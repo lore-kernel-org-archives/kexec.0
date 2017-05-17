@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x233.google.com ([2607:f8b0:400e:c05::233])
+Received: from mail-pg0-x231.google.com ([2607:f8b0:400e:c05::231])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dArov-0000ez-6T
- for kexec@lists.infradead.org; Wed, 17 May 2017 05:48:26 +0000
-Received: by mail-pg0-x233.google.com with SMTP id u187so1762494pgb.0
- for <kexec@lists.infradead.org>; Tue, 16 May 2017 22:48:05 -0700 (PDT)
+ id 1dArpC-0000hY-E3
+ for kexec@lists.infradead.org; Wed, 17 May 2017 05:48:44 +0000
+Received: by mail-pg0-x231.google.com with SMTP id x64so1710885pgd.3
+ for <kexec@lists.infradead.org>; Tue, 16 May 2017 22:48:22 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v7 01/10] kexec: exntend the semantics of
- kexec_iomem_for_each_line
-Date: Wed, 17 May 2017 14:51:41 +0900
-Message-Id: <20170517055150.12601-2-takahiro.akashi@linaro.org>
+Subject: [PATCH v7 03/10] arm64: identify PHYS_OFFSET correctly
+Date: Wed, 17 May 2017 14:51:43 +0900
+Message-Id: <20170517055150.12601-4-takahiro.akashi@linaro.org>
 In-Reply-To: <20170517055150.12601-1-takahiro.akashi@linaro.org>
 References: <20170517055150.12601-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -28,73 +27,84 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au
 Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-The current kexec_iomem_for_each_line() counts up all the lines for which
-a callback function returns zero(0) or positive, and otherwise it stops
-further scanning.
-This behavior is incovenient in some cases. For instance, on arm64, we want
-to count up "System RAM" entries, but need to skip "reserved" entries.
+Due to the kernel patch, commit e7cd190385d1 ("arm64: mark reserved
+memblock regions explicitly in iomem"), the current code will not be able
+to identify the correct value of PHYS_OFFSET if some "reserved" memory
+region, which is likely to be UEFI runtime services code/data, exists at
+an address below the first "System RAM" regions.
 
-So this patch extends the semantics so that we will continue to scan
-succeeding entries but not count lines for which a callback function
-returns positive.
-
-The current users of kexec_iomem_for_each_line(), arm, sh and x86, will not
-be affected by this change because
-* arm
-  The callback function only returns -1 or 0, and the return value of
-  kexec_iomem_for_each_line() will never be used.
-* sh, x86
-  The callback function may return (-1 for sh,) 0 or 1, but always returns
-  1 once we have reached the maximum number of entries allowed.
-  Even so the current kexec_iomem_for_each_line() counts them up.
-  This change actually fixes this bug.
+This patch fixes this issue.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 ---
- kexec/kexec-iomem.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ kexec/arch/arm64/Makefile      |  1 +
+ kexec/arch/arm64/iomem.h       |  7 +++++++
+ kexec/arch/arm64/kexec-arm64.c | 12 ++++++++++--
+ 3 files changed, 18 insertions(+), 2 deletions(-)
+ create mode 100644 kexec/arch/arm64/iomem.h
 
-diff --git a/kexec/kexec-iomem.c b/kexec/kexec-iomem.c
-index 7ec3853..b5b52b1 100644
---- a/kexec/kexec-iomem.c
-+++ b/kexec/kexec-iomem.c
-@@ -18,6 +18,9 @@
-  * Iterate over each line in the file returned by proc_iomem(). If match is
-  * NULL or if the line matches with our match-pattern then call the
-  * callback if non-NULL.
-+ * If match is NULL, callback should return a negative if error.
-+ * Otherwise the interation goes on, incrementing nr but only if callback
-+ * returns 0 (matched).
-  *
-  * Return the number of lines matched.
-  */
-@@ -37,7 +40,7 @@ int kexec_iomem_for_each_line(char *match,
- 	char *str;
- 	int consumed;
- 	int count;
--	int nr = 0;
-+	int nr = 0, ret;
+diff --git a/kexec/arch/arm64/Makefile b/kexec/arch/arm64/Makefile
+index a931f0e..91f6388 100644
+--- a/kexec/arch/arm64/Makefile
++++ b/kexec/arch/arm64/Makefile
+@@ -26,6 +26,7 @@ dist += $(arm64_KEXEC_SRCS) \
+ 	kexec/arch/arm64/include/arch/options.h \
+ 	kexec/arch/arm64/crashdump-arm64.h \
+ 	kexec/arch/arm64/image-header.h \
++	kexec/arch/arm64/iomem.h \
+ 	kexec/arch/arm64/kexec-arm64.h \
+ 	kexec/arch/arm64/Makefile
  
- 	fp = fopen(iomem, "r");
- 	if (!fp)
-@@ -50,11 +53,13 @@ int kexec_iomem_for_each_line(char *match,
- 		str = line + consumed;
- 		size = end - start + 1;
- 		if (!match || memcmp(str, match, strlen(match)) == 0) {
--			if (callback
--			    && callback(data, nr, str, start, size) < 0) {
--				break;
-+			if (callback) {
-+				ret = callback(data, nr, str, start, size);
-+				if (ret < 0)
-+					break;
-+				else if (ret == 0)
-+					nr++;
- 			}
--			nr++;
- 		}
- 	}
+diff --git a/kexec/arch/arm64/iomem.h b/kexec/arch/arm64/iomem.h
+new file mode 100644
+index 0000000..7fd66eb
+--- /dev/null
++++ b/kexec/arch/arm64/iomem.h
+@@ -0,0 +1,7 @@
++#ifndef IOMEM_H
++#define IOMEM_H
++
++#define SYSTEM_RAM		"System RAM\n"
++#define IOMEM_RESERVED		"reserved\n"
++
++#endif
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index c822939..7024f74 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -21,6 +21,7 @@
+ #include "crashdump-arm64.h"
+ #include "dt-ops.h"
+ #include "fs2dt.h"
++#include "iomem.h"
+ #include "kexec-syscall.h"
+ #include "arch/options.h"
  
+@@ -477,7 +478,14 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
+ 		return -1;
+ 
+ 	r = (struct memory_range *)data + nr;
+-	r->type = RANGE_RAM;
++
++	if (!strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)))
++		r->type = RANGE_RAM;
++	else if (!strncmp(str, IOMEM_RESERVED, strlen(IOMEM_RESERVED)))
++		r->type = RANGE_RESERVED;
++	else
++		return 1;
++
+ 	r->start = base;
+ 	r->end = base + length - 1;
+ 
+@@ -496,7 +504,7 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
+ static int get_memory_ranges_iomem(struct memory_range *array,
+ 	unsigned int *count)
+ {
+-	*count = kexec_iomem_for_each_line("System RAM\n",
++	*count = kexec_iomem_for_each_line(NULL,
+ 		get_memory_ranges_iomem_cb, array);
+ 
+ 	if (!*count) {
 -- 
 2.11.1
 
