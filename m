@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x233.google.com ([2607:f8b0:400e:c00::233])
+Received: from mail-pf0-x229.google.com ([2607:f8b0:400e:c00::229])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dArpV-0000k3-Ez
- for kexec@lists.infradead.org; Wed, 17 May 2017 05:49:02 +0000
-Received: by mail-pf0-x233.google.com with SMTP id e193so1850637pfh.0
- for <kexec@lists.infradead.org>; Tue, 16 May 2017 22:48:41 -0700 (PDT)
+ id 1dArpY-0000n3-RF
+ for kexec@lists.infradead.org; Wed, 17 May 2017 05:49:06 +0000
+Received: by mail-pf0-x229.google.com with SMTP id 9so1837618pfj.1
+ for <kexec@lists.infradead.org>; Tue, 16 May 2017 22:48:48 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v7 08/10] arm64: kdump: set up other segments
-Date: Wed, 17 May 2017 14:51:48 +0900
-Message-Id: <20170517055150.12601-9-takahiro.akashi@linaro.org>
+Subject: [PATCH v7 10/10] arm64: kdump: Add support for binary image files
+Date: Wed, 17 May 2017 14:51:50 +0900
+Message-Id: <20170517055150.12601-11-takahiro.akashi@linaro.org>
 In-Reply-To: <20170517055150.12601-1-takahiro.akashi@linaro.org>
 References: <20170517055150.12601-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,30 +27,55 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au
 Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-We make sure that all the other segments, initrd and device-tree blob,
-also be loaded into the reserved memory of crash dump kernel.
+From: Pratyush Anand <panand@redhat.com>
 
+This patch adds support to use binary image ie arch/arm64/boot/Image with
+kdump.
+
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+[takahiro.akashi@linaro.org: a bit reworked]
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 ---
- kexec/arch/arm64/kexec-arm64.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kexec/arch/arm64/kexec-image-arm64.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 6c21756..dfe16a6 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -376,7 +376,10 @@ int arm64_load_other_segments(struct kexec_info *info,
- 	/* Put the other segments after the image. */
+diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
+index e5f2a9b..e1b1e54 100644
+--- a/kexec/arch/arm64/kexec-image-arm64.c
++++ b/kexec/arch/arm64/kexec-image-arm64.c
+@@ -4,7 +4,9 @@
  
- 	hole_min = image_base + arm64_mem.image_size;
--	hole_max = ULONG_MAX;
-+	if (info->kexec_flags & KEXEC_ON_CRASH)
-+		hole_max = crash_reserved_mem.end;
-+	else
-+		hole_max = ULONG_MAX;
+ #define _GNU_SOURCE
  
- 	if (arm64_opts.initrd) {
- 		initrd_buf = slurp_file(arm64_opts.initrd, &initrd_size);
++#include "crashdump-arm64.h"
+ #include "kexec-arm64.h"
++#include "kexec-syscall.h"
+ #include <limits.h>
+ 
+ int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
+@@ -58,11 +60,22 @@ int image_arm64_load(int argc, char **argv, const char *kernel_buf,
+ 	dbgprintf("%s: PE format:      %s\n", __func__,
+ 		(arm64_header_check_pe_sig(header) ? "yes" : "no"));
+ 
++	/* create and initialize elf core header segment */
++	if (info->kexec_flags & KEXEC_ON_CRASH) {
++		result = load_crashdump_segments(info);
++		if (result) {
++			dbgprintf("%s: Creating eflcorehdr failed.\n",
++								__func__);
++			goto exit;
++		}
++	}
++
+ 	/* load the kernel */
+ 	add_segment_phys_virt(info, kernel_buf, kernel_size,
+ 			kernel_segment + arm64_mem.text_offset,
+ 			arm64_mem.image_size, 0);
+ 
++	/* load additional data */
+ 	result = arm64_load_other_segments(info, kernel_segment
+ 		+ arm64_mem.text_offset);
+ 
 -- 
 2.11.1
 
