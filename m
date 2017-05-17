@@ -1,176 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-sn1nam01on0067.outbound.protection.outlook.com
- ([104.47.32.67] helo=NAM01-SN1-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dB5Xc-0007NR-0Z
- for kexec@lists.infradead.org; Wed, 17 May 2017 20:27:29 +0000
-Subject: Re: [PATCH v5 18/32] x86, mpparse: Use memremap to map the mpf and
- mpc data
-References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418211930.10190.62640.stgit@tlendack-t1.amdoffice.net>
- <20170516083658.fq2h4ysmrbgn23cs@pd.tnic>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <6e155b8f-b691-2ee0-8977-969aaab6199a@amd.com>
-Date: Wed, 17 May 2017 15:26:58 -0500
 MIME-Version: 1.0
-In-Reply-To: <20170516083658.fq2h4ysmrbgn23cs@pd.tnic>
-List-Id: <kexec.lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
- <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/kexec/>
-List-Post: <mailto:kexec@lists.infradead.org>
-List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
- <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Subject: Your message to kexec awaits moderator approval
+From: kexec-owner@lists.infradead.org
+Message-ID: <mailman.29486.1495064237.26984.kexec@lists.infradead.org>
+Date: Wed, 17 May 2017 16:37:17 -0700
+List-Id: <kexec.lists.infradead.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter
- Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S.
- Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: dwmw2@infradead.org
 
-On 5/16/2017 3:36 AM, Borislav Petkov wrote:
-> On Tue, Apr 18, 2017 at 04:19:30PM -0500, Tom Lendacky wrote:
->> The SMP MP-table is built by UEFI and placed in memory in a decrypted
->> state. These tables are accessed using a mix of early_memremap(),
->> early_memunmap(), phys_to_virt() and virt_to_phys(). Change all accesses
->> to use early_memremap()/early_memunmap(). This allows for proper setting
->> of the encryption mask so that the data can be successfully accessed when
->> SME is active.
->>
->> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
->> ---
->>  arch/x86/kernel/mpparse.c |  102 +++++++++++++++++++++++++++++++--------------
->>  1 file changed, 71 insertions(+), 31 deletions(-)
->>
->> diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
->> index fd37f39..afbda41d 100644
->> --- a/arch/x86/kernel/mpparse.c
->> +++ b/arch/x86/kernel/mpparse.c
->> @@ -429,7 +429,21 @@ static inline void __init construct_default_ISA_mptable(int mpc_default_type)
->>  	}
->>  }
->>
->> -static struct mpf_intel *mpf_found;
->> +static unsigned long mpf_base;
->> +
->> +static void __init unmap_mpf(struct mpf_intel *mpf)
->> +{
->> +	early_memunmap(mpf, sizeof(*mpf));
->> +}
->> +
->> +static struct mpf_intel * __init map_mpf(unsigned long paddr)
->> +{
->> +	struct mpf_intel *mpf;
->> +
->> +	mpf = early_memremap(paddr, sizeof(*mpf));
->> +
->> +	return mpf;
->
-> 	return early_memremap(paddr, sizeof(*mpf));
->
+Your mail to 'kexec' with the subject
 
-Ok.
+    Re: [PATCH v7 01/10] kexec: exntend the semantics of
+kexec_iomem_for_each_line
 
-> ...
->
->> @@ -842,25 +873,26 @@ static int __init update_mp_table(void)
->>  	if (!enable_update_mptable)
->>  		return 0;
->>
->> -	mpf = mpf_found;
->> -	if (!mpf)
->> +	if (!mpf_base)
->>  		return 0;
->>
->> +	mpf = map_mpf(mpf_base);
->> +
->>  	/*
->>  	 * Now see if we need to go further.
->>  	 */
->>  	if (mpf->feature1 != 0)
->
-> You're kidding, right? map_mpf() *can* return NULL.
+Is being held until the list moderator can review it for approval.
 
-Ugh...  don't know how I forgot about that. Will fix everywhere.
+The reason it is being held:
 
->
-> Also, simplify that test:
->
-> 	if (mpf->feature1)
-> 		...
+    Message has a suspicious header
 
-Ok, I can do that but I hope no one says anything about it being
-unrelated to the patch. :)
+Either the message will get posted to the list, or you will receive
+notification of the moderator's decision.  If you would like to cancel
+this posting, please visit the following URL:
 
->
->
->> -		return 0;
->> +		goto do_unmap_mpf;
->>
->>  	if (!mpf->physptr)
->> -		return 0;
->> +		goto do_unmap_mpf;
->>
->> -	mpc = phys_to_virt(mpf->physptr);
->> +	mpc = map_mpc(mpf->physptr);
->
-> Again: error checking !!!
->
-> You have other calls to early_memremap()/map_mpf() in this patch. Please
-> add error checking everywhere.
+    http://lists.infradead.org/mailman/confirm/kexec/be36720c20652e084a3cbb82e998f755d1ef9d61
 
-Yup.
-
->
->>
->>  	if (!smp_check_mpc(mpc, oem, str))
->> -		return 0;
->> +		goto do_unmap_mpc;
->>
->> -	pr_info("mpf: %llx\n", (u64)virt_to_phys(mpf));
->> +	pr_info("mpf: %llx\n", (u64)mpf_base);
->>  	pr_info("physptr: %x\n", mpf->physptr);
->>
->>  	if (mpc_new_phys && mpc->length > mpc_new_length) {
->> @@ -878,21 +910,23 @@ static int __init update_mp_table(void)
->>  		new = mpf_checksum((unsigned char *)mpc, mpc->length);
->>  		if (old == new) {
->>  			pr_info("mpc is readonly, please try alloc_mptable instead\n");
->> -			return 0;
->> +			goto do_unmap_mpc;
->>  		}
->>  		pr_info("use in-position replacing\n");
->>  	} else {
->>  		mpf->physptr = mpc_new_phys;
->> -		mpc_new = phys_to_virt(mpc_new_phys);
->> +		mpc_new = map_mpc(mpc_new_phys);
->
-> Ditto.
->
->>  		memcpy(mpc_new, mpc, mpc->length);
->> +		unmap_mpc(mpc);
->>  		mpc = mpc_new;
->>  		/* check if we can modify that */
->>  		if (mpc_new_phys - mpf->physptr) {
->>  			struct mpf_intel *mpf_new;
->>  			/* steal 16 bytes from [0, 1k) */
->>  			pr_info("mpf new: %x\n", 0x400 - 16);
->> -			mpf_new = phys_to_virt(0x400 - 16);
->> +			mpf_new = map_mpf(0x400 - 16);
->
-> Ditto.
->
->>  			memcpy(mpf_new, mpf, 16);
->> +			unmap_mpf(mpf);
->>  			mpf = mpf_new;
->>  			mpf->physptr = mpc_new_phys;
->>  		}
->
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
