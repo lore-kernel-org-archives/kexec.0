@@ -1,15 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-dm3nam03on0042.outbound.protection.outlook.com
- ([104.47.41.42] helo=NAM03-DM3-obe.outbound.protection.outlook.com)
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dBJ5w-0005aQ-2G
- for kexec@lists.infradead.org; Thu, 18 May 2017 10:55:49 +0000
-From: Bharat Bhushan <Bharat.Bhushan@nxp.com>
-Subject: [PATCH v2] kexec/kdump: Minor Documentation updates for arm64 and
- Image
-Date: Thu, 18 May 2017 16:23:13 +0530
-Message-ID: <1495104793-6563-1-git-send-email-Bharat.Bhushan@nxp.com>
+ id 1dBK9H-0007yN-Dd
+ for kexec@lists.infradead.org; Thu, 18 May 2017 12:03:21 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id
+ v4IBrmsi093237
+ for <kexec@lists.infradead.org>; Thu, 18 May 2017 08:02:57 -0400
+Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2agyb2mgtb-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 18 May 2017 08:02:57 -0400
+Received: from localhost
+ by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Thu, 18 May 2017 13:02:55 +0100
+Date: Thu, 18 May 2017 14:02:54 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: [PATCH] makedumpfile: Error on re-filtering the dump file with
+ no free pages
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701ED89ED@BPXM01GP.gisp.nec.co.jp>
+References: <2d1847a4-0e3c-b282-a3ff-74755716eb69@linux.vnet.ibm.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701ED89ED@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
+Message-Id: <20170518140254.3db3f205@TP-holzheu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,61 +38,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com, corbet@lwn.net, takahiro.akashi@linaro.org, panand@redhat.com
-Cc: Bharat Bhushan <Bharat.Bhushan@nxp.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Zaslonko Mikhail <zaslonko@linux.vnet.ibm.com>
 
-This patch have minor updates in Documentation for arm64i as
-relocatable kernel.
-Also this patch updates documentation for using uncompressed
-image "Image" which is used for ARM64.
+Am Thu, 18 May 2017 04:37:20 +0000
+schrieb Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>:
 
-Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
----
-v1->v2
-  - "a uncompressed" replaced with "an uncompressed"
+> Hello Zaslonko,
+> 
+> > When re-filtering the dump file after the free pages have already been
+> > stripped out we get an error "Can't get necessary symbols for excluding
+> > free pages" if newly specified dump level is below 16 (preserves free
+> > pages).
+> > According to the code, the check for the new dump level is done BEFORE
+> > the new dump level is actually set (based on the dump level specified in
+> > the command and the one from the input dump file).
+> > Moving the new_dump_level calculation ahead would fix the error.
+> 
+> Well, I guess the real problem is different.
+> The error you said is printed by exclude_free_page():
+> 
+>         if ((SYMBOL(node_data) == NOT_FOUND_SYMBOL)
+>             && (SYMBOL(pgdat_list) == NOT_FOUND_SYMBOL)
+>             && (SYMBOL(contig_page_data) == NOT_FOUND_SYMBOL)) {
+>                 ERRMSG("Can't get necessary symbols for excluding free pages.\n");
+>                 return FALSE;
+>         }
+> 
+> I think the availability of these symbols are not related to free pages.
+> exclude_free_page() is called if info->page_is_buddy is null, I estimate that
+> this situation occurs only if the kernel is older(2.6.16 or before). 
+> 
+> However, I don't think you use such too old kernel, so I suspect that
+> setup_page_is_buddy() should be updated for newer kernel.
 
- Documentation/kdump/kdump.txt | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+Mikhail is on vacation now - so I try to explain:
 
-diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-index 615434d..5181445 100644
---- a/Documentation/kdump/kdump.txt
-+++ b/Documentation/kdump/kdump.txt
-@@ -112,8 +112,8 @@ There are two possible methods of using Kdump.
- 2) Or use the system kernel binary itself as dump-capture kernel and there is
-    no need to build a separate dump-capture kernel. This is possible
-    only with the architectures which support a relocatable kernel. As
--   of today, i386, x86_64, ppc64, ia64 and arm architectures support relocatable
--   kernel.
-+   of today, i386, x86_64, ppc64, ia64, arm and arm64 architectures support
-+   relocatable kernel.
- 
- Building a relocatable kernel is advantageous from the point of view that
- one does not have to build a second kernel for capturing the dump. But
-@@ -339,7 +339,7 @@ For arm:
- For arm64:
- 	- Use vmlinux or Image
- 
--If you are using a uncompressed vmlinux image then use following command
-+If you are using an uncompressed vmlinux image then use following command
- to load dump-capture kernel.
- 
-    kexec -p <dump-capture-kernel-vmlinux-image> \
-@@ -361,6 +361,12 @@ to load dump-capture kernel.
-    --dtb=<dtb-for-dump-capture-kernel> \
-    --append="root=<root-dev> <arch-specific-options>"
- 
-+If you are using an uncompressed Image, then use following command
-+to load dump-capture kernel.
-+
-+   kexec -p <dump-capture-kernel-Image> \
-+   --initrd=<initrd-for-dump-capture-kernel> \
-+   --append="root=<root-dev> <arch-specific-options>"
- 
- Please note, that --args-linux does not need to be specified for ia64.
- It is planned to make this a no-op on that architecture, but for now
--- 
-1.9.3
+The test case is as follows:
+
+ 1) We have a -d31 filtered dump "dump.d31"
+ 2) We want to compress the dump with "makedumpfile -c dump.31 dump31.compressed"
+
+This fails with:
+
+makedumpfile -c dump.31 dump.31.compressed
+Excluding unnecessary pages        : [100.0 %]
+exclude_free_page: Can't get necessary symbols for excluding free pages.
+dump_level is changed to 31, because dump.31 was created by dump_level(31).
+makedumpfile Failed.
+
+The problem is that setup_page_is_buddy() is not called in this case because
+info->dump_level is still 0 since it was not adjusted early enough:
+
+        if (info->dump_level & DL_EXCLUDE_FREE)
+                setup_page_is_buddy();
+
+Because it is not set info->page_is_buddy is NULL and therefore the following
+if condition gets true:
+
+        if ((info->dump_level & DL_EXCLUDE_FREE) && !info->page_is_buddy)
+                if (!exclude_free_page(cycle))
+                        return FALSE;
+
+Since we don't have the symbols in VMCOREINFO (and IMHO don't need it?) the
+exclude_free_page() functions fails with the described error message.
+
+So our fix is to adjust the info->level before setup_page_is_buddy() is called.
+
+Best Regards
+Michael
+
+> Could you tell me your kernel version and how to reproduce this issue ?
+
 
 
 _______________________________________________
