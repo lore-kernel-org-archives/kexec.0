@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1dBOoj-0004Qq-TG
- for kexec@lists.infradead.org; Thu, 18 May 2017 17:02:27 +0000
-Date: Thu, 18 May 2017 19:01:53 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 31/32] x86: Add sysfs support for Secure Memory
- Encryption
-Message-ID: <20170518170153.eqiyat5s6q3yeejl@pd.tnic>
+Received: from mail-wm0-x233.google.com ([2a00:1450:400c:c09::233])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dBRS8-0003iI-2V
+ for kexec@lists.infradead.org; Thu, 18 May 2017 19:51:22 +0000
+Received: by mail-wm0-x233.google.com with SMTP id d127so64074764wmf.0
+ for <kexec@lists.infradead.org>; Thu, 18 May 2017 12:50:54 -0700 (PDT)
+Date: Thu, 18 May 2017 20:50:51 +0100
+From: Matt Fleming <matt@codeblueprint.co.uk>
+Subject: Re: [PATCH v5 17/32] x86/mm: Add support to access boot related data
+ in the clear
+Message-ID: <20170518195051.GA5651@codeblueprint.co.uk>
 References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418212212.10190.73484.stgit@tlendack-t1.amdoffice.net>
+ <20170418211921.10190.1537.stgit@tlendack-t1.amdoffice.net>
+ <20170515183517.mb4k2gp2qobbuvtm@pd.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170418212212.10190.73484.stgit@tlendack-t1.amdoffice.net>
+In-Reply-To: <20170515183517.mb4k2gp2qobbuvtm@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,33 +28,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Tom Lendacky <thomas.lendacky@amd.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-On Tue, Apr 18, 2017 at 04:22:12PM -0500, Tom Lendacky wrote:
-> Add sysfs support for SME so that user-space utilities (kdump, etc.) can
-> determine if SME is active.
+On Mon, 15 May, at 08:35:17PM, Borislav Petkov wrote:
+> On Tue, Apr 18, 2017 at 04:19:21PM -0500, Tom Lendacky wrote:
+>
+> > +		paddr = boot_params.efi_info.efi_memmap_hi;
+> > +		paddr <<= 32;
+> > +		paddr |= boot_params.efi_info.efi_memmap;
+> > +		if (phys_addr == paddr)
+> > +			return true;
+> > +
+> > +		paddr = boot_params.efi_info.efi_systab_hi;
+> > +		paddr <<= 32;
+> > +		paddr |= boot_params.efi_info.efi_systab;
+> 
+> So those two above look like could be two global vars which are
+> initialized somewhere in the EFI init path:
+> 
+> efi_memmap_phys and efi_systab_phys or so.
+> 
+> Matt ?
+> 
+> And then you won't need to create that paddr each time on the fly. I
+> mean, it's not a lot of instructions but still...
+ 
+We should already have the physical memmap address available in
+'efi.memmap.phys_map'.
 
-But why do user-space tools need to know that?
-
-I mean, when we load the kdump kernel, we do it with the first kernel,
-with the kexec_load() syscall, AFAICT. And that code does a lot of
-things during that init, like machine_kexec_prepare()->init_pgtable() to
-prepare the ident mapping of the second kernel, for example.
-
-What I'm aiming at is that the first kernel knows *exactly* whether SME
-is enabled or not and doesn't need to tell the second one through some
-sysfs entries - it can do that during loading.
-
-So I don't think we need any userspace things at all...
-
-Or?
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+And the physical address of the system table should be in
+'efi_phys.systab'. See efi_init().
 
 _______________________________________________
 kexec mailing list
