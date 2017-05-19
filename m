@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x233.google.com ([2a00:1450:400c:c09::233])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dBRS8-0003iI-2V
- for kexec@lists.infradead.org; Thu, 18 May 2017 19:51:22 +0000
-Received: by mail-wm0-x233.google.com with SMTP id d127so64074764wmf.0
- for <kexec@lists.infradead.org>; Thu, 18 May 2017 12:50:54 -0700 (PDT)
-Date: Thu, 18 May 2017 20:50:51 +0100
-From: Matt Fleming <matt@codeblueprint.co.uk>
-Subject: Re: [PATCH v5 17/32] x86/mm: Add support to access boot related data
- in the clear
-Message-ID: <20170518195051.GA5651@codeblueprint.co.uk>
-References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418211921.10190.1537.stgit@tlendack-t1.amdoffice.net>
- <20170515183517.mb4k2gp2qobbuvtm@pd.tnic>
+ id 1dBY1a-0003zf-Ez
+ for kexec@lists.infradead.org; Fri, 19 May 2017 02:52:20 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile: Error on re-filtering the dump file with
+ no free pages
+Date: Fri, 19 May 2017 02:35:40 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701ED9104@BPXM01GP.gisp.nec.co.jp>
+References: <2d1847a4-0e3c-b282-a3ff-74755716eb69@linux.vnet.ibm.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701ED89ED@BPXM01GP.gisp.nec.co.jp>
+ <20170518140254.3db3f205@TP-holzheu>
+In-Reply-To: <20170518140254.3db3f205@TP-holzheu>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20170515183517.mb4k2gp2qobbuvtm@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,37 +26,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Tom Lendacky <thomas.lendacky@amd.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Zaslonko Mikhail <zaslonko@linux.vnet.ibm.com>
 
-On Mon, 15 May, at 08:35:17PM, Borislav Petkov wrote:
-> On Tue, Apr 18, 2017 at 04:19:21PM -0500, Tom Lendacky wrote:
+>> Hello Zaslonko,
+>>
+>> > When re-filtering the dump file after the free pages have already been
+>> > stripped out we get an error "Can't get necessary symbols for excluding
+>> > free pages" if newly specified dump level is below 16 (preserves free
+>> > pages).
+>> > According to the code, the check for the new dump level is done BEFORE
+>> > the new dump level is actually set (based on the dump level specified in
+>> > the command and the one from the input dump file).
+>> > Moving the new_dump_level calculation ahead would fix the error.
+>>
+>> Well, I guess the real problem is different.
+>> The error you said is printed by exclude_free_page():
+>>
+>>         if ((SYMBOL(node_data) == NOT_FOUND_SYMBOL)
+>>             && (SYMBOL(pgdat_list) == NOT_FOUND_SYMBOL)
+>>             && (SYMBOL(contig_page_data) == NOT_FOUND_SYMBOL)) {
+>>                 ERRMSG("Can't get necessary symbols for excluding free pages.\n");
+>>                 return FALSE;
+>>         }
+>>
+>> I think the availability of these symbols are not related to free pages.
+>> exclude_free_page() is called if info->page_is_buddy is null, I estimate that
+>> this situation occurs only if the kernel is older(2.6.16 or before).
+>>
+>> However, I don't think you use such too old kernel, so I suspect that
+>> setup_page_is_buddy() should be updated for newer kernel.
 >
-> > +		paddr = boot_params.efi_info.efi_memmap_hi;
-> > +		paddr <<= 32;
-> > +		paddr |= boot_params.efi_info.efi_memmap;
-> > +		if (phys_addr == paddr)
-> > +			return true;
-> > +
-> > +		paddr = boot_params.efi_info.efi_systab_hi;
-> > +		paddr <<= 32;
-> > +		paddr |= boot_params.efi_info.efi_systab;
-> 
-> So those two above look like could be two global vars which are
-> initialized somewhere in the EFI init path:
-> 
-> efi_memmap_phys and efi_systab_phys or so.
-> 
-> Matt ?
-> 
-> And then you won't need to create that paddr each time on the fly. I
-> mean, it's not a lot of instructions but still...
- 
-We should already have the physical memmap address available in
-'efi.memmap.phys_map'.
+>Mikhail is on vacation now - so I try to explain:
 
-And the physical address of the system table should be in
-'efi_phys.systab'. See efi_init().
+Thanks for your explanation, I understand this issue properly.
+
+>The test case is as follows:
+>
+> 1) We have a -d31 filtered dump "dump.d31"
+> 2) We want to compress the dump with "makedumpfile -c dump.31 dump31.compressed"
+>
+>This fails with:
+>
+>makedumpfile -c dump.31 dump.31.compressed
+>Excluding unnecessary pages        : [100.0 %]
+>exclude_free_page: Can't get necessary symbols for excluding free pages.
+>dump_level is changed to 31, because dump.31 was created by dump_level(31).
+>makedumpfile Failed.
+>
+>The problem is that setup_page_is_buddy() is not called in this case because
+>info->dump_level is still 0 since it was not adjusted early enough:
+>
+>        if (info->dump_level & DL_EXCLUDE_FREE)
+>                setup_page_is_buddy();
+>
+>Because it is not set info->page_is_buddy is NULL and therefore the following
+>if condition gets true:
+>
+>        if ((info->dump_level & DL_EXCLUDE_FREE) && !info->page_is_buddy)
+>                if (!exclude_free_page(cycle))
+>                        return FALSE;
+>
+>Since we don't have the symbols in VMCOREINFO (and IMHO don't need it?) the
+>exclude_free_page() functions fails with the described error message.
+
+It seems that it's better if I update the condition check of exclude_free_page()
+for recent kernels, but those symbols are unnecessary in this case as you thought
+anyway. exclude_free_page() shouldn't be called for recent kernels, I don't think
+this is an actual problem.
+
+>So our fix is to adjust the info->level before setup_page_is_buddy() is called.
+
+I'm sure this fix is reasonable, I'll merge this into v1.6.2.
+
+Thanks,
+Atsushi Kumagai
+
 
 _______________________________________________
 kexec mailing list
