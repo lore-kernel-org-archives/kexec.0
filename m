@@ -1,32 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dBcKW-0001AO-7E
- for kexec@lists.infradead.org; Fri, 19 May 2017 07:28:09 +0000
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id
- v4J7JsT5067428
- for <kexec@lists.infradead.org>; Fri, 19 May 2017 03:27:46 -0400
-Received: from e06smtp13.uk.ibm.com (e06smtp13.uk.ibm.com [195.75.94.109])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2ahmq68pq1-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 19 May 2017 03:27:46 -0400
-Received: from localhost
- by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Fri, 19 May 2017 08:27:44 +0100
-Date: Fri, 19 May 2017 09:27:45 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH] makedumpfile: Error on re-filtering the dump file with
- no free pages
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701ED9104@BPXM01GP.gisp.nec.co.jp>
-References: <2d1847a4-0e3c-b282-a3ff-74755716eb69@linux.vnet.ibm.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701ED89ED@BPXM01GP.gisp.nec.co.jp>
- <20170518140254.3db3f205@TP-holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE9701ED9104@BPXM01GP.gisp.nec.co.jp>
+ id 1dBe0y-0007u1-0T
+ for kexec@lists.infradead.org; Fri, 19 May 2017 09:16:05 +0000
+Date: Fri, 19 May 2017 17:15:38 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] Handle additional e820 memmap type strings
+Message-ID: <20170519091538.GA24903@x1>
+References: <1494432217-26092-1-git-send-email-eric.devolder@oracle.com>
+ <20170515140711.GB21797@x1>
+ <ff7c75d3-2b12-fe7a-8ede-ec04a6161665@oracle.com>
 MIME-Version: 1.0
-Message-Id: <20170519092745.0bc956a3@TP-holzheu>
+Content-Disposition: inline
+In-Reply-To: <ff7c75d3-2b12-fe7a-8ede-ec04a6161665@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,33 +25,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Zaslonko Mikhail <zaslonko@linux.vnet.ibm.com>
+To: Eric DeVolder <eric.devolder@oracle.com>
+Cc: andrew.cooper3@citrix.com, daniel.kiper@oracle.com, horms@verge.net.au, kexec@lists.infradead.org, konrad.wilk@oracle.com
 
-Am Fri, 19 May 2017 02:35:40 +0000
-schrieb Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>:
-
-> >> Hello Zaslonko,
-> >>
-
-[snip]
-
-> >Since we don't have the symbols in VMCOREINFO (and IMHO don't need it?) the
-> >exclude_free_page() functions fails with the described error message.
+On 05/17/17 at 07:51am, Eric DeVolder wrote:
+> > > diff --git a/kexec/firmware_memmap.c b/kexec/firmware_memmap.c
+> > > index 4d84f00..1ee214a 100644
+> > > --- a/kexec/firmware_memmap.c
+> > > +++ b/kexec/firmware_memmap.c
+> > > @@ -164,6 +164,10 @@ static int parse_memmap_entry(const char *entry, struct memory_range *range)
+> > >   		range->type = RANGE_RESERVED;
+> > >   	else if (strcmp(type, "reserved") == 0)
+> > >   		range->type = RANGE_RESERVED;
+> > > +	else if (strcmp(type, "Reserved") == 0)
+> > > +		range->type = RANGE_RESERVED;
+> > > +	else if (strcmp(type, "Unknown E820 type") == 0)
+> > > +		range->type = RANGE_RESERVED;
+> > 
+> > Should we change the "reserved" one to "Reserved" so that we don't need
+> > to have "reserved" and "Reserved" at the same time?
 > 
-> It seems that it's better if I update the condition check of exclude_free_page()
-> for recent kernels, but those symbols are unnecessary in this case as you thought
-> anyway. exclude_free_page() shouldn't be called for recent kernels, I don't think
-> this is an actual problem.
+> The lower-case "reserved" has been in use by the kernel for quite a long
+> while, and upper-case "Reserved" has been recently introduced. I think
+> removing lower-case "reserved" would result in problems with existing,
+> older, kernels that still would be using "reserved".
+
+Thanks. Then it looks good to me. Ack.
+
+Simon might pick several patches one time every several days. Please
+wait.
 > 
-> >So our fix is to adjust the info->level before setup_page_is_buddy() is called.
+> > 
+> > >   	else if (strcmp(type, "ACPI Non-volatile Storage") == 0)
+> > >   		range->type = RANGE_ACPI_NVS;
+> > >   	else if (strcmp(type, "Uncached RAM") == 0)
+> > > -- 
+> > > 2.7.4
+> > > 
+> > > 
+> > > _______________________________________________
+> > > kexec mailing list
+> > > kexec@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/kexec
 > 
-> I'm sure this fix is reasonable, I'll merge this into v1.6.2.
-
-Thanks!
-
-Michael
-
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
