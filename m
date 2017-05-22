@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1dCll1-0008SB-PK
- for kexec@lists.infradead.org; Mon, 22 May 2017 11:44:17 +0000
-Date: Mon, 22 May 2017 13:43:51 +0200
+ id 1dClnG-0001z5-1y
+ for kexec@lists.infradead.org; Mon, 22 May 2017 11:46:35 +0000
+Date: Mon, 22 May 2017 13:46:10 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Handle additional e820 memmap type strings
-Message-ID: <20170522114351.GF16822@verge.net.au>
-References: <1494432217-26092-1-git-send-email-eric.devolder@oracle.com>
- <20170515140711.GB21797@x1>
- <ff7c75d3-2b12-fe7a-8ede-ec04a6161665@oracle.com>
- <20170519091538.GA24903@x1>
+Subject: Re: [PATCH v2] kexec/kdump: Minor Documentation updates for arm64
+ and Image
+Message-ID: <20170522114610.GG16822@verge.net.au>
+References: <1495104793-6563-1-git-send-email-Bharat.Bhushan@nxp.com>
+ <2eab1d0a-c147-8364-8fb8-4efbea879992@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170519091538.GA24903@x1>
+In-Reply-To: <2eab1d0a-c147-8364-8fb8-4efbea879992@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,39 +25,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: andrew.cooper3@citrix.com, daniel.kiper@oracle.com, Eric DeVolder <eric.devolder@oracle.com>, kexec@lists.infradead.org, konrad.wilk@oracle.com
+To: Pratyush Anand <panand@redhat.com>
+Cc: bhe@redhat.com, corbet@lwn.net, Bharat Bhushan <Bharat.Bhushan@nxp.com>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, dyoung@redhat.com, vgoyal@redhat.com
 
-On Fri, May 19, 2017 at 05:15:38PM +0800, Baoquan He wrote:
-> On 05/17/17 at 07:51am, Eric DeVolder wrote:
-> > > > diff --git a/kexec/firmware_memmap.c b/kexec/firmware_memmap.c
-> > > > index 4d84f00..1ee214a 100644
-> > > > --- a/kexec/firmware_memmap.c
-> > > > +++ b/kexec/firmware_memmap.c
-> > > > @@ -164,6 +164,10 @@ static int parse_memmap_entry(const char *entry, struct memory_range *range)
-> > > >   		range->type = RANGE_RESERVED;
-> > > >   	else if (strcmp(type, "reserved") == 0)
-> > > >   		range->type = RANGE_RESERVED;
-> > > > +	else if (strcmp(type, "Reserved") == 0)
-> > > > +		range->type = RANGE_RESERVED;
-> > > > +	else if (strcmp(type, "Unknown E820 type") == 0)
-> > > > +		range->type = RANGE_RESERVED;
-> > > 
-> > > Should we change the "reserved" one to "Reserved" so that we don't need
-> > > to have "reserved" and "Reserved" at the same time?
-> > 
-> > The lower-case "reserved" has been in use by the kernel for quite a long
-> > while, and upper-case "Reserved" has been recently introduced. I think
-> > removing lower-case "reserved" would result in problems with existing,
-> > older, kernels that still would be using "reserved".
+On Mon, May 22, 2017 at 12:39:59PM +0530, Pratyush Anand wrote:
 > 
-> Thanks. Then it looks good to me. Ack.
 > 
-> Simon might pick several patches one time every several days. Please
-> wait.
+> On Thursday 18 May 2017 04:23 PM, Bharat Bhushan wrote:
+> >This patch have minor updates in Documentation for arm64i as
+>                                                     arm64
+> >relocatable kernel.
+> >Also this patch updates documentation for using uncompressed
+> >image "Image" which is used for ARM64.
+> >
+> >Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+> >---
+> >v1->v2
+> >  - "a uncompressed" replaced with "an uncompressed"
+> 
+> Reviewed-by: Pratyush Anand <panand@redhat.com>
 
-Yes, I try to pick up new patches within a few working days.
-I have applied this one.
+Reviewed-by: Simon Horman <horms@verge.net.au>
 
 _______________________________________________
 kexec mailing list
