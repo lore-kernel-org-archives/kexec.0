@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f176.google.com ([209.85.192.176])
+Received: from mail-pf0-f174.google.com ([209.85.192.174])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dCgrM-0007Bo-V9
- for kexec@lists.infradead.org; Mon, 22 May 2017 06:30:31 +0000
-Received: by mail-pf0-f176.google.com with SMTP id n23so72327215pfb.2
- for <kexec@lists.infradead.org>; Sun, 21 May 2017 23:30:08 -0700 (PDT)
-Subject: Re: [PATCH v7 00/10] (kexec-tools) arm64: add kdump support
-References: <20170517055150.12601-1-takahiro.akashi@linaro.org>
+ id 1dCh0T-0001vI-B9
+ for kexec@lists.infradead.org; Mon, 22 May 2017 06:39:57 +0000
+Received: by mail-pf0-f174.google.com with SMTP id 9so72594549pfj.1
+ for <kexec@lists.infradead.org>; Sun, 21 May 2017 23:39:33 -0700 (PDT)
+Subject: Re: [PATCH] kexec/kdump: Minor Documentation updates for arm64 and
+ Image
+References: <1495085600-2645-1-git-send-email-Bharat.Bhushan@nxp.com>
+ <20170518055914.GC4059@dhcp-128-65.nay.redhat.com>
+ <20170519034514.GA4283@fireball>
 From: Pratyush Anand <panand@redhat.com>
-Message-ID: <089fe15a-ef8d-a325-59cb-f25ecf678deb@redhat.com>
-Date: Mon, 22 May 2017 11:52:25 +0530
+Message-ID: <2ed84f9f-76c8-62eb-36b5-e97568ba3a2e@redhat.com>
+Date: Mon, 22 May 2017 12:09:26 +0530
 MIME-Version: 1.0
-In-Reply-To: <20170517055150.12601-1-takahiro.akashi@linaro.org>
+In-Reply-To: <20170519034514.GA4283@fireball>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,42 +27,33 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, horms@verge.net.au
-Cc: geoff@infradead.org, kexec@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Dave Young <dyoung@redhat.com>, Bharat Bhushan <Bharat.Bhushan@nxp.com>, bhe@redhat.com, vgoyal@redhat.com, corbet@lwn.net, kexec@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi Akashi,
 
-On Wednesday 17 May 2017 11:21 AM, AKASHI Takahiro wrote:
-> My kernel patches of kdump support on arm64 were merged in v4.12-rc1.
+
+On Friday 19 May 2017 09:15 AM, AKASHI Takahiro wrote:
+>>> +to load dump-capture kernel.
+>>> +
+>>> +   kexec -p <dump-capture-kernel-Image> \
+>>> +   --initrd=<initrd-for-dump-capture-kernel> \
+>>> +   --append="root=<root-dev> <arch-specific-options>"
+>> For uncompressed Image, dtb is not necessary?
+> Just for clarification, dtb is optional for both vmlinux and Image
+> on arm64. (This means you can specify it if you want.)
+> But this is also true for initrd and append(command line) to some extent.
+
+Yes, I agree.
 >
-> This patchset is synced with them and provides necessary changes for
-> kexec-tools. It can be applied on top of kexec-tools master branch.
->
-> Patch #1 to #4 are preparatory patches for succeeding patches,
-> #5 to #9 are main part of kdump implementation for vmlinux support
-> and #10 is for Image support.
->
-> Changes for v7:
->  - rebased on the latest master
->  - fix incorrect return values on error (patch #4)
->  - implement get_crash_kernel_load_range() (patch #5)
->  - rename some variables/functions for better readability (patch #5/#9)
->  - add/revise comments
->
+> More precisely, whether these parameters are optional or not will
+> depend on architectures, not formats, I believe.
 
+May be not architecture, rather a distro environment.
 
-Thanks for the v7 updates. I tested this version as well, and it worked!!
-Tested-by: Pratyush Anand <panand@redhat.com>
-
-
-I will be sending v2 of D-cache enabling patches(for faster purgatory sha 
-verification) once these patches are merged. If some one would like to test 
-those patches in advance, it will be more than welcome. Patches lie in my 
-github devel branch.
-
-https://github.com/pratyushanand/kexec-tools.git : devel
+For example, we should be able to work without --initrd for any arch if kernel 
+has been compiled by configuring CONFG_INITRAMFS_SOURCE.
 
 ~Pratyush
+
 
 _______________________________________________
 kexec mailing list
