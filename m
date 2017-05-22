@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f181.google.com ([209.85.192.181])
+Received: from mail-pf0-f169.google.com ([209.85.192.169])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dChPG-0000X1-7F
- for kexec@lists.infradead.org; Mon, 22 May 2017 07:05:31 +0000
-Received: by mail-pf0-f181.google.com with SMTP id n23so73224969pfb.2
- for <kexec@lists.infradead.org>; Mon, 22 May 2017 00:05:10 -0700 (PDT)
-Subject: Re: [PATCH] kexec/kdump: Minor Documentation updates for arm64 and
+ id 1dChU1-0002Iq-Il
+ for kexec@lists.infradead.org; Mon, 22 May 2017 07:10:27 +0000
+Received: by mail-pf0-f169.google.com with SMTP id 9so73376925pfj.1
+ for <kexec@lists.infradead.org>; Mon, 22 May 2017 00:10:05 -0700 (PDT)
+Subject: Re: [PATCH v2] kexec/kdump: Minor Documentation updates for arm64 and
  Image
-References: <1495085600-2645-1-git-send-email-Bharat.Bhushan@nxp.com>
- <20170518055914.GC4059@dhcp-128-65.nay.redhat.com>
- <20170519034514.GA4283@fireball>
- <2ed84f9f-76c8-62eb-36b5-e97568ba3a2e@redhat.com>
- <AM5PR0401MB25453F52820674F1D07EC8569AF80@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+References: <1495104793-6563-1-git-send-email-Bharat.Bhushan@nxp.com>
 From: Pratyush Anand <panand@redhat.com>
-Message-ID: <3b29d230-7295-4e04-5d07-b14817ccb954@redhat.com>
-Date: Mon, 22 May 2017 12:35:04 +0530
+Message-ID: <2eab1d0a-c147-8364-8fb8-4efbea879992@redhat.com>
+Date: Mon, 22 May 2017 12:39:59 +0530
 MIME-Version: 1.0
-In-Reply-To: <AM5PR0401MB25453F52820674F1D07EC8569AF80@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+In-Reply-To: <1495104793-6563-1-git-send-email-Bharat.Bhushan@nxp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,53 +25,66 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bharat Bhushan <bharat.bhushan@nxp.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Dave Young <dyoung@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>, "corbet@lwn.net" <corbet@lwn.net>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Bharat Bhushan <Bharat.Bhushan@nxp.com>, dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com, corbet@lwn.net, takahiro.akashi@linaro.org
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 
 
 
-On Monday 22 May 2017 12:19 PM, Bharat Bhushan wrote:
->> On Friday 19 May 2017 09:15 AM, AKASHI Takahiro wrote:
->>>>> +to load dump-capture kernel.
->>>>> +
->>>>> +   kexec -p <dump-capture-kernel-Image> \
->>>>> +   --initrd=<initrd-for-dump-capture-kernel> \
->>>>> +   --append="root=<root-dev> <arch-specific-options>"
->>>> For uncompressed Image, dtb is not necessary?
->>> Just for clarification, dtb is optional for both vmlinux and Image on
->>> arm64. (This means you can specify it if you want.) But this is also
->>> true for initrd and append(command line) to some extent.
->>
->> Yes, I agree.
+On Thursday 18 May 2017 04:23 PM, Bharat Bhushan wrote:
+> This patch have minor updates in Documentation for arm64i as
+                                                     arm64
+> relocatable kernel.
+> Also this patch updates documentation for using uncompressed
+> image "Image" which is used for ARM64.
 >
-> Should I mention "-dtb" also for "Image"?
+> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+> ---
+> v1->v2
+>   - "a uncompressed" replaced with "an uncompressed"
 
-No,I think it is fine.
-
-This documentation is representing a typical use case and so above changes is 
-OK for me. I think,your v2 is fine.
-
-~Pratyush
+Reviewed-by: Pratyush Anand <panand@redhat.com>
 
 >
-> Also do we need to mention that it is optional somewhere in this document? I do not see "optional" is mentioned for other parameters and architecture.
+>  Documentation/kdump/kdump.txt | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
 >
-> Does this looks ok:
+> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+> index 615434d..5181445 100644
+> --- a/Documentation/kdump/kdump.txt
+> +++ b/Documentation/kdump/kdump.txt
+> @@ -112,8 +112,8 @@ There are two possible methods of using Kdump.
+>  2) Or use the system kernel binary itself as dump-capture kernel and there is
+>     no need to build a separate dump-capture kernel. This is possible
+>     only with the architectures which support a relocatable kernel. As
+> -   of today, i386, x86_64, ppc64, ia64 and arm architectures support relocatable
+> -   kernel.
+> +   of today, i386, x86_64, ppc64, ia64, arm and arm64 architectures support
+> +   relocatable kernel.
 >
-> 	" -dtb=<optional-dtb-for-dump-capture-kernel> \"
+>  Building a relocatable kernel is advantageous from the point of view that
+>  one does not have to build a second kernel for capturing the dump. But
+> @@ -339,7 +339,7 @@ For arm:
+>  For arm64:
+>  	- Use vmlinux or Image
 >
-> Thanks
-> -Bharat
+> -If you are using a uncompressed vmlinux image then use following command
+> +If you are using an uncompressed vmlinux image then use following command
+>  to load dump-capture kernel.
 >
->>>
->>> More precisely, whether these parameters are optional or not will
->>> depend on architectures, not formats, I believe.
->>
->> May be not architecture, rather a distro environment.
->>
->> For example, we should be able to work without --initrd for any arch if kernel
->> has been compiled by configuring CONFG_INITRAMFS_SOURCE.
->>
->> ~Pratyush
+>     kexec -p <dump-capture-kernel-vmlinux-image> \
+> @@ -361,6 +361,12 @@ to load dump-capture kernel.
+>     --dtb=<dtb-for-dump-capture-kernel> \
+>     --append="root=<root-dev> <arch-specific-options>"
+>
+> +If you are using an uncompressed Image, then use following command
+> +to load dump-capture kernel.
+> +
+> +   kexec -p <dump-capture-kernel-Image> \
+> +   --initrd=<initrd-for-dump-capture-kernel> \
+> +   --append="root=<root-dev> <arch-specific-options>"
+>
+>  Please note, that --args-linux does not need to be specified for ia64.
+>  It is planned to make this a no-op on that architecture, but for now
 >
 
 _______________________________________________
