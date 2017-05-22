@@ -1,22 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1dCL7H-0007Sb-AH
- for kexec@lists.infradead.org; Sun, 21 May 2017 07:17:29 +0000
-Date: Sun, 21 May 2017 09:16:50 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 17/32] x86/mm: Add support to access boot related data
- in the clear
-Message-ID: <20170521071650.pwwmw4agggaazfrh@pd.tnic>
-References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418211921.10190.1537.stgit@tlendack-t1.amdoffice.net>
- <20170515183517.mb4k2gp2qobbuvtm@pd.tnic>
- <4845df29-bae7-9b78-0428-ff96dbef2128@amd.com>
- <20170518090212.kebstmnjv4h3cjf2@pd.tnic>
- <c0cb8a50-e860-169b-ee0c-7eb4db7c3fda@amd.com>
+Received: from mail-pf0-x235.google.com ([2607:f8b0:400e:c00::235])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dCazF-0001Cs-RQ
+ for kexec@lists.infradead.org; Mon, 22 May 2017 00:14:16 +0000
+Received: by mail-pf0-x235.google.com with SMTP id m17so64979616pfg.3
+ for <kexec@lists.infradead.org>; Sun, 21 May 2017 17:13:52 -0700 (PDT)
+Date: Mon, 22 May 2017 09:18:07 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v7 01/10] kexec: exntend the semantics of
+ kexec_iomem_for_each_line
+Message-ID: <20170522001806.GA6544@linaro.org>
+References: <20170517055150.12601-1-takahiro.akashi@linaro.org>
+ <20170517055150.12601-2-takahiro.akashi@linaro.org>
+ <1495064224.19471.13.camel@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <c0cb8a50-e860-169b-ee0c-7eb4db7c3fda@amd.com>
+In-Reply-To: <1495064224.19471.13.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,119 +28,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: geoff@infradead.org, panand@redhat.com, horms@verge.net.au, kexec@lists.infradead.org
 
-On Fri, May 19, 2017 at 03:50:32PM -0500, Tom Lendacky wrote:
-> The "worker" function would be doing the loop through the setup data,
-> but since the setup data is mapped inside the loop I can't do the __init
-> calling the non-init function and still hope to consolidate the code.
-> Maybe I'm missing something here...
+On Wed, May 17, 2017 at 04:37:04PM -0700, David Woodhouse wrote:
+> On Wed, 2017-05-17 at 14:51 +0900, AKASHI Takahiro wrote:
+> > The current kexec_iomem_for_each_line() counts up all the lines for which
+> > a callback function returns zero(0) or positive, and otherwise it stops
+> > further scanning.
+> > This behavior is incovenient in some cases. For instance, on arm64, we want
+> > to count up "System RAM" entries, but need to skip "reserved" entries.
+> 
+> s/exntend/extend/ and s/incovenient/inconvenient/ but other than that,
+> all ten patches
+> Tested-by: David Woodhouse <dwmw@amazon.co.uk>
 
-Hmm, I see what you mean. But the below change ontop doesn't fire any
-warnings here. Maybe your .config has something set which I don't...
+Thanks a lot!
 
----
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 55317ba3b6dc..199c983192ae 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -515,71 +515,50 @@ static bool memremap_is_efi_data(resource_size_t phys_addr,
-  * Examine the physical address to determine if it is boot data by checking
-  * it against the boot params setup_data chain.
-  */
--static bool memremap_is_setup_data(resource_size_t phys_addr,
--				   unsigned long size)
-+static bool
-+__memremap_is_setup_data(resource_size_t phys_addr, unsigned long size, bool early)
- {
- 	struct setup_data *data;
- 	u64 paddr, paddr_next;
-+	u32 len;
- 
- 	paddr = boot_params.hdr.setup_data;
- 	while (paddr) {
--		bool is_setup_data = false;
- 
- 		if (phys_addr == paddr)
- 			return true;
- 
--		data = memremap(paddr, sizeof(*data),
--				MEMREMAP_WB | MEMREMAP_DEC);
-+		if (early)
-+			data = early_memremap_decrypted(paddr, sizeof(*data));
-+		else
-+			data = memremap(paddr, sizeof(*data), MEMREMAP_WB | MEMREMAP_DEC);
- 
- 		paddr_next = data->next;
-+		len = data->len;
- 
--		if ((phys_addr > paddr) && (phys_addr < (paddr + data->len)))
--			is_setup_data = true;
-+		if (early)
-+			early_memunmap(data, sizeof(*data));
-+		else
-+			memunmap(data);
- 
--		memunmap(data);
- 
--		if (is_setup_data)
-+		if ((phys_addr > paddr) && (phys_addr < (paddr + data->len)))
- 			return true;
- 
- 		paddr = paddr_next;
- 	}
--
- 	return false;
- }
- 
--/*
-- * Examine the physical address to determine if it is boot data by checking
-- * it against the boot params setup_data chain (early boot version).
-- */
- static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
- 						unsigned long size)
- {
--	struct setup_data *data;
--	u64 paddr, paddr_next;
--
--	paddr = boot_params.hdr.setup_data;
--	while (paddr) {
--		bool is_setup_data = false;
--
--		if (phys_addr == paddr)
--			return true;
--
--		data = early_memremap_decrypted(paddr, sizeof(*data));
--
--		paddr_next = data->next;
--
--		if ((phys_addr > paddr) && (phys_addr < (paddr + data->len)))
--			is_setup_data = true;
--
--		early_memunmap(data, sizeof(*data));
--
--		if (is_setup_data)
--			return true;
--
--		paddr = paddr_next;
--	}
-+	return __memremap_is_setup_data(phys_addr, size, true);
-+}
- 
--	return false;
-+static bool memremap_is_setup_data(resource_size_t phys_addr, unsigned long size)
-+{
-+	return __memremap_is_setup_data(phys_addr, size, false);
- }
- 
- /*
+> Simon, any chance of a 2.0.15 release once these are merged please?
 
--- 
-Regards/Gruss,
-    Boris.
+For your convenience, you can also find my patch with fixes above:
+http://git.linaro.org/people/takahiro.akashi/kexec-tools.git
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+> Thanks for your continued effort on this, Akashi-san. Congratulations
+> on finally getting the support merged into 4.12!
+> 
+> I've backported the final set of patches to 4.9 too. That's where I'm
+> going to be using it for the moment. In case it's useful to anyone
+> else, it's here:
+> http://git.infradead.org/users/dwmw2/arm64-kdump-4.9.git
+
+Great.
+Just FYI, we, linaro, will also backport kdump to our lsk v4.4 and v4.9.
+
+Thanks,
+-Takahiro AKASHI
 
 _______________________________________________
 kexec mailing list
