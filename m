@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwkm01.jp.fujitsu.com ([202.219.69.168])
+Received: from mgwkm04.jp.fujitsu.com ([202.219.69.171])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dCzwk-0001EU-1L
- for kexec@lists.infradead.org; Tue, 23 May 2017 02:53:19 +0000
+ id 1dCzym-0001k3-PX
+ for kexec@lists.infradead.org; Tue, 23 May 2017 02:55:26 +0000
 Received: from g01jpfmpwyt01.exch.g01.fujitsu.local
  (g01jpfmpwyt01.exch.g01.fujitsu.local [10.128.193.38])
- by kw-mxauth.gw.nic.fujitsu.com (Postfix) with ESMTP id 227F0AC008D
- for <kexec@lists.infradead.org>; Tue, 23 May 2017 11:52:53 +0900 (JST)
+ by kw-mxauth.gw.nic.fujitsu.com (Postfix) with ESMTP id 3D6E4AC0086
+ for <kexec@lists.infradead.org>; Tue, 23 May 2017 11:54:59 +0900 (JST)
 From: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH 1/2] sadump: set info->page_size before cache_init()
-Date: Tue, 23 May 2017 02:52:51 +0000
-Message-ID: <33710E6CAA200E4583255F4FB666C4E20D205BEE@G01JPEXMBYT03>
+Subject: [PATCH 2/2] Revert "[PATCH V2 1/4] x86_64: Calculate page_offset
+ from pt_load"
+Date: Tue, 23 May 2017 02:54:56 +0000
+Message-ID: <33710E6CAA200E4583255F4FB666C4E20D205C05@G01JPEXMBYT03>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -26,80 +27,65 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "'ats-kumagai@wm.jp.nec.com'" <ats-kumagai@wm.jp.nec.com>
-Cc: "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>
+Cc: "'panand@redhat.com'" <panand@redhat.com>, "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>, "'bhe@redhat.com'" <bhe@redhat.com>
 
-Currently, makedumpfile results in Segmentation fault on sadump dump
-files as follows:
-
-    # LANG=C makedumpfile -f --message-level=31 -ld31 -x vmlinux ./sadump_vmcore sadump_vmcore-ld31
-    sadump: read dump device as single partition
-    sadump: single partition configuration
-    page_size    : 4096
-    sadump: timezone information is missing
-    Segmentation fault
-
-By bisect, I found that this issue is caused by the following commit
-that moves invocation of cache_init() in initial() a bit early:
-
-    # git bisect bad
-    8e2834bac4f62da3894da297f083068431be6d80 is the first bad commit
-    commit 8e2834bac4f62da3894da297f083068431be6d80
-    Author: Pratyush Anand <panand@redhat.com>
-    Date:   Thu Mar 2 17:37:11 2017 +0900
-
-        [PATCH v3 2/7] initial(): call cache_init() a bit early
-
-        Call cache_init() before get_kcore_dump_loads(), because latter uses
-        cache_search().
-
-        Call path is like this :
-        get_kcore_dump_loads() -> process_dump_load() -> vaddr_to_paddr() ->
-        vtop4_x86_64() -> readmem() -> cache_search()
-
-        Signed-off-by: Pratyush Anand <panand@redhat.com>
-
-    :100644 100644 6942047199deb09dd1fff2121e264584dbb05587 3b8e9810468de26b0d8b73d456f0bd4f3d3aa2fe M      makedumpfile.c
-
-In this timing, on sadump vmcores, info->page_size has not been
-initialized yet so has 0. So, malloc() in cache_init() returns a chunk
-of 0 size. A bit later, info->page_size is initialized with 4096.
-Later processing on cache.c behaves assuming the chunk size is 8 *
-4096. This destroys objects allocated after the chunk, resulting in
-the above Segmentation fault.
-
-To fix this issue, this commit moves setting info->page_size before
-cache_init().
+This reverts commit 0c9dd01d8ee2e4ec1821a11f5e174fdba56012b8 because
+the logic works well only on the kdump ELF format. It doesn't work
+well on sadump vmcores and qemu/KVM guest vmcores created by virsh
+dump --memory-only command where info->page_offset results in 0. These
+formats have to depend on kernel version dependency in the current
+situation.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: Baoquan He <bhe@redhat.com>
 Cc: Pratyush Anand <panand@redhat.com>
 ---
- makedumpfile.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86_64.c | 25 ++++---------------------
+ 1 file changed, 4 insertions(+), 21 deletions(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 301772a..f300b19 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -3878,6 +3878,9 @@ initial(void)
- 	if (!get_value_for_old_linux())
- 		return FALSE;
+diff --git a/arch/x86_64.c b/arch/x86_64.c
+index e978a36..13f0c3f 100644
+--- a/arch/x86_64.c
++++ b/arch/x86_64.c
+@@ -33,25 +33,6 @@ get_xen_p2m_mfn(void)
+ 	return NOT_FOUND_LONG_VALUE;
+ }
  
-+	if (info->flag_sadump && !set_page_size(sadump_page_size()))
-+			return FALSE;
-+
- 	if (!is_xen_memory() && !cache_init())
- 		return FALSE;
- 
-@@ -3906,9 +3909,6 @@ initial(void)
- 			return FALSE;
- 		}
- 
--		if (!set_page_size(sadump_page_size()))
--			return FALSE;
+-static int
+-get_page_offset_x86_64(void)
+-{
+-	int i;
+-	unsigned long long phys_start;
+-	unsigned long long virt_start;
 -
- 		if (!sadump_initialize_bitmap_memory())
- 			return FALSE;
+-	for (i = 0; get_pt_load(i, &phys_start, NULL, &virt_start, NULL); i++) {
+-		if (virt_start < __START_KERNEL_map
+-				&& phys_start != NOT_PADDR) {
+-			info->page_offset = virt_start - phys_start;
+-			return TRUE;
+-		}
+-	}
+-
+-	ERRMSG("Can't get any pt_load to calculate page offset.\n");
+-	return FALSE;
+-}
+-
+ int
+ get_phys_base_x86_64(void)
+ {
+@@ -179,8 +160,10 @@ get_versiondep_info_x86_64(void)
+ 	else
+ 		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_31;
  
+-	if (!get_page_offset_x86_64())
+-		return FALSE;
++	if (info->kernel_version < KERNEL_VERSION(2, 6, 27))
++		info->page_offset = __PAGE_OFFSET_ORIG;
++	else
++		info->page_offset = __PAGE_OFFSET_2_6_27;
+ 
+ 	if (info->kernel_version < KERNEL_VERSION(2, 6, 31)) {
+ 		info->vmemmap_start = VMEMMAP_START_ORIG;
 -- 
 1.8.3.1
 
