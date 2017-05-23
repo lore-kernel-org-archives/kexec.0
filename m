@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwym04.jp.fujitsu.com ([211.128.242.43])
+Received: from mgwkm01.jp.fujitsu.com ([202.219.69.168])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dCztB-0007K5-U8
- for kexec@lists.infradead.org; Tue, 23 May 2017 02:49:39 +0000
-Received: from g01jpfmpwyt03.exch.g01.fujitsu.local
- (g01jpfmpwyt03.exch.g01.fujitsu.local [10.128.193.57])
- by yt-mxoi1.gw.nic.fujitsu.com (Postfix) with ESMTP id E438DAC0143
- for <kexec@lists.infradead.org>; Tue, 23 May 2017 11:49:03 +0900 (JST)
+ id 1dCzwk-0001EU-1L
+ for kexec@lists.infradead.org; Tue, 23 May 2017 02:53:19 +0000
+Received: from g01jpfmpwyt01.exch.g01.fujitsu.local
+ (g01jpfmpwyt01.exch.g01.fujitsu.local [10.128.193.38])
+ by kw-mxauth.gw.nic.fujitsu.com (Postfix) with ESMTP id 227F0AC008D
+ for <kexec@lists.infradead.org>; Tue, 23 May 2017 11:52:53 +0900 (JST)
 From: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH 0/2] makedumpfile: Fix regression issues on sadump vmcores
-Date: Tue, 23 May 2017 02:49:01 +0000
-Message-ID: <33710E6CAA200E4583255F4FB666C4E20D205BC5@G01JPEXMBYT03>
+Subject: [PATCH 1/2] sadump: set info->page_size before cache_init()
+Date: Tue, 23 May 2017 02:52:51 +0000
+Message-ID: <33710E6CAA200E4583255F4FB666C4E20D205BEE@G01JPEXMBYT03>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -28,24 +28,80 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "'ats-kumagai@wm.jp.nec.com'" <ats-kumagai@wm.jp.nec.com>
 Cc: "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>
 
-Kumagai-san,
+Currently, makedumpfile results in Segmentation fault on sadump dump
+files as follows:
 
-I found regression issues on sadump vmcores.
-These two patches fix them.
-Could you review the patches?
+    # LANG=C makedumpfile -f --message-level=31 -ld31 -x vmlinux ./sadump_vmcore sadump_vmcore-ld31
+    sadump: read dump device as single partition
+    sadump: single partition configuration
+    page_size    : 4096
+    sadump: timezone information is missing
+    Segmentation fault
 
-HATAYAMA Daisuke (2):
-      sadump: set info->page_size before cache_init()
-      Revert "[PATCH V2 1/4] x86_64: Calculate page_offset from pt_load"
+By bisect, I found that this issue is caused by the following commit
+that moves invocation of cache_init() in initial() a bit early:
 
-arch/x86_64.c  | 25 ++++---------------------
- makedumpfile.c |  6 +++---
- 2 files changed, 7 insertions(+), 24 deletions(-)
+    # git bisect bad
+    8e2834bac4f62da3894da297f083068431be6d80 is the first bad commit
+    commit 8e2834bac4f62da3894da297f083068431be6d80
+    Author: Pratyush Anand <panand@redhat.com>
+    Date:   Thu Mar 2 17:37:11 2017 +0900
 
---
-Thanks.
-HATAYAMA, Daisuke
+        [PATCH v3 2/7] initial(): call cache_init() a bit early
 
+        Call cache_init() before get_kcore_dump_loads(), because latter uses
+        cache_search().
+
+        Call path is like this :
+        get_kcore_dump_loads() -> process_dump_load() -> vaddr_to_paddr() ->
+        vtop4_x86_64() -> readmem() -> cache_search()
+
+        Signed-off-by: Pratyush Anand <panand@redhat.com>
+
+    :100644 100644 6942047199deb09dd1fff2121e264584dbb05587 3b8e9810468de26b0d8b73d456f0bd4f3d3aa2fe M      makedumpfile.c
+
+In this timing, on sadump vmcores, info->page_size has not been
+initialized yet so has 0. So, malloc() in cache_init() returns a chunk
+of 0 size. A bit later, info->page_size is initialized with 4096.
+Later processing on cache.c behaves assuming the chunk size is 8 *
+4096. This destroys objects allocated after the chunk, resulting in
+the above Segmentation fault.
+
+To fix this issue, this commit moves setting info->page_size before
+cache_init().
+
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: Pratyush Anand <panand@redhat.com>
+---
+ makedumpfile.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 301772a..f300b19 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3878,6 +3878,9 @@ initial(void)
+ 	if (!get_value_for_old_linux())
+ 		return FALSE;
+ 
++	if (info->flag_sadump && !set_page_size(sadump_page_size()))
++			return FALSE;
++
+ 	if (!is_xen_memory() && !cache_init())
+ 		return FALSE;
+ 
+@@ -3906,9 +3909,6 @@ initial(void)
+ 			return FALSE;
+ 		}
+ 
+-		if (!set_page_size(sadump_page_size()))
+-			return FALSE;
+-
+ 		if (!sadump_initialize_bitmap_memory())
+ 			return FALSE;
+ 
+-- 
+1.8.3.1
 
 
 _______________________________________________
