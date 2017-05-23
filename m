@@ -1,21 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f182.google.com ([209.85.192.182])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dD5IZ-000168-Hj
- for kexec@lists.infradead.org; Tue, 23 May 2017 08:36:17 +0000
-Received: by mail-pf0-f182.google.com with SMTP id n23so107753305pfb.2
- for <kexec@lists.infradead.org>; Tue, 23 May 2017 01:35:50 -0700 (PDT)
-Subject: Re: [PATCH 2/2] Revert "[PATCH V2 1/4] x86_64: Calculate page_offset
- from pt_load"
-References: <33710E6CAA200E4583255F4FB666C4E20D205C05@G01JPEXMBYT03>
- <681cf021-74c0-25d2-a173-23ba50c38cab@redhat.com>
- <449aaa2b-0058-8b4d-227b-df97256b5674@redhat.com>
- <33710E6CAA200E4583255F4FB666C4E20D2060C9@G01JPEXMBYT03>
-From: Pratyush Anand <panand@redhat.com>
-Message-ID: <c3807eca-ff7e-73b9-1382-7a92dbed04bb@redhat.com>
-Date: Tue, 23 May 2017 14:05:42 +0530
+ id 1dD6Dv-0008PW-FD
+ for kexec@lists.infradead.org; Tue, 23 May 2017 09:35:30 +0000
+Date: Tue, 23 May 2017 11:34:52 +0200
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: [ptesarik@suse.cz: [makedumpfile PATCH] Fix the use of Xen physical
+ and machine addresses]
+Message-ID: <20170523093452.GQ30364@olila.local.net-space.pl>
 MIME-Version: 1.0
-In-Reply-To: <33710E6CAA200E4583255F4FB666C4E20D2060C9@G01JPEXMBYT03>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,126 +18,371 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Cc: "'ats-kumagai@wm.jp.nec.com'" <ats-kumagai@wm.jp.nec.com>, "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>, "'bhe@redhat.com'" <bhe@redhat.com>
+To: eric.devolder@oracle.com
+Cc: ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, ptesarik@suse.c, konrad.wilk@oracle.com
+
+Hi Eric,
+
+May I ask you to do the tests of this patch with our (Xen) dumpfiles?
+After that please drop the summary of the results here. If you have
+any questions drop me a line.
+
+Daniel
+
+----- Forwarded message from Petr Tesarik <ptesarik@suse.cz> -----
+
+Date: Tue, 23 May 2017 07:46:40 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: kexec@lists.infradead.org, Daniel Kiper <daniel.kiper@oracle.com>
+Subject: [makedumpfile PATCH] Fix the use of Xen physical and machine addresses
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
+
+There is currently some support for physical-to-machine translation in
+makedumpfile, but it is inconsistent.
+
+Most importantly, vaddr_to_paddr() may return either a physical address
+or a machine address:
+
+1. If the return value is calculated directly (by subtracting direct
+   mapping offset, or by consulting ELF headers), then it is a guest
+   physical address (as seen by the Linux kernel).
+
+2. If the return value is taken from page tables, then it is a machine
+   address (as seen by the CPU).
+
+Interestingly, makedumpfile never uses guest physical addresses, except
+in __exclude_unnecessary_pages(), which already performs the required
+ptom conversion explicitly.
+
+So, the best solution is to treat PADDR as "the address seen by the CPU"
+(be it on bare metal or under Xen) and get rid of MADDR_XEN. For addresses
+that are translated directly, vaddr_to_paddr() return value must be
+converted using ptom_xen(), but this call is in fact merely moved from
+readmem().
+
+This patch has been tested on a few bare metal and Xen dumps (x86_64 and
+x86).
+
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ arch/ia64.c    |  8 +++++---
+ arch/x86.c     | 19 +++++++++++++------
+ arch/x86_64.c  | 19 ++++++++++++-------
+ makedumpfile.c | 45 ++++++++-------------------------------------
+ makedumpfile.h |  2 +-
+ 5 files changed, 39 insertions(+), 54 deletions(-)
+
+diff --git a/arch/ia64.c b/arch/ia64.c
+index e629f94..6c33cc7 100644
+--- a/arch/ia64.c
++++ b/arch/ia64.c
+@@ -243,6 +243,8 @@ vtop_ia64(unsigned long vaddr)
+ 	if (!is_vmalloc_addr_ia64(vaddr)) {
+ 		paddr = vaddr - info->kernel_start +
+ 			(info->phys_base & KERNEL_TR_PAGE_MASK);
++		if (is_xen_memory())
++			paddr = ptom_xen(paddr);
+ 		return paddr;
+ 	}
+ 
+@@ -301,7 +303,7 @@ kvtop_xen_ia64(unsigned long kvaddr)
+ 
+ 	dirp = SYMBOL(frametable_pg_dir) - DIRECTMAP_VIRT_START;
+ 	dirp += ((addr >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1)) * sizeof(unsigned long long);
+-	if (!readmem(MADDR_XEN, dirp, &entry, sizeof(entry)))
++	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
+ 		return NOT_PADDR;
+ 
+ 	dirp = entry & _PFN_MASK;
+@@ -309,7 +311,7 @@ kvtop_xen_ia64(unsigned long kvaddr)
+ 		return NOT_PADDR;
+ 
+ 	dirp += ((addr >> PMD_SHIFT) & (PTRS_PER_PMD - 1)) * sizeof(unsigned long long);
+-	if (!readmem(MADDR_XEN, dirp, &entry, sizeof(entry)))
++	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
+ 		return NOT_PADDR;
+ 
+ 	dirp = entry & _PFN_MASK;
+@@ -317,7 +319,7 @@ kvtop_xen_ia64(unsigned long kvaddr)
+ 		return NOT_PADDR;
+ 
+ 	dirp += ((addr >> PAGESHIFT()) & (PTRS_PER_PTE - 1)) * sizeof(unsigned long long);
+-	if (!readmem(MADDR_XEN, dirp, &entry, sizeof(entry)))
++	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
+ 		return NOT_PADDR;
+ 
+ 	if (!(entry & _PAGE_P))
+diff --git a/arch/x86.c b/arch/x86.c
+index 1b4d2b6..3fdae93 100644
+--- a/arch/x86.c
++++ b/arch/x86.c
+@@ -233,8 +233,11 @@ vaddr_to_paddr_x86(unsigned long vaddr)
+ {
+ 	unsigned long long paddr;
+ 
+-	if ((paddr = vtop_x86_remap(vaddr)) != NOT_PADDR)
++	if ((paddr = vtop_x86_remap(vaddr)) != NOT_PADDR) {
++		if (is_xen_memory())
++			paddr = ptom_xen(paddr);
+ 		return paddr;
++	}
+ 
+ 	if ((paddr = vaddr_to_paddr_general(vaddr)) != NOT_PADDR)
+ 		return paddr;
+@@ -247,8 +250,12 @@ vaddr_to_paddr_x86(unsigned long vaddr)
+ 		ERRMSG("Can't get necessary information for vmalloc translation.\n");
+ 		return NOT_PADDR;
+ 	}
+-	if (!is_vmalloc_addr_x86(vaddr))
+-		return (vaddr - info->kernel_start);
++	if (!is_vmalloc_addr_x86(vaddr)) {
++		paddr = vaddr - info->kernel_start;
++		if (is_xen_memory())
++			paddr = ptom_xen(paddr);
++		return paddr;
++	}
+ 
+ 	if (vt.mem_flags & MEMORY_X86_PAE) {
+ 		paddr = vtop_x86_PAE(vaddr);
+@@ -280,7 +287,7 @@ kvtop_xen_x86(unsigned long kvaddr)
+ 	if ((dirp = kvtop_xen_x86(SYMBOL(pgd_l3))) == NOT_PADDR)
+ 		return NOT_PADDR;
+ 	dirp += pgd_index_PAE(kvaddr) * sizeof(unsigned long long);
+-	if (!readmem(MADDR_XEN, dirp, &entry, sizeof(entry)))
++	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
+ 		return NOT_PADDR;
+ 
+ 	if (!(entry & _PAGE_PRESENT))
+@@ -288,7 +295,7 @@ kvtop_xen_x86(unsigned long kvaddr)
+ 
+ 	dirp = entry & ENTRY_MASK;
+ 	dirp += pmd_index(kvaddr) * sizeof(unsigned long long);
+-	if (!readmem(MADDR_XEN, dirp, &entry, sizeof(entry)))
++	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
+ 		return NOT_PADDR;
+ 
+ 	if (!(entry & _PAGE_PRESENT))
+@@ -301,7 +308,7 @@ kvtop_xen_x86(unsigned long kvaddr)
+ 
+ 	dirp = entry & ENTRY_MASK;
+ 	dirp += pte_index(kvaddr) * sizeof(unsigned long long);
+-	if (!readmem(MADDR_XEN, dirp, &entry, sizeof(entry)))
++	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
+ 		return NOT_PADDR;
+ 
+ 	if (!(entry & _PAGE_PRESENT)) {
+diff --git a/arch/x86_64.c b/arch/x86_64.c
+index e978a36..daa2e86 100644
+--- a/arch/x86_64.c
++++ b/arch/x86_64.c
+@@ -112,7 +112,7 @@ get_machdep_info_x86_64(void)
+ 		ERRMSG("Can't get p2m_mfn address.\n");
+ 		return FALSE;
+ 	}
+-	if (!readmem(MADDR_XEN, pfn_to_paddr(p2m_mfn),
++	if (!readmem(PADDR, pfn_to_paddr(p2m_mfn),
+ 		     &frame_mfn, PAGESIZE())) {
+ 		ERRMSG("Can't read p2m_mfn.\n");
+ 		return FALSE;
+@@ -126,7 +126,7 @@ get_machdep_info_x86_64(void)
+ 		if (!frame_mfn[i])
+ 			break;
+ 
+-		if (!readmem(MADDR_XEN, pfn_to_paddr(frame_mfn[i]), &buf,
++		if (!readmem(PADDR, pfn_to_paddr(frame_mfn[i]), &buf,
+ 		    PAGESIZE())) {
+ 			ERRMSG("Can't get frame_mfn[%d].\n", i);
+ 			return FALSE;
+@@ -154,7 +154,7 @@ get_machdep_info_x86_64(void)
+ 		if (!frame_mfn[i])
+ 			break;
+ 
+-		if (!readmem(MADDR_XEN, pfn_to_paddr(frame_mfn[i]),
++		if (!readmem(PADDR, pfn_to_paddr(frame_mfn[i]),
+ 		    &info->p2m_mfn_frame_list[i * MFNS_PER_FRAME],
+ 		    mfns[i] * sizeof(unsigned long))) {
+ 			ERRMSG("Can't get p2m_mfn_frame_list.\n");
+@@ -211,6 +211,11 @@ vtop4_x86_64(unsigned long vaddr)
+ 	 * Get PGD.
+ 	 */
+ 	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + info->phys_base;
++	if (is_xen_memory()) {
++		page_dir = ptom_xen(page_dir);
++		if (page_dir == NOT_PADDR)
++			return NOT_PADDR;
++	}
+ 	page_dir += pml4_index(vaddr) * sizeof(unsigned long);
+ 	if (!readmem(PADDR, page_dir, &pml4, sizeof pml4)) {
+ 		ERRMSG("Can't get pml4 (page_dir:%lx).\n", page_dir);
+@@ -303,7 +308,7 @@ kvtop_xen_x86_64(unsigned long kvaddr)
+ 	if ((dirp = kvtop_xen_x86_64(SYMBOL(pgd_l4))) == NOT_PADDR)
+ 		return NOT_PADDR;
+ 	dirp += pml4_index(kvaddr) * sizeof(unsigned long long);
+-	if (!readmem(MADDR_XEN, dirp, &entry, sizeof(entry)))
++	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
+ 		return NOT_PADDR;
+ 
+ 	if (!(entry & _PAGE_PRESENT))
+@@ -311,7 +316,7 @@ kvtop_xen_x86_64(unsigned long kvaddr)
+ 
+ 	dirp = entry & ENTRY_MASK;
+ 	dirp += pgd_index(kvaddr) * sizeof(unsigned long long);
+-	if (!readmem(MADDR_XEN, dirp, &entry, sizeof(entry)))
++	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
+ 		return NOT_PADDR;
+ 
+ 	if (!(entry & _PAGE_PRESENT))
+@@ -323,7 +328,7 @@ kvtop_xen_x86_64(unsigned long kvaddr)
+ 
+ 	dirp = entry & ENTRY_MASK;
+ 	dirp += pmd_index(kvaddr) * sizeof(unsigned long long);
+-	if (!readmem(MADDR_XEN, dirp, &entry, sizeof(entry)))
++	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
+ 		return NOT_PADDR;
+ 
+ 	if (!(entry & _PAGE_PRESENT))
+@@ -335,7 +340,7 @@ kvtop_xen_x86_64(unsigned long kvaddr)
+ 
+ 	dirp = entry & ENTRY_MASK;
+ 	dirp += pte_index(kvaddr) * sizeof(unsigned long long);
+-	if (!readmem(MADDR_XEN, dirp, &entry, sizeof(entry)))
++	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
+ 		return NOT_PADDR;
+ 
+ 	if (!(entry & _PAGE_PRESENT)) {
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 301772a..954a772 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -149,7 +149,7 @@ ptom_xen(unsigned long long paddr)
+ 	}
+ 	maddr = pfn_to_paddr(info->p2m_mfn_frame_list[mfn_idx])
+ 		+ sizeof(unsigned long) * frame_idx;
+-	if (!readmem(MADDR_XEN, maddr, &mfn, sizeof(mfn))) {
++	if (!readmem(PADDR, maddr, &mfn, sizeof(mfn))) {
+ 		ERRMSG("Can't get mfn.\n");
+ 		return NOT_PADDR;
+ 	}
+@@ -211,7 +211,7 @@ get_dom0_mapnr()
+ 		unsigned i;
+ 
+ 		maddr = pfn_to_paddr(info->p2m_mfn_frame_list[mfn_idx]);
+-		if (!readmem(MADDR_XEN, maddr, &mfns, sizeof(mfns))) {
++		if (!readmem(PADDR, maddr, &mfns, sizeof(mfns))) {
+ 			ERRMSG("Can't read %ld domain-0 mfns at 0x%llu\n",
+ 				(long)MFNS_PER_FRAME, maddr);
+ 			return FALSE;
+@@ -924,7 +924,7 @@ int
+ readmem(int type_addr, unsigned long long addr, void *bufptr, size_t size)
+ {
+ 	size_t read_size, size_orig = size;
+-	unsigned long long paddr, maddr = NOT_PADDR;
++	unsigned long long paddr;
+ 	unsigned long long pgaddr;
+ 	void *pgbuf;
+ 	struct cache_entry *cached;
+@@ -937,25 +937,9 @@ next_page:
+ 			    addr);
+ 			goto error;
+ 		}
+-		if (is_xen_memory()) {
+-			if ((maddr = ptom_xen(paddr)) == NOT_PADDR) {
+-				ERRMSG("Can't convert a physical address(%llx) to machine address.\n",
+-				    paddr);
+-				return FALSE;
+-			}
+-			paddr = maddr;
+-		}
+ 		break;
+ 	case PADDR:
+ 		paddr = addr;
+-		if (is_xen_memory()) {
+-			if ((maddr  = ptom_xen(paddr)) == NOT_PADDR) {
+-				ERRMSG("Can't convert a physical address(%llx) to machine address.\n",
+-				    paddr);
+-				return FALSE;
+-			}
+-			paddr = maddr;
+-		}
+ 		break;
+ 	case VADDR_XEN:
+ 		if ((paddr = kvtop_xen(addr)) == NOT_PADDR) {
+@@ -964,9 +948,6 @@ next_page:
+ 			goto error;
+ 		}
+ 		break;
+-	case MADDR_XEN:
+-		paddr = addr;
+-		break;
+ 	default:
+ 		ERRMSG("Invalid address type (%d).\n", type_addr);
+ 		goto error;
+@@ -5493,18 +5474,10 @@ exclude_zero_pages_cyclic(struct cycle *cycle)
+ 		if (!is_dumpable(info->bitmap2, pfn, cycle))
+ 			continue;
+ 
+-		if (is_xen_memory()) {
+-			if (!readmem(MADDR_XEN, paddr, buf, info->page_size)) {
+-				ERRMSG("Can't get the page data(pfn:%llx, max_mapnr:%llx).\n",
+-				    pfn, info->max_mapnr);
+-				return FALSE;
+-			}
+-		} else {
+-			if (!readmem(PADDR, paddr, buf, info->page_size)) {
+-				ERRMSG("Can't get the page data(pfn:%llx, max_mapnr:%llx).\n",
+-				    pfn, info->max_mapnr);
+-				return FALSE;
+-			}
++		if (!readmem(PADDR, paddr, buf, info->page_size)) {
++			ERRMSG("Can't get the page data(pfn:%llx, max_mapnr:%llx).\n",
++			    pfn, info->max_mapnr);
++			return FALSE;
+ 		}
+ 		if (is_zero_page(buf, info->page_size)) {
+ 			if (clear_bit_on_2nd_bitmap(pfn, cycle))
+@@ -7145,11 +7118,9 @@ int
+ read_pfn(mdf_pfn_t pfn, unsigned char *buf)
+ {
+ 	unsigned long long paddr;
+-	int type_addr;
+ 
+ 	paddr = pfn_to_paddr(pfn);
+-	type_addr = is_xen_memory() ? MADDR_XEN : PADDR;
+-	if (!readmem(type_addr, paddr, buf, info->page_size)) {
++	if (!readmem(PADDR, paddr, buf, info->page_size)) {
+ 		ERRMSG("Can't get the page data.\n");
+ 		return FALSE;
+ 	}
+diff --git a/makedumpfile.h b/makedumpfile.h
+index e32e567..1158487 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -130,7 +130,6 @@ enum {
+ 	VADDR,
+ 	PADDR,
+ 	VADDR_XEN,
+-	MADDR_XEN
+ };
+ 
+ /*
+@@ -2151,6 +2150,7 @@ mdf_pfn_t get_num_dumpable_cyclic(void);
+ mdf_pfn_t get_num_dumpable_cyclic_withsplit(void);
+ int get_loads_dumpfile_cyclic(void);
+ int initial_xen(void);
++unsigned long long ptom_xen(unsigned long long paddr);
+ unsigned long long get_free_memory_size(void);
+ int calculate_cyclic_buffer_size(void);
+ int prepare_splitblock_table(void);
+-- 
+2.12.0
 
 
-
-On Tuesday 23 May 2017 12:55 PM, Hatayama, Daisuke wrote:
-> Pratysh,
->
->> -----Original Message-----
->> From: Pratyush Anand [mailto:panand@redhat.com]
->> Sent: Tuesday, May 23, 2017 1:12 PM
->> To: Hatayama, Daisuke <d.hatayama@jp.fujitsu.com>;
->> 'ats-kumagai@wm.jp.nec.com' <ats-kumagai@wm.jp.nec.com>
->> Cc: 'kexec@lists.infradead.org' <kexec@lists.infradead.org>;
->> 'bhe@redhat.com' <bhe@redhat.com>
->> Subject: Re: [PATCH 2/2] Revert "[PATCH V2 1/4] x86_64: Calculate page_offset
->> from pt_load"
->>
->>
->>
->> On Tuesday 23 May 2017 08:53 AM, Pratyush Anand wrote:
->>> Hi Hatayama,
->>>
->>> On Tuesday 23 May 2017 08:24 AM, Hatayama, Daisuke wrote:
->>>> This reverts commit 0c9dd01d8ee2e4ec1821a11f5e174fdba56012b8 because
->>>> the logic works well only on the kdump ELF format. It doesn't work
->>>> well on sadump vmcores and qemu/KVM guest vmcores created by virsh
->>>> dump --memory-only command where info->page_offset results in 0. These
->>>> formats have to depend on kernel version dependency in the current
->>>> situation.
->>>
->>> I do not think that we should just revert it. Revert will break things on
->>> KASLR enabled kernel.
->>>
->>> I have already posted a patch to calculate page_offset when pt_load is not
->>> available.
->>>
->>> http://lists.infradead.org/pipermail/kexec/2017-May/018747.html
->>>
->>> Probably,I can improve that patch in next version so that it takes care of
->>> sadump case as well.
->>>
->>
->> Can you please try following patches from
->> https://github.com/pratyushanand/makedumpfile.git : devel
->>
->> https://github.com/pratyushanand/makedumpfile/commit/ba93c349ac5d097a51c22
->> 1e39816da5fef2e5f58
->
-> strtoul() is better than strtol() because info->kaslr_offset is of unsigned long,
-> though there's no runtime error in this case.
-
-ok.
-
->
->> https://github.com/pratyushanand/makedumpfile/commit/241ecc6d96afbf7be6e02
->> f51e882ce5e1e2eb9d0
->
-> This patch works fine on sadump vmcores, but doesn't look good on virsh dump --memory-only.
-> The vmcore created by virsh dump --memory-only command is written in ELF format.
-> Virtual addresses assigned into it differs from the kdump one, not reflecting
-> kernel runtime virtual addresses.
->
-> Here is a sample readelf output:
->
-> # LANG=C readelf -l /root/vmcore-by-virsh-dump
->
-> Elf file type is CORE (Core file)
-> Entry point 0x0
-> There are 7 program headers, starting at offset 64
->
-> Program Headers:
->   Type           Offset             VirtAddr           PhysAddr
->                  FileSiz            MemSiz              Flags  Align
->   NOTE           0x00000000000001c8 0x0000000000000000 0x0000000000000000
->                  0x0000000000000650 0x0000000000000650         0
->   LOAD           0x0000000000000818 0x0000000000000000 0x0000000000000000
->                  0x00000000000a0000 0x00000000000a0000         0
->   LOAD           0x00000000000a0818 0x0000000000000000 0x00000000000a0000
->                  0x0000000000010000 0x0000000000010000         0
->   LOAD           0x00000000000b0818 0x0000000000000000 0x00000000000c0000
->                  0x0000000000020000 0x0000000000020000         0
->   LOAD           0x00000000000d0818 0x0000000000000000 0x00000000000e0000
->                  0x0000000000020000 0x0000000000020000         0
->   LOAD           0x00000000000f0818 0x0000000000000000 0x0000000000100000
->                  0x000000003ff00000 0x000000003ff00000         0
->   LOAD           0x000000003fff0818 0x0000000000000000 0x00000000f0000000
->                  0x0000000001000000 0x0000000001000000         0
->
-> How about using QEMU or VMCOREINFO to distinguish QEMU ELF vmcore from
-> kdump ELF vmcore?
-
-Thanks for investigating it.
-
-I am not sure why all the virtual address in above PT_LOAD is 0 (which is  
-invalid). However, this information can be used similar to how we use  
-NOT_PADDR (if virt addresses are always invalid in case of virsh dump).
-
-So what about following updated patch:
-https://github.com/pratyushanand/makedumpfile/commit/52387707bb8a8c0c0645215fcbf4eef60c7e4aaf
-
-
-~Pratyush
-
->
-> I think you know what VMCOREINFO is, and here is QEMU note information example:
->
-> # LANG=C readelf -n /root/vmcore
->
-> Displaying notes found at file offset 0x000001c8 with length 0x00000650:
->   Owner                 Data size       Description
->   CORE                 0x00000150       NT_PRSTATUS (prstatus structure)
->   CORE                 0x00000150       NT_PRSTATUS (prstatus structure)
->   QEMU                 0x000001b0       Unknown note type: (0x00000000)
->   QEMU                 0x000001b0       Unknown note type: (0x00000000)
->
+----- End forwarded message -----
 
 _______________________________________________
 kexec mailing list
