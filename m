@@ -1,23 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f173.google.com ([209.85.192.173])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dDP5n-0005Q7-76
- for kexec@lists.infradead.org; Wed, 24 May 2017 05:44:22 +0000
-Received: by mail-pf0-f173.google.com with SMTP id n23so133709901pfb.2
- for <kexec@lists.infradead.org>; Tue, 23 May 2017 22:43:58 -0700 (PDT)
-Subject: Re: [PATCH 2/2] Revert "[PATCH V2 1/4] x86_64: Calculate page_offset
- from pt_load"
-References: <33710E6CAA200E4583255F4FB666C4E20D205C05@G01JPEXMBYT03>
- <681cf021-74c0-25d2-a173-23ba50c38cab@redhat.com>
- <449aaa2b-0058-8b4d-227b-df97256b5674@redhat.com>
- <33710E6CAA200E4583255F4FB666C4E20D2060C9@G01JPEXMBYT03>
- <c3807eca-ff7e-73b9-1382-7a92dbed04bb@redhat.com>
- <33710E6CAA200E4583255F4FB666C4E20D21B9BC@G01JPEXMBYT03>
-From: Pratyush Anand <panand@redhat.com>
-Message-ID: <7e95a840-2982-90bd-69fc-fe6f55caa0a0@redhat.com>
-Date: Wed, 24 May 2017 11:13:53 +0530
+ id 1dDPcF-0001h6-BO
+ for kexec@lists.infradead.org; Wed, 24 May 2017 06:17:53 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [Makedumpfile PATCH 0/2] Fix refiltering when kaslr enabled
+Date: Wed, 24 May 2017 06:11:06 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EDA8B5@BPXM01GP.gisp.nec.co.jp>
+References: <cover.1493272570.git.panand@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701EC6885@BPXM01GP.gisp.nec.co.jp>
+ <cf5a82bf-8232-f39f-7ab4-69250492d4a2@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701EC910B@BPXM01GP.gisp.nec.co.jp>
+ <383e5f5d-8be8-f3cc-f937-5713f785a4df@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701ED695B@BPXM01GP.gisp.nec.co.jp>
+ <a69827b0-ff2d-4f1b-a119-88e0b941ac81@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701EDA053@BPXM01GP.gisp.nec.co.jp>
+ <6e1e4b85-5625-fdc2-da11-07c3bcb0e987@redhat.com>
+In-Reply-To: <6e1e4b85-5625-fdc2-da11-07c3bcb0e987@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <33710E6CAA200E4583255F4FB666C4E20D21B9BC@G01JPEXMBYT03>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,73 +27,139 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Cc: "'ats-kumagai@wm.jp.nec.com'" <ats-kumagai@wm.jp.nec.com>, "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>, "'bhe@redhat.com'" <bhe@redhat.com>
+To: Pratyush Anand <panand@redhat.com>
+Cc: "keescook@chromium.org" <keescook@chromium.org>, "bhe@redhat.com" <bhe@redhat.com>, "yinghai@kernel.org" <yinghai@kernel.org>, Xunlei Pang <xlpang@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "dyoung@redhat.com" <dyoung@redhat.com>, "mingo@kernel.org" <mingo@kernel.org>
 
-Hi Hatayama,
+>On Tuesday 23 May 2017 08:39 AM, Atsushi Kumagai wrote:
+>>>>>>>> Thanks for your report, I have received this.
+>>>>>>>> I'm on vacation until Mar 8, I'll review it when I return from vacation.
+>>>>>>>
+>>>>>>> Any further comment on it?
+>>>>>>> Otherwise, I will send a v2 after accommodating concern from Xunlei.
+>>>>>>
+>>>>>> Unfortunately, it doesn't seem like I can make time anymore for review this week,
+>>>>>> but at least this patch doesn't seem to work in my environment (linux 4.8 without kaslr).
+>>>>>> Do you have any ideas ?
+>>>>>
+>>>>> I see, why it would have caused. I have not tested this case, but I hope my v2
+>>>>> should not have this issue.
+>>>>
+>>>> Umm, v2 still doesn't work in my environment...
+>>>> It seems that I have to investigate this deeper.
+>>>
+>>> Hummm, I thought we would see file_vmcoreinfo as NULL in
+>>> get_kaslr_offset_x86_64() in your case. However, it's not true.
+>>>
+>>> I think, it will have to be initialized with NULL in main().
+>>>
+>>> Can you please try following fixup on top of this series:
+>>
+>> I found the cause, please see below:
+>>
+>> initial()
+>>   + find_kaslr_offsets()
+>>     + open_vmcoreinfo()
+>>     + get_kaslr_offset()        // set info->kaslr_offset
+>>     + close_vmcoreinfo()
+>> gather_filter_info()
+>>   (snip)
+>>   + resolve_config_entry()
+>>     + get_kaslr_offset()        // occur SIGSEGV since info->file_vmcoreinfo is closed
+>
+>Since info->file_vmcoreinfo is closed,therefore it should be NULL. But
+>currently, close_vmcoreinfo() does not set it to NULL. We should also set
+>info->file_vmcoreinfo to NULL in close_vmcoreinfo() apart from main().
 
+Sure, uninitialized info->file_vmcoreinfo is a general issue,
+I'll fix it in another patch.
 
-On Wednesday 24 May 2017 07:39 AM, Hatayama, Daisuke wrote:
-> How about this?
-> - return immediately in case of kaslr because there's no need to refer to PT_LOAD entries,
-> - refer to PT_LOAD entries only if they exist, and
-> - finally try to get page offset according to kernel versions.
+>>
+>>
+>> The cause code is in [PATCH v2 1/2],
+>>
+>> diff --git a/erase_info.c b/erase_info.c
+>> index f2ba914..60abfa1 100644
+>> --- a/erase_info.c
+>> +++ b/erase_info.c
+>> @@ -1088,6 +1088,7 @@ resolve_config_entry(struct config_entry *ce, unsigned long long base_vaddr,
+>>                                                         ce->line, ce->name);
+>>                         return FALSE;
+>>                 }
+>> +               ce->sym_addr += get_kaslr_offset(ce->sym_addr);
+>>                 ce->type_name = get_symbol_type_name(ce->name,
+>>                                         DWARF_INFO_GET_SYMBOL_TYPE,
+>>                                         &ce->size, &ce->type_flag);
+>>
+>>
+>> I think we should use info->kaslr_offset instead of get_kaslr_offset(),
+>> how about you ?
+>
+>Actually,  we are not sure at this point that ce->sym_addr is a kernel linear
+>address. It could be a module address and that can have different
+>randomization offset.
 
-It looks fine to me.
-So if you agree then I can send next revision with your "Suggested-by" tag.
+I see, I misunderstood that the randomization offset is same in any case.
+
+>My intention is to calculate all types of kaslr offsets in
+>find_kaslr_offsets() very early and then store them in different "info"
+>elements. Now, whenever we call get_kaslr_offset() we would return right
+>offset as per the input address.
+>I have very little idea about x86. So, I have left a TODO to calculate offset
+>for non-linear addresses.
+>
+>>
+>> BTW, I'm not sure why you didn't meet this issue...
+>
+>Because, I tested with kaslr kernel, so when get_kaslr_offset(ce->sym_addr)
+>was called, I already had a valid info->kaslr_offset.
+>
+>So, what about following fixup
+
+As mentioned at the beginning, the fix below is not your fault,
+so I'll merge your patches as it is into v1.6.2.
+
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 57235690569e..4986d098d69a 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -8685,6 +8685,7 @@ close_vmcoreinfo(void)
+>         if(fclose(info->file_vmcoreinfo) < 0)
+>                 ERRMSG("Can't close the vmcoreinfo file(%s). %s\n",
+>                     info->name_vmcoreinfo, strerror(errno));
+>+       info->file_vmcoreinfo = NULL;
+>  }
+>
+>  void
+>@@ -11076,6 +11077,7 @@ main(int argc, char *argv[])
+>                     strerror(errno));
+>                 goto out;
+>         }
+>+       info->file_vmcoreinfo = NULL;
+>         info->fd_vmlinux = -1;
+>         info->fd_xen_syms = -1;
+>         info->fd_memory = -1;
+
+However, I think [PATCH 2/2] should be dropped since the alternative patch
+has appeared, is it ok with you ?
 
 https://github.com/pratyushanand/makedumpfile/commit/16655ce1f4c2da8d4066072db2a03c84bf2553fe
 
->
->     static int
->     get_page_offset_x86_64(void)
->     {
->             if (info->kaslr_offset) {
->                     unsigned long page_offset_base;
->
->                     page_offset_base = get_symbol_addr("page_offset_base");
->                     page_offset_base += info->kaslr_offset;
->                     if (!readmem(VADDR, page_offset_base, &info->page_offset,
->                                  sizeof(info->page_offset))) {
->                              ERRMSG("Can't read page_offset_base.\n");
->                              return FALSE;
->                     }
->                     return TRUE;
->             }
->
->             if (get_num_pt_loads()) {
->                     int i;
->                     unsigned long long phys_start;
->                     unsigned long long virt_start;
->
->                     for (i = 0;
->                          get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
->                          i++) {
->                             if (virt_start != NOT_KV_ADDR
->                                 && virt_start < __START_KERNEL_map
->                                 && phys_start != NOT_PADDR) {
->                                     info->page_offset = virt_start - phys_start;
->                                     return TRUE;
->                             }
->                     }
->             }
->
->             if (info->kernel_version < KERNEL_VERSION(2, 6, 27)) {
->                     info->page_offset = __PAGE_OFFSET_ORIG;
->             } else {
->                     info->page_offset = __PAGE_OFFSET_2_6_27;
->             }
->
->             return TRUE;
->     }
+Thanks,
+Atsushi Kumagai
 
-Thanks
+>
+>~Pratyush
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
-~Pratyush
+
 
 _______________________________________________
 kexec mailing list
