@@ -1,22 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f182.google.com ([209.85.192.182])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dE5KY-0002Xv-J9
- for kexec@lists.infradead.org; Fri, 26 May 2017 02:50:24 +0000
-Received: by mail-pf0-f182.google.com with SMTP id e193so184210630pfh.0
- for <kexec@lists.infradead.org>; Thu, 25 May 2017 19:50:01 -0700 (PDT)
-Subject: Re: [Makedumpfile PATCH v3 1/2] makedumpfile: add runtime kaslr
- offset if it exists
-References: <cover.1495619809.git.panand@redhat.com>
- <a2b4fcdf5974e6ea8b66abade20fb2ae1ab9ae08.1495619809.git.panand@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701EDACC2@BPXM01GP.gisp.nec.co.jp>
- <a0f93c46-4ca3-cfc7-e2bf-b0059bd8fdea@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701EDB285@BPXM01GP.gisp.nec.co.jp>
-From: Pratyush Anand <panand@redhat.com>
-Message-ID: <99eb6e19-2d58-2118-ddde-3d6b8d282554@redhat.com>
-Date: Fri, 26 May 2017 08:19:56 +0530
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dE5Kv-0002DH-QZ
+ for kexec@lists.infradead.org; Fri, 26 May 2017 02:50:47 +0000
+Date: Fri, 26 May 2017 10:49:33 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v5 31/32] x86: Add sysfs support for Secure Memory
+ Encryption
+Message-ID: <20170526024933.GA3228@dhcp-128-65.nay.redhat.com>
+References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
+ <20170418212212.10190.73484.stgit@tlendack-t1.amdoffice.net>
+ <20170518170153.eqiyat5s6q3yeejl@pd.tnic>
 MIME-Version: 1.0
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701EDB285@BPXM01GP.gisp.nec.co.jp>
+Content-Disposition: inline
+In-Reply-To: <20170518170153.eqiyat5s6q3yeejl@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,42 +22,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "xlpang@redhat.com" <xlpang@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Tom Lendacky <thomas.lendacky@amd.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, xlpang@redhat.com, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
+Ccing Xunlei he is reading the patches see what need to be done for
+kdump. There should still be several places to handle to make kdump work.
 
+On 05/18/17 at 07:01pm, Borislav Petkov wrote:
+> On Tue, Apr 18, 2017 at 04:22:12PM -0500, Tom Lendacky wrote:
+> > Add sysfs support for SME so that user-space utilities (kdump, etc.) can
+> > determine if SME is active.
+> 
+> But why do user-space tools need to know that?
+> 
+> I mean, when we load the kdump kernel, we do it with the first kernel,
+> with the kexec_load() syscall, AFAICT. And that code does a lot of
+> things during that init, like machine_kexec_prepare()->init_pgtable() to
+> prepare the ident mapping of the second kernel, for example.
+> 
+> What I'm aiming at is that the first kernel knows *exactly* whether SME
+> is enabled or not and doesn't need to tell the second one through some
+> sysfs entries - it can do that during loading.
+> 
+> So I don't think we need any userspace things at all...
 
-On Friday 26 May 2017 07:17 AM, Atsushi Kumagai wrote:
->>>> write_vmcoreinfo_data(void)
->>>> {
->>>> 	/*
->>>> +	 * write 1st kernel's KERNELOFFSET
->>>> +	 */
->>>> +	if (info->kaslr_offset)
->>>> +		fprintf(info->file_vmcoreinfo, "%s%lx\n", STR_KERNELOFFSET,
->>>> +		    info->kaslr_offset);
->>> When will this data written to VMCOREINFO file be used ?
->>> info->kaslr_offset is necessary for vmlinux but -x and -i are exclusive.
->> This is what I thought:
->>
->> Lets says we have got a vmcore1 after re-filtering original vmcore. Now, if we
->> would like to re-filter vmcore1 then we will need kaslr_offset again. So,
->> should we not right kaslr_offset in vmcoreinfo of vmcore1 as well?
-> write_vmcoreinfo_data() is called only for -g option, it makes a
-> VMCOREINFO file as a separate file, it doesn't overwrite VMCOREINFO in vmcore.
-
-OK..got it.
-
-Will remove this function and send v4.
-
+If kdump kernel can get the SME status from hardware register then this
+should be not necessary and this patch can be dropped.
 
 Thanks
-
-~Pratyush
+Dave
 
 _______________________________________________
 kexec mailing list
