@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-sn1nam01on0041.outbound.protection.outlook.com
- ([104.47.32.41] helo=NAM01-SN1-obe.outbound.protection.outlook.com)
+Received: from mail-sn1nam01on0081.outbound.protection.outlook.com
+ ([104.47.32.81] helo=NAM01-SN1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dEHTD-0003Ds-2N
- for kexec@lists.infradead.org; Fri, 26 May 2017 15:48:08 +0000
-Subject: Re: [PATCH v5 31/32] x86: Add sysfs support for Secure Memory
- Encryption
+ id 1dEI11-0001Pt-1u
+ for kexec@lists.infradead.org; Fri, 26 May 2017 16:23:04 +0000
+Subject: Re: [PATCH v5 17/32] x86/mm: Add support to access boot related data
+ in the clear
 References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418212212.10190.73484.stgit@tlendack-t1.amdoffice.net>
- <20170518170153.eqiyat5s6q3yeejl@pd.tnic>
- <20170526024933.GA3228@dhcp-128-65.nay.redhat.com>
- <5927B767.3010701@redhat.com>
+ <20170418211921.10190.1537.stgit@tlendack-t1.amdoffice.net>
+ <20170515183517.mb4k2gp2qobbuvtm@pd.tnic>
+ <20170518195051.GA5651@codeblueprint.co.uk>
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <d05fa3d2-54d7-f317-b31f-3123f638dd25@amd.com>
-Date: Fri, 26 May 2017 10:47:39 -0500
+Message-ID: <4c2ef3ba-2940-3330-d362-5b2b0d812c6f@amd.com>
+Date: Fri, 26 May 2017 11:22:36 -0500
 MIME-Version: 1.0
-In-Reply-To: <5927B767.3010701@redhat.com>
+In-Reply-To: <20170518195051.GA5651@codeblueprint.co.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,43 +27,50 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: xlpang@redhat.com, Dave Young <dyoung@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, kvm@vger.kernel.org, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, kexec@lists.infradead.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, Toshimitsu Kani <toshi.kani@hpe.com>, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, x86@kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: Matt Fleming <matt@codeblueprint.co.uk>, Borislav Petkov <bp@alien8.de>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-On 5/26/2017 12:04 AM, Xunlei Pang wrote:
-> On 05/26/2017 at 10:49 AM, Dave Young wrote:
->> Ccing Xunlei he is reading the patches see what need to be done for
->> kdump. There should still be several places to handle to make kdump work.
+On 5/18/2017 2:50 PM, Matt Fleming wrote:
+> On Mon, 15 May, at 08:35:17PM, Borislav Petkov wrote:
+>> On Tue, Apr 18, 2017 at 04:19:21PM -0500, Tom Lendacky wrote:
 >>
->> On 05/18/17 at 07:01pm, Borislav Petkov wrote:
->>> On Tue, Apr 18, 2017 at 04:22:12PM -0500, Tom Lendacky wrote:
->>>> Add sysfs support for SME so that user-space utilities (kdump, etc.) can
->>>> determine if SME is active.
->>> But why do user-space tools need to know that?
->>>
->>> I mean, when we load the kdump kernel, we do it with the first kernel,
->>> with the kexec_load() syscall, AFAICT. And that code does a lot of
->>> things during that init, like machine_kexec_prepare()->init_pgtable() to
->>> prepare the ident mapping of the second kernel, for example.
->>>
->>> What I'm aiming at is that the first kernel knows *exactly* whether SME
->>> is enabled or not and doesn't need to tell the second one through some
->>> sysfs entries - it can do that during loading.
->>>
->>> So I don't think we need any userspace things at all...
->> If kdump kernel can get the SME status from hardware register then this
->> should be not necessary and this patch can be dropped.
+>>> +		paddr = boot_params.efi_info.efi_memmap_hi;
+>>> +		paddr <<= 32;
+>>> +		paddr |= boot_params.efi_info.efi_memmap;
+>>> +		if (phys_addr == paddr)
+>>> +			return true;
+>>> +
+>>> +		paddr = boot_params.efi_info.efi_systab_hi;
+>>> +		paddr <<= 32;
+>>> +		paddr |= boot_params.efi_info.efi_systab;
+>>
+>> So those two above look like could be two global vars which are
+>> initialized somewhere in the EFI init path:
+>>
+>> efi_memmap_phys and efi_systab_phys or so.
+>>
+>> Matt ?
+>>
+>> And then you won't need to create that paddr each time on the fly. I
+>> mean, it's not a lot of instructions but still...
 >
-> Yes, I also agree with dropping this one.
+> We should already have the physical memmap address available in
+> 'efi.memmap.phys_map'.
 
-Consensus is to drop, so it will be.
+Unfortunately memremap_is_efi_data() is called before the efi structure
+gets initialized, so I can't use that value.
+
+>
+> And the physical address of the system table should be in
+> 'efi_phys.systab'. See efi_init().
+
+In addition to the same issue as efi.memmap.phys_map, efi_phys has
+the __initdata attribute so it will be released/freed which will cause
+problems in checks performed afterwards.
 
 Thanks,
 Tom
 
->
-> Regards,
-> Xunlei
 >
 
 _______________________________________________
