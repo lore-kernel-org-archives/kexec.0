@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dE7PV-0003xT-9R
- for kexec@lists.infradead.org; Fri, 26 May 2017 05:03:38 +0000
-Subject: Re: [PATCH v5 31/32] x86: Add sysfs support for Secure Memory
- Encryption
-References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418212212.10190.73484.stgit@tlendack-t1.amdoffice.net>
- <20170518170153.eqiyat5s6q3yeejl@pd.tnic>
- <20170526024933.GA3228@dhcp-128-65.nay.redhat.com>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <5927B767.3010701@redhat.com>
-Date: Fri, 26 May 2017 13:04:39 +0800
+ id 1dE9yE-0006ZX-Vv
+ for kexec@lists.infradead.org; Fri, 26 May 2017 07:47:40 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [Makedumpfile PATCH v4 0/2] Fix refiltering when kaslr enabled
+Date: Fri, 26 May 2017 07:45:16 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EDB6BC@BPXM01GP.gisp.nec.co.jp>
+References: <cover.1495767738.git.panand@redhat.com>
+In-Reply-To: <cover.1495767738.git.panand@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <20170526024933.GA3228@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,41 +19,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, kvm@vger.kernel.org, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, kexec@lists.infradead.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, Toshimitsu Kani <toshi.kani@hpe.com>, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, x86@kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Tom Lendacky <thomas.lendacky@amd.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, xlpang@redhat.com, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: Pratyush Anand <panand@redhat.com>
+Cc: "xlpang@redhat.com" <xlpang@redhat.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
 
-On 05/26/2017 at 10:49 AM, Dave Young wrote:
-> Ccing Xunlei he is reading the patches see what need to be done for
-> kdump. There should still be several places to handle to make kdump work.
->
-> On 05/18/17 at 07:01pm, Borislav Petkov wrote:
->> On Tue, Apr 18, 2017 at 04:22:12PM -0500, Tom Lendacky wrote:
->>> Add sysfs support for SME so that user-space utilities (kdump, etc.) can
->>> determine if SME is active.
->> But why do user-space tools need to know that?
->>
->> I mean, when we load the kdump kernel, we do it with the first kernel,
->> with the kexec_load() syscall, AFAICT. And that code does a lot of
->> things during that init, like machine_kexec_prepare()->init_pgtable() to
->> prepare the ident mapping of the second kernel, for example.
->>
->> What I'm aiming at is that the first kernel knows *exactly* whether SME
->> is enabled or not and doesn't need to tell the second one through some
->> sysfs entries - it can do that during loading.
->>
->> So I don't think we need any userspace things at all...
-> If kdump kernel can get the SME status from hardware register then this
-> should be not necessary and this patch can be dropped.
+Hello Pratyush,
 
-Yes, I also agree with dropping this one.
+I have nothing to comment anymore, thanks for your hard work.
+I'll merge v4 patches into v1.6.2.
 
 Regards,
-Xunlei
+Atsushi Kumagai
+
+>Hi All,
+>
+>We came across another failure in makedumpfile when kaslr is enabled. This
+>failure occurs when we try re-filtering. We try to erase some symbol from a
+>dumpfile which was copied/compressed from /proc/vmcore using makedumpfile.
+>
+>We have very limited symbol information in vmcoreinfo. So symbols to be
+>erased may not be available in vmcoreinfo and we look for it in vmlinux.
+>However,  symbol address from vmlinux is a static address which differs
+>from run time address with KASLR_OFFSET. Therefore, reading any "virtual
+>address of vmlinux" from vmcore is not possible.
+>
+>These patches finds runtime  KASLR offset and then calculates run time
+>address of symbols read from vmlinux.
+>
+>Hatayama Daisuke also found some issue [1] when he was working with a
+>sadump and virsh dump of a none kaslr kernel. Patch 2/2 of this series has
+>been improved to take care of those issues as well.
+>
+>[1]http://lists.infradead.org/pipermail/kexec/2017-May/018833.html
+>
+>Thanks
+>
+>~Pratyush
+>
+>v1->v2:
+> - reading KERNELOFFSET from vmcoreinfo now instead of calculating it from
+>   _stext
+>v2->v3:
+> - Fixed initialization of info->file_vmcoreinfo
+> - Improved page_offset calculation logic to take care of different dump
+>   scenarios.
+>v3->v4:
+> - Removed info->kaslr_offset write to VMCOREINFO
+>
+>
+>
+>Pratyush Anand (2):
+>  makedumpfile: add runtime kaslr offset if it exists
+>  x86_64: calculate page_offset in case of re-filtering/sadump/virsh
+>    dump
+>
+> arch/x86_64.c  | 72 ++++++++++++++++++++++++++++++++++++++++++++++++++++------
+> erase_info.c   |  1 +
+> makedumpfile.c | 46 +++++++++++++++++++++++++++++++++++++
+> makedumpfile.h | 16 +++++++++++++
+> 4 files changed, 128 insertions(+), 7 deletions(-)
+>
+>--
+>2.9.3
+
 
 _______________________________________________
 kexec mailing list
