@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from mail-co1nam03on0061.outbound.protection.outlook.com
+ ([104.47.40.61] helo=NAM03-CO1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dFJ0c-0001Y6-4M
- for kexec@lists.infradead.org; Mon, 29 May 2017 11:38:52 +0000
-Date: Mon, 29 May 2017 13:38:19 +0200
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [Crash-utility] [PATCH] xen: Add support for domU with Linux
- kernel 3.19 and newer
-Message-ID: <20170529113819.GL30364@olila.local.net-space.pl>
-References: <1495609985-5328-1-git-send-email-honglei.wang@oracle.com>
- <2121155069.18928570.1495641388085.JavaMail.zimbra@redhat.com>
+ id 1dFiIv-0006dR-M0
+ for kexec@lists.infradead.org; Tue, 30 May 2017 14:39:27 +0000
+Subject: Re: [PATCH v5 32/32] x86/mm: Add support to make use of Secure Memory
+ Encryption
+References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
+ <20170418212223.10190.85121.stgit@tlendack-t1.amdoffice.net>
+ <20170519112703.voajtn4t7uy6nwa3@pd.tnic>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <7c522f65-c5c8-9362-e1eb-d0765e3ea6c9@amd.com>
+Date: Tue, 30 May 2017 09:38:36 -0500
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2121155069.18928570.1495641388085.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20170519112703.voajtn4t7uy6nwa3@pd.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,129 +23,111 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: jgross@suse.com, Honglei Wang <honglei.wang@oracle.com>, konrad wilk <konrad.wilk@oracle.com>, ptesarik@suse.cz, kexec@lists.infradead.org, xen-devel@lists.xenproject.org, eric devolder <eric.devolder@oracle.com>, crash-utility@redhat.com
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter
+ Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S.
+ Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-On Wed, May 24, 2017 at 11:56:28AM -0400, Dave Anderson wrote:
-> ----- Original Message -----
-> > crash patch c3413456599161cabc4e910a0ae91dfe5eec3c21 (xen: Add support for
-> > dom0 with Linux kernel 3.19 and newer) from Daniel made crash utility
-> > support xen dom0 vmcores after linux kernel commit
-> > 054954eb051f35e74b75a566a96fe756015352c8 (xen: switch to linear virtual
-> > mapped sparse p2m list).
-> >
-> > This patch can be deemed as a subsequent and make this utility support Xen
-> > PV domU dumpfiles again.
-> >
-> > Basically speaking, readmem() can't be used to read xen_p2m_addr associate
-> > memory directly during m2p translation. It introduces infinite recursion.
-> > Following call sequence shows the scenario, it comes from a section of
-> > backtrace with only kvaddr, machine addr and mfn left as parameter:
-> >
-> > module_init()
-> >
-> > /* The first readmem() from module_init(). */
-> > readmem(addr=0xffffffffa02fe4a0)
-> >
-> > /* readmem() needs physical address, so calls kvtop(). */
-> > kvtop(kvaddr=0xffffffffa02fe4a0)
-> > x86_64_kvtop(kvaddr=ffffffffa02fe4a0)
-> >
-> > /* Calculate physical address by traversing page tables. */
-> > x86_64_kvtop_xen_wpt(kvaddr=0xffffffffa02fe4a0)
-> >
-> > /*
-> >  * x86_64_kvtop_xen_wpt() is going to traverse the page table to
-> >  * get the physical address for 0xffffffffa02fe4a0. So, at first it
-> >  * is needed to translate the pgd from machine address to physical
-> >  * address. So invoke xen_m2p() here to do the translation. 0x58687f000
-> >  * is the pgd machine address in x86_64_kvtop_xen_wpt() and is needed
-> >  * to be translated to its physical address.
-> >  */
-> > xen_m2p(machine=0x58687f000)
-> > __xen_m2p(machine=0x58687f000, mfn=0x58687f)
-> >
-> > /*
-> >  * __xen_m2p() is going to search mfn 0x58687f in p2m VMA which starts
-> >  * at VMA 0xffffc900001cf000. It compares every mfn stored in it with
-> >  * 0x58687f. Once it's proved 0x58687f is one mfn in the p2m, its offset
-> >  * will be used to calculate the pfn.
-> >  *
-> >  * readmem() is invoked by __xen_m2p() to read the page from VMA
-> >  * 0xffffc900001cf000 here.
-> >  */
-> > readmem(addr=0xffffc900001cf000)
-> >
-> > /*
-> >  * readmem() needs physical address of 0xffffc900001cf000 to make the
-> >  * reading done. So it invokes kvtop() to get the physical address.
-> >  */
-> > kvtop(kvaddr=0xffffc900001cf000)
-> > x86_64_kvtop(kvaddr=0xffffc900001cf000)
-> >
-> > /* It needs to calculate physical address by traversing page tables. */
-> > x86_64_kvtop_xen_wpt(kvaddr=0xffffc900001cf000)
-> >
-> > /*
-> >  * 0x581b7e000 is the machine address of pgd need to be translated here.
-> >  * The mfn is calculated in this way at x86_64_kvtop_xen_wpt():
-> >  *
-> >  * pml4 = ((ulong *)machdep->machspec->pml4) + pml4_index(kvaddr);
-> >  * pgd_paddr = (*pml4) & PHYSICAL_PAGE_MASK;
-> >  *
-> >  * The kvaddr 0xffffc900001cf000 here is quite different from the one
-> >  * above, so the machine address of pgd is not the same one. And this
-> >  * pgd is the one we use to access the VMA of p2m table.
-> >  */
-> > xen_m2p(machine=0x581b7e000)
-> > __xen_m2p(machine=0x581b7e000, mfn=0x581b7e)
-> >
-> > /*
-> >  * Looking for mfn 0x581b7e in the range of p2m page which starts at
-> >  * VMA 0xffffc900001f5000.
-> >  */
-> > readmem(addr=0xffffc900001f5000)
-> >
-> > /* Need physical address of VMA 0xffffc900001f5000 as same reason above. */
-> > kvtop(kvaddr=0xffffc900001f5000)
-> > x86_64_kvtop(kvaddr=0xffffc900001f5000)
-> >
-> > /* Need to traverse page tables to calculate physical address for it. */
-> > x86_64_kvtop_xen_wpt(kvaddr=0xffffc900001f5000)
-> >
-> > /*
-> >  * Unfortunately, machine address 0x581b7e000 have to be translated again.
-> >  * Endless loop starts from here.
-> >  */
-> > xen_m2p(machine=0x581b7e000)
-> > __xen_m2p(machine=0x581b7e000, mfn=0x581b7e)
-> > readmem(addr=0xffffc900001f5000)
-> >
-> > Fortunately, PV domU p2m mapping is also stored at xd->xfd + xch_index_offset
-> > and organized as struct xen_dumpcore_p2m. We have a chance to read the p2m
-> > stuff directly from there, and then we avoid the loop above.
-> >
-> > So, this patch implements a special reading function read_xc_p2m() to extract
-> > the mfns from xd->xfd + xch_index_offset. This function does not need to read
-> > mfns from p2m VMA like readmem() does, so, we avoid the endless loop introduced
-> > by the address translation.
-> >
-> > Signed-off-by: Honglei Wang <honglei.wang@oracle.com>
-> > Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
->
-> Queued for crash-7.2.0:
->
->   https://github.com/crash-utility/crash/commit/5c52842a58a2602dba81de71831af98b2b53c6e0
+On 5/19/2017 6:27 AM, Borislav Petkov wrote:
+> On Tue, Apr 18, 2017 at 04:22:23PM -0500, Tom Lendacky wrote:
+>> Add support to check if SME has been enabled and if memory encryption
+>> should be activated (checking of command line option based on the
+>> configuration of the default state).  If memory encryption is to be
+>> activated, then the encryption mask is set and the kernel is encrypted
+>> "in place."
+>>
+>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+>> ---
+>>   arch/x86/kernel/head_64.S |    1 +
+>>   arch/x86/mm/mem_encrypt.c |   83 +++++++++++++++++++++++++++++++++++++++++++--
+>>   2 files changed, 80 insertions(+), 4 deletions(-)
+> 
+> ...
+> 
+>> +unsigned long __init sme_enable(struct boot_params *bp)
+>>   {
+>> +	const char *cmdline_ptr, *cmdline_arg, *cmdline_on, *cmdline_off;
+>> +	unsigned int eax, ebx, ecx, edx;
+>> +	unsigned long me_mask;
+>> +	bool active_by_default;
+>> +	char buffer[16];
+>> +	u64 msr;
+>> +
+>> +	/* Check for the SME support leaf */
+>> +	eax = 0x80000000;
+>> +	ecx = 0;
+>> +	native_cpuid(&eax, &ebx, &ecx, &edx);
+>> +	if (eax < 0x8000001f)
+>> +		goto out;
+>> +
+>> +	/*
+>> +	 * Check for the SME feature:
+>> +	 *   CPUID Fn8000_001F[EAX] - Bit 0
+>> +	 *     Secure Memory Encryption support
+>> +	 *   CPUID Fn8000_001F[EBX] - Bits 5:0
+>> +	 *     Pagetable bit position used to indicate encryption
+>> +	 */
+>> +	eax = 0x8000001f;
+>> +	ecx = 0;
+>> +	native_cpuid(&eax, &ebx, &ecx, &edx);
+>> +	if (!(eax & 1))
+>> +		goto out;
+> 
+> <---- newline here.
+> 
+>> +	me_mask = 1UL << (ebx & 0x3f);
+>> +
+>> +	/* Check if SME is enabled */
+>> +	msr = __rdmsr(MSR_K8_SYSCFG);
+>> +	if (!(msr & MSR_K8_SYSCFG_MEM_ENCRYPT))
+>> +		goto out;
+>> +
+>> +	/*
+>> +	 * Fixups have not been applied to phys_base yet, so we must obtain
+>> +	 * the address to the SME command line option data in the following
+>> +	 * way.
+>> +	 */
+>> +	asm ("lea sme_cmdline_arg(%%rip), %0"
+>> +	     : "=r" (cmdline_arg)
+>> +	     : "p" (sme_cmdline_arg));
+>> +	asm ("lea sme_cmdline_on(%%rip), %0"
+>> +	     : "=r" (cmdline_on)
+>> +	     : "p" (sme_cmdline_on));
+>> +	asm ("lea sme_cmdline_off(%%rip), %0"
+>> +	     : "=r" (cmdline_off)
+>> +	     : "p" (sme_cmdline_off));
+>> +
+>> +	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT))
+>> +		active_by_default = true;
+>> +	else
+>> +		active_by_default = false;
+>> +
+>> +	cmdline_ptr = (const char *)((u64)bp->hdr.cmd_line_ptr |
+>> +				     ((u64)bp->ext_cmd_line_ptr << 32));
+>> +
+>> +	cmdline_find_option(cmdline_ptr, cmdline_arg, buffer, sizeof(buffer));
+>> +
+>> +	if (strncmp(buffer, cmdline_on, sizeof(buffer)) == 0)
+>> +		sme_me_mask = me_mask;
+> 
+> Why doesn't simply
+> 
+> 	if (!strncmp(buffer, "on", 2))
+> 		...
+> 
+> work?
 
-Wow, Dave, you are fast! Thanks a lot!
+In this case we're running identity mapped and the "on" constant ends up
+as kernel address (0xffffffff81...) which results in a segfault.
 
-Honglei, congrats! Thanks for doing the work!
+Thanks,
+Tom
 
-Daniel
+> 
 
 _______________________________________________
 kexec mailing list
