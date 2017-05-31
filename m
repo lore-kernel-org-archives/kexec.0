@@ -1,22 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1dG0Ie-0002ye-ET
- for kexec@lists.infradead.org; Wed, 31 May 2017 09:52:21 +0000
-Date: Wed, 31 May 2017 11:51:48 +0200
+ id 1dG0RS-0000fg-0n
+ for kexec@lists.infradead.org; Wed, 31 May 2017 10:01:28 +0000
+Date: Wed, 31 May 2017 12:01:00 +0200
 From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 29/32] x86/mm: Add support to encrypt the kernel
- in-place
-Message-ID: <20170531095148.pba6ju6im4qxbwfg@pd.tnic>
+Subject: Re: [PATCH v5 28/32] x86/mm, kexec: Allow kexec to be used with SME
+Message-ID: <20170531100100.jgznzx3o7qklfgbp@pd.tnic>
 References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418212149.10190.70894.stgit@tlendack-t1.amdoffice.net>
- <20170518124626.hqyqqbjpy7hmlpqc@pd.tnic>
- <7e2ae014-525c-76f2-9fce-2124596db2d2@amd.com>
- <20170526162522.p7prrqqalx2ivfxl@pd.tnic>
- <33c075b1-71f6-b5d0-b1fa-d742d0659d38@amd.com>
+ <20170418212121.10190.94885.stgit@tlendack-t1.amdoffice.net>
+ <5927AC6E.8080209@redhat.com>
+ <de4d2efc-6636-4120-98d9-7fdf4707f68d@amd.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <33c075b1-71f6-b5d0-b1fa-d742d0659d38@amd.com>
+In-Reply-To: <de4d2efc-6636-4120-98d9-7fdf4707f68d@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,53 +27,19 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, linux-doc@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, linux-mm@kvack.org, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, x86@kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, xlpang@redhat.com, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-On Tue, May 30, 2017 at 11:39:07AM -0500, Tom Lendacky wrote:
-> Yes, it's from objtool:
-> 
-> arch/x86/mm/mem_encrypt_boot.o: warning: objtool: .text+0xd2: return
-> instruction outside of a callable function
+On Tue, May 30, 2017 at 12:46:14PM -0500, Tom Lendacky wrote:
+> This is an area that I'm not familiar with, so I don't completely
+> understand the flow in regards to where/when/how the ELF headers are
+> copied and what needs to be done.
 
-Oh, well, let's make it a global symbol then. Who knows, we might have
-to live-patch it someday :-)
+So my suggestion is still to put kexec/kdump on the backburner for now
+and concentrate on the 30-ish patchset first. Once they're done, we can
+start dealing with it. Ditto with the IOMMU side of things. One thing at
+a time.
 
----
-diff --git a/arch/x86/mm/mem_encrypt_boot.S b/arch/x86/mm/mem_encrypt_boot.S
-index fb58f9f953e3..7720b0050840 100644
---- a/arch/x86/mm/mem_encrypt_boot.S
-+++ b/arch/x86/mm/mem_encrypt_boot.S
-@@ -47,9 +47,9 @@ ENTRY(sme_encrypt_execute)
- 	movq	%rdx, %r12		/* Kernel length */
- 
- 	/* Copy encryption routine into the workarea */
--	movq	%rax, %rdi		/* Workarea encryption routine */
--	leaq	.Lenc_start(%rip), %rsi	/* Encryption routine */
--	movq	$(.Lenc_stop - .Lenc_start), %rcx	/* Encryption routine length */
-+	movq	%rax, %rdi				/* Workarea encryption routine */
-+	leaq	__enc_copy(%rip), %rsi			/* Encryption routine */
-+	movq	$(.L__enc_copy_end - __enc_copy), %rcx	/* Encryption routine length */
- 	rep	movsb
- 
- 	/* Setup registers for call */
-@@ -70,8 +70,7 @@ ENTRY(sme_encrypt_execute)
- 	ret
- ENDPROC(sme_encrypt_execute)
- 
--.Lenc_start:
--ENTRY(sme_enc_routine)
-+ENTRY(__enc_copy)
- /*
-  * Routine used to encrypt kernel.
-  *   This routine must be run outside of the kernel proper since
-@@ -147,5 +146,5 @@ ENTRY(sme_enc_routine)
- 	wrmsr
- 
- 	ret
--ENDPROC(sme_enc_routine)
--.Lenc_stop:
-+.L__enc_copy_end:
-+ENDPROC(__enc_copy)
+Thanks.
 
 -- 
 Regards/Gruss,
