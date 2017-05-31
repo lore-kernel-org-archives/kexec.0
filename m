@@ -1,22 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1dFzKE-0004qz-QR
- for kexec@lists.infradead.org; Wed, 31 May 2017 08:49:56 +0000
-Date: Wed, 31 May 2017 10:49:23 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 32/32] x86/mm: Add support to make use of Secure
- Memory Encryption
-Message-ID: <20170531084923.mmlpefxfx53f3okp@pd.tnic>
-References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418212223.10190.85121.stgit@tlendack-t1.amdoffice.net>
- <20170519112703.voajtn4t7uy6nwa3@pd.tnic>
- <7c522f65-c5c8-9362-e1eb-d0765e3ea6c9@amd.com>
- <20170530145459.tyuy6veqxnrqkhgw@pd.tnic>
- <115ca39d-6ae7-f603-a415-ead7c4e8193d@amd.com>
+Received: from userp1040.oracle.com ([156.151.31.81])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dFzcD-0005Sw-0A
+ for kexec@lists.infradead.org; Wed, 31 May 2017 09:08:30 +0000
+Date: Wed, 31 May 2017 11:07:50 +0200
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: makedumpfile PATCH] Fix the use of Xen physical and machine
+ addresses
+Message-ID: <20170531090750.GA19333@olila.local.net-space.pl>
+References: <20170523093452.GQ30364@olila.local.net-space.pl>
+ <b1e80585-7a71-b1d1-7d09-f52da8a82b7e@oracle.com>
+ <20170530232815.5233981e@hananiah.suse.cz>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <115ca39d-6ae7-f603-a415-ead7c4e8193d@amd.com>
+In-Reply-To: <20170530232815.5233981e@hananiah.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,39 +26,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: ats-kumagai@wm.jp.nec.com, Eric DeVolder <eric.devolder@oracle.com>, kexec@lists.infradead.org, konrad.wilk@oracle.com
 
-On Tue, May 30, 2017 at 10:37:03AM -0500, Tom Lendacky wrote:
-> I can define the command line option and the "on" and "off" values as
-> character buffers in the function and initialize them on a per character
-> basis (using a static string causes the same issues as referencing a
-> string constant), i.e.:
-> 
-> char cmdline_arg[] = {'m', 'e', 'm', '_', 'e', 'n', 'c', 'r', 'y', 'p', 't', '\0'};
-> char cmdline_off[] = {'o', 'f', 'f', '\0'};
-> char cmdline_on[] = {'o', 'n', '\0'};
-> 
-> It doesn't look the greatest, but it works and removes the need for the
-> rip-relative addressing.
+On Tue, May 30, 2017 at 11:28:15PM +0200, Petr Tesarik wrote:
+> On Tue, 30 May 2017 14:30:43 -0500
+> Eric DeVolder <eric.devolder@oracle.com> wrote:
+>
+> > Hi,
+> > Testing is underway. Generally working but I do have a couple of fails
+> > I'm looking into:
+> >
+> >  > FAIL xen-4.1.2-rc3-pre_domU-pv_xl_linux-2.6.39-x86_64.tar.bz2
+>                             ^^^^^^^
+>
+> Is this a PV DomU xc_core style dump? If so, then it has never been
+> supported by makedumpfile, because the file format is very different,
+> with no program headers, but a special section called ".xen_pages". In
+> fact, the file format itself does not cover this type of dump.
 
-Well, I'm not thrilled about this one either. It's like being between a
-rock and a hard place. :-\
+Ahhh... IIRC, you are right. Thanks for pointing this out. Eric, please
+double check it and if PV __GUESTS__ are not supported by makedumpfile
+skip tests for them. Just test dom0 and Xen hypervisor stuff.
 
-On the one hand, we need the encryption mask before we do the fixups and
-OTOH we need to do the fixups in order to access the strings properly.
-Yuck.
-
-Well, the only thing I can think of right now is maybe define
-"mem_encrypt=" at the end of head_64.S and pass it in from asm to
-sme_enable() and then do the "on"/"off" comparsion with local char
-buffers. That could make it less ugly...
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Daniel
 
 _______________________________________________
 kexec mailing list
