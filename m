@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1dG5sF-0005vd-1x
- for kexec@lists.infradead.org; Wed, 31 May 2017 15:49:28 +0000
-Date: Wed, 31 May 2017 17:48:54 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 28/32] x86/mm, kexec: Allow kexec to be used with SME
-Message-ID: <20170531154854.4tf4rmivgmixc275@pd.tnic>
-References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418212121.10190.94885.stgit@tlendack-t1.amdoffice.net>
- <5927AC6E.8080209@redhat.com>
- <de4d2efc-6636-4120-98d9-7fdf4707f68d@amd.com>
- <592EDB58.4090903@redhat.com>
+Received: from aserp1040.oracle.com ([141.146.126.69])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dGQwa-0002YR-Vp
+ for kexec@lists.infradead.org; Thu, 01 Jun 2017 14:19:22 +0000
+Subject: Re: makedumpfile PATCH] Fix the use of Xen physical and machine
+ addresses
+References: <20170523093452.GQ30364@olila.local.net-space.pl>
+ <b1e80585-7a71-b1d1-7d09-f52da8a82b7e@oracle.com>
+ <20170530232815.5233981e@hananiah.suse.cz>
+ <20170531090750.GA19333@olila.local.net-space.pl>
+From: Eric DeVolder <eric.devolder@oracle.com>
+Message-ID: <5f866d24-4aaa-ef80-4327-779780132b12@oracle.com>
+Date: Thu, 1 Jun 2017 09:18:52 -0500
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <592EDB58.4090903@redhat.com>
+In-Reply-To: <20170531090750.GA19333@olila.local.net-space.pl>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,28 +23,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: xlpang@redhat.com, Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, linux-doc@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, linux-mm@kvack.org, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, x86@kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: Daniel Kiper <daniel.kiper@oracle.com>, Petr Tesarik <ptesarik@suse.cz>
+Cc: ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, konrad.wilk@oracle.com
 
-On Wed, May 31, 2017 at 11:03:52PM +0800, Xunlei Pang wrote:
-> For kdump case, it will be put in some reserved crash memory allocated
-> by kexec-tools, and passed the corresponding start address of the
-> allocated reserved crash memory to kdump kernel via "elfcorehdr=",
-> please see kernel functions setup_elfcorehdr() and vmcore_init() for
-> how it is parsed by kdump kernel.
 
-... which could be a great way to pass the SME status to the second
-kernel without any funky sysfs games.
 
--- 
-Regards/Gruss,
-    Boris.
+On 05/31/2017 04:07 AM, Daniel Kiper wrote:
+> On Tue, May 30, 2017 at 11:28:15PM +0200, Petr Tesarik wrote:
+>> On Tue, 30 May 2017 14:30:43 -0500
+>> Eric DeVolder <eric.devolder@oracle.com> wrote:
+>>
+>>> Hi,
+>>> Testing is underway. Generally working but I do have a couple of fails
+>>> I'm looking into:
+>>>
+>>>   > FAIL xen-4.1.2-rc3-pre_domU-pv_xl_linux-2.6.39-x86_64.tar.bz2
+>>                              ^^^^^^^
+>>
+>> Is this a PV DomU xc_core style dump? If so, then it has never been
+>> supported by makedumpfile, because the file format is very different,
+>> with no program headers, but a special section called ".xen_pages". In
+>> fact, the file format itself does not cover this type of dump.
+> 
+> Ahhh... IIRC, you are right. Thanks for pointing this out. Eric, please
+> double check it and if PV __GUESTS__ are not supported by makedumpfile
+> skip tests for them. Just test dom0 and Xen hypervisor stuff.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+I concur, this dump format is not supported by makedumpfile.
+
+I'm still working on validating 32-bit dump files.
+
+eric
+
 
 _______________________________________________
 kexec mailing list
