@@ -1,22 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dGcwg-0006P3-DV
- for kexec@lists.infradead.org; Fri, 02 Jun 2017 03:08:16 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: makedumpfile PATCH] Fix the use of Xen physical and machine
- addresses
-Date: Fri, 2 Jun 2017 03:04:30 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EDD48C@BPXM01GP.gisp.nec.co.jp>
-References: <20170523093452.GQ30364@olila.local.net-space.pl>
- <b1e80585-7a71-b1d1-7d09-f52da8a82b7e@oracle.com>
- <20170530232815.5233981e@hananiah.suse.cz>
- <20170531090750.GA19333@olila.local.net-space.pl>
- <5f866d24-4aaa-ef80-4327-779780132b12@oracle.com>
- <54051391-6363-ec1b-0cc9-3f156c32908c@oracle.com>
-In-Reply-To: <54051391-6363-ec1b-0cc9-3f156c32908c@oracle.com>
-Content-Language: ja-JP
+Message-ID: <59312080.1090906@arm.com>
+Date: Fri, 02 Jun 2017 09:23:28 +0100
+From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH v3 0/2] kexec-tools: arm64: Enable D-cache in purgatory
+References: <cover.1495514291.git.panand@redhat.com>
+In-Reply-To: <cover.1495514291.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,51 +18,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>, Eric DeVolder <eric.devolder@oracle.com>, Daniel Kiper <daniel.kiper@oracle.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>
+To: Pratyush Anand <panand@redhat.com>
+Cc: mark.rutland@arm.com, bhe@redhat.com, kexec@lists.infradead.org, horms@verge.net.au, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Thanks everyone, I'll merge this patch into v1.6.2
+Hi Pratyush,
 
-Regards,
-Atsushi Kumagai
+On 23/05/17 06:02, Pratyush Anand wrote:
+> It takes more that 2 minutes to verify SHA in purgatory when vmlinuz image
+> is around 13MB and initramfs is around 30MB. It takes more than 20 second
+> even when we have -O2 optimization enabled. However, if dcache is enabled
+> during purgatory execution then, it takes just a second in SHA
+> verification.
+> 
+> Therefore, these patches adds support for dcache enabling facility during
+> purgatory execution.
 
->On 06/01/2017 09:18 AM, Eric DeVolder wrote:
->>
->>
->> On 05/31/2017 04:07 AM, Daniel Kiper wrote:
->>> On Tue, May 30, 2017 at 11:28:15PM +0200, Petr Tesarik wrote:
->>>> On Tue, 30 May 2017 14:30:43 -0500
->>>> Eric DeVolder <eric.devolder@oracle.com> wrote:
->>>>
->>>>> Hi,
->>>>> Testing is underway. Generally working but I do have a couple of fails
->>>>> I'm looking into:
->>>>>
->>>>>   > FAIL xen-4.1.2-rc3-pre_domU-pv_xl_linux-2.6.39-x86_64.tar.bz2
->>>>                              ^^^^^^^
->>>>
->>>> Is this a PV DomU xc_core style dump? If so, then it has never been
->>>> supported by makedumpfile, because the file format is very different,
->>>> with no program headers, but a special section called ".xen_pages". In
->>>> fact, the file format itself does not cover this type of dump.
->>>
->>> Ahhh... IIRC, you are right. Thanks for pointing this out. Eric, please
->>> double check it and if PV __GUESTS__ are not supported by makedumpfile
->>> skip tests for them. Just test dom0 and Xen hypervisor stuff.
->>
->> I concur, this dump format is not supported by makedumpfile.
->>
->> I'm still working on validating 32-bit dump files.
->
->I have validated the 32-bit dump files with this patch. All is good.
->eric
->
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
+I'm still not convinced we need this. Moving the SHA verification to happen
+before the dcache+mmu are disabled would also solve the delay problem, and we
+can print an error message or fail the syscall.
 
+For kexec we don't expect memory corruption, what are we testing for?
+I can see the use for kdump, but the kdump-kernel is unmapped so the kernel
+can't accidentally write over it.
+
+(we discussed all this last time, but it fizzled-out. If you and the
+ kexec-tools maintainer think its necessary, fine by me!)
+
+I have some comments on making this code easier to maintain..
+
+
+Thanks,
+
+James
 
 _______________________________________________
 kexec mailing list
