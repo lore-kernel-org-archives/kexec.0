@@ -2,12 +2,13 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-sn1nam01on0050.outbound.protection.outlook.com
  ([104.47.32.50] helo=NAM01-SN1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dIgSl-0002aE-Rr
- for kexec@lists.infradead.org; Wed, 07 Jun 2017 19:17:53 +0000
+ id 1dIgSo-0002aE-55
+ for kexec@lists.infradead.org; Wed, 07 Jun 2017 19:17:56 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v6 24/34] x86, swiotlb: Add memory encryption support
-Date: Wed, 07 Jun 2017 14:17:21 -0500
-Message-ID: <20170607191721.28645.96519.stgit@tlendack-t1.amdoffice.net>
+Subject: [PATCH v6 26/34] iommu/amd: Allow the AMD IOMMU to work with memory
+ encryption
+Date: Wed, 07 Jun 2017 14:17:45 -0500
+Message-ID: <20170607191745.28645.81756.stgit@tlendack-t1.amdoffice.net>
 In-Reply-To: <20170607191309.28645.15241.stgit@tlendack-t1.amdoffice.net>
 References: <20170607191309.28645.15241.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
@@ -26,382 +27,353 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, linux-mm@kvack.org, iommu@lists.linux-foundation.org
 Cc: Thomas Gleixner <tglx@linutronix.de>, Rik van Riel <riel@redhat.com>, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Matt Fleming <matt@codeblueprint.co.uk>, Joerg Roedel <joro@8bytes.org>, Radim =?utf-8?b?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Ingo Molnar <mingo@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Paolo Bonzini <pbonzini@redhat.com>, Alexander Potapenko <glider@google.com>, Dave Young <dyoung@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Dmitry Vyukov <dvyukov@google.com>
 
-Since DMA addresses will effectively look like 48-bit addresses when the
-memory encryption mask is set, SWIOTLB is needed if the DMA mask of the
-device performing the DMA does not support 48-bits. SWIOTLB will be
-initialized to create decrypted bounce buffers for use by these devices.
+The IOMMU is programmed with physical addresses for the various tables
+and buffers that are used to communicate between the device and the
+driver. When the driver allocates this memory it is encrypted. In order
+for the IOMMU to access the memory as encrypted the encryption mask needs
+to be included in these physical addresses during configuration.
+
+The PTE entries created by the IOMMU should also include the encryption
+mask so that when the device behind the IOMMU performs a DMA, the DMA
+will be performed to encrypted memory.
 
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/x86/include/asm/dma-mapping.h |    5 ++-
- arch/x86/include/asm/mem_encrypt.h |    5 +++
- arch/x86/kernel/pci-dma.c          |   11 +++++--
- arch/x86/kernel/pci-nommu.c        |    2 +
- arch/x86/kernel/pci-swiotlb.c      |   15 ++++++++--
- arch/x86/mm/mem_encrypt.c          |   22 ++++++++++++++
- include/linux/swiotlb.h            |    1 +
- init/main.c                        |   13 ++++++++
- lib/swiotlb.c                      |   56 +++++++++++++++++++++++++++++++-----
- 9 files changed, 113 insertions(+), 17 deletions(-)
+ arch/x86/include/asm/mem_encrypt.h |    7 +++++++
+ arch/x86/mm/mem_encrypt.c          |   30 ++++++++++++++++++++++++++++++
+ drivers/iommu/amd_iommu.c          |   36 +++++++++++++++++++-----------------
+ drivers/iommu/amd_iommu_init.c     |   18 ++++++++++++------
+ drivers/iommu/amd_iommu_proto.h    |   10 ++++++++++
+ drivers/iommu/amd_iommu_types.h    |    2 +-
+ include/asm-generic/mem_encrypt.h  |    5 +++++
+ 7 files changed, 84 insertions(+), 24 deletions(-)
 
-diff --git a/arch/x86/include/asm/dma-mapping.h b/arch/x86/include/asm/dma-mapping.h
-index 08a0838..d75430a 100644
---- a/arch/x86/include/asm/dma-mapping.h
-+++ b/arch/x86/include/asm/dma-mapping.h
-@@ -12,6 +12,7 @@
- #include <asm/io.h>
- #include <asm/swiotlb.h>
- #include <linux/dma-contiguous.h>
-+#include <asm/mem_encrypt.h>
- 
- #ifdef CONFIG_ISA
- # define ISA_DMA_BIT_MASK DMA_BIT_MASK(24)
-@@ -62,12 +63,12 @@ static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size)
- 
- static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
- {
--	return paddr;
-+	return __sme_set(paddr);
- }
- 
- static inline phys_addr_t dma_to_phys(struct device *dev, dma_addr_t daddr)
- {
--	return daddr;
-+	return __sme_clr(daddr);
- }
- #endif /* CONFIG_X86_DMA_REMAP */
- 
 diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index 61a7049..f1215a4 100644
+index c7a2525..d86e544 100644
 --- a/arch/x86/include/asm/mem_encrypt.h
 +++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -31,6 +31,11 @@ void __init sme_early_decrypt(resource_size_t paddr,
+@@ -31,6 +31,8 @@ void __init sme_early_decrypt(resource_size_t paddr,
  
  void __init sme_early_init(void);
  
-+/* Architecture __weak replacement functions */
-+void __init mem_encrypt_init(void);
++bool sme_iommu_supported(void);
 +
-+void swiotlb_set_mem_attributes(void *vaddr, unsigned long size);
-+
- #else	/* !CONFIG_AMD_MEM_ENCRYPT */
+ /* Architecture __weak replacement functions */
+ void __init mem_encrypt_init(void);
  
- #define sme_me_mask	0UL
-diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
-index 3a216ec..72d96d4 100644
---- a/arch/x86/kernel/pci-dma.c
-+++ b/arch/x86/kernel/pci-dma.c
-@@ -93,9 +93,12 @@ void *dma_generic_alloc_coherent(struct device *dev, size_t size,
- 	if (gfpflags_allow_blocking(flag)) {
- 		page = dma_alloc_from_contiguous(dev, count, get_order(size),
- 						 flag);
--		if (page && page_to_phys(page) + size > dma_mask) {
--			dma_release_from_contiguous(dev, page, count);
--			page = NULL;
-+		if (page) {
-+			addr = phys_to_dma(dev, page_to_phys(page));
-+			if (addr + size > dma_mask) {
-+				dma_release_from_contiguous(dev, page, count);
-+				page = NULL;
-+			}
- 		}
- 	}
- 	/* fallback */
-@@ -104,7 +107,7 @@ void *dma_generic_alloc_coherent(struct device *dev, size_t size,
- 	if (!page)
- 		return NULL;
- 
--	addr = page_to_phys(page);
-+	addr = phys_to_dma(dev, page_to_phys(page));
- 	if (addr + size > dma_mask) {
- 		__free_pages(page, get_order(size));
- 
-diff --git a/arch/x86/kernel/pci-nommu.c b/arch/x86/kernel/pci-nommu.c
-index a88952e..98b576a 100644
---- a/arch/x86/kernel/pci-nommu.c
-+++ b/arch/x86/kernel/pci-nommu.c
-@@ -30,7 +30,7 @@ static dma_addr_t nommu_map_page(struct device *dev, struct page *page,
- 				 enum dma_data_direction dir,
- 				 unsigned long attrs)
+@@ -62,6 +64,11 @@ static inline void __init sme_early_init(void)
  {
--	dma_addr_t bus = page_to_phys(page) + offset;
-+	dma_addr_t bus = phys_to_dma(dev, page_to_phys(page)) + offset;
- 	WARN_ON(size == 0);
- 	if (!check_addr("map_single", dev, bus, size))
- 		return DMA_ERROR_CODE;
-diff --git a/arch/x86/kernel/pci-swiotlb.c b/arch/x86/kernel/pci-swiotlb.c
-index 1e23577..cc1e106 100644
---- a/arch/x86/kernel/pci-swiotlb.c
-+++ b/arch/x86/kernel/pci-swiotlb.c
-@@ -12,6 +12,8 @@
- #include <asm/dma.h>
- #include <asm/xen/swiotlb-xen.h>
- #include <asm/iommu_table.h>
-+#include <asm/mem_encrypt.h>
-+
- int swiotlb __read_mostly;
- 
- void *x86_swiotlb_alloc_coherent(struct device *hwdev, size_t size,
-@@ -79,8 +81,8 @@ int __init pci_swiotlb_detect_override(void)
- 		  pci_swiotlb_late_init);
- 
- /*
-- * if 4GB or more detected (and iommu=off not set) return 1
-- * and set swiotlb to 1.
-+ * If 4GB or more detected (and iommu=off not set) or if SME is active
-+ * then set swiotlb to 1 and return 1.
-  */
- int __init pci_swiotlb_detect_4gb(void)
- {
-@@ -89,6 +91,15 @@ int __init pci_swiotlb_detect_4gb(void)
- 	if (!no_iommu && max_possible_pfn > MAX_DMA32_PFN)
- 		swiotlb = 1;
- #endif
-+
-+	/*
-+	 * If SME is active then swiotlb will be set to 1 so that bounce
-+	 * buffers are allocated and used for devices that do not support
-+	 * the addressing range required for the encryption mask.
-+	 */
-+	if (sme_active())
-+		swiotlb = 1;
-+
- 	return swiotlb;
  }
- IOMMU_INIT(pci_swiotlb_detect_4gb,
+ 
++static inline bool sme_iommu_supported(void)
++{
++	return true;
++}
++
+ #endif	/* CONFIG_AMD_MEM_ENCRYPT */
+ 
+ static inline bool sme_active(void)
 diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index 2321f05..5d7c51d 100644
+index 5d7c51d..018b58a 100644
 --- a/arch/x86/mm/mem_encrypt.c
 +++ b/arch/x86/mm/mem_encrypt.c
-@@ -16,11 +16,14 @@
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- 
- #include <linux/mm.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/swiotlb.h>
- 
- #include <asm/tlbflush.h>
- #include <asm/fixmap.h>
- #include <asm/setup.h>
- #include <asm/bootparam.h>
-+#include <asm/set_memory.h>
- 
- /*
-  * Since SME related variables are set early in the boot process they must
-@@ -194,6 +197,25 @@ void __init sme_early_init(void)
+@@ -197,6 +197,36 @@ void __init sme_early_init(void)
  		protection_map[i] = pgprot_encrypted(protection_map[i]);
  }
  
-+/* Architecture __weak replacement functions */
-+void __init mem_encrypt_init(void)
++bool sme_iommu_supported(void)
 +{
-+	if (!sme_me_mask)
-+		return;
++	struct cpuinfo_x86 *c = &boot_cpu_data;
 +
-+	/* Call into SWIOTLB to update the SWIOTLB DMA buffers */
-+	swiotlb_update_mem_attributes();
++	if (!sme_me_mask || (c->x86 != 0x17))
++		return true;
++
++	/* For Fam17h, a specific level of support is required */
++	switch (c->microcode & 0xf000) {
++	case 0x0000:
++		return false;
++	case 0x1000:
++		switch (c->microcode & 0x0f00) {
++		case 0x0000:
++			return false;
++		case 0x0100:
++			if ((c->microcode & 0xff) < 0x26)
++				return false;
++			break;
++		case 0x0200:
++			if ((c->microcode & 0xff) < 0x05)
++				return false;
++			break;
++		}
++		break;
++	}
++
++	return true;
 +}
 +
-+void swiotlb_set_mem_attributes(void *vaddr, unsigned long size)
-+{
-+	WARN(PAGE_ALIGN(size) != size,
-+	     "size is not page-aligned (%#lx)\n", size);
-+
-+	/* Make the SWIOTLB buffer area decrypted */
-+	set_memory_decrypted((unsigned long)vaddr, size >> PAGE_SHIFT);
-+}
-+
- void __init sme_encrypt_kernel(void)
+ /* Architecture __weak replacement functions */
+ void __init mem_encrypt_init(void)
  {
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 63cacf5..94eb130 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -544,7 +544,7 @@ static void dump_dte_entry(u16 devid)
+ 
+ static void dump_command(unsigned long phys_addr)
+ {
+-	struct iommu_cmd *cmd = phys_to_virt(phys_addr);
++	struct iommu_cmd *cmd = iommu_phys_to_virt(phys_addr);
+ 	int i;
+ 
+ 	for (i = 0; i < 4; ++i)
+@@ -863,13 +863,15 @@ static void copy_cmd_to_buffer(struct amd_iommu *iommu,
+ 	writel(tail, iommu->mmio_base + MMIO_CMD_TAIL_OFFSET);
  }
-diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-index 4ee479f..15e7160 100644
---- a/include/linux/swiotlb.h
-+++ b/include/linux/swiotlb.h
-@@ -35,6 +35,7 @@ enum swiotlb_force {
- extern unsigned long swiotlb_nr_tbl(void);
- unsigned long swiotlb_size_or_default(void);
- extern int swiotlb_late_init_with_tbl(char *tlb, unsigned long nslabs);
-+extern void __init swiotlb_update_mem_attributes(void);
  
- /*
-  * Enumeration for sync targets
-diff --git a/init/main.c b/init/main.c
-index df58a41..7125b5f 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -488,6 +488,10 @@ void __init __weak thread_stack_cache_init(void)
+-static void build_completion_wait(struct iommu_cmd *cmd, u64 address)
++static void build_completion_wait(struct iommu_cmd *cmd, volatile u64 *sem)
+ {
++	u64 address = iommu_virt_to_phys((void *)sem);
++
+ 	WARN_ON(address & 0x7ULL);
+ 
+ 	memset(cmd, 0, sizeof(*cmd));
+-	cmd->data[0] = lower_32_bits(__pa(address)) | CMD_COMPL_WAIT_STORE_MASK;
+-	cmd->data[1] = upper_32_bits(__pa(address));
++	cmd->data[0] = lower_32_bits(address) | CMD_COMPL_WAIT_STORE_MASK;
++	cmd->data[1] = upper_32_bits(address);
+ 	cmd->data[2] = 1;
+ 	CMD_SET_TYPE(cmd, CMD_COMPL_WAIT);
  }
- #endif
+@@ -1033,7 +1035,7 @@ static int __iommu_queue_command_sync(struct amd_iommu *iommu,
  
-+void __init __weak mem_encrypt_init(void)
-+{
-+}
-+
- /*
-  * Set up kernel memory allocators
-  */
-@@ -640,6 +644,15 @@ asmlinkage __visible void __init start_kernel(void)
- 	 */
- 	locking_selftest();
+ 		iommu->cmd_sem = 0;
  
-+	/*
-+	 * This needs to be called before any devices perform DMA
-+	 * operations that might use the SWIOTLB bounce buffers.
-+	 * This call will mark the bounce buffers as decrypted so
-+	 * that their usage will not cause "plain-text" data to be
-+	 * decrypted when accessed.
-+	 */
-+	mem_encrypt_init();
-+
- #ifdef CONFIG_BLK_DEV_INITRD
- 	if (initrd_start && !initrd_below_start_ok &&
- 	    page_to_pfn(virt_to_page((void *)initrd_start)) < min_low_pfn) {
-diff --git a/lib/swiotlb.c b/lib/swiotlb.c
-index a8d74a7..74d6557 100644
---- a/lib/swiotlb.c
-+++ b/lib/swiotlb.c
-@@ -30,6 +30,7 @@
- #include <linux/highmem.h>
- #include <linux/gfp.h>
- #include <linux/scatterlist.h>
+-		build_completion_wait(&sync_cmd, (u64)&iommu->cmd_sem);
++		build_completion_wait(&sync_cmd, &iommu->cmd_sem);
+ 		copy_cmd_to_buffer(iommu, &sync_cmd, tail);
+ 
+ 		if ((ret = wait_on_sem(&iommu->cmd_sem)) != 0)
+@@ -1083,7 +1085,7 @@ static int iommu_completion_wait(struct amd_iommu *iommu)
+ 		return 0;
+ 
+ 
+-	build_completion_wait(&cmd, (u64)&iommu->cmd_sem);
++	build_completion_wait(&cmd, &iommu->cmd_sem);
+ 
+ 	spin_lock_irqsave(&iommu->lock, flags);
+ 
+@@ -1328,7 +1330,7 @@ static bool increase_address_space(struct protection_domain *domain,
+ 		return false;
+ 
+ 	*pte             = PM_LEVEL_PDE(domain->mode,
+-					virt_to_phys(domain->pt_root));
++					iommu_virt_to_phys(domain->pt_root));
+ 	domain->pt_root  = pte;
+ 	domain->mode    += 1;
+ 	domain->updated  = true;
+@@ -1365,7 +1367,7 @@ static u64 *alloc_pte(struct protection_domain *domain,
+ 			if (!page)
+ 				return NULL;
+ 
+-			__npte = PM_LEVEL_PDE(level, virt_to_phys(page));
++			__npte = PM_LEVEL_PDE(level, iommu_virt_to_phys(page));
+ 
+ 			/* pte could have been changed somewhere. */
+ 			if (cmpxchg64(pte, __pte, __npte) != __pte) {
+@@ -1481,10 +1483,10 @@ static int iommu_map_page(struct protection_domain *dom,
+ 			return -EBUSY;
+ 
+ 	if (count > 1) {
+-		__pte = PAGE_SIZE_PTE(phys_addr, page_size);
++		__pte = PAGE_SIZE_PTE(__sme_set(phys_addr), page_size);
+ 		__pte |= PM_LEVEL_ENC(7) | IOMMU_PTE_P | IOMMU_PTE_FC;
+ 	} else
+-		__pte = phys_addr | IOMMU_PTE_P | IOMMU_PTE_FC;
++		__pte = __sme_set(phys_addr) | IOMMU_PTE_P | IOMMU_PTE_FC;
+ 
+ 	if (prot & IOMMU_PROT_IR)
+ 		__pte |= IOMMU_PTE_IR;
+@@ -1700,7 +1702,7 @@ static void free_gcr3_tbl_level1(u64 *tbl)
+ 		if (!(tbl[i] & GCR3_VALID))
+ 			continue;
+ 
+-		ptr = __va(tbl[i] & PAGE_MASK);
++		ptr = iommu_phys_to_virt(tbl[i] & PAGE_MASK);
+ 
+ 		free_page((unsigned long)ptr);
+ 	}
+@@ -1715,7 +1717,7 @@ static void free_gcr3_tbl_level2(u64 *tbl)
+ 		if (!(tbl[i] & GCR3_VALID))
+ 			continue;
+ 
+-		ptr = __va(tbl[i] & PAGE_MASK);
++		ptr = iommu_phys_to_virt(tbl[i] & PAGE_MASK);
+ 
+ 		free_gcr3_tbl_level1(ptr);
+ 	}
+@@ -1807,7 +1809,7 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
+ 	u64 flags = 0;
+ 
+ 	if (domain->mode != PAGE_MODE_NONE)
+-		pte_root = virt_to_phys(domain->pt_root);
++		pte_root = iommu_virt_to_phys(domain->pt_root);
+ 
+ 	pte_root |= (domain->mode & DEV_ENTRY_MODE_MASK)
+ 		    << DEV_ENTRY_MODE_SHIFT;
+@@ -1819,7 +1821,7 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
+ 		flags |= DTE_FLAG_IOTLB;
+ 
+ 	if (domain->flags & PD_IOMMUV2_MASK) {
+-		u64 gcr3 = __pa(domain->gcr3_tbl);
++		u64 gcr3 = iommu_virt_to_phys(domain->gcr3_tbl);
+ 		u64 glx  = domain->glx;
+ 		u64 tmp;
+ 
+@@ -3470,10 +3472,10 @@ static u64 *__get_gcr3_pte(u64 *root, int level, int pasid, bool alloc)
+ 			if (root == NULL)
+ 				return NULL;
+ 
+-			*pte = __pa(root) | GCR3_VALID;
++			*pte = iommu_virt_to_phys(root) | GCR3_VALID;
+ 		}
+ 
+-		root = __va(*pte & PAGE_MASK);
++		root = iommu_phys_to_virt(*pte & PAGE_MASK);
+ 
+ 		level -= 1;
+ 	}
+@@ -3652,7 +3654,7 @@ static void set_dte_irq_entry(u16 devid, struct irq_remap_table *table)
+ 
+ 	dte	= amd_iommu_dev_table[devid].data[2];
+ 	dte	&= ~DTE_IRQ_PHYS_ADDR_MASK;
+-	dte	|= virt_to_phys(table->table);
++	dte	|= iommu_virt_to_phys(table->table);
+ 	dte	|= DTE_IRQ_REMAP_INTCTL;
+ 	dte	|= DTE_IRQ_TABLE_LEN;
+ 	dte	|= DTE_IRQ_REMAP_ENABLE;
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 5a11328..2870a6b 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -29,6 +29,7 @@
+ #include <linux/export.h>
+ #include <linux/iommu.h>
+ #include <linux/kmemleak.h>
 +#include <linux/mem_encrypt.h>
+ #include <asm/pci-direct.h>
+ #include <asm/iommu.h>
+ #include <asm/gart.h>
+@@ -346,7 +347,7 @@ static void iommu_set_device_table(struct amd_iommu *iommu)
  
- #include <asm/io.h>
- #include <asm/dma.h>
-@@ -155,6 +156,17 @@ unsigned long swiotlb_size_or_default(void)
- 	return size ? size : (IO_TLB_DEFAULT_SIZE);
+ 	BUG_ON(iommu->mmio_base == NULL);
+ 
+-	entry = virt_to_phys(amd_iommu_dev_table);
++	entry = iommu_virt_to_phys(amd_iommu_dev_table);
+ 	entry |= (dev_table_size >> 12) - 1;
+ 	memcpy_toio(iommu->mmio_base + MMIO_DEV_TABLE_OFFSET,
+ 			&entry, sizeof(entry));
+@@ -602,7 +603,7 @@ static void iommu_enable_command_buffer(struct amd_iommu *iommu)
+ 
+ 	BUG_ON(iommu->cmd_buf == NULL);
+ 
+-	entry = (u64)virt_to_phys(iommu->cmd_buf);
++	entry = iommu_virt_to_phys(iommu->cmd_buf);
+ 	entry |= MMIO_CMD_SIZE_512;
+ 
+ 	memcpy_toio(iommu->mmio_base + MMIO_CMD_BUF_OFFSET,
+@@ -631,7 +632,7 @@ static void iommu_enable_event_buffer(struct amd_iommu *iommu)
+ 
+ 	BUG_ON(iommu->evt_buf == NULL);
+ 
+-	entry = (u64)virt_to_phys(iommu->evt_buf) | EVT_LEN_MASK;
++	entry = iommu_virt_to_phys(iommu->evt_buf) | EVT_LEN_MASK;
+ 
+ 	memcpy_toio(iommu->mmio_base + MMIO_EVT_BUF_OFFSET,
+ 		    &entry, sizeof(entry));
+@@ -664,7 +665,7 @@ static void iommu_enable_ppr_log(struct amd_iommu *iommu)
+ 	if (iommu->ppr_log == NULL)
+ 		return;
+ 
+-	entry = (u64)virt_to_phys(iommu->ppr_log) | PPR_LOG_SIZE_512;
++	entry = iommu_virt_to_phys(iommu->ppr_log) | PPR_LOG_SIZE_512;
+ 
+ 	memcpy_toio(iommu->mmio_base + MMIO_PPR_LOG_OFFSET,
+ 		    &entry, sizeof(entry));
+@@ -744,10 +745,10 @@ static int iommu_init_ga_log(struct amd_iommu *iommu)
+ 	if (!iommu->ga_log_tail)
+ 		goto err_out;
+ 
+-	entry = (u64)virt_to_phys(iommu->ga_log) | GA_LOG_SIZE_512;
++	entry = iommu_virt_to_phys(iommu->ga_log) | GA_LOG_SIZE_512;
+ 	memcpy_toio(iommu->mmio_base + MMIO_GA_LOG_BASE_OFFSET,
+ 		    &entry, sizeof(entry));
+-	entry = ((u64)virt_to_phys(iommu->ga_log) & 0xFFFFFFFFFFFFFULL) & ~7ULL;
++	entry = (iommu_virt_to_phys(iommu->ga_log) & 0xFFFFFFFFFFFFFULL) & ~7ULL;
+ 	memcpy_toio(iommu->mmio_base + MMIO_GA_LOG_TAIL_OFFSET,
+ 		    &entry, sizeof(entry));
+ 	writel(0x00, iommu->mmio_base + MMIO_GA_HEAD_OFFSET);
+@@ -2552,6 +2553,11 @@ int __init amd_iommu_detect(void)
+ 	if (amd_iommu_disabled)
+ 		return -ENODEV;
+ 
++	if (!sme_iommu_supported()) {
++		pr_notice("AMD-Vi: IOMMU not supported when SME is active\n");
++		return -ENODEV;
++	}
++
+ 	ret = iommu_go_to_state(IOMMU_IVRS_DETECTED);
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/iommu/amd_iommu_proto.h b/drivers/iommu/amd_iommu_proto.h
+index 466260f..3f12fb2 100644
+--- a/drivers/iommu/amd_iommu_proto.h
++++ b/drivers/iommu/amd_iommu_proto.h
+@@ -87,4 +87,14 @@ static inline bool iommu_feature(struct amd_iommu *iommu, u64 f)
+ 	return !!(iommu->features & f);
  }
  
-+void __weak swiotlb_set_mem_attributes(void *vaddr, unsigned long size)
++static inline u64 iommu_virt_to_phys(void *vaddr)
 +{
++	return (u64)__sme_set(virt_to_phys(vaddr));
 +}
 +
-+/* For swiotlb, clear memory encryption mask from dma addresses */
-+static dma_addr_t swiotlb_phys_to_dma(struct device *hwdev,
-+				      phys_addr_t address)
++static inline void *iommu_phys_to_virt(unsigned long paddr)
 +{
-+	return __sme_clr(phys_to_dma(hwdev, address));
++	return phys_to_virt(__sme_clr(paddr));
 +}
 +
- /* Note that this doesn't work with highmem page */
- static dma_addr_t swiotlb_virt_to_bus(struct device *hwdev,
- 				      volatile void *address)
-@@ -183,6 +195,31 @@ void swiotlb_print_info(void)
- 	       bytes >> 20, vstart, vend - 1);
+ #endif /* _ASM_X86_AMD_IOMMU_PROTO_H  */
+diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
+index 4de8f41..3ce587d 100644
+--- a/drivers/iommu/amd_iommu_types.h
++++ b/drivers/iommu/amd_iommu_types.h
+@@ -343,7 +343,7 @@
+ 
+ #define IOMMU_PAGE_MASK (((1ULL << 52) - 1) & ~0xfffULL)
+ #define IOMMU_PTE_PRESENT(pte) ((pte) & IOMMU_PTE_P)
+-#define IOMMU_PTE_PAGE(pte) (phys_to_virt((pte) & IOMMU_PAGE_MASK))
++#define IOMMU_PTE_PAGE(pte) (iommu_phys_to_virt((pte) & IOMMU_PAGE_MASK))
+ #define IOMMU_PTE_MODE(pte) (((pte) >> 9) & 0x07)
+ 
+ #define IOMMU_PROT_MASK 0x03
+diff --git a/include/asm-generic/mem_encrypt.h b/include/asm-generic/mem_encrypt.h
+index fb02ff0..bbc49e1 100644
+--- a/include/asm-generic/mem_encrypt.h
++++ b/include/asm-generic/mem_encrypt.h
+@@ -27,6 +27,11 @@ static inline u64 sme_dma_mask(void)
+ 	return 0ULL;
  }
  
-+/*
-+ * Early SWIOTLB allocation may be too early to allow an architecture to
-+ * perform the desired operations.  This function allows the architecture to
-+ * call SWIOTLB when the operations are possible.  It needs to be called
-+ * before the SWIOTLB memory is used.
-+ */
-+void __init swiotlb_update_mem_attributes(void)
++static inline bool sme_iommu_supported(void)
 +{
-+	void *vaddr;
-+	unsigned long bytes;
-+
-+	if (no_iotlb_memory || late_alloc)
-+		return;
-+
-+	vaddr = phys_to_virt(io_tlb_start);
-+	bytes = PAGE_ALIGN(io_tlb_nslabs << IO_TLB_SHIFT);
-+	swiotlb_set_mem_attributes(vaddr, bytes);
-+	memset(vaddr, 0, bytes);
-+
-+	vaddr = phys_to_virt(io_tlb_overflow_buffer);
-+	bytes = PAGE_ALIGN(io_tlb_overflow);
-+	swiotlb_set_mem_attributes(vaddr, bytes);
-+	memset(vaddr, 0, bytes);
++	return true;
 +}
 +
- int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
- {
- 	void *v_overflow_buffer;
-@@ -320,6 +357,7 @@ int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
- 	io_tlb_start = virt_to_phys(tlb);
- 	io_tlb_end = io_tlb_start + bytes;
- 
-+	swiotlb_set_mem_attributes(tlb, bytes);
- 	memset(tlb, 0, bytes);
- 
- 	/*
-@@ -330,6 +368,8 @@ int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
- 	if (!v_overflow_buffer)
- 		goto cleanup2;
- 
-+	swiotlb_set_mem_attributes(v_overflow_buffer, io_tlb_overflow);
-+	memset(v_overflow_buffer, 0, io_tlb_overflow);
- 	io_tlb_overflow_buffer = virt_to_phys(v_overflow_buffer);
- 
- 	/*
-@@ -581,7 +621,7 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
- 		return SWIOTLB_MAP_ERROR;
- 	}
- 
--	start_dma_addr = phys_to_dma(hwdev, io_tlb_start);
-+	start_dma_addr = swiotlb_phys_to_dma(hwdev, io_tlb_start);
- 	return swiotlb_tbl_map_single(hwdev, start_dma_addr, phys, size,
- 				      dir, attrs);
- }
-@@ -702,7 +742,7 @@ void swiotlb_tbl_sync_single(struct device *hwdev, phys_addr_t tlb_addr,
- 			goto err_warn;
- 
- 		ret = phys_to_virt(paddr);
--		dev_addr = phys_to_dma(hwdev, paddr);
-+		dev_addr = swiotlb_phys_to_dma(hwdev, paddr);
- 
- 		/* Confirm address can be DMA'd by device */
- 		if (dev_addr + size - 1 > dma_mask) {
-@@ -812,10 +852,10 @@ dma_addr_t swiotlb_map_page(struct device *dev, struct page *page,
- 	map = map_single(dev, phys, size, dir, attrs);
- 	if (map == SWIOTLB_MAP_ERROR) {
- 		swiotlb_full(dev, size, dir, 1);
--		return phys_to_dma(dev, io_tlb_overflow_buffer);
-+		return swiotlb_phys_to_dma(dev, io_tlb_overflow_buffer);
- 	}
- 
--	dev_addr = phys_to_dma(dev, map);
-+	dev_addr = swiotlb_phys_to_dma(dev, map);
- 
- 	/* Ensure that the address returned is DMA'ble */
- 	if (dma_capable(dev, dev_addr, size))
-@@ -824,7 +864,7 @@ dma_addr_t swiotlb_map_page(struct device *dev, struct page *page,
- 	attrs |= DMA_ATTR_SKIP_CPU_SYNC;
- 	swiotlb_tbl_unmap_single(dev, map, size, dir, attrs);
- 
--	return phys_to_dma(dev, io_tlb_overflow_buffer);
-+	return swiotlb_phys_to_dma(dev, io_tlb_overflow_buffer);
- }
- EXPORT_SYMBOL_GPL(swiotlb_map_page);
- 
-@@ -958,7 +998,7 @@ void swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
- 				sg_dma_len(sgl) = 0;
- 				return 0;
- 			}
--			sg->dma_address = phys_to_dma(hwdev, map);
-+			sg->dma_address = swiotlb_phys_to_dma(hwdev, map);
- 		} else
- 			sg->dma_address = dev_addr;
- 		sg_dma_len(sg) = sg->length;
-@@ -1026,7 +1066,7 @@ void swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
- int
- swiotlb_dma_mapping_error(struct device *hwdev, dma_addr_t dma_addr)
- {
--	return (dma_addr == phys_to_dma(hwdev, io_tlb_overflow_buffer));
-+	return (dma_addr == swiotlb_phys_to_dma(hwdev, io_tlb_overflow_buffer));
- }
- EXPORT_SYMBOL(swiotlb_dma_mapping_error);
- 
-@@ -1039,6 +1079,6 @@ void swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
- int
- swiotlb_dma_supported(struct device *hwdev, u64 mask)
- {
--	return phys_to_dma(hwdev, io_tlb_end - 1) <= mask;
-+	return swiotlb_phys_to_dma(hwdev, io_tlb_end - 1) <= mask;
- }
- EXPORT_SYMBOL(swiotlb_dma_supported);
+ /*
+  * The __sme_set() and __sme_clr() macros are useful for adding or removing
+  * the encryption mask from a value (e.g. when dealing with pagetable
 
 
 _______________________________________________
