@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-cys01nam02on0086.outbound.protection.outlook.com
- ([104.47.37.86] helo=NAM02-CY1-obe.outbound.protection.outlook.com)
+Received: from mail-sn1nam01on0064.outbound.protection.outlook.com
+ ([104.47.32.64] helo=NAM01-SN1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dIgSx-0002av-Mw
- for kexec@lists.infradead.org; Wed, 07 Jun 2017 19:18:06 +0000
+ id 1dIgTG-0002iM-3s
+ for kexec@lists.infradead.org; Wed, 07 Jun 2017 19:18:23 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v6 25/34] swiotlb: Add warnings for use of bounce buffers
- with SME
-Date: Wed, 07 Jun 2017 14:17:32 -0500
-Message-ID: <20170607191732.28645.42876.stgit@tlendack-t1.amdoffice.net>
+Subject: [PATCH v6 27/34] x86, realmode: Check for memory encryption on the APs
+Date: Wed, 07 Jun 2017 14:17:54 -0500
+Message-ID: <20170607191754.28645.22939.stgit@tlendack-t1.amdoffice.net>
 In-Reply-To: <20170607191309.28645.15241.stgit@tlendack-t1.amdoffice.net>
 References: <20170607191309.28645.15241.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
@@ -27,102 +26,118 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, linux-mm@kvack.org, iommu@lists.linux-foundation.org
 Cc: Thomas Gleixner <tglx@linutronix.de>, Rik van Riel <riel@redhat.com>, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Matt Fleming <matt@codeblueprint.co.uk>, Joerg Roedel <joro@8bytes.org>, Radim =?utf-8?b?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Ingo Molnar <mingo@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Paolo Bonzini <pbonzini@redhat.com>, Alexander Potapenko <glider@google.com>, Dave Young <dyoung@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Dmitry Vyukov <dvyukov@google.com>
 
-Add warnings to let the user know when bounce buffers are being used for
-DMA when SME is active.  Since the bounce buffers are not in encrypted
-memory, these notifications are to allow the user to determine some
-appropriate action - if necessary.
+Add support to check if memory encryption is active in the kernel and that
+it has been enabled on the AP. If memory encryption is active in the kernel
+but has not been enabled on the AP, then set the memory encryption bit (bit
+23) of MSR_K8_SYSCFG to enable memory encryption on that AP and allow the
+AP to continue start up.
 
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/x86/include/asm/mem_encrypt.h |    8 ++++++++
- include/asm-generic/mem_encrypt.h  |    5 +++++
- include/linux/dma-mapping.h        |    9 +++++++++
- lib/swiotlb.c                      |    3 +++
- 4 files changed, 25 insertions(+)
+ arch/x86/include/asm/realmode.h      |   12 ++++++++++++
+ arch/x86/realmode/init.c             |    4 ++++
+ arch/x86/realmode/rm/trampoline_64.S |   24 ++++++++++++++++++++++++
+ 3 files changed, 40 insertions(+)
 
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index f1215a4..c7a2525 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -69,6 +69,14 @@ static inline bool sme_active(void)
- 	return !!sme_me_mask;
- }
+diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
+index 230e190..90d9152 100644
+--- a/arch/x86/include/asm/realmode.h
++++ b/arch/x86/include/asm/realmode.h
+@@ -1,6 +1,15 @@
+ #ifndef _ARCH_X86_REALMODE_H
+ #define _ARCH_X86_REALMODE_H
  
-+static inline u64 sme_dma_mask(void)
-+{
-+	if (!sme_me_mask)
-+		return 0ULL;
++/*
++ * Flag bit definitions for use with the flags field of the trampoline header
++ * in the CONFIG_X86_64 variant.
++ */
++#define TH_FLAGS_SME_ACTIVE_BIT		0
++#define TH_FLAGS_SME_ACTIVE		BIT(TH_FLAGS_SME_ACTIVE_BIT)
 +
-+	return ((u64)sme_me_mask << 1) - 1;
-+}
++#ifndef __ASSEMBLY__
 +
- /*
-  * The __sme_pa() and __sme_pa_nodebug() macros are meant for use when
-  * writing to or comparing values from the cr3 register.  Having the
-diff --git a/include/asm-generic/mem_encrypt.h b/include/asm-generic/mem_encrypt.h
-index b55c3f9..fb02ff0 100644
---- a/include/asm-generic/mem_encrypt.h
-+++ b/include/asm-generic/mem_encrypt.h
-@@ -22,6 +22,11 @@ static inline bool sme_active(void)
- 	return false;
- }
+ #include <linux/types.h>
+ #include <asm/io.h>
  
-+static inline u64 sme_dma_mask(void)
-+{
-+	return 0ULL;
-+}
-+
- /*
-  * The __sme_set() and __sme_clr() macros are useful for adding or removing
-  * the encryption mask from a value (e.g. when dealing with pagetable
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 4f3eece..e2c5fda 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -10,6 +10,7 @@
- #include <linux/scatterlist.h>
- #include <linux/kmemcheck.h>
- #include <linux/bug.h>
-+#include <linux/mem_encrypt.h>
+@@ -38,6 +47,7 @@ struct trampoline_header {
+ 	u64 start;
+ 	u64 efer;
+ 	u32 cr4;
++	u32 flags;
+ #endif
+ };
  
- /**
-  * List of possible attributes associated with a DMA mapping. The semantics
-@@ -577,6 +578,10 @@ static inline int dma_set_mask(struct device *dev, u64 mask)
+@@ -69,4 +79,6 @@ static inline size_t real_mode_size_needed(void)
+ void set_real_mode_mem(phys_addr_t mem, size_t size);
+ void reserve_real_mode(void);
  
- 	if (!dev->dma_mask || !dma_supported(dev, mask))
- 		return -EIO;
++#endif /* __ASSEMBLY__ */
 +
-+	if (sme_active() && (mask < sme_dma_mask()))
-+		dev_warn(dev, "SME is active, device will require DMA bounce buffers\n");
-+
- 	*dev->dma_mask = mask;
- 	return 0;
- }
-@@ -596,6 +601,10 @@ static inline int dma_set_coherent_mask(struct device *dev, u64 mask)
- {
- 	if (!dma_supported(dev, mask))
- 		return -EIO;
-+
-+	if (sme_active() && (mask < sme_dma_mask()))
-+		dev_warn(dev, "SME is active, device will require DMA bounce buffers\n");
-+
- 	dev->coherent_dma_mask = mask;
- 	return 0;
- }
-diff --git a/lib/swiotlb.c b/lib/swiotlb.c
-index 74d6557..f78906a 100644
---- a/lib/swiotlb.c
-+++ b/lib/swiotlb.c
-@@ -509,6 +509,9 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
- 	if (no_iotlb_memory)
- 		panic("Can not allocate SWIOTLB buffer earlier and can't now provide you with the DMA bounce buffer");
+ #endif /* _ARCH_X86_REALMODE_H */
+diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+index 195ba29..60373d0 100644
+--- a/arch/x86/realmode/init.c
++++ b/arch/x86/realmode/init.c
+@@ -101,6 +101,10 @@ static void __init setup_real_mode(void)
+ 	trampoline_cr4_features = &trampoline_header->cr4;
+ 	*trampoline_cr4_features = mmu_cr4_features;
  
++	trampoline_header->flags = 0;
 +	if (sme_active())
-+		pr_warn_once("SME is active and system is using DMA bounce buffers\n");
++		trampoline_header->flags |= TH_FLAGS_SME_ACTIVE;
 +
- 	mask = dma_get_seg_boundary(hwdev);
+ 	trampoline_pgd = (u64 *) __va(real_mode_header->trampoline_pgd);
+ 	trampoline_pgd[0] = trampoline_pgd_entry.pgd;
+ 	trampoline_pgd[511] = init_level4_pgt[511].pgd;
+diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
+index dac7b20..614fd70 100644
+--- a/arch/x86/realmode/rm/trampoline_64.S
++++ b/arch/x86/realmode/rm/trampoline_64.S
+@@ -30,6 +30,7 @@
+ #include <asm/msr.h>
+ #include <asm/segment.h>
+ #include <asm/processor-flags.h>
++#include <asm/realmode.h>
+ #include "realmode.h"
  
- 	tbl_dma_addr &= mask;
+ 	.text
+@@ -92,6 +93,28 @@ ENTRY(startup_32)
+ 	movl	%edx, %fs
+ 	movl	%edx, %gs
+ 
++	/*
++	 * Check for memory encryption support. This is a safety net in
++	 * case BIOS hasn't done the necessary step of setting the bit in
++	 * the MSR for this AP. If SME is active and we've gotten this far
++	 * then it is safe for us to set the MSR bit and continue. If we
++	 * don't we'll eventually crash trying to execute encrypted
++	 * instructions.
++	 */
++	bt	$TH_FLAGS_SME_ACTIVE_BIT, pa_tr_flags
++	jnc	.Ldone
++	movl	$MSR_K8_SYSCFG, %ecx
++	rdmsr
++	bts	$MSR_K8_SYSCFG_MEM_ENCRYPT_BIT, %eax
++	jc	.Ldone
++
++	/*
++	 * Memory encryption is enabled but the SME enable bit for this
++	 * CPU has has not been set.  It is safe to set it, so do so.
++	 */
++	wrmsr
++.Ldone:
++
+ 	movl	pa_tr_cr4, %eax
+ 	movl	%eax, %cr4		# Enable PAE mode
+ 
+@@ -147,6 +170,7 @@ GLOBAL(trampoline_header)
+ 	tr_start:		.space	8
+ 	GLOBAL(tr_efer)		.space	8
+ 	GLOBAL(tr_cr4)		.space	4
++	GLOBAL(tr_flags)	.space	4
+ END(trampoline_header)
+ 
+ #include "trampoline_common.S"
 
 
 _______________________________________________
