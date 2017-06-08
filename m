@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-sn1nam01on0604.outbound.protection.outlook.com
- ([2a01:111:f400:fe40::604]
- helo=NAM01-SN1-obe.outbound.protection.outlook.com)
+Received: from mail-sn1nam02on0067.outbound.protection.outlook.com
+ ([104.47.36.67] helo=NAM02-SN1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dIxij-0007l4-3s
- for kexec@lists.infradead.org; Thu, 08 Jun 2017 13:43:30 +0000
-Subject: Re: [PATCH v6 10/34] x86, x86/mm, x86/xen, olpc: Use __va() against
- just the physical address in cr3
+ id 1dIyP1-0000Et-Cu
+ for kexec@lists.infradead.org; Thu, 08 Jun 2017 14:27:13 +0000
+Subject: Re: [PATCH v6 26/34] iommu/amd: Allow the AMD IOMMU to work with
+ memory encryption
 References: <20170607191309.28645.15241.stgit@tlendack-t1.amdoffice.net>
- <20170607191453.28645.92256.stgit@tlendack-t1.amdoffice.net>
- <b15e8924-4069-b5fa-adb2-86c164b1dd36@oracle.com>
+ <20170607191745.28645.81756.stgit@tlendack-t1.amdoffice.net>
+ <CAOcCaLZ5QNx+CdnLn4eHtYOJOezJAsmq2whf8mggOdeMQDWOhw@mail.gmail.com>
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <4a7376fb-abfc-8edd-42b7-38de461ac65e@amd.com>
-Date: Thu, 8 Jun 2017 08:42:51 -0500
+Message-ID: <9ca73103-f202-b5b0-b449-79a4b8a8fd72@amd.com>
+Date: Thu, 8 Jun 2017 09:26:38 -0500
 MIME-Version: 1.0
-In-Reply-To: <b15e8924-4069-b5fa-adb2-86c164b1dd36@oracle.com>
+In-Reply-To: <CAOcCaLZ5QNx+CdnLn4eHtYOJOezJAsmq2whf8mggOdeMQDWOhw@mail.gmail.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -28,87 +27,121 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Boris Ostrovsky <boris.ostrovsky@oracle.com>, linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, linux-mm@kvack.org, iommu@lists.linux-foundation.org
-Cc: Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, "Michael S. Tsirkin" <mst@redhat.com>, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, xen-devel <xen-devel@lists.xen.org>, Paolo Bonzini <pbonzini@redhat.com>
+To: Nick Sarnie <commendsarnex@gmail.com>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, linux-doc@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "Michael S. Tsirkin" <mst@redhat.com>, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, Paolo Bonzini <pbonzini@redhat.com>
 
-On 6/7/2017 5:06 PM, Boris Ostrovsky wrote:
-> On 06/07/2017 03:14 PM, Tom Lendacky wrote:
->> The cr3 register entry can contain the SME encryption bit that indicates
->> the PGD is encrypted.  The encryption bit should not be used when creating
->> a virtual address for the PGD table.
+On 6/7/2017 9:38 PM, Nick Sarnie wrote:
+> On Wed, Jun 7, 2017 at 3:17 PM, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+>> The IOMMU is programmed with physical addresses for the various tables
+>> and buffers that are used to communicate between the device and the
+>> driver. When the driver allocates this memory it is encrypted. In order
+>> for the IOMMU to access the memory as encrypted the encryption mask needs
+>> to be included in these physical addresses during configuration.
 >>
->> Create a new function, read_cr3_pa(), that will extract the physical
->> address from the cr3 register. This function is then used where a virtual
->> address of the PGD needs to be created/used from the cr3 register.
+>> The PTE entries created by the IOMMU should also include the encryption
+>> mask so that when the device behind the IOMMU performs a DMA, the DMA
+>> will be performed to encrypted memory.
 >>
 >> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 >> ---
->>   arch/x86/include/asm/special_insns.h |    9 +++++++++
->>   arch/x86/kernel/head64.c             |    2 +-
->>   arch/x86/mm/fault.c                  |   10 +++++-----
->>   arch/x86/mm/ioremap.c                |    2 +-
->>   arch/x86/platform/olpc/olpc-xo1-pm.c |    2 +-
->>   arch/x86/power/hibernate_64.c        |    2 +-
->>   arch/x86/xen/mmu_pv.c                |    6 +++---
->>   7 files changed, 21 insertions(+), 12 deletions(-)
+>>   arch/x86/include/asm/mem_encrypt.h |    7 +++++++
+>>   arch/x86/mm/mem_encrypt.c          |   30 ++++++++++++++++++++++++++++++
+>>   drivers/iommu/amd_iommu.c          |   36 +++++++++++++++++++-----------------
+>>   drivers/iommu/amd_iommu_init.c     |   18 ++++++++++++------
+>>   drivers/iommu/amd_iommu_proto.h    |   10 ++++++++++
+>>   drivers/iommu/amd_iommu_types.h    |    2 +-
+>>   include/asm-generic/mem_encrypt.h  |    5 +++++
+>>   7 files changed, 84 insertions(+), 24 deletions(-)
 >>
+>> diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+>> index c7a2525..d86e544 100644
+>> --- a/arch/x86/include/asm/mem_encrypt.h
+>> +++ b/arch/x86/include/asm/mem_encrypt.h
+>> @@ -31,6 +31,8 @@ void __init sme_early_decrypt(resource_size_t paddr,
+>>
+>>   void __init sme_early_init(void);
+>>
+>> +bool sme_iommu_supported(void);
+>> +
+>>   /* Architecture __weak replacement functions */
+>>   void __init mem_encrypt_init(void);
+>>
+>> @@ -62,6 +64,11 @@ static inline void __init sme_early_init(void)
+>>   {
+>>   }
+>>
+>> +static inline bool sme_iommu_supported(void)
+>> +{
+>> +       return true;
+>> +}
+>> +
+>>   #endif /* CONFIG_AMD_MEM_ENCRYPT */
+>>
+>>   static inline bool sme_active(void)
+>> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+>> index 5d7c51d..018b58a 100644
+>> --- a/arch/x86/mm/mem_encrypt.c
+>> +++ b/arch/x86/mm/mem_encrypt.c
+>> @@ -197,6 +197,36 @@ void __init sme_early_init(void)
+>>                  protection_map[i] = pgprot_encrypted(protection_map[i]);
+>>   }
+>>
+>> +bool sme_iommu_supported(void)
+>> +{
+>> +       struct cpuinfo_x86 *c = &boot_cpu_data;
+>> +
+>> +       if (!sme_me_mask || (c->x86 != 0x17))
+>> +               return true;
+>> +
+>> +       /* For Fam17h, a specific level of support is required */
+>> +       switch (c->microcode & 0xf000) {
+>> +       case 0x0000:
+>> +               return false;
+>> +       case 0x1000:
+>> +               switch (c->microcode & 0x0f00) {
+>> +               case 0x0000:
+>> +                       return false;
+>> +               case 0x0100:
+>> +                       if ((c->microcode & 0xff) < 0x26)
+>> +                               return false;
+>> +                       break;
+>> +               case 0x0200:
+>> +                       if ((c->microcode & 0xff) < 0x05)
+>> +                               return false;
+>> +                       break;
+>> +               }
+>> +               break;
+>> +       }
+>> +
+>> +       return true;
+>> +}
+>> +
+>>   /* Architecture __weak replacement functions */
+>>   void __init mem_encrypt_init(void)
+>>   {
+> 
 
 ...
 
->> diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
->> index 1f386d7..2dc5243 100644
->> --- a/arch/x86/xen/mmu_pv.c
->> +++ b/arch/x86/xen/mmu_pv.c
->> @@ -2022,7 +2022,7 @@ static phys_addr_t __init xen_early_virt_to_phys(unsigned long vaddr)
->>   	pmd_t pmd;
->>   	pte_t pte;
->>   
->> -	pa = read_cr3();
->> +	pa = read_cr3_pa();
->>   	pgd = native_make_pgd(xen_read_phys_ulong(pa + pgd_index(vaddr) *
->>   						       sizeof(pgd)));
->>   	if (!pgd_present(pgd))
->> @@ -2102,7 +2102,7 @@ void __init xen_relocate_p2m(void)
->>   	pt_phys = pmd_phys + PFN_PHYS(n_pmd);
->>   	p2m_pfn = PFN_DOWN(pt_phys) + n_pt;
->>   
->> -	pgd = __va(read_cr3());
->> +	pgd = __va(read_cr3_pa());
->>   	new_p2m = (unsigned long *)(2 * PGDIR_SIZE);
->>   	idx_p4d = 0;
->>   	save_pud = n_pud;
->> @@ -2209,7 +2209,7 @@ static void __init xen_write_cr3_init(unsigned long cr3)
->>   {
->>   	unsigned long pfn = PFN_DOWN(__pa(swapper_pg_dir));
->>   
->> -	BUG_ON(read_cr3() != __pa(initial_page_table));
->> +	BUG_ON(read_cr3_pa() != __pa(initial_page_table));
->>   	BUG_ON(cr3 != __pa(swapper_pg_dir));
->>   
->>   	/*
 > 
+> Hi Tom,
 > 
-> (Please copy Xen maintainers when modifying xen-related files.)
+> This sounds like a cool feature. I'm trying to test it on my Ryzen
+> system, but c->microcode & 0xf000 is evaluating as 0, so IOMMU is not
+> being enabled on my system. I'm using the latest microcode for AGESA
+> 1.0.0.6, 0x08001126. Is this work reliant on a future microcode
+> update, or is there some other issue?
 
-Sorry about that, missed adding the Xen maintainers when I added this
-change.
-
-> 
-> Given that page tables for Xen PV guests are controlled by the
-> hypervisor I don't think this change (although harmless) is necessary.
-
-I can back this change out if the Xen maintainers think that's best.
-
-> What may be needed is making sure X86_FEATURE_SME is not set for PV guests.
-
-And that may be something that Xen will need to control through either
-CPUID or MSR support for the PV guests.
+This is my mistake. I moved the check and didn't re-test. At this point
+the c->microcode field hasn't been filled in so I'll need to read
+MSR_AMD64_PATCH_LEVEL directly in the sme_iommu_supported() function.
 
 Thanks,
 Tom
 
 > 
-> -boris
+> Thanks,
+> Sarnex
 > 
 
 _______________________________________________
