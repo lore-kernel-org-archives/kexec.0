@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-sn1nam02on0067.outbound.protection.outlook.com
- ([104.47.36.67] helo=NAM02-SN1-obe.outbound.protection.outlook.com)
+Received: from mail-bn3nam01on0064.outbound.protection.outlook.com
+ ([104.47.33.64] helo=NAM01-BN3-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dIyP1-0000Et-Cu
- for kexec@lists.infradead.org; Thu, 08 Jun 2017 14:27:13 +0000
-Subject: Re: [PATCH v6 26/34] iommu/amd: Allow the AMD IOMMU to work with
- memory encryption
+ id 1dJ05R-00088I-D9
+ for kexec@lists.infradead.org; Thu, 08 Jun 2017 16:15:15 +0000
+Subject: Re: [PATCH v6 00/34] x86: Secure Memory Encryption (AMD)
 References: <20170607191309.28645.15241.stgit@tlendack-t1.amdoffice.net>
- <20170607191745.28645.81756.stgit@tlendack-t1.amdoffice.net>
- <CAOcCaLZ5QNx+CdnLn4eHtYOJOezJAsmq2whf8mggOdeMQDWOhw@mail.gmail.com>
+ <CAOcCaLYWoOu0c-Fkee-=wegNqkzUp9pLFLmaFrXuhiXRnUZ3Xw@mail.gmail.com>
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <9ca73103-f202-b5b0-b449-79a4b8a8fd72@amd.com>
-Date: Thu, 8 Jun 2017 09:26:38 -0500
+Message-ID: <2dd424fe-0af1-d82f-b608-271ea5e1f62b@amd.com>
+Date: Thu, 8 Jun 2017 11:14:38 -0500
 MIME-Version: 1.0
-In-Reply-To: <CAOcCaLZ5QNx+CdnLn4eHtYOJOezJAsmq2whf8mggOdeMQDWOhw@mail.gmail.com>
+In-Reply-To: <CAOcCaLYWoOu0c-Fkee-=wegNqkzUp9pLFLmaFrXuhiXRnUZ3Xw@mail.gmail.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -30,111 +28,63 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Nick Sarnie <commendsarnex@gmail.com>
 Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, linux-doc@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "Michael S. Tsirkin" <mst@redhat.com>, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, Paolo Bonzini <pbonzini@redhat.com>
 
-On 6/7/2017 9:38 PM, Nick Sarnie wrote:
-> On Wed, Jun 7, 2017 at 3:17 PM, Tom Lendacky <thomas.lendacky@amd.com> wrote:
->> The IOMMU is programmed with physical addresses for the various tables
->> and buffers that are used to communicate between the device and the
->> driver. When the driver allocates this memory it is encrypted. In order
->> for the IOMMU to access the memory as encrypted the encryption mask needs
->> to be included in these physical addresses during configuration.
+On 6/7/2017 9:40 PM, Nick Sarnie wrote:
+> On Wed, Jun 7, 2017 at 3:13 PM, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+>> This patch series provides support for AMD's new Secure Memory Encryption (SME)
+>> feature.
 >>
->> The PTE entries created by the IOMMU should also include the encryption
->> mask so that when the device behind the IOMMU performs a DMA, the DMA
->> will be performed to encrypted memory.
+>> SME can be used to mark individual pages of memory as encrypted through the
+>> page tables. A page of memory that is marked encrypted will be automatically
+>> decrypted when read from DRAM and will be automatically encrypted when
+>> written to DRAM. Details on SME can found in the links below.
 >>
->> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+>> The SME feature is identified through a CPUID function and enabled through
+>> the SYSCFG MSR. Once enabled, page table entries will determine how the
+>> memory is accessed. If a page table entry has the memory encryption mask set,
+>> then that memory will be accessed as encrypted memory. The memory encryption
+>> mask (as well as other related information) is determined from settings
+>> returned through the same CPUID function that identifies the presence of the
+>> feature.
+>>
+>> The approach that this patch series takes is to encrypt everything possible
+>> starting early in the boot where the kernel is encrypted. Using the page
+>> table macros the encryption mask can be incorporated into all page table
+>> entries and page allocations. By updating the protection map, userspace
+>> allocations are also marked encrypted. Certain data must be accounted for
+>> as having been placed in memory before SME was enabled (EFI, initrd, etc.)
+>> and accessed accordingly.
+>>
+>> This patch series is a pre-cursor to another AMD processor feature called
+>> Secure Encrypted Virtualization (SEV). The support for SEV will build upon
+>> the SME support and will be submitted later. Details on SEV can be found
+>> in the links below.
+>>
+>> The following links provide additional detail:
+>>
+>> AMD Memory Encryption whitepaper:
+>>     http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2013/12/AMD_Memory_Encryption_Whitepaper_v7-Public.pdf
+>>
+>> AMD64 Architecture Programmer's Manual:
+>>     http://support.amd.com/TechDocs/24593.pdf
+>>     SME is section 7.10
+>>     SEV is section 15.34
+>>
 >> ---
->>   arch/x86/include/asm/mem_encrypt.h |    7 +++++++
->>   arch/x86/mm/mem_encrypt.c          |   30 ++++++++++++++++++++++++++++++
->>   drivers/iommu/amd_iommu.c          |   36 +++++++++++++++++++-----------------
->>   drivers/iommu/amd_iommu_init.c     |   18 ++++++++++++------
->>   drivers/iommu/amd_iommu_proto.h    |   10 ++++++++++
->>   drivers/iommu/amd_iommu_types.h    |    2 +-
->>   include/asm-generic/mem_encrypt.h  |    5 +++++
->>   7 files changed, 84 insertions(+), 24 deletions(-)
 >>
->> diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
->> index c7a2525..d86e544 100644
->> --- a/arch/x86/include/asm/mem_encrypt.h
->> +++ b/arch/x86/include/asm/mem_encrypt.h
->> @@ -31,6 +31,8 @@ void __init sme_early_decrypt(resource_size_t paddr,
->>
->>   void __init sme_early_init(void);
->>
->> +bool sme_iommu_supported(void);
->> +
->>   /* Architecture __weak replacement functions */
->>   void __init mem_encrypt_init(void);
->>
->> @@ -62,6 +64,11 @@ static inline void __init sme_early_init(void)
->>   {
->>   }
->>
->> +static inline bool sme_iommu_supported(void)
->> +{
->> +       return true;
->> +}
->> +
->>   #endif /* CONFIG_AMD_MEM_ENCRYPT */
->>
->>   static inline bool sme_active(void)
->> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
->> index 5d7c51d..018b58a 100644
->> --- a/arch/x86/mm/mem_encrypt.c
->> +++ b/arch/x86/mm/mem_encrypt.c
->> @@ -197,6 +197,36 @@ void __init sme_early_init(void)
->>                  protection_map[i] = pgprot_encrypted(protection_map[i]);
->>   }
->>
->> +bool sme_iommu_supported(void)
->> +{
->> +       struct cpuinfo_x86 *c = &boot_cpu_data;
->> +
->> +       if (!sme_me_mask || (c->x86 != 0x17))
->> +               return true;
->> +
->> +       /* For Fam17h, a specific level of support is required */
->> +       switch (c->microcode & 0xf000) {
->> +       case 0x0000:
->> +               return false;
->> +       case 0x1000:
->> +               switch (c->microcode & 0x0f00) {
->> +               case 0x0000:
->> +                       return false;
->> +               case 0x0100:
->> +                       if ((c->microcode & 0xff) < 0x26)
->> +                               return false;
->> +                       break;
->> +               case 0x0200:
->> +                       if ((c->microcode & 0xff) < 0x05)
->> +                               return false;
->> +                       break;
->> +               }
->> +               break;
->> +       }
->> +
->> +       return true;
->> +}
->> +
->>   /* Architecture __weak replacement functions */
->>   void __init mem_encrypt_init(void)
->>   {
-> 
 
 ...
 
 > 
+> 
 > Hi Tom,
 > 
-> This sounds like a cool feature. I'm trying to test it on my Ryzen
-> system, but c->microcode & 0xf000 is evaluating as 0, so IOMMU is not
-> being enabled on my system. I'm using the latest microcode for AGESA
-> 1.0.0.6, 0x08001126. Is this work reliant on a future microcode
-> update, or is there some other issue?
+> Thanks for your work on this. This may be a stupid question, but is
+> using bounce buffers for the GPU(s) expected to reduce performance in
+> any/a noticeable way? I'm hitting another issue which I've already
+> sent mail about so I can't test it for myself at the moment,
 
-This is my mistake. I moved the check and didn't re-test. At this point
-the c->microcode field hasn't been filled in so I'll need to read
-MSR_AMD64_PATCH_LEVEL directly in the sme_iommu_supported() function.
+That all depends on the workload, how much DMA is being performed, etc.
+But it is extra overhead to use bounce buffers.
 
 Thanks,
 Tom
