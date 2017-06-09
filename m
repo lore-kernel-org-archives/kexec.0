@@ -1,38 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dJBIm-0003o8-Lu
- for kexec@lists.infradead.org; Fri, 09 Jun 2017 04:13:38 +0000
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id
- v5948ljv036381
- for <kexec@lists.infradead.org>; Fri, 9 Jun 2017 00:13:13 -0400
-Received: from e23smtp01.au.ibm.com (e23smtp01.au.ibm.com [202.81.31.143])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2ayksgsrm4-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 09 Jun 2017 00:13:13 -0400
-Received: from localhost
- by e23smtp01.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Fri, 9 Jun 2017 14:13:10 +1000
-Received: from d23av05.au.ibm.com (d23av05.au.ibm.com [9.190.234.119])
- by d23relay08.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- v594D1nt7471504
- for <kexec@lists.infradead.org>; Fri, 9 Jun 2017 14:13:09 +1000
-Received: from d23av05.au.ibm.com (localhost [127.0.0.1])
- by d23av05.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- v594CaI1014551
- for <kexec@lists.infradead.org>; Fri, 9 Jun 2017 14:12:36 +1000
+ id 1dJEcM-000635-Ov
+ for kexec@lists.infradead.org; Fri, 09 Jun 2017 07:46:04 +0000
+Date: Fri, 9 Jun 2017 15:45:29 +0800
+From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH] s390/crash: Fix KEXEC_NOTE_BYTES definition
+Message-ID: <20170609074529.GA9485@dhcp-128-65.nay.redhat.com>
 References: <1496974625-10891-1-git-send-email-xlpang@redhat.com>
-From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Fri, 9 Jun 2017 09:42:10 +0530
+ <20170609022904.GB3688@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1496974625-10891-1-git-send-email-xlpang@redhat.com>
-Content-Language: en-US
-Message-Id: <945499f7-3639-d803-adfe-8aa473695488@linux.vnet.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <20170609022904.GB3688@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,111 +20,138 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Xunlei Pang <xlpang@redhat.com>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: linux-s390@vger.kernel.org, Baoquan He <bhe@redhat.com>, Gustavo Luiz Duarte <gustavold@linux.vnet.ibm.com>, Dave Anderson <anderson@redhat.com>, Eric Biederman <ebiederm@xmission.com>, akpm@linux-foundation.org, Michael Holzheu <holzheu@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
+To: Xunlei Pang <xlpang@redhat.com>
+Cc: linux-s390@vger.kernel.org, Baoquan He <bhe@redhat.com>, Gustavo Luiz Duarte <gustavold@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Dave Anderson <anderson@redhat.com>, Eric Biederman <ebiederm@xmission.com>, Hari Bathini <hbathini@linux.vnet.ibm.com>, akpm@linux-foundation.org, Michael Holzheu <holzheu@linux.vnet.ibm.com>
+
+On 06/09/17 at 10:29am, Dave Young wrote:
+> On 06/09/17 at 10:17am, Xunlei Pang wrote:
+> > S390 KEXEC_NOTE_BYTES is not used by note_buf_t as before, which
+> > is now defined as follows:
+> >     typedef u32 note_buf_t[CRASH_CORE_NOTE_BYTES/4];
+> > It was changed by the CONFIG_CRASH_CORE feature.
+> > 
+> > This patch gets rid of all the old KEXEC_NOTE_BYTES stuff, and
+> > renames KEXEC_NOTE_BYTES to CRASH_CORE_NOTE_BYTES for S390.
+> > 
+> > Fixes: 692f66f26a4c ("crash: move crashkernel parsing and vmcore related code under CONFIG_CRASH_CORE")
+> > Cc: Dave Young <dyoung@redhat.com>
+> > Cc: Dave Anderson <anderson@redhat.com>
+> > Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
+> > Cc: Gustavo Luiz Duarte <gustavold@linux.vnet.ibm.com>
+> > Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+> > ---
+> >  arch/s390/include/asm/kexec.h |  2 +-
+> >  include/linux/crash_core.h    |  7 +++++++
+> >  include/linux/kexec.h         | 11 +----------
+> >  3 files changed, 9 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
+> > index 2f924bc..352deb8 100644
+> > --- a/arch/s390/include/asm/kexec.h
+> > +++ b/arch/s390/include/asm/kexec.h
+> > @@ -47,7 +47,7 @@
+> >   * Seven notes plus zero note at the end: prstatus, fpregset, timer,
+> >   * tod_cmp, tod_reg, control regs, and prefix
+> >   */
+> > -#define KEXEC_NOTE_BYTES \
+> > +#define CRASH_CORE_NOTE_BYTES \
+> >  	(ALIGN(sizeof(struct elf_note), 4) * 8 + \
+> >  	 ALIGN(sizeof("CORE"), 4) * 7 + \
+> >  	 ALIGN(sizeof(struct elf_prstatus), 4) + \
+
+I found that in mainline since below commit, above define should be
+useless, but if distribution with older kernel does need your fix, so in
+mainline the right fix should be dropping the s390 part about these
+macros usage.
+
+Anyway this need a comment from Michael.
+
+commit 8a07dd02d7615d91d65d6235f7232e3f9b5d347f
+Author: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Date:   Wed Oct 14 15:53:06 2015 +0200
+
+    s390/kdump: remove code to create ELF notes in the crashed system
+    
+    The s390 architecture can store the CPU registers of the crashed
+system
+    after the kdump kernel has been started and this is the preferred
+way.
+    Remove the remaining code fragments that deal with storing CPU
+registers
+    while the crashed system is still active.
+    
+    Acked-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+    Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 
 
+> > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> > index e9de6b4..dbc6e5c 100644
+> > --- a/include/linux/crash_core.h
+> > +++ b/include/linux/crash_core.h
+> > @@ -10,9 +10,16 @@
+> >  #define CRASH_CORE_NOTE_NAME_BYTES ALIGN(sizeof(CRASH_CORE_NOTE_NAME), 4)
+> >  #define CRASH_CORE_NOTE_DESC_BYTES ALIGN(sizeof(struct elf_prstatus), 4)
+> >  
+> > +/*
+> > + * The per-cpu notes area is a list of notes terminated by a "NULL"
+> > + * note header.  For kdump, the code in vmcore.c runs in the context
+> > + * of the second kernel to combine them into one note.
+> > + */
+> > +#ifndef CRASH_CORE_NOTE_BYTES
+> >  #define CRASH_CORE_NOTE_BYTES	   ((CRASH_CORE_NOTE_HEAD_BYTES * 2) +	\
+> >  				     CRASH_CORE_NOTE_NAME_BYTES +	\
+> >  				     CRASH_CORE_NOTE_DESC_BYTES)
+> > +#endif
+> >  
+> >  #define VMCOREINFO_BYTES	   PAGE_SIZE
+> >  #define VMCOREINFO_NOTE_NAME	   "VMCOREINFO"
+> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> > index 3ea8275..133df03 100644
+> > --- a/include/linux/kexec.h
+> > +++ b/include/linux/kexec.h
+> > @@ -14,7 +14,6 @@
+> >  
+> >  #if !defined(__ASSEMBLY__)
+> >  
+> > -#include <linux/crash_core.h>
+> >  #include <asm/io.h>
+> >  
+> >  #include <uapi/linux/kexec.h>
+> > @@ -25,6 +24,7 @@
+> >  #include <linux/ioport.h>
+> >  #include <linux/module.h>
+> >  #include <asm/kexec.h>
+> > +#include <linux/crash_core.h>
+> >  
+> >  /* Verify architecture specific macros are defined */
+> >  
+> > @@ -63,15 +63,6 @@
+> >  #define KEXEC_CORE_NOTE_NAME	CRASH_CORE_NOTE_NAME
+> >  
+> >  /*
+> > - * The per-cpu notes area is a list of notes terminated by a "NULL"
+> > - * note header.  For kdump, the code in vmcore.c runs in the context
+> > - * of the second kernel to combine them into one note.
+> > - */
+> > -#ifndef KEXEC_NOTE_BYTES
+> > -#define KEXEC_NOTE_BYTES	CRASH_CORE_NOTE_BYTES
+> > -#endif
+> 
+> It is still not clear how does s390 use the crash_notes except this macro.
+> But from code point of view we do need to update this as well after the
+> crash_core splitting.
+> 
+> Acked-by: Dave Young <dyoung@redhat.com>
 
-On Friday 09 June 2017 07:47 AM, Xunlei Pang wrote:
-> S390 KEXEC_NOTE_BYTES is not used by note_buf_t as before, which
-> is now defined as follows:
->      typedef u32 note_buf_t[CRASH_CORE_NOTE_BYTES/4];
-> It was changed by the CONFIG_CRASH_CORE feature.
->
-> This patch gets rid of all the old KEXEC_NOTE_BYTES stuff, and
-> renames KEXEC_NOTE_BYTES to CRASH_CORE_NOTE_BYTES for S390.
->
-> Fixes: 692f66f26a4c ("crash: move crashkernel parsing and vmcore related code under CONFIG_CRASH_CORE")
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: Dave Anderson <anderson@redhat.com>
-> Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
-> Cc: Gustavo Luiz Duarte <gustavold@linux.vnet.ibm.com>
-> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
-> ---
->   arch/s390/include/asm/kexec.h |  2 +-
->   include/linux/crash_core.h    |  7 +++++++
->   include/linux/kexec.h         | 11 +----------
->   3 files changed, 9 insertions(+), 11 deletions(-)
->
-> diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
-> index 2f924bc..352deb8 100644
-> --- a/arch/s390/include/asm/kexec.h
-> +++ b/arch/s390/include/asm/kexec.h
-> @@ -47,7 +47,7 @@
->    * Seven notes plus zero note at the end: prstatus, fpregset, timer,
->    * tod_cmp, tod_reg, control regs, and prefix
->    */
-> -#define KEXEC_NOTE_BYTES \
-> +#define CRASH_CORE_NOTE_BYTES \
->   	(ALIGN(sizeof(struct elf_note), 4) * 8 + \
->   	 ALIGN(sizeof("CORE"), 4) * 7 + \
->   	 ALIGN(sizeof(struct elf_prstatus), 4) + \
-> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> index e9de6b4..dbc6e5c 100644
-> --- a/include/linux/crash_core.h
-> +++ b/include/linux/crash_core.h
-> @@ -10,9 +10,16 @@
->   #define CRASH_CORE_NOTE_NAME_BYTES ALIGN(sizeof(CRASH_CORE_NOTE_NAME), 4)
->   #define CRASH_CORE_NOTE_DESC_BYTES ALIGN(sizeof(struct elf_prstatus), 4)
->
-> +/*
-> + * The per-cpu notes area is a list of notes terminated by a "NULL"
-> + * note header.  For kdump, the code in vmcore.c runs in the context
-> + * of the second kernel to combine them into one note.
-> + */
-> +#ifndef CRASH_CORE_NOTE_BYTES
->   #define CRASH_CORE_NOTE_BYTES	   ((CRASH_CORE_NOTE_HEAD_BYTES * 2) +	\
->   				     CRASH_CORE_NOTE_NAME_BYTES +	\
->   				     CRASH_CORE_NOTE_DESC_BYTES)
-> +#endif
->
->   #define VMCOREINFO_BYTES	   PAGE_SIZE
->   #define VMCOREINFO_NOTE_NAME	   "VMCOREINFO"
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 3ea8275..133df03 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -14,7 +14,6 @@
->
->   #if !defined(__ASSEMBLY__)
->
-> -#include <linux/crash_core.h>
->   #include <asm/io.h>
->
->   #include <uapi/linux/kexec.h>
-> @@ -25,6 +24,7 @@
->   #include <linux/ioport.h>
->   #include <linux/module.h>
->   #include <asm/kexec.h>
-> +#include <linux/crash_core.h>
->
->   /* Verify architecture specific macros are defined */
->
-> @@ -63,15 +63,6 @@
->   #define KEXEC_CORE_NOTE_NAME	CRASH_CORE_NOTE_NAME
->
->   /*
-> - * The per-cpu notes area is a list of notes terminated by a "NULL"
-> - * note header.  For kdump, the code in vmcore.c runs in the context
-> - * of the second kernel to combine them into one note.
-> - */
-> -#ifndef KEXEC_NOTE_BYTES
-> -#define KEXEC_NOTE_BYTES	CRASH_CORE_NOTE_BYTES
-> -#endif
-> -
-> -/*
->    * This structure is used to hold the arguments that are used when loading
->    * kernel binaries.
->    */
+Hold on the ack because of the new findings, wait for Michael's
+feedback.
 
-Looks good to me. Thanks for the fix..
-
-- Hari
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
