@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-sn1nam02on0058.outbound.protection.outlook.com
- ([104.47.36.58] helo=NAM02-SN1-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dJRL4-0008Ul-5w
- for kexec@lists.infradead.org; Fri, 09 Jun 2017 21:21:04 +0000
-Subject: Re: [PATCH v6 10/34] x86, x86/mm, x86/xen, olpc: Use __va() against
- just the physical address in cr3
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+ by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
+ id 1dJdsw-00005w-TX
+ for kexec@lists.infradead.org; Sat, 10 Jun 2017 10:44:52 +0000
+Date: Sat, 10 Jun 2017 12:44:08 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v6 09/34] x86/mm: Simplify p[gum]d_page() macros
+Message-ID: <20170610104408.xmmlwtafyhbczxyi@pd.tnic>
 References: <20170607191309.28645.15241.stgit@tlendack-t1.amdoffice.net>
- <20170607191453.28645.92256.stgit@tlendack-t1.amdoffice.net>
- <CALCETrVVhMf=zkiDNn_-hKDZLGXKFiwxuWkPmD5RJgHa5VUMiQ@mail.gmail.com>
- <85355c4c-2cc1-daac-d8fe-ac6965b34606@amd.com>
- <CALCETrVyHbgJxk6hTRuM0CCpWTvFSX0MxuUQjKOf=7hYCt-yEg@mail.gmail.com>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <601d5972-72b0-6556-0054-7275cb763816@amd.com>
-Date: Fri, 9 Jun 2017 16:20:35 -0500
+ <20170607191445.28645.15664.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
-In-Reply-To: <CALCETrVyHbgJxk6hTRuM0CCpWTvFSX0MxuUQjKOf=7hYCt-yEg@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20170607191445.28645.15664.stgit@tlendack-t1.amdoffice.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,91 +20,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andy Lutomirski <luto@kernel.org>
-Cc: "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, X86 ML <x86@kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch <linux-arch@vger.kernel.org>, kvm list <kvm@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, kasan-dev <kasan-dev@googlegroups.com>, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-On 6/9/2017 1:46 PM, Andy Lutomirski wrote:
-> On Thu, Jun 8, 2017 at 3:38 PM, Tom Lendacky <thomas.lendacky@amd.com> wrote:
->> On 6/8/2017 1:05 AM, Andy Lutomirski wrote:
->>>
->>> On Wed, Jun 7, 2017 at 12:14 PM, Tom Lendacky <thomas.lendacky@amd.com>
->>> wrote:
->>>>
->>>> The cr3 register entry can contain the SME encryption bit that indicates
->>>> the PGD is encrypted.  The encryption bit should not be used when
->>>> creating
->>>> a virtual address for the PGD table.
->>>>
->>>> Create a new function, read_cr3_pa(), that will extract the physical
->>>> address from the cr3 register. This function is then used where a virtual
->>>> address of the PGD needs to be created/used from the cr3 register.
->>>
->>>
->>> This is going to conflict with:
->>>
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/commit/?h=x86/pcid&id=555c81e5d01a62b629ec426a2f50d27e2127c1df
->>>
->>> We're both encountering the fact that CR3 munges the page table PA
->>> with some other stuff, and some readers want to see the actual CR3
->>> value and other readers just want the PA.  The thing I prefer about my
->>> patch is that I get rid of read_cr3() entirely, forcing the patch to
->>> update every single reader, making review and conflict resolution much
->>> safer.
->>>
->>> I'd be willing to send a patch tomorrow that just does the split into
->>> __read_cr3() and read_cr3_pa() (I like your name better) and then we
->>> can both base on top of it.  Would that make sense?
->>
->>
->> That makes sense to me.
+On Wed, Jun 07, 2017 at 02:14:45PM -0500, Tom Lendacky wrote:
+> Create a pgd_pfn() macro similar to the p[um]d_pfn() macros and then
+> use the p[gum]d_pfn() macros in the p[gum]d_page() macros instead of
+> duplicating the code.
 > 
-> Draft patch:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/commit/?h=x86/read_cr3&id=9adebbc1071f066421a27b4f6e040190f1049624
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  arch/x86/include/asm/pgtable.h |   16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
 
-Looks good to me. I'll look at how to best mask off the encryption bit
-in CR3_ADDR_MASK for SME support.  I should be able to just do an
-__sme_clr() against it.
+For patches 7-9:
 
-> 
->>
->>>
->>> Also:
->>>
->>>> +static inline unsigned long read_cr3_pa(void)
->>>> +{
->>>> +       return (read_cr3() & PHYSICAL_PAGE_MASK);
->>>> +}
->>>
->>>
->>> Is there any guarantee that the magic encryption bit is masked out in
->>> PHYSICAL_PAGE_MASK?  The docs make it sound like it could be any bit.
->>> (But if it's one of the low 12 bits, that would be quite confusing.)
->>
->>
->> Right now it's bit 47 and we're steering away from any of the currently
->> reserved bits so we should be safe.
-> 
-> Should the SME init code check that it's a usable bit (i.e. outside
-> our physical address mask and not one of the bottom twelve bits)?  If
-> some future CPU daftly picks, say, bit 12, we'll regret it if we
-> enable SME.
+Reviewed-by: Borislav Petkov <bp@suse.de>
 
-I think I can safely say that it will never be any of the lower 12 bits,
-but let me talk to some of the hardware folks and see about the other
-end of the range.
+-- 
+Regards/Gruss,
+    Boris.
 
-Thanks,
-Tom
-
-> 
-> --Andy
-> 
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
