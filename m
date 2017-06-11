@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1dJipl-0008Rp-3y
- for kexec@lists.infradead.org; Sat, 10 Jun 2017 16:01:55 +0000
-Date: Sat, 10 Jun 2017 18:01:19 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v6 14/34] x86/mm: Insure that boot memory areas are
- mapped properly
-Message-ID: <20170610160119.bnx5ir5dj3i27igx@pd.tnic>
-References: <20170607191309.28645.15241.stgit@tlendack-t1.amdoffice.net>
- <20170607191539.28645.70161.stgit@tlendack-t1.amdoffice.net>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dJySH-0002iD-1L
+ for kexec@lists.infradead.org; Sun, 11 Jun 2017 08:42:43 +0000
+Subject: Re: [PATCH] s390/crash: Fix KEXEC_NOTE_BYTES definition
+References: <1496974625-10891-1-git-send-email-xlpang@redhat.com>
+ <20170609022904.GB3688@dhcp-128-65.nay.redhat.com>
+ <20170609074529.GA9485@dhcp-128-65.nay.redhat.com>
+From: Xunlei Pang <xpang@redhat.com>
+Message-ID: <593D02AB.1030706@redhat.com>
+Date: Sun, 11 Jun 2017 16:43:23 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20170607191539.28645.70161.stgit@tlendack-t1.amdoffice.net>
+In-Reply-To: <20170609074529.GA9485@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,121 +20,144 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: Dave Young <dyoung@redhat.com>, Xunlei Pang <xlpang@redhat.com>
+Cc: linux-s390@vger.kernel.org, Baoquan He <bhe@redhat.com>, Gustavo Luiz Duarte <gustavold@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Dave Anderson <anderson@redhat.com>, Eric Biederman <ebiederm@xmission.com>, Hari Bathini <hbathini@linux.vnet.ibm.com>, akpm@linux-foundation.org, Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-On Wed, Jun 07, 2017 at 02:15:39PM -0500, Tom Lendacky wrote:
-> The boot data and command line data are present in memory in a decrypted
-> state and are copied early in the boot process.  The early page fault
-> support will map these areas as encrypted, so before attempting to copy
-> them, add decrypted mappings so the data is accessed properly when copied.
-> 
-> For the initrd, encrypt this data in place. Since the future mapping of the
-> initrd area will be mapped as encrypted the data will be accessed properly.
-> 
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> ---
->  arch/x86/include/asm/mem_encrypt.h |   11 +++++
->  arch/x86/include/asm/pgtable.h     |    3 +
->  arch/x86/kernel/head64.c           |   30 ++++++++++++--
->  arch/x86/kernel/setup.c            |    9 ++++
->  arch/x86/mm/mem_encrypt.c          |   77 ++++++++++++++++++++++++++++++++++++
->  5 files changed, 126 insertions(+), 4 deletions(-)
+On 06/09/2017 at 03:45 PM, Dave Young wrote:
+> On 06/09/17 at 10:29am, Dave Young wrote:
+>> On 06/09/17 at 10:17am, Xunlei Pang wrote:
+>>> S390 KEXEC_NOTE_BYTES is not used by note_buf_t as before, which
+>>> is now defined as follows:
+>>>     typedef u32 note_buf_t[CRASH_CORE_NOTE_BYTES/4];
+>>> It was changed by the CONFIG_CRASH_CORE feature.
+>>>
+>>> This patch gets rid of all the old KEXEC_NOTE_BYTES stuff, and
+>>> renames KEXEC_NOTE_BYTES to CRASH_CORE_NOTE_BYTES for S390.
+>>>
+>>> Fixes: 692f66f26a4c ("crash: move crashkernel parsing and vmcore related code under CONFIG_CRASH_CORE")
+>>> Cc: Dave Young <dyoung@redhat.com>
+>>> Cc: Dave Anderson <anderson@redhat.com>
+>>> Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
+>>> Cc: Gustavo Luiz Duarte <gustavold@linux.vnet.ibm.com>
+>>> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+>>> ---
+>>>  arch/s390/include/asm/kexec.h |  2 +-
+>>>  include/linux/crash_core.h    |  7 +++++++
+>>>  include/linux/kexec.h         | 11 +----------
+>>>  3 files changed, 9 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
+>>> index 2f924bc..352deb8 100644
+>>> --- a/arch/s390/include/asm/kexec.h
+>>> +++ b/arch/s390/include/asm/kexec.h
+>>> @@ -47,7 +47,7 @@
+>>>   * Seven notes plus zero note at the end: prstatus, fpregset, timer,
+>>>   * tod_cmp, tod_reg, control regs, and prefix
+>>>   */
+>>> -#define KEXEC_NOTE_BYTES \
+>>> +#define CRASH_CORE_NOTE_BYTES \
+>>>  	(ALIGN(sizeof(struct elf_note), 4) * 8 + \
+>>>  	 ALIGN(sizeof("CORE"), 4) * 7 + \
+>>>  	 ALIGN(sizeof(struct elf_prstatus), 4) + \
+> I found that in mainline since below commit, above define should be
+> useless, but if distribution with older kernel does need your fix, so in
+> mainline the right fix should be dropping the s390 part about these
+> macros usage.
 
-Some cleanups ontop in case you get to send v7:
+Indeed, then I think we can remove this special definition of S390 to avoid confusion.
 
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index 61a704945294..5959a42dd4d5 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -45,13 +45,8 @@ static inline void __init sme_early_decrypt(resource_size_t paddr,
- {
- }
- 
--static inline void __init sme_map_bootdata(char *real_mode_data)
--{
--}
--
--static inline void __init sme_unmap_bootdata(char *real_mode_data)
--{
--}
-+static inline void __init sme_map_bootdata(char *real_mode_data)	{ }
-+static inline void __init sme_unmap_bootdata(char *real_mode_data)	{ }
- 
- static inline void __init sme_early_init(void)
- {
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index 2321f05045e5..32ebbe0ab04d 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -132,6 +132,10 @@ static void __init __sme_map_unmap_bootdata(char *real_mode_data, bool map)
- 	struct boot_params *boot_data;
- 	unsigned long cmdline_paddr;
- 
-+	/* If SME is not active, the bootdata is in the correct state */
-+	if (!sme_active())
-+		return;
-+
- 	__sme_early_map_unmap_mem(real_mode_data, sizeof(boot_params), map);
- 	boot_data = (struct boot_params *)real_mode_data;
- 
-@@ -142,40 +146,22 @@ static void __init __sme_map_unmap_bootdata(char *real_mode_data, bool map)
- 	cmdline_paddr = boot_data->hdr.cmd_line_ptr |
- 			((u64)boot_data->ext_cmd_line_ptr << 32);
- 
--	if (cmdline_paddr)
--		__sme_early_map_unmap_mem(__va(cmdline_paddr),
--					  COMMAND_LINE_SIZE, map);
-+	if (!cmdline_paddr)
-+		return;
-+
-+	__sme_early_map_unmap_mem(__va(cmdline_paddr), COMMAND_LINE_SIZE, map);
-+
-+	sme_early_pgtable_flush();
- }
- 
- void __init sme_unmap_bootdata(char *real_mode_data)
- {
--	/* If SME is not active, the bootdata is in the correct state */
--	if (!sme_active())
--		return;
--
--	/*
--	 * The bootdata and command line aren't needed anymore so clear
--	 * any mapping of them.
--	 */
- 	__sme_map_unmap_bootdata(real_mode_data, false);
--
--	sme_early_pgtable_flush();
- }
- 
- void __init sme_map_bootdata(char *real_mode_data)
- {
--	/* If SME is not active, the bootdata is in the correct state */
--	if (!sme_active())
--		return;
--
--	/*
--	 * The bootdata and command line will not be encrypted, so they
--	 * need to be mapped as decrypted memory so they can be copied
--	 * properly.
--	 */
- 	__sme_map_unmap_bootdata(real_mode_data, true);
--
--	sme_early_pgtable_flush();
- }
- 
- void __init sme_early_init(void)
+Regards,
+Xunlei
 
--- 
-Regards/Gruss,
-    Boris.
+>
+> Anyway this need a comment from Michael.
+>
+> commit 8a07dd02d7615d91d65d6235f7232e3f9b5d347f
+> Author: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> Date:   Wed Oct 14 15:53:06 2015 +0200
+>
+>     s390/kdump: remove code to create ELF notes in the crashed system
+>     
+>     The s390 architecture can store the CPU registers of the crashed
+> system
+>     after the kdump kernel has been started and this is the preferred
+> way.
+>     Remove the remaining code fragments that deal with storing CPU
+> registers
+>     while the crashed system is still active.
+>     
+>     Acked-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+>     Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+>
+>
+>>> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+>>> index e9de6b4..dbc6e5c 100644
+>>> --- a/include/linux/crash_core.h
+>>> +++ b/include/linux/crash_core.h
+>>> @@ -10,9 +10,16 @@
+>>>  #define CRASH_CORE_NOTE_NAME_BYTES ALIGN(sizeof(CRASH_CORE_NOTE_NAME), 4)
+>>>  #define CRASH_CORE_NOTE_DESC_BYTES ALIGN(sizeof(struct elf_prstatus), 4)
+>>>  
+>>> +/*
+>>> + * The per-cpu notes area is a list of notes terminated by a "NULL"
+>>> + * note header.  For kdump, the code in vmcore.c runs in the context
+>>> + * of the second kernel to combine them into one note.
+>>> + */
+>>> +#ifndef CRASH_CORE_NOTE_BYTES
+>>>  #define CRASH_CORE_NOTE_BYTES	   ((CRASH_CORE_NOTE_HEAD_BYTES * 2) +	\
+>>>  				     CRASH_CORE_NOTE_NAME_BYTES +	\
+>>>  				     CRASH_CORE_NOTE_DESC_BYTES)
+>>> +#endif
+>>>  
+>>>  #define VMCOREINFO_BYTES	   PAGE_SIZE
+>>>  #define VMCOREINFO_NOTE_NAME	   "VMCOREINFO"
+>>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>>> index 3ea8275..133df03 100644
+>>> --- a/include/linux/kexec.h
+>>> +++ b/include/linux/kexec.h
+>>> @@ -14,7 +14,6 @@
+>>>  
+>>>  #if !defined(__ASSEMBLY__)
+>>>  
+>>> -#include <linux/crash_core.h>
+>>>  #include <asm/io.h>
+>>>  
+>>>  #include <uapi/linux/kexec.h>
+>>> @@ -25,6 +24,7 @@
+>>>  #include <linux/ioport.h>
+>>>  #include <linux/module.h>
+>>>  #include <asm/kexec.h>
+>>> +#include <linux/crash_core.h>
+>>>  
+>>>  /* Verify architecture specific macros are defined */
+>>>  
+>>> @@ -63,15 +63,6 @@
+>>>  #define KEXEC_CORE_NOTE_NAME	CRASH_CORE_NOTE_NAME
+>>>  
+>>>  /*
+>>> - * The per-cpu notes area is a list of notes terminated by a "NULL"
+>>> - * note header.  For kdump, the code in vmcore.c runs in the context
+>>> - * of the second kernel to combine them into one note.
+>>> - */
+>>> -#ifndef KEXEC_NOTE_BYTES
+>>> -#define KEXEC_NOTE_BYTES	CRASH_CORE_NOTE_BYTES
+>>> -#endif
+>> It is still not clear how does s390 use the crash_notes except this macro.
+>> But from code point of view we do need to update this as well after the
+>> crash_core splitting.
+>>
+>> Acked-by: Dave Young <dyoung@redhat.com>
+> Hold on the ack because of the new findings, wait for Michael's
+> feedback.
+>
+> Thanks
+> Dave
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
