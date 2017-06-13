@@ -1,16 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dKfHG-0000AB-Nn
- for kexec@lists.infradead.org; Tue, 13 Jun 2017 06:26:12 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] Add the --partial-dmesg option to dump only non-cleared
- dmesg
-Date: Tue, 13 Jun 2017 06:20:57 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EDFCCA@BPXM01GP.gisp.nec.co.jp>
-References: <20170613010046.GA25025@visor>
-In-Reply-To: <20170613010046.GA25025@visor>
-Content-Language: ja-JP
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dKgNu-0000lP-Fp
+ for kexec@lists.infradead.org; Tue, 13 Jun 2017 07:37:06 +0000
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com
+ [10.5.11.15])
+ (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+ (No client certificate requested)
+ by mx1.redhat.com (Postfix) with ESMTPS id AF53983F40
+ for <kexec@lists.infradead.org>; Tue, 13 Jun 2017 07:36:16 +0000 (UTC)
+Date: Tue, 13 Jun 2017 03:36:15 -0400 (EDT)
+From: Pingfan Liu <piliu@redhat.com>
+Message-ID: <102818823.21629841.1497339375650.JavaMail.zimbra@redhat.com>
+In-Reply-To: <817b653f-9191-70c2-21b9-6fba9a196399@redhat.com>
+References: <1496822990-17848-1-git-send-email-piliu@redhat.com>
+ <1496822990-17848-2-git-send-email-piliu@redhat.com>
+ <817b653f-9191-70c2-21b9-6fba9a196399@redhat.com>
+Subject: Re: [makedumpfile PATCHv2 2/2] print_info: show the remaining time
+ of dump progress
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,130 +27,396 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ivan Delalande <colona@arista.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Pratyush Anand <panand@redhat.com>
+Cc: kexec@lists.infradead.org
 
-SGVsbG8gSXZhbiwNCg0KPlRoaXMgb3B0aW9uIHdpbGwgbWFrZSAtLWR1bXAtZG1lc2cgc2F2ZSBv
-bmx5IHRoZSBwYXJ0IG9mIHRoZSBkbWVzZw0KPmJ1ZmZlciBzaW5jZSBpdCB3YXMgbGFzdCBjbGVh
-cmVkIG9uIHRoZSBjcmFzaGVkIGtlcm5lbCAod2l0aA0KPmRtZXNnIC0tY2xlYXIgYW5kIHN1Y2gp
-IGluc3RlYWQgb2YgdGhlIHdob2xlIGJ1ZmZlciBzaW5jZSBib290IG9yDQo+d3JhcC1hcm91bmQu
-IEl0IHdvcmtzIG9uIGtlcm5lbHMgd2l0aCBjb21taXQgZjQ2ODkwOGJiNTVhICgicHJpbnRrOg0K
-PmFkZCBjbGVhcl9pZHggc3ltYm9sIHRvIHZtY29yZWluZm8iKSBtZXJnZWQgaW4gdjQuNiBhbmQg
-b3RoZXJ3aXNlDQo+d2lsbCBkZWZhdWx0IHRvIHRoZSByZWd1bGFyIGJlaGF2aW9yLg0KDQpJdCB3
-b3JrcyBmaW5lLCB0aGFua3MuIA0KSSB0aGluayBjaGVja19wYXJhbV9mb3JfY3JlYXRpbmdfZHVt
-cGZpbGUoKSBzaG91bGQgYmUgbW9kaWZpZWQNCnRvIHJlamVjdCBhIHNpbmdsZSAtLXBhcnRpYWwt
-ZG1lc2csIGl0IHNob3VsZCBiZSBhbHdheXMgc3BlY2lmaWVkDQp3aXRoIC0tZHVtcC1kbWVzZy4N
-Cg0KVGhhbmtzLA0KQXRzdXNoaSBLdW1hZ2FpDQoNCj5TaWduZWQtb2ZmLWJ5OiBJdmFuIERlbGFs
-YW5kZSA8Y29sb25hQGFyaXN0YS5jb20+DQo+LS0tDQo+IG1ha2VkdW1wZmlsZS44IHwgIDggKysr
-KysrKy0NCj4gbWFrZWR1bXBmaWxlLmMgfCAyMSArKysrKysrKysrKysrKysrKysrLS0NCj4gbWFr
-ZWR1bXBmaWxlLmggfCAgMyArKysNCj4gMyBmaWxlcyBjaGFuZ2VkLCAyOSBpbnNlcnRpb25zKCsp
-LCAzIGRlbGV0aW9ucygtKQ0KPg0KPmRpZmYgLS1naXQgYS9tYWtlZHVtcGZpbGUuOCBiL21ha2Vk
-dW1wZmlsZS44DQo+aW5kZXggOTkzMjM2NC4uNzZhOGQ2ZSAxMDA2NDQNCj4tLS0gYS9tYWtlZHVt
-cGZpbGUuOA0KPisrKyBiL21ha2VkdW1wZmlsZS44DQo+QEAgLTIwLDcgKzIwLDcgQEAgbWFrZWR1
-bXBmaWxlIFwtIG1ha2UgYSBzbWFsbCBkdW1wZmlsZSBvZiBrZHVtcA0KPiAuYnINCj4gXGZCbWFr
-ZWR1bXBmaWxlXGZSICAgIFtcZklPUFRJT05cZlJdIFtcLVwteGVuLXN5bXMgXGZJWEVOLVNZTVNc
-ZlJ8XC1cLXhlbi12bWNvcmVpbmZvIFxmSVZNQ09SRUlORk9cZlJdIFxmSVZNQ09SRVxmUg0KPlxm
-SURVTVBGSUxFXGZSDQo+IC5icg0KPi1cZkJtYWtlZHVtcGZpbGVcZlIgXC1cLWR1bXAtZG1lc2cg
-W1wteCBcZklWTUxJTlVYXGZSfFwtaSBcZklWTUNPUkVJTkZPXGZSXSBcZklWTUNPUkVcZlIgXGZJ
-TE9HRklMRVxmUg0KPitcZkJtYWtlZHVtcGZpbGVcZlIgXC1cLWR1bXAtZG1lc2cgW1wtXC1wYXJ0
-aWFsLWRtZXNnXSBbXC14IFxmSVZNTElOVVhcZlJ8XC1pIFxmSVZNQ09SRUlORk9cZlJdIFxmSVZN
-Q09SRVxmUg0KPlxmSUxPR0ZJTEVcZlINCj4gLmJyDQo+IFxmQm1ha2VkdW1wZmlsZVxmUiAgICBb
-XGZJT1BUSU9OXGZSXSBcLXggXGZJVk1MSU5VWFxmUiBcLVwtZGlza3NldD1cZklWTUNPUkUxXGZS
-IFwtXC1kaXNrc2V0PVxmSVZNQ09SRTJcZlINCj5bXC1cLWRpc2tzZXQ9XGZJVk1DT1JFM1xmUiAu
-Ll0gXGZJRFVNUEZJTEVcZlINCj4gLmJyDQo+QEAgLTU4Niw2ICs1ODYsMTIgQEAgaXQgaXMgbmVj
-ZXNzYXJ5IHRvIHNwZWNmaXkgW1wteCBcZklWTUxJTlVYXGZSXSBvciBbXC1pIFxmSVZNQ09SRUlO
-Rk9cZlJdLg0KPg0KPg0KPiAuVFANCj4rXGZCXC1cLXBhcnRpYWwtZG1lc2dcZlINCj4rVGhpcyBv
-cHRpb24gd2lsbCBtYWtlIC0tZHVtcC1kbWVzZyBleHRyYWN0IG9ubHkgZG1lc2cgbG9ncyBzaW5j
-ZSB0aGF0IGJ1ZmZlciB3YXMNCj4rbGFzdCBjbGVhcmVkIG9uIHRoZSBjcmFzaGVkIGtlcm5lbCwg
-dGhyb3VnaCAiZG1lc2cgLS1jbGVhciIgZm9yIGV4YW1wbGUuDQo+Kw0KPisNCj4rLlRQDQo+IFxm
-QlwtXC1tZW0tdXNhZ2VcZlINCj4gVGhpcyBvcHRpb24gaXMgb25seSBmb3IgeDg2XzY0Lg0KPiBU
-aGlzIG9wdGlvbiBpcyB1c2VkIHRvIHNob3cgdGhlIHBhZ2UgbnVtYmVycyBvZiBjdXJyZW50IHN5
-c3RlbSBpbiBkaWZmZXJlbnQNCj5kaWZmIC0tZ2l0IGEvbWFrZWR1bXBmaWxlLmMgYi9tYWtlZHVt
-cGZpbGUuYw0KPmluZGV4IDk1Y2M1ZWYuLjdjODgyMDMgMTAwNjQ0DQo+LS0tIGEvbWFrZWR1bXBm
-aWxlLmMNCj4rKysgYi9tYWtlZHVtcGZpbGUuYw0KPkBAIC0xNDk4LDYgKzE0OTgsNyBAQCBnZXRf
-c3ltYm9sX2luZm8odm9pZCkNCj4gCVNZTUJPTF9JTklUKGxvZ19idWZfbGVuLCAibG9nX2J1Zl9s
-ZW4iKTsNCj4gCVNZTUJPTF9JTklUKGxvZ19lbmQsICJsb2dfZW5kIik7DQo+IAlTWU1CT0xfSU5J
-VChsb2dfZmlyc3RfaWR4LCAibG9nX2ZpcnN0X2lkeCIpOw0KPisJU1lNQk9MX0lOSVQoY2xlYXJf
-aWR4LCAiY2xlYXJfaWR4Iik7DQo+IAlTWU1CT0xfSU5JVChsb2dfbmV4dF9pZHgsICJsb2dfbmV4
-dF9pZHgiKTsNCj4gCVNZTUJPTF9JTklUKG1heF9wZm4sICJtYXhfcGZuIik7DQo+IAlTWU1CT0xf
-SU5JVChtb2R1bGVzLCAibW9kdWxlcyIpOw0KPkBAIC0yMTE1LDYgKzIxMTYsNyBAQCB3cml0ZV92
-bWNvcmVpbmZvX2RhdGEodm9pZCkNCj4gCVdSSVRFX1NZTUJPTCgibG9nX2J1Zl9sZW4iLCBsb2df
-YnVmX2xlbik7DQo+IAlXUklURV9TWU1CT0woImxvZ19lbmQiLCBsb2dfZW5kKTsNCj4gCVdSSVRF
-X1NZTUJPTCgibG9nX2ZpcnN0X2lkeCIsIGxvZ19maXJzdF9pZHgpOw0KPisJV1JJVEVfU1lNQk9M
-KCJjbGVhcl9pZHgiLCBjbGVhcl9pZHgpOw0KPiAJV1JJVEVfU1lNQk9MKCJsb2dfbmV4dF9pZHgi
-LCBsb2dfbmV4dF9pZHgpOw0KPiAJV1JJVEVfU1lNQk9MKCJtYXhfcGZuIiwgbWF4X3Bmbik7DQo+
-IAlXUklURV9TWU1CT0woImhpZ2hfbWVtb3J5IiwgaGlnaF9tZW1vcnkpOw0KPkBAIC0yNTA5LDYg
-KzI1MTEsNyBAQCByZWFkX3ZtY29yZWluZm8odm9pZCkNCj4gCVJFQURfU1lNQk9MKCJsb2dfYnVm
-X2xlbiIsIGxvZ19idWZfbGVuKTsNCj4gCVJFQURfU1lNQk9MKCJsb2dfZW5kIiwgbG9nX2VuZCk7
-DQo+IAlSRUFEX1NZTUJPTCgibG9nX2ZpcnN0X2lkeCIsIGxvZ19maXJzdF9pZHgpOw0KPisJUkVB
-RF9TWU1CT0woImNsZWFyX2lkeCIsIGNsZWFyX2lkeCk7DQo+IAlSRUFEX1NZTUJPTCgibG9nX25l
-eHRfaWR4IiwgbG9nX25leHRfaWR4KTsNCj4gCVJFQURfU1lNQk9MKCJtYXhfcGZuIiwgbWF4X3Bm
-bik7DQo+IAlSRUFEX1NZTUJPTCgiaGlnaF9tZW1vcnkiLCBoaWdoX21lbW9yeSk7DQo+QEAgLTUw
-MjUsNiArNTAyOCw3IEBAIGR1bXBfZG1lc2coKQ0KPiAJaW50IGxvZ19idWZfbGVuLCBsZW5ndGhf
-bG9nLCBsZW5ndGhfb2xkbG9nLCByZXQgPSBGQUxTRTsNCj4gCXVuc2lnbmVkIGxvbmcgaW5kZXgs
-IGxvZ19idWYsIGxvZ19lbmQ7DQo+IAl1bnNpZ25lZCBpbnQgaWR4LCBsb2dfZmlyc3RfaWR4LCBs
-b2dfbmV4dF9pZHg7DQo+Kwl1bnNpZ25lZCBsb25nIGxvbmcgZmlyc3RfaWR4X3N5bTsNCj4gCXVu
-c2lnbmVkIGxvbmcgbG9nX2VuZF8yXzZfMjQ7DQo+IAl1bnNpZ25lZCAgICAgIGxvZ19lbmRfMl82
-XzI1Ow0KPiAJY2hhciAqbG9nX2J1ZmZlciA9IE5VTEwsICpsb2dfcHRyID0gTlVMTDsNCj5AQCAt
-NTA1OCw3ICs1MDYyLDEzIEBAIGR1bXBfZG1lc2coKQ0KPiAJCQlFUlJNU0coIkNhbid0IGZpbmQg
-dmFyaWFibGUtbGVuZ3RoIHJlY29yZCBzeW1ib2xzIik7DQo+IAkJCXJldHVybiBGQUxTRTsNCj4g
-CQl9IGVsc2Ugew0KPi0JCQlpZiAoIXJlYWRtZW0oVkFERFIsIFNZTUJPTChsb2dfZmlyc3RfaWR4
-KSwgJmxvZ19maXJzdF9pZHgsDQo+KwkJCWlmIChpbmZvLT5mbGFnX3BhcnRpYWxfZG1lc2cNCj4r
-CQkJICAgICYmIFNZTUJPTChjbGVhcl9pZHgpICE9IE5PVF9GT1VORF9TWU1CT0wpDQo+KwkJCQlm
-aXJzdF9pZHhfc3ltID0gU1lNQk9MKGNsZWFyX2lkeCk7DQo+KwkJCWVsc2UNCj4rCQkJCWZpcnN0
-X2lkeF9zeW0gPSBTWU1CT0wobG9nX2ZpcnN0X2lkeCk7DQo+Kw0KPisJCQlpZiAoIXJlYWRtZW0o
-VkFERFIsIGZpcnN0X2lkeF9zeW0sICZsb2dfZmlyc3RfaWR4LA0KPiAJCQkgICAgc2l6ZW9mKGxv
-Z19maXJzdF9pZHgpKSkgew0KPiAJCQkJRVJSTVNHKCJDYW4ndCBnZXQgbG9nX2ZpcnN0X2lkeC5c
-biIpOw0KPiAJCQkJcmV0dXJuIEZBTFNFOw0KPkBAIC01MTAyLDcgKzUxMTIsMTAgQEAgZHVtcF9k
-bWVzZygpDQo+IAlERUJVR19NU0coImxvZ19idWYgICAgICAgOiAlbHhcbiIsIGxvZ19idWYpOw0K
-PiAJREVCVUdfTVNHKCJsb2dfZW5kICAgICAgIDogJWx4XG4iLCBsb2dfZW5kKTsNCj4gCURFQlVH
-X01TRygibG9nX2J1Zl9sZW4gICA6ICVkXG4iLCBsb2dfYnVmX2xlbik7DQo+LQlERUJVR19NU0co
-ImxvZ19maXJzdF9pZHggOiAldVxuIiwgbG9nX2ZpcnN0X2lkeCk7DQo+KwlpZiAoaW5mby0+Zmxh
-Z19wYXJ0aWFsX2RtZXNnKQ0KPisJCURFQlVHX01TRygiY2xlYXJfaWR4IDogJXVcbiIsIGxvZ19m
-aXJzdF9pZHgpOw0KPisJZWxzZQ0KPisJCURFQlVHX01TRygibG9nX2ZpcnN0X2lkeCA6ICV1XG4i
-LCBsb2dfZmlyc3RfaWR4KTsNCj4gCURFQlVHX01TRygibG9nX25leHRfaWR4ICA6ICV1XG4iLCBs
-b2dfbmV4dF9pZHgpOw0KPg0KPiAJaWYgKChsb2dfYnVmZmVyID0gbWFsbG9jKGxvZ19idWZfbGVu
-KSkgPT0gTlVMTCkgew0KPkBAIC0xMTAyMiw2ICsxMTAzNSw3IEBAIHN0YXRpYyBzdHJ1Y3Qgb3B0
-aW9uIGxvbmdvcHRzW10gPSB7DQo+IAl7Im1lc3NhZ2UtbGV2ZWwiLCByZXF1aXJlZF9hcmd1bWVu
-dCwgTlVMTCwgT1BUX01FU1NBR0VfTEVWRUx9LA0KPiAJeyJ2dG9wIiwgcmVxdWlyZWRfYXJndW1l
-bnQsIE5VTEwsIE9QVF9WVE9QfSwNCj4gCXsiZHVtcC1kbWVzZyIsIG5vX2FyZ3VtZW50LCBOVUxM
-LCBPUFRfRFVNUF9ETUVTR30sDQo+Kwl7InBhcnRpYWwtZG1lc2ciLCBub19hcmd1bWVudCwgTlVM
-TCwgT1BUX1BBUlRJQUxfRE1FU0d9LA0KPiAJeyJjb25maWciLCByZXF1aXJlZF9hcmd1bWVudCwg
-TlVMTCwgT1BUX0NPTkZJR30sDQo+IAl7ImhlbHAiLCBub19hcmd1bWVudCwgTlVMTCwgT1BUX0hF
-TFB9LA0KPiAJeyJkaXNrc2V0IiwgcmVxdWlyZWRfYXJndW1lbnQsIE5VTEwsIE9QVF9ESVNLU0VU
-fSwNCj5AQCAtMTExMzUsNiArMTExNDksOSBAQCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10p
-DQo+IAkJY2FzZSBPUFRfRFVNUF9ETUVTRzoNCj4gCQkJaW5mby0+ZmxhZ19kbWVzZyA9IDE7DQo+
-IAkJCWJyZWFrOw0KPisJCWNhc2UgT1BUX1BBUlRJQUxfRE1FU0c6DQo+KwkJCWluZm8tPmZsYWdf
-cGFydGlhbF9kbWVzZyA9IDE7DQo+KwkJCWJyZWFrOw0KPiAJCWNhc2UgT1BUX01FTV9VU0FHRToN
-Cj4gCQkgICAgICAgaW5mby0+ZmxhZ19tZW1fdXNhZ2UgPSAxOw0KPiAJCSAgICAgICBicmVhazsN
-Cj5kaWZmIC0tZ2l0IGEvbWFrZWR1bXBmaWxlLmggYi9tYWtlZHVtcGZpbGUuaA0KPmluZGV4IDZl
-YThjYzQuLmQzYjc1MzIgMTAwNjQ0DQo+LS0tIGEvbWFrZWR1bXBmaWxlLmgNCj4rKysgYi9tYWtl
-ZHVtcGZpbGUuaA0KPkBAIC0xMjQxLDYgKzEyNDEsNyBAQCBzdHJ1Y3QgRHVtcEluZm8gew0KPiAJ
-aW50CQlmbGFnX2ZvcmNlOwkgICAgIC8qIG92ZXJ3cml0ZSBleGlzdGluZyBzdHVmZiAqLw0KPiAJ
-aW50CQlmbGFnX2V4Y2x1ZGVfeGVuX2RvbTsvKiBleGNsdWRlIERvbWFpbi1VIGZyb20geGVuLWtk
-dW1wICovDQo+IAlpbnQgICAgICAgICAgICAgZmxhZ19kbWVzZzsgICAgICAgICAgLyogZHVtcCB0
-aGUgZG1lc2cgbG9nIG91dCBvZiB0aGUgdm1jb3JlIGZpbGUgKi8NCj4rCWludCAgICAgICAgICAg
-ICBmbGFnX3BhcnRpYWxfZG1lc2c7ICAvKiBkbWVzZyBkdW1wIG9ubHkgZnJvbSB0aGUgbGFzdCBj
-bGVhcmVkIGluZGV4Ki8NCj4gCWludCAgICAgICAgICAgICBmbGFnX21lbV91c2FnZTsgIC8qc2hv
-dyB0aGUgcGFnZSBudW1iZXIgb2YgbWVtb3J5IGluIGRpZmZlcmVudCB1c2UqLw0KPiAJaW50CQlm
-bGFnX3VzZV9wcmludGtfbG9nOyAvKiBkaWQgd2UgcmVhZCBwcmludGtfbG9nIHN5bWJvbCBuYW1l
-PyAqLw0KPiAJaW50CQlmbGFnX25vc3BhY2U7CSAgICAgLyogdGhlIGZsYWcgb2YgIk5vIHNwYWNl
-IG9uIGRldmljZSIgZXJyb3IgKi8NCj5AQCAtMTUyOSw2ICsxNTMwLDcgQEAgc3RydWN0IHN5bWJv
-bF90YWJsZSB7DQo+IAl1bnNpZ25lZCBsb25nIGxvbmcJbG9nX2J1Zl9sZW47DQo+IAl1bnNpZ25l
-ZCBsb25nIGxvbmcJbG9nX2VuZDsNCj4gCXVuc2lnbmVkIGxvbmcgbG9uZwlsb2dfZmlyc3RfaWR4
-Ow0KPisJdW5zaWduZWQgbG9uZyBsb25nCWNsZWFyX2lkeDsNCj4gCXVuc2lnbmVkIGxvbmcgbG9u
-Zwlsb2dfbmV4dF9pZHg7DQo+IAl1bnNpZ25lZCBsb25nIGxvbmcJbWF4X3BmbjsNCj4gCXVuc2ln
-bmVkIGxvbmcgbG9uZwlub2RlX3JlbWFwX3N0YXJ0X3ZhZGRyOw0KPkBAIC0yMjY4LDYgKzIyNzAs
-NyBAQCBzdHJ1Y3QgZWxmX3Byc3RhdHVzIHsNCj4gI2RlZmluZSBPUFRfU1BMSVRCTE9DS19TSVpF
-CU9QVF9TVEFSVCsxNA0KPiAjZGVmaW5lIE9QVF9XT1JLSU5HX0RJUiAgICAgICAgIE9QVF9TVEFS
-VCsxNQ0KPiAjZGVmaW5lIE9QVF9OVU1fVEhSRUFEUwlPUFRfU1RBUlQrMTYNCj4rI2RlZmluZSBP
-UFRfUEFSVElBTF9ETUVTRwlPUFRfU1RBUlQrMTcNCj4NCj4gLyoNCj4gICogRnVuY3Rpb24gUHJv
-dG90eXBlLg0KPi0tDQo+Mi4xMy4xDQo+DQo+DQo+LS0NCj5JdmFuIERlbGFsYW5kZQ0KPktlcm5l
-bCBUZWFtIC0gVmFuY291dmVyIC0gI8KzIEEzWTIwDQo+UGhvbmU6IDczNDIgfCBNb2JpbGU6IDYw
-NCA2MDAgNTMxMw0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+
+
+
+
+----- Original Message -----
+> From: "Pratyush Anand" <panand@redhat.com>
+> To: kexec@lists.infradead.org
+> Sent: Thursday, June 8, 2017 3:09:46 PM
+> Subject: Re: [makedumpfile PATCHv2 2/2] print_info: show the remaining time of dump progress
+> 
+> 
+> 
+> On Wednesday 07 June 2017 01:39 PM, Pingfan Liu wrote:
+> > If the dump progress is slow, it is better to show  an estimate of
+> > remaining time of the progress to the user. The estimator simply uses
+> > the average speed to work.
+> 
+> Nice improvement.
+> 
+> It could have been better to write about how does log looks before and after
+> this patch.
+>
+The progress bar looks like: Copying data                                      : [  1.8 %] /          eta: 39s
+I will update the commit log.
+> >
+> > Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> > ---
+> > v1 -> v2: fold  eta string into eta_to_human_short()
+> >
+> >
+> >  makedumpfile.c | 46 +++++++++++++++++++++++-----------------------
+> >  print_info.c   | 41 +++++++++++++++++++++++++++++++++++------
+> >  print_info.h   |  3 ++-
+> >  3 files changed, 60 insertions(+), 30 deletions(-)
+> >
+> > diff --git a/makedumpfile.c b/makedumpfile.c
+> > index 301772a..35a36ce 100644
+> > --- a/makedumpfile.c
+> > +++ b/makedumpfile.c
+> > @@ -5175,7 +5175,7 @@ _exclude_free_page(struct cycle *cycle)
+> >
+> >  	for (num_nodes = 1; num_nodes <= vt.numnodes; num_nodes++) {
+> >
+> > -		print_progress(PROGRESS_FREE_PAGES, num_nodes - 1, vt.numnodes);
+> > +		print_progress(PROGRESS_FREE_PAGES, num_nodes - 1, vt.numnodes, NULL);
+> >
+> >  		node_zones = pgdat + OFFSET(pglist_data.node_zones);
+> >
+> > @@ -5188,7 +5188,7 @@ _exclude_free_page(struct cycle *cycle)
+> >  		for (i = 0; i < nr_zones; i++) {
+> >
+> >  			print_progress(PROGRESS_FREE_PAGES, i + nr_zones * (num_nodes - 1),
+> > -					nr_zones * vt.numnodes);
+> > +					nr_zones * vt.numnodes, NULL);
+> >
+> >  			zone = node_zones + (i * SIZE(zone));
+> >  			if (!readmem(VADDR, zone + OFFSET(zone.spanned_pages),
+> > @@ -5216,7 +5216,7 @@ _exclude_free_page(struct cycle *cycle)
+> >  	/*
+> >  	 * print [100 %]
+> >  	 */
+> > -	print_progress(PROGRESS_FREE_PAGES, vt.numnodes, vt.numnodes);
+> > +	print_progress(PROGRESS_FREE_PAGES, vt.numnodes, vt.numnodes, NULL);
+> >  	print_execution_time(PROGRESS_FREE_PAGES, &tv_start);
+> >
+> >  	return TRUE;
+> > @@ -5403,7 +5403,7 @@ create_1st_bitmap_file(void)
+> >  	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
+> >
+> >  		if (!info->flag_mem_usage)
+> > -			print_progress(PROGRESS_HOLES, i, num_pt_loads);
+> > +			print_progress(PROGRESS_HOLES, i, num_pt_loads, NULL);
+> >
+> >  		pfn_start = paddr_to_pfn(phys_start);
+> >  		pfn_end   = paddr_to_pfn(phys_end);
+> > @@ -5422,7 +5422,7 @@ create_1st_bitmap_file(void)
+> >  	 * print 100 %
+> >  	 */
+> >  	if (!info->flag_mem_usage) {
+> > -		print_progress(PROGRESS_HOLES, info->max_mapnr, info->max_mapnr);
+> > +		print_progress(PROGRESS_HOLES, info->max_mapnr, info->max_mapnr, NULL);
+> >  		print_execution_time(PROGRESS_HOLES, &tv_start);
+> >  	}
+> >
+> > @@ -5548,7 +5548,7 @@ create_bitmap_from_memhole(struct cycle *cycle,
+> > struct dump_bitmap *bitmap, int
+> >  		pfn_start = MAX(paddr_to_pfn(phys_start), cycle->start_pfn);
+> >  		pfn_end = MIN(paddr_to_pfn(phys_end), cycle->end_pfn);
+> >
+> > -		print_progress(PROGRESS_HOLES, i, num_pt_loads);
+> > +		print_progress(PROGRESS_HOLES, i, num_pt_loads, NULL);
+> >
+> >  		if (pfn_start >= pfn_end)
+> >  			continue;
+> > @@ -5587,7 +5587,7 @@ create_bitmap_from_memhole(struct cycle *cycle,
+> > struct dump_bitmap *bitmap, int
+> >  	/*
+> >  	 * print 100 %
+> >  	 */
+> > -	print_progress(PROGRESS_HOLES, info->max_mapnr, info->max_mapnr);
+> > +	print_progress(PROGRESS_HOLES, info->max_mapnr, info->max_mapnr, NULL);
+> >  	print_execution_time(PROGRESS_HOLES, &tv_start);
+> >
+> >  	return TRUE;
+> > @@ -5842,7 +5842,7 @@ exclude_unnecessary_pages(struct cycle *cycle)
+> >  	for (mm = 0; mm < info->num_mem_map; mm++) {
+> >
+> >  		if (!info->flag_mem_usage)
+> > -			print_progress(PROGRESS_UNN_PAGES, mm, info->num_mem_map);
+> > +			print_progress(PROGRESS_UNN_PAGES, mm, info->num_mem_map, NULL);
+> >
+> >  		mmd = &info->mem_map_data[mm];
+> >
+> > @@ -5860,7 +5860,7 @@ exclude_unnecessary_pages(struct cycle *cycle)
+> >  	 * print [100 %]
+> >  	 */
+> >  	if (!info->flag_mem_usage) {
+> > -		print_progress(PROGRESS_UNN_PAGES, info->num_mem_map,
+> > info->num_mem_map);
+> > +		print_progress(PROGRESS_UNN_PAGES, info->num_mem_map, info->num_mem_map,
+> > NULL);
+> >  		print_execution_time(PROGRESS_UNN_PAGES, &tv_start);
+> >  	}
+> >
+> > @@ -7334,7 +7334,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header,
+> > struct cache_data *cd_page)
+> >  				}
+> >
+> >  				if ((num_dumped % per) == 0)
+> > -					print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
+> > +					print_progress(PROGRESS_COPY, num_dumped, num_dumpable, &tv_start);
+> >
+> >  				num_dumped++;
+> >
+> > @@ -7453,7 +7453,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header,
+> > struct cache_data *cd_page)
+> >  	/*
+> >  	 * print [100 %]
+> >  	 */
+> > -	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
+> > +	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable, &tv_start);
+> >  	print_execution_time(PROGRESS_COPY, &tv_start);
+> >  	PROGRESS_MSG("\n");
+> >
+> > @@ -7931,7 +7931,7 @@ write_kdump_pages_parallel_cyclic(struct cache_data
+> > *cd_header,
+> >  		}
+> >
+> >  		if ((num_dumped % per) == 0)
+> > -			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
+> > +			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable,
+> > &tv_start);
+> >
+> >  		num_dumped++;
+> >
+> > @@ -7967,7 +7967,7 @@ finish:
+> >  	/*
+> >  	 * print [100 %]
+> >  	 */
+> > -	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
+> > +	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &tv_start);
+> >  	print_execution_time(PROGRESS_COPY, &tv_start);
+> >  	PROGRESS_MSG("\n");
+> >
+> > @@ -8084,7 +8084,7 @@ write_kdump_pages_cyclic(struct cache_data
+> > *cd_header, struct cache_data *cd_pag
+> >  	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+> >
+> >  		if ((num_dumped % per) == 0)
+> > -			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
+> > +			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable,
+> > &tv_start);
+> >
+> >  		/*
+> >  		 * Check the excluded page.
+> > @@ -8164,7 +8164,7 @@ out:
+> >  		free(wrkmem);
+> >  #endif
+> >
+> > -	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
+> > +	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &tv_start);
+> >  	print_execution_time(PROGRESS_COPY, &tv_start);
+> >
+> >  	return ret;
+> > @@ -8622,7 +8622,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data
+> > *cd_header, struct cache_d
+> >  	/*
+> >  	 * print [100 %]
+> >  	 */
+> > -	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
+> > +	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &tv_start);
+> >  	print_execution_time(PROGRESS_COPY, &tv_start);
+> >  	PROGRESS_MSG("\n");
+> >
+> > @@ -9216,7 +9216,7 @@ exclude_xen3_user_domain(void)
+> >  	 */
+> >  	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
+> >
+> > -		print_progress(PROGRESS_XEN_DOMAIN, i, num_pt_loads);
+> > +		print_progress(PROGRESS_XEN_DOMAIN, i, num_pt_loads, NULL);
+> >
+> >  		pfn     = paddr_to_pfn(phys_start);
+> >  		pfn_end = paddr_to_pfn(phys_end);
+> > @@ -9224,7 +9224,7 @@ exclude_xen3_user_domain(void)
+> >
+> >  		for (j = 0; pfn < pfn_end; pfn++, j++) {
+> >  			print_progress(PROGRESS_XEN_DOMAIN, j + (size * i),
+> > -					size * num_pt_loads);
+> > +					size * num_pt_loads, NULL);
+> >
+> >  			if (!allocated_in_map(pfn)) {
+> >  				clear_bit_on_2nd_bitmap(pfn, NULL);
+> > @@ -9280,7 +9280,7 @@ exclude_xen4_user_domain(void)
+> >  	 */
+> >  	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
+> >
+> > -		print_progress(PROGRESS_XEN_DOMAIN, i, num_pt_loads);
+> > +		print_progress(PROGRESS_XEN_DOMAIN, i, num_pt_loads, NULL);
+> >
+> >  		pfn     = paddr_to_pfn(phys_start);
+> >  		pfn_end = paddr_to_pfn(phys_end);
+> > @@ -9288,7 +9288,7 @@ exclude_xen4_user_domain(void)
+> >
+> >  		for (j = 0; pfn < pfn_end; pfn++, j++) {
+> >  			print_progress(PROGRESS_XEN_DOMAIN, j + (size * i),
+> > -					size * num_pt_loads);
+> > +					size * num_pt_loads, NULL);
+> >
+> >  			page_info_addr = info->frame_table_vaddr + pfn * SIZE(page_info);
+> >  			if (!readmem(VADDR_XEN,
+> > @@ -9356,7 +9356,7 @@ exclude_xen_user_domain(void)
+> >  	/*
+> >  	 * print [100 %]
+> >  	 */
+> > -	print_progress(PROGRESS_XEN_DOMAIN, 1, 1);
+> > +	print_progress(PROGRESS_XEN_DOMAIN, 1, 1, NULL);
+> >  	print_execution_time(PROGRESS_XEN_DOMAIN, &tv_start);
+> >
+> >  	return ret;
+> > @@ -10342,7 +10342,7 @@ reassemble_kdump_pages(void)
+> >
+> >  			num_dumped++;
+> >
+> > -			print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
+> > +			print_progress(PROGRESS_COPY, num_dumped, num_dumpable, &tv_start);
+> >
+> >  			if (lseek(fd, offset_ph_org, SEEK_SET) < 0) {
+> >  				ERRMSG("Can't seek a file(%s). %s\n",
+> > @@ -10439,7 +10439,7 @@ reassemble_kdump_pages(void)
+> >  						    size_eraseinfo))
+> >  			goto out;
+> >  	}
+> > -	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
+> > +	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable, &tv_start);
+> >  	print_execution_time(PROGRESS_COPY, &tv_start);
+> >
+> >  	ret = TRUE;
+> > diff --git a/print_info.c b/print_info.c
+> > index 79dfe5e..4e0bb5c 100644
+> > --- a/print_info.c
+> > +++ b/print_info.c
+> > @@ -15,8 +15,9 @@
+> >   */
+> >  #include "print_info.h"
+> >  #include <time.h>
+> > +#include <string.h>
+> >
+> > -#define PROGRESS_MAXLEN		"35"
+> > +#define PROGRESS_MAXLEN		"50"
+> >
+> >  int message_level;
+> >  int flag_strerr_message;
+> > @@ -350,14 +351,36 @@ static void calc_delta(struct timeval *tv_start,
+> > struct timeval *delta)
+> >  	}
+> >  }
+> >
+> > +/* produce less than 12 bytes on msg */
+> > +static int eta_to_human_short (int secs, char* msg)
+> > +{
+> > +	strcpy(msg, "eta: ");
+> > +	msg += strlen("eta: ");
+> > +	if (secs < 100)
+> > +		sprintf(msg, "%ds", secs);
+> > +	else if (secs < 100 * 60)
+> > +		sprintf(msg, "%dm%ds", secs / 60, secs % 60);
+> > +	else if (secs < 48 * 3600)
+> > +		sprintf(msg, "%dh%dm", secs / 3600, (secs / 60) % 60);
+> > +	else if (secs < 100 * 86400)
+> > +		sprintf(msg, "%dd%dh", secs / 86400, (secs / 3600) % 24);
+> > +	else
+> > +		sprintf(msg, ">2day");
+> > +	return 0;
+> > +}
+> > +
+> > +
+> >  void
+> > -print_progress(const char *msg, unsigned long current, unsigned long end)
+> > +print_progress(const char *msg, unsigned long current, unsigned long end,
+> > struct timeval *start)
+> >  {
+> >  	float progress;
+> >  	time_t tm;
+> >  	static time_t last_time = 0;
+> >  	static unsigned int lapse = 0;
+> >  	static const char *spinner = "/|\\-";
+> > +	struct timeval delta;
+> > +	double eta;
+> > +	char eta_msg[16] = " ";
+> >
+> >  	if (current < end) {
+> >  		tm = time(NULL);
+> > @@ -368,13 +391,19 @@ print_progress(const char *msg, unsigned long
+> > current, unsigned long end)
+> >  	} else
+> >  		progress = 100;
+> >
+> > +	if (start != NULL) {
+> > +		calc_delta(start, &delta);
+> > +		eta = delta.tv_sec + delta.tv_usec/1e6;
+> 
+> space around /
+> and better to write hex value as 0x1e6
+> 
+> Sorry, I could not understand what is this magic number 1e6?
+> 
+Ah, it is 10^6.
+
+> 
+> > +		eta = (100 - progress) * eta/progress;
+> 
+> space around /
+> 
+Adopted.
+
+Thank you for review.
+
+Regards,
+Pingfan
+
+> > +		eta_to_human_short(eta, eta_msg);
+> > +	}
+> >  	if (flag_ignore_r_char) {
+> > -		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c\n",
+> > -			     msg, progress, spinner[lapse % 4]);
+> > +		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s\n",
+> > +			     msg, progress, spinner[lapse % 4], eta_msg);
+> >  	} else {
+> >  		PROGRESS_MSG("\r");
+> > -		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c",
+> > -			     msg, progress, spinner[lapse % 4]);
+> > +		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s",
+> > +			     msg, progress, spinner[lapse % 4], eta_msg);
+> >  	}
+> >  	lapse++;
+> >  }
+> > diff --git a/print_info.h b/print_info.h
+> > index 01e3706..1ce3593 100644
+> > --- a/print_info.h
+> > +++ b/print_info.h
+> > @@ -25,7 +25,8 @@ extern int flag_ignore_r_char;
+> >
+> >  void show_version(void);
+> >  void print_usage(void);
+> > -void print_progress(const char *msg, unsigned long current, unsigned long
+> > end);
+> > +void print_progress(const char *msg, unsigned long current, unsigned long
+> > end, struct timeval *start);
+> > +
+> >  void print_execution_time(char *step_name, struct timeval *tv_start);
+> >
+> >  /*
+> >
+> 
+> ~Pratyush
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
