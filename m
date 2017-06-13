@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-cys01nam02on0066.outbound.protection.outlook.com
- ([104.47.37.66] helo=NAM02-CY1-obe.outbound.protection.outlook.com)
+Received: from prod-mx.aristanetworks.com ([162.210.130.12])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dKPSC-0000NX-IU
- for kexec@lists.infradead.org; Mon, 12 Jun 2017 13:32:26 +0000
-Subject: Re: [PATCH v6 14/34] x86/mm: Insure that boot memory areas are mapped
- properly
-References: <20170607191309.28645.15241.stgit@tlendack-t1.amdoffice.net>
- <20170607191539.28645.70161.stgit@tlendack-t1.amdoffice.net>
- <20170610160119.bnx5ir5dj3i27igx@pd.tnic>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <64d7cb4e-64fe-0882-ad17-fc3918c3a09a@amd.com>
-Date: Mon, 12 Jun 2017 08:31:58 -0500
+ id 1dKaCn-0002mA-Fk
+ for kexec@lists.infradead.org; Tue, 13 Jun 2017 01:01:15 +0000
+Date: Mon, 12 Jun 2017 18:00:46 -0700
+From: Ivan Delalande <colona@arista.com>
+Subject: [PATCH] Add the --partial-dmesg option to dump only non-cleared dmesg
+Message-ID: <20170613010046.GA25025@visor>
 MIME-Version: 1.0
-In-Reply-To: <20170610160119.bnx5ir5dj3i27igx@pd.tnic>
-Content-Language: en-US
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,133 +17,121 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: kexec@lists.infradead.org
 
-On 6/10/2017 11:01 AM, Borislav Petkov wrote:
-> On Wed, Jun 07, 2017 at 02:15:39PM -0500, Tom Lendacky wrote:
->> The boot data and command line data are present in memory in a decrypted
->> state and are copied early in the boot process.  The early page fault
->> support will map these areas as encrypted, so before attempting to copy
->> them, add decrypted mappings so the data is accessed properly when copied.
->>
->> For the initrd, encrypt this data in place. Since the future mapping of the
->> initrd area will be mapped as encrypted the data will be accessed properly.
->>
->> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
->> ---
->>   arch/x86/include/asm/mem_encrypt.h |   11 +++++
->>   arch/x86/include/asm/pgtable.h     |    3 +
->>   arch/x86/kernel/head64.c           |   30 ++++++++++++--
->>   arch/x86/kernel/setup.c            |    9 ++++
->>   arch/x86/mm/mem_encrypt.c          |   77 ++++++++++++++++++++++++++++++++++++
->>   5 files changed, 126 insertions(+), 4 deletions(-)
-> 
-> Some cleanups ontop in case you get to send v7:
-
-There will be a v7.
-
-> 
-> diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-> index 61a704945294..5959a42dd4d5 100644
-> --- a/arch/x86/include/asm/mem_encrypt.h
-> +++ b/arch/x86/include/asm/mem_encrypt.h
-> @@ -45,13 +45,8 @@ static inline void __init sme_early_decrypt(resource_size_t paddr,
->   {
->   }
->   
-> -static inline void __init sme_map_bootdata(char *real_mode_data)
-> -{
-> -}
-> -
-> -static inline void __init sme_unmap_bootdata(char *real_mode_data)
-> -{
-> -}
-> +static inline void __init sme_map_bootdata(char *real_mode_data)	{ }
-> +static inline void __init sme_unmap_bootdata(char *real_mode_data)	{ }
->   
->   static inline void __init sme_early_init(void)
->   {
-> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-> index 2321f05045e5..32ebbe0ab04d 100644
-> --- a/arch/x86/mm/mem_encrypt.c
-> +++ b/arch/x86/mm/mem_encrypt.c
-> @@ -132,6 +132,10 @@ static void __init __sme_map_unmap_bootdata(char *real_mode_data, bool map)
->   	struct boot_params *boot_data;
->   	unsigned long cmdline_paddr;
->   
-> +	/* If SME is not active, the bootdata is in the correct state */
-> +	if (!sme_active())
-> +		return;
-> +
->   	__sme_early_map_unmap_mem(real_mode_data, sizeof(boot_params), map);
->   	boot_data = (struct boot_params *)real_mode_data;
->   
-> @@ -142,40 +146,22 @@ static void __init __sme_map_unmap_bootdata(char *real_mode_data, bool map)
->   	cmdline_paddr = boot_data->hdr.cmd_line_ptr |
->   			((u64)boot_data->ext_cmd_line_ptr << 32);
->   
-> -	if (cmdline_paddr)
-> -		__sme_early_map_unmap_mem(__va(cmdline_paddr),
-> -					  COMMAND_LINE_SIZE, map);
-> +	if (!cmdline_paddr)
-> +		return;
-> +
-> +	__sme_early_map_unmap_mem(__va(cmdline_paddr), COMMAND_LINE_SIZE, map);
-> +
-> +	sme_early_pgtable_flush();
-
-Yup, overall it definitely simplifies things.
-
-I have to call sme_early_pgtable_flush() even if cmdline_paddr is NULL,
-so I'll either keep the if and have one flush at the end or I can move
-the flush into __sme_early_map_unmap_mem(). I'm leaning towards the
-latter.
-
-Thanks,
-Tom
-
->   }
->   
->   void __init sme_unmap_bootdata(char *real_mode_data)
->   {
-> -	/* If SME is not active, the bootdata is in the correct state */
-> -	if (!sme_active())
-> -		return;
-> -
-> -	/*
-> -	 * The bootdata and command line aren't needed anymore so clear
-> -	 * any mapping of them.
-> -	 */
->   	__sme_map_unmap_bootdata(real_mode_data, false);
-> -
-> -	sme_early_pgtable_flush();
->   }
->   
->   void __init sme_map_bootdata(char *real_mode_data)
->   {
-> -	/* If SME is not active, the bootdata is in the correct state */
-> -	if (!sme_active())
-> -		return;
-> -
-> -	/*
-> -	 * The bootdata and command line will not be encrypted, so they
-> -	 * need to be mapped as decrypted memory so they can be copied
-> -	 * properly.
-> -	 */
->   	__sme_map_unmap_bootdata(real_mode_data, true);
-> -
-> -	sme_early_pgtable_flush();
->   }
->   
->   void __init sme_early_init(void)
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+VGhpcyBvcHRpb24gd2lsbCBtYWtlIC0tZHVtcC1kbWVzZyBzYXZlIG9ubHkgdGhlIHBhcnQgb2Yg
+dGhlIGRtZXNnCmJ1ZmZlciBzaW5jZSBpdCB3YXMgbGFzdCBjbGVhcmVkIG9uIHRoZSBjcmFzaGVk
+IGtlcm5lbCAod2l0aApkbWVzZyAtLWNsZWFyIGFuZCBzdWNoKSBpbnN0ZWFkIG9mIHRoZSB3aG9s
+ZSBidWZmZXIgc2luY2UgYm9vdCBvcgp3cmFwLWFyb3VuZC4gSXQgd29ya3Mgb24ga2VybmVscyB3
+aXRoIGNvbW1pdCBmNDY4OTA4YmI1NWEgKCJwcmludGs6CmFkZCBjbGVhcl9pZHggc3ltYm9sIHRv
+IHZtY29yZWluZm8iKSBtZXJnZWQgaW4gdjQuNiBhbmQgb3RoZXJ3aXNlCndpbGwgZGVmYXVsdCB0
+byB0aGUgcmVndWxhciBiZWhhdmlvci4KClNpZ25lZC1vZmYtYnk6IEl2YW4gRGVsYWxhbmRlIDxj
+b2xvbmFAYXJpc3RhLmNvbT4KLS0tCiBtYWtlZHVtcGZpbGUuOCB8ICA4ICsrKysrKystCiBtYWtl
+ZHVtcGZpbGUuYyB8IDIxICsrKysrKysrKysrKysrKysrKystLQogbWFrZWR1bXBmaWxlLmggfCAg
+MyArKysKIDMgZmlsZXMgY2hhbmdlZCwgMjkgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkK
+CmRpZmYgLS1naXQgYS9tYWtlZHVtcGZpbGUuOCBiL21ha2VkdW1wZmlsZS44CmluZGV4IDk5MzIz
+NjQuLjc2YThkNmUgMTAwNjQ0Ci0tLSBhL21ha2VkdW1wZmlsZS44CisrKyBiL21ha2VkdW1wZmls
+ZS44CkBAIC0yMCw3ICsyMCw3IEBAIG1ha2VkdW1wZmlsZSBcLSBtYWtlIGEgc21hbGwgZHVtcGZp
+bGUgb2Yga2R1bXAKIC5icgogXGZCbWFrZWR1bXBmaWxlXGZSICAgIFtcZklPUFRJT05cZlJdIFtc
+LVwteGVuLXN5bXMgXGZJWEVOLVNZTVNcZlJ8XC1cLXhlbi12bWNvcmVpbmZvIFxmSVZNQ09SRUlO
+Rk9cZlJdIFxmSVZNQ09SRVxmUiBcZklEVU1QRklMRVxmUgogLmJyCi1cZkJtYWtlZHVtcGZpbGVc
+ZlIgXC1cLWR1bXAtZG1lc2cgW1wteCBcZklWTUxJTlVYXGZSfFwtaSBcZklWTUNPUkVJTkZPXGZS
+XSBcZklWTUNPUkVcZlIgXGZJTE9HRklMRVxmUgorXGZCbWFrZWR1bXBmaWxlXGZSIFwtXC1kdW1w
+LWRtZXNnIFtcLVwtcGFydGlhbC1kbWVzZ10gW1wteCBcZklWTUxJTlVYXGZSfFwtaSBcZklWTUNP
+UkVJTkZPXGZSXSBcZklWTUNPUkVcZlIgXGZJTE9HRklMRVxmUgogLmJyCiBcZkJtYWtlZHVtcGZp
+bGVcZlIgICAgW1xmSU9QVElPTlxmUl0gXC14IFxmSVZNTElOVVhcZlIgXC1cLWRpc2tzZXQ9XGZJ
+Vk1DT1JFMVxmUiBcLVwtZGlza3NldD1cZklWTUNPUkUyXGZSIFtcLVwtZGlza3NldD1cZklWTUNP
+UkUzXGZSIC4uXSBcZklEVU1QRklMRVxmUgogLmJyCkBAIC01ODYsNiArNTg2LDEyIEBAIGl0IGlz
+IG5lY2Vzc2FyeSB0byBzcGVjZml5IFtcLXggXGZJVk1MSU5VWFxmUl0gb3IgW1wtaSBcZklWTUNP
+UkVJTkZPXGZSXS4KIAogCiAuVFAKK1xmQlwtXC1wYXJ0aWFsLWRtZXNnXGZSCitUaGlzIG9wdGlv
+biB3aWxsIG1ha2UgLS1kdW1wLWRtZXNnIGV4dHJhY3Qgb25seSBkbWVzZyBsb2dzIHNpbmNlIHRo
+YXQgYnVmZmVyIHdhcworbGFzdCBjbGVhcmVkIG9uIHRoZSBjcmFzaGVkIGtlcm5lbCwgdGhyb3Vn
+aCAiZG1lc2cgLS1jbGVhciIgZm9yIGV4YW1wbGUuCisKKworLlRQCiBcZkJcLVwtbWVtLXVzYWdl
+XGZSCiBUaGlzIG9wdGlvbiBpcyBvbmx5IGZvciB4ODZfNjQuCiBUaGlzIG9wdGlvbiBpcyB1c2Vk
+IHRvIHNob3cgdGhlIHBhZ2UgbnVtYmVycyBvZiBjdXJyZW50IHN5c3RlbSBpbiBkaWZmZXJlbnQK
+ZGlmZiAtLWdpdCBhL21ha2VkdW1wZmlsZS5jIGIvbWFrZWR1bXBmaWxlLmMKaW5kZXggOTVjYzVl
+Zi4uN2M4ODIwMyAxMDA2NDQKLS0tIGEvbWFrZWR1bXBmaWxlLmMKKysrIGIvbWFrZWR1bXBmaWxl
+LmMKQEAgLTE0OTgsNiArMTQ5OCw3IEBAIGdldF9zeW1ib2xfaW5mbyh2b2lkKQogCVNZTUJPTF9J
+TklUKGxvZ19idWZfbGVuLCAibG9nX2J1Zl9sZW4iKTsKIAlTWU1CT0xfSU5JVChsb2dfZW5kLCAi
+bG9nX2VuZCIpOwogCVNZTUJPTF9JTklUKGxvZ19maXJzdF9pZHgsICJsb2dfZmlyc3RfaWR4Iik7
+CisJU1lNQk9MX0lOSVQoY2xlYXJfaWR4LCAiY2xlYXJfaWR4Iik7CiAJU1lNQk9MX0lOSVQobG9n
+X25leHRfaWR4LCAibG9nX25leHRfaWR4Iik7CiAJU1lNQk9MX0lOSVQobWF4X3BmbiwgIm1heF9w
+Zm4iKTsKIAlTWU1CT0xfSU5JVChtb2R1bGVzLCAibW9kdWxlcyIpOwpAQCAtMjExNSw2ICsyMTE2
+LDcgQEAgd3JpdGVfdm1jb3JlaW5mb19kYXRhKHZvaWQpCiAJV1JJVEVfU1lNQk9MKCJsb2dfYnVm
+X2xlbiIsIGxvZ19idWZfbGVuKTsKIAlXUklURV9TWU1CT0woImxvZ19lbmQiLCBsb2dfZW5kKTsK
+IAlXUklURV9TWU1CT0woImxvZ19maXJzdF9pZHgiLCBsb2dfZmlyc3RfaWR4KTsKKwlXUklURV9T
+WU1CT0woImNsZWFyX2lkeCIsIGNsZWFyX2lkeCk7CiAJV1JJVEVfU1lNQk9MKCJsb2dfbmV4dF9p
+ZHgiLCBsb2dfbmV4dF9pZHgpOwogCVdSSVRFX1NZTUJPTCgibWF4X3BmbiIsIG1heF9wZm4pOwog
+CVdSSVRFX1NZTUJPTCgiaGlnaF9tZW1vcnkiLCBoaWdoX21lbW9yeSk7CkBAIC0yNTA5LDYgKzI1
+MTEsNyBAQCByZWFkX3ZtY29yZWluZm8odm9pZCkKIAlSRUFEX1NZTUJPTCgibG9nX2J1Zl9sZW4i
+LCBsb2dfYnVmX2xlbik7CiAJUkVBRF9TWU1CT0woImxvZ19lbmQiLCBsb2dfZW5kKTsKIAlSRUFE
+X1NZTUJPTCgibG9nX2ZpcnN0X2lkeCIsIGxvZ19maXJzdF9pZHgpOworCVJFQURfU1lNQk9MKCJj
+bGVhcl9pZHgiLCBjbGVhcl9pZHgpOwogCVJFQURfU1lNQk9MKCJsb2dfbmV4dF9pZHgiLCBsb2df
+bmV4dF9pZHgpOwogCVJFQURfU1lNQk9MKCJtYXhfcGZuIiwgbWF4X3Bmbik7CiAJUkVBRF9TWU1C
+T0woImhpZ2hfbWVtb3J5IiwgaGlnaF9tZW1vcnkpOwpAQCAtNTAyNSw2ICs1MDI4LDcgQEAgZHVt
+cF9kbWVzZygpCiAJaW50IGxvZ19idWZfbGVuLCBsZW5ndGhfbG9nLCBsZW5ndGhfb2xkbG9nLCBy
+ZXQgPSBGQUxTRTsKIAl1bnNpZ25lZCBsb25nIGluZGV4LCBsb2dfYnVmLCBsb2dfZW5kOwogCXVu
+c2lnbmVkIGludCBpZHgsIGxvZ19maXJzdF9pZHgsIGxvZ19uZXh0X2lkeDsKKwl1bnNpZ25lZCBs
+b25nIGxvbmcgZmlyc3RfaWR4X3N5bTsKIAl1bnNpZ25lZCBsb25nIGxvZ19lbmRfMl82XzI0Owog
+CXVuc2lnbmVkICAgICAgbG9nX2VuZF8yXzZfMjU7CiAJY2hhciAqbG9nX2J1ZmZlciA9IE5VTEws
+ICpsb2dfcHRyID0gTlVMTDsKQEAgLTUwNTgsNyArNTA2MiwxMyBAQCBkdW1wX2RtZXNnKCkKIAkJ
+CUVSUk1TRygiQ2FuJ3QgZmluZCB2YXJpYWJsZS1sZW5ndGggcmVjb3JkIHN5bWJvbHMiKTsKIAkJ
+CXJldHVybiBGQUxTRTsKIAkJfSBlbHNlIHsKLQkJCWlmICghcmVhZG1lbShWQUREUiwgU1lNQk9M
+KGxvZ19maXJzdF9pZHgpLCAmbG9nX2ZpcnN0X2lkeCwKKwkJCWlmIChpbmZvLT5mbGFnX3BhcnRp
+YWxfZG1lc2cKKwkJCSAgICAmJiBTWU1CT0woY2xlYXJfaWR4KSAhPSBOT1RfRk9VTkRfU1lNQk9M
+KQorCQkJCWZpcnN0X2lkeF9zeW0gPSBTWU1CT0woY2xlYXJfaWR4KTsKKwkJCWVsc2UKKwkJCQlm
+aXJzdF9pZHhfc3ltID0gU1lNQk9MKGxvZ19maXJzdF9pZHgpOworCisJCQlpZiAoIXJlYWRtZW0o
+VkFERFIsIGZpcnN0X2lkeF9zeW0sICZsb2dfZmlyc3RfaWR4LAogCQkJICAgIHNpemVvZihsb2df
+Zmlyc3RfaWR4KSkpIHsKIAkJCQlFUlJNU0coIkNhbid0IGdldCBsb2dfZmlyc3RfaWR4LlxuIik7
+CiAJCQkJcmV0dXJuIEZBTFNFOwpAQCAtNTEwMiw3ICs1MTEyLDEwIEBAIGR1bXBfZG1lc2coKQog
+CURFQlVHX01TRygibG9nX2J1ZiAgICAgICA6ICVseFxuIiwgbG9nX2J1Zik7CiAJREVCVUdfTVNH
+KCJsb2dfZW5kICAgICAgIDogJWx4XG4iLCBsb2dfZW5kKTsKIAlERUJVR19NU0coImxvZ19idWZf
+bGVuICAgOiAlZFxuIiwgbG9nX2J1Zl9sZW4pOwotCURFQlVHX01TRygibG9nX2ZpcnN0X2lkeCA6
+ICV1XG4iLCBsb2dfZmlyc3RfaWR4KTsKKwlpZiAoaW5mby0+ZmxhZ19wYXJ0aWFsX2RtZXNnKQor
+CQlERUJVR19NU0coImNsZWFyX2lkeCA6ICV1XG4iLCBsb2dfZmlyc3RfaWR4KTsKKwllbHNlCisJ
+CURFQlVHX01TRygibG9nX2ZpcnN0X2lkeCA6ICV1XG4iLCBsb2dfZmlyc3RfaWR4KTsKIAlERUJV
+R19NU0coImxvZ19uZXh0X2lkeCAgOiAldVxuIiwgbG9nX25leHRfaWR4KTsKIAogCWlmICgobG9n
+X2J1ZmZlciA9IG1hbGxvYyhsb2dfYnVmX2xlbikpID09IE5VTEwpIHsKQEAgLTExMDIyLDYgKzEx
+MDM1LDcgQEAgc3RhdGljIHN0cnVjdCBvcHRpb24gbG9uZ29wdHNbXSA9IHsKIAl7Im1lc3NhZ2Ut
+bGV2ZWwiLCByZXF1aXJlZF9hcmd1bWVudCwgTlVMTCwgT1BUX01FU1NBR0VfTEVWRUx9LAogCXsi
+dnRvcCIsIHJlcXVpcmVkX2FyZ3VtZW50LCBOVUxMLCBPUFRfVlRPUH0sCiAJeyJkdW1wLWRtZXNn
+Iiwgbm9fYXJndW1lbnQsIE5VTEwsIE9QVF9EVU1QX0RNRVNHfSwKKwl7InBhcnRpYWwtZG1lc2ci
+LCBub19hcmd1bWVudCwgTlVMTCwgT1BUX1BBUlRJQUxfRE1FU0d9LAogCXsiY29uZmlnIiwgcmVx
+dWlyZWRfYXJndW1lbnQsIE5VTEwsIE9QVF9DT05GSUd9LAogCXsiaGVscCIsIG5vX2FyZ3VtZW50
+LCBOVUxMLCBPUFRfSEVMUH0sCiAJeyJkaXNrc2V0IiwgcmVxdWlyZWRfYXJndW1lbnQsIE5VTEws
+IE9QVF9ESVNLU0VUfSwKQEAgLTExMTM1LDYgKzExMTQ5LDkgQEAgbWFpbihpbnQgYXJnYywgY2hh
+ciAqYXJndltdKQogCQljYXNlIE9QVF9EVU1QX0RNRVNHOgogCQkJaW5mby0+ZmxhZ19kbWVzZyA9
+IDE7CiAJCQlicmVhazsKKwkJY2FzZSBPUFRfUEFSVElBTF9ETUVTRzoKKwkJCWluZm8tPmZsYWdf
+cGFydGlhbF9kbWVzZyA9IDE7CisJCQlicmVhazsKIAkJY2FzZSBPUFRfTUVNX1VTQUdFOgogCQkg
+ICAgICAgaW5mby0+ZmxhZ19tZW1fdXNhZ2UgPSAxOwogCQkgICAgICAgYnJlYWs7CmRpZmYgLS1n
+aXQgYS9tYWtlZHVtcGZpbGUuaCBiL21ha2VkdW1wZmlsZS5oCmluZGV4IDZlYThjYzQuLmQzYjc1
+MzIgMTAwNjQ0Ci0tLSBhL21ha2VkdW1wZmlsZS5oCisrKyBiL21ha2VkdW1wZmlsZS5oCkBAIC0x
+MjQxLDYgKzEyNDEsNyBAQCBzdHJ1Y3QgRHVtcEluZm8gewogCWludAkJZmxhZ19mb3JjZTsJICAg
+ICAvKiBvdmVyd3JpdGUgZXhpc3Rpbmcgc3R1ZmYgKi8KIAlpbnQJCWZsYWdfZXhjbHVkZV94ZW5f
+ZG9tOy8qIGV4Y2x1ZGUgRG9tYWluLVUgZnJvbSB4ZW4ta2R1bXAgKi8KIAlpbnQgICAgICAgICAg
+ICAgZmxhZ19kbWVzZzsgICAgICAgICAgLyogZHVtcCB0aGUgZG1lc2cgbG9nIG91dCBvZiB0aGUg
+dm1jb3JlIGZpbGUgKi8KKwlpbnQgICAgICAgICAgICAgZmxhZ19wYXJ0aWFsX2RtZXNnOyAgLyog
+ZG1lc2cgZHVtcCBvbmx5IGZyb20gdGhlIGxhc3QgY2xlYXJlZCBpbmRleCovCiAJaW50ICAgICAg
+ICAgICAgIGZsYWdfbWVtX3VzYWdlOyAgLypzaG93IHRoZSBwYWdlIG51bWJlciBvZiBtZW1vcnkg
+aW4gZGlmZmVyZW50IHVzZSovCiAJaW50CQlmbGFnX3VzZV9wcmludGtfbG9nOyAvKiBkaWQgd2Ug
+cmVhZCBwcmludGtfbG9nIHN5bWJvbCBuYW1lPyAqLwogCWludAkJZmxhZ19ub3NwYWNlOwkgICAg
+IC8qIHRoZSBmbGFnIG9mICJObyBzcGFjZSBvbiBkZXZpY2UiIGVycm9yICovCkBAIC0xNTI5LDYg
+KzE1MzAsNyBAQCBzdHJ1Y3Qgc3ltYm9sX3RhYmxlIHsKIAl1bnNpZ25lZCBsb25nIGxvbmcJbG9n
+X2J1Zl9sZW47CiAJdW5zaWduZWQgbG9uZyBsb25nCWxvZ19lbmQ7CiAJdW5zaWduZWQgbG9uZyBs
+b25nCWxvZ19maXJzdF9pZHg7CisJdW5zaWduZWQgbG9uZyBsb25nCWNsZWFyX2lkeDsKIAl1bnNp
+Z25lZCBsb25nIGxvbmcJbG9nX25leHRfaWR4OwogCXVuc2lnbmVkIGxvbmcgbG9uZwltYXhfcGZu
+OwogCXVuc2lnbmVkIGxvbmcgbG9uZwlub2RlX3JlbWFwX3N0YXJ0X3ZhZGRyOwpAQCAtMjI2OCw2
+ICsyMjcwLDcgQEAgc3RydWN0IGVsZl9wcnN0YXR1cyB7CiAjZGVmaW5lIE9QVF9TUExJVEJMT0NL
+X1NJWkUJT1BUX1NUQVJUKzE0CiAjZGVmaW5lIE9QVF9XT1JLSU5HX0RJUiAgICAgICAgIE9QVF9T
+VEFSVCsxNQogI2RlZmluZSBPUFRfTlVNX1RIUkVBRFMJT1BUX1NUQVJUKzE2CisjZGVmaW5lIE9Q
+VF9QQVJUSUFMX0RNRVNHCU9QVF9TVEFSVCsxNwogCiAvKgogICogRnVuY3Rpb24gUHJvdG90eXBl
+LgotLSAKMi4xMy4xCgoKLS0gCkl2YW4gRGVsYWxhbmRlCktlcm5lbCBUZWFtIC0gVmFuY291dmVy
+IC0gI8KzIEEzWTIwClBob25lOiA3MzQyIHwgTW9iaWxlOiA2MDQgNjAwIDUzMTMKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
+dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8va2V4ZWMK
