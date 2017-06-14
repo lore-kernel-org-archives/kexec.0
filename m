@@ -1,12 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dL4oH-0002dG-Ul
- for kexec@lists.infradead.org; Wed, 14 Jun 2017 09:41:59 +0000
-From: Pingfan Liu <piliu@redhat.com>
-Subject: [makedumpfile PATCHv3 1/2] fold the calc of time delta into a func
-Date: Wed, 14 Jun 2017 17:41:31 +0800
-Message-Id: <1497433292-6015-1-git-send-email-piliu@redhat.com>
+Received: from mail.skyhub.de ([5.9.137.197])
+ by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
+ id 1dLAqJ-0003eO-4s
+ for kexec@lists.infradead.org; Wed, 14 Jun 2017 16:08:29 +0000
+Date: Wed, 14 Jun 2017 18:07:54 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v6 20/34] x86, mpparse: Use memremap to map the mpf and
+ mpc data
+Message-ID: <20170614160754.c4ywbf5ktqwgc4ij@pd.tnic>
+References: <20170607191309.28645.15241.stgit@tlendack-t1.amdoffice.net>
+ <20170607191643.28645.91679.stgit@tlendack-t1.amdoffice.net>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20170607191643.28645.91679.stgit@tlendack-t1.amdoffice.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,72 +21,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Pratyush Anand <panand@redhat.com>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-This piece of code will be used by more than one function after
-introducing the next patch
+On Wed, Jun 07, 2017 at 02:16:43PM -0500, Tom Lendacky wrote:
+> The SMP MP-table is built by UEFI and placed in memory in a decrypted
+> state. These tables are accessed using a mix of early_memremap(),
+> early_memunmap(), phys_to_virt() and virt_to_phys(). Change all accesses
+> to use early_memremap()/early_memunmap(). This allows for proper setting
+> of the encryption mask so that the data can be successfully accessed when
+> SME is active.
+> 
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  arch/x86/kernel/mpparse.c |   98 ++++++++++++++++++++++++++++++++-------------
+>  1 file changed, 70 insertions(+), 28 deletions(-)
 
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
----
- print_info.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+...
 
-diff --git a/print_info.c b/print_info.c
-index 832196d..79dfe5e 100644
---- a/print_info.c
-+++ b/print_info.c
-@@ -337,6 +337,19 @@ print_usage(void)
- 	MSG("\n");
- }
- 
-+static void calc_delta(struct timeval *tv_start, struct timeval *delta)
-+{
-+	struct timeval tv_end;
-+
-+	gettimeofday(&tv_end, NULL);
-+	delta->tv_sec = tv_end.tv_sec - tv_start->tv_sec;
-+	delta->tv_usec = tv_end.tv_usec - tv_start->tv_usec;
-+	if (delta->tv_usec < 0) {
-+		delta->tv_sec--;
-+		delta->tv_usec += 1000000;
-+	}
-+}
-+
- void
- print_progress(const char *msg, unsigned long current, unsigned long end)
- {
-@@ -369,19 +382,10 @@ print_progress(const char *msg, unsigned long current, unsigned long end)
- void
- print_execution_time(char *step_name, struct timeval *tv_start)
- {
--	struct timeval tv_end;
--	time_t diff_sec;
--	suseconds_t diff_usec;
-+	struct timeval delta;
- 
--	gettimeofday(&tv_end, NULL);
--
--	diff_sec  = tv_end.tv_sec - tv_start->tv_sec;
--	diff_usec = tv_end.tv_usec - tv_start->tv_usec;
--	if (diff_usec < 0) {
--		diff_sec--;
--		diff_usec += 1000000;
--	}
-+	calc_delta(tv_start, &delta);
- 	REPORT_MSG("STEP [%s] : %ld.%06ld seconds\n",
--		   step_name, diff_sec, diff_usec);
-+		   step_name, delta.tv_sec, delta.tv_usec);
- }
- 
+> @@ -515,6 +516,12 @@ void __init default_get_smp_config(unsigned int early)
+>  	if (acpi_lapic && acpi_ioapic)
+>  		return;
+>  
+> +	mpf = early_memremap(mpf_base, sizeof(*mpf));
+> +	if (!mpf) {
+> +		pr_err("MPTABLE: mpf early_memremap() failed\n");
+
+If you're going to introduce new prefixes then add:
+
+#undef pr_fmt
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
+at the beginning of the file so that they all say "mpparse:" instead.
+
+And pls make that message more user-friendly: "Error mapping MP table"
+or so.
+
 -- 
-2.7.4
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
