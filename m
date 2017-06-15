@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-cys01nam02on0086.outbound.protection.outlook.com
- ([104.47.37.86] helo=NAM02-CY1-obe.outbound.protection.outlook.com)
+Received: from mail-pg0-f51.google.com ([74.125.83.51])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dLF65-00077n-Gh
- for kexec@lists.infradead.org; Wed, 14 Jun 2017 20:41:03 +0000
-Subject: Re: [PATCH v6 26/34] iommu/amd: Allow the AMD IOMMU to work with
- memory encryption
-References: <20170607191309.28645.15241.stgit@tlendack-t1.amdoffice.net>
- <20170607191745.28645.81756.stgit@tlendack-t1.amdoffice.net>
- <20170614174208.p2yr5exs4b6pjxhf@pd.tnic>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <0611d01a-19f8-d6ae-2682-932789855518@amd.com>
-Date: Wed, 14 Jun 2017 15:40:28 -0500
+ id 1dLKmJ-0001HZ-QK
+ for kexec@lists.infradead.org; Thu, 15 Jun 2017 02:45:02 +0000
+Received: by mail-pg0-f51.google.com with SMTP id k71so1040290pgd.2
+ for <kexec@lists.infradead.org>; Wed, 14 Jun 2017 19:44:38 -0700 (PDT)
+Subject: Re: [makedumpfile PATCH v3 2/2] print_info: show the remaining time
+ of dump progress
+References: <1497433292-6015-1-git-send-email-piliu@redhat.com>
+ <1497433292-6015-2-git-send-email-piliu@redhat.com>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <7cb91f63-828d-9e98-c846-19c9215c9bed@redhat.com>
+Date: Thu, 15 Jun 2017 08:07:12 +0530
 MIME-Version: 1.0
-In-Reply-To: <20170614174208.p2yr5exs4b6pjxhf@pd.tnic>
-Content-Language: en-US
+In-Reply-To: <1497433292-6015-2-git-send-email-piliu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,216 +26,337 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: Pingfan Liu <piliu@redhat.com>, kexec@lists.infradead.org
+Cc: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
 
-On 6/14/2017 12:42 PM, Borislav Petkov wrote:
-> On Wed, Jun 07, 2017 at 02:17:45PM -0500, Tom Lendacky wrote:
->> The IOMMU is programmed with physical addresses for the various tables
->> and buffers that are used to communicate between the device and the
->> driver. When the driver allocates this memory it is encrypted. In order
->> for the IOMMU to access the memory as encrypted the encryption mask needs
->> to be included in these physical addresses during configuration.
->>
->> The PTE entries created by the IOMMU should also include the encryption
->> mask so that when the device behind the IOMMU performs a DMA, the DMA
->> will be performed to encrypted memory.
->>
->> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
->> ---
->>   arch/x86/include/asm/mem_encrypt.h |    7 +++++++
->>   arch/x86/mm/mem_encrypt.c          |   30 ++++++++++++++++++++++++++++++
->>   drivers/iommu/amd_iommu.c          |   36 +++++++++++++++++++-----------------
->>   drivers/iommu/amd_iommu_init.c     |   18 ++++++++++++------
->>   drivers/iommu/amd_iommu_proto.h    |   10 ++++++++++
->>   drivers/iommu/amd_iommu_types.h    |    2 +-
->>   include/asm-generic/mem_encrypt.h  |    5 +++++
->>   7 files changed, 84 insertions(+), 24 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
->> index c7a2525..d86e544 100644
->> --- a/arch/x86/include/asm/mem_encrypt.h
->> +++ b/arch/x86/include/asm/mem_encrypt.h
->> @@ -31,6 +31,8 @@ void __init sme_early_decrypt(resource_size_t paddr,
->>   
->>   void __init sme_early_init(void);
->>   
->> +bool sme_iommu_supported(void);
->> +
->>   /* Architecture __weak replacement functions */
->>   void __init mem_encrypt_init(void);
->>   
->> @@ -62,6 +64,11 @@ static inline void __init sme_early_init(void)
->>   {
->>   }
->>   
->> +static inline bool sme_iommu_supported(void)
->> +{
->> +	return true;
->> +}
-> 
-> Some more file real-estate saving:
-> 
-> static inline bool sme_iommu_supported(void) 	{ return true; }
-> 
->> +
->>   #endif	/* CONFIG_AMD_MEM_ENCRYPT */
->>   
->>   static inline bool sme_active(void)
->> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
->> index 5d7c51d..018b58a 100644
->> --- a/arch/x86/mm/mem_encrypt.c
->> +++ b/arch/x86/mm/mem_encrypt.c
->> @@ -197,6 +197,36 @@ void __init sme_early_init(void)
->>   		protection_map[i] = pgprot_encrypted(protection_map[i]);
->>   }
->>   
->> +bool sme_iommu_supported(void)
-> 
-> Why is this one exported with all the header file declarations if it is
-> going to be used in the iommu code only? IOW, you can make it a static
-> function there and save yourself all the exporting.
 
-I was trying to keep all the logic for it here in the SME related files
-rather than put it in the iommu code itself. But it is easy enough to
-move if you think it's worth it.
 
-> 
->> +{
->> +	struct cpuinfo_x86 *c = &boot_cpu_data;
->> +
->> +	if (!sme_me_mask || (c->x86 != 0x17))
-> 
-> me_mask or sme_active()?
+On Wednesday 14 June 2017 03:11 PM, Pingfan Liu wrote:
+> If the dump progress is slow, it is better to show  an estimate of
+> remaining time of the progress to the user. The estimator simply uses
+> the average speed to work.
+> Before this patch, the bar looks like:
+>   Copying data                                      : [  1.8 %] /
+> After this patch:
+>   Copying data                                      : [  1.8 %] /          eta: 39s
+>
+> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> ---
+> v2 -> v3: improve the commit log
 
-I like using sme_active() outside of the SME-specific files and using
-sme_me_mask in the SME-specific files to save any changes that will have
-to be made once SEV comes around.
+for the series
 
-> 
-> Or is the IOMMU "disabled" in a way the moment the BIOS decides that SME
-> can be enabled?
+Reviewed-by: Pratyush Anand <panand@redhat.com>
 
-There's a fix in the AGESA layer of the BIOS that permits the IOMMU to
-function properly when SME is enabled.  Unfortunately, the only easy way
-to determine if that fix is available is through the patch level check.
-
-> 
-> Also, family checks are always a bad idea for enablement. Why do we need
-> the family check? Because future families will work with the IOMMU? :-)
-
-Yes, any future family that supports SME will (should) work with the
-IOMMU without having to check patch levels.
-
-> 
->> +		return true;
->> +
->> +	/* For Fam17h, a specific level of support is required */
->> +	switch (c->microcode & 0xf000) {
-> 
-> Also, you said in another mail on this subthread that c->microcode
-> is not yet set. Are you saying, that the iommu init gunk runs before
-> init_amd(), where we do set c->microcode?
-> 
-> If so, we can move the setting to early_init_amd() or so.
-
-I'll look into that.
-
-> 
->> +	case 0x0000:
->> +		return false;
->> +	case 0x1000:
->> +		switch (c->microcode & 0x0f00) {
->> +		case 0x0000:
->> +			return false;
->> +		case 0x0100:
->> +			if ((c->microcode & 0xff) < 0x26)
->> +				return false;
->> +			break;
->> +		case 0x0200:
->> +			if ((c->microcode & 0xff) < 0x05)
->> +				return false;
->> +			break;
->> +		}
-> 
-> So this is the microcode revision, why those complex compares? Can't you
-> simply check a range of values?
-
-I'll look into simplifying the checks.
-
-> 
->> +		break;
->> +	}
->> +
->> +	return true;
->> +}
->> +
->>   /* Architecture __weak replacement functions */
->>   void __init mem_encrypt_init(void)
->>   {
->> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
->> index 63cacf5..94eb130 100644
->> --- a/drivers/iommu/amd_iommu.c
->> +++ b/drivers/iommu/amd_iommu.c
->> @@ -544,7 +544,7 @@ static void dump_dte_entry(u16 devid)
->>   
->>   static void dump_command(unsigned long phys_addr)
->>   {
->> -	struct iommu_cmd *cmd = phys_to_virt(phys_addr);
->> +	struct iommu_cmd *cmd = iommu_phys_to_virt(phys_addr);
->>   	int i;
->>   
->>   	for (i = 0; i < 4; ++i)
->> @@ -863,13 +863,15 @@ static void copy_cmd_to_buffer(struct amd_iommu *iommu,
->>   	writel(tail, iommu->mmio_base + MMIO_CMD_TAIL_OFFSET);
->>   }
->>   
->> -static void build_completion_wait(struct iommu_cmd *cmd, u64 address)
->> +static void build_completion_wait(struct iommu_cmd *cmd, volatile u64 *sem)
-> 
-> WARNING: Use of volatile is usually wrong: see Documentation/process/volatile-considered-harmful.rst
-> #134: FILE: drivers/iommu/amd_iommu.c:866:
-> +static void build_completion_wait(struct iommu_cmd *cmd, volatile u64 *sem)
-> 
-
-The semaphore area is written to by the device so the use of volatile is
-appropriate in this case.
-
-Thanks,
-Tom
-
->>   {
->> +	u64 address = iommu_virt_to_phys((void *)sem);
->> +
->>   	WARN_ON(address & 0x7ULL);
->>   
->>   	memset(cmd, 0, sizeof(*cmd));
->> -	cmd->data[0] = lower_32_bits(__pa(address)) | CMD_COMPL_WAIT_STORE_MASK;
->> -	cmd->data[1] = upper_32_bits(__pa(address));
->> +	cmd->data[0] = lower_32_bits(address) | CMD_COMPL_WAIT_STORE_MASK;
->> +	cmd->data[1] = upper_32_bits(address);
->>   	cmd->data[2] = 1;
->>   	CMD_SET_TYPE(cmd, CMD_COMPL_WAIT);
-> 
-> <... snip stuff which Joerg needs to review... >
-> 
->> diff --git a/include/asm-generic/mem_encrypt.h b/include/asm-generic/mem_encrypt.h
->> index fb02ff0..bbc49e1 100644
->> --- a/include/asm-generic/mem_encrypt.h
->> +++ b/include/asm-generic/mem_encrypt.h
->> @@ -27,6 +27,11 @@ static inline u64 sme_dma_mask(void)
->>   	return 0ULL;
->>   }
->>   
->> +static inline bool sme_iommu_supported(void)
->> +{
->> +	return true;
->> +}
-> 
-> Save some more file real-estate... you get the idea by now, I'm sure.
-> 
-> :-)
-> 
+>
+>  makedumpfile.c | 46 +++++++++++++++++++++++-----------------------
+>  print_info.c   | 41 +++++++++++++++++++++++++++++++++++------
+>  print_info.h   |  3 ++-
+>  3 files changed, 60 insertions(+), 30 deletions(-)
+>
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 301772a..35a36ce 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -5175,7 +5175,7 @@ _exclude_free_page(struct cycle *cycle)
+>
+>  	for (num_nodes = 1; num_nodes <= vt.numnodes; num_nodes++) {
+>
+> -		print_progress(PROGRESS_FREE_PAGES, num_nodes - 1, vt.numnodes);
+> +		print_progress(PROGRESS_FREE_PAGES, num_nodes - 1, vt.numnodes, NULL);
+>
+>  		node_zones = pgdat + OFFSET(pglist_data.node_zones);
+>
+> @@ -5188,7 +5188,7 @@ _exclude_free_page(struct cycle *cycle)
+>  		for (i = 0; i < nr_zones; i++) {
+>
+>  			print_progress(PROGRESS_FREE_PAGES, i + nr_zones * (num_nodes - 1),
+> -					nr_zones * vt.numnodes);
+> +					nr_zones * vt.numnodes, NULL);
+>
+>  			zone = node_zones + (i * SIZE(zone));
+>  			if (!readmem(VADDR, zone + OFFSET(zone.spanned_pages),
+> @@ -5216,7 +5216,7 @@ _exclude_free_page(struct cycle *cycle)
+>  	/*
+>  	 * print [100 %]
+>  	 */
+> -	print_progress(PROGRESS_FREE_PAGES, vt.numnodes, vt.numnodes);
+> +	print_progress(PROGRESS_FREE_PAGES, vt.numnodes, vt.numnodes, NULL);
+>  	print_execution_time(PROGRESS_FREE_PAGES, &tv_start);
+>
+>  	return TRUE;
+> @@ -5403,7 +5403,7 @@ create_1st_bitmap_file(void)
+>  	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
+>
+>  		if (!info->flag_mem_usage)
+> -			print_progress(PROGRESS_HOLES, i, num_pt_loads);
+> +			print_progress(PROGRESS_HOLES, i, num_pt_loads, NULL);
+>
+>  		pfn_start = paddr_to_pfn(phys_start);
+>  		pfn_end   = paddr_to_pfn(phys_end);
+> @@ -5422,7 +5422,7 @@ create_1st_bitmap_file(void)
+>  	 * print 100 %
+>  	 */
+>  	if (!info->flag_mem_usage) {
+> -		print_progress(PROGRESS_HOLES, info->max_mapnr, info->max_mapnr);
+> +		print_progress(PROGRESS_HOLES, info->max_mapnr, info->max_mapnr, NULL);
+>  		print_execution_time(PROGRESS_HOLES, &tv_start);
+>  	}
+>
+> @@ -5548,7 +5548,7 @@ create_bitmap_from_memhole(struct cycle *cycle, struct dump_bitmap *bitmap, int
+>  		pfn_start = MAX(paddr_to_pfn(phys_start), cycle->start_pfn);
+>  		pfn_end = MIN(paddr_to_pfn(phys_end), cycle->end_pfn);
+>
+> -		print_progress(PROGRESS_HOLES, i, num_pt_loads);
+> +		print_progress(PROGRESS_HOLES, i, num_pt_loads, NULL);
+>
+>  		if (pfn_start >= pfn_end)
+>  			continue;
+> @@ -5587,7 +5587,7 @@ create_bitmap_from_memhole(struct cycle *cycle, struct dump_bitmap *bitmap, int
+>  	/*
+>  	 * print 100 %
+>  	 */
+> -	print_progress(PROGRESS_HOLES, info->max_mapnr, info->max_mapnr);
+> +	print_progress(PROGRESS_HOLES, info->max_mapnr, info->max_mapnr, NULL);
+>  	print_execution_time(PROGRESS_HOLES, &tv_start);
+>
+>  	return TRUE;
+> @@ -5842,7 +5842,7 @@ exclude_unnecessary_pages(struct cycle *cycle)
+>  	for (mm = 0; mm < info->num_mem_map; mm++) {
+>
+>  		if (!info->flag_mem_usage)
+> -			print_progress(PROGRESS_UNN_PAGES, mm, info->num_mem_map);
+> +			print_progress(PROGRESS_UNN_PAGES, mm, info->num_mem_map, NULL);
+>
+>  		mmd = &info->mem_map_data[mm];
+>
+> @@ -5860,7 +5860,7 @@ exclude_unnecessary_pages(struct cycle *cycle)
+>  	 * print [100 %]
+>  	 */
+>  	if (!info->flag_mem_usage) {
+> -		print_progress(PROGRESS_UNN_PAGES, info->num_mem_map, info->num_mem_map);
+> +		print_progress(PROGRESS_UNN_PAGES, info->num_mem_map, info->num_mem_map, NULL);
+>  		print_execution_time(PROGRESS_UNN_PAGES, &tv_start);
+>  	}
+>
+> @@ -7334,7 +7334,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+>  				}
+>
+>  				if ((num_dumped % per) == 0)
+> -					print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
+> +					print_progress(PROGRESS_COPY, num_dumped, num_dumpable, &tv_start);
+>
+>  				num_dumped++;
+>
+> @@ -7453,7 +7453,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+>  	/*
+>  	 * print [100 %]
+>  	 */
+> -	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
+> +	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable, &tv_start);
+>  	print_execution_time(PROGRESS_COPY, &tv_start);
+>  	PROGRESS_MSG("\n");
+>
+> @@ -7931,7 +7931,7 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+>  		}
+>
+>  		if ((num_dumped % per) == 0)
+> -			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
+> +			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &tv_start);
+>
+>  		num_dumped++;
+>
+> @@ -7967,7 +7967,7 @@ finish:
+>  	/*
+>  	 * print [100 %]
+>  	 */
+> -	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
+> +	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &tv_start);
+>  	print_execution_time(PROGRESS_COPY, &tv_start);
+>  	PROGRESS_MSG("\n");
+>
+> @@ -8084,7 +8084,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+>  	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+>
+>  		if ((num_dumped % per) == 0)
+> -			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
+> +			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &tv_start);
+>
+>  		/*
+>  		 * Check the excluded page.
+> @@ -8164,7 +8164,7 @@ out:
+>  		free(wrkmem);
+>  #endif
+>
+> -	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
+> +	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &tv_start);
+>  	print_execution_time(PROGRESS_COPY, &tv_start);
+>
+>  	return ret;
+> @@ -8622,7 +8622,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+>  	/*
+>  	 * print [100 %]
+>  	 */
+> -	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
+> +	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &tv_start);
+>  	print_execution_time(PROGRESS_COPY, &tv_start);
+>  	PROGRESS_MSG("\n");
+>
+> @@ -9216,7 +9216,7 @@ exclude_xen3_user_domain(void)
+>  	 */
+>  	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
+>
+> -		print_progress(PROGRESS_XEN_DOMAIN, i, num_pt_loads);
+> +		print_progress(PROGRESS_XEN_DOMAIN, i, num_pt_loads, NULL);
+>
+>  		pfn     = paddr_to_pfn(phys_start);
+>  		pfn_end = paddr_to_pfn(phys_end);
+> @@ -9224,7 +9224,7 @@ exclude_xen3_user_domain(void)
+>
+>  		for (j = 0; pfn < pfn_end; pfn++, j++) {
+>  			print_progress(PROGRESS_XEN_DOMAIN, j + (size * i),
+> -					size * num_pt_loads);
+> +					size * num_pt_loads, NULL);
+>
+>  			if (!allocated_in_map(pfn)) {
+>  				clear_bit_on_2nd_bitmap(pfn, NULL);
+> @@ -9280,7 +9280,7 @@ exclude_xen4_user_domain(void)
+>  	 */
+>  	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
+>
+> -		print_progress(PROGRESS_XEN_DOMAIN, i, num_pt_loads);
+> +		print_progress(PROGRESS_XEN_DOMAIN, i, num_pt_loads, NULL);
+>
+>  		pfn     = paddr_to_pfn(phys_start);
+>  		pfn_end = paddr_to_pfn(phys_end);
+> @@ -9288,7 +9288,7 @@ exclude_xen4_user_domain(void)
+>
+>  		for (j = 0; pfn < pfn_end; pfn++, j++) {
+>  			print_progress(PROGRESS_XEN_DOMAIN, j + (size * i),
+> -					size * num_pt_loads);
+> +					size * num_pt_loads, NULL);
+>
+>  			page_info_addr = info->frame_table_vaddr + pfn * SIZE(page_info);
+>  			if (!readmem(VADDR_XEN,
+> @@ -9356,7 +9356,7 @@ exclude_xen_user_domain(void)
+>  	/*
+>  	 * print [100 %]
+>  	 */
+> -	print_progress(PROGRESS_XEN_DOMAIN, 1, 1);
+> +	print_progress(PROGRESS_XEN_DOMAIN, 1, 1, NULL);
+>  	print_execution_time(PROGRESS_XEN_DOMAIN, &tv_start);
+>
+>  	return ret;
+> @@ -10342,7 +10342,7 @@ reassemble_kdump_pages(void)
+>
+>  			num_dumped++;
+>
+> -			print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
+> +			print_progress(PROGRESS_COPY, num_dumped, num_dumpable, &tv_start);
+>
+>  			if (lseek(fd, offset_ph_org, SEEK_SET) < 0) {
+>  				ERRMSG("Can't seek a file(%s). %s\n",
+> @@ -10439,7 +10439,7 @@ reassemble_kdump_pages(void)
+>  						    size_eraseinfo))
+>  			goto out;
+>  	}
+> -	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
+> +	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable, &tv_start);
+>  	print_execution_time(PROGRESS_COPY, &tv_start);
+>
+>  	ret = TRUE;
+> diff --git a/print_info.c b/print_info.c
+> index 79dfe5e..e0e6a27 100644
+> --- a/print_info.c
+> +++ b/print_info.c
+> @@ -15,8 +15,9 @@
+>   */
+>  #include "print_info.h"
+>  #include <time.h>
+> +#include <string.h>
+>
+> -#define PROGRESS_MAXLEN		"35"
+> +#define PROGRESS_MAXLEN		"50"
+>
+>  int message_level;
+>  int flag_strerr_message;
+> @@ -350,14 +351,36 @@ static void calc_delta(struct timeval *tv_start, struct timeval *delta)
+>  	}
+>  }
+>
+> +/* produce less than 12 bytes on msg */
+> +static int eta_to_human_short (int secs, char* msg)
+> +{
+> +	strcpy(msg, "eta: ");
+> +	msg += strlen("eta: ");
+> +	if (secs < 100)
+> +		sprintf(msg, "%ds", secs);
+> +	else if (secs < 100 * 60)
+> +		sprintf(msg, "%dm%ds", secs / 60, secs % 60);
+> +	else if (secs < 48 * 3600)
+> +		sprintf(msg, "%dh%dm", secs / 3600, (secs / 60) % 60);
+> +	else if (secs < 100 * 86400)
+> +		sprintf(msg, "%dd%dh", secs / 86400, (secs / 3600) % 24);
+> +	else
+> +		sprintf(msg, ">2day");
+> +	return 0;
+> +}
+> +
+> +
+>  void
+> -print_progress(const char *msg, unsigned long current, unsigned long end)
+> +print_progress(const char *msg, unsigned long current, unsigned long end, struct timeval *start)
+>  {
+>  	float progress;
+>  	time_t tm;
+>  	static time_t last_time = 0;
+>  	static unsigned int lapse = 0;
+>  	static const char *spinner = "/|\\-";
+> +	struct timeval delta;
+> +	double eta;
+> +	char eta_msg[16] = " ";
+>
+>  	if (current < end) {
+>  		tm = time(NULL);
+> @@ -368,13 +391,19 @@ print_progress(const char *msg, unsigned long current, unsigned long end)
+>  	} else
+>  		progress = 100;
+>
+> +	if (start != NULL) {
+> +		calc_delta(start, &delta);
+> +		eta = delta.tv_sec + delta.tv_usec / 1e6;
+> +		eta = (100 - progress) * eta / progress;
+> +		eta_to_human_short(eta, eta_msg);
+> +	}
+>  	if (flag_ignore_r_char) {
+> -		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c\n",
+> -			     msg, progress, spinner[lapse % 4]);
+> +		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s\n",
+> +			     msg, progress, spinner[lapse % 4], eta_msg);
+>  	} else {
+>  		PROGRESS_MSG("\r");
+> -		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c",
+> -			     msg, progress, spinner[lapse % 4]);
+> +		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s",
+> +			     msg, progress, spinner[lapse % 4], eta_msg);
+>  	}
+>  	lapse++;
+>  }
+> diff --git a/print_info.h b/print_info.h
+> index 01e3706..1ce3593 100644
+> --- a/print_info.h
+> +++ b/print_info.h
+> @@ -25,7 +25,8 @@ extern int flag_ignore_r_char;
+>
+>  void show_version(void);
+>  void print_usage(void);
+> -void print_progress(const char *msg, unsigned long current, unsigned long end);
+> +void print_progress(const char *msg, unsigned long current, unsigned long end, struct timeval *start);
+> +
+>  void print_execution_time(char *step_name, struct timeval *tv_start);
+>
+>  /*
+>
 
 _______________________________________________
 kexec mailing list
