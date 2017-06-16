@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bl2nam02on0089.outbound.protection.outlook.com
- ([104.47.38.89] helo=NAM02-BL2-obe.outbound.protection.outlook.com)
+Received: from mail-bl2nam02on0069.outbound.protection.outlook.com
+ ([104.47.38.69] helo=NAM02-BL2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dLwML-0000uT-GY
- for kexec@lists.infradead.org; Fri, 16 Jun 2017 18:52:43 +0000
+ id 1dLwMv-0001hK-Hz
+ for kexec@lists.infradead.org; Fri, 16 Jun 2017 18:53:19 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v7 13/36] x86/mm: Add support for early encrypt/decrypt of
- memory
-Date: Fri, 16 Jun 2017 13:52:20 -0500
-Message-ID: <20170616185220.18967.78204.stgit@tlendack-t1.amdoffice.net>
+Subject: [PATCH v7 17/36] efi: Update efi_mem_type() to return an error
+ rather than 0
+Date: Fri, 16 Jun 2017 13:53:06 -0500
+Message-ID: <20170616185306.18967.8964.stgit@tlendack-t1.amdoffice.net>
 In-Reply-To: <20170616184947.18967.84890.stgit@tlendack-t1.amdoffice.net>
 References: <20170616184947.18967.84890.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
@@ -27,142 +27,83 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, xen-devel@lists.xen.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org
 Cc: Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, "Michael S. Tsirkin" <mst@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, Radim =?utf-8?b?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-Add support to be able to either encrypt or decrypt data in place during
-the early stages of booting the kernel. This does not change the memory
-encryption attribute - it is used for ensuring that data present in either
-an encrypted or decrypted memory area is in the proper state (for example
-the initrd will have been loaded by the boot loader and will not be
-encrypted, but the memory that it resides in is marked as encrypted).
+The efi_mem_type() function currently returns a 0, which maps to
+EFI_RESERVED_TYPE, if the function is unable to find a memmap entry for
+the supplied physical address. Returning EFI_RESERVED_TYPE implies that
+a memmap entry exists, when it doesn't.  Instead of returning 0, change
+the function to return a negative error value when no memmap entry is
+found.
 
 Reviewed-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/x86/include/asm/mem_encrypt.h |   10 +++++
- arch/x86/mm/mem_encrypt.c          |   76 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 86 insertions(+)
+ arch/ia64/kernel/efi.c      |    4 ++--
+ arch/x86/platform/efi/efi.c |    6 +++---
+ include/linux/efi.h         |    2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index faae4e1..6508ec9 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -21,6 +21,11 @@
+diff --git a/arch/ia64/kernel/efi.c b/arch/ia64/kernel/efi.c
+index 1212956..8141600 100644
+--- a/arch/ia64/kernel/efi.c
++++ b/arch/ia64/kernel/efi.c
+@@ -757,14 +757,14 @@ static void __init handle_palo(unsigned long phys_addr)
+ 	return 0;
+ }
  
- extern unsigned long sme_me_mask;
- 
-+void __init sme_early_encrypt(resource_size_t paddr,
-+			      unsigned long size);
-+void __init sme_early_decrypt(resource_size_t paddr,
-+			      unsigned long size);
-+
- void __init sme_early_init(void);
- 
- void __init sme_enable(void);
-@@ -29,6 +34,11 @@
- 
- #define sme_me_mask	0UL
- 
-+static inline void __init sme_early_encrypt(resource_size_t paddr,
-+					    unsigned long size) { }
-+static inline void __init sme_early_decrypt(resource_size_t paddr,
-+					    unsigned long size) { }
-+
- static inline void __init sme_early_init(void) { }
- 
- static inline void __init sme_enable(void) { }
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index b2d1cdf..b7671b9 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -17,6 +17,9 @@
- 
- #include <linux/mm.h>
- 
-+#include <asm/tlbflush.h>
-+#include <asm/fixmap.h>
-+
- /*
-  * Since SME related variables are set early in the boot process they must
-  * reside in the .data section so as not to be zeroed out when the .bss
-@@ -25,6 +28,79 @@
- unsigned long sme_me_mask __section(.data) = 0;
- EXPORT_SYMBOL_GPL(sme_me_mask);
- 
-+/* Buffer used for early in-place encryption by BSP, no locking needed */
-+static char sme_early_buffer[PAGE_SIZE] __aligned(PAGE_SIZE);
-+
-+/*
-+ * This routine does not change the underlying encryption setting of the
-+ * page(s) that map this memory. It assumes that eventually the memory is
-+ * meant to be accessed as either encrypted or decrypted but the contents
-+ * are currently not in the desired state.
-+ *
-+ * This routine follows the steps outlined in the AMD64 Architecture
-+ * Programmer's Manual Volume 2, Section 7.10.8 Encrypt-in-Place.
-+ */
-+static void __init __sme_early_enc_dec(resource_size_t paddr,
-+				       unsigned long size, bool enc)
-+{
-+	void *src, *dst;
-+	size_t len;
-+
-+	if (!sme_me_mask)
-+		return;
-+
-+	local_flush_tlb();
-+	wbinvd();
-+
-+	/*
-+	 * There are limited number of early mapping slots, so map (at most)
-+	 * one page at time.
-+	 */
-+	while (size) {
-+		len = min_t(size_t, sizeof(sme_early_buffer), size);
-+
-+		/*
-+		 * Create mappings for the current and desired format of
-+		 * the memory. Use a write-protected mapping for the source.
-+		 */
-+		src = enc ? early_memremap_decrypted_wp(paddr, len) :
-+			    early_memremap_encrypted_wp(paddr, len);
-+
-+		dst = enc ? early_memremap_encrypted(paddr, len) :
-+			    early_memremap_decrypted(paddr, len);
-+
-+		/*
-+		 * If a mapping can't be obtained to perform the operation,
-+		 * then eventual access of that area in the desired mode
-+		 * will cause a crash.
-+		 */
-+		BUG_ON(!src || !dst);
-+
-+		/*
-+		 * Use a temporary buffer, of cache-line multiple size, to
-+		 * avoid data corruption as documented in the APM.
-+		 */
-+		memcpy(sme_early_buffer, src, len);
-+		memcpy(dst, sme_early_buffer, len);
-+
-+		early_memunmap(dst, len);
-+		early_memunmap(src, len);
-+
-+		paddr += len;
-+		size -= len;
-+	}
-+}
-+
-+void __init sme_early_encrypt(resource_size_t paddr, unsigned long size)
-+{
-+	__sme_early_enc_dec(paddr, size, true);
-+}
-+
-+void __init sme_early_decrypt(resource_size_t paddr, unsigned long size)
-+{
-+	__sme_early_enc_dec(paddr, size, false);
-+}
-+
- void __init sme_early_init(void)
+-u32
++int
+ efi_mem_type (unsigned long phys_addr)
  {
- 	unsigned int i;
+ 	efi_memory_desc_t *md = efi_memory_descriptor(phys_addr);
+ 
+ 	if (md)
+ 		return md->type;
+-	return 0;
++	return -EINVAL;
+ }
+ 
+ u64
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index f084d87..6217b23 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -1035,12 +1035,12 @@ void __init efi_enter_virtual_mode(void)
+ /*
+  * Convenience functions to obtain memory types and attributes
+  */
+-u32 efi_mem_type(unsigned long phys_addr)
++int efi_mem_type(unsigned long phys_addr)
+ {
+ 	efi_memory_desc_t *md;
+ 
+ 	if (!efi_enabled(EFI_MEMMAP))
+-		return 0;
++		return -ENOTSUPP;
+ 
+ 	for_each_efi_memory_desc(md) {
+ 		if ((md->phys_addr <= phys_addr) &&
+@@ -1048,7 +1048,7 @@ u32 efi_mem_type(unsigned long phys_addr)
+ 				  (md->num_pages << EFI_PAGE_SHIFT))))
+ 			return md->type;
+ 	}
+-	return 0;
++	return -EINVAL;
+ }
+ 
+ static int __init arch_parse_efi_cmdline(char *str)
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 8e24f09..4e47f78 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -985,7 +985,7 @@ static inline void efi_esrt_init(void) { }
+ extern int efi_config_parse_tables(void *config_tables, int count, int sz,
+ 				   efi_config_table_type_t *arch_tables);
+ extern u64 efi_get_iobase (void);
+-extern u32 efi_mem_type (unsigned long phys_addr);
++extern int efi_mem_type(unsigned long phys_addr);
+ extern u64 efi_mem_attributes (unsigned long phys_addr);
+ extern u64 efi_mem_attribute (unsigned long phys_addr, unsigned long size);
+ extern int __init efi_uart_console_only (void);
 
 
 _______________________________________________
