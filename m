@@ -1,22 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dLbA8-0004Ko-NN
- for kexec@lists.infradead.org; Thu, 15 Jun 2017 20:14:42 +0000
-Date: Thu, 15 Jun 2017 16:13:29 -0400
-In-Reply-To: <20170615153322.nwylo3dzn4fdx6n6@pd.tnic>
-References: <20170607191309.28645.15241.stgit@tlendack-t1.amdoffice.net>
- <20170607191745.28645.81756.stgit@tlendack-t1.amdoffice.net>
- <20170614174208.p2yr5exs4b6pjxhf@pd.tnic>
- <0611d01a-19f8-d6ae-2682-932789855518@amd.com>
- <20170615094111.wga334kg2bhxqib3@pd.tnic>
- <921153f5-1528-31d8-b815-f0419e819aeb@amd.com>
- <20170615153322.nwylo3dzn4fdx6n6@pd.tnic>
+ id 1dLmV5-0001Gy-El
+ for kexec@lists.infradead.org; Fri, 16 Jun 2017 08:21:05 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: makedumpfile: support for newer kernels [v4.9 onwards]
+Date: Fri, 16 Jun 2017 08:18:15 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EE2111@BPXM01GP.gisp.nec.co.jp>
+References: <CAEzMDiD-w91Q+Fjy_KgXDcwo9YGasa9ggqW2dEhF4ffV7RstqQ@mail.gmail.com>
+ <0bd0a35a-88cd-3f68-846f-2a2ad1e7afcb@redhat.com>
+ <CAEzMDiBKdA15Gn2kgs=BgzCM=bzaBXCQP_tM_Vmfc4uxGL0SRg@mail.gmail.com>
+ <0ae1e066-821e-3b11-ee44-b615245cb1ea@redhat.com>
+ <3b72a75c-012e-2779-74a4-d36ca1ef9e56@redhat.com>
+ <CAEzMDiARnp-FMqUcoVdCBSSApaRbenvrk7cawgyo8kJJvy0jXg@mail.gmail.com>
+ <364d6133-158b-0f28-0278-dc0da33b2916@redhat.com>
+ <CAEzMDiAq1U3SRkvwh5nqETDBoZs8DojhmMTDSG7B-Uzbh1a3Nw@mail.gmail.com>
+In-Reply-To: <CAEzMDiAq1U3SRkvwh5nqETDBoZs8DojhmMTDSG7B-Uzbh1a3Nw@mail.gmail.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Subject: Re: [PATCH v6 26/34] iommu/amd: Allow the AMD IOMMU to work with
- memory encryption
-From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Message-ID: <C1A52990-84AA-4258-B864-0121F5F5C4B5@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,29 +30,90 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>, Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: Abhishek Shah <abrs612@gmail.com>, Pratyush Anand <panand@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Dave Anderson <anderson@redhat.com>
 
-On June 15, 2017 11:33:22 AM EDT, Borislav Petkov <bp@alien8.de> wrote:
->On Thu, Jun 15, 2017 at 09:59:45AM -0500, Tom Lendacky wrote:
->> Actually the detection routine, amd_iommu_detect(), is part of the
->> IOMMU_INIT_FINISH macro support which is called early through
->mm_init()
->> from start_kernel() and that routine is called before init_amd().
+Hello,
+
+I would like to inform you that I can't reply on this thread next week
+because of vacation, Thanks for your cooperation.
+
+BTW, I answer the first question:
+
+>Is there plan to support newer kernel?
+
+I'm going to release the next version in July, it will support kernel 4.11.
+
+Thanks,
+Atsushi Kumagai
+
 >
->Ah, we do that there too:
+>Hi Pratyush/Dave,
 >
->	for (p = __iommu_table; p < __iommu_table_end; p++) {
+>On Tue, Jun 13, 2017 at 1:36 PM, Pratyush Anand <panand@redhat.com> wrote:
+>> Hi Abhishek,
+>>
+>> On Thursday 08 June 2017 11:30 AM, Abhishek Shah wrote:
+>>>
+>>> Hi Pratyush,
+>>>
+>>> Kernel config:
+>>> ARM64_VA_BITS_48 [=y]
+>>> ARM64_PAGE_SHIFT [=12]
+>>> RANDOMIZE_BASE [=n]
+>>> ARM64_4K_PAGES [=y]
+>>
+>> These are the only variable configs on which arm64 makedumpfile depends. I
+>> tested with above configuration and things were working fine.
+>>
+>> I used 4.11 based kernel and  crash-7.1.9.
+>>
+>> BTW, which version of crash utility do you use. If you are not at latest can
+>> you please try with latest.
+>>
+>I was using crash 7.1.9++ with head commit
+>5c52842a58a2602dba81de71831af98b2b53c6e0;
+>I have upgraded my kernel and built the crash utility again; and
+>following is my setup details now:
 >
->Can't say that that code with the special section and whatnot is
->obvious. :-\
+>kernel: 4.12- rc5
+>yocto based rootfs: Pyro[2.3] which has kexec 2.0.14 and makedumpfile 1.6.1.
+>crash: 7.1.9++ [Head: 4d517ad28acd845fe6e91360e645cf0446a4757b]
 >
+>The output generated by makedumpfile gets processed by crash utility
+>if I use following command:
+>makedumpfile -E /proc/vmcore vmcore
+>
+>But, the output generated by following command (which I used while
+>reporting the issue) gives the "seek error" while being processed by
+>crash.
+>makedumpfile /proc/vmcore vmcore
+>
+>(As a result?), output from following command gives "seek error" as
+>well while being processed by crash:
+>makedumpfile -c /proc/vmcore vmcore
+>
+>makedumpfile Manual suggests:
+>"-E
+>Create DUMPFILE in the ELF format.
+>This option cannot be specified with -c option, because the ELF format
+>does not support compressed data."
+>So only elf formatted output from makedumpfile gets processed by crash.
+>
+>@Pratyush, Thanks for testing and verifying the kernel configuration
+>for arm64 makedumpfile.
+>When you say things were working fine for you,  what exact
+>makedumpfile command did you use??
+>
+>Regards,
+>Abhishek
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
-Patches to make it more obvious would be always welcome!
 
-
-
-Thanks!
 
 _______________________________________________
 kexec mailing list
