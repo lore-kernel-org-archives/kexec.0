@@ -2,13 +2,13 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-bl2nam02on0069.outbound.protection.outlook.com
  ([104.47.38.69] helo=NAM02-BL2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dLwMv-0001hK-Hz
- for kexec@lists.infradead.org; Fri, 16 Jun 2017 18:53:19 +0000
+ id 1dLwMr-0001hK-JF
+ for kexec@lists.infradead.org; Fri, 16 Jun 2017 18:53:17 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v7 17/36] efi: Update efi_mem_type() to return an error
- rather than 0
-Date: Fri, 16 Jun 2017 13:53:06 -0500
-Message-ID: <20170616185306.18967.8964.stgit@tlendack-t1.amdoffice.net>
+Subject: [PATCH v7 15/36] x86/boot/e820: Add support to determine the E820
+ type of an address
+Date: Fri, 16 Jun 2017 13:52:43 -0500
+Message-ID: <20170616185243.18967.44475.stgit@tlendack-t1.amdoffice.net>
 In-Reply-To: <20170616184947.18967.84890.stgit@tlendack-t1.amdoffice.net>
 References: <20170616184947.18967.84890.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
@@ -27,83 +27,74 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, xen-devel@lists.xen.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org
 Cc: Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, "Michael S. Tsirkin" <mst@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, Radim =?utf-8?b?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-The efi_mem_type() function currently returns a 0, which maps to
-EFI_RESERVED_TYPE, if the function is unable to find a memmap entry for
-the supplied physical address. Returning EFI_RESERVED_TYPE implies that
-a memmap entry exists, when it doesn't.  Instead of returning 0, change
-the function to return a negative error value when no memmap entry is
-found.
+Add a function that will return the E820 type associated with an address
+range.
 
 Reviewed-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/ia64/kernel/efi.c      |    4 ++--
- arch/x86/platform/efi/efi.c |    6 +++---
- include/linux/efi.h         |    2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/e820/api.h |    2 ++
+ arch/x86/kernel/e820.c          |   26 +++++++++++++++++++++++---
+ 2 files changed, 25 insertions(+), 3 deletions(-)
 
-diff --git a/arch/ia64/kernel/efi.c b/arch/ia64/kernel/efi.c
-index 1212956..8141600 100644
---- a/arch/ia64/kernel/efi.c
-+++ b/arch/ia64/kernel/efi.c
-@@ -757,14 +757,14 @@ static void __init handle_palo(unsigned long phys_addr)
- 	return 0;
- }
+diff --git a/arch/x86/include/asm/e820/api.h b/arch/x86/include/asm/e820/api.h
+index 8e0f8b8..3641f5f 100644
+--- a/arch/x86/include/asm/e820/api.h
++++ b/arch/x86/include/asm/e820/api.h
+@@ -38,6 +38,8 @@
+ extern void e820__reallocate_tables(void);
+ extern void e820__register_nosave_regions(unsigned long limit_pfn);
  
--u32
-+int
- efi_mem_type (unsigned long phys_addr)
- {
- 	efi_memory_desc_t *md = efi_memory_descriptor(phys_addr);
- 
- 	if (md)
- 		return md->type;
--	return 0;
-+	return -EINVAL;
- }
- 
- u64
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index f084d87..6217b23 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -1035,12 +1035,12 @@ void __init efi_enter_virtual_mode(void)
++extern int  e820__get_entry_type(u64 start, u64 end);
++
  /*
-  * Convenience functions to obtain memory types and attributes
+  * Returns true iff the specified range [start,end) is completely contained inside
+  * the ISA region.
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index d78a586..46c9b65 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -84,7 +84,8 @@ bool e820__mapped_any(u64 start, u64 end, enum e820_type type)
+  * Note: this function only works correctly once the E820 table is sorted and
+  * not-overlapping (at least for the range specified), which is the case normally.
   */
--u32 efi_mem_type(unsigned long phys_addr)
-+int efi_mem_type(unsigned long phys_addr)
+-bool __init e820__mapped_all(u64 start, u64 end, enum e820_type type)
++static struct e820_entry *__e820__mapped_all(u64 start, u64 end,
++					     enum e820_type type)
  {
- 	efi_memory_desc_t *md;
+ 	int i;
  
- 	if (!efi_enabled(EFI_MEMMAP))
--		return 0;
-+		return -ENOTSUPP;
- 
- 	for_each_efi_memory_desc(md) {
- 		if ((md->phys_addr <= phys_addr) &&
-@@ -1048,7 +1048,7 @@ u32 efi_mem_type(unsigned long phys_addr)
- 				  (md->num_pages << EFI_PAGE_SHIFT))))
- 			return md->type;
+@@ -110,9 +111,28 @@ bool __init e820__mapped_all(u64 start, u64 end, enum e820_type type)
+ 		 * coverage of the desired range exists:
+ 		 */
+ 		if (start >= end)
+-			return 1;
++			return entry;
  	}
 -	return 0;
-+	return -EINVAL;
++
++	return NULL;
++}
++
++/*
++ * This function checks if the entire range <start,end> is mapped with type.
++ */
++bool __init e820__mapped_all(u64 start, u64 end, enum e820_type type)
++{
++	return __e820__mapped_all(start, end, type);
++}
++
++/*
++ * This function returns the type associated with the range <start,end>.
++ */
++int e820__get_entry_type(u64 start, u64 end)
++{
++	struct e820_entry *entry = __e820__mapped_all(start, end, 0);
++
++	return entry ? entry->type : -EINVAL;
  }
  
- static int __init arch_parse_efi_cmdline(char *str)
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 8e24f09..4e47f78 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -985,7 +985,7 @@ static inline void efi_esrt_init(void) { }
- extern int efi_config_parse_tables(void *config_tables, int count, int sz,
- 				   efi_config_table_type_t *arch_tables);
- extern u64 efi_get_iobase (void);
--extern u32 efi_mem_type (unsigned long phys_addr);
-+extern int efi_mem_type(unsigned long phys_addr);
- extern u64 efi_mem_attributes (unsigned long phys_addr);
- extern u64 efi_mem_attribute (unsigned long phys_addr, unsigned long size);
- extern int __init efi_uart_console_only (void);
+ /*
 
 
 _______________________________________________
