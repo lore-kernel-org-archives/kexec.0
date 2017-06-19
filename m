@@ -1,25 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-x229.google.com ([2607:f8b0:400d:c09::229])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dMUpw-0006yN-4w
- for kexec@lists.infradead.org; Sun, 18 Jun 2017 07:41:33 +0000
-Received: by mail-qk0-x229.google.com with SMTP id r62so15860603qkf.0
- for <kexec@lists.infradead.org>; Sun, 18 Jun 2017 00:41:10 -0700 (PDT)
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+ by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
+ id 1dN0KI-0004hX-CZ
+ for kexec@lists.infradead.org; Mon, 19 Jun 2017 17:19:00 +0000
+Date: Mon, 19 Jun 2017 19:18:20 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v6 26/34] iommu/amd: Allow the AMD IOMMU to work with
+ memory encryption
+Message-ID: <20170619171820.tq4htttamb52pyx5@pd.tnic>
+References: <20170607191309.28645.15241.stgit@tlendack-t1.amdoffice.net>
+ <20170607191745.28645.81756.stgit@tlendack-t1.amdoffice.net>
+ <20170614174208.p2yr5exs4b6pjxhf@pd.tnic>
+ <0611d01a-19f8-d6ae-2682-932789855518@amd.com>
+ <20170615094111.wga334kg2bhxqib3@pd.tnic>
+ <921153f5-1528-31d8-b815-f0419e819aeb@amd.com>
+ <20170615153322.nwylo3dzn4fdx6n6@pd.tnic>
+ <3db2c52d-5e63-a1df-edd4-975bce7f29c2@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <148b498a-cd13-bcb2-de04-d74b1c2a0f65@redhat.com>
-References: <CAEzMDiD-w91Q+Fjy_KgXDcwo9YGasa9ggqW2dEhF4ffV7RstqQ@mail.gmail.com>
- <0bd0a35a-88cd-3f68-846f-2a2ad1e7afcb@redhat.com>
- <CAEzMDiBKdA15Gn2kgs=BgzCM=bzaBXCQP_tM_Vmfc4uxGL0SRg@mail.gmail.com>
- <0ae1e066-821e-3b11-ee44-b615245cb1ea@redhat.com>
- <3b72a75c-012e-2779-74a4-d36ca1ef9e56@redhat.com>
- <CAEzMDiARnp-FMqUcoVdCBSSApaRbenvrk7cawgyo8kJJvy0jXg@mail.gmail.com>
- <364d6133-158b-0f28-0278-dc0da33b2916@redhat.com>
- <CAEzMDiAq1U3SRkvwh5nqETDBoZs8DojhmMTDSG7B-Uzbh1a3Nw@mail.gmail.com>
- <148b498a-cd13-bcb2-de04-d74b1c2a0f65@redhat.com>
-From: Abhishek Shah <abrs612@gmail.com>
-Date: Sun, 18 Jun 2017 13:11:08 +0530
-Message-ID: <CAEzMDiBU98VzS9Yye6UrCVM5-f9F64ZUqCOJPpnd+5ufdY5OsA@mail.gmail.com>
-Subject: Re: makedumpfile: support for newer kernels [v4.9 onwards]
+Content-Disposition: inline
+In-Reply-To: <3db2c52d-5e63-a1df-edd4-975bce7f29c2@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,32 +31,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Dave Anderson <anderson@redhat.com>, ats-kumagai@wm.jp.nec.com, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Tom Lendacky <thomas.lendacky@amd.com>, =?utf-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-Hi Pratyush,
+On Thu, Jun 15, 2017 at 11:33:41AM -0500, Tom Lendacky wrote:
+> Changing the signature back reverts to the original way, so this can be
+> looked at separate from this patchset then.
 
-On Fri, Jun 16, 2017 at 2:04 PM, Pratyush Anand <panand@redhat.com> wrote:
->
->
-> On Tuesday 13 June 2017 08:47 PM, Abhishek Shah wrote:
->>
->> @Pratyush, Thanks for testing and verifying the kernel configuration
->> for arm64 makedumpfile.
->> When you say things were working fine for you,  what exact
->> makedumpfile command did you use??
->
->
-> makedumpfile -l --message-level 1 -d 31 /proc/vmcore /var/crash/vmcore
->
-I am getting "seek error" as reported earlier if I use above command
-to generate dump in my setup:
-crash: seek error: kernel virtual address: ffff8008000c2020  type:
-"memory section"
+Right, the patch which added the volatile thing was this one:
 
+  4bf5beef578e ("iommu/amd: Don't put completion-wait semaphore on stack")
 
-Regards,
-Abhishek
+and the commit message doesn't say why the thing needs to be volatile at
+all.
+
+Joerg?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
