@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn3nam01on0041.outbound.protection.outlook.com
- ([104.47.33.41] helo=NAM01-BN3-obe.outbound.protection.outlook.com)
+Received: from galois.linutronix.de ([2a01:7a0:2:106d:700::1])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dNhhr-0005s8-Ul
- for kexec@lists.infradead.org; Wed, 21 Jun 2017 15:38:13 +0000
-Subject: Re: [PATCH v7 25/36] swiotlb: Add warnings for use of bounce buffers
- with SME
+ id 1dNhiB-0005vv-9J
+ for kexec@lists.infradead.org; Wed, 21 Jun 2017 15:38:36 +0000
+Date: Wed, 21 Jun 2017 17:38:04 +0200 (CEST)
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v7 08/36] x86/mm: Add support to enable SME in early boot
+ processing
+In-Reply-To: <8d3c215f-cdad-5554-6e9c-5598e1081850@amd.com>
+Message-ID: <alpine.DEB.2.20.1706211720060.2328@nanos>
 References: <20170616184947.18967.84890.stgit@tlendack-t1.amdoffice.net>
- <20170616185435.18967.26665.stgit@tlendack-t1.amdoffice.net>
- <20170621105026.lcbtkklaenyi2wqe@pd.tnic>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <7b9f8b6d-60f2-0a78-b582-0821401d17eb@amd.com>
-Date: Wed, 21 Jun 2017 10:37:41 -0500
+ <20170616185115.18967.79622.stgit@tlendack-t1.amdoffice.net>
+ <alpine.DEB.2.20.1706202259290.2157@nanos>
+ <8d3c215f-cdad-5554-6e9c-5598e1081850@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20170621105026.lcbtkklaenyi2wqe@pd.tnic>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,82 +22,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, linux-doc@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, "Michael S. Tsirkin" <mst@redhat.com>, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, xen-devel@lists.xen.org, iommu@lists.linux-foundation.org, Thomas Gleixner <tglx@linutronix.de>, Paolo Bonzini <pbonzini@redhat.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, linux-doc@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, =?ISO-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, "Michael S. Tsirkin" <mst@redhat.com>, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, xen-devel@lists.xen.org, iommu@lists.linux-foundation.org, Paolo Bonzini <pbonzini@redhat.com>
 
-On 6/21/2017 5:50 AM, Borislav Petkov wrote:
-> On Fri, Jun 16, 2017 at 01:54:36PM -0500, Tom Lendacky wrote:
->> Add warnings to let the user know when bounce buffers are being used for
->> DMA when SME is active.  Since the bounce buffers are not in encrypted
->> memory, these notifications are to allow the user to determine some
->> appropriate action - if necessary.  Actions can range from utilizing an
->> IOMMU, replacing the device with another device that can support 64-bit
->> DMA, ignoring the message if the device isn't used much, etc.
->>
->> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
->> ---
->>   include/linux/dma-mapping.h |   11 +++++++++++
->>   include/linux/mem_encrypt.h |    8 ++++++++
->>   lib/swiotlb.c               |    3 +++
->>   3 files changed, 22 insertions(+)
->>
->> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
->> index 4f3eece..ee2307e 100644
->> --- a/include/linux/dma-mapping.h
->> +++ b/include/linux/dma-mapping.h
->> @@ -10,6 +10,7 @@
->>   #include <linux/scatterlist.h>
->>   #include <linux/kmemcheck.h>
->>   #include <linux/bug.h>
->> +#include <linux/mem_encrypt.h>
->>   
->>   /**
->>    * List of possible attributes associated with a DMA mapping. The semantics
->> @@ -577,6 +578,11 @@ static inline int dma_set_mask(struct device *dev, u64 mask)
->>   
->>   	if (!dev->dma_mask || !dma_supported(dev, mask))
->>   		return -EIO;
->> +
->> +	/* Since mask is unsigned, this can only be true if SME is active */
->> +	if (mask < sme_dma_mask())
->> +		dev_warn(dev, "SME is active, device will require DMA bounce buffers\n");
->> +
->>   	*dev->dma_mask = mask;
->>   	return 0;
->>   }
->> @@ -596,6 +602,11 @@ static inline int dma_set_coherent_mask(struct device *dev, u64 mask)
->>   {
->>   	if (!dma_supported(dev, mask))
->>   		return -EIO;
->> +
->> +	/* Since mask is unsigned, this can only be true if SME is active */
->> +	if (mask < sme_dma_mask())
->> +		dev_warn(dev, "SME is active, device will require DMA bounce buffers\n");
+On Wed, 21 Jun 2017, Tom Lendacky wrote:
+> On 6/21/2017 2:16 AM, Thomas Gleixner wrote:
+> > Why is this an unconditional function? Isn't the mask simply 0 when the MEM
+> > ENCRYPT support is disabled?
 > 
-> Looks to me like those two checks above need to be a:
+> I made it unconditional because of the call from head_64.S. I can't make
+> use of the C level static inline function and since the mask is not a
+> variable if CONFIG_AMD_MEM_ENCRYPT is not configured (#defined to 0) I
+> can't reference the variable directly.
 > 
-> void sme_check_mask(struct device *dev, u64 mask)
-> {
->          if (!sme_me_mask)
->                  return;
-> 
->          /* Since mask is unsigned, this can only be true if SME is active */
->          if (mask < (((u64)sme_me_mask << 1) - 1))
->                  dev_warn(dev, "SME is active, device will require DMA bounce buffers\n");
-> }
-> 
-> which gets called and sme_dma_mask() is not really needed.
+> I could create a #define in head_64.S that changes this to load rax with
+> the variable if CONFIG_AMD_MEM_ENCRYPT is configured or a zero if it's
+> not or add a #ifdef at that point in the code directly. Thoughts on
+> that?
 
-Makes a lot of sense, I'll update the patch.
+See below.
+
+> > That does not make any sense. Neither the call to sme_encrypt_kernel() nor
+> > the following call to sme_get_me_mask().
+> > 
+> > __startup_64() is already C code, so why can't you simply call that from
+> > __startup_64() in C and return the mask from there?
+> 
+> I was trying to keep it explicit as to what was happening, but I can
+> move those calls into __startup_64().
+
+That's much preferred. And the return value wants to be documented in both
+C and ASM code.
+
+> I'll still need the call to sme_get_me_mask() in the secondary_startup_64
+> path, though (depending on your thoughts to the above response).
+
+        call verify_cpu
+
+        movq    $(init_top_pgt - __START_KERNEL_map), %rax
+
+So if you make that:
+
+	/*
+	 * Sanitize CPU configuration and retrieve the modifier
+	 * for the initial pgdir entry which will be programmed
+	 * into CR3. Depends on enabled SME encryption, normally 0.
+	 */
+	call __startup_secondary_64
+
+        addq    $(init_top_pgt - __START_KERNEL_map), %rax
+
+You can hide that stuff in C-code nicely without adding any cruft to the
+ASM code.
 
 Thanks,
-Tom
 
-> 
+	tglx
 
 _______________________________________________
 kexec mailing list
