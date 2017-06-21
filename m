@@ -1,28 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail-by2nam03on0058.outbound.protection.outlook.com
+ ([104.47.42.58] helo=NAM03-BY2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dNjgX-0001qn-Od
- for kexec@lists.infradead.org; Wed, 21 Jun 2017 17:44:59 +0000
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id
- v5LHhmpL114166
- for <kexec@lists.infradead.org>; Wed, 21 Jun 2017 13:44:33 -0400
-Received: from e06smtp13.uk.ibm.com (e06smtp13.uk.ibm.com [195.75.94.109])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2b7qcm45s9-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 21 Jun 2017 13:44:33 -0400
-Received: from localhost
- by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Wed, 21 Jun 2017 18:44:30 +0100
-Date: Wed, 21 Jun 2017 19:44:23 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH] s390/crash: Fix KEXEC_NOTE_BYTES definition
-In-Reply-To: <1496974625-10891-1-git-send-email-xlpang@redhat.com>
-References: <1496974625-10891-1-git-send-email-xlpang@redhat.com>
+ id 1dNkOx-0005Qd-9i
+ for kexec@lists.infradead.org; Wed, 21 Jun 2017 18:30:52 +0000
+Subject: Re: [PATCH v7 08/36] x86/mm: Add support to enable SME in early boot
+ processing
+References: <20170616184947.18967.84890.stgit@tlendack-t1.amdoffice.net>
+ <20170616185115.18967.79622.stgit@tlendack-t1.amdoffice.net>
+ <alpine.DEB.2.20.1706202259290.2157@nanos>
+ <8d3c215f-cdad-5554-6e9c-5598e1081850@amd.com>
+ <alpine.DEB.2.20.1706211720060.2328@nanos>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <fc697503-ec54-f481-36b3-3d5bf63aaaee@amd.com>
+Date: Wed, 21 Jun 2017 13:30:19 -0500
 MIME-Version: 1.0
-Message-Id: <20170621194423.2d0318d7@TP-holzheu>
+In-Reply-To: <alpine.DEB.2.20.1706211720060.2328@nanos>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,131 +25,83 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Xunlei Pang <xlpang@redhat.com>
-Cc: linux-s390@vger.kernel.org, Baoquan He <bhe@redhat.com>, Gustavo Luiz Duarte <gustavold@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Dave Anderson <anderson@redhat.com>, Eric Biederman <ebiederm@xmission.com>, Hari Bathini <hbathini@linux.vnet.ibm.com>, Mikhail Zaslonko <zaslonko@linux.vnet.ibm.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, linux-doc@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, "Michael S. Tsirkin" <mst@redhat.com>, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, xen-devel@lists.xen.org, iommu@lists.linux-foundation.org, Paolo Bonzini <pbonzini@redhat.com>
 
-Am Fri,  9 Jun 2017 10:17:05 +0800
-schrieb Xunlei Pang <xlpang@redhat.com>:
-
-> S390 KEXEC_NOTE_BYTES is not used by note_buf_t as before, which
-> is now defined as follows:
->     typedef u32 note_buf_t[CRASH_CORE_NOTE_BYTES/4];
-> It was changed by the CONFIG_CRASH_CORE feature.
+On 6/21/2017 10:38 AM, Thomas Gleixner wrote:
+> On Wed, 21 Jun 2017, Tom Lendacky wrote:
+>> On 6/21/2017 2:16 AM, Thomas Gleixner wrote:
+>>> Why is this an unconditional function? Isn't the mask simply 0 when the MEM
+>>> ENCRYPT support is disabled?
+>>
+>> I made it unconditional because of the call from head_64.S. I can't make
+>> use of the C level static inline function and since the mask is not a
+>> variable if CONFIG_AMD_MEM_ENCRYPT is not configured (#defined to 0) I
+>> can't reference the variable directly.
+>>
+>> I could create a #define in head_64.S that changes this to load rax with
+>> the variable if CONFIG_AMD_MEM_ENCRYPT is configured or a zero if it's
+>> not or add a #ifdef at that point in the code directly. Thoughts on
+>> that?
 > 
-> This patch gets rid of all the old KEXEC_NOTE_BYTES stuff, and
-> renames KEXEC_NOTE_BYTES to CRASH_CORE_NOTE_BYTES for S390.
+> See below.
 > 
-> Fixes: 692f66f26a4c ("crash: move crashkernel parsing and vmcore related code under CONFIG_CRASH_CORE")
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: Dave Anderson <anderson@redhat.com>
-> Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
-> Cc: Gustavo Luiz Duarte <gustavold@linux.vnet.ibm.com>
-> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+>>> That does not make any sense. Neither the call to sme_encrypt_kernel() nor
+>>> the following call to sme_get_me_mask().
+>>>
+>>> __startup_64() is already C code, so why can't you simply call that from
+>>> __startup_64() in C and return the mask from there?
+>>
+>> I was trying to keep it explicit as to what was happening, but I can
+>> move those calls into __startup_64().
+> 
+> That's much preferred. And the return value wants to be documented in both
+> C and ASM code.
 
-Hello Xunlei,
+Will do.
 
-As you already know on s390 we create the ELF header in the new kernel.
-Therefore we don't use the per-cpu buffers for ELF notes to store
-the register state.
+> 
+>> I'll still need the call to sme_get_me_mask() in the secondary_startup_64
+>> path, though (depending on your thoughts to the above response).
+> 
+>          call verify_cpu
+> 
+>          movq    $(init_top_pgt - __START_KERNEL_map), %rax
+> 
+> So if you make that:
+> 
+> 	/*
+> 	 * Sanitize CPU configuration and retrieve the modifier
+> 	 * for the initial pgdir entry which will be programmed
+> 	 * into CR3. Depends on enabled SME encryption, normally 0.
+> 	 */
+> 	call __startup_secondary_64
+> 
+>          addq    $(init_top_pgt - __START_KERNEL_map), %rax
+> 
+> You can hide that stuff in C-code nicely without adding any cruft to the
+> ASM code.
+> 
 
-For RHEL7 we still store the registers in machine_kexec.c:add_elf_notes().
-Though we also use the ELF header from new kernel ...
+Moving the call to verify_cpu into the C-code might be quite a bit of
+change.  Currently, the verify_cpu code is included code and not a
+global function.  I can still do the __startup_secondary_64() function
+and then look to incorporate verify_cpu into both __startup_64() and
+__startup_secondary_64() as a post-patch to this series. At least the
+secondary path will have a base C routine to which modifications can
+be made in the future if needed.  How does that sound?
 
-We assume your original problem with the "kmem -s" failure
-was caused by the memory overwrite due to the invalid size of the
-"crash_notes" per-cpu buffers.
+Thanks,
+Tom
 
-Therefore your patch looks good for RHEL7 but for upstream we propose the
-patch below.
----
-[PATCH] s390/crash: Remove unused KEXEC_NOTE_BYTES
-
-After commmit 692f66f26a4c19 ("crash: move crashkernel parsing and vmcore
-related code under CONFIG_CRASH_CORE") the KEXEC_NOTE_BYTES macro is not
-used anymore and for s390 we create the ELF header in the new kernel
-anyway. Therefore remove the macro.
-
-Reported-by: Xunlei Pang <xpang@redhat.com>
-Reviewed-by: Mikhail Zaslonko <zaslonko@linux.vnet.ibm.com>
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- arch/s390/include/asm/kexec.h | 18 ------------------
- include/linux/crash_core.h    |  5 +++++
- include/linux/kexec.h         |  9 ---------
- 3 files changed, 5 insertions(+), 27 deletions(-)
-
-diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
-index 2f924bc30e35..dccf24ee26d3 100644
---- a/arch/s390/include/asm/kexec.h
-+++ b/arch/s390/include/asm/kexec.h
-@@ -41,24 +41,6 @@
- /* The native architecture */
- #define KEXEC_ARCH KEXEC_ARCH_S390
- 
--/*
-- * Size for s390x ELF notes per CPU
-- *
-- * Seven notes plus zero note at the end: prstatus, fpregset, timer,
-- * tod_cmp, tod_reg, control regs, and prefix
-- */
--#define KEXEC_NOTE_BYTES \
--	(ALIGN(sizeof(struct elf_note), 4) * 8 + \
--	 ALIGN(sizeof("CORE"), 4) * 7 + \
--	 ALIGN(sizeof(struct elf_prstatus), 4) + \
--	 ALIGN(sizeof(elf_fpregset_t), 4) + \
--	 ALIGN(sizeof(u64), 4) + \
--	 ALIGN(sizeof(u64), 4) + \
--	 ALIGN(sizeof(u32), 4) + \
--	 ALIGN(sizeof(u64) * 16, 4) + \
--	 ALIGN(sizeof(u32), 4) \
--	)
--
- /* Provide a dummy definition to avoid build failures. */
- static inline void crash_setup_regs(struct pt_regs *newregs,
- 					struct pt_regs *oldregs) { }
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 541a197ba4a2..4090a42578a8 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -10,6 +10,11 @@
- #define CRASH_CORE_NOTE_NAME_BYTES ALIGN(sizeof(CRASH_CORE_NOTE_NAME), 4)
- #define CRASH_CORE_NOTE_DESC_BYTES ALIGN(sizeof(struct elf_prstatus), 4)
- 
-+/*
-+ * The per-cpu notes area is a list of notes terminated by a "NULL"
-+ * note header.  For kdump, the code in vmcore.c runs in the context
-+ * of the second kernel to combine them into one note.
-+ */
- #define CRASH_CORE_NOTE_BYTES	   ((CRASH_CORE_NOTE_HEAD_BYTES * 2) +	\
- 				     CRASH_CORE_NOTE_NAME_BYTES +	\
- 				     CRASH_CORE_NOTE_DESC_BYTES)
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index c9481ebcbc0c..65888418fb69 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -63,15 +63,6 @@
- #define KEXEC_CORE_NOTE_NAME	CRASH_CORE_NOTE_NAME
- 
- /*
-- * The per-cpu notes area is a list of notes terminated by a "NULL"
-- * note header.  For kdump, the code in vmcore.c runs in the context
-- * of the second kernel to combine them into one note.
-- */
--#ifndef KEXEC_NOTE_BYTES
--#define KEXEC_NOTE_BYTES	CRASH_CORE_NOTE_BYTES
--#endif
--
--/*
-  * This structure is used to hold the arguments that are used when loading
-  * kernel binaries.
-  */
--- 
-2.11.2
-
+> Thanks,
+> 
+> 	tglx
+> 
 
 _______________________________________________
 kexec mailing list
