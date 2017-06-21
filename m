@@ -1,19 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a01:7a0:2:106d:700::1])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dNhiB-0005vv-9J
- for kexec@lists.infradead.org; Wed, 21 Jun 2017 15:38:36 +0000
-Date: Wed, 21 Jun 2017 17:38:04 +0200 (CEST)
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v7 08/36] x86/mm: Add support to enable SME in early boot
- processing
-In-Reply-To: <8d3c215f-cdad-5554-6e9c-5598e1081850@amd.com>
-Message-ID: <alpine.DEB.2.20.1706211720060.2328@nanos>
-References: <20170616184947.18967.84890.stgit@tlendack-t1.amdoffice.net>
- <20170616185115.18967.79622.stgit@tlendack-t1.amdoffice.net>
- <alpine.DEB.2.20.1706202259290.2157@nanos>
- <8d3c215f-cdad-5554-6e9c-5598e1081850@amd.com>
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+ by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
+ id 1dNiz6-0000H0-UP
+ for kexec@lists.infradead.org; Wed, 21 Jun 2017 17:00:06 +0000
+Date: Wed, 21 Jun 2017 18:59:22 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v6 26/34] iommu/amd: Allow the AMD IOMMU to work with
+ memory encryption
+Message-ID: <20170621165921.tv2jfhf5dz7hsjsy@pd.tnic>
+References: <20170607191309.28645.15241.stgit@tlendack-t1.amdoffice.net>
+ <20170607191745.28645.81756.stgit@tlendack-t1.amdoffice.net>
+ <20170614174208.p2yr5exs4b6pjxhf@pd.tnic>
+ <0611d01a-19f8-d6ae-2682-932789855518@amd.com>
+ <20170615094111.wga334kg2bhxqib3@pd.tnic>
+ <20170621153721.GP30388@8bytes.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20170621153721.GP30388@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,62 +29,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, linux-doc@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, =?ISO-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, "Michael S. Tsirkin" <mst@redhat.com>, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, xen-devel@lists.xen.org, iommu@lists.linux-foundation.org, Paolo Bonzini <pbonzini@redhat.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Tom Lendacky <thomas.lendacky@amd.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-On Wed, 21 Jun 2017, Tom Lendacky wrote:
-> On 6/21/2017 2:16 AM, Thomas Gleixner wrote:
-> > Why is this an unconditional function? Isn't the mask simply 0 when the MEM
-> > ENCRYPT support is disabled?
-> 
-> I made it unconditional because of the call from head_64.S. I can't make
-> use of the C level static inline function and since the mask is not a
-> variable if CONFIG_AMD_MEM_ENCRYPT is not configured (#defined to 0) I
-> can't reference the variable directly.
-> 
-> I could create a #define in head_64.S that changes this to load rax with
-> the variable if CONFIG_AMD_MEM_ENCRYPT is configured or a zero if it's
-> not or add a #ifdef at that point in the code directly. Thoughts on
-> that?
-
-See below.
-
-> > That does not make any sense. Neither the call to sme_encrypt_kernel() nor
-> > the following call to sme_get_me_mask().
+On Wed, Jun 21, 2017 at 05:37:22PM +0200, Joerg Roedel wrote:
+> > Do you mean this is like the last exception case in that document above:
 > > 
-> > __startup_64() is already C code, so why can't you simply call that from
-> > __startup_64() in C and return the mask from there?
+> > "
+> >   - Pointers to data structures in coherent memory which might be modified
+> >     by I/O devices can, sometimes, legitimately be volatile.  A ring buffer
+> >     used by a network adapter, where that adapter changes pointers to
+> >     indicate which descriptors have been processed, is an example of this
+> >     type of situation."
+> > 
+> > ?
 > 
-> I was trying to keep it explicit as to what was happening, but I can
-> move those calls into __startup_64().
+> So currently (without this patch) the build_completion_wait function
+> does not take a volatile parameter, only wait_on_sem() does.
+> 
+> Wait_on_sem() needs it because its purpose is to poll a memory location
+> which is changed by the iommu-hardware when its done with command
+> processing.
 
-That's much preferred. And the return value wants to be documented in both
-C and ASM code.
+Right, the reason above - memory modifiable by an IO device. You could
+add a comment there explaining the need for the volatile.
 
-> I'll still need the call to sme_get_me_mask() in the secondary_startup_64
-> path, though (depending on your thoughts to the above response).
+> But the 'volatile' in build_completion_wait() looks unnecessary, because
+> the function does not poll the memory location. It only uses the
+> pointer, converts it to a physical address and writes it to the command
+> to be queued.
 
-        call verify_cpu
+Ok.
 
-        movq    $(init_top_pgt - __START_KERNEL_map), %rax
+Thanks.
 
-So if you make that:
+-- 
+Regards/Gruss,
+    Boris.
 
-	/*
-	 * Sanitize CPU configuration and retrieve the modifier
-	 * for the initial pgdir entry which will be programmed
-	 * into CR3. Depends on enabled SME encryption, normally 0.
-	 */
-	call __startup_secondary_64
-
-        addq    $(init_top_pgt - __START_KERNEL_map), %rax
-
-You can hide that stuff in C-code nicely without adding any cruft to the
-ASM code.
-
-Thanks,
-
-	tglx
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
