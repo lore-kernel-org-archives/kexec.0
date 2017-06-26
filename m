@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-by2nam01on061d.outbound.protection.outlook.com
- ([2a01:111:f400:fe42::61d]
- helo=NAM01-BY2-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dOSdx-0005jc-Lq
- for kexec@lists.infradead.org; Fri, 23 Jun 2017 17:45:19 +0000
-Subject: Re: [PATCH v7 34/36] x86/mm: Add support to encrypt the kernel
- in-place
-References: <20170616184947.18967.84890.stgit@tlendack-t1.amdoffice.net>
- <20170616185619.18967.38945.stgit@tlendack-t1.amdoffice.net>
- <20170623100013.upd4or6esjvulmvg@pd.tnic>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <af9a50f7-17ea-a840-6456-b6479e5d7e82@amd.com>
-Date: Fri, 23 Jun 2017 12:44:46 -0500
+Received: from mx1.redhat.com ([209.132.183.28])
+ by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dPKA3-0007L3-1a
+ for kexec@lists.infradead.org; Mon, 26 Jun 2017 02:54:09 +0000
+Date: Mon, 26 Jun 2017 10:52:56 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] kexec:arm: support zImage with appended device tree
+Message-ID: <20170626025256.GA3378@dhcp-128-65.nay.redhat.com>
+References: <1498208138-19283-1-git-send-email-hoeun.ryu@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20170623100013.upd4or6esjvulmvg@pd.tnic>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1498208138-19283-1-git-send-email-hoeun.ryu@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,167 +19,148 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, linux-doc@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, "Michael S. Tsirkin" <mst@redhat.com>, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, xen-devel@lists.xen.org, iommu@lists.linux-foundation.org, Thomas Gleixner <tglx@linutronix.de>, Paolo Bonzini <pbonzini@redhat.com>
+To: Hoeun Ryu <hoeun.ryu@gmail.com>
+Cc: Matthew Leach <matthew.leach@arm.com>, Russell King <rmk@armlinux.org.uk>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Wang Nan <wangnan0@huawei.com>
 
-On 6/23/2017 5:00 AM, Borislav Petkov wrote:
-> On Fri, Jun 16, 2017 at 01:56:19PM -0500, Tom Lendacky wrote:
->> Add the support to encrypt the kernel in-place. This is done by creating
->> new page mappings for the kernel - a decrypted write-protected mapping
->> and an encrypted mapping. The kernel is encrypted by copying it through
->> a temporary buffer.
->>
->> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
->> ---
->>   arch/x86/include/asm/mem_encrypt.h |    6 +
->>   arch/x86/mm/Makefile               |    2
->>   arch/x86/mm/mem_encrypt.c          |  314 ++++++++++++++++++++++++++++++++++++
->>   arch/x86/mm/mem_encrypt_boot.S     |  150 +++++++++++++++++
->>   4 files changed, 472 insertions(+)
->>   create mode 100644 arch/x86/mm/mem_encrypt_boot.S
->>
->> diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
->> index af835cf..7da6de3 100644
->> --- a/arch/x86/include/asm/mem_encrypt.h
->> +++ b/arch/x86/include/asm/mem_encrypt.h
->> @@ -21,6 +21,12 @@
->>   
->>   extern unsigned long sme_me_mask;
->>   
->> +void sme_encrypt_execute(unsigned long encrypted_kernel_vaddr,
->> +			 unsigned long decrypted_kernel_vaddr,
->> +			 unsigned long kernel_len,
->> +			 unsigned long encryption_wa,
->> +			 unsigned long encryption_pgd);
->> +
->>   void __init sme_early_encrypt(resource_size_t paddr,
->>   			      unsigned long size);
->>   void __init sme_early_decrypt(resource_size_t paddr,
->> diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
->> index 9e13841..0633142 100644
->> --- a/arch/x86/mm/Makefile
->> +++ b/arch/x86/mm/Makefile
->> @@ -38,3 +38,5 @@ obj-$(CONFIG_NUMA_EMU)		+= numa_emulation.o
->>   obj-$(CONFIG_X86_INTEL_MPX)	+= mpx.o
->>   obj-$(CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS) += pkeys.o
->>   obj-$(CONFIG_RANDOMIZE_MEMORY) += kaslr.o
->> +
->> +obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= mem_encrypt_boot.o
->> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
->> index 842c8a6..6e87662 100644
->> --- a/arch/x86/mm/mem_encrypt.c
->> +++ b/arch/x86/mm/mem_encrypt.c
->> @@ -24,6 +24,8 @@
->>   #include <asm/setup.h>
->>   #include <asm/bootparam.h>
->>   #include <asm/set_memory.h>
->> +#include <asm/cacheflush.h>
->> +#include <asm/sections.h>
->>   
->>   /*
->>    * Since SME related variables are set early in the boot process they must
->> @@ -209,8 +211,320 @@ void swiotlb_set_mem_attributes(void *vaddr, unsigned long size)
->>   	set_memory_decrypted((unsigned long)vaddr, size >> PAGE_SHIFT);
->>   }
->>   
->> +static void __init sme_clear_pgd(pgd_t *pgd_base, unsigned long start,
->> +				 unsigned long end)
->> +{
->> +	unsigned long pgd_start, pgd_end, pgd_size;
->> +	pgd_t *pgd_p;
->> +
->> +	pgd_start = start & PGDIR_MASK;
->> +	pgd_end = end & PGDIR_MASK;
->> +
->> +	pgd_size = (((pgd_end - pgd_start) / PGDIR_SIZE) + 1);
->> +	pgd_size *= sizeof(pgd_t);
->> +
->> +	pgd_p = pgd_base + pgd_index(start);
->> +
->> +	memset(pgd_p, 0, pgd_size);
->> +}
->> +
->> +#ifndef CONFIG_X86_5LEVEL
->> +#define native_make_p4d(_x)	(p4d_t) { .pgd = native_make_pgd(_x) }
->> +#endif
+On 06/23/17 at 05:55pm, Hoeun Ryu wrote:
+> Arm linux supports zImage with appended dtb (CONFIG_ARM_APPENDED_DTB) and
+> the concatenated image is generated like `cat zImage dtb > zImage_w_dtb`.
 > 
-> Huh, why isn't this in arch/x86/include/asm/pgtable_types.h in the #else
-> branch of #if CONFIG_PGTABLE_LEVELS > 4 ?
+> This patch is to support the concatednated zImage. This changes the
+> priority of source of dtb file.
+> 
+>  1. --dtb dtb_file
+>  2. zImage_w_dtb	<= newly added
+>  3. /sys/firmware/fdt
+>  4. /proc/device-tree
 
-Normally the __p4d() macro would be used and that would be ok whether
-CONFIG_X86_5LEVEL is defined or not. But since __p4d() is part of the
-paravirt ops path I have to use native_make_p4d(). I'd be the only user
-of the function and thought it would be best to localize it this way.
+The original default fdt is /sys/firmware/fdt, after your changes it
+becomes zImage attached dtb, presumably one knows his zImage appended a
+dtb it is fine, but if one does not notice it, it changes the behavior
+he expects.
+
+How about add a new option for zImage_dtb, like --zImage-dtb
 
 > 
-> Also
+> Users don't need to specify dtb file in the command line and don't have to
+> have /sys/firmware/fdt or /proc/device-tree if dtb is available in zImage.
 > 
-> ERROR: Macros with complex values should be enclosed in parentheses
-> #105: FILE: arch/x86/mm/mem_encrypt.c:232:
-> +#define native_make_p4d(_x)    (p4d_t) { .pgd = native_make_pgd(_x) }
+> Signed-off-by: Hoeun Ryu <hoeun.ryu@gmail.com>
+> ---
+>  kexec/arch/arm/kexec-arm.h        |  1 +
+>  kexec/arch/arm/kexec-zImage-arm.c | 47 ++++++++++++++++++++++++++++++---------
+>  2 files changed, 37 insertions(+), 11 deletions(-)
 > 
-> so why isn't it a function?
-
-I can define it as an inline function.
-
+> diff --git a/kexec/arch/arm/kexec-arm.h b/kexec/arch/arm/kexec-arm.h
+> index a74cce2..94695b7 100644
+> --- a/kexec/arch/arm/kexec-arm.h
+> +++ b/kexec/arch/arm/kexec-arm.h
+> @@ -4,6 +4,7 @@
+>  #include <sys/types.h>
+>  
+>  #define SYSFS_FDT "/sys/firmware/fdt"
+> +#define APPENDED_FDT ((char *)-1) /* it doesn't mean to be opened. */
+>  #define BOOT_BLOCK_VERSION 17
+>  #define BOOT_BLOCK_LAST_COMP_VERSION 16
+>  
+> diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+> index 7f02b93..59f0003 100644
+> --- a/kexec/arch/arm/kexec-zImage-arm.c
+> +++ b/kexec/arch/arm/kexec-zImage-arm.c
+> @@ -390,6 +390,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  	initrd_size = 0;
+>  	use_atags = 0;
+>  	dtb_file = NULL;
+> +	dtb_buf = NULL;
+>  	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
+>  		switch(opt) {
+>  		default:
+> @@ -424,14 +425,6 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  		return -1;
+>  	}
+>  
+> -	if (!use_atags && !dtb_file) {
+> -		int f;
+> -
+> -		f = have_sysfs_fdt();
+> -		if (f)
+> -			dtb_file = SYSFS_FDT;
+> -	}
+> -
+>  	if (command_line) {
+>  		command_line_len = strlen(command_line) + 1;
+>  		if (command_line_len > COMMAND_LINE_SIZE)
+> @@ -440,9 +433,6 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  	if (ramdisk)
+>  		ramdisk_buf = slurp_file(ramdisk, &initrd_size);
+>  
+> -	if (dtb_file)
+> -		dtb_buf = slurp_file(dtb_file, &dtb_length);
+> -
+>  	if (len > 0x34) {
+>  		const struct zimage_header *hdr;
+>  		off_t size;
+> @@ -459,6 +449,25 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  				  (unsigned long long)size,
+>  				  (unsigned long long)len);
+>  
+> +			/* check if zImage has an appended dtb */
+> +			if (!dtb_file) {
+> +				if (fdt_check_header(buf + size) == 0) {
+> +					/*
+> +					 * dtb_file won't be opened. It's set
+> +					 * just to pass NULL checking.
+> +					 */
+> +					dtb_file = APPENDED_FDT;
+> +					dtb_length = fdt_totalsize(buf + size);
+> +					dtb_buf = xmalloc(dtb_length);
+> +					memcpy(dtb_buf, buf+size, dtb_length);
+> +
+> +					dbgprintf("found appended dtb, size 0x%llx\n",
+> +						  (unsigned long long)dtb_length);
+> +
+> +
+> +				}
+> +			}
+> +
+>  			if (size > len) {
+>  				fprintf(stderr,
+>  					"zImage is truncated - file 0x%llx vs header 0x%llx\n",
+> @@ -575,6 +584,22 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  		initrd_base = kernel_base + _ALIGN(len * 5, getpagesize());
+>  	}
+>  
+> +	if (!use_atags && !dtb_file) {
+> +		int f;
+> +
+> +		f = have_sysfs_fdt();
+> +		if (f)
+> +			dtb_file = SYSFS_FDT;
+> +	}
+> +
+> +	/*
+> +	 * dtb_buf can be allocated when checking zImage_with_dtb.
+> +	 * dtb_buf won't be allocated in the logic if dtb_file is handed over
+> +	 * in argv[].
+> +	 */
+> +	if (dtb_file && !dtb_buf)
+> +		dtb_buf = slurp_file(dtb_file, &dtb_length);
+> +
+>  	if (use_atags) {
+>  		/*
+>  		 * use ATAGs from /proc/atags
+> -- 
+> 2.7.4
 > 
->> +
->> +#define PGD_FLAGS	_KERNPG_TABLE_NOENC
->> +#define P4D_FLAGS	_KERNPG_TABLE_NOENC
->> +#define PUD_FLAGS	_KERNPG_TABLE_NOENC
->> +#define PMD_FLAGS	(__PAGE_KERNEL_LARGE_EXEC & ~_PAGE_GLOBAL)
->> +
->> +static void __init *sme_populate_pgd(pgd_t *pgd_base, void *pgtable_area,
->> +				     unsigned long vaddr, pmdval_t pmd_val)
->> +{
->> +	pgd_t *pgd_p;
->> +	p4d_t *p4d_p;
->> +	pud_t *pud_p;
->> +	pmd_t *pmd_p;
->> +
->> +	pgd_p = pgd_base + pgd_index(vaddr);
->> +	if (native_pgd_val(*pgd_p)) {
->> +		if (IS_ENABLED(CONFIG_X86_5LEVEL))
 > 
-> Err, I don't understand: so this is a Kconfig symbol and when it is
-> enabled at build time, you do a 5level pagetable.
-> 
-> But you can't stick a 5level pagetable to a hardware which doesn't know
-> about it.
-
-True, 5-level will only be turned on for specific hardware which is why
-I originally had this as only 4-level pagetables. But in a comment from
-you back on the v5 version you said it needed to support 5-level. I
-guess we should have discussed this more, but I also thought that should
-our hardware ever support 5-level paging in the future then this would
-be good to go.
-
-> 
-> Or do you mean that p4d layer folding at runtime to happen? (I admit, I
-> haven't looked at that in detail.) But then I'd hope that the generic
-> macros/functions would give you the ability to not care whether we have
-> a p4d or not and not add a whole bunch of ifdeffery to this code.
-
-The macros work great if you are not running identity mapped. You could
-use p*d_offset() to move easily through the tables, but those functions
-use __va() to generate table virtual addresses. I've seen where
-boot/compressed/pagetable.c #defines __va() to work with identity mapped
-pages but that would only work if I create a separate file just for this
-function.
-
-Given when this occurs it's very similar to what __startup_64() does in
-regards to the IS_ENABLED(CONFIG_X86_5LEVEL) checks.
-
-Thanks,
-Tom
-
-> 
-> Hmmm.
-> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
