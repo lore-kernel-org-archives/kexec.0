@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+Received: from mail-pf0-f177.google.com ([209.85.192.177])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dPQ6r-0008Eu-3N
- for kexec@lists.infradead.org; Mon, 26 Jun 2017 09:15:07 +0000
-Date: Mon, 26 Jun 2017 10:14:12 +0100
-From: Russell King <rmk@armlinux.org.uk>
+ id 1dPQFj-0006pu-1A
+ for kexec@lists.infradead.org; Mon, 26 Jun 2017 09:24:17 +0000
+Received: by mail-pf0-f177.google.com with SMTP id c73so52281431pfk.2
+ for <kexec@lists.infradead.org>; Mon, 26 Jun 2017 02:23:54 -0700 (PDT)
 Subject: Re: [PATCH] kexec:arm: support zImage with appended device tree
-Message-ID: <20170626091412.GE837@flint.armlinux.org.uk>
 References: <1498208138-19283-1-git-send-email-hoeun.ryu@gmail.com>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <cdce2336-228a-a794-cdde-8c869d7a8cf2@redhat.com>
+Date: Mon, 26 Jun 2017 14:45:08 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
 In-Reply-To: <1498208138-19283-1-git-send-email-hoeun.ryu@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,26 +20,147 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hoeun Ryu <hoeun.ryu@gmail.com>
-Cc: Matthew Leach <matthew.leach@arm.com>, Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Wang Nan <wangnan0@huawei.com>
+To: Hoeun Ryu <hoeun.ryu@gmail.com>, Matthew Leach <matthew.leach@arm.com>, Dave Young <dyoung@redhat.com>, Wang Nan <wangnan0@huawei.com>, Russell King <rmk@armlinux.org.uk>, Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-On Fri, Jun 23, 2017 at 05:55:38PM +0900, Hoeun Ryu wrote:
+
+
+On Friday 23 June 2017 02:25 PM, Hoeun Ryu wrote:
 > Arm linux supports zImage with appended dtb (CONFIG_ARM_APPENDED_DTB) and
 > the concatenated image is generated like `cat zImage dtb > zImage_w_dtb`.
+>
+> This patch is to support the concatednated zImage. This changes the
+> priority of source of dtb file.
+>
+>  1. --dtb dtb_file
+>  2. zImage_w_dtb	<= newly added
+>  3. /sys/firmware/fdt
+>  4. /proc/device-tree
+>
+> Users don't need to specify dtb file in the command line and don't have to
+> have /sys/firmware/fdt or /proc/device-tree if dtb is available in zImage.
 
-We support that only for the purpose of allowing old boot loaders that
-are not DT aware to load kernels that require DT.  If it weren't for
-that, we wouldn't have it.
+any specific reason to not to add the new method as last preferred option? 
+Does it not work if there exist a /sys/firmware/fdt in case of a kernel booted 
+with "dtb appended zImage"?
 
-I don't see why we should propagate this hack to other systems such as
-kexec, especially when they have native DT support.
+>
+> Signed-off-by: Hoeun Ryu <hoeun.ryu@gmail.com>
+> ---
+>  kexec/arch/arm/kexec-arm.h        |  1 +
+>  kexec/arch/arm/kexec-zImage-arm.c | 47 ++++++++++++++++++++++++++++++---------
+>  2 files changed, 37 insertions(+), 11 deletions(-)
+>
+> diff --git a/kexec/arch/arm/kexec-arm.h b/kexec/arch/arm/kexec-arm.h
+> index a74cce2..94695b7 100644
+> --- a/kexec/arch/arm/kexec-arm.h
+> +++ b/kexec/arch/arm/kexec-arm.h
+> @@ -4,6 +4,7 @@
+>  #include <sys/types.h>
+>
+>  #define SYSFS_FDT "/sys/firmware/fdt"
+> +#define APPENDED_FDT ((char *)-1) /* it doesn't mean to be opened. */
+>  #define BOOT_BLOCK_VERSION 17
+>  #define BOOT_BLOCK_LAST_COMP_VERSION 16
+>
+> diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+> index 7f02b93..59f0003 100644
+> --- a/kexec/arch/arm/kexec-zImage-arm.c
+> +++ b/kexec/arch/arm/kexec-zImage-arm.c
+> @@ -390,6 +390,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  	initrd_size = 0;
+>  	use_atags = 0;
+>  	dtb_file = NULL;
+> +	dtb_buf = NULL;
+>  	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
+>  		switch(opt) {
+>  		default:
+> @@ -424,14 +425,6 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  		return -1;
+>  	}
+>
+> -	if (!use_atags && !dtb_file) {
+> -		int f;
+> -
+> -		f = have_sysfs_fdt();
+> -		if (f)
+> -			dtb_file = SYSFS_FDT;
+> -	}
+> -
+>  	if (command_line) {
+>  		command_line_len = strlen(command_line) + 1;
+>  		if (command_line_len > COMMAND_LINE_SIZE)
+> @@ -440,9 +433,6 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  	if (ramdisk)
+>  		ramdisk_buf = slurp_file(ramdisk, &initrd_size);
+>
+> -	if (dtb_file)
+> -		dtb_buf = slurp_file(dtb_file, &dtb_length);
+> -
+>  	if (len > 0x34) {
+>  		const struct zimage_header *hdr;
+>  		off_t size;
+> @@ -459,6 +449,25 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  				  (unsigned long long)size,
+>  				  (unsigned long long)len);
+>
+> +			/* check if zImage has an appended dtb */
+> +			if (!dtb_file) {
+> +				if (fdt_check_header(buf + size) == 0) {
 
--- 
-Russell King
+What if size >= len? I think, in that case there might not be a valid address 
+at buf+size and reading those area would lead in segmentation fault.
+
+> +					/*
+> +					 * dtb_file won't be opened. It's set
+> +					 * just to pass NULL checking.
+> +					 */
+> +					dtb_file = APPENDED_FDT;
+> +					dtb_length = fdt_totalsize(buf + size);
+> +					dtb_buf = xmalloc(dtb_length);
+> +					memcpy(dtb_buf, buf+size, dtb_length);
+> +
+> +					dbgprintf("found appended dtb, size 0x%llx\n",
+> +						  (unsigned long long)dtb_length);
+> +
+> +
+> +				}
+> +			}
+> +
+>  			if (size > len) {
+>  				fprintf(stderr,
+>  					"zImage is truncated - file 0x%llx vs header 0x%llx\n",
+> @@ -575,6 +584,22 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  		initrd_base = kernel_base + _ALIGN(len * 5, getpagesize());
+>  	}
+>
+> +	if (!use_atags && !dtb_file) {
+> +		int f;
+> +
+> +		f = have_sysfs_fdt();
+> +		if (f)
+> +			dtb_file = SYSFS_FDT;
+> +	}
+> +
+> +	/*
+> +	 * dtb_buf can be allocated when checking zImage_with_dtb.
+> +	 * dtb_buf won't be allocated in the logic if dtb_file is handed over
+> +	 * in argv[].
+> +	 */
+> +	if (dtb_file && !dtb_buf)
+> +		dtb_buf = slurp_file(dtb_file, &dtb_length);
+> +
+>  	if (use_atags) {
+>  		/*
+>  		 * use ATAGs from /proc/atags
+>
+
+--
+Pratyush
 
 _______________________________________________
 kexec mailing list
