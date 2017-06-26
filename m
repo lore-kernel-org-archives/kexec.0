@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f177.google.com ([209.85.192.177])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dPQFj-0006pu-1A
- for kexec@lists.infradead.org; Mon, 26 Jun 2017 09:24:17 +0000
-Received: by mail-pf0-f177.google.com with SMTP id c73so52281431pfk.2
- for <kexec@lists.infradead.org>; Mon, 26 Jun 2017 02:23:54 -0700 (PDT)
-Subject: Re: [PATCH] kexec:arm: support zImage with appended device tree
-References: <1498208138-19283-1-git-send-email-hoeun.ryu@gmail.com>
-From: Pratyush Anand <panand@redhat.com>
-Message-ID: <cdce2336-228a-a794-cdde-8c869d7a8cf2@redhat.com>
-Date: Mon, 26 Jun 2017 14:45:08 +0530
+Received: from mail.skyhub.de ([5.9.137.197])
+ by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
+ id 1dPWDk-00014w-65
+ for kexec@lists.infradead.org; Mon, 26 Jun 2017 15:46:38 +0000
+Date: Mon, 26 Jun 2017 17:45:43 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v7 34/36] x86/mm: Add support to encrypt the kernel
+ in-place
+Message-ID: <20170626154543.fsuxfhxidytgo2ia@pd.tnic>
+References: <20170616184947.18967.84890.stgit@tlendack-t1.amdoffice.net>
+ <20170616185619.18967.38945.stgit@tlendack-t1.amdoffice.net>
+ <20170623100013.upd4or6esjvulmvg@pd.tnic>
+ <af9a50f7-17ea-a840-6456-b6479e5d7e82@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <1498208138-19283-1-git-send-email-hoeun.ryu@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <af9a50f7-17ea-a840-6456-b6479e5d7e82@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,147 +23,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hoeun Ryu <hoeun.ryu@gmail.com>, Matthew Leach <matthew.leach@arm.com>, Dave Young <dyoung@redhat.com>, Wang Nan <wangnan0@huawei.com>, Russell King <rmk@armlinux.org.uk>, Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, linux-doc@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, "Michael S. Tsirkin" <mst@redhat.com>, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, xen-devel@lists.xen.org, iommu@lists.linux-foundation.org, Thomas Gleixner <tglx@linutronix.de>, Paolo Bonzini <pbonzini@redhat.com>
 
+On Fri, Jun 23, 2017 at 12:44:46PM -0500, Tom Lendacky wrote:
+> Normally the __p4d() macro would be used and that would be ok whether
+> CONFIG_X86_5LEVEL is defined or not. But since __p4d() is part of the
+> paravirt ops path I have to use native_make_p4d().
 
+So __p4d is in !CONFIG_PARAVIRT path.
 
-On Friday 23 June 2017 02:25 PM, Hoeun Ryu wrote:
-> Arm linux supports zImage with appended dtb (CONFIG_ARM_APPENDED_DTB) and
-> the concatenated image is generated like `cat zImage dtb > zImage_w_dtb`.
->
-> This patch is to support the concatednated zImage. This changes the
-> priority of source of dtb file.
->
->  1. --dtb dtb_file
->  2. zImage_w_dtb	<= newly added
->  3. /sys/firmware/fdt
->  4. /proc/device-tree
->
-> Users don't need to specify dtb file in the command line and don't have to
-> have /sys/firmware/fdt or /proc/device-tree if dtb is available in zImage.
+Regardless, we use the native_* variants in generic code to mean, not
+paravirt. Just define it in a separate patch like the rest of the p4*
+machinery and use it in your code. Sooner or later someone else will
+need it.
 
-any specific reason to not to add the new method as last preferred option? 
-Does it not work if there exist a /sys/firmware/fdt in case of a kernel booted 
-with "dtb appended zImage"?
+> True, 5-level will only be turned on for specific hardware which is why
+> I originally had this as only 4-level pagetables. But in a comment from
+> you back on the v5 version you said it needed to support 5-level. I
+> guess we should have discussed this more,
 
->
-> Signed-off-by: Hoeun Ryu <hoeun.ryu@gmail.com>
-> ---
->  kexec/arch/arm/kexec-arm.h        |  1 +
->  kexec/arch/arm/kexec-zImage-arm.c | 47 ++++++++++++++++++++++++++++++---------
->  2 files changed, 37 insertions(+), 11 deletions(-)
->
-> diff --git a/kexec/arch/arm/kexec-arm.h b/kexec/arch/arm/kexec-arm.h
-> index a74cce2..94695b7 100644
-> --- a/kexec/arch/arm/kexec-arm.h
-> +++ b/kexec/arch/arm/kexec-arm.h
-> @@ -4,6 +4,7 @@
->  #include <sys/types.h>
->
->  #define SYSFS_FDT "/sys/firmware/fdt"
-> +#define APPENDED_FDT ((char *)-1) /* it doesn't mean to be opened. */
->  #define BOOT_BLOCK_VERSION 17
->  #define BOOT_BLOCK_LAST_COMP_VERSION 16
->
-> diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-> index 7f02b93..59f0003 100644
-> --- a/kexec/arch/arm/kexec-zImage-arm.c
-> +++ b/kexec/arch/arm/kexec-zImage-arm.c
-> @@ -390,6 +390,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
->  	initrd_size = 0;
->  	use_atags = 0;
->  	dtb_file = NULL;
-> +	dtb_buf = NULL;
->  	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
->  		switch(opt) {
->  		default:
-> @@ -424,14 +425,6 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
->  		return -1;
->  	}
->
-> -	if (!use_atags && !dtb_file) {
-> -		int f;
-> -
-> -		f = have_sysfs_fdt();
-> -		if (f)
-> -			dtb_file = SYSFS_FDT;
-> -	}
-> -
->  	if (command_line) {
->  		command_line_len = strlen(command_line) + 1;
->  		if (command_line_len > COMMAND_LINE_SIZE)
-> @@ -440,9 +433,6 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
->  	if (ramdisk)
->  		ramdisk_buf = slurp_file(ramdisk, &initrd_size);
->
-> -	if (dtb_file)
-> -		dtb_buf = slurp_file(dtb_file, &dtb_length);
-> -
->  	if (len > 0x34) {
->  		const struct zimage_header *hdr;
->  		off_t size;
-> @@ -459,6 +449,25 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
->  				  (unsigned long long)size,
->  				  (unsigned long long)len);
->
-> +			/* check if zImage has an appended dtb */
-> +			if (!dtb_file) {
-> +				if (fdt_check_header(buf + size) == 0) {
+AFAIR, I said something along the lines of "what about 5-level page
+tables?" and whether we care.
 
-What if size >= len? I think, in that case there might not be a valid address 
-at buf+size and reading those area would lead in segmentation fault.
+> but I also thought that should our hardware ever support 5-level
+> paging in the future then this would be good to go.
 
-> +					/*
-> +					 * dtb_file won't be opened. It's set
-> +					 * just to pass NULL checking.
-> +					 */
-> +					dtb_file = APPENDED_FDT;
-> +					dtb_length = fdt_totalsize(buf + size);
-> +					dtb_buf = xmalloc(dtb_length);
-> +					memcpy(dtb_buf, buf+size, dtb_length);
-> +
-> +					dbgprintf("found appended dtb, size 0x%llx\n",
-> +						  (unsigned long long)dtb_length);
-> +
-> +
-> +				}
-> +			}
-> +
->  			if (size > len) {
->  				fprintf(stderr,
->  					"zImage is truncated - file 0x%llx vs header 0x%llx\n",
-> @@ -575,6 +584,22 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
->  		initrd_base = kernel_base + _ALIGN(len * 5, getpagesize());
->  	}
->
-> +	if (!use_atags && !dtb_file) {
-> +		int f;
-> +
-> +		f = have_sysfs_fdt();
-> +		if (f)
-> +			dtb_file = SYSFS_FDT;
-> +	}
-> +
-> +	/*
-> +	 * dtb_buf can be allocated when checking zImage_with_dtb.
-> +	 * dtb_buf won't be allocated in the logic if dtb_file is handed over
-> +	 * in argv[].
-> +	 */
-> +	if (dtb_file && !dtb_buf)
-> +		dtb_buf = slurp_file(dtb_file, &dtb_length);
-> +
->  	if (use_atags) {
->  		/*
->  		 * use ATAGs from /proc/atags
->
+There it is :-)
 
---
-Pratyush
+> The macros work great if you are not running identity mapped. You could
+> use p*d_offset() to move easily through the tables, but those functions
+> use __va() to generate table virtual addresses. I've seen where
+> boot/compressed/pagetable.c #defines __va() to work with identity mapped
+> pages but that would only work if I create a separate file just for this
+> function.
+> 
+> Given when this occurs it's very similar to what __startup_64() does in
+> regards to the IS_ENABLED(CONFIG_X86_5LEVEL) checks.
+
+Ok.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
