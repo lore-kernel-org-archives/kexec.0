@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-by2nam01on0047.outbound.protection.outlook.com
- ([104.47.34.47] helo=NAM01-BY2-obe.outbound.protection.outlook.com)
+Received: from mail-co1nam03on0081.outbound.protection.outlook.com
+ ([104.47.40.81] helo=NAM03-CO1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dPrwZ-0005Wo-DO
- for kexec@lists.infradead.org; Tue, 27 Jun 2017 14:58:21 +0000
+ id 1dPrwt-0005u6-GS
+ for kexec@lists.infradead.org; Tue, 27 Jun 2017 14:58:52 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v8 09/38] x86/mm: Simplify p[g4um]d_page() macros
-Date: Tue, 27 Jun 2017 09:57:51 -0500
-Message-ID: <20170627145751.15908.55617.stgit@tlendack-t1.amdoffice.net>
+Subject: [PATCH v8 11/38] x86/mm: Add SME support for read_cr3_pa()
+Date: Tue, 27 Jun 2017 09:58:12 -0500
+Message-ID: <20170627145812.15908.39913.stgit@tlendack-t1.amdoffice.net>
 In-Reply-To: <20170627145607.15908.26571.stgit@tlendack-t1.amdoffice.net>
 References: <20170627145607.15908.26571.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
@@ -26,71 +26,60 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, xen-devel@lists.xen.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org
 Cc: Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, "Michael S. Tsirkin" <mst@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, Radim =?utf-8?b?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-Create a pgd_pfn() macro similar to the p[4um]d_pfn() macros and then
-use the p[g4um]d_pfn() macros in the p[g4um]d_page() macros instead of
-duplicating the code.
+The cr3 register entry can contain the SME encryption mask that indicates
+the PGD is encrypted.  The encryption mask should not be used when
+creating a virtual address from the cr3 register, so remove the SME
+encryption mask in the read_cr3_pa() function.
+
+During early boot SME will need to use a native version of read_cr3_pa(),
+so create native_read_cr3_pa().
 
 Reviewed-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/x86/include/asm/pgtable.h |   16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/processor-flags.h |    5 +++--
+ arch/x86/include/asm/processor.h       |    5 +++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 77037b6..b64ea52 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -195,6 +195,11 @@ static inline unsigned long p4d_pfn(p4d_t p4d)
- 	return (p4d_val(p4d) & p4d_pfn_mask(p4d)) >> PAGE_SHIFT;
+diff --git a/arch/x86/include/asm/processor-flags.h b/arch/x86/include/asm/processor-flags.h
+index 79aa2f9..f5d3e50 100644
+--- a/arch/x86/include/asm/processor-flags.h
++++ b/arch/x86/include/asm/processor-flags.h
+@@ -2,6 +2,7 @@
+ #define _ASM_X86_PROCESSOR_FLAGS_H
+ 
+ #include <uapi/asm/processor-flags.h>
++#include <linux/mem_encrypt.h>
+ 
+ #ifdef CONFIG_VM86
+ #define X86_VM_MASK	X86_EFLAGS_VM
+@@ -32,8 +33,8 @@
+  * CR3_ADDR_MASK is the mask used by read_cr3_pa().
+  */
+ #ifdef CONFIG_X86_64
+-/* Mask off the address space ID bits. */
+-#define CR3_ADDR_MASK 0x7FFFFFFFFFFFF000ull
++/* Mask off the address space ID and SME encryption bits. */
++#define CR3_ADDR_MASK __sme_clr(0x7FFFFFFFFFFFF000ull)
+ #define CR3_PCID_MASK 0xFFFull
+ #else
+ /*
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 8010c97..ab878bd 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -240,6 +240,11 @@ static inline unsigned long read_cr3_pa(void)
+ 	return __read_cr3() & CR3_ADDR_MASK;
  }
  
-+static inline unsigned long pgd_pfn(pgd_t pgd)
++static inline unsigned long native_read_cr3_pa(void)
 +{
-+	return (pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
++	return __native_read_cr3() & CR3_ADDR_MASK;
 +}
 +
- static inline int p4d_large(p4d_t p4d)
+ static inline void load_cr3(pgd_t *pgdir)
  {
- 	/* No 512 GiB pages yet */
-@@ -704,8 +709,7 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
-  * Currently stuck as a macro due to indirect forward reference to
-  * linux/mmzone.h's __section_mem_map_addr() definition:
-  */
--#define pmd_page(pmd)		\
--	pfn_to_page((pmd_val(pmd) & pmd_pfn_mask(pmd)) >> PAGE_SHIFT)
-+#define pmd_page(pmd)	pfn_to_page(pmd_pfn(pmd))
- 
- /*
-  * the pmd page can be thought of an array like this: pmd_t[PTRS_PER_PMD]
-@@ -773,8 +777,7 @@ static inline unsigned long pud_page_vaddr(pud_t pud)
-  * Currently stuck as a macro due to indirect forward reference to
-  * linux/mmzone.h's __section_mem_map_addr() definition:
-  */
--#define pud_page(pud)		\
--	pfn_to_page((pud_val(pud) & pud_pfn_mask(pud)) >> PAGE_SHIFT)
-+#define pud_page(pud)	pfn_to_page(pud_pfn(pud))
- 
- /* Find an entry in the second-level page table.. */
- static inline pmd_t *pmd_offset(pud_t *pud, unsigned long address)
-@@ -824,8 +827,7 @@ static inline unsigned long p4d_page_vaddr(p4d_t p4d)
-  * Currently stuck as a macro due to indirect forward reference to
-  * linux/mmzone.h's __section_mem_map_addr() definition:
-  */
--#define p4d_page(p4d)		\
--	pfn_to_page((p4d_val(p4d) & p4d_pfn_mask(p4d)) >> PAGE_SHIFT)
-+#define p4d_page(p4d)	pfn_to_page(p4d_pfn(p4d))
- 
- /* Find an entry in the third-level page table.. */
- static inline pud_t *pud_offset(p4d_t *p4d, unsigned long address)
-@@ -859,7 +861,7 @@ static inline unsigned long pgd_page_vaddr(pgd_t pgd)
-  * Currently stuck as a macro due to indirect forward reference to
-  * linux/mmzone.h's __section_mem_map_addr() definition:
-  */
--#define pgd_page(pgd)		pfn_to_page(pgd_val(pgd) >> PAGE_SHIFT)
-+#define pgd_page(pgd)	pfn_to_page(pgd_pfn(pgd))
- 
- /* to find an entry in a page-table-directory. */
- static inline p4d_t *p4d_offset(pgd_t *pgd, unsigned long address)
+ 	write_cr3(__sme_pa(pgdir));
 
 
 _______________________________________________
