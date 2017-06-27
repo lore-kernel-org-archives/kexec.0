@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-by2nam01on0066.outbound.protection.outlook.com
- ([104.47.34.66] helo=NAM01-BY2-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dPsCz-00030P-8k
- for kexec@lists.infradead.org; Tue, 27 Jun 2017 15:15:19 +0000
+Received: from mail-bl2nam02on0068.outbound.protection.outlook.com
+ ([104.47.38.68] helo=NAM02-BL2-obe.outbound.protection.outlook.com)
+ by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dPsAc-0004oB-1C
+ for kexec@lists.infradead.org; Tue, 27 Jun 2017 15:12:52 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v8 RESEND 38/38] x86/mm: Add support to make use of Secure
- Memory Encryption
-Date: Tue, 27 Jun 2017 10:14:48 -0500
-Message-ID: <20170627151447.17428.56826.stgit@tlendack-t1.amdoffice.net>
+Subject: [PATCH v8 RESEND 27/38] iommu/amd: Allow the AMD IOMMU to work with
+ memory encryption
+Date: Tue, 27 Jun 2017 10:12:30 -0500
+Message-ID: <20170627151230.17428.75281.stgit@tlendack-t1.amdoffice.net>
 In-Reply-To: <20170627150718.17428.81813.stgit@tlendack-t1.amdoffice.net>
 References: <20170627150718.17428.81813.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
@@ -27,181 +27,271 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, xen-devel@lists.xen.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org
 Cc: Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, "Michael S. Tsirkin" <mst@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, Radim =?utf-8?b?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-Add support to check if SME has been enabled and if memory encryption
-should be activated (checking of command line option based on the
-configuration of the default state).  If memory encryption is to be
-activated, then the encryption mask is set and the kernel is encrypted
-"in place."
+The IOMMU is programmed with physical addresses for the various tables
+and buffers that are used to communicate between the device and the
+driver. When the driver allocates this memory it is encrypted. In order
+for the IOMMU to access the memory as encrypted the encryption mask needs
+to be included in these physical addresses during configuration.
 
+The PTE entries created by the IOMMU should also include the encryption
+mask so that when the device behind the IOMMU performs a DMA, the DMA
+will be performed to encrypted memory.
+
+Reviewed-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/x86/include/asm/mem_encrypt.h |    6 ++-
- arch/x86/kernel/head64.c           |    5 +-
- arch/x86/mm/mem_encrypt.c          |   77 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 83 insertions(+), 5 deletions(-)
+ drivers/iommu/amd_iommu.c       |   30 ++++++++++++++++--------------
+ drivers/iommu/amd_iommu_init.c  |   34 ++++++++++++++++++++++++++++------
+ drivers/iommu/amd_iommu_proto.h |   10 ++++++++++
+ drivers/iommu/amd_iommu_types.h |    2 +-
+ 4 files changed, 55 insertions(+), 21 deletions(-)
 
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index 7122c36..8e618fc 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -17,6 +17,8 @@
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 503849d..16cc54b 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -544,7 +544,7 @@ static void dump_dte_entry(u16 devid)
  
- #include <linux/init.h>
- 
-+#include <asm/bootparam.h>
-+
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- 
- extern unsigned long sme_me_mask;
-@@ -38,7 +40,7 @@ void __init sme_early_decrypt(resource_size_t paddr,
- void __init sme_early_init(void);
- 
- void __init sme_encrypt_kernel(void);
--void __init sme_enable(void);
-+void __init sme_enable(struct boot_params *bp);
- 
- /* Architecture __weak replacement functions */
- void __init mem_encrypt_init(void);
-@@ -60,7 +62,7 @@ static inline void __init sme_unmap_bootdata(char *real_mode_data) { }
- static inline void __init sme_early_init(void) { }
- 
- static inline void __init sme_encrypt_kernel(void) { }
--static inline void __init sme_enable(void) { }
-+static inline void __init sme_enable(struct boot_params *bp) { }
- 
- #endif	/* CONFIG_AMD_MEM_ENCRYPT */
- 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 0cdb53b..925b292 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -45,7 +45,8 @@ static void __head *fixup_pointer(void *ptr, unsigned long physaddr)
- 	return ptr - (void *)_text + (void *)physaddr;
- }
- 
--unsigned long __head __startup_64(unsigned long physaddr)
-+unsigned long __head __startup_64(unsigned long physaddr,
-+				  struct boot_params *bp)
+ static void dump_command(unsigned long phys_addr)
  {
- 	unsigned long load_delta, *p;
- 	unsigned long pgtable_flags;
-@@ -70,7 +71,7 @@ unsigned long __head __startup_64(unsigned long physaddr)
- 		for (;;);
+-	struct iommu_cmd *cmd = phys_to_virt(phys_addr);
++	struct iommu_cmd *cmd = iommu_phys_to_virt(phys_addr);
+ 	int i;
  
- 	/* Activate Secure Memory Encryption (SME) if supported and enabled */
--	sme_enable();
-+	sme_enable(bp);
+ 	for (i = 0; i < 4; ++i)
+@@ -865,11 +865,13 @@ static void copy_cmd_to_buffer(struct amd_iommu *iommu,
  
- 	/* Include the SME encryption mask in the fixup value */
- 	load_delta += sme_get_me_mask();
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index e5d5439..053d540 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -15,6 +15,7 @@
- #include <linux/mm.h>
- #include <linux/dma-mapping.h>
- #include <linux/swiotlb.h>
+ static void build_completion_wait(struct iommu_cmd *cmd, u64 address)
+ {
++	u64 paddr = iommu_virt_to_phys((void *)address);
++
+ 	WARN_ON(address & 0x7ULL);
+ 
+ 	memset(cmd, 0, sizeof(*cmd));
+-	cmd->data[0] = lower_32_bits(__pa(address)) | CMD_COMPL_WAIT_STORE_MASK;
+-	cmd->data[1] = upper_32_bits(__pa(address));
++	cmd->data[0] = lower_32_bits(paddr) | CMD_COMPL_WAIT_STORE_MASK;
++	cmd->data[1] = upper_32_bits(paddr);
+ 	cmd->data[2] = 1;
+ 	CMD_SET_TYPE(cmd, CMD_COMPL_WAIT);
+ }
+@@ -1328,7 +1330,7 @@ static bool increase_address_space(struct protection_domain *domain,
+ 		return false;
+ 
+ 	*pte             = PM_LEVEL_PDE(domain->mode,
+-					virt_to_phys(domain->pt_root));
++					iommu_virt_to_phys(domain->pt_root));
+ 	domain->pt_root  = pte;
+ 	domain->mode    += 1;
+ 	domain->updated  = true;
+@@ -1365,7 +1367,7 @@ static u64 *alloc_pte(struct protection_domain *domain,
+ 			if (!page)
+ 				return NULL;
+ 
+-			__npte = PM_LEVEL_PDE(level, virt_to_phys(page));
++			__npte = PM_LEVEL_PDE(level, iommu_virt_to_phys(page));
+ 
+ 			/* pte could have been changed somewhere. */
+ 			if (cmpxchg64(pte, __pte, __npte) != __pte) {
+@@ -1481,10 +1483,10 @@ static int iommu_map_page(struct protection_domain *dom,
+ 			return -EBUSY;
+ 
+ 	if (count > 1) {
+-		__pte = PAGE_SIZE_PTE(phys_addr, page_size);
++		__pte = PAGE_SIZE_PTE(__sme_set(phys_addr), page_size);
+ 		__pte |= PM_LEVEL_ENC(7) | IOMMU_PTE_P | IOMMU_PTE_FC;
+ 	} else
+-		__pte = phys_addr | IOMMU_PTE_P | IOMMU_PTE_FC;
++		__pte = __sme_set(phys_addr) | IOMMU_PTE_P | IOMMU_PTE_FC;
+ 
+ 	if (prot & IOMMU_PROT_IR)
+ 		__pte |= IOMMU_PTE_IR;
+@@ -1700,7 +1702,7 @@ static void free_gcr3_tbl_level1(u64 *tbl)
+ 		if (!(tbl[i] & GCR3_VALID))
+ 			continue;
+ 
+-		ptr = __va(tbl[i] & PAGE_MASK);
++		ptr = iommu_phys_to_virt(tbl[i] & PAGE_MASK);
+ 
+ 		free_page((unsigned long)ptr);
+ 	}
+@@ -1715,7 +1717,7 @@ static void free_gcr3_tbl_level2(u64 *tbl)
+ 		if (!(tbl[i] & GCR3_VALID))
+ 			continue;
+ 
+-		ptr = __va(tbl[i] & PAGE_MASK);
++		ptr = iommu_phys_to_virt(tbl[i] & PAGE_MASK);
+ 
+ 		free_gcr3_tbl_level1(ptr);
+ 	}
+@@ -1807,7 +1809,7 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
+ 	u64 flags = 0;
+ 
+ 	if (domain->mode != PAGE_MODE_NONE)
+-		pte_root = virt_to_phys(domain->pt_root);
++		pte_root = iommu_virt_to_phys(domain->pt_root);
+ 
+ 	pte_root |= (domain->mode & DEV_ENTRY_MODE_MASK)
+ 		    << DEV_ENTRY_MODE_SHIFT;
+@@ -1819,7 +1821,7 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
+ 		flags |= DTE_FLAG_IOTLB;
+ 
+ 	if (domain->flags & PD_IOMMUV2_MASK) {
+-		u64 gcr3 = __pa(domain->gcr3_tbl);
++		u64 gcr3 = iommu_virt_to_phys(domain->gcr3_tbl);
+ 		u64 glx  = domain->glx;
+ 		u64 tmp;
+ 
+@@ -3470,10 +3472,10 @@ static u64 *__get_gcr3_pte(u64 *root, int level, int pasid, bool alloc)
+ 			if (root == NULL)
+ 				return NULL;
+ 
+-			*pte = __pa(root) | GCR3_VALID;
++			*pte = iommu_virt_to_phys(root) | GCR3_VALID;
+ 		}
+ 
+-		root = __va(*pte & PAGE_MASK);
++		root = iommu_phys_to_virt(*pte & PAGE_MASK);
+ 
+ 		level -= 1;
+ 	}
+@@ -3652,7 +3654,7 @@ static void set_dte_irq_entry(u16 devid, struct irq_remap_table *table)
+ 
+ 	dte	= amd_iommu_dev_table[devid].data[2];
+ 	dte	&= ~DTE_IRQ_PHYS_ADDR_MASK;
+-	dte	|= virt_to_phys(table->table);
++	dte	|= iommu_virt_to_phys(table->table);
+ 	dte	|= DTE_IRQ_REMAP_INTCTL;
+ 	dte	|= DTE_IRQ_TABLE_LEN;
+ 	dte	|= DTE_IRQ_REMAP_ENABLE;
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 5a11328..26862f1 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -29,6 +29,7 @@
+ #include <linux/export.h>
+ #include <linux/iommu.h>
+ #include <linux/kmemleak.h>
 +#include <linux/mem_encrypt.h>
+ #include <asm/pci-direct.h>
+ #include <asm/iommu.h>
+ #include <asm/gart.h>
+@@ -346,7 +347,7 @@ static void iommu_set_device_table(struct amd_iommu *iommu)
  
- #include <asm/tlbflush.h>
- #include <asm/fixmap.h>
-@@ -23,6 +24,13 @@
- #include <asm/set_memory.h>
- #include <asm/cacheflush.h>
- #include <asm/sections.h>
-+#include <asm/processor-flags.h>
-+#include <asm/msr.h>
-+#include <asm/cmdline.h>
-+
-+static char sme_cmdline_arg[] __initdata = "mem_encrypt";
-+static char sme_cmdline_on[]  __initdata = "on";
-+static char sme_cmdline_off[] __initdata = "off";
+ 	BUG_ON(iommu->mmio_base == NULL);
  
- /*
-  * Since SME related variables are set early in the boot process they must
-@@ -190,6 +198,8 @@ void __init mem_encrypt_init(void)
+-	entry = virt_to_phys(amd_iommu_dev_table);
++	entry = iommu_virt_to_phys(amd_iommu_dev_table);
+ 	entry |= (dev_table_size >> 12) - 1;
+ 	memcpy_toio(iommu->mmio_base + MMIO_DEV_TABLE_OFFSET,
+ 			&entry, sizeof(entry));
+@@ -602,7 +603,7 @@ static void iommu_enable_command_buffer(struct amd_iommu *iommu)
  
- 	/* Call into SWIOTLB to update the SWIOTLB DMA buffers */
- 	swiotlb_update_mem_attributes();
-+
-+	pr_info("AMD Secure Memory Encryption (SME) active\n");
+ 	BUG_ON(iommu->cmd_buf == NULL);
+ 
+-	entry = (u64)virt_to_phys(iommu->cmd_buf);
++	entry = iommu_virt_to_phys(iommu->cmd_buf);
+ 	entry |= MMIO_CMD_SIZE_512;
+ 
+ 	memcpy_toio(iommu->mmio_base + MMIO_CMD_BUF_OFFSET,
+@@ -631,7 +632,7 @@ static void iommu_enable_event_buffer(struct amd_iommu *iommu)
+ 
+ 	BUG_ON(iommu->evt_buf == NULL);
+ 
+-	entry = (u64)virt_to_phys(iommu->evt_buf) | EVT_LEN_MASK;
++	entry = iommu_virt_to_phys(iommu->evt_buf) | EVT_LEN_MASK;
+ 
+ 	memcpy_toio(iommu->mmio_base + MMIO_EVT_BUF_OFFSET,
+ 		    &entry, sizeof(entry));
+@@ -664,7 +665,7 @@ static void iommu_enable_ppr_log(struct amd_iommu *iommu)
+ 	if (iommu->ppr_log == NULL)
+ 		return;
+ 
+-	entry = (u64)virt_to_phys(iommu->ppr_log) | PPR_LOG_SIZE_512;
++	entry = iommu_virt_to_phys(iommu->ppr_log) | PPR_LOG_SIZE_512;
+ 
+ 	memcpy_toio(iommu->mmio_base + MMIO_PPR_LOG_OFFSET,
+ 		    &entry, sizeof(entry));
+@@ -744,10 +745,10 @@ static int iommu_init_ga_log(struct amd_iommu *iommu)
+ 	if (!iommu->ga_log_tail)
+ 		goto err_out;
+ 
+-	entry = (u64)virt_to_phys(iommu->ga_log) | GA_LOG_SIZE_512;
++	entry = iommu_virt_to_phys(iommu->ga_log) | GA_LOG_SIZE_512;
+ 	memcpy_toio(iommu->mmio_base + MMIO_GA_LOG_BASE_OFFSET,
+ 		    &entry, sizeof(entry));
+-	entry = ((u64)virt_to_phys(iommu->ga_log) & 0xFFFFFFFFFFFFFULL) & ~7ULL;
++	entry = (iommu_virt_to_phys(iommu->ga_log) & 0xFFFFFFFFFFFFFULL) & ~7ULL;
+ 	memcpy_toio(iommu->mmio_base + MMIO_GA_LOG_TAIL_OFFSET,
+ 		    &entry, sizeof(entry));
+ 	writel(0x00, iommu->mmio_base + MMIO_GA_HEAD_OFFSET);
+@@ -2535,6 +2536,24 @@ static int __init amd_iommu_init(void)
+ 	return ret;
  }
  
- void swiotlb_set_mem_attributes(void *vaddr, unsigned long size)
-@@ -513,6 +523,71 @@ void __init sme_encrypt_kernel(void)
- 	native_write_cr3(__native_read_cr3());
++static bool amd_iommu_supports_sme(void)
++{
++	if (!sme_active() || (boot_cpu_data.x86 != 0x17))
++		return true;
++
++	/* For Fam17h, a specific level of support is required */
++	if (boot_cpu_data.microcode >= 0x08001205)
++		return true;
++
++	if ((boot_cpu_data.microcode >= 0x08001126) &&
++	    (boot_cpu_data.microcode <= 0x080011ff))
++		return true;
++
++	pr_notice("AMD-Vi: IOMMU not currently supported when SME is active\n");
++
++	return false;
++}
++
+ /****************************************************************************
+  *
+  * Early detect code. This code runs at IOMMU detection time in the DMA
+@@ -2552,6 +2571,9 @@ int __init amd_iommu_detect(void)
+ 	if (amd_iommu_disabled)
+ 		return -ENODEV;
+ 
++	if (!amd_iommu_supports_sme())
++		return -ENODEV;
++
+ 	ret = iommu_go_to_state(IOMMU_IVRS_DETECTED);
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/iommu/amd_iommu_proto.h b/drivers/iommu/amd_iommu_proto.h
+index 466260f..3f12fb2 100644
+--- a/drivers/iommu/amd_iommu_proto.h
++++ b/drivers/iommu/amd_iommu_proto.h
+@@ -87,4 +87,14 @@ static inline bool iommu_feature(struct amd_iommu *iommu, u64 f)
+ 	return !!(iommu->features & f);
  }
  
--void __init sme_enable(void)
-+void __init __nostackp sme_enable(struct boot_params *bp)
- {
-+	const char *cmdline_ptr, *cmdline_arg, *cmdline_on, *cmdline_off;
-+	unsigned int eax, ebx, ecx, edx;
-+	bool active_by_default;
-+	unsigned long me_mask;
-+	char buffer[16];
-+	u64 msr;
++static inline u64 iommu_virt_to_phys(void *vaddr)
++{
++	return (u64)__sme_set(virt_to_phys(vaddr));
++}
 +
-+	/* Check for the SME support leaf */
-+	eax = 0x80000000;
-+	ecx = 0;
-+	native_cpuid(&eax, &ebx, &ecx, &edx);
-+	if (eax < 0x8000001f)
-+		return;
++static inline void *iommu_phys_to_virt(unsigned long paddr)
++{
++	return phys_to_virt(__sme_clr(paddr));
++}
 +
-+	/*
-+	 * Check for the SME feature:
-+	 *   CPUID Fn8000_001F[EAX] - Bit 0
-+	 *     Secure Memory Encryption support
-+	 *   CPUID Fn8000_001F[EBX] - Bits 5:0
-+	 *     Pagetable bit position used to indicate encryption
-+	 */
-+	eax = 0x8000001f;
-+	ecx = 0;
-+	native_cpuid(&eax, &ebx, &ecx, &edx);
-+	if (!(eax & 1))
-+		return;
-+
-+	me_mask = 1UL << (ebx & 0x3f);
-+
-+	/* Check if SME is enabled */
-+	msr = __rdmsr(MSR_K8_SYSCFG);
-+	if (!(msr & MSR_K8_SYSCFG_MEM_ENCRYPT))
-+		return;
-+
-+	/*
-+	 * Fixups have not been applied to phys_base yet and we're running
-+	 * identity mapped, so we must obtain the address to the SME command
-+	 * line argument data using rip-relative addressing.
-+	 */
-+	asm ("lea sme_cmdline_arg(%%rip), %0"
-+	     : "=r" (cmdline_arg)
-+	     : "p" (sme_cmdline_arg));
-+	asm ("lea sme_cmdline_on(%%rip), %0"
-+	     : "=r" (cmdline_on)
-+	     : "p" (sme_cmdline_on));
-+	asm ("lea sme_cmdline_off(%%rip), %0"
-+	     : "=r" (cmdline_off)
-+	     : "p" (sme_cmdline_off));
-+
-+	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT))
-+		active_by_default = true;
-+	else
-+		active_by_default = false;
-+
-+	cmdline_ptr = (const char *)((u64)bp->hdr.cmd_line_ptr |
-+				     ((u64)bp->ext_cmd_line_ptr << 32));
-+
-+	cmdline_find_option(cmdline_ptr, cmdline_arg, buffer, sizeof(buffer));
-+
-+	if (!strncmp(buffer, cmdline_on, sizeof(buffer)))
-+		sme_me_mask = me_mask;
-+	else if (!strncmp(buffer, cmdline_off, sizeof(buffer)))
-+		sme_me_mask = 0;
-+	else
-+		sme_me_mask = active_by_default ? me_mask : 0;
- }
+ #endif /* _ASM_X86_AMD_IOMMU_PROTO_H  */
+diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
+index 4de8f41..3ce587d 100644
+--- a/drivers/iommu/amd_iommu_types.h
++++ b/drivers/iommu/amd_iommu_types.h
+@@ -343,7 +343,7 @@
+ 
+ #define IOMMU_PAGE_MASK (((1ULL << 52) - 1) & ~0xfffULL)
+ #define IOMMU_PTE_PRESENT(pte) ((pte) & IOMMU_PTE_P)
+-#define IOMMU_PTE_PAGE(pte) (phys_to_virt((pte) & IOMMU_PAGE_MASK))
++#define IOMMU_PTE_PAGE(pte) (iommu_phys_to_virt((pte) & IOMMU_PAGE_MASK))
+ #define IOMMU_PTE_MODE(pte) (((pte) >> 9) & 0x07)
+ 
+ #define IOMMU_PROT_MASK 0x03
 
 
 _______________________________________________
