@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-cys01nam02on0048.outbound.protection.outlook.com
- ([104.47.37.48] helo=NAM02-CY1-obe.outbound.protection.outlook.com)
- by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dPrzf-0003ZA-Uz
- for kexec@lists.infradead.org; Tue, 27 Jun 2017 15:01:40 +0000
+Received: from mail-sn1nam01on0076.outbound.protection.outlook.com
+ ([104.47.32.76] helo=NAM01-SN1-obe.outbound.protection.outlook.com)
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dPs7r-0006Ao-KJ
+ for kexec@lists.infradead.org; Tue, 27 Jun 2017 15:10:05 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v8 27/38] iommu/amd: Allow the AMD IOMMU to work with memory
- encryption
-Date: Tue, 27 Jun 2017 10:00:56 -0500
-Message-ID: <20170627150056.15908.79730.stgit@tlendack-t1.amdoffice.net>
-In-Reply-To: <20170627145607.15908.26571.stgit@tlendack-t1.amdoffice.net>
-References: <20170627145607.15908.26571.stgit@tlendack-t1.amdoffice.net>
+Subject: [PATCH v8 RESEND 12/38] x86/mm: Extend early_memremap() support
+ with additional attrs
+Date: Tue, 27 Jun 2017 10:09:29 -0500
+Message-ID: <20170627150929.17428.31589.stgit@tlendack-t1.amdoffice.net>
+In-Reply-To: <20170627150718.17428.81813.stgit@tlendack-t1.amdoffice.net>
+References: <20170627150718.17428.81813.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,271 +27,185 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, xen-devel@lists.xen.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org
 Cc: Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, "Michael S. Tsirkin" <mst@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, Radim =?utf-8?b?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-The IOMMU is programmed with physical addresses for the various tables
-and buffers that are used to communicate between the device and the
-driver. When the driver allocates this memory it is encrypted. In order
-for the IOMMU to access the memory as encrypted the encryption mask needs
-to be included in these physical addresses during configuration.
-
-The PTE entries created by the IOMMU should also include the encryption
-mask so that when the device behind the IOMMU performs a DMA, the DMA
-will be performed to encrypted memory.
+Add early_memremap() support to be able to specify encrypted and
+decrypted mappings with and without write-protection. The use of
+write-protection is necessary when encrypting data "in place". The
+write-protect attribute is considered cacheable for loads, but not
+stores. This implies that the hardware will never give the core a
+dirty line with this memtype.
 
 Reviewed-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- drivers/iommu/amd_iommu.c       |   30 ++++++++++++++++--------------
- drivers/iommu/amd_iommu_init.c  |   34 ++++++++++++++++++++++++++++------
- drivers/iommu/amd_iommu_proto.h |   10 ++++++++++
- drivers/iommu/amd_iommu_types.h |    2 +-
- 4 files changed, 55 insertions(+), 21 deletions(-)
+ arch/x86/Kconfig                     |    4 +++
+ arch/x86/include/asm/fixmap.h        |   13 ++++++++++
+ arch/x86/include/asm/pgtable_types.h |    8 ++++++
+ arch/x86/mm/ioremap.c                |   44 ++++++++++++++++++++++++++++++++++
+ include/asm-generic/early_ioremap.h  |    2 ++
+ mm/early_ioremap.c                   |   10 ++++++++
+ 6 files changed, 81 insertions(+)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 503849d..16cc54b 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -544,7 +544,7 @@ static void dump_dte_entry(u16 devid)
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 3a59e9c..a04081ce 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1434,6 +1434,10 @@ config AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT
+ 	  If set to N, then the encryption of system memory can be
+ 	  activated with the mem_encrypt=on command line option.
  
- static void dump_command(unsigned long phys_addr)
- {
--	struct iommu_cmd *cmd = phys_to_virt(phys_addr);
-+	struct iommu_cmd *cmd = iommu_phys_to_virt(phys_addr);
- 	int i;
- 
- 	for (i = 0; i < 4; ++i)
-@@ -865,11 +865,13 @@ static void copy_cmd_to_buffer(struct amd_iommu *iommu,
- 
- static void build_completion_wait(struct iommu_cmd *cmd, u64 address)
- {
-+	u64 paddr = iommu_virt_to_phys((void *)address);
++config ARCH_USE_MEMREMAP_PROT
++	def_bool y
++	depends on AMD_MEM_ENCRYPT
 +
- 	WARN_ON(address & 0x7ULL);
+ # Common NUMA Features
+ config NUMA
+ 	bool "Numa Memory Allocation and Scheduler Support"
+diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
+index d9ff226..dcd9fb5 100644
+--- a/arch/x86/include/asm/fixmap.h
++++ b/arch/x86/include/asm/fixmap.h
+@@ -164,6 +164,19 @@ static inline void __set_fixmap(enum fixed_addresses idx,
+  */
+ #define FIXMAP_PAGE_NOCACHE PAGE_KERNEL_IO_NOCACHE
  
- 	memset(cmd, 0, sizeof(*cmd));
--	cmd->data[0] = lower_32_bits(__pa(address)) | CMD_COMPL_WAIT_STORE_MASK;
--	cmd->data[1] = upper_32_bits(__pa(address));
-+	cmd->data[0] = lower_32_bits(paddr) | CMD_COMPL_WAIT_STORE_MASK;
-+	cmd->data[1] = upper_32_bits(paddr);
- 	cmd->data[2] = 1;
- 	CMD_SET_TYPE(cmd, CMD_COMPL_WAIT);
- }
-@@ -1328,7 +1330,7 @@ static bool increase_address_space(struct protection_domain *domain,
- 		return false;
++/*
++ * Early memremap routines used for in-place encryption. The mappings created
++ * by these routines are intended to be used as temporary mappings.
++ */
++void __init *early_memremap_encrypted(resource_size_t phys_addr,
++				      unsigned long size);
++void __init *early_memremap_encrypted_wp(resource_size_t phys_addr,
++					 unsigned long size);
++void __init *early_memremap_decrypted(resource_size_t phys_addr,
++				      unsigned long size);
++void __init *early_memremap_decrypted_wp(resource_size_t phys_addr,
++					 unsigned long size);
++
+ #include <asm-generic/fixmap.h>
  
- 	*pte             = PM_LEVEL_PDE(domain->mode,
--					virt_to_phys(domain->pt_root));
-+					iommu_virt_to_phys(domain->pt_root));
- 	domain->pt_root  = pte;
- 	domain->mode    += 1;
- 	domain->updated  = true;
-@@ -1365,7 +1367,7 @@ static u64 *alloc_pte(struct protection_domain *domain,
- 			if (!page)
- 				return NULL;
+ #define __late_set_fixmap(idx, phys, flags) __set_fixmap(idx, phys, flags)
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index de32ca3..32095af 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -161,6 +161,7 @@ enum page_cache_mode {
  
--			__npte = PM_LEVEL_PDE(level, virt_to_phys(page));
-+			__npte = PM_LEVEL_PDE(level, iommu_virt_to_phys(page));
+ #define _PAGE_CACHE_MASK	(_PAGE_PAT | _PAGE_PCD | _PAGE_PWT)
+ #define _PAGE_NOCACHE		(cachemode2protval(_PAGE_CACHE_MODE_UC))
++#define _PAGE_CACHE_WP		(cachemode2protval(_PAGE_CACHE_MODE_WP))
  
- 			/* pte could have been changed somewhere. */
- 			if (cmpxchg64(pte, __pte, __npte) != __pte) {
-@@ -1481,10 +1483,10 @@ static int iommu_map_page(struct protection_domain *dom,
- 			return -EBUSY;
+ #define PAGE_NONE	__pgprot(_PAGE_PROTNONE | _PAGE_ACCESSED)
+ #define PAGE_SHARED	__pgprot(_PAGE_PRESENT | _PAGE_RW | _PAGE_USER | \
+@@ -189,6 +190,7 @@ enum page_cache_mode {
+ #define __PAGE_KERNEL_VVAR		(__PAGE_KERNEL_RO | _PAGE_USER)
+ #define __PAGE_KERNEL_LARGE		(__PAGE_KERNEL | _PAGE_PSE)
+ #define __PAGE_KERNEL_LARGE_EXEC	(__PAGE_KERNEL_EXEC | _PAGE_PSE)
++#define __PAGE_KERNEL_WP		(__PAGE_KERNEL | _PAGE_CACHE_WP)
  
- 	if (count > 1) {
--		__pte = PAGE_SIZE_PTE(phys_addr, page_size);
-+		__pte = PAGE_SIZE_PTE(__sme_set(phys_addr), page_size);
- 		__pte |= PM_LEVEL_ENC(7) | IOMMU_PTE_P | IOMMU_PTE_FC;
- 	} else
--		__pte = phys_addr | IOMMU_PTE_P | IOMMU_PTE_FC;
-+		__pte = __sme_set(phys_addr) | IOMMU_PTE_P | IOMMU_PTE_FC;
+ #define __PAGE_KERNEL_IO		(__PAGE_KERNEL)
+ #define __PAGE_KERNEL_IO_NOCACHE	(__PAGE_KERNEL_NOCACHE)
+@@ -202,6 +204,12 @@ enum page_cache_mode {
+ #define _KERNPG_TABLE	(_PAGE_PRESENT | _PAGE_RW | _PAGE_ACCESSED |	\
+ 			 _PAGE_DIRTY | _PAGE_ENC)
  
- 	if (prot & IOMMU_PROT_IR)
- 		__pte |= IOMMU_PTE_IR;
-@@ -1700,7 +1702,7 @@ static void free_gcr3_tbl_level1(u64 *tbl)
- 		if (!(tbl[i] & GCR3_VALID))
- 			continue;
- 
--		ptr = __va(tbl[i] & PAGE_MASK);
-+		ptr = iommu_phys_to_virt(tbl[i] & PAGE_MASK);
- 
- 		free_page((unsigned long)ptr);
- 	}
-@@ -1715,7 +1717,7 @@ static void free_gcr3_tbl_level2(u64 *tbl)
- 		if (!(tbl[i] & GCR3_VALID))
- 			continue;
- 
--		ptr = __va(tbl[i] & PAGE_MASK);
-+		ptr = iommu_phys_to_virt(tbl[i] & PAGE_MASK);
- 
- 		free_gcr3_tbl_level1(ptr);
- 	}
-@@ -1807,7 +1809,7 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
- 	u64 flags = 0;
- 
- 	if (domain->mode != PAGE_MODE_NONE)
--		pte_root = virt_to_phys(domain->pt_root);
-+		pte_root = iommu_virt_to_phys(domain->pt_root);
- 
- 	pte_root |= (domain->mode & DEV_ENTRY_MODE_MASK)
- 		    << DEV_ENTRY_MODE_SHIFT;
-@@ -1819,7 +1821,7 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
- 		flags |= DTE_FLAG_IOTLB;
- 
- 	if (domain->flags & PD_IOMMUV2_MASK) {
--		u64 gcr3 = __pa(domain->gcr3_tbl);
-+		u64 gcr3 = iommu_virt_to_phys(domain->gcr3_tbl);
- 		u64 glx  = domain->glx;
- 		u64 tmp;
- 
-@@ -3470,10 +3472,10 @@ static u64 *__get_gcr3_pte(u64 *root, int level, int pasid, bool alloc)
- 			if (root == NULL)
- 				return NULL;
- 
--			*pte = __pa(root) | GCR3_VALID;
-+			*pte = iommu_virt_to_phys(root) | GCR3_VALID;
- 		}
- 
--		root = __va(*pte & PAGE_MASK);
-+		root = iommu_phys_to_virt(*pte & PAGE_MASK);
- 
- 		level -= 1;
- 	}
-@@ -3652,7 +3654,7 @@ static void set_dte_irq_entry(u16 devid, struct irq_remap_table *table)
- 
- 	dte	= amd_iommu_dev_table[devid].data[2];
- 	dte	&= ~DTE_IRQ_PHYS_ADDR_MASK;
--	dte	|= virt_to_phys(table->table);
-+	dte	|= iommu_virt_to_phys(table->table);
- 	dte	|= DTE_IRQ_REMAP_INTCTL;
- 	dte	|= DTE_IRQ_TABLE_LEN;
- 	dte	|= DTE_IRQ_REMAP_ENABLE;
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 5a11328..26862f1 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -29,6 +29,7 @@
- #include <linux/export.h>
- #include <linux/iommu.h>
- #include <linux/kmemleak.h>
-+#include <linux/mem_encrypt.h>
- #include <asm/pci-direct.h>
- #include <asm/iommu.h>
- #include <asm/gart.h>
-@@ -346,7 +347,7 @@ static void iommu_set_device_table(struct amd_iommu *iommu)
- 
- 	BUG_ON(iommu->mmio_base == NULL);
- 
--	entry = virt_to_phys(amd_iommu_dev_table);
-+	entry = iommu_virt_to_phys(amd_iommu_dev_table);
- 	entry |= (dev_table_size >> 12) - 1;
- 	memcpy_toio(iommu->mmio_base + MMIO_DEV_TABLE_OFFSET,
- 			&entry, sizeof(entry));
-@@ -602,7 +603,7 @@ static void iommu_enable_command_buffer(struct amd_iommu *iommu)
- 
- 	BUG_ON(iommu->cmd_buf == NULL);
- 
--	entry = (u64)virt_to_phys(iommu->cmd_buf);
-+	entry = iommu_virt_to_phys(iommu->cmd_buf);
- 	entry |= MMIO_CMD_SIZE_512;
- 
- 	memcpy_toio(iommu->mmio_base + MMIO_CMD_BUF_OFFSET,
-@@ -631,7 +632,7 @@ static void iommu_enable_event_buffer(struct amd_iommu *iommu)
- 
- 	BUG_ON(iommu->evt_buf == NULL);
- 
--	entry = (u64)virt_to_phys(iommu->evt_buf) | EVT_LEN_MASK;
-+	entry = iommu_virt_to_phys(iommu->evt_buf) | EVT_LEN_MASK;
- 
- 	memcpy_toio(iommu->mmio_base + MMIO_EVT_BUF_OFFSET,
- 		    &entry, sizeof(entry));
-@@ -664,7 +665,7 @@ static void iommu_enable_ppr_log(struct amd_iommu *iommu)
- 	if (iommu->ppr_log == NULL)
- 		return;
- 
--	entry = (u64)virt_to_phys(iommu->ppr_log) | PPR_LOG_SIZE_512;
-+	entry = iommu_virt_to_phys(iommu->ppr_log) | PPR_LOG_SIZE_512;
- 
- 	memcpy_toio(iommu->mmio_base + MMIO_PPR_LOG_OFFSET,
- 		    &entry, sizeof(entry));
-@@ -744,10 +745,10 @@ static int iommu_init_ga_log(struct amd_iommu *iommu)
- 	if (!iommu->ga_log_tail)
- 		goto err_out;
- 
--	entry = (u64)virt_to_phys(iommu->ga_log) | GA_LOG_SIZE_512;
-+	entry = iommu_virt_to_phys(iommu->ga_log) | GA_LOG_SIZE_512;
- 	memcpy_toio(iommu->mmio_base + MMIO_GA_LOG_BASE_OFFSET,
- 		    &entry, sizeof(entry));
--	entry = ((u64)virt_to_phys(iommu->ga_log) & 0xFFFFFFFFFFFFFULL) & ~7ULL;
-+	entry = (iommu_virt_to_phys(iommu->ga_log) & 0xFFFFFFFFFFFFFULL) & ~7ULL;
- 	memcpy_toio(iommu->mmio_base + MMIO_GA_LOG_TAIL_OFFSET,
- 		    &entry, sizeof(entry));
- 	writel(0x00, iommu->mmio_base + MMIO_GA_HEAD_OFFSET);
-@@ -2535,6 +2536,24 @@ static int __init amd_iommu_init(void)
- 	return ret;
++#define __PAGE_KERNEL_ENC	(__PAGE_KERNEL | _PAGE_ENC)
++#define __PAGE_KERNEL_ENC_WP	(__PAGE_KERNEL_WP | _PAGE_ENC)
++
++#define __PAGE_KERNEL_NOENC	(__PAGE_KERNEL)
++#define __PAGE_KERNEL_NOENC_WP	(__PAGE_KERNEL_WP)
++
+ #define PAGE_KERNEL		__pgprot(__PAGE_KERNEL | _PAGE_ENC)
+ #define PAGE_KERNEL_RO		__pgprot(__PAGE_KERNEL_RO | _PAGE_ENC)
+ #define PAGE_KERNEL_EXEC	__pgprot(__PAGE_KERNEL_EXEC | _PAGE_ENC)
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index bfc3e2d..26db273 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -414,6 +414,50 @@ void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
+ 	iounmap((void __iomem *)((unsigned long)addr & PAGE_MASK));
  }
  
-+static bool amd_iommu_supports_sme(void)
++#ifdef CONFIG_ARCH_USE_MEMREMAP_PROT
++/* Remap memory with encryption */
++void __init *early_memremap_encrypted(resource_size_t phys_addr,
++				      unsigned long size)
 +{
-+	if (!sme_active() || (boot_cpu_data.x86 != 0x17))
-+		return true;
-+
-+	/* For Fam17h, a specific level of support is required */
-+	if (boot_cpu_data.microcode >= 0x08001205)
-+		return true;
-+
-+	if ((boot_cpu_data.microcode >= 0x08001126) &&
-+	    (boot_cpu_data.microcode <= 0x080011ff))
-+		return true;
-+
-+	pr_notice("AMD-Vi: IOMMU not currently supported when SME is active\n");
-+
-+	return false;
++	return early_memremap_prot(phys_addr, size, __PAGE_KERNEL_ENC);
 +}
 +
- /****************************************************************************
-  *
-  * Early detect code. This code runs at IOMMU detection time in the DMA
-@@ -2552,6 +2571,9 @@ int __init amd_iommu_detect(void)
- 	if (amd_iommu_disabled)
- 		return -ENODEV;
- 
-+	if (!amd_iommu_supports_sme())
-+		return -ENODEV;
++/*
++ * Remap memory with encryption and write-protected - cannot be called
++ * before pat_init() is called
++ */
++void __init *early_memremap_encrypted_wp(resource_size_t phys_addr,
++					 unsigned long size)
++{
++	/* Be sure the write-protect PAT entry is set for write-protect */
++	if (__pte2cachemode_tbl[_PAGE_CACHE_MODE_WP] != _PAGE_CACHE_MODE_WP)
++		return NULL;
 +
- 	ret = iommu_go_to_state(IOMMU_IVRS_DETECTED);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/iommu/amd_iommu_proto.h b/drivers/iommu/amd_iommu_proto.h
-index 466260f..3f12fb2 100644
---- a/drivers/iommu/amd_iommu_proto.h
-+++ b/drivers/iommu/amd_iommu_proto.h
-@@ -87,4 +87,14 @@ static inline bool iommu_feature(struct amd_iommu *iommu, u64 f)
- 	return !!(iommu->features & f);
++	return early_memremap_prot(phys_addr, size, __PAGE_KERNEL_ENC_WP);
++}
++
++/* Remap memory without encryption */
++void __init *early_memremap_decrypted(resource_size_t phys_addr,
++				      unsigned long size)
++{
++	return early_memremap_prot(phys_addr, size, __PAGE_KERNEL_NOENC);
++}
++
++/*
++ * Remap memory without encryption and write-protected - cannot be called
++ * before pat_init() is called
++ */
++void __init *early_memremap_decrypted_wp(resource_size_t phys_addr,
++					 unsigned long size)
++{
++	/* Be sure the write-protect PAT entry is set for write-protect */
++	if (__pte2cachemode_tbl[_PAGE_CACHE_MODE_WP] != _PAGE_CACHE_MODE_WP)
++		return NULL;
++
++	return early_memremap_prot(phys_addr, size, __PAGE_KERNEL_NOENC_WP);
++}
++#endif	/* CONFIG_ARCH_USE_MEMREMAP_PROT */
++
+ static pte_t bm_pte[PAGE_SIZE/sizeof(pte_t)] __page_aligned_bss;
+ 
+ static inline pmd_t * __init early_ioremap_pmd(unsigned long addr)
+diff --git a/include/asm-generic/early_ioremap.h b/include/asm-generic/early_ioremap.h
+index 734ad4d..2edef8d 100644
+--- a/include/asm-generic/early_ioremap.h
++++ b/include/asm-generic/early_ioremap.h
+@@ -13,6 +13,8 @@ extern void *early_memremap(resource_size_t phys_addr,
+ 			    unsigned long size);
+ extern void *early_memremap_ro(resource_size_t phys_addr,
+ 			       unsigned long size);
++extern void *early_memremap_prot(resource_size_t phys_addr,
++				 unsigned long size, unsigned long prot_val);
+ extern void early_iounmap(void __iomem *addr, unsigned long size);
+ extern void early_memunmap(void *addr, unsigned long size);
+ 
+diff --git a/mm/early_ioremap.c b/mm/early_ioremap.c
+index 6d5717b..d7d30da 100644
+--- a/mm/early_ioremap.c
++++ b/mm/early_ioremap.c
+@@ -226,6 +226,16 @@ void __init early_iounmap(void __iomem *addr, unsigned long size)
  }
+ #endif
  
-+static inline u64 iommu_virt_to_phys(void *vaddr)
++#ifdef CONFIG_ARCH_USE_MEMREMAP_PROT
++void __init *
++early_memremap_prot(resource_size_t phys_addr, unsigned long size,
++		    unsigned long prot_val)
 +{
-+	return (u64)__sme_set(virt_to_phys(vaddr));
++	return (__force void *)__early_ioremap(phys_addr, size,
++					       __pgprot(prot_val));
 +}
++#endif
 +
-+static inline void *iommu_phys_to_virt(unsigned long paddr)
-+{
-+	return phys_to_virt(__sme_clr(paddr));
-+}
-+
- #endif /* _ASM_X86_AMD_IOMMU_PROTO_H  */
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index 4de8f41..3ce587d 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -343,7 +343,7 @@
+ #define MAX_MAP_CHUNK	(NR_FIX_BTMAPS << PAGE_SHIFT)
  
- #define IOMMU_PAGE_MASK (((1ULL << 52) - 1) & ~0xfffULL)
- #define IOMMU_PTE_PRESENT(pte) ((pte) & IOMMU_PTE_P)
--#define IOMMU_PTE_PAGE(pte) (phys_to_virt((pte) & IOMMU_PAGE_MASK))
-+#define IOMMU_PTE_PAGE(pte) (iommu_phys_to_virt((pte) & IOMMU_PAGE_MASK))
- #define IOMMU_PTE_MODE(pte) (((pte) >> 9) & 0x07)
- 
- #define IOMMU_PROT_MASK 0x03
+ void __init copy_from_early_mem(void *dest, phys_addr_t src, unsigned long size)
 
 
 _______________________________________________
