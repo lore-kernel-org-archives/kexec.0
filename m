@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-dm3nam03on0056.outbound.protection.outlook.com
- ([104.47.41.56] helo=NAM03-DM3-obe.outbound.protection.outlook.com)
+Received: from mail-pg0-x242.google.com ([2607:f8b0:400e:c05::242])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dPWz5-0002R1-Mz
- for kexec@lists.infradead.org; Mon, 26 Jun 2017 16:35:33 +0000
-Subject: Re: [PATCH v7 34/36] x86/mm: Add support to encrypt the kernel
- in-place
-References: <20170616184947.18967.84890.stgit@tlendack-t1.amdoffice.net>
- <20170616185619.18967.38945.stgit@tlendack-t1.amdoffice.net>
- <20170623100013.upd4or6esjvulmvg@pd.tnic>
- <af9a50f7-17ea-a840-6456-b6479e5d7e82@amd.com>
- <20170626154543.fsuxfhxidytgo2ia@pd.tnic>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <aed44ee3-dd6c-e6e1-4de5-5629bf61e688@amd.com>
-Date: Mon, 26 Jun 2017 11:34:49 -0500
-MIME-Version: 1.0
-In-Reply-To: <20170626154543.fsuxfhxidytgo2ia@pd.tnic>
-Content-Language: en-US
+ id 1dPg4h-0007Un-5c
+ for kexec@lists.infradead.org; Tue, 27 Jun 2017 02:17:56 +0000
+Received: by mail-pg0-x242.google.com with SMTP id f127so2400316pgc.2
+ for <kexec@lists.infradead.org>; Mon, 26 Jun 2017 19:17:34 -0700 (PDT)
+Message-ID: <1498529597.1734.2.camel@gmail.com>
+Subject: Re: [PATCH] kexec:arm: support zImage with appended device tree
+From: Hoeun Ryu <hoeun.ryu@gmail.com>
+Date: Tue, 27 Jun 2017 11:13:17 +0900
+In-Reply-To: <20170626025256.GA3378@dhcp-128-65.nay.redhat.com>
+References: <1498208138-19283-1-git-send-email-hoeun.ryu@gmail.com>
+ <20170626025256.GA3378@dhcp-128-65.nay.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,62 +21,96 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, linux-doc@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, "Michael S. Tsirkin" <mst@redhat.com>, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, xen-devel@lists.xen.org, iommu@lists.linux-foundation.org, Thomas Gleixner <tglx@linutronix.de>, Paolo Bonzini <pbonzini@redhat.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: Matthew Leach <matthew.leach@arm.com>, Russell King <rmk@armlinux.org.uk>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Wang Nan <wangnan0@huawei.com>
 
-On 6/26/2017 10:45 AM, Borislav Petkov wrote:
-> On Fri, Jun 23, 2017 at 12:44:46PM -0500, Tom Lendacky wrote:
->> Normally the __p4d() macro would be used and that would be ok whether
->> CONFIG_X86_5LEVEL is defined or not. But since __p4d() is part of the
->> paravirt ops path I have to use native_make_p4d().
-> 
-> So __p4d is in !CONFIG_PARAVIRT path.
-> 
-> Regardless, we use the native_* variants in generic code to mean, not
-> paravirt. Just define it in a separate patch like the rest of the p4*
-> machinery and use it in your code. Sooner or later someone else will
-> need it.
-
-Ok, will do.
-
-> 
->> True, 5-level will only be turned on for specific hardware which is why
->> I originally had this as only 4-level pagetables. But in a comment from
->> you back on the v5 version you said it needed to support 5-level. I
->> guess we should have discussed this more,
-> 
-> AFAIR, I said something along the lines of "what about 5-level page
-> tables?" and whether we care.
-
-My bad, I took the meaning of that question the wrong way then.
-
-Thanks,
-Tom
-
-> 
->> but I also thought that should our hardware ever support 5-level
->> paging in the future then this would be good to go.
-> 
-> There it is :-)
-> 
->> The macros work great if you are not running identity mapped. You could
->> use p*d_offset() to move easily through the tables, but those functions
->> use __va() to generate table virtual addresses. I've seen where
->> boot/compressed/pagetable.c #defines __va() to work with identity mapped
->> pages but that would only work if I create a separate file just for this
->> function.
->>
->> Given when this occurs it's very similar to what __startup_64() does in
->> regards to the IS_ENABLED(CONFIG_X86_5LEVEL) checks.
-> 
-> Ok.
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCAyMDE3LTA2LTI2IGF0IDEwOjUyICswODAwLCBEYXZlIFlvdW5nIHdyb3RlOgo+IE9u
+IDA2LzIzLzE3IGF0IDA1OjU1cG0sIEhvZXVuIFJ5dSB3cm90ZToKPiA+IAo+ID4gQXJtIGxpbnV4
+IHN1cHBvcnRzIHpJbWFnZSB3aXRoIGFwcGVuZGVkIGR0Ygo+ID4gKENPTkZJR19BUk1fQVBQRU5E
+RURfRFRCKSBhbmQKPiA+IHRoZSBjb25jYXRlbmF0ZWQgaW1hZ2UgaXMgZ2VuZXJhdGVkIGxpa2Ug
+YGNhdCB6SW1hZ2UgZHRiID4KPiA+IHpJbWFnZV93X2R0YmAuCj4gPiAKPiA+IFRoaXMgcGF0Y2gg
+aXMgdG8gc3VwcG9ydCB0aGUgY29uY2F0ZWRuYXRlZCB6SW1hZ2UuIFRoaXMgY2hhbmdlcyB0aGUK
+PiA+IHByaW9yaXR5IG9mIHNvdXJjZSBvZiBkdGIgZmlsZS4KPiA+IAo+ID4gwqAxLiAtLWR0YiBk
+dGJfZmlsZQo+ID4gwqAyLiB6SW1hZ2Vfd19kdGIJPD0gbmV3bHkgYWRkZWQKPiA+IMKgMy4gL3N5
+cy9maXJtd2FyZS9mZHQKPiA+IMKgNC4gL3Byb2MvZGV2aWNlLXRyZWUKPiBUaGUgb3JpZ2luYWwg
+ZGVmYXVsdCBmZHQgaXMgL3N5cy9maXJtd2FyZS9mZHQsIGFmdGVyIHlvdXIgY2hhbmdlcyBpdAo+
+IGJlY29tZXMgekltYWdlIGF0dGFjaGVkIGR0YiwgcHJlc3VtYWJseSBvbmUga25vd3MgaGlzIHpJ
+bWFnZSBhcHBlbmRlZAo+IGEKPiBkdGIgaXQgaXMgZmluZSwgYnV0IGlmIG9uZSBkb2VzIG5vdCBu
+b3RpY2UgaXQsIGl0IGNoYW5nZXMgdGhlCj4gYmVoYXZpb3IKPiBoZSBleHBlY3RzLgo+IAo+IEhv
+dyBhYm91dCBhZGQgYSBuZXcgb3B0aW9uIGZvciB6SW1hZ2VfZHRiLCBsaWtlIC0tekltYWdlLWR0
+Ygo+IAoKSXQgc291bmRzIGdvb2QgdG8gbWUgdG9vLgpJIHRoaW5rIEkgY2FuIGFjY2VwdCB5b3Vy
+IHN1Z2dlc3Rpb24gaW4gdGhlIG5leHQgdmVyc2lvbiBpZiB0aGUgb3RoZXJzCmFncmVlLgoKVGhh
+bmsgeW91IGZvciB0aGUgcmV2aWV3LgoKPiA+IAo+ID4gCj4gPiBVc2VycyBkb24ndCBuZWVkIHRv
+IHNwZWNpZnkgZHRiIGZpbGUgaW4gdGhlIGNvbW1hbmQgbGluZSBhbmQgZG9uJ3QKPiA+IGhhdmUg
+dG8KPiA+IGhhdmUgL3N5cy9maXJtd2FyZS9mZHQgb3IgL3Byb2MvZGV2aWNlLXRyZWUgaWYgZHRi
+IGlzIGF2YWlsYWJsZSBpbgo+ID4gekltYWdlLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb2V1
+biBSeXUgPGhvZXVuLnJ5dUBnbWFpbC5jb20+Cj4gPiAtLS0KPiA+IMKga2V4ZWMvYXJjaC9hcm0v
+a2V4ZWMtYXJtLmjCoMKgwqDCoMKgwqDCoMKgfMKgwqAxICsKPiA+IMKga2V4ZWMvYXJjaC9hcm0v
+a2V4ZWMtekltYWdlLWFybS5jIHwgNDcKPiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+Ky0tLS0tLS0tLQo+ID4gwqAyIGZpbGVzIGNoYW5nZWQsIDM3IGluc2VydGlvbnMoKyksIDExIGRl
+bGV0aW9ucygtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9hcm0va2V4ZWMtYXJt
+LmggYi9rZXhlYy9hcmNoL2FybS9rZXhlYy0KPiA+IGFybS5oCj4gPiBpbmRleCBhNzRjY2UyLi45
+NDY5NWI3IDEwMDY0NAo+ID4gLS0tIGEva2V4ZWMvYXJjaC9hcm0va2V4ZWMtYXJtLmgKPiA+ICsr
+KyBiL2tleGVjL2FyY2gvYXJtL2tleGVjLWFybS5oCj4gPiBAQCAtNCw2ICs0LDcgQEAKPiA+IMKg
+I2luY2x1ZGUgPHN5cy90eXBlcy5oPgo+ID4gwqAKPiA+IMKgI2RlZmluZSBTWVNGU19GRFQgIi9z
+eXMvZmlybXdhcmUvZmR0Igo+ID4gKyNkZWZpbmUgQVBQRU5ERURfRkRUICgoY2hhciAqKS0xKSAv
+KiBpdCBkb2Vzbid0IG1lYW4gdG8gYmUgb3BlbmVkLgo+ID4gKi8KPiA+IMKgI2RlZmluZSBCT09U
+X0JMT0NLX1ZFUlNJT04gMTcKPiA+IMKgI2RlZmluZSBCT09UX0JMT0NLX0xBU1RfQ09NUF9WRVJT
+SU9OIDE2Cj4gPiDCoAo+ID4gZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvYXJtL2tleGVjLXpJbWFn
+ZS1hcm0uYwo+ID4gYi9rZXhlYy9hcmNoL2FybS9rZXhlYy16SW1hZ2UtYXJtLmMKPiA+IGluZGV4
+IDdmMDJiOTMuLjU5ZjAwMDMgMTAwNjQ0Cj4gPiAtLS0gYS9rZXhlYy9hcmNoL2FybS9rZXhlYy16
+SW1hZ2UtYXJtLmMKPiA+ICsrKyBiL2tleGVjL2FyY2gvYXJtL2tleGVjLXpJbWFnZS1hcm0uYwo+
+ID4gQEAgLTM5MCw2ICszOTAsNyBAQCBpbnQgekltYWdlX2FybV9sb2FkKGludCBhcmdjLCBjaGFy
+ICoqYXJndiwKPiA+IGNvbnN0IGNoYXIgKmJ1Ziwgb2ZmX3QgbGVuLAo+ID4gwqAJaW5pdHJkX3Np
+emUgPSAwOwo+ID4gwqAJdXNlX2F0YWdzID0gMDsKPiA+IMKgCWR0Yl9maWxlID0gTlVMTDsKPiA+
+ICsJZHRiX2J1ZiA9IE5VTEw7Cj4gPiDCoAl3aGlsZSgob3B0ID0gZ2V0b3B0X2xvbmcoYXJnYywg
+YXJndiwgc2hvcnRfb3B0aW9ucywKPiA+IG9wdGlvbnMsIDApKSAhPSAtMSkgewo+ID4gwqAJCXN3
+aXRjaChvcHQpIHsKPiA+IMKgCQlkZWZhdWx0Ogo+ID4gQEAgLTQyNCwxNCArNDI1LDYgQEAgaW50
+IHpJbWFnZV9hcm1fbG9hZChpbnQgYXJnYywgY2hhciAqKmFyZ3YsCj4gPiBjb25zdCBjaGFyICpi
+dWYsIG9mZl90IGxlbiwKPiA+IMKgCQlyZXR1cm4gLTE7Cj4gPiDCoAl9Cj4gPiDCoAo+ID4gLQlp
+ZiAoIXVzZV9hdGFncyAmJiAhZHRiX2ZpbGUpIHsKPiA+IC0JCWludCBmOwo+ID4gLQo+ID4gLQkJ
+ZiA9IGhhdmVfc3lzZnNfZmR0KCk7Cj4gPiAtCQlpZiAoZikKPiA+IC0JCQlkdGJfZmlsZSA9IFNZ
+U0ZTX0ZEVDsKPiA+IC0JfQo+ID4gLQo+ID4gwqAJaWYgKGNvbW1hbmRfbGluZSkgewo+ID4gwqAJ
+CWNvbW1hbmRfbGluZV9sZW4gPSBzdHJsZW4oY29tbWFuZF9saW5lKSArIDE7Cj4gPiDCoAkJaWYg
+KGNvbW1hbmRfbGluZV9sZW4gPiBDT01NQU5EX0xJTkVfU0laRSkKPiA+IEBAIC00NDAsOSArNDMz
+LDYgQEAgaW50IHpJbWFnZV9hcm1fbG9hZChpbnQgYXJnYywgY2hhciAqKmFyZ3YsCj4gPiBjb25z
+dCBjaGFyICpidWYsIG9mZl90IGxlbiwKPiA+IMKgCWlmIChyYW1kaXNrKQo+ID4gwqAJCXJhbWRp
+c2tfYnVmID0gc2x1cnBfZmlsZShyYW1kaXNrLCAmaW5pdHJkX3NpemUpOwo+ID4gwqAKPiA+IC0J
+aWYgKGR0Yl9maWxlKQo+ID4gLQkJZHRiX2J1ZiA9IHNsdXJwX2ZpbGUoZHRiX2ZpbGUsICZkdGJf
+bGVuZ3RoKTsKPiA+IC0KPiA+IMKgCWlmIChsZW4gPiAweDM0KSB7Cj4gPiDCoAkJY29uc3Qgc3Ry
+dWN0IHppbWFnZV9oZWFkZXIgKmhkcjsKPiA+IMKgCQlvZmZfdCBzaXplOwo+ID4gQEAgLTQ1OSw2
+ICs0NDksMjUgQEAgaW50IHpJbWFnZV9hcm1fbG9hZChpbnQgYXJnYywgY2hhciAqKmFyZ3YsCj4g
+PiBjb25zdCBjaGFyICpidWYsIG9mZl90IGxlbiwKPiA+IMKgCQkJCcKgwqAodW5zaWduZWQgbG9u
+ZyBsb25nKXNpemUsCj4gPiDCoAkJCQnCoMKgKHVuc2lnbmVkIGxvbmcgbG9uZylsZW4pOwo+ID4g
+wqAKPiA+ICsJCQkvKiBjaGVjayBpZiB6SW1hZ2UgaGFzIGFuIGFwcGVuZGVkIGR0YiAqLwo+ID4g
+KwkJCWlmICghZHRiX2ZpbGUpIHsKPiA+ICsJCQkJaWYgKGZkdF9jaGVja19oZWFkZXIoYnVmICsg
+c2l6ZSkKPiA+ID09IDApIHsKPiA+ICsJCQkJCS8qCj4gPiArCQkJCQnCoCogZHRiX2ZpbGUgd29u
+J3QgYmUKPiA+IG9wZW5lZC4gSXQncyBzZXQKPiA+ICsJCQkJCcKgKiBqdXN0IHRvIHBhc3MgTlVM
+TAo+ID4gY2hlY2tpbmcuCj4gPiArCQkJCQnCoCovCj4gPiArCQkJCQlkdGJfZmlsZSA9IEFQUEVO
+REVEX0ZEVDsKPiA+ICsJCQkJCWR0Yl9sZW5ndGggPQo+ID4gZmR0X3RvdGFsc2l6ZShidWYgKyBz
+aXplKTsKPiA+ICsJCQkJCWR0Yl9idWYgPQo+ID4geG1hbGxvYyhkdGJfbGVuZ3RoKTsKPiA+ICsJ
+CQkJCW1lbWNweShkdGJfYnVmLCBidWYrc2l6ZSwKPiA+IGR0Yl9sZW5ndGgpOwo+ID4gKwo+ID4g
+KwkJCQkJZGJncHJpbnRmKCJmb3VuZCBhcHBlbmRlZAo+ID4gZHRiLCBzaXplIDB4JWxseFxuIiwK
+PiA+ICsJCQkJCQnCoMKgKHVuc2lnbmVkIGxvbmcKPiA+IGxvbmcpZHRiX2xlbmd0aCk7Cj4gPiAr
+Cj4gPiArCj4gPiArCQkJCX0KPiA+ICsJCQl9Cj4gPiArCj4gPiDCoAkJCWlmIChzaXplID4gbGVu
+KSB7Cj4gPiDCoAkJCQlmcHJpbnRmKHN0ZGVyciwKPiA+IMKgCQkJCQkiekltYWdlIGlzIHRydW5j
+YXRlZCAtCj4gPiBmaWxlIDB4JWxseCB2cyBoZWFkZXIgMHglbGx4XG4iLAo+ID4gQEAgLTU3NSw2
+ICs1ODQsMjIgQEAgaW50IHpJbWFnZV9hcm1fbG9hZChpbnQgYXJnYywgY2hhciAqKmFyZ3YsCj4g
+PiBjb25zdCBjaGFyICpidWYsIG9mZl90IGxlbiwKPiA+IMKgCQlpbml0cmRfYmFzZSA9IGtlcm5l
+bF9iYXNlICsgX0FMSUdOKGxlbiAqIDUsCj4gPiBnZXRwYWdlc2l6ZSgpKTsKPiA+IMKgCX0KPiA+
+IMKgCj4gPiArCWlmICghdXNlX2F0YWdzICYmICFkdGJfZmlsZSkgewo+ID4gKwkJaW50IGY7Cj4g
+PiArCj4gPiArCQlmID0gaGF2ZV9zeXNmc19mZHQoKTsKPiA+ICsJCWlmIChmKQo+ID4gKwkJCWR0
+Yl9maWxlID0gU1lTRlNfRkRUOwo+ID4gKwl9Cj4gPiArCj4gPiArCS8qCj4gPiArCcKgKiBkdGJf
+YnVmIGNhbiBiZSBhbGxvY2F0ZWQgd2hlbiBjaGVja2luZyB6SW1hZ2Vfd2l0aF9kdGIuCj4gPiAr
+CcKgKiBkdGJfYnVmIHdvbid0IGJlIGFsbG9jYXRlZCBpbiB0aGUgbG9naWMgaWYgZHRiX2ZpbGUg
+aXMKPiA+IGhhbmRlZCBvdmVyCj4gPiArCcKgKiBpbiBhcmd2W10uCj4gPiArCcKgKi8KPiA+ICsJ
+aWYgKGR0Yl9maWxlICYmICFkdGJfYnVmKQo+ID4gKwkJZHRiX2J1ZiA9IHNsdXJwX2ZpbGUoZHRi
+X2ZpbGUsICZkdGJfbGVuZ3RoKTsKPiA+ICsKPiA+IMKgCWlmICh1c2VfYXRhZ3MpIHsKPiA+IMKg
+CQkvKgo+ID4gwqAJCcKgKiB1c2UgQVRBR3MgZnJvbSAvcHJvYy9hdGFncwoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
+eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9rZXhlYwo=
