@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn3nam01on0050.outbound.protection.outlook.com
- ([104.47.33.50] helo=NAM01-BN3-obe.outbound.protection.outlook.com)
- by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dPrxu-0005tw-JA
- for kexec@lists.infradead.org; Tue, 27 Jun 2017 14:59:43 +0000
+Received: from mail-sn1nam01on0609.outbound.protection.outlook.com
+ ([2a01:111:f400:fe40::609]
+ helo=NAM01-SN1-obe.outbound.protection.outlook.com)
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dPs5x-0006aR-7c
+ for kexec@lists.infradead.org; Tue, 27 Jun 2017 15:08:05 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v8 17/38] efi: Update efi_mem_type() to return an error
- rather than 0
-Date: Tue, 27 Jun 2017 09:59:12 -0500
-Message-ID: <20170627145912.15908.60861.stgit@tlendack-t1.amdoffice.net>
-In-Reply-To: <20170627145607.15908.26571.stgit@tlendack-t1.amdoffice.net>
-References: <20170627145607.15908.26571.stgit@tlendack-t1.amdoffice.net>
+Subject: [PATCH v8 RESEND 01/38] x86: Document AMD Secure Memory Encryption
+ (SME)
+Date: Tue, 27 Jun 2017 10:07:31 -0500
+Message-ID: <20170627150731.17428.51715.stgit@tlendack-t1.amdoffice.net>
+In-Reply-To: <20170627150718.17428.81813.stgit@tlendack-t1.amdoffice.net>
+References: <20170627150718.17428.81813.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,84 +28,114 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, xen-devel@lists.xen.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org
 Cc: Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, "Michael S. Tsirkin" <mst@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, Radim =?utf-8?b?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-The efi_mem_type() function currently returns a 0, which maps to
-EFI_RESERVED_TYPE, if the function is unable to find a memmap entry for
-the supplied physical address. Returning EFI_RESERVED_TYPE implies that
-a memmap entry exists, when it doesn't.  Instead of returning 0, change
-the function to return a negative error value when no memmap entry is
-found.
+Create a Documentation entry to describe the AMD Secure Memory
+Encryption (SME) feature and add documentation for the mem_encrypt=
+kernel parameter.
 
-Reviewed-by: Matt Fleming <matt@codeblueprint.co.uk>
 Reviewed-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/ia64/kernel/efi.c      |    4 ++--
- arch/x86/platform/efi/efi.c |    6 +++---
- include/linux/efi.h         |    2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt |   11 ++++
+ Documentation/x86/amd-memory-encryption.txt     |   68 +++++++++++++++++++++++
+ 2 files changed, 79 insertions(+)
+ create mode 100644 Documentation/x86/amd-memory-encryption.txt
 
-diff --git a/arch/ia64/kernel/efi.c b/arch/ia64/kernel/efi.c
-index 1212956..8141600 100644
---- a/arch/ia64/kernel/efi.c
-+++ b/arch/ia64/kernel/efi.c
-@@ -757,14 +757,14 @@ static void __init handle_palo(unsigned long phys_addr)
- 	return 0;
- }
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 9b0b3de..51e03ee 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2197,6 +2197,17 @@
+ 			memory contents and reserves bad memory
+ 			regions that are detected.
  
--u32
-+int
- efi_mem_type (unsigned long phys_addr)
- {
- 	efi_memory_desc_t *md = efi_memory_descriptor(phys_addr);
- 
- 	if (md)
- 		return md->type;
--	return 0;
-+	return -EINVAL;
- }
- 
- u64
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index f084d87..6217b23 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -1035,12 +1035,12 @@ void __init efi_enter_virtual_mode(void)
- /*
-  * Convenience functions to obtain memory types and attributes
-  */
--u32 efi_mem_type(unsigned long phys_addr)
-+int efi_mem_type(unsigned long phys_addr)
- {
- 	efi_memory_desc_t *md;
- 
- 	if (!efi_enabled(EFI_MEMMAP))
--		return 0;
-+		return -ENOTSUPP;
- 
- 	for_each_efi_memory_desc(md) {
- 		if ((md->phys_addr <= phys_addr) &&
-@@ -1048,7 +1048,7 @@ u32 efi_mem_type(unsigned long phys_addr)
- 				  (md->num_pages << EFI_PAGE_SHIFT))))
- 			return md->type;
- 	}
--	return 0;
-+	return -EINVAL;
- }
- 
- static int __init arch_parse_efi_cmdline(char *str)
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 8e24f09..4e47f78 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -985,7 +985,7 @@ static inline void efi_esrt_init(void) { }
- extern int efi_config_parse_tables(void *config_tables, int count, int sz,
- 				   efi_config_table_type_t *arch_tables);
- extern u64 efi_get_iobase (void);
--extern u32 efi_mem_type (unsigned long phys_addr);
-+extern int efi_mem_type(unsigned long phys_addr);
- extern u64 efi_mem_attributes (unsigned long phys_addr);
- extern u64 efi_mem_attribute (unsigned long phys_addr, unsigned long size);
- extern int __init efi_uart_console_only (void);
++	mem_encrypt=	[X86-64] AMD Secure Memory Encryption (SME) control
++			Valid arguments: on, off
++			Default (depends on kernel configuration option):
++			  on  (CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT=y)
++			  off (CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT=n)
++			mem_encrypt=on:		Activate SME
++			mem_encrypt=off:	Do not activate SME
++
++			Refer to Documentation/x86/amd-memory-encryption.txt
++			for details on when memory encryption can be activated.
++
+ 	mem_sleep_default=	[SUSPEND] Default system suspend mode:
+ 			s2idle  - Suspend-To-Idle
+ 			shallow - Power-On Suspend or equivalent (if supported)
+diff --git a/Documentation/x86/amd-memory-encryption.txt b/Documentation/x86/amd-memory-encryption.txt
+new file mode 100644
+index 0000000..f512ab7
+--- /dev/null
++++ b/Documentation/x86/amd-memory-encryption.txt
+@@ -0,0 +1,68 @@
++Secure Memory Encryption (SME) is a feature found on AMD processors.
++
++SME provides the ability to mark individual pages of memory as encrypted using
++the standard x86 page tables.  A page that is marked encrypted will be
++automatically decrypted when read from DRAM and encrypted when written to
++DRAM.  SME can therefore be used to protect the contents of DRAM from physical
++attacks on the system.
++
++A page is encrypted when a page table entry has the encryption bit set (see
++below on how to determine its position).  The encryption bit can also be
++specified in the cr3 register, allowing the PGD table to be encrypted. Each
++successive level of page tables can also be encrypted by setting the encryption
++bit in the page table entry that points to the next table. This allows the full
++page table hierarchy to be encrypted. Note, this means that just because the
++encryption bit is set in cr3, doesn't imply the full hierarchy is encyrpted.
++Each page table entry in the hierarchy needs to have the encryption bit set to
++achieve that. So, theoretically, you could have the encryption bit set in cr3
++so that the PGD is encrypted, but not set the encryption bit in the PGD entry
++for a PUD which results in the PUD pointed to by that entry to not be
++encrypted.
++
++Support for SME can be determined through the CPUID instruction. The CPUID
++function 0x8000001f reports information related to SME:
++
++	0x8000001f[eax]:
++		Bit[0] indicates support for SME
++	0x8000001f[ebx]:
++		Bits[5:0]  pagetable bit number used to activate memory
++			   encryption
++		Bits[11:6] reduction in physical address space, in bits, when
++			   memory encryption is enabled (this only affects
++			   system physical addresses, not guest physical
++			   addresses)
++
++If support for SME is present, MSR 0xc00100010 (MSR_K8_SYSCFG) can be used to
++determine if SME is enabled and/or to enable memory encryption:
++
++	0xc0010010:
++		Bit[23]   0 = memory encryption features are disabled
++			  1 = memory encryption features are enabled
++
++Linux relies on BIOS to set this bit if BIOS has determined that the reduction
++in the physical address space as a result of enabling memory encryption (see
++CPUID information above) will not conflict with the address space resource
++requirements for the system.  If this bit is not set upon Linux startup then
++Linux itself will not set it and memory encryption will not be possible.
++
++The state of SME in the Linux kernel can be documented as follows:
++	- Supported:
++	  The CPU supports SME (determined through CPUID instruction).
++
++	- Enabled:
++	  Supported and bit 23 of MSR_K8_SYSCFG is set.
++
++	- Active:
++	  Supported, Enabled and the Linux kernel is actively applying
++	  the encryption bit to page table entries (the SME mask in the
++	  kernel is non-zero).
++
++SME can also be enabled and activated in the BIOS. If SME is enabled and
++activated in the BIOS, then all memory accesses will be encrypted and it will
++not be necessary to activate the Linux memory encryption support.  If the BIOS
++merely enables SME (sets bit 23 of the MSR_K8_SYSCFG), then Linux can activate
++memory encryption by default (CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT=y) or
++by supplying mem_encrypt=on on the kernel command line.  However, if BIOS does
++not enable SME, then Linux will not be able to activate memory encryption, even
++if configured to do so by default or the mem_encrypt=on command line parameter
++is specified.
 
 
 _______________________________________________
