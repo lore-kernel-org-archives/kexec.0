@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-by2nam01on0088.outbound.protection.outlook.com
- ([104.47.34.88] helo=NAM01-BY2-obe.outbound.protection.outlook.com)
- by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dPrxI-00030n-41
- for kexec@lists.infradead.org; Tue, 27 Jun 2017 14:59:07 +0000
+Received: from mail-dm3nam03on0050.outbound.protection.outlook.com
+ ([104.47.41.50] helo=NAM03-DM3-obe.outbound.protection.outlook.com)
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dPrxY-00071a-Cc
+ for kexec@lists.infradead.org; Tue, 27 Jun 2017 14:59:40 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v8 13/38] x86/mm: Add support for early encrypt/decrypt of
- memory
-Date: Tue, 27 Jun 2017 09:58:34 -0500
-Message-ID: <20170627145834.15908.73745.stgit@tlendack-t1.amdoffice.net>
+Subject: [PATCH v8 15/38] x86/boot/e820: Add support to determine the E820
+ type of an address
+Date: Tue, 27 Jun 2017 09:58:55 -0500
+Message-ID: <20170627145855.15908.1043.stgit@tlendack-t1.amdoffice.net>
 In-Reply-To: <20170627145607.15908.26571.stgit@tlendack-t1.amdoffice.net>
 References: <20170627145607.15908.26571.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
@@ -27,142 +27,74 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, xen-devel@lists.xen.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org
 Cc: Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, "Michael S. Tsirkin" <mst@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, Radim =?utf-8?b?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-Add support to be able to either encrypt or decrypt data in place during
-the early stages of booting the kernel. This does not change the memory
-encryption attribute - it is used for ensuring that data present in either
-an encrypted or decrypted memory area is in the proper state (for example
-the initrd will have been loaded by the boot loader and will not be
-encrypted, but the memory that it resides in is marked as encrypted).
+Add a function that will return the E820 type associated with an address
+range.
 
 Reviewed-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/x86/include/asm/mem_encrypt.h |   10 +++++
- arch/x86/mm/mem_encrypt.c          |   76 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 86 insertions(+)
+ arch/x86/include/asm/e820/api.h |    2 ++
+ arch/x86/kernel/e820.c          |   26 +++++++++++++++++++++++---
+ 2 files changed, 25 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index dbae7a5..8baa35b 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -21,6 +21,11 @@
+diff --git a/arch/x86/include/asm/e820/api.h b/arch/x86/include/asm/e820/api.h
+index 8e0f8b8..3641f5f 100644
+--- a/arch/x86/include/asm/e820/api.h
++++ b/arch/x86/include/asm/e820/api.h
+@@ -38,6 +38,8 @@
+ extern void e820__reallocate_tables(void);
+ extern void e820__register_nosave_regions(unsigned long limit_pfn);
  
- extern unsigned long sme_me_mask;
- 
-+void __init sme_early_encrypt(resource_size_t paddr,
-+			      unsigned long size);
-+void __init sme_early_decrypt(resource_size_t paddr,
-+			      unsigned long size);
-+
- void __init sme_early_init(void);
- 
- void __init sme_encrypt_kernel(void);
-@@ -30,6 +35,11 @@
- 
- #define sme_me_mask	0UL
- 
-+static inline void __init sme_early_encrypt(resource_size_t paddr,
-+					    unsigned long size) { }
-+static inline void __init sme_early_decrypt(resource_size_t paddr,
-+					    unsigned long size) { }
-+
- static inline void __init sme_early_init(void) { }
- 
- static inline void __init sme_encrypt_kernel(void) { }
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index f973d3d..54bb73c 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -14,6 +14,9 @@
- #include <linux/init.h>
- #include <linux/mm.h>
- 
-+#include <asm/tlbflush.h>
-+#include <asm/fixmap.h>
++extern int  e820__get_entry_type(u64 start, u64 end);
 +
  /*
-  * Since SME related variables are set early in the boot process they must
-  * reside in the .data section so as not to be zeroed out when the .bss
-@@ -22,6 +25,79 @@
- unsigned long sme_me_mask __section(.data) = 0;
- EXPORT_SYMBOL_GPL(sme_me_mask);
+  * Returns true iff the specified range [start,end) is completely contained inside
+  * the ISA region.
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index d78a586..46c9b65 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -84,7 +84,8 @@ bool e820__mapped_any(u64 start, u64 end, enum e820_type type)
+  * Note: this function only works correctly once the E820 table is sorted and
+  * not-overlapping (at least for the range specified), which is the case normally.
+  */
+-bool __init e820__mapped_all(u64 start, u64 end, enum e820_type type)
++static struct e820_entry *__e820__mapped_all(u64 start, u64 end,
++					     enum e820_type type)
+ {
+ 	int i;
  
-+/* Buffer used for early in-place encryption by BSP, no locking needed */
-+static char sme_early_buffer[PAGE_SIZE] __aligned(PAGE_SIZE);
+@@ -110,9 +111,28 @@ bool __init e820__mapped_all(u64 start, u64 end, enum e820_type type)
+ 		 * coverage of the desired range exists:
+ 		 */
+ 		if (start >= end)
+-			return 1;
++			return entry;
+ 	}
+-	return 0;
++
++	return NULL;
++}
 +
 +/*
-+ * This routine does not change the underlying encryption setting of the
-+ * page(s) that map this memory. It assumes that eventually the memory is
-+ * meant to be accessed as either encrypted or decrypted but the contents
-+ * are currently not in the desired state.
-+ *
-+ * This routine follows the steps outlined in the AMD64 Architecture
-+ * Programmer's Manual Volume 2, Section 7.10.8 Encrypt-in-Place.
++ * This function checks if the entire range <start,end> is mapped with type.
 + */
-+static void __init __sme_early_enc_dec(resource_size_t paddr,
-+				       unsigned long size, bool enc)
++bool __init e820__mapped_all(u64 start, u64 end, enum e820_type type)
 +{
-+	void *src, *dst;
-+	size_t len;
-+
-+	if (!sme_me_mask)
-+		return;
-+
-+	local_flush_tlb();
-+	wbinvd();
-+
-+	/*
-+	 * There are limited number of early mapping slots, so map (at most)
-+	 * one page at time.
-+	 */
-+	while (size) {
-+		len = min_t(size_t, sizeof(sme_early_buffer), size);
-+
-+		/*
-+		 * Create mappings for the current and desired format of
-+		 * the memory. Use a write-protected mapping for the source.
-+		 */
-+		src = enc ? early_memremap_decrypted_wp(paddr, len) :
-+			    early_memremap_encrypted_wp(paddr, len);
-+
-+		dst = enc ? early_memremap_encrypted(paddr, len) :
-+			    early_memremap_decrypted(paddr, len);
-+
-+		/*
-+		 * If a mapping can't be obtained to perform the operation,
-+		 * then eventual access of that area in the desired mode
-+		 * will cause a crash.
-+		 */
-+		BUG_ON(!src || !dst);
-+
-+		/*
-+		 * Use a temporary buffer, of cache-line multiple size, to
-+		 * avoid data corruption as documented in the APM.
-+		 */
-+		memcpy(sme_early_buffer, src, len);
-+		memcpy(dst, sme_early_buffer, len);
-+
-+		early_memunmap(dst, len);
-+		early_memunmap(src, len);
-+
-+		paddr += len;
-+		size -= len;
-+	}
++	return __e820__mapped_all(start, end, type);
 +}
 +
-+void __init sme_early_encrypt(resource_size_t paddr, unsigned long size)
++/*
++ * This function returns the type associated with the range <start,end>.
++ */
++int e820__get_entry_type(u64 start, u64 end)
 +{
-+	__sme_early_enc_dec(paddr, size, true);
-+}
++	struct e820_entry *entry = __e820__mapped_all(start, end, 0);
 +
-+void __init sme_early_decrypt(resource_size_t paddr, unsigned long size)
-+{
-+	__sme_early_enc_dec(paddr, size, false);
-+}
-+
- void __init sme_early_init(void)
- {
- 	unsigned int i;
++	return entry ? entry->type : -EINVAL;
+ }
+ 
+ /*
 
 
 _______________________________________________
