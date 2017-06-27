@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bl2nam02on0068.outbound.protection.outlook.com
- ([104.47.38.68] helo=NAM02-BL2-obe.outbound.protection.outlook.com)
- by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dPsAZ-0004oB-TJ
- for kexec@lists.infradead.org; Tue, 27 Jun 2017 15:12:49 +0000
+Received: from mail-by2nam01on0042.outbound.protection.outlook.com
+ ([104.47.34.42] helo=NAM01-BY2-obe.outbound.protection.outlook.com)
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dPs7K-0007Kx-61
+ for kexec@lists.infradead.org; Tue, 27 Jun 2017 15:09:30 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v8 RESEND 26/38] x86/CPU/AMD: Make the microcode level
- available earlier in the boot
-Date: Tue, 27 Jun 2017 10:12:18 -0500
-Message-ID: <20170627151218.17428.25499.stgit@tlendack-t1.amdoffice.net>
+Subject: [PATCH v8 RESEND 09/38] x86/mm: Simplify p[g4um]d_page() macros
+Date: Tue, 27 Jun 2017 10:08:55 -0500
+Message-ID: <20170627150855.17428.90364.stgit@tlendack-t1.amdoffice.net>
 In-Reply-To: <20170627150718.17428.81813.stgit@tlendack-t1.amdoffice.net>
 References: <20170627150718.17428.81813.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
@@ -27,51 +26,71 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, xen-devel@lists.xen.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org
 Cc: Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, "Michael S. Tsirkin" <mst@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, Radim =?utf-8?b?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-Move the setting of the cpuinfo_x86.microcode field from amd_init() to
-early_amd_init() so that it is available earlier in the boot process. This
-avoids having to read MSR_AMD64_PATCH_LEVEL directly during early boot.
+Create a pgd_pfn() macro similar to the p[4um]d_pfn() macros and then
+use the p[g4um]d_pfn() macros in the p[g4um]d_page() macros instead of
+duplicating the code.
 
 Reviewed-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/x86/kernel/cpu/amd.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/pgtable.h |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 5bdcbd4..fdcf305 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -547,8 +547,12 @@ static void bsp_init_amd(struct cpuinfo_x86 *c)
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 77037b6..b64ea52 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -195,6 +195,11 @@ static inline unsigned long p4d_pfn(p4d_t p4d)
+ 	return (p4d_val(p4d) & p4d_pfn_mask(p4d)) >> PAGE_SHIFT;
+ }
  
- static void early_init_amd(struct cpuinfo_x86 *c)
- {
-+	u32 dummy;
++static inline unsigned long pgd_pfn(pgd_t pgd)
++{
++	return (pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
++}
 +
- 	early_init_amd_mc(c);
- 
-+	rdmsr_safe(MSR_AMD64_PATCH_LEVEL, &c->microcode, &dummy);
-+
- 	/*
- 	 * c->x86_power is 8000_0007 edx. Bit 8 is TSC runs at constant rate
- 	 * with P/T states and does not stop in deep C-states
-@@ -746,8 +750,6 @@ static void init_amd_bd(struct cpuinfo_x86 *c)
- 
- static void init_amd(struct cpuinfo_x86 *c)
+ static inline int p4d_large(p4d_t p4d)
  {
--	u32 dummy;
--
- 	early_init_amd(c);
+ 	/* No 512 GiB pages yet */
+@@ -704,8 +709,7 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
+  * Currently stuck as a macro due to indirect forward reference to
+  * linux/mmzone.h's __section_mem_map_addr() definition:
+  */
+-#define pmd_page(pmd)		\
+-	pfn_to_page((pmd_val(pmd) & pmd_pfn_mask(pmd)) >> PAGE_SHIFT)
++#define pmd_page(pmd)	pfn_to_page(pmd_pfn(pmd))
  
- 	/*
-@@ -809,8 +811,6 @@ static void init_amd(struct cpuinfo_x86 *c)
- 	if (c->x86 > 0x11)
- 		set_cpu_cap(c, X86_FEATURE_ARAT);
+ /*
+  * the pmd page can be thought of an array like this: pmd_t[PTRS_PER_PMD]
+@@ -773,8 +777,7 @@ static inline unsigned long pud_page_vaddr(pud_t pud)
+  * Currently stuck as a macro due to indirect forward reference to
+  * linux/mmzone.h's __section_mem_map_addr() definition:
+  */
+-#define pud_page(pud)		\
+-	pfn_to_page((pud_val(pud) & pud_pfn_mask(pud)) >> PAGE_SHIFT)
++#define pud_page(pud)	pfn_to_page(pud_pfn(pud))
  
--	rdmsr_safe(MSR_AMD64_PATCH_LEVEL, &c->microcode, &dummy);
--
- 	/* 3DNow or LM implies PREFETCHW */
- 	if (!cpu_has(c, X86_FEATURE_3DNOWPREFETCH))
- 		if (cpu_has(c, X86_FEATURE_3DNOW) || cpu_has(c, X86_FEATURE_LM))
+ /* Find an entry in the second-level page table.. */
+ static inline pmd_t *pmd_offset(pud_t *pud, unsigned long address)
+@@ -824,8 +827,7 @@ static inline unsigned long p4d_page_vaddr(p4d_t p4d)
+  * Currently stuck as a macro due to indirect forward reference to
+  * linux/mmzone.h's __section_mem_map_addr() definition:
+  */
+-#define p4d_page(p4d)		\
+-	pfn_to_page((p4d_val(p4d) & p4d_pfn_mask(p4d)) >> PAGE_SHIFT)
++#define p4d_page(p4d)	pfn_to_page(p4d_pfn(p4d))
+ 
+ /* Find an entry in the third-level page table.. */
+ static inline pud_t *pud_offset(p4d_t *p4d, unsigned long address)
+@@ -859,7 +861,7 @@ static inline unsigned long pgd_page_vaddr(pgd_t pgd)
+  * Currently stuck as a macro due to indirect forward reference to
+  * linux/mmzone.h's __section_mem_map_addr() definition:
+  */
+-#define pgd_page(pgd)		pfn_to_page(pgd_val(pgd) >> PAGE_SHIFT)
++#define pgd_page(pgd)	pfn_to_page(pgd_pfn(pgd))
+ 
+ /* to find an entry in a page-table-directory. */
+ static inline p4d_t *p4d_offset(pgd_t *pgd, unsigned long address)
 
 
 _______________________________________________
