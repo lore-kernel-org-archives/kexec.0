@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pg0-f46.google.com ([74.125.83.46])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dQ5Ny-0004Kg-WA
- for kexec@lists.infradead.org; Wed, 28 Jun 2017 05:19:33 +0000
-Date: Wed, 28 Jun 2017 13:19:02 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] vmcore-dmesg: avoid allocating large memory chunk for
- log buf
-Message-ID: <20170628051902.GA1719@dhcp-128-65.nay.redhat.com>
+ id 1dQ5WY-0000Bp-OF
+ for kexec@lists.infradead.org; Wed, 28 Jun 2017 05:28:24 +0000
+Received: by mail-pg0-f46.google.com with SMTP id t186so26341696pgb.1
+ for <kexec@lists.infradead.org>; Tue, 27 Jun 2017 22:28:02 -0700 (PDT)
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH] vmcore-dmesg: avoid allocating large memory chunk for log
+ buf
 References: <1497910994-15129-1-git-send-email-xiyou.wangcong@gmail.com>
+Message-ID: <2550dd3e-4473-aef8-41cf-4bfe1bb930df@redhat.com>
+Date: Wed, 28 Jun 2017 10:57:58 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
 In-Reply-To: <1497910994-15129-1-git-send-email-xiyou.wangcong@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,208 +21,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+To: Cong Wang <xiyou.wangcong@gmail.com>, kexec@lists.infradead.org
+Cc: horms@verge.net.au
 
-On 06/19/17 at 03:23pm, Cong Wang wrote:
+
+
+On Tuesday 20 June 2017 03:53 AM, Cong Wang wrote:
 > In kdump kernel, we got:
-> 
+>
 >     Saving vmcore-dmesg.txt
 >     Failed to malloc 67108864 bytes for the logbuf: Cannot allocate memory
-> 
+>
 > Apparently 64M is too luxury for a kdump kernel which only has 128M
 > in total.
-> 
+>
 > We can avoid allocating such a large memory chunk, instead just allocate
 > a smaller chunk inside the loop each time.
-> 
+
+Nice improvement.
+
+>
 > Verify the result by comparing the vmcore-dmesg output with and without
 > this patch.
-> 
-> Cc: Simon Horman <horms@verge.net.au>
-> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-> ---
->  vmcore-dmesg/vmcore-dmesg.c | 101 ++++++++++++++++++--------------------------
->  1 file changed, 41 insertions(+), 60 deletions(-)
-> 
-> diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
-> index a8f56df..593557c 100644
-> --- a/vmcore-dmesg/vmcore-dmesg.c
-> +++ b/vmcore-dmesg/vmcore-dmesg.c
-> @@ -565,53 +565,12 @@ static inline uint64_t struct_val_u64(char *ptr, unsigned int offset)
->  	return(file64_to_cpu(*(uint64_t *)(ptr + offset)));
->  }
->  
-> -/* human readable text of the record */
-> -static char *log_text(char *msg)
-> -{
-> -	return msg + log_sz;
-> -}
-> -
-> -/* get record by index; idx must point to valid msg */
-> -static char *log_from_idx(char *log_buf, uint32_t idx)
-> -{
-> -	char *msg = log_buf + idx;
-> -
-> -	/*
-> -	 * A length == 0 record is the end of buffer marker. Wrap around and
-> -	 * read the message at the start of the buffer.
-> -	 */
-> -	if (!struct_val_u16(msg, log_offset_len))
-> -		return log_buf;
-> -	return msg;
-> -}
-> -
-> -/* get next record; idx must point to valid msg */
-> -static uint32_t log_next(char *log_buf, uint32_t idx)
-> -{
-> -	char *msg = log_buf + idx;
-> -	uint16_t len;
-> -
-> -	/* length == 0 indicates the end of the buffer; wrap */
-> -	/*
-> -	 * A length == 0 record is the end of buffer marker. Wrap around and
-> -	 * read the message at the start of the buffer as *this* one, and
-> -	 * return the one after that.
-> -	 */
-> -	len = struct_val_u16(msg, log_offset_len);
-> -	if (!len) {
-> -		msg = log_buf;
-> -		return struct_val_u16(msg, log_offset_len);
-> -	}
-> -	return idx + len;
-> -}
-> -
->  /* Read headers of log records and dump accordingly */
->  static void dump_dmesg_structured(int fd)
->  {
->  #define OUT_BUF_SIZE	4096
->  	uint64_t log_buf, log_buf_offset, ts_nsec;
->  	uint32_t log_first_idx, log_next_idx, current_idx, len = 0, i;
-> -	int log_buf_len;
->  	char *buf, out_buf[OUT_BUF_SIZE];
->  	ssize_t ret;
->  	char *msg;
-> @@ -659,34 +618,33 @@ static void dump_dmesg_structured(int fd)
->  	}
->  
->  	log_buf = read_file_pointer(fd, vaddr_to_offset(log_buf_vaddr));
-> -	log_buf_len = read_file_s32(fd, vaddr_to_offset(log_buf_len_vaddr));
->  
->  	log_first_idx = read_file_u32(fd, vaddr_to_offset(log_first_idx_vaddr));
->  	log_next_idx = read_file_u32(fd, vaddr_to_offset(log_next_idx_vaddr));
->  
->  	log_buf_offset = vaddr_to_offset(log_buf);
->  
-> -	buf = calloc(1, log_buf_len);
-> +	buf = calloc(1, log_sz);
->  	if (!buf) {
-> -		fprintf(stderr, "Failed to malloc %d bytes for the logbuf:"
-> -				" %s\n", log_buf_len, strerror(errno));
-> +		fprintf(stderr, "Failed to malloc %" PRId64 " bytes for the log:"
-> +				" %s\n", log_sz, strerror(errno));
->  		exit(64);
->  	}
->  
-> -	ret = pread(fd, buf, log_buf_len, log_buf_offset);
-> -	if (ret != log_buf_len) {
-> -		fprintf(stderr, "Failed to read log buffer of size %d bytes:"
-> -			" %s\n", log_buf_len, strerror(errno));
-> -		exit(65);
-> -	}
-> -
->  	/* Parse records and write out data at standard output */
->  
->  	current_idx = log_first_idx;
->  	len = 0;
->  	while (current_idx != log_next_idx) {
-> -		msg = log_from_idx(buf, current_idx);
-> -		ts_nsec = struct_val_u64(msg, log_offset_ts_nsec);
-> +		uint16_t loglen;
-> +
-> +		ret = pread(fd, buf, log_sz, log_buf_offset + current_idx);
-> +		if (ret != log_sz) {
-> +			fprintf(stderr, "Failed to read log of size %" PRId64 " bytes:"
-> +				" %s\n", log_sz, strerror(errno));
-> +			exit(65);
-> +		}
-> +		ts_nsec = struct_val_u64(buf, log_offset_ts_nsec);
->  		imaxdiv_sec = imaxdiv(ts_nsec, 1000000000);
->  		imaxdiv_usec = imaxdiv(imaxdiv_sec.rem, 1000);
->  
-> @@ -695,9 +653,22 @@ static void dump_dmesg_structured(int fd)
->  			(long long unsigned int)imaxdiv_usec.quot);
->  
->  		/* escape non-printable characters */
-> -		text_len = struct_val_u16(msg, log_offset_text_len);
-> +		text_len = struct_val_u16(buf, log_offset_text_len);
-> +		msg = calloc(1, text_len);
-> +		if (!msg) {
-> +			fprintf(stderr, "Failed to malloc %u bytes for log text:"
-> +				" %s\n", text_len, strerror(errno));
-> +			exit(64);
-> +		}
-> +
-> +		ret = pread(fd, msg, text_len, log_buf_offset + current_idx + log_sz);
-> +		if (ret != text_len) {
-> +			fprintf(stderr, "Failed to read log text of size %u bytes:"
-> +				" %s\n", text_len, strerror(errno));
-> +			exit(65);
-> +		}
->  		for (i = 0; i < text_len; i++) {
-> -			unsigned char c = log_text(msg)[i];
-> +			unsigned char c = msg[i];
->  
->  			if (!isprint(c) && !isspace(c))
->  				len += sprintf(out_buf + len, "\\x%02x", c);
-> @@ -711,11 +682,21 @@ static void dump_dmesg_structured(int fd)
->  		}
->  
->  		out_buf[len++] = '\n';
-> -
-> -		/* Move to next record */
-> -		current_idx = log_next(buf, current_idx);
-> +		free(msg);
-> +		/* length == 0 indicates the end of the buffer; wrap */
 
-Since the code is restructured, above line can be dropped, other wise:
+Yes, it works.
 
-Reviewed-by: Dave Young <dyoung@redhat.com>
+Modification looks fine to me.
 
-> +		/*
-> +		 * A length == 0 record is the end of buffer marker. Wrap around and
-> +		 * read the message at the start of the buffer as *this* one, and
-> +		 * return the one after that.
-> +		 */
-> +		loglen = struct_val_u16(buf, log_offset_len);
-> +		if (!loglen)
-> +			current_idx = log_first_idx;
-> +		else
-> +			/* Move to next record */
-> +			current_idx += loglen;
->  	}
-> -
-> +	free(buf);
->  	if (len)
->  		write_to_stdout(out_buf, len);
->  }
-> -- 
-> 2.5.5
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Reviewed-by: Pratyush Anand <panand@redhat.com>
 
-Thanks
-Dave
-> 
-> 
+
 
 _______________________________________________
 kexec mailing list
