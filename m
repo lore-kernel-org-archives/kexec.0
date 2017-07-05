@@ -1,23 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x244.google.com ([2607:f8b0:400e:c05::244])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dSDM9-00083b-1w
- for kexec@lists.infradead.org; Tue, 04 Jul 2017 02:14:26 +0000
-Received: by mail-pg0-x244.google.com with SMTP id d193so6386379pgc.2
- for <kexec@lists.infradead.org>; Mon, 03 Jul 2017 19:14:04 -0700 (PDT)
-Message-ID: <1499134187.1734.42.camel@gmail.com>
-Subject: Re: [PATCH] kexec:arm: support zImage with appended device tree
-From: Hoeun Ryu <hoeun.ryu@gmail.com>
-Date: Tue, 04 Jul 2017 11:09:47 +0900
-In-Reply-To: <20170704014145.GA8657@dhcp-128-65.nay.redhat.com>
-References: <1498208138-19283-1-git-send-email-hoeun.ryu@gmail.com>
- <20170626091412.GE837@flint.armlinux.org.uk>
- <1498531003.1734.13.camel@gmail.com>
- <20170627085359.GH837@flint.armlinux.org.uk>
- <BA3D72AC-402C-4148-B49A-560720267961@gmail.com>
- <20170703164109.GJ22756@flint.armlinux.org.uk>
- <20170704014145.GA8657@dhcp-128-65.nay.redhat.com>
-Mime-Version: 1.0
+ id 1dSfxs-0008Hg-82
+ for kexec@lists.infradead.org; Wed, 05 Jul 2017 08:47:18 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [makedumpfile PATCH] Prevent data loss in last page of ELF core
+ dumpfile
+Date: Wed, 5 Jul 2017 08:34:32 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EEDF87@BPXM01GP.gisp.nec.co.jp>
+References: <1499102033-24811-1-git-send-email-eric.devolder@oracle.com>
+In-Reply-To: <1499102033-24811-1-git-send-email-eric.devolder@oracle.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,40 +20,239 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Russell King <rmk@armlinux.org.uk>
-Cc: Matthew Leach <matthew.leach@arm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Wang Nan <wangnan0@huawei.com>
+To: Eric DeVolder <eric.devolder@oracle.com>
+Cc: "daniel.kiper@oracle.com" <daniel.kiper@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>
 
-T24gVHVlLCAyMDE3LTA3LTA0IGF0IDA5OjQxICswODAwLCBEYXZlIFlvdW5nIHdyb3RlOgo+IE9u
-IDA3LzAzLzE3IGF0IDA1OjQxcG0sIFJ1c3NlbGwgS2luZyB3cm90ZToKPiA+IAo+ID4gT24gVHVl
-LCBKdW4gMjcsIDIwMTcgYXQgMDY6NTE6NTBQTSArMDkwMCwgSG9ldW4gUnl1IHdyb3RlOgo+ID4g
-PiAKPiA+ID4gPiAKPiA+ID4gPiBXaGF0IGFib3V0IHRoZSBpbml0cmQ/wqDCoERvIHlvdSB3YW50
-IHRvIGFwcGVuZCB0aGF0IGFzIHdlbGw/Cj4gPiA+IEkgaGF2ZSB0aG91Z2h0IG9mIGl0Lgo+ID4g
-PiBJIHRoaW5rIEl0IHdvdWxkIGJlIGJldHRlciB0byBoYXZlIGl0Lgo+ID4gPiBCdXQgSSB0aGlu
-ayB0aGlzIGlzIHRoZSBmaXJzdCBzdGVwIHRvIGRvIHNvLgo+ID4gVGhhdCBpcyBzb21ldGhpbmcg
-d2UgZG9uJ3Qgc3VwcG9ydCB3aXRoIHRoZSBrZXJuZWwsIGFuZCB3b3VsZCBiZQo+ID4gaW5zYW5l
-Cj4gPiB0byBkbyBzbyAtIGl0IHdvdWxkIG1lYW4gdGhhdCB0aGUgdmVyeSBkdW1iIGRlY29tcHJl
-c3NvciB3b3VsZCBoYXZlCj4gPiB0byByZWxvY2F0ZSBub3Qgb25seSB0aGUgZHRiIGltYWdlLCBi
-dXQgYWxzbyB0aGUgaW5pdHJkIGltYWdlIHRvCj4gPiBzb21lIG90aGVyIHBhcnQgb2YgbWVtb3J5
-LsKgwqBJdCBtb3ZlcyB0aGUgYXBwZW5kZWQgZHRiIGltYWdlIGFsb25nCj4gPiB3aXRoCj4gPiB0
-aGUgcmVzdCBvZiB0aGUgekltYWdlIGFzIG9uZSBjb21wbGV0ZSBibG9iLCBidXQgdGhhdCBkb2Vz
-bid0IHdvcmsKPiA+IHNvIHdlbGwgZm9yIGFuIGFwcGVuZGVkIGluaXRyZC7CoMKgSXQgd2lsbCBh
-bHNvIGJlIHJhdGhlciBzbG93Lgo+ID4gCj4gPiBTbyBJJ2QgbGlrZSB0byBjb250aW51ZSBteSBk
-aXNjb3VyYWdlbWVudCBvZiB0aGlzIGVudGlyZSBhcHByb2FjaAo+ID4gYW5kCj4gPiBzYXkgdGhh
-dCBrZXhlYy10b29scyBzaG91bGQgKm5vdCogYWRkIHN1cHBvcnQgZm9yIGFuIGFwcGVuZGVkIERU
-Qgo+ID4gbm9yCj4gPiBhbiBhcHBlbmRlZCBpbml0cmQuCj4gSSBhbHNvIGFncmVlIHRoYXQgd2Un
-ZCBiZXR0ZXIgbm90IGFkZGluZyB0aGlzIGluIGtleGVjLXRvb2xzLCAtLWR0Ygo+IHdvcmtzIHdl
-bGwsIHRoZSBhcHBlbmRlZCBkdGIgZG9lcyBub3QgZ2FpbiBtdWNoIGJ1dCBpdCBpbnRyb2R1Y2Vz
-Cj4gbW9yZQo+IGNvZGUgdG8gbWFpbnRhaW4uCj4gCgpJIHVuZGVyc3RhbmQgYW5kIHJlc3BlY3Qg
-eW91ciBvcGluaW9uLgpUaGFuayB5b3UgZm9yIHRoZSByZXZpZXcuCgo+ID4gCj4gPiAKPiA+IFRo
-ZSBrZXJuZWwgYnVpbGQgcHJvY2VzcyBnaXZlcyB5b3UgdGhlIGtlcm5lbCBpbWFnZSBhbmQgZHRi
-IGZpbGUuCj4gPiBUaGUgYXBwZW5kZWQtZHRiIGltYWdlIHN1cHBvcnQgdGhhdCB3ZSBoYXZlIGlu
-IHRoZSBrZXJuZWwgaXMgZm9yCj4gPiBiYWNrd2FyZHMgY29tcGF0aWJpbGl0eSB3aXRoIG5vbi1E
-VCBhd2FyZSBib290IGxvYWRlcnMgdGhhdCBvbmx5Cj4gPiBrbm93IGhvdyB0byBkZWFsIHdpdGgg
-b25lIG9yIHR3byBpbWFnZXMgYXQgYm9vdCB0aW1lLgo+ID4gCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2tleGVjCg==
+Hello Eric,
+
+Good catch, thanks for your investigation.
+Please see the comment below.
+
+>When generating an ELF core dump file, if a segment/section size
+>is not an integral of PAGE_SIZE, then the corresponding generated
+>segment/section is erroneously truncated to a PAGE_SIZE integral.
+>Thus a small loss of data up to PAGE_SIZE-1 bytes can occur.
+>
+>In the function write_elf_pages_cyclic(), two variables memsz and
+>filesz track the sizes. This patch provides the missing update to
+>filesz for one particular condition, in a fashion consistent with
+>the update to memsz in this condition.
+>
+>This patch corrects the test case described here.
+>
+>I have an existing ELF vmcore dumpfile and run it through
+>makedumpfile again, as such:
+>
+>% makedumpfile -E -x vmlinux vmcore newvmcore
+>% objdump --all-headers vmcore > before.txt
+>% objdump --all-headers newvmcore > after.txt
+>
+From crash, here is a description of the original vmcore:
+>
+>      KERNEL: vmlinux
+>    DUMPFILE: vmcore
+>        CPUS: 4
+>        DATE: Thu Jan  7 07:49:10 2016
+>      UPTIME: 00:00:22
+>LOAD AVERAGE: 0.00, 0.00, 0.00
+>       TASKS: 77
+>    NODENAME: mini-amd64
+>     RELEASE: 4.2.0-ns.gen.amd64.1
+>     VERSION: #1 SMP Wed Oct 28 16:32:12 CET 2015
+>     MACHINE: x86_64  (2194 Mhz)
+>      MEMORY: 4 GB
+>       PANIC: "sysrq: SysRq : Trigger a crash"
+>         PID: 96
+>     COMMAND: "bash"
+>        TASK: ffff88017a4c9e00  [THREAD_INFO: ffff88017a198000]
+>         CPU: 3
+>       STATE: TASK_RUNNING (SYSRQ)
+>
+>In essence, no re-filtering has occured and I expect to see a very similar
+>ELF dump file to the original.  And for the most part, the files are similar,
+>but I do observe some differences.
+>
+>The contents of before.txt are:
+>
+>== before.txt ========================================================
+>vmcore:     file format elf64-x86-64
+>vmcore
+>architecture: i386:x86-64, flags 0x00000000:
+>
+>start address 0x0000000000000000
+>
+>Program Header:
+>    NOTE off    0x0000000000001000 vaddr 0x0000000000000000 paddr 0x0000000000000000 align 2**0
+>         filesz 0x0000000000000c6c memsz 0x0000000000000c6c flags ---
+>    LOAD off    0x0000000000002000 vaddr 0xffffffff81000000 paddr 0x0000000001000000 align 2**0
+>         filesz 0x0000000000829000 memsz 0x0000000000829000 flags rwx
+>    LOAD off    0x000000000082b000 vaddr 0xffff880000001000 paddr 0x0000000000001000 align 2**0
+>         filesz 0x000000000009ec00 memsz 0x000000000009ec00 flags rwx
+>    LOAD off    0x00000000008ca000 vaddr 0xffff880000100000 paddr 0x0000000000100000 align 2**0
+>         filesz 0x0000000003f00000 memsz 0x0000000003f00000 flags rwx
+>    LOAD off    0x00000000047ca000 vaddr 0xffff880014000000 paddr 0x0000000014000000 align 2**0
+>         filesz 0x000000006bfdf000 memsz 0x000000006bfdf000 flags rwx
+>    LOAD off    0x00000000707a9000 vaddr 0xffff880100000000 paddr 0x0000000100000000 align 2**0
+>         filesz 0x0000000080000000 memsz 0x0000000080000000 flags rwx
+>
+>Sections:
+>Idx Name          Size      VMA               LMA               File off  Algn
+>  0 note0         00000c6c  0000000000000000  0000000000000000  00001000  2**0
+>                  CONTENTS, READONLY
+>  1 .reg/0        000000d8  0000000000000000  0000000000000000  00001084  2**2
+>                  CONTENTS
+>  2 .reg          000000d8  0000000000000000  0000000000000000  00001084  2**2
+>                  CONTENTS
+>  3 .reg/0        000000d8  0000000000000000  0000000000000000  000011e8  2**2
+>                  CONTENTS
+>  4 .reg/0        000000d8  0000000000000000  0000000000000000  0000134c  2**2
+>                  CONTENTS
+>  5 .reg/96       000000d8  0000000000000000  0000000000000000  000014b0  2**2
+>                  CONTENTS
+>  6 load1         00829000  ffffffff81000000  0000000001000000  00002000  2**0
+>                  CONTENTS, ALLOC, LOAD, CODE
+>  7 load2         0009ec00  ffff880000001000  0000000000001000  0082b000  2**0
+>                  CONTENTS, ALLOC, LOAD, CODE
+>  8 load3         03f00000  ffff880000100000  0000000000100000  008ca000  2**0
+>                  CONTENTS, ALLOC, LOAD, CODE
+>  9 load4         6bfdf000  ffff880014000000  0000000014000000  047ca000  2**0
+>                  CONTENTS, ALLOC, LOAD, CODE
+> 10 load5         80000000  ffff880100000000  0000000100000000  707a9000  2**0
+>                  CONTENTS, ALLOC, LOAD, CODE
+>SYMBOL TABLE:
+>no symbols
+>
+>== before.txt ========================================================
+>
+>And the contents of after.txt:
+>
+>== after.txt =========================================================
+>newvmcore:  file format elf64-x86-64
+>newvmcore:
+>architecture: i386:x86-64, flags 0x00000000:
+>
+>start address 0x0000000000000000
+>
+>Program Header:
+>    NOTE off    0x0000000000000190 vaddr 0x0000000000000000 paddr 0x0000000000000000 align 2**0
+>         filesz 0x0000000000000c6c memsz 0x0000000000000c6c flags ---
+>    LOAD off    0x0000000000000dfc vaddr 0xffffffff81000000 paddr 0x0000000001000000 align 2**0
+>         filesz 0x0000000000829000 memsz 0x0000000000829000 flags rwx
+>    LOAD off    0x0000000000829dfc vaddr 0xffff880000001000 paddr 0x0000000000001000 align 2**0
+>         filesz 0x000000000009e000 memsz 0x000000000009ec00 flags rwx
+>    LOAD off    0x00000000008c7dfc vaddr 0xffff880000100000 paddr 0x0000000000100000 align 2**0
+>         filesz 0x0000000003f00000 memsz 0x0000000003f00000 flags rwx
+>    LOAD off    0x00000000047c7dfc vaddr 0xffff880014000000 paddr 0x0000000014000000 align 2**0
+>         filesz 0x000000006bfdf000 memsz 0x000000006bfdf000 flags rwx
+>    LOAD off    0x00000000707a6dfc vaddr 0xffff880100000000 paddr 0x0000000100000000 align 2**0
+>         filesz 0x0000000080000000 memsz 0x0000000080000000 flags rwx
+>
+>Sections:
+>Idx Name          Size      VMA               LMA               File off  Algn
+>  0 note0         00000c6c  0000000000000000  0000000000000000  00000190  2**0
+>                  CONTENTS, READONLY
+>  1 .reg/0        000000d8  0000000000000000  0000000000000000  00000214  2**2
+>                  CONTENTS
+>  2 .reg          000000d8  0000000000000000  0000000000000000  00000214  2**2
+>                  CONTENTS
+>  3 .reg/0        000000d8  0000000000000000  0000000000000000  00000378  2**2
+>                  CONTENTS
+>  4 .reg/0        000000d8  0000000000000000  0000000000000000  000004dc  2**2
+>                  CONTENTS
+>  5 .reg/96       000000d8  0000000000000000  0000000000000000  00000640  2**2
+>                  CONTENTS
+>  6 load1         00829000  ffffffff81000000  0000000001000000  00000dfc  2**0
+>                  CONTENTS, ALLOC, LOAD, CODE
+>  7 load2a        0009e000  ffff880000001000  0000000000001000  00829dfc  2**0
+>                  CONTENTS, ALLOC, LOAD, CODE
+>  8 load2b        00000000  ffff88000009f000  000000000009f000  008c7dfc  2**0
+>                  ALLOC, CODE
+>  9 load3         03f00000  ffff880000100000  0000000000100000  008c7dfc  2**0
+>                  CONTENTS, ALLOC, LOAD, CODE
+> 10 load4         6bfdf000  ffff880014000000  0000000014000000  047c7dfc  2**0
+>                  CONTENTS, ALLOC, LOAD, CODE
+> 11 load5         80000000  ffff880100000000  0000000100000000  707a6dfc  2**0
+>                  CONTENTS, ALLOC, LOAD, CODE
+>== after.txt =========================================================
+>
+>If we ignore the file offset differences, one can see that something has
+>happened to "load2".
+>
+>The original vmcore "load2" looks like:
+>
+>Program Header:
+>    LOAD off    0x000000000082b000 vaddr 0xffff880000001000 paddr 0x0000000000001000 align 2**0
+>         filesz 0x000000000009ec00 memsz 0x000000000009ec00 flags rwx
+>Sections:
+>  7 load2         0009ec00  ffff880000001000  0000000000001000  0082b000  2**0
+>                  CONTENTS, ALLOC, LOAD, CODE
+>
+>It was split into these when passed through makedumpfile:
+>
+>Program Header:
+>    LOAD off    0x0000000000829dfc vaddr 0xffff880000001000 paddr 0x0000000000001000 align 2**0
+>         filesz 0x000000000009e000 memsz 0x000000000009ec00 flags rwx
+>Sections:
+>  7 load2a        0009e000  ffff880000001000  0000000000001000  00829dfc  2**0
+>                  CONTENTS, ALLOC, LOAD, CODE
+>  8 load2b        00000000  ffff88000009f000  000000000009f000  008c7dfc  2**0
+>                  ALLOC, CODE
+>
+>In doing so, makedumpfile truncated the size of "load2a" 0009e000 by 0xc00
+>bytes compared to original vmcore "load2" 0009ec00. This appears to be a
+>loss of data, and likely bug.
+>
+>In addition, makedumpfile also generated a new zero-length section (and no
+>corresponding program header, thankfully) of what would appear to be the page
+>address following the end of "load2a". This seems to be un-necessary, and
+>perhaps a likely bug, though harmless for this example.
+>
+>With the patch applied, the correct segment and section are generated (and
+>no extraneous section), and the newly generated vmcore loads within 'crash'.
+>
+>Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+>---
+>---
+> makedumpfile.c | 7 +++++--
+> 1 file changed, 5 insertions(+), 2 deletions(-)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index e69b6df..94359ac 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -7326,10 +7326,13 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+> 			for (pfn = MAX(pfn_start, cycle.start_pfn); pfn < cycle.end_pfn; pfn++) {
+> 				if (!is_dumpable(info->bitmap2, pfn, &cycle)) {
+> 					num_excluded++;
+>-					if ((pfn == pfn_end - 1) && frac_tail)
+>+					if ((pfn == pfn_end - 1) && frac_tail) {
+> 						memsz += frac_tail;
+>-					else
+>+						filesz += frac_tail;
+>+					} else {
+> 						memsz += page_size;
+>+						filesz += page_size;
+>+                    }
+
+As "!is_dumpable()" indicates, this block is for page filtering.
+If a page is excluded, page_size shouldn't be added to filesz since 
+the page is not included in the file.
+
+So I don't think this approach is proper, but I don't have a good
+idea for now. It seems that a frac_tail page can be judged as
+"not dumpable" erroneously even without filtering, I suspect it's
+the root cause of your problem.
+
+
+Thanks,
+Atsushi Kumagai
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
