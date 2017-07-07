@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dTCMF-0005O1-NC
- for kexec@lists.infradead.org; Thu, 06 Jul 2017 19:22:37 +0000
-From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [makedumpfile PATCH] Allow PFN_EXCLUDED to be tunable via command
- line option --exclude-threshold
-Date: Thu,  6 Jul 2017 14:21:22 -0500
-Message-Id: <1499368882-2125-1-git-send-email-eric.devolder@oracle.com>
+ id 1dTJD8-00027V-Of
+ for kexec@lists.infradead.org; Fri, 07 Jul 2017 02:41:41 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [makedumpfile PATCH v3] Prevent data loss in last page of ELF
+ core dumpfile
+Date: Fri, 7 Jul 2017 02:36:06 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EEE86F@BPXM01GP.gisp.nec.co.jp>
+References: <1499362115-32091-1-git-send-email-eric.devolder@oracle.com>
+In-Reply-To: <1499362115-32091-1-git-send-email-eric.devolder@oracle.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,230 +20,274 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, ats-kumagai@wm.jp.nec.com
-Cc: daniel.kiper@oracle.com, eric.devolder@oracle.com, konrad.wilk@oracle.com
+To: Eric DeVolder <eric.devolder@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "daniel.kiper@oracle.com" <daniel.kiper@oracle.com>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>
 
-The PFN_EXCLUDED value is used to control at which point a run of
-zeros in the bitmap (zeros denote excluded pages) is large enough
-to warrant truncating the current output segment and to create a
-new output segment (containing non-excluded pages), in an ELF dump.
+Hello Eric,
 
-If the run is smaller than PFN_EXCLUDED, then those excluded pages
-are still output in the ELF dump, for the current output segment.
+Thanks! I'll merge this version into v1.6.2.
 
-By using smaller values of PFN_EXCLUDED, the resulting dump file
-size can be made smaller by actually removing more excluded pages
-from the resulting dump file.
+Regards,
+Atsushi Kumagai
 
-This patch adds the command line option --exclude-threshold=<value>
-to indicate the threshold. The default is 256, the legacy value
-of PFN_EXCLUDED. The smallest value permitted is 1.
+>When generating an ELF core dump file, if a segment size
+>is not an exact multiple of PAGE_SIZE, then the corresponding
+>generated segment is erroneously truncated to a PAGE_SIZE multiple.
+>Thus a small loss of data up to PAGE_SIZE-1 bytes can occur.
+>
+>The problem root is in the creation of the first bitmap, which
+>is the list of pages to dump as calculated from the vmcore
+>segments' information. (A second bitmap is created which is
+>a copy of the first bitmap with those bits corresponding to the
+>exclude/filter pages zero'd, and is the actual list of dumpable
+>pages).
+>
+>During creation of the first bitmap, each segment is processed
+>to determine the first and last page frame numbers corresponding
+>to the segment. The page dump loops are generally written as:
+>
+>  for (pfn = pfn_start; pfn < pfn_end; ++pfn)
+>
+>meaning that the pfn_end needs to be one beyond the actual last
+>page frame number.
+>
+>The last page frame number is calculated via the paddr_to_pfn()
+>macro on the segment end physical address of p_addr + p_memsz.
+>The paddr_to_pfn() macro essentially performs a right shift of
+>the address to extract the pfn. Since p_memsz is typically a
+>multiple of PAGE_SIZE, the computed pfn_end is one beyond the
+>actual. For example, a segment which describes the first page of
+>memory would be p_paddr 0 + p_memsz 0x1000 = 0x1000, and when
+>right shifted yields pfn_end of 1, matching the loop semantics
+>above and resulting in one iteration of the loop.
+>
+>However, when the end physical address is not a multiple of
+>PAGE_SIZE, the paddr_to_pfn() macro truncates the address and
+>the need for one additional page for the remaining data is
+>unaccounted. For example, a segment which describes the 4097
+>bytes (PAGE_SIZE + 1), results in p_addr 0 + p_memsz 0x1001 =
+>0x1001, and when right shifted yields pfn_end of 1. An additional
+>page is needed to account for the additional data, so pfn_end
+>needs to be 2 in this case.
+>
+>This patch detects this condition and accounts for the additional
+>needed page.
+>
+>This problem was observed by the test case described below.
+>
+>I have an existing ELF vmcore dumpfile and run it through
+>makedumpfile again, as such:
+>
+>% makedumpfile -E -x vmlinux vmcore newvmcore
+>% readelf -a vmcore > vmcore.txt
+>% readelf -a newvmcore > newvmcore.txt
+>
+From crash, here is a description of the original vmcore:
+>
+>      KERNEL: vmlinux
+>    DUMPFILE: vmcore
+>        CPUS: 4
+>        DATE: Thu Jan  7 07:49:10 2016
+>      UPTIME: 00:00:22
+>LOAD AVERAGE: 0.00, 0.00, 0.00
+>       TASKS: 77
+>    NODENAME: mini-amd64
+>     RELEASE: 4.2.0-ns.gen.amd64.1
+>     VERSION: #1 SMP Wed Oct 28 16:32:12 CET 2015
+>     MACHINE: x86_64  (2194 Mhz)
+>      MEMORY: 4 GB
+>       PANIC: "sysrq: SysRq : Trigger a crash"
+>         PID: 96
+>     COMMAND: "bash"
+>        TASK: ffff88017a4c9e00  [THREAD_INFO: ffff88017a198000]
+>         CPU: 3
+>       STATE: TASK_RUNNING (SYSRQ)
+>
+>In essence, no re-filtering has occured and I expect to see a very similar
+>ELF dump file to the original.  And for the most part, the files are similar,
+>but I do observe some differences.
+>
+>The contents of vmcore.txt are:
+>
+>=== vmcore.txt ===
+>ELF Header:
+>  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+>  Class:                             ELF64
+>  Data:                              2's complement, little endian
+>  Version:                           1 (current)
+>  OS/ABI:                            UNIX - System V
+>  ABI Version:                       0
+>  Type:                              CORE (Core file)
+>  Machine:                           Advanced Micro Devices X86-64
+>  Version:                           0x1
+>  Entry point address:               0x0
+>  Start of program headers:          64 (bytes into file)
+>  Start of section headers:          0 (bytes into file)
+>  Flags:                             0x0
+>  Size of this header:               64 (bytes)
+>  Size of program headers:           56 (bytes)
+>  Number of program headers:         6
+>  Size of section headers:           0 (bytes)
+>  Number of section headers:         0
+>  Section header string table index: 0
+>
+>There are no sections in this file.
+>
+>There are no sections to group in this file.
+>
+>Program Headers:
+>  Type           Offset             VirtAddr           PhysAddr
+>                 FileSiz            MemSiz              Flags  Align
+>  NOTE           0x0000000000001000 0x0000000000000000 0x0000000000000000
+>                 0x0000000000000c6c 0x0000000000000c6c         0
+>  LOAD           0x0000000000002000 0xffffffff81000000 0x0000000001000000
+>                 0x0000000000829000 0x0000000000829000  RWE    0
+>  LOAD           0x000000000082b000 0xffff880000001000 0x0000000000001000
+>                 0x000000000009ec00 0x000000000009ec00  RWE    0
+>  LOAD           0x00000000008ca000 0xffff880000100000 0x0000000000100000
+>                 0x0000000003f00000 0x0000000003f00000  RWE    0
+>  LOAD           0x00000000047ca000 0xffff880014000000 0x0000000014000000
+>                 0x000000006bfdf000 0x000000006bfdf000  RWE    0
+>  LOAD           0x00000000707a9000 0xffff880100000000 0x0000000100000000
+>                 0x0000000080000000 0x0000000080000000  RWE    0
+>
+>There is no dynamic section in this file.
+>
+>There are no relocations in this file.
+>
+>The decoding of unwind sections for machine type Advanced Micro Devices X86-64 is not currently supported.
+>
+>Dynamic symbol information is not available for displaying symbols.
+>
+>No version information found in this file.
+>
+>Displaying notes found at file offset 0x00001000 with length 0x00000c6c:
+>  Owner                 Data size	Description
+>  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+>  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+>  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+>  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+>  VMCOREINFO           0x000006c1	Unknown note type: (0x00000000)
+>=== vmcore.txt ===
+>
+>And the contents of newvmcore.txt:
+>
+>=== newvmcore.txt ===
+>ELF Header:
+>  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+>  Class:                             ELF64
+>  Data:                              2's complement, little endian
+>  Version:                           1 (current)
+>  OS/ABI:                            UNIX - System V
+>  ABI Version:                       0
+>  Type:                              CORE (Core file)
+>  Machine:                           Advanced Micro Devices X86-64
+>  Version:                           0x1
+>  Entry point address:               0x0
+>  Start of program headers:          64 (bytes into file)
+>  Start of section headers:          0 (bytes into file)
+>  Flags:                             0x0
+>  Size of this header:               64 (bytes)
+>  Size of program headers:           56 (bytes)
+>  Number of program headers:         6
+>  Size of section headers:           0 (bytes)
+>  Number of section headers:         0
+>  Section header string table index: 0
+>
+>There are no sections in this file.
+>
+>There are no sections to group in this file.
+>
+>Program Headers:
+>  Type           Offset             VirtAddr           PhysAddr
+>                 FileSiz            MemSiz              Flags  Align
+>  NOTE           0x0000000000000190 0x0000000000000000 0x0000000000000000
+>                 0x0000000000000c6c 0x0000000000000c6c         0
+>  LOAD           0x0000000000000dfc 0xffffffff81000000 0x0000000001000000
+>                 0x0000000000829000 0x0000000000829000  RWE    0
+>  LOAD           0x0000000000829dfc 0xffff880000001000 0x0000000000001000
+>                 0x000000000009e000 0x000000000009ec00  RWE    0
+>  LOAD           0x00000000008c7dfc 0xffff880000100000 0x0000000000100000
+>                 0x0000000003f00000 0x0000000003f00000  RWE    0
+>  LOAD           0x00000000047c7dfc 0xffff880014000000 0x0000000014000000
+>                 0x000000006bfdf000 0x000000006bfdf000  RWE    0
+>  LOAD           0x00000000707a6dfc 0xffff880100000000 0x0000000100000000
+>                 0x0000000080000000 0x0000000080000000  RWE    0
+>
+>There is no dynamic section in this file.
+>
+>There are no relocations in this file.
+>
+>The decoding of unwind sections for machine type Advanced Micro Devices X86-64 is not currently supported.
+>
+>Dynamic symbol information is not available for displaying symbols.
+>
+>No version information found in this file.
+>
+>Displaying notes found at file offset 0x00000190 with length 0x00000c6c:
+>  Owner                 Data size	Description
+>  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+>  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+>  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+>  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+>  VMCOREINFO           0x000006c1	Unknown note type: (0x00000000)
+>=== newvmcore.txt ===
+>
+>Ignoring the file offset differences, one can see that something
+>changed on the second LOAD segment. The original vmcore has:
+>
+>  LOAD           0x000000000082b000 0xffff880000001000 0x0000000000001000
+>                 0x000000000009ec00 0x000000000009ec00  RWE    0
+>
+>whereas the newvmcore has:
+>
+>  LOAD           0x0000000000829dfc 0xffff880000001000 0x0000000000001000
+>                 0x000000000009e000 0x000000000009ec00  RWE    0
+>                              ^^^^^
+>
+>Specifically, the file size for this segment in newvmcore is now 0x9e000
+>rather than the 0x9ec00 of the original, a loss of data. (Since p_memsz
+>is larger than p_filesz, those 0xc00 bytes become zeros in the handling
+>of those addresses).
+>
+>With the patch applied, the file size is again correct.
+>
+>Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+>---
+>v3: posted 06jul2017 to kexec-tools list
+> - fix style/spacing issues noted by Daniel Kiper
+>
+>v2: posted 05jul2017 to kexec-tools list
+> - feedback from Atsushi Kumagai pointed to real root of problem,
+>   and patch changed accordingly
+>
+>v1: posted 03jul2017 to kexec-tools list
+>---
+> makedumpfile.c | 3 +++
+> 1 file changed, 3 insertions(+)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index e69b6df..fac5c2e 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -5410,6 +5410,9 @@ create_1st_bitmap_file(void)
+> 		if (pfn_start > info->max_mapnr)
+> 			continue;
+> 		pfn_end = MIN(pfn_end, info->max_mapnr);
+>+		/* Account for last page if it has less than page_size data in it */
+>+		if (phys_end & (info->page_size-1))
+>+			++pfn_end;
+>
+> 		for (pfn = pfn_start; pfn < pfn_end; pfn++) {
+> 			set_bit_on_1st_bitmap(pfn, NULL);
+>--
+>2.7.4
+>
 
-Using an existing vmcore, this was tested by the following:
-
-% makedumpfile -E -d31 --exclude-threshold=256 -x vmlinux vmcore newvmcore256
-% makedumpfile -E -d31 --exclude-threshold=4 -x vmlinux vmcore newvmcore4
-
-I utilize -d31 in order to exclude as many page types as possible,
-resulting in a [significantly] smaller file sizes than the original
-vmcore.
-
--rwxrwx--- 1 edevolde edevolde 4034564096 Jun 27 10:24 vmcore
--rw------- 1 edevolde edevolde 119808156 Jul  6 13:01 newvmcore256
--rw------- 1 edevolde edevolde 100811276 Jul  6 13:08 newvmcore4
-
-The use of smaller value of PFN_EXCLUDED increases the number of
-output segments (the 'Number of program headers' in the readelf
-output) in the ELF dump file.
-
-% readelf -h vmcore
-ELF Header:
-  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
-  Class:                             ELF64
-  Data:                              2's complement, little endian
-  Version:                           1 (current)
-  OS/ABI:                            UNIX - System V
-  ABI Version:                       0
-  Type:                              CORE (Core file)
-  Machine:                           Advanced Micro Devices X86-64
-  Version:                           0x1
-  Entry point address:               0x0
-  Start of program headers:          64 (bytes into file)
-  Start of section headers:          0 (bytes into file)
-  Flags:                             0x0
-  Size of this header:               64 (bytes)
-  Size of program headers:           56 (bytes)
-  Number of program headers:         6
-                                     ^^^
-  Size of section headers:           0 (bytes)
-  Number of section headers:         0
-  Section header string table index: 0
-
-% readelf -h newvmcore256
-ELF Header:
-  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
-  Class:                             ELF64
-  Data:                              2's complement, little endian
-  Version:                           1 (current)
-  OS/ABI:                            UNIX - System V
-  ABI Version:                       0
-  Type:                              CORE (Core file)
-  Machine:                           Advanced Micro Devices X86-64
-  Version:                           0x1
-  Entry point address:               0x0
-  Start of program headers:          64 (bytes into file)
-  Start of section headers:          0 (bytes into file)
-  Flags:                             0x0
-  Size of this header:               64 (bytes)
-  Size of program headers:           56 (bytes)
-  Number of program headers:         18
-                                     ^^^
-  Size of section headers:           0 (bytes)
-  Number of section headers:         0
-  Section header string table index: 0
-
-% readelf -h newvmcore4
-ELF Header:
-  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
-  Class:                             ELF64
-  Data:                              2's complement, little endian
-  Version:                           1 (current)
-  OS/ABI:                            UNIX - System V
-  ABI Version:                       0
-  Type:                              CORE (Core file)
-  Machine:                           Advanced Micro Devices X86-64
-  Version:                           0x1
-  Entry point address:               0x0
-  Start of program headers:          64 (bytes into file)
-  Start of section headers:          0 (bytes into file)
-  Flags:                             0x0
-  Size of this header:               64 (bytes)
-  Size of program headers:           56 (bytes)
-  Number of program headers:         244
-                                     ^^^
-  Size of section headers:           0 (bytes)
-  Number of section headers:         0
-  Section header string table index: 0
-
-The newvmcore4 has an even smaller file size than newvmcore256, with
-the small price being that there are now 244 rather than 18 segments
-in the dump file.
-
-And with a larger number of segments, loading both vmcore and newvmcore4
-into 'crash' resulted in identical outputs when run with the dmesg, ps,
-files, mount, and net sub-commands.
-
-Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
----
-v1: Posted 06jul2017 to kexec-tools mailing list
- - original
----
- makedumpfile.c | 20 +++++++++++++++++---
- makedumpfile.h |  4 +++-
- 2 files changed, 20 insertions(+), 4 deletions(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index e69b6df..940f64c 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -7236,7 +7236,7 @@ get_loads_dumpfile_cyclic(void)
- 
- 				/*
- 				 * If the number of the contiguous pages to be excluded
--				 * is 256 or more, those pages are excluded really.
-+				 * is PFN_EXCLUDED or more, those pages are excluded really.
- 				 * And a new PT_LOAD segment is created.
- 				 */
- 				if (num_excluded >= PFN_EXCLUDED) {
-@@ -7352,7 +7352,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 					continue;
- 					/*
- 					 * If the number of the contiguous pages to be excluded
--					 * is 255 or less, those pages are not excluded.
-+					 * is less than PFN_EXCLUDED, those pages are not excluded.
- 					 */
- 				} else if (num_excluded < PFN_EXCLUDED) {
- 					if ((pfn == pfn_end - 1) && frac_tail) {
-@@ -7370,7 +7370,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 
- 				/*
- 				 * If the number of the contiguous pages to be excluded
--				 * is 256 or more, those pages are excluded really.
-+				 * is PFN_EXCLUDED or more, those pages are excluded really.
- 				 * And a new PT_LOAD segment is created.
- 				 */
- 				load.p_memsz = memsz;
-@@ -11007,6 +11007,7 @@ static struct option longopts[] = {
- 	{"splitblock-size", required_argument, NULL, OPT_SPLITBLOCK_SIZE},
- 	{"work-dir", required_argument, NULL, OPT_WORKING_DIR},
- 	{"num-threads", required_argument, NULL, OPT_NUM_THREADS},
-+	{"exclude-threshold", required_argument, NULL, OPT_PFN_EXCLUDE_THRESHOLD},
- 	{0, 0, 0, 0}
- };
- 
-@@ -11044,6 +11045,14 @@ main(int argc, char *argv[])
- 	 */
- 	info->flag_usemmap = MMAP_TRY;
- 
-+	/*
-+	 * A run of zeros in the bitmap (excluded pages) of less than
-+	 * pfn_excluded_threshold in length will still be dumped. Runs greater
-+	 * than or equal to pfn_excluded_threshold will result in the creation
-+	 * of a new output segment, for ELF dumps.
-+	 */
-+	info->pfn_exclude_threshold = 256;
-+
- 	info->block_order = DEFAULT_ORDER;
- 	message_level = DEFAULT_MSG_LEVEL;
- 	while ((opt = getopt_long(argc, argv, "b:cDd:eEFfg:hi:lpRvXx:", longopts,
-@@ -11163,6 +11172,11 @@ main(int argc, char *argv[])
- 		case OPT_NUM_THREADS:
- 			info->num_threads = MAX(atoi(optarg), 0);
- 			break;
-+		case OPT_PFN_EXCLUDE_THRESHOLD:
-+			info->pfn_exclude_threshold = strtoul(optarg, NULL, 0);
-+			if (0 == info->pfn_exclude_threshold)
-+				info->pfn_exclude_threshold = 1;
-+			break;
- 		case '?':
- 			MSG("Commandline parameter is invalid.\n");
- 			MSG("Try `makedumpfile --help' for more information.\n");
-diff --git a/makedumpfile.h b/makedumpfile.h
-index e32e567..33d3eb0 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -216,7 +216,7 @@ isAnon(unsigned long mapping)
- 
- #define BITPERBYTE		(8)
- #define PGMM_CACHED		(512)
--#define PFN_EXCLUDED		(256)
-+#define PFN_EXCLUDED		(info->pfn_exclude_threshold)
- #define BUFSIZE			(1024)
- #define BUFSIZE_FGETS		(1500)
- #define BUFSIZE_BITMAP		(4096)
-@@ -1139,6 +1139,7 @@ struct DumpInfo {
- 	long		page_size;           /* size of page */
- 	long		page_shift;
- 	mdf_pfn_t	max_mapnr;   /* number of page descriptor */
-+	unsigned long	pfn_exclude_threshold;
- 	unsigned long   page_offset;
- 	unsigned long   section_size_bits;
- 	unsigned long   max_physmem_bits;
-@@ -2143,6 +2144,7 @@ struct elf_prstatus {
- #define OPT_SPLITBLOCK_SIZE	OPT_START+14
- #define OPT_WORKING_DIR         OPT_START+15
- #define OPT_NUM_THREADS	OPT_START+16
-+#define OPT_PFN_EXCLUDE_THRESHOLD	OPT_START+17
- 
- /*
-  * Function Prototype.
--- 
-2.7.4
 
 
 _______________________________________________
