@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-vk0-x241.google.com ([2607:f8b0:400c:c05::241])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dTpIz-0006co-Ve
- for kexec@lists.infradead.org; Sat, 08 Jul 2017 12:57:51 +0000
-Received: by mail-vk0-x241.google.com with SMTP id 191so3737934vko.1
- for <kexec@lists.infradead.org>; Sat, 08 Jul 2017 05:57:29 -0700 (PDT)
+ id 1dUa3I-0006ed-Rx
+ for kexec@lists.infradead.org; Mon, 10 Jul 2017 14:52:47 +0000
+Subject: Re: [makedumpfile PATCH] Allow PFN_EXCLUDED to be tunable via command
+ line option --exclude-threshold
+References: <1499368882-2125-1-git-send-email-eric.devolder@oracle.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701EEEC72@BPXM01GP.gisp.nec.co.jp>
+ <109a59ca-9ea3-662c-6c27-2a919f991053@oracle.com>
+From: Eric DeVolder <eric.devolder@oracle.com>
+Message-ID: <cf1f0817-ab19-30b9-fce4-b82b6e678091@oracle.com>
+Date: Mon, 10 Jul 2017 09:51:23 -0500
 MIME-Version: 1.0
-In-Reply-To: <20170707133925.29711.39301.stgit@tlendack-t1.amdoffice.net>
-References: <20170707133804.29711.1616.stgit@tlendack-t1.amdoffice.net>
- <20170707133925.29711.39301.stgit@tlendack-t1.amdoffice.net>
-From: Brian Gerst <brgerst@gmail.com>
-Date: Sat, 8 Jul 2017 08:57:27 -0400
-Message-ID: <CAMzpN2h=AAF6OVfeGJnf5va2Msmd_BPU5BrVENvs0zGQtRMdzQ@mail.gmail.com>
-Subject: Re: [PATCH v9 07/38] x86/mm: Remove phys_to_virt() usage in ioremap()
+In-Reply-To: <109a59ca-9ea3-662c-6c27-2a919f991053@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,66 +21,357 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, linux-doc@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, the arch/x86 maintainers <x86@kernel.org>, Linux-MM <linux-mm@kvack.org>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch <linux-arch@vger.kernel.org>, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, "Michael S. Tsirkin" <mst@redhat.com>, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, xen-devel@lists.xen.org, iommu@lists.linux-foundation.org, Thomas Gleixner <tglx@linutronix.de>, Paolo Bonzini <pbonzini@redhat.com>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "daniel.kiper@oracle.com" <daniel.kiper@oracle.com>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>
 
-On Fri, Jul 7, 2017 at 9:39 AM, Tom Lendacky <thomas.lendacky@amd.com> wrote:
-> Currently there is a check if the address being mapped is in the ISA
-> range (is_ISA_range()), and if it is, then phys_to_virt() is used to
-> perform the mapping. When SME is active, the default is to add pagetable
-> mappings with the encryption bit set unless specifically overridden. The
-> resulting pagetable mapping from phys_to_virt() will result in a mapping
-> that has the encryption bit set. With SME, the use of ioremap() is
-> intended to generate pagetable mappings that do not have the encryption
-> bit set through the use of the PAGE_KERNEL_IO protection value.
+On 07/07/2017 12:53 PM, Eric DeVolder wrote:
+> Hi Atsushi,
+> please see below.
+> eric
 >
-> Rather than special case the SME scenario, remove the ISA range check and
-> usage of phys_to_virt() and have ISA range mappings continue through the
-> remaining ioremap() path.
+> On 07/07/2017 04:09 AM, Atsushi Kumagai wrote:
+>>> The PFN_EXCLUDED value is used to control at which point a run of
+>>> zeros in the bitmap (zeros denote excluded pages) is large enough
+>>> to warrant truncating the current output segment and to create a
+>>> new output segment (containing non-excluded pages), in an ELF dump.
+>>>
+>>> If the run is smaller than PFN_EXCLUDED, then those excluded pages
+>>> are still output in the ELF dump, for the current output segment.
+>>>
+>>> By using smaller values of PFN_EXCLUDED, the resulting dump file
+>>> size can be made smaller by actually removing more excluded pages
+>>> from the resulting dump file.
+>>>
+>>> This patch adds the command line option --exclude-threshold=<value>
+>>> to indicate the threshold. The default is 256, the legacy value
+>>> of PFN_EXCLUDED. The smallest value permitted is 1.
+>>>
+>>> Using an existing vmcore, this was tested by the following:
+>>>
+>>> % makedumpfile -E -d31 --exclude-threshold=256 -x vmlinux vmcore
+>>> newvmcore256
+>>> % makedumpfile -E -d31 --exclude-threshold=4 -x vmlinux vmcore
+>>> newvmcore4
+>>>
+>>> I utilize -d31 in order to exclude as many page types as possible,
+>>> resulting in a [significantly] smaller file sizes than the original
+>>> vmcore.
+>>>
+>>> -rwxrwx--- 1 edevolde edevolde 4034564096 Jun 27 10:24 vmcore
+>>> -rw------- 1 edevolde edevolde 119808156 Jul  6 13:01 newvmcore256
+>>> -rw------- 1 edevolde edevolde 100811276 Jul  6 13:08 newvmcore4
+>>>
+>>> The use of smaller value of PFN_EXCLUDED increases the number of
+>>> output segments (the 'Number of program headers' in the readelf
+>>> output) in the ELF dump file.
+>>
+>> How will you tune the value ? I'm not sure what is the benefit of the
+>> tunable PFN_EXCLUDED. If there is no regression caused by too many
+>> PT_LOAD
+>> entries, I think we can decide a concrete PFN_EXCLUDED.
 >
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> ---
->  arch/x86/mm/ioremap.c |    7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
+> Allow me note two things prior to addressing the question.
 >
-> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-> index 4c1b5fd..bfc3e2d 100644
-> --- a/arch/x86/mm/ioremap.c
-> +++ b/arch/x86/mm/ioremap.c
-> @@ -13,6 +13,7 @@
->  #include <linux/slab.h>
->  #include <linux/vmalloc.h>
->  #include <linux/mmiotrace.h>
-> +#include <linux/mem_encrypt.h>
+> Note that the value for PFN_EXCLUDED really should be in the range:
 >
->  #include <asm/set_memory.h>
->  #include <asm/e820/api.h>
-> @@ -106,12 +107,6 @@ static void __iomem *__ioremap_caller(resource_size_t phys_addr,
->         }
+>   1 <= PFN_EXCLUDED <= NUM_PAGES(largest segment)
 >
->         /*
-> -        * Don't remap the low PCI/ISA area, it's always mapped..
-> -        */
-> -       if (is_ISA_range(phys_addr, last_addr))
-> -               return (__force void __iomem *)phys_to_virt(phys_addr);
-> -
-> -       /*
->          * Don't allow anybody to remap normal RAM that we're using..
->          */
->         pfn      = phys_addr >> PAGE_SHIFT;
+> but that values larger than NUM_PAGES(largest segment) behave the same
+> as NUM_PAGES(largest segment) and simply prevent makedumpfile from ever
+> omitting excluded pages from the dump file.
 >
+> Also note that the ELF header allows for a 16-bit e_phnum value for the
+> number of segments in the dump file. As it stands today, I doubt that
+> anybody has come close to reaching 65535 segments, but the combination
+> of larger and larger memories as well as the work we (Oracle) are doing
+> to further enhance the capabilities of makedumpfile, I believe we will
+> start to challenge this 65535 number.
+>
+> The ability to tune PFN_EXCLUDED allows one to minimize file size while
+> still staying within ELF boundaries.
+>
+> There are two ways in which have PFN_EXCLUDED as a tunable parameter
+> benefits the user.
+>
+> The first benefit is, when making PFN_EXCLUDED smaller, makedumpfile has
+> more opportunities to NOT write excluded pages to the resulting dump
+> file, thus obtaining a smaller overall dump file size. And since a
+> PT_LOAD header is smaller than a page, this penalty (of more segments)
+> will always result in a smaller file size. (In the example I cite the
+> dump file was 18MB smaller with a PFN_EXCLUDED value of 4 than default
+> 256, in spite of increasing the number of segments from 6 to 244).
+>
+> The second benefit is, when enabling PFN_EXCLUDED to become larger, it
+> allows makedumpfile to continue to generate valid ELF dump files in the
+> presence of larger and larger memory systems. Generally speaking, the
+> goal is to minimize the size of dump files via the exclusion of
+> uninteresting pages (ie zero, free, etc), especially as the size of
+> memory continues to grow and grow. As the memory increases, there are
+> more and more of these uninteresting pages, and more opportunities for
+> makedumpfile to omit them (even at the current PFN_EXCLUDED value of
+> 256). Furthermore, we are working on additional page exclusion
+> strategies that will drive more and more opportunities for makedumpfile
+> to omit these pages from the dump file. And as makedumpfile omits more
+> and more pages from the dump file, that increases the number of segments
+> needed.
+>
+> By enabling a user to tune the value of PFN_EXCLUDED, we provide an
+> additional mechanism to balance the size of the ELF dump file with
+> respect to the size of memory.
 
-Removing this also affects 32-bit, which is more likely to access
-legacy devices in this range.  Put in a check for SME instead
-(provided you follow my recommendations to not set the SME feature bit
-on 32-bit even when the processor supports it).
+It occurred to me that offering the option "--exclude-threshold=auto" 
+whereby a binary search on the second bitmap in the function 
+get_loads_dumpfile_cyclic() to determine the optimum value of 
+PFN_EXCLUDED (optimum here meaning the smallest possible value while 
+still staying within 65535 segments, which would yield the smallest 
+possible dump file size for the given constraints) would be an excellent 
+feature to have?
 
---
-Brian Gerst
+eric
+
+>
+>
+>>
+>> The penalty for splitting PT_LOAD is the size of a PT_LOAD header,
+>> so the best PFN_EXCLUDED is the minimum number which meets the condition
+>> below:
+>>
+>>       (size of PT_LOAD header)  <  (PFN_EXCLUDED <<  PAGE_SIZE)
+>>
+>
+> I admit I don't quite understand, would you mind working through an
+> example or two?
+>
+> It seems to me that a PT_LOAD header of 56 bytes is always less than a
+> page_size of 4096 bytes, and would always be a win (meaning a new
+> segment is better than dumping the page), especially as the consecutive
+> number of physically contiguous excluded pages is large.
+>
+> The only caveat here being that we can not exceed e_phnum limitation of
+> 65535 segments.
+>
+>
+>>> % readelf -h vmcore
+>>> ELF Header:
+>>>  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+>>>  Class:                             ELF64
+>>>  Data:                              2's complement, little endian
+>>>  Version:                           1 (current)
+>>>  OS/ABI:                            UNIX - System V
+>>>  ABI Version:                       0
+>>>  Type:                              CORE (Core file)
+>>>  Machine:                           Advanced Micro Devices X86-64
+>>>  Version:                           0x1
+>>>  Entry point address:               0x0
+>>>  Start of program headers:          64 (bytes into file)
+>>>  Start of section headers:          0 (bytes into file)
+>>>  Flags:                             0x0
+>>>  Size of this header:               64 (bytes)
+>>>  Size of program headers:           56 (bytes)
+>>>  Number of program headers:         6
+>>>                                     ^^^
+>>>  Size of section headers:           0 (bytes)
+>>>  Number of section headers:         0
+>>>  Section header string table index: 0
+>>>
+>>> % readelf -h newvmcore256
+>>> ELF Header:
+>>>  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+>>>  Class:                             ELF64
+>>>  Data:                              2's complement, little endian
+>>>  Version:                           1 (current)
+>>>  OS/ABI:                            UNIX - System V
+>>>  ABI Version:                       0
+>>>  Type:                              CORE (Core file)
+>>>  Machine:                           Advanced Micro Devices X86-64
+>>>  Version:                           0x1
+>>>  Entry point address:               0x0
+>>>  Start of program headers:          64 (bytes into file)
+>>>  Start of section headers:          0 (bytes into file)
+>>>  Flags:                             0x0
+>>>  Size of this header:               64 (bytes)
+>>>  Size of program headers:           56 (bytes)
+>>>  Number of program headers:         18
+>>>                                     ^^^
+>>>  Size of section headers:           0 (bytes)
+>>>  Number of section headers:         0
+>>>  Section header string table index: 0
+>>>
+>>> % readelf -h newvmcore4
+>>> ELF Header:
+>>>  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+>>>  Class:                             ELF64
+>>>  Data:                              2's complement, little endian
+>>>  Version:                           1 (current)
+>>>  OS/ABI:                            UNIX - System V
+>>>  ABI Version:                       0
+>>>  Type:                              CORE (Core file)
+>>>  Machine:                           Advanced Micro Devices X86-64
+>>>  Version:                           0x1
+>>>  Entry point address:               0x0
+>>>  Start of program headers:          64 (bytes into file)
+>>>  Start of section headers:          0 (bytes into file)
+>>>  Flags:                             0x0
+>>>  Size of this header:               64 (bytes)
+>>>  Size of program headers:           56 (bytes)
+>>>  Number of program headers:         244
+>>>                                     ^^^
+>>>  Size of section headers:           0 (bytes)
+>>>  Number of section headers:         0
+>>>  Section header string table index: 0
+>>>
+>>> The newvmcore4 has an even smaller file size than newvmcore256, with
+>>> the small price being that there are now 244 rather than 18 segments
+>>> in the dump file.
+>>>
+>>> And with a larger number of segments, loading both vmcore and newvmcore4
+>>> into 'crash' resulted in identical outputs when run with the dmesg, ps,
+>>> files, mount, and net sub-commands.
+>>
+>> What about the processing speed of crash, is there no slow down ?
+>
+> I did not observe a noticeable change in processing speed of crash.
+>
+>>
+>>
+>> Thanks,
+>> Atsushi Kumagai
+>>
+>>> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+>>> ---
+>>> v1: Posted 06jul2017 to kexec-tools mailing list
+>>> - original
+>>> ---
+>>> makedumpfile.c | 20 +++++++++++++++++---
+>>> makedumpfile.h |  4 +++-
+>>> 2 files changed, 20 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/makedumpfile.c b/makedumpfile.c
+>>> index e69b6df..940f64c 100644
+>>> --- a/makedumpfile.c
+>>> +++ b/makedumpfile.c
+>>> @@ -7236,7 +7236,7 @@ get_loads_dumpfile_cyclic(void)
+>>>
+>>>                 /*
+>>>                  * If the number of the contiguous pages to be excluded
+>>> -                 * is 256 or more, those pages are excluded really.
+>>> +                 * is PFN_EXCLUDED or more, those pages are excluded
+>>> really.
+>>>                  * And a new PT_LOAD segment is created.
+>>>                  */
+>>>                 if (num_excluded >= PFN_EXCLUDED) {
+>>> @@ -7352,7 +7352,7 @@ write_elf_pages_cyclic(struct cache_data
+>>> *cd_header, struct cache_data *cd_page)
+>>>                     continue;
+>>>                     /*
+>>>                      * If the number of the contiguous pages to be
+>>> excluded
+>>> -                     * is 255 or less, those pages are not excluded.
+>>> +                     * is less than PFN_EXCLUDED, those pages are
+>>> not excluded.
+>>>                      */
+>>>                 } else if (num_excluded < PFN_EXCLUDED) {
+>>>                     if ((pfn == pfn_end - 1) && frac_tail) {
+>>> @@ -7370,7 +7370,7 @@ write_elf_pages_cyclic(struct cache_data
+>>> *cd_header, struct cache_data *cd_page)
+>>>
+>>>                 /*
+>>>                  * If the number of the contiguous pages to be excluded
+>>> -                 * is 256 or more, those pages are excluded really.
+>>> +                 * is PFN_EXCLUDED or more, those pages are excluded
+>>> really.
+>>>                  * And a new PT_LOAD segment is created.
+>>>                  */
+>>>                 load.p_memsz = memsz;
+>>> @@ -11007,6 +11007,7 @@ static struct option longopts[] = {
+>>>     {"splitblock-size", required_argument, NULL, OPT_SPLITBLOCK_SIZE},
+>>>     {"work-dir", required_argument, NULL, OPT_WORKING_DIR},
+>>>     {"num-threads", required_argument, NULL, OPT_NUM_THREADS},
+>>> +    {"exclude-threshold", required_argument, NULL,
+>>> OPT_PFN_EXCLUDE_THRESHOLD},
+>>>     {0, 0, 0, 0}
+>>> };
+>>>
+>>> @@ -11044,6 +11045,14 @@ main(int argc, char *argv[])
+>>>      */
+>>>     info->flag_usemmap = MMAP_TRY;
+>>>
+>>> +    /*
+>>> +     * A run of zeros in the bitmap (excluded pages) of less than
+>>> +     * pfn_excluded_threshold in length will still be dumped. Runs
+>>> greater
+>>> +     * than or equal to pfn_excluded_threshold will result in the
+>>> creation
+>>> +     * of a new output segment, for ELF dumps.
+>>> +     */
+>>> +    info->pfn_exclude_threshold = 256;
+>>> +
+>>>     info->block_order = DEFAULT_ORDER;
+>>>     message_level = DEFAULT_MSG_LEVEL;
+>>>     while ((opt = getopt_long(argc, argv, "b:cDd:eEFfg:hi:lpRvXx:",
+>>> longopts,
+>>> @@ -11163,6 +11172,11 @@ main(int argc, char *argv[])
+>>>         case OPT_NUM_THREADS:
+>>>             info->num_threads = MAX(atoi(optarg), 0);
+>>>             break;
+>>> +        case OPT_PFN_EXCLUDE_THRESHOLD:
+>>> +            info->pfn_exclude_threshold = strtoul(optarg, NULL, 0);
+>>> +            if (0 == info->pfn_exclude_threshold)
+>>> +                info->pfn_exclude_threshold = 1;
+>>> +            break;
+>>>         case '?':
+>>>             MSG("Commandline parameter is invalid.\n");
+>>>             MSG("Try `makedumpfile --help' for more information.\n");
+>>> diff --git a/makedumpfile.h b/makedumpfile.h
+>>> index e32e567..33d3eb0 100644
+>>> --- a/makedumpfile.h
+>>> +++ b/makedumpfile.h
+>>> @@ -216,7 +216,7 @@ isAnon(unsigned long mapping)
+>>>
+>>> #define BITPERBYTE        (8)
+>>> #define PGMM_CACHED        (512)
+>>> -#define PFN_EXCLUDED        (256)
+>>> +#define PFN_EXCLUDED        (info->pfn_exclude_threshold)
+>>> #define BUFSIZE            (1024)
+>>> #define BUFSIZE_FGETS        (1500)
+>>> #define BUFSIZE_BITMAP        (4096)
+>>> @@ -1139,6 +1139,7 @@ struct DumpInfo {
+>>>     long        page_size;           /* size of page */
+>>>     long        page_shift;
+>>>     mdf_pfn_t    max_mapnr;   /* number of page descriptor */
+>>> +    unsigned long    pfn_exclude_threshold;
+>>>     unsigned long   page_offset;
+>>>     unsigned long   section_size_bits;
+>>>     unsigned long   max_physmem_bits;
+>>> @@ -2143,6 +2144,7 @@ struct elf_prstatus {
+>>> #define OPT_SPLITBLOCK_SIZE    OPT_START+14
+>>> #define OPT_WORKING_DIR         OPT_START+15
+>>> #define OPT_NUM_THREADS    OPT_START+16
+>>> +#define OPT_PFN_EXCLUDE_THRESHOLD    OPT_START+17
+>>>
+>>> /*
+>>>  * Function Prototype.
+>>> --
+>>> 2.7.4
+>>
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>>
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
 
 _______________________________________________
 kexec mailing list
