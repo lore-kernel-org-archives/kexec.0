@@ -1,28 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-x22f.google.com ([2607:f8b0:400d:c09::22f])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dUxrb-0005G8-PP
- for kexec@lists.infradead.org; Tue, 11 Jul 2017 16:18:17 +0000
-Received: by mail-qk0-x22f.google.com with SMTP id d78so6996472qkb.1
- for <kexec@lists.infradead.org>; Tue, 11 Jul 2017 09:17:54 -0700 (PDT)
+ id 1dV13P-0003qT-8h
+ for kexec@lists.infradead.org; Tue, 11 Jul 2017 19:42:41 +0000
+Subject: Re: [makedumpfile PATCH] Allow PFN_EXCLUDED to be tunable via command
+ line option --exclude-threshold
+References: <1499368882-2125-1-git-send-email-eric.devolder@oracle.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701EEEC72@BPXM01GP.gisp.nec.co.jp>
+ <109a59ca-9ea3-662c-6c27-2a919f991053@oracle.com>
+ <cf1f0817-ab19-30b9-fce4-b82b6e678091@oracle.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701EEFA89@BPXM01GP.gisp.nec.co.jp>
+From: Eric DeVolder <eric.devolder@oracle.com>
+Message-ID: <a32867ed-e9de-bb0e-907a-9a94630760aa@oracle.com>
+Date: Tue, 11 Jul 2017 14:42:12 -0500
 MIME-Version: 1.0
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701EEE856@BPXM01GP.gisp.nec.co.jp>
-References: <CAEzMDiD-w91Q+Fjy_KgXDcwo9YGasa9ggqW2dEhF4ffV7RstqQ@mail.gmail.com>
- <0bd0a35a-88cd-3f68-846f-2a2ad1e7afcb@redhat.com>
- <CAEzMDiBKdA15Gn2kgs=BgzCM=bzaBXCQP_tM_Vmfc4uxGL0SRg@mail.gmail.com>
- <0ae1e066-821e-3b11-ee44-b615245cb1ea@redhat.com>
- <3b72a75c-012e-2779-74a4-d36ca1ef9e56@redhat.com>
- <CAEzMDiARnp-FMqUcoVdCBSSApaRbenvrk7cawgyo8kJJvy0jXg@mail.gmail.com>
- <364d6133-158b-0f28-0278-dc0da33b2916@redhat.com>
- <CAEzMDiAq1U3SRkvwh5nqETDBoZs8DojhmMTDSG7B-Uzbh1a3Nw@mail.gmail.com>
- <148b498a-cd13-bcb2-de04-d74b1c2a0f65@redhat.com>
- <CAEzMDiBU98VzS9Yye6UrCVM5-f9F64ZUqCOJPpnd+5ufdY5OsA@mail.gmail.com>
- <CAEzMDiAJwLXHRqF9whvRoXw3Va47X-2M1=v0cTK6RqvMZLb91Q@mail.gmail.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701EEE856@BPXM01GP.gisp.nec.co.jp>
-From: Abhishek Shah <abrs612@gmail.com>
-Date: Tue, 11 Jul 2017 21:47:52 +0530
-Message-ID: <CAEzMDiDMx=AD3O_4Jc9BWmo2Tumw4eS--4K3khu9gUOM73Kstg@mail.gmail.com>
-Subject: Re: makedumpfile: support for newer kernels [v4.9 onwards]
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701EEFA89@BPXM01GP.gisp.nec.co.jp>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,190 +24,150 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: Pratyush Anand <panand@redhat.com>, Dave Anderson <anderson@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "daniel.kiper@oracle.com" <daniel.kiper@oracle.com>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>
 
->>Seeing further, I could see that the "get_mem_map" function at the end
->>[if (!is_xen_memory())]
->>is attempting to change "info->max_mapnr" value based on "mem=" option.
->>-- in particular commit ebe2fa3a5c1e2bfac3778c0fbeca4287a934cc58.
->>And in my kernel command line, "mem=2G" was present, as I intended to
->>take dump of 2G RAM,
->>resulting into reduced "info->max_mapnr".
->
-> Basically, this adjusting info->max_mapnr must be harmless since
-> it just intends to ignore unused memory regions.
-> Did you find out why adjusting info->max_mapnr causes the problem ?
->
-Operation of "write_kdump_pages_and_bitmap_cyclic" depends on
-info->max_mapnr value.
-That is the reason why we have problem with kdump compressed dump, but
-not with elf formatted dump.
+Atsushi,
+Please see response below!
+eric
 
-From the memory regions that I have, the last region does not seem to
-be mapped (which contains the address sought by crash);
-because of which, info->max_mapnr is getting adjusted to some reduced
-value (compared to the previous info->max_mapnr of 880203).
+On 07/11/2017 02:43 AM, Atsushi Kumagai wrote:
+> Hello Eric,
+> 
+>>> On 07/07/2017 04:09 AM, Atsushi Kumagai wrote:
+>>>>> The PFN_EXCLUDED value is used to control at which point a run of
+>>>>> zeros in the bitmap (zeros denote excluded pages) is large enough
+>>>>> to warrant truncating the current output segment and to create a
+>>>>> new output segment (containing non-excluded pages), in an ELF dump.
+>>>>>
+>>>>> If the run is smaller than PFN_EXCLUDED, then those excluded pages
+>>>>> are still output in the ELF dump, for the current output segment.
+>>>>>
+>>>>> By using smaller values of PFN_EXCLUDED, the resulting dump file
+>>>>> size can be made smaller by actually removing more excluded pages
+>>>>> from the resulting dump file.
+>>>>>
+>>>>> This patch adds the command line option --exclude-threshold=<value>
+>>>>> to indicate the threshold. The default is 256, the legacy value
+>>>>> of PFN_EXCLUDED. The smallest value permitted is 1.
+>>>>>
+>>>>> Using an existing vmcore, this was tested by the following:
+>>>>>
+>>>>> % makedumpfile -E -d31 --exclude-threshold=256 -x vmlinux vmcore
+>>>>> newvmcore256
+>>>>> % makedumpfile -E -d31 --exclude-threshold=4 -x vmlinux vmcore
+>>>>> newvmcore4
+>>>>>
+>>>>> I utilize -d31 in order to exclude as many page types as possible,
+>>>>> resulting in a [significantly] smaller file sizes than the original
+>>>>> vmcore.
+>>>>>
+>>>>> -rwxrwx--- 1 edevolde edevolde 4034564096 Jun 27 10:24 vmcore
+>>>>> -rw------- 1 edevolde edevolde 119808156 Jul  6 13:01 newvmcore256
+>>>>> -rw------- 1 edevolde edevolde 100811276 Jul  6 13:08 newvmcore4
+>>>>>
+>>>>> The use of smaller value of PFN_EXCLUDED increases the number of
+>>>>> output segments (the 'Number of program headers' in the readelf
+>>>>> output) in the ELF dump file.
+>>>>
+>>>> How will you tune the value ? I'm not sure what is the benefit of the
+>>>> tunable PFN_EXCLUDED. If there is no regression caused by too many
+>>>> PT_LOAD
+>>>> entries, I think we can decide a concrete PFN_EXCLUDED.
+>>>
+>>> Allow me note two things prior to addressing the question.
+>>>
+>>> Note that the value for PFN_EXCLUDED really should be in the range:
+>>>
+>>>    1 <= PFN_EXCLUDED <= NUM_PAGES(largest segment)
+>>>
+>>> but that values larger than NUM_PAGES(largest segment) behave the same
+>>> as NUM_PAGES(largest segment) and simply prevent makedumpfile from ever
+>>> omitting excluded pages from the dump file.
+>>>
+>>> Also note that the ELF header allows for a 16-bit e_phnum value for the
+>>> number of segments in the dump file. As it stands today, I doubt that
+>>> anybody has come close to reaching 65535 segments, but the combination
+>>> of larger and larger memories as well as the work we (Oracle) are doing
+>>> to further enhance the capabilities of makedumpfile, I believe we will
+>>> start to challenge this 65535 number.
+> 
+> I overlooked the limitation of the number of segments, so I considered
+> only "The first benefit" you said below.
+> 
+>>> The ability to tune PFN_EXCLUDED allows one to minimize file size while
+>>> still staying within ELF boundaries.
+>>>
+>>> There are two ways in which have PFN_EXCLUDED as a tunable parameter
+>>> benefits the user.
+>>>
+>>> The first benefit is, when making PFN_EXCLUDED smaller, makedumpfile has
+>>> more opportunities to NOT write excluded pages to the resulting dump
+>>> file, thus obtaining a smaller overall dump file size. And since a
+>>> PT_LOAD header is smaller than a page, this penalty (of more segments)
+>>> will always result in a smaller file size. (In the example I cite the
+>>> dump file was 18MB smaller with a PFN_EXCLUDED value of 4 than default
+>>> 256, in spite of increasing the number of segments from 6 to 244).
+>>>
+>>> The second benefit is, when enabling PFN_EXCLUDED to become larger, it
+>>> allows makedumpfile to continue to generate valid ELF dump files in the
+>>> presence of larger and larger memory systems. Generally speaking, the
+>>> goal is to minimize the size of dump files via the exclusion of
+>>> uninteresting pages (ie zero, free, etc), especially as the size of
+>>> memory continues to grow and grow. As the memory increases, there are
+>>> more and more of these uninteresting pages, and more opportunities for
+>>> makedumpfile to omit them (even at the current PFN_EXCLUDED value of
+>>> 256). Furthermore, we are working on additional page exclusion
+>>> strategies that will drive more and more opportunities for makedumpfile
+>>> to omit these pages from the dump file. And as makedumpfile omits more
+>>> and more pages from the dump file, that increases the number of segments
+>>> needed.
+>>>
+>>> By enabling a user to tune the value of PFN_EXCLUDED, we provide an
+>>> additional mechanism to balance the size of the ELF dump file with
+>>> respect to the size of memory.
+>>
+>> It occurred to me that offering the option "--exclude-threshold=auto"
+>> whereby a binary search on the second bitmap in the function
+>> get_loads_dumpfile_cyclic() to determine the optimum value of
+>> PFN_EXCLUDED (optimum here meaning the smallest possible value while
+>> still staying within 65535 segments, which would yield the smallest
+>> possible dump file size for the given constraints) would be an excellent
+>> feature to have?
+> 
+> I think the "auto" is necessary for --exclude-threshold, the optimum
+> value should be calculated automatically. Otherwise, it imposes trial-and-error
+> on users every time, it doesn't sound practical. IOW, this patch is
+> unacceptable if there is no mechanism to support users.
+> So now, my only concern for this option is the processing time of the
+> binary search.
 
-Following is the memory regions that I have:
-mem_map (0)
-  mem_map    : ffff8008000c6280
-  pfn_start  : 0
-  pfn_end    : 40000
-mem_map (1)
-  mem_map    : 0
-  pfn_start  : 40000
-  pfn_end    : 80000
-mem_map (2)
-  mem_map    : 0
-  pfn_start  : 80000
-  pfn_end    : c0000
-mem_map (3)
-  mem_map    : 0
-  pfn_start  : c0000
-  pfn_end    : 100000
-mem_map (4)
-  mem_map    : 0
-  pfn_start  : 100000
-  pfn_end    : 140000
-mem_map (5)
-  mem_map    : 0
-  pfn_start  : 140000
-  pfn_end    : 180000
-mem_map (6)
-  mem_map    : 0
-  pfn_start  : 180000
-  pfn_end    : 1c0000
-mem_map (7)
-  mem_map    : 0
-  pfn_start  : 1c0000
-  pfn_end    : 200000
-mem_map (8)
-  mem_map    : 0
-  pfn_start  : 200000
-  pfn_end    : 240000
-mem_map (9)
-  mem_map    : 0
-  pfn_start  : 240000
-  pfn_end    : 280000
-mem_map (10)
-  mem_map    : 0
-  pfn_start  : 280000
-  pfn_end    : 2c0000
-mem_map (11)
-  mem_map    : 0
-  pfn_start  : 2c0000
-  pfn_end    : 300000
-mem_map (12)
-  mem_map    : ffff800045136a80
-  pfn_start  : 300000
-  pfn_end    : 340000
-mem_map (13)
-  mem_map    : ffff800046136480
-  pfn_start  : 340000
-  pfn_end    : 380000
-mem_map (14)
-  mem_map    : ffff800047136c00
-  pfn_start  : 380000
-  pfn_end    : 3c0000
-mem_map (15)
-  mem_map    : 0
-  pfn_start  : 3c0000
-  pfn_end    : 400000
-mem_map (16)
-  mem_map    : 0
-  pfn_start  : 400000
-  pfn_end    : 440000
-mem_map (17)
-  mem_map    : 0
-  pfn_start  : 440000
-  pfn_end    : 480000
-mem_map (18)
-  mem_map    : 0
-  pfn_start  : 480000
-  pfn_end    : 4c0000
-mem_map (19)
-  mem_map    : 0
-  pfn_start  : 4c0000
-  pfn_end    : 500000
-mem_map (20)
-  mem_map    : 0
-  pfn_start  : 500000
-  pfn_end    : 540000
-mem_map (21)
-  mem_map    : 0
-  pfn_start  : 540000
-  pfn_end    : 580000
-mem_map (22)
-  mem_map    : 0
-  pfn_start  : 580000
-  pfn_end    : 5c0000
-mem_map (23)
-  mem_map    : 0
-  pfn_start  : 5c0000
-  pfn_end    : 600000
-mem_map (24)
-  mem_map    : 0
-  pfn_start  : 600000
-  pfn_end    : 640000
-mem_map (25)
-  mem_map    : 0
-  pfn_start  : 640000
-  pfn_end    : 680000
-mem_map (26)
-  mem_map    : 0
-  pfn_start  : 680000
-  pfn_end    : 6c0000
-mem_map (27)
-  mem_map    : 0
-  pfn_start  : 6c0000
-  pfn_end    : 700000
-mem_map (28)
-  mem_map    : 0
-  pfn_start  : 700000
-  pfn_end    : 740000
-mem_map (29)
-  mem_map    : 0
-  pfn_start  : 740000
-  pfn_end    : 780000
-mem_map (30)
-  mem_map    : 0
-  pfn_start  : 780000
-  pfn_end    : 7c0000
-mem_map (31)
-  mem_map    : 0
-  pfn_start  : 7c0000
-  pfn_end    : 800000
-mem_map (32)
-  mem_map    : 0
-  pfn_start  : 800000
-  pfn_end    : 840000
-mem_map (33)
-  mem_map    : 0
-  pfn_start  : 840000
-  pfn_end    : 880000
-mem_map (34)
-  mem_map    : 0
-  pfn_start  : 880000
-  pfn_end    : 880203
-
->>So, I commented out this portion and confirmed that "info->max_mapnr"
->>remains same
->>throughout. And I was able to get kdump compressed vmcore process-able
->>by crash utility.
->
-> This sounds like there are some valid data beyond the adjusted info->max_mapnr,
-> is that true ?
-I am not sure about it, but crash does look for data in mem_map(34),
-I haven't yet look into this in-detail. I will do that soon.
-
+OK, so the idea of "tuning" the value of PFN_EXCLUDED is agree-able,  
+great! I will work on the binary search and report back with  
+measurements on the processing time of 'crash'. From there we can  
+determine if benefit is worthwhile.
 
 Regards,
-Abhishek
+eric
+
+> 
+> [snip]
+>>>>> And with a larger number of segments, loading both vmcore and newvmcore4
+>>>>> into 'crash' resulted in identical outputs when run with the dmesg, ps,
+>>>>> files, mount, and net sub-commands.
+>>>>
+>>>> What about the processing speed of crash, is there no slow down ?
+>>>
+>>> I did not observe a noticeable change in processing speed of crash.
+> 
+> Good, it would be better to be represented by actual measured results.
+> 
+> Thanks,
+> Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
