@@ -1,21 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from aserp1040.oracle.com ([141.146.126.69])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dV13P-0003qT-8h
- for kexec@lists.infradead.org; Tue, 11 Jul 2017 19:42:41 +0000
-Subject: Re: [makedumpfile PATCH] Allow PFN_EXCLUDED to be tunable via command
- line option --exclude-threshold
-References: <1499368882-2125-1-git-send-email-eric.devolder@oracle.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701EEEC72@BPXM01GP.gisp.nec.co.jp>
- <109a59ca-9ea3-662c-6c27-2a919f991053@oracle.com>
- <cf1f0817-ab19-30b9-fce4-b82b6e678091@oracle.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701EEFA89@BPXM01GP.gisp.nec.co.jp>
+ id 1dVNKF-0003mU-EL
+ for kexec@lists.infradead.org; Wed, 12 Jul 2017 19:29:33 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
-Message-ID: <a32867ed-e9de-bb0e-907a-9a94630760aa@oracle.com>
-Date: Tue, 11 Jul 2017 14:42:12 -0500
+Subject: [makedumpfile PATCH] fix compiler warnings
+Date: Wed, 12 Jul 2017 14:28:12 -0500
+Message-Id: <1499887692-10068-1-git-send-email-eric.devolder@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701EEFA89@BPXM01GP.gisp.nec.co.jp>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,152 +16,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: "daniel.kiper@oracle.com" <daniel.kiper@oracle.com>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>
+To: kexec@lists.infradead.org, ats-kumagai@wm.jp.nec.com
+Cc: daniel.kiper@oracle.com, eric.devolder@oracle.com, konrad.wilk@oracle.com
 
-Atsushi,
-Please see response below!
-eric
-
-On 07/11/2017 02:43 AM, Atsushi Kumagai wrote:
-> Hello Eric,
-> 
->>> On 07/07/2017 04:09 AM, Atsushi Kumagai wrote:
->>>>> The PFN_EXCLUDED value is used to control at which point a run of
->>>>> zeros in the bitmap (zeros denote excluded pages) is large enough
->>>>> to warrant truncating the current output segment and to create a
->>>>> new output segment (containing non-excluded pages), in an ELF dump.
->>>>>
->>>>> If the run is smaller than PFN_EXCLUDED, then those excluded pages
->>>>> are still output in the ELF dump, for the current output segment.
->>>>>
->>>>> By using smaller values of PFN_EXCLUDED, the resulting dump file
->>>>> size can be made smaller by actually removing more excluded pages
->>>>> from the resulting dump file.
->>>>>
->>>>> This patch adds the command line option --exclude-threshold=<value>
->>>>> to indicate the threshold. The default is 256, the legacy value
->>>>> of PFN_EXCLUDED. The smallest value permitted is 1.
->>>>>
->>>>> Using an existing vmcore, this was tested by the following:
->>>>>
->>>>> % makedumpfile -E -d31 --exclude-threshold=256 -x vmlinux vmcore
->>>>> newvmcore256
->>>>> % makedumpfile -E -d31 --exclude-threshold=4 -x vmlinux vmcore
->>>>> newvmcore4
->>>>>
->>>>> I utilize -d31 in order to exclude as many page types as possible,
->>>>> resulting in a [significantly] smaller file sizes than the original
->>>>> vmcore.
->>>>>
->>>>> -rwxrwx--- 1 edevolde edevolde 4034564096 Jun 27 10:24 vmcore
->>>>> -rw------- 1 edevolde edevolde 119808156 Jul  6 13:01 newvmcore256
->>>>> -rw------- 1 edevolde edevolde 100811276 Jul  6 13:08 newvmcore4
->>>>>
->>>>> The use of smaller value of PFN_EXCLUDED increases the number of
->>>>> output segments (the 'Number of program headers' in the readelf
->>>>> output) in the ELF dump file.
->>>>
->>>> How will you tune the value ? I'm not sure what is the benefit of the
->>>> tunable PFN_EXCLUDED. If there is no regression caused by too many
->>>> PT_LOAD
->>>> entries, I think we can decide a concrete PFN_EXCLUDED.
->>>
->>> Allow me note two things prior to addressing the question.
->>>
->>> Note that the value for PFN_EXCLUDED really should be in the range:
->>>
->>>    1 <= PFN_EXCLUDED <= NUM_PAGES(largest segment)
->>>
->>> but that values larger than NUM_PAGES(largest segment) behave the same
->>> as NUM_PAGES(largest segment) and simply prevent makedumpfile from ever
->>> omitting excluded pages from the dump file.
->>>
->>> Also note that the ELF header allows for a 16-bit e_phnum value for the
->>> number of segments in the dump file. As it stands today, I doubt that
->>> anybody has come close to reaching 65535 segments, but the combination
->>> of larger and larger memories as well as the work we (Oracle) are doing
->>> to further enhance the capabilities of makedumpfile, I believe we will
->>> start to challenge this 65535 number.
-> 
-> I overlooked the limitation of the number of segments, so I considered
-> only "The first benefit" you said below.
-> 
->>> The ability to tune PFN_EXCLUDED allows one to minimize file size while
->>> still staying within ELF boundaries.
->>>
->>> There are two ways in which have PFN_EXCLUDED as a tunable parameter
->>> benefits the user.
->>>
->>> The first benefit is, when making PFN_EXCLUDED smaller, makedumpfile has
->>> more opportunities to NOT write excluded pages to the resulting dump
->>> file, thus obtaining a smaller overall dump file size. And since a
->>> PT_LOAD header is smaller than a page, this penalty (of more segments)
->>> will always result in a smaller file size. (In the example I cite the
->>> dump file was 18MB smaller with a PFN_EXCLUDED value of 4 than default
->>> 256, in spite of increasing the number of segments from 6 to 244).
->>>
->>> The second benefit is, when enabling PFN_EXCLUDED to become larger, it
->>> allows makedumpfile to continue to generate valid ELF dump files in the
->>> presence of larger and larger memory systems. Generally speaking, the
->>> goal is to minimize the size of dump files via the exclusion of
->>> uninteresting pages (ie zero, free, etc), especially as the size of
->>> memory continues to grow and grow. As the memory increases, there are
->>> more and more of these uninteresting pages, and more opportunities for
->>> makedumpfile to omit them (even at the current PFN_EXCLUDED value of
->>> 256). Furthermore, we are working on additional page exclusion
->>> strategies that will drive more and more opportunities for makedumpfile
->>> to omit these pages from the dump file. And as makedumpfile omits more
->>> and more pages from the dump file, that increases the number of segments
->>> needed.
->>>
->>> By enabling a user to tune the value of PFN_EXCLUDED, we provide an
->>> additional mechanism to balance the size of the ELF dump file with
->>> respect to the size of memory.
->>
->> It occurred to me that offering the option "--exclude-threshold=auto"
->> whereby a binary search on the second bitmap in the function
->> get_loads_dumpfile_cyclic() to determine the optimum value of
->> PFN_EXCLUDED (optimum here meaning the smallest possible value while
->> still staying within 65535 segments, which would yield the smallest
->> possible dump file size for the given constraints) would be an excellent
->> feature to have?
-> 
-> I think the "auto" is necessary for --exclude-threshold, the optimum
-> value should be calculated automatically. Otherwise, it imposes trial-and-error
-> on users every time, it doesn't sound practical. IOW, this patch is
-> unacceptable if there is no mechanism to support users.
-> So now, my only concern for this option is the processing time of the
-> binary search.
-
-OK, so the idea of "tuning" the value of PFN_EXCLUDED is agree-able,  
-great! I will work on the binary search and report back with  
-measurements on the processing time of 'crash'. From there we can  
-determine if benefit is worthwhile.
-
-Regards,
-eric
-
-> 
-> [snip]
->>>>> And with a larger number of segments, loading both vmcore and newvmcore4
->>>>> into 'crash' resulted in identical outputs when run with the dmesg, ps,
->>>>> files, mount, and net sub-commands.
->>>>
->>>> What about the processing speed of crash, is there no slow down ?
->>>
->>> I did not observe a noticeable change in processing speed of crash.
-> 
-> Good, it would be better to be represented by actual measured results.
-> 
-> Thanks,
-> Atsushi Kumagai
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+V2hlbiBidWlsZGluZyBtYWtlZHVtcGZpbGUgd2l0aCBHQ0MgNS40LCBJIG9ic2VydmUgYSBmZXcg
+d2FybmluZ3M6CgolIG1ha2UgTElOS1RZUEU9ZHluYW1pYwoKc2FkdW1wX2luZm8uYzogSW4gZnVu
+Y3Rpb24g4oCYc2FkdW1wX2lzX2R1bXBhYmxl4oCZOgpzYWR1bXBfaW5mby5jOjE0NTozOiB3YXJu
+aW5nOiBpZ25vcmluZyByZXR1cm4gdmFsdWUgb2Yg4oCYcmVhZOKAmSwgZGVjbGFyZWQgd2l0aCBh
+dHRyaWJ1dGUgd2Fybl91bnVzZWRfcmVzdWx0IFstV3VudXNlZC1yZXN1bHRdCiAgIHJlYWQoYml0
+bWFwLT5mZCwgYml0bWFwLT5idWYsIEJVRlNJWkVfQklUTUFQKTsKICAgXgpJbiBmaWxlIGluY2x1
+ZGVkIGZyb20gc2FkdW1wX2luZm8uYzoyMTowOgptYWtlZHVtcGZpbGUuaDogSW4gZnVuY3Rpb24g
+4oCYaXNfZHVtcGFibGVfZmlsZeKAmToKbWFrZWR1bXBmaWxlLmg6MTk5MjozOiB3YXJuaW5nOiBp
+Z25vcmluZyByZXR1cm4gdmFsdWUgb2Yg4oCYcmVhZOKAmSwgZGVjbGFyZWQgd2l0aCBhdHRyaWJ1
+dGUgd2Fybl91bnVzZWRfcmVzdWx0IFstV3VudXNlZC1yZXN1bHRdCiAgIHJlYWQoYml0bWFwLT5m
+ZCwgYml0bWFwLT5idWYsIEJVRlNJWkVfQklUTUFQKTsKICAgXgptYWtlZHVtcGZpbGUuYzogSW4g
+ZnVuY3Rpb24g4oCYd3JpdGVfZXJhc2VpbmZv4oCZOgptYWtlZHVtcGZpbGUuYzo4MjczOjQ6IHdh
+cm5pbmc6IGZvcm1hdCBub3QgYSBzdHJpbmcgbGl0ZXJhbCBhbmQgbm8gZm9ybWF0IGFyZ3VtZW50
+cyBbLVdmb3JtYXQtc2VjdXJpdHldCiAgICBERUJVR19NU0cob2J1Zik7CiAgICBeCm1ha2VkdW1w
+ZmlsZS5jOjgyNzM6NDogd2FybmluZzogZm9ybWF0IG5vdCBhIHN0cmluZyBsaXRlcmFsIGFuZCBu
+byBmb3JtYXQgYXJndW1lbnRzIFstV2Zvcm1hdC1zZWN1cml0eV0KSW4gZmlsZSBpbmNsdWRlZCBm
+cm9tIG1ha2VkdW1wZmlsZS5jOjE2OjA6Cm1ha2VkdW1wZmlsZS5oOiBJbiBmdW5jdGlvbiDigJhp
+c19kdW1wYWJsZV9maWxl4oCZOgptYWtlZHVtcGZpbGUuaDoxOTkyOjM6IHdhcm5pbmc6IGlnbm9y
+aW5nIHJldHVybiB2YWx1ZSBvZiDigJhyZWFk4oCZLCBkZWNsYXJlZCB3aXRoIGF0dHJpYnV0ZSB3
+YXJuX3VudXNlZF9yZXN1bHQgWy1XdW51c2VkLXJlc3VsdF0KICAgcmVhZChiaXRtYXAtPmZkLCBi
+aXRtYXAtPmJ1ZiwgQlVGU0laRV9CSVRNQVApOwogICBeCgpUaGlzIHBhdGNoIGVsaW1pbmF0ZXMg
+dGhlIHdhcm5pbmdzLgoKU2lnbmVkLW9mZi1ieTogRXJpYyBEZVZvbGRlciA8ZXJpYy5kZXZvbGRl
+ckBvcmFjbGUuY29tPgotLS0KdjE6IDEyanVsMjAxNyBwb3N0ZWQgdG8ga2V4ZWMtdG9vbHMgbWFp
+bGluZyBsaXN0Ci0tLQogbWFrZWR1bXBmaWxlLmMgfCAyICstCiBtYWtlZHVtcGZpbGUuaCB8IDYg
+KysrKystCiBzYWR1bXBfaW5mby5jICB8IDYgKysrKystCiAzIGZpbGVzIGNoYW5nZWQsIDExIGlu
+c2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvbWFrZWR1bXBmaWxlLmMg
+Yi9tYWtlZHVtcGZpbGUuYwppbmRleCBlNjliNmRmLi44YjhhNmIwIDEwMDY0NAotLS0gYS9tYWtl
+ZHVtcGZpbGUuYworKysgYi9tYWtlZHVtcGZpbGUuYwpAQCAtODI3MCw3ICs4MjcwLDcgQEAgd3Jp
+dGVfZXJhc2VpbmZvKHN0cnVjdCBjYWNoZV9kYXRhICpjZF9wYWdlLCB1bnNpZ25lZCBsb25nICpz
+aXplX291dCkKIAkJCX0KIAkJCXNwcmludGYob2J1ZiwgImVyYXNlICVzICVzIiwgZXJhc2VfaW5m
+b1tpXS5zeW1ib2xfZXhwciwKIAkJCQkJCQlzaXplX3N0cik7Ci0JCQlERUJVR19NU0cob2J1Zik7
+CisJCQlERUJVR19NU0coIiVzIiwgb2J1Zik7CiAJCQlpZiAoIXdyaXRlX2NhY2hlKGNkX3BhZ2Us
+IG9idWYsIHN0cmxlbihvYnVmKSkpCiAJCQkJZ290byBvdXQ7CiAJCQlzaXplX2VyYXNlaW5mbyAr
+PSBzdHJsZW4ob2J1Zik7CmRpZmYgLS1naXQgYS9tYWtlZHVtcGZpbGUuaCBiL21ha2VkdW1wZmls
+ZS5oCmluZGV4IGUzMmU1NjcuLjM4ZWE2NzMgMTAwNjQ0Ci0tLSBhL21ha2VkdW1wZmlsZS5oCisr
+KyBiL21ha2VkdW1wZmlsZS5oCkBAIC0xOTgxLDYgKzE5ODEsNyBAQCBzdGF0aWMgaW5saW5lIGlu
+dAogaXNfZHVtcGFibGVfZmlsZShzdHJ1Y3QgZHVtcF9iaXRtYXAgKmJpdG1hcCwgbWRmX3Bmbl90
+IHBmbikKIHsKIAlvZmZfdCBvZmZzZXQ7CisJc3NpemVfdCByY29kZTsKIAlpZiAocGZuID09IDAg
+fHwgYml0bWFwLT5ub19ibG9jayAhPSBwZm4vUEZOX0JVRkJJVE1BUCkgewogCQlvZmZzZXQgPSBi
+aXRtYXAtPm9mZnNldCArIEJVRlNJWkVfQklUTUFQKihwZm4vUEZOX0JVRkJJVE1BUCk7CiAJCWlm
+IChsc2VlayhiaXRtYXAtPmZkLCBvZmZzZXQsIFNFRUtfU0VUKSA8IDAgKSB7CkBAIC0xOTg5LDcg
+KzE5OTAsMTAgQEAgaXNfZHVtcGFibGVfZmlsZShzdHJ1Y3QgZHVtcF9iaXRtYXAgKmJpdG1hcCwg
+bWRmX3Bmbl90IHBmbikKIAkJCXJldHVybiBGQUxTRTsKIAkJfQogCi0JCXJlYWQoYml0bWFwLT5m
+ZCwgYml0bWFwLT5idWYsIEJVRlNJWkVfQklUTUFQKTsKKwkJcmNvZGUgPSByZWFkKGJpdG1hcC0+
+ZmQsIGJpdG1hcC0+YnVmLCBCVUZTSVpFX0JJVE1BUCk7CisJCWlmIChyY29kZSAhPSBCVUZTSVpF
+X0JJVE1BUCkKKwkJCUVSUk1TRygiQ2FuJ3QgcmVhZCB0aGUgYml0bWFwKCVzKS4gJXNcbiIsCisJ
+CQkJYml0bWFwLT5maWxlX25hbWUsIHN0cmVycm9yKGVycm5vKSk7CiAJCWlmIChwZm4gPT0gMCkK
+IAkJCWJpdG1hcC0+bm9fYmxvY2sgPSAwOwogCQllbHNlCmRpZmYgLS1naXQgYS9zYWR1bXBfaW5m
+by5jIGIvc2FkdW1wX2luZm8uYwppbmRleCBmNzdhMDIwLi45YTZiOTc3IDEwMDY0NAotLS0gYS9z
+YWR1bXBfaW5mby5jCisrKyBiL3NhZHVtcF9pbmZvLmMKQEAgLTEzOCwxMSArMTM4LDE1IEBAIHN0
+YXRpYyBpbmxpbmUgaW50CiBzYWR1bXBfaXNfZHVtcGFibGUoc3RydWN0IGR1bXBfYml0bWFwICpi
+aXRtYXAsIG1kZl9wZm5fdCBwZm4pCiB7CiAJb2ZmX3Qgb2Zmc2V0OworCXNzaXplX3QgcmNvZGU7
+CiAKIAlpZiAocGZuID09IDAgfHwgYml0bWFwLT5ub19ibG9jayAhPSBwZm4vUEZOX0JVRkJJVE1B
+UCkgewogCQlvZmZzZXQgPSBiaXRtYXAtPm9mZnNldCArIEJVRlNJWkVfQklUTUFQKihwZm4vUEZO
+X0JVRkJJVE1BUCk7CiAJCWxzZWVrKGJpdG1hcC0+ZmQsIG9mZnNldCwgU0VFS19TRVQpOwotCQly
+ZWFkKGJpdG1hcC0+ZmQsIGJpdG1hcC0+YnVmLCBCVUZTSVpFX0JJVE1BUCk7CisJCXJjb2RlID0g
+cmVhZChiaXRtYXAtPmZkLCBiaXRtYXAtPmJ1ZiwgQlVGU0laRV9CSVRNQVApOworCQlpZiAocmNv
+ZGUgIT0gQlVGU0laRV9CSVRNQVApCisJCQlFUlJNU0coIkNhbid0IHJlYWQgdGhlIGJpdG1hcCgl
+cykuICVzXG4iLAorCQkJCWJpdG1hcC0+ZmlsZV9uYW1lLCBzdHJlcnJvcihlcnJubykpOwogCQlp
+ZiAocGZuID09IDApCiAJCQliaXRtYXAtPm5vX2Jsb2NrID0gMDsKIAkJZWxzZQotLSAKMi43LjQK
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBt
+YWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
