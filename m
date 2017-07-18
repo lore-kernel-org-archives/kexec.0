@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn3nam01on0061.outbound.protection.outlook.com
- ([104.47.33.61] helo=NAM01-BN3-obe.outbound.protection.outlook.com)
+Received: from terminus.zytor.com ([65.50.211.136])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dXDKP-0003bH-GI
- for kexec@lists.infradead.org; Mon, 17 Jul 2017 21:13:19 +0000
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v10 31/38] x86/mm, kexec: Allow kexec to be used with SME
-Date: Mon, 17 Jul 2017 16:10:28 -0500
-Message-Id: <b95ff075db3e7cd545313f2fb609a49619a09625.1500319216.git.thomas.lendacky@amd.com>
-In-Reply-To: <cover.1500319216.git.thomas.lendacky@amd.com>
-References: <cover.1500319216.git.thomas.lendacky@amd.com>
+ id 1dXQLl-0005I7-Sr
+ for kexec@lists.infradead.org; Tue, 18 Jul 2017 11:07:36 +0000
+Date: Tue, 18 Jul 2017 03:58:36 -0700
+From: tip-bot for Tom Lendacky <tipbot@zytor.com>
+Message-ID: <tip-bba4ed011a52d494aa7ef5e08cf226709bbf3f60@git.kernel.org>
+In-Reply-To: <b95ff075db3e7cd545313f2fb609a49619a09625.1500319216.git.thomas.lendacky@amd.com>
+References: <b95ff075db3e7cd545313f2fb609a49619a09625.1500319216.git.thomas.lendacky@amd.com>
+Subject: [tip:x86/mm] x86/mm, kexec: Allow kexec to be used with SME
 MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,275 +19,208 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Reply-To: arnd@arndb.de, dvyukov@google.com, corbet@lwn.net, mingo@kernel.org,
+ tglx@linutronix.de, riel@redhat.com, kexec@lists.infradead.org,
+ linux-kernel@vger.kernel.org, dyoung@redhat.com, konrad.wilk@oracle.com,
+ bp@alien8.de, hpa@zytor.com, torvalds@linux-foundation.org,
+ matt@codeblueprint.co.uk, aryabinin@virtuozzo.com, thomas.lendacky@amd.com,
+ luto@kernel.org, toshi.kani@hpe.com, glider@google.com, mst@redhat.com,
+ rkrcmar@redhat.com, pbonzini@redhat.com, peterz@infradead.org, bp@suse.de,
+ lwoodman@redhat.com, brijesh.singh@amd.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: x86@kernel.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org, kasan-dev@googlegroups.com
-Cc: Rik van Riel <riel@redhat.com>, =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Matt Fleming <matt@codeblueprint.co.uk>, "Michael S. Tsirkin" <mst@redhat.com>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Brijesh Singh <brijesh.singh@amd.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Alexander Potapenko <glider@google.com>, Dave Young <dyoung@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>
+To: linux-tip-commits@vger.kernel.org
+Cc: brijesh.singh@amd.com, toshi.kani@hpe.com, rkrcmar@redhat.com, matt@codeblueprint.co.uk, glider@google.com, hpa@zytor.com, mingo@kernel.org, corbet@lwn.net, mst@redhat.com, lwoodman@redhat.com, peterz@infradead.org, aryabinin@virtuozzo.com, bp@suse.de, dyoung@redhat.com, thomas.lendacky@amd.com, riel@redhat.com, arnd@arndb.de, konrad.wilk@oracle.com, bp@alien8.de, luto@kernel.org, tglx@linutronix.de, dvyukov@google.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, torvalds@linux-foundation.org
 
-Provide support so that kexec can be used to boot a kernel when SME is
-enabled.
-
-Support is needed to allocate pages for kexec without encryption.  This
-is needed in order to be able to reboot in the kernel in the same manner
-as originally booted.
-
-Additionally, when shutting down all of the CPUs we need to be sure to
-flush the caches and then halt. This is needed when booting from a state
-where SME was not active into a state where SME is active (or vice-versa).
-Without these steps, it is possible for cache lines to exist for the same
-physical location but tagged both with and without the encryption bit. This
-can cause random memory corruption when caches are flushed depending on
-which cacheline is written last.
-
-Cc: <kexec@lists.infradead.org>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
----
- arch/x86/include/asm/init.h          |  1 +
- arch/x86/include/asm/kexec.h         |  8 ++++++++
- arch/x86/include/asm/pgtable_types.h |  1 +
- arch/x86/kernel/machine_kexec_64.c   | 22 +++++++++++++++++++++-
- arch/x86/kernel/process.c            | 17 +++++++++++++++--
- arch/x86/mm/ident_map.c              | 12 ++++++++----
- include/linux/kexec.h                |  8 ++++++++
- kernel/kexec_core.c                  | 12 +++++++++++-
- 8 files changed, 73 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
-index 474eb8c..05c4aa0 100644
---- a/arch/x86/include/asm/init.h
-+++ b/arch/x86/include/asm/init.h
-@@ -7,6 +7,7 @@ struct x86_mapping_info {
- 	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
- 	unsigned long offset;		 /* ident mapping offset */
- 	bool direct_gbpages;		 /* PUD level 1GB page support */
-+	unsigned long kernpg_flag;	 /* kernel pagetable flag override */
- };
- 
- int kernel_ident_mapping_init(struct x86_mapping_info *info, pgd_t *pgd_page,
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 70ef205..e8183ac 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -207,6 +207,14 @@ struct kexec_entry64_regs {
- 	uint64_t r15;
- 	uint64_t rip;
- };
-+
-+extern int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages,
-+				       gfp_t gfp);
-+#define arch_kexec_post_alloc_pages arch_kexec_post_alloc_pages
-+
-+extern void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages);
-+#define arch_kexec_pre_free_pages arch_kexec_pre_free_pages
-+
- #endif
- 
- typedef void crash_vmclear_fn(void);
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index 32095af..830992f 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -213,6 +213,7 @@ enum page_cache_mode {
- #define PAGE_KERNEL		__pgprot(__PAGE_KERNEL | _PAGE_ENC)
- #define PAGE_KERNEL_RO		__pgprot(__PAGE_KERNEL_RO | _PAGE_ENC)
- #define PAGE_KERNEL_EXEC	__pgprot(__PAGE_KERNEL_EXEC | _PAGE_ENC)
-+#define PAGE_KERNEL_EXEC_NOENC	__pgprot(__PAGE_KERNEL_EXEC)
- #define PAGE_KERNEL_RX		__pgprot(__PAGE_KERNEL_RX | _PAGE_ENC)
- #define PAGE_KERNEL_NOCACHE	__pgprot(__PAGE_KERNEL_NOCACHE | _PAGE_ENC)
- #define PAGE_KERNEL_LARGE	__pgprot(__PAGE_KERNEL_LARGE | _PAGE_ENC)
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index cb0a304..9cf8daa 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -87,7 +87,7 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
- 		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
- 	}
- 	pte = pte_offset_kernel(pmd, vaddr);
--	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, PAGE_KERNEL_EXEC));
-+	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, PAGE_KERNEL_EXEC_NOENC));
- 	return 0;
- err:
- 	free_transition_pgtable(image);
-@@ -115,6 +115,7 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
- 		.alloc_pgt_page	= alloc_pgt_page,
- 		.context	= image,
- 		.page_flag	= __PAGE_KERNEL_LARGE_EXEC,
-+		.kernpg_flag	= _KERNPG_TABLE_NOENC,
- 	};
- 	unsigned long mstart, mend;
- 	pgd_t *level4p;
-@@ -602,3 +603,22 @@ void arch_kexec_unprotect_crashkres(void)
- {
- 	kexec_mark_crashkres(false);
- }
-+
-+int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, gfp_t gfp)
-+{
-+	/*
-+	 * If SME is active we need to be sure that kexec pages are
-+	 * not encrypted because when we boot to the new kernel the
-+	 * pages won't be accessed encrypted (initially).
-+	 */
-+	return set_memory_decrypted((unsigned long)vaddr, pages);
-+}
-+
-+void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages)
-+{
-+	/*
-+	 * If SME is active we need to reset the pages back to being
-+	 * an encrypted mapping before freeing them.
-+	 */
-+	set_memory_encrypted((unsigned long)vaddr, pages);
-+}
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 3ca1980..bd6b85f 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -355,6 +355,7 @@ bool xen_set_default_idle(void)
- 	return ret;
- }
- #endif
-+
- void stop_this_cpu(void *dummy)
- {
- 	local_irq_disable();
-@@ -365,8 +366,20 @@ void stop_this_cpu(void *dummy)
- 	disable_local_APIC();
- 	mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
- 
--	for (;;)
--		halt();
-+	for (;;) {
-+		/*
-+		 * Use wbinvd followed by hlt to stop the processor. This
-+		 * provides support for kexec on a processor that supports
-+		 * SME. With kexec, going from SME inactive to SME active
-+		 * requires clearing cache entries so that addresses without
-+		 * the encryption bit set don't corrupt the same physical
-+		 * address that has the encryption bit set when caches are
-+		 * flushed. To achieve this a wbinvd is performed followed by
-+		 * a hlt. Even if the processor is not in the kexec/SME
-+		 * scenario this only adds a wbinvd to a halting processor.
-+		 */
-+		asm volatile("wbinvd; hlt" : : : "memory");
-+	}
- }
- 
- /*
-diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
-index adab159..31cea98 100644
---- a/arch/x86/mm/ident_map.c
-+++ b/arch/x86/mm/ident_map.c
-@@ -51,7 +51,7 @@ static int ident_pud_init(struct x86_mapping_info *info, pud_t *pud_page,
- 		if (!pmd)
- 			return -ENOMEM;
- 		ident_pmd_init(info, pmd, addr, next);
--		set_pud(pud, __pud(__pa(pmd) | _KERNPG_TABLE));
-+		set_pud(pud, __pud(__pa(pmd) | info->kernpg_flag));
- 	}
- 
- 	return 0;
-@@ -79,7 +79,7 @@ static int ident_p4d_init(struct x86_mapping_info *info, p4d_t *p4d_page,
- 		if (!pud)
- 			return -ENOMEM;
- 		ident_pud_init(info, pud, addr, next);
--		set_p4d(p4d, __p4d(__pa(pud) | _KERNPG_TABLE));
-+		set_p4d(p4d, __p4d(__pa(pud) | info->kernpg_flag));
- 	}
- 
- 	return 0;
-@@ -93,6 +93,10 @@ int kernel_ident_mapping_init(struct x86_mapping_info *info, pgd_t *pgd_page,
- 	unsigned long next;
- 	int result;
- 
-+	/* Set the default pagetable flags if not supplied */
-+	if (!info->kernpg_flag)
-+		info->kernpg_flag = _KERNPG_TABLE;
-+
- 	for (; addr < end; addr = next) {
- 		pgd_t *pgd = pgd_page + pgd_index(addr);
- 		p4d_t *p4d;
-@@ -116,14 +120,14 @@ int kernel_ident_mapping_init(struct x86_mapping_info *info, pgd_t *pgd_page,
- 		if (result)
- 			return result;
- 		if (IS_ENABLED(CONFIG_X86_5LEVEL)) {
--			set_pgd(pgd, __pgd(__pa(p4d) | _KERNPG_TABLE));
-+			set_pgd(pgd, __pgd(__pa(p4d) | info->kernpg_flag));
- 		} else {
- 			/*
- 			 * With p4d folded, pgd is equal to p4d.
- 			 * The pgd entry has to point to the pud page table in this case.
- 			 */
- 			pud_t *pud = pud_offset(p4d, 0);
--			set_pgd(pgd, __pgd(__pa(pud) | _KERNPG_TABLE));
-+			set_pgd(pgd, __pgd(__pa(pud) | info->kernpg_flag));
- 		}
- 	}
- 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index dd056fa..2b7590f 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -327,6 +327,14 @@ static inline void *boot_phys_to_virt(unsigned long entry)
- 	return phys_to_virt(boot_phys_to_phys(entry));
- }
- 
-+#ifndef arch_kexec_post_alloc_pages
-+static inline int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, gfp_t gfp) { return 0; }
-+#endif
-+
-+#ifndef arch_kexec_pre_free_pages
-+static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) { }
-+#endif
-+
- #else /* !CONFIG_KEXEC_CORE */
- struct pt_regs;
- struct task_struct;
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 1ae7c41..20fef1a 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -301,7 +301,7 @@ static struct page *kimage_alloc_pages(gfp_t gfp_mask, unsigned int order)
- {
- 	struct page *pages;
- 
--	pages = alloc_pages(gfp_mask, order);
-+	pages = alloc_pages(gfp_mask & ~__GFP_ZERO, order);
- 	if (pages) {
- 		unsigned int count, i;
- 
-@@ -310,6 +310,13 @@ static struct page *kimage_alloc_pages(gfp_t gfp_mask, unsigned int order)
- 		count = 1 << order;
- 		for (i = 0; i < count; i++)
- 			SetPageReserved(pages + i);
-+
-+		arch_kexec_post_alloc_pages(page_address(pages), count,
-+					    gfp_mask);
-+
-+		if (gfp_mask & __GFP_ZERO)
-+			for (i = 0; i < count; i++)
-+				clear_highpage(pages + i);
- 	}
- 
- 	return pages;
-@@ -321,6 +328,9 @@ static void kimage_free_pages(struct page *page)
- 
- 	order = page_private(page);
- 	count = 1 << order;
-+
-+	arch_kexec_pre_free_pages(page_address(page), count);
-+
- 	for (i = 0; i < count; i++)
- 		ClearPageReserved(page + i);
- 	__free_pages(page, order);
--- 
-1.9.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Q29tbWl0LUlEOiAgYmJhNGVkMDExYTUyZDQ5NGFhN2VmNWUwOGNmMjI2NzA5YmJmM2Y2MApHaXR3
+ZWI6ICAgICBodHRwOi8vZ2l0Lmtlcm5lbC5vcmcvdGlwL2JiYTRlZDAxMWE1MmQ0OTRhYTdlZjVl
+MDhjZjIyNjcwOWJiZjNmNjAKQXV0aG9yOiAgICAgVG9tIExlbmRhY2t5IDx0aG9tYXMubGVuZGFj
+a3lAYW1kLmNvbT4KQXV0aG9yRGF0ZTogTW9uLCAxNyBKdWwgMjAxNyAxNjoxMDoyOCAtMDUwMApD
+b21taXR0ZXI6ICBJbmdvIE1vbG5hciA8bWluZ29Aa2VybmVsLm9yZz4KQ29tbWl0RGF0ZTogVHVl
+LCAxOCBKdWwgMjAxNyAxMTozODowNCArMDIwMAoKeDg2L21tLCBrZXhlYzogQWxsb3cga2V4ZWMg
+dG8gYmUgdXNlZCB3aXRoIFNNRQoKUHJvdmlkZSBzdXBwb3J0IHNvIHRoYXQga2V4ZWMgY2FuIGJl
+IHVzZWQgdG8gYm9vdCBhIGtlcm5lbCB3aGVuIFNNRSBpcwplbmFibGVkLgoKU3VwcG9ydCBpcyBu
+ZWVkZWQgdG8gYWxsb2NhdGUgcGFnZXMgZm9yIGtleGVjIHdpdGhvdXQgZW5jcnlwdGlvbi4gIFRo
+aXMKaXMgbmVlZGVkIGluIG9yZGVyIHRvIGJlIGFibGUgdG8gcmVib290IGluIHRoZSBrZXJuZWwg
+aW4gdGhlIHNhbWUgbWFubmVyCmFzIG9yaWdpbmFsbHkgYm9vdGVkLgoKQWRkaXRpb25hbGx5LCB3
+aGVuIHNodXR0aW5nIGRvd24gYWxsIG9mIHRoZSBDUFVzIHdlIG5lZWQgdG8gYmUgc3VyZSB0bwpm
+bHVzaCB0aGUgY2FjaGVzIGFuZCB0aGVuIGhhbHQuIFRoaXMgaXMgbmVlZGVkIHdoZW4gYm9vdGlu
+ZyBmcm9tIGEgc3RhdGUKd2hlcmUgU01FIHdhcyBub3QgYWN0aXZlIGludG8gYSBzdGF0ZSB3aGVy
+ZSBTTUUgaXMgYWN0aXZlIChvciB2aWNlLXZlcnNhKS4KV2l0aG91dCB0aGVzZSBzdGVwcywgaXQg
+aXMgcG9zc2libGUgZm9yIGNhY2hlIGxpbmVzIHRvIGV4aXN0IGZvciB0aGUgc2FtZQpwaHlzaWNh
+bCBsb2NhdGlvbiBidXQgdGFnZ2VkIGJvdGggd2l0aCBhbmQgd2l0aG91dCB0aGUgZW5jcnlwdGlv
+biBiaXQuIFRoaXMKY2FuIGNhdXNlIHJhbmRvbSBtZW1vcnkgY29ycnVwdGlvbiB3aGVuIGNhY2hl
+cyBhcmUgZmx1c2hlZCBkZXBlbmRpbmcgb24Kd2hpY2ggY2FjaGVsaW5lIGlzIHdyaXR0ZW4gbGFz
+dC4KClNpZ25lZC1vZmYtYnk6IFRvbSBMZW5kYWNreSA8dGhvbWFzLmxlbmRhY2t5QGFtZC5jb20+
+ClJldmlld2VkLWJ5OiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4KUmV2aWV3
+ZWQtYnk6IEJvcmlzbGF2IFBldGtvdiA8YnBAc3VzZS5kZT4KQ2M6IDxrZXhlY0BsaXN0cy5pbmZy
+YWRlYWQub3JnPgpDYzogQWxleGFuZGVyIFBvdGFwZW5rbyA8Z2xpZGVyQGdvb2dsZS5jb20+CkNj
+OiBBbmRyZXkgUnlhYmluaW4gPGFyeWFiaW5pbkB2aXJ0dW96em8uY29tPgpDYzogQW5keSBMdXRv
+bWlyc2tpIDxsdXRvQGtlcm5lbC5vcmc+CkNjOiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRl
+PgpDYzogQm9yaXNsYXYgUGV0a292IDxicEBhbGllbjguZGU+CkNjOiBCcmlqZXNoIFNpbmdoIDxi
+cmlqZXNoLnNpbmdoQGFtZC5jb20+CkNjOiBEYXZlIFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4K
+Q2M6IERtaXRyeSBWeXVrb3YgPGR2eXVrb3ZAZ29vZ2xlLmNvbT4KQ2M6IEpvbmF0aGFuIENvcmJl
+dCA8Y29yYmV0QGx3bi5uZXQ+CkNjOiBLb25yYWQgUnplc3p1dGVrIFdpbGsgPGtvbnJhZC53aWxr
+QG9yYWNsZS5jb20+CkNjOiBMYXJyeSBXb29kbWFuIDxsd29vZG1hbkByZWRoYXQuY29tPgpDYzog
+TGludXMgVG9ydmFsZHMgPHRvcnZhbGRzQGxpbnV4LWZvdW5kYXRpb24ub3JnPgpDYzogTWF0dCBG
+bGVtaW5nIDxtYXR0QGNvZGVibHVlcHJpbnQuY28udWs+CkNjOiBNaWNoYWVsIFMuIFRzaXJraW4g
+PG1zdEByZWRoYXQuY29tPgpDYzogUGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT4K
+Q2M6IFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5mcmFkZWFkLm9yZz4KQ2M6IFJhZGltIEtyxI1t
+w6HFmSA8cmtyY21hckByZWRoYXQuY29tPgpDYzogUmlrIHZhbiBSaWVsIDxyaWVsQHJlZGhhdC5j
+b20+CkNjOiBUb3NoaW1pdHN1IEthbmkgPHRvc2hpLmthbmlAaHBlLmNvbT4KQ2M6IGthc2FuLWRl
+dkBnb29nbGVncm91cHMuY29tCkNjOiBrdm1Admdlci5rZXJuZWwub3JnCkNjOiBsaW51eC1hcmNo
+QHZnZXIua2VybmVsLm9yZwpDYzogbGludXgtZG9jQHZnZXIua2VybmVsLm9yZwpDYzogbGludXgt
+ZWZpQHZnZXIua2VybmVsLm9yZwpDYzogbGludXgtbW1Aa3ZhY2sub3JnCkxpbms6IGh0dHA6Ly9s
+a21sLmtlcm5lbC5vcmcvci9iOTVmZjA3NWRiM2U3Y2Q1NDUzMTNmMmZiNjA5YTQ5NjE5YTA5NjI1
+LjE1MDAzMTkyMTYuZ2l0LnRob21hcy5sZW5kYWNreUBhbWQuY29tClNpZ25lZC1vZmYtYnk6IElu
+Z28gTW9sbmFyIDxtaW5nb0BrZXJuZWwub3JnPgotLS0KIGFyY2gveDg2L2luY2x1ZGUvYXNtL2lu
+aXQuaCAgICAgICAgICB8ICAxICsKIGFyY2gveDg2L2luY2x1ZGUvYXNtL2tleGVjLmggICAgICAg
+ICB8ICA4ICsrKysrKysrCiBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9wZ3RhYmxlX3R5cGVzLmggfCAg
+MSArCiBhcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jICAgfCAyMiArKysrKysrKysr
+KysrKysrKysrKystCiBhcmNoL3g4Ni9rZXJuZWwvcHJvY2Vzcy5jICAgICAgICAgICAgfCAxNyAr
+KysrKysrKysrKysrKystLQogYXJjaC94ODYvbW0vaWRlbnRfbWFwLmMgICAgICAgICAgICAgIHwg
+MTIgKysrKysrKystLS0tCiBpbmNsdWRlL2xpbnV4L2tleGVjLmggICAgICAgICAgICAgICAgfCAg
+OCArKysrKysrKwoga2VybmVsL2tleGVjX2NvcmUuYyAgICAgICAgICAgICAgICAgIHwgMTIgKysr
+KysrKysrKystCiA4IGZpbGVzIGNoYW5nZWQsIDczIGluc2VydGlvbnMoKyksIDggZGVsZXRpb25z
+KC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vaW5pdC5oIGIvYXJjaC94ODYv
+aW5jbHVkZS9hc20vaW5pdC5oCmluZGV4IDQ3NGViOGMuLjA1YzRhYTAgMTAwNjQ0Ci0tLSBhL2Fy
+Y2gveDg2L2luY2x1ZGUvYXNtL2luaXQuaAorKysgYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9pbml0
+LmgKQEAgLTcsNiArNyw3IEBAIHN0cnVjdCB4ODZfbWFwcGluZ19pbmZvIHsKIAl1bnNpZ25lZCBs
+b25nIHBhZ2VfZmxhZzsJIC8qIHBhZ2UgZmxhZyBmb3IgUE1EIG9yIFBVRCBlbnRyeSAqLwogCXVu
+c2lnbmVkIGxvbmcgb2Zmc2V0OwkJIC8qIGlkZW50IG1hcHBpbmcgb2Zmc2V0ICovCiAJYm9vbCBk
+aXJlY3RfZ2JwYWdlczsJCSAvKiBQVUQgbGV2ZWwgMUdCIHBhZ2Ugc3VwcG9ydCAqLworCXVuc2ln
+bmVkIGxvbmcga2VybnBnX2ZsYWc7CSAvKiBrZXJuZWwgcGFnZXRhYmxlIGZsYWcgb3ZlcnJpZGUg
+Ki8KIH07CiAKIGludCBrZXJuZWxfaWRlbnRfbWFwcGluZ19pbml0KHN0cnVjdCB4ODZfbWFwcGlu
+Z19pbmZvICppbmZvLCBwZ2RfdCAqcGdkX3BhZ2UsCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9pbmNs
+dWRlL2FzbS9rZXhlYy5oIGIvYXJjaC94ODYvaW5jbHVkZS9hc20va2V4ZWMuaAppbmRleCA3MGVm
+MjA1Li5lODE4M2FjIDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9rZXhlYy5oCisr
+KyBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL2tleGVjLmgKQEAgLTIwNyw2ICsyMDcsMTQgQEAgc3Ry
+dWN0IGtleGVjX2VudHJ5NjRfcmVncyB7CiAJdWludDY0X3QgcjE1OwogCXVpbnQ2NF90IHJpcDsK
+IH07CisKK2V4dGVybiBpbnQgYXJjaF9rZXhlY19wb3N0X2FsbG9jX3BhZ2VzKHZvaWQgKnZhZGRy
+LCB1bnNpZ25lZCBpbnQgcGFnZXMsCisJCQkJICAgICAgIGdmcF90IGdmcCk7CisjZGVmaW5lIGFy
+Y2hfa2V4ZWNfcG9zdF9hbGxvY19wYWdlcyBhcmNoX2tleGVjX3Bvc3RfYWxsb2NfcGFnZXMKKwor
+ZXh0ZXJuIHZvaWQgYXJjaF9rZXhlY19wcmVfZnJlZV9wYWdlcyh2b2lkICp2YWRkciwgdW5zaWdu
+ZWQgaW50IHBhZ2VzKTsKKyNkZWZpbmUgYXJjaF9rZXhlY19wcmVfZnJlZV9wYWdlcyBhcmNoX2tl
+eGVjX3ByZV9mcmVlX3BhZ2VzCisKICNlbmRpZgogCiB0eXBlZGVmIHZvaWQgY3Jhc2hfdm1jbGVh
+cl9mbih2b2lkKTsKZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL3BndGFibGVfdHlw
+ZXMuaCBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL3BndGFibGVfdHlwZXMuaAppbmRleCAzMjA5NWFm
+Li44MzA5OTJmIDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9wZ3RhYmxlX3R5cGVz
+LmgKKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vcGd0YWJsZV90eXBlcy5oCkBAIC0yMTMsNiAr
+MjEzLDcgQEAgZW51bSBwYWdlX2NhY2hlX21vZGUgewogI2RlZmluZSBQQUdFX0tFUk5FTAkJX19w
+Z3Byb3QoX19QQUdFX0tFUk5FTCB8IF9QQUdFX0VOQykKICNkZWZpbmUgUEFHRV9LRVJORUxfUk8J
+CV9fcGdwcm90KF9fUEFHRV9LRVJORUxfUk8gfCBfUEFHRV9FTkMpCiAjZGVmaW5lIFBBR0VfS0VS
+TkVMX0VYRUMJX19wZ3Byb3QoX19QQUdFX0tFUk5FTF9FWEVDIHwgX1BBR0VfRU5DKQorI2RlZmlu
+ZSBQQUdFX0tFUk5FTF9FWEVDX05PRU5DCV9fcGdwcm90KF9fUEFHRV9LRVJORUxfRVhFQykKICNk
+ZWZpbmUgUEFHRV9LRVJORUxfUlgJCV9fcGdwcm90KF9fUEFHRV9LRVJORUxfUlggfCBfUEFHRV9F
+TkMpCiAjZGVmaW5lIFBBR0VfS0VSTkVMX05PQ0FDSEUJX19wZ3Byb3QoX19QQUdFX0tFUk5FTF9O
+T0NBQ0hFIHwgX1BBR0VfRU5DKQogI2RlZmluZSBQQUdFX0tFUk5FTF9MQVJHRQlfX3BncHJvdChf
+X1BBR0VfS0VSTkVMX0xBUkdFIHwgX1BBR0VfRU5DKQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2Vy
+bmVsL21hY2hpbmVfa2V4ZWNfNjQuYyBiL2FyY2gveDg2L2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0
+LmMKaW5kZXggY2IwYTMwNC4uOWNmOGRhYSAxMDA2NDQKLS0tIGEvYXJjaC94ODYva2VybmVsL21h
+Y2hpbmVfa2V4ZWNfNjQuYworKysgYi9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5j
+CkBAIC04Nyw3ICs4Nyw3IEBAIHN0YXRpYyBpbnQgaW5pdF90cmFuc2l0aW9uX3BndGFibGUoc3Ry
+dWN0IGtpbWFnZSAqaW1hZ2UsIHBnZF90ICpwZ2QpCiAJCXNldF9wbWQocG1kLCBfX3BtZChfX3Bh
+KHB0ZSkgfCBfS0VSTlBHX1RBQkxFKSk7CiAJfQogCXB0ZSA9IHB0ZV9vZmZzZXRfa2VybmVsKHBt
+ZCwgdmFkZHIpOwotCXNldF9wdGUocHRlLCBwZm5fcHRlKHBhZGRyID4+IFBBR0VfU0hJRlQsIFBB
+R0VfS0VSTkVMX0VYRUMpKTsKKwlzZXRfcHRlKHB0ZSwgcGZuX3B0ZShwYWRkciA+PiBQQUdFX1NI
+SUZULCBQQUdFX0tFUk5FTF9FWEVDX05PRU5DKSk7CiAJcmV0dXJuIDA7CiBlcnI6CiAJZnJlZV90
+cmFuc2l0aW9uX3BndGFibGUoaW1hZ2UpOwpAQCAtMTE1LDYgKzExNSw3IEBAIHN0YXRpYyBpbnQg
+aW5pdF9wZ3RhYmxlKHN0cnVjdCBraW1hZ2UgKmltYWdlLCB1bnNpZ25lZCBsb25nIHN0YXJ0X3Bn
+dGFibGUpCiAJCS5hbGxvY19wZ3RfcGFnZQk9IGFsbG9jX3BndF9wYWdlLAogCQkuY29udGV4dAk9
+IGltYWdlLAogCQkucGFnZV9mbGFnCT0gX19QQUdFX0tFUk5FTF9MQVJHRV9FWEVDLAorCQkua2Vy
+bnBnX2ZsYWcJPSBfS0VSTlBHX1RBQkxFX05PRU5DLAogCX07CiAJdW5zaWduZWQgbG9uZyBtc3Rh
+cnQsIG1lbmQ7CiAJcGdkX3QgKmxldmVsNHA7CkBAIC02MDIsMyArNjAzLDIyIEBAIHZvaWQgYXJj
+aF9rZXhlY191bnByb3RlY3RfY3Jhc2hrcmVzKHZvaWQpCiB7CiAJa2V4ZWNfbWFya19jcmFzaGty
+ZXMoZmFsc2UpOwogfQorCitpbnQgYXJjaF9rZXhlY19wb3N0X2FsbG9jX3BhZ2VzKHZvaWQgKnZh
+ZGRyLCB1bnNpZ25lZCBpbnQgcGFnZXMsIGdmcF90IGdmcCkKK3sKKwkvKgorCSAqIElmIFNNRSBp
+cyBhY3RpdmUgd2UgbmVlZCB0byBiZSBzdXJlIHRoYXQga2V4ZWMgcGFnZXMgYXJlCisJICogbm90
+IGVuY3J5cHRlZCBiZWNhdXNlIHdoZW4gd2UgYm9vdCB0byB0aGUgbmV3IGtlcm5lbCB0aGUKKwkg
+KiBwYWdlcyB3b24ndCBiZSBhY2Nlc3NlZCBlbmNyeXB0ZWQgKGluaXRpYWxseSkuCisJICovCisJ
+cmV0dXJuIHNldF9tZW1vcnlfZGVjcnlwdGVkKCh1bnNpZ25lZCBsb25nKXZhZGRyLCBwYWdlcyk7
+Cit9CisKK3ZvaWQgYXJjaF9rZXhlY19wcmVfZnJlZV9wYWdlcyh2b2lkICp2YWRkciwgdW5zaWdu
+ZWQgaW50IHBhZ2VzKQoreworCS8qCisJICogSWYgU01FIGlzIGFjdGl2ZSB3ZSBuZWVkIHRvIHJl
+c2V0IHRoZSBwYWdlcyBiYWNrIHRvIGJlaW5nCisJICogYW4gZW5jcnlwdGVkIG1hcHBpbmcgYmVm
+b3JlIGZyZWVpbmcgdGhlbS4KKwkgKi8KKwlzZXRfbWVtb3J5X2VuY3J5cHRlZCgodW5zaWduZWQg
+bG9uZyl2YWRkciwgcGFnZXMpOworfQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL3Byb2Nl
+c3MuYyBiL2FyY2gveDg2L2tlcm5lbC9wcm9jZXNzLmMKaW5kZXggM2NhMTk4MC4uYmQ2Yjg1ZiAx
+MDA2NDQKLS0tIGEvYXJjaC94ODYva2VybmVsL3Byb2Nlc3MuYworKysgYi9hcmNoL3g4Ni9rZXJu
+ZWwvcHJvY2Vzcy5jCkBAIC0zNTUsNiArMzU1LDcgQEAgYm9vbCB4ZW5fc2V0X2RlZmF1bHRfaWRs
+ZSh2b2lkKQogCXJldHVybiByZXQ7CiB9CiAjZW5kaWYKKwogdm9pZCBzdG9wX3RoaXNfY3B1KHZv
+aWQgKmR1bW15KQogewogCWxvY2FsX2lycV9kaXNhYmxlKCk7CkBAIC0zNjUsOCArMzY2LDIwIEBA
+IHZvaWQgc3RvcF90aGlzX2NwdSh2b2lkICpkdW1teSkKIAlkaXNhYmxlX2xvY2FsX0FQSUMoKTsK
+IAltY2hlY2tfY3B1X2NsZWFyKHRoaXNfY3B1X3B0cigmY3B1X2luZm8pKTsKIAotCWZvciAoOzsp
+Ci0JCWhhbHQoKTsKKwlmb3IgKDs7KSB7CisJCS8qCisJCSAqIFVzZSB3YmludmQgZm9sbG93ZWQg
+YnkgaGx0IHRvIHN0b3AgdGhlIHByb2Nlc3Nvci4gVGhpcworCQkgKiBwcm92aWRlcyBzdXBwb3J0
+IGZvciBrZXhlYyBvbiBhIHByb2Nlc3NvciB0aGF0IHN1cHBvcnRzCisJCSAqIFNNRS4gV2l0aCBr
+ZXhlYywgZ29pbmcgZnJvbSBTTUUgaW5hY3RpdmUgdG8gU01FIGFjdGl2ZQorCQkgKiByZXF1aXJl
+cyBjbGVhcmluZyBjYWNoZSBlbnRyaWVzIHNvIHRoYXQgYWRkcmVzc2VzIHdpdGhvdXQKKwkJICog
+dGhlIGVuY3J5cHRpb24gYml0IHNldCBkb24ndCBjb3JydXB0IHRoZSBzYW1lIHBoeXNpY2FsCisJ
+CSAqIGFkZHJlc3MgdGhhdCBoYXMgdGhlIGVuY3J5cHRpb24gYml0IHNldCB3aGVuIGNhY2hlcyBh
+cmUKKwkJICogZmx1c2hlZC4gVG8gYWNoaWV2ZSB0aGlzIGEgd2JpbnZkIGlzIHBlcmZvcm1lZCBm
+b2xsb3dlZCBieQorCQkgKiBhIGhsdC4gRXZlbiBpZiB0aGUgcHJvY2Vzc29yIGlzIG5vdCBpbiB0
+aGUga2V4ZWMvU01FCisJCSAqIHNjZW5hcmlvIHRoaXMgb25seSBhZGRzIGEgd2JpbnZkIHRvIGEg
+aGFsdGluZyBwcm9jZXNzb3IuCisJCSAqLworCQlhc20gdm9sYXRpbGUoIndiaW52ZDsgaGx0IiA6
+IDogOiAibWVtb3J5Iik7CisJfQogfQogCiAvKgpkaWZmIC0tZ2l0IGEvYXJjaC94ODYvbW0vaWRl
+bnRfbWFwLmMgYi9hcmNoL3g4Ni9tbS9pZGVudF9tYXAuYwppbmRleCBhZGFiMTU5Li4zMWNlYTk4
+IDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9tbS9pZGVudF9tYXAuYworKysgYi9hcmNoL3g4Ni9tbS9p
+ZGVudF9tYXAuYwpAQCAtNTEsNyArNTEsNyBAQCBzdGF0aWMgaW50IGlkZW50X3B1ZF9pbml0KHN0
+cnVjdCB4ODZfbWFwcGluZ19pbmZvICppbmZvLCBwdWRfdCAqcHVkX3BhZ2UsCiAJCWlmICghcG1k
+KQogCQkJcmV0dXJuIC1FTk9NRU07CiAJCWlkZW50X3BtZF9pbml0KGluZm8sIHBtZCwgYWRkciwg
+bmV4dCk7Ci0JCXNldF9wdWQocHVkLCBfX3B1ZChfX3BhKHBtZCkgfCBfS0VSTlBHX1RBQkxFKSk7
+CisJCXNldF9wdWQocHVkLCBfX3B1ZChfX3BhKHBtZCkgfCBpbmZvLT5rZXJucGdfZmxhZykpOwog
+CX0KIAogCXJldHVybiAwOwpAQCAtNzksNyArNzksNyBAQCBzdGF0aWMgaW50IGlkZW50X3A0ZF9p
+bml0KHN0cnVjdCB4ODZfbWFwcGluZ19pbmZvICppbmZvLCBwNGRfdCAqcDRkX3BhZ2UsCiAJCWlm
+ICghcHVkKQogCQkJcmV0dXJuIC1FTk9NRU07CiAJCWlkZW50X3B1ZF9pbml0KGluZm8sIHB1ZCwg
+YWRkciwgbmV4dCk7Ci0JCXNldF9wNGQocDRkLCBfX3A0ZChfX3BhKHB1ZCkgfCBfS0VSTlBHX1RB
+QkxFKSk7CisJCXNldF9wNGQocDRkLCBfX3A0ZChfX3BhKHB1ZCkgfCBpbmZvLT5rZXJucGdfZmxh
+ZykpOwogCX0KIAogCXJldHVybiAwOwpAQCAtOTMsNiArOTMsMTAgQEAgaW50IGtlcm5lbF9pZGVu
+dF9tYXBwaW5nX2luaXQoc3RydWN0IHg4Nl9tYXBwaW5nX2luZm8gKmluZm8sIHBnZF90ICpwZ2Rf
+cGFnZSwKIAl1bnNpZ25lZCBsb25nIG5leHQ7CiAJaW50IHJlc3VsdDsKIAorCS8qIFNldCB0aGUg
+ZGVmYXVsdCBwYWdldGFibGUgZmxhZ3MgaWYgbm90IHN1cHBsaWVkICovCisJaWYgKCFpbmZvLT5r
+ZXJucGdfZmxhZykKKwkJaW5mby0+a2VybnBnX2ZsYWcgPSBfS0VSTlBHX1RBQkxFOworCiAJZm9y
+ICg7IGFkZHIgPCBlbmQ7IGFkZHIgPSBuZXh0KSB7CiAJCXBnZF90ICpwZ2QgPSBwZ2RfcGFnZSAr
+IHBnZF9pbmRleChhZGRyKTsKIAkJcDRkX3QgKnA0ZDsKQEAgLTExNiwxNCArMTIwLDE0IEBAIGlu
+dCBrZXJuZWxfaWRlbnRfbWFwcGluZ19pbml0KHN0cnVjdCB4ODZfbWFwcGluZ19pbmZvICppbmZv
+LCBwZ2RfdCAqcGdkX3BhZ2UsCiAJCWlmIChyZXN1bHQpCiAJCQlyZXR1cm4gcmVzdWx0OwogCQlp
+ZiAoSVNfRU5BQkxFRChDT05GSUdfWDg2XzVMRVZFTCkpIHsKLQkJCXNldF9wZ2QocGdkLCBfX3Bn
+ZChfX3BhKHA0ZCkgfCBfS0VSTlBHX1RBQkxFKSk7CisJCQlzZXRfcGdkKHBnZCwgX19wZ2QoX19w
+YShwNGQpIHwgaW5mby0+a2VybnBnX2ZsYWcpKTsKIAkJfSBlbHNlIHsKIAkJCS8qCiAJCQkgKiBX
+aXRoIHA0ZCBmb2xkZWQsIHBnZCBpcyBlcXVhbCB0byBwNGQuCiAJCQkgKiBUaGUgcGdkIGVudHJ5
+IGhhcyB0byBwb2ludCB0byB0aGUgcHVkIHBhZ2UgdGFibGUgaW4gdGhpcyBjYXNlLgogCQkJICov
+CiAJCQlwdWRfdCAqcHVkID0gcHVkX29mZnNldChwNGQsIDApOwotCQkJc2V0X3BnZChwZ2QsIF9f
+cGdkKF9fcGEocHVkKSB8IF9LRVJOUEdfVEFCTEUpKTsKKwkJCXNldF9wZ2QocGdkLCBfX3BnZChf
+X3BhKHB1ZCkgfCBpbmZvLT5rZXJucGdfZmxhZykpOwogCQl9CiAJfQogCmRpZmYgLS1naXQgYS9p
+bmNsdWRlL2xpbnV4L2tleGVjLmggYi9pbmNsdWRlL2xpbnV4L2tleGVjLmgKaW5kZXggZGQwNTZm
+YS4uMmI3NTkwZiAxMDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9rZXhlYy5oCisrKyBiL2luY2x1
+ZGUvbGludXgva2V4ZWMuaApAQCAtMzI3LDYgKzMyNywxNCBAQCBzdGF0aWMgaW5saW5lIHZvaWQg
+KmJvb3RfcGh5c190b192aXJ0KHVuc2lnbmVkIGxvbmcgZW50cnkpCiAJcmV0dXJuIHBoeXNfdG9f
+dmlydChib290X3BoeXNfdG9fcGh5cyhlbnRyeSkpOwogfQogCisjaWZuZGVmIGFyY2hfa2V4ZWNf
+cG9zdF9hbGxvY19wYWdlcworc3RhdGljIGlubGluZSBpbnQgYXJjaF9rZXhlY19wb3N0X2FsbG9j
+X3BhZ2VzKHZvaWQgKnZhZGRyLCB1bnNpZ25lZCBpbnQgcGFnZXMsIGdmcF90IGdmcCkgeyByZXR1
+cm4gMDsgfQorI2VuZGlmCisKKyNpZm5kZWYgYXJjaF9rZXhlY19wcmVfZnJlZV9wYWdlcworc3Rh
+dGljIGlubGluZSB2b2lkIGFyY2hfa2V4ZWNfcHJlX2ZyZWVfcGFnZXModm9pZCAqdmFkZHIsIHVu
+c2lnbmVkIGludCBwYWdlcykgeyB9CisjZW5kaWYKKwogI2Vsc2UgLyogIUNPTkZJR19LRVhFQ19D
+T1JFICovCiBzdHJ1Y3QgcHRfcmVnczsKIHN0cnVjdCB0YXNrX3N0cnVjdDsKZGlmZiAtLWdpdCBh
+L2tlcm5lbC9rZXhlY19jb3JlLmMgYi9rZXJuZWwva2V4ZWNfY29yZS5jCmluZGV4IDFhZTdjNDEu
+LjIwZmVmMWEgMTAwNjQ0Ci0tLSBhL2tlcm5lbC9rZXhlY19jb3JlLmMKKysrIGIva2VybmVsL2tl
+eGVjX2NvcmUuYwpAQCAtMzAxLDcgKzMwMSw3IEBAIHN0YXRpYyBzdHJ1Y3QgcGFnZSAqa2ltYWdl
+X2FsbG9jX3BhZ2VzKGdmcF90IGdmcF9tYXNrLCB1bnNpZ25lZCBpbnQgb3JkZXIpCiB7CiAJc3Ry
+dWN0IHBhZ2UgKnBhZ2VzOwogCi0JcGFnZXMgPSBhbGxvY19wYWdlcyhnZnBfbWFzaywgb3JkZXIp
+OworCXBhZ2VzID0gYWxsb2NfcGFnZXMoZ2ZwX21hc2sgJiB+X19HRlBfWkVSTywgb3JkZXIpOwog
+CWlmIChwYWdlcykgewogCQl1bnNpZ25lZCBpbnQgY291bnQsIGk7CiAKQEAgLTMxMCw2ICszMTAs
+MTMgQEAgc3RhdGljIHN0cnVjdCBwYWdlICpraW1hZ2VfYWxsb2NfcGFnZXMoZ2ZwX3QgZ2ZwX21h
+c2ssIHVuc2lnbmVkIGludCBvcmRlcikKIAkJY291bnQgPSAxIDw8IG9yZGVyOwogCQlmb3IgKGkg
+PSAwOyBpIDwgY291bnQ7IGkrKykKIAkJCVNldFBhZ2VSZXNlcnZlZChwYWdlcyArIGkpOworCisJ
+CWFyY2hfa2V4ZWNfcG9zdF9hbGxvY19wYWdlcyhwYWdlX2FkZHJlc3MocGFnZXMpLCBjb3VudCwK
+KwkJCQkJICAgIGdmcF9tYXNrKTsKKworCQlpZiAoZ2ZwX21hc2sgJiBfX0dGUF9aRVJPKQorCQkJ
+Zm9yIChpID0gMDsgaSA8IGNvdW50OyBpKyspCisJCQkJY2xlYXJfaGlnaHBhZ2UocGFnZXMgKyBp
+KTsKIAl9CiAKIAlyZXR1cm4gcGFnZXM7CkBAIC0zMjEsNiArMzI4LDkgQEAgc3RhdGljIHZvaWQg
+a2ltYWdlX2ZyZWVfcGFnZXMoc3RydWN0IHBhZ2UgKnBhZ2UpCiAKIAlvcmRlciA9IHBhZ2VfcHJp
+dmF0ZShwYWdlKTsKIAljb3VudCA9IDEgPDwgb3JkZXI7CisKKwlhcmNoX2tleGVjX3ByZV9mcmVl
+X3BhZ2VzKHBhZ2VfYWRkcmVzcyhwYWdlKSwgY291bnQpOworCiAJZm9yIChpID0gMDsgaSA8IGNv
+dW50OyBpKyspCiAJCUNsZWFyUGFnZVJlc2VydmVkKHBhZ2UgKyBpKTsKIAlfX2ZyZWVfcGFnZXMo
+cGFnZSwgb3JkZXIpOwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
