@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dXYxv-0006l9-Cj
- for kexec@lists.infradead.org; Tue, 18 Jul 2017 20:19:33 +0000
-From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [makedumpfile PATCH RFC v0.1] Implemented the
- --fill-excluded-pages=<value> feature
-Date: Tue, 18 Jul 2017 09:19:13 -0700
-Message-Id: <1500394753-5900-1-git-send-email-eric.devolder@oracle.com>
+ id 1dXjjc-0003GL-FM
+ for kexec@lists.infradead.org; Wed, 19 Jul 2017 07:49:30 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [Makedumpfile Patch v3 2/7] initial(): call cach_init() a bit
+ early
+Date: Wed, 19 Jul 2017 07:46:21 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EF24AA@BPXM01GP.gisp.nec.co.jp>
+References: <cover.1488443170.git.panand@redhat.com>
+ <5121b3b3857e3f5710195b4983d7261549ef7fac.1488443170.git.panand@redhat.com>
+In-Reply-To: <5121b3b3857e3f5710195b4983d7261549ef7fac.1488443170.git.panand@redhat.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,178 +21,144 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, ats-kumagai@wm.jp.nec.com
-Cc: daniel.kiper@oracle.com, eric.devolder@oracle.com, konrad.wilk@oracle.com
+To: Pratyush Anand <panand@redhat.com>
+Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "HATAYAMA Daisuke (d.hatayama@jp.fujitsu.com)" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
 
-When a page is excluded by any of the existing dump levels,
-that page may still be written to the ELF dump file, depending
-upon the PFN_EXCLUDED mechanism.
+Hello Pratyush,
 
-The PFN_EXCLUDED mechanism looks for N consecutive "not
-dumpable" pages, and if found, the current ELF segment is
-closed out and a new ELF segment started, at the next dumpable
-page. Otherwise, if the PFN_EXCLUDED criteria is not meet (that
-is, there is a mix of dumpable and not dumpable pages, but not
-N consecutive not dumpable pages) all pages are written to the
-dump file.
+>Call cach_init() before get_kcore_dump_loads(), because latter uses
+>cache_search().
+>
+>Call path is like this :
+>get_kcore_dump_loads() -> process_dump_load() -> vaddr_to_paddr() ->
+>vtop4_x86_64() -> readmem() -> cache_search()
 
-This patch implements a mechanism for those "not dumpable" pages
-that are written to the ELF dump file to fill those pages with
-constant data, rather than the original data. In other words,
-the dump file still contains the page, but its data is wiped.
+I found that the current cach_init() is too early, cache_init() should be
+called after fallback_to_current_page_size() for older kernel
+which doesn't have VMCOREINFO.
+Could you confirm that the patch below is fine with you ?
 
-The motivation for doing this is to protect real user data from
-"leaking" through to a dump file when that data was asked to be
-omitted. This is especially important for effort I currently am
-working on to allow further refinement of what is allowed to be
-dumped, all in an effort to protect user (customer) data.
+Thanks,
+Atsushi Kumagai
 
-The patch is simple enough, however, it causes problems with
-crash; crash is unable to load the resulting ELF dump file.
-For example, I do the following as a test scenario for this
-change:
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Date: Wed, 19 Jul 2017 15:05:58 +0900
+Subject: [PATCH] Fix the regression caused by moving cache_init() earlier
 
-- Obtain a non-filtered dump file (eg. dump level 0, no -d option,
-  or straight copy of /proc/vmcore)
-- Run vmcore through 'crash' to ensure loads ok, test with
-  commands like: ps, files, etc.
-  % crash vmlinux vmcore
-- Apply this patch and rebuild makedumpfile
-- Run vmcore through makedumpfile *without* --fill-excluded-pages
-  and with filtering to ensure no uintended side effects of patch:
-  % ./makedumpfile -E -d31 -x vmlinux vmcore newvmcore
-- Run new vmcore through crash to ensure still loads ok, test
-  with commands like: ps, files, etc.
-  % crash vmlinux newvmcore
-- Run vmcore through makedumpfile *with* --fill-excluded-pages
-  and with filtering to check side effects of patch:
-  % ./makedumpfile -E -d31 --fill-excluded-pages=0 -x vmlinux vmcore newvmcore2
-- Run new vmcore through crash to ensure still loads ok, test
-  with commands like: ps, files, etc.
-  % crash vmlinux newvmcore2
+info->page_size should be set before calling cache_init() since it
+allocates some buffers based on info->page_size. However, cache_init()
+was moved before fallback_to_current_page_size() while it set
+info->page_size for older kernel which doesn't have VMCOREINFO.
 
-But crash yields errors like:
-  [...]
-  This GDB was configured as "x86_64-unknown-linux-gnu"...
+This patch moves cache_init() after fallback_to_current_page_size()
+and reverts the commit: b98e6e0d2a(sadump: set info->page_size before cache_init())
 
-  crash: cannot determine thread return address
-  please wait... (gathering kmem slab cache data)
-  crash: invalid kernel virtual address: 1c  type: "kmem_cache objsize/object_size"
-
-If the patch is correct/accurate, then that may mean that crash
-is using data which it should not be.
-
-The more likely scenario is that the patch is not correct/accurate,
-and I'm corrupting the dump file.
-
-Please provide feedback!!
+Signed-off-by: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
 ---
- makedumpfile.c | 28 +++++++++++++++++++++-------
- makedumpfile.h |  3 +++
- 2 files changed, 24 insertions(+), 7 deletions(-)
+ makedumpfile.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index e69b6df..3f9816a 100644
+index a3f0697..f85003a 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -7102,7 +7102,7 @@ out:
+@@ -3905,15 +3905,6 @@ initial(void)
+ 	if (!get_value_for_old_linux())
+ 		return FALSE;
  
- int
- write_elf_load_segment(struct cache_data *cd_page, unsigned long long paddr,
--		       off_t off_memory, long long size)
-+		       off_t off_memory, long long size, struct cycle *cycle)
- {
- 	long page_size = info->page_size;
- 	long long bufsz_write;
-@@ -7126,10 +7126,18 @@ write_elf_load_segment(struct cache_data *cd_page, unsigned long long paddr,
- 		else
- 			bufsz_write = size;
- 
--		if (read(info->fd_memory, buf, bufsz_write) != bufsz_write) {
--			ERRMSG("Can't read the dump memory(%s). %s\n",
--			    info->name_memory, strerror(errno));
+-	if (info->flag_sadump && !set_page_size(sadump_page_size()))
 -			return FALSE;
-+		if (info->flag_fill_excluded_pages && !is_dumpable(info->bitmap2, paddr_to_pfn(paddr), cycle)) {
-+			unsigned k;
-+			unsigned long *p = (unsigned long *)buf;
-+			for (k = 0; k < info->page_size; k += sizeof(unsigned long)) {
-+				*p++ = info->fill_excluded_pages_value;
-+			}
-+		} else {
-+			if (read(info->fd_memory, buf, bufsz_write) != bufsz_write) {
-+				ERRMSG("Can't read the dump memory(%s). %s\n",
-+				    info->name_memory, strerror(errno));
-+				return FALSE;
-+			}
+-
+-	if (!is_xen_memory() && !cache_init())
+-		return FALSE;
+-
+-	if (info->flag_mem_usage && !get_kcore_dump_loads())
+-		return FALSE;
+-
+ 	if (info->flag_refiltering) {
+ 		if (info->flag_elf_dumpfile) {
+ 			MSG("'-E' option is disable, ");
+@@ -3936,6 +3927,9 @@ initial(void)
+ 			return FALSE;
  		}
- 		filter_data_buffer((unsigned char *)buf, paddr, bufsz_write);
- 		paddr += bufsz_write;
-@@ -7396,7 +7404,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 				 */
- 				if (load.p_filesz)
- 					if (!write_elf_load_segment(cd_page, paddr,
--								    off_memory, load.p_filesz))
-+								    off_memory, load.p_filesz, &cycle))
- 						return FALSE;
  
- 				load.p_paddr += load.p_memsz;
-@@ -7438,7 +7446,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
++		if (!set_page_size(sadump_page_size()))
++			return FALSE;
++
+ 		if (!sadump_initialize_bitmap_memory())
+ 			return FALSE;
+ 
+@@ -3949,9 +3943,7 @@ initial(void)
+ 		 * postponed until debug information becomes
+ 		 * available.
  		 */
- 		if (load.p_filesz)
- 			if (!write_elf_load_segment(cd_page, paddr,
--						    off_memory, load.p_filesz))
-+						    off_memory, load.p_filesz, &cycle))
- 				return FALSE;
+-
+-	} else if (!get_phys_base())
+-		return FALSE;
++	}
  
- 		off_seg_load += load.p_filesz;
-@@ -11007,6 +11015,7 @@ static struct option longopts[] = {
- 	{"splitblock-size", required_argument, NULL, OPT_SPLITBLOCK_SIZE},
- 	{"work-dir", required_argument, NULL, OPT_WORKING_DIR},
- 	{"num-threads", required_argument, NULL, OPT_NUM_THREADS},
-+	{"fill-excluded-pages", optional_argument, NULL, OPT_FILL_EXCLUDED_PAGES},
- 	{0, 0, 0, 0}
- };
+ out:
+ 	if (!info->page_size) {
+@@ -3962,6 +3954,18 @@ out:
+ 		if (!fallback_to_current_page_size())
+ 			return FALSE;
+ 	}
++
++	if (!is_xen_memory() && !cache_init())
++		return FALSE;
++
++	if (info->flag_mem_usage && !get_kcore_dump_loads())
++		return FALSE;
++
++	if (!info->flag_refiltering && !info->flag_sadump) {
++		if (!get_phys_base())
++			return FALSE;
++	}
++
+ 	if (!get_max_mapnr())
+ 		return FALSE;
  
-@@ -11163,6 +11172,11 @@ main(int argc, char *argv[])
- 		case OPT_NUM_THREADS:
- 			info->num_threads = MAX(atoi(optarg), 0);
- 			break;
-+		case OPT_FILL_EXCLUDED_PAGES:
-+			info->flag_fill_excluded_pages = 1;
-+			if (optarg)
-+				info->fill_excluded_pages_value = strtoul(optarg, NULL, 0);
-+			break;
- 		case '?':
- 			MSG("Commandline parameter is invalid.\n");
- 			MSG("Try `makedumpfile --help' for more information.\n");
-diff --git a/makedumpfile.h b/makedumpfile.h
-index e32e567..4069672 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1135,6 +1135,8 @@ struct DumpInfo {
- 	int		flag_vmemmap;        /* kernel supports vmemmap address space */
- 	int		flag_excludevm;      /* -e - excluding unused vmemmap pages */
- 	int		flag_use_count;      /* _refcount is named _count in struct page */
-+	int		flag_fill_excluded_pages;    /* if pages are excluded but still dumped (see PFN_EXCLUDED operation), replace with page with fill */
-+	unsigned long	fill_excluded_pages_value; /* fill value for excluded pages */
- 	unsigned long	vaddr_for_vtop;      /* virtual address for debugging */
- 	long		page_size;           /* size of page */
- 	long		page_shift;
-@@ -2143,6 +2145,7 @@ struct elf_prstatus {
- #define OPT_SPLITBLOCK_SIZE	OPT_START+14
- #define OPT_WORKING_DIR         OPT_START+15
- #define OPT_NUM_THREADS	OPT_START+16
-+#define OPT_FILL_EXCLUDED_PAGES	OPT_START+17
- 
- /*
-  * Function Prototype.
 -- 
-2.7.4
+2.7.2
+
+
+>Signed-off-by: Pratyush Anand <panand@redhat.com>
+>---
+> makedumpfile.c | 6 +++---
+> 1 file changed, 3 insertions(+), 3 deletions(-)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 6942047199de..3b8e9810468d 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -3878,6 +3878,9 @@ initial(void)
+> 	if (!get_value_for_old_linux())
+> 		return FALSE;
+>
+>+	if (!is_xen_memory() && !cache_init())
+>+		return FALSE;
+>+
+> 	if (info->flag_mem_usage && !get_kcore_dump_loads())
+> 		return FALSE;
+>
+>@@ -4000,9 +4003,6 @@ out:
+> 		}
+> 	}
+>
+>-	if (!is_xen_memory() && !cache_init())
+>-		return FALSE;
+>-
+> 	if (debug_info && !get_machdep_info())
+> 		return FALSE;
+>
+>--
+>2.9.3
+>
+
 
 
 _______________________________________________
