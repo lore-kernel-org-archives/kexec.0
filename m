@@ -2,12 +2,15 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-sn1nam01on0076.outbound.protection.outlook.com
  ([104.47.32.76] helo=NAM01-SN1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1daQgI-0001yP-AA
- for kexec@lists.infradead.org; Wed, 26 Jul 2017 18:05:12 +0000
+ id 1daQgK-0001yP-Dh
+ for kexec@lists.infradead.org; Wed, 26 Jul 2017 18:05:13 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v1 0/2] x86: Secure Memory Encryption (SME) fixes 2017-07-26
-Date: Wed, 26 Jul 2017 13:04:32 -0500
-Message-Id: <cover.1501092102.git.thomas.lendacky@amd.com>
+Subject: [PATCH v1 1/2] x86/mm,
+ kexec: Fix memory corruption with SME on successive kexecs
+Date: Wed, 26 Jul 2017 13:04:33 -0500
+Message-Id: <28648b23b9957506069e20bd985e3d7e8af94780.1501092102.git.thomas.lendacky@amd.com>
+In-Reply-To: <cover.1501092102.git.thomas.lendacky@amd.com>
+References: <cover.1501092102.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,33 +27,42 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: x86@kernel.org, linux-kernel@vger.kernel.org
 Cc: Brijesh Singh <brijesh.singh@amd.com>, kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
 
-This patch series addresses some issues found during further testing of
-Secure Memory Encryption (SME).
+After issuing successive kexecs it was found that the SHA hash failed
+verification when booting the kexec'd kernel.  When SME is enabled, the
+change from using pages that were marked encrypted to now being marked as
+not encrypted (through new identify mapped page tables) results in memory
+corruption if there are any cache entries for the previously encrypted
+pages. This is because separate cache entries can exist for the same
+physical location but tagged both with and without the encryption bit.
 
-The following fixes are included in this update series:
-
-- Fix a cache-related memory corruption when kexec is invoked in
-  successive instances
-- Remove the encryption mask from the protection properties returned
-  by arch_apei_get_mem_attribute() when SME is active
-
----
-
-This patch series is based off of the master branch of tip:
-  https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
-
-  Commit 8333bcad393c ("Merge branch 'x86/asm'")
+To prevent this, issue a wbinvd before copying the pages from the source
+location to the destination location to clear any possible cache entry
+conflicts.
 
 Cc: <kexec@lists.infradead.org>
-
-Tom Lendacky (2):
-  x86/mm, kexec: Fix memory corruption with SME on successive kexecs
-  acpi, x86: Remove encryption mask from ACPI page protection type
-
- arch/x86/include/asm/acpi.h          | 7 ++++++-
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+---
  arch/x86/kernel/relocate_kernel_64.S | 7 +++++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ 1 file changed, 7 insertions(+)
 
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index 98111b3..c11d8bc 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -132,6 +132,13 @@ identity_mapped:
+ 	/* Flush the TLB (needed?) */
+ 	movq	%r9, %cr3
+ 
++	/*
++	 * If SME is/was active, there could be old encrypted cache line
++	 * entries that will conflict with the now unencrypted memory
++	 * used by kexec. Flush the caches before copying the kernel.
++	 */
++	wbinvd
++
+ 	movq	%rcx, %r11
+ 	call	swap_pages
+ 
 -- 
 1.9.1
 
