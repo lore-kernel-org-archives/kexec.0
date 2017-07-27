@@ -1,24 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from mail-wm0-x243.google.com ([2a00:1450:400c:c09::243])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1daaX9-0008L5-Hv
- for kexec@lists.infradead.org; Thu, 27 Jul 2017 04:36:26 +0000
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
- by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id v6R4Zws4029433
- (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO)
- for <kexec@lists.infradead.org>; Thu, 27 Jul 2017 13:35:58 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
- by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id v6R4ZwiV032156
- for <kexec@lists.infradead.org>; Thu, 27 Jul 2017 13:35:58 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id v6R4ZgAJ020569
- for <kexec@lists.infradead.org>; Thu, 27 Jul 2017 13:35:58 +0900
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: makedumpfile-1.6.2: Add support for sparc64
-Date: Thu, 27 Jul 2017 04:32:46 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EF4423@BPXM01GP.gisp.nec.co.jp>
-Content-Language: ja-JP
+ id 1dad3H-00070z-1v
+ for kexec@lists.infradead.org; Thu, 27 Jul 2017 07:17:45 +0000
+Received: by mail-wm0-x243.google.com with SMTP id c184so10013374wmd.1
+ for <kexec@lists.infradead.org>; Thu, 27 Jul 2017 00:17:22 -0700 (PDT)
+Date: Thu, 27 Jul 2017 09:17:18 +0200
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v1 1/2] x86/mm, kexec: Fix memory corruption with SME on
+ successive kexecs
+Message-ID: <20170727071717.aydwpzaji6l2o6xs@gmail.com>
+References: <cover.1501092102.git.thomas.lendacky@amd.com>
+ <28648b23b9957506069e20bd985e3d7e8af94780.1501092102.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <28648b23b9957506069e20bd985e3d7e8af94780.1501092102.git.thomas.lendacky@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,93 +27,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-
-Hello,
-
-makedumpfile version 1.6.2 is released.
-Your comments/patches are welcome.
-
-Main new feature:
-o Support for sparc64
- - sparc64 is supported from this version, it's tested on kernel-4.1.12.
-
-o Add new option for --dump-dmesg
- - Introduce the new option "--partial-dmesg", it can exclude the buffers
-   cleared by "dmesg --clear" while the current --dump-dmesg always extracts
-   the whole ring buffer.   
-
-o Support new kernels
- - The supported kernel is updated to 4.11 in this version.
-
-Changelog:
-o New feature
-    - [PATCH] Add initial sparc64 support (by Tom Hromatka) 001d9b7
-    - [PATCH v5 1/2] Add runtime kaslr offset if it exists (by Pratyush Anand) 2bfb7f1
-    - [PATCH v5 2/2] x86_64: Calculate page_offset in case of re-filtering/sadump/virsh dump (by Pratyush Anand) 4944f93
-    - [PATCH v2] Add the --partial-dmesg option to dump only non-cleared dmesg (by Ivan Delalande) ec5da81
-    - [PATCH v3 1/2] Fold the calc of time delta into a func (by Pingfan Liu) 1192446
-    - [PATCH v3 2/2] print_info: Show the remaining time of dump progress (by Pingfan Liu) 3438e8d
-
-o Bugfix
-    - [PATCH] elf_info.c: fix memory leak in get_kcore_dump_loads() (by Pingfan Liu) f10d1e2
-    - [PATCH] Error on re-filtering the dump file with no free pages (by Mikhail Zaslonko) deb8e1f
-    - [PATCH] Fix get_kcore_dump_loads() error case (by Pratyush Anand) a569d63
-    - [PATCH] sadump: set info->page_size before cache_init() (by Hatayama, Daisuke) b98e6e0
-    - [PATCH] Fix the use of Xen physical and machine addresses (by Petr Tesarik) e765785
-    - [PATCH V3] elf_info: Fix file_size if segment is excluded (by Pratyush Anand) 88731c7
-    - [PATCH v3] Prevent data loss in last page of ELF core dumpfile (by Eric DeVolder) 622f0d7
-    - [PATCH] Consider not page-size aligned phys_end for paddr_to_pfn() (by Atsushi Kumagai) 25259e6
-    - [PATCH] Fix the regression caused by moving cache_init() earlier (by Atsushi Kumagai) be0461f
-
-o Cleanup
-    - [PATCH 1/4] eppic: Rename scripts to reflect validity of kernel version (by Kamalesh Babulal) b55b29f
-    - [PATCH 2/4] eppic/vhost_net_buffers: Introduce changes for kernel 3.19 (by Kamalesh Babulal) 0a1d8ee
-    - [PATCH 3/4] eppic/dir_names: Introduce changes for kernel 3.14 (by Kamalesh Babulal) 5c822a7
-    - [PATCH 4/4] eppic/keyring: Introduce changes for kernel 4.4 (by Kamalesh Babulal) 19fe701
-    - [PATCH v3 1/7] show_mem_usage(): calculate page offset after elf load (by Pratyush Anand) 4b0bed3
-    - [PATCH v3 2/7] initial(): call cache_init() a bit early (by Pratyush Anand) 8e2834b
-    - [PATCH v3 3/7] x86_64: check physical address in PT_LOAD for none direct mapped regions (by Pratyush Anand) f136302
-    - [PATCH v3 4/7] elf_info: kcore: check for invalid physical address (by Pratyush Anand) f4ab689
-    - [PATCH v3 5/7] makedumpfile: Correct the calculation of kvaddr in set_kcore_vmcoreinfo (by Baoquan He) 4c53423
-    - [PATCH v3 6/7] makedumpfile: Discard process_dump_load (by Baoquan He) f3ff8c6
-    - [PATCH v3 7/7] mem-usage: allow to work only with -f for kernel version < 4.11 (by Pratyush Anand) 78cbb40
-    - [PATCH] Fix typo in the ERRMSG of function show_mem_usage (by Eric Desrochers) ade8512
-    - [PATCH] Fix other typos in messages (by Atsushi Kumagai) b171374
-    - [PATCH] Fix compiler warnings (by Eric DeVolder) 04dab93
-
-Explanation of makedumpfile:
-  To shorten the size of the dumpfile and the time of creating the
-  dumpfile, makedumpfile copies only the necessary pages for analysis
-  to the dumpfile from /proc/vmcore. You can specify the kind of
-  unnecessary pages with dump_level. If you want to shorten the size
-  further, enable the compression of the page data.
-
-Download:
-  You can download the latest makedumpfile from the following URL.
-  Details of the change are written on the git page of the following site.
-  https://sourceforge.net/projects/makedumpfile/
-
-Method of installation:
-  You can compile the makedumpfile command as follows;
-  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
-  2. "cd makedumpfile-x.y.z"
-  3. "make; make install"
-
-Usage:
-  makedumpfile [-c|-l|-p] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
-
-Example:
-  If you want to exclude pages filled by zero, cache pages, user pages
-  and free pages and to enable compression, please execute the following
-  command.	
-
-  # makedumpfile -c -d 31 /proc/vmcore dumpfile
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Brijesh Singh <brijesh.singh@amd.com>, Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
 
 
-Thanks
-Atsushi Kumagai
+* Tom Lendacky <thomas.lendacky@amd.com> wrote:
 
+> After issuing successive kexecs it was found that the SHA hash failed
+> verification when booting the kexec'd kernel.  When SME is enabled, the
+> change from using pages that were marked encrypted to now being marked as
+> not encrypted (through new identify mapped page tables) results in memory
+> corruption if there are any cache entries for the previously encrypted
+> pages. This is because separate cache entries can exist for the same
+> physical location but tagged both with and without the encryption bit.
+> 
+> To prevent this, issue a wbinvd before copying the pages from the source
+> location to the destination location to clear any possible cache entry
+> conflicts.
+> 
+> Cc: <kexec@lists.infradead.org>
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  arch/x86/kernel/relocate_kernel_64.S | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> index 98111b3..c11d8bc 100644
+> --- a/arch/x86/kernel/relocate_kernel_64.S
+> +++ b/arch/x86/kernel/relocate_kernel_64.S
+> @@ -132,6 +132,13 @@ identity_mapped:
+>  	/* Flush the TLB (needed?) */
+>  	movq	%r9, %cr3
+>  
+> +	/*
+> +	 * If SME is/was active, there could be old encrypted cache line
+> +	 * entries that will conflict with the now unencrypted memory
+> +	 * used by kexec. Flush the caches before copying the kernel.
+> +	 */
+> +	wbinvd
+
+WBINVD is very expensive IIRC - several milliseconds.
+
+So if we change the page table from encrypted to unencrypted we need to do a full 
+cache flush sounds pretty broken to me - how can then this be done via an API such 
+as mmap() without executing WBINVD?
+
+Thanks,
+
+	Ingo
 
 _______________________________________________
 kexec mailing list
