@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dcEzQ-0001TE-Cc
- for kexec@lists.infradead.org; Mon, 31 Jul 2017 18:00:26 +0000
-Date: Mon, 31 Jul 2017 19:59:56 +0200
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [makedumpfile PATCH] Wipe excluded pages that are written into
- ELF dump file
-Message-ID: <20170731175956.GE7443@olila.local.net-space.pl>
-References: <1501508130-27022-1-git-send-email-eric.devolder@oracle.com>
+ id 1dcRtM-0002G0-7J
+ for kexec@lists.infradead.org; Tue, 01 Aug 2017 07:47:02 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile: x86: Take care of init_level4_pgt rename
+ in kernel
+Date: Tue, 1 Aug 2017 07:41:13 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EF57F4@BPXM01GP.gisp.nec.co.jp>
+References: <b5a4b87480473137478313355b0a6fd9f197f945.1501432848.git.panand@redhat.com>
+ <20170731023838.GA7947@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20170731023838.GA7947@dhcp-128-65.nay.redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1501508130-27022-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,179 +25,95 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric DeVolder <eric.devolder@oracle.com>
-Cc: ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, konrad.wilk@oracle.com
+To: Pratyush Anand <panand@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>
 
-On Mon, Jul 31, 2017 at 06:35:30AM -0700, Eric DeVolder wrote:
-> When a page is excluded by any of the existing dump levels,
-> that page may still be written to the ELF dump file, depending
-> upon the PFN_EXCLUDED mechanism.
->
-> The PFN_EXCLUDED mechanism looks for N consecutive "not
-> dumpable" pages, and if found, the current ELF segment is
-> closed out and a new ELF segment started, at the next dumpable
-> page. Otherwise, if the PFN_EXCLUDED criteria is not meet (that
-> is, there is a mix of dumpable and not dumpable pages, but not
-> N consecutive not dumpable pages) all pages are written to the
-> dump file.
->
-> This patch implements a mechanism for those "not dumpable" pages
-> that are written to the ELF dump file to fill those pages with
-> constant data, rather than the original data. In other words,
-> the dump file still contains the page, but its data is wiped.
->
-> The motivation for doing this is to protect real user (customer)
-> data from "leaking" through to a dump file when that data was
-> intended to be omitted.
->
-> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-> ---
->  makedumpfile.8 |  8 ++++++++
->  makedumpfile.c | 32 +++++++++++++++++++++++++-------
->  makedumpfile.h |  2 ++
->  3 files changed, 35 insertions(+), 7 deletions(-)
->
-> diff --git a/makedumpfile.8 b/makedumpfile.8
-> index f94f2d7..64af0cf 100644
-> --- a/makedumpfile.8
-> +++ b/makedumpfile.8
-> @@ -621,6 +621,14 @@ order from left to right.  \fIVMCORE\fRs are assembled into a single
->  # makedumpfile \-x vmlinux \-\-diskset=vmcore1 \-\-diskset=vmcore2 dumpfile
->
->  .TP
-> +\fB\-\-fill-excluded-pages FILL_VALUE\fR
+Hello Pratyush,
 
-I am OK with --fill-excluded-pages to change default value but it is not needed
-in my opinion. However, I think that we should have --no-fill-excluded-pages
-variant. Just in case if somebody wish to disable default behavior
+Thanks for your work.
 
-> +For the ELF dump file format, excluded pages may be written into the dump
-> +file, but the page contents are wiped. This option allows the wipe value
-> +to be changed from the default 0x5041474557495045UL "PAGEWIPE", or on
-> +32-bit systems "WIPE".
+>On 07/30/17 at 10:11pm, Pratyush Anand wrote:
+>> Following commit renamed init_level4_pgt to init_top_pgt in kernel.
+>>
+>> commit 65ade2f872b474fa8a04c2d397783350326634e6
+>> Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>> Date:   Tue Jun 6 14:31:27 2017 +0300
+>>
+>>     x86/boot/64: Rename init_level4_pgt and early_level4_pgt
+>>
+>> This patch takes care of above kernel modification in makedumpfile.
+>>
+>> Signed-off-by: Pratyush Anand <panand@redhat.com>
+>> ---
+>>  makedumpfile.c | 9 ++++++++-
+>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/makedumpfile.c b/makedumpfile.c
+>> index f85003a33551..e875f4bb539e 100644
+>> --- a/makedumpfile.c
+>> +++ b/makedumpfile.c
+>> @@ -1486,6 +1486,8 @@ get_symbol_info(void)
+>>  	SYMBOL_INIT(_stext, "_stext");
+>>  	SYMBOL_INIT(swapper_pg_dir, "swapper_pg_dir");
+>>  	SYMBOL_INIT(init_level4_pgt, "init_level4_pgt");
+>> +	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL)
+>> +		SYMBOL_INIT(init_level4_pgt, "init_top_pgt");
+>>  	SYMBOL_INIT(vmlist, "vmlist");
+>>  	SYMBOL_INIT(vmap_area_list, "vmap_area_list");
+>>  	SYMBOL_INIT(node_online_map, "node_online_map");
+>> @@ -2104,7 +2106,10 @@ write_vmcoreinfo_data(void)
+>>  	WRITE_SYMBOL("init_uts_ns", init_uts_ns);
+>>  	WRITE_SYMBOL("_stext", _stext);
+>>  	WRITE_SYMBOL("swapper_pg_dir", swapper_pg_dir);
+>> -	WRITE_SYMBOL("init_level4_pgt", init_level4_pgt);
+>> +	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL)
+>> +		WRITE_SYMBOL("init_top_pgt", init_level4_pgt);
+>> +	else
+>> +		WRITE_SYMBOL("init_level4_pgt", init_level4_pgt);
 
-0xDEAD9A6E == DEADPAGE where P == 9 (do you have better figure for P?) and G == 6
+Whether the source is init_level4_pgt or init_top_pgt, the value will
+be kept as SYMBOL(init_level4_pgt), so this conditional judgment is meaningless.
 
-This seems better for me because you do not need to convert it to ASCII
-to see what it is. And fills exactly 32-bits.
+I think what you want to do is like commit: ed46b6ad9, but I don't want to
+introduce a new flag every time a symbol name is changed. So how about
+unification into "init_level4_pgt" for backward compatibility ?
+The old name can be read in all versions of makedumpfile.
 
-> +
-> +
-> +.TP
->  \fB\-D\fR
->  Print debugging message.
->
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index f85003a..cee0ab0 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -7139,7 +7139,7 @@ out:
->
->  int
->  write_elf_load_segment(struct cache_data *cd_page, unsigned long long paddr,
-> -		       off_t off_memory, long long size)
-> +		       off_t off_memory, long long size, struct cycle *cycle)
->  {
->  	long page_size = info->page_size;
->  	long long bufsz_write;
-> @@ -7163,10 +7163,23 @@ write_elf_load_segment(struct cache_data *cd_page, unsigned long long paddr,
->  		else
->  			bufsz_write = size;
->
-> -		if (read(info->fd_memory, buf, bufsz_write) != bufsz_write) {
-> -			ERRMSG("Can't read the dump memory(%s). %s\n",
-> -			    info->name_memory, strerror(errno));
-> -			return FALSE;
-> +		if (!is_dumpable(info->bitmap2, paddr_to_pfn(paddr), cycle)) {
-> +			unsigned k;
-> +			unsigned long *p = (unsigned long *)buf;
-> +			for (k = 0; k < info->page_size; k += sizeof(unsigned long)) {
-> +				*p++ = info->fill_excluded_pages_value;
-> +			}
-> +			if (lseek(info->fd_memory, bufsz_write, SEEK_CUR) < 0) {
-> +				ERRMSG("Can't seek the dump memory(%s). %s\n",
-> +				    info->name_memory, strerror(errno));
-> +				return FALSE;
-> +			}
-> +		} else {
-> +			if (read(info->fd_memory, buf, bufsz_write) != bufsz_write) {
-> +				ERRMSG("Can't read the dump memory(%s). %s\n",
-> +				    info->name_memory, strerror(errno));
-> +				return FALSE;
-> +			}
->  		}
->  		filter_data_buffer((unsigned char *)buf, paddr, bufsz_write);
->  		paddr += bufsz_write;
-> @@ -7431,7 +7444,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
->  				 */
->  				if (load.p_filesz)
->  					if (!write_elf_load_segment(cd_page, paddr,
-> -								    off_memory, load.p_filesz))
-> +								    off_memory, load.p_filesz, &cycle))
->  						return FALSE;
->
->  				load.p_paddr += load.p_memsz;
-> @@ -7473,7 +7486,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
->  		 */
->  		if (load.p_filesz)
->  			if (!write_elf_load_segment(cd_page, paddr,
-> -						    off_memory, load.p_filesz))
-> +						    off_memory, load.p_filesz, &cycle))
->  				return FALSE;
->
->  		off_seg_load += load.p_filesz;
-> @@ -11057,6 +11070,7 @@ static struct option longopts[] = {
->  	{"splitblock-size", required_argument, NULL, OPT_SPLITBLOCK_SIZE},
->  	{"work-dir", required_argument, NULL, OPT_WORKING_DIR},
->  	{"num-threads", required_argument, NULL, OPT_NUM_THREADS},
-> +	{"fill-excluded-pages", required_argument, NULL, OPT_FILL_EXCLUDED_PAGES},
->  	{0, 0, 0, 0}
->  };
->
-> @@ -11083,6 +11097,7 @@ main(int argc, char *argv[])
->  	info->fd_dumpfile = -1;
->  	info->fd_bitmap = -1;
->  	info->kaslr_offset = 0;
-> +	info->fill_excluded_pages_value = 0x5041474557495045UL;
->  	initialize_tables();
->
->  	/*
-> @@ -11218,6 +11233,9 @@ main(int argc, char *argv[])
->  		case OPT_NUM_THREADS:
->  			info->num_threads = MAX(atoi(optarg), 0);
->  			break;
-> +		case OPT_FILL_EXCLUDED_PAGES:
-> +			info->fill_excluded_pages_value = strtoul(optarg, NULL, 0);
-> +			break;
->  		case '?':
->  			MSG("Commandline parameter is invalid.\n");
->  			MSG("Try `makedumpfile --help' for more information.\n");
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index 8a05794..9ccd06d 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -1266,6 +1266,7 @@ struct DumpInfo {
->  	int		vmemmap_cnt;
->  	struct ppc64_vmemmap	*vmemmap_list;
->  	unsigned long	kaslr_offset;
-> +	unsigned long	fill_excluded_pages_value; /* fill value for excluded pages */
->
->  	/*
->  	 * page table info for ppc64
-> @@ -2275,6 +2276,7 @@ struct elf_prstatus {
->  #define OPT_WORKING_DIR         OPT_START+15
->  #define OPT_NUM_THREADS	OPT_START+16
->  #define OPT_PARTIAL_DMESG	OPT_START+17
-> +#define OPT_FILL_EXCLUDED_PAGES	OPT_START+18
 
-Oh, no please fix alignment somehow here. Separate patch?
-And I think that just in case it should be:
+Thanks,
+Atsushi Kumagai
 
-#define OPT_FILL_EXCLUDED_PAGES      (OPT_START+18)
+>>  	WRITE_SYMBOL("vmlist", vmlist);
+>>  	WRITE_SYMBOL("vmap_area_list", vmap_area_list);
+>>  	WRITE_SYMBOL("node_online_map", node_online_map);
+>> @@ -2500,6 +2505,8 @@ read_vmcoreinfo(void)
+>>  	READ_SYMBOL("_stext", _stext);
+>>  	READ_SYMBOL("swapper_pg_dir", swapper_pg_dir);
+>>  	READ_SYMBOL("init_level4_pgt", init_level4_pgt);
+>> +	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL)
+>> +		READ_SYMBOL("init_top_pgt", init_level4_pgt);
+>>  	READ_SYMBOL("vmlist", vmlist);
+>>  	READ_SYMBOL("vmap_area_list", vmap_area_list);
+>>  	READ_SYMBOL("node_online_map", node_online_map);
+>> --
+>> 2.9.4
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>
+>Tested-by: Dave Young <dyoung@redhat.com>
+>
+>Thanks
+>Dave
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
-And probably this applies to others. Next patch?
-
-Daniel
 
 _______________________________________________
 kexec mailing list
