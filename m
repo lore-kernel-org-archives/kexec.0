@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dd6RA-0001w1-0s
- for kexec@lists.infradead.org; Thu, 03 Aug 2017 03:04:37 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [Makedumpfile PATCH v2] x86_64: Take care of init_level4_pgt
- rename in kernel
-Date: Thu, 3 Aug 2017 02:56:48 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EF629D@BPXM01GP.gisp.nec.co.jp>
-References: <38ae7bb411e2520e320548f4538431d2e9722bdc.1501662929.git.panand@redhat.com>
-In-Reply-To: <38ae7bb411e2520e320548f4538431d2e9722bdc.1501662929.git.panand@redhat.com>
-Content-Language: ja-JP
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
+ id 1ddaW4-00059H-5a
+ for kexec@lists.infradead.org; Fri, 04 Aug 2017 11:11:41 +0000
+Date: Fri, 4 Aug 2017 13:11:11 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec-tools: ppc64: fix how RMA top is deduced
+Message-ID: <20170804111111.GA13074@verge.net.au>
+References: <150108958197.31071.13359341334422395062.stgit@hbathini.in.ibm.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <150108958197.31071.13359341334422395062.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,60 +23,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Cc: Geoff Levand <geoff@infradead.org>, Michael Ellerman <mpe@ellerman.id.au>, Ankit Kumar <ankit@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>
 
-Hello Pratyush,
+On Wed, Jul 26, 2017 at 10:49:41PM +0530, Hari Bathini wrote:
+> Hang was observed, in purgatory, on a machine configured with
+> single LPAR. This was because one of the segments was loaded
+> outside the actual Real Memory Area (RMA) due to wrongly
+> deduced RMA top value.
+> 
+> Currently, top of real memory area, which is crucial for loading
+> kexec/kdump kernel, is obtained by iterating through mem nodes
+> and setting its value based on the base and size values of the
+> last mem node in the iteration. That can't always be correct as
+> the order of iteration may not be same and RMA base & size are
+> always based on the first memory property. Fix this by setting
+> RMA top value based on the base and size values of the memory
+> node that has the smallest base value (first memory property)
+> among all the memory nodes.
+> 
+> Also, correct the misnomers rmo_base and rmo_top to rma_base
+> and rma_top respectively.
+> 
+> While how RMA top is deduced was broken for sometime, the issue
+> may not have been seen so far, for couple of possible reasons:
+> 
+>     1. Only one mem node was available.
+>     2. First memory property has been the last node in
+>        iteration when multiple mem nodes were present.
+> 
+> Fixes: 02f4088ffded ("kexec fix ppc64 device-tree mem node")
+> Reported-by: Ankit Kumar <ankit@linux.vnet.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Geoff Levand <geoff@infradead.org>
+> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
 
->Following commit renamed init_level4_pgt to init_top_pgt in kernel.
->
->commit 65ade2f872b474fa8a04c2d397783350326634e6
->Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->Date:   Tue Jun 6 14:31:27 2017 +0300
->
->    x86/boot/64: Rename init_level4_pgt and early_level4_pgt
->
->This patch takes care of above kernel modification in makedumpfile.
->
->Signed-off-by: Pratyush Anand <panand@redhat.com>
->---
->v2 -> v1
->Removed redundant 'if condition' for WRITE_SYMBOL().
-
-Thanks, I'll merge this version into v1.6.3.
-
-Regards,
-Atsushi Kumagai
-
-> makedumpfile.c | 4 ++++
-> 1 file changed, 4 insertions(+)
->
->diff --git a/makedumpfile.c b/makedumpfile.c
->index f85003a33551..30230a15a2e7 100644
->--- a/makedumpfile.c
->+++ b/makedumpfile.c
->@@ -1486,6 +1486,8 @@ get_symbol_info(void)
-> 	SYMBOL_INIT(_stext, "_stext");
-> 	SYMBOL_INIT(swapper_pg_dir, "swapper_pg_dir");
-> 	SYMBOL_INIT(init_level4_pgt, "init_level4_pgt");
->+	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL)
->+		SYMBOL_INIT(init_level4_pgt, "init_top_pgt");
-> 	SYMBOL_INIT(vmlist, "vmlist");
-> 	SYMBOL_INIT(vmap_area_list, "vmap_area_list");
-> 	SYMBOL_INIT(node_online_map, "node_online_map");
->@@ -2500,6 +2502,8 @@ read_vmcoreinfo(void)
-> 	READ_SYMBOL("_stext", _stext);
-> 	READ_SYMBOL("swapper_pg_dir", swapper_pg_dir);
-> 	READ_SYMBOL("init_level4_pgt", init_level4_pgt);
->+	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL)
->+		READ_SYMBOL("init_top_pgt", init_level4_pgt);
-> 	READ_SYMBOL("vmlist", vmlist);
-> 	READ_SYMBOL("vmap_area_list", vmap_area_list);
-> 	READ_SYMBOL("node_online_map", node_online_map);
->--
->2.9.4
->
-
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
