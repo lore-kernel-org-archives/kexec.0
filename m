@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1ddaW4-00059H-5a
- for kexec@lists.infradead.org; Fri, 04 Aug 2017 11:11:41 +0000
-Date: Fri, 4 Aug 2017 13:11:11 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec-tools: ppc64: fix how RMA top is deduced
-Message-ID: <20170804111111.GA13074@verge.net.au>
-References: <150108958197.31071.13359341334422395062.stgit@hbathini.in.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <150108958197.31071.13359341334422395062.stgit@hbathini.in.ibm.com>
+Received: from aserp1040.oracle.com ([141.146.126.69])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1ddfDr-0004tM-V8
+ for kexec@lists.infradead.org; Fri, 04 Aug 2017 16:13:13 +0000
+From: Eric DeVolder <eric.devolder@oracle.com>
+Subject: [makedumpfile PATCH v2] Wipe excluded pages that are written into ELF
+ dump file
+Date: Fri,  4 Aug 2017 05:13:59 -0700
+Message-Id: <1501848839-10518-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,46 +16,124 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Cc: Geoff Levand <geoff@infradead.org>, Michael Ellerman <mpe@ellerman.id.au>, Ankit Kumar <ankit@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org, ats-kumagai@wm.jp.nec.com
+Cc: daniel.kiper@oracle.com, eric.devolder@oracle.com, konrad.wilk@oracle.com
 
-On Wed, Jul 26, 2017 at 10:49:41PM +0530, Hari Bathini wrote:
-> Hang was observed, in purgatory, on a machine configured with
-> single LPAR. This was because one of the segments was loaded
-> outside the actual Real Memory Area (RMA) due to wrongly
-> deduced RMA top value.
-> 
-> Currently, top of real memory area, which is crucial for loading
-> kexec/kdump kernel, is obtained by iterating through mem nodes
-> and setting its value based on the base and size values of the
-> last mem node in the iteration. That can't always be correct as
-> the order of iteration may not be same and RMA base & size are
-> always based on the first memory property. Fix this by setting
-> RMA top value based on the base and size values of the memory
-> node that has the smallest base value (first memory property)
-> among all the memory nodes.
-> 
-> Also, correct the misnomers rmo_base and rmo_top to rma_base
-> and rma_top respectively.
-> 
-> While how RMA top is deduced was broken for sometime, the issue
-> may not have been seen so far, for couple of possible reasons:
-> 
->     1. Only one mem node was available.
->     2. First memory property has been the last node in
->        iteration when multiple mem nodes were present.
-> 
-> Fixes: 02f4088ffded ("kexec fix ppc64 device-tree mem node")
-> Reported-by: Ankit Kumar <ankit@linux.vnet.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Geoff Levand <geoff@infradead.org>
-> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+When a page is excluded by any of the existing dump levels,
+that page may still be written to the ELF dump file, depending
+upon the PFN_EXCLUDED mechanism.
 
-Thanks, applied.
+The PFN_EXCLUDED mechanism looks for N consecutive "not
+dumpable" pages, and if found, the current ELF segment is
+closed out and a new ELF segment started, at the next dumpable
+page. Otherwise, if the PFN_EXCLUDED criteria is not meet (that
+is, there is a mix of dumpable and not dumpable pages, but not
+N consecutive not dumpable pages) all pages are written to the
+dump file.
+
+This patch implements a mechanism for those "not dumpable" pages
+that are written to the ELF dump file to fill those pages with
+constant data, rather than the original data. In other words,
+the dump file still contains the page, but its data is wiped.
+The data is wiped with the value 0xDEAD9A6EDEAD9A6EUL (an
+attempt at DEADPAGE in hex, which works for 32-bit targets as
+well).
+
+The motivation for doing this is to protect real user (customer)
+data from "leaking" through to a dump file when that data was
+intended to be omitted.
+
+Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+---
+v2: posted 04aug2017 to mailing list
+ - Incorporate feedback from Daniel Kiper (wipe value)
+ - Incorporate feedback from Atsushi Kumagai (eliminate the
+   option and make as default/builtin behavior)
+v1: posted 31jul2017 to mailing list
+---
+ makedumpfile.c | 27 ++++++++++++++++++++-------
+ makedumpfile.h |  1 +
+ 2 files changed, 21 insertions(+), 7 deletions(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index f85003a..66c3105 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -7139,7 +7139,7 @@ out:
+ 
+ int
+ write_elf_load_segment(struct cache_data *cd_page, unsigned long long paddr,
+-		       off_t off_memory, long long size)
++		       off_t off_memory, long long size, struct cycle *cycle)
+ {
+ 	long page_size = info->page_size;
+ 	long long bufsz_write;
+@@ -7163,10 +7163,23 @@ write_elf_load_segment(struct cache_data *cd_page, unsigned long long paddr,
+ 		else
+ 			bufsz_write = size;
+ 
+-		if (read(info->fd_memory, buf, bufsz_write) != bufsz_write) {
+-			ERRMSG("Can't read the dump memory(%s). %s\n",
+-			    info->name_memory, strerror(errno));
+-			return FALSE;
++		if (!is_dumpable(info->bitmap2, paddr_to_pfn(paddr), cycle)) {
++			unsigned k;
++			unsigned long *p = (unsigned long *)buf;
++			for (k = 0; k < info->page_size; k += sizeof(unsigned long)) {
++				*p++ = FILL_EXCLUDED_PAGES_VALUE;
++			}
++			if (lseek(info->fd_memory, bufsz_write, SEEK_CUR) < 0) {
++				ERRMSG("Can't seek the dump memory(%s). %s\n",
++				    info->name_memory, strerror(errno));
++				return FALSE;
++			}
++		} else {
++			if (read(info->fd_memory, buf, bufsz_write) != bufsz_write) {
++				ERRMSG("Can't read the dump memory(%s). %s\n",
++				    info->name_memory, strerror(errno));
++				return FALSE;
++			}
+ 		}
+ 		filter_data_buffer((unsigned char *)buf, paddr, bufsz_write);
+ 		paddr += bufsz_write;
+@@ -7431,7 +7444,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ 				 */
+ 				if (load.p_filesz)
+ 					if (!write_elf_load_segment(cd_page, paddr,
+-								    off_memory, load.p_filesz))
++								    off_memory, load.p_filesz, &cycle))
+ 						return FALSE;
+ 
+ 				load.p_paddr += load.p_memsz;
+@@ -7473,7 +7486,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ 		 */
+ 		if (load.p_filesz)
+ 			if (!write_elf_load_segment(cd_page, paddr,
+-						    off_memory, load.p_filesz))
++						    off_memory, load.p_filesz, &cycle))
+ 				return FALSE;
+ 
+ 		off_seg_load += load.p_filesz;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 8a05794..e043cf2 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -223,6 +223,7 @@ isAnon(unsigned long mapping)
+ #define FILENAME_BITMAP		"kdump_bitmapXXXXXX"
+ #define FILENAME_STDOUT		"STDOUT"
+ #define MAP_REGION		(4096*1024)
++#define FILL_EXCLUDED_PAGES_VALUE   (0xDEAD9A6EDEAD9A6EUL)
+ 
+ /*
+  * Minimam vmcore has 2 ProgramHeaderTables(PT_NOTE and PT_LOAD).
+-- 
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
