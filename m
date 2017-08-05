@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from mail-yw0-x243.google.com ([2607:f8b0:4002:c05::243])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1ddfSU-00031D-M2
- for kexec@lists.infradead.org; Fri, 04 Aug 2017 16:28:20 +0000
-From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [makedumpfile PATCH] Fix formatting problems in header file
-Date: Fri,  4 Aug 2017 05:29:08 -0700
-Message-Id: <1501849748-11647-1-git-send-email-eric.devolder@oracle.com>
+ id 1de7lH-0006KC-Q8
+ for kexec@lists.infradead.org; Sat, 05 Aug 2017 22:41:37 +0000
+Received: by mail-yw0-x243.google.com with SMTP id t139so2981478ywg.1
+ for <kexec@lists.infradead.org>; Sat, 05 Aug 2017 15:41:15 -0700 (PDT)
+From: Bradley Bolen <bradleybolen@gmail.com>
+Subject: [PATCH] makedumpfile: arm64: Fix page table walk of 1GB section
+Date: Sat,  5 Aug 2017 18:41:06 -0400
+Message-Id: <20170805224107.4966-1-bradleybolen@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,47 +22,101 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, ats-kumagai@wm.jp.nec.com
-Cc: daniel.kiper@oracle.com, eric.devolder@oracle.com, konrad.wilk@oracle.com
+To: kexec@lists.infradead.org
+Cc: panand@redhat.com, Bradley Bolen <bradleybolen@gmail.com>
 
-The list of #defines uses spaces to separate the value from the
-name. A few used tabs, so those tabs have been converted to
-spaces so that the values align again.
 
-Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
----
- makedumpfile.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Using an arm64 board, 2GB of memory, makedumpfile 1.6.2, and the v4.11 kernel,
+I ran into an issue where the dumpfile was not excluding any pages thus
+creating a huge vmcore.
 
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 8a05794..34dd8d7 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -2244,7 +2244,7 @@ struct elf_prstatus {
- #define OPT_DEBUG               'D'
- #define OPT_DUMP_LEVEL          'd'
- #define OPT_ELF_DUMPFILE        'E'
--#define OPT_EXCLUDE_UNUSED_VM	'e'
-+#define OPT_EXCLUDE_UNUSED_VM   'e'
- #define OPT_FLATTEN             'F'
- #define OPT_FORCE               'f'
- #define OPT_GENERATE_VMCOREINFO 'g'
-@@ -2271,10 +2271,10 @@ struct elf_prstatus {
- #define OPT_EPPIC               OPT_START+11
- #define OPT_NON_MMAP            OPT_START+12
- #define OPT_MEM_USAGE           OPT_START+13
--#define OPT_SPLITBLOCK_SIZE	OPT_START+14
-+#define OPT_SPLITBLOCK_SIZE     OPT_START+14
- #define OPT_WORKING_DIR         OPT_START+15
--#define OPT_NUM_THREADS	OPT_START+16
--#define OPT_PARTIAL_DMESG	OPT_START+17
-+#define OPT_NUM_THREADS         OPT_START+16
-+#define OPT_PARTIAL_DMESG       OPT_START+17
- 
- /*
-  * Function Prototype.
+I found that my board had a 1GB mapping in the PGD of 0xffffffc040000000. This
+isn't my area of expertise but I think I've pieced together how the kernel
+handles page tables.
+
+cat /proc/kallsyms |grep swapper_pg
+ffffff8008a66000 B swapper_pg_dir
+
+00a66800: 7fff9003 // pgd for virtual addr 0xffffffc000000000
+00a66804: 00000000
+00a66808: 40000711 // pgd for virtual addr 0xffffffc040000000
+00a6680c: 00e80000
+
+If I understand everything correctly then the pgd at 0xa66808 is a section and
+not a pointer to a PMD, thus it should have been handled as a section instead
+of trying to drill down to a PTE by the code in arch/arm64.c
+
+Please find debug below and a proposed (probably not optimal) fix attached.
+
+Thank you.
+
+/usr/sbin/makedumpfile -F -c -d 31 --message-level=31 /proc/vmcore > /dev/null
+sadump: unsupported architecture
+LOAD (0)
+phys_start : 80000
+phys_end : a58000
+virt_start : ffffff8008080000
+virt_end : ffffff8008a58000
+LOAD (1)
+phys_start : 0
+phys_end : 6000000
+virt_start : ffffffc000000000
+virt_end : ffffffc006000000
+LOAD (2)
+phys_start : 6800000
+phys_end : 8000000
+virt_start : ffffffc006800000
+virt_end : ffffffc008000000
+LOAD (3)
+phys_start : a000000
+phys_end : 80000000
+virt_start : ffffffc00a000000
+virt_end : ffffffc080000000
+Linux kdump
+page_size : 4096
+phys_base : 0
+
+max_mapnr : 80000
+There is enough free memory to be done in one cycle.
+
+Buffer size for the cyclic mode: 131072
+kimage_voffset : ffffff8008000000
+max_physmem_bits : 30
+section_size_bits: 1e
+page_offset : ffffffc000000000
+
+num of NODEs : 1
+
+Memory type : SPARSEMEM_EX
+
+readmem: Can't convert a virtual address(ffffffc07fff6000) to physical address.
+readmem: type_addr: 0, addr:ffffffc07fff6000, size:16
+section_mem_map_addr: Can't get a struct mem_section(ffffffc07fff6000).
+mem_map (0)
+mem_map : 0
+pfn_start : 0
+pfn_end : 40000
+readmem: Can't convert a virtual address(ffffffc07fff6010) to physical address.
+readmem: type_addr: 0, addr:ffffffc07fff6010, size:16
+section_mem_map_addr: Can't get a struct mem_section(ffffffc07fff6010).
+mem_map (1)
+mem_map : 0
+pfn_start : 40000
+pfn_end : 80000
+mmap() is available on the kernel.
+Checking for memory holes : [100.0 %] | STEP [Checking for memory holes ] :
+0.017147 seconds
+Excluding unnecessary pages : [100.0 %] \ STEP [Excluding unnecessary pages] :
+0.000034 seconds
+
+Bradley Bolen (1):
+  makedumpfile: arm64: Fix page table walk of 1GB section
+
+ arch/arm64.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
 -- 
-2.7.4
+1.9.3
 
 
 _______________________________________________
