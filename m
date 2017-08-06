@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw0-x243.google.com ([2607:f8b0:4002:c05::243])
+Received: from mail.kapsi.fi ([2001:67c:1be8::25])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1de7lH-0006KD-QI
- for kexec@lists.infradead.org; Sat, 05 Aug 2017 22:41:37 +0000
-Received: by mail-yw0-x243.google.com with SMTP id n83so2977956ywn.3
- for <kexec@lists.infradead.org>; Sat, 05 Aug 2017 15:41:15 -0700 (PDT)
-From: Bradley Bolen <bradleybolen@gmail.com>
-Subject: [PATCH] makedumpfile: arm64: Fix page table walk of 1GB section
-Date: Sat,  5 Aug 2017 18:41:07 -0400
-Message-Id: <20170805224107.4966-2-bradleybolen@gmail.com>
-In-Reply-To: <20170805224107.4966-1-bradleybolen@gmail.com>
-References: <20170805224107.4966-1-bradleybolen@gmail.com>
+ id 1deOig-0000ep-KW
+ for kexec@lists.infradead.org; Sun, 06 Aug 2017 16:48:05 +0000
+From: Mikko Rapeli <mikko.rapeli@iki.fi>
+Subject: [PATCH v06 21/36] uapi linux/kexec.h: use __kernel_size_t instead of
+ size_t
+Date: Sun,  6 Aug 2017 18:44:12 +0200
+Message-Id: <20170806164428.2273-22-mikko.rapeli@iki.fi>
+In-Reply-To: <20170806164428.2273-1-mikko.rapeli@iki.fi>
+References: <20170806164428.2273-1-mikko.rapeli@iki.fi>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,78 +19,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: panand@redhat.com, Bradley Bolen <bradleybolen@gmail.com>
+To: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Cc: Mikko Rapeli <mikko.rapeli@iki.fi>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
 
-makedumpfile was generating large (> 500MB) vmcore files for an arm64
-board with 2GB of DRAM.  It was not excluding any pages because the
-mem_map address was not being converted correctly.
-
-readmem: Can't convert a virtual address(ffffffc07fff6000) to physical
-address.
-readmem: type_addr: 0, addr:ffffffc07fff6000, size:16
-section_mem_map_addr: Can't get a struct mem_section(ffffffc07fff6000).
-mem_map (0)
-mem_map : 0
-
-makedumpfile was not handling 1GB sections in the PGD and was trying to
-drill down to a PTE in which it was trying to dereference invalid
-memory.  This patch adds code to check the PGD for a section type and
-handle it instead of treating it as a table entry.
-
-Signed-off-by: Bradley Bolen <bradleybolen@gmail.com>
----
- arch/arm64.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm64.c b/arch/arm64.c
-index 958f57f..cae4b70 100644
---- a/arch/arm64.c
-+++ b/arch/arm64.c
-@@ -57,6 +57,8 @@ static unsigned long kimage_voffset;
- #define PGDIR_SHIFT		((PAGESHIFT() - 3) * pgtable_level + 3)
- #define PTRS_PER_PGD		(1 << (va_bits - PGDIR_SHIFT))
- #define PUD_SHIFT		get_pud_shift_arm64()
-+#define PUD_SIZE		(1UL << PUD_SHIFT)
-+#define PUD_MASK		(~(PUD_SIZE - 1))
- #define PTRS_PER_PTE		(1 << (PAGESHIFT() - 3))
- #define PTRS_PER_PUD		PTRS_PER_PTE
- #define PMD_SHIFT		((PAGESHIFT() - 3) * 2 + 3)
-@@ -79,6 +81,10 @@ static unsigned long kimage_voffset;
- #define PMD_TYPE_SECT		1
- #define PMD_TYPE_TABLE		3
- 
-+#define PUD_TYPE_MASK		3
-+#define PUD_TYPE_SECT		1
-+#define PUD_TYPE_TABLE		3
-+
- #define pgd_index(vaddr) 		(((vaddr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
- #define pgd_offset(pgdir, vaddr)	((pgd_t *)(pgdir) + pgd_index(vaddr))
- 
-@@ -253,6 +259,13 @@ vaddr_to_paddr_arm64(unsigned long vaddr)
- 		return NOT_PADDR;
- 	}
- 
-+	if ((pud_val(pudv) & PUD_TYPE_MASK) == PUD_TYPE_SECT) {
-+		/* 1GB section */
-+		paddr = (pud_val(pudv) & (PUD_MASK & PMD_SECTION_MASK))
-+					+ (vaddr & (PUD_SIZE - 1));
-+		return paddr;
-+	}
-+
- 	pmda = pmd_offset(puda, &pudv, vaddr);
- 	if (!readmem(PADDR, (unsigned long long)pmda, &pmdv, sizeof(pmdv))) {
- 		ERRMSG("Can't read pmd\n");
--- 
-1.9.3
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Rml4ZXMgdXNlcnNwYWNlIGNvbXBpbGF0aW9uIGVycm9yOgoKZXJyb3I6IHVua25vd24gdHlwZSBu
+YW1lIOKAmHNpemVfdOKAmQogIHNpemVfdCBidWZzejsKClNpZ25lZC1vZmYtYnk6IE1pa2tvIFJh
+cGVsaSA8bWlra28ucmFwZWxpQGlraS5maT4KQ2M6IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
+Q2M6IEVyaWMgQmllZGVybWFuIDxlYmllZGVybUB4bWlzc2lvbi5jb20+Ci0tLQogaW5jbHVkZS91
+YXBpL2xpbnV4L2tleGVjLmggfCA0ICsrLS0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
+KyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvaW5jbHVkZS91YXBpL2xpbnV4L2tleGVj
+LmggYi9pbmNsdWRlL3VhcGkvbGludXgva2V4ZWMuaAppbmRleCBhYWU1ZWJmMjAyMmIuLmY5NjRk
+ODNiMjc1NyAxMDA2NDQKLS0tIGEvaW5jbHVkZS91YXBpL2xpbnV4L2tleGVjLmgKKysrIGIvaW5j
+bHVkZS91YXBpL2xpbnV4L2tleGVjLmgKQEAgLTUxLDkgKzUxLDkgQEAKICAqLwogc3RydWN0IGtl
+eGVjX3NlZ21lbnQgewogCWNvbnN0IHZvaWQgKmJ1ZjsKLQlzaXplX3QgYnVmc3o7CisJX19rZXJu
+ZWxfc2l6ZV90IGJ1ZnN6OwogCWNvbnN0IHZvaWQgKm1lbTsKLQlzaXplX3QgbWVtc3o7CisJX19r
+ZXJuZWxfc2l6ZV90IG1lbXN6OwogfTsKIAogI2VuZGlmIC8qIF9fS0VSTkVMX18gKi8KLS0gCjIu
+MTMuMwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtl
+eGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
