@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-x243.google.com ([2607:f8b0:4003:c06::243])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dejhl-0002sj-MT
- for kexec@lists.infradead.org; Mon, 07 Aug 2017 15:12:31 +0000
-Received: by mail-oi0-x243.google.com with SMTP id v11so676310oif.1
- for <kexec@lists.infradead.org>; Mon, 07 Aug 2017 08:12:08 -0700 (PDT)
+ id 1deuF2-0003eO-EC
+ for kexec@lists.infradead.org; Tue, 08 Aug 2017 02:27:34 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [makedumpfile PATCH v2] Wipe excluded pages that are written
+ into ELF dump file
+Date: Tue, 8 Aug 2017 02:25:08 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EF7308@BPXM01GP.gisp.nec.co.jp>
+References: <1501848839-10518-1-git-send-email-eric.devolder@oracle.com>
+In-Reply-To: <1501848839-10518-1-git-send-email-eric.devolder@oracle.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <20170806164428.2273-22-mikko.rapeli@iki.fi>
-References: <20170806164428.2273-1-mikko.rapeli@iki.fi>
- <20170806164428.2273-22-mikko.rapeli@iki.fi>
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Mon, 7 Aug 2017 17:12:06 +0200
-Message-ID: <CAK8P3a2YUbohiCDkMgKVHEmJtDv7XG21DkrVBA7eAg6+nhcidA@mail.gmail.com>
-Subject: Re: [PATCH v06 21/36] uapi linux/kexec.h: use __kernel_size_t instead
- of size_t
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,19 +20,134 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mikko Rapeli <mikko.rapeli@iki.fi>
-Cc: Linux API <linux-api@vger.kernel.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>
+To: Eric DeVolder <eric.devolder@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "daniel.kiper@oracle.com" <daniel.kiper@oracle.com>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>
 
-T24gU3VuLCBBdWcgNiwgMjAxNyBhdCA2OjQ0IFBNLCBNaWtrbyBSYXBlbGkgPG1pa2tvLnJhcGVs
-aUBpa2kuZmk+IHdyb3RlOgo+IEZpeGVzIHVzZXJzcGFjZSBjb21waWxhdGlvbiBlcnJvcjoKPgo+
-IGVycm9yOiB1bmtub3duIHR5cGUgbmFtZSDigJhzaXplX3TigJkKPiAgIHNpemVfdCBidWZzejsK
-Pgo+IFNpZ25lZC1vZmYtYnk6IE1pa2tvIFJhcGVsaSA8bWlra28ucmFwZWxpQGlraS5maT4KPiBD
-Yzoga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IENjOiBFcmljIEJpZWRlcm1hbiA8ZWJpZWRl
-cm1AeG1pc3Npb24uY29tPgoKQWNrZWQtYnk6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBt
-YWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hello Eric,
+
+>When a page is excluded by any of the existing dump levels,
+>that page may still be written to the ELF dump file, depending
+>upon the PFN_EXCLUDED mechanism.
+>
+>The PFN_EXCLUDED mechanism looks for N consecutive "not
+>dumpable" pages, and if found, the current ELF segment is
+>closed out and a new ELF segment started, at the next dumpable
+>page. Otherwise, if the PFN_EXCLUDED criteria is not meet (that
+>is, there is a mix of dumpable and not dumpable pages, but not
+>N consecutive not dumpable pages) all pages are written to the
+>dump file.
+>
+>This patch implements a mechanism for those "not dumpable" pages
+>that are written to the ELF dump file to fill those pages with
+>constant data, rather than the original data. In other words,
+>the dump file still contains the page, but its data is wiped.
+>The data is wiped with the value 0xDEAD9A6EDEAD9A6EUL (an
+>attempt at DEADPAGE in hex, which works for 32-bit targets as
+>well).
+>
+>The motivation for doing this is to protect real user (customer)
+>data from "leaking" through to a dump file when that data was
+>intended to be omitted.
+>
+>Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+>---
+>v2: posted 04aug2017 to mailing list
+> - Incorporate feedback from Daniel Kiper (wipe value)
+> - Incorporate feedback from Atsushi Kumagai (eliminate the
+>   option and make as default/builtin behavior)
+
+Thanks for your work, this version looks good to me.
+I'll merge this into v1.6.3.
+
+Regards,
+Atsushi Kumagai
+
+>v1: posted 31jul2017 to mailing list
+>---
+> makedumpfile.c | 27 ++++++++++++++++++++-------
+> makedumpfile.h |  1 +
+> 2 files changed, 21 insertions(+), 7 deletions(-)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index f85003a..66c3105 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -7139,7 +7139,7 @@ out:
+>
+> int
+> write_elf_load_segment(struct cache_data *cd_page, unsigned long long paddr,
+>-		       off_t off_memory, long long size)
+>+		       off_t off_memory, long long size, struct cycle *cycle)
+> {
+> 	long page_size = info->page_size;
+> 	long long bufsz_write;
+>@@ -7163,10 +7163,23 @@ write_elf_load_segment(struct cache_data *cd_page, unsigned long long paddr,
+> 		else
+> 			bufsz_write = size;
+>
+>-		if (read(info->fd_memory, buf, bufsz_write) != bufsz_write) {
+>-			ERRMSG("Can't read the dump memory(%s). %s\n",
+>-			    info->name_memory, strerror(errno));
+>-			return FALSE;
+>+		if (!is_dumpable(info->bitmap2, paddr_to_pfn(paddr), cycle)) {
+>+			unsigned k;
+>+			unsigned long *p = (unsigned long *)buf;
+>+			for (k = 0; k < info->page_size; k += sizeof(unsigned long)) {
+>+				*p++ = FILL_EXCLUDED_PAGES_VALUE;
+>+			}
+>+			if (lseek(info->fd_memory, bufsz_write, SEEK_CUR) < 0) {
+>+				ERRMSG("Can't seek the dump memory(%s). %s\n",
+>+				    info->name_memory, strerror(errno));
+>+				return FALSE;
+>+			}
+>+		} else {
+>+			if (read(info->fd_memory, buf, bufsz_write) != bufsz_write) {
+>+				ERRMSG("Can't read the dump memory(%s). %s\n",
+>+				    info->name_memory, strerror(errno));
+>+				return FALSE;
+>+			}
+> 		}
+> 		filter_data_buffer((unsigned char *)buf, paddr, bufsz_write);
+> 		paddr += bufsz_write;
+>@@ -7431,7 +7444,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+> 				 */
+> 				if (load.p_filesz)
+> 					if (!write_elf_load_segment(cd_page, paddr,
+>-								    off_memory, load.p_filesz))
+>+								    off_memory, load.p_filesz, &cycle))
+> 						return FALSE;
+>
+> 				load.p_paddr += load.p_memsz;
+>@@ -7473,7 +7486,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+> 		 */
+> 		if (load.p_filesz)
+> 			if (!write_elf_load_segment(cd_page, paddr,
+>-						    off_memory, load.p_filesz))
+>+						    off_memory, load.p_filesz, &cycle))
+> 				return FALSE;
+>
+> 		off_seg_load += load.p_filesz;
+>diff --git a/makedumpfile.h b/makedumpfile.h
+>index 8a05794..e043cf2 100644
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -223,6 +223,7 @@ isAnon(unsigned long mapping)
+> #define FILENAME_BITMAP		"kdump_bitmapXXXXXX"
+> #define FILENAME_STDOUT		"STDOUT"
+> #define MAP_REGION		(4096*1024)
+>+#define FILL_EXCLUDED_PAGES_VALUE   (0xDEAD9A6EDEAD9A6EUL)
+>
+> /*
+>  * Minimam vmcore has 2 ProgramHeaderTables(PT_NOTE and PT_LOAD).
+>--
+>2.7.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
