@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1df91v-0000zw-EA
- for kexec@lists.infradead.org; Tue, 08 Aug 2017 18:15:01 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1502195440-3600-1-git-send-email-bianpan2016@163.com>
-Date: Tue, 08 Aug 2017 13:05:16 -0500
-In-Reply-To: <1502195440-3600-1-git-send-email-bianpan2016@163.com> (Pan
- Bian's message of "Tue, 8 Aug 2017 20:30:40 +0800")
-Message-ID: <87bmnqey03.fsf@xmission.com>
+Date: Wed, 9 Aug 2017 10:18:04 +0300
+From: Mikko Rapeli <mikko.rapeli@iki.fi>
+Subject: Re: [PATCH v06 05/36] uapi linux/sysctl.h: use __kernel_size_t
+ instead of size_t
+Message-ID: <20170809071804.GD31101@lakka.kapsi.fi>
 MIME-Version: 1.0
-Subject: Re: kexec_file: use crypto_free_shash to free memory
+Content-Disposition: inline
+In-Reply-To: <20170808231711.GJ10552@altlinux.org>
+ <20170808231543.GI10552@altlinux.org>
+ <20170808225739.GF10552@altlinux.org>
+ <20170808225417.GE10552@altlinux.org>
+ <20170808225026.GD10552@altlinux.org>
+ <20170808224555.GC10552@altlinux.org>
+ <20170808224253.GB10552@altlinux.org>
+ <20170808223420.GA10552@altlinux.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,44 +26,14 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pan Bian <bianpan2016@163.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Dmitry V. Levin" <ldv@altlinux.org>, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, reiserfs-devel@vger.kernel.org
+Cc: linux-arch@vger.kernel.org, "H . J . Lu" <hjl.tools@gmail.com>, Joel Scherpelz <jscherpelz@google.com>, kexec@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Matthew Whitehead <tedheadster@gmail.com>, Eric Biederman <ebiederm@xmission.com>, "David S . Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org, Lorenzo Colitti <lorenzo@google.com>
 
-Pan Bian <bianpan2016@163.com> writes:
+Hi Dmitry and thanks for the comments.
 
-> In function kexec_calculate_store_digests(), kfree() is used to free
-> memory allocated by crypto_alloc_shash(). It is better to use function
-> crypto_free_shash(), which also zeroizes the memory to be freed.
+I have only one question: why haven't your patches been applied yet?
 
-Why is it important to zero memory?  There is nothing sensitive being
-stored or hashed.  The hash is used for integrity checking purposes.
-
-If the argument is that kfree is simply the wrong frunction for freeing
-something allocating with crypto_alloc_shash() I can believe that.  In
-which case that sounds like something that needs to be fixed.  But I am
-concerned that wasn't your argument and you are talking about something
-that appears to be completely irrelevant.
-
-Eric
-
-> Signed-off-by: Pan Bian <bianpan2016@163.com>
-> ---
->  kernel/kexec_file.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 9f48f44..94eeb38 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -627,7 +627,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
->  out_free_desc:
->  	kfree(desc);
->  out_free_tfm:
-> -	kfree(tfm);
-> +	crypto_free_shash(tfm);
->  out:
->  	return ret;
->  }
+-Mikko
 
 _______________________________________________
 kexec mailing list
