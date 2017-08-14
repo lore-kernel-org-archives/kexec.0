@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dh4dE-00072z-W6
- for kexec@lists.infradead.org; Mon, 14 Aug 2017 01:57:31 +0000
+ id 1dhAvV-00030J-B7
+ for kexec@lists.infradead.org; Mon, 14 Aug 2017 08:40:47 +0000
 From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [Makedumpfile PATCH] Fix SECTION_MAP_MASK for kernel >= v.13
-Date: Mon, 14 Aug 2017 01:53:21 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EF87E0@BPXM01GP.gisp.nec.co.jp>
-References: <7b445774345728d4a67e18513cb5ceb184f44d4c.1502385614.git.panand@redhat.com>
-In-Reply-To: <7b445774345728d4a67e18513cb5ceb184f44d4c.1502385614.git.panand@redhat.com>
+Subject: RE: [PATCH] makedumpfile: arm64: Fix page table walk of 1GB section
+Date: Mon, 14 Aug 2017 08:37:04 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EF8C02@BPXM01GP.gisp.nec.co.jp>
+References: <20170805224107.4966-1-bradleybolen@gmail.com>
+ <20170805224107.4966-2-bradleybolen@gmail.com>
+In-Reply-To: <20170805224107.4966-2-bradleybolen@gmail.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -23,65 +24,85 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Bradley Bolen <bradleybolen@gmail.com>
+Cc: "panand@redhat.com" <panand@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hello Pratyush,
+Hello Bradley,
 
->commit 2d070eab2e82 "mm: consider zone which is not fully populated to
->have holes" added a new flag SECTION_IS_ONLINE and therefore
->SECTION_MAP_MASK has been changed. We are not able to find correct
->mem_map in makedumpfile for kernel version v4.13-rc1 and onward because
->of the above kernel change.
->
->This patch fixes the MASK value keeping the code backward compatible
->
->Signed-off-by: Pratyush Anand <panand@redhat.com>
->---
-> makedumpfile.c | 5 ++++-
-> makedumpfile.h | 4 +++-
-> 2 files changed, 7 insertions(+), 2 deletions(-)
->
->diff --git a/makedumpfile.c b/makedumpfile.c
->index 30230a15a2e7..7350e5b5af95 100644
->--- a/makedumpfile.c
->+++ b/makedumpfile.c
->@@ -3304,7 +3304,10 @@ section_mem_map_addr(unsigned long addr)
-> 		return NOT_KV_ADDR;
-> 	}
-> 	map = ULONG(mem_section + OFFSET(mem_section.section_mem_map));
->-	map &= SECTION_MAP_MASK;
->+	if (info->kernel_version <= KERNEL_VERSION(4, 12, 0))
+Sorry for my late reply, I'll merge this patch into v1.6.3.
+Thanks for your work.
 
-I think this condition should be "< KERNEL_VERSION(4, 13, 0)",
-actually v4.12.7 doesn't have SECTION_IS_ONLINE.
-
-Thanks,
+Regards,
 Atsushi Kumagai
 
->+		map &= SECTION_MAP_MASK_4_12;
->+	else
->+		map &= SECTION_MAP_MASK;
-> 	free(mem_section);
+>makedumpfile was generating large (> 500MB) vmcore files for an arm64
+>board with 2GB of DRAM.  It was not excluding any pages because the
+>mem_map address was not being converted correctly.
 >
-> 	return map;
->diff --git a/makedumpfile.h b/makedumpfile.h
->index 8a05794843fb..322f28c632b0 100644
->--- a/makedumpfile.h
->+++ b/makedumpfile.h
->@@ -183,7 +183,9 @@ isAnon(unsigned long mapping)
-> #define SECTIONS_PER_ROOT()	(info->sections_per_root)
-> #define SECTION_ROOT_MASK()	(SECTIONS_PER_ROOT() - 1)
-> #define SECTION_NR_TO_ROOT(sec)	((sec) / SECTIONS_PER_ROOT())
->-#define SECTION_MAP_LAST_BIT	(1UL<<2)
->+#define SECTION_IS_ONLINE	(1UL<<2)
->+#define SECTION_MAP_LAST_BIT	(1UL<<3)
->+#define SECTION_MAP_MASK_4_12	(~(SECTION_IS_ONLINE-1))
-> #define SECTION_MAP_MASK	(~(SECTION_MAP_LAST_BIT-1))
-> #define NR_SECTION_ROOTS()	divideup(num_section, SECTIONS_PER_ROOT())
-> #define SECTION_NR_TO_PFN(sec)	((sec) << PFN_SECTION_SHIFT())
+>readmem: Can't convert a virtual address(ffffffc07fff6000) to physical
+>address.
+>readmem: type_addr: 0, addr:ffffffc07fff6000, size:16
+>section_mem_map_addr: Can't get a struct mem_section(ffffffc07fff6000).
+>mem_map (0)
+>mem_map : 0
+>
+>makedumpfile was not handling 1GB sections in the PGD and was trying to
+>drill down to a PTE in which it was trying to dereference invalid
+>memory.  This patch adds code to check the PGD for a section type and
+>handle it instead of treating it as a table entry.
+>
+>Signed-off-by: Bradley Bolen <bradleybolen@gmail.com>
+>---
+> arch/arm64.c | 13 +++++++++++++
+> 1 file changed, 13 insertions(+)
+>
+>diff --git a/arch/arm64.c b/arch/arm64.c
+>index 958f57f..cae4b70 100644
+>--- a/arch/arm64.c
+>+++ b/arch/arm64.c
+>@@ -57,6 +57,8 @@ static unsigned long kimage_voffset;
+> #define PGDIR_SHIFT		((PAGESHIFT() - 3) * pgtable_level + 3)
+> #define PTRS_PER_PGD		(1 << (va_bits - PGDIR_SHIFT))
+> #define PUD_SHIFT		get_pud_shift_arm64()
+>+#define PUD_SIZE		(1UL << PUD_SHIFT)
+>+#define PUD_MASK		(~(PUD_SIZE - 1))
+> #define PTRS_PER_PTE		(1 << (PAGESHIFT() - 3))
+> #define PTRS_PER_PUD		PTRS_PER_PTE
+> #define PMD_SHIFT		((PAGESHIFT() - 3) * 2 + 3)
+>@@ -79,6 +81,10 @@ static unsigned long kimage_voffset;
+> #define PMD_TYPE_SECT		1
+> #define PMD_TYPE_TABLE		3
+>
+>+#define PUD_TYPE_MASK		3
+>+#define PUD_TYPE_SECT		1
+>+#define PUD_TYPE_TABLE		3
+>+
+> #define pgd_index(vaddr) 		(((vaddr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
+> #define pgd_offset(pgdir, vaddr)	((pgd_t *)(pgdir) + pgd_index(vaddr))
+>
+>@@ -253,6 +259,13 @@ vaddr_to_paddr_arm64(unsigned long vaddr)
+> 		return NOT_PADDR;
+> 	}
+>
+>+	if ((pud_val(pudv) & PUD_TYPE_MASK) == PUD_TYPE_SECT) {
+>+		/* 1GB section */
+>+		paddr = (pud_val(pudv) & (PUD_MASK & PMD_SECTION_MASK))
+>+					+ (vaddr & (PUD_SIZE - 1));
+>+		return paddr;
+>+	}
+>+
+> 	pmda = pmd_offset(puda, &pudv, vaddr);
+> 	if (!readmem(PADDR, (unsigned long long)pmda, &pmdv, sizeof(pmdv))) {
+> 		ERRMSG("Can't read pmd\n");
 >--
->2.9.4
+>1.9.3
+>
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
+
 
 
 _______________________________________________
