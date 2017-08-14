@@ -1,29 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dftHY-000889-Hs
- for kexec@lists.infradead.org; Thu, 10 Aug 2017 19:38:13 +0000
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com
- [10.5.11.16])
- (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
- (No client certificate requested)
- by mx1.redhat.com (Postfix) with ESMTPS id A07DAFFC93
- for <kexec@lists.infradead.org>; Thu, 10 Aug 2017 19:30:24 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com
- (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 8CD5D96593
- for <kexec@lists.infradead.org>; Thu, 10 Aug 2017 19:30:24 +0000 (UTC)
-Received: from zmail24.collab.prod.int.phx2.redhat.com
- (zmail24.collab.prod.int.phx2.redhat.com [10.5.83.30])
- by colo-mx.corp.redhat.com (Postfix) with ESMTP id 833EF1805974
- for <kexec@lists.infradead.org>; Thu, 10 Aug 2017 19:30:24 +0000 (UTC)
-Date: Thu, 10 Aug 2017 15:30:24 -0400 (EDT)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <1169006560.42893057.1502393424430.JavaMail.zimbra@redhat.com>
-In-Reply-To: <mailman.7.1502391602.4098.kexec@lists.infradead.org>
-References: <mailman.7.1502391602.4098.kexec@lists.infradead.org>
-Subject: Re: Re: [Makedumpfile PATCH v2] x86_64: Take care of
- init_level4_pgt rename in kernel
+ id 1dh4dE-00072z-W6
+ for kexec@lists.infradead.org; Mon, 14 Aug 2017 01:57:31 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [Makedumpfile PATCH] Fix SECTION_MAP_MASK for kernel >= v.13
+Date: Mon, 14 Aug 2017 01:53:21 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EF87E0@BPXM01GP.gisp.nec.co.jp>
+References: <7b445774345728d4a67e18513cb5ceb184f44d4c.1502385614.git.panand@redhat.com>
+In-Reply-To: <7b445774345728d4a67e18513cb5ceb184f44d4c.1502385614.git.panand@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -37,53 +23,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Pratyush Anand <panand@redhat.com>
+Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
+Hello Pratyush,
 
+>commit 2d070eab2e82 "mm: consider zone which is not fully populated to
+>have holes" added a new flag SECTION_IS_ONLINE and therefore
+>SECTION_MAP_MASK has been changed. We are not able to find correct
+>mem_map in makedumpfile for kernel version v4.13-rc1 and onward because
+>of the above kernel change.
+>
+>This patch fixes the MASK value keeping the code backward compatible
+>
+>Signed-off-by: Pratyush Anand <panand@redhat.com>
+>---
+> makedumpfile.c | 5 ++++-
+> makedumpfile.h | 4 +++-
+> 2 files changed, 7 insertions(+), 2 deletions(-)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 30230a15a2e7..7350e5b5af95 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -3304,7 +3304,10 @@ section_mem_map_addr(unsigned long addr)
+> 		return NOT_KV_ADDR;
+> 	}
+> 	map = ULONG(mem_section + OFFSET(mem_section.section_mem_map));
+>-	map &= SECTION_MAP_MASK;
+>+	if (info->kernel_version <= KERNEL_VERSION(4, 12, 0))
 
------ Original Message -----
-> 
-> Ccing Dave, not sure if crash utility also need update about this
-> issue..
-
-Hi Pratyush,
-
-Yes it does, I fixed it upstream a few weeks ago:
-
-  commit a16324a2f05c0947a83e26a5de7c756de4603da9
-  Author: Dave Anderson <anderson@redhat.com>
-  Date:   Thu Jul 6 16:19:41 2017 -0400
-
-    Fix for Linux 4.13-rc0 commit 7fd8329ba502ef76dd91db561c7aed696b2c7720
-    "x86/boot/64: Rename init_level4_pgt and early_level4_pgt".  Without
-    the patch, the crash session fails during initialization with the
-    error message "crash: cannot resolve "init_level4_pgt".
-    (anderson@redhat.com)
-
-As well as a fix for the SECTION_MAP_MASK change:
-
-  commit c24011916c6f70b3828ab522e3e6b0edb3c82677
-  Author: Dave Anderson <anderson@redhat.com>
-  Date:   Wed Jul 19 10:06:49 2017 -0400
-
-    Fix for Linux 4.13-rc1 commit 2d070eab2e8270c8a84d480bb91e4f739315f03d
-    "mm: consider zone which is not fully populated to have holes".
-    Without the patch, SPARSEMEM page struct addresses are incorrectly
-    calculated because a new section state, and an associated flag bit,
-    has been added to the low bits of the mem_section.section_mem_map
-    address; the extra bit is erroneously passed back as part of the
-    section_mem_map and resultant page struct address, leading to
-    errors in commands such as "kmem -p", "kmem -s", "kmem -n", and any
-    other command that translates a physical address to its page struct
-    address.
-    (anderson@redhat.com)
-
-I don't have support for 5-level paging as of yet.
+I think this condition should be "< KERNEL_VERSION(4, 13, 0)",
+actually v4.12.7 doesn't have SECTION_IS_ONLINE.
 
 Thanks,
-  Dave
+Atsushi Kumagai
 
- 
+>+		map &= SECTION_MAP_MASK_4_12;
+>+	else
+>+		map &= SECTION_MAP_MASK;
+> 	free(mem_section);
+>
+> 	return map;
+>diff --git a/makedumpfile.h b/makedumpfile.h
+>index 8a05794843fb..322f28c632b0 100644
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -183,7 +183,9 @@ isAnon(unsigned long mapping)
+> #define SECTIONS_PER_ROOT()	(info->sections_per_root)
+> #define SECTION_ROOT_MASK()	(SECTIONS_PER_ROOT() - 1)
+> #define SECTION_NR_TO_ROOT(sec)	((sec) / SECTIONS_PER_ROOT())
+>-#define SECTION_MAP_LAST_BIT	(1UL<<2)
+>+#define SECTION_IS_ONLINE	(1UL<<2)
+>+#define SECTION_MAP_LAST_BIT	(1UL<<3)
+>+#define SECTION_MAP_MASK_4_12	(~(SECTION_IS_ONLINE-1))
+> #define SECTION_MAP_MASK	(~(SECTION_MAP_LAST_BIT-1))
+> #define NR_SECTION_ROOTS()	divideup(num_section, SECTIONS_PER_ROOT())
+> #define SECTION_NR_TO_PFN(sec)	((sec) << PFN_SECTION_SHIFT())
+>--
+>2.9.4
+
 
 _______________________________________________
 kexec mailing list
