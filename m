@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dhWHx-0004kt-Ay
- for kexec@lists.infradead.org; Tue, 15 Aug 2017 07:29:23 +0000
-From: Pingfan Liu <piliu@redhat.com>
-Subject: [PATCH 2/2] makedumpfile/ppc64: get the info of mem reserved for
- crashkernel
-Date: Tue, 15 Aug 2017 15:21:06 +0800
-Message-Id: <1502781666-20987-3-git-send-email-piliu@redhat.com>
-In-Reply-To: <1502781666-20987-1-git-send-email-piliu@redhat.com>
-References: <1502781666-20987-1-git-send-email-piliu@redhat.com>
+Received: from mail-yw0-x241.google.com ([2607:f8b0:4002:c05::241])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1di8GA-0002lG-6e
+ for kexec@lists.infradead.org; Thu, 17 Aug 2017 00:02:03 +0000
+Received: by mail-yw0-x241.google.com with SMTP id s143so3228363ywg.4
+ for <kexec@lists.infradead.org>; Wed, 16 Aug 2017 17:01:40 -0700 (PDT)
+From: Bradley Bolen <bradleybolen@gmail.com>
+Subject: [PATCH v2] makedumpfile: arm64: Fix page table walk of 1GB section
+Date: Wed, 16 Aug 2017 20:01:29 -0400
+Message-Id: <20170817000129.3955-1-bradleybolen@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,112 +23,83 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: panand@redhat.com, Bradley Bolen <bradleybolen@gmail.com>, Bradley Bolen <bbolen@lexmark.com>
 
-In kernel, ppc64 does not export the mem layout by ioresource. So we
-need to get the mem info for crashkernel from device tree.
+From: Bradley Bolen <bbolen@lexmark.com>
 
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
+makedumpfile was generating large (> 500MB) vmcore files for an arm64
+board with 2GB of DRAM.  It was not excluding any pages because the
+mem_map address was not being converted correctly.
+
+readmem: Can't convert a virtual address(ffffffc07fff6000) to physical
+address.
+readmem: type_addr: 0, addr:ffffffc07fff6000, size:16
+section_mem_map_addr: Can't get a struct mem_section(ffffffc07fff6000).
+mem_map (0)
+mem_map : 0
+
+makedumpfile was not handling 1GB sections in the PGD and was trying to
+drill down to a PTE in which it was trying to dereference invalid
+memory.  This patch adds code to check the PGD for a section type and
+handle it instead of treating it as a table entry.
+
+Signed-off-by: Bradley Bolen <bradleybolen@gmail.com>
 ---
- arch/ppc64.c   | 36 ++++++++++++++++++++++++++++++++++++
- makedumpfile.c | 10 ++++++++++
- makedumpfile.h |  4 ++++
- 3 files changed, 50 insertions(+)
+Changes in v2:
+- updated comments
 
-diff --git a/arch/ppc64.c b/arch/ppc64.c
-index 3fd6002..360590e 100644
---- a/arch/ppc64.c
-+++ b/arch/ppc64.c
-@@ -617,4 +617,40 @@ vaddr_to_paddr_ppc64(unsigned long vaddr)
- 	return ppc64_vtop_level4(vaddr);
- }
+ arch/arm64.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64.c b/arch/arm64.c
+index 958f57f..25d7a1f 100644
+--- a/arch/arm64.c
++++ b/arch/arm64.c
+@@ -57,6 +57,8 @@ static unsigned long kimage_voffset;
+ #define PGDIR_SHIFT		((PAGESHIFT() - 3) * pgtable_level + 3)
+ #define PTRS_PER_PGD		(1 << (va_bits - PGDIR_SHIFT))
+ #define PUD_SHIFT		get_pud_shift_arm64()
++#define PUD_SIZE		(1UL << PUD_SHIFT)
++#define PUD_MASK		(~(PUD_SIZE - 1))
+ #define PTRS_PER_PTE		(1 << (PAGESHIFT() - 3))
+ #define PTRS_PER_PUD		PTRS_PER_PTE
+ #define PMD_SHIFT		((PAGESHIFT() - 3) * 2 + 3)
+@@ -79,6 +81,10 @@ static unsigned long kimage_voffset;
+ #define PMD_TYPE_SECT		1
+ #define PMD_TYPE_TABLE		3
  
-+int arch_crashkernel_mem_size()
-+{
-+	const char f_crashsize[] = "/proc/device-tree/chosen/linux,crashkernel-size";
-+	const char f_crashbase[] = "/proc/device-tree/chosen/linux,crashkernel-base";
-+	unsigned long crashk_sz_be, crashk_sz;
-+	unsigned long crashk_base_be, crashk_base;
-+	uint swap;
-+	FILE *fp, *fpb;
++#define PUD_TYPE_MASK		3
++#define PUD_TYPE_SECT		1
++#define PUD_TYPE_TABLE		3
 +
-+	fp = fopen(f_crashsize, "r");
-+	if (!fp) {
-+		ERRMSG("Cannot open %s\n", f_crashsize);
-+		return FALSE;
+ #define pgd_index(vaddr) 		(((vaddr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
+ #define pgd_offset(pgdir, vaddr)	((pgd_t *)(pgdir) + pgd_index(vaddr))
+ 
+@@ -253,6 +259,13 @@ vaddr_to_paddr_arm64(unsigned long vaddr)
+ 		return NOT_PADDR;
+ 	}
+ 
++	if ((pud_val(pudv) & PUD_TYPE_MASK) == PUD_TYPE_SECT) {
++		/* 1GB section for Page Table level = 4 and Page Size = 4KB */
++		paddr = (pud_val(pudv) & (PUD_MASK & PMD_SECTION_MASK))
++					+ (vaddr & (PUD_SIZE - 1));
++		return paddr;
 +	}
-+	fpb = fopen(f_crashbase, "r");
-+	if (!fp) {
-+		ERRMSG("Cannot open %s\n", f_crashbase);
-+		fclose(fp);
-+		return FALSE;
-+	}
 +
-+	fread(&crashk_sz_be, sizeof(crashk_sz_be), 1, fp);
-+	fread(&crashk_base_be, sizeof(crashk_base_be), 1, fpb);
-+	fclose(fp);
-+	fclose(fpb);
-+	/* dev tree is always big endian */
-+	swap = !is_bigendian();
-+	crashk_sz = swap64(crashk_sz_be, swap);
-+	crashk_base = swap64(crashk_base_be, swap);
-+	crash_reserved_mem_nr = 1;
-+	crash_reserved_mem[0].start = crashk_base;
-+	crash_reserved_mem[0].end   = crashk_base + crashk_sz - 1;
-+
-+	return TRUE;
-+}
-+
- #endif /* powerpc64 */
-diff --git a/makedumpfile.c b/makedumpfile.c
-index f85003a..c599b91 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -10921,10 +10921,20 @@ static int crashkernel_mem_callback(void *data, int nr,
- 	return 0;
- }
- 
-+#if !defined(HAVE_ARCH_CRASHKERNEL_MEM_SIZE)
-+int arch_crashkernel_mem_size()
-+{
-+	return FALSE;
-+}
-+#endif
-+
- int is_crashkernel_mem_reserved(void)
- {
- 	int ret;
- 
-+	if (arch_crashkernel_mem_size())
-+		return TRUE;
-+
- 	ret = iomem_for_each_line("Crash kernel\n",
- 					crashkernel_mem_callback, NULL);
- 	crash_reserved_mem_nr = ret;
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 8a05794..48c1423 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -987,6 +987,8 @@ unsigned long long vaddr_to_paddr_ppc64(unsigned long vaddr);
- #define get_kaslr_offset(X)	stub_false()
- #define vaddr_to_paddr(X)	vaddr_to_paddr_ppc64(X)
- #define is_phys_addr(X)		stub_true_ul(X)
-+
-+#define HAVE_ARCH_CRASHKERNEL_MEM_SIZE
- #endif          /* powerpc64 */
- 
- #ifdef __powerpc32__ /* powerpc32 */
-@@ -1939,6 +1941,8 @@ int iomem_for_each_line(char *match, int (*callback)(void *data, int nr,
- 						     unsigned long base,
- 						     unsigned long length),
- 			void *data);
-+int is_bigendian(void);
-+int arch_crashkernel_mem_size(void);
- 
- 
- /*
+ 	pmda = pmd_offset(puda, &pudv, vaddr);
+ 	if (!readmem(PADDR, (unsigned long long)pmda, &pmdv, sizeof(pmdv))) {
+ 		ERRMSG("Can't read pmd\n");
+@@ -278,7 +291,7 @@ vaddr_to_paddr_arm64(unsigned long vaddr)
+ 		}
+ 		break;
+ 	case PMD_TYPE_SECT:
+-		/* 1GB section */
++		/* 512MB section for Page Table level = 3 and Page Size = 64KB*/
+ 		paddr = (pmd_val(pmdv) & (PMD_MASK & PMD_SECTION_MASK))
+ 					+ (vaddr & (PMD_SIZE - 1));
+ 		break;
 -- 
-2.7.4
+1.9.3
 
 
 _______________________________________________
