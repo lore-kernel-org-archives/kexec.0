@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f41.google.com ([74.125.83.41])
+Received: from mail-pg0-f48.google.com ([74.125.83.48])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1diBmO-0007Ay-KF
- for kexec@lists.infradead.org; Thu, 17 Aug 2017 03:47:35 +0000
-Received: by mail-pg0-f41.google.com with SMTP id t3so5915764pgt.0
- for <kexec@lists.infradead.org>; Wed, 16 Aug 2017 20:47:11 -0700 (PDT)
+ id 1diBq7-0001SE-JL
+ for kexec@lists.infradead.org; Thu, 17 Aug 2017 03:51:25 +0000
+Received: by mail-pg0-f48.google.com with SMTP id v189so33959130pgd.2
+ for <kexec@lists.infradead.org>; Wed, 16 Aug 2017 20:51:02 -0700 (PDT)
+Subject: Re: [PATCH v2] makedumpfile: arm64: Fix page table walk of 1GB section
+References: <20170817000129.3955-1-bradleybolen@gmail.com>
 From: Pratyush Anand <panand@redhat.com>
-Subject: [Makedumpfile PATCH v2] Fix SECTION_MAP_MASK for kernel >= v.13
-Date: Thu, 17 Aug 2017 09:16:59 +0530
-Message-Id: <13b8d74c1b64c5ac96497b08176a98382e5bf1e1.1502941463.git.panand@redhat.com>
+Message-ID: <bfb79bd9-5a17-5eb3-5c7e-def47b8d0832@redhat.com>
+Date: Thu, 17 Aug 2017 09:12:55 +0530
+MIME-Version: 1.0
+In-Reply-To: <20170817000129.3955-1-bradleybolen@gmail.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,65 +21,97 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ats-kumagai@wm.jp.nec.com
-Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
+To: Bradley Bolen <bradleybolen@gmail.com>, kexec@lists.infradead.org
+Cc: Bradley Bolen <bbolen@lexmark.com>
 
-commit 2d070eab2e82 "mm: consider zone which is not fully populated to
-have holes" added a new flag SECTION_IS_ONLINE and therefore
-SECTION_MAP_MASK has been changed. We are not able to find correct
-mem_map in makedumpfile for kernel version v4.13-rc1 and onward because
-of the above kernel change.
 
-This patch fixes the MASK value keeping the code backward compatible
 
-Signed-off-by: Pratyush Anand <panand@redhat.com>
----
-v1->v2: Improved kernel_version comparison to take care of stable kernel
-versions as well.
+On Thursday 17 August 2017 05:31 AM, Bradley Bolen wrote:
+> From: Bradley Bolen <bbolen@lexmark.com>
+> 
+> makedumpfile was generating large (> 500MB) vmcore files for an arm64
+> board with 2GB of DRAM.  It was not excluding any pages because the
+> mem_map address was not being converted correctly.
+> 
+> readmem: Can't convert a virtual address(ffffffc07fff6000) to physical
+> address.
+> readmem: type_addr: 0, addr:ffffffc07fff6000, size:16
+> section_mem_map_addr: Can't get a struct mem_section(ffffffc07fff6000).
+> mem_map (0)
+> mem_map : 0
+> 
+> makedumpfile was not handling 1GB sections in the PGD and was trying to
+> drill down to a PTE in which it was trying to dereference invalid
+> memory.  This patch adds code to check the PGD for a section type and
+> handle it instead of treating it as a table entry.
+> 
+> Signed-off-by: Bradley Bolen <bradleybolen@gmail.com>
 
- makedumpfile.c | 5 ++++-
- makedumpfile.h | 4 +++-
- 2 files changed, 7 insertions(+), 2 deletions(-)
+Reviewed-by: Pratyush Anand <panand@redhat.com>
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 30230a15a2e7..c975651ca357 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -3304,7 +3304,10 @@ section_mem_map_addr(unsigned long addr)
- 		return NOT_KV_ADDR;
- 	}
- 	map = ULONG(mem_section + OFFSET(mem_section.section_mem_map));
--	map &= SECTION_MAP_MASK;
-+	if (info->kernel_version < KERNEL_VERSION(4, 13, 0))
-+		map &= SECTION_MAP_MASK_4_12;
-+	else
-+		map &= SECTION_MAP_MASK;
- 	free(mem_section);
- 
- 	return map;
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 8a05794843fb..322f28c632b0 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -183,7 +183,9 @@ isAnon(unsigned long mapping)
- #define SECTIONS_PER_ROOT()	(info->sections_per_root)
- #define SECTION_ROOT_MASK()	(SECTIONS_PER_ROOT() - 1)
- #define SECTION_NR_TO_ROOT(sec)	((sec) / SECTIONS_PER_ROOT())
--#define SECTION_MAP_LAST_BIT	(1UL<<2)
-+#define SECTION_IS_ONLINE	(1UL<<2)
-+#define SECTION_MAP_LAST_BIT	(1UL<<3)
-+#define SECTION_MAP_MASK_4_12	(~(SECTION_IS_ONLINE-1))
- #define SECTION_MAP_MASK	(~(SECTION_MAP_LAST_BIT-1))
- #define NR_SECTION_ROOTS()	divideup(num_section, SECTIONS_PER_ROOT())
- #define SECTION_NR_TO_PFN(sec)	((sec) << PFN_SECTION_SHIFT())
+> ---
+> Changes in v2:
+> - updated comments
+> 
+>   arch/arm64.c | 15 ++++++++++++++-
+>   1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64.c b/arch/arm64.c
+> index 958f57f..25d7a1f 100644
+> --- a/arch/arm64.c
+> +++ b/arch/arm64.c
+> @@ -57,6 +57,8 @@ static unsigned long kimage_voffset;
+>   #define PGDIR_SHIFT		((PAGESHIFT() - 3) * pgtable_level + 3)
+>   #define PTRS_PER_PGD		(1 << (va_bits - PGDIR_SHIFT))
+>   #define PUD_SHIFT		get_pud_shift_arm64()
+> +#define PUD_SIZE		(1UL << PUD_SHIFT)
+> +#define PUD_MASK		(~(PUD_SIZE - 1))
+>   #define PTRS_PER_PTE		(1 << (PAGESHIFT() - 3))
+>   #define PTRS_PER_PUD		PTRS_PER_PTE
+>   #define PMD_SHIFT		((PAGESHIFT() - 3) * 2 + 3)
+> @@ -79,6 +81,10 @@ static unsigned long kimage_voffset;
+>   #define PMD_TYPE_SECT		1
+>   #define PMD_TYPE_TABLE		3
+>   
+> +#define PUD_TYPE_MASK		3
+> +#define PUD_TYPE_SECT		1
+> +#define PUD_TYPE_TABLE		3
+> +
+>   #define pgd_index(vaddr) 		(((vaddr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
+>   #define pgd_offset(pgdir, vaddr)	((pgd_t *)(pgdir) + pgd_index(vaddr))
+>   
+> @@ -253,6 +259,13 @@ vaddr_to_paddr_arm64(unsigned long vaddr)
+>   		return NOT_PADDR;
+>   	}
+>   
+> +	if ((pud_val(pudv) & PUD_TYPE_MASK) == PUD_TYPE_SECT) {
+> +		/* 1GB section for Page Table level = 4 and Page Size = 4KB */
+> +		paddr = (pud_val(pudv) & (PUD_MASK & PMD_SECTION_MASK))
+> +					+ (vaddr & (PUD_SIZE - 1));
+> +		return paddr;
+> +	}
+> +
+>   	pmda = pmd_offset(puda, &pudv, vaddr);
+>   	if (!readmem(PADDR, (unsigned long long)pmda, &pmdv, sizeof(pmdv))) {
+>   		ERRMSG("Can't read pmd\n");
+> @@ -278,7 +291,7 @@ vaddr_to_paddr_arm64(unsigned long vaddr)
+>   		}
+>   		break;
+>   	case PMD_TYPE_SECT:
+> -		/* 1GB section */
+> +		/* 512MB section for Page Table level = 3 and Page Size = 64KB*/
+>   		paddr = (pmd_val(pmdv) & (PMD_MASK & PMD_SECTION_MASK))
+>   					+ (vaddr & (PMD_SIZE - 1));
+>   		break;
+> 
+
 -- 
-2.9.4
-
+Regards
+Pratyush
 
 _______________________________________________
 kexec mailing list
