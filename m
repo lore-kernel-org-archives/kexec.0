@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ipmail07.adl2.internode.on.net ([150.101.137.131])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1diZLG-0005MS-0M
- for kexec@lists.infradead.org; Fri, 18 Aug 2017 04:57:10 +0000
-From: Alistair Popple <alistair@popple.id.au>
-Subject: Re: [PATCH] kexec-tools: ppc64: avoid adding coherent memory regions
- to crash memory ranges
-Date: Fri, 18 Aug 2017 14:56:30 +1000
-Message-ID: <2943090.QOlPB5ZzCH@new-mexico>
-In-Reply-To: <150297311110.25328.11468130779639120510.stgit@hbathini.in.ibm.com>
-References: <150297311110.25328.11468130779639120510.stgit@hbathini.in.ibm.com>
-MIME-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1djdKH-0004Z5-9E
+ for kexec@lists.infradead.org; Mon, 21 Aug 2017 03:24:32 +0000
+From: Pingfan Liu <piliu@redhat.com>
+Subject: [PATCH v2 1/2] makedumpfile/ppc64: set page_offset in
+ get_versiondep_info_ppc64()
+Date: Mon, 21 Aug 2017 11:24:05 +0800
+Message-Id: <1503285846-11432-2-git-send-email-piliu@redhat.com>
+In-Reply-To: <1503285846-11432-1-git-send-email-piliu@redhat.com>
+References: <1503285846-11432-1-git-send-email-piliu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,147 +18,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Cc: Ankit Kumar <ankit@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>, Simon Horman <horms@verge.net.au>, Anshuman Khandual <khandual@linux.vnet.ibm.com>
+To: kexec@lists.infradead.org
+Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
 
-Hi,
+Envalue info->page_offset in get_versiondep_info_ppc64() is a little
+misleading. But since show_mem_usage->get_page_offset->get_versiondep_info
+needs to get this info, so initialize it in get_versiondep_info_ppc64().
 
-I haven't reviewed the code in depth but skipping memory regions marked
-ibm,coherent-device-memory is the right thing to do as the links to this memory
-will usually go down prior during a kexec.
+Signed-off-by: Pingfan Liu <piliu@redhat.com>
+---
+ arch/ppc64.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Also device-drivers typically put this memory into ZONE_MOVABLE which means
-there will be no kernel allocations present in this memory.
-
-Regards,
-
-Alistair
-
-On Thu, 17 Aug 2017 06:01:51 PM Hari Bathini wrote:
-> Accelerator devices like GPU and FPGA cards contain onboard memory. This
-> onboard memory is represented as a memory only NUMA node, integrating it
-> with core memory subsystem. Since, the link through which these devices
-> are integrated to core memory goes down after a system crash and they are
-> meant for user workloads, avoid adding coherent device memory regions to
-> crash memory ranges. Without this change, makedumpfile tool tries to save
-> unaccessible coherent device memory regions, crashing the system.
-> 
-> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
-> ---
->  kexec/arch/ppc64/crashdump-ppc64.c |   64 +++++++++++++++++++++++++++++++++++-
->  kexec/arch/ppc64/kexec-ppc64.h     |    1 +
->  2 files changed, 63 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
-> index 13995bf..7ea3983 100644
-> --- a/kexec/arch/ppc64/crashdump-ppc64.c
-> +++ b/kexec/arch/ppc64/crashdump-ppc64.c
-> @@ -181,6 +181,53 @@ static int get_dyn_reconf_crash_memory_ranges(void)
->  	return 0;
->  }
->  
-> +/*
-> + * For a given memory node, check if it is mapped to system RAM or
-> + * to onboard memory on accelerator device like GPU card or such.
-> + */
-> +static int is_coherent_device_mem(const char *fname)
-> +{
-> +	char fpath[PATH_LEN];
-> +	char buf[32];
-> +	DIR *dmem;
-> +	FILE *file;
-> +	struct dirent *mentry;
-> +	int cnt, ret = 0;
-> +
-> +	strcpy(fpath, fname);
-> +	if ((dmem = opendir(fpath)) == NULL) {
-> +		perror(fpath);
-> +		return -1;
-> +	}
-> +
-> +	while ((mentry = readdir(dmem)) != NULL) {
-> +		if (strcmp(mentry->d_name, "compatible"))
-> +			continue;
-> +
-> +		strcat(fpath, "/compatible");
-> +		if ((file = fopen(fpath, "r")) == NULL) {
-> +			perror(fpath);
-> +			ret = -1;
-> +			break;
-> +		}
-> +		if ((cnt = fread(buf, 1, 32, file)) < 0) {
-> +			perror(fpath);
-> +			fclose(file);
-> +			ret = -1;
-> +			break;
-> +		}
-> +		if (!strncmp(buf, "ibm,coherent-device-memory", 26)) {
-> +			ret = 1;
-> +			break;
-> +		}
-> +		fclose(file);
-> +	}
-> +
-> +	closedir(dmem);
-> +	return ret;
-> +}
-> +
-> +
->  /* Reads the appropriate file and retrieves the SYSTEM RAM regions for whom to
->   * create Elf headers. Keeping it separate from get_memory_ranges() as
->   * requirements are different in the case of normal kexec and crashdumps.
-> @@ -196,12 +243,12 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
->  {
->  
->  	char device_tree[256] = "/proc/device-tree/";
-> -	char fname[256];
-> +	char fname[PATH_LEN];
->  	char buf[MAXBYTES];
->  	DIR *dir, *dmem;
->  	FILE *file;
->  	struct dirent *dentry, *mentry;
-> -	int n, crash_rng_len = 0;
-> +	int n, ret, crash_rng_len = 0;
->  	unsigned long long start, end;
->  	int page_size;
->  
-> @@ -240,6 +287,19 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
->  			continue;
->  		strcpy(fname, device_tree);
->  		strcat(fname, dentry->d_name);
-> +
-> +		ret = is_coherent_device_mem(fname);
-> +		if (ret == -1) {
-> +			closedir(dir);
-> +			goto err;
-> +		} else if (ret == 1) {
-> +			/*
-> +			 * Avoid adding this memory region as it is not
-> +			 * mapped to system RAM.
-> +			 */
-> +			continue;
-> +		}
-> +
->  		if ((dmem = opendir(fname)) == NULL) {
->  			perror(fname);
->  			closedir(dir);
-> diff --git a/kexec/arch/ppc64/kexec-ppc64.h b/kexec/arch/ppc64/kexec-ppc64.h
-> index 633ae77..434b4bf 100644
-> --- a/kexec/arch/ppc64/kexec-ppc64.h
-> +++ b/kexec/arch/ppc64/kexec-ppc64.h
-> @@ -1,6 +1,7 @@
->  #ifndef KEXEC_PPC64_H
->  #define KEXEC_PPC64_H
->  
-> +#define PATH_LEN 256
->  #define MAXBYTES 128
->  #define MAX_LINE 160
->  #define CORE_TYPE_ELF32 1
-> 
+diff --git a/arch/ppc64.c b/arch/ppc64.c
+index 6aeab7e..3fd6002 100644
+--- a/arch/ppc64.c
++++ b/arch/ppc64.c
+@@ -576,6 +576,7 @@ get_versiondep_info_ppc64()
+ 		ERRMSG("Can't initialize for vmalloc translation\n");
+ 		return FALSE;
+ 	}
++	info->page_offset = __PAGE_OFFSET;
+ 
+ 	return TRUE;
+ }
+-- 
+2.7.4
 
 
 _______________________________________________
