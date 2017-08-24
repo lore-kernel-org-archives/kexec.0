@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x231.google.com ([2607:f8b0:400e:c05::231])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dkmcj-00027f-7d
- for kexec@lists.infradead.org; Thu, 24 Aug 2017 07:32:20 +0000
-Received: by mail-pg0-x231.google.com with SMTP id 83so12874842pgb.3
- for <kexec@lists.infradead.org>; Thu, 24 Aug 2017 00:31:56 -0700 (PDT)
+Received: from mail-pg0-x232.google.com ([2607:f8b0:400e:c05::232])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dknKs-0005F9-96
+ for kexec@lists.infradead.org; Thu, 24 Aug 2017 08:17:56 +0000
+Received: by mail-pg0-x232.google.com with SMTP id 83so13436638pgb.3
+ for <kexec@lists.infradead.org>; Thu, 24 Aug 2017 01:17:30 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH] arm64: fix an issue with kaslr-enabled vmlinux
-Date: Thu, 24 Aug 2017 16:32:49 +0900
-Message-Id: <20170824073249.18056-1-takahiro.akashi@linaro.org>
+Subject: [PATCH 00/14] arm64: kexec: add kexec_file_load support
+Date: Thu, 24 Aug 2017 17:17:57 +0900
+Message-Id: <20170824081811.19299-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,59 +22,140 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-Normally vmlinux for arm64 is of ET_EXEC type, while if built with
-CONFIG_RANDAMIZE_BASE (that is KASLR), it will be of ET_DYN type.
-Meanwhile, physical address field of segments in vmlinux has actually
-the same value as virtual address field.
+This is the initial attempt of implementing kexec_file_load() support
+on arm64.[1]
+Most of the code is based on kexec-tools (along with some kernel code
+from x86 and from powerpc, which also came from kexec-tools).
 
-Accordingly, in this case, it totally makes no sense to check for
-validity of segments against physical memory ranges and, if necessary,
-relocate them in elf_exec_load() on arm64.
 
-This patch allows to unconditionally skip the check on arm64.
+This patch series enables us to
+  * load the kernel, either Image or vmlinux, with kexec_file_load
+    system call, and
+  * optionally verify its signature at load time for trusted boot.
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
----
- include/elf.h          | 3 ++-
- kexec/kexec-elf-exec.c | 6 +++++-
- 2 files changed, 7 insertions(+), 2 deletions(-)
+To load the kernel via kexec_file_load system call, a small change
+needs to be applied on kexec-tools. See [2]. This enables '-s' option.
 
-diff --git a/include/elf.h b/include/elf.h
-index 5db637b..b7677a2 100644
---- a/include/elf.h
-+++ b/include/elf.h
-@@ -258,7 +258,8 @@ typedef struct
- #define EM_OPENRISC	92		/* OpenRISC 32-bit embedded processor */
- #define EM_ARC_A5	93		/* ARC Cores Tangent-A5 */
- #define EM_XTENSA	94		/* Tensilica Xtensa Architecture */
--#define EM_NUM		95
-+#define EM_AARCH64	183		/* ARM AARCH64 */
-+#define EM_NUM		184
- 
- /* If it is necessary to assign new unofficial EM_* values, please
-    pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
-diff --git a/kexec/kexec-elf-exec.c b/kexec/kexec-elf-exec.c
-index cb62d04..a9329ac 100644
---- a/kexec/kexec-elf-exec.c
-+++ b/kexec/kexec-elf-exec.c
-@@ -63,9 +63,13 @@ int elf_exec_load(struct mem_ehdr *ehdr, struct kexec_info *info)
- 
- 	/* If I have a dynamic executable find it's size
- 	 * and then find a location for it in memory.
-+	 * Note on arm64:
-+	 * arm64's vmlinux has virtual address in physical address
-+	 * field of PT_LOAD segments. So the following validity check
-+	 * and relocation makes no sense on arm64.
- 	 */
- 	base = 0;
--	if (ehdr->e_type == ET_DYN) {
-+	if ((ehdr->e_machine != EM_AARCH64) && (ehdr->e_type == ET_DYN)) {
- 		unsigned long first, last, align;
- 		first = ULONG_MAX;
- 		last  = 0;
+As we discussed a long time ago, users may not be allowed to specify
+device-tree file of the 2nd kernel explicitly with kexec-tools, therefore
+re-using the blob of the first kernel.
+
+Regarding a method of placing the signature into the kernel binary,
+  * for 'Image', we conform with x86 (or rather Microsoft?) style of
+    signing since the binary can also be seen as in PE format
+    (assuming that CONFIG_EFI is enabled),
+  * for 'vmlinux', we follow powerpc approach[3]: The signature will
+    be appended just after the binary itself as module signing does.
+    This implies that we need to enable CONFIG_MODULE_SIG, too.
+
+    Powerpc is also going to support extended-file-attribute-based
+    verification[3], but arm64 doesn't for now partly because we don't
+    have TPM-based IMA at this moment.
+
+Accordingly, we can use the existing commands, sbsign and sig-file
+respectively, to sign the kernel. Please note that it is totally up to
+the system what key/certificate is used for signing.
+
+Some concerns(or future works):
+* Even if the kernel is configured with CONFIG_RANDOMIZE_BASE, the 2nd
+  kernel won't be placed at a randomized address. We will have to
+  add some boot code similar to efi-stub to implement the feature.
+* While big-endian kernel can support kernel signing, I'm not sure that
+  Image can be recognized as in PE format because x86 standard only
+  defines little-endian-based format.
+  So I tested big-endian kernel signing only with vmlinux.
+* IMA(and file extended attribute)-based kexec
+
+
+Patch #1 to #7 are all preparatory patches on generic side.
+(Patch #1 is not part of mine, but a prerequisite from [4].)
+Patch #8 and #9 are purgatory code.
+Patch #10 to #12 are common for enabling kexec_file_load.
+Patch #13 is for 'Image' support.
+Patch #14 is for 'vmlinux' support.
+
+
+  [1] http://git.linaro.org/people/takahiro.akashi/linux-aarch64.git
+	branch:arm64/kexec_file
+  [2] http://git.linaro.org/people/takahiro.akashi/kexec-tools.git
+	branch:arm64/kexec_file
+  [3] http://lkml.iu.edu//hypermail/linux/kernel/1707.0/03669.html
+  [4] http://lkml.iu.edu//hypermail/linux/kernel/1707.0/03670.html
+
+
+AKASHI Takahiro (13):
+  include: pe.h: remove message[] from mz header definition
+  resource: add walk_system_ram_res_rev()
+  kexec_file: factor out vmlinux (elf) parser from powerpc
+  kexec_file: factor out crashdump elf header function from x86
+  kexec_file: add kexec_add_segment()
+  asm-generic: add kexec_file_load system call to unistd.h
+  arm64: kexec_file: create purgatory
+  arm64: kexec_file: add sha256 digest check in purgatory
+  arm64: kexec_file: load initrd, device-tree and purgatory segments
+  arm64: kexec_file: set up for crash dump adding elf core header
+  arm64: enable KEXEC_FILE config
+  arm64: kexec_file: add Image format support
+  arm64: kexec_file: add vmlinux format support
+
+Thiago Jung Bauermann (1):
+  MODSIGN: Export module signature definitions
+
+ arch/Kconfig                            |   3 +
+ arch/arm64/Kconfig                      |  33 ++
+ arch/arm64/Makefile                     |   1 +
+ arch/arm64/crypto/sha256-core.S_shipped |   2 +
+ arch/arm64/include/asm/kexec.h          |  23 ++
+ arch/arm64/include/asm/kexec_file.h     |  84 +++++
+ arch/arm64/kernel/Makefile              |   5 +-
+ arch/arm64/kernel/kexec_elf.c           | 216 ++++++++++++
+ arch/arm64/kernel/kexec_image.c         | 112 ++++++
+ arch/arm64/kernel/machine_kexec_file.c  | 606 ++++++++++++++++++++++++++++++++
+ arch/arm64/purgatory/Makefile           |  43 +++
+ arch/arm64/purgatory/entry.S            |  41 +++
+ arch/arm64/purgatory/purgatory.c        |  20 ++
+ arch/arm64/purgatory/sha256-core.S      |   1 +
+ arch/arm64/purgatory/sha256.c           |  79 +++++
+ arch/arm64/purgatory/sha256.h           |   1 +
+ arch/arm64/purgatory/string.c           |  32 ++
+ arch/arm64/purgatory/string.h           |   5 +
+ arch/powerpc/Kconfig                    |   1 +
+ arch/powerpc/kernel/kexec_elf_64.c      | 464 ------------------------
+ arch/x86/kernel/crash.c                 | 324 -----------------
+ include/linux/elf.h                     |  62 ++++
+ include/linux/ioport.h                  |   3 +
+ include/linux/kexec.h                   |  39 ++
+ include/linux/module.h                  |   3 -
+ include/linux/module_signature.h        |  47 +++
+ include/linux/pe.h                      |   2 +-
+ include/uapi/asm-generic/unistd.h       |   4 +-
+ init/Kconfig                            |   6 +-
+ kernel/Makefile                         |   3 +-
+ kernel/crash_core.c                     | 333 ++++++++++++++++++
+ kernel/kexec_file.c                     |  47 +++
+ kernel/kexec_file_elf.c                 | 454 ++++++++++++++++++++++++
+ kernel/module.c                         |   1 +
+ kernel/module_signing.c                 |  74 ++--
+ kernel/resource.c                       |  48 +++
+ 36 files changed, 2383 insertions(+), 839 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kexec_file.h
+ create mode 100644 arch/arm64/kernel/kexec_elf.c
+ create mode 100644 arch/arm64/kernel/kexec_image.c
+ create mode 100644 arch/arm64/kernel/machine_kexec_file.c
+ create mode 100644 arch/arm64/purgatory/Makefile
+ create mode 100644 arch/arm64/purgatory/entry.S
+ create mode 100644 arch/arm64/purgatory/purgatory.c
+ create mode 100644 arch/arm64/purgatory/sha256-core.S
+ create mode 100644 arch/arm64/purgatory/sha256.c
+ create mode 100644 arch/arm64/purgatory/sha256.h
+ create mode 100644 arch/arm64/purgatory/string.c
+ create mode 100644 arch/arm64/purgatory/string.h
+ create mode 100644 include/linux/module_signature.h
+ create mode 100644 kernel/kexec_file_elf.c
+
 -- 
 2.14.1
 
