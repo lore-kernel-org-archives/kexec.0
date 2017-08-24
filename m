@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x232.google.com ([2607:f8b0:400e:c05::232])
- by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dknKs-0005F9-96
- for kexec@lists.infradead.org; Thu, 24 Aug 2017 08:17:56 +0000
-Received: by mail-pg0-x232.google.com with SMTP id 83so13436638pgb.3
- for <kexec@lists.infradead.org>; Thu, 24 Aug 2017 01:17:30 -0700 (PDT)
+Received: from mail-pg0-x22d.google.com ([2607:f8b0:400e:c05::22d])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dknKs-0007Jb-EU
+ for kexec@lists.infradead.org; Thu, 24 Aug 2017 08:17:59 +0000
+Received: by mail-pg0-x22d.google.com with SMTP id s14so13457984pgs.1
+ for <kexec@lists.infradead.org>; Thu, 24 Aug 2017 01:17:34 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH 00/14] arm64: kexec: add kexec_file_load support
-Date: Thu, 24 Aug 2017 17:17:57 +0900
-Message-Id: <20170824081811.19299-1-takahiro.akashi@linaro.org>
+Subject: [PATCH 01/14] MODSIGN: Export module signature definitions
+Date: Thu, 24 Aug 2017 17:17:58 +0900
+Message-Id: <20170824081811.19299-2-takahiro.akashi@linaro.org>
+In-Reply-To: <20170824081811.19299-1-takahiro.akashi@linaro.org>
+References: <20170824081811.19299-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,139 +25,255 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-This is the initial attempt of implementing kexec_file_load() support
-on arm64.[1]
-Most of the code is based on kexec-tools (along with some kernel code
-from x86 and from powerpc, which also came from kexec-tools).
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 
+IMA will use the module_signature format for append signatures, so export
+the relevant definitions and factor out the code which verifies that the
+appended signature trailer is valid.
 
-This patch series enables us to
-  * load the kernel, either Image or vmlinux, with kexec_file_load
-    system call, and
-  * optionally verify its signature at load time for trusted boot.
+Also, create a CONFIG_MODULE_SIG_FORMAT option so that IMA can select it
+and be able to use validate_module_signature without having to depend on
+CONFIG_MODULE_SIG.
 
-To load the kernel via kexec_file_load system call, a small change
-needs to be applied on kexec-tools. See [2]. This enables '-s' option.
-
-As we discussed a long time ago, users may not be allowed to specify
-device-tree file of the 2nd kernel explicitly with kexec-tools, therefore
-re-using the blob of the first kernel.
-
-Regarding a method of placing the signature into the kernel binary,
-  * for 'Image', we conform with x86 (or rather Microsoft?) style of
-    signing since the binary can also be seen as in PE format
-    (assuming that CONFIG_EFI is enabled),
-  * for 'vmlinux', we follow powerpc approach[3]: The signature will
-    be appended just after the binary itself as module signing does.
-    This implies that we need to enable CONFIG_MODULE_SIG, too.
-
-    Powerpc is also going to support extended-file-attribute-based
-    verification[3], but arm64 doesn't for now partly because we don't
-    have TPM-based IMA at this moment.
-
-Accordingly, we can use the existing commands, sbsign and sig-file
-respectively, to sign the kernel. Please note that it is totally up to
-the system what key/certificate is used for signing.
-
-Some concerns(or future works):
-* Even if the kernel is configured with CONFIG_RANDOMIZE_BASE, the 2nd
-  kernel won't be placed at a randomized address. We will have to
-  add some boot code similar to efi-stub to implement the feature.
-* While big-endian kernel can support kernel signing, I'm not sure that
-  Image can be recognized as in PE format because x86 standard only
-  defines little-endian-based format.
-  So I tested big-endian kernel signing only with vmlinux.
-* IMA(and file extended attribute)-based kexec
-
-
-Patch #1 to #7 are all preparatory patches on generic side.
-(Patch #1 is not part of mine, but a prerequisite from [4].)
-Patch #8 and #9 are purgatory code.
-Patch #10 to #12 are common for enabling kexec_file_load.
-Patch #13 is for 'Image' support.
-Patch #14 is for 'vmlinux' support.
-
-
-  [1] http://git.linaro.org/people/takahiro.akashi/linux-aarch64.git
-	branch:arm64/kexec_file
-  [2] http://git.linaro.org/people/takahiro.akashi/kexec-tools.git
-	branch:arm64/kexec_file
-  [3] http://lkml.iu.edu//hypermail/linux/kernel/1707.0/03669.html
-  [4] http://lkml.iu.edu//hypermail/linux/kernel/1707.0/03670.html
-
-
-AKASHI Takahiro (13):
-  include: pe.h: remove message[] from mz header definition
-  resource: add walk_system_ram_res_rev()
-  kexec_file: factor out vmlinux (elf) parser from powerpc
-  kexec_file: factor out crashdump elf header function from x86
-  kexec_file: add kexec_add_segment()
-  asm-generic: add kexec_file_load system call to unistd.h
-  arm64: kexec_file: create purgatory
-  arm64: kexec_file: add sha256 digest check in purgatory
-  arm64: kexec_file: load initrd, device-tree and purgatory segments
-  arm64: kexec_file: set up for crash dump adding elf core header
-  arm64: enable KEXEC_FILE config
-  arm64: kexec_file: add Image format support
-  arm64: kexec_file: add vmlinux format support
-
-Thiago Jung Bauermann (1):
-  MODSIGN: Export module signature definitions
-
- arch/Kconfig                            |   3 +
- arch/arm64/Kconfig                      |  33 ++
- arch/arm64/Makefile                     |   1 +
- arch/arm64/crypto/sha256-core.S_shipped |   2 +
- arch/arm64/include/asm/kexec.h          |  23 ++
- arch/arm64/include/asm/kexec_file.h     |  84 +++++
- arch/arm64/kernel/Makefile              |   5 +-
- arch/arm64/kernel/kexec_elf.c           | 216 ++++++++++++
- arch/arm64/kernel/kexec_image.c         | 112 ++++++
- arch/arm64/kernel/machine_kexec_file.c  | 606 ++++++++++++++++++++++++++++++++
- arch/arm64/purgatory/Makefile           |  43 +++
- arch/arm64/purgatory/entry.S            |  41 +++
- arch/arm64/purgatory/purgatory.c        |  20 ++
- arch/arm64/purgatory/sha256-core.S      |   1 +
- arch/arm64/purgatory/sha256.c           |  79 +++++
- arch/arm64/purgatory/sha256.h           |   1 +
- arch/arm64/purgatory/string.c           |  32 ++
- arch/arm64/purgatory/string.h           |   5 +
- arch/powerpc/Kconfig                    |   1 +
- arch/powerpc/kernel/kexec_elf_64.c      | 464 ------------------------
- arch/x86/kernel/crash.c                 | 324 -----------------
- include/linux/elf.h                     |  62 ++++
- include/linux/ioport.h                  |   3 +
- include/linux/kexec.h                   |  39 ++
- include/linux/module.h                  |   3 -
- include/linux/module_signature.h        |  47 +++
- include/linux/pe.h                      |   2 +-
- include/uapi/asm-generic/unistd.h       |   4 +-
- init/Kconfig                            |   6 +-
- kernel/Makefile                         |   3 +-
- kernel/crash_core.c                     | 333 ++++++++++++++++++
- kernel/kexec_file.c                     |  47 +++
- kernel/kexec_file_elf.c                 | 454 ++++++++++++++++++++++++
- kernel/module.c                         |   1 +
- kernel/module_signing.c                 |  74 ++--
- kernel/resource.c                       |  48 +++
- 36 files changed, 2383 insertions(+), 839 deletions(-)
- create mode 100644 arch/arm64/include/asm/kexec_file.h
- create mode 100644 arch/arm64/kernel/kexec_elf.c
- create mode 100644 arch/arm64/kernel/kexec_image.c
- create mode 100644 arch/arm64/kernel/machine_kexec_file.c
- create mode 100644 arch/arm64/purgatory/Makefile
- create mode 100644 arch/arm64/purgatory/entry.S
- create mode 100644 arch/arm64/purgatory/purgatory.c
- create mode 100644 arch/arm64/purgatory/sha256-core.S
- create mode 100644 arch/arm64/purgatory/sha256.c
- create mode 100644 arch/arm64/purgatory/sha256.h
- create mode 100644 arch/arm64/purgatory/string.c
- create mode 100644 arch/arm64/purgatory/string.h
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+---
+ include/linux/module.h           |  3 --
+ include/linux/module_signature.h | 47 +++++++++++++++++++++++++
+ init/Kconfig                     |  6 +++-
+ kernel/Makefile                  |  2 +-
+ kernel/module.c                  |  1 +
+ kernel/module_signing.c          | 74 +++++++++++++++++-----------------------
+ 6 files changed, 85 insertions(+), 48 deletions(-)
  create mode 100644 include/linux/module_signature.h
- create mode 100644 kernel/kexec_file_elf.c
 
+diff --git a/include/linux/module.h b/include/linux/module.h
+index e7bdd549e527..672ad2016262 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -23,9 +23,6 @@
+ #include <linux/percpu.h>
+ #include <asm/module.h>
+ 
+-/* In stripped ARM and x86-64 modules, ~ is surprisingly rare. */
+-#define MODULE_SIG_STRING "~Module signature appended~\n"
+-
+ /* Not Yet Implemented */
+ #define MODULE_SUPPORTED_DEVICE(name)
+ 
+diff --git a/include/linux/module_signature.h b/include/linux/module_signature.h
+new file mode 100644
+index 000000000000..e80728e5b86c
+--- /dev/null
++++ b/include/linux/module_signature.h
+@@ -0,0 +1,47 @@
++/* Module signature handling.
++ *
++ * Copyright (C) 2012 Red Hat, Inc. All Rights Reserved.
++ * Written by David Howells (dhowells@redhat.com)
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public Licence
++ * as published by the Free Software Foundation; either version
++ * 2 of the Licence, or (at your option) any later version.
++ */
++
++#ifndef _LINUX_MODULE_SIGNATURE_H
++#define _LINUX_MODULE_SIGNATURE_H
++
++/* In stripped ARM and x86-64 modules, ~ is surprisingly rare. */
++#define MODULE_SIG_STRING "~Module signature appended~\n"
++
++enum pkey_id_type {
++	PKEY_ID_PGP,		/* OpenPGP generated key ID */
++	PKEY_ID_X509,		/* X.509 arbitrary subjectKeyIdentifier */
++	PKEY_ID_PKCS7,		/* Signature in PKCS#7 message */
++};
++
++/*
++ * Module signature information block.
++ *
++ * The constituents of the signature section are, in order:
++ *
++ *	- Signer's name
++ *	- Key identifier
++ *	- Signature data
++ *	- Information block
++ */
++struct module_signature {
++	u8	algo;		/* Public-key crypto algorithm [0] */
++	u8	hash;		/* Digest algorithm [0] */
++	u8	id_type;	/* Key identifier type [PKEY_ID_PKCS7] */
++	u8	signer_len;	/* Length of signer's name [0] */
++	u8	key_id_len;	/* Length of key identifier [0] */
++	u8	__pad[3];
++	__be32	sig_len;	/* Length of signature data */
++};
++
++int validate_module_sig(const struct module_signature *ms, size_t file_len);
++int mod_verify_sig(const void *mod, unsigned long *_modlen);
++
++#endif /* _LINUX_MODULE_SIGNATURE_H */
+diff --git a/init/Kconfig b/init/Kconfig
+index 8514b25db21c..c3ac1170b93a 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1734,7 +1734,7 @@ config MODULE_SRCVERSION_ALL
+ config MODULE_SIG
+ 	bool "Module signature verification"
+ 	depends on MODULES
+-	select SYSTEM_DATA_VERIFICATION
++	select MODULE_SIG_FORMAT
+ 	help
+ 	  Check modules for valid signatures upon load: the signature
+ 	  is simply appended to the module. For more information see
+@@ -1749,6 +1749,10 @@ config MODULE_SIG
+ 	  debuginfo strip done by some packagers (such as rpmbuild) and
+ 	  inclusion into an initramfs that wants the module size reduced.
+ 
++config MODULE_SIG_FORMAT
++	def_bool n
++	select SYSTEM_DATA_VERIFICATION
++
+ config MODULE_SIG_FORCE
+ 	bool "Require modules to be validly signed"
+ 	depends on MODULE_SIG
+diff --git a/kernel/Makefile b/kernel/Makefile
+index 4cb8e8b23c6e..d5f9748ab19f 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -56,7 +56,7 @@ obj-y += up.o
+ endif
+ obj-$(CONFIG_UID16) += uid16.o
+ obj-$(CONFIG_MODULES) += module.o
+-obj-$(CONFIG_MODULE_SIG) += module_signing.o
++obj-$(CONFIG_MODULE_SIG_FORMAT) += module_signing.o
+ obj-$(CONFIG_KALLSYMS) += kallsyms.o
+ obj-$(CONFIG_BSD_PROCESS_ACCT) += acct.o
+ obj-$(CONFIG_CRASH_CORE) += crash_core.o
+diff --git a/kernel/module.c b/kernel/module.c
+index 40f983cbea81..52921fccb51a 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -19,6 +19,7 @@
+ #include <linux/export.h>
+ #include <linux/extable.h>
+ #include <linux/moduleloader.h>
++#include <linux/module_signature.h>
+ #include <linux/trace_events.h>
+ #include <linux/init.h>
+ #include <linux/kallsyms.h>
+diff --git a/kernel/module_signing.c b/kernel/module_signing.c
+index 937c844bee4a..204c60d4cc9f 100644
+--- a/kernel/module_signing.c
++++ b/kernel/module_signing.c
+@@ -11,36 +11,38 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/errno.h>
++#include <linux/module_signature.h>
+ #include <linux/string.h>
+ #include <linux/verification.h>
+ #include <crypto/public_key.h>
+ #include "module-internal.h"
+ 
+-enum pkey_id_type {
+-	PKEY_ID_PGP,		/* OpenPGP generated key ID */
+-	PKEY_ID_X509,		/* X.509 arbitrary subjectKeyIdentifier */
+-	PKEY_ID_PKCS7,		/* Signature in PKCS#7 message */
+-};
+-
+-/*
+- * Module signature information block.
+- *
+- * The constituents of the signature section are, in order:
++/**
++ * validate_module_sig - validate that the given signature is sane
+  *
+- *	- Signer's name
+- *	- Key identifier
+- *	- Signature data
+- *	- Information block
++ * @ms:		Signature to validate.
++ * @file_len:	Size of the file to which @ms is appended.
+  */
+-struct module_signature {
+-	u8	algo;		/* Public-key crypto algorithm [0] */
+-	u8	hash;		/* Digest algorithm [0] */
+-	u8	id_type;	/* Key identifier type [PKEY_ID_PKCS7] */
+-	u8	signer_len;	/* Length of signer's name [0] */
+-	u8	key_id_len;	/* Length of key identifier [0] */
+-	u8	__pad[3];
+-	__be32	sig_len;	/* Length of signature data */
+-};
++int validate_module_sig(const struct module_signature *ms, size_t file_len)
++{
++	if (be32_to_cpu(ms->sig_len) >= file_len - sizeof(*ms))
++		return -EBADMSG;
++	else if (ms->id_type != PKEY_ID_PKCS7) {
++		pr_err("Module is not signed with expected PKCS#7 message\n");
++		return -ENOPKG;
++	} else if (ms->algo != 0 ||
++		   ms->hash != 0 ||
++		   ms->signer_len != 0 ||
++		   ms->key_id_len != 0 ||
++		   ms->__pad[0] != 0 ||
++		   ms->__pad[1] != 0 ||
++		   ms->__pad[2] != 0) {
++		pr_err("PKCS#7 signature info has unexpected non-zero params\n");
++		return -EBADMSG;
++	}
++
++	return 0;
++}
+ 
+ /*
+  * Verify the signature on a module.
+@@ -49,6 +51,7 @@ int mod_verify_sig(const void *mod, unsigned long *_modlen)
+ {
+ 	struct module_signature ms;
+ 	size_t modlen = *_modlen, sig_len;
++	int ret;
+ 
+ 	pr_devel("==>%s(,%zu)\n", __func__, modlen);
+ 
+@@ -56,30 +59,15 @@ int mod_verify_sig(const void *mod, unsigned long *_modlen)
+ 		return -EBADMSG;
+ 
+ 	memcpy(&ms, mod + (modlen - sizeof(ms)), sizeof(ms));
+-	modlen -= sizeof(ms);
++
++	ret = validate_module_sig(&ms, modlen);
++	if (ret)
++		return ret;
+ 
+ 	sig_len = be32_to_cpu(ms.sig_len);
+-	if (sig_len >= modlen)
+-		return -EBADMSG;
+-	modlen -= sig_len;
++	modlen -= sig_len + sizeof(ms);
+ 	*_modlen = modlen;
+ 
+-	if (ms.id_type != PKEY_ID_PKCS7) {
+-		pr_err("Module is not signed with expected PKCS#7 message\n");
+-		return -ENOPKG;
+-	}
+-
+-	if (ms.algo != 0 ||
+-	    ms.hash != 0 ||
+-	    ms.signer_len != 0 ||
+-	    ms.key_id_len != 0 ||
+-	    ms.__pad[0] != 0 ||
+-	    ms.__pad[1] != 0 ||
+-	    ms.__pad[2] != 0) {
+-		pr_err("PKCS#7 signature info has unexpected non-zero params\n");
+-		return -EBADMSG;
+-	}
+-
+ 	return verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
+ 				      NULL, VERIFYING_MODULE_SIGNATURE,
+ 				      NULL, NULL);
 -- 
 2.14.1
 
