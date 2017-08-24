@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x232.google.com ([2607:f8b0:4001:c0b::232])
+Received: from mail-io0-x230.google.com ([2607:f8b0:4001:c06::230])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dko6D-0004B4-TB
- for kexec@lists.infradead.org; Thu, 24 Aug 2017 09:06:51 +0000
-Received: by mail-it0-x232.google.com with SMTP id a73so127649itd.1
- for <kexec@lists.infradead.org>; Thu, 24 Aug 2017 02:06:29 -0700 (PDT)
+ id 1dkoDL-0008Vt-5o
+ for kexec@lists.infradead.org; Thu, 24 Aug 2017 09:14:13 +0000
+Received: by mail-io0-x230.google.com with SMTP id r14so173116iod.1
+ for <kexec@lists.infradead.org>; Thu, 24 Aug 2017 02:13:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20170824081811.19299-4-takahiro.akashi@linaro.org>
+In-Reply-To: <20170824081811.19299-10-takahiro.akashi@linaro.org>
 References: <20170824081811.19299-1-takahiro.akashi@linaro.org>
- <20170824081811.19299-4-takahiro.akashi@linaro.org>
+ <20170824081811.19299-10-takahiro.akashi@linaro.org>
 From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Thu, 24 Aug 2017 10:06:28 +0100
-Message-ID: <CAKv+Gu_UfeDf13RPUejVqz0y=QjSCGhPn6fTTCyLWHY=iu-4BA@mail.gmail.com>
-Subject: Re: [PATCH 03/14] resource: add walk_system_ram_res_rev()
+Date: Thu, 24 Aug 2017 10:13:49 +0100
+Message-ID: <CAKv+Gu_GX4cBw=UxMj89Eu7jLDTXRdPE=cF7xorxxYasaTGvOQ@mail.gmail.com>
+Subject: Re: [PATCH 09/14] arm64: kexec_file: add sha256 digest check in
+ purgatory
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,108 +27,314 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, Baoquan He <bhe@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, David Howells <dhowells@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Michael Ellerman <mpe@ellerman.id.au>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, "David S. Miller" <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, Baoquan He <bhe@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, David Howells <dhowells@redhat.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Michael Ellerman <mpe@ellerman.id.au>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, "David S. Miller" <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
 
 On 24 August 2017 at 09:18, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> This function, being a variant of walk_system_ram_res() introduced in
-> commit 8c86e70acead ("resource: provide new functions to walk through
-> resources"), walks through a list of all the resources of System RAM
-> in reversed order, i.e., from higher to lower.
+> Most of sha256 code is based on crypto/sha256-glue.c, particularly using
+> non-neon version.
 >
-> It will be used in kexec_file implementation on arm64.
+> Please note that we won't be able to re-use lib/mem*.S for purgatory
+> because unaligned memory access is not allowed in purgatory where mmu
+> is turned off.
+>
+> Since purgatory is not linked with the other part of kernel, care must be
+> taken of selecting an appropriate set of compiler options in order to
+> prevent undefined symbol references from being generated.
 >
 > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 > ---
->  include/linux/ioport.h |  3 +++
->  kernel/resource.c      | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 51 insertions(+)
+>  arch/arm64/crypto/sha256-core.S_shipped |  2 +
+>  arch/arm64/purgatory/Makefile           | 21 ++++++++-
+>  arch/arm64/purgatory/entry.S            | 13 ++++++
+>  arch/arm64/purgatory/purgatory.c        | 20 +++++++++
+>  arch/arm64/purgatory/sha256-core.S      |  1 +
+>  arch/arm64/purgatory/sha256.c           | 79 +++++++++++++++++++++++++++++++++
+>  arch/arm64/purgatory/sha256.h           |  1 +
+>  arch/arm64/purgatory/string.c           | 32 +++++++++++++
+>  arch/arm64/purgatory/string.h           |  5 +++
+>  9 files changed, 173 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/purgatory/purgatory.c
+>  create mode 100644 arch/arm64/purgatory/sha256-core.S
+>  create mode 100644 arch/arm64/purgatory/sha256.c
+>  create mode 100644 arch/arm64/purgatory/sha256.h
+>  create mode 100644 arch/arm64/purgatory/string.c
+>  create mode 100644 arch/arm64/purgatory/string.h
 >
-> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> index 6230064d7f95..9a212266299f 100644
-> --- a/include/linux/ioport.h
-> +++ b/include/linux/ioport.h
-> @@ -271,6 +271,9 @@ extern int
->  walk_system_ram_res(u64 start, u64 end, void *arg,
->                     int (*func)(u64, u64, void *));
->  extern int
-> +walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-> +                       int (*func)(u64, u64, void *));
-> +extern int
->  walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start, u64 end,
->                     void *arg, int (*func)(u64, u64, void *));
+> diff --git a/arch/arm64/crypto/sha256-core.S_shipped b/arch/arm64/crypto/sha256-core.S_shipped
+> index 3ce82cc860bc..9ce7419c9152 100644
+> --- a/arch/arm64/crypto/sha256-core.S_shipped
+> +++ b/arch/arm64/crypto/sha256-core.S_shipped
+> @@ -1210,6 +1210,7 @@ sha256_block_armv8:
+>         ret
+>  .size  sha256_block_armv8,.-sha256_block_armv8
+>  #endif
+> +#ifndef __PURGATORY__
+>  #ifdef __KERNEL__
+>  .globl sha256_block_neon
+>  #endif
+> @@ -2056,6 +2057,7 @@ sha256_block_neon:
+>         add     sp,sp,#16*4+16
+>         ret
+>  .size  sha256_block_neon,.-sha256_block_neon
+> +#endif
+>  #ifndef        __KERNEL__
+>  .comm  OPENSSL_armcap_P,4,4
+>  #endif
+
+Could you please try to find another way to address this?
+sha256-core.S_shipped is generated code from the accompanying Perl
+script, and that script is kept in sync with upstream OpenSSL. Also,
+the performance delta between the generic code is not /that/
+spectacular, so we may simply use that instead.
+
+
+> diff --git a/arch/arm64/purgatory/Makefile b/arch/arm64/purgatory/Makefile
+> index c2127a2cbd51..d9b38be31e0a 100644
+> --- a/arch/arm64/purgatory/Makefile
+> +++ b/arch/arm64/purgatory/Makefile
+> @@ -1,14 +1,33 @@
+>  OBJECT_FILES_NON_STANDARD := y
 >
-> diff --git a/kernel/resource.c b/kernel/resource.c
-> index 9b5f04404152..1d6d734c75ac 100644
-> --- a/kernel/resource.c
-> +++ b/kernel/resource.c
-> @@ -23,6 +23,7 @@
->  #include <linux/pfn.h>
->  #include <linux/mm.h>
->  #include <linux/resource_ext.h>
-> +#include <linux/vmalloc.h>
->  #include <asm/io.h>
+> -purgatory-y := entry.o
+> +purgatory-y := entry.o purgatory.o sha256.o sha256-core.o string.o
 >
+>  targets += $(purgatory-y)
+>  PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
 >
-> @@ -469,6 +470,53 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
->         return ret;
->  }
+> +# Purgatory is expected to be ET_REL, not an executable
+>  LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined \
+>                                         -nostdlib -z nodefaultlib
+> +
+>  targets += purgatory.ro
 >
-> +int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-> +                               int (*func)(u64, u64, void *))
+> +GCOV_PROFILE   := n
+> +KASAN_SANITIZE := n
+> +KCOV_INSTRUMENT        := n
+> +
+> +# Some kernel configurations may generate additional code containing
+> +# undefined symbols, like _mcount for ftrace and __stack_chk_guard
+> +# for stack-protector. Those should be removed from purgatory.
+> +
+> +CFLAGS_REMOVE_purgatory.o = -pg
+> +CFLAGS_REMOVE_sha256.o = -pg
+> +CFLAGS_REMOVE_string.o = -pg
+> +
+> +NO_PROTECTOR := $(call cc-option, -fno-stack-protector)
+> +KBUILD_CFLAGS += $(NO_PROTECTOR)
+> +
+> +KBUILD_AFLAGS += -D__PURGATORY__
+> +
+>  $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
+>                 $(call if_changed,ld)
+>
+> diff --git a/arch/arm64/purgatory/entry.S b/arch/arm64/purgatory/entry.S
+> index bc4e6b3bf8a1..74d028b838bd 100644
+> --- a/arch/arm64/purgatory/entry.S
+> +++ b/arch/arm64/purgatory/entry.S
+> @@ -6,6 +6,11 @@
+>  .text
+>
+>  ENTRY(purgatory_start)
+> +       adr     x19, .Lstack
+> +       mov     sp, x19
+> +
+> +       bl      purgatory
+> +
+>         /* Start new image. */
+>         ldr     x17, arm64_kernel_entry
+>         ldr     x0, arm64_dtb_addr
+> @@ -15,6 +20,14 @@ ENTRY(purgatory_start)
+>         br      x17
+>  END(purgatory_start)
+>
+> +.ltorg
+> +
+> +.align 4
+> +       .rept   256
+> +       .quad   0
+> +       .endr
+> +.Lstack:
+> +
+>  .data
+>
+>  .align 3
+> diff --git a/arch/arm64/purgatory/purgatory.c b/arch/arm64/purgatory/purgatory.c
+> new file mode 100644
+> index 000000000000..7fcbefa786bc
+> --- /dev/null
+> +++ b/arch/arm64/purgatory/purgatory.c
+> @@ -0,0 +1,20 @@
+> +/*
+> + * purgatory: Runs between two kernels
+> + *
+> + * Copyright (c) 2017 Linaro Limited
+> + * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> + */
+> +
+> +#include "sha256.h"
+> +
+> +void purgatory(void)
 > +{
-> +       struct resource res, *rams;
-> +       u64 orig_end;
-> +       int count, i;
-> +       int ret = -1;
+> +       int ret;
 > +
-> +       count = 16; /* initial */
-> +again:
-> +       /* create a list */
-> +       rams = vmalloc(sizeof(struct resource) * count);
-> +       if (!rams)
-> +               return ret;
-> +
-> +       res.start = start;
-> +       res.end = end;
-> +       res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-> +       orig_end = res.end;
-> +       i = 0;
-> +       while ((res.start < res.end) &&
-> +               (!find_next_iomem_res(&res, IORES_DESC_NONE, true))) {
-> +               if (i >= count) {
-> +                       /* unlikely but */
-> +                       vfree(rams);
-> +                       count += 16;
-
-If the count is likely to be < 16, why are we using vmalloc() here?
-
-> +                       goto again;
-> +               }
-> +
-> +               rams[i].start = res.start;
-> +               rams[i++].end = res.end;
-> +
-> +               res.start = res.end + 1;
-> +               res.end = orig_end;
+> +       ret = verify_sha256_digest();
+> +       if (ret) {
+> +               /* loop forever */
+> +               for (;;)
+> +                       ;
 > +       }
+> +}
+> diff --git a/arch/arm64/purgatory/sha256-core.S b/arch/arm64/purgatory/sha256-core.S
+> new file mode 100644
+> index 000000000000..24f5ce25b61e
+> --- /dev/null
+> +++ b/arch/arm64/purgatory/sha256-core.S
+> @@ -0,0 +1 @@
+> +#include "../crypto/sha256-core.S_shipped"
+> diff --git a/arch/arm64/purgatory/sha256.c b/arch/arm64/purgatory/sha256.c
+> new file mode 100644
+> index 000000000000..5d20d81767e3
+> --- /dev/null
+> +++ b/arch/arm64/purgatory/sha256.c
+> @@ -0,0 +1,79 @@
+> +#include <linux/kexec.h>
+> +#include <linux/purgatory.h>
+> +#include <linux/types.h>
 > +
-> +       /* go reverse */
-> +       for (i--; i >= 0; i--) {
-> +               ret = (*func)(rams[i].start, rams[i].end, arg);
-> +               if (ret)
-> +                       break;
-> +       }
+> +/*
+> + * Under KASAN, those are defined as un-instrumented version, __memxxx()
+> + */
+> +#undef memcmp
+> +#undef memcpy
+> +#undef memset
 > +
-> +       vfree(rams);
-> +       return ret;
+> +#include "string.h"
+> +#include <crypto/hash.h>
+> +#include <crypto/sha.h>
+> +#include <crypto/sha256_base.h>
+> +
+> +u8 purgatory_sha256_digest[SHA256_DIGEST_SIZE] __section(.kexec-purgatory);
+> +struct kexec_sha_region purgatory_sha_regions[KEXEC_SEGMENT_MAX]
+> +                                               __section(.kexec-purgatory);
+> +
+> +asmlinkage void sha256_block_data_order(u32 *digest, const void *data,
+> +                                       unsigned int num_blks);
+> +
+> +static int sha256_init(struct shash_desc *desc)
+> +{
+> +       return sha256_base_init(desc);
 > +}
 > +
->  #if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
->
->  /*
+> +static int sha256_update(struct shash_desc *desc, const u8 *data,
+> +                                                       unsigned int len)
+> +{
+> +       return sha256_base_do_update(desc, data, len,
+> +                               (sha256_block_fn *)sha256_block_data_order);
+> +}
+> +
+> +static int __sha256_base_finish(struct shash_desc *desc, u8 *out)
+> +{
+> +       /* we can't do crypto_shash_digestsize(desc->tfm) */
+> +       unsigned int digest_size = 32;
+> +       struct sha256_state *sctx = shash_desc_ctx(desc);
+> +       __be32 *digest = (__be32 *)out;
+> +       int i;
+> +
+> +       for (i = 0; digest_size > 0; i++, digest_size -= sizeof(__be32))
+> +               put_unaligned_be32(sctx->state[i], digest++);
+> +
+> +       *sctx = (struct sha256_state){};
+> +       return 0;
+> +}
+> +
+> +static int sha256_final(struct shash_desc *desc, u8 *out)
+> +{
+> +       sha256_base_do_finalize(desc,
+> +                               (sha256_block_fn *)sha256_block_data_order);
+> +
+> +       return __sha256_base_finish(desc, out);
+> +}
+> +
+> +int verify_sha256_digest(void)
+> +{
+> +       char __sha256_desc[sizeof(struct shash_desc) +
+> +               sizeof(struct sha256_state)] CRYPTO_MINALIGN_ATTR;
+> +       struct shash_desc *desc = (struct shash_desc *)__sha256_desc;
+> +       struct kexec_sha_region *ptr, *end;
+> +       u8 digest[SHA256_DIGEST_SIZE];
+> +
+> +       sha256_init(desc);
+> +
+> +       end = purgatory_sha_regions + ARRAY_SIZE(purgatory_sha_regions);
+> +       for (ptr = purgatory_sha_regions; ptr < end; ptr++)
+> +               sha256_update(desc, (uint8_t *)(ptr->start), ptr->len);
+> +
+> +       sha256_final(desc, digest);
+> +
+> +       if (memcmp(digest, purgatory_sha256_digest, sizeof(digest)))
+> +               return 1;
+> +
+> +       return 0;
+> +}
+> diff --git a/arch/arm64/purgatory/sha256.h b/arch/arm64/purgatory/sha256.h
+> new file mode 100644
+> index 000000000000..54dc3c33c469
+> --- /dev/null
+> +++ b/arch/arm64/purgatory/sha256.h
+> @@ -0,0 +1 @@
+> +extern int verify_sha256_digest(void);
+> diff --git a/arch/arm64/purgatory/string.c b/arch/arm64/purgatory/string.c
+> new file mode 100644
+> index 000000000000..33233a210a65
+> --- /dev/null
+> +++ b/arch/arm64/purgatory/string.c
+> @@ -0,0 +1,32 @@
+> +#include <linux/types.h>
+> +
+> +void *memcpy(void *dst, const void *src, size_t len)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < len; i++)
+> +               ((u8 *)dst)[i] = ((u8 *)src)[i];
+> +
+> +       return NULL;
+> +}
+> +
+> +void *memset(void *dst, int c, size_t len)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < len; i++)
+> +               ((u8 *)dst)[i] = (u8)c;
+> +
+> +       return NULL;
+> +}
+> +
+> +int memcmp(const void *src, const void *dst, size_t len)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < len; i++)
+> +               if (*(char *)src != *(char *)dst)
+> +                       return 1;
+> +
+> +       return 0;
+> +}
+> diff --git a/arch/arm64/purgatory/string.h b/arch/arm64/purgatory/string.h
+> new file mode 100644
+> index 000000000000..cb5f68dd84ef
+> --- /dev/null
+> +++ b/arch/arm64/purgatory/string.h
+> @@ -0,0 +1,5 @@
+> +#include <linux/types.h>
+> +
+> +int memcmp(const void *s1, const void *s2, size_t len);
+> +void *memcpy(void *dst, const void *src, size_t len);
+> +void *memset(void *dst, int c, size_t len);
 > --
 > 2.14.1
 >
