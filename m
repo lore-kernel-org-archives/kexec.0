@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 24 Aug 2017 18:23:37 +0100
+Date: Thu, 24 Aug 2017 18:30:50 +0100
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 13/14] arm64: kexec_file: add Image format support
-Message-ID: <20170824172337.GF29665@leverpostej>
+Subject: Re: [PATCH 14/14] arm64: kexec_file: add vmlinux format support
+Message-ID: <20170824173049.GG29665@leverpostej>
 References: <20170824081811.19299-1-takahiro.akashi@linaro.org>
- <20170824081811.19299-14-takahiro.akashi@linaro.org>
+ <20170824081811.19299-15-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170824081811.19299-14-takahiro.akashi@linaro.org>
+In-Reply-To: <20170824081811.19299-15-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,63 +23,80 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-On Thu, Aug 24, 2017 at 05:18:10PM +0900, AKASHI Takahiro wrote:
-> The "Image" binary will be loaded at the offset of TEXT_OFFSET from
-> the start of system memory. TEXT_OFFSET is basically determined from
-> the header of the image.
+On Thu, Aug 24, 2017 at 05:18:11PM +0900, AKASHI Takahiro wrote:
+> The first PT_LOAD segment, which is assumed to be "text" code, in vmlinux
+> will be loaded at the offset of TEXT_OFFSET from the begining of system
+> memory. The other PT_LOAD segments are placed relative to the first one.
 
-What's the policy for the binary types kexec_file_load() will load, and
-how are these identified? AFAICT, there are no flags, so it looks like
-we're just checking the magic and hoping.
+I really don't like assuming things about the vmlinux ELF file.
 
-> Regarding kernel verification, it will be done through
-> verify_pefile_signature() as arm64's "Image" binary can be seen as
-> in PE format. This approach is consistent with x86 implementation.
+> Regarding kernel verification, since there is no standard way to contain
+> a signature within elf binary, we follow PowerPC's (not yet upstreamed)
+> approach, that is, appending a signature right after the kernel binary
+> itself like module signing.
 
-This will not work for kernels built without CONFIG_EFI, where we don't
-have a PE header.
+I also *really* don't like this. It's a bizarre in-band mechanism,
+without explcit information. It's not a nice ABI.
 
-What happens in that case?
+If we can load an Image, why do we need to be able to load a vmlinux?
 
 [...]
 
-> +/**
-> + * arm64_header_check_msb - Helper to check the arm64 image header.
+> diff --git a/arch/arm64/kernel/kexec_elf.c b/arch/arm64/kernel/kexec_elf.c
+> new file mode 100644
+> index 000000000000..7bd3c1e1f65a
+> --- /dev/null
+> +++ b/arch/arm64/kernel/kexec_elf.c
+> @@ -0,0 +1,216 @@
+> +/*
+> + * Kexec vmlinux loader
+> +
+> + * Copyright (C) 2017 Linaro Limited
+> + * Authors: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > + *
-> + * Returns non-zero if the image was built as big endian.
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
 > + */
 > +
-> +static inline int arm64_header_check_msb(const struct arm64_image_header *h)
-> +{
-> +	if (!h)
-> +		return 0;
+> +#define pr_fmt(fmt)	"kexec_file(elf): " fmt
 > +
-> +	return !!(h->flags[7] & arm64_image_flag_7_be);
+> +#include <linux/elf.h>
+> +#include <linux/err.h>
+> +#include <linux/errno.h>
+> +#include <linux/kernel.h>
+> +#include <linux/kexec.h>
+> +#include <linux/module_signature.h>
+> +#include <linux/types.h>
+> +#include <linux/verification.h>
+> +#include <asm/byteorder.h>
+> +#include <asm/kexec_file.h>
+> +#include <asm/memory.h>
+> +
+> +static int elf64_probe(const char *buf, unsigned long len)
+> +{
+> +	struct elfhdr ehdr;
+> +
+> +	/* Check for magic and architecture */
+> +	memcpy(&ehdr, buf, sizeof(ehdr));
+> +	if (memcmp(ehdr.e_ident, ELFMAG, SELFMAG) ||
+> +		(elf16_to_cpu(&ehdr, ehdr.e_machine) != EM_AARCH64))
+> +		return -ENOEXEC;
+> +
+> +	return 0;
 > +}
-
-What are we going to use this for?
-
-In kernel, we use the term "BE" rather than "MSB", and it's unfortunate
-to have code with varying naming conventions.
-
-[...]
-
-> +static void *image_load(struct kimage *image, char *kernel,
-> +			    unsigned long kernel_len, char *initrd,
-> +			    unsigned long initrd_len, char *cmdline,
-> +			    unsigned long cmdline_len)
+> +
+> +static int elf_exec_load(struct kimage *image, struct elfhdr *ehdr,
+> +			 struct elf_info *elf_info,
+> +			 unsigned long *kernel_load_addr)
 > +{
 > +	struct kexec_buf kbuf;
-> +	struct arm64_image_header *h = (struct arm64_image_header *)kernel;
-> +	unsigned long text_offset, kernel_load_addr;
-> +	int ret;
+> +	const struct elf_phdr *phdr;
+> +	const struct arm64_image_header *h;
+> +	unsigned long text_offset, rand_offset;
+> +	unsigned long page_offset, phys_offset;
+> +	int first_segment, i, ret = -ENOEXEC;
 > +
-> +	/* Create elf core header segment */
-> +	ret = load_crashdump_segments(image);
-> +	if (ret)
-> +		goto out;
-> +
-> +	/* Load the kernel */
 > +	kbuf.image = image;
 > +	if (image->type == KEXEC_TYPE_CRASH) {
 > +		kbuf.buf_min = crashk_res.start;
@@ -90,20 +107,48 @@ to have code with varying naming conventions.
 > +	}
 > +	kbuf.top_down = 0;
 > +
-> +	kbuf.buffer = kernel;
-> +	kbuf.bufsz = kernel_len;
-> +	if (h->image_size) {
-> +		kbuf.memsz = le64_to_cpu(h->image_size);
-> +		text_offset = le64_to_cpu(h->text_offset);
-> +	} else {
-> +		/* v3.16 or older */
-> +		kbuf.memsz = kbuf.bufsz; /* NOTE: not including BSS */
+> +	/* Load PT_LOAD segments. */
+> +	for (i = 0, first_segment = 1; i < ehdr->e_phnum; i++) {
+> +		phdr = &elf_info->proghdrs[i];
+> +		if (phdr->p_type != PT_LOAD)
+> +			continue;
+> +
+> +		kbuf.buffer = (void *) elf_info->buffer + phdr->p_offset;
+> +		kbuf.bufsz = min(phdr->p_filesz, phdr->p_memsz);
+> +		kbuf.memsz = phdr->p_memsz;
+> +		kbuf.buf_align = phdr->p_align;
+> +
+> +		if (first_segment) {
+> +			/*
+> +			 * Identify TEXT_OFFSET:
+> +			 * When CONFIG_ARM64_RANDOMIZE_TEXT_OFFSET=y the image
+> +			 * header could be offset in the elf segment. The linker
+> +			 * script sets ehdr->e_entry to the start of text.
 
-Why bother supporting < 3.16 kernels?
+Please, let's not have to go delving into the vmlinux, knowing intimate
+details about how it's put together.
 
-They predate regulate kexec, we know we don't have enough information to
-boot such kernels reliably, and arguably attempting to load one would
-indicate some kind of rollback attack.
+> +			 *
+> +			 * NOTE: In v3.16 or older, h->text_offset is 0,
+> +			 * so use the default, 0x80000
+> +			 */
+> +			rand_offset = ehdr->e_entry - phdr->p_vaddr;
+> +			h = (struct arm64_image_header *)
+> +					(elf_info->buffer + phdr->p_offset +
+> +					rand_offset);
+> +
+> +			if (!arm64_header_check_magic(h))
+> +				goto out;
+> +
+> +			if (h->image_size)
+> +				text_offset = le64_to_cpu(h->text_offset);
+> +			else
+> +				text_offset = 0x80000;
+
+Surely we can share the Image header parsing with the Image parser?
+
+The Image code had practically the exact same logic operating on the
+header struct.
 
 Thanks,
 Mark.
