@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 25 Aug 2017 13:47:49 +0800
+Date: Fri, 25 Aug 2017 14:13:53 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 05/14] kexec_file: factor out crashdump elf header
- function from x86
-Message-ID: <20170825054749.GA8604@dhcp-128-65.nay.redhat.com>
+Subject: Re: [PATCH 14/14] arm64: kexec_file: add vmlinux format support
+Message-ID: <20170825061353.GB8604@dhcp-128-65.nay.redhat.com>
 References: <20170824081811.19299-1-takahiro.akashi@linaro.org>
- <20170824081811.19299-6-takahiro.akashi@linaro.org>
+ <20170824081811.19299-15-takahiro.akashi@linaro.org>
+ <20170824173049.GG29665@leverpostej>
+ <20170825020348.GA7308@akashi-kouhiroshi-no-MacBook-Air.local>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170824081811.19299-6-takahiro.akashi@linaro.org>
+In-Reply-To: <20170825020348.GA7308@akashi-kouhiroshi-no-MacBook-Air.local>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,23 +22,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, davem@davemloft.net, vgoyal@redhat.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Mark Rutland <mark.rutland@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-On 08/24/17 at 05:18pm, AKASHI Takahiro wrote:
-> prepare_elf_headers() can also be useful for other architectures,
-> including arm64. So let it factored out.
+On 08/25/17 at 11:03am, AKASHI Takahiro wrote:
+> On Thu, Aug 24, 2017 at 06:30:50PM +0100, Mark Rutland wrote:
+> > On Thu, Aug 24, 2017 at 05:18:11PM +0900, AKASHI Takahiro wrote:
+> > > The first PT_LOAD segment, which is assumed to be "text" code, in vmlinux
+> > > will be loaded at the offset of TEXT_OFFSET from the begining of system
+> > > memory. The other PT_LOAD segments are placed relative to the first one.
+> > 
+> > I really don't like assuming things about the vmlinux ELF file.
 > 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> ---
->  arch/x86/kernel/crash.c | 324 ----------------------------------------------
->  include/linux/kexec.h   |  19 +++
->  kernel/crash_core.c     | 333 ++++++++++++++++++++++++++++++++++++++++++++++++
+> If so, vmlinux is not an appropriate format for loading.
+> 
+> > > Regarding kernel verification, since there is no standard way to contain
+> > > a signature within elf binary, we follow PowerPC's (not yet upstreamed)
+> > > approach, that is, appending a signature right after the kernel binary
+> > > itself like module signing.
+> > 
+> > I also *really* don't like this. It's a bizarre in-band mechanism,
+> > without explcit information. It's not a nice ABI.
+> > 
+> > If we can load an Image, why do we need to be able to load a vmlinux?
+> 
+> Well, kexec-tools does. I don't know why Geoff wanted to support vmlinux.
+> I'm just trying to support what kexec-tools does support.
 
-It looks better to add these to kexec_file.c instead.
+We only add things when it is really necessary, kexec-tools
+functionalities should have some historic reasons.
+
+If only for doing kexec-tools has done I would say just not to do it.
 
 Thanks
 Dave
