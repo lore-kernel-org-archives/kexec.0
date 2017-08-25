@@ -1,13 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 24 Aug 2017 18:30:50 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 14/14] arm64: kexec_file: add vmlinux format support
-Message-ID: <20170824173049.GG29665@leverpostej>
+Received: from mail-pg0-x233.google.com ([2607:f8b0:400e:c05::233])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dl2pW-0002Kl-Vr
+ for kexec@lists.infradead.org; Fri, 25 Aug 2017 00:50:37 +0000
+Received: by mail-pg0-x233.google.com with SMTP id 63so5979987pgc.2
+ for <kexec@lists.infradead.org>; Thu, 24 Aug 2017 17:50:14 -0700 (PDT)
+Date: Fri, 25 Aug 2017 09:50:07 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH 03/14] resource: add walk_system_ram_res_rev()
+Message-ID: <20170825005006.GB6434@akashi-kouhiroshi-no-MacBook-Air.local>
 References: <20170824081811.19299-1-takahiro.akashi@linaro.org>
- <20170824081811.19299-15-takahiro.akashi@linaro.org>
+ <20170824081811.19299-4-takahiro.akashi@linaro.org>
+ <CAKv+Gu_UfeDf13RPUejVqz0y=QjSCGhPn6fTTCyLWHY=iu-4BA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170824081811.19299-15-takahiro.akashi@linaro.org>
+In-Reply-To: <CAKv+Gu_UfeDf13RPUejVqz0y=QjSCGhPn6fTTCyLWHY=iu-4BA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,138 +27,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, Baoquan He <bhe@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, David Howells <dhowells@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Michael Ellerman <mpe@ellerman.id.au>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, "David S. Miller" <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, Aug 24, 2017 at 05:18:11PM +0900, AKASHI Takahiro wrote:
-> The first PT_LOAD segment, which is assumed to be "text" code, in vmlinux
-> will be loaded at the offset of TEXT_OFFSET from the begining of system
-> memory. The other PT_LOAD segments are placed relative to the first one.
+On Thu, Aug 24, 2017 at 10:06:28AM +0100, Ard Biesheuvel wrote:
+> On 24 August 2017 at 09:18, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
+> > +       /* create a list */
+> > +       rams = vmalloc(sizeof(struct resource) * count);
+> > +       if (!rams)
+> > +               return ret;
+> > +
+> > +       res.start = start;
+> > +       res.end = end;
+> > +       res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> > +       orig_end = res.end;
+> > +       i = 0;
+> > +       while ((res.start < res.end) &&
+> > +               (!find_next_iomem_res(&res, IORES_DESC_NONE, true))) {
+> > +               if (i >= count) {
+> > +                       /* unlikely but */
+> > +                       vfree(rams);
+> > +                       count += 16;
+> 
+> If the count is likely to be < 16, why are we using vmalloc() here?
 
-I really don't like assuming things about the vmlinux ELF file.
+Ah, you're right :)
 
-> Regarding kernel verification, since there is no standard way to contain
-> a signature within elf binary, we follow PowerPC's (not yet upstreamed)
-> approach, that is, appending a signature right after the kernel binary
-> itself like module signing.
-
-I also *really* don't like this. It's a bizarre in-band mechanism,
-without explcit information. It's not a nice ABI.
-
-If we can load an Image, why do we need to be able to load a vmlinux?
-
-[...]
-
-> diff --git a/arch/arm64/kernel/kexec_elf.c b/arch/arm64/kernel/kexec_elf.c
-> new file mode 100644
-> index 000000000000..7bd3c1e1f65a
-> --- /dev/null
-> +++ b/arch/arm64/kernel/kexec_elf.c
-> @@ -0,0 +1,216 @@
-> +/*
-> + * Kexec vmlinux loader
-> +
-> + * Copyright (C) 2017 Linaro Limited
-> + * Authors: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#define pr_fmt(fmt)	"kexec_file(elf): " fmt
-> +
-> +#include <linux/elf.h>
-> +#include <linux/err.h>
-> +#include <linux/errno.h>
-> +#include <linux/kernel.h>
-> +#include <linux/kexec.h>
-> +#include <linux/module_signature.h>
-> +#include <linux/types.h>
-> +#include <linux/verification.h>
-> +#include <asm/byteorder.h>
-> +#include <asm/kexec_file.h>
-> +#include <asm/memory.h>
-> +
-> +static int elf64_probe(const char *buf, unsigned long len)
-> +{
-> +	struct elfhdr ehdr;
-> +
-> +	/* Check for magic and architecture */
-> +	memcpy(&ehdr, buf, sizeof(ehdr));
-> +	if (memcmp(ehdr.e_ident, ELFMAG, SELFMAG) ||
-> +		(elf16_to_cpu(&ehdr, ehdr.e_machine) != EM_AARCH64))
-> +		return -ENOEXEC;
-> +
-> +	return 0;
-> +}
-> +
-> +static int elf_exec_load(struct kimage *image, struct elfhdr *ehdr,
-> +			 struct elf_info *elf_info,
-> +			 unsigned long *kernel_load_addr)
-> +{
-> +	struct kexec_buf kbuf;
-> +	const struct elf_phdr *phdr;
-> +	const struct arm64_image_header *h;
-> +	unsigned long text_offset, rand_offset;
-> +	unsigned long page_offset, phys_offset;
-> +	int first_segment, i, ret = -ENOEXEC;
-> +
-> +	kbuf.image = image;
-> +	if (image->type == KEXEC_TYPE_CRASH) {
-> +		kbuf.buf_min = crashk_res.start;
-> +		kbuf.buf_max = crashk_res.end + 1;
-> +	} else {
-> +		kbuf.buf_min = 0;
-> +		kbuf.buf_max = ULONG_MAX;
-> +	}
-> +	kbuf.top_down = 0;
-> +
-> +	/* Load PT_LOAD segments. */
-> +	for (i = 0, first_segment = 1; i < ehdr->e_phnum; i++) {
-> +		phdr = &elf_info->proghdrs[i];
-> +		if (phdr->p_type != PT_LOAD)
-> +			continue;
-> +
-> +		kbuf.buffer = (void *) elf_info->buffer + phdr->p_offset;
-> +		kbuf.bufsz = min(phdr->p_filesz, phdr->p_memsz);
-> +		kbuf.memsz = phdr->p_memsz;
-> +		kbuf.buf_align = phdr->p_align;
-> +
-> +		if (first_segment) {
-> +			/*
-> +			 * Identify TEXT_OFFSET:
-> +			 * When CONFIG_ARM64_RANDOMIZE_TEXT_OFFSET=y the image
-> +			 * header could be offset in the elf segment. The linker
-> +			 * script sets ehdr->e_entry to the start of text.
-
-Please, let's not have to go delving into the vmlinux, knowing intimate
-details about how it's put together.
-
-> +			 *
-> +			 * NOTE: In v3.16 or older, h->text_offset is 0,
-> +			 * so use the default, 0x80000
-> +			 */
-> +			rand_offset = ehdr->e_entry - phdr->p_vaddr;
-> +			h = (struct arm64_image_header *)
-> +					(elf_info->buffer + phdr->p_offset +
-> +					rand_offset);
-> +
-> +			if (!arm64_header_check_magic(h))
-> +				goto out;
-> +
-> +			if (h->image_size)
-> +				text_offset = le64_to_cpu(h->text_offset);
-> +			else
-> +				text_offset = 0x80000;
-
-Surely we can share the Image header parsing with the Image parser?
-
-The Image code had practically the exact same logic operating on the
-header struct.
-
-Thanks,
-Mark.
+-Takahiro AKASHI
 
 _______________________________________________
 kexec mailing list
