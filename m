@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 25 Aug 2017 11:22:50 +0100
+Date: Fri, 25 Aug 2017 11:41:33 +0100
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 08/14] arm64: kexec_file: create purgatory
-Message-ID: <20170825102250.GA3127@leverpostej>
+Subject: Re: [PATCH 09/14] arm64: kexec_file: add sha256 digest check in
+ purgatory
+Message-ID: <20170825104133.GB3127@leverpostej>
 References: <20170824081811.19299-1-takahiro.akashi@linaro.org>
- <20170824081811.19299-9-takahiro.akashi@linaro.org>
- <20170824165617.GC29665@leverpostej>
- <20170825010054.GC6434@akashi-kouhiroshi-no-MacBook-Air.local>
+ <20170824081811.19299-10-takahiro.akashi@linaro.org>
+ <20170824170440.GD29665@leverpostej>
+ <20170825012103.GB7245@akashi-kouhiroshi-no-MacBook-Air.local>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170825010054.GC6434@akashi-kouhiroshi-no-MacBook-Air.local>
+In-Reply-To: <20170825012103.GB7245@akashi-kouhiroshi-no-MacBook-Air.local>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,75 +25,175 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-On Fri, Aug 25, 2017 at 10:00:59AM +0900, AKASHI Takahiro wrote:
-> On Thu, Aug 24, 2017 at 05:56:17PM +0100, Mark Rutland wrote:
-> > On Thu, Aug 24, 2017 at 05:18:05PM +0900, AKASHI Takahiro wrote:
-> > > This is a basic purgtory, or a kind of glue code between the two kernel,
-> > > for arm64. We will later add a feature of verifying a digest check against
-> > > loaded memory segments.
+On Fri, Aug 25, 2017 at 10:21:06AM +0900, AKASHI Takahiro wrote:
+> On Thu, Aug 24, 2017 at 06:04:40PM +0100, Mark Rutland wrote:
+> > On Thu, Aug 24, 2017 at 05:18:06PM +0900, AKASHI Takahiro wrote:
+> > > Most of sha256 code is based on crypto/sha256-glue.c, particularly using
+> > > non-neon version.
 > > > 
-> > > arch_kexec_apply_relocations_add() is responsible for re-linking any
-> > > relative symbols in purgatory. Please note that the purgatory is not
-> > > an executable, but a non-linked archive of binaries so relative symbols
-> > > contained here must be resolved at kexec load time.
-> > > Despite that arm64_kernel_start and arm64_dtb_addr are only such global
-> > > variables now, arch_kexec_apply_relocations_add() can manage more various
-> > > types of relocations.
+> > > Please note that we won't be able to re-use lib/mem*.S for purgatory
+> > > because unaligned memory access is not allowed in purgatory where mmu
+> > > is turned off.
+> > > 
+> > > Since purgatory is not linked with the other part of kernel, care must be
+> > > taken of selecting an appropriate set of compiler options in order to
+> > > prevent undefined symbol references from being generated.
 > > 
-> > Why does the purgatory code need to be so complex?
-> > 
-> > Why is it not possible to write this as position-independent asm?
+> > What is the point in performing this check in the purgatory code, when
+> > this will presumably have been checked when the image is loaded?
 > 
-> I don't get your point, but please note that these values are also
-> re-written by the 1st kernel when it loads the 2nd kernel and so
-> they must appear as globals.
+> Well, this is what x86 does :)
+> On powerpc, meanwhile, they don't have this check.
+> 
+> Maybe to avoid booting corrupted kernel after loading?
+> (loaded data are now protected by making them unmapped, though.)
 
-My fear about complexity is that we must "re-link" the purgatory.
+I'd really prefer to avoid this, since it seems to be what necessitates
+all the complexity for executing C code (linking and all), and it's
+going to be very slow to execute with the MMU off.
 
-I don't understand why that has to be necessary. Surely we can have the
-purgatory code be position independent, and store those globals in a
-single struct purgatory_info that we can fill in from the host?
+If you can deliberately corrupt the next kernel, you could also have
+corrupted the purgatory to skip the check.
 
-i.e. similar to what we do for values shared with the VDSO, where we
-just poke vdso_data->field, no re-linking required.
+Unless we have a strong reason to want the hash check, I think it should
+be dropped.
 
-Otherwise, why can't the purgatory code be written in assembly? AFAICT,
-the only complex part is the hashing code, which I don't beleive is
-strictly necessary.
+> > > diff --git a/arch/arm64/purgatory/entry.S b/arch/arm64/purgatory/entry.S
+> > > index bc4e6b3bf8a1..74d028b838bd 100644
+> > > --- a/arch/arm64/purgatory/entry.S
+> > > +++ b/arch/arm64/purgatory/entry.S
+> > > @@ -6,6 +6,11 @@
+> > >  .text
+> > >  
+> > >  ENTRY(purgatory_start)
+> > > +	adr	x19, .Lstack
+> > > +	mov	sp, x19
+> > > +
+> > > +	bl	purgatory
+> > > +
+> > >  	/* Start new image. */
+> > >  	ldr	x17, arm64_kernel_entry
+> > >  	ldr	x0, arm64_dtb_addr
+> > > @@ -15,6 +20,14 @@ ENTRY(purgatory_start)
+> > >  	br	x17
+> > >  END(purgatory_start)
+> > >  
+> > > +.ltorg
+> > > +
+> > > +.align 4
+> > > +	.rept	256
+> > > +	.quad	0
+> > > +	.endr
+> > > +.Lstack:
+> > > +
+> > >  .data
+> > 
+> > Why is the stack in .text?
+> 
+> to call verify_sha256_digest() from asm
+
+Won't that also work if the stack is in .data? or .bss?
+
+... or is there a particular need for it to be in .text?
+
+> > Does this need to be zeroed?
+> 
+> No :)
+
+Ok, so we can probably do:
+
+	.data
+	.align 4
+	. += PURGATORY_STACK_SIZE
+.Lstack_ptr:
+
+... assuming we need to run C code.
 
 [...]
 
+> > > diff --git a/arch/arm64/purgatory/sha256.c b/arch/arm64/purgatory/sha256.c
+> > > new file mode 100644
+> > > index 000000000000..5d20d81767e3
+> > > --- /dev/null
+> > > +++ b/arch/arm64/purgatory/sha256.c
+> > > @@ -0,0 +1,79 @@
+> > > +#include <linux/kexec.h>
+> > > +#include <linux/purgatory.h>
+> > > +#include <linux/types.h>
+> > > +
 > > > +/*
-> > > + * Apply purgatory relocations.
-> > > + *
-> > > + * ehdr: Pointer to elf headers
-> > > + * sechdrs: Pointer to section headers.
-> > > + * relsec: section index of SHT_RELA section.
-> > > + *
-> > > + * Note:
-> > > + * Currently R_AARCH64_ABS64, R_AARCH64_LD_PREL_LO19 and R_AARCH64_CALL26
-> > > + * are the only types to be generated from purgatory code.
+> > > + * Under KASAN, those are defined as un-instrumented version, __memxxx()
+> > > + */
+> > > +#undef memcmp
+> > > +#undef memcpy
+> > > +#undef memset
 > > 
-> > Is this all that has been observed, or is this ensured somehow?
+> > This doesn't look like the right place for this undeffery; it looks
+> > rather fragile.
 > 
-> It was observed by inserting a debug print message in this function,
-> I'm not sure whether we can restrict only those three types.
+> Yeah, I agree, but if not there, __memxxx() are used.
 
-If we have to perform linking, I don't think we can assume the above is
-sufficient.
+Ok, but we'll have to add this to every C file used in the purgatory
+code, or at the start of any header that uses a memxxx() function, or it
+might still be overridden to use __memxxx(), before the undef takes
+effect.
 
-> > The arch_kexec_apply_relocations_add() function below duplicates a lot
-> > of logic that already exists in the arm64 module loader's
-> > apply_relocate_add() function.
+Can we define __memxxx() instead?
+
+[...]
+
+> > > +void *memcpy(void *dst, const void *src, size_t len)
+> > > +{
+> > > +	int i;
+> > > +
+> > > +	for (i = 0; i < len; i++)
+> > > +		((u8 *)dst)[i] = ((u8 *)src)[i];
+> > > +
+> > > +	return NULL;
+> > > +}
+> > > +
+> > > +void *memset(void *dst, int c, size_t len)
+> > > +{
+> > > +	int i;
+> > > +
+> > > +	for (i = 0; i < len; i++)
+> > > +		((u8 *)dst)[i] = (u8)c;
+> > > +
+> > > +	return NULL;
+> > > +}
+> > > +
+> > > +int memcmp(const void *src, const void *dst, size_t len)
+> > > +{
+> > > +	int i;
+> > > +
+> > > +	for (i = 0; i < len; i++)
+> > > +		if (*(char *)src != *(char *)dst)
+> > > +			return 1;
+> > > +
+> > > +	return 0;
+> > > +}
 > > 
-> > Please reuse that code. Having a duplicate or alternative implementation
-> > is just asking for subtle bugs.
+> > How is the compiler prevented from "optimising" these into calls to
+> > themselves?
 > 
-> Okey, I'll look at it.
+> I don't get what you mean by "calls to themselves."
 
-Ok.
+There are compiler optimizations that recognise sequences like:
 
-As above, I think it would be preferable that we avoid linking entirely.
+	for (i = 0; i < len; i++)
+		dst[i] = src[i];
+
+... and turn those into:
+
+	memcpy(dst, src, len);
+
+... these have been known to "optimize" memcpy implementations into
+calls to themselves. Likewise for other string operations.
+
+One way we avoid that today is by writing our memcpy in assembly.
+
+Do we have a guarnatee that this will not happen here? e.g. do we pass
+some compiler flag that prevents this?
 
 Thanks,
 Mark.
