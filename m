@@ -1,33 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dlHHp-0005yF-Ek
- for kexec@lists.infradead.org; Fri, 25 Aug 2017 16:16:47 +0000
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id
- v7PGEg2e090662
- for <kexec@lists.infradead.org>; Fri, 25 Aug 2017 12:16:24 -0400
-Received: from e19.ny.us.ibm.com (e19.ny.us.ibm.com [129.33.205.209])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2cjpa6kw4g-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 25 Aug 2017 12:16:24 -0400
-Received: from localhost
- by e19.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Fri, 25 Aug 2017 12:16:19 -0400
-References: <20170824081811.19299-1-takahiro.akashi@linaro.org>
- <20170824081811.19299-9-takahiro.akashi@linaro.org>
- <20170824165617.GC29665@leverpostej>
- <20170825010054.GC6434@akashi-kouhiroshi-no-MacBook-Air.local>
- <20170825102250.GA3127@leverpostej>
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH 08/14] arm64: kexec_file: create purgatory
-In-reply-to: <20170825102250.GA3127@leverpostej>
-Date: Fri, 25 Aug 2017 13:16:06 -0300
+ id 1dmATz-0001hm-IC
+ for kexec@lists.infradead.org; Mon, 28 Aug 2017 03:13:01 +0000
+Date: Sun, 27 Aug 2017 23:12:37 -0400 (EDT)
+From: Pingfan Liu <piliu@redhat.com>
+Message-ID: <1901144618.2370656.1503889957737.JavaMail.zimbra@redhat.com>
+In-Reply-To: <150297311110.25328.11468130779639120510.stgit@hbathini.in.ibm.com>
+References: <150297311110.25328.11468130779639120510.stgit@hbathini.in.ibm.com>
+Subject: Re: [PATCH] kexec-tools: ppc64: avoid adding coherent memory
+ regions to crash memory ranges
 MIME-Version: 1.0
-Message-Id: <878ti7fws9.fsf@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,68 +23,154 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Cc: Alistair Popple <alistair@popple.id.au>, Ankit Kumar <ankit@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>, Simon Horman <horms@verge.net.au>, Anshuman Khandual <khandual@linux.vnet.ibm.com>
 
 
-Mark Rutland <mark.rutland@arm.com> writes:
 
-> On Fri, Aug 25, 2017 at 10:00:59AM +0900, AKASHI Takahiro wrote:
->> On Thu, Aug 24, 2017 at 05:56:17PM +0100, Mark Rutland wrote:
->> > On Thu, Aug 24, 2017 at 05:18:05PM +0900, AKASHI Takahiro wrote:
->> > > This is a basic purgtory, or a kind of glue code between the two kernel,
->> > > for arm64. We will later add a feature of verifying a digest check against
->> > > loaded memory segments.
->> > > 
->> > > arch_kexec_apply_relocations_add() is responsible for re-linking any
->> > > relative symbols in purgatory. Please note that the purgatory is not
->> > > an executable, but a non-linked archive of binaries so relative symbols
->> > > contained here must be resolved at kexec load time.
->> > > Despite that arm64_kernel_start and arm64_dtb_addr are only such global
->> > > variables now, arch_kexec_apply_relocations_add() can manage more various
->> > > types of relocations.
->> > 
->> > Why does the purgatory code need to be so complex?
->> > 
->> > Why is it not possible to write this as position-independent asm?
->> 
->> I don't get your point, but please note that these values are also
->> re-written by the 1st kernel when it loads the 2nd kernel and so
->> they must appear as globals.
->
-> My fear about complexity is that we must "re-link" the purgatory.
->
-> I don't understand why that has to be necessary. Surely we can have the
-> purgatory code be position independent, and store those globals in a
-> single struct purgatory_info that we can fill in from the host?
->
-> i.e. similar to what we do for values shared with the VDSO, where we
-> just poke vdso_data->field, no re-linking required.
 
-Right. I'm not sure why it is a partially linked object. I believe that
-the purgatory could be linked at build time into a PIE executable with
-exported symbols for the variables that need to be filled in from the
-host.
 
-On some architectures (e.g., powerpc), this would greatly reduce the
-number of relocation types that the kernel needs to know how to process.
-On x86 it make less of a difference because the partially linked object
-already has just a handful of relocation types.
+----- Original Message -----
+> From: "Hari Bathini" <hbathini@linux.vnet.ibm.com>
+> To: "Simon Horman" <horms@verge.net.au>, "Kexec-ml" <kexec@lists.infradead.org>
+> Cc: "Ankit Kumar" <ankit@linux.vnet.ibm.com>, "Anshuman Khandual" <khandual@linux.vnet.ibm.com>, "Ananth N
+> Mavinakayanahalli" <ananth@linux.vnet.ibm.com>, "Alistair Popple" <alistair@popple.id.au>
+> Sent: Thursday, August 17, 2017 8:31:51 PM
+> Subject: [PATCH] kexec-tools: ppc64: avoid adding coherent memory regions to crash memory ranges
+> 
+> Accelerator devices like GPU and FPGA cards contain onboard memory. This
+> onboard memory is represented as a memory only NUMA node, integrating it
+> with core memory subsystem. Since, the link through which these devices
+> are integrated to core memory goes down after a system crash and they are
+> meant for user workloads, avoid adding coherent device memory regions to
+> crash memory ranges. Without this change, makedumpfile tool tries to save
+> unaccessible coherent device memory regions, crashing the system.
+> 
+> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+> ---
+>  kexec/arch/ppc64/crashdump-ppc64.c |   64
+>  +++++++++++++++++++++++++++++++++++-
+>  kexec/arch/ppc64/kexec-ppc64.h     |    1 +
+>  2 files changed, 63 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kexec/arch/ppc64/crashdump-ppc64.c
+> b/kexec/arch/ppc64/crashdump-ppc64.c
+> index 13995bf..7ea3983 100644
+> --- a/kexec/arch/ppc64/crashdump-ppc64.c
+> +++ b/kexec/arch/ppc64/crashdump-ppc64.c
+> @@ -181,6 +181,53 @@ static int get_dyn_reconf_crash_memory_ranges(void)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * For a given memory node, check if it is mapped to system RAM or
+> + * to onboard memory on accelerator device like GPU card or such.
+> + */
+> +static int is_coherent_device_mem(const char *fname)
+> +{
+> +	char fpath[PATH_LEN];
+> +	char buf[32];
+> +	DIR *dmem;
+> +	FILE *file;
+> +	struct dirent *mentry;
+> +	int cnt, ret = 0;
+> +
+> +	strcpy(fpath, fname);
+> +	if ((dmem = opendir(fpath)) == NULL) {
+> +		perror(fpath);
+> +		return -1;
+> +	}
+> +
+> +	while ((mentry = readdir(dmem)) != NULL) {
+> +		if (strcmp(mentry->d_name, "compatible"))
+> +			continue;
+> +
+> +		strcat(fpath, "/compatible");
+> +		if ((file = fopen(fpath, "r")) == NULL) {
+> +			perror(fpath);
+> +			ret = -1;
+> +			break;
+> +		}
+> +		if ((cnt = fread(buf, 1, 32, file)) < 0) {
+> +			perror(fpath);
+> +			fclose(file);
+> +			ret = -1;
+> +			break;
+> +		}
+> +		if (!strncmp(buf, "ibm,coherent-device-memory", 26)) {
+> +			ret = 1;
+> +			break;
+> +		}
+> +		fclose(file);
+> +	}
+> +
+> +	closedir(dmem);
+> +	return ret;
+> +}
+> +
+> +
+>  /* Reads the appropriate file and retrieves the SYSTEM RAM regions for whom
+>  to
+>   * create Elf headers. Keeping it separate from get_memory_ranges() as
+>   * requirements are different in the case of normal kexec and crashdumps.
+> @@ -196,12 +243,12 @@ static int get_crash_memory_ranges(struct memory_range
+> **range, int *ranges)
+>  {
+>  
+>  	char device_tree[256] = "/proc/device-tree/";
+> -	char fname[256];
+> +	char fname[PATH_LEN];
+>  	char buf[MAXBYTES];
+>  	DIR *dir, *dmem;
+>  	FILE *file;
+>  	struct dirent *dentry, *mentry;
+> -	int n, crash_rng_len = 0;
+> +	int n, ret, crash_rng_len = 0;
+>  	unsigned long long start, end;
+>  	int page_size;
+>  
+> @@ -240,6 +287,19 @@ static int get_crash_memory_ranges(struct memory_range
+> **range, int *ranges)
+>  			continue;
+>  		strcpy(fname, device_tree);
+>  		strcat(fname, dentry->d_name);
+> +
+> +		ret = is_coherent_device_mem(fname);
+> +		if (ret == -1) {
+> +			closedir(dir);
+> +			goto err;
+> +		} else if (ret == 1) {
+> +			/*
+> +			 * Avoid adding this memory region as it is not
+> +			 * mapped to system RAM.
+> +			 */
+> +			continue;
+> +		}
+> +
+>  		if ((dmem = opendir(fname)) == NULL) {
+>  			perror(fname);
+>  			closedir(dir);
+> diff --git a/kexec/arch/ppc64/kexec-ppc64.h b/kexec/arch/ppc64/kexec-ppc64.h
+> index 633ae77..434b4bf 100644
+> --- a/kexec/arch/ppc64/kexec-ppc64.h
+> +++ b/kexec/arch/ppc64/kexec-ppc64.h
+> @@ -1,6 +1,7 @@
+>  #ifndef KEXEC_PPC64_H
+>  #define KEXEC_PPC64_H
+>  
+> +#define PATH_LEN 256
+>  #define MAXBYTES 128
+>  #define MAX_LINE 160
+>  #define CORE_TYPE_ELF32 1
+> 
+Tested-by: Pingfan Liu <piliu@redhat.com>
 
-> Otherwise, why can't the purgatory code be written in assembly? AFAICT,
-> the only complex part is the hashing code, which I don't beleive is
-> strictly necessary.
-
-When I posted a similar series for powerpc with similar changes to
-handle a partially linked purgatory in the kernel, Michael Ellerman
-preferred to go for a purgatory written in assembly, partially based on
-the one from kexec-lite. That purgatory doesn't do the checksum
-verification of the segments.
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
