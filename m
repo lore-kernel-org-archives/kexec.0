@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1dmwfE-0000z3-HR
- for kexec@lists.infradead.org; Wed, 30 Aug 2017 06:39:50 +0000
-Date: Wed, 30 Aug 2017 08:39:19 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec-tools: ppc64: fix leak while checking for coherent
- device memory
-Message-ID: <20170830063919.GA10398@verge.net.au>
-References: <150402826929.17885.17434431332871284117.stgit@hbathini.in.ibm.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 14/14] arm64: kexec_file: add vmlinux format support
+In-Reply-To: <20170829100112.GC2901@leverpostej>
+References: <20170824081811.19299-1-takahiro.akashi@linaro.org>
+ <20170824081811.19299-15-takahiro.akashi@linaro.org>
+ <20170824173049.GG29665@leverpostej> <20170829100112.GC2901@leverpostej>
+Date: Wed, 30 Aug 2017 18:40:14 +1000
+Message-ID: <87ziah1ma9.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <150402826929.17885.17434431332871284117.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,13 +20,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Cc: Ankit Kumar <ankit@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>
+To: Mark Rutland <mark.rutland@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, davem@davemloft.net, dhowells@redhat.com, arnd@arndb.de, vgoyal@redhat.com, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Tue, Aug 29, 2017 at 11:08:02PM +0530, Hari Bathini wrote:
-> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Mark Rutland <mark.rutland@arm.com> writes:
 
-Thanks, applied.
+> On Thu, Aug 24, 2017 at 06:30:50PM +0100, Mark Rutland wrote:
+>> On Thu, Aug 24, 2017 at 05:18:11PM +0900, AKASHI Takahiro wrote:
+>> > The first PT_LOAD segment, which is assumed to be "text" code, in vmlinux
+>> > will be loaded at the offset of TEXT_OFFSET from the begining of system
+>> > memory. The other PT_LOAD segments are placed relative to the first one.
+>> 
+>> I really don't like assuming things about the vmlinux ELF file.
+>> 
+>> > Regarding kernel verification, since there is no standard way to contain
+>> > a signature within elf binary, we follow PowerPC's (not yet upstreamed)
+>> > approach, that is, appending a signature right after the kernel binary
+>> > itself like module signing.
+>> 
+>> I also *really* don't like this. It's a bizarre in-band mechanism,
+>> without explcit information. It's not a nice ABI.
+>> 
+>> If we can load an Image, why do we need to be able to load a vmlinux?
+>
+> So IIUC, the whole point of this is to be able to kexec_file_load() a
+> vmlinux + signature bundle, for !CONFIG_EFI kernels.
+>
+> For that, I think that we actually need a new kexec_file_load${N}
+> syscall, where we can pass the signature for the kernel as a separate
+> file. Ideally also with a flags argument and perhaps the ability to sign
+> the initrd too.
+>
+> That way we don't ahve to come up with a magic vmlinux+signature format,
+
+You don't have to come up with one, it already exists. We've been using
+it for signed modules for ~5 years.
+
+It also has the advantages of being a signature of the entire ELF, no
+silly games about which sections are included, and it's attached to the
+vmlinux so you don't have to remember to copy it around. And the code to
+produce it and verify it already exists.
+
+cheers
 
 _______________________________________________
 kexec mailing list
