@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x236.google.com ([2607:f8b0:400e:c05::236])
+Received: from mail-pg0-f51.google.com ([74.125.83.51])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dq9ls-0002T8-Mf
- for kexec@lists.infradead.org; Fri, 08 Sep 2017 03:16:21 +0000
-Received: by mail-pg0-x236.google.com with SMTP id v66so2747007pgb.5
- for <kexec@lists.infradead.org>; Thu, 07 Sep 2017 20:15:36 -0700 (PDT)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH 7/9] arm64: kexec_file: set up for crash dump adding elf core
- header
-Date: Fri,  8 Sep 2017 12:16:14 +0900
-Message-Id: <20170908031616.17916-8-takahiro.akashi@linaro.org>
-In-Reply-To: <20170908031616.17916-1-takahiro.akashi@linaro.org>
-References: <20170908031616.17916-1-takahiro.akashi@linaro.org>
+ id 1dq9yJ-0001st-Ec
+ for kexec@lists.infradead.org; Fri, 08 Sep 2017 03:28:53 +0000
+Received: by mail-pg0-f51.google.com with SMTP id t3so2841700pgt.0
+ for <kexec@lists.infradead.org>; Thu, 07 Sep 2017 20:28:26 -0700 (PDT)
+Subject: Re: Fwd: zImage support for ppc
+References: <CALKbUJQCd3C1NPxXba5jb9QYPUbEYNnx_dywxTsP+Rnejbt6YA@mail.gmail.com>
+ <CALKbUJTmkJV-bq1mnzqR5Q-RrX6OpSniTZd=z26QxqtJttPVMg@mail.gmail.com>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <cdbaee7b-0173-5171-67ec-5f685c16776d@redhat.com>
+Date: Fri, 8 Sep 2017 08:58:22 +0530
+MIME-Version: 1.0
+In-Reply-To: <CALKbUJTmkJV-bq1mnzqR5Q-RrX6OpSniTZd=z26QxqtJttPVMg@mail.gmail.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,232 +22,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Sunil Kumar <sukumar@mvista.com>, kexec@lists.infradead.org
 
-load_crashdump_segments() creates and loads a memory segment of elf core
-header for crash dump.
 
-"linux,usable-memory-range" and "linux,elfcorehdr" will add to the 2nd
-kernel's device-tree blob. The logic of this cod is also from kexec-tools.
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
----
- arch/arm64/include/asm/kexec.h         |   5 ++
- arch/arm64/kernel/machine_kexec_file.c | 145 +++++++++++++++++++++++++++++++++
- 2 files changed, 150 insertions(+)
+On Thursday 07 September 2017 01:49 PM, Sunil Kumar wrote:
+> $ kexec -e
+> 
+> As the zImage is also and elf file format, but the control is not
+> getting transferred to the zImage.
+> I can see kexec is able to load all the segments properly, but looks
+> like its not able to figure out the entry point to start execution
+> with zImage.
+> -------------------------------------------------------------------------------------------------------------------------------------------------------
+> kexec_load: entry = 0x329678 flags = 0x0
+> -------------------------------------------------------------------------------------------------------------------------------------------------------
+> 
+> On the same board (i.e. Freescale p2020ds), uImage and vmlinux works fine.
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index d74dc49670ad..66537de588fa 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -98,6 +98,10 @@ static inline void crash_post_resume(void) {}
- 
- struct kimage_arch {
- 	void *dtb_buf;
-+	/* Core ELF header buffer */
-+	void *elf_headers;
-+	unsigned long elf_headers_sz;
-+	unsigned long elf_load_addr;
- };
- 
- struct kimage;
-@@ -110,6 +114,7 @@ extern int load_other_segments(struct kimage *image,
- 		unsigned long kernel_load_addr,
- 		char *initrd, unsigned long initrd_len,
- 		char *cmdline, unsigned long cmdline_len);
-+extern int load_crashdump_segments(struct kimage *image);
- #endif
- 
- #endif /* __ASSEMBLY__ */
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index a6d2c006b4f7..62627f5440ff 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -99,6 +99,77 @@ int arch_kexec_walk_mem(struct kexec_buf *kbuf, int (*func)(u64, u64, void *))
- 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
- }
- 
-+static int __init arch_kexec_file_init(void)
-+{
-+	/* Those values are used later on loading the kernel */
-+	__dt_root_addr_cells = dt_root_addr_cells;
-+	__dt_root_size_cells = dt_root_size_cells;
-+
-+	return 0;
-+}
-+late_initcall(arch_kexec_file_init);
-+
-+#define FDT_ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
-+#define FDT_TAGALIGN(x)	(FDT_ALIGN((x), FDT_TAGSIZE))
-+
-+static int fdt_prop_len(const char *prop_name, int len)
-+{
-+	return (strlen(prop_name) + 1) +
-+		sizeof(struct fdt_property) +
-+		FDT_TAGALIGN(len);
-+}
-+
-+static bool cells_size_fitted(unsigned long base, unsigned long size)
-+{
-+	/* if *_cells >= 2, cells can hold 64-bit values anyway */
-+	if ((__dt_root_addr_cells == 1) && (base >= (1ULL << 32)))
-+		return false;
-+
-+	if ((__dt_root_size_cells == 1) && (size >= (1ULL << 32)))
-+		return false;
-+
-+	return true;
-+}
-+
-+static void fill_property(void *buf, u64 val64, int cells)
-+{
-+	u32 val32;
-+	int i;
-+
-+	if (cells == 1) {
-+		val32 = cpu_to_fdt32((u32)val64);
-+		memcpy(buf, &val32, sizeof(val32));
-+	} else {
-+		for (i = 0; i < (cells * sizeof(u32) - sizeof(u64)); i++)
-+			*(char *)buf++ = 0;
-+
-+		val64 = cpu_to_fdt64(val64);
-+		memcpy(buf, &val64, sizeof(val64));
-+	}
-+}
-+
-+static int fdt_setprop_range(void *fdt, int nodeoffset, const char *name,
-+				unsigned long addr, unsigned long size)
-+{
-+	u64 range[2];
-+	void *prop;
-+	size_t buf_size;
-+	int result;
-+
-+	prop = range;
-+	buf_size = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
-+
-+	fill_property(prop, addr, __dt_root_addr_cells);
-+	prop += __dt_root_addr_cells * sizeof(u32);
-+
-+	fill_property(prop, size, __dt_root_size_cells);
-+	prop += __dt_root_size_cells * sizeof(u32);
-+
-+	result = fdt_setprop(fdt, nodeoffset, name, range, buf_size);
-+
-+	return result;
-+}
-+
- int setup_dtb(struct kimage *image,
- 		unsigned long initrd_load_addr, unsigned long initrd_len,
- 		char *cmdline, unsigned long cmdline_len,
-@@ -111,10 +182,26 @@ int setup_dtb(struct kimage *image,
- 	int range_len;
- 	int ret;
- 
-+	/* check ranges against root's #address-cells and #size-cells */
-+	if (image->type == KEXEC_TYPE_CRASH &&
-+		(!cells_size_fitted(image->arch.elf_load_addr,
-+				image->arch.elf_headers_sz) ||
-+		 !cells_size_fitted(crashk_res.start,
-+				crashk_res.end - crashk_res.start + 1))) {
-+		pr_err("Crash memory region doesn't fit into DT's root cell sizes.\n");
-+		ret = -EINVAL;
-+		goto out_err;
-+	}
-+
- 	/* duplicate dt blob */
- 	buf_size = fdt_totalsize(initial_boot_params);
- 	range_len = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
- 
-+	if (image->type == KEXEC_TYPE_CRASH)
-+		buf_size += fdt_prop_len("linux,elfcorehdr", range_len)
-+				+ fdt_prop_len("linux,usable-memory-range",
-+								range_len);
-+
- 	if (initrd_load_addr)
- 		buf_size += fdt_prop_len("initrd-start", sizeof(u64))
- 				+ fdt_prop_len("initrd-end", sizeof(u64));
-@@ -136,6 +223,23 @@ int setup_dtb(struct kimage *image,
- 	if (nodeoffset < 0)
- 		goto out_err;
- 
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		/* add linux,elfcorehdr */
-+		ret = fdt_setprop_range(buf, nodeoffset, "linux,elfcorehdr",
-+				image->arch.elf_load_addr,
-+				image->arch.elf_headers_sz);
-+		if (ret)
-+			goto out_err;
-+
-+		/* add linux,usable-memory-range */
-+		ret = fdt_setprop_range(buf, nodeoffset,
-+				"linux,usable-memory-range",
-+				crashk_res.start,
-+				crashk_res.end - crashk_res.start + 1);
-+		if (ret)
-+			goto out_err;
-+	}
-+
- 	/* add bootargs */
- 	if (cmdline) {
- 		ret = fdt_setprop(buf, nodeoffset, "bootargs",
-@@ -262,3 +366,44 @@ int load_other_segments(struct kimage *image, unsigned long kernel_load_addr,
- 	image->arch.dtb_buf = NULL;
- 	return ret;
- }
-+
-+int load_crashdump_segments(struct kimage *image)
-+{
-+	void *elf_addr;
-+	unsigned long elf_sz;
-+	struct kexec_buf kbuf;
-+	int ret;
-+
-+	if (image->type != KEXEC_TYPE_CRASH)
-+		return 0;
-+
-+	/* Prepare elf headers and add a segment */
-+	ret = prepare_elf_headers(image, &elf_addr, &elf_sz);
-+	if (ret) {
-+		pr_err("Preparing elf core header failed\n");
-+		return ret;
-+	}
-+
-+	kbuf.image = image;
-+	kbuf.buffer = elf_addr;
-+	kbuf.bufsz = elf_sz;
-+	kbuf.memsz = elf_sz;
-+	kbuf.buf_align = PAGE_SIZE;
-+	kbuf.buf_min = crashk_res.start;
-+	kbuf.buf_max = crashk_res.end + 1;
-+	kbuf.top_down = 1;
-+
-+	ret = kexec_add_buffer(&kbuf);
-+	if (ret) {
-+		vfree(elf_addr);
-+		return ret;
-+	}
-+	image->arch.elf_headers = elf_addr;
-+	image->arch.elf_headers_sz = elf_sz;
-+	image->arch.elf_load_addr = kbuf.mem;
-+
-+	pr_debug("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+			 image->arch.elf_load_addr, elf_sz, elf_sz);
-+
-+	return ret;
-+}
+Looking into upstream code: ppc has only support of elf and uImage,and so they 
+work.
+
+> 
+> Just curious to know , why the zImage support is still not provided in
+> the kexec for ppc ??
+
+Probably because no one needed it till now.
+
+> Is there any restriction from kexec design point of view ?
+
+I do not think. You can write a patch. I see, ppc64 has zImage support, so you 
+can take that as example and can write code for ppc as well.
+
 -- 
-2.14.1
-
+Regards
+Pratyush
 
 _______________________________________________
 kexec mailing list
