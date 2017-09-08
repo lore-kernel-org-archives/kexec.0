@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x230.google.com ([2607:f8b0:400e:c05::230])
+Received: from mail-pg0-x236.google.com ([2607:f8b0:400e:c05::236])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dq9l6-00014T-KX
- for kexec@lists.infradead.org; Fri, 08 Sep 2017 03:15:11 +0000
-Received: by mail-pg0-x230.google.com with SMTP id t3so2791041pgt.0
- for <kexec@lists.infradead.org>; Thu, 07 Sep 2017 20:14:48 -0700 (PDT)
+ id 1dq9ls-0002T8-Mf
+ for kexec@lists.infradead.org; Fri, 08 Sep 2017 03:16:21 +0000
+Received: by mail-pg0-x236.google.com with SMTP id v66so2747007pgb.5
+ for <kexec@lists.infradead.org>; Thu, 07 Sep 2017 20:15:36 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH 0/9] kexec: add kexec_file_load() support
-Date: Fri,  8 Sep 2017 12:16:07 +0900
-Message-Id: <20170908031616.17916-1-takahiro.akashi@linaro.org>
+Subject: [PATCH 7/9] arm64: kexec_file: set up for crash dump adding elf core
+ header
+Date: Fri,  8 Sep 2017 12:16:14 +0900
+Message-Id: <20170908031616.17916-8-takahiro.akashi@linaro.org>
+In-Reply-To: <20170908031616.17916-1-takahiro.akashi@linaro.org>
+References: <20170908031616.17916-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,106 +28,221 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org
 Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-This is the second round of implementing kexec_file_load() support
-on arm64.[1]
-Most of the code is based on kexec-tools (along with some kernel code
-from x86, which also came from kexec-tools).
+load_crashdump_segments() creates and loads a memory segment of elf core
+header for crash dump.
 
+"linux,usable-memory-range" and "linux,elfcorehdr" will add to the 2nd
+kernel's device-tree blob. The logic of this cod is also from kexec-tools.
 
-This patch series enables us to
-  * load the kernel, Image, with kexec_file_load system call, and
-  * optionally verify its signature at load time for trusted boot.
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+---
+ arch/arm64/include/asm/kexec.h         |   5 ++
+ arch/arm64/kernel/machine_kexec_file.c | 145 +++++++++++++++++++++++++++++++++
+ 2 files changed, 150 insertions(+)
 
-To load the kernel via kexec_file_load system call, a small change
-is also needed to kexec-tools. See [2]. This enables '-s' option.
-
-As we discussed a long time ago, users may not be allowed to specify
-device-tree file of the 2nd kernel explicitly with kexec-tools, therefore
-re-using the blob of the first kernel.
-
-Regarding a signing method, we conform with x86 (or rather Microsoft?)
-style of signing since the binary can also be seen as in PE format
-(assuming that CONFIG_EFI is enabled).
-
-    Powerpc is also going to support extended-file-attribute-based
-    verification[3] with vmlinux, but arm64 doesn't for now partly
-    because we don't have TPM-based IMA at this moment.
-
-Accordingly, we can use the existing command, sbsign, to sign the kernel.
-
-    $ sbsign --key ${KEY} --cert ${CERT} Image
-
-Please note that it is totally up to the system what key/certificate is
-used for signing, but one of easy ways to *try* this feature is to turn on
-CONFIG_MODULE_SIG so that we can reuse certs/signing_key.pem as a signing
-key, KEY and CERT above, for kernel.
-(This also enables CONFIG_CRYPTO_SHA1 by default.)
-
-
-Some concerns(or future works):
-* Even if the kernel is configured with CONFIG_RANDOMIZE_BASE, the 2nd
-  kernel won't be placed at a randomized address. We will have to
-  add some boot code similar to efi-stub to implement the feature.
-* While big-endian kernel can support kernel signing, I'm not sure that
-  Image can be recognized as in PE format because x86 standard only
-  defines little-endian-based format.
-* IMA(and file extended attribute)-based kexec
-* vmlinux support
-
-  [1] http://git.linaro.org/people/takahiro.akashi/linux-aarch64.git
-	branch:arm64/kexec_file
-  [2] http://git.linaro.org/people/takahiro.akashi/kexec-tools.git
-	branch:arm64/kexec_file
-  [3] http://lkml.iu.edu//hypermail/linux/kernel/1707.0/03669.html
-
-
-Changes in v2 (Sep 8, 2017)
-* move core-header-related functions from crash_core.c to kexec_file.c
-* drop hash-check code from purgatory
-* modify purgatory asm to remove arch_kexec_apply_relocations_add()
-* drop older kernel support
-* drop vmlinux support (at least, for this series)
-
-Patch #1 to #4 are all preparatory patches on generic side.
-Patch #5 is purgatory code.
-Patch #6 to #8 are common for enabling kexec_file_load.
-Patch #9 is for 'Image' support.
-
-
-AKASHI Takahiro (9):
-  include: pe.h: remove message[] from mz header definition
-  resource: add walk_system_ram_res_rev()
-  kexec_file: factor out crashdump elf header function from x86
-  asm-generic: add kexec_file_load system call to unistd.h
-  arm64: kexec_file: create purgatory
-  arm64: kexec_file: load initrd, device-tree and purgatory segments
-  arm64: kexec_file: set up for crash dump adding elf core header
-  arm64: enable KEXEC_FILE config
-  arm64: kexec_file: add Image format support
-
- arch/arm64/Kconfig                     |  29 +++
- arch/arm64/Makefile                    |   1 +
- arch/arm64/include/asm/kexec.h         |  24 ++
- arch/arm64/include/asm/kexec_file.h    |  69 ++++++
- arch/arm64/kernel/Makefile             |   4 +-
- arch/arm64/kernel/kexec_image.c        | 106 +++++++++
- arch/arm64/kernel/machine_kexec_file.c | 413 +++++++++++++++++++++++++++++++++
- arch/arm64/purgatory/Makefile          |  24 ++
- arch/arm64/purgatory/entry.S           |  55 +++++
- arch/x86/kernel/crash.c                | 324 --------------------------
- include/linux/ioport.h                 |   3 +
- include/linux/kexec.h                  |  19 ++
- include/linux/pe.h                     |   2 +-
- include/uapi/asm-generic/unistd.h      |   4 +-
- kernel/kexec_file.c                    | 329 ++++++++++++++++++++++++++
- kernel/resource.c                      |  59 +++++
- 16 files changed, 1138 insertions(+), 327 deletions(-)
- create mode 100644 arch/arm64/include/asm/kexec_file.h
- create mode 100644 arch/arm64/kernel/kexec_image.c
- create mode 100644 arch/arm64/kernel/machine_kexec_file.c
- create mode 100644 arch/arm64/purgatory/Makefile
- create mode 100644 arch/arm64/purgatory/entry.S
-
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index d74dc49670ad..66537de588fa 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -98,6 +98,10 @@ static inline void crash_post_resume(void) {}
+ 
+ struct kimage_arch {
+ 	void *dtb_buf;
++	/* Core ELF header buffer */
++	void *elf_headers;
++	unsigned long elf_headers_sz;
++	unsigned long elf_load_addr;
+ };
+ 
+ struct kimage;
+@@ -110,6 +114,7 @@ extern int load_other_segments(struct kimage *image,
+ 		unsigned long kernel_load_addr,
+ 		char *initrd, unsigned long initrd_len,
+ 		char *cmdline, unsigned long cmdline_len);
++extern int load_crashdump_segments(struct kimage *image);
+ #endif
+ 
+ #endif /* __ASSEMBLY__ */
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index a6d2c006b4f7..62627f5440ff 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -99,6 +99,77 @@ int arch_kexec_walk_mem(struct kexec_buf *kbuf, int (*func)(u64, u64, void *))
+ 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
+ }
+ 
++static int __init arch_kexec_file_init(void)
++{
++	/* Those values are used later on loading the kernel */
++	__dt_root_addr_cells = dt_root_addr_cells;
++	__dt_root_size_cells = dt_root_size_cells;
++
++	return 0;
++}
++late_initcall(arch_kexec_file_init);
++
++#define FDT_ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
++#define FDT_TAGALIGN(x)	(FDT_ALIGN((x), FDT_TAGSIZE))
++
++static int fdt_prop_len(const char *prop_name, int len)
++{
++	return (strlen(prop_name) + 1) +
++		sizeof(struct fdt_property) +
++		FDT_TAGALIGN(len);
++}
++
++static bool cells_size_fitted(unsigned long base, unsigned long size)
++{
++	/* if *_cells >= 2, cells can hold 64-bit values anyway */
++	if ((__dt_root_addr_cells == 1) && (base >= (1ULL << 32)))
++		return false;
++
++	if ((__dt_root_size_cells == 1) && (size >= (1ULL << 32)))
++		return false;
++
++	return true;
++}
++
++static void fill_property(void *buf, u64 val64, int cells)
++{
++	u32 val32;
++	int i;
++
++	if (cells == 1) {
++		val32 = cpu_to_fdt32((u32)val64);
++		memcpy(buf, &val32, sizeof(val32));
++	} else {
++		for (i = 0; i < (cells * sizeof(u32) - sizeof(u64)); i++)
++			*(char *)buf++ = 0;
++
++		val64 = cpu_to_fdt64(val64);
++		memcpy(buf, &val64, sizeof(val64));
++	}
++}
++
++static int fdt_setprop_range(void *fdt, int nodeoffset, const char *name,
++				unsigned long addr, unsigned long size)
++{
++	u64 range[2];
++	void *prop;
++	size_t buf_size;
++	int result;
++
++	prop = range;
++	buf_size = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
++
++	fill_property(prop, addr, __dt_root_addr_cells);
++	prop += __dt_root_addr_cells * sizeof(u32);
++
++	fill_property(prop, size, __dt_root_size_cells);
++	prop += __dt_root_size_cells * sizeof(u32);
++
++	result = fdt_setprop(fdt, nodeoffset, name, range, buf_size);
++
++	return result;
++}
++
+ int setup_dtb(struct kimage *image,
+ 		unsigned long initrd_load_addr, unsigned long initrd_len,
+ 		char *cmdline, unsigned long cmdline_len,
+@@ -111,10 +182,26 @@ int setup_dtb(struct kimage *image,
+ 	int range_len;
+ 	int ret;
+ 
++	/* check ranges against root's #address-cells and #size-cells */
++	if (image->type == KEXEC_TYPE_CRASH &&
++		(!cells_size_fitted(image->arch.elf_load_addr,
++				image->arch.elf_headers_sz) ||
++		 !cells_size_fitted(crashk_res.start,
++				crashk_res.end - crashk_res.start + 1))) {
++		pr_err("Crash memory region doesn't fit into DT's root cell sizes.\n");
++		ret = -EINVAL;
++		goto out_err;
++	}
++
+ 	/* duplicate dt blob */
+ 	buf_size = fdt_totalsize(initial_boot_params);
+ 	range_len = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
+ 
++	if (image->type == KEXEC_TYPE_CRASH)
++		buf_size += fdt_prop_len("linux,elfcorehdr", range_len)
++				+ fdt_prop_len("linux,usable-memory-range",
++								range_len);
++
+ 	if (initrd_load_addr)
+ 		buf_size += fdt_prop_len("initrd-start", sizeof(u64))
+ 				+ fdt_prop_len("initrd-end", sizeof(u64));
+@@ -136,6 +223,23 @@ int setup_dtb(struct kimage *image,
+ 	if (nodeoffset < 0)
+ 		goto out_err;
+ 
++	if (image->type == KEXEC_TYPE_CRASH) {
++		/* add linux,elfcorehdr */
++		ret = fdt_setprop_range(buf, nodeoffset, "linux,elfcorehdr",
++				image->arch.elf_load_addr,
++				image->arch.elf_headers_sz);
++		if (ret)
++			goto out_err;
++
++		/* add linux,usable-memory-range */
++		ret = fdt_setprop_range(buf, nodeoffset,
++				"linux,usable-memory-range",
++				crashk_res.start,
++				crashk_res.end - crashk_res.start + 1);
++		if (ret)
++			goto out_err;
++	}
++
+ 	/* add bootargs */
+ 	if (cmdline) {
+ 		ret = fdt_setprop(buf, nodeoffset, "bootargs",
+@@ -262,3 +366,44 @@ int load_other_segments(struct kimage *image, unsigned long kernel_load_addr,
+ 	image->arch.dtb_buf = NULL;
+ 	return ret;
+ }
++
++int load_crashdump_segments(struct kimage *image)
++{
++	void *elf_addr;
++	unsigned long elf_sz;
++	struct kexec_buf kbuf;
++	int ret;
++
++	if (image->type != KEXEC_TYPE_CRASH)
++		return 0;
++
++	/* Prepare elf headers and add a segment */
++	ret = prepare_elf_headers(image, &elf_addr, &elf_sz);
++	if (ret) {
++		pr_err("Preparing elf core header failed\n");
++		return ret;
++	}
++
++	kbuf.image = image;
++	kbuf.buffer = elf_addr;
++	kbuf.bufsz = elf_sz;
++	kbuf.memsz = elf_sz;
++	kbuf.buf_align = PAGE_SIZE;
++	kbuf.buf_min = crashk_res.start;
++	kbuf.buf_max = crashk_res.end + 1;
++	kbuf.top_down = 1;
++
++	ret = kexec_add_buffer(&kbuf);
++	if (ret) {
++		vfree(elf_addr);
++		return ret;
++	}
++	image->arch.elf_headers = elf_addr;
++	image->arch.elf_headers_sz = elf_sz;
++	image->arch.elf_load_addr = kbuf.mem;
++
++	pr_debug("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++			 image->arch.elf_load_addr, elf_sz, elf_sz);
++
++	return ret;
++}
 -- 
 2.14.1
 
