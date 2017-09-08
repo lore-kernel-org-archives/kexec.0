@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x22e.google.com ([2607:f8b0:400e:c05::22e])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dq9lh-0002SL-UG
- for kexec@lists.infradead.org; Fri, 08 Sep 2017 03:16:10 +0000
-Received: by mail-pg0-x22e.google.com with SMTP id v66so2746346pgb.5
- for <kexec@lists.infradead.org>; Thu, 07 Sep 2017 20:15:25 -0700 (PDT)
+Received: from mail-pg0-x236.google.com ([2607:f8b0:400e:c05::236])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dq9m2-0003WW-6B
+ for kexec@lists.infradead.org; Fri, 08 Sep 2017 03:16:09 +0000
+Received: by mail-pg0-x236.google.com with SMTP id 188so2774934pgb.2
+ for <kexec@lists.infradead.org>; Thu, 07 Sep 2017 20:15:43 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH 5/9] arm64: kexec_file: create purgatory
-Date: Fri,  8 Sep 2017 12:16:12 +0900
-Message-Id: <20170908031616.17916-6-takahiro.akashi@linaro.org>
+Subject: [PATCH 8/9] arm64: enable KEXEC_FILE config
+Date: Fri,  8 Sep 2017 12:16:15 +0900
+Message-Id: <20170908031616.17916-9-takahiro.akashi@linaro.org>
 In-Reply-To: <20170908031616.17916-1-takahiro.akashi@linaro.org>
 References: <20170908031616.17916-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,141 +27,62 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org
 Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-This is a basic purgatory, or a kind of glue code between the two kernels,
-for arm64.
-
-Since purgatory is assumed to be relocatable (not executable) object by
-kexec generic code, arch_kexec_apply_relocations_add() is required in
-general. Arm64's purgatory, however, is a simple asm and all the references
-can be resolved as local, no re-linking is needed here.
+Modify arm64/Kconfig and Makefile to enable kexec_file_load support.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will.deacon@arm.com>
 ---
- arch/arm64/Makefile           |  1 +
- arch/arm64/kernel/Makefile    |  1 +
- arch/arm64/purgatory/Makefile | 24 +++++++++++++++++++
- arch/arm64/purgatory/entry.S  | 55 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 81 insertions(+)
- create mode 100644 arch/arm64/purgatory/Makefile
- create mode 100644 arch/arm64/purgatory/entry.S
+ arch/arm64/Kconfig         | 22 ++++++++++++++++++++++
+ arch/arm64/kernel/Makefile |  2 +-
+ 2 files changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 9b41f1e3b1a0..429f60728c0a 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -105,6 +105,7 @@ core-$(CONFIG_XEN) += arch/arm64/xen/
- core-$(CONFIG_CRYPTO) += arch/arm64/crypto/
- libs-y		:= arch/arm64/lib/ $(libs-y)
- core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
-+core-$(CONFIG_KEXEC_FILE) += arch/arm64/purgatory/
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index dfd908630631..fa7299f08cc6 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -756,6 +756,28 @@ config KEXEC
+ 	  but it is independent of the system firmware.   And like a reboot
+ 	  you can start any kernel with it, not just Linux.
  
- # Default target when executing plain make
- boot		:= arch/arm64/boot
++config KEXEC_FILE
++	bool "kexec file based system call"
++	select KEXEC_CORE
++	select BUILD_BIN2C
++	---help---
++	  This is new version of kexec system call. This system call is
++	  file based and takes file descriptors as system call argument
++	  for kernel and initramfs as opposed to list of segments as
++	  accepted by previous system call.
++
++	  In addition to this option, you need to enable a specific type
++	  of image support.
++
++config KEXEC_VERIFY_SIG
++	bool "Verify kernel signature during kexec_file_load() syscall"
++	depends on KEXEC_FILE
++	select SYSTEM_DATA_VERIFICATION
++	---help---
++	  Select this option to verify a signature with loaded kernel
++	  image. If configured, any attempt of loading a image without
++	  valid signature will fail.
++
+ config CRASH_DUMP
+ 	bool "Build kdump crash kernel"
+ 	help
 diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index f2b4e816b6de..16e9f56b536a 100644
+index 16e9f56b536a..5df003d6157c 100644
 --- a/arch/arm64/kernel/Makefile
 +++ b/arch/arm64/kernel/Makefile
-@@ -50,6 +50,7 @@ arm64-obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
+@@ -48,7 +48,7 @@ arm64-obj-$(CONFIG_ARM64_ACPI_PARKING_PROTOCOL)	+= acpi_parking_protocol.o
+ arm64-obj-$(CONFIG_PARAVIRT)		+= paravirt.o
+ arm64-obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
  arm64-obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
- arm64-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o	\
+-arm64-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o	\
++arm64-obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
  					   cpu-reset.o
-+arm64-obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o
+ arm64-obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o
  arm64-obj-$(CONFIG_ARM64_RELOC_TEST)	+= arm64-reloc-test.o
- arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
- arm64-obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
-diff --git a/arch/arm64/purgatory/Makefile b/arch/arm64/purgatory/Makefile
-new file mode 100644
-index 000000000000..c2127a2cbd51
---- /dev/null
-+++ b/arch/arm64/purgatory/Makefile
-@@ -0,0 +1,24 @@
-+OBJECT_FILES_NON_STANDARD := y
-+
-+purgatory-y := entry.o
-+
-+targets += $(purgatory-y)
-+PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
-+
-+LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined \
-+					-nostdlib -z nodefaultlib
-+targets += purgatory.ro
-+
-+$(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
-+		$(call if_changed,ld)
-+
-+targets += kexec_purgatory.c
-+
-+CMD_BIN2C = $(objtree)/scripts/basic/bin2c
-+quiet_cmd_bin2c = BIN2C $@
-+	cmd_bin2c = $(CMD_BIN2C) kexec_purgatory < $< > $@
-+
-+$(obj)/kexec_purgatory.c: $(obj)/purgatory.ro FORCE
-+	$(call if_changed,bin2c)
-+
-+obj-${CONFIG_KEXEC_FILE}	+= kexec_purgatory.o
-diff --git a/arch/arm64/purgatory/entry.S b/arch/arm64/purgatory/entry.S
-new file mode 100644
-index 000000000000..fe6e968076db
---- /dev/null
-+++ b/arch/arm64/purgatory/entry.S
-@@ -0,0 +1,55 @@
-+/*
-+ * kexec core purgatory
-+ */
-+#include <linux/linkage.h>
-+#include <uapi/linux/kexec.h>
-+
-+#define SHA256_DIGEST_SIZE	32 /* defined in crypto/sha.h */
-+
-+.text
-+
-+ENTRY(purgatory_start)
-+	/* Start new image. */
-+	ldr	x17, __kernel_entry
-+	ldr	x0, __dtb_addr
-+	mov	x1, xzr
-+	mov	x2, xzr
-+	mov	x3, xzr
-+	br	x17
-+END(purgatory_start)
-+
-+/*
-+ * data section:
-+ * kernel_entry and dtb_addr are global but also labelled as local,
-+ * "__xxx:", to avoid unwanted re-linking.
-+ *
-+ * purgatory_sha_regions and purgatory_sha256_digest are referenced
-+ * by kexec generic code and so must exist, but not actually used
-+ * here because hash check is not that useful in purgatory.
-+ */
-+.align 3
-+
-+.globl kernel_entry
-+kernel_entry:
-+__kernel_entry:
-+	.quad	0
-+END(kernel_entry)
-+
-+.globl dtb_addr
-+dtb_addr:
-+__dtb_addr:
-+	.quad	0
-+END(dtb_addr)
-+
-+.globl purgatory_sha_regions
-+purgatory_sha_regions:
-+	.rept	KEXEC_SEGMENT_MAX
-+	.quad	0
-+	.quad	0
-+	.endr
-+END(purgatory_sha_regions)
-+
-+.globl purgatory_sha256_digest
-+purgatory_sha256_digest:
-+        .skip   SHA256_DIGEST_SIZE
-+END(purgatory_sha256_digest)
 -- 
 2.14.1
 
