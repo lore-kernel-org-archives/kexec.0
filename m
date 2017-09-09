@@ -1,33 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail-qk0-x244.google.com ([2607:f8b0:400d:c09::244])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dqLhV-0004Lk-7x
- for kexec@lists.infradead.org; Fri, 08 Sep 2017 16:00:15 +0000
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id
- v88FxELg102912
- for <kexec@lists.infradead.org>; Fri, 8 Sep 2017 11:59:52 -0400
-Received: from e38.co.us.ibm.com (e38.co.us.ibm.com [32.97.110.159])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2cuuw0856k-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 08 Sep 2017 11:59:52 -0400
-Received: from localhost
- by e38.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Fri, 8 Sep 2017 09:59:51 -0600
-References: <20170824081811.19299-1-takahiro.akashi@linaro.org>
- <20170824081811.19299-10-takahiro.akashi@linaro.org>
- <20170824170440.GD29665@leverpostej>
- <20170825012103.GB7245@akashi-kouhiroshi-no-MacBook-Air.local>
- <20170825104133.GB3127@leverpostej> <20170908025044.GD17186@linaro.org>
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH 09/14] arm64: kexec_file: add sha256 digest check in
- purgatory
-In-reply-to: <20170908025044.GD17186@linaro.org>
-Date: Fri, 08 Sep 2017 12:59:38 -0300
+ id 1dqfMF-0005kc-8w
+ for kexec@lists.infradead.org; Sat, 09 Sep 2017 12:59:37 +0000
+Received: by mail-qk0-x244.google.com with SMTP id r66so2831432qke.4
+ for <kexec@lists.infradead.org>; Sat, 09 Sep 2017 05:59:14 -0700 (PDT)
 MIME-Version: 1.0
-Message-Id: <87lglpp4et.fsf@linux.vnet.ibm.com>
+In-Reply-To: <CALKbUJSrLuY3QmHhJu_yHDFPvjqsLtm1-GbnO_tYECUdtyfb+g@mail.gmail.com>
+References: <CALKbUJQCd3C1NPxXba5jb9QYPUbEYNnx_dywxTsP+Rnejbt6YA@mail.gmail.com>
+ <CALKbUJTmkJV-bq1mnzqR5Q-RrX6OpSniTZd=z26QxqtJttPVMg@mail.gmail.com>
+ <cdbaee7b-0173-5171-67ec-5f685c16776d@redhat.com>
+ <CALKbUJSrLuY3QmHhJu_yHDFPvjqsLtm1-GbnO_tYECUdtyfb+g@mail.gmail.com>
+From: Bhupesh SHARMA <bhupesh.linux@gmail.com>
+Date: Sat, 9 Sep 2017 18:29:13 +0530
+Message-ID: <CAFTCetRY9o1ss3-DcYyz941Hj4Up90O_5tSBeb8uyRnh40=X6Q@mail.gmail.com>
+Subject: Re: Fwd: zImage support for ppc
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,83 +27,88 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: Sunil Kumar <sukumar@mvista.com>
+Cc: kexec@lists.infradead.org
 
+Hi Sunil,
 
-AKASHI Takahiro <takahiro.akashi@linaro.org> writes:
-> On Fri, Aug 25, 2017 at 11:41:33AM +0100, Mark Rutland wrote:
->> On Fri, Aug 25, 2017 at 10:21:06AM +0900, AKASHI Takahiro wrote:
->> > On Thu, Aug 24, 2017 at 06:04:40PM +0100, Mark Rutland wrote:
->> > > On Thu, Aug 24, 2017 at 05:18:06PM +0900, AKASHI Takahiro wrote:
->> > > > +void *memcpy(void *dst, const void *src, size_t len)
->> > > > +{
->> > > > +	int i;
->> > > > +
->> > > > +	for (i = 0; i < len; i++)
->> > > > +		((u8 *)dst)[i] = ((u8 *)src)[i];
->> > > > +
->> > > > +	return NULL;
->> > > > +}
->> > > > +
->> > > > +void *memset(void *dst, int c, size_t len)
->> > > > +{
->> > > > +	int i;
->> > > > +
->> > > > +	for (i = 0; i < len; i++)
->> > > > +		((u8 *)dst)[i] = (u8)c;
->> > > > +
->> > > > +	return NULL;
->> > > > +}
->> > > > +
->> > > > +int memcmp(const void *src, const void *dst, size_t len)
->> > > > +{
->> > > > +	int i;
->> > > > +
->> > > > +	for (i = 0; i < len; i++)
->> > > > +		if (*(char *)src != *(char *)dst)
->> > > > +			return 1;
->> > > > +
->> > > > +	return 0;
->> > > > +}
->> > > 
->> > > How is the compiler prevented from "optimising" these into calls to
->> > > themselves?
->> > 
->> > I don't get what you mean by "calls to themselves."
->> 
->> There are compiler optimizations that recognise sequences like:
->> 
->> 	for (i = 0; i < len; i++)
->> 		dst[i] = src[i];
->> 
->> ... and turn those into:
->> 
->> 	memcpy(dst, src, len);
->> 
->> ... these have been known to "optimize" memcpy implementations into
->> calls to themselves. Likewise for other string operations.
->> 
->> One way we avoid that today is by writing our memcpy in assembly.
+On Fri, Sep 8, 2017 at 5:20 PM, Sunil Kumar <sukumar@mvista.com> wrote:
+> Hi ,
 >
-> I see, thanks.
+> Thanks for replying Pratyush.
 >
->> Do we have a guarnatee that this will not happen here? e.g. do we pass
->> some compiler flag that prevents this?
+> I have also seen the zImage support is present for the ppc64, earlier
+> my plan was to take this source as reference and port it for ppc.
+> But in zImage_ppc64_usage() its clearly written that "zImage support
+> is still broken", which stop me.
 >
-> I don't know any options to do this.
-> (maybe -nostdlib?)
+> Is the zImage for ppc64 working properly ? Should I trust this ?
+>
+> Asking this because I don't have hardware to test for ppc64.
+>
+> If anyone else used the ppc64 zImage as secondary kernel. please
+> provide your inputs here.
 
-kexec-tools calls gcc with -fno-builtin -ffreestanding (though according
-to the man page, the former is implied in the latter), which tells the
-compiler that the standard library may not exist. I don't know
-specifically that this options turns off the memcpy optimization, but it
-seems logical that it does.
+I was recently experimenting with the kexec zImage support for both
+ppc/ppc64 systems, but I do not find it working reliably on ppc64 on
+Power8 machines as well.
 
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+I am looking to work on a fix for the ppc64 zImage support first
+(since I have real hardware to test the same on) and also looking to
+extend it to ppc32 (for which I have only qemu systems to test on).
 
+I plan to share a RFC patchset in a week or so and would need your
+help to test it on ppc32 boards like the p2020.
+
+Regards,
+Bhupesh
+
+>
+> On Fri, Sep 8, 2017 at 8:58 AM, Pratyush Anand <panand@redhat.com> wrote:
+>>
+>>
+>> On Thursday 07 September 2017 01:49 PM, Sunil Kumar wrote:
+>>>
+>>> $ kexec -e
+>>>
+>>> As the zImage is also and elf file format, but the control is not
+>>> getting transferred to the zImage.
+>>> I can see kexec is able to load all the segments properly, but looks
+>>> like its not able to figure out the entry point to start execution
+>>> with zImage.
+>>>
+>>> -------------------------------------------------------------------------------------------------------------------------------------------------------
+>>> kexec_load: entry = 0x329678 flags = 0x0
+>>>
+>>> -------------------------------------------------------------------------------------------------------------------------------------------------------
+>>>
+>>> On the same board (i.e. Freescale p2020ds), uImage and vmlinux works fine.
+>>
+>>
+>> Looking into upstream code: ppc has only support of elf and uImage,and so
+>> they work.
+>>
+>>>
+>>> Just curious to know , why the zImage support is still not provided in
+>>> the kexec for ppc ??
+>>
+>>
+>> Probably because no one needed it till now.
+>>
+>>> Is there any restriction from kexec design point of view ?
+>>
+>>
+>> I do not think. You can write a patch. I see, ppc64 has zImage support, so
+>> you can take that as example and can write code for ppc as well.
+>>
+>> --
+>> Regards
+>> Pratyush
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
