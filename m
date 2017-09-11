@@ -1,39 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail-io0-x236.google.com ([2607:f8b0:4001:c06::236])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1drKZl-0002oP-50
- for kexec@lists.infradead.org; Mon, 11 Sep 2017 09:00:30 +0000
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id
- v8B8x1OF072121
- for <kexec@lists.infradead.org>; Mon, 11 Sep 2017 04:59:55 -0400
-Received: from e23smtp06.au.ibm.com (e23smtp06.au.ibm.com [202.81.31.148])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2cwcybrnjs-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 11 Sep 2017 04:59:55 -0400
-Received: from localhost
- by e23smtp06.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Mon, 11 Sep 2017 18:59:52 +1000
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
- by d23relay08.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- v8B8xpnw35651774
- for <kexec@lists.infradead.org>; Mon, 11 Sep 2017 18:59:51 +1000
-Received: from d23av03.au.ibm.com (localhost [127.0.0.1])
- by d23av03.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- v8B8xhrP014618
- for <kexec@lists.infradead.org>; Mon, 11 Sep 2017 18:59:43 +1000
-Subject: Re: [Makedumpfile PATCH] book3s/ppc64: Lower the max real address to
- 53 bits for kernels >= v4.11
-References: <1504845625-27408-1-git-send-email-bhsharma@redhat.com>
- <20170911013522.GA2704@dhcp-128-65.nay.redhat.com>
-From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Mon, 11 Sep 2017 14:29:45 +0530
+ id 1drO9U-0007Jp-Hq
+ for kexec@lists.infradead.org; Mon, 11 Sep 2017 12:49:33 +0000
+Received: by mail-io0-x236.google.com with SMTP id d16so25271464ioj.3
+ for <kexec@lists.infradead.org>; Mon, 11 Sep 2017 05:49:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20170911013522.GA2704@dhcp-128-65.nay.redhat.com>
-Content-Language: en-US
-Message-Id: <41ff60d5-7010-87f4-b861-6e83e374b0c8@linux.vnet.ibm.com>
+In-Reply-To: <CAFTCetRY9o1ss3-DcYyz941Hj4Up90O_5tSBeb8uyRnh40=X6Q@mail.gmail.com>
+References: <CALKbUJQCd3C1NPxXba5jb9QYPUbEYNnx_dywxTsP+Rnejbt6YA@mail.gmail.com>
+ <CALKbUJTmkJV-bq1mnzqR5Q-RrX6OpSniTZd=z26QxqtJttPVMg@mail.gmail.com>
+ <cdbaee7b-0173-5171-67ec-5f685c16776d@redhat.com>
+ <CALKbUJSrLuY3QmHhJu_yHDFPvjqsLtm1-GbnO_tYECUdtyfb+g@mail.gmail.com>
+ <CAFTCetRY9o1ss3-DcYyz941Hj4Up90O_5tSBeb8uyRnh40=X6Q@mail.gmail.com>
+From: Sunil Kumar <sukumar@mvista.com>
+Date: Mon, 11 Sep 2017 18:18:22 +0530
+Message-ID: <CALKbUJRqrYG_6xY63_0d1CSTQUpwK5dM=Q4ZHqNk-pwyQyJ=Jg@mail.gmail.com>
+Subject: Re: Fwd: zImage support for ppc
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -42,63 +24,114 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Bhupesh Sharma <bhsharma@redhat.com>
-Cc: ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, piliu@redhat.com, bhe@redhat.com
+To: Bhupesh SHARMA <bhupesh.linux@gmail.com>
+Cc: kexec@lists.infradead.org
+
+Hi,
+
+Thanks Bhupesh for confirmation about the ppc64 zImage support.
+
+As of now I am thinking of using 'uImage' as secondary kernel, because
+porting zImage changes for ppc will take more time for me.
+
+>>I plan to share a RFC patchset in a week or so and would need your
+>> help to test it on ppc32 boards like the p2020.
+Surely I will test it on p2020 once you release RFC patch.
+
+Regards
+Sunil Kumar
+Thanks & Regards,
+Sunil Kumar
+Technical Lead
+Montavista Software
+Bengaluru, India - 560008
+www.mvista.com | +91-80-67228800 [+8865]
 
 
-On Monday 11 September 2017 07:05 AM, Dave Young wrote:
-> Cc more people.
+On Sat, Sep 9, 2017 at 6:29 PM, Bhupesh SHARMA <bhupesh.linux@gmail.com> wrote:
+> Hi Sunil,
 >
-> On 09/08/17 at 10:10am, Bhupesh Sharma wrote:
->> Kernel commit 2f18d533757da3899f4bedab0b2c051b080079dc lowered the
->> max real address on ppc64 to 53 bits.
+> On Fri, Sep 8, 2017 at 5:20 PM, Sunil Kumar <sukumar@mvista.com> wrote:
+>> Hi ,
 >>
->> Make similar changes in makedumpfile (on basis of the underlying kernel
->> version), without which the makedumpfile will fail to create a dumpfile
->> and instead throw a SEGV fault as shown below on kernels >= v4.11:
+>> Thanks for replying Pratyush.
 >>
->>   # makedumpfile --split -d 31 -x vmlinux vmcore dumpfile_{1,2,3} 2>&1
+>> I have also seen the zImage support is present for the ppc64, earlier
+>> my plan was to take this source as reference and port it for ppc.
+>> But in zImage_ppc64_usage() its clearly written that "zImage support
+>> is still broken", which stop me.
 >>
->>   The kernel version is not supported.
->>   The makedumpfile operation may be incomplete.
->>   [ 1196.252094] makedumpfile[2367]: unhandled signal 11 at
->>   00000100f7011ca8 nip 000000001001eecc lr 000000001001f3c0 code 30001
->>   Segmentation fault
-
-I have not hit the above problem, but for the sake of correctness,
-this patch is needed for >= 4.11.0 kernels. So..
-
-Acked-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
-
->> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
->> ---
->>   makedumpfile.h | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
+>> Is the zImage for ppc64 working properly ? Should I trust this ?
 >>
->> diff --git a/makedumpfile.h b/makedumpfile.h
->> index 7d81bbcf2234..142753d84e8d 100644
->> --- a/makedumpfile.h
->> +++ b/makedumpfile.h
->> @@ -684,8 +684,9 @@ unsigned long get_kvbase_arm64(void);
->>   #define PMD_MASKED_BITS_64K_4_6  0xc0000000000000ffUL
->>   
->>   #define PTE_RPN_MASK_DEFAULT  0xffffffffffffffffUL
->> -#define PTE_RPN_SIZE_L4_4_6   (info->page_size == 65536 ? 41 : 45)
->> -#define PTE_RPN_MASK_L4_4_6   (((1UL << PTE_RPN_SIZE_L4_4_6) - 1) << info->page_shift)
->> +#define PAGE_PA_MAX_L4_4_6    (info->kernel_version >= KERNEL_VERSION(4,11,0) ? 53 : 57)
->> +#define PTE_RPN_MASK_L4_4_6   \
->> +	(((1UL << PAGE_PA_MAX_L4_4_6) - 1) & ~((1UL << info->page_shift) - 1))
->>   #define PTE_RPN_SHIFT_L4_4_6  info->page_shift
->>   
->>   #define PGD_MASKED_BITS_4_7  0xc0000000000000ffUL
->> -- 
->> 2.7.4
+>> Asking this because I don't have hardware to test for ppc64.
 >>
-
+>> If anyone else used the ppc64 zImage as secondary kernel. please
+>> provide your inputs here.
+>
+> I was recently experimenting with the kexec zImage support for both
+> ppc/ppc64 systems, but I do not find it working reliably on ppc64 on
+> Power8 machines as well.
+>
+> I am looking to work on a fix for the ppc64 zImage support first
+> (since I have real hardware to test the same on) and also looking to
+> extend it to ppc32 (for which I have only qemu systems to test on).
+>
+> I plan to share a RFC patchset in a week or so and would need your
+> help to test it on ppc32 boards like the p2020.
+>
+> Regards,
+> Bhupesh
+>
+>>
+>> On Fri, Sep 8, 2017 at 8:58 AM, Pratyush Anand <panand@redhat.com> wrote:
+>>>
+>>>
+>>> On Thursday 07 September 2017 01:49 PM, Sunil Kumar wrote:
+>>>>
+>>>> $ kexec -e
+>>>>
+>>>> As the zImage is also and elf file format, but the control is not
+>>>> getting transferred to the zImage.
+>>>> I can see kexec is able to load all the segments properly, but looks
+>>>> like its not able to figure out the entry point to start execution
+>>>> with zImage.
+>>>>
+>>>> -------------------------------------------------------------------------------------------------------------------------------------------------------
+>>>> kexec_load: entry = 0x329678 flags = 0x0
+>>>>
+>>>> -------------------------------------------------------------------------------------------------------------------------------------------------------
+>>>>
+>>>> On the same board (i.e. Freescale p2020ds), uImage and vmlinux works fine.
+>>>
+>>>
+>>> Looking into upstream code: ppc has only support of elf and uImage,and so
+>>> they work.
+>>>
+>>>>
+>>>> Just curious to know , why the zImage support is still not provided in
+>>>> the kexec for ppc ??
+>>>
+>>>
+>>> Probably because no one needed it till now.
+>>>
+>>>> Is there any restriction from kexec design point of view ?
+>>>
+>>>
+>>> I do not think. You can write a patch. I see, ppc64 has zImage support, so
+>>> you can take that as example and can write code for ppc as well.
+>>>
+>>> --
+>>> Regards
+>>> Pratyush
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
