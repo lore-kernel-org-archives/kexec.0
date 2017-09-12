@@ -1,21 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x230.google.com ([2607:f8b0:4001:c0b::230])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1drd4Z-0005hM-Od
- for kexec@lists.infradead.org; Tue, 12 Sep 2017 04:45:21 +0000
-Received: by mail-it0-x230.google.com with SMTP id 6so20152154itl.1
- for <kexec@lists.infradead.org>; Mon, 11 Sep 2017 21:44:59 -0700 (PDT)
-Date: Tue, 12 Sep 2017 13:46:49 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH 6/9] arm64: kexec_file: load initrd, device-tree and
- purgatory segments
-Message-ID: <20170912044647.GH17186@linaro.org>
+Date: Tue, 12 Sep 2017 13:55:21 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 3/9] kexec_file: factor out crashdump elf header function
+ from x86
+Message-ID: <20170912055521.GA8787@dhcp-128-65.nay.redhat.com>
 References: <20170908031616.17916-1-takahiro.akashi@linaro.org>
- <20170908031616.17916-7-takahiro.akashi@linaro.org>
- <20170911064754.GA7332@dhcp-128-65.nay.redhat.com>
+ <20170908031616.17916-4-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170911064754.GA7332@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20170908031616.17916-4-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,169 +21,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, davem@davemloft.net, vgoyal@redhat.com
 
-On Mon, Sep 11, 2017 at 02:47:54PM +0800, Dave Young wrote:
-> Hi,
-> 
-> On 09/08/17 at 12:16pm, AKASHI Takahiro wrote:
-> > load_other_segments() sets up and adds all the memory segments necessary
-> > other than kernel, including initrd, device-tree blob and purgatory.
-> > Most of the code was borrowed from kexec-tools' counterpart.
-> > 
-> > In addition, arch_kexec_image_probe(), arch_kexec_image_load() and
-> > arch_kexec_kernel_verify_sig() are added as stubs for supporting multiple
-> > types of kernel image formats.
-> > 
-> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > ---
-> >  arch/arm64/include/asm/kexec.h         |  19 +++
-> >  arch/arm64/kernel/machine_kexec_file.c | 264 +++++++++++++++++++++++++++++++++
-> >  2 files changed, 283 insertions(+)
-> >  create mode 100644 arch/arm64/kernel/machine_kexec_file.c
-> > 
-> > diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> > index e17f0529a882..d74dc49670ad 100644
-> > --- a/arch/arm64/include/asm/kexec.h
-> > +++ b/arch/arm64/include/asm/kexec.h
-> > @@ -93,6 +93,25 @@ static inline void crash_prepare_suspend(void) {}
-> >  static inline void crash_post_resume(void) {}
-> >  #endif
-> >  
-> > +#ifdef CONFIG_KEXEC_FILE
-> > +#define ARCH_HAS_KIMAGE_ARCH
-> > +
-> > +struct kimage_arch {
-> > +	void *dtb_buf;
-> > +};
-> > +
-> > +struct kimage;
-> > +
-> > +extern int setup_dtb(struct kimage *image,
-> > +		unsigned long initrd_load_addr, unsigned long initrd_len,
-> > +		char *cmdline, unsigned long cmdline_len,
-> > +		char **dtb_buf, size_t *dtb_buf_len);
-> > +extern int load_other_segments(struct kimage *image,
-> > +		unsigned long kernel_load_addr,
-> > +		char *initrd, unsigned long initrd_len,
-> > +		char *cmdline, unsigned long cmdline_len);
-> > +#endif
-> > +
-> >  #endif /* __ASSEMBLY__ */
-> >  
-> >  #endif
-> > diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> > new file mode 100644
-> > index 000000000000..a6d2c006b4f7
-> > --- /dev/null
-> > +++ b/arch/arm64/kernel/machine_kexec_file.c
-> > @@ -0,0 +1,264 @@
-> > +/*
-> > + * kexec_file for arm64
-> > + *
-> > + * Copyright (C) 2017 Linaro Limited
-> > + * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > + *
-> > + * Most code is derived from arm64 port of kexec-tools
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + */
-> > +
-> > +#define pr_fmt(fmt) "kexec_file: " fmt
-> > +
-> > +#include <linux/errno.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/kexec.h>
-> > +#include <linux/libfdt.h>
-> > +#include <linux/memblock.h>
-> > +#include <linux/of_fdt.h>
-> > +#include <asm/kexec_file.h>
-> > +
-> > +static int __dt_root_addr_cells;
-> > +static int __dt_root_size_cells;
-> > +
-> > +static struct kexec_file_ops *kexec_file_loaders[0];
-> > +
-> > +int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
-> > +				  unsigned long buf_len)
-> > +{
-> > +	struct kexec_file_ops *fops;
-> > +	int i, ret;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(kexec_file_loaders); i++) {
-> > +		fops = kexec_file_loaders[i];
-> > +		if (!fops || !fops->probe)
-> > +			continue;
-> > +
-> > +		ret = fops->probe(buf, buf_len);
-> > +		if (!ret) {
-> > +			image->fops = fops;
-> > +			return 0;
-> > +		}
-> > +	}
-> > +
-> > +	return -ENOEXEC;
-> > +}
-> > +
-> > +void *arch_kexec_kernel_image_load(struct kimage *image)
-> > +{
-> > +	if (!image->fops || !image->fops->load)
-> > +		return ERR_PTR(-ENOEXEC);
-> > +
-> > +	return image->fops->load(image, image->kernel_buf,
-> > +				 image->kernel_buf_len, image->initrd_buf,
-> > +				 image->initrd_buf_len, image->cmdline_buf,
-> > +				 image->cmdline_buf_len);
-> > +}
-> > +
-> > +int arch_kimage_file_post_load_cleanup(struct kimage *image)
-> > +{
-> > +	vfree(image->arch.dtb_buf);
-> > +	image->arch.dtb_buf = NULL;
-> > +
-> > +	vfree(image->arch.elf_headers);
-> > +	image->arch.elf_headers = NULL;
-> > +	image->arch.elf_headers_sz = 0;
-> > +
-> > +	if (!image->fops || !image->fops->cleanup)
-> > +		return 0;
-> > +
-> > +	return image->fops->cleanup(image->image_loader_data);
-> > +}
-> > +
-> > +#ifdef CONFIG_KEXEC_VERIFY_SIG
-> > +int arch_kexec_kernel_verify_sig(struct kimage *image, void *kernel,
-> > +				 unsigned long kernel_len)
-> > +{
-> > +	if (!image->fops || !image->fops->verify_sig) {
-> > +		pr_debug("kernel loader does not support signature verification.\n");
-> > +		return -EKEYREJECTED;
-> > +	}
-> > +
-> > +	return image->fops->verify_sig(kernel, kernel_len);
-> > +}
-> 
-> 
-> arch_kexec_kernel_verify_sig now be duplicated so it can be put in the
-> general function in kexec_file.c
-> 
-> Also the probe and load function are also duplicated, they can be moved
-> to common code as well.
+Hi,
+On 09/08/17 at 12:16pm, AKASHI Takahiro wrote:
+[snip]
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -162,6 +162,25 @@ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+>  			       int (*func)(u64, u64, void *));
+>  extern int kexec_add_buffer(struct kexec_buf *kbuf);
+>  int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+> +#ifdef CONFIG_CRASH_CORE
+> +extern int prepare_elf_headers(struct kimage *image, void **addr,
+> +				unsigned long *sz);
+> +
+> +/* This primarily represents number of split ranges due to exclusion */
+> +#define CRASH_MAX_RANGES        16
+> +
+> +struct crash_mem_range {
+> +	u64 start, end;
+> +};
+> +
+> +struct crash_mem {
+> +	unsigned int nr_ranges;
+> +	struct crash_mem_range ranges[CRASH_MAX_RANGES];
+> +};
+> +
+> +extern int exclude_mem_range(struct crash_mem *mem,
+> +		unsigned long long mstart, unsigned long long mend);
+> +#endif /* CONFIG_CRASH_CORE */
 
-Okay!
+Maybe I did not say it clear when reviewing the v1.
 
-> The x86 load function can be cleaned up with removing the vfree
-> callback.
+I suggested to move the code from to kexec_file.c because the
+CONFIG_CRASH_CORE originally was introduced for the common code for
+vmcoreinfo stuff when Hari worked on sharing code between powerpc
+fadump and kdump.
 
-Sure
+I'm not sure we need the #ifdef CONFIG_CRASH_CORE here for these
+kexec file load functions. Since they are already in kexec_file.c
+so I think no need to add the #ifdef
 
-Thanks,
--Takahiro AKASHI
+>  #endif /* CONFIG_KEXEC_FILE */
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
