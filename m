@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x236.google.com ([2607:f8b0:4001:c06::236])
+Received: from mail-it0-x234.google.com ([2607:f8b0:4001:c0b::234])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1drO9U-0007Jp-Hq
- for kexec@lists.infradead.org; Mon, 11 Sep 2017 12:49:33 +0000
-Received: by mail-io0-x236.google.com with SMTP id d16so25271464ioj.3
- for <kexec@lists.infradead.org>; Mon, 11 Sep 2017 05:49:03 -0700 (PDT)
+ id 1drd1l-0004d7-8E
+ for kexec@lists.infradead.org; Tue, 12 Sep 2017 04:42:27 +0000
+Received: by mail-it0-x234.google.com with SMTP id v19so20193456ite.0
+ for <kexec@lists.infradead.org>; Mon, 11 Sep 2017 21:42:04 -0700 (PDT)
+Date: Tue, 12 Sep 2017 13:43:52 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH 8/9] arm64: enable KEXEC_FILE config
+Message-ID: <20170912044350.GG17186@linaro.org>
+References: <20170908031616.17916-9-takahiro.akashi@linaro.org>
+ <201709102315.3pEUMBHR%fengguang.wu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFTCetRY9o1ss3-DcYyz941Hj4Up90O_5tSBeb8uyRnh40=X6Q@mail.gmail.com>
-References: <CALKbUJQCd3C1NPxXba5jb9QYPUbEYNnx_dywxTsP+Rnejbt6YA@mail.gmail.com>
- <CALKbUJTmkJV-bq1mnzqR5Q-RrX6OpSniTZd=z26QxqtJttPVMg@mail.gmail.com>
- <cdbaee7b-0173-5171-67ec-5f685c16776d@redhat.com>
- <CALKbUJSrLuY3QmHhJu_yHDFPvjqsLtm1-GbnO_tYECUdtyfb+g@mail.gmail.com>
- <CAFTCetRY9o1ss3-DcYyz941Hj4Up90O_5tSBeb8uyRnh40=X6Q@mail.gmail.com>
-From: Sunil Kumar <sukumar@mvista.com>
-Date: Mon, 11 Sep 2017 18:18:22 +0530
-Message-ID: <CALKbUJRqrYG_6xY63_0d1CSTQUpwK5dM=Q4ZHqNk-pwyQyJ=Jg@mail.gmail.com>
-Subject: Re: Fwd: zImage support for ppc
+Content-Disposition: inline
+In-Reply-To: <201709102315.3pEUMBHR%fengguang.wu@intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,110 +26,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh SHARMA <bhupesh.linux@gmail.com>
-Cc: kexec@lists.infradead.org
+To: kbuild test robot <lkp@intel.com>
+Cc: linux-arm-kernel@lists.infradead.org, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, kbuild-all@01.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-Hi,
+On Sun, Sep 10, 2017 at 11:41:47PM +0800, kbuild test robot wrote:
+> Hi AKASHI,
+> 
+> [auto build test ERROR on arm64/for-next/core]
+> [also build test ERROR on v4.13 next-20170908]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/AKASHI-Takahiro/kexec-add-kexec_file_load-support/20170910-143930
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
+> config: arm64-allmodconfig (attached as .config)
+> compiler: aarch64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=arm64 
+> 
+> Note: the linux-review/AKASHI-Takahiro/kexec-add-kexec_file_load-support/20170910-143930 HEAD caf976acefa5a78ad88489581c66b98cbc8f91fa builds fine.
+>       It only hurts bisectibility.
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> arch/arm64/kernel/machine_kexec_file.c:22:28: fatal error: asm/kexec_file.h: No such file or directory
+>     #include <asm/kexec_file.h>
+>                                ^
 
-Thanks Bhupesh for confirmation about the ppc64 zImage support.
+Will fix it in the next version, v3.
 
-As of now I am thinking of using 'uImage' as secondary kernel, because
-porting zImage changes for ppc will take more time for me.
+-Takahiro AKASHI
 
->>I plan to share a RFC patchset in a week or so and would need your
->> help to test it on ppc32 boards like the p2020.
-Surely I will test it on p2020 once you release RFC patch.
+>    compilation terminated.
+> 
+> vim +22 arch/arm64/kernel/machine_kexec_file.c
+> 
+> 423cf6dc9f AKASHI Takahiro 2017-09-08  15  
+> 423cf6dc9f AKASHI Takahiro 2017-09-08  16  #include <linux/errno.h>
+> 423cf6dc9f AKASHI Takahiro 2017-09-08  17  #include <linux/kernel.h>
+> 423cf6dc9f AKASHI Takahiro 2017-09-08  18  #include <linux/kexec.h>
+> 423cf6dc9f AKASHI Takahiro 2017-09-08  19  #include <linux/libfdt.h>
+> 423cf6dc9f AKASHI Takahiro 2017-09-08  20  #include <linux/memblock.h>
+> 423cf6dc9f AKASHI Takahiro 2017-09-08  21  #include <linux/of_fdt.h>
+> 423cf6dc9f AKASHI Takahiro 2017-09-08 @22  #include <asm/kexec_file.h>
+> 423cf6dc9f AKASHI Takahiro 2017-09-08  23  
+> 
+> :::::: The code at line 22 was first introduced by commit
+> :::::: 423cf6dc9f06d95907902b2b7f84161bdc98f752 arm64: kexec_file: load initrd, device-tree and purgatory segments
+> 
+> :::::: TO: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> :::::: CC: 0day robot <fengguang.wu@intel.com>
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-Regards
-Sunil Kumar
-Thanks & Regards,
-Sunil Kumar
-Technical Lead
-Montavista Software
-Bengaluru, India - 560008
-www.mvista.com | +91-80-67228800 [+8865]
 
-
-On Sat, Sep 9, 2017 at 6:29 PM, Bhupesh SHARMA <bhupesh.linux@gmail.com> wrote:
-> Hi Sunil,
->
-> On Fri, Sep 8, 2017 at 5:20 PM, Sunil Kumar <sukumar@mvista.com> wrote:
->> Hi ,
->>
->> Thanks for replying Pratyush.
->>
->> I have also seen the zImage support is present for the ppc64, earlier
->> my plan was to take this source as reference and port it for ppc.
->> But in zImage_ppc64_usage() its clearly written that "zImage support
->> is still broken", which stop me.
->>
->> Is the zImage for ppc64 working properly ? Should I trust this ?
->>
->> Asking this because I don't have hardware to test for ppc64.
->>
->> If anyone else used the ppc64 zImage as secondary kernel. please
->> provide your inputs here.
->
-> I was recently experimenting with the kexec zImage support for both
-> ppc/ppc64 systems, but I do not find it working reliably on ppc64 on
-> Power8 machines as well.
->
-> I am looking to work on a fix for the ppc64 zImage support first
-> (since I have real hardware to test the same on) and also looking to
-> extend it to ppc32 (for which I have only qemu systems to test on).
->
-> I plan to share a RFC patchset in a week or so and would need your
-> help to test it on ppc32 boards like the p2020.
->
-> Regards,
-> Bhupesh
->
->>
->> On Fri, Sep 8, 2017 at 8:58 AM, Pratyush Anand <panand@redhat.com> wrote:
->>>
->>>
->>> On Thursday 07 September 2017 01:49 PM, Sunil Kumar wrote:
->>>>
->>>> $ kexec -e
->>>>
->>>> As the zImage is also and elf file format, but the control is not
->>>> getting transferred to the zImage.
->>>> I can see kexec is able to load all the segments properly, but looks
->>>> like its not able to figure out the entry point to start execution
->>>> with zImage.
->>>>
->>>> -------------------------------------------------------------------------------------------------------------------------------------------------------
->>>> kexec_load: entry = 0x329678 flags = 0x0
->>>>
->>>> -------------------------------------------------------------------------------------------------------------------------------------------------------
->>>>
->>>> On the same board (i.e. Freescale p2020ds), uImage and vmlinux works fine.
->>>
->>>
->>> Looking into upstream code: ppc has only support of elf and uImage,and so
->>> they work.
->>>
->>>>
->>>> Just curious to know , why the zImage support is still not provided in
->>>> the kexec for ppc ??
->>>
->>>
->>> Probably because no one needed it till now.
->>>
->>>> Is there any restriction from kexec design point of view ?
->>>
->>>
->>> I do not think. You can write a patch. I see, ppc64 has zImage support, so
->>> you can take that as example and can write code for ppc as well.
->>>
->>> --
->>> Regards
->>> Pratyush
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
