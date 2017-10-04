@@ -1,11 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 4 Oct 2017 17:08:08 +0800
+Date: Wed, 4 Oct 2017 17:40:03 +0800
 From: kbuild test robot <lkp@intel.com>
 Subject: Re: [PATCH v4 03/10] kexec_file: factor out arch_kexec_kernel_*()
  from x86, powerpc
-Message-ID: <201710041658.Ukz7Eof0%fengguang.wu@intel.com>
+Message-ID: <201710041753.sJjSW3iY%fengguang.wu@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="6c2NcOVqGQ03X4Wi"
+Content-Type: multipart/mixed; boundary="zhXaljGHf11kAtnf"
 Content-Disposition: inline
 In-Reply-To: <20171002061431.11117-4-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -22,7 +22,7 @@ To: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Cc: linux-arm-kernel@lists.infradead.org, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, arnd@arndb.de, kbuild-all@01.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
 
---6c2NcOVqGQ03X4Wi
+--zhXaljGHf11kAtnf
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
@@ -42,29 +42,68 @@ reproduce:
 
 All errors (new ones prefixed by >>):
 
->> arch/x86/kernel/kexec-bzimage64.c:541:29: error: conflicting type qualifiers for 'kexec_bzImage64_ops'
-    const struct kexec_file_ops kexec_bzImage64_ops = {
-                                ^~~~~~~~~~~~~~~~~~~
-   In file included from arch/x86/kernel/kexec-bzimage64.c:29:0:
-   arch/x86/include/asm/kexec-bzimage64.h:4:30: note: previous declaration of 'kexec_bzImage64_ops' was here
-    extern struct kexec_file_ops kexec_bzImage64_ops;
-                                 ^~~~~~~~~~~~~~~~~~~
+   kernel/kexec_file.c: In function 'kimage_file_post_load_cleanup':
+>> kernel/kexec_file.c:152:2: error: implicit declaration of function 'arch_kimage_file_post_load_cleanup' [-Werror=implicit-function-declaration]
+     arch_kimage_file_post_load_cleanup(image);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
-vim +/kexec_bzImage64_ops +541 arch/x86/kernel/kexec-bzimage64.c
+vim +/arch_kimage_file_post_load_cleanup +152 kernel/kexec_file.c
 
-   540	
- > 541	const struct kexec_file_ops kexec_bzImage64_ops = {
+a43cac0d9 Dave Young 2015-09-09  126  
+a43cac0d9 Dave Young 2015-09-09  127  /*
+a43cac0d9 Dave Young 2015-09-09  128   * Free up memory used by kernel, initrd, and command line. This is temporary
+a43cac0d9 Dave Young 2015-09-09  129   * memory allocation which is not needed any more after these buffers have
+a43cac0d9 Dave Young 2015-09-09  130   * been loaded into separate segments and have been copied elsewhere.
+a43cac0d9 Dave Young 2015-09-09  131   */
+a43cac0d9 Dave Young 2015-09-09  132  void kimage_file_post_load_cleanup(struct kimage *image)
+a43cac0d9 Dave Young 2015-09-09  133  {
+a43cac0d9 Dave Young 2015-09-09  134  	struct purgatory_info *pi = &image->purgatory_info;
+a43cac0d9 Dave Young 2015-09-09  135  
+a43cac0d9 Dave Young 2015-09-09  136  	vfree(image->kernel_buf);
+a43cac0d9 Dave Young 2015-09-09  137  	image->kernel_buf = NULL;
+a43cac0d9 Dave Young 2015-09-09  138  
+a43cac0d9 Dave Young 2015-09-09  139  	vfree(image->initrd_buf);
+a43cac0d9 Dave Young 2015-09-09  140  	image->initrd_buf = NULL;
+a43cac0d9 Dave Young 2015-09-09  141  
+a43cac0d9 Dave Young 2015-09-09  142  	kfree(image->cmdline_buf);
+a43cac0d9 Dave Young 2015-09-09  143  	image->cmdline_buf = NULL;
+a43cac0d9 Dave Young 2015-09-09  144  
+a43cac0d9 Dave Young 2015-09-09  145  	vfree(pi->purgatory_buf);
+a43cac0d9 Dave Young 2015-09-09  146  	pi->purgatory_buf = NULL;
+a43cac0d9 Dave Young 2015-09-09  147  
+a43cac0d9 Dave Young 2015-09-09  148  	vfree(pi->sechdrs);
+a43cac0d9 Dave Young 2015-09-09  149  	pi->sechdrs = NULL;
+a43cac0d9 Dave Young 2015-09-09  150  
+a43cac0d9 Dave Young 2015-09-09  151  	/* See if architecture has anything to cleanup post load */
+a43cac0d9 Dave Young 2015-09-09 @152  	arch_kimage_file_post_load_cleanup(image);
+a43cac0d9 Dave Young 2015-09-09  153  
+a43cac0d9 Dave Young 2015-09-09  154  	/*
+a43cac0d9 Dave Young 2015-09-09  155  	 * Above call should have called into bootloader to free up
+a43cac0d9 Dave Young 2015-09-09  156  	 * any data stored in kimage->image_loader_data. It should
+a43cac0d9 Dave Young 2015-09-09  157  	 * be ok now to free it up.
+a43cac0d9 Dave Young 2015-09-09  158  	 */
+a43cac0d9 Dave Young 2015-09-09  159  	kfree(image->image_loader_data);
+a43cac0d9 Dave Young 2015-09-09  160  	image->image_loader_data = NULL;
+a43cac0d9 Dave Young 2015-09-09  161  }
+a43cac0d9 Dave Young 2015-09-09  162  
+
+:::::: The code at line 152 was first introduced by commit
+:::::: a43cac0d9dc2073ff2245a171429ddbe1accece7 kexec: split kexec_file syscall code to kexec_file.c
+
+:::::: TO: Dave Young <dyoung@redhat.com>
+:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
 
 ---
 0-DAY kernel test infrastructure                Open Source Technology Center
 https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
---6c2NcOVqGQ03X4Wi
+--zhXaljGHf11kAtnf
 Content-Type: application/gzip
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-H4sICHuh1FkAAy5jb25maWcAlDxdc+M2ku/5FarJPew+JGN7Zr2TuvIDSIISIpLgEKBk+YXl
+H4sICEWp1FkAAy5jb25maWcAlDxdc+M2ku/5FarJPew+JGN7Zr2TuvIDSIISIpLgEKBk+YXl
 2JqJaz32nC3vJv/+uhukCIBN5S4PqVF3A2g0Gv0J+scfflyIt8Pzt9vDw93t4+Ofi6/7p/3L
 7WF/v/jy8Lj/70WmF5W2C5kp+zMQFw9Pb3+8/+PTZXf5cfHx5/MPP5/99HL3cbHevzztHxfp
 89OXh69vMMHD89MPP/6Q6ipXS6BNlL36c/h5TcOD3+MPVRnbtKlVuuoymepMNiNSt7ZubZfr
@@ -574,7 +613,7 @@ NJJ1CEJj4eTtBWRmpRHwbOZN23YYYyNpVKdc0QGBRd+4O2PVetZr/H2KeZvKD7CUV0cMPOUA
 YBhcB+ii8A6+Ut2gHokzK9dd6YUWx0BuSm7heFKeuadHd9yK9XbvMcpd63Rv3hQBQ2pPBoUh
 3ybPbrHY6nUkqomMwMFD2JmIslsTxYLsQxcLOAprOTVjnWlf0f8Dh6SrQ0esAQA=
 
---6c2NcOVqGQ03X4Wi
+--zhXaljGHf11kAtnf
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -585,5 +624,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---6c2NcOVqGQ03X4Wi--
+--zhXaljGHf11kAtnf--
 
