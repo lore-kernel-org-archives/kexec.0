@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x235.google.com ([2607:f8b0:4001:c0b::235])
+Received: from mail-io0-x22f.google.com ([2607:f8b0:4001:c06::22f])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e0Mbf-0001Ll-Re
- for kexec@lists.infradead.org; Fri, 06 Oct 2017 06:59:37 +0000
-Received: by mail-it0-x235.google.com with SMTP id n195so4037863itg.2
- for <kexec@lists.infradead.org>; Thu, 05 Oct 2017 23:59:15 -0700 (PDT)
-Date: Fri, 6 Oct 2017 16:01:42 +0900
+ id 1e0MgA-0003kA-NK
+ for kexec@lists.infradead.org; Fri, 06 Oct 2017 07:04:17 +0000
+Received: by mail-io0-x22f.google.com with SMTP id m201so10015164iom.4
+ for <kexec@lists.infradead.org>; Fri, 06 Oct 2017 00:03:54 -0700 (PDT)
+Date: Fri, 6 Oct 2017 16:06:24 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v4 02/10] resource: add walk_system_ram_res_rev()
-Message-ID: <20171006070140.GA6756@linaro.org>
+Subject: Re: [PATCH v4 03/10] kexec_file: factor out arch_kexec_kernel_*()
+ from x86, powerpc
+Message-ID: <20171006070623.GB6756@linaro.org>
 References: <20171002061431.11117-1-takahiro.akashi@linaro.org>
- <20171002061431.11117-3-takahiro.akashi@linaro.org>
- <f91538fe-986b-5815-b271-e4d7ee8aff4e@arm.com>
+ <20171002061431.11117-4-takahiro.akashi@linaro.org>
+ <5f65195f-4a6f-c2c1-d346-36541e263c64@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <f91538fe-986b-5815-b271-e4d7ee8aff4e@arm.com>
+In-Reply-To: <5f65195f-4a6f-c2c1-d346-36541e263c64@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,165 +29,309 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Julien Thierry <julien.thierry@arm.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, Linus Torvalds <torvalds@linux-foundation.org>, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-Hi Julien,
-
-On Thu, Oct 05, 2017 at 10:36:47AM +0100, Julien Thierry wrote:
+On Thu, Oct 05, 2017 at 11:21:38AM +0100, Julien Thierry wrote:
 > Hi Takahiro,
 > 
 > On 02/10/17 07:14, AKASHI Takahiro wrote:
-> >This function, being a variant of walk_system_ram_res() introduced in
-> >commit 8c86e70acead ("resource: provide new functions to walk through
-> >resources"), walks through a list of all the resources of System RAM
-> >in reversed order, i.e., from higher to lower.
-> >
-> >It will be used in kexec_file implementation on arm64.
+> >arch_kexec_kernel_*() and arch_kimage_file_post_load_cleanup can now be
+> >duplicated among some architectures, so let's factor them out.
 > >
 > >Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> >Cc: Dave Young <dyoung@redhat.com>
 > >Cc: Vivek Goyal <vgoyal@redhat.com>
-> >Cc: Andrew Morton <akpm@linux-foundation.org>
-> >Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> >Cc: Baoquan He <bhe@redhat.com>
+> >Cc: Michael Ellerman <mpe@ellerman.id.au>
+> >Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 > >---
-> >  include/linux/ioport.h |  3 +++
-> >  kernel/resource.c      | 59 ++++++++++++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 62 insertions(+)
+> >  arch/powerpc/kernel/kexec_elf_64.c          |  2 +-
+> >  arch/powerpc/kernel/machine_kexec_file_64.c | 36 ++---------------
+> >  arch/x86/kernel/kexec-bzimage64.c           |  2 +-
+> >  arch/x86/kernel/machine_kexec_64.c          | 45 +--------------------
+> >  include/linux/kexec.h                       | 15 +++----
+> >  kernel/kexec_file.c                         | 63 ++++++++++++++++++++++++++---
+> >  6 files changed, 73 insertions(+), 90 deletions(-)
 > >
-> >diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> >index f5cf32e80041..62eb62b98118 100644
-> >--- a/include/linux/ioport.h
-> >+++ b/include/linux/ioport.h
-> >@@ -273,6 +273,9 @@ extern int
-> >  walk_system_ram_res(u64 start, u64 end, void *arg,
-> >  		    int (*func)(u64, u64, void *));
-> >  extern int
-> >+walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-> >+			int (*func)(u64, u64, void *));
-> >+extern int
-> >  walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start, u64 end,
-> >  		    void *arg, int (*func)(u64, u64, void *));
-> >diff --git a/kernel/resource.c b/kernel/resource.c
-> >index 9b5f04404152..572f2f91ce9c 100644
-> >--- a/kernel/resource.c
-> >+++ b/kernel/resource.c
-> >@@ -23,6 +23,8 @@
-> >  #include <linux/pfn.h>
-> >  #include <linux/mm.h>
-> >  #include <linux/resource_ext.h>
-> >+#include <linux/string.h>
-> >+#include <linux/vmalloc.h>
-> >  #include <asm/io.h>
-> >@@ -469,6 +471,63 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
-> >  	return ret;
+> >diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec_elf_64.c
+> >index 9a42309b091a..6c78c11c7faf 100644
+> >--- a/arch/powerpc/kernel/kexec_elf_64.c
+> >+++ b/arch/powerpc/kernel/kexec_elf_64.c
+> >@@ -657,7 +657,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+> >  	return ret ? ERR_PTR(ret) : fdt;
 > >  }
-> >+int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-> >+				int (*func)(u64, u64, void *))
-> >+{
-> >+	struct resource res, *rams;
-> >+	u64 orig_end;
-> 
-> nit:
-> Why do you need orig_end? From what I can tell it is always equal to the
-> "end" parameter of the function.
-
-Right, but all the other functions, including walk_system_ram_res()
-and walk_iomem_res_desc(), use orig_end in the exact same way.
-
-> If you think having orig_end makes it clearer to distinguish "end" from
-> "res.end" could we declare it as:
-> 
-> 	const u64 orig_end = end;
-> 
-> Making it clear it is an alias?
-
-That said, I will remove orig_end from my function.
-
-> >+	int count, i;
-> >+	int ret = -1;
+> >-struct kexec_file_ops kexec_elf64_ops = {
+> >+const struct kexec_file_ops kexec_elf64_ops = {
+> >  	.probe = elf64_probe,
+> >  	.load = elf64_load,
+> >  };
+> >diff --git a/arch/powerpc/kernel/machine_kexec_file_64.c b/arch/powerpc/kernel/machine_kexec_file_64.c
+> >index 992c0d258e5d..e7ce78857f0b 100644
+> >--- a/arch/powerpc/kernel/machine_kexec_file_64.c
+> >+++ b/arch/powerpc/kernel/machine_kexec_file_64.c
+> >@@ -31,8 +31,9 @@
+> >  #define SLAVE_CODE_SIZE		256
+> >-static struct kexec_file_ops *kexec_file_loaders[] = {
+> >+const struct kexec_file_ops * const kexec_file_loaders[] = {
+> >  	&kexec_elf64_ops,
+> >+	NULL
+> >  };
+> >  int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+> >@@ -45,38 +46,7 @@ int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+> >  	if (image->type == KEXEC_TYPE_CRASH)
+> >  		return -ENOTSUPP;
+> >-	for (i = 0; i < ARRAY_SIZE(kexec_file_loaders); i++) {
+> >-		fops = kexec_file_loaders[i];
+> >-		if (!fops || !fops->probe)
+> >-			continue;
+> >-
+> >-		ret = fops->probe(buf, buf_len);
+> >-		if (!ret) {
+> >-			image->fops = fops;
+> >-			return ret;
+> >-		}
+> >-	}
+> >-
+> >-	return ret;
+> >-}
+> >-
+> >-void *arch_kexec_kernel_image_load(struct kimage *image)
+> >-{
+> >-	if (!image->fops || !image->fops->load)
+> >-		return ERR_PTR(-ENOEXEC);
+> >-
+> >-	return image->fops->load(image, image->kernel_buf,
+> >-				 image->kernel_buf_len, image->initrd_buf,
+> >-				 image->initrd_buf_len, image->cmdline_buf,
+> >-				 image->cmdline_buf_len);
+> >-}
+> >-
+> >-int arch_kimage_file_post_load_cleanup(struct kimage *image)
+> >-{
+> >-	if (!image->fops || !image->fops->cleanup)
+> >-		return 0;
+> >-
+> >-	return image->fops->cleanup(image->image_loader_data);
+> >+	return _kexec_kernel_image_probe(image, buf, buf_len);
+> >  }
+> >  /**
+> >diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+> >index fb095ba0c02f..705654776c0c 100644
+> >--- a/arch/x86/kernel/kexec-bzimage64.c
+> >+++ b/arch/x86/kernel/kexec-bzimage64.c
+> >@@ -538,7 +538,7 @@ static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
+> >  }
+> >  #endif
+> >-struct kexec_file_ops kexec_bzImage64_ops = {
+> >+const struct kexec_file_ops kexec_bzImage64_ops = {
+> >  	.probe = bzImage64_probe,
+> >  	.load = bzImage64_load,
+> >  	.cleanup = bzImage64_cleanup,
+> >diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> >index 1f790cf9d38f..2cdd29d64181 100644
+> >--- a/arch/x86/kernel/machine_kexec_64.c
+> >+++ b/arch/x86/kernel/machine_kexec_64.c
+> >@@ -30,8 +30,9 @@
+> >  #include <asm/set_memory.h>
+> >  #ifdef CONFIG_KEXEC_FILE
+> >-static struct kexec_file_ops *kexec_file_loaders[] = {
+> >+const struct kexec_file_ops * const kexec_file_loaders[] = {
+> >  		&kexec_bzImage64_ops,
+> >+		NULL
+> >  };
+> >  #endif
+> >@@ -363,27 +364,6 @@ void arch_crash_save_vmcoreinfo(void)
+> >  /* arch-dependent functionality related to kexec file-based syscall */
+> >  #ifdef CONFIG_KEXEC_FILE
+> >-int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+> >-				  unsigned long buf_len)
+> >-{
+> >-	int i, ret = -ENOEXEC;
+> >-	struct kexec_file_ops *fops;
+> >-
+> >-	for (i = 0; i < ARRAY_SIZE(kexec_file_loaders); i++) {
+> >-		fops = kexec_file_loaders[i];
+> >-		if (!fops || !fops->probe)
+> >-			continue;
+> >-
+> >-		ret = fops->probe(buf, buf_len);
+> >-		if (!ret) {
+> >-			image->fops = fops;
+> >-			return ret;
+> >-		}
+> >-	}
+> >-
+> >-	return ret;
+> >-}
+> >-
+> >  void *arch_kexec_kernel_image_load(struct kimage *image)
+> >  {
+> >  	vfree(image->arch.elf_headers);
+> >@@ -398,27 +378,6 @@ void *arch_kexec_kernel_image_load(struct kimage *image)
+> >  				 image->cmdline_buf_len);
+> >  }
+> >-int arch_kimage_file_post_load_cleanup(struct kimage *image)
+> >-{
+> >-	if (!image->fops || !image->fops->cleanup)
+> >-		return 0;
+> >-
+> >-	return image->fops->cleanup(image->image_loader_data);
+> >-}
+> >-
+> >-#ifdef CONFIG_KEXEC_VERIFY_SIG
+> >-int arch_kexec_kernel_verify_sig(struct kimage *image, void *kernel,
+> >-				 unsigned long kernel_len)
+> >-{
+> >-	if (!image->fops || !image->fops->verify_sig) {
+> >-		pr_debug("kernel loader does not support signature verification.");
+> >-		return -EKEYREJECTED;
+> >-	}
+> >-
+> >-	return image->fops->verify_sig(kernel, kernel_len);
+> >-}
+> >-#endif
+> >-
+> >  /*
+> >   * Apply purgatory relocations.
+> >   *
+> >diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> >index 2b7590f5483a..c64c29c1fb0e 100644
+> >--- a/include/linux/kexec.h
+> >+++ b/include/linux/kexec.h
+> >@@ -208,7 +208,7 @@ struct kimage {
+> >  	unsigned long cmdline_buf_len;
+> >  	/* File operations provided by image loader */
+> >-	struct kexec_file_ops *fops;
+> >+	const struct kexec_file_ops *fops;
+> >  	/* Image loader handling the kernel can store a pointer here */
+> >  	void *image_loader_data;
+> >@@ -276,12 +276,13 @@ int crash_shrink_memory(unsigned long new_size);
+> >  size_t crash_get_memory_size(void);
+> >  void crash_free_reserved_phys_range(unsigned long begin, unsigned long end);
+> >-int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+> >-					 unsigned long buf_len);
+> >-void * __weak arch_kexec_kernel_image_load(struct kimage *image);
+> >-int __weak arch_kimage_file_post_load_cleanup(struct kimage *image);
+> >-int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+> >-					unsigned long buf_len);
+> >+int _kexec_kernel_image_probe(struct kimage *image, void *buf,
+> >+			      unsigned long buf_len);
+> >+void *_kexec_kernel_image_load(struct kimage *image);
+> >+int _kexec_kernel_post_load_cleanup(struct kimage *image);
+> >+int _kexec_kernel_verify_sig(struct kimage *image, void *buf,
+> >+			     unsigned long buf_len);
 > >+
-> >+	count = 16; /* initial */
+> >  int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
+> >  					Elf_Shdr *sechdrs, unsigned int relsec);
+> >  int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+> >diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> >index 9f48f4412297..130965b28392 100644
+> >--- a/kernel/kexec_file.c
+> >+++ b/kernel/kexec_file.c
+> >@@ -26,30 +26,83 @@
+> >  #include <linux/vmalloc.h>
+> >  #include "kexec_internal.h"
+> >+const __weak struct kexec_file_ops * const kexec_file_loaders[] = {NULL};
+> >+
+> >  static int kexec_calculate_store_digests(struct kimage *image);
+> >+int _kexec_kernel_image_probe(struct kimage *image, void *buf,
+> >+			     unsigned long buf_len)
+> >+{
+> >+	int i, ret = -ENOEXEC;
+> >+	const struct kexec_file_ops *fops;
+> >+
+> >+	for (i = 0; ; i++) {
+> >+		fops = kexec_file_loaders[i];
+> >+		if (!fops || !fops->probe)
+> >+			break;
+> >+
 > 
-> nit:
-> This doesn't represent the number of element we found but the size of the
-> rams array.
-> Would it be better named something like "rams_size"?
+> Could we have something like:
+> 
+> for (fops = &kexec_file_loaders[0]; fops && fops->probe; ++fops) {
+> 	[...]
+> }
+> 
+> And get rid of i? I think it's nicer to have the condition clearly stated in
+> the loop.
 
 Okay
 
-> >+
-> >+	/* create a list */
-> >+	rams = vmalloc(sizeof(struct resource) * count);
-> >+	if (!rams)
-> >+		return ret;
-> >+
-> >+	res.start = start;
-> >+	res.end = end;
-> >+	res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-> >+	orig_end = res.end;
-> >+	i = 0;
-> >+	while ((res.start < res.end) &&
-> >+		(!find_next_iomem_res(&res, IORES_DESC_NONE, true))) {
-> >+		if (i >= count) {
-> >+			/* re-alloc */
-> >+			struct resource *rams_new;
-> >+			int count_new;
-> >+
-> >+			count_new = count + 16;
-> >+			rams_new = vmalloc(sizeof(struct resource) * count_new);
-> >+			if (!rams_new)
-> >+				goto out;
-> 
-> Should we return -ENOMEM?
-
-Well, I'd like to keep the current code as all the other variants just
-return -1 for error.
-
-> >+
-> >+			memcpy(rams_new, rams, count);
-> 
-> We are likely to lose data here.
-> 
-> -> memcpy(rams_new, rams, count * sizeof(struct resourse));
-
-Oops, thanks.
-
-> Also, if vremalloc doesn't exist maybe the realloc part could still be put
-> in a separate function?
-
-Next time :)
+I will also fix kbuild errors for x86 & powerpc.
 
 Thanks,
 -Takahiro AKASHI
 
-> >+			vfree(rams);
-> >+			rams = rams_new;
-> >+			count = count_new;
+
+> Thanks,
+> 
+> >+		ret = fops->probe(buf, buf_len);
+> >+		if (!ret) {
+> >+			image->fops = fops;
+> >+			return ret;
 > >+		}
-> >+
-> >+		rams[i].start = res.start;
-> >+		rams[i++].end = res.end;
-> >+
-> >+		res.start = res.end + 1;
-> >+		res.end = orig_end;
 > >+	}
 > >+
-> >+	/* go reverse */
-> >+	for (i--; i >= 0; i--) {
-> >+		ret = (*func)(rams[i].start, rams[i].end, arg);
-> >+		if (ret)
-> >+			break;
-> >+	}
-> >+
-> >+out:
-> >+	vfree(rams);
 > >+	return ret;
 > >+}
 > >+
-> >  #if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
-> >  /*
+> >  /* Architectures can provide this probe function */
+> >  int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+> >  					 unsigned long buf_len)
+> >  {
+> >-	return -ENOEXEC;
+> >+	return _kexec_kernel_image_probe(image, buf, buf_len);
+> >+}
+> >+
+> >+void *_kexec_kernel_image_load(struct kimage *image)
+> >+{
+> >+	if (!image->fops || !image->fops->load)
+> >+		return ERR_PTR(-ENOEXEC);
+> >+
+> >+	return image->fops->load(image, image->kernel_buf,
+> >+				 image->kernel_buf_len, image->initrd_buf,
+> >+				 image->initrd_buf_len, image->cmdline_buf,
+> >+				 image->cmdline_buf_len);
+> >  }
+> >  void * __weak arch_kexec_kernel_image_load(struct kimage *image)
+> >  {
+> >-	return ERR_PTR(-ENOEXEC);
+> >+	return _kexec_kernel_image_load(image);
+> >  }
+> >-int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
+> >+int _kexec_kernel_post_load_cleanup(struct kimage *image)
+> >  {
+> >-	return -EINVAL;
+> >+	if (!image->fops || !image->fops->cleanup)
+> >+		return 0;
+> >+
+> >+	return image->fops->cleanup(image->image_loader_data);
+> >+}
+> >+
+> >+int __weak arch_kexec_kernel_post_load_cleanup(struct kimage *image)
+> >+{
+> >+	return _kexec_kernel_post_load_cleanup(image);
+> >  }
+> >  #ifdef CONFIG_KEXEC_VERIFY_SIG
+> >+int _kexec_kernel_verify_sig(struct kimage *image, void *buf,
+> >+			    unsigned long buf_len)
+> >+{
+> >+	if (!image->fops || !image->fops->verify_sig) {
+> >+		pr_debug("kernel loader does not support signature verification.\n");
+> >+		return -EKEYREJECTED;
+> >+	}
+> >+
+> >+	return image->fops->verify_sig(buf, buf_len);
+> >+}
+> >+
+> >  int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+> >  					unsigned long buf_len)
+> >  {
+> >-	return -EKEYREJECTED;
+> >+	return _kexec_kernel_verify_sig(image, buf, buf_len);
+> >  }
+> >  #endif
 > >
-> 
-> Cheers,
 > 
 > -- 
 > Julien Thierry
