@@ -1,21 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x232.google.com ([2607:f8b0:4001:c06::232])
+Received: from mail-pf0-x233.google.com ([2607:f8b0:400e:c00::233])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e0MlT-0006Ue-SQ
- for kexec@lists.infradead.org; Fri, 06 Oct 2017 07:09:48 +0000
-Received: by mail-io0-x232.google.com with SMTP id l15so15351321iol.8
- for <kexec@lists.infradead.org>; Fri, 06 Oct 2017 00:09:23 -0700 (PDT)
-Date: Fri, 6 Oct 2017 16:11:53 +0900
+ id 1e1o87-0004NF-Q2
+ for kexec@lists.infradead.org; Tue, 10 Oct 2017 06:35:06 +0000
+Received: by mail-pf0-x233.google.com with SMTP id a1so13002805pfj.9
+ for <kexec@lists.infradead.org>; Mon, 09 Oct 2017 23:34:42 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v4 08/10] arm64: kexec_file: set up for crash dump adding
- elf core header
-Message-ID: <20171006071152.GC6756@linaro.org>
-References: <20171002061431.11117-1-takahiro.akashi@linaro.org>
- <20171002061431.11117-9-takahiro.akashi@linaro.org>
- <74f89c3b-fd2e-0ed5-5be4-4b1fd8d95617@arm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <74f89c3b-fd2e-0ed5-5be4-4b1fd8d95617@arm.com>
+Subject: [PATCH v5 00/10] arm64: kexec: add kexec_file_load() support
+Date: Tue, 10 Oct 2017 15:36:09 +0900
+Message-Id: <20171010063619.6303-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,279 +17,144 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Julien Thierry <julien.thierry@arm.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org, julien.thierry@arm.com
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-On Thu, Oct 05, 2017 at 03:15:52PM +0100, Julien Thierry wrote:
-> 
-> 
-> On 02/10/17 07:14, AKASHI Takahiro wrote:
-> >load_crashdump_segments() creates and loads a memory segment of elf core
-> >header for crash dump.
-> >
-> >"linux,usable-memory-range" and "linux,elfcorehdr" will add to the 2nd
-> >kernel's device-tree blob. The logic of this cod is also from kexec-tools.
-> >
-> >Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> >Cc: Catalin Marinas <catalin.marinas@arm.com>
-> >Cc: Will Deacon <will.deacon@arm.com>
-> >---
-> >  arch/arm64/include/asm/kexec.h         |   5 ++
-> >  arch/arm64/kernel/machine_kexec_file.c | 149 +++++++++++++++++++++++++++++++++
-> >  kernel/kexec_file.c                    |   2 +-
-> >  3 files changed, 155 insertions(+), 1 deletion(-)
-> >
-> >diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> >index 2fadd3cbf3af..edb702e64a8a 100644
-> >--- a/arch/arm64/include/asm/kexec.h
-> >+++ b/arch/arm64/include/asm/kexec.h
-> >@@ -98,6 +98,10 @@ static inline void crash_post_resume(void) {}
-> >  struct kimage_arch {
-> >  	void *dtb_buf;
-> >+	/* Core ELF header buffer */
-> >+	void *elf_headers;
-> >+	unsigned long elf_headers_sz;
-> >+	unsigned long elf_load_addr;
-> >  };
-> >  struct kimage;
-> >@@ -113,6 +117,7 @@ extern int load_other_segments(struct kimage *image,
-> >  		unsigned long kernel_load_addr,
-> >  		char *initrd, unsigned long initrd_len,
-> >  		char *cmdline, unsigned long cmdline_len);
-> >+extern int load_crashdump_segments(struct kimage *image);
-> >  #endif
-> >  #endif /* __ASSEMBLY__ */
-> >diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> >index 8a09d89f6266..1d30b4773af5 100644
-> >--- a/arch/arm64/kernel/machine_kexec_file.c
-> >+++ b/arch/arm64/kernel/machine_kexec_file.c
-> >@@ -32,6 +32,10 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
-> >  	vfree(image->arch.dtb_buf);
-> >  	image->arch.dtb_buf = NULL;
-> >+	vfree(image->arch.elf_headers);
-> >+	image->arch.elf_headers = NULL;
-> >+	image->arch.elf_headers_sz = 0;
-> >+
-> >  	return _kexec_kernel_post_load_cleanup(image);
-> >  }
-> >@@ -48,6 +52,77 @@ int arch_kexec_walk_mem(struct kexec_buf *kbuf, int (*func)(u64, u64, void *))
-> >  		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
-> >  }
-> >+static int __init arch_kexec_file_init(void)
-> >+{
-> >+	/* Those values are used later on loading the kernel */
-> >+	__dt_root_addr_cells = dt_root_addr_cells;
-> >+	__dt_root_size_cells = dt_root_size_cells;
-> >+
-> >+	return 0;
-> >+}
-> >+late_initcall(arch_kexec_file_init);
-> >+
-> >+#define FDT_ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
-> >+#define FDT_TAGALIGN(x)	(FDT_ALIGN((x), FDT_TAGSIZE))
-> >+
-> >+static int fdt_prop_len(const char *prop_name, int len)
-> >+{
-> >+	return (strlen(prop_name) + 1) +
-> >+		sizeof(struct fdt_property) +
-> >+		FDT_TAGALIGN(len);
-> >+}
-> >+
-> >+static bool cells_size_fitted(unsigned long base, unsigned long size)
-> >+{
-> >+	/* if *_cells >= 2, cells can hold 64-bit values anyway */
-> >+	if ((__dt_root_addr_cells == 1) && (base >= (1ULL << 32)))
-> >+		return false;
-> >+
-> >+	if ((__dt_root_size_cells == 1) && (size >= (1ULL << 32)))
-> >+		return false;
-> >+
-> >+	return true;
-> >+}
-> >+
-> >+static void fill_property(void *buf, u64 val64, int cells)
-> >+{
-> >+	u32 val32;
-> >+	int i;
-> >+
-> >+	if (cells == 1) {
-> >+		val32 = cpu_to_fdt32((u32)val64);
-> >+		memcpy(buf, &val32, sizeof(val32));
-> >+	} else {
-> >+		for (i = 0; i < (cells * sizeof(u32) - sizeof(u64)); i++)
-> >+			*(char *)buf++ = 0;
-> >+
-> 
-> Should we use memset for this?
+This is the fifth round of implementing kexec_file_load() support
+on arm64.[1]
+Most of the code is based on kexec-tools (along with some kernel code
+from x86, which also came from kexec-tools).
 
-Sure.
 
-> >+		val64 = cpu_to_fdt64(val64);
-> >+		memcpy(buf, &val64, sizeof(val64));
-> >+	}
-> >+}
-> >+
-> >+static int fdt_setprop_range(void *fdt, int nodeoffset, const char *name,
-> >+				unsigned long addr, unsigned long size)
-> >+{
-> >+	u64 range[2];
-> 
-> Could we just add some BUG/WARN when either __dt_root_addr_cells or
-> __dt_root_size_cells is greater than 2?
+This patch series enables us to
+  * load the kernel, Image, with kexec_file_load system call, and
+  * optionally verify its signature at load time for trusted boot.
 
-Since I want to keep this function generic, I will change it to use
-vmalloc().
+To load the kernel via kexec_file_load system call, a small change
+is also needed to kexec-tools. See [2]. This enables '-s' option.
 
-> Both to make sure we have sane values and because it will be easier to debug
-> than overwriting things on the stack.
-> 
-> >+	void *prop;
-> >+	size_t buf_size;
-> >+	int result;
-> >+
-> >+	prop = range;
-> >+	buf_size = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
-> >+
-> >+	fill_property(prop, addr, __dt_root_addr_cells);
-> >+	prop += __dt_root_addr_cells * sizeof(u32);
-> >+
-> >+	fill_property(prop, size, __dt_root_size_cells);
-> >+	prop += __dt_root_size_cells * sizeof(u32);
-> 
-> This is not needed (or at least we aren't doing anything with it).
+As we discussed a long time ago, users may not be allowed to specify
+device-tree file of the 2nd kernel explicitly with kexec-tools, hence
+re-using the blob of the first kernel.
 
-Sure.
+Regarding a signing method, we conform with x86 (or rather Microsoft?)
+style of signing since the binary can also be seen as in PE format
+(assuming that CONFIG_EFI is enabled).
 
-> Apart from that, patch seems fine.
+    Powerpc is also going to support extended-file-attribute-based
+    verification[3] with vmlinux, but arm64 doesn't for now partly
+    because we don't have TPM-based IMA at this moment.
 
-Thank you for reviewing.
+Accordingly, we can use the existing command, sbsign, to sign the kernel.
 
--Takahiro AKASHI
+    $ sbsign --key ${KEY} --cert ${CERT} Image
 
-> Cheers,
-> 
-> >+
-> >+	result = fdt_setprop(fdt, nodeoffset, name, range, buf_size);
-> >+
-> >+	return result;
-> >+}
-> >+
-> >  int setup_dtb(struct kimage *image,
-> >  		unsigned long initrd_load_addr, unsigned long initrd_len,
-> >  		char *cmdline, unsigned long cmdline_len,
-> >@@ -60,10 +135,26 @@ int setup_dtb(struct kimage *image,
-> >  	int range_len;
-> >  	int ret;
-> >+	/* check ranges against root's #address-cells and #size-cells */
-> >+	if (image->type == KEXEC_TYPE_CRASH &&
-> >+		(!cells_size_fitted(image->arch.elf_load_addr,
-> >+				image->arch.elf_headers_sz) ||
-> >+		 !cells_size_fitted(crashk_res.start,
-> >+				crashk_res.end - crashk_res.start + 1))) {
-> >+		pr_err("Crash memory region doesn't fit into DT's root cell sizes.\n");
-> >+		ret = -EINVAL;
-> >+		goto out_err;
-> >+	}
-> >+
-> >  	/* duplicate dt blob */
-> >  	buf_size = fdt_totalsize(initial_boot_params);
-> >  	range_len = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
-> >+	if (image->type == KEXEC_TYPE_CRASH)
-> >+		buf_size += fdt_prop_len("linux,elfcorehdr", range_len)
-> >+				+ fdt_prop_len("linux,usable-memory-range",
-> >+								range_len);
-> >+
-> >  	if (initrd_load_addr)
-> >  		buf_size += fdt_prop_len("initrd-start", sizeof(u64))
-> >  				+ fdt_prop_len("initrd-end", sizeof(u64));
-> >@@ -85,6 +176,23 @@ int setup_dtb(struct kimage *image,
-> >  	if (nodeoffset < 0)
-> >  		goto out_err;
-> >+	if (image->type == KEXEC_TYPE_CRASH) {
-> >+		/* add linux,elfcorehdr */
-> >+		ret = fdt_setprop_range(buf, nodeoffset, "linux,elfcorehdr",
-> >+				image->arch.elf_load_addr,
-> >+				image->arch.elf_headers_sz);
-> >+		if (ret)
-> >+			goto out_err;
-> >+
-> >+		/* add linux,usable-memory-range */
-> >+		ret = fdt_setprop_range(buf, nodeoffset,
-> >+				"linux,usable-memory-range",
-> >+				crashk_res.start,
-> >+				crashk_res.end - crashk_res.start + 1);
-> >+		if (ret)
-> >+			goto out_err;
-> >+	}
-> >+
-> >  	/* add bootargs */
-> >  	if (cmdline) {
-> >  		ret = fdt_setprop(buf, nodeoffset, "bootargs",
-> >@@ -211,3 +319,44 @@ int load_other_segments(struct kimage *image, unsigned long kernel_load_addr,
-> >  	image->arch.dtb_buf = NULL;
-> >  	return ret;
-> >  }
-> >+
-> >+int load_crashdump_segments(struct kimage *image)
-> >+{
-> >+	void *elf_addr;
-> >+	unsigned long elf_sz;
-> >+	struct kexec_buf kbuf;
-> >+	int ret;
-> >+
-> >+	if (image->type != KEXEC_TYPE_CRASH)
-> >+		return 0;
-> >+
-> >+	/* Prepare elf headers and add a segment */
-> >+	ret = prepare_elf_headers(image, &elf_addr, &elf_sz);
-> >+	if (ret) {
-> >+		pr_err("Preparing elf core header failed\n");
-> >+		return ret;
-> >+	}
-> >+
-> >+	kbuf.image = image;
-> >+	kbuf.buffer = elf_addr;
-> >+	kbuf.bufsz = elf_sz;
-> >+	kbuf.memsz = elf_sz;
-> >+	kbuf.buf_align = PAGE_SIZE;
-> >+	kbuf.buf_min = crashk_res.start;
-> >+	kbuf.buf_max = crashk_res.end + 1;
-> >+	kbuf.top_down = 1;
-> >+
-> >+	ret = kexec_add_buffer(&kbuf);
-> >+	if (ret) {
-> >+		vfree(elf_addr);
-> >+		return ret;
-> >+	}
-> >+	image->arch.elf_headers = elf_addr;
-> >+	image->arch.elf_headers_sz = elf_sz;
-> >+	image->arch.elf_load_addr = kbuf.mem;
-> >+
-> >+	pr_debug("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-> >+			 image->arch.elf_load_addr, elf_sz, elf_sz);
-> >+
-> >+	return ret;
-> >+}
-> >diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> >index 8a7f029c5995..82a98f284cf5 100644
-> >--- a/kernel/kexec_file.c
-> >+++ b/kernel/kexec_file.c
-> >@@ -1340,7 +1340,7 @@ static int prepare_elf64_headers(struct crash_elf_data *ced,
-> >  	phdr->p_filesz = phdr->p_memsz = VMCOREINFO_NOTE_SIZE;
-> >  	(ehdr->e_phnum)++;
-> >-#ifdef CONFIG_X86_64
-> >+#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
-> >  	/* Prepare PT_LOAD type program header for kernel text region */
-> >  	phdr = (Elf64_Phdr *)bufp;
-> >  	bufp += sizeof(Elf64_Phdr);
-> >
-> 
-> -- 
-> Julien Thierry
+Please note that it is totally up to the system what key/certificate is
+used for signing, but one of easy ways to *try* this feature is to turn on
+CONFIG_MODULE_SIG so that we can reuse certs/signing_key.pem as a signing
+key, KEY and CERT above, for kernel.
+(This also enables CONFIG_CRYPTO_SHA1 by default.)
+
+
+Some concerns(or future works):
+* Even if the kernel is configured with CONFIG_RANDOMIZE_BASE, the 2nd
+  kernel won't be placed at a randomized address. We will have to
+  add some boot code similar to efi-stub to implement the feature.
+* While big-endian kernel can support kernel signing, I'm not sure that
+  Image can be recognized as in PE format because x86 standard only
+  defines little-endian-based format.
+* IMA(and extended file attribute)-based kexec
+* vmlinux support
+
+  [1] http://git.linaro.org/people/takahiro.akashi/linux-aarch64.git
+	branch:arm64/kexec_file
+  [2] http://git.linaro.org/people/takahiro.akashi/kexec-tools.git
+	branch:arm64/kexec_file
+  [3] http://lkml.iu.edu//hypermail/linux/kernel/1707.0/03669.html
+
+
+Changes in v5 (Oct 10, 2017)
+* fix kbuild errors around patch #3
+per Julien's comments,
+* fix a bug in walk_system_ram_res_rev() with some cleanup
+* modify fdt_setprop_range() to use vmalloc()
+* modify fill_property() to use memset()
+
+Changes in v4 (Oct 2, 2017)
+* reinstate x86's arch_kexec_kernel_image_load()
+* rename weak arch_kexec_kernel_xxx() to _kexec_kernel_xxx() for
+  better re-use
+* constify kexec_file_loaders[]
+
+Changes in v3 (Sep 15, 2017)
+* fix kbuild test error
+* factor out arch_kexec_kernel_*() & arch_kimage_file_post_load_cleanup()
+* remove CONFIG_CRASH_CORE guard from kexec_file.c
+* add vmapped kernel region to vmcore for gdb backtracing
+  (see prepare_elf64_headers())
+* merge asm/kexec_file.h into asm/kexec.h
+* and some cleanups
+
+Changes in v2 (Sep 8, 2017)
+* move core-header-related functions from crash_core.c to kexec_file.c
+* drop hash-check code from purgatory
+* modify purgatory asm to remove arch_kexec_apply_relocations_add()
+* drop older kernel support
+* drop vmlinux support (at least, for this series)
+
+Patch #1 to #5 are all preparatory patches on generic side.
+Patch #6 is purgatory code.
+Patch #7 to #9 are common for enabling kexec_file_load.
+Patch #10 is for 'Image' support.
+
+AKASHI Takahiro (10):
+  include: pe.h: remove message[] from mz header definition
+  resource: add walk_system_ram_res_rev()
+  kexec_file: factor out arch_kexec_kernel_*() from x86, powerpc
+  kexec_file: factor out crashdump elf header function from x86
+  asm-generic: add kexec_file_load system call to unistd.h
+  arm64: kexec_file: create purgatory
+  arm64: kexec_file: load initrd, device-tree and purgatory segments
+  arm64: kexec_file: set up for crash dump adding elf core header
+  arm64: enable KEXEC_FILE config
+  arm64: kexec_file: add Image format support
+
+ arch/arm64/Kconfig                          |  29 +++
+ arch/arm64/Makefile                         |   1 +
+ arch/arm64/include/asm/kexec.h              |  93 +++++++
+ arch/arm64/kernel/Makefile                  |   4 +-
+ arch/arm64/kernel/kexec_image.c             | 105 ++++++++
+ arch/arm64/kernel/machine_kexec_file.c      | 367 ++++++++++++++++++++++++++++
+ arch/arm64/purgatory/Makefile               |  24 ++
+ arch/arm64/purgatory/entry.S                |  55 +++++
+ arch/powerpc/include/asm/kexec.h            |   2 +-
+ arch/powerpc/kernel/kexec_elf_64.c          |   2 +-
+ arch/powerpc/kernel/machine_kexec_file_64.c |  36 +--
+ arch/x86/include/asm/kexec-bzimage64.h      |   2 +-
+ arch/x86/kernel/crash.c                     | 324 ------------------------
+ arch/x86/kernel/kexec-bzimage64.c           |   2 +-
+ arch/x86/kernel/machine_kexec_64.c          |  45 +---
+ include/linux/ioport.h                      |   3 +
+ include/linux/kexec.h                       |  32 ++-
+ include/linux/pe.h                          |   2 +-
+ include/uapi/asm-generic/unistd.h           |   4 +-
+ kernel/kexec_file.c                         | 365 ++++++++++++++++++++++++++-
+ kernel/kexec_internal.h                     |  20 ++
+ kernel/resource.c                           |  57 +++++
+ 22 files changed, 1156 insertions(+), 418 deletions(-)
+ create mode 100644 arch/arm64/kernel/kexec_image.c
+ create mode 100644 arch/arm64/kernel/machine_kexec_file.c
+ create mode 100644 arch/arm64/purgatory/Makefile
+ create mode 100644 arch/arm64/purgatory/entry.S
+
+-- 
+2.14.1
+
 
 _______________________________________________
 kexec mailing list
