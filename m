@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwym04.jp.fujitsu.com ([211.128.242.43])
+Received: from mgwym02.jp.fujitsu.com ([211.128.242.41])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e1qpR-0005dr-LB
- for kexec@lists.infradead.org; Tue, 10 Oct 2017 09:28:00 +0000
-Received: from g01jpfmpwyt01.exch.g01.fujitsu.local
- (g01jpfmpwyt01.exch.g01.fujitsu.local [10.128.193.38])
- by yt-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id 45333AC0146
- for <kexec@lists.infradead.org>; Tue, 10 Oct 2017 18:27:28 +0900 (JST)
+ id 1e1qpU-0005eI-Ls
+ for kexec@lists.infradead.org; Tue, 10 Oct 2017 09:28:04 +0000
+Received: from g01jpfmpwyt03.exch.g01.fujitsu.local
+ (g01jpfmpwyt03.exch.g01.fujitsu.local [10.128.193.57])
+ by yt-mxoi1.gw.nic.fujitsu.com (Postfix) with ESMTP id 74227AC0132
+ for <kexec@lists.infradead.org>; Tue, 10 Oct 2017 18:27:33 +0900 (JST)
 From: Takao Indoh <indou.takao@jp.fujitsu.com>
-Subject: [PATCH 0/3] Fix KASLR problem on sadump
-Date: Tue, 10 Oct 2017 18:27:14 +0900
-Message-ID: <20171010092717.7392-1-indou.takao@jp.fujitsu.com>
+Subject: [PATCH 1/3] Support symbol __cpu_online_mask
+Date: Tue, 10 Oct 2017 18:27:15 +0900
+Message-ID: <20171010092717.7392-2-indou.takao@jp.fujitsu.com>
+In-Reply-To: <20171010092717.7392-1-indou.takao@jp.fujitsu.com>
+References: <20171010092717.7392-1-indou.takao@jp.fujitsu.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,32 +29,65 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com, d.hatayama@jp.fujitsu.com
 Cc: kexec@lists.infradead.org
 
-Hi Kumagai-san, Hatayama-san,
+In the upstream kernel, by commit 5aec01b83 cpu_online_mask was replaced
+with macros and new variables __cpu_online_mask was added instead of it.
+Sadump uses cpu_online_mask to check the cpu was online or not,
+therefore it also need __cpu_online_mask symbol for this in the latest
+kernel.
 
-These patch series fix a problem that makedumpfile cannot handle a dumpfile
-which is captured by sadump on KASLR enabled kernel.
+Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+---
+ makedumpfile.c | 9 +++++++--
+ makedumpfile.h | 1 +
+ sadump_info.c  | 3 ++-
+ 3 files changed, 10 insertions(+), 3 deletions(-)
 
-When KASLR feature is enabled, a kernel is placed on the memory randomly and
-therefore makedumpfile cannot handle a dumpfile because addresses of kernel
-symbols in vmlinux are different from actual addresses. In the case of kdump,
-information to get actual address is included in the vmcoreinfo, but dumpfile of
-sadump does not have such a information.
-
-These patches calculate kaslr offset and phys_base to solve this problem. The
-basic idea is getting register (IDTR and CR3) from dump header, and calculate
-kaslr_offset/phys_base using them.
-
-Takao Indoh (3):
-  Support symbol __cpu_online_mask
-  makedumpfile: Introduce vtop4_x86_64_pagetable
-  makedumpfile: sadump: Fix a KASLR problem of sadump
-
- arch/x86_64.c  |  30 ++++-
- makedumpfile.c |  22 ++-
- makedumpfile.h |   7 +-
- sadump_info.c  | 420 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 4 files changed, 466 insertions(+), 13 deletions(-)
-
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 567ac5d..5f2ca7d 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1519,8 +1519,13 @@ get_symbol_info(void)
+ 	SYMBOL_INIT(__per_cpu_load, "__per_cpu_load");
+ 	SYMBOL_INIT(__per_cpu_offset, "__per_cpu_offset");
+ 	SYMBOL_INIT(cpu_online_mask, "cpu_online_mask");
+-	if (SYMBOL(cpu_online_mask) == NOT_FOUND_SYMBOL)
+-		SYMBOL_INIT(cpu_online_mask, "cpu_online_map");
++	SYMBOL_INIT(__cpu_online_mask, "__cpu_online_mask");
++	if (SYMBOL(cpu_online_mask) == NOT_FOUND_SYMBOL) {
++		if (SYMBOL(__cpu_online_mask) == NOT_FOUND_SYMBOL)
++			SYMBOL_INIT(cpu_online_mask, "cpu_online_map");
++		else
++			SYMBOL_INIT(cpu_online_mask, "__cpu_online_mask");
++	}
+ 	SYMBOL_INIT(kexec_crash_image, "kexec_crash_image");
+ 	SYMBOL_INIT(node_remap_start_vaddr, "node_remap_start_vaddr");
+ 	SYMBOL_INIT(node_remap_end_vaddr, "node_remap_end_vaddr");
+diff --git a/makedumpfile.h b/makedumpfile.h
+index f4ba02d..704a6bc 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1596,6 +1596,7 @@ struct symbol_table {
+ 	unsigned long long	__per_cpu_offset;
+ 	unsigned long long	__per_cpu_load;
+ 	unsigned long long	cpu_online_mask;
++	unsigned long long	__cpu_online_mask;
+ 	unsigned long long	kexec_crash_image;
+ 
+ 	/*
+diff --git a/sadump_info.c b/sadump_info.c
+index 257f1be..7dd22e7 100644
+--- a/sadump_info.c
++++ b/sadump_info.c
+@@ -953,7 +953,8 @@ cpu_online_mask_init(void)
+ 		return FALSE;
+ 	}
+ 
+-	if (SIZE(cpumask) == NOT_FOUND_STRUCTURE)
++	if ((SIZE(cpumask) == NOT_FOUND_STRUCTURE) ||
++	    (SYMBOL(__cpu_online_mask) != NOT_FOUND_SYMBOL))
+ 		cpu_online_mask_addr = SYMBOL(cpu_online_mask);
+ 
+ 	else {
 -- 
 2.9.5
 
