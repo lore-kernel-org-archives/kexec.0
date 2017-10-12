@@ -2,12 +2,14 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-by2nam01on0060.outbound.protection.outlook.com
  ([104.47.34.60] helo=NAM01-BY2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e2kd5-0002wx-MS
- for kexec@lists.infradead.org; Thu, 12 Oct 2017 21:02:57 +0000
+ id 1e2kd7-0002wx-DP
+ for kexec@lists.infradead.org; Thu, 12 Oct 2017 21:02:58 +0000
 From: David Daney <david.daney@cavium.com>
-Subject: [PATCH 0/4] kexec-tools: mips: Fixes for 64-bit and OCTEON
-Date: Thu, 12 Oct 2017 14:02:24 -0700
-Message-Id: <20171012210228.7353-1-david.daney@cavium.com>
+Subject: [PATCH 1/4] kexec-tools: mips: Merge adjacent memory ranges.
+Date: Thu, 12 Oct 2017 14:02:25 -0700
+Message-Id: <20171012210228.7353-2-david.daney@cavium.com>
+In-Reply-To: <20171012210228.7353-1-david.daney@cavium.com>
+References: <20171012210228.7353-1-david.daney@cavium.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,22 +26,42 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
 Cc: linux-mips@linux-mips.org, David Daney <david.daney@cavium.com>
 
-Here are a few improvements to the kexec-tools needed to get usable
-core dumps out of 64-bit kernels running on Cavium's OCTEON
-processors.  Patch 3/4 is OCTEON specific, the rest are needed for
-good results on MIPS64 in general.
+Some kernel versions running on MIPS split the System RAM memory
+regions reported in /proc/iomem.  This may cause loading of the kexec
+kernel to fail if it crosses one of the splits.
 
-David Daney (4):
-  kexec-tools: mips: Merge adjacent memory ranges.
-  kexec-tools: mips: Don't set lowmem_limit to 2G for 64-bit systems.
-  kexec-tools: mips: Use proper page_offset for OCTEON CPUs.
-  kexec-tools: mips: Try to include bss in kernel vmcore file.
+Fix by merging adjacent memory ranges that have the same type.
 
- kexec/arch/mips/crashdump-mips.c | 36 +++++++++++++++++++++++++++++++++---
- kexec/arch/mips/crashdump-mips.h |  3 ++-
- kexec/arch/mips/kexec-mips.c     | 14 ++++++++++----
- 3 files changed, 45 insertions(+), 8 deletions(-)
+Signed-off-by: David Daney <david.daney@cavium.com>
+---
+ kexec/arch/mips/kexec-mips.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
+diff --git a/kexec/arch/mips/kexec-mips.c b/kexec/arch/mips/kexec-mips.c
+index 2e5b700..415c2ed 100644
+--- a/kexec/arch/mips/kexec-mips.c
++++ b/kexec/arch/mips/kexec-mips.c
+@@ -60,10 +60,16 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
+ 		} else {
+ 			continue;
+ 		}
+-		memory_range[memory_ranges].start = start;
+-		memory_range[memory_ranges].end = end;
+-		memory_range[memory_ranges].type = type;
+-		memory_ranges++;
++		if (memory_ranges > 0 &&
++		    memory_range[memory_ranges - 1].end == start &&
++		    memory_range[memory_ranges - 1].type == type) {
++			memory_range[memory_ranges - 1].end = end;
++		} else {
++			memory_range[memory_ranges].start = start;
++			memory_range[memory_ranges].end = end;
++			memory_range[memory_ranges].type = type;
++			memory_ranges++;
++		}
+ 	}
+ 	fclose(fp);
+ 	*range = memory_range;
 -- 
 2.9.5
 
