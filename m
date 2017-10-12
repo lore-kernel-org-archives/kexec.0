@@ -2,13 +2,12 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-by2nam01on0060.outbound.protection.outlook.com
  ([104.47.34.60] helo=NAM01-BY2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e2kd9-0002wx-3K
- for kexec@lists.infradead.org; Thu, 12 Oct 2017 21:03:01 +0000
+ id 1e2kdB-0002wx-8N
+ for kexec@lists.infradead.org; Thu, 12 Oct 2017 21:03:03 +0000
 From: David Daney <david.daney@cavium.com>
-Subject: [PATCH 2/4] kexec-tools: mips: Don't set lowmem_limit to 2G for
- 64-bit systems.
-Date: Thu, 12 Oct 2017 14:02:26 -0700
-Message-Id: <20171012210228.7353-3-david.daney@cavium.com>
+Subject: [PATCH 3/4] kexec-tools: mips: Use proper page_offset for OCTEON CPUs.
+Date: Thu, 12 Oct 2017 14:02:27 -0700
+Message-Id: <20171012210228.7353-4-david.daney@cavium.com>
 In-Reply-To: <20171012210228.7353-1-david.daney@cavium.com>
 References: <20171012210228.7353-1-david.daney@cavium.com>
 MIME-Version: 1.0
@@ -27,57 +26,62 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
 Cc: linux-mips@linux-mips.org, David Daney <david.daney@cavium.com>
 
-The 64-bit MIPS architecture doesn't have the same 2G limit the 32-bit
-version has.  Set MAXMEM and lowmem_limit to 0 for 64-bit MIPS so that
-memory above 2G is usable in the kdump core files.
+The OCTEON family of MIPS64 CPUs uses a PAGE_OFFSET of
+0x8000000000000000ULL, which is differs from other CPUs.
+
+Scan /proc/cpuinfo to see if the current system is "Octeon", if so,
+patch the page_offset so that usable kdump core files are produced.
 
 Signed-off-by: David Daney <david.daney@cavium.com>
 ---
- kexec/arch/mips/crashdump-mips.c | 4 ++--
- kexec/arch/mips/crashdump-mips.h | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ kexec/arch/mips/crashdump-mips.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
 diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
-index 6308ec8..22fc38e 100644
+index 22fc38e..e98badf 100644
 --- a/kexec/arch/mips/crashdump-mips.c
 +++ b/kexec/arch/mips/crashdump-mips.c
-@@ -201,7 +201,7 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
- 		memory_ranges++;
- 
- 		/* Segregate linearly mapped region. */
--		if ((MAXMEM - 1) >= start && (MAXMEM - 1) <= end) {
-+		if (MAXMEM && (MAXMEM - 1) >= start && (MAXMEM - 1) <= end) {
- 			crash_memory_range[memory_ranges - 1].end = MAXMEM - 1;
- 
- 			/* Add segregated region. */
-@@ -304,7 +304,7 @@ static struct crash_elf_info elf_info64 = {
- 	data : ELFDATALOCAL,
- 	machine : EM_MIPS,
- 	page_offset : PAGE_OFFSET,
--	lowmem_limit : MAXMEM,
-+	lowmem_limit : 0, /* 0 == no limit */
+@@ -315,6 +315,30 @@ static struct crash_elf_info elf_info32 = {
+ 	lowmem_limit : MAXMEM,
  };
  
- static struct crash_elf_info elf_info32 = {
-diff --git a/kexec/arch/mips/crashdump-mips.h b/kexec/arch/mips/crashdump-mips.h
-index c986835..7edd859 100644
---- a/kexec/arch/mips/crashdump-mips.h
-+++ b/kexec/arch/mips/crashdump-mips.h
-@@ -6,12 +6,13 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
- 				unsigned long max_addr, unsigned long min_base);
- #ifdef __mips64
- #define PAGE_OFFSET	0xa800000000000000ULL
-+#define MAXMEM		0
- #else
- #define PAGE_OFFSET	0x80000000
-+#define MAXMEM		0x80000000
- #endif
- #define __pa(x)		((unsigned long)(X) & 0x7fffffff)
++static int patch_elf_info(void)
++{
++	const char cpuinfo[] = "/proc/cpuinfo";
++	char line[MAX_LINE];
++	FILE *fp;
++
++	fp = fopen(cpuinfo, "r");
++	if (!fp) {
++		fprintf(stderr, "Cannot open %s: %s\n",
++			cpuinfo, strerror(errno));
++		return -1;
++	}
++	while (fgets(line, sizeof(line), fp) != 0) {
++		if (strncmp(line, "cpu model", 9) == 0) {
++			/* OCTEON uses a different page_offset. */
++			if (strstr(line, "Octeon"))
++				elf_info64.page_offset = 0x8000000000000000ULL;
++			break;
++		}
++	}
++	fclose(fp);
++	return 0;
++}
++
+ /* Loads additional segments in case of a panic kernel is being loaded.
+  * One segment for backup region, another segment for storing elf headers
+  * for crash memory image.
+@@ -331,6 +355,9 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 	struct crash_elf_info *elf_info = &elf_info32;
+ 	unsigned long start_offset = 0x80000000UL;
  
--#define MAXMEM		0x80000000
- 
- #define CRASH_MAX_MEMMAP_NR	(KEXEC_MAX_SEGMENTS + 1)
- #define CRASH_MAX_MEMORY_RANGES	(MAX_MEMORY_RANGES + 2)
++	if (patch_elf_info())
++		return -1;
++
+ 	if (arch_options.core_header_type == CORE_TYPE_ELF64) {
+ 		elf_info = &elf_info64;
+ 		crash_create = crash_create_elf64_headers;
 -- 
 2.9.5
 
