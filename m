@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v5 03/10] kexec_file: factor out arch_kexec_kernel_*()
- from x86, powerpc
-References: <20171010063619.6303-1-takahiro.akashi@linaro.org>
- <20171010063619.6303-4-takahiro.akashi@linaro.org>
- <a8a0f36b-e797-289b-04e3-aa87b4088cdd@arm.com>
- <20171011050734.GE6756@linaro.org>
-From: Julien Thierry <julien.thierry@arm.com>
-Message-ID: <cbeb01e5-8758-1205-1e79-de01de899ef6@arm.com>
-Date: Wed, 11 Oct 2017 09:24:16 +0100
+Received: from mail-by2nam01on0060.outbound.protection.outlook.com
+ ([104.47.34.60] helo=NAM01-BY2-obe.outbound.protection.outlook.com)
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1e2kd5-0002wx-MS
+ for kexec@lists.infradead.org; Thu, 12 Oct 2017 21:02:57 +0000
+From: David Daney <david.daney@cavium.com>
+Subject: [PATCH 0/4] kexec-tools: mips: Fixes for 64-bit and OCTEON
+Date: Thu, 12 Oct 2017 14:02:24 -0700
+Message-Id: <20171012210228.7353-1-david.daney@cavium.com>
 MIME-Version: 1.0
-In-Reply-To: <20171011050734.GE6756@linaro.org>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,86 +17,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
+Cc: linux-mips@linux-mips.org, David Daney <david.daney@cavium.com>
 
+Here are a few improvements to the kexec-tools needed to get usable
+core dumps out of 64-bit kernels running on Cavium's OCTEON
+processors.  Patch 3/4 is OCTEON specific, the rest are needed for
+good results on MIPS64 in general.
 
+David Daney (4):
+  kexec-tools: mips: Merge adjacent memory ranges.
+  kexec-tools: mips: Don't set lowmem_limit to 2G for 64-bit systems.
+  kexec-tools: mips: Use proper page_offset for OCTEON CPUs.
+  kexec-tools: mips: Try to include bss in kernel vmcore file.
 
-On 11/10/17 06:07, AKASHI Takahiro wrote:
-> On Tue, Oct 10, 2017 at 12:02:01PM +0100, Julien Thierry wrote:
-> 
-> [snip]
-> 
->>> --- a/kernel/kexec_file.c
->>> +++ b/kernel/kexec_file.c
->>> @@ -26,30 +26,79 @@
->>>   #include <linux/vmalloc.h>
->>>   #include "kexec_internal.h"
->>>
->>> +const __weak struct kexec_file_ops * const kexec_file_loaders[] = {NULL};
->>> +
->>>   static int kexec_calculate_store_digests(struct kimage *image);
->>>
->>> +int _kexec_kernel_image_probe(struct kimage *image, void *buf,
->>> +                          unsigned long buf_len)
->>> +{
->>> +     const struct kexec_file_ops *fops;
->>> +     int ret = -ENOEXEC;
->>> +
->>> +     for (fops = kexec_file_loaders[0]; fops && fops->probe; ++fops) {
->>
->> Hmm, that's not gonna work (and I see that what I said in the previous
->> patch was not 100% correct either).
-> 
-> Can you elaborate this a bit more?
->
-
-Yes. With the current state of the loop, you are going to check the 
-first element of kexec_file_loaders[0], and what will get incremented is 
-the pointer contained in kexec_file_loaders rather than a pointer 
-pointer pointing at an element of kexec_file_loaders.
-
-
-> I'm sure that, with my code, any member of fops, cannot be changed;
-> "const struct kexec_file_ops *fops" means that fops is a pointer to
-> "constant sturct kexec_file_ops," while "struct kexec_file_ops *
-> const kexec_file_loaders[]" means that kexec_file_loaders is a "constant
-> array" of pointers to "constant struct kexec_file_ops."
-> 
-
-Hmm, right, my suggestion below doesn't have the right constness, fops 
-should be declared as:
-const struct kexec_file_ops * const * fops;
-
-This can point at elements of kexec_file_loaders.
-
-Hope this makes more sense.
-
-Cheers,
-
-> Thanks,
-> -Takahiro AKASHI
-> 
-> 
->> 'fops' should be of type 'const struct kexec_file_ops **', and the loop
->> should be:
->>
->> for (fops = &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops)
->>
->> With some additional dereferences in the body of the loop.
->>
->> Unless you prefer the previous state of the loop (with i and the break
->> inside), but I still think this looks better.
->>
->> Cheers,
->>
-
+ kexec/arch/mips/crashdump-mips.c | 36 +++++++++++++++++++++++++++++++++---
+ kexec/arch/mips/crashdump-mips.h |  3 ++-
+ kexec/arch/mips/kexec-mips.c     | 14 ++++++++++----
+ 3 files changed, 45 insertions(+), 8 deletions(-)
 
 -- 
-Julien Thierry
+2.9.5
+
 
 _______________________________________________
 kexec mailing list
