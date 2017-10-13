@@ -1,23 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x229.google.com ([2607:f8b0:4001:c0b::229])
+Received: from mgwym01.jp.fujitsu.com ([211.128.242.40])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e2vaT-0002ko-Ac
- for kexec@lists.infradead.org; Fri, 13 Oct 2017 08:44:59 +0000
-Received: by mail-it0-x229.google.com with SMTP id p138so10433134itp.2
- for <kexec@lists.infradead.org>; Fri, 13 Oct 2017 01:44:36 -0700 (PDT)
-Date: Fri, 13 Oct 2017 17:47:23 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v5 03/10] kexec_file: factor out arch_kexec_kernel_*()
- from x86, powerpc
-Message-ID: <20171013084721.GH6756@linaro.org>
-References: <20171010063619.6303-1-takahiro.akashi@linaro.org>
- <20171010063619.6303-4-takahiro.akashi@linaro.org>
- <a8a0f36b-e797-289b-04e3-aa87b4088cdd@arm.com>
- <20171011050734.GE6756@linaro.org>
- <cbeb01e5-8758-1205-1e79-de01de899ef6@arm.com>
+ id 1e2ydz-0008A7-49
+ for kexec@lists.infradead.org; Fri, 13 Oct 2017 12:00:49 +0000
+Received: from g01jpfmpwyt03.exch.g01.fujitsu.local
+ (g01jpfmpwyt03.exch.g01.fujitsu.local [10.128.193.57])
+ by yt-mxauth.gw.nic.fujitsu.com (Postfix) with ESMTP id 39199AC04D8
+ for <kexec@lists.infradead.org>; Fri, 13 Oct 2017 21:00:15 +0900 (JST)
+From: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
+Subject: RE: [PATCH 1/3] Support symbol __cpu_online_mask
+Date: Fri, 13 Oct 2017 12:00:13 +0000
+Message-ID: <33710E6CAA200E4583255F4FB666C4E21B09C98B@G01JPEXMBYT03>
+References: <20171010092717.7392-1-indou.takao@jp.fujitsu.com>
+ <20171010092717.7392-2-indou.takao@jp.fujitsu.com>
+In-Reply-To: <20171010092717.7392-2-indou.takao@jp.fujitsu.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <cbeb01e5-8758-1205-1e79-de01de899ef6@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,94 +28,85 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Julien Thierry <julien.thierry@arm.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
-
-On Wed, Oct 11, 2017 at 09:24:16AM +0100, Julien Thierry wrote:
-> 
-> 
-> On 11/10/17 06:07, AKASHI Takahiro wrote:
-> >On Tue, Oct 10, 2017 at 12:02:01PM +0100, Julien Thierry wrote:
-> >
-> >[snip]
-> >
-> >>>--- a/kernel/kexec_file.c
-> >>>+++ b/kernel/kexec_file.c
-> >>>@@ -26,30 +26,79 @@
-> >>>  #include <linux/vmalloc.h>
-> >>>  #include "kexec_internal.h"
-> >>>
-> >>>+const __weak struct kexec_file_ops * const kexec_file_loaders[] = {NULL};
-> >>>+
-> >>>  static int kexec_calculate_store_digests(struct kimage *image);
-> >>>
-> >>>+int _kexec_kernel_image_probe(struct kimage *image, void *buf,
-> >>>+                          unsigned long buf_len)
-> >>>+{
-> >>>+     const struct kexec_file_ops *fops;
-> >>>+     int ret = -ENOEXEC;
-> >>>+
-> >>>+     for (fops = kexec_file_loaders[0]; fops && fops->probe; ++fops) {
-> >>
-> >>Hmm, that's not gonna work (and I see that what I said in the previous
-> >>patch was not 100% correct either).
-> >
-> >Can you elaborate this a bit more?
-> >
-> 
-> Yes. With the current state of the loop, you are going to check the first
-> element of kexec_file_loaders[0], and what will get incremented is the
-> pointer contained in kexec_file_loaders rather than a pointer pointer
-> pointing at an element of kexec_file_loaders.
-
-Aha, got it. I thought that you were talking about const usage.
-
-Since I don't want to bother anybody with my repeated minor updates,
-I'd like to post a new version, v6, only if you don't have any more
-comments and if Catalin and Will are likely to accept my other patches.
-
-Thanks,
--Takahiro AKASHI
+To: "Indoh, Takao" <indou.takao@jp.fujitsu.com>
+Cc: "ats-kumagai@wm.jp.nec.com" <ats-kumagai@wm.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
 
+
+> -----Original Message-----
+> From: Takao Indoh [mailto:indou.takao@jp.fujitsu.com]
+> Sent: Tuesday, October 10, 2017 6:27 PM
+> To: ats-kumagai@wm.jp.nec.com; Hatayama, Daisuke 
+> <d.hatayama@jp.fujitsu.com>
+> Cc: kexec@lists.infradead.org
+> Subject: [PATCH 1/3] Support symbol __cpu_online_mask
 > 
-> >I'm sure that, with my code, any member of fops, cannot be changed;
-> >"const struct kexec_file_ops *fops" means that fops is a pointer to
-> >"constant sturct kexec_file_ops," while "struct kexec_file_ops *
-> >const kexec_file_loaders[]" means that kexec_file_loaders is a "constant
-> >array" of pointers to "constant struct kexec_file_ops."
-> >
+> In the upstream kernel, by commit 5aec01b83 cpu_online_mask was replaced
+> with macros and new variables __cpu_online_mask was added instead of it.
+> Sadump uses cpu_online_mask to check the cpu was online or not,
+> therefore it also need __cpu_online_mask symbol for this in the latest
+> kernel.
 > 
-> Hmm, right, my suggestion below doesn't have the right constness, fops
-> should be declared as:
-> const struct kexec_file_ops * const * fops;
+> Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+> ---
+>  makedumpfile.c | 9 +++++++--
+>  makedumpfile.h | 1 +
+>  sadump_info.c  | 3 ++-
+>  3 files changed, 10 insertions(+), 3 deletions(-)
 > 
-> This can point at elements of kexec_file_loaders.
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 567ac5d..5f2ca7d 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -1519,8 +1519,13 @@ get_symbol_info(void)
+>  	SYMBOL_INIT(__per_cpu_load, "__per_cpu_load");
+>  	SYMBOL_INIT(__per_cpu_offset, "__per_cpu_offset");
+>  	SYMBOL_INIT(cpu_online_mask, "cpu_online_mask");
+> -	if (SYMBOL(cpu_online_mask) == NOT_FOUND_SYMBOL)
+> -		SYMBOL_INIT(cpu_online_mask, "cpu_online_map");
+> +	SYMBOL_INIT(__cpu_online_mask, "__cpu_online_mask");
+> +	if (SYMBOL(cpu_online_mask) == NOT_FOUND_SYMBOL) {
+> +		if (SYMBOL(__cpu_online_mask) == NOT_FOUND_SYMBOL)
+> +			SYMBOL_INIT(cpu_online_mask, "cpu_online_map");
+> +		else
+> +			SYMBOL_INIT(cpu_online_mask,
+> "__cpu_online_mask");
+> +	}
+>  	SYMBOL_INIT(kexec_crash_image, "kexec_crash_image");
+>  	SYMBOL_INIT(node_remap_start_vaddr, "node_remap_start_vaddr");
+>  	SYMBOL_INIT(node_remap_end_vaddr, "node_remap_end_vaddr");
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index f4ba02d..704a6bc 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -1596,6 +1596,7 @@ struct symbol_table {
+>  	unsigned long long	__per_cpu_offset;
+>  	unsigned long long	__per_cpu_load;
+>  	unsigned long long	cpu_online_mask;
+> +	unsigned long long	__cpu_online_mask;
+>  	unsigned long long	kexec_crash_image;
 > 
-> Hope this makes more sense.
+>  	/*
+> diff --git a/sadump_info.c b/sadump_info.c
+> index 257f1be..7dd22e7 100644
+> --- a/sadump_info.c
+> +++ b/sadump_info.c
+> @@ -953,7 +953,8 @@ cpu_online_mask_init(void)
+>  		return FALSE;
+>  	}
 > 
-> Cheers,
+> -	if (SIZE(cpumask) == NOT_FOUND_STRUCTURE)
+> +	if ((SIZE(cpumask) == NOT_FOUND_STRUCTURE) ||
+> +	    (SYMBOL(__cpu_online_mask) != NOT_FOUND_SYMBOL))
+>  		cpu_online_mask_addr = SYMBOL(cpu_online_mask);
 > 
-> >Thanks,
-> >-Takahiro AKASHI
-> >
-> >
-> >>'fops' should be of type 'const struct kexec_file_ops **', and the loop
-> >>should be:
-> >>
-> >>for (fops = &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops)
-> >>
-> >>With some additional dereferences in the body of the loop.
-> >>
-> >>Unless you prefer the previous state of the loop (with i and the break
-> >>inside), but I still think this looks better.
-> >>
-> >>Cheers,
-> >>
-> 
-> 
-> -- 
-> Julien Thierry
+>  	else {
+> --
+> 2.9.5
+
+Looks good to me.
+
+
 
 _______________________________________________
 kexec mailing list
