@@ -1,21 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwym01.jp.fujitsu.com ([211.128.242.40])
- by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e2yjV-0002Uf-Nd
- for kexec@lists.infradead.org; Fri, 13 Oct 2017 12:06:36 +0000
-Received: from g01jpfmpwyt02.exch.g01.fujitsu.local
- (g01jpfmpwyt02.exch.g01.fujitsu.local [10.128.193.56])
- by yt-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id 3AAB6AC00A6
- for <kexec@lists.infradead.org>; Fri, 13 Oct 2017 21:05:54 +0900 (JST)
-From: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Subject: RE: [PATCH 3/3] makedumpfile: sadump: Fix a KASLR problem of sadump
-Date: Fri, 13 Oct 2017 12:05:52 +0000
-Message-ID: <33710E6CAA200E4583255F4FB666C4E21B09C9D3@G01JPEXMBYT03>
-References: <20171010092717.7392-1-indou.takao@jp.fujitsu.com>
- <20171010092717.7392-4-indou.takao@jp.fujitsu.com>
-In-Reply-To: <20171010092717.7392-4-indou.takao@jp.fujitsu.com>
-Content-Language: ja-JP
+Date: Sat, 14 Oct 2017 19:37:04 +0800
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v5 03/10] kexec_file: factor out arch_kexec_kernel_*()
+ from x86, powerpc
+Message-ID: <201710141902.VMF5VddZ%fengguang.wu@intel.com>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="ew6BAiZeqk4r7MaW"
+Content-Disposition: inline
+In-Reply-To: <20171010063619.6303-4-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,625 +16,532 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Indoh, Takao" <indou.takao@jp.fujitsu.com>
-Cc: "ats-kumagai@wm.jp.nec.com" <ats-kumagai@wm.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, julien.thierry@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, arnd@arndb.de, kbuild-all@01.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
 
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> -----Original Message-----
-> From: Takao Indoh [mailto:indou.takao@jp.fujitsu.com]
-> Sent: Tuesday, October 10, 2017 6:27 PM
-> To: ats-kumagai@wm.jp.nec.com; Hatayama, Daisuke 
-> <d.hatayama@jp.fujitsu.com>
-> Cc: kexec@lists.infradead.org
-> Subject: [PATCH 3/3] makedumpfile: sadump: Fix a KASLR problem of sadump
-> 
-> This patch fix a problem that makedumpfile cannot handle a dumpfile
-> which is captured by sadump in KASLR enabled kernel.
-> 
-> When KASLR feature is enabled, a kernel is placed on the memory randomly
-> and therefore makedumpfile cannot handle a dumpfile captured by sadump
-> because addresses of kernel symbols in System.map or vmlinux are
-> different from actual addresses.
-> 
-> To solve this problem, we need to calculate kaslr offset(the difference
-> between original symbol address and actual address) and phys_base, and
-> adjust symbol table of makedumpfile. In the case of dumpfile of kdump,
-> these information is included in the header, but dumpfile of sadump does
-> not have such a information.
-> 
-> This patch calculate kaslr offset and phys_base to solve this problem.
-> Please see the comment in the calc_kaslr_offset() for the detail idea.
-> The basic idea is getting register (IDTR and CR3) from dump header, and
-> calculate kaslr_offset/phys_base using them.
-> 
-> Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
-> ---
->  makedumpfile.c |  13 ++
->  makedumpfile.h |   5 +-
->  sadump_info.c  | 417
-> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  3 files changed, 432 insertions(+), 3 deletions(-)
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 5f2ca7d..a246cbb 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -1554,6 +1554,10 @@ get_symbol_info(void)
->  	SYMBOL_INIT(demote_segment_4k, "demote_segment_4k");
->  	SYMBOL_INIT(cur_cpu_spec, "cur_cpu_spec");
-> 
-> +	SYMBOL_INIT(divide_error, "divide_error");
-> +	SYMBOL_INIT(idt_table, "idt_table");
-> +	SYMBOL_INIT(saved_command_line, "saved_command_line");
-> +
->  	return TRUE;
->  }
-> 
-> @@ -2249,6 +2253,15 @@ write_vmcoreinfo_data(void)
->  	WRITE_NUMBER_UNSIGNED("kimage_voffset", kimage_voffset);
->  #endif
-> 
-> +	if (info->flag_sadump) {
-> +		if (info->phys_base)
-> +			fprintf(info->file_vmcoreinfo, "%s%lu\n",
-> STR_NUMBER("phys_base"),
-> +			    info->phys_base);
-> +		if (info->kaslr_offset)
-> +			fprintf(info->file_vmcoreinfo, "%s%lx\n",
-> STR_KERNELOFFSET,
-> +			    info->kaslr_offset);
-> +	}
-> +
+Hi AKASHI,
 
-Is the sadump condition necessary?
-I think these information is always useful.
+[auto build test WARNING on arm64/for-next/core]
+[also build test WARNING on v4.14-rc4 next-20171013]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
->  	/*
->  	 * write the source file of 1st kernel
->  	 */
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index f48dc0b..6566241 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -1599,6 +1599,9 @@ struct symbol_table {
->  	unsigned long long	cpu_online_mask;
->  	unsigned long long	__cpu_online_mask;
->  	unsigned long long	kexec_crash_image;
-> +	unsigned long long	divide_error;
-> +	unsigned long long	idt_table;
-> +	unsigned long long	saved_command_line;
-> 
->  	/*
->  	 * symbols on ppc64 arch
-> @@ -1960,7 +1963,7 @@ int iomem_for_each_line(char *match, int
-> (*callback)(void *data, int nr,
->  						     unsigned long
-> length),
->  			void *data);
->  int is_bigendian(void);
-> -
-> +int get_symbol_info(void);
-> 
->  /*
->   * for Xen extraction
-> diff --git a/sadump_info.c b/sadump_info.c
-> index 7dd22e7..dafa9e7 100644
-> --- a/sadump_info.c
-> +++ b/sadump_info.c
-> @@ -1035,6 +1035,412 @@ sadump_get_max_mapnr(void)
-> 
->  #ifdef __x86_64__
-> 
-> +/*
-> + * Get address of vector0 interrupt handler (Devide Error) form Interrupt
-> + * Descriptor Table.
-> + */
-> +static unsigned long
-> +get_vec0_addr(ulong idtr)
-> +{
-> +	ulong buf[16];
-> +	ulong *ip, i1, i2, addr;
-> +
-> +	readmem(PADDR, idtr, buf, sizeof(buf));
-> +
-> +	ip = (ulong *)buf;
-> +
-> +	i1 = *ip;
-> +	i2 = *(ip+1);
-> +
-> +	i2 <<= 32;
-> +	addr = i2 & 0xffffffff00000000;
-> +	addr |= (i1 & 0xffff);
-> +	i1 >>= 32;
-> +	addr |= (i1 & 0xffff0000);
-> +
-> +	return addr;
-> +}
+url:    https://github.com/0day-ci/linux/commits/AKASHI-Takahiro/arm64-kexec-add-kexec_file_load-support/20171012-003448
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
+config: x86_64-randconfig-in0-10141752 (attached as .config)
+compiler: gcc-4.6 (Debian 4.6.4-7) 4.6.4
+reproduce:
+        # save the attached .config to linux build tree
+        make ARCH=x86_64 
 
-As the comment I did in the review of crash utility side, I prefer a
-style using structure like below for readability.
+All warnings (new ones prefixed by >>):
 
-Also, readmem() in makedumpfile doesn't support long jump at fault, so
-we need error handling around readmem(). ULONGMAX as error status?
+>> kernel/kexec_file.o: warning: objtool: _kexec_kernel_image_load()+0x31: unsupported stack register modification
 
-static unsigend long
-get_vec0_addr(ulong idtr)
-{
-        struct gate_struct64 {
-                uint16_t offset_low;
-                uint16_t segment;
-                uint32_t ist : 3, zero0 : 5, type : 5, dpl : 2, p : 1;
-                uint16_t offset_middle;
-                uint32_t offset_high;
-                uint32_t zero1;
-        } __attribute__((packed)) gate;
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-        if (!readmem(PADDR, idtr, &gate, sizeof(gate)))
-            return ULONGMAX;
+--ew6BAiZeqk4r7MaW
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
-        return ((ulong)gate.offset_high << 32)
-                + ((ulong)gate.offset_middle << 16)
-                + gate.offset_low;
-}
+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
 
-> +
-> +/*
-> + * Parse a string of [size[KMG]@]offset[KMG]
-> + * Import from Linux kernel(lib/cmdline.c)
-> + */
-> +static ulong memparse(char *ptr, char **retptr)
-> +{
-> +	char *endptr;
-> +
-> +	unsigned long long ret = strtoull(ptr, &endptr, 0);
-> +
-> +	switch (*endptr) {
-> +	case 'E':
-> +	case 'e':
-> +		ret <<= 10;
-> +	case 'P':
-> +	case 'p':
-> +		ret <<= 10;
-> +	case 'T':
-> +	case 't':
-> +		ret <<= 10;
-> +	case 'G':
-> +	case 'g':
-> +		ret <<= 10;
-> +	case 'M':
-> +	case 'm':
-> +		ret <<= 10;
-> +	case 'K':
-> +	case 'k':
-> +		ret <<= 10;
-> +		endptr++;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	if (retptr)
-> +		*retptr = endptr;
-> +
-> +	return ret;
-> +}
-> +
-> +/*
-> + * Find "elfcorehdr=" in the boot parameter of kernel and return the address
-> + * of elfcorehdr.
-> + */
-> +static ulong
-> +get_elfcorehdr(ulong cr3)
-> +{
-> +	char cmdline[BUFSIZE], *ptr;
-> +	ulong cmdline_vaddr;
-> +	ulong cmdline_paddr;
-> +	ulong buf_vaddr, buf_paddr;
-> +	char elfcorehdr_val[16], *end;
-> +	ulong elfcorehdr_addr = 0, elfcorehdr_size = 0;
-> +
-> +	if (SYMBOL(saved_command_line) == NOT_FOUND_SYMBOL) {
-> +		ERRMSG("Can't get the symbol of saved_command_line.\n");
-> +		return 0;
-> +	}
-> +	cmdline_vaddr = SYMBOL(saved_command_line);
-> +	if ((cmdline_paddr = vtop4_x86_64_pagetable(cmdline_vaddr, cr3)) ==
-> NOT_PADDR)
-> +		return 0;
-> +
-> +	DEBUG_MSG("sadump: cmdline vaddr: %lx\n", cmdline_vaddr);
-> +	DEBUG_MSG("sadump: cmdline paddr: %lx\n", cmdline_paddr);
-> +
-> +	if (!readmem(PADDR, cmdline_paddr, &buf_vaddr, sizeof(ulong)))
-> +		return 0;
-> +
-> +	if ((buf_paddr = vtop4_x86_64_pagetable(buf_vaddr, cr3)) ==
-> NOT_PADDR)
-> +		return 0;
-> +
-> +	DEBUG_MSG("sadump: cmdline buf vaddr: %lx\n", buf_vaddr);
-> +	DEBUG_MSG("sadump: cmdline buf paddr: %lx\n", buf_paddr);
-> +
-> +	memset(cmdline, 0, BUFSIZE);
-> +	if (!readmem(PADDR, buf_paddr, cmdline, BUFSIZE))
-> +		return 0;
-> +
-> +	ptr = strstr(cmdline, "elfcorehdr=");
-> +	if (!ptr)
-> +		return 0;
-> +
-> +	ptr += strlen("elfcorehdr=");
-> +	memset(elfcorehdr_val, 0, sizeof(elfcorehdr_val));
-> +	sscanf(ptr, "%s", elfcorehdr_val);
-> +
-> +	DEBUG_MSG("sadump: 2nd kernel detected.\n");
-> +	DEBUG_MSG("sadump: elfcorehdr=%s\n", elfcorehdr_val);
-> +
-> +	/*  elfcorehdr=[size[KMG]@]offset[KMG] */
-> +	elfcorehdr_addr = memparse(elfcorehdr_val, &end);
-
-Is it possible to remove elfcorehdr_val by:
-
-    elfcorehdr_addr = memparse(ptr, &end);
-
-> +	if (*end == '@') {
-> +		elfcorehdr_size = elfcorehdr_addr;
-> +		elfcorehdr_addr = memparse(end + 1, &end);
-> +	}
-> +
-> +	DEBUG_MSG("sadump: elfcorehdr_addr: %lx\n", elfcorehdr_addr);
-> +	DEBUG_MSG("sadump: elfcorehdr_size: %lx\n", elfcorehdr_size);
-> +
-> +	return elfcorehdr_addr;
-> +}
-> +
-> +/*
-> + * Get vmcoreinfo from elfcorehdr.
-> + * Some codes are imported from Linux kernel(fs/proc/vmcore.c)
-> + */
-> +#define DIV_ROUND_UP(n,d) (((n) + (d) - 1) / (d))
-
-Please use divideup() macro defined in common.h instead.
-
-> +static int
-> +get_vmcoreinfo_in_kdump_kernel(ulong elfcorehdr, ulong *addr, int *len)
-> +{
-> +	unsigned char e_ident[EI_NIDENT];
-> +	Elf64_Ehdr ehdr;
-> +	Elf64_Phdr phdr;
-> +	Elf64_Nhdr nhdr;
-> +	ulong ptr;
-> +	ulong nhdr_offset = 0;
-> +	int i;
-> +
-> +	if (!readmem(PADDR, elfcorehdr, e_ident, EI_NIDENT))
-> +		return FALSE;
-> +
-> +	if (e_ident[EI_CLASS] != ELFCLASS64) {
-> +		ERRMSG("Only ELFCLASS64 is supportd\n");
-> +		return FALSE;
-> +	}
-> +
-> +	if (!readmem(PADDR, elfcorehdr, &ehdr, sizeof(ehdr)))
-> +		return FALSE;
-> +
-> +	/* Sanity Check */
-> +	if (memcmp(ehdr.e_ident, ELFMAG, SELFMAG) != 0 ||
-> +		(ehdr.e_type != ET_CORE) ||
-> +		ehdr.e_ident[EI_CLASS] != ELFCLASS64 ||
-> +		ehdr.e_ident[EI_VERSION] != EV_CURRENT ||
-> +		ehdr.e_version != EV_CURRENT ||
-> +		ehdr.e_ehsize != sizeof(Elf64_Ehdr) ||
-> +		ehdr.e_phentsize != sizeof(Elf64_Phdr) ||
-> +		ehdr.e_phnum == 0) {
-> +		ERRMSG("Invalid elf header\n");
-> +		return FALSE;
-> +	}
-> +
-> +	ptr = elfcorehdr + sizeof(ehdr);
-
-ptr = elfcorehdr + ehdr.e_phoff; is better.
-
-> +	for (i = 0; i < ehdr.e_phnum; i++) {
-> +		ulong offset;
-> +		char name[16];
-> +
-> +		if (!readmem(PADDR, ptr, &phdr, sizeof(phdr)))
-> +			return FALSE;
-> +
-> +		ptr += sizeof(phdr);
-> +		if (phdr.p_type != PT_NOTE)
-> +			continue;
-> +
-> +		offset = phdr.p_offset;
-> +		if (!readmem(PADDR, offset, &nhdr, sizeof(nhdr)))
-> +			return FALSE;
-> +
-> +		offset += DIV_ROUND_UP(sizeof(Elf64_Nhdr),
-> sizeof(Elf64_Word))*
-> +			  sizeof(Elf64_Word);
-> +		memset(name, 0, sizeof(name));
-> +		if (!readmem(PADDR, offset, name, sizeof(name)))
-> +			return FALSE;
-> +
-> +		if(!strcmp(name, "VMCOREINFO")) {
-> +			nhdr_offset = offset;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (!nhdr_offset)
-> +		return FALSE;
-> +
-> +	*addr = nhdr_offset +
-> +		DIV_ROUND_UP(nhdr.n_namesz, sizeof(Elf64_Word))*
-> +		sizeof(Elf64_Word);
-> +	*len = nhdr.n_descsz;
-> +
-> +	DEBUG_MSG("sadump: vmcoreinfo addr: %lx\n", *addr);
-> +	DEBUG_MSG("sadump: vmcoreinfo len:  %d\n", *len);
-> +
-> +	return TRUE;
-> +}
-> +
-> +/*
-> + * Check if current kaslr_offset/phys_base is for 1st kernel or 2nd kernel.
-> + * If we are in 2nd kernel, get kaslr_offset/phys_base from vmcoreinfo.
-> + *
-> + * 1. Get command line and try to retrieve "elfcorehdr=" boot parameter
-> + * 2. If "elfcorehdr=" is not found in command line, we are in 1st kernel.
-> + *    There is nothing to do.
-> + * 3. If "elfcorehdr=" is found, we are in 2nd kernel. Find vmcoreinfo
-> + *    using "elfcorehdr=" and retrieve kaslr_offset/phys_base from
-> vmcoreinfo.
-> + */
-> +int
-> +get_kaslr_offset_from_vmcoreinfo(ulong cr3, ulong *kaslr_offset,
-> +				 ulong *phys_base)
-> +{
-> +	ulong elfcorehdr_addr = 0;
-> +	ulong vmcoreinfo_addr;
-> +	int vmcoreinfo_len;
-> +	char *buf, *pos, *endptr;
-> +	int ret = FALSE;
-> +
-> +	elfcorehdr_addr = get_elfcorehdr(cr3);
-> +	if (!elfcorehdr_addr)
-> +		return FALSE;
-> +
-> +	if (!get_vmcoreinfo_in_kdump_kernel(elfcorehdr_addr,
-> &vmcoreinfo_addr,
-> +					    &vmcoreinfo_len))
-> +		return FALSE;
-> +
-> +	DEBUG_MSG("sadump: Find vmcoreinfo in kdump memory\n");
-> +
-> +	buf = malloc(vmcoreinfo_len);
-
-Zero check for vmcoreinfo_len and NULL check for buf are needed
-respectively.
-
-> +	if (!readmem(PADDR, vmcoreinfo_addr, buf, vmcoreinfo_len))
-> +		goto finish;
-> +
-> +	pos = strstr(buf, STR_NUMBER("phys_base"));
-> +	if (!pos)
-> +		goto finish;
-> +	*phys_base  = strtoull(pos + strlen(STR_NUMBER("phys_base")),
-> &endptr, 0);
-> +
-> +	pos = strstr(buf, STR_KERNELOFFSET);
-> +	if (!pos)
-> +		goto finish;
-> +	*kaslr_offset = strtoull(pos + strlen(STR_KERNELOFFSET), &endptr,
-> 16);
-
-I think endptr can be removed.
-
-> +	ret = TRUE;
-> +
-> +finish:
-> +	free(buf);
-> +	return ret;
-> +}
-> +
-> +/*
-> + * Calculate kaslr_offset and phys_base
-> + *
-> + * kaslr_offset:
-> + *   The difference between original address in vmlinux and actual address
-> + *   placed randomly by kaslr feature. To be more accurate,
-> + *   kaslr_offset = actual address  - original address
-> + *
-> + * phys_base:
-> + *   Physical address where the kerenel is placed. In other words, it's a
-> + *   physical address of __START_KERNEL_map. This is also decided randomly
-> by
-> + *   kaslr.
-> + *
-> + * kaslr offset and phys_base are calculated as follows:
-> + *
-> + * kaslr_offset:
-> + * 1) Get IDTR and CR3 value from the dump header.
-> + * 2) Get a virtual address of IDT from IDTR value
-> + *    --- (A)
-> + * 3) Translate (A) to physical address using CR3, which points a top of
-> + *    page table.
-> + *    --- (B)
-> + * 4) Get an address of vector0 (Devide Error) interrupt handler from
-> + *    IDT, which are pointed by (B).
-> + *    --- (C)
-> + * 5) Get an address of symbol "divide_error" form vmlinux
-> + *    --- (D)
-> + *
-> + * Now we have two addresses:
-> + * (C)-> Actual address of "divide_error"
-> + * (D)-> Original address of "divide_error" in the vmlinux
-> + *
-> + * kaslr_offset can be calculated by the difference between these two
-> + * value.
-> + *
-> + * phys_base;
-> + * 1) Get IDT virtual address from vmlinux
-> + *    --- (E)
-> + *
-> + * So phys_base can be calculated using relationship of directly mapped
-> + * address.
-> + *
-> + * phys_base =
-> + *   Physical address(B) -
-> + *   (Virtual address(E) + kaslr_offset - __START_KERNEL_map)
-> + *
-> + * Note that the address (A) cannot be used instead of (E) because (A) is
-> + * not direct map address, it's a fixed map address.
-> + *
-> + * This solution works in most every case, but does not work in the
-> + * following case.
-> + *
-> + * 1) If the dump is captured on early stage of kernel boot, IDTR points
-> + *    early IDT table(early_idts) instead of normal IDT(idt_table).
-> + * 2) If the dump is captured whle kdump is working, IDTR points
-> + *    IDT table of 2nd kernel, not 1st kernel.
-> + *
-> + * Current implementation does not support the case 1), need
-> + * enhancement in the future. For the case 2), get kaslr_offset and
-> + * phys_base as follows.
-> + *
-> + * 1) Get kaslr_offset and phys_base using the above solution.
-> + * 2) Get kernel boot parameter from "saved_command_line"
-> + * 3) If "elfcorehdr=" is not included in boot parameter, we are in the
-> + *    first kernel, nothing to do any more.
-> + * 4) If "elfcorehdr=" is included in boot parameter, we are in the 2nd
-> + *    kernel. Retrieve vmcoreinfo from address of "elfcorehdr=" and
-> + *    get kaslr_offset and phys_base from vmcoreinfo.
-> + */
-> +int
-> +calc_kaslr_offset(void)
-> +{
-> +	struct sadump_header *sh = si->sh_memory;
-> +	uint64_t idtr = 0, cr3 = 0, idtr_paddr;
-> +	struct sadump_smram_cpu_state smram, zero;
-> +	int apicid;
-> +	unsigned long divide_error_vmcore, divide_error_vmlinux;
-> +
-> +	unsigned long kaslr_offset_kdump, phys_base_kdump;
-> +	unsigned long kaslr_offset, phys_base;
-> +
-> +	memset(&zero, 0, sizeof(zero));
-> +	for (apicid = 0; apicid < sh->nr_cpus; ++apicid) {
-> +		if (!get_smram_cpu_state(apicid, &smram)) {
-> +			ERRMSG("get_smram_cpu_state error\n");
-> +			return FALSE;
-> +		}
-> +
-> +		if (memcmp(&smram, &zero, sizeof(smram)) != 0)
-> +			break;
-> +	}
-> +	if (apicid >= sh->nr_cpus) {
-> +		ERRMSG("Can't get smram state\n");
-> +		return FALSE;
-> +	}
-> +
-> +	idtr = ((uint64_t)smram.IdtUpper)<<32 | (uint64_t)smram.IdtLower;
-> +	cr3 = smram.Cr3;
-> +
-> +	/* Convert virtual address of IDT table to physical address */
-> +	if ((idtr_paddr = vtop4_x86_64_pagetable(idtr, cr3)) == NOT_PADDR)
-> +		return FALSE;
-> +
-> +	/* Now we can calculate kaslr_offset and phys_base */
-> +	divide_error_vmlinux = SYMBOL(divide_error);
-> +	divide_error_vmcore = get_vec0_addr(idtr_paddr);
-> +	kaslr_offset = divide_error_vmcore - divide_error_vmlinux;
-> +	phys_base = idtr_paddr -
-> +		(SYMBOL(idt_table) + kaslr_offset - __START_KERNEL_map);
-> +
-> +	info->kaslr_offset = kaslr_offset;
-> +	info->phys_base = phys_base;
-> +
-> +	DEBUG_MSG("sadump: idtr=%lx\n", idtr);
-> +	DEBUG_MSG("sadump: cr3=%lx\n", cr3);
-> +	DEBUG_MSG("sadump: idtr(phys)=%lx\n", idtr_paddr);
-
-Use PRIx64 defined in inttypes.h for uint64_t just as:
-
-    DEBUG_MSG("sadump: idtr=" PRIx64 "\n", idtr);
-
-> +	DEBUG_MSG("sadump: devide_error(vmlinux)=%lx\n",
-> +		divide_error_vmlinux);
-> +	DEBUG_MSG("sadump: devide_error(vmcore)=%lx\n",
-> +		divide_error_vmcore);
-> +
-> +	/* Reload symbol */
-> +	if (!get_symbol_info())
-> +		return FALSE;
-> +
-> +	/*
-> +	 * Check if current kaslr_offset/phys_base is for 1st kernel or 2nd
-> +	 * kernel. If we are in 2nd kernel, get kaslr_offset/phys_base
-> +	 * from vmcoreinfo
-> +	 */
-> +	if (get_kaslr_offset_from_vmcoreinfo(cr3, &kaslr_offset_kdump,
-> +					    &phys_base_kdump)) {
-> +		info->kaslr_offset = kaslr_offset_kdump;
-> +		info->phys_base = phys_base_kdump;
-> +
-> +		/* Reload symbol */
-> +		if (!get_symbol_info())
-> +			return FALSE;
-> +	}
-> +
-> +	DEBUG_MSG("sadump: kaslr_offset=%lx\n", info->kaslr_offset);
-> +	DEBUG_MSG("sadump: phys_base=%lx\n", info->phys_base);
-> +
-> +	return TRUE;
-> +}
-> +
->  int
->  sadump_virt_phys_base(void)
->  {
-> @@ -1065,6 +1471,9 @@ sadump_virt_phys_base(void)
->  	}
-> 
->  failed:
-> +	if (calc_kaslr_offset())
-> +		return TRUE;
-> +
->  	info->phys_base = 0;
-> 
->  	DEBUG_MSG("sadump: failed to calculate phys_base; default to 0\n");
-> @@ -1518,10 +1927,14 @@ cpu_to_apicid(int cpu, int *apicid)
->  		if (!readmem(VADDR, SYMBOL(x86_bios_cpu_apicid_early_ptr),
->  			     &early_ptr, sizeof(early_ptr)))
->  			return FALSE;
-> -
-> +		/*
-> +		 * Note: SYMBOL(name) value is adjusted by
-> info->kaslr_offset,
-> +		 * but per_cpu symbol does not need to be adjusted becasue
-> it
-> +		 * is not affectd by kaslr.
-> +		 */
->  		apicid_addr = early_ptr
->  			?
-> SYMBOL(x86_bios_cpu_apicid_early_map)+cpu*sizeof(uint16_t)
-> -			: per_cpu_ptr(SYMBOL(x86_bios_cpu_apicid), cpu);
-> +			: per_cpu_ptr(SYMBOL(x86_bios_cpu_apicid) -
-> info->kaslr_offset, cpu);
-> 
->  		if (!readmem(VADDR, apicid_addr, &apicid_u16,
-> sizeof(uint16_t)))
->  			return FALSE;
-> --
-> 2.9.5
-
-
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--ew6BAiZeqk4r7MaW--
+
