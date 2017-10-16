@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwym03.jp.fujitsu.com ([211.128.242.42])
+Received: from mail-by2nam03on0612.outbound.protection.outlook.com
+ ([2a01:111:f400:fe4a::612]
+ helo=NAM03-BY2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e41vD-0006Yl-FZ
- for kexec@lists.infradead.org; Mon, 16 Oct 2017 09:43:04 +0000
-Received: from g01jpfmpwkw02.exch.g01.fujitsu.local
- (g01jpfmpwkw02.exch.g01.fujitsu.local [10.0.193.56])
- by yt-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id 1A5CEAC0097
- for <kexec@lists.infradead.org>; Mon, 16 Oct 2017 18:42:29 +0900 (JST)
-From: Takao Indoh <indou.takao@jp.fujitsu.com>
-Subject: [makedumpfile PATCH v2 1/3] Support symbol __cpu_online_mask
-Date: Mon, 16 Oct 2017 18:42:15 +0900
-Message-ID: <20171016094217.1020-2-indou.takao@jp.fujitsu.com>
-In-Reply-To: <20171016094217.1020-1-indou.takao@jp.fujitsu.com>
-References: <20171016094217.1020-1-indou.takao@jp.fujitsu.com>
+ id 1e47tl-0003yQ-Dq
+ for kexec@lists.infradead.org; Mon, 16 Oct 2017 16:05:51 +0000
+Subject: Re: [PATCH 3/4] kexec-tools: mips: Use proper page_offset for OCTEON
+ CPUs.
+References: <20171012210228.7353-1-david.daney@cavium.com>
+ <20171012210228.7353-4-david.daney@cavium.com>
+ <20171016065636.wxm3nrzq7lkn4lw6@verge.net.au>
+From: David Daney <ddaney@caviumnetworks.com>
+Message-ID: <901800ab-a86a-6513-3bdd-2d2567105ac4@caviumnetworks.com>
+Date: Mon, 16 Oct 2017 09:05:22 -0700
 MIME-Version: 1.0
+In-Reply-To: <20171016065636.wxm3nrzq7lkn4lw6@verge.net.au>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,77 +24,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ats-kumagai@wm.jp.nec.com, d.hatayama@jp.fujitsu.com
-Cc: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, David Daney <david.daney@cavium.com>, Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org, kexec@lists.infradead.org
 
-In the upstream kernel, by commit 5aec01b83 cpu_online_mask was replaced
-with macros and new variables __cpu_online_mask was added instead of it.
-Sadump uses cpu_online_mask to check the cpu was online or not,
-therefore it also need __cpu_online_mask symbol for this in the latest
-kernel.
+On 10/15/2017 11:56 PM, Simon Horman wrote:
+> On Thu, Oct 12, 2017 at 02:02:27PM -0700, David Daney wrote:
+>> The OCTEON family of MIPS64 CPUs uses a PAGE_OFFSET of
+>> 0x8000000000000000ULL, which is differs from other CPUs.
+>>
+>> Scan /proc/cpuinfo to see if the current system is "Octeon", if so,
+>> patch the page_offset so that usable kdump core files are produced.
+>>
+>> Signed-off-by: David Daney <david.daney@cavium.com>
+> 
+> Is it possible to read this offset from the system rather than
+> checking for an Octeon CPU? It seems that such an approach, if possible,
+> would be somewhat more general.
+> 
 
-Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
----
- makedumpfile.c | 9 +++++++--
- makedumpfile.h | 1 +
- sadump_info.c  | 3 ++-
- 3 files changed, 10 insertions(+), 3 deletions(-)
+Before implementing this scanning of /proc/cpuinfo, I thought long and 
+hard about this, and couldn't think of how the PAGE_OFFSET could be 
+derived from information available in userspace.
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 567ac5d..5f2ca7d 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -1519,8 +1519,13 @@ get_symbol_info(void)
- 	SYMBOL_INIT(__per_cpu_load, "__per_cpu_load");
- 	SYMBOL_INIT(__per_cpu_offset, "__per_cpu_offset");
- 	SYMBOL_INIT(cpu_online_mask, "cpu_online_mask");
--	if (SYMBOL(cpu_online_mask) == NOT_FOUND_SYMBOL)
--		SYMBOL_INIT(cpu_online_mask, "cpu_online_map");
-+	SYMBOL_INIT(__cpu_online_mask, "__cpu_online_mask");
-+	if (SYMBOL(cpu_online_mask) == NOT_FOUND_SYMBOL) {
-+		if (SYMBOL(__cpu_online_mask) == NOT_FOUND_SYMBOL)
-+			SYMBOL_INIT(cpu_online_mask, "cpu_online_map");
-+		else
-+			SYMBOL_INIT(cpu_online_mask, "__cpu_online_mask");
-+	}
- 	SYMBOL_INIT(kexec_crash_image, "kexec_crash_image");
- 	SYMBOL_INIT(node_remap_start_vaddr, "node_remap_start_vaddr");
- 	SYMBOL_INIT(node_remap_end_vaddr, "node_remap_end_vaddr");
-diff --git a/makedumpfile.h b/makedumpfile.h
-index f4ba02d..704a6bc 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1596,6 +1596,7 @@ struct symbol_table {
- 	unsigned long long	__per_cpu_offset;
- 	unsigned long long	__per_cpu_load;
- 	unsigned long long	cpu_online_mask;
-+	unsigned long long	__cpu_online_mask;
- 	unsigned long long	kexec_crash_image;
- 
- 	/*
-diff --git a/sadump_info.c b/sadump_info.c
-index 257f1be..7dd22e7 100644
---- a/sadump_info.c
-+++ b/sadump_info.c
-@@ -953,7 +953,8 @@ cpu_online_mask_init(void)
- 		return FALSE;
- 	}
- 
--	if (SIZE(cpumask) == NOT_FOUND_STRUCTURE)
-+	if ((SIZE(cpumask) == NOT_FOUND_STRUCTURE) ||
-+	    (SYMBOL(__cpu_online_mask) != NOT_FOUND_SYMBOL))
- 		cpu_online_mask_addr = SYMBOL(cpu_online_mask);
- 
- 	else {
--- 
-2.9.5
+Ralf (MIPS maintainer) may have an idea, but these address bits don't 
+show up in /proc/kallsyms or any other file in /proc or /sys that I am 
+aware of.
 
-
+David
 
 _______________________________________________
 kexec mailing list
