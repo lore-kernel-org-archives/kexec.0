@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-by2nam03on0612.outbound.protection.outlook.com
- ([2a01:111:f400:fe4a::612]
- helo=NAM03-BY2-obe.outbound.protection.outlook.com)
+Received: from mail-cys01nam02on0047.outbound.protection.outlook.com
+ ([104.47.37.47] helo=NAM02-CY1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e47tl-0003yQ-Dq
- for kexec@lists.infradead.org; Mon, 16 Oct 2017 16:05:51 +0000
-Subject: Re: [PATCH 3/4] kexec-tools: mips: Use proper page_offset for OCTEON
- CPUs.
+ id 1e481c-0007zZ-KZ
+ for kexec@lists.infradead.org; Mon, 16 Oct 2017 16:13:58 +0000
+Subject: Re: [PATCH 1/4] kexec-tools: mips: Merge adjacent memory ranges.
 References: <20171012210228.7353-1-david.daney@cavium.com>
- <20171012210228.7353-4-david.daney@cavium.com>
- <20171016065636.wxm3nrzq7lkn4lw6@verge.net.au>
+ <20171012210228.7353-2-david.daney@cavium.com>
+ <20171016065313.g5va4jel5si2udbm@verge.net.au>
 From: David Daney <ddaney@caviumnetworks.com>
-Message-ID: <901800ab-a86a-6513-3bdd-2d2567105ac4@caviumnetworks.com>
-Date: Mon, 16 Oct 2017 09:05:22 -0700
+Message-ID: <8a440fe8-0633-32e1-d142-44765b41c47b@caviumnetworks.com>
+Date: Mon, 16 Oct 2017 09:13:30 -0700
 MIME-Version: 1.0
-In-Reply-To: <20171016065636.wxm3nrzq7lkn4lw6@verge.net.au>
+In-Reply-To: <20171016065313.g5va4jel5si2udbm@verge.net.au>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -28,33 +26,72 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, David Daney <david.daney@cavium.com>, Ralf Baechle <ralf@linux-mips.org>
+To: Simon Horman <horms@verge.net.au>, David Daney <david.daney@cavium.com>
 Cc: linux-mips@linux-mips.org, kexec@lists.infradead.org
 
-On 10/15/2017 11:56 PM, Simon Horman wrote:
-> On Thu, Oct 12, 2017 at 02:02:27PM -0700, David Daney wrote:
->> The OCTEON family of MIPS64 CPUs uses a PAGE_OFFSET of
->> 0x8000000000000000ULL, which is differs from other CPUs.
+On 10/15/2017 11:53 PM, Simon Horman wrote:
+> On Thu, Oct 12, 2017 at 02:02:25PM -0700, David Daney wrote:
+>> Some kernel versions running on MIPS split the System RAM memory
+>> regions reported in /proc/iomem.  This may cause loading of the kexec
+>> kernel to fail if it crosses one of the splits.
 >>
->> Scan /proc/cpuinfo to see if the current system is "Octeon", if so,
->> patch the page_offset so that usable kdump core files are produced.
+>> Fix by merging adjacent memory ranges that have the same type.
 >>
 >> Signed-off-by: David Daney <david.daney@cavium.com>
+>> ---
+>>   kexec/arch/mips/kexec-mips.c | 14 ++++++++++----
+>>   1 file changed, 10 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/kexec/arch/mips/kexec-mips.c b/kexec/arch/mips/kexec-mips.c
+>> index 2e5b700..415c2ed 100644
+>> --- a/kexec/arch/mips/kexec-mips.c
+>> +++ b/kexec/arch/mips/kexec-mips.c
+>> @@ -60,10 +60,16 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
+>>   		} else {
+>>   			continue;
+>>   		}
+>> -		memory_range[memory_ranges].start = start;
+>> -		memory_range[memory_ranges].end = end;
+>> -		memory_range[memory_ranges].type = type;
+>> -		memory_ranges++;
+>> +		if (memory_ranges > 0 &&
 > 
-> Is it possible to read this offset from the system rather than
-> checking for an Octeon CPU? It seems that such an approach, if possible,
-> would be somewhat more general.
+> It seems that this will never merge the first memory range
+> with subsequent ones. Is that intentional?
+
+
+With the first range (index 0), no other range yet exists to merge with. 
+  We can only test for merging with the second and subsequent ranges 
+(indices 1 and above).  To do otherwise would cause us to read things 
+from *before* the beginning of the array ...
+
 > 
+> 
+>> +		    memory_range[memory_ranges - 1].end == start &&
 
-Before implementing this scanning of /proc/cpuinfo, I thought long and 
-hard about this, and couldn't think of how the PAGE_OFFSET could be 
-derived from information available in userspace.
+... here.
 
-Ralf (MIPS maintainer) may have an idea, but these address bits don't 
-show up in /proc/kallsyms or any other file in /proc or /sys that I am 
-aware of.
+>> +		    memory_range[memory_ranges - 1].type == type) {
+>> +			memory_range[memory_ranges - 1].end = end;
+>> +		} else {
+>> +			memory_range[memory_ranges].start = start;
+>> +			memory_range[memory_ranges].end = end;
+>> +			memory_range[memory_ranges].type = type;
+>> +			memory_ranges++;
+>> +		}
+>>   	}
+>>   	fclose(fp);
+>>   	*range = memory_range;
+>> -- 
+>> 2.9.5
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>>
 
-David
 
 _______________________________________________
 kexec mailing list
