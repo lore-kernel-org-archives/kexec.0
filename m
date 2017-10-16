@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwym01.jp.fujitsu.com ([211.128.242.40])
+Received: from mgwym03.jp.fujitsu.com ([211.128.242.42])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e41vJ-0006cJ-4f
- for kexec@lists.infradead.org; Mon, 16 Oct 2017 09:43:10 +0000
+ id 1e41vD-0006Yl-FZ
+ for kexec@lists.infradead.org; Mon, 16 Oct 2017 09:43:04 +0000
 Received: from g01jpfmpwkw02.exch.g01.fujitsu.local
  (g01jpfmpwkw02.exch.g01.fujitsu.local [10.0.193.56])
- by yt-mxoi2.gw.nic.fujitsu.com (Postfix) with ESMTP id 65E67AC0450
- for <kexec@lists.infradead.org>; Mon, 16 Oct 2017 18:42:32 +0900 (JST)
+ by yt-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id 1A5CEAC0097
+ for <kexec@lists.infradead.org>; Mon, 16 Oct 2017 18:42:29 +0900 (JST)
 From: Takao Indoh <indou.takao@jp.fujitsu.com>
-Subject: [makedumpfile PATCH v2 2/3] Introduce vtop4_x86_64_pagetable
-Date: Mon, 16 Oct 2017 18:42:16 +0900
-Message-ID: <20171016094217.1020-3-indou.takao@jp.fujitsu.com>
+Subject: [makedumpfile PATCH v2 1/3] Support symbol __cpu_online_mask
+Date: Mon, 16 Oct 2017 18:42:15 +0900
+Message-ID: <20171016094217.1020-2-indou.takao@jp.fujitsu.com>
 In-Reply-To: <20171016094217.1020-1-indou.takao@jp.fujitsu.com>
 References: <20171016094217.1020-1-indou.takao@jp.fujitsu.com>
 MIME-Version: 1.0
@@ -29,91 +29,66 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com, d.hatayama@jp.fujitsu.com
 Cc: kexec@lists.infradead.org
 
-This patch introduces new function vtop4_x86_64_pagetable
-to translate virtual address to physical address. Unlike vtop4_x86_64,
-vtop4_x86_64_pagetable need a pointer of top of pagetable like CR3.
-
-Current vtop4_x86_64 implementation uses symbol value of
-init_level4_pgt, therefore vtop4_x86_64 does not work for sadump
-dumpfile of kaslr enabled kernel because it does not have vmcoreinfo to
-correct address of init_level4_pgt. vtop4_x86_64_pagetable requires
-pagetable address instead of init_level4_pgt and sadump dumpfile can
-pass CR3 value which is included in dump header.
+In the upstream kernel, by commit 5aec01b83 cpu_online_mask was replaced
+with macros and new variables __cpu_online_mask was added instead of it.
+Sadump uses cpu_online_mask to check the cpu was online or not,
+therefore it also need __cpu_online_mask symbol for this in the latest
+kernel.
 
 Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
- arch/x86_64.c  | 30 +++++++++++++++++++++++-------
- makedumpfile.h |  1 +
- 2 files changed, 24 insertions(+), 7 deletions(-)
+ makedumpfile.c | 9 +++++++--
+ makedumpfile.h | 1 +
+ sadump_info.c  | 3 ++-
+ 3 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86_64.c b/arch/x86_64.c
-index 08dd6b2..33621f1 100644
---- a/arch/x86_64.c
-+++ b/arch/x86_64.c
-@@ -255,20 +255,15 @@ get_versiondep_info_x86_64(void)
-  * Translate a virtual address to a physical address by using 4 levels paging.
-  */
- unsigned long long
--vtop4_x86_64(unsigned long vaddr)
-+__vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
- {
- 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
- 	unsigned long pte_paddr, pte;
- 
--	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
--		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
--		return NOT_PADDR;
--	}
--
- 	/*
- 	 * Get PGD.
- 	 */
--	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + info->phys_base;
-+	page_dir = pagetable;
- 	if (is_xen_memory()) {
- 		page_dir = ptom_xen(page_dir);
- 		if (page_dir == NOT_PADDR)
-@@ -346,6 +341,27 @@ vtop4_x86_64(unsigned long vaddr)
- 	return (pte & ENTRY_MASK) + PAGEOFFSET(vaddr);
- }
- 
-+unsigned long long
-+vtop4_x86_64(unsigned long vaddr)
-+{
-+	unsigned long pagetable;
-+
-+	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
-+		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
-+		return NOT_PADDR;
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 567ac5d..5f2ca7d 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1519,8 +1519,13 @@ get_symbol_info(void)
+ 	SYMBOL_INIT(__per_cpu_load, "__per_cpu_load");
+ 	SYMBOL_INIT(__per_cpu_offset, "__per_cpu_offset");
+ 	SYMBOL_INIT(cpu_online_mask, "cpu_online_mask");
+-	if (SYMBOL(cpu_online_mask) == NOT_FOUND_SYMBOL)
+-		SYMBOL_INIT(cpu_online_mask, "cpu_online_map");
++	SYMBOL_INIT(__cpu_online_mask, "__cpu_online_mask");
++	if (SYMBOL(cpu_online_mask) == NOT_FOUND_SYMBOL) {
++		if (SYMBOL(__cpu_online_mask) == NOT_FOUND_SYMBOL)
++			SYMBOL_INIT(cpu_online_mask, "cpu_online_map");
++		else
++			SYMBOL_INIT(cpu_online_mask, "__cpu_online_mask");
 +	}
-+
-+	pagetable = SYMBOL(init_level4_pgt) - __START_KERNEL_map + info->phys_base;
-+
-+	return __vtop4_x86_64(vaddr, pagetable);
-+}
-+
-+unsigned long long
-+vtop4_x86_64_pagetable(unsigned long vaddr, unsigned long pagetable)
-+{
-+	return __vtop4_x86_64(vaddr, pagetable);
-+}
-+
- /*
-  * for Xen extraction
-  */
+ 	SYMBOL_INIT(kexec_crash_image, "kexec_crash_image");
+ 	SYMBOL_INIT(node_remap_start_vaddr, "node_remap_start_vaddr");
+ 	SYMBOL_INIT(node_remap_end_vaddr, "node_remap_end_vaddr");
 diff --git a/makedumpfile.h b/makedumpfile.h
-index 704a6bc..f48dc0b 100644
+index f4ba02d..704a6bc 100644
 --- a/makedumpfile.h
 +++ b/makedumpfile.h
-@@ -978,6 +978,7 @@ int get_phys_base_x86_64(void);
- int get_machdep_info_x86_64(void);
- int get_versiondep_info_x86_64(void);
- unsigned long long vtop4_x86_64(unsigned long vaddr);
-+unsigned long long vtop4_x86_64_pagetable(unsigned long vaddr, unsigned long pagetable);
- #define find_vmemmap()		find_vmemmap_x86_64()
- #define get_phys_base()		get_phys_base_x86_64()
- #define get_machdep_info()	get_machdep_info_x86_64()
+@@ -1596,6 +1596,7 @@ struct symbol_table {
+ 	unsigned long long	__per_cpu_offset;
+ 	unsigned long long	__per_cpu_load;
+ 	unsigned long long	cpu_online_mask;
++	unsigned long long	__cpu_online_mask;
+ 	unsigned long long	kexec_crash_image;
+ 
+ 	/*
+diff --git a/sadump_info.c b/sadump_info.c
+index 257f1be..7dd22e7 100644
+--- a/sadump_info.c
++++ b/sadump_info.c
+@@ -953,7 +953,8 @@ cpu_online_mask_init(void)
+ 		return FALSE;
+ 	}
+ 
+-	if (SIZE(cpumask) == NOT_FOUND_STRUCTURE)
++	if ((SIZE(cpumask) == NOT_FOUND_STRUCTURE) ||
++	    (SYMBOL(__cpu_online_mask) != NOT_FOUND_SYMBOL))
+ 		cpu_online_mask_addr = SYMBOL(cpu_online_mask);
+ 
+ 	else {
 -- 
 2.9.5
 
