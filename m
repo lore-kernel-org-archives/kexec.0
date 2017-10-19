@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1e4gjU-0007Hy-0n
- for kexec@lists.infradead.org; Wed, 18 Oct 2017 05:17:33 +0000
-Date: Wed, 18 Oct 2017 07:16:53 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 3/4] kexec-tools: mips: Use proper page_offset for OCTEON
- CPUs.
-Message-ID: <20171018051653.anvogntf3ijw7fta@verge.net.au>
-References: <20171012210228.7353-1-david.daney@cavium.com>
- <20171012210228.7353-4-david.daney@cavium.com>
- <20171016065636.wxm3nrzq7lkn4lw6@verge.net.au>
- <901800ab-a86a-6513-3bdd-2d2567105ac4@caviumnetworks.com>
+Received: from mail-pf0-x243.google.com ([2607:f8b0:400e:c00::243])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1e52Wg-0008Hk-SO
+ for kexec@lists.infradead.org; Thu, 19 Oct 2017 04:33:48 +0000
+Received: by mail-pf0-x243.google.com with SMTP id b79so5602442pfk.5
+ for <kexec@lists.infradead.org>; Wed, 18 Oct 2017 21:33:25 -0700 (PDT)
+Date: Thu, 19 Oct 2017 13:36:14 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v5 03/10] kexec_file: factor out arch_kexec_kernel_*()
+ from x86, powerpc
+Message-ID: <20171019043613.GF8215@linaro.org>
+References: <20171010063619.6303-4-takahiro.akashi@linaro.org>
+ <201710141902.VMF5VddZ%fengguang.wu@intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <901800ab-a86a-6513-3bdd-2d2567105ac4@caviumnetworks.com>
+In-Reply-To: <201710141902.VMF5VddZ%fengguang.wu@intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,34 +27,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: linux-mips@linux-mips.org, kexec@lists.infradead.org, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>
+To: kbuild test robot <lkp@intel.com>
+Cc: linux-arm-kernel@lists.infradead.org, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, julien.thierry@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, kbuild-all@01.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-On Mon, Oct 16, 2017 at 09:05:22AM -0700, David Daney wrote:
-> On 10/15/2017 11:56 PM, Simon Horman wrote:
-> > On Thu, Oct 12, 2017 at 02:02:27PM -0700, David Daney wrote:
-> > > The OCTEON family of MIPS64 CPUs uses a PAGE_OFFSET of
-> > > 0x8000000000000000ULL, which is differs from other CPUs.
-> > > 
-> > > Scan /proc/cpuinfo to see if the current system is "Octeon", if so,
-> > > patch the page_offset so that usable kdump core files are produced.
-> > > 
-> > > Signed-off-by: David Daney <david.daney@cavium.com>
-> > 
-> > Is it possible to read this offset from the system rather than
-> > checking for an Octeon CPU? It seems that such an approach, if possible,
-> > would be somewhat more general.
-> > 
+On Sat, Oct 14, 2017 at 07:37:04PM +0800, kbuild test robot wrote:
+> Hi AKASHI,
 > 
-> Before implementing this scanning of /proc/cpuinfo, I thought long and hard
-> about this, and couldn't think of how the PAGE_OFFSET could be derived from
-> information available in userspace.
+> [auto build test WARNING on arm64/for-next/core]
+> [also build test WARNING on v4.14-rc4 next-20171013]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 > 
-> Ralf (MIPS maintainer) may have an idea, but these address bits don't show
-> up in /proc/kallsyms or any other file in /proc or /sys that I am aware of.
+> url:    https://github.com/0day-ci/linux/commits/AKASHI-Takahiro/arm64-kexec-add-kexec_file_load-support/20171012-003448
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
+> config: x86_64-randconfig-in0-10141752 (attached as .config)
+> compiler: gcc-4.6 (Debian 4.6.4-7) 4.6.4
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> All warnings (new ones prefixed by >>):
+> 
+> >> kernel/kexec_file.o: warning: objtool: _kexec_kernel_image_load()+0x31: unsupported stack register modification
 
-Thanks for the explanation. I've applied this patch pending any further
-progress in this area.
+I talked to Josh (objtool maintainer) and confirmed this is an issue
+of objtool, not a bug in my patch.
+
+-Takahiro AKASHI
+
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+
+
 
 _______________________________________________
 kexec mailing list
