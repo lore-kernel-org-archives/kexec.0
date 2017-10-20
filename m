@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x243.google.com ([2607:f8b0:400e:c00::243])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e52Wg-0008Hk-SO
- for kexec@lists.infradead.org; Thu, 19 Oct 2017 04:33:48 +0000
-Received: by mail-pf0-x243.google.com with SMTP id b79so5602442pfk.5
- for <kexec@lists.infradead.org>; Wed, 18 Oct 2017 21:33:25 -0700 (PDT)
-Date: Thu, 19 Oct 2017 13:36:14 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v5 03/10] kexec_file: factor out arch_kexec_kernel_*()
- from x86, powerpc
-Message-ID: <20171019043613.GF8215@linaro.org>
-References: <20171010063619.6303-4-takahiro.akashi@linaro.org>
- <201710141902.VMF5VddZ%fengguang.wu@intel.com>
+ id 1e5QFF-0000Bv-TP
+ for kexec@lists.infradead.org; Fri, 20 Oct 2017 05:53:23 +0000
+Date: Fri, 20 Oct 2017 13:52:54 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: x86/kdump: crashkernel=X try to reserve below 896M first then below
+ 4G and MAXMEM
+Message-ID: <20171020055254.GA7095@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <201710141902.VMF5VddZ%fengguang.wu@intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,39 +22,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kbuild test robot <lkp@intel.com>
-Cc: linux-arm-kernel@lists.infradead.org, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, julien.thierry@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, kbuild-all@01.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, yinghai@kernel.org, vgoyal@redhat.com, bhe@redhat.com
 
-On Sat, Oct 14, 2017 at 07:37:04PM +0800, kbuild test robot wrote:
-> Hi AKASHI,
-> 
-> [auto build test WARNING on arm64/for-next/core]
-> [also build test WARNING on v4.14-rc4 next-20171013]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/AKASHI-Takahiro/arm64-kexec-add-kexec_file_load-support/20171012-003448
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
-> config: x86_64-randconfig-in0-10141752 (attached as .config)
-> compiler: gcc-4.6 (Debian 4.6.4-7) 4.6.4
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=x86_64 
-> 
-> All warnings (new ones prefixed by >>):
-> 
-> >> kernel/kexec_file.o: warning: objtool: _kexec_kernel_image_load()+0x31: unsupported stack register modification
+Now crashkernel=X will fail if there's not enough memory at low region
+(below 896M) when trying to reserve large memory size.  One can use
+crashkernel=xM,high to reserve it at high region (>4G) but it is more
+convinient to improve crashkernel=X to: 
 
-I talked to Josh (objtool maintainer) and confirmed this is an issue
-of objtool, not a bug in my patch.
+ - First try to reserve X below 896M (for being compatible with old
+   kexec-tools).
+ - If fails, try to reserve X below 4G (swiotlb need to stay below 4G).
+ - If fails, try to reserve X from MAXMEM top down.
 
--Takahiro AKASHI
+It's more transparent and user-friendly.
 
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+If crashkernel is large and the reserved is beyond 896M, old kexec-tools
+is not compatible with new kernel because old kexec-tools can not load
+kernel at high memory region, there was an old discussion below
+(previously posted by Chao Wang):
+https://lkml.org/lkml/2013/10/15/601
 
+But actually the behavior is consistent during my test. Suppose
+old kernel fail to reserve memory at low areas, kdump does not
+work because no memory reserved. With this patch, suppose new kernel
+successfully reserved memory at high areas, old kexec-tools still fail
+to load kdump kernel (tested 2.0.2), so it is acceptable, no need to
+worry about the compatibility.
 
+Here is the test result (kexec-tools 2.0.2, no high memory load
+support):
+Crashkernel over 4G:
+# cat /proc/iomem|grep Crash
+  be000000-cdffffff : Crash kernel
+  213000000-21effffff : Crash kernel
+# ./kexec  -p /boot/vmlinuz-`uname -r`
+Memory for crashkernel is not reserved
+Please reserve memory by passing "crashkernel=X@Y" parameter to the kernel
+Then try loading kdump kernel
+
+crashkernel: 896M-4G:
+# cat /proc/iomem|grep Crash
+  96000000-cdefffff : Crash kernel
+# ./kexec -p /boot/vmlinuz-4.14.0-rc4+
+ELF core (kcore) parse failed
+Cannot load /boot/vmlinuz-4.14.0-rc4+
+
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+ arch/x86/kernel/setup.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+--- linux-x86.orig/arch/x86/kernel/setup.c
++++ linux-x86/arch/x86/kernel/setup.c
+@@ -568,6 +568,22 @@ static void __init reserve_crashkernel(v
+ 						    high ? CRASH_ADDR_HIGH_MAX
+ 							 : CRASH_ADDR_LOW_MAX,
+ 						    crash_size, CRASH_ALIGN);
++#ifdef CONFIG_X86_64
++		/*
++		 * crashkernel=X reserve below 896M fails? Try below 4G
++		 */
++		if (!high && !crash_base)
++			crash_base = memblock_find_in_range(CRASH_ALIGN,
++						(1ULL << 32),
++						crash_size, CRASH_ALIGN);
++		/*
++		 * crashkernel=X reserve below 4G fails? Try MAXMEM
++		 */
++		if (!high && !crash_base)
++			crash_base = memblock_find_in_range(CRASH_ALIGN,
++						CRASH_ADDR_HIGH_MAX,
++						crash_size, CRASH_ALIGN);
++#endif
+ 		if (!crash_base) {
+ 			pr_info("crashkernel reservation failed - No suitable area found.\n");
+ 			return;
 
 _______________________________________________
 kexec mailing list
