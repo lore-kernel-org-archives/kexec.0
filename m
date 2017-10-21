@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-ua0-x230.google.com ([2607:f8b0:400c:c08::230])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e5QFF-0000Bv-TP
- for kexec@lists.infradead.org; Fri, 20 Oct 2017 05:53:23 +0000
-Date: Fri, 20 Oct 2017 13:52:54 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: x86/kdump: crashkernel=X try to reserve below 896M first then below
- 4G and MAXMEM
-Message-ID: <20171020055254.GA7095@dhcp-128-65.nay.redhat.com>
+ id 1e5o5Y-0006vq-Iu
+ for kexec@lists.infradead.org; Sat, 21 Oct 2017 07:20:58 +0000
+Received: by mail-ua0-x230.google.com with SMTP id e46so9781921uaa.4
+ for <kexec@lists.infradead.org>; Sat, 21 Oct 2017 00:20:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
+In-Reply-To: <20171020055254.GA7095@dhcp-128-65.nay.redhat.com>
+References: <20171020055254.GA7095@dhcp-128-65.nay.redhat.com>
+From: Yinghai Lu <yinghai@kernel.org>
+Date: Sat, 21 Oct 2017 00:20:33 -0700
+Message-ID: <CAE9FiQU+R4Z+3xS9SjUk2i2D8Ht6uhP_pd8maguQOen1UqpgZg@mail.gmail.com>
+Subject: Re: x86/kdump: crashkernel=X try to reserve below 896M first then
+ below 4G and MAXMEM
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,82 +25,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org, yinghai@kernel.org, vgoyal@redhat.com, bhe@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Now crashkernel=X will fail if there's not enough memory at low region
-(below 896M) when trying to reserve large memory size.  One can use
-crashkernel=xM,high to reserve it at high region (>4G) but it is more
-convinient to improve crashkernel=X to: 
+On Thu, Oct 19, 2017 at 10:52 PM, Dave Young <dyoung@redhat.com> wrote:
+> Now crashkernel=X will fail if there's not enough memory at low region
+> (below 896M) when trying to reserve large memory size.  One can use
+> crashkernel=xM,high to reserve it at high region (>4G) but it is more
+> convinient to improve crashkernel=X to:
+>
+>  - First try to reserve X below 896M (for being compatible with old
+>    kexec-tools).
+>  - If fails, try to reserve X below 4G (swiotlb need to stay below 4G).
+>  - If fails, try to reserve X from MAXMEM top down.
+>
+> It's more transparent and user-friendly.
 
- - First try to reserve X below 896M (for being compatible with old
-   kexec-tools).
- - If fails, try to reserve X below 4G (swiotlb need to stay below 4G).
- - If fails, try to reserve X from MAXMEM top down.
+ok with me.
 
-It's more transparent and user-friendly.
-
-If crashkernel is large and the reserved is beyond 896M, old kexec-tools
-is not compatible with new kernel because old kexec-tools can not load
-kernel at high memory region, there was an old discussion below
-(previously posted by Chao Wang):
-https://lkml.org/lkml/2013/10/15/601
-
-But actually the behavior is consistent during my test. Suppose
-old kernel fail to reserve memory at low areas, kdump does not
-work because no memory reserved. With this patch, suppose new kernel
-successfully reserved memory at high areas, old kexec-tools still fail
-to load kdump kernel (tested 2.0.2), so it is acceptable, no need to
-worry about the compatibility.
-
-Here is the test result (kexec-tools 2.0.2, no high memory load
-support):
-Crashkernel over 4G:
-# cat /proc/iomem|grep Crash
-  be000000-cdffffff : Crash kernel
-  213000000-21effffff : Crash kernel
-# ./kexec  -p /boot/vmlinuz-`uname -r`
-Memory for crashkernel is not reserved
-Please reserve memory by passing "crashkernel=X@Y" parameter to the kernel
-Then try loading kdump kernel
-
-crashkernel: 896M-4G:
-# cat /proc/iomem|grep Crash
-  96000000-cdefffff : Crash kernel
-# ./kexec -p /boot/vmlinuz-4.14.0-rc4+
-ELF core (kcore) parse failed
-Cannot load /boot/vmlinuz-4.14.0-rc4+
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- arch/x86/kernel/setup.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
---- linux-x86.orig/arch/x86/kernel/setup.c
-+++ linux-x86/arch/x86/kernel/setup.c
-@@ -568,6 +568,22 @@ static void __init reserve_crashkernel(v
- 						    high ? CRASH_ADDR_HIGH_MAX
- 							 : CRASH_ADDR_LOW_MAX,
- 						    crash_size, CRASH_ALIGN);
-+#ifdef CONFIG_X86_64
-+		/*
-+		 * crashkernel=X reserve below 896M fails? Try below 4G
-+		 */
-+		if (!high && !crash_base)
-+			crash_base = memblock_find_in_range(CRASH_ALIGN,
-+						(1ULL << 32),
-+						crash_size, CRASH_ALIGN);
-+		/*
-+		 * crashkernel=X reserve below 4G fails? Try MAXMEM
-+		 */
-+		if (!high && !crash_base)
-+			crash_base = memblock_find_in_range(CRASH_ALIGN,
-+						CRASH_ADDR_HIGH_MAX,
-+						crash_size, CRASH_ALIGN);
-+#endif
- 		if (!crash_base) {
- 			pr_info("crashkernel reservation failed - No suitable area found.\n");
- 			return;
+But looks like last time Vivek did not like this idea.
 
 _______________________________________________
 kexec mailing list
