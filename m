@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x243.google.com ([2607:f8b0:400e:c05::243])
+Received: from mail-pg0-x241.google.com ([2607:f8b0:400e:c05::241])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e6sbc-0004kw-2P
- for kexec@lists.infradead.org; Tue, 24 Oct 2017 06:22:53 +0000
-Received: by mail-pg0-x243.google.com with SMTP id y5so5890761pgq.7
- for <kexec@lists.infradead.org>; Mon, 23 Oct 2017 23:22:07 -0700 (PDT)
+ id 1e6sbY-0004jB-5M
+ for kexec@lists.infradead.org; Tue, 24 Oct 2017 06:22:47 +0000
+Received: by mail-pg0-x241.google.com with SMTP id s75so13711232pgs.0
+ for <kexec@lists.infradead.org>; Mon, 23 Oct 2017 23:22:04 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v6 06/10] arm64: kexec_file: create purgatory
-Date: Tue, 24 Oct 2017 15:23:50 +0900
-Message-Id: <20171024062354.22621-7-takahiro.akashi@linaro.org>
+Subject: [PATCH v6 05/10] asm-generic: add kexec_file_load system call to
+ unistd.h
+Date: Tue, 24 Oct 2017 15:23:49 +0900
+Message-Id: <20171024062354.22621-6-takahiro.akashi@linaro.org>
 In-Reply-To: <20171024062354.22621-1-takahiro.akashi@linaro.org>
 References: <20171024062354.22621-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,132 +28,31 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org, julien.thierry@arm.com
 Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-This is a basic purgatory, or a kind of glue code between the two kernels,
-for arm64.
-
-Since purgatory is assumed to be relocatable (not executable) object by
-kexec generic code, arch_kexec_apply_relocations_add() is required in
-general. Arm64's purgatory, however, is a simple asm and all the references
-can be resolved as local, no re-linking is needed here.
-
-Please note that even if we don't support digest check at purgatory we
-need purgatory_sha_regions and purgatory_sha256_digest as they are
-referenced by generic kexec code.
+The initial user of this system call number is arm64.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm64/Makefile           |  1 +
- arch/arm64/purgatory/Makefile | 24 +++++++++++++++++++
- arch/arm64/purgatory/entry.S  | 55 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 80 insertions(+)
- create mode 100644 arch/arm64/purgatory/Makefile
- create mode 100644 arch/arm64/purgatory/entry.S
+ include/uapi/asm-generic/unistd.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 939b310913cf..cf39ec3baf5a 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -110,6 +110,7 @@ core-$(CONFIG_XEN) += arch/arm64/xen/
- core-$(CONFIG_CRYPTO) += arch/arm64/crypto/
- libs-y		:= arch/arm64/lib/ $(libs-y)
- core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
-+core-$(CONFIG_KEXEC_FILE) += arch/arm64/purgatory/
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index 061185a5eb51..086697fe3917 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -731,9 +731,11 @@ __SYSCALL(__NR_pkey_alloc,    sys_pkey_alloc)
+ __SYSCALL(__NR_pkey_free,     sys_pkey_free)
+ #define __NR_statx 291
+ __SYSCALL(__NR_statx,     sys_statx)
++#define __NR_kexec_file_load 292
++__SYSCALL(__NR_kexec_file_load,     sys_kexec_file_load)
  
- # Default target when executing plain make
- boot		:= arch/arm64/boot
-diff --git a/arch/arm64/purgatory/Makefile b/arch/arm64/purgatory/Makefile
-new file mode 100644
-index 000000000000..c2127a2cbd51
---- /dev/null
-+++ b/arch/arm64/purgatory/Makefile
-@@ -0,0 +1,24 @@
-+OBJECT_FILES_NON_STANDARD := y
-+
-+purgatory-y := entry.o
-+
-+targets += $(purgatory-y)
-+PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
-+
-+LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined \
-+					-nostdlib -z nodefaultlib
-+targets += purgatory.ro
-+
-+$(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
-+		$(call if_changed,ld)
-+
-+targets += kexec_purgatory.c
-+
-+CMD_BIN2C = $(objtree)/scripts/basic/bin2c
-+quiet_cmd_bin2c = BIN2C $@
-+	cmd_bin2c = $(CMD_BIN2C) kexec_purgatory < $< > $@
-+
-+$(obj)/kexec_purgatory.c: $(obj)/purgatory.ro FORCE
-+	$(call if_changed,bin2c)
-+
-+obj-${CONFIG_KEXEC_FILE}	+= kexec_purgatory.o
-diff --git a/arch/arm64/purgatory/entry.S b/arch/arm64/purgatory/entry.S
-new file mode 100644
-index 000000000000..fe6e968076db
---- /dev/null
-+++ b/arch/arm64/purgatory/entry.S
-@@ -0,0 +1,55 @@
-+/*
-+ * kexec core purgatory
-+ */
-+#include <linux/linkage.h>
-+#include <uapi/linux/kexec.h>
-+
-+#define SHA256_DIGEST_SIZE	32 /* defined in crypto/sha.h */
-+
-+.text
-+
-+ENTRY(purgatory_start)
-+	/* Start new image. */
-+	ldr	x17, __kernel_entry
-+	ldr	x0, __dtb_addr
-+	mov	x1, xzr
-+	mov	x2, xzr
-+	mov	x3, xzr
-+	br	x17
-+END(purgatory_start)
-+
-+/*
-+ * data section:
-+ * kernel_entry and dtb_addr are global but also labelled as local,
-+ * "__xxx:", to avoid unwanted re-linking.
-+ *
-+ * purgatory_sha_regions and purgatory_sha256_digest are referenced
-+ * by kexec generic code and so must exist, but not actually used
-+ * here because hash check is not that useful in purgatory.
-+ */
-+.align 3
-+
-+.globl kernel_entry
-+kernel_entry:
-+__kernel_entry:
-+	.quad	0
-+END(kernel_entry)
-+
-+.globl dtb_addr
-+dtb_addr:
-+__dtb_addr:
-+	.quad	0
-+END(dtb_addr)
-+
-+.globl purgatory_sha_regions
-+purgatory_sha_regions:
-+	.rept	KEXEC_SEGMENT_MAX
-+	.quad	0
-+	.quad	0
-+	.endr
-+END(purgatory_sha_regions)
-+
-+.globl purgatory_sha256_digest
-+purgatory_sha256_digest:
-+        .skip   SHA256_DIGEST_SIZE
-+END(purgatory_sha256_digest)
+ #undef __NR_syscalls
+-#define __NR_syscalls 292
++#define __NR_syscalls 293
+ 
+ /*
+  * All syscalls below here should go away really,
 -- 
 2.14.1
 
