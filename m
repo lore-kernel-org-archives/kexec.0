@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pf0-x242.google.com ([2607:f8b0:400e:c00::242])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e6sPk-0006El-AP
- for kexec@lists.infradead.org; Tue, 24 Oct 2017 06:10:14 +0000
-Date: Tue, 24 Oct 2017 14:09:44 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 3/3] kdump: round up the total memory size to 128M for
- crashkernel reservation
-Message-ID: <20171024060944.GB8585@dhcp-128-65.nay.redhat.com>
-References: <20171024053901.813846011@redhat.com> <20171024055722.GG27757@x1>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20171024055722.GG27757@x1>
+ id 1e6sac-0004I3-NL
+ for kexec@lists.infradead.org; Tue, 24 Oct 2017 06:21:28 +0000
+Received: by mail-pf0-x242.google.com with SMTP id b79so18949127pfk.5
+ for <kexec@lists.infradead.org>; Mon, 23 Oct 2017 23:21:06 -0700 (PDT)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v6 00/10] arm64: kexec: add kexec_file_load() support
+Date: Tue, 24 Oct 2017 15:23:44 +0900
+Message-Id: <20171024062354.22621-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,105 +17,148 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: corbet@lwn.net, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, yinghai@kernel.org, vgoyal@redhat.com
+To: catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org, julien.thierry@arm.com
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-Hi Baoquan,
+This is the sixth round of implementing kexec_file_load() support
+on arm64.[1]
+Most of the code is based on kexec-tools (along with some kernel code
+from x86, which also came from kexec-tools).
 
-On 10/24/17 at 01:57pm, Baoquan He wrote:
-> Hi Dave,
-> 
-> On 10/24/17 at 01:31pm, Dave Young wrote:
-> > The total memory size we get in kernel is usually slightly less than 2G with a
-> > 2G memory module machine. The main reason is bios/firmware reserve some area
-> > it will not export all memory as usable to Linux.
-> > 
-> > 2G memory X86 kvm guest test result of the total_mem value:
-> > UEFI boot with ovmf: 0x7ef10000
-> > Legacy boot kvm guest: 0x7ff7cc00
-> > 
-> > An option is to use dmi/smbios to get physical memory size, but it's not
-> > reliable as well. According to Prarit hardware vendors sometimes screw this up.
-> > Thus we choose to round up total size to 128M to workaround this problem.
-> > This is a best effort workaround, will improve it when we have better way
-> > in the future. 
-> 
-> Thanks for this posting. While I don't get the point of this patch. So
-> firmware take piece of memory, then why we need to count it into the
-> total memory which we want to calculate a crashkernel memory based on.
-> 
-> Not counting that, is there anyting incorrect?
 
-Yes, considering crashkernel=1G-2G:128M,  if we have a 1G memory
-machine, we get total size 1023M from firmware then it will not fall
-into 1G-2G thus no memory reserved.  User will never know that, it is
-hard to let user to know the exact total value we get in kernel..
+This patch series enables us to
+  * load the kernel, Image, with kexec_file_load system call, and
+  * optionally verify its signature at load time for trusted boot.
 
-> 
-> Thanks
-> Baoquan
-> 
-> > 
-> > Signed-off-by: Dave Young <dyoung@redhat.com>
-> > ---
-> >  kernel/crash_core.c |   17 +++++++++++++----
-> >  1 file changed, 13 insertions(+), 4 deletions(-)
-> > 
-> > --- linux.orig/kernel/crash_core.c
-> > +++ linux/kernel/crash_core.c
-> > @@ -42,6 +42,15 @@ static int __init parse_crashkernel_mem(
-> >  {
-> >  	char *cur = cmdline, *tmp;
-> >  	bool infinite_end = false;
-> > +	unsigned long long total_mem = system_ram;
-> > +
-> > +	/*
-> > +	 * Firmware usually reserves some memory regions for it's own use.
-> > +	 * so we get less than actual system memory size.
-> > +	 * We workaround this by round up the total size to 128M which is
-> > +	 * enough for most test cases.
-> > +	 */
-> > +	total_mem = roundup(total_mem, 0x8000000);
-> >  
-> >  	/* for each entry of the comma-separated list */
-> >  	do {
-> > @@ -86,13 +95,13 @@ static int __init parse_crashkernel_mem(
-> >  			return -EINVAL;
-> >  		}
-> >  		cur = tmp;
-> > -		if (size >= system_ram) {
-> > +		if (size >= total_mem) {
-> >  			pr_warn("crashkernel: invalid size\n");
-> >  			return -EINVAL;
-> >  		}
-> >  
-> >  		/* match ? */
-> > -		if (system_ram >= start && system_ram < end) {
-> > +		if (total_mem >= start && total_mem < end) {
-> >  			*crash_size = size;
-> >  			if (end == ULLONG_MAX)
-> >  				infinite_end = true;
-> > @@ -126,9 +135,9 @@ static int __init parse_crashkernel_mem(
-> >  				pr_warn("Memory reservation scale order expected after '^'\n");
-> >  				return -EINVAL;
-> >  			}
-> > -			size = (system_ram - *crash_size) >> shift;
-> > +			size = (total_mem - *crash_size) >> shift;
-> >  			size = *crash_size + roundup(size, 1ULL << 20);
-> > -			if (size < system_ram)
-> > +			if (size < total_mem)
-> >  				*crash_size = size;
-> >  			cur = tmp;
-> >  		} else
-> > 
-> > 
+To load the kernel via kexec_file_load system call, a small change
+is also needed to kexec-tools. See [2]. This enables '-s' option.
+(Please use v7.2.1+ crash for v4.14+ kernel)
 
-Thanks
-Dave
+As we discussed a long time ago, users may not be allowed to specify
+device-tree file of the 2nd kernel explicitly with kexec-tools, hence
+re-using the blob of the first kernel.
+
+Regarding a signing method, we conform with x86 (or rather Microsoft?)
+style of signing since the binary can also be seen as in PE format
+(assuming that CONFIG_EFI is enabled).
+
+    Powerpc is also going to support extended-file-attribute-based
+    verification[3] with vmlinux, but arm64 doesn't for now partly
+    because we don't have TPM-based IMA at this moment.
+
+Accordingly, we can use the existing command, sbsign, to sign the kernel.
+
+    $ sbsign --key ${KEY} --cert ${CERT} Image
+
+Please note that it is totally up to the system what key/certificate is
+used for signing, but one of easy ways to *try* this feature is to turn on
+CONFIG_MODULE_SIG so that we can reuse certs/signing_key.pem as a signing
+key, KEY and CERT above, for kernel.
+(This also enables CONFIG_CRYPTO_SHA1 by default.)
+
+
+Some concerns(or future works):
+* Even if the kernel is configured with CONFIG_RANDOMIZE_BASE, the 2nd
+  kernel won't be placed at a randomized address. We will have to
+  add some boot code similar to efi-stub to implement the feature.
+* While big-endian kernel can support kernel signing, I'm not sure that
+  Image can be recognized as in PE format because x86 standard only
+  defines little-endian-based format.
+* IMA(and extended file attribute)-based kexec
+* vmlinux support
+
+  [1] http://git.linaro.org/people/takahiro.akashi/linux-aarch64.git
+	branch:arm64/kexec_file
+  [2] http://git.linaro.org/people/takahiro.akashi/kexec-tools.git
+	branch:arm64/kexec_file
+  [3] http://lkml.iu.edu//hypermail/linux/kernel/1707.0/03669.html
+
+
+Changes in v6 (Oct 24, 2017)
+* fix a for-loop bug in _kexec_kernel_image_probe() per Julien
+
+Changes in v5 (Oct 10, 2017)
+* fix kbuild errors around patch #3
+per Julien's comments,
+* fix a bug in walk_system_ram_res_rev() with some cleanup
+* modify fdt_setprop_range() to use vmalloc()
+* modify fill_property() to use memset()
+
+Changes in v4 (Oct 2, 2017)
+* reinstate x86's arch_kexec_kernel_image_load()
+* rename weak arch_kexec_kernel_xxx() to _kexec_kernel_xxx() for
+  better re-use
+* constify kexec_file_loaders[]
+
+Changes in v3 (Sep 15, 2017)
+* fix kbuild test error
+* factor out arch_kexec_kernel_*() & arch_kimage_file_post_load_cleanup()
+* remove CONFIG_CRASH_CORE guard from kexec_file.c
+* add vmapped kernel region to vmcore for gdb backtracing
+  (see prepare_elf64_headers())
+* merge asm/kexec_file.h into asm/kexec.h
+* and some cleanups
+
+Changes in v2 (Sep 8, 2017)
+* move core-header-related functions from crash_core.c to kexec_file.c
+* drop hash-check code from purgatory
+* modify purgatory asm to remove arch_kexec_apply_relocations_add()
+* drop older kernel support
+* drop vmlinux support (at least, for this series)
+
+Patch #1 to #5 are all preparatory patches on generic side.
+Patch #6 is purgatory code.
+Patch #7 to #9 are common for enabling kexec_file_load.
+Patch #10 is for 'Image' support.
+
+AKASHI Takahiro (10):
+  include: pe.h: remove message[] from mz header definition
+  resource: add walk_system_ram_res_rev()
+  kexec_file: factor out arch_kexec_kernel_*() from x86, powerpc
+  kexec_file: factor out crashdump elf header function from x86
+  asm-generic: add kexec_file_load system call to unistd.h
+  arm64: kexec_file: create purgatory
+  arm64: kexec_file: load initrd, device-tree and purgatory segments
+  arm64: kexec_file: set up for crash dump adding elf core header
+  arm64: enable KEXEC_FILE config
+  arm64: kexec_file: add Image format support
+
+ arch/arm64/Kconfig                          |  29 +++
+ arch/arm64/Makefile                         |   1 +
+ arch/arm64/include/asm/kexec.h              |  93 +++++++
+ arch/arm64/kernel/Makefile                  |   4 +-
+ arch/arm64/kernel/kexec_image.c             | 105 ++++++++
+ arch/arm64/kernel/machine_kexec_file.c      | 367 ++++++++++++++++++++++++++++
+ arch/arm64/purgatory/Makefile               |  24 ++
+ arch/arm64/purgatory/entry.S                |  55 +++++
+ arch/powerpc/include/asm/kexec.h            |   2 +-
+ arch/powerpc/kernel/kexec_elf_64.c          |   2 +-
+ arch/powerpc/kernel/machine_kexec_file_64.c |  39 +--
+ arch/x86/include/asm/kexec-bzimage64.h      |   2 +-
+ arch/x86/kernel/crash.c                     | 324 ------------------------
+ arch/x86/kernel/kexec-bzimage64.c           |   2 +-
+ arch/x86/kernel/machine_kexec_64.c          |  45 +---
+ include/linux/ioport.h                      |   3 +
+ include/linux/kexec.h                       |  32 ++-
+ include/linux/pe.h                          |   2 +-
+ include/uapi/asm-generic/unistd.h           |   4 +-
+ kernel/kexec_file.c                         | 365 ++++++++++++++++++++++++++-
+ kernel/kexec_internal.h                     |  20 ++
+ kernel/resource.c                           |  57 +++++
+ 22 files changed, 1156 insertions(+), 421 deletions(-)
+ create mode 100644 arch/arm64/kernel/kexec_image.c
+ create mode 100644 arch/arm64/kernel/machine_kexec_file.c
+ create mode 100644 arch/arm64/purgatory/Makefile
+ create mode 100644 arch/arm64/purgatory/entry.S
+
+-- 
+2.14.1
+
 
 _______________________________________________
 kexec mailing list
