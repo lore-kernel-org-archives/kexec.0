@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x244.google.com ([2607:f8b0:400e:c00::244])
+Received: from mail-pg0-x244.google.com ([2607:f8b0:400e:c05::244])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e6sbA-0004SR-1I
- for kexec@lists.infradead.org; Tue, 24 Oct 2017 06:22:03 +0000
-Received: by mail-pf0-x244.google.com with SMTP id i5so18935775pfe.6
- for <kexec@lists.infradead.org>; Mon, 23 Oct 2017 23:21:40 -0700 (PDT)
+ id 1e6sbn-0004nl-5c
+ for kexec@lists.infradead.org; Tue, 24 Oct 2017 06:22:57 +0000
+Received: by mail-pg0-x244.google.com with SMTP id y5so5891114pgq.7
+ for <kexec@lists.infradead.org>; Mon, 23 Oct 2017 23:22:19 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v6 02/10] resource: add walk_system_ram_res_rev()
-Date: Tue, 24 Oct 2017 15:23:46 +0900
-Message-Id: <20171024062354.22621-3-takahiro.akashi@linaro.org>
+Subject: [PATCH v6 09/10] arm64: enable KEXEC_FILE config
+Date: Tue, 24 Oct 2017 15:23:53 +0900
+Message-Id: <20171024062354.22621-10-takahiro.akashi@linaro.org>
 In-Reply-To: <20171024062354.22621-1-takahiro.akashi@linaro.org>
 References: <20171024062354.22621-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -25,113 +25,50 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org, julien.thierry@arm.com
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Linus Torvalds <torvalds@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-This function, being a variant of walk_system_ram_res() introduced in
-commit 8c86e70acead ("resource: provide new functions to walk through
-resources"), walks through a list of all the resources of System RAM
-in reversed order, i.e., from higher to lower.
-
-It will be used in kexec_file implementation on arm64.
+Modify arm64/Kconfig and Makefile to enable kexec_file_load support.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
 ---
- include/linux/ioport.h |  3 +++
- kernel/resource.c      | 57 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
+ arch/arm64/Kconfig | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index f5cf32e80041..62eb62b98118 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -273,6 +273,9 @@ extern int
- walk_system_ram_res(u64 start, u64 end, void *arg,
- 		    int (*func)(u64, u64, void *));
- extern int
-+walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-+			int (*func)(u64, u64, void *));
-+extern int
- walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start, u64 end,
- 		    void *arg, int (*func)(u64, u64, void *));
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 0df64a6a56d4..e37be8a59a88 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -757,6 +757,28 @@ config KEXEC
+ 	  but it is independent of the system firmware.   And like a reboot
+ 	  you can start any kernel with it, not just Linux.
  
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 9b5f04404152..69c31454cb2e 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -23,6 +23,8 @@
- #include <linux/pfn.h>
- #include <linux/mm.h>
- #include <linux/resource_ext.h>
-+#include <linux/string.h>
-+#include <linux/vmalloc.h>
- #include <asm/io.h>
- 
- 
-@@ -469,6 +471,61 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
- 	return ret;
- }
- 
-+int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-+				int (*func)(u64, u64, void *))
-+{
-+	struct resource res, *rams;
-+	int rams_size = 16, i;
-+	int ret = -1;
++config KEXEC_FILE
++	bool "kexec file based system call"
++	select KEXEC_CORE
++	select BUILD_BIN2C
++	---help---
++	  This is new version of kexec system call. This system call is
++	  file based and takes file descriptors as system call argument
++	  for kernel and initramfs as opposed to list of segments as
++	  accepted by previous system call.
 +
-+	/* create a list */
-+	rams = vmalloc(sizeof(struct resource) * rams_size);
-+	if (!rams)
-+		return ret;
++	  In addition to this option, you need to enable a specific type
++	  of image support.
 +
-+	res.start = start;
-+	res.end = end;
-+	res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-+	i = 0;
-+	while ((res.start < res.end) &&
-+		(!find_next_iomem_res(&res, IORES_DESC_NONE, true))) {
-+		if (i >= rams_size) {
-+			/* re-alloc */
-+			struct resource *rams_new;
-+			int rams_new_size;
++config KEXEC_VERIFY_SIG
++	bool "Verify kernel signature during kexec_file_load() syscall"
++	depends on KEXEC_FILE
++	select SYSTEM_DATA_VERIFICATION
++	---help---
++	  Select this option to verify a signature with loaded kernel
++	  image. If configured, any attempt of loading a image without
++	  valid signature will fail.
 +
-+			rams_new_size = rams_size + 16;
-+			rams_new = vmalloc(sizeof(struct resource)
-+							* rams_new_size);
-+			if (!rams_new)
-+				goto out;
-+
-+			memcpy(rams_new, rams,
-+					sizeof(struct resource) * rams_size);
-+			vfree(rams);
-+			rams = rams_new;
-+			rams_size = rams_new_size;
-+		}
-+
-+		rams[i].start = res.start;
-+		rams[i++].end = res.end;
-+
-+		res.start = res.end + 1;
-+		res.end = end;
-+	}
-+
-+	/* go reverse */
-+	for (i--; i >= 0; i--) {
-+		ret = (*func)(rams[i].start, rams[i].end, arg);
-+		if (ret)
-+			break;
-+	}
-+
-+out:
-+	vfree(rams);
-+	return ret;
-+}
-+
- #if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
- 
- /*
+ config CRASH_DUMP
+ 	bool "Build kdump crash kernel"
+ 	help
 -- 
 2.14.1
 
