@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x241.google.com ([2607:f8b0:400e:c00::241])
- by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e6sbO-0004Ho-UV
- for kexec@lists.infradead.org; Tue, 24 Oct 2017 06:22:19 +0000
-Received: by mail-pf0-x241.google.com with SMTP id n14so18921551pfh.8
- for <kexec@lists.infradead.org>; Mon, 23 Oct 2017 23:21:54 -0700 (PDT)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v6 03/10] kexec_file: factor out arch_kexec_kernel_*() from
- x86, powerpc
-Date: Tue, 24 Oct 2017 15:23:47 +0900
-Message-Id: <20171024062354.22621-4-takahiro.akashi@linaro.org>
-In-Reply-To: <20171024062354.22621-1-takahiro.akashi@linaro.org>
-References: <20171024062354.22621-1-takahiro.akashi@linaro.org>
+Received: from mgwym01.jp.fujitsu.com ([211.128.242.40])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1e6w1a-0004f2-VI
+ for kexec@lists.infradead.org; Tue, 24 Oct 2017 10:01:38 +0000
+Received: from g01jpfmpwkw01.exch.g01.fujitsu.local
+ (g01jpfmpwkw01.exch.g01.fujitsu.local [10.0.193.38])
+ by yt-mxoi1.gw.nic.fujitsu.com (Postfix) with ESMTP id D977BAC0118
+ for <kexec@lists.infradead.org>; Tue, 24 Oct 2017 19:00:59 +0900 (JST)
+Date: Tue, 24 Oct 2017 19:00:47 +0900
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
+Subject: Re: [makedumpfile PATCH v2 0/3] Fix KASLR problem on sadump
+Message-ID: <20171024100046.GF19620@tindoh2.g01.fujitsu.local>
+References: <20171016094217.1020-1-indou.takao@jp.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20171016094217.1020-1-indou.takao@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,339 +23,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org, julien.thierry@arm.com
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: ats-kumagai@wm.jp.nec.com, d.hatayama@jp.fujitsu.com
+Cc: kexec@lists.infradead.org
 
-arch_kexec_kernel_*() and arch_kimage_file_post_load_cleanup can now be
-duplicated among some architectures, so let's factor them out.
+Hi Kumagai-san, Hatayama-san,
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
----
- arch/powerpc/include/asm/kexec.h            |  2 +-
- arch/powerpc/kernel/kexec_elf_64.c          |  2 +-
- arch/powerpc/kernel/machine_kexec_file_64.c | 39 ++------------------
- arch/x86/include/asm/kexec-bzimage64.h      |  2 +-
- arch/x86/kernel/kexec-bzimage64.c           |  2 +-
- arch/x86/kernel/machine_kexec_64.c          | 45 +----------------------
- include/linux/kexec.h                       | 15 ++++----
- kernel/kexec_file.c                         | 57 +++++++++++++++++++++++++++--
- 8 files changed, 70 insertions(+), 94 deletions(-)
+Any comments?
 
-diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-index 25668bc8cb2a..23588952d8bd 100644
---- a/arch/powerpc/include/asm/kexec.h
-+++ b/arch/powerpc/include/asm/kexec.h
-@@ -92,7 +92,7 @@ static inline bool kdump_in_progress(void)
- }
- 
- #ifdef CONFIG_KEXEC_FILE
--extern struct kexec_file_ops kexec_elf64_ops;
-+extern const struct kexec_file_ops kexec_elf64_ops;
- 
- #ifdef CONFIG_IMA_KEXEC
- #define ARCH_HAS_KIMAGE_ARCH
-diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec_elf_64.c
-index 9a42309b091a..6c78c11c7faf 100644
---- a/arch/powerpc/kernel/kexec_elf_64.c
-+++ b/arch/powerpc/kernel/kexec_elf_64.c
-@@ -657,7 +657,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
- 	return ret ? ERR_PTR(ret) : fdt;
- }
- 
--struct kexec_file_ops kexec_elf64_ops = {
-+const struct kexec_file_ops kexec_elf64_ops = {
- 	.probe = elf64_probe,
- 	.load = elf64_load,
- };
-diff --git a/arch/powerpc/kernel/machine_kexec_file_64.c b/arch/powerpc/kernel/machine_kexec_file_64.c
-index 992c0d258e5d..cd2a7671f5c6 100644
---- a/arch/powerpc/kernel/machine_kexec_file_64.c
-+++ b/arch/powerpc/kernel/machine_kexec_file_64.c
-@@ -31,52 +31,19 @@
- 
- #define SLAVE_CODE_SIZE		256
- 
--static struct kexec_file_ops *kexec_file_loaders[] = {
-+const struct kexec_file_ops * const kexec_file_loaders[] = {
- 	&kexec_elf64_ops,
-+	NULL
- };
- 
- int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
- 				  unsigned long buf_len)
- {
--	int i, ret = -ENOEXEC;
--	struct kexec_file_ops *fops;
--
- 	/* We don't support crash kernels yet. */
- 	if (image->type == KEXEC_TYPE_CRASH)
- 		return -ENOTSUPP;
- 
--	for (i = 0; i < ARRAY_SIZE(kexec_file_loaders); i++) {
--		fops = kexec_file_loaders[i];
--		if (!fops || !fops->probe)
--			continue;
--
--		ret = fops->probe(buf, buf_len);
--		if (!ret) {
--			image->fops = fops;
--			return ret;
--		}
--	}
--
--	return ret;
--}
--
--void *arch_kexec_kernel_image_load(struct kimage *image)
--{
--	if (!image->fops || !image->fops->load)
--		return ERR_PTR(-ENOEXEC);
--
--	return image->fops->load(image, image->kernel_buf,
--				 image->kernel_buf_len, image->initrd_buf,
--				 image->initrd_buf_len, image->cmdline_buf,
--				 image->cmdline_buf_len);
--}
--
--int arch_kimage_file_post_load_cleanup(struct kimage *image)
--{
--	if (!image->fops || !image->fops->cleanup)
--		return 0;
--
--	return image->fops->cleanup(image->image_loader_data);
-+	return _kexec_kernel_image_probe(image, buf, buf_len);
- }
- 
- /**
-diff --git a/arch/x86/include/asm/kexec-bzimage64.h b/arch/x86/include/asm/kexec-bzimage64.h
-index d1b5d194e31d..284fd23d133b 100644
---- a/arch/x86/include/asm/kexec-bzimage64.h
-+++ b/arch/x86/include/asm/kexec-bzimage64.h
-@@ -1,6 +1,6 @@
- #ifndef _ASM_KEXEC_BZIMAGE64_H
- #define _ASM_KEXEC_BZIMAGE64_H
- 
--extern struct kexec_file_ops kexec_bzImage64_ops;
-+extern const struct kexec_file_ops kexec_bzImage64_ops;
- 
- #endif  /* _ASM_KEXE_BZIMAGE64_H */
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index fb095ba0c02f..705654776c0c 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -538,7 +538,7 @@ static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
- }
- #endif
- 
--struct kexec_file_ops kexec_bzImage64_ops = {
-+const struct kexec_file_ops kexec_bzImage64_ops = {
- 	.probe = bzImage64_probe,
- 	.load = bzImage64_load,
- 	.cleanup = bzImage64_cleanup,
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 1f790cf9d38f..2cdd29d64181 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -30,8 +30,9 @@
- #include <asm/set_memory.h>
- 
- #ifdef CONFIG_KEXEC_FILE
--static struct kexec_file_ops *kexec_file_loaders[] = {
-+const struct kexec_file_ops * const kexec_file_loaders[] = {
- 		&kexec_bzImage64_ops,
-+		NULL
- };
- #endif
- 
-@@ -363,27 +364,6 @@ void arch_crash_save_vmcoreinfo(void)
- /* arch-dependent functionality related to kexec file-based syscall */
- 
- #ifdef CONFIG_KEXEC_FILE
--int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
--				  unsigned long buf_len)
--{
--	int i, ret = -ENOEXEC;
--	struct kexec_file_ops *fops;
--
--	for (i = 0; i < ARRAY_SIZE(kexec_file_loaders); i++) {
--		fops = kexec_file_loaders[i];
--		if (!fops || !fops->probe)
--			continue;
--
--		ret = fops->probe(buf, buf_len);
--		if (!ret) {
--			image->fops = fops;
--			return ret;
--		}
--	}
--
--	return ret;
--}
--
- void *arch_kexec_kernel_image_load(struct kimage *image)
- {
- 	vfree(image->arch.elf_headers);
-@@ -398,27 +378,6 @@ void *arch_kexec_kernel_image_load(struct kimage *image)
- 				 image->cmdline_buf_len);
- }
- 
--int arch_kimage_file_post_load_cleanup(struct kimage *image)
--{
--	if (!image->fops || !image->fops->cleanup)
--		return 0;
--
--	return image->fops->cleanup(image->image_loader_data);
--}
--
--#ifdef CONFIG_KEXEC_VERIFY_SIG
--int arch_kexec_kernel_verify_sig(struct kimage *image, void *kernel,
--				 unsigned long kernel_len)
--{
--	if (!image->fops || !image->fops->verify_sig) {
--		pr_debug("kernel loader does not support signature verification.");
--		return -EKEYREJECTED;
--	}
--
--	return image->fops->verify_sig(kernel, kernel_len);
--}
--#endif
--
- /*
-  * Apply purgatory relocations.
-  *
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 2b7590f5483a..bfb37665a77f 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -208,7 +208,7 @@ struct kimage {
- 	unsigned long cmdline_buf_len;
- 
- 	/* File operations provided by image loader */
--	struct kexec_file_ops *fops;
-+	const struct kexec_file_ops *fops;
- 
- 	/* Image loader handling the kernel can store a pointer here */
- 	void *image_loader_data;
-@@ -276,12 +276,13 @@ int crash_shrink_memory(unsigned long new_size);
- size_t crash_get_memory_size(void);
- void crash_free_reserved_phys_range(unsigned long begin, unsigned long end);
- 
--int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
--					 unsigned long buf_len);
--void * __weak arch_kexec_kernel_image_load(struct kimage *image);
--int __weak arch_kimage_file_post_load_cleanup(struct kimage *image);
--int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
--					unsigned long buf_len);
-+int _kexec_kernel_image_probe(struct kimage *image, void *buf,
-+			      unsigned long buf_len);
-+void *_kexec_kernel_image_load(struct kimage *image);
-+int _kimage_file_post_load_cleanup(struct kimage *image);
-+int _kexec_kernel_verify_sig(struct kimage *image, void *buf,
-+			     unsigned long buf_len);
-+
- int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
- 					Elf_Shdr *sechdrs, unsigned int relsec);
- int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 9f48f4412297..fd87be4e0576 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -26,30 +26,79 @@
- #include <linux/vmalloc.h>
- #include "kexec_internal.h"
- 
-+const __weak struct kexec_file_ops * const kexec_file_loaders[] = {NULL};
-+
- static int kexec_calculate_store_digests(struct kimage *image);
- 
-+int _kexec_kernel_image_probe(struct kimage *image, void *buf,
-+			     unsigned long buf_len)
-+{
-+	const struct kexec_file_ops * const *fops;
-+	int ret = -ENOEXEC;
-+
-+	for (fops = &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops) {
-+		ret = (*fops)->probe(buf, buf_len);
-+		if (!ret) {
-+			image->fops = *fops;
-+			return ret;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
- /* Architectures can provide this probe function */
- int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
- 					 unsigned long buf_len)
- {
--	return -ENOEXEC;
-+	return _kexec_kernel_image_probe(image, buf, buf_len);
-+}
-+
-+void *_kexec_kernel_image_load(struct kimage *image)
-+{
-+	if (!image->fops || !image->fops->load)
-+		return ERR_PTR(-ENOEXEC);
-+
-+	return image->fops->load(image, image->kernel_buf,
-+				 image->kernel_buf_len, image->initrd_buf,
-+				 image->initrd_buf_len, image->cmdline_buf,
-+				 image->cmdline_buf_len);
- }
- 
- void * __weak arch_kexec_kernel_image_load(struct kimage *image)
- {
--	return ERR_PTR(-ENOEXEC);
-+	return _kexec_kernel_image_load(image);
-+}
-+
-+int _kimage_file_post_load_cleanup(struct kimage *image)
-+{
-+	if (!image->fops || !image->fops->cleanup)
-+		return 0;
-+
-+	return image->fops->cleanup(image->image_loader_data);
- }
- 
- int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
- {
--	return -EINVAL;
-+	return _kimage_file_post_load_cleanup(image);
- }
- 
- #ifdef CONFIG_KEXEC_VERIFY_SIG
-+int _kexec_kernel_verify_sig(struct kimage *image, void *buf,
-+			    unsigned long buf_len)
-+{
-+	if (!image->fops || !image->fops->verify_sig) {
-+		pr_debug("kernel loader does not support signature verification.\n");
-+		return -EKEYREJECTED;
-+	}
-+
-+	return image->fops->verify_sig(buf, buf_len);
-+}
-+
- int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
- 					unsigned long buf_len)
- {
--	return -EKEYREJECTED;
-+	return _kexec_kernel_verify_sig(image, buf, buf_len);
- }
- #endif
- 
--- 
-2.14.1
+Thanks,
+Takao Indoh
+
+On Mon, Oct 16, 2017 at 06:42:14PM +0900, Takao Indoh wrote:
+> Hi Kumagai-san, Hatayama-san,
+> 
+> Hatayama-san, thanks for your review, I updated may patch.
+> 
+> These patch series fix a problem that makedumpfile cannot handle a dumpfile
+> which is captured by sadump on KASLR enabled kernel.
+> 
+> When KASLR feature is enabled, a kernel is placed on the memory randomly and
+> therefore makedumpfile cannot handle a dumpfile because addresses of kernel
+> symbols in vmlinux are different from actual addresses. In the case of kdump,
+> information to get actual address is included in the vmcoreinfo, but dumpfile of
+> sadump does not have such a information.
+> 
+> These patches calculate kaslr offset and phys_base to solve this problem. The
+> basic idea is getting register (IDTR and CR3) from dump header, and calculate
+> kaslr_offset/phys_base using them.
+> 
+> changelog:
+> v2:
+> - Change get_vec0_addr style
+> - Some tiny fixes
+> 
+> v1:
+> http://lists.infradead.org/pipermail/kexec/2017-October/019530.html
+> 
+> Takao Indoh (3):
+>   Support symbol __cpu_online_mask
+>   Introduce vtop4_x86_64_pagetable
+>   sadump: Fix a KASLR problem of sadump
+> 
+>  arch/x86_64.c  |  30 ++++-
+>  makedumpfile.c |  20 ++-
+>  makedumpfile.h |   8 +-
+>  sadump_info.c  | 418 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  4 files changed, 463 insertions(+), 13 deletions(-)
+> 
+> -- 
+> 2.9.5
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 
 _______________________________________________
