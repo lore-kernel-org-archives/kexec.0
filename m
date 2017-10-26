@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwym04.jp.fujitsu.com ([211.128.242.43])
+Received: from mgwym03.jp.fujitsu.com ([211.128.242.42])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e7gPK-0001MS-BY
- for kexec@lists.infradead.org; Thu, 26 Oct 2017 11:33:08 +0000
+ id 1e7gPR-0001Sd-PG
+ for kexec@lists.infradead.org; Thu, 26 Oct 2017 11:33:15 +0000
 Received: from g01jpfmpwyt03.exch.g01.fujitsu.local
  (g01jpfmpwyt03.exch.g01.fujitsu.local [10.128.193.57])
- by yt-mxoi2.gw.nic.fujitsu.com (Postfix) with ESMTP id 499CBAC00B6
- for <kexec@lists.infradead.org>; Thu, 26 Oct 2017 20:32:39 +0900 (JST)
+ by yt-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id 178DAAC011D
+ for <kexec@lists.infradead.org>; Thu, 26 Oct 2017 20:32:47 +0900 (JST)
 From: Takao Indoh <indou.takao@jp.fujitsu.com>
-Subject: [makedumpfile PATCH v3 0/4] Fix KASLR problem on sadump
-Date: Thu, 26 Oct 2017 20:32:23 +0900
-Message-ID: <20171026113227.36740-1-indou.takao@jp.fujitsu.com>
+Subject: [makedumpfile PATCH v3 2/4] Introduce vtop4_x86_64_pagetable
+Date: Thu, 26 Oct 2017 20:32:25 +0900
+Message-ID: <20171026113227.36740-3-indou.takao@jp.fujitsu.com>
+In-Reply-To: <20171026113227.36740-1-indou.takao@jp.fujitsu.com>
+References: <20171026113227.36740-1-indou.takao@jp.fujitsu.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,47 +29,91 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com, d.hatayama@jp.fujitsu.com
 Cc: kexec@lists.infradead.org
 
-Hi Kumagai-san, Hatayama-san,
+This patch introduces new function vtop4_x86_64_pagetable
+to translate virtual address to physical address. Unlike vtop4_x86_64,
+vtop4_x86_64_pagetable need a pointer of top of pagetable like CR3.
 
-These patch series fix a problem that makedumpfile cannot handle a dumpfile
-which is captured by sadump on KASLR enabled kernel.
+Current vtop4_x86_64 implementation uses symbol value of
+init_level4_pgt, therefore vtop4_x86_64 does not work for sadump
+dumpfile of kaslr enabled kernel because it does not have vmcoreinfo to
+correct address of init_level4_pgt. vtop4_x86_64_pagetable requires
+pagetable address instead of init_level4_pgt and sadump dumpfile can
+pass CR3 value which is included in dump header.
 
-When KASLR feature is enabled, a kernel is placed on the memory randomly and
-therefore makedumpfile cannot handle a dumpfile because addresses of kernel
-symbols in vmlinux are different from actual addresses. In the case of kdump,
-information to get actual address is included in the vmcoreinfo, but dumpfile of
-sadump does not have such a information.
+Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+---
+ arch/x86_64.c  | 30 +++++++++++++++++++++++-------
+ makedumpfile.h |  1 +
+ 2 files changed, 24 insertions(+), 7 deletions(-)
 
-These patches calculate kaslr offset and phys_base to solve this problem. The
-basic idea is getting register (IDTR and CR3) from dump header, and calculate
-kaslr_offset/phys_base using them.
-
-changelog:
-v3:
-- Split patch 3/3 into two parts
-  - core part to calculate kaslr_offset and phys_base
-  - Additional part to fix this problem during kdump
-
-v2:
-http://lists.infradead.org/pipermail/kexec/2017-October/019554.html
-- Change get_vec0_addr style
-- Some tiny fixes
-
-v1:
-http://lists.infradead.org/pipermail/kexec/2017-October/019530.html
-
-Takao Indoh (4):
-  Support symbol __cpu_online_mask
-  Introduce vtop4_x86_64_pagetable
-  sadump: Fix a KASLR problem of sadump
-  sadump: Fix a KASLR problem of sadump while kdump is working
-
- arch/x86_64.c  |  30 ++++-
- makedumpfile.c |  20 ++-
- makedumpfile.h |   8 +-
- sadump_info.c  | 417 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 4 files changed, 462 insertions(+), 13 deletions(-)
-
+diff --git a/arch/x86_64.c b/arch/x86_64.c
+index 08dd6b2..33621f1 100644
+--- a/arch/x86_64.c
++++ b/arch/x86_64.c
+@@ -255,20 +255,15 @@ get_versiondep_info_x86_64(void)
+  * Translate a virtual address to a physical address by using 4 levels paging.
+  */
+ unsigned long long
+-vtop4_x86_64(unsigned long vaddr)
++__vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+ {
+ 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
+ 	unsigned long pte_paddr, pte;
+ 
+-	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
+-		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
+-		return NOT_PADDR;
+-	}
+-
+ 	/*
+ 	 * Get PGD.
+ 	 */
+-	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + info->phys_base;
++	page_dir = pagetable;
+ 	if (is_xen_memory()) {
+ 		page_dir = ptom_xen(page_dir);
+ 		if (page_dir == NOT_PADDR)
+@@ -346,6 +341,27 @@ vtop4_x86_64(unsigned long vaddr)
+ 	return (pte & ENTRY_MASK) + PAGEOFFSET(vaddr);
+ }
+ 
++unsigned long long
++vtop4_x86_64(unsigned long vaddr)
++{
++	unsigned long pagetable;
++
++	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
++		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
++		return NOT_PADDR;
++	}
++
++	pagetable = SYMBOL(init_level4_pgt) - __START_KERNEL_map + info->phys_base;
++
++	return __vtop4_x86_64(vaddr, pagetable);
++}
++
++unsigned long long
++vtop4_x86_64_pagetable(unsigned long vaddr, unsigned long pagetable)
++{
++	return __vtop4_x86_64(vaddr, pagetable);
++}
++
+ /*
+  * for Xen extraction
+  */
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 704a6bc..f48dc0b 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -978,6 +978,7 @@ int get_phys_base_x86_64(void);
+ int get_machdep_info_x86_64(void);
+ int get_versiondep_info_x86_64(void);
+ unsigned long long vtop4_x86_64(unsigned long vaddr);
++unsigned long long vtop4_x86_64_pagetable(unsigned long vaddr, unsigned long pagetable);
+ #define find_vmemmap()		find_vmemmap_x86_64()
+ #define get_phys_base()		get_phys_base_x86_64()
+ #define get_machdep_info()	get_machdep_info_x86_64()
 -- 
 2.9.5
 
