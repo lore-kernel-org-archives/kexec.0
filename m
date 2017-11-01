@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1e9o7C-0002s5-8r
- for kexec@lists.infradead.org; Wed, 01 Nov 2017 08:11:12 +0000
-Date: Wed, 1 Nov 2017 09:10:36 +0100
-From: Simon Horman <horms@verge.net.au>
+Received: from pandora.armlinux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1e9qiA-0004yj-Ny
+ for kexec@lists.infradead.org; Wed, 01 Nov 2017 10:57:34 +0000
+Date: Wed, 1 Nov 2017 10:56:36 +0000
+From: Russell King <rmk@armlinux.org.uk>
 Subject: Re: [PATCH 2/2] ARM: read kernel size from zImage
-Message-ID: <20171101081036.57ahx2bymugl5s37@verge.net.au>
+Message-ID: <20171101105636.GG5019@flint.armlinux.org.uk>
 References: <20171023100834.GA5462@n2100.armlinux.org.uk>
+ <20171101081036.57ahx2bymugl5s37@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20171023100834.GA5462@n2100.armlinux.org.uk>
+In-Reply-To: <20171101081036.57ahx2bymugl5s37@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,26 +21,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King <rmk@armlinux.org.uk>
+To: Simon Horman <horms@verge.net.au>, Daniel Kiper <daniel.kiper@oracle.com>
 Cc: kexec@lists.infradead.org
 
-On Mon, Oct 23, 2017 at 11:08:34AM +0100, Russell King wrote:
-> Read the new extension data which tells the boot agent about the
-> requirements for booting the kernel image, such as how much RAM
-> will be consumed by the kernel through decompression and booting.
-> This is necessary to control the placement of the DTB and
-> compressed RAM disk to avoid these objects being corrupted.
-> 
-> Tested-by: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Russell King <rmk@armlinux.org.uk>
-
-Thanks, applied.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCBOb3YgMDEsIDIwMTcgYXQgMDk6MTA6MzZBTSArMDEwMCwgU2ltb24gSG9ybWFuIHdy
+b3RlOgo+IE9uIE1vbiwgT2N0IDIzLCAyMDE3IGF0IDExOjA4OjM0QU0gKzAxMDAsIFJ1c3NlbGwg
+S2luZyB3cm90ZToKPiA+IFJlYWQgdGhlIG5ldyBleHRlbnNpb24gZGF0YSB3aGljaCB0ZWxscyB0
+aGUgYm9vdCBhZ2VudCBhYm91dCB0aGUKPiA+IHJlcXVpcmVtZW50cyBmb3IgYm9vdGluZyB0aGUg
+a2VybmVsIGltYWdlLCBzdWNoIGFzIGhvdyBtdWNoIFJBTQo+ID4gd2lsbCBiZSBjb25zdW1lZCBi
+eSB0aGUga2VybmVsIHRocm91Z2ggZGVjb21wcmVzc2lvbiBhbmQgYm9vdGluZy4KPiA+IFRoaXMg
+aXMgbmVjZXNzYXJ5IHRvIGNvbnRyb2wgdGhlIHBsYWNlbWVudCBvZiB0aGUgRFRCIGFuZAo+ID4g
+Y29tcHJlc3NlZCBSQU0gZGlzayB0byBhdm9pZCB0aGVzZSBvYmplY3RzIGJlaW5nIGNvcnJ1cHRl
+ZC4KPiA+IAo+ID4gVGVzdGVkLWJ5OiBUb255IExpbmRncmVuIDx0b255QGF0b21pZGUuY29tPgo+
+ID4gU2lnbmVkLW9mZi1ieTogUnVzc2VsbCBLaW5nIDxybWtAYXJtbGludXgub3JnLnVrPgo+IAo+
+IFRoYW5rcywgYXBwbGllZC4KClRoYW5rcywgc2luY2UgSSByZWJhc2VkIG15IHRyZWUsIEkndmUg
+cmVhbGlzZWQgdGhhdCB3YXNuJ3QgcXVpdGUgdGhlCnBhdGNoIEkgaW50ZW5kZWQsIGJ1dCBpdCds
+bCBkbyBmb3Igbm93LgoKQnVpbGRpbmcgdGhlIGxhdGVzdCB0cmVlIGdpdmVzIG1lIGEgbmV3IHdh
+cm5pbmc6CgpnY2MgLWcgLU8yIC1mbm8tc3RyaWN0LWFsaWFzaW5nIC1XYWxsIC1Xc3RyaWN0LXBy
+b3RvdHlwZXMgLUkuL2luY2x1ZGUgLUkuL3V0aWxfbGliL2luY2x1ZGUgLUlpbmNsdWRlLyAtSS4v
+a2V4ZWMvbGliZmR0IC1EX0ZJTEVfT0ZGU0VUX0JJVFM9NjQgLUkuL2tleGVjL2FyY2gvYXJtL2lu
+Y2x1ZGUgIC1jIC1NRCAtbyBrZXhlYy9rZXhlYy5vIGtleGVjL2tleGVjLmMKa2V4ZWMva2V4ZWMu
+YzogSW4gZnVuY3Rpb24g4pagcHJpbnRfY3Jhc2hrZXJuZWxfcmVnaW9uX3NpemXilqA6CmtleGVj
+L2tleGVjLmM6MTIzMjo5OiB3YXJuaW5nOiBmb3JtYXQg4pagJWx14pagIGV4cGVjdHMgYXJndW1l
+bnQgb2YgdHlwZSDilqBsb25nIHVuc2lnbmVkIGludOKWoCwgYnV0IGFyZ3VtZW50IDIgaGFzIHR5
+cGUg4pagdWludDY0X3Qge2FrYSBsb25nIGxvbmcgdW5zaWduZWQgaW50feKWoCBbLVdmb3JtYXQ9
+XQogIHByaW50ZigiJWx1XG4iLCAoc3RhcnQgIT0gZW5kKSA/IChlbmQgLSBzdGFydCArIDEpIDog
+MFVMKTsKICAgICAgICAgXgoKY2F1c2VkIGJ5OgoKY29tbWl0IDc2YjMxMjAzMjIyYTk4MzNmNDI0
+ZTk4YTEzNDYwM2MyZjg0MGM4MmIKQXV0aG9yOiBEYW5pZWwgS2lwZXIgPGRhbmllbC5raXBlckBv
+cmFjbGUuY29tPgpEYXRlOiAgIEZyaSBGZWIgMTcgMTY6NDc6MjUgMjAxNyAtMDYwMAoKICAgIGtl
+eGVjOiBBZGQgb3B0aW9uIHRvIGdldCBjcmFzaCBrZXJuZWwgcmVnaW9uIHNpemUKCk9uIDMyLWJp
+dCBhcmNoaXRlY3R1cmVzLCAiJWx1IiBleHBlY3RzIGFuIHVuc2lnbmVkIGxvbmcsIGJ1dCB1aW50
+NjRfdCBpcwphbiB1bnNpZ25lZCBsb25nIGxvbmcuICBPbiA2NC1iaXQgYXJjaGl0ZWN0dXJlcywg
+IiVsdSIgYWxzbyBleHBlY3RzIGFuCnVuc2lnbmVkIGxvbmcsIGJ1dCB1aW50NjRfdCBpcyB1bnNp
+Z25lZCBsb25nLCBzbyB0aGVyZSdzIG5vIHdhcm5pbmcuCgpUaGUgcHJvYmxlbSBmb3IgQVJNIGhl
+cmUgaXMgdGhhdCBhIDY0LWJpdCB2YWx1ZSBpcyBwYXNzZWQgYXMgYW4KZXZlbi1vZGQgcmVnaXN0
+ZXIgcGFpciwgc28gZm9yIHRoZSBhYm92ZSBwcmludGYsIHRoYXQgd291bGQgYmUgcjIsIHIzLgpI
+b3dldmVyLCAiJWx1IiB3aWxsIGV4cGVjdCB0aGUgdmFsdWUgaW4gdGhlIGZpcnN0IHJlZ2lzdGVy
+IGZvbGxvd2luZwp0aGUgZm9ybWF0IHBvaW50ZXIsIHRoYXQgYmVpbmcgcjEuICBTbyB3ZSBlbmQg
+dXAgcHJpbnRpbmcgZ2FyYmFnZSBoZXJlLgoKRWl0aGVyIHdlIHVzZSAiJWxsdSIgYW5kIGNhc3Qg
+dGhlIHZhbHVlIHRvIGFuIHVuc2lnbmVkIGxvbmcgbG9uZwoobmVlZGxlc3NseSB3aWRlbmluZyBv
+biA2NC1iaXQgYXJjaGVzKSwgb3IgIiVsdSIgYW5kIGNhc3QgdG8gdW5zaWduZWQKbG9uZyAodHJ1
+bmNhdGluZykgb3Igd2UgbmVlZCBhIGRlZmluaXRpb24gb2YgdGhlIGZvcm1hdCB0byBiZSB1c2Vk
+IGZvcgp1aW50NjRfdCB0eXBlcyAodGVuZHMgdG8gYmUgbWVzc3kuKQoKLS0gClJ1c3NlbGwgS2lu
+ZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMg
+bWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
