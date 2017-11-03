@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1e9qiA-0004yj-Ny
- for kexec@lists.infradead.org; Wed, 01 Nov 2017 10:57:34 +0000
-Date: Wed, 1 Nov 2017 10:56:36 +0000
-From: Russell King <rmk@armlinux.org.uk>
-Subject: Re: [PATCH 2/2] ARM: read kernel size from zImage
-Message-ID: <20171101105636.GG5019@flint.armlinux.org.uk>
-References: <20171023100834.GA5462@n2100.armlinux.org.uk>
- <20171101081036.57ahx2bymugl5s37@verge.net.au>
+ id 1eAS0R-0006zj-UN
+ for kexec@lists.infradead.org; Fri, 03 Nov 2017 02:46:53 +0000
+Date: Fri, 3 Nov 2017 10:46:22 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: [PATCH 3/3 update] kdump: round up the total memory size to 128M for
+ crashkernel reservation
+Message-ID: <20171103024622.GA5584@dhcp-128-65.nay.redhat.com>
+References: <20171024053901.813846011@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20171101081036.57ahx2bymugl5s37@verge.net.au>
+In-Reply-To: <20171024053901.813846011@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,52 +20,96 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Daniel Kiper <daniel.kiper@oracle.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: bhe@redhat.com, corbet@lwn.net, bhsharma@redhat.com, akpm@linux-foundation.org, yinghai@kernel.org, vgoyal@redhat.com
 
-T24gV2VkLCBOb3YgMDEsIDIwMTcgYXQgMDk6MTA6MzZBTSArMDEwMCwgU2ltb24gSG9ybWFuIHdy
-b3RlOgo+IE9uIE1vbiwgT2N0IDIzLCAyMDE3IGF0IDExOjA4OjM0QU0gKzAxMDAsIFJ1c3NlbGwg
-S2luZyB3cm90ZToKPiA+IFJlYWQgdGhlIG5ldyBleHRlbnNpb24gZGF0YSB3aGljaCB0ZWxscyB0
-aGUgYm9vdCBhZ2VudCBhYm91dCB0aGUKPiA+IHJlcXVpcmVtZW50cyBmb3IgYm9vdGluZyB0aGUg
-a2VybmVsIGltYWdlLCBzdWNoIGFzIGhvdyBtdWNoIFJBTQo+ID4gd2lsbCBiZSBjb25zdW1lZCBi
-eSB0aGUga2VybmVsIHRocm91Z2ggZGVjb21wcmVzc2lvbiBhbmQgYm9vdGluZy4KPiA+IFRoaXMg
-aXMgbmVjZXNzYXJ5IHRvIGNvbnRyb2wgdGhlIHBsYWNlbWVudCBvZiB0aGUgRFRCIGFuZAo+ID4g
-Y29tcHJlc3NlZCBSQU0gZGlzayB0byBhdm9pZCB0aGVzZSBvYmplY3RzIGJlaW5nIGNvcnJ1cHRl
-ZC4KPiA+IAo+ID4gVGVzdGVkLWJ5OiBUb255IExpbmRncmVuIDx0b255QGF0b21pZGUuY29tPgo+
-ID4gU2lnbmVkLW9mZi1ieTogUnVzc2VsbCBLaW5nIDxybWtAYXJtbGludXgub3JnLnVrPgo+IAo+
-IFRoYW5rcywgYXBwbGllZC4KClRoYW5rcywgc2luY2UgSSByZWJhc2VkIG15IHRyZWUsIEkndmUg
-cmVhbGlzZWQgdGhhdCB3YXNuJ3QgcXVpdGUgdGhlCnBhdGNoIEkgaW50ZW5kZWQsIGJ1dCBpdCds
-bCBkbyBmb3Igbm93LgoKQnVpbGRpbmcgdGhlIGxhdGVzdCB0cmVlIGdpdmVzIG1lIGEgbmV3IHdh
-cm5pbmc6CgpnY2MgLWcgLU8yIC1mbm8tc3RyaWN0LWFsaWFzaW5nIC1XYWxsIC1Xc3RyaWN0LXBy
-b3RvdHlwZXMgLUkuL2luY2x1ZGUgLUkuL3V0aWxfbGliL2luY2x1ZGUgLUlpbmNsdWRlLyAtSS4v
-a2V4ZWMvbGliZmR0IC1EX0ZJTEVfT0ZGU0VUX0JJVFM9NjQgLUkuL2tleGVjL2FyY2gvYXJtL2lu
-Y2x1ZGUgIC1jIC1NRCAtbyBrZXhlYy9rZXhlYy5vIGtleGVjL2tleGVjLmMKa2V4ZWMva2V4ZWMu
-YzogSW4gZnVuY3Rpb24g4pagcHJpbnRfY3Jhc2hrZXJuZWxfcmVnaW9uX3NpemXilqA6CmtleGVj
-L2tleGVjLmM6MTIzMjo5OiB3YXJuaW5nOiBmb3JtYXQg4pagJWx14pagIGV4cGVjdHMgYXJndW1l
-bnQgb2YgdHlwZSDilqBsb25nIHVuc2lnbmVkIGludOKWoCwgYnV0IGFyZ3VtZW50IDIgaGFzIHR5
-cGUg4pagdWludDY0X3Qge2FrYSBsb25nIGxvbmcgdW5zaWduZWQgaW50feKWoCBbLVdmb3JtYXQ9
-XQogIHByaW50ZigiJWx1XG4iLCAoc3RhcnQgIT0gZW5kKSA/IChlbmQgLSBzdGFydCArIDEpIDog
-MFVMKTsKICAgICAgICAgXgoKY2F1c2VkIGJ5OgoKY29tbWl0IDc2YjMxMjAzMjIyYTk4MzNmNDI0
-ZTk4YTEzNDYwM2MyZjg0MGM4MmIKQXV0aG9yOiBEYW5pZWwgS2lwZXIgPGRhbmllbC5raXBlckBv
-cmFjbGUuY29tPgpEYXRlOiAgIEZyaSBGZWIgMTcgMTY6NDc6MjUgMjAxNyAtMDYwMAoKICAgIGtl
-eGVjOiBBZGQgb3B0aW9uIHRvIGdldCBjcmFzaCBrZXJuZWwgcmVnaW9uIHNpemUKCk9uIDMyLWJp
-dCBhcmNoaXRlY3R1cmVzLCAiJWx1IiBleHBlY3RzIGFuIHVuc2lnbmVkIGxvbmcsIGJ1dCB1aW50
-NjRfdCBpcwphbiB1bnNpZ25lZCBsb25nIGxvbmcuICBPbiA2NC1iaXQgYXJjaGl0ZWN0dXJlcywg
-IiVsdSIgYWxzbyBleHBlY3RzIGFuCnVuc2lnbmVkIGxvbmcsIGJ1dCB1aW50NjRfdCBpcyB1bnNp
-Z25lZCBsb25nLCBzbyB0aGVyZSdzIG5vIHdhcm5pbmcuCgpUaGUgcHJvYmxlbSBmb3IgQVJNIGhl
-cmUgaXMgdGhhdCBhIDY0LWJpdCB2YWx1ZSBpcyBwYXNzZWQgYXMgYW4KZXZlbi1vZGQgcmVnaXN0
-ZXIgcGFpciwgc28gZm9yIHRoZSBhYm92ZSBwcmludGYsIHRoYXQgd291bGQgYmUgcjIsIHIzLgpI
-b3dldmVyLCAiJWx1IiB3aWxsIGV4cGVjdCB0aGUgdmFsdWUgaW4gdGhlIGZpcnN0IHJlZ2lzdGVy
-IGZvbGxvd2luZwp0aGUgZm9ybWF0IHBvaW50ZXIsIHRoYXQgYmVpbmcgcjEuICBTbyB3ZSBlbmQg
-dXAgcHJpbnRpbmcgZ2FyYmFnZSBoZXJlLgoKRWl0aGVyIHdlIHVzZSAiJWxsdSIgYW5kIGNhc3Qg
-dGhlIHZhbHVlIHRvIGFuIHVuc2lnbmVkIGxvbmcgbG9uZwoobmVlZGxlc3NseSB3aWRlbmluZyBv
-biA2NC1iaXQgYXJjaGVzKSwgb3IgIiVsdSIgYW5kIGNhc3QgdG8gdW5zaWduZWQKbG9uZyAodHJ1
-bmNhdGluZykgb3Igd2UgbmVlZCBhIGRlZmluaXRpb24gb2YgdGhlIGZvcm1hdCB0byBiZSB1c2Vk
-IGZvcgp1aW50NjRfdCB0eXBlcyAodGVuZHMgdG8gYmUgbWVzc3kuKQoKLS0gClJ1c3NlbGwgS2lu
-ZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMg
-bWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+The total memory size we get in kernel is usually slightly less than 2G with a
+2G memory module machine. The main reason is bios/firmware reserve some area
+it will not export all memory as usable to Linux.
+
+2G memory X86 kvm guest test result of the total_mem value:
+UEFI boot with ovmf: 0x7ef10000
+Legacy boot kvm guest: 0x7ff7cc00
+This is also a problem on arm64 UEFI booted system according to my test.
+
+Thus for example crashkernel=1G-2G:128M,  if we have a 1G memory
+machine, we get total size 1023M from firmware then it will not fall
+into 1G-2G thus no memory reserved.
+
+An option is to use dmi/smbios to get physical memory size, but it's not
+reliable as well. According to Prarit hardware vendors sometimes screw this up.
+Thus round up total size to 128M to workaround this problem.
+
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+Changes from previous version of 3/3:
+1. improve changelog: add examples why this is a problem (comment from
+   Baoquan He)
+2. change to use SZ_128M (comment from Bhupesh Sharma)
+
+ kernel/crash_core.c |   18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+--- linux-x86.orig/kernel/crash_core.c
++++ linux-x86/kernel/crash_core.c
+@@ -9,6 +9,7 @@
+ #include <linux/crash_core.h>
+ #include <linux/utsname.h>
+ #include <linux/vmalloc.h>
++#include <linux/sizes.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -42,6 +43,15 @@ static int __init parse_crashkernel_mem(
+ {
+ 	char *cur = cmdline, *tmp;
+ 	bool infinite_end = false;
++	unsigned long long total_mem = system_ram;
++
++	/*
++	 * Firmware usually reserves some memory regions for it's own use.
++	 * so we get less than actual system memory size.
++	 * We workaround this by round up the total size to 128M which is
++	 * enough for most test cases.
++	 */
++	total_mem = roundup(total_mem, SZ_128M);
+ 
+ 	/* for each entry of the comma-separated list */
+ 	do {
+@@ -86,13 +96,13 @@ static int __init parse_crashkernel_mem(
+ 			return -EINVAL;
+ 		}
+ 		cur = tmp;
+-		if (size >= system_ram) {
++		if (size >= total_mem) {
+ 			pr_warn("crashkernel: invalid size\n");
+ 			return -EINVAL;
+ 		}
+ 
+ 		/* match ? */
+-		if (system_ram >= start && system_ram < end) {
++		if (total_mem >= start && total_mem < end) {
+ 			*crash_size = size;
+ 			if (end == ULLONG_MAX)
+ 				infinite_end = true;
+@@ -126,9 +136,9 @@ static int __init parse_crashkernel_mem(
+ 				pr_warn("Memory reservation scale order expected after '^'\n");
+ 				return -EINVAL;
+ 			}
+-			size = (system_ram - *crash_size) >> shift;
++			size = (total_mem - *crash_size) >> shift;
+ 			size = *crash_size + roundup(size, 1ULL << 20);
+-			if (size < system_ram)
++			if (size < total_mem)
+ 				*crash_size = size;
+ 			cur = tmp;
+ 		} else
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
