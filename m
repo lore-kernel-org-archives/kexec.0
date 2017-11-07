@@ -1,14 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1eC14J-0004ug-A3
- for kexec@lists.infradead.org; Tue, 07 Nov 2017 10:25:21 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] handle renamed init_level4_pgt -> init_top_pgt
-Date: Tue, 7 Nov 2017 10:20:02 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701F22E63@BPXM01GP.gisp.nec.co.jp>
-Content-Language: ja-JP
+ id 1eC2Ez-0005ly-F4
+ for kexec@lists.infradead.org; Tue, 07 Nov 2017 11:40:30 +0000
+Date: Tue, 7 Nov 2017 19:39:56 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] x86/kexec: Exclude GART aperture from vmcore
+Message-ID: <20171107113956.GC3669@x1>
+References: <20171103172822.4ty6yjhewroe4z4j@dwarf.suse.cz>
+ <20171106024143.GA3669@x1>
+ <20171106090155.p7jhe2m57whfxma3@dwarf.suse.cz>
+ <20171106092729.GB3669@x1>
+ <20171106095638.7iwlyjmlom3tqelt@dwarf.suse.cz>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20171106095638.7iwlyjmlom3tqelt@dwarf.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,135 +27,112 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jeff Mahoney <jeffm@suse.com>
-Cc: Keiichirou Suzuki <kei-suzuki@xr.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Jiri Bohac <jbohac@suse.cz>
+Cc: Toshi Kani <toshi.kani@hpe.com>, David Airlie <airlied@linux.ie>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
->Linux 4.13 renamed init_level4_pgt to init_top_pgt in preparation for
->introducing 5-level page tables.  This patch follows the rename if
->the lookup for init_level4_pgt fails.  It also checks to see if
->5-level page tables are enabled and bails if it discovers they are.
+On 11/06/17 at 10:56am, Jiri Bohac wrote:
+> On Mon, Nov 06, 2017 at 05:27:29PM +0800, Baoquan He wrote:
+> > > 	00100000-c7e7ffff : System RAM
+> > > 	  0b000000-0b792eb5 : Kernel code
+> > > 	  0b792eb6-0bd5d47f : Kernel data
+> > > 	  0c274000-0c3c8fff : Kernel bss
+> > > 	  b7000000-c6ffffff : Crash kernel
+> > 
+> > It's weird, gart aperture located in crashkernel region? 
+> 
+> Ooops! I sent you a /proc/iomem from a different boot than the
+> dmesg, whith different crashkernel= commandline. Sorry, this is
+> the correct /proc/iomem:
+> 
+> 
+> 	00000000-00000fff : Reserved
+> 	00001000-0009d7ff : System RAM
+> 	0009d800-0009ffff : Reserved
+> 	000a0000-000bffff : PCI Bus 0000:00
+> 	000c0000-000cafff : PCI Bus 0000:00
+> 	  000c0000-000cafff : Video ROM
+> 	000cb000-000ccfff : Adapter ROM
+> 	000ce000-000fffff : Reserved
+> 	  000f0000-000fffff : System ROM
+> 	00100000-c7e7ffff : System RAM
 
-Thanks Jeff, but could you rebase it on the current devel branch ?
-vtop4 for x86_64 was modified in the commit below:
+AGP: Mapping aperture over RAM [mem 0xb8000000-0xbbffffff] (65536KB)
 
-commit 8c89727155f4994b4e75a659e28e5eff16ff6cbc
-Author: Takao Indoh <indou.takao@jp.fujitsu.com>
-Date:   Thu Oct 26 20:32:54 2017 +0900
+So on this system, gart is located inside 00100000-c7e7ffff : System
+RAM.
 
-    [PATCH v3 2/4] Introduce vtop4_x86_64_pagetable
+I saw you defined the variable as xx_stolen_xx, does it mean that the
+memory region where aperture located will be stolen from memory domain?
+I am wondering if it will cause error when access this region from direct
+mapping since allocate_aperture() is called in pci_iommu_alloc(), while
+in setup_arch() we have built the direct mapping for all system
+ram. Did I miss anything?
 
-Regards,
-Atsushi Kumagai
+Anyway, if it should be excluded from crash memory region, can we dig it
+away from /proc/iomem so that it's a hole in /proc/vmcore? Like this, we
+don't worry about the user space kexec utility either. Could be I still
+don't get it, may need to read the code of gart.
 
->Signed-off-by: Jeff Mahoney <jeffm@suse.com>
->---
-> arch/x86_64.c  | 24 +++++++++++++++++++++---
-> makedumpfile.c |  6 ++++++
-> makedumpfile.h |  2 ++
-> 3 files changed, 29 insertions(+), 3 deletions(-)
->
->diff --git a/arch/x86_64.c b/arch/x86_64.c
->index 08dd6b2..9b09035 100644
->--- a/arch/x86_64.c
->+++ b/arch/x86_64.c
->@@ -259,16 +259,26 @@ vtop4_x86_64(unsigned long vaddr)
-> {
-> 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
-> 	unsigned long pte_paddr, pte;
->+	unsigned long init_level4_pgt;
->
->-	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
->+	if (SYMBOL(init_level4_pgt) != NOT_FOUND_SYMBOL)
->+		init_level4_pgt = SYMBOL(init_level4_pgt);
->+	else if (SYMBOL(init_top_pgt) != NOT_FOUND_SYMBOL)
->+		init_level4_pgt = SYMBOL(init_top_pgt);
->+	else {
-> 		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
-> 		return NOT_PADDR;
-> 	}
->
->+	if (SYMBOL(level4_kernel_pgt) != NOT_FOUND_SYMBOL) {
->+		ERRMSG("Kernel is built with 5-level page tables\n");
->+		return NOT_PADDR;
->+	}
->+
-> 	/*
-> 	 * Get PGD.
-> 	 */
->-	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + info->phys_base;
->+	page_dir = init_level4_pgt - __START_KERNEL_map + info->phys_base;
-> 	if (is_xen_memory()) {
-> 		page_dir = ptom_xen(page_dir);
-> 		if (page_dir == NOT_PADDR)
->@@ -549,8 +559,16 @@ find_vmemmap_x86_64()
-> 	struct vmap_pfns *vmapp, *vmaphead = NULL, *cur, *tail;
->
-> 	init_level4_pgt = SYMBOL(init_level4_pgt);
->+	if (init_level4_pgt == NOT_FOUND_SYMBOL)
->+		init_level4_pgt = SYMBOL(init_top_pgt);
->+
-> 	if (init_level4_pgt == NOT_FOUND_SYMBOL) {
->-		ERRMSG("init_level4_pgt not found\n");
->+		ERRMSG("init_level4_pgt/init_top_pgt not found\n");
->+		return FAILED;
->+	}
->+
->+	if (SYMBOL(level4_kernel_pgt) != NOT_FOUND_SYMBOL) {
->+		ERRMSG("kernel is configured for 5-level page tables\n");
-> 		return FAILED;
-> 	}
-> 	pagestructsize = size_table.page;
->diff --git a/makedumpfile.c b/makedumpfile.c
->index f85003a..6e5ec34 100644
->--- a/makedumpfile.c
->+++ b/makedumpfile.c
->@@ -1486,6 +1486,8 @@ get_symbol_info(void)
-> 	SYMBOL_INIT(_stext, "_stext");
-> 	SYMBOL_INIT(swapper_pg_dir, "swapper_pg_dir");
-> 	SYMBOL_INIT(init_level4_pgt, "init_level4_pgt");
->+	SYMBOL_INIT(level4_kernel_pgt, "level4_kernel_pgt");
->+	SYMBOL_INIT(init_top_pgt, "init_top_pgt");
-> 	SYMBOL_INIT(vmlist, "vmlist");
-> 	SYMBOL_INIT(vmap_area_list, "vmap_area_list");
-> 	SYMBOL_INIT(node_online_map, "node_online_map");
->@@ -2105,6 +2107,8 @@ write_vmcoreinfo_data(void)
-> 	WRITE_SYMBOL("_stext", _stext);
-> 	WRITE_SYMBOL("swapper_pg_dir", swapper_pg_dir);
-> 	WRITE_SYMBOL("init_level4_pgt", init_level4_pgt);
->+	WRITE_SYMBOL("level4_kernel_pgt", level4_kernel_pgt);
->+	WRITE_SYMBOL("init_top_pgt", init_top_pgt);
-> 	WRITE_SYMBOL("vmlist", vmlist);
-> 	WRITE_SYMBOL("vmap_area_list", vmap_area_list);
-> 	WRITE_SYMBOL("node_online_map", node_online_map);
->@@ -2500,6 +2504,8 @@ read_vmcoreinfo(void)
-> 	READ_SYMBOL("_stext", _stext);
-> 	READ_SYMBOL("swapper_pg_dir", swapper_pg_dir);
-> 	READ_SYMBOL("init_level4_pgt", init_level4_pgt);
->+	READ_SYMBOL("level4_kernel_pgt", level4_kernel_pgt);
->+	READ_SYMBOL("init_top_pgt", init_top_pgt);
-> 	READ_SYMBOL("vmlist", vmlist);
-> 	READ_SYMBOL("vmap_area_list", vmap_area_list);
-> 	READ_SYMBOL("node_online_map", node_online_map);
->diff --git a/makedumpfile.h b/makedumpfile.h
->index 8a05794..9357e47 100644
->--- a/makedumpfile.h
->+++ b/makedumpfile.h
->@@ -1517,6 +1517,8 @@ struct symbol_table {
-> 	unsigned long long	_stext;
-> 	unsigned long long	swapper_pg_dir;
-> 	unsigned long long	init_level4_pgt;
->+	unsigned long long	level4_kernel_pgt;
->+	unsigned long long	init_top_pgt;
-> 	unsigned long long	vmlist;
-> 	unsigned long long	vmap_area_list;
-> 	unsigned long long	phys_base;
->
->
->--
->Jeff Mahoney
->SUSE Labs
-
-
+Thanks
+Baoquan
+> 	  c3000000-c77fffff : Crash kernel
+> 	c7e80000-c7e8afff : ACPI Tables
+> 	c7e8b000-c7e8cfff : ACPI Non-volatile Storage
+> 	c7e8d000-c7ffffff : Reserved
+> 	c8000000-ce0fffff : PCI Bus 0000:00
+> 	  c8000000-c80003ff : IOAPIC 1
+> 	  c8014000-c80143ff : 0000:00:11.0
+> 	    c8014000-c80143ff : ahci
+> 	  c8014400-c80144ff : 0000:00:12.2
+> 	    c8014400-c80144ff : ehci_hcd
+> 	  c8014800-c80148ff : 0000:00:13.2
+> 	    c8014800-c80148ff : ehci_hcd
+> 	  c8015000-c8015fff : 0000:00:12.0
+> 	    c8015000-c8015fff : ohci_hcd
+> 	  c8016000-c8016fff : 0000:00:12.1
+> 	    c8016000-c8016fff : ohci_hcd
+> 	  c8017000-c8017fff : 0000:00:13.0
+> 	    c8017000-c8017fff : ohci_hcd
+> 	  c8018000-c8018fff : 0000:00:13.1
+> 	    c8018000-c8018fff : ohci_hcd
+> 	  c8019000-c8019fff : 0000:00:14.5
+> 	    c8019000-c8019fff : ohci_hcd
+> 	  ca000000-cdffffff : PCI Bus 0000:01
+> 	    ca000000-cbffffff : 0000:01:00.0
+> 	      ca000000-cbffffff : bnx2
+> 	    cc000000-cdffffff : 0000:01:00.1
+> 	      cc000000-cdffffff : bnx2
+> 	  ce000000-ce0fffff : PCI Bus 0000:02
+> 	    ce000000-ce00ffff : 0000:02:06.0
+> 	d0000000-d7ffffff : PCI Bus 0000:00
+> 	  d0000000-d7ffffff : PCI Bus 0000:02
+> 	    d0000000-d7ffffff : 0000:02:06.0
+> 	e0000000-efffffff : Reserved
+> 	  e0000000-efffffff : pnp 00:00
+> 	    e0000000-e02fffff : PCI MMCONFIG 0000 [bus 00-02]
+> 	fec00000-fec0ffff : Reserved
+> 	  fec00000-fec003ff : IOAPIC 0
+> 	fec10000-fec1001f : pnp 00:05
+> 	fed00000-fed003ff : HPET 2
+> 	  fed00000-fed003ff : PNP0103:00
+> 	fed40000-fed45000 : PCI Bus 0000:00
+> 	fee00000-fee00fff : Local APIC
+> 	  fee00000-fee00fff : Reserved
+> 	    fee00000-fee00fff : pnp 00:00
+> 	fff00000-ffffffff : Reserved
+> 	  fff00000-ffffffff : pnp 00:05
+> 	100000000-837ffffff : System RAM
+> 	  4df000000-4df792eb5 : Kernel code
+> 	  4df792eb6-4dfd5d47f : Kernel data
+> 	  4e0274000-4e03c8fff : Kernel bss
+> 	  831000000-8374fffff : Crash kernel
+> 
+> Sorry for the confusion!
+> 
+> -- 
+> Jiri Bohac <jbohac@suse.cz>
+> SUSE Labs, Prague, Czechia
+> 
 
 _______________________________________________
 kexec mailing list
