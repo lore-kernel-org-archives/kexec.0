@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-f68.google.com ([209.85.214.68])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1eEARj-0003hB-Jb
- for kexec@lists.infradead.org; Mon, 13 Nov 2017 08:50:26 +0000
-Received: by mail-it0-f68.google.com with SMTP id m191so8435055itg.2
- for <kexec@lists.infradead.org>; Mon, 13 Nov 2017 00:50:02 -0800 (PST)
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: Re: [PATCH] kdump: print a message in case crashkernel size parsing
- resulted in zero bytes
-References: <20171113054311.GA4971@dhcp-128-65.nay.redhat.com>
-Message-ID: <a8a5d2ae-579e-262c-4231-49ab967b0108@redhat.com>
-Date: Mon, 13 Nov 2017 14:19:54 +0530
+ id 1eEAsC-0001wX-BW
+ for kexec@lists.infradead.org; Mon, 13 Nov 2017 09:17:46 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [makedumpfile PATCH] ppc64: update hash page table geometry
+Date: Mon, 13 Nov 2017 09:14:29 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701F248FB@BPXM01GP.gisp.nec.co.jp>
+References: <151033402186.13486.3228487082738293986.stgit@hbathini.in.ibm.com>
+In-Reply-To: <151033402186.13486.3228487082738293986.stgit@hbathini.in.ibm.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <20171113054311.GA4971@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,56 +19,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org, kexec@lists.infradead.org, bhe@redhat.com, vgoyal@redhat.com
+To: Hari Bathini <hbathini@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>
+Cc: Keiichirou Suzuki <kei-suzuki@xr.jp.nec.com>, Ankit Kumar <ankit@linux.vnet.ibm.com>
 
-Hi Dave,
+Hello Hari,
 
-Cc: arm kernel mailing list for wider distribution
-
-On 11/13/2017 11:13 AM, Dave Young wrote:
-> In parse_crashkernel_mem, it silently return in case we get zero
-> bytes in the parsing function.  It is useful for debugging for
-> adding a warning message especially sometimes kernel can not boot
-> up correctly.
+>Starting with kernel 4.12, BOOK3S hash page table geometry is updated
+>to accommodate larger virtual address range. Update here accordingly.
 >
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-> ---
->  kernel/crash_core.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+
+Thanks, I'll merge this patch into v1.6.3.
+
+Regards
+Atsushi Kumagai
+
+>---
+> arch/ppc64.c   |   12 +++++++++---
+> makedumpfile.h |    3 +++
+> 2 files changed, 12 insertions(+), 3 deletions(-)
 >
-> --- linux-x86.orig/kernel/crash_core.c
-> +++ linux-x86/kernel/crash_core.c
-> @@ -108,7 +108,8 @@ static int __init parse_crashkernel_mem(
->                  return -EINVAL;
->              }
->          }
-> -    }
-> +    } else
-> +        pr_warn("crashkernel size resulted in zero bytes\n");
+>diff --git a/arch/ppc64.c b/arch/ppc64.c
+>index 2f5a0da..8bdbcc5 100644
+>--- a/arch/ppc64.c
+>+++ b/arch/ppc64.c
+>@@ -245,10 +245,16 @@ ppc64_vmalloc_init(void)
 >
->      return 0;
->  }
+> 		} else if (info->kernel_version >= KERNEL_VERSION(4, 6, 0)) {
+> 			info->l1_index_size = PTE_INDEX_SIZE_L4_64K_3_10;
+>-			info->l2_index_size = PMD_INDEX_SIZE_L4_64K_4_6;
+>-			info->l3_index_size = PUD_INDEX_SIZE_L4_64K_4_6;
+>-			info->l4_index_size = PGD_INDEX_SIZE_L4_64K_3_10;
 >
-This is a useful change as finding this debug message in the boot logs allows better debug of crashkernel related issues.
-
-However I have one minor point:
-
-- The comment above 'parse_crashkernel_mem' currently mentions:
-  * The function returns 0 on success and -EINVAL on failure.
-  */
-
-- I am wondering if we hit the WARNING case where the crashkernel size resulted in 0 bytes, then should we still be returning 0 from this function. Or, should this be replaced with 'return -EINVAL'.
-
-- If not, can we atleast update the comment above this function to better document the return values and where having a 'return 0' should be ok, even if crashkernel size resulted in 0 bytes.
-
-Regards,
-Bhupesh
-
+>+			if (info->kernel_version >= KERNEL_VERSION(4, 12, 0)) {
+>+				info->l2_index_size = PMD_INDEX_SIZE_L4_64K_4_12;
+>+				info->l3_index_size = PUD_INDEX_SIZE_L4_64K_4_12;
+>+				info->l4_index_size = PGD_INDEX_SIZE_L4_64K_4_12;
+>+			} else {
+>+				info->l2_index_size = PMD_INDEX_SIZE_L4_64K_4_6;
+>+				info->l3_index_size = PUD_INDEX_SIZE_L4_64K_4_6;
+>+				info->l4_index_size = PGD_INDEX_SIZE_L4_64K_3_10;
+>+			}
+> 		} else if (info->kernel_version >= KERNEL_VERSION(3, 10, 0)) {
+> 			info->l1_index_size = PTE_INDEX_SIZE_L4_64K_3_10;
+> 			info->l2_index_size = PMD_INDEX_SIZE_L4_64K_3_10;
+>diff --git a/makedumpfile.h b/makedumpfile.h
+>index db75379..b983aaf 100644
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -670,6 +670,9 @@ unsigned long get_kvbase_arm64(void);
+> #define PGD_INDEX_SIZE_L4_64K_3_10  12
+> #define PMD_INDEX_SIZE_L4_64K_4_6  5
+> #define PUD_INDEX_SIZE_L4_64K_4_6  5
+>+#define PMD_INDEX_SIZE_L4_64K_4_12 10
+>+#define PUD_INDEX_SIZE_L4_64K_4_12 7
+>+#define PGD_INDEX_SIZE_L4_64K_4_12 8
+> #define PTE_INDEX_SIZE_RADIX_64K  5
+> #define PMD_INDEX_SIZE_RADIX_64K  9
+> #define PUD_INDEX_SIZE_RADIX_64K  9
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
