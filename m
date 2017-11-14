@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1eEUtm-0008Sm-4s
- for kexec@lists.infradead.org; Tue, 14 Nov 2017 06:40:44 +0000
-Date: Tue, 14 Nov 2017 14:39:55 +0800
+ id 1eEWAQ-00079e-AM
+ for kexec@lists.infradead.org; Tue, 14 Nov 2017 08:02:05 +0000
+Date: Tue, 14 Nov 2017 16:01:29 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v6 4/5] crash: export paddr_vmcoreinfo_note()
-Message-ID: <20171114063955.GA4668@dhcp-128-65.nay.redhat.com>
-References: <20171113192958.22953-1-marcandre.lureau@redhat.com>
- <20171113192958.22953-5-marcandre.lureau@redhat.com>
+Subject: [PATCH V2] kdump: print a message in case parse_crashkernel_mem
+ resulted in zero bytes
+Message-ID: <20171114080129.GA6115@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20171113192958.22953-5-marcandre.lureau@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,56 +18,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?iso-8859-1?Q?Marc-Andr=E9?= Lureau <marcandre.lureau@redhat.com>
-Cc: Tony Luck <tony.luck@intel.com>, Baoquan He <bhe@redhat.com>, mst@redhat.com, somlo@cmu.edu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, qemu-devel@nongnu.org, Hari Bathini <hbathini@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, bhsharma@redhat.com, vgoyal@redhat.com, bhe@redhat.com
 
-On 11/13/17 at 08:29pm, Marc-Andr=E9 Lureau wrote:
-> The following patch is going to use the symbol from the fw_cfg module,
-> to call the function and write the note location details in the
-> vmcoreinfo entry, so qemu can produce dumps with the vmcoreinfo note.
-> =
+In parse_crashkernel_mem, it silently return in case we get zero
+bytes in the parsing function.  It is useful for debugging for
+adding a message especially sometimes kernel can not boot
+up correctly.
 
-> CC: Andrew Morton <akpm@linux-foundation.org>
-> CC: Baoquan He <bhe@redhat.com>
-> CC: Dave Young <dyoung@redhat.com>
-> CC: Dave Young <dyoung@redhat.com>
-> CC: Hari Bathini <hbathini@linux.vnet.ibm.com>
-> CC: Tony Luck <tony.luck@intel.com>
-> CC: Vivek Goyal <vgoyal@redhat.com>
-> Signed-off-by: Marc-Andr=E9 Lureau <marcandre.lureau@redhat.com>
-> Acked-by: Gabriel Somlo <somlo@cmu.edu>
-> ---
->  kernel/crash_core.c | 1 +
->  1 file changed, 1 insertion(+)
-> =
+Add a pr_info instead of pr_warn because it is expected behavior for
+size = 0, eg. crashkernel=2G-4G:128M, size will be 0 in case system
+memory is less than 2G.
 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 6db80fc0810b..47541c891810 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -375,6 +375,7 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
->  {
->  	return __pa(vmcoreinfo_note);
->  }
-> +EXPORT_SYMBOL(paddr_vmcoreinfo_note);
->  =
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+[v1 -> v2]: bhsharma: pr_warn looks confusing because of return 0
+ kernel/crash_core.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
->  static int __init crash_save_vmcoreinfo_init(void)
->  {
-> -- =
-
-> 2.15.0.125.g8f49766d64
-> =
-
-
-Acked-by: Dave Young <dyoung@redhat.com>
-
-Thanks
-Dave
+--- linux-x86.orig/kernel/crash_core.c
++++ linux-x86/kernel/crash_core.c
+@@ -108,7 +108,8 @@ static int __init parse_crashkernel_mem(
+ 				return -EINVAL;
+ 			}
+ 		}
+-	}
++	} else
++		pr_info("crashkernel size resulted in zero bytes\n");
+ 
+ 	return 0;
+ }
 
 _______________________________________________
 kexec mailing list
