@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f196.google.com ([209.85.192.196])
- by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1eFRkP-0005XV-C0
- for kexec@lists.infradead.org; Thu, 16 Nov 2017 21:30:58 +0000
-Received: by mail-pf0-f196.google.com with SMTP id q4so289547pfg.13
- for <kexec@lists.infradead.org>; Thu, 16 Nov 2017 13:30:35 -0800 (PST)
+Received: from mail-pg0-f66.google.com ([74.125.83.66])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1eFRkR-0003m6-Dz
+ for kexec@lists.infradead.org; Thu, 16 Nov 2017 21:31:01 +0000
+Received: by mail-pg0-f66.google.com with SMTP id j16so299734pgn.9
+ for <kexec@lists.infradead.org>; Thu, 16 Nov 2017 13:30:38 -0800 (PST)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [makedumpfile PATCH 1/2] Fix compilation warnings on ppc64/ppc64le
- platforms
-Date: Fri, 17 Nov 2017 02:59:59 +0530
-Message-Id: <1510867800-6492-1-git-send-email-bhsharma@redhat.com>
-MIME-Version: 1.0
+Subject: [makedumpfile PATCH 2/2] Fix 'kernel_version' variable being
+ uninitialized & introduce minor reorganization
+Date: Fri, 17 Nov 2017 03:00:00 +0530
+Message-Id: <1510867800-6492-2-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1510867800-6492-1-git-send-email-bhsharma@redhat.com>
+References: <1510867800-6492-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,47 +20,139 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org
 Cc: hbathini@linux.vnet.ibm.com, bhsharma@redhat.com, bhupesh.linux@gmail.com, dyoung@redhat.com, piliu@redhat.com
 
-SSByYW4gaW50byB0aGUgZm9sbG93aW5nIGNvbXBpbGF0aW9uIHdhcm5pbmdzIHdoaWxlIGNvbXBp
-bGluZwptYWtlZHVtcGZpbGUgb24gcHBjNjQvcHBjNjRsZSBwbGF0Zm9ybXM6CgotRF9MQVJHRUZJ
-TEU2NF9TT1VSQ0UgLURWRVJTSU9OPSciMS42LjIiJyAtRFJFTEVBU0VfREFURT0nIjI3IEp1bCAy
-MDE3IicKLURfX3Bvd2VycGM2NGxlX18gIC1EVVNFTFpPIC1EVVNFU05BUFBZICBwcmludF9pbmZv
-Lm8gZHdhcmZfaW5mby5vCmVsZl9pbmZvLm8gZXJhc2VfaW5mby5vIHNhZHVtcF9pbmZvLm8gY2Fj
-aGUubyBhcmNoL2FybS5vIGFyY2gvYXJtNjQubwphcmNoL3g4Ni5vIGFyY2gveDg2XzY0Lm8gYXJj
-aC9pYTY0Lm8gYXJjaC9wcGM2NC5vIGFyY2gvczM5MHgubwphcmNoL3BwYy5vIGFyY2gvc3BhcmM2
-NC5vIC1yZHluYW1pYyAtbyBtYWtlZHVtcGZpbGUgbWFrZWR1bXBmaWxlLmMKLWxwdGhyZWFkIC1s
-c25hcHB5IC1sbHpvMiAtbGR3IC1sYnoyIC1sZWJsIC1sZGwgLWxlbGYgLWx6CgptYWtlZHVtcGZp
-bGUuYzogSW4gZnVuY3Rpb24g4oCYaW5pdGlhbF94ZW7igJk6Cm1ha2VkdW1wZmlsZS5jOjk0NDI6
-MTY6IHdhcm5pbmc6IHVudXNlZCB2YXJpYWJsZSDigJhzaXpl4oCZIFstV3VudXNlZC12YXJpYWJs
-ZV0KICB1bnNpZ25lZCBsb25nIHNpemU7CiAgICAgICAgICAgICAgICAgIF4KbWFrZWR1bXBmaWxl
-LmM6OTQ0MTo4OiB3YXJuaW5nOiB1bnVzZWQgdmFyaWFibGUg4oCYb2Zmc2V04oCZIFstV3VudXNl
-ZC12YXJpYWJsZV0KICBvZmZfdCBvZmZzZXQ7CiAgICAgICAgICAgIF4KbWFrZWR1bXBmaWxlLmM6
-OTQ0MDo2OiB3YXJuaW5nOiB1bnVzZWQgdmFyaWFibGUg4oCYeGVuX2luZm9fcmVxdWlyZWTigJkg
-Wy1XdW51c2VkLXZhcmlhYmxlXQogIGludCB4ZW5faW5mb19yZXF1aXJlZCA9IFRSVUU7CiAgICAg
-ICAgICAgIF4KClRoaXMgaXMgY2F1c2VkIGJlY2F1c2Ugd2hpbGUgd2UgZG9uJ3Qgc3VwcG9ydCBY
-ZW4gb24gcG93ZXJwYywKd2Ugc3RpbGwgaGF2ZSB0aGUgYWJvdmUgdmFyaWFibGVzIGRlY2xhcmVk
-IG91dHNpZGUgdGhlCicjaWYgZGVmaW5lZChfX3Bvd2VycGM2NF9fKSB8fCBkZWZpbmVkKF9fcG93
-ZXJwYzMyX18pJwpjaGVjay4KClRoaXMgcGF0Y2ggZml4ZXMgdGhlIHNhbWUgYnkgZW5zdXJpbmcg
-dGhhdCB0aGVzZSB2YXJpYWJsZXMgYXJlIG9ubHkKZGVjbGFyZWQgZm9yIGFyY2hzICE9IHBvd2Vy
-cGMuCgpTaWduZWQtb2ZmLWJ5OiBCaHVwZXNoIFNoYXJtYSA8YmhzaGFybWFAcmVkaGF0LmNvbT4K
-LS0tCiBtYWtlZHVtcGZpbGUuYyB8IDggKysrKy0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2Vy
-dGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvbWFrZWR1bXBmaWxlLmMgYi9t
-YWtlZHVtcGZpbGUuYwppbmRleCA2ZDVmYzhiOTU0MTUuLjdjZTBjNmQ2NDhhYSAxMDA2NDQKLS0t
-IGEvbWFrZWR1bXBmaWxlLmMKKysrIGIvbWFrZWR1bXBmaWxlLmMKQEAgLTk0MzcsMTUgKzk0Mzcs
-MTUgQEAgZXhjbHVkZV94ZW5fdXNlcl9kb21haW4odm9pZCkKIGludAogaW5pdGlhbF94ZW4odm9p
-ZCkKIHsKLQlpbnQgeGVuX2luZm9fcmVxdWlyZWQgPSBUUlVFOwotCW9mZl90IG9mZnNldDsKLQl1
-bnNpZ25lZCBsb25nIHNpemU7Ci0KICNpZiBkZWZpbmVkKF9fcG93ZXJwYzY0X18pIHx8IGRlZmlu
-ZWQoX19wb3dlcnBjMzJfXykKIAlNU0coIlxuIik7CiAJTVNHKCJYZW4gaXMgbm90IHN1cHBvcnRl
-ZCBvbiBwb3dlcnBjLlxuIik7CiAJcmV0dXJuIEZBTFNFOwogI2Vsc2UKKwlpbnQgeGVuX2luZm9f
-cmVxdWlyZWQgPSBUUlVFOworCW9mZl90IG9mZnNldDsKKwl1bnNpZ25lZCBsb25nIHNpemU7CisK
-ICNpZm5kZWYgX194ODZfNjRfXwogCWlmIChETF9FWENMVURFX1pFUk8gPCBpbmZvLT5tYXhfZHVt
-cF9sZXZlbCkgewogCQlNU0coIkR1bXBfbGV2ZWwgaXMgaW52YWxpZC4gSXQgc2hvdWxkIGJlIDAg
-b3IgMS5cbiIpOwotLSAKMi43LjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On executing `makedumpfile --mem-usage /proc/kcore`, it
+fails currently with the following error message on newer Linux kernels
+like 4.13.0 or 4.14.0:
+
+mem-usage not supported for this kernel.
+You can try with -f if your kernel's kcore has valid p_paddr
+makedumpfile Failed.
+
+This happens because 'info->kernel_version' is uninitialized in function
+main(). So when we perform the following check, it fails even though the
+kernel version is greater than 4.11.0:
+
+if (info->kernel_version < KERNEL_VERSION(4, 11, 0) &&
+				!info->flag_force) {
+
+Fix this by reorganizing the code to:
+- Add an API to populate the kernel version.
+- Call this API rather than replicating the open code across other APIs
+  across 'makedumpfile.c'
+
+After this patch, '--mem-usage' can be used properly with makedumpfile.
+Here are the logs I observe on a Fedora 26 ppc64le system:
+
+The kernel version is not supported.
+The makedumpfile operation may be incomplete.
+
+TYPE		PAGES			EXCLUDABLE	DESCRIPTION
+----------------------------------------------------------------------
+ZERO		99              	yes		Pages filled
+with zero
+NON_PRI_CACHE	7817            	yes		Cache pages
+without private flag
+PRI_CACHE	63603           	yes		Cache pages with
+private flag
+USER		4105            	yes		User process
+pages
+FREE		165446          	yes		Free pages
+KERN_DATA	6738            	no		Dumpable kernel
+data
+
+page size:		65536
+Total pages on system:	247808
+Total size on system:	16240345088      Byte
+
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+---
+ makedumpfile.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 7ce0c6d648aa..4bde542b4f0c 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1089,6 +1089,21 @@ fallback_to_current_page_size(void)
+ 	return TRUE;
+ }
+ 
++static int populate_kernel_version(void)
++{
++	struct utsname utsname;
++
++	if (uname(&utsname)) {
++		ERRMSG("Cannot get name and information about current kernel : %s\n",
++		       strerror(errno));
++		return FALSE;
++	}
++
++	info->kernel_version = get_kernel_version(utsname.release);
++
++	return TRUE;
++}
++
+ int
+ check_release(void)
+ {
+@@ -1120,11 +1135,8 @@ check_release(void)
+ 		}
+ 	}
+ 
+-	info->kernel_version = get_kernel_version(info->system_utsname.release);
+-	if (info->kernel_version == FALSE) {
+-		ERRMSG("Can't get the kernel version.\n");
++	if (!populate_kernel_version())
+ 		return FALSE;
+-	}
+ 
+ 	return TRUE;
+ }
+@@ -10973,20 +10985,14 @@ int is_crashkernel_mem_reserved(void)
+ 
+ static int get_page_offset(void)
+ {
+-	struct utsname utsname;
+-	if (uname(&utsname)) {
+-		ERRMSG("Cannot get name and information about current kernel : %s",
+-		       strerror(errno));
++	if (!populate_kernel_version())
+ 		return FALSE;
+-	}
+ 
+-	info->kernel_version = get_kernel_version(utsname.release);
+ 	get_versiondep_info();
+ 
+ 	return TRUE;
+ }
+ 
+-
+ /* Returns the physical address of start of crash notes buffer for a kernel. */
+ static int get_sys_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
+ {
+@@ -11363,6 +11369,9 @@ main(int argc, char *argv[])
+ 			MSG("Try `makedumpfile --help' for more information.\n");
+ 			goto out;
+ 		}
++		if (!populate_kernel_version())
++			goto out;
++
+ 		if (info->kernel_version < KERNEL_VERSION(4, 11, 0) &&
+ 				!info->flag_force) {
+ 			MSG("mem-usage not supported for this kernel.\n");
+-- 
+2.7.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
