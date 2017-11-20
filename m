@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1eFv2f-0004cd-IW
- for kexec@lists.infradead.org; Sat, 18 Nov 2017 04:47:47 +0000
-Date: Sat, 18 Nov 2017 12:47:11 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH] certs: always use secondary keyring first if possible
-Message-ID: <20171118044711.GA7352@dhcp-128-65.nay.redhat.com>
+ id 1eGZsD-0006sK-2Z
+ for kexec@lists.infradead.org; Mon, 20 Nov 2017 00:23:43 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [makedumpfile PATCH 1/2] Fix compilation warnings on
+ ppc64/ppc64le platforms
+Date: Mon, 20 Nov 2017 00:19:34 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701F263B0@BPXM01GP.gisp.nec.co.jp>
+References: <1510867800-6492-1-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1510867800-6492-1-git-send-email-bhsharma@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,45 +20,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Howells <dhowells@redhat.com>
-Cc: keyrings@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Bhupesh Sharma <bhsharma@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "hbathini@linux.vnet.ibm.com" <hbathini@linux.vnet.ibm.com>, Keiichirou Suzuki <kei-suzuki@xr.jp.nec.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "piliu@redhat.com" <piliu@redhat.com>
 
-Commit d3bfe84129f6 introduced secondary_trusted_keys keyring, current
-users of verify_pkcs7_signature are below:
-net/wireless/reg.c : uses its own trusted_keys
-kernel/module_signing.c : pass NULL trusted_keys 
-crypto/asymmetric_keys/verify_pefile.c : pass NULL trusted_keys
-
-For both module and pefile verification, there is no reason to use builtin
-keys only. Actually in Fedora kernel module signing code passes 1UL, but
-kexec code does not pass 1UL for pefile verification thus we have below bug
-https://bugzilla.redhat.com/show_bug.cgi?id=1470995
-
-Drop the hard code 1UL checking so that pefile verification can use
-secondary keyring as well.
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- certs/system_keyring.c |    2 --
- 1 file changed, 2 deletions(-)
-
---- linux-x86.orig/certs/system_keyring.c
-+++ linux-x86/certs/system_keyring.c
-@@ -229,8 +229,6 @@ int verify_pkcs7_signature(const void *d
- 		goto error;
- 
- 	if (!trusted_keys) {
--		trusted_keys = builtin_trusted_keys;
--	} else if (trusted_keys == (void *)1UL) {
- #ifdef CONFIG_SECONDARY_TRUSTED_KEYRING
- 		trusted_keys = secondary_trusted_keys;
- #else
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gQmh1cGVzaCwNCg0KVGhhbmtzIGZvciB5b3VyIHdvcmssIEknbGwgbWVyZ2UgdGhlc2Ug
+cGF0Y2hlcyBpbnRvIHYxLjYuMy4NCg0KUmVnYXJkcw0KQXRzdXNoaSBLdW1hZ2FpDQoNCj5JIHJh
+biBpbnRvIHRoZSBmb2xsb3dpbmcgY29tcGlsYXRpb24gd2FybmluZ3Mgd2hpbGUgY29tcGlsaW5n
+DQo+bWFrZWR1bXBmaWxlIG9uIHBwYzY0L3BwYzY0bGUgcGxhdGZvcm1zOg0KPg0KPi1EX0xBUkdF
+RklMRTY0X1NPVVJDRSAtRFZFUlNJT049JyIxLjYuMiInIC1EUkVMRUFTRV9EQVRFPSciMjcgSnVs
+IDIwMTciJw0KPi1EX19wb3dlcnBjNjRsZV9fICAtRFVTRUxaTyAtRFVTRVNOQVBQWSAgcHJpbnRf
+aW5mby5vIGR3YXJmX2luZm8ubw0KPmVsZl9pbmZvLm8gZXJhc2VfaW5mby5vIHNhZHVtcF9pbmZv
+Lm8gY2FjaGUubyBhcmNoL2FybS5vIGFyY2gvYXJtNjQubw0KPmFyY2gveDg2Lm8gYXJjaC94ODZf
+NjQubyBhcmNoL2lhNjQubyBhcmNoL3BwYzY0Lm8gYXJjaC9zMzkweC5vDQo+YXJjaC9wcGMubyBh
+cmNoL3NwYXJjNjQubyAtcmR5bmFtaWMgLW8gbWFrZWR1bXBmaWxlIG1ha2VkdW1wZmlsZS5jDQo+
+LWxwdGhyZWFkIC1sc25hcHB5IC1sbHpvMiAtbGR3IC1sYnoyIC1sZWJsIC1sZGwgLWxlbGYgLWx6
+DQo+DQo+bWFrZWR1bXBmaWxlLmM6IEluIGZ1bmN0aW9uIOKAmGluaXRpYWxfeGVu4oCZOg0KPm1h
+a2VkdW1wZmlsZS5jOjk0NDI6MTY6IHdhcm5pbmc6IHVudXNlZCB2YXJpYWJsZSDigJhzaXpl4oCZ
+IFstV3VudXNlZC12YXJpYWJsZV0NCj4gIHVuc2lnbmVkIGxvbmcgc2l6ZTsNCj4gICAgICAgICAg
+ICAgICAgICBeDQo+bWFrZWR1bXBmaWxlLmM6OTQ0MTo4OiB3YXJuaW5nOiB1bnVzZWQgdmFyaWFi
+bGUg4oCYb2Zmc2V04oCZIFstV3VudXNlZC12YXJpYWJsZV0NCj4gIG9mZl90IG9mZnNldDsNCj4g
+ICAgICAgICAgICBeDQo+bWFrZWR1bXBmaWxlLmM6OTQ0MDo2OiB3YXJuaW5nOiB1bnVzZWQgdmFy
+aWFibGUg4oCYeGVuX2luZm9fcmVxdWlyZWTigJkgWy1XdW51c2VkLXZhcmlhYmxlXQ0KPiAgaW50
+IHhlbl9pbmZvX3JlcXVpcmVkID0gVFJVRTsNCj4gICAgICAgICAgICBeDQo+DQo+VGhpcyBpcyBj
+YXVzZWQgYmVjYXVzZSB3aGlsZSB3ZSBkb24ndCBzdXBwb3J0IFhlbiBvbiBwb3dlcnBjLA0KPndl
+IHN0aWxsIGhhdmUgdGhlIGFib3ZlIHZhcmlhYmxlcyBkZWNsYXJlZCBvdXRzaWRlIHRoZQ0KPicj
+aWYgZGVmaW5lZChfX3Bvd2VycGM2NF9fKSB8fCBkZWZpbmVkKF9fcG93ZXJwYzMyX18pJw0KPmNo
+ZWNrLg0KPg0KPlRoaXMgcGF0Y2ggZml4ZXMgdGhlIHNhbWUgYnkgZW5zdXJpbmcgdGhhdCB0aGVz
+ZSB2YXJpYWJsZXMgYXJlIG9ubHkNCj5kZWNsYXJlZCBmb3IgYXJjaHMgIT0gcG93ZXJwYy4NCj4N
+Cj5TaWduZWQtb2ZmLWJ5OiBCaHVwZXNoIFNoYXJtYSA8YmhzaGFybWFAcmVkaGF0LmNvbT4NCj4t
+LS0NCj4gbWFrZWR1bXBmaWxlLmMgfCA4ICsrKystLS0tDQo+IDEgZmlsZSBjaGFuZ2VkLCA0IGlu
+c2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+DQo+ZGlmZiAtLWdpdCBhL21ha2VkdW1wZmls
+ZS5jIGIvbWFrZWR1bXBmaWxlLmMNCj5pbmRleCA2ZDVmYzhiOTU0MTUuLjdjZTBjNmQ2NDhhYSAx
+MDA2NDQNCj4tLS0gYS9tYWtlZHVtcGZpbGUuYw0KPisrKyBiL21ha2VkdW1wZmlsZS5jDQo+QEAg
+LTk0MzcsMTUgKzk0MzcsMTUgQEAgZXhjbHVkZV94ZW5fdXNlcl9kb21haW4odm9pZCkNCj4gaW50
+DQo+IGluaXRpYWxfeGVuKHZvaWQpDQo+IHsNCj4tCWludCB4ZW5faW5mb19yZXF1aXJlZCA9IFRS
+VUU7DQo+LQlvZmZfdCBvZmZzZXQ7DQo+LQl1bnNpZ25lZCBsb25nIHNpemU7DQo+LQ0KPiAjaWYg
+ZGVmaW5lZChfX3Bvd2VycGM2NF9fKSB8fCBkZWZpbmVkKF9fcG93ZXJwYzMyX18pDQo+IAlNU0co
+IlxuIik7DQo+IAlNU0coIlhlbiBpcyBub3Qgc3VwcG9ydGVkIG9uIHBvd2VycGMuXG4iKTsNCj4g
+CXJldHVybiBGQUxTRTsNCj4gI2Vsc2UNCj4rCWludCB4ZW5faW5mb19yZXF1aXJlZCA9IFRSVUU7
+DQo+KwlvZmZfdCBvZmZzZXQ7DQo+Kwl1bnNpZ25lZCBsb25nIHNpemU7DQo+Kw0KPiAjaWZuZGVm
+IF9feDg2XzY0X18NCj4gCWlmIChETF9FWENMVURFX1pFUk8gPCBpbmZvLT5tYXhfZHVtcF9sZXZl
+bCkgew0KPiAJCU1TRygiRHVtcF9sZXZlbCBpcyBpbnZhbGlkLiBJdCBzaG91bGQgYmUgMCBvciAx
+LlxuIik7DQo+LS0NCj4yLjcuNA0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
