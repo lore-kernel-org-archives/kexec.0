@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1eGZsD-0006sK-2Z
- for kexec@lists.infradead.org; Mon, 20 Nov 2017 00:23:43 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [makedumpfile PATCH 1/2] Fix compilation warnings on
- ppc64/ppc64le platforms
-Date: Mon, 20 Nov 2017 00:19:34 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701F263B0@BPXM01GP.gisp.nec.co.jp>
-References: <1510867800-6492-1-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1510867800-6492-1-git-send-email-bhsharma@redhat.com>
-Content-Language: ja-JP
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
+ id 1eGiVR-0007SO-TN
+ for kexec@lists.infradead.org; Mon, 20 Nov 2017 09:36:51 +0000
+Received: from penelope.horms.nl (unknown [217.111.208.18])
+ by kirsty.vergenet.net (Postfix) with ESMTPA id 7636D25AD5A
+ for <kexec@lists.infradead.org>; Mon, 20 Nov 2017 20:36:19 +1100 (AEDT)
+Date: Mon, 20 Nov 2017 10:36:17 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: [ANNOUNCE] kexec-tools 2.0.16
+Message-ID: <20171120093617.6btks4ijakzi4yil@verge.net.au>
 MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,51 +20,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: "hbathini@linux.vnet.ibm.com" <hbathini@linux.vnet.ibm.com>, Keiichirou Suzuki <kei-suzuki@xr.jp.nec.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "piliu@redhat.com" <piliu@redhat.com>
+To: kexec@lists.infradead.org
 
-SGVsbG8gQmh1cGVzaCwNCg0KVGhhbmtzIGZvciB5b3VyIHdvcmssIEknbGwgbWVyZ2UgdGhlc2Ug
-cGF0Y2hlcyBpbnRvIHYxLjYuMy4NCg0KUmVnYXJkcw0KQXRzdXNoaSBLdW1hZ2FpDQoNCj5JIHJh
-biBpbnRvIHRoZSBmb2xsb3dpbmcgY29tcGlsYXRpb24gd2FybmluZ3Mgd2hpbGUgY29tcGlsaW5n
-DQo+bWFrZWR1bXBmaWxlIG9uIHBwYzY0L3BwYzY0bGUgcGxhdGZvcm1zOg0KPg0KPi1EX0xBUkdF
-RklMRTY0X1NPVVJDRSAtRFZFUlNJT049JyIxLjYuMiInIC1EUkVMRUFTRV9EQVRFPSciMjcgSnVs
-IDIwMTciJw0KPi1EX19wb3dlcnBjNjRsZV9fICAtRFVTRUxaTyAtRFVTRVNOQVBQWSAgcHJpbnRf
-aW5mby5vIGR3YXJmX2luZm8ubw0KPmVsZl9pbmZvLm8gZXJhc2VfaW5mby5vIHNhZHVtcF9pbmZv
-Lm8gY2FjaGUubyBhcmNoL2FybS5vIGFyY2gvYXJtNjQubw0KPmFyY2gveDg2Lm8gYXJjaC94ODZf
-NjQubyBhcmNoL2lhNjQubyBhcmNoL3BwYzY0Lm8gYXJjaC9zMzkweC5vDQo+YXJjaC9wcGMubyBh
-cmNoL3NwYXJjNjQubyAtcmR5bmFtaWMgLW8gbWFrZWR1bXBmaWxlIG1ha2VkdW1wZmlsZS5jDQo+
-LWxwdGhyZWFkIC1sc25hcHB5IC1sbHpvMiAtbGR3IC1sYnoyIC1sZWJsIC1sZGwgLWxlbGYgLWx6
-DQo+DQo+bWFrZWR1bXBmaWxlLmM6IEluIGZ1bmN0aW9uIOKAmGluaXRpYWxfeGVu4oCZOg0KPm1h
-a2VkdW1wZmlsZS5jOjk0NDI6MTY6IHdhcm5pbmc6IHVudXNlZCB2YXJpYWJsZSDigJhzaXpl4oCZ
-IFstV3VudXNlZC12YXJpYWJsZV0NCj4gIHVuc2lnbmVkIGxvbmcgc2l6ZTsNCj4gICAgICAgICAg
-ICAgICAgICBeDQo+bWFrZWR1bXBmaWxlLmM6OTQ0MTo4OiB3YXJuaW5nOiB1bnVzZWQgdmFyaWFi
-bGUg4oCYb2Zmc2V04oCZIFstV3VudXNlZC12YXJpYWJsZV0NCj4gIG9mZl90IG9mZnNldDsNCj4g
-ICAgICAgICAgICBeDQo+bWFrZWR1bXBmaWxlLmM6OTQ0MDo2OiB3YXJuaW5nOiB1bnVzZWQgdmFy
-aWFibGUg4oCYeGVuX2luZm9fcmVxdWlyZWTigJkgWy1XdW51c2VkLXZhcmlhYmxlXQ0KPiAgaW50
-IHhlbl9pbmZvX3JlcXVpcmVkID0gVFJVRTsNCj4gICAgICAgICAgICBeDQo+DQo+VGhpcyBpcyBj
-YXVzZWQgYmVjYXVzZSB3aGlsZSB3ZSBkb24ndCBzdXBwb3J0IFhlbiBvbiBwb3dlcnBjLA0KPndl
-IHN0aWxsIGhhdmUgdGhlIGFib3ZlIHZhcmlhYmxlcyBkZWNsYXJlZCBvdXRzaWRlIHRoZQ0KPicj
-aWYgZGVmaW5lZChfX3Bvd2VycGM2NF9fKSB8fCBkZWZpbmVkKF9fcG93ZXJwYzMyX18pJw0KPmNo
-ZWNrLg0KPg0KPlRoaXMgcGF0Y2ggZml4ZXMgdGhlIHNhbWUgYnkgZW5zdXJpbmcgdGhhdCB0aGVz
-ZSB2YXJpYWJsZXMgYXJlIG9ubHkNCj5kZWNsYXJlZCBmb3IgYXJjaHMgIT0gcG93ZXJwYy4NCj4N
-Cj5TaWduZWQtb2ZmLWJ5OiBCaHVwZXNoIFNoYXJtYSA8YmhzaGFybWFAcmVkaGF0LmNvbT4NCj4t
-LS0NCj4gbWFrZWR1bXBmaWxlLmMgfCA4ICsrKystLS0tDQo+IDEgZmlsZSBjaGFuZ2VkLCA0IGlu
-c2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+DQo+ZGlmZiAtLWdpdCBhL21ha2VkdW1wZmls
-ZS5jIGIvbWFrZWR1bXBmaWxlLmMNCj5pbmRleCA2ZDVmYzhiOTU0MTUuLjdjZTBjNmQ2NDhhYSAx
-MDA2NDQNCj4tLS0gYS9tYWtlZHVtcGZpbGUuYw0KPisrKyBiL21ha2VkdW1wZmlsZS5jDQo+QEAg
-LTk0MzcsMTUgKzk0MzcsMTUgQEAgZXhjbHVkZV94ZW5fdXNlcl9kb21haW4odm9pZCkNCj4gaW50
-DQo+IGluaXRpYWxfeGVuKHZvaWQpDQo+IHsNCj4tCWludCB4ZW5faW5mb19yZXF1aXJlZCA9IFRS
-VUU7DQo+LQlvZmZfdCBvZmZzZXQ7DQo+LQl1bnNpZ25lZCBsb25nIHNpemU7DQo+LQ0KPiAjaWYg
-ZGVmaW5lZChfX3Bvd2VycGM2NF9fKSB8fCBkZWZpbmVkKF9fcG93ZXJwYzMyX18pDQo+IAlNU0co
-IlxuIik7DQo+IAlNU0coIlhlbiBpcyBub3Qgc3VwcG9ydGVkIG9uIHBvd2VycGMuXG4iKTsNCj4g
-CXJldHVybiBGQUxTRTsNCj4gI2Vsc2UNCj4rCWludCB4ZW5faW5mb19yZXF1aXJlZCA9IFRSVUU7
-DQo+KwlvZmZfdCBvZmZzZXQ7DQo+Kwl1bnNpZ25lZCBsb25nIHNpemU7DQo+Kw0KPiAjaWZuZGVm
-IF9feDg2XzY0X18NCj4gCWlmIChETF9FWENMVURFX1pFUk8gPCBpbmZvLT5tYXhfZHVtcF9sZXZl
-bCkgew0KPiAJCU1TRygiRHVtcF9sZXZlbCBpcyBpbnZhbGlkLiBJdCBzaG91bGQgYmUgMCBvciAx
-LlxuIik7DQo+LS0NCj4yLjcuNA0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi all,
+
+I am happy to announce the release of kexec-tools 2.0.16.
+
+This is a feature release coinciding with the release of v4.14 of the Linux
+Kernel.
+
+This release can be downloaded from kernel.org:
+
+	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.16.tar.xz
+	http://kernel.org/pub/linux/utils/kernel/kexec/
+
+It is also tagged it in git:
+
+	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+
+Thanks to everyone who has contributed to kexec.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
