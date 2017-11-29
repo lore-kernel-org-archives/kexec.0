@@ -1,23 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-sn1nam01on0605.outbound.protection.outlook.com
- ([2a01:111:f400:fe40::605]
- helo=NAM01-SN1-obe.outbound.protection.outlook.com)
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1eJzf9-00009W-6o
- for kexec@lists.infradead.org; Wed, 29 Nov 2017 10:32:25 +0000
-From: "Gurumurthy, Anil" <Anil.Gurumurthy@cavium.com>
-Subject: RE: kdump issues with 4.11 kernel
-Date: Wed, 29 Nov 2017 10:31:55 +0000
-Message-ID: <BY2PR0701MB2023974CB792B56F110EC4BE8E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
-References: <BY2PR0701MB202342812CFB9669B01930D98E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
- <20171129073841.GA2129@dhcp-128-65.nay.redhat.com>
- <BY2PR0701MB2023DAF450CE2EB7270E05A38E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
- <CACi5LpP9+5YVVh1DtnWXCMQbFMRJ1NVYh=_nQYcpShZS0es7hg@mail.gmail.com>
- <BY2PR0701MB2023FFA00EC7445B005BCB498E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
- <CACi5LpNVRpHJW-AUuNnH0YQ-dTxD+fGjMAO_pL=2ieqzkG0mgw@mail.gmail.com>
-In-Reply-To: <CACi5LpNVRpHJW-AUuNnH0YQ-dTxD+fGjMAO_pL=2ieqzkG0mgw@mail.gmail.com>
-Content-Language: en-US
+ id 1eK1T3-0002xy-9h
+ for kexec@lists.infradead.org; Wed, 29 Nov 2017 12:27:59 +0000
+Date: Wed, 29 Nov 2017 13:27:32 +0100
+From: Jiri Bohac <jbohac@suse.cz>
+Subject: Re: [PATCH] x86/kexec: Exclude GART aperture from vmcore
+Message-ID: <20171129122732.qcpi655yf26iuspg@dwarf.suse.cz>
+References: <20171106024143.GA3669@x1>
+ <20171106090155.p7jhe2m57whfxma3@dwarf.suse.cz>
+ <20171106092729.GB3669@x1>
+ <20171106095638.7iwlyjmlom3tqelt@dwarf.suse.cz>
+ <20171107113956.GC3669@x1>
+ <20171107134212.tmjdt7rdailtbosa@dwarf.suse.cz>
+ <20171107153428.ex27nwkvelhm2nm7@dwarf.suse.cz>
+ <20171112080426.GB6429@x1>
+ <20171128215833.hhcjvn5qjfc3bdrk@dwarf.suse.cz>
+ <20171129024307.GE15074@x1>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20171129024307.GE15074@x1>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,132 +32,87 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Toshi Kani <toshi.kani@hpe.com>, David Airlie <airlied@linux.ie>, yinghai@kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
+On Wed, Nov 29, 2017 at 10:43:07AM +0800, Baoquan He wrote:
+> On 11/28/17 at 10:58pm, Jiri Bohac wrote:
+> > On Sun, Nov 12, 2017 at 04:04:26PM +0800, Baoquan He wrote:
+> > > Solution:
+> > > 1) Remove the code which support GART IOMMU when it's not enabled in
+> > > BIOS. This has been done in the new generation of hardware IOMMU like
+> > > intel vt-d IOMMU and amd-Vi IOMMU. We should not make GART IOMMU be
+> > > exceptional.
+> > 
+> > Wouldn't this break old machines with actual AGP and
+> > misconfigured/bugg BIOSes? Wasn't that the reason why we have the
+> > workaround of mapping the hole over real memory?
+> 
+> Hmm, a quick question, does it work when GART support is enabled in
+> bios? In intel vt-d and amd-vi iommu, if user doesn't enable it in bios,
+> the functionality will be disabled in kernel, why would we not do that
+> for GART IOMMU? and why is GART so special?
 
+My feeling is that there is no technical reason (perhaps there
+were more broken BIOSes in the AGP days?). The main reason is
+that the kernel has included the workaround since ever and
+removing it now will break these machines. Even if most of them
+would be fixed by properly configuring the BIOS, it will still be
+regardes as a regression by the user, which I don't think is
+acceptable. 
 
------Original Message-----
-From: Bhupesh Sharma [mailto:bhsharma@redhat.com] 
-Sent: 29 November 2017 15:50
-To: Gurumurthy, Anil <Anil.Gurumurthy@cavium.com>
-Cc: Dave Young <dyoung@redhat.com>; kexec@lists.infradead.org
-Subject: Re: kdump issues with 4.11 kernel
+Currently everything works with the workaround, except kdump.
+That's why I came up with a fix for [half of] kdump.
 
-On Wed, Nov 29, 2017 at 3:36 PM, Gurumurthy, Anil <Anil.Gurumurthy@cavium.com> wrote:
->
->
-> -----Original Message-----
-> From: Bhupesh Sharma [mailto:bhsharma@redhat.com]
-> Sent: 29 November 2017 15:16
-> To: Gurumurthy, Anil <Anil.Gurumurthy@cavium.com>
-> Cc: Dave Young <dyoung@redhat.com>; kexec@lists.infradead.org
-> Subject: Re: kdump issues with 4.11 kernel
->
-> Hi Anil,
->
-> On Wed, Nov 29, 2017 at 2:44 PM, Gurumurthy, Anil <Anil.Gurumurthy@cavium.com> wrote:
->> Thanks. That did help getting kexec to work.
->> However I still do not get a crash dump - echo c  > 
->> /proc/sysrq-trigger does not get a crash dump.
->>
->> Any thoughts?
->
-> Cam you share the console messages you see when the crash kernel 
-> boots? Or do you see nothing after the crash is introduced via echo c
->> /proc/sysrq-trigger
-> [Anil]  I do not see any messages after introducing the crash.
+> > > 2) Remove those pages from mm subsystem since they are not seen any more
+> > > though they have been added into mm subsystem, because CPU can't see
+> > > them.
 
-There could be several reasons for this:
+Could you explain what exactly you mean and how it would fix the
+vmcore issue? 
 
-- crashkernel might be missing some arch/machine specific options.
-- It may be that the purgatory sha verification has failed. If your arch supports a console in purgatory then it is easy to debug this.
-- It might be that the crash kernel itself crashed very early. Pass some earlycon/earlyprintk option for your system to the second kernel command line.
-- Also please share relevant dmesg log of both primary kernel boot and the commands you use to invoke the crashkernel.
+> > > 3) Remove the apreture region from /proc/iomem so that pages in that
+> > > region can't be seen by kdump kernel. This is easier, but just a work
+> > > around.
+> > 
+> > I like this idea, but won't this cause pci_claim_resource() fail
+> > after the call to pci_find_parent_resource() ? See my previous
+> > mail.
+> 
+> Not very sure, now have not time to investigate why it cause failure.
+> 
+> I tried to find a system with GART in our lab, but failed. Those
+> machines are too old
 
-[Anil] Thanks for the quick response
+The vmcore problem is reproducible on modern AMD systems. This
+has originally been reported by a customer running an "HP ProLiant
+BL465c Gen8". I later reproduced it on a "ProLiant DL385p Gen8",
+as well as many older systems.
 
-   This is what I have in the .config (for the primary kernel)
-CONFIG_EARLY_PRINTK=y
-CONFIG_EARLY_PRINTK_DBGP=y
-CONFIG_EARLY_PRINTK_EFI=y
+So I believe kdump/vmcore needs fixing - it is broken on machines
+sold today.
 
-The log for the primary kernel boot:
+What became a bit "old" is the reason why we don't include the
+"GART" region in the iomem resources - fix for a resource
+conflict resulting in malfuncioning AGP hardware as reported in
+bko#72201; see my original mail for the full info. But I don't
+think we should break this old hardware again just to make the
+kdump fix more beautiful.
 
-Nov 29 14:22:22 localhost journal: Runtime journal is using 8.0M (max 1.9G, leaving 2.9G of free 19.4G, current limit 1.9G).
-Nov 29 14:22:22 localhost kernel: Linux version 4.11.12+ (root@localhost.localdomain) (gcc version 4.8.3 20140911 (Red Hat 4.8.3-9) (GCC) ) #4 SMP Thu Nov 23 12:11:02 IST 2017
-Nov 29 14:22:22 localhost kernel: Command line: BOOT_IMAGE=/vmlinuz-4.11.12+ root=/dev/mapper/rhel-root ro rd.lvm.lv=rhel/swap crashkernel=128M rd.lvm.lv=rhel/root rhgb quiet
-Nov 29 14:22:22 localhost kernel: x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
-Nov 29 14:22:22 localhost kernel: x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
-Nov 29 14:22:22 localhost kernel: x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
-Nov 29 14:22:22 localhost kernel: x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
-Nov 29 14:22:22 localhost kernel: x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'standard' format.
-Nov 29 14:22:22 localhost kernel: e820: BIOS-provided physical RAM map:
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000000000000-0x000000000006bfff] usable
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000000006c000-0x000000000006cfff] ACPI NVS
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000000006d000-0x000000000009efff] usable
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000000009f000-0x000000000009ffff] ACPI NVS
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000000100000-0x000000005d184fff] usable
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005d185000-0x000000005d185fff] ACPI data
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005d186000-0x000000005fb77fff] usable
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005fb78000-0x000000005fb7cfff] reserved
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005fb7d000-0x000000005ffdffff] usable
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005ffe0000-0x000000005ffe1fff] ACPI data
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005ffe2000-0x000000005fffafff] usable
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005fffb000-0x0000000060001fff] ACPI data
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000060002000-0x0000000060009fff] usable
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000006000a000-0x000000006000efff] ACPI data
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000006000f000-0x000000006000ffff] usable
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000060010000-0x0000000060011fff] ACPI data
-Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000060012000-0x00000000600ddfff] usable
+> If have a easy fix, worth to have a try.
 
-
-Will try to get the other details you needed too.
-
--Anil
+The fix for kexec_file_load-based kdump is easy and tested. I
+don't insist on fixing the old kexec, because we don't use it on
+x86_64. But I'm willing to help if you think it needs to be fixed
+as well.
 
 Regards,
-Bhupesh
+
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
 
 
-> Generally, depending on your test machine arch, it is useful to use earlycon/earlyprintk to see if the crash kernel produced any useful message until the actual console device became operational.
->
-> Can you try setting the earlycon/earlyprintk settings and share the crash kernel logs messages after the same?
->
-> Thanks,
-> Bhupesh
->
->> -----Original Message-----
->> From: Dave Young [mailto:dyoung@redhat.com]
->> Sent: 29 November 2017 13:09
->> To: Gurumurthy, Anil <Anil.Gurumurthy@cavium.com>
->> Cc: kexec@lists.infradead.org
->> Subject: Re: kdump issues with 4.11 kernel
->>
->> Hi,
->> On 11/29/17 at 05:29am, Gurumurthy, Anil wrote:
->>> Hello,
->>>   I was facing trouble getting a crash dump on 4.11 kernel. Debugging a bit, I see that the kexec run from the cmd line fails. Any ideas on what I could be missing?
->>>
->>> [root@localhost ~]# kexec -p /boot/vmlinuz-`uname -r` 
->>> --initrd=/boot/initramfs-`uname -r`kdump.img ELF core (kcore) parse 
->>> failed Cannot load /boot/vmlinuz-4.11.12+
->>>
->>
->> Can you try below kexec-tools commit:
->> commit ed15ba1b9977e506637ff1697821d97127b2c919
->> Author: Pratyush Anand <panand@redhat.com>
->> Date:   Wed Mar 1 11:19:42 2017 +0530
->>
->>     build_mem_phdrs(): check if p_paddr is invalid
->>
->> Thanks
->> Dave
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
