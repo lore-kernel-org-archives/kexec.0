@@ -1,25 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-dm3nam03on0055.outbound.protection.outlook.com
+ ([104.47.41.55] helo=NAM03-DM3-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1eJsLW-0007X9-0d
- for kexec@lists.infradead.org; Wed, 29 Nov 2017 02:43:36 +0000
-Date: Wed, 29 Nov 2017 10:43:07 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] x86/kexec: Exclude GART aperture from vmcore
-Message-ID: <20171129024307.GE15074@x1>
-References: <20171103172822.4ty6yjhewroe4z4j@dwarf.suse.cz>
- <20171106024143.GA3669@x1>
- <20171106090155.p7jhe2m57whfxma3@dwarf.suse.cz>
- <20171106092729.GB3669@x1>
- <20171106095638.7iwlyjmlom3tqelt@dwarf.suse.cz>
- <20171107113956.GC3669@x1>
- <20171107134212.tmjdt7rdailtbosa@dwarf.suse.cz>
- <20171107153428.ex27nwkvelhm2nm7@dwarf.suse.cz>
- <20171112080426.GB6429@x1>
- <20171128215833.hhcjvn5qjfc3bdrk@dwarf.suse.cz>
+ id 1eJuwR-0007Yw-HE
+ for kexec@lists.infradead.org; Wed, 29 Nov 2017 05:29:53 +0000
+From: "Gurumurthy, Anil" <Anil.Gurumurthy@cavium.com>
+Subject: RE: kdump issues with 4.11 kernel
+Date: Wed, 29 Nov 2017 05:29:25 +0000
+Message-ID: <BY2PR0701MB202342812CFB9669B01930D98E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20171128215833.hhcjvn5qjfc3bdrk@dwarf.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,96 +18,316 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jiri Bohac <jbohac@suse.cz>
-Cc: Toshi Kani <toshi.kani@hpe.com>, David Airlie <airlied@linux.ie>, yinghai@kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 11/28/17 at 10:58pm, Jiri Bohac wrote:
-> Hi Baoquan,
-> 
-> On Sun, Nov 12, 2017 at 04:04:26PM +0800, Baoquan He wrote:
-> > Solution:
-> > 1) Remove the code which support GART IOMMU when it's not enabled in
-> > BIOS. This has been done in the new generation of hardware IOMMU like
-> > intel vt-d IOMMU and amd-Vi IOMMU. We should not make GART IOMMU be
-> > exceptional.
-> 
-> Wouldn't this break old machines with actual AGP and
-> misconfigured/bugg BIOSes? Wasn't that the reason why we have the
-> workaround of mapping the hole over real memory?
+Hello,
+=A0 I was facing trouble getting a crash dump on 4.11 kernel. Debugging a b=
+it, I see that the kexec run from the cmd line fails. Any ideas on what I c=
+ould be missing?
 
-Hmm, a quick question, does it work when GART support is enabled in
-bios? In intel vt-d and amd-vi iommu, if user doesn't enable it in bios,
-the functionality will be disabled in kernel, why would we not do that
-for GART IOMMU? and why is GART so special?
+[root@localhost ~]# kexec -p /boot/vmlinuz-`uname -r` --initrd=3D/boot/init=
+ramfs-`uname -r`kdump.img
+ELF core (kcore) parse failed
+Cannot load /boot/vmlinuz-4.11.12+
 
-GART could be the only feature in kernel I saw which bios option is not
-enabled but still get supported. Doesn't it look very weird?
+[root@localhost ~]# ls -l /boot/vmlinuz-4.11.12+
+-rw-r--r--. 1 root root 6404384 Nov 23 12:14 /boot/vmlinuz-4.11.12+
+[root@localhost ~]# cat /sys/kernel/kexec_crash_size
+134217728
+[root@localhost ~]# cat /proc/iomem | grep -i crash
+=A0 30000000-37ffffff : Crash kernel
 
->  
-> > 2) Remove those pages from mm subsystem since they are not seen any more
-> > though they have been added into mm subsystem, because CPU can't see
-> > them.
-> 
-> not exactly sure I understand this... they are reserved by the
-> memblock allocater, thus preventing any further use by any mm
-> code.
-
-Many kernel pages are reverved from memblock, why can you still read
-their content?
-
-> 
-> > 3) Remove the apreture region from /proc/iomem so that pages in that
-> > region can't be seen by kdump kernel. This is easier, but just a work
-> > around.
-> 
-> I like this idea, but won't this cause pci_claim_resource() fail
-> after the call to pci_find_parent_resource() ? See my previous
-> mail.
-
-Not very sure, now have not time to investigate why it cause failure.
-
-I tried to find a system with GART in our lab, but failed. Those
-machines are too old, at least in redhat I never heard complain about
-it. If have a easy fix, worth to have a try. otherwise, may just better
-to leave it as is. That's why I suggested the 1st choice, and also the
-work around code is too quirky if GART bios is not enabled.
-
-> 
-> 
-> Bad thing is, we don't want to break random old AGP hardware, but
-> at the same time, it's now too rare to properly test this.
-> 
-> So wouldn't it be better to fix the problem at least for the
-> kexec_file case using my original patch?
-> 
-> A possible hack for the old kexec syscall might be to
-> make /proc/iomem list the "GART" region without it being present in
-> the iomem resource database. kexec-tools has working code to deal with
-> the GART region, but the kernel no longer includes it in
-> /proc/iomem.
-> 
-> Or maybe a cleaner solution than special-casing the "GART" region
-> into /proc/iomem would be to introduce a new type of iomem
-> resource that would be visible in /proc/iomem but would allow
-> other resources to be requested even when overlapping the region of this
-> special resource? This way, we could insert the "GART" resource
-> when allocating the hole but later, when an actual AGP driver
-> requests the range during PCI enumeration, the "GART" resource
-> would be overwrtiten by the actual PCI resource.
-> 
-> -- 
-> Jiri Bohac <jbohac@suse.cz>
-> SUSE Labs, Prague, Czechia
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+[root@localhost ~]# kexec -p /boot/vmlinuz-`uname -r` --initrd=3D/boot/init=
+ramfs-`uname -r`kdump.img -d
+kernel: 0x7fa8ba785010 kernel_size: 0x61b920
+MEMORY RANGES
+0000000000000100-000000000006bfff (0)
+000000000006c000-000000000006cfff (3)
+000000000006d000-000000000009efff (0)
+000000000009f000-000000000009ffff (3)
+0000000000100000-000000004578d017 (0)
+000000004578d018-00000000457aee57 (0)
+00000000457aee58-00000000457af017 (0)
+00000000457af018-00000000457d0e57 (0)
+00000000457d0e58-00000000457d1017 (0)
+00000000457d1018-00000000457f2e57 (0)
+00000000457f2e58-00000000457f3017 (0)
+00000000457f3018-0000000045814e57 (0)
+0000000045814e58-0000000045815017 (0)
+0000000045815018-000000004584ec57 (0)
+000000004584ec58-000000004584f017 (0)
+000000004584f018-0000000045888c57 (0)
+0000000045888c58-000000005d13c017 (0)
+000000005d13c018-000000005d14b057 (0)
+000000005d14b058-000000005d14c017 (0)
+000000005d14c018-000000005d15f657 (0)
+000000005d15f658-000000005d184fff (0)
+000000005d185000-000000005d185fff (2)
+000000005d186000-000000005fb76fff (0)
+000000005fb77000-000000005fb7bfff (1)
+000000005fb7c000-000000005ffe0fff (0)
+000000005ffe1000-000000005ffe1fff (2)
+000000005ffe2000-000000005fff9fff (0)
+000000005fffa000-0000000060001fff (2)
+0000000060002000-0000000060009fff (0)
+000000006000a000-000000006000afff (2)
+000000006000b000-000000006000bfff (0)
+000000006000c000-0000000060011fff (2)
+0000000060012000-00000000600ddfff (0)
+00000000600de000-00000000600e0fff (2)
+00000000600e1000-00000000600e2fff (1)
+00000000600e3000-00000000600e4fff (2)
+00000000600e5000-00000000606e2fff (0)
+00000000606e3000-00000000606e3fff (2)
+00000000606e4000-0000000060e52fff (0)
+0000000060e53000-0000000060e53fff (2)
+0000000060e54000-00000000735d9fff (0)
+00000000735da000-00000000735e6fff (1)
+00000000735e7000-0000000074413fff (0)
+0000000074414000-000000007e892fff (1)
+000000007e893000-000000007eb9efff (3)
+000000007eb9f000-000000007ec01fff (0)
+0000000080000000-000000008fffffff (1)
+00000000fed1c000-00000000fed1ffff (1)
+00000000ff800000-00000000ffffffff (1)
+0000000100000000-0000000a7fffffff (0)
+0000000000000000-0000000000000fff : reserved
+0000000000001000-000000000006bfff : System RAM
+000000000006c000-000000000006cfff : ACPI Non-volatile Storage
+000000000006d000-000000000009efff : System RAM
+000000000009f000-000000000009ffff : ACPI Non-volatile Storage
+00000000000a0000-00000000000bffff : PCI Bus 0000:00
+00000000000c0000-00000000000c7fff : Video ROM
+00000000000f0000-00000000000fffff : System ROM
+0000000000100000-000000004578d017 : System RAM
+0000000030000000-0000000037ffffff : Crash kernel
+000000004578d018-00000000457aee57 : System RAM
+00000000457aee58-00000000457af017 : System RAM
+00000000457af018-00000000457d0e57 : System RAM
+00000000457d0e58-00000000457d1017 : System RAM
+00000000457d1018-00000000457f2e57 : System RAM
+00000000457f2e58-00000000457f3017 : System RAM
+00000000457f3018-0000000045814e57 : System RAM
+0000000045814e58-0000000045815017 : System RAM
+0000000045815018-000000004584ec57 : System RAM
+000000004584ec58-000000004584f017 : System RAM
+000000004584f018-0000000045888c57 : System RAM
+0000000045888c58-000000005d13c017 : System RAM
+000000005d13c018-000000005d14b057 : System RAM
+000000005d14b058-000000005d14c017 : System RAM
+000000005d14c018-000000005d15f657 : System RAM
+000000005d15f658-000000005d184fff : System RAM
+000000005d185000-000000005d185fff : ACPI Tables
+000000005d186000-000000005fb76fff : System RAM
+000000005fb77000-000000005fb7bfff : reserved
+000000005fb7c000-000000005ffe0fff : System RAM
+000000005ffe1000-000000005ffe1fff : ACPI Tables
+000000005ffe2000-000000005fff9fff : System RAM
+000000005fffa000-0000000060001fff : ACPI Tables
+0000000060002000-0000000060009fff : System RAM
+000000006000a000-000000006000afff : ACPI Tables
+000000006000b000-000000006000bfff : System RAM
+000000006000c000-0000000060011fff : ACPI Tables
+0000000060012000-00000000600ddfff : System RAM
+00000000600de000-00000000600e0fff : ACPI Tables
+00000000600e1000-00000000600e2fff : reserved
+00000000600e3000-00000000600e4fff : ACPI Tables
+00000000600e5000-00000000606e2fff : System RAM
+00000000606e3000-00000000606e3fff : ACPI Tables
+00000000606e4000-0000000060e52fff : System RAM
+0000000060e53000-0000000060e53fff : ACPI Tables
+0000000060e54000-00000000735d9fff : System RAM
+00000000735da000-00000000735e6fff : reserved
+00000000735e7000-0000000074413fff : System RAM
+0000000074414000-000000007e892fff : reserved
+000000007e893000-000000007eb9efff : ACPI Non-volatile Storage
+000000007eb9f000-000000007ec01fff : System RAM
+000000007ec02000-000000007fffffff : RAM buffer
+0000000080000000-000000008fffffff : PCI MMCONFIG 0000 [bus 00-ff]
+0000000080000000-000000008fffffff : reserved
+0000000090000000-00000000c3ff7fff : PCI Bus 0000:80
+0000000090000000-0000000090003fff : 0000:80:04.0
+0000000090000000-0000000090003fff : ioatdma
+0000000090004000-0000000090007fff : 0000:80:04.1
+0000000090004000-0000000090007fff : ioatdma
+0000000090008000-000000009000bfff : 0000:80:04.2
+0000000090008000-000000009000bfff : ioatdma
+000000009000c000-000000009000ffff : 0000:80:04.3
+000000009000c000-000000009000ffff : ioatdma
+0000000090010000-0000000090013fff : 0000:80:04.4
+0000000090010000-0000000090013fff : ioatdma
+0000000090014000-0000000090017fff : 0000:80:04.5
+0000000090014000-0000000090017fff : ioatdma
+0000000090018000-000000009001bfff : 0000:80:04.6
+0000000090018000-000000009001bfff : ioatdma
+000000009001c000-000000009001ffff : 0000:80:04.7
+000000009001c000-000000009001ffff : ioatdma
+00000000c3ff8000-00000000c3ff8fff : dmar0
+00000000c4000000-00000000fbff7fff : PCI Bus 0000:00
+00000000c4000000-00000000c40fffff : PCI Bus 0000:20
+00000000c4000000-00000000c403ffff : 0000:20:00.0
+00000000c4040000-00000000c407ffff : 0000:20:00.1
+00000000c42fd000-00000000c42fd3ff : 0000:00:1a.0
+00000000c42fd000-00000000c42fd3ff : ehci_hcd
+00000000c42fe000-00000000c42fe3ff : 0000:00:1d.0
+00000000c42fe000-00000000c42fe3ff : ehci_hcd
+00000000c42ff000-00000000c42ff7ff : 0000:00:1f.2
+00000000c42ff000-00000000c42ff7ff : ahci
+00000000c4300000-00000000c43fffff : PCI Bus 0000:16
+00000000c4300000-00000000c431ffff : 0000:16:00.0
+00000000c43bc000-00000000c43bffff : 0000:16:00.0
+00000000c43bc000-00000000c43bffff : megasas: LSI
+00000000c43c0000-00000000c43fffff : 0000:16:00.0
+00000000c4400000-00000000c45fffff : PCI Bus 0000:06
+00000000c4470000-00000000c4473fff : 0000:06:00.0
+00000000c4470000-00000000c4473fff : igb
+00000000c4474000-00000000c4493fff : 0000:06:00.0
+00000000c4494000-00000000c44b3fff : 0000:06:00.0
+00000000c44b4000-00000000c44b7fff : 0000:06:00.1
+00000000c44b4000-00000000c44b7fff : igb
+00000000c44b8000-00000000c44d7fff : 0000:06:00.1
+00000000c44d8000-00000000c44f7fff : 0000:06:00.1
+00000000c44f8000-00000000c44fbfff : 0000:06:00.2
+00000000c44f8000-00000000c44fbfff : igb
+00000000c44fc000-00000000c451bfff : 0000:06:00.2
+00000000c451c000-00000000c453bfff : 0000:06:00.2
+00000000c453c000-00000000c453ffff : 0000:06:00.3
+00000000c453c000-00000000c453ffff : igb
+00000000c4540000-00000000c455ffff : 0000:06:00.3
+00000000c4560000-00000000c457ffff : 0000:06:00.3
+00000000c4580000-00000000c459ffff : 0000:06:00.0
+00000000c4580000-00000000c459ffff : igb
+00000000c45a0000-00000000c45bffff : 0000:06:00.1
+00000000c45a0000-00000000c45bffff : igb
+00000000c45c0000-00000000c45dffff : 0000:06:00.2
+00000000c45c0000-00000000c45dffff : igb
+00000000c45e0000-00000000c45fffff : 0000:06:00.3
+00000000c45e0000-00000000c45fffff : igb
+00000000c4600000-00000000c4ffffff : PCI Bus 0000:01
+00000000c4600000-00000000c4ffffff : PCI Bus 0000:02
+00000000c4600000-00000000c46fffff : PCI Bus 0000:05
+00000000c4700000-00000000c4ffffff : PCI Bus 0000:03
+00000000c4700000-00000000c4ffffff : PCI Bus 0000:04
+00000000c47fc000-00000000c47fffff : 0000:04:00.0
+00000000c47fc000-00000000c47fffff : mgadrmfb_mmio
+00000000c4800000-00000000c4ffffff : 0000:04:00.0
+00000000c5000000-00000000c5ffffff : PCI Bus 0000:01
+00000000c5000000-00000000c5ffffff : PCI Bus 0000:02
+00000000c5000000-00000000c5ffffff : PCI Bus 0000:03
+00000000c5000000-00000000c5ffffff : PCI Bus 0000:04
+00000000c5000000-00000000c5ffffff : 0000:04:00.0
+00000000c5000000-00000000c5ffffff : mgadrmfb_vram
+00000000c60e0000-00000000c60e3fff : 0000:00:04.0
+00000000c60e0000-00000000c60e3fff : ioatdma
+00000000c60e4000-00000000c60e7fff : 0000:00:04.1
+00000000c60e4000-00000000c60e7fff : ioatdma
+00000000c60e8000-00000000c60ebfff : 0000:00:04.2
+00000000c60e8000-00000000c60ebfff : ioatdma
+00000000c60ec000-00000000c60effff : 0000:00:04.3
+00000000c60ec000-00000000c60effff : ioatdma
+00000000c60f0000-00000000c60f3fff : 0000:00:04.4
+00000000c60f0000-00000000c60f3fff : ioatdma
+00000000c60f4000-00000000c60f7fff : 0000:00:04.5
+00000000c60f4000-00000000c60f7fff : ioatdma
+00000000c60f8000-00000000c60fbfff : 0000:00:04.6
+00000000c60f8000-00000000c60fbfff : ioatdma
+00000000c60fc000-00000000c60fffff : 0000:00:04.7
+00000000c60fc000-00000000c60fffff : ioatdma
+00000000c6100000-00000000c63fffff : PCI Bus 0000:20
+00000000c61fa000-00000000c61fafff : 0000:20:00.0
+00000000c61fa000-00000000c61fafff : qla2xxx
+00000000c61fb000-00000000c61fbfff : 0000:20:00.1
+00000000c61fb000-00000000c61fbfff : qla2xxx
+00000000c61fc000-00000000c61fdfff : 0000:20:00.0
+00000000c61fc000-00000000c61fdfff : qla2xxx
+00000000c61fe000-00000000c61fffff : 0000:20:00.1
+00000000c61fe000-00000000c61fffff : qla2xxx
+00000000c6200000-00000000c62fffff : 0000:20:00.0
+00000000c6200000-00000000c62fffff : qla2xxx
+00000000c6300000-00000000c63fffff : 0000:20:00.1
+00000000c6300000-00000000c63fffff : qla2xxx
+00000000fbff8000-00000000fbff8fff : dmar1
+00000000fec00000-00000000fecfffff : PNP0003:00
+00000000fec00000-00000000fec003ff : IOAPIC 0
+00000000fec01000-00000000fec013ff : IOAPIC 1
+00000000fec40000-00000000fec403ff : IOAPIC 2
+00000000fed00000-00000000fed003ff : HPET 0
+00000000fed00000-00000000fed003ff : PNP0103:00
+00000000fed1b000-00000000fed1bfff : pnp 00:01
+00000000fed1c000-00000000fed1ffff : reserved
+00000000fed1f410-00000000fed1f414 : iTCO_wdt.0.auto
+00000000fed40000-00000000fedfffff : PCI Bus 0000:00
+00000000fed40000-00000000fed44fff : TPM
+00000000fee00000-00000000feefffff : pnp 00:01
+00000000fee00000-00000000fee00fff : Local APIC
+00000000ff800000-00000000ffffffff : reserved
+0000000100000000-0000000a7fffffff : System RAM
+00000007e7600000-00000007e7d62a60 : Kernel code
+00000007e7d62a61-00000007e838c9ff : Kernel data
+00000007e85c6000-00000007e88dcfff : Kernel bss
+0000038000000000-00000387ffffffff : PCI Bus 0000:00
+0000038800000000-0000038fffffffff : PCI Bus 0000:80
+get_backup_area: 0000000000001000-000000000006bfff : System RAM
+CRASH MEMORY RANGES
+0000000000000000-0000000000000fff (1)
+0000000000001000-000000000006bfff (0)
+000000000006c000-000000000006cfff (3)
+000000000006d000-000000000009efff (0)
+000000000009f000-000000000009ffff (3)
+0000000000100000-000000002fffffff (0)
+0000000038000000-000000004578d017 (0)
+000000004578d018-00000000457aee57 (0)
+00000000457aee58-00000000457af017 (0)
+00000000457af018-00000000457d0e57 (0)
+00000000457d0e58-00000000457d1017 (0)
+00000000457d1018-00000000457f2e57 (0)
+00000000457f2e58-00000000457f3017 (0)
+00000000457f3018-0000000045814e57 (0)
+0000000045814e58-0000000045815017 (0)
+0000000045815018-000000004584ec57 (0)
+000000004584ec58-000000004584f017 (0)
+000000004584f018-0000000045888c57 (0)
+0000000045888c58-000000005d13c017 (0)
+000000005d13c018-000000005d14b057 (0)
+000000005d14b058-000000005d14c017 (0)
+000000005d14c018-000000005d15f657 (0)
+000000005d15f658-000000005d184fff (0)
+000000005d185000-000000005d185fff (2)
+000000005d186000-000000005fb76fff (0)
+000000005fb77000-000000005fb7bfff (1)
+000000005fb7c000-000000005ffe0fff (0)
+000000005ffe1000-000000005ffe1fff (2)
+000000005ffe2000-000000005fff9fff (0)
+000000005fffa000-0000000060001fff (2)
+0000000060002000-0000000060009fff (0)
+000000006000a000-000000006000afff (2)
+000000006000b000-000000006000bfff (0)
+000000006000c000-0000000060011fff (2)
+0000000060012000-00000000600ddfff (0)
+00000000600de000-00000000600e0fff (2)
+00000000600e1000-00000000600e2fff (1)
+00000000600e3000-00000000600e4fff (2)
+00000000600e5000-00000000606e2fff (0)
+00000000606e3000-00000000606e3fff (2)
+00000000606e4000-0000000060e52fff (0)
+0000000060e53000-0000000060e53fff (2)
+0000000060e54000-00000000735d9fff (0)
+00000000735da000-00000000735e6fff (1)
+00000000735e7000-0000000074413fff (0)
+0000000074414000-000000007e892fff (1)
+000000007e893000-000000007eb9efff (3)
+000000007eb9f000-000000007ec01fff (0)
+0000000080000000-000000008fffffff (1)
+00000000fed1c000-00000000fed1ffff (1)
+00000000ff800000-00000000ffffffff (1)
+0000000100000000-0000000a7fffffff (0)
+kernel load physical addr start =3D 0x00000007e7600000
+ELF core (kcore) parse failed
+Cannot load /boot/vmlinuz-4.11.12+
 
 _______________________________________________
 kexec mailing list
