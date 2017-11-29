@@ -1,24 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1eJnu8-0007mf-4n
- for kexec@lists.infradead.org; Tue, 28 Nov 2017 21:59:01 +0000
-Date: Tue, 28 Nov 2017 22:58:33 +0100
-From: Jiri Bohac <jbohac@suse.cz>
-Subject: Re: [PATCH] x86/kexec: Exclude GART aperture from vmcore
-Message-ID: <20171128215833.hhcjvn5qjfc3bdrk@dwarf.suse.cz>
-References: <20171103172822.4ty6yjhewroe4z4j@dwarf.suse.cz>
- <20171106024143.GA3669@x1>
- <20171106090155.p7jhe2m57whfxma3@dwarf.suse.cz>
- <20171106092729.GB3669@x1>
- <20171106095638.7iwlyjmlom3tqelt@dwarf.suse.cz>
- <20171107113956.GC3669@x1>
- <20171107134212.tmjdt7rdailtbosa@dwarf.suse.cz>
- <20171107153428.ex27nwkvelhm2nm7@dwarf.suse.cz>
- <20171112080426.GB6429@x1>
+ id 1eJruQ-0005M6-RH
+ for kexec@lists.infradead.org; Wed, 29 Nov 2017 02:15:36 +0000
+Date: Wed, 29 Nov 2017 10:15:04 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] certs: always use secondary keyring first if possible
+Message-ID: <20171129021504.GA4080@dhcp-128-65.nay.redhat.com>
+References: <20171118044711.GA7352@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20171112080426.GB6429@x1>
+In-Reply-To: <20171118044711.GA7352@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,64 +23,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Toshi Kani <toshi.kani@hpe.com>, David Airlie <airlied@linux.ie>, Dave Young <dyoung@redhat.com>, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, yinghai@kernel.org, Vivek Goyal <vgoyal@redhat.com>
+To: David Howells <dhowells@redhat.com>
+Cc: keyrings@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hi Baoquan,
+On 11/18/17 at 12:47pm, Dave Young wrote:
+> Commit d3bfe84129f6 introduced secondary_trusted_keys keyring, current
+> users of verify_pkcs7_signature are below:
+> net/wireless/reg.c : uses its own trusted_keys
+> kernel/module_signing.c : pass NULL trusted_keys 
+> crypto/asymmetric_keys/verify_pefile.c : pass NULL trusted_keys
+> 
+> For both module and pefile verification, there is no reason to use builtin
+> keys only. Actually in Fedora kernel module signing code passes 1UL, but
+> kexec code does not pass 1UL for pefile verification thus we have below bug
+> https://bugzilla.redhat.com/show_bug.cgi?id=1470995
+> 
+> Drop the hard code 1UL checking so that pefile verification can use
+> secondary keyring as well.
+> 
+> Signed-off-by: Dave Young <dyoung@redhat.com>
+> ---
+>  certs/system_keyring.c |    2 --
+>  1 file changed, 2 deletions(-)
+> 
+> --- linux-x86.orig/certs/system_keyring.c
+> +++ linux-x86/certs/system_keyring.c
+> @@ -229,8 +229,6 @@ int verify_pkcs7_signature(const void *d
+>  		goto error;
+>  
+>  	if (!trusted_keys) {
+> -		trusted_keys = builtin_trusted_keys;
+> -	} else if (trusted_keys == (void *)1UL) {
+>  #ifdef CONFIG_SECONDARY_TRUSTED_KEYRING
+>  		trusted_keys = secondary_trusted_keys;
+>  #else
 
-On Sun, Nov 12, 2017 at 04:04:26PM +0800, Baoquan He wrote:
-> Solution:
-> 1) Remove the code which support GART IOMMU when it's not enabled in
-> BIOS. This has been done in the new generation of hardware IOMMU like
-> intel vt-d IOMMU and amd-Vi IOMMU. We should not make GART IOMMU be
-> exceptional.
+Ping, can anyone review this?
 
-Wouldn't this break old machines with actual AGP and
-misconfigured/bugg BIOSes? Wasn't that the reason why we have the
-workaround of mapping the hole over real memory?
- 
-> 2) Remove those pages from mm subsystem since they are not seen any more
-> though they have been added into mm subsystem, because CPU can't see
-> them.
-
-not exactly sure I understand this... they are reserved by the
-memblock allocater, thus preventing any further use by any mm
-code.
-
-> 3) Remove the apreture region from /proc/iomem so that pages in that
-> region can't be seen by kdump kernel. This is easier, but just a work
-> around.
-
-I like this idea, but won't this cause pci_claim_resource() fail
-after the call to pci_find_parent_resource() ? See my previous
-mail.
-
-
-Bad thing is, we don't want to break random old AGP hardware, but
-at the same time, it's now too rare to properly test this.
-
-So wouldn't it be better to fix the problem at least for the
-kexec_file case using my original patch?
-
-A possible hack for the old kexec syscall might be to
-make /proc/iomem list the "GART" region without it being present in
-the iomem resource database. kexec-tools has working code to deal with
-the GART region, but the kernel no longer includes it in
-/proc/iomem.
-
-Or maybe a cleaner solution than special-casing the "GART" region
-into /proc/iomem would be to introduce a new type of iomem
-resource that would be visible in /proc/iomem but would allow
-other resources to be requested even when overlapping the region of this
-special resource? This way, we could insert the "GART" resource
-when allocating the hole but later, when an actual AGP driver
-requests the range during PCI enumeration, the "GART" resource
-would be overwrtiten by the actual PCI resource.
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
