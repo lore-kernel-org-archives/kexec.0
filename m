@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-co1nam03on0061.outbound.protection.outlook.com
- ([104.47.40.61] helo=NAM03-CO1-obe.outbound.protection.outlook.com)
+Received: from mail-io0-f193.google.com ([209.85.223.193])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1eJySO-00045L-Uk
- for kexec@lists.infradead.org; Wed, 29 Nov 2017 09:15:11 +0000
-From: "Gurumurthy, Anil" <Anil.Gurumurthy@cavium.com>
-Subject: RE: kdump issues with 4.11 kernel
-Date: Wed, 29 Nov 2017 09:14:42 +0000
-Message-ID: <BY2PR0701MB2023DAF450CE2EB7270E05A38E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
+ id 1eJyx7-0005ut-Dy
+ for kexec@lists.infradead.org; Wed, 29 Nov 2017 09:46:52 +0000
+Received: by mail-io0-f193.google.com with SMTP id e204so3037513iof.12
+ for <kexec@lists.infradead.org>; Wed, 29 Nov 2017 01:46:28 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <BY2PR0701MB2023DAF450CE2EB7270E05A38E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
 References: <BY2PR0701MB202342812CFB9669B01930D98E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
  <20171129073841.GA2129@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20171129073841.GA2129@dhcp-128-65.nay.redhat.com>
-Content-Language: en-US
-MIME-Version: 1.0
+ <BY2PR0701MB2023DAF450CE2EB7270E05A38E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Wed, 29 Nov 2017 15:16:27 +0530
+Message-ID: <CACi5LpP9+5YVVh1DtnWXCMQbFMRJ1NVYh=_nQYcpShZS0es7hg@mail.gmail.com>
+Subject: Re: kdump issues with 4.11 kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,56 +22,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "Gurumurthy, Anil" <Anil.Gurumurthy@cavium.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>
 
-Thanks. That did help getting kexec to work.
-However I still do not get a crash dump - =
+Hi Anil,
 
-echo c  > /proc/sysrq-trigger does not get a crash dump.
+On Wed, Nov 29, 2017 at 2:44 PM, Gurumurthy, Anil
+<Anil.Gurumurthy@cavium.com> wrote:
+> Thanks. That did help getting kexec to work.
+> However I still do not get a crash dump -
+> echo c  > /proc/sysrq-trigger does not get a crash dump.
+>
+> Any thoughts?
 
-Any thoughts?
+Cam you share the console messages you see when the crash kernel
+boots? Or do you see nothing after the crash is introduced via echo c
+> /proc/sysrq-trigger
+
+Generally, depending on your test machine arch, it is useful to use
+earlycon/earlyprintk to see if the crash kernel produced any useful
+message until the actual console device became operational.
+
+Can you try setting the earlycon/earlyprintk settings and share the
+crash kernel logs messages after the same?
 
 Thanks,
-Anil
+Bhupesh
 
------Original Message-----
-From: Dave Young [mailto:dyoung@redhat.com] =
-
-Sent: 29 November 2017 13:09
-To: Gurumurthy, Anil <Anil.Gurumurthy@cavium.com>
-Cc: kexec@lists.infradead.org
-Subject: Re: kdump issues with 4.11 kernel
-
-Hi,
-On 11/29/17 at 05:29am, Gurumurthy, Anil wrote:
-> Hello,
-> =A0 I was facing trouble getting a crash dump on 4.11 kernel. Debugging a=
- bit, I see that the kexec run from the cmd line fails. Any ideas on what I=
- could be missing?
-> =
-
-> [root@localhost ~]# kexec -p /boot/vmlinuz-`uname -r` =
-
-> --initrd=3D/boot/initramfs-`uname -r`kdump.img ELF core (kcore) parse =
-
-> failed Cannot load /boot/vmlinuz-4.11.12+
-> =
-
-
-Can you try below kexec-tools commit:
-commit ed15ba1b9977e506637ff1697821d97127b2c919
-Author: Pratyush Anand <panand@redhat.com>
-Date:   Wed Mar 1 11:19:42 2017 +0530
-
-    build_mem_phdrs(): check if p_paddr is invalid
-
-Thanks
-Dave
+> -----Original Message-----
+> From: Dave Young [mailto:dyoung@redhat.com]
+> Sent: 29 November 2017 13:09
+> To: Gurumurthy, Anil <Anil.Gurumurthy@cavium.com>
+> Cc: kexec@lists.infradead.org
+> Subject: Re: kdump issues with 4.11 kernel
+>
+> Hi,
+> On 11/29/17 at 05:29am, Gurumurthy, Anil wrote:
+>> Hello,
+>>   I was facing trouble getting a crash dump on 4.11 kernel. Debugging a bit, I see that the kexec run from the cmd line fails. Any ideas on what I could be missing?
+>>
+>> [root@localhost ~]# kexec -p /boot/vmlinuz-`uname -r`
+>> --initrd=/boot/initramfs-`uname -r`kdump.img ELF core (kcore) parse
+>> failed Cannot load /boot/vmlinuz-4.11.12+
+>>
+>
+> Can you try below kexec-tools commit:
+> commit ed15ba1b9977e506637ff1697821d97127b2c919
+> Author: Pratyush Anand <panand@redhat.com>
+> Date:   Wed Mar 1 11:19:42 2017 +0530
+>
+>     build_mem_phdrs(): check if p_paddr is invalid
+>
+> Thanks
+> Dave
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
