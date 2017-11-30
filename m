@@ -1,12 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from mail-sn1nam02on0050.outbound.protection.outlook.com
+ ([104.47.36.50] helo=NAM02-SN1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1eK9BG-0002eP-5A
- for kexec@lists.infradead.org; Wed, 29 Nov 2017 20:42:11 +0000
-From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [PATCH v1] kexec-tools: Perform run-time linking of libxenctrl.so
-Date: Wed, 29 Nov 2017 10:45:16 -0600
-Message-Id: <1511973916-3915-1-git-send-email-eric.devolder@oracle.com>
+ id 1eKNyH-0006zt-SX
+ for kexec@lists.infradead.org; Thu, 30 Nov 2017 12:29:44 +0000
+From: "Gurumurthy, Anil" <Anil.Gurumurthy@cavium.com>
+Subject: RE: kdump issues with 4.11 kernel
+Date: Thu, 30 Nov 2017 12:29:16 +0000
+Message-ID: <BY2PR0701MB202353AA68A956CA64516B808E380@BY2PR0701MB2023.namprd07.prod.outlook.com>
+References: <BY2PR0701MB202342812CFB9669B01930D98E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
+ <20171129073841.GA2129@dhcp-128-65.nay.redhat.com>
+ <BY2PR0701MB2023DAF450CE2EB7270E05A38E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
+ <CACi5LpP9+5YVVh1DtnWXCMQbFMRJ1NVYh=_nQYcpShZS0es7hg@mail.gmail.com>
+ <BY2PR0701MB2023FFA00EC7445B005BCB498E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
+ <CACi5LpNVRpHJW-AUuNnH0YQ-dTxD+fGjMAO_pL=2ieqzkG0mgw@mail.gmail.com> 
+Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,390 +24,128 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, horms@verge.net.au, andrew.cooper3@citrix.com
-Cc: daniel.kiper@oracle.com, eric.devolder@oracle.com, konrad.wilk@oracle.com
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>
 
-When kexec is utilized in a Xen environment, it has an explicit
-run-time dependency on libxenctrl.so. This dependency occurs
-during the configure stage and when building kexec-tools.
+Hi Bhupesh,
+  I tried to get some log messages for the crash kernel, but unable to get anything.
+echo c > /proc/sysrq-trigger
+simply hangs w/o any messages on the console.
 
-When kexec is utilized in a non-Xen environment (either bare
-metal or KVM), the configure and build of kexec-tools omits
-any reference to libxenctrl.so.
-
-Thus today it is not currently possible to configure and build
-a *single* kexec that will work in *both* Xen and non-Xen
-environments, unless the libxenctrl.so is *always* present.
-
-For example, a kexec configured for Xen in a Xen environment:
-
- # ldd build/sbin/kexec
-        linux-vdso.so.1 =>  (0x00007ffdeba5c000)
-        libxenctrl.so.4.4 => /usr/lib64/libxenctrl.so.4.4 (0x00000038d8000000)
-        libz.so.1 => /lib64/libz.so.1 (0x00000038d6c00000)
-        libc.so.6 => /lib64/libc.so.6 (0x00000038d6000000)
-        libdl.so.2 => /lib64/libdl.so.2 (0x00000038d6400000)
-        libpthread.so.0 => /lib64/libpthread.so.0 (0x00000038d6800000)
-        /lib64/ld-linux-x86-64.so.2 (0x000055e9f8c6c000)
- # build/sbin/kexec -v
- kexec-tools 2.0.16
-
-However, the *same* kexec executable fails in a non-Xen environment:
-
- # copy xen kexec to .
- # ldd ./kexec
-         linux-vdso.so.1 =>  (0x00007fffa9da7000)
-         libxenctrl.so.4.4 => not found
-         liblzma.so.0 => /usr/lib64/liblzma.so.0 (0x0000003014e00000)
-         libz.so.1 => /lib64/libz.so.1 (0x000000300ea00000)
-         libc.so.6 => /lib64/libc.so.6 (0x000000300de00000)
-         libpthread.so.0 => /lib64/libpthread.so.0 (0x000000300e200000)
-         /lib64/ld-linux-x86-64.so.2 (0x0000558cc786c000)
- # ./kexec -v
- ./kexec: error while loading shared libraries:
- libxenctrl.so.4.4: cannot open shared object file: No such file or directory
-
-At Oracle we "workaround" this by having two kexec-tools packages,
-one for Xen and another for non-Xen environments. At Oracle, the
-desire is to offer a single kexec-tools package that works in either
-environment. To achieve this, kexec-tools would either have to ship
-with libxenctrl.so (which we have deemed as unacceptable), or we can
-make kexec perform run-time linking against libxenctrl.so.
-
-This patch is one possible way to alleviate the explicit run-time
-dependency on libxenctrl.so. This implementation utilizes a set of
-macros to wrap calls into libxenctrl.so so that the library can
-instead be dlopen() and obtain the function via dlsym() and then
-make the call. The advantage of this implementation is that it
-requires few changes to the existing kexec-tools code. The dis-
-advantage is that it uses macros to remap libxenctrl functions
-and do work under the hood.
-
-Another possible implementation worth considering is the approach
-taken by libvmi. Reference the following file:
-
-https://github.com/libvmi/libvmi/blob/master/libvmi/driver/xen/libxc_wrapper.h
-
-The libxc_wrapper_t structure definition that starts at line ~33
-has members that are function pointers into libxenctrl.so. This
-structure is populated once and then later referenced/dereferenced
-by the callers of libxenctrl.so members. The advantage of this
-implementation is it is more explicit in managing the use of
-libxenctrl.so and its versions, but the disadvantage is it would
-require touching more of the kexec-tools code.
-
-The following is a list libxenctrl members utilized by kexec:
-
-Functions:
-xc_interface_open
-xc_kexec_get_range
-xc_interface_close
-xc_kexec_get_range
-xc_interface_open
-xc_get_max_cpus
-xc_kexec_get_range
-xc_version
-xc_kexec_exec
-xc_kexec_status
-xc_kexec_unload
-xc_hypercall_buffer_array_create
-xc__hypercall_buffer_array_alloc
-xc_hypercall_buffer_array_destroy
-xc_kexec_load
-xc_get_machine_memory_map
-
-Data:
-xc__hypercall_buffer_HYPERCALL_BUFFER_NULL
-
-These were identified by configuring and building kexec-tools
-with Xen support, but omitting the -lxenctrl from the LDFLAGS
-in the Makefile for an x86_64 build.
-
-The above libxenctrl members were referenced via these source
-files.
-
-kexec/crashdump-xen.c
-kexec/kexec-xen.c
-kexec/arch/i386/kexec-x86-common.c
-kexec/arch/i386/crashdump-x86.c
-
-This patch provides a wrapper around the calls to the above
-functions in libxenctrl.so. Every libxenctrl call must pass a
-xc_interface which it obtains from xc_interface_open().
-So the existing code is already structured in a manner that
-facilitates graceful dlopen()'ing of the libxenctrl.so and
-the subsequent dlsym() of the required member.
-
-The patch creates a wrapper function around xc_interface_open()
-and xc_interface_close() to perform the dlopen() and dlclose().
-
-For the remaing xc_ functions, this patch defines a macro
-of the same name which performs the dlsym() and then invokes
-the function. See the _xc_call() macro for details.
-
-There was one data item in libxenctrl.so that presented a
-unique problem, HYPERCALL_BUFFER_NULL. It was only utilized
-once, as
-
-    set_xen_guest_handle(xen_segs[s].buf.h, HYPERCALL_BUFFER_NULL);
-
-I tried a variety of techniques but could not find a general
-macro-type solution without modifying xenctrl.h. So the
-solution was to declare a local HYPERCALL_BUFFER_NULL, and
-this appears to work. I admit I am not familiar with libxenctrl
-to state if this is a satisfactory workaround, so feedback
-here welcome. I can state that this allows kexec to load/unload/kexec
-on Xen and non-Xen environments that I've tested without issue.
-
-With this patch applied, kexec-tools can be built with Xen
-support and yet there is no explicit run-time dependency on
-libxenctrl.so. Thus it can also be deployed in non-Xen
-environments where libxenctrl.so is not installed.
-
- # ldd build/sbin/kexec
-        linux-vdso.so.1 =>  (0x00007fff7dbcd000)
-        liblzma.so.0 => /usr/lib64/liblzma.so.0 (0x00000038d9000000)
-        libz.so.1 => /lib64/libz.so.1 (0x00000038d6c00000)
-        libdl.so.2 => /lib64/libdl.so.2 (0x00000038d6400000)
-        libc.so.6 => /lib64/libc.so.6 (0x00000038d6000000)
-        libpthread.so.0 => /lib64/libpthread.so.0 (0x00000038d6800000)
-        /lib64/ld-linux-x86-64.so.2 (0x0000562dc0c14000)
- # build/sbin/kexec -v
- kexec-tools 2.0.16
-
-Currently this feature is enabled with the following:
-
- ./configure --with-xen-dl --with-xen=no
-
-This is a bit clunky. I welcome feedback such as better names
-and/or usage of --with, as well as if we might make this feature
-the default.
-
-Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
----
- configure.ac                       | 18 ++++++++++++++
- kexec/Makefile                     |  1 +
- kexec/arch/i386/crashdump-x86.c    |  4 +---
- kexec/arch/i386/kexec-x86-common.c |  4 +---
- kexec/crashdump-xen.c              |  4 +---
- kexec/kexec-xen.c                  | 43 +++++++++++++++++++++++++++++++++-
- kexec/kexec-xen.h                  | 48 ++++++++++++++++++++++++++++++++++++++
- 7 files changed, 112 insertions(+), 10 deletions(-)
- create mode 100644 kexec/kexec-xen.h
-
-diff --git a/configure.ac b/configure.ac
-index 208dc0a..4fc8aa0 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -92,6 +92,9 @@ AC_ARG_WITH([lzma], AC_HELP_STRING([--without-lzma],[disable lzma support]),
- AC_ARG_WITH([xen], AC_HELP_STRING([--without-xen],
- 	[disable extended xen support]), [ with_xen="$withval"], [ with_xen=yes ] )
- 
-+AC_ARG_WITH([xen-dl], AC_HELP_STRING([--without-xen-dl],
-+	[link libxenctrl.so at run-time rather than build-time]), [ with_xen_dl="$withval"], [ with_xen_dl=no ] )
-+
- AC_ARG_WITH([booke],
- 		AC_HELP_STRING([--with-booke],[build for booke]),
- 		AC_DEFINE(CONFIG_BOOKE,1,
-@@ -174,6 +177,21 @@ if test "$with_xen" = yes ; then
- 				AC_MSG_NOTICE([The kexec_status call is not available]))
- 		fi
- fi
-+if test "$with_xen_dl" = yes ; then
-+	if test "$with_xen" = yes ; then
-+		AC_MSG_ERROR([Options --with-xen and --with-xen-dl are mutually exclusive])
-+	fi
-+	AC_DEFINE(CONFIG_LIBXENCTRL_DL, 1, [Define to 1 to link libxenctrl.so at run-time rather than build-time])
-+	AC_CHECK_HEADER(dlfcn.h, , AC_MSG_ERROR([Dynamic library linking not available]))
-+	AC_CHECK_LIB(dl, dlopen, , AC_MSG_ERROR([Dynamic library linking not available]))
-+	AC_CHECK_HEADER(xenctrl.h,
-+		AC_DEFINE(HAVE_LIBXENCTRL, 1, [Define to 1 to enable run-time linking of libxenctrl.so]),
-+		AC_MSG_ERROR([Xen support not available]))
-+dnl NOTE: Explicitly *NOT* performing AC_CHECK_LIB(xenctrl) as only need the header file to build
-+	AC_CHECK_HEADER(xenctrl.h,
-+		AC_DEFINE(HAVE_KEXEC_CMD_STATUS, 1, [Define to 1 so kexec_status call is available]),
-+		AC_MSG_NOTICE([The kexec_status call is not available]))
-+fi
- 
- dnl ---Sanity checks
- if test "$CC"      = "no"; then AC_MSG_ERROR([cc not found]); fi
-diff --git a/kexec/Makefile b/kexec/Makefile
-index 2b4fb3d..8871731 100644
---- a/kexec/Makefile
-+++ b/kexec/Makefile
-@@ -36,6 +36,7 @@ dist += kexec/Makefile						\
- 	kexec/kexec-elf-boot.h					\
- 	kexec/kexec-elf.h kexec/kexec-sha256.h			\
- 	kexec/kexec-zlib.h kexec/kexec-lzma.h			\
-+	kexec/kexec-xen.h 								\
- 	kexec/kexec-syscall.h kexec/kexec.h kexec/kexec.8
- 
- dist				+= kexec/proc_iomem.c
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 69a063a..a948d9f 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -44,9 +44,7 @@
- #include "kexec-x86.h"
- #include "crashdump-x86.h"
- 
--#ifdef HAVE_LIBXENCTRL
--#include <xenctrl.h>
--#endif /* HAVE_LIBXENCTRL */
-+#include "../../kexec-xen.h"
- 
- #include "x86-linux-setup.h"
- 
-diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-index be03618..b44c8b7 100644
---- a/kexec/arch/i386/kexec-x86-common.c
-+++ b/kexec/arch/i386/kexec-x86-common.c
-@@ -40,9 +40,7 @@
- #include "../../crashdump.h"
- #include "kexec-x86.h"
- 
--#ifdef HAVE_LIBXENCTRL
--#include <xenctrl.h>
--#endif /* HAVE_LIBXENCTRL */
-+#include "../../kexec-xen.h"
- 
- /* Used below but not present in (older?) xenctrl.h */
- #ifndef E820_PMEM
-diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
-index 60594f6..2e4cbdc 100644
---- a/kexec/crashdump-xen.c
-+++ b/kexec/crashdump-xen.c
-@@ -18,9 +18,7 @@
- 
- #include "config.h"
- 
--#ifdef HAVE_LIBXENCTRL
--#include <xenctrl.h>
--#endif
-+#include "kexec-xen.h"
- 
- struct crash_note_info {
- 	unsigned long base;
-diff --git a/kexec/kexec-xen.c b/kexec/kexec-xen.c
-index 2b448d3..2b01fee 100644
---- a/kexec/kexec-xen.c
-+++ b/kexec/kexec-xen.c
-@@ -10,10 +10,51 @@
- #include "config.h"
- 
- #ifdef HAVE_LIBXENCTRL
--#include <xenctrl.h>
-+#include "kexec-xen.h"
- 
- #include "crashdump.h"
- 
-+#ifdef CONFIG_LIBXENCTRL_DL
-+void *xc_dlhandle = NULL;
-+xc_hypercall_buffer_t XC__HYPERCALL_BUFFER_NAME(HYPERCALL_BUFFER_NULL);
-+xc_interface *_xc_interface_open(xentoollog_logger *logger,
-+                                xentoollog_logger *dombuild_logger,
-+                                unsigned open_flags)
-+{
-+    xc_interface *xch = NULL;
-+
-+    if (NULL == xc_dlhandle)
-+        xc_dlhandle = dlopen("libxenctrl.so", RTLD_NOW | RTLD_NODELETE);
-+
-+    if (xc_dlhandle) {
-+        typedef xc_interface *(*func_t)(xentoollog_logger *logger,
-+                                xentoollog_logger *dombuild_logger,
-+                                unsigned open_flags);
-+        func_t func = (func_t)dlsym(xc_dlhandle, "xc_interface_open");
-+        xch = func(logger, dombuild_logger, open_flags);
-+    }
-+
-+    return xch;
-+}
-+
-+int _xc_interface_close(xc_interface *xch)
-+{
-+    int rc = -1;
-+
-+/*
-+    if (xc_dlhandle) {
-+*/
-+        typedef int (*func_t)(xc_interface *xch);
-+        func_t func = (func_t)dlsym(xc_dlhandle, "xc_interface_close");
-+        rc = func(xch);
-+/*
-+        xc_dlhandle = NULL;
-+    }
-+*/
-+    return rc;
-+}
-+#endif /* CONFIG_LIBXENCTRL_DL */
-+
- int xen_kexec_load(struct kexec_info *info)
- {
- 	uint32_t nr_segments = info->nr_segments;
-diff --git a/kexec/kexec-xen.h b/kexec/kexec-xen.h
-new file mode 100644
-index 0000000..6d2046e
---- /dev/null
-+++ b/kexec/kexec-xen.h
-@@ -0,0 +1,48 @@
-+#ifndef KEXEC_XEN_H
-+#define KEXEC_XEN_H
-+
-+#ifdef HAVE_LIBXENCTRL
-+#include <xenctrl.h>
-+
-+#ifdef CONFIG_LIBXENCTRL_DL
-+#include <dlfcn.h>
-+
-+/* The handle from dlopen(), needed by dlsym(), dlclose() */
-+extern void *xc_dlhandle;
-+
-+/* Wrappers around xc_interface_open/close() to insert dlopen/dlclose() */
-+xc_interface *_xc_interface_open(xentoollog_logger *logger,
-+                                xentoollog_logger *dombuild_logger,
-+                                unsigned open_flags);
-+int _xc_interface_close(xc_interface *xch);
-+
-+/* GCC expression statements for evaluating dlsym() */
-+#define _xc_call(DTYPE, NAME, ARGS...) ({ DTYPE value; typedef DTYPE (*func_t)(xc_interface *, ...); func_t func = dlsym(xc_dlhandle, #NAME); value = func(ARGS); value; } )
-+#define _xc_data(DTYPE, NAME) ({ DTYPE *value = (DTYPE *)dlsym(xc_dlhandle, #NAME); value; } )
-+
-+/* The wrappers around utilized xenctrl.h functions */
-+#define xc_interface_open(A,B,C)    _xc_interface_open(A,B,C)
-+#define xc_interface_close(A)       _xc_interface_close(A)
-+#define xc_version(ARGS...)         _xc_call(int, xc_version, ARGS)
-+#define xc_get_max_cpus(ARGS...)    _xc_call(int, xc_get_max_cpus, ARGS)
-+#define xc_get_machine_memory_map(ARGS...)  _xc_call(int, xc_get_machine_memory_map, ARGS)
-+#define xc_kexec_get_range(ARGS...) _xc_call(int, xc_kexec_get_range, ARGS)
-+#define xc_kexec_load(ARGS...)      _xc_call(int, xc_kexec_load, ARGS)
-+#define xc_kexec_unload(ARGS...)    _xc_call(int, xc_kexec_unload, ARGS)
-+#define xc_kexec_status(ARGS...)    _xc_call(int, xc_kexec_status, ARGS)
-+#define xc_kexec_exec(ARGS...)      _xc_call(int, xc_kexec_exec, ARGS)
-+#define xc_hypercall_buffer_array_create(ARGS...)   _xc_call(xc_hypercall_buffer_array_t *, xc_hypercall_buffer_array_create, ARGS)
-+#define xc__hypercall_buffer_alloc(ARGS...) _xc_call(void *, xc__hypercall_buffer_alloc, ARGS)
-+#define xc__hypercall_buffer_free(ARGS...)  _xc_call(void  , xc__hypercall_buffer_free, ARGS)
-+#define xc__hypercall_buffer_alloc_pages(ARGS...)   _xc_call(void *, xc__hypercall_buffer_alloc_pages, ARGS)
-+#define xc__hypercall_buffer_free_pages(ARGS...)    _xc_call(void  , xc__hypercall_buffer_free_pages, ARGS)
-+#define xc__hypercall_buffer_array_alloc(ARGS...)   _xc_call(void *, xc__hypercall_buffer_array_alloc, ARGS)
-+#define xc__hypercall_buffer_array_get(ARGS...)     _xc_call(void *, xc__hypercall_buffer_array_get, ARGS)
-+#define xc_hypercall_buffer_array_destroy(ARGS...)  _xc_call(void *, xc_hypercall_buffer_array_destroy, ARGS)
-+
-+#endif /* CONFIG_LIBXENCTRL_DL */
-+
-+#endif /* HAVE_LIBXENCTRL */
-+
-+#endif /* KEXEC_XEN_H */
-+
--- 
-2.7.4
+Thanks,
+Anil
+-----Original Message-----
+From: Gurumurthy, Anil 
+Sent: 29 November 2017 16:02
+To: 'Bhupesh Sharma' <bhsharma@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>; kexec@lists.infradead.org
+Subject: RE: kdump issues with 4.11 kernel
 
 
+
+-----Original Message-----
+From: Bhupesh Sharma [mailto:bhsharma@redhat.com]
+Sent: 29 November 2017 15:50
+To: Gurumurthy, Anil <Anil.Gurumurthy@cavium.com>
+Cc: Dave Young <dyoung@redhat.com>; kexec@lists.infradead.org
+Subject: Re: kdump issues with 4.11 kernel
+
+On Wed, Nov 29, 2017 at 3:36 PM, Gurumurthy, Anil <Anil.Gurumurthy@cavium.com> wrote:
+>
+>
+> -----Original Message-----
+> From: Bhupesh Sharma [mailto:bhsharma@redhat.com]
+> Sent: 29 November 2017 15:16
+> To: Gurumurthy, Anil <Anil.Gurumurthy@cavium.com>
+> Cc: Dave Young <dyoung@redhat.com>; kexec@lists.infradead.org
+> Subject: Re: kdump issues with 4.11 kernel
+>
+> Hi Anil,
+>
+> On Wed, Nov 29, 2017 at 2:44 PM, Gurumurthy, Anil <Anil.Gurumurthy@cavium.com> wrote:
+>> Thanks. That did help getting kexec to work.
+>> However I still do not get a crash dump - echo c  > 
+>> /proc/sysrq-trigger does not get a crash dump.
+>>
+>> Any thoughts?
+>
+> Cam you share the console messages you see when the crash kernel 
+> boots? Or do you see nothing after the crash is introduced via echo c
+>> /proc/sysrq-trigger
+> [Anil]  I do not see any messages after introducing the crash.
+
+There could be several reasons for this:
+
+- crashkernel might be missing some arch/machine specific options.
+- It may be that the purgatory sha verification has failed. If your arch supports a console in purgatory then it is easy to debug this.
+- It might be that the crash kernel itself crashed very early. Pass some earlycon/earlyprintk option for your system to the second kernel command line.
+- Also please share relevant dmesg log of both primary kernel boot and the commands you use to invoke the crashkernel.
+
+[Anil] Thanks for the quick response
+
+   This is what I have in the .config (for the primary kernel) CONFIG_EARLY_PRINTK=y CONFIG_EARLY_PRINTK_DBGP=y CONFIG_EARLY_PRINTK_EFI=y
+
+The log for the primary kernel boot:
+
+Nov 29 14:22:22 localhost journal: Runtime journal is using 8.0M (max 1.9G, leaving 2.9G of free 19.4G, current limit 1.9G).
+Nov 29 14:22:22 localhost kernel: Linux version 4.11.12+ (root@localhost.localdomain) (gcc version 4.8.3 20140911 (Red Hat 4.8.3-9) (GCC) ) #4 SMP Thu Nov 23 12:11:02 IST 2017 Nov 29 14:22:22 localhost kernel: Command line: BOOT_IMAGE=/vmlinuz-4.11.12+ root=/dev/mapper/rhel-root ro rd.lvm.lv=rhel/swap crashkernel=128M rd.lvm.lv=rhel/root rhgb quiet Nov 29 14:22:22 localhost kernel: x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+Nov 29 14:22:22 localhost kernel: x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+Nov 29 14:22:22 localhost kernel: x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+Nov 29 14:22:22 localhost kernel: x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256 Nov 29 14:22:22 localhost kernel: x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'standard' format.
+Nov 29 14:22:22 localhost kernel: e820: BIOS-provided physical RAM map:
+Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000000000000-0x000000000006bfff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000000006c000-0x000000000006cfff] ACPI NVS Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000000006d000-0x000000000009efff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000000009f000-0x000000000009ffff] ACPI NVS Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000000100000-0x000000005d184fff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005d185000-0x000000005d185fff] ACPI data Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005d186000-0x000000005fb77fff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005fb78000-0x000000005fb7cfff] reserved Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005fb7d000-0x000000005ffdffff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005ffe0000-0x000000005ffe1fff] ACPI data Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005ffe2000-0x000000005fffafff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005fffb000-0x0000000060001fff] ACPI data Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000060002000-0x0000000060009fff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000006000a000-0x000000006000efff] ACPI data Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000006000f000-0x000000006000ffff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000060010000-0x0000000060011fff] ACPI data Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000060012000-0x00000000600ddfff] usable
+
+
+Will try to get the other details you needed too.
+
+-Anil
+
+Regards,
+Bhupesh
+
+
+> Generally, depending on your test machine arch, it is useful to use earlycon/earlyprintk to see if the crash kernel produced any useful message until the actual console device became operational.
+>
+> Can you try setting the earlycon/earlyprintk settings and share the crash kernel logs messages after the same?
+>
+> Thanks,
+> Bhupesh
+>
+>> -----Original Message-----
+>> From: Dave Young [mailto:dyoung@redhat.com]
+>> Sent: 29 November 2017 13:09
+>> To: Gurumurthy, Anil <Anil.Gurumurthy@cavium.com>
+>> Cc: kexec@lists.infradead.org
+>> Subject: Re: kdump issues with 4.11 kernel
+>>
+>> Hi,
+>> On 11/29/17 at 05:29am, Gurumurthy, Anil wrote:
+>>> Hello,
+>>>   I was facing trouble getting a crash dump on 4.11 kernel. Debugging a bit, I see that the kexec run from the cmd line fails. Any ideas on what I could be missing?
+>>>
+>>> [root@localhost ~]# kexec -p /boot/vmlinuz-`uname -r` 
+>>> --initrd=/boot/initramfs-`uname -r`kdump.img ELF core (kcore) parse 
+>>> failed Cannot load /boot/vmlinuz-4.11.12+
+>>>
+>>
+>> Can you try below kexec-tools commit:
+>> commit ed15ba1b9977e506637ff1697821d97127b2c919
+>> Author: Pratyush Anand <panand@redhat.com>
+>> Date:   Wed Mar 1 11:19:42 2017 +0530
+>>
+>>     build_mem_phdrs(): check if p_paddr is invalid
+>>
+>> Thanks
+>> Dave
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
