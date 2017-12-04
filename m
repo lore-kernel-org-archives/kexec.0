@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x241.google.com ([2607:f8b0:400e:c05::241])
+Received: from mail-pf0-x242.google.com ([2607:f8b0:400e:c00::242])
  by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1eLgv9-0007N9-8M
- for kexec@lists.infradead.org; Mon, 04 Dec 2017 02:55:53 +0000
-Received: by mail-pg0-x241.google.com with SMTP id j9so7206375pgc.11
- for <kexec@lists.infradead.org>; Sun, 03 Dec 2017 18:55:31 -0800 (PST)
+ id 1eLgv1-0007Mq-He
+ for kexec@lists.infradead.org; Mon, 04 Dec 2017 02:55:48 +0000
+Received: by mail-pf0-x242.google.com with SMTP id u19so7469490pfa.12
+ for <kexec@lists.infradead.org>; Sun, 03 Dec 2017 18:55:23 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v7 11/11] arm64: kexec_file: enable KEXEC_VERIFY_SIG for Image
-Date: Mon,  4 Dec 2017 11:58:01 +0900
-Message-Id: <20171204025801.12161-12-takahiro.akashi@linaro.org>
+Subject: [PATCH v7 09/11] arm64: kexec_file: add Image format support
+Date: Mon,  4 Dec 2017 11:57:59 +0900
+Message-Id: <20171204025801.12161-10-takahiro.akashi@linaro.org>
 In-Reply-To: <20171204025801.12161-1-takahiro.akashi@linaro.org>
 References: <20171204025801.12161-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,121 +27,236 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org, julien.thierry@arm.com
 Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-With this patch, kernel verification can be done without IMA security
-subsystem enabled. Turn on CONFIG_KEXEC_VERIFY_SIG instead.
+The "Image" binary will be loaded at the offset of TEXT_OFFSET from
+the start of system memory. TEXT_OFFSET is determined from the header
+of the image.
 
-On x86, a signature is embedded into a PE file (Microsoft's format) header
-of binary. Since arm64's "Image" can also be seen as a PE file as far as
-CONFIG_EFI is enabled, we adopt this format for kernel signing.
+This patch doesn't have CONFIG_KEXEC_VERIFY_SIG support. Nevertherless
+kernel verification will be supported by enabling IMA security subsystem.
+See more details about IMA here:
+    https://sourceforge.net/p/linux-ima/wiki/Home/
 
-You can create a signed kernel image with:
-    $ sbsign --key ${KEY} --cert ${CERT} Image
+You can sign(label) a kernel image binary to be kexec-ed on target
+filesystem with:
+    $ evmctl ima_sign --key /path/to/private_key.pem Image
+
+On live system, you must have IMA enforced with, at least, the following
+security policy:
+    "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig"
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will.deacon@arm.com>
 ---
- arch/arm64/Kconfig              | 10 ++++++++++
- arch/arm64/include/asm/kexec.h  | 16 ++++++++++++++++
- arch/arm64/kernel/kexec_image.c | 15 +++++++++++++++
- 3 files changed, 41 insertions(+)
+ arch/arm64/Kconfig                     |  7 +++
+ arch/arm64/include/asm/kexec.h         | 50 +++++++++++++++++++
+ arch/arm64/kernel/Makefile             |  1 +
+ arch/arm64/kernel/kexec_image.c        | 90 ++++++++++++++++++++++++++++++++++
+ arch/arm64/kernel/machine_kexec_file.c |  3 ++
+ 5 files changed, 151 insertions(+)
+ create mode 100644 arch/arm64/kernel/kexec_image.c
 
 diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index c0b021736c10..289c7bede593 100644
+index 865d110809f9..c0b021736c10 100644
 --- a/arch/arm64/Kconfig
 +++ b/arch/arm64/Kconfig
-@@ -814,6 +814,16 @@ config KEXEC_FILE_IMAGE_FMT
- 	---help---
- 	  Select this option to enable 'Image' kernel loading.
+@@ -807,6 +807,13 @@ config KEXEC_FILE
+ 	  In addition to this option, you need to enable a specific type
+ 	  of image support.
  
-+config KEXEC_VERIFY_SIG
-+	bool "Verify kernel signature during kexec_file_load() syscall"
++config KEXEC_FILE_IMAGE_FMT
++	bool "Enable Image support"
++	default y
 +	depends on KEXEC_FILE
-+	select SYSTEM_DATA_VERIFICATION
-+	select SIGNED_PE_FILE_VERIFICATION if KEXEC_FILE_IMAGE_FMT
 +	---help---
-+	  Select this option to verify a signature with loaded kernel
-+	  image. If configured, any attempt of loading a image without
-+	  valid signature will fail.
++	  Select this option to enable 'Image' kernel loading.
 +
  config CRASH_DUMP
  	bool "Build kdump crash kernel"
  	help
 diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index b6469bc64a89..2a63bf5f32ea 100644
+index edb702e64a8a..b6469bc64a89 100644
 --- a/arch/arm64/include/asm/kexec.h
 +++ b/arch/arm64/include/asm/kexec.h
-@@ -131,6 +131,7 @@ struct arm64_image_header {
+@@ -104,6 +104,56 @@ struct kimage_arch {
+ 	unsigned long elf_load_addr;
  };
  
- static const u8 arm64_image_magic[4] = {'A', 'R', 'M', 0x64U};
-+static const u8 arm64_image_pe_sig[2] = {'M', 'Z'};
- 
- /**
-  * arm64_header_check_magic - Helper to check the arm64 image header.
-@@ -152,6 +153,21 @@ static inline int arm64_header_check_magic(const struct arm64_image_header *h)
- 		&& h->magic[3] == arm64_image_magic[3]);
- }
- 
 +/**
-+ * arm64_header_check_pe_sig - Helper to check the arm64 image header.
++ * struct arm64_image_header - arm64 kernel image header
 + *
-+ * Returns non-zero if 'MZ' signature is found.
++ * @pe_sig: Optional PE format 'MZ' signature
++ * @branch_code: Instruction to branch to stext
++ * @text_offset: Image load offset, little endian
++ * @image_size: Effective image size, little endian
++ * @flags:
++ *	Bit 0: Kernel endianness. 0=little endian, 1=big endian
++ * @reserved: Reserved
++ * @magic: Magic number, "ARM\x64"
++ * @pe_header: Optional offset to a PE format header
++ **/
++
++struct arm64_image_header {
++	u8 pe_sig[2];
++	u8 pad[2];
++	u32 branch_code;
++	u64 text_offset;
++	u64 image_size;
++	u64 flags;
++	u64 reserved[3];
++	u8 magic[4];
++	u32 pe_header;
++};
++
++static const u8 arm64_image_magic[4] = {'A', 'R', 'M', 0x64U};
++
++/**
++ * arm64_header_check_magic - Helper to check the arm64 image header.
++ *
++ * Returns non-zero if header is OK.
 + */
 +
-+static inline int arm64_header_check_pe_sig(const struct arm64_image_header *h)
++static inline int arm64_header_check_magic(const struct arm64_image_header *h)
 +{
 +	if (!h)
 +		return 0;
 +
-+	return (h->pe_sig[0] == arm64_image_pe_sig[0]
-+		&& h->pe_sig[1] == arm64_image_pe_sig[1]);
++	if (!h->text_offset)
++		return 0;
++
++	return (h->magic[0] == arm64_image_magic[0]
++		&& h->magic[1] == arm64_image_magic[1]
++		&& h->magic[2] == arm64_image_magic[2]
++		&& h->magic[3] == arm64_image_magic[3]);
 +}
 +
- extern const struct kexec_file_ops kexec_image_ops;
- 
++extern const struct kexec_file_ops kexec_image_ops;
++
  struct kimage;
+ 
+ #define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index 2cd982b779b9..17906a62d795 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -50,6 +50,7 @@ arm64-obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
+ arm64-obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
+ 					   cpu-reset.o
+ arm64-obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o
++arm64-obj-$(CONFIG_KEXEC_FILE_IMAGE_FMT)	+= kexec_image.o
+ arm64-obj-$(CONFIG_ARM64_RELOC_TEST)	+= arm64-reloc-test.o
+ arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
+ arm64-obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
 diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index 1c106237901d..b840b6ed6ed9 100644
---- a/arch/arm64/kernel/kexec_image.c
+new file mode 100644
+index 000000000000..1c106237901d
+--- /dev/null
 +++ b/arch/arm64/kernel/kexec_image.c
-@@ -15,6 +15,7 @@
- #include <linux/errno.h>
- #include <linux/kernel.h>
- #include <linux/kexec.h>
-+#include <linux/verification.h>
- #include <asm/byteorder.h>
- #include <asm/memory.h>
- 
-@@ -27,6 +28,9 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
- 	if ((kernel_len < sizeof(*h)) || !arm64_header_check_magic(h))
- 		return -EINVAL;
- 
-+	pr_debug("PE format: %s\n",
-+			(arm64_header_check_pe_sig(h) ? "yes" : "no"));
+@@ -0,0 +1,90 @@
++/*
++ * Kexec image loader
 +
- 	return 0;
- }
- 
-@@ -84,7 +88,18 @@ static void *image_load(struct kimage *image, char *kernel,
- 	return ERR_PTR(ret);
- }
- 
-+#ifdef CONFIG_KEXEC_VERIFY_SIG
-+static int image_verify_sig(const char *kernel, unsigned long kernel_len)
++ * Copyright (C) 2017 Linaro Limited
++ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#define pr_fmt(fmt)	"kexec_file(Image): " fmt
++
++#include <linux/err.h>
++#include <linux/errno.h>
++#include <linux/kernel.h>
++#include <linux/kexec.h>
++#include <asm/byteorder.h>
++#include <asm/memory.h>
++
++static int image_probe(const char *kernel_buf, unsigned long kernel_len)
 +{
-+	return verify_pefile_signature(kernel, kernel_len, NULL,
-+				       VERIFYING_KEXEC_PE_SIGNATURE);
-+}
-+#endif
++	const struct arm64_image_header *h;
 +
- const struct kexec_file_ops kexec_image_ops = {
- 	.probe = image_probe,
- 	.load = image_load,
-+#ifdef CONFIG_KEXEC_VERIFY_SIG
-+	.verify_sig = image_verify_sig,
++	h = (const struct arm64_image_header *)(kernel_buf);
++
++	if ((kernel_len < sizeof(*h)) || !arm64_header_check_magic(h))
++		return -EINVAL;
++
++	return 0;
++}
++
++static void *image_load(struct kimage *image, char *kernel,
++			    unsigned long kernel_len, char *initrd,
++			    unsigned long initrd_len, char *cmdline,
++			    unsigned long cmdline_len)
++{
++	struct kexec_buf kbuf;
++	struct arm64_image_header *h = (struct arm64_image_header *)kernel;
++	unsigned long text_offset, kernel_load_addr;
++	int ret;
++
++	/* Create elf core header segment */
++	ret = load_crashdump_segments(image);
++	if (ret)
++		goto out;
++
++	/* Load the kernel */
++	kbuf.image = image;
++	if (image->type == KEXEC_TYPE_CRASH) {
++		kbuf.buf_min = crashk_res.start;
++		kbuf.buf_max = crashk_res.end + 1;
++	} else {
++		kbuf.buf_min = 0;
++		kbuf.buf_max = ULONG_MAX;
++	}
++	kbuf.top_down = 0;
++
++	kbuf.buffer = kernel;
++	kbuf.bufsz = kernel_len;
++	kbuf.memsz = le64_to_cpu(h->image_size);
++	text_offset = le64_to_cpu(h->text_offset);
++	kbuf.buf_align = SZ_2M;
++
++	/* Adjust kernel segment with TEXT_OFFSET */
++	kbuf.memsz += text_offset;
++
++	ret = kexec_add_buffer(&kbuf);
++	if (ret)
++		goto out;
++
++	image->segment[image->nr_segments - 1].mem += text_offset;
++	image->segment[image->nr_segments - 1].memsz -= text_offset;
++	kernel_load_addr = kbuf.mem + text_offset;
++
++	pr_debug("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++		 kernel_load_addr, kbuf.bufsz, kbuf.memsz);
++
++	/* Load additional data */
++	ret = load_other_segments(image, kernel_load_addr,
++			    initrd, initrd_len, cmdline, cmdline_len);
++
++out:
++	return ERR_PTR(ret);
++}
++
++const struct kexec_file_ops kexec_image_ops = {
++	.probe = image_probe,
++	.load = image_load,
++};
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index 012b2af4e27b..2b6d9164df8a 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -25,6 +25,9 @@ static int __dt_root_addr_cells;
+ static int __dt_root_size_cells;
+ 
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
++#ifdef CONFIG_KEXEC_FILE_IMAGE_FMT
++	&kexec_image_ops,
 +#endif
+ 	NULL
  };
+ 
 -- 
 2.14.1
 
