@@ -1,23 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-f50.google.com ([209.85.214.50])
+Received: from aserp2130.oracle.com ([141.146.126.79])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1eLwuT-00071L-D1
- for kexec@lists.infradead.org; Mon, 04 Dec 2017 20:00:19 +0000
-Received: by mail-it0-f50.google.com with SMTP id f143so9617798itb.0
- for <kexec@lists.infradead.org>; Mon, 04 Dec 2017 11:59:52 -0800 (PST)
+ id 1eMexF-0003sl-3d
+ for kexec@lists.infradead.org; Wed, 06 Dec 2017 19:02:03 +0000
+Date: Wed, 6 Dec 2017 20:01:24 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH v1] kexec-tools: Perform run-time linking of libxenctrl.so
+Message-ID: <20171206190124.GI16962@olila.local.net-space.pl>
+References: <1511973916-3915-1-git-send-email-eric.devolder@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <BY2PR0701MB202353AA68A956CA64516B808E380@BY2PR0701MB2023.namprd07.prod.outlook.com>
-References: <BY2PR0701MB202342812CFB9669B01930D98E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
- <20171129073841.GA2129@dhcp-128-65.nay.redhat.com>
- <BY2PR0701MB2023DAF450CE2EB7270E05A38E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
- <CACi5LpP9+5YVVh1DtnWXCMQbFMRJ1NVYh=_nQYcpShZS0es7hg@mail.gmail.com>
- <BY2PR0701MB2023FFA00EC7445B005BCB498E3B0@BY2PR0701MB2023.namprd07.prod.outlook.com>
- <CACi5LpNVRpHJW-AUuNnH0YQ-dTxD+fGjMAO_pL=2ieqzkG0mgw@mail.gmail.com>
- <BY2PR0701MB202353AA68A956CA64516B808E380@BY2PR0701MB2023.namprd07.prod.outlook.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 5 Dec 2017 01:29:50 +0530
-Message-ID: <CACi5LpMVpGo7guKs7kscJk0yyu-tohx6nuwQ1F_o+s867DsepA@mail.gmail.com>
-Subject: Re: kdump issues with 4.11 kernel
+Content-Disposition: inline
+In-Reply-To: <1511973916-3915-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,140 +23,107 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Gurumurthy, Anil" <Anil.Gurumurthy@cavium.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>
+To: Eric DeVolder <eric.devolder@oracle.com>
+Cc: andrew.cooper3@citrix.com, horms@verge.net.au, kexec@lists.infradead.org, konrad.wilk@oracle.com
 
-Hello Anil,
+On Wed, Nov 29, 2017 at 10:45:16AM -0600, Eric DeVolder wrote:
+> When kexec is utilized in a Xen environment, it has an explicit
+> run-time dependency on libxenctrl.so. This dependency occurs
+> during the configure stage and when building kexec-tools.
+>
+> When kexec is utilized in a non-Xen environment (either bare
+> metal or KVM), the configure and build of kexec-tools omits
+> any reference to libxenctrl.so.
+>
+> Thus today it is not currently possible to configure and build
+> a *single* kexec that will work in *both* Xen and non-Xen
+> environments, unless the libxenctrl.so is *always* present.
+>
+> For example, a kexec configured for Xen in a Xen environment:
+>
+>  # ldd build/sbin/kexec
+>         linux-vdso.so.1 =>  (0x00007ffdeba5c000)
+>         libxenctrl.so.4.4 => /usr/lib64/libxenctrl.so.4.4 (0x00000038d8000000)
+>         libz.so.1 => /lib64/libz.so.1 (0x00000038d6c00000)
+>         libc.so.6 => /lib64/libc.so.6 (0x00000038d6000000)
+>         libdl.so.2 => /lib64/libdl.so.2 (0x00000038d6400000)
+>         libpthread.so.0 => /lib64/libpthread.so.0 (0x00000038d6800000)
+>         /lib64/ld-linux-x86-64.so.2 (0x000055e9f8c6c000)
+>  # build/sbin/kexec -v
+>  kexec-tools 2.0.16
+>
+> However, the *same* kexec executable fails in a non-Xen environment:
+>
+>  # copy xen kexec to .
+>  # ldd ./kexec
+>          linux-vdso.so.1 =>  (0x00007fffa9da7000)
+>          libxenctrl.so.4.4 => not found
+>          liblzma.so.0 => /usr/lib64/liblzma.so.0 (0x0000003014e00000)
+>          libz.so.1 => /lib64/libz.so.1 (0x000000300ea00000)
+>          libc.so.6 => /lib64/libc.so.6 (0x000000300de00000)
+>          libpthread.so.0 => /lib64/libpthread.so.0 (0x000000300e200000)
+>          /lib64/ld-linux-x86-64.so.2 (0x0000558cc786c000)
+>  # ./kexec -v
+>  ./kexec: error while loading shared libraries:
+>  libxenctrl.so.4.4: cannot open shared object file: No such file or directory
+>
+> At Oracle we "workaround" this by having two kexec-tools packages,
+> one for Xen and another for non-Xen environments. At Oracle, the
+> desire is to offer a single kexec-tools package that works in either
+> environment. To achieve this, kexec-tools would either have to ship
+> with libxenctrl.so (which we have deemed as unacceptable), or we can
+> make kexec perform run-time linking against libxenctrl.so.
+>
+> This patch is one possible way to alleviate the explicit run-time
+> dependency on libxenctrl.so. This implementation utilizes a set of
+> macros to wrap calls into libxenctrl.so so that the library can
+> instead be dlopen() and obtain the function via dlsym() and then
+> make the call. The advantage of this implementation is that it
+> requires few changes to the existing kexec-tools code. The dis-
+> advantage is that it uses macros to remap libxenctrl functions
+> and do work under the hood.
+>
+> Another possible implementation worth considering is the approach
+> taken by libvmi. Reference the following file:
+>
+> https://github.com/libvmi/libvmi/blob/master/libvmi/driver/xen/libxc_wrapper.h
+>
+> The libxc_wrapper_t structure definition that starts at line ~33
+> has members that are function pointers into libxenctrl.so. This
+> structure is populated once and then later referenced/dereferenced
+> by the callers of libxenctrl.so members. The advantage of this
+> implementation is it is more explicit in managing the use of
+> libxenctrl.so and its versions, but the disadvantage is it would
+> require touching more of the kexec-tools code.
 
-On Thu, Nov 30, 2017 at 5:59 PM, Gurumurthy, Anil
-<Anil.Gurumurthy@cavium.com> wrote:
-> Hi Bhupesh,
->   I tried to get some log messages for the crash kernel, but unable to get anything.
-> echo c > /proc/sysrq-trigger
-> simply hangs w/o any messages on the console.
+After some thinking it seems to me that we can consider different approach.
+Could not we pack all basic Xen libraries into small package called, e.g. libxen?
+E.g. Debian provides libxen-4.8 which contains following files:
 
-Did you tree to set earlycon or earlyprintk in the bootargs. Something
-like this:
+/usr/lib/x86_64-linux-gnu/libxencall-4.8.so.1
+/usr/lib/x86_64-linux-gnu/libxencall-4.8.so.1.0
+/usr/lib/x86_64-linux-gnu/libxenctrl-4.8.so
+/usr/lib/x86_64-linux-gnu/libxenevtchn-4.8.so.1
+/usr/lib/x86_64-linux-gnu/libxenevtchn-4.8.so.1.0
+/usr/lib/x86_64-linux-gnu/libxenforeignmemory-4.8.so.1
+/usr/lib/x86_64-linux-gnu/libxenforeignmemory-4.8.so.1.0
+/usr/lib/x86_64-linux-gnu/libxengnttab-4.8.so.1
+/usr/lib/x86_64-linux-gnu/libxengnttab-4.8.so.1.1
+/usr/lib/x86_64-linux-gnu/libxenguest-4.8.so
+/usr/lib/x86_64-linux-gnu/libxenlight-4.8.so
+/usr/lib/x86_64-linux-gnu/libxentoollog-4.8.so.1
+/usr/lib/x86_64-linux-gnu/libxentoollog-4.8.so.1.0
+/usr/lib/x86_64-linux-gnu/libxlutil-4.8.so
+/usr/share/bug/libxen-4.8/control
+/usr/share/doc/libxen-4.8/changelog.Debian.gz
+/usr/share/doc/libxen-4.8/changelog.gz
+/usr/share/doc/libxen-4.8/copyright
 
-earlycon=pl011,mmio32,0xff78ed1000
+Then we do not have to install all other Xen stuff to make kexec-tools happy
+on non-Xen machines. And this should also work for other packages requiring
+above listed Xen libraries.
 
-depending on the underlying uart device you have on the board. For
-e.g. here I assumed a pl011 uart is used to display console messages.
-
-Regards,
-Bhupesh
-
->
-> Thanks,
-> Anil
-> -----Original Message-----
-> From: Gurumurthy, Anil
-> Sent: 29 November 2017 16:02
-> To: 'Bhupesh Sharma' <bhsharma@redhat.com>
-> Cc: Dave Young <dyoung@redhat.com>; kexec@lists.infradead.org
-> Subject: RE: kdump issues with 4.11 kernel
->
->
->
-> -----Original Message-----
-> From: Bhupesh Sharma [mailto:bhsharma@redhat.com]
-> Sent: 29 November 2017 15:50
-> To: Gurumurthy, Anil <Anil.Gurumurthy@cavium.com>
-> Cc: Dave Young <dyoung@redhat.com>; kexec@lists.infradead.org
-> Subject: Re: kdump issues with 4.11 kernel
->
-> On Wed, Nov 29, 2017 at 3:36 PM, Gurumurthy, Anil <Anil.Gurumurthy@cavium.com> wrote:
->>
->>
->> -----Original Message-----
->> From: Bhupesh Sharma [mailto:bhsharma@redhat.com]
->> Sent: 29 November 2017 15:16
->> To: Gurumurthy, Anil <Anil.Gurumurthy@cavium.com>
->> Cc: Dave Young <dyoung@redhat.com>; kexec@lists.infradead.org
->> Subject: Re: kdump issues with 4.11 kernel
->>
->> Hi Anil,
->>
->> On Wed, Nov 29, 2017 at 2:44 PM, Gurumurthy, Anil <Anil.Gurumurthy@cavium.com> wrote:
->>> Thanks. That did help getting kexec to work.
->>> However I still do not get a crash dump - echo c  >
->>> /proc/sysrq-trigger does not get a crash dump.
->>>
->>> Any thoughts?
->>
->> Cam you share the console messages you see when the crash kernel
->> boots? Or do you see nothing after the crash is introduced via echo c
->>> /proc/sysrq-trigger
->> [Anil]  I do not see any messages after introducing the crash.
->
-> There could be several reasons for this:
->
-> - crashkernel might be missing some arch/machine specific options.
-> - It may be that the purgatory sha verification has failed. If your arch supports a console in purgatory then it is easy to debug this.
-> - It might be that the crash kernel itself crashed very early. Pass some earlycon/earlyprintk option for your system to the second kernel command line.
-> - Also please share relevant dmesg log of both primary kernel boot and the commands you use to invoke the crashkernel.
->
-> [Anil] Thanks for the quick response
->
->    This is what I have in the .config (for the primary kernel) CONFIG_EARLY_PRINTK=y CONFIG_EARLY_PRINTK_DBGP=y CONFIG_EARLY_PRINTK_EFI=y
->
-> The log for the primary kernel boot:
->
-> Nov 29 14:22:22 localhost journal: Runtime journal is using 8.0M (max 1.9G, leaving 2.9G of free 19.4G, current limit 1.9G).
-> Nov 29 14:22:22 localhost kernel: Linux version 4.11.12+ (root@localhost.localdomain) (gcc version 4.8.3 20140911 (Red Hat 4.8.3-9) (GCC) ) #4 SMP Thu Nov 23 12:11:02 IST 2017 Nov 29 14:22:22 localhost kernel: Command line: BOOT_IMAGE=/vmlinuz-4.11.12+ root=/dev/mapper/rhel-root ro rd.lvm.lv=rhel/swap crashkernel=128M rd.lvm.lv=rhel/root rhgb quiet Nov 29 14:22:22 localhost kernel: x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
-> Nov 29 14:22:22 localhost kernel: x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
-> Nov 29 14:22:22 localhost kernel: x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
-> Nov 29 14:22:22 localhost kernel: x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256 Nov 29 14:22:22 localhost kernel: x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'standard' format.
-> Nov 29 14:22:22 localhost kernel: e820: BIOS-provided physical RAM map:
-> Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000000000000-0x000000000006bfff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000000006c000-0x000000000006cfff] ACPI NVS Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000000006d000-0x000000000009efff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000000009f000-0x000000000009ffff] ACPI NVS Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000000100000-0x000000005d184fff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005d185000-0x000000005d185fff] ACPI data Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005d186000-0x000000005fb77fff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005fb78000-0x000000005fb7cfff] reserved Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005fb7d000-0x000000005ffdffff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005ffe0000-0x000000005ffe1fff] ACPI data Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005ffe2000-0x000000005fffafff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000005fffb000-0x0000000060001fff] ACPI data Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000060002000-0x0000000060009fff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000006000a000-0x000000006000efff] ACPI data Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x000000006000f000-0x000000006000ffff] usable Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000060010000-0x0000000060011fff] ACPI data Nov 29 14:22:22 localhost kernel: BIOS-e820: [mem 0x0000000060012000-0x00000000600ddfff] usable
->
->
-> Will try to get the other details you needed too.
->
-> -Anil
->
-> Regards,
-> Bhupesh
->
->
->> Generally, depending on your test machine arch, it is useful to use earlycon/earlyprintk to see if the crash kernel produced any useful message until the actual console device became operational.
->>
->> Can you try setting the earlycon/earlyprintk settings and share the crash kernel logs messages after the same?
->>
->> Thanks,
->> Bhupesh
->>
->>> -----Original Message-----
->>> From: Dave Young [mailto:dyoung@redhat.com]
->>> Sent: 29 November 2017 13:09
->>> To: Gurumurthy, Anil <Anil.Gurumurthy@cavium.com>
->>> Cc: kexec@lists.infradead.org
->>> Subject: Re: kdump issues with 4.11 kernel
->>>
->>> Hi,
->>> On 11/29/17 at 05:29am, Gurumurthy, Anil wrote:
->>>> Hello,
->>>>   I was facing trouble getting a crash dump on 4.11 kernel. Debugging a bit, I see that the kexec run from the cmd line fails. Any ideas on what I could be missing?
->>>>
->>>> [root@localhost ~]# kexec -p /boot/vmlinuz-`uname -r`
->>>> --initrd=/boot/initramfs-`uname -r`kdump.img ELF core (kcore) parse
->>>> failed Cannot load /boot/vmlinuz-4.11.12+
->>>>
->>>
->>> Can you try below kexec-tools commit:
->>> commit ed15ba1b9977e506637ff1697821d97127b2c919
->>> Author: Pratyush Anand <panand@redhat.com>
->>> Date:   Wed Mar 1 11:19:42 2017 +0530
->>>
->>>     build_mem_phdrs(): check if p_paddr is invalid
->>>
->>> Thanks
->>> Dave
->>>
->>> _______________________________________________
->>> kexec mailing list
->>> kexec@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/kexec
+Daniel
 
 _______________________________________________
 kexec mailing list
