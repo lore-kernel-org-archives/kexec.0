@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1eNDpi-0002d7-Ny
- for kexec@lists.infradead.org; Fri, 08 Dec 2017 08:16:37 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] handle renamed init_level4_pgt -> init_top_pgt
-Date: Fri, 8 Dec 2017 08:15:30 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701F2A617@BPXM01GP.gisp.nec.co.jp>
-References: <0910DD04CBD6DE4193FCF86B9C00BE9701F22E63@BPXM01GP.gisp.nec.co.jp>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701F22E63@BPXM01GP.gisp.nec.co.jp>
-Content-Language: ja-JP
+ id 1eOxAm-00033x-3S
+ for kexec@lists.infradead.org; Wed, 13 Dec 2017 02:53:30 +0000
+Date: Wed, 13 Dec 2017 10:52:56 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Regression: kexec/kdump boot hangs with x86/vector commits
+Message-ID: <20171213025256.GA1913@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,150 +21,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jeff Mahoney <jeffm@suse.com>
-Cc: Keiichirou Suzuki <kei-suzuki@xr.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Juergen Gross <jgross@suse.com>, Tony Luck <tony.luck@intel.com>, Yu Chen <yu.c.chen@intel.com>, kexec@lists.infradead.org, Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org, mingo@kernel.org, Borislav Petkov <bp@alien8.de>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Arjan van de Ven <arjan@linux.intel.com>, Rui Zhang <rui.zhang@intel.com>
 
->>Linux 4.13 renamed init_level4_pgt to init_top_pgt in preparation for
->>introducing 5-level page tables.  This patch follows the rename if
->>the lookup for init_level4_pgt fails.  It also checks to see if
->>5-level page tables are enabled and bails if it discovers they are.
->
->Thanks Jeff, but could you rebase it on the current devel branch ?
->vtop4 for x86_64 was modified in the commit below:
->
->commit 8c89727155f4994b4e75a659e28e5eff16ff6cbc
->Author: Takao Indoh <indou.takao@jp.fujitsu.com>
->Date:   Thu Oct 26 20:32:54 2017 +0900
->
->    [PATCH v3 2/4] Introduce vtop4_x86_64_pagetable
->
->Regards,
->Atsushi Kumagai
+Hi,
 
-I rebased that and updated the devel branch:
+Kexec reboot and kdump has broken on my laptop for long time with
+4.15.0-rc1+ kernels. With the patch below an early panic been fixed:
+https://patchwork.kernel.org/patch/10084289/
 
-https://sourceforge.net/p/makedumpfile/code/ci/97e156b493c46fabfc4b136ab834a6495166ac66/
+But still can not get a successful reboot, it looked like graphic
+issue, but after bisecting the kernel, I got below:
 
-I'll merge it into v1.6.3 if you have no comment.
+[dyoung@dhcp-*-* linux]$ git bisect good
+There are only 'skip'ped commits left to test.
+The first bad commit could be any of:
+2db1f959d9dc16035f2eb44ed5fdb2789b754d6a
+4900be83602b6be07366d3e69f756c1959f4169a
+We cannot bisect more!
 
-Thanks,
-Atsushi Kumagai
+These two commits can no be reverted because of code conflicts, thus
+I reverted the whole series from Thomas (below commits), with those
+x86/vector changes reverted, kexec reboot works fine.
 
->>Signed-off-by: Jeff Mahoney <jeffm@suse.com>
->>---
->> arch/x86_64.c  | 24 +++++++++++++++++++++---
->> makedumpfile.c |  6 ++++++
->> makedumpfile.h |  2 ++
->> 3 files changed, 29 insertions(+), 3 deletions(-)
->>
->>diff --git a/arch/x86_64.c b/arch/x86_64.c
->>index 08dd6b2..9b09035 100644
->>--- a/arch/x86_64.c
->>+++ b/arch/x86_64.c
->>@@ -259,16 +259,26 @@ vtop4_x86_64(unsigned long vaddr)
->> {
->> 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
->> 	unsigned long pte_paddr, pte;
->>+	unsigned long init_level4_pgt;
->>
->>-	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
->>+	if (SYMBOL(init_level4_pgt) != NOT_FOUND_SYMBOL)
->>+		init_level4_pgt = SYMBOL(init_level4_pgt);
->>+	else if (SYMBOL(init_top_pgt) != NOT_FOUND_SYMBOL)
->>+		init_level4_pgt = SYMBOL(init_top_pgt);
->>+	else {
->> 		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
->> 		return NOT_PADDR;
->> 	}
->>
->>+	if (SYMBOL(level4_kernel_pgt) != NOT_FOUND_SYMBOL) {
->>+		ERRMSG("Kernel is built with 5-level page tables\n");
->>+		return NOT_PADDR;
->>+	}
->>+
->> 	/*
->> 	 * Get PGD.
->> 	 */
->>-	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + info->phys_base;
->>+	page_dir = init_level4_pgt - __START_KERNEL_map + info->phys_base;
->> 	if (is_xen_memory()) {
->> 		page_dir = ptom_xen(page_dir);
->> 		if (page_dir == NOT_PADDR)
->>@@ -549,8 +559,16 @@ find_vmemmap_x86_64()
->> 	struct vmap_pfns *vmapp, *vmaphead = NULL, *cur, *tail;
->>
->> 	init_level4_pgt = SYMBOL(init_level4_pgt);
->>+	if (init_level4_pgt == NOT_FOUND_SYMBOL)
->>+		init_level4_pgt = SYMBOL(init_top_pgt);
->>+
->> 	if (init_level4_pgt == NOT_FOUND_SYMBOL) {
->>-		ERRMSG("init_level4_pgt not found\n");
->>+		ERRMSG("init_level4_pgt/init_top_pgt not found\n");
->>+		return FAILED;
->>+	}
->>+
->>+	if (SYMBOL(level4_kernel_pgt) != NOT_FOUND_SYMBOL) {
->>+		ERRMSG("kernel is configured for 5-level page tables\n");
->> 		return FAILED;
->> 	}
->> 	pagestructsize = size_table.page;
->>diff --git a/makedumpfile.c b/makedumpfile.c
->>index f85003a..6e5ec34 100644
->>--- a/makedumpfile.c
->>+++ b/makedumpfile.c
->>@@ -1486,6 +1486,8 @@ get_symbol_info(void)
->> 	SYMBOL_INIT(_stext, "_stext");
->> 	SYMBOL_INIT(swapper_pg_dir, "swapper_pg_dir");
->> 	SYMBOL_INIT(init_level4_pgt, "init_level4_pgt");
->>+	SYMBOL_INIT(level4_kernel_pgt, "level4_kernel_pgt");
->>+	SYMBOL_INIT(init_top_pgt, "init_top_pgt");
->> 	SYMBOL_INIT(vmlist, "vmlist");
->> 	SYMBOL_INIT(vmap_area_list, "vmap_area_list");
->> 	SYMBOL_INIT(node_online_map, "node_online_map");
->>@@ -2105,6 +2107,8 @@ write_vmcoreinfo_data(void)
->> 	WRITE_SYMBOL("_stext", _stext);
->> 	WRITE_SYMBOL("swapper_pg_dir", swapper_pg_dir);
->> 	WRITE_SYMBOL("init_level4_pgt", init_level4_pgt);
->>+	WRITE_SYMBOL("level4_kernel_pgt", level4_kernel_pgt);
->>+	WRITE_SYMBOL("init_top_pgt", init_top_pgt);
->> 	WRITE_SYMBOL("vmlist", vmlist);
->> 	WRITE_SYMBOL("vmap_area_list", vmap_area_list);
->> 	WRITE_SYMBOL("node_online_map", node_online_map);
->>@@ -2500,6 +2504,8 @@ read_vmcoreinfo(void)
->> 	READ_SYMBOL("_stext", _stext);
->> 	READ_SYMBOL("swapper_pg_dir", swapper_pg_dir);
->> 	READ_SYMBOL("init_level4_pgt", init_level4_pgt);
->>+	READ_SYMBOL("level4_kernel_pgt", level4_kernel_pgt);
->>+	READ_SYMBOL("init_top_pgt", init_top_pgt);
->> 	READ_SYMBOL("vmlist", vmlist);
->> 	READ_SYMBOL("vmap_area_list", vmap_area_list);
->> 	READ_SYMBOL("node_online_map", node_online_map);
->>diff --git a/makedumpfile.h b/makedumpfile.h
->>index 8a05794..9357e47 100644
->>--- a/makedumpfile.h
->>+++ b/makedumpfile.h
->>@@ -1517,6 +1517,8 @@ struct symbol_table {
->> 	unsigned long long	_stext;
->> 	unsigned long long	swapper_pg_dir;
->> 	unsigned long long	init_level4_pgt;
->>+	unsigned long long	level4_kernel_pgt;
->>+	unsigned long long	init_top_pgt;
->> 	unsigned long long	vmlist;
->> 	unsigned long long	vmap_area_list;
->> 	unsigned long long	phys_base;
->>
->>
->>--
->>Jeff Mahoney
->>SUSE Labs
->
->
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
+Could you help to take a look, any thoughts?  I can do the test
+if you have some debug patch to try.
 
+commit 90ad9e2d91067983f3328e21b306323877e5f48a
+Author: Thomas Gleixner <tglx@linutronix.de>
+Date:   Wed Sep 13 23:29:49 2017 +0200
+
+    x86/io_apic: Reevaluate vector configuration on activate()
+
+commit 2db1f959d9dc16035f2eb44ed5fdb2789b754d6a
+Author: Thomas Gleixner <tglx@linutronix.de>
+Date:   Wed Sep 13 23:29:50 2017 +0200
+
+    x86/vector: Handle managed interrupts proper
+
+commit 4900be83602b6be07366d3e69f756c1959f4169a
+Author: Thomas Gleixner <tglx@linutronix.de>
+Date:   Wed Sep 13 23:29:51 2017 +0200
+
+    x86/vector/msi: Switch to global reservation mode
+
+commit 464d12309e1b5829597793db551ae8ecaecf4036
+Author: Thomas Gleixner <tglx@linutronix.de>
+Date:   Wed Sep 13 23:29:52 2017 +0200
+
+    x86/vector: Switch IOAPIC to global reservation mod
+
+commit 2cffad7bad83157f89332872015f4305d2ac09ac
+Author: Thomas Gleixner <tglx@linutronix.de>
+Date:   Wed Sep 13 23:29:53 2017 +0200
+
+    x86/irq: Simplify hotplug vector accounting
+
+commit d6ffc6ac83b1f9f12652d89b9cb5bcbfbea7796c
+Author: Thomas Gleixner <tglx@linutronix.de>
+Date:   Wed Sep 13 23:29:54 2017 +0200
+
+    x86/vector: Respect affinity mask in irq descriptor
+
+commit 02edee152d6ea325c88898f3a702f5db2d78de7a
+Author: Thomas Gleixner <tglx@linutronix.de>
+Date:   Thu Oct 12 11:05:28 2017 +0200
+
+    x86/apic/vector: Ignore set_affinity call for inactive interrupts
+
+commit 0696d059f23c05f2dbc3b19ef50e5bdd175b782b
+Author: Thomas Gleixner <tglx@linutronix.de>
+Date:   Mon Oct 16 16:16:19 2017 +0200
+
+    x86/vector: Use correct per cpu variable in free_moved_vector()
+----------------
+
+BTW, my git HEAD is below:
+commit 43570f0383d6d5879ae585e6c3cf027ba321546f (origin/master, origin/HEAD, bisect)
+Merge: 43f462f1c2e1 c14ca8386539
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue Nov 28 16:22:10 2017 -0800
+
+    Merge branch 'linus' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
+
+
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
