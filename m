@@ -1,16 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2130.oracle.com ([156.151.31.86])
+Received: from mail-it0-f67.google.com ([209.85.214.67])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eR2Xy-0006BP-8q
- for kexec@lists.infradead.org; Mon, 18 Dec 2017 21:02:07 +0000
-Date: Mon, 18 Dec 2017 14:43:52 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH v2] kexec-tools: Perform run-time linking of libxenctrl.so
-Message-ID: <20171218134352.GX4531@olila.local.net-space.pl>
-References: <1513291681-497-1-git-send-email-eric.devolder@oracle.com>
+ id 1eR2xe-0000L0-OV
+ for kexec@lists.infradead.org; Mon, 18 Dec 2017 21:28:38 +0000
+Received: by mail-it0-f67.google.com with SMTP id r6so372629itr.3
+ for <kexec@lists.infradead.org>; Mon, 18 Dec 2017 13:28:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1513291681-497-1-git-send-email-eric.devolder@oracle.com>
+In-Reply-To: <20171218051657.GA5998@dhcp-128-65.nay.redhat.com>
+References: <CAFTCetQHmpprAVu6uYO+rc5Xi4EUVhmovbmSaU6nM1n1mAH62w@mail.gmail.com>
+ <CAKv+Gu9oda1Ee8AoXsCEw+Bjn-XF3wZA_CsxvqhjtT6_bmJ7uA@mail.gmail.com>
+ <CACi5LpOZ=WOx14gTwH5jfLozepT2Jw8JSY5x+bfEZ_YaiQvFpw@mail.gmail.com>
+ <20171213102624.GC28046@linaro.org>
+ <CAKv+Gu_BmFN9Zg861SCS+R=V4khFykjuOzkmfEknsL=NvWW3Eg@mail.gmail.com>
+ <20171213121605.GE28046@linaro.org>
+ <CAKv+Gu_G8kBEAdAznVauZVAdJOFkr1vmu0Gf6tOwJfH2CgdufA@mail.gmail.com>
+ <20171215085924.sqlcwm4copzba5ag@fireball>
+ <CAKv+Gu-W5VpVrgA=FVZCCevksaRGOVvPdE+B8WkpZc6AE1jOPw@mail.gmail.com>
+ <CACi5LpPDL0j4o3MuOZ3jRv3UOqM48yTgKtdm-hY+OWL8h-ETzQ@mail.gmail.com>
+ <20171218051657.GA5998@dhcp-128-65.nay.redhat.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Tue, 19 Dec 2017 02:58:20 +0530
+Message-ID: <CACi5LpOmeEMuoCkTC7MrBDaA1J5a4vZ_7bh3HSC0G5GoAMUCjw@mail.gmail.com>
+Subject: Re: arm64 crashkernel fails to boot on acpi-only machines due to ACPI
+ regions being no longer mapped as NOMAP
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,437 +35,328 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric DeVolder <eric.devolder@oracle.com>
-Cc: andrew.cooper3@citrix.com, horms@verge.net.au, kexec@lists.infradead.org, konrad.wilk@oracle.com, xen-devel@lists.xen.org
+To: Dave Young <dyoung@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Matt Fleming <matt@codeblueprint.co.uk>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Thu, Dec 14, 2017 at 04:48:01PM -0600, Eric DeVolder wrote:
-> When kexec is utilized in a Xen environment, it has an explicit
-> run-time dependency on libxenctrl.so. This dependency occurs
-> during the configure stage and when building kexec-tools.
->
-> When kexec is utilized in a non-Xen environment (either bare
-> metal or KVM), the configure and build of kexec-tools omits
-> any reference to libxenctrl.so.
->
-> Thus today it is not currently possible to configure and build
-> a *single* kexec that will work in *both* Xen and non-Xen
-> environments, unless the libxenctrl.so is *always* present.
->
-> For example, a kexec configured for Xen in a Xen environment:
->
->  # ldd build/sbin/kexec
->         linux-vdso.so.1 =>  (0x00007ffdeba5c000)
->         libxenctrl.so.4.4 => /usr/lib64/libxenctrl.so.4.4 (0x00000038d8000000)
->         libz.so.1 => /lib64/libz.so.1 (0x00000038d6c00000)
->         libc.so.6 => /lib64/libc.so.6 (0x00000038d6000000)
->         libdl.so.2 => /lib64/libdl.so.2 (0x00000038d6400000)
->         libpthread.so.0 => /lib64/libpthread.so.0 (0x00000038d6800000)
->         /lib64/ld-linux-x86-64.so.2 (0x000055e9f8c6c000)
->  # build/sbin/kexec -v
->  kexec-tools 2.0.16
->
-> However, the *same* kexec executable fails in a non-Xen environment:
->
->  # copy xen kexec to .
->  # ldd ./kexec
->          linux-vdso.so.1 =>  (0x00007fffa9da7000)
->          libxenctrl.so.4.4 => not found
->          liblzma.so.0 => /usr/lib64/liblzma.so.0 (0x0000003014e00000)
->          libz.so.1 => /lib64/libz.so.1 (0x000000300ea00000)
->          libc.so.6 => /lib64/libc.so.6 (0x000000300de00000)
->          libpthread.so.0 => /lib64/libpthread.so.0 (0x000000300e200000)
->          /lib64/ld-linux-x86-64.so.2 (0x0000558cc786c000)
->  # ./kexec -v
->  ./kexec: error while loading shared libraries:
->  libxenctrl.so.4.4: cannot open shared object file: No such file or directory
->
-> At Oracle we "workaround" this by having two kexec-tools packages,
-> one for Xen and another for non-Xen environments. At Oracle, the
-> desire is to offer a single kexec-tools package that works in either
-> environment. To achieve this, kexec-tools would either have to ship
-> with libxenctrl.so (which we have deemed as unacceptable), or we can
-> make kexec perform run-time linking against libxenctrl.so.
->
-> This patch is one possible way to alleviate the explicit run-time
-> dependency on libxenctrl.so. This implementation utilizes a set of
-> macros to wrap calls into libxenctrl.so so that the library can
-> instead be dlopen() and obtain the function via dlsym() and then
-> make the call. The advantage of this implementation is that it
-> requires few changes to the existing kexec-tools code. The dis-
-> advantage is that it uses macros to remap libxenctrl functions
-> and do work under the hood.
->
-> Another possible implementation worth considering is the approach
-> taken by libvmi. Reference the following file:
->
-> https://github.com/libvmi/libvmi/blob/master/libvmi/driver/xen/libxc_wrapper.h
->
-> The libxc_wrapper_t structure definition that starts at line ~33
-> has members that are function pointers into libxenctrl.so. This
-> structure is populated once and then later referenced/dereferenced
-> by the callers of libxenctrl.so members. The advantage of this
-> implementation is it is more explicit in managing the use of
-> libxenctrl.so and its versions, but the disadvantage is it would
-> require touching more of the kexec-tools code.
->
-> The following is a list libxenctrl members utilized by kexec:
->
-> Functions:
-> xc_interface_open
-> xc_kexec_get_range
-> xc_interface_close
-> xc_kexec_get_range
-> xc_interface_open
-> xc_get_max_cpus
-> xc_kexec_get_range
-> xc_version
-> xc_kexec_exec
-> xc_kexec_status
-> xc_kexec_unload
-> xc_hypercall_buffer_array_create
-> xc__hypercall_buffer_array_alloc
-> xc_hypercall_buffer_array_destroy
-> xc_kexec_load
-> xc_get_machine_memory_map
->
-> Data:
-> xc__hypercall_buffer_HYPERCALL_BUFFER_NULL
->
-> These were identified by configuring and building kexec-tools
-> with Xen support, but omitting the -lxenctrl from the LDFLAGS
-> in the Makefile for an x86_64 build.
->
-> The above libxenctrl members were referenced via these source
-> files.
->
-> kexec/crashdump-xen.c
-> kexec/kexec-xen.c
-> kexec/arch/i386/kexec-x86-common.c
-> kexec/arch/i386/crashdump-x86.c
->
-> This patch provides a wrapper around the calls to the above
-> functions in libxenctrl.so. Every libxenctrl call must pass a
-> xc_interface which it obtains from xc_interface_open().
-> So the existing code is already structured in a manner that
-> facilitates graceful dlopen()'ing of the libxenctrl.so and
-> the subsequent dlsym() of the required member.
->
-> The patch creates a wrapper function around xc_interface_open()
-> and xc_interface_close() to perform the dlopen() and dlclose().
->
-> For the remaining xc_ functions, this patch defines a macro
-> of the same name which performs the dlsym() and then invokes
-> the function. See the _xc_call() macro for details.
->
-> There was one data item in libxenctrl.so that presented a
-> unique problem, HYPERCALL_BUFFER_NULL. It was only utilized
-> once, as
->
->     set_xen_guest_handle(xen_segs[s].buf.h, HYPERCALL_BUFFER_NULL);
->
-> I tried a variety of techniques but could not find a general
-> macro-type solution without modifying xenctrl.h. So the
-> solution was to declare a local HYPERCALL_BUFFER_NULL, and
-> this appears to work. I admit I am not familiar with libxenctrl
-> to state if this is a satisfactory workaround, so feedback
-> here welcome. I can state that this allows kexec to load/unload/kexec
-> on Xen and non-Xen environments that I've tested without issue.
->
-> With this patch applied, kexec-tools can be built with Xen
-> support and yet there is no explicit run-time dependency on
-> libxenctrl.so. Thus it can also be deployed in non-Xen
-> environments where libxenctrl.so is not installed.
->
->  # ldd build/sbin/kexec
->         linux-vdso.so.1 =>  (0x00007fff7dbcd000)
->         liblzma.so.0 => /usr/lib64/liblzma.so.0 (0x00000038d9000000)
->         libz.so.1 => /lib64/libz.so.1 (0x00000038d6c00000)
->         libdl.so.2 => /lib64/libdl.so.2 (0x00000038d6400000)
->         libc.so.6 => /lib64/libc.so.6 (0x00000038d6000000)
->         libpthread.so.0 => /lib64/libpthread.so.0 (0x00000038d6800000)
->         /lib64/ld-linux-x86-64.so.2 (0x0000562dc0c14000)
->  # build/sbin/kexec -v
->  kexec-tools 2.0.16
->
-> Currently this feature is enabled with the following:
->
->  ./configure --with-xen-dl --with-xen=no
->
-> This is a bit clunky. I welcome feedback such as better names
-> and/or usage of --with, as well as if we might make this feature
-> the default.
+Hi Dave,
 
-I would do it in a bit different way. If somebody specifies --with-xen
-then kexec-tools should build as usual. However, if somebody specifies
-with-xen-dl itself or --with-xen-dl and --with-xen then --with-xen-dl
-should have a precedence.
-
-> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-> ---
-> v1: 29nov2017
->  - Daniel Kiper suggested Debian's libxen package of libraries,
->    but I did not find similar package on most other systems.
+On Mon, Dec 18, 2017 at 10:46 AM, Dave Young <dyoung@redhat.com> wrote:
+> kexec@fedoraproject... is for Fedora kexec scripts discussion, changed it
+> to kexec@lists.infradead.org
 >
-> v2: 14dec2017
->  - Reposted to kexec and xen-devel mailing lists
-> ---
->  configure.ac                       | 18 ++++++++++++++
->  kexec/Makefile                     |  1 +
->  kexec/arch/i386/crashdump-x86.c    |  4 +---
->  kexec/arch/i386/kexec-x86-common.c |  4 +---
->  kexec/crashdump-xen.c              |  4 +---
->  kexec/kexec-xen.c                  | 43 +++++++++++++++++++++++++++++++++-
->  kexec/kexec-xen.h                  | 48 ++++++++++++++++++++++++++++++++++++++
->  7 files changed, 112 insertions(+), 10 deletions(-)
->  create mode 100644 kexec/kexec-xen.h
+> Also add linux-acpi list
+> On 12/18/17 at 02:31am, Bhupesh Sharma wrote:
+>> On Fri, Dec 15, 2017 at 3:05 PM, Ard Biesheuvel
+>> <ard.biesheuvel@linaro.org> wrote:
+>> > On 15 December 2017 at 09:59, AKASHI Takahiro
+>> > <takahiro.akashi@linaro.org> wrote:
+>> >> On Wed, Dec 13, 2017 at 12:17:22PM +0000, Ard Biesheuvel wrote:
+>> >>> On 13 December 2017 at 12:16, AKASHI Takahiro
+>> >>> <takahiro.akashi@linaro.org> wrote:
+>> >>> > On Wed, Dec 13, 2017 at 10:49:27AM +0000, Ard Biesheuvel wrote:
+>> >>> >> On 13 December 2017 at 10:26, AKASHI Takahiro
+>> >>> >> <takahiro.akashi@linaro.org> wrote:
+>> >>> >> > Bhupesh, Ard,
+>> >>> >> >
+>> >>> >> > On Wed, Dec 13, 2017 at 03:21:59AM +0530, Bhupesh Sharma wrote:
+>> >>> >> >> Hi Ard, Akashi
+>> >>> >> >>
+>> >>> >> > (snip)
+>> >>> >> >
+>> >>> >> >> Looking deeper into the issue, since the arm64 kexec-tools uses the
+>> >>> >> >> 'linux,usable-memory-range' dt property to allow crash dump kernel to
+>> >>> >> >> identify its own usable memory and exclude, at its boot time, any
+>> >>> >> >> other memory areas that are part of the panicked kernel's memory.
+>> >>> >> >> (see https://www.kernel.org/doc/Documentation/devicetree/bindings/chosen.txt
+>> >>> >> >> , for details)
+>> >>> >> >
+>> >>> >> > Right.
+>> >>> >> >
+>> >>> >> >> 1). Now when 'kexec -p' is executed, this node is patched up only
+>> >>> >> >> with the crashkernel memory range:
+>> >>> >> >>
+>> >>> >> >>                 /* add linux,usable-memory-range */
+>> >>> >> >>                 nodeoffset = fdt_path_offset(new_buf, "/chosen");
+>> >>> >> >>                 result = fdt_setprop_range(new_buf, nodeoffset,
+>> >>> >> >>                                 PROP_USABLE_MEM_RANGE, &crash_reserved_mem,
+>> >>> >> >>                                 address_cells, size_cells);
+>> >>> >> >>
+>> >>> >> >> (see https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/tree/kexec/arch/arm64/kexec-arm64.c#n465
+>> >>> >> >> , for details)
+>> >>> >> >>
+>> >>> >> >> 2). This excludes the ACPI reclaim regions irrespective of whether
+>> >>> >> >> they are marked as System RAM or as RESERVED. As,
+>> >>> >> >> 'linux,usable-memory-range' dt node is patched up only with
+>> >>> >> >> 'crash_reserved_mem' and not 'system_memory_ranges'
+>> >>> >> >>
+>> >>> >> >> 3). As a result when the crashkernel boots up it doesn't find this
+>> >>> >> >> ACPI memory and crashes while trying to access the same:
+>> >>> >> >>
+>> >>> >> >> # kexec -p /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname
+>> >>> >> >> -r`.img --reuse-cmdline -d
+>> >>> >> >>
+>> >>> >> >> [snip..]
+>> >>> >> >>
+>> >>> >> >> Reserved memory range
+>> >>> >> >> 000000000e800000-000000002e7fffff (0)
+>> >>> >> >>
+>> >>> >> >> Coredump memory ranges
+>> >>> >> >> 0000000000000000-000000000e7fffff (0)
+>> >>> >> >> 000000002e800000-000000003961ffff (0)
+>> >>> >> >> 0000000039d40000-000000003ed2ffff (0)
+>> >>> >> >> 000000003ed60000-000000003fbfffff (0)
+>> >>> >> >> 0000001040000000-0000001ffbffffff (0)
+>> >>> >> >> 0000002000000000-0000002ffbffffff (0)
+>> >>> >> >> 0000009000000000-0000009ffbffffff (0)
+>> >>> >> >> 000000a000000000-000000affbffffff (0)
+>> >>> >> >>
+>> >>> >> >> 4). So if we revert Ard's patch or just comment the fixing up of the
+>> >>> >> >> memory cap'ing passed to the crash kernel inside
+>> >>> >> >> 'arch/arm64/mm/init.c' (see below):
+>> >>> >> >>
+>> >>> >> >> static void __init fdt_enforce_memory_region(void)
+>> >>> >> >> {
+>> >>> >> >>         struct memblock_region reg = {
+>> >>> >> >>                 .size = 0,
+>> >>> >> >>         };
+>> >>> >> >>
+>> >>> >> >>         of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
+>> >>> >> >>
+>> >>> >> >>         if (reg.size)
+>> >>> >> >>                 //memblock_cap_memory_range(reg.base, reg.size); /*
+>> >>> >> >> comment this out */
+>> >>> >> >> }
+>> >>> >> >
+>> >>> >> > Please just don't do that. It can cause a fatal damage on
+>> >>> >> > memory contents of the *crashed* kernel.
+>> >>> >> >
+>> >>> >> >> 5). Both the above temporary solutions fix the problem.
+>> >>> >> >>
+>> >>> >> >> 6). However exposing all System RAM regions to the crashkernel is not
+>> >>> >> >> advisable and may cause the crashkernel or some crashkernel drivers to
+>> >>> >> >> fail.
+>> >>> >> >>
+>> >>> >> >> 6a). I am trying an approach now, where the ACPI reclaim regions are
+>> >>> >> >> added to '/proc/iomem' separately as ACPI reclaim regions by the
+>> >>> >> >> kernel code and on the other hand the user-space 'kexec-tools' will
+>> >>> >> >> pick up the ACPI reclaim regions from '/proc/iomem' and add it to the
+>> >>> >> >> dt node 'linux,usable-memory-range'
+>> >>> >> >
+>> >>> >> > I still don't understand why we need to carry over the information
+>> >>> >> > about "ACPI Reclaim memory" to crash dump kernel. In my understandings,
+>> >>> >> > such regions are free to be reused by the kernel after some point of
+>> >>> >> > initialization. Why does crash dump kernel need to know about them?
+>> >>> >> >
+>> >>> >>
+>> >>> >> Not really. According to the UEFI spec, they can be reclaimed after
+>> >>> >> the OS has initialized, i.e., when it has consumed the ACPI tables and
+>> >>> >> no longer needs them. Of course, in order to be able to boot a kexec
+>> >>> >> kernel, those regions needs to be preserved, which is why they are
+>> >>> >> memblock_reserve()'d now.
+>> >>> >
+>> >>> > For my better understandings, who is actually accessing such regions
+>> >>> > during boot time, uefi itself or efistub?
+>> >>> >
+>> >>>
+>> >>> No, only the kernel. This is where the ACPI tables are stored. For
+>> >>> instance, on QEMU we have
+>> >>>
+>> >>>  ACPI: RSDP 0x0000000078980000 000024 (v02 BOCHS )
+>> >>>  ACPI: XSDT 0x0000000078970000 000054 (v01 BOCHS  BXPCFACP 00000001
+>> >>>   01000013)
+>> >>>  ACPI: FACP 0x0000000078930000 00010C (v05 BOCHS  BXPCFACP 00000001
+>> >>> BXPC 00000001)
+>> >>>  ACPI: DSDT 0x0000000078940000 0011DA (v02 BOCHS  BXPCDSDT 00000001
+>> >>> BXPC 00000001)
+>> >>>  ACPI: APIC 0x0000000078920000 000140 (v03 BOCHS  BXPCAPIC 00000001
+>> >>> BXPC 00000001)
+>> >>>  ACPI: GTDT 0x0000000078910000 000060 (v02 BOCHS  BXPCGTDT 00000001
+>> >>> BXPC 00000001)
+>> >>>  ACPI: MCFG 0x0000000078900000 00003C (v01 BOCHS  BXPCMCFG 00000001
+>> >>> BXPC 00000001)
+>> >>>  ACPI: SPCR 0x00000000788F0000 000050 (v02 BOCHS  BXPCSPCR 00000001
+>> >>> BXPC 00000001)
+>> >>>  ACPI: IORT 0x00000000788E0000 00007C (v00 BOCHS  BXPCIORT 00000001
+>> >>> BXPC 00000001)
+>> >>>
+>> >>> covered by
+>> >>>
+>> >>>  efi:   0x0000788e0000-0x00007894ffff [ACPI Reclaim Memory ...]
+>> >>>  ...
+>> >>>  efi:   0x000078970000-0x00007898ffff [ACPI Reclaim Memory ...]
+>> >>
+>> >> OK. I mistakenly understood those regions could be freed after exiting
+>> >> UEFI boot services.
+>> >>
+>> >>>
+>> >>> >> So it seems that kexec does not honour the memblock_reserve() table
+>> >>> >> when booting the next kernel.
+>> >>> >
+>> >>> > not really.
+>> >>> >
+>> >>> >> > (In other words, can or should we skip some part of ACPI-related init code
+>> >>> >> > on crash dump kernel?)
+>> >>> >> >
+>> >>> >>
+>> >>> >> I don't think so. And the change to the handling of ACPI reclaim
+>> >>> >> regions only revealed the bug, not created it (given that other
+>> >>> >> memblock_reserve regions may be affected as well)
+>> >>> >
+>> >>> > As whether we should honor such reserved regions over kexec'ing
+>> >>> > depends on each one's specific nature, we will have to take care one-by-one.
+>> >>> > As a matter of fact, no information about "reserved" memblocks is
+>> >>> > exposed to user space (via proc/iomem).
+>> >>> >
+>> >>>
+>> >>> That is why I suggested (somewhere in this thread?) to not expose them
+>> >>> as 'System RAM'. Do you think that could solve this?
+>> >>
+>> >> Memblock-reserv'ing them is necessary to prevent their corruption and
+>> >> marking them under another name in /proc/iomem would also be good in order
+>> >> not to allocate them as part of crash kernel's memory.
+>> >>
+>> >
+>> > I agree. However, this may not be entirely trivial, since iterating
+>> > over the memblock_reserved table and creating iomem entries may result
+>> > in collisions.
+>>
+>> I found a method (using the patch I shared earlier in this thread) to mark these
+>> entries as 'ACPI reclaim memory' ranges rather than System RAM or
+>> reserved regions.
+>>
+>> >> But I'm not still convinced that we should export them in useable-
+>> >> memory-range to crash dump kernel. They will be accessed through
+>> >> acpi_os_map_memory() and so won't be required to be part of system ram
+>> >> (or memblocks), I guess.
+>> >
+>> > Agreed. They will be covered by the linear mapping in the boot kernel,
+>> > and be mapped explicitly via ioremap_cache() in the kexec kernel,
+>> > which is exactly what we want in this case.
+>>
+>> Now this is what is confusing me. I don't see the above happening.
+>>
+>> I see that the primary kernel boots up and adds the ACPI regions via:
+>> acpi_os_ioremap
+>>     -> ioremap_cache
+>>
+>> But during the crashkernel boot, ''acpi_os_ioremap' calls
+>> 'ioremap' for the ACPI Reclaim Memory regions and not the _cache
+>> variant.
+>>
+>> And it fails while accessing the ACPI tables:
+>>
+>> [    0.039205] ACPI: Core revision 20170728
+>> pud=000000002e7d0003, *pmd=000000002e7c0003, *pte=00e8000039710707
+>> [    0.095098] Internal error: Oops: 96000021 [#1] SMP
+>> [    0.100022] Modules linked in:
+>> [    0.103102] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.14.0-rc6 #1
+>> [    0.109432] task: ffff000008d05180 task.stack: ffff000008cc0000
+>> [    0.115414] PC is at acpi_ns_lookup+0x25c/0x3c0
+>> [    0.119987] LR is at acpi_ds_load1_begin_op+0xa4/0x294
+>> [    0.125175] pc : [<ffff0000084a6764>] lr : [<ffff00000849b4f8>]
+>> pstate: 60000045
+>> [    0.132647] sp : ffff000008ccfb40
+>> [    0.135989] x29: ffff000008ccfb40 x28: ffff000008a9f2a4
+>> [    0.141354] x27: ffff0000088be820 x26: 0000000000000000
+>> [    0.146718] x25: 000000000000001b x24: 0000000000000001
+>> [    0.152083] x23: 0000000000000001 x22: ffff000009710027
+>> [    0.157447] x21: ffff000008ccfc50 x20: 0000000000000001
+>> [    0.162812] x19: 000000000000001b x18: 0000000000000005
+>> [    0.168176] x17: 0000000000000000 x16: 0000000000000000
+>> [    0.173541] x15: 0000000000000000 x14: 000000000000038e
+>> [    0.178905] x13: ffffffff00000000 x12: ffffffffffffffff
+>> [    0.184270] x11: 0000000000000006 x10: 00000000ffffff76
+>> [    0.189634] x9 : 000000000000005f x8 : ffff8000126d0140
+>> [    0.194998] x7 : 0000000000000000 x6 : ffff000008ccfc50
+>> [    0.200362] x5 : ffff80000fe62c00 x4 : 0000000000000001
+>> [    0.205727] x3 : ffff000008ccfbe0 x2 : ffff0000095e3980
+>> [    0.211091] x1 : ffff000009710027 x0 : 0000000000000000
+>> [    0.216456] Process swapper/0 (pid: 0, stack limit = 0xffff000008cc0000)
+>> [    0.223224] Call trace:
+>> [    0.225688] Exception stack(0xffff000008ccfa00 to 0xffff000008ccfb40)
+>> [    0.232194] fa00: 0000000000000000 ffff000009710027
+>> ffff0000095e3980 ffff000008ccfbe0
+>> [    0.240106] fa20: 0000000000000001 ffff80000fe62c00
+>> ffff000008ccfc50 0000000000000000
+>> [    0.248018] fa40: ffff8000126d0140 000000000000005f
+>> 00000000ffffff76 0000000000000006
+>> [    0.255931] fa60: ffffffffffffffff ffffffff00000000
+>> 000000000000038e 0000000000000000
+>> [    0.263843] fa80: 0000000000000000 0000000000000000
+>> 0000000000000005 000000000000001b
+>> [    0.271754] faa0: 0000000000000001 ffff000008ccfc50
+>> ffff000009710027 0000000000000001
+>> [    0.279667] fac0: 0000000000000001 000000000000001b
+>> 0000000000000000 ffff0000088be820
+>> [    0.287579] fae0: ffff000008a9f2a4 ffff000008ccfb40
+>> ffff00000849b4f8 ffff000008ccfb40
+>> [    0.295491] fb00: ffff0000084a6764 0000000060000045
+>> ffff000008ccfb40 ffff000008260a18
+>> [    0.303403] fb20: ffffffffffffffff ffff0000087f3fb0
+>> ffff000008ccfb40 ffff0000084a6764
+>> [    0.311316] [<ffff0000084a6764>] acpi_ns_lookup+0x25c/0x3c0
+>> [    0.316943] [<ffff00000849b4f8>] acpi_ds_load1_begin_op+0xa4/0x294
+>> [    0.323186] [<ffff0000084ad4ac>] acpi_ps_build_named_op+0xc4/0x198
+>> [    0.329428] [<ffff0000084ad6cc>] acpi_ps_create_op+0x14c/0x270
+>> [    0.335319] [<ffff0000084acfa8>] acpi_ps_parse_loop+0x188/0x5c8
+>> [    0.341298] [<ffff0000084ae048>] acpi_ps_parse_aml+0xb0/0x2b8
+>> [    0.347101] [<ffff0000084a8e10>] acpi_ns_one_complete_parse+0x144/0x184
+>> [    0.353783] [<ffff0000084a8e98>] acpi_ns_parse_table+0x48/0x68
+>> [    0.359675] [<ffff0000084a82cc>] acpi_ns_load_table+0x4c/0xdc
+>> [    0.365479] [<ffff0000084b32f8>] acpi_tb_load_namespace+0xe4/0x264
+>> [    0.371723] [<ffff000008baf9b4>] acpi_load_tables+0x48/0xc0
+>> [    0.377350] [<ffff000008badc20>] acpi_early_init+0x9c/0xd0
+>> [    0.382891] [<ffff000008b70d50>] start_kernel+0x3b4/0x43c
+>> [    0.388343] Code: b9008fb9 2a000318 36380054 32190318 (b94002c0)
+>> [    0.394500] ---[ end trace c46ed37f9651c58e ]---
+>> [    0.399160] Kernel panic - not syncing: Fatal exception
+>> [    0.404437] Rebooting in 10 seconds.
+>>
+>> So, I think the linear mapping done by the primary kernel does not
+>> make these accessible in the crash kernel directly.
+>>
+>> Any pointers?
 >
-> diff --git a/configure.ac b/configure.ac
-> index 208dc0a..4fc8aa0 100644
-> --- a/configure.ac
-> +++ b/configure.ac
-> @@ -92,6 +92,9 @@ AC_ARG_WITH([lzma], AC_HELP_STRING([--without-lzma],[disable lzma support]),
->  AC_ARG_WITH([xen], AC_HELP_STRING([--without-xen],
->  	[disable extended xen support]), [ with_xen="$withval"], [ with_xen=yes ] )
->
-> +AC_ARG_WITH([xen-dl], AC_HELP_STRING([--without-xen-dl],
-> +	[link libxenctrl.so at run-time rather than build-time]), [ with_xen_dl="$withval"], [ with_xen_dl=no ] )
-> +
->  AC_ARG_WITH([booke],
->  		AC_HELP_STRING([--with-booke],[build for booke]),
->  		AC_DEFINE(CONFIG_BOOKE,1,
-> @@ -174,6 +177,21 @@ if test "$with_xen" = yes ; then
->  				AC_MSG_NOTICE([The kexec_status call is not available]))
->  		fi
->  fi
-> +if test "$with_xen_dl" = yes ; then
-> +	if test "$with_xen" = yes ; then
-> +		AC_MSG_ERROR([Options --with-xen and --with-xen-dl are mutually exclusive])
-> +	fi
-> +	AC_DEFINE(CONFIG_LIBXENCTRL_DL, 1, [Define to 1 to link libxenctrl.so at run-time rather than build-time])
-> +	AC_CHECK_HEADER(dlfcn.h, , AC_MSG_ERROR([Dynamic library linking not available]))
-> +	AC_CHECK_LIB(dl, dlopen, , AC_MSG_ERROR([Dynamic library linking not available]))
+> Can you get the code line number for acpi_ns_lookup+0x25c?
 
-Please call AC_CHECK_LIB() from AC_CHECK_HEADER(). You can find more details
-if you take a look at zlib, lzma and even xenctrl config in configure.ac.
+gdb points to the following code line number:
 
-> +	AC_CHECK_HEADER(xenctrl.h,
-> +		AC_DEFINE(HAVE_LIBXENCTRL, 1, [Define to 1 to enable run-time linking of libxenctrl.so]),
-> +		AC_MSG_ERROR([Xen support not available]))
-> +dnl NOTE: Explicitly *NOT* performing AC_CHECK_LIB(xenctrl) as only need the header file to build
-> +	AC_CHECK_HEADER(xenctrl.h,
-> +		AC_DEFINE(HAVE_KEXEC_CMD_STATUS, 1, [Define to 1 so kexec_status call is available]),
-> +		AC_MSG_NOTICE([The kexec_status call is not available]))
-> +fi
->
->  dnl ---Sanity checks
->  if test "$CC"      = "no"; then AC_MSG_ERROR([cc not found]); fi
-> diff --git a/kexec/Makefile b/kexec/Makefile
-> index 2b4fb3d..8871731 100644
-> --- a/kexec/Makefile
-> +++ b/kexec/Makefile
-> @@ -36,6 +36,7 @@ dist += kexec/Makefile						\
->  	kexec/kexec-elf-boot.h					\
->  	kexec/kexec-elf.h kexec/kexec-sha256.h			\
->  	kexec/kexec-zlib.h kexec/kexec-lzma.h			\
-> +	kexec/kexec-xen.h 								\
->  	kexec/kexec-syscall.h kexec/kexec.h kexec/kexec.8
->
->  dist				+= kexec/proc_iomem.c
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index 69a063a..a948d9f 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -44,9 +44,7 @@
->  #include "kexec-x86.h"
->  #include "crashdump-x86.h"
->
-> -#ifdef HAVE_LIBXENCTRL
-> -#include <xenctrl.h>
-> -#endif /* HAVE_LIBXENCTRL */
-> +#include "../../kexec-xen.h"
->
->  #include "x86-linux-setup.h"
->
-> diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-> index be03618..b44c8b7 100644
-> --- a/kexec/arch/i386/kexec-x86-common.c
-> +++ b/kexec/arch/i386/kexec-x86-common.c
-> @@ -40,9 +40,7 @@
->  #include "../../crashdump.h"
->  #include "kexec-x86.h"
->
-> -#ifdef HAVE_LIBXENCTRL
-> -#include <xenctrl.h>
-> -#endif /* HAVE_LIBXENCTRL */
-> +#include "../../kexec-xen.h"
->
->  /* Used below but not present in (older?) xenctrl.h */
->  #ifndef E820_PMEM
-> diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
-> index 60594f6..2e4cbdc 100644
-> --- a/kexec/crashdump-xen.c
-> +++ b/kexec/crashdump-xen.c
-> @@ -18,9 +18,7 @@
->
->  #include "config.h"
->
-> -#ifdef HAVE_LIBXENCTRL
-> -#include <xenctrl.h>
-> -#endif
-> +#include "kexec-xen.h"
->
->  struct crash_note_info {
->  	unsigned long base;
-> diff --git a/kexec/kexec-xen.c b/kexec/kexec-xen.c
-> index 2b448d3..2b01fee 100644
-> --- a/kexec/kexec-xen.c
-> +++ b/kexec/kexec-xen.c
-> @@ -10,10 +10,51 @@
->  #include "config.h"
->
->  #ifdef HAVE_LIBXENCTRL
-> -#include <xenctrl.h>
-> +#include "kexec-xen.h"
->
->  #include "crashdump.h"
->
-> +#ifdef CONFIG_LIBXENCTRL_DL
-> +void *xc_dlhandle = NULL;
+(gdb) list *(acpi_ns_lookup+0x25c)
+0xffff0000084aa250 is in acpi_ns_lookup (drivers/acpi/acpica/nsaccess.c:577).
+572                }
+573            }
+574
+575            /* Extract one ACPI name from the front of the pathname */
+576
+577            ACPI_MOVE_32_TO_32(&simple_name, path);
+578
+579            /* Try to find the single (4 character) ACPI name */
+580
+581            status =
+(gdb)
 
-Just "void *xc_dlhandle;". Compiler will do work for you.
+i.e. ACPI_MOVE_32_TO_32(&simple_name, path);
 
-> +xc_hypercall_buffer_t XC__HYPERCALL_BUFFER_NAME(HYPERCALL_BUFFER_NULL);
+addr2line also confirms the same:
 
-static?
+# addr2line -e  vmlinux ffff0000084aa250
+/root/git/kernel-alt/drivers/acpi/acpica/nsaccess.c:577
 
-> +xc_interface *_xc_interface_open(xentoollog_logger *logger,
 
-I would prefer __xc_interface_open() instead of _xc_interface_open()
-(two underscores at the beginning of the function). Same applies to
-the functions/variables below.
+Regards,
+Bhupesh
 
-> +                                xentoollog_logger *dombuild_logger,
-> +                                unsigned open_flags)
-> +{
-> +    xc_interface *xch = NULL;
 
-xc_interface *xch;
-
-> +    if (NULL == xc_dlhandle)
-
-if (!xc_dlhandle)
-
-> +        xc_dlhandle = dlopen("libxenctrl.so", RTLD_NOW | RTLD_NODELETE);
-
-if (!xc_dlhandle)
-  return NULL;
-
-> +    if (xc_dlhandle) {
-
-... then you do not need this condition.
-
-> +        typedef xc_interface *(*func_t)(xentoollog_logger *logger,
-> +                                xentoollog_logger *dombuild_logger,
-> +                                unsigned open_flags);
-
-Please define type(s) just behind the includes.
-
-> +        func_t func = (func_t)dlsym(xc_dlhandle, "xc_interface_open");
-> +        xch = func(logger, dombuild_logger, open_flags);
-> +    }
-> +
-> +    return xch;
-> +}
-> +
-> +int _xc_interface_close(xc_interface *xch)
-> +{
-> +    int rc = -1;
-> +
-> +/*
-> +    if (xc_dlhandle) {
-> +*/
-> +        typedef int (*func_t)(xc_interface *xch);
-> +        func_t func = (func_t)dlsym(xc_dlhandle, "xc_interface_close");
-> +        rc = func(xch);
-> +/*
-
-If you are not sure please provide the comment why it is
-commented out or drop these lines entirely.
-
-> +        xc_dlhandle = NULL;
-> +    }
-> +*/
-> +    return rc;
-> +}
-> +#endif /* CONFIG_LIBXENCTRL_DL */
-> +
->  int xen_kexec_load(struct kexec_info *info)
->  {
->  	uint32_t nr_segments = info->nr_segments;
-> diff --git a/kexec/kexec-xen.h b/kexec/kexec-xen.h
-> new file mode 100644
-> index 0000000..6d2046e
-> --- /dev/null
-> +++ b/kexec/kexec-xen.h
-> @@ -0,0 +1,48 @@
-> +#ifndef KEXEC_XEN_H
-> +#define KEXEC_XEN_H
-> +
-> +#ifdef HAVE_LIBXENCTRL
-> +#include <xenctrl.h>
-> +
-> +#ifdef CONFIG_LIBXENCTRL_DL
-> +#include <dlfcn.h>
-> +
-> +/* The handle from dlopen(), needed by dlsym(), dlclose() */
-> +extern void *xc_dlhandle;
-> +
-> +/* Wrappers around xc_interface_open/close() to insert dlopen/dlclose() */
-> +xc_interface *_xc_interface_open(xentoollog_logger *logger,
-> +                                xentoollog_logger *dombuild_logger,
-> +                                unsigned open_flags);
-> +int _xc_interface_close(xc_interface *xch);
-> +
-> +/* GCC expression statements for evaluating dlsym() */
-> +#define _xc_call(DTYPE, NAME, ARGS...) ({ DTYPE value; typedef DTYPE (*func_t)(xc_interface *, ...); func_t func = dlsym(xc_dlhandle, #NAME); value = func(ARGS); value; } )
-
-Too long line. Please try to not exceed 80 characters.
-
-> +#define _xc_data(DTYPE, NAME) ({ DTYPE *value = (DTYPE *)dlsym(xc_dlhandle, #NAME); value; } )
-
-I would export e.g. __xc_dlsym(const char *symbol) which calls
-dlsym(xc_dlhandle, symbol). Then you can make xc_dlhandle static.
-Hmmm... xc_dlhandle -> xc_dl_handle -> xc_dlh or even xdlh?
-
-> +/* The wrappers around utilized xenctrl.h functions */
-> +#define xc_interface_open(A,B,C)    _xc_interface_open(A,B,C)
-
-Lack of space after commas... And please use lowercase letters here.
-
-> +#define xc_interface_close(A)       _xc_interface_close(A)
-> +#define xc_version(ARGS...)         _xc_call(int, xc_version, ARGS)
-> +#define xc_get_max_cpus(ARGS...)    _xc_call(int, xc_get_max_cpus, ARGS)
-> +#define xc_get_machine_memory_map(ARGS...)  _xc_call(int, xc_get_machine_memory_map, ARGS)
-> +#define xc_kexec_get_range(ARGS...) _xc_call(int, xc_kexec_get_range, ARGS)
-> +#define xc_kexec_load(ARGS...)      _xc_call(int, xc_kexec_load, ARGS)
-> +#define xc_kexec_unload(ARGS...)    _xc_call(int, xc_kexec_unload, ARGS)
-> +#define xc_kexec_status(ARGS...)    _xc_call(int, xc_kexec_status, ARGS)
-> +#define xc_kexec_exec(ARGS...)      _xc_call(int, xc_kexec_exec, ARGS)
-> +#define xc_hypercall_buffer_array_create(ARGS...)   _xc_call(xc_hypercall_buffer_array_t *, xc_hypercall_buffer_array_create, ARGS)
-> +#define xc__hypercall_buffer_alloc(ARGS...) _xc_call(void *, xc__hypercall_buffer_alloc, ARGS)
-> +#define xc__hypercall_buffer_free(ARGS...)  _xc_call(void  , xc__hypercall_buffer_free, ARGS)
-> +#define xc__hypercall_buffer_alloc_pages(ARGS...)   _xc_call(void *, xc__hypercall_buffer_alloc_pages, ARGS)
-> +#define xc__hypercall_buffer_free_pages(ARGS...)    _xc_call(void  , xc__hypercall_buffer_free_pages, ARGS)
-> +#define xc__hypercall_buffer_array_alloc(ARGS...)   _xc_call(void *, xc__hypercall_buffer_array_alloc, ARGS)
-> +#define xc__hypercall_buffer_array_get(ARGS...)     _xc_call(void *, xc__hypercall_buffer_array_get, ARGS)
-> +#define xc_hypercall_buffer_array_destroy(ARGS...)  _xc_call(void *, xc_hypercall_buffer_array_destroy, ARGS)
-
-Could you try to make this more readable? Alignment, line wraps
-if needed, etc. And of course too long lines in many places...
-
-Really kexec-tools use all of them?
-
-Daniel
+>>
+>> Regards,
+>> Bhupesh
+>>
+>> >> Just FYI, on x86, ACPI tables seems to be exposed to crash dump kernel
+>> >> via a kernel command line parameter, "memmap=".
+>> >>
+>> _______________________________________________
+>> kexec mailing list -- kexec@lists.fedoraproject.org
+>> To unsubscribe send an email to kexec-leave@lists.fedoraproject.org
 
 _______________________________________________
 kexec mailing list
