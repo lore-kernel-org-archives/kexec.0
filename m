@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eRMA6-0006Bf-Uu
- for kexec@lists.infradead.org; Tue, 19 Dec 2017 17:58:44 +0000
-Date: Tue, 19 Dec 2017 18:58:27 +0100
-From: Jiri Bohac <jbohac@suse.cz>
-Subject: Re: [PATCH v2] x86/kexec: Exclude GART aperture from vmcore
-Message-ID: <20171219175827.oqfskuax6zzm2ljq@dwarf.suse.cz>
-References: <20171216001514.x5eg37ad4aa2fwqt@dwarf.suse.cz>
- <20171216010142.GK12442@x1>
- <20171217214735.nuxq5zo2eknqpbpi@pd.tnic>
- <20171218134736.GA4035@x1>
- <20171218143753.k7xyq6yiyjisnonh@pd.tnic>
- <20171219015804.GC4035@x1>
+ id 1eRYkO-0004uu-NO
+ for kexec@lists.infradead.org; Wed, 20 Dec 2017 07:25:03 +0000
+Date: Wed, 20 Dec 2017 15:24:43 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] handle renamed init_level4_pgt -> init_top_pgt
+Message-ID: <20171220072443.GA7413@dhcp-128-65.nay.redhat.com>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9701F22E63@BPXM01GP.gisp.nec.co.jp>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701F2A617@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20171219015804.GC4035@x1>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701F2A617@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,63 +24,174 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Toshi Kani <toshi.kani@hpe.com>, David Airlie <airlied@linux.ie>, yinghai@kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: Keiichirou Suzuki <kei-suzuki@xr.jp.nec.com>, Jeff Mahoney <jeffm@suse.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-
-On Tue, Dec 19, 2017 at 09:58:04AM +0800, Baoquan He wrote:
-> Hmm, as I have said in the first replying mail, the v2 will introduce
-> issues:
+On 12/08/17 at 08:15am, Atsushi Kumagai wrote:
+> >>Linux 4.13 renamed init_level4_pgt to init_top_pgt in preparation for
+> >>introducing 5-level page tables.  This patch follows the rename if
+> >>the lookup for init_level4_pgt fails.  It also checks to see if
+> >>5-level page tables are enabled and bails if it discovers they are.
+> >
+> >Thanks Jeff, but could you rebase it on the current devel branch ?
+> >vtop4 for x86_64 was modified in the commit below:
+> >
+> >commit 8c89727155f4994b4e75a659e28e5eff16ff6cbc
+> >Author: Takao Indoh <indou.takao@jp.fujitsu.com>
+> >Date:   Thu Oct 26 20:32:54 2017 +0900
+> >
+> >    [PATCH v3 2/4] Introduce vtop4_x86_64_pagetable
+> >
+> >Regards,
+> >Atsushi Kumagai
 > 
-> 1) If 'iommu=off' is specified in 1st kernel but not in kdump kernel, it
-> will ignore the ram we need dump.
+> I rebased that and updated the devel branch:
+> 
+> https://sourceforge.net/p/makedumpfile/code/ci/97e156b493c46fabfc4b136ab834a6495166ac66/
+> 
+> I'll merge it into v1.6.3 if you have no comment.
 
-yes, instead of crashing the machine (because GART may be initialized in the
-2nd kernel, overlapping the 1st kernel memory, which the 2nd kernel with its
-fake e820 map sees as unused).
+[dyoung@dhcp-*-* makedumpfile]$ sudo ./makedumpfile -l -d 31 /mnt/vmcore/vmcore /tmp/vmcore.1
+The kernel version is not supported.
+The makedumpfile operation may be incomplete.
+Checking for memory holes                         : [100.0 %] |                  __vtop4_x86_64: Can't get a valid pte.
+readmem: Can't convert a virtual address(ffff88007ebb1000) to physical address.
+readmem: type_addr: 0, addr:ffff88007ebb1000, size:32768
+__exclude_unnecessary_pages: Can't read the buffer of struct page.
+create_2nd_bitmap: Can't exclude unnecessary pages.
 
-I'd say this is an improvement.
+makedumpfile Failed.
 
-> 2) If 'iommu=off' is specified in kdump kernel, but not in 1st kernel,
-> it won't get the GART region, this patch does't work.
+If you need the vmcore for debugging please let me know, my test is just
+a normal test in kvm guest.
 
-No. It will work:
+> 
+> Thanks,
+> Atsushi Kumagai
+> 
+> >>Signed-off-by: Jeff Mahoney <jeffm@suse.com>
+> >>---
+> >> arch/x86_64.c  | 24 +++++++++++++++++++++---
+> >> makedumpfile.c |  6 ++++++
+> >> makedumpfile.h |  2 ++
+> >> 3 files changed, 29 insertions(+), 3 deletions(-)
+> >>
+> >>diff --git a/arch/x86_64.c b/arch/x86_64.c
+> >>index 08dd6b2..9b09035 100644
+> >>--- a/arch/x86_64.c
+> >>+++ b/arch/x86_64.c
+> >>@@ -259,16 +259,26 @@ vtop4_x86_64(unsigned long vaddr)
+> >> {
+> >> 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
+> >> 	unsigned long pte_paddr, pte;
+> >>+	unsigned long init_level4_pgt;
+> >>
+> >>-	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
+> >>+	if (SYMBOL(init_level4_pgt) != NOT_FOUND_SYMBOL)
+> >>+		init_level4_pgt = SYMBOL(init_level4_pgt);
+> >>+	else if (SYMBOL(init_top_pgt) != NOT_FOUND_SYMBOL)
+> >>+		init_level4_pgt = SYMBOL(init_top_pgt);
+> >>+	else {
+> >> 		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
+> >> 		return NOT_PADDR;
+> >> 	}
+> >>
+> >>+	if (SYMBOL(level4_kernel_pgt) != NOT_FOUND_SYMBOL) {
+> >>+		ERRMSG("Kernel is built with 5-level page tables\n");
+> >>+		return NOT_PADDR;
+> >>+	}
+> >>+
+> >> 	/*
+> >> 	 * Get PGD.
+> >> 	 */
+> >>-	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + info->phys_base;
+> >>+	page_dir = init_level4_pgt - __START_KERNEL_map + info->phys_base;
+> >> 	if (is_xen_memory()) {
+> >> 		page_dir = ptom_xen(page_dir);
+> >> 		if (page_dir == NOT_PADDR)
+> >>@@ -549,8 +559,16 @@ find_vmemmap_x86_64()
+> >> 	struct vmap_pfns *vmapp, *vmaphead = NULL, *cur, *tail;
+> >>
+> >> 	init_level4_pgt = SYMBOL(init_level4_pgt);
+> >>+	if (init_level4_pgt == NOT_FOUND_SYMBOL)
+> >>+		init_level4_pgt = SYMBOL(init_top_pgt);
+> >>+
+> >> 	if (init_level4_pgt == NOT_FOUND_SYMBOL) {
+> >>-		ERRMSG("init_level4_pgt not found\n");
+> >>+		ERRMSG("init_level4_pgt/init_top_pgt not found\n");
+> >>+		return FAILED;
+> >>+	}
+> >>+
+> >>+	if (SYMBOL(level4_kernel_pgt) != NOT_FOUND_SYMBOL) {
+> >>+		ERRMSG("kernel is configured for 5-level page tables\n");
+> >> 		return FAILED;
+> >> 	}
+> >> 	pagestructsize = size_table.page;
+> >>diff --git a/makedumpfile.c b/makedumpfile.c
+> >>index f85003a..6e5ec34 100644
+> >>--- a/makedumpfile.c
+> >>+++ b/makedumpfile.c
+> >>@@ -1486,6 +1486,8 @@ get_symbol_info(void)
+> >> 	SYMBOL_INIT(_stext, "_stext");
+> >> 	SYMBOL_INIT(swapper_pg_dir, "swapper_pg_dir");
+> >> 	SYMBOL_INIT(init_level4_pgt, "init_level4_pgt");
+> >>+	SYMBOL_INIT(level4_kernel_pgt, "level4_kernel_pgt");
+> >>+	SYMBOL_INIT(init_top_pgt, "init_top_pgt");
+> >> 	SYMBOL_INIT(vmlist, "vmlist");
+> >> 	SYMBOL_INIT(vmap_area_list, "vmap_area_list");
+> >> 	SYMBOL_INIT(node_online_map, "node_online_map");
+> >>@@ -2105,6 +2107,8 @@ write_vmcoreinfo_data(void)
+> >> 	WRITE_SYMBOL("_stext", _stext);
+> >> 	WRITE_SYMBOL("swapper_pg_dir", swapper_pg_dir);
+> >> 	WRITE_SYMBOL("init_level4_pgt", init_level4_pgt);
+> >>+	WRITE_SYMBOL("level4_kernel_pgt", level4_kernel_pgt);
+> >>+	WRITE_SYMBOL("init_top_pgt", init_top_pgt);
+> >> 	WRITE_SYMBOL("vmlist", vmlist);
+> >> 	WRITE_SYMBOL("vmap_area_list", vmap_area_list);
+> >> 	WRITE_SYMBOL("node_online_map", node_online_map);
+> >>@@ -2500,6 +2504,8 @@ read_vmcoreinfo(void)
+> >> 	READ_SYMBOL("_stext", _stext);
+> >> 	READ_SYMBOL("swapper_pg_dir", swapper_pg_dir);
+> >> 	READ_SYMBOL("init_level4_pgt", init_level4_pgt);
+> >>+	READ_SYMBOL("level4_kernel_pgt", level4_kernel_pgt);
+> >>+	READ_SYMBOL("init_top_pgt", init_top_pgt);
+> >> 	READ_SYMBOL("vmlist", vmlist);
+> >> 	READ_SYMBOL("vmap_area_list", vmap_area_list);
+> >> 	READ_SYMBOL("node_online_map", node_online_map);
+> >>diff --git a/makedumpfile.h b/makedumpfile.h
+> >>index 8a05794..9357e47 100644
+> >>--- a/makedumpfile.h
+> >>+++ b/makedumpfile.h
+> >>@@ -1517,6 +1517,8 @@ struct symbol_table {
+> >> 	unsigned long long	_stext;
+> >> 	unsigned long long	swapper_pg_dir;
+> >> 	unsigned long long	init_level4_pgt;
+> >>+	unsigned long long	level4_kernel_pgt;
+> >>+	unsigned long long	init_top_pgt;
+> >> 	unsigned long long	vmlist;
+> >> 	unsigned long long	vmap_area_list;
+> >> 	unsigned long long	phys_base;
+> >>
+> >>
+> >>--
+> >>Jeff Mahoney
+> >>SUSE Labs
+> >
+> >
+> >
+> >_______________________________________________
+> >kexec mailing list
+> >kexec@lists.infradead.org
+> >http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-First kernel initializes the GART (either in a hole properly provided by the
-BIOS or overlapping e820 RAM).
-
-Second kernel will start with the GART initialized.  In gart_iommu_hole_init()
-the setting is read from the northbridge registers and verified as valid. It
-does not overlap e820 memory, because the second kernel has a fake e820 map
-only spanning the crashkernel= reserved range. "fix" is never set to 1, so it
-will exclude GART from vmcore in this path:
-
-out:
-        if (!fix && !fallback_aper_force) {
-                if (last_aper_base) {
-                        exclude_from_vmcore(last_aper_base, last_aper_order);
-                        return 1;
-
-(fix is never set to 1)
-no_iommu is only checked after that.
-
-
-> 3) If people enable GART in bios, there's a ram memory hole for GART.
-> Nothing need to do while kdump kernel doesn't know GART is enabled or
-> not in bios, will try to avoid it anyway. It won't hurt anythig though,
-> in logic it's not suggested since confusion will be brought in.
-
-I don't have easy access to the HP machines. I have a machine right here in our
-lab that has this issue. It has no "enable GART" setting in BIOS.  It has a
-"enable IOMMU" setting. The bug stays there regardless of the setting.
-It's old. Noone will fix the firmware. The patch fixes it.
-
-Thanks,
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
