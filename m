@@ -1,21 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eTkUx-00069k-NT
- for kexec@lists.infradead.org; Tue, 26 Dec 2017 08:22:10 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] handle renamed init_level4_pgt -> init_top_pgt
-Date: Tue, 26 Dec 2017 08:21:26 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701F31899@BPXM01GP.gisp.nec.co.jp>
-References: <0910DD04CBD6DE4193FCF86B9C00BE9701F22E63@BPXM01GP.gisp.nec.co.jp>
- <0910DD04CBD6DE4193FCF86B9C00BE9701F2A617@BPXM01GP.gisp.nec.co.jp>
- <20171220072443.GA7413@dhcp-128-65.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701F2D609@BPXM01GP.gisp.nec.co.jp>
- <20171222045444.GA978@dhcp-128-65.nay.redhat.com>
- <20171222054829.GA21523@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20171222054829.GA21523@dhcp-128-65.nay.redhat.com>
-Content-Language: ja-JP
+ id 1eU6Oj-0000Nv-FD
+ for kexec@lists.infradead.org; Wed, 27 Dec 2017 07:45:11 +0000
+Date: Wed, 27 Dec 2017 15:44:49 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v2] x86/kexec: Exclude GART aperture from vmcore
+Message-ID: <20171227074449.GA15255@x1>
+References: <20171216001514.x5eg37ad4aa2fwqt@dwarf.suse.cz>
+ <20171216010142.GK12442@x1>
+ <20171217214735.nuxq5zo2eknqpbpi@pd.tnic>
+ <20171218134736.GA4035@x1>
+ <20171218143753.k7xyq6yiyjisnonh@pd.tnic>
+ <20171219015804.GC4035@x1>
+ <20171219175827.oqfskuax6zzm2ljq@dwarf.suse.cz>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20171219175827.oqfskuax6zzm2ljq@dwarf.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,214 +29,91 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Keiichirou Suzuki <kei-suzuki@xr.jp.nec.com>, Jeff Mahoney <jeffm@suse.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Jiri Bohac <jbohac@suse.cz>
+Cc: Toshi Kani <toshi.kani@hpe.com>, David Airlie <airlied@linux.ie>, yinghai@kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
->On 12/22/17 at 12:54pm, Dave Young wrote:
->> Hi Atsushi,
->> On 12/21/17 at 08:48am, Atsushi Kumagai wrote:
->> > Hello Dave,
->> >
->> > >[dyoung@dhcp-*-* makedumpfile]$ sudo ./makedumpfile -l -d 31 /mnt/vmcore/vmcore /tmp/vmcore.1
->> > >The kernel version is not supported.
->> > >The makedumpfile operation may be incomplete.
->> > >Checking for memory holes                         : [100.0 %] |                  __vtop4_x86_64: Can't get a valid
->pte.
->> > >readmem: Can't convert a virtual address(ffff88007ebb1000) to physical address.
->> > >readmem: type_addr: 0, addr:ffff88007ebb1000, size:32768
->> > >__exclude_unnecessary_pages: Can't read the buffer of struct page.
->> > >create_2nd_bitmap: Can't exclude unnecessary pages.
->> > >
->> > >makedumpfile Failed.
->> > >
->> > >If you need the vmcore for debugging please let me know, my test is just
->> > >a normal test in kvm guest.
->> >
->> > Thanks for your report.
->> > I can't reproduce that in my environment, could you give me the vmcore ?
->> > It's helpful if you append the vmlinux and the .config.
->>
->> I'm bisecting it, nearly finished, will post the results and share
->> vmcore if needed soon.
->
->vmcore/vmlinux (gzipped) and .config:
->http://people.redhat.com/ruyang/rhbz1528542/
+On 12/19/17 at 06:58pm, Jiri Bohac wrote:
 
-Thanks.
+Sorry for late response. Please see the inline comments.
 
->Bisect result is below:
+> 
+> On Tue, Dec 19, 2017 at 09:58:04AM +0800, Baoquan He wrote:
+> > Hmm, as I have said in the first replying mail, the v2 will introduce
+> > issues:
+> > 
+> > 1) If 'iommu=off' is specified in 1st kernel but not in kdump kernel, it
+> > will ignore the ram we need dump.
+> 
+> yes, instead of crashing the machine (because GART may be initialized in the
+> 2nd kernel, overlapping the 1st kernel memory, which the 2nd kernel with its
+> fake e820 map sees as unused).
+> 
+> I'd say this is an improvement.
 
-I'm not sure why this commit affects makedumpfile yet, but
-I'll give priority to release v1.6.3 since the commit will not be included
-in the supported kernel(4.14).
+I don't get what you said. If 'iommu=off' only specified in 1st kernel,
+kdump kernel will think the memory which GART bar pointed as a hole.
+This is incorrect. I don't see the improvement.
 
-Regards,
-Atsushi Kumagai
+> 
+> > 2) If 'iommu=off' is specified in kdump kernel, but not in 1st kernel,
+> > it won't get the GART region, this patch does't work.
+> 
+> No. It will work:
+> 
+> First kernel initializes the GART (either in a hole properly provided by the
+> BIOS or overlapping e820 RAM).
+> 
+> Second kernel will start with the GART initialized.  In gart_iommu_hole_init()
+> the setting is read from the northbridge registers and verified as valid. It
+> does not overlap e820 memory, because the second kernel has a fake e820 map
+> only spanning the crashkernel= reserved range. "fix" is never set to 1, so it
+> will exclude GART from vmcore in this path:
+> 
+> out:
+>         if (!fix && !fallback_aper_force) {
+>                 if (last_aper_base) {
+>                         exclude_from_vmcore(last_aper_base, last_aper_order);
+>                         return 1;
+> 
+> (fix is never set to 1)
+> no_iommu is only checked after that.
 
->83e3c48729d9ebb7af5a31a504f3fd6aff0348c4 is the first bad commit
->commit 83e3c48729d9ebb7af5a31a504f3fd6aff0348c4
->Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->Date:   Fri Sep 29 17:08:16 2017 +0300
->
->    mm/sparsemem: Allocate mem_section at runtime for CONFIG_SPARSEMEM_EXTREME=y
->
->    Size of the mem_section[] array depends on the size of the physical address space.
->
->    In preparation for boot-time switching between paging modes on x86-64
->    we need to make the allocation of mem_section[] dynamic, because otherwise
->    we waste a lot of RAM: with CONFIG_NODE_SHIFT=10, mem_section[] size is 32kB
->    for 4-level paging and 2MB for 5-level paging mode.
->
->    The patch allocates the array on the first call to sparse_memory_present_with_active_regions().
->
->    Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->    Cc: Andrew Morton <akpm@linux-foundation.org>
->    Cc: Andy Lutomirski <luto@amacapital.net>
->    Cc: Borislav Petkov <bp@suse.de>
->    Cc: Cyrill Gorcunov <gorcunov@openvz.org>
->    Cc: Linus Torvalds <torvalds@linux-foundation.org>
->    Cc: Peter Zijlstra <peterz@infradead.org>
->    Cc: Thomas Gleixner <tglx@linutronix.de>
->    Cc: linux-mm@kvack.org
->    Link: http://lkml.kernel.org/r/20170929140821.37654-2-kirill.shutemov@linux.intel.com
->    Signed-off-by: Ingo Molnar <mingo@kernel.org>
->
->:040000 040000 68b7ff3eedc2c9ff56e31108f7e982eacbb233fc 0014ee63bebe14efb0e36e0028e2cbe718fd6c30 M	include
->:040000 040000 78adbc296527c802400b1f68e0fbd716920726fa a4eea8117cb318527c0d5a6281d68f312f644831 M	mm
->
->>
->> >
->> > Thanks,
->> > Atsushi Kumagai
->> >
->> > >> >>Signed-off-by: Jeff Mahoney <jeffm@suse.com>
->> > >> >>---
->> > >> >> arch/x86_64.c  | 24 +++++++++++++++++++++---
->> > >> >> makedumpfile.c |  6 ++++++
->> > >> >> makedumpfile.h |  2 ++
->> > >> >> 3 files changed, 29 insertions(+), 3 deletions(-)
->> > >> >>
->> > >> >>diff --git a/arch/x86_64.c b/arch/x86_64.c
->> > >> >>index 08dd6b2..9b09035 100644
->> > >> >>--- a/arch/x86_64.c
->> > >> >>+++ b/arch/x86_64.c
->> > >> >>@@ -259,16 +259,26 @@ vtop4_x86_64(unsigned long vaddr)
->> > >> >> {
->> > >> >> 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
->> > >> >> 	unsigned long pte_paddr, pte;
->> > >> >>+	unsigned long init_level4_pgt;
->> > >> >>
->> > >> >>-	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
->> > >> >>+	if (SYMBOL(init_level4_pgt) != NOT_FOUND_SYMBOL)
->> > >> >>+		init_level4_pgt = SYMBOL(init_level4_pgt);
->> > >> >>+	else if (SYMBOL(init_top_pgt) != NOT_FOUND_SYMBOL)
->> > >> >>+		init_level4_pgt = SYMBOL(init_top_pgt);
->> > >> >>+	else {
->> > >> >> 		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
->> > >> >> 		return NOT_PADDR;
->> > >> >> 	}
->> > >> >>
->> > >> >>+	if (SYMBOL(level4_kernel_pgt) != NOT_FOUND_SYMBOL) {
->> > >> >>+		ERRMSG("Kernel is built with 5-level page tables\n");
->> > >> >>+		return NOT_PADDR;
->> > >> >>+	}
->> > >> >>+
->> > >> >> 	/*
->> > >> >> 	 * Get PGD.
->> > >> >> 	 */
->> > >> >>-	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + info->phys_base;
->> > >> >>+	page_dir = init_level4_pgt - __START_KERNEL_map + info->phys_base;
->> > >> >> 	if (is_xen_memory()) {
->> > >> >> 		page_dir = ptom_xen(page_dir);
->> > >> >> 		if (page_dir == NOT_PADDR)
->> > >> >>@@ -549,8 +559,16 @@ find_vmemmap_x86_64()
->> > >> >> 	struct vmap_pfns *vmapp, *vmaphead = NULL, *cur, *tail;
->> > >> >>
->> > >> >> 	init_level4_pgt = SYMBOL(init_level4_pgt);
->> > >> >>+	if (init_level4_pgt == NOT_FOUND_SYMBOL)
->> > >> >>+		init_level4_pgt = SYMBOL(init_top_pgt);
->> > >> >>+
->> > >> >> 	if (init_level4_pgt == NOT_FOUND_SYMBOL) {
->> > >> >>-		ERRMSG("init_level4_pgt not found\n");
->> > >> >>+		ERRMSG("init_level4_pgt/init_top_pgt not found\n");
->> > >> >>+		return FAILED;
->> > >> >>+	}
->> > >> >>+
->> > >> >>+	if (SYMBOL(level4_kernel_pgt) != NOT_FOUND_SYMBOL) {
->> > >> >>+		ERRMSG("kernel is configured for 5-level page tables\n");
->> > >> >> 		return FAILED;
->> > >> >> 	}
->> > >> >> 	pagestructsize = size_table.page;
->> > >> >>diff --git a/makedumpfile.c b/makedumpfile.c
->> > >> >>index f85003a..6e5ec34 100644
->> > >> >>--- a/makedumpfile.c
->> > >> >>+++ b/makedumpfile.c
->> > >> >>@@ -1486,6 +1486,8 @@ get_symbol_info(void)
->> > >> >> 	SYMBOL_INIT(_stext, "_stext");
->> > >> >> 	SYMBOL_INIT(swapper_pg_dir, "swapper_pg_dir");
->> > >> >> 	SYMBOL_INIT(init_level4_pgt, "init_level4_pgt");
->> > >> >>+	SYMBOL_INIT(level4_kernel_pgt, "level4_kernel_pgt");
->> > >> >>+	SYMBOL_INIT(init_top_pgt, "init_top_pgt");
->> > >> >> 	SYMBOL_INIT(vmlist, "vmlist");
->> > >> >> 	SYMBOL_INIT(vmap_area_list, "vmap_area_list");
->> > >> >> 	SYMBOL_INIT(node_online_map, "node_online_map");
->> > >> >>@@ -2105,6 +2107,8 @@ write_vmcoreinfo_data(void)
->> > >> >> 	WRITE_SYMBOL("_stext", _stext);
->> > >> >> 	WRITE_SYMBOL("swapper_pg_dir", swapper_pg_dir);
->> > >> >> 	WRITE_SYMBOL("init_level4_pgt", init_level4_pgt);
->> > >> >>+	WRITE_SYMBOL("level4_kernel_pgt", level4_kernel_pgt);
->> > >> >>+	WRITE_SYMBOL("init_top_pgt", init_top_pgt);
->> > >> >> 	WRITE_SYMBOL("vmlist", vmlist);
->> > >> >> 	WRITE_SYMBOL("vmap_area_list", vmap_area_list);
->> > >> >> 	WRITE_SYMBOL("node_online_map", node_online_map);
->> > >> >>@@ -2500,6 +2504,8 @@ read_vmcoreinfo(void)
->> > >> >> 	READ_SYMBOL("_stext", _stext);
->> > >> >> 	READ_SYMBOL("swapper_pg_dir", swapper_pg_dir);
->> > >> >> 	READ_SYMBOL("init_level4_pgt", init_level4_pgt);
->> > >> >>+	READ_SYMBOL("level4_kernel_pgt", level4_kernel_pgt);
->> > >> >>+	READ_SYMBOL("init_top_pgt", init_top_pgt);
->> > >> >> 	READ_SYMBOL("vmlist", vmlist);
->> > >> >> 	READ_SYMBOL("vmap_area_list", vmap_area_list);
->> > >> >> 	READ_SYMBOL("node_online_map", node_online_map);
->> > >> >>diff --git a/makedumpfile.h b/makedumpfile.h
->> > >> >>index 8a05794..9357e47 100644
->> > >> >>--- a/makedumpfile.h
->> > >> >>+++ b/makedumpfile.h
->> > >> >>@@ -1517,6 +1517,8 @@ struct symbol_table {
->> > >> >> 	unsigned long long	_stext;
->> > >> >> 	unsigned long long	swapper_pg_dir;
->> > >> >> 	unsigned long long	init_level4_pgt;
->> > >> >>+	unsigned long long	level4_kernel_pgt;
->> > >> >>+	unsigned long long	init_top_pgt;
->> > >> >> 	unsigned long long	vmlist;
->> > >> >> 	unsigned long long	vmap_area_list;
->> > >> >> 	unsigned long long	phys_base;
->> > >> >>
->> > >> >>
->> > >> >>--
->> > >> >>Jeff Mahoney
->> > >> >>SUSE Labs
->> > >> >
->> > >> >
->> > >> >
->> > >> >_______________________________________________
->> > >> >kexec mailing list
->> > >> >kexec@lists.infradead.org
->> > >> >http://lists.infradead.org/mailman/listinfo/kexec
->> > >>
->> > >>
->> > >> _______________________________________________
->> > >> kexec mailing list
->> > >> kexec@lists.infradead.org
->> > >> http://lists.infradead.org/mailman/listinfo/kexec
->> > >
->> > >Thanks
->> > >Dave
->> >
->> >
->>
->> Thanks
->> Dave
+Seems yes. Well, the interesting thing is 'iommu=off' doesn't even work,
+right? Well, I don't know why the GART hardware/firmware/implementation
+is so ..., well, freaky. Even though 'iommu=off' is specified
+explicitly, it will initialize anyway.
+> 
+> 
+> > 3) If people enable GART in bios, there's a ram memory hole for GART.
+> > Nothing need to do while kdump kernel doesn't know GART is enabled or
+> > not in bios, will try to avoid it anyway. It won't hurt anythig though,
+> > in logic it's not suggested since confusion will be brought in.
+> 
+> I don't have easy access to the HP machines. I have a machine right here in our
+> lab that has this issue. It has no "enable GART" setting in BIOS.  It has a
+> "enable IOMMU" setting. The bug stays there regardless of the setting.
+> It's old. Noone will fix the firmware. The patch fixes it.
+
+OK, then we need fix it. In fact, in my personal opinion, if there's
+a chance, we should avoid to fix it, because
+ ..GART is too old, and systems with GART rarely are seen currently;
+ ..The code is too freaky, no clear code comment. As you can see, we
+usually clean up codes around too when we fix a found issue. While
+there's no way to begin to do clean up for GART, and it's not worth
+doing that.
+
+I understand you could get a bug report from other people, and have to
+fix it as an assignee. And this fix is located in aperture_64.c only,
+I am fine it's done like this. Maybe you can try the way I suggested
+that only removing the region from io resource, but not touching anything
+else, if you have interest.
+
+So if have to, could you add some code comments around your fix to notice
+people why these code are introduced? Commit log can help to understand
+added code, while sometime file moving may make this checking very hard.
+
+Thanks
+Baoquan
 
 
 _______________________________________________
