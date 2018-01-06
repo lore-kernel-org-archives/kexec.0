@@ -1,23 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eXcqf-0004Qo-Rf
- for kexec@lists.infradead.org; Sat, 06 Jan 2018 01:00:35 +0000
-Date: Sat, 6 Jan 2018 02:00:13 +0100
-From: Jiri Bohac <jbohac@suse.cz>
-Subject: Re: [PATCH v2] x86/kexec: Exclude GART aperture from vmcore
-Message-ID: <20180106010013.73suskgxm7lox7g6@dwarf.suse.cz>
-References: <20171216001514.x5eg37ad4aa2fwqt@dwarf.suse.cz>
- <20171216010142.GK12442@x1>
- <20171217214735.nuxq5zo2eknqpbpi@pd.tnic>
- <20171218134736.GA4035@x1>
- <20171218143753.k7xyq6yiyjisnonh@pd.tnic>
- <20171219015804.GC4035@x1>
- <20171219175827.oqfskuax6zzm2ljq@dwarf.suse.cz>
- <20171227074449.GA15255@x1>
+ id 1eXhA4-0002i7-DB
+ for kexec@lists.infradead.org; Sat, 06 Jan 2018 05:36:54 +0000
+Date: Sat, 6 Jan 2018 13:36:23 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: makedumpfile saving vmcore fails with dynamically allocated
+ mem_section (was: Re: [PATCH] handle renamed init_level4_pgt ->
+ init_top_pgt)
+Message-ID: <20180106053623.GA2803@dhcp-128-65.nay.redhat.com>
+References: <20171220072443.GA7413@dhcp-128-65.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701F2D609@BPXM01GP.gisp.nec.co.jp>
+ <20171222045444.GA978@dhcp-128-65.nay.redhat.com>
+ <20171222054829.GA21523@dhcp-128-65.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701F31899@BPXM01GP.gisp.nec.co.jp>
+ <20180102085703.GA18368@dhcp-128-65.nay.redhat.com>
+ <20180102090836.GA2338@x1>
+ <20180103023010.GA4889@dhcp-128-65.nay.redhat.com>
+ <20180103023835.GB2338@x1>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701F33131@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20171227074449.GA15255@x1>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701F33131@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,191 +34,145 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Toshi Kani <toshi.kani@hpe.com>, David Airlie <airlied@linux.ie>, yinghai@kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Keiichirou Suzuki <kei-suzuki@xr.jp.nec.com>, Jeff Mahoney <jeffm@suse.com>, "anderson@redhat.com" <anderson@redhat.com>, Baoquan He <bhe@redhat.com>
 
-Hi Baoquan,
-
-thank you very much for your review!
-
-On Wed, Dec 27, 2017 at 03:44:49PM +0800, Baoquan He wrote:
-> > > 1) If 'iommu=off' is specified in 1st kernel but not in kdump kernel, it
-> > > will ignore the ram we need dump.
-> > 
-> > yes, instead of crashing the machine (because GART may be initialized in the
-> > 2nd kernel, overlapping the 1st kernel memory, which the 2nd kernel with its
-> > fake e820 map sees as unused).
-> > 
-> > I'd say this is an improvement.
+On 01/05/18 at 08:19am, Atsushi Kumagai wrote:
+> >On 01/03/18 at 10:30am, Dave Young wrote:
+> >> On 01/02/18 at 05:08pm, Baoquan He wrote:
+> >> > On 01/02/18 at 04:57pm, Dave Young wrote:
+> >> > > The root cause is this commit makes mem_section as a pointer instead of
+> >> > > the static array.
+> >> > >
+> >> > > VMCOREINFO_SYMBOL() expand it as &mem_section, this is not correct in
+> >> > > the test case any more.
+> >> > >
+> >> > > This hack code works for me:
+> >> > >
+> >> > > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> >> > > index b3663896278e..f5fe6068ae39 100644
+> >> > > --- a/kernel/crash_core.c
+> >> > > +++ b/kernel/crash_core.c
+> >> > > @@ -376,6 +376,8 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+> >> > >  {
+> >> > >  	return __pa(vmcoreinfo_note);
+> >> > >  }
+> >> > > +#define VMCOREINFO_SYMBOL_HACK(name) \
+> >> > > +	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)name)
+> >> >
+> >> > Oh, you made a new one. We may use vmcoreinfo_append_str directly since
+> >> > there's an existing one in crash_save_vmcoreinfo():
+> >>
+> >> Yes, it should be something like this instead, this should ensure
+> >> makedumpfile maybe crash tool works without any modifications,
+> >> waiting for feedback from Atsushi, also ccing Dave for crash utility
+> >> potential issue.
 > 
-> I don't get what you said. If 'iommu=off' only specified in 1st kernel,
-> kdump kernel will think the memory which GART bar pointed as a hole.
-> This is incorrect. I don't see the improvement.
+> makedumpfile needs some fix anyway since some logic depend on the array length
+> of mem_section. I'm trying to fix it referring to the crash's fix.
 
-Without the patch, the kernel will crash/hang the machine, as it
-will (correctly) try to dump the first kernel's memory that is
-now mapped by the GART.
+Hmm, a makedumpfile only fix is enough for this issue?
 
-With the patch it will produce a dump with the data missing.
-But this is just a corner case, I don't see why someone would
-specify iommu=off in the first kernel and not the second.
-
-So instead of crashing and producing no dump at all, we get a
-dump with some data possibly missing.
-
-> I understand you could get a bug report from other people, and have to
-> fix it as an assignee. And this fix is located in aperture_64.c only,
-> I am fine it's done like this. Maybe you can try the way I suggested
-> that only removing the region from io resource, but not touching anything
-> else, if you have interest.
 > 
-> So if have to, could you add some code comments around your fix to notice
-> people why these code are introduced? Commit log can help to understand
-> added code, while sometime file moving may make this checking very hard.
+> > I'll give priority to release v1.6.3 since the commit will not be included
+> > in the supported kernel(4.14).
+> 
+> The kernel change was merged also into kernel 4.14.9, I'm working on this issue
+> for the next release(v1.6.3).
+> 
+> Thanks,
+> Atsushi Kumagai
+> 
+> >> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> >> index b3663896278e..122494364179 100644
+> >> --- a/kernel/crash_core.c
+> >> +++ b/kernel/crash_core.c
+> >> @@ -410,10 +410,16 @@ static int __init crash_save_vmcoreinfo_init(void)
+> >>  	VMCOREINFO_SYMBOL(contig_page_data);
+> >>  #endif
+> >>  #ifdef CONFIG_SPARSEMEM
+> >> +#ifdef CONFIG_SPARSEMEM_EXTREME
+> >> +	vmcoreinfo_append_str("SYMBOL(mem_section)=%lx\n",
+> >> +			      (unsigned long)mem_section);
+> >> +#else
+> >>  	VMCOREINFO_SYMBOL(mem_section);
+> >> +#endif
+> >
+> >	vmcoreinfo_append_str("SYMBOL(mem_section)=%lx\n",
+> >				(unsigned long)mem_section);
+> >
+> >This is enough to cover both cases. mem_section is array name in non
+> >SPARSEMEM_EXTREME case, so value of &mem_section == value of
+> >mem_section.
+> >
+> >>  	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+> >>  	VMCOREINFO_STRUCT_SIZE(mem_section);
+> >>  	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+> >> +
+> >>  #endif
+> >>  	VMCOREINFO_STRUCT_SIZE(page);
+> >>  	VMCOREINFO_STRUCT_SIZE(pglist_data);
+> >>
+> >> >
+> >> > vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
+> >> >
+> >> > The thing is that VMCOREINFO_SYMBOL will reference symbol. While
+> >> > checking all exported symbol, all of them are array names. So here
+> >> > the value of &array_name is equal to the address of the first element of
+> >> > array. Now the first exception appeared, mem_section, which could be not
+> >> > an array name, but a pointer pointing at the allocated memory.
+> >> >
+> >> > For this issue, we either change as Dave mentioned two options, or can
+> >> > we adjust VMCOREINFO_SYMBOL(name)?
+> >> >
+> >> > >
+> >> > >  static int __init crash_save_vmcoreinfo_init(void)
+> >> > >  {
+> >> > > @@ -410,10 +412,11 @@ static int __init crash_save_vmcoreinfo_init(void)
+> >> > >  	VMCOREINFO_SYMBOL(contig_page_data);
+> >> > >  #endif
+> >> > >  #ifdef CONFIG_SPARSEMEM
+> >> > > -	VMCOREINFO_SYMBOL(mem_section);
+> >> > > +	VMCOREINFO_SYMBOL_HACK(mem_section);
+> >> > >  	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+> >> > >  	VMCOREINFO_STRUCT_SIZE(mem_section);
+> >> > >  	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+> >> > > +
+> >> > >  #endif
+> >> > >  	VMCOREINFO_STRUCT_SIZE(page);
+> >> > >  	VMCOREINFO_STRUCT_SIZE(pglist_data);
+> >> > >
+> >> > >
+> >> > > But probably we need this instead, but I can not test it because I do
+> >> > > not know how to fix makedumpfile to use a _NUMBER instead of a SYMBOL.
+> >> > > Thus bring up the issue, seeking for thoughts and discussion.
+> >> > >
+> >> > > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> >> > > index b3663896278e..dfa2238e2c28 100644
+> >> > > --- a/kernel/crash_core.c
+> >> > > +++ b/kernel/crash_core.c
+> >> > > @@ -410,10 +410,17 @@ static int __init crash_save_vmcoreinfo_init(void)
+> >> > > 	VMCOREINFO_SYMBOL(contig_page_data);
+> >> > >  #endif
+> >> > >  #ifdef CONFIG_SPARSEMEM
+> >> > > +#ifdef CONFIG_SPARSEMEM_EXTREME
+> >> > > +	VMCOREINFO_NUMBER(mem_section);
+> >> > > +#else
+> >> > > 	VMCOREINFO_SYMBOL(mem_section);
+> >> > > +#endif
+> >> > > 	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+> >> > > 	VMCOREINFO_STRUCT_SIZE(mem_section);
+> >> > > 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+> >> > >
+> >> > > [snip]
+> >> > >
+> >> > > Thanks
+> >> > > Dave
+> 
+> 
 
-Sure, the full patch with comments added is below. Do the
-comments make sense? Do you want me to re-post it as v3?:
-
----
-On machines where the GART aperture is mapped over physical RAM
-/proc/vmcore contains the remapped range and reading it may
-cause hangs or reboots. 
-
-In the past, the GART region was added into the resource map, implemented by
-commit 56dd669a138c ("[PATCH] Insert GART region into resource map")
-
-However, inserting the iomem_resource from the early GART code caused
-resource conflicts with some AGP drivers (bko#72201), which got avoided by
-reverting the patch in commit 707d4eefbdb3 ("Revert [PATCH] Insert GART
-region into resource map"). This revert introduced the /proc/vmcore bug.
-
-The vmcore ELF header is either prepared by the kernel (when using the
-kexec_file_load syscall) or by the kexec userspace (when using the kexec_load
-syscall). Since we no longer have the GART iomem resource, the userspace
-kexec has no way of knowing which region to exclude from the ELF header.
-
-Changes from v1 of this patch:
-Instead of excluding the aperture from the ELF header, this patch
-makes /proc/vmcore return zeroes in the second kernel when attempting to
-read the aperture region. This is done by reusing the
-gart_oldmem_pfn_is_ram infrastructure originally intended to exclude XEN
-balooned memory. This works for both, the kexec_file_load and kexec_load
-syscalls.
-
-[Note that the GART region is the same in the first and second kernels:
-regardless whether the first kernel fixed up the northbridge/bios setting
-and mapped the aperture over physical memory, the second kernel finds the
-northbridge properly configured by the first kernel and the aperture
-never overlaps with e820 memory because the second kernel has a fake e820
-map created from the crashkernel memory regions. Thus, the second kernel
-keeps the aperture address/size as configured by the first kernel.]
-
-register_oldmem_pfn_is_ram can only register one callback and returns an error
-if the callback has been registered already. Since XEN used to be the only user
-of this function, it never checks the return value. Now that we have more than
-one user, I added a WARN_ON just in case agp, XEN, or any other future user of
-register_oldmem_pfn_is_ram were to step on each other's toes.
-
-
-Signed-off-by: Jiri Bohac <jbohac@suse.cz>
-Fixes: 707d4eefbdb3 ("Revert [PATCH] Insert GART region into resource map")
-
-diff --git a/arch/x86/kernel/aperture_64.c b/arch/x86/kernel/aperture_64.c
-index f5d92bc3b884..2c4d5ece7456 100644
---- a/arch/x86/kernel/aperture_64.c
-+++ b/arch/x86/kernel/aperture_64.c
-@@ -30,6 +30,7 @@
- #include <asm/dma.h>
- #include <asm/amd_nb.h>
- #include <asm/x86_init.h>
-+#include <linux/crash_dump.h>
- 
- /*
-  * Using 512M as goal, in case kexec will load kernel_big
-@@ -56,6 +57,33 @@ int fallback_aper_force __initdata;
- 
- int fix_aperture __initdata = 1;
- 
-+#ifdef CONFIG_PROC_VMCORE
-+/*
-+ * If the first kernel maps the aperture over e820 RAM, the kdump kernel will
-+ * use the same range because it will remain configured in the northbridge.
-+ * Trying to dump this area via /proc/vmcore may crash the machine, so exclude
-+ * it from vmcore.
-+ */
-+static unsigned long aperture_pfn_start, aperture_page_count;
-+
-+static int gart_oldmem_pfn_is_ram(unsigned long pfn)
-+{
-+	return likely((pfn < aperture_pfn_start) ||
-+		      (pfn >= aperture_pfn_start + aperture_page_count));
-+}
-+
-+static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
-+{
-+	aperture_pfn_start = aper_base >> PAGE_SHIFT;
-+	aperture_page_count = (32 * 1024 * 1024) << aper_order >> PAGE_SHIFT;
-+	WARN_ON(register_oldmem_pfn_is_ram(&gart_oldmem_pfn_is_ram));
-+}
-+#else
-+static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
-+{
-+}
-+#endif
-+
- /* This code runs before the PCI subsystem is initialized, so just
-    access the northbridge directly. */
- 
-@@ -435,8 +463,16 @@ int __init gart_iommu_hole_init(void)
- 
- out:
- 	if (!fix && !fallback_aper_force) {
--		if (last_aper_base)
-+		if (last_aper_base) {
-+			/*
-+			 * If this is the kdump kernel, the first kernel
-+			 * may have allocated the range over its e820 RAM
-+			 * and fixed up the northbridge
-+			 */
-+			exclude_from_vmcore(last_aper_base, last_aper_order);
-+
- 			return 1;
-+		}
- 		return 0;
- 	}
- 
-@@ -473,6 +509,14 @@ int __init gart_iommu_hole_init(void)
- 		return 0;
- 	}
- 
-+	/*
-+	 * If this is the kdump kernel _and_ the first kernel did not
-+	 * configure the aperture in the northbridge, this range may
-+	 * overlap with the first kernel's memory. We can't access the
-+	 * range through vmcore even though it should be part of the dump.
-+	 */
-+	exclude_from_vmcore(aper_alloc, aper_order);
-+
- 	/* Fix up the north bridges */
- 	for (i = 0; i < amd_nb_bus_dev_ranges[i].dev_limit; i++) {
- 		int bus, dev_base, dev_limit;
-diff --git a/arch/x86/xen/mmu_hvm.c b/arch/x86/xen/mmu_hvm.c
-index 2cfcfe4f6b2a..dd2ad82eee80 100644
---- a/arch/x86/xen/mmu_hvm.c
-+++ b/arch/x86/xen/mmu_hvm.c
-@@ -75,6 +75,6 @@ void __init xen_hvm_init_mmu_ops(void)
- 	if (is_pagetable_dying_supported())
- 		pv_mmu_ops.exit_mmap = xen_hvm_exit_mmap;
- #ifdef CONFIG_PROC_VMCORE
--	register_oldmem_pfn_is_ram(&xen_oldmem_pfn_is_ram);
-+	WARN_ON(register_oldmem_pfn_is_ram(&xen_oldmem_pfn_is_ram));
- #endif
- }
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
