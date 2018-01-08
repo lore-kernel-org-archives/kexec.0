@@ -1,14 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Poonam Aggrwal <poonam.aggrwal@nxp.com>
-Subject: RE: [PATCH][v2] arm64: Allocate elfcorehdr & crashkernel mem before
- any reservation
-Date: Mon, 8 Jan 2018 04:31:13 +0000
-Message-ID: <DB5PR0401MB1733C9CB0DCDF94FCF3E4E1286130@DB5PR0401MB1733.eurprd04.prod.outlook.com>
-References: <1515080048-9154-1-git-send-email-poonam.aggrwal@nxp.com>
- <5A4F5C45.3090006@arm.com>
-In-Reply-To: <5A4F5C45.3090006@arm.com>
-Content-Language: en-US
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1eYSyv-0000Ti-T3
+ for kexec@lists.infradead.org; Mon, 08 Jan 2018 08:40:36 +0000
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com
+ [10.5.11.15])
+ (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+ (No client certificate requested)
+ by mx1.redhat.com (Postfix) with ESMTPS id 7CA9980468
+ for <kexec@lists.infradead.org>; Mon,  8 Jan 2018 08:40:22 +0000 (UTC)
+Date: Mon, 8 Jan 2018 16:40:16 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: makedumpfile saving vmcore fails with dynamically allocated
+ mem_section (was: Re: [PATCH] handle renamed init_level4_pgt ->
+ init_top_pgt)
+Message-ID: <20180108084016.GA2295@dhcp-128-65.nay.redhat.com>
+References: <mailman.7.1515009607.12089.kexec@lists.infradead.org>
+ <727199273.2520585.1515010910495.JavaMail.zimbra@redhat.com>
+ <20180105023828.GA11054@dhcp-128-65.nay.redhat.com>
+ <1123355622.3166541.1515161806514.JavaMail.zimbra@redhat.com>
+ <20180106061346.GA18939@dhcp-128-65.nay.redhat.com>
+ <877254148.3374192.1515254816148.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <877254148.3374192.1515254816148.JavaMail.zimbra@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,124 +36,129 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "takahiro.akashi@linaro.org" <takahiro.akashi@linaro.org>, "G.h. Gao" <guanhua.gao@nxp.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Abhimanyu Saini <abhimanyu.saini@nxp.com>
+To: Dave Anderson <anderson@redhat.com>
+Cc: kexec@lists.infradead.org
 
-Thanks James for  the feedback.
-Please find replies inline.
+On 01/06/18 at 11:06am, Dave Anderson wrote:
+> 
+> 
+> ----- Original Message -----
+> > On 01/05/18 at 09:16am, Dave Anderson wrote:
+> > > 
+> > > 
+> > > ----- Original Message -----
+> > > > On 01/03/18 at 03:21pm, Dave Anderson wrote:
+> > > > > 
+> > > > > 
+> > > > > ----- Original Message -----
+> > > > > 
+> > > > > > On 01/02/18 at 05:08pm, Baoquan He wrote:
+> > > > > > > On 01/02/18 at 04:57pm, Dave Young wrote:
+> > > > > > > > The root cause is this commit makes mem_section as a pointer
+> > > > > > > > instead
+> > > > > > > > of
+> > > > > > > > the static array.
+> > > > > > > > 
+> > > > > > > > VMCOREINFO_SYMBOL() expand it as &mem_section, this is not
+> > > > > > > > correct in
+> > > > > > > > the test case any more.
+> > > > > > > > 
+> > > > > > > > This hack code works for me:
+> > > > > > > > 
+> > > > > > > > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> > > > > > > > index b3663896278e..f5fe6068ae39 100644
+> > > > > > > > --- a/kernel/crash_core.c
+> > > > > > > > +++ b/kernel/crash_core.c
+> > > > > > > > @@ -376,6 +376,8 @@ phys_addr_t __weak
+> > > > > > > > paddr_vmcoreinfo_note(void)
+> > > > > > > >  {
+> > > > > > > >  	return __pa(vmcoreinfo_note);
+> > > > > > > >  }
+> > > > > > > > +#define VMCOREINFO_SYMBOL_HACK(name) \
+> > > > > > > > +	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned
+> > > > > > > > long)name)
+> > > > > > > 
+> > > > > > > Oh, you made a new one. We may use vmcoreinfo_append_str directly
+> > > > > > > since
+> > > > > > > there's an existing one in crash_save_vmcoreinfo():
+> > > > > > 
+> > > > > > Yes, it should be something like this instead, this should ensure
+> > > > > > makedumpfile maybe crash tool works without any modifications,
+> > > > > > waiting for feedback from Atsushi, also ccing Dave for crash utility
+> > > > > > potential issue.
+> > > > > 
+> > > > > Yeah, I ran into that issue when testing 4.15, and fixed it upstream:
+> > > > > 
+> > > > >   https://github.com/crash-utility/crash/commit/264f22dafe9f37780c4113fd08e8d5b2138edbce
+> > > > > 
+> > > > >   commit 264f22dafe9f37780c4113fd08e8d5b2138edbce
+> > > > >   Author: Dave Anderson <anderson@redhat.com>
+> > > > >   Date:   Wed Nov 29 15:28:41 2017 -0500
+> > > > > 
+> > > > >     Fix for Linux 4.15 and later kernels that are configured with
+> > > > >     CONFIG_SPARSEMEM_EXTREME, and that contain kernel commit
+> > > > >     83e3c48729d9ebb7af5a31a504f3fd6aff0348c4, titled "mm/sparsemem:
+> > > > >     Allocate mem_section at runtime for CONFIG_SPARSEMEM_EXTREME=y".
+> > > > >     Without the patch, kernels configured with SPARSEMEM_EXTREME
+> > > > >     have changed the data type of "mem_section" from an array to
+> > > > >     a pointer, leading to errors in commands such as "kmem -p",
+> > > > >     "kmem -n", "kmem -s", and any other command that translates a
+> > > > >     physical address to its page struct address.
+> > > > >     (anderson@redhat.com)
+> > > > > 
+> > > > 
+> > > > Hi Dave,
+> > > > 
+> > > > I tried latest crash tool, but segment fault happened, I put the
+> > > > vmlinux/vmcore in below url, could you have a look?:
+> > > > http://people.redhat.com/ruyang/rhbz1528542/127.0.0.1-2018-01-05-10:29:23/
+> > > 
+> > > I can't access them:
+> > > 
+> > >   Forbidden
+> > > 
+> > >   You don't have permission to access
+> > >   /ruyang/rhbz1528542/127.0.0.1-2018-01-05-10:29:23/vmcore on this server.
+> > 
+> > Oops, updated with chmod 666
+> > > 
+> > > Although, in the meantime, what should first be clarified is why this
+> > > message occurred:
+> > > 
+> > >   WARNING: kernel version inconsistency between vmlinux and dumpfile
+> > > 
+> > > If you run with at least "crash -d1", it will display the version strings from
+> > > the vmlinux file and the dumpfile, and they should be identical.
+> > 
+> > Sorry about that, maybe I mistakenly use another build:
+> > dumpfile /proc/version:
+> > Linux version 4.15.0-rc6+ (dyoung@dhcp-128-65.nay.redhat.com) (gcc version
+> > 7.2.1 20170915 (Red Hat 7.2.1-4) (GCC)) #455 SMP Fri Jan 5 09:57:01 CST 2018
+> > vmlinux:
+> > Linux version 4.15.0-rc6+ (dyoung@dhcp-128-65.nay.redhat.com) (gcc version
+> > 7.2.1 20170915 (Red Hat 7.2.1-4) (GCC)) #456 SMP Fri Jan 5 10:26:27 CST 2018
+> > 
+> > But should be some simple change over the vmcore_append_str as Baoquan's
+> > suggestions, maybe I used Fedora default crash tool, I'm not sure now :(
+> 
+> No it's not the crash utility version that's the problem, but rather the 
+> vmcore_append_str() addition, which would modify/increment the virtual 
+> addresses of all static data symbols that come after it.  The crash utility
+> doesn't stand a prayer of working when the data symbol values in the vmlinux
+> do not match those in the vmcore.  
 
-Regards
-Poonam
+Ok, thanks for the reply.  If Atsushi can fix it in makedumpfile without
+kernel patch it would be ideal.
 
-> -----Original Message-----
-> From: James Morse [mailto:james.morse@arm.com]
-> Sent: Friday, January 05, 2018 4:37 PM
-> To: Poonam Aggrwal <poonam.aggrwal@nxp.com>; linux-arm-
-> kernel@lists.infradead.org
-> Cc: takahiro.akashi@linaro.org; will.deacon@arm.com; G.h. Gao
-> <guanhua.gao@nxp.com>; Abhimanyu Saini <abhimanyu.saini@nxp.com>
-> Subject: Re: [PATCH][v2] arm64: Allocate elfcorehdr & crashkernel mem before
-> any reservation
 > 
-> Hi Poonam,
-> 
-> On 04/01/18 15:34, Poonam Aggrwal wrote:
-> > Address for both crashkernel memory and elfcorehdr can be assigned
-> > statically. For crashkernel memory it is via crashkernel=SIZE@ADDRESS
-> > and elfcorehdr_addr via by kexec-utils in dump kernel device tree.
-> 
-> There are some crashkernel=SIZE@ADDRESS values that the user can supply that
-> we must reject. The obvious one is if it overlaps with the kernel text. (this patch
-> won't spot this). We need to read the hardware's reserved regions from the DT
-> before we allocate the crashkernel region, for example if the bootloader
-> reserved a chunk of memory for a frame-buffer, I shouldn't be able to use that
-> as crashkernel memory.
-> 
-> (you shouldn't need to specify an address, doing so prevents the kernel from
-> picking memory it can use)
+> Dave
 > 
 > 
-> > So memory should be reserved for both the above areas before any other
-> > memory reservations are done. Otherwise overlaps may happen and memory
-> > allocations will fail leading to failure in booting the dump capture
-> > kernel.
-> 
-> > Signed-off-by: Guanhua <guanhua.gao@nxp.com>
-> 
-> The first signed-off-by should be the patch author.
-> If you want to credit your colleagues you can use 'CC', or they can give
-> reviewed-by/acked-by to the patch.
-> 
-> 
-> > Signed-off-by: Poonam Aggrwal <poonam.aggrwal@nxp.com>
-> > Signed-off-by: Abhimanyu Saini <abhimanyu.saini@nxp.com>
-> 
-> And the last signed-of-by should be from the person posting to the mailing list.
-> 
-Sure will correct this.
-> 
-> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c index
-> > 00e7b90..24ce15d 100644
-> > --- a/arch/arm64/mm/init.c
-> > +++ b/arch/arm64/mm/init.c
-> > @@ -453,6 +453,14 @@ void __init arm64_memblock_init(void)
-> >  	 * Register the kernel text, kernel data, initrd, and initial
-> >  	 * pagetables with memblock.
-> >  	 */
-> 
-> Please don't insert this code between 'memblock_reserve(__pa_symbol(_text),
-> _end
-> - _text);' and the comment that describes it.
-Thanks for catching this, will fix it.
-> 
-> 
-> > +
-> > +	/* make these the first reservations to avoid chances of
-> > +	 * overlap
-> > +	 */
-> 
-> Nit: comment style
-Right, will fix it.
-> 
-> 
-> > +	reserve_elfcorehdr();
-> 
-> (Moving reserve_elfcorehdr() makes sense, but..)
-> 
-> 
-> > +	reserve_crashkernel();
-> 
-> reserve_crashkernel() does the allocation for the crashkernels reserved memory.
-> I expect this to always fail in the kdump kernel because there isn't enough
-> memory. (fdt_enforce_memory_region() at the top of this function calls
-> memblock_cap_memory_range()).
-> 
-> Moving this allocation above the early_init_fdt_scan_reserved_mem() below
-> means we may allocate memory for the crashdump that is in use by
-> firmware/hardware and described as reserved in the DT.
-Yeah, this is a good point. So ideally the address of the crash kernel should be diligently provided by the user based on the system.
-> 
-> 
-> >  	memblock_reserve(__pa_symbol(_text), _end - _text);  #ifdef
-> > CONFIG_BLK_DEV_INITRD
-> >  	if (initrd_start) {
-> > @@ -472,10 +480,6 @@ void __init arm64_memblock_init(void)
-> >  	else
-> >  		arm64_dma_phys_limit = PHYS_MASK + 1;
-> >
-> > -	reserve_crashkernel();
-> > -
-> > -	reserve_elfcorehdr();
-> > -
-> >  	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
-> >
-> >  	dma_contiguous_reserve(arm64_dma_phys_limit);
-> >
-> 
-> 
-> Thanks,
-> 
-> James
+> > 
+> > Retest with a fresh build, crash works fine to me. Here are the new
+> > files:
+> > http://people.redhat.com/ruyang/rhbz1528542/127.0.0.1-2018-01-06-14:02:59/
+> > 
 
 _______________________________________________
 kexec mailing list
