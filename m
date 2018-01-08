@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-x22e.google.com ([2607:f8b0:400d:c09::22e])
- by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eYDn7-0007Gx-Sr
- for kexec@lists.infradead.org; Sun, 07 Jan 2018 16:27:23 +0000
-Received: by mail-qk0-x22e.google.com with SMTP id o126so11527765qke.12
- for <kexec@lists.infradead.org>; Sun, 07 Jan 2018 08:27:10 -0800 (PST)
-From: David Michael <david.michael@coreos.com>
-Subject: [PATCH] arm64: Set -fno-PIC along with -mcmodel=large
-Date: Sun, 07 Jan 2018 11:26:57 -0500
-Message-ID: <87608dprce.fsf@coreos.com>
+From: Poonam Aggrwal <poonam.aggrwal@nxp.com>
+Subject: RE: [PATCH][v2] arm64: Allocate elfcorehdr & crashkernel mem before
+ any reservation
+Date: Mon, 8 Jan 2018 04:31:13 +0000
+Message-ID: <DB5PR0401MB1733C9CB0DCDF94FCF3E4E1286130@DB5PR0401MB1733.eurprd04.prod.outlook.com>
+References: <1515080048-9154-1-git-send-email-poonam.aggrwal@nxp.com>
+ <5A4F5C45.3090006@arm.com>
+In-Reply-To: <5A4F5C45.3090006@arm.com>
+Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,45 +21,124 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: kexec@lists.infradead.org
+To: James Morse <james.morse@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "takahiro.akashi@linaro.org" <takahiro.akashi@linaro.org>, "G.h. Gao" <guanhua.gao@nxp.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Abhimanyu Saini <abhimanyu.saini@nxp.com>
 
-As seen in GCC's gcc/config/aarch64/aarch64.c, -fPIC with large
-code model is unsupported.  This fixes the "sorry, unimplemented"
-errors when building with compilers defaulting to -fPIC.
----
+Thanks James for  the feedback.
+Please find replies inline.
 
-Hi,
+Regards
+Poonam
 
-I'm hitting this error with 2.0.16 on Gentoo:
-
-purgatory/arch/arm64/entry.S:1:0: sorry, unimplemented: code model 'large' with -fPIC
-
-This change fixes it.  Can something like this be applied?
-
-Thanks.
-
-David
-
-
- purgatory/arch/arm64/Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/purgatory/arch/arm64/Makefile b/purgatory/arch/arm64/Makefile
-index 636abea..80068ca 100644
---- a/purgatory/arch/arm64/Makefile
-+++ b/purgatory/arch/arm64/Makefile
-@@ -1,6 +1,7 @@
- 
- arm64_PURGATORY_EXTRA_CFLAGS = \
- 	-mcmodel=large \
-+	-fno-PIC \
- 	-fno-stack-protector \
- 	-fno-asynchronous-unwind-tables \
- 	-Wundef \
--- 
-2.14.3
-
+> -----Original Message-----
+> From: James Morse [mailto:james.morse@arm.com]
+> Sent: Friday, January 05, 2018 4:37 PM
+> To: Poonam Aggrwal <poonam.aggrwal@nxp.com>; linux-arm-
+> kernel@lists.infradead.org
+> Cc: takahiro.akashi@linaro.org; will.deacon@arm.com; G.h. Gao
+> <guanhua.gao@nxp.com>; Abhimanyu Saini <abhimanyu.saini@nxp.com>
+> Subject: Re: [PATCH][v2] arm64: Allocate elfcorehdr & crashkernel mem before
+> any reservation
+> 
+> Hi Poonam,
+> 
+> On 04/01/18 15:34, Poonam Aggrwal wrote:
+> > Address for both crashkernel memory and elfcorehdr can be assigned
+> > statically. For crashkernel memory it is via crashkernel=SIZE@ADDRESS
+> > and elfcorehdr_addr via by kexec-utils in dump kernel device tree.
+> 
+> There are some crashkernel=SIZE@ADDRESS values that the user can supply that
+> we must reject. The obvious one is if it overlaps with the kernel text. (this patch
+> won't spot this). We need to read the hardware's reserved regions from the DT
+> before we allocate the crashkernel region, for example if the bootloader
+> reserved a chunk of memory for a frame-buffer, I shouldn't be able to use that
+> as crashkernel memory.
+> 
+> (you shouldn't need to specify an address, doing so prevents the kernel from
+> picking memory it can use)
+> 
+> 
+> > So memory should be reserved for both the above areas before any other
+> > memory reservations are done. Otherwise overlaps may happen and memory
+> > allocations will fail leading to failure in booting the dump capture
+> > kernel.
+> 
+> > Signed-off-by: Guanhua <guanhua.gao@nxp.com>
+> 
+> The first signed-off-by should be the patch author.
+> If you want to credit your colleagues you can use 'CC', or they can give
+> reviewed-by/acked-by to the patch.
+> 
+> 
+> > Signed-off-by: Poonam Aggrwal <poonam.aggrwal@nxp.com>
+> > Signed-off-by: Abhimanyu Saini <abhimanyu.saini@nxp.com>
+> 
+> And the last signed-of-by should be from the person posting to the mailing list.
+> 
+Sure will correct this.
+> 
+> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c index
+> > 00e7b90..24ce15d 100644
+> > --- a/arch/arm64/mm/init.c
+> > +++ b/arch/arm64/mm/init.c
+> > @@ -453,6 +453,14 @@ void __init arm64_memblock_init(void)
+> >  	 * Register the kernel text, kernel data, initrd, and initial
+> >  	 * pagetables with memblock.
+> >  	 */
+> 
+> Please don't insert this code between 'memblock_reserve(__pa_symbol(_text),
+> _end
+> - _text);' and the comment that describes it.
+Thanks for catching this, will fix it.
+> 
+> 
+> > +
+> > +	/* make these the first reservations to avoid chances of
+> > +	 * overlap
+> > +	 */
+> 
+> Nit: comment style
+Right, will fix it.
+> 
+> 
+> > +	reserve_elfcorehdr();
+> 
+> (Moving reserve_elfcorehdr() makes sense, but..)
+> 
+> 
+> > +	reserve_crashkernel();
+> 
+> reserve_crashkernel() does the allocation for the crashkernels reserved memory.
+> I expect this to always fail in the kdump kernel because there isn't enough
+> memory. (fdt_enforce_memory_region() at the top of this function calls
+> memblock_cap_memory_range()).
+> 
+> Moving this allocation above the early_init_fdt_scan_reserved_mem() below
+> means we may allocate memory for the crashdump that is in use by
+> firmware/hardware and described as reserved in the DT.
+Yeah, this is a good point. So ideally the address of the crash kernel should be diligently provided by the user based on the system.
+> 
+> 
+> >  	memblock_reserve(__pa_symbol(_text), _end - _text);  #ifdef
+> > CONFIG_BLK_DEV_INITRD
+> >  	if (initrd_start) {
+> > @@ -472,10 +480,6 @@ void __init arm64_memblock_init(void)
+> >  	else
+> >  		arm64_dma_phys_limit = PHYS_MASK + 1;
+> >
+> > -	reserve_crashkernel();
+> > -
+> > -	reserve_elfcorehdr();
+> > -
+> >  	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+> >
+> >  	dma_contiguous_reserve(arm64_dma_phys_limit);
+> >
+> 
+> 
+> Thanks,
+> 
+> James
 
 _______________________________________________
 kexec mailing list
