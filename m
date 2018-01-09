@@ -1,23 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-io0-x233.google.com ([2607:f8b0:4001:c06::233])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eUB4h-0003fT-Lz
- for kexec@lists.infradead.org; Wed, 27 Dec 2017 12:44:49 +0000
-Date: Wed, 27 Dec 2017 20:44:29 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2] x86/kexec: Exclude GART aperture from vmcore
-Message-ID: <20171227124429.GB15255@x1>
-References: <20171216001514.x5eg37ad4aa2fwqt@dwarf.suse.cz>
- <20171216010142.GK12442@x1>
- <20171217214735.nuxq5zo2eknqpbpi@pd.tnic>
- <20171218134736.GA4035@x1>
- <20171218143753.k7xyq6yiyjisnonh@pd.tnic>
- <20171219015804.GC4035@x1>
- <20171219175827.oqfskuax6zzm2ljq@dwarf.suse.cz>
- <20171227074449.GA15255@x1> <20171227122523.GC13909@nazgul.tnic>
+ id 1eYlyZ-0001mz-CF
+ for kexec@lists.infradead.org; Tue, 09 Jan 2018 04:57:29 +0000
+Received: by mail-io0-x233.google.com with SMTP id f6so17110815ioh.8
+ for <kexec@lists.infradead.org>; Mon, 08 Jan 2018 20:57:16 -0800 (PST)
+Date: Tue, 9 Jan 2018 14:02:18 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: arm64 crashkernel fails to boot on acpi-only machines due to
+ ACPI regions being no longer mapped as NOMAP
+Message-ID: <20180109050216.GB18820@linaro.org>
+References: <20171221103440.GJ28046@linaro.org>
+ <CACi5LpMUnUKxiALAHW9_PE2RYC8GNWLPGpdJ5ca53g=v3rNkfg@mail.gmail.com>
+ <20171222083308.cy3vwlyhig22q5ee@fireball>
+ <CACi5LpNF5i3Eo7nMLr_z9r4VVbXhDwSJCQoiOh-A_jB6hV0_2Q@mail.gmail.com>
+ <20171225032500.GA8877@linaro.org>
+ <CACi5LpMzYidDaC0_yfwgVOisH-FqcNViYj+Z54uKfUtHkJKKXA@mail.gmail.com>
+ <20171226013217.GA2119@dhcp-128-65.nay.redhat.com>
+ <20171226013517.GA2186@dhcp-128-65.nay.redhat.com>
+ <20171226022807.GB8877@linaro.org>
+ <20171226065636.GA5354@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20171227122523.GC13909@nazgul.tnic>
+In-Reply-To: <20171226065636.GA5354@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,28 +35,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Jiri Bohac <jbohac@suse.cz>, Toshi Kani <toshi.kani@hpe.com>, David Airlie <airlied@linux.ie>, yinghai@kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Matt Fleming <matt@codeblueprint.co.uk>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On 12/27/17 at 01:25pm, Borislav Petkov wrote:
-> On Wed, Dec 27, 2017 at 03:44:49PM +0800, Baoquan He wrote:
-> > > yes, instead of crashing the machine (because GART may be initialized in the
-> > > 2nd kernel, overlapping the 1st kernel memory, which the 2nd kernel with its
-> > > fake e820 map sees as unused).
+On Tue, Dec 26, 2017 at 02:56:36PM +0800, Dave Young wrote:
+> On 12/26/17 at 11:28am, AKASHI Takahiro wrote:
+> > On Tue, Dec 26, 2017 at 09:35:17AM +0800, Dave Young wrote:
+> > > [snip]
+> > > > > > Well, we may be able to change pr_warn() to pr_warn_once() here, but
+> > > > > > I hope that adding "numa=off" to kernel command line should also work.
+> > > > > 
+> > > > > Hmm, adding "numa=off" to crashkernel bootargs works, and TBH it was
+> > > > > my initial thought process as well, but I am not sure if this will
+> > > > > cause any regressions on aarch64 systems which use crashdump feature.
+> > > > 
+> > > > It should be fine since we use numa=off by default for all other arches
+> > > > ie. x86, ppc64 and s390. Actually disabling numa in kdump kernel can save
+> > > > mm component memory usage. 
+> > > > 
 > > > 
-> > > I'd say this is an improvement.
+> > > Forgot to say I means in RHEL and Fedora we use numa=off for kdump..
 > > 
-> > I don't get what you said. If 'iommu=off' only specified in 1st kernel,
-> > kdump kernel will think the memory which GART bar pointed as a hole.
-> > This is incorrect. I don't see the improvement.
+> > Thank you for the clarification.
+> > (It might be better to make numa off automatically if maxcpus == 0 (and 1?).)
 > 
-> So he says, this memory is unused. Why is that incorrect?!?
+> Hmm, I did a quick test with qemu/kvm, kdump kernel boot without numa=off
+> I'm not sure why I do not see the warning messages on x86
+> machines, maybe something arm64 specific?
 
-'iommu=off' specified in 1st kernel, that region will be normal memory,
-there could be important kernel data written into the place. While kdump
-kernel will take that region as a gart aperture, trying to read data
-from that region will cause error which Jiri originally tried to fix.
+I didn't see the messages(i.e. "potential offnode page_structs")
+on arm64 qemu (with -smp 2 -numa node -numa node).
 
+It seems that qemu doesn't generate acpi slit(inter-node distance table).
+
+Thanks,
+-Takahiro AKASHI
+
+> > 
+> > -Takahiro AKASHI
 
 _______________________________________________
 kexec mailing list
