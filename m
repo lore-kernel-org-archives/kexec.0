@@ -1,28 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x235.google.com ([2607:f8b0:4001:c06::235])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eYmIG-0003Iw-CT
- for kexec@lists.infradead.org; Tue, 09 Jan 2018 05:17:50 +0000
-Received: by mail-io0-x235.google.com with SMTP id z130so17119206ioe.13
- for <kexec@lists.infradead.org>; Mon, 08 Jan 2018 21:17:37 -0800 (PST)
-Date: Tue, 9 Jan 2018 14:22:38 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: arm64 crashkernel fails to boot on acpi-only machines due to
- ACPI regions being no longer mapped as NOMAP
-Message-ID: <20180109052237.GC18820@linaro.org>
-References: <CACi5LpMUnUKxiALAHW9_PE2RYC8GNWLPGpdJ5ca53g=v3rNkfg@mail.gmail.com>
- <20171222083308.cy3vwlyhig22q5ee@fireball>
- <CACi5LpNF5i3Eo7nMLr_z9r4VVbXhDwSJCQoiOh-A_jB6hV0_2Q@mail.gmail.com>
- <20171225032500.GA8877@linaro.org>
- <CACi5LpMzYidDaC0_yfwgVOisH-FqcNViYj+Z54uKfUtHkJKKXA@mail.gmail.com>
- <20171226013217.GA2119@dhcp-128-65.nay.redhat.com>
- <20171226013517.GA2186@dhcp-128-65.nay.redhat.com>
- <20171226022807.GB8877@linaro.org>
- <CACi5LpNRtXh-j9Y9HwRatDZwRMr++-ZeaSnk62vD3btpxsVv7w@mail.gmail.com>
- <20171226065845.GB5354@dhcp-128-65.nay.redhat.com>
+ id 1eYmJy-0003zK-EI
+ for kexec@lists.infradead.org; Tue, 09 Jan 2018 05:19:36 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: makedumpfile saving vmcore fails with dynamically allocated
+ mem_section (was: Re: [PATCH] handle renamed init_level4_pgt -> init_top_pgt)
+Date: Tue, 9 Jan 2018 05:17:11 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701F336B1@BPXM01GP.gisp.nec.co.jp>
+References: <20171220072443.GA7413@dhcp-128-65.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701F2D609@BPXM01GP.gisp.nec.co.jp>
+ <20171222045444.GA978@dhcp-128-65.nay.redhat.com>
+ <20171222054829.GA21523@dhcp-128-65.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701F31899@BPXM01GP.gisp.nec.co.jp>
+ <20180102085703.GA18368@dhcp-128-65.nay.redhat.com>
+ <20180102090836.GA2338@x1>
+ <20180103023010.GA4889@dhcp-128-65.nay.redhat.com>
+ <20180103023835.GB2338@x1>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701F33131@BPXM01GP.gisp.nec.co.jp>
+ <20180106053623.GA2803@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20180106053623.GA2803@dhcp-128-65.nay.redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20171226065845.GB5354@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,67 +35,155 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Matt Fleming <matt@codeblueprint.co.uk>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "anderson@redhat.com" <anderson@redhat.com>, Keiichirou Suzuki <kei-suzuki@xr.jp.nec.com>, Jeff Mahoney <jeffm@suse.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>
 
-On Tue, Dec 26, 2017 at 02:58:45PM +0800, Dave Young wrote:
-> On 12/26/17 at 08:26am, Bhupesh Sharma wrote:
-> > On Tue, Dec 26, 2017 at 7:58 AM, AKASHI Takahiro
-> > <takahiro.akashi@linaro.org> wrote:
-> > > On Tue, Dec 26, 2017 at 09:35:17AM +0800, Dave Young wrote:
-> > >> [snip]
-> > >> > > > Well, we may be able to change pr_warn() to pr_warn_once() here, but
-> > >> > > > I hope that adding "numa=off" to kernel command line should also work.
-> > >> > >
-> > >> > > Hmm, adding "numa=off" to crashkernel bootargs works, and TBH it was
-> > >> > > my initial thought process as well, but I am not sure if this will
-> > >> > > cause any regressions on aarch64 systems which use crashdump feature.
-> > >> >
-> > >> > It should be fine since we use numa=off by default for all other arches
-> > >> > ie. x86, ppc64 and s390. Actually disabling numa in kdump kernel can save
-> > >> > mm component memory usage.
-> > >> >
-> > >>
-> > >> Forgot to say I means in RHEL and Fedora we use numa=off for kdump..
-> > >
-> > > Thank you for the clarification.
-> > > (It might be better to make numa off automatically if maxcpus == 0 (and 1?).)
-> > >
-> > 
-> > Not sure if we can leave this to the distribution-specific kdump
-> > scripts (as the crashkernel boot can be held up for sufficient time
-> > and may appear stuck). The distribution scripts may be different (for
-> > e.g. ubuntu and RHEL/fedora) across distributions and may have
-> > different bootarg options.
-> 
-> Personally I think distribution should take care of this param as for
-> kdump.  But as AKASHI said it could be a issue for 1st kernel with
-> nr_cpus=1 booting.  Problem is why we do not see this issue on other
-> machines.
+>> >> > > The root cause is this commit makes mem_section as a pointer instead of
+>> >> > > the static array.
+>> >> > >
+>> >> > > VMCOREINFO_SYMBOL() expand it as &mem_section, this is not correct in
+>> >> > > the test case any more.
+>> >> > >
+>> >> > > This hack code works for me:
+>> >> > >
+>> >> > > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+>> >> > > index b3663896278e..f5fe6068ae39 100644
+>> >> > > --- a/kernel/crash_core.c
+>> >> > > +++ b/kernel/crash_core.c
+>> >> > > @@ -376,6 +376,8 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+>> >> > >  {
+>> >> > >  	return __pa(vmcoreinfo_note);
+>> >> > >  }
+>> >> > > +#define VMCOREINFO_SYMBOL_HACK(name) \
+>> >> > > +	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)name)
+>> >> >
+>> >> > Oh, you made a new one. We may use vmcoreinfo_append_str directly since
+>> >> > there's an existing one in crash_save_vmcoreinfo():
+>> >>
+>> >> Yes, it should be something like this instead, this should ensure
+>> >> makedumpfile maybe crash tool works without any modifications,
+>> >> waiting for feedback from Atsushi, also ccing Dave for crash utility
+>> >> potential issue.
+>>
+>> makedumpfile needs some fix anyway since some logic depend on the array length
+>> of mem_section. I'm trying to fix it referring to the crash's fix.
+>
+>Hmm, a makedumpfile only fix is enough for this issue?
 
-The issue won't be kdump-specific. Theoretically, it also takes place
-when "mem=" is specified on numa.
+Sorry, it was thoughtless of me. The crash's fix uses dwarf info,
+the kernel side fix you thought is necessary for makedumpfile to work without
+vmlinux.
 
-Since we can avoid annoying messages by adding "numa=off", I'm reluctant to
-suppress most of messages but the first. My suggestion here is to add some
-notes in Documentation/kdump/kdump.txt regarding NUMA case.
 
 Thanks,
-Takahiro AKASHI
+Atsushi Kumagai
+
+>>
+>> > I'll give priority to release v1.6.3 since the commit will not be included
+>> > in the supported kernel(4.14).
+>>
+>> The kernel change was merged also into kernel 4.14.9, I'm working on this issue
+>> for the next release(v1.6.3).
+>>
+>> Thanks,
+>> Atsushi Kumagai
+>>
+>> >> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+>> >> index b3663896278e..122494364179 100644
+>> >> --- a/kernel/crash_core.c
+>> >> +++ b/kernel/crash_core.c
+>> >> @@ -410,10 +410,16 @@ static int __init crash_save_vmcoreinfo_init(void)
+>> >>  	VMCOREINFO_SYMBOL(contig_page_data);
+>> >>  #endif
+>> >>  #ifdef CONFIG_SPARSEMEM
+>> >> +#ifdef CONFIG_SPARSEMEM_EXTREME
+>> >> +	vmcoreinfo_append_str("SYMBOL(mem_section)=%lx\n",
+>> >> +			      (unsigned long)mem_section);
+>> >> +#else
+>> >>  	VMCOREINFO_SYMBOL(mem_section);
+>> >> +#endif
+>> >
+>> >	vmcoreinfo_append_str("SYMBOL(mem_section)=%lx\n",
+>> >				(unsigned long)mem_section);
+>> >
+>> >This is enough to cover both cases. mem_section is array name in non
+>> >SPARSEMEM_EXTREME case, so value of &mem_section == value of
+>> >mem_section.
+>> >
+>> >>  	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+>> >>  	VMCOREINFO_STRUCT_SIZE(mem_section);
+>> >>  	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+>> >> +
+>> >>  #endif
+>> >>  	VMCOREINFO_STRUCT_SIZE(page);
+>> >>  	VMCOREINFO_STRUCT_SIZE(pglist_data);
+>> >>
+>> >> >
+>> >> > vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
+>> >> >
+>> >> > The thing is that VMCOREINFO_SYMBOL will reference symbol. While
+>> >> > checking all exported symbol, all of them are array names. So here
+>> >> > the value of &array_name is equal to the address of the first element of
+>> >> > array. Now the first exception appeared, mem_section, which could be not
+>> >> > an array name, but a pointer pointing at the allocated memory.
+>> >> >
+>> >> > For this issue, we either change as Dave mentioned two options, or can
+>> >> > we adjust VMCOREINFO_SYMBOL(name)?
+>> >> >
+>> >> > >
+>> >> > >  static int __init crash_save_vmcoreinfo_init(void)
+>> >> > >  {
+>> >> > > @@ -410,10 +412,11 @@ static int __init crash_save_vmcoreinfo_init(void)
+>> >> > >  	VMCOREINFO_SYMBOL(contig_page_data);
+>> >> > >  #endif
+>> >> > >  #ifdef CONFIG_SPARSEMEM
+>> >> > > -	VMCOREINFO_SYMBOL(mem_section);
+>> >> > > +	VMCOREINFO_SYMBOL_HACK(mem_section);
+>> >> > >  	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+>> >> > >  	VMCOREINFO_STRUCT_SIZE(mem_section);
+>> >> > >  	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+>> >> > > +
+>> >> > >  #endif
+>> >> > >  	VMCOREINFO_STRUCT_SIZE(page);
+>> >> > >  	VMCOREINFO_STRUCT_SIZE(pglist_data);
+>> >> > >
+>> >> > >
+>> >> > > But probably we need this instead, but I can not test it because I do
+>> >> > > not know how to fix makedumpfile to use a _NUMBER instead of a SYMBOL.
+>> >> > > Thus bring up the issue, seeking for thoughts and discussion.
+>> >> > >
+>> >> > > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+>> >> > > index b3663896278e..dfa2238e2c28 100644
+>> >> > > --- a/kernel/crash_core.c
+>> >> > > +++ b/kernel/crash_core.c
+>> >> > > @@ -410,10 +410,17 @@ static int __init crash_save_vmcoreinfo_init(void)
+>> >> > > 	VMCOREINFO_SYMBOL(contig_page_data);
+>> >> > >  #endif
+>> >> > >  #ifdef CONFIG_SPARSEMEM
+>> >> > > +#ifdef CONFIG_SPARSEMEM_EXTREME
+>> >> > > +	VMCOREINFO_NUMBER(mem_section);
+>> >> > > +#else
+>> >> > > 	VMCOREINFO_SYMBOL(mem_section);
+>> >> > > +#endif
+>> >> > > 	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+>> >> > > 	VMCOREINFO_STRUCT_SIZE(mem_section);
+>> >> > > 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+>> >> > >
+>> >> > > [snip]
+>> >> > >
+>> >> > > Thanks
+>> >> > > Dave
+>>
+>>
+>
+>Thanks
+>Dave
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 
-> > 
-> > So how about considering a kernel fix only which doesn't require
-> > relying on changing the distribution-specific kdump scripts, as we
-> > should avoid introducing a regression while trying to fix a regression
-> > :)
-> > 
-> > Just my 2 cents.
-> > 
-> > Thanks,
-> > Bhupesh
-> 
-> Thanks
-> Dave
 
 _______________________________________________
 kexec mailing list
