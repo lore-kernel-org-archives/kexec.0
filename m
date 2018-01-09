@@ -1,29 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-f178.google.com ([209.85.223.178])
+Received: from mail-wm0-x243.google.com ([2a00:1450:400c:c09::243])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eYdam-0002ho-6T
- for kexec@lists.infradead.org; Mon, 08 Jan 2018 20:00:28 +0000
-Received: by mail-io0-f178.google.com with SMTP id 87so15925501ior.5
- for <kexec@lists.infradead.org>; Mon, 08 Jan 2018 12:00:09 -0800 (PST)
+ id 1eYhXa-0004AH-MK
+ for kexec@lists.infradead.org; Tue, 09 Jan 2018 00:13:20 +0000
+Received: by mail-wm0-x243.google.com with SMTP id r78so17329533wme.5
+ for <kexec@lists.infradead.org>; Mon, 08 Jan 2018 16:13:07 -0800 (PST)
+Date: Tue, 9 Jan 2018 03:13:03 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+Subject: Re: [PATCH 4.14 023/159] mm/sparsemem: Allocate mem_section at
+ runtime for CONFIG_SPARSEMEM_EXTREME=y
+Message-ID: <20180109001303.dy73bpixsaegn4ol@node.shutemov.name>
+References: <20171222084623.668990192@linuxfoundation.org>
+ <20171222084625.007160464@linuxfoundation.org>
+ <1515302062.6507.18.camel@gmx.de>
+ <20180108160444.2ol4fvgqbxnjmlpg@gmail.com>
+ <20180108174653.7muglyihpngxp5tl@black.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CACi5LpNRtXh-j9Y9HwRatDZwRMr++-ZeaSnk62vD3btpxsVv7w@mail.gmail.com>
-References: <CAKv+Gu-gmbWdZ7rxp5qGrtSBQ7dM=3FqF-Pw=J0LaL=oKTMg4w@mail.gmail.com>
- <CACi5LpOscbcBecWaC3Q9P22kheRYc+M2Ynfusszk14fPY-cJ5A@mail.gmail.com>
- <20171221103440.GJ28046@linaro.org>
- <CACi5LpMUnUKxiALAHW9_PE2RYC8GNWLPGpdJ5ca53g=v3rNkfg@mail.gmail.com>
- <20171222083308.cy3vwlyhig22q5ee@fireball>
- <CACi5LpNF5i3Eo7nMLr_z9r4VVbXhDwSJCQoiOh-A_jB6hV0_2Q@mail.gmail.com>
- <20171225032500.GA8877@linaro.org>
- <CACi5LpMzYidDaC0_yfwgVOisH-FqcNViYj+Z54uKfUtHkJKKXA@mail.gmail.com>
- <20171226013217.GA2119@dhcp-128-65.nay.redhat.com>
- <20171226013517.GA2186@dhcp-128-65.nay.redhat.com>
- <20171226022807.GB8877@linaro.org>
- <CACi5LpNRtXh-j9Y9HwRatDZwRMr++-ZeaSnk62vD3btpxsVv7w@mail.gmail.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 9 Jan 2018 01:30:07 +0530
-Message-ID: <CACi5LpNeSNHoUcM9xOq0bjN_okaEUDbaz1qyuqAct7BSNLQqKQ@mail.gmail.com>
-Subject: Re: arm64 crashkernel fails to boot on acpi-only machines due to ACPI
- regions being no longer mapped as NOMAP
+Content-Disposition: inline
+In-Reply-To: <20180108174653.7muglyihpngxp5tl@black.fi.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,59 +30,86 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Dave Young <dyoung@redhat.com>, Bhupesh Sharma <bhsharma@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Matt Fleming <matt@codeblueprint.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org
+To: Ingo Molnar <mingo@kernel.org>, Mike Galbraith <efault@gmx.de>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, linux-mm@kvack.org, Vivek Goyal <vgoyal@redhat.com>, Cyrill Gorcunov <gorcunov@openvz.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, Linus Torvalds <torvalds@linux-foundation.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 
-Hello Akashi,
+On Mon, Jan 08, 2018 at 08:46:53PM +0300, Kirill A. Shutemov wrote:
+> On Mon, Jan 08, 2018 at 04:04:44PM +0000, Ingo Molnar wrote:
+> > 
+> > hi Kirill,
+> > 
+> > As Mike reported it below, your 5-level paging related upstream commit 
+> > 83e3c48729d9 and all its followup fixes:
+> > 
+> >  83e3c48729d9: mm/sparsemem: Allocate mem_section at runtime for CONFIG_SPARSEMEM_EXTREME=y
+> >  629a359bdb0e: mm/sparsemem: Fix ARM64 boot crash when CONFIG_SPARSEMEM_EXTREME=y
+> >  d09cfbbfa0f7: mm/sparse.c: wrong allocation for mem_section
+> > 
+> > ... still breaks kexec - and that now regresses -stable as well.
+> > 
+> > Given that 5-level paging now syntactically depends on having this commit, if we 
+> > fully revert this then we'll have to disable 5-level paging as well.
 
-On Tue, Dec 26, 2017 at 8:26 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> On Tue, Dec 26, 2017 at 7:58 AM, AKASHI Takahiro
-> <takahiro.akashi@linaro.org> wrote:
->> On Tue, Dec 26, 2017 at 09:35:17AM +0800, Dave Young wrote:
->>> [snip]
->>> > > > Well, we may be able to change pr_warn() to pr_warn_once() here, but
->>> > > > I hope that adding "numa=off" to kernel command line should also work.
->>> > >
->>> > > Hmm, adding "numa=off" to crashkernel bootargs works, and TBH it was
->>> > > my initial thought process as well, but I am not sure if this will
->>> > > cause any regressions on aarch64 systems which use crashdump feature.
->>> >
->>> > It should be fine since we use numa=off by default for all other arches
->>> > ie. x86, ppc64 and s390. Actually disabling numa in kdump kernel can save
->>> > mm component memory usage.
->>> >
->>>
->>> Forgot to say I means in RHEL and Fedora we use numa=off for kdump..
->>
->> Thank you for the clarification.
->> (It might be better to make numa off automatically if maxcpus == 0 (and 1?).)
->>
->
-> Not sure if we can leave this to the distribution-specific kdump
-> scripts (as the crashkernel boot can be held up for sufficient time
-> and may appear stuck). The distribution scripts may be different (for
-> e.g. ubuntu and RHEL/fedora) across distributions and may have
-> different bootarg options.
->
-> So how about considering a kernel fix only which doesn't require
-> relying on changing the distribution-specific kdump scripts, as we
-> should avoid introducing a regression while trying to fix a regression
-> :)
->
-> Just my 2 cents.
->
+This *should* help.
 
-Sorry for the delay but I was on holidays in the last week.
+Mike, could you test this? (On top of the rest of the fixes.)
 
-Are you planning to send a patch to fix this issue or do you want me
-to send a RFC version instead?
+Sorry for the mess.
 
-i think this is a blocking issue for aarch64 kdump support on newer
-kernels (v4.14) and we are already hearing about this issue from other
-users as well, so it would be great to get this fixed now that we have
-root-caused the issue and found a possible way around.
+From 100fd567754f1457be94732046aefca204c842d2 Mon Sep 17 00:00:00 2001
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Date: Tue, 9 Jan 2018 02:55:47 +0300
+Subject: [PATCH] kdump: Write a correct address of mem_section into vmcoreinfo
 
-Regards,
-Bhupesh
+Depending on configuration mem_section can now be an array or a pointer
+to an array allocated dynamically. In most cases, we can continue to refer
+to it as 'mem_section' regardless of what it is.
+
+But there's one exception: '&mem_section' means "address of the array" if
+mem_section is an array, but if mem_section is a pointer, it would mean
+"address of the pointer".
+
+We've stepped onto this in kdump code. VMCOREINFO_SYMBOL(mem_section)
+writes down address of pointer into vmcoreinfo, not array as we wanted.
+
+Let's introduce VMCOREINFO_ARRAY() that would handle the situation
+correctly for both cases.
+
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Fixes: 83e3c48729d9 ("mm/sparsemem: Allocate mem_section at runtime for CONFIG_SPARSEMEM_EXTREME=y")
+---
+ include/linux/crash_core.h | 2 ++
+ kernel/crash_core.c        | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index 06097ef30449..83ae04950269 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -42,6 +42,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+ 	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
+ #define VMCOREINFO_SYMBOL(name) \
+ 	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
++#define VMCOREINFO_ARRAY(name) \
++	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)name)
+ #define VMCOREINFO_SIZE(name) \
+ 	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
+ 			      (unsigned long)sizeof(name))
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index b3663896278e..d4122a837477 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -410,7 +410,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_SYMBOL(contig_page_data);
+ #endif
+ #ifdef CONFIG_SPARSEMEM
+-	VMCOREINFO_SYMBOL(mem_section);
++	VMCOREINFO_ARRAY(mem_section);
+ 	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+ 	VMCOREINFO_STRUCT_SIZE(mem_section);
+ 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+-- 
+ Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
