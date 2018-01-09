@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-wm0-x22f.google.com ([2a00:1450:400c:c09::22f])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eYoHP-0008HK-G8
- for kexec@lists.infradead.org; Tue, 09 Jan 2018 07:25:06 +0000
-Date: Tue, 9 Jan 2018 15:24:40 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1eYprD-0008Mn-HY
+ for kexec@lists.infradead.org; Tue, 09 Jan 2018 09:06:09 +0000
+Received: by mail-wm0-x22f.google.com with SMTP id i11so19013702wmf.4
+ for <kexec@lists.infradead.org>; Tue, 09 Jan 2018 01:05:56 -0800 (PST)
+Date: Tue, 9 Jan 2018 12:05:52 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
 Subject: Re: [PATCH 4.14 023/159] mm/sparsemem: Allocate mem_section at
  runtime for CONFIG_SPARSEMEM_EXTREME=y
-Message-ID: <20180109072440.GA6521@dhcp-128-65.nay.redhat.com>
+Message-ID: <20180109090552.45ddfk2y25lf4uyn@node.shutemov.name>
 References: <20171222084623.668990192@linuxfoundation.org>
  <20171222084625.007160464@linuxfoundation.org>
  <1515302062.6507.18.camel@gmx.de>
@@ -16,9 +18,10 @@ References: <20171222084623.668990192@linuxfoundation.org>
  <20180109001303.dy73bpixsaegn4ol@node.shutemov.name>
  <20180109010927.GA2082@dhcp-128-65.nay.redhat.com>
  <20180109054131.GB1935@localhost.localdomain>
+ <20180109072440.GA6521@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180109054131.GB1935@localhost.localdomain>
+In-Reply-To: <20180109072440.GA6521@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,117 +34,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Galbraith <efault@gmx.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>, Cyrill Gorcunov <gorcunov@openvz.org>, "Kirill A. Shutemov" <kirill@shutemov.name>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Galbraith <efault@gmx.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>, Cyrill Gorcunov <gorcunov@openvz.org>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 
-On 01/09/18 at 01:41pm, Baoquan He wrote:
-> On 01/09/18 at 09:09am, Dave Young wrote:
-> > On 01/09/18 at 03:13am, Kirill A. Shutemov wrote:
-> > > On Mon, Jan 08, 2018 at 08:46:53PM +0300, Kirill A. Shutemov wrote:
-> > > > On Mon, Jan 08, 2018 at 04:04:44PM +0000, Ingo Molnar wrote:
-> > > > > 
-> > > > > hi Kirill,
-> > > > > 
-> > > > > As Mike reported it below, your 5-level paging related upstream commit 
-> > > > > 83e3c48729d9 and all its followup fixes:
-> > > > > 
-> > > > >  83e3c48729d9: mm/sparsemem: Allocate mem_section at runtime for CONFIG_SPARSEMEM_EXTREME=y
-> > > > >  629a359bdb0e: mm/sparsemem: Fix ARM64 boot crash when CONFIG_SPARSEMEM_EXTREME=y
-> > > > >  d09cfbbfa0f7: mm/sparse.c: wrong allocation for mem_section
-> > > > > 
-> > > > > ... still breaks kexec - and that now regresses -stable as well.
-> > > > > 
-> > > > > Given that 5-level paging now syntactically depends on having this commit, if we 
-> > > > > fully revert this then we'll have to disable 5-level paging as well.
-> > > 
-> > > This *should* help.
-> > > 
-> > > Mike, could you test this? (On top of the rest of the fixes.)
-> > > 
-> > > Sorry for the mess.
-> > > 
-> > > From 100fd567754f1457be94732046aefca204c842d2 Mon Sep 17 00:00:00 2001
-> > > From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> > > Date: Tue, 9 Jan 2018 02:55:47 +0300
-> > > Subject: [PATCH] kdump: Write a correct address of mem_section into vmcoreinfo
-> > > 
-> > > Depending on configuration mem_section can now be an array or a pointer
-> > > to an array allocated dynamically. In most cases, we can continue to refer
-> > > to it as 'mem_section' regardless of what it is.
-> > > 
-> > > But there's one exception: '&mem_section' means "address of the array" if
-> > > mem_section is an array, but if mem_section is a pointer, it would mean
-> > > "address of the pointer".
-> > > 
-> > > We've stepped onto this in kdump code. VMCOREINFO_SYMBOL(mem_section)
-> > > writes down address of pointer into vmcoreinfo, not array as we wanted.
-> > > 
-> > > Let's introduce VMCOREINFO_ARRAY() that would handle the situation
-> > > correctly for both cases.
-> > > 
-> > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > > Fixes: 83e3c48729d9 ("mm/sparsemem: Allocate mem_section at runtime for CONFIG_SPARSEMEM_EXTREME=y")
-> > > ---
-> > >  include/linux/crash_core.h | 2 ++
-> > >  kernel/crash_core.c        | 2 +-
-> > >  2 files changed, 3 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> > > index 06097ef30449..83ae04950269 100644
-> > > --- a/include/linux/crash_core.h
-> > > +++ b/include/linux/crash_core.h
-> > > @@ -42,6 +42,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
-> > >  	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
-> > >  #define VMCOREINFO_SYMBOL(name) \
-> > >  	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
-> > > +#define VMCOREINFO_ARRAY(name) \
+On Tue, Jan 09, 2018 at 03:24:40PM +0800, Dave Young wrote:
+> On 01/09/18 at 01:41pm, Baoquan He wrote:
+> > On 01/09/18 at 09:09am, Dave Young wrote:
 > > 
-> > Thanks for the patch, I have a similar patch but makedumpfile maintainer
-> > is looking at a userspace fix instead.
-> 
-> Seems we should add lkml to CC next time so that people can watch it.
+> > > As for the macro name, VMCOREINFO_SYMBOL_ARRAY sounds better.
 
-Yes, agreed.
+Yep, that's better.
 
-> 
-> > As for the macro name, VMCOREINFO_SYMBOL_ARRAY sounds better.
-> 
-> I still think using vmcoreinfo_append_str is better. Unless we replace
-> all array variables with the newly added macro.
-> 
-> vmcoreinfo_append_str("SYMBOL(mem_section)=%lx\n",
->                                 (unsigned long)mem_section);
-
-I have no strong opinion, either change all array uses or just introduce
-the macro and start to use it from now on if we have similar array
-symbols.
-
+> > I still think using vmcoreinfo_append_str is better. Unless we replace
+> > all array variables with the newly added macro.
 > > 
-> > > +	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)name)
-> > >  #define VMCOREINFO_SIZE(name) \
-> > >  	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
-> > >  			      (unsigned long)sizeof(name))
-> > > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> > > index b3663896278e..d4122a837477 100644
-> > > --- a/kernel/crash_core.c
-> > > +++ b/kernel/crash_core.c
-> > > @@ -410,7 +410,7 @@ static int __init crash_save_vmcoreinfo_init(void)
-> > >  	VMCOREINFO_SYMBOL(contig_page_data);
-> > >  #endif
-> > >  #ifdef CONFIG_SPARSEMEM
-> > > -	VMCOREINFO_SYMBOL(mem_section);
-> > > +	VMCOREINFO_ARRAY(mem_section);
-> > >  	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
-> > >  	VMCOREINFO_STRUCT_SIZE(mem_section);
-> > >  	VMCOREINFO_OFFSET(mem_section, section_mem_map);
-> > > -- 
-> > >  Kirill A. Shutemov
-> > 
-> > Thanks
-> > Dave
+> > vmcoreinfo_append_str("SYMBOL(mem_section)=%lx\n",
+> >                                 (unsigned long)mem_section);
+> 
+> I have no strong opinion, either change all array uses or just introduce
+> the macro and start to use it from now on if we have similar array
+> symbols.
 
-Thanks
-Dave
+Do you need some action on my side or will you folks take care about this?
+
+-- 
+ Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
