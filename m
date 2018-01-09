@@ -1,22 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mout.gmx.net ([212.227.15.18])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eYiQI-000413-Ib
- for kexec@lists.infradead.org; Tue, 09 Jan 2018 01:09:53 +0000
-Date: Tue, 9 Jan 2018 09:09:27 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1eYkqT-0001sq-CW
+ for kexec@lists.infradead.org; Tue, 09 Jan 2018 03:45:04 +0000
+Message-ID: <1515469448.6766.12.camel@gmx.de>
 Subject: Re: [PATCH 4.14 023/159] mm/sparsemem: Allocate mem_section at
  runtime for CONFIG_SPARSEMEM_EXTREME=y
-Message-ID: <20180109010927.GA2082@dhcp-128-65.nay.redhat.com>
+From: Mike Galbraith <efault@gmx.de>
+Date: Tue, 09 Jan 2018 04:44:08 +0100
+In-Reply-To: <20180109001303.dy73bpixsaegn4ol@node.shutemov.name>
 References: <20171222084623.668990192@linuxfoundation.org>
  <20171222084625.007160464@linuxfoundation.org>
  <1515302062.6507.18.camel@gmx.de>
  <20180108160444.2ol4fvgqbxnjmlpg@gmail.com>
  <20180108174653.7muglyihpngxp5tl@black.fi.intel.com>
  <20180109001303.dy73bpixsaegn4ol@node.shutemov.name>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180109001303.dy73bpixsaegn4ol@node.shutemov.name>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,33 +28,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Galbraith <efault@gmx.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>, Cyrill Gorcunov <gorcunov@openvz.org>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: "Kirill A. Shutemov" <kirill@shutemov.name>, Ingo Molnar <mingo@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, linux-mm@kvack.org, Vivek Goyal <vgoyal@redhat.com>, Cyrill Gorcunov <gorcunov@openvz.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, Linus Torvalds <torvalds@linux-foundation.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 
-On 01/09/18 at 03:13am, Kirill A. Shutemov wrote:
-> On Mon, Jan 08, 2018 at 08:46:53PM +0300, Kirill A. Shutemov wrote:
-> > On Mon, Jan 08, 2018 at 04:04:44PM +0000, Ingo Molnar wrote:
-> > > 
-> > > hi Kirill,
-> > > 
-> > > As Mike reported it below, your 5-level paging related upstream commit 
-> > > 83e3c48729d9 and all its followup fixes:
-> > > 
-> > >  83e3c48729d9: mm/sparsemem: Allocate mem_section at runtime for CONFIG_SPARSEMEM_EXTREME=y
-> > >  629a359bdb0e: mm/sparsemem: Fix ARM64 boot crash when CONFIG_SPARSEMEM_EXTREME=y
-> > >  d09cfbbfa0f7: mm/sparse.c: wrong allocation for mem_section
-> > > 
-> > > ... still breaks kexec - and that now regresses -stable as well.
-> > > 
-> > > Given that 5-level paging now syntactically depends on having this commit, if we 
-> > > fully revert this then we'll have to disable 5-level paging as well.
-> 
-> This *should* help.
+On Tue, 2018-01-09 at 03:13 +0300, Kirill A. Shutemov wrote:
 > 
 > Mike, could you test this? (On top of the rest of the fixes.)
-> 
+
+homer:..crash/2018-01-09-04:25 # ll
+total 1863604
+-rw------- 1 root root      66255 Jan  9 04:25 dmesg.txt
+-rw-r--r-- 1 root root        182 Jan  9 04:25 README.txt
+-rw-r--r-- 1 root root    2818240 Jan  9 04:25 System.map-4.15.0.gb2cd1df-master
+-rw------- 1 root root 1832914928 Jan  9 04:25 vmcore
+-rw-r--r-- 1 root root   72514993 Jan  9 04:25 vmlinux-4.15.0.gb2cd1df-master.gz
+
+Yup, all better.
+
 > Sorry for the mess.
-> 
+
+(why, developers not installing shiny new bugs is a whole lot worse:)
+
 > From 100fd567754f1457be94732046aefca204c842d2 Mon Sep 17 00:00:00 2001
 > From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 > Date: Tue, 9 Jan 2018 02:55:47 +0300
@@ -91,12 +84,6 @@ On 01/09/18 at 03:13am, Kirill A. Shutemov wrote:
 >  #define VMCOREINFO_SYMBOL(name) \
 >  	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
 > +#define VMCOREINFO_ARRAY(name) \
-
-Thanks for the patch, I have a similar patch but makedumpfile maintainer
-is looking at a userspace fix instead.
-
-As for the macro name, VMCOREINFO_SYMBOL_ARRAY sounds better.
-
 > +	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)name)
 >  #define VMCOREINFO_SIZE(name) \
 >  	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
@@ -114,11 +101,6 @@ As for the macro name, VMCOREINFO_SYMBOL_ARRAY sounds better.
 >  	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
 >  	VMCOREINFO_STRUCT_SIZE(mem_section);
 >  	VMCOREINFO_OFFSET(mem_section, section_mem_map);
-> -- 
->  Kirill A. Shutemov
-
-Thanks
-Dave
 
 _______________________________________________
 kexec mailing list
