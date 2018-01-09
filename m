@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x236.google.com ([2607:f8b0:4001:c0b::236])
+Received: from mail-io0-x235.google.com ([2607:f8b0:4001:c06::235])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eYlfn-0000zM-Hp
- for kexec@lists.infradead.org; Tue, 09 Jan 2018 04:38:05 +0000
-Received: by mail-it0-x236.google.com with SMTP id f143so10344681itb.0
- for <kexec@lists.infradead.org>; Mon, 08 Jan 2018 20:37:51 -0800 (PST)
-Date: Tue, 9 Jan 2018 13:42:53 +0900
+ id 1eYmIG-0003Iw-CT
+ for kexec@lists.infradead.org; Tue, 09 Jan 2018 05:17:50 +0000
+Received: by mail-io0-x235.google.com with SMTP id z130so17119206ioe.13
+ for <kexec@lists.infradead.org>; Mon, 08 Jan 2018 21:17:37 -0800 (PST)
+Date: Tue, 9 Jan 2018 14:22:38 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Subject: Re: arm64 crashkernel fails to boot on acpi-only machines due to
  ACPI regions being no longer mapped as NOMAP
-Message-ID: <20180109030717.GA18820@linaro.org>
+Message-ID: <20180109052237.GC18820@linaro.org>
 References: <CACi5LpMUnUKxiALAHW9_PE2RYC8GNWLPGpdJ5ca53g=v3rNkfg@mail.gmail.com>
  <20171222083308.cy3vwlyhig22q5ee@fireball>
  <CACi5LpNF5i3Eo7nMLr_z9r4VVbXhDwSJCQoiOh-A_jB6hV0_2Q@mail.gmail.com>
@@ -19,10 +19,10 @@ References: <CACi5LpMUnUKxiALAHW9_PE2RYC8GNWLPGpdJ5ca53g=v3rNkfg@mail.gmail.com>
  <20171226013517.GA2186@dhcp-128-65.nay.redhat.com>
  <20171226022807.GB8877@linaro.org>
  <CACi5LpNRtXh-j9Y9HwRatDZwRMr++-ZeaSnk62vD3btpxsVv7w@mail.gmail.com>
- <CACi5LpNeSNHoUcM9xOq0bjN_okaEUDbaz1qyuqAct7BSNLQqKQ@mail.gmail.com>
+ <20171226065845.GB5354@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CACi5LpNeSNHoUcM9xOq0bjN_okaEUDbaz1qyuqAct7BSNLQqKQ@mail.gmail.com>
+In-Reply-To: <20171226065845.GB5354@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,70 +35,68 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Matt Fleming <matt@codeblueprint.co.uk>, kexec@lists.infradead.org, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Dave Young <dyoung@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Matt Fleming <matt@codeblueprint.co.uk>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Bhupesh,
-
-On Tue, Jan 09, 2018 at 01:30:07AM +0530, Bhupesh Sharma wrote:
-> Hello Akashi,
-> 
-> On Tue, Dec 26, 2017 at 8:26 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+On Tue, Dec 26, 2017 at 02:58:45PM +0800, Dave Young wrote:
+> On 12/26/17 at 08:26am, Bhupesh Sharma wrote:
 > > On Tue, Dec 26, 2017 at 7:58 AM, AKASHI Takahiro
 > > <takahiro.akashi@linaro.org> wrote:
-> >> On Tue, Dec 26, 2017 at 09:35:17AM +0800, Dave Young wrote:
-> >>> [snip]
-> >>> > > > Well, we may be able to change pr_warn() to pr_warn_once() here, but
-> >>> > > > I hope that adding "numa=off" to kernel command line should also work.
-> >>> > >
-> >>> > > Hmm, adding "numa=off" to crashkernel bootargs works, and TBH it was
-> >>> > > my initial thought process as well, but I am not sure if this will
-> >>> > > cause any regressions on aarch64 systems which use crashdump feature.
-> >>> >
-> >>> > It should be fine since we use numa=off by default for all other arches
-> >>> > ie. x86, ppc64 and s390. Actually disabling numa in kdump kernel can save
-> >>> > mm component memory usage.
-> >>> >
-> >>>
-> >>> Forgot to say I means in RHEL and Fedora we use numa=off for kdump..
-> >>
-> >> Thank you for the clarification.
-> >> (It might be better to make numa off automatically if maxcpus == 0 (and 1?).)
-> >>
-> >
+> > > On Tue, Dec 26, 2017 at 09:35:17AM +0800, Dave Young wrote:
+> > >> [snip]
+> > >> > > > Well, we may be able to change pr_warn() to pr_warn_once() here, but
+> > >> > > > I hope that adding "numa=off" to kernel command line should also work.
+> > >> > >
+> > >> > > Hmm, adding "numa=off" to crashkernel bootargs works, and TBH it was
+> > >> > > my initial thought process as well, but I am not sure if this will
+> > >> > > cause any regressions on aarch64 systems which use crashdump feature.
+> > >> >
+> > >> > It should be fine since we use numa=off by default for all other arches
+> > >> > ie. x86, ppc64 and s390. Actually disabling numa in kdump kernel can save
+> > >> > mm component memory usage.
+> > >> >
+> > >>
+> > >> Forgot to say I means in RHEL and Fedora we use numa=off for kdump..
+> > >
+> > > Thank you for the clarification.
+> > > (It might be better to make numa off automatically if maxcpus == 0 (and 1?).)
+> > >
+> > 
 > > Not sure if we can leave this to the distribution-specific kdump
 > > scripts (as the crashkernel boot can be held up for sufficient time
 > > and may appear stuck). The distribution scripts may be different (for
 > > e.g. ubuntu and RHEL/fedora) across distributions and may have
 > > different bootarg options.
-> >
+> 
+> Personally I think distribution should take care of this param as for
+> kdump.  But as AKASHI said it could be a issue for 1st kernel with
+> nr_cpus=1 booting.  Problem is why we do not see this issue on other
+> machines.
+
+The issue won't be kdump-specific. Theoretically, it also takes place
+when "mem=" is specified on numa.
+
+Since we can avoid annoying messages by adding "numa=off", I'm reluctant to
+suppress most of messages but the first. My suggestion here is to add some
+notes in Documentation/kdump/kdump.txt regarding NUMA case.
+
+Thanks,
+Takahiro AKASHI
+
+
+> > 
 > > So how about considering a kernel fix only which doesn't require
 > > relying on changing the distribution-specific kdump scripts, as we
 > > should avoid introducing a regression while trying to fix a regression
 > > :)
-> >
+> > 
 > > Just my 2 cents.
-> >
+> > 
+> > Thanks,
+> > Bhupesh
 > 
-> Sorry for the delay but I was on holidays in the last week.
-> 
-> Are you planning to send a patch to fix this issue or do you want me
-> to send a RFC version instead?
-
-I should have submitted my own patch before my new year holidays,
-but I will do so as soon as possible.
-
-Thanks,
--Takahiro AKASHI
-
-
-> i think this is a blocking issue for aarch64 kdump support on newer
-> kernels (v4.14) and we are already hearing about this issue from other
-> users as well, so it would be great to get this fixed now that we have
-> root-caused the issue and found a possible way around.
-> 
-> Regards,
-> Bhupesh
+> Thanks
+> Dave
 
 _______________________________________________
 kexec mailing list
