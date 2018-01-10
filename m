@@ -1,28 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-f48.google.com ([209.85.214.48])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eYsML-00035E-3U
- for kexec@lists.infradead.org; Tue, 09 Jan 2018 11:47:29 +0000
-Received: by mail-it0-f48.google.com with SMTP id p139so11303154itb.1
- for <kexec@lists.infradead.org>; Tue, 09 Jan 2018 03:46:14 -0800 (PST)
+ id 1eZ6kb-0001fF-Dz
+ for kexec@lists.infradead.org; Wed, 10 Jan 2018 03:08:27 +0000
+Date: Wed, 10 Jan 2018 11:08:04 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 4.14 023/159] mm/sparsemem: Allocate mem_section at
+ runtime for CONFIG_SPARSEMEM_EXTREME=y
+Message-ID: <20180110030804.GB1744@dhcp-128-110.nay.redhat.com>
+References: <20171222084623.668990192@linuxfoundation.org>
+ <20171222084625.007160464@linuxfoundation.org>
+ <1515302062.6507.18.camel@gmx.de>
+ <20180108160444.2ol4fvgqbxnjmlpg@gmail.com>
+ <20180108174653.7muglyihpngxp5tl@black.fi.intel.com>
+ <20180109001303.dy73bpixsaegn4ol@node.shutemov.name>
+ <20180109010927.GA2082@dhcp-128-65.nay.redhat.com>
+ <20180109054131.GB1935@localhost.localdomain>
+ <20180109072440.GA6521@dhcp-128-65.nay.redhat.com>
+ <20180109090552.45ddfk2y25lf4uyn@node.shutemov.name>
 MIME-Version: 1.0
-In-Reply-To: <20180109030717.GA18820@linaro.org>
-References: <CACi5LpMUnUKxiALAHW9_PE2RYC8GNWLPGpdJ5ca53g=v3rNkfg@mail.gmail.com>
- <20171222083308.cy3vwlyhig22q5ee@fireball>
- <CACi5LpNF5i3Eo7nMLr_z9r4VVbXhDwSJCQoiOh-A_jB6hV0_2Q@mail.gmail.com>
- <20171225032500.GA8877@linaro.org>
- <CACi5LpMzYidDaC0_yfwgVOisH-FqcNViYj+Z54uKfUtHkJKKXA@mail.gmail.com>
- <20171226013217.GA2119@dhcp-128-65.nay.redhat.com>
- <20171226013517.GA2186@dhcp-128-65.nay.redhat.com>
- <20171226022807.GB8877@linaro.org>
- <CACi5LpNRtXh-j9Y9HwRatDZwRMr++-ZeaSnk62vD3btpxsVv7w@mail.gmail.com>
- <CACi5LpNeSNHoUcM9xOq0bjN_okaEUDbaz1qyuqAct7BSNLQqKQ@mail.gmail.com>
- <20180109030717.GA18820@linaro.org>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 9 Jan 2018 17:16:12 +0530
-Message-ID: <CACi5LpNq0USxDDJ-c=zYdFpR6fQx59aHJN9Z1SRCsXG89OQsZg@mail.gmail.com>
-Subject: Re: arm64 crashkernel fails to boot on acpi-only machines due to ACPI
- regions being no longer mapped as NOMAP
+Content-Disposition: inline
+In-Reply-To: <20180109090552.45ddfk2y25lf4uyn@node.shutemov.name>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,75 +33,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, Dave Young <dyoung@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Matt Fleming <matt@codeblueprint.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Galbraith <efault@gmx.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>, Cyrill Gorcunov <gorcunov@openvz.org>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 
-On Tue, Jan 9, 2018 at 10:12 AM, AKASHI Takahiro
-<takahiro.akashi@linaro.org> wrote:
-> Bhupesh,
->
-> On Tue, Jan 09, 2018 at 01:30:07AM +0530, Bhupesh Sharma wrote:
->> Hello Akashi,
->>
->> On Tue, Dec 26, 2017 at 8:26 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
->> > On Tue, Dec 26, 2017 at 7:58 AM, AKASHI Takahiro
->> > <takahiro.akashi@linaro.org> wrote:
->> >> On Tue, Dec 26, 2017 at 09:35:17AM +0800, Dave Young wrote:
->> >>> [snip]
->> >>> > > > Well, we may be able to change pr_warn() to pr_warn_once() here, but
->> >>> > > > I hope that adding "numa=off" to kernel command line should also work.
->> >>> > >
->> >>> > > Hmm, adding "numa=off" to crashkernel bootargs works, and TBH it was
->> >>> > > my initial thought process as well, but I am not sure if this will
->> >>> > > cause any regressions on aarch64 systems which use crashdump feature.
->> >>> >
->> >>> > It should be fine since we use numa=off by default for all other arches
->> >>> > ie. x86, ppc64 and s390. Actually disabling numa in kdump kernel can save
->> >>> > mm component memory usage.
->> >>> >
->> >>>
->> >>> Forgot to say I means in RHEL and Fedora we use numa=off for kdump..
->> >>
->> >> Thank you for the clarification.
->> >> (It might be better to make numa off automatically if maxcpus == 0 (and 1?).)
->> >>
->> >
->> > Not sure if we can leave this to the distribution-specific kdump
->> > scripts (as the crashkernel boot can be held up for sufficient time
->> > and may appear stuck). The distribution scripts may be different (for
->> > e.g. ubuntu and RHEL/fedora) across distributions and may have
->> > different bootarg options.
->> >
->> > So how about considering a kernel fix only which doesn't require
->> > relying on changing the distribution-specific kdump scripts, as we
->> > should avoid introducing a regression while trying to fix a regression
->> > :)
->> >
->> > Just my 2 cents.
->> >
->>
->> Sorry for the delay but I was on holidays in the last week.
->>
->> Are you planning to send a patch to fix this issue or do you want me
->> to send a RFC version instead?
->
-> I should have submitted my own patch before my new year holidays,
-> but I will do so as soon as possible.
+On Tue, Jan 09, 2018 at 12:05:52PM +0300, Kirill A. Shutemov wrote:
+> On Tue, Jan 09, 2018 at 03:24:40PM +0800, Dave Young wrote:
+> > On 01/09/18 at 01:41pm, Baoquan He wrote:
+> > > On 01/09/18 at 09:09am, Dave Young wrote:
+> > > 
+> > > > As for the macro name, VMCOREINFO_SYMBOL_ARRAY sounds better.
+> 
+> Yep, that's better.
+> 
+> > > I still think using vmcoreinfo_append_str is better. Unless we replace
+> > > all array variables with the newly added macro.
+> > > 
+> > > vmcoreinfo_append_str("SYMBOL(mem_section)=%lx\n",
+> > >                                 (unsigned long)mem_section);
+> > 
+> > I have no strong opinion, either change all array uses or just introduce
+> > the macro and start to use it from now on if we have similar array
+> > symbols.
+> 
+> Do you need some action on my side or will you folks take care about this?
 
-Thanks for the confirmation.
-I will look forward to the patches and give them a go on the arm64
-boards available with me.
+I think Baoquan was suggesting to update all array users in current code, if you can check every VMCOREINFO_SYMBOL and update all the arrays he will be happy. But if can not do it easily I'm fine with a VMCOREINFO_SYMBOL_ARRAY changes only now, we kdump people can do it later as well. 
 
-Regards,
-Bhupesh
+> 
+> -- 
+>  Kirill A. Shutemov
 
->
->> i think this is a blocking issue for aarch64 kdump support on newer
->> kernels (v4.14) and we are already hearing about this issue from other
->> users as well, so it would be great to get this fixed now that we have
->> root-caused the issue and found a possible way around.
->>
->> Regards,
->> Bhupesh
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
