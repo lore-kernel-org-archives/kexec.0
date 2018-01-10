@@ -1,17 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x243.google.com ([2607:f8b0:4001:c0b::243])
+Received: from mga11.intel.com ([192.55.52.93])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eZEGO-0003VO-6D
- for kexec@lists.infradead.org; Wed, 10 Jan 2018 11:09:45 +0000
-Received: by mail-it0-x243.google.com with SMTP id f143so15752661itb.0
- for <kexec@lists.infradead.org>; Wed, 10 Jan 2018 03:09:33 -0800 (PST)
+ id 1eZENH-0000Ie-BU
+ for kexec@lists.infradead.org; Wed, 10 Jan 2018 11:16:53 +0000
+Date: Wed, 10 Jan 2018 14:16:04 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH 4.14 023/159] mm/sparsemem: Allocate mem_section at
+ runtime for CONFIG_SPARSEMEM_EXTREME=y
+Message-ID: <20180110111603.56disgew7ipusgjy@black.fi.intel.com>
+References: <20171222084625.007160464@linuxfoundation.org>
+ <1515302062.6507.18.camel@gmx.de>
+ <20180108160444.2ol4fvgqbxnjmlpg@gmail.com>
+ <20180108174653.7muglyihpngxp5tl@black.fi.intel.com>
+ <20180109001303.dy73bpixsaegn4ol@node.shutemov.name>
+ <20180109010927.GA2082@dhcp-128-65.nay.redhat.com>
+ <20180109054131.GB1935@localhost.localdomain>
+ <20180109072440.GA6521@dhcp-128-65.nay.redhat.com>
+ <20180109090552.45ddfk2y25lf4uyn@node.shutemov.name>
+ <20180110030804.GB1744@dhcp-128-110.nay.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20180110100943.6082-1-takahiro.akashi@linaro.org>
-References: <20180110100943.6082-1-takahiro.akashi@linaro.org>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Wed, 10 Jan 2018 11:09:32 +0000
-Message-ID: <CAKv+Gu9QX-r7Q5Dsze6MYRb8hbRyq=C__3BsZTBvvSyv1Y-KMg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: kdump: retain reserved memory regions
+Content-Disposition: inline
+In-Reply-To: <20180110030804.GB1744@dhcp-128-110.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,115 +33,98 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, Will Deacon <will.deacon@arm.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Galbraith <efault@gmx.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Cyrill Gorcunov <gorcunov@openvz.org>, "Kirill A. Shutemov" <kirill@shutemov.name>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On 10 January 2018 at 10:09, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> This is a fix against the issue that crash dump kernel may hang up
-> during booting, which can happen on any ACPI-based system with "ACPI
-> Reclaim Memory."
->
->         <kicking off kdump after panic>
->         Bye!
->            (snip...)
->         ACPI: Core revision 20170728
->         pud=000000002e7d0003, *pmd=000000002e7c0003, *pte=00e8000039710707
->         Internal error: Oops: 96000021 [#1] SMP
->         Modules linked in:
->         CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.14.0-rc6 #1
->         task: ffff000008d05180 task.stack: ffff000008cc0000
->         PC is at acpi_ns_lookup+0x25c/0x3c0
->         LR is at acpi_ds_load1_begin_op+0xa4/0x294
->            (snip...)
->         Process swapper/0 (pid: 0, stack limit = 0xffff000008cc0000)
->         Call trace:
->            (snip...)
->         [<ffff0000084a6764>] acpi_ns_lookup+0x25c/0x3c0
->         [<ffff00000849b4f8>] acpi_ds_load1_begin_op+0xa4/0x294
->         [<ffff0000084ad4ac>] acpi_ps_build_named_op+0xc4/0x198
->         [<ffff0000084ad6cc>] acpi_ps_create_op+0x14c/0x270
->         [<ffff0000084acfa8>] acpi_ps_parse_loop+0x188/0x5c8
->         [<ffff0000084ae048>] acpi_ps_parse_aml+0xb0/0x2b8
->         [<ffff0000084a8e10>] acpi_ns_one_complete_parse+0x144/0x184
->         [<ffff0000084a8e98>] acpi_ns_parse_table+0x48/0x68
->         [<ffff0000084a82cc>] acpi_ns_load_table+0x4c/0xdc
->         [<ffff0000084b32f8>] acpi_tb_load_namespace+0xe4/0x264
->         [<ffff000008baf9b4>] acpi_load_tables+0x48/0xc0
->         [<ffff000008badc20>] acpi_early_init+0x9c/0xd0
->         [<ffff000008b70d50>] start_kernel+0x3b4/0x43c
->         Code: b9008fb9 2a000318 36380054 32190318 (b94002c0)
->         ---[ end trace c46ed37f9651c58e ]---
->         Kernel panic - not syncing: Fatal exception
->         Rebooting in 10 seconds..
->
-> (diagnosis)
-> * This fault is a data abort, alignment fault (ESR=0x96000021)
->   during reading out ACPI table.
-> * Initial ACPI tables are normally stored in system ram and marked as
->   "ACPI Reclaim memory" by the firmware.
-> * After the commit f56ab9a5b73c ("efi/arm: Don't mark ACPI reclaim
->   memory as MEMBLOCK_NOMAP"), those regions' attribute were changed
->   removing NOMAP bit and they are instead "memblock-reserved".
-> * When crash dump kernel boots up, it tries to accesses ACPI tables by
->   ioremap'ing them (through acpi_os_ioremap()).
-> * Since those regions are not included in device tree's
->   "usable-memory-range" and so not recognized as part of crash dump
->   kernel's system ram, ioremap() will create a non-cacheable mapping here.
-> * ACPI accessor/helper functions are compiled in without unaligned access
->   support (ACPI_MISALIGNMENT_NOT_SUPPORTED), eventually ending up a fatal
->   panic when accessing ACPI tables.
->
-> With this patch, all the reserved memory regions, as well as NOMAP-
-> attributed ones which are presumably ACPI runtime code and data, are set
-> to be retained in system ram even if they are outside of usable memory
-> range specified by device tree blob. Accordingly, ACPI tables are mapped
-> as cacheable and can be safely accessed without causing unaligned access
-> faults.
->
-> Reported-by: Bhupesh Sharma <bhsharma@redhat.com>
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> ---
->  arch/arm64/mm/init.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 2d5a443b205c..e4a8b64a09b1 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -352,11 +352,23 @@ static void __init fdt_enforce_memory_region(void)
->         struct memblock_region reg = {
->                 .size = 0,
->         };
-> +       u64 idx;
-> +       phys_addr_t start, end;
->
->         of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
->
-> -       if (reg.size)
-> -               memblock_cap_memory_range(reg.base, reg.size);
+On Wed, Jan 10, 2018 at 03:08:04AM +0000, Dave Young wrote:
+> On Tue, Jan 09, 2018 at 12:05:52PM +0300, Kirill A. Shutemov wrote:
+> > On Tue, Jan 09, 2018 at 03:24:40PM +0800, Dave Young wrote:
+> > > On 01/09/18 at 01:41pm, Baoquan He wrote:
+> > > > On 01/09/18 at 09:09am, Dave Young wrote:
+> > > > 
+> > > > > As for the macro name, VMCOREINFO_SYMBOL_ARRAY sounds better.
+> > 
+> > Yep, that's better.
+> > 
+> > > > I still think using vmcoreinfo_append_str is better. Unless we replace
+> > > > all array variables with the newly added macro.
+> > > > 
+> > > > vmcoreinfo_append_str("SYMBOL(mem_section)=%lx\n",
+> > > >                                 (unsigned long)mem_section);
+> > > 
+> > > I have no strong opinion, either change all array uses or just introduce
+> > > the macro and start to use it from now on if we have similar array
+> > > symbols.
+> > 
+> > Do you need some action on my side or will you folks take care about this?
+> 
+> I think Baoquan was suggesting to update all array users in current
+> code, if you can check every VMCOREINFO_SYMBOL and update all the arrays
+> he will be happy. But if can not do it easily I'm fine with a
+> VMCOREINFO_SYMBOL_ARRAY changes only now, we kdump people can do it
+> later as well. 
 
-Given that memblock_cap_memory_range() was introduced by you for
-kdump, is there any way to handle it there?
-If not, should we remove it?
+It seems it's the only array we have there. swapper_pg_dir is a potential
+candidate, but it's 'unsigned long' on arm.
 
-> +       if (reg.size) {
-> +retry:
-> +               /* exclude usable & !reserved memory */
-> +               for_each_free_mem_range(idx, NUMA_NO_NODE, MEMBLOCK_NONE,
-> +                                       &start, &end, NULL) {
-> +                       memblock_remove(start, end - start);
-> +                       goto retry;
-> +               }
-> +
-> +               /* add back fdt's usable memory */
-> +               memblock_add(reg.base, reg.size);
-> +       }
->  }
->
->  void __init arm64_memblock_init(void)
-> --
-> 2.15.1
->
+Below it patch with corrected macro name.
+
+Please, consider applying.
+
+From 70f3a84b97f2de98d1364f7b10b7a42a1d8e9968 Mon Sep 17 00:00:00 2001
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Date: Tue, 9 Jan 2018 02:55:47 +0300
+Subject: [PATCH] kdump: Write a correct address of mem_section into vmcoreinfo
+
+Depending on configuration mem_section can now be an array or a pointer
+to an array allocated dynamically. In most cases, we can continue to refer
+to it as 'mem_section' regardless of what it is.
+
+But there's one exception: '&mem_section' means "address of the array" if
+mem_section is an array, but if mem_section is a pointer, it would mean
+"address of the pointer".
+
+We've stepped onto this in kdump code. VMCOREINFO_SYMBOL(mem_section)
+writes down address of pointer into vmcoreinfo, not array as we wanted.
+
+Let's introduce VMCOREINFO_SYMBOL_ARRAY() that would handle the
+situation correctly for both cases.
+
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Fixes: 83e3c48729d9 ("mm/sparsemem: Allocate mem_section at runtime for CONFIG_SPARSEMEM_EXTREME=y")
+---
+ include/linux/crash_core.h | 2 ++
+ kernel/crash_core.c        | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index 06097ef30449..b511f6d24b42 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -42,6 +42,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+ 	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
+ #define VMCOREINFO_SYMBOL(name) \
+ 	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
++#define VMCOREINFO_SYMBOL_ARRAY(name) \
++	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)name)
+ #define VMCOREINFO_SIZE(name) \
+ 	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
+ 			      (unsigned long)sizeof(name))
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index b3663896278e..4f63597c824d 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -410,7 +410,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_SYMBOL(contig_page_data);
+ #endif
+ #ifdef CONFIG_SPARSEMEM
+-	VMCOREINFO_SYMBOL(mem_section);
++	VMCOREINFO_SYMBOL_ARRAY(mem_section);
+ 	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+ 	VMCOREINFO_STRUCT_SIZE(mem_section);
+ 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+-- 
+ Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
