@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga11.intel.com ([192.55.52.93])
- by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ea2AB-0007IJ-Ie
- for kexec@lists.infradead.org; Fri, 12 Jan 2018 16:26:41 +0000
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH] kdump: Write a correct address of mem_section into vmcoreinfo
-Date: Fri, 12 Jan 2018 19:25:32 +0300
-Message-Id: <20180112162532.35896-1-kirill.shutemov@linux.intel.com>
+Message-ID: <5A58F75E.8030106@arm.com>
+Date: Fri, 12 Jan 2018 17:58:54 +0000
+From: James Morse <james.morse@arm.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH][v2] arm64: Allocate elfcorehdr & crashkernel mem before
+ any reservation
+References: <1515080048-9154-1-git-send-email-poonam.aggrwal@nxp.com>
+ <5A4F5C45.3090006@arm.com>
+ <DB5PR0401MB1733C9CB0DCDF94FCF3E4E1286130@DB5PR0401MB1733.eurprd04.prod.outlook.com>
+In-Reply-To: <DB5PR0401MB1733C9CB0DCDF94FCF3E4E1286130@DB5PR0401MB1733.eurprd04.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,67 +17,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>
-Cc: Baoquan He <bhe@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, linux-mm@kvack.org, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Poonam Aggrwal <poonam.aggrwal@nxp.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "takahiro.akashi@linaro.org" <takahiro.akashi@linaro.org>, "G.h. Gao" <guanhua.gao@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Abhimanyu Saini <abhimanyu.saini@nxp.com>
 
-Depending on configuration mem_section can now be an array or a pointer
-to an array allocated dynamically. In most cases, we can continue to refer
-to it as 'mem_section' regardless of what it is.
+Hi Poonam,
 
-But there's one exception: '&mem_section' means "address of the array" if
-mem_section is an array, but if mem_section is a pointer, it would mean
-"address of the pointer".
+On 08/01/18 04:31, Poonam Aggrwal wrote:
+> James Morse wrote:
+>> On 04/01/18 15:34, Poonam Aggrwal wrote:
+>>> Address for both crashkernel memory and elfcorehdr can be assigned
+>>> statically. For crashkernel memory it is via crashkernel=SIZE@ADDRESS
+>>> and elfcorehdr_addr via by kexec-utils in dump kernel device tree.
+>>
+>> There are some crashkernel=SIZE@ADDRESS values that the user can supply that
+>> we must reject. The obvious one is if it overlaps with the kernel text. (this patch
+>> won't spot this). We need to read the hardware's reserved regions from the DT
+>> before we allocate the crashkernel region, for example if the bootloader
+>> reserved a chunk of memory for a frame-buffer, I shouldn't be able to use that
+>> as crashkernel memory.
+>>
+>> (you shouldn't need to specify an address, doing so prevents the kernel from
+>> picking memory it can use)
+>>
+>>
+>>> So memory should be reserved for both the above areas before any other
+>>> memory reservations are done. Otherwise overlaps may happen and memory
+>>> allocations will fail leading to failure in booting the dump capture
+>>> kernel.
 
-We've stepped onto this in kdump code. VMCOREINFO_SYMBOL(mem_section)
-writes down address of pointer into vmcoreinfo, not array as we wanted.
+>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c index
+>>> 00e7b90..24ce15d 100644
+>>> --- a/arch/arm64/mm/init.c
+>>> +++ b/arch/arm64/mm/init.c
+>>> @@ -453,6 +453,14 @@ void __init arm64_memblock_init(void)
 
-Let's introduce VMCOREINFO_SYMBOL_ARRAY() that would handle the
-situation correctly for both cases.
+>>> +	reserve_elfcorehdr();
+>>
+>> (Moving reserve_elfcorehdr() makes sense, but..)
+>>
+>>
+>>> +	reserve_crashkernel();
+>>
+>> reserve_crashkernel() does the allocation for the crashkernels reserved memory.
+>> I expect this to always fail in the kdump kernel because there isn't enough
+>> memory. (fdt_enforce_memory_region() at the top of this function calls
+>> memblock_cap_memory_range()).
+>>
+>> Moving this allocation above the early_init_fdt_scan_reserved_mem() below
+>> means we may allocate memory for the crashdump that is in use by
+>> firmware/hardware and described as reserved in the DT.
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Fixes: 83e3c48729d9 ("mm/sparsemem: Allocate mem_section at runtime for CONFIG_SPARSEMEM_EXTREME=y")
-Cc: stable@vger.kernel.org
-Acked-by: Baoquan He <bhe@redhat.com>
-Acked-by: Dave Young <dyoung@redhat.com>
----
- include/linux/crash_core.h | 2 ++
- kernel/crash_core.c        | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+> Yeah, this is a good point. So ideally the address of the crash kernel should
+> be diligently provided by the user based on the system.
 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 06097ef30449..b511f6d24b42 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -42,6 +42,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
- 	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
- #define VMCOREINFO_SYMBOL(name) \
- 	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
-+#define VMCOREINFO_SYMBOL_ARRAY(name) \
-+	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)name)
- #define VMCOREINFO_SIZE(name) \
- 	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
- 			      (unsigned long)sizeof(name))
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index b3663896278e..4f63597c824d 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -410,7 +410,7 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_SYMBOL(contig_page_data);
- #endif
- #ifdef CONFIG_SPARSEMEM
--	VMCOREINFO_SYMBOL(mem_section);
-+	VMCOREINFO_SYMBOL_ARRAY(mem_section);
- 	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
- 	VMCOREINFO_STRUCT_SIZE(mem_section);
- 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
--- 
-2.15.1
+Even better: the region to store the crash kernel in should be chosen by the kernel.
+When using kdump I boot with 'crashkernel=1G', the kernel chooses where to place
+the reserved region. Even if I specified a reasonable physical address, the
+efistub may relocate the kernel over the top during boot as part of its KASLR work.
 
+(Why does anyone ever need to specify an offset here?)
+
+
+Thanks,
+
+James
 
 _______________________________________________
 kexec mailing list
