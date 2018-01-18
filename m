@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x233.google.com ([2607:f8b0:4001:c0b::233])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ec0NB-0003f9-Td
- for kexec@lists.infradead.org; Thu, 18 Jan 2018 02:56:15 +0000
-Received: by mail-it0-x233.google.com with SMTP id 68so11808625ite.4
- for <kexec@lists.infradead.org>; Wed, 17 Jan 2018 18:56:03 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <20180118024741.GA1831@dhcp-128-65.nay.redhat.com>
+ id 1ec0OP-0004FE-FB
+ for kexec@lists.infradead.org; Thu, 18 Jan 2018 02:57:30 +0000
+Date: Thu, 18 Jan 2018 10:57:02 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: kexec reboot fails with extra wbinvd introduced for AME SME
+Message-ID: <20180118025702.GA2242@dhcp-128-65.nay.redhat.com>
 References: <20171213025256.GA1913@dhcp-128-65.nay.redhat.com>
  <20171213155746.GA29572@yu-chen.sh.intel.com>
  <20171214092429.GA2004@dhcp-128-65.nay.redhat.com>
@@ -15,11 +15,10 @@ References: <20171213025256.GA1913@dhcp-128-65.nay.redhat.com>
  <CA+55aFxCuz2K_kE3Huu3Ar32LVmWav__2CPL_=zs2g0devx9-Q@mail.gmail.com>
  <20180118014705.GA1812@dhcp-128-65.nay.redhat.com>
  <CA+55aFzc9eXKOdhS-ygQPbr0_N84d8iE8WbSGOWmpJXr1rvDjQ@mail.gmail.com>
- <20180118024741.GA1831@dhcp-128-65.nay.redhat.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 17 Jan 2018 18:56:01 -0800
-Message-ID: <CA+55aFxWXOCo2DqjB_W6fM7Y6tX01mT1QT9rdoh7_X3-BH8eTQ@mail.gmail.com>
-Subject: Re: kexec reboot fails with extra wbinvd introduced for AME SME
+ <47fe0d37-93d9-1394-062a-f973a38daa16@linux.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <47fe0d37-93d9-1394-062a-f973a38daa16@linux.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,43 +31,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>, Tom Lendacky <thomas.lendacky@amd.com>, Tony Luck <tony.luck@intel.com>, Yu Chen <yu.c.chen@intel.com>, Baoquan He <bhe@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, Ingo Molnar <mingo@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rui Zhang <rui.zhang@intel.com>, ebiederm@redhat.com, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Arjan van de Ven <arjan@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>
+To: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Juergen Gross <jgross@suse.com>, Tom Lendacky <thomas.lendacky@amd.com>, Tony Luck <tony.luck@intel.com>, Yu Chen <yu.c.chen@intel.com>, Baoquan He <bhe@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, Ingo Molnar <mingo@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rui Zhang <rui.zhang@intel.com>, ebiederm@redhat.com, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-On Wed, Jan 17, 2018 at 6:47 PM, Dave Young <dyoung@redhat.com> wrote:
-> Did several quick tests, probably need more tests, but till now the
-> results are:
->
-> void stop_this_cpu(void *dummy)
-> {
-> =====> add wbinvd here: kexec works
->         local_irq_disable();
-> =====> add wbinvd here: kexec works
->         /*
->          * Remove this CPU:
->          */
->         set_cpu_online(smp_processor_id(), false);
-> =====> add wbinvd here: kexec does not work
+On 01/17/18 at 06:53pm, Arjan van de Ven wrote:
+> > 
+> > Does anybody have any other ideas?
+> 
+> wbinvd is thankfully not common, but also not rare (MTRR setup and a bunch of other cases)
+> and in some other operating systems it happens even more than on Linux.. it's generally not totally broken like this.
+> 
+> I can only imagine a machine check case where a write back to a bad cell causes some parity error
+> or something...  but it's odd that no other machine checks are reported?
+> (can the user check for this please)
 
-Funky.
+Could you say more about how to check this? My .config disabled
+CONFIG_X86_MCE, should this be enabled?
 
-> So it seems that it will not work after cpu offined..
+Thanks
+Dave
 
-Well, that set_cpu_online() call really just clears a bit in our
-'__cpu_online_mask' CPU mask. It doesn't really do anything to the
-*hardware*.
-
-But I do wonder if the wbinvd causes an SMI or something on your
-system. I _think_ wbinvd causes some external pin to be wiggled just
-to tell possible external cache hardware to flush too, and on a system
-level that could be tied to some random thing.
-
-And then if we get an SMI/NMI when we've marked the system offline,
-maybe we do something odd.
-
-Very odd. But maybe this makes somebody go "Duh, that's because of xyz.."
-
-                Linus
 
 _______________________________________________
 kexec mailing list
