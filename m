@@ -1,25 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-sn1nam02on0087.outbound.protection.outlook.com
+ ([104.47.36.87] helo=NAM02-SN1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ec0vT-0006xA-TF
- for kexec@lists.infradead.org; Thu, 18 Jan 2018 03:31:41 +0000
-Date: Thu, 18 Jan 2018 11:31:18 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1ec2Xh-0004Bp-Ke
+ for kexec@lists.infradead.org; Thu, 18 Jan 2018 05:15:15 +0000
 Subject: Re: kexec reboot fails with extra wbinvd introduced for AME SME
-Message-ID: <20180118033118.GA1838@dhcp-128-65.nay.redhat.com>
-References: <20171214092429.GA2004@dhcp-128-65.nay.redhat.com>
+References: <20171213025256.GA1913@dhcp-128-65.nay.redhat.com>
+ <20171213155746.GA29572@yu-chen.sh.intel.com>
+ <20171214092429.GA2004@dhcp-128-65.nay.redhat.com>
  <20180104031537.GA1819@dhcp-128-65.nay.redhat.com>
  <20180117072123.GA1866@dhcp-128-65.nay.redhat.com>
  <CA+55aFxCuz2K_kE3Huu3Ar32LVmWav__2CPL_=zs2g0devx9-Q@mail.gmail.com>
  <20180118014705.GA1812@dhcp-128-65.nay.redhat.com>
  <CA+55aFzc9eXKOdhS-ygQPbr0_N84d8iE8WbSGOWmpJXr1rvDjQ@mail.gmail.com>
- <47fe0d37-93d9-1394-062a-f973a38daa16@linux.intel.com>
- <20180118025702.GA2242@dhcp-128-65.nay.redhat.com>
- <CA+55aFxbkR+9dXu-ECm-Lx8bxpJhq=b60x_WdUS3XB9WzMp9=w@mail.gmail.com>
- <20180118030448.GA7124@dhcp-128-65.nay.redhat.com>
+ <20180118022905.GA2933@dhcp-128-65.nay.redhat.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <2264b098-1c8f-6f11-9956-4e1b8cb4b309@amd.com>
+Date: Wed, 17 Jan 2018 23:14:54 -0600
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180118030448.GA7124@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20180118022905.GA2933@dhcp-128-65.nay.redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,38 +32,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Juergen Gross <jgross@suse.com>, Tom Lendacky <thomas.lendacky@amd.com>, Tony Luck <tony.luck@intel.com>, Yu Chen <yu.c.chen@intel.com>, Baoquan He <bhe@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, Ingo Molnar <mingo@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rui Zhang <rui.zhang@intel.com>, ebiederm@redhat.com, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Arjan van de Ven <arjan@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>
+To: Dave Young <dyoung@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Juergen Gross <jgross@suse.com>, Tony Luck <tony.luck@intel.com>, Yu Chen <yu.c.chen@intel.com>, Baoquan He <bhe@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, Ingo Molnar <mingo@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rui Zhang <rui.zhang@intel.com>, ebiederm@redhat.com, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Arjan van de Ven <arjan@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-On 01/18/18 at 11:04am, Dave Young wrote:
-> On 01/17/18 at 07:00pm, Linus Torvalds wrote:
-> > On Wed, Jan 17, 2018 at 6:57 PM, Dave Young <dyoung@redhat.com> wrote:
-> > >
-> > > Could you say more about how to check this? My .config disabled
-> > > CONFIG_X86_MCE, should this be enabled?
-> > 
-> > By all means, try it.
-> > 
-> > Some pending machine check exception that we have *not* reacted to,
-> > and that is pending around kexec boot could very possibly be relevant.
-> > 
-> > I forget your exact symptoms. Was it that the _first_ kexec works, but
-> > the second one hangs? Or was that the other unrelated issue? Or have I
-> > confused this with some other report entirely?
+On 1/17/2018 8:29 PM, Dave Young wrote:
+> On 01/17/18 at 06:14pm, Linus Torvalds wrote:
+>> On Wed, Jan 17, 2018 at 5:47 PM, Dave Young <dyoung@redhat.com> wrote:
+>>>
+>>> It does not work with just once wbinvd(), and it only works with
+>>> removing the wbinvd() for me.  Tom's new post works for me as well
+>>> since my cpu is an Intel i5-4200U.
+>>
+>> Intriguing.
+>>
+>> It's not like the wbinvd really should be that much of a deal.
+>>
+>> I think Tom's patch is fine and should be applied, but it does worry
+>> me a bit that even a single wbinvd makes that much of a difference for
+>> you. There is very little logical reason I can think of that a wbinvd
+>> should make any difference what-so-ever on an i5-4200U.
+>>
+>> I wonder if you have some system issues, and wbinvd just happens to
+>> trigger them. But I think we do wbinvd before a suspend-to-RAM too
+>> (it's "ACPI_FLUSH_CPU_CACHE()" in the ACPI code). And the dmr code
+>> dioes "wbinvd_on_all_cpus()" which does a cross-call etc.
+>>
+>> Would you mind experimenting a bit with that wbinvd?
+>>
+>> In particular, what happens if you enable it (so it's not hidden by
+>> the SME check), but you move it up to before interrupts are disabled?
 > 
-> Yes, 1st kexec works, 2nd hangs.
-> 
-> Rebuilding with MCE enabled now.
+> Will play with it more.  Actually I found the hang seems happens
+> in code of arch/x86/kernel/relocate_kernel_64.S, there is another
+> wbinvd there as well.
 
-dmesg only shows "mce: CPU supports 7 MCE banks"
-Nothing special happens with MCE enabled , anyway thank all for
-the hints, I will continue to think about this and maybe try more experiments.
+The wbinvd in arch/x86/kernel/relocate_kernel_64.S is only performed if
+SME is active, so that one won't be executed on an Intel chip.
+
+Thanks,
+Tom
 
 > 
-> Thanks
-> Dave
-> > 
-> >                Linus
+>>
+>> I'm wondering if there is some issue with MCE generation and wbinvd
+>> and whatever, and doing it when the CPU is down and interrupts are
+>> disabled causes some system issue..
+>>
+>> Does anybody have any other ideas?
+>>
+>>                 Linus
 
 _______________________________________________
 kexec mailing list
