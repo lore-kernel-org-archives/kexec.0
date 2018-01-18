@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ebzxN-0006Ae-ES
- for kexec@lists.infradead.org; Thu, 18 Jan 2018 02:29:35 +0000
-Date: Thu, 18 Jan 2018 10:29:05 +0800
+ id 1ec0FG-0007WC-8J
+ for kexec@lists.infradead.org; Thu, 18 Jan 2018 02:48:03 +0000
+Date: Thu, 18 Jan 2018 10:47:41 +0800
 From: Dave Young <dyoung@redhat.com>
 Subject: Re: kexec reboot fails with extra wbinvd introduced for AME SME
-Message-ID: <20180118022905.GA2933@dhcp-128-65.nay.redhat.com>
+Message-ID: <20180118024741.GA1831@dhcp-128-65.nay.redhat.com>
 References: <20171213025256.GA1913@dhcp-128-65.nay.redhat.com>
  <20171213155746.GA29572@yu-chen.sh.intel.com>
  <20171214092429.GA2004@dhcp-128-65.nay.redhat.com>
@@ -59,9 +59,26 @@ On 01/17/18 at 06:14pm, Linus Torvalds wrote:
 > In particular, what happens if you enable it (so it's not hidden by
 > the SME check), but you move it up to before interrupts are disabled?
 
-Will play with it more.  Actually I found the hang seems happens
-in code of arch/x86/kernel/relocate_kernel_64.S, there is another
-wbinvd there as well.
+Did several quick tests, probably need more tests, but till now the
+results are:
+
+void stop_this_cpu(void *dummy)
+{
+=====> add wbinvd here: kexec works
+        local_irq_disable();
+=====> add wbinvd here: kexec works
+        /*
+         * Remove this CPU:
+         */
+        set_cpu_online(smp_processor_id(), false);
+=====> add wbinvd here: kexec does not work
+ 
+        disable_local_APIC();
+        mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
+
+[snip]
+
+So it seems that it will not work after cpu offined..
 
 > 
 > I'm wondering if there is some issue with MCE generation and wbinvd
