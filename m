@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ebz07-0005V6-0A
- for kexec@lists.infradead.org; Thu, 18 Jan 2018 01:28:21 +0000
-Date: Thu, 18 Jan 2018 09:27:55 +0800
+ id 1ebzIe-000736-4I
+ for kexec@lists.infradead.org; Thu, 18 Jan 2018 01:47:29 +0000
+Date: Thu, 18 Jan 2018 09:47:05 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] x86/mm: Rework wbinvd, hlt operation in stop_this_cpu()
-Message-ID: <20180118012755.GA1517@dhcp-128-65.nay.redhat.com>
-References: <20180117234141.21184.44067.stgit@tlendack-t1.amdoffice.net>
- <2a4c4e77-b27f-1537-515c-5ac7644c4768@amd.com>
+Subject: Re: kexec reboot fails with extra wbinvd introduced for AME SME
+Message-ID: <20180118014705.GA1812@dhcp-128-65.nay.redhat.com>
+References: <20171213025256.GA1913@dhcp-128-65.nay.redhat.com>
+ <20171213155746.GA29572@yu-chen.sh.intel.com>
+ <20171214092429.GA2004@dhcp-128-65.nay.redhat.com>
+ <20180104031537.GA1819@dhcp-128-65.nay.redhat.com>
+ <20180117072123.GA1866@dhcp-128-65.nay.redhat.com>
+ <CA+55aFxCuz2K_kE3Huu3Ar32LVmWav__2CPL_=zs2g0devx9-Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <2a4c4e77-b27f-1537-515c-5ac7644c4768@amd.com>
+In-Reply-To: <CA+55aFxCuz2K_kE3Huu3Ar32LVmWav__2CPL_=zs2g0devx9-Q@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,90 +28,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Juergen Gross <jgross@suse.com>, Tony Luck <tony.luck@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Yu Chen <yu.c.chen@intel.com>, Baoquan He <bhe@redhat.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@redhat.com, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Rui Zhang <rui.zhang@intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Ingo Molnar <mingo@kernel.org>, Dan Williams <dan.j.williams@intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Juergen Gross <jgross@suse.com>, Tom Lendacky <thomas.lendacky@amd.com>, Tony Luck <tony.luck@intel.com>, Yu Chen <yu.c.chen@intel.com>, Baoquan He <bhe@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, Ingo Molnar <mingo@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rui Zhang <rui.zhang@intel.com>, ebiederm@redhat.com, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Arjan van de Ven <arjan@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-On 01/17/18 at 05:47pm, Tom Lendacky wrote:
-> On 1/17/2018 5:41 PM, Tom Lendacky wrote:
-> > Some issues have been reported with the for loop in stop_this_cpu() that
-> > issues the 'wbinvd; hlt' sequence.  Reverting this sequence to halt()
-> > has been shown to resolve the issue.
-> > 
-> > However, the wbinvd is needed when running with SME.  The reason for the
-> > wbinvd is to prevent cache flush races between encrypted and non-encrypted
-> > entries that have the same physical address.  This can occur when
-> > kexec'ing from memory encryption active to inactive or vice-versa.  The
-> > important thing is to not have outside of kernel text memory references
-> > (such as stack usage), so the usage of the native_*() functions is needed
-> > since these expand as inline asm sequences.  So instead of reverting the
-> > change, rework the sequence.
-> > 
-> > Move the wbinvd instruction outside of the for loop as native_wbinvd()
-> > and make its execution conditional on X86_FEATURE_SME.  In the for loop,
-> > change the asm 'wbinvd; hlt' sequence back to a halt sequence but use
-> > the native_halt() call.
-> > 
-> > Cc: <stable@vger.kernel.org> # 4.14.x
-> > Fixes: bba4ed011a52 ("x86/mm, kexec: Allow kexec to be used with SME")
-> > Reported-by: Dave Young <dyoung@redhat.com>
+On 01/17/18 at 11:42am, Linus Torvalds wrote:
+> On Tue, Jan 16, 2018 at 11:22 PM, Dave Young <dyoung@redhat.com> wrote:
+> >
+> > For the kexec reboot hang, if I remove the wbinvd in stop_this_cpu()
+> > then kexec works fine. like this:
 > 
-> Dave,
+> Honestly, I think we should apply that patch regardless.
 > 
-> Can you test this and see if it resolves your issue?
+> Using 'wbinvd' should not be some "just because of random reasons".
+> There are CPU's with errata on wbinvd, and the thing in general is
+> slow and nasty.
+> 
+> Doing the wbinvd in a loop sounds even stranger.
+> 
+> If we're only doing it because of some SME issue, why isn't it
+> dependent on SME? And why is it inside that loop at all?
+> 
+> Anyway, does it work for you if you just do the wbinvd() once, outside
+> the loop? Admittedly the loop shouldn't actually loop (hlt with
+> interrupts disabled), but who the hell knows.. Some of the errata
+> around SME have been about machine check exceptions or something.
 
-It works for me, thank you for the patch!
-
-Tested-by: Dave Young <dyoung@redhat.com>
+It does not work with just once wbinvd(), and it only works with
+removing the wbinvd() for me.  Tom's new post works for me as well
+since my cpu is an Intel i5-4200U.
 
 > 
-> Thanks,
-> Tom
+> See commit a68e5c94f7d3 ("x86, hotplug: Move WBINVD back outside the
+> play_dead loop") for another example where wbinvd was inside a loop
+> and apparently caused some odd issues.
 > 
-> > Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> > ---
-> >  arch/x86/kernel/process.c |   25 +++++++++++++++----------
-> >  1 file changed, 15 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-> > index 63711fe..03408b9 100644
-> > --- a/arch/x86/kernel/process.c
-> > +++ b/arch/x86/kernel/process.c
-> > @@ -379,19 +379,24 @@ void stop_this_cpu(void *dummy)
-> >  	disable_local_APIC();
-> >  	mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
-> >  
-> > +	/*
-> > +	 * Use wbinvd on processors that support SME. This provides support
-> > +	 * for performing a successful kexec when going from SME inactive
-> > +	 * to SME active (or vice-versa). The cache must be cleared so that
-> > +	 * if there are entries with the same physical address, both with and
-> > +	 * without the encryption bit, they don't race each other when flushed
-> > +	 * and potentially end up with the wrong entry being committed to
-> > +	 * memory.
-> > +	 */
-> > +	if (boot_cpu_has(X86_FEATURE_SME))
-> > +		native_wbinvd();
-> >  	for (;;) {
-> >  		/*
-> > -		 * Use wbinvd followed by hlt to stop the processor. This
-> > -		 * provides support for kexec on a processor that supports
-> > -		 * SME. With kexec, going from SME inactive to SME active
-> > -		 * requires clearing cache entries so that addresses without
-> > -		 * the encryption bit set don't corrupt the same physical
-> > -		 * address that has the encryption bit set when caches are
-> > -		 * flushed. To achieve this a wbinvd is performed followed by
-> > -		 * a hlt. Even if the processor is not in the kexec/SME
-> > -		 * scenario this only adds a wbinvd to a halting processor.
-> > +		 * Use native_halt() so that memory contents don't change
-> > +		 * (stack usage and variables) after possibly issuing the
-> > +		 * native_wbinvd() above.
-> >  		 */
-> > -		asm volatile("wbinvd; hlt" : : : "memory");
-> > +		native_halt();
-> >  	}
-> >  }
-> >  
-> > 
+>               Linus
+
+Thanks for the help! Finally I get my laptop kexec & kdump works again
+after solving these issues.
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
