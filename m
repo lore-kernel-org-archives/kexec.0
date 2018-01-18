@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2130.oracle.com ([156.151.31.86])
- by casper.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ec8na-00029P-I9
- for kexec@lists.infradead.org; Thu, 18 Jan 2018 11:56:04 +0000
-Date: Thu, 18 Jan 2018 12:55:19 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH v4] kexec-tools: Perform run-time linking of libxenctrl.so
-Message-ID: <20180118115519.GV21705@olila.local.net-space.pl>
-References: <1516207141-31590-1-git-send-email-eric.devolder@oracle.com>
+Received: from mga14.intel.com ([192.55.52.115])
+ by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1ecEWM-0002xI-Ej
+ for kexec@lists.infradead.org; Thu, 18 Jan 2018 18:02:39 +0000
+From: Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH] print kdump kernel loaded status in stack dump
+References: <20180117045057.GA4994@dhcp-128-65.nay.redhat.com>
+Date: Thu, 18 Jan 2018 10:02:17 -0800
+In-Reply-To: <20180117045057.GA4994@dhcp-128-65.nay.redhat.com> (Dave Young's
+ message of "Wed, 17 Jan 2018 12:50:57 +0800")
+Message-ID: <878tcvt592.fsf@linux.intel.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1516207141-31590-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,81 +23,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric DeVolder <eric.devolder@oracle.com>
-Cc: andrew.cooper3@citrix.com, horms@verge.net.au, kexec@lists.infradead.org, konrad.wilk@oracle.com, xen-devel@lists.xen.org
+To: Dave Young <dyoung@redhat.com>
+Cc: pmladek@suse.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org, sergey.senozhatsky@gmail.com, akpm@linux-foundation.org
 
-On Wed, Jan 17, 2018 at 10:39:01AM -0600, Eric DeVolder wrote:
-> When kexec is utilized in a Xen environment, it has an explicit
-> run-time dependency on libxenctrl.so. This dependency occurs
-> during the configure stage and when building kexec-tools.
+Dave Young <dyoung@redhat.com> writes:
+>  		printk("%sHardware name: %s\n",
+>  		       log_lvl, dump_stack_arch_desc_str);
+> +	if (kexec_crash_loaded())
+> +		printk("%skdump kernel loaded\n", log_lvl);
 
-[...]
+Oops/warnings are getting longer and longer, often scrolling away
+from the screen, and if the kernel crashes backscroll does not work
+anymore, so precious information is lost.
 
-As I saw Simon applied the patch. Great! Sadly I have just
-realized that I have missed two things. Please look below.
+Can you merge it with some other line?
 
-> The patch creates a wrapper function around xc_interface_open()
-> and xc_interface_close() to perform the dlopen() and dlclose().
+Just a [KDUMP] or so somewhere should be good enough.
 
-You say about dlclose() here...
-
-diff --git a/kexec/kexec-xen.h b/kexec/kexec-xen.h
-new file mode 100644
-index 0000000..ffb8743
---- /dev/null
-+++ b/kexec/kexec-xen.h
-
-[...]
-
-> +/* The handle from dlopen(), needed by dlsym(), dlclose() */
-> +extern void *xc_dlhandle;
-
-...and here but it is never called. Is it by design or by mistake?
-If by design please add a comment saying why into relevant place,
-e.g. __xc_interface_close()? If by mistake please fix it.
-
-[...]
-
-> +/* The handle from dlopen(), needed by dlsym(), dlclose() */
-> +extern void *xc_dlhandle;
-
-I am still not happy with xc_dlhandle being extern. IMO it should be static.
-I have missed that during last review. Sorry about that. I have a feeling
-that you can easily fix it.
-
-Define __xc_dlsym() in kexec/kexec-xen.c just before __xc_interface_open() like below:
-
-void *__xc_dlsym(const char *symbol)
-{
-  return dlsym(xc_dlhandle, symbol);
-}
-
-> +/* Wrappers around xc_interface_open/close() to insert dlopen/dlclose() */
-> +xc_interface *__xc_interface_open(xentoollog_logger *logger,
-> +				  xentoollog_logger *dombuild_logger,
-> +				  unsigned open_flags);
-> +int __xc_interface_close(xc_interface *xch);
-> +
-> +/* GCC expression statements for evaluating dlsym() */
-> +#define __xc_call(dtype, name, args...) \
-> +( \
-> +	{ dtype value; \
-> +	typedef dtype (*func_t)(xc_interface *, ...); \
-> +	func_t func = dlsym(xc_dlhandle, #name); \
-
-And then replace dlsym(xc_dlhandle, #name) with __xc_dlsym(#name)...
-
-> +	value = func(args); \
-> +	value; } \
-> +)
-> +#define __xc_data(dtype, name) \
-> +( \
-> +	{ dtype *value = (dtype *)dlsym(xc_dlhandle, #name); value; } \
-
-...and here. Additionally, you can use __xc_dlsym() instead of dlsym()
-in other places in your patch. Latter is not a must...
-
-Daniel
+-Andi
 
 _______________________________________________
 kexec mailing list
