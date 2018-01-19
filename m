@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <5A61E19F.1000207@arm.com>
-Date: Fri, 19 Jan 2018 12:16:31 +0000
-From: James Morse <james.morse@arm.com>
+Received: from mx2.suse.de ([195.135.220.15])
+ by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1ecWO2-0003EQ-Qk
+ for kexec@lists.infradead.org; Fri, 19 Jan 2018 13:07:16 +0000
+Received: from relay2.suse.de (charybdis-ext.suse.de [195.135.220.254])
+ by mx2.suse.de (Postfix) with ESMTP id A0CB2AB40
+ for <kexec@lists.infradead.org>; Fri, 19 Jan 2018 13:06:59 +0000 (UTC)
+Date: Fri, 19 Jan 2018 14:06:58 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH] print kdump kernel loaded status in stack dump
+Message-ID: <20180119140658.2137904e@ezekiel.suse.cz>
+In-Reply-To: <20180119044719.GA3985@dhcp-128-65.nay.redhat.com>
+References: <20180117045057.GA4994@dhcp-128-65.nay.redhat.com>
+ <878tcvt592.fsf@linux.intel.com>
+ <20180118135704.62d0f79f@gandalf.local.home>
+ <20180119044719.GA3985@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH][v2] arm64: Allocate elfcorehdr & crashkernel mem before
- any reservation
-References: <1515080048-9154-1-git-send-email-poonam.aggrwal@nxp.com>
- <5A4F5C45.3090006@arm.com>
- <DB5PR0401MB1733C9CB0DCDF94FCF3E4E1286130@DB5PR0401MB1733.eurprd04.prod.outlook.com>
- <5A58F75E.8030106@arm.com>
- <DB5PR0401MB173376E6E9B45B871BD1A66086140@DB5PR0401MB1733.eurprd04.prod.outlook.com>
- <CAFTCetQvrNG7fr2-y4wOmjgFyC6D1U18K3iq5--RcNwt+hEz2g@mail.gmail.com>
- <20180116070703.GA15458@linaro.org>
-In-Reply-To: <20180116070703.GA15458@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,142 +28,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "takahiro.akashi@linaro.org" <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Poonam Aggrwal <poonam.aggrwal@nxp.com>
-Cc: "will.deacon@arm.com" <will.deacon@arm.com>, "G.h. Gao" <guanhua.gao@nxp.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Abhimanyu Saini <abhimanyu.saini@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: kexec@lists.infradead.org
 
-Hello,
+On Fri, 19 Jan 2018 12:47:19 +0800
+Dave Young <dyoung@redhat.com> wrote:
 
-On 16/01/18 07:07, takahiro.akashi@linaro.org wrote:
-> On Mon, Jan 15, 2018 at 10:14:05AM +0530, Bhupesh SHARMA wrote:
->> On Sat, Jan 13, 2018 at 8:37 AM, Poonam Aggrwal <poonam.aggrwal@nxp.com> wrote:
->>>> On 08/01/18 04:31, Poonam Aggrwal wrote:
->>>>> Yeah, this is a good point. So ideally the address of the crash kernel
->>>>> should be diligently provided by the user based on the system.
-
->>>> Even better: the region to store the crash kernel in should be chosen by the
->>>> kernel.
->>>> When using kdump I boot with 'crashkernel=1G', the kernel chooses where to
->>>> place the reserved region.
->>>> Even if I specified a reasonable physical address, the
->>>> efistub may relocate the kernel over the top during boot as part of its KASLR
->>>> work.
-
->>> Agree
->>>>
->>>> (Why does anyone ever need to specify an offset here?)
->>> offset is normally an optional argument. Request Takahiro to provide his inputs.  Does this imply any updates in kexec design/implementation/documentation?
->>
->> offset is a optional argument. For relocatable kernels (and kernels
->> which support KASLR), specifying offset is normally not needed.
->>
->> Please refer to the 'Extended crashkernel syntax' documentation
->> (<https://github.com/torvalds/linux/blob/master/Documentation/kdump/kdump.txt#L259>):
->>
->> Extended crashkernel syntax
->> ===========================
->>
->> While the "crashkernel=size[@offset]" syntax is sufficient for most
->> configurations, sometimes it's handy to have the reserved memory dependent
->> on the value of System RAM -- that's mostly for distributors that pre-setup
->> the kernel command line to avoid a unbootable system after some memory has
->> been removed from the machine.
-
-This is to let the distribution provide a single value that works on machines
-with very little RAM, and machines that need gigabytes in order to boot.
-
-Where does specifying the offset/absolute-address come in?
-
-
->> As James mentioned for arm64, in case of relocatable/kaslr kernels,
->> the efistub may relocate the kernel over the top during boot as part
->> of its KASLR.
+> On 01/18/18 at 01:57pm, Steven Rostedt wrote:
+> > On Thu, 18 Jan 2018 10:02:17 -0800
+> > Andi Kleen <ak@linux.intel.com> wrote:
+> >   
+> > > Dave Young <dyoung@redhat.com> writes:  
+> > > >  		printk("%sHardware name: %s\n",
+> > > >  		       log_lvl, dump_stack_arch_desc_str);
+> > > > +	if (kexec_crash_loaded())
+> > > > +		printk("%skdump kernel loaded\n", log_lvl);    
+> > > 
+> > > Oops/warnings are getting longer and longer, often scrolling away
+> > > from the screen, and if the kernel crashes backscroll does not work
+> > > anymore, so precious information is lost.
+> > > 
+> > > Can you merge it with some other line?
+> > > 
+> > > Just a [KDUMP] or so somewhere should be good enough.  
+> > 
+> > Or perhaps we should add it as a TAINT. Not all taints are bad.  
 > 
-> It would be sad if we couldn't specify kaslr and kdump at the same time.
+> Hmm, I also thought about this before but It sounds like not match the
+> "tainted" meaning with the assumption that it is bad :(
 
-We can. The problem comes when you specify an absolute-address that should be
-reserved for user-space to eventually load the kdump kernel into. This is
-fragile for a number of reasons.
+Not only that. Once set, taint flags are not supposed to go away, but
+it is perfectly fine to unload a panic kernel.
 
-
-> Since kaslr will skip any of memory regions whose attributes are not
-> CONVENTIONAL_MEMORY for allocating a relocated kernel image, we will be
-> able to have a dedicated range of memory reserved for kdump.
-> In this case, using an "offset" in "crashkernel=" will be crucial.
-> 
-> (I don't know how we can notify uefi of the region though.)
-
-I'm confused. panic()->kdump:boot doesn't go via UEFI. It passes information in
-the DT:/chosen that may have been generated by the EFIStub, but it doesn't (and
-must not) change the EFI memory map.
-
-We need to decide where the crashdump kernel region is when the first-kernel
-generates its page tables, as the protect/unprotect mechanism wants to be able
-to unmap them.
-There is no reason for UEFI to know about the kdump region, BootServices are
-long-gone by the time its location has to be decided.
-
-
->> So, the offset field may make more sense for
->> non-relocatable/static kernels, but for newer kernels, its better to
->> use the 'Extended crashkernel syntax' syntax which is also supported
->> by newer distribution versions.
-
-(this extended crashkernel syntax looks like a tangent: its about specifying
-one-value string to specify a reservation-size on both small-memory and
-large-memory machines).
-
-I don't think 'relocatable kernels' are relevant here. The KASLR series changed
-the kernel to no longer run from the linear map, so where in the linear map we
-allocate memory for the crash-kernel to boot from can't matter. These changes
-were merged before kexec/kdump support was added.
-
-Even before this change, (I recall that:) the kernel would discard memory below
-its text. This isn't a problem as kexec-tools (typically) locates the kernel at
-the bottom of the region, and physical memory outside this range isn't
-accessible anyway because of the "linux,usable-memory" property. When we do want
-to access it, we remap it using the vmcore helpers.
-
-I think this @offset must be for kernels that have to run from a
-physical/virtual address that is known at compile time. We don't have this
-problem on arm64, and specifying @offset makes kdump less reliable:
-| cannot reserve crashkernel: region overlaps reserved memory
-
-
-> How better is it for the case?
-> 
-> I don't know exactly what you mean by "newer kernel/distribution", but
-> kdump on arm64 supports this feature from the day one.
-> (It is basically independent from architectures.)
-
-Support @offset? Yes, its core code allowing this.
-
-
->> For e.g. see ubuntu trusty kdump-config man page -
->> <http://manpages.ubuntu.com/manpages/trusty/man8/kdump-config.8.html>:
->>
->>   kdump kernel relocation address does not match crashkernel= parameter:
->>               For non-relocatable architectures,  the  kdump  kernel  must  be
->>               built   with   a  predetermined  start  address.   This  message
->>               indicates that the start address of the  kdump  kernel  and  the
->>               start address in the crashkernel= parameter do not match.
-
-arm64 doesn't have this issue. The 'predetermined start address' is a relative
-value stored in the header. This is so the bootloader can place the kernel
-anywhere in memory and still have it boot.
-
-I think we're in the weeds here: adding @offset to your 'crashkernel=' cmdline
-option tells the kernel you know this address will be free and not-reserved when
-it comes to reservation time. This isn't generally true.
-Unless you wrote the DT and the bootloader, you can't know this.
-
-
-Wasn't this patch moving the elfcorehdr reservation up to be before any dynamic
-reservations, to prevent them overlapping?
-
-
-Thanks,
-
-James
+Petr T
 
 _______________________________________________
 kexec mailing list
