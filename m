@@ -1,23 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x242.google.com ([2607:f8b0:400e:c05::242])
- by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ecTFa-0006GA-3K
- for kexec@lists.infradead.org; Fri, 19 Jan 2018 09:46:19 +0000
-Received: by mail-pg0-x242.google.com with SMTP id s9so1016718pgq.13
- for <kexec@lists.infradead.org>; Fri, 19 Jan 2018 01:46:07 -0800 (PST)
-Date: Fri, 19 Jan 2018 18:46:03 +0900
-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCH] print kdump kernel loaded status in stack dump
-Message-ID: <20180119094603.GA3685@tigerII.localdomain>
-References: <20180117045057.GA4994@dhcp-128-65.nay.redhat.com>
- <878tcvt592.fsf@linux.intel.com>
- <20180119054538.GA484@jagdpanzerIV>
- <20180119081628.GB3985@dhcp-128-65.nay.redhat.com>
- <20180119082835.GA477@jagdpanzerIV>
- <20180119084223.GC3985@dhcp-128-65.nay.redhat.com>
+Message-ID: <5A61D90E.1000907@arm.com>
+Date: Fri, 19 Jan 2018 11:39:58 +0000
+From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180119084223.GC3985@dhcp-128-65.nay.redhat.com>
+Subject: Re: [PATCH] arm64: kdump: retain reserved memory regions
+References: <20180110100943.6082-1-takahiro.akashi@linaro.org>
+ <5A55F87F.2080501@arm.com> <20180111113840.GF18820@linaro.org>
+In-Reply-To: <20180111113840.GF18820@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,44 +19,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: pmladek@suse.com, Andi Kleen <ak@linux.intel.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org, sergey.senozhatsky@gmail.com, akpm@linux-foundation.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On (01/19/18 16:42), Dave Young wrote:
-[..]
-> > [I'm not entirely sure I see why do we have printk_delay() in
-> >    vprintk_emit()... I mean I probably can see some reasoning behind
-> >    it, but at the same it makes sense to slow down console_unlock()
-> >    as well]
+Hi Akashi,
+
+On 11/01/18 11:38, AKASHI Takahiro wrote:
+> On Wed, Jan 10, 2018 at 11:26:55AM +0000, James Morse wrote:
+>> On 10/01/18 10:09, AKASHI Takahiro wrote:
+>>> This is a fix against the issue that crash dump kernel may hang up
+>>> during booting, which can happen on any ACPI-based system with "ACPI
+>>> Reclaim Memory."
+
+>>> (diagnosis)
+>>> * This fault is a data abort, alignment fault (ESR=0x96000021)
+>>>   during reading out ACPI table.
+>>> * Initial ACPI tables are normally stored in system ram and marked as
+>>>   "ACPI Reclaim memory" by the firmware.
+>>> * After the commit f56ab9a5b73c ("efi/arm: Don't mark ACPI reclaim
+>>>   memory as MEMBLOCK_NOMAP"), those regions' attribute were changed
+>>>   removing NOMAP bit and they are instead "memblock-reserved".
+>>> * When crash dump kernel boots up, it tries to accesses ACPI tables by
+>>>   ioremap'ing them (through acpi_os_ioremap()).
+>>> * Since those regions are not included in device tree's
+>>>   "usable-memory-range" and so not recognized as part of crash dump
+>>>   kernel's system ram, ioremap() will create a non-cacheable mapping here.
+>>
+>> Ugh, because acpi_os_ioremap() looks at the efi memory map through the prism of
+>> what we pulled into memblock, which is different during kdump.
+>>
+>> Is an alternative to teach acpi_os_ioremap() to ask
+>> efi_mem_attributes() directly for the attributes to use?
+>> (e.g. arch_apei_get_mem_attribute())
 > 
-> Looks like I am the guy who added the code :)
+> I didn't think of this approach.
+> Do you mean a change like the patch below?
 
-LOL :)
+Yes. Aha, you can pretty much re-use the helper directly.
 
-> Actually no special reason, just did not thinking about the performance
-> issue at all at that time..
+It was just a suggestion, removing the extra abstraction that is causing the bug
+could be cleaner ...
 
-it's quite reasonable to have it in vprintk_emit(), actually.
+> (I'm still debugging this code since the kernel fails to boot.)
 
-the thing is that it limits the rate at which new messages appear in
-the kernel log buffer, which does not necessarily correspond to the rate
-at which new messages appear on the consoles.
+... but might be too fragile.
 
-printk has a "direct path"  printk -> console_unlock() -> consoles,
-and "indirect path" - when it fails to acquire console semaphore,
-because it's locked by someone else. that someone else, a console_sem
-owner, might be scheduled out under console_sem; all printks in the
-meantime will just log_store() messages [after printk_delay()].
-once the console_sem owner will be back to running it will resume
-console_unlock() printing loop and print out all pending messages
-immediately [modulo preemption]. so there are ways for messages to
-bypass printk_delay() and appear on the consoles with no visible
-delay.
+There are points during boot when the EFI memory map isn't mapped. I think that
+helper will return 'device memory' for everything when this happens.
 
-additionally printk_delay() does touch_nmi_watchdog() so we,
-technically, are fine with moving it to console_unlock().
 
-	-ss
+
+Thanks,
+
+James
 
 _______________________________________________
 kexec mailing list
