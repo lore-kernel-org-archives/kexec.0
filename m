@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mga07.intel.com ([134.134.136.100])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ecWO2-0003EQ-Qk
- for kexec@lists.infradead.org; Fri, 19 Jan 2018 13:07:16 +0000
-Received: from relay2.suse.de (charybdis-ext.suse.de [195.135.220.254])
- by mx2.suse.de (Postfix) with ESMTP id A0CB2AB40
- for <kexec@lists.infradead.org>; Fri, 19 Jan 2018 13:06:59 +0000 (UTC)
-Date: Fri, 19 Jan 2018 14:06:58 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
+ id 1ecZLA-0007HO-EF
+ for kexec@lists.infradead.org; Fri, 19 Jan 2018 16:16:29 +0000
+Date: Fri, 19 Jan 2018 08:16:04 -0800
+From: Andi Kleen <ak@linux.intel.com>
 Subject: Re: [PATCH] print kdump kernel loaded status in stack dump
-Message-ID: <20180119140658.2137904e@ezekiel.suse.cz>
-In-Reply-To: <20180119044719.GA3985@dhcp-128-65.nay.redhat.com>
+Message-ID: <20180119161604.GH7844@tassilo.jf.intel.com>
 References: <20180117045057.GA4994@dhcp-128-65.nay.redhat.com>
  <878tcvt592.fsf@linux.intel.com>
- <20180118135704.62d0f79f@gandalf.local.home>
- <20180119044719.GA3985@dhcp-128-65.nay.redhat.com>
+ <20180119054538.GA484@jagdpanzerIV>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180119054538.GA484@jagdpanzerIV>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,38 +25,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc: pmladek@suse.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org, sergey.senozhatsky@gmail.com, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>
 
-On Fri, 19 Jan 2018 12:47:19 +0800
-Dave Young <dyoung@redhat.com> wrote:
-
-> On 01/18/18 at 01:57pm, Steven Rostedt wrote:
-> > On Thu, 18 Jan 2018 10:02:17 -0800
-> > Andi Kleen <ak@linux.intel.com> wrote:
-> >   
-> > > Dave Young <dyoung@redhat.com> writes:  
-> > > >  		printk("%sHardware name: %s\n",
-> > > >  		       log_lvl, dump_stack_arch_desc_str);
-> > > > +	if (kexec_crash_loaded())
-> > > > +		printk("%skdump kernel loaded\n", log_lvl);    
-> > > 
-> > > Oops/warnings are getting longer and longer, often scrolling away
-> > > from the screen, and if the kernel crashes backscroll does not work
-> > > anymore, so precious information is lost.
-> > > 
-> > > Can you merge it with some other line?
-> > > 
-> > > Just a [KDUMP] or so somewhere should be good enough.  
+On Fri, Jan 19, 2018 at 02:45:38PM +0900, Sergey Senozhatsky wrote:
+> On (01/18/18 10:02), Andi Kleen wrote:
+> > Dave Young <dyoung@redhat.com> writes:
+> > >  		printk("%sHardware name: %s\n",
+> > >  		       log_lvl, dump_stack_arch_desc_str);
+> > > +	if (kexec_crash_loaded())
+> > > +		printk("%skdump kernel loaded\n", log_lvl);
 > > 
-> > Or perhaps we should add it as a TAINT. Not all taints are bad.  
+> > Oops/warnings are getting longer and longer, often scrolling away
+> > from the screen, and if the kernel crashes backscroll does not work
+> > anymore, so precious information is lost.
 > 
-> Hmm, I also thought about this before but It sounds like not match the
-> "tainted" meaning with the assumption that it is bad :(
+> true. I even ended up having a console_reflush_on_panic() function. it
+> simply re-prints with a delay [so I can at least read the oops] logbuf
+> entries every once in a while, staring with the first oops_in_progress
+> record.
 
-Not only that. Once set, taint flags are not supposed to go away, but
-it is perfectly fine to unload a panic kernel.
+It would be better to make scrollback work even after panic (e.g. with a polled
+keyboard driver)
 
-Petr T
+-Andi
 
 _______________________________________________
 kexec mailing list
