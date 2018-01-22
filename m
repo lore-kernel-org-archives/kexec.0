@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
- by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1edXsN-0001FK-O8
- for kexec@lists.infradead.org; Mon, 22 Jan 2018 08:54:50 +0000
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 87/89] x86/mm: Rework wbinvd,
- hlt operation in stop_this_cpu()
-Date: Mon, 22 Jan 2018 09:46:07 +0100
-Message-Id: <20180122084003.212954389@linuxfoundation.org>
-In-Reply-To: <20180122083954.683903493@linuxfoundation.org>
-References: <20180122083954.683903493@linuxfoundation.org>
+Date: Tue, 23 Jan 2018 00:32:59 +0200
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: Re: [BISECTED] kexec issue with v4.15-rc on N8x0
+Message-ID: <20180122223259.v5qumil2fvw2k7pt@darkstar.musicnaut.iki.fi>
+References: <20180111194747.k5qwz66mfntj6v2g@darkstar.musicnaut.iki.fi>
+ <20180115181508.GM4821@atomide.com>
+ <20180122220654.k6atriweesf2qmw4@darkstar.musicnaut.iki.fi>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180122220654.k6atriweesf2qmw4@darkstar.musicnaut.iki.fi>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,98 +21,105 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Juergen Gross <jgross@suse.com>, Tom Lendacky <thomas.lendacky@amd.com>, Tony Luck <tony.luck@intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Yu Chen <yu.c.chen@intel.com>, Baoquan He <bhe@redhat.com>, ebiederm@redhat.com, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, stable@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Rui Zhang <rui.zhang@intel.com>, Dan Williams <dan.j.williams@intel.com>
+To: Tony Lindgren <tony@atomide.com>, Eric Biederman <ebiederm@xmission.com>, horms@verge.net.au, kexec@lists.infradead.org
+Cc: Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+Hi,
 
-------------------
+(Adding also kexec people...)
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+On Tue, Jan 23, 2018 at 12:06:54AM +0200, Aaro Koskinen wrote:
+> On Mon, Jan 15, 2018 at 10:15:08AM -0800, Tony Lindgren wrote:
+> > * Aaro Koskinen <aaro.koskinen@iki.fi> [180111 11:48]:
+> > > When booting v4.15-rc kernel with kexec (kexec-tools 2.0.16) on N8x0, I get:
+> > > 
+> > >     Uncompressing Linux... done, booting the kernel.
+> > >     no ATAGS support: can't continue
+> > > 
+> > > v4.14 kernel works OK.
+> > > 
+> > > I bisected this to:
+> > > 
+> > > commit c772568788b5f0cbaac7c8d4111d7173bfc90673
+> > > Author: Russell King <rmk+kernel@armlinux.org.uk>
+> > > Date:   Thu Sep 21 18:10:19 2017 +0100
+> > > 
+> > >     ARM: add additional table to compressed kernel
+> > > 
+> > > If I revert the commit, kexec booting starts to work. Interesting,
+> > > the patch mentions "This is necessary for correct behaviour of kexec.",
+> > > so I wonder what could be wrong...
+> > 
+> > So care to post what you get if you load with kexec -d -l options
+> > before and after this commit?
+> 
+> See below. I guess the interesting part is the "zImage has tags" with the
+> bad kernel.
+> 
+> Bad (plain v4.15-rc9)
+> ---------------------
+> kernel: 0xb6a25008 kernel_size: 0x3ce605
+> MEMORY RANGES
+> 0000000080000000-0000000087ffffff (0)
+> zImage header: 0x016f2818 0x00000000 0x003c59d0
+> zImage size 0x3c59d0, file size 0x3ce605
+> zImage has tags
+>   offset 0x00003be0 tag 0x5a534c4b size 8
+> kernel image size: 0x00c5c6ec
+> kexec_load: entry = 0x80008000 flags = 0x280000
+> nr_segments = 2
+> segment[0].buf   = 0xb6a25008
+> segment[0].bufsz = 0x3c59d0
+> segment[0].mem   = 0x80008000
+> segment[0].memsz = 0x3c6000
+> segment[1].buf   = 0x1ed52b8
+> segment[1].bufsz = 0x8c35
+> segment[1].mem   = 0x80c66000
+> segment[1].memsz = 0x9000
+> [    4.850341] kexec_core: Starting new kernel
+> [    4.854766] Bye!
+> 
+> (kernel fails to boot)
+> 
+> Good (v4.15-rc9 and c772568788b5f0cbaac7c8d4111d7173bfc90673 reverted)
+> -----------------------------
+> kernel: 0xb6999008 kernel_size: 0x3ce9bd
+> MEMORY RANGES
+> 0000000080000000-0000000087ffffff (0)
+> zImage header: 0x016f2818 0x00000000 0x003c5d88
+> zImage size 0x3c5d88, file size 0x3ce9bd
+> kexec_load: entry = 0x80008000 flags = 0x280000
+> nr_segments = 2
+> segment[0].buf   = 0xb6999008
+> segment[0].bufsz = 0x3c5d88
+> segment[0].mem   = 0x80008000
+> segment[0].memsz = 0x3c6000
+> segment[1].buf   = 0x14192b8
+> segment[1].bufsz = 0x8c35
+> segment[1].mem   = 0x812e7000
+> segment[1].memsz = 0x9000
+> [    4.860473] kexec_core: Starting new kernel
+> [    4.864898] Bye!
+> [    0.000000] Booting Linux on physical CPU 0x0
+> [    0.000000] Linux version 4.15.0-rc9-n8x0-los_ecc96+-00001-g0a003b4 (aaro@amd-fx-6350) (gcc version 6.4.0 (GCC)) #1 Mon Jan 22 23:43:19 EET 2018
+> [    0.000000] CPU: ARMv6-compatible processor [4107b362] revision 2 (ARMv6TEJ), cr=00c5387d
+> [    0.000000] CPU: VIPT aliasing data cache, VIPT aliasing instruction cache
+> [    0.000000] OF: fdt: Machine model: Nokia N810
+> [...]
+> 
+> (kernel boots fine)
+> 
+> > Also, I wonder if Linux next commit 55e7cff44c7c ("ARM: verify
+> > size of zImage") helps here?
+> 
+> No difference.
 
-commit f23d74f6c66c3697e032550eeef3f640391a3a7d upstream.
+Looks like downgrading kexec-tools from .16 to 2.0.15 helps.
 
-Some issues have been reported with the for loop in stop_this_cpu() that
-issues the 'wbinvd; hlt' sequence.  Reverting this sequence to halt()
-has been shown to resolve the issue.
+So it seems the latest kexec-tools is incompatible with the latest kernel
+on ARM?
 
-However, the wbinvd is needed when running with SME.  The reason for the
-wbinvd is to prevent cache flush races between encrypted and non-encrypted
-entries that have the same physical address.  This can occur when
-kexec'ing from memory encryption active to inactive or vice-versa.  The
-important thing is to not have outside of kernel text memory references
-(such as stack usage), so the usage of the native_*() functions is needed
-since these expand as inline asm sequences.  So instead of reverting the
-change, rework the sequence.
-
-Move the wbinvd instruction outside of the for loop as native_wbinvd()
-and make its execution conditional on X86_FEATURE_SME.  In the for loop,
-change the asm 'wbinvd; hlt' sequence back to a halt sequence but use
-the native_halt() call.
-
-Fixes: bba4ed011a52 ("x86/mm, kexec: Allow kexec to be used with SME")
-Reported-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Dave Young <dyoung@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Yu Chen <yu.c.chen@intel.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: kexec@lists.infradead.org
-Cc: ebiederm@redhat.com
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Rui Zhang <rui.zhang@intel.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Link: https://lkml.kernel.org/r/20180117234141.21184.44067.stgit@tlendack-t1.amdoffice.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/kernel/process.c |   25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
-
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -380,19 +380,24 @@ void stop_this_cpu(void *dummy)
- 	disable_local_APIC();
- 	mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
- 
-+	/*
-+	 * Use wbinvd on processors that support SME. This provides support
-+	 * for performing a successful kexec when going from SME inactive
-+	 * to SME active (or vice-versa). The cache must be cleared so that
-+	 * if there are entries with the same physical address, both with and
-+	 * without the encryption bit, they don't race each other when flushed
-+	 * and potentially end up with the wrong entry being committed to
-+	 * memory.
-+	 */
-+	if (boot_cpu_has(X86_FEATURE_SME))
-+		native_wbinvd();
- 	for (;;) {
- 		/*
--		 * Use wbinvd followed by hlt to stop the processor. This
--		 * provides support for kexec on a processor that supports
--		 * SME. With kexec, going from SME inactive to SME active
--		 * requires clearing cache entries so that addresses without
--		 * the encryption bit set don't corrupt the same physical
--		 * address that has the encryption bit set when caches are
--		 * flushed. To achieve this a wbinvd is performed followed by
--		 * a hlt. Even if the processor is not in the kexec/SME
--		 * scenario this only adds a wbinvd to a halting processor.
-+		 * Use native_halt() so that memory contents don't change
-+		 * (stack usage and variables) after possibly issuing the
-+		 * native_wbinvd() above.
- 		 */
--		asm volatile("wbinvd; hlt" : : : "memory");
-+		native_halt();
- 	}
- }
- 
-
-
+A.
 
 _______________________________________________
 kexec mailing list
