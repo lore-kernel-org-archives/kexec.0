@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-f196.google.com ([209.85.223.196])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1edVbS-00030M-Df
- for kexec@lists.infradead.org; Mon, 22 Jan 2018 06:29:12 +0000
-Received: by mail-io0-f196.google.com with SMTP id t22so8299746ioa.7
- for <kexec@lists.infradead.org>; Sun, 21 Jan 2018 22:28:59 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <cover.1516354241.git.ptesarik@suse.com>
+ id 1edXL3-0006cg-BX
+ for kexec@lists.infradead.org; Mon, 22 Jan 2018 08:20:24 +0000
+Date: Mon, 22 Jan 2018 16:20:06 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [makedumpfile PATCH 1/2] Fix off-by-one errors in
+ exclude_segment()
+Message-ID: <20180122082006.GA6814@localhost.localdomain>
 References: <cover.1516354241.git.ptesarik@suse.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Mon, 22 Jan 2018 11:58:58 +0530
-Message-ID: <CACi5LpN7XL-uNzNBF9HLT7+-x5D_C909TEqHF=7HKDRg7C_mpQ@mail.gmail.com>
-Subject: Re: [makedumpfile PATCH 0/2] Fix calculations in exclude_segment()
+ <ca842e328fcf6565a4cf0c8747367b3560d09412.1516354241.git.ptesarik@suse.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <ca842e328fcf6565a4cf0c8747367b3560d09412.1516354241.git.ptesarik@suse.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,101 +26,85 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Tesarik <ptesarik@suse.com>
-Cc: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>
+Cc: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, kexec@lists.infradead.org
 
-Hi Petr,
+On 01/19/18 at 12:45pm, Petr Tesarik wrote:
+> The crashed reserved memory end offset is the last address within
+> range, whereas the end offset in the pt_loads[] denotes the first
+> address past the range. This has caused a number of off-by-one
+> errors in exclude_segment().
+> 
+> First, let's unify the meaning of "end" to be the first out-of-range
+> address, i.e. start + size. Thanks to that, no +1 or -1 adjustments
+> are needed in exclude_segment().
+> 
+> Second, since the value read from /proc/iomem is the last address
+> within range, add one when passing it as an argument to
+> exclude_segment(). This is now the only adjustment by one.
+> 
+> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> ---
+>  elf_info.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/elf_info.c b/elf_info.c
+> index 69b1719..1eaddd9 100644
+> --- a/elf_info.c
+> +++ b/elf_info.c
+> @@ -820,26 +820,26 @@ static int exclude_segment(struct pt_load_segment **pt_loads,
+>  		if (kvstart <  vend && kvend > vstart) {
+>  			if (kvstart != vstart && kvend != vend) {
+>  				/* Split load segment */
+> -				temp_seg.phys_start = end + 1;
+> +				temp_seg.phys_start = end;
+>  				temp_seg.phys_end = (*pt_loads)[i].phys_end;
+> -				temp_seg.virt_start = kvend + 1;
+> +				temp_seg.virt_start = kvend;
 
-On Fri, Jan 19, 2018 at 5:15 PM, Petr Tesarik <ptesarik@suse.com> wrote:
-> I have observed that makedumpfile --mem-usage shows bogus numbers
-> on a kaslr-enabled kernel. This boils down to incorrect calculations
-> in exclude_segment(). Consequently, data beyond a split LOAD segment
-> are read from the wrong file offset.
->
-> Petr Tesarik (2):
->   Fix off-by-one errors in exclude_segment()
->   Fix physical-to-virtual conversion in exclude_segment()
->
->  elf_info.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
->
-> --
+Does the old code cause error? I remember I thought about this, forget
+why I still took the old way.
+
+Looks a good clean up.
+
+>  				temp_seg.virt_end = vend;
+>  				temp_seg.file_offset = (*pt_loads)[i].file_offset
+>  					+ temp_seg.virt_start - (*pt_loads)[i].virt_start;
+>  				temp_seg.file_size = temp_seg.phys_end
+>  					- temp_seg.phys_start;
+>  
+> -				(*pt_loads)[i].virt_end = kvstart - 1;
+> -				(*pt_loads)[i].phys_end =  start - 1;
+> +				(*pt_loads)[i].virt_end = kvstart;
+> +				(*pt_loads)[i].phys_end =  start;
+>  				(*pt_loads)[i].file_size -= temp_seg.file_size;
+>  
+>  				tidx = i+1;
+>  			} else if (kvstart != vstart) {
+> -				(*pt_loads)[i].phys_end = start - 1;
+> -				(*pt_loads)[i].virt_end = kvstart - 1;
+> +				(*pt_loads)[i].phys_end = start;
+> +				(*pt_loads)[i].virt_end = kvstart;
+>  			} else {
+> -				(*pt_loads)[i].phys_start = end + 1;
+> -				(*pt_loads)[i].virt_start = kvend + 1;
+> +				(*pt_loads)[i].phys_start = end;
+> +				(*pt_loads)[i].virt_start = kvend;
+>  			}
+>  			(*pt_loads)[i].file_size -= (end -start);
+>  		}
+> @@ -917,7 +917,7 @@ int get_kcore_dump_loads(void)
+>  
+>  	for (i = 0; i < crash_reserved_mem_nr; i++)	{
+>  		exclude_segment(&pt_loads, &num_pt_loads,
+> -				crash_reserved_mem[i].start, crash_reserved_mem[i].end);
+> +				crash_reserved_mem[i].start, crash_reserved_mem[i].end + 1);
+>  	}
+>  
+>  	max_file_offset = 0;
+> -- 
 > 2.13.6
->
-
-Tested this patchset on a x86_64 RHEL machine (please find my test
-summary below), so:
-
-Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
-
-Test Summary
--------------------
-
-1. I was running into the following issue while trying to run
-'--mem-usage' option with makedumpfile on a RHEL machine with KASLR
-enabled kernel:
-
-# makedumpfile --mem-usage /proc/kcore -f
-
-__vtop4_x86_64: vaddr:ffff90d3bffd63e0, page_dir:244ae0e908,
-pml4:244b425067, pgd_paddr:244b425a70, pgd_pte:347ffd5067,
-pmd_paddr:347ffd5ff8, pmd_pte:0
-__vtop4_x86_64: Can't get a valid pmd_pte.
-readmem: Can't convert a virtual address(ffff90d3bffd63e0) to physical address.
-readmem: type_addr: 0, addr:ffff90d3bffd63e0, size:32
-section_mem_map_addr: Can't get
-
-which indicates that the pmd_pte is 0 for the virtual addr ffff90d3bffd63e0.
-
-1a). On the other hand, if we use the crash utility (and gdb inside
-it), we can see that it can convert this virtual addr ffff90d3bffd63e0
-properly and find all the page levels properly:
-
-# crash
-
-crash> vtop ffff90d3bffd63e0
-VIRTUAL           PHYSICAL
-ffff90d3bffd63e0  87ffd63e0
-
-PML4 DIRECTORY: ffffffff9280e000
-PAGE DIRECTORY: 244b425067
-   PUD: 244b425a70 => 347ffd5067
-   PMD: 347ffd5ff8 => 87fedf063
-   PTE: 87fedfeb0 => 800000087ffd6163
-  PAGE: 87ffd6000
-
-      PTE         PHYSICAL   FLAGS
-800000087ffd6163  87ffd6000  (PRESENT|RW|ACCESSED|DIRTY|GLOBAL|NX)
-
-      PAGE         PHYSICAL      MAPPING       INDEX CNT FLAGS
-ffffce9821fff580  87ffd6000                0        0  1 2fffff00000400 reserved
-
-2). As is seen from the crash and makedumpfile logs, both calculate
-the following values correctly for the virtual addr ffff90d3bffd63e0:
-
-pml4(244b425067), pgd_pte(347ffd5067), pmd_paddr(347ffd5ff8).
-
-3). But while the crash util can correctly decode the
-pmd_pte(87fedf063) from pmd_addr(347ffd5ff8), makedumpfile fails to do
-the same.
-
-4). The reason is that for the KASLR enabled kernels the following
-computation is no longer _valid_:
-
-kvstart = (ulong)start | PAGE_OFFSET;
-kvend = (ulong)end | PAGE_OFFSET;
-
-leading to erroneous computation of 'pmd_pte'
-
-changing this to the following fixes the issue for me:
-
-kvstart = (ulong)start  + PAGE_OFFSET;
-kvend = (ulong)end   PAGE_OFFSET;
-
-In addition to the above, this patchset also fixes the off-by-one
-errors, so its looks good to me.
-
-Thanks,
-Bhupesh
+> 
+> 
 
 _______________________________________________
 kexec mailing list
