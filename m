@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1edXL3-0006cg-BX
- for kexec@lists.infradead.org; Mon, 22 Jan 2018 08:20:24 +0000
-Date: Mon, 22 Jan 2018 16:20:06 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [makedumpfile PATCH 1/2] Fix off-by-one errors in
- exclude_segment()
-Message-ID: <20180122082006.GA6814@localhost.localdomain>
-References: <cover.1516354241.git.ptesarik@suse.com>
- <ca842e328fcf6565a4cf0c8747367b3560d09412.1516354241.git.ptesarik@suse.com>
+ id 1edXsN-0001FK-O8
+ for kexec@lists.infradead.org; Mon, 22 Jan 2018 08:54:50 +0000
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 87/89] x86/mm: Rework wbinvd,
+ hlt operation in stop_this_cpu()
+Date: Mon, 22 Jan 2018 09:46:07 +0100
+Message-Id: <20180122084003.212954389@linuxfoundation.org>
+In-Reply-To: <20180122083954.683903493@linuxfoundation.org>
+References: <20180122083954.683903493@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ca842e328fcf6565a4cf0c8747367b3560d09412.1516354241.git.ptesarik@suse.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,86 +23,98 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.com>
-Cc: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, kexec@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>, Tom Lendacky <thomas.lendacky@amd.com>, Tony Luck <tony.luck@intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Yu Chen <yu.c.chen@intel.com>, Baoquan He <bhe@redhat.com>, ebiederm@redhat.com, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, stable@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Rui Zhang <rui.zhang@intel.com>, Dan Williams <dan.j.williams@intel.com>
 
-On 01/19/18 at 12:45pm, Petr Tesarik wrote:
-> The crashed reserved memory end offset is the last address within
-> range, whereas the end offset in the pt_loads[] denotes the first
-> address past the range. This has caused a number of off-by-one
-> errors in exclude_segment().
-> 
-> First, let's unify the meaning of "end" to be the first out-of-range
-> address, i.e. start + size. Thanks to that, no +1 or -1 adjustments
-> are needed in exclude_segment().
-> 
-> Second, since the value read from /proc/iomem is the last address
-> within range, add one when passing it as an argument to
-> exclude_segment(). This is now the only adjustment by one.
-> 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> ---
->  elf_info.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/elf_info.c b/elf_info.c
-> index 69b1719..1eaddd9 100644
-> --- a/elf_info.c
-> +++ b/elf_info.c
-> @@ -820,26 +820,26 @@ static int exclude_segment(struct pt_load_segment **pt_loads,
->  		if (kvstart <  vend && kvend > vstart) {
->  			if (kvstart != vstart && kvend != vend) {
->  				/* Split load segment */
-> -				temp_seg.phys_start = end + 1;
-> +				temp_seg.phys_start = end;
->  				temp_seg.phys_end = (*pt_loads)[i].phys_end;
-> -				temp_seg.virt_start = kvend + 1;
-> +				temp_seg.virt_start = kvend;
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
-Does the old code cause error? I remember I thought about this, forget
-why I still took the old way.
+------------------
 
-Looks a good clean up.
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
->  				temp_seg.virt_end = vend;
->  				temp_seg.file_offset = (*pt_loads)[i].file_offset
->  					+ temp_seg.virt_start - (*pt_loads)[i].virt_start;
->  				temp_seg.file_size = temp_seg.phys_end
->  					- temp_seg.phys_start;
->  
-> -				(*pt_loads)[i].virt_end = kvstart - 1;
-> -				(*pt_loads)[i].phys_end =  start - 1;
-> +				(*pt_loads)[i].virt_end = kvstart;
-> +				(*pt_loads)[i].phys_end =  start;
->  				(*pt_loads)[i].file_size -= temp_seg.file_size;
->  
->  				tidx = i+1;
->  			} else if (kvstart != vstart) {
-> -				(*pt_loads)[i].phys_end = start - 1;
-> -				(*pt_loads)[i].virt_end = kvstart - 1;
-> +				(*pt_loads)[i].phys_end = start;
-> +				(*pt_loads)[i].virt_end = kvstart;
->  			} else {
-> -				(*pt_loads)[i].phys_start = end + 1;
-> -				(*pt_loads)[i].virt_start = kvend + 1;
-> +				(*pt_loads)[i].phys_start = end;
-> +				(*pt_loads)[i].virt_start = kvend;
->  			}
->  			(*pt_loads)[i].file_size -= (end -start);
->  		}
-> @@ -917,7 +917,7 @@ int get_kcore_dump_loads(void)
->  
->  	for (i = 0; i < crash_reserved_mem_nr; i++)	{
->  		exclude_segment(&pt_loads, &num_pt_loads,
-> -				crash_reserved_mem[i].start, crash_reserved_mem[i].end);
-> +				crash_reserved_mem[i].start, crash_reserved_mem[i].end + 1);
->  	}
->  
->  	max_file_offset = 0;
-> -- 
-> 2.13.6
-> 
-> 
+commit f23d74f6c66c3697e032550eeef3f640391a3a7d upstream.
+
+Some issues have been reported with the for loop in stop_this_cpu() that
+issues the 'wbinvd; hlt' sequence.  Reverting this sequence to halt()
+has been shown to resolve the issue.
+
+However, the wbinvd is needed when running with SME.  The reason for the
+wbinvd is to prevent cache flush races between encrypted and non-encrypted
+entries that have the same physical address.  This can occur when
+kexec'ing from memory encryption active to inactive or vice-versa.  The
+important thing is to not have outside of kernel text memory references
+(such as stack usage), so the usage of the native_*() functions is needed
+since these expand as inline asm sequences.  So instead of reverting the
+change, rework the sequence.
+
+Move the wbinvd instruction outside of the for loop as native_wbinvd()
+and make its execution conditional on X86_FEATURE_SME.  In the for loop,
+change the asm 'wbinvd; hlt' sequence back to a halt sequence but use
+the native_halt() call.
+
+Fixes: bba4ed011a52 ("x86/mm, kexec: Allow kexec to be used with SME")
+Reported-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Dave Young <dyoung@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Yu Chen <yu.c.chen@intel.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: kexec@lists.infradead.org
+Cc: ebiederm@redhat.com
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Rui Zhang <rui.zhang@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Link: https://lkml.kernel.org/r/20180117234141.21184.44067.stgit@tlendack-t1.amdoffice.net
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/kernel/process.c |   25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
+
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -380,19 +380,24 @@ void stop_this_cpu(void *dummy)
+ 	disable_local_APIC();
+ 	mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
+ 
++	/*
++	 * Use wbinvd on processors that support SME. This provides support
++	 * for performing a successful kexec when going from SME inactive
++	 * to SME active (or vice-versa). The cache must be cleared so that
++	 * if there are entries with the same physical address, both with and
++	 * without the encryption bit, they don't race each other when flushed
++	 * and potentially end up with the wrong entry being committed to
++	 * memory.
++	 */
++	if (boot_cpu_has(X86_FEATURE_SME))
++		native_wbinvd();
+ 	for (;;) {
+ 		/*
+-		 * Use wbinvd followed by hlt to stop the processor. This
+-		 * provides support for kexec on a processor that supports
+-		 * SME. With kexec, going from SME inactive to SME active
+-		 * requires clearing cache entries so that addresses without
+-		 * the encryption bit set don't corrupt the same physical
+-		 * address that has the encryption bit set when caches are
+-		 * flushed. To achieve this a wbinvd is performed followed by
+-		 * a hlt. Even if the processor is not in the kexec/SME
+-		 * scenario this only adds a wbinvd to a halting processor.
++		 * Use native_halt() so that memory contents don't change
++		 * (stack usage and variables) after possibly issuing the
++		 * native_wbinvd() above.
+ 		 */
+-		asm volatile("wbinvd; hlt" : : : "memory");
++		native_halt();
+ 	}
+ }
+ 
+
+
 
 _______________________________________________
 kexec mailing list
