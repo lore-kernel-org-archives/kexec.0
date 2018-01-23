@@ -1,12 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH] arm64: kdump: retain reserved memory regions
-References: <20180110100943.6082-1-takahiro.akashi@linaro.org>
-From: "Goel, Sameer" <sgoel@codeaurora.org>
-Message-ID: <a2813fed-648e-3904-f8a9-72dd97e31d9f@codeaurora.org>
-Date: Mon, 22 Jan 2018 18:19:32 -0700
 MIME-Version: 1.0
-In-Reply-To: <20180110100943.6082-1-takahiro.akashi@linaro.org>
-Content-Language: en-US
+In-Reply-To: <5A61E19F.1000207@arm.com>
+References: <1515080048-9154-1-git-send-email-poonam.aggrwal@nxp.com>
+ <5A4F5C45.3090006@arm.com>
+ <DB5PR0401MB1733C9CB0DCDF94FCF3E4E1286130@DB5PR0401MB1733.eurprd04.prod.outlook.com>
+ <5A58F75E.8030106@arm.com>
+ <DB5PR0401MB173376E6E9B45B871BD1A66086140@DB5PR0401MB1733.eurprd04.prod.outlook.com>
+ <CAFTCetQvrNG7fr2-y4wOmjgFyC6D1U18K3iq5--RcNwt+hEz2g@mail.gmail.com>
+ <20180116070703.GA15458@linaro.org> <5A61E19F.1000207@arm.com>
+From: Bhupesh SHARMA <bhupesh.linux@gmail.com>
+Date: Tue, 23 Jan 2018 10:38:14 +0530
+Message-ID: <CAFTCetRSxh4CCYvUOFDmzKWcXdXU6bLzW8e2PpUBpOpJsDpY6A@mail.gmail.com>
+Subject: Re: [PATCH][v2] arm64: Allocate elfcorehdr & crashkernel mem before
+ any reservation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,116 +25,175 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: dyoung@redhat.com, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, ard.biesheuvel@linaro.org
+To: James Morse <james.morse@arm.com>
+Cc: Poonam Aggrwal <poonam.aggrwal@nxp.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "takahiro.akashi@linaro.org" <takahiro.akashi@linaro.org>, "G.h. Gao" <guanhua.gao@nxp.com>, Abhimanyu Saini <abhimanyu.saini@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Hi Akashi,
- Thanks for posting the patch. I tested the patch on Qualcomm Centriq system.
-Thanks,
-Sameer
+Hi,
 
-On 1/10/2018 3:09 AM, AKASHI Takahiro wrote:
-> This is a fix against the issue that crash dump kernel may hang up
-> during booting, which can happen on any ACPI-based system with "ACPI
-> Reclaim Memory."
-> 
-> 	<kicking off kdump after panic>
-> 	Bye!
-> 	   (snip...)
-> 	ACPI: Core revision 20170728
-> 	pud=000000002e7d0003, *pmd=000000002e7c0003, *pte=00e8000039710707
-> 	Internal error: Oops: 96000021 [#1] SMP
-> 	Modules linked in:
-> 	CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.14.0-rc6 #1
-> 	task: ffff000008d05180 task.stack: ffff000008cc0000
-> 	PC is at acpi_ns_lookup+0x25c/0x3c0
-> 	LR is at acpi_ds_load1_begin_op+0xa4/0x294
-> 	   (snip...)
-> 	Process swapper/0 (pid: 0, stack limit = 0xffff000008cc0000)
-> 	Call trace:
-> 	   (snip...)
-> 	[<ffff0000084a6764>] acpi_ns_lookup+0x25c/0x3c0
-> 	[<ffff00000849b4f8>] acpi_ds_load1_begin_op+0xa4/0x294
-> 	[<ffff0000084ad4ac>] acpi_ps_build_named_op+0xc4/0x198
-> 	[<ffff0000084ad6cc>] acpi_ps_create_op+0x14c/0x270
-> 	[<ffff0000084acfa8>] acpi_ps_parse_loop+0x188/0x5c8
-> 	[<ffff0000084ae048>] acpi_ps_parse_aml+0xb0/0x2b8
-> 	[<ffff0000084a8e10>] acpi_ns_one_complete_parse+0x144/0x184
-> 	[<ffff0000084a8e98>] acpi_ns_parse_table+0x48/0x68
-> 	[<ffff0000084a82cc>] acpi_ns_load_table+0x4c/0xdc
-> 	[<ffff0000084b32f8>] acpi_tb_load_namespace+0xe4/0x264
-> 	[<ffff000008baf9b4>] acpi_load_tables+0x48/0xc0
-> 	[<ffff000008badc20>] acpi_early_init+0x9c/0xd0
-> 	[<ffff000008b70d50>] start_kernel+0x3b4/0x43c
-> 	Code: b9008fb9 2a000318 36380054 32190318 (b94002c0)
-> 	---[ end trace c46ed37f9651c58e ]---
-> 	Kernel panic - not syncing: Fatal exception
-> 	Rebooting in 10 seconds..
-> 
-> (diagnosis)
-> * This fault is a data abort, alignment fault (ESR=0x96000021)
->   during reading out ACPI table.
-> * Initial ACPI tables are normally stored in system ram and marked as
->   "ACPI Reclaim memory" by the firmware.
-> * After the commit f56ab9a5b73c ("efi/arm: Don't mark ACPI reclaim
->   memory as MEMBLOCK_NOMAP"), those regions' attribute were changed
->   removing NOMAP bit and they are instead "memblock-reserved".
-> * When crash dump kernel boots up, it tries to accesses ACPI tables by
->   ioremap'ing them (through acpi_os_ioremap()).
-> * Since those regions are not included in device tree's
->   "usable-memory-range" and so not recognized as part of crash dump
->   kernel's system ram, ioremap() will create a non-cacheable mapping here.
-> * ACPI accessor/helper functions are compiled in without unaligned access
->   support (ACPI_MISALIGNMENT_NOT_SUPPORTED), eventually ending up a fatal
->   panic when accessing ACPI tables.
-> 
-> With this patch, all the reserved memory regions, as well as NOMAP-
-> attributed ones which are presumably ACPI runtime code and data, are set
-> to be retained in system ram even if they are outside of usable memory
-> range specified by device tree blob. Accordingly, ACPI tables are mapped
-> as cacheable and can be safely accessed without causing unaligned access
-> faults.
-> 
-> Reported-by: Bhupesh Sharma <bhsharma@redhat.com>
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> ---
->  arch/arm64/mm/init.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 2d5a443b205c..e4a8b64a09b1 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -352,11 +352,23 @@ static void __init fdt_enforce_memory_region(void)
->  	struct memblock_region reg = {
->  		.size = 0,
->  	};
-> +	u64 idx;
-> +	phys_addr_t start, end;
->  
->  	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
->  
-> -	if (reg.size)
-> -		memblock_cap_memory_range(reg.base, reg.size);
-> +	if (reg.size) {
-> +retry:
-> +		/* exclude usable & !reserved memory */
-> +		for_each_free_mem_range(idx, NUMA_NO_NODE, MEMBLOCK_NONE,
-> +					&start, &end, NULL) {
-> +			memblock_remove(start, end - start);
-> +			goto retry;
-> +		}
-> +
-> +		/* add back fdt's usable memory */
-> +		memblock_add(reg.base, reg.size);
-> +	}
->  }
->  
->  void __init arm64_memblock_init(void)
-> 
+On Fri, Jan 19, 2018 at 5:46 PM, James Morse <james.morse@arm.com> wrote:
+> Hello,
+>
+> On 16/01/18 07:07, takahiro.akashi@linaro.org wrote:
+>> On Mon, Jan 15, 2018 at 10:14:05AM +0530, Bhupesh SHARMA wrote:
+>>> On Sat, Jan 13, 2018 at 8:37 AM, Poonam Aggrwal <poonam.aggrwal@nxp.com> wrote:
+>>>>> On 08/01/18 04:31, Poonam Aggrwal wrote:
+>>>>>> Yeah, this is a good point. So ideally the address of the crash kernel
+>>>>>> should be diligently provided by the user based on the system.
+>
+>>>>> Even better: the region to store the crash kernel in should be chosen by the
+>>>>> kernel.
+>>>>> When using kdump I boot with 'crashkernel=1G', the kernel chooses where to
+>>>>> place the reserved region.
+>>>>> Even if I specified a reasonable physical address, the
+>>>>> efistub may relocate the kernel over the top during boot as part of its KASLR
+>>>>> work.
+>
+>>>> Agree
+>>>>>
+>>>>> (Why does anyone ever need to specify an offset here?)
+>>>> offset is normally an optional argument. Request Takahiro to provide his inputs.  Does this imply any updates in kexec design/implementation/documentation?
+>>>
+>>> offset is a optional argument. For relocatable kernels (and kernels
+>>> which support KASLR), specifying offset is normally not needed.
+>>>
+>>> Please refer to the 'Extended crashkernel syntax' documentation
+>>> (<https://github.com/torvalds/linux/blob/master/Documentation/kdump/kdump.txt#L259>):
+>>>
+>>> Extended crashkernel syntax
+>>> ===========================
+>>>
+>>> While the "crashkernel=size[@offset]" syntax is sufficient for most
+>>> configurations, sometimes it's handy to have the reserved memory dependent
+>>> on the value of System RAM -- that's mostly for distributors that pre-setup
+>>> the kernel command line to avoid a unbootable system after some memory has
+>>> been removed from the machine.
+>
+> This is to let the distribution provide a single value that works on machines
+> with very little RAM, and machines that need gigabytes in order to boot.
+>
+> Where does specifying the offset/absolute-address come in?
 
--- 
- Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc. Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+It comes into picture where we know at compile time where we want to
+place the crashkernel at.
+I remember using it on a few arm 32-bit machines but they had a static
+and well defined layout of the memory
+map from the available system RAM, and required crashkernel to be
+placed at predefined offset to prevent 'undefined' behaviour.
+
+I don't think this is relevant though now with the newer KASLR enabled
+kernels where we can RANDOMIZE the _text and also the module load
+area.
+So using a static offset value in this case would be risky to say the least ...
+
+>
+>>> As James mentioned for arm64, in case of relocatable/kaslr kernels,
+>>> the efistub may relocate the kernel over the top during boot as part
+>>> of its KASLR.
+>>
+>> It would be sad if we couldn't specify kaslr and kdump at the same time.
+>
+> We can. The problem comes when you specify an absolute-address that should be
+> reserved for user-space to eventually load the kdump kernel into. This is
+> fragile for a number of reasons.
+
+... Fedora allows using kdump and KASLR both, so I am not sure that's a problem.
+
+>> Since kaslr will skip any of memory regions whose attributes are not
+>> CONVENTIONAL_MEMORY for allocating a relocated kernel image, we will be
+>> able to have a dedicated range of memory reserved for kdump.
+>> In this case, using an "offset" in "crashkernel=" will be crucial.
+>>
+>> (I don't know how we can notify uefi of the region though.)
+>
+> I'm confused. panic()->kdump:boot doesn't go via UEFI. It passes information in
+> the DT:/chosen that may have been generated by the EFIStub, but it doesn't (and
+> must not) change the EFI memory map.
+>
+> We need to decide where the crashdump kernel region is when the first-kernel
+> generates its page tables, as the protect/unprotect mechanism wants to be able
+> to unmap them.
+> There is no reason for UEFI to know about the kdump region, BootServices are
+> long-gone by the time its location has to be decided.
+
+>>> So, the offset field may make more sense for
+>>> non-relocatable/static kernels, but for newer kernels, its better to
+>>> use the 'Extended crashkernel syntax' syntax which is also supported
+>>> by newer distribution versions.
+>
+> (this extended crashkernel syntax looks like a tangent: its about specifying
+> one-value string to specify a reservation-size on both small-memory and
+> large-memory machines).
+>
+> I don't think 'relocatable kernels' are relevant here. The KASLR series changed
+> the kernel to no longer run from the linear map, so where in the linear map we
+> allocate memory for the crash-kernel to boot from can't matter. These changes
+> were merged before kexec/kdump support was added.
+
+Agreed.
+
+> Even before this change, (I recall that:) the kernel would discard memory below
+> its text. This isn't a problem as kexec-tools (typically) locates the kernel at
+> the bottom of the region, and physical memory outside this range isn't
+> accessible anyway because of the "linux,usable-memory" property. When we do want
+> to access it, we remap it using the vmcore helpers.
+>
+> I think this @offset must be for kernels that have to run from a
+> physical/virtual address that is known at compile time. We don't have this
+> problem on arm64, and specifying @offset makes kdump less reliable:
+> | cannot reserve crashkernel: region overlaps reserved memory
+>
+>
+>> How better is it for the case?
+>>
+>> I don't know exactly what you mean by "newer kernel/distribution", but
+>> kdump on arm64 supports this feature from the day one.
+>> (It is basically independent from architectures.)
+>
+> Support @offset? Yes, its core code allowing this.
+>
+>
+>>> For e.g. see ubuntu trusty kdump-config man page -
+>>> <http://manpages.ubuntu.com/manpages/trusty/man8/kdump-config.8.html>:
+>>>
+>>>   kdump kernel relocation address does not match crashkernel= parameter:
+>>>               For non-relocatable architectures,  the  kdump  kernel  must  be
+>>>               built   with   a  predetermined  start  address.   This  message
+>>>               indicates that the start address of the  kdump  kernel  and  the
+>>>               start address in the crashkernel= parameter do not match.
+>
+> arm64 doesn't have this issue. The 'predetermined start address' is a relative
+> value stored in the header. This is so the bootloader can place the kernel
+> anywhere in memory and still have it boot.
+>
+> I think we're in the weeds here: adding @offset to your 'crashkernel=' cmdline
+> option tells the kernel you know this address will be free and not-reserved when
+> it comes to reservation time. This isn't generally true.
+> Unless you wrote the DT and the bootloader, you can't know this.
+
+Agreed. See my comments above. What I meant was that using @offset with newer
+kernels/distributions which support KASLR can lead to undefined
+behavior. What I tried to capture
+from the ubuntu trusty man-page was that "kdump kernel must be built
+with a predetermined start  address
+for non-relocatable architectures".
+
+Normally we use the same primary kernel as the kdump kernel, so if the
+primary kernels is Relocatable + KASLR enabled,
+the kdump kernel would support the same as well. In that case assuming
+a fixed offset at which the kdump kernel can be loaded at or assuming
+a static
+start address for the kdump kernel can lead to issues.
+
+Regards,
+Bhupesh
+
+> Wasn't this patch moving the elfcorehdr reservation up to be before any dynamic
+> reservations, to prevent them overlapping?
+>
+>
+> Thanks,
+>
+> James
 
 _______________________________________________
 kexec mailing list
