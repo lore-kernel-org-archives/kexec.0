@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp2130.oracle.com ([141.146.126.79])
+Received: from userp2120.oracle.com ([156.151.31.85])
  by casper.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ee409-0004tE-Ok
- for kexec@lists.infradead.org; Tue, 23 Jan 2018 19:12:59 +0000
+ id 1ee40A-0004tF-Rb
+ for kexec@lists.infradead.org; Tue, 23 Jan 2018 19:13:00 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [PATCH v2 2/2] kexec-tools: Make xc_dlhandle static
-Date: Tue, 23 Jan 2018 13:12:51 -0600
-Message-Id: <1516734771-14795-3-git-send-email-eric.devolder@oracle.com>
+Subject: [PATCH v2 1/2] kexec-tools: Call dlclose() from within
+ __xc_interface_close()
+Date: Tue, 23 Jan 2018 13:12:50 -0600
+Message-Id: <1516734771-14795-2-git-send-email-eric.devolder@oracle.com>
 In-Reply-To: <1516734771-14795-1-git-send-email-eric.devolder@oracle.com>
 References: <1516734771-14795-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -29,8 +30,11 @@ This patch is a follow-on to commit 43d3932e "kexec-tools: Perform
 run-time linking of libxenctrl.so". This patch addresses feedback
 from Daniel Kiper.
 
-This patch implements Daniel's suggestion to make the
-xc_dlhandle variable static.
+In the original patch, the call to dlclose() was omitted, in contrast
+to the description in the commit message. This patch inserts the call.
+Note that this dynamic linking feature is dependent upon the proper
+operation of the RTLD_NODELETE flag to dlopen(), which does work as
+advertised on Linux (otherwise the call to dlclose() should be omitted).
 
 Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 ---
@@ -41,63 +45,21 @@ v2: 23jan2018
  - Implemented feedback from Daniel Kiper
  - Broke patch into two
 ---
- kexec/kexec-xen.c | 9 ++++++++-
- kexec/kexec-xen.h | 9 ++++-----
- 2 files changed, 12 insertions(+), 6 deletions(-)
+ kexec/kexec-xen.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/kexec/kexec-xen.c b/kexec/kexec-xen.c
-index 75f8758..960fa16 100644
+index d42a45a..75f8758 100644
 --- a/kexec/kexec-xen.c
 +++ b/kexec/kexec-xen.c
-@@ -15,8 +15,15 @@
- #include "crashdump.h"
+@@ -47,6 +47,7 @@ int __xc_interface_close(xc_interface *xch)
  
- #ifdef CONFIG_LIBXENCTRL_DL
--void *xc_dlhandle;
-+/* The handle from dlopen(), needed by dlsym(), dlclose() */
-+static void *xc_dlhandle;
- xc_hypercall_buffer_t XC__HYPERCALL_BUFFER_NAME(HYPERCALL_BUFFER_NULL);
-+
-+void *__xc_dlsym(const char *symbol)
-+{
-+	return dlsym(xc_dlhandle, symbol);
-+}
-+
- xc_interface *__xc_interface_open(xentoollog_logger *logger,
- 				  xentoollog_logger *dombuild_logger,
- 				  unsigned open_flags)
-diff --git a/kexec/kexec-xen.h b/kexec/kexec-xen.h
-index ffb8743..8955334 100644
---- a/kexec/kexec-xen.h
-+++ b/kexec/kexec-xen.h
-@@ -6,9 +6,8 @@
+ 		func_t func = (func_t)dlsym(xc_dlhandle, "xc_interface_close");
+ 		rc = func(xch);
++		dlclose(xc_dlhandle);
+ 		xc_dlhandle = NULL;
+ 	}
  
- #ifdef CONFIG_LIBXENCTRL_DL
- #include <dlfcn.h>
--
--/* The handle from dlopen(), needed by dlsym(), dlclose() */
--extern void *xc_dlhandle;
-+/* Lookup symbols in libxenctrl.so */
-+void *__xc_dlsym(const char *symbol);
- 
- /* Wrappers around xc_interface_open/close() to insert dlopen/dlclose() */
- xc_interface *__xc_interface_open(xentoollog_logger *logger,
-@@ -21,13 +20,13 @@ int __xc_interface_close(xc_interface *xch);
- ( \
- 	{ dtype value; \
- 	typedef dtype (*func_t)(xc_interface *, ...); \
--	func_t func = dlsym(xc_dlhandle, #name); \
-+	func_t func = __xc_dlsym(#name); \
- 	value = func(args); \
- 	value; } \
- )
- #define __xc_data(dtype, name) \
- ( \
--	{ dtype *value = (dtype *)dlsym(xc_dlhandle, #name); value; } \
-+	{ dtype *value = (dtype *)__xc_dlsym(#name); value; } \
- )
- 
- /* The wrappers around utilized xenctrl.h functions */
 -- 
 2.7.4
 
