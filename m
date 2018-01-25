@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.89 #1 (Red Hat Linux))
- id 1eecYu-0007TP-M9
- for kexec@lists.infradead.org; Thu, 25 Jan 2018 08:07:10 +0000
-Date: Thu, 25 Jan 2018 09:06:52 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4] kexec-tools: Make xc_dlhandle static
-Message-ID: <20180125080652.ez7rwefytnayfkly@verge.net.au>
-References: <1516821621-27139-1-git-send-email-eric.devolder@oracle.com>
- <20180124192632.GW4675@olila.local.net-space.pl>
+Received: from smtp2.provo.novell.com ([137.65.250.81])
+ by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1eedds-0006Av-8c
+ for kexec@lists.infradead.org; Thu, 25 Jan 2018 09:16:21 +0000
+Date: Thu, 25 Jan 2018 10:15:59 +0100
+From: Petr Tesarik <ptesarik@suse.com>
+Subject: Re: [makedumpfile PATCH 0/2] Fix calculations in exclude_segment()
+Message-ID: <20180125101559.20f42a5c@ezekiel.suse.cz>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701F37744@BPXM01GP.gisp.nec.co.jp>
+References: <cover.1516354241.git.ptesarik@suse.com>
+ <20180123062813.GB1968@localhost.localdomain>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701F37744@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180124192632.GW4675@olila.local.net-space.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,25 +24,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: andrew.cooper3@citrix.com, Eric DeVolder <eric.devolder@oracle.com>, kexec@lists.infradead.org, konrad.wilk@oracle.com
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Wed, Jan 24, 2018 at 08:26:32PM +0100, Daniel Kiper wrote:
-> On Wed, Jan 24, 2018 at 01:20:21PM -0600, Eric DeVolder wrote:
-> > This patch is a follow-on to commit 894bea93 "kexec-tools: Perform
-> > run-time linking of libxenctrl.so". This patch addresses feedback
-> > from Daniel Kiper.
+On Tue, 23 Jan 2018 08:49:48 +0000
+Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
+
+> >On 01/19/18 at 12:45pm, Petr Tesarik wrote:  
+> >> I have observed that makedumpfile --mem-usage shows bogus numbers
+> >> on a kaslr-enabled kernel. This boils down to incorrect calculations
+> >> in exclude_segment(). Consequently, data beyond a split LOAD segment
+> >> are read from the wrong file offset.
+> >>
+> >> Petr Tesarik (2):
+> >>   Fix off-by-one errors in exclude_segment()
+> >>   Fix physical-to-virtual conversion in exclude_segment()
+> >>
+> >>  elf_info.c | 22 +++++++++++-----------
+> >>  1 file changed, 11 insertions(+), 11 deletions(-)  
 > >
-> > This patch implements Daniel's suggestion to make the
-> > xc_dlhandle variable static, insert missing 'extern'
-> > qualifier for the new __xc() wrappers, and correct some
-> > style issues.
-> >
-> > Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> >Ack the series, thanks!  
 > 
-> Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+> Thanks guys, I'll merge them into v1.6.3.
 
-Thanks, applied.
+Glad to help. And thanks for merging into 'devel'!
+
+Petr T
 
 _______________________________________________
 kexec mailing list
