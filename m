@@ -1,24 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eeu4Y-0007PK-Bm
- for kexec@lists.infradead.org; Fri, 26 Jan 2018 02:49:00 +0000
-Date: Fri, 26 Jan 2018 10:48:41 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 4.14 023/159] mm/sparsemem: Allocate mem_section at
- runtime for CONFIG_SPARSEMEM_EXTREME=y
-Message-ID: <20180126024841.GA1759@localhost.localdomain>
-References: <20171222084623.668990192@linuxfoundation.org>
- <20171222084625.007160464@linuxfoundation.org>
- <1515302062.6507.18.camel@gmx.de>
- <20180108160444.2ol4fvgqbxnjmlpg@gmail.com>
- <20180108174653.7muglyihpngxp5tl@black.fi.intel.com>
- <20180109001303.dy73bpixsaegn4ol@node.shutemov.name>
- <20180117052454.GA2321@localhost.localdomain>
- <20180125155043.nj5b26yxutds7f37@node.shutemov.name>
+ id 1eeyZz-0007wB-LY
+ for kexec@lists.infradead.org; Fri, 26 Jan 2018 07:37:46 +0000
+Date: Fri, 26 Jan 2018 15:37:24 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] print kdump kernel loaded status in stack dump
+Message-ID: <20180126073724.GA27220@dhcp-128-65.nay.redhat.com>
+References: <20180117045057.GA4994@dhcp-128-65.nay.redhat.com>
+ <878tcvt592.fsf@linux.intel.com>
+ <20180118135704.62d0f79f@gandalf.local.home>
+ <20180119044719.GA3985@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180125155043.nj5b26yxutds7f37@node.shutemov.name>
+In-Reply-To: <20180119044719.GA3985@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,58 +26,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Galbraith <efault@gmx.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, Cyrill Gorcunov <gorcunov@openvz.org>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: pmladek@suse.com, Andi Kleen <ak@linux.intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, sergey.senozhatsky@gmail.com, akpm@linux-foundation.org
 
-On 01/25/18 at 06:50pm, Kirill A. Shutemov wrote:
-> On Wed, Jan 17, 2018 at 01:24:54PM +0800, Baoquan He wrote:
-> > Hi Kirill,
+On 01/19/18 at 12:47pm, Dave Young wrote:
+> On 01/18/18 at 01:57pm, Steven Rostedt wrote:
+> > On Thu, 18 Jan 2018 10:02:17 -0800
+> > Andi Kleen <ak@linux.intel.com> wrote:
 > > 
-> > I setup qemu 2.9.0 to test 5-level on kexec/kdump support. While both
-> > kexec and kdump reset to BIOS immediately after triggering. I saw your
-> > patch adding 5-level paging support for kexec. Wonder if your test
-> > succeeded to jump into kexec/kdump kernel, and what else I need to
-> > make it. By the way, I just tested the latest upstream kernel.
+> > > Dave Young <dyoung@redhat.com> writes:
+> > > >  		printk("%sHardware name: %s\n",
+> > > >  		       log_lvl, dump_stack_arch_desc_str);
+> > > > +	if (kexec_crash_loaded())
+> > > > +		printk("%skdump kernel loaded\n", log_lvl);  
+> > > 
+> > > Oops/warnings are getting longer and longer, often scrolling away
+> > > from the screen, and if the kernel crashes backscroll does not work
+> > > anymore, so precious information is lost.
+> > > 
+> > > Can you merge it with some other line?
+> > > 
+> > > Just a [KDUMP] or so somewhere should be good enough.
 > > 
-> > commit 7f6890418 x86/kexec: Add 5-level paging support
-> > 
-> > [ ~]$ qemu-system-x86_64 --version
-> > QEMU emulator version 2.9.0(qemu-2.9.0-1.fc26.1)
-> > Copyright (c) 2003-2017 Fabrice Bellard and the QEMU Project developers
+> > Or perhaps we should add it as a TAINT. Not all taints are bad.
 > 
-> Sorry for delay.
+> Hmm, I also thought about this before but It sounds like not match the
+> "tainted" meaning with the assumption that it is bad :(
 > 
-> I didn't tested it in 5-level paging mode :-/
-> 
-> The patch below helps in my case. Could you test it?
+> Maybe it would be better to do like Andi said, but print a better word
+> than "KDUMP", eg. "Kdumpable" sounds better.  If this is fine I can
+> repost the patch.
 
-Thanks, Kirill. 
+I have been not available recently, sorry for late about the update,
+rethinking about this, it is looks good to use "[KDUMP]".  Also for
+the tainted flags, I tried but it is not what we want since kdump kernel
+can be unloaded, this is not like "tainted" which can only be added and
+it can not be removed.
 
-Seems it doesn't work. I have some confusion about the process, will
-send you a private mail.
+How about below version?
+---
 
-Thanks
-Baoquan
-> 
-> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-> index 307d3bac5f04..65a98cf2307d 100644
-> --- a/arch/x86/kernel/relocate_kernel_64.S
-> +++ b/arch/x86/kernel/relocate_kernel_64.S
-> @@ -126,8 +126,12 @@ identity_mapped:
->         /*
->          * Set cr4 to a known state:
->          *  - physical address extension enabled
-> +        *  - 5-level paging, if enabled
->          */
->         movl    $X86_CR4_PAE, %eax
-> +#ifdef CONFIG_X86_5LEVEL
-> +       orl     $X86_CR4_LA57, %eax
-> +#endif
->         movq    %rax, %cr4
-> 
->         jmp 1f
-> -- 
->  Kirill A. Shutemov
+It is useful to print kdump kernel loaded status in dump_stack() 
+especially when panic happens so that we can  differentiate
+kdump kernel early hang and a normal panic in a bug report.
+
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+[v1 -> v2] merge the status in other line as Andi Kleen suggested
+ kernel/printk/printk.c |    3 +++
+--- linux.orig/kernel/printk/printk.c
++++ linux/kernel/printk/printk.c
+@@ -48,6 +48,7 @@
+ #include <linux/sched/clock.h>
+ #include <linux/sched/debug.h>
+ #include <linux/sched/task_stack.h>
++#include <linux/kexec.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/sections.h>
+@@ -3118,9 +3119,11 @@ void __init dump_stack_set_arch_desc(con
+  */
+ void dump_stack_print_info(const char *log_lvl)
+ {
+-	printk("%sCPU: %d PID: %d Comm: %.20s %s %s %.*s\n",
++	printk("%sCPU: %d PID: %d Comm: %.20s %s %s %s %.*s\n",
+ 	       log_lvl, raw_smp_processor_id(), current->pid, current->comm,
+-	       print_tainted(), init_utsname()->release,
++	       print_tainted(),
++	       kexec_crash_loaded() ? "[KDUMP]" : "",
++	       init_utsname()->release,
+ 	       (int)strcspn(init_utsname()->version, " "),
+ 	       init_utsname()->version);
+ 
 
 _______________________________________________
 kexec mailing list
