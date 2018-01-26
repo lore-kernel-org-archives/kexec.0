@@ -1,17 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eesva-0006hD-IQ
- for kexec@lists.infradead.org; Fri, 26 Jan 2018 01:35:40 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [makedumpfile PATCH] sadump: Fix a problem of PTI enabled kernel
-Date: Fri, 26 Jan 2018 01:31:29 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701F38B21@BPXM01GP.gisp.nec.co.jp>
-References: <1516926146-20347-1-git-send-email-indou.takao@jp.fujitsu.com>
- <33710E6CAA200E4583255F4FB666C4E21B3353BD@G01JPEXMBYT03>
-In-Reply-To: <33710E6CAA200E4583255F4FB666C4E21B3353BD@G01JPEXMBYT03>
-Content-Language: ja-JP
+ id 1eeu4Y-0007PK-Bm
+ for kexec@lists.infradead.org; Fri, 26 Jan 2018 02:49:00 +0000
+Date: Fri, 26 Jan 2018 10:48:41 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 4.14 023/159] mm/sparsemem: Allocate mem_section at
+ runtime for CONFIG_SPARSEMEM_EXTREME=y
+Message-ID: <20180126024841.GA1759@localhost.localdomain>
+References: <20171222084623.668990192@linuxfoundation.org>
+ <20171222084625.007160464@linuxfoundation.org>
+ <1515302062.6507.18.camel@gmx.de>
+ <20180108160444.2ol4fvgqbxnjmlpg@gmail.com>
+ <20180108174653.7muglyihpngxp5tl@black.fi.intel.com>
+ <20180109001303.dy73bpixsaegn4ol@node.shutemov.name>
+ <20180117052454.GA2321@localhost.localdomain>
+ <20180125155043.nj5b26yxutds7f37@node.shutemov.name>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180125155043.nj5b26yxutds7f37@node.shutemov.name>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,91 +31,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>, "Indoh, Takao" <indou.takao@jp.fujitsu.com>
-Cc: Keiichirou Suzuki <kei-suzuki@xr.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Galbraith <efault@gmx.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, Cyrill Gorcunov <gorcunov@openvz.org>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
->> This patch fixes a problme that a dumpfile of sadump cannot be handled by
->> makedumpfile when Page Table Isolation(PTI) is enabled.
->>
->> When PTI is enabled, bit 12 of CR3 register is used to split user space and
->> kernel space. Also bit 11:0 is used for Process Context IDentifiers(PCID).  To
->> open a dump file of sadump, a value of CR3 is used to calculate KASLR offset
->> and
->> phys_base, therefore this patch fixes to mask CR3 register value collectly for
->> PTI enabled kernel.
->>
->> Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
->> ---
->>  makedumpfile.c | 2 ++
->>  makedumpfile.h | 2 ++
->>  sadump_info.c  | 9 ++++++++-
->>  3 files changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/makedumpfile.c b/makedumpfile.c
->> index 64b404a..247a056 100644
->> --- a/makedumpfile.c
->> +++ b/makedumpfile.c
->> @@ -1557,6 +1557,8 @@ get_symbol_info(void)
->>  	SYMBOL_INIT(divide_error, "divide_error");
->>  	SYMBOL_INIT(idt_table, "idt_table");
->>  	SYMBOL_INIT(saved_command_line, "saved_command_line");
->> +	SYMBOL_INIT(pti_init, "pti_init");
->> +	SYMBOL_INIT(kaiser_init, "kaiser_init");
->>
->>  	return TRUE;
->>  }
->> diff --git a/makedumpfile.h b/makedumpfile.h
->> index 57cf4d9..8ee4d29 100644
->> --- a/makedumpfile.h
->> +++ b/makedumpfile.h
->> @@ -1608,6 +1608,8 @@ struct symbol_table {
->>  	unsigned long long	divide_error;
->>  	unsigned long long	idt_table;
->>  	unsigned long long	saved_command_line;
->> +	unsigned long long	pti_init;
->> +	unsigned long long	kaiser_init;
->>
->>  	/*
->>  	 * symbols on ppc64 arch
->> diff --git a/sadump_info.c b/sadump_info.c
->> index 148d4ba..dd50d48 100644
->> --- a/sadump_info.c
->> +++ b/sadump_info.c
->> @@ -1362,6 +1362,9 @@ finish:
->>   *    kernel. Retrieve vmcoreinfo from address of "elfcorehdr=" and
->>   *    get kaslr_offset and phys_base from vmcoreinfo.
->>   */
->> +#define PTI_USER_PGTABLE_BIT		(info->page_shift)
->> +#define PTI_USER_PGTABLE_MASK		(1 << PTI_USER_PGTABLE_BIT)
->> +#define CR3_PCID_MASK			0xFFFull
->>  int
->>  calc_kaslr_offset(void)
->>  {
->> @@ -1389,7 +1392,11 @@ calc_kaslr_offset(void)
->>  	}
->>
->>  	idtr = ((uint64_t)smram.IdtUpper)<<32 | (uint64_t)smram.IdtLower;
->> -	cr3 = smram.Cr3;
->> +	if ((SYMBOL(pti_init) != NOT_FOUND_SYMBOL) ||
->> +	    (SYMBOL(kaiser_init) != NOT_FOUND_SYMBOL))
->> +		cr3 = smram.Cr3 & ~(CR3_PCID_MASK|PTI_USER_PGTABLE_MASK);
->> +	else
->> +		cr3 = smram.Cr3 & ~CR3_PCID_MASK;
->>
->>  	/* Convert virtual address of IDT table to physical address */
->>  	if ((idtr_paddr = vtop4_x86_64_pagetable(idtr, cr3)) == NOT_PADDR)
->
->Looks good to me.
->
->Thanks for your work.
->
->Kumagai-san, could you merge this patch?
+On 01/25/18 at 06:50pm, Kirill A. Shutemov wrote:
+> On Wed, Jan 17, 2018 at 01:24:54PM +0800, Baoquan He wrote:
+> > Hi Kirill,
+> > 
+> > I setup qemu 2.9.0 to test 5-level on kexec/kdump support. While both
+> > kexec and kdump reset to BIOS immediately after triggering. I saw your
+> > patch adding 5-level paging support for kexec. Wonder if your test
+> > succeeded to jump into kexec/kdump kernel, and what else I need to
+> > make it. By the way, I just tested the latest upstream kernel.
+> > 
+> > commit 7f6890418 x86/kexec: Add 5-level paging support
+> > 
+> > [ ~]$ qemu-system-x86_64 --version
+> > QEMU emulator version 2.9.0(qemu-2.9.0-1.fc26.1)
+> > Copyright (c) 2003-2017 Fabrice Bellard and the QEMU Project developers
+> 
+> Sorry for delay.
+> 
+> I didn't tested it in 5-level paging mode :-/
+> 
+> The patch below helps in my case. Could you test it?
 
-Sure, it will be merged into v1.6.4 since v1.6.3 is almost ready for release.
+Thanks, Kirill. 
 
-Thanks,
-Atsushi Kumagai
+Seems it doesn't work. I have some confusion about the process, will
+send you a private mail.
 
+Thanks
+Baoquan
+> 
+> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> index 307d3bac5f04..65a98cf2307d 100644
+> --- a/arch/x86/kernel/relocate_kernel_64.S
+> +++ b/arch/x86/kernel/relocate_kernel_64.S
+> @@ -126,8 +126,12 @@ identity_mapped:
+>         /*
+>          * Set cr4 to a known state:
+>          *  - physical address extension enabled
+> +        *  - 5-level paging, if enabled
+>          */
+>         movl    $X86_CR4_PAE, %eax
+> +#ifdef CONFIG_X86_5LEVEL
+> +       orl     $X86_CR4_LA57, %eax
+> +#endif
+>         movq    %rax, %cr4
+> 
+>         jmp 1f
+> -- 
+>  Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
