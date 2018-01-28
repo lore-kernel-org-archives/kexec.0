@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1efHqF-0006do-Sy
- for kexec@lists.infradead.org; Sat, 27 Jan 2018 04:11:49 +0000
-Date: Sat, 27 Jan 2018 12:11:29 +0800
+ id 1efftd-00011y-0F
+ for kexec@lists.infradead.org; Sun, 28 Jan 2018 05:52:55 +0000
+Date: Sun, 28 Jan 2018 13:52:31 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH V2] print kdump kernel loaded status in stack dump
-Message-ID: <20180127041129.GA29016@dhcp-128-65.nay.redhat.com>
+Subject: [PATCH kexec-tools] x86: use old screen_info if needed
+Message-ID: <20180128055231.GA1744@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -21,45 +21,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, Andi Kleen <ak@linux.intel.com>, sergey.senozhatsky@gmail.com
-Cc: akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-It is useful to print kdump kernel loaded status in dump_stack() 
-especially when panic happens so that we can differenciate 
-kdump kernel early hang and a normal panic in a bug report.
+With modern drm/kms graphic driver kexec-tools does not setup screen_info
+correctly so one will only see screen output after those drm drivers
+reinitializing after rebooting. Copying the old screen info from original
+boot_params will help during my test, although it could not work for some
+potential cases, but it is not worse than before.  This has been used in
+the kernel kexec_file_load.
 
 Signed-off-by: Dave Young <dyoung@redhat.com>
 ---
-[v1 -> v2] merge the status in other line as Andi Kleen suggested
- kernel/printk/printk.c |    3 +++
----
- kernel/printk/printk.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ kexec/arch/i386/x86-linux-setup.c |   21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
---- linux-x86.orig/kernel/printk/printk.c
-+++ linux-x86/kernel/printk/printk.c
-@@ -48,6 +48,7 @@
- #include <linux/sched/clock.h>
- #include <linux/sched/debug.h>
- #include <linux/sched/task_stack.h>
-+#include <linux/kexec.h>
+--- kexec-tools.orig/kexec/arch/i386/x86-linux-setup.c
++++ kexec-tools/kexec/arch/i386/x86-linux-setup.c
+@@ -27,6 +27,7 @@
+ #include <fcntl.h>
+ #include <sys/ioctl.h>
+ #include <linux/fb.h>
++#include <linux/screen_info.h>
+ #include <unistd.h>
+ #include <dirent.h>
+ #include <mntent.h>
+@@ -122,7 +123,7 @@ void setup_linux_bootloader_parameters_h
+ 	cmdline_ptr[cmdline_len - 1] = '\0';
+ }
  
- #include <linux/uaccess.h>
- #include <asm/sections.h>
-@@ -3118,9 +3119,11 @@ void __init dump_stack_set_arch_desc(con
-  */
- void dump_stack_print_info(const char *log_lvl)
+-int setup_linux_vesafb(struct x86_linux_param_header *real_mode)
++static int setup_linux_vesafb(struct x86_linux_param_header *real_mode)
  {
--	printk("%sCPU: %d PID: %d Comm: %.20s %s %s %.*s\n",
-+	printk("%sCPU: %d PID: %d Comm: %.20s %s%s %s %.*s\n",
- 	       log_lvl, raw_smp_processor_id(), current->pid, current->comm,
--	       print_tainted(), init_utsname()->release,
-+	       kexec_crash_loaded() ? "Kdump: loaded " : "",
-+	       print_tainted(),
-+	       init_utsname()->release,
- 	       (int)strcspn(init_utsname()->version, " "),
- 	       init_utsname()->version);
+ 	struct fb_fix_screeninfo fix;
+ 	struct fb_var_screeninfo var;
+@@ -826,6 +827,8 @@ out:
+ void setup_linux_system_parameters(struct kexec_info *info,
+ 				   struct x86_linux_param_header *real_mode)
+ {
++	int err;
++
+ 	/* get subarch from running kernel */
+ 	setup_subarch(real_mode);
+ 	if (bzImage_support_efi_boot && !arch_options.noefi)
+@@ -841,8 +844,22 @@ void setup_linux_system_parameters(struc
+ 	real_mode->orig_video_ega_bx = 0;
+ 	real_mode->orig_video_isVGA = 1;
+ 	real_mode->orig_video_points = 16;
+-	setup_linux_vesafb(real_mode);
  
++	/* setup vesa fb if possible, or just use original screen_info */
++	err = setup_linux_vesafb(real_mode);
++	if (err) {
++		uint16_t cl_magic, cl_offset;
++
++		/* save and restore the old cmdline param if needed */
++		cl_magic = real_mode->cl_magic;
++		cl_offset = real_mode->cl_offset;
++
++		err = get_bootparam(real_mode, 0, sizeof(struct screen_info));
++		if (!err) {
++			real_mode->cl_magic = cl_magic;
++			real_mode->cl_offset = cl_offset;
++		}
++	}
+ 	/* Fill in the memsize later */
+ 	real_mode->ext_mem_k = 0;
+ 	real_mode->alt_mem_k = 0;
 
 _______________________________________________
 kexec mailing list
