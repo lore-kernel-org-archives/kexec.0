@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
- by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eg1QU-0005Ml-LK
- for kexec@lists.infradead.org; Mon, 29 Jan 2018 04:52:16 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [makedumpfile PATCH v2] Wipe excluded pages that are written
- into ELF dump file
-Date: Mon, 29 Jan 2018 04:51:22 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701F418BA@BPXM01GP.gisp.nec.co.jp>
-References: <1501848839-10518-1-git-send-email-eric.devolder@oracle.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701EF7308@BPXM01GP.gisp.nec.co.jp>
- <5db0222a-f550-9007-2775-15f6e8b92f0b@oracle.com>
-In-Reply-To: <5db0222a-f550-9007-2775-15f6e8b92f0b@oracle.com>
-Content-Language: ja-JP
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.89 #1 (Red Hat Linux))
+ id 1eg3lJ-0004mc-EP
+ for kexec@lists.infradead.org; Mon, 29 Jan 2018 07:21:55 +0000
+Date: Mon, 29 Jan 2018 08:21:35 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH kexec-tools] x86: use old screen_info if needed
+Message-ID: <20180129072135.pyzaawl7i6ny3piv@verge.net.au>
+References: <20180128055231.GA1744@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180128055231.GA1744@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,38 +23,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric DeVolder <eric.devolder@oracle.com>
-Cc: Keiichirou Suzuki <kei-suzuki@xr.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org
 
-Hello Eric,
+On Sun, Jan 28, 2018 at 01:52:31PM +0800, Dave Young wrote:
+> With modern drm/kms graphic driver kexec-tools does not setup screen_info
+> correctly so one will only see screen output after those drm drivers
+> reinitializing after rebooting. Copying the old screen info from original
+> boot_params will help during my test, although it could not work for some
+> potential cases, but it is not worse than before.  This has been used in
+> the kernel kexec_file_load.
+> 
+> Signed-off-by: Dave Young <dyoung@redhat.com>
 
->On 08/07/2017 07:25 PM, Atsushi Kumagai wrote:
->> Hello Eric,
->>
->> Thanks for your work, this version looks good to me.
->> I'll merge this into v1.6.3.
->>
->> Regards,
->> Atsushi Kumagai
->
->Thank you!
->eric
-
-I noticed that wiping zero pages seems to cause different behavior
-of crash like:
-
-[kmem -i]
--    SWAP USED        1         4 KB    0% of TOTAL SWAP
--    SWAP FREE   489979       1.9 GB   99% of TOTAL SWAP
-+    SWAP USED   229886       898 MB   46% of TOTAL SWAP  // wiped page is counted as SWAP USED ?
-+    SWAP FREE   260094      1016 MB   53% of TOTAL SWAP
-
-I don't investigate the details yet, but I decided to slip this
-feature to v1.6.4.
-
-Thanks,
-Atsushi Kumagai
-
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
