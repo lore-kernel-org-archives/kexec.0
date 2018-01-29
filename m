@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-io0-x244.google.com ([2607:f8b0:4001:c06::244])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eg4MP-0002LU-8B
- for kexec@lists.infradead.org; Mon, 29 Jan 2018 08:00:19 +0000
-Date: Mon, 29 Jan 2018 15:59:54 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH kexec-tools] x86: use old screen_info if needed
-Message-ID: <20180129075954.GA6020@dhcp-128-65.nay.redhat.com>
-References: <20180128055231.GA1744@dhcp-128-65.nay.redhat.com>
- <20180129072135.pyzaawl7i6ny3piv@verge.net.au>
+ id 1eg4Z3-0007Sw-9p
+ for kexec@lists.infradead.org; Mon, 29 Jan 2018 08:13:19 +0000
+Received: by mail-io0-x244.google.com with SMTP id f34so6677791ioi.13
+ for <kexec@lists.infradead.org>; Mon, 29 Jan 2018 00:13:05 -0800 (PST)
+Date: Mon, 29 Jan 2018 17:12:27 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH] arm64: kdump: retain reserved memory regions
+Message-ID: <20180129081225.GA23847@linaro.org>
+References: <20180110100943.6082-1-takahiro.akashi@linaro.org>
+ <5A55F87F.2080501@arm.com> <20180111113840.GF18820@linaro.org>
+ <5A61D90E.1000907@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180129072135.pyzaawl7i6ny3piv@verge.net.au>
+In-Reply-To: <5A61D90E.1000907@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,76 +27,189 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: James Morse <james.morse@arm.com>
+Cc: ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 01/29/18 at 08:21am, Simon Horman wrote:
-> On Sun, Jan 28, 2018 at 01:52:31PM +0800, Dave Young wrote:
-> > With modern drm/kms graphic driver kexec-tools does not setup screen_info
-> > correctly so one will only see screen output after those drm drivers
-> > reinitializing after rebooting. Copying the old screen info from original
-> > boot_params will help during my test, although it could not work for some
-> > potential cases, but it is not worse than before.  This has been used in
-> > the kernel kexec_file_load.
-> > 
-> > Signed-off-by: Dave Young <dyoung@redhat.com>
+James,
+
+On Fri, Jan 19, 2018 at 11:39:58AM +0000, James Morse wrote:
+> Hi Akashi,
 > 
-> Thanks, applied.
+> On 11/01/18 11:38, AKASHI Takahiro wrote:
+> > On Wed, Jan 10, 2018 at 11:26:55AM +0000, James Morse wrote:
+> >> On 10/01/18 10:09, AKASHI Takahiro wrote:
+> >>> This is a fix against the issue that crash dump kernel may hang up
+> >>> during booting, which can happen on any ACPI-based system with "ACPI
+> >>> Reclaim Memory."
+> 
+> >>> (diagnosis)
+> >>> * This fault is a data abort, alignment fault (ESR=0x96000021)
+> >>>   during reading out ACPI table.
+> >>> * Initial ACPI tables are normally stored in system ram and marked as
+> >>>   "ACPI Reclaim memory" by the firmware.
+> >>> * After the commit f56ab9a5b73c ("efi/arm: Don't mark ACPI reclaim
+> >>>   memory as MEMBLOCK_NOMAP"), those regions' attribute were changed
+> >>>   removing NOMAP bit and they are instead "memblock-reserved".
+> >>> * When crash dump kernel boots up, it tries to accesses ACPI tables by
+> >>>   ioremap'ing them (through acpi_os_ioremap()).
+> >>> * Since those regions are not included in device tree's
+> >>>   "usable-memory-range" and so not recognized as part of crash dump
+> >>>   kernel's system ram, ioremap() will create a non-cacheable mapping here.
+> >>
+> >> Ugh, because acpi_os_ioremap() looks at the efi memory map through the prism of
+> >> what we pulled into memblock, which is different during kdump.
+> >>
+> >> Is an alternative to teach acpi_os_ioremap() to ask
+> >> efi_mem_attributes() directly for the attributes to use?
+> >> (e.g. arch_apei_get_mem_attribute())
+> > 
+> > I didn't think of this approach.
+> > Do you mean a change like the patch below?
+> 
+> Yes. Aha, you can pretty much re-use the helper directly.
+> 
+> It was just a suggestion, removing the extra abstraction that is causing the bug
+> could be cleaner ...
+> 
+> > (I'm still debugging this code since the kernel fails to boot.)
+> 
+> ... but might be too fragile.
+> 
+> There are points during boot when the EFI memory map isn't mapped.
 
-Hi Simon,
+Right, this was a problem for my patch.
+Attached is the revised and workable one.
+Efi_memmap_init_late() may alternatively be called in acpi_early_init() or
+even in acpi_os_ioremap(), but either way it looks a bit odd.
 
-Thanks for taking it.  I tested the original version on my laptop with
-efi boot.  either of below two changes work for me:
+Thanks,
+-Takahiro AKASHI
 
-a) use the setup_linux_vesafb() detected values and change the orig_video_isVGA
-to 0x70 (copy from boot params)
-
-b) copy all screen_info from boot params.
-
-I actually was hesitating which one is better and finally I sent the b).
-But maybe a) + b) will be better, since my case is a framebuffer, I'm
-not sure non-framebuffer case though it will be not worse with the
-patch.  Could you consider an appending patch below?
+> I think that
+> helper will return 'device memory' for everything when this happens.
+> 
+> 
+> Thanks,
+> 
+> James
+===8<===
+From c88f4c8106ba7a918c835b1cdf538b1d21019863 Mon Sep 17 00:00:00 2001
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Date: Mon, 29 Jan 2018 15:07:43 +0900
+Subject: [PATCH] arm64: kdump: make acpi_os_ioremap() more generic
 
 ---
-In current kexec-tools we have already vesafb detecting code,
-but in case unsupported vesa fb types it just return and do nothing
-During my test copying the old boot time screen info works for me with
-efi booted machine. And the vesa fb detected values also work even if the
-fb fix.id is "inteldrmfb", thus change the code to use those values
-detected with fb ioctl first for framebuffer systems.
+ arch/arm64/include/asm/acpi.h | 23 ++++++++++++++++-------
+ arch/arm64/kernel/acpi.c      |  7 ++-----
+ init/main.c                   |  4 ++++
+ 3 files changed, 22 insertions(+), 12 deletions(-)
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- kexec/arch/i386/x86-linux-setup.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
---- kexec-tools.orig/kexec/arch/i386/x86-linux-setup.c
-+++ kexec-tools/kexec/arch/i386/x86-linux-setup.c
-@@ -123,6 +123,7 @@ void setup_linux_bootloader_parameters_h
- 	cmdline_ptr[cmdline_len - 1] = '\0';
+diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
+index 32f465a80e4e..d53c95f4e1a9 100644
+--- a/arch/arm64/include/asm/acpi.h
++++ b/arch/arm64/include/asm/acpi.h
+@@ -12,10 +12,12 @@
+ #ifndef _ASM_ACPI_H
+ #define _ASM_ACPI_H
+ 
++#include <linux/efi.h>
+ #include <linux/memblock.h>
+ #include <linux/psci.h>
+ 
+ #include <asm/cputype.h>
++#include <asm/io.h>
+ #include <asm/smp_plat.h>
+ #include <asm/tlbflush.h>
+ 
+@@ -29,18 +31,22 @@
+ 
+ /* Basic configuration for ACPI */
+ #ifdef	CONFIG_ACPI
++pgprot_t __acpi_get_mem_attribute(phys_addr_t addr);
++
+ /* ACPI table mapping after acpi_permanent_mmap is set */
+ static inline void __iomem *acpi_os_ioremap(acpi_physical_address phys,
+ 					    acpi_size size)
+ {
++	/* For normal memory we already have a cacheable mapping. */
++	if (memblock_is_map_memory(phys))
++		return (void __iomem *)__phys_to_virt(phys);
++
+ 	/*
+-	 * EFI's reserve_regions() call adds memory with the WB attribute
+-	 * to memblock via early_init_dt_add_memory_arch().
++	 * We should still honor the memory's attribute here because
++	 * crash dump kernel possibly excludes some ACPI (reclaim)
++	 * regions from memblock list.
+ 	 */
+-	if (!memblock_is_memory(phys))
+-		return ioremap(phys, size);
+-
+-	return ioremap_cache(phys, size);
++	return __ioremap(phys, size, __acpi_get_mem_attribute(phys));
+ }
+ #define acpi_os_ioremap acpi_os_ioremap
+ 
+@@ -125,7 +131,10 @@ static inline const char *acpi_get_enable_method(int cpu)
+  * for compatibility.
+  */
+ #define acpi_disable_cmcff 1
+-pgprot_t arch_apei_get_mem_attribute(phys_addr_t addr);
++static inline pgprot_t arch_apei_get_mem_attribute(phys_addr_t addr)
++{
++	return __acpi_get_mem_attribute(addr);
++}
+ #endif /* CONFIG_ACPI_APEI */
+ 
+ #ifdef CONFIG_ACPI_NUMA
+diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+index b3162715ed78..f94bdf7be439 100644
+--- a/arch/arm64/kernel/acpi.c
++++ b/arch/arm64/kernel/acpi.c
+@@ -31,10 +31,9 @@
+ #include <asm/cpu_ops.h>
+ #include <asm/smp_plat.h>
+ 
+-#ifdef CONFIG_ACPI_APEI
++/* CONFIG_ACPI_APEI */
+ # include <linux/efi.h>
+ # include <asm/pgtable.h>
+-#endif
+ 
+ int acpi_noirq = 1;		/* skip ACPI IRQ initialization */
+ int acpi_disabled = 1;
+@@ -239,8 +238,7 @@ void __init acpi_boot_table_init(void)
+ 	}
  }
  
-+static int get_bootparam(void *buf, off_t offset, size_t size);
- static int setup_linux_vesafb(struct x86_linux_param_header *real_mode)
+-#ifdef CONFIG_ACPI_APEI
+-pgprot_t arch_apei_get_mem_attribute(phys_addr_t addr)
++pgprot_t __acpi_get_mem_attribute(phys_addr_t addr)
  {
- 	struct fb_fix_screeninfo fix;
-@@ -144,8 +145,13 @@ static int setup_linux_vesafb(struct x86
- 		/* VIDEO_TYPE_EFI */
- 		real_mode->orig_video_isVGA = 0x70;
- 	} else {
--		/* cannot handle and other types */
--		goto out;
-+		int err;
-+		off_t offset = offsetof(typeof(*real_mode), orig_video_isVGA);
-+
-+		/* blindly try old boot time video type */
-+		err = get_bootparam(&real_mode->orig_video_isVGA, offset, 1);
-+		if (err)
-+			goto out;
- 	}
- 	close(fd);
- 
+ 	/*
+ 	 * According to "Table 8 Map: EFI memory types to AArch64 memory
+@@ -261,4 +259,3 @@ pgprot_t arch_apei_get_mem_attribute(phys_addr_t addr)
+ 		return __pgprot(PROT_NORMAL_NC);
+ 	return __pgprot(PROT_DEVICE_nGnRnE);
+ }
+-#endif
+diff --git a/init/main.c b/init/main.c
+index a8100b954839..a479ece2bae9 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -674,6 +674,10 @@ asmlinkage __visible void __init start_kernel(void)
+ 	debug_objects_mem_init();
+ 	setup_per_cpu_pageset();
+ 	numa_policy_init();
++#if defined(CONFIG_ARM64) && defined(CONFIG_EFI)
++	efi_memmap_init_late(efi.memmap.phys_map,
++			efi.memmap.nr_map * efi.memmap.desc_size);
++#endif
+ 	acpi_early_init();
+ 	if (late_time_init)
+ 		late_time_init();
+-- 
+2.15.1
 
 
 _______________________________________________
