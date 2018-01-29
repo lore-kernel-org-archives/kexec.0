@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.89 #1 (Red Hat Linux))
- id 1eg3t3-0006XW-Hl
- for kexec@lists.infradead.org; Mon, 29 Jan 2018 07:29:55 +0000
-From: Simon Horman <horms@verge.net.au>
-Subject: [PATCH] x86: constify fsname parameter of find_mnt_by_fsname()
-Date: Mon, 29 Jan 2018 08:29:33 +0100
-Message-Id: <20180129072933.19227-1-horms@verge.net.au>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1eg4MP-0002LU-8B
+ for kexec@lists.infradead.org; Mon, 29 Jan 2018 08:00:19 +0000
+Date: Mon, 29 Jan 2018 15:59:54 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH kexec-tools] x86: use old screen_info if needed
+Message-ID: <20180129075954.GA6020@dhcp-128-65.nay.redhat.com>
+References: <20180128055231.GA1744@dhcp-128-65.nay.redhat.com>
+ <20180129072135.pyzaawl7i6ny3piv@verge.net.au>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180129072135.pyzaawl7i6ny3piv@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,45 +20,83 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@verge.net.au>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-ZmluZF9tbnRfYnlfZnNuYW1lKCkgaXMgY2FsbGVkIHdpdGggY29uc3RhbnQgc3RyaW5ncyBhcyBp
-dHMKZnNuYW1lIHBhcmFtZXRlciBhbmQgZG9lcyBub3QgbW9kaWZ5IHRoaXMgcGFyYW1ldGVyLCB0
-aHVzCml0IHNlZW1zIGFwcHJvcHJpYXRlIHRvIG1ha2UgdGhlIHBhcmFtZXRlciBjb25zdC4KClRo
-aXMgcHJvYmxlbSB3YXMgYnJvdWdodCB0byBteSBhdHRlbnRpb24gYnkgZ2NjOgoKJCBnY2MgLS12
-ZXJzaW9uCmdjYyAoRGViaWFuIDYuMy4wLTE4KSA2LjMuMCAyMDE3MDUxNgouLi4KCiQgbWFrZQou
-Li4Ka2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51eC1zZXR1cC5jOiBJbiBmdW5jdGlvbiDigJhnZXRf
-Ym9vdHBhcmFt4oCZOgprZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmM6NDQ3OjMzOiB3
-YXJuaW5nOiBwYXNzaW5nIGFyZ3VtZW50IDEgb2Yg4oCYZmluZF9tbnRfYnlfZnNuYW1l4oCZIGRp
-c2NhcmRzIOKAmGNvbnN04oCZIHF1YWxpZmllciBmcm9tIHBvaW50ZXIgdGFyZ2V0IHR5cGUgWy1X
-ZGlzY2FyZGVkLXF1YWxpZmllcnNdCiAgc3lzZnNfbW50ID0gZmluZF9tbnRfYnlfZnNuYW1lKCJz
-eXNmcyIpOwogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBefn5+fn5+CmtleGVjL2Fy
-Y2gvaTM4Ni94ODYtbGludXgtc2V0dXAuYzo0MjI6Nzogbm90ZTogZXhwZWN0ZWQg4oCYY2hhciAq
-4oCZIGJ1dCBhcmd1bWVudCBpcyBvZiB0eXBlIOKAmGNvbnN0IGNoYXIgKuKAmQogY2hhciAqZmlu
-ZF9tbnRfYnlfZnNuYW1lKGNoYXIgKmZzbmFtZSkKICAgICAgIF5+fn5+fn5+fn5+fn5+fn5+fgpr
-ZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmM6NDU4OjM2OiB3YXJuaW5nOiBwYXNzaW5n
-IGFyZ3VtZW50IDEgb2Yg4oCYZmluZF9tbnRfYnlfZnNuYW1l4oCZIGRpc2NhcmRzIOKAmGNvbnN0
-4oCZIHF1YWxpZmllciBmcm9tIHBvaW50ZXIgdGFyZ2V0IHR5cGUgWy1XZGlzY2FyZGVkLXF1YWxp
-ZmllcnNdCiAgIGRlYnVnZnNfbW50ID0gZmluZF9tbnRfYnlfZnNuYW1lKCJkZWJ1Z2ZzIik7CiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fgprZXhlYy9hcmNoL2kz
-ODYveDg2LWxpbnV4LXNldHVwLmM6NDIyOjc6IG5vdGU6IGV4cGVjdGVkIOKAmGNoYXIgKuKAmSBi
-dXQgYXJndW1lbnQgaXMgb2YgdHlwZSDigJhjb25zdCBjaGFyICrigJkKIGNoYXIgKmZpbmRfbW50
-X2J5X2ZzbmFtZShjaGFyICpmc25hbWUpCi4uLgoKU2lnbmVkLW9mZi1ieTogU2ltb24gSG9ybWFu
-IDxob3Jtc0B2ZXJnZS5uZXQuYXU+Ci0tLQoga2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51eC1zZXR1
-cC5jIHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0p
-CgpkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51eC1zZXR1cC5jIGIva2V4ZWMv
-YXJjaC9pMzg2L3g4Ni1saW51eC1zZXR1cC5jCmluZGV4IDIxNTJhMjE5MTc0My4uMTgxZDdkYmEy
-YzIzIDEwMDY0NAotLS0gYS9rZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmMKKysrIGIv
-a2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51eC1zZXR1cC5jCkBAIC00MTksNyArNDE5LDcgQEAgb3V0
-OgogICogdG8gYmUgbW91bnRlZCBvbmNlIChzeXNmcywgZGVidWdzZnMsIHByb2MpLCBhcyBpdCB3
-aWxsIHJldHVybiB0aGUgZmlyc3QKICAqIGluc3RhbmNlIGxpc3RlZCBpbiBtdGFiLgogICovCi1j
-aGFyICpmaW5kX21udF9ieV9mc25hbWUoY2hhciAqZnNuYW1lKQorY2hhciAqZmluZF9tbnRfYnlf
-ZnNuYW1lKGNvbnN0IGNoYXIgKmZzbmFtZSkKIHsKIAlGSUxFICptdGFiOwogCXN0cnVjdCBtbnRl
-bnQgKm1udDsKLS0gCjIuMTEuMAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 01/29/18 at 08:21am, Simon Horman wrote:
+> On Sun, Jan 28, 2018 at 01:52:31PM +0800, Dave Young wrote:
+> > With modern drm/kms graphic driver kexec-tools does not setup screen_info
+> > correctly so one will only see screen output after those drm drivers
+> > reinitializing after rebooting. Copying the old screen info from original
+> > boot_params will help during my test, although it could not work for some
+> > potential cases, but it is not worse than before.  This has been used in
+> > the kernel kexec_file_load.
+> > 
+> > Signed-off-by: Dave Young <dyoung@redhat.com>
+> 
+> Thanks, applied.
+
+Hi Simon,
+
+Thanks for taking it.  I tested the original version on my laptop with
+efi boot.  either of below two changes work for me:
+
+a) use the setup_linux_vesafb() detected values and change the orig_video_isVGA
+to 0x70 (copy from boot params)
+
+b) copy all screen_info from boot params.
+
+I actually was hesitating which one is better and finally I sent the b).
+But maybe a) + b) will be better, since my case is a framebuffer, I'm
+not sure non-framebuffer case though it will be not worse with the
+patch.  Could you consider an appending patch below?
+
+---
+In current kexec-tools we have already vesafb detecting code,
+but in case unsupported vesa fb types it just return and do nothing
+During my test copying the old boot time screen info works for me with
+efi booted machine. And the vesa fb detected values also work even if the
+fb fix.id is "inteldrmfb", thus change the code to use those values
+detected with fb ioctl first for framebuffer systems.
+
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+ kexec/arch/i386/x86-linux-setup.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+--- kexec-tools.orig/kexec/arch/i386/x86-linux-setup.c
++++ kexec-tools/kexec/arch/i386/x86-linux-setup.c
+@@ -123,6 +123,7 @@ void setup_linux_bootloader_parameters_h
+ 	cmdline_ptr[cmdline_len - 1] = '\0';
+ }
+ 
++static int get_bootparam(void *buf, off_t offset, size_t size);
+ static int setup_linux_vesafb(struct x86_linux_param_header *real_mode)
+ {
+ 	struct fb_fix_screeninfo fix;
+@@ -144,8 +145,13 @@ static int setup_linux_vesafb(struct x86
+ 		/* VIDEO_TYPE_EFI */
+ 		real_mode->orig_video_isVGA = 0x70;
+ 	} else {
+-		/* cannot handle and other types */
+-		goto out;
++		int err;
++		off_t offset = offsetof(typeof(*real_mode), orig_video_isVGA);
++
++		/* blindly try old boot time video type */
++		err = get_bootparam(&real_mode->orig_video_isVGA, offset, 1);
++		if (err)
++			goto out;
+ 	}
+ 	close(fd);
+ 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
