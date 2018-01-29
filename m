@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x241.google.com ([2607:f8b0:400e:c05::241])
- by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eg8xj-0005Ho-IG
- for kexec@lists.infradead.org; Mon, 29 Jan 2018 12:55:05 +0000
-Received: by mail-pg0-x241.google.com with SMTP id z17so4389422pgc.4
- for <kexec@lists.infradead.org>; Mon, 29 Jan 2018 04:54:52 -0800 (PST)
-From: Zhou Wenjian <zhouwj.fi@gmail.com>
-Subject: [PATCH] makedumpfile: Fix a bug when multi-threads feature meets
- enospace
-Date: Mon, 29 Jan 2018 20:54:39 +0800
-Message-Id: <1517230479-8440-1-git-send-email-zhouwj.fi@gmail.com>
+Received: from userp2120.oracle.com ([156.151.31.85])
+ by casper.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1egC04-0007MJ-8h
+ for kexec@lists.infradead.org; Mon, 29 Jan 2018 16:09:43 +0000
+Subject: Re: [makedumpfile PATCH v2] Wipe excluded pages that are written into
+ ELF dump file
+References: <1501848839-10518-1-git-send-email-eric.devolder@oracle.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701EF7308@BPXM01GP.gisp.nec.co.jp>
+ <5db0222a-f550-9007-2775-15f6e8b92f0b@oracle.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701F418BA@BPXM01GP.gisp.nec.co.jp>
+From: Eric DeVolder <eric.devolder@oracle.com>
+Message-ID: <a78565ef-dcdc-cb41-7c99-07bfc7e34275@oracle.com>
+Date: Mon, 29 Jan 2018 10:06:53 -0600
+MIME-Version: 1.0
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701F418BA@BPXM01GP.gisp.nec.co.jp>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,56 +23,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: ats-kumagai@wm.jp.nec.com, Zhou Wenjian <zhouwj.fi@gmail.com>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: Keiichirou Suzuki <kei-suzuki@xr.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Currently, when multi-threads feature meets enospace error,
-the main thread will call pthread_join(). However, there is one
-thread doing while{} and won't stop.
 
-                pthread_mutex_lock(&info->page_data_mutex);
-                while (page_data_buf[index].used != FALSE) {
-                        index = (index + 1) % info->num_buffers;
-                }
-                page_data_buf[index].used = TRUE;
-                pthread_mutex_unlock(&info->page_data_mutex);
+On 01/28/2018 10:51 PM, Atsushi Kumagai wrote:
+> Hello Eric,
+> 
+>> On 08/07/2017 07:25 PM, Atsushi Kumagai wrote:
+>>> Hello Eric,
+>>>
+>>> Thanks for your work, this version looks good to me.
+>>> I'll merge this into v1.6.3.
+>>>
+>>> Regards,
+>>> Atsushi Kumagai
+>>
+>> Thank you!
+>> eric
+> 
+> I noticed that wiping zero pages seems to cause different behavior
+> of crash like:
+> 
+> [kmem -i]
+> -    SWAP USED        1         4 KB    0% of TOTAL SWAP
+> -    SWAP FREE   489979       1.9 GB   99% of TOTAL SWAP
+> +    SWAP USED   229886       898 MB   46% of TOTAL SWAP  // wiped page is counted as SWAP USED ?
+> +    SWAP FREE   260094      1016 MB   53% of TOTAL SWAP
+> 
+> I don't investigate the details yet, but I decided to slip this
+> feature to v1.6.4.
+> 
+> Thanks,
+> Atsushi Kumagai
 
-Then makedumpfile hangs.
+OK, I'll also look into it. Thanks for letting me know!
+eric
 
-This patch add a cancel point in while{}.
-
-Signed-off-by: Zhou Wenjian <zhouwj.fi@gmail.com>
----
- makedumpfile.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index ed138d3..f7ad50c 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -7731,11 +7731,13 @@ kdump_thread_function_cyclic(void *arg) {
- 		buf_ready = FALSE;
- 
- 		pthread_mutex_lock(&info->page_data_mutex);
-+		pthread_cleanup_push(pthread_mutex_unlock, &info->page_data_mutex);
- 		while (page_data_buf[index].used != FALSE) {
-+			pthread_testcancel();
- 			index = (index + 1) % info->num_buffers;
- 		}
- 		page_data_buf[index].used = TRUE;
--		pthread_mutex_unlock(&info->page_data_mutex);
-+		pthread_cleanup_pop(1); 
- 
- 		while (buf_ready == FALSE) {
- 			pthread_testcancel();
--- 
-1.8.3.1
-
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
