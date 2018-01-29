@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.89 #1 (Red Hat Linux))
- id 1eg3lJ-0004mc-EP
- for kexec@lists.infradead.org; Mon, 29 Jan 2018 07:21:55 +0000
-Date: Mon, 29 Jan 2018 08:21:35 +0100
+ id 1eg3t3-0006XW-Hl
+ for kexec@lists.infradead.org; Mon, 29 Jan 2018 07:29:55 +0000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH kexec-tools] x86: use old screen_info if needed
-Message-ID: <20180129072135.pyzaawl7i6ny3piv@verge.net.au>
-References: <20180128055231.GA1744@dhcp-128-65.nay.redhat.com>
+Subject: [PATCH] x86: constify fsname parameter of find_mnt_by_fsname()
+Date: Mon, 29 Jan 2018 08:29:33 +0100
+Message-Id: <20180129072933.19227-1-horms@verge.net.au>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180128055231.GA1744@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,26 +16,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Simon Horman <horms@verge.net.au>
 
-On Sun, Jan 28, 2018 at 01:52:31PM +0800, Dave Young wrote:
-> With modern drm/kms graphic driver kexec-tools does not setup screen_info
-> correctly so one will only see screen output after those drm drivers
-> reinitializing after rebooting. Copying the old screen info from original
-> boot_params will help during my test, although it could not work for some
-> potential cases, but it is not worse than before.  This has been used in
-> the kernel kexec_file_load.
-> 
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-
-Thanks, applied.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+ZmluZF9tbnRfYnlfZnNuYW1lKCkgaXMgY2FsbGVkIHdpdGggY29uc3RhbnQgc3RyaW5ncyBhcyBp
+dHMKZnNuYW1lIHBhcmFtZXRlciBhbmQgZG9lcyBub3QgbW9kaWZ5IHRoaXMgcGFyYW1ldGVyLCB0
+aHVzCml0IHNlZW1zIGFwcHJvcHJpYXRlIHRvIG1ha2UgdGhlIHBhcmFtZXRlciBjb25zdC4KClRo
+aXMgcHJvYmxlbSB3YXMgYnJvdWdodCB0byBteSBhdHRlbnRpb24gYnkgZ2NjOgoKJCBnY2MgLS12
+ZXJzaW9uCmdjYyAoRGViaWFuIDYuMy4wLTE4KSA2LjMuMCAyMDE3MDUxNgouLi4KCiQgbWFrZQou
+Li4Ka2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51eC1zZXR1cC5jOiBJbiBmdW5jdGlvbiDigJhnZXRf
+Ym9vdHBhcmFt4oCZOgprZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmM6NDQ3OjMzOiB3
+YXJuaW5nOiBwYXNzaW5nIGFyZ3VtZW50IDEgb2Yg4oCYZmluZF9tbnRfYnlfZnNuYW1l4oCZIGRp
+c2NhcmRzIOKAmGNvbnN04oCZIHF1YWxpZmllciBmcm9tIHBvaW50ZXIgdGFyZ2V0IHR5cGUgWy1X
+ZGlzY2FyZGVkLXF1YWxpZmllcnNdCiAgc3lzZnNfbW50ID0gZmluZF9tbnRfYnlfZnNuYW1lKCJz
+eXNmcyIpOwogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBefn5+fn5+CmtleGVjL2Fy
+Y2gvaTM4Ni94ODYtbGludXgtc2V0dXAuYzo0MjI6Nzogbm90ZTogZXhwZWN0ZWQg4oCYY2hhciAq
+4oCZIGJ1dCBhcmd1bWVudCBpcyBvZiB0eXBlIOKAmGNvbnN0IGNoYXIgKuKAmQogY2hhciAqZmlu
+ZF9tbnRfYnlfZnNuYW1lKGNoYXIgKmZzbmFtZSkKICAgICAgIF5+fn5+fn5+fn5+fn5+fn5+fgpr
+ZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmM6NDU4OjM2OiB3YXJuaW5nOiBwYXNzaW5n
+IGFyZ3VtZW50IDEgb2Yg4oCYZmluZF9tbnRfYnlfZnNuYW1l4oCZIGRpc2NhcmRzIOKAmGNvbnN0
+4oCZIHF1YWxpZmllciBmcm9tIHBvaW50ZXIgdGFyZ2V0IHR5cGUgWy1XZGlzY2FyZGVkLXF1YWxp
+ZmllcnNdCiAgIGRlYnVnZnNfbW50ID0gZmluZF9tbnRfYnlfZnNuYW1lKCJkZWJ1Z2ZzIik7CiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fgprZXhlYy9hcmNoL2kz
+ODYveDg2LWxpbnV4LXNldHVwLmM6NDIyOjc6IG5vdGU6IGV4cGVjdGVkIOKAmGNoYXIgKuKAmSBi
+dXQgYXJndW1lbnQgaXMgb2YgdHlwZSDigJhjb25zdCBjaGFyICrigJkKIGNoYXIgKmZpbmRfbW50
+X2J5X2ZzbmFtZShjaGFyICpmc25hbWUpCi4uLgoKU2lnbmVkLW9mZi1ieTogU2ltb24gSG9ybWFu
+IDxob3Jtc0B2ZXJnZS5uZXQuYXU+Ci0tLQoga2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51eC1zZXR1
+cC5jIHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0p
+CgpkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51eC1zZXR1cC5jIGIva2V4ZWMv
+YXJjaC9pMzg2L3g4Ni1saW51eC1zZXR1cC5jCmluZGV4IDIxNTJhMjE5MTc0My4uMTgxZDdkYmEy
+YzIzIDEwMDY0NAotLS0gYS9rZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmMKKysrIGIv
+a2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51eC1zZXR1cC5jCkBAIC00MTksNyArNDE5LDcgQEAgb3V0
+OgogICogdG8gYmUgbW91bnRlZCBvbmNlIChzeXNmcywgZGVidWdzZnMsIHByb2MpLCBhcyBpdCB3
+aWxsIHJldHVybiB0aGUgZmlyc3QKICAqIGluc3RhbmNlIGxpc3RlZCBpbiBtdGFiLgogICovCi1j
+aGFyICpmaW5kX21udF9ieV9mc25hbWUoY2hhciAqZnNuYW1lKQorY2hhciAqZmluZF9tbnRfYnlf
+ZnNuYW1lKGNvbnN0IGNoYXIgKmZzbmFtZSkKIHsKIAlGSUxFICptdGFiOwogCXN0cnVjdCBtbnRl
+bnQgKm1udDsKLS0gCjIuMTEuMAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
