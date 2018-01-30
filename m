@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2120.oracle.com ([156.151.31.85])
- by casper.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1egC04-0007MJ-8h
- for kexec@lists.infradead.org; Mon, 29 Jan 2018 16:09:43 +0000
-Subject: Re: [makedumpfile PATCH v2] Wipe excluded pages that are written into
- ELF dump file
-References: <1501848839-10518-1-git-send-email-eric.devolder@oracle.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701EF7308@BPXM01GP.gisp.nec.co.jp>
- <5db0222a-f550-9007-2775-15f6e8b92f0b@oracle.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701F418BA@BPXM01GP.gisp.nec.co.jp>
-From: Eric DeVolder <eric.devolder@oracle.com>
-Message-ID: <a78565ef-dcdc-cb41-7c99-07bfc7e34275@oracle.com>
-Date: Mon, 29 Jan 2018 10:06:53 -0600
+Received: from mail-pg0-x243.google.com ([2607:f8b0:400e:c05::243])
+ by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1egRdG-0001n4-He
+ for kexec@lists.infradead.org; Tue, 30 Jan 2018 08:51:15 +0000
+Received: by mail-pg0-x243.google.com with SMTP id m20so6708431pgc.11
+ for <kexec@lists.infradead.org>; Tue, 30 Jan 2018 00:50:59 -0800 (PST)
+Date: Tue, 30 Jan 2018 17:50:55 +0900
+From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: Re: [PATCH V2] print kdump kernel loaded status in stack dump
+Message-ID: <20180130085055.GA569@jagdpanzerIV>
+References: <20180127041129.GA29016@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701F418BA@BPXM01GP.gisp.nec.co.jp>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180127041129.GA29016@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,54 +21,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: Keiichirou Suzuki <kei-suzuki@xr.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: Petr Mladek <pmladek@suse.com>, Andi Kleen <ak@linux.intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, sergey.senozhatsky@gmail.com, akpm@linux-foundation.org
+
+On (01/27/18 12:11), Dave Young wrote:
+> It is useful to print kdump kernel loaded status in dump_stack() 
+> especially when panic happens so that we can differenciate 
+> kdump kernel early hang and a normal panic in a bug report.
+> 
+> Signed-off-by: Dave Young <dyoung@redhat.com>
+
+Looks OK to me.
+
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
 
-On 01/28/2018 10:51 PM, Atsushi Kumagai wrote:
-> Hello Eric,
-> 
->> On 08/07/2017 07:25 PM, Atsushi Kumagai wrote:
->>> Hello Eric,
->>>
->>> Thanks for your work, this version looks good to me.
->>> I'll merge this into v1.6.3.
->>>
->>> Regards,
->>> Atsushi Kumagai
->>
->> Thank you!
->> eric
-> 
-> I noticed that wiping zero pages seems to cause different behavior
-> of crash like:
-> 
-> [kmem -i]
-> -    SWAP USED        1         4 KB    0% of TOTAL SWAP
-> -    SWAP FREE   489979       1.9 GB   99% of TOTAL SWAP
-> +    SWAP USED   229886       898 MB   46% of TOTAL SWAP  // wiped page is counted as SWAP USED ?
-> +    SWAP FREE   260094      1016 MB   53% of TOTAL SWAP
-> 
-> I don't investigate the details yet, but I decided to slip this
-> feature to v1.6.4.
-> 
-> Thanks,
-> Atsushi Kumagai
+I agree with Steven, would be better to move the whole thing
+to lib/dump_stack.c
 
-OK, I'll also look into it. Thanks for letting me know!
-eric
-
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+	-ss
 
 _______________________________________________
 kexec mailing list
