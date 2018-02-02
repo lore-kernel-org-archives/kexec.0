@@ -2,27 +2,27 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ehb46-0007rn-Rf
- for kexec@lists.infradead.org; Fri, 02 Feb 2018 13:07:40 +0000
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+ id 1ehb47-0007pl-Cj
+ for kexec@lists.infradead.org; Fri, 02 Feb 2018 13:07:42 +0000
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
  by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w12D5g3H014494
- for <kexec@lists.infradead.org>; Fri, 2 Feb 2018 08:07:37 -0500
-Received: from e06smtp15.uk.ibm.com (e06smtp15.uk.ibm.com [195.75.94.111])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2fvqy61n0n-1
+ w12D6Knj085942
+ for <kexec@lists.infradead.org>; Fri, 2 Feb 2018 08:07:30 -0500
+Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2fvrargtts-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 02 Feb 2018 08:07:37 -0500
+ for <kexec@lists.infradead.org>; Fri, 02 Feb 2018 08:07:29 -0500
 Received: from localhost
- by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
- Fri, 2 Feb 2018 13:07:35 -0000
+ Fri, 2 Feb 2018 13:07:27 -0000
 From: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Subject: [PATCH 10/17] kexec_file: Allow archs to set purgatory load address
-Date: Fri,  2 Feb 2018 14:07:11 +0100
+Subject: [PATCH 04/17] kexec_file: Search symbols in read-only kexec_purgatory
+Date: Fri,  2 Feb 2018 14:07:05 +0100
 In-Reply-To: <20180202130718.35509-1-prudo@linux.vnet.ibm.com>
 References: <20180202130718.35509-1-prudo@linux.vnet.ibm.com>
-Message-Id: <20180202130718.35509-11-prudo@linux.vnet.ibm.com>
+Message-Id: <20180202130718.35509-5-prudo@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,210 +39,106 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-s390@vger.kernel.org
 Cc: prudo@linux.vnet.ibm.com, Michael Ellerman <mpe@ellerman.id.au>, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
 
-For s390 new kernels are loaded to fixed addresses in memory before they
-are booted. With the current code this is a problem as it assumes the
-kernel will be loaded to an 'arbitrary' address. In particular,
-kexec_locate_mem_hole searches for a large enough memory region and sets
-the load address (kexec_bufer->mem) to it.
-
-Luckily there is a simple workaround for this problem. By returning 1 in
-arch_kexec_walk_mem, kexec_locate_mem_hole is turned off. This allows the
-architecture to set kbuf->mem by hand. While the trick works fine for the
-kernel it does not for the purgatory as here the architectures don't have
-access to its kexec_buffer.
-
-Give architectures access to the purgatories kexec_buffer by changing
-kexec_load_purgatory to take a pointer to it. With this change
-architectures have access to the buffer and can edit it as they need.
-
-A nice side effect of this change is that we can get rid of the
-purgatory_info->purgatory_load_address field. As now the information stored
-there can directly be accessed from kbuf->mem.
+The stripped purgatory does not contain a symtab. So when looking for
+symbols this is done in read-only kexec_purgatory. Highlight this by
+marking the corresponding variables as 'const'.
 
 Signed-off-by: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Reviewed-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 ---
- arch/powerpc/kernel/kexec_elf_64.c |  9 +++++----
- arch/x86/kernel/kexec-bzimage64.c  |  8 ++++----
- include/linux/kexec.h              |  7 +------
- kernel/kexec_file.c                | 29 ++++++++++++++++-------------
- 4 files changed, 26 insertions(+), 27 deletions(-)
+ kernel/kexec_file.c | 38 ++++++++++++++++++++++----------------
+ 1 file changed, 22 insertions(+), 16 deletions(-)
 
-diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec_elf_64.c
-index 9a42309b091a..82448c03502d 100644
---- a/arch/powerpc/kernel/kexec_elf_64.c
-+++ b/arch/powerpc/kernel/kexec_elf_64.c
-@@ -572,7 +572,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
- {
- 	int ret;
- 	unsigned int fdt_size;
--	unsigned long kernel_load_addr, purgatory_load_addr;
-+	unsigned long kernel_load_addr;
- 	unsigned long initrd_load_addr = 0, fdt_load_addr;
- 	void *fdt;
- 	const void *slave_code;
-@@ -580,6 +580,8 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
- 	struct elf_info elf_info;
- 	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
- 				  .buf_max = ppc64_rma_size };
-+	struct kexec_buf pbuf = { .image = image, .buf_min = 0,
-+				  .buf_max = ppc64_rma_size, .top_down = true };
- 
- 	ret = build_elf_exec_info(kernel_buf, kernel_len, &ehdr, &elf_info);
- 	if (ret)
-@@ -591,14 +593,13 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
- 
- 	pr_debug("Loaded the kernel at 0x%lx\n", kernel_load_addr);
- 
--	ret = kexec_load_purgatory(image, 0, ppc64_rma_size, true,
--				   &purgatory_load_addr);
-+	ret = kexec_load_purgatory(image, &pbuf);
- 	if (ret) {
- 		pr_err("Loading purgatory failed.\n");
- 		goto out;
- 	}
- 
--	pr_debug("Loaded purgatory at 0x%lx\n", purgatory_load_addr);
-+	pr_debug("Loaded purgatory at 0x%lx\n", pbuf.mem);
- 
- 	if (initrd != NULL) {
- 		kbuf.buffer = initrd;
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index fb095ba0c02f..df183585928f 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -334,7 +334,6 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 	unsigned long setup_header_size, params_cmdline_sz;
- 	struct boot_params *params;
- 	unsigned long bootparam_load_addr, kernel_load_addr, initrd_load_addr;
--	unsigned long purgatory_load_addr;
- 	struct bzimage64_data *ldata;
- 	struct kexec_entry64_regs regs64;
- 	void *stack;
-@@ -342,6 +341,8 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 	unsigned int efi_map_offset, efi_map_sz, efi_setup_data_offset;
- 	struct kexec_buf kbuf = { .image = image, .buf_max = ULONG_MAX,
- 				  .top_down = true };
-+	struct kexec_buf pbuf = { .image = image, .buf_min = MIN_PURGATORY_ADDR,
-+				  .buf_max = ULONG_MAX, .top_down = true };
- 
- 	header = (struct setup_header *)(kernel + setup_hdr_offset);
- 	setup_sects = header->setup_sects;
-@@ -379,14 +380,13 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 	 * Load purgatory. For 64bit entry point, purgatory  code can be
- 	 * anywhere.
- 	 */
--	ret = kexec_load_purgatory(image, MIN_PURGATORY_ADDR, ULONG_MAX, 1,
--				   &purgatory_load_addr);
-+	ret = kexec_load_purgatory(image, &pbuf);
- 	if (ret) {
- 		pr_err("Loading purgatory failed\n");
- 		return ERR_PTR(ret);
- 	}
- 
--	pr_debug("Loaded purgatory at 0x%lx\n", purgatory_load_addr);
-+	pr_debug("Loaded purgatory at 0x%lx\n", pbuf.mem);
- 
- 
- 	/*
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index f15446be0e25..1cd9c5f49859 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -114,9 +114,6 @@ struct purgatory_info {
- 	 * relocation. This memory can be freed post image load.
- 	 */
- 	void *purgatory_buf;
--
--	/* Address where purgatory is finally loaded and is executed from */
--	unsigned long purgatory_load_addr;
- };
- 
- struct kimage;
-@@ -237,9 +234,7 @@ extern asmlinkage long sys_kexec_load(unsigned long entry,
- extern int kernel_kexec(void);
- extern struct page *kimage_alloc_control_pages(struct kimage *image,
- 						unsigned int order);
--extern int kexec_load_purgatory(struct kimage *image, unsigned long min,
--				unsigned long max, int top_down,
--				unsigned long *load_addr);
-+extern int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf);
- extern int kexec_purgatory_get_set_symbol(struct kimage *image,
- 					  const char *name, void *buf,
- 					  unsigned int size, bool get_value);
 diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 25b44d1a664a..d69d1bf9e7a2 100644
+index 06fc9fdd2474..2072b288ec53 100644
 --- a/kernel/kexec_file.c
 +++ b/kernel/kexec_file.c
-@@ -669,8 +669,8 @@ static int kexec_purgatory_setup_kbuf(struct purgatory_info *pi,
- 	int i, ret;
- 
- 	sechdrs = (void *)pi->ehdr + pi->ehdr->e_shoff;
--	bss_align = 1;
--	bss_sz = 0;
-+	kbuf->buf_align = bss_align = 1;
-+	kbuf->bufsz = bss_sz = 0;
- 
- 	for (i = 0; i < pi->ehdr->e_shnum; i++) {
- 		if (!(sechdrs[i].sh_flags & SHF_ALLOC))
-@@ -702,7 +702,6 @@ static int kexec_purgatory_setup_kbuf(struct purgatory_info *pi,
- 	ret = kexec_add_buffer(kbuf);
- 	if (ret)
- 		goto out;
--	pi->purgatory_load_addr = kbuf->mem;
- 
- 	return 0;
- out:
-@@ -836,27 +835,32 @@ static int kexec_apply_relocations(struct kimage *image)
- 	return 0;
+@@ -901,20 +901,27 @@ int kexec_load_purgatory(struct kimage *image, unsigned long min,
+ 	return ret;
  }
  
--/* Load relocatable purgatory object and relocate it appropriately */
--int kexec_load_purgatory(struct kimage *image, unsigned long min,
--			 unsigned long max, int top_down,
--			 unsigned long *load_addr)
+-static Elf_Sym *kexec_purgatory_find_symbol(struct purgatory_info *pi,
+-					    const char *name)
 +/*
-+ * kexec_load_purgatory - Load and relocate the purgatory object.
-+ * @image:	Image to add the purgatory to.
-+ * @kbuf:	Memory parameters to use.
++ * kexec_purgatory_find_symbol - find a symbol in the purgatory
++ * @pi:		Purgatory to search in.
++ * @name:	Name of the symbol.
 + *
-+ * Allocates the memory needed for image->purgatory_info.sechdrs and
-+ * image->purgatory_info.purgatory_buf/kbuf->buffer. Caller is responsible
-+ * to free the memory after use.
-+ *
-+ * Return: 0 on success, negative errno on error.
++ * Return: pointer to symbol in read-only symtab on success, NULL on error.
 + */
-+int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf)
++static const Elf_Sym *kexec_purgatory_find_symbol(struct purgatory_info *pi,
++						  const char *name)
+ {
++	const Elf_Shdr *sechdrs;
+ 	const Elf_Ehdr *ehdr;
+-	Elf_Sym *syms;
+-	Elf_Shdr *sechdrs;
+-	int i, k;
++	const Elf_Sym *syms;
+ 	const char *strtab;
++	int i, k;
+ 
+-	if (!pi->sechdrs || !pi->ehdr)
++	if (!pi->ehdr)
+ 		return NULL;
+ 
+-	sechdrs = pi->sechdrs;
+ 	ehdr = pi->ehdr;
++	sechdrs = (void *)ehdr + ehdr->e_shoff;
+ 
+ 	for (i = 0; i < ehdr->e_shnum; i++) {
+ 		if (sechdrs[i].sh_type != SHT_SYMTAB)
+@@ -923,8 +930,8 @@ static Elf_Sym *kexec_purgatory_find_symbol(struct purgatory_info *pi,
+ 		if (sechdrs[i].sh_link >= ehdr->e_shnum)
+ 			/* Invalid strtab section number */
+ 			continue;
+-		strtab = (char *)sechdrs[sechdrs[i].sh_link].sh_offset;
+-		syms = (Elf_Sym *)sechdrs[i].sh_offset;
++		strtab = (void *)ehdr + sechdrs[sechdrs[i].sh_link].sh_offset;
++		syms = (void *)ehdr + sechdrs[i].sh_offset;
+ 
+ 		/* Go through symbols for a match */
+ 		for (k = 0; k < sechdrs[i].sh_size/sizeof(Elf_Sym); k++) {
+@@ -952,7 +959,7 @@ static Elf_Sym *kexec_purgatory_find_symbol(struct purgatory_info *pi,
+ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name)
  {
  	struct purgatory_info *pi = &image->purgatory_info;
- 	int ret;
--	struct kexec_buf kbuf = { .image = image, .bufsz = 0, .buf_align = 1,
--				  .buf_min = min, .buf_max = max,
--				  .top_down = top_down };
+-	Elf_Sym *sym;
++	const Elf_Sym *sym;
+ 	Elf_Shdr *sechdr;
  
- 	if (kexec_purgatory_size <= 0)
+ 	sym = kexec_purgatory_find_symbol(pi, name);
+@@ -975,9 +982,9 @@ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name)
+ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+ 				   void *buf, unsigned int size, bool get_value)
+ {
+-	Elf_Sym *sym;
+-	Elf_Shdr *sechdrs;
+ 	struct purgatory_info *pi = &image->purgatory_info;
++	const Elf_Sym *sym;
++	Elf_Shdr *sec;
+ 	char *sym_buf;
+ 
+ 	sym = kexec_purgatory_find_symbol(pi, name);
+@@ -990,16 +997,15 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
  		return -EINVAL;
+ 	}
  
- 	pi->ehdr = (const Elf_Ehdr *)kexec_purgatory;
+-	sechdrs = pi->sechdrs;
++	sec = pi->sechdrs + sym->st_shndx;
  
--	ret = kexec_purgatory_setup_kbuf(pi, &kbuf);
-+	ret = kexec_purgatory_setup_kbuf(pi, kbuf);
- 	if (ret)
- 		return ret;
+-	if (sechdrs[sym->st_shndx].sh_type == SHT_NOBITS) {
++	if (sec->sh_type == SHT_NOBITS) {
+ 		pr_err("symbol %s is in a bss section. Cannot %s\n", name,
+ 		       get_value ? "get" : "set");
+ 		return -EINVAL;
+ 	}
  
--	ret = kexec_purgatory_setup_sechdrs(pi, &kbuf);
-+	ret = kexec_purgatory_setup_sechdrs(pi, kbuf);
- 	if (ret)
- 		goto out_free_kbuf;
+-	sym_buf = (unsigned char *)sechdrs[sym->st_shndx].sh_offset +
+-					sym->st_value;
++	sym_buf = (char *)sec->sh_offset + sym->st_value;
  
-@@ -864,7 +868,6 @@ int kexec_load_purgatory(struct kimage *image, unsigned long min,
- 	if (ret)
- 		goto out;
- 
--	*load_addr = pi->purgatory_load_addr;
- 	return 0;
- out:
- 	vfree(pi->sechdrs);
+ 	if (get_value)
+ 		memcpy((void *)buf, sym_buf, size);
 -- 
 2.13.5
 
