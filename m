@@ -2,27 +2,27 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ehb4J-0007su-3f
- for kexec@lists.infradead.org; Fri, 02 Feb 2018 13:08:00 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w12D5lJD015397
- for <kexec@lists.infradead.org>; Fri, 2 Feb 2018 08:07:41 -0500
+ id 1ehb4J-0007zM-3c
+ for kexec@lists.infradead.org; Fri, 02 Feb 2018 13:08:01 +0000
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w12D5wCQ002023
+ for <kexec@lists.infradead.org>; Fri, 2 Feb 2018 08:07:47 -0500
 Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2fvqq2jfnr-1
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2fvqqqjb3k-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 02 Feb 2018 08:07:40 -0500
+ for <kexec@lists.infradead.org>; Fri, 02 Feb 2018 08:07:47 -0500
 Received: from localhost
  by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
- Fri, 2 Feb 2018 13:07:39 -0000
+ Fri, 2 Feb 2018 13:07:45 -0000
 From: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Subject: [PATCH 12/17] s390/kexec_file: Prepare setup.h for kexec_file_load
-Date: Fri,  2 Feb 2018 14:07:13 +0100
+Subject: [PATCH 17/17] s390/kexec_file: Add ELF loader
+Date: Fri,  2 Feb 2018 14:07:18 +0100
 In-Reply-To: <20180202130718.35509-1-prudo@linux.vnet.ibm.com>
 References: <20180202130718.35509-1-prudo@linux.vnet.ibm.com>
-Message-Id: <20180202130718.35509-13-prudo@linux.vnet.ibm.com>
+Message-Id: <20180202130718.35509-18-prudo@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,86 +39,210 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-s390@vger.kernel.org
 Cc: prudo@linux.vnet.ibm.com, Michael Ellerman <mpe@ellerman.id.au>, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
 
-kexec_file_load needs to prepare the new kernels before they are loaded.
-For that it has to know the offsets in head.S, e.g. to register the new
-command line. Unfortunately there are no macros right now defining those
-offsets. Define them now.
+Add an ELF loader for kexec_file. The main task here is to do proper sanity
+checks on the ELF file. Basically all other functionality was already
+implemented for the image loader.
 
 Signed-off-by: Philipp Rudo <prudo@linux.vnet.ibm.com>
 ---
- arch/s390/include/asm/setup.h | 40 +++++++++++++++++++++++++++-------------
- 1 file changed, 27 insertions(+), 13 deletions(-)
+ arch/s390/include/asm/kexec.h         |   1 +
+ arch/s390/kernel/Makefile             |   2 +-
+ arch/s390/kernel/kexec_elf.c          | 149 ++++++++++++++++++++++++++++++++++
+ arch/s390/kernel/machine_kexec_file.c |   1 +
+ 4 files changed, 152 insertions(+), 1 deletion(-)
+ create mode 100644 arch/s390/kernel/kexec_elf.c
 
-diff --git a/arch/s390/include/asm/setup.h b/arch/s390/include/asm/setup.h
-index 2eb0c8a7b664..75b354e774eb 100644
---- a/arch/s390/include/asm/setup.h
-+++ b/arch/s390/include/asm/setup.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-  *  S390 version
-- *    Copyright IBM Corp. 1999, 2010
-+ *    Copyright IBM Corp. 1999, 2017
-  */
- #ifndef _ASM_S390_SETUP_H
- #define _ASM_S390_SETUP_H
-@@ -38,17 +38,31 @@
- #define LPP_MAGIC		_BITUL(31)
- #define LPP_PID_MASK		_AC(0xffffffff, UL)
+diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
+index 532f5e4f198f..e450b82e2716 100644
+--- a/arch/s390/include/asm/kexec.h
++++ b/arch/s390/include/asm/kexec.h
+@@ -67,5 +67,6 @@ void kexec_file_update_kernel(struct kimage *iamge,
+ 			      struct s390_load_data *data);
  
-+/* Offsets to entry points in kernel/head.S  */
+ extern const struct kexec_file_ops s390_kexec_image_ops;
++extern const struct kexec_file_ops s390_kexec_elf_ops;
+ 
+ #endif /*_S390_KEXEC_H */
+diff --git a/arch/s390/kernel/Makefile b/arch/s390/kernel/Makefile
+index 58a590709cc3..66d7b432c2a8 100644
+--- a/arch/s390/kernel/Makefile
++++ b/arch/s390/kernel/Makefile
+@@ -60,7 +60,7 @@ obj-y	+= debug.o irq.o ipl.o dis.o diag.o vdso.o als.o
+ obj-y	+= sysinfo.o jump_label.o lgr.o os_info.o machine_kexec.o pgm_check.o
+ obj-y	+= runtime_instr.o cache.o fpu.o dumpstack.o guarded_storage.o sthyi.o
+ obj-y	+= entry.o reipl.o relocate_kernel.o kdebugfs.o alternative.o
+-obj-y	+= machine_kexec_file.o kexec_image.o
++obj-y	+= machine_kexec_file.o kexec_image.o kexec_elf.o
+ 
+ extra-y				+= head.o head64.o vmlinux.lds
+ 
+diff --git a/arch/s390/kernel/kexec_elf.c b/arch/s390/kernel/kexec_elf.c
+new file mode 100644
+index 000000000000..919ab2f1256f
+--- /dev/null
++++ b/arch/s390/kernel/kexec_elf.c
+@@ -0,0 +1,149 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * ELF loader for kexec_file_load system call.
++ *
++ * Copyright IBM Corp. 2018
++ *
++ * Author(s): Philipp Rudo <prudo@linux.vnet.ibm.com>
++ */
 +
-+#define STARTUP_NORMAL_OFFSET	0x10000
-+#define STARTUP_KDUMP_OFFSET	0x10010
++#include <linux/errno.h>
++#include <linux/kernel.h>
++#include <linux/kexec.h>
++#include <asm/setup.h>
 +
-+/* Offsets to parameters in kernel/head.S  */
++static int kexec_file_add_elf_kernel(struct kimage *image,
++				     struct s390_load_data *data,
++				     char *kernel, unsigned long kernel_len)
++{
++	struct kexec_buf buf;
++	const Elf_Ehdr *ehdr;
++	const Elf_Phdr *phdr;
++	int i, ret;
 +
-+#define IPL_DEVICE_OFFSET	0x10400
-+#define INITRD_START_OFFSET	0x10408
-+#define INITRD_SIZE_OFFSET	0x10410
-+#define OLDMEM_BASE_OFFSET	0x10418
-+#define OLDMEM_SIZE_OFFSET	0x10420
-+#define COMMAND_LINE_OFFSET	0x10480
++	ehdr = (Elf_Ehdr *)kernel;
++	buf.image = image;
 +
- #ifndef __ASSEMBLY__
++	phdr = (void *)ehdr + ehdr->e_phoff;
++	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
++		if (phdr->p_type != PT_LOAD)
++			continue;
++
++		buf.buffer = kernel + phdr->p_offset;
++		buf.bufsz = phdr->p_filesz;
++
++		buf.mem = ALIGN(phdr->p_paddr, phdr->p_align);
++		buf.memsz = phdr->p_memsz;
++
++		if (phdr->p_paddr == 0) {
++			data->kernel_buf = buf.buffer;
++			data->memsz += STARTUP_NORMAL_OFFSET;
++
++			buf.buffer += STARTUP_NORMAL_OFFSET;
++			buf.bufsz -= STARTUP_NORMAL_OFFSET;
++
++			buf.mem += STARTUP_NORMAL_OFFSET;
++			buf.memsz -= STARTUP_NORMAL_OFFSET;
++		}
++
++		if (image->type == KEXEC_TYPE_CRASH)
++			buf.mem += crashk_res.start;
++
++		ret = kexec_add_buffer(&buf);
++		if (ret)
++			return ret;
++
++		data->memsz += buf.memsz;
++	}
++
++	return 0;
++}
++
++static void *s390_elf_load(struct kimage *image,
++			   char *kernel, unsigned long kernel_len,
++			   char *initrd, unsigned long initrd_len,
++			   char *cmdline, unsigned long cmdline_len)
++{
++	struct s390_load_data data = {0};
++	const Elf_Ehdr *ehdr;
++	const Elf_Phdr *phdr;
++	size_t size;
++	int i, ret;
++
++	/* image->fobs->probe already checked for valid ELF magic number. */
++	ehdr = (Elf_Ehdr *)kernel;
++
++	if (ehdr->e_type != ET_EXEC ||
++	    ehdr->e_ident[EI_CLASS] != ELFCLASS64 ||
++	    !elf_check_arch(ehdr))
++		return ERR_PTR(-EINVAL);
++
++	if (!ehdr->e_phnum || ehdr->e_phentsize != sizeof(Elf_Phdr))
++		return ERR_PTR(-EINVAL);
++
++	size = ehdr->e_ehsize + ehdr->e_phoff;
++	size += ehdr->e_phentsize * ehdr->e_phnum;
++	if (size > kernel_len)
++		return ERR_PTR(-EINVAL);
++
++	phdr = (void *)ehdr + ehdr->e_phoff;
++	size = ALIGN(size, phdr->p_align);
++	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
++		if (phdr->p_type == PT_INTERP)
++			return ERR_PTR(-EINVAL);
++
++		if (phdr->p_offset > kernel_len)
++			return ERR_PTR(-EINVAL);
++
++		size += ALIGN(phdr->p_filesz, phdr->p_align);
++	}
++
++	if (size > kernel_len)
++		return ERR_PTR(-EINVAL);
++
++	ret = kexec_file_add_elf_kernel(image, &data, kernel, kernel_len);
++	if (ret)
++		return ERR_PTR(ret);
++
++	if (!data.memsz)
++		return ERR_PTR(-EINVAL);
++
++	if (initrd) {
++		ret = kexec_file_add_initrd(image, &data, initrd, initrd_len);
++		if (ret)
++			return ERR_PTR(ret);
++	}
++
++	ret = kexec_file_add_purgatory(image, &data);
++	if (ret)
++		return ERR_PTR(ret);
++
++	kexec_file_update_kernel(image, &data);
++
++	return NULL;
++}
++
++static int s390_elf_probe(const char *buf, unsigned long len)
++{
++	const Elf_Ehdr *ehdr;
++
++	if (len < sizeof(Elf_Ehdr))
++		return -ENOEXEC;
++
++	ehdr = (Elf_Ehdr *)buf;
++
++	/* Only check the ELF magic number here and do proper validity check
++	 * in the loader. Any check here that fails would send the erroneous
++	 * ELF file to the image loader that does not care what it gets.
++	 * (Most likely) causing behavior not intended by the user.
++	 */
++	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0)
++		return -ENOEXEC;
++
++	return 0;
++}
++
++const struct kexec_file_ops s390_kexec_elf_ops = {
++	.probe = s390_elf_probe,
++	.load = s390_elf_load,
++};
+diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
+index 050ceab746ec..8938e0eca4b0 100644
+--- a/arch/s390/kernel/machine_kexec_file.c
++++ b/arch/s390/kernel/machine_kexec_file.c
+@@ -12,6 +12,7 @@
+ #include <asm/setup.h>
  
- #include <asm/lowcore.h>
- #include <asm/types.h>
- 
--#define IPL_DEVICE        (*(unsigned long *)  (0x10400))
--#define INITRD_START      (*(unsigned long *)  (0x10408))
--#define INITRD_SIZE       (*(unsigned long *)  (0x10410))
--#define OLDMEM_BASE	  (*(unsigned long *)  (0x10418))
--#define OLDMEM_SIZE	  (*(unsigned long *)  (0x10420))
--#define COMMAND_LINE      ((char *)            (0x10480))
-+#define IPL_DEVICE	(*(unsigned long *)  (IPL_DEVICE_OFFSET))
-+#define INITRD_START	(*(unsigned long *)  (INITRD_START_OFFSET))
-+#define INITRD_SIZE	(*(unsigned long *)  (INITRD_SIZE_OFFSET))
-+#define OLDMEM_BASE	(*(unsigned long *)  (OLDMEM_BASE_OFFSET))
-+#define OLDMEM_SIZE	(*(unsigned long *)  (OLDMEM_SIZE_OFFSET))
-+#define COMMAND_LINE	((char *)	     (COMMAND_LINE_OFFSET))
- 
- extern int memory_end_set;
- extern unsigned long memory_end;
-@@ -123,12 +137,12 @@ extern void (*_machine_power_off)(void);
- 
- #else /* __ASSEMBLY__ */
- 
--#define IPL_DEVICE        0x10400
--#define INITRD_START      0x10408
--#define INITRD_SIZE       0x10410
--#define OLDMEM_BASE	  0x10418
--#define OLDMEM_SIZE	  0x10420
--#define COMMAND_LINE      0x10480
-+#define IPL_DEVICE	(IPL_DEVICE_OFFSET)
-+#define INITRD_START	(INITRD_START_OFFSET)
-+#define INITRD_SIZE	(INITRD_SIZE_OFFSET)
-+#define OLDMEM_BASE	(OLDMEM_BASE_OFFSET)
-+#define OLDMEM_SIZE	(OLDMEM_SIZE_OFFSET)
-+#define COMMAND_LINE	(COMMAND_LINE_OFFSET)
- 
- #endif /* __ASSEMBLY__ */
- #endif /* _ASM_S390_SETUP_H */
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
++	&s390_kexec_elf_ops,
+ 	&s390_kexec_image_ops,
+ 	NULL,
+ };
 -- 
 2.13.5
 
