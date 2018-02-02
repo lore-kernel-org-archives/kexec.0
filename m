@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from smtp2.provo.novell.com ([137.65.250.81])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ehQNp-0003O0-4s
- for kexec@lists.infradead.org; Fri, 02 Feb 2018 01:43:19 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20180201231116.28077-1-jschoenh@amazon.de>
-Date: Thu, 01 Feb 2018 19:42:39 -0600
-In-Reply-To: <20180201231116.28077-1-jschoenh@amazon.de> ("Jan H.
- \=\?utf-8\?Q\?Sch\=C3\=B6nherr\=22's\?\=
- message of "Fri, 2 Feb 2018 00:11:16 +0100")
-Message-ID: <87h8r0jhf4.fsf@xmission.com>
+ id 1ehWZ2-0004Gv-JU
+ for kexec@lists.infradead.org; Fri, 02 Feb 2018 08:19:18 +0000
+Date: Fri, 2 Feb 2018 09:18:57 +0100
+From: Petr Tesarik <ptesarik@suse.com>
+Subject: [makedumpfile PATCH] Always use bigger SECTION_MAP_MASK
+Message-ID: <20180202091857.09299610@ezekiel.suse.cz>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: Allow to skip digest calculation for speed
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,61 +16,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Jan H. =?utf-8?Q?Sch=C3=B6nherr?=" <jschoenh@amazon.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, kexec@lists.infradead.org
+To: kexec mailing list <kexec@lists.infradead.org>, Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Takuya Nakayama <tak-nakayama@tg.jp.nec.com>, Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>
 
-SmFuIEguIFNjaMO2bmhlcnIgPGpzY2hvZW5oQGFtYXpvbi5kZT4gd3JpdGVzOgoKPiBHaXZlIHRo
-ZSBhZG1pbmlzdHJhdG9yIHRoZSBhYmlsaXR5IHRvIHRyYWRlIGtleGVjIHNhZmV0eSBmb3Iga2V4
-ZWMgc3BlZWQKPiBieSBkaXNhYmxpbmcgdGhlIGRpZ2VzdCBjYWxjdWxhdGlvbi92ZXJpZmljYXRp
-b24gZm9yIHJlZ3VsYXIga2V4ZWNzLgo+Cj4gVGhlIGJlaGF2aW9yIG9mIGtleGVjLW9uLWNyYXNo
-IGlzIG5vdCB0b3VjaGVkLgoKVGhlIHBlcmZvcm1hbmNlIG9mIHRoZSBkaWdlc3QgY2FjdWxhdGlv
-biBpcyBhY2NlcHRhYmxlIG9uIDM4NnMuICBPciBpdAp3YXMgeWVhcnMgYWdvIHdoZW4gSSB0ZXN0
-ZWQgaXQgb24gYSAzODYuICBXaGF0IGlzIHRoZSBwcm9ibGVtIHlvdSBhcmUKaGF2aW5nLgoKSXMg
-dGhlcmUgc29tZXRoaW5nIHNpbGx5IGxpa2UgYSBjYWNoZSBkaXNhYmxlIGluIHlvdXIgY29uZmln
-dXJhdGlvbj8KCkVyaWMKCj4gU2lnbmVkLW9mZi1ieTogSmFuIEguIFNjaMO2bmhlcnIgPGpzY2hv
-ZW5oQGFtYXpvbi5kZT4KPiAtLS0KPiAgYXJjaC94ODYvS2NvbmZpZyAgICAgICAgICAgICAgIHwg
-MTIgKysrKysrKysrKysrCj4gIGFyY2gveDg2L3B1cmdhdG9yeS9wdXJnYXRvcnkuYyB8ICA5ICsr
-KysrKysrKwo+ICBrZXJuZWwva2V4ZWNfZmlsZS5jICAgICAgICAgICAgfCAgNSArKysrKwo+ICAz
-IGZpbGVzIGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9hcmNoL3g4
-Ni9LY29uZmlnIGIvYXJjaC94ODYvS2NvbmZpZwo+IGluZGV4IDIwZGEzOTFiNWYzMi4uN2IyNTdm
-NjU1MzI3IDEwMDY0NAo+IC0tLSBhL2FyY2gveDg2L0tjb25maWcKPiArKysgYi9hcmNoL3g4Ni9L
-Y29uZmlnCj4gQEAgLTE5ODQsNiArMTk4NCwxOCBAQCBjb25maWcgS0VYRUNfQlpJTUFHRV9WRVJJ
-RllfU0lHCj4gIAktLS1oZWxwLS0tCj4gIAkgIEVuYWJsZSBiekltYWdlIHNpZ25hdHVyZSB2ZXJp
-ZmljYXRpb24gc3VwcG9ydC4KPiAgCj4gK2NvbmZpZyBLRVhFQ19TS0lQX05PTkNSQVNIX0RJR0VT
-VAo+ICsJYm9vbCAiRGlzYWJsZSBkaWdlc3QgY2FsY3VsYXRpb24gZm9yIHJlZ3VsYXIga2V4ZWMi
-Cj4gKwlkZXBlbmRzIG9uIEtFWEVDCj4gKwktLS1oZWxwLS0tCj4gKwkgIERpc2FibGUgdGhlIGNh
-bGN1bGF0aW9uIGFuZCB2ZXJpZmljYXRpb24gb2YgdGhlIFNIQSBkaWdlc3QgYmVmb3JlCj4gKwkg
-IGFuZCBkdXJpbmcgYSByZWd1bGFyIGtleGVjLiBUaGlzIHNwZWVkcyB1cCBrZXhlYyBhIGJpdCBh
-dCB0aGUgY29zdAo+ICsJICBvZiBhIGJpdCBvZiBzYWZldHkuCj4gKwo+ICsJICBOb3RlLCB0aGF0
-IHRoZSBkaWdlc3QgY2FsY3VsYXRpb24gaXMgc3RpbGwgZG9uZSBmb3IgYSBrZXhlYy1vbi1jcmFz
-aC4KPiArCj4gKwkgIElmIHVuc3VyZSwgc2F5IE4uCj4gKwo+ICBjb25maWcgQ1JBU0hfRFVNUAo+
-ICAJYm9vbCAia2VybmVsIGNyYXNoIGR1bXBzIgo+ICAJZGVwZW5kcyBvbiBYODZfNjQgfHwgKFg4
-Nl8zMiAmJiBISUdITUVNKQo+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9wdXJnYXRvcnkvcHVyZ2F0
-b3J5LmMgYi9hcmNoL3g4Ni9wdXJnYXRvcnkvcHVyZ2F0b3J5LmMKPiBpbmRleCA0NzBlZGFkOTZi
-YjkuLjJiNTE4OWI4NTFiMyAxMDA2NDQKPiAtLS0gYS9hcmNoL3g4Ni9wdXJnYXRvcnkvcHVyZ2F0
-b3J5LmMKPiArKysgYi9hcmNoL3g4Ni9wdXJnYXRvcnkvcHVyZ2F0b3J5LmMKPiBAQCAtNDQsNiAr
-NDQsMTUgQEAgc3RhdGljIGludCB2ZXJpZnlfc2hhMjU2X2RpZ2VzdCh2b2lkKQo+ICAJdTggZGln
-ZXN0W1NIQTI1Nl9ESUdFU1RfU0laRV07Cj4gIAlzdHJ1Y3Qgc2hhMjU2X3N0YXRlIHNjdHg7Cj4g
-IAo+ICsjaWZkZWYgQ09ORklHX0tFWEVDX1NLSVBfTk9OQ1JBU0hfRElHRVNUCj4gKwkvKgo+ICsJ
-ICogU2tpcCBkaWdlc3QgdmVyaWZpY2F0aW9uIGZvciBub24tY3Jhc2gga2VybmVscywgd2UgdHJ1
-c3QgdGhlCj4gKwkgKiBtZWNoYW5pc20gZW5vdWdoIHRvIHRyYWRlLW9mZiB0aGUgZGlnZXN0IGZv
-ciBhIHF1aWNrZXIga2V4ZWMKPiArCSAqLwo+ICsJaWYgKCFwdXJnYXRvcnlfYmFja3VwX2Rlc3Qp
-Cj4gKwkJcmV0dXJuIDA7Cj4gKyNlbmRpZgo+ICsKPiAgCXNoYTI1Nl9pbml0KCZzY3R4KTsKPiAg
-CWVuZCA9IHB1cmdhdG9yeV9zaGFfcmVnaW9ucyArIEFSUkFZX1NJWkUocHVyZ2F0b3J5X3NoYV9y
-ZWdpb25zKTsKPiAgCj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9rZXhlY19maWxlLmMgYi9rZXJuZWwv
-a2V4ZWNfZmlsZS5jCj4gaW5kZXggZTViY2Q5NGMxZWZiLi5hYzAxYjM0YTdmODcgMTAwNjQ0Cj4g
-LS0tIGEva2VybmVsL2tleGVjX2ZpbGUuYwo+ICsrKyBiL2tlcm5lbC9rZXhlY19maWxlLmMKPiBA
-QCAtNTMyLDYgKzUzMiwxMSBAQCBzdGF0aWMgaW50IGtleGVjX2NhbGN1bGF0ZV9zdG9yZV9kaWdl
-c3RzKHN0cnVjdCBraW1hZ2UgKmltYWdlKQo+ICAJc3RydWN0IGtleGVjX3NoYV9yZWdpb24gKnNo
-YV9yZWdpb25zOwo+ICAJc3RydWN0IHB1cmdhdG9yeV9pbmZvICpwaSA9ICZpbWFnZS0+cHVyZ2F0
-b3J5X2luZm87Cj4gIAo+ICsjaWZkZWYgQ09ORklHX0tFWEVDX1NLSVBfTk9OQ1JBU0hfRElHRVNU
-Cj4gKwlpZiAoaW1hZ2UtPnR5cGUgIT0gS0VYRUNfVFlQRV9DUkFTSCkKPiArCQlyZXR1cm4gMDsK
-PiArI2VuZGlmCj4gKwo+ICAJemVyb19idWYgPSBfX3ZhKHBhZ2VfdG9fcGZuKFpFUk9fUEFHRSgw
-KSkgPDwgUEFHRV9TSElGVCk7Cj4gIAl6ZXJvX2J1Zl9zeiA9IFBBR0VfU0laRTsKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
-dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8va2V4ZWMK
+It is not necessary to distinguish between different kernel
+versions. Kernel commit 2d070eab2e82 merely reuses a previously
+unused bit (see clarification in kernel commit def9b71ee651a). The
+bit was always zero even before that commit, so it is safe to mask
+it off even for kernel versions before 4.13, removing some of the
+complexity.
+
+More importantly, makedumpfile fails on kernels which backport the
+patch on top of an older version (for example SLES15).
+
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ makedumpfile.c | 5 +----
+ makedumpfile.h | 1 -
+ 2 files changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index ed138d3..b180eb3 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3337,10 +3337,7 @@ section_mem_map_addr(unsigned long addr)
+ 		return NOT_KV_ADDR;
+ 	}
+ 	map = ULONG(mem_section + OFFSET(mem_section.section_mem_map));
+-	if (info->kernel_version < KERNEL_VERSION(4, 13, 0))
+-		map &= SECTION_MAP_MASK_4_12;
+-	else
+-		map &= SECTION_MAP_MASK;
++	map &= SECTION_MAP_MASK;
+ 	free(mem_section);
+ 
+ 	return map;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 01eece2..548aab0 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -186,7 +186,6 @@ isAnon(unsigned long mapping)
+ #define SECTION_NR_TO_ROOT(sec)	((sec) / SECTIONS_PER_ROOT())
+ #define SECTION_IS_ONLINE	(1UL<<2)
+ #define SECTION_MAP_LAST_BIT	(1UL<<3)
+-#define SECTION_MAP_MASK_4_12	(~(SECTION_IS_ONLINE-1))
+ #define SECTION_MAP_MASK	(~(SECTION_MAP_LAST_BIT-1))
+ #define NR_SECTION_ROOTS()	divideup(num_section, SECTIONS_PER_ROOT())
+ #define SECTION_NR_TO_PFN(sec)	((sec) << PFN_SECTION_SHIFT())
+-- 
+2.13.6
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
