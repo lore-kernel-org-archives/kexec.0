@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.codeaurora.org ([198.145.29.96])
- by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ehgAj-000414-T5
- for kexec@lists.infradead.org; Fri, 02 Feb 2018 18:34:51 +0000
-Received: from [192.168.86.209] (c-67-165-203-88.hsd1.co.comcast.net
- [67.165.203.88])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
- (No client certificate requested)
- (Authenticated sender: sgoel@smtp.codeaurora.org)
- by smtp.codeaurora.org (Postfix) with ESMTPSA id 1F87C60285
- for <kexec@lists.infradead.org>; Fri,  2 Feb 2018 18:34:38 +0000 (UTC)
-Subject: Re: [PATCH] arm64: fix an issue with kaslr-enabled vmlinux
-References: <20170824073249.18056-1-takahiro.akashi@linaro.org>
-From: "Goel, Sameer" <sgoel@codeaurora.org>
-Message-ID: <6a9d6bc2-ff57-5aa9-fb6a-ab7b0102d0a1@codeaurora.org>
-Date: Fri, 2 Feb 2018 11:34:37 -0700
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154])
+ by merlin.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1ehjIA-0008O4-AF
+ for kexec@lists.infradead.org; Fri, 02 Feb 2018 21:54:43 +0000
+Subject: Re: [PATCH] kexec: Allow to skip digest calculation for speed
+References: <20180201231116.28077-1-jschoenh@amazon.de>
+ <87h8r0jhf4.fsf@xmission.com>
+From: "=?UTF-8?Q?Jan_H._Sch=c3=b6nherr?=" <jschoenh@amazon.de>
+Message-ID: <4d45f270-7659-4d64-69a2-a9c448875c02@amazon.de>
+Date: Fri, 2 Feb 2018 22:54:22 +0100
 MIME-Version: 1.0
-In-Reply-To: <20170824073249.18056-1-takahiro.akashi@linaro.org>
+In-Reply-To: <87h8r0jhf4.fsf@xmission.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,71 +20,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, kexec@lists.infradead.org
 
-I tested this fix and it works well. I am wondering which kexec tool release will pick this fix?
-
-On 8/24/2017 1:32 AM, AKASHI Takahiro wrote:
-> Normally vmlinux for arm64 is of ET_EXEC type, while if built with
-> CONFIG_RANDAMIZE_BASE (that is KASLR), it will be of ET_DYN type.
-> Meanwhile, physical address field of segments in vmlinux has actually
-> the same value as virtual address field.
-> 
-> Accordingly, in this case, it totally makes no sense to check for
-> validity of segments against physical memory ranges and, if necessary,
-> relocate them in elf_exec_load() on arm64.
-> 
-> This patch allows to unconditionally skip the check on arm64.
-> 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> ---
->  include/elf.h          | 3 ++-
->  kexec/kexec-elf-exec.c | 6 +++++-
->  2 files changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/elf.h b/include/elf.h
-> index 5db637b..b7677a2 100644
-> --- a/include/elf.h
-> +++ b/include/elf.h
-> @@ -258,7 +258,8 @@ typedef struct
->  #define EM_OPENRISC	92		/* OpenRISC 32-bit embedded processor */
->  #define EM_ARC_A5	93		/* ARC Cores Tangent-A5 */
->  #define EM_XTENSA	94		/* Tensilica Xtensa Architecture */
-> -#define EM_NUM		95
-> +#define EM_AARCH64	183		/* ARM AARCH64 */
-> +#define EM_NUM		184
->  
->  /* If it is necessary to assign new unofficial EM_* values, please
->     pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
-> diff --git a/kexec/kexec-elf-exec.c b/kexec/kexec-elf-exec.c
-> index cb62d04..a9329ac 100644
-> --- a/kexec/kexec-elf-exec.c
-> +++ b/kexec/kexec-elf-exec.c
-> @@ -63,9 +63,13 @@ int elf_exec_load(struct mem_ehdr *ehdr, struct kexec_info *info)
->  
->  	/* If I have a dynamic executable find it's size
->  	 * and then find a location for it in memory.
-> +	 * Note on arm64:
-> +	 * arm64's vmlinux has virtual address in physical address
-> +	 * field of PT_LOAD segments. So the following validity check
-> +	 * and relocation makes no sense on arm64.
->  	 */
->  	base = 0;
-> -	if (ehdr->e_type == ET_DYN) {
-> +	if ((ehdr->e_machine != EM_AARCH64) && (ehdr->e_type == ET_DYN)) {
->  		unsigned long first, last, align;
->  		first = ULONG_MAX;
->  		last  = 0;
-> 
-
--- 
- Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc. Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDIvMDIvMjAxOCAwMjo0MiBBTSwgRXJpYyBXLiBCaWVkZXJtYW4gd3JvdGU6Cj4gSmFuIEgu
+IFNjaMO2bmhlcnIgPGpzY2hvZW5oQGFtYXpvbi5kZT4gd3JpdGVzOgo+IAo+PiBHaXZlIHRoZSBh
+ZG1pbmlzdHJhdG9yIHRoZSBhYmlsaXR5IHRvIHRyYWRlIGtleGVjIHNhZmV0eSBmb3Iga2V4ZWMg
+c3BlZWQKPj4gYnkgZGlzYWJsaW5nIHRoZSBkaWdlc3QgY2FsY3VsYXRpb24vdmVyaWZpY2F0aW9u
+IGZvciByZWd1bGFyIGtleGVjcy4KPj4KPj4gVGhlIGJlaGF2aW9yIG9mIGtleGVjLW9uLWNyYXNo
+IGlzIG5vdCB0b3VjaGVkLgo+IAo+IFRoZSBwZXJmb3JtYW5jZSBvZiB0aGUgZGlnZXN0IGNhY3Vs
+YXRpb24gaXMgYWNjZXB0YWJsZSBvbiAzODZzLiAgT3IgaXQKPiB3YXMgeWVhcnMgYWdvIHdoZW4g
+SSB0ZXN0ZWQgaXQgb24gYSAzODYuICBXaGF0IGlzIHRoZSBwcm9ibGVtIHlvdSBhcmUKPiBoYXZp
+bmcuCj4gCj4gSXMgdGhlcmUgc29tZXRoaW5nIHNpbGx5IGxpa2UgYSBjYWNoZSBkaXNhYmxlIGlu
+IHlvdXIgY29uZmlndXJhdGlvbj8KCkxhc3QgdGltZSBJIG1lYXN1cmVkLCB0aGlzIHBhdGNoIHJl
+ZHVjZWQgdGhlIHRpbWUgdW50aWwgdGhlIHN5c3RlbSBpcyByZXNwb25zaXZlCmFnYWluIGFmdGVy
+IGEga2V4ZWMgYnkgYWJvdXQgNTAgbXMgdG8gMTAwIG1zIGluIG15IHNldHVwcy4gVGhhdCBzZWVt
+cyB0byBiZSBhYm91dAp0aGUgcmlnaHQgdGltZSBmb3IgZW5hYmxlZCBjYWNoZXMsIGp1ZGdpbmcg
+ZnJvbSBhIHF1aWNrIHNoYTI1NnN1bSBvbiB0aGUgY29tbWFuZApsaW5lIGFuZCB0aGUga2VybmVs
+IHNpemVzIEknbSB3b3JraW5nIHdpdGguCgpUaGVzZSA1MCBtcyB0byAxMDAgbXMgYXJlIGEgbm90
+aWNlYWJsZSBmcmFjdGlvbiBvZiB0aGUgdG90YWwga2V4ZWMgdGltZSBhbmQgdGhleQphcmUgZWFz
+eSB0byBhdm9pZCAtLSBjb21wYXJlZCB0byBzb21lIG90aGVyIHRpbWUgc2lua3MgaW4gdGhlIExp
+bnV4IGJvb3QgcHJvY2Vzcy4KClJlZ2FyZHMKSmFuCgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
+ZXhlYwo=
