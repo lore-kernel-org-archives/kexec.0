@@ -1,28 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from smtp.codeaurora.org ([198.145.29.96])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ehbDr-0003hS-2z
- for kexec@lists.infradead.org; Fri, 02 Feb 2018 13:17:45 +0000
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w12DETeY078852
- for <kexec@lists.infradead.org>; Fri, 2 Feb 2018 08:17:32 -0500
-Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2fvmbybwyb-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 02 Feb 2018 08:17:31 -0500
-Received: from localhost
- by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
- Fri, 2 Feb 2018 13:07:25 -0000
-From: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Subject: [PATCH 03/17] kexec_file: Make purgatory_info->ehdr const
-Date: Fri,  2 Feb 2018 14:07:04 +0100
-In-Reply-To: <20180202130718.35509-1-prudo@linux.vnet.ibm.com>
-References: <20180202130718.35509-1-prudo@linux.vnet.ibm.com>
-Message-Id: <20180202130718.35509-4-prudo@linux.vnet.ibm.com>
+ id 1ehgAj-000414-T5
+ for kexec@lists.infradead.org; Fri, 02 Feb 2018 18:34:51 +0000
+Received: from [192.168.86.209] (c-67-165-203-88.hsd1.co.comcast.net
+ [67.165.203.88])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+ (No client certificate requested)
+ (Authenticated sender: sgoel@smtp.codeaurora.org)
+ by smtp.codeaurora.org (Postfix) with ESMTPSA id 1F87C60285
+ for <kexec@lists.infradead.org>; Fri,  2 Feb 2018 18:34:38 +0000 (UTC)
+Subject: Re: [PATCH] arm64: fix an issue with kaslr-enabled vmlinux
+References: <20170824073249.18056-1-takahiro.akashi@linaro.org>
+From: "Goel, Sameer" <sgoel@codeaurora.org>
+Message-ID: <6a9d6bc2-ff57-5aa9-fb6a-ab7b0102d0a1@codeaurora.org>
+Date: Fri, 2 Feb 2018 11:34:37 -0700
+MIME-Version: 1.0
+In-Reply-To: <20170824073249.18056-1-takahiro.akashi@linaro.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,81 +26,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-s390@vger.kernel.org
-Cc: prudo@linux.vnet.ibm.com, Michael Ellerman <mpe@ellerman.id.au>, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
 
-The kexec_purgatory buffer is read-only. Thus all pointers into
-kexec_purgatory are read-only, too. Point this out by explicitly marking
-purgatory_info->ehdr as 'const' and update the comments in purgatory_info.
+I tested this fix and it works well. I am wondering which kexec tool release will pick this fix?
 
-Signed-off-by: Philipp Rudo <prudo@linux.vnet.ibm.com>
----
- include/linux/kexec.h | 17 +++++++++++------
- kernel/kexec_file.c   |  4 ++--
- 2 files changed, 13 insertions(+), 8 deletions(-)
+On 8/24/2017 1:32 AM, AKASHI Takahiro wrote:
+> Normally vmlinux for arm64 is of ET_EXEC type, while if built with
+> CONFIG_RANDAMIZE_BASE (that is KASLR), it will be of ET_DYN type.
+> Meanwhile, physical address field of segments in vmlinux has actually
+> the same value as virtual address field.
+> 
+> Accordingly, in this case, it totally makes no sense to check for
+> validity of segments against physical memory ranges and, if necessary,
+> relocate them in elf_exec_load() on arm64.
+> 
+> This patch allows to unconditionally skip the check on arm64.
+> 
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ---
+>  include/elf.h          | 3 ++-
+>  kexec/kexec-elf-exec.c | 6 +++++-
+>  2 files changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/elf.h b/include/elf.h
+> index 5db637b..b7677a2 100644
+> --- a/include/elf.h
+> +++ b/include/elf.h
+> @@ -258,7 +258,8 @@ typedef struct
+>  #define EM_OPENRISC	92		/* OpenRISC 32-bit embedded processor */
+>  #define EM_ARC_A5	93		/* ARC Cores Tangent-A5 */
+>  #define EM_XTENSA	94		/* Tensilica Xtensa Architecture */
+> -#define EM_NUM		95
+> +#define EM_AARCH64	183		/* ARM AARCH64 */
+> +#define EM_NUM		184
+>  
+>  /* If it is necessary to assign new unofficial EM_* values, please
+>     pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
+> diff --git a/kexec/kexec-elf-exec.c b/kexec/kexec-elf-exec.c
+> index cb62d04..a9329ac 100644
+> --- a/kexec/kexec-elf-exec.c
+> +++ b/kexec/kexec-elf-exec.c
+> @@ -63,9 +63,13 @@ int elf_exec_load(struct mem_ehdr *ehdr, struct kexec_info *info)
+>  
+>  	/* If I have a dynamic executable find it's size
+>  	 * and then find a location for it in memory.
+> +	 * Note on arm64:
+> +	 * arm64's vmlinux has virtual address in physical address
+> +	 * field of PT_LOAD segments. So the following validity check
+> +	 * and relocation makes no sense on arm64.
+>  	 */
+>  	base = 0;
+> -	if (ehdr->e_type == ET_DYN) {
+> +	if ((ehdr->e_machine != EM_AARCH64) && (ehdr->e_type == ET_DYN)) {
+>  		unsigned long first, last, align;
+>  		first = ULONG_MAX;
+>  		last  = 0;
+> 
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 7bae5e87bf0d..10842eece180 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -99,14 +99,19 @@ struct compat_kexec_segment {
- 
- #ifdef CONFIG_KEXEC_FILE
- struct purgatory_info {
--	/* Pointer to elf header of read only purgatory */
--	Elf_Ehdr *ehdr;
--
--	/* Pointer to purgatory sechdrs which are modifiable */
-+	/*
-+	 * Pointer to elf header at the beginning of kexec_purgatory.
-+	 * Note: kexec_purgatory is read only
-+	 */
-+	const Elf_Ehdr *ehdr;
-+	/*
-+	 * Temporary, modifiable buffer for sechdrs used for relocation.
-+	 * This memory can be freed post image load.
-+	 */
- 	Elf_Shdr *sechdrs;
- 	/*
--	 * Temporary buffer location where purgatory is loaded and relocated
--	 * This memory can be freed post image load
-+	 * Temporary, modifiable buffer for stripped purgatory used for
-+	 * relocation. This memory can be freed post image load.
- 	 */
- 	void *purgatory_buf;
- 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 0f044457b40c..06fc9fdd2474 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -880,7 +880,7 @@ int kexec_load_purgatory(struct kimage *image, unsigned long min,
- 	if (kexec_purgatory_size <= 0)
- 		return -EINVAL;
- 
--	pi->ehdr = (Elf_Ehdr *)kexec_purgatory;
-+	pi->ehdr = (const Elf_Ehdr *)kexec_purgatory;
- 
- 	ret = __kexec_load_purgatory(image, min, max, top_down);
- 	if (ret)
-@@ -904,9 +904,9 @@ int kexec_load_purgatory(struct kimage *image, unsigned long min,
- static Elf_Sym *kexec_purgatory_find_symbol(struct purgatory_info *pi,
- 					    const char *name)
- {
-+	const Elf_Ehdr *ehdr;
- 	Elf_Sym *syms;
- 	Elf_Shdr *sechdrs;
--	Elf_Ehdr *ehdr;
- 	int i, k;
- 	const char *strtab;
- 
 -- 
-2.13.5
-
+ Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc. Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
 
 _______________________________________________
 kexec mailing list
