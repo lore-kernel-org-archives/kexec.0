@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.cn.fujitsu.com ([183.91.158.132] helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.89 #1 (Red Hat Linux))
- id 1ej1fA-0000Nu-Hb
- for kexec@lists.infradead.org; Tue, 06 Feb 2018 11:43:50 +0000
-From: Dou Liyang <douly.fnst@cn.fujitsu.com>
-Subject: [makedumpfile PATCH 1/2] arch/x86_64: Cleanup the address translation
- of the 4-level page tables
-Date: Tue, 6 Feb 2018 19:43:02 +0800
-Message-ID: <20180206114303.7077-2-douly.fnst@cn.fujitsu.com>
-In-Reply-To: <20180206114303.7077-1-douly.fnst@cn.fujitsu.com>
-References: <20180206114303.7077-1-douly.fnst@cn.fujitsu.com>
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1ejBdf-0003hi-H0
+ for kexec@lists.infradead.org; Tue, 06 Feb 2018 22:22:57 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20180201231116.28077-1-jschoenh@amazon.de>
+ <87h8r0jhf4.fsf@xmission.com>
+ <4d45f270-7659-4d64-69a2-a9c448875c02@amazon.de>
+Date: Tue, 06 Feb 2018 16:22:10 -0600
+In-Reply-To: <4d45f270-7659-4d64-69a2-a9c448875c02@amazon.de> ("Jan
+ H. \=\?utf-8\?Q\?Sch\=C3\=B6nherr\=22's\?\= message of "Fri,
+ 2 Feb 2018 22:54:22 +0100")
+Message-ID: <87y3k5hi7h.fsf@xmission.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH] kexec: Allow to skip digest calculation for speed
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,204 +22,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ats-kumagai@wm.jp.nec.com, mas-tachibana@vf.jp.nec.com, indou.takao@jp.fujitsu.com
-Cc: Dou Liyang <douly.fnst@cn.fujitsu.com>, kexec@lists.infradead.org
+To: =?utf-8?Q?Jan_H=2E_Sch=C3=B6nherr?= <jschoenh@amazon.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, kexec@lists.infradead.org
 
-Due to the changing of 4-level page tables implementation in kernel, makedumpfile
-left behind some of the redundant macros. this make the translation not clear and
-hard to expand the code to support 5-level page tables.
-
-Remove the PML4* and PGDIR_* and unify the macro to get the index of PGD.
-
-Signed-off-by: Dou Liyang <douly.fnst@cn.fujitsu.com>
----
- arch/x86_64.c  | 59 +++++++++++++++++++++++++++++++++++-----------------------
- makedumpfile.h | 21 +++++++++------------
- 2 files changed, 45 insertions(+), 35 deletions(-)
-
-diff --git a/arch/x86_64.c b/arch/x86_64.c
-index 1f24415..cbe45c2 100644
---- a/arch/x86_64.c
-+++ b/arch/x86_64.c
-@@ -257,7 +257,7 @@ get_versiondep_info_x86_64(void)
- unsigned long long
- __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
- {
--	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
-+	unsigned long page_dir, pgd, pud_paddr, pud_pte, pmd_paddr, pmd_pte;
- 	unsigned long pte_paddr, pte;
- 
- 	/*
-@@ -269,43 +269,43 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
- 		if (page_dir == NOT_PADDR)
- 			return NOT_PADDR;
- 	}
--	page_dir += pml4_index(vaddr) * sizeof(unsigned long);
--	if (!readmem(PADDR, page_dir, &pml4, sizeof pml4)) {
--		ERRMSG("Can't get pml4 (page_dir:%lx).\n", page_dir);
-+	page_dir += pgd_index(vaddr) * sizeof(unsigned long);
-+	if (!readmem(PADDR, page_dir, &pgd, sizeof pgd)) {
-+		ERRMSG("Can't get pgd (page_dir:%lx).\n", page_dir);
- 		return NOT_PADDR;
- 	}
- 	if (info->vaddr_for_vtop == vaddr)
--		MSG("  PGD : %16lx => %16lx\n", page_dir, pml4);
-+		MSG("  PGD : %16lx => %16lx\n", page_dir, pgd);
- 
--	if (!(pml4 & _PAGE_PRESENT)) {
--		ERRMSG("Can't get a valid pml4.\n");
-+	if (!(pgd & _PAGE_PRESENT)) {
-+		ERRMSG("Can't get a valid pgd.\n");
- 		return NOT_PADDR;
- 	}
- 
- 	/*
- 	 * Get PUD.
- 	 */
--	pgd_paddr  = pml4 & ENTRY_MASK;
--	pgd_paddr += pgd_index(vaddr) * sizeof(unsigned long);
--	if (!readmem(PADDR, pgd_paddr, &pgd_pte, sizeof pgd_pte)) {
--		ERRMSG("Can't get pgd_pte (pgd_paddr:%lx).\n", pgd_paddr);
-+	pud_paddr  = pgd & ENTRY_MASK;
-+	pud_paddr += pud_index(vaddr) * sizeof(unsigned long);
-+	if (!readmem(PADDR, pud_paddr, &pud_pte, sizeof pud_pte)) {
-+		ERRMSG("Can't get pud_pte (pud_paddr:%lx).\n", pud_paddr);
- 		return NOT_PADDR;
- 	}
- 	if (info->vaddr_for_vtop == vaddr)
--		MSG("  PUD : %16lx => %16lx\n", pgd_paddr, pgd_pte);
-+		MSG("  PUD : %16lx => %16lx\n", pud_paddr, pud_pte);
- 
--	if (!(pgd_pte & _PAGE_PRESENT)) {
--		ERRMSG("Can't get a valid pgd_pte.\n");
-+	if (!(pud_pte & _PAGE_PRESENT)) {
-+		ERRMSG("Can't get a valid pud_pte.\n");
- 		return NOT_PADDR;
- 	}
--	if (pgd_pte & _PAGE_PSE)	/* 1GB pages */
--		return (pgd_pte & ENTRY_MASK & PGDIR_MASK) +
--			(vaddr & ~PGDIR_MASK);
-+	if (pud_pte & _PAGE_PSE)	/* 1GB pages */
-+		return (pud_pte & ENTRY_MASK & PUD_MASK) +
-+			(vaddr & ~PUD_MASK);
- 
- 	/*
- 	 * Get PMD.
- 	 */
--	pmd_paddr  = pgd_pte & ENTRY_MASK;
-+	pmd_paddr  = pud_pte & ENTRY_MASK;
- 	pmd_paddr += pmd_index(vaddr) * sizeof(unsigned long);
- 	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof pmd_pte)) {
- 		ERRMSG("Can't get pmd_pte (pmd_paddr:%lx).\n", pmd_paddr);
-@@ -391,15 +391,22 @@ kvtop_xen_x86_64(unsigned long kvaddr)
- 
- 	if ((dirp = kvtop_xen_x86_64(SYMBOL(pgd_l4))) == NOT_PADDR)
- 		return NOT_PADDR;
--	dirp += pml4_index(kvaddr) * sizeof(unsigned long long);
-+
-+	/*
-+	 * Get PGD.
-+	 */
-+	dirp += pgd_index(kvaddr) * sizeof(unsigned long long);
- 	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
- 		return NOT_PADDR;
- 
- 	if (!(entry & _PAGE_PRESENT))
- 		return NOT_PADDR;
- 
-+	/*
-+	 * Get PUD.
-+	 */
- 	dirp = entry & ENTRY_MASK;
--	dirp += pgd_index(kvaddr) * sizeof(unsigned long long);
-+	dirp += pud_index(kvaddr) * sizeof(unsigned long long);
- 	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
- 		return NOT_PADDR;
- 
-@@ -407,9 +414,12 @@ kvtop_xen_x86_64(unsigned long kvaddr)
- 		return NOT_PADDR;
- 
- 	if (entry & _PAGE_PSE)		/* 1GB pages */
--		return (entry & ENTRY_MASK & PGDIR_MASK) +
--			(kvaddr & ~PGDIR_MASK);
-+		return (entry & ENTRY_MASK & PUD_MASK) +
-+			(kvaddr & ~PUD_MASK);
- 
-+	/*
-+	 * Get PMD.
-+	 */
- 	dirp = entry & ENTRY_MASK;
- 	dirp += pmd_index(kvaddr) * sizeof(unsigned long long);
- 	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
-@@ -422,6 +432,9 @@ kvtop_xen_x86_64(unsigned long kvaddr)
- 		return (entry & ENTRY_MASK & PMD_MASK) +
- 			(kvaddr & ~PMD_MASK);
- 
-+	/*
-+	 * Get PTE.
-+	 */
- 	dirp = entry & ENTRY_MASK;
- 	dirp += pte_index(kvaddr) * sizeof(unsigned long long);
- 	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
-@@ -596,7 +609,7 @@ find_vmemmap_x86_64()
- 	 * for max_paddr >> 12 page structures
- 	 */
- 	high_pfn = max_paddr >> 12;
--	pgd_index = pgd4_index(vaddr_base);
-+	pgd_index = pgd_index(vaddr_base);
- 	pgd_addr = vaddr_to_paddr(init_level4_pgt); /* address of pgd */
- 	pgd_addr += pgd_index * sizeof(unsigned long);
- 	page_structs_per_pud = (PTRS_PER_PUD * PTRS_PER_PMD * info->page_size) /
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 01eece2..088dfc3 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -602,25 +602,22 @@ unsigned long get_kvbase_arm64(void);
- /*
-  * 4 Levels paging
-  */
--#define PML4_SHIFT		(39)
--#define PTRS_PER_PML4		(512)
--#define PGDIR_SHIFT		(30)
--#define PGDIR_SIZE		(1UL << PGDIR_SHIFT)
--#define PGDIR_MASK		(~(PGDIR_SIZE - 1))
--#define PTRS_PER_PGD		(512)
- #define PGD_SHIFT		(39)
- #define PUD_SHIFT		(30)
- #define PMD_SHIFT		(21)
--#define PMD_SIZE		(1UL << PMD_SHIFT)
--#define PMD_MASK		(~(PMD_SIZE - 1))
-+#define PTE_SHIFT		(12)
-+
-+#define PTRS_PER_PGD		(512)
- #define PTRS_PER_PUD		(512)
- #define PTRS_PER_PMD		(512)
- #define PTRS_PER_PTE		(512)
--#define PTE_SHIFT		(12)
- 
--#define pml4_index(address) (((address) >> PML4_SHIFT) & (PTRS_PER_PML4 - 1))
--#define pgd_index(address)  (((address) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
--#define pgd4_index(address) (((address) >> PGD_SHIFT) & (PTRS_PER_PGD - 1))
-+#define PUD_SIZE		(1UL << PUD_SHIFT)
-+#define PUD_MASK		(~(PUD_SHIFT - 1))
-+#define PMD_SIZE		(1UL << PMD_SHIFT)
-+#define PMD_MASK		(~(PMD_SIZE - 1))
-+
-+#define pgd_index(address)  (((address) >> PGD_SHIFT) & (PTRS_PER_PGD - 1))
- #define pud_index(address)  (((address) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
- #define pmd_index(address)  (((address) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
- #define pte_index(address)  (((address) >> PTE_SHIFT) & (PTRS_PER_PTE - 1))
--- 
-2.14.3
-
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+IkphbiBILiBTY2jDtm5oZXJyIiA8anNjaG9lbmhAYW1hem9uLmRlPiB3cml0ZXM6Cgo+IE9uIDAy
+LzAyLzIwMTggMDI6NDIgQU0sIEVyaWMgVy4gQmllZGVybWFuIHdyb3RlOgo+PiBKYW4gSC4gU2No
+w7ZuaGVyciA8anNjaG9lbmhAYW1hem9uLmRlPiB3cml0ZXM6Cj4+IAo+Pj4gR2l2ZSB0aGUgYWRt
+aW5pc3RyYXRvciB0aGUgYWJpbGl0eSB0byB0cmFkZSBrZXhlYyBzYWZldHkgZm9yIGtleGVjIHNw
+ZWVkCj4+PiBieSBkaXNhYmxpbmcgdGhlIGRpZ2VzdCBjYWxjdWxhdGlvbi92ZXJpZmljYXRpb24g
+Zm9yIHJlZ3VsYXIga2V4ZWNzLgo+Pj4KPj4+IFRoZSBiZWhhdmlvciBvZiBrZXhlYy1vbi1jcmFz
+aCBpcyBub3QgdG91Y2hlZC4KPj4gCj4+IFRoZSBwZXJmb3JtYW5jZSBvZiB0aGUgZGlnZXN0IGNh
+Y3VsYXRpb24gaXMgYWNjZXB0YWJsZSBvbiAzODZzLiAgT3IgaXQKPj4gd2FzIHllYXJzIGFnbyB3
+aGVuIEkgdGVzdGVkIGl0IG9uIGEgMzg2LiAgV2hhdCBpcyB0aGUgcHJvYmxlbSB5b3UgYXJlCj4+
+IGhhdmluZy4KPj4gCj4+IElzIHRoZXJlIHNvbWV0aGluZyBzaWxseSBsaWtlIGEgY2FjaGUgZGlz
+YWJsZSBpbiB5b3VyIGNvbmZpZ3VyYXRpb24/Cj4KPiBMYXN0IHRpbWUgSSBtZWFzdXJlZCwgdGhp
+cyBwYXRjaCByZWR1Y2VkIHRoZSB0aW1lIHVudGlsIHRoZSBzeXN0ZW0gaXMgcmVzcG9uc2l2ZQo+
+IGFnYWluIGFmdGVyIGEga2V4ZWMgYnkgYWJvdXQgNTAgbXMgdG8gMTAwIG1zIGluIG15IHNldHVw
+cy4gVGhhdCBzZWVtcyB0byBiZSBhYm91dAo+IHRoZSByaWdodCB0aW1lIGZvciBlbmFibGVkIGNh
+Y2hlcywganVkZ2luZyBmcm9tIGEgcXVpY2sgc2hhMjU2c3VtIG9uIHRoZSBjb21tYW5kCj4gbGlu
+ZSBhbmQgdGhlIGtlcm5lbCBzaXplcyBJJ20gd29ya2luZyB3aXRoLgo+Cj4gVGhlc2UgNTAgbXMg
+dG8gMTAwIG1zIGFyZSBhIG5vdGljZWFibGUgZnJhY3Rpb24gb2YgdGhlIHRvdGFsIGtleGVjIHRp
+bWUgYW5kIHRoZXkKPiBhcmUgZWFzeSB0byBhdm9pZCAtLSBjb21wYXJlZCB0byBzb21lIG90aGVy
+IHRpbWUgc2lua3MgaW4gdGhlIExpbnV4Cj4gYm9vdCBwcm9jZXNzLgoKU28ganVzdCBvcHRpbWl6
+YXRpb24gZm9yIG9wdGltaXphdGlvbiBzYWtlLiAgSXQgZml4ZXMgbm8gcHJvYmxlbXMgYW5kCnNv
+bHZlcyBubyBjaGFsbGVuZ2VzLgoKT24gYSBodW1hbiB0aW1lIHNjYWxlIEkgZG9uJ3QgYmVsaWV2
+ZSA1MG1zIHRvIDEwMG1zIGlzIGF0IGFsbCBub3RpY2FibGUuCgpUaGUgb3B0aW9uIGlzIGFscmVh
+ZHkgdGhlcmUgaWYgeW91IGRvbid0IHVzZSB0aGUga2V4ZWNfZmlsZSBzeXNjYWxsLgoKVGhlIGtl
+eGVjX2ZpbGUgc3lzY2FsbCBleGlzdHMgYmVjYXVzZSBwZW9wbGUgaGF2ZSBzZXR1cHMgd2hlcmUK
+c2lnbmF0dXJlcyBhcmUgbmVlZGVkIG9uIGtlcm5lbHMgYW5kIHNvIGNhbiBub3QgYWZmb3JkIHRo
+ZSBmdWxsCmdlbmVyYWxpdHkgb2YgdGhlIG9yaWdpbmFsIGtleGVjIHN5c3RlbSBjYWxsLiAgVGhl
+IHVzZSBvZiBrZXhlY19maWxlCmFscmVhZHkgdGVsbHMgdXMgcGVvcGxlIG9mIGdpdmVuIHVwIGZ1
+bGwgZ2VuZXJhbGl0eSBmb3Igc2FmZXR5LgoKSWYgdGhlcmUgaXMgYSBjb21wZWxsaW5nIHVzZSBj
+YXNlIHdlIGNhbiB0YWxrIGFib3V0IHRoaXMsIGJ1dCByaWdodCBub3cKSSBkb24ndCBzZWUgd2hh
+dCBjb3VsZCBwb3NzaWJseSBiZSBjb21wZWxsaW5nIGFib3V0IHNhdmluZyBhIHRlbnRoIG9mIGEK
+c2Vjb25kLCBvbiBhIGNvbXBhcmF0aXZlbHkgcmFyZSBvcGVyYXRpb24uCgpFcmljCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
+aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
