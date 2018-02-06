@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH] arm64: Set -fno-PIC along with -mcmodel=large
-References: <87608dprce.fsf@coreos.com>
-From: Geoff Levand <geoff@infradead.org>
-Message-ID: <b6fd5727-9199-1350-c175-8f9a780a095f@infradead.org>
-Date: Fri, 2 Feb 2018 15:48:31 -0800
+Received: from mail.cn.fujitsu.com ([183.91.158.132] helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.89 #1 (Red Hat Linux))
+ id 1ej1f7-0000Nu-Vi
+ for kexec@lists.infradead.org; Tue, 06 Feb 2018 11:43:47 +0000
+From: Dou Liyang <douly.fnst@cn.fujitsu.com>
+Subject: [makedumpfile PATCH 0/2] Add 5-level paging support
+Date: Tue, 6 Feb 2018 19:43:01 +0800
+Message-ID: <20180206114303.7077-1-douly.fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <87608dprce.fsf@coreos.com>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,24 +20,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Michael <david.michael@coreos.com>, horms@verge.net.au
-Cc: kexec@lists.infradead.org
+To: ats-kumagai@wm.jp.nec.com, mas-tachibana@vf.jp.nec.com, indou.takao@jp.fujitsu.com
+Cc: Dou Liyang <douly.fnst@cn.fujitsu.com>, kexec@lists.infradead.org
 
-Hi,
+this patchset adds 5-level paging support in makedumpfile
 
-On 01/07/2018 08:26 AM, David Michael wrote:
-> As seen in GCC's gcc/config/aarch64/aarch64.c, -fPIC with large
-> code model is unsupported.  This fixes the "sorry, unimplemented"
-> errors when building with compilers defaulting to -fPIC.
-> ---
-> 
-> purgatory/arch/arm64/entry.S:1:0: sorry, unimplemented: code model 'large' with -fPIC
-> 
-> This change fixes it.  Can something like this be applied?
+ -the 1th patch does some cleanup for the 4-level page
+ -the 2th patch add the 5-level page tables support
 
-This change seems reasonable considering large model + PIC is unsupported.
+Dou Liyang (2):
+  arch/x86_64: Cleanup the address translation of the 4-level page
+    tables
+  arch/x86_64: Add 5-level paging support
 
-Reviewed by: Geoff Levand <geoff@infradead.org>
+ arch/x86_64.c  | 131 +++++++++++++++++++++++++++++++++++++++++----------------
+ makedumpfile.h |  38 +++++++++++------
+ 2 files changed, 120 insertions(+), 49 deletions(-)
+
+-- 
+2.14.3
+
+
+
 
 _______________________________________________
 kexec mailing list
