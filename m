@@ -1,19 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
- by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ejBdf-0003hi-H0
- for kexec@lists.infradead.org; Tue, 06 Feb 2018 22:22:57 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20180201231116.28077-1-jschoenh@amazon.de>
- <87h8r0jhf4.fsf@xmission.com>
- <4d45f270-7659-4d64-69a2-a9c448875c02@amazon.de>
-Date: Tue, 06 Feb 2018 16:22:10 -0600
-In-Reply-To: <4d45f270-7659-4d64-69a2-a9c448875c02@amazon.de> ("Jan
- H. \=\?utf-8\?Q\?Sch\=C3\=B6nherr\=22's\?\= message of "Fri,
- 2 Feb 2018 22:54:22 +0100")
-Message-ID: <87y3k5hi7h.fsf@xmission.com>
+Received: from mail.cn.fujitsu.com ([183.91.158.132] helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.89 #1 (Red Hat Linux))
+ id 1ejLyn-0004eW-TW
+ for kexec@lists.infradead.org; Wed, 07 Feb 2018 09:25:28 +0000
+Subject: Re: [PATCH 4.14 023/159] mm/sparsemem: Allocate mem_section at
+ runtime for CONFIG_SPARSEMEM_EXTREME=y
+References: <20171222084623.668990192@linuxfoundation.org>
+ <20171222084625.007160464@linuxfoundation.org>
+ <1515302062.6507.18.camel@gmx.de> <20180108160444.2ol4fvgqbxnjmlpg@gmail.com>
+ <20180108174653.7muglyihpngxp5tl@black.fi.intel.com>
+ <20180109001303.dy73bpixsaegn4ol@node.shutemov.name>
+ <1515469448.6766.12.camel@gmx.de>
+From: Dou Liyang <douly.fnst@cn.fujitsu.com>
+Message-ID: <d71ba136-71ba-333a-f99b-b8283e2dc545@cn.fujitsu.com>
+Date: Wed, 7 Feb 2018 17:25:05 +0800
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: Allow to skip digest calculation for speed
+In-Reply-To: <1515469448.6766.12.camel@gmx.de>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,44 +25,230 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?utf-8?Q?Jan_H=2E_Sch=C3=B6nherr?= <jschoenh@amazon.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, kexec@lists.infradead.org
+To: Mike Galbraith <efault@gmx.de>, "Kirill A. Shutemov" <kirill@shutemov.name>, Ingo Molnar <mingo@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, linux-mm@kvack.org, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, Cyrill Gorcunov <gorcunov@openvz.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-IkphbiBILiBTY2jDtm5oZXJyIiA8anNjaG9lbmhAYW1hem9uLmRlPiB3cml0ZXM6Cgo+IE9uIDAy
-LzAyLzIwMTggMDI6NDIgQU0sIEVyaWMgVy4gQmllZGVybWFuIHdyb3RlOgo+PiBKYW4gSC4gU2No
-w7ZuaGVyciA8anNjaG9lbmhAYW1hem9uLmRlPiB3cml0ZXM6Cj4+IAo+Pj4gR2l2ZSB0aGUgYWRt
-aW5pc3RyYXRvciB0aGUgYWJpbGl0eSB0byB0cmFkZSBrZXhlYyBzYWZldHkgZm9yIGtleGVjIHNw
-ZWVkCj4+PiBieSBkaXNhYmxpbmcgdGhlIGRpZ2VzdCBjYWxjdWxhdGlvbi92ZXJpZmljYXRpb24g
-Zm9yIHJlZ3VsYXIga2V4ZWNzLgo+Pj4KPj4+IFRoZSBiZWhhdmlvciBvZiBrZXhlYy1vbi1jcmFz
-aCBpcyBub3QgdG91Y2hlZC4KPj4gCj4+IFRoZSBwZXJmb3JtYW5jZSBvZiB0aGUgZGlnZXN0IGNh
-Y3VsYXRpb24gaXMgYWNjZXB0YWJsZSBvbiAzODZzLiAgT3IgaXQKPj4gd2FzIHllYXJzIGFnbyB3
-aGVuIEkgdGVzdGVkIGl0IG9uIGEgMzg2LiAgV2hhdCBpcyB0aGUgcHJvYmxlbSB5b3UgYXJlCj4+
-IGhhdmluZy4KPj4gCj4+IElzIHRoZXJlIHNvbWV0aGluZyBzaWxseSBsaWtlIGEgY2FjaGUgZGlz
-YWJsZSBpbiB5b3VyIGNvbmZpZ3VyYXRpb24/Cj4KPiBMYXN0IHRpbWUgSSBtZWFzdXJlZCwgdGhp
-cyBwYXRjaCByZWR1Y2VkIHRoZSB0aW1lIHVudGlsIHRoZSBzeXN0ZW0gaXMgcmVzcG9uc2l2ZQo+
-IGFnYWluIGFmdGVyIGEga2V4ZWMgYnkgYWJvdXQgNTAgbXMgdG8gMTAwIG1zIGluIG15IHNldHVw
-cy4gVGhhdCBzZWVtcyB0byBiZSBhYm91dAo+IHRoZSByaWdodCB0aW1lIGZvciBlbmFibGVkIGNh
-Y2hlcywganVkZ2luZyBmcm9tIGEgcXVpY2sgc2hhMjU2c3VtIG9uIHRoZSBjb21tYW5kCj4gbGlu
-ZSBhbmQgdGhlIGtlcm5lbCBzaXplcyBJJ20gd29ya2luZyB3aXRoLgo+Cj4gVGhlc2UgNTAgbXMg
-dG8gMTAwIG1zIGFyZSBhIG5vdGljZWFibGUgZnJhY3Rpb24gb2YgdGhlIHRvdGFsIGtleGVjIHRp
-bWUgYW5kIHRoZXkKPiBhcmUgZWFzeSB0byBhdm9pZCAtLSBjb21wYXJlZCB0byBzb21lIG90aGVy
-IHRpbWUgc2lua3MgaW4gdGhlIExpbnV4Cj4gYm9vdCBwcm9jZXNzLgoKU28ganVzdCBvcHRpbWl6
-YXRpb24gZm9yIG9wdGltaXphdGlvbiBzYWtlLiAgSXQgZml4ZXMgbm8gcHJvYmxlbXMgYW5kCnNv
-bHZlcyBubyBjaGFsbGVuZ2VzLgoKT24gYSBodW1hbiB0aW1lIHNjYWxlIEkgZG9uJ3QgYmVsaWV2
-ZSA1MG1zIHRvIDEwMG1zIGlzIGF0IGFsbCBub3RpY2FibGUuCgpUaGUgb3B0aW9uIGlzIGFscmVh
-ZHkgdGhlcmUgaWYgeW91IGRvbid0IHVzZSB0aGUga2V4ZWNfZmlsZSBzeXNjYWxsLgoKVGhlIGtl
-eGVjX2ZpbGUgc3lzY2FsbCBleGlzdHMgYmVjYXVzZSBwZW9wbGUgaGF2ZSBzZXR1cHMgd2hlcmUK
-c2lnbmF0dXJlcyBhcmUgbmVlZGVkIG9uIGtlcm5lbHMgYW5kIHNvIGNhbiBub3QgYWZmb3JkIHRo
-ZSBmdWxsCmdlbmVyYWxpdHkgb2YgdGhlIG9yaWdpbmFsIGtleGVjIHN5c3RlbSBjYWxsLiAgVGhl
-IHVzZSBvZiBrZXhlY19maWxlCmFscmVhZHkgdGVsbHMgdXMgcGVvcGxlIG9mIGdpdmVuIHVwIGZ1
-bGwgZ2VuZXJhbGl0eSBmb3Igc2FmZXR5LgoKSWYgdGhlcmUgaXMgYSBjb21wZWxsaW5nIHVzZSBj
-YXNlIHdlIGNhbiB0YWxrIGFib3V0IHRoaXMsIGJ1dCByaWdodCBub3cKSSBkb24ndCBzZWUgd2hh
-dCBjb3VsZCBwb3NzaWJseSBiZSBjb21wZWxsaW5nIGFib3V0IHNhdmluZyBhIHRlbnRoIG9mIGEK
-c2Vjb25kLCBvbiBhIGNvbXBhcmF0aXZlbHkgcmFyZSBvcGVyYXRpb24uCgpFcmljCgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
-aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi All,
+
+I met the makedumpfile failed in the upstream kernel which contained
+this patch. Did I missed something else?
+
+In fedora27 host:
+
+[douly@localhost code]$ ./makedumpfile -d 31 --message-level 31 -x
+vmlinux_4.15+ vmcore_4.15+_from_cp_command vmcore_4.15+
+
+sadump: does not have partition header
+sadump: read dump device as unknown format
+sadump: unknown format
+LOAD (0)
+   phys_start : 1000000
+   phys_end   : 2a86000
+   virt_start : ffffffff81000000
+   virt_end   : ffffffff82a86000
+LOAD (1)
+   phys_start : 1000
+   phys_end   : 9fc00
+   virt_start : ffff880000001000
+   virt_end   : ffff88000009fc00
+LOAD (2)
+   phys_start : 100000
+   phys_end   : 13000000
+   virt_start : ffff880000100000
+   virt_end   : ffff880013000000
+LOAD (3)
+   phys_start : 33000000
+   phys_end   : 7ffd7000
+   virt_start : ffff880033000000
+   virt_end   : ffff88007ffd7000
+Linux kdump
+page_size    : 4096
+
+max_mapnr    : 7ffd7
+
+Buffer size for the cyclic mode: 131061
+The kernel version is not supported.
+The makedumpfile operation may be incomplete.
+
+num of NODEs : 1
+
+
+Memory type  : SPARSEMEM_EX
+
+mem_map (0)
+   mem_map    : ffff88007ff26000
+   pfn_start  : 0
+   pfn_end    : 8000
+mem_map (1)
+   mem_map    : 0
+   pfn_start  : 8000
+   pfn_end    : 10000
+mem_map (2)
+   mem_map    : 0
+   pfn_start  : 10000
+   pfn_end    : 18000
+mem_map (3)
+   mem_map    : 0
+   pfn_start  : 18000
+   pfn_end    : 20000
+mem_map (4)
+   mem_map    : 0
+   pfn_start  : 20000
+   pfn_end    : 28000
+mem_map (5)
+   mem_map    : 0
+   pfn_start  : 28000
+   pfn_end    : 30000
+mem_map (6)
+   mem_map    : 0
+   pfn_start  : 30000
+   pfn_end    : 38000
+mem_map (7)
+   mem_map    : 0
+   pfn_start  : 38000
+   pfn_end    : 40000
+mem_map (8)
+   mem_map    : 0
+   pfn_start  : 40000
+   pfn_end    : 48000
+mem_map (9)
+   mem_map    : 0
+   pfn_start  : 48000
+   pfn_end    : 50000
+mem_map (10)
+   mem_map    : 0
+   pfn_start  : 50000
+   pfn_end    : 58000
+mem_map (11)
+   mem_map    : 0
+   pfn_start  : 58000
+   pfn_end    : 60000
+mem_map (12)
+   mem_map    : 0
+   pfn_start  : 60000
+   pfn_end    : 68000
+mem_map (13)
+   mem_map    : 0
+   pfn_start  : 68000
+   pfn_end    : 70000
+mem_map (14)
+   mem_map    : 0
+   pfn_start  : 70000
+   pfn_end    : 78000
+mem_map (15)
+   mem_map    : 0
+   pfn_start  : 78000
+   pfn_end    : 7ffd7
+mmap() is available on the kernel.
+Checking for memory holes                         : [100.0 %] | 
+         STEP [Checking for memory holes  ] : 0.000060 seconds
+__vtop4_x86_64: Can't get a valid pte.
+readmem: Can't convert a virtual address(ffff88007ffd7000) to physical 
+address.
+readmem: type_addr: 0, addr:ffff88007ffd7000, size:32768
+__exclude_unnecessary_pages: Can't read the buffer of struct page.
+create_2nd_bitmap: Can't exclude unnecessary pages.
+Checking for memory holes                         : [100.0 %] \ 
+         STEP [Checking for memory holes  ] : 0.000010 seconds
+Checking for memory holes                         : [100.0 %] - 
+         STEP [Checking for memory holes  ] : 0.000004 seconds
+__vtop4_x86_64: Can't get a valid pte.
+readmem: Can't convert a virtual address(ffff88007ffd7000) to physical 
+address.
+readmem: type_addr: 0, addr:ffff88007ffd7000, size:32768
+__exclude_unnecessary_pages: Can't read the buffer of struct page.
+create_2nd_bitmap: Can't exclude unnecessary pages.
+
+Thanks,
+	dou
+At 01/09/2018 11:44 AM, Mike Galbraith wrote:
+> On Tue, 2018-01-09 at 03:13 +0300, Kirill A. Shutemov wrote:
+>>
+>> Mike, could you test this? (On top of the rest of the fixes.)
+> 
+> homer:..crash/2018-01-09-04:25 # ll
+> total 1863604
+> -rw------- 1 root root      66255 Jan  9 04:25 dmesg.txt
+> -rw-r--r-- 1 root root        182 Jan  9 04:25 README.txt
+> -rw-r--r-- 1 root root    2818240 Jan  9 04:25 System.map-4.15.0.gb2cd1df-master
+> -rw------- 1 root root 1832914928 Jan  9 04:25 vmcore
+> -rw-r--r-- 1 root root   72514993 Jan  9 04:25 vmlinux-4.15.0.gb2cd1df-master.gz
+> 
+> Yup, all better.
+> 
+>> Sorry for the mess.
+> 
+> (why, developers not installing shiny new bugs is a whole lot worse:)
+> 
+>>  From 100fd567754f1457be94732046aefca204c842d2 Mon Sep 17 00:00:00 2001
+>> From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+>> Date: Tue, 9 Jan 2018 02:55:47 +0300
+>> Subject: [PATCH] kdump: Write a correct address of mem_section into vmcoreinfo
+>>
+>> Depending on configuration mem_section can now be an array or a pointer
+>> to an array allocated dynamically. In most cases, we can continue to refer
+>> to it as 'mem_section' regardless of what it is.
+>>
+>> But there's one exception: '&mem_section' means "address of the array" if
+>> mem_section is an array, but if mem_section is a pointer, it would mean
+>> "address of the pointer".
+>>
+>> We've stepped onto this in kdump code. VMCOREINFO_SYMBOL(mem_section)
+>> writes down address of pointer into vmcoreinfo, not array as we wanted.
+>>
+>> Let's introduce VMCOREINFO_ARRAY() that would handle the situation
+>> correctly for both cases.
+>>
+>> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>> Fixes: 83e3c48729d9 ("mm/sparsemem: Allocate mem_section at runtime for CONFIG_SPARSEMEM_EXTREME=y")
+>> ---
+>>   include/linux/crash_core.h | 2 ++
+>>   kernel/crash_core.c        | 2 +-
+>>   2 files changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+>> index 06097ef30449..83ae04950269 100644
+>> --- a/include/linux/crash_core.h
+>> +++ b/include/linux/crash_core.h
+>> @@ -42,6 +42,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+>>   	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
+>>   #define VMCOREINFO_SYMBOL(name) \
+>>   	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
+>> +#define VMCOREINFO_ARRAY(name) \
+>> +	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)name)
+>>   #define VMCOREINFO_SIZE(name) \
+>>   	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
+>>   			      (unsigned long)sizeof(name))
+>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+>> index b3663896278e..d4122a837477 100644
+>> --- a/kernel/crash_core.c
+>> +++ b/kernel/crash_core.c
+>> @@ -410,7 +410,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+>>   	VMCOREINFO_SYMBOL(contig_page_data);
+>>   #endif
+>>   #ifdef CONFIG_SPARSEMEM
+>> -	VMCOREINFO_SYMBOL(mem_section);
+>> +	VMCOREINFO_ARRAY(mem_section);
+>>   	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+>>   	VMCOREINFO_STRUCT_SIZE(mem_section);
+>>   	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> 
+> 
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
