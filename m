@@ -1,11 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <5A7B4761.3000808@arm.com>
-Date: Wed, 07 Feb 2018 18:37:21 +0000
-From: James Morse <james.morse@arm.com>
+Received: from mail.cn.fujitsu.com ([183.91.158.132] helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.89 #1 (Red Hat Linux))
+ id 1ejao5-0006kg-HO
+ for kexec@lists.infradead.org; Thu, 08 Feb 2018 01:15:24 +0000
+Subject: Re: [PATCH 4.14 023/159] mm/sparsemem: Allocate mem_section at
+ runtime for CONFIG_SPARSEMEM_EXTREME=y
+References: <20180109001303.dy73bpixsaegn4ol@node.shutemov.name>
+ <1515469448.6766.12.camel@gmx.de>
+ <d71ba136-71ba-333a-f99b-b8283e2dc545@cn.fujitsu.com>
+ <20180207104111.sljc62bgkggmtio4@node.shutemov.name>
+ <1518000336.29698.1.camel@gmx.de>
+ <cd7e23ce-60a3-08ad-eb5d-21bb91df5937@cn.fujitsu.com>
+ <20180207120827.GB30270@localhost.localdomain>
+ <2945e12f-caab-b7e7-77e0-bd3971e784be@cn.fujitsu.com>
+ <20180207122724.GC30270@localhost.localdomain>
+ <0a2d5abe-3081-a784-dd85-70d34a0f60cc@cn.fujitsu.com>
+ <20180207124519.GD30270@localhost.localdomain>
+From: Dou Liyang <douly.fnst@cn.fujitsu.com>
+Message-ID: <0988774f-9de0-b18f-1216-57d802502bb7@cn.fujitsu.com>
+Date: Thu, 8 Feb 2018 09:14:56 +0800
 MIME-Version: 1.0
-Subject: Re: [PATCH v7 00/11] arm64: kexec: add kexec_file_load() support
-References: <20171204025801.12161-1-takahiro.akashi@linaro.org>
-In-Reply-To: <20171204025801.12161-1-takahiro.akashi@linaro.org>
+In-Reply-To: <20180207124519.GD30270@localhost.localdomain>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -14,101 +30,381 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, julien.thierry@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: Baoquan He <bhe@redhat.com>
+Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Galbraith <efault@gmx.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, Cyrill Gorcunov <gorcunov@openvz.org>, "Kirill A. Shutemov" <kirill@shutemov.name>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Akashi,
+Hi Baoquan,
 
-I'm still getting my head round how all this works, so please forgive what may
-be stupid questions!
-
-
-On 04/12/17 02:57, AKASHI Takahiro wrote:
-> This is the seventh round of implementing kexec_file_load() support
-> on arm64.[1]
-> Most of the code is based on kexec-tools (along with some kernel code
-> from x86, which also came from kexec-tools).
+At 02/07/2018 08:45 PM, Baoquan He wrote:
+> On 02/07/18 at 08:34pm, Dou Liyang wrote:
+>>
+>>
+>> At 02/07/2018 08:27 PM, Baoquan He wrote:
+>>> On 02/07/18 at 08:17pm, Dou Liyang wrote:
+>>>> Hi Baoquan,
+>>>>
+>>>> At 02/07/2018 08:08 PM, Baoquan He wrote:
+>>>>> On 02/07/18 at 08:00pm, Dou Liyang wrote:
+>>>>>> Hi Kirill,Mike
+>>>>>>
+>>>>>> At 02/07/2018 06:45 PM, Mike Galbraith wrote:
+>>>>>>> On Wed, 2018-02-07 at 13:41 +0300, Kirill A. Shutemov wrote:
+>>>>>>>> On Wed, Feb 07, 2018 at 05:25:05PM +0800, Dou Liyang wrote:
+>>>>>>>>> Hi All,
+>>>>>>>>>
+>>>>>>>>> I met the makedumpfile failed in the upstream kernel which contained
+>>>>>>>>> this patch. Did I missed something else?
+>>>>>>>>
+>>>>>>>> None I'm aware of.
+>>>>>>>>
+>>>>>>>> Is there a reason to suspect that the issue is related to the bug this patch
+>>>>>>>> fixed?
+>>>>>>>
+>>>>>>
+>>>>>> I did a contrastive test by my colleagues Indoh's suggestion.
 > 
+> OK, I may get the reason. kaslr is enabled, right? You can try to
+
+I add 'nokaslr' to disable the KASLR feature.
+
+# cat /proc/cmdline
+BOOT_IMAGE=/vmlinuz-4.15.0+ 
+root=UUID=10f10326-c923-4098-86aa-afed5c54ee0b ro crashkernel=512M rhgb 
+console=tty0 console=ttyS0 nokaslr LANG=en_US.UTF-8
+
+> disable kaslr and try them again. Because phys_base and kaslr_offset are
+> got from vmlinux, while these are generated at compiling time. Just a
+> guess.
 > 
-> This patch series enables us to
->   * load the kernel, Image, via kexec_file_load() system call, and
->   * optionally verify its signature at load time for trusted boot.
 
-Is kdump using kexec_file_load() possible? (questions on patch 3)
-I can't work out why additional elf-generating code would be necessary if kdump
-works today without it...
-
-
-> To load the kernel via kexec_file_load() system call, a small change
-> is also required on kexec-tools. See [2]. This enables '-s' option.
-> (Please use v7.2.1+ crash utility for v4.14+ kernel)
-
-(what does the -s option do?)
-
-
-> As we discussed a long time ago, users may not be allowed to specify
-> device-tree file of the 2nd kernel explicitly with kexec-tools, hence
-> re-using the blob of the first kernel.
-> 
-> Regarding a kernel image verification, a signature must be presented
-> along with the binary itself. A signature is basically a hash value
-> calculated against the whole binary data and encrypted by a key which
-> will be authenticated by the system's trusted certificate.
-> Any attempt to read and load a to-be-kexec-ed kernel image through
-> a system call will be checked and blocked if the binary's hash value
-> doesn't match its associated signature.
-
-> Concerns(or future works):
-
-(lets keep this stuff in the future)
-
-> * Even if the kernel is configured with CONFIG_RANDOMIZE_BASE, the 2nd
->   kernel won't be placed at a randomized address. We will have to
->   add some boot code similar to efi-stub to implement the randomization.
-
-I think there are two parts to this. The efistub may copy the kernel to a new
-~random location in physical memory. It also adds a seed used to randomise the
-virtual-addresses the kernel executes from.
-
-For kexec_file_load() the first-kernel could apply some randomness to the
-physical offset when it re-assembles the kexec-kernel. i.e. code in
-arm64_relocate_new_kernel(). I don't think we should do this without some hint
-that the new kernel supports this...
-
-For the virtual-addresses it would need to add a new kaslr-seed to the
-DT/chosen, which should be harmless.
-
-
-> for approach (1),
-> * While big-endian kernel can support kernel signing, I'm not sure that
->   Image can be recognized as in PE format because x86 standard only
->   defines little-endian-based format.
-
-What does the recognizing? (I don't think we should invent a new format..)
-
-
-> * vmlinux support
-
-(Patch 3 is why I'm here)
-
-I don't think we need to support this. I can't boot a vmlinux file via UEFI. As
-I understand it kexec_file_load() is all about the signature verification for
-UEFI:SecureBoot. The chances of me having a vmlinux signed for SecureBoot use is
-pretty low, chances are its a self-signed image I just built, in which case I
-can use the arm64 Image file that was built at the same time.
-
-Supporting two file formats is going to be a headache. Distributions ship
-separate debug info packages for debugging, I don't think we need to make them
-bootable...
+Oh, I will recompile the kernel with KASLR disabled in .config.
 
 
 Thanks,
+	dou.
+>>>>>>
+>>>>>> Revert your two commits:
+>>>>>>
+>>>>>> commit 83e3c48729d9ebb7af5a31a504f3fd6aff0348c4
+>>>>>> Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>>>>>> Date:   Fri Sep 29 17:08:16 2017 +0300
+>>>>>>
+>>>>>> commit 629a359bdb0e0652a8227b4ff3125431995fec6e
+>>>>>> Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>>>>>> Date:   Tue Nov 7 11:33:37 2017 +0300
+>>>>>>
+>>>>>> ...and keep others unchanged, the makedumpfile works well.
+>>>>>>
+>>>>>>> Still works fine for me with .today.  Box is only 16GB desktop box though.
+>>>>>>>
+>>>>>> Btw, In the upstream kernel which contained this patch, I did two tests:
+>>>>>>
+>>>>>>     1) use the makedumpfile as core_collector in /etc/kdump.conf, then
+>>>>>> trigger the process of kdump by echo 1 >/proc/sysrq-trigger, the
+>>>>>> makedumpfile works well and I can get the vmcore file.
+>>>>>>
+>>>>>>         ......It is OK
+>>>>>>
+>>>>>>     2) use cp as core_collector, do the same operation to get the vmcore file.
+>>>>>> then use makedumpfile to do like above:
+>>>>>>
+>>>>>>        [douly@localhost code]$ ./makedumpfile -d 31 --message-level 31 -x
+>>>>>> vmlinux_4.15+ vmcore_4.15+_from_cp_command vmcore_4.15+
+>>>>>
+>>>>> Oh, then please ignore my previous comment. Adding '-D' can give more
+>>>>> debugging message.
+>>>>
+>>>> I added '-D', Just like before, no more debugging message:
+>>>>
+>>>> BTW, I use crash to analyze the vmcore file created by 'cp' command.
+>>>>
+>>>>      ./crash ../makedumpfile/code/vmcore_4.15+_from_cp_command
+>>>> ../makedumpfile/code/vmlinux_4.15+
+>>>>
+>>>> the crash works well, It's so interesting.
+>>>>
+>>>> Thanks,
+>>>> 	dou.
+>>>>
+>>>> The debugging message with '-D':
+>>>
+>>> And what's the debugging printing when trigger crash by sysrq?
+>>>
+>>
+>> kdump: dump target is /dev/vda2
+>> kdump: saving to /sysroot//var/crash/127.0.0.1-2018-02-07-07:31:56/
+>> [    2.751352] EXT4-fs (vda2): re-mounted. Opts: data=ordered
+>> kdump: saving vmcore-dmesg.txt
+>> kdump: saving vmcore-dmesg.txt complete
+>> kdump: saving vmcore
+>> sadump: does not have partition header
+>> sadump: read dump device as unknown format
+>> sadump: unknown format
+>> LOAD (0)
+>>    phys_start : 1000000
+>>    phys_end   : 2a86000
+>>    virt_start : ffffffff81000000
+>>    virt_end   : ffffffff82a86000
+>> LOAD (1)
+>>    phys_start : 1000
+>>    phys_end   : 9fc00
+>>    virt_start : ffff880000001000
+>>    virt_end   : ffff88000009fc00
+>> LOAD (2)
+>>    phys_start : 100000
+>>    phys_end   : 13000000
+>>    virt_start : ffff880000100000
+>>    virt_end   : ffff880013000000
+>> LOAD (3)
+>>    phys_start : 33000000
+>>    phys_end   : 7ffd7000
+>>    virt_start : ffff880033000000
+>>    virt_end   : ffff88007ffd7000
+>> Linux kdump
+>> page_size    : 4096
+>>
+>> max_mapnr    : 7ffd7
+>>
+>> Buffer size for the cyclic mode: 131061
+>>
+>> num of NODEs : 1
+>>
+>>
+>> Memory type  : SPARSEMEM_EX
+>>
+>> mem_map (0)
+>>    mem_map    : ffffea0000000000
+>>    pfn_start  : 0
+>>    pfn_end    : 8000
+>> mem_map (1)
+>>    mem_map    : ffffea0000200000
+>>    pfn_start  : 8000
+>>    pfn_end    : 10000
+>> mem_map (2)
+>>    mem_map    : ffffea0000400000
+>>    pfn_start  : 10000
+>>    pfn_end    : 18000
+>> mem_map (3)
+>>    mem_map    : ffffea0000600000
+>>    pfn_start  : 18000
+>>    pfn_end    : 20000
+>> mem_map (4)
+>>    mem_map    : ffffea0000800000
+>>    pfn_start  : 20000
+>>    pfn_end    : 28000
+>> mem_map (5)
+>>    mem_map    : ffffea0000a00000
+>>    pfn_start  : 28000
+>>    pfn_end    : 30000
+>> mem_map (6)
+>>    mem_map    : ffffea0000c00000
+>>    pfn_start  : 30000
+>>    pfn_end    : 38000
+>> mem_map (7)
+>>    mem_map    : ffffea0000e00000
+>>    pfn_start  : 38000
+>>    pfn_end    : 40000
+>> mem_map (8)
+>>    mem_map    : ffffea0001000000
+>>    pfn_start  : 40000
+>>    pfn_end    : 48000
+>> mem_map (9)
+>>    mem_map    : ffffea0001200000
+>>    pfn_start  : 48000
+>>    pfn_end    : 50000
+>> mem_map (10)
+>>    mem_map    : ffffea0001400000
+>>    pfn_start  : 50000
+>>    pfn_end    : 58000
+>> mem_map (11)
+>>    mem_map    : ffffea0001600000
+>>    pfn_start  : 58000
+>>    pfn_end    : 60000
+>> mem_map (12)
+>>    mem_map    : ffffea0001800000
+>>    pfn_start  : 60000
+>>    pfn_end    : 68000
+>> mem_map (13)
+>>    mem_map    : ffffea0001a00000
+>>    pfn_start  : 68000
+>>    pfn_end    : 70000
+>> mem_map (14)
+>>    mem_map    : ffffea0001c00000
+>>    pfn_start  : 70000
+>>    pfn_end    : 78000
+>> mem_map (15)
+>>    mem_map    : ffffea0001e00000
+>>    pfn_start  : 78000
+>>    pfn_end    : 7ffd7
+>> mmap() is available on the kernel.
+>> Copying data                                      : [100.0 %] -  eta: 0s
+>> Writing erase info...
+>> offset_eraseinfo: 9567fb0, size_eraseinfo: 0
+>> kdump: saving vmcore complete
+>>
+>> Thanks,
+>> 	dou
+>>
+>>>>
+>>>> [douly@localhost code]$ ./makedumpfile -D -d 31 --message-level 31 -x
+>>>> vmlinux_4.15+  vmcore_4.15+_from_cp_command vmcore_4.15+
+>>>> sadump: does not have partition header
+>>>> sadump: read dump device as unknown format
+>>>> sadump: unknown format
+>>>> LOAD (0)
+>>>>     phys_start : 1000000
+>>>>     phys_end   : 2a86000
+>>>>     virt_start : ffffffff81000000
+>>>>     virt_end   : ffffffff82a86000
+>>>> LOAD (1)
+>>>>     phys_start : 1000
+>>>>     phys_end   : 9fc00
+>>>>     virt_start : ffff880000001000
+>>>>     virt_end   : ffff88000009fc00
+>>>> LOAD (2)
+>>>>     phys_start : 100000
+>>>>     phys_end   : 13000000
+>>>>     virt_start : ffff880000100000
+>>>>     virt_end   : ffff880013000000
+>>>> LOAD (3)
+>>>>     phys_start : 33000000
+>>>>     phys_end   : 7ffd7000
+>>>>     virt_start : ffff880033000000
+>>>>     virt_end   : ffff88007ffd7000
+>>>> Linux kdump
+>>>> page_size    : 4096
+>>>>
+>>>> max_mapnr    : 7ffd7
+>>>>
+>>>> Buffer size for the cyclic mode: 131061
+>>>> The kernel version is not supported.
+>>>> The makedumpfile operation may be incomplete.
+>>>>
+>>>> num of NODEs : 1
+>>>>
+>>>>
+>>>> Memory type  : SPARSEMEM_EX
+>>>>
+>>>> mem_map (0)
+>>>>     mem_map    : ffff88007ff26000
+>>>>     pfn_start  : 0
+>>>>     pfn_end    : 8000
+>>>> mem_map (1)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 8000
+>>>>     pfn_end    : 10000
+>>>> mem_map (2)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 10000
+>>>>     pfn_end    : 18000
+>>>> mem_map (3)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 18000
+>>>>     pfn_end    : 20000
+>>>> mem_map (4)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 20000
+>>>>     pfn_end    : 28000
+>>>> mem_map (5)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 28000
+>>>>     pfn_end    : 30000
+>>>> mem_map (6)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 30000
+>>>>     pfn_end    : 38000
+>>>> mem_map (7)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 38000
+>>>>     pfn_end    : 40000
+>>>> mem_map (8)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 40000
+>>>>     pfn_end    : 48000
+>>>> mem_map (9)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 48000
+>>>>     pfn_end    : 50000
+>>>> mem_map (10)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 50000
+>>>>     pfn_end    : 58000
+>>>> mem_map (11)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 58000
+>>>>     pfn_end    : 60000
+>>>> mem_map (12)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 60000
+>>>>     pfn_end    : 68000
+>>>> mem_map (13)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 68000
+>>>>     pfn_end    : 70000
+>>>> mem_map (14)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 70000
+>>>>     pfn_end    : 78000
+>>>> mem_map (15)
+>>>>     mem_map    : 0
+>>>>     pfn_start  : 78000
+>>>>     pfn_end    : 7ffd7
+>>>> mmap() is available on the kernel.
+>>>> Checking for memory holes                         : [100.0 %] |         STEP
+>>>> [Checking for memory holes  ] : 0.000014 seconds
+>>>> __vtop4_x86_64: Can't get a valid pte.
+>>>> readmem: Can't convert a virtual address(ffff88007ffd7000) to physical
+>>>> address.
+>>>> readmem: type_addr: 0, addr:ffff88007ffd7000, size:32768
+>>>> __exclude_unnecessary_pages: Can't read the buffer of struct page.
+>>>> create_2nd_bitmap: Can't exclude unnecessary pages.
+>>>> Checking for memory holes                         : [100.0 %] \         STEP
+>>>> [Checking for memory holes  ] : 0.000006 seconds
+>>>> Checking for memory holes                         : [100.0 %] -         STEP
+>>>> [Checking for memory holes  ] : 0.000004 seconds
+>>>> __vtop4_x86_64: Can't get a valid pte.
+>>>> readmem: Can't convert a virtual address(ffff88007ffd7000) to physical
+>>>> address.
+>>>> readmem: type_addr: 0, addr:ffff88007ffd7000, size:32768
+>>>> __exclude_unnecessary_pages: Can't read the buffer of struct page.
+>>>> create_2nd_bitmap: Can't exclude unnecessary pages.
+>>>>
+>>>> makedumpfile Failed.
+>>>>
+>>>>>
+>>>>>>
+>>>>>>        ......It causes makedumpfile failed.
+>>>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>> 	dou.
+>>>>>>
+>>>>>>> 	-Mike
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>
+>>>>>>
+>>>>>
+>>>>>
+>>>>>
+>>>>
+>>>>
+>>>
+>>>
+>>>
+>>
+>>
+> 
+> 
+> 
 
-James
+
 
 _______________________________________________
 kexec mailing list
