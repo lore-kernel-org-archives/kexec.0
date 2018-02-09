@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mail-it0-x244.google.com ([2607:f8b0:4001:c0b::244])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ek6ut-0000u1-Km
- for kexec@lists.infradead.org; Fri, 09 Feb 2018 11:32:33 +0000
-From: Masahiko Hayashi <mas-hayashi@tg.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile: Fix a bug when multi-threads feature
- meets enospace
-Date: Fri, 9 Feb 2018 11:31:44 +0000
-Message-ID: <7670A259544D1E42B1C54D20021FB1A669DF7D6C@BPXM05GP.gisp.nec.co.jp>
-References: <1517230479-8440-1-git-send-email-zhouwj.fi@gmail.com>
- <3d76898d-66a2-c733-73e0-6aa8e9854179@gmail.com>
- <61D4E5D821F1674CB87C99F080A210BE0117AC32@BPXM01GP.gisp.nec.co.jp> 
-Content-Language: ja-JP
+ id 1ek7BG-0005z2-Ev
+ for kexec@lists.infradead.org; Fri, 09 Feb 2018 11:49:28 +0000
+Received: by mail-it0-x244.google.com with SMTP id i144so10586179ita.3
+ for <kexec@lists.infradead.org>; Fri, 09 Feb 2018 03:49:15 -0800 (PST)
+Date: Fri, 9 Feb 2018 20:49:04 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v7 00/11] arm64: kexec: add kexec_file_load() support
+Message-ID: <20180209114903.gaex3pge4ndzgbhd@fireball>
+References: <20171204025801.12161-1-takahiro.akashi@linaro.org>
+ <5A7B4761.3000808@arm.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <5A7B4761.3000808@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,104 +22,147 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhou Wenjian <zhouwj.fi@gmail.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: James Morse <james.morse@arm.com>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, julien.thierry@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-Hi  Zhou-san
+Hi James,
 
-I will forward Tachibana's mail.
+On Wed, Feb 07, 2018 at 06:37:21PM +0000, James Morse wrote:
+> Hi Akashi,
+> 
+> I'm still getting my head round how all this works, so please forgive what may
+> be stupid questions!
 
-Thank you
+It is my pleasure.
+Hopefully I will be able to address all of your concerns before submitting
+a new version sometime next week.
 
->-----Original Message-----
->From: Hayashi Masahiko(林 正彦)
->Sent: Friday, February 09, 2018 8:24 PM
->To: Zhou Wenjian <zhouwj.fi@gmail.com>
->Cc: kexec@lists.infradead.org
->Subject: FW: [PATCH] makedumpfile: Fix a bug when multi-threads feature meets enospace
->
->>-----Original Message-----
->>From: Tachibana Masaki(橘 正樹)
->>Sent: Friday, February 09, 2018 8:05 PM
->>To: Zhou Wenjian <zhouwj.fi@gmail.com>
->>Cc: kexec@lists.infradead.org; Hayashi Masahiko(林 正彦) <mas-hayashi@tg.jp.nec.com>
->>Subject: RE: [PATCH] makedumpfile: Fix a bug when multi-threads feature meets enospace
->>
->>Hi Zhou,
->>
->>Sorry for the late reply.
->>Makedumpfile team are busy now for another development.
->>I'll reply in about a week.
->>
->>Thanks
->>tachibana
->>
->>> -----Original Message-----
->>> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Zhou Wenjian
->>> Sent: Thursday, February 08, 2018 8:53 PM
->>> To: kexec@lists.infradead.org
->>> Cc: Kumagai Atsushi <ats-kumagai@wm.jp.nec.com>; Suzuki Keiichirou <kei-suzuki@xr.jp.nec.com>
->>> Subject: Re: [PATCH] makedumpfile: Fix a bug when multi-threads feature meets enospace
->>>
->>> ping...
->>>
->>>
->>> On 01/29/2018 08:54 PM, Zhou Wenjian wrote:
->>> > Currently, when multi-threads feature meets enospace error,
->>> > the main thread will call pthread_join(). However, there is one
->>> > thread doing while{} and won't stop.
->>> >
->>> >                  pthread_mutex_lock(&info->page_data_mutex);
->>> >                  while (page_data_buf[index].used != FALSE) {
->>> >                          index = (index + 1) % info->num_buffers;
->>> >                  }
->>> >                  page_data_buf[index].used = TRUE;
->>> >                  pthread_mutex_unlock(&info->page_data_mutex);
->>> >
->>> > Then makedumpfile hangs.
->>> >
->>> > This patch add a cancel point in while{}.
->>> >
->>> > Signed-off-by: Zhou Wenjian <zhouwj.fi@gmail.com>
->>> > ---
->>> >   makedumpfile.c | 4 +++-
->>> >   1 file changed, 3 insertions(+), 1 deletion(-)
->>> >
->>> > diff --git a/makedumpfile.c b/makedumpfile.c
->>> > index ed138d3..f7ad50c 100644
->>> > --- a/makedumpfile.c
->>> > +++ b/makedumpfile.c
->>> > @@ -7731,11 +7731,13 @@ kdump_thread_function_cyclic(void *arg) {
->>> >   		buf_ready = FALSE;
->>> >
->>> >   		pthread_mutex_lock(&info->page_data_mutex);
->>> > +		pthread_cleanup_push(pthread_mutex_unlock, &info->page_data_mutex);
->>> >   		while (page_data_buf[index].used != FALSE) {
->>> > +			pthread_testcancel();
->>> >   			index = (index + 1) % info->num_buffers;
->>> >   		}
->>> >   		page_data_buf[index].used = TRUE;
->>> > -		pthread_mutex_unlock(&info->page_data_mutex);
->>> > +		pthread_cleanup_pop(1);
->>> >
->>> >   		while (buf_ready == FALSE) {
->>> >   			pthread_testcancel();
->>>
->>> --
->>> Thanks
->>> Zhou
->>>
->>>
->>> _______________________________________________
->>> kexec mailing list
->>> kexec@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> On 04/12/17 02:57, AKASHI Takahiro wrote:
+> > This is the seventh round of implementing kexec_file_load() support
+> > on arm64.[1]
+> > Most of the code is based on kexec-tools (along with some kernel code
+> > from x86, which also came from kexec-tools).
+> > 
+> > 
+> > This patch series enables us to
+> >   * load the kernel, Image, via kexec_file_load() system call, and
+> >   * optionally verify its signature at load time for trusted boot.
+> 
+> Is kdump using kexec_file_load() possible? (questions on patch 3)
+> I can't work out why additional elf-generating code would be necessary if kdump
+> works today without it...
+
+The code that probably you are mentioning is the one for
+creating a content of an ELF header (elfcoreheader) of /proc/vmcore.
+The memory region is allocated by the kernel, but the content itself
+will be filled up by kexec-tools for kexec_load syscall, while by
+the kernel for kexec_file_load syscall.
+(In former case, a "user" buffer is passed via kexec_load syscall
+and copied into the crash dump kernel memory.)
+
+Please see kexec/crashdump.c and crashdump-elf.c on kexec-tools.
+
+> 
+> 
+> > To load the kernel via kexec_file_load() system call, a small change
+> > is also required on kexec-tools. See [2]. This enables '-s' option.
+> > (Please use v7.2.1+ crash utility for v4.14+ kernel)
+> 
+> (what does the -s option do?)
+
+It is a switch for using kexec_file_load syscall instead of kexec_load
+syscall.
+
+> 
+> > As we discussed a long time ago, users may not be allowed to specify
+> > device-tree file of the 2nd kernel explicitly with kexec-tools, hence
+> > re-using the blob of the first kernel.
+> > 
+> > Regarding a kernel image verification, a signature must be presented
+> > along with the binary itself. A signature is basically a hash value
+> > calculated against the whole binary data and encrypted by a key which
+> > will be authenticated by the system's trusted certificate.
+> > Any attempt to read and load a to-be-kexec-ed kernel image through
+> > a system call will be checked and blocked if the binary's hash value
+> > doesn't match its associated signature.
+> 
+> > Concerns(or future works):
+> 
+> (lets keep this stuff in the future)
+
+Sure.
+
+> > * Even if the kernel is configured with CONFIG_RANDOMIZE_BASE, the 2nd
+> >   kernel won't be placed at a randomized address. We will have to
+> >   add some boot code similar to efi-stub to implement the randomization.
+> 
+> I think there are two parts to this. The efistub may copy the kernel to a new
+> ~random location in physical memory. It also adds a seed used to randomise the
+> virtual-addresses the kernel executes from.
+
+> For kexec_file_load() the first-kernel could apply some randomness to the
+> physical offset when it re-assembles the kexec-kernel. i.e. code in
+> arm64_relocate_new_kernel(). I don't think we should do this without some hint
+> that the new kernel supports this...
+
+Indeed. arm64_relocate_new_kernel belongs to the first kernel, while
+efistub to crash dump kernel.
+
+> For the virtual-addresses it would need to add a new kaslr-seed to the
+> DT/chosen, which should be harmless.
+
+Yeah, adding a seed is quite easy.
+
+> 
+> > for approach (1),
+> > * While big-endian kernel can support kernel signing, I'm not sure that
+> >   Image can be recognized as in PE format because x86 standard only
+> >   defines little-endian-based format.
+> 
+> What does the recognizing? (I don't think we should invent a new format..)
+
+The obvious problem is that there exists no defition of PE format for
+BE architecture. (I believe that MS only defines the format for x86).
+For exmaple, what magic number should we use? Are the fields in a header
+in BE or LE? I don't invent a new format, neither.
+
+Anyhow, if we allow for IMA-base kexec_file_load, it perfectly resolve
+the issue without any changes (maybe).
+
+> 
+> 
+> > * vmlinux support
+> 
+> (Patch 3 is why I'm here)
+> 
+> I don't think we need to support this. I can't boot a vmlinux file via UEFI. As
+> I understand it kexec_file_load() is all about the signature verification for
+> UEFI:SecureBoot. The chances of me having a vmlinux signed for SecureBoot use is
+> pretty low, chances are its a self-signed image I just built, in which case I
+> can use the arm64 Image file that was built at the same time.
+> 
+> Supporting two file formats is going to be a headache. Distributions ship
+> separate debug info packages for debugging, I don't think we need to make them
+> bootable...
+
+As I said somewhere before, the only reason that we may want to have
+vmlinux support is that kexec-tools (and in turn kexec_load syscall)
+supports both file types.
+(I don't know why Jeoff added this support first.)
+
+Thanks,
+-Takahiro AKASHI
 
 
+> 
+> Thanks,
+> 
+> James
 
 _______________________________________________
 kexec mailing list
