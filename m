@@ -1,28 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1elB29-0003Up-Uv
- for kexec@lists.infradead.org; Mon, 12 Feb 2018 10:08:28 +0000
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w1CA4CV1121101
- for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 05:08:24 -0500
-Received: from e06smtp13.uk.ibm.com (e06smtp13.uk.ibm.com [195.75.94.109])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2g3552re0r-1
+ id 1elB2F-0003Qv-Tp
+ for kexec@lists.infradead.org; Mon, 12 Feb 2018 10:08:33 +0000
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w1CA4BBc011731
+ for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 05:08:21 -0500
+Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2g338fkbsr-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 05:08:23 -0500
+ for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 05:08:20 -0500
 Received: from localhost
- by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
- Mon, 12 Feb 2018 10:08:22 -0000
+ Mon, 12 Feb 2018 10:08:18 -0000
 From: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Subject: [PATCH 16/17] s390/kexec_file: Add crash support to image loader
-Date: Mon, 12 Feb 2018 11:07:53 +0100
+Subject: [PATCH 14/17] s390/kexec_file: Add kexec_file_load system call
+Date: Mon, 12 Feb 2018 11:07:51 +0100
 In-Reply-To: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
 References: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
-Message-Id: <20180212100754.55121-17-prudo@linux.vnet.ibm.com>
+Message-Id: <20180212100754.55121-15-prudo@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,361 +38,245 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-s390@vger.kernel.org
 Cc: Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Add support to load a crash kernel to the image loader. This requires
-extending the purgatory.
+This patch adds the kexec_file_load system call to s390 as well as the arch
+specific functions common code requires to work. Loaders for the different
+file types will be added later.
 
 Signed-off-by: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Reviewed-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 ---
- arch/s390/kernel/kexec_image.c        |   6 +-
- arch/s390/kernel/machine_kexec_file.c |  45 ++++++++-
- arch/s390/purgatory/head.S            | 185 +++++++++++++++++++++++++++++++++-
- arch/s390/purgatory/purgatory.c       |   4 +
- 4 files changed, 234 insertions(+), 6 deletions(-)
+ arch/s390/Kconfig                     |   4 +
+ arch/s390/kernel/Makefile             |   1 +
+ arch/s390/kernel/compat_wrapper.c     |   1 +
+ arch/s390/kernel/machine_kexec_file.c | 174 ++++++++++++++++++++++++++++++++++
+ arch/s390/kernel/syscalls/syscall.tbl |   1 +
+ 5 files changed, 181 insertions(+)
+ create mode 100644 arch/s390/kernel/machine_kexec_file.c
 
-diff --git a/arch/s390/kernel/kexec_image.c b/arch/s390/kernel/kexec_image.c
-index 83cf5a9be3a4..60e03f7048b9 100644
---- a/arch/s390/kernel/kexec_image.c
-+++ b/arch/s390/kernel/kexec_image.c
-@@ -25,6 +25,8 @@ static int kexec_file_add_image_kernel(struct kimage *image,
- 	buf.bufsz = kernel_len - STARTUP_NORMAL_OFFSET;
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 0105ce28e246..baffd88109a5 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -51,6 +51,10 @@ config KEXEC
+ 	def_bool y
+ 	select KEXEC_CORE
  
- 	buf.mem = STARTUP_NORMAL_OFFSET;
-+	if (image->type == KEXEC_TYPE_CRASH)
-+		buf.mem += crashk_res.start;
- 	buf.memsz = buf.bufsz;
++config KEXEC_FILE
++	def_bool y
++	select KEXEC_CORE
++
+ config AUDIT_ARCH
+ 	def_bool y
  
- 	ret = kexec_add_buffer(&buf);
-@@ -43,10 +45,6 @@ static void *s390_image_load(struct kimage *image,
- 	struct s390_load_data data = {0};
- 	int ret;
+diff --git a/arch/s390/kernel/Makefile b/arch/s390/kernel/Makefile
+index 909bce65cb2b..496d4711c186 100644
+--- a/arch/s390/kernel/Makefile
++++ b/arch/s390/kernel/Makefile
+@@ -60,6 +60,7 @@ obj-y	+= debug.o irq.o ipl.o dis.o diag.o vdso.o als.o
+ obj-y	+= sysinfo.o jump_label.o lgr.o os_info.o machine_kexec.o pgm_check.o
+ obj-y	+= runtime_instr.o cache.o fpu.o dumpstack.o guarded_storage.o sthyi.o
+ obj-y	+= entry.o reipl.o relocate_kernel.o kdebugfs.o alternative.o
++obj-y	+= machine_kexec_file.o
  
--	/* We don't support crash kernels yet. */
--	if (image->type == KEXEC_TYPE_CRASH)
--		return ERR_PTR(-ENOTSUPP);
--
- 	ret = kexec_file_add_image_kernel(image, &data, kernel, kernel_len);
- 	if (ret)
- 		return ERR_PTR(ret);
+ extra-y				+= head.o head64.o vmlinux.lds
+ 
+diff --git a/arch/s390/kernel/compat_wrapper.c b/arch/s390/kernel/compat_wrapper.c
+index 11e9d8b5c1b0..607c5e9fba3d 100644
+--- a/arch/s390/kernel/compat_wrapper.c
++++ b/arch/s390/kernel/compat_wrapper.c
+@@ -182,3 +182,4 @@ COMPAT_SYSCALL_WRAP6(copy_file_range, int, fd_in, loff_t __user *, off_in, int,
+ COMPAT_SYSCALL_WRAP2(s390_guarded_storage, int, command, struct gs_cb *, gs_cb);
+ COMPAT_SYSCALL_WRAP5(statx, int, dfd, const char __user *, path, unsigned, flags, unsigned, mask, struct statx __user *, buffer);
+ COMPAT_SYSCALL_WRAP4(s390_sthyi, unsigned long, code, void __user *, info, u64 __user *, rc, unsigned long, flags);
++COMPAT_SYSCALL_WRAP5(kexec_file_load, int, kernel_fd, int, initrd_fd, unsigned long, cmdline_len, const char __user *, cmdline_ptr, unsigned long, flags)
 diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-index 052640220361..050ceab746ec 100644
---- a/arch/s390/kernel/machine_kexec_file.c
+new file mode 100644
+index 000000000000..e6928cbed524
+--- /dev/null
 +++ b/arch/s390/kernel/machine_kexec_file.c
-@@ -28,6 +28,14 @@ void kexec_file_update_kernel(struct kimage *image,
- 		memcpy(data->kernel_buf + COMMAND_LINE_OFFSET,
- 		       image->cmdline_buf, image->cmdline_buf_len);
- 
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		loc = (unsigned long *)(data->kernel_buf + OLDMEM_BASE_OFFSET);
-+		*loc = crashk_res.start;
+@@ -0,0 +1,174 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * s390 code for kexec_file_load system call
++ *
++ * Copyright IBM Corp. 2018
++ *
++ * Author(s): Philipp Rudo <prudo@linux.vnet.ibm.com>
++ */
 +
-+		loc = (unsigned long *)(data->kernel_buf + OLDMEM_SIZE_OFFSET);
-+		*loc = crashk_res.end - crashk_res.start + 1;
++#include <linux/elf.h>
++#include <linux/kexec.h>
++#include <asm/setup.h>
++
++const struct kexec_file_ops * const kexec_file_loaders[] = {
++	NULL,
++};
++
++/*
++ * The kernel is loaded to a fixed location. Turn off kexec_locate_mem_hole
++ * and provide kbuf->mem by hand.
++ */
++int arch_kexec_walk_mem(struct kexec_buf *kbuf,
++			int (*func)(struct resource *, void *))
++{
++	return 1;
++}
++
++int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
++				     Elf_Shdr *section,
++				     const Elf_Shdr *relsec,
++				     const Elf_Shdr *symtab)
++{
++	Elf_Rela *relas;
++	int i;
++
++	relas = (void *)pi->ehdr + relsec->sh_offset;
++
++	for (i = 0; i < relsec->sh_size / sizeof(*relas); i++) {
++		const Elf_Sym *sym;	/* symbol to relocate */
++		unsigned long addr;	/* final location after relocation */
++		unsigned long val;	/* relocated symbol value */
++		void *loc;		/* tmp location to modify */
++
++		sym = (void *)pi->ehdr + symtab->sh_offset;
++		sym += ELF64_R_SYM(relas[i].r_info);
++
++		if (sym->st_shndx == SHN_UNDEF)
++			return -ENOEXEC;
++
++		if (sym->st_shndx == SHN_COMMON)
++			return -ENOEXEC;
++
++		if (sym->st_shndx >= pi->ehdr->e_shnum &&
++		    sym->st_shndx != SHN_ABS)
++			return -ENOEXEC;
++
++		loc = pi->purgatory_buf;
++		loc += section->sh_offset;
++		loc += relas[i].r_offset;
++
++		val = sym->st_value;
++		if (sym->st_shndx != SHN_ABS)
++			val += pi->sechdrs[sym->st_shndx].sh_addr;
++		val += relas[i].r_addend;
++
++		addr = section->sh_addr + relas[i].r_offset;
++
++		switch (ELF64_R_TYPE(relas[i].r_info)) {
++		case R_390_8:		/* Direct 8 bit.   */
++			*(u8 *)loc = val;
++			break;
++		case R_390_12:		/* Direct 12 bit.  */
++			*(u16 *)loc &= 0xf000;
++			*(u16 *)loc |= val & 0xfff;
++			break;
++		case R_390_16:		/* Direct 16 bit.  */
++			*(u16 *)loc = val;
++			break;
++		case R_390_20:		/* Direct 20 bit.  */
++			*(u32 *)loc &= 0xf00000ff;
++			*(u32 *)loc |= (val & 0xfff) << 16;	/* DL */
++			*(u32 *)loc |= (val & 0xff000) >> 4;	/* DH */
++			break;
++		case R_390_32:		/* Direct 32 bit.  */
++			*(u32 *)loc = val;
++			break;
++		case R_390_64:		/* Direct 64 bit.  */
++			*(u64 *)loc = val;
++			break;
++		case R_390_PC16:	/* PC relative 16 bit.  */
++			*(u16 *)loc = (val - addr);
++			break;
++		case R_390_PC16DBL:	/* PC relative 16 bit shifted by 1.  */
++			*(u16 *)loc = (val - addr) >> 1;
++			break;
++		case R_390_PC32DBL:	/* PC relative 32 bit shifted by 1.  */
++			*(u32 *)loc = (val - addr) >> 1;
++			break;
++		case R_390_PC32:	/* PC relative 32 bit.  */
++			*(u32 *)loc = (val - addr);
++			break;
++		case R_390_PC64:	/* PC relative 64 bit.  */
++			*(u64 *)loc = (val - addr);
++			break;
++		default:
++			break;
++		}
 +	}
++	return 0;
++}
 +
- 	if (image->initrd_buf) {
- 		loc = (unsigned long *)(data->kernel_buf + INITRD_START_OFFSET);
- 		*loc = data->initrd_load_addr;
-@@ -42,9 +50,40 @@ static int kexec_file_update_purgatory(struct kimage *image)
- 	u64 entry, type;
- 	int ret;
- 
--	entry = STARTUP_NORMAL_OFFSET;
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		entry = STARTUP_KDUMP_OFFSET;
-+		type = KEXEC_TYPE_CRASH;
-+	} else {
-+		entry = STARTUP_NORMAL_OFFSET;
-+		type = KEXEC_TYPE_DEFAULT;
-+	}
++int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
++				  unsigned long buf_len)
++{
++	struct kexec_file_ops *fops;
++	int i, ret;
 +
- 	ret = kexec_purgatory_get_set_symbol(image, "kernel_entry", &entry,
- 					     sizeof(entry), false);
-+	if (ret)
-+		return ret;
++	/* A kernel must be at least large enough to contain head.S. During
++	 * load memory in head.S will be accessed, e.g. to register the next
++	 * command line. If the next kernel were smaller the current kernel
++	 * will panic at load.
++	 *
++	 * 0x11000 = sizeof(head.S)
++	 */
++	if (buf_len < 0x11000)
++		return -ENOEXEC;
 +
-+	ret = kexec_purgatory_get_set_symbol(image, "kernel_type", &type,
-+					     sizeof(type), false);
-+	if (ret)
-+		return ret;
++	for (i = 0; i < ARRAY_SIZE(kexec_file_loaders); i++) {
++		fops = kexec_file_loaders[i];
++		if (!fops || !fops->probe)
++			continue;
 +
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		u64 crash_size;
-+
-+		ret = kexec_purgatory_get_set_symbol(image, "crash_start",
-+						     &crashk_res.start,
-+						     sizeof(crashk_res.start),
-+						     false);
-+		if (ret)
++		ret = fops->probe(buf, buf_len);
++		if (!ret) {
++			image->fops = fops;
 +			return ret;
-+
-+		crash_size = crashk_res.end - crashk_res.start + 1;
-+		ret = kexec_purgatory_get_set_symbol(image, "crash_size",
-+						     &crash_size,
-+						     sizeof(crash_size),
-+						     false);
++		}
 +	}
- 	return ret;
- }
- 
-@@ -57,6 +96,8 @@ int kexec_file_add_purgatory(struct kimage *image, struct s390_load_data *data)
- 
- 	data->memsz = ALIGN(data->memsz, PAGE_SIZE);
- 	buf.mem = data->memsz;
-+	if (image->type == KEXEC_TYPE_CRASH)
-+		buf.mem += crashk_res.start;
- 
- 	ret = kexec_load_purgatory(image, &buf);
- 	if (ret)
-@@ -79,6 +120,8 @@ int kexec_file_add_initrd(struct kimage *image, struct s390_load_data *data,
- 
- 	data->memsz = ALIGN(data->memsz, PAGE_SIZE);
- 	buf.mem = data->memsz;
-+	if (image->type == KEXEC_TYPE_CRASH)
-+		buf.mem += crashk_res.start;
- 	buf.memsz = buf.bufsz;
- 
- 	data->initrd_load_addr = buf.mem;
-diff --git a/arch/s390/purgatory/head.S b/arch/s390/purgatory/head.S
-index 8735409d0280..6bfb13aa3f42 100644
---- a/arch/s390/purgatory/head.S
-+++ b/arch/s390/purgatory/head.S
-@@ -15,8 +15,52 @@
- /* The purgatory is the code running between two kernels. It's main purpose
-  * is to verify that the next kernel was not corrupted after load and to
-  * start it.
-+ *
-+ * If the next kernel is a crash kernel there are some peculiarities to
-+ * consider:
-+ *
-+ * First the purgatory is called twice. Once only to verify the
-+ * sha digest. So if the crash kernel got corrupted the old kernel can try
-+ * to trigger a stand-alone dumper. And once to actually load the crash kernel.
-+ *
-+ * Second the purgatory also has to swap the crash memory region with its
-+ * destination at address 0. As the purgatory is part of crash memory this
-+ * requires some finesse. The tactic here is that the purgatory first copies
-+ * itself to the end of the destination and then swaps the rest of the
-+ * memory running from there.
-  */
- 
-+#define bufsz purgatory_end-stack
 +
-+.macro MEMCPY dst,src,len
-+	lgr	%r0,\dst
-+	lgr	%r1,\len
-+	lgr	%r2,\src
-+	lgr	%r3,\len
++	return -ENOEXEC;
++}
 +
-+20:	mvcle	%r0,%r2,0
-+	jo	20b
-+.endm
++void *arch_kexec_kernel_image_load(struct kimage *image)
++{
++	if (!image->fops || !image->fops->load)
++		return ERR_PTR(-ENOEXEC);
 +
-+.macro MEMSWAP dst,src,buf,len
-+10:	cghi	\len,bufsz
-+	jh	11f
-+	lgr	%r4,\len
-+	j	12f
-+11:	lghi	%r4,bufsz
++	if (image->cmdline_buf_len >= ARCH_COMMAND_LINE_SIZE)
++		return ERR_PTR(-EINVAL);
 +
-+12:	MEMCPY	\buf,\dst,%r4
-+	MEMCPY	\dst,\src,%r4
-+	MEMCPY	\src,\buf,%r4
++	return image->fops->load(image, image->kernel_buf,
++				 image->kernel_buf_len, image->initrd_buf,
++				 image->initrd_buf_len, image->cmdline_buf,
++				 image->cmdline_buf_len);
++}
 +
-+	agr	\dst,%r4
-+	agr	\src,%r4
-+	sgr	\len,%r4
++int arch_kimage_file_post_load_cleanup(struct kimage *image)
++{
++	if (!image->fops || !image->fops->cleanup)
++		return 0;
 +
-+	cghi	\len,0
-+	jh	10b
-+.endm
++	return image->fops->cleanup(image->image_loader_data);
++}
 +
- .macro START_NEXT_KERNEL base
- 	lg	%r4,kernel_entry-\base(%r13)
- 	lg	%r5,load_psw_mask-\base(%r13)
-@@ -47,18 +91,144 @@ ENTRY(purgatory_start)
- 	larl	%r15,purgatory_end
- 	aghi	%r15,-160
- 
-+	/* If the next kernel is KEXEC_TYPE_CRASH the purgatory is called
-+	 * directly with a flag passed in %r2 whether the purgatory shall do
-+	 * checksum verification only (%r2 = 0 -> verification only).
-+	 *
-+	 * Check now and preserve over C function call by storing in
-+	 * %r10 whith
-+	 *	1 -> checksum verification only
-+	 *	0 -> load new kernel
-+	 */
-+	lghi	%r10,0
-+	lg	%r11,kernel_type-.base_crash(%r13)
-+	cghi	%r11,1		/* KEXEC_TYPE_CRASH */
-+	jne	.do_checksum_verification
-+	cghi	%r2,0		/* checksum verification only */
-+	jne	.do_checksum_verification
-+	lghi	%r10,1
++#ifdef CONFIG_KEXEC_VERIFY_SIG
++int arch_kexec_kernel_verify_sig(struct kimage *image, void *kernel,
++				 unsigned long kernel_len)
++{
++	if (!image->fops || !image->fops->verify_sig)
++		return -EKEYREJECTED;
 +
- .do_checksum_verification:
- 	brasl	%r14,verify_sha256_digest
- 
-+	cghi	%r10,1		/* checksum verification only */
-+	je	.return_old_kernel
- 	cghi	%r2,0		/* checksum match */
- 	jne	.disabled_wait
- 
-+	/* If the next kernel is a crash kernel the purgatory has to swap
-+	 * the mem regions first.
-+	 */
-+	cghi	%r11,1 /* KEXEC_TYPE_CRASH */
-+	je	.start_crash_kernel
-+
- 	/* start normal kernel */
- 	START_NEXT_KERNEL .base_crash
- 
-+.return_old_kernel:
-+	lmg	%r6,%r15,gprregs-.base_crash(%r13)
-+	br	%r14
-+
- .disabled_wait:
- 	lpswe	disabled_wait_psw-.base_crash(%r13)
- 
-+.start_crash_kernel:
-+	/* Location of purgatory_start in crash memory */
-+	lgr	%r8,%r13
-+	aghi	%r8,-(.base_crash-purgatory_start)
-+
-+	/* Destination for this code i.e. end of memory to be swapped. */
-+	lg	%r9,crash_size-.base_crash(%r13)
-+	aghi	%r9,-(purgatory_end-purgatory_start)
-+
-+	/* Destination in crash memory, i.e. same as r9 but in crash memory. */
-+	lg	%r10,crash_start-.base_crash(%r13)
-+	agr	%r10,%r9
-+
-+	/* Buffer location (in crash memory) and size. As the purgatory is
-+	 * behind the point of no return it can re-use the stack as buffer.
-+	 */
-+	lghi	%r11,bufsz
-+	larl	%r12,stack
-+
-+	MEMCPY	%r12,%r9,%r11	/* dst  -> (crash) buf */
-+	MEMCPY	%r9,%r8,%r11	/* self -> dst */
-+
-+	/* Jump to new location. */
-+	lgr	%r7,%r9
-+	aghi	%r7,.jump_to_dst-purgatory_start
-+	br	%r7
-+
-+.jump_to_dst:
-+	basr	%r13,0
-+.base_dst:
-+
-+	/* clear buffer */
-+	MEMCPY	%r12,%r10,%r11	/* (crash) buf -> (crash) dst */
-+
-+	/* Load new buffer location after jump */
-+	larl	%r7,stack
-+	aghi	%r10,stack-purgatory_start
-+	MEMCPY	%r10,%r7,%r11	/* (new) buf -> (crash) buf */
-+
-+	/* Now the code is set up to run from its designated location. Start
-+	 * swapping the rest of crash memory now.
-+	 *
-+	 * The registers will be used as follow:
-+	 *
-+	 *	%r0-%r4	reserved for macros defined above
-+	 *	%r5-%r6 tmp registers
-+	 *	%r7	pointer to current struct sha region
-+	 *	%r8	index to iterate over all sha regions
-+	 *	%r9	pointer in crash memory
-+	 *	%r10	pointer in old kernel
-+	 *	%r11	total size (still) to be moved
-+	 *	%r12	pointer to buffer
-+	 */
-+	lgr	%r12,%r7
-+	lgr	%r11,%r9
-+	lghi	%r10,0
-+	lg	%r9,crash_start-.base_dst(%r13)
-+	lghi	%r8,16	/* KEXEC_SEGMENTS_MAX */
-+	larl	%r7,purgatory_sha_regions
-+
-+	j .loop_first
-+
-+	/* Loop over all purgatory_sha_regions. */
-+.loop_next:
-+	aghi	%r8,-1
-+	cghi	%r8,0
-+	je	.loop_out
-+
-+	aghi	%r7,__KEXEC_SHA_REGION_SIZE
-+
-+.loop_first:
-+	lg	%r5,__KEXEC_SHA_REGION_START(%r7)
-+	cghi	%r5,0
-+	je	.loop_next
-+
-+	/* Copy [end last sha region, start current sha region) */
-+	/* Note: kexec_sha_region->start points in crash memory */
-+	sgr	%r5,%r9
-+	MEMCPY	%r9,%r10,%r5
-+
-+	agr	%r9,%r5
-+	agr	%r10,%r5
-+	sgr	%r11,%r5
-+
-+	/* Swap sha region */
-+	lg	%r6,__KEXEC_SHA_REGION_LEN(%r7)
-+	MEMSWAP	%r9,%r10,%r12,%r6
-+	sg	%r11,__KEXEC_SHA_REGION_LEN(%r7)
-+	j	.loop_next
-+
-+.loop_out:
-+	/* Copy rest of crash memory */
-+	MEMCPY	%r9,%r10,%r11
-+
-+	/* start crash kernel */
-+	START_NEXT_KERNEL .base_dst
-+
- 
- load_psw_mask:
- 	.long	0x00080000,0x80000000
-@@ -89,8 +259,21 @@ kernel_entry:
- 	.global kernel_entry
- 	.quad	0
- 
-+kernel_type:
-+	.global kernel_type
-+	.quad	0
-+
-+crash_start:
-+	.global crash_start
-+	.quad	0
-+
-+crash_size:
-+	.global crash_size
-+	.quad	0
-+
- 	.align	PAGE_SIZE
- stack:
--	.skip	PAGE_SIZE
-+	/* The buffer to move this code must be as big as the code. */
-+	.skip	stack-purgatory_start
- 	.align	PAGE_SIZE
- purgatory_end:
-diff --git a/arch/s390/purgatory/purgatory.c b/arch/s390/purgatory/purgatory.c
-index fec67b58b8be..67ded81e0430 100644
---- a/arch/s390/purgatory/purgatory.c
-+++ b/arch/s390/purgatory/purgatory.c
-@@ -16,6 +16,10 @@ struct kexec_sha_region purgatory_sha_regions[KEXEC_SEGMENT_MAX];
- u8 purgatory_sha256_digest[SHA256_DIGEST_SIZE];
- 
- u64 kernel_entry;
-+u64 kernel_type;
-+
-+u64 crash_start;
-+u64 crash_size;
- 
- int verify_sha256_digest(void)
- {
++	return image->fops->verify_sig(kernel, kernel_len);
++}
++#endif /* CONFIG_KEXEC_VERIFY_SIG */
+diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
+index b38d48464368..8b210ead7956 100644
+--- a/arch/s390/kernel/syscalls/syscall.tbl
++++ b/arch/s390/kernel/syscalls/syscall.tbl
+@@ -388,3 +388,4 @@
+ 378  common	s390_guarded_storage	sys_s390_guarded_storage	compat_sys_s390_guarded_storage
+ 379  common	statx			sys_statx			compat_sys_statx
+ 380  common	s390_sthyi		sys_s390_sthyi			compat_sys_s390_sthyi
++381  common	kexec_file_load		sys_kexec_file_load		compat_sys_kexec_file_load
 -- 
 2.13.5
 
