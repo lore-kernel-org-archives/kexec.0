@@ -1,28 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail-wr0-f195.google.com ([209.85.128.195])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1elB1z-0003MF-Rn
- for kexec@lists.infradead.org; Mon, 12 Feb 2018 10:08:19 +0000
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w1CA4CG5011796
- for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 05:08:09 -0500
-Received: from e06smtp15.uk.ibm.com (e06smtp15.uk.ibm.com [195.75.94.111])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2g338fkbm1-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 05:08:09 -0500
-Received: from localhost
- by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
- Mon, 12 Feb 2018 10:08:06 -0000
-From: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Subject: [PATCH 05/17] kexec_file: Use read-only sections in
- arch_kexec_apply_relocations*
-Date: Mon, 12 Feb 2018 11:07:42 +0100
-In-Reply-To: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
+ id 1elBoR-0001RK-2x
+ for kexec@lists.infradead.org; Mon, 12 Feb 2018 10:58:20 +0000
+Received: by mail-wr0-f195.google.com with SMTP id s5so14733107wra.0
+ for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 02:58:07 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <20180212100754.55121-15-prudo@linux.vnet.ibm.com>
 References: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
-Message-Id: <20180212100754.55121-6-prudo@linux.vnet.ibm.com>
+ <20180212100754.55121-15-prudo@linux.vnet.ibm.com>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Date: Mon, 12 Feb 2018 11:56:25 +0100
+Message-ID: <CAOFm3uFfXZZuQ6cM=pi34ybxM37BQVz08ctJmh5LryVGVgEjjA@mail.gmail.com>
+Subject: Re: [PATCH 14/17] s390/kexec_file: Add kexec_file_load system call
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,263 +21,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-s390@vger.kernel.org
-Cc: Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Philipp Rudo <prudo@linux.vnet.ibm.com>
+Cc: linux-s390@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-When the relocations are applied to the purgatory only the section the
-relocations are applied to is writable. The other sections, i.e. the symtab
-and .rel/.rela, are in read-only kexec_purgatory. Highlight this by marking
-the corresponding variables as 'const'.
+On Mon, Feb 12, 2018 at 11:07 AM, Philipp Rudo <prudo@linux.vnet.ibm.com> wrote:
+> This patch adds the kexec_file_load system call to s390 as well as the arch
+> specific functions common code requires to work. Loaders for the different
+> file types will be added later.
+>
+> Signed-off-by: Philipp Rudo <prudo@linux.vnet.ibm.com>
 
-While at it also change the signatures of arch_kexec_apply_relocations* to
-take section pointers instead of just the index of the relocation section.
-This removes the second lookup and sanity check of the sections in arch
-code.
+<snip>
 
-Signed-off-by: Philipp Rudo <prudo@linux.vnet.ibm.com>
----
- arch/x86/kernel/machine_kexec_64.c | 56 ++++++++++++---------------------
- include/linux/kexec.h              | 12 +++++---
- kernel/kexec_file.c                | 63 +++++++++++++++++++++++++-------------
- 3 files changed, 70 insertions(+), 61 deletions(-)
+> --- /dev/null
+> +++ b/arch/s390/kernel/machine_kexec_file.c
+> @@ -0,0 +1,174 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 1f790cf9d38f..6be04e4d4a7e 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -422,52 +422,36 @@ int arch_kexec_kernel_verify_sig(struct kimage *image, void *kernel,
- /*
-  * Apply purgatory relocations.
-  *
-- * ehdr: Pointer to elf headers
-- * sechdrs: Pointer to section headers.
-- * relsec: section index of SHT_RELA section.
-+ * @pi:		Purgatory to be relocated.
-+ * @section:	Section relocations applying to.
-+ * @relsec:	Section containing RELAs.
-+ * @symtabsec:	Corresponding symtab.
-  *
-  * TODO: Some of the code belongs to generic code. Move that in kexec.c.
-  */
--int arch_kexec_apply_relocations_add(const Elf64_Ehdr *ehdr,
--				     Elf64_Shdr *sechdrs, unsigned int relsec)
-+int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-+				     Elf_Shdr *section, const Elf_Shdr *relsec,
-+				     const Elf_Shdr *symtabsec)
- {
- 	unsigned int i;
- 	Elf64_Rela *rel;
- 	Elf64_Sym *sym;
- 	void *location;
--	Elf64_Shdr *section, *symtabsec;
- 	unsigned long address, sec_base, value;
- 	const char *strtab, *name, *shstrtab;
-+	const Elf_Shdr *sechdrs;
- 
--	/*
--	 * ->sh_offset has been modified to keep the pointer to section
--	 * contents in memory
--	 */
--	rel = (void *)sechdrs[relsec].sh_offset;
--
--	/* Section to which relocations apply */
--	section = &sechdrs[sechdrs[relsec].sh_info];
--
--	pr_debug("Applying relocate section %u to %u\n", relsec,
--		 sechdrs[relsec].sh_info);
--
--	/* Associated symbol table */
--	symtabsec = &sechdrs[sechdrs[relsec].sh_link];
--
--	/* String table */
--	if (symtabsec->sh_link >= ehdr->e_shnum) {
--		/* Invalid strtab section number */
--		pr_err("Invalid string table section index %d\n",
--		       symtabsec->sh_link);
--		return -ENOEXEC;
--	}
-+	/* String & section header string table */
-+	sechdrs = (void *)pi->ehdr + pi->ehdr->e_shoff;
-+	strtab = (char *)pi->ehdr + sechdrs[symtabsec->sh_link].sh_offset;
-+	shstrtab = (char *)pi->ehdr + sechdrs[pi->ehdr->e_shstrndx].sh_offset;
- 
--	strtab = (char *)sechdrs[symtabsec->sh_link].sh_offset;
-+	rel = (void *)pi->ehdr + relsec->sh_offset;
- 
--	/* section header string table */
--	shstrtab = (char *)sechdrs[ehdr->e_shstrndx].sh_offset;
-+	pr_debug("Applying relocate section %s to %u\n",
-+		 shstrtab + relsec->sh_name, relsec->sh_info);
- 
--	for (i = 0; i < sechdrs[relsec].sh_size / sizeof(*rel); i++) {
-+	for (i = 0; i < relsec->sh_size / sizeof(*rel); i++) {
- 
- 		/*
- 		 * rel[i].r_offset contains byte offset from beginning
-@@ -490,8 +474,8 @@ int arch_kexec_apply_relocations_add(const Elf64_Ehdr *ehdr,
- 		 * to apply. ELF64_R_SYM() and ELF64_R_TYPE() macros get
- 		 * these respectively.
- 		 */
--		sym = (Elf64_Sym *)symtabsec->sh_offset +
--				ELF64_R_SYM(rel[i].r_info);
-+		sym = (void *)pi->ehdr + symtabsec->sh_offset;
-+		sym += ELF64_R_SYM(rel[i].r_info);
- 
- 		if (sym->st_name)
- 			name = strtab + sym->st_name;
-@@ -514,12 +498,12 @@ int arch_kexec_apply_relocations_add(const Elf64_Ehdr *ehdr,
- 
- 		if (sym->st_shndx == SHN_ABS)
- 			sec_base = 0;
--		else if (sym->st_shndx >= ehdr->e_shnum) {
-+		else if (sym->st_shndx >= pi->ehdr->e_shnum) {
- 			pr_err("Invalid section %d for symbol %s\n",
- 			       sym->st_shndx, name);
- 			return -ENOEXEC;
- 		} else
--			sec_base = sechdrs[sym->st_shndx].sh_addr;
-+			sec_base = pi->sechdrs[sym->st_shndx].sh_addr;
- 
- 		value = sym->st_value;
- 		value += sec_base;
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 10842eece180..f15446be0e25 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -290,10 +290,14 @@ void * __weak arch_kexec_kernel_image_load(struct kimage *image);
- int __weak arch_kimage_file_post_load_cleanup(struct kimage *image);
- int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
- 					unsigned long buf_len);
--int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
--					Elf_Shdr *sechdrs, unsigned int relsec);
--int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
--					unsigned int relsec);
-+int __weak arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-+					    Elf_Shdr *section,
-+					    const Elf_Shdr *relsec,
-+					    const Elf_Shdr *symtab);
-+int __weak arch_kexec_apply_relocations(struct purgatory_info *pi,
-+					Elf_Shdr *section,
-+					const Elf_Shdr *relsec,
-+					const Elf_Shdr *symtab);
- void arch_kexec_protect_crashkres(void);
- void arch_kexec_unprotect_crashkres(void);
- 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 2072b288ec53..80c7f658afc0 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -53,19 +53,35 @@ int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
- }
- #endif
- 
--/* Apply relocations of type RELA */
-+/*
-+ * arch_kexec_apply_relocations_add - apply relocations of type RELA
-+ * @pi:		Purgatory to be relocated.
-+ * @section:	Section relocations applying to.
-+ * @relsec:	Section containing RELAs.
-+ * @symtab:	Corresponding symtab.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
- int __weak
--arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
--				 unsigned int relsec)
-+arch_kexec_apply_relocations_add(struct purgatory_info *pi, Elf_Shdr *section,
-+				 const Elf_Shdr *relsec, const Elf_Shdr *symtab)
- {
- 	pr_err("RELA relocation unsupported.\n");
- 	return -ENOEXEC;
- }
- 
--/* Apply relocations of type REL */
-+/*
-+ * arch_kexec_apply_relocations - apply relocations of type REL
-+ * @pi:		Purgatory to be relocated.
-+ * @section:	Section relocations applying to.
-+ * @relsec:	Section containing RELs.
-+ * @symtab:	Corresponding symtab.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
- int __weak
--arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
--			     unsigned int relsec)
-+arch_kexec_apply_relocations(struct purgatory_info *pi, Elf_Shdr *section,
-+			     const Elf_Shdr *relsec, const Elf_Shdr *symtab)
- {
- 	pr_err("REL relocation unsupported.\n");
- 	return -ENOEXEC;
-@@ -818,14 +834,19 @@ static int kexec_apply_relocations(struct kimage *image)
- {
- 	int i, ret;
- 	struct purgatory_info *pi = &image->purgatory_info;
--	Elf_Shdr *sechdrs = pi->sechdrs;
-+	const Elf_Shdr *sechdrs;
-+
-+	sechdrs = (void *)pi->ehdr + pi->ehdr->e_shoff;
- 
--	/* Apply relocations */
- 	for (i = 0; i < pi->ehdr->e_shnum; i++) {
--		Elf_Shdr *section, *symtab;
-+		const Elf_Shdr *relsec;
-+		const Elf_Shdr *symtab;
-+		Elf_Shdr *section;
-+
-+		relsec = sechdrs + i;
- 
--		if (sechdrs[i].sh_type != SHT_RELA &&
--		    sechdrs[i].sh_type != SHT_REL)
-+		if (relsec->sh_type != SHT_RELA &&
-+		    relsec->sh_type != SHT_REL)
- 			continue;
- 
- 		/*
-@@ -834,12 +855,12 @@ static int kexec_apply_relocations(struct kimage *image)
- 		 * symbol table. And ->sh_info contains section header
- 		 * index of section to which relocations apply.
- 		 */
--		if (sechdrs[i].sh_info >= pi->ehdr->e_shnum ||
--		    sechdrs[i].sh_link >= pi->ehdr->e_shnum)
-+		if (relsec->sh_info >= pi->ehdr->e_shnum ||
-+		    relsec->sh_link >= pi->ehdr->e_shnum)
- 			return -ENOEXEC;
- 
--		section = &sechdrs[sechdrs[i].sh_info];
--		symtab = &sechdrs[sechdrs[i].sh_link];
-+		section = pi->sechdrs + relsec->sh_info;
-+		symtab = sechdrs + relsec->sh_link;
- 
- 		if (!(section->sh_flags & SHF_ALLOC))
- 			continue;
-@@ -856,12 +877,12 @@ static int kexec_apply_relocations(struct kimage *image)
- 		 * Respective architecture needs to provide support for applying
- 		 * relocations of type SHT_RELA/SHT_REL.
- 		 */
--		if (sechdrs[i].sh_type == SHT_RELA)
--			ret = arch_kexec_apply_relocations_add(pi->ehdr,
--							       sechdrs, i);
--		else if (sechdrs[i].sh_type == SHT_REL)
--			ret = arch_kexec_apply_relocations(pi->ehdr,
--							   sechdrs, i);
-+		if (relsec->sh_type == SHT_RELA)
-+			ret = arch_kexec_apply_relocations_add(pi, section,
-+							       relsec, symtab);
-+		else if (relsec->sh_type == SHT_REL)
-+			ret = arch_kexec_apply_relocations(pi, section,
-+							   relsec, symtab);
- 		if (ret)
- 			return ret;
- 	}
+I know this may sound weird but in .c files this should be instead:
+
+// SPDX-License-Identifier: GPL-2.0
+
+See Documentation/process/license-rules.rst for why.
 -- 
-2.13.5
-
+Cordially
+Philippe Ombredanne
 
 _______________________________________________
 kexec mailing list
