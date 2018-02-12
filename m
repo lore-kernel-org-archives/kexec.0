@@ -2,27 +2,27 @@ Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1elB20-0003MO-8T
+ id 1elB20-0003LE-8C
  for kexec@lists.infradead.org; Mon, 12 Feb 2018 10:08:21 +0000
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w1CA4QbC049449
- for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 05:08:10 -0500
-Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2g31etpr8h-1
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w1CA4QnG050198
+ for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 05:08:05 -0500
+Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2g30f00rpj-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 05:08:10 -0500
+ for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 05:08:05 -0500
 Received: from localhost
- by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
- Mon, 12 Feb 2018 10:08:08 -0000
+ Mon, 12 Feb 2018 10:08:03 -0000
 From: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Subject: [PATCH 07/17] kexec_file: Simplify kexec_purgatory_setup_sechdrs 1
-Date: Mon, 12 Feb 2018 11:07:44 +0100
+Subject: [PATCH 04/17] kexec_file: Search symbols in read-only kexec_purgatory
+Date: Mon, 12 Feb 2018 11:07:41 +0100
 In-Reply-To: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
 References: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
-Message-Id: <20180212100754.55121-8-prudo@linux.vnet.ibm.com>
+Message-Id: <20180212100754.55121-5-prudo@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,129 +39,106 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-s390@vger.kernel.org
 Cc: Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-To update the entry point there is an extra loop over all section headers
-although this can be done in the main loop. So move it there and eliminate
-the extra loop and variable to store the 'entry section index'.
-
-Also, in the main loop, move the usual case, i.e. non-bss section, out of
-the extra if-block.
+The stripped purgatory does not contain a symtab. So when looking for
+symbols this is done in read-only kexec_purgatory. Highlight this by
+marking the corresponding variables as 'const'.
 
 Signed-off-by: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Reviewed-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 ---
- kernel/kexec_file.c | 76 +++++++++++++++++++++--------------------------------
- 1 file changed, 30 insertions(+), 46 deletions(-)
+ kernel/kexec_file.c | 38 ++++++++++++++++++++++----------------
+ 1 file changed, 22 insertions(+), 16 deletions(-)
 
 diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index d1c3ec8dc6b1..bb31a3b627c2 100644
+index 06fc9fdd2474..2072b288ec53 100644
 --- a/kernel/kexec_file.c
 +++ b/kernel/kexec_file.c
-@@ -731,7 +731,6 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
- 	unsigned char *buf_addr;
- 	unsigned char *src;
- 	Elf_Shdr *sechdrs;
--	int entry_sidx = -1;
- 	int i;
+@@ -901,20 +901,27 @@ int kexec_load_purgatory(struct kimage *image, unsigned long min,
+ 	return ret;
+ }
  
- 	sechdrs = vzalloc(pi->ehdr->e_shnum * sizeof(Elf_Shdr));
-@@ -763,32 +762,11 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
- 						sechdrs[i].sh_offset;
+-static Elf_Sym *kexec_purgatory_find_symbol(struct purgatory_info *pi,
+-					    const char *name)
++/*
++ * kexec_purgatory_find_symbol - find a symbol in the purgatory
++ * @pi:		Purgatory to search in.
++ * @name:	Name of the symbol.
++ *
++ * Return: pointer to symbol in read-only symtab on success, NULL on error.
++ */
++static const Elf_Sym *kexec_purgatory_find_symbol(struct purgatory_info *pi,
++						  const char *name)
+ {
++	const Elf_Shdr *sechdrs;
+ 	const Elf_Ehdr *ehdr;
+-	Elf_Sym *syms;
+-	Elf_Shdr *sechdrs;
+-	int i, k;
++	const Elf_Sym *syms;
+ 	const char *strtab;
++	int i, k;
+ 
+-	if (!pi->sechdrs || !pi->ehdr)
++	if (!pi->ehdr)
+ 		return NULL;
+ 
+-	sechdrs = pi->sechdrs;
+ 	ehdr = pi->ehdr;
++	sechdrs = (void *)ehdr + ehdr->e_shoff;
+ 
+ 	for (i = 0; i < ehdr->e_shnum; i++) {
+ 		if (sechdrs[i].sh_type != SHT_SYMTAB)
+@@ -923,8 +930,8 @@ static Elf_Sym *kexec_purgatory_find_symbol(struct purgatory_info *pi,
+ 		if (sechdrs[i].sh_link >= ehdr->e_shnum)
+ 			/* Invalid strtab section number */
+ 			continue;
+-		strtab = (char *)sechdrs[sechdrs[i].sh_link].sh_offset;
+-		syms = (Elf_Sym *)sechdrs[i].sh_offset;
++		strtab = (void *)ehdr + sechdrs[sechdrs[i].sh_link].sh_offset;
++		syms = (void *)ehdr + sechdrs[i].sh_offset;
+ 
+ 		/* Go through symbols for a match */
+ 		for (k = 0; k < sechdrs[i].sh_size/sizeof(Elf_Sym); k++) {
+@@ -952,7 +959,7 @@ static Elf_Sym *kexec_purgatory_find_symbol(struct purgatory_info *pi,
+ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name)
+ {
+ 	struct purgatory_info *pi = &image->purgatory_info;
+-	Elf_Sym *sym;
++	const Elf_Sym *sym;
+ 	Elf_Shdr *sechdr;
+ 
+ 	sym = kexec_purgatory_find_symbol(pi, name);
+@@ -975,9 +982,9 @@ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name)
+ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+ 				   void *buf, unsigned int size, bool get_value)
+ {
+-	Elf_Sym *sym;
+-	Elf_Shdr *sechdrs;
+ 	struct purgatory_info *pi = &image->purgatory_info;
++	const Elf_Sym *sym;
++	Elf_Shdr *sec;
+ 	char *sym_buf;
+ 
+ 	sym = kexec_purgatory_find_symbol(pi, name);
+@@ -990,16 +997,15 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+ 		return -EINVAL;
  	}
  
--	/*
--	 * Identify entry point section and make entry relative to section
--	 * start.
--	 */
--	kbuf->image->start = pi->ehdr->e_entry;
--	for (i = 0; i < pi->ehdr->e_shnum; i++) {
--		if (!(sechdrs[i].sh_flags & SHF_ALLOC))
--			continue;
--
--		if (!(sechdrs[i].sh_flags & SHF_EXECINSTR))
--			continue;
--
--		/* Make entry section relative */
--		if (sechdrs[i].sh_addr <= pi->ehdr->e_entry &&
--		    ((sechdrs[i].sh_addr + sechdrs[i].sh_size) >
--		     pi->ehdr->e_entry)) {
--			entry_sidx = i;
--			kbuf->image->start -= sechdrs[i].sh_addr;
--			break;
--		}
--	}
--
- 	/* Load SHF_ALLOC sections */
- 	buf_addr = kbuf->buffer;
- 	load_addr = curr_load_addr = kbuf->mem;
- 	bss_addr = load_addr + kbuf->bufsz;
-+	kbuf->image->start = pi->ehdr->e_entry;
+-	sechdrs = pi->sechdrs;
++	sec = pi->sechdrs + sym->st_shndx;
  
- 	for (i = 0; i < pi->ehdr->e_shnum; i++) {
- 		unsigned long align;
-@@ -797,34 +775,40 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
- 			continue;
+-	if (sechdrs[sym->st_shndx].sh_type == SHT_NOBITS) {
++	if (sec->sh_type == SHT_NOBITS) {
+ 		pr_err("symbol %s is in a bss section. Cannot %s\n", name,
+ 		       get_value ? "get" : "set");
+ 		return -EINVAL;
+ 	}
  
- 		align = sechdrs[i].sh_addralign;
--		if (sechdrs[i].sh_type != SHT_NOBITS) {
--			curr_load_addr = ALIGN(curr_load_addr, align);
--			offset = curr_load_addr - load_addr;
--			/* We already modifed ->sh_offset to keep src addr */
--			src = (char *) sechdrs[i].sh_offset;
--			memcpy(buf_addr + offset, src, sechdrs[i].sh_size);
--
--			/* Store load address and source address of section */
--			sechdrs[i].sh_addr = curr_load_addr;
--
--			/*
--			 * This section got copied to temporary buffer. Update
--			 * ->sh_offset accordingly.
--			 */
--			sechdrs[i].sh_offset = (unsigned long)(buf_addr + offset);
--
--			/* Advance to the next address */
--			curr_load_addr += sechdrs[i].sh_size;
--		} else {
-+
-+		if (sechdrs[i].sh_type == SHT_NOBITS) {
- 			bss_addr = ALIGN(bss_addr, align);
- 			sechdrs[i].sh_addr = bss_addr;
- 			bss_addr += sechdrs[i].sh_size;
-+			continue;
-+		}
-+
-+		curr_load_addr = ALIGN(curr_load_addr, align);
-+		offset = curr_load_addr - load_addr;
-+		/* We already modifed ->sh_offset to keep src addr */
-+		src = (char *)sechdrs[i].sh_offset;
-+		memcpy(buf_addr + offset, src, sechdrs[i].sh_size);
-+
-+		if (sechdrs[i].sh_flags & SHF_EXECINSTR &&
-+		    pi->ehdr->e_entry >= sechdrs[i].sh_addr &&
-+		    pi->ehdr->e_entry < (sechdrs[i].sh_addr
-+					 + sechdrs[i].sh_size)) {
-+			kbuf->image->start -= sechdrs[i].sh_addr;
-+			kbuf->image->start += curr_load_addr
- 		}
--	}
+-	sym_buf = (unsigned char *)sechdrs[sym->st_shndx].sh_offset +
+-					sym->st_value;
++	sym_buf = (char *)sec->sh_offset + sym->st_value;
  
--	/* Update entry point based on load address of text section */
--	if (entry_sidx >= 0)
--		kbuf->image->start += sechdrs[entry_sidx].sh_addr;
-+		/* Store load address and source address of section */
-+		sechdrs[i].sh_addr = curr_load_addr;
-+
-+		/*
-+		 * This section got copied to temporary buffer. Update
-+		 * ->sh_offset accordingly.
-+		 */
-+		sechdrs[i].sh_offset = (unsigned long)(buf_addr + offset);
-+
-+		/* Advance to the next address */
-+		curr_load_addr += sechdrs[i].sh_size;
-+	}
- 
- 	return 0;
- }
+ 	if (get_value)
+ 		memcpy((void *)buf, sym_buf, size);
 -- 
 2.13.5
 
