@@ -1,27 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1elB2F-0003Tc-TK
- for kexec@lists.infradead.org; Mon, 12 Feb 2018 10:08:33 +0000
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+ id 1elB29-0003OY-Vg
+ for kexec@lists.infradead.org; Mon, 12 Feb 2018 10:08:31 +0000
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w1CA4AaX108816
- for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 05:08:23 -0500
-Received: from e06smtp15.uk.ibm.com (e06smtp15.uk.ibm.com [195.75.94.111])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2g36g0wrby-1
+ w1CA4QTS049433
+ for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 05:08:15 -0500
+Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2g31etprac-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 05:08:22 -0500
+ for <kexec@lists.infradead.org>; Mon, 12 Feb 2018 05:08:14 -0500
 Received: from localhost
- by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
- Mon, 12 Feb 2018 10:08:20 -0000
+ Mon, 12 Feb 2018 10:08:11 -0000
 From: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Subject: [PATCH 15/17] s390/kexec_file: Add image loader
-Date: Mon, 12 Feb 2018 11:07:52 +0100
+Subject: [PATCH 09/17] kexec_file: Remove mis-use of sh_offset field
+Date: Mon, 12 Feb 2018 11:07:46 +0100
 In-Reply-To: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
 References: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
-Message-Id: <20180212100754.55121-16-prudo@linux.vnet.ibm.com>
+Message-Id: <20180212100754.55121-10-prudo@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,237 +39,109 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-s390@vger.kernel.org
 Cc: Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Add an image loader for kexec_file_load. For simplicity first skip crash
-support. The functions defined in machine_kexec_file will later be shared
-with the ELF loader.
+The current code uses the sh_offset field in purgatory_info->sechdrs to
+store a pointer to the current load address of the section. Depending
+whether the section will be loaded or not this is either a pointer into
+purgatory_info->purgatory_buf or kexec_purgatory. This is not only a
+violation of the ELF standard but also makes the code very hard to
+understand as you cannot tell if the memory you are using is read-only or
+not.
+
+Remove this mis-use and store the offset of the section in
+pugaroty_info->purgatory_buf in sh_offset.
 
 Signed-off-by: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Reviewed-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 ---
- arch/s390/include/asm/kexec.h         | 22 ++++++++++
- arch/s390/kernel/Makefile             |  2 +-
- arch/s390/kernel/kexec_image.c        | 80 +++++++++++++++++++++++++++++++++++
- arch/s390/kernel/machine_kexec_file.c | 73 ++++++++++++++++++++++++++++++++
- 4 files changed, 176 insertions(+), 1 deletion(-)
- create mode 100644 arch/s390/kernel/kexec_image.c
+ arch/x86/kernel/machine_kexec_64.c | 10 ++++++----
+ kernel/kexec_file.c                | 33 +++------------------------------
+ 2 files changed, 9 insertions(+), 34 deletions(-)
 
-diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
-index 1d708a419326..532f5e4f198f 100644
---- a/arch/s390/include/asm/kexec.h
-+++ b/arch/s390/include/asm/kexec.h
-@@ -46,4 +46,26 @@
- static inline void crash_setup_regs(struct pt_regs *newregs,
- 					struct pt_regs *oldregs) { }
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 6be04e4d4a7e..cf233e878d28 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -457,13 +457,15 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+ 		 * rel[i].r_offset contains byte offset from beginning
+ 		 * of section to the storage unit affected.
+ 		 *
+-		 * This is location to update (->sh_offset). This is temporary
+-		 * buffer where section is currently loaded. This will finally
+-		 * be loaded to a different address later, pointed to by
++		 * This is location to update. This is temporary buffer
++		 * where section is currently loaded. This will finally be
++		 * loaded to a different address later, pointed to by
+ 		 * ->sh_addr. kexec takes care of moving it
+ 		 *  (kexec_load_segment()).
+ 		 */
+-		location = (void *)(section->sh_offset + rel[i].r_offset);
++		location = pi->purgatory_buf;
++		location += section->sh_offset;
++		location += rel[i].r_offset;
  
-+struct kimage;
-+struct s390_load_data {
-+	/* Pointer to the kernel buffer. Used to register cmdline etc.. */
-+	void *kernel_buf;
-+
-+	/* Total size of loaded segments in memory. Used as an offset. */
-+	size_t memsz;
-+
-+	/* Load address of initrd. Used to register INITRD_START in kernel. */
-+	unsigned long initrd_load_addr;
-+};
-+
-+int kexec_file_add_purgatory(struct kimage *image,
-+			     struct s390_load_data *data);
-+int kexec_file_add_initrd(struct kimage *image,
-+			  struct s390_load_data *data,
-+			  char *initrd, unsigned long initrd_len);
-+void kexec_file_update_kernel(struct kimage *iamge,
-+			      struct s390_load_data *data);
-+
-+extern const struct kexec_file_ops s390_kexec_image_ops;
-+
- #endif /*_S390_KEXEC_H */
-diff --git a/arch/s390/kernel/Makefile b/arch/s390/kernel/Makefile
-index 496d4711c186..58a590709cc3 100644
---- a/arch/s390/kernel/Makefile
-+++ b/arch/s390/kernel/Makefile
-@@ -60,7 +60,7 @@ obj-y	+= debug.o irq.o ipl.o dis.o diag.o vdso.o als.o
- obj-y	+= sysinfo.o jump_label.o lgr.o os_info.o machine_kexec.o pgm_check.o
- obj-y	+= runtime_instr.o cache.o fpu.o dumpstack.o guarded_storage.o sthyi.o
- obj-y	+= entry.o reipl.o relocate_kernel.o kdebugfs.o alternative.o
--obj-y	+= machine_kexec_file.o
-+obj-y	+= machine_kexec_file.o kexec_image.o
+ 		/* Final address of the location */
+ 		address = section->sh_addr + rel[i].r_offset;
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 746b91e46e34..25b44d1a664a 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -736,28 +736,6 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
+ 	       pi->ehdr->e_shnum * sizeof(Elf_Shdr));
+ 	pi->sechdrs = sechdrs;
  
- extra-y				+= head.o head64.o vmlinux.lds
+-	/*
+-	 * We seem to have multiple copies of sections. First copy is which
+-	 * is embedded in kernel in read only section. Some of these sections
+-	 * will be copied to a temporary buffer and relocated. And these
+-	 * sections will finally be copied to their final destination at
+-	 * segment load time.
+-	 *
+-	 * Use ->sh_offset to reflect section address in memory. It will
+-	 * point to original read only copy if section is not allocatable.
+-	 * Otherwise it will point to temporary copy which will be relocated.
+-	 *
+-	 * Use ->sh_addr to contain final address of the section where it
+-	 * will go during execution time.
+-	 */
+-	for (i = 0; i < pi->ehdr->e_shnum; i++) {
+-		if (sechdrs[i].sh_type == SHT_NOBITS)
+-			continue;
+-
+-		sechdrs[i].sh_offset = (unsigned long)pi->ehdr +
+-						sechdrs[i].sh_offset;
+-	}
+-
+ 	offset = 0;
+ 	bss_addr = kbuf->mem + kbuf->bufsz;
+ 	kbuf->image->start = pi->ehdr->e_entry;
+@@ -786,17 +764,12 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
+ 			kbuf->image->start += kbuf->mem + offset;
+ 		}
  
-diff --git a/arch/s390/kernel/kexec_image.c b/arch/s390/kernel/kexec_image.c
-new file mode 100644
-index 000000000000..83cf5a9be3a4
---- /dev/null
-+++ b/arch/s390/kernel/kexec_image.c
-@@ -0,0 +1,80 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Image loader for kexec_file_load system call.
-+ *
-+ * Copyright IBM Corp. 2018
-+ *
-+ * Author(s): Philipp Rudo <prudo@linux.vnet.ibm.com>
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/kernel.h>
-+#include <linux/kexec.h>
-+#include <asm/setup.h>
-+
-+static int kexec_file_add_image_kernel(struct kimage *image,
-+				       struct s390_load_data *data,
-+				       char *kernel, unsigned long kernel_len)
-+{
-+	struct kexec_buf buf;
-+	int ret;
-+
-+	buf.image = image;
-+
-+	buf.buffer = kernel + STARTUP_NORMAL_OFFSET;
-+	buf.bufsz = kernel_len - STARTUP_NORMAL_OFFSET;
-+
-+	buf.mem = STARTUP_NORMAL_OFFSET;
-+	buf.memsz = buf.bufsz;
-+
-+	ret = kexec_add_buffer(&buf);
-+
-+	data->kernel_buf = kernel;
-+	data->memsz += buf.memsz + STARTUP_NORMAL_OFFSET;
-+
-+	return ret;
-+}
-+
-+static void *s390_image_load(struct kimage *image,
-+			     char *kernel, unsigned long kernel_len,
-+			     char *initrd, unsigned long initrd_len,
-+			     char *cmdline, unsigned long cmdline_len)
-+{
-+	struct s390_load_data data = {0};
-+	int ret;
-+
-+	/* We don't support crash kernels yet. */
-+	if (image->type == KEXEC_TYPE_CRASH)
-+		return ERR_PTR(-ENOTSUPP);
-+
-+	ret = kexec_file_add_image_kernel(image, &data, kernel, kernel_len);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	if (initrd) {
-+		ret = kexec_file_add_initrd(image, &data, initrd, initrd_len);
-+		if (ret)
-+			return ERR_PTR(ret);
-+	}
-+
-+	ret = kexec_file_add_purgatory(image, &data);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	kexec_file_update_kernel(image, &data);
-+
-+	return NULL;
-+}
-+
-+static int s390_image_probe(const char *buf, unsigned long len)
-+{
-+	/* Can't reliably tell if an image is valid.  Therefore give the
-+	 * user whatever he wants.
-+	 */
-+	return 0;
-+}
-+
-+const struct kexec_file_ops s390_kexec_image_ops = {
-+	.probe = s390_image_probe,
-+	.load = s390_image_load,
-+};
-diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-index e6928cbed524..052640220361 100644
---- a/arch/s390/kernel/machine_kexec_file.c
-+++ b/arch/s390/kernel/machine_kexec_file.c
-@@ -12,9 +12,82 @@
- #include <asm/setup.h>
+-		src = (void *)sechdrs[i].sh_offset;
++		src = (void *)pi->ehdr + sechdrs[i].sh_offset;
+ 		dst = pi->purgatory_buf + offset;
+ 		memcpy(dst, src, sechdrs[i].sh_size);
  
- const struct kexec_file_ops * const kexec_file_loaders[] = {
-+	&s390_kexec_image_ops,
- 	NULL,
- };
+ 		sechdrs[i].sh_addr = kbuf->mem + offset;
+-
+-		/*
+-		 * This section got copied to temporary buffer. Update
+-		 * ->sh_offset accordingly.
+-		 */
+-		sechdrs[i].sh_offset = (unsigned long)dst;
++		sechdrs[i].sh_offset = offset;
+ 		offset += sechdrs[i].sh_size;
+ 	}
  
-+void kexec_file_update_kernel(struct kimage *image,
-+			      struct s390_load_data *data)
-+{
-+	unsigned long *loc;
-+
-+	/* Callers guarantee cmdline to be \0-terminated and
-+	 * cmdline_len < ARCH_COMMAND_LINE_SIZE.
-+	 */
-+	if (image->cmdline_buf_len)
-+		memcpy(data->kernel_buf + COMMAND_LINE_OFFSET,
-+		       image->cmdline_buf, image->cmdline_buf_len);
-+
-+	if (image->initrd_buf) {
-+		loc = (unsigned long *)(data->kernel_buf + INITRD_START_OFFSET);
-+		*loc = data->initrd_load_addr;
-+
-+		loc = (unsigned long *)(data->kernel_buf + INITRD_SIZE_OFFSET);
-+		*loc = image->initrd_buf_len;
-+	}
-+}
-+
-+static int kexec_file_update_purgatory(struct kimage *image)
-+{
-+	u64 entry, type;
-+	int ret;
-+
-+	entry = STARTUP_NORMAL_OFFSET;
-+	ret = kexec_purgatory_get_set_symbol(image, "kernel_entry", &entry,
-+					     sizeof(entry), false);
-+	return ret;
-+}
-+
-+int kexec_file_add_purgatory(struct kimage *image, struct s390_load_data *data)
-+{
-+	struct kexec_buf buf;
-+	int ret;
-+
-+	buf.image = image;
-+
-+	data->memsz = ALIGN(data->memsz, PAGE_SIZE);
-+	buf.mem = data->memsz;
-+
-+	ret = kexec_load_purgatory(image, &buf);
-+	if (ret)
-+		return ret;
-+
-+	ret = kexec_file_update_purgatory(image);
-+	return ret;
-+}
-+
-+int kexec_file_add_initrd(struct kimage *image, struct s390_load_data *data,
-+			  char *initrd, unsigned long initrd_len)
-+{
-+	struct kexec_buf buf;
-+	int ret;
-+
-+	buf.image = image;
-+
-+	buf.buffer = initrd;
-+	buf.bufsz = initrd_len;
-+
-+	data->memsz = ALIGN(data->memsz, PAGE_SIZE);
-+	buf.mem = data->memsz;
-+	buf.memsz = buf.bufsz;
-+
-+	data->initrd_load_addr = buf.mem;
-+	data->memsz += buf.memsz;
-+
-+	ret = kexec_add_buffer(&buf);
-+	return ret;
-+}
-+
- /*
-  * The kernel is loaded to a fixed location. Turn off kexec_locate_mem_hole
-  * and provide kbuf->mem by hand.
+@@ -1006,7 +979,7 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+ 		return -EINVAL;
+ 	}
+ 
+-	sym_buf = (char *)sec->sh_offset + sym->st_value;
++	sym_buf = (char *)pi->purgatory_buf + sec->sh_offset + sym->st_value;
+ 
+ 	if (get_value)
+ 		memcpy((void *)buf, sym_buf, size);
 -- 
 2.13.5
 
