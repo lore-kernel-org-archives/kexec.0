@@ -1,23 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt0-x230.google.com ([2607:f8b0:400d:c0d::230])
+Received: from mail-wm0-x231.google.com ([2a00:1450:400c:c09::231])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eltJe-0008DE-7y
- for kexec@lists.infradead.org; Wed, 14 Feb 2018 09:25:28 +0000
-Received: by mail-qt0-x230.google.com with SMTP id d8so6949986qtm.0
- for <kexec@lists.infradead.org>; Wed, 14 Feb 2018 01:25:15 -0800 (PST)
+ id 1elteg-0008To-NS
+ for kexec@lists.infradead.org; Wed, 14 Feb 2018 09:47:12 +0000
+Received: by mail-wm0-x231.google.com with SMTP id t74so21398677wme.3
+ for <kexec@lists.infradead.org>; Wed, 14 Feb 2018 01:47:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CANc8B5OiTBgZy4ez9wbqScCqxmp9G1jzHAkgW-Y8N9Nrtbo7Lg@mail.gmail.com>
-References: <CANc8B5NV7xepYWHWZ3sYsv1uP2ofxwtw1SN2DERxfA4ta05fKw@mail.gmail.com>
- <CAFTCetR6cbs1eLwaxu_U4pXQ4f51e3L6R2Kz2z545VH6EX+ncA@mail.gmail.com>
- <CANc8B5NL-if_9FBoE6sHfmoUeD1zj37VcRKEYOThZBWkpo-iAQ@mail.gmail.com>
- <CANc8B5Of1EeOQTTrP4_n_kiXuLd6-7pZ62dft_0dU59H5f4C5g@mail.gmail.com>
- <CANc8B5PSv_B2iteSL3muOz6H8kRX3YHohGReXwxHFESLZsZwjw@mail.gmail.com>
- <CAFTCetQ_zmGW2=RRfBC5tWRXY6qAJbNFrFbKVmq==Bj3ry_x5A@mail.gmail.com>
- <CANc8B5OiTBgZy4ez9wbqScCqxmp9G1jzHAkgW-Y8N9Nrtbo7Lg@mail.gmail.com>
-From: Bhupesh SHARMA <bhupesh.linux@gmail.com>
-Date: Wed, 14 Feb 2018 14:55:14 +0530
-Message-ID: <CAFTCetSc9vUDY0jZ0qqP=a9a8t31cZzuQdsxmbPeyCuj0XBkkw@mail.gmail.com>
-Subject: Re: how to use kexec to jump back to the original kernel
+In-Reply-To: <CAFTCetRkDUW5UA_JyG5sA9z_Ue7g97134VB=3-oUcC3wSi7JkA@mail.gmail.com>
+References: <20180213152236.31413-1-gi-oh.kim@profitbricks.com>
+ <20180214014329.GA2756@dhcp-128-65.nay.redhat.com>
+ <CAJX1YtaLFnCM1t=3BhFSW=i-G3T9XWm_LHnfk9k9A+Nwo-M9og@mail.gmail.com>
+ <CAFTCetRkDUW5UA_JyG5sA9z_Ue7g97134VB=3-oUcC3wSi7JkA@mail.gmail.com>
+From: Gi-Oh Kim <gi-oh.kim@profitbricks.com>
+Date: Wed, 14 Feb 2018 10:46:18 +0100
+Message-ID: <CAJX1YtbHqTBKa3Nnt__aB-H4QX0N7mZLvoHLa3SvzKEVhtew7w@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: kdump: describe jumping to dump-capture
+ kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,148 +24,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Gioh Kim <gurugio@gmail.com>
-Cc: kexec@lists.infradead.org
+To: Bhupesh SHARMA <bhupesh.linux@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-On Wed, Feb 14, 2018 at 2:24 PM, Gioh Kim <gurugio@gmail.com> wrote:
-> On Tue, Feb 13, 2018 at 8:06 PM, Bhupesh SHARMA <bhupesh.linux@gmail.com> wrote:
->> On Tue, Feb 13, 2018 at 8:15 PM, Gioh Kim <gurugio@gmail.com> wrote:
->>> On Tue, Feb 13, 2018 at 3:36 PM, Gioh Kim <gurugio@gmail.com> wrote:
->>>> On Tue, Feb 13, 2018 at 11:06 AM, Gioh Kim <gurugio@gmail.com> wrote:
->>>>> On Mon, Feb 12, 2018 at 7:56 AM, Bhupesh SHARMA <bhupesh.linux@gmail.com> wrote:
->>>>>> Hello,
->>>>>>
->>>>>> On Fri, Feb 9, 2018 at 7:24 PM, Gioh Kim <gurugio@gmail.com> wrote:
->>>>>>> Hello,
->>>>>>>
->>>>>>> "echo c > /proc/sysrq-trigger" generates the kernel dump but it
->>>>>>> reboots the system.
->>>>>>> I'd like to generate kernel dump without system reboot.
->>>>>>>
->>>>>>> I think it is possible to jump to the kdump kernel and generate kernel
->>>>>>> dump, and come back to the operating kernel with kexec.
->>>>>>> I know I can jump to the kdump kernel with "kexec -e" but I cannot
->>>>>>> figure out how to come back to the operating kernel.
->>>>>>>
->>>>>>> For example, I tried following sequences after reading kexec manual page.
->>>>>>>
->>>>>>> 0. rebuild kernel with CONFIG_KEXEC_JUMP option
->>>>>>> 1. kexec --load=/boot/vmlinuz --initrd=/boot/initrd --reuse-cmdline
->>>>>>
->>>>>> Instead you should be using something like:
->>>>>> # kexec -l /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname
->>>>>> -r`.img --reuse-cmdline  --load-preserve-context --mem-min=addr
->>>>>> --mem-max=addr
->>>>>
->>>>> Hello Bhupesh,
->>>>
->>>> I'm sorry to bother you.
->>>> I failed because I booted up wrong kernel without KEXEC_JUMP.
->>>> I can jump to kdump kernel with booting a kernel with KEXEC_JUMP.
->>>> And I can see "kexec_jump_back_entry=0x00000000000810d2" at kernel
->>>> booting parameter.
->>>> Now I can jump to kdump kernel and jump back to the original kernel.
->>>>
->>>> Can I ask just one more question?
->>>> After jumping to kdump kernel, there is not /proc/vmcore file.
->>>> I checked the kernel enabled CONFIG_PROC_VMCORE option.
->>>> What kernel option should I enable to use /proc/vmcore?
->>>> Or should I use another file instead /proc/vmcore?
->>>>
->>>>
->>>
->>> I'm sorry but please let me ask one more question.
->>>
->>> I ran "kexec -e" command on kdump kernel, then it just rebooted the system.
->>> I guess jumping to the original kernel means resuming the original
->>> kernel as it was running.
->>> Did I misunderstand?
->>> Or my machine did not work correctly?
->>
->> Hello,
->>
->> I have replied in another thread (in reply to the documentation patch
->> for kdump jump feature which you sent out today) about this in detail,
->> but to capture my thoughts briefly here, I think you are confusing the
->> 'kexec -l' or loading another kernel and 'kexec -p' or the kdump use
->> cases.
->>
->> Can you please explain whether you are trying the jump feature with
->> 'kexec -l' or 'kexec -p'.
->>
->
-> Hello,
->
-> The another thread about documentation is for documentation.
-> So I explain the background here.
->
-> I'm working for the Cloud company providing qemu-based virtualization service.
-> When system has a problem and does not panic yet, we usually migrate
-> all guest VMs
-> and reboot the system.
-> Sometimes log files have a clue for the problem, but in many cases
-> there is nothing in log files
-> and it's difficult to investigate.
->
-> What I want to do is generating a kernel dump at the moment when the
-> system becomes unstable.
-> After migrating all VMs, the system would be clean and I would get no
-> clue for the problem.
-> So I'd like to generate the kernel dump before migrating VMs and
-> cleaning up the system.
->
-> Of course, when system paniced, I got kernel dump.
-> But it is the worst case because guest VMs also were killed.
-> It is the service failure.
->
-> I think I'm confused with system snapshot and kernel dump.
-> Nevertheless I need a solution to capture the system status without
-> panic or reboot.
->
->
->> I remember trying the jump feature with 'kexec -p' some time back and
->> it did not work for me at that time. Although I was able to use the
->> jump feature with 'kexec -l' on the same machine.
->
-> 'kexec -p' command jumps to kdump kernel on panic, doesn't it?
-> I'd like to jump to kdump kernel without panic or reboot, and get back
-> to the system kernel
-> and continue to service.
-
-So you mean kexec not kdump here, see more below ..
-
-> I think that is the jumping between the system kernel and kdump kernel.
-> If I misunderstand the meaning of the jump, I'll find another way.
->
-> Thank you again ;-)
-
-.. Seems you are mixing up two separate use-cases (see [1] for some background):
-
-Kexec is a Linux kernel-to-kernel boot loader that helps to boot the
-second kernel from the context of first kernel. Kexec shuts down the
-first kernel, bypasses the BIOS or firmware stage, and jumps to second
-kernel.
-
-Whereas Kdump can be used with the kexec application when the first
-kernel panics, the second kernel is used to copy the memory dump of
-first kernel, which can be analysed with tools such as gdb and crash
-to determine the panic reasons.
-
-I am not sure if we can jump back to a primary kernel from the
-secondary kernel when the primary kernel has already panicked/crashed,
-so we are looking at a 'kexec -l' use case primarily, which should
-work fine normally on x86_64 with the jump use-case.
-
-[1]. https://opensource.com/article/17/6/kdump-usage-and-internals
-
-Regards,
-Bhupesh
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCBGZWIgMTQsIDIwMTggYXQgMTA6MTcgQU0sIEJodXBlc2ggU0hBUk1BCjxiaHVwZXNo
+LmxpbnV4QGdtYWlsLmNvbT4gd3JvdGU6Cj4gT24gV2VkLCBGZWIgMTQsIDIwMTggYXQgMjozMiBQ
+TSwgR2ktT2ggS2ltIDxnaS1vaC5raW1AcHJvZml0YnJpY2tzLmNvbT4gd3JvdGU6Cj4+IE9uIFdl
+ZCwgRmViIDE0LCAyMDE4IGF0IDI6NDMgQU0sIERhdmUgWW91bmcgPGR5b3VuZ0ByZWRoYXQuY29t
+PiB3cm90ZToKPj4+IEhpLAo+Pj4gT24gMDIvMTMvMTggYXQgMDQ6MjJwbSwgR2lvaCBLaW0gd3Jv
+dGU6Cj4+Pj4gSnVtcGluZyBiZXR3ZWVuIHRoZSBzeXN0ZW0ga2VybmVsIGFuZCB0aGUgZHVtcC1j
+YXB0dXJlIGtlcm5lbAo+Pj4+IGhhcyBiZWVuIHN1cHBvcnRlZCBmb3IgbG9uZyB0aW1lIGJ1dCB0
+aGVyZSBpcyBubyBkZXNjcmlwdGlvbgo+Pj4+IGhvdyB0byB1c2UgaXQuIFRoaXMgcGF0Y2ggYWRk
+cyB0aGUgZGVzY3JpcHRpb24gaG93IHRvIHVzZSBrZXhlYyB0b29sCj4+Pj4gdG8ganVtcCB0byB0
+aGUgZHVtcC1jYXB0dXJlIGtlcm5lbCBhbmQganVtcCBiYWNrIHRvIHRoZSBzeXN0ZW0ga2VybmVs
+Lgo+Pj4KPj4+IEkgZG8gbm90IHRoaW5rIHRoaXMgc2hvdWxkIGJlbG9uZyB0byBrZHVtcCBkb2N1
+bWVudGF0aW9uLiAgVGhlcmUgYXJlIGEKPj4+IGxvdCBvZiBjaG9pY2VzIGFmdGVyIGEgdm1jb3Jl
+IHNhdmluZywgb25lIGNhbiByZWJvb3QsIGhhbHQsIGV2ZW4gZ28KPj4+IGFoZWFkIHdpdGggcmVh
+bCByb290IGZpbGVzeXN0ZW0gaW5pdCBwYXRoLiAgV2UgZG8gbm90IG5lZWQgdG8gZG9jdW1lbnQK
+Pj4+IGFsbCB0aGVzZSBpbiBrZHVtcC50eHQuCj4+Pgo+Pj4gU2luY2UgaXQgaXMgYSBnZW5lcmFs
+IHVzZSBjYXNlIG5vdCBvbmx5IGZvciBrZHVtcCwgYWRkIG1vcmUgaW5mbyBpbgo+Pj4ga2V4ZWMg
+bWFuIHBhZ2Ugd291bGQgYmUgYmV0dGVyLgo+Pgo+PiBIaSwKPj4KPj4gV2hlbmV2ZXIgSSBmaW5k
+IGEga2VybmVsIG9wdGlvbiwgSSBzZWFyY2ggRG9jdW1lbnRhdGlvbiBmaWxlcywgYW5kCj4+IG5l
+eHQgaXMgZ29vZ2xlLgo+PiBTbyBJIHRoaW5rIGl0IHdvdWxkIGJlIGJldHRlciB0byBkZXNjcmli
+ZSBob3cgdG8gdXNlIGEga2VybmVsIG9wdGlvbgo+PiBvciBrZXJuZWwgZmVhdHVyZSBpbiBrZXJu
+ZWwgZG9jdW1lbnQuCj4KPiBCdXQgdGhpcyBpcyBub3QgdGhlIGtlcm5lbCBkb2N1bWVudGF0aW9u
+IGZvciBrZXhlYyB3YXJtIHJlYm9vdC4KPiBJbnN0ZWFkIHRoaXMgaXMgdGhlIGtkdW1wIGRvY3Vt
+ZW50YXRpb24uIFRoZSBleGFtcGxlIHlvdSBxdW90ZWQgYWJvdmUKPiBpcyB0aGUgJ2tleGVjIC1s
+JyB1c2UgY2FzZSBhbmQgbm90ICdrZXhlYyAtcCcuCgoKSSB0aG91Z2h0IGVuYWJsaW5nIENPTkZJ
+R19LRVhFQ19KVU1QIGluIGtlcm5lbCBpcyB0aGUgbWFpbiB0b3BpYwphbmQgZGVzY3JpYmluZyAn
+a2V4ZWMgLWwnIGlzIHNob3dpbmcgaG93IHRvIHVzZSB0aGUgQ09ORklHX0tFWEVDX0pVTVAgb3B0
+aW9uLgpPaywgSSdsbCBjaGVjayB0aGUgbWFudWFsIHBhZ2Ugb2Yga2V4ZWMuCkkgdGhpbmsgaXQg
+d291bGQgYmUgZW5vdWdoIGlmIEkgYWRkIGEgc2hvcnQgbm90ZSBmb3IgLWwgYW5kCi0tbG9hZC1w
+cmVzZXJ2ZS1jb250ZXh0IGFib3V0IHRoZSBrZXJuZWwgb3B0aW9uLgoKVGhhbmsgeW91IDstKQoK
+Cj4KPiBSYXRoZXIgdGhlIG1hbiBwYWdlIGZvciBrZXhlYy10b29scyBzaG91bGQgYmUgYSBnb29k
+IHBsYWNlIHRvIGluY2x1ZGUKPiB0aGlzIGRvY3VtZW50YXRpb24uCj4KPiBSZWdhcmRzLAo+IEJo
+dXBlc2gKPgo+Pj4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IEdpb2ggS2ltIDxnaS1vaC5raW1A
+cHJvZml0YnJpY2tzLmNvbT4KPj4+PiAtLS0KPj4+PiAgRG9jdW1lbnRhdGlvbi9rZHVtcC9rZHVt
+cC50eHQgfCAzOCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+Pj4+ICAx
+IGZpbGUgY2hhbmdlZCwgMzggaW5zZXJ0aW9ucygrKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24va2R1bXAva2R1bXAudHh0IGIvRG9jdW1lbnRhdGlvbi9rZHVtcC9rZHVtcC50
+eHQKPj4+PiBpbmRleCA1MTgxNDQ1MGE3ZjguLjM1YjcxZmVmNWQ4OCAxMDA2NDQKPj4+PiAtLS0g
+YS9Eb2N1bWVudGF0aW9uL2tkdW1wL2tkdW1wLnR4dAo+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
+a2R1bXAva2R1bXAudHh0Cj4+Pj4gQEAgLTQ2MCw2ICs0NjAsNDQgQEAgYW5kIHRoZSBzeXN0ZW0g
+d2lsbCBib290IGludG8gdGhlIGR1bXAtY2FwdHVyZSBrZXJuZWwuCj4+Pj4gIEZvciB0ZXN0aW5n
+IHB1cnBvc2VzLCB5b3UgY2FuIHRyaWdnZXIgYSBjcmFzaCBieSB1c2luZyAiQUxULVN5c1JxLWMi
+LAo+Pj4+ICAiZWNobyBjID4gL3Byb2Mvc3lzcnEtdHJpZ2dlciIgb3Igd3JpdGUgYSBtb2R1bGUg
+dG8gZm9yY2UgdGhlIHBhbmljLgo+Pj4+Cj4+Pj4gK0p1bXAgYmV0d2VlbiB0aGUgU3lzdGVtIGtl
+cm5lbCBhbmQgdGhlIER1bXAtY2FwdHVyZSBrZXJuZWwKPj4+PiArPT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PQo+Pj4+ICsKPj4+PiArV2l0aG91dCBzeXN0ZW0gY3Jhc2gsIHRoZSBzeXN0
+ZW0gY2FuIGp1bXAgdG8gdGhlIGR1bXAtY2FwdHVyZSBrZXJuZWwuCj4+Pj4gKwo+Pj4+ICsxKSBF
+bmFibGUgImp1bXAgYmV0d2VlbiBzeXN0ZW0ga2VybmVsIGFuZCBkdW1wLWNhcHR1cmUga2VybmVs
+IiBzdXBwb3J0IHVuZGVyCj4+Pj4gKyAgICJQcm9jZXNzb3IgdHlwZSBhbmQgZmVhdHVyZXMiCj4+
+Pj4gKwo+Pj4+ICsgICBDT05GSUdfS0VYRUNfSlVNUD15Cj4+Pj4gKwo+Pj4+ICsyKSBMb2FkIHRo
+ZSBkdW1wLWNhcHR1cmUga2VybmVsIHdpdGggLS1sb2FkLXByZXNlcnZlLWNvbnRleHQgYW5kIG1l
+bS1tYXgKPj4+PiArICAgb3B0aW9ucyBhcyBmb2xsb3dpbmcuCj4+Pj4gKwo+Pj4+ICsgICBrZXhl
+YyAtbCA8ZHVtcC1jYXB0dXJlLWtlcm5lbC12bWxpbnV4LWltYWdlPiBcCj4+Pj4gKyAgIC0taW5p
+dHJkPTxpbml0cmQtZm9yLWR1bXAtY2FwdHVyZS1rZXJuZWw+IC0tYXJncy1saW51eCBcCj4+Pj4g
+KyAgIC0tYXBwZW5kPSJyb290PTxyb290LWRldj4gPGFyY2gtc3BlY2lmaWMtb3B0aW9ucz4iIFwK
+Pj4+PiArICAgLS1sb2FkLXByZXNlcnZlLWNvbnRleHQgXAo+Pj4+ICsgICAtLW1lbS1tYXg9PHRo
+ZSBoaWdoZXN0IG1lbW9yeSBhZGRyZXNzIGFkZHIgdG8gbG9hZCBjb2RlIGludG8+Cj4+Pj4gKwo+
+Pj4+ICszKSBKdW1wIHRvIHRoZSBsb2FkZWQga2VybmVsCj4+Pj4gKwo+Pj4+ICsgICBrZXhlYyAt
+ZQo+Pj4+ICsKPj4+PiArTm93IHRoZSBzeXN0ZW0gaXMgcnVubmluZyB3aXRoIHRoZSBkdW1wLWNh
+cHR1cmUga2VybmVsLiBZb3UgY2FuIGp1bXAgYmFjawo+Pj4+ICt0byB0aGUgc3lzdGVtIGtlcm5l
+bC4KPj4+PiArCj4+Pj4gKzEpIEZpbmQga2V4ZWNfanVtcF9iYWNrX2VudHJ5IGFkZHJlc3MgaW4g
+a2VybmVsIGJvb3RpbmcgcGFyYW1ldGVycyBpbgo+Pj4+ICsgICAvcHJvYy9jbWRsaW5lLiBUaGF0
+IGlzIHRoZSBhZGRyZXNzIGZvciBrZXhlYyB0byBqdW1wIHRvLiBGb3IgZXhhbXBsZToKPj4+PiAr
+ICAga2V4ZWNfanVtcF9iYWNrX2VudHJ5PTB4MDAwMDAwMDAwMDA4MTBkMgo+Pj4+ICsKPj4+PiAr
+MikgRm9sbG93aW5nIGNvbW1hbmQgc2V0cyB0aGUganVtcC1iYWNrIGFkZHJlc3MgZm9yIGtleGVj
+Lgo+Pj4+ICsKPj4+PiArICAga2V4ZWMgLS1sb2FkLWp1bXAtYmFjay1oZWxwZXIgLS1lbnRyeT0w
+eDgxMGQyCj4+Pj4gKwo+Pj4+ICszKSBKdW1wIHRvIHRoZSBzeXN0ZW0ga2VybmVsCj4+Pj4gKwo+
+Pj4+ICsgICBrZXhlYyAtZQo+Pj4+ICsKPj4+PiAgV3JpdGUgT3V0IHRoZSBEdW1wIEZpbGUKPj4+
+PiAgPT09PT09PT09PT09PT09PT09PT09PT0KPj4+Pgo+Pj4+IC0tCj4+Pj4gMi4xMS4wCj4+Pj4K
+Pj4+Cj4+PiBUaGFua3MKPj4+IERhdmUKPj4KPj4KPj4KPj4gLS0KPj4gR0lPSCBLSU0KPj4gTGlu
+dXggS2VybmVsIEVudHdpY2tsZXIKPj4KPj4gUHJvZml0QnJpY2tzIEdtYkgKPj4gR3JlaWZzd2Fs
+ZGVyIFN0ci4gMjA3Cj4+IEQgLSAxMDQwNSBCZXJsaW4KPj4KPj4gVGVsOiAgICAgICArNDkgMTc2
+IDI2OTcgODk2Mgo+PiBGYXg6ICAgICAgKzQ5IDMwIDU3NyAwMDggMjk5Cj4+IEVtYWlsOiAgICBn
+aS1vaC5raW1AcHJvZml0YnJpY2tzLmNvbQo+PiBVUkw6ICAgICAgaHR0cHM6Ly93d3cucHJvZml0
+YnJpY2tzLmRlCj4+Cj4+IFNpdHogZGVyIEdlc2VsbHNjaGFmdDogQmVybGluCj4+IFJlZ2lzdGVy
+Z2VyaWNodDogQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcsIEhSQiAxMjU1MDYgQgo+PiBHZXNj
+aMOkZnRzZsO8aHJlcjogQWNoaW0gV2Vpc3MsIE1hdHRoaWFzIFN0ZWluYmVyZwoKCgotLSAKR0lP
+SCBLSU0KTGludXggS2VybmVsIEVudHdpY2tsZXIKClByb2ZpdEJyaWNrcyBHbWJICkdyZWlmc3dh
+bGRlciBTdHIuIDIwNwpEIC0gMTA0MDUgQmVybGluCgpUZWw6ICAgICAgICs0OSAxNzYgMjY5NyA4
+OTYyCkZheDogICAgICArNDkgMzAgNTc3IDAwOCAyOTkKRW1haWw6ICAgIGdpLW9oLmtpbUBwcm9m
+aXRicmlja3MuY29tClVSTDogICAgICBodHRwczovL3d3dy5wcm9maXRicmlja3MuZGUKClNpdHog
+ZGVyIEdlc2VsbHNjaGFmdDogQmVybGluClJlZ2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQgQ2hh
+cmxvdHRlbmJ1cmcsIEhSQiAxMjU1MDYgQgpHZXNjaMOkZnRzZsO8aHJlcjogQWNoaW0gV2Vpc3Ms
+IE1hdHRoaWFzIFN0ZWluYmVyZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
