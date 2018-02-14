@@ -1,16 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mail-qk0-x230.google.com ([2607:f8b0:400d:c09::230])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1elrbq-0000kH-GJ
- for kexec@lists.infradead.org; Wed, 14 Feb 2018 07:36:08 +0000
-Date: Wed, 14 Feb 2018 15:35:43 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 00/17] Add kexec_file_load support to s390
-Message-ID: <20180214073543.GA12328@dhcp-128-65.nay.redhat.com>
-References: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
+ id 1elsqF-0003GT-5F
+ for kexec@lists.infradead.org; Wed, 14 Feb 2018 08:55:05 +0000
+Received: by mail-qk0-x230.google.com with SMTP id i184so14684107qkf.10
+ for <kexec@lists.infradead.org>; Wed, 14 Feb 2018 00:54:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
+In-Reply-To: <CAFTCetQ_zmGW2=RRfBC5tWRXY6qAJbNFrFbKVmq==Bj3ry_x5A@mail.gmail.com>
+References: <CANc8B5NV7xepYWHWZ3sYsv1uP2ofxwtw1SN2DERxfA4ta05fKw@mail.gmail.com>
+ <CAFTCetR6cbs1eLwaxu_U4pXQ4f51e3L6R2Kz2z545VH6EX+ncA@mail.gmail.com>
+ <CANc8B5NL-if_9FBoE6sHfmoUeD1zj37VcRKEYOThZBWkpo-iAQ@mail.gmail.com>
+ <CANc8B5Of1EeOQTTrP4_n_kiXuLd6-7pZ62dft_0dU59H5f4C5g@mail.gmail.com>
+ <CANc8B5PSv_B2iteSL3muOz6H8kRX3YHohGReXwxHFESLZsZwjw@mail.gmail.com>
+ <CAFTCetQ_zmGW2=RRfBC5tWRXY6qAJbNFrFbKVmq==Bj3ry_x5A@mail.gmail.com>
+From: Gioh Kim <gurugio@gmail.com>
+Date: Wed, 14 Feb 2018 09:54:51 +0100
+Message-ID: <CANc8B5OiTBgZy4ez9wbqScCqxmp9G1jzHAkgW-Y8N9Nrtbo7Lg@mail.gmail.com>
+Subject: Re: how to use kexec to jump back to the original kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,129 +29,122 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Cc: linux-s390@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Bhupesh SHARMA <bhupesh.linux@gmail.com>
+Cc: kexec@lists.infradead.org
 
-Hi Philipp,
+On Tue, Feb 13, 2018 at 8:06 PM, Bhupesh SHARMA <bhupesh.linux@gmail.com> wrote:
+> On Tue, Feb 13, 2018 at 8:15 PM, Gioh Kim <gurugio@gmail.com> wrote:
+>> On Tue, Feb 13, 2018 at 3:36 PM, Gioh Kim <gurugio@gmail.com> wrote:
+>>> On Tue, Feb 13, 2018 at 11:06 AM, Gioh Kim <gurugio@gmail.com> wrote:
+>>>> On Mon, Feb 12, 2018 at 7:56 AM, Bhupesh SHARMA <bhupesh.linux@gmail.com> wrote:
+>>>>> Hello,
+>>>>>
+>>>>> On Fri, Feb 9, 2018 at 7:24 PM, Gioh Kim <gurugio@gmail.com> wrote:
+>>>>>> Hello,
+>>>>>>
+>>>>>> "echo c > /proc/sysrq-trigger" generates the kernel dump but it
+>>>>>> reboots the system.
+>>>>>> I'd like to generate kernel dump without system reboot.
+>>>>>>
+>>>>>> I think it is possible to jump to the kdump kernel and generate kernel
+>>>>>> dump, and come back to the operating kernel with kexec.
+>>>>>> I know I can jump to the kdump kernel with "kexec -e" but I cannot
+>>>>>> figure out how to come back to the operating kernel.
+>>>>>>
+>>>>>> For example, I tried following sequences after reading kexec manual page.
+>>>>>>
+>>>>>> 0. rebuild kernel with CONFIG_KEXEC_JUMP option
+>>>>>> 1. kexec --load=/boot/vmlinuz --initrd=/boot/initrd --reuse-cmdline
+>>>>>
+>>>>> Instead you should be using something like:
+>>>>> # kexec -l /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname
+>>>>> -r`.img --reuse-cmdline  --load-preserve-context --mem-min=addr
+>>>>> --mem-max=addr
+>>>>
+>>>> Hello Bhupesh,
+>>>
+>>> I'm sorry to bother you.
+>>> I failed because I booted up wrong kernel without KEXEC_JUMP.
+>>> I can jump to kdump kernel with booting a kernel with KEXEC_JUMP.
+>>> And I can see "kexec_jump_back_entry=0x00000000000810d2" at kernel
+>>> booting parameter.
+>>> Now I can jump to kdump kernel and jump back to the original kernel.
+>>>
+>>> Can I ask just one more question?
+>>> After jumping to kdump kernel, there is not /proc/vmcore file.
+>>> I checked the kernel enabled CONFIG_PROC_VMCORE option.
+>>> What kernel option should I enable to use /proc/vmcore?
+>>> Or should I use another file instead /proc/vmcore?
+>>>
+>>>
+>>
+>> I'm sorry but please let me ask one more question.
+>>
+>> I ran "kexec -e" command on kdump kernel, then it just rebooted the system.
+>> I guess jumping to the original kernel means resuming the original
+>> kernel as it was running.
+>> Did I misunderstand?
+>> Or my machine did not work correctly?
+>
+> Hello,
+>
+> I have replied in another thread (in reply to the documentation patch
+> for kdump jump feature which you sent out today) about this in detail,
+> but to capture my thoughts briefly here, I think you are confusing the
+> 'kexec -l' or loading another kernel and 'kexec -p' or the kdump use
+> cases.
+>
+> Can you please explain whether you are trying the jump feature with
+> 'kexec -l' or 'kexec -p'.
+>
 
-I added AKASHI in cc, he posted arm64 kexec_file series previously.
-I would like to read both series especially the general part, but
-maybe at the end of this month because of a holiday..
+Hello,
 
-From the patch log the cleanup looks nice, but still need read the
-details.
+The another thread about documentation is for documentation.
+So I explain the background here.
 
-On 02/12/18 at 11:07am, Philipp Rudo wrote:
-> Hi everybody
-> 
-> resending the series as there was no reaction, yet. Furthermore i was told
-> that Andrew and the x86 list should also be CCed, so welcome.
-> 
-> No changes made to the patches since first time i sent them. The patches
-> apply to the current master (v4.16-rc1).
-> 
-> Thanks
-> Philipp
-> 
-> ---
-> 
-> this series adds the kexec_file_load system call to s390. Before the system
-> call is added there are some preparations/clean ups to common
-> kexec_file_load. In detail this series contains:
-> 
-> Patch #1&2: Minor cleanups/fixes.
-> 
-> Patch #3-9: Clean up the purgatory load/relocation code. Especially remove
-> the mis-use of the purgatory_info->sechdrs->sh_offset field, currently
-> holding a pointer into either kexec_purgatory (ro) or purgatory_buf (rw)
-> depending on the section. With these patches the section address will be
-> calculated verbosely and sh_offset will contain the offset of the section
-> in the stripped purgatory binary (purgatory_buf).
-> 
-> Patch #10: Allows architectures to set the purgaory load address. This
-> patch is important for s390 as the kernel and purgatory have to be loaded
-> to fixed addresses. In current code this is impossible as the purgatory
-> load is opaque to the architecture.
-> 
-> Patch #11: Moves x86 purgatories sha implementation to common lib/
-> directory.
-> 
-> Patches #12-17 finally adds the kexec_file_load system call to s390.
-> 
-> Please note that I had to touch arch code for x86 and power a little. In
-> theory this should not change the behavior but I don't have a way to test
-> it. Cross-compiling with defconfig(*) works fine for both.
-> 
-> Thanks
-> Philipp
-> 
-> (*) On x86 with the orc unwinder turned off. objtool SEGFAULTs on s390...
-> 
-> Philipp Rudo (17):
->   kexec_file: Silence compile warnings
->   kexec_file: Remove checks in kexec_purgatory_load
->   kexec_file: Make purgatory_info->ehdr const
->   kexec_file: Search symbols in read-only kexec_purgatory
->   kexec_file: Use read-only sections in arch_kexec_apply_relocations*
->   kexec_file: Split up __kexec_load_puragory
->   kexec_file: Simplify kexec_purgatory_setup_sechdrs 1
->   kexec_file: Simplify kexec_purgatory_setup_sechdrs 2
->   kexec_file: Remove mis-use of sh_offset field
->   kexec_file: Allow archs to set purgatory load address
->   kexec_file: Move purgatories sha256 to common code
->   s390/kexec_file: Prepare setup.h for kexec_file_load
->   s390/kexec_file: Add purgatory
->   s390/kexec_file: Add kexec_file_load system call
->   s390/kexec_file: Add image loader
->   s390/kexec_file: Add crash support to image loader
->   s390/kexec_file: Add ELF loader
-> 
->  arch/powerpc/kernel/kexec_elf_64.c             |   9 +-
->  arch/s390/Kbuild                               |   1 +
->  arch/s390/Kconfig                              |   4 +
->  arch/s390/include/asm/kexec.h                  |  23 ++
->  arch/s390/include/asm/purgatory.h              |  17 ++
->  arch/s390/include/asm/setup.h                  |  40 ++-
->  arch/s390/kernel/Makefile                      |   1 +
->  arch/s390/kernel/asm-offsets.c                 |   5 +
->  arch/s390/kernel/compat_wrapper.c              |   1 +
->  arch/s390/kernel/kexec_elf.c                   | 149 ++++++++++
->  arch/s390/kernel/kexec_image.c                 |  78 +++++
->  arch/s390/kernel/machine_kexec_file.c          | 291 +++++++++++++++++++
->  arch/s390/kernel/syscalls/syscall.tbl          |   1 +
->  arch/s390/purgatory/Makefile                   |  37 +++
->  arch/s390/purgatory/head.S                     | 279 ++++++++++++++++++
->  arch/s390/purgatory/purgatory.c                |  42 +++
->  arch/x86/kernel/kexec-bzimage64.c              |   8 +-
->  arch/x86/kernel/machine_kexec_64.c             |  66 ++---
->  arch/x86/purgatory/Makefile                    |   3 +
->  arch/x86/purgatory/purgatory.c                 |   2 +-
->  include/linux/kexec.h                          |  38 +--
->  {arch/x86/purgatory => include/linux}/sha256.h |  10 +-
->  kernel/kexec_file.c                            | 375 ++++++++++++-------------
->  {arch/x86/purgatory => lib}/sha256.c           |   4 +-
->  24 files changed, 1200 insertions(+), 284 deletions(-)
->  create mode 100644 arch/s390/include/asm/purgatory.h
->  create mode 100644 arch/s390/kernel/kexec_elf.c
->  create mode 100644 arch/s390/kernel/kexec_image.c
->  create mode 100644 arch/s390/kernel/machine_kexec_file.c
->  create mode 100644 arch/s390/purgatory/Makefile
->  create mode 100644 arch/s390/purgatory/head.S
->  create mode 100644 arch/s390/purgatory/purgatory.c
->  rename {arch/x86/purgatory => include/linux}/sha256.h (63%)
->  rename {arch/x86/purgatory => lib}/sha256.c (99%)
-> 
-> -- 
-> 2.13.5
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+I'm working for the Cloud company providing qemu-based virtualization service.
+When system has a problem and does not panic yet, we usually migrate
+all guest VMs
+and reboot the system.
+Sometimes log files have a clue for the problem, but in many cases
+there is nothing in log files
+and it's difficult to investigate.
 
-Thanks
-Dave
+What I want to do is generating a kernel dump at the moment when the
+system becomes unstable.
+After migrating all VMs, the system would be clean and I would get no
+clue for the problem.
+So I'd like to generate the kernel dump before migrating VMs and
+cleaning up the system.
+
+Of course, when system paniced, I got kernel dump.
+But it is the worst case because guest VMs also were killed.
+It is the service failure.
+
+I think I'm confused with system snapshot and kernel dump.
+Nevertheless I need a solution to capture the system status without
+panic or reboot.
+
+
+> I remember trying the jump feature with 'kexec -p' some time back and
+> it did not work for me at that time. Although I was able to use the
+> jump feature with 'kexec -l' on the same machine.
+
+'kexec -p' command jumps to kdump kernel on panic, doesn't it?
+I'd like to jump to kdump kernel without panic or reboot, and get back
+to the system kernel
+and continue to service.
+I think that is the jumping between the system kernel and kdump kernel.
+If I misunderstand the meaning of the jump, I'll find another way.
+
+Thank you again ;-)
+
+
+-- 
+
+Best regards,
+Gioh Kim
 
 _______________________________________________
 kexec mailing list
