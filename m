@@ -1,21 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x231.google.com ([2a00:1450:400c:c09::231])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1elteg-0008To-NS
- for kexec@lists.infradead.org; Wed, 14 Feb 2018 09:47:12 +0000
-Received: by mail-wm0-x231.google.com with SMTP id t74so21398677wme.3
- for <kexec@lists.infradead.org>; Wed, 14 Feb 2018 01:47:00 -0800 (PST)
+ id 1eltmd-000608-F7
+ for kexec@lists.infradead.org; Wed, 14 Feb 2018 09:55:40 +0000
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w1E9t7gc071311
+ for <kexec@lists.infradead.org>; Wed, 14 Feb 2018 04:55:09 -0500
+Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2g4heqkn6q-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 14 Feb 2018 04:55:08 -0500
+Received: from localhost
+ by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
+ Wed, 14 Feb 2018 09:54:55 -0000
+Date: Wed, 14 Feb 2018 10:54:49 +0100
+From: Philipp Rudo <prudo@linux.vnet.ibm.com>
+Subject: Re: [PATCH 00/17] Add kexec_file_load support to s390
+In-Reply-To: <20180214073543.GA12328@dhcp-128-65.nay.redhat.com>
+References: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
+ <20180214073543.GA12328@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFTCetRkDUW5UA_JyG5sA9z_Ue7g97134VB=3-oUcC3wSi7JkA@mail.gmail.com>
-References: <20180213152236.31413-1-gi-oh.kim@profitbricks.com>
- <20180214014329.GA2756@dhcp-128-65.nay.redhat.com>
- <CAJX1YtaLFnCM1t=3BhFSW=i-G3T9XWm_LHnfk9k9A+Nwo-M9og@mail.gmail.com>
- <CAFTCetRkDUW5UA_JyG5sA9z_Ue7g97134VB=3-oUcC3wSi7JkA@mail.gmail.com>
-From: Gi-Oh Kim <gi-oh.kim@profitbricks.com>
-Date: Wed, 14 Feb 2018 10:46:18 +0100
-Message-ID: <CAJX1YtbHqTBKa3Nnt__aB-H4QX0N7mZLvoHLa3SvzKEVhtew7w@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: kdump: describe jumping to dump-capture
- kernel
+Message-Id: <20180214105449.1325bfbe@ThinkPad>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,95 +33,156 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh SHARMA <bhupesh.linux@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: linux-s390@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-T24gV2VkLCBGZWIgMTQsIDIwMTggYXQgMTA6MTcgQU0sIEJodXBlc2ggU0hBUk1BCjxiaHVwZXNo
-LmxpbnV4QGdtYWlsLmNvbT4gd3JvdGU6Cj4gT24gV2VkLCBGZWIgMTQsIDIwMTggYXQgMjozMiBQ
-TSwgR2ktT2ggS2ltIDxnaS1vaC5raW1AcHJvZml0YnJpY2tzLmNvbT4gd3JvdGU6Cj4+IE9uIFdl
-ZCwgRmViIDE0LCAyMDE4IGF0IDI6NDMgQU0sIERhdmUgWW91bmcgPGR5b3VuZ0ByZWRoYXQuY29t
-PiB3cm90ZToKPj4+IEhpLAo+Pj4gT24gMDIvMTMvMTggYXQgMDQ6MjJwbSwgR2lvaCBLaW0gd3Jv
-dGU6Cj4+Pj4gSnVtcGluZyBiZXR3ZWVuIHRoZSBzeXN0ZW0ga2VybmVsIGFuZCB0aGUgZHVtcC1j
-YXB0dXJlIGtlcm5lbAo+Pj4+IGhhcyBiZWVuIHN1cHBvcnRlZCBmb3IgbG9uZyB0aW1lIGJ1dCB0
-aGVyZSBpcyBubyBkZXNjcmlwdGlvbgo+Pj4+IGhvdyB0byB1c2UgaXQuIFRoaXMgcGF0Y2ggYWRk
-cyB0aGUgZGVzY3JpcHRpb24gaG93IHRvIHVzZSBrZXhlYyB0b29sCj4+Pj4gdG8ganVtcCB0byB0
-aGUgZHVtcC1jYXB0dXJlIGtlcm5lbCBhbmQganVtcCBiYWNrIHRvIHRoZSBzeXN0ZW0ga2VybmVs
-Lgo+Pj4KPj4+IEkgZG8gbm90IHRoaW5rIHRoaXMgc2hvdWxkIGJlbG9uZyB0byBrZHVtcCBkb2N1
-bWVudGF0aW9uLiAgVGhlcmUgYXJlIGEKPj4+IGxvdCBvZiBjaG9pY2VzIGFmdGVyIGEgdm1jb3Jl
-IHNhdmluZywgb25lIGNhbiByZWJvb3QsIGhhbHQsIGV2ZW4gZ28KPj4+IGFoZWFkIHdpdGggcmVh
-bCByb290IGZpbGVzeXN0ZW0gaW5pdCBwYXRoLiAgV2UgZG8gbm90IG5lZWQgdG8gZG9jdW1lbnQK
-Pj4+IGFsbCB0aGVzZSBpbiBrZHVtcC50eHQuCj4+Pgo+Pj4gU2luY2UgaXQgaXMgYSBnZW5lcmFs
-IHVzZSBjYXNlIG5vdCBvbmx5IGZvciBrZHVtcCwgYWRkIG1vcmUgaW5mbyBpbgo+Pj4ga2V4ZWMg
-bWFuIHBhZ2Ugd291bGQgYmUgYmV0dGVyLgo+Pgo+PiBIaSwKPj4KPj4gV2hlbmV2ZXIgSSBmaW5k
-IGEga2VybmVsIG9wdGlvbiwgSSBzZWFyY2ggRG9jdW1lbnRhdGlvbiBmaWxlcywgYW5kCj4+IG5l
-eHQgaXMgZ29vZ2xlLgo+PiBTbyBJIHRoaW5rIGl0IHdvdWxkIGJlIGJldHRlciB0byBkZXNjcmli
-ZSBob3cgdG8gdXNlIGEga2VybmVsIG9wdGlvbgo+PiBvciBrZXJuZWwgZmVhdHVyZSBpbiBrZXJu
-ZWwgZG9jdW1lbnQuCj4KPiBCdXQgdGhpcyBpcyBub3QgdGhlIGtlcm5lbCBkb2N1bWVudGF0aW9u
-IGZvciBrZXhlYyB3YXJtIHJlYm9vdC4KPiBJbnN0ZWFkIHRoaXMgaXMgdGhlIGtkdW1wIGRvY3Vt
-ZW50YXRpb24uIFRoZSBleGFtcGxlIHlvdSBxdW90ZWQgYWJvdmUKPiBpcyB0aGUgJ2tleGVjIC1s
-JyB1c2UgY2FzZSBhbmQgbm90ICdrZXhlYyAtcCcuCgoKSSB0aG91Z2h0IGVuYWJsaW5nIENPTkZJ
-R19LRVhFQ19KVU1QIGluIGtlcm5lbCBpcyB0aGUgbWFpbiB0b3BpYwphbmQgZGVzY3JpYmluZyAn
-a2V4ZWMgLWwnIGlzIHNob3dpbmcgaG93IHRvIHVzZSB0aGUgQ09ORklHX0tFWEVDX0pVTVAgb3B0
-aW9uLgpPaywgSSdsbCBjaGVjayB0aGUgbWFudWFsIHBhZ2Ugb2Yga2V4ZWMuCkkgdGhpbmsgaXQg
-d291bGQgYmUgZW5vdWdoIGlmIEkgYWRkIGEgc2hvcnQgbm90ZSBmb3IgLWwgYW5kCi0tbG9hZC1w
-cmVzZXJ2ZS1jb250ZXh0IGFib3V0IHRoZSBrZXJuZWwgb3B0aW9uLgoKVGhhbmsgeW91IDstKQoK
-Cj4KPiBSYXRoZXIgdGhlIG1hbiBwYWdlIGZvciBrZXhlYy10b29scyBzaG91bGQgYmUgYSBnb29k
-IHBsYWNlIHRvIGluY2x1ZGUKPiB0aGlzIGRvY3VtZW50YXRpb24uCj4KPiBSZWdhcmRzLAo+IEJo
-dXBlc2gKPgo+Pj4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IEdpb2ggS2ltIDxnaS1vaC5raW1A
-cHJvZml0YnJpY2tzLmNvbT4KPj4+PiAtLS0KPj4+PiAgRG9jdW1lbnRhdGlvbi9rZHVtcC9rZHVt
-cC50eHQgfCAzOCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+Pj4+ICAx
-IGZpbGUgY2hhbmdlZCwgMzggaW5zZXJ0aW9ucygrKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24va2R1bXAva2R1bXAudHh0IGIvRG9jdW1lbnRhdGlvbi9rZHVtcC9rZHVtcC50
-eHQKPj4+PiBpbmRleCA1MTgxNDQ1MGE3ZjguLjM1YjcxZmVmNWQ4OCAxMDA2NDQKPj4+PiAtLS0g
-YS9Eb2N1bWVudGF0aW9uL2tkdW1wL2tkdW1wLnR4dAo+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
-a2R1bXAva2R1bXAudHh0Cj4+Pj4gQEAgLTQ2MCw2ICs0NjAsNDQgQEAgYW5kIHRoZSBzeXN0ZW0g
-d2lsbCBib290IGludG8gdGhlIGR1bXAtY2FwdHVyZSBrZXJuZWwuCj4+Pj4gIEZvciB0ZXN0aW5n
-IHB1cnBvc2VzLCB5b3UgY2FuIHRyaWdnZXIgYSBjcmFzaCBieSB1c2luZyAiQUxULVN5c1JxLWMi
-LAo+Pj4+ICAiZWNobyBjID4gL3Byb2Mvc3lzcnEtdHJpZ2dlciIgb3Igd3JpdGUgYSBtb2R1bGUg
-dG8gZm9yY2UgdGhlIHBhbmljLgo+Pj4+Cj4+Pj4gK0p1bXAgYmV0d2VlbiB0aGUgU3lzdGVtIGtl
-cm5lbCBhbmQgdGhlIER1bXAtY2FwdHVyZSBrZXJuZWwKPj4+PiArPT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PQo+Pj4+ICsKPj4+PiArV2l0aG91dCBzeXN0ZW0gY3Jhc2gsIHRoZSBzeXN0
-ZW0gY2FuIGp1bXAgdG8gdGhlIGR1bXAtY2FwdHVyZSBrZXJuZWwuCj4+Pj4gKwo+Pj4+ICsxKSBF
-bmFibGUgImp1bXAgYmV0d2VlbiBzeXN0ZW0ga2VybmVsIGFuZCBkdW1wLWNhcHR1cmUga2VybmVs
-IiBzdXBwb3J0IHVuZGVyCj4+Pj4gKyAgICJQcm9jZXNzb3IgdHlwZSBhbmQgZmVhdHVyZXMiCj4+
-Pj4gKwo+Pj4+ICsgICBDT05GSUdfS0VYRUNfSlVNUD15Cj4+Pj4gKwo+Pj4+ICsyKSBMb2FkIHRo
-ZSBkdW1wLWNhcHR1cmUga2VybmVsIHdpdGggLS1sb2FkLXByZXNlcnZlLWNvbnRleHQgYW5kIG1l
-bS1tYXgKPj4+PiArICAgb3B0aW9ucyBhcyBmb2xsb3dpbmcuCj4+Pj4gKwo+Pj4+ICsgICBrZXhl
-YyAtbCA8ZHVtcC1jYXB0dXJlLWtlcm5lbC12bWxpbnV4LWltYWdlPiBcCj4+Pj4gKyAgIC0taW5p
-dHJkPTxpbml0cmQtZm9yLWR1bXAtY2FwdHVyZS1rZXJuZWw+IC0tYXJncy1saW51eCBcCj4+Pj4g
-KyAgIC0tYXBwZW5kPSJyb290PTxyb290LWRldj4gPGFyY2gtc3BlY2lmaWMtb3B0aW9ucz4iIFwK
-Pj4+PiArICAgLS1sb2FkLXByZXNlcnZlLWNvbnRleHQgXAo+Pj4+ICsgICAtLW1lbS1tYXg9PHRo
-ZSBoaWdoZXN0IG1lbW9yeSBhZGRyZXNzIGFkZHIgdG8gbG9hZCBjb2RlIGludG8+Cj4+Pj4gKwo+
-Pj4+ICszKSBKdW1wIHRvIHRoZSBsb2FkZWQga2VybmVsCj4+Pj4gKwo+Pj4+ICsgICBrZXhlYyAt
-ZQo+Pj4+ICsKPj4+PiArTm93IHRoZSBzeXN0ZW0gaXMgcnVubmluZyB3aXRoIHRoZSBkdW1wLWNh
-cHR1cmUga2VybmVsLiBZb3UgY2FuIGp1bXAgYmFjawo+Pj4+ICt0byB0aGUgc3lzdGVtIGtlcm5l
-bC4KPj4+PiArCj4+Pj4gKzEpIEZpbmQga2V4ZWNfanVtcF9iYWNrX2VudHJ5IGFkZHJlc3MgaW4g
-a2VybmVsIGJvb3RpbmcgcGFyYW1ldGVycyBpbgo+Pj4+ICsgICAvcHJvYy9jbWRsaW5lLiBUaGF0
-IGlzIHRoZSBhZGRyZXNzIGZvciBrZXhlYyB0byBqdW1wIHRvLiBGb3IgZXhhbXBsZToKPj4+PiAr
-ICAga2V4ZWNfanVtcF9iYWNrX2VudHJ5PTB4MDAwMDAwMDAwMDA4MTBkMgo+Pj4+ICsKPj4+PiAr
-MikgRm9sbG93aW5nIGNvbW1hbmQgc2V0cyB0aGUganVtcC1iYWNrIGFkZHJlc3MgZm9yIGtleGVj
-Lgo+Pj4+ICsKPj4+PiArICAga2V4ZWMgLS1sb2FkLWp1bXAtYmFjay1oZWxwZXIgLS1lbnRyeT0w
-eDgxMGQyCj4+Pj4gKwo+Pj4+ICszKSBKdW1wIHRvIHRoZSBzeXN0ZW0ga2VybmVsCj4+Pj4gKwo+
-Pj4+ICsgICBrZXhlYyAtZQo+Pj4+ICsKPj4+PiAgV3JpdGUgT3V0IHRoZSBEdW1wIEZpbGUKPj4+
-PiAgPT09PT09PT09PT09PT09PT09PT09PT0KPj4+Pgo+Pj4+IC0tCj4+Pj4gMi4xMS4wCj4+Pj4K
-Pj4+Cj4+PiBUaGFua3MKPj4+IERhdmUKPj4KPj4KPj4KPj4gLS0KPj4gR0lPSCBLSU0KPj4gTGlu
-dXggS2VybmVsIEVudHdpY2tsZXIKPj4KPj4gUHJvZml0QnJpY2tzIEdtYkgKPj4gR3JlaWZzd2Fs
-ZGVyIFN0ci4gMjA3Cj4+IEQgLSAxMDQwNSBCZXJsaW4KPj4KPj4gVGVsOiAgICAgICArNDkgMTc2
-IDI2OTcgODk2Mgo+PiBGYXg6ICAgICAgKzQ5IDMwIDU3NyAwMDggMjk5Cj4+IEVtYWlsOiAgICBn
-aS1vaC5raW1AcHJvZml0YnJpY2tzLmNvbQo+PiBVUkw6ICAgICAgaHR0cHM6Ly93d3cucHJvZml0
-YnJpY2tzLmRlCj4+Cj4+IFNpdHogZGVyIEdlc2VsbHNjaGFmdDogQmVybGluCj4+IFJlZ2lzdGVy
-Z2VyaWNodDogQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcsIEhSQiAxMjU1MDYgQgo+PiBHZXNj
-aMOkZnRzZsO8aHJlcjogQWNoaW0gV2Vpc3MsIE1hdHRoaWFzIFN0ZWluYmVyZwoKCgotLSAKR0lP
-SCBLSU0KTGludXggS2VybmVsIEVudHdpY2tsZXIKClByb2ZpdEJyaWNrcyBHbWJICkdyZWlmc3dh
-bGRlciBTdHIuIDIwNwpEIC0gMTA0MDUgQmVybGluCgpUZWw6ICAgICAgICs0OSAxNzYgMjY5NyA4
-OTYyCkZheDogICAgICArNDkgMzAgNTc3IDAwOCAyOTkKRW1haWw6ICAgIGdpLW9oLmtpbUBwcm9m
-aXRicmlja3MuY29tClVSTDogICAgICBodHRwczovL3d3dy5wcm9maXRicmlja3MuZGUKClNpdHog
-ZGVyIEdlc2VsbHNjaGFmdDogQmVybGluClJlZ2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQgQ2hh
-cmxvdHRlbmJ1cmcsIEhSQiAxMjU1MDYgQgpHZXNjaMOkZnRzZsO8aHJlcjogQWNoaW0gV2Vpc3Ms
-IE1hdHRoaWFzIFN0ZWluYmVyZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Dave,
+
+I just browsed AKASHI's patches (v7). The way I see it the common code changes
+are on different areas of kexec_file and shouldn't get in conflict. Only in the
+arch code (s390 and arm64) some function calls might need an update. But I have
+to take a closer look on the patches first.
+
+@AKASHI: Welcome to the list. While browsing I couldn't find any
+arch_apply_relocation function for arm64. These require the biggest changes in
+my patch set. Did I just miss it or does arm64 work differently?
+
+@Dave: Happy holiday
+
+Thanks
+Philipp
+
+On Wed, 14 Feb 2018 15:35:43 +0800
+Dave Young <dyoung@redhat.com> wrote:
+
+> Hi Philipp,
+> 
+> I added AKASHI in cc, he posted arm64 kexec_file series previously.
+> I would like to read both series especially the general part, but
+> maybe at the end of this month because of a holiday..
+> 
+> From the patch log the cleanup looks nice, but still need read the
+> details.
+> 
+> On 02/12/18 at 11:07am, Philipp Rudo wrote:
+> > Hi everybody
+> > 
+> > resending the series as there was no reaction, yet. Furthermore i was told
+> > that Andrew and the x86 list should also be CCed, so welcome.
+> > 
+> > No changes made to the patches since first time i sent them. The patches
+> > apply to the current master (v4.16-rc1).
+> > 
+> > Thanks
+> > Philipp
+> > 
+> > ---
+> > 
+> > this series adds the kexec_file_load system call to s390. Before the system
+> > call is added there are some preparations/clean ups to common
+> > kexec_file_load. In detail this series contains:
+> > 
+> > Patch #1&2: Minor cleanups/fixes.
+> > 
+> > Patch #3-9: Clean up the purgatory load/relocation code. Especially remove
+> > the mis-use of the purgatory_info->sechdrs->sh_offset field, currently
+> > holding a pointer into either kexec_purgatory (ro) or purgatory_buf (rw)
+> > depending on the section. With these patches the section address will be
+> > calculated verbosely and sh_offset will contain the offset of the section
+> > in the stripped purgatory binary (purgatory_buf).
+> > 
+> > Patch #10: Allows architectures to set the purgaory load address. This
+> > patch is important for s390 as the kernel and purgatory have to be loaded
+> > to fixed addresses. In current code this is impossible as the purgatory
+> > load is opaque to the architecture.
+> > 
+> > Patch #11: Moves x86 purgatories sha implementation to common lib/
+> > directory.
+> > 
+> > Patches #12-17 finally adds the kexec_file_load system call to s390.
+> > 
+> > Please note that I had to touch arch code for x86 and power a little. In
+> > theory this should not change the behavior but I don't have a way to test
+> > it. Cross-compiling with defconfig(*) works fine for both.
+> > 
+> > Thanks
+> > Philipp
+> > 
+> > (*) On x86 with the orc unwinder turned off. objtool SEGFAULTs on s390...
+> > 
+> > Philipp Rudo (17):
+> >   kexec_file: Silence compile warnings
+> >   kexec_file: Remove checks in kexec_purgatory_load
+> >   kexec_file: Make purgatory_info->ehdr const
+> >   kexec_file: Search symbols in read-only kexec_purgatory
+> >   kexec_file: Use read-only sections in arch_kexec_apply_relocations*
+> >   kexec_file: Split up __kexec_load_puragory
+> >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 1
+> >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 2
+> >   kexec_file: Remove mis-use of sh_offset field
+> >   kexec_file: Allow archs to set purgatory load address
+> >   kexec_file: Move purgatories sha256 to common code
+> >   s390/kexec_file: Prepare setup.h for kexec_file_load
+> >   s390/kexec_file: Add purgatory
+> >   s390/kexec_file: Add kexec_file_load system call
+> >   s390/kexec_file: Add image loader
+> >   s390/kexec_file: Add crash support to image loader
+> >   s390/kexec_file: Add ELF loader
+> > 
+> >  arch/powerpc/kernel/kexec_elf_64.c             |   9 +-
+> >  arch/s390/Kbuild                               |   1 +
+> >  arch/s390/Kconfig                              |   4 +
+> >  arch/s390/include/asm/kexec.h                  |  23 ++
+> >  arch/s390/include/asm/purgatory.h              |  17 ++
+> >  arch/s390/include/asm/setup.h                  |  40 ++-
+> >  arch/s390/kernel/Makefile                      |   1 +
+> >  arch/s390/kernel/asm-offsets.c                 |   5 +
+> >  arch/s390/kernel/compat_wrapper.c              |   1 +
+> >  arch/s390/kernel/kexec_elf.c                   | 149 ++++++++++
+> >  arch/s390/kernel/kexec_image.c                 |  78 +++++
+> >  arch/s390/kernel/machine_kexec_file.c          | 291 +++++++++++++++++++
+> >  arch/s390/kernel/syscalls/syscall.tbl          |   1 +
+> >  arch/s390/purgatory/Makefile                   |  37 +++
+> >  arch/s390/purgatory/head.S                     | 279 ++++++++++++++++++
+> >  arch/s390/purgatory/purgatory.c                |  42 +++
+> >  arch/x86/kernel/kexec-bzimage64.c              |   8 +-
+> >  arch/x86/kernel/machine_kexec_64.c             |  66 ++---
+> >  arch/x86/purgatory/Makefile                    |   3 +
+> >  arch/x86/purgatory/purgatory.c                 |   2 +-
+> >  include/linux/kexec.h                          |  38 +--
+> >  {arch/x86/purgatory => include/linux}/sha256.h |  10 +-
+> >  kernel/kexec_file.c                            | 375 ++++++++++++-------------
+> >  {arch/x86/purgatory => lib}/sha256.c           |   4 +-
+> >  24 files changed, 1200 insertions(+), 284 deletions(-)
+> >  create mode 100644 arch/s390/include/asm/purgatory.h
+> >  create mode 100644 arch/s390/kernel/kexec_elf.c
+> >  create mode 100644 arch/s390/kernel/kexec_image.c
+> >  create mode 100644 arch/s390/kernel/machine_kexec_file.c
+> >  create mode 100644 arch/s390/purgatory/Makefile
+> >  create mode 100644 arch/s390/purgatory/head.S
+> >  create mode 100644 arch/s390/purgatory/purgatory.c
+> >  rename {arch/x86/purgatory => include/linux}/sha256.h (63%)
+> >  rename {arch/x86/purgatory => lib}/sha256.c (99%)
+> > 
+> > -- 
+> > 2.13.5
+> > 
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec  
+> 
+> Thanks
+> Dave
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
