@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-wm0-x242.google.com ([2a00:1450:400c:c09::242])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eme7P-0002BR-Fv
- for kexec@lists.infradead.org; Fri, 16 Feb 2018 11:24:11 +0000
-Received: by mail-wm0-x242.google.com with SMTP id j21so5097425wmh.1
- for <kexec@lists.infradead.org>; Fri, 16 Feb 2018 03:23:44 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <CAFTCetTT4h7k7gtbm_T41qrg=Sr98ubknPdCnpcS6=opC57fkg@mail.gmail.com>
-References: <20180215114419.12705-1-gi-oh.kim@profitbricks.com>
- <CAFTCetTT4h7k7gtbm_T41qrg=Sr98ubknPdCnpcS6=opC57fkg@mail.gmail.com>
-From: Gi-Oh Kim <gi-oh.kim@profitbricks.com>
-Date: Fri, 16 Feb 2018 12:23:02 +0100
-Message-ID: <CAJX1YtaAB2zfyF2s4fzjFkCJsU4ZnWHOAO=cnGcch0oZ+4cScQ@mail.gmail.com>
-Subject: Re: [PATCH] add description for jumping back to the original kernel
- in man page
+ id 1eme8z-0003h4-RP
+ for kexec@lists.infradead.org; Fri, 16 Feb 2018 11:25:42 +0000
+Received: by mail-wm0-x242.google.com with SMTP id v71so2543705wmv.2
+ for <kexec@lists.infradead.org>; Fri, 16 Feb 2018 03:25:23 -0800 (PST)
+From: Gioh Kim <gi-oh.kim@profitbricks.com>
+Subject: [PATCH v2] add description for jumping back to the primary kernel in
+ man page
+Date: Fri, 16 Feb 2018 12:25:14 +0100
+Message-Id: <20180216112514.28584-1-gi-oh.kim@profitbricks.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,71 +18,87 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh SHARMA <bhupesh.linux@gmail.com>
-Cc: kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>
+To: kexec@lists.infradead.org
+Cc: bhupesh.linux@gmail.com, Gioh Kim <gi-oh.kim@profitbricks.com>, bhe@redhat.com
 
-T24gVGh1LCBGZWIgMTUsIDIwMTggYXQgNzo1NCBQTSwgQmh1cGVzaCBTSEFSTUEgPGJodXBlc2gu
-bGludXhAZ21haWwuY29tPiB3cm90ZToKPiBIaSwKPgo+IFNvbWUgbml0cGlja3MgaW5saW5lLi4K
-CkkgdGhhbmsgeW91IGFnYWluIGZvciB5b3VyIHJldmlldy4KSSdsbCBzZW5kIHRoZSBzZWNvbmQg
-dmVyc2lvbiBwYXRjaCBzb29uLgoKPgo+IE9uIFRodSwgRmViIDE1LCAyMDE4IGF0IDU6MTQgUE0s
-IEdpb2ggS2ltIDxnaS1vaC5raW1AcHJvZml0YnJpY2tzLmNvbT4gd3JvdGU6Cj4+ICItLWxvYWQt
-cHJlc2VydmUtY29udGV4dCIsICItLWxvYWQtanVtcC1iYWNrLWhlbHBlciIgYW5kICItLWVudHJ5
-Igo+PiBvcHRpb25zIGFyZSBkZXNjcmliZWQgc2VwYXJhdGVseSBidXQgdGhlcmUgaXMgbm90IGFu
-eSBkZXNjcmlwdGlvbgo+PiBob3cgdG8gdXNlIHRoZW0uCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEdp
-b2ggS2ltIDxnaS1vaC5raW1AcHJvZml0YnJpY2tzLmNvbT4KPj4gLS0tCj4+ICBrZXhlYy9rZXhl
-Yy44IHwgMzAgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdl
-ZCwgMzAgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEva2V4ZWMva2V4ZWMuOCBiL2tl
-eGVjL2tleGVjLjgKPj4gaW5kZXggZTAxMzFiNC4uYjdhYzAyOCAxMDA2NDQKPj4gLS0tIGEva2V4
-ZWMva2V4ZWMuOAo+PiArKysgYi9rZXhlYy9rZXhlYy44Cj4+IEBAIC0zMCw2ICszMCw5IEBAIHdo
-ZW4gY29uZmlndXJpbmcgdGhlIGtlcm5lbC4gVGhlCj4+ICBvcHRpb24gZW5hYmxlcyB0aGUKPj4g
-IC5CIGtleGVjCj4+ICBzeXN0ZW0gY2FsbC4KPj4gK0FmdGVyIGJvb3RpbmcgaW50byBhbm90aGVy
-IGtlcm5lbCwgeW91IGNhbiBqdW1wIGJhY2sgdG8gdGhlIGZpcnN0IGtlcm5lbCB3aXRoIGVuYWJs
-aW5nCj4KPiBJIHdvdWxkIHN1Z2dlc3QgdXNpbmcgdGhlIGFscmVhZHkgcHJldmFsZW50IG5hbWlu
-ZyBjb252ZW50aW9ucyAtIHByaW1hcnkga2VybmVsCj4gYW5kIHNlY29uZGFyeSBrZXJuZWwgZm9y
-IHRoZSB0d28ga2VybmVscy4KPgo+PiArLkIgQ09ORklHX0tFWEVDX0pVTVAKPj4gK29wdGlvbiAo
-eDg2IG9ubHkpLgo+Cj4gSSB0aGluayB0aGlzIGlzIGFsc28gc3VwcG9ydGVkIG9uIHNoIGFyY2hp
-dGVjdHVyZSwgc28gbWF5IGJlIHlvdSBjYW4KPiByZXdvcmQgdGhpcyB0byBzb21ldGhpbmcgbGlr
-ZToKPiAoY3VycmVudGx5IG9ubHkgeDg2IGFuZCBzaCBhcmNoaXRlY3R1cmVzIGFyZSBzdXBwb3J0
-ZWQpLgo+Cj4+ICAuU0ggVVNBR0UKPj4gIFVzaW5nCj4+ICAuQiBrZXhlYwo+PiBAQCAtMTAyLDYg
-KzEwNSwzMCBAQCBjb21tYW5kOgo+PiAgLkJSIGtleGVjIFwgXC1lCj4+ICAuUkUKPj4KPj4gK0Fm
-dGVyIGJvb3RpbmcgdGhlIGtlcm5lbCwgeW91IGNhbiBqdW1wIGJhY2sgdG8gdGhlIGZpcnN0IGtl
-cm5lbCBpZiB5b3UgZW5hYmxlCj4+ICsuQiBDT05GSUdfS0VYRUNfSlVNUAo+PiAra2VybmVsIG9w
-dGlvbiBhbmQgc3BlY2lmeSBcLVwtbG9hZFwtcHJlc2VydmVcLWNvbnRleHQgb3B0aW9uLgo+Cj4g
-RG8gd2UgbmVlZCB0byByZXBlYXQgdGhlIGRldGFpbHMgb2YgQ09ORklHX0tFWEVDX0pVTVAgaGVy
-ZSBhbmQgYmVsb3csCj4gYXMgd2UgaGF2ZSBhbHJlYWR5IHRoZSBjYXB0dXJlZCB0aGUgc2FtZSBh
-Ym92ZS4KPgo+PiArWW91IGNhbiBzZWUKPgo+ICAgICAgICAgICAgICAgICAgICAgIF5eXiBzcGVj
-aWZ5IChpbnN0ZWFkIG9mIHNlZSkKPgo+PiArLkJSICJrZXhlY19qdW1wX2JhY2tfZW50cnk9PGFk
-ZHJlc3M+Igo+PiAra2VybmVsIHBhcmFtZXRlciBpbiAvcHJvYy9jbWRsaW5lIGZpbGUsIGZvciBl
-eGFtcGxlOgo+PiArCj4+ICsuUlMKPj4gKy5CUiAia2V4ZWNfanVtcF9iYWNrX2VudHJ5PTB4MDAw
-MDAwMDAwMDA4MTBkMiIKPgo+IEJldHRlciB0byBzcGVjaWZ5IGxpdGVyYWwgYWRkciBpbnN0ZWFk
-IG9mIHNwZWNpZnlpbmcgYSB2YWx1ZSBoZXJlLgo+Cj4+ICsuUkUKPj4gKwo+PiArRnJpc3QgeW91
-IG5lZWQgdG8gcHJlcGFyZSBqdW1wIHdpdGggXC1cLWxvYWRcLWp1bXBcLWJhY2tcLWhlbHBlciBh
-bmQgXC1cLWVudHJ5IG9wdGlvbnMuCj4KPiAgICAgIF5eXiBGaXJzdCAocmF0aGVyIHRoYW4gRnJp
-c3QpCj4KPj4gKwo+PiArLlJTCj4+ICsuQiBrZXhlYwo+PiArLlJCIFwtXC1sb2FkXC1qdW1wXC1i
-YWNrXC1oZWxwZXIgXC1cLWVudHJ5PTB4ODEwZDIKPgo+IEJldHRlciB0byB1c2UgbGl0ZXJhbCBh
-ZGRyIGluc3RlYWQgb2Ygc3BlY2lmeWluZyBhIHBhcnRpY3VsYXIgdmFsdWUKPiBoZXJlLCB0byBr
-ZWVwIHRoZSBtYW4gcGFnZSBnZW5lcmljLgo+Cj4gUmVnYXJkcywKPiBCaHVwZXNoCj4KPj4gKy5S
-RQo+PiArCj4+ICtUaGVuIHRoZSBmaXJzdCBrZXJuZWwgY2FuIGJlIHJlYm9vdGVkIHVzaW5nIHRo
-ZSBjb21tYW5kOgo+PiArCj4+ICsuUlMKPj4gKy5CUiBrZXhlYyBcIFwtZQo+PiArLlJFCj4+ICsK
-Pj4gIC5TSCBPUFRJT05TCj4+ICAuVFAKPj4gIC5CIFwtZFwgKFwtXC1kZWJ1ZykKPj4gQEAgLTE3
-Myw2ICsyMDAsOSBAQCBTcGVjaWZ5IHRoZSBqdW1wIGJhY2sgYWRkcmVzcy4gKDAgbWVhbnMgaXQn
-cyBub3QganVtcCBiYWNrIG9yIHByZXNlcnZlIGNvbnRleHQpCj4+ICAuVFAKPj4gIC5CSSBcLVwt
-bG9hZFwtcHJlc2VydmVcLWNvbnRleHQKPj4gIExvYWQgdGhlIG5ldyBrZXJuZWwgYW5kIHByZXNl
-cnZlIGNvbnRleHQgb2YgY3VycmVudCBrZXJuZWwgZHVyaW5nIGtleGVjLgo+PiArKGtleGVjIHJl
-dHVybnMgZXJyb3IgaWYKPj4gKy5CIENPTkZJR19LRVhFQ19KVU1QCj4+ICtpcyBub3QgZW5hYmxl
-ZCkKPj4gIC5UUAo+PiAgLkJJIFwtXC1sb2FkXC1qdW1wXC1iYWNrXC1oZWxwZXIKPj4gIExvYWQg
-YSBoZWxwZXIgaW1hZ2UgdG8ganVtcCBiYWNrIHRvIG9yaWdpbmFsIGtlcm5lbC4KPj4gLS0KPj4g
-Mi4xNC4xCj4+CgoKCi0tIApHSU9IIEtJTQpMaW51eCBLZXJuZWwgRW50d2lja2xlcgoKUHJvZml0
-QnJpY2tzIEdtYkgKR3JlaWZzd2FsZGVyIFN0ci4gMjA3CkQgLSAxMDQwNSBCZXJsaW4KClRlbDog
-ICAgICAgKzQ5IDE3NiAyNjk3IDg5NjIKRmF4OiAgICAgICs0OSAzMCA1NzcgMDA4IDI5OQpFbWFp
-bDogICAgZ2ktb2gua2ltQHByb2ZpdGJyaWNrcy5jb20KVVJMOiAgICAgIGh0dHBzOi8vd3d3LnBy
-b2ZpdGJyaWNrcy5kZQoKU2l0eiBkZXIgR2VzZWxsc2NoYWZ0OiBCZXJsaW4KUmVnaXN0ZXJnZXJp
-Y2h0OiBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVyZywgSFJCIDEyNTUwNiBCCkdlc2Now6RmdHNm
-w7xocmVyOiBBY2hpbSBXZWlzcywgTWF0dGhpYXMgU3RlaW5iZXJnCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2tleGVjCg==
+"--load-preserve-context", "--load-jump-back-helper" and "--entry"
+options are described separately but there is not any description
+how to use them.
+
+Signed-off-by: Gioh Kim <gi-oh.kim@profitbricks.com>
+---
+ kexec/kexec.8 | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/kexec/kexec.8 b/kexec/kexec.8
+index e0131b4..675a285 100644
+--- a/kexec/kexec.8
++++ b/kexec/kexec.8
+@@ -30,6 +30,9 @@ when configuring the kernel. The
+ option enables the
+ .B kexec
+ system call.
++After booting into secondary kernel, you can jump back to the primary kernel with enabling
++.B CONFIG_KEXEC_JUMP
++option (x86 and sh only).
+ .SH USAGE
+ Using
+ .B kexec
+@@ -94,7 +97,7 @@ then you would use the following command to load the kernel:
+ .RB \-l\  /boot/vmlinux
+ .RB "\-\-append=" "root=/dev/hda1" "\ \-\-initrd=" /boot/initrd
+ .RE
+-.PP
++
+ After this kernel is loaded, it can be booted to at any time using the
+ command:
+ 
+@@ -102,6 +105,25 @@ command:
+ .BR kexec \ \-e
+ .RE
+ 
++For jumping back to the primary kernel, you need to prepare the jump with following command:
++
++.RS
++.B kexec
++.RB \-\-load\-jump\-back\-helper \ \-\-entry=<address>
++.RE
++
++The
++.BR <address>
++value is specified by
++.BR kexec_jump_back_entry=<address>
++kernel parameter in /proc/cmdline. Then the primary kernel can be booted
++using the command:
++
++.RS
++.BR kexec \ \-e
++.RE
++.PP
++
+ .SH OPTIONS
+ .TP
+ .B \-d\ (\-\-debug)
+@@ -173,6 +195,9 @@ Specify the jump back address. (0 means it's not jump back or preserve context)
+ .TP
+ .BI \-\-load\-preserve\-context
+ Load the new kernel and preserve context of current kernel during kexec.
++(kexec returns error if
++.B CONFIG_KEXEC_JUMP
++is not enabled)
+ .TP
+ .BI \-\-load\-jump\-back\-helper
+ Load a helper image to jump back to original kernel.
+-- 
+2.14.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
