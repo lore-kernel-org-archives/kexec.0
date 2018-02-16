@@ -1,28 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mail-wm0-x242.google.com ([2a00:1450:400c:c09::242])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1emW2j-0006wm-Qb
- for kexec@lists.infradead.org; Fri, 16 Feb 2018 02:46:36 +0000
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
- by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id w1G2kJRZ027718
- (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO)
- for <kexec@lists.infradead.org>; Fri, 16 Feb 2018 11:46:19 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
- by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id w1G2kJgA028136
- for <kexec@lists.infradead.org>; Fri, 16 Feb 2018 11:46:19 +0900
-Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
- by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id w1G2jx83025389
- for <kexec@lists.infradead.org>; Fri, 16 Feb 2018 11:46:19 +0900
-From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile: Fix a bug when multi-threads feature
- meets enospace
-Date: Fri, 16 Feb 2018 02:45:33 +0000
-Message-ID: <61D4E5D821F1674CB87C99F080A210BE0117C360@BPXM01GP.gisp.nec.co.jp>
-References: <1517230479-8440-1-git-send-email-zhouwj.fi@gmail.com>
- <3d76898d-66a2-c733-73e0-6aa8e9854179@gmail.com>
-In-Reply-To: <3d76898d-66a2-c733-73e0-6aa8e9854179@gmail.com>
-Content-Language: ja-JP
+ id 1eme7P-0002BR-Fv
+ for kexec@lists.infradead.org; Fri, 16 Feb 2018 11:24:11 +0000
+Received: by mail-wm0-x242.google.com with SMTP id j21so5097425wmh.1
+ for <kexec@lists.infradead.org>; Fri, 16 Feb 2018 03:23:44 -0800 (PST)
 MIME-Version: 1.0
+In-Reply-To: <CAFTCetTT4h7k7gtbm_T41qrg=Sr98ubknPdCnpcS6=opC57fkg@mail.gmail.com>
+References: <20180215114419.12705-1-gi-oh.kim@profitbricks.com>
+ <CAFTCetTT4h7k7gtbm_T41qrg=Sr98ubknPdCnpcS6=opC57fkg@mail.gmail.com>
+From: Gi-Oh Kim <gi-oh.kim@profitbricks.com>
+Date: Fri, 16 Feb 2018 12:23:02 +0100
+Message-ID: <CAJX1YtaAB2zfyF2s4fzjFkCJsU4ZnWHOAO=cnGcch0oZ+4cScQ@mail.gmail.com>
+Subject: Re: [PATCH] add description for jumping back to the original kernel
+ in man page
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,92 +22,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: Masahiko Hayashi <mas-hayashi@tg.jp.nec.com>
+To: Bhupesh SHARMA <bhupesh.linux@gmail.com>
+Cc: kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>
 
-Hi,
-
-Atsushi Kumagai has retired, so other members will maintain makedumpfile.
-
-
-Wenjian
-
-Sorry for the late reply.
-Your patch looks good to me.
-I'll merge it into V1.6.4.
-
-Thanks
-tachibana
-
-
-> -----Original Message-----
-> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Zhou Wenjian
-> Sent: Thursday, February 08, 2018 8:53 PM
-> To: kexec@lists.infradead.org
-> Cc: Kumagai Atsushi() <ats-kumagai@wm.jp.nec.com>; Suzuki Keiichirou() <kei-suzuki@xr.jp.nec.com>
-> Subject: Re: [PATCH] makedumpfile: Fix a bug when multi-threads feature meets enospace
-> 
-> ping...
-> 
-> 
-> On 01/29/2018 08:54 PM, Zhou Wenjian wrote:
-> > Currently, when multi-threads feature meets enospace error,
-> > the main thread will call pthread_join(). However, there is one
-> > thread doing while{} and won't stop.
-> >
-> >                  pthread_mutex_lock(&info->page_data_mutex);
-> >                  while (page_data_buf[index].used != FALSE) {
-> >                          index = (index + 1) % info->num_buffers;
-> >                  }
-> >                  page_data_buf[index].used = TRUE;
-> >                  pthread_mutex_unlock(&info->page_data_mutex);
-> >
-> > Then makedumpfile hangs.
-> >
-> > This patch add a cancel point in while{}.
-> >
-> > Signed-off-by: Zhou Wenjian <zhouwj.fi@gmail.com>
-> > ---
-> >   makedumpfile.c | 4 +++-
-> >   1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/makedumpfile.c b/makedumpfile.c
-> > index ed138d3..f7ad50c 100644
-> > --- a/makedumpfile.c
-> > +++ b/makedumpfile.c
-> > @@ -7731,11 +7731,13 @@ kdump_thread_function_cyclic(void *arg) {
-> >   		buf_ready = FALSE;
-> >
-> >   		pthread_mutex_lock(&info->page_data_mutex);
-> > +		pthread_cleanup_push(pthread_mutex_unlock, &info->page_data_mutex);
-> >   		while (page_data_buf[index].used != FALSE) {
-> > +			pthread_testcancel();
-> >   			index = (index + 1) % info->num_buffers;
-> >   		}
-> >   		page_data_buf[index].used = TRUE;
-> > -		pthread_mutex_unlock(&info->page_data_mutex);
-> > +		pthread_cleanup_pop(1);
-> >
-> >   		while (buf_ready == FALSE) {
-> >   			pthread_testcancel();
-> 
-> --
-> Thanks
-> Zhou
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBGZWIgMTUsIDIwMTggYXQgNzo1NCBQTSwgQmh1cGVzaCBTSEFSTUEgPGJodXBlc2gu
+bGludXhAZ21haWwuY29tPiB3cm90ZToKPiBIaSwKPgo+IFNvbWUgbml0cGlja3MgaW5saW5lLi4K
+CkkgdGhhbmsgeW91IGFnYWluIGZvciB5b3VyIHJldmlldy4KSSdsbCBzZW5kIHRoZSBzZWNvbmQg
+dmVyc2lvbiBwYXRjaCBzb29uLgoKPgo+IE9uIFRodSwgRmViIDE1LCAyMDE4IGF0IDU6MTQgUE0s
+IEdpb2ggS2ltIDxnaS1vaC5raW1AcHJvZml0YnJpY2tzLmNvbT4gd3JvdGU6Cj4+ICItLWxvYWQt
+cHJlc2VydmUtY29udGV4dCIsICItLWxvYWQtanVtcC1iYWNrLWhlbHBlciIgYW5kICItLWVudHJ5
+Igo+PiBvcHRpb25zIGFyZSBkZXNjcmliZWQgc2VwYXJhdGVseSBidXQgdGhlcmUgaXMgbm90IGFu
+eSBkZXNjcmlwdGlvbgo+PiBob3cgdG8gdXNlIHRoZW0uCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEdp
+b2ggS2ltIDxnaS1vaC5raW1AcHJvZml0YnJpY2tzLmNvbT4KPj4gLS0tCj4+ICBrZXhlYy9rZXhl
+Yy44IHwgMzAgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdl
+ZCwgMzAgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEva2V4ZWMva2V4ZWMuOCBiL2tl
+eGVjL2tleGVjLjgKPj4gaW5kZXggZTAxMzFiNC4uYjdhYzAyOCAxMDA2NDQKPj4gLS0tIGEva2V4
+ZWMva2V4ZWMuOAo+PiArKysgYi9rZXhlYy9rZXhlYy44Cj4+IEBAIC0zMCw2ICszMCw5IEBAIHdo
+ZW4gY29uZmlndXJpbmcgdGhlIGtlcm5lbC4gVGhlCj4+ICBvcHRpb24gZW5hYmxlcyB0aGUKPj4g
+IC5CIGtleGVjCj4+ICBzeXN0ZW0gY2FsbC4KPj4gK0FmdGVyIGJvb3RpbmcgaW50byBhbm90aGVy
+IGtlcm5lbCwgeW91IGNhbiBqdW1wIGJhY2sgdG8gdGhlIGZpcnN0IGtlcm5lbCB3aXRoIGVuYWJs
+aW5nCj4KPiBJIHdvdWxkIHN1Z2dlc3QgdXNpbmcgdGhlIGFscmVhZHkgcHJldmFsZW50IG5hbWlu
+ZyBjb252ZW50aW9ucyAtIHByaW1hcnkga2VybmVsCj4gYW5kIHNlY29uZGFyeSBrZXJuZWwgZm9y
+IHRoZSB0d28ga2VybmVscy4KPgo+PiArLkIgQ09ORklHX0tFWEVDX0pVTVAKPj4gK29wdGlvbiAo
+eDg2IG9ubHkpLgo+Cj4gSSB0aGluayB0aGlzIGlzIGFsc28gc3VwcG9ydGVkIG9uIHNoIGFyY2hp
+dGVjdHVyZSwgc28gbWF5IGJlIHlvdSBjYW4KPiByZXdvcmQgdGhpcyB0byBzb21ldGhpbmcgbGlr
+ZToKPiAoY3VycmVudGx5IG9ubHkgeDg2IGFuZCBzaCBhcmNoaXRlY3R1cmVzIGFyZSBzdXBwb3J0
+ZWQpLgo+Cj4+ICAuU0ggVVNBR0UKPj4gIFVzaW5nCj4+ICAuQiBrZXhlYwo+PiBAQCAtMTAyLDYg
+KzEwNSwzMCBAQCBjb21tYW5kOgo+PiAgLkJSIGtleGVjIFwgXC1lCj4+ICAuUkUKPj4KPj4gK0Fm
+dGVyIGJvb3RpbmcgdGhlIGtlcm5lbCwgeW91IGNhbiBqdW1wIGJhY2sgdG8gdGhlIGZpcnN0IGtl
+cm5lbCBpZiB5b3UgZW5hYmxlCj4+ICsuQiBDT05GSUdfS0VYRUNfSlVNUAo+PiAra2VybmVsIG9w
+dGlvbiBhbmQgc3BlY2lmeSBcLVwtbG9hZFwtcHJlc2VydmVcLWNvbnRleHQgb3B0aW9uLgo+Cj4g
+RG8gd2UgbmVlZCB0byByZXBlYXQgdGhlIGRldGFpbHMgb2YgQ09ORklHX0tFWEVDX0pVTVAgaGVy
+ZSBhbmQgYmVsb3csCj4gYXMgd2UgaGF2ZSBhbHJlYWR5IHRoZSBjYXB0dXJlZCB0aGUgc2FtZSBh
+Ym92ZS4KPgo+PiArWW91IGNhbiBzZWUKPgo+ICAgICAgICAgICAgICAgICAgICAgIF5eXiBzcGVj
+aWZ5IChpbnN0ZWFkIG9mIHNlZSkKPgo+PiArLkJSICJrZXhlY19qdW1wX2JhY2tfZW50cnk9PGFk
+ZHJlc3M+Igo+PiAra2VybmVsIHBhcmFtZXRlciBpbiAvcHJvYy9jbWRsaW5lIGZpbGUsIGZvciBl
+eGFtcGxlOgo+PiArCj4+ICsuUlMKPj4gKy5CUiAia2V4ZWNfanVtcF9iYWNrX2VudHJ5PTB4MDAw
+MDAwMDAwMDA4MTBkMiIKPgo+IEJldHRlciB0byBzcGVjaWZ5IGxpdGVyYWwgYWRkciBpbnN0ZWFk
+IG9mIHNwZWNpZnlpbmcgYSB2YWx1ZSBoZXJlLgo+Cj4+ICsuUkUKPj4gKwo+PiArRnJpc3QgeW91
+IG5lZWQgdG8gcHJlcGFyZSBqdW1wIHdpdGggXC1cLWxvYWRcLWp1bXBcLWJhY2tcLWhlbHBlciBh
+bmQgXC1cLWVudHJ5IG9wdGlvbnMuCj4KPiAgICAgIF5eXiBGaXJzdCAocmF0aGVyIHRoYW4gRnJp
+c3QpCj4KPj4gKwo+PiArLlJTCj4+ICsuQiBrZXhlYwo+PiArLlJCIFwtXC1sb2FkXC1qdW1wXC1i
+YWNrXC1oZWxwZXIgXC1cLWVudHJ5PTB4ODEwZDIKPgo+IEJldHRlciB0byB1c2UgbGl0ZXJhbCBh
+ZGRyIGluc3RlYWQgb2Ygc3BlY2lmeWluZyBhIHBhcnRpY3VsYXIgdmFsdWUKPiBoZXJlLCB0byBr
+ZWVwIHRoZSBtYW4gcGFnZSBnZW5lcmljLgo+Cj4gUmVnYXJkcywKPiBCaHVwZXNoCj4KPj4gKy5S
+RQo+PiArCj4+ICtUaGVuIHRoZSBmaXJzdCBrZXJuZWwgY2FuIGJlIHJlYm9vdGVkIHVzaW5nIHRo
+ZSBjb21tYW5kOgo+PiArCj4+ICsuUlMKPj4gKy5CUiBrZXhlYyBcIFwtZQo+PiArLlJFCj4+ICsK
+Pj4gIC5TSCBPUFRJT05TCj4+ICAuVFAKPj4gIC5CIFwtZFwgKFwtXC1kZWJ1ZykKPj4gQEAgLTE3
+Myw2ICsyMDAsOSBAQCBTcGVjaWZ5IHRoZSBqdW1wIGJhY2sgYWRkcmVzcy4gKDAgbWVhbnMgaXQn
+cyBub3QganVtcCBiYWNrIG9yIHByZXNlcnZlIGNvbnRleHQpCj4+ICAuVFAKPj4gIC5CSSBcLVwt
+bG9hZFwtcHJlc2VydmVcLWNvbnRleHQKPj4gIExvYWQgdGhlIG5ldyBrZXJuZWwgYW5kIHByZXNl
+cnZlIGNvbnRleHQgb2YgY3VycmVudCBrZXJuZWwgZHVyaW5nIGtleGVjLgo+PiArKGtleGVjIHJl
+dHVybnMgZXJyb3IgaWYKPj4gKy5CIENPTkZJR19LRVhFQ19KVU1QCj4+ICtpcyBub3QgZW5hYmxl
+ZCkKPj4gIC5UUAo+PiAgLkJJIFwtXC1sb2FkXC1qdW1wXC1iYWNrXC1oZWxwZXIKPj4gIExvYWQg
+YSBoZWxwZXIgaW1hZ2UgdG8ganVtcCBiYWNrIHRvIG9yaWdpbmFsIGtlcm5lbC4KPj4gLS0KPj4g
+Mi4xNC4xCj4+CgoKCi0tIApHSU9IIEtJTQpMaW51eCBLZXJuZWwgRW50d2lja2xlcgoKUHJvZml0
+QnJpY2tzIEdtYkgKR3JlaWZzd2FsZGVyIFN0ci4gMjA3CkQgLSAxMDQwNSBCZXJsaW4KClRlbDog
+ICAgICAgKzQ5IDE3NiAyNjk3IDg5NjIKRmF4OiAgICAgICs0OSAzMCA1NzcgMDA4IDI5OQpFbWFp
+bDogICAgZ2ktb2gua2ltQHByb2ZpdGJyaWNrcy5jb20KVVJMOiAgICAgIGh0dHBzOi8vd3d3LnBy
+b2ZpdGJyaWNrcy5kZQoKU2l0eiBkZXIgR2VzZWxsc2NoYWZ0OiBCZXJsaW4KUmVnaXN0ZXJnZXJp
+Y2h0OiBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVyZywgSFJCIDEyNTUwNiBCCkdlc2Now6RmdHNm
+w7xocmVyOiBBY2hpbSBXZWlzcywgTWF0dGhpYXMgU3RlaW5iZXJnCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2tleGVjCg==
