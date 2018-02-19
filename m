@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x242.google.com ([2a00:1450:400c:c09::242])
+Received: from youngberry.canonical.com ([91.189.89.112])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eme8z-0003h4-RP
- for kexec@lists.infradead.org; Fri, 16 Feb 2018 11:25:42 +0000
-Received: by mail-wm0-x242.google.com with SMTP id v71so2543705wmv.2
- for <kexec@lists.infradead.org>; Fri, 16 Feb 2018 03:25:23 -0800 (PST)
-From: Gioh Kim <gi-oh.kim@profitbricks.com>
-Subject: [PATCH v2] add description for jumping back to the primary kernel in
- man page
-Date: Fri, 16 Feb 2018 12:25:14 +0100
-Message-Id: <20180216112514.28584-1-gi-oh.kim@profitbricks.com>
+ id 1enrh2-0002DR-2W
+ for kexec@lists.infradead.org; Mon, 19 Feb 2018 20:05:45 +0000
+Received: from [177.197.97.150] (helo=localhost.localdomain)
+ by youngberry.canonical.com with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
+ (Exim 4.76) (envelope-from <cascardo@canonical.com>)
+ id 1enrgm-0002Fh-Jw
+ for kexec@lists.infradead.org; Mon, 19 Feb 2018 20:05:29 +0000
+From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Subject: [PATCH makedumpfile] handle mem_section as either a pointer or an
+ array
+Date: Mon, 19 Feb 2018 17:04:59 -0300
+Message-Id: <20180219200459.27159-1-cascardo@canonical.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,76 +27,265 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: bhupesh.linux@gmail.com, Gioh Kim <gi-oh.kim@profitbricks.com>, bhe@redhat.com
 
-"--load-preserve-context", "--load-jump-back-helper" and "--entry"
-options are described separately but there is not any description
-how to use them.
+Some kernel versions that have been recently shipped have mem_section point to
+a pointer to the array, instead of pointing directly to the array. That only
+happens on SPARSEMEM_EXTREME configurations.
 
-Signed-off-by: Gioh Kim <gi-oh.kim@profitbricks.com>
+As dwarf information might not be present that would have allowed us to detect
+which type it is, we need to try it either as an array or as the pointer to the
+array. Then, we validate all section_mem_map: they must either be present or
+null. If any problems are found when traversing it, consider it invalid. Only
+one way may be valid. Otherwise, fail.
+
+This has been tested with both types of kernels and succeeded in producing a
+compressed dump that could be analyzed with crash 7.2.1.
+
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 ---
- kexec/kexec.8 | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ makedumpfile.c | 153 +++++++++++++++++++++++++++++++++++++++++++--------------
+ makedumpfile.h |   1 +
+ 2 files changed, 118 insertions(+), 36 deletions(-)
 
-diff --git a/kexec/kexec.8 b/kexec/kexec.8
-index e0131b4..675a285 100644
---- a/kexec/kexec.8
-+++ b/kexec/kexec.8
-@@ -30,6 +30,9 @@ when configuring the kernel. The
- option enables the
- .B kexec
- system call.
-+After booting into secondary kernel, you can jump back to the primary kernel with enabling
-+.B CONFIG_KEXEC_JUMP
-+option (x86 and sh only).
- .SH USAGE
- Using
- .B kexec
-@@ -94,7 +97,7 @@ then you would use the following command to load the kernel:
- .RB \-l\  /boot/vmlinux
- .RB "\-\-append=" "root=/dev/hda1" "\ \-\-initrd=" /boot/initrd
- .RE
--.PP
-+
- After this kernel is loaded, it can be booted to at any time using the
- command:
+diff --git a/makedumpfile.c b/makedumpfile.c
+index ed138d3..cd3fa4d 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3297,7 +3297,7 @@ get_mm_discontigmem(void)
+ 	return TRUE;
+ }
  
-@@ -102,6 +105,25 @@ command:
- .BR kexec \ \-e
- .RE
+-unsigned long
++static unsigned long
+ nr_to_section(unsigned long nr, unsigned long *mem_sec)
+ {
+ 	unsigned long addr;
+@@ -3311,17 +3311,17 @@ nr_to_section(unsigned long nr, unsigned long *mem_sec)
+ 		addr = SYMBOL(mem_section) + (nr * SIZE(mem_section));
+ 	}
  
-+For jumping back to the primary kernel, you need to prepare the jump with following command:
+-	if (!is_kvaddr(addr))
+-		return NOT_KV_ADDR;
+-
+ 	return addr;
+ }
+ 
+-unsigned long
+-section_mem_map_addr(unsigned long addr)
++static unsigned long
++section_mem_map_addr(unsigned long addr, unsigned long *map_mask)
+ {
+ 	char *mem_section;
+ 	unsigned long map;
++	unsigned long mask;
 +
-+.RS
-+.B kexec
-+.RB \-\-load\-jump\-back\-helper \ \-\-entry=<address>
-+.RE
++	*map_mask = 0;
+ 
+ 	if (!is_kvaddr(addr))
+ 		return NOT_KV_ADDR;
+@@ -3338,15 +3338,19 @@ section_mem_map_addr(unsigned long addr)
+ 	}
+ 	map = ULONG(mem_section + OFFSET(mem_section.section_mem_map));
+ 	if (info->kernel_version < KERNEL_VERSION(4, 13, 0))
+-		map &= SECTION_MAP_MASK_4_12;
++		mask = SECTION_MAP_MASK_4_12;
+ 	else
+-		map &= SECTION_MAP_MASK;
++		mask = SECTION_MAP_MASK;
++	*map_mask = map & ~mask;
++	if (map == 0x0)
++		*map_mask |= SECTION_MARKED_PRESENT;
++	map &= mask;
+ 	free(mem_section);
+ 
+ 	return map;
+ }
+ 
+-unsigned long
++static unsigned long
+ sparse_decode_mem_map(unsigned long coded_mem_map, unsigned long section_nr)
+ {
+ 	unsigned long mem_map;
+@@ -3354,17 +3358,110 @@ sparse_decode_mem_map(unsigned long coded_mem_map, unsigned long section_nr)
+ 	mem_map =  coded_mem_map +
+ 	    (SECTION_NR_TO_PFN(section_nr) * SIZE(page));
+ 
+-	if (!is_kvaddr(mem_map))
+-		return NOT_KV_ADDR;
+ 	return mem_map;
+ }
 +
-+The
-+.BR <address>
-+value is specified by
-+.BR kexec_jump_back_entry=<address>
-+kernel parameter in /proc/cmdline. Then the primary kernel can be booted
-+using the command:
++/*
++ * On some kernels, mem_section may be a pointer or an array, when
++ * SPARSEMEM_EXTREME is on.
++ *
++ * We assume that section_mem_map is either 0 or has the present bit set.
++ *
++ */
 +
-+.RS
-+.BR kexec \ \-e
-+.RE
-+.PP
++static int
++validate_mem_section(unsigned long *mem_sec,
++		     unsigned long mem_section_ptr, unsigned int mem_section_size,
++		     unsigned long *mem_maps, unsigned int num_section)
++{
++	unsigned int section_nr;
++	unsigned long map_mask;
++	unsigned long section, mem_map;
++	if (!readmem(VADDR, mem_section_ptr, mem_sec, mem_section_size)) {
++		ERRMSG("Can't read mem_section array.\n");
++		return FALSE;
++	}
++	for (section_nr = 0; section_nr < num_section; section_nr++) {
++		section = nr_to_section(section_nr, mem_sec);
++		if (section == NOT_KV_ADDR) {
++			mem_map = NOT_MEMMAP_ADDR;
++		} else {
++			mem_map = section_mem_map_addr(section, &map_mask);
++			if (!(map_mask & SECTION_MARKED_PRESENT)) {
++				return FALSE;
++			}
++			if (mem_map == 0) {
++				mem_map = NOT_MEMMAP_ADDR;
++			} else {
++				mem_map = sparse_decode_mem_map(mem_map,
++								section_nr);
++				if (!is_kvaddr(mem_map)) {
++					return FALSE;
++				}
++			}
++		}
++		mem_maps[section_nr] = mem_map;
++	}
++	return TRUE;
++}
 +
- .SH OPTIONS
- .TP
- .B \-d\ (\-\-debug)
-@@ -173,6 +195,9 @@ Specify the jump back address. (0 means it's not jump back or preserve context)
- .TP
- .BI \-\-load\-preserve\-context
- Load the new kernel and preserve context of current kernel during kexec.
-+(kexec returns error if
-+.B CONFIG_KEXEC_JUMP
-+is not enabled)
- .TP
- .BI \-\-load\-jump\-back\-helper
- Load a helper image to jump back to original kernel.
++static int
++get_mem_section(unsigned int mem_section_size, unsigned long *mem_maps,
++		unsigned int num_section)
++{
++	unsigned long mem_section_ptr;
++	int ret = FALSE;
++	unsigned long *mem_sec = NULL;
++
++	if ((mem_sec = malloc(mem_section_size)) == NULL) {
++		ERRMSG("Can't allocate memory for the mem_section. %s\n",
++		    strerror(errno));
++		return FALSE;
++	}
++	ret = validate_mem_section(mem_sec, SYMBOL(mem_section),
++				   mem_section_size, mem_maps, num_section);
++
++	if (is_sparsemem_extreme()) {
++		int symbol_valid = ret;
++		int pointer_valid;
++		int mem_maps_size = sizeof(*mem_maps) * num_section;
++		unsigned long *mem_maps_ex = NULL;
++		if (!readmem(VADDR, SYMBOL(mem_section), &mem_section_ptr,
++			     sizeof(mem_section_ptr)))
++			goto out;
++
++		if ((mem_maps_ex = malloc(mem_maps_size)) == NULL) {
++			ERRMSG("Can't allocate memory for the mem_maps. %s\n",
++			    strerror(errno));
++			goto out;
++		}
++
++		pointer_valid = validate_mem_section(mem_sec,
++						     mem_section_ptr,
++						     mem_section_size,
++						     mem_maps_ex,
++						     num_section);
++		if (pointer_valid)
++			memcpy(mem_maps, mem_maps_ex, mem_maps_size);
++		if (mem_maps_ex)
++			free(mem_maps_ex);
++		ret = symbol_valid ^ pointer_valid;
++		if (!ret) {
++			ERRMSG("Could not validate mem_section.\n");
++		}
++	}
++out:
++	if (mem_sec != NULL)
++		free(mem_sec);
++	return ret;
++}
++
+ int
+ get_mm_sparsemem(void)
+ {
+ 	unsigned int section_nr, mem_section_size, num_section;
+ 	mdf_pfn_t pfn_start, pfn_end;
+-	unsigned long section, mem_map;
+-	unsigned long *mem_sec = NULL;
++	unsigned long *mem_maps = NULL;
+ 
+ 	int ret = FALSE;
+ 
+@@ -3379,13 +3476,12 @@ get_mm_sparsemem(void)
+ 		info->sections_per_root = _SECTIONS_PER_ROOT();
+ 		mem_section_size = SIZE(mem_section) * NR_SECTION_ROOTS();
+ 	}
+-	if ((mem_sec = malloc(mem_section_size)) == NULL) {
+-		ERRMSG("Can't allocate memory for the mem_section. %s\n",
+-		    strerror(errno));
++	if ((mem_maps = malloc(sizeof(*mem_maps) * num_section)) == NULL) {
++		ERRMSG("Can't allocate memory for the mem_maps. %s\n",
++			strerror(errno));
+ 		return FALSE;
+ 	}
+-	if (!readmem(VADDR, SYMBOL(mem_section), mem_sec,
+-	    mem_section_size)) {
++	if (!get_mem_section(mem_section_size, mem_maps, num_section)) {
+ 		ERRMSG("Can't get the address of mem_section.\n");
+ 		goto out;
+ 	}
+@@ -3397,31 +3493,16 @@ get_mm_sparsemem(void)
+ 		goto out;
+ 	}
+ 	for (section_nr = 0; section_nr < num_section; section_nr++) {
+-		section = nr_to_section(section_nr, mem_sec);
+-		if (section == NOT_KV_ADDR) {
+-			mem_map = NOT_MEMMAP_ADDR;
+-		} else {
+-			mem_map = section_mem_map_addr(section);
+-			if (mem_map == 0) {
+-				mem_map = NOT_MEMMAP_ADDR;
+-			} else {
+-				mem_map = sparse_decode_mem_map(mem_map,
+-								section_nr);
+-				if (!is_kvaddr(mem_map))
+-					mem_map = NOT_MEMMAP_ADDR;
+-			}
+-		}
+ 		pfn_start = section_nr * PAGES_PER_SECTION();
+ 		pfn_end   = pfn_start + PAGES_PER_SECTION();
+ 		if (info->max_mapnr < pfn_end)
+ 			pfn_end = info->max_mapnr;
+-		dump_mem_map(pfn_start, pfn_end, mem_map, section_nr);
++		dump_mem_map(pfn_start, pfn_end, mem_maps[section_nr], section_nr);
+ 	}
+ 	ret = TRUE;
+ out:
+-	if (mem_sec != NULL)
+-		free(mem_sec);
+-
++	if (mem_maps != NULL)
++		free(mem_maps);
+ 	return ret;
+ }
+ 
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 01eece2..58e1aaa 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -184,6 +184,7 @@ isAnon(unsigned long mapping)
+ #define SECTIONS_PER_ROOT()	(info->sections_per_root)
+ #define SECTION_ROOT_MASK()	(SECTIONS_PER_ROOT() - 1)
+ #define SECTION_NR_TO_ROOT(sec)	((sec) / SECTIONS_PER_ROOT())
++#define SECTION_MARKED_PRESENT  (1UL<<0)
+ #define SECTION_IS_ONLINE	(1UL<<2)
+ #define SECTION_MAP_LAST_BIT	(1UL<<3)
+ #define SECTION_MAP_MASK_4_12	(~(SECTION_IS_ONLINE-1))
 -- 
 2.14.1
 
