@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from youngberry.canonical.com ([91.189.89.112])
+Received: from mail-lf0-f66.google.com ([209.85.215.66])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1enrh2-0002DR-2W
- for kexec@lists.infradead.org; Mon, 19 Feb 2018 20:05:45 +0000
-Received: from [177.197.97.150] (helo=localhost.localdomain)
- by youngberry.canonical.com with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
- (Exim 4.76) (envelope-from <cascardo@canonical.com>)
- id 1enrgm-0002Fh-Jw
- for kexec@lists.infradead.org; Mon, 19 Feb 2018 20:05:29 +0000
-From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Subject: [PATCH makedumpfile] handle mem_section as either a pointer or an
- array
-Date: Mon, 19 Feb 2018 17:04:59 -0300
-Message-Id: <20180219200459.27159-1-cascardo@canonical.com>
+ id 1enzyM-0005wy-6C
+ for kexec@lists.infradead.org; Tue, 20 Feb 2018 04:56:12 +0000
+Received: by mail-lf0-f66.google.com with SMTP id v9so2359766lfa.11
+ for <kexec@lists.infradead.org>; Mon, 19 Feb 2018 20:55:59 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <1518168978-11268-1-git-send-email-bhsharma@redhat.com>
+References: <1518168978-11268-1-git-send-email-bhsharma@redhat.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Tue, 20 Feb 2018 10:25:56 +0530
+Message-ID: <CACi5LpM5snjZA9zmOibeVbB9ZN650epDDy26LOvDtBL+yVpr6A@mail.gmail.com>
+Subject: Re: [PATCH] makedumpfile/arm64: Add '--mem-usage' support
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,274 +20,249 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
+Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Bhupesh Sharma <bhsharma@redhat.com>, Takuya Nakayama <tak-nakayama@tg.jp.nec.com>, Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>
 
-Some kernel versions that have been recently shipped have mem_section point to
-a pointer to the array, instead of pointing directly to the array. That only
-happens on SPARSEMEM_EXTREME configurations.
+Hello,
 
-As dwarf information might not be present that would have allowed us to detect
-which type it is, we need to try it either as an array or as the pointer to the
-array. Then, we validate all section_mem_map: they must either be present or
-null. If any problems are found when traversing it, consider it invalid. Only
-one way may be valid. Otherwise, fail.
+On Fri, Feb 9, 2018 at 3:06 PM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> Its good to have the makedumpfile '--mem-usage' support
+> for arm64 architecture as well, as it allows one to see the page numbers
+> of current system (1st kernel) in different use.
+>
+> Using this we can know how many pages are dumpable when different
+> dump_level is specified.
+>
+> Normally for x86_64, makedumpfile analyzes the 'System Ram' and
+> 'kernel text' program segment of /proc/kcore excluding
+> the crashkernel range, then calculates the page number of different
+> kind per vmcoreinfo.
+>
+> We use the similar logic for arm64, but in addition make the '--mem-usage'
+> usage dependent on the VMLINUX file being passed. This is done to allow
+> information like VA_BITS being determined from kernel symbol like
+> _stext. This allows us to get the VA_BITS before 'set_kcore_vmcoreinfo()'
+> is called.
+>
+> Also I have validated the '--mem-usage' makedumpfile option on several
+> ppc64/ppc64le and s390x machines, so update the makedumpfile.8
+> documentation to indicate that '--mem-usage' option is supported
+> not only on x86_64, but also on ppc64, s390x and arm64.
+>
+> After this patch, when using the '--mem-usage' option with makedumpfile,
+> we get the correct information about the different pages. For e.g.
+> here is an output from my arm64 board:
+>
+> TYPE            PAGES                   EXCLUDABLE      DESCRIPTION
+> ----------------------------------------------------------------------
+> ZERO            49524                   yes             Pages filled with zero
+> NON_PRI_CACHE   15143                   yes             Cache pages without private flag
+> PRI_CACHE       29147                   yes             Cache pages with private flag
+> USER            3684                    yes             User process pages
+> FREE            1450569                 yes             Free pages
+> KERN_DATA       14243                   no              Dumpable kernel data
+>
+> page size:              65536
+> Total pages on system:  1562310
+> Total size on system:   102387548160     Byte
+>
+> Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
+> Cc: Takuya Nakayama <tak-nakayama@tg.jp.nec.com>
+> Cc: Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
 
-This has been tested with both types of kernels and succeeded in producing a
-compressed dump that could be analyzed with crash 7.2.1.
+Ping. Any review comments on this?
 
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
----
- makedumpfile.c | 153 +++++++++++++++++++++++++++++++++++++++++++--------------
- makedumpfile.h |   1 +
- 2 files changed, 118 insertions(+), 36 deletions(-)
+Regards,
+Bhupesh
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index ed138d3..cd3fa4d 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -3297,7 +3297,7 @@ get_mm_discontigmem(void)
- 	return TRUE;
- }
- 
--unsigned long
-+static unsigned long
- nr_to_section(unsigned long nr, unsigned long *mem_sec)
- {
- 	unsigned long addr;
-@@ -3311,17 +3311,17 @@ nr_to_section(unsigned long nr, unsigned long *mem_sec)
- 		addr = SYMBOL(mem_section) + (nr * SIZE(mem_section));
- 	}
- 
--	if (!is_kvaddr(addr))
--		return NOT_KV_ADDR;
--
- 	return addr;
- }
- 
--unsigned long
--section_mem_map_addr(unsigned long addr)
-+static unsigned long
-+section_mem_map_addr(unsigned long addr, unsigned long *map_mask)
- {
- 	char *mem_section;
- 	unsigned long map;
-+	unsigned long mask;
-+
-+	*map_mask = 0;
- 
- 	if (!is_kvaddr(addr))
- 		return NOT_KV_ADDR;
-@@ -3338,15 +3338,19 @@ section_mem_map_addr(unsigned long addr)
- 	}
- 	map = ULONG(mem_section + OFFSET(mem_section.section_mem_map));
- 	if (info->kernel_version < KERNEL_VERSION(4, 13, 0))
--		map &= SECTION_MAP_MASK_4_12;
-+		mask = SECTION_MAP_MASK_4_12;
- 	else
--		map &= SECTION_MAP_MASK;
-+		mask = SECTION_MAP_MASK;
-+	*map_mask = map & ~mask;
-+	if (map == 0x0)
-+		*map_mask |= SECTION_MARKED_PRESENT;
-+	map &= mask;
- 	free(mem_section);
- 
- 	return map;
- }
- 
--unsigned long
-+static unsigned long
- sparse_decode_mem_map(unsigned long coded_mem_map, unsigned long section_nr)
- {
- 	unsigned long mem_map;
-@@ -3354,17 +3358,110 @@ sparse_decode_mem_map(unsigned long coded_mem_map, unsigned long section_nr)
- 	mem_map =  coded_mem_map +
- 	    (SECTION_NR_TO_PFN(section_nr) * SIZE(page));
- 
--	if (!is_kvaddr(mem_map))
--		return NOT_KV_ADDR;
- 	return mem_map;
- }
-+
-+/*
-+ * On some kernels, mem_section may be a pointer or an array, when
-+ * SPARSEMEM_EXTREME is on.
-+ *
-+ * We assume that section_mem_map is either 0 or has the present bit set.
-+ *
-+ */
-+
-+static int
-+validate_mem_section(unsigned long *mem_sec,
-+		     unsigned long mem_section_ptr, unsigned int mem_section_size,
-+		     unsigned long *mem_maps, unsigned int num_section)
-+{
-+	unsigned int section_nr;
-+	unsigned long map_mask;
-+	unsigned long section, mem_map;
-+	if (!readmem(VADDR, mem_section_ptr, mem_sec, mem_section_size)) {
-+		ERRMSG("Can't read mem_section array.\n");
-+		return FALSE;
-+	}
-+	for (section_nr = 0; section_nr < num_section; section_nr++) {
-+		section = nr_to_section(section_nr, mem_sec);
-+		if (section == NOT_KV_ADDR) {
-+			mem_map = NOT_MEMMAP_ADDR;
-+		} else {
-+			mem_map = section_mem_map_addr(section, &map_mask);
-+			if (!(map_mask & SECTION_MARKED_PRESENT)) {
-+				return FALSE;
-+			}
-+			if (mem_map == 0) {
-+				mem_map = NOT_MEMMAP_ADDR;
-+			} else {
-+				mem_map = sparse_decode_mem_map(mem_map,
-+								section_nr);
-+				if (!is_kvaddr(mem_map)) {
-+					return FALSE;
-+				}
-+			}
-+		}
-+		mem_maps[section_nr] = mem_map;
-+	}
-+	return TRUE;
-+}
-+
-+static int
-+get_mem_section(unsigned int mem_section_size, unsigned long *mem_maps,
-+		unsigned int num_section)
-+{
-+	unsigned long mem_section_ptr;
-+	int ret = FALSE;
-+	unsigned long *mem_sec = NULL;
-+
-+	if ((mem_sec = malloc(mem_section_size)) == NULL) {
-+		ERRMSG("Can't allocate memory for the mem_section. %s\n",
-+		    strerror(errno));
-+		return FALSE;
-+	}
-+	ret = validate_mem_section(mem_sec, SYMBOL(mem_section),
-+				   mem_section_size, mem_maps, num_section);
-+
-+	if (is_sparsemem_extreme()) {
-+		int symbol_valid = ret;
-+		int pointer_valid;
-+		int mem_maps_size = sizeof(*mem_maps) * num_section;
-+		unsigned long *mem_maps_ex = NULL;
-+		if (!readmem(VADDR, SYMBOL(mem_section), &mem_section_ptr,
-+			     sizeof(mem_section_ptr)))
-+			goto out;
-+
-+		if ((mem_maps_ex = malloc(mem_maps_size)) == NULL) {
-+			ERRMSG("Can't allocate memory for the mem_maps. %s\n",
-+			    strerror(errno));
-+			goto out;
-+		}
-+
-+		pointer_valid = validate_mem_section(mem_sec,
-+						     mem_section_ptr,
-+						     mem_section_size,
-+						     mem_maps_ex,
-+						     num_section);
-+		if (pointer_valid)
-+			memcpy(mem_maps, mem_maps_ex, mem_maps_size);
-+		if (mem_maps_ex)
-+			free(mem_maps_ex);
-+		ret = symbol_valid ^ pointer_valid;
-+		if (!ret) {
-+			ERRMSG("Could not validate mem_section.\n");
-+		}
-+	}
-+out:
-+	if (mem_sec != NULL)
-+		free(mem_sec);
-+	return ret;
-+}
-+
- int
- get_mm_sparsemem(void)
- {
- 	unsigned int section_nr, mem_section_size, num_section;
- 	mdf_pfn_t pfn_start, pfn_end;
--	unsigned long section, mem_map;
--	unsigned long *mem_sec = NULL;
-+	unsigned long *mem_maps = NULL;
- 
- 	int ret = FALSE;
- 
-@@ -3379,13 +3476,12 @@ get_mm_sparsemem(void)
- 		info->sections_per_root = _SECTIONS_PER_ROOT();
- 		mem_section_size = SIZE(mem_section) * NR_SECTION_ROOTS();
- 	}
--	if ((mem_sec = malloc(mem_section_size)) == NULL) {
--		ERRMSG("Can't allocate memory for the mem_section. %s\n",
--		    strerror(errno));
-+	if ((mem_maps = malloc(sizeof(*mem_maps) * num_section)) == NULL) {
-+		ERRMSG("Can't allocate memory for the mem_maps. %s\n",
-+			strerror(errno));
- 		return FALSE;
- 	}
--	if (!readmem(VADDR, SYMBOL(mem_section), mem_sec,
--	    mem_section_size)) {
-+	if (!get_mem_section(mem_section_size, mem_maps, num_section)) {
- 		ERRMSG("Can't get the address of mem_section.\n");
- 		goto out;
- 	}
-@@ -3397,31 +3493,16 @@ get_mm_sparsemem(void)
- 		goto out;
- 	}
- 	for (section_nr = 0; section_nr < num_section; section_nr++) {
--		section = nr_to_section(section_nr, mem_sec);
--		if (section == NOT_KV_ADDR) {
--			mem_map = NOT_MEMMAP_ADDR;
--		} else {
--			mem_map = section_mem_map_addr(section);
--			if (mem_map == 0) {
--				mem_map = NOT_MEMMAP_ADDR;
--			} else {
--				mem_map = sparse_decode_mem_map(mem_map,
--								section_nr);
--				if (!is_kvaddr(mem_map))
--					mem_map = NOT_MEMMAP_ADDR;
--			}
--		}
- 		pfn_start = section_nr * PAGES_PER_SECTION();
- 		pfn_end   = pfn_start + PAGES_PER_SECTION();
- 		if (info->max_mapnr < pfn_end)
- 			pfn_end = info->max_mapnr;
--		dump_mem_map(pfn_start, pfn_end, mem_map, section_nr);
-+		dump_mem_map(pfn_start, pfn_end, mem_maps[section_nr], section_nr);
- 	}
- 	ret = TRUE;
- out:
--	if (mem_sec != NULL)
--		free(mem_sec);
--
-+	if (mem_maps != NULL)
-+		free(mem_maps);
- 	return ret;
- }
- 
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 01eece2..58e1aaa 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -184,6 +184,7 @@ isAnon(unsigned long mapping)
- #define SECTIONS_PER_ROOT()	(info->sections_per_root)
- #define SECTION_ROOT_MASK()	(SECTIONS_PER_ROOT() - 1)
- #define SECTION_NR_TO_ROOT(sec)	((sec) / SECTIONS_PER_ROOT())
-+#define SECTION_MARKED_PRESENT  (1UL<<0)
- #define SECTION_IS_ONLINE	(1UL<<2)
- #define SECTION_MAP_LAST_BIT	(1UL<<3)
- #define SECTION_MAP_MASK_4_12	(~(SECTION_IS_ONLINE-1))
--- 
-2.14.1
-
+> ---
+>  arch/arm64.c   | 51 ++++++++++++++++++++++++++++++++++++++++++++++++---
+>  makedumpfile.8 | 11 +++++++++--
+>  makedumpfile.c | 25 +++++++++++++++++++++++--
+>  makedumpfile.h |  1 +
+>  4 files changed, 81 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/arm64.c b/arch/arm64.c
+> index 25d7a1f4db98..91f113f6447c 100644
+> --- a/arch/arm64.c
+> +++ b/arch/arm64.c
+> @@ -48,6 +48,12 @@ static unsigned long kimage_voffset;
+>  #define SZ_64K                 (64 * 1024)
+>  #define SZ_128M                        (128 * 1024 * 1024)
+>
+> +#define PAGE_OFFSET_36 ((0xffffffffffffffffUL) << 36)
+> +#define PAGE_OFFSET_39 ((0xffffffffffffffffUL) << 39)
+> +#define PAGE_OFFSET_42 ((0xffffffffffffffffUL) << 42)
+> +#define PAGE_OFFSET_47 ((0xffffffffffffffffUL) << 47)
+> +#define PAGE_OFFSET_48 ((0xffffffffffffffffUL) << 48)
+> +
+>  #define pgd_val(x)             ((x).pgd)
+>  #define pud_val(x)             (pgd_val((x).pgd))
+>  #define pmd_val(x)             (pud_val((x).pud))
+> @@ -140,8 +146,6 @@ pud_offset(pgd_t *pgda, pgd_t *pgdv, unsigned long vaddr)
+>
+>  static int calculate_plat_config(void)
+>  {
+> -       va_bits = NUMBER(VA_BITS);
+> -
+>         /* derive pgtable_level as per arch/arm64/Kconfig */
+>         if ((PAGESIZE() == SZ_16K && va_bits == 36) ||
+>                         (PAGESIZE() == SZ_64K && va_bits == 42)) {
+> @@ -188,7 +192,6 @@ get_machdep_info_arm64(void)
+>         kimage_voffset = NUMBER(kimage_voffset);
+>         info->max_physmem_bits = PHYS_MASK_SHIFT;
+>         info->section_size_bits = SECTIONS_SIZE_BITS;
+> -       info->page_offset = 0xffffffffffffffffUL << (va_bits - 1);
+>
+>         DEBUG_MSG("kimage_voffset   : %lx\n", kimage_voffset);
+>         DEBUG_MSG("max_physmem_bits : %lx\n", info->max_physmem_bits);
+> @@ -219,6 +222,48 @@ get_xen_info_arm64(void)
+>  int
+>  get_versiondep_info_arm64(void)
+>  {
+> +       unsigned long long stext;
+> +
+> +       /* We can read the _stext symbol from vmlinux and determine the
+> +        * VA_BITS and page_offset.
+> +        */
+> +
+> +       /* Open the vmlinux file */
+> +       open_kernel_file();
+> +       set_dwarf_debuginfo("vmlinux", NULL,
+> +                       info->name_vmlinux, info->fd_vmlinux);
+> +
+> +       if (!get_symbol_info())
+> +               return FALSE;
+> +
+> +       /* Get the '_stext' symbol */
+> +       if (SYMBOL(_stext) == NOT_FOUND_SYMBOL) {
+> +               ERRMSG("Can't get the symbol of _stext.\n");
+> +               return FALSE;
+> +       } else {
+> +               stext = SYMBOL(_stext);
+> +       }
+> +
+> +       /* Derive va_bits as per arch/arm64/Kconfig */
+> +       if ((stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
+> +               va_bits = 36;
+> +       } else if ((stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
+> +               va_bits = 39;
+> +       } else if ((stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
+> +               va_bits = 42;
+> +       } else if ((stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
+> +               va_bits = 47;
+> +       } else if ((stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
+> +               va_bits = 48;
+> +       } else {
+> +               ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
+> +               return FALSE;
+> +       }
+> +
+> +       info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
+> +
+> +       DEBUG_MSG("page_offset=%lx, va_bits=%d\n", info->page_offset, va_bits);
+> +
+>         return TRUE;
+>  }
+>
+> diff --git a/makedumpfile.8 b/makedumpfile.8
+> index 15db7947d62f..be9620035316 100644
+> --- a/makedumpfile.8
+> +++ b/makedumpfile.8
+> @@ -593,7 +593,7 @@ last cleared on the crashed kernel, through "dmesg --clear" for example.
+>
+>  .TP
+>  \fB\-\-mem-usage\fR
+> -This option is only for x86_64.
+> +This option is currently supported on x86_64, arm64, ppc64 and s390x.
+>  This option is used to show the page numbers of current system in different
+>  use. It should be executed in 1st kernel. By the help of this, user can know
+>  how many pages is dumpable when different dump_level is specified. It analyzes
+> @@ -601,12 +601,19 @@ the 'System Ram' and 'kernel text' program segment of /proc/kcore excluding
+>  the crashkernel range, then calculates the page number of different kind per
+>  vmcoreinfo. So currently /proc/kcore need be specified explicitly.
+>
+> +For arm64, path to vmlinux file should be specified as well.
+> +
+>  .br
+> -.B Example:
+> +.B Example (for architectures other than arm64):
+>  .br
+>  # makedumpfile \-\-mem-usage /proc/kcore
+> +
+> +.br
+> +.B Example (for arm64 architecture):
+>  .br
+>
+> +# makedumpfile \-\-mem-usage vmlinux /proc/kcore
+> +.br
+>
+>  .TP
+>  \fB\-\-diskset=VMCORE\fR
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index ed138d339d9a..b38b5000aa74 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -11090,7 +11090,14 @@ static struct option longopts[] = {
+>         {"cyclic-buffer", required_argument, NULL, OPT_CYCLIC_BUFFER},
+>         {"eppic", required_argument, NULL, OPT_EPPIC},
+>         {"non-mmap", no_argument, NULL, OPT_NON_MMAP},
+> +#ifdef __aarch64__
+> +       /* VMLINUX file is required for aarch64 for get
+> +        * the symbols required to calculate va_bits.
+> +        */
+> +       {"mem-usage", required_argument, NULL, OPT_MEM_USAGE},
+> +#else
+>         {"mem-usage", no_argument, NULL, OPT_MEM_USAGE},
+> +#endif
+>         {"splitblock-size", required_argument, NULL, OPT_SPLITBLOCK_SIZE},
+>         {"work-dir", required_argument, NULL, OPT_WORKING_DIR},
+>         {"num-threads", required_argument, NULL, OPT_NUM_THREADS},
+> @@ -11201,8 +11208,22 @@ main(int argc, char *argv[])
+>                         info->flag_partial_dmesg = 1;
+>                         break;
+>                 case OPT_MEM_USAGE:
+> -                      info->flag_mem_usage = 1;
+> -                      break;
+> +                       info->flag_mem_usage = 1;
+> +#ifdef __aarch64__
+> +                       /* VMLINUX file is required for aarch64 for get
+> +                        * the symbols required to calculate va_bits and
+> +                        * it should be the 1st command parameter being
+> +                        * specified.
+> +                        */
+> +                       if (strcmp(optarg, "/proc/kcore") == 0) {
+> +                               MSG("vmlinux path should be 1st commandline parameter with --mem-usage option.\n");
+> +                               goto out;
+> +                       }
+> +                       else {
+> +                               info->name_vmlinux = optarg;
+> +                       }
+> +#endif
+> +                       break;
+>                 case OPT_COMPRESS_SNAPPY:
+>                         info->flag_compress = DUMP_DH_COMPRESSED_SNAPPY;
+>                         break;
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 01eece231475..f65d91870b73 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -2308,6 +2308,7 @@ struct elf_prstatus {
+>  /*
+>   * Function Prototype.
+>   */
+> +int open_kernel_file(void);
+>  mdf_pfn_t get_num_dumpable_cyclic(void);
+>  mdf_pfn_t get_num_dumpable_cyclic_withsplit(void);
+>  int get_loads_dumpfile_cyclic(void);
+> --
+> 2.7.4
+>
 
 _______________________________________________
 kexec mailing list
