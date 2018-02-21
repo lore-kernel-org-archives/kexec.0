@@ -1,32 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eoNCd-0001H3-DI
- for kexec@lists.infradead.org; Wed, 21 Feb 2018 05:44:28 +0000
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+ id 1eoQNY-0006LU-Nj
+ for kexec@lists.infradead.org; Wed, 21 Feb 2018 09:07:58 +0000
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w1L5iBk6099815
- for <kexec@lists.infradead.org>; Wed, 21 Feb 2018 00:44:11 -0500
-Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2g8ww6rf7g-1
+ w1L96eRH133333
+ for <kexec@lists.infradead.org>; Wed, 21 Feb 2018 04:07:45 -0500
+Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2g90rr9hby-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 21 Feb 2018 00:43:24 -0500
+ for <kexec@lists.infradead.org>; Wed, 21 Feb 2018 04:07:39 -0500
 Received: from localhost
- by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
- for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Wed, 21 Feb 2018 05:43:22 -0000
-Subject: Re: [PATCH 2/2] kexec/ppc64: add support to parse ibm,
- dynamic-memory-v2 property
-From: Hari Bathini <hbathini@linux.vnet.ibm.com>
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Wed, 21 Feb 2018 09:07:37 -0000
+Subject: Re: [PATCH 1/2] kexec: add a helper function to add ranges
 References: <151913628039.8893.12994971144990413141.stgit@hbathini.in.ibm.com>
- <151913628939.8893.17231490402797441078.stgit@hbathini.in.ibm.com>
- <a48462f8-41a8-f819-f9de-0dbef0f70fa5@linux.vnet.ibm.com>
-Date: Wed, 21 Feb 2018 11:13:16 +0530
+From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
+Date: Wed, 21 Feb 2018 14:37:31 +0530
 MIME-Version: 1.0
-In-Reply-To: <a48462f8-41a8-f819-f9de-0dbef0f70fa5@linux.vnet.ibm.com>
-Content-Language: en-US
-Message-Id: <253ad639-3cf4-4911-fbab-951bd127c845@linux.vnet.ibm.com>
+In-Reply-To: <151913628039.8893.12994971144990413141.stgit@hbathini.in.ibm.com>
+Content-Language: en-MW
+Message-Id: <c2afb888-5bdd-074f-2ddd-525528379c3b@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,91 +32,189 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geoff Levand <geoff@infradead.org>, Michael Ellerman <mpe@ellerman.id.au>, Kexec-ml <kexec@lists.infradead.org>, nfont@linux.vnet.ibm.com
+To: Hari Bathini <hbathini@linux.vnet.ibm.com>, Simon Horman <horms@verge.net.au>
+Cc: Geoff Levand <geoff@infradead.org>, nfont@linux.vnet.ibm.com, Kexec-ml <kexec@lists.infradead.org>, Michael Ellerman <mpe@ellerman.id.au>
 
-CgpPbiBXZWRuZXNkYXkgMjEgRmVicnVhcnkgMjAxOCAxMjoyNyBBTSwgSGFyaSBCYXRoaW5pIHdy
-b3RlOgo+Cj4KPiBPbiBUdWVzZGF5IDIwIEZlYnJ1YXJ5IDIwMTggMDc6NDggUE0sIEhhcmkgQmF0
-aGluaSB3cm90ZToKPj4gQWRkIHN1cHBvcnQgdG8gcGFyc2UgdGhlIG5ldyAnaWJtLGR5bmFtaWMt
-bWVtb3J5LXYyJyBwcm9wZXJ0eSBpbiB0aGUKPj4gJ2libSxkeW5hbWljLXJlY29uZmlndXJhdGlv
-bi1tZW1vcnknIG5vZGUuIFRoaXMgcmVwbGFjZXMgdGhlIG9sZAo+PiAnaWJtLGR5bmFtaWMtbWVt
-b3J5JyBwcm9wZXJ0eSBhbmQgaXMgZW5hYmxlZCBpbiB0aGUga2VybmVsIHdpdGggYQo+PiBwYXRj
-aCBzZXJpZXMgdGhhdCBzdGFydHMgd2l0aCBjb21taXQgMGMzOGVkNmY2ZjBiICgicG93ZXJwYy9w
-c2VyaWVzOgo+PiBFbmFibGUgc3VwcG9ydCBvZiBpYm0sZHluYW1pYy1tZW1vcnktdjIiKS4gQWxs
-IExNQnMgdGhhdCBzaGFyZSB0aGUgc2FtZQo+PiBmbGFncyBhbmQgYXJlIGFkamFjZW50IGFyZSBn
-cm91cGVkIHRvZ2V0aGVyIGluIHRoZSBuZXdlciB2ZXJzaW9uIG9mIHRoZQo+PiBwcm9wZXJ0eSBt
-YWtpbmcgaXQgY29tcGFjdCB0byByZXByZXNlbnQgbGFyZ2VyIG1lbW9yeSBjb25maWd1cmF0aW9u
-cy4KPj4KPj4gU2lnbmVkLW9mZi1ieTogSGFyaSBCYXRoaW5pIDxoYmF0aGluaUBsaW51eC52bmV0
-LmlibS5jb20+Cj4+IC0tLQo+PiDCoCBrZXhlYy9hcmNoL3BwYzY0L2NyYXNoZHVtcC1wcGM2NC5j
-IHzCoMKgIDIzICsrKysrKystLQo+PiDCoCBrZXhlYy9hcmNoL3BwYzY0L2NyYXNoZHVtcC1wcGM2
-NC5oIHzCoMKgIDE2ICsrKysrLQo+PiDCoCBrZXhlYy9hcmNoL3BwYzY0L2tleGVjLXBwYzY0LmPC
-oMKgwqDCoCB8wqDCoCAzNSArKysrKysrKysrLS0tLQo+PiDCoCBrZXhlYy9mczJkdC5jwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDkyIAo+PiArKysrKysr
-KysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0KPj4gwqAgNCBmaWxlcyBjaGFuZ2VkLCAxMTIg
-aW5zZXJ0aW9ucygrKSwgNTQgZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9rZXhlYy9h
-cmNoL3BwYzY0L2NyYXNoZHVtcC1wcGM2NC5jIAo+PiBiL2tleGVjL2FyY2gvcHBjNjQvY3Jhc2hk
-dW1wLXBwYzY0LmMKPj4gaW5kZXggYmM5Zjk0OC4uNTBlMzg1MyAxMDA2NDQKPj4gLS0tIGEva2V4
-ZWMvYXJjaC9wcGM2NC9jcmFzaGR1bXAtcHBjNjQuYwo+PiArKysgYi9rZXhlYy9hcmNoL3BwYzY0
-L2NyYXNoZHVtcC1wcGM2NC5jCj4+IEBAIC0zOSw2ICszOSwxMCBAQAo+PiDCoCAjZGVmaW5lIERF
-VlRSRUVfQ1JBU0hLRVJORUxfQkFTRSAKPj4gIi9wcm9jL2RldmljZS10cmVlL2Nob3Nlbi9saW51
-eCxjcmFzaGtlcm5lbC1iYXNlIgo+PiDCoCAjZGVmaW5lIERFVlRSRUVfQ1JBU0hLRVJORUxfU0la
-RSAKPj4gIi9wcm9jL2RldmljZS10cmVlL2Nob3Nlbi9saW51eCxjcmFzaGtlcm5lbC1zaXplIgo+
-Pgo+PiArdW5zaWduZWQgaW50IG51bV9vZl9sbWJfc2V0czsKPj4gK3Vuc2lnbmVkIGludCBpc19k
-eW5fbWVtX3YyOwo+PiArdWludDY0X3QgbG1iX3NpemU7Cj4+ICsKPj4gwqAgc3RhdGljIHN0cnVj
-dCBjcmFzaF9lbGZfaW5mbyBlbGZfaW5mbzY0ID0KPj4gwqAgewo+PiDCoMKgwqDCoMKgIGNsYXNz
-OiBFTEZDTEFTUzY0LAo+PiBAQCAtMTI3LDYgKzEzMSw3IEBAIHN0YXRpYyBpbnQgZ2V0X2R5bl9y
-ZWNvbmZfY3Jhc2hfbWVtb3J5X3Jhbmdlcyh2b2lkKQo+PiDCoCB7Cj4+IMKgwqDCoMKgwqAgdWlu
-dDY0X3Qgc3RhcnQsIGVuZDsKPj4gwqDCoMKgwqDCoCB1aW50NjRfdCBzdGFydHJhbmdlLCBlbmRy
-YW5nZTsKPj4gK8KgwqDCoCB1aW50NjRfdCBzaXplOwo+PiDCoMKgwqDCoMKgIGNoYXIgZm5hbWVb
-MTI4XSwgYnVmWzMyXTsKPj4gwqDCoMKgwqDCoCBGSUxFICpmaWxlOwo+PiDCoMKgwqDCoMKgIHVu
-c2lnbmVkIGludCBpOwo+PiBAQCAtMTM1LDYgKzE0MCw4IEBAIHN0YXRpYyBpbnQgZ2V0X2R5bl9y
-ZWNvbmZfY3Jhc2hfbWVtb3J5X3Jhbmdlcyh2b2lkKQo+Pgo+PiDCoMKgwqDCoMKgIHN0cmNweShm
-bmFtZSwgIi9wcm9jL2RldmljZS10cmVlLyIpOwo+PiDCoMKgwqDCoMKgIHN0cmNhdChmbmFtZSwg
-Cj4+ICJpYm0sZHluYW1pYy1yZWNvbmZpZ3VyYXRpb24tbWVtb3J5L2libSxkeW5hbWljLW1lbW9y
-eSIpOwo+PiArwqDCoMKgIGlmIChpc19keW5fbWVtX3YyKQo+PiArwqDCoMKgwqDCoMKgwqAgc3Ry
-Y2F0KGZuYW1lLCAiLXYyIik7Cj4+IMKgwqDCoMKgwqAgaWYgKChmaWxlID0gZm9wZW4oZm5hbWUs
-ICJyIikpID09IE5VTEwpIHsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIHBlcnJvcihmbmFtZSk7Cj4+
-IMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gLTE7Cj4+IEBAIC0xNDIsOCArMTQ5LDkgQEAgc3Rh
-dGljIGludCBnZXRfZHluX3JlY29uZl9jcmFzaF9tZW1vcnlfcmFuZ2VzKHZvaWQpCj4+Cj4+IMKg
-wqDCoMKgwqAgZnNlZWsoZmlsZSwgNCwgU0VFS19TRVQpOwo+PiDCoMKgwqDCoMKgIHN0YXJ0cmFu
-Z2UgPSBlbmRyYW5nZSA9IDA7Cj4+IC3CoMKgwqAgZm9yIChpID0gMDsgaSA8IG51bV9vZl9sbWJz
-OyBpKyspIHsKPj4gLcKgwqDCoMKgwqDCoMKgIGlmICgobiA9IGZyZWFkKGJ1ZiwgMSwgMjQsIGZp
-bGUpKSA8IDApIHsKPj4gK8KgwqDCoCBzaXplID0gbG1iX3NpemU7Cj4+ICvCoMKgwqAgZm9yIChp
-ID0gMDsgaSA8IG51bV9vZl9sbWJfc2V0czsgaSsrKSB7Cj4+ICvCoMKgwqDCoMKgwqDCoCBpZiAo
-KG4gPSBmcmVhZChidWYsIDEsIExNQl9FTlRSWV9TSVpFLCBmaWxlKSkgPCAwKSB7Cj4+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBlcnJvcihmbmFtZSk7Cj4+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIGZjbG9zZShmaWxlKTsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0
-dXJuIC0xOwo+PiBAQCAtMTU2LDggKzE2NCwxNSBAQCBzdGF0aWMgaW50IGdldF9keW5fcmVjb25m
-X2NyYXNoX21lbW9yeV9yYW5nZXModm9pZCkKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-cmV0dXJuIC0xOwo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgfQo+Pgo+PiAtwqDCoMKgwqDCoMKgwqAg
-c3RhcnQgPSBiZTY0X3RvX2NwdSgoKHVpbnQ2NF90ICopYnVmKVtEUkNPTkZfQUREUl0pOwo+PiAt
-wqDCoMKgwqDCoMKgwqAgZW5kID0gc3RhcnQgKyBsbWJfc2l6ZTsKPj4gK8KgwqDCoMKgwqDCoMKg
-IC8qCj4+ICvCoMKgwqDCoMKgwqDCoMKgICogSWYgdGhlIHByb3BlcnR5IGlzIGlibSxkeW5hbWlj
-LW1lbW9yeS12MiwgdGhlIGZpcnN0IDQgYnl0ZXMKPj4gK8KgwqDCoMKgwqDCoMKgwqAgKiB0ZWxs
-IHRoZSBudW1iZXIgb2Ygc2VxdWVudGlhbCBMTUJzIGluIHRoaXMgZW50cnkuCj4+ICvCoMKgwqDC
-oMKgwqDCoMKgICovCj4+ICvCoMKgwqDCoMKgwqDCoCBpZiAoaXNfZHluX21lbV92MikKPj4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgc2l6ZSA9IGJlMzJfdG9fY3B1KCgodW5zaWduZWQgaW50ICop
-YnVmKVswXSkgKiBsbWJfc2l6ZTsKPj4gKwo+PiArwqDCoMKgwqDCoMKgwqAgc3RhcnQgPSBiZTY0
-X3RvX2NwdSgqKCh1aW50NjRfdCAqKSZidWZbRFJDT05GX0FERFJdKSk7Cj4+ICvCoMKgwqDCoMKg
-wqDCoCBlbmQgPSBzdGFydCArIHNpemU7Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoc3RhcnQg
-PT0gMCAmJiBlbmQgPj0gKEJBQ0tVUF9TUkNfRU5EICsgMSkpCj4+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIHN0YXJ0ID0gQkFDS1VQX1NSQ19FTkQgKyAxOwo+Pgo+PiBkaWZmIC0tZ2l0IGEv
-a2V4ZWMvYXJjaC9wcGM2NC9jcmFzaGR1bXAtcHBjNjQuaCAKPj4gYi9rZXhlYy9hcmNoL3BwYzY0
-L2NyYXNoZHVtcC1wcGM2NC5oCj4+IGluZGV4IDQyY2NjMzEuLjg3YmViMzkgMTAwNjQ0Cj4+IC0t
-LSBhL2tleGVjL2FyY2gvcHBjNjQvY3Jhc2hkdW1wLXBwYzY0LmgKPj4gKysrIGIva2V4ZWMvYXJj
-aC9wcGM2NC9jcmFzaGR1bXAtcHBjNjQuaAo+PiBAQCAtMzQsMTAgKzM0LDE4IEBAIGV4dGVybiB1
-bnNpZ25lZCBpbnQgcnRhc19zaXplOwo+PiDCoCBleHRlcm4gdWludDY0X3Qgb3BhbF9iYXNlOwo+
-PiDCoCBleHRlcm4gdWludDY0X3Qgb3BhbF9zaXplOwo+Pgo+PiAtdWludDY0X3QgbG1iX3NpemU7
-Cj4+IC11bnNpZ25lZCBpbnQgbnVtX29mX2xtYnM7Cj4KPiBUaGlzIG1pZ2h0IHByb2JhYmx5IGJy
-ZWFrIGNvbXBpbGF0aW9uIG9uIG90aGVyIGFyY2hpdGVjdHVyZXMgbGlrZSAKPiBhcm02NCAmIG1p
-cHMuCj4gV2lsbCBjaGVjayBhbmQgcG9zdCB2Mi4uCj4KCkFjdHVhbGx5LCB3ZSBhcmUgT0sgaGVy
-ZSBhcyB0aGUgbWFjcm8gJ0hBVkVfRFlOQU1JQ19NRU1PUlknIGlzIGRlZmluZWQgCm9ubHkgZm9y
-IFBQQzY0IGFyY2gKYW5kIHRoZSBhYm92ZSB2YXJpYWJsZXMgYXJlIHVzZWQgaW4gdGhlIGNvbW1v
-biBjb2RlIChrZXhlYy9mczJkdC5jKSBvbmx5IAp1bmRlciB0aGlzIGZsYWcuLgoKVGhhbmtzCkhh
-cmkKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhl
-YyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 02/20/2018 07:48 PM, Hari Bathini wrote:
+> Add a helper function for adding ranges to avoid duplicating code.
+> 
+> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+
+Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+
+> ---
+>  kexec/fs2dt.c |  115 ++++++++++++++++++++++++++-------------------------------
+>  1 file changed, 53 insertions(+), 62 deletions(-)
+> 
+> diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+> index 79aa0f3..550eca9 100644
+> --- a/kexec/fs2dt.c
+> +++ b/kexec/fs2dt.c
+> @@ -169,6 +169,50 @@ static unsigned propnum(const char *name)
+>  	return offset;
+>  }
+> 
+> +/*
+> + * Add ranges by comparing 'base' and 'end' addresses with usable
+> + * memory ranges. Returns the number of ranges added. Each range added
+> + * increments 'idx' by 2.
+> + */
+> +static uint64_t add_ranges(uint64_t **ranges, int *ranges_size, int idx,
+> +			   uint64_t base, uint64_t end)
+> +{
+> +	uint64_t loc_base, loc_end, rngs_cnt = 0;
+> +	size_t range;
+> +	int add = 0;
+> +
+> +	for (range = 0; range < usablemem_rgns.size; range++) {
+> +		loc_base = usablemem_rgns.ranges[range].start;
+> +		loc_end = usablemem_rgns.ranges[range].end;
+> +		if (loc_base >= base && loc_end <= end) {
+> +			add = 1;
+> +		} else if (base < loc_end && end > loc_base) {
+> +			if (loc_base < base)
+> +				loc_base = base;
+> +			if (loc_end > end)
+> +				loc_end = end;
+> +			add = 1;
+> +		}
+> +
+> +		if (add) {
+> +			if (idx >= ((*ranges_size) - 2)) {
+> +				(*ranges_size) += MEM_RANGE_CHUNK_SZ;
+> +				*ranges = realloc(*ranges, (*ranges_size)*8);
+> +				if (!(*ranges))
+> +					die("unrecoverable error: can't realloc"
+> +					    "%d bytes for ranges.\n",
+> +					    (*ranges_size)*8);
+> +			}
+> +			(*ranges)[idx++] = cpu_to_be64(loc_base);
+> +			(*ranges)[idx++] = cpu_to_be64(loc_end - loc_base);
+> +
+> +			rngs_cnt++;
+> +		}
+> +	}
+> +
+> +	return rngs_cnt;
+> +}
+> +
+>  #ifdef HAVE_DYNAMIC_MEMORY
+>  static void add_dyn_reconf_usable_mem_property__(int fd)
+>  {
+> @@ -176,8 +220,8 @@ static void add_dyn_reconf_usable_mem_property__(int fd)
+>  	uint64_t buf[32];
+>  	uint64_t *ranges;
+>  	int ranges_size = MEM_RANGE_CHUNK_SZ;
+> -	uint64_t base, end, loc_base, loc_end;
+> -	size_t i, rngs_cnt, range;
+> +	uint64_t base, end, rngs_cnt;
+> +	size_t i;
+>  	int rlen = 0;
+>  	int tmp_indx;
+> 
+> @@ -210,36 +254,8 @@ static void add_dyn_reconf_usable_mem_property__(int fd)
+> 
+>  		tmp_indx = rlen++;
+> 
+> -		rngs_cnt = 0;
+> -		for (range = 0; range < usablemem_rgns.size; range++) {
+> -			int add = 0;
+> -			loc_base = usablemem_rgns.ranges[range].start;
+> -			loc_end = usablemem_rgns.ranges[range].end;
+> -			if (loc_base >= base && loc_end <= end) {
+> -				add = 1;
+> -			} else if (base < loc_end && end > loc_base) {
+> -				if (loc_base < base)
+> -					loc_base = base;
+> -				if (loc_end > end)
+> -					loc_end = end;
+> -				add = 1;
+> -			}
+> -
+> -			if (add) {
+> -				if (rlen >= (ranges_size-2)) {
+> -					ranges_size += MEM_RANGE_CHUNK_SZ;
+> -					ranges = realloc(ranges, ranges_size*8);
+> -					if (!ranges)
+> -						die("unrecoverable error: can't"
+> -						    " realloc %d bytes for"
+> -						    " ranges.\n",
+> -						    ranges_size*8);
+> -				}
+> -				ranges[rlen++] = cpu_to_be64(loc_base);
+> -				ranges[rlen++] = cpu_to_be64(loc_end - loc_base);
+> -				rngs_cnt++;
+> -			}
+> -		}
+> +		rngs_cnt = add_ranges(&ranges, &ranges_size, rlen,
+> +				      base, end);
+>  		if (rngs_cnt == 0) {
+>  			/* We still need to add a counter for every LMB because
+>  			 * the kernel parsing code is dumb.  We just have
+> @@ -261,7 +277,8 @@ static void add_dyn_reconf_usable_mem_property__(int fd)
+>  			}
+>  		} else {
+>  			/* Store the count of (base, size) duple */
+> -			ranges[tmp_indx] = cpu_to_be64((uint64_t) rngs_cnt);
+> +			ranges[tmp_indx] = cpu_to_be64(rngs_cnt);
+> +			rlen += rngs_cnt * 2;
+>  		}
+>  	}
+>  		
+> @@ -294,8 +311,7 @@ static void add_usable_mem_property(int fd, size_t len)
+>  	uint64_t buf[2];
+>  	uint64_t *ranges;
+>  	int ranges_size = MEM_RANGE_CHUNK_SZ;
+> -	uint64_t base, end, loc_base, loc_end;
+> -	size_t range;
+> +	uint64_t base, end, rngs_cnt;
+>  	int rlen = 0;
+> 
+>  	strcpy(fname, pathname);
+> @@ -326,33 +342,8 @@ static void add_usable_mem_property(int fd, size_t len)
+>  		die("unrecoverable error: can't alloc %zu bytes for ranges.\n",
+>  		    ranges_size * sizeof(*ranges));
+> 
+> -	for (range = 0; range < usablemem_rgns.size; range++) {
+> -		int add = 0;
+> -		loc_base = usablemem_rgns.ranges[range].start;
+> -		loc_end = usablemem_rgns.ranges[range].end;
+> -		if (loc_base >= base && loc_end <= end) {
+> -			add = 1;
+> -		} else if (base < loc_end && end > loc_base) {
+> -			if (loc_base < base)
+> -				loc_base = base;
+> -			if (loc_end > end)
+> -				loc_end = end;
+> -			add = 1;
+> -		}
+> -		if (add) {
+> -			if (rlen >= (ranges_size-2)) {
+> -				ranges_size += MEM_RANGE_CHUNK_SZ;
+> -				ranges = realloc(ranges, ranges_size *
+> -						 sizeof(*ranges));
+> -				if (!ranges)
+> -					die("unrecoverable error: can't realloc"
+> -					    "%zu bytes for ranges.\n",
+> -					    ranges_size*sizeof(*ranges));
+> -			}
+> -			ranges[rlen++] = cpu_to_be64(loc_base);
+> -			ranges[rlen++] = cpu_to_be64(loc_end - loc_base);
+> -		}
+> -	}
+> +	rngs_cnt = add_ranges(&ranges, &ranges_size, rlen, base, end);
+> +	rlen += rngs_cnt * 2;
+> 
+>  	if (!rlen) {
+>  		/*
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
