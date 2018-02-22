@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-x243.google.com ([2607:f8b0:400d:c09::243])
+Received: from mail-pl0-x229.google.com ([2607:f8b0:400e:c01::229])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eoZae-0001HP-Oc
- for kexec@lists.infradead.org; Wed, 21 Feb 2018 18:58:06 +0000
-Received: by mail-qk0-x243.google.com with SMTP id h129so3321818qke.8
- for <kexec@lists.infradead.org>; Wed, 21 Feb 2018 10:57:54 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <61D4E5D821F1674CB87C99F080A210BE0117D388@BPXM01GP.gisp.nec.co.jp>
-References: <1518168978-11268-1-git-send-email-bhsharma@redhat.com>
- <CACi5LpM5snjZA9zmOibeVbB9ZN650epDDy26LOvDtBL+yVpr6A@mail.gmail.com>
- <61D4E5D821F1674CB87C99F080A210BE0117D388@BPXM01GP.gisp.nec.co.jp>
-From: Bhupesh SHARMA <bhupesh.linux@gmail.com>
-Date: Thu, 22 Feb 2018 00:27:52 +0530
-Message-ID: <CAFTCetQHpGbnJOTSAah6G8hyzoA29xq_grGyn4BFFJyP8AJqDg@mail.gmail.com>
-Subject: Re: [PATCH] makedumpfile/arm64: Add '--mem-usage' support
+ id 1eootX-0002Fz-In
+ for kexec@lists.infradead.org; Thu, 22 Feb 2018 11:18:38 +0000
+Received: by mail-pl0-x229.google.com with SMTP id v9-v6so698923plp.12
+ for <kexec@lists.infradead.org>; Thu, 22 Feb 2018 03:18:24 -0800 (PST)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v8 00/13] arm64: kexec: add kexec_file_load() support
+Date: Thu, 22 Feb 2018 20:17:19 +0900
+Message-Id: <20180222111732.23051-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,280 +17,263 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Bhupesh Sharma <bhsharma@redhat.com>, Masahiko Hayashi <mas-hayashi@tg.jp.nec.com>
+To: catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, akpm@linux-foundation.org, mpe@ellerman.id.au, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org, julien.thierry@arm.com
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-Hi Masaki Tachibana,
-
-On Tue, Feb 20, 2018 at 4:42 PM, Masaki Tachibana
-<mas-tachibana@vf.jp.nec.com> wrote:
-> Hi Bhupesh,
->
-> Sorry for the late reply.
-> I'll reply by the end the next week.
-
-Sure. Thanks for your mail.
-
-Regards,
-Bhupesh
+This is the eighth round of implementing kexec_file_load() support
+on arm64.[1]
+Most of the code is based on kexec-tools (along with some kernel code
+from x86, which also came from kexec-tools).
 
 
-> Thanks
-> tachibana
->
->> -----Original Message-----
->> From: Bhupesh Sharma [mailto:bhsharma@redhat.com]
->> Sent: Tuesday, February 20, 2018 1:56 PM
->> To: kexec@lists.infradead.org
->> Cc: Bhupesh Sharma <bhsharma@redhat.com>; Tachibana Masaki() <mas-tachibana@vf.jp.nec.com>; Nakayama Takuya(
->> ) <tak-nakayama@tg.jp.nec.com>; Nishimura Daisuke() <dai-nishimura@rc.jp.nec.com>
->> Subject: Re: [PATCH] makedumpfile/arm64: Add '--mem-usage' support
->>
->> Hello,
->>
->> On Fri, Feb 9, 2018 at 3:06 PM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
->> > Its good to have the makedumpfile '--mem-usage' support
->> > for arm64 architecture as well, as it allows one to see the page numbers
->> > of current system (1st kernel) in different use.
->> >
->> > Using this we can know how many pages are dumpable when different
->> > dump_level is specified.
->> >
->> > Normally for x86_64, makedumpfile analyzes the 'System Ram' and
->> > 'kernel text' program segment of /proc/kcore excluding
->> > the crashkernel range, then calculates the page number of different
->> > kind per vmcoreinfo.
->> >
->> > We use the similar logic for arm64, but in addition make the '--mem-usage'
->> > usage dependent on the VMLINUX file being passed. This is done to allow
->> > information like VA_BITS being determined from kernel symbol like
->> > _stext. This allows us to get the VA_BITS before 'set_kcore_vmcoreinfo()'
->> > is called.
->> >
->> > Also I have validated the '--mem-usage' makedumpfile option on several
->> > ppc64/ppc64le and s390x machines, so update the makedumpfile.8
->> > documentation to indicate that '--mem-usage' option is supported
->> > not only on x86_64, but also on ppc64, s390x and arm64.
->> >
->> > After this patch, when using the '--mem-usage' option with makedumpfile,
->> > we get the correct information about the different pages. For e.g.
->> > here is an output from my arm64 board:
->> >
->> > TYPE            PAGES                   EXCLUDABLE      DESCRIPTION
->> > ----------------------------------------------------------------------
->> > ZERO            49524                   yes             Pages filled with zero
->> > NON_PRI_CACHE   15143                   yes             Cache pages without private flag
->> > PRI_CACHE       29147                   yes             Cache pages with private flag
->> > USER            3684                    yes             User process pages
->> > FREE            1450569                 yes             Free pages
->> > KERN_DATA       14243                   no              Dumpable kernel data
->> >
->> > page size:              65536
->> > Total pages on system:  1562310
->> > Total size on system:   102387548160     Byte
->> >
->> > Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
->> > Cc: Takuya Nakayama <tak-nakayama@tg.jp.nec.com>
->> > Cc: Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>
->> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
->>
->> Ping. Any review comments on this?
->>
->> Regards,
->> Bhupesh
->>
->> > ---
->> >  arch/arm64.c   | 51 ++++++++++++++++++++++++++++++++++++++++++++++++---
->> >  makedumpfile.8 | 11 +++++++++--
->> >  makedumpfile.c | 25 +++++++++++++++++++++++--
->> >  makedumpfile.h |  1 +
->> >  4 files changed, 81 insertions(+), 7 deletions(-)
->> >
->> > diff --git a/arch/arm64.c b/arch/arm64.c
->> > index 25d7a1f4db98..91f113f6447c 100644
->> > --- a/arch/arm64.c
->> > +++ b/arch/arm64.c
->> > @@ -48,6 +48,12 @@ static unsigned long kimage_voffset;
->> >  #define SZ_64K                 (64 * 1024)
->> >  #define SZ_128M                        (128 * 1024 * 1024)
->> >
->> > +#define PAGE_OFFSET_36 ((0xffffffffffffffffUL) << 36)
->> > +#define PAGE_OFFSET_39 ((0xffffffffffffffffUL) << 39)
->> > +#define PAGE_OFFSET_42 ((0xffffffffffffffffUL) << 42)
->> > +#define PAGE_OFFSET_47 ((0xffffffffffffffffUL) << 47)
->> > +#define PAGE_OFFSET_48 ((0xffffffffffffffffUL) << 48)
->> > +
->> >  #define pgd_val(x)             ((x).pgd)
->> >  #define pud_val(x)             (pgd_val((x).pgd))
->> >  #define pmd_val(x)             (pud_val((x).pud))
->> > @@ -140,8 +146,6 @@ pud_offset(pgd_t *pgda, pgd_t *pgdv, unsigned long vaddr)
->> >
->> >  static int calculate_plat_config(void)
->> >  {
->> > -       va_bits = NUMBER(VA_BITS);
->> > -
->> >         /* derive pgtable_level as per arch/arm64/Kconfig */
->> >         if ((PAGESIZE() == SZ_16K && va_bits == 36) ||
->> >                         (PAGESIZE() == SZ_64K && va_bits == 42)) {
->> > @@ -188,7 +192,6 @@ get_machdep_info_arm64(void)
->> >         kimage_voffset = NUMBER(kimage_voffset);
->> >         info->max_physmem_bits = PHYS_MASK_SHIFT;
->> >         info->section_size_bits = SECTIONS_SIZE_BITS;
->> > -       info->page_offset = 0xffffffffffffffffUL << (va_bits - 1);
->> >
->> >         DEBUG_MSG("kimage_voffset   : %lx\n", kimage_voffset);
->> >         DEBUG_MSG("max_physmem_bits : %lx\n", info->max_physmem_bits);
->> > @@ -219,6 +222,48 @@ get_xen_info_arm64(void)
->> >  int
->> >  get_versiondep_info_arm64(void)
->> >  {
->> > +       unsigned long long stext;
->> > +
->> > +       /* We can read the _stext symbol from vmlinux and determine the
->> > +        * VA_BITS and page_offset.
->> > +        */
->> > +
->> > +       /* Open the vmlinux file */
->> > +       open_kernel_file();
->> > +       set_dwarf_debuginfo("vmlinux", NULL,
->> > +                       info->name_vmlinux, info->fd_vmlinux);
->> > +
->> > +       if (!get_symbol_info())
->> > +               return FALSE;
->> > +
->> > +       /* Get the '_stext' symbol */
->> > +       if (SYMBOL(_stext) == NOT_FOUND_SYMBOL) {
->> > +               ERRMSG("Can't get the symbol of _stext.\n");
->> > +               return FALSE;
->> > +       } else {
->> > +               stext = SYMBOL(_stext);
->> > +       }
->> > +
->> > +       /* Derive va_bits as per arch/arm64/Kconfig */
->> > +       if ((stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
->> > +               va_bits = 36;
->> > +       } else if ((stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
->> > +               va_bits = 39;
->> > +       } else if ((stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
->> > +               va_bits = 42;
->> > +       } else if ((stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
->> > +               va_bits = 47;
->> > +       } else if ((stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
->> > +               va_bits = 48;
->> > +       } else {
->> > +               ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
->> > +               return FALSE;
->> > +       }
->> > +
->> > +       info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
->> > +
->> > +       DEBUG_MSG("page_offset=%lx, va_bits=%d\n", info->page_offset, va_bits);
->> > +
->> >         return TRUE;
->> >  }
->> >
->> > diff --git a/makedumpfile.8 b/makedumpfile.8
->> > index 15db7947d62f..be9620035316 100644
->> > --- a/makedumpfile.8
->> > +++ b/makedumpfile.8
->> > @@ -593,7 +593,7 @@ last cleared on the crashed kernel, through "dmesg --clear" for example.
->> >
->> >  .TP
->> >  \fB\-\-mem-usage\fR
->> > -This option is only for x86_64.
->> > +This option is currently supported on x86_64, arm64, ppc64 and s390x.
->> >  This option is used to show the page numbers of current system in different
->> >  use. It should be executed in 1st kernel. By the help of this, user can know
->> >  how many pages is dumpable when different dump_level is specified. It analyzes
->> > @@ -601,12 +601,19 @@ the 'System Ram' and 'kernel text' program segment of /proc/kcore excluding
->> >  the crashkernel range, then calculates the page number of different kind per
->> >  vmcoreinfo. So currently /proc/kcore need be specified explicitly.
->> >
->> > +For arm64, path to vmlinux file should be specified as well.
->> > +
->> >  .br
->> > -.B Example:
->> > +.B Example (for architectures other than arm64):
->> >  .br
->> >  # makedumpfile \-\-mem-usage /proc/kcore
->> > +
->> > +.br
->> > +.B Example (for arm64 architecture):
->> >  .br
->> >
->> > +# makedumpfile \-\-mem-usage vmlinux /proc/kcore
->> > +.br
->> >
->> >  .TP
->> >  \fB\-\-diskset=VMCORE\fR
->> > diff --git a/makedumpfile.c b/makedumpfile.c
->> > index ed138d339d9a..b38b5000aa74 100644
->> > --- a/makedumpfile.c
->> > +++ b/makedumpfile.c
->> > @@ -11090,7 +11090,14 @@ static struct option longopts[] = {
->> >         {"cyclic-buffer", required_argument, NULL, OPT_CYCLIC_BUFFER},
->> >         {"eppic", required_argument, NULL, OPT_EPPIC},
->> >         {"non-mmap", no_argument, NULL, OPT_NON_MMAP},
->> > +#ifdef __aarch64__
->> > +       /* VMLINUX file is required for aarch64 for get
->> > +        * the symbols required to calculate va_bits.
->> > +        */
->> > +       {"mem-usage", required_argument, NULL, OPT_MEM_USAGE},
->> > +#else
->> >         {"mem-usage", no_argument, NULL, OPT_MEM_USAGE},
->> > +#endif
->> >         {"splitblock-size", required_argument, NULL, OPT_SPLITBLOCK_SIZE},
->> >         {"work-dir", required_argument, NULL, OPT_WORKING_DIR},
->> >         {"num-threads", required_argument, NULL, OPT_NUM_THREADS},
->> > @@ -11201,8 +11208,22 @@ main(int argc, char *argv[])
->> >                         info->flag_partial_dmesg = 1;
->> >                         break;
->> >                 case OPT_MEM_USAGE:
->> > -                      info->flag_mem_usage = 1;
->> > -                      break;
->> > +                       info->flag_mem_usage = 1;
->> > +#ifdef __aarch64__
->> > +                       /* VMLINUX file is required for aarch64 for get
->> > +                        * the symbols required to calculate va_bits and
->> > +                        * it should be the 1st command parameter being
->> > +                        * specified.
->> > +                        */
->> > +                       if (strcmp(optarg, "/proc/kcore") == 0) {
->> > +                               MSG("vmlinux path should be 1st commandline parameter with --mem-usage option.\n");
->> > +                               goto out;
->> > +                       }
->> > +                       else {
->> > +                               info->name_vmlinux = optarg;
->> > +                       }
->> > +#endif
->> > +                       break;
->> >                 case OPT_COMPRESS_SNAPPY:
->> >                         info->flag_compress = DUMP_DH_COMPRESSED_SNAPPY;
->> >                         break;
->> > diff --git a/makedumpfile.h b/makedumpfile.h
->> > index 01eece231475..f65d91870b73 100644
->> > --- a/makedumpfile.h
->> > +++ b/makedumpfile.h
->> > @@ -2308,6 +2308,7 @@ struct elf_prstatus {
->> >  /*
->> >   * Function Prototype.
->> >   */
->> > +int open_kernel_file(void);
->> >  mdf_pfn_t get_num_dumpable_cyclic(void);
->> >  mdf_pfn_t get_num_dumpable_cyclic_withsplit(void);
->> >  int get_loads_dumpfile_cyclic(void);
->> > --
->> > 2.7.4
->> >
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+This patch series enables us to
+  * load the kernel by specifying its file descriptor, instead of user-
+    filled buffer, at kexec_file_load() system call, and
+  * optionally verify its signature at load time for trusted boot.
+
+Contrary to kexec_load() system call, as we discussed a long time ago,
+users may not be allowed to provide a device tree to the 2nd kernel
+explicitly, hence enforcing a dt blob of the first kernel to be re-used
+internally.
+
+To use kexec_file_load() system call, instead of kexec_load(), at kexec
+command, '-s' option must be specified. See [2] for a necessary patch for
+kexec-tools.
+
+To anaylize a generated crash dump file, use the latest master branch of
+crash utility[3] for v4.16-rc kernel. I always try to submit patches to
+fix any inconsistencies introduced in the latest kernel.
+
+Regarding a kernel image verification, a signature must be presented
+along with the binary itself. A signature is basically a hash value
+calculated against the whole binary data and encrypted by a key which
+will be authenticated by one of the system's trusted certificates.
+Any attempt to read and load a to-be-kexec-ed kernel image through
+a system call will be checked and blocked if the binary's hash value
+doesn't match its associated signature.
+
+There are two methods available now:
+1. implementing arch-specific verification hook of kexec_file_load()
+2. utilizing IMA(Integrity Measurement Architecture)[4] appraisal framework
+
+Before my v7, I believed that my patch only supports (1) but am now
+confident that (2) comes free if IMA is enabled and properly configured.
+
+
+(1) Arch-specific verification hook
+If CONFIG_KEXEC_VERIFY_SIG is enabled, kexec_file_load() invokes an arch-
+defined (and hence file-format-specific) hook function to check for the
+validity of kernel binary.
+
+On x86, a signature is embedded into a PE file (Microsoft's format) header
+of binary. Since arm64's "Image" can also be seen as a PE file as far as
+CONFIG_EFI is enabled, we adopt this format for kernel signing.  
+
+As in the case of UEFI applications, we can create a signed kernel image:
+    $ sbsign --key ${KEY} --cert ${CERT} Image
+
+You may want to use certs/signing_key.pem, which is intended to be used
+for module sigining (CONFIG_MODULE_SIG), as ${KEY} and ${CERT} for test
+purpose.
+
+
+(2) IMA appraisal-based
+IMA was first introduced in linux in order to meet TCG (Trusted Computing
+Group) requirement that all the sensitive files be *measured* before
+reading/executing them to detect any untrusted changes/modification.
+Then appraisal feature, which allows us to ensure the integrity of
+files and even prevent them from reading/executing, was added later.
+
+Meanwhile, kexec_file_load() has been merged since v3.17 and evolved to
+enable IMA-appraisal type verification by the commit b804defe4297 ("kexec:
+replace call to copy_file_from_fd() with kernel version").
+
+In this scheme, a signature will be stored in a extended file attribute,
+"security.ima" while a decryption key is hold in a dedicated keyring,
+".ima" or "_ima".  All the necessary process of verification is confined
+in a secure API, kernel_read_file_from_fd(), called by kexec_file_load().
+
+    Please note that powerpc is one of the two architectures now
+    supporting KEXEC_FILE, and that it wishes to exntend IMA,
+    where a signature may be appended to "vmlinux" file[5], like module
+    signing, instead of using an extended file attribute.
+
+While IMA meant to be used with TPM (Trusted Platform Module) on secure
+platform, IMA is still usable without TPM. Here is an example procedure
+about how we can give it a try to run the feature using a self-signed
+root ca for demo/test purposes:
+
+ 1) Generate needed keys and certificates, following "Generate trusted
+    keys" section in README of ima-evm-utils[6].
+
+ 2) Build the kernel with the following kernel configurations, specifying
+    "ima-local-ca.pem" for CONFIG_SYSTEM_TRUSTED_KEYS:
+	CONFIG_EXT4_FS_SECURITY
+	CONFIG_INTEGRITY_SIGNATURE
+	CONFIG_INTEGRITY_ASYMMETRIC_KEYS
+	CONFIG_INTEGRITY_TRUSTED_KEYRING
+	CONFIG_IMA
+	CONFIG_IMA_WRITE_POLICY
+	CONFIG_IMA_READ_POLICY
+	CONFIG_IMA_APPRAISE
+	CONFIG_IMA_APPRAISE_BOOTPARAM
+	CONFIG_SYSTEM_TRUSTED_KEYS
+    Please note that CONFIG_KEXEC_VERIFY_SIG is not, actually should
+    not be, enabled.
+
+ 3) Sign(label) a kernel image binary to be kexec-ed on target filesystem:
+    $ evmctl ima_sign --key /path/to/private_key.pem /your/Image
+
+ 4) Add a command line parameter and boot the kernel:
+    ima_appraise=enforce
+
+ On live system,
+ 5) Set a security policy:
+    $ mount -t securityfs none /sys/kernel/security
+    $ echo "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig" \
+      > /sys/kernel/security/ima/policy
+
+ 6) Add a key for ima:
+    $ keyctl padd asymmetric my_ima_key %:.ima < /path/to/x509_ima.der
+    (or evmctl import /path/to/x509_ima.der <ima_keyring_id>)
+
+ 7) Then try kexec as normal.
+
+
+Concerns(or future works):
+* Even if the kernel is configured with CONFIG_RANDOMIZE_BASE, the 2nd
+  kernel won't be placed at a randomized address. We will have to
+  add some boot code similar to efi-stub to implement the randomization.
+for approach (1),
+* While big-endian kernel can support kernel signing, I'm not sure that
+  Image can be recognized as in PE format because x86 standard only
+  defines little-endian-based format.
+* vmlinux support
+
+  [1] http://git.linaro.org/people/takahiro.akashi/linux-aarch64.git
+	branch:arm64/kexec_file
+  [2] http://git.linaro.org/people/takahiro.akashi/kexec-tools.git
+	branch:arm64/kexec_file
+  [3] http://github.com/crash-utility/crash.git
+  [4] https://sourceforge.net/p/linux-ima/wiki/Home/
+  [5] http://lkml.iu.edu//hypermail/linux/kernel/1707.0/03669.html
+  [6] https://sourceforge.net/p/linux-ima/ima-evm-utils/ci/master/tree/
+
+
+Changes in v8 (Feb 22, 2018)
+* introduce ARCH_HAS_KEXEC_PURGATORY so that arm64 will be able to skip
+  purgatory
+* remove "ifdef CONFIG_X86_64" stuffs from a re-factored function,
+  prepare_elf64_headers(), making its interface more generic
+  (The original patch was split into two for easier reviews.)
+* modify cpu_soft_restart() so as to let the 2nd kernel jump into its entry
+  code directly without requiring purgatory in case of kexec_file_load
+* remove CONFIG_KEXEC_FILE_IMAGE_FMT and introduce
+  CONFIG_KEXEC_IMAGE_VERIFY_SIG, much similar to x86 but quite redundant
+  for now.
+* In addition, update/modify dependencies of KEXEC_IMAGE_VERIFY_SIG
+
+Changes in v7 (Dec 4, 2017)
+* rebased to v4.15-rc2
+* re-organize the patch set to separate KEXEC_FILE_VERIFY_SIG-related
+  code from the others
+* revamp factored-out code in kernel/kexec_file.c due to the changes
+  in original x86 code
+* redefine walk_sys_ram_res_rev() prototype due to change of callback
+  type in the counterpart, walk_sys_ram_res()
+* make KEXEC_FILE_IMAGE_FMT defaut on if KEXEC_FILE selected
+
+Changes in v6 (Oct 24, 2017)
+* fix a for-loop bug in _kexec_kernel_image_probe() per Julien
+
+Changes in v5 (Oct 10, 2017)
+* fix kbuild errors around patch #3
+per Julien's comments,
+* fix a bug in walk_system_ram_res_rev() with some cleanup
+* modify fdt_setprop_range() to use vmalloc()
+* modify fill_property() to use memset()
+
+Changes in v4 (Oct 2, 2017)
+* reinstate x86's arch_kexec_kernel_image_load()
+* rename weak arch_kexec_kernel_xxx() to _kexec_kernel_xxx() for
+  better re-use
+* constify kexec_file_loaders[]
+
+Changes in v3 (Sep 15, 2017)
+* fix kbuild test error
+* factor out arch_kexec_kernel_*() & arch_kimage_file_post_load_cleanup()
+* remove CONFIG_CRASH_CORE guard from kexec_file.c
+* add vmapped kernel region to vmcore for gdb backtracing
+  (see prepare_elf64_headers())
+* merge asm/kexec_file.h into asm/kexec.h
+* and some cleanups
+
+Changes in v2 (Sep 8, 2017)
+* move core-header-related functions from crash_core.c to kexec_file.c
+* drop hash-check code from purgatory
+* modify purgatory asm to remove arch_kexec_apply_relocations_add()
+* drop older kernel support
+* drop vmlinux support (at least, for this series)
+
+
+Patch #1 to #10 are essential part for KEXEC_FILE support
+(additionally allowing for IMA-based verification):
+  Patch #1 to #6 are all preparatory patches on generic side.
+  Patch #7 to #11 are to enable kexec_file_load on arm64.
+
+Patch #12 to #13 are for KEXEC_VERIFY_SIG (arch-specific verification)
+support
+
+AKASHI Takahiro (13):
+  resource: add walk_system_ram_res_rev()
+  kexec_file: make an use of purgatory optional
+  kexec_file,x86,powerpc: factor out kexec_file_ops functions
+  x86: kexec_file: factor out elf core header related functions
+  kexec_file, x86: move re-factored code to generic side
+  asm-generic: add kexec_file_load system call to unistd.h
+  arm64: kexec_file: invoke the kernel without purgatory
+  arm64: kexec_file: load initrd and device-tree
+  arm64: kexec_file: add crash dump support
+  arm64: kexec_file: add Image format support
+  arm64: kexec_file: enable KEXEC_FILE config
+  include: pe.h: remove message[] from mz header definition
+  arm64: kexec_file: enable KEXEC_VERIFY_SIG for Image
+
+ arch/arm64/Kconfig                          |  34 +++
+ arch/arm64/include/asm/kexec.h              |  90 +++++++
+ arch/arm64/kernel/Makefile                  |   3 +-
+ arch/arm64/kernel/cpu-reset.S               |   6 +-
+ arch/arm64/kernel/kexec_image.c             | 105 ++++++++
+ arch/arm64/kernel/machine_kexec.c           |  11 +-
+ arch/arm64/kernel/machine_kexec_file.c      | 401 ++++++++++++++++++++++++++++
+ arch/arm64/kernel/relocate_kernel.S         |   3 +-
+ arch/powerpc/Kconfig                        |   3 +
+ arch/powerpc/include/asm/kexec.h            |   2 +-
+ arch/powerpc/kernel/kexec_elf_64.c          |   2 +-
+ arch/powerpc/kernel/machine_kexec_file_64.c |  39 +--
+ arch/x86/Kconfig                            |   3 +
+ arch/x86/include/asm/kexec-bzimage64.h      |   2 +-
+ arch/x86/kernel/crash.c                     | 332 +++++------------------
+ arch/x86/kernel/kexec-bzimage64.c           |   2 +-
+ arch/x86/kernel/machine_kexec_64.c          |  45 +---
+ include/linux/ioport.h                      |   3 +
+ include/linux/kexec.h                       |  34 ++-
+ include/linux/pe.h                          |   2 +-
+ include/uapi/asm-generic/unistd.h           |   4 +-
+ kernel/kexec_file.c                         | 238 ++++++++++++++++-
+ kernel/resource.c                           |  57 ++++
+ 23 files changed, 1046 insertions(+), 375 deletions(-)
+ create mode 100644 arch/arm64/kernel/kexec_image.c
+ create mode 100644 arch/arm64/kernel/machine_kexec_file.c
+
+-- 
+2.16.2
+
 
 _______________________________________________
 kexec mailing list
