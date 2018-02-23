@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by casper.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ep8oS-0002Oq-C8
- for kexec@lists.infradead.org; Fri, 23 Feb 2018 08:34:42 +0000
-Date: Fri, 23 Feb 2018 16:34:05 +0800
+Date: Fri, 23 Feb 2018 16:36:19 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 00/17] Add kexec_file_load support to s390
-Message-ID: <20180223083405.GA29498@dhcp-128-65.nay.redhat.com>
-References: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
- <20180214073543.GA12328@dhcp-128-65.nay.redhat.com>
- <20180214105449.1325bfbe@ThinkPad>
+Subject: Re: [PATCH v8 01/13] resource: add walk_system_ram_res_rev()
+Message-ID: <20180223083619.GA4433@dhcp-128-65.nay.redhat.com>
+References: <20180222111732.23051-1-takahiro.akashi@linaro.org>
+ <20180222111732.23051-2-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180214105449.1325bfbe@ThinkPad>
+In-Reply-To: <20180222111732.23051-2-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,159 +20,127 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Cc: linux-s390@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, julien.thierry@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, Linus Torvalds <torvalds@linux-foundation.org>, davem@davemloft.net, vgoyal@redhat.com
 
-On 02/14/18 at 10:54am, Philipp Rudo wrote:
-> Hi Dave,
+Hi AKASHI,
+
+On 02/22/18 at 08:17pm, AKASHI Takahiro wrote:
+> This function, being a variant of walk_system_ram_res() introduced in
+> commit 8c86e70acead ("resource: provide new functions to walk through
+> resources"), walks through a list of all the resources of System RAM
+> in reversed order, i.e., from higher to lower.
 > 
-> I just browsed AKASHI's patches (v7). The way I see it the common code changes
-> are on different areas of kexec_file and shouldn't get in conflict. Only in the
-> arch code (s390 and arm64) some function calls might need an update. But I have
-> to take a closer look on the patches first.
+> It will be used in kexec_file implementation on arm64.
 
-I'm tring both in local branch with both series (V8 from AKASHI and this series),
-but there are indeed some conflicts, may because AKASHI factored out some arch
-code from ppc/x86 to common code.
-
-> 
-> @AKASHI: Welcome to the list. While browsing I couldn't find any
-> arch_apply_relocation function for arm64. These require the biggest changes in
-> my patch set. Did I just miss it or does arm64 work differently?
-> 
-> @Dave: Happy holiday
-
-Thank you!
+I remember there was an old discussion about this, it should be added
+in patch log why this is needed.
 
 > 
-> Thanks
-> Philipp
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> ---
+>  include/linux/ioport.h |  3 +++
+>  kernel/resource.c      | 57 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 60 insertions(+)
 > 
-> On Wed, 14 Feb 2018 15:35:43 +0800
-> Dave Young <dyoung@redhat.com> wrote:
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index da0ebaec25f0..f12d95fe038b 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -277,6 +277,9 @@ extern int
+>  walk_system_ram_res(u64 start, u64 end, void *arg,
+>  		    int (*func)(struct resource *, void *));
+>  extern int
+> +walk_system_ram_res_rev(u64 start, u64 end, void *arg,
+> +			int (*func)(struct resource *, void *));
+> +extern int
+>  walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start, u64 end,
+>  		    void *arg, int (*func)(struct resource *, void *));
+>  
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index e270b5048988..bdaa93407f4c 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -23,6 +23,8 @@
+>  #include <linux/pfn.h>
+>  #include <linux/mm.h>
+>  #include <linux/resource_ext.h>
+> +#include <linux/string.h>
+> +#include <linux/vmalloc.h>
+>  #include <asm/io.h>
+>  
+>  
+> @@ -486,6 +488,61 @@ int walk_mem_res(u64 start, u64 end, void *arg,
+>  				     arg, func);
+>  }
+>  
+> +int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
+> +				int (*func)(struct resource *, void *))
+> +{
+> +	struct resource res, *rams;
+> +	int rams_size = 16, i;
+> +	int ret = -1;
+> +
+> +	/* create a list */
+> +	rams = vmalloc(sizeof(struct resource) * rams_size);
+> +	if (!rams)
+> +		return ret;
+> +
+> +	res.start = start;
+> +	res.end = end;
+> +	res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> +	i = 0;
+> +	while ((res.start < res.end) &&
+> +		(!find_next_iomem_res(&res, IORES_DESC_NONE, true))) {
+> +		if (i >= rams_size) {
+> +			/* re-alloc */
+> +			struct resource *rams_new;
+> +			int rams_new_size;
+> +
+> +			rams_new_size = rams_size + 16;
+> +			rams_new = vmalloc(sizeof(struct resource)
+> +							* rams_new_size);
+> +			if (!rams_new)
+> +				goto out;
+> +
+> +			memcpy(rams_new, rams,
+> +					sizeof(struct resource) * rams_size);
+> +			vfree(rams);
+> +			rams = rams_new;
+> +			rams_size = rams_new_size;
+> +		}
+> +
+> +		rams[i].start = res.start;
+> +		rams[i++].end = res.end;
+> +
+> +		res.start = res.end + 1;
+> +		res.end = end;
+> +	}
+> +
+> +	/* go reverse */
+> +	for (i--; i >= 0; i--) {
+> +		ret = (*func)(&rams[i], arg);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +out:
+> +	vfree(rams);
+> +	return ret;
+> +}
+> +
+>  #if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
+>  
+>  /*
+> -- 
+> 2.16.2
 > 
-> > Hi Philipp,
-> > 
-> > I added AKASHI in cc, he posted arm64 kexec_file series previously.
-> > I would like to read both series especially the general part, but
-> > maybe at the end of this month because of a holiday..
-> > 
-> > From the patch log the cleanup looks nice, but still need read the
-> > details.
-> > 
-> > On 02/12/18 at 11:07am, Philipp Rudo wrote:
-> > > Hi everybody
-> > > 
-> > > resending the series as there was no reaction, yet. Furthermore i was told
-> > > that Andrew and the x86 list should also be CCed, so welcome.
-> > > 
-> > > No changes made to the patches since first time i sent them. The patches
-> > > apply to the current master (v4.16-rc1).
-> > > 
-> > > Thanks
-> > > Philipp
-> > > 
-> > > ---
-> > > 
-> > > this series adds the kexec_file_load system call to s390. Before the system
-> > > call is added there are some preparations/clean ups to common
-> > > kexec_file_load. In detail this series contains:
-> > > 
-> > > Patch #1&2: Minor cleanups/fixes.
-> > > 
-> > > Patch #3-9: Clean up the purgatory load/relocation code. Especially remove
-> > > the mis-use of the purgatory_info->sechdrs->sh_offset field, currently
-> > > holding a pointer into either kexec_purgatory (ro) or purgatory_buf (rw)
-> > > depending on the section. With these patches the section address will be
-> > > calculated verbosely and sh_offset will contain the offset of the section
-> > > in the stripped purgatory binary (purgatory_buf).
-> > > 
-> > > Patch #10: Allows architectures to set the purgaory load address. This
-> > > patch is important for s390 as the kernel and purgatory have to be loaded
-> > > to fixed addresses. In current code this is impossible as the purgatory
-> > > load is opaque to the architecture.
-> > > 
-> > > Patch #11: Moves x86 purgatories sha implementation to common lib/
-> > > directory.
-> > > 
-> > > Patches #12-17 finally adds the kexec_file_load system call to s390.
-> > > 
-> > > Please note that I had to touch arch code for x86 and power a little. In
-> > > theory this should not change the behavior but I don't have a way to test
-> > > it. Cross-compiling with defconfig(*) works fine for both.
-> > > 
-> > > Thanks
-> > > Philipp
-> > > 
-> > > (*) On x86 with the orc unwinder turned off. objtool SEGFAULTs on s390...
-> > > 
-> > > Philipp Rudo (17):
-> > >   kexec_file: Silence compile warnings
-> > >   kexec_file: Remove checks in kexec_purgatory_load
-> > >   kexec_file: Make purgatory_info->ehdr const
-> > >   kexec_file: Search symbols in read-only kexec_purgatory
-> > >   kexec_file: Use read-only sections in arch_kexec_apply_relocations*
-> > >   kexec_file: Split up __kexec_load_puragory
-> > >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 1
-> > >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 2
-> > >   kexec_file: Remove mis-use of sh_offset field
-> > >   kexec_file: Allow archs to set purgatory load address
-> > >   kexec_file: Move purgatories sha256 to common code
-> > >   s390/kexec_file: Prepare setup.h for kexec_file_load
-> > >   s390/kexec_file: Add purgatory
-> > >   s390/kexec_file: Add kexec_file_load system call
-> > >   s390/kexec_file: Add image loader
-> > >   s390/kexec_file: Add crash support to image loader
-> > >   s390/kexec_file: Add ELF loader
-> > > 
-> > >  arch/powerpc/kernel/kexec_elf_64.c             |   9 +-
-> > >  arch/s390/Kbuild                               |   1 +
-> > >  arch/s390/Kconfig                              |   4 +
-> > >  arch/s390/include/asm/kexec.h                  |  23 ++
-> > >  arch/s390/include/asm/purgatory.h              |  17 ++
-> > >  arch/s390/include/asm/setup.h                  |  40 ++-
-> > >  arch/s390/kernel/Makefile                      |   1 +
-> > >  arch/s390/kernel/asm-offsets.c                 |   5 +
-> > >  arch/s390/kernel/compat_wrapper.c              |   1 +
-> > >  arch/s390/kernel/kexec_elf.c                   | 149 ++++++++++
-> > >  arch/s390/kernel/kexec_image.c                 |  78 +++++
-> > >  arch/s390/kernel/machine_kexec_file.c          | 291 +++++++++++++++++++
-> > >  arch/s390/kernel/syscalls/syscall.tbl          |   1 +
-> > >  arch/s390/purgatory/Makefile                   |  37 +++
-> > >  arch/s390/purgatory/head.S                     | 279 ++++++++++++++++++
-> > >  arch/s390/purgatory/purgatory.c                |  42 +++
-> > >  arch/x86/kernel/kexec-bzimage64.c              |   8 +-
-> > >  arch/x86/kernel/machine_kexec_64.c             |  66 ++---
-> > >  arch/x86/purgatory/Makefile                    |   3 +
-> > >  arch/x86/purgatory/purgatory.c                 |   2 +-
-> > >  include/linux/kexec.h                          |  38 +--
-> > >  {arch/x86/purgatory => include/linux}/sha256.h |  10 +-
-> > >  kernel/kexec_file.c                            | 375 ++++++++++++-------------
-> > >  {arch/x86/purgatory => lib}/sha256.c           |   4 +-
-> > >  24 files changed, 1200 insertions(+), 284 deletions(-)
-> > >  create mode 100644 arch/s390/include/asm/purgatory.h
-> > >  create mode 100644 arch/s390/kernel/kexec_elf.c
-> > >  create mode 100644 arch/s390/kernel/kexec_image.c
-> > >  create mode 100644 arch/s390/kernel/machine_kexec_file.c
-> > >  create mode 100644 arch/s390/purgatory/Makefile
-> > >  create mode 100644 arch/s390/purgatory/head.S
-> > >  create mode 100644 arch/s390/purgatory/purgatory.c
-> > >  rename {arch/x86/purgatory => include/linux}/sha256.h (63%)
-> > >  rename {arch/x86/purgatory => lib}/sha256.c (99%)
-> > > 
-> > > -- 
-> > > 2.13.5
-> > > 
-> > > 
-> > > _______________________________________________
-> > > kexec mailing list
-> > > kexec@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/kexec  
-> > 
-> > Thanks
-> > Dave
-> > 
-> 
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
