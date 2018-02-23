@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ep8jF-0007Vx-68
- for kexec@lists.infradead.org; Fri, 23 Feb 2018 08:29:19 +0000
-Date: Fri, 23 Feb 2018 09:29:00 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] kexec: do KEXEC_FILE_LOAD and fallback to KEXEC_LOAD if
- not supported.
-Message-ID: <20180223092900.76a5dd33@ezekiel.suse.cz>
-In-Reply-To: <20180222232043.GC693@localhost.localdomain>
-References: <20180222222442.9422-1-msuchanek@suse.de>
- <20180222232043.GC693@localhost.localdomain>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by casper.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1ep8oS-0002Oq-C8
+ for kexec@lists.infradead.org; Fri, 23 Feb 2018 08:34:42 +0000
+Date: Fri, 23 Feb 2018 16:34:05 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 00/17] Add kexec_file_load support to s390
+Message-ID: <20180223083405.GA29498@dhcp-128-65.nay.redhat.com>
+References: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
+ <20180214073543.GA12328@dhcp-128-65.nay.redhat.com>
+ <20180214105449.1325bfbe@ThinkPad>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180214105449.1325bfbe@ThinkPad>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,221 +25,159 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Tony Jones <tonyj@suse.com>, Michal Suchanek <msuchanek@suse.de>, kexec@lists.infradead.org, horms@verge.net.au
+To: Philipp Rudo <prudo@linux.vnet.ibm.com>
+Cc: linux-s390@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Baoquan,
-
-On Fri, 23 Feb 2018 07:20:43 +0800
-Baoquan He <bhe@redhat.com> wrote:
-
-> Hi Michal,
+On 02/14/18 at 10:54am, Philipp Rudo wrote:
+> Hi Dave,
 > 
-> On 02/22/18 at 11:24pm, Michal Suchanek wrote:
-> > The new KEXEC_FILE_LOAD is preferred in the case the platform supports
-> > it because it allows kexec in locked down secure boot mode.
-> > 
-> > However, some platforms do not support it so fall back to the old
-> > syscall there.  
+> I just browsed AKASHI's patches (v7). The way I see it the common code changes
+> are on different areas of kexec_file and shouldn't get in conflict. Only in the
+> arch code (s390 and arm64) some function calls might need an update. But I have
+> to take a closer look on the patches first.
+
+I'm tring both in local branch with both series (V8 from AKASHI and this series),
+but there are indeed some conflicts, may because AKASHI factored out some arch
+code from ppc/x86 to common code.
+
 > 
-> I didn't read code change, just from patch log, I tend to not agree. There
-> are two options KEXEC_FILE_LOAD and KEXEC_LOAD, some platforms do not
-> support, why does some platforms not choose KEXEC_LOAD, the working one?
-> Why bother to make change in code? I believe there's returned message
-> telling if KEXEC_FILE_LOAD works or not.
+> @AKASHI: Welcome to the list. While browsing I couldn't find any
+> arch_apply_relocation function for arm64. These require the biggest changes in
+> my patch set. Did I just miss it or does arm64 work differently?
+> 
+> @Dave: Happy holiday
 
-Well... let me give a bit of background. As you have probably noticed,
-this syscall was originally available only for x86_64, but more and
-more architectures are also adding it now.
+Thank you!
 
-Next, kexec is actually called by a script (which locates a suitable
-kernel and initrd, constructs the kernel command line, etc.). The
-script must either:
-
-  A. know somehow if the currently running kernel implements
-     kexec_file_load(2), or
-
-  B. try one method first, and if it fails, retry with the other.
-
-I agree that kexec(1) should probably allow the user to force a
-specific method, but I don't see the benefit of implementing fallback
-in an external script and not in kexec-tools itself.
-
-OTOH if you want to push the fallback logic out of kexec-tools, then I
-would like to get better diagnostic at least. Letting my script parse
-kexec output is, um, suboptimal.
-
-Petr T
-
+> 
 > Thanks
-> Baoquan
-> > 
-> > Also provide an option to call the old syscall in case the new syscall
-> > fails with other reason than ENOSYS.
-> > 
-> > Also document the options.
-> > 
-> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> > ---
-> >  kexec/kexec.8 |  9 +++++++++
-> >  kexec/kexec.c | 41 +++++++++++++++--------------------------
-> >  kexec/kexec.h |  2 ++
-> >  3 files changed, 26 insertions(+), 26 deletions(-)
-> > 
-> > diff --git a/kexec/kexec.8 b/kexec/kexec.8
-> > index e0131b4ea827..7e4df723251d 100644
-> > --- a/kexec/kexec.8
-> > +++ b/kexec/kexec.8
-> > @@ -144,6 +144,15 @@ Load the new kernel for use on panic.
-> >  Specify that the new kernel is of this
-> >  .I type.
-> >  .TP
-> > +.BI \-s\ (\-\-kexec-file-syscall)
-> > +Specify that the new KEXEC_FILE_LOAD syscall should be used exclusively.
-> > +Otherwise KEXEC_FILE_LOAD is tried and when not supported KEXEC_LOAD is used.
-> > +.I type.
-> > +.TP
-> > +.BI \-c\ (\-\-kexec-syscall)
-> > +Specify that the old KEXEC_LOAD syscall should be used exclusively.
-> > +.I type.
-> > +.TP
-> >  .B \-u\ (\-\-unload)
-> >  Unload the current
-> >  .B kexec
-> > diff --git a/kexec/kexec.c b/kexec/kexec.c
-> > index cfd837c1b6bb..25328c02b508 100644
-> > --- a/kexec/kexec.c
-> > +++ b/kexec/kexec.c
-> > @@ -1166,7 +1166,7 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
-> >  
-> >  	if (!is_kexec_file_load_implemented()) {
-> >  		fprintf(stderr, "syscall kexec_file_load not available.\n");
-> > -		return -1;
-> > +		return -ENOSYS;
-> >  	}
-> >  
-> >  	if (argc - fileind <= 0) {
-> > @@ -1243,6 +1243,7 @@ int main(int argc, char *argv[])
-> >  	int do_unload = 0;
-> >  	int do_reuse_initrd = 0;
-> >  	int do_kexec_file_syscall = 0;
-> > +	int do_kexec_syscall = 0;
-> >  	int do_status = 0;
-> >  	void *entry = 0;
-> >  	char *type = 0;
-> > @@ -1256,19 +1257,6 @@ int main(int argc, char *argv[])
-> >  	};
-> >  	static const char short_options[] = KEXEC_ALL_OPT_STR;
-> >  
-> > -	/*
-> > -	 * First check if --use-kexec-file-syscall is set. That changes lot of
-> > -	 * things
-> > -	 */
-> > -	while ((opt = getopt_long(argc, argv, short_options,
-> > -				  options, 0)) != -1) {
-> > -		switch(opt) {
-> > -		case OPT_KEXEC_FILE_SYSCALL:
-> > -			do_kexec_file_syscall = 1;
-> > -			break;
-> > -		}
-> > -	}
-> > -
-> >  	/* Reset getopt for the next pass. */
-> >  	opterr = 1;
-> >  	optind = 1;
-> > @@ -1310,8 +1298,7 @@ int main(int argc, char *argv[])
-> >  			do_shutdown = 0;
-> >  			do_sync = 0;
-> >  			do_unload = 1;
-> > -			if (do_kexec_file_syscall)
-> > -				kexec_file_flags |= KEXEC_FILE_UNLOAD;
-> > +			kexec_file_flags |= KEXEC_FILE_UNLOAD;
-> >  			break;
-> >  		case OPT_EXEC:
-> >  			do_load = 0;
-> > @@ -1354,11 +1341,8 @@ int main(int argc, char *argv[])
-> >  			do_exec = 0;
-> >  			do_shutdown = 0;
-> >  			do_sync = 0;
-> > -			if (do_kexec_file_syscall)
-> > -				kexec_file_flags |= KEXEC_FILE_ON_CRASH;
-> > -			else
-> > -				kexec_flags = KEXEC_ON_CRASH;
-> > -			break;
-> > +			kexec_file_flags |= KEXEC_FILE_ON_CRASH;
-> > +			kexec_flags = KEXEC_ON_CRASH;
-> >  		case OPT_MEM_MIN:
-> >  			mem_min = strtoul(optarg, &endptr, 0);
-> >  			if (*endptr) {
-> > @@ -1383,7 +1367,12 @@ int main(int argc, char *argv[])
-> >  			do_reuse_initrd = 1;
-> >  			break;
-> >  		case OPT_KEXEC_FILE_SYSCALL:
-> > -			/* We already parsed it. Nothing to do. */
-> > +			do_kexec_file_syscall = 1;
-> > +			do_kexec_syscall = 0;
-> > +			break;
-> > +		case OPT_KEXEC_SYSCALL:
-> > +			do_kexec_file_syscall = 0;
-> > +			do_kexec_syscall = 1;
-> >  			break;
-> >  		case OPT_STATUS:
-> >  			do_status = 1;
-> > @@ -1456,16 +1445,16 @@ int main(int argc, char *argv[])
-> >  		result = k_status(kexec_flags);
-> >  	}
-> >  	if (do_unload) {
-> > -		if (do_kexec_file_syscall)
-> > +		if (!do_kexec_syscall)
-> >  			result = kexec_file_unload(kexec_file_flags);
-> > -		else
-> > +		if ((result == -ENOSYS) || !do_kexec_file_syscall)
-> >  			result = k_unload(kexec_flags);
-> >  	}
-> >  	if (do_load && (result == 0)) {
-> > -		if (do_kexec_file_syscall)
-> > +		if (!do_kexec_syscall)
-> >  			result = do_kexec_file_load(fileind, argc, argv,
-> >  						 kexec_file_flags);
-> > -		else
-> > +		if ((result == -ENOSYS) || !do_kexec_file_syscall)
-> >  			result = my_load(type, fileind, argc, argv,
-> >  						kexec_flags, entry);
-> >  	}
-> > diff --git a/kexec/kexec.h b/kexec/kexec.h
-> > index 26225d2c002a..7abcec796cae 100644
-> > --- a/kexec/kexec.h
-> > +++ b/kexec/kexec.h
-> > @@ -219,6 +219,7 @@ extern int file_types;
-> >  #define OPT_TYPE		't'
-> >  #define OPT_PANIC		'p'
-> >  #define OPT_KEXEC_FILE_SYSCALL	's'
-> > +#define OPT_KEXEC_SYSCALL	'c'
-> >  #define OPT_STATUS		'S'
-> >  #define OPT_MEM_MIN             256
-> >  #define OPT_MEM_MAX             257
-> > @@ -246,6 +247,7 @@ extern int file_types;
-> >  	{ "mem-max",		1, 0, OPT_MEM_MAX }, \
-> >  	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
-> >  	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
-> > +	{ "kexec-syscall",	0, 0, OPT_KEXEC_SYSCALL }, \
-> >  	{ "debug",		0, 0, OPT_DEBUG }, \
-> >  	{ "status",		0, 0, OPT_STATUS }, \
-> >  	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
-> > -- 
-> > 2.13.6
-> > 
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec  
+> Philipp
 > 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
+> On Wed, 14 Feb 2018 15:35:43 +0800
+> Dave Young <dyoung@redhat.com> wrote:
+> 
+> > Hi Philipp,
+> > 
+> > I added AKASHI in cc, he posted arm64 kexec_file series previously.
+> > I would like to read both series especially the general part, but
+> > maybe at the end of this month because of a holiday..
+> > 
+> > From the patch log the cleanup looks nice, but still need read the
+> > details.
+> > 
+> > On 02/12/18 at 11:07am, Philipp Rudo wrote:
+> > > Hi everybody
+> > > 
+> > > resending the series as there was no reaction, yet. Furthermore i was told
+> > > that Andrew and the x86 list should also be CCed, so welcome.
+> > > 
+> > > No changes made to the patches since first time i sent them. The patches
+> > > apply to the current master (v4.16-rc1).
+> > > 
+> > > Thanks
+> > > Philipp
+> > > 
+> > > ---
+> > > 
+> > > this series adds the kexec_file_load system call to s390. Before the system
+> > > call is added there are some preparations/clean ups to common
+> > > kexec_file_load. In detail this series contains:
+> > > 
+> > > Patch #1&2: Minor cleanups/fixes.
+> > > 
+> > > Patch #3-9: Clean up the purgatory load/relocation code. Especially remove
+> > > the mis-use of the purgatory_info->sechdrs->sh_offset field, currently
+> > > holding a pointer into either kexec_purgatory (ro) or purgatory_buf (rw)
+> > > depending on the section. With these patches the section address will be
+> > > calculated verbosely and sh_offset will contain the offset of the section
+> > > in the stripped purgatory binary (purgatory_buf).
+> > > 
+> > > Patch #10: Allows architectures to set the purgaory load address. This
+> > > patch is important for s390 as the kernel and purgatory have to be loaded
+> > > to fixed addresses. In current code this is impossible as the purgatory
+> > > load is opaque to the architecture.
+> > > 
+> > > Patch #11: Moves x86 purgatories sha implementation to common lib/
+> > > directory.
+> > > 
+> > > Patches #12-17 finally adds the kexec_file_load system call to s390.
+> > > 
+> > > Please note that I had to touch arch code for x86 and power a little. In
+> > > theory this should not change the behavior but I don't have a way to test
+> > > it. Cross-compiling with defconfig(*) works fine for both.
+> > > 
+> > > Thanks
+> > > Philipp
+> > > 
+> > > (*) On x86 with the orc unwinder turned off. objtool SEGFAULTs on s390...
+> > > 
+> > > Philipp Rudo (17):
+> > >   kexec_file: Silence compile warnings
+> > >   kexec_file: Remove checks in kexec_purgatory_load
+> > >   kexec_file: Make purgatory_info->ehdr const
+> > >   kexec_file: Search symbols in read-only kexec_purgatory
+> > >   kexec_file: Use read-only sections in arch_kexec_apply_relocations*
+> > >   kexec_file: Split up __kexec_load_puragory
+> > >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 1
+> > >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 2
+> > >   kexec_file: Remove mis-use of sh_offset field
+> > >   kexec_file: Allow archs to set purgatory load address
+> > >   kexec_file: Move purgatories sha256 to common code
+> > >   s390/kexec_file: Prepare setup.h for kexec_file_load
+> > >   s390/kexec_file: Add purgatory
+> > >   s390/kexec_file: Add kexec_file_load system call
+> > >   s390/kexec_file: Add image loader
+> > >   s390/kexec_file: Add crash support to image loader
+> > >   s390/kexec_file: Add ELF loader
+> > > 
+> > >  arch/powerpc/kernel/kexec_elf_64.c             |   9 +-
+> > >  arch/s390/Kbuild                               |   1 +
+> > >  arch/s390/Kconfig                              |   4 +
+> > >  arch/s390/include/asm/kexec.h                  |  23 ++
+> > >  arch/s390/include/asm/purgatory.h              |  17 ++
+> > >  arch/s390/include/asm/setup.h                  |  40 ++-
+> > >  arch/s390/kernel/Makefile                      |   1 +
+> > >  arch/s390/kernel/asm-offsets.c                 |   5 +
+> > >  arch/s390/kernel/compat_wrapper.c              |   1 +
+> > >  arch/s390/kernel/kexec_elf.c                   | 149 ++++++++++
+> > >  arch/s390/kernel/kexec_image.c                 |  78 +++++
+> > >  arch/s390/kernel/machine_kexec_file.c          | 291 +++++++++++++++++++
+> > >  arch/s390/kernel/syscalls/syscall.tbl          |   1 +
+> > >  arch/s390/purgatory/Makefile                   |  37 +++
+> > >  arch/s390/purgatory/head.S                     | 279 ++++++++++++++++++
+> > >  arch/s390/purgatory/purgatory.c                |  42 +++
+> > >  arch/x86/kernel/kexec-bzimage64.c              |   8 +-
+> > >  arch/x86/kernel/machine_kexec_64.c             |  66 ++---
+> > >  arch/x86/purgatory/Makefile                    |   3 +
+> > >  arch/x86/purgatory/purgatory.c                 |   2 +-
+> > >  include/linux/kexec.h                          |  38 +--
+> > >  {arch/x86/purgatory => include/linux}/sha256.h |  10 +-
+> > >  kernel/kexec_file.c                            | 375 ++++++++++++-------------
+> > >  {arch/x86/purgatory => lib}/sha256.c           |   4 +-
+> > >  24 files changed, 1200 insertions(+), 284 deletions(-)
+> > >  create mode 100644 arch/s390/include/asm/purgatory.h
+> > >  create mode 100644 arch/s390/kernel/kexec_elf.c
+> > >  create mode 100644 arch/s390/kernel/kexec_image.c
+> > >  create mode 100644 arch/s390/kernel/machine_kexec_file.c
+> > >  create mode 100644 arch/s390/purgatory/Makefile
+> > >  create mode 100644 arch/s390/purgatory/head.S
+> > >  create mode 100644 arch/s390/purgatory/purgatory.c
+> > >  rename {arch/x86/purgatory => include/linux}/sha256.h (63%)
+> > >  rename {arch/x86/purgatory => lib}/sha256.c (99%)
+> > > 
+> > > -- 
+> > > 2.13.5
+> > > 
+> > > 
+> > > _______________________________________________
+> > > kexec mailing list
+> > > kexec@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/kexec  
+> > 
+> > Thanks
+> > Dave
+> > 
+> 
 
 _______________________________________________
 kexec mailing list
