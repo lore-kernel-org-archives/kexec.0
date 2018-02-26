@@ -1,19 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mail-pf0-x241.google.com ([2607:f8b0:400e:c00::241])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1epg1c-0003cy-US
- for kexec@lists.infradead.org; Sat, 24 Feb 2018 20:02:31 +0000
-Date: Sat, 24 Feb 2018 21:02:10 +0100
-From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-Subject: Re: [PATCH] kexec: do KEXEC_FILE_LOAD and fallback to KEXEC_LOAD if
- not supported.
-Message-ID: <20180224210210.1d0f0613@naga.suse.cz>
-In-Reply-To: <20180224014342.GA11298@dhcp-128-65.nay.redhat.com>
-References: <20180222222442.9422-1-msuchanek@suse.de>
- <20180222232043.GC693@localhost.localdomain>
- <20180223092900.76a5dd33@ezekiel.suse.cz>
- <20180224014342.GA11298@dhcp-128-65.nay.redhat.com>
+ id 1eq7Td-00057x-M7
+ for kexec@lists.infradead.org; Mon, 26 Feb 2018 01:21:15 +0000
+Received: by mail-pf0-x241.google.com with SMTP id q13so5865936pff.0
+ for <kexec@lists.infradead.org>; Sun, 25 Feb 2018 17:21:02 -0800 (PST)
+Date: Mon, 26 Feb 2018 10:21:02 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH 00/17] Add kexec_file_load support to s390
+Message-ID: <20180226012100.GA6019@linaro.org>
+References: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
+ <20180214073543.GA12328@dhcp-128-65.nay.redhat.com>
+ <20180214105449.1325bfbe@ThinkPad>
+ <20180223083405.GA29498@dhcp-128-65.nay.redhat.com>
+ <20180223110143.1747fb3f@ThinkPad>
+ <20180224015956.GA11191@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180224015956.GA11191@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,191 +31,203 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: Tony Jones <tonyj@suse.com>, horms@verge.net.au, Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>
+Cc: linux-s390@vger.kernel.org, Philipp Rudo <prudo@linux.vnet.ibm.com>, kexec@lists.infradead.org, x86@kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Hello,
-
-On Sat, 24 Feb 2018 10:19:09 +0800
-Baoquan He <bhe@redhat.com> wrote:
-
-> Hi Petr,
-> 
-> On 02/23/18 at 09:29am, Petr Tesarik wrote:
-> > Hi Baoquan,
+On Sat, Feb 24, 2018 at 09:59:56AM +0800, Dave Young wrote:
+> On 02/23/18 at 11:01am, Philipp Rudo wrote:
+> > Hi Dave
 > > 
-> > On Fri, 23 Feb 2018 07:20:43 +0800
-> > Baoquan He <bhe@redhat.com> wrote:
-> >   
-> > > Hi Michal,
-> > > 
-> > > On 02/22/18 at 11:24pm, Michal Suchanek wrote:  
-> > > > The new KEXEC_FILE_LOAD is preferred in the case the platform
-> > > > supports it because it allows kexec in locked down secure boot
-> > > > mode.
+> > On Fri, 23 Feb 2018 16:34:05 +0800
+> > Dave Young <dyoung@redhat.com> wrote:
+> > 
+> > > On 02/14/18 at 10:54am, Philipp Rudo wrote:
+> > > > Hi Dave,
 > > > > 
-> > > > However, some platforms do not support it so fall back to the
-> > > > old syscall there.    
+> > > > I just browsed AKASHI's patches (v7). The way I see it the common code changes
+> > > > are on different areas of kexec_file and shouldn't get in conflict. Only in the
+> > > > arch code (s390 and arm64) some function calls might need an update. But I have
+> > > > to take a closer look on the patches first.  
 > > > 
-> > > I didn't read code change, just from patch log, I tend to not
-> > > agree. There are two options KEXEC_FILE_LOAD and KEXEC_LOAD, some
-> > > platforms do not support, why does some platforms not choose
-> > > KEXEC_LOAD, the working one? Why bother to make change in code? I
-> > > believe there's returned message telling if KEXEC_FILE_LOAD works
-> > > or not.  
+> > > I'm tring both in local branch with both series (V8 from AKASHI and this series),
+> > > but there are indeed some conflicts, may because AKASHI factored out some arch
+> > > code from ppc/x86 to common code.
 > > 
-> > Well... let me give a bit of background. As you have probably
-> > noticed, this syscall was originally available only for x86_64, but
-> > more and more architectures are also adding it now.
+> > I feared this would happen.  I didn't have time to look at AKASHI's v8
+> > yesterday but hope to find some today. How do you think i should handle
+> > conflicts with his patches? I don't think it is wise to include the changes
+> > into my patches as that would make AKASHI's patches a prereq for mine. Is adding
+> > one (multiple?) fixup patches on top of my series ok for you?
+> 
+> Arch code need arch maintainer to review, maybe either of you can send
+> the common part first before the arch code, eg. AKASHI can split the common
+>  cleanup patches and post them as a separate series, after these prep
+> series are reviewed then other patches can be refreshed based on it.
+> 
+> Seems in AKASHI's series, only patch 2, 3 ,4 ,5 is needed if split out
+> as a common change series.
+
+Yeah, all of those are touching kernel/kexec_file.c and in turn
+they can conflict if being applied with 390 patches, but none of changes
+that I made on kexec_file.c are overlapped with Phillips', I suppose
+that merging these two patch sets is rather straightforward.
+
+@Phillips: I hope that your patch#14 and #17 be aligned with my patch#3
+as it is factoring out arch_kexec_{image_probe, image_load, verify_sig}()
+and arch_kimage_file_post_load_cleanup().
+
+Thanks,
+-Takahiro AKASHI
+
+> What do you think? 
 > > 
-> > Next, kexec is actually called by a script (which locates a suitable
-> > kernel and initrd, constructs the kernel command line, etc.). The
-> > script must either:
+> > Thanks
+> > Philipp
 > > 
-> >   A. know somehow if the currently running kernel implements
-> >      kexec_file_load(2), or
-> > 
-> >   B. try one method first, and if it fails, retry with the other.
-> > 
-> > I agree that kexec(1) should probably allow the user to force a
-> > specific method, but I don't see the benefit of implementing
-> > fallback in an external script and not in kexec-tools itself.
-> > 
-> > OTOH if you want to push the fallback logic out of kexec-tools,
-> > then I would like to get better diagnostic at least. Letting my
-> > script parse kexec output is, um, suboptimal.  
-> 
-> Thanks for the details!
-> 
-> Firstly, this patch is very ugly. It mixs the falling back issue, doc
-> adding, code cleanup in one patch. It's not easy to see how many lines
-> of code change involved.
-
-The -s option is special-cased and I needed to un-special-case it to be
-able to use either syscall. I suppose this can be split.
-
-> 
-> Secondly, I personally like better the A or B two options. 
-Which the patch does provide. If you want A you can select it. if you
-want B you can select it as well. If you do not select either kexec
-tries A and if not supported tries B. 
->  For A,
-> checking ARCH in script might be a easier thing. 
-What does checking ARCH in a script tell you? You need to check that
-the syscall is supported both in kexec and the running kernel. And only
-kexec can do that.
-> And for B, just check
-> if "syscall kexec_file_load not available" is printed, then retry the
-> KEXEC_LOAD.
-
-Oh right, that's totally robust programming. If kexec does not know how
-to call KEXEC_FILE_LOAD then the message is printed to stderr and -1 is
-returned whereas when kexec thinks it knows how to call KEXEC_FILE_LOAD
-and the kernel does not support it nothing is printed and the
-return code from kernel is passed through which is hopefully -ENOSYS.
-
-Can we at least make the return code consistent?
-
-> 
-> And the falling back may give people a feeling that that ARCH support
-> the file mode loading.
-
-Why? How?
-
-Previously they had to select KEXEC_FILE_LOAD with an undocumented
-option. It is now documented and when used the fallback is disabled -
-no change. 
-
-> Besides, if fall back to KEXEC_LOAD when
-> KEXEC_FILE_LOAD is tried but not supported this time, next time people
-> may want to do fall back when KEXEC_FILE_LOAD is tried but failed,
-> since there has been a precedent. This might be not good for keeping
-> code logic simple, add complexity to maintaining.
-
-What complexity are you talking about? That is exactly what the
-fallback does except it checks that the error code was ENOSYS. It might
-make sense to also use the fallback when the file format is not
-recognized by the kernel. KEXEC_FILE_LOAD currently does not support
-multiboot and uImage formats. So if a specific error code is returned
-in this case (as opposed to known image type which is invalid) it might
-make sense to use the fallback as well.
-
-> 
-> My personal opinion.
-> 
-> Thanks
-> Baoquan
-> 
-
-
-
-On Sat, 24 Feb 2018 09:43:42 +0800
-Dave Young <dyoung@redhat.com> wrote:
-
-> On 02/23/18 at 09:29am, Petr Tesarik wrote:
-> > Hi Baoquan,
-> > 
-> > On Fri, 23 Feb 2018 07:20:43 +0800
-> > Baoquan He <bhe@redhat.com> wrote:
-> >   
-> > > Hi Michal,
-> > > 
-> > > On 02/22/18 at 11:24pm, Michal Suchanek wrote:  
-> > > > The new KEXEC_FILE_LOAD is preferred in the case the platform
-> > > > supports it because it allows kexec in locked down secure boot
-> > > > mode.
 > > > > 
-> > > > However, some platforms do not support it so fall back to the
-> > > > old syscall there.    
+> > > > @AKASHI: Welcome to the list. While browsing I couldn't find any
+> > > > arch_apply_relocation function for arm64. These require the biggest changes in
+> > > > my patch set. Did I just miss it or does arm64 work differently?
+> > > > 
+> > > > @Dave: Happy holiday  
 > > > 
-> > > I didn't read code change, just from patch log, I tend to not
-> > > agree. There are two options KEXEC_FILE_LOAD and KEXEC_LOAD, some
-> > > platforms do not support, why does some platforms not choose
-> > > KEXEC_LOAD, the working one? Why bother to make change in code? I
-> > > believe there's returned message telling if KEXEC_FILE_LOAD works
-> > > or not.  
+> > > Thank you!
+> > > 
+> > > > 
+> > > > Thanks
+> > > > Philipp
+> > > > 
+> > > > On Wed, 14 Feb 2018 15:35:43 +0800
+> > > > Dave Young <dyoung@redhat.com> wrote:
+> > > >   
+> > > > > Hi Philipp,
+> > > > > 
+> > > > > I added AKASHI in cc, he posted arm64 kexec_file series previously.
+> > > > > I would like to read both series especially the general part, but
+> > > > > maybe at the end of this month because of a holiday..
+> > > > > 
+> > > > > From the patch log the cleanup looks nice, but still need read the
+> > > > > details.
+> > > > > 
+> > > > > On 02/12/18 at 11:07am, Philipp Rudo wrote:  
+> > > > > > Hi everybody
+> > > > > > 
+> > > > > > resending the series as there was no reaction, yet. Furthermore i was told
+> > > > > > that Andrew and the x86 list should also be CCed, so welcome.
+> > > > > > 
+> > > > > > No changes made to the patches since first time i sent them. The patches
+> > > > > > apply to the current master (v4.16-rc1).
+> > > > > > 
+> > > > > > Thanks
+> > > > > > Philipp
+> > > > > > 
+> > > > > > ---
+> > > > > > 
+> > > > > > this series adds the kexec_file_load system call to s390. Before the system
+> > > > > > call is added there are some preparations/clean ups to common
+> > > > > > kexec_file_load. In detail this series contains:
+> > > > > > 
+> > > > > > Patch #1&2: Minor cleanups/fixes.
+> > > > > > 
+> > > > > > Patch #3-9: Clean up the purgatory load/relocation code. Especially remove
+> > > > > > the mis-use of the purgatory_info->sechdrs->sh_offset field, currently
+> > > > > > holding a pointer into either kexec_purgatory (ro) or purgatory_buf (rw)
+> > > > > > depending on the section. With these patches the section address will be
+> > > > > > calculated verbosely and sh_offset will contain the offset of the section
+> > > > > > in the stripped purgatory binary (purgatory_buf).
+> > > > > > 
+> > > > > > Patch #10: Allows architectures to set the purgaory load address. This
+> > > > > > patch is important for s390 as the kernel and purgatory have to be loaded
+> > > > > > to fixed addresses. In current code this is impossible as the purgatory
+> > > > > > load is opaque to the architecture.
+> > > > > > 
+> > > > > > Patch #11: Moves x86 purgatories sha implementation to common lib/
+> > > > > > directory.
+> > > > > > 
+> > > > > > Patches #12-17 finally adds the kexec_file_load system call to s390.
+> > > > > > 
+> > > > > > Please note that I had to touch arch code for x86 and power a little. In
+> > > > > > theory this should not change the behavior but I don't have a way to test
+> > > > > > it. Cross-compiling with defconfig(*) works fine for both.
+> > > > > > 
+> > > > > > Thanks
+> > > > > > Philipp
+> > > > > > 
+> > > > > > (*) On x86 with the orc unwinder turned off. objtool SEGFAULTs on s390...
+> > > > > > 
+> > > > > > Philipp Rudo (17):
+> > > > > >   kexec_file: Silence compile warnings
+> > > > > >   kexec_file: Remove checks in kexec_purgatory_load
+> > > > > >   kexec_file: Make purgatory_info->ehdr const
+> > > > > >   kexec_file: Search symbols in read-only kexec_purgatory
+> > > > > >   kexec_file: Use read-only sections in arch_kexec_apply_relocations*
+> > > > > >   kexec_file: Split up __kexec_load_puragory
+> > > > > >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 1
+> > > > > >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 2
+> > > > > >   kexec_file: Remove mis-use of sh_offset field
+> > > > > >   kexec_file: Allow archs to set purgatory load address
+> > > > > >   kexec_file: Move purgatories sha256 to common code
+> > > > > >   s390/kexec_file: Prepare setup.h for kexec_file_load
+> > > > > >   s390/kexec_file: Add purgatory
+> > > > > >   s390/kexec_file: Add kexec_file_load system call
+> > > > > >   s390/kexec_file: Add image loader
+> > > > > >   s390/kexec_file: Add crash support to image loader
+> > > > > >   s390/kexec_file: Add ELF loader
+> > > > > > 
+> > > > > >  arch/powerpc/kernel/kexec_elf_64.c             |   9 +-
+> > > > > >  arch/s390/Kbuild                               |   1 +
+> > > > > >  arch/s390/Kconfig                              |   4 +
+> > > > > >  arch/s390/include/asm/kexec.h                  |  23 ++
+> > > > > >  arch/s390/include/asm/purgatory.h              |  17 ++
+> > > > > >  arch/s390/include/asm/setup.h                  |  40 ++-
+> > > > > >  arch/s390/kernel/Makefile                      |   1 +
+> > > > > >  arch/s390/kernel/asm-offsets.c                 |   5 +
+> > > > > >  arch/s390/kernel/compat_wrapper.c              |   1 +
+> > > > > >  arch/s390/kernel/kexec_elf.c                   | 149 ++++++++++
+> > > > > >  arch/s390/kernel/kexec_image.c                 |  78 +++++
+> > > > > >  arch/s390/kernel/machine_kexec_file.c          | 291 +++++++++++++++++++
+> > > > > >  arch/s390/kernel/syscalls/syscall.tbl          |   1 +
+> > > > > >  arch/s390/purgatory/Makefile                   |  37 +++
+> > > > > >  arch/s390/purgatory/head.S                     | 279 ++++++++++++++++++
+> > > > > >  arch/s390/purgatory/purgatory.c                |  42 +++
+> > > > > >  arch/x86/kernel/kexec-bzimage64.c              |   8 +-
+> > > > > >  arch/x86/kernel/machine_kexec_64.c             |  66 ++---
+> > > > > >  arch/x86/purgatory/Makefile                    |   3 +
+> > > > > >  arch/x86/purgatory/purgatory.c                 |   2 +-
+> > > > > >  include/linux/kexec.h                          |  38 +--
+> > > > > >  {arch/x86/purgatory => include/linux}/sha256.h |  10 +-
+> > > > > >  kernel/kexec_file.c                            | 375 ++++++++++++-------------
+> > > > > >  {arch/x86/purgatory => lib}/sha256.c           |   4 +-
+> > > > > >  24 files changed, 1200 insertions(+), 284 deletions(-)
+> > > > > >  create mode 100644 arch/s390/include/asm/purgatory.h
+> > > > > >  create mode 100644 arch/s390/kernel/kexec_elf.c
+> > > > > >  create mode 100644 arch/s390/kernel/kexec_image.c
+> > > > > >  create mode 100644 arch/s390/kernel/machine_kexec_file.c
+> > > > > >  create mode 100644 arch/s390/purgatory/Makefile
+> > > > > >  create mode 100644 arch/s390/purgatory/head.S
+> > > > > >  create mode 100644 arch/s390/purgatory/purgatory.c
+> > > > > >  rename {arch/x86/purgatory => include/linux}/sha256.h (63%)
+> > > > > >  rename {arch/x86/purgatory => lib}/sha256.c (99%)
+> > > > > > 
+> > > > > > -- 
+> > > > > > 2.13.5
+> > > > > > 
+> > > > > > 
+> > > > > > _______________________________________________
+> > > > > > kexec mailing list
+> > > > > > kexec@lists.infradead.org
+> > > > > > http://lists.infradead.org/mailman/listinfo/kexec    
+> > > > > 
+> > > > > Thanks
+> > > > > Dave
+> > > > >   
+> > > >   
+> > > 
+> > > _______________________________________________
+> > > kexec mailing list
+> > > kexec@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/kexec
+> > > 
 > > 
-> > Well... let me give a bit of background. As you have probably
-> > noticed, this syscall was originally available only for x86_64, but
-> > more and more architectures are also adding it now.
-> > 
-> > Next, kexec is actually called by a script (which locates a suitable
-> > kernel and initrd, constructs the kernel command line, etc.). The
-> > script must either:
-> > 
-> >   A. know somehow if the currently running kernel implements
-> >      kexec_file_load(2), or
-> > 
-> >   B. try one method first, and if it fails, retry with the other.
-> > 
-> > I agree that kexec(1) should probably allow the user to force a
-> > specific method, but I don't see the benefit of implementing
-> > fallback in an external script and not in kexec-tools itself.
-> > 
-> > OTOH if you want to push the fallback logic out of kexec-tools,
-> > then I would like to get better diagnostic at least. Letting my
-> > script parse kexec output is, um, suboptimal.  
-> 
-> In Fedora/RHEL we use this in scripts by checking the arch first,
-> for distribution it is enough? 
-
-No. That means you need to update the script when you implement
-KEXEC_FILE_LOAD on a new arch. Worse, you need to check the kernel
-version so it works on old kernel as well.
-
->  There are also some other arch
-> dependent options in kexec-tools, there is no way to just use same
-> for every different platform without checking in scripts. 
-
-Like?
-
-And here I mean options that are specific to the platform and not a
-particular system. Because system-specific options have to be set case
-by case, obviously. I see no kexec option that would generally apply on
-one arch and not other except -s.
-
-Thanks
-
-Michal
 
 _______________________________________________
 kexec mailing list
