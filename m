@@ -1,26 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eqKW7-0000wr-Q0
- for kexec@lists.infradead.org; Mon, 26 Feb 2018 15:16:48 +0000
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w1QF90gq126604
- for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 10:16:28 -0500
-Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2gchv37q7k-1
+ id 1eqKWC-0000xK-Pw
+ for kexec@lists.infradead.org; Mon, 26 Feb 2018 15:16:56 +0000
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w1QF8jPX127103
+ for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 10:16:32 -0500
+Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2gckm7br5q-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 10:16:28 -0500
+ for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 10:16:31 -0500
 Received: from localhost
- by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
- Mon, 26 Feb 2018 15:16:25 -0000
+ Mon, 26 Feb 2018 15:16:29 -0000
 From: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Subject: [PATCH 00/11] kexec_file: Clean up purgatory load
-Date: Mon, 26 Feb 2018 16:16:09 +0100
-MIME-Version: 1.0
-Message-Id: <20180226151620.20970-1-prudo@linux.vnet.ibm.com>
+Subject: [PATCH 02/11] kexec_file: Remove checks in kexec_purgatory_load
+Date: Mon, 26 Feb 2018 16:16:11 +0100
+In-Reply-To: <20180226151620.20970-1-prudo@linux.vnet.ibm.com>
+References: <20180226151620.20970-1-prudo@linux.vnet.ibm.com>
+Message-Id: <20180226151620.20970-3-prudo@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,6 +31,7 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
@@ -36,75 +39,51 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-s390@vger.kernel.org
 Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
+Before the purgatory is loaded several checks are done whether the ELF file
+in kexec_purgatory is valid or not. These checks are incomplete. For
+example they don't check for the total size of the sections defined in the
+section header table or if the entry point actually points into the
+purgatory.
 
-Hi everybody
+On the other hand the purgatory, although an ELF file on its own, is part
+of the kernel. Thus not trusting the purgatory means not trusting the
+kernel build itself.
 
-following the discussion with Dave and AKASHI, here are the common code
-patches extracted from my recent patch set (Add kexec_file_load support to
-s390) [1]. The patches were extracted to allow upstream integration together
-with AKASHI's common code patches before the arch code gets adjusted to the
-new base.
+So remove all validity checks on the purgatory and just trust the kernel
+build.
 
-The reason for this series is to prepare common code for adding
-kexec_file_load to s390 as well as cleaning up the mis-use of the sh_offset
-field during purgatory load. In detail this series contains:
+Signed-off-by: Philipp Rudo <prudo@linux.vnet.ibm.com>
+---
+ kernel/kexec_file.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-Patch #1&2: Minor cleanups/fixes.
-
-Patch #3-9: Clean up the purgatory load/relocation code. Especially remove
-the mis-use of the purgatory_info->sechdrs->sh_offset field, currently
-holding a pointer into either kexec_purgatory (ro) or purgatory_buf (rw)
-depending on the section. With these patches the section address will be
-calculated verbosely and sh_offset will contain the offset of the section
-in the stripped purgatory binary (purgatory_buf).
-
-Patch #10: Allows architectures to set the purgatory load address. This
-patch is important for s390 as the kernel and purgatory have to be loaded
-to fixed addresses. In current code this is impossible as the purgatory
-load is opaque to the architecture.
-
-Patch #11: Moves x86 purgatories sha implementation to common lib/
-directory to allow reuse in other architectures.
-
-The patches apply to v4.16-rc3. There are no changes compared to [1] (all
-requested changes only affected s390 code). Please note that I had to touch
-arch code for x86 and power a little. In theory this should not change the
-behavior but I don't have a way to test it. Cross-compiling with
-defconfig [2] works fine for both.
-
-Thanks
-Philipp
-
-[1] http://lists.infradead.org/pipermail/kexec/2018-February/019926.html
-[2] On x86 with the orc unwinder and stack validation turned off. objtool
-    SEGFAULTs on s390...
-
-Philipp Rudo (11):
-  kexec_file: Silence compile warnings
-  kexec_file: Remove checks in kexec_purgatory_load
-  kexec_file: Make purgatory_info->ehdr const
-  kexec_file: Search symbols in read-only kexec_purgatory
-  kexec_file: Use read-only sections in arch_kexec_apply_relocations*
-  kexec_file: Split up __kexec_load_puragory
-  kexec_file: Simplify kexec_purgatory_setup_sechdrs 1
-  kexec_file: Simplify kexec_purgatory_setup_sechdrs 2
-  kexec_file: Remove mis-use of sh_offset field
-  kexec_file: Allow archs to set purgatory load address
-  kexec_file: Move purgatories sha256 to common code
-
- arch/powerpc/kernel/kexec_elf_64.c             |   9 +-
- arch/x86/kernel/kexec-bzimage64.c              |   8 +-
- arch/x86/kernel/machine_kexec_64.c             |  66 ++---
- arch/x86/purgatory/Makefile                    |   3 +
- arch/x86/purgatory/purgatory.c                 |   2 +-
- include/linux/kexec.h                          |  38 +--
- {arch/x86/purgatory => include/linux}/sha256.h |  10 +-
- kernel/kexec_file.c                            | 375 ++++++++++++-------------
- {arch/x86/purgatory => lib}/sha256.c           |   4 +-
- 9 files changed, 244 insertions(+), 271 deletions(-)
- rename {arch/x86/purgatory => include/linux}/sha256.h (63%)
- rename {arch/x86/purgatory => lib}/sha256.c (99%)
-
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index e5bcd94c1efb..0f044457b40c 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -880,22 +880,8 @@ int kexec_load_purgatory(struct kimage *image, unsigned long min,
+ 	if (kexec_purgatory_size <= 0)
+ 		return -EINVAL;
+ 
+-	if (kexec_purgatory_size < sizeof(Elf_Ehdr))
+-		return -ENOEXEC;
+-
+ 	pi->ehdr = (Elf_Ehdr *)kexec_purgatory;
+ 
+-	if (memcmp(pi->ehdr->e_ident, ELFMAG, SELFMAG) != 0
+-	    || pi->ehdr->e_type != ET_REL
+-	    || !elf_check_arch(pi->ehdr)
+-	    || pi->ehdr->e_shentsize != sizeof(Elf_Shdr))
+-		return -ENOEXEC;
+-
+-	if (pi->ehdr->e_shoff >= kexec_purgatory_size
+-	    || (pi->ehdr->e_shnum * sizeof(Elf_Shdr) >
+-	    kexec_purgatory_size - pi->ehdr->e_shoff))
+-		return -ENOEXEC;
+-
+ 	ret = __kexec_load_purgatory(image, min, max, top_down);
+ 	if (ret)
+ 		return ret;
 -- 
 2.13.5
 
