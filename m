@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eqHSj-0007a1-AC
- for kexec@lists.infradead.org; Mon, 26 Feb 2018 12:01:02 +0000
+ id 1eqHSj-0007a0-A8
+ for kexec@lists.infradead.org; Mon, 26 Feb 2018 12:01:03 +0000
 From: Michal Suchanek <msuchanek@suse.de>
-Subject: [PATCH 4/5] kexec: fallback to KEXEC_LOAD when KEXEC_FILE_LOAD is not
- supported.
-Date: Mon, 26 Feb 2018 13:00:37 +0100
-Message-Id: <ebc4bc6f1dc7d62ba5c81f40c7f7d83a8ae3eb5d.1519646210.git.msuchanek@suse.de>
+Subject: [PATCH 3/5] kexec: add option to revert -s
+Date: Mon, 26 Feb 2018 13:00:36 +0100
+Message-Id: <1b9aab1f9562e9de4eb77e6b70f75f9788577834.1519646210.git.msuchanek@suse.de>
 In-Reply-To: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519646210.git.msuchanek@suse.de>
 References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519646210.git.msuchanek@suse.de>
 In-Reply-To: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519646210.git.msuchanek@suse.de>
@@ -28,97 +27,57 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: msuchanek@suse.de, kexec@lists.infradead.org
 Cc: Tony Jones <tonyj@suse.com>, horms@verge.net.au, Petr Tesarik <ptesarik@suse.cz>
 
-Not all architectures implement KEXEC_FILE_LOAD. However, on some
-archiectures KEXEC_FILE_LOAD is required when secure boot is enabled in
-locked-down mode. Previously users had to select the KEXEC_FILE_LOAD
-syscall with undocumented -s option. However, if they did pass the
-option kexec would fail on architectures that do not support it.
-
-When no option is passed to select one syscall or the other try
-KEXEC_FILE_LOAD and fall back to KEXEC_LOAD when not suported.
+The undocumented -s option selects KEXEC_FILE_LOAD syscall but there is
+no option to select KEXEC_LOAD syscall so add it. It is generally good
+idea and in followup patch the default will be changed so it will be
+needed to get KEXEC_LOAD functionality.
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- kexec/kexec.c | 43 +++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 39 insertions(+), 4 deletions(-)
+ kexec/kexec.c | 3 +++
+ kexec/kexec.h | 4 +++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/kexec/kexec.c b/kexec/kexec.c
-index a95cfb473d6b..14f56e466a95 100644
+index 9ea102e1565a..a95cfb473d6b 100644
 --- a/kexec/kexec.c
 +++ b/kexec/kexec.c
-@@ -1243,6 +1243,7 @@ int main(int argc, char *argv[])
- 	int do_unload = 0;
- 	int do_reuse_initrd = 0;
- 	int do_kexec_file_syscall = 0;
-+	int do_kexec_fallback = 1;
- 	int do_status = 0;
- 	void *entry = 0;
- 	char *type = 0;
-@@ -1367,9 +1368,11 @@ int main(int argc, char *argv[])
- 			break;
+@@ -1368,6 +1368,9 @@ int main(int argc, char *argv[])
  		case OPT_KEXEC_FILE_SYSCALL:
  			do_kexec_file_syscall = 1;
-+			do_kexec_fallback = 0;
  			break;
- 		case OPT_KEXEC_SYSCALL:
- 			do_kexec_file_syscall = 0;
-+			do_kexec_fallback = 0;
- 			break;
++		case OPT_KEXEC_SYSCALL:
++			do_kexec_file_syscall = 0;
++			break;
  		case OPT_STATUS:
  			do_status = 1;
-@@ -1442,16 +1445,48 @@ int main(int argc, char *argv[])
- 		result = k_status(kexec_flags);
- 	}
- 	if (do_unload) {
--		if (do_kexec_file_syscall)
-+		if (do_kexec_file_syscall) {
- 			result = kexec_file_unload(kexec_file_flags);
--		else
-+			if ((result == -ENOSYS) && do_kexec_fallback)
-+				do_kexec_file_syscall = 0;
-+		}
-+		if (!do_kexec_file_syscall)
- 			result = k_unload(kexec_flags);
- 	}
- 	if (do_load && (result == 0)) {
--		if (do_kexec_file_syscall)
-+		if (do_kexec_file_syscall) {
- 			result = do_kexec_file_load(fileind, argc, argv,
- 						 kexec_file_flags);
--		else
-+			if (do_kexec_fallback) switch (result) {
-+				/*
-+				 * Something failed with signature verification.
-+				 * Reject the image.
-+				 */
-+				case -ELIBBAD:
-+				case -EKEYREJECTED:
-+				case -ENOPKG:
-+				case -ENOKEY:
-+				case -EBADMSG:
-+				case -EMSGSIZE:
-+				case -ENOTSUPP:
-+					/*
-+					 * By default reject or do nothing if
-+					 * succeded
-+					 */
-+				default: break;
-+					/*
-+					 * Parsing image or other options failed
-+					 * The image may be invalid or image
-+					 * type may not supported by kernel so
-+					 * retry parsing in kexec-tools.
-+					 */
-+				case -EINVAL:
-+				case -ENOEXEC:
-+					do_kexec_file_syscall = 0;
-+					break;
-+			}
-+		}
-+		if (!do_kexec_file_syscall)
- 			result = my_load(type, fileind, argc, argv,
- 						kexec_flags, entry);
- 	}
+ 			break;
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 26225d2c002a..9fd0355eacd0 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -219,6 +219,7 @@ extern int file_types;
+ #define OPT_TYPE		't'
+ #define OPT_PANIC		'p'
+ #define OPT_KEXEC_FILE_SYSCALL	's'
++#define OPT_KEXEC_SYSCALL	'c'
+ #define OPT_STATUS		'S'
+ #define OPT_MEM_MIN             256
+ #define OPT_MEM_MAX             257
+@@ -246,11 +247,12 @@ extern int file_types;
+ 	{ "mem-max",		1, 0, OPT_MEM_MAX }, \
+ 	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
+ 	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
++	{ "kexec-syscall",	0, 0, OPT_KEXEC_SYSCALL }, \
+ 	{ "debug",		0, 0, OPT_DEBUG }, \
+ 	{ "status",		0, 0, OPT_STATUS }, \
+ 	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
+ 
+-#define KEXEC_OPT_STR "h?vdfxyluet:psS"
++#define KEXEC_OPT_STR "h?vdfxyluet:pscS"
+ 
+ extern void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr);
+ extern void die(const char *fmt, ...)
 -- 
 2.13.6
 
