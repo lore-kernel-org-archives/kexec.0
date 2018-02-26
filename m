@@ -1,21 +1,35 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x241.google.com ([2607:f8b0:4001:c0b::241])
- by merlin.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eqFbW-0004UL-HV
- for kexec@lists.infradead.org; Mon, 26 Feb 2018 10:01:56 +0000
-Received: by mail-it0-x241.google.com with SMTP id w63so10109906ita.3
- for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 02:01:39 -0800 (PST)
-Date: Mon, 26 Feb 2018 19:01:39 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v8 03/13] kexec_file,x86,powerpc: factor out
- kexec_file_ops functions
-Message-ID: <20180226100138.GC6019@linaro.org>
-References: <20180222111732.23051-1-takahiro.akashi@linaro.org>
- <20180222111732.23051-4-takahiro.akashi@linaro.org>
- <20180223092459.GC4433@dhcp-128-65.nay.redhat.com>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1eqGm3-0002ek-7T
+ for kexec@lists.infradead.org; Mon, 26 Feb 2018 11:16:55 +0000
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w1QBDlFk117373
+ for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 06:16:36 -0500
+Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2gch3y89nc-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 06:16:35 -0500
+Received: from localhost
+ by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
+ Mon, 26 Feb 2018 11:16:34 -0000
+Date: Mon, 26 Feb 2018 12:16:28 +0100
+From: Philipp Rudo <prudo@linux.vnet.ibm.com>
+Subject: Re: [PATCH 00/17] Add kexec_file_load support to s390
+In-Reply-To: <20180226012100.GA6019@linaro.org>
+References: <20180212100754.55121-1-prudo@linux.vnet.ibm.com>
+ <20180214073543.GA12328@dhcp-128-65.nay.redhat.com>
+ <20180214105449.1325bfbe@ThinkPad>
+ <20180223083405.GA29498@dhcp-128-65.nay.redhat.com>
+ <20180223110143.1747fb3f@ThinkPad>
+ <20180224015956.GA11191@dhcp-128-65.nay.redhat.com>
+ <20180226012100.GA6019@linaro.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180223092459.GC4433@dhcp-128-65.nay.redhat.com>
+Message-Id: <20180226121628.5e832adf@ThinkPad>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,99 +42,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, julien.thierry@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, davem@davemloft.net, vgoyal@redhat.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: linux-s390@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, Feb 23, 2018 at 05:24:59PM +0800, Dave Young wrote:
-> Hi AKASHI,
-> 
-> On 02/22/18 at 08:17pm, AKASHI Takahiro wrote:
-> > As arch_kexec_kernel_*_{probe,load}(), arch_kimage_file_post_load_cleanup()
-> > and arch_kexec_kernel_verify_sg can be parameterized with a kexec_file_ops
-> > array and now duplicated among some architectures, let's factor them out.
+Hi Dave
+Hi AKASHI
+
+On Mon, 26 Feb 2018 10:21:02 +0900
+AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
+
 > > 
-> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > Cc: Dave Young <dyoung@redhat.com>
-> > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > Cc: Baoquan He <bhe@redhat.com>
-> > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-> > ---
-> >  arch/powerpc/include/asm/kexec.h            |  2 +-
-> >  arch/powerpc/kernel/kexec_elf_64.c          |  2 +-
-> >  arch/powerpc/kernel/machine_kexec_file_64.c | 39 ++------------------
-> >  arch/x86/include/asm/kexec-bzimage64.h      |  2 +-
-> >  arch/x86/kernel/kexec-bzimage64.c           |  2 +-
-> >  arch/x86/kernel/machine_kexec_64.c          | 45 +----------------------
-> >  include/linux/kexec.h                       | 15 ++++----
-> >  kernel/kexec_file.c                         | 57 +++++++++++++++++++++++++++--
-> >  8 files changed, 70 insertions(+), 94 deletions(-)
+> > Arch code need arch maintainer to review, maybe either of you can send
+> > the common part first before the arch code, eg. AKASHI can split the common
+> >  cleanup patches and post them as a separate series, after these prep
+> > series are reviewed then other patches can be refreshed based on it.
 > > 
+> > Seems in AKASHI's series, only patch 2, 3 ,4 ,5 is needed if split out
+> > as a common change series.  
 > 
-> [snip]
+> Yeah, all of those are touching kernel/kexec_file.c and in turn
+> they can conflict if being applied with 390 patches, but none of changes
+> that I made on kexec_file.c are overlapped with Phillips', I suppose
+> that merging these two patch sets is rather straightforward.
 > 
-> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > index 990adae52151..a6d14a768b3e 100644
-> > --- a/kernel/kexec_file.c
-> > +++ b/kernel/kexec_file.c
-> > @@ -26,34 +26,83 @@
-> >  #include <linux/vmalloc.h>
-> >  #include "kexec_internal.h"
-> >  
-> > +const __weak struct kexec_file_ops * const kexec_file_loaders[] = {NULL};
-> > +
-> >  #ifdef CONFIG_ARCH_HAS_KEXEC_PURGATORY
-> >  static int kexec_calculate_store_digests(struct kimage *image);
-> >  #else
-> >  static int kexec_calculate_store_digests(struct kimage *image) { return 0; };
-> >  #endif
-> >  
-> > +int _kexec_kernel_image_probe(struct kimage *image, void *buf,
-> > +			     unsigned long buf_len)
-> > +{
-> > +	const struct kexec_file_ops * const *fops;
-> > +	int ret = -ENOEXEC;
-> > +
-> > +	for (fops = &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops) {
-> > +		ret = (*fops)->probe(buf, buf_len);
-> > +		if (!ret) {
-> > +			image->fops = *fops;
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >  /* Architectures can provide this probe function */
-> >  int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
-> >  					 unsigned long buf_len)
-> >  {
-> > -	return -ENOEXEC;
-> > +	return _kexec_kernel_image_probe(image, buf, buf_len);
-> 
-> 
-> I vaguely remember previously I suggest split the _kexec_kernel_image_probe
-> because arch code can call them, and common code also use it like above.
-> But in your new series I do not find where else calls this function
-> except the common code arch_kexec_kernel_image_probe.  If nobody use
-> them then it is not worth to split them out, it is better to just embed
-> them in the __weak functions.
+> @Phillips: I hope that your patch#14 and #17 be aligned with my patch#3
+> as it is factoring out arch_kexec_{image_probe, image_load, verify_sig}()
+> and arch_kimage_file_post_load_cleanup().
 
-Powerpc's arch_kexec_kernel_image_probe() uses
-_kexec_kekrnel_image_probe() as it needs an extra check to rule out
-crash dump for now.
+Splitting the common code patches from the series is totally fine with me.
 
-Thanks,
--Takahiro AKASHI
+On Friday I managed to get my code working with AKASHI's patches. After setting
+ARCH_HAS_PURGATORY and cleaning up the kexec_* functions it worked basically out
+of the box. However there is one problem with older compilers on s390. Please
+see my comment on patch #3 for details.
 
+Thanks
+Philipp
 
-> Ditto for other similar functions.
-> 
-> [snip]
-> 
-> Thanks
-> Dave
 
 _______________________________________________
 kexec mailing list
