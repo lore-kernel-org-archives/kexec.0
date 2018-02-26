@@ -1,21 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eqHah-00027o-8A
- for kexec@lists.infradead.org; Mon, 26 Feb 2018 12:09:13 +0000
-Date: Mon, 26 Feb 2018 13:08:58 +0100
-From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-Subject: Re: [PATCH] kexec: do KEXEC_FILE_LOAD and fallback to KEXEC_LOAD if
- not supported.
-Message-ID: <20180226130858.6c0a8d09@naga.suse.cz>
-In-Reply-To: <20180226014515.GA2862@dhcp-128-65.nay.redhat.com>
-References: <20180222222442.9422-1-msuchanek@suse.de>
- <20180222232043.GC693@localhost.localdomain>
- <20180223092900.76a5dd33@ezekiel.suse.cz>
- <20180224014342.GA11298@dhcp-128-65.nay.redhat.com>
- <20180224173431.12ab826c@ezekiel.suse.cz>
- <20180226014515.GA2862@dhcp-128-65.nay.redhat.com>
-MIME-Version: 1.0
+ id 1eqKW7-0000xG-Q2
+ for kexec@lists.infradead.org; Mon, 26 Feb 2018 15:16:47 +0000
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w1QFFQOm081237
+ for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 10:16:33 -0500
+Received: from e06smtp15.uk.ibm.com (e06smtp15.uk.ibm.com [195.75.94.111])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2gck1x4xhv-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 10:16:32 -0500
+Received: from localhost
+ by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
+ Mon, 26 Feb 2018 15:16:29 -0000
+From: Philipp Rudo <prudo@linux.vnet.ibm.com>
+Subject: [PATCH 03/11] kexec_file: Make purgatory_info->ehdr const
+Date: Mon, 26 Feb 2018 16:16:12 +0100
+In-Reply-To: <20180226151620.20970-1-prudo@linux.vnet.ibm.com>
+References: <20180226151620.20970-1-prudo@linux.vnet.ibm.com>
+Message-Id: <20180226151620.20970-4-prudo@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,107 +30,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Tony Jones <tonyj@suse.com>, horms@verge.net.au, Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>
+To: kexec@lists.infradead.org, linux-s390@vger.kernel.org
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, 26 Feb 2018 09:45:15 +0800
-Dave Young <dyoung@redhat.com> wrote:
+The kexec_purgatory buffer is read-only. Thus all pointers into
+kexec_purgatory are read-only, too. Point this out by explicitly marking
+purgatory_info->ehdr as 'const' and update the comments in purgatory_info.
 
-> On 02/24/18 at 05:34pm, Petr Tesarik wrote:
-> > On Sat, 24 Feb 2018 09:43:42 +0800
-> > Dave Young <dyoung@redhat.com> wrote:
-> >   
-> > > On 02/23/18 at 09:29am, Petr Tesarik wrote:  
-> > > > Hi Baoquan,
-> > > > 
-> > > > On Fri, 23 Feb 2018 07:20:43 +0800
-> > > > Baoquan He <bhe@redhat.com> wrote:
-> > > >     
-> > > > > Hi Michal,
-> > > > > 
-> > > > > On 02/22/18 at 11:24pm, Michal Suchanek wrote:    
-> > > > > > The new KEXEC_FILE_LOAD is preferred in the case the
-> > > > > > platform supports it because it allows kexec in locked down
-> > > > > > secure boot mode.
-> > > > > > 
-> > > > > > However, some platforms do not support it so fall back to
-> > > > > > the old syscall there.      
-> > > > > 
-> > > > > I didn't read code change, just from patch log, I tend to not
-> > > > > agree. There are two options KEXEC_FILE_LOAD and KEXEC_LOAD,
-> > > > > some platforms do not support, why does some platforms not
-> > > > > choose KEXEC_LOAD, the working one? Why bother to make change
-> > > > > in code? I believe there's returned message telling if
-> > > > > KEXEC_FILE_LOAD works or not.    
-> > > > 
-> > > > Well... let me give a bit of background. As you have probably
-> > > > noticed, this syscall was originally available only for x86_64,
-> > > > but more and more architectures are also adding it now.
-> > > > 
-> > > > Next, kexec is actually called by a script (which locates a
-> > > > suitable kernel and initrd, constructs the kernel command line,
-> > > > etc.). The script must either:
-> > > > 
-> > > >   A. know somehow if the currently running kernel implements
-> > > >      kexec_file_load(2), or
-> > > > 
-> > > >   B. try one method first, and if it fails, retry with the
-> > > > other.
-> > > > 
-> > > > I agree that kexec(1) should probably allow the user to force a
-> > > > specific method, but I don't see the benefit of implementing
-> > > > fallback in an external script and not in kexec-tools itself.
-> > > > 
-> > > > OTOH if you want to push the fallback logic out of kexec-tools,
-> > > > then I would like to get better diagnostic at least. Letting my
-> > > > script parse kexec output is, um, suboptimal.    
-> > > 
-> > > In Fedora/RHEL we use this in scripts by checking the arch first,
-> > > for distribution it is enough?  
-> > 
-> > No.
-> > 
-> > First, you would also have to check the kernel version (and
-> > maintain an ugly mapping of which kernel version introduced
-> > kexec_file_load on which architecture).  
-> 
-> The kernel version update is rare for these new syscall added, but
-> it is indeed needed to match with them
-> 
-> > 
-> > Second, it's not just the architecture. kexec_load(2) will fail if
-> > SecureBoot is active. OTOH kexec_file_load(2) will fail if the
-> > kernel is not signed. For kernel hackers who don't use SecureBoot,
-> > signing self-built kernels is just overkill. So, you should also
-> > check the state of SecureBoot, possibly also whether the kernel
-> > image is signed with a valid key, repeating a bit too much of the
-> > kernel logic, and quite likely introducing subtle differences...  
-> 
-> Hmm, I did not say the exact details, yes, we checked the Secure Boot
-> state and only use kexec_file_load for that special case.
-> 
-> kexec_file and kexec_file_load is not exactly same so if one want to
-> use one instead of another for a specific functionality it seems not
-> good to automatically switch to another if one failed. For example
-> which one should be the first choice, it is hard to say.
+Signed-off-by: Philipp Rudo <prudo@linux.vnet.ibm.com>
+---
+ include/linux/kexec.h | 17 +++++++++++------
+ kernel/kexec_file.c   |  4 ++--
+ 2 files changed, 13 insertions(+), 8 deletions(-)
 
-Hard to say indeed, However, I would assume that architectures that
-implement kexec_file_load do so because it is required in some case and
-hence it will be actively maintained when available. However, some
-architectures may not require it and will be slow to implement it. So
-using kexec_file_load when available sounds like the right thing.
-Technically the implementation details are different but for most users
-this does not matter.
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 7bae5e87bf0d..10842eece180 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -99,14 +99,19 @@ struct compat_kexec_segment {
+ 
+ #ifdef CONFIG_KEXEC_FILE
+ struct purgatory_info {
+-	/* Pointer to elf header of read only purgatory */
+-	Elf_Ehdr *ehdr;
+-
+-	/* Pointer to purgatory sechdrs which are modifiable */
++	/*
++	 * Pointer to elf header at the beginning of kexec_purgatory.
++	 * Note: kexec_purgatory is read only
++	 */
++	const Elf_Ehdr *ehdr;
++	/*
++	 * Temporary, modifiable buffer for sechdrs used for relocation.
++	 * This memory can be freed post image load.
++	 */
+ 	Elf_Shdr *sechdrs;
+ 	/*
+-	 * Temporary buffer location where purgatory is loaded and relocated
+-	 * This memory can be freed post image load
++	 * Temporary, modifiable buffer for stripped purgatory used for
++	 * relocation. This memory can be freed post image load.
+ 	 */
+ 	void *purgatory_buf;
+ 
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 0f044457b40c..06fc9fdd2474 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -880,7 +880,7 @@ int kexec_load_purgatory(struct kimage *image, unsigned long min,
+ 	if (kexec_purgatory_size <= 0)
+ 		return -EINVAL;
+ 
+-	pi->ehdr = (Elf_Ehdr *)kexec_purgatory;
++	pi->ehdr = (const Elf_Ehdr *)kexec_purgatory;
+ 
+ 	ret = __kexec_load_purgatory(image, min, max, top_down);
+ 	if (ret)
+@@ -904,9 +904,9 @@ int kexec_load_purgatory(struct kimage *image, unsigned long min,
+ static Elf_Sym *kexec_purgatory_find_symbol(struct purgatory_info *pi,
+ 					    const char *name)
+ {
++	const Elf_Ehdr *ehdr;
+ 	Elf_Sym *syms;
+ 	Elf_Shdr *sechdrs;
+-	Elf_Ehdr *ehdr;
+ 	int i, k;
+ 	const char *strtab;
+ 
+-- 
+2.13.5
 
-For those that do care I provide option to select one or the other.
-
-Thanks
-
-Michal
 
 _______________________________________________
 kexec mailing list
