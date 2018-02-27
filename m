@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x243.google.com ([2607:f8b0:400e:c05::243])
+Received: from mail-pf0-x244.google.com ([2607:f8b0:400e:c00::244])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eqXBw-0005Eb-J6
- for kexec@lists.infradead.org; Tue, 27 Feb 2018 04:48:42 +0000
-Received: by mail-pg0-x243.google.com with SMTP id q27so5502549pgn.8
- for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 20:48:29 -0800 (PST)
+ id 1eqXCD-0005HM-HA
+ for kexec@lists.infradead.org; Tue, 27 Feb 2018 04:49:06 +0000
+Received: by mail-pf0-x244.google.com with SMTP id s24so7509572pfm.4
+ for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 20:48:46 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH 0/7] kexec_file: refactoring for other architecutres 
-Date: Tue, 27 Feb 2018 13:48:07 +0900
-Message-Id: <20180227044814.24808-1-takahiro.akashi@linaro.org>
+Subject: [PATCH 1/7] kexec_file: make an use of purgatory optional
+Date: Tue, 27 Feb 2018 13:48:08 +0900
+Message-Id: <20180227044814.24808-2-takahiro.akashi@linaro.org>
+In-Reply-To: <20180227044814.24808-1-takahiro.akashi@linaro.org>
+References: <20180227044814.24808-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,56 +27,93 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: dyoung@redhat.com, vgoyal@redhat.com, bhe@redhat.com, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, prudo@linux.vnet.ibm.com
 Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-subject: 
+On arm64, crash dump kernel's usable memory is protected by
+*unmapping* it from kernel virtual space unlike other architectures
+where the region is just made read-only. It is highly unlikely that
+the region is accidentally corrupted and this observation rationalizes
+that digest check code can also be dropped from purgatory.
+The resulting code is so simple as it doesn't require a bit ugly
+re-linking/relocation stuff, i.e. arch_kexec_apply_relocations_add().
 
-This is a preparatory patch set for adding kexec_file support on arm64.
+Please see:
+   http://lists.infradead.org/pipermail/linux-arm-kernel/2017-December/545428.html
+All that the purgatory does is to shuffle arguments and jump into a new
+kernel, while we still need to have some space for a hash value
+(purgatory_sha256_digest) which is never checked against.
 
-It was originally included in a arm64 patch set[1], but Philipp is also
-working on their kexec_file support on s390[2] and some changes are now
-conflicting.
+As such, it doesn't make sense to have trampline code between old kernel
+and new kernel on arm64.
 
-So these common part was extracted and put into a separate patch set for
-better integration. What's more, my original patch#4 was split into a few
-small chunks for easier review after Dave's comment.
+This patch introduces a new configuration, ARCH_HAS_KEXEC_PURGATORY, and
+allows related code to be compiled in only if necessary.
 
-As such, the resulting code is basically identical with my original, and
-the only difference is that kexec_file_loaders[] is now declared in kexec.h
-after Phillipp's comment[3]. Other than that, this patch set doesn't
-require any changes on the rest of my original patch set(#1, #6 to #13).
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
+---
+ arch/powerpc/Kconfig | 3 +++
+ arch/x86/Kconfig     | 3 +++
+ kernel/kexec_file.c  | 6 ++++++
+ 3 files changed, 12 insertions(+)
 
-Patch#1 allows making a use of purgatory optional, particularly useful
-for arm64.
-Patch#2 commonalizes arch_kexec_kernel_{image_probe, image_load,
-verify_sig}() and arch_kimage_file_post_load_cleanup() across architectures.
-Patch#3-#7 is also intended to generalize parse_elf64_headers(), along with
-exclude_mem_range(), to be made best re-use of.
-
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-February/561182.html
-[2] http://lkml.iu.edu//hypermail/linux/kernel/1802.1/02596.html
-[3] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-February/562041.html
-
-AKASHI Takahiro (7):
-  kexec_file: make an use of purgatory optional
-  kexec_file,x86,powerpc: factor out kexec_file_ops functions
-  x86: kexec_file: purge system-ram walking from prepare_elf64_headers()
-  x86: kexec_file: remove X86_64 dependency from prepare_elf64_headers()
-  x86: kexec_file: lift CRASH_MAX_RANGES limit on crash_mem buffer
-  x86: kexec_file: clean up prepare_elf64_headers()
-  kexec_file, x86: move re-factored code to generic side
-
- arch/powerpc/Kconfig                        |   3 +
- arch/powerpc/include/asm/kexec.h            |   2 +-
- arch/powerpc/kernel/kexec_elf_64.c          |   2 +-
- arch/powerpc/kernel/machine_kexec_file_64.c |  39 +---
- arch/x86/Kconfig                            |   3 +
- arch/x86/include/asm/kexec-bzimage64.h      |   2 +-
- arch/x86/kernel/crash.c                     | 332 +++++-----------------------
- arch/x86/kernel/kexec-bzimage64.c           |   2 +-
- arch/x86/kernel/machine_kexec_64.c          |  45 +---
- include/linux/kexec.h                       |  36 ++-
- kernel/kexec_file.c                         | 236 +++++++++++++++++++-
- 11 files changed, 336 insertions(+), 366 deletions(-)
-
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 73ce5dd07642..c32a181a7cbb 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -552,6 +552,9 @@ config KEXEC_FILE
+ 	  for kernel and initramfs as opposed to a list of segments as is the
+ 	  case for the older kexec call.
+ 
++config ARCH_HAS_KEXEC_PURGATORY
++	def_bool KEXEC_FILE
++
+ config RELOCATABLE
+ 	bool "Build a relocatable kernel"
+ 	depends on PPC64 || (FLATMEM && (44x || FSL_BOOKE))
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index c1236b187824..f031c3efe47e 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2019,6 +2019,9 @@ config KEXEC_FILE
+ 	  for kernel and initramfs as opposed to list of segments as
+ 	  accepted by previous system call.
+ 
++config ARCH_HAS_KEXEC_PURGATORY
++	def_bool KEXEC_FILE
++
+ config KEXEC_VERIFY_SIG
+ 	bool "Verify kernel signature during kexec_file_load() syscall"
+ 	depends on KEXEC_FILE
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index e5bcd94c1efb..990adae52151 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -26,7 +26,11 @@
+ #include <linux/vmalloc.h>
+ #include "kexec_internal.h"
+ 
++#ifdef CONFIG_ARCH_HAS_KEXEC_PURGATORY
+ static int kexec_calculate_store_digests(struct kimage *image);
++#else
++static int kexec_calculate_store_digests(struct kimage *image) { return 0; };
++#endif
+ 
+ /* Architectures can provide this probe function */
+ int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+@@ -520,6 +524,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_ARCH_HAS_KEXEC_PURGATORY
+ /* Calculate and store the digest of segments */
+ static int kexec_calculate_store_digests(struct kimage *image)
+ {
+@@ -1022,3 +1027,4 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+ 
+ 	return 0;
+ }
++#endif /* CONFIG_ARCH_HAS_KEXEC_PURGATORY */
 -- 
 2.16.2
 
