@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eqanZ-0008Oo-P1
- for kexec@lists.infradead.org; Tue, 27 Feb 2018 08:39:47 +0000
-Date: Tue, 27 Feb 2018 09:39:29 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
+ id 1eqbGG-00040h-Ja
+ for kexec@lists.infradead.org; Tue, 27 Feb 2018 09:09:31 +0000
+Date: Tue, 27 Feb 2018 17:09:05 +0800
+From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH] kexec: do KEXEC_FILE_LOAD and fallback to KEXEC_LOAD if
  not supported.
-Message-ID: <20180227093929.1aef97a2@ezekiel.suse.cz>
-In-Reply-To: <20180227011510.GA2311@dhcp-128-65.nay.redhat.com>
+Message-ID: <20180227090905.GA14817@dhcp-128-65.nay.redhat.com>
 References: <20180222222442.9422-1-msuchanek@suse.de>
  <20180222232043.GC693@localhost.localdomain>
  <20180223092900.76a5dd33@ezekiel.suse.cz>
@@ -17,7 +16,10 @@ References: <20180222222442.9422-1-msuchanek@suse.de>
  <20180226014515.GA2862@dhcp-128-65.nay.redhat.com>
  <20180226130858.6c0a8d09@naga.suse.cz>
  <20180227011510.GA2311@dhcp-128-65.nay.redhat.com>
+ <20180227093929.1aef97a2@ezekiel.suse.cz>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180227093929.1aef97a2@ezekiel.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,105 +28,190 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Tony Jones <tonyj@suse.com>, Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>, horms@verge.net.au
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: Tony Jones <tonyj@suse.com>, Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>, horms@verge.net.au
 
-T24gVHVlLCAyNyBGZWIgMjAxOCAwOToxNToxMCArMDgwMApEYXZlIFlvdW5nIDxkeW91bmdAcmVk
-aGF0LmNvbT4gd3JvdGU6Cgo+IE9uIDAyLzI2LzE4IGF0IDAxOjA4cG0sIE1pY2hhbCBTdWNow6Fu
-ZWsgd3JvdGU6Cj4gPiBPbiBNb24sIDI2IEZlYiAyMDE4IDA5OjQ1OjE1ICswODAwCj4gPiBEYXZl
-IFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiAgIAo+ID4gPiBPbiAwMi8yNC8x
-OCBhdCAwNTozNHBtLCBQZXRyIFRlc2FyaWsgd3JvdGU6ICAKPiA+ID4gPiBPbiBTYXQsIDI0IEZl
-YiAyMDE4IDA5OjQzOjQyICswODAwCj4gPiA+ID4gRGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhhdC5j
-b20+IHdyb3RlOgo+ID4gPiA+ICAgICAKPiA+ID4gPiA+IE9uIDAyLzIzLzE4IGF0IDA5OjI5YW0s
-IFBldHIgVGVzYXJpayB3cm90ZTogICAgCj4gPiA+ID4gPiA+IEhpIEJhb3F1YW4sCj4gPiA+ID4g
-PiA+IAo+ID4gPiA+ID4gPiBPbiBGcmksIDIzIEZlYiAyMDE4IDA3OjIwOjQzICswODAwCj4gPiA+
-ID4gPiA+IEJhb3F1YW4gSGUgPGJoZUByZWRoYXQuY29tPiB3cm90ZToKPiA+ID4gPiA+ID4gICAg
-ICAgCj4gPiA+ID4gPiA+ID4gSGkgTWljaGFsLAo+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+
-IE9uIDAyLzIyLzE4IGF0IDExOjI0cG0sIE1pY2hhbCBTdWNoYW5layB3cm90ZTogICAgICAKPiA+
-ID4gPiA+ID4gPiA+IFRoZSBuZXcgS0VYRUNfRklMRV9MT0FEIGlzIHByZWZlcnJlZCBpbiB0aGUg
-Y2FzZSB0aGUKPiA+ID4gPiA+ID4gPiA+IHBsYXRmb3JtIHN1cHBvcnRzIGl0IGJlY2F1c2UgaXQg
-YWxsb3dzIGtleGVjIGluIGxvY2tlZCBkb3duCj4gPiA+ID4gPiA+ID4gPiBzZWN1cmUgYm9vdCBt
-b2RlLgo+ID4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gPiBIb3dldmVyLCBzb21lIHBsYXRm
-b3JtcyBkbyBub3Qgc3VwcG9ydCBpdCBzbyBmYWxsIGJhY2sgdG8KPiA+ID4gPiA+ID4gPiA+IHRo
-ZSBvbGQgc3lzY2FsbCB0aGVyZS4gICAgICAgIAo+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+
-IEkgZGlkbid0IHJlYWQgY29kZSBjaGFuZ2UsIGp1c3QgZnJvbSBwYXRjaCBsb2csIEkgdGVuZCB0
-byBub3QKPiA+ID4gPiA+ID4gPiBhZ3JlZS4gVGhlcmUgYXJlIHR3byBvcHRpb25zIEtFWEVDX0ZJ
-TEVfTE9BRCBhbmQgS0VYRUNfTE9BRCwKPiA+ID4gPiA+ID4gPiBzb21lIHBsYXRmb3JtcyBkbyBu
-b3Qgc3VwcG9ydCwgd2h5IGRvZXMgc29tZSBwbGF0Zm9ybXMgbm90Cj4gPiA+ID4gPiA+ID4gY2hv
-b3NlIEtFWEVDX0xPQUQsIHRoZSB3b3JraW5nIG9uZT8gV2h5IGJvdGhlciB0byBtYWtlIGNoYW5n
-ZQo+ID4gPiA+ID4gPiA+IGluIGNvZGU/IEkgYmVsaWV2ZSB0aGVyZSdzIHJldHVybmVkIG1lc3Nh
-Z2UgdGVsbGluZyBpZgo+ID4gPiA+ID4gPiA+IEtFWEVDX0ZJTEVfTE9BRCB3b3JrcyBvciBub3Qu
-ICAgICAgCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBXZWxsLi4uIGxldCBtZSBnaXZlIGEgYml0
-IG9mIGJhY2tncm91bmQuIEFzIHlvdSBoYXZlIHByb2JhYmx5Cj4gPiA+ID4gPiA+IG5vdGljZWQs
-IHRoaXMgc3lzY2FsbCB3YXMgb3JpZ2luYWxseSBhdmFpbGFibGUgb25seSBmb3IgeDg2XzY0LAo+
-ID4gPiA+ID4gPiBidXQgbW9yZSBhbmQgbW9yZSBhcmNoaXRlY3R1cmVzIGFyZSBhbHNvIGFkZGlu
-ZyBpdCBub3cuCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBOZXh0LCBrZXhlYyBpcyBhY3R1YWxs
-eSBjYWxsZWQgYnkgYSBzY3JpcHQgKHdoaWNoIGxvY2F0ZXMgYQo+ID4gPiA+ID4gPiBzdWl0YWJs
-ZSBrZXJuZWwgYW5kIGluaXRyZCwgY29uc3RydWN0cyB0aGUga2VybmVsIGNvbW1hbmQgbGluZSwK
-PiA+ID4gPiA+ID4gZXRjLikuIFRoZSBzY3JpcHQgbXVzdCBlaXRoZXI6Cj4gPiA+ID4gPiA+IAo+
-ID4gPiA+ID4gPiAgIEEuIGtub3cgc29tZWhvdyBpZiB0aGUgY3VycmVudGx5IHJ1bm5pbmcga2Vy
-bmVsIGltcGxlbWVudHMKPiA+ID4gPiA+ID4gICAgICBrZXhlY19maWxlX2xvYWQoMiksIG9yCj4g
-PiA+ID4gPiA+IAo+ID4gPiA+ID4gPiAgIEIuIHRyeSBvbmUgbWV0aG9kIGZpcnN0LCBhbmQgaWYg
-aXQgZmFpbHMsIHJldHJ5IHdpdGggdGhlCj4gPiA+ID4gPiA+IG90aGVyLgo+ID4gPiA+ID4gPiAK
-PiA+ID4gPiA+ID4gSSBhZ3JlZSB0aGF0IGtleGVjKDEpIHNob3VsZCBwcm9iYWJseSBhbGxvdyB0
-aGUgdXNlciB0byBmb3JjZSBhCj4gPiA+ID4gPiA+IHNwZWNpZmljIG1ldGhvZCwgYnV0IEkgZG9u
-J3Qgc2VlIHRoZSBiZW5lZml0IG9mIGltcGxlbWVudGluZwo+ID4gPiA+ID4gPiBmYWxsYmFjayBp
-biBhbiBleHRlcm5hbCBzY3JpcHQgYW5kIG5vdCBpbiBrZXhlYy10b29scyBpdHNlbGYuCj4gPiA+
-ID4gPiA+IAo+ID4gPiA+ID4gPiBPVE9IIGlmIHlvdSB3YW50IHRvIHB1c2ggdGhlIGZhbGxiYWNr
-IGxvZ2ljIG91dCBvZiBrZXhlYy10b29scywKPiA+ID4gPiA+ID4gdGhlbiBJIHdvdWxkIGxpa2Ug
-dG8gZ2V0IGJldHRlciBkaWFnbm9zdGljIGF0IGxlYXN0LiBMZXR0aW5nIG15Cj4gPiA+ID4gPiA+
-IHNjcmlwdCBwYXJzZSBrZXhlYyBvdXRwdXQgaXMsIHVtLCBzdWJvcHRpbWFsLiAgICAgIAo+ID4g
-PiA+ID4gCj4gPiA+ID4gPiBJbiBGZWRvcmEvUkhFTCB3ZSB1c2UgdGhpcyBpbiBzY3JpcHRzIGJ5
-IGNoZWNraW5nIHRoZSBhcmNoIGZpcnN0LAo+ID4gPiA+ID4gZm9yIGRpc3RyaWJ1dGlvbiBpdCBp
-cyBlbm91Z2g/ICAgIAo+ID4gPiA+IAo+ID4gPiA+IE5vLgo+ID4gPiA+IAo+ID4gPiA+IEZpcnN0
-LCB5b3Ugd291bGQgYWxzbyBoYXZlIHRvIGNoZWNrIHRoZSBrZXJuZWwgdmVyc2lvbiAoYW5kCj4g
-PiA+ID4gbWFpbnRhaW4gYW4gdWdseSBtYXBwaW5nIG9mIHdoaWNoIGtlcm5lbCB2ZXJzaW9uIGlu
-dHJvZHVjZWQKPiA+ID4gPiBrZXhlY19maWxlX2xvYWQgb24gd2hpY2ggYXJjaGl0ZWN0dXJlKS4g
-ICAgCj4gPiA+IAo+ID4gPiBUaGUga2VybmVsIHZlcnNpb24gdXBkYXRlIGlzIHJhcmUgZm9yIHRo
-ZXNlIG5ldyBzeXNjYWxsIGFkZGVkLCBidXQKPiA+ID4gaXQgaXMgaW5kZWVkIG5lZWRlZCB0byBt
-YXRjaCB3aXRoIHRoZW0KPiA+ID4gICAKPiA+ID4gPiAKPiA+ID4gPiBTZWNvbmQsIGl0J3Mgbm90
-IGp1c3QgdGhlIGFyY2hpdGVjdHVyZS4ga2V4ZWNfbG9hZCgyKSB3aWxsIGZhaWwgaWYKPiA+ID4g
-PiBTZWN1cmVCb290IGlzIGFjdGl2ZS4gT1RPSCBrZXhlY19maWxlX2xvYWQoMikgd2lsbCBmYWls
-IGlmIHRoZQo+ID4gPiA+IGtlcm5lbCBpcyBub3Qgc2lnbmVkLiBGb3Iga2VybmVsIGhhY2tlcnMg
-d2hvIGRvbid0IHVzZSBTZWN1cmVCb290LAo+ID4gPiA+IHNpZ25pbmcgc2VsZi1idWlsdCBrZXJu
-ZWxzIGlzIGp1c3Qgb3ZlcmtpbGwuIFNvLCB5b3Ugc2hvdWxkIGFsc28KPiA+ID4gPiBjaGVjayB0
-aGUgc3RhdGUgb2YgU2VjdXJlQm9vdCwgcG9zc2libHkgYWxzbyB3aGV0aGVyIHRoZSBrZXJuZWwK
-PiA+ID4gPiBpbWFnZSBpcyBzaWduZWQgd2l0aCBhIHZhbGlkIGtleSwgcmVwZWF0aW5nIGEgYml0
-IHRvbyBtdWNoIG9mIHRoZQo+ID4gPiA+IGtlcm5lbCBsb2dpYywgYW5kIHF1aXRlIGxpa2VseSBp
-bnRyb2R1Y2luZyBzdWJ0bGUgZGlmZmVyZW5jZXMuLi4gICAgCj4gPiA+IAo+ID4gPiBIbW0sIEkg
-ZGlkIG5vdCBzYXkgdGhlIGV4YWN0IGRldGFpbHMsIHllcywgd2UgY2hlY2tlZCB0aGUgU2VjdXJl
-IEJvb3QKPiA+ID4gc3RhdGUgYW5kIG9ubHkgdXNlIGtleGVjX2ZpbGVfbG9hZCBmb3IgdGhhdCBz
-cGVjaWFsIGNhc2UuCj4gPiA+IAo+ID4gPiBrZXhlY19maWxlIGFuZCBrZXhlY19maWxlX2xvYWQg
-aXMgbm90IGV4YWN0bHkgc2FtZSBzbyBpZiBvbmUgd2FudCB0bwo+ID4gPiB1c2Ugb25lIGluc3Rl
-YWQgb2YgYW5vdGhlciBmb3IgYSBzcGVjaWZpYyBmdW5jdGlvbmFsaXR5IGl0IHNlZW1zIG5vdAo+
-ID4gPiBnb29kIHRvIGF1dG9tYXRpY2FsbHkgc3dpdGNoIHRvIGFub3RoZXIgaWYgb25lIGZhaWxl
-ZC4gRm9yIGV4YW1wbGUKPiA+ID4gd2hpY2ggb25lIHNob3VsZCBiZSB0aGUgZmlyc3QgY2hvaWNl
-LCBpdCBpcyBoYXJkIHRvIHNheS4gIAo+ID4gCj4gPiBIYXJkIHRvIHNheSBpbmRlZWQsIEhvd2V2
-ZXIsIEkgd291bGQgYXNzdW1lIHRoYXQgYXJjaGl0ZWN0dXJlcyB0aGF0Cj4gPiBpbXBsZW1lbnQg
-a2V4ZWNfZmlsZV9sb2FkIGRvIHNvIGJlY2F1c2UgaXQgaXMgcmVxdWlyZWQgaW4gc29tZSBjYXNl
-IGFuZAo+ID4gaGVuY2UgaXQgd2lsbCBiZSBhY3RpdmVseSBtYWludGFpbmVkIHdoZW4gYXZhaWxh
-YmxlLiBIb3dldmVyLCBzb21lCj4gPiBhcmNoaXRlY3R1cmVzIG1heSBub3QgcmVxdWlyZSBpdCBh
-bmQgd2lsbCBiZSBzbG93IHRvIGltcGxlbWVudCBpdC4gU28KPiA+IHVzaW5nIGtleGVjX2ZpbGVf
-bG9hZCB3aGVuIGF2YWlsYWJsZSBzb3VuZHMgbGlrZSB0aGUgcmlnaHQgdGhpbmcuCj4gPiBUZWNo
-bmljYWxseSB0aGUgaW1wbGVtZW50YXRpb24gZGV0YWlscyBhcmUgZGlmZmVyZW50IGJ1dCBmb3Ig
-bW9zdCB1c2Vycwo+ID4gdGhpcyBkb2VzIG5vdCBtYXR0ZXIuCj4gPiAKPiA+IEZvciB0aG9zZSB0
-aGF0IGRvIGNhcmUgSSBwcm92aWRlIG9wdGlvbiB0byBzZWxlY3Qgb25lIG9yIHRoZSBvdGhlci4g
-IAo+IAo+IEkgd291bGQgc2F5IGl0IGJyZWFrcyB0aGluZ3MsIGEgYmV0dGVyIHdheSBzaG91bGQg
-YmUgaW50cm9kdWNpbmcgYW5vdGhlcgo+IGtleGVjLXRvb2xzIG9wdGlvbiBmb3IgZXhhbXBsZSBr
-ZXhlYyAtLWF1dG8gZm9yIHRoaXMgcHVycG9zZS4gUHJvYmFibHkKPiBhZGQgc29tZSAtLWF1dG89
-Li4uIHRvIHNlbGVjdCB0aGUgZmlyc3QgY2hhbmNlLgoKWWVzISBUaGlzIGlzIHRoZSB3YXkgdG8g
-Z28uIEJ1dCB0aGVuIEkgd291bGRuJ3QgY2FsbCBpdCAtLWF1dG8uCkkgd291bGQgY2FsbCBpdCAi
-LS1tZXRob2Q9Iiwgc28geW91IGNvdWxkIHNwZWNpZnk6CgogIC0tbWV0aG9kPWtlcm5lbCAgKHRv
-IHVzZSB0aGUgaW4ta2VybmVsIGxvYWRlciBha2Ega2V4ZWNfZmlsZV9sb2FkKQogIC0tbWV0aG9k
-PXVzZXIgICAgKHRvIHVzZSB0aGUgdHJhZGl0aW9uYWwgdXNlci1zcGFjZSBsb2FkZXIpCiAgLS1t
-ZXRob2Q9a2VybmVsLHVzZXIgICh0byBwcmVmZXIga2V4ZWNfZmlsZV9sb2FkKQogIC0tbWV0aG9k
-PXVzZXIsa2VybmVsICAodG8gcHJlZmVyIGtleGNfbG9hZCkKCkknbSBub3QgcXVpdGUgc3VyZSBp
-ZiBpdCBhbHNvIG1ha2VzIHNlbnNlIHRvIHByb3ZpZGUgIi0tbWV0aG9kPWF1dG8iLAp3aGljaCB3
-b3VsZCB1c2Ugd2hhdGV2ZXIgZGVmYXVsdCBpcyBjb25zaWRlcmVkIHNhbmUgZm9yIHRoZSBydW5u
-aW5nCnN5c3RlbS4KClBldHIgVAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On 02/27/18 at 09:39am, Petr Tesarik wrote:
+> On Tue, 27 Feb 2018 09:15:10 +0800
+> Dave Young <dyoung@redhat.com> wrote:
+> =
+
+> > On 02/26/18 at 01:08pm, Michal Such=E1nek wrote:
+> > > On Mon, 26 Feb 2018 09:45:15 +0800
+> > > Dave Young <dyoung@redhat.com> wrote:
+> > >   =
+
+> > > > On 02/24/18 at 05:34pm, Petr Tesarik wrote:  =
+
+> > > > > On Sat, 24 Feb 2018 09:43:42 +0800
+> > > > > Dave Young <dyoung@redhat.com> wrote:
+> > > > >     =
+
+> > > > > > On 02/23/18 at 09:29am, Petr Tesarik wrote:    =
+
+> > > > > > > Hi Baoquan,
+> > > > > > > =
+
+> > > > > > > On Fri, 23 Feb 2018 07:20:43 +0800
+> > > > > > > Baoquan He <bhe@redhat.com> wrote:
+> > > > > > >       =
+
+> > > > > > > > Hi Michal,
+> > > > > > > > =
+
+> > > > > > > > On 02/22/18 at 11:24pm, Michal Suchanek wrote:      =
+
+> > > > > > > > > The new KEXEC_FILE_LOAD is preferred in the case the
+> > > > > > > > > platform supports it because it allows kexec in locked do=
+wn
+> > > > > > > > > secure boot mode.
+> > > > > > > > > =
+
+> > > > > > > > > However, some platforms do not support it so fall back to
+> > > > > > > > > the old syscall there.        =
+
+> > > > > > > > =
+
+> > > > > > > > I didn't read code change, just from patch log, I tend to n=
+ot
+> > > > > > > > agree. There are two options KEXEC_FILE_LOAD and KEXEC_LOAD,
+> > > > > > > > some platforms do not support, why does some platforms not
+> > > > > > > > choose KEXEC_LOAD, the working one? Why bother to make chan=
+ge
+> > > > > > > > in code? I believe there's returned message telling if
+> > > > > > > > KEXEC_FILE_LOAD works or not.      =
+
+> > > > > > > =
+
+> > > > > > > Well... let me give a bit of background. As you have probably
+> > > > > > > noticed, this syscall was originally available only for x86_6=
+4,
+> > > > > > > but more and more architectures are also adding it now.
+> > > > > > > =
+
+> > > > > > > Next, kexec is actually called by a script (which locates a
+> > > > > > > suitable kernel and initrd, constructs the kernel command lin=
+e,
+> > > > > > > etc.). The script must either:
+> > > > > > > =
+
+> > > > > > >   A. know somehow if the currently running kernel implements
+> > > > > > >      kexec_file_load(2), or
+> > > > > > > =
+
+> > > > > > >   B. try one method first, and if it fails, retry with the
+> > > > > > > other.
+> > > > > > > =
+
+> > > > > > > I agree that kexec(1) should probably allow the user to force=
+ a
+> > > > > > > specific method, but I don't see the benefit of implementing
+> > > > > > > fallback in an external script and not in kexec-tools itself.
+> > > > > > > =
+
+> > > > > > > OTOH if you want to push the fallback logic out of kexec-tool=
+s,
+> > > > > > > then I would like to get better diagnostic at least. Letting =
+my
+> > > > > > > script parse kexec output is, um, suboptimal.      =
+
+> > > > > > =
+
+> > > > > > In Fedora/RHEL we use this in scripts by checking the arch firs=
+t,
+> > > > > > for distribution it is enough?    =
+
+> > > > > =
+
+> > > > > No.
+> > > > > =
+
+> > > > > First, you would also have to check the kernel version (and
+> > > > > maintain an ugly mapping of which kernel version introduced
+> > > > > kexec_file_load on which architecture).    =
+
+> > > > =
+
+> > > > The kernel version update is rare for these new syscall added, but
+> > > > it is indeed needed to match with them
+> > > >   =
+
+> > > > > =
+
+> > > > > Second, it's not just the architecture. kexec_load(2) will fail if
+> > > > > SecureBoot is active. OTOH kexec_file_load(2) will fail if the
+> > > > > kernel is not signed. For kernel hackers who don't use SecureBoot,
+> > > > > signing self-built kernels is just overkill. So, you should also
+> > > > > check the state of SecureBoot, possibly also whether the kernel
+> > > > > image is signed with a valid key, repeating a bit too much of the
+> > > > > kernel logic, and quite likely introducing subtle differences... =
+   =
+
+> > > > =
+
+> > > > Hmm, I did not say the exact details, yes, we checked the Secure Bo=
+ot
+> > > > state and only use kexec_file_load for that special case.
+> > > > =
+
+> > > > kexec_file and kexec_file_load is not exactly same so if one want to
+> > > > use one instead of another for a specific functionality it seems not
+> > > > good to automatically switch to another if one failed. For example
+> > > > which one should be the first choice, it is hard to say.  =
+
+> > > =
+
+> > > Hard to say indeed, However, I would assume that architectures that
+> > > implement kexec_file_load do so because it is required in some case a=
+nd
+> > > hence it will be actively maintained when available. However, some
+> > > architectures may not require it and will be slow to implement it. So
+> > > using kexec_file_load when available sounds like the right thing.
+> > > Technically the implementation details are different but for most use=
+rs
+> > > this does not matter.
+> > > =
+
+> > > For those that do care I provide option to select one or the other.  =
+
+> > =
+
+> > I would say it breaks things, a better way should be introducing another
+> > kexec-tools option for example kexec --auto for this purpose. Probably
+> > add some --auto=3D... to select the first chance.
+> =
+
+> Yes! This is the way to go. But then I wouldn't call it --auto.
+> I would call it "--method=3D", so you could specify:
+> =
+
+>   --method=3Dkernel  (to use the in-kernel loader aka kexec_file_load)
+>   --method=3Duser    (to use the traditional user-space loader)
+>   --method=3Dkernel,user  (to prefer kexec_file_load)
+>   --method=3Duser,kernel  (to prefer kexc_load)
+> =
+
+> I'm not quite sure if it also makes sense to provide "--method=3Dauto",
+> which would use whatever default is considered sane for the running
+> system.
+
+If we have --method=3Dkernel,user and --method=3Duser,kernel then no need
+"auto" anymore..  But I would prefer that original default behavior is kept,
+kexec -l  without "--method" will use userspace loader, kexec -s -l will
+use kernel space loader
+
+> =
+
+> Petr T
+
+Thanks
+Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
