@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x242.google.com ([2607:f8b0:400e:c01::242])
+Received: from mail-pf0-x241.google.com ([2607:f8b0:400e:c00::241])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eqXCJ-0005R5-Ez
- for kexec@lists.infradead.org; Tue, 27 Feb 2018 04:49:20 +0000
-Received: by mail-pl0-x242.google.com with SMTP id ay8so10704254plb.4
- for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 20:49:00 -0800 (PST)
+ id 1eqXCV-0005Tv-8g
+ for kexec@lists.infradead.org; Tue, 27 Feb 2018 04:49:40 +0000
+Received: by mail-pf0-x241.google.com with SMTP id f80so2405756pfa.8
+ for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 20:49:04 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH 4/7] x86: kexec_file: remove X86_64 dependency from
- prepare_elf64_headers()
-Date: Tue, 27 Feb 2018 13:48:11 +0900
-Message-Id: <20180227044814.24808-5-takahiro.akashi@linaro.org>
+Subject: [PATCH 5/7] x86: kexec_file: lift CRASH_MAX_RANGES limit on crash_mem
+ buffer
+Date: Tue, 27 Feb 2018 13:48:12 +0900
+Message-Id: <20180227044814.24808-6-takahiro.akashi@linaro.org>
 In-Reply-To: <20180227044814.24808-1-takahiro.akashi@linaro.org>
 References: <20180227044814.24808-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -28,71 +28,204 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: dyoung@redhat.com, vgoyal@redhat.com, bhe@redhat.com, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, prudo@linux.vnet.ibm.com
 Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-The code guarded by CONFIG_X86_64 is necessary on some architectures
-which have a dedicated kernel mapping outside of linear memory mapping.
-(arm64 is among those.)
+While CRASH_MAX_RANGES (== 16) seems to be good enough, fixed-number
+array is not a good idea in general.
 
-In this patch, an additional argument, kernel_map, is added to enable/
-disable the code removing #ifdef.
+In this patch, size of crash_mem buffer is calculated as before and
+the buffer is now dynamically allocated. This change also allows removing
+crash_elf_data structure.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Cc: Dave Young <dyoung@redhat.com>
 Cc: Vivek Goyal <vgoyal@redhat.com>
 Cc: Baoquan He <bhe@redhat.com>
 ---
- arch/x86/kernel/crash.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ arch/x86/kernel/crash.c | 80 ++++++++++++++++++-------------------------------
+ 1 file changed, 29 insertions(+), 51 deletions(-)
 
 diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 2123fa0efc17..913fd8021f8a 100644
+index 913fd8021f8a..bfc37ad20d4a 100644
 --- a/arch/x86/kernel/crash.c
 +++ b/arch/x86/kernel/crash.c
-@@ -347,7 +347,7 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+@@ -41,32 +41,14 @@
+ /* Alignment required for elf header segment */
+ #define ELF_CORE_HEADER_ALIGN   4096
+ 
+-/* This primarily represents number of split ranges due to exclusion */
+-#define CRASH_MAX_RANGES	16
+-
+ struct crash_mem_range {
+ 	u64 start, end;
+ };
+ 
+ struct crash_mem {
+-	unsigned int nr_ranges;
+-	struct crash_mem_range ranges[CRASH_MAX_RANGES];
+-};
+-
+-/* Misc data about ram ranges needed to prepare elf headers */
+-struct crash_elf_data {
+-	struct kimage *image;
+-	/*
+-	 * Total number of ram ranges we have after various adjustments for
+-	 * crash reserved region, etc.
+-	 */
+ 	unsigned int max_nr_ranges;
+-
+-	/* Pointer to elf header */
+-	void *ehdr;
+-	/* Pointer to next phdr */
+-	void *bufp;
+-	struct crash_mem mem;
++	unsigned int nr_ranges;
++	struct crash_mem_range ranges[0];
+ };
+ 
+ /* Used while preparing memory map entries for second kernel */
+@@ -217,26 +199,29 @@ static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
  	return 0;
  }
  
--static int prepare_elf64_headers(struct crash_elf_data *ced,
-+static int prepare_elf64_headers(struct crash_elf_data *ced, int kernel_map,
+-
+ /* Gather all the required information to prepare elf headers for ram regions */
+-static void fill_up_crash_elf_data(struct crash_elf_data *ced,
+-				   struct kimage *image)
++static struct crash_mem *fill_up_crash_elf_data(void)
+ {
+ 	unsigned int nr_ranges = 0;
+-
+-	ced->image = image;
++	struct crash_mem *cmem;
+ 
+ 	walk_system_ram_res(0, -1, &nr_ranges,
+ 				get_nr_ram_ranges_callback);
+ 
+-	ced->max_nr_ranges = nr_ranges;
++	/*
++	 * Exclusion of crash region and/or crashk_low_res may cause
++	 * another range split. So add extra two slots here.
++	 */
++	nr_ranges += 2;
++	cmem = vmalloc(sizeof(struct crash_mem) +
++			sizeof(struct crash_mem_range) * nr_ranges);
++	if (!cmem)
++		return NULL;
+ 
+-	/* Exclusion of crash region could split memory ranges */
+-	ced->max_nr_ranges++;
++	cmem->max_nr_ranges = nr_ranges;
++	cmem->nr_ranges = 0;
+ 
+-	/* If crashk_low_res is not 0, another range split possible */
+-	if (crashk_low_res.end)
+-		ced->max_nr_ranges++;
++	return cmem;
+ }
+ 
+ static int exclude_mem_range(struct crash_mem *mem,
+@@ -293,10 +278,8 @@ static int exclude_mem_range(struct crash_mem *mem,
+ 		return 0;
+ 
+ 	/* Split happened */
+-	if (i == CRASH_MAX_RANGES - 1) {
+-		pr_err("Too many crash ranges after split\n");
++	if (i == mem->max_nr_ranges - 1)
+ 		return -ENOMEM;
+-	}
+ 
+ 	/* Location where new range should go */
+ 	j = i + 1;
+@@ -314,11 +297,10 @@ static int exclude_mem_range(struct crash_mem *mem,
+ 
+ /*
+  * Look for any unwanted ranges between mstart, mend and remove them. This
+- * might lead to split and split ranges are put in ced->mem.ranges[] array
++ * might lead to split and split ranges are put in cmem->ranges[] array
+  */
+-static int elf_header_exclude_ranges(struct crash_elf_data *ced)
++static int elf_header_exclude_ranges(struct crash_mem *cmem)
+ {
+-	struct crash_mem *cmem = &ced->mem;
+ 	int ret = 0;
+ 
+ 	/* Exclude crashkernel region */
+@@ -337,8 +319,7 @@ static int elf_header_exclude_ranges(struct crash_elf_data *ced)
+ 
+ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+ {
+-	struct crash_elf_data *ced = arg;
+-	struct crash_mem *cmem = &ced->mem;
++	struct crash_mem *cmem = arg;
+ 
+ 	cmem->ranges[cmem->nr_ranges].start = res->start;
+ 	cmem->ranges[cmem->nr_ranges].end = res->end;
+@@ -347,7 +328,7 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+ 	return 0;
+ }
+ 
+-static int prepare_elf64_headers(struct crash_elf_data *ced, int kernel_map,
++static int prepare_elf64_headers(struct crash_mem *cmem, int kernel_map,
  		void **addr, unsigned long *sz)
  {
  	Elf64_Ehdr *ehdr;
-@@ -414,17 +414,17 @@ static int prepare_elf64_headers(struct crash_elf_data *ced,
- 	phdr->p_filesz = phdr->p_memsz = VMCOREINFO_NOTE_SIZE;
- 	(ehdr->e_phnum)++;
+@@ -356,12 +337,11 @@ static int prepare_elf64_headers(struct crash_elf_data *ced, int kernel_map,
+ 	unsigned char *buf, *bufp;
+ 	unsigned int cpu, i;
+ 	unsigned long long notes_addr;
+-	struct crash_mem *cmem = &ced->mem;
+ 	unsigned long mstart, mend;
  
--#ifdef CONFIG_X86_64
- 	/* Prepare PT_LOAD type program header for kernel text region */
--	phdr = (Elf64_Phdr *)bufp;
--	bufp += sizeof(Elf64_Phdr);
--	phdr->p_type = PT_LOAD;
--	phdr->p_flags = PF_R|PF_W|PF_X;
--	phdr->p_vaddr = (Elf64_Addr)_text;
--	phdr->p_filesz = phdr->p_memsz = _end - _text;
--	phdr->p_offset = phdr->p_paddr = __pa_symbol(_text);
--	(ehdr->e_phnum)++;
--#endif
-+	if (kernel_map) {
-+		phdr = (Elf64_Phdr *)bufp;
-+		bufp += sizeof(Elf64_Phdr);
-+		phdr->p_type = PT_LOAD;
-+		phdr->p_flags = PF_R|PF_W|PF_X;
-+		phdr->p_vaddr = (Elf64_Addr)_text;
-+		phdr->p_filesz = phdr->p_memsz = _end - _text;
-+		phdr->p_offset = phdr->p_paddr = __pa_symbol(_text);
-+		(ehdr->e_phnum)++;
-+	}
+ 	/* extra phdr for vmcoreinfo elf note */
+ 	nr_phdr = nr_cpus + 1;
+-	nr_phdr += ced->max_nr_ranges;
++	nr_phdr += cmem->nr_ranges;
  
- 	/* Go through all the ranges in cmem->ranges[] and prepare phdr */
- 	for (i = 0; i < cmem->nr_ranges; i++) {
-@@ -477,7 +477,8 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
+ 	/*
+ 	 * kexec-tools creates an extra PT_LOAD phdr for kernel text mapping
+@@ -455,29 +435,27 @@ static int prepare_elf64_headers(struct crash_elf_data *ced, int kernel_map,
+ static int prepare_elf_headers(struct kimage *image, void **addr,
+ 					unsigned long *sz)
+ {
+-	struct crash_elf_data *ced;
++	struct crash_mem *cmem;
+ 	Elf64_Ehdr *ehdr;
+ 	Elf64_Phdr *phdr;
+ 	int ret, i;
+ 
+-	ced = kzalloc(sizeof(*ced), GFP_KERNEL);
+-	if (!ced)
++	cmem = fill_up_crash_elf_data();
++	if (!cmem)
+ 		return -ENOMEM;
+ 
+-	fill_up_crash_elf_data(ced, image);
+-
+-	ret = walk_system_ram_res(0, -1, ced,
++	ret = walk_system_ram_res(0, -1, cmem,
+ 				prepare_elf64_ram_headers_callback);
+ 	if (ret)
+ 		goto out;
+ 
+ 	/* Exclude unwanted mem ranges */
+-	ret = elf_header_exclude_ranges(ced);
++	ret = elf_header_exclude_ranges(cmem);
+ 	if (ret)
  		goto out;
  
  	/* By default prepare 64bit headers */
--	ret =  prepare_elf64_headers(ced, addr, sz);
-+	ret =  prepare_elf64_headers(ced,
-+				(int)IS_ENABLED(CONFIG_X86_64), addr, sz);
+-	ret =  prepare_elf64_headers(ced,
++	ret =  prepare_elf64_headers(cmem,
+ 				(int)IS_ENABLED(CONFIG_X86_64), addr, sz);
  	if (ret)
  		goto out;
+@@ -496,7 +474,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
+ 			break;
+ 		}
+ out:
+-	kfree(ced);
++	vfree(cmem);
+ 	return ret;
+ }
  
 -- 
 2.16.2
