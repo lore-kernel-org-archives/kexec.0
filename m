@@ -1,26 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by casper.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eqbtk-0003DE-Kv
- for kexec@lists.infradead.org; Tue, 27 Feb 2018 09:50:19 +0000
-Date: Tue, 27 Feb 2018 10:49:58 +0100
-From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-Subject: Re: [PATCH] kexec: do KEXEC_FILE_LOAD and fallback to KEXEC_LOAD if
- not supported.
-Message-ID: <20180227104958.27405e62@naga.suse.cz>
-In-Reply-To: <20180227091402.GB14817@dhcp-128-65.nay.redhat.com>
-References: <20180222222442.9422-1-msuchanek@suse.de>
- <20180222232043.GC693@localhost.localdomain>
- <20180223092900.76a5dd33@ezekiel.suse.cz>
- <20180224014342.GA11298@dhcp-128-65.nay.redhat.com>
- <20180224173431.12ab826c@ezekiel.suse.cz>
- <20180226014515.GA2862@dhcp-128-65.nay.redhat.com>
- <20180226130858.6c0a8d09@naga.suse.cz>
- <20180227011510.GA2311@dhcp-128-65.nay.redhat.com>
- <20180227093929.1aef97a2@ezekiel.suse.cz>
- <20180227090905.GA14817@dhcp-128-65.nay.redhat.com>
- <20180227091402.GB14817@dhcp-128-65.nay.redhat.com>
+Received: from mail-pl0-x244.google.com ([2607:f8b0:400e:c01::244])
+ by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1eqeze-0001LU-7R
+ for kexec@lists.infradead.org; Tue, 27 Feb 2018 13:08:32 +0000
+Received: by mail-pl0-x244.google.com with SMTP id f23so11322458plr.10
+ for <kexec@lists.infradead.org>; Tue, 27 Feb 2018 05:08:19 -0800 (PST)
+Subject: Re: [PATCH] makedumpfile: Fix a bug when multi-threads feature meets
+ enospace
+References: <1517230479-8440-1-git-send-email-zhouwj.fi@gmail.com>
+ <3d76898d-66a2-c733-73e0-6aa8e9854179@gmail.com>
+ <61D4E5D821F1674CB87C99F080A210BE0117C360@BPXM01GP.gisp.nec.co.jp>
+From: Zhou Wenjian <zhouwj.fi@gmail.com>
+Message-ID: <30252ca7-b704-2fd1-e3f0-3348f8741004@gmail.com>
+Date: Tue, 27 Feb 2018 21:08:03 +0800
 MIME-Version: 1.0
+In-Reply-To: <61D4E5D821F1674CB87C99F080A210BE0117C360@BPXM01GP.gisp.nec.co.jp>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,138 +24,109 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Tony Jones <tonyj@suse.com>, horms@verge.net.au, Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>
+To: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: Masahiko Hayashi <mas-hayashi@tg.jp.nec.com>
 
-T24gVHVlLCAyNyBGZWIgMjAxOCAxNzoxNDowMiArMDgwMApEYXZlIFlvdW5nIDxkeW91bmdAcmVk
-aGF0LmNvbT4gd3JvdGU6Cgo+IE9uIDAyLzI3LzE4IGF0IDA1OjA5cG0sIERhdmUgWW91bmcgd3Jv
-dGU6Cj4gPiBPbiAwMi8yNy8xOCBhdCAwOTozOWFtLCBQZXRyIFRlc2FyaWsgd3JvdGU6ICAKPiA+
-ID4gT24gVHVlLCAyNyBGZWIgMjAxOCAwOToxNToxMCArMDgwMAo+ID4gPiBEYXZlIFlvdW5nIDxk
-eW91bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiA+ICAgCj4gPiA+ID4gT24gMDIvMjYvMTggYXQg
-MDE6MDhwbSwgTWljaGFsIFN1Y2jDoW5layB3cm90ZTogIAo+ID4gPiA+ID4gT24gTW9uLCAyNiBG
-ZWIgMjAxOCAwOTo0NToxNSArMDgwMAo+ID4gPiA+ID4gRGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhh
-dC5jb20+IHdyb3RlOgo+ID4gPiA+ID4gICAgIAo+ID4gPiA+ID4gPiBPbiAwMi8yNC8xOCBhdCAw
-NTozNHBtLCBQZXRyIFRlc2FyaWsgd3JvdGU6ICAgIAo+ID4gPiA+ID4gPiA+IE9uIFNhdCwgMjQg
-RmViIDIwMTggMDk6NDM6NDIgKzA4MDAKPiA+ID4gPiA+ID4gPiBEYXZlIFlvdW5nIDxkeW91bmdA
-cmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiA+ID4gPiA+ID4gICAgICAgCj4gPiA+ID4gPiA+ID4gPiBP
-biAwMi8yMy8xOCBhdCAwOToyOWFtLCBQZXRyIFRlc2FyaWsgd3JvdGU6ICAgICAgCj4gPiA+ID4g
-PiA+ID4gPiA+IEhpIEJhb3F1YW4sCj4gPiA+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+ID4g
-PiBPbiBGcmksIDIzIEZlYiAyMDE4IDA3OjIwOjQzICswODAwCj4gPiA+ID4gPiA+ID4gPiA+IEJh
-b3F1YW4gSGUgPGJoZUByZWRoYXQuY29tPiB3cm90ZToKPiA+ID4gPiA+ID4gPiA+ID4gICAgICAg
-ICAKPiA+ID4gPiA+ID4gPiA+ID4gPiBIaSBNaWNoYWwsCj4gPiA+ID4gPiA+ID4gPiA+ID4gCj4g
-PiA+ID4gPiA+ID4gPiA+ID4gT24gMDIvMjIvMTggYXQgMTE6MjRwbSwgTWljaGFsIFN1Y2hhbmVr
-Cj4gPiA+ID4gPiA+ID4gPiA+ID4gd3JvdGU6ICAgICAgICAKPiA+ID4gPiA+ID4gPiA+ID4gPiA+
-IFRoZSBuZXcgS0VYRUNfRklMRV9MT0FEIGlzIHByZWZlcnJlZCBpbiB0aGUgY2FzZQo+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4gdGhlIHBsYXRmb3JtIHN1cHBvcnRzIGl0IGJlY2F1c2UgaXQgYWxsb3dz
-IGtleGVjCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiBpbiBsb2NrZWQgZG93biBzZWN1cmUgYm9vdCBt
-b2RlLgo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiBIb3dldmVy
-LCBzb21lIHBsYXRmb3JtcyBkbyBub3Qgc3VwcG9ydCBpdCBzbyBmYWxsCj4gPiA+ID4gPiA+ID4g
-PiA+ID4gPiBiYWNrIHRvIHRoZSBvbGQgc3lzY2FsbCB0aGVyZS4gICAgICAgICAgCj4gPiA+ID4g
-PiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gPiA+ID4gSSBkaWRuJ3QgcmVhZCBjb2RlIGNoYW5n
-ZSwganVzdCBmcm9tIHBhdGNoIGxvZywgSQo+ID4gPiA+ID4gPiA+ID4gPiA+IHRlbmQgdG8gbm90
-IGFncmVlLiBUaGVyZSBhcmUgdHdvIG9wdGlvbnMKPiA+ID4gPiA+ID4gPiA+ID4gPiBLRVhFQ19G
-SUxFX0xPQUQgYW5kIEtFWEVDX0xPQUQsIHNvbWUgcGxhdGZvcm1zIGRvCj4gPiA+ID4gPiA+ID4g
-PiA+ID4gbm90IHN1cHBvcnQsIHdoeSBkb2VzIHNvbWUgcGxhdGZvcm1zIG5vdCBjaG9vc2UKPiA+
-ID4gPiA+ID4gPiA+ID4gPiBLRVhFQ19MT0FELCB0aGUgd29ya2luZyBvbmU/IFdoeSBib3RoZXIg
-dG8gbWFrZQo+ID4gPiA+ID4gPiA+ID4gPiA+IGNoYW5nZSBpbiBjb2RlPyBJIGJlbGlldmUgdGhl
-cmUncyByZXR1cm5lZCBtZXNzYWdlCj4gPiA+ID4gPiA+ID4gPiA+ID4gdGVsbGluZyBpZiBLRVhF
-Q19GSUxFX0xPQUQgd29ya3Mgb3Igbm90LiAgICAgICAgCj4gPiA+ID4gPiA+ID4gPiA+IAo+ID4g
-PiA+ID4gPiA+ID4gPiBXZWxsLi4uIGxldCBtZSBnaXZlIGEgYml0IG9mIGJhY2tncm91bmQuIEFz
-IHlvdSBoYXZlCj4gPiA+ID4gPiA+ID4gPiA+IHByb2JhYmx5IG5vdGljZWQsIHRoaXMgc3lzY2Fs
-bCB3YXMgb3JpZ2luYWxseQo+ID4gPiA+ID4gPiA+ID4gPiBhdmFpbGFibGUgb25seSBmb3IgeDg2
-XzY0LCBidXQgbW9yZSBhbmQgbW9yZQo+ID4gPiA+ID4gPiA+ID4gPiBhcmNoaXRlY3R1cmVzIGFy
-ZSBhbHNvIGFkZGluZyBpdCBub3cuCj4gPiA+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+ID4g
-PiBOZXh0LCBrZXhlYyBpcyBhY3R1YWxseSBjYWxsZWQgYnkgYSBzY3JpcHQgKHdoaWNoCj4gPiA+
-ID4gPiA+ID4gPiA+IGxvY2F0ZXMgYSBzdWl0YWJsZSBrZXJuZWwgYW5kIGluaXRyZCwgY29uc3Ry
-dWN0cyB0aGUKPiA+ID4gPiA+ID4gPiA+ID4ga2VybmVsIGNvbW1hbmQgbGluZSwgZXRjLikuIFRo
-ZSBzY3JpcHQgbXVzdCBlaXRoZXI6Cj4gPiA+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+ID4g
-PiAgIEEuIGtub3cgc29tZWhvdyBpZiB0aGUgY3VycmVudGx5IHJ1bm5pbmcga2VybmVsCj4gPiA+
-ID4gPiA+ID4gPiA+IGltcGxlbWVudHMga2V4ZWNfZmlsZV9sb2FkKDIpLCBvcgo+ID4gPiA+ID4g
-PiA+ID4gPiAKPiA+ID4gPiA+ID4gPiA+ID4gICBCLiB0cnkgb25lIG1ldGhvZCBmaXJzdCwgYW5k
-IGlmIGl0IGZhaWxzLCByZXRyeQo+ID4gPiA+ID4gPiA+ID4gPiB3aXRoIHRoZSBvdGhlci4KPiA+
-ID4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gPiA+IEkgYWdyZWUgdGhhdCBrZXhlYygxKSBz
-aG91bGQgcHJvYmFibHkgYWxsb3cgdGhlIHVzZXIKPiA+ID4gPiA+ID4gPiA+ID4gdG8gZm9yY2Ug
-YSBzcGVjaWZpYyBtZXRob2QsIGJ1dCBJIGRvbid0IHNlZSB0aGUKPiA+ID4gPiA+ID4gPiA+ID4g
-YmVuZWZpdCBvZiBpbXBsZW1lbnRpbmcgZmFsbGJhY2sgaW4gYW4gZXh0ZXJuYWwKPiA+ID4gPiA+
-ID4gPiA+ID4gc2NyaXB0IGFuZCBub3QgaW4ga2V4ZWMtdG9vbHMgaXRzZWxmLgo+ID4gPiA+ID4g
-PiA+ID4gPiAKPiA+ID4gPiA+ID4gPiA+ID4gT1RPSCBpZiB5b3Ugd2FudCB0byBwdXNoIHRoZSBm
-YWxsYmFjayBsb2dpYyBvdXQgb2YKPiA+ID4gPiA+ID4gPiA+ID4ga2V4ZWMtdG9vbHMsIHRoZW4g
-SSB3b3VsZCBsaWtlIHRvIGdldCBiZXR0ZXIKPiA+ID4gPiA+ID4gPiA+ID4gZGlhZ25vc3RpYyBh
-dCBsZWFzdC4gTGV0dGluZyBteSBzY3JpcHQgcGFyc2Uga2V4ZWMKPiA+ID4gPiA+ID4gPiA+ID4g
-b3V0cHV0IGlzLCB1bSwgc3Vib3B0aW1hbC4gICAgICAgIAo+ID4gPiA+ID4gPiA+ID4gCj4gPiA+
-ID4gPiA+ID4gPiBJbiBGZWRvcmEvUkhFTCB3ZSB1c2UgdGhpcyBpbiBzY3JpcHRzIGJ5IGNoZWNr
-aW5nIHRoZQo+ID4gPiA+ID4gPiA+ID4gYXJjaCBmaXJzdCwgZm9yIGRpc3RyaWJ1dGlvbiBpdCBp
-cyBlbm91Z2g/ICAgICAgCj4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gTm8uCj4gPiA+ID4g
-PiA+ID4gCj4gPiA+ID4gPiA+ID4gRmlyc3QsIHlvdSB3b3VsZCBhbHNvIGhhdmUgdG8gY2hlY2sg
-dGhlIGtlcm5lbCB2ZXJzaW9uCj4gPiA+ID4gPiA+ID4gKGFuZCBtYWludGFpbiBhbiB1Z2x5IG1h
-cHBpbmcgb2Ygd2hpY2gga2VybmVsIHZlcnNpb24KPiA+ID4gPiA+ID4gPiBpbnRyb2R1Y2VkIGtl
-eGVjX2ZpbGVfbG9hZCBvbiB3aGljaCBhcmNoaXRlY3R1cmUpLiAgICAgIAo+ID4gPiA+ID4gPiAK
-PiA+ID4gPiA+ID4gVGhlIGtlcm5lbCB2ZXJzaW9uIHVwZGF0ZSBpcyByYXJlIGZvciB0aGVzZSBu
-ZXcgc3lzY2FsbAo+ID4gPiA+ID4gPiBhZGRlZCwgYnV0IGl0IGlzIGluZGVlZCBuZWVkZWQgdG8g
-bWF0Y2ggd2l0aCB0aGVtCj4gPiA+ID4gPiA+ICAgICAKPiA+ID4gPiA+ID4gPiAKPiA+ID4gPiA+
-ID4gPiBTZWNvbmQsIGl0J3Mgbm90IGp1c3QgdGhlIGFyY2hpdGVjdHVyZS4ga2V4ZWNfbG9hZCgy
-KQo+ID4gPiA+ID4gPiA+IHdpbGwgZmFpbCBpZiBTZWN1cmVCb290IGlzIGFjdGl2ZS4gT1RPSAo+
-ID4gPiA+ID4gPiA+IGtleGVjX2ZpbGVfbG9hZCgyKSB3aWxsIGZhaWwgaWYgdGhlIGtlcm5lbCBp
-cyBub3Qgc2lnbmVkLgo+ID4gPiA+ID4gPiA+IEZvciBrZXJuZWwgaGFja2VycyB3aG8gZG9uJ3Qg
-dXNlIFNlY3VyZUJvb3QsIHNpZ25pbmcKPiA+ID4gPiA+ID4gPiBzZWxmLWJ1aWx0IGtlcm5lbHMg
-aXMganVzdCBvdmVya2lsbC4gU28sIHlvdSBzaG91bGQgYWxzbwo+ID4gPiA+ID4gPiA+IGNoZWNr
-IHRoZSBzdGF0ZSBvZiBTZWN1cmVCb290LCBwb3NzaWJseSBhbHNvIHdoZXRoZXIgdGhlCj4gPiA+
-ID4gPiA+ID4ga2VybmVsIGltYWdlIGlzIHNpZ25lZCB3aXRoIGEgdmFsaWQga2V5LCByZXBlYXRp
-bmcgYSBiaXQKPiA+ID4gPiA+ID4gPiB0b28gbXVjaCBvZiB0aGUga2VybmVsIGxvZ2ljLCBhbmQg
-cXVpdGUgbGlrZWx5Cj4gPiA+ID4gPiA+ID4gaW50cm9kdWNpbmcgc3VidGxlIGRpZmZlcmVuY2Vz
-Li4uICAgICAgCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBIbW0sIEkgZGlkIG5vdCBzYXkgdGhl
-IGV4YWN0IGRldGFpbHMsIHllcywgd2UgY2hlY2tlZCB0aGUKPiA+ID4gPiA+ID4gU2VjdXJlIEJv
-b3Qgc3RhdGUgYW5kIG9ubHkgdXNlIGtleGVjX2ZpbGVfbG9hZCBmb3IgdGhhdAo+ID4gPiA+ID4g
-PiBzcGVjaWFsIGNhc2UuCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBrZXhlY19maWxlIGFuZCBr
-ZXhlY19maWxlX2xvYWQgaXMgbm90IGV4YWN0bHkgc2FtZSBzbyBpZgo+ID4gPiA+ID4gPiBvbmUg
-d2FudCB0byB1c2Ugb25lIGluc3RlYWQgb2YgYW5vdGhlciBmb3IgYSBzcGVjaWZpYwo+ID4gPiA+
-ID4gPiBmdW5jdGlvbmFsaXR5IGl0IHNlZW1zIG5vdCBnb29kIHRvIGF1dG9tYXRpY2FsbHkgc3dp
-dGNoIHRvCj4gPiA+ID4gPiA+IGFub3RoZXIgaWYgb25lIGZhaWxlZC4gRm9yIGV4YW1wbGUgd2hp
-Y2ggb25lIHNob3VsZCBiZSB0aGUKPiA+ID4gPiA+ID4gZmlyc3QgY2hvaWNlLCBpdCBpcyBoYXJk
-IHRvIHNheS4gICAgCj4gPiA+ID4gPiAKPiA+ID4gPiA+IEhhcmQgdG8gc2F5IGluZGVlZCwgSG93
-ZXZlciwgSSB3b3VsZCBhc3N1bWUgdGhhdAo+ID4gPiA+ID4gYXJjaGl0ZWN0dXJlcyB0aGF0IGlt
-cGxlbWVudCBrZXhlY19maWxlX2xvYWQgZG8gc28gYmVjYXVzZSBpdAo+ID4gPiA+ID4gaXMgcmVx
-dWlyZWQgaW4gc29tZSBjYXNlIGFuZCBoZW5jZSBpdCB3aWxsIGJlIGFjdGl2ZWx5Cj4gPiA+ID4g
-PiBtYWludGFpbmVkIHdoZW4gYXZhaWxhYmxlLiBIb3dldmVyLCBzb21lIGFyY2hpdGVjdHVyZXMg
-bWF5Cj4gPiA+ID4gPiBub3QgcmVxdWlyZSBpdCBhbmQgd2lsbCBiZSBzbG93IHRvIGltcGxlbWVu
-dCBpdC4gU28gdXNpbmcKPiA+ID4gPiA+IGtleGVjX2ZpbGVfbG9hZCB3aGVuIGF2YWlsYWJsZSBz
-b3VuZHMgbGlrZSB0aGUgcmlnaHQgdGhpbmcuCj4gPiA+ID4gPiBUZWNobmljYWxseSB0aGUgaW1w
-bGVtZW50YXRpb24gZGV0YWlscyBhcmUgZGlmZmVyZW50IGJ1dCBmb3IKPiA+ID4gPiA+IG1vc3Qg
-dXNlcnMgdGhpcyBkb2VzIG5vdCBtYXR0ZXIuCj4gPiA+ID4gPiAKPiA+ID4gPiA+IEZvciB0aG9z
-ZSB0aGF0IGRvIGNhcmUgSSBwcm92aWRlIG9wdGlvbiB0byBzZWxlY3Qgb25lIG9yIHRoZQo+ID4g
-PiA+ID4gb3RoZXIuICAgIAo+ID4gPiA+IAo+ID4gPiA+IEkgd291bGQgc2F5IGl0IGJyZWFrcyB0
-aGluZ3MsIGEgYmV0dGVyIHdheSBzaG91bGQgYmUKPiA+ID4gPiBpbnRyb2R1Y2luZyBhbm90aGVy
-IGtleGVjLXRvb2xzIG9wdGlvbiBmb3IgZXhhbXBsZSBrZXhlYyAtLWF1dG8KPiA+ID4gPiBmb3Ig
-dGhpcyBwdXJwb3NlLiBQcm9iYWJseSBhZGQgc29tZSAtLWF1dG89Li4uIHRvIHNlbGVjdCB0aGUK
-PiA+ID4gPiBmaXJzdCBjaGFuY2UuICAKPiA+ID4gCj4gPiA+IFllcyEgVGhpcyBpcyB0aGUgd2F5
-IHRvIGdvLiBCdXQgdGhlbiBJIHdvdWxkbid0IGNhbGwgaXQgLS1hdXRvLgo+ID4gPiBJIHdvdWxk
-IGNhbGwgaXQgIi0tbWV0aG9kPSIsIHNvIHlvdSBjb3VsZCBzcGVjaWZ5Ogo+ID4gPiAKPiA+ID4g
-ICAtLW1ldGhvZD1rZXJuZWwgICh0byB1c2UgdGhlIGluLWtlcm5lbCBsb2FkZXIgYWthCj4gPiA+
-IGtleGVjX2ZpbGVfbG9hZCkgLS1tZXRob2Q9dXNlciAgICAodG8gdXNlIHRoZSB0cmFkaXRpb25h
-bAo+ID4gPiB1c2VyLXNwYWNlIGxvYWRlcikgLS1tZXRob2Q9a2VybmVsLHVzZXIgICh0byBwcmVm
-ZXIKPiA+ID4ga2V4ZWNfZmlsZV9sb2FkKSAtLW1ldGhvZD11c2VyLGtlcm5lbCAgKHRvIHByZWZl
-ciBrZXhjX2xvYWQpCj4gPiA+IAo+ID4gPiBJJ20gbm90IHF1aXRlIHN1cmUgaWYgaXQgYWxzbyBt
-YWtlcyBzZW5zZSB0byBwcm92aWRlCj4gPiA+ICItLW1ldGhvZD1hdXRvIiwgd2hpY2ggd291bGQg
-dXNlIHdoYXRldmVyIGRlZmF1bHQgaXMgY29uc2lkZXJlZAo+ID4gPiBzYW5lIGZvciB0aGUgcnVu
-bmluZyBzeXN0ZW0uICAKPiA+IAo+ID4gSWYgd2UgaGF2ZSAtLW1ldGhvZD1rZXJuZWwsdXNlciBh
-bmQgLS1tZXRob2Q9dXNlcixrZXJuZWwgdGhlbiBubwo+ID4gbmVlZCAiYXV0byIgYW55bW9yZS4u
-ICBCdXQgSSB3b3VsZCBwcmVmZXIgdGhhdCBvcmlnaW5hbCBkZWZhdWx0Cj4gPiBiZWhhdmlvciBp
-cyBrZXB0LCBrZXhlYyAtbCAgd2l0aG91dCAiLS1tZXRob2QiIHdpbGwgdXNlIHVzZXJzcGFjZQo+
-ID4gbG9hZGVyLCBrZXhlYyAtcyAtbCB3aWxsIHVzZSBrZXJuZWwgc3BhY2UgbG9hZGVyICAKPiAK
-PiBJZiBvbmUgdXNlIGtleGVjIC1zIC0tbWV0aG9kPXVzZXIgdGhlbiBrZXhlYy10b29scyBzaG91
-bGQgZmFpbCwKPiB0YWxrZWQgd2l0aCBCYW9xdWFuIHByaXZhdGVseSBoZSBoYXMgYW5vdGhlciBp
-ZGVhIHRvIGV4dGVuZCB0aGUga2V4ZWMKPiAtcyB3aXRoIC0tZmFsbGJhY2s6ICJrZXhlYyAtcyAt
-LWZhbGxiYWNrIC1sIiAgY2FuIGZhbGxiYWNrIHRvCj4gdXNlcnNwYWNlIGxvYWRlciB0aGlzIHNl
-ZW1zIGFsc28gYSBnb29kIG9wdGlvbi4KCkluIHRoZSB1cGRhdGVkIHNlcmllcyBpdCBpcyBlYXN5
-IHRvIHR1cm4gb24gb3Igb2ZmIHRoZSBmYWxsYmFjayBzbyBhbgpvcHRpb24gY2FuIGJlIGFkZGVk
-IGZvciB0aGF0LiBIb3dldmVyLCB0aGUgZmFsbGJhY2sgb25seSB3b3JrcyBieQp0cnlpbmcgLXMg
-Zmlyc3QuIEltcGxlbWVudGluZyBmYWxsYmFjayBpbiBlaXRoZXIgZGlyZWN0aW9uIHdvdWxkCmNv
-bXBsaWNhdGUgdGhpbmdzIGEgYml0LiBFc3BlY2lhbGx5IHNpbmNlIGVycm9yIGNvZGVzIG9mIGtl
-eGVjLXRvb2xzIGRvCm5vdCB0ZW5kIHRvIGJlIG5pY2UgYW5kIGNvbnNpc3RlbnQuCgpUaGFua3MK
-Ck1pY2hhbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Tachibana,
+
+Thanks for your reply.
+
+And I do appreciate Kumagai-san's help these years.
+
+
+On 02/16/2018 10:45 AM, Masaki Tachibana wrote:
+> Hi,
+>
+> Atsushi Kumagai has retired, so other members will maintain makedumpfile.
+>
+>
+> Wenjian
+>
+> Sorry for the late reply.
+> Your patch looks good to me.
+> I'll merge it into V1.6.4.
+>
+> Thanks
+> tachibana
+>
+>
+>> -----Original Message-----
+>> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Zhou Wenjian
+>> Sent: Thursday, February 08, 2018 8:53 PM
+>> To: kexec@lists.infradead.org
+>> Cc: Kumagai Atsushi() <ats-kumagai@wm.jp.nec.com>; Suzuki Keiichirou() <kei-suzuki@xr.jp.nec.com>
+>> Subject: Re: [PATCH] makedumpfile: Fix a bug when multi-threads feature meets enospace
+>>
+>> ping...
+>>
+>>
+>> On 01/29/2018 08:54 PM, Zhou Wenjian wrote:
+>>> Currently, when multi-threads feature meets enospace error,
+>>> the main thread will call pthread_join(). However, there is one
+>>> thread doing while{} and won't stop.
+>>>
+>>>                   pthread_mutex_lock(&info->page_data_mutex);
+>>>                   while (page_data_buf[index].used != FALSE) {
+>>>                           index = (index + 1) % info->num_buffers;
+>>>                   }
+>>>                   page_data_buf[index].used = TRUE;
+>>>                   pthread_mutex_unlock(&info->page_data_mutex);
+>>>
+>>> Then makedumpfile hangs.
+>>>
+>>> This patch add a cancel point in while{}.
+>>>
+>>> Signed-off-by: Zhou Wenjian <zhouwj.fi@gmail.com>
+>>> ---
+>>>    makedumpfile.c | 4 +++-
+>>>    1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/makedumpfile.c b/makedumpfile.c
+>>> index ed138d3..f7ad50c 100644
+>>> --- a/makedumpfile.c
+>>> +++ b/makedumpfile.c
+>>> @@ -7731,11 +7731,13 @@ kdump_thread_function_cyclic(void *arg) {
+>>>    		buf_ready = FALSE;
+>>>
+>>>    		pthread_mutex_lock(&info->page_data_mutex);
+>>> +		pthread_cleanup_push(pthread_mutex_unlock, &info->page_data_mutex);
+>>>    		while (page_data_buf[index].used != FALSE) {
+>>> +			pthread_testcancel();
+>>>    			index = (index + 1) % info->num_buffers;
+>>>    		}
+>>>    		page_data_buf[index].used = TRUE;
+>>> -		pthread_mutex_unlock(&info->page_data_mutex);
+>>> +		pthread_cleanup_pop(1);
+>>>
+>>>    		while (buf_ready == FALSE) {
+>>>    			pthread_testcancel();
+>> --
+>> Thanks
+>> Zhou
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+>
+
+-- 
+Thanks
+Zhou
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
