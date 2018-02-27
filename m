@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eqbGG-00040h-Ja
- for kexec@lists.infradead.org; Tue, 27 Feb 2018 09:09:31 +0000
-Date: Tue, 27 Feb 2018 17:09:05 +0800
+ id 1eqbL2-0006MG-CJ
+ for kexec@lists.infradead.org; Tue, 27 Feb 2018 09:14:22 +0000
+Date: Tue, 27 Feb 2018 17:14:02 +0800
 From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH] kexec: do KEXEC_FILE_LOAD and fallback to KEXEC_LOAD if
  not supported.
-Message-ID: <20180227090905.GA14817@dhcp-128-65.nay.redhat.com>
+Message-ID: <20180227091402.GB14817@dhcp-128-65.nay.redhat.com>
 References: <20180222222442.9422-1-msuchanek@suse.de>
  <20180222232043.GC693@localhost.localdomain>
  <20180223092900.76a5dd33@ezekiel.suse.cz>
@@ -17,9 +17,10 @@ References: <20180222222442.9422-1-msuchanek@suse.de>
  <20180226130858.6c0a8d09@naga.suse.cz>
  <20180227011510.GA2311@dhcp-128-65.nay.redhat.com>
  <20180227093929.1aef97a2@ezekiel.suse.cz>
+ <20180227090905.GA14817@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180227093929.1aef97a2@ezekiel.suse.cz>
+In-Reply-To: <20180227090905.GA14817@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,181 +36,204 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Tesarik <ptesarik@suse.cz>
 Cc: Tony Jones <tonyj@suse.com>, Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>, horms@verge.net.au
 
-On 02/27/18 at 09:39am, Petr Tesarik wrote:
-> On Tue, 27 Feb 2018 09:15:10 +0800
-> Dave Young <dyoung@redhat.com> wrote:
-> =
+On 02/27/18 at 05:09pm, Dave Young wrote:
+> On 02/27/18 at 09:39am, Petr Tesarik wrote:
+> > On Tue, 27 Feb 2018 09:15:10 +0800
+> > Dave Young <dyoung@redhat.com> wrote:
+> > =
 
-> > On 02/26/18 at 01:08pm, Michal Such=E1nek wrote:
-> > > On Mon, 26 Feb 2018 09:45:15 +0800
-> > > Dave Young <dyoung@redhat.com> wrote:
-> > >   =
+> > > On 02/26/18 at 01:08pm, Michal Such=E1nek wrote:
+> > > > On Mon, 26 Feb 2018 09:45:15 +0800
+> > > > Dave Young <dyoung@redhat.com> wrote:
+> > > >   =
 
-> > > > On 02/24/18 at 05:34pm, Petr Tesarik wrote:  =
+> > > > > On 02/24/18 at 05:34pm, Petr Tesarik wrote:  =
 
-> > > > > On Sat, 24 Feb 2018 09:43:42 +0800
-> > > > > Dave Young <dyoung@redhat.com> wrote:
-> > > > >     =
+> > > > > > On Sat, 24 Feb 2018 09:43:42 +0800
+> > > > > > Dave Young <dyoung@redhat.com> wrote:
+> > > > > >     =
 
-> > > > > > On 02/23/18 at 09:29am, Petr Tesarik wrote:    =
+> > > > > > > On 02/23/18 at 09:29am, Petr Tesarik wrote:    =
 
-> > > > > > > Hi Baoquan,
-> > > > > > > =
-
-> > > > > > > On Fri, 23 Feb 2018 07:20:43 +0800
-> > > > > > > Baoquan He <bhe@redhat.com> wrote:
-> > > > > > >       =
-
-> > > > > > > > Hi Michal,
+> > > > > > > > Hi Baoquan,
 > > > > > > > > =
 
-> > > > > > > > On 02/22/18 at 11:24pm, Michal Suchanek wrote:      =
+> > > > > > > > On Fri, 23 Feb 2018 07:20:43 +0800
+> > > > > > > > Baoquan He <bhe@redhat.com> wrote:
+> > > > > > > >       =
 
-> > > > > > > > > The new KEXEC_FILE_LOAD is preferred in the case the
-> > > > > > > > > platform supports it because it allows kexec in locked do=
-wn
-> > > > > > > > > secure boot mode.
+> > > > > > > > > Hi Michal,
 > > > > > > > > > =
 
-> > > > > > > > > However, some platforms do not support it so fall back to
-> > > > > > > > > the old syscall there.        =
+> > > > > > > > > On 02/22/18 at 11:24pm, Michal Suchanek wrote:      =
+
+> > > > > > > > > > The new KEXEC_FILE_LOAD is preferred in the case the
+> > > > > > > > > > platform supports it because it allows kexec in locked =
+down
+> > > > > > > > > > secure boot mode.
+> > > > > > > > > > =
+
+> > > > > > > > > > However, some platforms do not support it so fall back =
+to
+> > > > > > > > > > the old syscall there.        =
+
+> > > > > > > > > =
+
+> > > > > > > > > I didn't read code change, just from patch log, I tend to=
+ not
+> > > > > > > > > agree. There are two options KEXEC_FILE_LOAD and KEXEC_LO=
+AD,
+> > > > > > > > > some platforms do not support, why does some platforms not
+> > > > > > > > > choose KEXEC_LOAD, the working one? Why bother to make ch=
+ange
+> > > > > > > > > in code? I believe there's returned message telling if
+> > > > > > > > > KEXEC_FILE_LOAD works or not.      =
 
 > > > > > > > > =
 
-> > > > > > > > I didn't read code change, just from patch log, I tend to n=
-ot
-> > > > > > > > agree. There are two options KEXEC_FILE_LOAD and KEXEC_LOAD,
-> > > > > > > > some platforms do not support, why does some platforms not
-> > > > > > > > choose KEXEC_LOAD, the working one? Why bother to make chan=
-ge
-> > > > > > > > in code? I believe there's returned message telling if
-> > > > > > > > KEXEC_FILE_LOAD works or not.      =
+> > > > > > > > Well... let me give a bit of background. As you have probab=
+ly
+> > > > > > > > noticed, this syscall was originally available only for x86=
+_64,
+> > > > > > > > but more and more architectures are also adding it now.
+> > > > > > > > =
+
+> > > > > > > > Next, kexec is actually called by a script (which locates a
+> > > > > > > > suitable kernel and initrd, constructs the kernel command l=
+ine,
+> > > > > > > > etc.). The script must either:
+> > > > > > > > =
+
+> > > > > > > >   A. know somehow if the currently running kernel implements
+> > > > > > > >      kexec_file_load(2), or
+> > > > > > > > =
+
+> > > > > > > >   B. try one method first, and if it fails, retry with the
+> > > > > > > > other.
+> > > > > > > > =
+
+> > > > > > > > I agree that kexec(1) should probably allow the user to for=
+ce a
+> > > > > > > > specific method, but I don't see the benefit of implementing
+> > > > > > > > fallback in an external script and not in kexec-tools itsel=
+f.
+> > > > > > > > =
+
+> > > > > > > > OTOH if you want to push the fallback logic out of kexec-to=
+ols,
+> > > > > > > > then I would like to get better diagnostic at least. Lettin=
+g my
+> > > > > > > > script parse kexec output is, um, suboptimal.      =
 
 > > > > > > > =
 
-> > > > > > > Well... let me give a bit of background. As you have probably
-> > > > > > > noticed, this syscall was originally available only for x86_6=
-4,
-> > > > > > > but more and more architectures are also adding it now.
-> > > > > > > =
-
-> > > > > > > Next, kexec is actually called by a script (which locates a
-> > > > > > > suitable kernel and initrd, constructs the kernel command lin=
-e,
-> > > > > > > etc.). The script must either:
-> > > > > > > =
-
-> > > > > > >   A. know somehow if the currently running kernel implements
-> > > > > > >      kexec_file_load(2), or
-> > > > > > > =
-
-> > > > > > >   B. try one method first, and if it fails, retry with the
-> > > > > > > other.
-> > > > > > > =
-
-> > > > > > > I agree that kexec(1) should probably allow the user to force=
- a
-> > > > > > > specific method, but I don't see the benefit of implementing
-> > > > > > > fallback in an external script and not in kexec-tools itself.
-> > > > > > > =
-
-> > > > > > > OTOH if you want to push the fallback logic out of kexec-tool=
-s,
-> > > > > > > then I would like to get better diagnostic at least. Letting =
-my
-> > > > > > > script parse kexec output is, um, suboptimal.      =
+> > > > > > > In Fedora/RHEL we use this in scripts by checking the arch fi=
+rst,
+> > > > > > > for distribution it is enough?    =
 
 > > > > > > =
 
-> > > > > > In Fedora/RHEL we use this in scripts by checking the arch firs=
-t,
-> > > > > > for distribution it is enough?    =
+> > > > > > No.
+> > > > > > =
+
+> > > > > > First, you would also have to check the kernel version (and
+> > > > > > maintain an ugly mapping of which kernel version introduced
+> > > > > > kexec_file_load on which architecture).    =
 
 > > > > > =
 
-> > > > > No.
+> > > > > The kernel version update is rare for these new syscall added, but
+> > > > > it is indeed needed to match with them
+> > > > >   =
+
+> > > > > > =
+
+> > > > > > Second, it's not just the architecture. kexec_load(2) will fail=
+ if
+> > > > > > SecureBoot is active. OTOH kexec_file_load(2) will fail if the
+> > > > > > kernel is not signed. For kernel hackers who don't use SecureBo=
+ot,
+> > > > > > signing self-built kernels is just overkill. So, you should also
+> > > > > > check the state of SecureBoot, possibly also whether the kernel
+> > > > > > image is signed with a valid key, repeating a bit too much of t=
+he
+> > > > > > kernel logic, and quite likely introducing subtle differences..=
+.    =
+
 > > > > > =
 
-> > > > > First, you would also have to check the kernel version (and
-> > > > > maintain an ugly mapping of which kernel version introduced
-> > > > > kexec_file_load on which architecture).    =
-
-> > > > =
-
-> > > > The kernel version update is rare for these new syscall added, but
-> > > > it is indeed needed to match with them
-> > > >   =
-
+> > > > > Hmm, I did not say the exact details, yes, we checked the Secure =
+Boot
+> > > > > state and only use kexec_file_load for that special case.
 > > > > > =
 
-> > > > > Second, it's not just the architecture. kexec_load(2) will fail if
-> > > > > SecureBoot is active. OTOH kexec_file_load(2) will fail if the
-> > > > > kernel is not signed. For kernel hackers who don't use SecureBoot,
-> > > > > signing self-built kernels is just overkill. So, you should also
-> > > > > check the state of SecureBoot, possibly also whether the kernel
-> > > > > image is signed with a valid key, repeating a bit too much of the
-> > > > > kernel logic, and quite likely introducing subtle differences... =
-   =
+> > > > > kexec_file and kexec_file_load is not exactly same so if one want=
+ to
+> > > > > use one instead of another for a specific functionality it seems =
+not
+> > > > > good to automatically switch to another if one failed. For example
+> > > > > which one should be the first choice, it is hard to say.  =
 
 > > > > =
 
-> > > > Hmm, I did not say the exact details, yes, we checked the Secure Bo=
-ot
-> > > > state and only use kexec_file_load for that special case.
+> > > > Hard to say indeed, However, I would assume that architectures that
+> > > > implement kexec_file_load do so because it is required in some case=
+ and
+> > > > hence it will be actively maintained when available. However, some
+> > > > architectures may not require it and will be slow to implement it. =
+So
+> > > > using kexec_file_load when available sounds like the right thing.
+> > > > Technically the implementation details are different but for most u=
+sers
+> > > > this does not matter.
 > > > > =
 
-> > > > kexec_file and kexec_file_load is not exactly same so if one want to
-> > > > use one instead of another for a specific functionality it seems not
-> > > > good to automatically switch to another if one failed. For example
-> > > > which one should be the first choice, it is hard to say.  =
+> > > > For those that do care I provide option to select one or the other.=
+  =
 
 > > > =
 
-> > > Hard to say indeed, However, I would assume that architectures that
-> > > implement kexec_file_load do so because it is required in some case a=
-nd
-> > > hence it will be actively maintained when available. However, some
-> > > architectures may not require it and will be slow to implement it. So
-> > > using kexec_file_load when available sounds like the right thing.
-> > > Technically the implementation details are different but for most use=
-rs
-> > > this does not matter.
-> > > =
+> > > I would say it breaks things, a better way should be introducing anot=
+her
+> > > kexec-tools option for example kexec --auto for this purpose. Probably
+> > > add some --auto=3D... to select the first chance.
+> > =
 
-> > > For those that do care I provide option to select one or the other.  =
+> > Yes! This is the way to go. But then I wouldn't call it --auto.
+> > I would call it "--method=3D", so you could specify:
+> > =
+
+> >   --method=3Dkernel  (to use the in-kernel loader aka kexec_file_load)
+> >   --method=3Duser    (to use the traditional user-space loader)
+> >   --method=3Dkernel,user  (to prefer kexec_file_load)
+> >   --method=3Duser,kernel  (to prefer kexc_load)
+> > =
+
+> > I'm not quite sure if it also makes sense to provide "--method=3Dauto",
+> > which would use whatever default is considered sane for the running
+> > system.
+> =
+
+> If we have --method=3Dkernel,user and --method=3Duser,kernel then no need
+> "auto" anymore..  But I would prefer that original default behavior is ke=
+pt,
+> kexec -l  without "--method" will use userspace loader, kexec -s -l will
+> use kernel space loader
+
+If one use kexec -s --method=3Duser then kexec-tools should fail,  talked
+with Baoquan privately he has another idea to extend the kexec -s with
+--fallback: "kexec -s --fallback -l"  can fallback to userspace loader
+this seems also a good option.
+
+> =
 
 > > =
 
-> > I would say it breaks things, a better way should be introducing another
-> > kexec-tools option for example kexec --auto for this purpose. Probably
-> > add some --auto=3D... to select the first chance.
+> > Petr T
 > =
 
-> Yes! This is the way to go. But then I wouldn't call it --auto.
-> I would call it "--method=3D", so you could specify:
-> =
-
->   --method=3Dkernel  (to use the in-kernel loader aka kexec_file_load)
->   --method=3Duser    (to use the traditional user-space loader)
->   --method=3Dkernel,user  (to prefer kexec_file_load)
->   --method=3Duser,kernel  (to prefer kexc_load)
-> =
-
-> I'm not quite sure if it also makes sense to provide "--method=3Dauto",
-> which would use whatever default is considered sane for the running
-> system.
-
-If we have --method=3Dkernel,user and --method=3Duser,kernel then no need
-"auto" anymore..  But I would prefer that original default behavior is kept,
-kexec -l  without "--method" will use userspace loader, kexec -s -l will
-use kernel space loader
-
-> =
-
-> Petr T
-
-Thanks
-Dave
+> Thanks
+> Dave
 
 _______________________________________________
 kexec mailing list
