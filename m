@@ -1,21 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x242.google.com ([2607:f8b0:400e:c01::242])
+Received: from mail-pg0-x243.google.com ([2607:f8b0:400e:c05::243])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eqUbp-00069Z-QL
- for kexec@lists.infradead.org; Tue, 27 Feb 2018 02:03:16 +0000
-Received: by mail-pl0-x242.google.com with SMTP id w21so10458109plp.11
- for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 18:03:03 -0800 (PST)
-Date: Tue, 27 Feb 2018 11:03:07 +0900
+ id 1eqXBw-0005Eb-J6
+ for kexec@lists.infradead.org; Tue, 27 Feb 2018 04:48:42 +0000
+Received: by mail-pg0-x243.google.com with SMTP id q27so5502549pgn.8
+ for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 20:48:29 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v8 03/13] kexec_file, x86, powerpc: factor out
- kexec_file_ops functions
-Message-ID: <20180227020304.GE6019@linaro.org>
-References: <20180222111732.23051-1-takahiro.akashi@linaro.org>
- <20180222111732.23051-4-takahiro.akashi@linaro.org>
- <20180226121718.3432bbd6@ThinkPad>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180226121718.3432bbd6@ThinkPad>
+Subject: [PATCH 0/7] kexec_file: refactoring for other architecutres 
+Date: Tue, 27 Feb 2018 13:48:07 +0900
+Message-Id: <20180227044814.24808-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,169 +17,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, julien.thierry@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: dyoung@redhat.com, vgoyal@redhat.com, bhe@redhat.com, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, prudo@linux.vnet.ibm.com
+Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-On Mon, Feb 26, 2018 at 12:17:18PM +0100, Philipp Rudo wrote:
-> Hi AKASHI
-> 
-> On Thu, 22 Feb 2018 20:17:22 +0900
-> AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> 
-> [...]
-> 
-> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > index 990adae52151..a6d14a768b3e 100644
-> > --- a/kernel/kexec_file.c
-> > +++ b/kernel/kexec_file.c
-> > @@ -26,34 +26,83 @@
-> >  #include <linux/vmalloc.h>
-> >  #include "kexec_internal.h"
-> > 
-> > +const __weak struct kexec_file_ops * const kexec_file_loaders[] = {NULL};
-> > +
-> 
-> Having a weak definition of kexec_file_loaders causes trouble on s390 with 
-> gcc 4.8 (newer versions seem to work fine). For me it looks like that in this
-> version gcc doesn't recognize __weak but use the default value for
-> optimization. This leads to _kexec_kernel_image_probe to always return ENOEXEC
-> because the for-loop gets optimized out.
+subject: 
 
-I gave it a try to compile with gcc 4.9 (not 4.8) for arm64
-and didn't see any errors or warnings, but
+This is a preparatory patch set for adding kexec_file support on arm64.
 
-> The problem can easily be worked around by declaring kexec_file_loaders in
-> include/linux/kexec.h and defining it in arch code. In particular doing this
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 37e9dce518aa..fc0788540d90 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -139,6 +139,8 @@ struct kexec_file_ops {
->  #endif
->  };
->  
-> +extern const struct kexec_file_ops * const kexec_file_loaders[];
-> +
->  /**
->   * struct kexec_buf - parameters for finding a place for a buffer in memory
->   * @image:	kexec image in which memory to search.
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 17ba407d0e79..4e3d1e4bc7f6 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -31,8 +31,6 @@
->  #include <linux/vmalloc.h>
->  #include "kexec_internal.h"
->  
-> -const __weak struct kexec_file_ops * const kexec_file_loaders[] = {NULL};
-> -
->  #ifdef CONFIG_ARCH_HAS_KEXEC_PURGATORY
->  static int kexec_calculate_store_digests(struct kimage *image);
->  #else
+It was originally included in a arm64 patch set[1], but Philipp is also
+working on their kexec_file support on s390[2] and some changes are now
+conflicting.
 
-Your change is just fine with me, too.
-I will incorporate it in my next version.
+So these common part was extracted and put into a separate patch set for
+better integration. What's more, my original patch#4 was split into a few
+small chunks for easier review after Dave's comment.
 
-Thanks,
--Takahiro AKASHI
+As such, the resulting code is basically identical with my original, and
+the only difference is that kexec_file_loaders[] is now declared in kexec.h
+after Phillipp's comment[3]. Other than that, this patch set doesn't
+require any changes on the rest of my original patch set(#1, #6 to #13).
 
-> A nice side effect of this solution is, that a developer who forgets to define
-> kexec_file_loaders gets a linker error. So he directly knows what's missing
-> instead of first having to find out where/why an error gets returned.
-> 
-> Otherwise the series is fine for me.
-> 
-> Thanks
-> Philipp
-> 
-> >  #ifdef CONFIG_ARCH_HAS_KEXEC_PURGATORY
-> >  static int kexec_calculate_store_digests(struct kimage *image);
-> >  #else
-> >  static int kexec_calculate_store_digests(struct kimage *image) { return 0; };
-> >  #endif
-> > 
-> > +int _kexec_kernel_image_probe(struct kimage *image, void *buf,
-> > +			     unsigned long buf_len)
-> > +{
-> > +	const struct kexec_file_ops * const *fops;
-> > +	int ret = -ENOEXEC;
-> > +
-> > +	for (fops = &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops) {
-> > +		ret = (*fops)->probe(buf, buf_len);
-> > +		if (!ret) {
-> > +			image->fops = *fops;
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >  /* Architectures can provide this probe function */
-> >  int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
-> >  					 unsigned long buf_len)
-> >  {
-> > -	return -ENOEXEC;
-> > +	return _kexec_kernel_image_probe(image, buf, buf_len);
-> > +}
-> > +
-> > +void *_kexec_kernel_image_load(struct kimage *image)
-> > +{
-> > +	if (!image->fops || !image->fops->load)
-> > +		return ERR_PTR(-ENOEXEC);
-> > +
-> > +	return image->fops->load(image, image->kernel_buf,
-> > +				 image->kernel_buf_len, image->initrd_buf,
-> > +				 image->initrd_buf_len, image->cmdline_buf,
-> > +				 image->cmdline_buf_len);
-> >  }
-> > 
-> >  void * __weak arch_kexec_kernel_image_load(struct kimage *image)
-> >  {
-> > -	return ERR_PTR(-ENOEXEC);
-> > +	return _kexec_kernel_image_load(image);
-> > +}
-> > +
-> > +int _kimage_file_post_load_cleanup(struct kimage *image)
-> > +{
-> > +	if (!image->fops || !image->fops->cleanup)
-> > +		return 0;
-> > +
-> > +	return image->fops->cleanup(image->image_loader_data);
-> >  }
-> > 
-> >  int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
-> >  {
-> > -	return -EINVAL;
-> > +	return _kimage_file_post_load_cleanup(image);
-> >  }
-> > 
-> >  #ifdef CONFIG_KEXEC_VERIFY_SIG
-> > +int _kexec_kernel_verify_sig(struct kimage *image, void *buf,
-> > +			    unsigned long buf_len)
-> > +{
-> > +	if (!image->fops || !image->fops->verify_sig) {
-> > +		pr_debug("kernel loader does not support signature verification.\n");
-> > +		return -EKEYREJECTED;
-> > +	}
-> > +
-> > +	return image->fops->verify_sig(buf, buf_len);
-> > +}
-> > +
-> >  int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
-> >  					unsigned long buf_len)
-> >  {
-> > -	return -EKEYREJECTED;
-> > +	return _kexec_kernel_verify_sig(image, buf, buf_len);
-> >  }
-> >  #endif
-> > 
-> 
+Patch#1 allows making a use of purgatory optional, particularly useful
+for arm64.
+Patch#2 commonalizes arch_kexec_kernel_{image_probe, image_load,
+verify_sig}() and arch_kimage_file_post_load_cleanup() across architectures.
+Patch#3-#7 is also intended to generalize parse_elf64_headers(), along with
+exclude_mem_range(), to be made best re-use of.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-February/561182.html
+[2] http://lkml.iu.edu//hypermail/linux/kernel/1802.1/02596.html
+[3] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-February/562041.html
+
+AKASHI Takahiro (7):
+  kexec_file: make an use of purgatory optional
+  kexec_file,x86,powerpc: factor out kexec_file_ops functions
+  x86: kexec_file: purge system-ram walking from prepare_elf64_headers()
+  x86: kexec_file: remove X86_64 dependency from prepare_elf64_headers()
+  x86: kexec_file: lift CRASH_MAX_RANGES limit on crash_mem buffer
+  x86: kexec_file: clean up prepare_elf64_headers()
+  kexec_file, x86: move re-factored code to generic side
+
+ arch/powerpc/Kconfig                        |   3 +
+ arch/powerpc/include/asm/kexec.h            |   2 +-
+ arch/powerpc/kernel/kexec_elf_64.c          |   2 +-
+ arch/powerpc/kernel/machine_kexec_file_64.c |  39 +---
+ arch/x86/Kconfig                            |   3 +
+ arch/x86/include/asm/kexec-bzimage64.h      |   2 +-
+ arch/x86/kernel/crash.c                     | 332 +++++-----------------------
+ arch/x86/kernel/kexec-bzimage64.c           |   2 +-
+ arch/x86/kernel/machine_kexec_64.c          |  45 +---
+ include/linux/kexec.h                       |  36 ++-
+ kernel/kexec_file.c                         | 236 +++++++++++++++++++-
+ 11 files changed, 336 insertions(+), 366 deletions(-)
+
+-- 
+2.16.2
+
 
 _______________________________________________
 kexec mailing list
