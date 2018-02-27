@@ -1,33 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
- by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eqbXJ-0004U9-Dj
- for kexec@lists.infradead.org; Tue, 27 Feb 2018 09:27:03 +0000
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w1R9PwEA007458
- for <kexec@lists.infradead.org>; Tue, 27 Feb 2018 04:26:49 -0500
-Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2gd34bm1ya-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 27 Feb 2018 04:26:49 -0500
-Received: from localhost
- by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
- Tue, 27 Feb 2018 09:26:47 -0000
-Date: Tue, 27 Feb 2018 10:26:38 +0100
-From: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Subject: Re: [PATCH v8 03/13] kexec_file, x86, powerpc: factor out
- kexec_file_ops functions
-In-Reply-To: <20180227020304.GE6019@linaro.org>
-References: <20180222111732.23051-1-takahiro.akashi@linaro.org>
- <20180222111732.23051-4-takahiro.akashi@linaro.org>
- <20180226121718.3432bbd6@ThinkPad>
- <20180227020304.GE6019@linaro.org>
+Received: from mx2.suse.de ([195.135.220.15])
+ by casper.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1eqbtk-0003DE-Kv
+ for kexec@lists.infradead.org; Tue, 27 Feb 2018 09:50:19 +0000
+Date: Tue, 27 Feb 2018 10:49:58 +0100
+From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+Subject: Re: [PATCH] kexec: do KEXEC_FILE_LOAD and fallback to KEXEC_LOAD if
+ not supported.
+Message-ID: <20180227104958.27405e62@naga.suse.cz>
+In-Reply-To: <20180227091402.GB14817@dhcp-128-65.nay.redhat.com>
+References: <20180222222442.9422-1-msuchanek@suse.de>
+ <20180222232043.GC693@localhost.localdomain>
+ <20180223092900.76a5dd33@ezekiel.suse.cz>
+ <20180224014342.GA11298@dhcp-128-65.nay.redhat.com>
+ <20180224173431.12ab826c@ezekiel.suse.cz>
+ <20180226014515.GA2862@dhcp-128-65.nay.redhat.com>
+ <20180226130858.6c0a8d09@naga.suse.cz>
+ <20180227011510.GA2311@dhcp-128-65.nay.redhat.com>
+ <20180227093929.1aef97a2@ezekiel.suse.cz>
+ <20180227090905.GA14817@dhcp-128-65.nay.redhat.com>
+ <20180227091402.GB14817@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Message-Id: <20180227102638.19e8cd53@ThinkPad>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,184 +29,138 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, julien.thierry@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: Tony Jones <tonyj@suse.com>, horms@verge.net.au, Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>
 
-On Tue, 27 Feb 2018 11:03:07 +0900
-AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-
-> On Mon, Feb 26, 2018 at 12:17:18PM +0100, Philipp Rudo wrote:
-> > Hi AKASHI
-> > 
-> > On Thu, 22 Feb 2018 20:17:22 +0900
-> > AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> > 
-> > [...]
-> >   
-> > > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > > index 990adae52151..a6d14a768b3e 100644
-> > > --- a/kernel/kexec_file.c
-> > > +++ b/kernel/kexec_file.c
-> > > @@ -26,34 +26,83 @@
-> > >  #include <linux/vmalloc.h>
-> > >  #include "kexec_internal.h"
-> > > 
-> > > +const __weak struct kexec_file_ops * const kexec_file_loaders[] = {NULL};
-> > > +  
-> > 
-> > Having a weak definition of kexec_file_loaders causes trouble on s390 with 
-> > gcc 4.8 (newer versions seem to work fine). For me it looks like that in this
-> > version gcc doesn't recognize __weak but use the default value for
-> > optimization. This leads to _kexec_kernel_image_probe to always return ENOEXEC
-> > because the for-loop gets optimized out.  
-> 
-> I gave it a try to compile with gcc 4.9 (not 4.8) for arm64
-> and didn't see any errors or warnings, but
-
-I talked to our compiler guys, and it looks like its a bug in gcc which was
-introduced with gcc 4.8 and removed again with gcc 4.9. So I was just extremely
-lucky hitting the sweat spot...
-
-
-> > The problem can easily be worked around by declaring kexec_file_loaders in
-> > include/linux/kexec.h and defining it in arch code. In particular doing this
-> > 
-> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> > index 37e9dce518aa..fc0788540d90 100644
-> > --- a/include/linux/kexec.h
-> > +++ b/include/linux/kexec.h
-> > @@ -139,6 +139,8 @@ struct kexec_file_ops {
-> >  #endif
-> >  };
-> >  
-> > +extern const struct kexec_file_ops * const kexec_file_loaders[];
-> > +
-> >  /**
-> >   * struct kexec_buf - parameters for finding a place for a buffer in memory
-> >   * @image:	kexec image in which memory to search.
-> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > index 17ba407d0e79..4e3d1e4bc7f6 100644
-> > --- a/kernel/kexec_file.c
-> > +++ b/kernel/kexec_file.c
-> > @@ -31,8 +31,6 @@
-> >  #include <linux/vmalloc.h>
-> >  #include "kexec_internal.h"
-> >  
-> > -const __weak struct kexec_file_ops * const kexec_file_loaders[] = {NULL};
-> > -
-> >  #ifdef CONFIG_ARCH_HAS_KEXEC_PURGATORY
-> >  static int kexec_calculate_store_digests(struct kimage *image);
-> >  #else  
-> 
-> Your change is just fine with me, too.
-> I will incorporate it in my next version.
-
-Thanks a lot
-Philipp
-
-> Thanks,
-> -Takahiro AKASHI
-> 
-> > A nice side effect of this solution is, that a developer who forgets to define
-> > kexec_file_loaders gets a linker error. So he directly knows what's missing
-> > instead of first having to find out where/why an error gets returned.
-> > 
-> > Otherwise the series is fine for me.
-> > 
-> > Thanks
-> > Philipp
-> >   
-> > >  #ifdef CONFIG_ARCH_HAS_KEXEC_PURGATORY
-> > >  static int kexec_calculate_store_digests(struct kimage *image);
-> > >  #else
-> > >  static int kexec_calculate_store_digests(struct kimage *image) { return 0; };
-> > >  #endif
-> > > 
-> > > +int _kexec_kernel_image_probe(struct kimage *image, void *buf,
-> > > +			     unsigned long buf_len)
-> > > +{
-> > > +	const struct kexec_file_ops * const *fops;
-> > > +	int ret = -ENOEXEC;
-> > > +
-> > > +	for (fops = &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops) {
-> > > +		ret = (*fops)->probe(buf, buf_len);
-> > > +		if (!ret) {
-> > > +			image->fops = *fops;
-> > > +			return ret;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > >  /* Architectures can provide this probe function */
-> > >  int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
-> > >  					 unsigned long buf_len)
-> > >  {
-> > > -	return -ENOEXEC;
-> > > +	return _kexec_kernel_image_probe(image, buf, buf_len);
-> > > +}
-> > > +
-> > > +void *_kexec_kernel_image_load(struct kimage *image)
-> > > +{
-> > > +	if (!image->fops || !image->fops->load)
-> > > +		return ERR_PTR(-ENOEXEC);
-> > > +
-> > > +	return image->fops->load(image, image->kernel_buf,
-> > > +				 image->kernel_buf_len, image->initrd_buf,
-> > > +				 image->initrd_buf_len, image->cmdline_buf,
-> > > +				 image->cmdline_buf_len);
-> > >  }
-> > > 
-> > >  void * __weak arch_kexec_kernel_image_load(struct kimage *image)
-> > >  {
-> > > -	return ERR_PTR(-ENOEXEC);
-> > > +	return _kexec_kernel_image_load(image);
-> > > +}
-> > > +
-> > > +int _kimage_file_post_load_cleanup(struct kimage *image)
-> > > +{
-> > > +	if (!image->fops || !image->fops->cleanup)
-> > > +		return 0;
-> > > +
-> > > +	return image->fops->cleanup(image->image_loader_data);
-> > >  }
-> > > 
-> > >  int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
-> > >  {
-> > > -	return -EINVAL;
-> > > +	return _kimage_file_post_load_cleanup(image);
-> > >  }
-> > > 
-> > >  #ifdef CONFIG_KEXEC_VERIFY_SIG
-> > > +int _kexec_kernel_verify_sig(struct kimage *image, void *buf,
-> > > +			    unsigned long buf_len)
-> > > +{
-> > > +	if (!image->fops || !image->fops->verify_sig) {
-> > > +		pr_debug("kernel loader does not support signature verification.\n");
-> > > +		return -EKEYREJECTED;
-> > > +	}
-> > > +
-> > > +	return image->fops->verify_sig(buf, buf_len);
-> > > +}
-> > > +
-> > >  int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
-> > >  					unsigned long buf_len)
-> > >  {
-> > > -	return -EKEYREJECTED;
-> > > +	return _kexec_kernel_verify_sig(image, buf, buf_len);
-> > >  }
-> > >  #endif
-> > >   
-> >   
-> 
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCAyNyBGZWIgMjAxOCAxNzoxNDowMiArMDgwMApEYXZlIFlvdW5nIDxkeW91bmdAcmVk
+aGF0LmNvbT4gd3JvdGU6Cgo+IE9uIDAyLzI3LzE4IGF0IDA1OjA5cG0sIERhdmUgWW91bmcgd3Jv
+dGU6Cj4gPiBPbiAwMi8yNy8xOCBhdCAwOTozOWFtLCBQZXRyIFRlc2FyaWsgd3JvdGU6ICAKPiA+
+ID4gT24gVHVlLCAyNyBGZWIgMjAxOCAwOToxNToxMCArMDgwMAo+ID4gPiBEYXZlIFlvdW5nIDxk
+eW91bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiA+ICAgCj4gPiA+ID4gT24gMDIvMjYvMTggYXQg
+MDE6MDhwbSwgTWljaGFsIFN1Y2jDoW5layB3cm90ZTogIAo+ID4gPiA+ID4gT24gTW9uLCAyNiBG
+ZWIgMjAxOCAwOTo0NToxNSArMDgwMAo+ID4gPiA+ID4gRGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhh
+dC5jb20+IHdyb3RlOgo+ID4gPiA+ID4gICAgIAo+ID4gPiA+ID4gPiBPbiAwMi8yNC8xOCBhdCAw
+NTozNHBtLCBQZXRyIFRlc2FyaWsgd3JvdGU6ICAgIAo+ID4gPiA+ID4gPiA+IE9uIFNhdCwgMjQg
+RmViIDIwMTggMDk6NDM6NDIgKzA4MDAKPiA+ID4gPiA+ID4gPiBEYXZlIFlvdW5nIDxkeW91bmdA
+cmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiA+ID4gPiA+ID4gICAgICAgCj4gPiA+ID4gPiA+ID4gPiBP
+biAwMi8yMy8xOCBhdCAwOToyOWFtLCBQZXRyIFRlc2FyaWsgd3JvdGU6ICAgICAgCj4gPiA+ID4g
+PiA+ID4gPiA+IEhpIEJhb3F1YW4sCj4gPiA+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+ID4g
+PiBPbiBGcmksIDIzIEZlYiAyMDE4IDA3OjIwOjQzICswODAwCj4gPiA+ID4gPiA+ID4gPiA+IEJh
+b3F1YW4gSGUgPGJoZUByZWRoYXQuY29tPiB3cm90ZToKPiA+ID4gPiA+ID4gPiA+ID4gICAgICAg
+ICAKPiA+ID4gPiA+ID4gPiA+ID4gPiBIaSBNaWNoYWwsCj4gPiA+ID4gPiA+ID4gPiA+ID4gCj4g
+PiA+ID4gPiA+ID4gPiA+ID4gT24gMDIvMjIvMTggYXQgMTE6MjRwbSwgTWljaGFsIFN1Y2hhbmVr
+Cj4gPiA+ID4gPiA+ID4gPiA+ID4gd3JvdGU6ICAgICAgICAKPiA+ID4gPiA+ID4gPiA+ID4gPiA+
+IFRoZSBuZXcgS0VYRUNfRklMRV9MT0FEIGlzIHByZWZlcnJlZCBpbiB0aGUgY2FzZQo+ID4gPiA+
+ID4gPiA+ID4gPiA+ID4gdGhlIHBsYXRmb3JtIHN1cHBvcnRzIGl0IGJlY2F1c2UgaXQgYWxsb3dz
+IGtleGVjCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiBpbiBsb2NrZWQgZG93biBzZWN1cmUgYm9vdCBt
+b2RlLgo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiBIb3dldmVy
+LCBzb21lIHBsYXRmb3JtcyBkbyBub3Qgc3VwcG9ydCBpdCBzbyBmYWxsCj4gPiA+ID4gPiA+ID4g
+PiA+ID4gPiBiYWNrIHRvIHRoZSBvbGQgc3lzY2FsbCB0aGVyZS4gICAgICAgICAgCj4gPiA+ID4g
+PiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gPiA+ID4gSSBkaWRuJ3QgcmVhZCBjb2RlIGNoYW5n
+ZSwganVzdCBmcm9tIHBhdGNoIGxvZywgSQo+ID4gPiA+ID4gPiA+ID4gPiA+IHRlbmQgdG8gbm90
+IGFncmVlLiBUaGVyZSBhcmUgdHdvIG9wdGlvbnMKPiA+ID4gPiA+ID4gPiA+ID4gPiBLRVhFQ19G
+SUxFX0xPQUQgYW5kIEtFWEVDX0xPQUQsIHNvbWUgcGxhdGZvcm1zIGRvCj4gPiA+ID4gPiA+ID4g
+PiA+ID4gbm90IHN1cHBvcnQsIHdoeSBkb2VzIHNvbWUgcGxhdGZvcm1zIG5vdCBjaG9vc2UKPiA+
+ID4gPiA+ID4gPiA+ID4gPiBLRVhFQ19MT0FELCB0aGUgd29ya2luZyBvbmU/IFdoeSBib3RoZXIg
+dG8gbWFrZQo+ID4gPiA+ID4gPiA+ID4gPiA+IGNoYW5nZSBpbiBjb2RlPyBJIGJlbGlldmUgdGhl
+cmUncyByZXR1cm5lZCBtZXNzYWdlCj4gPiA+ID4gPiA+ID4gPiA+ID4gdGVsbGluZyBpZiBLRVhF
+Q19GSUxFX0xPQUQgd29ya3Mgb3Igbm90LiAgICAgICAgCj4gPiA+ID4gPiA+ID4gPiA+IAo+ID4g
+PiA+ID4gPiA+ID4gPiBXZWxsLi4uIGxldCBtZSBnaXZlIGEgYml0IG9mIGJhY2tncm91bmQuIEFz
+IHlvdSBoYXZlCj4gPiA+ID4gPiA+ID4gPiA+IHByb2JhYmx5IG5vdGljZWQsIHRoaXMgc3lzY2Fs
+bCB3YXMgb3JpZ2luYWxseQo+ID4gPiA+ID4gPiA+ID4gPiBhdmFpbGFibGUgb25seSBmb3IgeDg2
+XzY0LCBidXQgbW9yZSBhbmQgbW9yZQo+ID4gPiA+ID4gPiA+ID4gPiBhcmNoaXRlY3R1cmVzIGFy
+ZSBhbHNvIGFkZGluZyBpdCBub3cuCj4gPiA+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+ID4g
+PiBOZXh0LCBrZXhlYyBpcyBhY3R1YWxseSBjYWxsZWQgYnkgYSBzY3JpcHQgKHdoaWNoCj4gPiA+
+ID4gPiA+ID4gPiA+IGxvY2F0ZXMgYSBzdWl0YWJsZSBrZXJuZWwgYW5kIGluaXRyZCwgY29uc3Ry
+dWN0cyB0aGUKPiA+ID4gPiA+ID4gPiA+ID4ga2VybmVsIGNvbW1hbmQgbGluZSwgZXRjLikuIFRo
+ZSBzY3JpcHQgbXVzdCBlaXRoZXI6Cj4gPiA+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+ID4g
+PiAgIEEuIGtub3cgc29tZWhvdyBpZiB0aGUgY3VycmVudGx5IHJ1bm5pbmcga2VybmVsCj4gPiA+
+ID4gPiA+ID4gPiA+IGltcGxlbWVudHMga2V4ZWNfZmlsZV9sb2FkKDIpLCBvcgo+ID4gPiA+ID4g
+PiA+ID4gPiAKPiA+ID4gPiA+ID4gPiA+ID4gICBCLiB0cnkgb25lIG1ldGhvZCBmaXJzdCwgYW5k
+IGlmIGl0IGZhaWxzLCByZXRyeQo+ID4gPiA+ID4gPiA+ID4gPiB3aXRoIHRoZSBvdGhlci4KPiA+
+ID4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gPiA+IEkgYWdyZWUgdGhhdCBrZXhlYygxKSBz
+aG91bGQgcHJvYmFibHkgYWxsb3cgdGhlIHVzZXIKPiA+ID4gPiA+ID4gPiA+ID4gdG8gZm9yY2Ug
+YSBzcGVjaWZpYyBtZXRob2QsIGJ1dCBJIGRvbid0IHNlZSB0aGUKPiA+ID4gPiA+ID4gPiA+ID4g
+YmVuZWZpdCBvZiBpbXBsZW1lbnRpbmcgZmFsbGJhY2sgaW4gYW4gZXh0ZXJuYWwKPiA+ID4gPiA+
+ID4gPiA+ID4gc2NyaXB0IGFuZCBub3QgaW4ga2V4ZWMtdG9vbHMgaXRzZWxmLgo+ID4gPiA+ID4g
+PiA+ID4gPiAKPiA+ID4gPiA+ID4gPiA+ID4gT1RPSCBpZiB5b3Ugd2FudCB0byBwdXNoIHRoZSBm
+YWxsYmFjayBsb2dpYyBvdXQgb2YKPiA+ID4gPiA+ID4gPiA+ID4ga2V4ZWMtdG9vbHMsIHRoZW4g
+SSB3b3VsZCBsaWtlIHRvIGdldCBiZXR0ZXIKPiA+ID4gPiA+ID4gPiA+ID4gZGlhZ25vc3RpYyBh
+dCBsZWFzdC4gTGV0dGluZyBteSBzY3JpcHQgcGFyc2Uga2V4ZWMKPiA+ID4gPiA+ID4gPiA+ID4g
+b3V0cHV0IGlzLCB1bSwgc3Vib3B0aW1hbC4gICAgICAgIAo+ID4gPiA+ID4gPiA+ID4gCj4gPiA+
+ID4gPiA+ID4gPiBJbiBGZWRvcmEvUkhFTCB3ZSB1c2UgdGhpcyBpbiBzY3JpcHRzIGJ5IGNoZWNr
+aW5nIHRoZQo+ID4gPiA+ID4gPiA+ID4gYXJjaCBmaXJzdCwgZm9yIGRpc3RyaWJ1dGlvbiBpdCBp
+cyBlbm91Z2g/ICAgICAgCj4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gTm8uCj4gPiA+ID4g
+PiA+ID4gCj4gPiA+ID4gPiA+ID4gRmlyc3QsIHlvdSB3b3VsZCBhbHNvIGhhdmUgdG8gY2hlY2sg
+dGhlIGtlcm5lbCB2ZXJzaW9uCj4gPiA+ID4gPiA+ID4gKGFuZCBtYWludGFpbiBhbiB1Z2x5IG1h
+cHBpbmcgb2Ygd2hpY2gga2VybmVsIHZlcnNpb24KPiA+ID4gPiA+ID4gPiBpbnRyb2R1Y2VkIGtl
+eGVjX2ZpbGVfbG9hZCBvbiB3aGljaCBhcmNoaXRlY3R1cmUpLiAgICAgIAo+ID4gPiA+ID4gPiAK
+PiA+ID4gPiA+ID4gVGhlIGtlcm5lbCB2ZXJzaW9uIHVwZGF0ZSBpcyByYXJlIGZvciB0aGVzZSBu
+ZXcgc3lzY2FsbAo+ID4gPiA+ID4gPiBhZGRlZCwgYnV0IGl0IGlzIGluZGVlZCBuZWVkZWQgdG8g
+bWF0Y2ggd2l0aCB0aGVtCj4gPiA+ID4gPiA+ICAgICAKPiA+ID4gPiA+ID4gPiAKPiA+ID4gPiA+
+ID4gPiBTZWNvbmQsIGl0J3Mgbm90IGp1c3QgdGhlIGFyY2hpdGVjdHVyZS4ga2V4ZWNfbG9hZCgy
+KQo+ID4gPiA+ID4gPiA+IHdpbGwgZmFpbCBpZiBTZWN1cmVCb290IGlzIGFjdGl2ZS4gT1RPSAo+
+ID4gPiA+ID4gPiA+IGtleGVjX2ZpbGVfbG9hZCgyKSB3aWxsIGZhaWwgaWYgdGhlIGtlcm5lbCBp
+cyBub3Qgc2lnbmVkLgo+ID4gPiA+ID4gPiA+IEZvciBrZXJuZWwgaGFja2VycyB3aG8gZG9uJ3Qg
+dXNlIFNlY3VyZUJvb3QsIHNpZ25pbmcKPiA+ID4gPiA+ID4gPiBzZWxmLWJ1aWx0IGtlcm5lbHMg
+aXMganVzdCBvdmVya2lsbC4gU28sIHlvdSBzaG91bGQgYWxzbwo+ID4gPiA+ID4gPiA+IGNoZWNr
+IHRoZSBzdGF0ZSBvZiBTZWN1cmVCb290LCBwb3NzaWJseSBhbHNvIHdoZXRoZXIgdGhlCj4gPiA+
+ID4gPiA+ID4ga2VybmVsIGltYWdlIGlzIHNpZ25lZCB3aXRoIGEgdmFsaWQga2V5LCByZXBlYXRp
+bmcgYSBiaXQKPiA+ID4gPiA+ID4gPiB0b28gbXVjaCBvZiB0aGUga2VybmVsIGxvZ2ljLCBhbmQg
+cXVpdGUgbGlrZWx5Cj4gPiA+ID4gPiA+ID4gaW50cm9kdWNpbmcgc3VidGxlIGRpZmZlcmVuY2Vz
+Li4uICAgICAgCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBIbW0sIEkgZGlkIG5vdCBzYXkgdGhl
+IGV4YWN0IGRldGFpbHMsIHllcywgd2UgY2hlY2tlZCB0aGUKPiA+ID4gPiA+ID4gU2VjdXJlIEJv
+b3Qgc3RhdGUgYW5kIG9ubHkgdXNlIGtleGVjX2ZpbGVfbG9hZCBmb3IgdGhhdAo+ID4gPiA+ID4g
+PiBzcGVjaWFsIGNhc2UuCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBrZXhlY19maWxlIGFuZCBr
+ZXhlY19maWxlX2xvYWQgaXMgbm90IGV4YWN0bHkgc2FtZSBzbyBpZgo+ID4gPiA+ID4gPiBvbmUg
+d2FudCB0byB1c2Ugb25lIGluc3RlYWQgb2YgYW5vdGhlciBmb3IgYSBzcGVjaWZpYwo+ID4gPiA+
+ID4gPiBmdW5jdGlvbmFsaXR5IGl0IHNlZW1zIG5vdCBnb29kIHRvIGF1dG9tYXRpY2FsbHkgc3dp
+dGNoIHRvCj4gPiA+ID4gPiA+IGFub3RoZXIgaWYgb25lIGZhaWxlZC4gRm9yIGV4YW1wbGUgd2hp
+Y2ggb25lIHNob3VsZCBiZSB0aGUKPiA+ID4gPiA+ID4gZmlyc3QgY2hvaWNlLCBpdCBpcyBoYXJk
+IHRvIHNheS4gICAgCj4gPiA+ID4gPiAKPiA+ID4gPiA+IEhhcmQgdG8gc2F5IGluZGVlZCwgSG93
+ZXZlciwgSSB3b3VsZCBhc3N1bWUgdGhhdAo+ID4gPiA+ID4gYXJjaGl0ZWN0dXJlcyB0aGF0IGlt
+cGxlbWVudCBrZXhlY19maWxlX2xvYWQgZG8gc28gYmVjYXVzZSBpdAo+ID4gPiA+ID4gaXMgcmVx
+dWlyZWQgaW4gc29tZSBjYXNlIGFuZCBoZW5jZSBpdCB3aWxsIGJlIGFjdGl2ZWx5Cj4gPiA+ID4g
+PiBtYWludGFpbmVkIHdoZW4gYXZhaWxhYmxlLiBIb3dldmVyLCBzb21lIGFyY2hpdGVjdHVyZXMg
+bWF5Cj4gPiA+ID4gPiBub3QgcmVxdWlyZSBpdCBhbmQgd2lsbCBiZSBzbG93IHRvIGltcGxlbWVu
+dCBpdC4gU28gdXNpbmcKPiA+ID4gPiA+IGtleGVjX2ZpbGVfbG9hZCB3aGVuIGF2YWlsYWJsZSBz
+b3VuZHMgbGlrZSB0aGUgcmlnaHQgdGhpbmcuCj4gPiA+ID4gPiBUZWNobmljYWxseSB0aGUgaW1w
+bGVtZW50YXRpb24gZGV0YWlscyBhcmUgZGlmZmVyZW50IGJ1dCBmb3IKPiA+ID4gPiA+IG1vc3Qg
+dXNlcnMgdGhpcyBkb2VzIG5vdCBtYXR0ZXIuCj4gPiA+ID4gPiAKPiA+ID4gPiA+IEZvciB0aG9z
+ZSB0aGF0IGRvIGNhcmUgSSBwcm92aWRlIG9wdGlvbiB0byBzZWxlY3Qgb25lIG9yIHRoZQo+ID4g
+PiA+ID4gb3RoZXIuICAgIAo+ID4gPiA+IAo+ID4gPiA+IEkgd291bGQgc2F5IGl0IGJyZWFrcyB0
+aGluZ3MsIGEgYmV0dGVyIHdheSBzaG91bGQgYmUKPiA+ID4gPiBpbnRyb2R1Y2luZyBhbm90aGVy
+IGtleGVjLXRvb2xzIG9wdGlvbiBmb3IgZXhhbXBsZSBrZXhlYyAtLWF1dG8KPiA+ID4gPiBmb3Ig
+dGhpcyBwdXJwb3NlLiBQcm9iYWJseSBhZGQgc29tZSAtLWF1dG89Li4uIHRvIHNlbGVjdCB0aGUK
+PiA+ID4gPiBmaXJzdCBjaGFuY2UuICAKPiA+ID4gCj4gPiA+IFllcyEgVGhpcyBpcyB0aGUgd2F5
+IHRvIGdvLiBCdXQgdGhlbiBJIHdvdWxkbid0IGNhbGwgaXQgLS1hdXRvLgo+ID4gPiBJIHdvdWxk
+IGNhbGwgaXQgIi0tbWV0aG9kPSIsIHNvIHlvdSBjb3VsZCBzcGVjaWZ5Ogo+ID4gPiAKPiA+ID4g
+ICAtLW1ldGhvZD1rZXJuZWwgICh0byB1c2UgdGhlIGluLWtlcm5lbCBsb2FkZXIgYWthCj4gPiA+
+IGtleGVjX2ZpbGVfbG9hZCkgLS1tZXRob2Q9dXNlciAgICAodG8gdXNlIHRoZSB0cmFkaXRpb25h
+bAo+ID4gPiB1c2VyLXNwYWNlIGxvYWRlcikgLS1tZXRob2Q9a2VybmVsLHVzZXIgICh0byBwcmVm
+ZXIKPiA+ID4ga2V4ZWNfZmlsZV9sb2FkKSAtLW1ldGhvZD11c2VyLGtlcm5lbCAgKHRvIHByZWZl
+ciBrZXhjX2xvYWQpCj4gPiA+IAo+ID4gPiBJJ20gbm90IHF1aXRlIHN1cmUgaWYgaXQgYWxzbyBt
+YWtlcyBzZW5zZSB0byBwcm92aWRlCj4gPiA+ICItLW1ldGhvZD1hdXRvIiwgd2hpY2ggd291bGQg
+dXNlIHdoYXRldmVyIGRlZmF1bHQgaXMgY29uc2lkZXJlZAo+ID4gPiBzYW5lIGZvciB0aGUgcnVu
+bmluZyBzeXN0ZW0uICAKPiA+IAo+ID4gSWYgd2UgaGF2ZSAtLW1ldGhvZD1rZXJuZWwsdXNlciBh
+bmQgLS1tZXRob2Q9dXNlcixrZXJuZWwgdGhlbiBubwo+ID4gbmVlZCAiYXV0byIgYW55bW9yZS4u
+ICBCdXQgSSB3b3VsZCBwcmVmZXIgdGhhdCBvcmlnaW5hbCBkZWZhdWx0Cj4gPiBiZWhhdmlvciBp
+cyBrZXB0LCBrZXhlYyAtbCAgd2l0aG91dCAiLS1tZXRob2QiIHdpbGwgdXNlIHVzZXJzcGFjZQo+
+ID4gbG9hZGVyLCBrZXhlYyAtcyAtbCB3aWxsIHVzZSBrZXJuZWwgc3BhY2UgbG9hZGVyICAKPiAK
+PiBJZiBvbmUgdXNlIGtleGVjIC1zIC0tbWV0aG9kPXVzZXIgdGhlbiBrZXhlYy10b29scyBzaG91
+bGQgZmFpbCwKPiB0YWxrZWQgd2l0aCBCYW9xdWFuIHByaXZhdGVseSBoZSBoYXMgYW5vdGhlciBp
+ZGVhIHRvIGV4dGVuZCB0aGUga2V4ZWMKPiAtcyB3aXRoIC0tZmFsbGJhY2s6ICJrZXhlYyAtcyAt
+LWZhbGxiYWNrIC1sIiAgY2FuIGZhbGxiYWNrIHRvCj4gdXNlcnNwYWNlIGxvYWRlciB0aGlzIHNl
+ZW1zIGFsc28gYSBnb29kIG9wdGlvbi4KCkluIHRoZSB1cGRhdGVkIHNlcmllcyBpdCBpcyBlYXN5
+IHRvIHR1cm4gb24gb3Igb2ZmIHRoZSBmYWxsYmFjayBzbyBhbgpvcHRpb24gY2FuIGJlIGFkZGVk
+IGZvciB0aGF0LiBIb3dldmVyLCB0aGUgZmFsbGJhY2sgb25seSB3b3JrcyBieQp0cnlpbmcgLXMg
+Zmlyc3QuIEltcGxlbWVudGluZyBmYWxsYmFjayBpbiBlaXRoZXIgZGlyZWN0aW9uIHdvdWxkCmNv
+bXBsaWNhdGUgdGhpbmdzIGEgYml0LiBFc3BlY2lhbGx5IHNpbmNlIGVycm9yIGNvZGVzIG9mIGtl
+eGVjLXRvb2xzIGRvCm5vdCB0ZW5kIHRvIGJlIG5pY2UgYW5kIGNvbnNpc3RlbnQuCgpUaGFua3MK
+Ck1pY2hhbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
