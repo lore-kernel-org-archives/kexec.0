@@ -1,27 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eqKg4-00073Y-VT
- for kexec@lists.infradead.org; Mon, 26 Feb 2018 15:27:00 +0000
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w1QFQAHZ030123
- for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 10:26:46 -0500
-Received: from e06smtp13.uk.ibm.com (e06smtp13.uk.ibm.com [195.75.94.109])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2gcj97ywaw-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 10:26:46 -0500
-Received: from localhost
- by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
- Mon, 26 Feb 2018 15:16:38 -0000
-From: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Subject: [PATCH 08/11] kexec_file: Simplify kexec_purgatory_setup_sechdrs 2
-Date: Mon, 26 Feb 2018 16:16:17 +0100
-In-Reply-To: <20180226151620.20970-1-prudo@linux.vnet.ibm.com>
-References: <20180226151620.20970-1-prudo@linux.vnet.ibm.com>
-Message-Id: <20180226151620.20970-9-prudo@linux.vnet.ibm.com>
+ id 1eqTre-0004Y6-Dt
+ for kexec@lists.infradead.org; Tue, 27 Feb 2018 01:15:32 +0000
+Date: Tue, 27 Feb 2018 09:15:10 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] kexec: do KEXEC_FILE_LOAD and fallback to KEXEC_LOAD if
+ not supported.
+Message-ID: <20180227011510.GA2311@dhcp-128-65.nay.redhat.com>
+References: <20180222222442.9422-1-msuchanek@suse.de>
+ <20180222232043.GC693@localhost.localdomain>
+ <20180223092900.76a5dd33@ezekiel.suse.cz>
+ <20180224014342.GA11298@dhcp-128-65.nay.redhat.com>
+ <20180224173431.12ab826c@ezekiel.suse.cz>
+ <20180226014515.GA2862@dhcp-128-65.nay.redhat.com>
+ <20180226130858.6c0a8d09@naga.suse.cz>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180226130858.6c0a8d09@naga.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,107 +26,155 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-s390@vger.kernel.org
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+Cc: Tony Jones <tonyj@suse.com>, horms@verge.net.au, Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>
 
-The main loop currently uses quite a lot of variables to update the section
-headers. Some of them are unnecessary. So clean them up a little.
+On 02/26/18 at 01:08pm, Michal Such=E1nek wrote:
+> On Mon, 26 Feb 2018 09:45:15 +0800
+> Dave Young <dyoung@redhat.com> wrote:
+> =
 
-Signed-off-by: Philipp Rudo <prudo@linux.vnet.ibm.com>
----
- kernel/kexec_file.c | 34 ++++++++++++----------------------
- 1 file changed, 12 insertions(+), 22 deletions(-)
+> > On 02/24/18 at 05:34pm, Petr Tesarik wrote:
+> > > On Sat, 24 Feb 2018 09:43:42 +0800
+> > > Dave Young <dyoung@redhat.com> wrote:
+> > >   =
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index bb31a3b627c2..746b91e46e34 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -724,12 +724,8 @@ static int kexec_purgatory_setup_kbuf(struct purgatory_info *pi,
- static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
- 					 struct kexec_buf *kbuf)
- {
--	unsigned long curr_load_addr;
--	unsigned long load_addr;
- 	unsigned long bss_addr;
- 	unsigned long offset;
--	unsigned char *buf_addr;
--	unsigned char *src;
- 	Elf_Shdr *sechdrs;
- 	int i;
- 
-@@ -762,20 +758,18 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
- 						sechdrs[i].sh_offset;
- 	}
- 
--	/* Load SHF_ALLOC sections */
--	buf_addr = kbuf->buffer;
--	load_addr = curr_load_addr = kbuf->mem;
--	bss_addr = load_addr + kbuf->bufsz;
-+	offset = 0;
-+	bss_addr = kbuf->mem + kbuf->bufsz;
- 	kbuf->image->start = pi->ehdr->e_entry;
- 
- 	for (i = 0; i < pi->ehdr->e_shnum; i++) {
- 		unsigned long align;
-+		void *src, *dst;
- 
- 		if (!(sechdrs[i].sh_flags & SHF_ALLOC))
- 			continue;
- 
- 		align = sechdrs[i].sh_addralign;
--
- 		if (sechdrs[i].sh_type == SHT_NOBITS) {
- 			bss_addr = ALIGN(bss_addr, align);
- 			sechdrs[i].sh_addr = bss_addr;
-@@ -783,31 +777,27 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
- 			continue;
- 		}
- 
--		curr_load_addr = ALIGN(curr_load_addr, align);
--		offset = curr_load_addr - load_addr;
--		/* We already modifed ->sh_offset to keep src addr */
--		src = (char *)sechdrs[i].sh_offset;
--		memcpy(buf_addr + offset, src, sechdrs[i].sh_size);
--
-+		offset = ALIGN(offset, align);
- 		if (sechdrs[i].sh_flags & SHF_EXECINSTR &&
- 		    pi->ehdr->e_entry >= sechdrs[i].sh_addr &&
- 		    pi->ehdr->e_entry < (sechdrs[i].sh_addr
- 					 + sechdrs[i].sh_size)) {
- 			kbuf->image->start -= sechdrs[i].sh_addr;
--			kbuf->image->start += curr_load_addr
-+			kbuf->image->start += kbuf->mem + offset;
- 		}
- 
--		/* Store load address and source address of section */
--		sechdrs[i].sh_addr = curr_load_addr;
-+		src = (void *)sechdrs[i].sh_offset;
-+		dst = pi->purgatory_buf + offset;
-+		memcpy(dst, src, sechdrs[i].sh_size);
-+
-+		sechdrs[i].sh_addr = kbuf->mem + offset;
- 
- 		/*
- 		 * This section got copied to temporary buffer. Update
- 		 * ->sh_offset accordingly.
- 		 */
--		sechdrs[i].sh_offset = (unsigned long)(buf_addr + offset);
--
--		/* Advance to the next address */
--		curr_load_addr += sechdrs[i].sh_size;
-+		sechdrs[i].sh_offset = (unsigned long)dst;
-+		offset += sechdrs[i].sh_size;
- 	}
- 
- 	return 0;
--- 
-2.13.5
+> > > > On 02/23/18 at 09:29am, Petr Tesarik wrote:  =
 
+> > > > > Hi Baoquan,
+> > > > > =
+
+> > > > > On Fri, 23 Feb 2018 07:20:43 +0800
+> > > > > Baoquan He <bhe@redhat.com> wrote:
+> > > > >     =
+
+> > > > > > Hi Michal,
+> > > > > > =
+
+> > > > > > On 02/22/18 at 11:24pm, Michal Suchanek wrote:    =
+
+> > > > > > > The new KEXEC_FILE_LOAD is preferred in the case the
+> > > > > > > platform supports it because it allows kexec in locked down
+> > > > > > > secure boot mode.
+> > > > > > > =
+
+> > > > > > > However, some platforms do not support it so fall back to
+> > > > > > > the old syscall there.      =
+
+> > > > > > =
+
+> > > > > > I didn't read code change, just from patch log, I tend to not
+> > > > > > agree. There are two options KEXEC_FILE_LOAD and KEXEC_LOAD,
+> > > > > > some platforms do not support, why does some platforms not
+> > > > > > choose KEXEC_LOAD, the working one? Why bother to make change
+> > > > > > in code? I believe there's returned message telling if
+> > > > > > KEXEC_FILE_LOAD works or not.    =
+
+> > > > > =
+
+> > > > > Well... let me give a bit of background. As you have probably
+> > > > > noticed, this syscall was originally available only for x86_64,
+> > > > > but more and more architectures are also adding it now.
+> > > > > =
+
+> > > > > Next, kexec is actually called by a script (which locates a
+> > > > > suitable kernel and initrd, constructs the kernel command line,
+> > > > > etc.). The script must either:
+> > > > > =
+
+> > > > >   A. know somehow if the currently running kernel implements
+> > > > >      kexec_file_load(2), or
+> > > > > =
+
+> > > > >   B. try one method first, and if it fails, retry with the
+> > > > > other.
+> > > > > =
+
+> > > > > I agree that kexec(1) should probably allow the user to force a
+> > > > > specific method, but I don't see the benefit of implementing
+> > > > > fallback in an external script and not in kexec-tools itself.
+> > > > > =
+
+> > > > > OTOH if you want to push the fallback logic out of kexec-tools,
+> > > > > then I would like to get better diagnostic at least. Letting my
+> > > > > script parse kexec output is, um, suboptimal.    =
+
+> > > > =
+
+> > > > In Fedora/RHEL we use this in scripts by checking the arch first,
+> > > > for distribution it is enough?  =
+
+> > > =
+
+> > > No.
+> > > =
+
+> > > First, you would also have to check the kernel version (and
+> > > maintain an ugly mapping of which kernel version introduced
+> > > kexec_file_load on which architecture).  =
+
+> > =
+
+> > The kernel version update is rare for these new syscall added, but
+> > it is indeed needed to match with them
+> > =
+
+> > > =
+
+> > > Second, it's not just the architecture. kexec_load(2) will fail if
+> > > SecureBoot is active. OTOH kexec_file_load(2) will fail if the
+> > > kernel is not signed. For kernel hackers who don't use SecureBoot,
+> > > signing self-built kernels is just overkill. So, you should also
+> > > check the state of SecureBoot, possibly also whether the kernel
+> > > image is signed with a valid key, repeating a bit too much of the
+> > > kernel logic, and quite likely introducing subtle differences...  =
+
+> > =
+
+> > Hmm, I did not say the exact details, yes, we checked the Secure Boot
+> > state and only use kexec_file_load for that special case.
+> > =
+
+> > kexec_file and kexec_file_load is not exactly same so if one want to
+> > use one instead of another for a specific functionality it seems not
+> > good to automatically switch to another if one failed. For example
+> > which one should be the first choice, it is hard to say.
+> =
+
+> Hard to say indeed, However, I would assume that architectures that
+> implement kexec_file_load do so because it is required in some case and
+> hence it will be actively maintained when available. However, some
+> architectures may not require it and will be slow to implement it. So
+> using kexec_file_load when available sounds like the right thing.
+> Technically the implementation details are different but for most users
+> this does not matter.
+> =
+
+> For those that do care I provide option to select one or the other.
+
+I would say it breaks things, a better way should be introducing another
+kexec-tools option for example kexec --auto for this purpose. Probably
+add some --auto=3D... to select the first chance.
+
+> =
+
+> Thanks
+> =
+
+> Michal
+> =
+
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
