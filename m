@@ -1,16 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x243.google.com ([2607:f8b0:400e:c01::243])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1eqXCf-0005az-2e
- for kexec@lists.infradead.org; Tue, 27 Feb 2018 04:49:51 +0000
-Received: by mail-pl0-x243.google.com with SMTP id ay8so10704559plb.4
- for <kexec@lists.infradead.org>; Mon, 26 Feb 2018 20:49:14 -0800 (PST)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH 7/7] kexec_file, x86: move re-factored code to generic side
-Date: Tue, 27 Feb 2018 13:48:14 +0900
-Message-Id: <20180227044814.24808-8-takahiro.akashi@linaro.org>
-In-Reply-To: <20180227044814.24808-1-takahiro.akashi@linaro.org>
-References: <20180227044814.24808-1-takahiro.akashi@linaro.org>
+ id 1eqanZ-0008Oo-P1
+ for kexec@lists.infradead.org; Tue, 27 Feb 2018 08:39:47 +0000
+Date: Tue, 27 Feb 2018 09:39:29 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH] kexec: do KEXEC_FILE_LOAD and fallback to KEXEC_LOAD if
+ not supported.
+Message-ID: <20180227093929.1aef97a2@ezekiel.suse.cz>
+In-Reply-To: <20180227011510.GA2311@dhcp-128-65.nay.redhat.com>
+References: <20180222222442.9422-1-msuchanek@suse.de>
+ <20180222232043.GC693@localhost.localdomain>
+ <20180223092900.76a5dd33@ezekiel.suse.cz>
+ <20180224014342.GA11298@dhcp-128-65.nay.redhat.com>
+ <20180224173431.12ab826c@ezekiel.suse.cz>
+ <20180226014515.GA2862@dhcp-128-65.nay.redhat.com>
+ <20180226130858.6c0a8d09@naga.suse.cz>
+ <20180227011510.GA2311@dhcp-128-65.nay.redhat.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,504 +26,105 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dyoung@redhat.com, vgoyal@redhat.com, bhe@redhat.com, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, prudo@linux.vnet.ibm.com
-Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: Tony Jones <tonyj@suse.com>, Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>, horms@verge.net.au
 
-In the previous patches, commonly-used routines, exclude_mem_range() and
-prepare_elf64_headers(), were carved out. Now place them in kexec common
-code. A prefix "crash_" is given to each of their names to avoid possible
-name collisions.
-
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
----
- arch/x86/kernel/crash.c | 194 ++----------------------------------------------
- include/linux/kexec.h   |  19 +++++
- kernel/kexec_file.c     | 175 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 200 insertions(+), 188 deletions(-)
-
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index a842fd847684..3e4f3980688d 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -38,19 +38,6 @@
- #include <asm/virtext.h>
- #include <asm/intel_pt.h>
- 
--/* Alignment required for elf header segment */
--#define ELF_CORE_HEADER_ALIGN   4096
--
--struct crash_mem_range {
--	u64 start, end;
--};
--
--struct crash_mem {
--	unsigned int max_nr_ranges;
--	unsigned int nr_ranges;
--	struct crash_mem_range ranges[0];
--};
--
- /* Used while preparing memory map entries for second kernel */
- struct crash_memmap_data {
- 	struct boot_params *params;
-@@ -224,77 +211,6 @@ static struct crash_mem *fill_up_crash_elf_data(void)
- 	return cmem;
- }
- 
--static int exclude_mem_range(struct crash_mem *mem,
--		unsigned long long mstart, unsigned long long mend)
--{
--	int i, j;
--	unsigned long long start, end;
--	struct crash_mem_range temp_range = {0, 0};
--
--	for (i = 0; i < mem->nr_ranges; i++) {
--		start = mem->ranges[i].start;
--		end = mem->ranges[i].end;
--
--		if (mstart > end || mend < start)
--			continue;
--
--		/* Truncate any area outside of range */
--		if (mstart < start)
--			mstart = start;
--		if (mend > end)
--			mend = end;
--
--		/* Found completely overlapping range */
--		if (mstart == start && mend == end) {
--			mem->ranges[i].start = 0;
--			mem->ranges[i].end = 0;
--			if (i < mem->nr_ranges - 1) {
--				/* Shift rest of the ranges to left */
--				for (j = i; j < mem->nr_ranges - 1; j++) {
--					mem->ranges[j].start =
--						mem->ranges[j+1].start;
--					mem->ranges[j].end =
--							mem->ranges[j+1].end;
--				}
--			}
--			mem->nr_ranges--;
--			return 0;
--		}
--
--		if (mstart > start && mend < end) {
--			/* Split original range */
--			mem->ranges[i].end = mstart - 1;
--			temp_range.start = mend + 1;
--			temp_range.end = end;
--		} else if (mstart != start)
--			mem->ranges[i].end = mstart - 1;
--		else
--			mem->ranges[i].start = mend + 1;
--		break;
--	}
--
--	/* If a split happend, add the split to array */
--	if (!temp_range.end)
--		return 0;
--
--	/* Split happened */
--	if (i == mem->max_nr_ranges - 1)
--		return -ENOMEM;
--
--	/* Location where new range should go */
--	j = i + 1;
--	if (j < mem->nr_ranges) {
--		/* Move over all ranges one slot towards the end */
--		for (i = mem->nr_ranges - 1; i >= j; i--)
--			mem->ranges[i + 1] = mem->ranges[i];
--	}
--
--	mem->ranges[j].start = temp_range.start;
--	mem->ranges[j].end = temp_range.end;
--	mem->nr_ranges++;
--	return 0;
--}
--
- /*
-  * Look for any unwanted ranges between mstart, mend and remove them. This
-  * might lead to split and split ranges are put in cmem->ranges[] array
-@@ -304,12 +220,13 @@ static int elf_header_exclude_ranges(struct crash_mem *cmem)
- 	int ret = 0;
- 
- 	/* Exclude crashkernel region */
--	ret = exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
-+	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
- 	if (ret)
- 		return ret;
- 
- 	if (crashk_low_res.end) {
--		ret = exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
-+		ret = crash_exclude_mem_range(cmem, crashk_low_res.start,
-+							crashk_low_res.end);
- 		if (ret)
- 			return ret;
- 	}
-@@ -328,105 +245,6 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
- 	return 0;
- }
- 
--static int prepare_elf64_headers(struct crash_mem *cmem, int kernel_map,
--		void **addr, unsigned long *sz)
--{
--	Elf64_Ehdr *ehdr;
--	Elf64_Phdr *phdr;
--	unsigned long nr_cpus = num_possible_cpus(), nr_phdr, elf_sz;
--	unsigned char *buf;
--	unsigned int cpu, i;
--	unsigned long long notes_addr;
--	unsigned long mstart, mend;
--
--	/* extra phdr for vmcoreinfo elf note */
--	nr_phdr = nr_cpus + 1;
--	nr_phdr += cmem->nr_ranges;
--
--	/*
--	 * kexec-tools creates an extra PT_LOAD phdr for kernel text mapping
--	 * area on x86_64 (ffffffff80000000 - ffffffffa0000000).
--	 * I think this is required by tools like gdb. So same physical
--	 * memory will be mapped in two elf headers. One will contain kernel
--	 * text virtual addresses and other will have __va(physical) addresses.
--	 */
--
--	nr_phdr++;
--	elf_sz = sizeof(Elf64_Ehdr) + nr_phdr * sizeof(Elf64_Phdr);
--	elf_sz = ALIGN(elf_sz, ELF_CORE_HEADER_ALIGN);
--
--	buf = vzalloc(elf_sz);
--	if (!buf)
--		return -ENOMEM;
--
--	ehdr = (Elf64_Ehdr *)buf;
--	phdr = (Elf64_Phdr *)(ehdr + 1);
--	memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
--	ehdr->e_ident[EI_CLASS] = ELFCLASS64;
--	ehdr->e_ident[EI_DATA] = ELFDATA2LSB;
--	ehdr->e_ident[EI_VERSION] = EV_CURRENT;
--	ehdr->e_ident[EI_OSABI] = ELF_OSABI;
--	memset(ehdr->e_ident + EI_PAD, 0, EI_NIDENT - EI_PAD);
--	ehdr->e_type = ET_CORE;
--	ehdr->e_machine = ELF_ARCH;
--	ehdr->e_version = EV_CURRENT;
--	ehdr->e_phoff = sizeof(Elf64_Ehdr);
--	ehdr->e_ehsize = sizeof(Elf64_Ehdr);
--	ehdr->e_phentsize = sizeof(Elf64_Phdr);
--
--	/* Prepare one phdr of type PT_NOTE for each present cpu */
--	for_each_present_cpu(cpu) {
--		phdr->p_type = PT_NOTE;
--		notes_addr = per_cpu_ptr_to_phys(per_cpu_ptr(crash_notes, cpu));
--		phdr->p_offset = phdr->p_paddr = notes_addr;
--		phdr->p_filesz = phdr->p_memsz = sizeof(note_buf_t);
--		(ehdr->e_phnum)++;
--		phdr++;
--	}
--
--	/* Prepare one PT_NOTE header for vmcoreinfo */
--	phdr->p_type = PT_NOTE;
--	phdr->p_offset = phdr->p_paddr = paddr_vmcoreinfo_note();
--	phdr->p_filesz = phdr->p_memsz = VMCOREINFO_NOTE_SIZE;
--	(ehdr->e_phnum)++;
--	phdr++;
--
--	/* Prepare PT_LOAD type program header for kernel text region */
--	if (kernel_map) {
--		phdr->p_type = PT_LOAD;
--		phdr->p_flags = PF_R|PF_W|PF_X;
--		phdr->p_vaddr = (Elf64_Addr)_text;
--		phdr->p_filesz = phdr->p_memsz = _end - _text;
--		phdr->p_offset = phdr->p_paddr = __pa_symbol(_text);
--		ehdr->e_phnum++;
--		phdr++;
--	}
--
--	/* Go through all the ranges in cmem->ranges[] and prepare phdr */
--	for (i = 0; i < cmem->nr_ranges; i++) {
--		mstart = cmem->ranges[i].start;
--		mend = cmem->ranges[i].end;
--
--		phdr->p_type = PT_LOAD;
--		phdr->p_flags = PF_R|PF_W|PF_X;
--		phdr->p_offset  = mstart;
--
--		phdr->p_paddr = mstart;
--		phdr->p_vaddr = (unsigned long long) __va(mstart);
--		phdr->p_filesz = phdr->p_memsz = mend - mstart + 1;
--		phdr->p_align = 0;
--		ehdr->e_phnum++;
--		phdr++;
--		pr_debug("Crash PT_LOAD elf header. phdr=%p vaddr=0x%llx, paddr=0x%llx, sz=0x%llx e_phnum=%d p_offset=0x%llx\n",
--			phdr, phdr->p_vaddr, phdr->p_paddr, phdr->p_filesz,
--			ehdr->e_phnum, phdr->p_offset);
--	}
--
--	*addr = buf;
--	*sz = elf_sz;
--	return 0;
--}
--
- /* Prepare elf headers. Return addr and size */
- static int prepare_elf_headers(struct kimage *image, void **addr,
- 					unsigned long *sz)
-@@ -451,7 +269,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
- 		goto out;
- 
- 	/* By default prepare 64bit headers */
--	ret =  prepare_elf64_headers(cmem,
-+	ret =  crash_prepare_elf64_headers(cmem,
- 				(int)IS_ENABLED(CONFIG_X86_64), addr, sz);
- 	if (ret)
- 		goto out;
-@@ -516,14 +334,14 @@ static int memmap_exclude_ranges(struct kimage *image, struct crash_mem *cmem,
- 	/* Exclude Backup region */
- 	start = image->arch.backup_load_addr;
- 	end = start + image->arch.backup_src_sz - 1;
--	ret = exclude_mem_range(cmem, start, end);
-+	ret = crash_exclude_mem_range(cmem, start, end);
- 	if (ret)
- 		return ret;
- 
- 	/* Exclude elf header region */
- 	start = image->arch.elf_load_addr;
- 	end = start + image->arch.elf_headers_sz - 1;
--	return exclude_mem_range(cmem, start, end);
-+	return crash_exclude_mem_range(cmem, start, end);
- }
- 
- /* Prepare memory map for crash dump kernel */
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 2e095c3b4537..9aecf5472596 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -172,6 +172,25 @@ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
- 			       int (*func)(struct resource *, void *));
- extern int kexec_add_buffer(struct kexec_buf *kbuf);
- int kexec_locate_mem_hole(struct kexec_buf *kbuf);
-+
-+/* Alignment required for elf header segment */
-+#define ELF_CORE_HEADER_ALIGN   4096
-+
-+struct crash_mem_range {
-+	u64 start, end;
-+};
-+
-+struct crash_mem {
-+	unsigned int max_nr_ranges;
-+	unsigned int nr_ranges;
-+	struct crash_mem_range ranges[0];
-+};
-+
-+extern int crash_exclude_mem_range(struct crash_mem *mem,
-+				   unsigned long long mstart,
-+				   unsigned long long mend);
-+extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
-+				       void **addr, unsigned long *sz);
- #endif /* CONFIG_KEXEC_FILE */
- 
- struct kimage {
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 60bdfc1104ff..04bbfd2209d0 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -22,6 +22,11 @@
- #include <linux/ima.h>
- #include <crypto/hash.h>
- #include <crypto/sha.h>
-+#include <linux/elf.h>
-+#include <linux/elfcore.h>
-+#include <linux/kernel.h>
-+#include <linux/kexec.h>
-+#include <linux/slab.h>
- #include <linux/syscalls.h>
- #include <linux/vmalloc.h>
- #include "kexec_internal.h"
-@@ -1075,3 +1080,173 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
- 	return 0;
- }
- #endif /* CONFIG_ARCH_HAS_KEXEC_PURGATORY */
-+
-+int crash_exclude_mem_range(struct crash_mem *mem,
-+			    unsigned long long mstart, unsigned long long mend)
-+{
-+	int i, j;
-+	unsigned long long start, end;
-+	struct crash_mem_range temp_range = {0, 0};
-+
-+	for (i = 0; i < mem->nr_ranges; i++) {
-+		start = mem->ranges[i].start;
-+		end = mem->ranges[i].end;
-+
-+		if (mstart > end || mend < start)
-+			continue;
-+
-+		/* Truncate any area outside of range */
-+		if (mstart < start)
-+			mstart = start;
-+		if (mend > end)
-+			mend = end;
-+
-+		/* Found completely overlapping range */
-+		if (mstart == start && mend == end) {
-+			mem->ranges[i].start = 0;
-+			mem->ranges[i].end = 0;
-+			if (i < mem->nr_ranges - 1) {
-+				/* Shift rest of the ranges to left */
-+				for (j = i; j < mem->nr_ranges - 1; j++) {
-+					mem->ranges[j].start =
-+						mem->ranges[j+1].start;
-+					mem->ranges[j].end =
-+							mem->ranges[j+1].end;
-+				}
-+			}
-+			mem->nr_ranges--;
-+			return 0;
-+		}
-+
-+		if (mstart > start && mend < end) {
-+			/* Split original range */
-+			mem->ranges[i].end = mstart - 1;
-+			temp_range.start = mend + 1;
-+			temp_range.end = end;
-+		} else if (mstart != start)
-+			mem->ranges[i].end = mstart - 1;
-+		else
-+			mem->ranges[i].start = mend + 1;
-+		break;
-+	}
-+
-+	/* If a split happened, add the split to array */
-+	if (!temp_range.end)
-+		return 0;
-+
-+	/* Split happened */
-+	if (i == mem->max_nr_ranges - 1)
-+		return -ENOMEM;
-+
-+	/* Location where new range should go */
-+	j = i + 1;
-+	if (j < mem->nr_ranges) {
-+		/* Move over all ranges one slot towards the end */
-+		for (i = mem->nr_ranges - 1; i >= j; i--)
-+			mem->ranges[i + 1] = mem->ranges[i];
-+	}
-+
-+	mem->ranges[j].start = temp_range.start;
-+	mem->ranges[j].end = temp_range.end;
-+	mem->nr_ranges++;
-+	return 0;
-+}
-+
-+int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
-+			  void **addr, unsigned long *sz)
-+{
-+	Elf64_Ehdr *ehdr;
-+	Elf64_Phdr *phdr;
-+	unsigned long nr_cpus = num_possible_cpus(), nr_phdr, elf_sz;
-+	unsigned char *buf;
-+	unsigned int cpu, i;
-+	unsigned long long notes_addr;
-+	unsigned long mstart, mend;
-+
-+	/* extra phdr for vmcoreinfo elf note */
-+	nr_phdr = nr_cpus + 1;
-+	nr_phdr += mem->nr_ranges;
-+
-+	/*
-+	 * kexec-tools creates an extra PT_LOAD phdr for kernel text mapping
-+	 * area (for example, ffffffff80000000 - ffffffffa0000000 on x86_64).
-+	 * I think this is required by tools like gdb. So same physical
-+	 * memory will be mapped in two elf headers. One will contain kernel
-+	 * text virtual addresses and other will have __va(physical) addresses.
-+	 */
-+
-+	nr_phdr++;
-+	elf_sz = sizeof(Elf64_Ehdr) + nr_phdr * sizeof(Elf64_Phdr);
-+	elf_sz = ALIGN(elf_sz, ELF_CORE_HEADER_ALIGN);
-+
-+	buf = vzalloc(elf_sz);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	ehdr = (Elf64_Ehdr *)buf;
-+	phdr = (Elf64_Phdr *)(ehdr + 1);
-+	memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
-+	ehdr->e_ident[EI_CLASS] = ELFCLASS64;
-+	ehdr->e_ident[EI_DATA] = ELFDATA2LSB;
-+	ehdr->e_ident[EI_VERSION] = EV_CURRENT;
-+	ehdr->e_ident[EI_OSABI] = ELF_OSABI;
-+	memset(ehdr->e_ident + EI_PAD, 0, EI_NIDENT - EI_PAD);
-+	ehdr->e_type = ET_CORE;
-+	ehdr->e_machine = ELF_ARCH;
-+	ehdr->e_version = EV_CURRENT;
-+	ehdr->e_phoff = sizeof(Elf64_Ehdr);
-+	ehdr->e_ehsize = sizeof(Elf64_Ehdr);
-+	ehdr->e_phentsize = sizeof(Elf64_Phdr);
-+
-+	/* Prepare one phdr of type PT_NOTE for each present cpu */
-+	for_each_present_cpu(cpu) {
-+		phdr->p_type = PT_NOTE;
-+		notes_addr = per_cpu_ptr_to_phys(per_cpu_ptr(crash_notes, cpu));
-+		phdr->p_offset = phdr->p_paddr = notes_addr;
-+		phdr->p_filesz = phdr->p_memsz = sizeof(note_buf_t);
-+		(ehdr->e_phnum)++;
-+		phdr++;
-+	}
-+
-+	/* Prepare one PT_NOTE header for vmcoreinfo */
-+	phdr->p_type = PT_NOTE;
-+	phdr->p_offset = phdr->p_paddr = paddr_vmcoreinfo_note();
-+	phdr->p_filesz = phdr->p_memsz = VMCOREINFO_NOTE_SIZE;
-+	(ehdr->e_phnum)++;
-+	phdr++;
-+
-+	/* Prepare PT_LOAD type program header for kernel text region */
-+	if (kernel_map) {
-+		phdr->p_type = PT_LOAD;
-+		phdr->p_flags = PF_R|PF_W|PF_X;
-+		phdr->p_vaddr = (Elf64_Addr)_text;
-+		phdr->p_filesz = phdr->p_memsz = _end - _text;
-+		phdr->p_offset = phdr->p_paddr = __pa_symbol(_text);
-+		ehdr->e_phnum++;
-+		phdr++;
-+	}
-+
-+	/* Go through all the ranges in mem->ranges[] and prepare phdr */
-+	for (i = 0; i < mem->nr_ranges; i++) {
-+		mstart = mem->ranges[i].start;
-+		mend = mem->ranges[i].end;
-+
-+		phdr->p_type = PT_LOAD;
-+		phdr->p_flags = PF_R|PF_W|PF_X;
-+		phdr->p_offset  = mstart;
-+
-+		phdr->p_paddr = mstart;
-+		phdr->p_vaddr = (unsigned long long) __va(mstart);
-+		phdr->p_filesz = phdr->p_memsz = mend - mstart + 1;
-+		phdr->p_align = 0;
-+		ehdr->e_phnum++;
-+		phdr++;
-+		pr_debug("Crash PT_LOAD elf header. phdr=%p vaddr=0x%llx, paddr=0x%llx, sz=0x%llx e_phnum=%d p_offset=0x%llx\n",
-+			phdr, phdr->p_vaddr, phdr->p_paddr, phdr->p_filesz,
-+			ehdr->e_phnum, phdr->p_offset);
-+	}
-+
-+	*addr = buf;
-+	*sz = elf_sz;
-+	return 0;
-+}
--- 
-2.16.2
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCAyNyBGZWIgMjAxOCAwOToxNToxMCArMDgwMApEYXZlIFlvdW5nIDxkeW91bmdAcmVk
+aGF0LmNvbT4gd3JvdGU6Cgo+IE9uIDAyLzI2LzE4IGF0IDAxOjA4cG0sIE1pY2hhbCBTdWNow6Fu
+ZWsgd3JvdGU6Cj4gPiBPbiBNb24sIDI2IEZlYiAyMDE4IDA5OjQ1OjE1ICswODAwCj4gPiBEYXZl
+IFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiAgIAo+ID4gPiBPbiAwMi8yNC8x
+OCBhdCAwNTozNHBtLCBQZXRyIFRlc2FyaWsgd3JvdGU6ICAKPiA+ID4gPiBPbiBTYXQsIDI0IEZl
+YiAyMDE4IDA5OjQzOjQyICswODAwCj4gPiA+ID4gRGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhhdC5j
+b20+IHdyb3RlOgo+ID4gPiA+ICAgICAKPiA+ID4gPiA+IE9uIDAyLzIzLzE4IGF0IDA5OjI5YW0s
+IFBldHIgVGVzYXJpayB3cm90ZTogICAgCj4gPiA+ID4gPiA+IEhpIEJhb3F1YW4sCj4gPiA+ID4g
+PiA+IAo+ID4gPiA+ID4gPiBPbiBGcmksIDIzIEZlYiAyMDE4IDA3OjIwOjQzICswODAwCj4gPiA+
+ID4gPiA+IEJhb3F1YW4gSGUgPGJoZUByZWRoYXQuY29tPiB3cm90ZToKPiA+ID4gPiA+ID4gICAg
+ICAgCj4gPiA+ID4gPiA+ID4gSGkgTWljaGFsLAo+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+
+IE9uIDAyLzIyLzE4IGF0IDExOjI0cG0sIE1pY2hhbCBTdWNoYW5layB3cm90ZTogICAgICAKPiA+
+ID4gPiA+ID4gPiA+IFRoZSBuZXcgS0VYRUNfRklMRV9MT0FEIGlzIHByZWZlcnJlZCBpbiB0aGUg
+Y2FzZSB0aGUKPiA+ID4gPiA+ID4gPiA+IHBsYXRmb3JtIHN1cHBvcnRzIGl0IGJlY2F1c2UgaXQg
+YWxsb3dzIGtleGVjIGluIGxvY2tlZCBkb3duCj4gPiA+ID4gPiA+ID4gPiBzZWN1cmUgYm9vdCBt
+b2RlLgo+ID4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gPiBIb3dldmVyLCBzb21lIHBsYXRm
+b3JtcyBkbyBub3Qgc3VwcG9ydCBpdCBzbyBmYWxsIGJhY2sgdG8KPiA+ID4gPiA+ID4gPiA+IHRo
+ZSBvbGQgc3lzY2FsbCB0aGVyZS4gICAgICAgIAo+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+
+IEkgZGlkbid0IHJlYWQgY29kZSBjaGFuZ2UsIGp1c3QgZnJvbSBwYXRjaCBsb2csIEkgdGVuZCB0
+byBub3QKPiA+ID4gPiA+ID4gPiBhZ3JlZS4gVGhlcmUgYXJlIHR3byBvcHRpb25zIEtFWEVDX0ZJ
+TEVfTE9BRCBhbmQgS0VYRUNfTE9BRCwKPiA+ID4gPiA+ID4gPiBzb21lIHBsYXRmb3JtcyBkbyBu
+b3Qgc3VwcG9ydCwgd2h5IGRvZXMgc29tZSBwbGF0Zm9ybXMgbm90Cj4gPiA+ID4gPiA+ID4gY2hv
+b3NlIEtFWEVDX0xPQUQsIHRoZSB3b3JraW5nIG9uZT8gV2h5IGJvdGhlciB0byBtYWtlIGNoYW5n
+ZQo+ID4gPiA+ID4gPiA+IGluIGNvZGU/IEkgYmVsaWV2ZSB0aGVyZSdzIHJldHVybmVkIG1lc3Nh
+Z2UgdGVsbGluZyBpZgo+ID4gPiA+ID4gPiA+IEtFWEVDX0ZJTEVfTE9BRCB3b3JrcyBvciBub3Qu
+ICAgICAgCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBXZWxsLi4uIGxldCBtZSBnaXZlIGEgYml0
+IG9mIGJhY2tncm91bmQuIEFzIHlvdSBoYXZlIHByb2JhYmx5Cj4gPiA+ID4gPiA+IG5vdGljZWQs
+IHRoaXMgc3lzY2FsbCB3YXMgb3JpZ2luYWxseSBhdmFpbGFibGUgb25seSBmb3IgeDg2XzY0LAo+
+ID4gPiA+ID4gPiBidXQgbW9yZSBhbmQgbW9yZSBhcmNoaXRlY3R1cmVzIGFyZSBhbHNvIGFkZGlu
+ZyBpdCBub3cuCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBOZXh0LCBrZXhlYyBpcyBhY3R1YWxs
+eSBjYWxsZWQgYnkgYSBzY3JpcHQgKHdoaWNoIGxvY2F0ZXMgYQo+ID4gPiA+ID4gPiBzdWl0YWJs
+ZSBrZXJuZWwgYW5kIGluaXRyZCwgY29uc3RydWN0cyB0aGUga2VybmVsIGNvbW1hbmQgbGluZSwK
+PiA+ID4gPiA+ID4gZXRjLikuIFRoZSBzY3JpcHQgbXVzdCBlaXRoZXI6Cj4gPiA+ID4gPiA+IAo+
+ID4gPiA+ID4gPiAgIEEuIGtub3cgc29tZWhvdyBpZiB0aGUgY3VycmVudGx5IHJ1bm5pbmcga2Vy
+bmVsIGltcGxlbWVudHMKPiA+ID4gPiA+ID4gICAgICBrZXhlY19maWxlX2xvYWQoMiksIG9yCj4g
+PiA+ID4gPiA+IAo+ID4gPiA+ID4gPiAgIEIuIHRyeSBvbmUgbWV0aG9kIGZpcnN0LCBhbmQgaWYg
+aXQgZmFpbHMsIHJldHJ5IHdpdGggdGhlCj4gPiA+ID4gPiA+IG90aGVyLgo+ID4gPiA+ID4gPiAK
+PiA+ID4gPiA+ID4gSSBhZ3JlZSB0aGF0IGtleGVjKDEpIHNob3VsZCBwcm9iYWJseSBhbGxvdyB0
+aGUgdXNlciB0byBmb3JjZSBhCj4gPiA+ID4gPiA+IHNwZWNpZmljIG1ldGhvZCwgYnV0IEkgZG9u
+J3Qgc2VlIHRoZSBiZW5lZml0IG9mIGltcGxlbWVudGluZwo+ID4gPiA+ID4gPiBmYWxsYmFjayBp
+biBhbiBleHRlcm5hbCBzY3JpcHQgYW5kIG5vdCBpbiBrZXhlYy10b29scyBpdHNlbGYuCj4gPiA+
+ID4gPiA+IAo+ID4gPiA+ID4gPiBPVE9IIGlmIHlvdSB3YW50IHRvIHB1c2ggdGhlIGZhbGxiYWNr
+IGxvZ2ljIG91dCBvZiBrZXhlYy10b29scywKPiA+ID4gPiA+ID4gdGhlbiBJIHdvdWxkIGxpa2Ug
+dG8gZ2V0IGJldHRlciBkaWFnbm9zdGljIGF0IGxlYXN0LiBMZXR0aW5nIG15Cj4gPiA+ID4gPiA+
+IHNjcmlwdCBwYXJzZSBrZXhlYyBvdXRwdXQgaXMsIHVtLCBzdWJvcHRpbWFsLiAgICAgIAo+ID4g
+PiA+ID4gCj4gPiA+ID4gPiBJbiBGZWRvcmEvUkhFTCB3ZSB1c2UgdGhpcyBpbiBzY3JpcHRzIGJ5
+IGNoZWNraW5nIHRoZSBhcmNoIGZpcnN0LAo+ID4gPiA+ID4gZm9yIGRpc3RyaWJ1dGlvbiBpdCBp
+cyBlbm91Z2g/ICAgIAo+ID4gPiA+IAo+ID4gPiA+IE5vLgo+ID4gPiA+IAo+ID4gPiA+IEZpcnN0
+LCB5b3Ugd291bGQgYWxzbyBoYXZlIHRvIGNoZWNrIHRoZSBrZXJuZWwgdmVyc2lvbiAoYW5kCj4g
+PiA+ID4gbWFpbnRhaW4gYW4gdWdseSBtYXBwaW5nIG9mIHdoaWNoIGtlcm5lbCB2ZXJzaW9uIGlu
+dHJvZHVjZWQKPiA+ID4gPiBrZXhlY19maWxlX2xvYWQgb24gd2hpY2ggYXJjaGl0ZWN0dXJlKS4g
+ICAgCj4gPiA+IAo+ID4gPiBUaGUga2VybmVsIHZlcnNpb24gdXBkYXRlIGlzIHJhcmUgZm9yIHRo
+ZXNlIG5ldyBzeXNjYWxsIGFkZGVkLCBidXQKPiA+ID4gaXQgaXMgaW5kZWVkIG5lZWRlZCB0byBt
+YXRjaCB3aXRoIHRoZW0KPiA+ID4gICAKPiA+ID4gPiAKPiA+ID4gPiBTZWNvbmQsIGl0J3Mgbm90
+IGp1c3QgdGhlIGFyY2hpdGVjdHVyZS4ga2V4ZWNfbG9hZCgyKSB3aWxsIGZhaWwgaWYKPiA+ID4g
+PiBTZWN1cmVCb290IGlzIGFjdGl2ZS4gT1RPSCBrZXhlY19maWxlX2xvYWQoMikgd2lsbCBmYWls
+IGlmIHRoZQo+ID4gPiA+IGtlcm5lbCBpcyBub3Qgc2lnbmVkLiBGb3Iga2VybmVsIGhhY2tlcnMg
+d2hvIGRvbid0IHVzZSBTZWN1cmVCb290LAo+ID4gPiA+IHNpZ25pbmcgc2VsZi1idWlsdCBrZXJu
+ZWxzIGlzIGp1c3Qgb3ZlcmtpbGwuIFNvLCB5b3Ugc2hvdWxkIGFsc28KPiA+ID4gPiBjaGVjayB0
+aGUgc3RhdGUgb2YgU2VjdXJlQm9vdCwgcG9zc2libHkgYWxzbyB3aGV0aGVyIHRoZSBrZXJuZWwK
+PiA+ID4gPiBpbWFnZSBpcyBzaWduZWQgd2l0aCBhIHZhbGlkIGtleSwgcmVwZWF0aW5nIGEgYml0
+IHRvbyBtdWNoIG9mIHRoZQo+ID4gPiA+IGtlcm5lbCBsb2dpYywgYW5kIHF1aXRlIGxpa2VseSBp
+bnRyb2R1Y2luZyBzdWJ0bGUgZGlmZmVyZW5jZXMuLi4gICAgCj4gPiA+IAo+ID4gPiBIbW0sIEkg
+ZGlkIG5vdCBzYXkgdGhlIGV4YWN0IGRldGFpbHMsIHllcywgd2UgY2hlY2tlZCB0aGUgU2VjdXJl
+IEJvb3QKPiA+ID4gc3RhdGUgYW5kIG9ubHkgdXNlIGtleGVjX2ZpbGVfbG9hZCBmb3IgdGhhdCBz
+cGVjaWFsIGNhc2UuCj4gPiA+IAo+ID4gPiBrZXhlY19maWxlIGFuZCBrZXhlY19maWxlX2xvYWQg
+aXMgbm90IGV4YWN0bHkgc2FtZSBzbyBpZiBvbmUgd2FudCB0bwo+ID4gPiB1c2Ugb25lIGluc3Rl
+YWQgb2YgYW5vdGhlciBmb3IgYSBzcGVjaWZpYyBmdW5jdGlvbmFsaXR5IGl0IHNlZW1zIG5vdAo+
+ID4gPiBnb29kIHRvIGF1dG9tYXRpY2FsbHkgc3dpdGNoIHRvIGFub3RoZXIgaWYgb25lIGZhaWxl
+ZC4gRm9yIGV4YW1wbGUKPiA+ID4gd2hpY2ggb25lIHNob3VsZCBiZSB0aGUgZmlyc3QgY2hvaWNl
+LCBpdCBpcyBoYXJkIHRvIHNheS4gIAo+ID4gCj4gPiBIYXJkIHRvIHNheSBpbmRlZWQsIEhvd2V2
+ZXIsIEkgd291bGQgYXNzdW1lIHRoYXQgYXJjaGl0ZWN0dXJlcyB0aGF0Cj4gPiBpbXBsZW1lbnQg
+a2V4ZWNfZmlsZV9sb2FkIGRvIHNvIGJlY2F1c2UgaXQgaXMgcmVxdWlyZWQgaW4gc29tZSBjYXNl
+IGFuZAo+ID4gaGVuY2UgaXQgd2lsbCBiZSBhY3RpdmVseSBtYWludGFpbmVkIHdoZW4gYXZhaWxh
+YmxlLiBIb3dldmVyLCBzb21lCj4gPiBhcmNoaXRlY3R1cmVzIG1heSBub3QgcmVxdWlyZSBpdCBh
+bmQgd2lsbCBiZSBzbG93IHRvIGltcGxlbWVudCBpdC4gU28KPiA+IHVzaW5nIGtleGVjX2ZpbGVf
+bG9hZCB3aGVuIGF2YWlsYWJsZSBzb3VuZHMgbGlrZSB0aGUgcmlnaHQgdGhpbmcuCj4gPiBUZWNo
+bmljYWxseSB0aGUgaW1wbGVtZW50YXRpb24gZGV0YWlscyBhcmUgZGlmZmVyZW50IGJ1dCBmb3Ig
+bW9zdCB1c2Vycwo+ID4gdGhpcyBkb2VzIG5vdCBtYXR0ZXIuCj4gPiAKPiA+IEZvciB0aG9zZSB0
+aGF0IGRvIGNhcmUgSSBwcm92aWRlIG9wdGlvbiB0byBzZWxlY3Qgb25lIG9yIHRoZSBvdGhlci4g
+IAo+IAo+IEkgd291bGQgc2F5IGl0IGJyZWFrcyB0aGluZ3MsIGEgYmV0dGVyIHdheSBzaG91bGQg
+YmUgaW50cm9kdWNpbmcgYW5vdGhlcgo+IGtleGVjLXRvb2xzIG9wdGlvbiBmb3IgZXhhbXBsZSBr
+ZXhlYyAtLWF1dG8gZm9yIHRoaXMgcHVycG9zZS4gUHJvYmFibHkKPiBhZGQgc29tZSAtLWF1dG89
+Li4uIHRvIHNlbGVjdCB0aGUgZmlyc3QgY2hhbmNlLgoKWWVzISBUaGlzIGlzIHRoZSB3YXkgdG8g
+Z28uIEJ1dCB0aGVuIEkgd291bGRuJ3QgY2FsbCBpdCAtLWF1dG8uCkkgd291bGQgY2FsbCBpdCAi
+LS1tZXRob2Q9Iiwgc28geW91IGNvdWxkIHNwZWNpZnk6CgogIC0tbWV0aG9kPWtlcm5lbCAgKHRv
+IHVzZSB0aGUgaW4ta2VybmVsIGxvYWRlciBha2Ega2V4ZWNfZmlsZV9sb2FkKQogIC0tbWV0aG9k
+PXVzZXIgICAgKHRvIHVzZSB0aGUgdHJhZGl0aW9uYWwgdXNlci1zcGFjZSBsb2FkZXIpCiAgLS1t
+ZXRob2Q9a2VybmVsLHVzZXIgICh0byBwcmVmZXIga2V4ZWNfZmlsZV9sb2FkKQogIC0tbWV0aG9k
+PXVzZXIsa2VybmVsICAodG8gcHJlZmVyIGtleGNfbG9hZCkKCkknbSBub3QgcXVpdGUgc3VyZSBp
+ZiBpdCBhbHNvIG1ha2VzIHNlbnNlIHRvIHByb3ZpZGUgIi0tbWV0aG9kPWF1dG8iLAp3aGljaCB3
+b3VsZCB1c2Ugd2hhdGV2ZXIgZGVmYXVsdCBpcyBjb25zaWRlcmVkIHNhbmUgZm9yIHRoZSBydW5u
+aW5nCnN5c3RlbS4KClBldHIgVAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
