@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1erkoH-0000Zb-BG
+ id 1erkoH-0000Zf-BF
  for kexec@lists.infradead.org; Fri, 02 Mar 2018 13:33:18 +0000
 From: Michal Suchanek <msuchanek@suse.de>
-Subject: [PATCH v3 3/5] kexec: add option to revert -s
-Date: Fri,  2 Mar 2018 14:33:01 +0100
-Message-Id: <1b9aab1f9562e9de4eb77e6b70f75f9788577834.1519997533.git.msuchanek@suse.de>
+Subject: [PATCH v3 5/5] kexec: document -s, -c and -a options.
+Date: Fri,  2 Mar 2018 14:33:03 +0100
+Message-Id: <71910238d489c7a3444ca4caa9d19cee02357784.1519997533.git.msuchanek@suse.de>
 In-Reply-To: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519997533.git.msuchanek@suse.de>
 References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519997533.git.msuchanek@suse.de>
 In-Reply-To: <20180302124610.3tyvym3dayq3coiz@verge.net.au>
@@ -27,57 +27,37 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Tony Jones <tonyj@suse.com>, Dave Young <dyoung@redhat.com>, Michal Suchanek <msuchanek@suse.de>, Petr Tesarik <ptesarik@suse.cz>, horms@verge.net.au
 
-The undocumented -s option selects KEXEC_FILE_LOAD syscall but there is
-no option to select KEXEC_LOAD syscall so add it. It is generally good
-idea and in followup patch the default will be changed so it will be
-needed to get KEXEC_LOAD functionality.
-
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- kexec/kexec.c | 3 +++
- kexec/kexec.h | 4 +++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ kexec/kexec.8 | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 9ea102e1565a..a95cfb473d6b 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -1368,6 +1368,9 @@ int main(int argc, char *argv[])
- 		case OPT_KEXEC_FILE_SYSCALL:
- 			do_kexec_file_syscall = 1;
- 			break;
-+		case OPT_KEXEC_SYSCALL:
-+			do_kexec_file_syscall = 0;
-+			break;
- 		case OPT_STATUS:
- 			do_status = 1;
- 			break;
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 26225d2c002a..9fd0355eacd0 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -219,6 +219,7 @@ extern int file_types;
- #define OPT_TYPE		't'
- #define OPT_PANIC		'p'
- #define OPT_KEXEC_FILE_SYSCALL	's'
-+#define OPT_KEXEC_SYSCALL	'c'
- #define OPT_STATUS		'S'
- #define OPT_MEM_MIN             256
- #define OPT_MEM_MAX             257
-@@ -246,11 +247,12 @@ extern int file_types;
- 	{ "mem-max",		1, 0, OPT_MEM_MAX }, \
- 	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
- 	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
-+	{ "kexec-syscall",	0, 0, OPT_KEXEC_SYSCALL }, \
- 	{ "debug",		0, 0, OPT_DEBUG }, \
- 	{ "status",		0, 0, OPT_STATUS }, \
- 	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
- 
--#define KEXEC_OPT_STR "h?vdfxyluet:psS"
-+#define KEXEC_OPT_STR "h?vdfxyluet:pscS"
- 
- extern void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr);
- extern void die(const char *fmt, ...)
+diff --git a/kexec/kexec.8 b/kexec/kexec.8
+index e0131b4ea827..b3543db3f413 100644
+--- a/kexec/kexec.8
++++ b/kexec/kexec.8
+@@ -144,6 +144,21 @@ Load the new kernel for use on panic.
+ Specify that the new kernel is of this
+ .I type.
+ .TP
++.BI \-s\ (\-\-kexec-file-syscall)
++Specify that the new KEXEC_FILE_LOAD syscall should be used exclusively.
++.TP
++.BI \-c\ (\-\-kexec-syscall)
++Specify that the old KEXEC_LOAD syscall should be used exclusively (the default).
++.TP
++.BI \-a\ (\-\-kexec-syscall-auto)
++Try the new simpler KEXEC_FILE_LOAD syscall first and if it is not supported
++fall back to the old KEXEC_LOAD interface.
++
++There is no one single interface that always works. KEXEC_FILE_LOAD is required
++on systems that use locked-down secure boot to verify the kernel signature.
++KEXEC_LOAD is required for some kernel image formats and on architectures that
++do not support KEXEC_FILE_LOAD.
++.TP
+ .B \-u\ (\-\-unload)
+ Unload the current
+ .B kexec
 -- 
 2.13.6
 
