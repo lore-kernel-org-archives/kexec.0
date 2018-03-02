@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ergvc-0007Mi-PI
- for kexec@lists.infradead.org; Fri, 02 Mar 2018 09:24:38 +0000
-Date: Fri, 2 Mar 2018 17:24:19 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 4/5] kexec: fallback to KEXEC_LOAD when KEXEC_FILE_LOAD
- is not supported.
-Message-ID: <20180302092419.GB15374@dhcp-128-65.nay.redhat.com>
-References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519646210.git.msuchanek@suse.de>
- <ebc4bc6f1dc7d62ba5c81f40c7f7d83a8ae3eb5d.1519646210.git.msuchanek@suse.de>
+Date: Fri, 2 Mar 2018 10:30:32 +0000
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: RFC on Kdump and PCIe on ARM64
+Message-ID: <20180302103032.GB19323@arm.com>
+References: <c5c2d8d2-0384-442a-7bc6-8929457b8447@codeaurora.org>
+ <20180301190552.GK13722@bhelgaas-glaptop.roam.corp.google.com>
+ <2b2de17c-8527-e49b-2ef2-2a3d1801e4f9@codeaurora.org>
+ <20180302000303.GD74737@bhelgaas-glaptop.roam.corp.google.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ebc4bc6f1dc7d62ba5c81f40c7f7d83a8ae3eb5d.1519646210.git.msuchanek@suse.de>
+In-Reply-To: <20180302000303.GD74737@bhelgaas-glaptop.roam.corp.google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,115 +22,96 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michal Suchanek <msuchanek@suse.de>
-Cc: Tony Jones <tonyj@suse.com>, horms@verge.net.au, kexec@lists.infradead.org, Petr Tesarik <ptesarik@suse.cz>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Vikram Sethi <vikrams@codeaurora.org>, Linux PCI <linux-pci@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>, kexec@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, iommu@lists.linux-foundation.org, Nate Watterson <nwatters@codeaurora.org>, "Goel,
+ Sameer" <sgoel@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, "shankerd@codeaurora.org" <shankerd@codeaurora.org>
 
-On 02/26/18 at 01:00pm, Michal Suchanek wrote:
-> Not all architectures implement KEXEC_FILE_LOAD. However, on some
-> archiectures KEXEC_FILE_LOAD is required when secure boot is enabled in
-> locked-down mode. Previously users had to select the KEXEC_FILE_LOAD
-> syscall with undocumented -s option. However, if they did pass the
-> option kexec would fail on architectures that do not support it.
+On Thu, Mar 01, 2018 at 06:03:03PM -0600, Bjorn Helgaas wrote:
+> On Thu, Mar 01, 2018 at 02:19:09PM -0500, Sinan Kaya wrote:
+> > On 3/1/2018 2:05 PM, Bjorn Helgaas wrote:
+> > > On Thu, Mar 01, 2018 at 12:44:26PM -0500, Sinan Kaya wrote:
+> > >> Hi,
+> > >>
+> > >> We are seeing IOMMU faults when booting the kdump kernel on ARM64.
+> > >>
+> > >> [    7.220162] arm-smmu-v3 arm-smmu-v3.0.auto: event 0x02 received:
+> > >> [    7.226123] arm-smmu-v3 arm-smmu-v3.0.auto:            0x0000010000000002
+> > >> [    7.232023] arm-smmu-v3 arm-smmu-v3.0.auto:            0x0000000000000000
+> > >> [    7.237925] arm-smmu-v3 arm-smmu-v3.0.auto:            0x0000000000000000
+> > >> [    7.243827] arm-smmu-v3 arm-smmu-v3.0.auto:            0x0000000000000000
+> > >>
+> > >> This is Nate's interpretation of the fault:
+> > >>
+> > >> "The PCI device is sending transactions just after the SMMU was
+> > >> reset/reinitialized which is problematic because the device has not
+> > >> yet been added to the SMMU and thus should not be doing *any* DMA.
+> > >> DMA from the PCI devices should be quiesced prior to starting the
+> > >> crashdump kernel or you risk overwriting portions of memory you
+> > >> meant to preserve. In this case the SMMU was actually doing you a
+> > >> favor by blocking these errant DMA operations!!"
+> > >>
+> > >> I think this makes sense especially for the IOMMU enabled case on
+> > >> the host where an IOVA can overlap with the region of memory kdump
+> > >> reserved for itself.
+> > >>
+> > >> Apparently, there has been similar concerns in the past.
+> > >>
+> > >> https://www.fujitsu.com/jp/documents/products/software/os/linux/catalog/LinuxConJapan2013-Indoh.pdf
+> > >>
+> > >> and was not addressed globally due to IOMMU+PCI driver ordering
+> > >> issues and bugs in HW due to hot reset.
+> > >>
+> > >> https://lkml.org/lkml/2012/8/3/160
+> > >>
+> > >> Hot reset as mentioned is destructive and may not be the best
+> > >> implementation choice.  However, most of the modern endpoints
+> > >> support PCIE function level reset.
+> > >>
+> > >> One other solution is for SMMUv3 driver to reserve the kdump used
+> > >> IOVA addresses.
+> > >>
+> > >> Another solution is for the SMMUv3 driver to disable PCIe devices
+> > >> behind the SMMU if it see SMMU is already enabled.
+> > > 
+> > > What problem are you trying to solve?  If the IOMMU is blocking DMA
+> > > after the kdump kernel starts up, that sounds like the desired
+> > > behavior.
+> > > 
+> > 
+> > Three issues:
+> > 1. I'm seeing a flood of SMMUv3 faults due to adapter using
+> > addresses from the previous kernel. This might be OK. 
 > 
-> When no option is passed to select one syscall or the other try
-> KEXEC_FILE_LOAD and fall back to KEXEC_LOAD when not suported.
+> Yep.  That's cosmetic and we could suppress the messages if they were
+> a problem.
+> 
+> Isn't part of the point of an IOMMU protection against malicious
+> devices and drivers?  If so, we should be able to withstand an
+> arbitrary number of faults.
+> 
+> > 2. When the SMMUv3 driver sees that it is enabled, it resets itself
+> > and configures it one more time. 
+> > 
+> > [    7.018304] arm-smmu-v3 arm-smmu-v3.0.auto: ias 44-bit, oas 44-bit (features 0x00001fef)
+> > [    7.026379] arm-smmu-v3 arm-smmu-v3.0.auto: SMMU currently enabled! Resetting...
+> > 
+> > From the moment IOMMU is disabled to the point where IOMMU get
+> > enabled again, there is a potential for the PCIE device to corrupt
+> > the kdump kernel memory as the bus master and memory enable bits are
+> > left enabled.
+> 
+> Do you really have to reset the IOMMU?  Can you just give it new page
+> tables that start out with all IOVAs from all devices being invalid,
+> then add valid mappings as drivers need them (presumably after the
+> driver has done whatever it needs to so the device stops using the old
+> DMA addresses)?
 
-Again, IMHO the default behavior should not be changed..
+We already have the option to do that via the command line using the
+disable_bypass option, so it just sounds like we need to take this into
+account when resetting the SMMU to take care that GBPA is configured so
+that transactions are terminated when SMMUEN=0.
 
-> 
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
->  kexec/kexec.c | 43 +++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 39 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kexec/kexec.c b/kexec/kexec.c
-> index a95cfb473d6b..14f56e466a95 100644
-> --- a/kexec/kexec.c
-> +++ b/kexec/kexec.c
-> @@ -1243,6 +1243,7 @@ int main(int argc, char *argv[])
->  	int do_unload = 0;
->  	int do_reuse_initrd = 0;
->  	int do_kexec_file_syscall = 0;
-> +	int do_kexec_fallback = 1;
->  	int do_status = 0;
->  	void *entry = 0;
->  	char *type = 0;
-> @@ -1367,9 +1368,11 @@ int main(int argc, char *argv[])
->  			break;
->  		case OPT_KEXEC_FILE_SYSCALL:
->  			do_kexec_file_syscall = 1;
-> +			do_kexec_fallback = 0;
->  			break;
->  		case OPT_KEXEC_SYSCALL:
->  			do_kexec_file_syscall = 0;
-> +			do_kexec_fallback = 0;
->  			break;
->  		case OPT_STATUS:
->  			do_status = 1;
-> @@ -1442,16 +1445,48 @@ int main(int argc, char *argv[])
->  		result = k_status(kexec_flags);
->  	}
->  	if (do_unload) {
-> -		if (do_kexec_file_syscall)
-> +		if (do_kexec_file_syscall) {
->  			result = kexec_file_unload(kexec_file_flags);
-> -		else
-> +			if ((result == -ENOSYS) && do_kexec_fallback)
-> +				do_kexec_file_syscall = 0;
-> +		}
-> +		if (!do_kexec_file_syscall)
->  			result = k_unload(kexec_flags);
->  	}
->  	if (do_load && (result == 0)) {
-> -		if (do_kexec_file_syscall)
-> +		if (do_kexec_file_syscall) {
->  			result = do_kexec_file_load(fileind, argc, argv,
->  						 kexec_file_flags);
-> -		else
-> +			if (do_kexec_fallback) switch (result) {
-> +				/*
-> +				 * Something failed with signature verification.
-> +				 * Reject the image.
-> +				 */
-> +				case -ELIBBAD:
-> +				case -EKEYREJECTED:
-> +				case -ENOPKG:
-> +				case -ENOKEY:
-> +				case -EBADMSG:
-> +				case -EMSGSIZE:
-> +				case -ENOTSUPP:
-> +					/*
-> +					 * By default reject or do nothing if
-> +					 * succeded
-> +					 */
-> +				default: break;
-> +					/*
-> +					 * Parsing image or other options failed
-> +					 * The image may be invalid or image
-> +					 * type may not supported by kernel so
-> +					 * retry parsing in kexec-tools.
-> +					 */
-> +				case -EINVAL:
-> +				case -ENOEXEC:
-> +					do_kexec_file_syscall = 0;
-> +					break;
-> +			}
-> +		}
-> +		if (!do_kexec_file_syscall)
->  			result = my_load(type, fileind, argc, argv,
->  						kexec_flags, entry);
->  	}
-> -- 
-> 2.13.6
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-Thanks
-Dave
+Will
 
 _______________________________________________
 kexec mailing list
