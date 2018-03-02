@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1erjs4-0002m4-18
- for kexec@lists.infradead.org; Fri, 02 Mar 2018 12:33:10 +0000
-Date: Fri, 2 Mar 2018 13:32:52 +0100
-From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-Subject: Re: [PATCH 4/5] kexec: fallback to KEXEC_LOAD when KEXEC_FILE_LOAD
- is not supported.
-Message-ID: <20180302133252.69a36ffd@kitsune.suse.cz>
-In-Reply-To: <20180302092419.GB15374@dhcp-128-65.nay.redhat.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.89 #1 (Red Hat Linux))
+ id 1erju6-00049g-RX
+ for kexec@lists.infradead.org; Fri, 02 Mar 2018 12:35:19 +0000
+Date: Fri, 2 Mar 2018 13:34:45 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/5] kexec: Return -ENOSYS when kexec does not know how
+ to call KEXEC_FILE_LOAD
+Message-ID: <20180302123445.3vemxrooug26ixdu@verge.net.au>
 References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519646210.git.msuchanek@suse.de>
- <ebc4bc6f1dc7d62ba5c81f40c7f7d83a8ae3eb5d.1519646210.git.msuchanek@suse.de>
- <20180302092419.GB15374@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519646210.git.msuchanek@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,135 +24,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Tony Jones <tonyj@suse.com>, horms@verge.net.au, kexec@lists.infradead.org, Petr Tesarik <ptesarik@suse.cz>
+To: Michal Suchanek <msuchanek@suse.de>
+Cc: Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>
 
-On Fri, 2 Mar 2018 17:24:19 +0800
-Dave Young <dyoung@redhat.com> wrote:
-
-> On 02/26/18 at 01:00pm, Michal Suchanek wrote:
-> > Not all architectures implement KEXEC_FILE_LOAD. However, on some
-> > archiectures KEXEC_FILE_LOAD is required when secure boot is
-> > enabled in locked-down mode. Previously users had to select the
-> > KEXEC_FILE_LOAD syscall with undocumented -s option. However, if
-> > they did pass the option kexec would fail on architectures that do
-> > not support it.
-> > 
-> > When no option is passed to select one syscall or the other try
-> > KEXEC_FILE_LOAD and fall back to KEXEC_LOAD when not suported.  
+On Mon, Feb 26, 2018 at 01:00:34PM +0100, Michal Suchanek wrote:
+> When the kernel does not know a syscall number it returns -ENOSYS but
+> when kexec does not know a syscall number it returns -1. Return -ENOSYS
+> from kexec as well.
 > 
-> Again, IMHO the default behavior should not be changed..
-
-So adding a new option to enable the fallback would be ok?
-
-Thanks
-
-Michal
-
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+>  kexec/kexec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> > 
-> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> > ---
-> >  kexec/kexec.c | 43 +++++++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 39 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/kexec/kexec.c b/kexec/kexec.c
-> > index a95cfb473d6b..14f56e466a95 100644
-> > --- a/kexec/kexec.c
-> > +++ b/kexec/kexec.c
-> > @@ -1243,6 +1243,7 @@ int main(int argc, char *argv[])
-> >  	int do_unload = 0;
-> >  	int do_reuse_initrd = 0;
-> >  	int do_kexec_file_syscall = 0;
-> > +	int do_kexec_fallback = 1;
-> >  	int do_status = 0;
-> >  	void *entry = 0;
-> >  	char *type = 0;
-> > @@ -1367,9 +1368,11 @@ int main(int argc, char *argv[])
-> >  			break;
-> >  		case OPT_KEXEC_FILE_SYSCALL:
-> >  			do_kexec_file_syscall = 1;
-> > +			do_kexec_fallback = 0;
-> >  			break;
-> >  		case OPT_KEXEC_SYSCALL:
-> >  			do_kexec_file_syscall = 0;
-> > +			do_kexec_fallback = 0;
-> >  			break;
-> >  		case OPT_STATUS:
-> >  			do_status = 1;
-> > @@ -1442,16 +1445,48 @@ int main(int argc, char *argv[])
-> >  		result = k_status(kexec_flags);
-> >  	}
-> >  	if (do_unload) {
-> > -		if (do_kexec_file_syscall)
-> > +		if (do_kexec_file_syscall) {
-> >  			result =
-> > kexec_file_unload(kexec_file_flags);
-> > -		else
-> > +			if ((result == -ENOSYS) &&
-> > do_kexec_fallback)
-> > +				do_kexec_file_syscall = 0;
-> > +		}
-> > +		if (!do_kexec_file_syscall)
-> >  			result = k_unload(kexec_flags);
-> >  	}
-> >  	if (do_load && (result == 0)) {
-> > -		if (do_kexec_file_syscall)
-> > +		if (do_kexec_file_syscall) {
-> >  			result = do_kexec_file_load(fileind, argc,
-> > argv, kexec_file_flags);
-> > -		else
-> > +			if (do_kexec_fallback) switch (result) {
-> > +				/*
-> > +				 * Something failed with signature
-> > verification.
-> > +				 * Reject the image.
-> > +				 */
-> > +				case -ELIBBAD:
-> > +				case -EKEYREJECTED:
-> > +				case -ENOPKG:
-> > +				case -ENOKEY:
-> > +				case -EBADMSG:
-> > +				case -EMSGSIZE:
-> > +				case -ENOTSUPP:
-> > +					/*
-> > +					 * By default reject or do
-> > nothing if
-> > +					 * succeded
-> > +					 */
-> > +				default: break;
-> > +					/*
-> > +					 * Parsing image or other
-> > options failed
-> > +					 * The image may be
-> > invalid or image
-> > +					 * type may not supported
-> > by kernel so
-> > +					 * retry parsing in
-> > kexec-tools.
-> > +					 */
-> > +				case -EINVAL:
-> > +				case -ENOEXEC:
-> > +					do_kexec_file_syscall = 0;
-> > +					break;
-> > +			}
-> > +		}
-> > +		if (!do_kexec_file_syscall)
-> >  			result = my_load(type, fileind, argc, argv,
-> >  						kexec_flags,
-> > entry); }
-> > -- 
-> > 2.13.6
-> > 
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec  
-> 
-> Thanks
-> Dave
+> diff --git a/kexec/kexec.c b/kexec/kexec.c
+> index cfd837c1b6bb..ab8cff7fe083 100644
+> --- a/kexec/kexec.c
+> +++ b/kexec/kexec.c
+> @@ -1166,7 +1166,7 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
+>  
+>  	if (!is_kexec_file_load_implemented()) {
+>  		fprintf(stderr, "syscall kexec_file_load not available.\n");
+> -		return -1;
+> +		return -ENOSYS;
 
+It seems to me that the current with do_kexec_file_load() returning
+0 for success and -1 for error. I think any change to that scheme would
+need to be more comprehensive than this.
+
+>  	}
+>  
+>  	if (argc - fileind <= 0) {
+> -- 
+> 2.13.6
+> 
 
 _______________________________________________
 kexec mailing list
