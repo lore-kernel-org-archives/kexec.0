@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mail-pf0-x242.google.com ([2607:f8b0:400e:c00::242])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1erdLP-00072e-D5
- for kexec@lists.infradead.org; Fri, 02 Mar 2018 05:35:02 +0000
-From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile/arm64: Add '--mem-usage' support
-Date: Fri, 2 Mar 2018 05:31:59 +0000
-Message-ID: <61D4E5D821F1674CB87C99F080A210BE0117FD24@BPXM01GP.gisp.nec.co.jp>
-References: <1518168978-11268-1-git-send-email-bhsharma@redhat.com>
- <CACi5LpM5snjZA9zmOibeVbB9ZN650epDDy26LOvDtBL+yVpr6A@mail.gmail.com>
- <61D4E5D821F1674CB87C99F080A210BE0117D388@BPXM01GP.gisp.nec.co.jp>
- <CAFTCetQHpGbnJOTSAah6G8hyzoA29xq_grGyn4BFFJyP8AJqDg@mail.gmail.com>
-In-Reply-To: <CAFTCetQHpGbnJOTSAah6G8hyzoA29xq_grGyn4BFFJyP8AJqDg@mail.gmail.com>
-Content-Language: ja-JP
+ id 1erdMt-0008R7-OQ
+ for kexec@lists.infradead.org; Fri, 02 Mar 2018 05:36:34 +0000
+Received: by mail-pf0-x242.google.com with SMTP id j2so1377597pff.10
+ for <kexec@lists.infradead.org>; Thu, 01 Mar 2018 21:36:21 -0800 (PST)
+Date: Fri, 2 Mar 2018 14:36:33 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH 5/7] x86: kexec_file: lift CRASH_MAX_RANGES limit on
+ crash_mem buffer
+Message-ID: <20180302053632.GP6019@linaro.org>
+References: <20180227044814.24808-1-takahiro.akashi@linaro.org>
+ <20180227044814.24808-6-takahiro.akashi@linaro.org>
+ <20180302053153.GC2952@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180302053153.GC2952@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,306 +28,229 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Masahiko Hayashi <mas-hayashi@tg.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: linux-s390@vger.kernel.org, prudo@linux.vnet.ibm.com, bhe@redhat.com, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bauerman@linux.vnet.ibm.com, vgoyal@redhat.com
 
-Hi Bhupesh,
+On Fri, Mar 02, 2018 at 01:31:53PM +0800, Dave Young wrote:
+> On 02/27/18 at 01:48pm, AKASHI Takahiro wrote:
+> > While CRASH_MAX_RANGES (== 16) seems to be good enough, fixed-number
+> > array is not a good idea in general.
+> > 
+> > In this patch, size of crash_mem buffer is calculated as before and
+> > the buffer is now dynamically allocated. This change also allows removing
+> > crash_elf_data structure.
+> > 
+> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > Cc: Dave Young <dyoung@redhat.com>
+> > Cc: Vivek Goyal <vgoyal@redhat.com>
+> > Cc: Baoquan He <bhe@redhat.com>
+> > ---
+> >  arch/x86/kernel/crash.c | 80 ++++++++++++++++++-------------------------------
+> >  1 file changed, 29 insertions(+), 51 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> > index 913fd8021f8a..bfc37ad20d4a 100644
+> > --- a/arch/x86/kernel/crash.c
+> > +++ b/arch/x86/kernel/crash.c
+> > @@ -41,32 +41,14 @@
+> >  /* Alignment required for elf header segment */
+> >  #define ELF_CORE_HEADER_ALIGN   4096
+> >  
+> > -/* This primarily represents number of split ranges due to exclusion */
+> > -#define CRASH_MAX_RANGES	16
+> > -
+> >  struct crash_mem_range {
+> >  	u64 start, end;
+> >  };
+> >  
+> >  struct crash_mem {
+> > -	unsigned int nr_ranges;
+> > -	struct crash_mem_range ranges[CRASH_MAX_RANGES];
+> > -};
+> > -
+> > -/* Misc data about ram ranges needed to prepare elf headers */
+> > -struct crash_elf_data {
+> > -	struct kimage *image;
+> > -	/*
+> > -	 * Total number of ram ranges we have after various adjustments for
+> > -	 * crash reserved region, etc.
+> > -	 */
+> >  	unsigned int max_nr_ranges;
+> > -
+> > -	/* Pointer to elf header */
+> > -	void *ehdr;
+> > -	/* Pointer to next phdr */
+> > -	void *bufp;
+> > -	struct crash_mem mem;
+> > +	unsigned int nr_ranges;
+> > +	struct crash_mem_range ranges[0];
+> >  };
+> >  
+> >  /* Used while preparing memory map entries for second kernel */
+> > @@ -217,26 +199,29 @@ static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
+> >  	return 0;
+> >  }
+> >  
+> > -
+> >  /* Gather all the required information to prepare elf headers for ram regions */
+> > -static void fill_up_crash_elf_data(struct crash_elf_data *ced,
+> > -				   struct kimage *image)
+> > +static struct crash_mem *fill_up_crash_elf_data(void)
+> >  {
+> >  	unsigned int nr_ranges = 0;
+> > -
+> > -	ced->image = image;
+> > +	struct crash_mem *cmem;
+> >  
+> >  	walk_system_ram_res(0, -1, &nr_ranges,
+> >  				get_nr_ram_ranges_callback);
+> 
+> I know it is probably not possible fail here, but for safe we can check
+> if nr_ranges == 0
 
-Sorry for the late reply.
-And thank you for your patch.
-I have some questions. Please answer me.
-- Have you succeeded --mem-usage on ppc64, s390x ?
-- By your patch, makedumpfile behaves like this;
-  1.Gets an address of _stext from a vmlinux file.
-  2.Checks how many upper bits are 1 in the address.
-  3.Determines va_bits and info->page_offset by the check.
-  Isn't there any other method to get page_offset without a vmlinux ?
+OK.
 
-Thanks
-Tachibana
+> >  
+> > -	ced->max_nr_ranges = nr_ranges;
+> > +	/*
+> > +	 * Exclusion of crash region and/or crashk_low_res may cause
+> > +	 * another range split. So add extra two slots here.
+> > +	 */
+> > +	nr_ranges += 2;
+> > +	cmem = vmalloc(sizeof(struct crash_mem) +
+> > +			sizeof(struct crash_mem_range) * nr_ranges);
+> > +	if (!cmem)
+> > +		return NULL;
+> 
+> vzalloc will be better. 
 
-> -----Original Message-----
-> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Bhupesh SHARMA
-> Sent: Thursday, February 22, 2018 3:58 AM
-> To: Tachibana Masaki() <mas-tachibana@vf.jp.nec.com>
-> Cc: kexec@lists.infradead.org; Bhupesh Sharma <bhsharma@redhat.com>; Hayashi Masahiko()
-> <mas-hayashi@tg.jp.nec.com>
-> Subject: Re: [PATCH] makedumpfile/arm64: Add '--mem-usage' support
-> 
-> Hi Masaki Tachibana,
-> 
-> On Tue, Feb 20, 2018 at 4:42 PM, Masaki Tachibana
-> <mas-tachibana@vf.jp.nec.com> wrote:
-> > Hi Bhupesh,
-> >
-> > Sorry for the late reply.
-> > I'll reply by the end the next week.
-> 
-> Sure. Thanks for your mail.
-> 
-> Regards,
-> Bhupesh
-> 
-> 
-> > Thanks
-> > tachibana
-> >
-> >> -----Original Message-----
-> >> From: Bhupesh Sharma [mailto:bhsharma@redhat.com]
-> >> Sent: Tuesday, February 20, 2018 1:56 PM
-> >> To: kexec@lists.infradead.org
-> >> Cc: Bhupesh Sharma <bhsharma@redhat.com>; Tachibana Masaki() <mas-tachibana@vf.jp.nec.com>; Nakayama Takuya(
-> >> ) <tak-nakayama@tg.jp.nec.com>; Nishimura Daisuke() <dai-nishimura@rc.jp.nec.com>
-> >> Subject: Re: [PATCH] makedumpfile/arm64: Add '--mem-usage' support
-> >>
-> >> Hello,
-> >>
-> >> On Fri, Feb 9, 2018 at 3:06 PM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> >> > Its good to have the makedumpfile '--mem-usage' support
-> >> > for arm64 architecture as well, as it allows one to see the page numbers
-> >> > of current system (1st kernel) in different use.
-> >> >
-> >> > Using this we can know how many pages are dumpable when different
-> >> > dump_level is specified.
-> >> >
-> >> > Normally for x86_64, makedumpfile analyzes the 'System Ram' and
-> >> > 'kernel text' program segment of /proc/kcore excluding
-> >> > the crashkernel range, then calculates the page number of different
-> >> > kind per vmcoreinfo.
-> >> >
-> >> > We use the similar logic for arm64, but in addition make the '--mem-usage'
-> >> > usage dependent on the VMLINUX file being passed. This is done to allow
-> >> > information like VA_BITS being determined from kernel symbol like
-> >> > _stext. This allows us to get the VA_BITS before 'set_kcore_vmcoreinfo()'
-> >> > is called.
-> >> >
-> >> > Also I have validated the '--mem-usage' makedumpfile option on several
-> >> > ppc64/ppc64le and s390x machines, so update the makedumpfile.8
-> >> > documentation to indicate that '--mem-usage' option is supported
-> >> > not only on x86_64, but also on ppc64, s390x and arm64.
-> >> >
-> >> > After this patch, when using the '--mem-usage' option with makedumpfile,
-> >> > we get the correct information about the different pages. For e.g.
-> >> > here is an output from my arm64 board:
-> >> >
-> >> > TYPE            PAGES                   EXCLUDABLE      DESCRIPTION
-> >> > ----------------------------------------------------------------------
-> >> > ZERO            49524                   yes             Pages filled with zero
-> >> > NON_PRI_CACHE   15143                   yes             Cache pages without private flag
-> >> > PRI_CACHE       29147                   yes             Cache pages with private flag
-> >> > USER            3684                    yes             User process pages
-> >> > FREE            1450569                 yes             Free pages
-> >> > KERN_DATA       14243                   no              Dumpable kernel data
-> >> >
-> >> > page size:              65536
-> >> > Total pages on system:  1562310
-> >> > Total size on system:   102387548160     Byte
-> >> >
-> >> > Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
-> >> > Cc: Takuya Nakayama <tak-nakayama@tg.jp.nec.com>
-> >> > Cc: Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>
-> >> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> >>
-> >> Ping. Any review comments on this?
-> >>
-> >> Regards,
-> >> Bhupesh
-> >>
-> >> > ---
-> >> >  arch/arm64.c   | 51 ++++++++++++++++++++++++++++++++++++++++++++++++---
-> >> >  makedumpfile.8 | 11 +++++++++--
-> >> >  makedumpfile.c | 25 +++++++++++++++++++++++--
-> >> >  makedumpfile.h |  1 +
-> >> >  4 files changed, 81 insertions(+), 7 deletions(-)
-> >> >
-> >> > diff --git a/arch/arm64.c b/arch/arm64.c
-> >> > index 25d7a1f4db98..91f113f6447c 100644
-> >> > --- a/arch/arm64.c
-> >> > +++ b/arch/arm64.c
-> >> > @@ -48,6 +48,12 @@ static unsigned long kimage_voffset;
-> >> >  #define SZ_64K                 (64 * 1024)
-> >> >  #define SZ_128M                        (128 * 1024 * 1024)
-> >> >
-> >> > +#define PAGE_OFFSET_36 ((0xffffffffffffffffUL) << 36)
-> >> > +#define PAGE_OFFSET_39 ((0xffffffffffffffffUL) << 39)
-> >> > +#define PAGE_OFFSET_42 ((0xffffffffffffffffUL) << 42)
-> >> > +#define PAGE_OFFSET_47 ((0xffffffffffffffffUL) << 47)
-> >> > +#define PAGE_OFFSET_48 ((0xffffffffffffffffUL) << 48)
-> >> > +
-> >> >  #define pgd_val(x)             ((x).pgd)
-> >> >  #define pud_val(x)             (pgd_val((x).pgd))
-> >> >  #define pmd_val(x)             (pud_val((x).pud))
-> >> > @@ -140,8 +146,6 @@ pud_offset(pgd_t *pgda, pgd_t *pgdv, unsigned long vaddr)
-> >> >
-> >> >  static int calculate_plat_config(void)
-> >> >  {
-> >> > -       va_bits = NUMBER(VA_BITS);
-> >> > -
-> >> >         /* derive pgtable_level as per arch/arm64/Kconfig */
-> >> >         if ((PAGESIZE() == SZ_16K && va_bits == 36) ||
-> >> >                         (PAGESIZE() == SZ_64K && va_bits == 42)) {
-> >> > @@ -188,7 +192,6 @@ get_machdep_info_arm64(void)
-> >> >         kimage_voffset = NUMBER(kimage_voffset);
-> >> >         info->max_physmem_bits = PHYS_MASK_SHIFT;
-> >> >         info->section_size_bits = SECTIONS_SIZE_BITS;
-> >> > -       info->page_offset = 0xffffffffffffffffUL << (va_bits - 1);
-> >> >
-> >> >         DEBUG_MSG("kimage_voffset   : %lx\n", kimage_voffset);
-> >> >         DEBUG_MSG("max_physmem_bits : %lx\n", info->max_physmem_bits);
-> >> > @@ -219,6 +222,48 @@ get_xen_info_arm64(void)
-> >> >  int
-> >> >  get_versiondep_info_arm64(void)
-> >> >  {
-> >> > +       unsigned long long stext;
-> >> > +
-> >> > +       /* We can read the _stext symbol from vmlinux and determine the
-> >> > +        * VA_BITS and page_offset.
-> >> > +        */
-> >> > +
-> >> > +       /* Open the vmlinux file */
-> >> > +       open_kernel_file();
-> >> > +       set_dwarf_debuginfo("vmlinux", NULL,
-> >> > +                       info->name_vmlinux, info->fd_vmlinux);
-> >> > +
-> >> > +       if (!get_symbol_info())
-> >> > +               return FALSE;
-> >> > +
-> >> > +       /* Get the '_stext' symbol */
-> >> > +       if (SYMBOL(_stext) == NOT_FOUND_SYMBOL) {
-> >> > +               ERRMSG("Can't get the symbol of _stext.\n");
-> >> > +               return FALSE;
-> >> > +       } else {
-> >> > +               stext = SYMBOL(_stext);
-> >> > +       }
-> >> > +
-> >> > +       /* Derive va_bits as per arch/arm64/Kconfig */
-> >> > +       if ((stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
-> >> > +               va_bits = 36;
-> >> > +       } else if ((stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
-> >> > +               va_bits = 39;
-> >> > +       } else if ((stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
-> >> > +               va_bits = 42;
-> >> > +       } else if ((stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
-> >> > +               va_bits = 47;
-> >> > +       } else if ((stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
-> >> > +               va_bits = 48;
-> >> > +       } else {
-> >> > +               ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
-> >> > +               return FALSE;
-> >> > +       }
-> >> > +
-> >> > +       info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
-> >> > +
-> >> > +       DEBUG_MSG("page_offset=%lx, va_bits=%d\n", info->page_offset, va_bits);
-> >> > +
-> >> >         return TRUE;
-> >> >  }
-> >> >
-> >> > diff --git a/makedumpfile.8 b/makedumpfile.8
-> >> > index 15db7947d62f..be9620035316 100644
-> >> > --- a/makedumpfile.8
-> >> > +++ b/makedumpfile.8
-> >> > @@ -593,7 +593,7 @@ last cleared on the crashed kernel, through "dmesg --clear" for example.
-> >> >
-> >> >  .TP
-> >> >  \fB\-\-mem-usage\fR
-> >> > -This option is only for x86_64.
-> >> > +This option is currently supported on x86_64, arm64, ppc64 and s390x.
-> >> >  This option is used to show the page numbers of current system in different
-> >> >  use. It should be executed in 1st kernel. By the help of this, user can know
-> >> >  how many pages is dumpable when different dump_level is specified. It analyzes
-> >> > @@ -601,12 +601,19 @@ the 'System Ram' and 'kernel text' program segment of /proc/kcore excluding
-> >> >  the crashkernel range, then calculates the page number of different kind per
-> >> >  vmcoreinfo. So currently /proc/kcore need be specified explicitly.
-> >> >
-> >> > +For arm64, path to vmlinux file should be specified as well.
-> >> > +
-> >> >  .br
-> >> > -.B Example:
-> >> > +.B Example (for architectures other than arm64):
-> >> >  .br
-> >> >  # makedumpfile \-\-mem-usage /proc/kcore
-> >> > +
-> >> > +.br
-> >> > +.B Example (for arm64 architecture):
-> >> >  .br
-> >> >
-> >> > +# makedumpfile \-\-mem-usage vmlinux /proc/kcore
-> >> > +.br
-> >> >
-> >> >  .TP
-> >> >  \fB\-\-diskset=VMCORE\fR
-> >> > diff --git a/makedumpfile.c b/makedumpfile.c
-> >> > index ed138d339d9a..b38b5000aa74 100644
-> >> > --- a/makedumpfile.c
-> >> > +++ b/makedumpfile.c
-> >> > @@ -11090,7 +11090,14 @@ static struct option longopts[] = {
-> >> >         {"cyclic-buffer", required_argument, NULL, OPT_CYCLIC_BUFFER},
-> >> >         {"eppic", required_argument, NULL, OPT_EPPIC},
-> >> >         {"non-mmap", no_argument, NULL, OPT_NON_MMAP},
-> >> > +#ifdef __aarch64__
-> >> > +       /* VMLINUX file is required for aarch64 for get
-> >> > +        * the symbols required to calculate va_bits.
-> >> > +        */
-> >> > +       {"mem-usage", required_argument, NULL, OPT_MEM_USAGE},
-> >> > +#else
-> >> >         {"mem-usage", no_argument, NULL, OPT_MEM_USAGE},
-> >> > +#endif
-> >> >         {"splitblock-size", required_argument, NULL, OPT_SPLITBLOCK_SIZE},
-> >> >         {"work-dir", required_argument, NULL, OPT_WORKING_DIR},
-> >> >         {"num-threads", required_argument, NULL, OPT_NUM_THREADS},
-> >> > @@ -11201,8 +11208,22 @@ main(int argc, char *argv[])
-> >> >                         info->flag_partial_dmesg = 1;
-> >> >                         break;
-> >> >                 case OPT_MEM_USAGE:
-> >> > -                      info->flag_mem_usage = 1;
-> >> > -                      break;
-> >> > +                       info->flag_mem_usage = 1;
-> >> > +#ifdef __aarch64__
-> >> > +                       /* VMLINUX file is required for aarch64 for get
-> >> > +                        * the symbols required to calculate va_bits and
-> >> > +                        * it should be the 1st command parameter being
-> >> > +                        * specified.
-> >> > +                        */
-> >> > +                       if (strcmp(optarg, "/proc/kcore") == 0) {
-> >> > +                               MSG("vmlinux path should be 1st commandline parameter with --mem-usage option.\n");
-> >> > +                               goto out;
-> >> > +                       }
-> >> > +                       else {
-> >> > +                               info->name_vmlinux = optarg;
-> >> > +                       }
-> >> > +#endif
-> >> > +                       break;
-> >> >                 case OPT_COMPRESS_SNAPPY:
-> >> >                         info->flag_compress = DUMP_DH_COMPRESSED_SNAPPY;
-> >> >                         break;
-> >> > diff --git a/makedumpfile.h b/makedumpfile.h
-> >> > index 01eece231475..f65d91870b73 100644
-> >> > --- a/makedumpfile.h
-> >> > +++ b/makedumpfile.h
-> >> > @@ -2308,6 +2308,7 @@ struct elf_prstatus {
-> >> >  /*
-> >> >   * Function Prototype.
-> >> >   */
-> >> > +int open_kernel_file(void);
-> >> >  mdf_pfn_t get_num_dumpable_cyclic(void);
-> >> >  mdf_pfn_t get_num_dumpable_cyclic_withsplit(void);
-> >> >  int get_loads_dumpfile_cyclic(void);
-> >> > --
-> >> > 2.7.4
-> >> >
-> >
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Sure.
 
+-Takahiro AKASHI
 
+> >  
+> > -	/* Exclusion of crash region could split memory ranges */
+> > -	ced->max_nr_ranges++;
+> > +	cmem->max_nr_ranges = nr_ranges;
+> > +	cmem->nr_ranges = 0;
+> >  
+> > -	/* If crashk_low_res is not 0, another range split possible */
+> > -	if (crashk_low_res.end)
+> > -		ced->max_nr_ranges++;
+> > +	return cmem;
+> >  }
+> >  
+> >  static int exclude_mem_range(struct crash_mem *mem,
+> > @@ -293,10 +278,8 @@ static int exclude_mem_range(struct crash_mem *mem,
+> >  		return 0;
+> >  
+> >  	/* Split happened */
+> > -	if (i == CRASH_MAX_RANGES - 1) {
+> > -		pr_err("Too many crash ranges after split\n");
+> > +	if (i == mem->max_nr_ranges - 1)
+> >  		return -ENOMEM;
+> > -	}
+> >  
+> >  	/* Location where new range should go */
+> >  	j = i + 1;
+> > @@ -314,11 +297,10 @@ static int exclude_mem_range(struct crash_mem *mem,
+> >  
+> >  /*
+> >   * Look for any unwanted ranges between mstart, mend and remove them. This
+> > - * might lead to split and split ranges are put in ced->mem.ranges[] array
+> > + * might lead to split and split ranges are put in cmem->ranges[] array
+> >   */
+> > -static int elf_header_exclude_ranges(struct crash_elf_data *ced)
+> > +static int elf_header_exclude_ranges(struct crash_mem *cmem)
+> >  {
+> > -	struct crash_mem *cmem = &ced->mem;
+> >  	int ret = 0;
+> >  
+> >  	/* Exclude crashkernel region */
+> > @@ -337,8 +319,7 @@ static int elf_header_exclude_ranges(struct crash_elf_data *ced)
+> >  
+> >  static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+> >  {
+> > -	struct crash_elf_data *ced = arg;
+> > -	struct crash_mem *cmem = &ced->mem;
+> > +	struct crash_mem *cmem = arg;
+> >  
+> >  	cmem->ranges[cmem->nr_ranges].start = res->start;
+> >  	cmem->ranges[cmem->nr_ranges].end = res->end;
+> > @@ -347,7 +328,7 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+> >  	return 0;
+> >  }
+> >  
+> > -static int prepare_elf64_headers(struct crash_elf_data *ced, int kernel_map,
+> > +static int prepare_elf64_headers(struct crash_mem *cmem, int kernel_map,
+> >  		void **addr, unsigned long *sz)
+> >  {
+> >  	Elf64_Ehdr *ehdr;
+> > @@ -356,12 +337,11 @@ static int prepare_elf64_headers(struct crash_elf_data *ced, int kernel_map,
+> >  	unsigned char *buf, *bufp;
+> >  	unsigned int cpu, i;
+> >  	unsigned long long notes_addr;
+> > -	struct crash_mem *cmem = &ced->mem;
+> >  	unsigned long mstart, mend;
+> >  
+> >  	/* extra phdr for vmcoreinfo elf note */
+> >  	nr_phdr = nr_cpus + 1;
+> > -	nr_phdr += ced->max_nr_ranges;
+> > +	nr_phdr += cmem->nr_ranges;
+> >  
+> >  	/*
+> >  	 * kexec-tools creates an extra PT_LOAD phdr for kernel text mapping
+> > @@ -455,29 +435,27 @@ static int prepare_elf64_headers(struct crash_elf_data *ced, int kernel_map,
+> >  static int prepare_elf_headers(struct kimage *image, void **addr,
+> >  					unsigned long *sz)
+> >  {
+> > -	struct crash_elf_data *ced;
+> > +	struct crash_mem *cmem;
+> >  	Elf64_Ehdr *ehdr;
+> >  	Elf64_Phdr *phdr;
+> >  	int ret, i;
+> >  
+> > -	ced = kzalloc(sizeof(*ced), GFP_KERNEL);
+> > -	if (!ced)
+> > +	cmem = fill_up_crash_elf_data();
+> > +	if (!cmem)
+> >  		return -ENOMEM;
+> >  
+> > -	fill_up_crash_elf_data(ced, image);
+> > -
+> > -	ret = walk_system_ram_res(0, -1, ced,
+> > +	ret = walk_system_ram_res(0, -1, cmem,
+> >  				prepare_elf64_ram_headers_callback);
+> >  	if (ret)
+> >  		goto out;
+> >  
+> >  	/* Exclude unwanted mem ranges */
+> > -	ret = elf_header_exclude_ranges(ced);
+> > +	ret = elf_header_exclude_ranges(cmem);
+> >  	if (ret)
+> >  		goto out;
+> >  
+> >  	/* By default prepare 64bit headers */
+> > -	ret =  prepare_elf64_headers(ced,
+> > +	ret =  prepare_elf64_headers(cmem,
+> >  				(int)IS_ENABLED(CONFIG_X86_64), addr, sz);
+> >  	if (ret)
+> >  		goto out;
+> > @@ -496,7 +474,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
+> >  			break;
+> >  		}
+> >  out:
+> > -	kfree(ced);
+> > +	vfree(cmem);
+> >  	return ret;
+> >  }
+> >  
+> > -- 
+> > 2.16.2
+> > 
+> 
+> Thanks
+> Dave
 
 _______________________________________________
 kexec mailing list
