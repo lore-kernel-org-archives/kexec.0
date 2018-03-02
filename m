@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 2 Mar 2018 10:30:32 +0000
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: RFC on Kdump and PCIe on ARM64
-Message-ID: <20180302103032.GB19323@arm.com>
-References: <c5c2d8d2-0384-442a-7bc6-8929457b8447@codeaurora.org>
- <20180301190552.GK13722@bhelgaas-glaptop.roam.corp.google.com>
- <2b2de17c-8527-e49b-2ef2-2a3d1801e4f9@codeaurora.org>
- <20180302000303.GD74737@bhelgaas-glaptop.roam.corp.google.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180302000303.GD74737@bhelgaas-glaptop.roam.corp.google.com>
+Received: from stargate.chelsio.com ([12.32.117.8])
+ by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1erjgN-00048g-T1
+ for kexec@lists.infradead.org; Fri, 02 Mar 2018 12:21:14 +0000
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Subject: [RFC 0/2] kernel: add support to collect hardware logs in panic
+Date: Fri,  2 Mar 2018 17:49:56 +0530
+Message-Id: <cover.1519911559.git.rahul.lakkireddy@chelsio.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,100 +15,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Vikram Sethi <vikrams@codeaurora.org>, Linux PCI <linux-pci@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>, kexec@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, iommu@lists.linux-foundation.org, Nate Watterson <nwatters@codeaurora.org>, "Goel,
- Sameer" <sgoel@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, "shankerd@codeaurora.org" <shankerd@codeaurora.org>
+To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, kexec@lists.infradead.org
+Cc: indranil@chelsio.com, nirranjan@chelsio.com, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, ganeshgr@chelsio.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ebiederm@xmission.com
 
-On Thu, Mar 01, 2018 at 06:03:03PM -0600, Bjorn Helgaas wrote:
-> On Thu, Mar 01, 2018 at 02:19:09PM -0500, Sinan Kaya wrote:
-> > On 3/1/2018 2:05 PM, Bjorn Helgaas wrote:
-> > > On Thu, Mar 01, 2018 at 12:44:26PM -0500, Sinan Kaya wrote:
-> > >> Hi,
-> > >>
-> > >> We are seeing IOMMU faults when booting the kdump kernel on ARM64.
-> > >>
-> > >> [    7.220162] arm-smmu-v3 arm-smmu-v3.0.auto: event 0x02 received:
-> > >> [    7.226123] arm-smmu-v3 arm-smmu-v3.0.auto:            0x0000010000000002
-> > >> [    7.232023] arm-smmu-v3 arm-smmu-v3.0.auto:            0x0000000000000000
-> > >> [    7.237925] arm-smmu-v3 arm-smmu-v3.0.auto:            0x0000000000000000
-> > >> [    7.243827] arm-smmu-v3 arm-smmu-v3.0.auto:            0x0000000000000000
-> > >>
-> > >> This is Nate's interpretation of the fault:
-> > >>
-> > >> "The PCI device is sending transactions just after the SMMU was
-> > >> reset/reinitialized which is problematic because the device has not
-> > >> yet been added to the SMMU and thus should not be doing *any* DMA.
-> > >> DMA from the PCI devices should be quiesced prior to starting the
-> > >> crashdump kernel or you risk overwriting portions of memory you
-> > >> meant to preserve. In this case the SMMU was actually doing you a
-> > >> favor by blocking these errant DMA operations!!"
-> > >>
-> > >> I think this makes sense especially for the IOMMU enabled case on
-> > >> the host where an IOVA can overlap with the region of memory kdump
-> > >> reserved for itself.
-> > >>
-> > >> Apparently, there has been similar concerns in the past.
-> > >>
-> > >> https://www.fujitsu.com/jp/documents/products/software/os/linux/catalog/LinuxConJapan2013-Indoh.pdf
-> > >>
-> > >> and was not addressed globally due to IOMMU+PCI driver ordering
-> > >> issues and bugs in HW due to hot reset.
-> > >>
-> > >> https://lkml.org/lkml/2012/8/3/160
-> > >>
-> > >> Hot reset as mentioned is destructive and may not be the best
-> > >> implementation choice.  However, most of the modern endpoints
-> > >> support PCIE function level reset.
-> > >>
-> > >> One other solution is for SMMUv3 driver to reserve the kdump used
-> > >> IOVA addresses.
-> > >>
-> > >> Another solution is for the SMMUv3 driver to disable PCIe devices
-> > >> behind the SMMU if it see SMMU is already enabled.
-> > > 
-> > > What problem are you trying to solve?  If the IOMMU is blocking DMA
-> > > after the kdump kernel starts up, that sounds like the desired
-> > > behavior.
-> > > 
-> > 
-> > Three issues:
-> > 1. I'm seeing a flood of SMMUv3 faults due to adapter using
-> > addresses from the previous kernel. This might be OK. 
-> 
-> Yep.  That's cosmetic and we could suppress the messages if they were
-> a problem.
-> 
-> Isn't part of the point of an IOMMU protection against malicious
-> devices and drivers?  If so, we should be able to withstand an
-> arbitrary number of faults.
-> 
-> > 2. When the SMMUv3 driver sees that it is enabled, it resets itself
-> > and configures it one more time. 
-> > 
-> > [    7.018304] arm-smmu-v3 arm-smmu-v3.0.auto: ias 44-bit, oas 44-bit (features 0x00001fef)
-> > [    7.026379] arm-smmu-v3 arm-smmu-v3.0.auto: SMMU currently enabled! Resetting...
-> > 
-> > From the moment IOMMU is disabled to the point where IOMMU get
-> > enabled again, there is a potential for the PCIE device to corrupt
-> > the kdump kernel memory as the bus master and memory enable bits are
-> > left enabled.
-> 
-> Do you really have to reset the IOMMU?  Can you just give it new page
-> tables that start out with all IOVAs from all devices being invalid,
-> then add valid mappings as drivers need them (presumably after the
-> driver has done whatever it needs to so the device stops using the old
-> DMA addresses)?
+On production servers running variety of workloads over time, kernel
+panic can happen sporadically after days or even months. It is
+important to collect as much debug logs as possible to root cause
+and fix the problem, that may not be easy to reproduce. Snapshot of
+underlying hardware/firmware state (like register dump, firmware
+logs, adapter memory, etc.), at the time of kernel panic will be very
+helpful while debugging the culprit device driver.
 
-We already have the option to do that via the command line using the
-disable_bypass option, so it just sounds like we need to take this into
-account when resetting the SMMU to take care that GBPA is configured so
-that transactions are terminated when SMMUEN=0.
+This series of patches add new generic framework that enable device
+drivers to collect device specific snapshot of the hardware/firmware
+state of the underlying device at the time of kernel panic. The
+collected logs are appended to vmcore along with details, such as
+start address and length of the logs, which are required for
+extraction during post-analysis.
 
-Will
+Device drivers can use crash_driver_dump_register() to register their
+callback that collects underlying device specific hardware/firmware
+logs during kernel panic (i.e. before booting into the second kernel).
+Drivers can unregister with crash_driver_dump_unregister().
+
+To extract the device specific hardware/firmware logs using crash:
+
+crash> help -D | grep DRIVERDUMP
+DRIVERDUMP=(cxgb4_0000:02:00.4, ffffb131090bd000, 37782968)
+
+crash> rd ffffb131090bd000 37782968 -r hardware.log
+37782968 bytes copied from 0xffffb131090bd000 to hardware.log
+
+Patch 1 adds API to allow drivers to register callback to
+collect the device specific hardware/firmware logs.
+
+Patch 2 shows a cxgb4 driver example using the API to collect
+hardware/firmware logs during kernel panic.
+
+Suggestions and feedback will be much appreciated.
+
+Thanks,
+Rahul
+
+Rahul Lakkireddy (2):
+  kernel/crash_core: add API to collect hardware dump in kernel panic
+  cxgb4: collect hardware dump in kernel panic
+
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4.h       |  6 ++
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c | 95 +++++++++++++++++++++++-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h |  4 +
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c  | 12 +++
+ include/linux/crash_core.h                       | 33 ++++++++
+ kernel/crash_core.c                              | 83 ++++++++++++++++++++-
+ kernel/kexec_core.c                              |  1 +
+ 7 files changed, 229 insertions(+), 5 deletions(-)
+
+-- 
+2.14.1
+
 
 _______________________________________________
 kexec mailing list
