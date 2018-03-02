@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1erkoH-0000ZM-BJ
- for kexec@lists.infradead.org; Fri, 02 Mar 2018 13:33:20 +0000
+ id 1erkoH-0000Zb-BG
+ for kexec@lists.infradead.org; Fri, 02 Mar 2018 13:33:18 +0000
 From: Michal Suchanek <msuchanek@suse.de>
-Subject: [PATCH v3 1/5] kexec: Return -ENOSYS when kexec does not know how to
- call KEXEC_FILE_LOAD
-Date: Fri,  2 Mar 2018 14:32:59 +0100
-Message-Id: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519997533.git.msuchanek@suse.de>
+Subject: [PATCH v3 3/5] kexec: add option to revert -s
+Date: Fri,  2 Mar 2018 14:33:01 +0100
+Message-Id: <1b9aab1f9562e9de4eb77e6b70f75f9788577834.1519997533.git.msuchanek@suse.de>
+In-Reply-To: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519997533.git.msuchanek@suse.de>
+References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519997533.git.msuchanek@suse.de>
 In-Reply-To: <20180302124610.3tyvym3dayq3coiz@verge.net.au>
 References: <20180302124610.3tyvym3dayq3coiz@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
@@ -26,28 +27,57 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Tony Jones <tonyj@suse.com>, Dave Young <dyoung@redhat.com>, Michal Suchanek <msuchanek@suse.de>, Petr Tesarik <ptesarik@suse.cz>, horms@verge.net.au
 
-When the kernel does not know a syscall number it returns -ENOSYS but
-when kexec does not know a syscall number it returns -1. Return -ENOSYS
-from kexec as well.
+The undocumented -s option selects KEXEC_FILE_LOAD syscall but there is
+no option to select KEXEC_LOAD syscall so add it. It is generally good
+idea and in followup patch the default will be changed so it will be
+needed to get KEXEC_LOAD functionality.
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- kexec/kexec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kexec/kexec.c | 3 +++
+ kexec/kexec.h | 4 +++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/kexec/kexec.c b/kexec/kexec.c
-index cfd837c1b6bb..ab8cff7fe083 100644
+index 9ea102e1565a..a95cfb473d6b 100644
 --- a/kexec/kexec.c
 +++ b/kexec/kexec.c
-@@ -1166,7 +1166,7 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
+@@ -1368,6 +1368,9 @@ int main(int argc, char *argv[])
+ 		case OPT_KEXEC_FILE_SYSCALL:
+ 			do_kexec_file_syscall = 1;
+ 			break;
++		case OPT_KEXEC_SYSCALL:
++			do_kexec_file_syscall = 0;
++			break;
+ 		case OPT_STATUS:
+ 			do_status = 1;
+ 			break;
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 26225d2c002a..9fd0355eacd0 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -219,6 +219,7 @@ extern int file_types;
+ #define OPT_TYPE		't'
+ #define OPT_PANIC		'p'
+ #define OPT_KEXEC_FILE_SYSCALL	's'
++#define OPT_KEXEC_SYSCALL	'c'
+ #define OPT_STATUS		'S'
+ #define OPT_MEM_MIN             256
+ #define OPT_MEM_MAX             257
+@@ -246,11 +247,12 @@ extern int file_types;
+ 	{ "mem-max",		1, 0, OPT_MEM_MAX }, \
+ 	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
+ 	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
++	{ "kexec-syscall",	0, 0, OPT_KEXEC_SYSCALL }, \
+ 	{ "debug",		0, 0, OPT_DEBUG }, \
+ 	{ "status",		0, 0, OPT_STATUS }, \
+ 	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
  
- 	if (!is_kexec_file_load_implemented()) {
- 		fprintf(stderr, "syscall kexec_file_load not available.\n");
--		return -1;
-+		return -ENOSYS;
- 	}
+-#define KEXEC_OPT_STR "h?vdfxyluet:psS"
++#define KEXEC_OPT_STR "h?vdfxyluet:pscS"
  
- 	if (argc - fileind <= 0) {
+ extern void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr);
+ extern void die(const char *fmt, ...)
 -- 
 2.13.6
 
