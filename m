@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from stargate.chelsio.com ([12.32.117.8])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1erjgO-00049u-0q
- for kexec@lists.infradead.org; Fri, 02 Mar 2018 12:21:21 +0000
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Subject: [RFC 1/2] kernel/crash_core: add API to collect hardware dump in
- kernel panic
-Date: Fri,  2 Mar 2018 17:49:57 +0530
-Message-Id: <f8bf42cd79cbca694df805e78cc690573eb6d237.1519911559.git.rahul.lakkireddy@chelsio.com>
-In-Reply-To: <cover.1519911559.git.rahul.lakkireddy@chelsio.com>
-References: <cover.1519911559.git.rahul.lakkireddy@chelsio.com>
-In-Reply-To: <cover.1519911559.git.rahul.lakkireddy@chelsio.com>
-References: <cover.1519911559.git.rahul.lakkireddy@chelsio.com>
+ id 1erjs4-0002m4-18
+ for kexec@lists.infradead.org; Fri, 02 Mar 2018 12:33:10 +0000
+Date: Fri, 2 Mar 2018 13:32:52 +0100
+From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+Subject: Re: [PATCH 4/5] kexec: fallback to KEXEC_LOAD when KEXEC_FILE_LOAD
+ is not supported.
+Message-ID: <20180302133252.69a36ffd@kitsune.suse.cz>
+In-Reply-To: <20180302092419.GB15374@dhcp-128-65.nay.redhat.com>
+References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519646210.git.msuchanek@suse.de>
+ <ebc4bc6f1dc7d62ba5c81f40c7f7d83a8ae3eb5d.1519646210.git.msuchanek@suse.de>
+ <20180302092419.GB15374@dhcp-128-65.nay.redhat.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,206 +21,138 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, kexec@lists.infradead.org
-Cc: indranil@chelsio.com, nirranjan@chelsio.com, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, ganeshgr@chelsio.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ebiederm@xmission.com
+To: Dave Young <dyoung@redhat.com>
+Cc: Tony Jones <tonyj@suse.com>, horms@verge.net.au, kexec@lists.infradead.org, Petr Tesarik <ptesarik@suse.cz>
 
-Add API to allow drivers to register callback to collect device
-specific hardware/firmware dump during kernel panic. The registered
-callbacks will be invoked during kernel panic before moving to second
-kernel. Also save the dump location and size in vmcore info.
+On Fri, 2 Mar 2018 17:24:19 +0800
+Dave Young <dyoung@redhat.com> wrote:
 
-The dump can be extracted using crash:
+> On 02/26/18 at 01:00pm, Michal Suchanek wrote:
+> > Not all architectures implement KEXEC_FILE_LOAD. However, on some
+> > archiectures KEXEC_FILE_LOAD is required when secure boot is
+> > enabled in locked-down mode. Previously users had to select the
+> > KEXEC_FILE_LOAD syscall with undocumented -s option. However, if
+> > they did pass the option kexec would fail on architectures that do
+> > not support it.
+> > 
+> > When no option is passed to select one syscall or the other try
+> > KEXEC_FILE_LOAD and fall back to KEXEC_LOAD when not suported.  
+> 
+> Again, IMHO the default behavior should not be changed..
 
-crash> help -D | grep DRIVERDUMP
-DRIVERDUMP=(cxgb4_0000:02:00.4, ffffb131090bd000, 37782968)
+So adding a new option to enable the fallback would be ok?
 
-crash> rd ffffb131090bd000 37782968 -r hardware.log
-37782968 bytes copied from 0xffffb131090bd000 to hardware.log
+Thanks
 
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
----
- include/linux/crash_core.h | 33 ++++++++++++++++++
- kernel/crash_core.c        | 83 +++++++++++++++++++++++++++++++++++++++++++++-
- kernel/kexec_core.c        |  1 +
- 3 files changed, 116 insertions(+), 1 deletion(-)
+Michal
 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index b511f6d24b42..d9cc6b3346c7 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -59,6 +59,9 @@ phys_addr_t paddr_vmcoreinfo_note(void);
- 	vmcoreinfo_append_str("NUMBER(%s)=%ld\n", #name, (long)name)
- #define VMCOREINFO_CONFIG(name) \
- 	vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
-+#define VMCOREINFO_DRIVER_DUMP(name, buf, size) \
-+	vmcoreinfo_append_str("DRIVERDUMP=(%s, %lx, %lu)\n", \
-+			      name, (unsigned long)buf, (unsigned long)size)
- 
- extern u32 *vmcoreinfo_note;
- 
-@@ -73,4 +76,34 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
- int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *crash_size, unsigned long long *crash_base);
- 
-+/* Driver dump collection */
-+#define CRASH_DRIVER_DUMP_NAME_LENGTH 32
-+
-+struct crash_driver_dump_node {
-+	struct crash_driver_dump_node __rcu *next;
-+	struct crash_driver_dump *data;
-+	struct notifier_block *nb;
-+};
-+
-+struct crash_driver_dump_head {
-+	struct crash_driver_dump_node __rcu *head;
-+};
-+
-+#define CRASH_DRIVER_DUMP_INIT(name) { \
-+	.head = NULL \
-+}
-+
-+#define CRASH_DRIVER_DUMP_HEAD(name) \
-+	struct crash_driver_dump_head name = CRASH_DRIVER_DUMP_INIT(name) \
-+
-+struct crash_driver_dump {
-+	char name[CRASH_DRIVER_DUMP_NAME_LENGTH];
-+	void *buf;
-+	unsigned long size;
-+};
-+
-+void crash_driver_dump_call_handlers(void);
-+int crash_driver_dump_register(struct crash_driver_dump *data,
-+			       struct notifier_block *nb);
-+int crash_driver_dump_unregister(struct crash_driver_dump *data);
- #endif /* LINUX_CRASH_CORE_H */
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 4f63597c824d..ff62713f597e 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -21,6 +21,64 @@ u32 *vmcoreinfo_note;
- /* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
- static unsigned char *vmcoreinfo_data_safecopy;
- 
-+/* List of driver registered callbacks to collect dumps */
-+CRASH_DRIVER_DUMP_HEAD(crash_driver_dump_list);
-+ATOMIC_NOTIFIER_HEAD(crash_driver_dump_notifier_list);
-+
-+static int driver_dump_callback_register(struct crash_driver_dump_head *dh,
-+					 struct crash_driver_dump *data,
-+					 struct notifier_block *nb)
-+{
-+	struct crash_driver_dump_node *d, **dl;
-+
-+	d = vzalloc(sizeof(*d));
-+	if (!d)
-+		return -ENOMEM;
-+
-+	atomic_notifier_chain_register(&crash_driver_dump_notifier_list, nb);
-+	d->nb = nb;
-+	d->data = data;
-+
-+	dl = &dh->head;
-+	while (*dl)
-+		dl = &((*dl)->next);
-+	d->next = *dl;
-+	rcu_assign_pointer(*dl, d);
-+	return 0;
-+}
-+
-+static int driver_dump_callback_unregister(struct crash_driver_dump_head *dh,
-+					   struct crash_driver_dump *data)
-+{
-+	struct atomic_notifier_head *ah = &crash_driver_dump_notifier_list;
-+	struct crash_driver_dump_node **dl;
-+
-+	dl = &dh->head;
-+	while (*dl) {
-+		if ((*dl)->data == data) {
-+			atomic_notifier_chain_unregister(ah, (*dl)->nb);
-+			rcu_assign_pointer((*dl), (*dl)->next);
-+			vfree(*dl);
-+			return 0;
-+		}
-+		dl = &((*dl)->next);
-+	}
-+	return -ENOENT;
-+}
-+
-+int crash_driver_dump_register(struct crash_driver_dump *data,
-+			       struct notifier_block *nb)
-+{
-+	return driver_dump_callback_register(&crash_driver_dump_list, data, nb);
-+}
-+EXPORT_SYMBOL(crash_driver_dump_register);
-+
-+int crash_driver_dump_unregister(struct crash_driver_dump *data)
-+{
-+	return driver_dump_callback_unregister(&crash_driver_dump_list, data);
-+}
-+EXPORT_SYMBOL(crash_driver_dump_unregister);
-+
- /*
-  * parsing the "crashkernel" commandline
-  *
-@@ -365,6 +423,30 @@ void vmcoreinfo_append_str(const char *fmt, ...)
- 	vmcoreinfo_size += r;
- }
- 
-+void crash_driver_dump_call_handlers(void)
-+{
-+	static char driver_dump_buf[1024];
-+	struct crash_driver_dump_node *dl;
-+
-+	dl = crash_driver_dump_list.head;
-+	if (dl) {
-+		atomic_notifier_call_chain(&crash_driver_dump_notifier_list, 0,
-+					   driver_dump_buf);
-+
-+		/* Append to safe copy if available */
-+		if (vmcoreinfo_data_safecopy)
-+			vmcoreinfo_data = vmcoreinfo_data_safecopy;
-+
-+		while (dl) {
-+			VMCOREINFO_DRIVER_DUMP(dl->data->name, dl->data->buf,
-+					       dl->data->size);
-+			dl = dl->next;
-+		}
-+
-+		update_vmcoreinfo_note();
-+	}
-+}
-+
- /*
-  * provide an empty default implementation here -- architecture
-  * code may override this
-@@ -462,7 +544,6 @@ static int __init crash_save_vmcoreinfo_init(void)
- #ifdef CONFIG_HUGETLB_PAGE
- 	VMCOREINFO_NUMBER(HUGETLB_PAGE_DTOR);
- #endif
--
- 	arch_crash_save_vmcoreinfo();
- 	update_vmcoreinfo_note();
- 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 20fef1a38602..b86ffe24fe09 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -938,6 +938,7 @@ void __noclone __crash_kexec(struct pt_regs *regs)
- 		if (kexec_crash_image) {
- 			struct pt_regs fixed_regs;
- 
-+			crash_driver_dump_call_handlers();
- 			crash_setup_regs(&fixed_regs, regs);
- 			crash_save_vmcoreinfo();
- 			machine_crash_shutdown(&fixed_regs);
--- 
-2.14.1
+> 
+> > 
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > ---
+> >  kexec/kexec.c | 43 +++++++++++++++++++++++++++++++++++++++----
+> >  1 file changed, 39 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/kexec/kexec.c b/kexec/kexec.c
+> > index a95cfb473d6b..14f56e466a95 100644
+> > --- a/kexec/kexec.c
+> > +++ b/kexec/kexec.c
+> > @@ -1243,6 +1243,7 @@ int main(int argc, char *argv[])
+> >  	int do_unload = 0;
+> >  	int do_reuse_initrd = 0;
+> >  	int do_kexec_file_syscall = 0;
+> > +	int do_kexec_fallback = 1;
+> >  	int do_status = 0;
+> >  	void *entry = 0;
+> >  	char *type = 0;
+> > @@ -1367,9 +1368,11 @@ int main(int argc, char *argv[])
+> >  			break;
+> >  		case OPT_KEXEC_FILE_SYSCALL:
+> >  			do_kexec_file_syscall = 1;
+> > +			do_kexec_fallback = 0;
+> >  			break;
+> >  		case OPT_KEXEC_SYSCALL:
+> >  			do_kexec_file_syscall = 0;
+> > +			do_kexec_fallback = 0;
+> >  			break;
+> >  		case OPT_STATUS:
+> >  			do_status = 1;
+> > @@ -1442,16 +1445,48 @@ int main(int argc, char *argv[])
+> >  		result = k_status(kexec_flags);
+> >  	}
+> >  	if (do_unload) {
+> > -		if (do_kexec_file_syscall)
+> > +		if (do_kexec_file_syscall) {
+> >  			result =
+> > kexec_file_unload(kexec_file_flags);
+> > -		else
+> > +			if ((result == -ENOSYS) &&
+> > do_kexec_fallback)
+> > +				do_kexec_file_syscall = 0;
+> > +		}
+> > +		if (!do_kexec_file_syscall)
+> >  			result = k_unload(kexec_flags);
+> >  	}
+> >  	if (do_load && (result == 0)) {
+> > -		if (do_kexec_file_syscall)
+> > +		if (do_kexec_file_syscall) {
+> >  			result = do_kexec_file_load(fileind, argc,
+> > argv, kexec_file_flags);
+> > -		else
+> > +			if (do_kexec_fallback) switch (result) {
+> > +				/*
+> > +				 * Something failed with signature
+> > verification.
+> > +				 * Reject the image.
+> > +				 */
+> > +				case -ELIBBAD:
+> > +				case -EKEYREJECTED:
+> > +				case -ENOPKG:
+> > +				case -ENOKEY:
+> > +				case -EBADMSG:
+> > +				case -EMSGSIZE:
+> > +				case -ENOTSUPP:
+> > +					/*
+> > +					 * By default reject or do
+> > nothing if
+> > +					 * succeded
+> > +					 */
+> > +				default: break;
+> > +					/*
+> > +					 * Parsing image or other
+> > options failed
+> > +					 * The image may be
+> > invalid or image
+> > +					 * type may not supported
+> > by kernel so
+> > +					 * retry parsing in
+> > kexec-tools.
+> > +					 */
+> > +				case -EINVAL:
+> > +				case -ENOEXEC:
+> > +					do_kexec_file_syscall = 0;
+> > +					break;
+> > +			}
+> > +		}
+> > +		if (!do_kexec_file_syscall)
+> >  			result = my_load(type, fileind, argc, argv,
+> >  						kexec_flags,
+> > entry); }
+> > -- 
+> > 2.13.6
+> > 
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec  
+> 
+> Thanks
+> Dave
 
 
 _______________________________________________
