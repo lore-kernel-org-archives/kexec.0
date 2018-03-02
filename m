@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.89 #1 (Red Hat Linux))
- id 1erk3z-0002BR-DO
- for kexec@lists.infradead.org; Fri, 02 Mar 2018 12:45:29 +0000
-Date: Fri, 2 Mar 2018 13:44:58 +0100
+ id 1erk59-0002LE-8n
+ for kexec@lists.infradead.org; Fri, 02 Mar 2018 12:46:41 +0000
+Date: Fri, 2 Mar 2018 13:46:10 +0100
 From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH 4/5] kexec: fallback to KEXEC_LOAD when KEXEC_FILE_LOAD
  is not supported.
-Message-ID: <20180302124458.md6hyibep32b3zom@verge.net.au>
+Message-ID: <20180302124610.3tyvym3dayq3coiz@verge.net.au>
 References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519646210.git.msuchanek@suse.de>
  <ebc4bc6f1dc7d62ba5c81f40c7f7d83a8ae3eb5d.1519646210.git.msuchanek@suse.de>
+ <20180302092419.GB15374@dhcp-128-65.nay.redhat.com>
+ <20180302133252.69a36ffd@kitsune.suse.cz>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ebc4bc6f1dc7d62ba5c81f40c7f7d83a8ae3eb5d.1519646210.git.msuchanek@suse.de>
+In-Reply-To: <20180302133252.69a36ffd@kitsune.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,130 +23,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michal Suchanek <msuchanek@suse.de>
-Cc: Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>
+To: Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+Cc: kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Tony Jones <tonyj@suse.com>
 
-On Mon, Feb 26, 2018 at 01:00:37PM +0100, Michal Suchanek wrote:
-> Not all architectures implement KEXEC_FILE_LOAD. However, on some
-> archiectures KEXEC_FILE_LOAD is required when secure boot is enabled in
-> locked-down mode. Previously users had to select the KEXEC_FILE_LOAD
-> syscall with undocumented -s option. However, if they did pass the
-> option kexec would fail on architectures that do not support it.
-> 
-> When no option is passed to select one syscall or the other try
-> KEXEC_FILE_LOAD and fall back to KEXEC_LOAD when not suported.
-
-Has there been a release of kexec-tools with things arranged they
-way they currently are?
-
-Can we document this behaviour and the related undocumented options?
-
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
->  kexec/kexec.c | 43 +++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 39 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kexec/kexec.c b/kexec/kexec.c
-> index a95cfb473d6b..14f56e466a95 100644
-> --- a/kexec/kexec.c
-> +++ b/kexec/kexec.c
-> @@ -1243,6 +1243,7 @@ int main(int argc, char *argv[])
->  	int do_unload = 0;
->  	int do_reuse_initrd = 0;
->  	int do_kexec_file_syscall = 0;
-> +	int do_kexec_fallback = 1;
->  	int do_status = 0;
->  	void *entry = 0;
->  	char *type = 0;
-> @@ -1367,9 +1368,11 @@ int main(int argc, char *argv[])
->  			break;
->  		case OPT_KEXEC_FILE_SYSCALL:
->  			do_kexec_file_syscall = 1;
-> +			do_kexec_fallback = 0;
->  			break;
->  		case OPT_KEXEC_SYSCALL:
->  			do_kexec_file_syscall = 0;
-> +			do_kexec_fallback = 0;
->  			break;
->  		case OPT_STATUS:
->  			do_status = 1;
-> @@ -1442,16 +1445,48 @@ int main(int argc, char *argv[])
->  		result = k_status(kexec_flags);
->  	}
->  	if (do_unload) {
-> -		if (do_kexec_file_syscall)
-> +		if (do_kexec_file_syscall) {
->  			result = kexec_file_unload(kexec_file_flags);
-> -		else
-> +			if ((result == -ENOSYS) && do_kexec_fallback)
-> +				do_kexec_file_syscall = 0;
-> +		}
-> +		if (!do_kexec_file_syscall)
->  			result = k_unload(kexec_flags);
->  	}
->  	if (do_load && (result == 0)) {
-> -		if (do_kexec_file_syscall)
-> +		if (do_kexec_file_syscall) {
->  			result = do_kexec_file_load(fileind, argc, argv,
->  						 kexec_file_flags);
-> -		else
-> +			if (do_kexec_fallback) switch (result) {
-> +				/*
-> +				 * Something failed with signature verification.
-> +				 * Reject the image.
-> +				 */
-> +				case -ELIBBAD:
-> +				case -EKEYREJECTED:
-> +				case -ENOPKG:
-> +				case -ENOKEY:
-> +				case -EBADMSG:
-> +				case -EMSGSIZE:
-> +				case -ENOTSUPP:
-> +					/*
-> +					 * By default reject or do nothing if
-> +					 * succeded
-> +					 */
-> +				default: break;
-> +					/*
-> +					 * Parsing image or other options failed
-> +					 * The image may be invalid or image
-> +					 * type may not supported by kernel so
-> +					 * retry parsing in kexec-tools.
-> +					 */
-> +				case -EINVAL:
-> +				case -ENOEXEC:
-> +					do_kexec_file_syscall = 0;
-> +					break;
-> +			}
-> +		}
-> +		if (!do_kexec_file_syscall)
-
-How about:
-
-	if (do_kexec_file_syscall) {
-		result = ...;
-		/* Comment */
-		if (do_kexec_fallback &&
-		    (result == -EINVAL || result == -ENOEXEC))
-			do_kexec_file_syscall = 0;
-	}
-	if (!do_kexec_file_syscall)
-		result = ...;
-
-
-
->  			result = my_load(type, fileind, argc, argv,
->  						kexec_flags, entry);
->  	}
-> -- 
-> 2.13.6
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCBNYXIgMDIsIDIwMTggYXQgMDE6MzI6NTJQTSArMDEwMCwgTWljaGFsIFN1Y2jDoW5l
+ayB3cm90ZToKPiBPbiBGcmksIDIgTWFyIDIwMTggMTc6MjQ6MTkgKzA4MDAKPiBEYXZlIFlvdW5n
+IDxkeW91bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gCj4gPiBPbiAwMi8yNi8xOCBhdCAwMTowMHBt
+LCBNaWNoYWwgU3VjaGFuZWsgd3JvdGU6Cj4gPiA+IE5vdCBhbGwgYXJjaGl0ZWN0dXJlcyBpbXBs
+ZW1lbnQgS0VYRUNfRklMRV9MT0FELiBIb3dldmVyLCBvbiBzb21lCj4gPiA+IGFyY2hpZWN0dXJl
+cyBLRVhFQ19GSUxFX0xPQUQgaXMgcmVxdWlyZWQgd2hlbiBzZWN1cmUgYm9vdCBpcwo+ID4gPiBl
+bmFibGVkIGluIGxvY2tlZC1kb3duIG1vZGUuIFByZXZpb3VzbHkgdXNlcnMgaGFkIHRvIHNlbGVj
+dCB0aGUKPiA+ID4gS0VYRUNfRklMRV9MT0FEIHN5c2NhbGwgd2l0aCB1bmRvY3VtZW50ZWQgLXMg
+b3B0aW9uLiBIb3dldmVyLCBpZgo+ID4gPiB0aGV5IGRpZCBwYXNzIHRoZSBvcHRpb24ga2V4ZWMg
+d291bGQgZmFpbCBvbiBhcmNoaXRlY3R1cmVzIHRoYXQgZG8KPiA+ID4gbm90IHN1cHBvcnQgaXQu
+Cj4gPiA+IAo+ID4gPiBXaGVuIG5vIG9wdGlvbiBpcyBwYXNzZWQgdG8gc2VsZWN0IG9uZSBzeXNj
+YWxsIG9yIHRoZSBvdGhlciB0cnkKPiA+ID4gS0VYRUNfRklMRV9MT0FEIGFuZCBmYWxsIGJhY2sg
+dG8gS0VYRUNfTE9BRCB3aGVuIG5vdCBzdXBvcnRlZC4gIAo+ID4gCj4gPiBBZ2FpbiwgSU1ITyB0
+aGUgZGVmYXVsdCBiZWhhdmlvciBzaG91bGQgbm90IGJlIGNoYW5nZWQuLgo+IAo+IFNvIGFkZGlu
+ZyBhIG5ldyBvcHRpb24gdG8gZW5hYmxlIHRoZSBmYWxsYmFjayB3b3VsZCBiZSBvaz8KCkkgYW0g
+YWxzbyB3YXJ5IG9mIGNoYW5naW5nIHRoZSBkZWZhdWx0IGJlaGF2aW91ciBhbmQKSSB0aGluayBh
+IG5ldyBmYWxsYmFjayBvcHRpb24gd291bGQgYmUgYmV0dGVyLgoKRGF2ZT8KCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8va2V4ZWMK
