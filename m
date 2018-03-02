@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1ergof-0003SN-GZ
- for kexec@lists.infradead.org; Fri, 02 Mar 2018 09:17:27 +0000
-Date: Fri, 2 Mar 2018 17:17:06 +0800
+ id 1ergvc-0007Mi-PI
+ for kexec@lists.infradead.org; Fri, 02 Mar 2018 09:24:38 +0000
+Date: Fri, 2 Mar 2018 17:24:19 +0800
 From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH 4/5] kexec: fallback to KEXEC_LOAD when KEXEC_FILE_LOAD
  is not supported.
-Message-ID: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
+Message-ID: <20180302092419.GB15374@dhcp-128-65.nay.redhat.com>
 References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519646210.git.msuchanek@suse.de>
  <ebc4bc6f1dc7d62ba5c81f40c7f7d83a8ae3eb5d.1519646210.git.msuchanek@suse.de>
 MIME-Version: 1.0
@@ -37,6 +37,9 @@ On 02/26/18 at 01:00pm, Michal Suchanek wrote:
 > 
 > When no option is passed to select one syscall or the other try
 > KEXEC_FILE_LOAD and fall back to KEXEC_LOAD when not suported.
+
+Again, IMHO the default behavior should not be changed..
+
 > 
 > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 > ---
@@ -114,9 +117,6 @@ On 02/26/18 at 01:00pm, Michal Suchanek wrote:
 > +				case -ENOEXEC:
 > +					do_kexec_file_syscall = 0;
 > +					break;
-
-Why do we need checking so many errno, I assumed only fallback in case -ENOSYS
-
 > +			}
 > +		}
 > +		if (!do_kexec_file_syscall)
@@ -131,6 +131,9 @@ Why do we need checking so many errno, I assumed only fallback in case -ENOSYS
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
