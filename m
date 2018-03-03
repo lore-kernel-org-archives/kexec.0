@@ -1,27 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-bn3nam01on0101.outbound.protection.outlook.com
+ ([104.47.33.101] helo=NAM01-BN3-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1esCPB-0002hK-Jb
- for kexec@lists.infradead.org; Sat, 03 Mar 2018 19:01:15 +0000
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w23Iwr9D023572
- for <kexec@lists.infradead.org>; Sat, 3 Mar 2018 14:01:00 -0500
-Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2gfpwr6uy8-1
- (version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Sat, 03 Mar 2018 14:00:59 -0500
-Received: from localhost
- by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Sat, 3 Mar 2018 19:00:58 -0000
-Subject: [PATCH] kexec/ppc64: leverage kexec_file_load support
-From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Sun, 04 Mar 2018 00:30:50 +0530
+ id 1esFgj-00087N-7P
+ for kexec@lists.infradead.org; Sat, 03 Mar 2018 22:31:50 +0000
+From: Sasha Levin <Alexander.Levin@microsoft.com>
+Subject: [PATCH AUTOSEL for 4.9 024/219] x86/mce: Handle broadcasted MCE
+ gracefully with kexec
+Date: Sat, 3 Mar 2018 22:28:09 +0000
+Message-ID: <20180303222716.26640-24-alexander.levin@microsoft.com>
+References: <20180303222716.26640-1-alexander.levin@microsoft.com>
+In-Reply-To: <20180303222716.26640-1-alexander.levin@microsoft.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Message-Id: <152010365000.15494.15072043690885225651.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,144 +25,110 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: bauerman@linux.vnet.ibm.com, Michael Ellerman <mpe@ellerman.id.au>, Kexec-ml <kexec@lists.infradead.org>, Geoff Levand <geoff@infradead.org>
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Cc: Xunlei Pang <xlpang@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Borislav Petkov <bp@suse.de>, Thomas Gleixner <tglx@linutronix.de>, linux-edac <linux-edac@vger.kernel.org>
 
-PPC64 kernel now supports kexec_file_load system call. Leverage it by
-enabling that support here. Note that loading crash kernel with this
-system call is not yet supported in the kernel and trying to load one
-will fail with '-ENOTSUPP' error.
+From: Xunlei Pang <xlpang@redhat.com>
 
-Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+[ Upstream commit 5bc329503e8191c91c4c40836f062ef771d8ba83 ]
+
+When we are about to kexec a crash kernel and right then and there a
+broadcasted MCE fires while we're still in the first kernel and while
+the other CPUs remain in a holding pattern, the #MC handler of the
+first kernel will timeout and then panic due to never completing MCE
+synchronization.
+
+Handle this in a similar way as to when the CPUs are offlined when that
+broadcasted MCE happens.
+
+[ Boris: rewrote commit message and comments. ]
+
+Suggested-by: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Tony Luck <tony.luck@intel.com>
+Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: kexec@lists.infradead.org
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Link: http://lkml.kernel.org/r/1487857012-9059-1-git-send-email-xlpang@redhat.com
+Link: http://lkml.kernel.org/r/20170313095019.19351-1-bp@alien8.de
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- kexec/arch/ppc64/kexec-elf-ppc64.c |   84 ++++++++++++++++++++++++++++++++++++
- kexec/kexec-syscall.h              |    3 +
- 2 files changed, 87 insertions(+)
+ arch/x86/include/asm/reboot.h    |  1 +
+ arch/x86/kernel/cpu/mcheck/mce.c | 18 ++++++++++++++++--
+ arch/x86/kernel/reboot.c         |  5 +++--
+ 3 files changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
-index ddd3de8..2742cd6 100644
---- a/kexec/arch/ppc64/kexec-elf-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
-@@ -93,6 +93,85 @@ static int read_prop(char *name, void *value, size_t len)
- 	return 0;
- }
+diff --git a/arch/x86/include/asm/reboot.h b/arch/x86/include/asm/reboot.h
+index 2cb1cc253d51..fc62ba8dce93 100644
+--- a/arch/x86/include/asm/reboot.h
++++ b/arch/x86/include/asm/reboot.h
+@@ -15,6 +15,7 @@ struct machine_ops {
+ };
  
-+static int elf_ppc64_load_file(int argc, char **argv, struct kexec_info *info)
-+{
-+	int ret = 0;
-+	char *cmdline, *dtb;
-+	int opt, cmdline_len = 0;
-+
-+	/* See options.h -- add any more there, too. */
-+	static const struct option options[] = {
-+		KEXEC_ARCH_OPTIONS
-+		{ "command-line",       1, NULL, OPT_APPEND },
-+		{ "append",             1, NULL, OPT_APPEND },
-+		{ "ramdisk",            1, NULL, OPT_RAMDISK },
-+		{ "initrd",             1, NULL, OPT_RAMDISK },
-+		{ "devicetreeblob",     1, NULL, OPT_DEVICETREEBLOB },
-+		{ "dtb",                1, NULL, OPT_DEVICETREEBLOB },
-+		{ "args-linux",		0, NULL, OPT_ARGS_IGNORE },
-+		{ 0,                    0, NULL, 0 },
-+	};
-+
-+	static const char short_options[] = KEXEC_OPT_STR "";
-+
-+	/* Parse command line arguments */
-+	cmdline = 0;
-+	dtb = 0;
-+	ramdisk = 0;
-+
-+	while ((opt = getopt_long(argc, argv, short_options,
-+					options, 0)) != -1) {
-+		switch (opt) {
-+		default:
-+			/* Ignore core options */
-+			if (opt < OPT_ARCH_MAX)
-+				break;
-+		case OPT_APPEND:
-+			cmdline = optarg;
-+			break;
-+		case OPT_RAMDISK:
-+			ramdisk = optarg;
-+			break;
-+		case OPT_DEVICETREEBLOB:
-+			dtb = optarg;
-+			break;
-+		case OPT_ARGS_IGNORE:
-+			break;
-+		}
-+	}
-+
-+	if (dtb)
-+		die("--dtb not supported while using --kexec-file-syscall.\n");
-+
-+	if (reuse_initrd)
-+		die("--reuseinitrd not supported with --kexec-file-syscall.\n");
-+
-+	if (cmdline) {
-+		cmdline_len = strlen(cmdline) + 1;
-+	} else {
-+		cmdline = strdup("\0");
-+		cmdline_len = 1;
-+	}
-+
-+	if (ramdisk) {
-+		info->initrd_fd = open(ramdisk, O_RDONLY);
-+		if (info->initrd_fd == -1) {
-+			fprintf(stderr, "Could not open initrd file %s:%s\n",
-+					ramdisk, strerror(errno));
-+			ret = -1;
-+			goto out;
-+		}
-+	}
-+
-+	info->command_line = cmdline;
-+	info->command_line_len = cmdline_len;
-+	return ret;
-+out:
-+	if (cmdline_len == 1)
-+		free(cmdline);
-+	return ret;
-+}
-+
- int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
- 			struct kexec_info *info)
- {
-@@ -117,6 +196,9 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
- 	uint32_t my_run_at_load;
- 	unsigned int slave_code[256/sizeof (unsigned int)], master_entry;
+ extern struct machine_ops machine_ops;
++extern int crashing_cpu;
  
-+	if (info->file_mode)
-+		return elf_ppc64_load_file(argc, argv, info);
-+
- 	/* See options.h -- add any more there, too. */
- 	static const struct option options[] = {
- 		KEXEC_ARCH_OPTIONS
-@@ -387,6 +469,8 @@ void elf_ppc64_usage(void)
- 	fprintf(stderr, "     --ramdisk=<filename> Initial RAM disk.\n");
- 	fprintf(stderr, "     --initrd=<filename> same as --ramdisk.\n");
- 	fprintf(stderr, "     --devicetreeblob=<filename> Specify device tree blob file.\n");
-+	fprintf(stderr, "                                 ");
-+	fprintf(stderr, "Not applicable while using --kexec-file-syscall.\n");
- 	fprintf(stderr, "     --dtb=<filename> same as --devicetreeblob.\n");
+ void native_machine_crash_shutdown(struct pt_regs *regs);
+ void native_machine_shutdown(void);
+diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
+index fe5cd6ea1f0e..b0cc7bd26ab5 100644
+--- a/arch/x86/kernel/cpu/mcheck/mce.c
++++ b/arch/x86/kernel/cpu/mcheck/mce.c
+@@ -48,6 +48,7 @@
+ #include <asm/tlbflush.h>
+ #include <asm/mce.h>
+ #include <asm/msr.h>
++#include <asm/reboot.h>
  
- 	fprintf(stderr, "elf support is still broken\n");
-diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
-index 3b5c528..33638c2 100644
---- a/kexec/kexec-syscall.h
-+++ b/kexec/kexec-syscall.h
-@@ -61,6 +61,9 @@
- #ifdef __x86_64__
- #define __NR_kexec_file_load	320
+ #include "mce-internal.h"
+ 
+@@ -1078,9 +1079,22 @@ void do_machine_check(struct pt_regs *regs, long error_code)
+ 	 * on Intel.
+ 	 */
+ 	int lmce = 1;
++	int cpu = smp_processor_id();
+ 
+-	/* If this CPU is offline, just bail out. */
+-	if (cpu_is_offline(smp_processor_id())) {
++	/*
++	 * Cases where we avoid rendezvous handler timeout:
++	 * 1) If this CPU is offline.
++	 *
++	 * 2) If crashing_cpu was set, e.g. we're entering kdump and we need to
++	 *  skip those CPUs which remain looping in the 1st kernel - see
++	 *  crash_nmi_callback().
++	 *
++	 * Note: there still is a small window between kexec-ing and the new,
++	 * kdump kernel establishing a new #MC handler where a broadcasted MCE
++	 * might not get handled properly.
++	 */
++	if (cpu_is_offline(cpu) ||
++	    (crashing_cpu != -1 && crashing_cpu != cpu)) {
+ 		u64 mcgstatus;
+ 
+ 		mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index ce020a69bba9..03f21dbfaa9d 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -769,10 +769,11 @@ void machine_crash_shutdown(struct pt_regs *regs)
  #endif
-+#ifdef __powerpc64__
-+#define __NR_kexec_file_load	382
-+#endif
  
- #ifndef __NR_kexec_file_load
- /* system call not available for the arch */
-
+ 
++/* This is the CPU performing the emergency shutdown work. */
++int crashing_cpu = -1;
++
+ #if defined(CONFIG_SMP)
+ 
+-/* This keeps a track of which one is crashing cpu. */
+-static int crashing_cpu;
+ static nmi_shootdown_cb shootdown_callback;
+ 
+ static atomic_t waiting_for_crash_ipi;
+-- 
+2.14.1
 
 _______________________________________________
 kexec mailing list
