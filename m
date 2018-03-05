@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1esmEt-0004UI-E2
- for kexec@lists.infradead.org; Mon, 05 Mar 2018 09:17:01 +0000
-From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
-Subject: RE: [PATCH makedumpfile] handle mem_section as either a pointer or
- an array
-Date: Mon, 5 Mar 2018 09:15:44 +0000
-Message-ID: <61D4E5D821F1674CB87C99F080A210BE01180726@BPXM01GP.gisp.nec.co.jp>
-References: <20180219200459.27159-1-cascardo@canonical.com>
- <20180302143316.GG5441@siri.cascardo.eti.br>
-In-Reply-To: <20180302143316.GG5441@siri.cascardo.eti.br>
-Content-Language: ja-JP
-MIME-Version: 1.0
+ id 1espcA-0005wY-KB
+ for kexec@lists.infradead.org; Mon, 05 Mar 2018 12:53:16 +0000
+From: Michal Suchanek <msuchanek@suse.de>
+Subject: [PATCH] kexec: add option to fall back to KEXEC_LOAD when
+ KEXEC_FILE_LOAD is not supported.
+Date: Mon,  5 Mar 2018 13:52:52 +0100
+Message-Id: <20180305125252.4953-1-msuchanek@suse.de>
+In-Reply-To: <3b910afee8763a7fd64358884ce3fd4d43e98675.1519997533.git.msuchanek@suse.de>
+References: <3b910afee8763a7fd64358884ce3fd4d43e98675.1519997533.git.msuchanek@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,309 +18,143 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Cc: Masahiko Hayashi <mas-hayashi@tg.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: Tony Jones <tonyj@suse.com>, Dave Young <dyoung@redhat.com>, Michal Suchanek <msuchanek@suse.de>, Petr Tesarik <ptesarik@suse.cz>, horms@verge.net.au
 
-Hi Thadeu,
+Not all architectures implement KEXEC_FILE_LOAD. However, on some
+archiectures KEXEC_FILE_LOAD is required when secure boot is enabled in
+locked-down mode. Previously users had to select the KEXEC_FILE_LOAD
+syscall with undocumented -s option. However, if they did pass the
+option kexec would fail on architectures that do not support it.
 
-Sorry for the late reply.
-"handle mem_section as either a pointer or an array" patch and
-"Always use bigger SECTION_MAP_MASK" patch modify the same line.
-I would like to reply about both patches by the end of the next week.
+So add an -a option that tries KEXEC_FILE_LOAD and when it is not
+supported tries KEXEC_LOAD.
 
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+ kexec/kexec.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++----
+ kexec/kexec.h |  4 +++-
+ 2 files changed, 50 insertions(+), 5 deletions(-)
 
-Thanks
-Tachibana
-
-
-> -----Original Message-----
-> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Thadeu Lima de Souza Cascardo
-> Sent: Friday, March 02, 2018 11:33 PM
-> To: kexec@lists.infradead.org
-> Subject: Re: [PATCH makedumpfile] handle mem_section as either a pointer or an array
-> 
-> Any comments or reviews on the patch below?
-> 
-> Thanks.
-> Cascardo.
-> 
-> On Mon, Feb 19, 2018 at 05:04:59PM -0300, Thadeu Lima de Souza Cascardo wrote:
-> > Some kernel versions that have been recently shipped have mem_section point to
-> > a pointer to the array, instead of pointing directly to the array. That only
-> > happens on SPARSEMEM_EXTREME configurations.
-> >
-> > As dwarf information might not be present that would have allowed us to detect
-> > which type it is, we need to try it either as an array or as the pointer to the
-> > array. Then, we validate all section_mem_map: they must either be present or
-> > null. If any problems are found when traversing it, consider it invalid. Only
-> > one way may be valid. Otherwise, fail.
-> >
-> > This has been tested with both types of kernels and succeeded in producing a
-> > compressed dump that could be analyzed with crash 7.2.1.
-> >
-> > Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-> > ---
-> >  makedumpfile.c | 153 +++++++++++++++++++++++++++++++++++++++++++--------------
-> >  makedumpfile.h |   1 +
-> >  2 files changed, 118 insertions(+), 36 deletions(-)
-> >
-> > diff --git a/makedumpfile.c b/makedumpfile.c
-> > index ed138d3..cd3fa4d 100644
-> > --- a/makedumpfile.c
-> > +++ b/makedumpfile.c
-> > @@ -3297,7 +3297,7 @@ get_mm_discontigmem(void)
-> >  	return TRUE;
-> >  }
-> >
-> > -unsigned long
-> > +static unsigned long
-> >  nr_to_section(unsigned long nr, unsigned long *mem_sec)
-> >  {
-> >  	unsigned long addr;
-> > @@ -3311,17 +3311,17 @@ nr_to_section(unsigned long nr, unsigned long *mem_sec)
-> >  		addr = SYMBOL(mem_section) + (nr * SIZE(mem_section));
-> >  	}
-> >
-> > -	if (!is_kvaddr(addr))
-> > -		return NOT_KV_ADDR;
-> > -
-> >  	return addr;
-> >  }
-> >
-> > -unsigned long
-> > -section_mem_map_addr(unsigned long addr)
-> > +static unsigned long
-> > +section_mem_map_addr(unsigned long addr, unsigned long *map_mask)
-> >  {
-> >  	char *mem_section;
-> >  	unsigned long map;
-> > +	unsigned long mask;
-> > +
-> > +	*map_mask = 0;
-> >
-> >  	if (!is_kvaddr(addr))
-> >  		return NOT_KV_ADDR;
-> > @@ -3338,15 +3338,19 @@ section_mem_map_addr(unsigned long addr)
-> >  	}
-> >  	map = ULONG(mem_section + OFFSET(mem_section.section_mem_map));
-> >  	if (info->kernel_version < KERNEL_VERSION(4, 13, 0))
-> > -		map &= SECTION_MAP_MASK_4_12;
-> > +		mask = SECTION_MAP_MASK_4_12;
-> >  	else
-> > -		map &= SECTION_MAP_MASK;
-> > +		mask = SECTION_MAP_MASK;
-> > +	*map_mask = map & ~mask;
-> > +	if (map == 0x0)
-> > +		*map_mask |= SECTION_MARKED_PRESENT;
-> > +	map &= mask;
-> >  	free(mem_section);
-> >
-> >  	return map;
-> >  }
-> >
-> > -unsigned long
-> > +static unsigned long
-> >  sparse_decode_mem_map(unsigned long coded_mem_map, unsigned long section_nr)
-> >  {
-> >  	unsigned long mem_map;
-> > @@ -3354,17 +3358,110 @@ sparse_decode_mem_map(unsigned long coded_mem_map, unsigned long section_nr)
-> >  	mem_map =  coded_mem_map +
-> >  	    (SECTION_NR_TO_PFN(section_nr) * SIZE(page));
-> >
-> > -	if (!is_kvaddr(mem_map))
-> > -		return NOT_KV_ADDR;
-> >  	return mem_map;
-> >  }
-> > +
-> > +/*
-> > + * On some kernels, mem_section may be a pointer or an array, when
-> > + * SPARSEMEM_EXTREME is on.
-> > + *
-> > + * We assume that section_mem_map is either 0 or has the present bit set.
-> > + *
-> > + */
-> > +
-> > +static int
-> > +validate_mem_section(unsigned long *mem_sec,
-> > +		     unsigned long mem_section_ptr, unsigned int mem_section_size,
-> > +		     unsigned long *mem_maps, unsigned int num_section)
-> > +{
-> > +	unsigned int section_nr;
-> > +	unsigned long map_mask;
-> > +	unsigned long section, mem_map;
-> > +	if (!readmem(VADDR, mem_section_ptr, mem_sec, mem_section_size)) {
-> > +		ERRMSG("Can't read mem_section array.\n");
-> > +		return FALSE;
-> > +	}
-> > +	for (section_nr = 0; section_nr < num_section; section_nr++) {
-> > +		section = nr_to_section(section_nr, mem_sec);
-> > +		if (section == NOT_KV_ADDR) {
-> > +			mem_map = NOT_MEMMAP_ADDR;
-> > +		} else {
-> > +			mem_map = section_mem_map_addr(section, &map_mask);
-> > +			if (!(map_mask & SECTION_MARKED_PRESENT)) {
-> > +				return FALSE;
-> > +			}
-> > +			if (mem_map == 0) {
-> > +				mem_map = NOT_MEMMAP_ADDR;
-> > +			} else {
-> > +				mem_map = sparse_decode_mem_map(mem_map,
-> > +								section_nr);
-> > +				if (!is_kvaddr(mem_map)) {
-> > +					return FALSE;
-> > +				}
-> > +			}
-> > +		}
-> > +		mem_maps[section_nr] = mem_map;
-> > +	}
-> > +	return TRUE;
-> > +}
-> > +
-> > +static int
-> > +get_mem_section(unsigned int mem_section_size, unsigned long *mem_maps,
-> > +		unsigned int num_section)
-> > +{
-> > +	unsigned long mem_section_ptr;
-> > +	int ret = FALSE;
-> > +	unsigned long *mem_sec = NULL;
-> > +
-> > +	if ((mem_sec = malloc(mem_section_size)) == NULL) {
-> > +		ERRMSG("Can't allocate memory for the mem_section. %s\n",
-> > +		    strerror(errno));
-> > +		return FALSE;
-> > +	}
-> > +	ret = validate_mem_section(mem_sec, SYMBOL(mem_section),
-> > +				   mem_section_size, mem_maps, num_section);
-> > +
-> > +	if (is_sparsemem_extreme()) {
-> > +		int symbol_valid = ret;
-> > +		int pointer_valid;
-> > +		int mem_maps_size = sizeof(*mem_maps) * num_section;
-> > +		unsigned long *mem_maps_ex = NULL;
-> > +		if (!readmem(VADDR, SYMBOL(mem_section), &mem_section_ptr,
-> > +			     sizeof(mem_section_ptr)))
-> > +			goto out;
-> > +
-> > +		if ((mem_maps_ex = malloc(mem_maps_size)) == NULL) {
-> > +			ERRMSG("Can't allocate memory for the mem_maps. %s\n",
-> > +			    strerror(errno));
-> > +			goto out;
-> > +		}
-> > +
-> > +		pointer_valid = validate_mem_section(mem_sec,
-> > +						     mem_section_ptr,
-> > +						     mem_section_size,
-> > +						     mem_maps_ex,
-> > +						     num_section);
-> > +		if (pointer_valid)
-> > +			memcpy(mem_maps, mem_maps_ex, mem_maps_size);
-> > +		if (mem_maps_ex)
-> > +			free(mem_maps_ex);
-> > +		ret = symbol_valid ^ pointer_valid;
-> > +		if (!ret) {
-> > +			ERRMSG("Could not validate mem_section.\n");
-> > +		}
-> > +	}
-> > +out:
-> > +	if (mem_sec != NULL)
-> > +		free(mem_sec);
-> > +	return ret;
-> > +}
-> > +
-> >  int
-> >  get_mm_sparsemem(void)
-> >  {
-> >  	unsigned int section_nr, mem_section_size, num_section;
-> >  	mdf_pfn_t pfn_start, pfn_end;
-> > -	unsigned long section, mem_map;
-> > -	unsigned long *mem_sec = NULL;
-> > +	unsigned long *mem_maps = NULL;
-> >
-> >  	int ret = FALSE;
-> >
-> > @@ -3379,13 +3476,12 @@ get_mm_sparsemem(void)
-> >  		info->sections_per_root = _SECTIONS_PER_ROOT();
-> >  		mem_section_size = SIZE(mem_section) * NR_SECTION_ROOTS();
-> >  	}
-> > -	if ((mem_sec = malloc(mem_section_size)) == NULL) {
-> > -		ERRMSG("Can't allocate memory for the mem_section. %s\n",
-> > -		    strerror(errno));
-> > +	if ((mem_maps = malloc(sizeof(*mem_maps) * num_section)) == NULL) {
-> > +		ERRMSG("Can't allocate memory for the mem_maps. %s\n",
-> > +			strerror(errno));
-> >  		return FALSE;
-> >  	}
-> > -	if (!readmem(VADDR, SYMBOL(mem_section), mem_sec,
-> > -	    mem_section_size)) {
-> > +	if (!get_mem_section(mem_section_size, mem_maps, num_section)) {
-> >  		ERRMSG("Can't get the address of mem_section.\n");
-> >  		goto out;
-> >  	}
-> > @@ -3397,31 +3493,16 @@ get_mm_sparsemem(void)
-> >  		goto out;
-> >  	}
-> >  	for (section_nr = 0; section_nr < num_section; section_nr++) {
-> > -		section = nr_to_section(section_nr, mem_sec);
-> > -		if (section == NOT_KV_ADDR) {
-> > -			mem_map = NOT_MEMMAP_ADDR;
-> > -		} else {
-> > -			mem_map = section_mem_map_addr(section);
-> > -			if (mem_map == 0) {
-> > -				mem_map = NOT_MEMMAP_ADDR;
-> > -			} else {
-> > -				mem_map = sparse_decode_mem_map(mem_map,
-> > -								section_nr);
-> > -				if (!is_kvaddr(mem_map))
-> > -					mem_map = NOT_MEMMAP_ADDR;
-> > -			}
-> > -		}
-> >  		pfn_start = section_nr * PAGES_PER_SECTION();
-> >  		pfn_end   = pfn_start + PAGES_PER_SECTION();
-> >  		if (info->max_mapnr < pfn_end)
-> >  			pfn_end = info->max_mapnr;
-> > -		dump_mem_map(pfn_start, pfn_end, mem_map, section_nr);
-> > +		dump_mem_map(pfn_start, pfn_end, mem_maps[section_nr], section_nr);
-> >  	}
-> >  	ret = TRUE;
-> >  out:
-> > -	if (mem_sec != NULL)
-> > -		free(mem_sec);
-> > -
-> > +	if (mem_maps != NULL)
-> > +		free(mem_maps);
-> >  	return ret;
-> >  }
-> >
-> > diff --git a/makedumpfile.h b/makedumpfile.h
-> > index 01eece2..58e1aaa 100644
-> > --- a/makedumpfile.h
-> > +++ b/makedumpfile.h
-> > @@ -184,6 +184,7 @@ isAnon(unsigned long mapping)
-> >  #define SECTIONS_PER_ROOT()	(info->sections_per_root)
-> >  #define SECTION_ROOT_MASK()	(SECTIONS_PER_ROOT() - 1)
-> >  #define SECTION_NR_TO_ROOT(sec)	((sec) / SECTIONS_PER_ROOT())
-> > +#define SECTION_MARKED_PRESENT  (1UL<<0)
-> >  #define SECTION_IS_ONLINE	(1UL<<2)
-> >  #define SECTION_MAP_LAST_BIT	(1UL<<3)
-> >  #define SECTION_MAP_MASK_4_12	(~(SECTION_IS_ONLINE-1))
-> > --
-> > 2.14.1
-> >
-> >
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index a95cfb473d6b..c7aaf8ac147f 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -1243,6 +1243,7 @@ int main(int argc, char *argv[])
+ 	int do_unload = 0;
+ 	int do_reuse_initrd = 0;
+ 	int do_kexec_file_syscall = 0;
++	int do_kexec_fallback = 0;
+ 	int do_status = 0;
+ 	void *entry = 0;
+ 	char *type = 0;
+@@ -1367,10 +1368,15 @@ int main(int argc, char *argv[])
+ 			break;
+ 		case OPT_KEXEC_FILE_SYSCALL:
+ 			do_kexec_file_syscall = 1;
++			do_kexec_fallback = 0;
+ 			break;
+ 		case OPT_KEXEC_SYSCALL:
+ 			do_kexec_file_syscall = 0;
++			do_kexec_fallback = 0;
+ 			break;
++		case OPT_KEXEC_SYSCALL_AUTO:
++			do_kexec_file_syscall = 1;
++			do_kexec_fallback = 1;
+ 		case OPT_STATUS:
+ 			do_status = 1;
+ 			break;
+@@ -1442,16 +1448,53 @@ int main(int argc, char *argv[])
+ 		result = k_status(kexec_flags);
+ 	}
+ 	if (do_unload) {
+-		if (do_kexec_file_syscall)
++		if (do_kexec_file_syscall) {
+ 			result = kexec_file_unload(kexec_file_flags);
+-		else
++			if ((result == -ENOSYS) && do_kexec_fallback)
++				do_kexec_file_syscall = 0;
++		}
++		if (!do_kexec_file_syscall)
+ 			result = k_unload(kexec_flags);
+ 	}
+ 	if (do_load && (result == 0)) {
+-		if (do_kexec_file_syscall)
++		if (do_kexec_file_syscall) {
+ 			result = do_kexec_file_load(fileind, argc, argv,
+ 						 kexec_file_flags);
+-		else
++			if (do_kexec_fallback) switch (result) {
++				/*
++				 * Something failed with signature verification.
++				 * Reject the image.
++				 */
++				case -ELIBBAD:
++				case -EKEYREJECTED:
++				case -ENOPKG:
++				case -ENOKEY:
++				case -EBADMSG:
++				case -EMSGSIZE:
++					/*
++					 * By default reject or do nothing if
++					 * succeded
++					 */
++				default: break;
++					/*
++					 * Parsing image or other options failed
++					 * The image may be invalid or image
++					 * type may not supported by kernel so
++					 * retry parsing in kexec-tools.
++					 */
++				case -EINVAL:
++				case -ENOEXEC:
++					 /*
++					  * ENOTSUPP can be unsupported image
++					  * type or unsupported PE signature
++					  * wrapper type, duh
++					  */
++				case -ENOTSUP:
++					do_kexec_file_syscall = 0;
++					break;
++			}
++		}
++		if (!do_kexec_file_syscall)
+ 			result = my_load(type, fileind, argc, argv,
+ 						kexec_flags, entry);
+ 	}
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 9fd0355eacd0..d445fbe3e486 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -220,6 +220,7 @@ extern int file_types;
+ #define OPT_PANIC		'p'
+ #define OPT_KEXEC_FILE_SYSCALL	's'
+ #define OPT_KEXEC_SYSCALL	'c'
++#define OPT_KEXEC_SYSCALL_AUTO	'a'
+ #define OPT_STATUS		'S'
+ #define OPT_MEM_MIN             256
+ #define OPT_MEM_MAX             257
+@@ -248,11 +249,12 @@ extern int file_types;
+ 	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
+ 	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
+ 	{ "kexec-syscall",	0, 0, OPT_KEXEC_SYSCALL }, \
++	{ "kexec-syscall-auto",	0, 0, OPT_KEXEC_SYSCALL_AUTO }, \
+ 	{ "debug",		0, 0, OPT_DEBUG }, \
+ 	{ "status",		0, 0, OPT_STATUS }, \
+ 	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
+ 
+-#define KEXEC_OPT_STR "h?vdfxyluet:pscS"
++#define KEXEC_OPT_STR "h?vdfxyluet:pscaS"
+ 
+ extern void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr);
+ extern void die(const char *fmt, ...)
+-- 
+2.13.6
 
 
 _______________________________________________
