@@ -1,21 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1esfHv-0000ss-8O
- for kexec@lists.infradead.org; Mon, 05 Mar 2018 01:51:40 +0000
-Date: Mon, 5 Mar 2018 09:51:18 +0800
+Date: Mon, 5 Mar 2018 10:36:07 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 4/5] kexec: fallback to KEXEC_LOAD when KEXEC_FILE_LOAD
- is not supported.
-Message-ID: <20180305015118.GA3878@dhcp-128-65.nay.redhat.com>
-References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519646210.git.msuchanek@suse.de>
- <ebc4bc6f1dc7d62ba5c81f40c7f7d83a8ae3eb5d.1519646210.git.msuchanek@suse.de>
- <20180302092419.GB15374@dhcp-128-65.nay.redhat.com>
- <20180302133252.69a36ffd@kitsune.suse.cz>
- <20180302124610.3tyvym3dayq3coiz@verge.net.au>
+Subject: Re: [PATCH 0/7] kexec_file: refactoring for other architecutres
+Message-ID: <20180305023607.GA4185@dhcp-128-65.nay.redhat.com>
+References: <20180227044814.24808-1-takahiro.akashi@linaro.org>
+ <20180302055609.GA15422@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180302124610.3tyvym3dayq3coiz@verge.net.au>
+In-Reply-To: <20180302055609.GA15422@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,46 +16,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Tony Jones <tonyj@suse.com>, Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>, kexec@lists.infradead.org, Petr Tesarik <ptesarik@suse.cz>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: linux-s390@vger.kernel.org, prudo@linux.vnet.ibm.com, bhe@redhat.com, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bauerman@linux.vnet.ibm.com, vgoyal@redhat.com
 
-On 03/02/18 at 01:46pm, Simon Horman wrote:
-> On Fri, Mar 02, 2018 at 01:32:52PM +0100, Michal Such=E1nek wrote:
-> > On Fri, 2 Mar 2018 17:24:19 +0800
-> > Dave Young <dyoung@redhat.com> wrote:
-> > =
+On 03/02/18 at 01:56pm, Dave Young wrote:
+> Hi AKASHI,
+> On 02/27/18 at 01:48pm, AKASHI Takahiro wrote:
+> > subject: 
+> > 
+> > This is a preparatory patch set for adding kexec_file support on arm64.
+> > 
+> > It was originally included in a arm64 patch set[1], but Philipp is also
+> > working on their kexec_file support on s390[2] and some changes are now
+> > conflicting.
+> > 
+> > So these common part was extracted and put into a separate patch set for
+> > better integration. What's more, my original patch#4 was split into a few
+> > small chunks for easier review after Dave's comment.
+> > 
+> > As such, the resulting code is basically identical with my original, and
+> > the only difference is that kexec_file_loaders[] is now declared in kexec.h
+> > after Phillipp's comment[3]. Other than that, this patch set doesn't
+> > require any changes on the rest of my original patch set(#1, #6 to #13).
+> > 
+> > Patch#1 allows making a use of purgatory optional, particularly useful
+> > for arm64.
+> > Patch#2 commonalizes arch_kexec_kernel_{image_probe, image_load,
+> > verify_sig}() and arch_kimage_file_post_load_cleanup() across architectures.
+> > Patch#3-#7 is also intended to generalize parse_elf64_headers(), along with
+> > exclude_mem_range(), to be made best re-use of.
+> > 
+> > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-February/561182.html
+> > [2] http://lkml.iu.edu//hypermail/linux/kernel/1802.1/02596.html
+> > [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-February/562041.html
+> > 
+> > AKASHI Takahiro (7):
+> >   kexec_file: make an use of purgatory optional
+> >   kexec_file,x86,powerpc: factor out kexec_file_ops functions
+> >   x86: kexec_file: purge system-ram walking from prepare_elf64_headers()
+> >   x86: kexec_file: remove X86_64 dependency from prepare_elf64_headers()
+> >   x86: kexec_file: lift CRASH_MAX_RANGES limit on crash_mem buffer
+> >   x86: kexec_file: clean up prepare_elf64_headers()
+> >   kexec_file, x86: move re-factored code to generic side
+> > 
+> >  arch/powerpc/Kconfig                        |   3 +
+> >  arch/powerpc/include/asm/kexec.h            |   2 +-
+> >  arch/powerpc/kernel/kexec_elf_64.c          |   2 +-
+> >  arch/powerpc/kernel/machine_kexec_file_64.c |  39 +---
+> >  arch/x86/Kconfig                            |   3 +
+> >  arch/x86/include/asm/kexec-bzimage64.h      |   2 +-
+> >  arch/x86/kernel/crash.c                     | 332 +++++-----------------------
+> >  arch/x86/kernel/kexec-bzimage64.c           |   2 +-
+> >  arch/x86/kernel/machine_kexec_64.c          |  45 +---
+> >  include/linux/kexec.h                       |  36 ++-
+> >  kernel/kexec_file.c                         | 236 +++++++++++++++++++-
+> >  11 files changed, 336 insertions(+), 366 deletions(-)
+> > 
+> > -- 
+> > 2.16.2
+> > 
+> 
+> Reviewed them with eyes and provided some comments, but since it changed
+> the elf header code, I would like to do some basic vmcore related test
+> with crash tools.  Will response later.
 
-> > > On 02/26/18 at 01:00pm, Michal Suchanek wrote:
-> > > > Not all architectures implement KEXEC_FILE_LOAD. However, on some
-> > > > archiectures KEXEC_FILE_LOAD is required when secure boot is
-> > > > enabled in locked-down mode. Previously users had to select the
-> > > > KEXEC_FILE_LOAD syscall with undocumented -s option. However, if
-> > > > they did pass the option kexec would fail on architectures that do
-> > > > not support it.
-> > > > =
+Followup: I did some basic testing, did not find problems.
 
-> > > > When no option is passed to select one syscall or the other try
-> > > > KEXEC_FILE_LOAD and fall back to KEXEC_LOAD when not suported.  =
-
-> > > =
-
-> > > Again, IMHO the default behavior should not be changed..
-> > =
-
-> > So adding a new option to enable the fallback would be ok?
-> =
-
-> I am also wary of changing the default behaviour and
-> I think a new fallback option would be better.
-> =
-
-> Dave?
-
-Simon, I have same feeling, and a new option looks good to me as well
+> 
+> Overall the cleanups looks good, thank you a lot for the cleanups!
+> 
+> Thanks
+> Dave
 
 Thanks
 Dave
