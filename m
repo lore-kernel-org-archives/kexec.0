@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f65.google.com ([74.125.83.65])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1estgZ-0002s8-Gi
- for kexec@lists.infradead.org; Mon, 05 Mar 2018 17:14:05 +0000
-Received: by mail-pg0-f65.google.com with SMTP id e9so7065458pgs.10
- for <kexec@lists.infradead.org>; Mon, 05 Mar 2018 09:13:53 -0800 (PST)
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH v2 3/3] Documentation: Update documentation regarding
- --mem-usage' option
-Date: Mon,  5 Mar 2018 22:42:56 +0530
-Message-Id: <1520269976-8850-4-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1520269976-8850-1-git-send-email-bhsharma@redhat.com>
-References: <1520269976-8850-1-git-send-email-bhsharma@redhat.com>
+ id 1esuEv-0003Qx-0b
+ for kexec@lists.infradead.org; Mon, 05 Mar 2018 17:49:34 +0000
+Date: Mon, 5 Mar 2018 18:49:17 +0100
+From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+Subject: Re: [PATCH 4/5] kexec: fallback to KEXEC_LOAD when KEXEC_FILE_LOAD
+ is not supported.
+Message-ID: <20180305184917.53b7404b@kitsune.suse.cz>
+In-Reply-To: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
+References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519646210.git.msuchanek@suse.de>
+ <ebc4bc6f1dc7d62ba5c81f40c7f7d83a8ae3eb5d.1519646210.git.msuchanek@suse.de>
+ <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,44 +21,131 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: bhsharma@redhat.com, bhupesh.linux@gmail.com
+To: Dave Young <dyoung@redhat.com>
+Cc: Tony Jones <tonyj@suse.com>, horms@verge.net.au, kexec@lists.infradead.org, Petr Tesarik <ptesarik@suse.cz>
 
-Earlier patch in this patchset, enables the '--mem-usage' makedumpfile
-option on arm64 platforms.
+On Fri, 2 Mar 2018 17:17:06 +0800
+Dave Young <dyoung@redhat.com> wrote:
 
-In addition, I have validated the '--mem-usage' makedumpfile option
-on several ppc64/ppc64le and s390x machines, so update the
-'makedumpfile.8' documentation to indicate that '--mem-usage' option is
-supported not only on x86_64, but also on ppc64, s390x and arm64
-platforms.
+> On 02/26/18 at 01:00pm, Michal Suchanek wrote:
+> > Not all architectures implement KEXEC_FILE_LOAD. However, on some
+> > archiectures KEXEC_FILE_LOAD is required when secure boot is
+> > enabled in locked-down mode. Previously users had to select the
+> > KEXEC_FILE_LOAD syscall with undocumented -s option. However, if
+> > they did pass the option kexec would fail on architectures that do
+> > not support it.
+> > 
+> > When no option is passed to select one syscall or the other try
+> > KEXEC_FILE_LOAD and fall back to KEXEC_LOAD when not suported.
+> > 
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > ---
+> >  kexec/kexec.c | 43 +++++++++++++++++++++++++++++++++++++++----
+> >  1 file changed, 39 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/kexec/kexec.c b/kexec/kexec.c
+> > index a95cfb473d6b..14f56e466a95 100644
+> > --- a/kexec/kexec.c
+> > +++ b/kexec/kexec.c
+> > @@ -1243,6 +1243,7 @@ int main(int argc, char *argv[])
+> >  	int do_unload = 0;
+> >  	int do_reuse_initrd = 0;
+> >  	int do_kexec_file_syscall = 0;
+> > +	int do_kexec_fallback = 1;
+> >  	int do_status = 0;
+> >  	void *entry = 0;
+> >  	char *type = 0;
+> > @@ -1367,9 +1368,11 @@ int main(int argc, char *argv[])
+> >  			break;
+> >  		case OPT_KEXEC_FILE_SYSCALL:
+> >  			do_kexec_file_syscall = 1;
+> > +			do_kexec_fallback = 0;
+> >  			break;
+> >  		case OPT_KEXEC_SYSCALL:
+> >  			do_kexec_file_syscall = 0;
+> > +			do_kexec_fallback = 0;
+> >  			break;
+> >  		case OPT_STATUS:
+> >  			do_status = 1;
+> > @@ -1442,16 +1445,48 @@ int main(int argc, char *argv[])
+> >  		result = k_status(kexec_flags);
+> >  	}
+> >  	if (do_unload) {
+> > -		if (do_kexec_file_syscall)
+> > +		if (do_kexec_file_syscall) {
+> >  			result =
+> > kexec_file_unload(kexec_file_flags);
+> > -		else
+> > +			if ((result == -ENOSYS) &&
+> > do_kexec_fallback)
+> > +				do_kexec_file_syscall = 0;
+> > +		}
+> > +		if (!do_kexec_file_syscall)
+> >  			result = k_unload(kexec_flags);
+> >  	}
+> >  	if (do_load && (result == 0)) {
+> > -		if (do_kexec_file_syscall)
+> > +		if (do_kexec_file_syscall) {
+> >  			result = do_kexec_file_load(fileind, argc,
+> > argv, kexec_file_flags);
+> > -		else
+> > +			if (do_kexec_fallback) switch (result) {
+> > +				/*
+> > +				 * Something failed with signature
+> > verification.
+> > +				 * Reject the image.
+> > +				 */
+> > +				case -ELIBBAD:
+> > +				case -EKEYREJECTED:
+> > +				case -ENOPKG:
+> > +				case -ENOKEY:
+> > +				case -EBADMSG:
+> > +				case -EMSGSIZE:
 
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- makedumpfile.8 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The above do not need to be listed. These are the return values
+expected when checking signature fails. This lists is for documentation
+purposes only.
 
-diff --git a/makedumpfile.8 b/makedumpfile.8
-index 15db7947d62f..3ccfc65798be 100644
---- a/makedumpfile.8
-+++ b/makedumpfile.8
-@@ -593,7 +593,7 @@ last cleared on the crashed kernel, through "dmesg --clear" for example.
- 
- .TP
- \fB\-\-mem-usage\fR
--This option is only for x86_64.
-+This option is currently supported on x86_64, arm64, ppc64 and s390x.
- This option is used to show the page numbers of current system in different
- use. It should be executed in 1st kernel. By the help of this, user can know
- how many pages is dumpable when different dump_level is specified. It analyzes
--- 
-2.7.4
+> > +				case -ENOTSUPP:
+> > +					/*
+> > +					 * By default reject or do
+> > nothing if
+> > +					 * succeded
+> > +					 */
+> > +				default: break;
+> > +					/*
+> > +					 * Parsing image or other
+> > options failed
+> > +					 * The image may be
+> > invalid or image
+> > +					 * type may not supported
+> > by kernel so
+> > +					 * retry parsing in
+> > kexec-tools.
+> > +					 */
+> > +				case -EINVAL:
+> > +				case -ENOEXEC:
+> > +					do_kexec_file_syscall = 0;
+> > +					break;  
+> 
+> Why do we need checking so many errno, 
 
+Linux returns these when it does not understand the image format.
+Because some formats are not supported by KEXEC_LOAD_FILE it makes sense
+to try parsing the image in kexec-tools.
+
+> I assumed only fallback in
+> case -ENOSYS
+
+which is not even listed.
+
+Thanks
+
+Michal
 
 _______________________________________________
 kexec mailing list
