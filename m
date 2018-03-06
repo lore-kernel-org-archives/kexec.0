@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1etCRw-000185-Ua
+ id 1etCRw-00018B-UY
  for kexec@lists.infradead.org; Tue, 06 Mar 2018 13:16:16 +0000
 From: Michal Suchanek <msuchanek@suse.de>
-Subject: [PATCH v4 1/5] kexec: Return -ENOSYS when kexec does not know how to
- call KEXEC_FILE_LOAD
-Date: Tue,  6 Mar 2018 14:15:52 +0100
-Message-Id: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1520342150.git.msuchanek@suse.de>
+Subject: [PATCH v4 4/5] kexec: add option to fall back to KEXEC_LOAD when
+ KEXEC_FILE_LOAD is not supported.
+Date: Tue,  6 Mar 2018 14:15:55 +0100
+Message-Id: <19a47e290fc03efea82af845740ae8f6b30f13b8.1520342150.git.msuchanek@suse.de>
+In-Reply-To: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1520342150.git.msuchanek@suse.de>
+References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1520342150.git.msuchanek@suse.de>
 In-Reply-To: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
 References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,28 +28,137 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Tony Jones <tonyj@suse.com>, Dave Young <dyoung@redhat.com>, Michal Suchanek <msuchanek@suse.de>, Petr Tesarik <ptesarik@suse.cz>, horms@verge.net.au
 
-When the kernel does not know a syscall number it returns -ENOSYS but
-when kexec does not know a syscall number it returns -1. Return -ENOSYS
-from kexec as well.
+Not all architectures implement KEXEC_FILE_LOAD. However, on some
+archiectures KEXEC_FILE_LOAD is required when secure boot is enabled in
+locked-down mode. Previously users had to select the KEXEC_FILE_LOAD
+syscall with undocumented -s option. However, if they did pass the
+option kexec would fail on architectures that do not support it.
+
+So add an -a option that tries KEXEC_FILE_LOAD and when it is not
+supported tries KEXEC_LOAD.
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- kexec/kexec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v3: instead of changing the deafult add extra option
+v4: actually check -ENOSYS as well
+---
+ kexec/kexec.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++----
+ kexec/kexec.h |  4 +++-
+ 2 files changed, 51 insertions(+), 5 deletions(-)
 
 diff --git a/kexec/kexec.c b/kexec/kexec.c
-index cfd837c1b6bb..ab8cff7fe083 100644
+index a95cfb473d6b..5c5aee344b41 100644
 --- a/kexec/kexec.c
 +++ b/kexec/kexec.c
-@@ -1166,7 +1166,7 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
- 
- 	if (!is_kexec_file_load_implemented()) {
- 		fprintf(stderr, "syscall kexec_file_load not available.\n");
--		return -1;
-+		return -ENOSYS;
+@@ -1243,6 +1243,7 @@ int main(int argc, char *argv[])
+ 	int do_unload = 0;
+ 	int do_reuse_initrd = 0;
+ 	int do_kexec_file_syscall = 0;
++	int do_kexec_fallback = 0;
+ 	int do_status = 0;
+ 	void *entry = 0;
+ 	char *type = 0;
+@@ -1367,10 +1368,15 @@ int main(int argc, char *argv[])
+ 			break;
+ 		case OPT_KEXEC_FILE_SYSCALL:
+ 			do_kexec_file_syscall = 1;
++			do_kexec_fallback = 0;
+ 			break;
+ 		case OPT_KEXEC_SYSCALL:
+ 			do_kexec_file_syscall = 0;
++			do_kexec_fallback = 0;
+ 			break;
++		case OPT_KEXEC_SYSCALL_AUTO:
++			do_kexec_file_syscall = 1;
++			do_kexec_fallback = 1;
+ 		case OPT_STATUS:
+ 			do_status = 1;
+ 			break;
+@@ -1442,16 +1448,54 @@ int main(int argc, char *argv[])
+ 		result = k_status(kexec_flags);
  	}
+ 	if (do_unload) {
+-		if (do_kexec_file_syscall)
++		if (do_kexec_file_syscall) {
+ 			result = kexec_file_unload(kexec_file_flags);
+-		else
++			if ((result == -ENOSYS) && do_kexec_fallback)
++				do_kexec_file_syscall = 0;
++		}
++		if (!do_kexec_file_syscall)
+ 			result = k_unload(kexec_flags);
+ 	}
+ 	if (do_load && (result == 0)) {
+-		if (do_kexec_file_syscall)
++		if (do_kexec_file_syscall) {
+ 			result = do_kexec_file_load(fileind, argc, argv,
+ 						 kexec_file_flags);
+-		else
++			if (do_kexec_fallback) switch (result) {
++				/*
++				 * Something failed with signature verification.
++				 * Reject the image.
++				 */
++				case -ELIBBAD:
++				case -EKEYREJECTED:
++				case -ENOPKG:
++				case -ENOKEY:
++				case -EBADMSG:
++				case -EMSGSIZE:
++					/*
++					 * By default reject or do nothing if
++					 * succeded
++					 */
++				default: break;
++				case -ENOSYS: /* not implemented */
++					/*
++					 * Parsing image or other options failed
++					 * The image may be invalid or image
++					 * type may not supported by kernel so
++					 * retry parsing in kexec-tools.
++					 */
++				case -EINVAL:
++				case -ENOEXEC:
++					 /*
++					  * ENOTSUPP can be unsupported image
++					  * type or unsupported PE signature
++					  * wrapper type, duh
++					  */
++				case -ENOTSUP:
++					do_kexec_file_syscall = 0;
++					break;
++			}
++		}
++		if (!do_kexec_file_syscall)
+ 			result = my_load(type, fileind, argc, argv,
+ 						kexec_flags, entry);
+ 	}
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 9fd0355eacd0..d445fbe3e486 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -220,6 +220,7 @@ extern int file_types;
+ #define OPT_PANIC		'p'
+ #define OPT_KEXEC_FILE_SYSCALL	's'
+ #define OPT_KEXEC_SYSCALL	'c'
++#define OPT_KEXEC_SYSCALL_AUTO	'a'
+ #define OPT_STATUS		'S'
+ #define OPT_MEM_MIN             256
+ #define OPT_MEM_MAX             257
+@@ -248,11 +249,12 @@ extern int file_types;
+ 	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
+ 	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
+ 	{ "kexec-syscall",	0, 0, OPT_KEXEC_SYSCALL }, \
++	{ "kexec-syscall-auto",	0, 0, OPT_KEXEC_SYSCALL_AUTO }, \
+ 	{ "debug",		0, 0, OPT_DEBUG }, \
+ 	{ "status",		0, 0, OPT_STATUS }, \
+ 	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
  
- 	if (argc - fileind <= 0) {
+-#define KEXEC_OPT_STR "h?vdfxyluet:pscS"
++#define KEXEC_OPT_STR "h?vdfxyluet:pscaS"
+ 
+ extern void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr);
+ extern void die(const char *fmt, ...)
 -- 
 2.13.6
 
