@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-it0-x241.google.com ([2607:f8b0:4001:c0b::241])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1et9ky-0007Nk-9G
- for kexec@lists.infradead.org; Tue, 06 Mar 2018 10:24:05 +0000
-Received: by mail-it0-x241.google.com with SMTP id c11so13144187ith.4
- for <kexec@lists.infradead.org>; Tue, 06 Mar 2018 02:23:30 -0800 (PST)
+ id 1et9pP-0002r4-AK
+ for kexec@lists.infradead.org; Tue, 06 Mar 2018 10:29:21 +0000
+Received: by mail-it0-x241.google.com with SMTP id w19so12255046ite.0
+ for <kexec@lists.infradead.org>; Tue, 06 Mar 2018 02:28:04 -0800 (PST)
+Date: Tue, 6 Mar 2018 19:28:19 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v2 4/7] x86: kexec_file: remove X86_64 dependency from
- prepare_elf64_headers()
-Date: Tue,  6 Mar 2018 19:23:00 +0900
-Message-Id: <20180306102303.9063-5-takahiro.akashi@linaro.org>
-In-Reply-To: <20180306102303.9063-1-takahiro.akashi@linaro.org>
-References: <20180306102303.9063-1-takahiro.akashi@linaro.org>
+Subject: Re: [PATCH 0/7] kexec_file: refactoring for other architecutres
+Message-ID: <20180306102818.GB25863@linaro.org>
+References: <20180227044814.24808-1-takahiro.akashi@linaro.org>
+ <20180302055609.GA15422@dhcp-128-65.nay.redhat.com>
+ <20180305023607.GA4185@dhcp-128-65.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180305023607.GA4185@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,82 +23,94 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dyoung@redhat.com, vgoyal@redhat.com, bhe@redhat.com, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, prudo@linux.vnet.ibm.com
-Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: linux-s390@vger.kernel.org, prudo@linux.vnet.ibm.com, bhe@redhat.com, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bauerman@linux.vnet.ibm.com, vgoyal@redhat.com
 
-The code guarded by CONFIG_X86_64 is necessary on some architectures
-which have a dedicated kernel mapping outside of linear memory mapping.
-(arm64 is among those.)
+Dave,
 
-In this patch, an additional argument, kernel_map, is added to enable/
-disable the code removing #ifdef.
+On Mon, Mar 05, 2018 at 10:36:07AM +0800, Dave Young wrote:
+> On 03/02/18 at 01:56pm, Dave Young wrote:
+> > Hi AKASHI,
+> > On 02/27/18 at 01:48pm, AKASHI Takahiro wrote:
+> > > subject: 
+> > > 
+> > > This is a preparatory patch set for adding kexec_file support on arm64.
+> > > 
+> > > It was originally included in a arm64 patch set[1], but Philipp is also
+> > > working on their kexec_file support on s390[2] and some changes are now
+> > > conflicting.
+> > > 
+> > > So these common part was extracted and put into a separate patch set for
+> > > better integration. What's more, my original patch#4 was split into a few
+> > > small chunks for easier review after Dave's comment.
+> > > 
+> > > As such, the resulting code is basically identical with my original, and
+> > > the only difference is that kexec_file_loaders[] is now declared in kexec.h
+> > > after Phillipp's comment[3]. Other than that, this patch set doesn't
+> > > require any changes on the rest of my original patch set(#1, #6 to #13).
+> > > 
+> > > Patch#1 allows making a use of purgatory optional, particularly useful
+> > > for arm64.
+> > > Patch#2 commonalizes arch_kexec_kernel_{image_probe, image_load,
+> > > verify_sig}() and arch_kimage_file_post_load_cleanup() across architectures.
+> > > Patch#3-#7 is also intended to generalize parse_elf64_headers(), along with
+> > > exclude_mem_range(), to be made best re-use of.
+> > > 
+> > > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-February/561182.html
+> > > [2] http://lkml.iu.edu//hypermail/linux/kernel/1802.1/02596.html
+> > > [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-February/562041.html
+> > > 
+> > > AKASHI Takahiro (7):
+> > >   kexec_file: make an use of purgatory optional
+> > >   kexec_file,x86,powerpc: factor out kexec_file_ops functions
+> > >   x86: kexec_file: purge system-ram walking from prepare_elf64_headers()
+> > >   x86: kexec_file: remove X86_64 dependency from prepare_elf64_headers()
+> > >   x86: kexec_file: lift CRASH_MAX_RANGES limit on crash_mem buffer
+> > >   x86: kexec_file: clean up prepare_elf64_headers()
+> > >   kexec_file, x86: move re-factored code to generic side
+> > > 
+> > >  arch/powerpc/Kconfig                        |   3 +
+> > >  arch/powerpc/include/asm/kexec.h            |   2 +-
+> > >  arch/powerpc/kernel/kexec_elf_64.c          |   2 +-
+> > >  arch/powerpc/kernel/machine_kexec_file_64.c |  39 +---
+> > >  arch/x86/Kconfig                            |   3 +
+> > >  arch/x86/include/asm/kexec-bzimage64.h      |   2 +-
+> > >  arch/x86/kernel/crash.c                     | 332 +++++-----------------------
+> > >  arch/x86/kernel/kexec-bzimage64.c           |   2 +-
+> > >  arch/x86/kernel/machine_kexec_64.c          |  45 +---
+> > >  include/linux/kexec.h                       |  36 ++-
+> > >  kernel/kexec_file.c                         | 236 +++++++++++++++++++-
+> > >  11 files changed, 336 insertions(+), 366 deletions(-)
+> > > 
+> > > -- 
+> > > 2.16.2
+> > > 
+> > 
+> > Reviewed them with eyes and provided some comments, but since it changed
+> > the elf header code, I would like to do some basic vmcore related test
+> > with crash tools.  Will response later.
+> 
+> Followup: I did some basic testing, did not find problems.
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
----
- arch/x86/kernel/crash.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+Thank you very much.
+I have submitted a revised version now.
+My apologies for your duplicating test efforts.
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 2123fa0efc17..b328153cee65 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -347,7 +347,7 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
- 	return 0;
- }
- 
--static int prepare_elf64_headers(struct crash_elf_data *ced,
-+static int prepare_elf64_headers(struct crash_elf_data *ced, bool kernel_map,
- 		void **addr, unsigned long *sz)
- {
- 	Elf64_Ehdr *ehdr;
-@@ -414,17 +414,17 @@ static int prepare_elf64_headers(struct crash_elf_data *ced,
- 	phdr->p_filesz = phdr->p_memsz = VMCOREINFO_NOTE_SIZE;
- 	(ehdr->e_phnum)++;
- 
--#ifdef CONFIG_X86_64
- 	/* Prepare PT_LOAD type program header for kernel text region */
--	phdr = (Elf64_Phdr *)bufp;
--	bufp += sizeof(Elf64_Phdr);
--	phdr->p_type = PT_LOAD;
--	phdr->p_flags = PF_R|PF_W|PF_X;
--	phdr->p_vaddr = (Elf64_Addr)_text;
--	phdr->p_filesz = phdr->p_memsz = _end - _text;
--	phdr->p_offset = phdr->p_paddr = __pa_symbol(_text);
--	(ehdr->e_phnum)++;
--#endif
-+	if (kernel_map) {
-+		phdr = (Elf64_Phdr *)bufp;
-+		bufp += sizeof(Elf64_Phdr);
-+		phdr->p_type = PT_LOAD;
-+		phdr->p_flags = PF_R|PF_W|PF_X;
-+		phdr->p_vaddr = (Elf64_Addr)_text;
-+		phdr->p_filesz = phdr->p_memsz = _end - _text;
-+		phdr->p_offset = phdr->p_paddr = __pa_symbol(_text);
-+		(ehdr->e_phnum)++;
-+	}
- 
- 	/* Go through all the ranges in cmem->ranges[] and prepare phdr */
- 	for (i = 0; i < cmem->nr_ranges; i++) {
-@@ -477,7 +477,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
- 		goto out;
- 
- 	/* By default prepare 64bit headers */
--	ret =  prepare_elf64_headers(ced, addr, sz);
-+	ret =  prepare_elf64_headers(ced, IS_ENABLED(CONFIG_X86_64), addr, sz);
- 	if (ret)
- 		goto out;
- 
--- 
-2.16.2
+-Takahiro AKASHI
 
+
+> > 
+> > Overall the cleanups looks good, thank you a lot for the cleanups!
+> > 
+> > Thanks
+> > Dave
+> 
+> Thanks
+> Dave
 
 _______________________________________________
 kexec mailing list
