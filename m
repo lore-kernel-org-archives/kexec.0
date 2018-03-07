@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1etNpX-0003Jh-B1
- for kexec@lists.infradead.org; Wed, 07 Mar 2018 01:25:21 +0000
-Subject: Re: [PATCH makedumpfile] Fix array index out of bound exception
-From: lijiang <lijiang@redhat.com>
+ id 1etRJ5-0002y4-H9
+ for kexec@lists.infradead.org; Wed, 07 Mar 2018 05:08:05 +0000
+From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
+Subject: RE: [PATCH makedumpfile] Fix array index out of bound exception
+Date: Wed, 7 Mar 2018 05:07:06 +0000
+Message-ID: <61D4E5D821F1674CB87C99F080A210BE011810CC@BPXM01GP.gisp.nec.co.jp>
 References: <20180306100711.16786-1-lijiang@redhat.com>
-Message-ID: <88a4037f-e944-5031-7cb7-f08a3d350e93@redhat.com>
-Date: Wed, 7 Mar 2018 09:25:01 +0800
+ <88a4037f-e944-5031-7cb7-f08a3d350e93@redhat.com>
+In-Reply-To: <88a4037f-e944-5031-7cb7-f08a3d350e93@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <20180306100711.16786-1-lijiang@redhat.com>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,60 +20,110 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Masahiko Hayashi <mas-hayashi@tg.jp.nec.com>, piliu <piliu@redhat.com>
+To: lijiang <lijiang@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Masahiko Hayashi <mas-hayashi@tg.jp.nec.com>, piliu <piliu@redhat.com>
 
-QWxzbyBjYyBNYXNha2kvTWFzYWhpa28vcGlsaXUuCgpUaGFua3MuCgpMaWFuYm8K5ZyoIDIwMTjl
-ubQwM+aciDA25pelIDE4OjA3LCBMaWFuYm8gSmlhbmcg5YaZ6YGTOgo+IEEgZGF0YSBvdmVyZmxv
-dyBtYXkgbGVhZCB0byBhIHJldmVyc2FsLCB3aGljaCBtYXkgdHVybiBhIHBvc2l0aXZlCj4gbnVt
-YmVyIGludG8gYSBsYXJnZSBuZWdhdGl2ZSBudW1iZXIsIGluIHRoaXMgY2FzZSwgdGhlIHN0cmlu
-ZydzCj4gbGVuZ3RoIHdpbGwgZXhjZWVkIHRoZSBhcnJheSBzaXplKGZvciBleGFtcGxlLCBldGE6
-IC0yMTQ3NDgzNjQ4cyksCj4gaGVyZSB0aGUgYXJyYXkgc2l6ZSBpcyBkZWZpbmVkIDE2IGNoYXJh
-Y3RlcnMuIFNvLCBpdCBpcyBuZXNzYXNhcnkKPiB0byBjb25zaWRlciBzb21lIGV4Y2VwdGlvbnMu
-Cj4gCj4gU2lnbmVkLW9mZi1ieTogTGlhbmJvIEppYW5nIDxsaWppYW5nQHJlZGhhdC5jb20+Cj4g
-LS0tCj4gIHByaW50X2luZm8uYyB8IDIxICsrKysrKysrKysrKystLS0tLS0tLQo+ICAxIGZpbGUg
-Y2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0
-IGEvcHJpbnRfaW5mby5jIGIvcHJpbnRfaW5mby5jCj4gaW5kZXggZTBlNmEyNy4uMDllMjE1YSAx
-MDA2NDQKPiAtLS0gYS9wcmludF9pbmZvLmMKPiArKysgYi9wcmludF9pbmZvLmMKPiBAQCAtMTYs
-NiArMTYsOCBAQAo+ICAjaW5jbHVkZSAicHJpbnRfaW5mby5oIgo+ICAjaW5jbHVkZSA8dGltZS5o
-Pgo+ICAjaW5jbHVkZSA8c3RyaW5nLmg+Cj4gKyNpbmNsdWRlIDxzdGRpbnQuaD4KPiArI2luY2x1
-ZGUgPGludHR5cGVzLmg+Cj4gIAo+ICAjZGVmaW5lIFBST0dSRVNTX01BWExFTgkJIjUwIgo+ICAK
-PiBAQCAtMzUyLDE4ICszNTQsMjEgQEAgc3RhdGljIHZvaWQgY2FsY19kZWx0YShzdHJ1Y3QgdGlt
-ZXZhbCAqdHZfc3RhcnQsIHN0cnVjdCB0aW1ldmFsICpkZWx0YSkKPiAgfQo+ICAKPiAgLyogcHJv
-ZHVjZSBsZXNzIHRoYW4gMTIgYnl0ZXMgb24gbXNnICovCj4gLXN0YXRpYyBpbnQgZXRhX3RvX2h1
-bWFuX3Nob3J0IChpbnQgc2VjcywgY2hhciogbXNnKQo+ICtzdGF0aWMgaW50IGV0YV90b19odW1h
-bl9zaG9ydCAoaW50NjRfdCBzZWNzLCBjaGFyKiBtc2csIGludCBtYXhzaXplKQo+ICB7Cj4gIAlz
-dHJjcHkobXNnLCAiZXRhOiAiKTsKPiAgCW1zZyArPSBzdHJsZW4oImV0YTogIik7Cj4gIAlpZiAo
-c2VjcyA8IDEwMCkKPiAtCQlzcHJpbnRmKG1zZywgIiVkcyIsIHNlY3MpOwo+ICsJCXNucHJpbnRm
-KG1zZywgbWF4c2l6ZSwgIiUiUFJJZDY0InMiLCBzZWNzKTsKPiAgCWVsc2UgaWYgKHNlY3MgPCAx
-MDAgKiA2MCkKPiAtCQlzcHJpbnRmKG1zZywgIiVkbSVkcyIsIHNlY3MgLyA2MCwgc2VjcyAlIDYw
-KTsKPiArCQlzbnByaW50Zihtc2csIG1heHNpemUsICIlIlBSSWQ2NCJtIiIlIlBSSWQ2NCJzIiwK
-PiArCQkJc2VjcyAvIDYwLCBzZWNzICUgNjApOwo+ICAJZWxzZSBpZiAoc2VjcyA8IDQ4ICogMzYw
-MCkKPiAtCQlzcHJpbnRmKG1zZywgIiVkaCVkbSIsIHNlY3MgLyAzNjAwLCAoc2VjcyAvIDYwKSAl
-IDYwKTsKPiArCQlzbnByaW50Zihtc2csIG1heHNpemUsICIlIlBSSWQ2NCJoIiIlIlBSSWQ2NCJt
-IiwKPiArCQkJc2VjcyAvIDM2MDAsIChzZWNzIC8gNjApICUgNjApOwo+ICAJZWxzZSBpZiAoc2Vj
-cyA8IDEwMCAqIDg2NDAwKQo+IC0JCXNwcmludGYobXNnLCAiJWRkJWRoIiwgc2VjcyAvIDg2NDAw
-LCAoc2VjcyAvIDM2MDApICUgMjQpOwo+ICsJCXNucHJpbnRmKG1zZywgbWF4c2l6ZSwgIiUiUFJJ
-ZDY0ImQiIiUiUFJJZDY0ImgiLAo+ICsJCQlzZWNzIC8gODY0MDAsIChzZWNzIC8gMzYwMCkgJSAy
-NCk7Cj4gIAllbHNlCj4gIAkJc3ByaW50Zihtc2csICI+MmRheSIpOwo+ICAJcmV0dXJuIDA7Cj4g
-QEAgLTM3OSw4ICszODQsOCBAQCBwcmludF9wcm9ncmVzcyhjb25zdCBjaGFyICptc2csIHVuc2ln
-bmVkIGxvbmcgY3VycmVudCwgdW5zaWduZWQgbG9uZyBlbmQsIHN0cnVjdAo+ICAJc3RhdGljIHVu
-c2lnbmVkIGludCBsYXBzZSA9IDA7Cj4gIAlzdGF0aWMgY29uc3QgY2hhciAqc3Bpbm5lciA9ICIv
-fFxcLSI7Cj4gIAlzdHJ1Y3QgdGltZXZhbCBkZWx0YTsKPiAtCWRvdWJsZSBldGE7Cj4gLQljaGFy
-IGV0YV9tc2dbMTZdID0gIiAiOwo+ICsJaW50NjRfdCBldGE7Cj4gKwljaGFyIGV0YV9tc2dbMzJd
-ID0gIiAiOwo+ICAKPiAgCWlmIChjdXJyZW50IDwgZW5kKSB7Cj4gIAkJdG0gPSB0aW1lKE5VTEwp
-Owo+IEBAIC0zOTUsNyArNDAwLDcgQEAgcHJpbnRfcHJvZ3Jlc3MoY29uc3QgY2hhciAqbXNnLCB1
-bnNpZ25lZCBsb25nIGN1cnJlbnQsIHVuc2lnbmVkIGxvbmcgZW5kLCBzdHJ1Y3QKPiAgCQljYWxj
-X2RlbHRhKHN0YXJ0LCAmZGVsdGEpOwo+ICAJCWV0YSA9IGRlbHRhLnR2X3NlYyArIGRlbHRhLnR2
-X3VzZWMgLyAxZTY7Cj4gIAkJZXRhID0gKDEwMCAtIHByb2dyZXNzKSAqIGV0YSAvIHByb2dyZXNz
-Owo+IC0JCWV0YV90b19odW1hbl9zaG9ydChldGEsIGV0YV9tc2cpOwo+ICsJCWV0YV90b19odW1h
-bl9zaG9ydChldGEsIGV0YV9tc2csIHNpemVvZihldGFfbXNnKSk7Cj4gIAl9Cj4gIAlpZiAoZmxh
-Z19pZ25vcmVfcl9jaGFyKSB7Cj4gIAkJUFJPR1JFU1NfTVNHKCIlLSIgUFJPR1JFU1NfTUFYTEVO
-ICJzOiBbJTUuMWYgJSVdICVjICAlMTZzXG4iLAo+IAoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
-ZXhlYwo=
+Hi Lianbo,
+
+Thank you for your patch.
+I understand the purpose of the patch.
+I'll reply formally in 10 days or so.
+
+Thanks
+Tachibana
+
+> -----Original Message-----
+> From: lijiang [mailto:lijiang@redhat.com]
+> Sent: Wednesday, March 07, 2018 10:25 AM
+> To: kexec@lists.infradead.org
+> Cc: Tachibana Masaki() <mas-tachibana@vf.jp.nec.com>; Hayashi Masahiko() <mas-hayashi@tg.jp.nec.com>;
+> piliu <piliu@redhat.com>
+> Subject: Re: [PATCH makedumpfile] Fix array index out of bound exception
+> 
+> Also cc Masaki/Masahiko/piliu.
+> 
+> Thanks.
+> 
+> Lianbo
+>  20180306 18:07, Lianbo Jiang :
+> > A data overflow may lead to a reversal, which may turn a positive
+> > number into a large negative number, in this case, the string's
+> > length will exceed the array size(for example, eta: -2147483648s),
+> > here the array size is defined 16 characters. So, it is nessasary
+> > to consider some exceptions.
+> >
+> > Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> > ---
+> >  print_info.c | 21 +++++++++++++--------
+> >  1 file changed, 13 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/print_info.c b/print_info.c
+> > index e0e6a27..09e215a 100644
+> > --- a/print_info.c
+> > +++ b/print_info.c
+> > @@ -16,6 +16,8 @@
+> >  #include "print_info.h"
+> >  #include <time.h>
+> >  #include <string.h>
+> > +#include <stdint.h>
+> > +#include <inttypes.h>
+> >
+> >  #define PROGRESS_MAXLEN		"50"
+> >
+> > @@ -352,18 +354,21 @@ static void calc_delta(struct timeval *tv_start, struct timeval *delta)
+> >  }
+> >
+> >  /* produce less than 12 bytes on msg */
+> > -static int eta_to_human_short (int secs, char* msg)
+> > +static int eta_to_human_short (int64_t secs, char* msg, int maxsize)
+> >  {
+> >  	strcpy(msg, "eta: ");
+> >  	msg += strlen("eta: ");
+> >  	if (secs < 100)
+> > -		sprintf(msg, "%ds", secs);
+> > +		snprintf(msg, maxsize, "%"PRId64"s", secs);
+> >  	else if (secs < 100 * 60)
+> > -		sprintf(msg, "%dm%ds", secs / 60, secs % 60);
+> > +		snprintf(msg, maxsize, "%"PRId64"m""%"PRId64"s",
+> > +			secs / 60, secs % 60);
+> >  	else if (secs < 48 * 3600)
+> > -		sprintf(msg, "%dh%dm", secs / 3600, (secs / 60) % 60);
+> > +		snprintf(msg, maxsize, "%"PRId64"h""%"PRId64"m",
+> > +			secs / 3600, (secs / 60) % 60);
+> >  	else if (secs < 100 * 86400)
+> > -		sprintf(msg, "%dd%dh", secs / 86400, (secs / 3600) % 24);
+> > +		snprintf(msg, maxsize, "%"PRId64"d""%"PRId64"h",
+> > +			secs / 86400, (secs / 3600) % 24);
+> >  	else
+> >  		sprintf(msg, ">2day");
+> >  	return 0;
+> > @@ -379,8 +384,8 @@ print_progress(const char *msg, unsigned long current, unsigned long end, struct
+> >  	static unsigned int lapse = 0;
+> >  	static const char *spinner = "/|\\-";
+> >  	struct timeval delta;
+> > -	double eta;
+> > -	char eta_msg[16] = " ";
+> > +	int64_t eta;
+> > +	char eta_msg[32] = " ";
+> >
+> >  	if (current < end) {
+> >  		tm = time(NULL);
+> > @@ -395,7 +400,7 @@ print_progress(const char *msg, unsigned long current, unsigned long end, struct
+> >  		calc_delta(start, &delta);
+> >  		eta = delta.tv_sec + delta.tv_usec / 1e6;
+> >  		eta = (100 - progress) * eta / progress;
+> > -		eta_to_human_short(eta, eta_msg);
+> > +		eta_to_human_short(eta, eta_msg, sizeof(eta_msg));
+> >  	}
+> >  	if (flag_ignore_r_char) {
+> >  		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s\n",
+> >
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
