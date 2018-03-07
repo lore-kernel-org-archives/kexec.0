@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1etCRw-00018B-UY
- for kexec@lists.infradead.org; Tue, 06 Mar 2018 13:16:16 +0000
-From: Michal Suchanek <msuchanek@suse.de>
-Subject: [PATCH v4 4/5] kexec: add option to fall back to KEXEC_LOAD when
- KEXEC_FILE_LOAD is not supported.
-Date: Tue,  6 Mar 2018 14:15:55 +0100
-Message-Id: <19a47e290fc03efea82af845740ae8f6b30f13b8.1520342150.git.msuchanek@suse.de>
-In-Reply-To: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1520342150.git.msuchanek@suse.de>
-References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1520342150.git.msuchanek@suse.de>
-In-Reply-To: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
-References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
+ id 1etNpX-0003Jh-B1
+ for kexec@lists.infradead.org; Wed, 07 Mar 2018 01:25:21 +0000
+Subject: Re: [PATCH makedumpfile] Fix array index out of bound exception
+From: lijiang <lijiang@redhat.com>
+References: <20180306100711.16786-1-lijiang@redhat.com>
+Message-ID: <88a4037f-e944-5031-7cb7-f08a3d350e93@redhat.com>
+Date: Wed, 7 Mar 2018 09:25:01 +0800
+MIME-Version: 1.0
+In-Reply-To: <20180306100711.16786-1-lijiang@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,150 +19,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Tony Jones <tonyj@suse.com>, Dave Young <dyoung@redhat.com>, Michal Suchanek <msuchanek@suse.de>, Petr Tesarik <ptesarik@suse.cz>, horms@verge.net.au
+Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Masahiko Hayashi <mas-hayashi@tg.jp.nec.com>, piliu <piliu@redhat.com>
 
-Not all architectures implement KEXEC_FILE_LOAD. However, on some
-archiectures KEXEC_FILE_LOAD is required when secure boot is enabled in
-locked-down mode. Previously users had to select the KEXEC_FILE_LOAD
-syscall with undocumented -s option. However, if they did pass the
-option kexec would fail on architectures that do not support it.
-
-So add an -a option that tries KEXEC_FILE_LOAD and when it is not
-supported tries KEXEC_LOAD.
-
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
-v3: instead of changing the deafult add extra option
-v4: actually check -ENOSYS as well
----
- kexec/kexec.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++----
- kexec/kexec.h |  4 +++-
- 2 files changed, 51 insertions(+), 5 deletions(-)
-
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index a95cfb473d6b..5c5aee344b41 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -1243,6 +1243,7 @@ int main(int argc, char *argv[])
- 	int do_unload = 0;
- 	int do_reuse_initrd = 0;
- 	int do_kexec_file_syscall = 0;
-+	int do_kexec_fallback = 0;
- 	int do_status = 0;
- 	void *entry = 0;
- 	char *type = 0;
-@@ -1367,10 +1368,15 @@ int main(int argc, char *argv[])
- 			break;
- 		case OPT_KEXEC_FILE_SYSCALL:
- 			do_kexec_file_syscall = 1;
-+			do_kexec_fallback = 0;
- 			break;
- 		case OPT_KEXEC_SYSCALL:
- 			do_kexec_file_syscall = 0;
-+			do_kexec_fallback = 0;
- 			break;
-+		case OPT_KEXEC_SYSCALL_AUTO:
-+			do_kexec_file_syscall = 1;
-+			do_kexec_fallback = 1;
- 		case OPT_STATUS:
- 			do_status = 1;
- 			break;
-@@ -1442,16 +1448,54 @@ int main(int argc, char *argv[])
- 		result = k_status(kexec_flags);
- 	}
- 	if (do_unload) {
--		if (do_kexec_file_syscall)
-+		if (do_kexec_file_syscall) {
- 			result = kexec_file_unload(kexec_file_flags);
--		else
-+			if ((result == -ENOSYS) && do_kexec_fallback)
-+				do_kexec_file_syscall = 0;
-+		}
-+		if (!do_kexec_file_syscall)
- 			result = k_unload(kexec_flags);
- 	}
- 	if (do_load && (result == 0)) {
--		if (do_kexec_file_syscall)
-+		if (do_kexec_file_syscall) {
- 			result = do_kexec_file_load(fileind, argc, argv,
- 						 kexec_file_flags);
--		else
-+			if (do_kexec_fallback) switch (result) {
-+				/*
-+				 * Something failed with signature verification.
-+				 * Reject the image.
-+				 */
-+				case -ELIBBAD:
-+				case -EKEYREJECTED:
-+				case -ENOPKG:
-+				case -ENOKEY:
-+				case -EBADMSG:
-+				case -EMSGSIZE:
-+					/*
-+					 * By default reject or do nothing if
-+					 * succeded
-+					 */
-+				default: break;
-+				case -ENOSYS: /* not implemented */
-+					/*
-+					 * Parsing image or other options failed
-+					 * The image may be invalid or image
-+					 * type may not supported by kernel so
-+					 * retry parsing in kexec-tools.
-+					 */
-+				case -EINVAL:
-+				case -ENOEXEC:
-+					 /*
-+					  * ENOTSUPP can be unsupported image
-+					  * type or unsupported PE signature
-+					  * wrapper type, duh
-+					  */
-+				case -ENOTSUP:
-+					do_kexec_file_syscall = 0;
-+					break;
-+			}
-+		}
-+		if (!do_kexec_file_syscall)
- 			result = my_load(type, fileind, argc, argv,
- 						kexec_flags, entry);
- 	}
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 9fd0355eacd0..d445fbe3e486 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -220,6 +220,7 @@ extern int file_types;
- #define OPT_PANIC		'p'
- #define OPT_KEXEC_FILE_SYSCALL	's'
- #define OPT_KEXEC_SYSCALL	'c'
-+#define OPT_KEXEC_SYSCALL_AUTO	'a'
- #define OPT_STATUS		'S'
- #define OPT_MEM_MIN             256
- #define OPT_MEM_MAX             257
-@@ -248,11 +249,12 @@ extern int file_types;
- 	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
- 	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
- 	{ "kexec-syscall",	0, 0, OPT_KEXEC_SYSCALL }, \
-+	{ "kexec-syscall-auto",	0, 0, OPT_KEXEC_SYSCALL_AUTO }, \
- 	{ "debug",		0, 0, OPT_DEBUG }, \
- 	{ "status",		0, 0, OPT_STATUS }, \
- 	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
- 
--#define KEXEC_OPT_STR "h?vdfxyluet:pscS"
-+#define KEXEC_OPT_STR "h?vdfxyluet:pscaS"
- 
- extern void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr);
- extern void die(const char *fmt, ...)
--- 
-2.13.6
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+QWxzbyBjYyBNYXNha2kvTWFzYWhpa28vcGlsaXUuCgpUaGFua3MuCgpMaWFuYm8K5ZyoIDIwMTjl
+ubQwM+aciDA25pelIDE4OjA3LCBMaWFuYm8gSmlhbmcg5YaZ6YGTOgo+IEEgZGF0YSBvdmVyZmxv
+dyBtYXkgbGVhZCB0byBhIHJldmVyc2FsLCB3aGljaCBtYXkgdHVybiBhIHBvc2l0aXZlCj4gbnVt
+YmVyIGludG8gYSBsYXJnZSBuZWdhdGl2ZSBudW1iZXIsIGluIHRoaXMgY2FzZSwgdGhlIHN0cmlu
+ZydzCj4gbGVuZ3RoIHdpbGwgZXhjZWVkIHRoZSBhcnJheSBzaXplKGZvciBleGFtcGxlLCBldGE6
+IC0yMTQ3NDgzNjQ4cyksCj4gaGVyZSB0aGUgYXJyYXkgc2l6ZSBpcyBkZWZpbmVkIDE2IGNoYXJh
+Y3RlcnMuIFNvLCBpdCBpcyBuZXNzYXNhcnkKPiB0byBjb25zaWRlciBzb21lIGV4Y2VwdGlvbnMu
+Cj4gCj4gU2lnbmVkLW9mZi1ieTogTGlhbmJvIEppYW5nIDxsaWppYW5nQHJlZGhhdC5jb20+Cj4g
+LS0tCj4gIHByaW50X2luZm8uYyB8IDIxICsrKysrKysrKysrKystLS0tLS0tLQo+ICAxIGZpbGUg
+Y2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0
+IGEvcHJpbnRfaW5mby5jIGIvcHJpbnRfaW5mby5jCj4gaW5kZXggZTBlNmEyNy4uMDllMjE1YSAx
+MDA2NDQKPiAtLS0gYS9wcmludF9pbmZvLmMKPiArKysgYi9wcmludF9pbmZvLmMKPiBAQCAtMTYs
+NiArMTYsOCBAQAo+ICAjaW5jbHVkZSAicHJpbnRfaW5mby5oIgo+ICAjaW5jbHVkZSA8dGltZS5o
+Pgo+ICAjaW5jbHVkZSA8c3RyaW5nLmg+Cj4gKyNpbmNsdWRlIDxzdGRpbnQuaD4KPiArI2luY2x1
+ZGUgPGludHR5cGVzLmg+Cj4gIAo+ICAjZGVmaW5lIFBST0dSRVNTX01BWExFTgkJIjUwIgo+ICAK
+PiBAQCAtMzUyLDE4ICszNTQsMjEgQEAgc3RhdGljIHZvaWQgY2FsY19kZWx0YShzdHJ1Y3QgdGlt
+ZXZhbCAqdHZfc3RhcnQsIHN0cnVjdCB0aW1ldmFsICpkZWx0YSkKPiAgfQo+ICAKPiAgLyogcHJv
+ZHVjZSBsZXNzIHRoYW4gMTIgYnl0ZXMgb24gbXNnICovCj4gLXN0YXRpYyBpbnQgZXRhX3RvX2h1
+bWFuX3Nob3J0IChpbnQgc2VjcywgY2hhciogbXNnKQo+ICtzdGF0aWMgaW50IGV0YV90b19odW1h
+bl9zaG9ydCAoaW50NjRfdCBzZWNzLCBjaGFyKiBtc2csIGludCBtYXhzaXplKQo+ICB7Cj4gIAlz
+dHJjcHkobXNnLCAiZXRhOiAiKTsKPiAgCW1zZyArPSBzdHJsZW4oImV0YTogIik7Cj4gIAlpZiAo
+c2VjcyA8IDEwMCkKPiAtCQlzcHJpbnRmKG1zZywgIiVkcyIsIHNlY3MpOwo+ICsJCXNucHJpbnRm
+KG1zZywgbWF4c2l6ZSwgIiUiUFJJZDY0InMiLCBzZWNzKTsKPiAgCWVsc2UgaWYgKHNlY3MgPCAx
+MDAgKiA2MCkKPiAtCQlzcHJpbnRmKG1zZywgIiVkbSVkcyIsIHNlY3MgLyA2MCwgc2VjcyAlIDYw
+KTsKPiArCQlzbnByaW50Zihtc2csIG1heHNpemUsICIlIlBSSWQ2NCJtIiIlIlBSSWQ2NCJzIiwK
+PiArCQkJc2VjcyAvIDYwLCBzZWNzICUgNjApOwo+ICAJZWxzZSBpZiAoc2VjcyA8IDQ4ICogMzYw
+MCkKPiAtCQlzcHJpbnRmKG1zZywgIiVkaCVkbSIsIHNlY3MgLyAzNjAwLCAoc2VjcyAvIDYwKSAl
+IDYwKTsKPiArCQlzbnByaW50Zihtc2csIG1heHNpemUsICIlIlBSSWQ2NCJoIiIlIlBSSWQ2NCJt
+IiwKPiArCQkJc2VjcyAvIDM2MDAsIChzZWNzIC8gNjApICUgNjApOwo+ICAJZWxzZSBpZiAoc2Vj
+cyA8IDEwMCAqIDg2NDAwKQo+IC0JCXNwcmludGYobXNnLCAiJWRkJWRoIiwgc2VjcyAvIDg2NDAw
+LCAoc2VjcyAvIDM2MDApICUgMjQpOwo+ICsJCXNucHJpbnRmKG1zZywgbWF4c2l6ZSwgIiUiUFJJ
+ZDY0ImQiIiUiUFJJZDY0ImgiLAo+ICsJCQlzZWNzIC8gODY0MDAsIChzZWNzIC8gMzYwMCkgJSAy
+NCk7Cj4gIAllbHNlCj4gIAkJc3ByaW50Zihtc2csICI+MmRheSIpOwo+ICAJcmV0dXJuIDA7Cj4g
+QEAgLTM3OSw4ICszODQsOCBAQCBwcmludF9wcm9ncmVzcyhjb25zdCBjaGFyICptc2csIHVuc2ln
+bmVkIGxvbmcgY3VycmVudCwgdW5zaWduZWQgbG9uZyBlbmQsIHN0cnVjdAo+ICAJc3RhdGljIHVu
+c2lnbmVkIGludCBsYXBzZSA9IDA7Cj4gIAlzdGF0aWMgY29uc3QgY2hhciAqc3Bpbm5lciA9ICIv
+fFxcLSI7Cj4gIAlzdHJ1Y3QgdGltZXZhbCBkZWx0YTsKPiAtCWRvdWJsZSBldGE7Cj4gLQljaGFy
+IGV0YV9tc2dbMTZdID0gIiAiOwo+ICsJaW50NjRfdCBldGE7Cj4gKwljaGFyIGV0YV9tc2dbMzJd
+ID0gIiAiOwo+ICAKPiAgCWlmIChjdXJyZW50IDwgZW5kKSB7Cj4gIAkJdG0gPSB0aW1lKE5VTEwp
+Owo+IEBAIC0zOTUsNyArNDAwLDcgQEAgcHJpbnRfcHJvZ3Jlc3MoY29uc3QgY2hhciAqbXNnLCB1
+bnNpZ25lZCBsb25nIGN1cnJlbnQsIHVuc2lnbmVkIGxvbmcgZW5kLCBzdHJ1Y3QKPiAgCQljYWxj
+X2RlbHRhKHN0YXJ0LCAmZGVsdGEpOwo+ICAJCWV0YSA9IGRlbHRhLnR2X3NlYyArIGRlbHRhLnR2
+X3VzZWMgLyAxZTY7Cj4gIAkJZXRhID0gKDEwMCAtIHByb2dyZXNzKSAqIGV0YSAvIHByb2dyZXNz
+Owo+IC0JCWV0YV90b19odW1hbl9zaG9ydChldGEsIGV0YV9tc2cpOwo+ICsJCWV0YV90b19odW1h
+bl9zaG9ydChldGEsIGV0YV9tc2csIHNpemVvZihldGFfbXNnKSk7Cj4gIAl9Cj4gIAlpZiAoZmxh
+Z19pZ25vcmVfcl9jaGFyKSB7Cj4gIAkJUFJPR1JFU1NfTVNHKCIlLSIgUFJPR1JFU1NfTUFYTEVO
+ICJzOiBbJTUuMWYgJSVdICVjICAlMTZzXG4iLAo+IAoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
+ZXhlYwo=
