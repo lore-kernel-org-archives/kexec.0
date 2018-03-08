@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
- by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1etRJ5-0002y4-H9
- for kexec@lists.infradead.org; Wed, 07 Mar 2018 05:08:05 +0000
-From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
-Subject: RE: [PATCH makedumpfile] Fix array index out of bound exception
-Date: Wed, 7 Mar 2018 05:07:06 +0000
-Message-ID: <61D4E5D821F1674CB87C99F080A210BE011810CC@BPXM01GP.gisp.nec.co.jp>
-References: <20180306100711.16786-1-lijiang@redhat.com>
- <88a4037f-e944-5031-7cb7-f08a3d350e93@redhat.com>
-In-Reply-To: <88a4037f-e944-5031-7cb7-f08a3d350e93@redhat.com>
-Content-Language: ja-JP
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by casper.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
+ id 1etk05-0004UB-1S
+ for kexec@lists.infradead.org; Thu, 08 Mar 2018 01:05:44 +0000
+Date: Thu, 8 Mar 2018 09:05:02 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2 0/7] kexec_file, x86, powerpc: refactoring for other
+ architecutres
+Message-ID: <20180308010502.GA2600@dhcp-128-65.nay.redhat.com>
+References: <20180306102303.9063-1-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180306102303.9063-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,104 +24,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Masahiko Hayashi <mas-hayashi@tg.jp.nec.com>, piliu <piliu@redhat.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: linux-s390@vger.kernel.org, prudo@linux.vnet.ibm.com, bhe@redhat.com, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, vgoyal@redhat.com
 
-Hi Lianbo,
+[Cc Andrew]
 
-Thank you for your patch.
-I understand the purpose of the patch.
-I'll reply formally in 10 days or so.
+On 03/06/18 at 07:22pm, AKASHI Takahiro wrote:
+> This is a preparatory patch set for adding kexec_file support on arm64.
+> 
+> It was originally included in a arm64 patch set[1], but Philipp is also
+> working on their kexec_file support on s390[2] and some changes are now
+> conflicting.
+> 
+> So these common parts were extracted and put into a separate patch set for
+> better integration. What's more, my original patch#4 was split into a few
+> small chunks for easier review after Dave's comment.
+> 
+> As such, the resulting code is basically identical with my original, and
+> the only *visible* differences are:
+>   * renamings of _kexec_kernel_image_probe() and
+>     _kimage_file_post_load_cleanup()
+>   * change one of types of arguments at prepare_elf64_headers()
+> Those, unfortunately, require a couple of trivial changes on the rest
+> (#1, #6 to #13) of my arm64 kexec_file patch set[1].
+> 
+> Patch#1 allows making a use of purgatory optional, particularly useful
+> for arm64.
+> Patch#2 commonalizes arch_kexec_kernel_{image_probe, image_load,
+> verify_sig}() and arch_kimage_file_post_load_cleanup() across architectures.
+> Patch#3-#7 is also intended to generalize parse_elf64_headers(), along with
+> exclude_mem_range(), to be made best re-use of.
+> 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-February/561182.html
+> [2] http://lkml.iu.edu//hypermail/linux/kernel/1802.1/02596.html
+> 
+> 
+> Changes in v2 (Mar 6, 2018)
+> * use IS_ENABLED() instead of #ifdef's in kexec_calculate_store_digests() 
+> * rename _kexec_kernel_*() and make them static for now except for
+>   kexec_image_probe_default() which is actually used by arch(powerpc) code
+>   (Note: kexec_image_post_load_cleanup_default() will also be exported by
+>   arm64 patches.)
+> * change a type of kernel_map in prepare_elf64_headers() to "int"
+> * check for a total number of system ram regions in full_up_crash_elf_data()
+>   and use vzalloc() instead of vmalloc()
+> 
+> AKASHI Takahiro (7):
+>   kexec_file: make an use of purgatory optional
+>   kexec_file,x86,powerpc: factor out kexec_file_ops functions
+>   x86: kexec_file: purge system-ram walking from prepare_elf64_headers()
+>   x86: kexec_file: remove X86_64 dependency from prepare_elf64_headers()
+>   x86: kexec_file: lift CRASH_MAX_RANGES limit on crash_mem buffer
+>   x86: kexec_file: clean up prepare_elf64_headers()
+>   kexec_file, x86: move re-factored code to generic side
+> 
+>  arch/powerpc/Kconfig                        |   3 +
+>  arch/powerpc/include/asm/kexec.h            |   2 +-
+>  arch/powerpc/kernel/kexec_elf_64.c          |   2 +-
+>  arch/powerpc/kernel/machine_kexec_file_64.c |  39 +---
+>  arch/x86/Kconfig                            |   3 +
+>  arch/x86/include/asm/kexec-bzimage64.h      |   2 +-
+>  arch/x86/kernel/crash.c                     | 334 ++++++----------------------
+>  arch/x86/kernel/kexec-bzimage64.c           |   2 +-
+>  arch/x86/kernel/machine_kexec_64.c          |  45 +---
+>  include/linux/kexec.h                       |  32 ++-
+>  kernel/kexec_file.c                         | 240 +++++++++++++++++++-
+>  11 files changed, 338 insertions(+), 366 deletions(-)
+> 
+> -- 
+> 2.16.2
+> 
+
+AKASHI, thanks for another update, looks good to me:
+
+Acked-by: Dave Young <dyoung@redhat.com>
 
 Thanks
-Tachibana
-
-> -----Original Message-----
-> From: lijiang [mailto:lijiang@redhat.com]
-> Sent: Wednesday, March 07, 2018 10:25 AM
-> To: kexec@lists.infradead.org
-> Cc: Tachibana Masaki() <mas-tachibana@vf.jp.nec.com>; Hayashi Masahiko() <mas-hayashi@tg.jp.nec.com>;
-> piliu <piliu@redhat.com>
-> Subject: Re: [PATCH makedumpfile] Fix array index out of bound exception
-> 
-> Also cc Masaki/Masahiko/piliu.
-> 
-> Thanks.
-> 
-> Lianbo
->  20180306 18:07, Lianbo Jiang :
-> > A data overflow may lead to a reversal, which may turn a positive
-> > number into a large negative number, in this case, the string's
-> > length will exceed the array size(for example, eta: -2147483648s),
-> > here the array size is defined 16 characters. So, it is nessasary
-> > to consider some exceptions.
-> >
-> > Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> > ---
-> >  print_info.c | 21 +++++++++++++--------
-> >  1 file changed, 13 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/print_info.c b/print_info.c
-> > index e0e6a27..09e215a 100644
-> > --- a/print_info.c
-> > +++ b/print_info.c
-> > @@ -16,6 +16,8 @@
-> >  #include "print_info.h"
-> >  #include <time.h>
-> >  #include <string.h>
-> > +#include <stdint.h>
-> > +#include <inttypes.h>
-> >
-> >  #define PROGRESS_MAXLEN		"50"
-> >
-> > @@ -352,18 +354,21 @@ static void calc_delta(struct timeval *tv_start, struct timeval *delta)
-> >  }
-> >
-> >  /* produce less than 12 bytes on msg */
-> > -static int eta_to_human_short (int secs, char* msg)
-> > +static int eta_to_human_short (int64_t secs, char* msg, int maxsize)
-> >  {
-> >  	strcpy(msg, "eta: ");
-> >  	msg += strlen("eta: ");
-> >  	if (secs < 100)
-> > -		sprintf(msg, "%ds", secs);
-> > +		snprintf(msg, maxsize, "%"PRId64"s", secs);
-> >  	else if (secs < 100 * 60)
-> > -		sprintf(msg, "%dm%ds", secs / 60, secs % 60);
-> > +		snprintf(msg, maxsize, "%"PRId64"m""%"PRId64"s",
-> > +			secs / 60, secs % 60);
-> >  	else if (secs < 48 * 3600)
-> > -		sprintf(msg, "%dh%dm", secs / 3600, (secs / 60) % 60);
-> > +		snprintf(msg, maxsize, "%"PRId64"h""%"PRId64"m",
-> > +			secs / 3600, (secs / 60) % 60);
-> >  	else if (secs < 100 * 86400)
-> > -		sprintf(msg, "%dd%dh", secs / 86400, (secs / 3600) % 24);
-> > +		snprintf(msg, maxsize, "%"PRId64"d""%"PRId64"h",
-> > +			secs / 86400, (secs / 3600) % 24);
-> >  	else
-> >  		sprintf(msg, ">2day");
-> >  	return 0;
-> > @@ -379,8 +384,8 @@ print_progress(const char *msg, unsigned long current, unsigned long end, struct
-> >  	static unsigned int lapse = 0;
-> >  	static const char *spinner = "/|\\-";
-> >  	struct timeval delta;
-> > -	double eta;
-> > -	char eta_msg[16] = " ";
-> > +	int64_t eta;
-> > +	char eta_msg[32] = " ";
-> >
-> >  	if (current < end) {
-> >  		tm = time(NULL);
-> > @@ -395,7 +400,7 @@ print_progress(const char *msg, unsigned long current, unsigned long end, struct
-> >  		calc_delta(start, &delta);
-> >  		eta = delta.tv_sec + delta.tv_usec / 1e6;
-> >  		eta = (100 - progress) * eta / progress;
-> > -		eta_to_human_short(eta, eta_msg);
-> > +		eta_to_human_short(eta, eta_msg, sizeof(eta_msg));
-> >  	}
-> >  	if (flag_ignore_r_char) {
-> >  		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s\n",
-> >
+Dave
 
 _______________________________________________
 kexec mailing list
