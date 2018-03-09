@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1euAfR-0006X5-TQ
- for kexec@lists.infradead.org; Fri, 09 Mar 2018 05:34:12 +0000
-Date: Fri, 9 Mar 2018 13:33:48 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 00/11] kexec_file: Clean up purgatory load
-Message-ID: <20180309053348.GA2042@dhcp-128-65.nay.redhat.com>
-References: <20180226151620.20970-1-prudo@linux.vnet.ibm.com>
- <20180309051913.GA9358@dhcp-128-65.nay.redhat.com>
+ id 1euB5K-0008PT-Ih
+ for kexec@lists.infradead.org; Fri, 09 Mar 2018 06:00:56 +0000
+From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile: fix for hugepages filtering
+Date: Fri, 9 Mar 2018 05:58:08 +0000
+Message-ID: <61D4E5D821F1674CB87C99F080A210BE01181B92@BPXM01GP.gisp.nec.co.jp>
+References: <152053259516.24027.9253761946115314214.stgit@hbathini.in.ibm.com>
+In-Reply-To: <152053259516.24027.9253761946115314214.stgit@hbathini.in.ibm.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180309051913.GA9358@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,107 +23,120 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Cc: linux-s390@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Cc: "ptesarik@suse.cz" <ptesarik@suse.cz>, Masahiko Hayashi <mas-hayashi@tg.jp.nec.com>, Dave Young <dyoung@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, "piliu@redhat.com" <piliu@redhat.com>
 
-On 03/09/18 at 01:19pm, Dave Young wrote:
-> Hi Philipp,
-> On 02/26/18 at 04:16pm, Philipp Rudo wrote:
-> > 
-> > Hi everybody
-> > 
-> > following the discussion with Dave and AKASHI, here are the common code
-> > patches extracted from my recent patch set (Add kexec_file_load support to
-> > s390) [1]. The patches were extracted to allow upstream integration together
-> > with AKASHI's common code patches before the arch code gets adjusted to the
-> > new base.
-> > 
-> > The reason for this series is to prepare common code for adding
-> > kexec_file_load to s390 as well as cleaning up the mis-use of the sh_offset
-> > field during purgatory load. In detail this series contains:
-> > 
-> > Patch #1&2: Minor cleanups/fixes.
-> > 
-> > Patch #3-9: Clean up the purgatory load/relocation code. Especially remove
-> > the mis-use of the purgatory_info->sechdrs->sh_offset field, currently
-> > holding a pointer into either kexec_purgatory (ro) or purgatory_buf (rw)
-> > depending on the section. With these patches the section address will be
-> > calculated verbosely and sh_offset will contain the offset of the section
-> > in the stripped purgatory binary (purgatory_buf).
-> > 
-> > Patch #10: Allows architectures to set the purgatory load address. This
-> > patch is important for s390 as the kernel and purgatory have to be loaded
-> > to fixed addresses. In current code this is impossible as the purgatory
-> > load is opaque to the architecture.
-> > 
-> > Patch #11: Moves x86 purgatories sha implementation to common lib/
-> > directory to allow reuse in other architectures.
-> > 
-> > The patches apply to v4.16-rc3. There are no changes compared to [1] (all
-> > requested changes only affected s390 code). Please note that I had to touch
-> > arch code for x86 and power a little. In theory this should not change the
-> > behavior but I don't have a way to test it. Cross-compiling with
-> > defconfig [2] works fine for both.
-> > 
-> > Thanks
-> > Philipp
-> > 
-> > [1] http://lists.infradead.org/pipermail/kexec/2018-February/019926.html
-> > [2] On x86 with the orc unwinder and stack validation turned off. objtool
-> >     SEGFAULTs on s390...
-> > 
-> > Philipp Rudo (11):
-> >   kexec_file: Silence compile warnings
-> >   kexec_file: Remove checks in kexec_purgatory_load
-> >   kexec_file: Make purgatory_info->ehdr const
-> >   kexec_file: Search symbols in read-only kexec_purgatory
-> >   kexec_file: Use read-only sections in arch_kexec_apply_relocations*
-> >   kexec_file: Split up __kexec_load_puragory
-> >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 1
-> >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 2
-> >   kexec_file: Remove mis-use of sh_offset field
-> >   kexec_file: Allow archs to set purgatory load address
-> >   kexec_file: Move purgatories sha256 to common code
-> > 
-> >  arch/powerpc/kernel/kexec_elf_64.c             |   9 +-
-> >  arch/x86/kernel/kexec-bzimage64.c              |   8 +-
-> >  arch/x86/kernel/machine_kexec_64.c             |  66 ++---
-> >  arch/x86/purgatory/Makefile                    |   3 +
-> >  arch/x86/purgatory/purgatory.c                 |   2 +-
-> >  include/linux/kexec.h                          |  38 +--
-> >  {arch/x86/purgatory => include/linux}/sha256.h |  10 +-
-> >  kernel/kexec_file.c                            | 375 ++++++++++++-------------
-> >  {arch/x86/purgatory => lib}/sha256.c           |   4 +-
-> >  9 files changed, 244 insertions(+), 271 deletions(-)
-> >  rename {arch/x86/purgatory => include/linux}/sha256.h (63%)
-> >  rename {arch/x86/purgatory => lib}/sha256.c (99%)
-> > 
-> > -- 
-> > 2.13.5
-> > 
-> 
-> I did a test on x86, but it failed:
-> [   15.636489] kexec: Undefined symbol: memcpy
-> [   15.636496] kexec-bzImage64: Loading purgatory failed
-> [   33.603356] kexec: Undefined symbol: memcpy
-> [   33.603362] kexec-bzImage64: Loading purgatory failed
-> 
-> I think this relates to the sha256 splitting patch.
-> 
-> After reverting the sha256 patch (the last one), rebuilt a kernel but it still
-> failed to load:
-> 
-> # kexec -d -s -l /home/dyoung/git/linux-x86/sign/bzImage.signed 
-> Try gzip decompression.
-> Try LZMA decompression.
-> lzma_decompress_file: read on /home/dyoung/git/linux-x86/sign/bzImage.signed of 65536 bytes failed
+Hi Hari,
 
-Oops, this lzma error message should be not harmful, actually kernel should
-have been loaded, I will do more tests anyway.
+Thank you for your patch.
+It looks good.
+I will merge it into V1.6.4.
 
+Thanks
+Tachibana
+
+P.S. Sorry. I am prohibited from sending a mail to free mail address such as gmail.com.
+
+
+> -----Original Message-----
+> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Hari Bathini
+> Sent: Friday, March 09, 2018 3:10 AM
+> To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+> Cc: Dave Young <dyoung@redhat.com>; ptesarik@suse.cz; Kexec-ml <kexec@lists.infradead.org>; piliu@redhat.com;
+> andrej.skvortzov@gmail.com
+> Subject: [PATCH] makedumpfile: fix for hugepages filtering
 > 
-> Thanks
-> Dave
+> Kernel commit 036e7aa49fb2 changed 'compound_dtor' & 'compound_order'
+> types from 'unsigned short' to 'unsigned char'. Fix it here to ensure
+> hugepages are filtered properly.
+> 
+> Also, makedumpfile tool commit 484c6b18624 used 'int' type for 'dtor'
+> argument in 'isHugetlb' function. While this works in recent kernels
+> that use 'unsigned short/char' type for 'compound_dtor', it breaks
+> older kernels that used address of 'free_huge_page' as dtor. Fix it
+> by changing 'dtor' type.
+> 
+> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+> ---
+>  makedumpfile.c |   30 ++++++++++++++++++++++++------
+>  makedumpfile.h |    1 +
+>  2 files changed, 25 insertions(+), 6 deletions(-)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index ed138d3..ac8483d 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -241,7 +241,7 @@ is_in_same_page(unsigned long vaddr1, unsigned long vaddr2)
+>  }
+> 
+>  static inline int
+> -isHugetlb(int dtor)
+> +isHugetlb(unsigned long dtor)
+>  {
+>          return ((NUMBER(HUGETLB_PAGE_DTOR) != NOT_FOUND_NUMBER)
+>  		&& (NUMBER(HUGETLB_PAGE_DTOR) == dtor))
+> @@ -5798,18 +5798,36 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+>  		 * and PGMM_CACHED is a power of 2.
+>  		 */
+>  		if ((index_pg < PGMM_CACHED - 1) && isCompoundHead(flags)) {
+> -			if (order_offset)
+> -				compound_order = USHORT(pcache + SIZE(page) + order_offset);
+> +			unsigned long long addr =
+> +				(unsigned long long)(pcache + SIZE(page));
+> +
+> +			if (order_offset) {
+> +				if (info->kernel_version >=
+> +				    KERNEL_VERSION(4, 16, 0)) {
+> +					compound_order =
+> +						UCHAR(addr + order_offset);
+> +				} else {
+> +					compound_order =
+> +						USHORT(addr + order_offset);
+> +				}
+> +			}
+> 
+>  			if (dtor_offset) {
+>  				/*
+>  				 * compound_dtor has been changed from the address of descriptor
+>  				 * to the ID of it since linux-4.4.
+>  				 */
+> -				if (info->kernel_version >= KERNEL_VERSION(4, 4, 0)) {
+> -					compound_dtor = USHORT(pcache + SIZE(page) + dtor_offset);
+> +				if (info->kernel_version >=
+> +				    KERNEL_VERSION(4, 16, 0)) {
+> +					compound_dtor =
+> +						UCHAR(addr + dtor_offset);
+> +				} else if (info->kernel_version >=
+> +					   KERNEL_VERSION(4, 4, 0)) {
+> +					compound_dtor =
+> +						USHORT(addr + dtor_offset);
+>  				} else {
+> -					compound_dtor = ULONG(pcache + SIZE(page) + dtor_offset);
+> +					compound_dtor =
+> +						ULONG(addr + dtor_offset);
+>  				}
+>  			}
+> 
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 01eece2..4cfad98 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -241,6 +241,7 @@ static inline int string_exists(char *s) { return (s ? TRUE : FALSE); }
+>  		     string_exists((char *)(B)) &&	\
+>  	(strncmp((char *)(A), (char *)(B), strlen((char *)(B))) == 0))
+> 
+> +#define UCHAR(ADDR)	*((unsigned char *)(ADDR))
+>  #define USHORT(ADDR)	*((unsigned short *)(ADDR))
+>  #define UINT(ADDR)	*((unsigned int *)(ADDR))
+>  #define ULONG(ADDR)	*((unsigned long *)(ADDR))
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+
 
 _______________________________________________
 kexec mailing list
