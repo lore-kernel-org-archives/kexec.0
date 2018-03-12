@@ -1,33 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-lf0-f54.google.com ([209.85.215.54])
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1evJzC-0000oM-OL
- for kexec@lists.infradead.org; Mon, 12 Mar 2018 09:43:20 +0000
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w2C9c4g0086543
- for <kexec@lists.infradead.org>; Mon, 12 Mar 2018 05:43:05 -0400
-Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2gnh0jv4j8-1
- (version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 12 Mar 2018 05:43:05 -0400
-Received: from localhost
- by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
- Mon, 12 Mar 2018 09:43:03 -0000
-Date: Mon, 12 Mar 2018 10:42:57 +0100
-From: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Subject: Re: [PATCH 09/11] kexec_file: Remove mis-use of sh_offset field
-In-Reply-To: <20180312074218.GA4125@dhcp-128-65.nay.redhat.com>
-References: <20180226151620.20970-1-prudo@linux.vnet.ibm.com>
- <20180226151620.20970-10-prudo@linux.vnet.ibm.com>
- <20180309031420.GA3246@dhcp-128-65.nay.redhat.com>
- <20180309110241.00b0d3f3@ThinkPad>
- <20180312074218.GA4125@dhcp-128-65.nay.redhat.com>
+ id 1evTq2-0003is-Rr
+ for kexec@lists.infradead.org; Mon, 12 Mar 2018 20:14:32 +0000
+Received: by mail-lf0-f54.google.com with SMTP id i80-v6so25267758lfg.5
+ for <kexec@lists.infradead.org>; Mon, 12 Mar 2018 13:14:16 -0700 (PDT)
 MIME-Version: 1.0
-Message-Id: <20180312104257.0d04b5b2@ThinkPad>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Tue, 13 Mar 2018 01:44:14 +0530
+Message-ID: <CACi5LpMhHt4bjEueOzHZTGpzuR2zoQqXcReL-khoSNLG6=FVmg@mail.gmail.com>
+Subject: [Query] ARM64 kaslr support - randomness, seeding and kdump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,165 +22,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linux-s390@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Bhupesh SHARMA <bhupesh.linux@gmail.com>
 
-On Mon, 12 Mar 2018 15:42:18 +0800
-Dave Young <dyoung@redhat.com> wrote:
+Hi Ard,
 
-> Hi Philipp,
-> On 03/09/18 at 11:02am, Philipp Rudo wrote:
-> > Hi Dave,
-> > 
-> > 
-> > On Fri, 9 Mar 2018 11:14:20 +0800
-> > Dave Young <dyoung@redhat.com> wrote:
-> >   
-> > > On 02/26/18 at 04:16pm, Philipp Rudo wrote:  
-> > > > The current code uses the sh_offset field in purgatory_info->sechdrs to
-> > > > store a pointer to the current load address of the section. Depending
-> > > > whether the section will be loaded or not this is either a pointer into
-> > > > purgatory_info->purgatory_buf or kexec_purgatory. This is not only a
-> > > > violation of the ELF standard but also makes the code very hard to
-> > > > understand as you cannot tell if the memory you are using is read-only or
-> > > > not.
-> > > > 
-> > > > Remove this mis-use and store the offset of the section in
-> > > > pugaroty_info->purgatory_buf in sh_offset.
-> > > > 
-> > > > Signed-off-by: Philipp Rudo <prudo@linux.vnet.ibm.com>
-> > > > ---
-> > > >  arch/x86/kernel/machine_kexec_64.c | 10 ++++++----
-> > > >  kernel/kexec_file.c                | 33 +++------------------------------
-> > > >  2 files changed, 9 insertions(+), 34 deletions(-)
-> > > > 
-> > > > diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> > > > index 51667c8b5c9b..41db74bdc88b 100644
-> > > > --- a/arch/x86/kernel/machine_kexec_64.c
-> > > > +++ b/arch/x86/kernel/machine_kexec_64.c
-> > > > @@ -457,13 +457,15 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-> > > >  		 * rel[i].r_offset contains byte offset from beginning
-> > > >  		 * of section to the storage unit affected.
-> > > >  		 *
-> > > > -		 * This is location to update (->sh_offset). This is temporary
-> > > > -		 * buffer where section is currently loaded. This will finally
-> > > > -		 * be loaded to a different address later, pointed to by
-> > > > +		 * This is location to update. This is temporary buffer
-> > > > +		 * where section is currently loaded. This will finally be
-> > > > +		 * loaded to a different address later, pointed to by
-> > > >  		 * ->sh_addr. kexec takes care of moving it
-> > > >  		 *  (kexec_load_segment()).
-> > > >  		 */
-> > > > -		location = (void *)(section->sh_offset + rel[i].r_offset);
-> > > > +		location = pi->purgatory_buf;
-> > > > +		location += section->sh_offset;
-> > > > +		location += rel[i].r_offset;
-> > > >  
-> > > >  		/* Final address of the location */
-> > > >  		address = section->sh_addr + rel[i].r_offset;
-> > > > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > > > index 746b91e46e34..25b44d1a664a 100644
-> > > > --- a/kernel/kexec_file.c
-> > > > +++ b/kernel/kexec_file.c
-> > > > @@ -736,28 +736,6 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
-> > > >  	       pi->ehdr->e_shnum * sizeof(Elf_Shdr));
-> > > >  	pi->sechdrs = sechdrs;
-> > > >  
-> > > > -	/*
-> > > > -	 * We seem to have multiple copies of sections. First copy is which
-> > > > -	 * is embedded in kernel in read only section. Some of these sections
-> > > > -	 * will be copied to a temporary buffer and relocated. And these
-> > > > -	 * sections will finally be copied to their final destination at
-> > > > -	 * segment load time.    
-> > > 
-> > > It would be good to keep above part comment somewhere..  
-> > 
-> > there is a comment in include/linux/kexec.h for the purgatory_info->sechdrs
-> > field saying 
-> > 
-> > Temporary, modifiable buffer for sechdrs used for relocation.        
-> > This memory can be freed post image load
-> > 
-> > When you think this is not enough i can add a comment here like
-> > 
-> > The section headers in kexec_purgatory are read-only. In order to have them
-> > modifiable make a temporary copy.  
-> 
-> Looks better to add above comment here.
+I remember we had a discussion on this topic some time ago, but I was
+working on enabling KASLR support on arm64 boards internally and
+wanted to check your opinion on the following points (especially to
+understand if there are any changes in the opinions of the ARM
+maintainers now):
 
-Ok, it's added. I'll wait what Ingo says about the string.c issue befor
-sending around v2. 
+A. Randomness / Seeding for arm64 kaslr:
 
-Thanks
-Philipp
+- Currently the arm64 kernel requires a bootloader to provide entropy,
+by passing a
+ random u64 value in '/chosen/kaslr-seed' at kernel entry (please see [1])
 
-> > 
-> > What do you think.
-> > 
-> > Thanks
-> > Philipp
-> >   
-> > > > -	 *
-> > > > -	 * Use ->sh_offset to reflect section address in memory. It will
-> > > > -	 * point to original read only copy if section is not allocatable.
-> > > > -	 * Otherwise it will point to temporary copy which will be relocated.
-> > > > -	 *
-> > > > -	 * Use ->sh_addr to contain final address of the section where it
-> > > > -	 * will go during execution time.
-> > > > -	 */
-> > > > -	for (i = 0; i < pi->ehdr->e_shnum; i++) {
-> > > > -		if (sechdrs[i].sh_type == SHT_NOBITS)
-> > > > -			continue;
-> > > > -
-> > > > -		sechdrs[i].sh_offset = (unsigned long)pi->ehdr +
-> > > > -						sechdrs[i].sh_offset;
-> > > > -	}
-> > > > -
-> > > >  	offset = 0;
-> > > >  	bss_addr = kbuf->mem + kbuf->bufsz;
-> > > >  	kbuf->image->start = pi->ehdr->e_entry;
-> > > > @@ -786,17 +764,12 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
-> > > >  			kbuf->image->start += kbuf->mem + offset;
-> > > >  		}
-> > > >  
-> > > > -		src = (void *)sechdrs[i].sh_offset;
-> > > > +		src = (void *)pi->ehdr + sechdrs[i].sh_offset;
-> > > >  		dst = pi->purgatory_buf + offset;
-> > > >  		memcpy(dst, src, sechdrs[i].sh_size);
-> > > >  
-> > > >  		sechdrs[i].sh_addr = kbuf->mem + offset;
-> > > > -
-> > > > -		/*
-> > > > -		 * This section got copied to temporary buffer. Update
-> > > > -		 * ->sh_offset accordingly.
-> > > > -		 */
-> > > > -		sechdrs[i].sh_offset = (unsigned long)dst;
-> > > > +		sechdrs[i].sh_offset = offset;
-> > > >  		offset += sechdrs[i].sh_size;
-> > > >  	}
-> > > >  
-> > > > @@ -1006,7 +979,7 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
-> > > >  		return -EINVAL;
-> > > >  	}
-> > > >  
-> > > > -	sym_buf = (char *)sec->sh_offset + sym->st_value;
-> > > > +	sym_buf = (char *)pi->purgatory_buf + sec->sh_offset + sym->st_value;
-> > > >  
-> > > >  	if (get_value)
-> > > >  		memcpy((void *)buf, sym_buf, size);
-> > > > -- 
-> > > > 2.13.5
-> > > >     
-> > > 
-> > > Thanks
-> > > Dave
-> > >   
-> >   
-> 
-> Thanks
-> Dave
-> 
+- On platforms which support UEFI firmware, its the responsibility of
+the UEFI firmware to implement EFI_RNG_PROTOCOL to supply the
+'/chosen/kaslr-seed' property.
 
+- I was wondering if we have any possibility to support a random seed
+generation like the x86 in the efistub only rather than relying on the
+UEFI firmwares with EFI_RNG_PROTOCOL for the same - for e.g. by using
+a randomness seed like the boot time or more proper entropy sources
+like arm64 system timer (see [2] for x86 example).
+
+- I guess that the main problem is that most arm64 UEFI firmware
+vendors still do not support EFI_RNG_PROTOCOL out of the box. We can
+use the ChaosKey (see [3]) EFI driver and use this USB key as the
+source of entropy on the arm64 systems for EFI firmwares which do not
+provide a EFI_RNG_PROTOCOL implementation, but it might not be very
+feasible to connect it to all boards in a production environment.
+
+B. Regarding the arm64 kaslr support in kdump (I have Cc'ed AKASHI and
+kexec list in this thread as well for their inputs), but currently we
+don't seem to have a way to support kaslr in arm64 kdump kernel:
+
+- '/chosen/kaslr-seed' a property is zeroed out in the primary kernel
+(to avoid leaking out randomness secret), but how should this be then
+handed over to the kdump kernel.
+- We pass the dtb over to the kdump kernel for arm64 kdump, but the
+'/chosen/kaslr-seed' property would be zeroed out already by the
+primary kernel and the secondary would work in a *nokaslr* environment
+due to the same (see [4] for example)
+
+[1]. https://elixir.bootlin.com/linux/v4.9/source/arch/arm64/Kconfig#L906
+[2]. https://github.com/torvalds/linux/blob/master/arch/x86/lib/kaslr.c#L49
+[3]. https://github.com/bhupesh-sharma/edk2-platforms/tree/master/Silicon/Openmoko/ChaosKeyDxe
+[4]. https://elixir.bootlin.com/linux/v4.12.9/source/arch/arm64/kernel/kaslr.c#L104
+
+Please share your views.
+
+Regards,
+Bhupesh
 
 _______________________________________________
 kexec mailing list
