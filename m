@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x242.google.com ([2607:f8b0:400e:c05::242])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.89 #1 (Red Hat Linux))
- id 1evFJG-0001IE-3t
- for kexec@lists.infradead.org; Mon, 12 Mar 2018 04:43:50 +0000
-Received: by mail-pg0-x242.google.com with SMTP id d1so255671pgv.2
- for <kexec@lists.infradead.org>; Sun, 11 Mar 2018 21:43:31 -0700 (PDT)
-From: Pingfan Liu <kernelfans@gmail.com>
-Subject: [PATCHv4 3/3] ppc64 boot: Wait for boot cpu to show up if nr_cpus
- limit is about to hit.
-Date: Mon, 12 Mar 2018 12:43:10 +0800
-Message-Id: <1520829790-14029-4-git-send-email-kernelfans@gmail.com>
-In-Reply-To: <1520829790-14029-1-git-send-email-kernelfans@gmail.com>
-References: <1520829790-14029-1-git-send-email-kernelfans@gmail.com>
+ id 1evI4V-0005L3-FI
+ for kexec@lists.infradead.org; Mon, 12 Mar 2018 07:40:44 +0000
+Date: Mon, 12 Mar 2018 15:40:16 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 00/11] kexec_file: Clean up purgatory load
+Message-ID: <20180312074016.GA1854@dhcp-128-65.nay.redhat.com>
+References: <20180226151620.20970-1-prudo@linux.vnet.ibm.com>
+ <20180309051913.GA9358@dhcp-128-65.nay.redhat.com>
+ <20180309152556.0ccf3cb1@ThinkPad>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180309152556.0ccf3cb1@ThinkPad>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,105 +21,192 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: cascardo@canonical.com, gpiccoli@linux.vnet.ibm.com, kexec@lists.infradead.org, paulus@ozlabs.org, mpe@ellerman.id.au, benh@kernel.crashing.org
+To: Philipp Rudo <prudo@linux.vnet.ibm.com>
+Cc: linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
 
-From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Hi Philipp,
+On 03/09/18 at 03:25pm, Philipp Rudo wrote:
+> Hi Dave,
+> 
+> On Fri, 9 Mar 2018 13:19:40 +0800
+> Dave Young <dyoung@redhat.com> wrote:
+> 
+> > Hi Philipp,
+> > On 02/26/18 at 04:16pm, Philipp Rudo wrote:
+> > > 
+> > > Hi everybody
+> > > 
+> > > following the discussion with Dave and AKASHI, here are the common code
+> > > patches extracted from my recent patch set (Add kexec_file_load support to
+> > > s390) [1]. The patches were extracted to allow upstream integration together
+> > > with AKASHI's common code patches before the arch code gets adjusted to the
+> > > new base.
+> > > 
+> > > The reason for this series is to prepare common code for adding
+> > > kexec_file_load to s390 as well as cleaning up the mis-use of the sh_offset
+> > > field during purgatory load. In detail this series contains:
+> > > 
+> > > Patch #1&2: Minor cleanups/fixes.
+> > > 
+> > > Patch #3-9: Clean up the purgatory load/relocation code. Especially remove
+> > > the mis-use of the purgatory_info->sechdrs->sh_offset field, currently
+> > > holding a pointer into either kexec_purgatory (ro) or purgatory_buf (rw)
+> > > depending on the section. With these patches the section address will be
+> > > calculated verbosely and sh_offset will contain the offset of the section
+> > > in the stripped purgatory binary (purgatory_buf).
+> > > 
+> > > Patch #10: Allows architectures to set the purgatory load address. This
+> > > patch is important for s390 as the kernel and purgatory have to be loaded
+> > > to fixed addresses. In current code this is impossible as the purgatory
+> > > load is opaque to the architecture.
+> > > 
+> > > Patch #11: Moves x86 purgatories sha implementation to common lib/
+> > > directory to allow reuse in other architectures.
+> > > 
+> > > The patches apply to v4.16-rc3. There are no changes compared to [1] (all
+> > > requested changes only affected s390 code). Please note that I had to touch
+> > > arch code for x86 and power a little. In theory this should not change the
+> > > behavior but I don't have a way to test it. Cross-compiling with
+> > > defconfig [2] works fine for both.
+> > > 
+> > > Thanks
+> > > Philipp
+> > > 
+> > > [1] http://lists.infradead.org/pipermail/kexec/2018-February/019926.html
+> > > [2] On x86 with the orc unwinder and stack validation turned off. objtool
+> > >     SEGFAULTs on s390...
+> > > 
+> > > Philipp Rudo (11):
+> > >   kexec_file: Silence compile warnings
+> > >   kexec_file: Remove checks in kexec_purgatory_load
+> > >   kexec_file: Make purgatory_info->ehdr const
+> > >   kexec_file: Search symbols in read-only kexec_purgatory
+> > >   kexec_file: Use read-only sections in arch_kexec_apply_relocations*
+> > >   kexec_file: Split up __kexec_load_puragory
+> > >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 1
+> > >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 2
+> > >   kexec_file: Remove mis-use of sh_offset field
+> > >   kexec_file: Allow archs to set purgatory load address
+> > >   kexec_file: Move purgatories sha256 to common code
+> > > 
+> > >  arch/powerpc/kernel/kexec_elf_64.c             |   9 +-
+> > >  arch/x86/kernel/kexec-bzimage64.c              |   8 +-
+> > >  arch/x86/kernel/machine_kexec_64.c             |  66 ++---
+> > >  arch/x86/purgatory/Makefile                    |   3 +
+> > >  arch/x86/purgatory/purgatory.c                 |   2 +-
+> > >  include/linux/kexec.h                          |  38 +--
+> > >  {arch/x86/purgatory => include/linux}/sha256.h |  10 +-
+> > >  kernel/kexec_file.c                            | 375 ++++++++++++-------------
+> > >  {arch/x86/purgatory => lib}/sha256.c           |   4 +-
+> > >  9 files changed, 244 insertions(+), 271 deletions(-)
+> > >  rename {arch/x86/purgatory => include/linux}/sha256.h (63%)
+> > >  rename {arch/x86/purgatory => lib}/sha256.c (99%)
+> > > 
+> > > -- 
+> > > 2.13.5
+> > >   
+> > 
+> > I did a test on x86, but it failed:
+> > [   15.636489] kexec: Undefined symbol: memcpy
+> > [   15.636496] kexec-bzImage64: Loading purgatory failed
+> > [   33.603356] kexec: Undefined symbol: memcpy
+> > [   33.603362] kexec-bzImage64: Loading purgatory failed
+> > 
+> > I think this relates to the sha256 splitting patch.
+> 
+> I looked into this a little closer and i think i understood what happens. 
+> 
+> There is no definition of memcpy in arch/x86/boot/string.c, instead it's defined
+> in arch/x86/boot/string.h as __buildin_memcpy (same for memset). Thus by
+> switching to linux/string.h there is no more definition for it. Leaving us with
+> 
+> $ readelf -s purgatory.ro
+> [...]
+>  45: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT  UND memcpy
+> [...]
+> 
+> To solve this problem I see two possibilities (example patches are at the end of
+> the mail):
+> 
+> 1) Have arch dependent includes in lib/sha256.c
+> 2) Add makefile magic so memcpy is defined
+> 
+> With both solutions the resulting purgatory.ro looks good. However both
+> solutions aren't perfect. For example in 2) i had too mix the linux/string.h
+> header with arch/x86/boot/string.c, because lib/string.c has too many
+> dependencies and does not compile in the purgatory. On the other hand having
+> arch dependent includes isn't that nice either ...
+> 
+> What's your opinion on this?
 
-The kernel boot parameter 'nr_cpus=' allows one to specify number of
-possible cpus in the system. In the normal scenario the first cpu (cpu0)
-that shows up is the boot cpu and hence it gets covered under nr_cpus
-limit.
+Looks like it is a mess, maybe the 1st one is better although it is also
+ugly.  Ccing Ingo see if he has some idea about this. 
 
-But this assumption will be broken in kdump scenario where kdump kenrel
-after a crash can boot up on an non-zero boot cpu. The paca structure
-allocation depends on value of nr_cpus and is indexed using logical cpu
-ids. This definetly will be an issue if boot cpu id > nr_cpus
+> 
+> Thanks
+> Philipp
+> 
+> -----
+> Example solution 1
+> 
+> --- a/lib/sha256.c
+> +++ b/lib/sha256.c
+> @@ -17,9 +17,14 @@
+>  
+>  #include <linux/bitops.h>
+>  #include <linux/sha256.h>
+> -#include <linux/string.h>
+>  #include <asm/byteorder.h>
+>  
+> +#ifdef CONFIG_X86
+> +#include "../arch/x86/boot/string.h"
+> +#else
+> +#include <linux/string.h>
+> +#endif /* CONFIG_X86 */
+> +
+>  static inline u32 Ch(u32 x, u32 y, u32 z)
+>  {
+>  	return z ^ (x & (y ^ z));
+> 
+> -----
+> Example solution 2
+> 
+> --- a/arch/x86/purgatory/Makefile
+> +++ b/arch/x86/purgatory/Makefile
+> @@ -1,7 +1,8 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  OBJECT_FILES_NON_STANDARD := y
+>  
+> -purgatory-y := purgatory.o stack.o setup-x86_$(BITS).o sha256.o entry64.o string.o
+> +purgatory-y := purgatory.o stack.o setup-x86_$(BITS).o sha256.o entry64.o \
+> +	string.o memcpy_$(BITS).o memset_$(BITS).o
+>  
+>  targets += $(purgatory-y)
+>  PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
+> @@ -9,6 +10,15 @@ PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
+>  $(obj)/sha256.o: $(srctree)/lib/sha256.c
+>  	$(call if_changed_rule,cc_o_c)
+>  
+> +$(obj)/string.o: $(srctree)/arch/x86/boot/string.c
+> +	$(call if_changed_rule,cc_o_c)
+> +
+> +$(obj)/memset_$(BITS).o: $(srctree)/arch/x86/lib/memset_$(BITS).S
+> +	$(call if_changed_rule,as_o_S)
+> +
+> +$(obj)/memcpy_$(BITS).o: $(srctree)/arch/x86/lib/memcpy_$(BITS).S
+> +	$(call if_changed_rule,as_o_S)
+> +
+>  LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
+>  targets += purgatory.ro
+>  
+> 
 
-This patch modifies allocate_pacas() and smp_setup_cpu_maps() to
-accommodate boot cpu for the case where boot_cpuid > nr_cpu_ids.
-
-This change would help to reduce the memory reservation requirement for
-kdump on ppc64.
-
-Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Tested-by: Guilherme G. Piccoli <gpiccoli@linux.vnet.ibm.com>
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com> (separate the logical for cpu id mapping)
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
----
- arch/powerpc/include/asm/paca.h |  3 +++
- arch/powerpc/kernel/paca.c      | 19 ++++++++++++++-----
- 2 files changed, 17 insertions(+), 5 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/paca.h b/arch/powerpc/include/asm/paca.h
-index b62c310..49ab29d 100644
---- a/arch/powerpc/include/asm/paca.h
-+++ b/arch/powerpc/include/asm/paca.h
-@@ -49,6 +49,9 @@ extern unsigned int debug_smp_processor_id(void); /* from linux/smp.h */
- #define get_lppaca()	(get_paca()->lppaca_ptr)
- #define get_slb_shadow()	(get_paca()->slb_shadow_ptr)
- 
-+/* Maximum number of threads per core. */
-+#define	MAX_SMT		8
-+
- struct task_struct;
- 
- /*
-diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
-index 95ffedf..13be6ab 100644
---- a/arch/powerpc/kernel/paca.c
-+++ b/arch/powerpc/kernel/paca.c
-@@ -209,6 +209,7 @@ void __init allocate_pacas(void)
- {
- 	u64 limit;
- 	int cpu;
-+	unsigned int nr_cpus_aligned;
- 
- #ifdef CONFIG_PPC_BOOK3S_64
- 	/*
-@@ -220,20 +221,28 @@ void __init allocate_pacas(void)
- 	limit = ppc64_rma_size;
- #endif
- 
--	paca_size = PAGE_ALIGN(sizeof(struct paca_struct) * nr_cpu_ids);
-+	/*
-+	 * Alloc the paca[] align up to SMT threads.
-+	 * This will help us to prepare for a situation where
-+	 * boot cpu id > nr_cpus.
-+	 * We keep the schema of nr_cpus in kernel cmdline, but
-+	 * waste a bit memory
-+	 */
-+	nr_cpus_aligned = _ALIGN_UP(nr_cpu_ids, MAX_SMT);
-+	paca_size = PAGE_ALIGN(sizeof(struct paca_struct) * nr_cpus_aligned);
- 
- 	paca = __va(memblock_alloc_base(paca_size, PAGE_SIZE, limit));
- 	memset(paca, 0, paca_size);
- 
- 	printk(KERN_DEBUG "Allocated %u bytes for %u pacas at %p\n",
--		paca_size, nr_cpu_ids, paca);
-+		paca_size, nr_cpus_aligned, paca);
- 
--	allocate_lppacas(nr_cpu_ids, limit);
-+	allocate_lppacas(nr_cpus_aligned, limit);
- 
--	allocate_slb_shadows(nr_cpu_ids, limit);
-+	allocate_slb_shadows(nr_cpus_aligned, limit);
- 
- 	/* Can't use for_each_*_cpu, as they aren't functional yet */
--	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
-+	for (cpu = 0; cpu < nr_cpus_aligned; cpu++)
- 		initialise_paca(&paca[cpu], cpu);
- }
- 
--- 
-2.7.4
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
