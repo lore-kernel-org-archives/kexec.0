@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 13 Mar 2018 11:20:17 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [Query] ARM64 kaslr support - randomness, seeding and kdump
-Message-ID: <20180313112016.ocx4qqhji3zfwjhs@lakrids.cambridge.arm.com>
-References: <CACi5LpMhHt4bjEueOzHZTGpzuR2zoQqXcReL-khoSNLG6=FVmg@mail.gmail.com>
- <CAKv+Gu8qd=rpJkG_GoVO=kkmc4qx_zZD8c_wwE16gr=8wSShSw@mail.gmail.com>
- <20180313102158.GI25863@linaro.org>
- <20180313104715.prurmrizho4ddc4l@lakrids.cambridge.arm.com>
- <20180313110747.GJ25863@linaro.org>
+Received: from mx2.suse.de ([195.135.220.15])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1evnlA-0002I4-MI
+ for kexec@lists.infradead.org; Tue, 13 Mar 2018 17:30:53 +0000
+Subject: Re: [PATCH v4 4/5] kexec: add option to fall back to KEXEC_LOAD when
+ KEXEC_FILE_LOAD is not supported.
+References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1520342150.git.msuchanek@suse.de>
+ <19a47e290fc03efea82af845740ae8f6b30f13b8.1520342150.git.msuchanek@suse.de>
+From: Tony Jones <tonyj@suse.de>
+Message-ID: <b7fcd583-d7d2-1348-5a17-7294c9f19e9a@suse.de>
+Date: Tue, 13 Mar 2018 10:30:28 -0700
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180313110747.GJ25863@linaro.org>
+In-Reply-To: <19a47e290fc03efea82af845740ae8f6b30f13b8.1520342150.git.msuchanek@suse.de>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,47 +25,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Bhupesh SHARMA <bhupesh.linux@gmail.com>
+To: kexec@lists.infradead.org
+Cc: msuchanek@suse.de, Simon Horman <horms@verge.net.au>, dyoung@redhat.com, Petr Tesarik <ptesarik@suse.cz>
 
-On Tue, Mar 13, 2018 at 08:07:49PM +0900, AKASHI Takahiro wrote:
-> On Tue, Mar 13, 2018 at 10:47:15AM +0000, Mark Rutland wrote:
-> > On Tue, Mar 13, 2018 at 07:22:03PM +0900, AKASHI Takahiro wrote:
-> > > On Mon, Mar 12, 2018 at 08:58:00PM +0000, Ard Biesheuvel wrote:
-> > > > On 12 March 2018 at 20:14, Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> > 
-> > > More importantly, neither arm64 _kexec_ supports kaslr.
-> > 
-> > The below is just considering this, and ignoring kdump (where I don't
-> > think we care at all about KASLR).
-> > 
-> > > Currently kexec-tools is set to determine where the kernel actually be
-> > > loaded, using a constant offset, text_offset, which comes from an image's
-> > > boot header and relocation of an image to the load address is performed
-> > > at the very end of the first kernel without knowing whether the 2nd kernel
-> > > has kaslr support enabled or not.
-> > 
-> > The kexec tools shouldn't need to know whether the kernel supports KASLR
-> > at all.
-> > 
-> > If the new kernel image has bit 3 (Kernel physical placement) set, kexec
-> > tools can choose to randomize the physical load address, regardless of
-> > whether that kernel has KASLR enabled.
+On 03/06/2018 05:15 AM, Michal Suchanek wrote:
+> Not all architectures implement KEXEC_FILE_LOAD. However, on some
+> archiectures KEXEC_FILE_LOAD is required when secure boot is enabled in
+> locked-down mode. Previously users had to select the KEXEC_FILE_LOAD
+> syscall with undocumented -s option. However, if they did pass the
+> option kexec would fail on architectures that do not support it.
 > 
-> So, by definition, is randomness, if we say so, in physical address not
-> part of KASLR?
+> So add an -a option that tries KEXEC_FILE_LOAD and when it is not
+> supported tries KEXEC_LOAD.
+> 
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 
-Physical randomization is not part of the kernel's KASLR implementation.
+David, Simon.
 
-We happen to do it in the EFI stub, because we can in that context. But
-generally, physical randomization is not part of arm64's in-kernel
-KASLR.
+Is there any feedback on v4 of this patchset?  Adding a new option for fallback rather than changing the existing behavior was the v3 feedback on March 2nd.
 
-For various reasons, the physical address that the kernel is loaded to
-may be arbitrary, so we have to cope with physical randomization
-regardless.
+Cheers!
 
-Thanks,
-Mark.
+Tony
 
 _______________________________________________
 kexec mailing list
