@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x241.google.com ([2607:f8b0:4001:c06::241])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1evh3x-0001PF-MD
- for kexec@lists.infradead.org; Tue, 13 Mar 2018 10:21:48 +0000
-Received: by mail-io0-x241.google.com with SMTP id k21so11154806ioc.2
- for <kexec@lists.infradead.org>; Tue, 13 Mar 2018 03:21:34 -0700 (PDT)
-Date: Tue, 13 Mar 2018 19:22:03 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Date: Tue, 13 Mar 2018 10:47:15 +0000
+From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [Query] ARM64 kaslr support - randomness, seeding and kdump
-Message-ID: <20180313102158.GI25863@linaro.org>
+Message-ID: <20180313104715.prurmrizho4ddc4l@lakrids.cambridge.arm.com>
 References: <CACi5LpMhHt4bjEueOzHZTGpzuR2zoQqXcReL-khoSNLG6=FVmg@mail.gmail.com>
  <CAKv+Gu8qd=rpJkG_GoVO=kkmc4qx_zZD8c_wwE16gr=8wSShSw@mail.gmail.com>
+ <20180313102158.GI25863@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu8qd=rpJkG_GoVO=kkmc4qx_zZD8c_wwE16gr=8wSShSw@mail.gmail.com>
+In-Reply-To: <20180313102158.GI25863@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,96 +21,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Bhupesh SHARMA <bhupesh.linux@gmail.com>
 
-On Mon, Mar 12, 2018 at 08:58:00PM +0000, Ard Biesheuvel wrote:
-> On 12 March 2018 at 20:14, Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> > Hi Ard,
-> >
-> > I remember we had a discussion on this topic some time ago, but I was
-> > working on enabling KASLR support on arm64 boards internally and
-> > wanted to check your opinion on the following points (especially to
-> > understand if there are any changes in the opinions of the ARM
-> > maintainers now):
-> >
-> > A. Randomness / Seeding for arm64 kaslr:
-> >
-> > - Currently the arm64 kernel requires a bootloader to provide entropy,
-> > by passing a
-> >  random u64 value in '/chosen/kaslr-seed' at kernel entry (please see [1])
-> >
-> > - On platforms which support UEFI firmware, its the responsibility of
-> > the UEFI firmware to implement EFI_RNG_PROTOCOL to supply the
-> > '/chosen/kaslr-seed' property.
-> >
-> > - I was wondering if we have any possibility to support a random seed
-> > generation like the x86 in the efistub only rather than relying on the
-> > UEFI firmwares with EFI_RNG_PROTOCOL for the same - for e.g. by using
-> > a randomness seed like the boot time or more proper entropy sources
-> > like arm64 system timer (see [2] for x86 example).
-> >
-> > - I guess that the main problem is that most arm64 UEFI firmware
-> > vendors still do not support EFI_RNG_PROTOCOL out of the box. We can
-> > use the ChaosKey (see [3]) EFI driver and use this USB key as the
-> > source of entropy on the arm64 systems for EFI firmwares which do not
-> > provide a EFI_RNG_PROTOCOL implementation, but it might not be very
-> > feasible to connect it to all boards in a production environment.
-> >
-> 
-> The problem is that arm64 does not have an architected means of
-> obtaining entropy, and we shouldn't rely on hacks to get pseudo
-> entropy.
-> 
-> Note that EFI_RNG_PROTOCOL is not only used for KASLR, it is also used
-> to seed the kernel entropy pool if the firmware provides an
-> implementation of the protocol.
-> 
-> Any UEFI system that can boot off USB should be able to use the
-> ChaosKey as well, but the best approach is obviously to implement
-> EFI_RNG_PROTOCOL natively if the platform has an entropy source
-> available.
-> 
-> If a platform vendor wants to hack something up based on the timer or
-> the performance counter, they are free to do so. But that doesn't mean
-> we should implement anything along those lines in the kernel.
-> 
-> > B. Regarding the arm64 kaslr support in kdump (I have Cc'ed AKASHI and
-> > kexec list in this thread as well for their inputs), but currently we
-> > don't seem to have a way to support kaslr in arm64 kdump kernel:
-> >
-> > - '/chosen/kaslr-seed' a property is zeroed out in the primary kernel
-> > (to avoid leaking out randomness secret), but how should this be then
-> > handed over to the kdump kernel.
-> > - We pass the dtb over to the kdump kernel for arm64 kdump, but the
-> > '/chosen/kaslr-seed' property would be zeroed out already by the
-> > primary kernel and the secondary would work in a *nokaslr* environment
-> > due to the same (see [4] for example)
-> >
-> 
-> What would be the point of randomizing the placement of the kdump
-> kernel? And don't say 'because x86 does it', because that is not a
-> good reason.
+On Tue, Mar 13, 2018 at 07:22:03PM +0900, AKASHI Takahiro wrote:
+> On Mon, Mar 12, 2018 at 08:58:00PM +0000, Ard Biesheuvel wrote:
+> > On 12 March 2018 at 20:14, Bhupesh Sharma <bhsharma@redhat.com> wrote:
 
-More importantly, neither arm64 _kexec_ supports kaslr.
+> More importantly, neither arm64 _kexec_ supports kaslr.
 
-Currently kexec-tools is set to determine where the kernel actually be
-loaded, using a constant offset, text_offset, which comes from an image's
-boot header and relocation of an image to the load address is performed
-at the very end of the first kernel without knowing whether the 2nd kernel
-has kaslr support enabled or not.
+The below is just considering this, and ignoring kdump (where I don't
+think we care at all about KASLR).
 
-> > B. Regarding the arm64 kaslr support in kdump (I have Cc'ed AKASHI and
-> > kexec list in this thread as well for their inputs), but currently we
-> > don't seem to have a way to support kaslr in arm64 kdump kernel:
-> >
-> > - '/chosen/kaslr-seed' a property is zeroed out in the primary kernel
+> Currently kexec-tools is set to determine where the kernel actually be
+> loaded, using a constant offset, text_offset, which comes from an image's
+> boot header and relocation of an image to the load address is performed
+> at the very end of the first kernel without knowing whether the 2nd kernel
+> has kaslr support enabled or not.
 
-So, even if adding /chosen/kaslr-seed to dtb at kexec would not be
-difficult, we would have to have efi_entry-like entry code.
+The kexec tools shouldn't need to know whether the kernel supports KASLR
+at all.
+
+If the new kernel image has bit 3 (Kernel physical placement) set, kexec
+tools can choose to randomize the physical load address, regardless of
+whether that kernel has KASLR enabled.
+
+Note that the bootloader is responsible for physical randomization, and
+the kernel is responsible for virtual randomization. It just happens
+that the EFI stub acts as a bootloader when we use EFI.
+
+> > > B. Regarding the arm64 kaslr support in kdump (I have Cc'ed AKASHI and
+> > > kexec list in this thread as well for their inputs), but currently we
+> > > don't seem to have a way to support kaslr in arm64 kdump kernel:
+> > >
+> > > - '/chosen/kaslr-seed' a property is zeroed out in the primary kernel
+> 
+> So, even if adding /chosen/kaslr-seed to dtb at kexec would not be
+> difficult, we would have to have efi_entry-like entry code.
+
+The kaslr-seed property is used for *virtual* randomization, so we don't
+need more code in the kernel for this. The kexec tools can populate this
+property if desired.
 
 Thanks,
--Takahiro AKASHI
+Mark.
 
 _______________________________________________
 kexec mailing list
