@@ -1,32 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-qt0-x242.google.com ([2607:f8b0:400d:c0d::242])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1evumw-0002ol-4b
- for kexec@lists.infradead.org; Wed, 14 Mar 2018 01:01:07 +0000
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w2E0xm2P147221
- for <kexec@lists.infradead.org>; Tue, 13 Mar 2018 21:00:52 -0400
-Received: from e36.co.us.ibm.com (e36.co.us.ibm.com [32.97.110.154])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2gpseugeaa-1
- (version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 13 Mar 2018 21:00:52 -0400
-Received: from localhost
- by e36.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Tue, 13 Mar 2018 19:00:51 -0600
-References: <20180306102303.9063-1-takahiro.akashi@linaro.org>
- <20180306102303.9063-3-takahiro.akashi@linaro.org>
- <20180308011303.GB2600@dhcp-128-65.nay.redhat.com>
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 2/7] kexec_file, x86,
- powerpc: factor out kexec_file_ops functions
-In-reply-to: <20180308011303.GB2600@dhcp-128-65.nay.redhat.com>
-Date: Tue, 13 Mar 2018 22:00:39 -0300
+ id 1evvkt-000868-9a
+ for kexec@lists.infradead.org; Wed, 14 Mar 2018 02:03:05 +0000
+Received: by mail-qt0-x242.google.com with SMTP id c7so1893823qtn.3
+ for <kexec@lists.infradead.org>; Tue, 13 Mar 2018 19:02:51 -0700 (PDT)
 MIME-Version: 1.0
-Message-Id: <87zi3b8o94.fsf@morokweng.localdomain>
+In-Reply-To: <1520909895.16434.67.camel@kernel.crashing.org>
+References: <1520829790-14029-1-git-send-email-kernelfans@gmail.com>
+ <1520829790-14029-2-git-send-email-kernelfans@gmail.com>
+ <1520909895.16434.67.camel@kernel.crashing.org>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Wed, 14 Mar 2018 10:02:50 +0800
+Message-ID: <CAFgQCTvLN+fPDS6QLfshJ7Fz9Zn==D0uEC+=zQdsz7y_vZ4NUg@mail.gmail.com>
+Subject: Re: [PATCHv4 1/3] powerpc, cpu: partially unbind the mapping between
+ cpu logical id and its seq in dt
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,50 +27,187 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linux-s390@vger.kernel.org, prudo@linux.vnet.ibm.com, bhe@redhat.com, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, vgoyal@redhat.com
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: cascardo@canonical.com, gpiccoli@linux.vnet.ibm.com, kexec@lists.infradead.org, paulus@ozlabs.org, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org
 
-
-Dave Young <dyoung@redhat.com> writes:
-
-> On 03/06/18 at 07:22pm, AKASHI Takahiro wrote:
->> As arch_kexec_kernel_image_{probe,load}(),
->> arch_kimage_file_post_load_cleanup() and arch_kexec_kernel_verify_sig()
->> are almost duplicated among architectures, they can be commonalized with
->> an architecture-defined kexec_file_ops array. So let's factor them out.
->> 
->> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
->> Cc: Dave Young <dyoung@redhat.com>
->> Cc: Vivek Goyal <vgoyal@redhat.com>
->> Cc: Baoquan He <bhe@redhat.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
->> ---
->>  arch/powerpc/include/asm/kexec.h            |  2 +-
->>  arch/powerpc/kernel/kexec_elf_64.c          |  2 +-
->>  arch/powerpc/kernel/machine_kexec_file_64.c | 39 ++-----------------
->>  arch/x86/include/asm/kexec-bzimage64.h      |  2 +-
->>  arch/x86/kernel/kexec-bzimage64.c           |  2 +-
->>  arch/x86/kernel/machine_kexec_64.c          | 45 +---------------------
->>  include/linux/kexec.h                       | 13 +++----
->>  kernel/kexec_file.c                         | 60 +++++++++++++++++++++++++++--
->>  8 files changed, 71 insertions(+), 94 deletions(-)
->> 
+On Tue, Mar 13, 2018 at 10:58 AM, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> On Mon, 2018-03-12 at 12:43 +0800, Pingfan Liu wrote:
+>> For kexec -p, the boot cpu can be not the cpu0, this causes the problem
+>> to alloc paca[]. In theory, there is no requirement to assign cpu's logical
+>> id as its present seq by device tree. But we have something like
+>> cpu_first_thread_sibling(), which makes assumption on the mapping inside
+>> a core. Hence partially changing the mapping, i.e. unbind the mapping of
+>> core while keep the mapping inside a core. After this patch, boot-cpu
+>> will always be mapped into the range [0,threads_per_core).
 >
-> For this patch it also needs some review from powerpc people. 
+> I'm ok with the idea but not fan of the implementation:
+>
+>> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+>> ---
+>>  arch/powerpc/include/asm/smp.h     |  1 +
+>>  arch/powerpc/kernel/prom.c         | 25 ++++++++++++++-----------
+>>  arch/powerpc/kernel/setup-common.c | 21 +++++++++++++++++++++
+>>  3 files changed, 36 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/arch/powerpc/include/asm/smp.h b/arch/powerpc/include/asm/smp.h
+>> index fac963e..1299100 100644
+>> --- a/arch/powerpc/include/asm/smp.h
+>> +++ b/arch/powerpc/include/asm/smp.h
+>> @@ -30,6 +30,7 @@
+>>  #include <asm/percpu.h>
+>>
+>>  extern int boot_cpuid;
+>> +extern int boot_cpuhwid;
+>>  extern int spinning_secondaries;
+>>
+>>  extern void cpu_die(void);
+>> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+>> index da67606..d0ebb25 100644
+>> --- a/arch/powerpc/kernel/prom.c
+>> +++ b/arch/powerpc/kernel/prom.c
+>> @@ -315,8 +315,7 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
+>>       const __be32 *intserv;
+>>       int i, nthreads;
+>>       int len;
+>> -     int found = -1;
+>> -     int found_thread = 0;
+>> +     bool found = false;
+>>
+>>       /* We are scanning "cpu" nodes only */
+>>       if (type == NULL || strcmp(type, "cpu") != 0)
+>> @@ -341,8 +340,11 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
+>>               if (fdt_version(initial_boot_params) >= 2) {
+>>                       if (be32_to_cpu(intserv[i]) ==
+>>                           fdt_boot_cpuid_phys(initial_boot_params)) {
+>> -                             found = boot_cpu_count;
+>> -                             found_thread = i;
+>> +                             /* always map the boot-cpu logical id into the
+>> +                              * the range of [0, thread_per_core)
+>> +                              */
+>> +                             boot_cpuid = i;
+>> +                             found = true;
+>>                       }
+>
+> Call it boot_thread_id
+>
+But I think boot_cpuid has the meaning of global index, while the
+thread_id has the meaning of index in a core.
 
-FWIW:
+>>               } else {
+>>                       /*
+>> @@ -351,8 +353,10 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
+>>                        * off secondary threads.
+>>                        */
+>>                       if (of_get_flat_dt_prop(node,
+>> -                                     "linux,boot-cpu", NULL) != NULL)
+>> -                             found = boot_cpu_count;
+>> +                                     "linux,boot-cpu", NULL) != NULL) {
+>> +                             boot_cpuid = i;
+>> +                             found = true;
+>> +                     }
+>>               }
+>>  #ifdef CONFIG_SMP
+>>               /* logical cpu id is always 0 on UP kernels */
+>> @@ -361,13 +365,12 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
+>>       }
+>>
+>>       /* Not the boot CPU */
+>> -     if (found < 0)
+>> +     if (!found)
+>>               return 0;
+>>
+>> -     DBG("boot cpu: logical %d physical %d\n", found,
+>> -         be32_to_cpu(intserv[found_thread]));
+>> -     boot_cpuid = found;
+>> -     set_hard_smp_processor_id(found, be32_to_cpu(intserv[found_thread]));
+>> +     boot_cpuhwid = be32_to_cpu(intserv[boot_cpuid]);
+>> +     DBG("boot cpu: logical %d physical %d\n", boot_cpuid, boot_cpuhwid);
+>> +     set_hard_smp_processor_id(boot_cpuid, boot_cpuhwid);
+>>
+>>       /*
+>>        * PAPR defines "logical" PVR values for cpus that
+>> diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
+>> index 66f7cc6..1a67344 100644
+>> --- a/arch/powerpc/kernel/setup-common.c
+>> +++ b/arch/powerpc/kernel/setup-common.c
+>> @@ -86,6 +86,7 @@ struct machdep_calls *machine_id;
+>>  EXPORT_SYMBOL(machine_id);
+>>
+>>  int boot_cpuid = -1;
+>> +int boot_cpuhwid = -1;
+>>  EXPORT_SYMBOL_GPL(boot_cpuid);
+>>
+>>  /*
+>> @@ -459,11 +460,17 @@ static void __init cpu_init_thread_core_maps(int tpc)
+>>  void __init smp_setup_cpu_maps(void)
+>>  {
+>>       struct device_node *dn;
+>> +     struct device_node *boot_dn = NULL;
+>> +     bool handling_bootdn = true;
+>>       int cpu = 0;
+>>       int nthreads = 1;
+>>
+>>       DBG("smp_setup_cpu_maps()\n");
+>>
+>> +again:
+>> +     /* E.g. kexec will not boot from the 1st core. So firstly loop to find out
+>> +      * the dn of boot-cpu, and map them onto [0, nthreads)
+>> +      */
+>>       for_each_node_by_type(dn, "cpu") {
+>>               const __be32 *intserv;
+>>               __be32 cpu_be;
+>> @@ -488,6 +495,16 @@ void __init smp_setup_cpu_maps(void)
+>>
+>>               nthreads = len / sizeof(int);
+>>
+>> +             if (handling_bootdn) {
+>> +                     if (boot_cpuid < nthreads &&
+>> +                             be32_to_cpu(intserv[boot_cpuid]) == boot_cpuhwid) {
+>> +                             boot_dn = dn;
+>> +                     }
+>> +                     if (boot_dn == NULL)
+>> +                             continue;
+>> +             } else if (dn == boot_dn)
+>> +                     continue;
+>> +
+>>               for (j = 0; j < nthreads && cpu < nr_cpu_ids; j++) {
+>>                       bool avail;
+>>
+>> @@ -509,6 +526,10 @@ void __init smp_setup_cpu_maps(void)
+>>                       of_node_put(dn);
+>>                       break;
+>>               }
+>> +             if (handling_bootdn) {
+>> +                     handling_bootdn = false;
+>> +                     goto again;
+>> +             }
+>>       }
+>
+> You don't need that "again" loop and "handling_bootdn" weird boolean.
+>
+> Instead, start with cpu = 1 instead of cpu = 0, and rename it to
+> "next_cpu".
+>
+> Then, before the thread loop, check if we are on the same core
+> as boot_cpuhwid:
+>
+>         if (same_core_as_boot_cpu(intserv)) {
+>                 cpu = 0;
+>         } else if (next_cpu < nr_cpus_ids) {
+>                 cpu = next_cpu++;
+>         } else {
+>                 of_node_put(dn);
+>                 break;
+>         }
+>
+OK.
 
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 
-Also, tested on a ppc64le KVM guest:
+Thanks for your review.
 
-Tested-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+Regards,
+Pingfan
 
 _______________________________________________
 kexec mailing list
