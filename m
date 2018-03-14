@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1evxKn-0005QQ-1i
- for kexec@lists.infradead.org; Wed, 14 Mar 2018 03:44:14 +0000
-Date: Wed, 14 Mar 2018 11:43:55 +0800
+ id 1evxLk-0005bO-GF
+ for kexec@lists.infradead.org; Wed, 14 Mar 2018 03:45:14 +0000
+Date: Wed, 14 Mar 2018 11:44:55 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v4 5/5] kexec: document -s, -c and -a options.
-Message-ID: <20180314034355.GB2039@dhcp-128-65.nay.redhat.com>
-References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
- <6a8aa85dbaa781348890362aa2d8589c91b8b458.1520342150.git.msuchanek@suse.de>
+Subject: Re: [PATCH v4 4/5] kexec: add option to fall back to KEXEC_LOAD when
+ KEXEC_FILE_LOAD is not supported.
+Message-ID: <20180314034455.GC2039@dhcp-128-65.nay.redhat.com>
+References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1520342150.git.msuchanek@suse.de>
+ <19a47e290fc03efea82af845740ae8f6b30f13b8.1520342150.git.msuchanek@suse.de>
+ <b7fcd583-d7d2-1348-5a17-7294c9f19e9a@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <6a8aa85dbaa781348890362aa2d8589c91b8b458.1520342150.git.msuchanek@suse.de>
+In-Reply-To: <b7fcd583-d7d2-1348-5a17-7294c9f19e9a@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,53 +26,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michal Suchanek <msuchanek@suse.de>
-Cc: Petr Tesarik <ptesarik@suse.cz>, horms@verge.net.au, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>
+To: Tony Jones <tonyj@suse.de>
+Cc: msuchanek@suse.de, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Petr Tesarik <ptesarik@suse.cz>
 
-On 03/06/18 at 02:15pm, Michal Suchanek wrote:
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
->  kexec/kexec.8 | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+On 03/13/18 at 10:30am, Tony Jones wrote:
+> On 03/06/2018 05:15 AM, Michal Suchanek wrote:
+> > Not all architectures implement KEXEC_FILE_LOAD. However, on some
+> > archiectures KEXEC_FILE_LOAD is required when secure boot is enabled in
+> > locked-down mode. Previously users had to select the KEXEC_FILE_LOAD
+> > syscall with undocumented -s option. However, if they did pass the
+> > option kexec would fail on architectures that do not support it.
+> > 
+> > So add an -a option that tries KEXEC_FILE_LOAD and when it is not
+> > supported tries KEXEC_LOAD.
+> > 
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 > 
-> diff --git a/kexec/kexec.8 b/kexec/kexec.8
-> index e0131b4ea827..b3543db3f413 100644
-> --- a/kexec/kexec.8
-> +++ b/kexec/kexec.8
-> @@ -144,6 +144,21 @@ Load the new kernel for use on panic.
->  Specify that the new kernel is of this
->  .I type.
->  .TP
-> +.BI \-s\ (\-\-kexec-file-syscall)
-> +Specify that the new KEXEC_FILE_LOAD syscall should be used exclusively.
-> +.TP
-> +.BI \-c\ (\-\-kexec-syscall)
-> +Specify that the old KEXEC_LOAD syscall should be used exclusively (the default).
-> +.TP
-> +.BI \-a\ (\-\-kexec-syscall-auto)
-> +Try the new simpler KEXEC_FILE_LOAD syscall first and if it is not supported
-> +fall back to the old KEXEC_LOAD interface.
-> +
-> +There is no one single interface that always works. KEXEC_FILE_LOAD is required
-> +on systems that use locked-down secure boot to verify the kernel signature.
-> +KEXEC_LOAD is required for some kernel image formats and on architectures that
-> +do not support KEXEC_FILE_LOAD.
-> +.TP
->  .B \-u\ (\-\-unload)
->  Unload the current
->  .B kexec
-> -- 
-> 2.13.6
+> David, Simon.
+> 
+> Is there any feedback on v4 of this patchset?  Adding a new option for fallback rather than changing the existing behavior was the v3 feedback on March 2nd.
 > 
 
-Actually while I replied this mail, I tried 'kexec -c -a' system
-immediately rebooted.  Also as I noted in patch 4 a 'break' is missing
-so does it work on your side?
+Tony, sure, I just replied with several comments, but still need Simon
+to review in case I may miss something.
 
-I think it need more testing.
-
-Another question I have is not sure if '-c' is a good option letter, but
-I do not have suggestion as well..
+> Cheers!
+> 
+> Tony
 
 Thanks
 Dave
