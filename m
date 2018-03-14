@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1evxIR-0005C0-Ru
- for kexec@lists.infradead.org; Wed, 14 Mar 2018 03:41:49 +0000
-Date: Wed, 14 Mar 2018 11:41:30 +0800
+ id 1evxKn-0005QQ-1i
+ for kexec@lists.infradead.org; Wed, 14 Mar 2018 03:44:14 +0000
+Date: Wed, 14 Mar 2018 11:43:55 +0800
 From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH v4 5/5] kexec: document -s, -c and -a options.
-Message-ID: <20180314034130.GA2039@dhcp-128-65.nay.redhat.com>
+Message-ID: <20180314034355.GB2039@dhcp-128-65.nay.redhat.com>
 References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
  <6a8aa85dbaa781348890362aa2d8589c91b8b458.1520342150.git.msuchanek@suse.de>
 MIME-Version: 1.0
@@ -43,18 +43,9 @@ On 03/06/18 at 02:15pm, Michal Suchanek wrote:
 >  .TP
 > +.BI \-s\ (\-\-kexec-file-syscall)
 > +Specify that the new KEXEC_FILE_LOAD syscall should be used exclusively.
-
-Maybe better to be simple like below:
-"Use kexec_file_load syscall to load the new kernel."
-
-
 > +.TP
 > +.BI \-c\ (\-\-kexec-syscall)
 > +Specify that the old KEXEC_LOAD syscall should be used exclusively (the default).
-
-similarly:
-"Use kexec_load syscall to load the new kernel."
-
 > +.TP
 > +.BI \-a\ (\-\-kexec-syscall-auto)
 > +Try the new simpler KEXEC_FILE_LOAD syscall first and if it is not supported
@@ -64,14 +55,6 @@ similarly:
 > +on systems that use locked-down secure boot to verify the kernel signature.
 > +KEXEC_LOAD is required for some kernel image formats and on architectures that
 > +do not support KEXEC_FILE_LOAD.
-
-It seems not good to say kexec_file_load is simpler and newer.  Also it
-is not a must for Secure Boot and locked down kernel only. So it would
-be better to just simplify and use the first paragraph:
-
-"Try kexec_file_load syscall first and if it is not supported fall back
-to the kexec_load syscall"
-
 > +.TP
 >  .B \-u\ (\-\-unload)
 >  Unload the current
@@ -79,6 +62,18 @@ to the kexec_load syscall"
 > -- 
 > 2.13.6
 > 
+
+Actually while I replied this mail, I tried 'kexec -c -a' system
+immediately rebooted.  Also as I noted in patch 4 a 'break' is missing
+so does it work on your side?
+
+I think it need more testing.
+
+Another question I have is not sure if '-c' is a good option letter, but
+I do not have suggestion as well..
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
