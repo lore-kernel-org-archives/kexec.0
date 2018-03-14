@@ -1,20 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt0-x242.google.com ([2607:f8b0:400d:c0d::242])
+Received: from mail-pg0-x241.google.com ([2607:f8b0:400e:c05::241])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1evvkt-000868-9a
- for kexec@lists.infradead.org; Wed, 14 Mar 2018 02:03:05 +0000
-Received: by mail-qt0-x242.google.com with SMTP id c7so1893823qtn.3
- for <kexec@lists.infradead.org>; Tue, 13 Mar 2018 19:02:51 -0700 (PDT)
+ id 1evvsA-00038I-LM
+ for kexec@lists.infradead.org; Wed, 14 Mar 2018 02:10:37 +0000
+Received: by mail-pg0-x241.google.com with SMTP id i14so742878pgv.3
+ for <kexec@lists.infradead.org>; Tue, 13 Mar 2018 19:10:22 -0700 (PDT)
+Date: Wed, 14 Mar 2018 11:10:53 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [Query] ARM64 kaslr support - randomness, seeding and kdump
+Message-ID: <20180314021050.GK25863@linaro.org>
+References: <CACi5LpMhHt4bjEueOzHZTGpzuR2zoQqXcReL-khoSNLG6=FVmg@mail.gmail.com>
+ <CAKv+Gu8qd=rpJkG_GoVO=kkmc4qx_zZD8c_wwE16gr=8wSShSw@mail.gmail.com>
+ <20180313102158.GI25863@linaro.org>
+ <20180313104715.prurmrizho4ddc4l@lakrids.cambridge.arm.com>
+ <20180313110747.GJ25863@linaro.org>
+ <20180313112016.ocx4qqhji3zfwjhs@lakrids.cambridge.arm.com>
+ <CACi5LpN4DTYFVSVqru2j0y=CKr2ztrJ1gCW32sJBU=oUV2fcWw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1520909895.16434.67.camel@kernel.crashing.org>
-References: <1520829790-14029-1-git-send-email-kernelfans@gmail.com>
- <1520829790-14029-2-git-send-email-kernelfans@gmail.com>
- <1520909895.16434.67.camel@kernel.crashing.org>
-From: Pingfan Liu <kernelfans@gmail.com>
-Date: Wed, 14 Mar 2018 10:02:50 +0800
-Message-ID: <CAFgQCTvLN+fPDS6QLfshJ7Fz9Zn==D0uEC+=zQdsz7y_vZ4NUg@mail.gmail.com>
-Subject: Re: [PATCHv4 1/3] powerpc, cpu: partially unbind the mapping between
- cpu logical id and its seq in dt
+Content-Disposition: inline
+In-Reply-To: <CACi5LpN4DTYFVSVqru2j0y=CKr2ztrJ1gCW32sJBU=oUV2fcWw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,187 +31,140 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: cascardo@canonical.com, gpiccoli@linux.vnet.ibm.com, kexec@lists.infradead.org, paulus@ozlabs.org, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-On Tue, Mar 13, 2018 at 10:58 AM, Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
-> On Mon, 2018-03-12 at 12:43 +0800, Pingfan Liu wrote:
->> For kexec -p, the boot cpu can be not the cpu0, this causes the problem
->> to alloc paca[]. In theory, there is no requirement to assign cpu's logical
->> id as its present seq by device tree. But we have something like
->> cpu_first_thread_sibling(), which makes assumption on the mapping inside
->> a core. Hence partially changing the mapping, i.e. unbind the mapping of
->> core while keep the mapping inside a core. After this patch, boot-cpu
->> will always be mapped into the range [0,threads_per_core).
->
-> I'm ok with the idea but not fan of the implementation:
->
->> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
->> ---
->>  arch/powerpc/include/asm/smp.h     |  1 +
->>  arch/powerpc/kernel/prom.c         | 25 ++++++++++++++-----------
->>  arch/powerpc/kernel/setup-common.c | 21 +++++++++++++++++++++
->>  3 files changed, 36 insertions(+), 11 deletions(-)
->>
->> diff --git a/arch/powerpc/include/asm/smp.h b/arch/powerpc/include/asm/smp.h
->> index fac963e..1299100 100644
->> --- a/arch/powerpc/include/asm/smp.h
->> +++ b/arch/powerpc/include/asm/smp.h
->> @@ -30,6 +30,7 @@
->>  #include <asm/percpu.h>
->>
->>  extern int boot_cpuid;
->> +extern int boot_cpuhwid;
->>  extern int spinning_secondaries;
->>
->>  extern void cpu_die(void);
->> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
->> index da67606..d0ebb25 100644
->> --- a/arch/powerpc/kernel/prom.c
->> +++ b/arch/powerpc/kernel/prom.c
->> @@ -315,8 +315,7 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
->>       const __be32 *intserv;
->>       int i, nthreads;
->>       int len;
->> -     int found = -1;
->> -     int found_thread = 0;
->> +     bool found = false;
->>
->>       /* We are scanning "cpu" nodes only */
->>       if (type == NULL || strcmp(type, "cpu") != 0)
->> @@ -341,8 +340,11 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
->>               if (fdt_version(initial_boot_params) >= 2) {
->>                       if (be32_to_cpu(intserv[i]) ==
->>                           fdt_boot_cpuid_phys(initial_boot_params)) {
->> -                             found = boot_cpu_count;
->> -                             found_thread = i;
->> +                             /* always map the boot-cpu logical id into the
->> +                              * the range of [0, thread_per_core)
->> +                              */
->> +                             boot_cpuid = i;
->> +                             found = true;
->>                       }
->
-> Call it boot_thread_id
->
-But I think boot_cpuid has the meaning of global index, while the
-thread_id has the meaning of index in a core.
+On Wed, Mar 14, 2018 at 01:18:47AM +0530, Bhupesh Sharma wrote:
+> On Tue, Mar 13, 2018 at 4:50 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Tue, Mar 13, 2018 at 08:07:49PM +0900, AKASHI Takahiro wrote:
+> >> On Tue, Mar 13, 2018 at 10:47:15AM +0000, Mark Rutland wrote:
+> >> > On Tue, Mar 13, 2018 at 07:22:03PM +0900, AKASHI Takahiro wrote:
+> >> > > On Mon, Mar 12, 2018 at 08:58:00PM +0000, Ard Biesheuvel wrote:
+> >> > > > On 12 March 2018 at 20:14, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> >> >
+> >> > > More importantly, neither arm64 _kexec_ supports kaslr.
+> 
+> Sorry if my earlier email was not clear on this, but I meant both the
+> kdump/kexec cases.
+> 
+> While for kdump there is no current requirement for physical
+> randomization, for kexec it would be good to support the same as the
+> primary kernel was already supporting kaslr and the secondary kernel
+> (if compiled with CONFIG_RANDOMIZE_BASE) would randomizes the virtual
+> address at which the kernel image is loaded.
+> 
+> If we have physical randomization supported in this case in the
+> secondary/kexec kernel we can avoid potential misuse related to the
+> physical address being known at which the secondary/kexec kernel is
+> loaded.
+> 
+> >> >
+> >> > The below is just considering this, and ignoring kdump (where I don't
+> >> > think we care at all about KASLR).
+> >> >
+> >> > > Currently kexec-tools is set to determine where the kernel actually be
+> >> > > loaded, using a constant offset, text_offset, which comes from an image's
+> >> > > boot header and relocation of an image to the load address is performed
+> >> > > at the very end of the first kernel without knowing whether the 2nd kernel
+> >> > > has kaslr support enabled or not.
+> >> >
+> >> > The kexec tools shouldn't need to know whether the kernel supports KASLR
+> >> > at all.
+> >> >
+> >> > If the new kernel image has bit 3 (Kernel physical placement) set, kexec
+> >> > tools can choose to randomize the physical load address, regardless of
+> >> > whether that kernel has KASLR enabled.
+> >>
+> >> So, by definition, is randomness, if we say so, in physical address not
+> >> part of KASLR?
+> >
+> > Physical randomization is not part of the kernel's KASLR implementation.
+> >
+> > We happen to do it in the EFI stub, because we can in that context. But
+> > generally, physical randomization is not part of arm64's in-kernel
+> > KASLR.
+> >
+> > For various reasons, the physical address that the kernel is loaded to
+> > may be arbitrary, so we have to cope with physical randomization
+> > regardless.
+> 
+> Indeed, since the primary kernel depends on the  firmware's
+> EFI_RNG_PROTOCOL implementation (if available) to randomise the
+> physical location of the kernel Image, for the secondary/kexec kernel,
+> if can have two approaches to enable physical randomization:
 
->>               } else {
->>                       /*
->> @@ -351,8 +353,10 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
->>                        * off secondary threads.
->>                        */
->>                       if (of_get_flat_dt_prop(node,
->> -                                     "linux,boot-cpu", NULL) != NULL)
->> -                             found = boot_cpu_count;
->> +                                     "linux,boot-cpu", NULL) != NULL) {
->> +                             boot_cpuid = i;
->> +                             found = true;
->> +                     }
->>               }
->>  #ifdef CONFIG_SMP
->>               /* logical cpu id is always 0 on UP kernels */
->> @@ -361,13 +365,12 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
->>       }
->>
->>       /* Not the boot CPU */
->> -     if (found < 0)
->> +     if (!found)
->>               return 0;
->>
->> -     DBG("boot cpu: logical %d physical %d\n", found,
->> -         be32_to_cpu(intserv[found_thread]));
->> -     boot_cpuid = found;
->> -     set_hard_smp_processor_id(found, be32_to_cpu(intserv[found_thread]));
->> +     boot_cpuhwid = be32_to_cpu(intserv[boot_cpuid]);
->> +     DBG("boot cpu: logical %d physical %d\n", boot_cpuid, boot_cpuhwid);
->> +     set_hard_smp_processor_id(boot_cpuid, boot_cpuhwid);
->>
->>       /*
->>        * PAPR defines "logical" PVR values for cpus that
->> diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
->> index 66f7cc6..1a67344 100644
->> --- a/arch/powerpc/kernel/setup-common.c
->> +++ b/arch/powerpc/kernel/setup-common.c
->> @@ -86,6 +86,7 @@ struct machdep_calls *machine_id;
->>  EXPORT_SYMBOL(machine_id);
->>
->>  int boot_cpuid = -1;
->> +int boot_cpuhwid = -1;
->>  EXPORT_SYMBOL_GPL(boot_cpuid);
->>
->>  /*
->> @@ -459,11 +460,17 @@ static void __init cpu_init_thread_core_maps(int tpc)
->>  void __init smp_setup_cpu_maps(void)
->>  {
->>       struct device_node *dn;
->> +     struct device_node *boot_dn = NULL;
->> +     bool handling_bootdn = true;
->>       int cpu = 0;
->>       int nthreads = 1;
->>
->>       DBG("smp_setup_cpu_maps()\n");
->>
->> +again:
->> +     /* E.g. kexec will not boot from the 1st core. So firstly loop to find out
->> +      * the dn of boot-cpu, and map them onto [0, nthreads)
->> +      */
->>       for_each_node_by_type(dn, "cpu") {
->>               const __be32 *intserv;
->>               __be32 cpu_be;
->> @@ -488,6 +495,16 @@ void __init smp_setup_cpu_maps(void)
->>
->>               nthreads = len / sizeof(int);
->>
->> +             if (handling_bootdn) {
->> +                     if (boot_cpuid < nthreads &&
->> +                             be32_to_cpu(intserv[boot_cpuid]) == boot_cpuhwid) {
->> +                             boot_dn = dn;
->> +                     }
->> +                     if (boot_dn == NULL)
->> +                             continue;
->> +             } else if (dn == boot_dn)
->> +                     continue;
->> +
->>               for (j = 0; j < nthreads && cpu < nr_cpu_ids; j++) {
->>                       bool avail;
->>
->> @@ -509,6 +526,10 @@ void __init smp_setup_cpu_maps(void)
->>                       of_node_put(dn);
->>                       break;
->>               }
->> +             if (handling_bootdn) {
->> +                     handling_bootdn = false;
->> +                     goto again;
->> +             }
->>       }
->
-> You don't need that "again" loop and "handling_bootdn" weird boolean.
->
-> Instead, start with cpu = 1 instead of cpu = 0, and rename it to
-> "next_cpu".
->
-> Then, before the thread loop, check if we are on the same core
-> as boot_cpuhwid:
->
->         if (same_core_as_boot_cpu(intserv)) {
->                 cpu = 0;
->         } else if (next_cpu < nr_cpus_ids) {
->                 cpu = next_cpu++;
->         } else {
->                 of_node_put(dn);
->                 break;
+I believe that you're now talking about "virtual" randomization.
+
+> - Implement a UEFI stub for loading the kexec kernel as well, or
+> 
+> - Extend the 'kexec-tools' to invoke the entropy source available in
+> the primary kernel (provided by the firmware via EFI_RNG_PROTOCOL)  to
+> generate a random seed to randomize the physical address and populate
+> it in the '/chosen/kaslr-seed' property of the device-tree being
+> passed to the secondary/kexec kernel and let the normal code flow in
+> ' arch/arm64/kernel/kaslr.c', function 'kaslr_early_init' to get the
+> seed for the secondary kernel from the '/chosen/kaslr-seed' property
+> itself.
+> 
+> Personally the later approach looks simpler to me from a implementation p-o-v.
+
+If kaslr-seed has a critical value in terms of security, is kexec-tools
+a right place? It is exposed to user space albeit for a short time of period.
+
+(Speaking of kexec_file, we can easily adopt this approach as fdt modification
+is done totally inside the kernel. Likewise, "physical" randomization would be
+easy in part of arm64_relocate_new_kernel() because we only have to care bit 3
+of boot header's flags after Mark's comment.)
+
+-Takahiro AKASHI
+
+> For example, currently in the kernel we normally invoke 'update_fdt'
+> (inside 'drivers/fimrware/efi/libstub/fdt.c') from the UEFI stub,
+> wherein we have this check for CONFIG_RANDOMIZE_BASE:
+> 
+> static efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
+>                    unsigned long orig_fdt_size,
+>                    void *fdt, int new_fdt_size, char *cmdline_ptr,
+>                    u64 initrd_addr, u64 initrd_size)
+> {
+> 
+> ...
+>     if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
+>         efi_status_t efi_status;
+> 
+>         efi_status = efi_get_random_bytes(sys_table, sizeof(fdt_val64),
+>                           (u8 *)&fdt_val64);
+>         if (efi_status == EFI_SUCCESS) {
+>             status = fdt_setprop(fdt, node, "kaslr-seed",
+>                          &fdt_val64, sizeof(fdt_val64));
+>             if (status)
+>                 goto fdt_set_fail;
+>         } else if (efi_status != EFI_NOT_FOUND) {
+>             return efi_status;
 >         }
->
-OK.
-
-
-Thanks for your review.
-
-Regards,
-Pingfan
+>     }
+> ...
+> }
+> 
+> I am thinking of modifying the kexec-tools code for arm64 (which
+> already processes the device tree to pass it to the secondary/kexec
+> kernel), so that we can do something like the following:
+> 
+>         --> efi_get_random_bytes(sys_table, sizeof(fdt_val64),
+>                           (u8 *)&fdt_val64);
+>         ------> fdt_setprop(fdt, node, "kaslr-seed", &fdt_val64,
+> sizeof(fdt_val64));
+> 
+> Now when the modified dtb is passed to the secondary/kexec kernel it
+> will automatically find a valid seed, will wipe it to zero for
+> security reasons and use the same to perform physical randomization.
+> 
+> If this looks sensible I will try to take a stab at this approach and
+> share results on thread in the coming days.
+> Please share your inputs.
+> 
+> Regards,
+> Bhupesh
 
 _______________________________________________
 kexec mailing list
