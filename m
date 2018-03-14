@@ -1,18 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1evqmI-0005ZP-OF
- for kexec@lists.infradead.org; Tue, 13 Mar 2018 20:44:12 +0000
-Date: Tue, 13 Mar 2018 21:43:54 +0100
-From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-Subject: Re: [PATCH 4/5] kexec: fallback to KEXEC_LOAD when KEXEC_FILE_LOAD
- is not supported.
-Message-ID: <20180313214354.21e75416@naga.suse.cz>
-In-Reply-To: <20180302124458.md6hyibep32b3zom@verge.net.au>
-References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1519646210.git.msuchanek@suse.de>
- <ebc4bc6f1dc7d62ba5c81f40c7f7d83a8ae3eb5d.1519646210.git.msuchanek@suse.de>
- <20180302124458.md6hyibep32b3zom@verge.net.au>
+ id 1evumw-0002ol-4b
+ for kexec@lists.infradead.org; Wed, 14 Mar 2018 01:01:07 +0000
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w2E0xm2P147221
+ for <kexec@lists.infradead.org>; Tue, 13 Mar 2018 21:00:52 -0400
+Received: from e36.co.us.ibm.com (e36.co.us.ibm.com [32.97.110.154])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2gpseugeaa-1
+ (version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Tue, 13 Mar 2018 21:00:52 -0400
+Received: from localhost
+ by e36.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Tue, 13 Mar 2018 19:00:51 -0600
+References: <20180306102303.9063-1-takahiro.akashi@linaro.org>
+ <20180306102303.9063-3-takahiro.akashi@linaro.org>
+ <20180308011303.GB2600@dhcp-128-65.nay.redhat.com>
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2 2/7] kexec_file, x86,
+ powerpc: factor out kexec_file_ops functions
+In-reply-to: <20180308011303.GB2600@dhcp-128-65.nay.redhat.com>
+Date: Tue, 13 Mar 2018 22:00:39 -0300
 MIME-Version: 1.0
+Message-Id: <87zi3b8o94.fsf@morokweng.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,54 +39,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: linux-s390@vger.kernel.org, prudo@linux.vnet.ibm.com, bhe@redhat.com, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, vgoyal@redhat.com
 
-On Fri, 2 Mar 2018 13:44:58 +0100
-Simon Horman <horms@verge.net.au> wrote:
 
-> On Mon, Feb 26, 2018 at 01:00:37PM +0100, Michal Suchanek wrote:
-> > Not all architectures implement KEXEC_FILE_LOAD. However, on some
-> > archiectures KEXEC_FILE_LOAD is required when secure boot is
-> > enabled in locked-down mode. Previously users had to select the
-> > KEXEC_FILE_LOAD syscall with undocumented -s option. However, if
-> > they did pass the option kexec would fail on architectures that do
-> > not support it.
-> > 
-> > When no option is passed to select one syscall or the other try
-> > KEXEC_FILE_LOAD and fall back to KEXEC_LOAD when not suported.  
-> 
-> Has there been a release of kexec-tools with things arranged they
-> way they currently are?
+Dave Young <dyoung@redhat.com> writes:
 
-$ git tag --contains
-046d1755d2bd723a11a180c265e61a884990712e 
-v2.0.10
-v2.0.10-rc1
-v2.0.11
-v2.0.11-rc1
-v2.0.12
-v2.0.12-rc1
-v2.0.13
-v2.0.13-rc1
-v2.0.14
-v2.0.14-rc1
-v2.0.15
-v2.0.15-rc1
-v2.0.16-rc1
-v2.0.8
-v2.0.8-rc1
-v2.0.9
-v2.0.9-rc1
+> On 03/06/18 at 07:22pm, AKASHI Takahiro wrote:
+>> As arch_kexec_kernel_image_{probe,load}(),
+>> arch_kimage_file_post_load_cleanup() and arch_kexec_kernel_verify_sig()
+>> are almost duplicated among architectures, they can be commonalized with
+>> an architecture-defined kexec_file_ops array. So let's factor them out.
+>> 
+>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>> Cc: Dave Young <dyoung@redhat.com>
+>> Cc: Vivek Goyal <vgoyal@redhat.com>
+>> Cc: Baoquan He <bhe@redhat.com>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+>> ---
+>>  arch/powerpc/include/asm/kexec.h            |  2 +-
+>>  arch/powerpc/kernel/kexec_elf_64.c          |  2 +-
+>>  arch/powerpc/kernel/machine_kexec_file_64.c | 39 ++-----------------
+>>  arch/x86/include/asm/kexec-bzimage64.h      |  2 +-
+>>  arch/x86/kernel/kexec-bzimage64.c           |  2 +-
+>>  arch/x86/kernel/machine_kexec_64.c          | 45 +---------------------
+>>  include/linux/kexec.h                       | 13 +++----
+>>  kernel/kexec_file.c                         | 60 +++++++++++++++++++++++++++--
+>>  8 files changed, 71 insertions(+), 94 deletions(-)
+>> 
+>
+> For this patch it also needs some review from powerpc people. 
 
-> 
-> Can we document this behaviour and the related undocumented options?
+FWIW:
 
-It's done in a followup patch.
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 
-Thanks
+Also, tested on a ppc64le KVM guest:
 
-Michal
+Tested-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
 
 _______________________________________________
