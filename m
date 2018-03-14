@@ -1,17 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x243.google.com ([2607:f8b0:4001:c0b::243])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ew1wd-0008Va-Ce
- for kexec@lists.infradead.org; Wed, 14 Mar 2018 08:39:39 +0000
-Received: by mail-it0-x243.google.com with SMTP id u66-v6so3582542ith.1
- for <kexec@lists.infradead.org>; Wed, 14 Mar 2018 01:39:24 -0700 (PDT)
+ id 1ew34c-0006zr-N6
+ for kexec@lists.infradead.org; Wed, 14 Mar 2018 09:51:56 +0000
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w2E9pBAk133544
+ for <kexec@lists.infradead.org>; Wed, 14 Mar 2018 05:51:42 -0400
+Received: from e06smtp15.uk.ibm.com (e06smtp15.uk.ibm.com [195.75.94.111])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2gpyrum7gb-1
+ (version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 14 Mar 2018 05:51:41 -0400
+Received: from localhost
+ by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
+ Wed, 14 Mar 2018 09:51:39 -0000
+Date: Wed, 14 Mar 2018 10:51:32 +0100
+From: Philipp Rudo <prudo@linux.vnet.ibm.com>
+Subject: Re: [PATCH 00/11] kexec_file: Clean up purgatory load
+In-Reply-To: <20180312074016.GA1854@dhcp-128-65.nay.redhat.com>
+References: <20180226151620.20970-1-prudo@linux.vnet.ibm.com>
+ <20180309051913.GA9358@dhcp-128-65.nay.redhat.com>
+ <20180309152556.0ccf3cb1@ThinkPad>
+ <20180312074016.GA1854@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20180314082941.GM25863@linaro.org>
-References: <20180314082941.GM25863@linaro.org>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Wed, 14 Mar 2018 08:39:23 +0000
-Message-ID: <CAKv+Gu9AMS4sGoRsw0KNv6+3WZPXCJRfbxBnjaqnZugiZe4o9w@mail.gmail.com>
-Subject: Re: [RFC] arm64: extra entries in /proc/iomem for kexec
+Message-Id: <20180314105132.3d828b01@ThinkPad>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,419 +38,201 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-efi@vger.kernel.org, kexec@lists.infradead.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, "Baicar, Tyler" <tbaicar@codeaurora.org>, Jeff Hugo <jhugo@codeaurora.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
 
-On 14 March 2018 at 08:29, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> In the last couples of months, there were some problems reported [1],[2]
-> around arm64 kexec/kdump. Where those phenomenon look different,
-> the root cause would be that kexec/kdump doesn't take into account
-> crucial "reserved" regions of system memory and unintentionally corrupts
-> them.
->
-> Given that kexec-tools looks for all the information by seeking the file,
-> /proc/iomem, the first step to address said problems is to expand this file's
-> format so that it will have enough information about system memory and
-> its usage.
->
-> Attached is my experimental code: With this patch applied, /proc/iomem sees
-> something like the below:
->
-> (format A)
-> 40000000-5871ffff : System RAM
->   40080000-40f1ffff : Kernel code
->   41040000-411e8fff : Kernel data
->   54400000-583fffff : Crash kernel
->   58590000-585effff : EFI Resources
->   58700000-5871ffff : EFI Resources
-> 58720000-58b5ffff : System RAM
->   58720000-58b5ffff : EFI Resources
-> 58b60000-5be3ffff : System RAM
->   58b61018-58b61947 : EFI Memory Map
->   59a7b118-59a7b667 : EFI Configuration Tables
-> 5be40000-5becffff : System RAM                  <== (A-1)
->   5be40000-5becffff : EFI Resources
-> 5bed0000-5bedffff : System RAM
-> 5bee0000-5bffffff : System RAM
->   5bee0000-5bffffff : EFI Resources
-> 5c000000-5fffffff : System RAM
-> 8000000000-ffffffffff : PCI Bus 0000:00
->
-> Meanwhile, the workaround I suggested in [3] gave us a simpler view:
->
-> (format B)
-> 40000000-5871ffff : System RAM
->   40080000-40f1ffff : Kernel code
->   41040000-411e9fff : Kernel data
->   54400000-583fffff : Crash kernel
->   58590000-585effff : reserved
->   58700000-5871ffff : reserved
-> 58720000-58b5ffff : reserved
-> 58b60000-5be3ffff : System RAM
->   58b61000-58b61fff : reserved
->   59a7b318-59a7b867 : reserved
-> 5be40000-5becffff : reserved                    <== (B-1)
-> 5bed0000-5bedffff : System RAM
-> 5bee0000-5bffffff : reserved
-> 5c000000-5fffffff : System RAM
->   5ec00000-5edfffff : reserved
-> 8000000000-ffffffffff : PCI Bus 0000:00
->
-> Here all the regions to be protected are named just "reserved" whether
-> they are NOMAP regions or simply-memblock_reserve'd. They are not very
-> useful for anything but kexec/kdump which knows what they mean.
->
-> Alternatively, we may want to give them more specific names, based on
-> related efi memory map descriptors and else, that will characterize
-> their contents:
->
-> (format C)
-> 40000000-5871ffff : System RAM
->   40080000-40f1ffff : Kernel code
->   41040000-411e9fff : Kernel data
->   54400000-583fffff : Crash kernel
->   58590000-585effff : ACPI Reclaim Memory
->   58700000-5871ffff : ACPI Reclaim Memory
-> 58720000-58b5ffff : System RAM
->   58720000-5878ffff : Runtime Data
->   58790000-587dffff : Runtime Code
->   587e0000-5882ffff : Runtime Data
->   58830000-5887ffff : Runtime Code
->   58880000-588cffff : Runtime Data
->   588d0000-5891ffff : Runtime Code
->   58920000-5896ffff : Runtime Data
->   58970000-589bffff : Runtime Code
->   589c0000-58a5ffff : Runtime Data
->   58a60000-58abffff : Runtime Code
->   58ac0000-58b0ffff : Runtime Data
->   58b10000-58b5ffff : Runtime Code
-> 58b60000-5be3ffff : System RAM
->   58b61000-58b61fff : EFI Memory Map
->   59a7b118-59a7b667 : EFI Memory Attributes Table
-> 5be40000-5becffff : System RAM
->   5be40000-5becffff : Runtime Code
-> 5bed0000-5bedffff : System RAM
-> 5bee0000-5bffffff : System RAM
->   5bee0000-5bffffff : Runtime Data
-> 5c000000-5fffffff : System RAM
-> 8000000000-ffffffffff : PCI Bus 0000:00
->
-> I once created a patch for this format, but it looks quite noisy and
-> names are a sort of mixture of memory attributes( ACPI Reclaim memory,
-> Conventional Memory, Persistent Memory etc.) vs.
-> function/usages ([Loader|Boot Service|Runtime] Code/Data).
-> (As a matter of fact, (C-1) consists of various ACPI tables.)
-> Anyhow, they seem not so useful for most of other applications.
->
-> Those observations lead to format A, where some entries with the same
-> attributes are squeezed into a single entry under a simple name if they
-> are neighbouring.
->
->
-> So my questions here are:
->
-> 1. Which format, A, B, or C, is the most appropriate for the moment?
->    or any other suggestions?
->
+Hi Ingo,
 
-I think some variant of B should be sufficient. The only meaningful
-distinction between these reserved regions at a general level is
-whether they are NOMAP or not, so perhaps we can incorporate that.
+do you have an idea about this? This problem is currently holding me back to
+send a v2 of the patch set.
 
-As for identifying things like EFI configuration tables: this is a
-moving target, and we also define our own config tables for the TPM
-log, screeninfo on ARM etc. Also, for EFI memory types, you can boot
-with efi=debug and look at the entire memory map. So I think adding
-all that information may be overkill.
+Thanks
+Philipp
 
-> Currently, there is a inconsistent view between (A) and the mainline's:
-> see (A-1) and (B-1). If this is really a matter, I can fix it.
-> Kexec-tools can be easily modified to accept both formats, though.
->
->
-> 2. How should we determine which regions be exported in /proc/iomem?
->
->  a. Trust all the memblock_reserve'd regions as my previous patch [3] does.
->
->     As I said, it's a kind of "overkill." Some of regions, say fdt, are
->     not required to be preserved across kexec.
->
+On Mon, 12 Mar 2018 15:40:16 +0800
+Dave Young <dyoung@redhat.com> wrote:
 
-I don't think there is anything wrong with listing all
-memblock_reserve()'d regions here, even if kexec has other means of
-ensuring that they are not touched. But as I said, I think it would be
-useful to distinguish them from NOMAP regions (even if the nesting
-below System RAM already shows that as well)
+> Hi Philipp,
+> On 03/09/18 at 03:25pm, Philipp Rudo wrote:
+> > Hi Dave,
+> > 
+> > On Fri, 9 Mar 2018 13:19:40 +0800
+> > Dave Young <dyoung@redhat.com> wrote:
+> >   
+> > > Hi Philipp,
+> > > On 02/26/18 at 04:16pm, Philipp Rudo wrote:  
+> > > > 
+> > > > Hi everybody
+> > > > 
+> > > > following the discussion with Dave and AKASHI, here are the common code
+> > > > patches extracted from my recent patch set (Add kexec_file_load support to
+> > > > s390) [1]. The patches were extracted to allow upstream integration together
+> > > > with AKASHI's common code patches before the arch code gets adjusted to the
+> > > > new base.
+> > > > 
+> > > > The reason for this series is to prepare common code for adding
+> > > > kexec_file_load to s390 as well as cleaning up the mis-use of the sh_offset
+> > > > field during purgatory load. In detail this series contains:
+> > > > 
+> > > > Patch #1&2: Minor cleanups/fixes.
+> > > > 
+> > > > Patch #3-9: Clean up the purgatory load/relocation code. Especially remove
+> > > > the mis-use of the purgatory_info->sechdrs->sh_offset field, currently
+> > > > holding a pointer into either kexec_purgatory (ro) or purgatory_buf (rw)
+> > > > depending on the section. With these patches the section address will be
+> > > > calculated verbosely and sh_offset will contain the offset of the section
+> > > > in the stripped purgatory binary (purgatory_buf).
+> > > > 
+> > > > Patch #10: Allows architectures to set the purgatory load address. This
+> > > > patch is important for s390 as the kernel and purgatory have to be loaded
+> > > > to fixed addresses. In current code this is impossible as the purgatory
+> > > > load is opaque to the architecture.
+> > > > 
+> > > > Patch #11: Moves x86 purgatories sha implementation to common lib/
+> > > > directory to allow reuse in other architectures.
+> > > > 
+> > > > The patches apply to v4.16-rc3. There are no changes compared to [1] (all
+> > > > requested changes only affected s390 code). Please note that I had to touch
+> > > > arch code for x86 and power a little. In theory this should not change the
+> > > > behavior but I don't have a way to test it. Cross-compiling with
+> > > > defconfig [2] works fine for both.
+> > > > 
+> > > > Thanks
+> > > > Philipp
+> > > > 
+> > > > [1] http://lists.infradead.org/pipermail/kexec/2018-February/019926.html
+> > > > [2] On x86 with the orc unwinder and stack validation turned off. objtool
+> > > >     SEGFAULTs on s390...
+> > > > 
+> > > > Philipp Rudo (11):
+> > > >   kexec_file: Silence compile warnings
+> > > >   kexec_file: Remove checks in kexec_purgatory_load
+> > > >   kexec_file: Make purgatory_info->ehdr const
+> > > >   kexec_file: Search symbols in read-only kexec_purgatory
+> > > >   kexec_file: Use read-only sections in arch_kexec_apply_relocations*
+> > > >   kexec_file: Split up __kexec_load_puragory
+> > > >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 1
+> > > >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 2
+> > > >   kexec_file: Remove mis-use of sh_offset field
+> > > >   kexec_file: Allow archs to set purgatory load address
+> > > >   kexec_file: Move purgatories sha256 to common code
+> > > > 
+> > > >  arch/powerpc/kernel/kexec_elf_64.c             |   9 +-
+> > > >  arch/x86/kernel/kexec-bzimage64.c              |   8 +-
+> > > >  arch/x86/kernel/machine_kexec_64.c             |  66 ++---
+> > > >  arch/x86/purgatory/Makefile                    |   3 +
+> > > >  arch/x86/purgatory/purgatory.c                 |   2 +-
+> > > >  include/linux/kexec.h                          |  38 +--
+> > > >  {arch/x86/purgatory => include/linux}/sha256.h |  10 +-
+> > > >  kernel/kexec_file.c                            | 375 ++++++++++++-------------
+> > > >  {arch/x86/purgatory => lib}/sha256.c           |   4 +-
+> > > >  9 files changed, 244 insertions(+), 271 deletions(-)
+> > > >  rename {arch/x86/purgatory => include/linux}/sha256.h (63%)
+> > > >  rename {arch/x86/purgatory => lib}/sha256.c (99%)
+> > > > 
+> > > > -- 
+> > > > 2.13.5
+> > > >     
+> > > 
+> > > I did a test on x86, but it failed:
+> > > [   15.636489] kexec: Undefined symbol: memcpy
+> > > [   15.636496] kexec-bzImage64: Loading purgatory failed
+> > > [   33.603356] kexec: Undefined symbol: memcpy
+> > > [   33.603362] kexec-bzImage64: Loading purgatory failed
+> > > 
+> > > I think this relates to the sha256 splitting patch.  
+> > 
+> > I looked into this a little closer and i think i understood what happens. 
+> > 
+> > There is no definition of memcpy in arch/x86/boot/string.c, instead it's defined
+> > in arch/x86/boot/string.h as __buildin_memcpy (same for memset). Thus by
+> > switching to linux/string.h there is no more definition for it. Leaving us with
+> > 
+> > $ readelf -s purgatory.ro
+> > [...]
+> >  45: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT  UND memcpy
+> > [...]
+> > 
+> > To solve this problem I see two possibilities (example patches are at the end of
+> > the mail):
+> > 
+> > 1) Have arch dependent includes in lib/sha256.c
+> > 2) Add makefile magic so memcpy is defined
+> > 
+> > With both solutions the resulting purgatory.ro looks good. However both
+> > solutions aren't perfect. For example in 2) i had too mix the linux/string.h
+> > header with arch/x86/boot/string.c, because lib/string.c has too many
+> > dependencies and does not compile in the purgatory. On the other hand having
+> > arch dependent includes isn't that nice either ...
+> > 
+> > What's your opinion on this?  
+> 
+> Looks like it is a mess, maybe the 1st one is better although it is also
+> ugly.  Ccing Ingo see if he has some idea about this. 
+> 
+> > 
+> > Thanks
+> > Philipp
+> > 
+> > -----
+> > Example solution 1
+> > 
+> > --- a/lib/sha256.c
+> > +++ b/lib/sha256.c
+> > @@ -17,9 +17,14 @@
+> >  
+> >  #include <linux/bitops.h>
+> >  #include <linux/sha256.h>
+> > -#include <linux/string.h>
+> >  #include <asm/byteorder.h>
+> >  
+> > +#ifdef CONFIG_X86
+> > +#include "../arch/x86/boot/string.h"
+> > +#else
+> > +#include <linux/string.h>
+> > +#endif /* CONFIG_X86 */
+> > +
+> >  static inline u32 Ch(u32 x, u32 y, u32 z)
+> >  {
+> >  	return z ^ (x & (y ^ z));
+> > 
+> > -----
+> > Example solution 2
+> > 
+> > --- a/arch/x86/purgatory/Makefile
+> > +++ b/arch/x86/purgatory/Makefile
+> > @@ -1,7 +1,8 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> >  OBJECT_FILES_NON_STANDARD := y
+> >  
+> > -purgatory-y := purgatory.o stack.o setup-x86_$(BITS).o sha256.o entry64.o string.o
+> > +purgatory-y := purgatory.o stack.o setup-x86_$(BITS).o sha256.o entry64.o \
+> > +	string.o memcpy_$(BITS).o memset_$(BITS).o
+> >  
+> >  targets += $(purgatory-y)
+> >  PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
+> > @@ -9,6 +10,15 @@ PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
+> >  $(obj)/sha256.o: $(srctree)/lib/sha256.c
+> >  	$(call if_changed_rule,cc_o_c)
+> >  
+> > +$(obj)/string.o: $(srctree)/arch/x86/boot/string.c
+> > +	$(call if_changed_rule,cc_o_c)
+> > +
+> > +$(obj)/memset_$(BITS).o: $(srctree)/arch/x86/lib/memset_$(BITS).S
+> > +	$(call if_changed_rule,as_o_S)
+> > +
+> > +$(obj)/memcpy_$(BITS).o: $(srctree)/arch/x86/lib/memcpy_$(BITS).S
+> > +	$(call if_changed_rule,as_o_S)
+> > +
+> >  LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
+> >  targets += purgatory.ro
+> >  
+> >   
+> 
+> Thanks
+> Dave
+> 
 
-
->  b. List regions separately and exhaustively later on at a single point
->     as my patch attached does.
->
->     I'm afraid of any possibility that some regions may be doubly counted,
->     one from efi memory map search and another from other efi/acpi code
->     (various type of "tables" in most cases).
->
->  c. Expand efi_mem_reserve() with an argument of "resource descriptor" and
->     replace memblock_reserve() in efi code wherever necessary so as to
->     maintain an export list.
->
->     efi_mem_reserve() was first introduced for specific needs at kexec
->     on x86, but I believe that its coverage over efi code is far from perfect.
->
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2017-November/541831.html
-> [2] http://lkml.iu.edu//hypermail/linux/kernel/1802.2/06745.html
-> [3] http://lkml.iu.edu//hypermail/linux/kernel/1803.0/04658.html
->     http://lkml.iu.edu//hypermail/linux/kernel/1803.0/04659.html
->
-> -Takahiro AKASHI
->
-> ===8<===
-> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> index 30ad2f085d1f..feda5cbdc6bf 100644
-> --- a/arch/arm64/kernel/setup.c
-> +++ b/arch/arm64/kernel/setup.c
-> @@ -214,13 +214,8 @@ static void __init request_standard_resources(void)
->
->         for_each_memblock(memory, region) {
->                 res = alloc_bootmem_low(sizeof(*res));
-> -               if (memblock_is_nomap(region)) {
-> -                       res->name  = "reserved";
-> -                       res->flags = IORESOURCE_MEM;
-> -               } else {
-> -                       res->name  = "System RAM";
-> -                       res->flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-> -               }
-> +               res->name  = "System RAM";
-> +               res->flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
->                 res->start = __pfn_to_phys(memblock_region_memory_base_pfn(region));
->                 res->end = __pfn_to_phys(memblock_region_memory_end_pfn(region)) - 1;
->
-> @@ -239,6 +234,9 @@ static void __init request_standard_resources(void)
->                         request_resource(res, &crashk_res);
->  #endif
->         }
-> +
-> +       /* Add firmware-reserved memory */
-> +       efi_arch_request_resources();
->  }
->
->  u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
-> diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
-> index 80d1a885def5..308143e69db4 100644
-> --- a/drivers/firmware/efi/arm-init.c
-> +++ b/drivers/firmware/efi/arm-init.c
-> @@ -13,8 +13,10 @@
->
->  #define pr_fmt(fmt)    "efi: " fmt
->
-> +#include <linux/bootmem.h>
->  #include <linux/efi.h>
->  #include <linux/init.h>
-> +#include <linux/ioport.h>
->  #include <linux/memblock.h>
->  #include <linux/mm_types.h>
->  #include <linux/of.h>
-> @@ -280,3 +282,97 @@ static int __init register_gop_device(void)
->         return PTR_ERR_OR_ZERO(pd);
->  }
->  subsys_initcall(register_gop_device);
-> +
-> +static unsigned long __init efi_memattr_to_iores_type(u64 addr)
-> +{
-> +       if (efi_mem_attributes(addr) &
-> +                       (EFI_MEMORY_WB|EFI_MEMORY_WT|EFI_MEMORY_WC))
-> +               return IORESOURCE_SYSTEM_RAM;
-> +       else
-> +               return IORESOURCE_MEM;
-> +}
-> +
-> +static unsigned long __init efi_type_to_iores_desc(u64 addr)
-> +{
-> +       /* TODO */
-> +       return IORES_DESC_NONE;
-> +}
-> +
-> +static struct resource * __init _efi_arch_request_resource(u64 start, u64 end,
-> +                                       char *name, struct resource *prev)
-> +{
-> +       struct resource *conflict, *res;
-> +
-> +       res = alloc_bootmem_low(sizeof(*res));
-> +
-> +       res->start = start;
-> +       res->end = end;
-> +       res->flags = efi_memattr_to_iores_type(res->start);
-> +       res->desc = efi_type_to_iores_desc(res->start);
-> +       res->name = name;
-> +
-> +       conflict = request_resource_conflict(&iomem_resource, res);
-> +       if (conflict) {
-> +               if (prev && (prev->parent == conflict) &&
-> +                               ((prev->end + 1) == start)) {
-> +                       /* merge consecutive regions */
-> +                       adjust_resource(prev, prev->start,
-> +                                                       end - prev->start + 1);
-> +                       free_bootmem((unsigned long)res, sizeof(*res));
-> +                       res = prev;
-> +               } else
-> +                       insert_resource(conflict, res);
-> +       }
-> +
-> +       return res;
-> +}
-> +
-> +/* Kexec expects those resources to be preserved */
-> +void __init efi_arch_request_resources(void)
-> +{
-> +       struct resource *res = NULL;
-> +       efi_memory_desc_t *md;
-> +       u64 paddr, npages, size;
-> +
-> +       /* EFI Memory Map */
-> +       /* FIXME */
-> +       _efi_arch_request_resource(efi.memmap.phys_map,
-> +                       efi.memmap.phys_map
-> +                       + efi.memmap.desc_size * efi.memmap.nr_map - 1,
-> +                       "EFI Memory Map", res);
-> +
-> +       /* generic EFI Configuration Tables */
-> +       efi_request_config_table_resources(_efi_arch_request_resource);
-> +
-> +       /* architecture-specifc Configuration Tables */
-> +       if (screen_info.lfb_size)
-> +               _efi_arch_request_resource(screen_info.lfb_base,
-> +                               screen_info.lfb_base + screen_info.lfb_size - 1,
-> +                               "EFI Screen Info Table", res);
-> +
-> +       /* architecture-specific EFI resources */
-> +       /* FIXME */
-> +       efi_memmap_install(efi.memmap.phys_map, efi.memmap.nr_map);
-> +
-> +       res = NULL;
-> +       for_each_efi_memory_desc(md) {
-> +               paddr = md->phys_addr;
-> +               npages = md->num_pages;
-> +
-> +               memrange_efi_to_native(&paddr, &npages);
-> +               size = npages << PAGE_SHIFT;
-> +
-> +               if (is_memory(md)) {
-> +                       if (!is_usable_memory(md))
-> +                               res = _efi_arch_request_resource(paddr,
-> +                                               paddr + size - 1,
-> +                                               "EFI Resources", res);
-> +
-> +                       if (md->type == EFI_ACPI_RECLAIM_MEMORY)
-> +                               res = _efi_arch_request_resource(paddr,
-> +                                               paddr + size - 1,
-> +                                               "EFI Resources", res);
-> +               }
-> +       }
-> +       efi_memmap_unmap();
-> +}
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index cd42f66a7c85..b13c9461278b 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -603,6 +603,33 @@ int __init efi_config_init(efi_config_table_type_t *arch_tables)
->         return ret;
->  }
->
-> +void __init efi_request_config_table_resources(struct resource *(*fn)(u64 start,
-> +                               u64 end, char *name, struct resource *prev))
-> +{
-> +       struct resource *prev = NULL;
-> +       char *name = "EFI Configuration Tables";
-> +
-> +       if (efi.config_table_size)
-> +               prev = fn(efi.config_table,
-> +                       efi.config_table + efi.config_table_size - 1, name,
-> +                                                                       prev);
-> +
-> +       if (efi.mem_attr_table_size)
-> +               prev = fn(efi.mem_attr_table,
-> +                       efi.mem_attr_table + efi.mem_attr_table_size - 1, name,
-> +                                                                       prev);
-> +
-> +       if (efi.esrt_size)
-> +               prev = fn(efi.esrt, efi.esrt + efi.esrt_size - 1, name, prev);
-> +
-> +       if (efi.tpm_log_size)
-> +               prev = fn(efi.tpm_log, efi.tpm_log + efi.tpm_log_size - 1, name,
-> +                                                                       prev);
-> +
-> +
-> +       /* TODO: BGRT */
-> +}
-> +
->  #ifdef CONFIG_EFI_VARS_MODULE
->  static int __init efi_load_efivars(void)
->  {
-> diff --git a/drivers/firmware/efi/esrt.c b/drivers/firmware/efi/esrt.c
-> index c47e0c6ec00f..61f66c139afb 100644
-> --- a/drivers/firmware/efi/esrt.c
-> +++ b/drivers/firmware/efi/esrt.c
-> @@ -330,6 +330,7 @@ void __init efi_esrt_init(void)
->
->         esrt_data = (phys_addr_t)efi.esrt;
->         esrt_data_size = size;
-> +       efi.esrt_size = size;
->
->         end = esrt_data + size;
->         pr_info("Reserving ESRT space from %pa to %pa.\n", &esrt_data, &end);
-> diff --git a/drivers/firmware/efi/memattr.c b/drivers/firmware/efi/memattr.c
-> index 8986757eafaf..dc2c7608793a 100644
-> --- a/drivers/firmware/efi/memattr.c
-> +++ b/drivers/firmware/efi/memattr.c
-> @@ -42,6 +42,7 @@ int __init efi_memattr_init(void)
->         }
->
->         tbl_size = sizeof(*tbl) + tbl->num_entries * tbl->desc_size;
-> +       efi.mem_attr_table_size = tbl_size;
->         memblock_reserve(efi.mem_attr_table, tbl_size);
->         set_bit(EFI_MEM_ATTR, &efi.flags);
->
-> diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-> index 0cbeb3d46b18..53cfb12513fa 100644
-> --- a/drivers/firmware/efi/tpm.c
-> +++ b/drivers/firmware/efi/tpm.c
-> @@ -33,6 +33,7 @@ int __init efi_tpm_eventlog_init(void)
->         }
->
->         tbl_size = sizeof(*log_tbl) + log_tbl->size;
-> +       efi.tpm_log_size = tbl_size;
->         memblock_reserve(efi.tpm_log, tbl_size);
->         early_memunmap(log_tbl, sizeof(*log_tbl));
->         return 0;
-> diff --git a/include/linux/efi.h b/include/linux/efi.h
-> index f5083aa72eae..9c3f8d284b36 100644
-> --- a/include/linux/efi.h
-> +++ b/include/linux/efi.h
-> @@ -942,11 +942,15 @@ extern struct efi {
->         unsigned long fw_vendor;        /* fw_vendor */
->         unsigned long runtime;          /* runtime table */
->         unsigned long config_table;     /* config tables */
-> +       unsigned long config_table_size;
->         unsigned long esrt;             /* ESRT table */
-> +       unsigned long esrt_size;
->         unsigned long properties_table; /* properties table */
->         unsigned long mem_attr_table;   /* memory attributes table */
-> +       unsigned long mem_attr_table_size;
->         unsigned long rng_seed;         /* UEFI firmware random seed */
->         unsigned long tpm_log;          /* TPM2 Event Log table */
-> +       unsigned long tpm_log_size;
->         efi_get_time_t *get_time;
->         efi_set_time_t *set_time;
->         efi_get_wakeup_time_t *get_wakeup_time;
-> @@ -980,6 +984,9 @@ efi_guid_to_str(efi_guid_t *guid, char *out)
->  }
->
->  extern void efi_init (void);
-> +extern void efi_arch_request_resources(void);
-> +extern void efi_request_config_table_resources(struct resource *
-> +               (*fn)(u64 start, u64 end, char *name, struct resource *prev));
->  extern void *efi_get_pal_addr (void);
->  extern void efi_map_pal_code (void);
->  extern void efi_memmap_walk (efi_freemem_callback_t callback, void *arg);
 
 _______________________________________________
 kexec mailing list
