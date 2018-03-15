@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ewQp8-00054w-M3
- for kexec@lists.infradead.org; Thu, 15 Mar 2018 11:13:32 +0000
-Date: Thu, 15 Mar 2018 12:13:18 +0100
+ id 1ewQts-0006kA-3N
+ for kexec@lists.infradead.org; Thu, 15 Mar 2018 11:18:25 +0000
+Date: Thu, 15 Mar 2018 12:18:11 +0100
 From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-Subject: Re: [PATCH v4 2/5] kexec: do not special-case the -s option
-Message-ID: <20180315121318.3d5ffc46@kitsune.suse.cz>
-In-Reply-To: <20180315103830.txngzqrwj63qq53p@verge.net.au>
+Subject: Re: [PATCH v4 5/5] kexec: document -s, -c and -a options.
+Message-ID: <20180315121811.0b0c2437@kitsune.suse.cz>
+In-Reply-To: <20180314034355.GB2039@dhcp-128-65.nay.redhat.com>
 References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
- <28358b37c1174572ff6051ec430d750969efa9eb.1520342150.git.msuchanek@suse.de>
- <20180315103830.txngzqrwj63qq53p@verge.net.au>
+ <6a8aa85dbaa781348890362aa2d8589c91b8b458.1520342150.git.msuchanek@suse.de>
+ <20180314034355.GB2039@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,99 +24,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Petr Tesarik <ptesarik@suse.cz>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: Petr Tesarik <ptesarik@suse.cz>, horms@verge.net.au, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>
 
-On Thu, 15 Mar 2018 11:38:30 +0100
-Simon Horman <horms@verge.net.au> wrote:
+On Wed, 14 Mar 2018 11:43:55 +0800
+Dave Young <dyoung@redhat.com> wrote:
 
-> On Tue, Mar 06, 2018 at 02:15:53PM +0100, Michal Suchanek wrote:
-> > It is parsed separately to save a few CPU cycles when setting up
-> > other options but it just complicates the code. So fold it back and
-> > set up all flags both for KEXEC_LOAD and KEXEC_FILE_LOAD
-> > 
+> On 03/06/18 at 02:15pm, Michal Suchanek wrote:
 > > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 > > ---
-> >  kexec/kexec.c | 25 ++++---------------------
-> >  1 file changed, 4 insertions(+), 21 deletions(-)
+> >  kexec/kexec.8 | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
 > > 
-> > diff --git a/kexec/kexec.c b/kexec/kexec.c
-> > index ab8cff7fe083..9ea102e1565a 100644
-> > --- a/kexec/kexec.c
-> > +++ b/kexec/kexec.c
-> > @@ -1256,19 +1256,6 @@ int main(int argc, char *argv[])
-> >  	};
-> >  	static const char short_options[] = KEXEC_ALL_OPT_STR;
-> >  
-> > -	/*
-> > -	 * First check if --use-kexec-file-syscall is set. That
-> > changes lot of
-> > -	 * things
-> > -	 */
-> > -	while ((opt = getopt_long(argc, argv, short_options,
-> > -				  options, 0)) != -1) {
-> > -		switch(opt) {
-> > -		case OPT_KEXEC_FILE_SYSCALL:
-> > -			do_kexec_file_syscall = 1;
-> > -			break;
-> > -		}
-> > -	}
-> > -
-> >  	/* Reset getopt for the next pass. */
-> >  	opterr = 1;
-> >  	optind = 1;
-> > @@ -1310,8 +1297,7 @@ int main(int argc, char *argv[])
-> >  			do_shutdown = 0;
-> >  			do_sync = 0;
-> >  			do_unload = 1;
-> > -			if (do_kexec_file_syscall)
-> > -				kexec_file_flags |=
-> > KEXEC_FILE_UNLOAD;
-> > +			kexec_file_flags |= KEXEC_FILE_UNLOAD;
-> >  			break;
-> >  		case OPT_EXEC:
-> >  			do_load = 0;  
->  @@ -1354,11 +1340,8 @@ int main(int argc, char *argv[])
+> > diff --git a/kexec/kexec.8 b/kexec/kexec.8
+> > index e0131b4ea827..b3543db3f413 100644
+> > --- a/kexec/kexec.8
+> > +++ b/kexec/kexec.8
+> > @@ -144,6 +144,21 @@ Load the new kernel for use on panic.
+> >  Specify that the new kernel is of this
+> >  .I type.
+> >  .TP
+> > +.BI \-s\ (\-\-kexec-file-syscall)
+> > +Specify that the new KEXEC_FILE_LOAD syscall should be used
+> > exclusively. +.TP
+> > +.BI \-c\ (\-\-kexec-syscall)
+> > +Specify that the old KEXEC_LOAD syscall should be used exclusively
+> > (the default). +.TP
+> > +.BI \-a\ (\-\-kexec-syscall-auto)
+> > +Try the new simpler KEXEC_FILE_LOAD syscall first and if it is not
+> > supported +fall back to the old KEXEC_LOAD interface.
+> > +
+> > +There is no one single interface that always works.
+> > KEXEC_FILE_LOAD is required +on systems that use locked-down secure
+> > boot to verify the kernel signature. +KEXEC_LOAD is required for
+> > some kernel image formats and on architectures that +do not support
+> > KEXEC_FILE_LOAD. +.TP
+> >  .B \-u\ (\-\-unload)
+> >  Unload the current
+> >  .B kexec
+> > -- 
+> > 2.13.6
+> >   
 > 
->  The existing code has the following above the context shown in the
-> patch:
-> 
-> 			do_load = 1;
-> 
-> 
-> >  			do_exec = 0;
-> >  			do_shutdown = 0;
-> >  			do_sync = 0;
-> > -			if (do_kexec_file_syscall)
-> > -				kexec_file_flags |=
-> > KEXEC_FILE_ON_CRASH;
-> > -			else
-> > -				kexec_flags = KEXEC_ON_CRASH;
-> > -			break;
-> > +			kexec_file_flags |= KEXEC_FILE_ON_CRASH;
-> > +			kexec_flags = KEXEC_ON_CRASH;  
-> 
-> kexec_flags is now set regardless of the value of
-> do_kexec_file_syscall, which was not the case prior to this patch.
-> That seems to affect the following which appears later in the
-> function. Is that ok?
-> 
-> 
->         if (do_load && (kexec_flags & KEXEC_ON_CRASH) &&
->             !is_crashkernel_mem_reserved()) {
->                 die("Memory for crashkernel is not reserved\n"
->                     "Please reserve memory by passing"
->                     "\"crashkernel=X@Y\" parameter to kernel\n"
->                     "Then try to loading kdump kernel\n");
->         }
+> Actually while I replied this mail, I tried 'kexec -c -a' system
+> immediately rebooted.  Also as I noted in patch 4 a 'break' is missing
+> so does it work on your side?
 
-Do you not need memory for kexec -s? This looks broken to start with.
-> 
-> 	...
-> 
->         if ((result == 0) && do_load_jump_back_helper) {
+Right, the original single-patch code had a bug which is now fixed but
+new one crept in. Since we still don't agree how it *should* behave it
+is too early to say it deviates from expectation.
 
-And yes, this should not be allowed with -s
+If we agree what it should do but it turns out to be broken it can be
+fixed after the fact, too.
 
 Thanks
 
