@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ewQts-0006kA-3N
- for kexec@lists.infradead.org; Thu, 15 Mar 2018 11:18:25 +0000
-Date: Thu, 15 Mar 2018 12:18:11 +0100
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1ewRJz-0002wM-6G
+ for kexec@lists.infradead.org; Thu, 15 Mar 2018 11:45:24 +0000
+Date: Thu, 15 Mar 2018 12:44:27 +0100
 From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
 Subject: Re: [PATCH v4 5/5] kexec: document -s, -c and -a options.
-Message-ID: <20180315121811.0b0c2437@kitsune.suse.cz>
-In-Reply-To: <20180314034355.GB2039@dhcp-128-65.nay.redhat.com>
+Message-ID: <20180315124427.15ca7836@kitsune.suse.cz>
+In-Reply-To: <20180314075031.GB23942@dhcp-128-65.nay.redhat.com>
 References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
  <6a8aa85dbaa781348890362aa2d8589c91b8b458.1520342150.git.msuchanek@suse.de>
- <20180314034355.GB2039@dhcp-128-65.nay.redhat.com>
+ <20180314034130.GA2039@dhcp-128-65.nay.redhat.com>
+ <20180314082519.0fcca316@naga.suse.cz>
+ <20180314075031.GB23942@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,68 +22,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
 Cc: Petr Tesarik <ptesarik@suse.cz>, horms@verge.net.au, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>
 
-On Wed, 14 Mar 2018 11:43:55 +0800
-Dave Young <dyoung@redhat.com> wrote:
-
-> On 03/06/18 at 02:15pm, Michal Suchanek wrote:
-> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> > ---
-> >  kexec/kexec.8 | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> > 
-> > diff --git a/kexec/kexec.8 b/kexec/kexec.8
-> > index e0131b4ea827..b3543db3f413 100644
-> > --- a/kexec/kexec.8
-> > +++ b/kexec/kexec.8
-> > @@ -144,6 +144,21 @@ Load the new kernel for use on panic.
-> >  Specify that the new kernel is of this
-> >  .I type.
-> >  .TP
-> > +.BI \-s\ (\-\-kexec-file-syscall)
-> > +Specify that the new KEXEC_FILE_LOAD syscall should be used
-> > exclusively. +.TP
-> > +.BI \-c\ (\-\-kexec-syscall)
-> > +Specify that the old KEXEC_LOAD syscall should be used exclusively
-> > (the default). +.TP
-> > +.BI \-a\ (\-\-kexec-syscall-auto)
-> > +Try the new simpler KEXEC_FILE_LOAD syscall first and if it is not
-> > supported +fall back to the old KEXEC_LOAD interface.
-> > +
-> > +There is no one single interface that always works.
-> > KEXEC_FILE_LOAD is required +on systems that use locked-down secure
-> > boot to verify the kernel signature. +KEXEC_LOAD is required for
-> > some kernel image formats and on architectures that +do not support
-> > KEXEC_FILE_LOAD. +.TP
-> >  .B \-u\ (\-\-unload)
-> >  Unload the current
-> >  .B kexec
-> > -- 
-> > 2.13.6
-> >   
-> 
-> Actually while I replied this mail, I tried 'kexec -c -a' system
-> immediately rebooted.  Also as I noted in patch 4 a 'break' is missing
-> so does it work on your side?
-
-Right, the original single-patch code had a bug which is now fixed but
-new one crept in. Since we still don't agree how it *should* behave it
-is too early to say it deviates from expectation.
-
-If we agree what it should do but it turns out to be broken it can be
-fixed after the fact, too.
-
-Thanks
-
-Michal
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCAxNCBNYXIgMjAxOCAxNTo1MDozMSArMDgwMApEYXZlIFlvdW5nIDxkeW91bmdAcmVk
+aGF0LmNvbT4gd3JvdGU6Cgo+IE9uIDAzLzE0LzE4IGF0IDA4OjI1YW0sIE1pY2hhbCBTdWNow6Fu
+ZWsgd3JvdGU6Cj4gPiBPbiBXZWQsIDE0IE1hciAyMDE4IDExOjQxOjMwICswODAwCj4gPiBEYXZl
+IFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiAgIAo+ID4gPiBPbiAwMy8wNi8x
+OCBhdCAwMjoxNXBtLCBNaWNoYWwgU3VjaGFuZWsgd3JvdGU6ICAKPiA+ID4gPiBTaWduZWQtb2Zm
+LWJ5OiBNaWNoYWwgU3VjaGFuZWsgPG1zdWNoYW5la0BzdXNlLmRlPgo+ID4gPiA+IC0tLQo+ID4g
+PiA+ICBrZXhlYy9rZXhlYy44IHwgMTUgKysrKysrKysrKysrKysrCj4gPiA+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspCj4gPiA+ID4gCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2tl
+eGVjL2tleGVjLjggYi9rZXhlYy9rZXhlYy44Cj4gPiA+ID4gaW5kZXggZTAxMzFiNGVhODI3Li5i
+MzU0M2RiM2Y0MTMgMTAwNjQ0Cj4gPiA+ID4gLS0tIGEva2V4ZWMva2V4ZWMuOAo+ID4gPiA+ICsr
+KyBiL2tleGVjL2tleGVjLjgKPiA+ID4gPiBAQCAtMTQ0LDYgKzE0NCwyMSBAQCBMb2FkIHRoZSBu
+ZXcga2VybmVsIGZvciB1c2Ugb24gcGFuaWMuCj4gPiA+ID4gIFNwZWNpZnkgdGhhdCB0aGUgbmV3
+IGtlcm5lbCBpcyBvZiB0aGlzCj4gPiA+ID4gIC5JIHR5cGUuCj4gPiA+ID4gIC5UUAo+ID4gPiA+
+ICsuQkkgXC1zXCAoXC1cLWtleGVjLWZpbGUtc3lzY2FsbCkKPiA+ID4gPiArU3BlY2lmeSB0aGF0
+IHRoZSBuZXcgS0VYRUNfRklMRV9MT0FEIHN5c2NhbGwgc2hvdWxkIGJlIHVzZWQKPiA+ID4gPiBl
+eGNsdXNpdmVseS4gICAgCj4gPiA+IAo+ID4gPiBNYXliZSBiZXR0ZXIgdG8gYmUgc2ltcGxlIGxp
+a2UgYmVsb3c6Cj4gPiA+ICJVc2Uga2V4ZWNfZmlsZV9sb2FkIHN5c2NhbGwgdG8gbG9hZCB0aGUg
+bmV3IGtlcm5lbC4iCj4gPiA+IAo+ID4gPiAgIAo+ID4gPiA+ICsuVFAKPiA+ID4gPiArLkJJIFwt
+Y1wgKFwtXC1rZXhlYy1zeXNjYWxsKQo+ID4gPiA+ICtTcGVjaWZ5IHRoYXQgdGhlIG9sZCBLRVhF
+Q19MT0FEIHN5c2NhbGwgc2hvdWxkIGJlIHVzZWQKPiA+ID4gPiBleGNsdXNpdmVseSAodGhlIGRl
+ZmF1bHQpLiAgICAKPiA+ID4gCj4gPiA+IHNpbWlsYXJseToKPiA+ID4gIlVzZSBrZXhlY19sb2Fk
+IHN5c2NhbGwgdG8gbG9hZCB0aGUgbmV3IGtlcm5lbC4iCj4gPiA+ICAgCj4gPiA+ID4gKy5UUAo+
+ID4gPiA+ICsuQkkgXC1hXCAoXC1cLWtleGVjLXN5c2NhbGwtYXV0bykKPiA+ID4gPiArVHJ5IHRo
+ZSBuZXcgc2ltcGxlciBLRVhFQ19GSUxFX0xPQUQgc3lzY2FsbCBmaXJzdCBhbmQgaWYgaXQgaXMK
+PiA+ID4gPiBub3Qgc3VwcG9ydGVkICtmYWxsIGJhY2sgdG8gdGhlIG9sZCBLRVhFQ19MT0FEIGlu
+dGVyZmFjZS4KPiA+ID4gPiArCj4gPiA+ID4gK1RoZXJlIGlzIG5vIG9uZSBzaW5nbGUgaW50ZXJm
+YWNlIHRoYXQgYWx3YXlzIHdvcmtzLgo+ID4gPiA+IEtFWEVDX0ZJTEVfTE9BRCBpcyByZXF1aXJl
+ZCArb24gc3lzdGVtcyB0aGF0IHVzZSBsb2NrZWQtZG93bgo+ID4gPiA+IHNlY3VyZSBib290IHRv
+IHZlcmlmeSB0aGUga2VybmVsIHNpZ25hdHVyZS4gK0tFWEVDX0xPQUQgaXMKPiA+ID4gPiByZXF1
+aXJlZCBmb3Igc29tZSBrZXJuZWwgaW1hZ2UgZm9ybWF0cyBhbmQgb24gYXJjaGl0ZWN0dXJlcwo+
+ID4gPiA+IHRoYXQgK2RvIG5vdCBzdXBwb3J0IEtFWEVDX0ZJTEVfTE9BRC4gICAgCj4gPiA+IAo+
+ID4gPiBJdCBzZWVtcyBub3QgZ29vZCB0byBzYXkga2V4ZWNfZmlsZV9sb2FkIGlzIHNpbXBsZXIg
+YW5kIG5ld2VyLgo+ID4gPiBBbHNvIGl0IGlzIG5vdCBhIG11c3QgZm9yIFNlY3VyZSBCb290IGFu
+ZCBsb2NrZWQgZG93biBrZXJuZWwKPiA+ID4gb25seS4gU28gaXQgd291bGQgYmUgYmV0dGVyIHRv
+IGp1c3Qgc2ltcGxpZnkgYW5kIHVzZSB0aGUgZmlyc3QKPiA+ID4gcGFyYWdyYXBoOgo+ID4gPiAK
+PiA+ID4gIlRyeSBrZXhlY19maWxlX2xvYWQgc3lzY2FsbCBmaXJzdCBhbmQgaWYgaXQgaXMgbm90
+IHN1cHBvcnRlZCBmYWxsCj4gPiA+IGJhY2sgdG8gdGhlIGtleGVjX2xvYWQgc3lzY2FsbCIgIAo+
+ID4gCj4gPiBUaGVyZSB3YXMgYSByZXF1ZXN0IGZvciBleHBsYW5hdGlvbiBzbyBqdXN0IHRoZSBm
+aXJzdCBwYXJhZ3JhcGggd2lsbAo+ID4gbm90IGRvLiBXaGF0IGlzIGl0IHJlcXVpcmVkIGZvciBv
+dGhlciB0aGFuIHNlY3VyZSBib290PyAgCj4gCj4gUGVvcGxlIGNhbiB1c2Uga2V4ZWMgLXMgdG8g
+bG9hZCBhIHNpZ25lZCBrZXJuZWwgYnV0IG5vdCBuZWNlc3NhcnkgdG8KPiBib290IHdpdGggU2Vj
+dXJlIEJvb3QgZW5hYmxlZC4KCklzIGJvb3Rpbmcgc2lnbmVkIGtlcm5lbCB3aXRob3V0IC1zIG5v
+dCBzdXBwb3J0ZWQ/IElmIHNvIEkgd291bGQKY29uc2lkZXIgaXQga2V4ZWMtdG9vbHMgYnVnLiBB
+bmQgaXQgc2hvdWxkIGRvY3VtZW50ZWQgdGhlbiBhcyB3ZWxsIEkKZ3Vlc3MuCgo+IAo+IFRoZXJl
+IGlzIG5vIFNlY3VyZSBCb290IGluIHBvd2VycGMsIGFybTY0IG5vdy4KCklzIHRoZXJlIG5vdCB5
+ZXQ/IEFueXdheSwgdGhlIGludGVudCBpcyB0byBzdXBwb3J0IGl0IHdoaWNoIGlzIHByb2JhYmx5
+CnRoZSByZWFzb24gd2UgaGF2ZSB0aGUgc3lzY2FsbCBpbiB0aGUgZmlyc3QgcGxhY2UuCgpUaGFu
+a3MKCk1pY2hhbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
