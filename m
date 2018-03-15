@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x244.google.com ([2607:f8b0:400e:c05::244])
+Received: from mail-io0-x244.google.com ([2607:f8b0:4001:c06::244])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ewKif-0003rQ-Sc
- for kexec@lists.infradead.org; Thu, 15 Mar 2018 04:42:29 +0000
-Received: by mail-pg0-x244.google.com with SMTP id w17so2341615pgq.8
- for <kexec@lists.infradead.org>; Wed, 14 Mar 2018 21:42:14 -0700 (PDT)
-From: Pingfan Liu <kernelfans@gmail.com>
-Subject: [PATCHv5 3/3] ppc64 boot: Wait for boot cpu to show up if nr_cpus
- limit is about to hit.
-Date: Thu, 15 Mar 2018 12:41:52 +0800
-Message-Id: <1521088912-31742-4-git-send-email-kernelfans@gmail.com>
-In-Reply-To: <1521088912-31742-1-git-send-email-kernelfans@gmail.com>
-References: <1521088912-31742-1-git-send-email-kernelfans@gmail.com>
+ id 1ewNOf-0000Jn-9z
+ for kexec@lists.infradead.org; Thu, 15 Mar 2018 07:34:00 +0000
+Received: by mail-io0-x244.google.com with SMTP id e30so7433828ioc.3
+ for <kexec@lists.infradead.org>; Thu, 15 Mar 2018 00:33:46 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <20180315044109.GN25863@linaro.org>
+References: <20180314082941.GM25863@linaro.org>
+ <CAKv+Gu9AMS4sGoRsw0KNv6+3WZPXCJRfbxBnjaqnZugiZe4o9w@mail.gmail.com>
+ <20180315044109.GN25863@linaro.org>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date: Thu, 15 Mar 2018 07:33:45 +0000
+Message-ID: <CAKv+Gu8-T84wExeMvJZyVCyY6vsEwWZ3Mhc1v+dRA7yqxxUOsQ@mail.gmail.com>
+Subject: Re: [RFC] arm64: extra entries in /proc/iomem for kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,107 +22,192 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: cascardo@canonical.com, gpiccoli@linux.vnet.ibm.com, benh@kernel.crashing.org, kexec@lists.infradead.org, paulus@ozlabs.org, mpe@ellerman.id.au
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-efi@vger.kernel.org, kexec@lists.infradead.org, James Morse <james.morse@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, "Baicar, Tyler" <tbaicar@codeaurora.org>, Jeff Hugo <jhugo@codeaurora.org>
 
-From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+On 15 March 2018 at 04:41, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
+> On Wed, Mar 14, 2018 at 08:39:23AM +0000, Ard Biesheuvel wrote:
+>> On 14 March 2018 at 08:29, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
+>> > In the last couples of months, there were some problems reported [1],[2]
+>> > around arm64 kexec/kdump. Where those phenomenon look different,
+>> > the root cause would be that kexec/kdump doesn't take into account
+>> > crucial "reserved" regions of system memory and unintentionally corrupts
+>> > them.
+>> >
+>> > Given that kexec-tools looks for all the information by seeking the file,
+>> > /proc/iomem, the first step to address said problems is to expand this file's
+>> > format so that it will have enough information about system memory and
+>> > its usage.
+>> >
+>> > Attached is my experimental code: With this patch applied, /proc/iomem sees
+>> > something like the below:
+>> >
+>> > (format A)
+>> > 40000000-5871ffff : System RAM
+>> >   40080000-40f1ffff : Kernel code
+>> >   41040000-411e8fff : Kernel data
+>> >   54400000-583fffff : Crash kernel
+>> >   58590000-585effff : EFI Resources
+>> >   58700000-5871ffff : EFI Resources
+>> > 58720000-58b5ffff : System RAM
+>> >   58720000-58b5ffff : EFI Resources
+>> > 58b60000-5be3ffff : System RAM
+>> >   58b61018-58b61947 : EFI Memory Map
+>> >   59a7b118-59a7b667 : EFI Configuration Tables
+>> > 5be40000-5becffff : System RAM                  <== (A-1)
+>> >   5be40000-5becffff : EFI Resources
+>> > 5bed0000-5bedffff : System RAM
+>> > 5bee0000-5bffffff : System RAM
+>> >   5bee0000-5bffffff : EFI Resources
+>> > 5c000000-5fffffff : System RAM
+>> > 8000000000-ffffffffff : PCI Bus 0000:00
+>> >
+>> > Meanwhile, the workaround I suggested in [3] gave us a simpler view:
+>> >
+>> > (format B)
+>> > 40000000-5871ffff : System RAM
+>> >   40080000-40f1ffff : Kernel code
+>> >   41040000-411e9fff : Kernel data
+>> >   54400000-583fffff : Crash kernel
+>> >   58590000-585effff : reserved
+>> >   58700000-5871ffff : reserved
+>> > 58720000-58b5ffff : reserved
+>> > 58b60000-5be3ffff : System RAM
+>> >   58b61000-58b61fff : reserved
+>> >   59a7b318-59a7b867 : reserved
+>> > 5be40000-5becffff : reserved                    <== (B-1)
+>> > 5bed0000-5bedffff : System RAM
+>> > 5bee0000-5bffffff : reserved
+>> > 5c000000-5fffffff : System RAM
+>> >   5ec00000-5edfffff : reserved
+>> > 8000000000-ffffffffff : PCI Bus 0000:00
+>> >
+>> > Here all the regions to be protected are named just "reserved" whether
+>> > they are NOMAP regions or simply-memblock_reserve'd. They are not very
+>> > useful for anything but kexec/kdump which knows what they mean.
+>> >
+>> > Alternatively, we may want to give them more specific names, based on
+>> > related efi memory map descriptors and else, that will characterize
+>> > their contents:
+>> >
+>> > (format C)
+>> > 40000000-5871ffff : System RAM
+>> >   40080000-40f1ffff : Kernel code
+>> >   41040000-411e9fff : Kernel data
+>> >   54400000-583fffff : Crash kernel
+>> >   58590000-585effff : ACPI Reclaim Memory
+>> >   58700000-5871ffff : ACPI Reclaim Memory
+>> > 58720000-58b5ffff : System RAM
+>> >   58720000-5878ffff : Runtime Data
+>> >   58790000-587dffff : Runtime Code
+>> >   587e0000-5882ffff : Runtime Data
+>> >   58830000-5887ffff : Runtime Code
+>> >   58880000-588cffff : Runtime Data
+>> >   588d0000-5891ffff : Runtime Code
+>> >   58920000-5896ffff : Runtime Data
+>> >   58970000-589bffff : Runtime Code
+>> >   589c0000-58a5ffff : Runtime Data
+>> >   58a60000-58abffff : Runtime Code
+>> >   58ac0000-58b0ffff : Runtime Data
+>> >   58b10000-58b5ffff : Runtime Code
+>> > 58b60000-5be3ffff : System RAM
+>> >   58b61000-58b61fff : EFI Memory Map
+>> >   59a7b118-59a7b667 : EFI Memory Attributes Table
+>> > 5be40000-5becffff : System RAM
+>> >   5be40000-5becffff : Runtime Code
+>> > 5bed0000-5bedffff : System RAM
+>> > 5bee0000-5bffffff : System RAM
+>> >   5bee0000-5bffffff : Runtime Data
+>> > 5c000000-5fffffff : System RAM
+>> > 8000000000-ffffffffff : PCI Bus 0000:00
+>> >
+>> > I once created a patch for this format, but it looks quite noisy and
+>> > names are a sort of mixture of memory attributes( ACPI Reclaim memory,
+>> > Conventional Memory, Persistent Memory etc.) vs.
+>> > function/usages ([Loader|Boot Service|Runtime] Code/Data).
+>> > (As a matter of fact, (C-1) consists of various ACPI tables.)
+>> > Anyhow, they seem not so useful for most of other applications.
+>> >
+>> > Those observations lead to format A, where some entries with the same
+>> > attributes are squeezed into a single entry under a simple name if they
+>> > are neighbouring.
+>> >
+>> >
+>> > So my questions here are:
+>> >
+>> > 1. Which format, A, B, or C, is the most appropriate for the moment?
+>> >    or any other suggestions?
+>> >
+>>
+>> I think some variant of B should be sufficient. The only meaningful
+>> distinction between these reserved regions at a general level is
+>> whether they are NOMAP or not, so perhaps we can incorporate that.
+>
+> I would definitely like to give your opinion the first priority,
+> but also hear from other guys.
+>
+> Can you tell my why you think that the distinction, NOMAP or not,
+> is meaningful?
+>
 
-The kernel boot parameter 'nr_cpus=' allows one to specify number of
-possible cpus in the system. In the normal scenario the first cpu (cpu0)
-that shows up is the boot cpu and hence it gets covered under nr_cpus
-limit.
+For diagnostic purposes, it may be useful to know whether a certain
+address is covered by the linear mapping or not.
 
-But this assumption will be broken in kdump scenario where kdump kenrel
-after a crash can boot up on an non-zero boot cpu. The paca structure
-allocation depends on value of nr_cpus and is indexed using logical cpu
-ids. This definetly will be an issue if boot cpu id > nr_cpus
+>> As for identifying things like EFI configuration tables: this is a
+>> moving target, and we also define our own config tables for the TPM
+>> log, screeninfo on ARM etc. Also, for EFI memory types, you can boot
+>> with efi=debug and look at the entire memory map. So I think adding
+>> all that information may be overkill.
+>
+> No doubt I agree.
+> The reason why I gave specific names to EFI configuration tables
+> is that all such tables are unambiguously listed in 'efi' structure,
+> while "screen info" seems to be arm-specific.
+> As for EFI memory types, I admit that they are inadequate for a source
+> of naming.
+> Nevertheless, I still have a sense that "reserved" sounds sloppy :)
+>
 
-This patch modifies allocate_pacas() and smp_setup_cpu_maps() to
-accommodate boot cpu for the case where boot_cpuid > nr_cpu_ids.
+I don't think that sounds sloppy at all.
 
-This change would help to reduce the memory reservation requirement for
-kdump on ppc64.
+>> > Currently, there is a inconsistent view between (A) and the mainline's:
+>> > see (A-1) and (B-1). If this is really a matter, I can fix it.
+>> > Kexec-tools can be easily modified to accept both formats, though.
+>> >
+>> >
+>> > 2. How should we determine which regions be exported in /proc/iomem?
+>> >
+>> >  a. Trust all the memblock_reserve'd regions as my previous patch [3] does.
+>> >
+>> >     As I said, it's a kind of "overkill." Some of regions, say fdt, are
+>> >     not required to be preserved across kexec.
+>> >
+>>
+>> I don't think there is anything wrong with listing all
+>> memblock_reserve()'d regions here, even if kexec has other means of
+>> ensuring that they are not touched.
+>
+> I initially thought that one downside in this approach is that we might
+> not able to re-use a reserved region for fdt, as well as others also
+> dynamically reserved by "/reserved-memory/" nodes, after kexec and that
+> it would end up more or less a memory leak eventually after iterating
+> kexec()'s. But
+> after thinking twice, I now don't believe it is a problem anymore.
+> In kexec case, we won't have to hand over a list of reserved regions to
+> secondary kernel. Kdump, on the other hand, will be triggered only once
+> for its nature anyway.
+>
+>> But as I said, I think it would be
+>> useful to distinguish them from NOMAP regions (even if the nesting
+>> below System RAM already shows that as well)
+>
+> Something like "reserved (no map)"?
+>
 
-Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Tested-by: Guilherme G. Piccoli <gpiccoli@linux.vnet.ibm.com>
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com> (separate the logical for
-               cpu id mapping and stick to the semantics of nr_cpus)
-
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
----
- arch/powerpc/include/asm/paca.h |  3 +++
- arch/powerpc/kernel/paca.c      | 19 ++++++++++++++-----
- 2 files changed, 17 insertions(+), 5 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/paca.h b/arch/powerpc/include/asm/paca.h
-index b62c310..49ab29d 100644
---- a/arch/powerpc/include/asm/paca.h
-+++ b/arch/powerpc/include/asm/paca.h
-@@ -49,6 +49,9 @@ extern unsigned int debug_smp_processor_id(void); /* from linux/smp.h */
- #define get_lppaca()	(get_paca()->lppaca_ptr)
- #define get_slb_shadow()	(get_paca()->slb_shadow_ptr)
- 
-+/* Maximum number of threads per core. */
-+#define	MAX_SMT		8
-+
- struct task_struct;
- 
- /*
-diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
-index 95ffedf..9c6f135 100644
---- a/arch/powerpc/kernel/paca.c
-+++ b/arch/powerpc/kernel/paca.c
-@@ -209,6 +209,7 @@ void __init allocate_pacas(void)
- {
- 	u64 limit;
- 	int cpu;
-+	unsigned int nr_cpus_aligned;
- 
- #ifdef CONFIG_PPC_BOOK3S_64
- 	/*
-@@ -220,20 +221,28 @@ void __init allocate_pacas(void)
- 	limit = ppc64_rma_size;
- #endif
- 
--	paca_size = PAGE_ALIGN(sizeof(struct paca_struct) * nr_cpu_ids);
-+	/*
-+	 * Alloc the paca[] align up to SMT threads.
-+	 * This will help us to prepare for a situation where
-+	 * boot cpu id > nr_cpus.
-+	 * We keep the semantics of nr_cpus in kernel cmdline, but
-+	 * waste a bit memory
-+	 */
-+	nr_cpus_aligned = _ALIGN_UP(nr_cpu_ids, MAX_SMT);
-+	paca_size = PAGE_ALIGN(sizeof(struct paca_struct) * nr_cpus_aligned);
- 
- 	paca = __va(memblock_alloc_base(paca_size, PAGE_SIZE, limit));
- 	memset(paca, 0, paca_size);
- 
- 	printk(KERN_DEBUG "Allocated %u bytes for %u pacas at %p\n",
--		paca_size, nr_cpu_ids, paca);
-+		paca_size, nr_cpus_aligned, paca);
- 
--	allocate_lppacas(nr_cpu_ids, limit);
-+	allocate_lppacas(nr_cpus_aligned, limit);
- 
--	allocate_slb_shadows(nr_cpu_ids, limit);
-+	allocate_slb_shadows(nr_cpus_aligned, limit);
- 
- 	/* Can't use for_each_*_cpu, as they aren't functional yet */
--	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
-+	for (cpu = 0; cpu < nr_cpus_aligned; cpu++)
- 		initialise_paca(&paca[cpu], cpu);
- }
- 
--- 
-2.7.4
-
+Works for me
 
 _______________________________________________
 kexec mailing list
