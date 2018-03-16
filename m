@@ -1,21 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mail-lf0-f66.google.com ([209.85.215.66])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ewjDA-0002e6-Mx
- for kexec@lists.infradead.org; Fri, 16 Mar 2018 06:51:34 +0000
-Date: Fri, 16 Mar 2018 14:51:14 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v4 5/5] kexec: document -s, -c and -a options.
-Message-ID: <20180316065114.GB11233@dhcp-128-65.nay.redhat.com>
-References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
- <6a8aa85dbaa781348890362aa2d8589c91b8b458.1520342150.git.msuchanek@suse.de>
- <20180314034130.GA2039@dhcp-128-65.nay.redhat.com>
- <20180314082519.0fcca316@naga.suse.cz>
- <20180314075031.GB23942@dhcp-128-65.nay.redhat.com>
- <20180315124427.15ca7836@kitsune.suse.cz>
+ id 1ewllj-0001ke-Gx
+ for kexec@lists.infradead.org; Fri, 16 Mar 2018 09:35:26 +0000
+Received: by mail-lf0-f66.google.com with SMTP id y19-v6so14393291lfd.4
+ for <kexec@lists.infradead.org>; Fri, 16 Mar 2018 02:35:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180315124427.15ca7836@kitsune.suse.cz>
+In-Reply-To: <20180314182448.bnvjtgyzipsuxcbe@lakrids.cambridge.arm.com>
+References: <CACi5LpMhHt4bjEueOzHZTGpzuR2zoQqXcReL-khoSNLG6=FVmg@mail.gmail.com>
+ <CAKv+Gu8qd=rpJkG_GoVO=kkmc4qx_zZD8c_wwE16gr=8wSShSw@mail.gmail.com>
+ <20180313102158.GI25863@linaro.org>
+ <20180313104715.prurmrizho4ddc4l@lakrids.cambridge.arm.com>
+ <20180313110747.GJ25863@linaro.org>
+ <20180313112016.ocx4qqhji3zfwjhs@lakrids.cambridge.arm.com>
+ <CACi5LpN4DTYFVSVqru2j0y=CKr2ztrJ1gCW32sJBU=oUV2fcWw@mail.gmail.com>
+ <20180314021050.GK25863@linaro.org>
+ <20180314182448.bnvjtgyzipsuxcbe@lakrids.cambridge.arm.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Fri, 16 Mar 2018 15:05:10 +0530
+Message-ID: <CACi5LpNyx5VKO6mYB1yXNPENPKhAfAJ7cUSBeVzVtXfF6+EPwg@mail.gmail.com>
+Subject: Re: [Query] ARM64 kaslr support - randomness, seeding and kdump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,132 +28,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-Cc: Petr Tesarik <ptesarik@suse.cz>, horms@verge.net.au, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-On 03/15/18 at 12:44pm, Michal Such=E1nek wrote:
-> On Wed, 14 Mar 2018 15:50:31 +0800
-> Dave Young <dyoung@redhat.com> wrote:
-> =
+On Wed, Mar 14, 2018 at 11:54 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Wed, Mar 14, 2018 at 11:10:53AM +0900, AKASHI Takahiro wrote:
+>> If kaslr-seed has a critical value in terms of security, is kexec-tools
+>> a right place? It is exposed to user space albeit for a short time of period.
+>
+> The kernel zeroes the seed in the DT at boot time, so the current seed
+> isn't visible to userspace.
+>
+> If kexec-tools generates a seed, and inserts it into the DTB that it
+> loads, this is only visible to kexec tools or other applications which
+> can inspect its memory, so I don't think this is much of a concern.
+> Anything with such privilege can presumably kexec() to arbitrary code
+> anyhow.
+>
+> The next kernel will then zero its seed in the DT at boot time, so
+> similarly this won't be visible to userspace on the new kernel.
+>
+> FWIW, having kexec tools generate a seed for the kexec_load() case makes
+> sense to me.
 
-> > On 03/14/18 at 08:25am, Michal Such=E1nek wrote:
-> > > On Wed, 14 Mar 2018 11:41:30 +0800
-> > > Dave Young <dyoung@redhat.com> wrote:
-> > >   =
+Fair enough. I will try to take a stab at the same and come back with
+my findings on this thread.
 
-> > > > On 03/06/18 at 02:15pm, Michal Suchanek wrote:  =
-
-> > > > > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> > > > > ---
-> > > > >  kexec/kexec.8 | 15 +++++++++++++++
-> > > > >  1 file changed, 15 insertions(+)
-> > > > > =
-
-> > > > > diff --git a/kexec/kexec.8 b/kexec/kexec.8
-> > > > > index e0131b4ea827..b3543db3f413 100644
-> > > > > --- a/kexec/kexec.8
-> > > > > +++ b/kexec/kexec.8
-> > > > > @@ -144,6 +144,21 @@ Load the new kernel for use on panic.
-> > > > >  Specify that the new kernel is of this
-> > > > >  .I type.
-> > > > >  .TP
-> > > > > +.BI \-s\ (\-\-kexec-file-syscall)
-> > > > > +Specify that the new KEXEC_FILE_LOAD syscall should be used
-> > > > > exclusively.    =
-
-> > > > =
-
-> > > > Maybe better to be simple like below:
-> > > > "Use kexec_file_load syscall to load the new kernel."
-> > > > =
-
-> > > >   =
-
-> > > > > +.TP
-> > > > > +.BI \-c\ (\-\-kexec-syscall)
-> > > > > +Specify that the old KEXEC_LOAD syscall should be used
-> > > > > exclusively (the default).    =
-
-> > > > =
-
-> > > > similarly:
-> > > > "Use kexec_load syscall to load the new kernel."
-> > > >   =
-
-> > > > > +.TP
-> > > > > +.BI \-a\ (\-\-kexec-syscall-auto)
-> > > > > +Try the new simpler KEXEC_FILE_LOAD syscall first and if it is
-> > > > > not supported +fall back to the old KEXEC_LOAD interface.
-> > > > > +
-> > > > > +There is no one single interface that always works.
-> > > > > KEXEC_FILE_LOAD is required +on systems that use locked-down
-> > > > > secure boot to verify the kernel signature. +KEXEC_LOAD is
-> > > > > required for some kernel image formats and on architectures
-> > > > > that +do not support KEXEC_FILE_LOAD.    =
-
-> > > > =
-
-> > > > It seems not good to say kexec_file_load is simpler and newer.
-> > > > Also it is not a must for Secure Boot and locked down kernel
-> > > > only. So it would be better to just simplify and use the first
-> > > > paragraph:
-> > > > =
-
-> > > > "Try kexec_file_load syscall first and if it is not supported fall
-> > > > back to the kexec_load syscall"  =
-
-> > > =
-
-> > > There was a request for explanation so just the first paragraph will
-> > > not do. What is it required for other than secure boot?  =
-
-> > =
-
-> > People can use kexec -s to load a signed kernel but not necessary to
-> > boot with Secure Boot enabled.
-> =
-
-> Is booting signed kernel without -s not supported? If so I would
-> consider it kexec-tools bug. And it should documented then as well I
-> guess.
-
-I'm not sure I understand the question.  In kernel we splitted kexec and
-kexec_file they can be enabled as kernel config options separately.  If
-one want to a secured kexec (not UEFI Secure Boot, only signed kernel
-loading) then one can only enable CONFIG_KEXEC_FILE but disable
-CONFIG_KEXEC.  In this case without '-s' load will fail.  But if one
-enabled both CONFIG_KEXEC_FILE and CONFIG_KEXEC then kexec load without
-'-s' still works.
-
-> =
-
-> > =
-
-> > There is no Secure Boot in powerpc, arm64 now.
-> =
-
-> Is there not yet? Anyway, the intent is to support it which is probably
-> the reason we have the syscall in the first place.
-
-Secure Boot is UEFI only, AFAIK powerpc does not have UEFI,  arm64 has
-UEFI but I do not see Secure Boot.
-
-Also powerpc version kexec_file_load does not have signature
-verification.
-
-> =
-
-> Thanks
-> =
-
-> Michal
-
-Thanks
-Dave
+Thanks,
+Bhupesh
 
 _______________________________________________
 kexec mailing list
