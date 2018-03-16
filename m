@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ewngq-0004Sj-Jg
- for kexec@lists.infradead.org; Fri, 16 Mar 2018 11:38:30 +0000
-Date: Fri, 16 Mar 2018 12:38:13 +0100
+ id 1ewnmb-0006hH-OM
+ for kexec@lists.infradead.org; Fri, 16 Mar 2018 11:44:27 +0000
+Date: Fri, 16 Mar 2018 12:44:13 +0100
 From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-Subject: Re: [PATCH v4 2/5] kexec: do not special-case the -s option
-Message-ID: <20180316123813.2dc20e10@naga.suse.cz>
-In-Reply-To: <20180316112024.juwn7bhoccwwprv6@verge.net.au>
+Subject: Re: [PATCH v4 4/5] kexec: add option to fall back to KEXEC_LOAD
+ when KEXEC_FILE_LOAD is not supported.
+Message-ID: <20180316124413.6b398baf@naga.suse.cz>
+In-Reply-To: <20180316064502.GA11233@dhcp-128-65.nay.redhat.com>
 References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
- <28358b37c1174572ff6051ec430d750969efa9eb.1520342150.git.msuchanek@suse.de>
- <20180315103830.txngzqrwj63qq53p@verge.net.au>
- <20180315121318.3d5ffc46@kitsune.suse.cz>
- <20180316112024.juwn7bhoccwwprv6@verge.net.au>
+ <19a47e290fc03efea82af845740ae8f6b30f13b8.1520342150.git.msuchanek@suse.de>
+ <20180314032159.GA4889@dhcp-128-65.nay.redhat.com>
+ <20180315120637.4f4c8dc6@kitsune.suse.cz>
+ <20180316064502.GA11233@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,33 +27,31 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Petr Tesarik <ptesarik@suse.cz>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: Tony Jones <tonyj@suse.com>, horms@verge.net.au, kexec@lists.infradead.org, Petr Tesarik <ptesarik@suse.cz>
 
-T24gRnJpLCAxNiBNYXIgMjAxOCAxMjoyMDoyNSArMDEwMApTaW1vbiBIb3JtYW4gPGhvcm1zQHZl
-cmdlLm5ldC5hdT4gd3JvdGU6Cgo+IE9uIFRodSwgTWFyIDE1LCAyMDE4IGF0IDEyOjEzOjE4UE0g
-KzAxMDAsIE1pY2hhbCBTdWNow6FuZWsgd3JvdGU6Cj4gPiBPbiBUaHUsIDE1IE1hciAyMDE4IDEx
-OjM4OjMwICswMTAwCj4gPiBTaW1vbiBIb3JtYW4gPGhvcm1zQHZlcmdlLm5ldC5hdT4gd3JvdGU6
-Cgo+ID4gPiAKPiA+ID4gCj4gPiA+ICAgICAgICAgaWYgKGRvX2xvYWQgJiYgKGtleGVjX2ZsYWdz
-ICYgS0VYRUNfT05fQ1JBU0gpICYmCj4gPiA+ICAgICAgICAgICAgICFpc19jcmFzaGtlcm5lbF9t
-ZW1fcmVzZXJ2ZWQoKSkgewo+ID4gPiAgICAgICAgICAgICAgICAgZGllKCJNZW1vcnkgZm9yIGNy
-YXNoa2VybmVsIGlzIG5vdCByZXNlcnZlZFxuIgo+ID4gPiAgICAgICAgICAgICAgICAgICAgICJQ
-bGVhc2UgcmVzZXJ2ZSBtZW1vcnkgYnkgcGFzc2luZyIKPiA+ID4gICAgICAgICAgICAgICAgICAg
-ICAiXCJjcmFzaGtlcm5lbD1YQFlcIiBwYXJhbWV0ZXIgdG8ga2VybmVsXG4iCj4gPiA+ICAgICAg
-ICAgICAgICAgICAgICAgIlRoZW4gdHJ5IHRvIGxvYWRpbmcga2R1bXAga2VybmVsXG4iKTsKPiA+
-ID4gICAgICAgICB9ICAKPiA+IAo+ID4gRG8geW91IG5vdCBuZWVkIG1lbW9yeSBmb3Iga2V4ZWMg
-LXM/IFRoaXMgbG9va3MgYnJva2VuIHRvIHN0YXJ0Cj4gPiB3aXRoLiAgCj4gCj4gQ291bGQgeW91
-IHByb3Bvc2UgYSBmaXg/IEkgcmVhbGlzZSB5b3VyIHBhdGNoc2V0IG1heSBub3QgaW50cm9kdWNl
-Cj4gdGhpcyBwcm9ibGVtLiBCdXQgaXQgc2VlbXMgdG8gbWUgdGhhdCBpdCBtYWtlcyB0aGluZ3Mg
-c2xpZ2h0bHkgd29yc2UKPiBvciBhdCB0aGUgdmVyeSBsZWFzdCBwZXJwZXR1YXRlcyB0aGUgbm90
-aW9uIHRoYXQgdGhlIGFib3ZlIGlzIGNvcnJlY3QuCgpZZXMsIGl0IG1ha2VzIHNlbnNlIHRvIGZp
-eCB0aGUgY29uZGl0aW9uLgoKPiAKPiA+ID4gCS4uLgo+ID4gPiAKPiA+ID4gICAgICAgICBpZiAo
-KHJlc3VsdCA9PSAwKSAmJiBkb19sb2FkX2p1bXBfYmFja19oZWxwZXIpIHsgIAo+ID4gCj4gPiBB
-bmQgeWVzLCB0aGlzIHNob3VsZCBub3QgYmUgYWxsb3dlZCB3aXRoIC1zICAKPiAKPiBJcyB0aGUg
-c2ltcGxlIGZpeCBoZXJlIGZvciB5b3VyIHBhdGNoIHRvIGFkZCBhbiBleHRyYSBjb25kaXRpb24K
-PiB0byB0aGUgaWYgc3RhdGVtZW50IGFib3ZlPwoKVGhpcyBpcyBub3Qgc3VwcG9ydGVkIHdpdGgg
-LXMgYnV0IG5vdGhpbmcgcHJldmVudHMgc2V0dGluZyB0aGUgZmxhZy4gU28KYSB0ZXN0IGZvciBr
-ZXhlY19sb2FkIHNob3VsZCBiZSBhZGRlZCBJIGd1ZXNzLgoKVGhhbmtzCgpNaWNoYWwKCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
-IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+T24gRnJpLCAxNiBNYXIgMjAxOCAxNDo0NTowMiArMDgwMApEYXZlIFlvdW5nIDxkeW91bmdAcmVk
+aGF0LmNvbT4gd3JvdGU6Cgo+IE9uIDAzLzE1LzE4IGF0IDEyOjA2cG0sIE1pY2hhbCBTdWNow6Fu
+ZWsgd3JvdGU6Cj4gPiBPbiBXZWQsIDE0IE1hciAyMDE4IDExOjIxOjU5ICswODAwCj4gPiBEYXZl
+IFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiAgIAo+ID4gPiBJdCBsb29rcyB0
+byBtZSBpdCBpcyBlbm91Z2ggb25seSBjaGVja2luZyAtRU5PU1lTIG1heWJlIGFsc28KPiA+ID4g
+LUVOT1RTVVBQIGFuZCB0aGVuIHNldCBkb19rZXhlY19maWxlX3N5c2NhbGwgPSAwOwo+ID4gPiAK
+PiA+ID4gRUlOVkFMIGFuZCBFTk9FWEVDIGFyZSByZWFsIGVycm9ycywgSSBkbyBub3QgdW5kZXJz
+dGFuZCB3aHkgc3RpbGwgCj4gPiA+IGZhbGxiYWNrLiAgICAKPiA+IAo+ID4gSWYgeW91IHBhc3Mg
+YW4gaW1hZ2UgdHlwZSB0aGF0IHRoZSBrZXJuZWwgZG9lcyBub3QgdW5kZXJzdGFuZCAoZWcuCj4g
+PiBtdWx0aWJvb3Qgb3IgdUltYWdlKSB0aGVuIHRoZSBrZXJuZWwgd2lsbCByZXR1cm4gYSByZWFs
+IGVycm9yCj4gPiBiZWNhdXNlIGl0IGRvZXMgbm90IHVuZGVyc3RhbmQgdGhlIGltYWdlLiBIb3dl
+dmVyLCBrZXhlYy10b29scwo+ID4gc2hvdWxkIHN0aWxsIGJlIGFibGUgdG8gbG9hZCBpdCwgYXV0
+b21hdGljYWxseS4gVGhhdCdzIHdoYXQgdGhlCj4gPiAtYXV0byBzdGFuZHMgZm9yLiAgCj4gCj4g
+VGhpcyBzZW1lcyBvdmVyIGVuZ2luZWVyaW5nLCB0aGUgaW5pdGlhbCBwdXJwb3NlIGlzIHRvIGZh
+bGxiYWNrIHdoZW4KPiBrZXhlY19maWxlX2xvYWQgaXMgbm90IHN1cHBvcnRlZCwgc28gSSB3b3Vs
+ZCBzdWdnZXN0IG5vdCB0byBkbyBtb3JlCj4gdGhhbiB0aGF0LgoKVGhlIGluaXRpYWwgcHVycG9z
+ZSBpcyBmb3IgdXNlcnMgdG8gbm90IG5lZWQgdG8gc3BlY2lmeSBhbnkgZmxhZyB0bwpzZWxlY3Qg
+YSBzeXNjYWxsIHRvIHVzZS4gU2luY2UgdGhpcyBpcyBub3QgYWNjZXB0YWJsZSBiZWNhdXNlIGl0
+IG1pZ2h0Cm1ha2Uga2V4ZWMgd29yayBvdXQgb2YgdGhlIGJveCBvbiBzeXN0ZW1zIHdoZXJlIGl0
+IHdhcyBwcmV2aW91c2x5IGJyb2tlbgpvciB3aGF0ZXZlciB0aGlzIG5ldyBmbGFnIGlzIHN1cHBv
+c2VkIHRvIGFjaGlldmUgdGhhdDogd2hlbiBzcGVjaWZpZWQKa2V4ZWMgdHJpZXMgaGFyZCB0byBk
+byB0aGUgYmVzdCB0aGluZyBwb3NzaWJsZSB3aXRoIHRoZSBpbWFnZSBpdApyZWNlaXZlZC4KClRo
+YW5rcwoKTWljaGFsCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
