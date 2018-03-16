@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from stargate.chelsio.com ([12.32.117.8])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ewnIL-0002Du-88
- for kexec@lists.infradead.org; Fri, 16 Mar 2018 11:13:12 +0000
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Subject: [RFC v2 2/2] cxgb4: collect hardware dump in second kernel
-Date: Fri, 16 Mar 2018 16:42:05 +0530
-Message-Id: <1521198725-13463-3-git-send-email-rahul.lakkireddy@chelsio.com>
-In-Reply-To: <1521198725-13463-1-git-send-email-rahul.lakkireddy@chelsio.com>
-References: <1521198725-13463-1-git-send-email-rahul.lakkireddy@chelsio.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1ewnPd-0005ZQ-HE
+ for kexec@lists.infradead.org; Fri, 16 Mar 2018 11:20:43 +0000
+Date: Fri, 16 Mar 2018 12:20:25 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 2/5] kexec: do not special-case the -s option
+Message-ID: <20180316112024.juwn7bhoccwwprv6@verge.net.au>
+References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
+ <28358b37c1174572ff6051ec430d750969efa9eb.1520342150.git.msuchanek@suse.de>
+ <20180315103830.txngzqrwj63qq53p@verge.net.au>
+ <20180315121318.3d5ffc46@kitsune.suse.cz>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180315121318.3d5ffc46@kitsune.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,130 +22,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, kexec@lists.infradead.org
-Cc: indranil@chelsio.com, nirranjan@chelsio.com, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, ganeshgr@chelsio.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ebiederm@xmission.com
+To: Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+Cc: Petr Tesarik <ptesarik@suse.cz>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>
 
-Register callback to collect hardware/firmware dumps in second kernel
-before hardware/firmware is initialized.  The dumps for each device
-will be available under /proc/crashdd/cxgb4/ directory in second
-kernel.
-
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
----
-v2:
-- Updated dump registration to the new API in patch 1.
-
- drivers/net/ethernet/chelsio/cxgb4/cxgb4.h       |  4 ++++
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c | 25 ++++++++++++++++++++++++
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h |  3 +++
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c  | 12 ++++++++++++
- 4 files changed, 44 insertions(+)
-
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
-index b2df0ffb7c94..00201e98ad19 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
-@@ -50,6 +50,7 @@
- #include <linux/net_tstamp.h>
- #include <linux/ptp_clock_kernel.h>
- #include <linux/ptp_classify.h>
-+#include <linux/crashdd.h>
- #include <asm/io.h>
- #include "t4_chip_type.h"
- #include "cxgb4_uld.h"
-@@ -959,6 +960,9 @@ struct adapter {
- 
- 	/* HMA */
- 	struct hma_data hma;
-+
-+	/* Dump buffer for collecting logs in kdump kernel */
-+	struct crashdd_data crashdd_buf;
- };
- 
- /* Support for "sched-class" command to allow a TX Scheduling Class to be
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c
-index 143686c60234..ce9f544781af 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c
-@@ -488,3 +488,28 @@ void cxgb4_init_ethtool_dump(struct adapter *adapter)
- 	adapter->eth_dump.version = adapter->params.fw_vers;
- 	adapter->eth_dump.len = 0;
- }
-+
-+static int cxgb4_cudbg_crashdd_collect(struct crashdd_data *data, void *buf)
-+{
-+	struct adapter *adap = container_of(data, struct adapter, crashdd_buf);
-+	u32 len = data->size;
-+
-+	return cxgb4_cudbg_collect(adap, buf, &len, CXGB4_ETH_DUMP_ALL);
-+}
-+
-+int cxgb4_cudbg_crashdd_add_dump(struct adapter *adap)
-+{
-+	struct crashdd_data *data = &adap->crashdd_buf;
-+	u32 len;
-+
-+	len = sizeof(struct cudbg_hdr) +
-+	      sizeof(struct cudbg_entity_hdr) * CUDBG_MAX_ENTITY;
-+	len += CUDBG_DUMP_BUFF_SIZE;
-+
-+	data->size = len;
-+	snprintf(data->name, sizeof(data->name), "%s_%s", cxgb4_driver_name,
-+		 adap->name);
-+	data->crashdd_callback = cxgb4_cudbg_crashdd_collect;
-+
-+	return crashdd_add_dump(cxgb4_driver_name, data);
-+}
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h
-index ce1ac9a1c878..095c6f04357e 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h
-@@ -41,8 +41,11 @@ enum CXGB4_ETHTOOL_DUMP_FLAGS {
- 	CXGB4_ETH_DUMP_HW = (1 << 1), /* various FW and HW dumps */
- };
- 
-+#define CXGB4_ETH_DUMP_ALL (CXGB4_ETH_DUMP_MEM | CXGB4_ETH_DUMP_HW)
-+
- u32 cxgb4_get_dump_length(struct adapter *adap, u32 flag);
- int cxgb4_cudbg_collect(struct adapter *adap, void *buf, u32 *buf_size,
- 			u32 flag);
- void cxgb4_init_ethtool_dump(struct adapter *adapter);
-+int cxgb4_cudbg_crashdd_add_dump(struct adapter *adap);
- #endif /* __CXGB4_CUDBG_H__ */
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-index 5a349e1576cb..6a380bee85b8 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-@@ -5484,6 +5484,18 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (err)
- 		goto out_free_adapter;
- 
-+	if (is_kdump_kernel()) {
-+		/* Collect hardware state and append to /proc/crashdd/cxgb4/
-+		 * directory
-+		 */
-+		err = cxgb4_cudbg_crashdd_add_dump(adapter);
-+		if (err) {
-+			dev_warn(adapter->pdev_dev,
-+				 "Fail collecting crash driver dump, err: %d. Continuing\n",
-+				 err);
-+			err = 0;
-+		}
-+	}
- 
- 	if (!is_t4(adapter->params.chip)) {
- 		s_qpp = (QUEUESPERPAGEPF0_S +
--- 
-2.14.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBNYXIgMTUsIDIwMTggYXQgMTI6MTM6MThQTSArMDEwMCwgTWljaGFsIFN1Y2jDoW5l
+ayB3cm90ZToKPiBPbiBUaHUsIDE1IE1hciAyMDE4IDExOjM4OjMwICswMTAwCj4gU2ltb24gSG9y
+bWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+IHdyb3RlOgo+IAo+ID4gT24gVHVlLCBNYXIgMDYsIDIw
+MTggYXQgMDI6MTU6NTNQTSArMDEwMCwgTWljaGFsIFN1Y2hhbmVrIHdyb3RlOgo+ID4gPiBJdCBp
+cyBwYXJzZWQgc2VwYXJhdGVseSB0byBzYXZlIGEgZmV3IENQVSBjeWNsZXMgd2hlbiBzZXR0aW5n
+IHVwCj4gPiA+IG90aGVyIG9wdGlvbnMgYnV0IGl0IGp1c3QgY29tcGxpY2F0ZXMgdGhlIGNvZGUu
+IFNvIGZvbGQgaXQgYmFjayBhbmQKPiA+ID4gc2V0IHVwIGFsbCBmbGFncyBib3RoIGZvciBLRVhF
+Q19MT0FEIGFuZCBLRVhFQ19GSUxFX0xPQUQKPiA+ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6IE1p
+Y2hhbCBTdWNoYW5layA8bXN1Y2hhbmVrQHN1c2UuZGU+Cj4gPiA+IC0tLQo+ID4gPiAga2V4ZWMv
+a2V4ZWMuYyB8IDI1ICsrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+ID4gIDEgZmlsZSBjaGFu
+Z2VkLCA0IGluc2VydGlvbnMoKyksIDIxIGRlbGV0aW9ucygtKQo+ID4gPiAKPiA+ID4gZGlmZiAt
+LWdpdCBhL2tleGVjL2tleGVjLmMgYi9rZXhlYy9rZXhlYy5jCj4gPiA+IGluZGV4IGFiOGNmZjdm
+ZTA4My4uOWVhMTAyZTE1NjVhIDEwMDY0NAo+ID4gPiAtLS0gYS9rZXhlYy9rZXhlYy5jCj4gPiA+
+ICsrKyBiL2tleGVjL2tleGVjLmMKPiA+ID4gQEAgLTEyNTYsMTkgKzEyNTYsNiBAQCBpbnQgbWFp
+bihpbnQgYXJnYywgY2hhciAqYXJndltdKQo+ID4gPiAgCX07Cj4gPiA+ICAJc3RhdGljIGNvbnN0
+IGNoYXIgc2hvcnRfb3B0aW9uc1tdID0gS0VYRUNfQUxMX09QVF9TVFI7Cj4gPiA+ICAKPiA+ID4g
+LQkvKgo+ID4gPiAtCSAqIEZpcnN0IGNoZWNrIGlmIC0tdXNlLWtleGVjLWZpbGUtc3lzY2FsbCBp
+cyBzZXQuIFRoYXQKPiA+ID4gY2hhbmdlcyBsb3Qgb2YKPiA+ID4gLQkgKiB0aGluZ3MKPiA+ID4g
+LQkgKi8KPiA+ID4gLQl3aGlsZSAoKG9wdCA9IGdldG9wdF9sb25nKGFyZ2MsIGFyZ3YsIHNob3J0
+X29wdGlvbnMsCj4gPiA+IC0JCQkJICBvcHRpb25zLCAwKSkgIT0gLTEpIHsKPiA+ID4gLQkJc3dp
+dGNoKG9wdCkgewo+ID4gPiAtCQljYXNlIE9QVF9LRVhFQ19GSUxFX1NZU0NBTEw6Cj4gPiA+IC0J
+CQlkb19rZXhlY19maWxlX3N5c2NhbGwgPSAxOwo+ID4gPiAtCQkJYnJlYWs7Cj4gPiA+IC0JCX0K
+PiA+ID4gLQl9Cj4gPiA+IC0KPiA+ID4gIAkvKiBSZXNldCBnZXRvcHQgZm9yIHRoZSBuZXh0IHBh
+c3MuICovCj4gPiA+ICAJb3B0ZXJyID0gMTsKPiA+ID4gIAlvcHRpbmQgPSAxOwo+ID4gPiBAQCAt
+MTMxMCw4ICsxMjk3LDcgQEAgaW50IG1haW4oaW50IGFyZ2MsIGNoYXIgKmFyZ3ZbXSkKPiA+ID4g
+IAkJCWRvX3NodXRkb3duID0gMDsKPiA+ID4gIAkJCWRvX3N5bmMgPSAwOwo+ID4gPiAgCQkJZG9f
+dW5sb2FkID0gMTsKPiA+ID4gLQkJCWlmIChkb19rZXhlY19maWxlX3N5c2NhbGwpCj4gPiA+IC0J
+CQkJa2V4ZWNfZmlsZV9mbGFncyB8PQo+ID4gPiBLRVhFQ19GSUxFX1VOTE9BRDsKPiA+ID4gKwkJ
+CWtleGVjX2ZpbGVfZmxhZ3MgfD0gS0VYRUNfRklMRV9VTkxPQUQ7Cj4gPiA+ICAJCQlicmVhazsK
+PiA+ID4gIAkJY2FzZSBPUFRfRVhFQzoKPiA+ID4gIAkJCWRvX2xvYWQgPSAwOyAgCj4gPiAgQEAg
+LTEzNTQsMTEgKzEzNDAsOCBAQCBpbnQgbWFpbihpbnQgYXJnYywgY2hhciAqYXJndltdKQo+ID4g
+Cj4gPiAgVGhlIGV4aXN0aW5nIGNvZGUgaGFzIHRoZSBmb2xsb3dpbmcgYWJvdmUgdGhlIGNvbnRl
+eHQgc2hvd24gaW4gdGhlCj4gPiBwYXRjaDoKPiA+IAo+ID4gCQkJZG9fbG9hZCA9IDE7Cj4gPiAK
+PiA+IAo+ID4gPiAgCQkJZG9fZXhlYyA9IDA7Cj4gPiA+ICAJCQlkb19zaHV0ZG93biA9IDA7Cj4g
+PiA+ICAJCQlkb19zeW5jID0gMDsKPiA+ID4gLQkJCWlmIChkb19rZXhlY19maWxlX3N5c2NhbGwp
+Cj4gPiA+IC0JCQkJa2V4ZWNfZmlsZV9mbGFncyB8PQo+ID4gPiBLRVhFQ19GSUxFX09OX0NSQVNI
+Owo+ID4gPiAtCQkJZWxzZQo+ID4gPiAtCQkJCWtleGVjX2ZsYWdzID0gS0VYRUNfT05fQ1JBU0g7
+Cj4gPiA+IC0JCQlicmVhazsKPiA+ID4gKwkJCWtleGVjX2ZpbGVfZmxhZ3MgfD0gS0VYRUNfRklM
+RV9PTl9DUkFTSDsKPiA+ID4gKwkJCWtleGVjX2ZsYWdzID0gS0VYRUNfT05fQ1JBU0g7ICAKPiA+
+IAo+ID4ga2V4ZWNfZmxhZ3MgaXMgbm93IHNldCByZWdhcmRsZXNzIG9mIHRoZSB2YWx1ZSBvZgo+
+ID4gZG9fa2V4ZWNfZmlsZV9zeXNjYWxsLCB3aGljaCB3YXMgbm90IHRoZSBjYXNlIHByaW9yIHRv
+IHRoaXMgcGF0Y2guCj4gPiBUaGF0IHNlZW1zIHRvIGFmZmVjdCB0aGUgZm9sbG93aW5nIHdoaWNo
+IGFwcGVhcnMgbGF0ZXIgaW4gdGhlCj4gPiBmdW5jdGlvbi4gSXMgdGhhdCBvaz8KPiA+IAo+ID4g
+Cj4gPiAgICAgICAgIGlmIChkb19sb2FkICYmIChrZXhlY19mbGFncyAmIEtFWEVDX09OX0NSQVNI
+KSAmJgo+ID4gICAgICAgICAgICAgIWlzX2NyYXNoa2VybmVsX21lbV9yZXNlcnZlZCgpKSB7Cj4g
+PiAgICAgICAgICAgICAgICAgZGllKCJNZW1vcnkgZm9yIGNyYXNoa2VybmVsIGlzIG5vdCByZXNl
+cnZlZFxuIgo+ID4gICAgICAgICAgICAgICAgICAgICAiUGxlYXNlIHJlc2VydmUgbWVtb3J5IGJ5
+IHBhc3NpbmciCj4gPiAgICAgICAgICAgICAgICAgICAgICJcImNyYXNoa2VybmVsPVhAWVwiIHBh
+cmFtZXRlciB0byBrZXJuZWxcbiIKPiA+ICAgICAgICAgICAgICAgICAgICAgIlRoZW4gdHJ5IHRv
+IGxvYWRpbmcga2R1bXAga2VybmVsXG4iKTsKPiA+ICAgICAgICAgfQo+IAo+IERvIHlvdSBub3Qg
+bmVlZCBtZW1vcnkgZm9yIGtleGVjIC1zPyBUaGlzIGxvb2tzIGJyb2tlbiB0byBzdGFydCB3aXRo
+LgoKQ291bGQgeW91IHByb3Bvc2UgYSBmaXg/IEkgcmVhbGlzZSB5b3VyIHBhdGNoc2V0IG1heSBu
+b3QgaW50cm9kdWNlIHRoaXMKcHJvYmxlbS4gQnV0IGl0IHNlZW1zIHRvIG1lIHRoYXQgaXQgbWFr
+ZXMgdGhpbmdzIHNsaWdodGx5IHdvcnNlIG9yIGF0CnRoZSB2ZXJ5IGxlYXN0IHBlcnBldHVhdGVz
+IHRoZSBub3Rpb24gdGhhdCB0aGUgYWJvdmUgaXMgY29ycmVjdC4KCj4gPiAJLi4uCj4gPiAKPiA+
+ICAgICAgICAgaWYgKChyZXN1bHQgPT0gMCkgJiYgZG9fbG9hZF9qdW1wX2JhY2tfaGVscGVyKSB7
+Cj4gCj4gQW5kIHllcywgdGhpcyBzaG91bGQgbm90IGJlIGFsbG93ZWQgd2l0aCAtcwoKSXMgdGhl
+IHNpbXBsZSBmaXggaGVyZSBmb3IgeW91ciBwYXRjaCB0byBhZGQgYW4gZXh0cmEgY29uZGl0aW9u
+CnRvIHRoZSBpZiBzdGF0ZW1lbnQgYWJvdmU/CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
+Cg==
