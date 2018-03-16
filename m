@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ewRJz-0002wM-6G
- for kexec@lists.infradead.org; Thu, 15 Mar 2018 11:45:24 +0000
-Date: Thu, 15 Mar 2018 12:44:27 +0100
-From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-Subject: Re: [PATCH v4 5/5] kexec: document -s, -c and -a options.
-Message-ID: <20180315124427.15ca7836@kitsune.suse.cz>
-In-Reply-To: <20180314075031.GB23942@dhcp-128-65.nay.redhat.com>
-References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
- <6a8aa85dbaa781348890362aa2d8589c91b8b458.1520342150.git.msuchanek@suse.de>
- <20180314034130.GA2039@dhcp-128-65.nay.redhat.com>
- <20180314082519.0fcca316@naga.suse.cz>
- <20180314075031.GB23942@dhcp-128-65.nay.redhat.com>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1ewj3N-0006Lv-LD
+ for kexec@lists.infradead.org; Fri, 16 Mar 2018 06:41:28 +0000
+Date: Fri, 16 Mar 2018 14:41:02 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 00/11] kexec_file: Clean up purgatory load
+Message-ID: <20180316064102.GA26732@dhcp-128-65.nay.redhat.com>
+References: <20180226151620.20970-1-prudo@linux.vnet.ibm.com>
+ <20180309051913.GA9358@dhcp-128-65.nay.redhat.com>
+ <20180309152556.0ccf3cb1@ThinkPad>
+ <20180312074016.GA1854@dhcp-128-65.nay.redhat.com>
+ <20180315073422.GA1876@dhcp-128-65.nay.redhat.com>
+ <20180315111341.6faa90e8@ThinkPad>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180315111341.6faa90e8@ThinkPad>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,60 +24,256 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Petr Tesarik <ptesarik@suse.cz>, horms@verge.net.au, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>
+To: Philipp Rudo <prudo@linux.vnet.ibm.com>
+Cc: linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
 
-T24gV2VkLCAxNCBNYXIgMjAxOCAxNTo1MDozMSArMDgwMApEYXZlIFlvdW5nIDxkeW91bmdAcmVk
-aGF0LmNvbT4gd3JvdGU6Cgo+IE9uIDAzLzE0LzE4IGF0IDA4OjI1YW0sIE1pY2hhbCBTdWNow6Fu
-ZWsgd3JvdGU6Cj4gPiBPbiBXZWQsIDE0IE1hciAyMDE4IDExOjQxOjMwICswODAwCj4gPiBEYXZl
-IFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiAgIAo+ID4gPiBPbiAwMy8wNi8x
-OCBhdCAwMjoxNXBtLCBNaWNoYWwgU3VjaGFuZWsgd3JvdGU6ICAKPiA+ID4gPiBTaWduZWQtb2Zm
-LWJ5OiBNaWNoYWwgU3VjaGFuZWsgPG1zdWNoYW5la0BzdXNlLmRlPgo+ID4gPiA+IC0tLQo+ID4g
-PiA+ICBrZXhlYy9rZXhlYy44IHwgMTUgKysrKysrKysrKysrKysrCj4gPiA+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspCj4gPiA+ID4gCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2tl
-eGVjL2tleGVjLjggYi9rZXhlYy9rZXhlYy44Cj4gPiA+ID4gaW5kZXggZTAxMzFiNGVhODI3Li5i
-MzU0M2RiM2Y0MTMgMTAwNjQ0Cj4gPiA+ID4gLS0tIGEva2V4ZWMva2V4ZWMuOAo+ID4gPiA+ICsr
-KyBiL2tleGVjL2tleGVjLjgKPiA+ID4gPiBAQCAtMTQ0LDYgKzE0NCwyMSBAQCBMb2FkIHRoZSBu
-ZXcga2VybmVsIGZvciB1c2Ugb24gcGFuaWMuCj4gPiA+ID4gIFNwZWNpZnkgdGhhdCB0aGUgbmV3
-IGtlcm5lbCBpcyBvZiB0aGlzCj4gPiA+ID4gIC5JIHR5cGUuCj4gPiA+ID4gIC5UUAo+ID4gPiA+
-ICsuQkkgXC1zXCAoXC1cLWtleGVjLWZpbGUtc3lzY2FsbCkKPiA+ID4gPiArU3BlY2lmeSB0aGF0
-IHRoZSBuZXcgS0VYRUNfRklMRV9MT0FEIHN5c2NhbGwgc2hvdWxkIGJlIHVzZWQKPiA+ID4gPiBl
-eGNsdXNpdmVseS4gICAgCj4gPiA+IAo+ID4gPiBNYXliZSBiZXR0ZXIgdG8gYmUgc2ltcGxlIGxp
-a2UgYmVsb3c6Cj4gPiA+ICJVc2Uga2V4ZWNfZmlsZV9sb2FkIHN5c2NhbGwgdG8gbG9hZCB0aGUg
-bmV3IGtlcm5lbC4iCj4gPiA+IAo+ID4gPiAgIAo+ID4gPiA+ICsuVFAKPiA+ID4gPiArLkJJIFwt
-Y1wgKFwtXC1rZXhlYy1zeXNjYWxsKQo+ID4gPiA+ICtTcGVjaWZ5IHRoYXQgdGhlIG9sZCBLRVhF
-Q19MT0FEIHN5c2NhbGwgc2hvdWxkIGJlIHVzZWQKPiA+ID4gPiBleGNsdXNpdmVseSAodGhlIGRl
-ZmF1bHQpLiAgICAKPiA+ID4gCj4gPiA+IHNpbWlsYXJseToKPiA+ID4gIlVzZSBrZXhlY19sb2Fk
-IHN5c2NhbGwgdG8gbG9hZCB0aGUgbmV3IGtlcm5lbC4iCj4gPiA+ICAgCj4gPiA+ID4gKy5UUAo+
-ID4gPiA+ICsuQkkgXC1hXCAoXC1cLWtleGVjLXN5c2NhbGwtYXV0bykKPiA+ID4gPiArVHJ5IHRo
-ZSBuZXcgc2ltcGxlciBLRVhFQ19GSUxFX0xPQUQgc3lzY2FsbCBmaXJzdCBhbmQgaWYgaXQgaXMK
-PiA+ID4gPiBub3Qgc3VwcG9ydGVkICtmYWxsIGJhY2sgdG8gdGhlIG9sZCBLRVhFQ19MT0FEIGlu
-dGVyZmFjZS4KPiA+ID4gPiArCj4gPiA+ID4gK1RoZXJlIGlzIG5vIG9uZSBzaW5nbGUgaW50ZXJm
-YWNlIHRoYXQgYWx3YXlzIHdvcmtzLgo+ID4gPiA+IEtFWEVDX0ZJTEVfTE9BRCBpcyByZXF1aXJl
-ZCArb24gc3lzdGVtcyB0aGF0IHVzZSBsb2NrZWQtZG93bgo+ID4gPiA+IHNlY3VyZSBib290IHRv
-IHZlcmlmeSB0aGUga2VybmVsIHNpZ25hdHVyZS4gK0tFWEVDX0xPQUQgaXMKPiA+ID4gPiByZXF1
-aXJlZCBmb3Igc29tZSBrZXJuZWwgaW1hZ2UgZm9ybWF0cyBhbmQgb24gYXJjaGl0ZWN0dXJlcwo+
-ID4gPiA+IHRoYXQgK2RvIG5vdCBzdXBwb3J0IEtFWEVDX0ZJTEVfTE9BRC4gICAgCj4gPiA+IAo+
-ID4gPiBJdCBzZWVtcyBub3QgZ29vZCB0byBzYXkga2V4ZWNfZmlsZV9sb2FkIGlzIHNpbXBsZXIg
-YW5kIG5ld2VyLgo+ID4gPiBBbHNvIGl0IGlzIG5vdCBhIG11c3QgZm9yIFNlY3VyZSBCb290IGFu
-ZCBsb2NrZWQgZG93biBrZXJuZWwKPiA+ID4gb25seS4gU28gaXQgd291bGQgYmUgYmV0dGVyIHRv
-IGp1c3Qgc2ltcGxpZnkgYW5kIHVzZSB0aGUgZmlyc3QKPiA+ID4gcGFyYWdyYXBoOgo+ID4gPiAK
-PiA+ID4gIlRyeSBrZXhlY19maWxlX2xvYWQgc3lzY2FsbCBmaXJzdCBhbmQgaWYgaXQgaXMgbm90
-IHN1cHBvcnRlZCBmYWxsCj4gPiA+IGJhY2sgdG8gdGhlIGtleGVjX2xvYWQgc3lzY2FsbCIgIAo+
-ID4gCj4gPiBUaGVyZSB3YXMgYSByZXF1ZXN0IGZvciBleHBsYW5hdGlvbiBzbyBqdXN0IHRoZSBm
-aXJzdCBwYXJhZ3JhcGggd2lsbAo+ID4gbm90IGRvLiBXaGF0IGlzIGl0IHJlcXVpcmVkIGZvciBv
-dGhlciB0aGFuIHNlY3VyZSBib290PyAgCj4gCj4gUGVvcGxlIGNhbiB1c2Uga2V4ZWMgLXMgdG8g
-bG9hZCBhIHNpZ25lZCBrZXJuZWwgYnV0IG5vdCBuZWNlc3NhcnkgdG8KPiBib290IHdpdGggU2Vj
-dXJlIEJvb3QgZW5hYmxlZC4KCklzIGJvb3Rpbmcgc2lnbmVkIGtlcm5lbCB3aXRob3V0IC1zIG5v
-dCBzdXBwb3J0ZWQ/IElmIHNvIEkgd291bGQKY29uc2lkZXIgaXQga2V4ZWMtdG9vbHMgYnVnLiBB
-bmQgaXQgc2hvdWxkIGRvY3VtZW50ZWQgdGhlbiBhcyB3ZWxsIEkKZ3Vlc3MuCgo+IAo+IFRoZXJl
-IGlzIG5vIFNlY3VyZSBCb290IGluIHBvd2VycGMsIGFybTY0IG5vdy4KCklzIHRoZXJlIG5vdCB5
-ZXQ/IEFueXdheSwgdGhlIGludGVudCBpcyB0byBzdXBwb3J0IGl0IHdoaWNoIGlzIHByb2JhYmx5
-CnRoZSByZWFzb24gd2UgaGF2ZSB0aGUgc3lzY2FsbCBpbiB0aGUgZmlyc3QgcGxhY2UuCgpUaGFu
-a3MKCk1pY2hhbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On 03/15/18 at 11:13am, Philipp Rudo wrote:
+> Hi Dave,
+> 
+> On Thu, 15 Mar 2018 15:34:22 +0800
+> Dave Young <dyoung@redhat.com> wrote:
+> 
+> > On 03/12/18 at 03:40pm, Dave Young wrote:
+> > > Hi Philipp,
+> > > On 03/09/18 at 03:25pm, Philipp Rudo wrote:  
+> > > > Hi Dave,
+> > > > 
+> > > > On Fri, 9 Mar 2018 13:19:40 +0800
+> > > > Dave Young <dyoung@redhat.com> wrote:
+> > > >   
+> > > > > Hi Philipp,
+> > > > > On 02/26/18 at 04:16pm, Philipp Rudo wrote:  
+> > > > > > 
+> > > > > > Hi everybody
+> > > > > > 
+> > > > > > following the discussion with Dave and AKASHI, here are the common code
+> > > > > > patches extracted from my recent patch set (Add kexec_file_load support to
+> > > > > > s390) [1]. The patches were extracted to allow upstream integration together
+> > > > > > with AKASHI's common code patches before the arch code gets adjusted to the
+> > > > > > new base.
+> > > > > > 
+> > > > > > The reason for this series is to prepare common code for adding
+> > > > > > kexec_file_load to s390 as well as cleaning up the mis-use of the sh_offset
+> > > > > > field during purgatory load. In detail this series contains:
+> > > > > > 
+> > > > > > Patch #1&2: Minor cleanups/fixes.
+> > > > > > 
+> > > > > > Patch #3-9: Clean up the purgatory load/relocation code. Especially remove
+> > > > > > the mis-use of the purgatory_info->sechdrs->sh_offset field, currently
+> > > > > > holding a pointer into either kexec_purgatory (ro) or purgatory_buf (rw)
+> > > > > > depending on the section. With these patches the section address will be
+> > > > > > calculated verbosely and sh_offset will contain the offset of the section
+> > > > > > in the stripped purgatory binary (purgatory_buf).
+> > > > > > 
+> > > > > > Patch #10: Allows architectures to set the purgatory load address. This
+> > > > > > patch is important for s390 as the kernel and purgatory have to be loaded
+> > > > > > to fixed addresses. In current code this is impossible as the purgatory
+> > > > > > load is opaque to the architecture.
+> > > > > > 
+> > > > > > Patch #11: Moves x86 purgatories sha implementation to common lib/
+> > > > > > directory to allow reuse in other architectures.
+> > > > > > 
+> > > > > > The patches apply to v4.16-rc3. There are no changes compared to [1] (all
+> > > > > > requested changes only affected s390 code). Please note that I had to touch
+> > > > > > arch code for x86 and power a little. In theory this should not change the
+> > > > > > behavior but I don't have a way to test it. Cross-compiling with
+> > > > > > defconfig [2] works fine for both.
+> > > > > > 
+> > > > > > Thanks
+> > > > > > Philipp
+> > > > > > 
+> > > > > > [1] http://lists.infradead.org/pipermail/kexec/2018-February/019926.html
+> > > > > > [2] On x86 with the orc unwinder and stack validation turned off. objtool
+> > > > > >     SEGFAULTs on s390...
+> > > > > > 
+> > > > > > Philipp Rudo (11):
+> > > > > >   kexec_file: Silence compile warnings
+> > > > > >   kexec_file: Remove checks in kexec_purgatory_load
+> > > > > >   kexec_file: Make purgatory_info->ehdr const
+> > > > > >   kexec_file: Search symbols in read-only kexec_purgatory
+> > > > > >   kexec_file: Use read-only sections in arch_kexec_apply_relocations*
+> > > > > >   kexec_file: Split up __kexec_load_puragory
+> > > > > >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 1
+> > > > > >   kexec_file: Simplify kexec_purgatory_setup_sechdrs 2
+> > > > > >   kexec_file: Remove mis-use of sh_offset field
+> > > > > >   kexec_file: Allow archs to set purgatory load address
+> > > > > >   kexec_file: Move purgatories sha256 to common code
+> > > > > > 
+> > > > > >  arch/powerpc/kernel/kexec_elf_64.c             |   9 +-
+> > > > > >  arch/x86/kernel/kexec-bzimage64.c              |   8 +-
+> > > > > >  arch/x86/kernel/machine_kexec_64.c             |  66 ++---
+> > > > > >  arch/x86/purgatory/Makefile                    |   3 +
+> > > > > >  arch/x86/purgatory/purgatory.c                 |   2 +-
+> > > > > >  include/linux/kexec.h                          |  38 +--
+> > > > > >  {arch/x86/purgatory => include/linux}/sha256.h |  10 +-
+> > > > > >  kernel/kexec_file.c                            | 375 ++++++++++++-------------
+> > > > > >  {arch/x86/purgatory => lib}/sha256.c           |   4 +-
+> > > > > >  9 files changed, 244 insertions(+), 271 deletions(-)
+> > > > > >  rename {arch/x86/purgatory => include/linux}/sha256.h (63%)
+> > > > > >  rename {arch/x86/purgatory => lib}/sha256.c (99%)
+> > > > > > 
+> > > > > > -- 
+> > > > > > 2.13.5
+> > > > > >     
+> > > > > 
+> > > > > I did a test on x86, but it failed:
+> > > > > [   15.636489] kexec: Undefined symbol: memcpy
+> > > > > [   15.636496] kexec-bzImage64: Loading purgatory failed
+> > > > > [   33.603356] kexec: Undefined symbol: memcpy
+> > > > > [   33.603362] kexec-bzImage64: Loading purgatory failed
+> > > > > 
+> > > > > I think this relates to the sha256 splitting patch.  
+> > > > 
+> > > > I looked into this a little closer and i think i understood what happens. 
+> > > > 
+> > > > There is no definition of memcpy in arch/x86/boot/string.c, instead it's defined
+> > > > in arch/x86/boot/string.h as __buildin_memcpy (same for memset). Thus by
+> > > > switching to linux/string.h there is no more definition for it. Leaving us with
+> > > > 
+> > > > $ readelf -s purgatory.ro
+> > > > [...]
+> > > >  45: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT  UND memcpy
+> > > > [...]
+> > > > 
+> > > > To solve this problem I see two possibilities (example patches are at the end of
+> > > > the mail):
+> > > > 
+> > > > 1) Have arch dependent includes in lib/sha256.c
+> > > > 2) Add makefile magic so memcpy is defined
+> > > > 
+> > > > With both solutions the resulting purgatory.ro looks good. However both
+> > > > solutions aren't perfect. For example in 2) i had too mix the linux/string.h
+> > > > header with arch/x86/boot/string.c, because lib/string.c has too many
+> > > > dependencies and does not compile in the purgatory. On the other hand having
+> > > > arch dependent includes isn't that nice either ...
+> > > > 
+> > > > What's your opinion on this?  
+> > > 
+> > > Looks like it is a mess, maybe the 1st one is better although it is also
+> > > ugly.  Ccing Ingo see if he has some idea about this.   
+> > 
+> > Maybe something like below is better if no other idea:
+> > 
+> > diff --git a/arch/x86/boot/string_builtin.c b/arch/x86/boot/string_builtin.c
+> > new file mode 100644
+> > index 000000000000..9099f949fb41
+> > --- /dev/null
+> > +++ b/arch/x86/boot/string_builtin.c
+> > @@ -0,0 +1,11 @@
+> > +#include <linux/types.h>
+> > +
+> > +void *memcpy(void *dst, const void *src, size_t len)
+> > +{
+> > +	return __builtin_memcpy(dst, src, len);
+> > +}
+> > +
+> > +void *memset(void *dst, int c, size_t len)
+> > +{
+> > +	return __builtin_memset(dst, c, len);
+> > +}
+> > diff --git a/arch/x86/purgatory/string.c b/arch/x86/purgatory/string.c
+> > index d886b1fa36f0..e12c78fcd59f 100644
+> > --- a/arch/x86/purgatory/string.c
+> > +++ b/arch/x86/purgatory/string.c
+> > @@ -11,3 +11,4 @@
+> >   */
+> > 
+> >  #include "../boot/string.c"
+> > +#include "../boot/string_builtin.c"
+> 
+> Looks like a good idea to me. Just to be sure, with this suggestion
+> lib/sha256.c stays unchanged, i.e. it includes linux/string.h?
+
+Yes, I assumed so, one thing is I noticed linux/string.h uses __kernel_size_t, but
+the boot/string.h use _size_t.
+
+> 
+> The only thing I don't really like is adding the extra boot/string.builtin.c
+> file. For my taste adding the two functions directly to purgatory/string.c would
+> be nicer. However in the end it's "not my problem".
+
+string.c is also included in boot/compressed/string.c which defines its
+own version of memcpy.  And in the boot/compressed/string.c version it
+calls warn() which is a special function for decompressor used only.
+I'm not sure how to merge them with one string.c now.
+
+> 
+> Thanks
+> Philipp
+> 
+> > >   
+> > > > 
+> > > > Thanks
+> > > > Philipp
+> > > > 
+> > > > -----
+> > > > Example solution 1
+> > > > 
+> > > > --- a/lib/sha256.c
+> > > > +++ b/lib/sha256.c
+> > > > @@ -17,9 +17,14 @@
+> > > >  
+> > > >  #include <linux/bitops.h>
+> > > >  #include <linux/sha256.h>
+> > > > -#include <linux/string.h>
+> > > >  #include <asm/byteorder.h>
+> > > >  
+> > > > +#ifdef CONFIG_X86
+> > > > +#include "../arch/x86/boot/string.h"
+> > > > +#else
+> > > > +#include <linux/string.h>
+> > > > +#endif /* CONFIG_X86 */
+> > > > +
+> > > >  static inline u32 Ch(u32 x, u32 y, u32 z)
+> > > >  {
+> > > >  	return z ^ (x & (y ^ z));
+> > > > 
+> > > > -----
+> > > > Example solution 2
+> > > > 
+> > > > --- a/arch/x86/purgatory/Makefile
+> > > > +++ b/arch/x86/purgatory/Makefile
+> > > > @@ -1,7 +1,8 @@
+> > > >  # SPDX-License-Identifier: GPL-2.0
+> > > >  OBJECT_FILES_NON_STANDARD := y
+> > > >  
+> > > > -purgatory-y := purgatory.o stack.o setup-x86_$(BITS).o sha256.o entry64.o string.o
+> > > > +purgatory-y := purgatory.o stack.o setup-x86_$(BITS).o sha256.o entry64.o \
+> > > > +	string.o memcpy_$(BITS).o memset_$(BITS).o
+> > > >  
+> > > >  targets += $(purgatory-y)
+> > > >  PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
+> > > > @@ -9,6 +10,15 @@ PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
+> > > >  $(obj)/sha256.o: $(srctree)/lib/sha256.c
+> > > >  	$(call if_changed_rule,cc_o_c)
+> > > >  
+> > > > +$(obj)/string.o: $(srctree)/arch/x86/boot/string.c
+> > > > +	$(call if_changed_rule,cc_o_c)
+> > > > +
+> > > > +$(obj)/memset_$(BITS).o: $(srctree)/arch/x86/lib/memset_$(BITS).S
+> > > > +	$(call if_changed_rule,as_o_S)
+> > > > +
+> > > > +$(obj)/memcpy_$(BITS).o: $(srctree)/arch/x86/lib/memcpy_$(BITS).S
+> > > > +	$(call if_changed_rule,as_o_S)
+> > > > +
+> > > >  LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
+> > > >  targets += purgatory.ro
+> > > >  
+> > > >   
+> > > 
+> > > Thanks
+> > > Dave  
+> > 
+> 
+
+Thanks
+Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
