@@ -1,16 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1exzN6-0005Re-7b
- for kexec@lists.infradead.org; Mon, 19 Mar 2018 18:19:25 +0000
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 022/241] x86/mce: Handle broadcasted MCE gracefully with
- kexec
-Date: Mon, 19 Mar 2018 19:04:47 +0100
-Message-Id: <20180319180752.087801059@linuxfoundation.org>
-In-Reply-To: <20180319180751.172155436@linuxfoundation.org>
-References: <20180319180751.172155436@linuxfoundation.org>
+ id 1exzyQ-0006Ks-M7
+ for kexec@lists.infradead.org; Mon, 19 Mar 2018 18:57:36 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w2JIsL02029302
+ for <kexec@lists.infradead.org>; Mon, 19 Mar 2018 14:57:22 -0400
+Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2gtfew9u3r-1
+ (version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 19 Mar 2018 14:57:21 -0400
+Received: from localhost
+ by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Mon, 19 Mar 2018 12:57:20 -0600
+References: <152010365000.15494.15072043690885225651.stgit@hbathini.in.ibm.com>
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH] kexec/ppc64: leverage kexec_file_load support
+In-reply-to: <152010365000.15494.15072043690885225651.stgit@hbathini.in.ibm.com>
+Date: Mon, 19 Mar 2018 15:57:11 -0300
 MIME-Version: 1.0
+Message-Id: <87y3inhp14.fsf@morokweng.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,109 +36,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Tony Luck <tony.luck@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Xunlei Pang <xlpang@redhat.com>, stable@vger.kernel.org, Sasha Levin <alexander.levin@microsoft.com>, Borislav Petkov <bp@alien8.de>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Borislav Petkov <bp@suse.de>, kexec@lists.infradead.org, linux-edac <linux-edac@vger.kernel.org>
-
-4.9-stable review patch.  If anyone has any objections, please let me know.
-
-------------------
-
-From: Xunlei Pang <xlpang@redhat.com>
+To: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Cc: Geoff Levand <geoff@infradead.org>, Michael Ellerman <mpe@ellerman.id.au>, Simon Horman <horms@verge.net.au>, Kexec-ml <kexec@lists.infradead.org>
 
 
-[ Upstream commit 5bc329503e8191c91c4c40836f062ef771d8ba83 ]
+Hello Hari,
 
-When we are about to kexec a crash kernel and right then and there a
-broadcasted MCE fires while we're still in the first kernel and while
-the other CPUs remain in a holding pattern, the #MC handler of the
-first kernel will timeout and then panic due to never completing MCE
-synchronization.
+Hari Bathini <hbathini@linux.vnet.ibm.com> writes:
 
-Handle this in a similar way as to when the CPUs are offlined when that
-broadcasted MCE happens.
+> PPC64 kernel now supports kexec_file_load system call. Leverage it by
+> enabling that support here. Note that loading crash kernel with this
+> system call is not yet supported in the kernel and trying to load one
+> will fail with '-ENOTSUPP' error.
+>
+> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+> ---
+>  kexec/arch/ppc64/kexec-elf-ppc64.c |   84 ++++++++++++++++++++++++++++++++++++
+>  kexec/kexec-syscall.h              |    3 +
+>  2 files changed, 87 insertions(+)
 
-[ Boris: rewrote commit message and comments. ]
+Thanks for implementing this! Looks good to me, just one nit below.
+Regardless of that:
 
-Suggested-by: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Xunlei Pang <xlpang@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Tony Luck <tony.luck@intel.com>
-Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc: kexec@lists.infradead.org
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Link: http://lkml.kernel.org/r/1487857012-9059-1-git-send-email-xlpang@redhat.com
-Link: http://lkml.kernel.org/r/20170313095019.19351-1-bp@alien8.de
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/include/asm/reboot.h    |    1 +
- arch/x86/kernel/cpu/mcheck/mce.c |   18 ++++++++++++++++--
- arch/x86/kernel/reboot.c         |    5 +++--
- 3 files changed, 20 insertions(+), 4 deletions(-)
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 
---- a/arch/x86/include/asm/reboot.h
-+++ b/arch/x86/include/asm/reboot.h
-@@ -15,6 +15,7 @@ struct machine_ops {
- };
- 
- extern struct machine_ops machine_ops;
-+extern int crashing_cpu;
- 
- void native_machine_crash_shutdown(struct pt_regs *regs);
- void native_machine_shutdown(void);
---- a/arch/x86/kernel/cpu/mcheck/mce.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce.c
-@@ -48,6 +48,7 @@
- #include <asm/tlbflush.h>
- #include <asm/mce.h>
- #include <asm/msr.h>
-+#include <asm/reboot.h>
- 
- #include "mce-internal.h"
- 
-@@ -1081,9 +1082,22 @@ void do_machine_check(struct pt_regs *re
- 	 * on Intel.
- 	 */
- 	int lmce = 1;
-+	int cpu = smp_processor_id();
- 
--	/* If this CPU is offline, just bail out. */
--	if (cpu_is_offline(smp_processor_id())) {
-+	/*
-+	 * Cases where we avoid rendezvous handler timeout:
-+	 * 1) If this CPU is offline.
-+	 *
-+	 * 2) If crashing_cpu was set, e.g. we're entering kdump and we need to
-+	 *  skip those CPUs which remain looping in the 1st kernel - see
-+	 *  crash_nmi_callback().
-+	 *
-+	 * Note: there still is a small window between kexec-ing and the new,
-+	 * kdump kernel establishing a new #MC handler where a broadcasted MCE
-+	 * might not get handled properly.
-+	 */
-+	if (cpu_is_offline(cpu) ||
-+	    (crashing_cpu != -1 && crashing_cpu != cpu)) {
- 		u64 mcgstatus;
- 
- 		mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -769,10 +769,11 @@ void machine_crash_shutdown(struct pt_re
- #endif
- 
- 
-+/* This is the CPU performing the emergency shutdown work. */
-+int crashing_cpu = -1;
-+
- #if defined(CONFIG_SMP)
- 
--/* This keeps a track of which one is crashing cpu. */
--static int crashing_cpu;
- static nmi_shootdown_cb shootdown_callback;
- 
- static atomic_t waiting_for_crash_ipi;
+> diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
+> index ddd3de8..2742cd6 100644
+> --- a/kexec/arch/ppc64/kexec-elf-ppc64.c
+> +++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
 
+<snip>
+
+> @@ -117,6 +196,9 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+>  	uint32_t my_run_at_load;
+>  	unsigned int slave_code[256/sizeof (unsigned int)], master_entry;
+>
+> +	if (info->file_mode)
+> +		return elf_ppc64_load_file(argc, argv, info);
+> +
+>  	/* See options.h -- add any more there, too. */
+>  	static const struct option options[] = {
+>  		KEXEC_ARCH_OPTIONS
+
+This is placing executable code between variable declarations. It may be
+fine for gcc but it's more idiomatic C to put it after all variable
+declarations. But perhaps the kexec-tools style is fine with it?
+
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
 
 _______________________________________________
