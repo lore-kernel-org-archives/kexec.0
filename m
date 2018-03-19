@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x241.google.com ([2607:f8b0:400e:c05::241])
+Received: from mail-by2nam03on0131.outbound.protection.outlook.com
+ ([104.47.42.131] helo=NAM03-BY2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1exwcJ-0005xq-Tk
- for kexec@lists.infradead.org; Mon, 19 Mar 2018 15:22:33 +0000
-Received: by mail-pg0-x241.google.com with SMTP id a15so7021750pgn.5
- for <kexec@lists.infradead.org>; Mon, 19 Mar 2018 08:22:21 -0700 (PDT)
-Date: Mon, 19 Mar 2018 08:22:11 -0700
-From: Stephen Hemminger <stephen@networkplumber.org>
-Subject: Re: [RFC v2 0/2] kernel: add support to collect hardware logs in
- crash recovery kernel
-Message-ID: <20180319082211.6651b45a@xeon-e3>
-In-Reply-To: <20180319075555.GA22955@chelsio.com>
-References: <1521198725-13463-1-git-send-email-rahul.lakkireddy@chelsio.com>
- <20180319075555.GA22955@chelsio.com>
+ id 1exx36-0002Sw-I9
+ for kexec@lists.infradead.org; Mon, 19 Mar 2018 15:50:15 +0000
+From: Sasha Levin <Alexander.Levin@microsoft.com>
+Subject: [PATCH AUTOSEL for 4.15 110/124] x86/gart: Exclude GART aperture from
+ vmcore
+Date: Mon, 19 Mar 2018 15:49:04 +0000
+Message-ID: <20180319154645.11350-110-alexander.levin@microsoft.com>
+References: <20180319154645.11350-1-alexander.levin@microsoft.com>
+In-Reply-To: <20180319154645.11350-1-alexander.levin@microsoft.com>
+Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,111 +25,165 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Cc: Indranil Choudhury <indranil@chelsio.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ebiederm@xmission.com" <ebiederm@xmission.com>, Nirranjan Kirubaharan <nirranjan@chelsio.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>, "davem@davemloft.net" <davem@davemloft.net>, Ganesh GR <ganeshgr@chelsio.com>
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Cc: Jiri Bohac <jbohac@suse.cz>, Baoquan He <bhe@redhat.com>, Toshi Kani <toshi.kani@hpe.com>, David Airlie <airlied@linux.ie>, Dave Young <dyoung@redhat.com>, "joro@8bytes.org" <joro@8bytes.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Borislav Petkov <bp@alien8.de>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, "yinghai@kernel.org" <yinghai@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, 19 Mar 2018 13:25:56 +0530
-Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> wrote:
+From: Jiri Bohac <jbohac@suse.cz>
 
-> On Friday, March 03/16/18, 2018 at 16:42:03 +0530, Rahul Lakkireddy wrote:
-> > On production servers running variety of workloads over time, kernel
-> > panic can happen sporadically after days or even months. It is
-> > important to collect as much debug logs as possible to root cause
-> > and fix the problem, that may not be easy to reproduce. Snapshot of
-> > underlying hardware/firmware state (like register dump, firmware
-> > logs, adapter memory, etc.), at the time of kernel panic will be very
-> > helpful while debugging the culprit device driver.
-> > 
-> > This series of patches add new generic framework that enable device
-> > drivers to collect device specific snapshot of the hardware/firmware
-> > state of the underlying device in the crash recovery kernel. In crash
-> > recovery kernel, the collected logs are exposed via /proc/crashdd/
-> > directory, which is copied by user space scripts for post-analysis.
-> > 
-> > A kernel module crashdd is newly added. In crash recovery kernel,
-> > crashdd exposes /proc/crashdd/ directory containing device specific
-> > hardware/firmware logs.
-> > 
-> > The sequence of actions done by device drivers to append their device
-> > specific hardware/firmware logs to /proc/crashdd/ directory are as
-> > follows:
-> > 
-> > 1. During probe (before hardware is initialized), device drivers
-> > register to the crashdd module (via crashdd_add_dump()), with
-> > callback function, along with buffer size and log name needed for
-> > firmware/hardware log collection.
-> > 
-> > 2. Crashdd creates a driver's directory under /proc/crashdd/<driver>.
-> > Then, it allocates the buffer with requested size and invokes the
-> > device driver's registered callback function.
-> > 
-> > 3. Device driver collects all hardware/firmware logs into the buffer
-> > and returns control back to crashdd.
-> > 
-> > 4. Crashdd exposes the buffer as a file via
-> > /proc/crashdd/<driver>/<dump_file>.
-> > 
-> > 5. User space script (/usr/lib/kdump/kdump-lib-initramfs.sh) copies
-> > the entire /proc/crashdd/ directory to /var/crash/ directory.
-> > 
-> > Patch 1 adds crashdd module to allow drivers to register callback to
-> > collect the device specific hardware/firmware logs.  The module also
-> > exports /proc/crashdd/ directory containing the hardware/firmware logs.
-> > 
-> > Patch 2 shows a cxgb4 driver example using the API to collect
-> > hardware/firmware logs in crash recovery kernel, before hardware is
-> > initialized.  The logs for the devices are made available under
-> > /proc/crashdd/cxgb4/ directory.
-> > 
-> > Suggestions and feedback will be much appreciated.
-> > 
-> > Thanks,
-> > Rahul
-> > 
-> > RFC v1: https://www.spinics.net/lists/netdev/msg486562.html
-> > 
-> > ---
-> > v2:
-> > - Added new crashdd module that exports /proc/crashdd/ containing
-> >   driver's registered hardware/firmware logs in patch 1.
-> > - Replaced the API to allow drivers to register their hardware/firmware
-> >   log collect routine in crash recovery kernel in patch 1.
-> > - Updated patch 2 to use the new API in patch 1.
-> > 
-> > Rahul Lakkireddy (2):
-> >   proc/crashdd: add API to collect hardware dump in second kernel
-> >   cxgb4: collect hardware dump in second kernel
-> > 
-> >  drivers/net/ethernet/chelsio/cxgb4/cxgb4.h       |   4 +
-> >  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c |  25 +++
-> >  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h |   3 +
-> >  drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c  |  12 ++
-> >  fs/proc/Kconfig                                  |  11 +
-> >  fs/proc/Makefile                                 |   1 +
-> >  fs/proc/crashdd.c                                | 263 +++++++++++++++++++++++
-> >  include/linux/crashdd.h                          |  43 ++++
-> >  8 files changed, 362 insertions(+)
-> >  create mode 100644 fs/proc/crashdd.c
-> >  create mode 100644 include/linux/crashdd.h
-> > 
-> > -- 
-> > 2.14.1
-> >   
-> 
-> Does anyone have any comments with this approach?  If there are no
-> comments, then I'll re-spin this RFC to Patch series.
-> 
-> Thanks,
-> Rahul
+[ Upstream commit 2a3e83c6f96c513f43ce5a8c9034608ea584a255 ]
 
-This does look like it gives useful data, but it is not clear that this can
-not already be done with existing API's or small extensions.
+On machines where the GART aperture is mapped over physical RAM
+/proc/vmcore contains the remapped range and reading it may cause hangs or
+reboots.
 
-Introducing a new /proc interface and one that is mostly device specific is
-unlikely to be greeted with a warm reception by the current Linux kernel community.
+In the past, the GART region was added into the resource map, implemented
+by commit 56dd669a138c ("[PATCH] Insert GART region into resource map")
 
-For example, getting firmware logs seems like something more related to
-ethtool or sysfs.
+However, inserting the iomem_resource from the early GART code caused
+resource conflicts with some AGP drivers (bko#72201), which got avoided by
+reverting the patch in commit 707d4eefbdb3 ("Revert [PATCH] Insert GART
+region into resource map"). This revert introduced the /proc/vmcore bug.
+
+The vmcore ELF header is either prepared by the kernel (when using the
+kexec_file_load syscall) or by the kexec userspace (when using the kexec_load
+syscall). Since we no longer have the GART iomem resource, the userspace
+kexec has no way of knowing which region to exclude from the ELF header.
+
+Changes from v1 of this patch:
+Instead of excluding the aperture from the ELF header, this patch
+makes /proc/vmcore return zeroes in the second kernel when attempting to
+read the aperture region. This is done by reusing the
+gart_oldmem_pfn_is_ram infrastructure originally intended to exclude XEN
+balooned memory. This works for both, the kexec_file_load and kexec_load
+syscalls.
+
+[Note that the GART region is the same in the first and second kernels:
+regardless whether the first kernel fixed up the northbridge/bios setting
+and mapped the aperture over physical memory, the second kernel finds the
+northbridge properly configured by the first kernel and the aperture
+never overlaps with e820 memory because the second kernel has a fake e820
+map created from the crashkernel memory regions. Thus, the second kernel
+keeps the aperture address/size as configured by the first kernel.]
+
+register_oldmem_pfn_is_ram can only register one callback and returns an error
+if the callback has been registered already. Since XEN used to be the only user
+of this function, it never checks the return value. Now that we have more than
+one user, I added a WARN_ON just in case agp, XEN, or any other future user of
+register_oldmem_pfn_is_ram were to step on each other's toes.
+
+Fixes: 707d4eefbdb3 ("Revert [PATCH] Insert GART region into resource map")
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Toshi Kani <toshi.kani@hpe.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: yinghai@kernel.org
+Cc: joro@8bytes.org
+Cc: kexec@lists.infradead.org
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Link: https://lkml.kernel.org/r/20180106010013.73suskgxm7lox7g6@dwarf.suse.cz
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+---
+ arch/x86/kernel/aperture_64.c | 46 ++++++++++++++++++++++++++++++++++++++++++-
+ arch/x86/xen/mmu_hvm.c        |  2 +-
+ 2 files changed, 46 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/aperture_64.c b/arch/x86/kernel/aperture_64.c
+index f5d92bc3b884..2c4d5ece7456 100644
+--- a/arch/x86/kernel/aperture_64.c
++++ b/arch/x86/kernel/aperture_64.c
+@@ -30,6 +30,7 @@
+ #include <asm/dma.h>
+ #include <asm/amd_nb.h>
+ #include <asm/x86_init.h>
++#include <linux/crash_dump.h>
+ 
+ /*
+  * Using 512M as goal, in case kexec will load kernel_big
+@@ -56,6 +57,33 @@ int fallback_aper_force __initdata;
+ 
+ int fix_aperture __initdata = 1;
+ 
++#ifdef CONFIG_PROC_VMCORE
++/*
++ * If the first kernel maps the aperture over e820 RAM, the kdump kernel will
++ * use the same range because it will remain configured in the northbridge.
++ * Trying to dump this area via /proc/vmcore may crash the machine, so exclude
++ * it from vmcore.
++ */
++static unsigned long aperture_pfn_start, aperture_page_count;
++
++static int gart_oldmem_pfn_is_ram(unsigned long pfn)
++{
++	return likely((pfn < aperture_pfn_start) ||
++		      (pfn >= aperture_pfn_start + aperture_page_count));
++}
++
++static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
++{
++	aperture_pfn_start = aper_base >> PAGE_SHIFT;
++	aperture_page_count = (32 * 1024 * 1024) << aper_order >> PAGE_SHIFT;
++	WARN_ON(register_oldmem_pfn_is_ram(&gart_oldmem_pfn_is_ram));
++}
++#else
++static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
++{
++}
++#endif
++
+ /* This code runs before the PCI subsystem is initialized, so just
+    access the northbridge directly. */
+ 
+@@ -435,8 +463,16 @@ int __init gart_iommu_hole_init(void)
+ 
+ out:
+ 	if (!fix && !fallback_aper_force) {
+-		if (last_aper_base)
++		if (last_aper_base) {
++			/*
++			 * If this is the kdump kernel, the first kernel
++			 * may have allocated the range over its e820 RAM
++			 * and fixed up the northbridge
++			 */
++			exclude_from_vmcore(last_aper_base, last_aper_order);
++
+ 			return 1;
++		}
+ 		return 0;
+ 	}
+ 
+@@ -473,6 +509,14 @@ int __init gart_iommu_hole_init(void)
+ 		return 0;
+ 	}
+ 
++	/*
++	 * If this is the kdump kernel _and_ the first kernel did not
++	 * configure the aperture in the northbridge, this range may
++	 * overlap with the first kernel's memory. We can't access the
++	 * range through vmcore even though it should be part of the dump.
++	 */
++	exclude_from_vmcore(aper_alloc, aper_order);
++
+ 	/* Fix up the north bridges */
+ 	for (i = 0; i < amd_nb_bus_dev_ranges[i].dev_limit; i++) {
+ 		int bus, dev_base, dev_limit;
+diff --git a/arch/x86/xen/mmu_hvm.c b/arch/x86/xen/mmu_hvm.c
+index 2cfcfe4f6b2a..dd2ad82eee80 100644
+--- a/arch/x86/xen/mmu_hvm.c
++++ b/arch/x86/xen/mmu_hvm.c
+@@ -75,6 +75,6 @@ void __init xen_hvm_init_mmu_ops(void)
+ 	if (is_pagetable_dying_supported())
+ 		pv_mmu_ops.exit_mmap = xen_hvm_exit_mmap;
+ #ifdef CONFIG_PROC_VMCORE
+-	register_oldmem_pfn_is_ram(&xen_oldmem_pfn_is_ram);
++	WARN_ON(register_oldmem_pfn_is_ram(&xen_oldmem_pfn_is_ram));
+ #endif
+ }
+-- 
+2.14.1
 
 _______________________________________________
 kexec mailing list
