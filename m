@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-f68.google.com ([209.85.214.68])
+Received: from mail-io0-f196.google.com ([209.85.223.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1exrzX-0000XR-3M
- for kexec@lists.infradead.org; Mon, 19 Mar 2018 10:26:12 +0000
-Received: by mail-it0-f68.google.com with SMTP id w3-v6so9755011itc.4
- for <kexec@lists.infradead.org>; Mon, 19 Mar 2018 03:26:00 -0700 (PDT)
+ id 1exs91-00057Z-FO
+ for kexec@lists.infradead.org; Mon, 19 Mar 2018 10:36:03 +0000
+Received: by mail-io0-f196.google.com with SMTP id g14so11285684iob.13
+ for <kexec@lists.infradead.org>; Mon, 19 Mar 2018 03:35:49 -0700 (PDT)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH 2/2] kexec-arm64: Add functionality to dump 2nd dtb
-Date: Mon, 19 Mar 2018 15:55:45 +0530
-Message-Id: <1521455145-6813-2-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1521455145-6813-1-git-send-email-bhsharma@redhat.com>
-References: <1521455145-6813-1-git-send-email-bhsharma@redhat.com>
+Subject: [RESEND PATCH 2/2] kexec-arm64: Add functionality to dump 2nd dtb
+Date: Mon, 19 Mar 2018 16:05:39 +0530
+Message-Id: <1521455739-8022-2-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1521455739-8022-1-git-send-email-bhsharma@redhat.com>
+References: <1521455739-8022-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,26 +36,15 @@ This patch adds this feature which is enabled when '-d' flag is
 used with kexec command line invocation.
 
 Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-
-Merge with 2nd patch
-
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
 ---
- kexec/arch/arm64/kexec-arm64.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kexec/arch/arm64/kexec-arm64.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 62f37585b788..c304c3775ada 100644
+index 62f37585b788..1b54718465b9 100644
 --- a/kexec/arch/arm64/kexec-arm64.c
 +++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -471,12 +471,14 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
- 			result = -EINVAL;
- 			goto on_error;
- 		}
--
-+		
- 		fdt_pack(new_buf);
- 		dtb->buf = new_buf;
+@@ -477,9 +477,10 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
  		dtb->size = fdt_totalsize(new_buf);
  	}
  
@@ -63,7 +52,10 @@ index 62f37585b788..c304c3775ada 100644
 +	dump_fdt(dtb->buf);
  	dump_reservemap(dtb);
  
+-
+ 	return result;
  
+ on_error:
 -- 
 2.7.4
 
