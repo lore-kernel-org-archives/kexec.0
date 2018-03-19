@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from stargate.chelsio.com ([12.32.117.8])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ewro4-0003hi-1e
- for kexec@lists.infradead.org; Fri, 16 Mar 2018 16:03:19 +0000
-Date: Fri, 16 Mar 2018 17:01:59 +0100
-From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-Subject: Re: [PATCH v4 5/5] kexec: document -s, -c and -a options.
-Message-ID: <20180316170159.1ee5bfbe@kitsune.suse.cz>
-In-Reply-To: <20180316065114.GB11233@dhcp-128-65.nay.redhat.com>
-References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
- <6a8aa85dbaa781348890362aa2d8589c91b8b458.1520342150.git.msuchanek@suse.de>
- <20180314034130.GA2039@dhcp-128-65.nay.redhat.com>
- <20180314082519.0fcca316@naga.suse.cz>
- <20180314075031.GB23942@dhcp-128-65.nay.redhat.com>
- <20180315124427.15ca7836@kitsune.suse.cz>
- <20180316065114.GB11233@dhcp-128-65.nay.redhat.com>
+ id 1expf0-0007g5-9X
+ for kexec@lists.infradead.org; Mon, 19 Mar 2018 07:56:52 +0000
+Date: Mon, 19 Mar 2018 13:25:56 +0530
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Subject: Re: [RFC v2 0/2] kernel: add support to collect hardware logs in
+ crash recovery kernel
+Message-ID: <20180319075555.GA22955@chelsio.com>
+References: <1521198725-13463-1-git-send-email-rahul.lakkireddy@chelsio.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1521198725-13463-1-git-send-email-rahul.lakkireddy@chelsio.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,74 +20,105 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Petr Tesarik <ptesarik@suse.cz>, horms@verge.net.au, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: Indranil Choudhury <indranil@chelsio.com>, Nirranjan Kirubaharan <nirranjan@chelsio.com>, Ganesh GR <ganeshgr@chelsio.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "ebiederm@xmission.com" <ebiederm@xmission.com>
 
-T24gRnJpLCAxNiBNYXIgMjAxOCAxNDo1MToxNCArMDgwMApEYXZlIFlvdW5nIDxkeW91bmdAcmVk
-aGF0LmNvbT4gd3JvdGU6Cgo+IE9uIDAzLzE1LzE4IGF0IDEyOjQ0cG0sIE1pY2hhbCBTdWNow6Fu
-ZWsgd3JvdGU6Cj4gPiBPbiBXZWQsIDE0IE1hciAyMDE4IDE1OjUwOjMxICswODAwCj4gPiBEYXZl
-IFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiAgIAo+ID4gPiBPbiAwMy8xNC8x
-OCBhdCAwODoyNWFtLCBNaWNoYWwgU3VjaMOhbmVrIHdyb3RlOiAgCj4gPiA+ID4gT24gV2VkLCAx
-NCBNYXIgMjAxOCAxMTo0MTozMCArMDgwMAo+ID4gPiA+IERhdmUgWW91bmcgPGR5b3VuZ0ByZWRo
-YXQuY29tPiB3cm90ZToKPiA+ID4gPiAgICAgCj4gPiA+ID4gPiBPbiAwMy8wNi8xOCBhdCAwMjox
-NXBtLCBNaWNoYWwgU3VjaGFuZWsgd3JvdGU6ICAgIAo+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5
-OiBNaWNoYWwgU3VjaGFuZWsgPG1zdWNoYW5la0BzdXNlLmRlPgo+ID4gPiA+ID4gPiAtLS0KPiA+
-ID4gPiA+ID4gIGtleGVjL2tleGVjLjggfCAxNSArKysrKysrKysrKysrKysKPiA+ID4gPiA+ID4g
-IDEgZmlsZSBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4g
-PiBkaWZmIC0tZ2l0IGEva2V4ZWMva2V4ZWMuOCBiL2tleGVjL2tleGVjLjgKPiA+ID4gPiA+ID4g
-aW5kZXggZTAxMzFiNGVhODI3Li5iMzU0M2RiM2Y0MTMgMTAwNjQ0Cj4gPiA+ID4gPiA+IC0tLSBh
-L2tleGVjL2tleGVjLjgKPiA+ID4gPiA+ID4gKysrIGIva2V4ZWMva2V4ZWMuOAo+ID4gPiA+ID4g
-PiBAQCAtMTQ0LDYgKzE0NCwyMSBAQCBMb2FkIHRoZSBuZXcga2VybmVsIGZvciB1c2Ugb24gcGFu
-aWMuCj4gPiA+ID4gPiA+ICBTcGVjaWZ5IHRoYXQgdGhlIG5ldyBrZXJuZWwgaXMgb2YgdGhpcwo+
-ID4gPiA+ID4gPiAgLkkgdHlwZS4KPiA+ID4gPiA+ID4gIC5UUAo+ID4gPiA+ID4gPiArLkJJIFwt
-c1wgKFwtXC1rZXhlYy1maWxlLXN5c2NhbGwpCj4gPiA+ID4gPiA+ICtTcGVjaWZ5IHRoYXQgdGhl
-IG5ldyBLRVhFQ19GSUxFX0xPQUQgc3lzY2FsbCBzaG91bGQgYmUgdXNlZAo+ID4gPiA+ID4gPiBl
-eGNsdXNpdmVseS4gICAgICAKPiA+ID4gPiA+IAo+ID4gPiA+ID4gTWF5YmUgYmV0dGVyIHRvIGJl
-IHNpbXBsZSBsaWtlIGJlbG93Ogo+ID4gPiA+ID4gIlVzZSBrZXhlY19maWxlX2xvYWQgc3lzY2Fs
-bCB0byBsb2FkIHRoZSBuZXcga2VybmVsLiIKPiA+ID4gPiA+IAo+ID4gPiA+ID4gICAgIAo+ID4g
-PiA+ID4gPiArLlRQCj4gPiA+ID4gPiA+ICsuQkkgXC1jXCAoXC1cLWtleGVjLXN5c2NhbGwpCj4g
-PiA+ID4gPiA+ICtTcGVjaWZ5IHRoYXQgdGhlIG9sZCBLRVhFQ19MT0FEIHN5c2NhbGwgc2hvdWxk
-IGJlIHVzZWQKPiA+ID4gPiA+ID4gZXhjbHVzaXZlbHkgKHRoZSBkZWZhdWx0KS4gICAgICAKPiA+
-ID4gPiA+IAo+ID4gPiA+ID4gc2ltaWxhcmx5Ogo+ID4gPiA+ID4gIlVzZSBrZXhlY19sb2FkIHN5
-c2NhbGwgdG8gbG9hZCB0aGUgbmV3IGtlcm5lbC4iCj4gPiA+ID4gPiAgICAgCj4gPiA+ID4gPiA+
-ICsuVFAKPiA+ID4gPiA+ID4gKy5CSSBcLWFcIChcLVwta2V4ZWMtc3lzY2FsbC1hdXRvKQo+ID4g
-PiA+ID4gPiArVHJ5IHRoZSBuZXcgc2ltcGxlciBLRVhFQ19GSUxFX0xPQUQgc3lzY2FsbCBmaXJz
-dCBhbmQgaWYKPiA+ID4gPiA+ID4gaXQgaXMgbm90IHN1cHBvcnRlZCArZmFsbCBiYWNrIHRvIHRo
-ZSBvbGQgS0VYRUNfTE9BRAo+ID4gPiA+ID4gPiBpbnRlcmZhY2UuICsKPiA+ID4gPiA+ID4gK1Ro
-ZXJlIGlzIG5vIG9uZSBzaW5nbGUgaW50ZXJmYWNlIHRoYXQgYWx3YXlzIHdvcmtzLgo+ID4gPiA+
-ID4gPiBLRVhFQ19GSUxFX0xPQUQgaXMgcmVxdWlyZWQgK29uIHN5c3RlbXMgdGhhdCB1c2UgbG9j
-a2VkLWRvd24KPiA+ID4gPiA+ID4gc2VjdXJlIGJvb3QgdG8gdmVyaWZ5IHRoZSBrZXJuZWwgc2ln
-bmF0dXJlLiArS0VYRUNfTE9BRCBpcwo+ID4gPiA+ID4gPiByZXF1aXJlZCBmb3Igc29tZSBrZXJu
-ZWwgaW1hZ2UgZm9ybWF0cyBhbmQgb24gYXJjaGl0ZWN0dXJlcwo+ID4gPiA+ID4gPiB0aGF0ICtk
-byBub3Qgc3VwcG9ydCBLRVhFQ19GSUxFX0xPQUQuICAgICAgCj4gPiA+ID4gPiAKPiA+ID4gPiA+
-IEl0IHNlZW1zIG5vdCBnb29kIHRvIHNheSBrZXhlY19maWxlX2xvYWQgaXMgc2ltcGxlciBhbmQg
-bmV3ZXIuCj4gPiA+ID4gPiBBbHNvIGl0IGlzIG5vdCBhIG11c3QgZm9yIFNlY3VyZSBCb290IGFu
-ZCBsb2NrZWQgZG93biBrZXJuZWwKPiA+ID4gPiA+IG9ubHkuIFNvIGl0IHdvdWxkIGJlIGJldHRl
-ciB0byBqdXN0IHNpbXBsaWZ5IGFuZCB1c2UgdGhlIGZpcnN0Cj4gPiA+ID4gPiBwYXJhZ3JhcGg6
-Cj4gPiA+ID4gPiAKPiA+ID4gPiA+ICJUcnkga2V4ZWNfZmlsZV9sb2FkIHN5c2NhbGwgZmlyc3Qg
-YW5kIGlmIGl0IGlzIG5vdCBzdXBwb3J0ZWQKPiA+ID4gPiA+IGZhbGwgYmFjayB0byB0aGUga2V4
-ZWNfbG9hZCBzeXNjYWxsIiAgICAKPiA+ID4gPiAKPiA+ID4gPiBUaGVyZSB3YXMgYSByZXF1ZXN0
-IGZvciBleHBsYW5hdGlvbiBzbyBqdXN0IHRoZSBmaXJzdCBwYXJhZ3JhcGgKPiA+ID4gPiB3aWxs
-IG5vdCBkby4gV2hhdCBpcyBpdCByZXF1aXJlZCBmb3Igb3RoZXIgdGhhbiBzZWN1cmUgYm9vdD8g
-ICAgCj4gPiA+IAo+ID4gPiBQZW9wbGUgY2FuIHVzZSBrZXhlYyAtcyB0byBsb2FkIGEgc2lnbmVk
-IGtlcm5lbCBidXQgbm90IG5lY2Vzc2FyeQo+ID4gPiB0byBib290IHdpdGggU2VjdXJlIEJvb3Qg
-ZW5hYmxlZC4gIAo+ID4gCj4gPiBJcyBib290aW5nIHNpZ25lZCBrZXJuZWwgd2l0aG91dCAtcyBu
-b3Qgc3VwcG9ydGVkPyBJZiBzbyBJIHdvdWxkCj4gPiBjb25zaWRlciBpdCBrZXhlYy10b29scyBi
-dWcuIEFuZCBpdCBzaG91bGQgZG9jdW1lbnRlZCB0aGVuIGFzIHdlbGwgSQo+ID4gZ3Vlc3MuICAK
-PiAKPiBJJ20gbm90IHN1cmUgSSB1bmRlcnN0YW5kIHRoZSBxdWVzdGlvbi4gIEluIGtlcm5lbCB3
-ZSBzcGxpdHRlZCBrZXhlYwo+IGFuZCBrZXhlY19maWxlIHRoZXkgY2FuIGJlIGVuYWJsZWQgYXMg
-a2VybmVsIGNvbmZpZyBvcHRpb25zCj4gc2VwYXJhdGVseS4gIElmIG9uZSB3YW50IHRvIGEgc2Vj
-dXJlZCBrZXhlYyAobm90IFVFRkkgU2VjdXJlIEJvb3QsCj4gb25seSBzaWduZWQga2VybmVsIGxv
-YWRpbmcpIHRoZW4gb25lIGNhbiBvbmx5IGVuYWJsZQo+IENPTkZJR19LRVhFQ19GSUxFIGJ1dCBk
-aXNhYmxlIENPTkZJR19LRVhFQy4gIEluIHRoaXMgY2FzZSB3aXRob3V0Cj4gJy1zJyBsb2FkIHdp
-bGwgZmFpbC4gIEJ1dCBpZiBvbmUgZW5hYmxlZCBib3RoIENPTkZJR19LRVhFQ19GSUxFIGFuZAo+
-IENPTkZJR19LRVhFQyB0aGVuIGtleGVjIGxvYWQgd2l0aG91dCAnLXMnIHN0aWxsIHdvcmtzLgoK
-VGhpcyBpcyBjdXJyZW50bHkgbm90IHN1cHBvcnRlZCBieSBrZXhlYy10b29scy4gU3RhdHVzIGRv
-ZXMgbm90IHVzZQpLRVhFQ19GSUxFCgpUaGFua3MKCk1pY2hhbAoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9rZXhlYwo=
+On Friday, March 03/16/18, 2018 at 16:42:03 +0530, Rahul Lakkireddy wrote:
+> On production servers running variety of workloads over time, kernel
+> panic can happen sporadically after days or even months. It is
+> important to collect as much debug logs as possible to root cause
+> and fix the problem, that may not be easy to reproduce. Snapshot of
+> underlying hardware/firmware state (like register dump, firmware
+> logs, adapter memory, etc.), at the time of kernel panic will be very
+> helpful while debugging the culprit device driver.
+> 
+> This series of patches add new generic framework that enable device
+> drivers to collect device specific snapshot of the hardware/firmware
+> state of the underlying device in the crash recovery kernel. In crash
+> recovery kernel, the collected logs are exposed via /proc/crashdd/
+> directory, which is copied by user space scripts for post-analysis.
+> 
+> A kernel module crashdd is newly added. In crash recovery kernel,
+> crashdd exposes /proc/crashdd/ directory containing device specific
+> hardware/firmware logs.
+> 
+> The sequence of actions done by device drivers to append their device
+> specific hardware/firmware logs to /proc/crashdd/ directory are as
+> follows:
+> 
+> 1. During probe (before hardware is initialized), device drivers
+> register to the crashdd module (via crashdd_add_dump()), with
+> callback function, along with buffer size and log name needed for
+> firmware/hardware log collection.
+> 
+> 2. Crashdd creates a driver's directory under /proc/crashdd/<driver>.
+> Then, it allocates the buffer with requested size and invokes the
+> device driver's registered callback function.
+> 
+> 3. Device driver collects all hardware/firmware logs into the buffer
+> and returns control back to crashdd.
+> 
+> 4. Crashdd exposes the buffer as a file via
+> /proc/crashdd/<driver>/<dump_file>.
+> 
+> 5. User space script (/usr/lib/kdump/kdump-lib-initramfs.sh) copies
+> the entire /proc/crashdd/ directory to /var/crash/ directory.
+> 
+> Patch 1 adds crashdd module to allow drivers to register callback to
+> collect the device specific hardware/firmware logs.  The module also
+> exports /proc/crashdd/ directory containing the hardware/firmware logs.
+> 
+> Patch 2 shows a cxgb4 driver example using the API to collect
+> hardware/firmware logs in crash recovery kernel, before hardware is
+> initialized.  The logs for the devices are made available under
+> /proc/crashdd/cxgb4/ directory.
+> 
+> Suggestions and feedback will be much appreciated.
+> 
+> Thanks,
+> Rahul
+> 
+> RFC v1: https://www.spinics.net/lists/netdev/msg486562.html
+> 
+> ---
+> v2:
+> - Added new crashdd module that exports /proc/crashdd/ containing
+>   driver's registered hardware/firmware logs in patch 1.
+> - Replaced the API to allow drivers to register their hardware/firmware
+>   log collect routine in crash recovery kernel in patch 1.
+> - Updated patch 2 to use the new API in patch 1.
+> 
+> Rahul Lakkireddy (2):
+>   proc/crashdd: add API to collect hardware dump in second kernel
+>   cxgb4: collect hardware dump in second kernel
+> 
+>  drivers/net/ethernet/chelsio/cxgb4/cxgb4.h       |   4 +
+>  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c |  25 +++
+>  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h |   3 +
+>  drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c  |  12 ++
+>  fs/proc/Kconfig                                  |  11 +
+>  fs/proc/Makefile                                 |   1 +
+>  fs/proc/crashdd.c                                | 263 +++++++++++++++++++++++
+>  include/linux/crashdd.h                          |  43 ++++
+>  8 files changed, 362 insertions(+)
+>  create mode 100644 fs/proc/crashdd.c
+>  create mode 100644 include/linux/crashdd.h
+> 
+> -- 
+> 2.14.1
+> 
+
+Does anyone have any comments with this approach?  If there are no
+comments, then I'll re-spin this RFC to Patch series.
+
+Thanks,
+Rahul
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
