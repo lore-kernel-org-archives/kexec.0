@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-by2nam03on0131.outbound.protection.outlook.com
- ([104.47.42.131] helo=NAM03-BY2-obe.outbound.protection.outlook.com)
+Received: from mail-by2nam01on0138.outbound.protection.outlook.com
+ ([104.47.34.138] helo=NAM01-BY2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1exx36-0002Sw-I9
- for kexec@lists.infradead.org; Mon, 19 Mar 2018 15:50:15 +0000
+ id 1exx9e-0006bv-JB
+ for kexec@lists.infradead.org; Mon, 19 Mar 2018 15:57:00 +0000
 From: Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: [PATCH AUTOSEL for 4.15 110/124] x86/gart: Exclude GART aperture from
+Subject: [PATCH AUTOSEL for 4.14 83/97] x86/gart: Exclude GART aperture from
  vmcore
-Date: Mon, 19 Mar 2018 15:49:04 +0000
-Message-ID: <20180319154645.11350-110-alexander.levin@microsoft.com>
-References: <20180319154645.11350-1-alexander.levin@microsoft.com>
-In-Reply-To: <20180319154645.11350-1-alexander.levin@microsoft.com>
+Date: Mon, 19 Mar 2018 15:56:21 +0000
+Message-ID: <20180319155411.12348-83-alexander.levin@microsoft.com>
+References: <20180319155411.12348-1-alexander.levin@microsoft.com>
+In-Reply-To: <20180319155411.12348-1-alexander.levin@microsoft.com>
 Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
