@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 20 Mar 2018 11:48:28 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v8 01/13] resource: add walk_system_ram_res_rev()
-Message-ID: <20180320034828.GB2514@localhost.localdomain>
-References: <20180222111732.23051-1-takahiro.akashi@linaro.org>
- <20180222111732.23051-2-takahiro.akashi@linaro.org>
- <20180223083619.GA4433@dhcp-128-65.nay.redhat.com>
- <20180320014318.GA2514@localhost.localdomain>
- <20180320031253.bwxat2dr3sns5uj4@dragonfly>
+Received: from smtp2.provo.novell.com ([137.65.250.81])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1eyDbz-0004cg-Ak
+ for kexec@lists.infradead.org; Tue, 20 Mar 2018 09:31:20 +0000
+Date: Tue, 20 Mar 2018 10:30:55 +0100
+From: Petr Tesarik <ptesarik@suse.com>
+Subject: [makedumpfile PATCH v2] Always use bigger SECTION_MAP_MASK
+Message-ID: <20180320103055.647bd9bd@ezekiel.suse.cz>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180320031253.bwxat2dr3sns5uj4@dragonfly>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,176 +20,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Dave Young <dyoung@redhat.com>, herbert@gondor.apana.org.au, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, julien.thierry@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, mpe@ellerman.id.au, bauerman@linux.vnet.ibm.com, akpm@linux-foundation.org, Linus Torvalds <torvalds@linux-foundation.org>, davem@davemloft.net, vgoyal@redhat.com
+To: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
+Cc: kexec mailing list <kexec@lists.infradead.org>
 
-On 03/20/18 at 12:12pm, AKASHI Takahiro wrote:
-> Baoquan,
-> 
-> On Tue, Mar 20, 2018 at 09:43:18AM +0800, Baoquan He wrote:
-> > On 02/23/18 at 04:36pm, Dave Young wrote:
-> > > Hi AKASHI,
-> > > 
-> > > On 02/22/18 at 08:17pm, AKASHI Takahiro wrote:
-> > > > This function, being a variant of walk_system_ram_res() introduced in
-> > > > commit 8c86e70acead ("resource: provide new functions to walk through
-> > > > resources"), walks through a list of all the resources of System RAM
-> > > > in reversed order, i.e., from higher to lower.
-> > > > 
-> > > > It will be used in kexec_file implementation on arm64.
-> > > 
-> > > I remember there was an old discussion about this, it should be added
-> > > in patch log why this is needed.
-> > 
-> > It's used to load kernel/initrd at the top of system RAM, and this is
-> > consistent with user space kexec behaviour.
-> > 
-> > In x86 64, Vivek didn't do like this since there's no reverse iomem
-> > resource iterating function, he just chose a match RAM region bottom up,
-> > then put kernel/initrd top down in the found RAM region. This is
-> > different than kexec_tools utility. I am considering to change resource
-> > sibling as double list, seems AKASHI's way is easier to be accepted by
-> > people. So I will use this one to change x86 64 code.
-> > 
-> > Hi AKASHI,
-> > 
-> > About arm64 kexec_file patches, will you post recently? Or any other
-> > plan?
-> 
-> A short answer is yes, but my new version won't include this specific patch.
-> So please feel free to add it to your own patch set if you want.
-> 
-> The reason that I'm going to remove it is that we will make a modification
-> on /proc/iomem due to a bug fixing and then we will have to have our own 
-> "walking" routine.
+It is not necessary to distinguish between different kernel
+versions. Kernel commit 2d070eab2e82 merely reuses a previously
+unused bit (see clarification in kernel commit def9b71ee651a). The
+bit was always zero even before that commit, so it is safe to mask
+it off even for kernel versions before 4.13, removing some of the
+complexity.
 
-I see. Saw your post about the /proc/iomem issue and discussions.
+More importantly, makedumpfile fails on kernels which backport the
+patch on top of an older version (for example SLES15).
 
-Then I will add this patch in and post a patchset.
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ makedumpfile.c | 5 +----
+ makedumpfile.h | 9 ++++++++-
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
-Thanks
-Baoquan
-
-> 
-> 
-> > Thanks
-> > Baoquan
-> > 
-> > > 
-> > > > 
-> > > > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > > > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > > > ---
-> > > >  include/linux/ioport.h |  3 +++
-> > > >  kernel/resource.c      | 57 ++++++++++++++++++++++++++++++++++++++++++++++++++
-> > > >  2 files changed, 60 insertions(+)
-> > > > 
-> > > > diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> > > > index da0ebaec25f0..f12d95fe038b 100644
-> > > > --- a/include/linux/ioport.h
-> > > > +++ b/include/linux/ioport.h
-> > > > @@ -277,6 +277,9 @@ extern int
-> > > >  walk_system_ram_res(u64 start, u64 end, void *arg,
-> > > >  		    int (*func)(struct resource *, void *));
-> > > >  extern int
-> > > > +walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-> > > > +			int (*func)(struct resource *, void *));
-> > > > +extern int
-> > > >  walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start, u64 end,
-> > > >  		    void *arg, int (*func)(struct resource *, void *));
-> > > >  
-> > > > diff --git a/kernel/resource.c b/kernel/resource.c
-> > > > index e270b5048988..bdaa93407f4c 100644
-> > > > --- a/kernel/resource.c
-> > > > +++ b/kernel/resource.c
-> > > > @@ -23,6 +23,8 @@
-> > > >  #include <linux/pfn.h>
-> > > >  #include <linux/mm.h>
-> > > >  #include <linux/resource_ext.h>
-> > > > +#include <linux/string.h>
-> > > > +#include <linux/vmalloc.h>
-> > > >  #include <asm/io.h>
-> > > >  
-> > > >  
-> > > > @@ -486,6 +488,61 @@ int walk_mem_res(u64 start, u64 end, void *arg,
-> > > >  				     arg, func);
-> > > >  }
-> > > >  
-> > > > +int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-> > > > +				int (*func)(struct resource *, void *))
-> > > > +{
-> > > > +	struct resource res, *rams;
-> > > > +	int rams_size = 16, i;
-> > > > +	int ret = -1;
-> > > > +
-> > > > +	/* create a list */
-> > > > +	rams = vmalloc(sizeof(struct resource) * rams_size);
-> > > > +	if (!rams)
-> > > > +		return ret;
-> > > > +
-> > > > +	res.start = start;
-> > > > +	res.end = end;
-> > > > +	res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-> > > > +	i = 0;
-> > > > +	while ((res.start < res.end) &&
-> > > > +		(!find_next_iomem_res(&res, IORES_DESC_NONE, true))) {
-> > > > +		if (i >= rams_size) {
-> > > > +			/* re-alloc */
-> > > > +			struct resource *rams_new;
-> > > > +			int rams_new_size;
-> > > > +
-> > > > +			rams_new_size = rams_size + 16;
-> > > > +			rams_new = vmalloc(sizeof(struct resource)
-> > > > +							* rams_new_size);
-> > > > +			if (!rams_new)
-> > > > +				goto out;
-> > > > +
-> > > > +			memcpy(rams_new, rams,
-> > > > +					sizeof(struct resource) * rams_size);
-> > > > +			vfree(rams);
-> > > > +			rams = rams_new;
-> > > > +			rams_size = rams_new_size;
-> > > > +		}
-> > > > +
-> > > > +		rams[i].start = res.start;
-> > > > +		rams[i++].end = res.end;
-> > > > +
-> > > > +		res.start = res.end + 1;
-> > > > +		res.end = end;
-> > > > +	}
-> > > > +
-> > > > +	/* go reverse */
-> > > > +	for (i--; i >= 0; i--) {
-> > > > +		ret = (*func)(&rams[i], arg);
-> > > > +		if (ret)
-> > > > +			break;
-> > > > +	}
-> > > > +
-> > > > +out:
-> > > > +	vfree(rams);
-> > > > +	return ret;
-> > > > +}
-> > > > +
-> > > >  #if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
-> > > >  
-> > > >  /*
-> > > > -- 
-> > > > 2.16.2
-> > > > 
-> > > 
-> > > Thanks
-> > > Dave
-> > > 
-> > > _______________________________________________
-> > > kexec mailing list
-> > > kexec@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+diff --git a/makedumpfile.c b/makedumpfile.c
+index ed138d3..b180eb3 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3337,10 +3337,7 @@ section_mem_map_addr(unsigned long addr)
+ 		return NOT_KV_ADDR;
+ 	}
+ 	map = ULONG(mem_section + OFFSET(mem_section.section_mem_map));
+-	if (info->kernel_version < KERNEL_VERSION(4, 13, 0))
+-		map &= SECTION_MAP_MASK_4_12;
+-	else
+-		map &= SECTION_MAP_MASK;
++	map &= SECTION_MAP_MASK;
+ 	free(mem_section);
+ 
+ 	return map;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 01eece2..8491025 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -185,8 +185,15 @@ isAnon(unsigned long mapping)
+ #define SECTION_ROOT_MASK()	(SECTIONS_PER_ROOT() - 1)
+ #define SECTION_NR_TO_ROOT(sec)	((sec) / SECTIONS_PER_ROOT())
+ #define SECTION_IS_ONLINE	(1UL<<2)
++/*
++ * SECTION_MAP_LAST_BIT was 1UL<<2 before Linux 4.13.0.
++ * However, we always use the higher value, because:
++ *  1. at least one distributor backported commit 2d070eab2e82 to kernel
++ *     version 4.12,
++ *  2. it has been verified that (1UL<<2) was never set, so it is
++ *     safe to mask that bit off even in old kernels.
++ */
+ #define SECTION_MAP_LAST_BIT	(1UL<<3)
+-#define SECTION_MAP_MASK_4_12	(~(SECTION_IS_ONLINE-1))
+ #define SECTION_MAP_MASK	(~(SECTION_MAP_LAST_BIT-1))
+ #define NR_SECTION_ROOTS()	divideup(num_section, SECTIONS_PER_ROOT())
+ #define SECTION_NR_TO_PFN(sec)	((sec) << PFN_SECTION_SHIFT())
+-- 
+2.13.6
 
 _______________________________________________
 kexec mailing list
