@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1eyJcq-0006qt-Mh
- for kexec@lists.infradead.org; Tue, 20 Mar 2018 15:56:38 +0000
+ id 1eyJcq-0006qs-Mk
+ for kexec@lists.infradead.org; Tue, 20 Mar 2018 15:56:40 +0000
 From: Michal Suchanek <msuchanek@suse.de>
-Subject: [PATCH v5 2/5] kexec: Fix option checks to take KEXEC_FILE_LOAD into
- account
-Date: Tue, 20 Mar 2018 16:56:17 +0100
-Message-Id: <74aedcfeb3eaea91c8565e1e4993a0dffcf3b176.1521561315.git.msuchanek@suse.de>
-In-Reply-To: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1521561315.git.msuchanek@suse.de>
+Subject: [PATCH v5 1/5] kexec: Return -ENOSYS when kexec does not know how to
+ call KEXEC_FILE_LOAD
+Date: Tue, 20 Mar 2018 16:56:16 +0100
+Message-Id: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1521561315.git.msuchanek@suse.de>
+In-Reply-To: <20180316114714.4tmf4gr3d6boowi5@verge.net.au>
 References: <20180316114714.4tmf4gr3d6boowi5@verge.net.au>
- <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1521561315.git.msuchanek@suse.de>
 In-Reply-To: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
 References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -29,45 +28,28 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Tony Jones <tonyj@suse.com>, Dave Young <dyoung@redhat.com>, Michal Suchanek <msuchanek@suse.de>, Petr Tesarik <ptesarik@suse.cz>, horms@verge.net.au
 
-When kexec_file_load support was added some sanity checks were not updated.
-
-Some options are set only in the kexec_load flags so cannot be supported
-wiht kexec_file_load. On the other hand, reserved memory is needed for
-kdump with both kexec_load and kexec_file_load.
+When the kernel does not know a syscall number it returns -ENOSYS but
+when kexec does not know a syscall number it returns -1. Return -ENOSYS
+from kexec as well.
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- kexec/kexec.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ kexec/kexec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kexec/kexec.c b/kexec/kexec.c
-index ab8cff7fe083..b793f31ea501 100644
+index cfd837c1b6bb..ab8cff7fe083 100644
 --- a/kexec/kexec.c
 +++ b/kexec/kexec.c
-@@ -1415,7 +1415,9 @@ int main(int argc, char *argv[])
- 		do_load_jump_back_helper = 0;
+@@ -1166,7 +1166,7 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
+ 
+ 	if (!is_kexec_file_load_implemented()) {
+ 		fprintf(stderr, "syscall kexec_file_load not available.\n");
+-		return -1;
++		return -ENOSYS;
  	}
  
--	if (do_load && (kexec_flags & KEXEC_ON_CRASH) &&
-+	if (do_load &&
-+	    ((kexec_flags & KEXEC_ON_CRASH) ||
-+	     (kexec_file_flags & KEXEC_FILE_ON_CRASH)) &&
- 	    !is_crashkernel_mem_reserved()) {
- 		die("Memory for crashkernel is not reserved\n"
- 		    "Please reserve memory by passing"
-@@ -1447,6 +1449,12 @@ int main(int argc, char *argv[])
- 			}
- 		}
- 	}
-+	if (do_kexec_file_syscall) {
-+		if (do_load_jump_back_helper)
-+			die("--load-jump-back-helper not supported with kexec_file_load\n");
-+		if (kexec_flags & KEXEC_PRESERVE_CONTEXT)
-+			die("--load-preserve-context not supported with kexec_file_load\n");
-+	}
- 
- 	if (do_reuse_initrd){
- 		check_reuse_initrd();
+ 	if (argc - fileind <= 0) {
 -- 
 2.13.6
 
