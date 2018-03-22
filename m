@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1eymj2-0008GW-Es
- for kexec@lists.infradead.org; Wed, 21 Mar 2018 23:00:57 +0000
-Date: Wed, 21 Mar 2018 16:00:42 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 00/11] kexec_file: Clean up purgatory load
-Message-Id: <20180321160042.0f7d1fe21937f37af96a982a@linux-foundation.org>
-In-Reply-To: <20180321112751.22196-1-prudo@linux.vnet.ibm.com>
-References: <20180321112751.22196-1-prudo@linux.vnet.ibm.com>
-Mime-Version: 1.0
+ id 1eyr2y-0002h1-Mu
+ for kexec@lists.infradead.org; Thu, 22 Mar 2018 03:37:50 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH 0/2] Kexec_file: Load kernel at top of system ram
+Date: Thu, 22 Mar 2018 11:37:20 +0800
+Message-Id: <20180322033722.9279-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,23 +15,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Cc: linux-s390@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: prudo@linux.vnet.ibm.com, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, takahiro.akashi@linaro.org, ebiederm@xmission.com, akpm@linux-foundation.org, dyoung@redhat.com, vgoyal@redhat.com
 
-On Wed, 21 Mar 2018 12:27:40 +0100 Philipp Rudo <prudo@linux.vnet.ibm.com> wrote:
+The current kexec_file ignores kexec_buf.top_down value when call
+arch_kexec_walk_mem() to allocate memory for loading kernel/initrd
+stuffs. This is not supposed to be what kexec_buf.top_down is used
+for.
 
-> here is the updated patch set including Dave's comments.
+In patch 0001, introduce a new function walk_system_ram_res_rev()
+which is a variant of walk_system_ram_res(), walks through resources
+of System RAM from top to down. And patch 0001 is picked from AKASHI's
+patchset which adds arm64 kexec_file support. His next round of post
+won't need walk_system_ram_res_rev any more, so I take it into this
+patchset and use it in patch 0002.
 
-There were some syntactic clashes with the "kexec_file, x86, powerpc:
-refactoring for other architecutres" series.  Please check (in
-linux-next) that I got it all correct and that both patch series are
-functioning correctly.
+In patch 0002, check kexec_buf.top_down in arch_kexec_walk_mem(),
+if its value is 'true', call walk_system_ram_res_rev(). Otherwise
+call walk_system_ram_res().
 
-I expect to send all this into Stephen for -next tomorrow.
+AKASHI Takahiro (1):
+  resource: add walk_system_ram_res_rev()
+
+Baoquan He (1):
+  kexec_file: Load kernel at top of system RAM if required
+
+ include/linux/ioport.h |  3 +++
+ kernel/kexec_file.c    |  2 ++
+ kernel/resource.c      | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 68 insertions(+)
+
+-- 
+2.13.6
+
 
 _______________________________________________
 kexec mailing list
