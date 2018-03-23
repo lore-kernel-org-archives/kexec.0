@@ -1,29 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ezJCd-00059y-2h
- for kexec@lists.infradead.org; Fri, 23 Mar 2018 09:41:40 +0000
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w2N9d88J024870
- for <kexec@lists.infradead.org>; Fri, 23 Mar 2018 05:41:24 -0400
-Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2gvv966q1y-1
- (version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 23 Mar 2018 05:41:24 -0400
-Received: from localhost
- by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <prudo@linux.vnet.ibm.com>;
- Fri, 23 Mar 2018 09:41:22 -0000
-Date: Fri, 23 Mar 2018 10:41:16 +0100
-From: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 00/11] kexec_file: Clean up purgatory load
-In-Reply-To: <20180321160042.0f7d1fe21937f37af96a982a@linux-foundation.org>
-References: <20180321112751.22196-1-prudo@linux.vnet.ibm.com>
- <20180321160042.0f7d1fe21937f37af96a982a@linux-foundation.org>
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1ezL4z-00043Q-Ct
+ for kexec@lists.infradead.org; Fri, 23 Mar 2018 11:41:55 +0000
+From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
+Subject: RE: [PATCH makedumpfile] Fix array index out of bound exception
+Date: Fri, 23 Mar 2018 11:40:42 +0000
+Message-ID: <61D4E5D821F1674CB87C99F080A210BE0118824C@BPXM01GP.gisp.nec.co.jp>
+References: <20180306100711.16786-1-lijiang@redhat.com>
+ <88a4037f-e944-5031-7cb7-f08a3d350e93@redhat.com>
+ <61D4E5D821F1674CB87C99F080A210BE011810CC@BPXM01GP.gisp.nec.co.jp>
+In-Reply-To: <61D4E5D821F1674CB87C99F080A210BE011810CC@BPXM01GP.gisp.nec.co.jp>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Message-Id: <20180323104116.0a3f00f4@ThinkPad>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,33 +25,126 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>
-Cc: linux-s390@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: lijiang <lijiang@redhat.com>
+Cc: Masahiko Hayashi <mas-hayashi@tg.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, piliu <piliu@redhat.com>
 
-Hi Andrew,
-Hi Dave,
+Hi Lianbo,
 
-i checked out linux-next with the patches and it looks good to me. Also made a
-quick test and everything works fine.
+Sorry for the late reply.
+Thank you for the patch.
+I will merge it into V1.6.4.
 
-Thanks very much to both of you
-Philipp
+Thanks
+Tachibana
 
-
-On Wed, 21 Mar 2018 16:00:42 -0700
-Andrew Morton <akpm@linux-foundation.org> wrote:
-
-> On Wed, 21 Mar 2018 12:27:40 +0100 Philipp Rudo <prudo@linux.vnet.ibm.com> wrote:
+> -----Original Message-----
+> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Masaki Tachibana
+> Sent: Wednesday, March 07, 2018 2:07 PM
+> To: lijiang <lijiang@redhat.com>
+> Cc: kexec@lists.infradead.org; Hayashi Masahiko() <mas-hayashi@tg.jp.nec.com>; piliu <piliu@redhat.com>
+> Subject: RE: [PATCH makedumpfile] Fix array index out of bound exception
 > 
-> > here is the updated patch set including Dave's comments.  
+> Hi Lianbo,
 > 
-> There were some syntactic clashes with the "kexec_file, x86, powerpc:
-> refactoring for other architecutres" series.  Please check (in
-> linux-next) that I got it all correct and that both patch series are
-> functioning correctly.
+> Thank you for your patch.
+> I understand the purpose of the patch.
+> I'll reply formally in 10 days or so.
 > 
-> I expect to send all this into Stephen for -next tomorrow.
+> Thanks
+> Tachibana
 > 
+> > -----Original Message-----
+> > From: lijiang [mailto:lijiang@redhat.com]
+> > Sent: Wednesday, March 07, 2018 10:25 AM
+> > To: kexec@lists.infradead.org
+> > Cc: Tachibana Masaki() <mas-tachibana@vf.jp.nec.com>; Hayashi Masahiko() <mas-hayashi@tg.jp.nec.com>;
+> > piliu <piliu@redhat.com>
+> > Subject: Re: [PATCH makedumpfile] Fix array index out of bound exception
+> >
+> > Also cc Masaki/Masahiko/piliu.
+> >
+> > Thanks.
+> >
+> > Lianbo
+> >  20180306 18:07, Lianbo Jiang :
+> > > A data overflow may lead to a reversal, which may turn a positive
+> > > number into a large negative number, in this case, the string's
+> > > length will exceed the array size(for example, eta: -2147483648s),
+> > > here the array size is defined 16 characters. So, it is nessasary
+> > > to consider some exceptions.
+> > >
+> > > Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> > > ---
+> > >  print_info.c | 21 +++++++++++++--------
+> > >  1 file changed, 13 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/print_info.c b/print_info.c
+> > > index e0e6a27..09e215a 100644
+> > > --- a/print_info.c
+> > > +++ b/print_info.c
+> > > @@ -16,6 +16,8 @@
+> > >  #include "print_info.h"
+> > >  #include <time.h>
+> > >  #include <string.h>
+> > > +#include <stdint.h>
+> > > +#include <inttypes.h>
+> > >
+> > >  #define PROGRESS_MAXLEN		"50"
+> > >
+> > > @@ -352,18 +354,21 @@ static void calc_delta(struct timeval *tv_start, struct timeval *delta)
+> > >  }
+> > >
+> > >  /* produce less than 12 bytes on msg */
+> > > -static int eta_to_human_short (int secs, char* msg)
+> > > +static int eta_to_human_short (int64_t secs, char* msg, int maxsize)
+> > >  {
+> > >  	strcpy(msg, "eta: ");
+> > >  	msg += strlen("eta: ");
+> > >  	if (secs < 100)
+> > > -		sprintf(msg, "%ds", secs);
+> > > +		snprintf(msg, maxsize, "%"PRId64"s", secs);
+> > >  	else if (secs < 100 * 60)
+> > > -		sprintf(msg, "%dm%ds", secs / 60, secs % 60);
+> > > +		snprintf(msg, maxsize, "%"PRId64"m""%"PRId64"s",
+> > > +			secs / 60, secs % 60);
+> > >  	else if (secs < 48 * 3600)
+> > > -		sprintf(msg, "%dh%dm", secs / 3600, (secs / 60) % 60);
+> > > +		snprintf(msg, maxsize, "%"PRId64"h""%"PRId64"m",
+> > > +			secs / 3600, (secs / 60) % 60);
+> > >  	else if (secs < 100 * 86400)
+> > > -		sprintf(msg, "%dd%dh", secs / 86400, (secs / 3600) % 24);
+> > > +		snprintf(msg, maxsize, "%"PRId64"d""%"PRId64"h",
+> > > +			secs / 86400, (secs / 3600) % 24);
+> > >  	else
+> > >  		sprintf(msg, ">2day");
+> > >  	return 0;
+> > > @@ -379,8 +384,8 @@ print_progress(const char *msg, unsigned long current, unsigned long end, struct
+> > >  	static unsigned int lapse = 0;
+> > >  	static const char *spinner = "/|\\-";
+> > >  	struct timeval delta;
+> > > -	double eta;
+> > > -	char eta_msg[16] = " ";
+> > > +	int64_t eta;
+> > > +	char eta_msg[32] = " ";
+> > >
+> > >  	if (current < end) {
+> > >  		tm = time(NULL);
+> > > @@ -395,7 +400,7 @@ print_progress(const char *msg, unsigned long current, unsigned long end, struct
+> > >  		calc_delta(start, &delta);
+> > >  		eta = delta.tv_sec + delta.tv_usec / 1e6;
+> > >  		eta = (100 - progress) * eta / progress;
+> > > -		eta_to_human_short(eta, eta_msg);
+> > > +		eta_to_human_short(eta, eta_msg, sizeof(eta_msg));
+> > >  	}
+> > >  	if (flag_ignore_r_char) {
+> > >  		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s\n",
+> > >
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
 
 
 _______________________________________________
