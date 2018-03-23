@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ezB7c-0000p1-9d
- for kexec@lists.infradead.org; Fri, 23 Mar 2018 01:03:58 +0000
-Date: Fri, 23 Mar 2018 09:03:34 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v2 00/11] kexec_file: Clean up purgatory load
-Message-ID: <20180323010334.GA2541@dhcp-128-65.nay.redhat.com>
-References: <20180321112751.22196-1-prudo@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180321112751.22196-1-prudo@linux.vnet.ibm.com>
+ id 1ezC5z-0002ix-MU
+ for kexec@lists.infradead.org; Fri, 23 Mar 2018 02:06:21 +0000
+Date: Thu, 22 Mar 2018 19:06:06 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/2] resource: add walk_system_ram_res_rev()
+Message-Id: <20180322190606.859a0f1c7e2d1b2958daeb9f@linux-foundation.org>
+In-Reply-To: <20180323005845.GA25740@localhost.localdomain>
+References: <20180322033722.9279-1-bhe@redhat.com>
+ <20180322033722.9279-2-bhe@redhat.com>
+ <20180322152929.9b421af2f66cc819ad691207@linux-foundation.org>
+ <20180323005845.GA25740@localhost.localdomain>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,109 +25,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Cc: linux-s390@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: prudo@linux.vnet.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com
 
-On 03/21/18 at 12:27pm, Philipp Rudo wrote:
-> Hi everybody
-> 
-> here is the updated patch set including Dave's comments.
-> 
-> Changes v1 -> v2:
-> 	* Fix missing memcpy and memset definition in x86 purgatory
-> 	introduced by moving the sha256 implementation to common code.
-> 	* Update subject of patches #7-9 to be more precise.
-> 	* Add missing semicolon in patch #7 found by kbuild bot.
-> 	* Fix compile warnings found by kbuild bot by moving all kexec_file
-> 	specific function declarations into a 'ifdef CONFIG_KEXEC_FILE'
-> 	block (patch #5 and #10).
-> 
-> Thanks
-> Philipp
-> 
+On Fri, 23 Mar 2018 08:58:45 +0800 Baoquan He <bhe@redhat.com> wrote:
 
-Philipp, thanks for the V2, it looks good and works for me.
+> > erk, this is pretty nasty.  Isn't there a better way :(
+> 
+> Yes, this is not efficient.
+> 
+> In struct resource{}, ->sibling list is a singly linked list. I ever
+> thought about changing it to doubly linked list, yet not very sure if
+> it will have effect since struct resource is a core data structure.
 
-Can you rebase the series on top of AKASHI's patches which has been
-taken by Andrew?
+Switching to a list_head sounds OK.  The only issue really is memory
+consumption and surely we don't have tens of thousands of struct
+resources floating about(?).  Or if we do have a lot, the machine is
+presumably huge (hope?).
 
-> ---
-> 
-> Hi everybody
-> 
-> following the discussion with Dave and AKASHI, here are the common code
-> patches extracted from my recent patch set (Add kexec_file_load support to
-> s390) [1]. The patches were extracted to allow upstream integration together
-> with AKASHI's common code patches before the arch code gets adjusted to the
-> new base.
-> 
-> The reason for this series is to prepare common code for adding
-> kexec_file_load to s390 as well as cleaning up the mis-use of the sh_offset
-> field during purgatory load. In detail this series contains:
-> 
-> Patch #1&2: Minor cleanups/fixes.
-> 
-> Patch #3-9: Clean up the purgatory load/relocation code. Especially remove
-> the mis-use of the purgatory_info->sechdrs->sh_offset field, currently
-> holding a pointer into either kexec_purgatory (ro) or purgatory_buf (rw)
-> depending on the section. With these patches the section address will be
-> calculated verbosely and sh_offset will contain the offset of the section
-> in the stripped purgatory binary (purgatory_buf).
-> 
-> Patch #10: Allows architectures to set the purgatory load address. This
-> patch is important for s390 as the kernel and purgatory have to be loaded
-> to fixed addresses. In current code this is impossible as the purgatory
-> load is opaque to the architecture.
-> 
-> Patch #11: Moves x86 purgatories sha implementation to common lib/
-> directory to allow reuse in other architectures.
-> 
-> The patches apply to v4.16-rc3. There are no changes compared to [1] (all
-> requested changes only affected s390 code). Please note that I had to touch
-> arch code for x86 and power a little. In theory this should not change the
-> behavior but I don't have a way to test it. Cross-compiling with
-> defconfig [2] works fine for both.
-> 
-> Thanks
-> Philipp
-> 
-> [1] http://lists.infradead.org/pipermail/kexec/2018-February/019926.html
-> [2] On x86 with the orc unwinder and stack validation turned off. objtool
->     SEGFAULTs on s390...
-> 
-> Philipp Rudo (11):
->   kexec_file: Silence compile warnings
->   kexec_file: Remove checks in kexec_purgatory_load
->   kexec_file: Make purgatory_info->ehdr const
->   kexec_file: Search symbols in read-only kexec_purgatory
->   kexec_file: Use read-only sections in arch_kexec_apply_relocations*
->   kexec_file: Split up __kexec_load_puragory
->   kexec_file: Remove unneeded for-loop in kexec_purgatory_setup_sechdrs
->   kexec_file: Remove unneeded variables in kexec_purgatory_setup_sechdrs
->   kexec_file: Remove mis-use of sh_offset field during purgatory load
->   kexec_file: Allow archs to set purgatory load address
->   kexec_file: Move purgatories sha256 to common code
-> 
->  arch/powerpc/kernel/kexec_elf_64.c             |   9 +-
->  arch/x86/kernel/kexec-bzimage64.c              |   8 +-
->  arch/x86/kernel/machine_kexec_64.c             |  66 ++---
->  arch/x86/purgatory/Makefile                    |   3 +
->  arch/x86/purgatory/purgatory.c                 |   2 +-
->  arch/x86/purgatory/string.c                    |  12 +
->  include/linux/kexec.h                          |  49 ++--
->  {arch/x86/purgatory => include/linux}/sha256.h |  11 +-
->  kernel/kexec_file.c                            | 379 ++++++++++++-------------
->  {arch/x86/purgatory => lib}/sha256.c           |   4 +-
->  10 files changed, 267 insertions(+), 276 deletions(-)
->  rename {arch/x86/purgatory => include/linux}/sha256.h (62%)
->  rename {arch/x86/purgatory => lib}/sha256.c (99%)
-> 
-> -- 
-> 2.13.5
-> 
+> AKASHI's method is more acceptable, and currently only kexec has this
+> requirement.
 
-Thanks
-Dave
+What method is that?
 
 _______________________________________________
 kexec mailing list
