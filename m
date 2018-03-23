@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from vps0.lunn.ch ([185.16.172.187])
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ezM5a-0001xs-Ar
- for kexec@lists.infradead.org; Fri, 23 Mar 2018 12:46:35 +0000
-Date: Fri, 23 Mar 2018 13:46:15 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 0/2] kernel: add support to collect hardware
- logs in crash recovery kernel
-Message-ID: <20180323124615.GB5145@lunn.ch>
-References: <cover.1521793455.git.rahul.lakkireddy@chelsio.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <cover.1521793455.git.rahul.lakkireddy@chelsio.com>
+ id 1ezSxN-0003Pe-5w
+ for kexec@lists.infradead.org; Fri, 23 Mar 2018 20:06:34 +0000
+Date: Fri, 23 Mar 2018 13:06:20 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/2] resource: add walk_system_ram_res_rev()
+Message-Id: <20180323130620.7d60fc442463ed5c21898387@linux-foundation.org>
+In-Reply-To: <20180323031013.GB11150@localhost.localdomain>
+References: <20180322033722.9279-1-bhe@redhat.com>
+ <20180322033722.9279-2-bhe@redhat.com>
+ <20180322152929.9b421af2f66cc819ad691207@linux-foundation.org>
+ <20180323005845.GA25740@localhost.localdomain>
+ <20180322190606.859a0f1c7e2d1b2958daeb9f@linux-foundation.org>
+ <20180323031013.GB11150@localhost.localdomain>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,18 +27,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Cc: indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stephen@networkplumber.org, ganeshgr@chelsio.com, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ebiederm@xmission.com
+To: Baoquan He <bhe@redhat.com>
+Cc: prudo@linux.vnet.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com
 
-> 4. Crashdd exposes the buffer as a file via
-> /sys/kernel/crashdd/<driver>/<dump_file>.
+On Fri, 23 Mar 2018 11:10:13 +0800 Baoquan He <bhe@redhat.com> wrote:
 
-Hi Rahul
+> On 03/22/18 at 07:06pm, Andrew Morton wrote:
+> > On Fri, 23 Mar 2018 08:58:45 +0800 Baoquan He <bhe@redhat.com> wrote:
+> > 
+> > > > erk, this is pretty nasty.  Isn't there a better way :(
+> > > 
+> > > Yes, this is not efficient.
+> > > 
+> > > In struct resource{}, ->sibling list is a singly linked list. I ever
+> > > thought about changing it to doubly linked list, yet not very sure if
+> > > it will have effect since struct resource is a core data structure.
+> > 
+> > Switching to a list_head sounds OK.  The only issue really is memory
+> > consumption and surely we don't have tens of thousands of struct
+> > resources floating about(?).  Or if we do have a lot, the machine is
+> > presumably huge (hope?).
+> 
+> Yes. It doubles the memory consumption.
+> 
+> AFAIK, the biggest number of resrouces I heard of possibly is mentioned
+> in this user space kexec_tools commit. In this commit, Xunlei told on
+> SGI system with 64TB RAM, the array which we have been using to store
+> "System RAM"|"Reserved"|"ACPI **" regions is not big enough. In that
+> case, we need extra 8Byte*2048=16KB at most. With my understanding, this
+> increase is system wide, since each resource instance only needs its own
+> list_head member, right?
 
-You should add something to Documentation/ABI/. All sysfs files need
-to be documented.
+Yes.  That sounds perfectly acceptable.
 
-   Andrew
+It would be interesting to see what this approach looks like, if you
+have time to toss something together?
+
 
 _______________________________________________
 kexec mailing list
