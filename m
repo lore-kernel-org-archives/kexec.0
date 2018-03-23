@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-x243.google.com ([2607:f8b0:400d:c09::243])
+Received: from stargate.chelsio.com ([12.32.117.8])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ezFFq-0005rX-G0
- for kexec@lists.infradead.org; Fri, 23 Mar 2018 05:28:44 +0000
-Received: by mail-qk0-x243.google.com with SMTP id o64so11776064qkl.7
- for <kexec@lists.infradead.org>; Thu, 22 Mar 2018 22:28:28 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <1521088912-31742-1-git-send-email-kernelfans@gmail.com>
-References: <1521088912-31742-1-git-send-email-kernelfans@gmail.com>
-From: Pingfan Liu <kernelfans@gmail.com>
-Date: Fri, 23 Mar 2018 13:28:27 +0800
-Message-ID: <CAFgQCTu3NRA1vi6auftHeXBWvPWgZRRURLHB6u7ih0TnkrzXrQ@mail.gmail.com>
-Subject: Re: [PATCHv5 0/3] enable nr_cpus for powerpc
+ id 1ezI7b-00052t-Hx
+ for kexec@lists.infradead.org; Fri, 23 Mar 2018 08:32:26 +0000
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Subject: [PATCH net-next 2/2] cxgb4: collect hardware dump in second kernel
+Date: Fri, 23 Mar 2018 14:01:01 +0530
+Message-Id: <6509497b5f5324ed2c05cabfc4895891a26b5ea6.1521793455.git.rahul.lakkireddy@chelsio.com>
+In-Reply-To: <cover.1521793455.git.rahul.lakkireddy@chelsio.com>
+References: <cover.1521793455.git.rahul.lakkireddy@chelsio.com>
+In-Reply-To: <cover.1521793455.git.rahul.lakkireddy@chelsio.com>
+References: <cover.1521793455.git.rahul.lakkireddy@chelsio.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,45 +19,131 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: cascardo@canonical.com, gpiccoli@linux.vnet.ibm.com, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, paulus@ozlabs.org, Michael Ellerman <mpe@ellerman.id.au>
+To: netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: indranil@chelsio.com, nirranjan@chelsio.com, stephen@networkplumber.org, ganeshgr@chelsio.com, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, ebiederm@xmission.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, viro@zeniv.linux.org.uk
 
-Maintainers, ping? Any comment?
+Register callback to collect hardware/firmware dumps in second kernel
+before hardware/firmware is initialized.  The dumps for each device
+will be available under /sys/kernel/crashdd/cxgb4/ directory in second
+kernel.
 
-Thanks
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
+---
+Changes since rfc v2:
+- Update comments and commit message for sysfs change.
 
-On Thu, Mar 15, 2018 at 12:41 PM, Pingfan Liu <kernelfans@gmail.com> wrote:
-> This topic has a very long history. It comes from Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-> For v3: https://patchwork.ozlabs.org/patch/834860/
-> I hope we can acquire it for "kexec -p" soon.
->
-> V4->V5:
->   improve the [1/3] implementation based on Benjamin's suggestion.
->
-> Mahesh Salgaonkar (1):
->   ppc64 boot: Wait for boot cpu to show up if nr_cpus limit is about to
->     hit.
->
-> Pingfan Liu (2):
->   powerpc, cpu: partially unbind the mapping between cpu logical id and
->        its seq in dt
->   powerpc, cpu: handling the special case when boot_cpuid greater than
->     nr_cpus
->
->  arch/powerpc/include/asm/paca.h    |  3 +++
->  arch/powerpc/include/asm/smp.h     |  2 ++
->  arch/powerpc/kernel/paca.c         | 19 ++++++++++++++-----
->  arch/powerpc/kernel/prom.c         | 27 ++++++++++++++++-----------
->  arch/powerpc/kernel/setup-common.c | 35 ++++++++++++++++++++++++++++++++---
->  5 files changed, 67 insertions(+), 19 deletions(-)
->
-> --
-> 2.7.4
->
+rfc v2:
+- Updated dump registration to the new API in patch 1.
+
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4.h       |  4 ++++
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c | 25 ++++++++++++++++++++++++
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h |  3 +++
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c  | 12 ++++++++++++
+ 4 files changed, 44 insertions(+)
+
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
+index 688f95440af2..79a123bfb628 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
+@@ -50,6 +50,7 @@
+ #include <linux/net_tstamp.h>
+ #include <linux/ptp_clock_kernel.h>
+ #include <linux/ptp_classify.h>
++#include <linux/crashdd.h>
+ #include <asm/io.h>
+ #include "t4_chip_type.h"
+ #include "cxgb4_uld.h"
+@@ -964,6 +965,9 @@ struct adapter {
+ 	struct hma_data hma;
+ 
+ 	struct srq_data *srq;
++
++	/* Dump buffer for collecting logs in kdump kernel */
++	struct crashdd_data crashdd_buf;
+ };
+ 
+ /* Support for "sched-class" command to allow a TX Scheduling Class to be
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c
+index 143686c60234..ce9f544781af 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c
+@@ -488,3 +488,28 @@ void cxgb4_init_ethtool_dump(struct adapter *adapter)
+ 	adapter->eth_dump.version = adapter->params.fw_vers;
+ 	adapter->eth_dump.len = 0;
+ }
++
++static int cxgb4_cudbg_crashdd_collect(struct crashdd_data *data, void *buf)
++{
++	struct adapter *adap = container_of(data, struct adapter, crashdd_buf);
++	u32 len = data->size;
++
++	return cxgb4_cudbg_collect(adap, buf, &len, CXGB4_ETH_DUMP_ALL);
++}
++
++int cxgb4_cudbg_crashdd_add_dump(struct adapter *adap)
++{
++	struct crashdd_data *data = &adap->crashdd_buf;
++	u32 len;
++
++	len = sizeof(struct cudbg_hdr) +
++	      sizeof(struct cudbg_entity_hdr) * CUDBG_MAX_ENTITY;
++	len += CUDBG_DUMP_BUFF_SIZE;
++
++	data->size = len;
++	snprintf(data->name, sizeof(data->name), "%s_%s", cxgb4_driver_name,
++		 adap->name);
++	data->crashdd_callback = cxgb4_cudbg_crashdd_collect;
++
++	return crashdd_add_dump(cxgb4_driver_name, data);
++}
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h
+index ce1ac9a1c878..095c6f04357e 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h
+@@ -41,8 +41,11 @@ enum CXGB4_ETHTOOL_DUMP_FLAGS {
+ 	CXGB4_ETH_DUMP_HW = (1 << 1), /* various FW and HW dumps */
+ };
+ 
++#define CXGB4_ETH_DUMP_ALL (CXGB4_ETH_DUMP_MEM | CXGB4_ETH_DUMP_HW)
++
+ u32 cxgb4_get_dump_length(struct adapter *adap, u32 flag);
+ int cxgb4_cudbg_collect(struct adapter *adap, void *buf, u32 *buf_size,
+ 			u32 flag);
+ void cxgb4_init_ethtool_dump(struct adapter *adapter);
++int cxgb4_cudbg_crashdd_add_dump(struct adapter *adap);
+ #endif /* __CXGB4_CUDBG_H__ */
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+index 99c9b88d6d34..c4e0e4705cda 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -5526,6 +5526,18 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (err)
+ 		goto out_free_adapter;
+ 
++	if (is_kdump_kernel()) {
++		/* Collect hardware state and append to
++		 * /sys/kernel/crashdd/cxgb4/ directory
++		 */
++		err = cxgb4_cudbg_crashdd_add_dump(adapter);
++		if (err) {
++			dev_warn(adapter->pdev_dev,
++				 "Fail collecting crash device dump, err: %d. Continuing\n",
++				 err);
++			err = 0;
++		}
++	}
+ 
+ 	if (!is_t4(adapter->params.chip)) {
+ 		s_qpp = (QUEUESPERPAGEPF0_S +
+-- 
+2.14.1
+
 
 _______________________________________________
 kexec mailing list
