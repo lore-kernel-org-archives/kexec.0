@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from vps0.lunn.ch ([185.16.172.187])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ezjIq-00024A-2c
- for kexec@lists.infradead.org; Sat, 24 Mar 2018 13:33:54 +0000
-Date: Sat, 24 Mar 2018 21:33:30 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 1/2] resource: add walk_system_ram_res_rev()
-Message-ID: <20180324133330.GD25740@localhost.localdomain>
-References: <20180322033722.9279-1-bhe@redhat.com>
- <20180322033722.9279-2-bhe@redhat.com>
- <20180322152929.9b421af2f66cc819ad691207@linux-foundation.org>
- <20180323005845.GA25740@localhost.localdomain>
- <20180322190606.859a0f1c7e2d1b2958daeb9f@linux-foundation.org>
- <20180323031013.GB11150@localhost.localdomain>
- <20180323130620.7d60fc442463ed5c21898387@linux-foundation.org>
+ id 1ezkwo-0001U2-CD
+ for kexec@lists.infradead.org; Sat, 24 Mar 2018 15:19:35 +0000
+Date: Sat, 24 Mar 2018 16:18:52 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next v2 2/2] cxgb4: collect hardware dump in second
+ kernel
+Message-ID: <20180324151852.GE31941@lunn.ch>
+References: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
+ <f06cca21650affa10d83a28dbd7fb577792e35a9.1521888444.git.rahul.lakkireddy@chelsio.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180323130620.7d60fc442463ed5c21898387@linux-foundation.org>
+In-Reply-To: <f06cca21650affa10d83a28dbd7fb577792e35a9.1521888444.git.rahul.lakkireddy@chelsio.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,44 +25,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: prudo@linux.vnet.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com
+To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Cc: indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stephen@networkplumber.org, ganeshgr@chelsio.com, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ebiederm@xmission.com
 
-On 03/23/18 at 01:06pm, Andrew Morton wrote:
-> On Fri, 23 Mar 2018 11:10:13 +0800 Baoquan He <bhe@redhat.com> wrote:
+On Sat, Mar 24, 2018 at 04:26:34PM +0530, Rahul Lakkireddy wrote:
+> Register callback to collect hardware/firmware dumps in second kernel
+> before hardware/firmware is initialized.  The dumps for each device
+> will be available under /sys/kernel/crashdd/cxgb4/ directory in second
+> kernel.
 > 
-> > On 03/22/18 at 07:06pm, Andrew Morton wrote:
-> > > On Fri, 23 Mar 2018 08:58:45 +0800 Baoquan He <bhe@redhat.com> wrote:
-> > > 
-> > > > > erk, this is pretty nasty.  Isn't there a better way :(
-> > > > 
-> > > > Yes, this is not efficient.
-> > > > 
-> > > > In struct resource{}, ->sibling list is a singly linked list. I ever
-> > > > thought about changing it to doubly linked list, yet not very sure if
-> > > > it will have effect since struct resource is a core data structure.
-> > > 
-> > > Switching to a list_head sounds OK.  The only issue really is memory
-> > > consumption and surely we don't have tens of thousands of struct
-> > > resources floating about(?).  Or if we do have a lot, the machine is
-> > > presumably huge (hope?).
-> > 
-> > Yes. It doubles the memory consumption.
-> > 
-> > AFAIK, the biggest number of resrouces I heard of possibly is mentioned
-> > in this user space kexec_tools commit. In this commit, Xunlei told on
-> > SGI system with 64TB RAM, the array which we have been using to store
-> > "System RAM"|"Reserved"|"ACPI **" regions is not big enough. In that
-> > case, we need extra 8Byte*2048=16KB at most. With my understanding, this
-> > increase is system wide, since each resource instance only needs its own
-> > list_head member, right?
-> 
-> Yes.  That sounds perfectly acceptable.
-> 
-> It would be interesting to see what this approach looks like, if you
-> have time to toss something together?
+> Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+> Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
 
-OK, will make patches for reviewing. Thanks!
+Thanks for adding generic documentation about the files in sysfs.
+
+However, you don't add any specific documentation here about the cxgb4
+crash dump. How am i supposed to interpret it? Does it follow any of
+the standard core dump formats? How do i use gdb with it? Are there
+some specific tools i should use to analyse it?
+
+Thanks
+	Andrew
 
 _______________________________________________
 kexec mailing list
