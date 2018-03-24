@@ -1,25 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x242.google.com ([2607:f8b0:400e:c01::242])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ezlnu-000549-Ox
- for kexec@lists.infradead.org; Sat, 24 Mar 2018 16:14:04 +0000
-Received: by mail-pl0-x242.google.com with SMTP id f5-v6so9263197plj.13
- for <kexec@lists.infradead.org>; Sat, 24 Mar 2018 09:13:51 -0700 (PDT)
-Date: Sun, 25 Mar 2018 00:13:43 +0800
-From: Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH 1/2] resource: add walk_system_ram_res_rev()
-Message-ID: <20180324161343.GA58414@WeideMacBook-Pro.local>
-References: <20180322033722.9279-1-bhe@redhat.com>
- <20180322033722.9279-2-bhe@redhat.com>
- <20180322152929.9b421af2f66cc819ad691207@linux-foundation.org>
- <20180323005845.GA25740@localhost.localdomain>
- <20180322190606.859a0f1c7e2d1b2958daeb9f@linux-foundation.org>
- <20180323031013.GB11150@localhost.localdomain>
- <20180323130620.7d60fc442463ed5c21898387@linux-foundation.org>
- <20180324133330.GD25740@localhost.localdomain>
+Received: from trem.minaslivre.org ([148.251.208.85] helo=grilo.cascardo.info)
+ by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1ezrVN-0004hY-3z
+ for kexec@lists.infradead.org; Sat, 24 Mar 2018 22:19:18 +0000
+Date: Sat, 24 Mar 2018 19:18:50 -0300
+From: Thadeu Lima de Souza Cascardo <cascardo@debian.org>
+Subject: Re: [PATCH net-next v2 2/2] cxgb4: collect hardware dump in second
+ kernel
+Message-ID: <20180324221849.GW14312@siri.cascardo.eti.br>
+References: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
+ <f06cca21650affa10d83a28dbd7fb577792e35a9.1521888444.git.rahul.lakkireddy@chelsio.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180324133330.GD25740@localhost.localdomain>
+In-Reply-To: <f06cca21650affa10d83a28dbd7fb577792e35a9.1521888444.git.rahul.lakkireddy@chelsio.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,209 +21,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: prudo@linux.vnet.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, ebiederm@xmission.com, Andrew Morton <akpm@linux-foundation.org>, dyoung@redhat.com, vgoyal@redhat.com
+To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Cc: indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk, davem@davemloft.net, stephen@networkplumber.org, ganeshgr@chelsio.com, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, kexec@lists.infradead.org, ebiederm@xmission.com
 
-On Sat, Mar 24, 2018 at 09:33:30PM +0800, Baoquan He wrote:
->> 
->> Yes.  That sounds perfectly acceptable.
->> 
->> It would be interesting to see what this approach looks like, if you
->> have time to toss something together?
->
->OK, will make patches for reviewing. Thanks!
+On Sat, Mar 24, 2018 at 04:26:34PM +0530, Rahul Lakkireddy wrote:
+> Register callback to collect hardware/firmware dumps in second kernel
+> before hardware/firmware is initialized.  The dumps for each device
+> will be available under /sys/kernel/crashdd/cxgb4/ directory in second
+> kernel.
+> 
+> Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+> Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
+> ---
+> v2:
+> - No Changes.
+> 
+> Changes since rfc v2:
+> - Update comments and commit message for sysfs change.
+> 
+> rfc v2:
+> - Updated dump registration to the new API in patch 1.
+[...]
+> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+> index e880be8e3c45..265cb026f868 100644
+> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+> @@ -5527,6 +5527,18 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  	if (err)
+>  		goto out_free_adapter;
+>  
+> +	if (is_kdump_kernel()) {
+> +		/* Collect hardware state and append to
+> +		 * /sys/kernel/crashdd/cxgb4/ directory
+> +		 */
+> +		err = cxgb4_cudbg_crashdd_add_dump(adapter);
+> +		if (err) {
+> +			dev_warn(adapter->pdev_dev,
+> +				 "Fail collecting crash device dump, err: %d. Continuing\n",
+> +				 err);
+> +			err = 0;
+> +		}
+> +	}
+>  
 
-Hi, Baoquan, Andrew
+The problem I see with this approach is that you require that the driver
+is built into the kdump kernel (or present as a module in the kdump
+initramfs), and that you will probe the device during the collection of
+the dumps.
 
-I have come up with an implementation for top-down search the ram resources.
-Hope this would meet your need.
+IMHO, if you are going to require the device to be probed by the same
+driver during kdump, you might just as well use the device object itself
+to present the crash data. I think that's what Stephen Hemminger meant
+when he said to use sysfs. No need at all for any special crashdd. Just
+add an attribute or attribute group to the device object.
 
-From b36d50487f1d4e4d6a5103965a27101b3121e0ea Mon Sep 17 00:00:00 2001
-From: Wei Yang <richard.weiyang@gmail.com>
-Date: Sat, 24 Mar 2018 23:25:46 +0800
-Subject: [PATCH] kernel/resource: add walk_system_ram_res_rev()
+Otherwise, as Eric Biederman pointed out, you should just add that data
+into the vmcore before you kexec, so you don't even need to look at a
+different file, and the driver does not even need to be present in the
+kdump kernel.
 
-As discussed on https://patchwork.kernel.org/patch/10300819/, this patch
-comes up with a variant implementation of walk_system_ram_res_rev(), which
-uses iteration instead of allocating array to store those resources.
+Cascardo.
 
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
----
- include/linux/ioport.h |   3 ++
- kernel/resource.c      | 113 +++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 116 insertions(+)
-
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index da0ebaec25f0..473f1d9cb97e 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -277,6 +277,9 @@ extern int
- walk_system_ram_res(u64 start, u64 end, void *arg,
- 		    int (*func)(struct resource *, void *));
- extern int
-+walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-+		    int (*func)(struct resource *, void *));
-+extern int
- walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start, u64 end,
- 		    void *arg, int (*func)(struct resource *, void *));
- 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 769109f20fb7..ddf6b4c41498 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -73,6 +73,38 @@ static struct resource *next_resource(struct resource *p, bool sibling_only)
- 	return p->sibling;
- }
- 
-+static struct resource *prev_resource(struct resource *p, bool sibling_only)
-+{
-+	struct resource *prev;
-+	if (NULL == iomem_resource.child)
-+		return NULL;
-+
-+	if (p == NULL) {
-+		prev = iomem_resource.child;
-+		while (prev->sibling)
-+			prev = prev->sibling;
-+	} else {
-+		if (p->parent->child == p) {
-+			return p->parent;
-+		}
-+
-+		for (prev = p->parent->child; prev->sibling != p;
-+			prev = prev->sibling) {}
-+	}
-+
-+	/* Caller wants to traverse through siblings only */
-+	if (sibling_only)
-+		return prev;
-+
-+	for (;prev->child;) {
-+		prev = prev->child;
-+
-+		while (prev->sibling)
-+			prev = prev->sibling;
-+	}
-+	return prev;
-+}
-+
- static void *r_next(struct seq_file *m, void *v, loff_t *pos)
- {
- 	struct resource *p = v;
-@@ -401,6 +433,47 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
- 	return 0;
- }
- 
-+/*
-+ * Finds the highest iomem resource existing within [res->start.res->end).
-+ * The caller must specify res->start, res->end, res->flags, and optionally
-+ * desc.  If found, returns 0, res is overwritten, if not found, returns -1.
-+ * This function walks the whole tree and not just first level children until
-+ * and unless first_level_children_only is true.
-+ */
-+static int find_prev_iomem_res(struct resource *res, unsigned long desc,
-+			       bool first_level_children_only)
-+{
-+	struct resource *p;
-+
-+	BUG_ON(!res);
-+	BUG_ON(res->start >= res->end);
-+
-+	read_lock(&resource_lock);
-+
-+	for (p = prev_resource(NULL, first_level_children_only); p;
-+		p = prev_resource(p, first_level_children_only)) {
-+		if ((p->flags & res->flags) != res->flags)
-+			continue;
-+		if ((desc != IORES_DESC_NONE) && (desc != p->desc))
-+			continue;
-+		if (p->end < res->start) {
-+			p = NULL;
-+			break;
-+		}
-+		if ((p->end >= res->start) && (p->start < res->end))
-+			break;
-+	}
-+
-+	read_unlock(&resource_lock);
-+	if (!p)
-+		return -1;
-+	/* copy data */
-+	resource_clip(res, p->start, p->end);
-+	res->flags = p->flags;
-+	res->desc = p->desc;
-+	return 0;
-+}
-+
- static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
- 				 bool first_level_children_only,
- 				 void *arg,
-@@ -422,6 +495,27 @@ static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
- 	return ret;
- }
- 
-+static int __walk_iomem_res_rev_desc(struct resource *res, unsigned long desc,
-+				 bool first_level_children_only,
-+				 void *arg,
-+				 int (*func)(struct resource *, void *))
-+{
-+	u64 orig_start = res->start;
-+	int ret = -1;
-+
-+	while ((res->start < res->end) &&
-+	       !find_prev_iomem_res(res, desc, first_level_children_only)) {
-+		ret = (*func)(res, arg);
-+		if (ret)
-+			break;
-+
-+		res->end = res->start - 1;
-+		res->start = orig_start;
-+	}
-+
-+	return ret;
-+}
-+
- /*
-  * Walks through iomem resources and calls func() with matching resource
-  * ranges. This walks through whole tree and not just first level children.
-@@ -468,6 +562,25 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
- 				     arg, func);
- }
- 
-+/*
-+ * This function, being a variant of walk_system_ram_res(), calls the @func
-+ * callback against all memory ranges of type System RAM which are marked as
-+ * IORESOURCE_SYSTEM_RAM and IORESOUCE_BUSY in reversed order, i.e., from
-+ * higher to lower.
-+ */
-+int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-+				int (*func)(struct resource *, void *))
-+{
-+	struct resource res;
-+
-+	res.start = start;
-+	res.end = end;
-+	res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-+
-+	return __walk_iomem_res_rev_desc(&res, IORES_DESC_NONE, true,
-+				     arg, func);
-+}
-+
- /*
-  * This function calls the @func callback against all memory ranges, which
-  * are ranges marked as IORESOURCE_MEM and IORESOUCE_BUSY.
--- 
-2.15.1
-
-
--- 
-Wei Yang
-Help you, Help me
+>  	if (!is_t4(adapter->params.chip)) {
+>  		s_qpp = (QUEUESPERPAGEPF0_S +
+> -- 
+> 2.14.1
 
 _______________________________________________
 kexec mailing list
