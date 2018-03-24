@@ -1,17 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from stargate.chelsio.com ([12.32.117.8])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ezgro-0006B9-CJ
- for kexec@lists.infradead.org; Sat, 24 Mar 2018 10:57:49 +0000
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Subject: [PATCH net-next v2 1/2] fs/crashdd: add API to collect hardware dump
- in second kernel
-Date: Sat, 24 Mar 2018 16:26:33 +0530
-Message-Id: <296ffbd47fd4f30238689e636bd2480683224227.1521888444.git.rahul.lakkireddy@chelsio.com>
-In-Reply-To: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
-References: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
-In-Reply-To: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
-References: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
+ id 1ezjIq-00024A-2c
+ for kexec@lists.infradead.org; Sat, 24 Mar 2018 13:33:54 +0000
+Date: Sat, 24 Mar 2018 21:33:30 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 1/2] resource: add walk_system_ram_res_rev()
+Message-ID: <20180324133330.GD25740@localhost.localdomain>
+References: <20180322033722.9279-1-bhe@redhat.com>
+ <20180322033722.9279-2-bhe@redhat.com>
+ <20180322152929.9b421af2f66cc819ad691207@linux-foundation.org>
+ <20180323005845.GA25740@localhost.localdomain>
+ <20180322190606.859a0f1c7e2d1b2958daeb9f@linux-foundation.org>
+ <20180323031013.GB11150@localhost.localdomain>
+ <20180323130620.7d60fc442463ed5c21898387@linux-foundation.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180323130620.7d60fc442463ed5c21898387@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,466 +25,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: indranil@chelsio.com, nirranjan@chelsio.com, stephen@networkplumber.org, ganeshgr@chelsio.com, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, ebiederm@xmission.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, viro@zeniv.linux.org.uk
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: prudo@linux.vnet.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com
 
-Add a new module crashdd that exports the /sys/kernel/crashdd/
-directory in second kernel, containing collected hardware/firmware
-dumps.
+On 03/23/18 at 01:06pm, Andrew Morton wrote:
+> On Fri, 23 Mar 2018 11:10:13 +0800 Baoquan He <bhe@redhat.com> wrote:
+> 
+> > On 03/22/18 at 07:06pm, Andrew Morton wrote:
+> > > On Fri, 23 Mar 2018 08:58:45 +0800 Baoquan He <bhe@redhat.com> wrote:
+> > > 
+> > > > > erk, this is pretty nasty.  Isn't there a better way :(
+> > > > 
+> > > > Yes, this is not efficient.
+> > > > 
+> > > > In struct resource{}, ->sibling list is a singly linked list. I ever
+> > > > thought about changing it to doubly linked list, yet not very sure if
+> > > > it will have effect since struct resource is a core data structure.
+> > > 
+> > > Switching to a list_head sounds OK.  The only issue really is memory
+> > > consumption and surely we don't have tens of thousands of struct
+> > > resources floating about(?).  Or if we do have a lot, the machine is
+> > > presumably huge (hope?).
+> > 
+> > Yes. It doubles the memory consumption.
+> > 
+> > AFAIK, the biggest number of resrouces I heard of possibly is mentioned
+> > in this user space kexec_tools commit. In this commit, Xunlei told on
+> > SGI system with 64TB RAM, the array which we have been using to store
+> > "System RAM"|"Reserved"|"ACPI **" regions is not big enough. In that
+> > case, we need extra 8Byte*2048=16KB at most. With my understanding, this
+> > increase is system wide, since each resource instance only needs its own
+> > list_head member, right?
+> 
+> Yes.  That sounds perfectly acceptable.
+> 
+> It would be interesting to see what this approach looks like, if you
+> have time to toss something together?
 
-The sequence of actions done by device drivers to append their device
-specific hardware/firmware logs to /sys/kernel/crashdd/ directory are
-as follows:
-
-1. During probe (before hardware is initialized), device drivers
-register to the crashdd module (via crashdd_add_dump()), with
-callback function, along with buffer size and log name needed for
-firmware/hardware log collection.
-
-2. Crashdd creates a driver's directory under
-/sys/kernel/crashdd/<driver>. Then, it allocates the buffer with
-requested size and invokes the device driver's registered callback
-function.
-
-3. Device driver collects all hardware/firmware logs into the buffer
-and returns control back to crashdd.
-
-4. Crashdd exposes the buffer as a binary file via
-/sys/kernel/crashdd/<driver>/<dump_file>.
-
-Suggested-by: Eric Biederman <ebiederm@xmission.com>.
-Suggested-by: Stephen Hemminger <stephen@networkplumber.org>
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
----
-v2:
-- Added ABI Documentation for crashdd.
-- Directly use octal permission instead of macro.
-
-Changes since rfc v2:
-- Moved exporting crashdd from procfs to sysfs.  Suggested by
-  Stephen Hemminger <stephen@networkplumber.org>
-- Moved code from fs/proc/crashdd.c to fs/crashdd/ directory.
-- Replaced all proc API with sysfs API and updated comments.
-- Calling driver callback before creating the binary file under
-  crashdd sysfs.
-- Changed binary dump file permission from S_IRUSR to S_IRUGO.
-- Changed module name from CRASH_DRIVER_DUMP to CRASH_DEVICE_DUMP.
-
-rfc v2:
-- Collecting logs in 2nd kernel instead of during kernel panic.
-  Suggested by Eric Biederman <ebiederm@xmission.com>.
-- Patch added in this series.
-
- Documentation/ABI/testing/sysfs-kernel-crashdd |  34 ++++
- fs/Kconfig                                     |   1 +
- fs/Makefile                                    |   1 +
- fs/crashdd/Kconfig                             |  10 ++
- fs/crashdd/Makefile                            |   3 +
- fs/crashdd/crashdd.c                           | 233 +++++++++++++++++++++++++
- fs/crashdd/crashdd_internal.h                  |  24 +++
- include/linux/crashdd.h                        |  24 +++
- 8 files changed, 330 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-crashdd
- create mode 100644 fs/crashdd/Kconfig
- create mode 100644 fs/crashdd/Makefile
- create mode 100644 fs/crashdd/crashdd.c
- create mode 100644 fs/crashdd/crashdd_internal.h
- create mode 100644 include/linux/crashdd.h
-
-diff --git a/Documentation/ABI/testing/sysfs-kernel-crashdd b/Documentation/ABI/testing/sysfs-kernel-crashdd
-new file mode 100644
-index 000000000000..1f6b9e27bf2e
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-kernel-crashdd
-@@ -0,0 +1,34 @@
-+What:		/sys/kernel/crashdd
-+Date:		March 2018
-+KernelVersion:	4.16
-+Contact:	Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-+		Ganesh Goudar <ganeshgr@chelsio.com>
-+Description:
-+		Snapshot of underlying hardware/firmware state (like register
-+		dump, firmware logs, adapter memory, etc.), at the time of
-+		kernel panic will be very helpful while	debugging the culprit
-+		device driver. Thus, Crash Device Dump (crashdd) module exports
-+		API to allow device drivers to collect the device specific
-+		snapshot of their hardware or firmware in crash recovery kernel.
-+		The collected dumps will be exported under /sys/kernel/crashdd/
-+		directory in crash recovery kernel.
-+
-+		The sequence of actions done by device drivers to append their
-+		device specific hardware/firmware logs to /sys/kernel/crashdd/
-+		directory are as follows:
-+
-+		1. During probe (before hardware is initialized), device drivers
-+		register to the crashdd module (via crashdd_add_dump()), with
-+		callback function, along with buffer size and log name needed for
-+		firmware/hardware log collection.
-+
-+		2. Crashdd creates a driver's directory under
-+		/sys/kernel/crashdd/<driver>. Then, it allocates the buffer
-+		with requested size and invokes the device driver's registered
-+		callback function.
-+
-+		3. Device driver collects all hardware/firmware logs into the buffer
-+		and returns control back to crashdd.
-+
-+		4. Crashdd exposes the buffer as a file via
-+		/sys/kernel/crashdd/<driver>/<dump_file>.
-diff --git a/fs/Kconfig b/fs/Kconfig
-index bc821a86d965..aae1c55a7dad 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -208,6 +208,7 @@ config ARCH_HAS_GIGANTIC_PAGE
- 
- source "fs/configfs/Kconfig"
- source "fs/efivarfs/Kconfig"
-+source "fs/crashdd/Kconfig"
- 
- endmenu
- 
-diff --git a/fs/Makefile b/fs/Makefile
-index add789ea270a..ff398a44f611 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -128,3 +128,4 @@ obj-y				+= exofs/ # Multiple modules
- obj-$(CONFIG_CEPH_FS)		+= ceph/
- obj-$(CONFIG_PSTORE)		+= pstore/
- obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
-+obj-$(CONFIG_CRASH_DEVICE_DUMP)	+= crashdd/
-diff --git a/fs/crashdd/Kconfig b/fs/crashdd/Kconfig
-new file mode 100644
-index 000000000000..5db9c7c98c17
---- /dev/null
-+++ b/fs/crashdd/Kconfig
-@@ -0,0 +1,10 @@
-+config CRASH_DEVICE_DUMP
-+	bool "Crash Kernel Device Hardware/Firmware Logs"
-+	depends on SYSFS && CRASH_DUMP
-+	default y
-+	---help---
-+	  Device drivers can collect the device specific snapshot of
-+	  their hardware or firmware before they are initialized in
-+	  crash recovery kernel. If you say Y here a tree of device
-+	  specific dumps will be made available under /sys/kernel/crashdd/
-+	  directory.
-diff --git a/fs/crashdd/Makefile b/fs/crashdd/Makefile
-new file mode 100644
-index 000000000000..8dbf946c0ea4
---- /dev/null
-+++ b/fs/crashdd/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+obj-y := crashdd.o
-diff --git a/fs/crashdd/crashdd.c b/fs/crashdd/crashdd.c
-new file mode 100644
-index 000000000000..996ba926578b
---- /dev/null
-+++ b/fs/crashdd/crashdd.c
-@@ -0,0 +1,233 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2018 Chelsio Communications, Inc. All rights reserved. */
-+
-+#include <linux/vmalloc.h>
-+#include <linux/crash_dump.h>
-+#include <linux/crashdd.h>
-+
-+#include "crashdd_internal.h"
-+
-+static LIST_HEAD(crashdd_list);
-+static DEFINE_MUTEX(crashdd_mutex);
-+
-+static struct kobject *crashdd_kobj;
-+
-+static ssize_t crashdd_read(struct file *filp, struct kobject *kobj,
-+			    struct bin_attribute *bin_attr,
-+			    char *buf, loff_t fpos, size_t count)
-+{
-+	struct crashdd_dump_node *dump = bin_attr->private;
-+
-+	memcpy(buf, dump->buf + fpos, count);
-+	return count;
-+}
-+
-+static struct kobject *crashdd_mkdir(const char *name)
-+{
-+	return kobject_create_and_add(name, crashdd_kobj);
-+}
-+
-+static int crashdd_add_file(struct kobject *kobj, const char *name,
-+			    struct crashdd_dump_node *dump)
-+{
-+	dump->bin_attr.attr.name = name;
-+	dump->bin_attr.attr.mode = 0444;
-+	dump->bin_attr.size = dump->size;
-+	dump->bin_attr.read = crashdd_read;
-+	dump->bin_attr.private = dump;
-+
-+	return sysfs_create_bin_file(kobj, &dump->bin_attr);
-+}
-+
-+static void crashdd_rmdir(struct kobject *kobj)
-+{
-+	kobject_put(kobj);
-+}
-+
-+/**
-+ * crashdd_init_driver - create a sysfs driver entry.
-+ * @name: Name of the directory.
-+ *
-+ * Creates a directory under /sys/kernel/crashdd/ with @name.  Allocates
-+ * and saves the sysfs entry.  The sysfs entry is added to the global
-+ * list and then returned to the caller. On failure, returns NULL.
-+ */
-+static struct crashdd_driver_node *crashdd_init_driver(const char *name)
-+{
-+	struct crashdd_driver_node *node;
-+
-+	node = vzalloc(sizeof(*node));
-+	if (!node)
-+		return NULL;
-+
-+	/* Create a driver's directory under /sys/kernel/crashdd/ */
-+	node->kobj = crashdd_mkdir(name);
-+	if (!node->kobj) {
-+		vfree(node);
-+		return NULL;
-+	}
-+
-+	atomic_set(&node->refcnt, 1);
-+
-+	/* Initialize the list of dumps that go under this driver's
-+	 * directory.
-+	 */
-+	INIT_LIST_HEAD(&node->dump_list);
-+
-+	/* Add the driver's entry to global list */
-+	mutex_lock(&crashdd_mutex);
-+	list_add_tail(&node->list, &crashdd_list);
-+	mutex_unlock(&crashdd_mutex);
-+
-+	return node;
-+}
-+
-+/**
-+ * crashdd_get_driver - get an exisiting sysfs driver entry.
-+ * @name: Name of the directory.
-+ *
-+ * Searches and fetches a sysfs entry having @name.  If @name is
-+ * found, then the reference count is incremented and the entry
-+ * is returned.  If @name is not found, NULL is returned.
-+ */
-+static struct crashdd_driver_node *crashdd_get_driver(const char *name)
-+{
-+	struct crashdd_driver_node *node;
-+	int found = 0;
-+
-+	/* Search for an existing driver sysfs entry having @name */
-+	mutex_lock(&crashdd_mutex);
-+	list_for_each_entry(node, &crashdd_list, list) {
-+		if (!strcmp(node->kobj->name, name)) {
-+			atomic_inc(&node->refcnt);
-+			found = 1;
-+			break;
-+		}
-+	}
-+	mutex_unlock(&crashdd_mutex);
-+
-+	if (found)
-+		return node;
-+
-+	/* No driver with @name found */
-+	return NULL;
-+}
-+
-+/**
-+ * crashdd_put_driver - put an exisiting sysfs driver entry.
-+ * @node: driver sysfs entry.
-+ *
-+ * Decrement @node reference count.  If there are no dumps left under it,
-+ * delete the sysfs directory and remove it from the global list.
-+ */
-+static void crashdd_put_driver(struct crashdd_driver_node *node)
-+{
-+	mutex_lock(&crashdd_mutex);
-+	if (atomic_dec_and_test(&node->refcnt)) {
-+		/* Delete @node driver entry if it has no dumps under it */
-+		crashdd_rmdir(node->kobj);
-+		list_del(&node->list);
-+	}
-+	mutex_unlock(&crashdd_mutex);
-+}
-+
-+/**
-+ * crashdd_add_dump - Allocate a directory under /sys/kernel/crashdd/ and
-+ * add the dump to it.
-+ * @driver_name: directory name under which the dump should be added.
-+ * @data: dump info.
-+ *
-+ * Search for /sys/kernel/crashdd/<@driver_name>/ directory.  If not found,
-+ * allocate a new directory under /sys/kernel/crashdd/ with @driver_name.
-+ * Allocate the dump file's context and invoke the calling driver's dump
-+ * collect routine.  Once collection is done, add the dump under
-+ * /sys/kernel/crashdd/<@driver_name>/ directory.
-+ */
-+int crashdd_add_dump(const char *driver_name, struct crashdd_data *data)
-+{
-+	struct crashdd_driver_node *node;
-+	struct crashdd_dump_node *dump;
-+	void *buf = NULL;
-+	int ret;
-+
-+	if (!driver_name || !strlen(driver_name) ||
-+	    !data || !strlen(data->name) ||
-+	    !data->crashdd_callback || !data->size)
-+		return -EINVAL;
-+
-+	/* Get a driver sysfs entry with specified name. */
-+	node = crashdd_get_driver(driver_name);
-+	if (!node) {
-+		/* No driver sysfs entry found with specified name.
-+		 * So create a new one
-+		 */
-+		node = crashdd_init_driver(driver_name);
-+		if (!node)
-+			return -ENOMEM;
-+	}
-+
-+	dump = vzalloc(sizeof(*dump));
-+	if (!dump) {
-+		ret = -ENOMEM;
-+		goto out_err;
-+	}
-+
-+	/* Allocate buffer for driver's to write their dumps */
-+	buf = vzalloc(data->size);
-+	if (!buf) {
-+		ret = -ENOMEM;
-+		goto out_err;
-+	}
-+
-+	/* Invoke the driver's dump collection routing */
-+	ret = data->crashdd_callback(data, buf);
-+	if (ret)
-+		goto out_err;
-+
-+	dump->buf = buf;
-+	dump->size = data->size;
-+
-+	/* Add a binary file under /sys/kernel/crashdd/@driver_name/ */
-+	ret = crashdd_add_file(node->kobj, data->name, dump);
-+	if (ret)
-+		goto out_err;
-+
-+	/* Add the dump to driver sysfs list */
-+	mutex_lock(&crashdd_mutex);
-+	list_add_tail(&dump->list, &node->dump_list);
-+	atomic_inc(&node->refcnt);
-+	mutex_unlock(&crashdd_mutex);
-+
-+	/* Return back the driver sysfs reference */
-+	crashdd_put_driver(node);
-+	return 0;
-+
-+out_err:
-+	if (buf)
-+		vfree(buf);
-+
-+	if (dump)
-+		vfree(dump);
-+
-+	crashdd_put_driver(node);
-+	return ret;
-+}
-+EXPORT_SYMBOL(crashdd_add_dump);
-+
-+/* Init function for crash device dump module. */
-+static int __init crashdd_init(void)
-+{
-+	/*
-+	 * Only export this directory in 2nd kernel.
-+	 */
-+	if (!is_kdump_kernel())
-+		return 0;
-+
-+	/* Create /sys/kernel/crashdd/ directory */
-+	crashdd_kobj = kobject_create_and_add("crashdd", kernel_kobj);
-+	if (!crashdd_kobj)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+fs_initcall(crashdd_init);
-diff --git a/fs/crashdd/crashdd_internal.h b/fs/crashdd/crashdd_internal.h
-new file mode 100644
-index 000000000000..9162d1a4264b
---- /dev/null
-+++ b/fs/crashdd/crashdd_internal.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2018 Chelsio Communications, Inc. All rights reserved. */
-+
-+#ifndef CRASH_DEVICE_DUMP_INTERNAL_H
-+#define CRASH_DEVICE_DUMP_INTERNAL_H
-+
-+/* Binary dump file's context internal to crashdd */
-+struct crashdd_dump_node {
-+	/* Pointer to list of dumps under the driver sysfs entry */
-+	struct list_head list;
-+	void *buf;                     /* Buffer containing device's dump */
-+	unsigned long size;            /* Size of the buffer */
-+	struct bin_attribute bin_attr; /* Binary dump file's attributes */
-+};
-+
-+/* Driver sysfs entry internal to crashdd */
-+struct crashdd_driver_node {
-+	/* Pointer to global list of driver sysfs entries */
-+	struct list_head list;
-+	struct list_head dump_list; /* List of dumps under this driver */
-+	atomic_t refcnt;            /* Number of dumps under this directory */
-+	struct kobject *kobj;       /* Pointer to driver sysfs kobject */
-+};
-+#endif /* CRASH_DEVICE_DUMP_INTERNAL_H */
-diff --git a/include/linux/crashdd.h b/include/linux/crashdd.h
-new file mode 100644
-index 000000000000..edaba8424019
---- /dev/null
-+++ b/include/linux/crashdd.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2018 Chelsio Communications, Inc. All rights reserved. */
-+
-+#ifndef CRASH_DEVICE_DUMP_H
-+#define CRASH_DEVICE_DUMP_H
-+
-+/* Max dump name length */
-+#define CRASHDD_NAME_LENGTH 32
-+
-+/* Device Dump information to be filled by drivers */
-+struct crashdd_data {
-+	char name[CRASHDD_NAME_LENGTH]; /* Unique name of the dump */
-+	unsigned long size;             /* Size of the dump */
-+	/* Driver's registered callback to be invoked to collect dump */
-+	int (*crashdd_callback)(struct crashdd_data *data, void *buf);
-+};
-+
-+#ifdef CONFIG_CRASH_DEVICE_DUMP
-+int crashdd_add_dump(const char *driver_name, struct crashdd_data *data);
-+#else
-+#define crashdd_add_dump(x, y) 0
-+#endif /* CONFIG_CRASH_DEVICE_DUMP */
-+
-+#endif /* CRASH_DEVICE_DUMP_H */
--- 
-2.14.1
-
+OK, will make patches for reviewing. Thanks!
 
 _______________________________________________
 kexec mailing list
