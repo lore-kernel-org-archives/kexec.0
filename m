@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from vps0.lunn.ch ([185.16.172.187])
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ezkwo-0001U2-CD
- for kexec@lists.infradead.org; Sat, 24 Mar 2018 15:19:35 +0000
-Date: Sat, 24 Mar 2018 16:18:52 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v2 2/2] cxgb4: collect hardware dump in second
- kernel
-Message-ID: <20180324151852.GE31941@lunn.ch>
+ id 1ezkzx-00031P-Bn
+ for kexec@lists.infradead.org; Sat, 24 Mar 2018 15:22:27 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
- <f06cca21650affa10d83a28dbd7fb577792e35a9.1521888444.git.rahul.lakkireddy@chelsio.com>
+Date: Sat, 24 Mar 2018 10:20:52 -0500
+In-Reply-To: <cover.1521888444.git.rahul.lakkireddy@chelsio.com> (Rahul
+ Lakkireddy's message of "Sat, 24 Mar 2018 16:26:32 +0530")
+Message-ID: <87muyxlctn.fsf@xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <f06cca21650affa10d83a28dbd7fb577792e35a9.1521888444.git.rahul.lakkireddy@chelsio.com>
+Subject: Re: [PATCH net-next v2 0/2] kernel: add support to collect hardware
+ logs in crash recovery kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,26 +25,133 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Cc: indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stephen@networkplumber.org, ganeshgr@chelsio.com, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ebiederm@xmission.com
+Cc: indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stephen@networkplumber.org, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ganeshgr@chelsio.com
 
-On Sat, Mar 24, 2018 at 04:26:34PM +0530, Rahul Lakkireddy wrote:
-> Register callback to collect hardware/firmware dumps in second kernel
-> before hardware/firmware is initialized.  The dumps for each device
-> will be available under /sys/kernel/crashdd/cxgb4/ directory in second
-> kernel.
-> 
-> Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-> Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
 
-Thanks for adding generic documentation about the files in sysfs.
+Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
 
-However, you don't add any specific documentation here about the cxgb4
-crash dump. How am i supposed to interpret it? Does it follow any of
-the standard core dump formats? How do i use gdb with it? Are there
-some specific tools i should use to analyse it?
+> On production servers running variety of workloads over time, kernel
+> panic can happen sporadically after days or even months. It is
+> important to collect as much debug logs as possible to root cause
+> and fix the problem, that may not be easy to reproduce. Snapshot of
+> underlying hardware/firmware state (like register dump, firmware
+> logs, adapter memory, etc.), at the time of kernel panic will be very
+> helpful while debugging the culprit device driver.
+>
+> This series of patches add new generic framework that enable device
+> drivers to collect device specific snapshot of the hardware/firmware
+> state of the underlying device in the crash recovery kernel. In crash
+> recovery kernel, the collected logs are exposed via /sys/kernel/crashdd/
+> directory, which is copied by user space scripts for post-analysis.
+>
+> A kernel module crashdd is newly added. In crash recovery kernel,
+> crashdd exposes /sys/kernel/crashdd/ directory containing device
+> specific hardware/firmware logs.
 
-Thanks
-	Andrew
+Have you looked at instead of adding a sysfs file adding the dumps
+as additional elf notes in /proc/vmcore?
+
+That should allow existing tools to capture your extended dump
+information with no code changes, and it will allow having a single file
+core dump for storing the information.
+
+Both of which should mean something that will integrate better into
+existing flows.
+
+The interface logic of the driver should be essentially the same.
+
+
+Also have you tested this and seen how well your current logic captures
+the device information?
+
+
+>
+> The sequence of actions done by device drivers to append their device
+> specific hardware/firmware logs to /sys/kernel/crashdd/ directory are
+> as follows:
+>
+> 1. During probe (before hardware is initialized), device drivers
+> register to the crashdd module (via crashdd_add_dump()), with
+> callback function, along with buffer size and log name needed for
+> firmware/hardware log collection.
+>
+> 2. Crashdd creates a driver's directory under /sys/kernel/crashdd/<driver>.
+> Then, it allocates the buffer with requested size and invokes the
+> device driver's registered callback function.
+>
+> 3. Device driver collects all hardware/firmware logs into the buffer
+> and returns control back to crashdd.
+>
+> 4. Crashdd exposes the buffer as a file via
+> /sys/kernel/crashdd/<driver>/<dump_file>.
+>
+> 5. User space script (/usr/lib/kdump/kdump-lib-initramfs.sh) copies
+> the entire /sys/kernel/crashdd/ directory to /var/crash/ directory.
+>
+> Patch 1 adds crashdd module to allow drivers to register callback to
+> collect the device specific hardware/firmware logs.  The module also
+> exports /sys/kernel/crashdd/ directory containing the hardware/firmware
+> logs.
+>
+> Patch 2 shows a cxgb4 driver example using the API to collect
+> hardware/firmware logs in crash recovery kernel, before hardware is
+> initialized.  The logs for the devices are made available under
+> /sys/kernel/crashdd/cxgb4/ directory.
+>
+> Thanks,
+> Rahul
+>
+> RFC v1: https://lkml.org/lkml/2018/3/2/542
+> RFC v2: https://lkml.org/lkml/2018/3/16/326
+>
+> ---
+> v2:
+> - Added ABI Documentation for crashdd.
+> - Directly use octal permission instead of macro.
+>
+> Changes since rfc v2:
+> - Moved exporting crashdd from procfs to sysfs. Suggested by
+>   Stephen Hemminger <stephen@networkplumber.org>
+> - Moved code from fs/proc/crashdd.c to fs/crashdd/ directory.
+> - Replaced all proc API with sysfs API and updated comments.
+> - Calling driver callback before creating the binary file under
+>   crashdd sysfs.
+> - Changed binary dump file permission from S_IRUSR to S_IRUGO.
+> - Changed module name from CRASH_DRIVER_DUMP to CRASH_DEVICE_DUMP.
+>
+> rfc v2:
+> - Collecting logs in 2nd kernel instead of during kernel panic.
+>   Suggested by Eric Biederman <ebiederm@xmission.com>.
+> - Added new crashdd module that exports /proc/crashdd/ containing
+>   driver's registered hardware/firmware logs in patch 1.
+> - Replaced the API to allow drivers to register their hardware/firmware
+>   log collect routine in crash recovery kernel in patch 1.
+> - Updated patch 2 to use the new API in patch 1.
+>
+>
+> Rahul Lakkireddy (2):
+>   fs/crashdd: add API to collect hardware dump in second kernel
+>   cxgb4: collect hardware dump in second kernel
+>
+>  Documentation/ABI/testing/sysfs-kernel-crashdd   |  34 ++++
+>  drivers/net/ethernet/chelsio/cxgb4/cxgb4.h       |   4 +
+>  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c |  25 +++
+>  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h |   3 +
+>  drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c  |  12 ++
+>  fs/Kconfig                                       |   1 +
+>  fs/Makefile                                      |   1 +
+>  fs/crashdd/Kconfig                               |  10 +
+>  fs/crashdd/Makefile                              |   3 +
+>  fs/crashdd/crashdd.c                             | 233 +++++++++++++++++++++++
+>  fs/crashdd/crashdd_internal.h                    |  24 +++
+>  include/linux/crashdd.h                          |  24 +++
+>  12 files changed, 374 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-kernel-crashdd
+>  create mode 100644 fs/crashdd/Kconfig
+>  create mode 100644 fs/crashdd/Makefile
+>  create mode 100644 fs/crashdd/crashdd.c
+>  create mode 100644 fs/crashdd/crashdd_internal.h
+>  create mode 100644 include/linux/crashdd.h
 
 _______________________________________________
 kexec mailing list
