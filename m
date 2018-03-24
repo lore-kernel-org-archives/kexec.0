@@ -1,17 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from mail-pl0-x242.google.com ([2607:f8b0:400e:c01::242])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ezkzx-00031P-Bn
- for kexec@lists.infradead.org; Sat, 24 Mar 2018 15:22:27 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
-Date: Sat, 24 Mar 2018 10:20:52 -0500
-In-Reply-To: <cover.1521888444.git.rahul.lakkireddy@chelsio.com> (Rahul
- Lakkireddy's message of "Sat, 24 Mar 2018 16:26:32 +0530")
-Message-ID: <87muyxlctn.fsf@xmission.com>
+ id 1ezlnu-000549-Ox
+ for kexec@lists.infradead.org; Sat, 24 Mar 2018 16:14:04 +0000
+Received: by mail-pl0-x242.google.com with SMTP id f5-v6so9263197plj.13
+ for <kexec@lists.infradead.org>; Sat, 24 Mar 2018 09:13:51 -0700 (PDT)
+Date: Sun, 25 Mar 2018 00:13:43 +0800
+From: Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH 1/2] resource: add walk_system_ram_res_rev()
+Message-ID: <20180324161343.GA58414@WeideMacBook-Pro.local>
+References: <20180322033722.9279-1-bhe@redhat.com>
+ <20180322033722.9279-2-bhe@redhat.com>
+ <20180322152929.9b421af2f66cc819ad691207@linux-foundation.org>
+ <20180323005845.GA25740@localhost.localdomain>
+ <20180322190606.859a0f1c7e2d1b2958daeb9f@linux-foundation.org>
+ <20180323031013.GB11150@localhost.localdomain>
+ <20180323130620.7d60fc442463ed5c21898387@linux-foundation.org>
+ <20180324133330.GD25740@localhost.localdomain>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v2 0/2] kernel: add support to collect hardware
- logs in crash recovery kernel
+Content-Disposition: inline
+In-Reply-To: <20180324133330.GD25740@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,138 +28,209 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Cc: indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stephen@networkplumber.org, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ganeshgr@chelsio.com
+To: Baoquan He <bhe@redhat.com>
+Cc: prudo@linux.vnet.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, ebiederm@xmission.com, Andrew Morton <akpm@linux-foundation.org>, dyoung@redhat.com, vgoyal@redhat.com
+
+On Sat, Mar 24, 2018 at 09:33:30PM +0800, Baoquan He wrote:
+>> 
+>> Yes.  That sounds perfectly acceptable.
+>> 
+>> It would be interesting to see what this approach looks like, if you
+>> have time to toss something together?
+>
+>OK, will make patches for reviewing. Thanks!
+
+Hi, Baoquan, Andrew
+
+I have come up with an implementation for top-down search the ram resources.
+Hope this would meet your need.
+
+From b36d50487f1d4e4d6a5103965a27101b3121e0ea Mon Sep 17 00:00:00 2001
+From: Wei Yang <richard.weiyang@gmail.com>
+Date: Sat, 24 Mar 2018 23:25:46 +0800
+Subject: [PATCH] kernel/resource: add walk_system_ram_res_rev()
+
+As discussed on https://patchwork.kernel.org/patch/10300819/, this patch
+comes up with a variant implementation of walk_system_ram_res_rev(), which
+uses iteration instead of allocating array to store those resources.
+
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+---
+ include/linux/ioport.h |   3 ++
+ kernel/resource.c      | 113 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 116 insertions(+)
+
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index da0ebaec25f0..473f1d9cb97e 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -277,6 +277,9 @@ extern int
+ walk_system_ram_res(u64 start, u64 end, void *arg,
+ 		    int (*func)(struct resource *, void *));
+ extern int
++walk_system_ram_res_rev(u64 start, u64 end, void *arg,
++		    int (*func)(struct resource *, void *));
++extern int
+ walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start, u64 end,
+ 		    void *arg, int (*func)(struct resource *, void *));
+ 
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 769109f20fb7..ddf6b4c41498 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -73,6 +73,38 @@ static struct resource *next_resource(struct resource *p, bool sibling_only)
+ 	return p->sibling;
+ }
+ 
++static struct resource *prev_resource(struct resource *p, bool sibling_only)
++{
++	struct resource *prev;
++	if (NULL == iomem_resource.child)
++		return NULL;
++
++	if (p == NULL) {
++		prev = iomem_resource.child;
++		while (prev->sibling)
++			prev = prev->sibling;
++	} else {
++		if (p->parent->child == p) {
++			return p->parent;
++		}
++
++		for (prev = p->parent->child; prev->sibling != p;
++			prev = prev->sibling) {}
++	}
++
++	/* Caller wants to traverse through siblings only */
++	if (sibling_only)
++		return prev;
++
++	for (;prev->child;) {
++		prev = prev->child;
++
++		while (prev->sibling)
++			prev = prev->sibling;
++	}
++	return prev;
++}
++
+ static void *r_next(struct seq_file *m, void *v, loff_t *pos)
+ {
+ 	struct resource *p = v;
+@@ -401,6 +433,47 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
+ 	return 0;
+ }
+ 
++/*
++ * Finds the highest iomem resource existing within [res->start.res->end).
++ * The caller must specify res->start, res->end, res->flags, and optionally
++ * desc.  If found, returns 0, res is overwritten, if not found, returns -1.
++ * This function walks the whole tree and not just first level children until
++ * and unless first_level_children_only is true.
++ */
++static int find_prev_iomem_res(struct resource *res, unsigned long desc,
++			       bool first_level_children_only)
++{
++	struct resource *p;
++
++	BUG_ON(!res);
++	BUG_ON(res->start >= res->end);
++
++	read_lock(&resource_lock);
++
++	for (p = prev_resource(NULL, first_level_children_only); p;
++		p = prev_resource(p, first_level_children_only)) {
++		if ((p->flags & res->flags) != res->flags)
++			continue;
++		if ((desc != IORES_DESC_NONE) && (desc != p->desc))
++			continue;
++		if (p->end < res->start) {
++			p = NULL;
++			break;
++		}
++		if ((p->end >= res->start) && (p->start < res->end))
++			break;
++	}
++
++	read_unlock(&resource_lock);
++	if (!p)
++		return -1;
++	/* copy data */
++	resource_clip(res, p->start, p->end);
++	res->flags = p->flags;
++	res->desc = p->desc;
++	return 0;
++}
++
+ static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
+ 				 bool first_level_children_only,
+ 				 void *arg,
+@@ -422,6 +495,27 @@ static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
+ 	return ret;
+ }
+ 
++static int __walk_iomem_res_rev_desc(struct resource *res, unsigned long desc,
++				 bool first_level_children_only,
++				 void *arg,
++				 int (*func)(struct resource *, void *))
++{
++	u64 orig_start = res->start;
++	int ret = -1;
++
++	while ((res->start < res->end) &&
++	       !find_prev_iomem_res(res, desc, first_level_children_only)) {
++		ret = (*func)(res, arg);
++		if (ret)
++			break;
++
++		res->end = res->start - 1;
++		res->start = orig_start;
++	}
++
++	return ret;
++}
++
+ /*
+  * Walks through iomem resources and calls func() with matching resource
+  * ranges. This walks through whole tree and not just first level children.
+@@ -468,6 +562,25 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
+ 				     arg, func);
+ }
+ 
++/*
++ * This function, being a variant of walk_system_ram_res(), calls the @func
++ * callback against all memory ranges of type System RAM which are marked as
++ * IORESOURCE_SYSTEM_RAM and IORESOUCE_BUSY in reversed order, i.e., from
++ * higher to lower.
++ */
++int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
++				int (*func)(struct resource *, void *))
++{
++	struct resource res;
++
++	res.start = start;
++	res.end = end;
++	res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
++
++	return __walk_iomem_res_rev_desc(&res, IORES_DESC_NONE, true,
++				     arg, func);
++}
++
+ /*
+  * This function calls the @func callback against all memory ranges, which
+  * are ranges marked as IORESOURCE_MEM and IORESOUCE_BUSY.
+-- 
+2.15.1
 
 
-Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
-
-> On production servers running variety of workloads over time, kernel
-> panic can happen sporadically after days or even months. It is
-> important to collect as much debug logs as possible to root cause
-> and fix the problem, that may not be easy to reproduce. Snapshot of
-> underlying hardware/firmware state (like register dump, firmware
-> logs, adapter memory, etc.), at the time of kernel panic will be very
-> helpful while debugging the culprit device driver.
->
-> This series of patches add new generic framework that enable device
-> drivers to collect device specific snapshot of the hardware/firmware
-> state of the underlying device in the crash recovery kernel. In crash
-> recovery kernel, the collected logs are exposed via /sys/kernel/crashdd/
-> directory, which is copied by user space scripts for post-analysis.
->
-> A kernel module crashdd is newly added. In crash recovery kernel,
-> crashdd exposes /sys/kernel/crashdd/ directory containing device
-> specific hardware/firmware logs.
-
-Have you looked at instead of adding a sysfs file adding the dumps
-as additional elf notes in /proc/vmcore?
-
-That should allow existing tools to capture your extended dump
-information with no code changes, and it will allow having a single file
-core dump for storing the information.
-
-Both of which should mean something that will integrate better into
-existing flows.
-
-The interface logic of the driver should be essentially the same.
-
-
-Also have you tested this and seen how well your current logic captures
-the device information?
-
-
->
-> The sequence of actions done by device drivers to append their device
-> specific hardware/firmware logs to /sys/kernel/crashdd/ directory are
-> as follows:
->
-> 1. During probe (before hardware is initialized), device drivers
-> register to the crashdd module (via crashdd_add_dump()), with
-> callback function, along with buffer size and log name needed for
-> firmware/hardware log collection.
->
-> 2. Crashdd creates a driver's directory under /sys/kernel/crashdd/<driver>.
-> Then, it allocates the buffer with requested size and invokes the
-> device driver's registered callback function.
->
-> 3. Device driver collects all hardware/firmware logs into the buffer
-> and returns control back to crashdd.
->
-> 4. Crashdd exposes the buffer as a file via
-> /sys/kernel/crashdd/<driver>/<dump_file>.
->
-> 5. User space script (/usr/lib/kdump/kdump-lib-initramfs.sh) copies
-> the entire /sys/kernel/crashdd/ directory to /var/crash/ directory.
->
-> Patch 1 adds crashdd module to allow drivers to register callback to
-> collect the device specific hardware/firmware logs.  The module also
-> exports /sys/kernel/crashdd/ directory containing the hardware/firmware
-> logs.
->
-> Patch 2 shows a cxgb4 driver example using the API to collect
-> hardware/firmware logs in crash recovery kernel, before hardware is
-> initialized.  The logs for the devices are made available under
-> /sys/kernel/crashdd/cxgb4/ directory.
->
-> Thanks,
-> Rahul
->
-> RFC v1: https://lkml.org/lkml/2018/3/2/542
-> RFC v2: https://lkml.org/lkml/2018/3/16/326
->
-> ---
-> v2:
-> - Added ABI Documentation for crashdd.
-> - Directly use octal permission instead of macro.
->
-> Changes since rfc v2:
-> - Moved exporting crashdd from procfs to sysfs. Suggested by
->   Stephen Hemminger <stephen@networkplumber.org>
-> - Moved code from fs/proc/crashdd.c to fs/crashdd/ directory.
-> - Replaced all proc API with sysfs API and updated comments.
-> - Calling driver callback before creating the binary file under
->   crashdd sysfs.
-> - Changed binary dump file permission from S_IRUSR to S_IRUGO.
-> - Changed module name from CRASH_DRIVER_DUMP to CRASH_DEVICE_DUMP.
->
-> rfc v2:
-> - Collecting logs in 2nd kernel instead of during kernel panic.
->   Suggested by Eric Biederman <ebiederm@xmission.com>.
-> - Added new crashdd module that exports /proc/crashdd/ containing
->   driver's registered hardware/firmware logs in patch 1.
-> - Replaced the API to allow drivers to register their hardware/firmware
->   log collect routine in crash recovery kernel in patch 1.
-> - Updated patch 2 to use the new API in patch 1.
->
->
-> Rahul Lakkireddy (2):
->   fs/crashdd: add API to collect hardware dump in second kernel
->   cxgb4: collect hardware dump in second kernel
->
->  Documentation/ABI/testing/sysfs-kernel-crashdd   |  34 ++++
->  drivers/net/ethernet/chelsio/cxgb4/cxgb4.h       |   4 +
->  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c |  25 +++
->  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h |   3 +
->  drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c  |  12 ++
->  fs/Kconfig                                       |   1 +
->  fs/Makefile                                      |   1 +
->  fs/crashdd/Kconfig                               |  10 +
->  fs/crashdd/Makefile                              |   3 +
->  fs/crashdd/crashdd.c                             | 233 +++++++++++++++++++++++
->  fs/crashdd/crashdd_internal.h                    |  24 +++
->  include/linux/crashdd.h                          |  24 +++
->  12 files changed, 374 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-kernel-crashdd
->  create mode 100644 fs/crashdd/Kconfig
->  create mode 100644 fs/crashdd/Makefile
->  create mode 100644 fs/crashdd/crashdd.c
->  create mode 100644 fs/crashdd/crashdd_internal.h
->  create mode 100644 include/linux/crashdd.h
+-- 
+Wei Yang
+Help you, Help me
 
 _______________________________________________
 kexec mailing list
