@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-f67.google.com ([209.85.215.67])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f0O4P-0005Ty-H9
- for kexec@lists.infradead.org; Mon, 26 Mar 2018 09:05:44 +0000
-Received: by mail-lf0-f67.google.com with SMTP id t132-v6so27011154lfe.2
- for <kexec@lists.infradead.org>; Mon, 26 Mar 2018 02:05:27 -0700 (PDT)
+ id 1f0O7a-0006Ca-4G
+ for kexec@lists.infradead.org; Mon, 26 Mar 2018 09:08:56 +0000
+Date: Mon, 26 Mar 2018 17:08:32 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v5 4/5] kexec: Add option to fall back to KEXEC_LOAD when
+ KEXEC_FILE_LOAD is not supported
+Message-ID: <20180326090832.GA24210@dhcp-128-65.nay.redhat.com>
+References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
+ <9db6c165a0832796faf88b0cef8f296a896f5fa8.1521561315.git.msuchanek@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <CACi5LpObqAJ=yC_e2G80JsspfzEx50Rq=J2G_UAnoT3UqS4HFQ@mail.gmail.com>
-References: <1521455739-8022-1-git-send-email-bhsharma@redhat.com>
- <20180319144529.vkfrrkc4bdhwvvbi@dragonfly>
- <CACi5LpObqAJ=yC_e2G80JsspfzEx50Rq=J2G_UAnoT3UqS4HFQ@mail.gmail.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Mon, 26 Mar 2018 14:29:31 +0530
-Message-ID: <CACi5LpPVbVZBAXynMQ79kkboLrQcw1s-LSuFkSQAnkXtdS8wAA@mail.gmail.com>
-Subject: Re: [RESEND PATCH 1/2] dt-ops: Add helper API to dump fdt blob
+Content-Disposition: inline
+In-Reply-To: <9db6c165a0832796faf88b0cef8f296a896f5fa8.1521561315.git.msuchanek@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,235 +25,185 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, Bhupesh SHARMA <bhupesh.linux@gmail.com>, James Morse <james.morse@arm.com>, Dave Young <dyoung@redhat.com>
+To: Michal Suchanek <msuchanek@suse.de>
+Cc: Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, hbathini@linux.vnet.ibm.com, Tony Jones <tonyj@suse.com>, horms@verge.net.au, bauerman@linux.vnet.ibm.com
 
-Hi Akashi,
+On 03/20/18 at 04:56pm, Michal Suchanek wrote:
+> Not all architectures implement KEXEC_FILE_LOAD. However, on some
+> archiectures KEXEC_FILE_LOAD is required when secure boot is enabled in
+> locked-down mode. Previously users had to select the KEXEC_FILE_LOAD
+> syscall with undocumented -s option. However, if they did pass the
+> option kexec would fail on architectures that do not support it.
+> 
+> So add an -a option that tries KEXEC_FILE_LOAD and when it is not
+> supported tries KEXEC_LOAD.
+> 
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+> v3: instead of changing the deafult add extra option
+> v4: actually check -ENOSYS as well
+> v5: add missing break
+> ---
+>  kexec/kexec.c | 58 +++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+>  kexec/kexec.h |  6 +++++-
+>  2 files changed, 58 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kexec/kexec.c b/kexec/kexec.c
+> index 68ae0594d4a7..44042345a16e 100644
+> --- a/kexec/kexec.c
+> +++ b/kexec/kexec.c
+> @@ -1243,6 +1243,7 @@ int main(int argc, char *argv[])
+>  	int do_unload = 0;
+>  	int do_reuse_initrd = 0;
+>  	int do_kexec_file_syscall = 0;
+> +	int do_kexec_fallback = 0;
+>  	int do_status = 0;
+>  	void *entry = 0;
+>  	char *type = 0;
+> @@ -1367,6 +1368,15 @@ int main(int argc, char *argv[])
+>  			break;
+>  		case OPT_KEXEC_FILE_SYSCALL:
+>  			do_kexec_file_syscall = 1;
+> +			do_kexec_fallback = 0;
+> +			break;
+> +		case OPT_KEXEC_SYSCALL:
+> +			do_kexec_file_syscall = 0;
+> +			do_kexec_fallback = 0;
+> +			break;
+> +		case OPT_KEXEC_SYSCALL_AUTO:
+> +			do_kexec_file_syscall = 1;
+> +			do_kexec_fallback = 1;
+>  			break;
+>  		case OPT_STATUS:
+>  			do_status = 1;
+> @@ -1433,7 +1443,7 @@ int main(int argc, char *argv[])
+>  		}
+>  	}
+>  	if (do_kexec_file_syscall) {
+> -		if (do_load_jump_back_helper)
+> +		if (do_load_jump_back_helper && !do_kexec_fallback)
+>  			die("--load-jump-back-helper not supported with kexec_file_load\n");
+>  		if (kexec_flags & KEXEC_PRESERVE_CONTEXT)
+>  			die("--load-preserve-context not supported with kexec_file_load\n");
+> @@ -1447,16 +1457,54 @@ int main(int argc, char *argv[])
+>  		result = k_status(kexec_flags);
+>  	}
+>  	if (do_unload) {
+> -		if (do_kexec_file_syscall)
+> +		if (do_kexec_file_syscall) {
+>  			result = kexec_file_unload(kexec_file_flags);
+> -		else
+> +			if ((result == -ENOSYS) && do_kexec_fallback)
+> +				do_kexec_file_syscall = 0;
+> +		}
+> +		if (!do_kexec_file_syscall)
+>  			result = k_unload(kexec_flags);
+>  	}
+>  	if (do_load && (result == 0)) {
+> -		if (do_kexec_file_syscall)
+> +		if (do_kexec_file_syscall) {
+>  			result = do_kexec_file_load(fileind, argc, argv,
+>  						 kexec_file_flags);
+> -		else
+> +			if (do_kexec_fallback) switch (result) {
+> +				/*
+> +				 * Something failed with signature verification.
+> +				 * Reject the image.
+> +				 */
+> +				case -ELIBBAD:
+> +				case -EKEYREJECTED:
+> +				case -ENOPKG:
+> +				case -ENOKEY:
+> +				case -EBADMSG:
+> +				case -EMSGSIZE:
+> +					/*
+> +					 * By default reject or do nothing if
+> +					 * succeded
+> +					 */
+> +				default: break;
+> +				case -ENOSYS: /* not implemented */
+> +					/*
+> +					 * Parsing image or other options failed
+> +					 * The image may be invalid or image
+> +					 * type may not supported by kernel so
+> +					 * retry parsing in kexec-tools.
+> +					 */
+> +				case -EINVAL:
+> +				case -ENOEXEC:
+> +					 /*
+> +					  * ENOTSUPP can be unsupported image
+> +					  * type or unsupported PE signature
+> +					  * wrapper type, duh
+> +					  */
+> +				case -ENOTSUP:
 
-On Tue, Mar 20, 2018 at 12:36 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> On Mon, Mar 19, 2018 at 8:15 PM, AKASHI Takahiro
-> <takahiro.akashi@linaro.org> wrote:
->> On Mon, Mar 19, 2018 at 04:05:38PM +0530, Bhupesh Sharma wrote:
->>> At several occasions it would be useful to dump the fdt
->>> blob being passed to the second (kexec/kdump) kernel
->>> when '-d' flag is specified while invoking kexec/kdump.
->>
->> Why not just save binary data to a file and interpret it
->> with dtc command?
->
-> Well, there are a couple of reasons for that which can be understood
-> from a system which is in a production environment (for e.g. I have
-> worked on one arm64 system in the past which used a yocto based
-> distribution in which kexec -p was launched with a -d option as a part
-> of initial ramfs scriptware):
->
-> - In a production environment, installing and executing tools like dtc
-> (which might not have been installed by default via 'yum' or 'apt-get
-> install' or other means is not only an additional step, but we might
-> not get a chance to run it even if it is installed if we have a early
-> crash in kdump itself (for e.g. consider the 'acpi table access' issue
-> in the arm64 crashkernel we discussed some time back
-> <https://www.spinics.net/lists/arm-kernel/msg616632.html>):
->
-> a) In such a case the primary kernel has already crashed, so we had no
-> opportunity to run a dtc interpreter there and the kdump kernel itself
-> has crashed in a very early boot phase. So we didn't get a chance to
-> execute 'dtc' on the kdump kernel command prompt (if the kdump scripts
-> are configured not to reboot the primary again).
->
-> b) Also when an early arm64 kdump crash is reported by a customer, we
-> usually only have access to the primary and secondary console log
-> which also might include the 'kexec -p -d' log messages, which can
-> point us to a discrepancy in dtc nodes like 'linux,usable-memory"
-> which might have caused a early crashkernel crash.
->
-> Personally, so-far I have found this dtb dumping facility of use in
-> debugging atleast a couple of arm64 crashkernel crash/panic issues.
-> Till the arm64 kexec/kdump implementation matures further, I feel this
-> dumping facility is of good use to ease crashkernel panic debugs.
+Hmm, this is still used in latest version.  kernel does not return such
+error number,  I might not say clearly previously.  Please check the
+kernel code, the only one place I know is because no kdump support in
+power kexec_file:
+arch/powerpc/kernel/machine_kexec_file_64.c
 
-Ping. Do you have any further comments on it?
+        /* We don't support crash kernels yet. */
+        if (image->type == KEXEC_TYPE_CRASH)
+                return -ENOTSUPP;
 
-Regards,
-Bhupesh
+So I suggest not checking this as well since -ENOTSUPP is not populated
+in userspace headers, and -ENOTSUP is not used at all.
 
->>> This allows one to look at the device-tree fields that
->>> is being passed to the secondary kernel and accordingly
->>> debug issues.
->>>
->>> This can be specially useful for the arm64 case, where
->>> kexec_load() or kdump passes important information like
->>> 'linux,usable-memory' ranges to the second kernel, and
->>> the correctness of the ranges can be verified by
->>> looking at the device-tree dump with '-d' flag specified.
->>>
->>> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
->>> ---
->>>  kexec/dt-ops.c | 133 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->>>  kexec/dt-ops.h |   1 +
->>>  2 files changed, 134 insertions(+)
->>>
->>> diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
->>> index 915dbf55afd2..caf6f8df6e6b 100644
->>> --- a/kexec/dt-ops.c
->>> +++ b/kexec/dt-ops.c
->>> @@ -8,6 +8,10 @@
->>>  #include "kexec.h"
->>>  #include "dt-ops.h"
->>>
->>> +#define ALIGN(x, a)  (((x) + ((a) - 1)) & ~((a) - 1))
->>> +#define PALIGN(p, a) ((void *)(ALIGN((unsigned long)(p), (a))))
->>> +#define GET_CELL(p)  (p += 4, *((const uint32_t *)(p-4)))
->>> +
->>>  static const char n_chosen[] = "/chosen";
->>>
->>>  static const char p_bootargs[] = "bootargs";
->>> @@ -143,3 +147,132 @@ int dtb_delete_property(char *dtb, const char *node, const char *prop)
->>>
->>>       return result;
->>>  }
->>> +
->>> +static uint64_t is_printable_string(const void* data, uint64_t len)
->>> +{
->>> +     const char *s = data;
->>> +     const char *ss;
->>> +
->>> +     /* Check for zero length strings */
->>> +     if (len == 0) {
->>> +             return 0;
->>> +     }
->>> +
->>> +     /* String must be terminated with a '\0' */
->>> +     if (s[len - 1] != '\0') {
->>> +             return 0;
->>> +     }
->>> +
->>> +     ss = s;
->>> +     while (*s) {
->>> +             s++;
->>> +     }
->>> +
->>> +     /* Traverse till we hit a '\0' or reach 'len' */
->>> +     if (*s != '\0' || (s + 1 - ss) < len) {
->>> +             return 0;
->>> +     }
->>> +
->>> +     return 1;
->>> +}
->>> +
->>> +static void print_data(const char* data, uint64_t len)
->>> +{
->>> +     uint64_t i;
->>> +     const char *p = data;
->>> +
->>> +     /* Check for non-zero length */
->>> +     if (len == 0)
->>> +             return;
->>> +
->>> +     if (is_printable_string(data, len)) {
->>> +             dbgprintf(" = \"%s\"", (const char *)data);
->>> +     } else if ((len % 4) == 0) {
->>> +             dbgprintf(" = <");
->>> +             for (i = 0; i < len; i += 4) {
->>> +                     dbgprintf("0x%08x%s",
->>> +                                     fdt32_to_cpu(GET_CELL(p)),
->>> +                                     i < (len - 4) ? " " : "");
->>> +             }
->>> +             dbgprintf(">");
->>> +     } else {
->>> +             dbgprintf(" = [");
->>> +             for (i = 0; i < len; i++)
->>> +                     dbgprintf("%02x%s", *p++,
->>> +                                     i < len - 1 ? " " : "");
->>> +             dbgprintf("]");
->>> +     }
->>> +}
->>> +
->>> +void dump_fdt(void* fdt)
->>> +{
->>> +     struct fdt_header *bph;
->>> +     const char* p_struct;
->>> +     const char* p_strings;
->>> +     const char* p;
->>> +     const char* s;
->>> +     const char* t;
->>> +     uint32_t off_dt;
->>> +     uint32_t off_str;
->>> +     uint32_t tag;
->>> +     uint64_t sz;
->>> +     uint64_t depth;
->>> +     uint64_t shift;
->>> +     uint32_t version;
->>> +
->>> +     depth = 0;
->>> +     shift = 4;
->>> +
->>> +     bph = fdt;
->>> +     off_dt = fdt32_to_cpu(bph->off_dt_struct);
->>> +     off_str = fdt32_to_cpu(bph->off_dt_strings);
->>> +     p_struct = (const char*)fdt + off_dt;
->>> +     p_strings = (const char*)fdt + off_str;
->>> +     version = fdt32_to_cpu(bph->version);
->>> +
->>> +     p = p_struct;
->>> +     while ((tag = fdt32_to_cpu(GET_CELL(p))) != FDT_END) {
->>> +
->>> +             if (tag == FDT_BEGIN_NODE) {
->>> +                     s = p;
->>> +                     p = PALIGN(p + strlen(s) + 1, 4);
->>> +
->>> +                     if (*s == '\0')
->>> +                             s = "/";
->>> +
->>> +                     dbgprintf("%*s%s {\n", (int)(depth * shift), " ", s);
->>> +
->>> +                     depth++;
->>> +                     continue;
->>> +             }
->>> +
->>> +             if (tag == FDT_END_NODE) {
->>> +                     depth--;
->>> +
->>> +                     dbgprintf("%*s};\n", (int)(depth * shift), " ");
->>> +                     continue;
->>> +             }
->>> +
->>> +             if (tag == FDT_NOP) {
->>> +                     dbgprintf("%*s// [NOP]\n", (int)(depth * shift), " ");
->>> +                     continue;
->>> +             }
->>> +
->>> +             if (tag != FDT_PROP) {
->>> +                     dbgprintf("%*s ** Unknown tag 0x%08x\n",
->>> +                                     (int)(depth * shift), " ", tag);
->>> +                     break;
->>> +             }
->>> +             sz = fdt32_to_cpu(GET_CELL(p));
->>> +             s = p_strings + fdt32_to_cpu(GET_CELL(p));
->>> +             if (version < 16 && sz >= 8)
->>> +                     p = PALIGN(p, 8);
->>> +             t = p;
->>> +
->>> +             p = PALIGN(p + sz, 4);
->>> +
->>> +             dbgprintf("%*s%s", (int)(depth * shift), " ", s);
->>> +             print_data(t, sz);
->>> +             dbgprintf(";\n");
->>> +     }
->>> +}
->>> diff --git a/kexec/dt-ops.h b/kexec/dt-ops.h
->>> index e70d15d8ffbf..25b9b569f2b7 100644
->>> --- a/kexec/dt-ops.h
->>> +++ b/kexec/dt-ops.h
->>> @@ -9,5 +9,6 @@ int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
->>>       const char *prop, const void *value, int value_len);
->>>
->>>  int dtb_delete_property(char *dtb, const char *node, const char *prop);
->>> +void dump_fdt(void *fdt) ;
->>>
->>>  #endif
->>> --
->>> 2.7.4
->>>
+Also as I mentioned in another reply -EINVAL and -ENOEXEC is also not
+ncessary.
+
+For -ENOTSUP, maybe someone can submit a patch to switch to -ENOTSUPP
+so that userspace can check it.
+Ccing Thiago and Hari for the -ENOTSUPP errno issue.
+
+> +					do_kexec_file_syscall = 0;
+> +					break;
+> +			}
+> +		}
+> +		if (!do_kexec_file_syscall)
+>  			result = my_load(type, fileind, argc, argv,
+>  						kexec_flags, entry);
+>  	}
+> diff --git a/kexec/kexec.h b/kexec/kexec.h
+> index 26225d2c002a..d445fbe3e486 100644
+> --- a/kexec/kexec.h
+> +++ b/kexec/kexec.h
+> @@ -219,6 +219,8 @@ extern int file_types;
+>  #define OPT_TYPE		't'
+>  #define OPT_PANIC		'p'
+>  #define OPT_KEXEC_FILE_SYSCALL	's'
+> +#define OPT_KEXEC_SYSCALL	'c'
+> +#define OPT_KEXEC_SYSCALL_AUTO	'a'
+>  #define OPT_STATUS		'S'
+>  #define OPT_MEM_MIN             256
+>  #define OPT_MEM_MAX             257
+> @@ -246,11 +248,13 @@ extern int file_types;
+>  	{ "mem-max",		1, 0, OPT_MEM_MAX }, \
+>  	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
+>  	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
+> +	{ "kexec-syscall",	0, 0, OPT_KEXEC_SYSCALL }, \
+> +	{ "kexec-syscall-auto",	0, 0, OPT_KEXEC_SYSCALL_AUTO }, \
+>  	{ "debug",		0, 0, OPT_DEBUG }, \
+>  	{ "status",		0, 0, OPT_STATUS }, \
+>  	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
+>  
+> -#define KEXEC_OPT_STR "h?vdfxyluet:psS"
+> +#define KEXEC_OPT_STR "h?vdfxyluet:pscaS"
+>  
+>  extern void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr);
+>  extern void die(const char *fmt, ...)
+> -- 
+> 2.13.6
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
