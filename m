@@ -1,27 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x241.google.com ([2607:f8b0:400e:c01::241])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f0TgI-0000Po-R9
- for kexec@lists.infradead.org; Mon, 26 Mar 2018 15:05:09 +0000
-Received: by mail-pl0-x241.google.com with SMTP id x4-v6so12093843pln.7
- for <kexec@lists.infradead.org>; Mon, 26 Mar 2018 08:04:56 -0700 (PDT)
-Date: Mon, 26 Mar 2018 23:04:47 +0800
-From: Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH 1/2] resource: add walk_system_ram_res_rev()
-Message-ID: <20180326150447.GA78252@WeideMacBook-Pro.local>
-References: <20180322033722.9279-1-bhe@redhat.com>
- <20180322033722.9279-2-bhe@redhat.com>
- <20180322152929.9b421af2f66cc819ad691207@linux-foundation.org>
- <20180323005845.GA25740@localhost.localdomain>
- <20180322190606.859a0f1c7e2d1b2958daeb9f@linux-foundation.org>
- <20180323031013.GB11150@localhost.localdomain>
- <20180323130620.7d60fc442463ed5c21898387@linux-foundation.org>
- <20180324133330.GD25740@localhost.localdomain>
- <20180324161343.GA58414@WeideMacBook-Pro.local>
- <20180326143016.GE25740@localhost.localdomain>
+ id 1f0W4g-0005n2-1p
+ for kexec@lists.infradead.org; Mon, 26 Mar 2018 17:38:28 +0000
+Date: Mon, 26 Mar 2018 19:38:09 +0200
+From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+Subject: Re: [PATCH v5 4/5] kexec: Add option to fall back to KEXEC_LOAD
+ when KEXEC_FILE_LOAD is not supported
+Message-ID: <20180326193810.028a94b5@kitsune.suse.cz>
+In-Reply-To: <20180326091210.GA4781@dhcp-128-65.nay.redhat.com>
+References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
+ <9db6c165a0832796faf88b0cef8f296a896f5fa8.1521561315.git.msuchanek@suse.de>
+ <20180326090832.GA24210@dhcp-128-65.nay.redhat.com>
+ <20180326091210.GA4781@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180326143016.GE25740@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,51 +22,173 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: prudo@linux.vnet.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Wei Yang <richard.weiyang@gmail.com>, takahiro.akashi@linaro.org, ebiederm@xmission.com, Andrew Morton <akpm@linux-foundation.org>, dyoung@redhat.com, vgoyal@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, hbathini@linux.vnet.ibm.com, Tony Jones <tonyj@suse.com>, horms@verge.net.au, bauerman@linux.vnet.ibm.com
 
-On Mon, Mar 26, 2018 at 10:30:16PM +0800, Baoquan He wrote:
->Hi Wei Yang,
->
->On 03/25/18 at 12:13am, Wei Yang wrote:
->> On Sat, Mar 24, 2018 at 09:33:30PM +0800, Baoquan He wrote:
->> >> 
->> >> Yes.  That sounds perfectly acceptable.
->> >> 
->> >> It would be interesting to see what this approach looks like, if you
->> >> have time to toss something together?
->> >
->> >OK, will make patches for reviewing. Thanks!
->> 
->> Hi, Baoquan, Andrew
->> 
->> I have come up with an implementation for top-down search the ram resources.
->> Hope this would meet your need.
->
->Thanks for telling and your effort. Glad to know
->I am not the only buyer of walk_system_ram_res_rev. I am fine with other
->ways to make it, people can compare them and know which one is better.
->I am working to use the list_head instead, the doubly linked list way
->as Andrew suggested. Andrew and other people can help make a choice. It
->won't be long.
->
+On Mon, 26 Mar 2018 17:12:10 +0800
+Dave Young <dyoung@redhat.com> wrote:
 
-Sure,
+> On 03/26/18 at 05:08pm, Dave Young wrote:
+> > On 03/20/18 at 04:56pm, Michal Suchanek wrote:  
+> > > Not all architectures implement KEXEC_FILE_LOAD. However, on some
+> > > archiectures KEXEC_FILE_LOAD is required when secure boot is
+> > > enabled in locked-down mode. Previously users had to select the
+> > > KEXEC_FILE_LOAD syscall with undocumented -s option. However, if
+> > > they did pass the option kexec would fail on architectures that
+> > > do not support it.
+> > > 
+> > > So add an -a option that tries KEXEC_FILE_LOAD and when it is not
+> > > supported tries KEXEC_LOAD.
+> > > 
+> > > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > > ---
+> > > v3: instead of changing the deafult add extra option
+> > > v4: actually check -ENOSYS as well
+> > > v5: add missing break
+> > > ---
+> > >  kexec/kexec.c | 58
+> > > +++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+> > > kexec/kexec.h |  6 +++++- 2 files changed, 58 insertions(+), 6
+> > > deletions(-)
+> > > 
+> > > diff --git a/kexec/kexec.c b/kexec/kexec.c
+> > > index 68ae0594d4a7..44042345a16e 100644
+> > > --- a/kexec/kexec.c
+> > > +++ b/kexec/kexec.c
+> > > @@ -1243,6 +1243,7 @@ int main(int argc, char *argv[])
+> > >  	int do_unload = 0;
+> > >  	int do_reuse_initrd = 0;
+> > >  	int do_kexec_file_syscall = 0;
+> > > +	int do_kexec_fallback = 0;
+> > >  	int do_status = 0;
+> > >  	void *entry = 0;
+> > >  	char *type = 0;
+> > > @@ -1367,6 +1368,15 @@ int main(int argc, char *argv[])
+> > >  			break;
+> > >  		case OPT_KEXEC_FILE_SYSCALL:
+> > >  			do_kexec_file_syscall = 1;
+> > > +			do_kexec_fallback = 0;
+> > > +			break;
+> > > +		case OPT_KEXEC_SYSCALL:
+> > > +			do_kexec_file_syscall = 0;
+> > > +			do_kexec_fallback = 0;
+> > > +			break;
+> > > +		case OPT_KEXEC_SYSCALL_AUTO:
+> > > +			do_kexec_file_syscall = 1;
+> > > +			do_kexec_fallback = 1;
+> > >  			break;
+> > >  		case OPT_STATUS:
+> > >  			do_status = 1;
+> > > @@ -1433,7 +1443,7 @@ int main(int argc, char *argv[])
+> > >  		}
+> > >  	}
+> > >  	if (do_kexec_file_syscall) {
+> > > -		if (do_load_jump_back_helper)
+> > > +		if (do_load_jump_back_helper
+> > > && !do_kexec_fallback) die("--load-jump-back-helper not supported
+> > > with kexec_file_load\n"); if (kexec_flags &
+> > > KEXEC_PRESERVE_CONTEXT) die("--load-preserve-context not
+> > > supported with kexec_file_load\n"); @@ -1447,16 +1457,54 @@ int
+> > > main(int argc, char *argv[]) result = k_status(kexec_flags);
+> > >  	}
+> > >  	if (do_unload) {
+> > > -		if (do_kexec_file_syscall)
+> > > +		if (do_kexec_file_syscall) {
+> > >  			result =
+> > > kexec_file_unload(kexec_file_flags);
+> > > -		else
+> > > +			if ((result == -ENOSYS) &&
+> > > do_kexec_fallback)
+> > > +				do_kexec_file_syscall = 0;
+> > > +		}
+> > > +		if (!do_kexec_file_syscall)
+> > >  			result = k_unload(kexec_flags);
+> > >  	}
+> > >  	if (do_load && (result == 0)) {
+> > > -		if (do_kexec_file_syscall)
+> > > +		if (do_kexec_file_syscall) {
+> > >  			result = do_kexec_file_load(fileind,
+> > > argc, argv, kexec_file_flags);
+> > > -		else
+> > > +			if (do_kexec_fallback) switch (result) {
+> > > +				/*
+> > > +				 * Something failed with
+> > > signature verification.
+> > > +				 * Reject the image.
+> > > +				 */
+> > > +				case -ELIBBAD:
+> > > +				case -EKEYREJECTED:
+> > > +				case -ENOPKG:
+> > > +				case -ENOKEY:
+> > > +				case -EBADMSG:
+> > > +				case -EMSGSIZE:
+> > > +					/*
+> > > +					 * By default reject or
+> > > do nothing if
+> > > +					 * succeded
+> > > +					 */
+> > > +				default: break;
+> > > +				case -ENOSYS: /* not implemented
+> > > */
+> > > +					/*
+> > > +					 * Parsing image or
+> > > other options failed
+> > > +					 * The image may be
+> > > invalid or image
+> > > +					 * type may not
+> > > supported by kernel so
+> > > +					 * retry parsing in
+> > > kexec-tools.
+> > > +					 */
+> > > +				case -EINVAL:
+> > > +				case -ENOEXEC:
+> > > +					 /*
+> > > +					  * ENOTSUPP can be
+> > > unsupported image
+> > > +					  * type or unsupported
+> > > PE signature
+> > > +					  * wrapper type, duh
+> > > +					  */
+> > > +				case -ENOTSUP:  
+> > 
+> > Hmm, this is still used in latest version.  kernel does not return
+> > such error number,  I might not say clearly previously.  Please
+> > check the kernel code, the only one place I know is because no
+> > kdump support in power kexec_file:
+> > arch/powerpc/kernel/machine_kexec_file_64.c
+> > 
+> >         /* We don't support crash kernels yet. */
+> >         if (image->type == KEXEC_TYPE_CRASH)
+> >                 return -ENOTSUPP;
+> > 
+> > So I suggest not checking this as well since -ENOTSUPP is not
+> > populated in userspace headers, and -ENOTSUP is not used at all.
+> > 
+> > Also as I mentioned in another reply -EINVAL and -ENOEXEC is also
+> > not ncessary.
+> > 
+> > For -ENOTSUP, maybe someone can submit a patch to switch to
+> > -ENOTSUPP so that userspace can check it.
+> > Ccing Thiago and Hari for the -ENOTSUPP errno issue.  
+> 
+> Oops for the hurry reply,  I means -ENOTSUPP might be able to replaced
+> with -EOPNOTSUPP, a similar change like this:
+> https://patchwork.kernel.org/patch/8490791/
 
-Look forward your approach.
+Thanks for catching this. In Linux ENOTSUPP with extra P is different
+from EOPNOTSUPP and ENOTSUP (single P). Since we are talking to the
+kernel and it returns the double P ENOTSUPP we need to define it in
+kexec as well. And we should check ENOTSUP with single P in case
+somebody some day thinks that returning undefined error codes to
+userspace is not nice like in the patch above.
 
->Thanks
->Baoquan
->
+Thanks
 
--- 
-Wei Yang
-Help you, Help me
+Michal
 
 _______________________________________________
 kexec mailing list
