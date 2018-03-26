@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f0MPV-0008Ja-0O
- for kexec@lists.infradead.org; Mon, 26 Mar 2018 07:19:18 +0000
-Date: Mon, 26 Mar 2018 09:19:03 +0200
+ id 1f0MWB-0003pT-TG
+ for kexec@lists.infradead.org; Mon, 26 Mar 2018 07:26:13 +0000
+Date: Mon, 26 Mar 2018 09:25:58 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec/ppc64: leverage kexec_file_load support
-Message-ID: <20180326071903.r2ce5tigwgc3o4tm@verge.net.au>
-References: <152010365000.15494.15072043690885225651.stgit@hbathini.in.ibm.com>
- <87y3inhp14.fsf@morokweng.localdomain>
+Subject: Re: [PATCH v5 1/5] kexec: Return -ENOSYS when kexec does not know
+ how to call KEXEC_FILE_LOAD
+Message-ID: <20180326072558.iidgbvxi2fh7cjgu@verge.net.au>
+References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
+ <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1521561315.git.msuchanek@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87y3inhp14.fsf@morokweng.localdomain>
+In-Reply-To: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1521561315.git.msuchanek@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,55 +25,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>, Geoff Levand <geoff@infradead.org>, Kexec-ml <kexec@lists.infradead.org>, Michael Ellerman <mpe@ellerman.id.au>
+To: Michal Suchanek <msuchanek@suse.de>
+Cc: Petr Tesarik <ptesarik@suse.cz>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>
 
-On Mon, Mar 19, 2018 at 03:57:11PM -0300, Thiago Jung Bauermann wrote:
-> 
-> Hello Hari,
-> 
-> Hari Bathini <hbathini@linux.vnet.ibm.com> writes:
-> 
-> > PPC64 kernel now supports kexec_file_load system call. Leverage it by
-> > enabling that support here. Note that loading crash kernel with this
-> > system call is not yet supported in the kernel and trying to load one
-> > will fail with '-ENOTSUPP' error.
-> >
-> > Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
-> > ---
-> >  kexec/arch/ppc64/kexec-elf-ppc64.c |   84 ++++++++++++++++++++++++++++++++++++
-> >  kexec/kexec-syscall.h              |    3 +
-> >  2 files changed, 87 insertions(+)
-> 
-> Thanks for implementing this! Looks good to me, just one nit below.
-> Regardless of that:
-> 
-> Reviewed-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-> 
-> > diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
-> > index ddd3de8..2742cd6 100644
-> > --- a/kexec/arch/ppc64/kexec-elf-ppc64.c
-> > +++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
-> 
-> <snip>
-> 
-> > @@ -117,6 +196,9 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
-> >  	uint32_t my_run_at_load;
-> >  	unsigned int slave_code[256/sizeof (unsigned int)], master_entry;
-> >
-> > +	if (info->file_mode)
-> > +		return elf_ppc64_load_file(argc, argv, info);
-> > +
-> >  	/* See options.h -- add any more there, too. */
-> >  	static const struct option options[] = {
-> >  		KEXEC_ARCH_OPTIONS
-> 
-> This is placing executable code between variable declarations. It may be
-> fine for gcc but it's more idiomatic C to put it after all variable
-> declarations. But perhaps the kexec-tools style is fine with it?
+Hi Michal, thanks for the updated patches.
 
-I'd rather we avoid proliferating this style in the kexec code.
-Hari, could you respin this patch?
+Dave, are you planning to review this series?
+
+On Tue, Mar 20, 2018 at 04:56:16PM +0100, Michal Suchanek wrote:
+> When the kernel does not know a syscall number it returns -ENOSYS but
+> when kexec does not know a syscall number it returns -1. Return -ENOSYS
+> from kexec as well.
+> 
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+>  kexec/kexec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kexec/kexec.c b/kexec/kexec.c
+> index cfd837c1b6bb..ab8cff7fe083 100644
+> --- a/kexec/kexec.c
+> +++ b/kexec/kexec.c
+> @@ -1166,7 +1166,7 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
+>  
+>  	if (!is_kexec_file_load_implemented()) {
+>  		fprintf(stderr, "syscall kexec_file_load not available.\n");
+> -		return -1;
+> +		return -ENOSYS;
+>  	}
+>  
+>  	if (argc - fileind <= 0) {
+> -- 
+> 2.13.6
+> 
 
 _______________________________________________
 kexec mailing list
