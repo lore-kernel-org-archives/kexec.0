@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from stargate.chelsio.com ([12.32.117.8])
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f0qWL-0003s0-Rp
- for kexec@lists.infradead.org; Tue, 27 Mar 2018 15:28:23 +0000
-Date: Tue, 27 Mar 2018 20:57:16 +0530
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Subject: Re: [PATCH net-next v2 0/2] kernel: add support to collect hardware
- logs in crash recovery kernel
-Message-ID: <20180327152715.GA18097@chelsio.com>
+ id 1f0r20-0002PH-9L
+ for kexec@lists.infradead.org; Tue, 27 Mar 2018 16:01:09 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
  <87muyxlctn.fsf@xmission.com> <20180326134539.GA15852@chelsio.com>
- <87k1txfyj5.fsf@xmission.com>
+ <87k1txfyj5.fsf@xmission.com> <20180327152715.GA18097@chelsio.com>
+Date: Tue, 27 Mar 2018 10:59:50 -0500
+In-Reply-To: <20180327152715.GA18097@chelsio.com> (Rahul Lakkireddy's message
+ of "Tue, 27 Mar 2018 20:57:16 +0530")
+Message-ID: <87tvt1ecg9.fsf@xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87k1txfyj5.fsf@xmission.com>
+Subject: Re: [PATCH net-next v2 0/2] kernel: add support to collect hardware
+ logs in crash recovery kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,56 +26,68 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 Cc: Indranil Choudhury <indranil@chelsio.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Nirranjan Kirubaharan <nirranjan@chelsio.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stephen@networkplumber.org" <stephen@networkplumber.org>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>, "davem@davemloft.net" <davem@davemloft.net>, Ganesh GR <ganeshgr@chelsio.com>
 
-On Tuesday, March 03/27/18, 2018 at 18:47:34 +0530, Eric W. Biederman wrote:
-> Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
-> 
-> > On Saturday, March 03/24/18, 2018 at 20:50:52 +0530, Eric W. Biederman wrote:
-> >> 
-> >> Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
-> >> 
-> >> > On production servers running variety of workloads over time, kernel
-> >> > panic can happen sporadically after days or even months. It is
-> >> > important to collect as much debug logs as possible to root cause
-> >> > and fix the problem, that may not be easy to reproduce. Snapshot of
-> >> > underlying hardware/firmware state (like register dump, firmware
-> >> > logs, adapter memory, etc.), at the time of kernel panic will be very
-> >> > helpful while debugging the culprit device driver.
-> >> >
-> >> > This series of patches add new generic framework that enable device
-> >> > drivers to collect device specific snapshot of the hardware/firmware
-> >> > state of the underlying device in the crash recovery kernel. In crash
-> >> > recovery kernel, the collected logs are exposed via /sys/kernel/crashdd/
-> >> > directory, which is copied by user space scripts for post-analysis.
-> >> >
-> >> > A kernel module crashdd is newly added. In crash recovery kernel,
-> >> > crashdd exposes /sys/kernel/crashdd/ directory containing device
-> >> > specific hardware/firmware logs.
-> >> 
-> >> Have you looked at instead of adding a sysfs file adding the dumps
-> >> as additional elf notes in /proc/vmcore?
-> >> 
-> >
-> > I see the crash recovery kernel's memory is not present in any of the
-> > the PT_LOAD headers.  So, makedumpfile is not collecting the dumps
-> > that are in crash recovery kernel's memory.
-> >
-> > Also, are you suggesting exporting the dumps themselves as PT_NOTE
-> > instead?  I'll look into doing it this way.
-> 
-> Yes.  I was suggesting exporting the dumps themselves as PT_NOTE
-> in /proc/vmcore.  I think that will allow makedumpfile to collect
-> your new information without modification.
-> 
+Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
 
-If I export the dumps themselves as PT_NOTE in /proc/vmcore, can the 
-crash tool work without modification; i.e can crash tool extract these
-notes?
+> On Tuesday, March 03/27/18, 2018 at 18:47:34 +0530, Eric W. Biederman wrote:
+>> Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
+>> 
+>> > On Saturday, March 03/24/18, 2018 at 20:50:52 +0530, Eric W. Biederman wrote:
+>> >> 
+>> >> Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
+>> >> 
+>> >> > On production servers running variety of workloads over time, kernel
+>> >> > panic can happen sporadically after days or even months. It is
+>> >> > important to collect as much debug logs as possible to root cause
+>> >> > and fix the problem, that may not be easy to reproduce. Snapshot of
+>> >> > underlying hardware/firmware state (like register dump, firmware
+>> >> > logs, adapter memory, etc.), at the time of kernel panic will be very
+>> >> > helpful while debugging the culprit device driver.
+>> >> >
+>> >> > This series of patches add new generic framework that enable device
+>> >> > drivers to collect device specific snapshot of the hardware/firmware
+>> >> > state of the underlying device in the crash recovery kernel. In crash
+>> >> > recovery kernel, the collected logs are exposed via /sys/kernel/crashdd/
+>> >> > directory, which is copied by user space scripts for post-analysis.
+>> >> >
+>> >> > A kernel module crashdd is newly added. In crash recovery kernel,
+>> >> > crashdd exposes /sys/kernel/crashdd/ directory containing device
+>> >> > specific hardware/firmware logs.
+>> >> 
+>> >> Have you looked at instead of adding a sysfs file adding the dumps
+>> >> as additional elf notes in /proc/vmcore?
+>> >> 
+>> >
+>> > I see the crash recovery kernel's memory is not present in any of the
+>> > the PT_LOAD headers.  So, makedumpfile is not collecting the dumps
+>> > that are in crash recovery kernel's memory.
+>> >
+>> > Also, are you suggesting exporting the dumps themselves as PT_NOTE
+>> > instead?  I'll look into doing it this way.
+>> 
+>> Yes.  I was suggesting exporting the dumps themselves as PT_NOTE
+>> in /proc/vmcore.  I think that will allow makedumpfile to collect
+>> your new information without modification.
+>> 
+>
+> If I export the dumps themselves as PT_NOTE in /proc/vmcore, can the 
+> crash tool work without modification; i.e can crash tool extract these
+> notes?
 
-Thanks,
-Rahul
+I believe crash would need to be taught about these notes.   This is
+something new.
+
+However "readelf -a random_elf_file" does display elf notes, and elf
+notes in general are not hard to extract.
+
+What I expect from an enconding in ELF core dump format is a way to
+captuer the data, a way to encode the data, and a way to transport the
+data to the people who care.  Analysis tools are easy enough after the
+fact.
+
+Eric
 
 _______________________________________________
 kexec mailing list
