@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f0mV0-0001B7-GJ
- for kexec@lists.infradead.org; Tue, 27 Mar 2018 11:10:44 +0000
-Date: Tue, 27 Mar 2018 13:10:28 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH v5 4/5] kexec: Add option to fall back to KEXEC_LOAD
- when KEXEC_FILE_LOAD is not supported
-Message-ID: <20180327131028.4c4f62c3@ezekiel.suse.cz>
-In-Reply-To: <20180327130129.413bd399@kitsune.suse.cz>
-References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
- <9db6c165a0832796faf88b0cef8f296a896f5fa8.1521561315.git.msuchanek@suse.de>
- <20180326090832.GA24210@dhcp-128-65.nay.redhat.com>
- <20180326091210.GA4781@dhcp-128-65.nay.redhat.com>
- <20180326193810.028a94b5@kitsune.suse.cz>
- <20180327100619.GC4681@dhcp-128-65.nay.redhat.com>
- <20180327130129.413bd399@kitsune.suse.cz>
+ id 1f0oVL-000677-Q3
+ for kexec@lists.infradead.org; Tue, 27 Mar 2018 13:19:13 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
+ <87muyxlctn.fsf@xmission.com> <20180326134539.GA15852@chelsio.com>
+Date: Tue, 27 Mar 2018 08:17:34 -0500
+In-Reply-To: <20180326134539.GA15852@chelsio.com> (Rahul Lakkireddy's message
+ of "Mon, 26 Mar 2018 19:15:40 +0530")
+Message-ID: <87k1txfyj5.fsf@xmission.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH net-next v2 0/2] kernel: add support to collect hardware
+ logs in crash recovery kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,58 +21,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-Cc: Tony Jones <tonyj@suse.com>, kexec@lists.infradead.org, hbathini@linux.vnet.ibm.com, horms@verge.net.au, bauerman@linux.vnet.ibm.com, Dave Young <dyoung@redhat.com>
+To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Cc: Indranil Choudhury <indranil@chelsio.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Nirranjan Kirubaharan <nirranjan@chelsio.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stephen@networkplumber.org" <stephen@networkplumber.org>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>, "davem@davemloft.net" <davem@davemloft.net>, Ganesh GR <ganeshgr@chelsio.com>
 
-T24gVHVlLCAyNyBNYXIgMjAxOCAxMzowMToyOSArMDIwMApNaWNoYWwgU3VjaMOhbmVrIDxtc3Vj
-aGFuZWtAc3VzZS5kZT4gd3JvdGU6Cgo+IE9uIFR1ZSwgMjcgTWFyIDIwMTggMTg6MDY6MTkgKzA4
-MDAKPiBEYXZlIFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gCj4gPiBPbiAwMy8y
-Ni8xOCBhdCAwNzozOHBtLCBNaWNoYWwgU3VjaMOhbmVrIHdyb3RlOiAgCj4gPiA+IE9uIE1vbiwg
-MjYgTWFyIDIwMTggMTc6MTI6MTAgKzA4MDAKPiA+ID4gRGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhh
-dC5jb20+IHdyb3RlOgo+ID4gPiAgICAgCj4gPiA+ID4gT24gMDMvMjYvMTggYXQgMDU6MDhwbSwg
-RGF2ZSBZb3VuZyB3cm90ZTogICAgCj4gPiA+ID4gPiBPbiAwMy8yMC8xOCBhdCAwNDo1NnBtLCBN
-aWNoYWwgU3VjaGFuZWsgd3JvdGU6ICAgICAgCj4gCj4gPiA+ID4gPiBIbW0sIHRoaXMgaXMgc3Rp
-bGwgdXNlZCBpbiBsYXRlc3QgdmVyc2lvbi4gIGtlcm5lbCBkb2VzIG5vdAo+ID4gPiA+ID4gcmV0
-dXJuIHN1Y2ggZXJyb3IgbnVtYmVyLCAgSSBtaWdodCBub3Qgc2F5IGNsZWFybHkgcHJldmlvdXNs
-eS4KPiA+ID4gPiA+IFBsZWFzZSBjaGVjayB0aGUga2VybmVsIGNvZGUsIHRoZSBvbmx5IG9uZSBw
-bGFjZSBJIGtub3cgaXMKPiA+ID4gPiA+IGJlY2F1c2Ugbm8ga2R1bXAgc3VwcG9ydCBpbiBwb3dl
-ciBrZXhlY19maWxlOgo+ID4gPiA+ID4gYXJjaC9wb3dlcnBjL2tlcm5lbC9tYWNoaW5lX2tleGVj
-X2ZpbGVfNjQuYwo+ID4gPiA+ID4gCj4gPiA+ID4gPiAgICAgICAgIC8qIFdlIGRvbid0IHN1cHBv
-cnQgY3Jhc2gga2VybmVscyB5ZXQuICovCj4gPiA+ID4gPiAgICAgICAgIGlmIChpbWFnZS0+dHlw
-ZSA9PSBLRVhFQ19UWVBFX0NSQVNIKQo+ID4gPiA+ID4gICAgICAgICAgICAgICAgIHJldHVybiAt
-RU5PVFNVUFA7Cj4gPiA+ID4gPiAKPiA+ID4gPiA+IFNvIEkgc3VnZ2VzdCBub3QgY2hlY2tpbmcg
-dGhpcyBhcyB3ZWxsIHNpbmNlIC1FTk9UU1VQUCBpcyBub3QKPiA+ID4gPiA+IHBvcHVsYXRlZCBp
-biB1c2Vyc3BhY2UgaGVhZGVycywgYW5kIC1FTk9UU1VQIGlzIG5vdCB1c2VkIGF0IGFsbC4KPiA+
-ID4gPiA+IAo+ID4gPiA+ID4gQWxzbyBhcyBJIG1lbnRpb25lZCBpbiBhbm90aGVyIHJlcGx5IC1F
-SU5WQUwgYW5kIC1FTk9FWEVDIGlzCj4gPiA+ID4gPiBhbHNvIG5vdCBuY2Vzc2FyeS4KPiA+ID4g
-PiA+IAo+ID4gPiA+ID4gRm9yIC1FTk9UU1VQLCBtYXliZSBzb21lb25lIGNhbiBzdWJtaXQgYSBw
-YXRjaCB0byBzd2l0Y2ggdG8KPiA+ID4gPiA+IC1FTk9UU1VQUCBzbyB0aGF0IHVzZXJzcGFjZSBj
-YW4gY2hlY2sgaXQuCj4gPiA+ID4gPiBDY2luZyBUaGlhZ28gYW5kIEhhcmkgZm9yIHRoZSAtRU5P
-VFNVUFAgZXJybm8gaXNzdWUuICAgICAgCj4gPiA+ID4gCj4gPiA+ID4gT29wcyBmb3IgdGhlIGh1
-cnJ5IHJlcGx5LCAgSSBtZWFucyAtRU5PVFNVUFAgbWlnaHQgYmUgYWJsZSB0bwo+ID4gPiA+IHJl
-cGxhY2VkIHdpdGggLUVPUE5PVFNVUFAsIGEgc2ltaWxhciBjaGFuZ2UgbGlrZSB0aGlzOgo+ID4g
-PiA+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvODQ5MDc5MS8gICAgCj4gPiA+
-IAo+ID4gPiBUaGFua3MgZm9yIGNhdGNoaW5nIHRoaXMuIEluIExpbnV4IEVOT1RTVVBQIHdpdGgg
-ZXh0cmEgUCBpcwo+ID4gPiBkaWZmZXJlbnQgZnJvbSBFT1BOT1RTVVBQIGFuZCBFTk9UU1VQIChz
-aW5nbGUgUCkuIFNpbmNlIHdlIGFyZQo+ID4gPiB0YWxraW5nIHRvIHRoZSBrZXJuZWwgYW5kIGl0
-IHJldHVybnMgdGhlIGRvdWJsZSBQIEVOT1RTVVBQIHdlIG5lZWQKPiA+ID4gdG8gZGVmaW5lIGl0
-IGluIGtleGVjIGFzIHdlbGwuIEFuZCB3ZSBzaG91bGQgY2hlY2sgRU5PVFNVUCB3aXRoCj4gPiA+
-IHNpbmdsZSBQIGluIGNhc2Ugc29tZWJvZHkgc29tZSBkYXkgdGhpbmtzIHRoYXQgcmV0dXJuaW5n
-IHVuZGVmaW5lZAo+ID4gPiBlcnJvciBjb2RlcyB0byB1c2Vyc3BhY2UgaXMgbm90IG5pY2UgbGlr
-ZSBpbiB0aGUgcGF0Y2ggYWJvdmUuICAgIAo+ID4gCj4gPiBJJ20gbm90IHN1cmUgaWYgd2UgY2Fu
-IGRlZmluZSBpdCBpbiBrZXhlYy10b29scyBzaW5jZSB0aGV5IGFyZSB1c2VkCj4gPiBpbiBrZXJu
-ZWwgb25seS4uICAgCj4gCj4gV2UgZGVmaW5lIHRoZSBLRVhFQ19GSUxFX0xPQUQgc3lzY2FsbCBu
-dW1iZXJzIHNvIHdoeSBub3QgRU5PVFNVUFA/CgpFc3NlbnRpYWxseSwgYmVjYXVzZSBzeXNjYWxs
-IG51bWJlcnMgd2lsbCBiZSBhZGRlZCB0byBMaW51eCB1YXBpCnNvb25lciBvciBsYXRlciwgYnV0
-IEVOT1RTVVBQIGlzIG1lYW50IHRvIHN0YXkga2VybmVsLWludGVybmFsLiBJdCBpcwpkZWNsYXJl
-ZCBpbiBpbmNsdWRlL2xpbnV4L2Vycm5vLmgsIHdoaWNoIHNheXM6CgogKiBUaGVzZSBzaG91bGQg
-bmV2ZXIgYmUgc2VlbiBieSB1c2VyIHByb2dyYW1zLiAKCkluIG90aGVyIHdvcmRzLCBpdCBpcyBh
-bHJlYWR5IGEga2VybmVsIGJ1ZyB0aGF0IHRoZXNlIGVycm9yIGNvZGVzIGNhbgphcmUgY3VycmVu
-dGx5IHJldHVybmVkIHRvIHVzZXIgc3BhY2UuCgpQZXRyIFQKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8va2V4ZWMK
+Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
+
+> On Saturday, March 03/24/18, 2018 at 20:50:52 +0530, Eric W. Biederman wrote:
+>> 
+>> Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
+>> 
+>> > On production servers running variety of workloads over time, kernel
+>> > panic can happen sporadically after days or even months. It is
+>> > important to collect as much debug logs as possible to root cause
+>> > and fix the problem, that may not be easy to reproduce. Snapshot of
+>> > underlying hardware/firmware state (like register dump, firmware
+>> > logs, adapter memory, etc.), at the time of kernel panic will be very
+>> > helpful while debugging the culprit device driver.
+>> >
+>> > This series of patches add new generic framework that enable device
+>> > drivers to collect device specific snapshot of the hardware/firmware
+>> > state of the underlying device in the crash recovery kernel. In crash
+>> > recovery kernel, the collected logs are exposed via /sys/kernel/crashdd/
+>> > directory, which is copied by user space scripts for post-analysis.
+>> >
+>> > A kernel module crashdd is newly added. In crash recovery kernel,
+>> > crashdd exposes /sys/kernel/crashdd/ directory containing device
+>> > specific hardware/firmware logs.
+>> 
+>> Have you looked at instead of adding a sysfs file adding the dumps
+>> as additional elf notes in /proc/vmcore?
+>> 
+>
+> I see the crash recovery kernel's memory is not present in any of the
+> the PT_LOAD headers.  So, makedumpfile is not collecting the dumps
+> that are in crash recovery kernel's memory.
+>
+> Also, are you suggesting exporting the dumps themselves as PT_NOTE
+> instead?  I'll look into doing it this way.
+
+Yes.  I was suggesting exporting the dumps themselves as PT_NOTE
+in /proc/vmcore.  I think that will allow makedumpfile to collect
+your new information without modification.
+
+Eric
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
