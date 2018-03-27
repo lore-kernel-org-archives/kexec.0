@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mail-it0-x242.google.com ([2607:f8b0:4001:c0b::242])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f0XTM-0003Zn-26
- for kexec@lists.infradead.org; Mon, 26 Mar 2018 19:08:03 +0000
-Date: Mon, 26 Mar 2018 21:07:46 +0200
-From: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-Subject: Re: [PATCH v5 4/5] kexec: Add option to fall back to KEXEC_LOAD
- when KEXEC_FILE_LOAD is not supported
-Message-ID: <20180326210746.156f53e1@kitsune.suse.cz>
-In-Reply-To: <87in9i3c08.fsf@morokweng.localdomain>
-References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
- <9db6c165a0832796faf88b0cef8f296a896f5fa8.1521561315.git.msuchanek@suse.de>
- <20180326090832.GA24210@dhcp-128-65.nay.redhat.com>
- <20180326091210.GA4781@dhcp-128-65.nay.redhat.com>
- <20180326193810.028a94b5@kitsune.suse.cz>
- <87in9i3c08.fsf@morokweng.localdomain>
+ id 1f0kWI-0000Ou-MP
+ for kexec@lists.infradead.org; Tue, 27 Mar 2018 09:03:56 +0000
+Received: by mail-it0-x242.google.com with SMTP id m134-v6so9508160itb.3
+ for <kexec@lists.infradead.org>; Tue, 27 Mar 2018 02:03:43 -0700 (PDT)
+Date: Tue, 27 Mar 2018 18:04:37 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [RESEND PATCH 1/2] dt-ops: Add helper API to dump fdt blob
+Message-ID: <20180326123038.GA14737@linaro.org>
+References: <1521455739-8022-1-git-send-email-bhsharma@redhat.com>
+ <20180319144529.vkfrrkc4bdhwvvbi@dragonfly>
+ <CACi5LpObqAJ=yC_e2G80JsspfzEx50Rq=J2G_UAnoT3UqS4HFQ@mail.gmail.com>
+ <CACi5LpPVbVZBAXynMQ79kkboLrQcw1s-LSuFkSQAnkXtdS8wAA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CACi5LpPVbVZBAXynMQ79kkboLrQcw1s-LSuFkSQAnkXtdS8wAA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,56 +24,251 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>, horms@verge.net.au, hbathini@linux.vnet.ibm.com, Dave Young <dyoung@redhat.com>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: James Morse <james.morse@arm.com>, Dave Young <dyoung@redhat.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org
 
-T24gTW9uLCAyNiBNYXIgMjAxOCAxNTo1MjozOSAtMDMwMApUaGlhZ28gSnVuZyBCYXVlcm1hbm4g
-PGJhdWVybWFuQGxpbnV4LnZuZXQuaWJtLmNvbT4gd3JvdGU6Cgo+IE1pY2hhbCBTdWNow6FuZWsg
-PG1zdWNoYW5la0BzdXNlLmRlPiB3cml0ZXM6Cj4gCj4gPiBPbiBNb24sIDI2IE1hciAyMDE4IDE3
-OjEyOjEwICswODAwCj4gPiBEYXZlIFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4g
-PiAgCj4gPj4gT24gMDMvMjYvMTggYXQgMDU6MDhwbSwgRGF2ZSBZb3VuZyB3cm90ZTogIAo+ID4+
-ID4gT24gMDMvMjAvMTggYXQgMDQ6NTZwbSwgTWljaGFsIFN1Y2hhbmVrIHdyb3RlOiAgICAKCj4g
-Pj4gPiBIbW0sIHRoaXMgaXMgc3RpbGwgdXNlZCBpbiBsYXRlc3QgdmVyc2lvbi4gIGtlcm5lbCBk
-b2VzIG5vdAo+ID4+ID4gcmV0dXJuIHN1Y2ggZXJyb3IgbnVtYmVyLCAgSSBtaWdodCBub3Qgc2F5
-IGNsZWFybHkgcHJldmlvdXNseS4KPiA+PiA+IFBsZWFzZSBjaGVjayB0aGUga2VybmVsIGNvZGUs
-IHRoZSBvbmx5IG9uZSBwbGFjZSBJIGtub3cgaXMKPiA+PiA+IGJlY2F1c2Ugbm8ga2R1bXAgc3Vw
-cG9ydCBpbiBwb3dlciBrZXhlY19maWxlOgo+ID4+ID4gYXJjaC9wb3dlcnBjL2tlcm5lbC9tYWNo
-aW5lX2tleGVjX2ZpbGVfNjQuYwo+ID4+ID4gCj4gPj4gPiAgICAgICAgIC8qIFdlIGRvbid0IHN1
-cHBvcnQgY3Jhc2gga2VybmVscyB5ZXQuICovCj4gPj4gPiAgICAgICAgIGlmIChpbWFnZS0+dHlw
-ZSA9PSBLRVhFQ19UWVBFX0NSQVNIKQo+ID4+ID4gICAgICAgICAgICAgICAgIHJldHVybiAtRU5P
-VFNVUFA7Cj4gPj4gPiAKPiA+PiA+IFNvIEkgc3VnZ2VzdCBub3QgY2hlY2tpbmcgdGhpcyBhcyB3
-ZWxsIHNpbmNlIC1FTk9UU1VQUCBpcyBub3QKPiA+PiA+IHBvcHVsYXRlZCBpbiB1c2Vyc3BhY2Ug
-aGVhZGVycywgYW5kIC1FTk9UU1VQIGlzIG5vdCB1c2VkIGF0IGFsbC4KPiA+PiA+IAouLi4KPiA+
-PiA+IEZvciAtRU5PVFNVUCwgbWF5YmUgc29tZW9uZSBjYW4gc3VibWl0IGEgcGF0Y2ggdG8gc3dp
-dGNoIHRvCj4gPj4gPiAtRU5PVFNVUFAgc28gdGhhdCB1c2Vyc3BhY2UgY2FuIGNoZWNrIGl0Lgo+
-ID4+ID4gQ2NpbmcgVGhpYWdvIGFuZCBIYXJpIGZvciB0aGUgLUVOT1RTVVBQIGVycm5vIGlzc3Vl
-LiAgICAKPiA+PiAKPiA+PiBPb3BzIGZvciB0aGUgaHVycnkgcmVwbHksICBJIG1lYW5zIC1FTk9U
-U1VQUCBtaWdodCBiZSBhYmxlIHRvCj4gPj4gcmVwbGFjZWQgd2l0aCAtRU9QTk9UU1VQUCwgYSBz
-aW1pbGFyIGNoYW5nZSBsaWtlIHRoaXM6Cj4gPj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9y
-Zy9wYXRjaC84NDkwNzkxLyAgCj4gPgo+ID4gVGhhbmtzIGZvciBjYXRjaGluZyB0aGlzLiBJbiBM
-aW51eCBFTk9UU1VQUCB3aXRoIGV4dHJhIFAgaXMKPiA+IGRpZmZlcmVudCBmcm9tIEVPUE5PVFNV
-UFAgYW5kIEVOT1RTVVAgKHNpbmdsZSBQKS4gU2luY2Ugd2UgYXJlCj4gPiB0YWxraW5nIHRvIHRo
-ZSBrZXJuZWwgYW5kIGl0IHJldHVybnMgdGhlIGRvdWJsZSBQIEVOT1RTVVBQIHdlIG5lZWQKPiA+
-IHRvIGRlZmluZSBpdCBpbiBrZXhlYyBhcyB3ZWxsLiBBbmQgd2Ugc2hvdWxkIGNoZWNrIEVOT1RT
-VVAgd2l0aAo+ID4gc2luZ2xlIFAgaW4gY2FzZSBzb21lYm9keSBzb21lIGRheSB0aGlua3MgdGhh
-dCByZXR1cm5pbmcgdW5kZWZpbmVkCj4gPiBlcnJvciBjb2RlcyB0byB1c2Vyc3BhY2UgaXMgbm90
-IG5pY2UgbGlrZSBpbiB0aGUgcGF0Y2ggYWJvdmUuICAKPiAKPiBJIHdhc24ndCBhd2FyZSB0aGF0
-IEVOT1RTVVBQIHdhcyBhbiBpbi1rZXJuZWwgb25seSBlcnJuby4gU2hvdWxkIEkKPiBzdWJtaXQg
-YSBwYXRjaCBmb3IgdGhlIGtlcm5lbCBzbyB0aGF0IHBvd2VycGMgcmV0dXJucyAtRU9QTk9UU1VQ
-UCBpbgo+IGNhc2Ugb2YgdHJ5aW5nIHRvIGxvYWQga2R1bXAga2VybmVsIHdpdGgga2V4ZWNfZmls
-ZV9sb2FkKCk/Cj4gCgpJdCBkb2VzIG5vdCBoZWxwIHVzIG11Y2ggYmVjYXVzZSB3ZSBuZWVkIHRv
-IHN1cHBvcnQga2VybmVscyB3aXRob3V0IHRoZQpwYXRjaCBhcyB3ZWxsLiBJbiB0aGUgbG9uZyBy
-dW4gaXQgbWlnaHQgYmUgbmljZSB0byBlbGltaW5hdGUgdGhlIHJldHVybgp2YWx1ZSBpbiB1c2Vy
-LWZhY2luZyBmdW5jdGlvbnMuIEJ1dCBpdCdzIGRpZmZpY3VsdCB0byB0ZWxsIHdoaWNoCmZ1bmN0
-aW9ucyBhcmUgdXNlci1mYWNpbmcuIFRoZSByZXR1cm4gdmFsdWUgY2FuIGJlIGZvcndhcmRlZCBx
-dWl0ZSBhCmZldyB0aW1lcyBiZWZvcmUgaXQgcmVhY2hlcyB0aGUgdXNlci4gCgpUaGlzIGlzIGZh
-ciBmcm9tIHRoZSBvbmx5IHBsYWNlIHJldHVybmluZyB0aGlzIGVycm9yIGNvZGUgdG8gdXNlcnNw
-YWNlLgpJIHdvbmRlciB3aGF0IHdhcyB0aGUgcmVhc29uIGZvciBpbnRyb2R1Y2luZyB0aGlzIGVy
-cm9yIGNvZGUgaW4gdGhlCmZpcnN0IHBsYWNlLgoKVGhhbmtzCgpNaWNoYWwKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
-ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8va2V4ZWMK
+On Mon, Mar 26, 2018 at 02:29:31PM +0530, Bhupesh Sharma wrote:
+> Hi Akashi,
+> 
+> On Tue, Mar 20, 2018 at 12:36 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> > On Mon, Mar 19, 2018 at 8:15 PM, AKASHI Takahiro
+> > <takahiro.akashi@linaro.org> wrote:
+> >> On Mon, Mar 19, 2018 at 04:05:38PM +0530, Bhupesh Sharma wrote:
+> >>> At several occasions it would be useful to dump the fdt
+> >>> blob being passed to the second (kexec/kdump) kernel
+> >>> when '-d' flag is specified while invoking kexec/kdump.
+> >>
+> >> Why not just save binary data to a file and interpret it
+> >> with dtc command?
+> >
+> > Well, there are a couple of reasons for that which can be understood
+> > from a system which is in a production environment (for e.g. I have
+> > worked on one arm64 system in the past which used a yocto based
+> > distribution in which kexec -p was launched with a -d option as a part
+> > of initial ramfs scriptware):
+> >
+> > - In a production environment, installing and executing tools like dtc
+> > (which might not have been installed by default via 'yum' or 'apt-get
+> > install' or other means is not only an additional step, but we might
+> > not get a chance to run it even if it is installed if we have a early
+> > crash in kdump itself (for e.g. consider the 'acpi table access' issue
+> > in the arm64 crashkernel we discussed some time back
+> > <https://www.spinics.net/lists/arm-kernel/msg616632.html>):
+> >
+> > a) In such a case the primary kernel has already crashed, so we had no
+> > opportunity to run a dtc interpreter there and the kdump kernel itself
+> > has crashed in a very early boot phase. So we didn't get a chance to
+> > execute 'dtc' on the kdump kernel command prompt (if the kdump scripts
+> > are configured not to reboot the primary again).
+> >
+> > b) Also when an early arm64 kdump crash is reported by a customer, we
+> > usually only have access to the primary and secondary console log
+> > which also might include the 'kexec -p -d' log messages, which can
+> > point us to a discrepancy in dtc nodes like 'linux,usable-memory"
+> > which might have caused a early crashkernel crash.
+> >
+> > Personally, so-far I have found this dtb dumping facility of use in
+> > debugging atleast a couple of arm64 crashkernel crash/panic issues.
+> > Till the arm64 kexec/kdump implementation matures further, I feel this
+> > dumping facility is of good use to ease crashkernel panic debugs.
+> 
+> Ping. Do you have any further comments on it?
+
+No.
+While I don't think dumping fdt is so useful as "kexec -d" option
+outputs enough information for me, you can go ahead.
+
+Thanks,
+-Takahiro AKASHI
+
+
+> Regards,
+> Bhupesh
+> 
+> >>> This allows one to look at the device-tree fields that
+> >>> is being passed to the secondary kernel and accordingly
+> >>> debug issues.
+> >>>
+> >>> This can be specially useful for the arm64 case, where
+> >>> kexec_load() or kdump passes important information like
+> >>> 'linux,usable-memory' ranges to the second kernel, and
+> >>> the correctness of the ranges can be verified by
+> >>> looking at the device-tree dump with '-d' flag specified.
+> >>>
+> >>> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> >>> ---
+> >>>  kexec/dt-ops.c | 133 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >>>  kexec/dt-ops.h |   1 +
+> >>>  2 files changed, 134 insertions(+)
+> >>>
+> >>> diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
+> >>> index 915dbf55afd2..caf6f8df6e6b 100644
+> >>> --- a/kexec/dt-ops.c
+> >>> +++ b/kexec/dt-ops.c
+> >>> @@ -8,6 +8,10 @@
+> >>>  #include "kexec.h"
+> >>>  #include "dt-ops.h"
+> >>>
+> >>> +#define ALIGN(x, a)  (((x) + ((a) - 1)) & ~((a) - 1))
+> >>> +#define PALIGN(p, a) ((void *)(ALIGN((unsigned long)(p), (a))))
+> >>> +#define GET_CELL(p)  (p += 4, *((const uint32_t *)(p-4)))
+> >>> +
+> >>>  static const char n_chosen[] = "/chosen";
+> >>>
+> >>>  static const char p_bootargs[] = "bootargs";
+> >>> @@ -143,3 +147,132 @@ int dtb_delete_property(char *dtb, const char *node, const char *prop)
+> >>>
+> >>>       return result;
+> >>>  }
+> >>> +
+> >>> +static uint64_t is_printable_string(const void* data, uint64_t len)
+> >>> +{
+> >>> +     const char *s = data;
+> >>> +     const char *ss;
+> >>> +
+> >>> +     /* Check for zero length strings */
+> >>> +     if (len == 0) {
+> >>> +             return 0;
+> >>> +     }
+> >>> +
+> >>> +     /* String must be terminated with a '\0' */
+> >>> +     if (s[len - 1] != '\0') {
+> >>> +             return 0;
+> >>> +     }
+> >>> +
+> >>> +     ss = s;
+> >>> +     while (*s) {
+> >>> +             s++;
+> >>> +     }
+> >>> +
+> >>> +     /* Traverse till we hit a '\0' or reach 'len' */
+> >>> +     if (*s != '\0' || (s + 1 - ss) < len) {
+> >>> +             return 0;
+> >>> +     }
+> >>> +
+> >>> +     return 1;
+> >>> +}
+> >>> +
+> >>> +static void print_data(const char* data, uint64_t len)
+> >>> +{
+> >>> +     uint64_t i;
+> >>> +     const char *p = data;
+> >>> +
+> >>> +     /* Check for non-zero length */
+> >>> +     if (len == 0)
+> >>> +             return;
+> >>> +
+> >>> +     if (is_printable_string(data, len)) {
+> >>> +             dbgprintf(" = \"%s\"", (const char *)data);
+> >>> +     } else if ((len % 4) == 0) {
+> >>> +             dbgprintf(" = <");
+> >>> +             for (i = 0; i < len; i += 4) {
+> >>> +                     dbgprintf("0x%08x%s",
+> >>> +                                     fdt32_to_cpu(GET_CELL(p)),
+> >>> +                                     i < (len - 4) ? " " : "");
+> >>> +             }
+> >>> +             dbgprintf(">");
+> >>> +     } else {
+> >>> +             dbgprintf(" = [");
+> >>> +             for (i = 0; i < len; i++)
+> >>> +                     dbgprintf("%02x%s", *p++,
+> >>> +                                     i < len - 1 ? " " : "");
+> >>> +             dbgprintf("]");
+> >>> +     }
+> >>> +}
+> >>> +
+> >>> +void dump_fdt(void* fdt)
+> >>> +{
+> >>> +     struct fdt_header *bph;
+> >>> +     const char* p_struct;
+> >>> +     const char* p_strings;
+> >>> +     const char* p;
+> >>> +     const char* s;
+> >>> +     const char* t;
+> >>> +     uint32_t off_dt;
+> >>> +     uint32_t off_str;
+> >>> +     uint32_t tag;
+> >>> +     uint64_t sz;
+> >>> +     uint64_t depth;
+> >>> +     uint64_t shift;
+> >>> +     uint32_t version;
+> >>> +
+> >>> +     depth = 0;
+> >>> +     shift = 4;
+> >>> +
+> >>> +     bph = fdt;
+> >>> +     off_dt = fdt32_to_cpu(bph->off_dt_struct);
+> >>> +     off_str = fdt32_to_cpu(bph->off_dt_strings);
+> >>> +     p_struct = (const char*)fdt + off_dt;
+> >>> +     p_strings = (const char*)fdt + off_str;
+> >>> +     version = fdt32_to_cpu(bph->version);
+> >>> +
+> >>> +     p = p_struct;
+> >>> +     while ((tag = fdt32_to_cpu(GET_CELL(p))) != FDT_END) {
+> >>> +
+> >>> +             if (tag == FDT_BEGIN_NODE) {
+> >>> +                     s = p;
+> >>> +                     p = PALIGN(p + strlen(s) + 1, 4);
+> >>> +
+> >>> +                     if (*s == '\0')
+> >>> +                             s = "/";
+> >>> +
+> >>> +                     dbgprintf("%*s%s {\n", (int)(depth * shift), " ", s);
+> >>> +
+> >>> +                     depth++;
+> >>> +                     continue;
+> >>> +             }
+> >>> +
+> >>> +             if (tag == FDT_END_NODE) {
+> >>> +                     depth--;
+> >>> +
+> >>> +                     dbgprintf("%*s};\n", (int)(depth * shift), " ");
+> >>> +                     continue;
+> >>> +             }
+> >>> +
+> >>> +             if (tag == FDT_NOP) {
+> >>> +                     dbgprintf("%*s// [NOP]\n", (int)(depth * shift), " ");
+> >>> +                     continue;
+> >>> +             }
+> >>> +
+> >>> +             if (tag != FDT_PROP) {
+> >>> +                     dbgprintf("%*s ** Unknown tag 0x%08x\n",
+> >>> +                                     (int)(depth * shift), " ", tag);
+> >>> +                     break;
+> >>> +             }
+> >>> +             sz = fdt32_to_cpu(GET_CELL(p));
+> >>> +             s = p_strings + fdt32_to_cpu(GET_CELL(p));
+> >>> +             if (version < 16 && sz >= 8)
+> >>> +                     p = PALIGN(p, 8);
+> >>> +             t = p;
+> >>> +
+> >>> +             p = PALIGN(p + sz, 4);
+> >>> +
+> >>> +             dbgprintf("%*s%s", (int)(depth * shift), " ", s);
+> >>> +             print_data(t, sz);
+> >>> +             dbgprintf(";\n");
+> >>> +     }
+> >>> +}
+> >>> diff --git a/kexec/dt-ops.h b/kexec/dt-ops.h
+> >>> index e70d15d8ffbf..25b9b569f2b7 100644
+> >>> --- a/kexec/dt-ops.h
+> >>> +++ b/kexec/dt-ops.h
+> >>> @@ -9,5 +9,6 @@ int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
+> >>>       const char *prop, const void *value, int value_len);
+> >>>
+> >>>  int dtb_delete_property(char *dtb, const char *node, const char *prop);
+> >>> +void dump_fdt(void *fdt) ;
+> >>>
+> >>>  #endif
+> >>> --
+> >>> 2.7.4
+> >>>
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
