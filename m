@@ -1,24 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f15jV-00079O-0L
- for kexec@lists.infradead.org; Wed, 28 Mar 2018 07:42:58 +0000
-Date: Wed, 28 Mar 2018 09:42:42 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v5 4/5] kexec: Add option to fall back to KEXEC_LOAD when
- KEXEC_FILE_LOAD is not supported
-Message-ID: <20180328074241.5ovquoc5rnbgq44q@verge.net.au>
-References: <20180302091706.GA15374@dhcp-128-65.nay.redhat.com>
- <9db6c165a0832796faf88b0cef8f296a896f5fa8.1521561315.git.msuchanek@suse.de>
- <20180326090832.GA24210@dhcp-128-65.nay.redhat.com>
- <20180326091210.GA4781@dhcp-128-65.nay.redhat.com>
- <20180326193810.028a94b5@kitsune.suse.cz>
- <20180327100619.GC4681@dhcp-128-65.nay.redhat.com>
- <20180327130129.413bd399@kitsune.suse.cz>
- <20180328005353.GB7227@dhcp-128-65.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180328005353.GB7227@dhcp-128-65.nay.redhat.com>
+Received: from mx2.suse.de ([195.135.220.15])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1f1AvV-0002Cx-Ud
+ for kexec@lists.infradead.org; Wed, 28 Mar 2018 13:15:43 +0000
+From: Michal Suchanek <msuchanek@suse.de>
+Subject: [PATCH v6 2/5] kexec: Fix option checks to take KEXEC_FILE_LOAD into
+ account
+Date: Wed, 28 Mar 2018 15:15:15 +0200
+Message-Id: <bf36a4623b5ef67b3ae9722972fc135c608df963.1522242915.git.msuchanek@suse.de>
+In-Reply-To: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1522242915.git.msuchanek@suse.de>
+References: <20180327095955.GB4681@dhcp-128-65.nay.redhat.com>
+ <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1522242915.git.msuchanek@suse.de>
+In-Reply-To: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1522242915.git.msuchanek@suse.de>
+References: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1522242915.git.msuchanek@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,57 +21,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, hbathini@linux.vnet.ibm.com, Tony Jones <tonyj@suse.com>, bauerman@linux.vnet.ibm.com, Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+To: kexec@lists.infradead.org
+Cc: Tony Jones <tonyj@suse.com>, Dave Young <dyoung@redhat.com>, Michal Suchanek <msuchanek@suse.de>, Petr Tesarik <ptesarik@suse.cz>, horms@verge.net.au
 
-T24gV2VkLCBNYXIgMjgsIDIwMTggYXQgMDg6NTM6NTNBTSArMDgwMCwgRGF2ZSBZb3VuZyB3cm90
-ZToKPiBPbiAwMy8yNy8xOCBhdCAwMTowMXBtLCBNaWNoYWwgU3VjaMOhbmVrIHdyb3RlOgo+ID4g
-T24gVHVlLCAyNyBNYXIgMjAxOCAxODowNjoxOSArMDgwMAo+ID4gRGF2ZSBZb3VuZyA8ZHlvdW5n
-QHJlZGhhdC5jb20+IHdyb3RlOgo+ID4gCj4gPiA+IE9uIDAzLzI2LzE4IGF0IDA3OjM4cG0sIE1p
-Y2hhbCBTdWNow6FuZWsgd3JvdGU6Cj4gPiA+ID4gT24gTW9uLCAyNiBNYXIgMjAxOCAxNzoxMjox
-MCArMDgwMAo+ID4gPiA+IERhdmUgWW91bmcgPGR5b3VuZ0ByZWRoYXQuY29tPiB3cm90ZToKPiA+
-ID4gPiAgIAo+ID4gPiA+ID4gT24gMDMvMjYvMTggYXQgMDU6MDhwbSwgRGF2ZSBZb3VuZyB3cm90
-ZTogIAo+ID4gPiA+ID4gPiBPbiAwMy8yMC8xOCBhdCAwNDo1NnBtLCBNaWNoYWwgU3VjaGFuZWsg
-d3JvdGU6ICAgIAo+ID4gCj4gPiA+ID4gPiA+IEhtbSwgdGhpcyBpcyBzdGlsbCB1c2VkIGluIGxh
-dGVzdCB2ZXJzaW9uLiAga2VybmVsIGRvZXMgbm90Cj4gPiA+ID4gPiA+IHJldHVybiBzdWNoIGVy
-cm9yIG51bWJlciwgIEkgbWlnaHQgbm90IHNheSBjbGVhcmx5IHByZXZpb3VzbHkuCj4gPiA+ID4g
-PiA+IFBsZWFzZSBjaGVjayB0aGUga2VybmVsIGNvZGUsIHRoZSBvbmx5IG9uZSBwbGFjZSBJIGtu
-b3cgaXMKPiA+ID4gPiA+ID4gYmVjYXVzZSBubyBrZHVtcCBzdXBwb3J0IGluIHBvd2VyIGtleGVj
-X2ZpbGU6Cj4gPiA+ID4gPiA+IGFyY2gvcG93ZXJwYy9rZXJuZWwvbWFjaGluZV9rZXhlY19maWxl
-XzY0LmMKPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ICAgICAgICAgLyogV2UgZG9uJ3Qgc3VwcG9y
-dCBjcmFzaCBrZXJuZWxzIHlldC4gKi8KPiA+ID4gPiA+ID4gICAgICAgICBpZiAoaW1hZ2UtPnR5
-cGUgPT0gS0VYRUNfVFlQRV9DUkFTSCkKPiA+ID4gPiA+ID4gICAgICAgICAgICAgICAgIHJldHVy
-biAtRU5PVFNVUFA7Cj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBTbyBJIHN1Z2dlc3Qgbm90IGNo
-ZWNraW5nIHRoaXMgYXMgd2VsbCBzaW5jZSAtRU5PVFNVUFAgaXMgbm90Cj4gPiA+ID4gPiA+IHBv
-cHVsYXRlZCBpbiB1c2Vyc3BhY2UgaGVhZGVycywgYW5kIC1FTk9UU1VQIGlzIG5vdCB1c2VkIGF0
-IGFsbC4KPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+IEFsc28gYXMgSSBtZW50aW9uZWQgaW4gYW5v
-dGhlciByZXBseSAtRUlOVkFMIGFuZCAtRU5PRVhFQyBpcwo+ID4gPiA+ID4gPiBhbHNvIG5vdCBu
-Y2Vzc2FyeS4KPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+IEZvciAtRU5PVFNVUCwgbWF5YmUgc29t
-ZW9uZSBjYW4gc3VibWl0IGEgcGF0Y2ggdG8gc3dpdGNoIHRvCj4gPiA+ID4gPiA+IC1FTk9UU1VQ
-UCBzbyB0aGF0IHVzZXJzcGFjZSBjYW4gY2hlY2sgaXQuCj4gPiA+ID4gPiA+IENjaW5nIFRoaWFn
-byBhbmQgSGFyaSBmb3IgdGhlIC1FTk9UU1VQUCBlcnJubyBpc3N1ZS4gICAgCj4gPiA+ID4gPiAK
-PiA+ID4gPiA+IE9vcHMgZm9yIHRoZSBodXJyeSByZXBseSwgIEkgbWVhbnMgLUVOT1RTVVBQIG1p
-Z2h0IGJlIGFibGUgdG8KPiA+ID4gPiA+IHJlcGxhY2VkIHdpdGggLUVPUE5PVFNVUFAsIGEgc2lt
-aWxhciBjaGFuZ2UgbGlrZSB0aGlzOgo+ID4gPiA+ID4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
-Lm9yZy9wYXRjaC84NDkwNzkxLyAgCj4gPiA+ID4gCj4gPiA+ID4gVGhhbmtzIGZvciBjYXRjaGlu
-ZyB0aGlzLiBJbiBMaW51eCBFTk9UU1VQUCB3aXRoIGV4dHJhIFAgaXMKPiA+ID4gPiBkaWZmZXJl
-bnQgZnJvbSBFT1BOT1RTVVBQIGFuZCBFTk9UU1VQIChzaW5nbGUgUCkuIFNpbmNlIHdlIGFyZQo+
-ID4gPiA+IHRhbGtpbmcgdG8gdGhlIGtlcm5lbCBhbmQgaXQgcmV0dXJucyB0aGUgZG91YmxlIFAg
-RU5PVFNVUFAgd2UgbmVlZAo+ID4gPiA+IHRvIGRlZmluZSBpdCBpbiBrZXhlYyBhcyB3ZWxsLiBB
-bmQgd2Ugc2hvdWxkIGNoZWNrIEVOT1RTVVAgd2l0aAo+ID4gPiA+IHNpbmdsZSBQIGluIGNhc2Ug
-c29tZWJvZHkgc29tZSBkYXkgdGhpbmtzIHRoYXQgcmV0dXJuaW5nIHVuZGVmaW5lZAo+ID4gPiA+
-IGVycm9yIGNvZGVzIHRvIHVzZXJzcGFjZSBpcyBub3QgbmljZSBsaWtlIGluIHRoZSBwYXRjaCBh
-Ym92ZS4gIAo+ID4gPiAKPiA+ID4gSSdtIG5vdCBzdXJlIGlmIHdlIGNhbiBkZWZpbmUgaXQgaW4g
-a2V4ZWMtdG9vbHMgc2luY2UgdGhleSBhcmUgdXNlZAo+ID4gPiBpbiBrZXJuZWwgb25seS4uIAo+
-ID4gCj4gPiBXZSBkZWZpbmUgdGhlIEtFWEVDX0ZJTEVfTE9BRCBzeXNjYWxsIG51bWJlcnMgc28g
-d2h5IG5vdCBFTk9UU1VQUD8KPiAKPiBUaGV5IGFyZSBkaWZmZXJlbnQgc3lzY2FsbCBudW1iZXIg
-aXMgcGVyc2lzdGVudCBidXQgaW50ZXJuYWwgZXJybm9zIGFyZQo+IG5vdCBzdXBwb3NlZCB0byBi
-ZSBzby4KCkl0IHNvdW5kcyB0byBtZSB0aGF0IHRoZSBrZXJuZWwgbmVlZHMgdG8gYmUgdXBkYXRl
-ZCBhbmQgdGhhdCB1cHN0cmVhbQprZXhlYy10b29scyBjYW4ndCBzdXBwb3J0IEVOT1RTVVBQLgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
-bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+When kexec_file_load support was added some sanity checks were not updated.
+
+Some options are set only in the kexec_load flags so cannot be supported
+wiht kexec_file_load. On the other hand, reserved memory is needed for
+kdump with both kexec_load and kexec_file_load.
+
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+Added in v5
+---
+ kexec/kexec.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index ab8cff7fe083..b793f31ea501 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -1415,7 +1415,9 @@ int main(int argc, char *argv[])
+ 		do_load_jump_back_helper = 0;
+ 	}
+ 
+-	if (do_load && (kexec_flags & KEXEC_ON_CRASH) &&
++	if (do_load &&
++	    ((kexec_flags & KEXEC_ON_CRASH) ||
++	     (kexec_file_flags & KEXEC_FILE_ON_CRASH)) &&
+ 	    !is_crashkernel_mem_reserved()) {
+ 		die("Memory for crashkernel is not reserved\n"
+ 		    "Please reserve memory by passing"
+@@ -1447,6 +1449,12 @@ int main(int argc, char *argv[])
+ 			}
+ 		}
+ 	}
++	if (do_kexec_file_syscall) {
++		if (do_load_jump_back_helper)
++			die("--load-jump-back-helper not supported with kexec_file_load\n");
++		if (kexec_flags & KEXEC_PRESERVE_CONTEXT)
++			die("--load-preserve-context not supported with kexec_file_load\n");
++	}
+ 
+ 	if (do_reuse_initrd){
+ 		check_reuse_initrd();
+-- 
+2.13.6
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
