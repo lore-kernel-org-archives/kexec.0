@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f1Avk-0002Oh-7U
- for kexec@lists.infradead.org; Wed, 28 Mar 2018 13:16:03 +0000
-From: Michal Suchanek <msuchanek@suse.de>
-Subject: [PATCH 6/6] kexec: Document -s, -c and -a options in the man page
-Date: Wed, 28 Mar 2018 15:15:19 +0200
-Message-Id: <20180328131528.17050-1-msuchanek@suse.de>
-In-Reply-To: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1522242915.git.msuchanek@suse.de>
-References: <20180327095955.GB4681@dhcp-128-65.nay.redhat.com>
- <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1522242915.git.msuchanek@suse.de>
+ id 1f1SUr-0007qE-Pg
+ for kexec@lists.infradead.org; Thu, 29 Mar 2018 08:01:27 +0000
+From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
+Subject: RE: makedumpfile fails on 4.4 longterm kernel with kaslr enabled
+Date: Thu, 29 Mar 2018 08:00:01 +0000
+Message-ID: <61D4E5D821F1674CB87C99F080A210BE01189752@BPXM01GP.gisp.nec.co.jp>
+References: <OSBPR01MB216670B2700A61193FF7C0B4F3AD0@OSBPR01MB2166.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB216670B2700A61193FF7C0B4F3AD0@OSBPR01MB2166.jpnprd01.prod.outlook.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,56 +19,93 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Tony Jones <tonyj@suse.com>, Dave Young <dyoung@redhat.com>, Michal Suchanek <msuchanek@suse.de>, Petr Tesarik <ptesarik@suse.cz>, horms@verge.net.au
+To: "daichi1.fukui@toshiba.co.jp" <daichi1.fukui@toshiba.co.jp>
+Cc: Masahiko Hayashi <mas-hayashi@tg.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
-v5: document that KEXEC_LOAD may be disabled
-v6: document that fallback happens in case the kernel does not
-understand the image
----
- kexec/kexec.8 | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Hi Fukui-san
 
-diff --git a/kexec/kexec.8 b/kexec/kexec.8
-index e0131b4ea827..fb8a4c9caa45 100644
---- a/kexec/kexec.8
-+++ b/kexec/kexec.8
-@@ -144,6 +144,26 @@ Load the new kernel for use on panic.
- Specify that the new kernel is of this
- .I type.
- .TP
-+.BI \-s\ (\-\-kexec-file-syscall)
-+Specify that the new KEXEC_FILE_LOAD syscall should be used exclusively.
-+.TP
-+.BI \-c\ (\-\-kexec-syscall)
-+Specify that the old KEXEC_LOAD syscall should be used exclusively (the default).
-+.TP
-+.BI \-a\ (\-\-kexec-syscall-auto)
-+Try the new KEXEC_FILE_LOAD syscall first and when it is not supported or the
-+kernel does not understand the supplied image fall back to the old KEXEC_LOAD
-+interface.
-+
-+There is no one single interface that always works.
-+
-+KEXEC_FILE_LOAD is required on systems that use locked-down secure boot to
-+verify the kernel signature.  KEXEC_LOAD may be also disabled in the kernel
-+configuration.
-+
-+KEXEC_LOAD is required for some kernel image formats and on architectures that
-+do not implement KEXEC_FILE_LOAD.
-+.TP
- .B \-u\ (\-\-unload)
- Unload the current
- .B kexec
--- 
-2.13.6
+Thank you for the detailed report.
+And sorry that makedumpfile doesn't have the enough compatibility.
+Unfortunately, my idea is only to disable KASLR.
+If no one propose another way, please consider it.
+
+Thanks
+Tachibana
+
+> -----Original Message-----
+> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of daichi1.fukui@toshiba.co.jp
+> Sent: Monday, March 26, 2018 10:21 AM
+> To: kexec@lists.infradead.org
+> Cc: daichi1.fukui@toshiba.co.jp
+> Subject: makedumpfile fails on 4.4 longterm kernel with kaslr enabled
+> 
+> Dear makedumpfile community,
+> 
+> Hi. My name is Fukui.
+> Please help me investigate an error related to makedumpfile.
+> 
+> When running the latest makedumpfile 1.6.3 on the Linux 4.4 kernel, we get an error:
+> 
+> -------------------------------------------
+> vtop4_x86_64: Can't get a valid pml4.
+> readmem: Can't convert a virtual address(22000000) to physical Address
+> readmem: type_addr: 0, addr:22000000, size:8
+> get_page_offset_x86_64: Can't read page_offset_base
+> 
+> makedumpfile Failed.
+> -------------------------------------------
+> 
+> After investigating the cause of this error, we found that the following patch fails to work correctly on Linux 4.4 kernel:
+> 
+> [PATCH v5 2/2] x86_64: Calculate page_offset in case of re-filtering/sadump/virsh dump
+> https://sourceforge.net/p/makedumpfile/code/ci/4944f934845c81f28667b4d7d6452edba062e8e2/
+> 
+> For your information, here is our testing environment.
+> Linux kernel version: 4.4.112
+> makedumpfile version: 1.6.3
+> 
+> According to the patch, the get_symbol_addr function gets the address of symbol "page_offset_base".
+> 
+> +       if (info->kaslr_offset) {
+> +               page_offset_base = get_symbol_addr("page_offset_base");
+> +               page_offset_base += info->kaslr_offset;
+> 
+> However, the symbol is available since Linux 4.8, so Linux 4.4 does not have the symbol.
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/commit/?id=021182e52fe01c1f7b126f97fd6ba048d
+> c4234fd
+> 
+> In addition, the patch depends on CONFIG_RANDOMIZE_MEMORY, but Linux 4.4 does not support the configuration.
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/commit/?id=0483e1fa6e09d4948272680f691dccb1e
+> db9677f
+> 
+> In short, on Linux 4.4, the kaslr patch (x86_64: Calculate page_offset in case of re-filtering/sadump/virsh dump)
+> does not work correctly because of lacking both of the symbol and the configuration.
+> 
+> Some may think why we run makedumpfile on Linux 4.4.
+> We aim at building a longterm supportable Linux system on a PC platform.
+> Because 4.4 is a longterm release kernel, the kernel is very suitable for our goal.
+> 
+> Range of this influence can be large because Linux 4.4 will be maintained until 2020.
+> See kernel.org for details:
+> https://www.kernel.org/category/releases.html
+> 
+> Can you help us correct the compatibility issue?
+> 
+> Thanks,
+> Fukui
+> 
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
 
 
 _______________________________________________
