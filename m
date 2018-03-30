@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x242.google.com ([2a00:1450:400c:c09::242])
+Received: from stargate.chelsio.com ([12.32.117.8])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f1rRI-0003Zn-HK
- for kexec@lists.infradead.org; Fri, 30 Mar 2018 10:39:22 +0000
-Received: by mail-wm0-x242.google.com with SMTP id p9so14984018wmc.3
- for <kexec@lists.infradead.org>; Fri, 30 Mar 2018 03:39:09 -0700 (PDT)
-Date: Fri, 30 Mar 2018 12:39:07 +0200
-From: Jiri Pirko <jiri@resnulli.us>
+ id 1f1rei-0000Iw-D1
+ for kexec@lists.infradead.org; Fri, 30 Mar 2018 10:53:14 +0000
+Date: Fri, 30 Mar 2018 16:21:57 +0530
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 Subject: Re: [PATCH net-next v2 1/2] fs/crashdd: add API to collect hardware
  dump in second kernel
-Message-ID: <20180330103907.GC3313@nanopsycho>
+Message-ID: <20180330105156.GA24344@chelsio.com>
 References: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
  <296ffbd47fd4f30238689e636bd2480683224227.1521888444.git.rahul.lakkireddy@chelsio.com>
+ <20180330103907.GC3313@nanopsycho>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <296ffbd47fd4f30238689e636bd2480683224227.1521888444.git.rahul.lakkireddy@chelsio.com>
+In-Reply-To: <20180330103907.GC3313@nanopsycho>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,47 +26,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Cc: indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stephen@networkplumber.org, ganeshgr@chelsio.com, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ebiederm@xmission.com
+To: Jiri Pirko <jiri@resnulli.us>
+Cc: Indranil Choudhury <indranil@chelsio.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Nirranjan Kirubaharan <nirranjan@chelsio.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stephen@networkplumber.org" <stephen@networkplumber.org>, Ganesh GR <ganeshgr@chelsio.com>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "ebiederm@xmission.com" <ebiederm@xmission.com>
 
-Sat, Mar 24, 2018 at 11:56:33AM CET, rahul.lakkireddy@chelsio.com wrote:
->Add a new module crashdd that exports the /sys/kernel/crashdd/
->directory in second kernel, containing collected hardware/firmware
->dumps.
->
->The sequence of actions done by device drivers to append their device
->specific hardware/firmware logs to /sys/kernel/crashdd/ directory are
->as follows:
->
->1. During probe (before hardware is initialized), device drivers
->register to the crashdd module (via crashdd_add_dump()), with
->callback function, along with buffer size and log name needed for
->firmware/hardware log collection.
->
->2. Crashdd creates a driver's directory under
->/sys/kernel/crashdd/<driver>. Then, it allocates the buffer with
+On Friday, March 03/30/18, 2018 at 16:09:07 +0530, Jiri Pirko wrote:
+> Sat, Mar 24, 2018 at 11:56:33AM CET, rahul.lakkireddy@chelsio.com wrote:
+> >Add a new module crashdd that exports the /sys/kernel/crashdd/
+> >directory in second kernel, containing collected hardware/firmware
+> >dumps.
+> >
+> >The sequence of actions done by device drivers to append their device
+> >specific hardware/firmware logs to /sys/kernel/crashdd/ directory are
+> >as follows:
+> >
+> >1. During probe (before hardware is initialized), device drivers
+> >register to the crashdd module (via crashdd_add_dump()), with
+> >callback function, along with buffer size and log name needed for
+> >firmware/hardware log collection.
+> >
+> >2. Crashdd creates a driver's directory under
+> >/sys/kernel/crashdd/<driver>. Then, it allocates the buffer with
+> 
+> This smells. I need to identify the exact ASIC instance that produced
+> the dump. To identify by driver name does not help me if I have multiple
+> instances of the same driver. This looks wrong to me. This looks like
+> a job for devlink where you have 1 devlink instance per 1 ASIC instance.
+> 
+> Please see:
+> http://patchwork.ozlabs.org/project/netdev/list/?series=36524
+> 
+> I bevieve that the solution in the patchset could be used for
+> your usecase too.
+> 
+> 
 
-This smells. I need to identify the exact ASIC instance that produced
-the dump. To identify by driver name does not help me if I have multiple
-instances of the same driver. This looks wrong to me. This looks like
-a job for devlink where you have 1 devlink instance per 1 ASIC instance.
+The sysfs approach proposed here had been dropped in favour exporting
+the dumps as ELF notes in /proc/vmcore.
 
-Please see:
-http://patchwork.ozlabs.org/project/netdev/list/?series=36524
+Will be posting the new patches soon.
 
-I bevieve that the solution in the patchset could be used for
-your usecase too.
-
-
->requested size and invokes the device driver's registered callback
->function.
->
->3. Device driver collects all hardware/firmware logs into the buffer
->and returns control back to crashdd.
->
->4. Crashdd exposes the buffer as a binary file via
->/sys/kernel/crashdd/<driver>/<dump_file>.
->
+> >requested size and invokes the device driver's registered callback
+> >function.
+> >
+> >3. Device driver collects all hardware/firmware logs into the buffer
+> >and returns control back to crashdd.
+> >
+> >4. Crashdd exposes the buffer as a binary file via
+> >/sys/kernel/crashdd/<driver>/<dump_file>.
+> >
 
 _______________________________________________
 kexec mailing list
