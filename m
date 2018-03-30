@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f1nan-0002Ho-3q
- for kexec@lists.infradead.org; Fri, 30 Mar 2018 06:32:54 +0000
-Received: from penelope.horms.nl (52D9BC73.cm-11-1c.dynamic.ziggo.nl
- [82.217.188.115])
- by kirsty.vergenet.net (Postfix) with ESMTPA id 2347A25B77E
- for <kexec@lists.infradead.org>; Fri, 30 Mar 2018 17:32:42 +1100 (AEDT)
-Date: Fri, 30 Mar 2018 08:32:39 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools v2.0.17 preparation
-Message-ID: <20180330063239.c7noamd2h7mbbrrd@verge.net.au>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1f1oyM-0001ou-PG
+ for kexec@lists.infradead.org; Fri, 30 Mar 2018 08:01:20 +0000
+Date: Fri, 30 Mar 2018 16:00:58 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v6 1/5] kexec: Return -ENOSYS when kexec does not know
+ how to call KEXEC_FILE_LOAD
+Message-ID: <20180330080058.GA4323@dhcp-128-65.nay.redhat.com>
+References: <20180327095955.GB4681@dhcp-128-65.nay.redhat.com>
+ <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1522242915.git.msuchanek@suse.de>
+ <20180330062928.234zvlgiwyfvqadd@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20180330062928.234zvlgiwyfvqadd@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,26 +26,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Michal Suchanek <msuchanek@suse.de>, Petr Tesarik <ptesarik@suse.cz>, Tony Jones <tonyj@suse.com>
 
-Hi all,
+Hi Simon,
 
-I am planning to release kexec-tools v2.0.17 in the next two weeks
-to roughly coincide with the release of the v4.16 kernel.
+On 03/30/18 at 08:29am, Simon Horman wrote:
+> Hi again Dave,
+> 
+> would you care to review v6?
 
-I would like to ask interested parties to send any patches they would like
-included in v2.0.17 within one week so that I can make an rc release.
+I have no more comments for v6.  Overall looks good to me.
 
-For reference the patches queued up since v2.0.16 are as follows:
-
-3720b743ae3c kexec/ppc64: leverage kexec_file_load support
-b10924a7da3c kexec/ppc64: add support to parse ibm, dynamic-memory-v2 property
-c740fdb20482 kexec: add a helper function to add ranges
-060eee589dd1 x86: use old screen_info if needed
-282ff2a5e613 kexec-tools: Make xc_dlhandle static
-58c225a6d762 kexec-tools: Call dlclose() from within __xc_interface_close()
-894bea9335f5 kexec-tools: Perform run-time linking of libxenctrl.so
-401e096166ce kexec-tools 2.0.16.git
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
