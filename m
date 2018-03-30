@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f1nW9-0000GZ-96
- for kexec@lists.infradead.org; Fri, 30 Mar 2018 06:28:06 +0000
-Date: Fri, 30 Mar 2018 08:27:52 +0200
+ id 1f1nXi-0000co-Bk
+ for kexec@lists.infradead.org; Fri, 30 Mar 2018 06:29:43 +0000
+Date: Fri, 30 Mar 2018 08:29:29 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] powerpc: kexec_file: Fix error code when trying to load
- kdump kernel
-Message-ID: <20180330062751.q6p5ofb5ia3auj7e@verge.net.au>
-References: <20180329190543.25118-1-bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH v6 1/5] kexec: Return -ENOSYS when kexec does not know
+ how to call KEXEC_FILE_LOAD
+Message-ID: <20180330062928.234zvlgiwyfvqadd@verge.net.au>
+References: <20180327095955.GB4681@dhcp-128-65.nay.redhat.com>
+ <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1522242915.git.msuchanek@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180329190543.25118-1-bauerman@linux.vnet.ibm.com>
+In-Reply-To: <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1522242915.git.msuchanek@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,32 +25,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>, Dave Young <dyoung@redhat.com>
+To: Michal Suchanek <msuchanek@suse.de>
+Cc: Petr Tesarik <ptesarik@suse.cz>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Tony Jones <tonyj@suse.com>
 
-On Thu, Mar 29, 2018 at 04:05:43PM -0300, Thiago Jung Bauermann wrote:
-> kexec_file_load() on powerpc doesn't support kdump kernels yet, so it
-> returns -ENOTSUPP in that case.
-> 
-> I've recently learned that this errno is internal to the kernel and isn't
-> supposed to be exposed to userspace. Therefore, change to -EOPNOTSUPP which
-> is defined in an uapi header.
-> 
-> This does indeed make kexec-tools happier. Before the patch, on ppc64le:
-> 
->   # ~bauermann/src/kexec-tools/build/sbin/kexec -s -p /boot/vmlinuz
->   kexec_file_load failed: Unknown error 524
-> 
-> After the patch:
-> 
->   # ~bauermann/src/kexec-tools/build/sbin/kexec -s -p /boot/vmlinuz
->   kexec_file_load failed: Operation not supported
-> 
-> Fixes: a0458284f062 ("powerpc: Add support code for kexec_file_load()")
-> Reported-by: Dave Young <dyoung@redhat.com>
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Hi again Dave,
 
-Reviewed-by: Simon Horman <horms@verge.net.au>
+would you care to review v6?
+
+On Wed, Mar 28, 2018 at 03:15:14PM +0200, Michal Suchanek wrote:
+> When the kernel does not know a syscall number it returns -ENOSYS but
+> when kexec does not know a syscall number it returns -1. Return -ENOSYS
+> from kexec as well.
+> 
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+>  kexec/kexec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kexec/kexec.c b/kexec/kexec.c
+> index cfd837c1b6bb..ab8cff7fe083 100644
+> --- a/kexec/kexec.c
+> +++ b/kexec/kexec.c
+> @@ -1166,7 +1166,7 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
+>  
+>  	if (!is_kexec_file_load_implemented()) {
+>  		fprintf(stderr, "syscall kexec_file_load not available.\n");
+> -		return -1;
+> +		return -ENOSYS;
+>  	}
+>  
+>  	if (argc - fileind <= 0) {
+> -- 
+> 2.13.6
+> 
 
 _______________________________________________
 kexec mailing list
