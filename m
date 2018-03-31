@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from stargate.chelsio.com ([12.32.117.8])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f1yzx-0006Ad-48
- for kexec@lists.infradead.org; Fri, 30 Mar 2018 18:43:38 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
- <296ffbd47fd4f30238689e636bd2480683224227.1521888444.git.rahul.lakkireddy@chelsio.com>
- <20180330103907.GC3313@nanopsycho>
- <20180330105156.GA24344@chelsio.com>
-Date: Fri, 30 Mar 2018 13:42:00 -0500
-In-Reply-To: <20180330105156.GA24344@chelsio.com> (Rahul Lakkireddy's message
- of "Fri, 30 Mar 2018 16:21:57 +0530")
-Message-ID: <87k1tt2yo7.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH net-next v2 1/2] fs/crashdd: add API to collect hardware
- dump in second kernel
+ id 1f2CFU-0001Mg-G0
+ for kexec@lists.infradead.org; Sat, 31 Mar 2018 08:52:35 +0000
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Subject: [PATCH net-next v3 3/3] cxgb4: collect hardware dump in second kernel
+Date: Sat, 31 Mar 2018 14:20:58 +0530
+Message-Id: <302fb326d8d15d64b5ef85471df40635f25cc890.1522483891.git.rahul.lakkireddy@chelsio.com>
+In-Reply-To: <cover.1522483890.git.rahul.lakkireddy@chelsio.com>
+References: <cover.1522483890.git.rahul.lakkireddy@chelsio.com>
+In-Reply-To: <cover.1522483890.git.rahul.lakkireddy@chelsio.com>
+References: <cover.1522483890.git.rahul.lakkireddy@chelsio.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,56 +19,136 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Cc: Jiri Pirko <jiri@resnulli.us>, Indranil Choudhury <indranil@chelsio.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Nirranjan Kirubaharan <nirranjan@chelsio.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stephen@networkplumber.org" <stephen@networkplumber.org>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>, "davem@davemloft.net" <davem@davemloft.net>, Ganesh GR <ganeshgr@chelsio.com>
+To: netdev@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: indranil@chelsio.com, nirranjan@chelsio.com, stephen@networkplumber.org, ganeshgr@chelsio.com, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, ebiederm@xmission.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, viro@zeniv.linux.org.uk
 
-Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
+Register callback to collect hardware/firmware dumps in second kernel
+before hardware/firmware is initialized. The dumps for each device
+will be available as elf notes in /proc/vmcore in second kernel.
 
-> On Friday, March 03/30/18, 2018 at 16:09:07 +0530, Jiri Pirko wrote:
->> Sat, Mar 24, 2018 at 11:56:33AM CET, rahul.lakkireddy@chelsio.com wrote:
->> >Add a new module crashdd that exports the /sys/kernel/crashdd/
->> >directory in second kernel, containing collected hardware/firmware
->> >dumps.
->> >
->> >The sequence of actions done by device drivers to append their device
->> >specific hardware/firmware logs to /sys/kernel/crashdd/ directory are
->> >as follows:
->> >
->> >1. During probe (before hardware is initialized), device drivers
->> >register to the crashdd module (via crashdd_add_dump()), with
->> >callback function, along with buffer size and log name needed for
->> >firmware/hardware log collection.
->> >
->> >2. Crashdd creates a driver's directory under
->> >/sys/kernel/crashdd/<driver>. Then, it allocates the buffer with
->> 
->> This smells. I need to identify the exact ASIC instance that produced
->> the dump. To identify by driver name does not help me if I have multiple
->> instances of the same driver. This looks wrong to me. This looks like
->> a job for devlink where you have 1 devlink instance per 1 ASIC instance.
->> 
->> Please see:
->> http://patchwork.ozlabs.org/project/netdev/list/?series=36524
->> 
->> I bevieve that the solution in the patchset could be used for
->> your usecase too.
->> 
->> 
->
-> The sysfs approach proposed here had been dropped in favour exporting
-> the dumps as ELF notes in /proc/vmcore.
->
-> Will be posting the new patches soon.
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
+---
+v3:
+- Replaced all crashdd* with vmcoredd*.
+- Replaced crashdd_add_dump() with vmcore_add_device_dump().
+- Updated comments and commit message.
 
-The concern was actually how you identify which device that came from.
-Where you read the identifier changes but sysfs or /proc/vmcore the
-change remains valid.
+v2:
+- No Changes.
 
-Eric
+Changes since rfc v2:
+- Update comments and commit message for sysfs change.
+
+rfc v2:
+- Updated dump registration to the new API in patch 1.
+
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4.h       |  4 ++++
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c | 25 ++++++++++++++++++++++++
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h |  3 +++
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c  | 10 ++++++++++
+ 4 files changed, 42 insertions(+)
+
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
+index 688f95440af2..01e7aad4ce5b 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
+@@ -50,6 +50,7 @@
+ #include <linux/net_tstamp.h>
+ #include <linux/ptp_clock_kernel.h>
+ #include <linux/ptp_classify.h>
++#include <linux/crash_dump.h>
+ #include <asm/io.h>
+ #include "t4_chip_type.h"
+ #include "cxgb4_uld.h"
+@@ -964,6 +965,9 @@ struct adapter {
+ 	struct hma_data hma;
+ 
+ 	struct srq_data *srq;
++
++	/* Dump buffer for collecting logs in kdump kernel */
++	struct vmcoredd_data vmcoredd;
+ };
+ 
+ /* Support for "sched-class" command to allow a TX Scheduling Class to be
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c
+index 143686c60234..76433d4fe483 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c
+@@ -488,3 +488,28 @@ void cxgb4_init_ethtool_dump(struct adapter *adapter)
+ 	adapter->eth_dump.version = adapter->params.fw_vers;
+ 	adapter->eth_dump.len = 0;
+ }
++
++static int cxgb4_cudbg_vmcoredd_collect(struct vmcoredd_data *data, void *buf)
++{
++	struct adapter *adap = container_of(data, struct adapter, vmcoredd);
++	u32 len = data->size;
++
++	return cxgb4_cudbg_collect(adap, buf, &len, CXGB4_ETH_DUMP_ALL);
++}
++
++int cxgb4_cudbg_vmcore_add_dump(struct adapter *adap)
++{
++	struct vmcoredd_data *data = &adap->vmcoredd;
++	u32 len;
++
++	len = sizeof(struct cudbg_hdr) +
++	      sizeof(struct cudbg_entity_hdr) * CUDBG_MAX_ENTITY;
++	len += CUDBG_DUMP_BUFF_SIZE;
++
++	data->size = len;
++	snprintf(data->name, sizeof(data->name), "%s_%s", cxgb4_driver_name,
++		 adap->name);
++	data->vmcoredd_callback = cxgb4_cudbg_vmcoredd_collect;
++
++	return vmcore_add_device_dump(data);
++}
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h
+index ce1ac9a1c878..ef59ba1ed968 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h
+@@ -41,8 +41,11 @@ enum CXGB4_ETHTOOL_DUMP_FLAGS {
+ 	CXGB4_ETH_DUMP_HW = (1 << 1), /* various FW and HW dumps */
+ };
+ 
++#define CXGB4_ETH_DUMP_ALL (CXGB4_ETH_DUMP_MEM | CXGB4_ETH_DUMP_HW)
++
+ u32 cxgb4_get_dump_length(struct adapter *adap, u32 flag);
+ int cxgb4_cudbg_collect(struct adapter *adap, void *buf, u32 *buf_size,
+ 			u32 flag);
+ void cxgb4_init_ethtool_dump(struct adapter *adapter);
++int cxgb4_cudbg_vmcore_add_dump(struct adapter *adap);
+ #endif /* __CXGB4_CUDBG_H__ */
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+index 0072580e2c25..040004db4a35 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -5530,6 +5530,16 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (err)
+ 		goto out_free_adapter;
+ 
++	if (is_kdump_kernel()) {
++		/* Collect hardware state and append to /proc/vmcore */
++		err = cxgb4_cudbg_vmcore_add_dump(adapter);
++		if (err) {
++			dev_warn(adapter->pdev_dev,
++				 "Fail collecting vmcore device dump, err: %d. Continuing\n",
++				 err);
++			err = 0;
++		}
++	}
+ 
+ 	if (!is_t4(adapter->params.chip)) {
+ 		s_qpp = (QUEUESPERPAGEPF0_S +
+-- 
+2.14.1
+
 
 _______________________________________________
 kexec mailing list
