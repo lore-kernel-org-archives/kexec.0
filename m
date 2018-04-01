@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([2401:3900:2:1::2])
+Received: from mga01.intel.com ([192.55.52.88])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f2H7Q-00071x-Lm
- for kexec@lists.infradead.org; Sat, 31 Mar 2018 14:04:34 +0000
-In-Reply-To: <20180329190543.25118-1-bauerman@linux.vnet.ibm.com>
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-Subject: Re: powerpc: kexec_file: Fix error code when trying to load kdump
- kernel
-Message-Id: <40D0bL6Ncvz9s3v@ozlabs.org>
-Date: Sun,  1 Apr 2018 01:04:14 +1100 (AEDT)
+ id 1f2QwJ-0001mZ-Q8
+ for kexec@lists.infradead.org; Sun, 01 Apr 2018 00:33:45 +0000
+Date: Sun, 1 Apr 2018 08:32:41 +0800
+From: kbuild test robot <lkp@intel.com>
+Subject: [RFC PATCH] vmcore: __vmcore_add_device_dump() can be static
+Message-ID: <20180401003241.GA77163@lkp-sb-ep06.lkp.intel.com>
+References: <194d1e289b385f2cbd4cb2c2569af93723a9cfb8.1522483891.git.rahul.lakkireddy@chelsio.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <194d1e289b385f2cbd4cb2c2569af93723a9cfb8.1522483891.git.rahul.lakkireddy@chelsio.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,43 +19,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, =?utf-8?q?Michal_Such=C3=A1n?= =?utf-8?q?ek?= <msuchanek@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Cc: ebiederm@xmission.com, indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stephen@networkplumber.org, ganeshgr@chelsio.com, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, kbuild-all@01.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, viro@zeniv.linux.org.uk
 
-On Thu, 2018-03-29 at 19:05:43 UTC, Thiago Jung Bauermann wrote:
-> kexec_file_load() on powerpc doesn't support kdump kernels yet, so it
-> returns -ENOTSUPP in that case.
-> 
-> I've recently learned that this errno is internal to the kernel and isn't
-> supposed to be exposed to userspace. Therefore, change to -EOPNOTSUPP which
-> is defined in an uapi header.
-> 
-> This does indeed make kexec-tools happier. Before the patch, on ppc64le:
-> 
->   # ~bauermann/src/kexec-tools/build/sbin/kexec -s -p /boot/vmlinuz
->   kexec_file_load failed: Unknown error 524
-> 
-> After the patch:
-> 
->   # ~bauermann/src/kexec-tools/build/sbin/kexec -s -p /boot/vmlinuz
->   kexec_file_load failed: Operation not supported
-> 
-> Fixes: a0458284f062 ("powerpc: Add support code for kexec_file_load()")
-> Reported-by: Dave Young <dyoung@redhat.com>
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-> Reviewed-by: Simon Horman <horms@verge.net.au>
-> Reviewed-by: Dave Young <dyoung@redhat.com>
 
-Applied to powerpc next, thanks.
+Fixes: 6bf7e2b7f850 ("vmcore: add API to collect hardware dump in second kernel")
+Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+---
+ vmcore.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-https://git.kernel.org/powerpc/c/bf8a1abc3ddbd6e9a8312ea7d96e5d
-
-cheers
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index b53698f..fe788dd 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -1196,7 +1196,7 @@ static void vmcoredd_write_note(const char *name, void *buf, size_t size)
+  * Write Elf note at the beginning of the buffer to indicate vmcore device
+  * dump and add the dump to global list.
+  */
+-int __vmcore_add_device_dump(struct vmcoredd_data *data)
++static int __vmcore_add_device_dump(struct vmcoredd_data *data)
+ {
+ 	size_t note_size, data_size;
+ 	struct vmcoredd_node *dump;
 
 _______________________________________________
 kexec mailing list
