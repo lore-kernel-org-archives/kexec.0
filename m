@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from vps0.lunn.ch ([185.16.172.187])
+Received: from stargate.chelsio.com ([12.32.117.8])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f2yTF-00032m-UR
- for kexec@lists.infradead.org; Mon, 02 Apr 2018 12:21:59 +0000
-Date: Mon, 2 Apr 2018 14:21:40 +0200
-From: Andrew Lunn <andrew@lunn.ch>
+ id 1f2ycz-00014o-Cb
+ for kexec@lists.infradead.org; Mon, 02 Apr 2018 12:32:03 +0000
+Date: Mon, 2 Apr 2018 18:00:45 +0530
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 Subject: Re: [PATCH net-next v2 1/2] fs/crashdd: add API to collect hardware
  dump in second kernel
-Message-ID: <20180402122140.GB8159@lunn.ch>
+Message-ID: <20180402123044.GA31231@chelsio.com>
 References: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
  <296ffbd47fd4f30238689e636bd2480683224227.1521888444.git.rahul.lakkireddy@chelsio.com>
  <20180330103907.GC3313@nanopsycho>
@@ -24,38 +24,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Jiri Pirko <jiri@resnulli.us>
-Cc: Indranil Choudhury <indranil@chelsio.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Nirranjan Kirubaharan <nirranjan@chelsio.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stephen@networkplumber.org" <stephen@networkplumber.org>, Ganesh GR <ganeshgr@chelsio.com>, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+Cc: Indranil Choudhury <indranil@chelsio.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Nirranjan Kirubaharan <nirranjan@chelsio.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stephen@networkplumber.org" <stephen@networkplumber.org>, Ganesh GR <ganeshgr@chelsio.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
 
-> >> The sysfs approach proposed here had been dropped in favour exporting
-> >> the dumps as ELF notes in /proc/vmcore.
-> >>
-> >> Will be posting the new patches soon.
-> >
-> >The concern was actually how you identify which device that came from.
-> >Where you read the identifier changes but sysfs or /proc/vmcore the
-> >change remains valid.
-> 
-> Yeah. I still don't see how you link the dump and the device.
-
-Hi Jiri
-
-You can see in the third version the core code accept a free form
-name. The driver builds a name using the driver name and the adaptor
-name.
-
-What i think would be good is to try to have one API to the driver
-that can be used for both crash dumps and devlink snapshots. These are
-used at different times, but have basically the same purpose, get
-state from the device.
-
-      Andrew
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uZGF5LCBBcHJpbCAwNC8wMi8xOCwgMjAxOCBhdCAxNDo0MTo0MyArMDUzMCwgSmlyaSBQ
+aXJrbyB3cm90ZToKPiBGcmksIE1hciAzMCwgMjAxOCBhdCAwODo0MjowMFBNIENFU1QsIGViaWVk
+ZXJtQHhtaXNzaW9uLmNvbSB3cm90ZToKPiA+UmFodWwgTGFra2lyZWRkeSA8cmFodWwubGFra2ly
+ZWRkeUBjaGVsc2lvLmNvbT4gd3JpdGVzOgo+ID4KPiA+PiBPbiBGcmlkYXksIE1hcmNoIDAzLzMw
+LzE4LCAyMDE4IGF0IDE2OjA5OjA3ICswNTMwLCBKaXJpIFBpcmtvIHdyb3RlOgo+ID4+PiBTYXQs
+IE1hciAyNCwgMjAxOCBhdCAxMTo1NjozM0FNIENFVCwgcmFodWwubGFra2lyZWRkeUBjaGVsc2lv
+LmNvbSB3cm90ZToKPiA+Pj4gPkFkZCBhIG5ldyBtb2R1bGUgY3Jhc2hkZCB0aGF0IGV4cG9ydHMg
+dGhlIC9zeXMva2VybmVsL2NyYXNoZGQvCj4gPj4+ID5kaXJlY3RvcnkgaW4gc2Vjb25kIGtlcm5l
+bCwgY29udGFpbmluZyBjb2xsZWN0ZWQgaGFyZHdhcmUvZmlybXdhcmUKPiA+Pj4gPmR1bXBzLgo+
+ID4+PiA+Cj4gPj4+ID5UaGUgc2VxdWVuY2Ugb2YgYWN0aW9ucyBkb25lIGJ5IGRldmljZSBkcml2
+ZXJzIHRvIGFwcGVuZCB0aGVpciBkZXZpY2UKPiA+Pj4gPnNwZWNpZmljIGhhcmR3YXJlL2Zpcm13
+YXJlIGxvZ3MgdG8gL3N5cy9rZXJuZWwvY3Jhc2hkZC8gZGlyZWN0b3J5IGFyZQo+ID4+PiA+YXMg
+Zm9sbG93czoKPiA+Pj4gPgo+ID4+PiA+MS4gRHVyaW5nIHByb2JlIChiZWZvcmUgaGFyZHdhcmUg
+aXMgaW5pdGlhbGl6ZWQpLCBkZXZpY2UgZHJpdmVycwo+ID4+PiA+cmVnaXN0ZXIgdG8gdGhlIGNy
+YXNoZGQgbW9kdWxlICh2aWEgY3Jhc2hkZF9hZGRfZHVtcCgpKSwgd2l0aAo+ID4+PiA+Y2FsbGJh
+Y2sgZnVuY3Rpb24sIGFsb25nIHdpdGggYnVmZmVyIHNpemUgYW5kIGxvZyBuYW1lIG5lZWRlZCBm
+b3IKPiA+Pj4gPmZpcm13YXJlL2hhcmR3YXJlIGxvZyBjb2xsZWN0aW9uLgo+ID4+PiA+Cj4gPj4+
+ID4yLiBDcmFzaGRkIGNyZWF0ZXMgYSBkcml2ZXIncyBkaXJlY3RvcnkgdW5kZXIKPiA+Pj4gPi9z
+eXMva2VybmVsL2NyYXNoZGQvPGRyaXZlcj4uIFRoZW4sIGl0IGFsbG9jYXRlcyB0aGUgYnVmZmVy
+IHdpdGgKPiA+Pj4gCj4gPj4+IFRoaXMgc21lbGxzLiBJIG5lZWQgdG8gaWRlbnRpZnkgdGhlIGV4
+YWN0IEFTSUMgaW5zdGFuY2UgdGhhdCBwcm9kdWNlZAo+ID4+PiB0aGUgZHVtcC4gVG8gaWRlbnRp
+ZnkgYnkgZHJpdmVyIG5hbWUgZG9lcyBub3QgaGVscCBtZSBpZiBJIGhhdmUgbXVsdGlwbGUKPiA+
+Pj4gaW5zdGFuY2VzIG9mIHRoZSBzYW1lIGRyaXZlci4gVGhpcyBsb29rcyB3cm9uZyB0byBtZS4g
+VGhpcyBsb29rcyBsaWtlCj4gPj4+IGEgam9iIGZvciBkZXZsaW5rIHdoZXJlIHlvdSBoYXZlIDEg
+ZGV2bGluayBpbnN0YW5jZSBwZXIgMSBBU0lDIGluc3RhbmNlLgo+ID4+PiAKPiA+Pj4gUGxlYXNl
+IHNlZToKPiA+Pj4gaHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3Byb2plY3QvbmV0ZGV2L2xp
+c3QvP3Nlcmllcz0zNjUyNAo+ID4+PiAKPiA+Pj4gSSBiZXZpZXZlIHRoYXQgdGhlIHNvbHV0aW9u
+IGluIHRoZSBwYXRjaHNldCBjb3VsZCBiZSB1c2VkIGZvcgo+ID4+PiB5b3VyIHVzZWNhc2UgdG9v
+Lgo+ID4+PiAKPiA+Pj4gCj4gPj4KPiA+PiBUaGUgc3lzZnMgYXBwcm9hY2ggcHJvcG9zZWQgaGVy
+ZSBoYWQgYmVlbiBkcm9wcGVkIGluIGZhdm91ciBleHBvcnRpbmcKPiA+PiB0aGUgZHVtcHMgYXMg
+RUxGIG5vdGVzIGluIC9wcm9jL3ZtY29yZS4KPiA+Pgo+ID4+IFdpbGwgYmUgcG9zdGluZyB0aGUg
+bmV3IHBhdGNoZXMgc29vbi4KPiA+Cj4gPlRoZSBjb25jZXJuIHdhcyBhY3R1YWxseSBob3cgeW91
+IGlkZW50aWZ5IHdoaWNoIGRldmljZSB0aGF0IGNhbWUgZnJvbS4KPiA+V2hlcmUgeW91IHJlYWQg
+dGhlIGlkZW50aWZpZXIgY2hhbmdlcyBidXQgc3lzZnMgb3IgL3Byb2Mvdm1jb3JlIHRoZQo+ID5j
+aGFuZ2UgcmVtYWlucyB2YWxpZC4KPiAKPiBZZWFoLiBJIHN0aWxsIGRvbid0IHNlZSBob3cgeW91
+IGxpbmsgdGhlIGR1bXAgYW5kIHRoZSBkZXZpY2UuCgpJbiBvdXIgY2FzZSwgdGhlIGR1bXAgYW5k
+IHRoZSBkZXZpY2UgYXJlIGJlaW5nIGlkZW50aWZpZWQgYnkgdGhlCmRyaXZlcuKAmXMgbmFtZSBm
+b2xsb3dlZCBieSBpdHMgY29ycmVzcG9uZGluZyBwY2kgYnVzIGlkLiAgSeKAmXZlIHBvc3RlZCBh
+bgpleGFtcGxlIGluIG15IHYzIHNlcmllczoKCmh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3Rz
+L25ldGRldi9tc2c0OTM3ODEuaHRtbAoKSGVyZeKAmXMgYW4gZXh0cmFjdCBmcm9tIHRoZSBsaW5r
+IGFib3ZlOgoKIyByZWFkZWxmIC1uIC9wcm9jL3ZtY29yZQoKRGlzcGxheWluZyBub3RlcyBmb3Vu
+ZCBhdCBmaWxlIG9mZnNldCAweDAwMDAxMDAwIHdpdGggbGVuZ3RoIDB4MDQwMDMyODg6Ck93bmVy
+ICAgICAgICAgICAgICAgICBEYXRhIHNpemUgICAgIERlc2NyaXB0aW9uClZNQ09SRUREX2N4Z2I0
+XzAwMDA6MDI6MDAuNCAweDAyMDAwZmQ4ICAgICAgVW5rbm93biBub3RlIHR5cGU6KDB4MDAwMDA3
+MDApClZNQ09SRUREX2N4Z2I0XzAwMDA6MDQ6MDAuNCAweDAyMDAwZmQ4ICAgICAgVW5rbm93biBu
+b3RlIHR5cGU6KDB4MDAwMDA3MDApCkNPUkUgICAgICAgICAgICAgICAgIDB4MDAwMDAxNTAgICAg
+IE5UX1BSU1RBVFVTIChwcnN0YXR1cyBzdHJ1Y3R1cmUpCkNPUkUgICAgICAgICAgICAgICAgIDB4
+MDAwMDAxNTAgICAgIE5UX1BSU1RBVFVTIChwcnN0YXR1cyBzdHJ1Y3R1cmUpCkNPUkUgICAgICAg
+ICAgICAgICAgIDB4MDAwMDAxNTAgICAgIE5UX1BSU1RBVFVTIChwcnN0YXR1cyBzdHJ1Y3R1cmUp
+CkNPUkUgICAgICAgICAgICAgICAgIDB4MDAwMDAxNTAgICAgIE5UX1BSU1RBVFVTIChwcnN0YXR1
+cyBzdHJ1Y3R1cmUpCkNPUkUgICAgICAgICAgICAgICAgIDB4MDAwMDAxNTAgICAgIE5UX1BSU1RB
+VFVTIChwcnN0YXR1cyBzdHJ1Y3R1cmUpCkNPUkUgICAgICAgICAgICAgICAgIDB4MDAwMDAxNTAg
+ICAgIE5UX1BSU1RBVFVTIChwcnN0YXR1cyBzdHJ1Y3R1cmUpCkNPUkUgICAgICAgICAgICAgICAg
+IDB4MDAwMDAxNTAgICAgIE5UX1BSU1RBVFVTIChwcnN0YXR1cyBzdHJ1Y3R1cmUpCkNPUkUgICAg
+ICAgICAgICAgICAgIDB4MDAwMDAxNTAgICAgIE5UX1BSU1RBVFVTIChwcnN0YXR1cyBzdHJ1Y3R1
+cmUpClZNQ09SRUlORk8gICAgICAgICAgIDB4MDAwMDA3NGYgICAgIFVua25vd24gbm90ZSB0eXBl
+OiAoMHgwMDAwMDAwMCkKCkhlcmUsIGZvciBteSB0d28gZGV2aWNlcywgdGhlIGR1bXDigJlzIG5h
+bWVzIGFyZQpWTUNPUkVERF9jeGdiNF8wMDAwOjAyOjAwLjQgYW5kIFZNQ09SRUREX2N4Z2I0XzAw
+MDA6MDQ6MDAuNC4KCkl04oCZcyByZWFsbHkgdXAgdG8gdGhlIGNhbGxlcnMgdG8gd3JpdGUgdGhl
+aXIgb3duIHVuaXF1ZSBuYW1lIGZvciB0aGUKZHVtcC4gIFRoZSBuYW1lIGlzIGFwcGVuZGVkIHRv
+IOKAnFZNQ09SRUREX+KAnSBzdHJpbmcuCgo+IFJhaHVsLCBkaWQgeW91IGxvb2sgYXQgdGhlIHBh
+dGNoc2V0IEkgcG9pbnRlZCBvdXQ/CgpGb3IgZGV2bGluaywgSSB0aGluayB0aGUgZHVtcCBuYW1l
+IHdvdWxkIGJlIGlkZW50aWZpZWQgYnkKYnVzX3R5cGUvZGV2aWNlX25hbWU7IGkuZS4g4oCccGNp
+LzAwMDA6MDI6MDAuNOKAnSBmb3IgbXkgZXhhbXBsZS4KSXMgbXkgdW5kZXJzdGFuZGluZyBjb3Jy
+ZWN0PwoKVGhhbmtzLApSYWh1bAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
