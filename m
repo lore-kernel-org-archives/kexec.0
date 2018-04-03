@@ -1,20 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr10060.outbound.protection.outlook.com ([40.107.1.60]
- helo=EUR02-HE1-obe.outbound.protection.outlook.com)
+Received: from mail-wm0-x22b.google.com ([2a00:1450:400c:c09::22b])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f3Ek3-0006Jh-5x
- for kexec@lists.infradead.org; Tue, 03 Apr 2018 05:44:25 +0000
+ id 1f3FzV-0001NR-HH
+ for kexec@lists.infradead.org; Tue, 03 Apr 2018 07:04:27 +0000
+Received: by mail-wm0-x22b.google.com with SMTP id r131so32455854wmb.2
+ for <kexec@lists.infradead.org>; Tue, 03 Apr 2018 00:04:15 -0700 (PDT)
+Date: Tue, 3 Apr 2018 09:04:12 +0200
+From: Jiri Pirko <jiri@resnulli.us>
 Subject: Re: [PATCH net-next v2 1/2] fs/crashdd: add API to collect hardware
  dump in second kernel
+Message-ID: <20180403070412.GH3313@nanopsycho>
 References: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
  <296ffbd47fd4f30238689e636bd2480683224227.1521888444.git.rahul.lakkireddy@chelsio.com>
- <20180330103907.GC3313@nanopsycho> <20180330151129.GG28244@lunn.ch>
- <20180402091232.GE3313@nanopsycho>
-From: Alex Vesker <valex@mellanox.com>
-Message-ID: <0d106ece-4669-389d-da30-63a630ca625c@mellanox.com>
-Date: Tue, 3 Apr 2018 08:43:27 +0300
+ <20180330103907.GC3313@nanopsycho>
+ <20180330105156.GA24344@chelsio.com> <87k1tt2yo7.fsf@xmission.com>
+ <20180402091143.GD3313@nanopsycho>
+ <20180402123044.GA31231@chelsio.com>
 MIME-Version: 1.0
-In-Reply-To: <20180402091232.GE3313@nanopsycho>
+Content-Disposition: inline
+In-Reply-To: <20180402123044.GA31231@chelsio.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,38 +27,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>
-Cc: indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stephen@networkplumber.org, ganeshgr@chelsio.com, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ebiederm@xmission.com
+To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Cc: Indranil Choudhury <indranil@chelsio.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Nirranjan Kirubaharan <nirranjan@chelsio.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stephen@networkplumber.org" <stephen@networkplumber.org>, Ganesh GR <ganeshgr@chelsio.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
 
-
-
-On 4/2/2018 12:12 PM, Jiri Pirko wrote:
-> Fri, Mar 30, 2018 at 05:11:29PM CEST, andrew@lunn.ch wrote:
->>> Please see:
->>> http://patchwork.ozlabs.org/project/netdev/list/?series=36524
->>>
->>> I bevieve that the solution in the patchset could be used for
->>> your usecase too.
->> Hi Jiri
->>
->> https://lkml.org/lkml/2018/3/20/436
->>
->> How well does this API work for a 2Gbyte snapshot?
-> Ccing Alex who did the tests.
-
-I didn't check the performance for such a large snapshot.
- From my measurement it takes 0.09s for 1 MB of data this means
-about ~3m.
-This can be tuned and improved since this is a socket application.
-
->>     Andrew
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+TW9uLCBBcHIgMDIsIDIwMTggYXQgMDI6MzA6NDVQTSBDRVNULCByYWh1bC5sYWtraXJlZGR5QGNo
+ZWxzaW8uY29tIHdyb3RlOgo+T24gTW9uZGF5LCBBcHJpbCAwNC8wMi8xOCwgMjAxOCBhdCAxNDo0
+MTo0MyArMDUzMCwgSmlyaSBQaXJrbyB3cm90ZToKPj4gRnJpLCBNYXIgMzAsIDIwMTggYXQgMDg6
+NDI6MDBQTSBDRVNULCBlYmllZGVybUB4bWlzc2lvbi5jb20gd3JvdGU6Cj4+ID5SYWh1bCBMYWtr
+aXJlZGR5IDxyYWh1bC5sYWtraXJlZGR5QGNoZWxzaW8uY29tPiB3cml0ZXM6Cj4+ID4KPj4gPj4g
+T24gRnJpZGF5LCBNYXJjaCAwMy8zMC8xOCwgMjAxOCBhdCAxNjowOTowNyArMDUzMCwgSmlyaSBQ
+aXJrbyB3cm90ZToKPj4gPj4+IFNhdCwgTWFyIDI0LCAyMDE4IGF0IDExOjU2OjMzQU0gQ0VULCBy
+YWh1bC5sYWtraXJlZGR5QGNoZWxzaW8uY29tIHdyb3RlOgo+PiA+Pj4gPkFkZCBhIG5ldyBtb2R1
+bGUgY3Jhc2hkZCB0aGF0IGV4cG9ydHMgdGhlIC9zeXMva2VybmVsL2NyYXNoZGQvCj4+ID4+PiA+
+ZGlyZWN0b3J5IGluIHNlY29uZCBrZXJuZWwsIGNvbnRhaW5pbmcgY29sbGVjdGVkIGhhcmR3YXJl
+L2Zpcm13YXJlCj4+ID4+PiA+ZHVtcHMuCj4+ID4+PiA+Cj4+ID4+PiA+VGhlIHNlcXVlbmNlIG9m
+IGFjdGlvbnMgZG9uZSBieSBkZXZpY2UgZHJpdmVycyB0byBhcHBlbmQgdGhlaXIgZGV2aWNlCj4+
+ID4+PiA+c3BlY2lmaWMgaGFyZHdhcmUvZmlybXdhcmUgbG9ncyB0byAvc3lzL2tlcm5lbC9jcmFz
+aGRkLyBkaXJlY3RvcnkgYXJlCj4+ID4+PiA+YXMgZm9sbG93czoKPj4gPj4+ID4KPj4gPj4+ID4x
+LiBEdXJpbmcgcHJvYmUgKGJlZm9yZSBoYXJkd2FyZSBpcyBpbml0aWFsaXplZCksIGRldmljZSBk
+cml2ZXJzCj4+ID4+PiA+cmVnaXN0ZXIgdG8gdGhlIGNyYXNoZGQgbW9kdWxlICh2aWEgY3Jhc2hk
+ZF9hZGRfZHVtcCgpKSwgd2l0aAo+PiA+Pj4gPmNhbGxiYWNrIGZ1bmN0aW9uLCBhbG9uZyB3aXRo
+IGJ1ZmZlciBzaXplIGFuZCBsb2cgbmFtZSBuZWVkZWQgZm9yCj4+ID4+PiA+ZmlybXdhcmUvaGFy
+ZHdhcmUgbG9nIGNvbGxlY3Rpb24uCj4+ID4+PiA+Cj4+ID4+PiA+Mi4gQ3Jhc2hkZCBjcmVhdGVz
+IGEgZHJpdmVyJ3MgZGlyZWN0b3J5IHVuZGVyCj4+ID4+PiA+L3N5cy9rZXJuZWwvY3Jhc2hkZC88
+ZHJpdmVyPi4gVGhlbiwgaXQgYWxsb2NhdGVzIHRoZSBidWZmZXIgd2l0aAo+PiA+Pj4gCj4+ID4+
+PiBUaGlzIHNtZWxscy4gSSBuZWVkIHRvIGlkZW50aWZ5IHRoZSBleGFjdCBBU0lDIGluc3RhbmNl
+IHRoYXQgcHJvZHVjZWQKPj4gPj4+IHRoZSBkdW1wLiBUbyBpZGVudGlmeSBieSBkcml2ZXIgbmFt
+ZSBkb2VzIG5vdCBoZWxwIG1lIGlmIEkgaGF2ZSBtdWx0aXBsZQo+PiA+Pj4gaW5zdGFuY2VzIG9m
+IHRoZSBzYW1lIGRyaXZlci4gVGhpcyBsb29rcyB3cm9uZyB0byBtZS4gVGhpcyBsb29rcyBsaWtl
+Cj4+ID4+PiBhIGpvYiBmb3IgZGV2bGluayB3aGVyZSB5b3UgaGF2ZSAxIGRldmxpbmsgaW5zdGFu
+Y2UgcGVyIDEgQVNJQyBpbnN0YW5jZS4KPj4gPj4+IAo+PiA+Pj4gUGxlYXNlIHNlZToKPj4gPj4+
+IGh0dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wcm9qZWN0L25ldGRldi9saXN0Lz9zZXJpZXM9
+MzY1MjQKPj4gPj4+IAo+PiA+Pj4gSSBiZXZpZXZlIHRoYXQgdGhlIHNvbHV0aW9uIGluIHRoZSBw
+YXRjaHNldCBjb3VsZCBiZSB1c2VkIGZvcgo+PiA+Pj4geW91ciB1c2VjYXNlIHRvby4KPj4gPj4+
+IAo+PiA+Pj4gCj4+ID4+Cj4+ID4+IFRoZSBzeXNmcyBhcHByb2FjaCBwcm9wb3NlZCBoZXJlIGhh
+ZCBiZWVuIGRyb3BwZWQgaW4gZmF2b3VyIGV4cG9ydGluZwo+PiA+PiB0aGUgZHVtcHMgYXMgRUxG
+IG5vdGVzIGluIC9wcm9jL3ZtY29yZS4KPj4gPj4KPj4gPj4gV2lsbCBiZSBwb3N0aW5nIHRoZSBu
+ZXcgcGF0Y2hlcyBzb29uLgo+PiA+Cj4+ID5UaGUgY29uY2VybiB3YXMgYWN0dWFsbHkgaG93IHlv
+dSBpZGVudGlmeSB3aGljaCBkZXZpY2UgdGhhdCBjYW1lIGZyb20uCj4+ID5XaGVyZSB5b3UgcmVh
+ZCB0aGUgaWRlbnRpZmllciBjaGFuZ2VzIGJ1dCBzeXNmcyBvciAvcHJvYy92bWNvcmUgdGhlCj4+
+ID5jaGFuZ2UgcmVtYWlucyB2YWxpZC4KPj4gCj4+IFllYWguIEkgc3RpbGwgZG9uJ3Qgc2VlIGhv
+dyB5b3UgbGluayB0aGUgZHVtcCBhbmQgdGhlIGRldmljZS4KPgo+SW4gb3VyIGNhc2UsIHRoZSBk
+dW1wIGFuZCB0aGUgZGV2aWNlIGFyZSBiZWluZyBpZGVudGlmaWVkIGJ5IHRoZQo+ZHJpdmVy4oCZ
+cyBuYW1lIGZvbGxvd2VkIGJ5IGl0cyBjb3JyZXNwb25kaW5nIHBjaSBidXMgaWQuICBJ4oCZdmUg
+cG9zdGVkIGFuCj5leGFtcGxlIGluIG15IHYzIHNlcmllczoKPgo+aHR0cHM6Ly93d3cuc3Bpbmlj
+cy5uZXQvbGlzdHMvbmV0ZGV2L21zZzQ5Mzc4MS5odG1sCj4KPkhlcmXigJlzIGFuIGV4dHJhY3Qg
+ZnJvbSB0aGUgbGluayBhYm92ZToKPgo+IyByZWFkZWxmIC1uIC9wcm9jL3ZtY29yZQo+Cj5EaXNw
+bGF5aW5nIG5vdGVzIGZvdW5kIGF0IGZpbGUgb2Zmc2V0IDB4MDAwMDEwMDAgd2l0aCBsZW5ndGgg
+MHgwNDAwMzI4ODoKPk93bmVyICAgICAgICAgICAgICAgICBEYXRhIHNpemUgICAgIERlc2NyaXB0
+aW9uCj5WTUNPUkVERF9jeGdiNF8wMDAwOjAyOjAwLjQgMHgwMjAwMGZkOCAgICAgIFVua25vd24g
+bm90ZSB0eXBlOigweDAwMDAwNzAwKQo+Vk1DT1JFRERfY3hnYjRfMDAwMDowNDowMC40IDB4MDIw
+MDBmZDggICAgICBVbmtub3duIG5vdGUgdHlwZTooMHgwMDAwMDcwMCkKPkNPUkUgICAgICAgICAg
+ICAgICAgIDB4MDAwMDAxNTAgICAgIE5UX1BSU1RBVFVTIChwcnN0YXR1cyBzdHJ1Y3R1cmUpCj5D
+T1JFICAgICAgICAgICAgICAgICAweDAwMDAwMTUwICAgICBOVF9QUlNUQVRVUyAocHJzdGF0dXMg
+c3RydWN0dXJlKQo+Q09SRSAgICAgICAgICAgICAgICAgMHgwMDAwMDE1MCAgICAgTlRfUFJTVEFU
+VVMgKHByc3RhdHVzIHN0cnVjdHVyZSkKPkNPUkUgICAgICAgICAgICAgICAgIDB4MDAwMDAxNTAg
+ICAgIE5UX1BSU1RBVFVTIChwcnN0YXR1cyBzdHJ1Y3R1cmUpCj5DT1JFICAgICAgICAgICAgICAg
+ICAweDAwMDAwMTUwICAgICBOVF9QUlNUQVRVUyAocHJzdGF0dXMgc3RydWN0dXJlKQo+Q09SRSAg
+ICAgICAgICAgICAgICAgMHgwMDAwMDE1MCAgICAgTlRfUFJTVEFUVVMgKHByc3RhdHVzIHN0cnVj
+dHVyZSkKPkNPUkUgICAgICAgICAgICAgICAgIDB4MDAwMDAxNTAgICAgIE5UX1BSU1RBVFVTIChw
+cnN0YXR1cyBzdHJ1Y3R1cmUpCj5DT1JFICAgICAgICAgICAgICAgICAweDAwMDAwMTUwICAgICBO
+VF9QUlNUQVRVUyAocHJzdGF0dXMgc3RydWN0dXJlKQo+Vk1DT1JFSU5GTyAgICAgICAgICAgMHgw
+MDAwMDc0ZiAgICAgVW5rbm93biBub3RlIHR5cGU6ICgweDAwMDAwMDAwKQo+Cj5IZXJlLCBmb3Ig
+bXkgdHdvIGRldmljZXMsIHRoZSBkdW1w4oCZcyBuYW1lcyBhcmUKPlZNQ09SRUREX2N4Z2I0XzAw
+MDA6MDI6MDAuNCBhbmQgVk1DT1JFRERfY3hnYjRfMDAwMDowNDowMC40Lgo+Cj5JdOKAmXMgcmVh
+bGx5IHVwIHRvIHRoZSBjYWxsZXJzIHRvIHdyaXRlIHRoZWlyIG93biB1bmlxdWUgbmFtZSBmb3Ig
+dGhlCj5kdW1wLiAgVGhlIG5hbWUgaXMgYXBwZW5kZWQgdG8g4oCcVk1DT1JFRERf4oCdIHN0cmlu
+Zy4KPgo+PiBSYWh1bCwgZGlkIHlvdSBsb29rIGF0IHRoZSBwYXRjaHNldCBJIHBvaW50ZWQgb3V0
+Pwo+Cj5Gb3IgZGV2bGluaywgSSB0aGluayB0aGUgZHVtcCBuYW1lIHdvdWxkIGJlIGlkZW50aWZp
+ZWQgYnkKPmJ1c190eXBlL2RldmljZV9uYW1lOyBpLmUuIOKAnHBjaS8wMDAwOjAyOjAwLjTigJ0g
+Zm9yIG15IGV4YW1wbGUuCj5JcyBteSB1bmRlcnN0YW5kaW5nIGNvcnJlY3Q/CgpZZXMuCgoKPgo+
+VGhhbmtzLAo+UmFodWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
