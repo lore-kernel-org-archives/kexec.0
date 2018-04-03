@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wr0-x242.google.com ([2a00:1450:400c:c0c::242])
+Received: from vps0.lunn.ch ([185.16.172.187])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f3JZo-0007NV-7o
- for kexec@lists.infradead.org; Tue, 03 Apr 2018 10:54:09 +0000
-Received: by mail-wr0-x242.google.com with SMTP id u11so18262093wri.12
- for <kexec@lists.infradead.org>; Tue, 03 Apr 2018 03:53:57 -0700 (PDT)
-Date: Tue, 3 Apr 2018 12:53:52 +0200
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL] remove in-kernel calls to syscalls
-Message-ID: <20180403105352.eicib6jcicif5zoo@gmail.com>
-References: <20180402190454.GB29890@light.dominikbrodowski.net>
- <CA+55aFyaVVKKbXPFzW1Tr7CTpiLCK+1nGdhS21wnm1j64bqWPA@mail.gmail.com>
+ id 1f3LAe-0005IE-SM
+ for kexec@lists.infradead.org; Tue, 03 Apr 2018 12:36:19 +0000
+Date: Tue, 3 Apr 2018 14:35:56 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next v2 1/2] fs/crashdd: add API to collect hardware
+ dump in second kernel
+Message-ID: <20180403123556.GA31740@lunn.ch>
+References: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
+ <296ffbd47fd4f30238689e636bd2480683224227.1521888444.git.rahul.lakkireddy@chelsio.com>
+ <20180330103907.GC3313@nanopsycho> <20180330151129.GG28244@lunn.ch>
+ <20180402091232.GE3313@nanopsycho>
+ <0d106ece-4669-389d-da30-63a630ca625c@mellanox.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CA+55aFyaVVKKbXPFzW1Tr7CTpiLCK+1nGdhS21wnm1j64bqWPA@mail.gmail.com>
+In-Reply-To: <0d106ece-4669-389d-da30-63a630ca625c@mellanox.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,34 +28,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, Dominik Brodowski <linux@dominikbrodowski.net>, linux-mm <linux-mm@kvack.org>, "H. Peter Anvin" <hpa@zytor.com>, tautschn@amazon.co.uk, linux-arch <linux-arch@vger.kernel.org>, linux-s390 <linux-s390@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>, uml-devel <user-mode-linux-devel@lists.sourceforge.net>, the arch/x86 maintainers <x86@kernel.org>, hmclauchlan@fb.com, Christoph Hellwig <hch@infradead.org>, Jiri Slaby <jslaby@suse.com>, Darren Hart <dvhart@infradead.org>, Jaswinder Singh <jaswinder@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>, Al Viro <viro@zeniv.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Network Development <netdev@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Luis R. Rodriguez" <mcgrof@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>
+To: Alex Vesker <valex@mellanox.com>
+Cc: Jiri Pirko <jiri@resnulli.us>, indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stephen@networkplumber.org, ganeshgr@chelsio.com, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ebiederm@xmission.com
 
-
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> On Mon, Apr 2, 2018 at 12:04 PM, Dominik Brodowski
-> <linux@dominikbrodowski.net> wrote:
-> >
-> > This patchset removes all in-kernel calls to syscall functions in the
-> > kernel with the exception of arch/.
+On Tue, Apr 03, 2018 at 08:43:27AM +0300, Alex Vesker wrote:
 > 
-> Ok, this finished off my arch updates for today, I'll probably move on
-> to driver pulls tomorrow.
 > 
-> Anyway, it's in my tree, will push out once my test build finishes.
+> On 4/2/2018 12:12 PM, Jiri Pirko wrote:
+> >Fri, Mar 30, 2018 at 05:11:29PM CEST, andrew@lunn.ch wrote:
+> >>>Please see:
+> >>>http://patchwork.ozlabs.org/project/netdev/list/?series=36524
+> >>>
+> >>>I bevieve that the solution in the patchset could be used for
+> >>>your usecase too.
+> >>Hi Jiri
+> >>
+> >>https://lkml.org/lkml/2018/3/20/436
+> >>
+> >>How well does this API work for a 2Gbyte snapshot?
+> >Ccing Alex who did the tests.
+> 
+> I didn't check the performance for such a large snapshot.
+> From my measurement it takes 0.09s for 1 MB of data this means
+> about ~3m.
 
-Thanks!
+I was not really thinking about performance. More about how well does
+the system work when you ask the kernel for 2GB of RAM to put a
+snapshot into? And given your current design, you need another 2GB
+buffer for the driver to use before calling this new API.
 
-Dominik, if you submit the x86 ptregs conversion patches in the next 1-2 days on 
-top of Linus's tree (642e7fd23353), then I can apply them and if they are 
-problem-free I can perhaps tempt Linus with a pull request early next week or so.
+So i'm asking, how well does this API scale?
 
-The Spectre angle does make me want those changes as well.
+I think you need to remove the need for a second buffer in the
+driver. Either the driver allocates the buffer and hands it over, or
+your core code allocates the buffer and gives it to the driver to
+fill. Maybe look at what makes most sense for the crash dump code?
 
-Thanks,
-
-	Ingo
+      Andrew
 
 _______________________________________________
 kexec mailing list
