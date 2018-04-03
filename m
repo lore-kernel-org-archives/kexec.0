@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x235.google.com ([2a00:1450:400c:c09::235])
+Received: from mail-wr0-x242.google.com ([2a00:1450:400c:c0c::242])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f3HIz-0006wI-9M
- for kexec@lists.infradead.org; Tue, 03 Apr 2018 08:28:39 +0000
-Received: by mail-wm0-x235.google.com with SMTP id t67so11702569wmt.0
- for <kexec@lists.infradead.org>; Tue, 03 Apr 2018 01:28:26 -0700 (PDT)
+ id 1f3JZo-0007NV-7o
+ for kexec@lists.infradead.org; Tue, 03 Apr 2018 10:54:09 +0000
+Received: by mail-wr0-x242.google.com with SMTP id u11so18262093wri.12
+ for <kexec@lists.infradead.org>; Tue, 03 Apr 2018 03:53:57 -0700 (PDT)
+Date: Tue, 3 Apr 2018 12:53:52 +0200
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL] remove in-kernel calls to syscalls
+Message-ID: <20180403105352.eicib6jcicif5zoo@gmail.com>
+References: <20180402190454.GB29890@light.dominikbrodowski.net>
+ <CA+55aFyaVVKKbXPFzW1Tr7CTpiLCK+1nGdhS21wnm1j64bqWPA@mail.gmail.com>
 MIME-Version: 1.0
-From: Sunil Kumar <sukumar@mvista.com>
-Date: Tue, 3 Apr 2018 13:57:44 +0530
-Message-ID: <CALKbUJSPYGyk6rmTaZ8NOD9re1X=Qb1Y8NjTzPc8EhtVWnYzcQ@mail.gmail.com>
-Subject: PowerPC External interrupts are not triggered in secondary kernel
+Content-Disposition: inline
+In-Reply-To: <CA+55aFyaVVKKbXPFzW1Tr7CTpiLCK+1nGdhS21wnm1j64bqWPA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,84 +26,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, Dominik Brodowski <linux@dominikbrodowski.net>, linux-mm <linux-mm@kvack.org>, "H. Peter Anvin" <hpa@zytor.com>, tautschn@amazon.co.uk, linux-arch <linux-arch@vger.kernel.org>, linux-s390 <linux-s390@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>, uml-devel <user-mode-linux-devel@lists.sourceforge.net>, the arch/x86 maintainers <x86@kernel.org>, hmclauchlan@fb.com, Christoph Hellwig <hch@infradead.org>, Jiri Slaby <jslaby@suse.com>, Darren Hart <dvhart@infradead.org>, Jaswinder Singh <jaswinder@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>, Al Viro <viro@zeniv.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Network Development <netdev@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Luis R. Rodriguez" <mcgrof@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>
 
-Hi All,
 
-I came across very interesting issue while working kexec with the 3.10
-kernel on NXP's t1042ds reference board.
-whenever crashing the primary kernel using the "echo c >
-/proc/sysrq-trigger' command. i am getting "mmc0: Timeout waiting for
-hardware interrupt." during bootup of secondary crash kernel. The mmc
-timeout is comming because the sdhci driver initialiation code sends
-the set of commands to the esdhc host controller and expecting it to
-get the interrupt from sdcard( i.e esdhc) host controller. When the
-interrupt is not raised within 10ms of time, sdhci reports the
-interrupt is not recieved from the sdcard controller by throwing mmc
-timeout error.
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-To debug it further added print in do_IRQ routine to check whether
-external interrupts are comming or not, but as soon as interrupts are
-enabled in the secondary kernel ( inside start_kernel() ),  I am
-getting spurious interrupt (i.e. irq=0 ~ NO_IRQ ) and a doorbell
-exception.
+> On Mon, Apr 2, 2018 at 12:04 PM, Dominik Brodowski
+> <linux@dominikbrodowski.net> wrote:
+> >
+> > This patchset removes all in-kernel calls to syscall functions in the
+> > kernel with the exception of arch/.
+> 
+> Ok, this finished off my arch updates for today, I'll probably move on
+> to driver pulls tomorrow.
+> 
+> Anyway, it's in my tree, will push out once my test build finishes.
 
-Not sure why doorbell exception, as SMP support is not enabled in my
-secondary kernel ?
-If I am not wrong doorbell exception are mainly used for IPI
-communication across different CPU cores.
+Thanks!
 
-Whenever getting this supurious interrupt during boots, Secondary
-kernel is not booting up due to mmc timeout error.
-Debugged it further by printing all the irq which are pending in the
-primary kernel before jumping to secondary kernel and found that one
-of the irq is not processed in the primary kernel. Looks like whenever
-having any pending interrupts from the primary kernel, the secondary
-kernel treat that as spurious interrupt.
+Dominik, if you submit the x86 ptregs conversion patches in the next 1-2 days on 
+top of Linus's tree (642e7fd23353), then I can apply them and if they are 
+problem-free I can perhaps tempt Linus with a pull request early next week or so.
 
-Ideally there should not be any pending interrupts from primary kernel
-as we are send EOI to all the interrupts and masking them in the
-machine_kexec_mask_interrupts() routine. As per my understanding even
-if spurious interrupt comes its should not cause any harm and
-secondary kernel should boot ideally.
+The Spectre angle does make me want those changes as well.
 
-The problem get fixed when all the pending interrupts are processed in
-the primary kernel just before jumping to secondary kernel. Below are
-the changes which fixes the issue
-==============================================================================
-diff --git a/arch/powerpc/kernel/machine_kexec_32.c
-b/arch/powerpc/kernel/machine_kexec_32.c
-index affe5dc..b2256d7 100644
---- a/arch/powerpc/kernel/machine_kexec_32.c
-+++ b/arch/powerpc/kernel/machine_kexec_32.c
-@@ -36,6 +36,13 @@ void default_machine_kexec(struct kimage *image)
-        unsigned long reboot_code_buffer, reboot_code_buffer_phys;
-        relocate_new_kernel_t rnk;
+Thanks,
 
-+       /*
-+         Allow pending interrupts to execute before jumping to
-+         secondary kernel if kexec called from atomic context.
-+       */
-+       if (irqs_disabled())
-+               local_irq_enable();
-+
-        /* Interrupts aren't acceptable while we reboot */
-        local_irq_disable();
-==============================================================================
-
-Similiar kind of solution has been merged to linux-stable for CPU
-HOTPLUG feature, where before disabling the cpu, kernel process all
-pending interrupts before going offline.
-
-Below is the reference
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/commit/?id=687b8f24f14db842c8c3f8cb8b24c9a29b691db8
-
-Is this good idea to process all the pending interrupt before jumping
-to secondary kernel ?
-Please provide your suggestion.
-
-Regards
-Sunil Kumar
+	Ingo
 
 _______________________________________________
 kexec mailing list
