@@ -1,24 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x22b.google.com ([2a00:1450:400c:c09::22b])
+Received: from mail-wm0-x235.google.com ([2a00:1450:400c:c09::235])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f3FzV-0001NR-HH
- for kexec@lists.infradead.org; Tue, 03 Apr 2018 07:04:27 +0000
-Received: by mail-wm0-x22b.google.com with SMTP id r131so32455854wmb.2
- for <kexec@lists.infradead.org>; Tue, 03 Apr 2018 00:04:15 -0700 (PDT)
-Date: Tue, 3 Apr 2018 09:04:12 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-Subject: Re: [PATCH net-next v2 1/2] fs/crashdd: add API to collect hardware
- dump in second kernel
-Message-ID: <20180403070412.GH3313@nanopsycho>
-References: <cover.1521888444.git.rahul.lakkireddy@chelsio.com>
- <296ffbd47fd4f30238689e636bd2480683224227.1521888444.git.rahul.lakkireddy@chelsio.com>
- <20180330103907.GC3313@nanopsycho>
- <20180330105156.GA24344@chelsio.com> <87k1tt2yo7.fsf@xmission.com>
- <20180402091143.GD3313@nanopsycho>
- <20180402123044.GA31231@chelsio.com>
+ id 1f3HIz-0006wI-9M
+ for kexec@lists.infradead.org; Tue, 03 Apr 2018 08:28:39 +0000
+Received: by mail-wm0-x235.google.com with SMTP id t67so11702569wmt.0
+ for <kexec@lists.infradead.org>; Tue, 03 Apr 2018 01:28:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180402123044.GA31231@chelsio.com>
+From: Sunil Kumar <sukumar@mvista.com>
+Date: Tue, 3 Apr 2018 13:57:44 +0530
+Message-ID: <CALKbUJSPYGyk6rmTaZ8NOD9re1X=Qb1Y8NjTzPc8EhtVWnYzcQ@mail.gmail.com>
+Subject: PowerPC External interrupts are not triggered in secondary kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,80 +18,90 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Cc: Indranil Choudhury <indranil@chelsio.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Nirranjan Kirubaharan <nirranjan@chelsio.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stephen@networkplumber.org" <stephen@networkplumber.org>, Ganesh GR <ganeshgr@chelsio.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+To: kexec@lists.infradead.org
 
-TW9uLCBBcHIgMDIsIDIwMTggYXQgMDI6MzA6NDVQTSBDRVNULCByYWh1bC5sYWtraXJlZGR5QGNo
-ZWxzaW8uY29tIHdyb3RlOgo+T24gTW9uZGF5LCBBcHJpbCAwNC8wMi8xOCwgMjAxOCBhdCAxNDo0
-MTo0MyArMDUzMCwgSmlyaSBQaXJrbyB3cm90ZToKPj4gRnJpLCBNYXIgMzAsIDIwMTggYXQgMDg6
-NDI6MDBQTSBDRVNULCBlYmllZGVybUB4bWlzc2lvbi5jb20gd3JvdGU6Cj4+ID5SYWh1bCBMYWtr
-aXJlZGR5IDxyYWh1bC5sYWtraXJlZGR5QGNoZWxzaW8uY29tPiB3cml0ZXM6Cj4+ID4KPj4gPj4g
-T24gRnJpZGF5LCBNYXJjaCAwMy8zMC8xOCwgMjAxOCBhdCAxNjowOTowNyArMDUzMCwgSmlyaSBQ
-aXJrbyB3cm90ZToKPj4gPj4+IFNhdCwgTWFyIDI0LCAyMDE4IGF0IDExOjU2OjMzQU0gQ0VULCBy
-YWh1bC5sYWtraXJlZGR5QGNoZWxzaW8uY29tIHdyb3RlOgo+PiA+Pj4gPkFkZCBhIG5ldyBtb2R1
-bGUgY3Jhc2hkZCB0aGF0IGV4cG9ydHMgdGhlIC9zeXMva2VybmVsL2NyYXNoZGQvCj4+ID4+PiA+
-ZGlyZWN0b3J5IGluIHNlY29uZCBrZXJuZWwsIGNvbnRhaW5pbmcgY29sbGVjdGVkIGhhcmR3YXJl
-L2Zpcm13YXJlCj4+ID4+PiA+ZHVtcHMuCj4+ID4+PiA+Cj4+ID4+PiA+VGhlIHNlcXVlbmNlIG9m
-IGFjdGlvbnMgZG9uZSBieSBkZXZpY2UgZHJpdmVycyB0byBhcHBlbmQgdGhlaXIgZGV2aWNlCj4+
-ID4+PiA+c3BlY2lmaWMgaGFyZHdhcmUvZmlybXdhcmUgbG9ncyB0byAvc3lzL2tlcm5lbC9jcmFz
-aGRkLyBkaXJlY3RvcnkgYXJlCj4+ID4+PiA+YXMgZm9sbG93czoKPj4gPj4+ID4KPj4gPj4+ID4x
-LiBEdXJpbmcgcHJvYmUgKGJlZm9yZSBoYXJkd2FyZSBpcyBpbml0aWFsaXplZCksIGRldmljZSBk
-cml2ZXJzCj4+ID4+PiA+cmVnaXN0ZXIgdG8gdGhlIGNyYXNoZGQgbW9kdWxlICh2aWEgY3Jhc2hk
-ZF9hZGRfZHVtcCgpKSwgd2l0aAo+PiA+Pj4gPmNhbGxiYWNrIGZ1bmN0aW9uLCBhbG9uZyB3aXRo
-IGJ1ZmZlciBzaXplIGFuZCBsb2cgbmFtZSBuZWVkZWQgZm9yCj4+ID4+PiA+ZmlybXdhcmUvaGFy
-ZHdhcmUgbG9nIGNvbGxlY3Rpb24uCj4+ID4+PiA+Cj4+ID4+PiA+Mi4gQ3Jhc2hkZCBjcmVhdGVz
-IGEgZHJpdmVyJ3MgZGlyZWN0b3J5IHVuZGVyCj4+ID4+PiA+L3N5cy9rZXJuZWwvY3Jhc2hkZC88
-ZHJpdmVyPi4gVGhlbiwgaXQgYWxsb2NhdGVzIHRoZSBidWZmZXIgd2l0aAo+PiA+Pj4gCj4+ID4+
-PiBUaGlzIHNtZWxscy4gSSBuZWVkIHRvIGlkZW50aWZ5IHRoZSBleGFjdCBBU0lDIGluc3RhbmNl
-IHRoYXQgcHJvZHVjZWQKPj4gPj4+IHRoZSBkdW1wLiBUbyBpZGVudGlmeSBieSBkcml2ZXIgbmFt
-ZSBkb2VzIG5vdCBoZWxwIG1lIGlmIEkgaGF2ZSBtdWx0aXBsZQo+PiA+Pj4gaW5zdGFuY2VzIG9m
-IHRoZSBzYW1lIGRyaXZlci4gVGhpcyBsb29rcyB3cm9uZyB0byBtZS4gVGhpcyBsb29rcyBsaWtl
-Cj4+ID4+PiBhIGpvYiBmb3IgZGV2bGluayB3aGVyZSB5b3UgaGF2ZSAxIGRldmxpbmsgaW5zdGFu
-Y2UgcGVyIDEgQVNJQyBpbnN0YW5jZS4KPj4gPj4+IAo+PiA+Pj4gUGxlYXNlIHNlZToKPj4gPj4+
-IGh0dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wcm9qZWN0L25ldGRldi9saXN0Lz9zZXJpZXM9
-MzY1MjQKPj4gPj4+IAo+PiA+Pj4gSSBiZXZpZXZlIHRoYXQgdGhlIHNvbHV0aW9uIGluIHRoZSBw
-YXRjaHNldCBjb3VsZCBiZSB1c2VkIGZvcgo+PiA+Pj4geW91ciB1c2VjYXNlIHRvby4KPj4gPj4+
-IAo+PiA+Pj4gCj4+ID4+Cj4+ID4+IFRoZSBzeXNmcyBhcHByb2FjaCBwcm9wb3NlZCBoZXJlIGhh
-ZCBiZWVuIGRyb3BwZWQgaW4gZmF2b3VyIGV4cG9ydGluZwo+PiA+PiB0aGUgZHVtcHMgYXMgRUxG
-IG5vdGVzIGluIC9wcm9jL3ZtY29yZS4KPj4gPj4KPj4gPj4gV2lsbCBiZSBwb3N0aW5nIHRoZSBu
-ZXcgcGF0Y2hlcyBzb29uLgo+PiA+Cj4+ID5UaGUgY29uY2VybiB3YXMgYWN0dWFsbHkgaG93IHlv
-dSBpZGVudGlmeSB3aGljaCBkZXZpY2UgdGhhdCBjYW1lIGZyb20uCj4+ID5XaGVyZSB5b3UgcmVh
-ZCB0aGUgaWRlbnRpZmllciBjaGFuZ2VzIGJ1dCBzeXNmcyBvciAvcHJvYy92bWNvcmUgdGhlCj4+
-ID5jaGFuZ2UgcmVtYWlucyB2YWxpZC4KPj4gCj4+IFllYWguIEkgc3RpbGwgZG9uJ3Qgc2VlIGhv
-dyB5b3UgbGluayB0aGUgZHVtcCBhbmQgdGhlIGRldmljZS4KPgo+SW4gb3VyIGNhc2UsIHRoZSBk
-dW1wIGFuZCB0aGUgZGV2aWNlIGFyZSBiZWluZyBpZGVudGlmaWVkIGJ5IHRoZQo+ZHJpdmVy4oCZ
-cyBuYW1lIGZvbGxvd2VkIGJ5IGl0cyBjb3JyZXNwb25kaW5nIHBjaSBidXMgaWQuICBJ4oCZdmUg
-cG9zdGVkIGFuCj5leGFtcGxlIGluIG15IHYzIHNlcmllczoKPgo+aHR0cHM6Ly93d3cuc3Bpbmlj
-cy5uZXQvbGlzdHMvbmV0ZGV2L21zZzQ5Mzc4MS5odG1sCj4KPkhlcmXigJlzIGFuIGV4dHJhY3Qg
-ZnJvbSB0aGUgbGluayBhYm92ZToKPgo+IyByZWFkZWxmIC1uIC9wcm9jL3ZtY29yZQo+Cj5EaXNw
-bGF5aW5nIG5vdGVzIGZvdW5kIGF0IGZpbGUgb2Zmc2V0IDB4MDAwMDEwMDAgd2l0aCBsZW5ndGgg
-MHgwNDAwMzI4ODoKPk93bmVyICAgICAgICAgICAgICAgICBEYXRhIHNpemUgICAgIERlc2NyaXB0
-aW9uCj5WTUNPUkVERF9jeGdiNF8wMDAwOjAyOjAwLjQgMHgwMjAwMGZkOCAgICAgIFVua25vd24g
-bm90ZSB0eXBlOigweDAwMDAwNzAwKQo+Vk1DT1JFRERfY3hnYjRfMDAwMDowNDowMC40IDB4MDIw
-MDBmZDggICAgICBVbmtub3duIG5vdGUgdHlwZTooMHgwMDAwMDcwMCkKPkNPUkUgICAgICAgICAg
-ICAgICAgIDB4MDAwMDAxNTAgICAgIE5UX1BSU1RBVFVTIChwcnN0YXR1cyBzdHJ1Y3R1cmUpCj5D
-T1JFICAgICAgICAgICAgICAgICAweDAwMDAwMTUwICAgICBOVF9QUlNUQVRVUyAocHJzdGF0dXMg
-c3RydWN0dXJlKQo+Q09SRSAgICAgICAgICAgICAgICAgMHgwMDAwMDE1MCAgICAgTlRfUFJTVEFU
-VVMgKHByc3RhdHVzIHN0cnVjdHVyZSkKPkNPUkUgICAgICAgICAgICAgICAgIDB4MDAwMDAxNTAg
-ICAgIE5UX1BSU1RBVFVTIChwcnN0YXR1cyBzdHJ1Y3R1cmUpCj5DT1JFICAgICAgICAgICAgICAg
-ICAweDAwMDAwMTUwICAgICBOVF9QUlNUQVRVUyAocHJzdGF0dXMgc3RydWN0dXJlKQo+Q09SRSAg
-ICAgICAgICAgICAgICAgMHgwMDAwMDE1MCAgICAgTlRfUFJTVEFUVVMgKHByc3RhdHVzIHN0cnVj
-dHVyZSkKPkNPUkUgICAgICAgICAgICAgICAgIDB4MDAwMDAxNTAgICAgIE5UX1BSU1RBVFVTIChw
-cnN0YXR1cyBzdHJ1Y3R1cmUpCj5DT1JFICAgICAgICAgICAgICAgICAweDAwMDAwMTUwICAgICBO
-VF9QUlNUQVRVUyAocHJzdGF0dXMgc3RydWN0dXJlKQo+Vk1DT1JFSU5GTyAgICAgICAgICAgMHgw
-MDAwMDc0ZiAgICAgVW5rbm93biBub3RlIHR5cGU6ICgweDAwMDAwMDAwKQo+Cj5IZXJlLCBmb3Ig
-bXkgdHdvIGRldmljZXMsIHRoZSBkdW1w4oCZcyBuYW1lcyBhcmUKPlZNQ09SRUREX2N4Z2I0XzAw
-MDA6MDI6MDAuNCBhbmQgVk1DT1JFRERfY3hnYjRfMDAwMDowNDowMC40Lgo+Cj5JdOKAmXMgcmVh
-bGx5IHVwIHRvIHRoZSBjYWxsZXJzIHRvIHdyaXRlIHRoZWlyIG93biB1bmlxdWUgbmFtZSBmb3Ig
-dGhlCj5kdW1wLiAgVGhlIG5hbWUgaXMgYXBwZW5kZWQgdG8g4oCcVk1DT1JFRERf4oCdIHN0cmlu
-Zy4KPgo+PiBSYWh1bCwgZGlkIHlvdSBsb29rIGF0IHRoZSBwYXRjaHNldCBJIHBvaW50ZWQgb3V0
-Pwo+Cj5Gb3IgZGV2bGluaywgSSB0aGluayB0aGUgZHVtcCBuYW1lIHdvdWxkIGJlIGlkZW50aWZp
-ZWQgYnkKPmJ1c190eXBlL2RldmljZV9uYW1lOyBpLmUuIOKAnHBjaS8wMDAwOjAyOjAwLjTigJ0g
-Zm9yIG15IGV4YW1wbGUuCj5JcyBteSB1bmRlcnN0YW5kaW5nIGNvcnJlY3Q/CgpZZXMuCgoKPgo+
-VGhhbmtzLAo+UmFodWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hi All,
+
+I came across very interesting issue while working kexec with the 3.10
+kernel on NXP's t1042ds reference board.
+whenever crashing the primary kernel using the "echo c >
+/proc/sysrq-trigger' command. i am getting "mmc0: Timeout waiting for
+hardware interrupt." during bootup of secondary crash kernel. The mmc
+timeout is comming because the sdhci driver initialiation code sends
+the set of commands to the esdhc host controller and expecting it to
+get the interrupt from sdcard( i.e esdhc) host controller. When the
+interrupt is not raised within 10ms of time, sdhci reports the
+interrupt is not recieved from the sdcard controller by throwing mmc
+timeout error.
+
+To debug it further added print in do_IRQ routine to check whether
+external interrupts are comming or not, but as soon as interrupts are
+enabled in the secondary kernel ( inside start_kernel() ),  I am
+getting spurious interrupt (i.e. irq=0 ~ NO_IRQ ) and a doorbell
+exception.
+
+Not sure why doorbell exception, as SMP support is not enabled in my
+secondary kernel ?
+If I am not wrong doorbell exception are mainly used for IPI
+communication across different CPU cores.
+
+Whenever getting this supurious interrupt during boots, Secondary
+kernel is not booting up due to mmc timeout error.
+Debugged it further by printing all the irq which are pending in the
+primary kernel before jumping to secondary kernel and found that one
+of the irq is not processed in the primary kernel. Looks like whenever
+having any pending interrupts from the primary kernel, the secondary
+kernel treat that as spurious interrupt.
+
+Ideally there should not be any pending interrupts from primary kernel
+as we are send EOI to all the interrupts and masking them in the
+machine_kexec_mask_interrupts() routine. As per my understanding even
+if spurious interrupt comes its should not cause any harm and
+secondary kernel should boot ideally.
+
+The problem get fixed when all the pending interrupts are processed in
+the primary kernel just before jumping to secondary kernel. Below are
+the changes which fixes the issue
+==============================================================================
+diff --git a/arch/powerpc/kernel/machine_kexec_32.c
+b/arch/powerpc/kernel/machine_kexec_32.c
+index affe5dc..b2256d7 100644
+--- a/arch/powerpc/kernel/machine_kexec_32.c
++++ b/arch/powerpc/kernel/machine_kexec_32.c
+@@ -36,6 +36,13 @@ void default_machine_kexec(struct kimage *image)
+        unsigned long reboot_code_buffer, reboot_code_buffer_phys;
+        relocate_new_kernel_t rnk;
+
++       /*
++         Allow pending interrupts to execute before jumping to
++         secondary kernel if kexec called from atomic context.
++       */
++       if (irqs_disabled())
++               local_irq_enable();
++
+        /* Interrupts aren't acceptable while we reboot */
+        local_irq_disable();
+==============================================================================
+
+Similiar kind of solution has been merged to linux-stable for CPU
+HOTPLUG feature, where before disabling the cpu, kernel process all
+pending interrupts before going offline.
+
+Below is the reference
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/commit/?id=687b8f24f14db842c8c3f8cb8b24c9a29b691db8
+
+Is this good idea to process all the pending interrupt before jumping
+to secondary kernel ?
+Please provide your suggestion.
+
+Regards
+Sunil Kumar
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
