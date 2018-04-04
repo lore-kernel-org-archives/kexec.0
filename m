@@ -1,15 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v3 0/2] kexec-tools: arm64: Enable D-cache in purgatory
-References: <cover.1495514291.git.panand@redhat.com>
- <59312080.1090906@arm.com> <1963984d-e78e-a5b2-f1a2-fb0a789a505e@redhat.com>
+Received: from mail-io0-x231.google.com ([2607:f8b0:4001:c06::231])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1f3rJQ-0006Zu-F8
+ for kexec@lists.infradead.org; Wed, 04 Apr 2018 22:55:30 +0000
+Received: by mail-io0-x231.google.com with SMTP id d5so28265945iob.9
+ for <kexec@lists.infradead.org>; Wed, 04 Apr 2018 15:55:15 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <5599813d-f83c-d154-287a-c131c48292ca@arm.com>
+References: <cover.1495514291.git.panand@redhat.com> <59312080.1090906@arm.com>
+ <1963984d-e78e-a5b2-f1a2-fb0a789a505e@redhat.com>
  <CAB=otbT23ySN4VC6G0sBKF5p4SvsnG8PS-C_beBgn8YJUsbw9Q@mail.gmail.com>
  <71f0a333-8bfb-3755-c9fd-e30bf2280339@cisco.com>
-From: James Morse <james.morse@arm.com>
-Message-ID: <5599813d-f83c-d154-287a-c131c48292ca@arm.com>
-Date: Wed, 4 Apr 2018 14:28:52 +0100
-MIME-Version: 1.0
-In-Reply-To: <71f0a333-8bfb-3755-c9fd-e30bf2280339@cisco.com>
-Content-Language: en-US
+ <5599813d-f83c-d154-287a-c131c48292ca@arm.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date: Thu, 5 Apr 2018 00:55:14 +0200
+Message-ID: <CAKv+Gu-jr79AtWtJWHnhzf6o21tMKaajyse6xtRfSOcfKQZHjA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] kexec-tools: arm64: Enable D-cache in purgatory
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,101 +24,170 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kostiantyn Iarmak <kiarmak@cisco.com>
-Cc: Pratyush Anand <panand@redhat.com>, mark.rutland@arm.com, bhe@redhat.com, kexec@lists.infradead.org, horms@verge.net.au, "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: James Morse <james.morse@arm.com>
+Cc: Pratyush Anand <panand@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>, Kostiantyn Iarmak <kiarmak@cisco.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-SGkgS29zdGlhbnR5biwKCk9uIDA0LzA0LzE4IDEzOjQ1LCBLb3N0aWFudHluIElhcm1hayB3cm90
-ZToKPiBGcm9tOiBQcmF0eXVzaCBBbmFuZCA8cGFuYW5kQHJlZGhhdC5jb20+Cj4+IERhdGU6IEZy
-aSwgSnVuIDIsIDIwMTcgYXQgNTo0MiBQTQo+PiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDAvMl0g
-a2V4ZWMtdG9vbHM6IGFybTY0OiBFbmFibGUgRC1jYWNoZSBpbiBwdXJnYXRvcnkKPj4gVG86IEph
-bWVzIE1vcnNlIDxqYW1lcy5tb3JzZUBhcm0uY29tPgo+PiBDYzogbWFyay5ydXRsYW5kQGFybS5j
-b20sIGJoZUByZWRoYXQuY29tLCBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnLAo+PiBob3Jtc0B2
-ZXJnZS5uZXQuYXUsIGR5b3VuZ0ByZWRoYXQuY29tLAo+PiBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKPj4KPj4gT24gRnJpZGF5IDAyIEp1bmUgMjAxNyAwMTo1MyBQTSwgSmFt
-ZXMgTW9yc2Ugd3JvdGU6Cj4+PiBPbiAyMy8wNS8xNyAwNjowMiwgUHJhdHl1c2ggQW5hbmQgd3Jv
-dGU6Cj4+Pj4gSXQgdGFrZXMgbW9yZSB0aGF0IDIgbWludXRlcyB0byB2ZXJpZnkgU0hBIGluIHB1
-cmdhdG9yeSB3aGVuIHZtbGludXogaW1hZ2UKPj4+PiBpcyBhcm91bmQgMTNNQiBhbmQgaW5pdHJh
-bWZzIGlzIGFyb3VuZCAzME1CLiBJdCB0YWtlcyBtb3JlIHRoYW4gMjAgc2Vjb25kCj4+Pj4gZXZl
-biB3aGVuIHdlIGhhdmUgLU8yIG9wdGltaXphdGlvbiBlbmFibGVkLiBIb3dldmVyLCBpZiBkY2Fj
-aGUgaXMgZW5hYmxlZAo+Pj4+IGR1cmluZyBwdXJnYXRvcnkgZXhlY3V0aW9uIHRoZW4sIGl0IHRh
-a2VzIGp1c3QgYSBzZWNvbmQgaW4gU0hBCj4+Pj4gdmVyaWZpY2F0aW9uLgo+Pj4+Cj4+Pj4gVGhl
-cmVmb3JlLCB0aGVzZSBwYXRjaGVzIGFkZHMgc3VwcG9ydCBmb3IgZGNhY2hlIGVuYWJsaW5nIGZh
-Y2lsaXR5IGR1cmluZwo+Pj4+IHB1cmdhdG9yeSBleGVjdXRpb24uCgo+Pj4gSSdtIHN0aWxsIG5v
-dCBjb252aW5jZWQgd2UgbmVlZCB0aGlzLiBNb3ZpbmcgdGhlIFNIQSB2ZXJpZmljYXRpb24gdG8g
-aGFwcGVuCj4+PiBiZWZvcmUgdGhlIGRjYWNoZSttbXUgYXJlIGRpc2FibGVkIHdvdWxkIGFsc28g
-c29sdmUgdGhlIGRlbGF5IHByb2JsZW0sCj4+Cj4+IEh1bW0uLkkgYW0gbm90IHN1cmUsIGlmIHdl
-IGNhbiBkbyB0aGF0LgoKPj4gV2hlbiB3ZSBsZWF2ZSBrZXJuZWwgKGFuZCBlbnRlciBpbnRvIHB1
-cmdhdG9yeSksIGljYWNoZStkY2FjaGUrbW11IGFyZQo+PiBhbHJlYWR5IGRpc2FibGVkLiBJIHRo
-aW5rLCB0aGF0IHdvdWxkIGJlIHBvc3NpYmxlIHdoZW4gd2Ugd2lsbCBiZSBpbiBhCj4+IHBvc2l0
-aW9uIHRvIHVzZSBpbi1rZXJuZWwgcHVyZ2F0b3J5Lgo+Pgo+Pj4gYW5kIHdlCj4+PiBjYW4gcHJp
-bnQgYW4gZXJyb3IgbWVzc2FnZSBvciBmYWlsIHRoZSBzeXNjYWxsLgo+Pj4KPj4+IEZvciBrZXhl
-YyB3ZSBkb24ndCBleHBlY3QgbWVtb3J5IGNvcnJ1cHRpb24sIHdoYXQgYXJlIHdlIHRlc3Rpbmcg
-Zm9yPwo+Pj4gSSBjYW4gc2VlIHRoZSB1c2UgZm9yIGtkdW1wLCBidXQgdGhlIGtkdW1wLWtlcm5l
-bCBpcyB1bm1hcHBlZCBzbyB0aGUga2VybmVsCj4+PiBjYW4ndCBhY2NpZGVudGFsbHkgd3JpdGUg
-b3ZlciBpdC4KPj4+Cj4+PiAod2UgZGlzY3Vzc2VkIGFsbCB0aGlzIGxhc3QgdGltZSwgYnV0IGl0
-IGZpenpsZWQtb3V0LiBJZiB5b3UgYW5kIHRoZQo+Pj4gwqAga2V4ZWMtdG9vbHMgbWFpbnRhaW5l
-ciB0aGluayBpdHMgbmVjZXNzYXJ5LCBmaW5lIGJ5IG1lISkKCj4+IFllcywgdGhlcmUgaGFkIGFs
-cmVhZHkgYmVlbiBkaXNjdXNzaW9uIGFuZCBNQUlOVEFJTkVScyBoYXZlCj4+IGRpc2NvdXJhZ2Vk
-IG5vbmUtcHVyZ2F0b3J5IGltcGxlbWVudGF0aW9uLgo+Pgo+Pj4gSSBoYXZlIHNvbWUgY29tbWVu
-dHMgb24gbWFraW5nIHRoaXMgY29kZSBlYXNpZXIgdG8gbWFpbnRhaW4uLgo+Pj4KPj4gVGhhbmtz
-Lgo+Pgo+PiBJIGhhdmUgaW1wbGVtZW50ZWQgeW91ciByZXZpZXcgY29tbWVudHMgYW5kIGhhdmUg
-YXJjaGl2ZWQgdGhlIGNvZGUgaW4KPj4KPj4gaHR0cHM6Ly9naXRodWIuY29tL3ByYXR5dXNoYW5h
-bmQva2V4ZWMtdG9vbHMuZ2l0IDogcHVyZ2F0b3J5LWVuYWJsZS1kY2FjaGUKPj4KPj4gSSB3aWxs
-IGJlIHBvc3RpbmcgdGhlIG5leHQgdmVyc2lvbiBvbmx5IHdoZW4gc29tZW9uZSBjb21wbGFpbnMg
-YWJvdXQKPj4gQVJNNjQga2R1bXAgYmVoYXZpb3IgdGhhdCBpdCBpcyBub3QgYXMgZmFzdCBhcyB4
-ODYuCgo+IE9uIG91ciBBUk02NC1iYXNlZCBwbGF0Zm9ybSB3ZSBoYXZlIHZlcnkgbG9uZyBtYWlu
-IGtlcm5lbC1zZWNvbmRhcnkga2VybmVsCj4gc3dpdGNoIHRpbWUuCj4gCj4gVGhpcyBwYXRjaCBz
-ZXQgZml4ZXMgdGhlIGlzc3VlICh3ZSBhcmUgdXNpbmcgNC40IGtlcm5lbCBhbmQgMi4wLjEzIGtl
-eGVjLXRvb2xzCj4gdmVyc2lvbiksIHdlIGNhbiBnZXQgfjI1eCBzcGVlZHVwLCB3aXRoIHRoaXMg
-cGF0Y2ggc2Vjb25kYXJ5IGtlcm5lbCBib290cyBpbiB+Mwo+IHNlY29uZHMgd2hpbGUgb24gMi4w
-LjEzLTIuMC4xNiBrZXhlYy10b29scyB3aXRob3V0IHRoaXMgcGF0Y2ggc3dpdGNoIHRha2VzIGFi
-b3V0Cj4gNzUgc2Vjb25kcy4KClRoaXMgaXMgc2xvdyBiZWNhdXNlIGl0cyBnZW5lcmF0aW5nIGEg
-Y2hlY2tzdW0gb2YgdGhlIGtlcm5lbCB3aXRob3V0IHRoZSBiZW5lZml0Cm9mIHRoZSBjYWNoZXMu
-IFRoaXMgc2VyaWVzIGdlbmVyYXRlZCBwYWdlIHRhYmxlcyBzbyB0aGF0IGl0IGNvdWxkIGVuYWJs
-ZSB0aGUgTU1VCmFuZCBjYWNoZXMuIEJ1dCwgdGhlIHB1cmdhdG9yeSBjb2RlIGFsc28gbmVlZHMg
-dG8gYmUgYSBzaW1wbGUgYXMgcG9zc2libGUKYmVjYXVzZSBpdHMgcHJhY3RpY2FsbHkgaW1wb3Nz
-aWJsZSB0byBkZWJ1Zy4KClRoZSBwdXJnYXRvcnkgY29kZSBkb2VzIHRoaXMgY2hlY2tzdW0taW5n
-IGJlY2F1c2UgaXRzIHdvcnJpZWQgdGhlIHBhbmljKCkgd2FzCmJlY2F1c2UgdGhlIGtlcm5lbCBj
-YXVzZSBzb21lIG1lbW9yeSBjb3JydXB0aW9uLCBhbmQgdGhhdCBtZW1vcnkgY29ycnVwdGlvbiBt
-YXkKaGF2ZSBhZmZlY3RlZCB0aGUga2R1bXAga2VybmVsIHRvby4KClRoaXMgY2FuJ3QgaGFwcGVu
-IG9uIGFybTY0IGFzIHdlIHVubWFwIGtkdW1wJ3MgY3Jhc2ggcmVnaW9uLCBzbyBub3QgZXZlbiB0
-aGUKa2VybmVsIGNhbiBhY2NpZGVudGFsbHkgd3JpdGUgdG8gaXQuIDk4ZDJlMTUzOWI4NCAoImFy
-bTY0OiBrZHVtcDogcHJvdGVjdCBjcmFzaApkdW1wIGtlcm5lbCBtZW1vcnkiKSBoYXMgYWxsIHRo
-ZSBkZXRhaWxzLgoKKHdlIGFsc28gbmVlZGVkIHRvIGRvIHRoaXMgdG8gYXZvaWQgdGhlIHJpc2sg
-b2YgbWlzbWF0Y2hlZCBtZW1vcnkgYXR0cmlidXRlcyBpZgprZHVtcCBib290cyBhbmQgc29tZSBD
-UFVzIGFyZSBzdGlsbCBzdHVjayBpbiB0aGUgb2xkIGtlcm5lbCkKCgo+IFdoZW4gZG8geW91IHBs
-YW4gbWVyZ2UgdGhpcyBwYXRjaD8KCldlIGVuZGVkIHVwIHdpdGggdGhlIGNoZWNrLXN1bW1pbmcg
-Y29kZSBiZWNhdXNlIGl0cyB0aGUgZGVmYXVsdCBiZWhhdmlvdXIgb2YKa2V4ZWMtdG9vbHMgb24g
-b3RoZXIgYXJjaGl0ZWN0dXJlcy4KCk9uZSBhbHRlcm5hdGl2ZSBpcyB0byByaXAgaXQgb3V0IGZv
-ciBhcm02NC4gVW50ZXN0ZWQ6Ci0tLS0tLS0tLS0tLS0tLS0tLS0tJTwtLS0tLS0tLS0tLS0tLS0t
-LS0tLQpkaWZmIC0tZ2l0IGEvcHVyZ2F0b3J5L2FyY2gvYXJtNjQvTWFrZWZpbGUgYi9wdXJnYXRv
-cnkvYXJjaC9hcm02NC9NYWtlZmlsZQppbmRleCA2MzZhYmVhLi5mMTBjMTQ4IDEwMDY0NAotLS0g
-YS9wdXJnYXRvcnkvYXJjaC9hcm02NC9NYWtlZmlsZQorKysgYi9wdXJnYXRvcnkvYXJjaC9hcm02
-NC9NYWtlZmlsZQpAQCAtNyw3ICs3LDggQEAgYXJtNjRfUFVSR0FUT1JZX0VYVFJBX0NGTEFHUyA9
-IFwKICAgICAgICAtV2Vycm9yLWltcGxpY2l0LWZ1bmN0aW9uLWRlY2xhcmF0aW9uIFwKICAgICAg
-ICAtV2RlY2xhcmF0aW9uLWFmdGVyLXN0YXRlbWVudCBcCiAgICAgICAgLVdlcnJvcj1pbXBsaWNp
-dC1pbnQgXAotICAgICAgIC1XZXJyb3I9c3RyaWN0LXByb3RvdHlwZXMKKyAgICAgICAtV2Vycm9y
-PXN0cmljdC1wcm90b3R5cGVzIFwKKyAgICAgICAtRE5PX1NIQV9JTl9QVVJHQVRPUlkKCiBhcm02
-NF9QVVJHQVRPUllfU1JDUyArPSBcCiAgICAgICAgcHVyZ2F0b3J5L2FyY2gvYXJtNjQvZW50cnku
-UyBcCmRpZmYgLS1naXQgYS9wdXJnYXRvcnkvcHVyZ2F0b3J5LmMgYi9wdXJnYXRvcnkvcHVyZ2F0
-b3J5LmMKaW5kZXggM2JiY2MwOS4uNDRlNzkyYSAxMDA2NDQKLS0tIGEvcHVyZ2F0b3J5L3B1cmdh
-dG9yeS5jCisrKyBiL3B1cmdhdG9yeS9wdXJnYXRvcnkuYwpAQCAtOSw2ICs5LDggQEAKIHN0cnVj
-dCBzaGEyNTZfcmVnaW9uIHNoYTI1Nl9yZWdpb25zW1NIQTI1Nl9SRUdJT05TXSA9IHt9Owogc2hh
-MjU2X2RpZ2VzdF90IHNoYTI1Nl9kaWdlc3QgPSB7IH07CgorI2lmbmRlZiBOT19TSEFfSU5fUFVS
-R0FUT1JZCisKIGludCB2ZXJpZnlfc2hhMjU2X2RpZ2VzdCh2b2lkKQogewogICAgICAgIHN0cnVj
-dCBzaGEyNTZfcmVnaW9uICpwdHIsICplbmQ7CkBAIC0zOSwxNCArNDEsMTggQEAgaW50IHZlcmlm
-eV9zaGEyNTZfZGlnZXN0KHZvaWQpCiAgICAgICAgcmV0dXJuIDA7CiB9CgorI2VuZGlmIC8qIE5P
-X1NIQV9JTl9QVVJHQVRPUlkgKi8KKwogdm9pZCBwdXJnYXRvcnkodm9pZCkKIHsKICAgICAgICBw
-cmludGYoIkknbSBpbiBwdXJnYXRvcnlcbiIpOwogICAgICAgIHNldHVwX2FyY2goKTsKKyNpZm5k
-ZWYgTk9fU0hBX0lOX1BVUkdBVE9SWQogICAgICAgIGlmICh2ZXJpZnlfc2hhMjU2X2RpZ2VzdCgp
-KSB7CiAgICAgICAgICAgICAgICBmb3IoOzspIHsKICAgICAgICAgICAgICAgICAgICAgICAgLyog
-bG9vcCBmb3JldmVyICovCiAgICAgICAgICAgICAgICB9CiAgICAgICAgfQorI2VuZGlmIC8qIE5P
-X1NIQV9JTl9QVVJHQVRPUlkgKi8KICAgICAgICBwb3N0X3ZlcmlmaWNhdGlvbl9zZXR1cF9hcmNo
-KCk7CiB9Ci0tLS0tLS0tLS0tLS0tLS0tLS0tJTwtLS0tLS0tLS0tLS0tLS0tLS0tLQoKClRoYW5r
-cywKCkphbWVzCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 4 April 2018 at 15:28, James Morse <james.morse@arm.com> wrote:
+> Hi Kostiantyn,
+>
+> On 04/04/18 13:45, Kostiantyn Iarmak wrote:
+>> From: Pratyush Anand <panand@redhat.com>
+>>> Date: Fri, Jun 2, 2017 at 5:42 PM
+>>> Subject: Re: [PATCH v3 0/2] kexec-tools: arm64: Enable D-cache in purgatory
+>>> To: James Morse <james.morse@arm.com>
+>>> Cc: mark.rutland@arm.com, bhe@redhat.com, kexec@lists.infradead.org,
+>>> horms@verge.net.au, dyoung@redhat.com,
+>>> linux-arm-kernel@lists.infradead.org
+>>>
+>>> On Friday 02 June 2017 01:53 PM, James Morse wrote:
+>>>> On 23/05/17 06:02, Pratyush Anand wrote:
+>>>>> It takes more that 2 minutes to verify SHA in purgatory when vmlinuz image
+>>>>> is around 13MB and initramfs is around 30MB. It takes more than 20 second
+>>>>> even when we have -O2 optimization enabled. However, if dcache is enabled
+>>>>> during purgatory execution then, it takes just a second in SHA
+>>>>> verification.
+>>>>>
+>>>>> Therefore, these patches adds support for dcache enabling facility during
+>>>>> purgatory execution.
+>
+>>>> I'm still not convinced we need this. Moving the SHA verification to happen
+>>>> before the dcache+mmu are disabled would also solve the delay problem,
+>>>
+>>> Humm..I am not sure, if we can do that.
+>
+>>> When we leave kernel (and enter into purgatory), icache+dcache+mmu are
+>>> already disabled. I think, that would be possible when we will be in a
+>>> position to use in-kernel purgatory.
+>>>
+>>>> and we
+>>>> can print an error message or fail the syscall.
+>>>>
+>>>> For kexec we don't expect memory corruption, what are we testing for?
+>>>> I can see the use for kdump, but the kdump-kernel is unmapped so the kernel
+>>>> can't accidentally write over it.
+>>>>
+>>>> (we discussed all this last time, but it fizzled-out. If you and the
+>>>>   kexec-tools maintainer think its necessary, fine by me!)
+>
+>>> Yes, there had already been discussion and MAINTAINERs have
+>>> discouraged none-purgatory implementation.
+>>>
+>>>> I have some comments on making this code easier to maintain..
+>>>>
+>>> Thanks.
+>>>
+>>> I have implemented your review comments and have archived the code in
+>>>
+>>> https://github.com/pratyushanand/kexec-tools.git : purgatory-enable-dcache
+>>>
+>>> I will be posting the next version only when someone complains about
+>>> ARM64 kdump behavior that it is not as fast as x86.
+>
+>> On our ARM64-based platform we have very long main kernel-secondary kernel
+>> switch time.
+>>
+>> This patch set fixes the issue (we are using 4.4 kernel and 2.0.13 kexec-tools
+>> version), we can get ~25x speedup, with this patch secondary kernel boots in ~3
+>> seconds while on 2.0.13-2.0.16 kexec-tools without this patch switch takes about
+>> 75 seconds.
+>
+> This is slow because its generating a checksum of the kernel without the benefit
+> of the caches. This series generated page tables so that it could enable the MMU
+> and caches. But, the purgatory code also needs to be a simple as possible
+> because its practically impossible to debug.
+>
+> The purgatory code does this checksum-ing because its worried the panic() was
+> because the kernel cause some memory corruption, and that memory corruption may
+> have affected the kdump kernel too.
+>
+
+If this is the only reason, there is no need to use a strong
+cryptographic hash, and we should be able to recover some performance
+by switching to CRC32 instead, preferably using the special arm64
+instructions (if implemented).
+
+But I agree that skipping the checksum calculation altogether is
+probably the best approach here.
+
+
+> This can't happen on arm64 as we unmap kdump's crash region, so not even the
+> kernel can accidentally write to it. 98d2e1539b84 ("arm64: kdump: protect crash
+> dump kernel memory") has all the details.
+>
+> (we also needed to do this to avoid the risk of mismatched memory attributes if
+> kdump boots and some CPUs are still stuck in the old kernel)
+>
+>
+>> When do you plan merge this patch?
+>
+> We ended up with the check-summing code because its the default behaviour of
+> kexec-tools on other architectures.
+>
+> One alternative is to rip it out for arm64. Untested:
+> --------------------%<--------------------
+> diff --git a/purgatory/arch/arm64/Makefile b/purgatory/arch/arm64/Makefile
+> index 636abea..f10c148 100644
+> --- a/purgatory/arch/arm64/Makefile
+> +++ b/purgatory/arch/arm64/Makefile
+> @@ -7,7 +7,8 @@ arm64_PURGATORY_EXTRA_CFLAGS = \
+>         -Werror-implicit-function-declaration \
+>         -Wdeclaration-after-statement \
+>         -Werror=implicit-int \
+> -       -Werror=strict-prototypes
+> +       -Werror=strict-prototypes \
+> +       -DNO_SHA_IN_PURGATORY
+>
+>  arm64_PURGATORY_SRCS += \
+>         purgatory/arch/arm64/entry.S \
+> diff --git a/purgatory/purgatory.c b/purgatory/purgatory.c
+> index 3bbcc09..44e792a 100644
+> --- a/purgatory/purgatory.c
+> +++ b/purgatory/purgatory.c
+> @@ -9,6 +9,8 @@
+>  struct sha256_region sha256_regions[SHA256_REGIONS] = {};
+>  sha256_digest_t sha256_digest = { };
+>
+> +#ifndef NO_SHA_IN_PURGATORY
+> +
+>  int verify_sha256_digest(void)
+>  {
+>         struct sha256_region *ptr, *end;
+> @@ -39,14 +41,18 @@ int verify_sha256_digest(void)
+>         return 0;
+>  }
+>
+> +#endif /* NO_SHA_IN_PURGATORY */
+> +
+>  void purgatory(void)
+>  {
+>         printf("I'm in purgatory\n");
+>         setup_arch();
+> +#ifndef NO_SHA_IN_PURGATORY
+>         if (verify_sha256_digest()) {
+>                 for(;;) {
+>                         /* loop forever */
+>                 }
+>         }
+> +#endif /* NO_SHA_IN_PURGATORY */
+>         post_verification_setup_arch();
+>  }
+> --------------------%<--------------------
+>
+>
+> Thanks,
+>
+> James
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
