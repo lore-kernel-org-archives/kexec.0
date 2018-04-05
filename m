@@ -1,22 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x229.google.com ([2607:f8b0:400e:c01::229])
+Received: from mail-pl0-x235.google.com ([2607:f8b0:400e:c01::235])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f3tzr-0001LR-U1
- for kexec@lists.infradead.org; Thu, 05 Apr 2018 01:47:29 +0000
-Received: by mail-pl0-x229.google.com with SMTP id b6-v6so14902615pla.11
- for <kexec@lists.infradead.org>; Wed, 04 Apr 2018 18:47:17 -0700 (PDT)
-Date: Thu, 5 Apr 2018 10:47:08 +0900
+ id 1f3uqy-0003s9-EY
+ for kexec@lists.infradead.org; Thu, 05 Apr 2018 02:42:22 +0000
+Received: by mail-pl0-x235.google.com with SMTP id k6-v6so11970680pls.5
+ for <kexec@lists.infradead.org>; Wed, 04 Apr 2018 19:42:09 -0700 (PDT)
+Date: Thu, 5 Apr 2018 11:42:05 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v3 0/2] kexec-tools: arm64: Enable D-cache in purgatory
-Message-ID: <20180405014707.GB19607@linaro.org>
-References: <cover.1495514291.git.panand@redhat.com> <59312080.1090906@arm.com>
- <1963984d-e78e-a5b2-f1a2-fb0a789a505e@redhat.com>
- <CAB=otbT23ySN4VC6G0sBKF5p4SvsnG8PS-C_beBgn8YJUsbw9Q@mail.gmail.com>
- <71f0a333-8bfb-3755-c9fd-e30bf2280339@cisco.com>
- <5599813d-f83c-d154-287a-c131c48292ca@arm.com>
+Subject: Re: [RFC] arm64: extra entries in /proc/iomem for kexec
+Message-ID: <20180405024203.GD19607@linaro.org>
+References: <20180314082941.GM25863@linaro.org>
+ <2d2e1be6-b925-1595-9b6e-76dd270d396d@redhat.com>
+ <20180327101654.GB14737@linaro.org>
+ <da2989ec-7fa5-b044-3237-4e75f2fe6d98@arm.com>
+ <20180402015330.GA27603@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5599813d-f83c-d154-287a-c131c48292ca@arm.com>
+In-Reply-To: <20180402015330.GA27603@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,116 +25,168 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Pratyush Anand <panand@redhat.com>, mark.rutland@arm.com, bhe@redhat.com, kexec@lists.infradead.org, horms@verge.net.au, "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>, Kostiantyn Iarmak <kiarmak@cisco.com>, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: James Morse <james.morse@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org, kexec@lists.infradead.org, ard.biesheuvel@linaro.org, tbaicar@codeaurora.org, jhugo@codeaurora.org, Bhupesh SHARMA <bhupesh.linux@gmail.com>
 
-T24gV2VkLCBBcHIgMDQsIDIwMTggYXQgMDI6Mjg6NTJQTSArMDEwMCwgSmFtZXMgTW9yc2Ugd3Jv
-dGU6Cj4gSGkgS29zdGlhbnR5biwKPiAKPiBPbiAwNC8wNC8xOCAxMzo0NSwgS29zdGlhbnR5biBJ
-YXJtYWsgd3JvdGU6Cj4gPiBGcm9tOiBQcmF0eXVzaCBBbmFuZCA8cGFuYW5kQHJlZGhhdC5jb20+
-Cj4gPj4gRGF0ZTogRnJpLCBKdW4gMiwgMjAxNyBhdCA1OjQyIFBNCj4gPj4gU3ViamVjdDogUmU6
-IFtQQVRDSCB2MyAwLzJdIGtleGVjLXRvb2xzOiBhcm02NDogRW5hYmxlIEQtY2FjaGUgaW4gcHVy
-Z2F0b3J5Cj4gPj4gVG86IEphbWVzIE1vcnNlIDxqYW1lcy5tb3JzZUBhcm0uY29tPgo+ID4+IENj
-OiBtYXJrLnJ1dGxhbmRAYXJtLmNvbSwgYmhlQHJlZGhhdC5jb20sIGtleGVjQGxpc3RzLmluZnJh
-ZGVhZC5vcmcsCj4gPj4gaG9ybXNAdmVyZ2UubmV0LmF1LCBkeW91bmdAcmVkaGF0LmNvbSwKPiA+
-PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPiA+Pgo+ID4+IE9uIEZyaWRh
-eSAwMiBKdW5lIDIwMTcgMDE6NTMgUE0sIEphbWVzIE1vcnNlIHdyb3RlOgo+ID4+PiBPbiAyMy8w
-NS8xNyAwNjowMiwgUHJhdHl1c2ggQW5hbmQgd3JvdGU6Cj4gPj4+PiBJdCB0YWtlcyBtb3JlIHRo
-YXQgMiBtaW51dGVzIHRvIHZlcmlmeSBTSEEgaW4gcHVyZ2F0b3J5IHdoZW4gdm1saW51eiBpbWFn
-ZQo+ID4+Pj4gaXMgYXJvdW5kIDEzTUIgYW5kIGluaXRyYW1mcyBpcyBhcm91bmQgMzBNQi4gSXQg
-dGFrZXMgbW9yZSB0aGFuIDIwIHNlY29uZAo+ID4+Pj4gZXZlbiB3aGVuIHdlIGhhdmUgLU8yIG9w
-dGltaXphdGlvbiBlbmFibGVkLiBIb3dldmVyLCBpZiBkY2FjaGUgaXMgZW5hYmxlZAo+ID4+Pj4g
-ZHVyaW5nIHB1cmdhdG9yeSBleGVjdXRpb24gdGhlbiwgaXQgdGFrZXMganVzdCBhIHNlY29uZCBp
-biBTSEEKPiA+Pj4+IHZlcmlmaWNhdGlvbi4KPiA+Pj4+Cj4gPj4+PiBUaGVyZWZvcmUsIHRoZXNl
-IHBhdGNoZXMgYWRkcyBzdXBwb3J0IGZvciBkY2FjaGUgZW5hYmxpbmcgZmFjaWxpdHkgZHVyaW5n
-Cj4gPj4+PiBwdXJnYXRvcnkgZXhlY3V0aW9uLgo+IAo+ID4+PiBJJ20gc3RpbGwgbm90IGNvbnZp
-bmNlZCB3ZSBuZWVkIHRoaXMuIE1vdmluZyB0aGUgU0hBIHZlcmlmaWNhdGlvbiB0byBoYXBwZW4K
-PiA+Pj4gYmVmb3JlIHRoZSBkY2FjaGUrbW11IGFyZSBkaXNhYmxlZCB3b3VsZCBhbHNvIHNvbHZl
-IHRoZSBkZWxheSBwcm9ibGVtLAo+ID4+Cj4gPj4gSHVtbS4uSSBhbSBub3Qgc3VyZSwgaWYgd2Ug
-Y2FuIGRvIHRoYXQuCj4gCj4gPj4gV2hlbiB3ZSBsZWF2ZSBrZXJuZWwgKGFuZCBlbnRlciBpbnRv
-IHB1cmdhdG9yeSksIGljYWNoZStkY2FjaGUrbW11IGFyZQo+ID4+IGFscmVhZHkgZGlzYWJsZWQu
-IEkgdGhpbmssIHRoYXQgd291bGQgYmUgcG9zc2libGUgd2hlbiB3ZSB3aWxsIGJlIGluIGEKPiA+
-PiBwb3NpdGlvbiB0byB1c2UgaW4ta2VybmVsIHB1cmdhdG9yeS4KPiA+Pgo+ID4+PiBhbmQgd2UK
-PiA+Pj4gY2FuIHByaW50IGFuIGVycm9yIG1lc3NhZ2Ugb3IgZmFpbCB0aGUgc3lzY2FsbC4KPiA+
-Pj4KPiA+Pj4gRm9yIGtleGVjIHdlIGRvbid0IGV4cGVjdCBtZW1vcnkgY29ycnVwdGlvbiwgd2hh
-dCBhcmUgd2UgdGVzdGluZyBmb3I/Cj4gPj4+IEkgY2FuIHNlZSB0aGUgdXNlIGZvciBrZHVtcCwg
-YnV0IHRoZSBrZHVtcC1rZXJuZWwgaXMgdW5tYXBwZWQgc28gdGhlIGtlcm5lbAo+ID4+PiBjYW4n
-dCBhY2NpZGVudGFsbHkgd3JpdGUgb3ZlciBpdC4KPiA+Pj4KPiA+Pj4gKHdlIGRpc2N1c3NlZCBh
-bGwgdGhpcyBsYXN0IHRpbWUsIGJ1dCBpdCBmaXp6bGVkLW91dC4gSWYgeW91IGFuZCB0aGUKPiA+
-Pj4gwqAga2V4ZWMtdG9vbHMgbWFpbnRhaW5lciB0aGluayBpdHMgbmVjZXNzYXJ5LCBmaW5lIGJ5
-IG1lISkKPiAKPiA+PiBZZXMsIHRoZXJlIGhhZCBhbHJlYWR5IGJlZW4gZGlzY3Vzc2lvbiBhbmQg
-TUFJTlRBSU5FUnMgaGF2ZQo+ID4+IGRpc2NvdXJhZ2VkIG5vbmUtcHVyZ2F0b3J5IGltcGxlbWVu
-dGF0aW9uLgoKSSBkb24ndCByZW1lbWJlciB0aGUgZGlzY3Vzc2lvbiBsaWtlIHRoaXMgcXVpdGUg
-d2VsbCwgYnV0IGFueWhvdyAuLi4KCj4gPj4KPiA+Pj4gSSBoYXZlIHNvbWUgY29tbWVudHMgb24g
-bWFraW5nIHRoaXMgY29kZSBlYXNpZXIgdG8gbWFpbnRhaW4uLgo+ID4+Pgo+ID4+IFRoYW5rcy4K
-PiA+Pgo+ID4+IEkgaGF2ZSBpbXBsZW1lbnRlZCB5b3VyIHJldmlldyBjb21tZW50cyBhbmQgaGF2
-ZSBhcmNoaXZlZCB0aGUgY29kZSBpbgo+ID4+Cj4gPj4gaHR0cHM6Ly9naXRodWIuY29tL3ByYXR5
-dXNoYW5hbmQva2V4ZWMtdG9vbHMuZ2l0IDogcHVyZ2F0b3J5LWVuYWJsZS1kY2FjaGUKPiA+Pgo+
-ID4+IEkgd2lsbCBiZSBwb3N0aW5nIHRoZSBuZXh0IHZlcnNpb24gb25seSB3aGVuIHNvbWVvbmUg
-Y29tcGxhaW5zIGFib3V0Cj4gPj4gQVJNNjQga2R1bXAgYmVoYXZpb3IgdGhhdCBpdCBpcyBub3Qg
-YXMgZmFzdCBhcyB4ODYuCj4gCj4gPiBPbiBvdXIgQVJNNjQtYmFzZWQgcGxhdGZvcm0gd2UgaGF2
-ZSB2ZXJ5IGxvbmcgbWFpbiBrZXJuZWwtc2Vjb25kYXJ5IGtlcm5lbAo+ID4gc3dpdGNoIHRpbWUu
-Cj4gPiAKPiA+IFRoaXMgcGF0Y2ggc2V0IGZpeGVzIHRoZSBpc3N1ZSAod2UgYXJlIHVzaW5nIDQu
-NCBrZXJuZWwgYW5kIDIuMC4xMyBrZXhlYy10b29scwo+ID4gdmVyc2lvbiksIHdlIGNhbiBnZXQg
-fjI1eCBzcGVlZHVwLCB3aXRoIHRoaXMgcGF0Y2ggc2Vjb25kYXJ5IGtlcm5lbCBib290cyBpbiB+
-Mwo+ID4gc2Vjb25kcyB3aGlsZSBvbiAyLjAuMTMtMi4wLjE2IGtleGVjLXRvb2xzIHdpdGhvdXQg
-dGhpcyBwYXRjaCBzd2l0Y2ggdGFrZXMgYWJvdXQKPiA+IDc1IHNlY29uZHMuCj4gCj4gVGhpcyBp
-cyBzbG93IGJlY2F1c2UgaXRzIGdlbmVyYXRpbmcgYSBjaGVja3N1bSBvZiB0aGUga2VybmVsIHdp
-dGhvdXQgdGhlIGJlbmVmaXQKPiBvZiB0aGUgY2FjaGVzLiBUaGlzIHNlcmllcyBnZW5lcmF0ZWQg
-cGFnZSB0YWJsZXMgc28gdGhhdCBpdCBjb3VsZCBlbmFibGUgdGhlIE1NVQo+IGFuZCBjYWNoZXMu
-IEJ1dCwgdGhlIHB1cmdhdG9yeSBjb2RlIGFsc28gbmVlZHMgdG8gYmUgYSBzaW1wbGUgYXMgcG9z
-c2libGUKPiBiZWNhdXNlIGl0cyBwcmFjdGljYWxseSBpbXBvc3NpYmxlIHRvIGRlYnVnLgoKTm90
-IGltcG9zc2libGUsIGJ1dCBJIGFkbWl0IHRoYXQgSSBvY2Nhc2lvbmFsbHkgaGFkIGhhcmQgdGlt
-ZSBpbiBkZWJ1Z2dpbmcuCgo+IFRoZSBwdXJnYXRvcnkgY29kZSBkb2VzIHRoaXMgY2hlY2tzdW0t
-aW5nIGJlY2F1c2UgaXRzIHdvcnJpZWQgdGhlIHBhbmljKCkgd2FzCj4gYmVjYXVzZSB0aGUga2Vy
-bmVsIGNhdXNlIHNvbWUgbWVtb3J5IGNvcnJ1cHRpb24sIGFuZCB0aGF0IG1lbW9yeSBjb3JydXB0
-aW9uIG1heQo+IGhhdmUgYWZmZWN0ZWQgdGhlIGtkdW1wIGtlcm5lbCB0b28uCj4gCj4gVGhpcyBj
-YW4ndCBoYXBwZW4gb24gYXJtNjQgYXMgd2UgdW5tYXAga2R1bXAncyBjcmFzaCByZWdpb24sIHNv
-IG5vdCBldmVuIHRoZQo+IGtlcm5lbCBjYW4gYWNjaWRlbnRhbGx5IHdyaXRlIHRvIGl0LiA5OGQy
-ZTE1MzliODQgKCJhcm02NDoga2R1bXA6IHByb3RlY3QgY3Jhc2gKPiBkdW1wIGtlcm5lbCBtZW1v
-cnkiKSBoYXMgYWxsIHRoZSBkZXRhaWxzLgo+IAo+ICh3ZSBhbHNvIG5lZWRlZCB0byBkbyB0aGlz
-IHRvIGF2b2lkIHRoZSByaXNrIG9mIG1pc21hdGNoZWQgbWVtb3J5IGF0dHJpYnV0ZXMgaWYKPiBr
-ZHVtcCBib290cyBhbmQgc29tZSBDUFVzIGFyZSBzdGlsbCBzdHVjayBpbiB0aGUgb2xkIGtlcm5l
-bCkKPiAKPiAKPiA+IFdoZW4gZG8geW91IHBsYW4gbWVyZ2UgdGhpcyBwYXRjaD8KPiAKPiBXZSBl
-bmRlZCB1cCB3aXRoIHRoZSBjaGVjay1zdW1taW5nIGNvZGUgYmVjYXVzZSBpdHMgdGhlIGRlZmF1
-bHQgYmVoYXZpb3VyIG9mCj4ga2V4ZWMtdG9vbHMgb24gb3RoZXIgYXJjaGl0ZWN0dXJlcy4KPiAK
-PiBPbmUgYWx0ZXJuYXRpdmUgaXMgdG8gcmlwIGl0IG91dCBmb3IgYXJtNjQuIFVudGVzdGVkOgoK
-VGhhbmtzIGZvciB0aGUgcGF0Y2guIFRoaXMgZXZlbnR1YWxseSBlbGltaW5hdGVzICJyZWFzb24g
-ZCdldHJlIiBvZgpwdXJnYXRvcnkgb24gYXJtNjQgYXMgSSBkb2VzIGluIG15IGtleGVjX2ZpbGUg
-cGF0Y2gsIGFsdGhvdWdoIGl0IHdvdWxkCnJlcXVpcmUgYSBzbWFsbCByZS13b3JrLgoKLVRha2Fo
-aXJvIEFLQVNISQoKCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0lPC0tLS0tLS0tLS0tLS0tLS0tLS0t
-Cj4gZGlmZiAtLWdpdCBhL3B1cmdhdG9yeS9hcmNoL2FybTY0L01ha2VmaWxlIGIvcHVyZ2F0b3J5
-L2FyY2gvYXJtNjQvTWFrZWZpbGUKPiBpbmRleCA2MzZhYmVhLi5mMTBjMTQ4IDEwMDY0NAo+IC0t
-LSBhL3B1cmdhdG9yeS9hcmNoL2FybTY0L01ha2VmaWxlCj4gKysrIGIvcHVyZ2F0b3J5L2FyY2gv
-YXJtNjQvTWFrZWZpbGUKPiBAQCAtNyw3ICs3LDggQEAgYXJtNjRfUFVSR0FUT1JZX0VYVFJBX0NG
-TEFHUyA9IFwKPiAgICAgICAgIC1XZXJyb3ItaW1wbGljaXQtZnVuY3Rpb24tZGVjbGFyYXRpb24g
-XAo+ICAgICAgICAgLVdkZWNsYXJhdGlvbi1hZnRlci1zdGF0ZW1lbnQgXAo+ICAgICAgICAgLVdl
-cnJvcj1pbXBsaWNpdC1pbnQgXAo+IC0gICAgICAgLVdlcnJvcj1zdHJpY3QtcHJvdG90eXBlcwo+
-ICsgICAgICAgLVdlcnJvcj1zdHJpY3QtcHJvdG90eXBlcyBcCj4gKyAgICAgICAtRE5PX1NIQV9J
-Tl9QVVJHQVRPUlkKPiAKPiAgYXJtNjRfUFVSR0FUT1JZX1NSQ1MgKz0gXAo+ICAgICAgICAgcHVy
-Z2F0b3J5L2FyY2gvYXJtNjQvZW50cnkuUyBcCj4gZGlmZiAtLWdpdCBhL3B1cmdhdG9yeS9wdXJn
-YXRvcnkuYyBiL3B1cmdhdG9yeS9wdXJnYXRvcnkuYwo+IGluZGV4IDNiYmNjMDkuLjQ0ZTc5MmEg
-MTAwNjQ0Cj4gLS0tIGEvcHVyZ2F0b3J5L3B1cmdhdG9yeS5jCj4gKysrIGIvcHVyZ2F0b3J5L3B1
-cmdhdG9yeS5jCj4gQEAgLTksNiArOSw4IEBACj4gIHN0cnVjdCBzaGEyNTZfcmVnaW9uIHNoYTI1
-Nl9yZWdpb25zW1NIQTI1Nl9SRUdJT05TXSA9IHt9Owo+ICBzaGEyNTZfZGlnZXN0X3Qgc2hhMjU2
-X2RpZ2VzdCA9IHsgfTsKPiAKPiArI2lmbmRlZiBOT19TSEFfSU5fUFVSR0FUT1JZCj4gKwo+ICBp
-bnQgdmVyaWZ5X3NoYTI1Nl9kaWdlc3Qodm9pZCkKPiAgewo+ICAgICAgICAgc3RydWN0IHNoYTI1
-Nl9yZWdpb24gKnB0ciwgKmVuZDsKPiBAQCAtMzksMTQgKzQxLDE4IEBAIGludCB2ZXJpZnlfc2hh
-MjU2X2RpZ2VzdCh2b2lkKQo+ICAgICAgICAgcmV0dXJuIDA7Cj4gIH0KPiAKPiArI2VuZGlmIC8q
-IE5PX1NIQV9JTl9QVVJHQVRPUlkgKi8KPiArCj4gIHZvaWQgcHVyZ2F0b3J5KHZvaWQpCj4gIHsK
-PiAgICAgICAgIHByaW50ZigiSSdtIGluIHB1cmdhdG9yeVxuIik7Cj4gICAgICAgICBzZXR1cF9h
-cmNoKCk7Cj4gKyNpZm5kZWYgTk9fU0hBX0lOX1BVUkdBVE9SWQo+ICAgICAgICAgaWYgKHZlcmlm
-eV9zaGEyNTZfZGlnZXN0KCkpIHsKPiAgICAgICAgICAgICAgICAgZm9yKDs7KSB7Cj4gICAgICAg
-ICAgICAgICAgICAgICAgICAgLyogbG9vcCBmb3JldmVyICovCj4gICAgICAgICAgICAgICAgIH0K
-PiAgICAgICAgIH0KPiArI2VuZGlmIC8qIE5PX1NIQV9JTl9QVVJHQVRPUlkgKi8KPiAgICAgICAg
-IHBvc3RfdmVyaWZpY2F0aW9uX3NldHVwX2FyY2goKTsKPiAgfQo+IC0tLS0tLS0tLS0tLS0tLS0t
-LS0tJTwtLS0tLS0tLS0tLS0tLS0tLS0tLQo+IAo+IAo+IFRoYW5rcywKPiAKPiBKYW1lcwo+IAo+
-IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gbGludXgt
-YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Mon, Apr 02, 2018 at 10:53:32AM +0900, AKASHI Takahiro wrote:
+> James,
+> 
+> My apologies for slow response. I had a long weekend.
+> 
+> On Tue, Mar 27, 2018 at 02:32:49PM +0100, James Morse wrote:
+> > Hi Akashi,
+> > 
+> > On 27/03/18 11:16, AKASHI Takahiro wrote:
+> > > On Tue, Mar 20, 2018 at 01:18:34AM +0530, Bhupesh Sharma wrote:
+> > >> On 03/14/2018 01:59 PM, AKASHI Takahiro wrote:
+> > >>> Currently, there is a inconsistent view between (A) and the mainline's:
+> > >>> see (A-1) and (B-1). If this is really a matter, I can fix it.
+> > >>> Kexec-tools can be easily modified to accept both formats, though.
+> > 
+> > Ooer, what needs changing in kexec-tools? What happens if someone doesn't update
+> > userspace at the same time?
+> 
+> Basically, changes that I made on /proc/iomem in my new format D were:
+> 1. to move NOMAP region entries, formerly named "reserved" and now named
+>    "reserved (no map)", under System RAM
+> 2. to add new entries for firmware-reserved regions as "reserved" also
+>    under System RAM
+> 
+> On the other hand, current kexec-tools, in particular kexec command,
+> only scan top-level "System RAM" entries as well as "reserved" entries.
+> 
+> So if someone doesn't update kexec-tools, secondary kernel may potentially
+> crash during boot time either because
+> a. new kernel (or initrd/dtb) may have been allocated on a NOMAP region
+>    which are not suitable for usable memory, or
+> b. new kernel (or initrd/dtb) may have been allocated on a reserved region
+>    whose contents can be overwritten.
+> 
+> While we see (b) even today, (a) is a backward compatibility issue.
+> 
+> Note: we have a different story for kdump (alignment error), and I will
+> take a different approach to fixing kdump case.
+> 
+> > Is there a format which doesn't require a user-space change, (and shouldn't we
+> > pick that one?)
+> 
+> The only solution that I can imagine for now to prevent (a) and (b)
+> at the same time without any user-space change is
+> 2+. to add new entries for firmware-reserved regions as "reserved",
+>     in addition to the current NOMAP regions, at top level
+> 
+> (format E)
+> 40000000-5858ffff : System RAM
+>   40080000-40f1ffff : Kernel code
+>   41040000-411e9fff : Kernel data
+>   54400000-583fffff : Crash kernel
+> 58590000-585effff : reserved
+> 484f0000-586fffff : System RAM 
+> 58700000-5871ffff : reserved
+> 58720000-58b5ffff : reserved (no map)
+> 58b60000-58b0ffff : System RAM
+> 58b61000-58b61fff : reserved
+> 58620000-59a7b117 : System RAM
+> 59a7b118-59a7b667 : reserved
+> 59a7b668-5be3ffff : System RAM
+> 5be40000-5becffff : reserved (no map)
+> 5bed0000-5bedffff : System RAM
+> 5bee0000-5bffffff : reserved (no map)
+> 5ec00000-5edfffff : reserved
+> 5ee00000-5fffffff ; System RAM
+> 8000000000-ffffffffff : PCI Bus 0000:00
+> 
+> This does not only look quite noisy but also ignores the fact that
+> reserved regions are part of System RAM (or memblock.memory). 
+> 
+> Or to maximize the compatibility, we may adopt format B:
+> 
+> (format B)
+> 40000000-5871ffff : System RAM
+>   40080000-40f1ffff : Kernel code
+>   41040000-411e9fff : Kernel data
+>   54400000-583fffff : Crash kernel
+>   58590000-585effff : reserved
+>   58700000-5871ffff : reserved
+> 58720000-58b5ffff : reserved (no map)
+> 58b60000-5be3ffff : System RAM
+>   58b61000-58b61fff : reserved
+>   59a7b118-59a7b667 : reserved
+> 5be40000-5becffff : reserved (no map)
+> 5bed0000-5bedffff : System RAM
+> 5bee0000-5bffffff : reserved (no map)
+> 5c000000-5fffffff : System RAM
+>   5ec00000-5edfffff : reserved
+> 8000000000-ffffffffff : PCI Bus 0000:00
+> 
+> but, in this case, we need some change on kexec-tools to fix (b).
+> 
+> > >>> 2. How should we determine which regions be exported in /proc/iomem?
+> > >>>
+> > >>>  a. Trust all the memblock_reserve'd regions as my previous patch [3] does.
+> > >>>
+> > >>>     As I said, it's a kind of "overkill." Some of regions, say fdt, are
+> > >>>     not required to be preserved across kexec.
+> > >>
+> > >>
+> > >> I think we should preserve all the memblock_reserve'd regions. So +1 on this
+> > >> approach from my side. I believe it might help avoid issues we have seen in
+> > >> the past with 'kexec-tools' _incorrectly_ determining which regions to pick
+> > >> from the '/proc/iomem'.
+> > > 
+> > > As I said in my reply to Ard's comment, I now know *overkill* is not a big
+> > > issue and I will go for this approach.
+> > 
+> > /sys/kernel/debug/memblock/reserved has all kinds of weird stuff in it,
+> > including some smaller-than-a-page reservations that appear to come from the
+> > percpu allocator.
+> > 
+> > I agree it will make the implementation simpler, and reserving 'too much' isn't
+> > an issue.
+> 
+> Are you suggesting that we should use /sys/kernel/debug/memblock/reserved
+> without modifying current /proc/iomem?
+> (Note that, even in this approach, we need an user-space change.)
+> 
+> Hmm, overall, this approach will be preferable to format B/E.
+
+What is nice in this approach is that we don't have to make any change
+on kernel side. Now that I have a patch for kexec-tools, you can try:
+https://git.linaro.org/people/takahiro.akashi/kexec-tools.git resv_mem2
+
+# I don't know yet whether people are happy with this fix, and also have
+  kernel patches for my other approaches. They are neither not much
+  complicated.
+
+On the other hand, kdump failure due to alignment fault at ACPI tables
+won't be fixed by this patch anyway. I already submitted two different
+approaches[1],[2].
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-January/553098.html
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-February/557248.html
+
+There can be yet another approach; we would add a list of reserved regions
+to a dtb property, "linux,usable-memory-range". But I don't like it.
+
+What do you think?
+
+Thanks,
+-Takahiro AKASHI
+
+
+
+> Thanks,
+> -Takahiro AKASHI
+> 
+> > 
+> > Thanks,
+> > 
+> > James
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
