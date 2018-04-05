@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x235.google.com ([2607:f8b0:400e:c01::235])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f3uqy-0003s9-EY
- for kexec@lists.infradead.org; Thu, 05 Apr 2018 02:42:22 +0000
-Received: by mail-pl0-x235.google.com with SMTP id k6-v6so11970680pls.5
- for <kexec@lists.infradead.org>; Wed, 04 Apr 2018 19:42:09 -0700 (PDT)
-Date: Thu, 5 Apr 2018 11:42:05 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [RFC] arm64: extra entries in /proc/iomem for kexec
-Message-ID: <20180405024203.GD19607@linaro.org>
-References: <20180314082941.GM25863@linaro.org>
- <2d2e1be6-b925-1595-9b6e-76dd270d396d@redhat.com>
- <20180327101654.GB14737@linaro.org>
- <da2989ec-7fa5-b044-3237-4e75f2fe6d98@arm.com>
- <20180402015330.GA27603@linaro.org>
+ id 1f42ig-000779-9Q
+ for kexec@lists.infradead.org; Thu, 05 Apr 2018 11:06:19 +0000
+Date: Thu, 5 Apr 2018 13:05:58 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH v6 3/5] kexec: Do not special-case the -s option
+Message-ID: <20180405130558.30486489@ezekiel.suse.cz>
+In-Reply-To: <1ce7ef9717b1e1a721a1012d1de1ed2b4eae9485.1522242915.git.msuchanek@suse.de>
+References: <20180327095955.GB4681@dhcp-128-65.nay.redhat.com>
+ <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1522242915.git.msuchanek@suse.de>
+ <1ce7ef9717b1e1a721a1012d1de1ed2b4eae9485.1522242915.git.msuchanek@suse.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180402015330.GA27603@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,162 +24,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org, kexec@lists.infradead.org, ard.biesheuvel@linaro.org, tbaicar@codeaurora.org, jhugo@codeaurora.org, Bhupesh SHARMA <bhupesh.linux@gmail.com>
+To: Michal Suchanek <msuchanek@suse.de>
+Cc: Tony Jones <tonyj@suse.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, horms@verge.net.au
 
-On Mon, Apr 02, 2018 at 10:53:32AM +0900, AKASHI Takahiro wrote:
-> James,
-> 
-> My apologies for slow response. I had a long weekend.
-> 
-> On Tue, Mar 27, 2018 at 02:32:49PM +0100, James Morse wrote:
-> > Hi Akashi,
-> > 
-> > On 27/03/18 11:16, AKASHI Takahiro wrote:
-> > > On Tue, Mar 20, 2018 at 01:18:34AM +0530, Bhupesh Sharma wrote:
-> > >> On 03/14/2018 01:59 PM, AKASHI Takahiro wrote:
-> > >>> Currently, there is a inconsistent view between (A) and the mainline's:
-> > >>> see (A-1) and (B-1). If this is really a matter, I can fix it.
-> > >>> Kexec-tools can be easily modified to accept both formats, though.
-> > 
-> > Ooer, what needs changing in kexec-tools? What happens if someone doesn't update
-> > userspace at the same time?
-> 
-> Basically, changes that I made on /proc/iomem in my new format D were:
-> 1. to move NOMAP region entries, formerly named "reserved" and now named
->    "reserved (no map)", under System RAM
-> 2. to add new entries for firmware-reserved regions as "reserved" also
->    under System RAM
-> 
-> On the other hand, current kexec-tools, in particular kexec command,
-> only scan top-level "System RAM" entries as well as "reserved" entries.
-> 
-> So if someone doesn't update kexec-tools, secondary kernel may potentially
-> crash during boot time either because
-> a. new kernel (or initrd/dtb) may have been allocated on a NOMAP region
->    which are not suitable for usable memory, or
-> b. new kernel (or initrd/dtb) may have been allocated on a reserved region
->    whose contents can be overwritten.
-> 
-> While we see (b) even today, (a) is a backward compatibility issue.
-> 
-> Note: we have a different story for kdump (alignment error), and I will
-> take a different approach to fixing kdump case.
-> 
-> > Is there a format which doesn't require a user-space change, (and shouldn't we
-> > pick that one?)
-> 
-> The only solution that I can imagine for now to prevent (a) and (b)
-> at the same time without any user-space change is
-> 2+. to add new entries for firmware-reserved regions as "reserved",
->     in addition to the current NOMAP regions, at top level
-> 
-> (format E)
-> 40000000-5858ffff : System RAM
->   40080000-40f1ffff : Kernel code
->   41040000-411e9fff : Kernel data
->   54400000-583fffff : Crash kernel
-> 58590000-585effff : reserved
-> 484f0000-586fffff : System RAM 
-> 58700000-5871ffff : reserved
-> 58720000-58b5ffff : reserved (no map)
-> 58b60000-58b0ffff : System RAM
-> 58b61000-58b61fff : reserved
-> 58620000-59a7b117 : System RAM
-> 59a7b118-59a7b667 : reserved
-> 59a7b668-5be3ffff : System RAM
-> 5be40000-5becffff : reserved (no map)
-> 5bed0000-5bedffff : System RAM
-> 5bee0000-5bffffff : reserved (no map)
-> 5ec00000-5edfffff : reserved
-> 5ee00000-5fffffff ; System RAM
-> 8000000000-ffffffffff : PCI Bus 0000:00
-> 
-> This does not only look quite noisy but also ignores the fact that
-> reserved regions are part of System RAM (or memblock.memory). 
-> 
-> Or to maximize the compatibility, we may adopt format B:
-> 
-> (format B)
-> 40000000-5871ffff : System RAM
->   40080000-40f1ffff : Kernel code
->   41040000-411e9fff : Kernel data
->   54400000-583fffff : Crash kernel
->   58590000-585effff : reserved
->   58700000-5871ffff : reserved
-> 58720000-58b5ffff : reserved (no map)
-> 58b60000-5be3ffff : System RAM
->   58b61000-58b61fff : reserved
->   59a7b118-59a7b667 : reserved
-> 5be40000-5becffff : reserved (no map)
-> 5bed0000-5bedffff : System RAM
-> 5bee0000-5bffffff : reserved (no map)
-> 5c000000-5fffffff : System RAM
->   5ec00000-5edfffff : reserved
-> 8000000000-ffffffffff : PCI Bus 0000:00
-> 
-> but, in this case, we need some change on kexec-tools to fix (b).
-> 
-> > >>> 2. How should we determine which regions be exported in /proc/iomem?
-> > >>>
-> > >>>  a. Trust all the memblock_reserve'd regions as my previous patch [3] does.
-> > >>>
-> > >>>     As I said, it's a kind of "overkill." Some of regions, say fdt, are
-> > >>>     not required to be preserved across kexec.
-> > >>
-> > >>
-> > >> I think we should preserve all the memblock_reserve'd regions. So +1 on this
-> > >> approach from my side. I believe it might help avoid issues we have seen in
-> > >> the past with 'kexec-tools' _incorrectly_ determining which regions to pick
-> > >> from the '/proc/iomem'.
-> > > 
-> > > As I said in my reply to Ard's comment, I now know *overkill* is not a big
-> > > issue and I will go for this approach.
-> > 
-> > /sys/kernel/debug/memblock/reserved has all kinds of weird stuff in it,
-> > including some smaller-than-a-page reservations that appear to come from the
-> > percpu allocator.
-> > 
-> > I agree it will make the implementation simpler, and reserving 'too much' isn't
-> > an issue.
-> 
-> Are you suggesting that we should use /sys/kernel/debug/memblock/reserved
-> without modifying current /proc/iomem?
-> (Note that, even in this approach, we need an user-space change.)
-> 
-> Hmm, overall, this approach will be preferable to format B/E.
+On Wed, 28 Mar 2018 15:15:16 +0200
+Michal Suchanek <msuchanek@suse.de> wrote:
 
-What is nice in this approach is that we don't have to make any change
-on kernel side. Now that I have a patch for kexec-tools, you can try:
-https://git.linaro.org/people/takahiro.akashi/kexec-tools.git resv_mem2
-
-# I don't know yet whether people are happy with this fix, and also have
-  kernel patches for my other approaches. They are neither not much
-  complicated.
-
-On the other hand, kdump failure due to alignment fault at ACPI tables
-won't be fixed by this patch anyway. I already submitted two different
-approaches[1],[2].
-
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-January/553098.html
-[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-February/557248.html
-
-There can be yet another approach; we would add a list of reserved regions
-to a dtb property, "linux,usable-memory-range". But I don't like it.
-
-What do you think?
-
-Thanks,
--Takahiro AKASHI
-
-
-
-> Thanks,
-> -Takahiro AKASHI
+> It is parsed separately to save a few CPU cycles when setting up other
+> options but it just complicates the code. So fold it back and set up all
+> flags for both KEXEC_LOAD and KEXEC_FILE_LOAD
 > 
-> > 
-> > Thanks,
-> > 
-> > James
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+>  kexec/kexec.c | 25 ++++---------------------
+>  1 file changed, 4 insertions(+), 21 deletions(-)
+> 
+> diff --git a/kexec/kexec.c b/kexec/kexec.c
+> index b793f31ea501..68ae0594d4a7 100644
+> --- a/kexec/kexec.c
+> +++ b/kexec/kexec.c
+>[...]
+> @@ -1354,11 +1340,8 @@ int main(int argc, char *argv[])
+>  			do_exec = 0;
+>  			do_shutdown = 0;
+>  			do_sync = 0;
+> -			if (do_kexec_file_syscall)
+> -				kexec_file_flags |= KEXEC_FILE_ON_CRASH;
+> -			else
+> -				kexec_flags = KEXEC_ON_CRASH;
+> -			break;
+
+Argh. This break was rather important. "kexec -p" now segfaults on
+me, as it falls through to parsing non-existent optarg. :-(
+
+Petr T
+
+> +			kexec_file_flags |= KEXEC_FILE_ON_CRASH;
+> +			kexec_flags = KEXEC_ON_CRASH;
+>  		case OPT_MEM_MIN:
+>  			mem_min = strtoul(optarg, &endptr, 0);
+>  			if (*endptr) {
+> @@ -1383,7 +1366,7 @@ int main(int argc, char *argv[])
+>  			do_reuse_initrd = 1;
+>  			break;
+>  		case OPT_KEXEC_FILE_SYSCALL:
+> -			/* We already parsed it. Nothing to do. */
+> +			do_kexec_file_syscall = 1;
+>  			break;
+>  		case OPT_STATUS:
+>  			do_status = 1;
+
 
 _______________________________________________
 kexec mailing list
