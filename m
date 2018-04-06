@@ -1,27 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x243.google.com ([2607:f8b0:400e:c01::243])
+Received: from mail-pl0-x242.google.com ([2607:f8b0:400e:c01::242])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f4Gp7-0003o5-0i
- for kexec@lists.infradead.org; Fri, 06 Apr 2018 02:09:54 +0000
-Received: by mail-pl0-x243.google.com with SMTP id a39-v6so2408345pla.10
- for <kexec@lists.infradead.org>; Thu, 05 Apr 2018 19:09:51 -0700 (PDT)
-Date: Fri, 6 Apr 2018 11:09:50 +0900
+ id 1f4HO9-0002N7-Cr
+ for kexec@lists.infradead.org; Fri, 06 Apr 2018 02:46:06 +0000
+Received: by mail-pl0-x242.google.com with SMTP id bj1-v6so19357436plb.8
+ for <kexec@lists.infradead.org>; Thu, 05 Apr 2018 19:45:54 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [Query] ARM64 kaslr support - randomness, seeding and kdump
-Message-ID: <20180406020948.GE19607@linaro.org>
-References: <CACi5LpMhHt4bjEueOzHZTGpzuR2zoQqXcReL-khoSNLG6=FVmg@mail.gmail.com>
- <CAKv+Gu8qd=rpJkG_GoVO=kkmc4qx_zZD8c_wwE16gr=8wSShSw@mail.gmail.com>
- <20180313102158.GI25863@linaro.org>
- <20180313104715.prurmrizho4ddc4l@lakrids.cambridge.arm.com>
- <20180313110747.GJ25863@linaro.org>
- <20180313112016.ocx4qqhji3zfwjhs@lakrids.cambridge.arm.com>
- <CACi5LpN4DTYFVSVqru2j0y=CKr2ztrJ1gCW32sJBU=oUV2fcWw@mail.gmail.com>
- <20180314021050.GK25863@linaro.org>
- <20180314182448.bnvjtgyzipsuxcbe@lakrids.cambridge.arm.com>
- <CACi5LpNyx5VKO6mYB1yXNPENPKhAfAJ7cUSBeVzVtXfF6+EPwg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CACi5LpNyx5VKO6mYB1yXNPENPKhAfAJ7cUSBeVzVtXfF6+EPwg@mail.gmail.com>
+Subject: [RESEND PATCH] arm64: fix an issue with kaslr-enabled vmlinux
+Date: Fri,  6 Apr 2018 11:45:28 +0900
+Message-Id: <20180406024528.32124-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,49 +17,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+To: horms@verge.net.au
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org
 
-Bhupesh,
+Normally vmlinux for arm64 is of ET_EXEC type, while if built with
+CONFIG_RANDAMIZE_BASE (that is KASLR), it will be of ET_DYN type.
+Meanwhile, physical address field of segments in vmlinux has actually
+the same value as virtual address field.
 
-On Fri, Mar 16, 2018 at 03:05:10PM +0530, Bhupesh Sharma wrote:
-> On Wed, Mar 14, 2018 at 11:54 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Wed, Mar 14, 2018 at 11:10:53AM +0900, AKASHI Takahiro wrote:
-> >> If kaslr-seed has a critical value in terms of security, is kexec-tools
-> >> a right place? It is exposed to user space albeit for a short time of period.
-> >
-> > The kernel zeroes the seed in the DT at boot time, so the current seed
-> > isn't visible to userspace.
-> >
-> > If kexec-tools generates a seed, and inserts it into the DTB that it
-> > loads, this is only visible to kexec tools or other applications which
-> > can inspect its memory, so I don't think this is much of a concern.
-> > Anything with such privilege can presumably kexec() to arbitrary code
-> > anyhow.
-> >
-> > The next kernel will then zero its seed in the DT at boot time, so
-> > similarly this won't be visible to userspace on the new kernel.
-> >
-> > FWIW, having kexec tools generate a seed for the kexec_load() case makes
-> > sense to me.
-> 
-> Fair enough. I will try to take a stab at the same and come back with
-> my findings on this thread.
+Accordingly, in this case, it totally makes no sense to check for
+validity of segments against physical memory ranges and, if necessary,
+relocate them in elf_exec_load() on arm64.
 
-How's your progress here?
-I've already added kaslr support (i.e. "virtual randomisation") to
-my kexec_file patch set.
-# just a few lines of code, though
+This patch allows to unconditionally skip the check on arm64.
 
--Takahiro AKASHI
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+---
+ include/elf.h          | 3 ++-
+ kexec/kexec-elf-exec.c | 6 +++++-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
+diff --git a/include/elf.h b/include/elf.h
+index 5db637b..b7677a2 100644
+--- a/include/elf.h
++++ b/include/elf.h
+@@ -258,7 +258,8 @@ typedef struct
+ #define EM_OPENRISC	92		/* OpenRISC 32-bit embedded processor */
+ #define EM_ARC_A5	93		/* ARC Cores Tangent-A5 */
+ #define EM_XTENSA	94		/* Tensilica Xtensa Architecture */
+-#define EM_NUM		95
++#define EM_AARCH64	183		/* ARM AARCH64 */
++#define EM_NUM		184
+ 
+ /* If it is necessary to assign new unofficial EM_* values, please
+    pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
+diff --git a/kexec/kexec-elf-exec.c b/kexec/kexec-elf-exec.c
+index cb62d04..a9329ac 100644
+--- a/kexec/kexec-elf-exec.c
++++ b/kexec/kexec-elf-exec.c
+@@ -63,9 +63,13 @@ int elf_exec_load(struct mem_ehdr *ehdr, struct kexec_info *info)
+ 
+ 	/* If I have a dynamic executable find it's size
+ 	 * and then find a location for it in memory.
++	 * Note on arm64:
++	 * arm64's vmlinux has virtual address in physical address
++	 * field of PT_LOAD segments. So the following validity check
++	 * and relocation makes no sense on arm64.
+ 	 */
+ 	base = 0;
+-	if (ehdr->e_type == ET_DYN) {
++	if ((ehdr->e_machine != EM_AARCH64) && (ehdr->e_type == ET_DYN)) {
+ 		unsigned long first, last, align;
+ 		first = ULONG_MAX;
+ 		last  = 0;
+-- 
+2.14.1
 
-> Thanks,
-> Bhupesh
 
 _______________________________________________
 kexec mailing list
