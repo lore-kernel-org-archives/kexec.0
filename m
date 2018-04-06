@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x242.google.com ([2607:f8b0:400e:c01::242])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f4HO9-0002N7-Cr
- for kexec@lists.infradead.org; Fri, 06 Apr 2018 02:46:06 +0000
-Received: by mail-pl0-x242.google.com with SMTP id bj1-v6so19357436plb.8
- for <kexec@lists.infradead.org>; Thu, 05 Apr 2018 19:45:54 -0700 (PDT)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [RESEND PATCH] arm64: fix an issue with kaslr-enabled vmlinux
-Date: Fri,  6 Apr 2018 11:45:28 +0900
-Message-Id: <20180406024528.32124-1-takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v3 0/2] kexec-tools: arm64: Enable D-cache in purgatory
+References: <cover.1495514291.git.panand@redhat.com>
+ <59312080.1090906@arm.com> <1963984d-e78e-a5b2-f1a2-fb0a789a505e@redhat.com>
+ <CAB=otbT23ySN4VC6G0sBKF5p4SvsnG8PS-C_beBgn8YJUsbw9Q@mail.gmail.com>
+ <71f0a333-8bfb-3755-c9fd-e30bf2280339@cisco.com>
+ <5599813d-f83c-d154-287a-c131c48292ca@arm.com>
+From: Kostiantyn Iarmak <kiarmak@cisco.com>
+Message-ID: <b47784fb-93c5-4edb-9a89-e228462dd1ae@cisco.com>
+Date: Fri, 6 Apr 2018 21:15:26 +0300
+MIME-Version: 1.0
+In-Reply-To: <5599813d-f83c-d154-287a-c131c48292ca@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,66 +18,154 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org
+To: James Morse <james.morse@arm.com>
+Cc: Pratyush Anand <panand@redhat.com>, mark.rutland@arm.com, bhe@redhat.com, kexec@lists.infradead.org, horms@verge.net.au, "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Normally vmlinux for arm64 is of ET_EXEC type, while if built with
-CONFIG_RANDAMIZE_BASE (that is KASLR), it will be of ET_DYN type.
-Meanwhile, physical address field of segments in vmlinux has actually
-the same value as virtual address field.
 
-Accordingly, in this case, it totally makes no sense to check for
-validity of segments against physical memory ranges and, if necessary,
-relocate them in elf_exec_load() on arm64.
+On 04.04.18 16:28, James Morse wrote:
+> Hi Kostiantyn,
+>
+> On 04/04/18 13:45, Kostiantyn Iarmak wrote:
+>> From: Pratyush Anand <panand@redhat.com>
+>>> Date: Fri, Jun 2, 2017 at 5:42 PM
+>>> Subject: Re: [PATCH v3 0/2] kexec-tools: arm64: Enable D-cache in purgatory
+>>> To: James Morse <james.morse@arm.com>
+>>> Cc: mark.rutland@arm.com, bhe@redhat.com, kexec@lists.infradead.org,
+>>> horms@verge.net.au, dyoung@redhat.com,
+>>> linux-arm-kernel@lists.infradead.org
+>>>
+>>> On Friday 02 June 2017 01:53 PM, James Morse wrote:
+>>>> On 23/05/17 06:02, Pratyush Anand wrote:
+>>>>> It takes more that 2 minutes to verify SHA in purgatory when vmlinuz image
+>>>>> is around 13MB and initramfs is around 30MB. It takes more than 20 second
+>>>>> even when we have -O2 optimization enabled. However, if dcache is enabled
+>>>>> during purgatory execution then, it takes just a second in SHA
+>>>>> verification.
+>>>>>
+>>>>> Therefore, these patches adds support for dcache enabling facility during
+>>>>> purgatory execution.
+>>>> I'm still not convinced we need this. Moving the SHA verification to happen
+>>>> before the dcache+mmu are disabled would also solve the delay problem,
+>>> Humm..I am not sure, if we can do that.
+>>> When we leave kernel (and enter into purgatory), icache+dcache+mmu are
+>>> already disabled. I think, that would be possible when we will be in a
+>>> position to use in-kernel purgatory.
+>>>
+>>>> and we
+>>>> can print an error message or fail the syscall.
+>>>>
+>>>> For kexec we don't expect memory corruption, what are we testing for?
+>>>> I can see the use for kdump, but the kdump-kernel is unmapped so the kernel
+>>>> can't accidentally write over it.
+>>>>
+>>>> (we discussed all this last time, but it fizzled-out. If you and the
+>>>>    kexec-tools maintainer think its necessary, fine by me!)
+>>> Yes, there had already been discussion and MAINTAINERs have
+>>> discouraged none-purgatory implementation.
+>>>
+>>>> I have some comments on making this code easier to maintain..
+>>>>
+>>> Thanks.
+>>>
+>>> I have implemented your review comments and have archived the code in
+>>>
+>>> https://github.com/pratyushanand/kexec-tools.git : purgatory-enable-dcache
+>>>
+>>> I will be posting the next version only when someone complains about
+>>> ARM64 kdump behavior that it is not as fast as x86.
+>> On our ARM64-based platform we have very long main kernel-secondary kernel
+>> switch time.
+>>
+>> This patch set fixes the issue (we are using 4.4 kernel and 2.0.13 kexec-tools
+>> version), we can get ~25x speedup, with this patch secondary kernel boots in ~3
+>> seconds while on 2.0.13-2.0.16 kexec-tools without this patch switch takes about
+>> 75 seconds.
+> This is slow because its generating a checksum of the kernel without the benefit
+> of the caches. This series generated page tables so that it could enable the MMU
+> and caches. But, the purgatory code also needs to be a simple as possible
+> because its practically impossible to debug.
+>
+> The purgatory code does this checksum-ing because its worried the panic() was
+> because the kernel cause some memory corruption, and that memory corruption may
+> have affected the kdump kernel too.
+>
+> This can't happen on arm64 as we unmap kdump's crash region, so not even the
+> kernel can accidentally write to it. 98d2e1539b84 ("arm64: kdump: protect crash
+> dump kernel memory") has all the details.
+>
+> (we also needed to do this to avoid the risk of mismatched memory attributes if
+> kdump boots and some CPUs are still stuck in the old kernel)
+>
+>
+>> When do you plan merge this patch?
+> We ended up with the check-summing code because its the default behaviour of
+> kexec-tools on other architectures.
+>
+> One alternative is to rip it out for arm64. Untested:
+> --------------------%<--------------------
+> diff --git a/purgatory/arch/arm64/Makefile b/purgatory/arch/arm64/Makefile
+> index 636abea..f10c148 100644
+> --- a/purgatory/arch/arm64/Makefile
+> +++ b/purgatory/arch/arm64/Makefile
+> @@ -7,7 +7,8 @@ arm64_PURGATORY_EXTRA_CFLAGS = \
+>          -Werror-implicit-function-declaration \
+>          -Wdeclaration-after-statement \
+>          -Werror=implicit-int \
+> -       -Werror=strict-prototypes
+> +       -Werror=strict-prototypes \
+> +       -DNO_SHA_IN_PURGATORY
+>
+>   arm64_PURGATORY_SRCS += \
+>          purgatory/arch/arm64/entry.S \
+> diff --git a/purgatory/purgatory.c b/purgatory/purgatory.c
+> index 3bbcc09..44e792a 100644
+> --- a/purgatory/purgatory.c
+> +++ b/purgatory/purgatory.c
+> @@ -9,6 +9,8 @@
+>   struct sha256_region sha256_regions[SHA256_REGIONS] = {};
+>   sha256_digest_t sha256_digest = { };
+>
+> +#ifndef NO_SHA_IN_PURGATORY
+> +
+>   int verify_sha256_digest(void)
+>   {
+>          struct sha256_region *ptr, *end;
+> @@ -39,14 +41,18 @@ int verify_sha256_digest(void)
+>          return 0;
+>   }
+>
+> +#endif /* NO_SHA_IN_PURGATORY */
+> +
+>   void purgatory(void)
+>   {
+>          printf("I'm in purgatory\n");
+>          setup_arch();
+> +#ifndef NO_SHA_IN_PURGATORY
+>          if (verify_sha256_digest()) {
+>                  for(;;) {
+>                          /* loop forever */
+>                  }
+>          }
+> +#endif /* NO_SHA_IN_PURGATORY */
+>          post_verification_setup_arch();
+>   }
+> --------------------%<--------------------
 
-This patch allows to unconditionally skip the check on arm64.
+Thank you, I've tested this patch (no issues).
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
----
- include/elf.h          | 3 ++-
- kexec/kexec-elf-exec.c | 6 +++++-
- 2 files changed, 7 insertions(+), 2 deletions(-)
+>
+> Thanks,
+>
+> James
 
-diff --git a/include/elf.h b/include/elf.h
-index 5db637b..b7677a2 100644
---- a/include/elf.h
-+++ b/include/elf.h
-@@ -258,7 +258,8 @@ typedef struct
- #define EM_OPENRISC	92		/* OpenRISC 32-bit embedded processor */
- #define EM_ARC_A5	93		/* ARC Cores Tangent-A5 */
- #define EM_XTENSA	94		/* Tensilica Xtensa Architecture */
--#define EM_NUM		95
-+#define EM_AARCH64	183		/* ARM AARCH64 */
-+#define EM_NUM		184
- 
- /* If it is necessary to assign new unofficial EM_* values, please
-    pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
-diff --git a/kexec/kexec-elf-exec.c b/kexec/kexec-elf-exec.c
-index cb62d04..a9329ac 100644
---- a/kexec/kexec-elf-exec.c
-+++ b/kexec/kexec-elf-exec.c
-@@ -63,9 +63,13 @@ int elf_exec_load(struct mem_ehdr *ehdr, struct kexec_info *info)
- 
- 	/* If I have a dynamic executable find it's size
- 	 * and then find a location for it in memory.
-+	 * Note on arm64:
-+	 * arm64's vmlinux has virtual address in physical address
-+	 * field of PT_LOAD segments. So the following validity check
-+	 * and relocation makes no sense on arm64.
- 	 */
- 	base = 0;
--	if (ehdr->e_type == ET_DYN) {
-+	if ((ehdr->e_machine != EM_AARCH64) && (ehdr->e_type == ET_DYN)) {
- 		unsigned long first, last, align;
- 		first = ULONG_MAX;
- 		last  = 0;
 -- 
-2.14.1
+Best Regards,
+
+   Kostiantyn Iarmak.
 
 
 _______________________________________________
