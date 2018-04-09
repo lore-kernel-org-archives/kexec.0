@@ -1,27 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x243.google.com ([2607:f8b0:4001:c0b::243])
+Received: from mail-it0-f65.google.com ([209.85.214.65])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f5OT6-0003dY-II
- for kexec@lists.infradead.org; Mon, 09 Apr 2018 04:31:50 +0000
-Received: by mail-it0-x243.google.com with SMTP id b5-v6so9127953itj.1
- for <kexec@lists.infradead.org>; Sun, 08 Apr 2018 21:31:35 -0700 (PDT)
-Date: Mon, 9 Apr 2018 13:31:39 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [Query] ARM64 kaslr support - randomness, seeding and kdump
-Message-ID: <20180409043138.GF19607@linaro.org>
-References: <20180313102158.GI25863@linaro.org>
- <20180313104715.prurmrizho4ddc4l@lakrids.cambridge.arm.com>
- <20180313110747.GJ25863@linaro.org>
- <20180313112016.ocx4qqhji3zfwjhs@lakrids.cambridge.arm.com>
- <CACi5LpN4DTYFVSVqru2j0y=CKr2ztrJ1gCW32sJBU=oUV2fcWw@mail.gmail.com>
- <20180314021050.GK25863@linaro.org>
- <20180314182448.bnvjtgyzipsuxcbe@lakrids.cambridge.arm.com>
- <CACi5LpNyx5VKO6mYB1yXNPENPKhAfAJ7cUSBeVzVtXfF6+EPwg@mail.gmail.com>
- <20180406020948.GE19607@linaro.org>
- <CACi5LpPe_C0fLFzsAHPD54X=D+AsYjvSyZi0yt_6=wFrWmvetw@mail.gmail.com>
+ id 1f5SKR-0007Qc-Bn
+ for kexec@lists.infradead.org; Mon, 09 Apr 2018 08:39:09 +0000
+Received: by mail-it0-f65.google.com with SMTP id 142-v6so9903598itl.5
+ for <kexec@lists.infradead.org>; Mon, 09 Apr 2018 01:38:57 -0700 (PDT)
+Subject: Re: [PATCH v6 3/5] kexec: Do not special-case the -s option
+References: <20180327095955.GB4681@dhcp-128-65.nay.redhat.com>
+ <e810acd57d9fc2d7ba3b0e95d470c20de9948462.1522242915.git.msuchanek@suse.de>
+ <1ce7ef9717b1e1a721a1012d1de1ed2b4eae9485.1522242915.git.msuchanek@suse.de>
+ <20180405130558.30486489@ezekiel.suse.cz>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Message-ID: <8eecd9e4-d98e-af28-6afd-a9526e609b8b@redhat.com>
+Date: Mon, 9 Apr 2018 14:08:47 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CACi5LpPe_C0fLFzsAHPD54X=D+AsYjvSyZi0yt_6=wFrWmvetw@mail.gmail.com>
+In-Reply-To: <20180405130558.30486489@ezekiel.suse.cz>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,84 +24,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+To: Petr Tesarik <ptesarik@suse.cz>, Michal Suchanek <msuchanek@suse.de>
+Cc: Tony Jones <tonyj@suse.com>, horms@verge.net.au, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
 
-Hi,
-
-On Mon, Apr 09, 2018 at 09:31:34AM +0530, Bhupesh Sharma wrote:
-> Hi Akashi,
+On 04/05/2018 04:35 PM, Petr Tesarik wrote:
+> On Wed, 28 Mar 2018 15:15:16 +0200
+> Michal Suchanek <msuchanek@suse.de> wrote:
 > 
-> On Fri, Apr 6, 2018 at 7:39 AM, AKASHI Takahiro
-> <takahiro.akashi@linaro.org> wrote:
-> > Bhupesh,
-> >
-> > On Fri, Mar 16, 2018 at 03:05:10PM +0530, Bhupesh Sharma wrote:
-> >> On Wed, Mar 14, 2018 at 11:54 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> >> > On Wed, Mar 14, 2018 at 11:10:53AM +0900, AKASHI Takahiro wrote:
-> >> >> If kaslr-seed has a critical value in terms of security, is kexec-tools
-> >> >> a right place? It is exposed to user space albeit for a short time of period.
-> >> >
-> >> > The kernel zeroes the seed in the DT at boot time, so the current seed
-> >> > isn't visible to userspace.
-> >> >
-> >> > If kexec-tools generates a seed, and inserts it into the DTB that it
-> >> > loads, this is only visible to kexec tools or other applications which
-> >> > can inspect its memory, so I don't think this is much of a concern.
-> >> > Anything with such privilege can presumably kexec() to arbitrary code
-> >> > anyhow.
-> >> >
-> >> > The next kernel will then zero its seed in the DT at boot time, so
-> >> > similarly this won't be visible to userspace on the new kernel.
-> >> >
-> >> > FWIW, having kexec tools generate a seed for the kexec_load() case makes
-> >> > sense to me.
-> >>
-> >> Fair enough. I will try to take a stab at the same and come back with
-> >> my findings on this thread.
-> >
-> > How's your progress here?
+>> It is parsed separately to save a few CPU cycles when setting up other
+>> options but it just complicates the code. So fold it back and set up all
+>> flags for both KEXEC_LOAD and KEXEC_FILE_LOAD
+>>
+>> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+>> ---
+>>   kexec/kexec.c | 25 ++++---------------------
+>>   1 file changed, 4 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/kexec/kexec.c b/kexec/kexec.c
+>> index b793f31ea501..68ae0594d4a7 100644
+>> --- a/kexec/kexec.c
+>> +++ b/kexec/kexec.c
+>> [...]
+>> @@ -1354,11 +1340,8 @@ int main(int argc, char *argv[])
+>>   			do_exec = 0;
+>>   			do_shutdown = 0;
+>>   			do_sync = 0;
+>> -			if (do_kexec_file_syscall)
+>> -				kexec_file_flags |= KEXEC_FILE_ON_CRASH;
+>> -			else
+>> -				kexec_flags = KEXEC_ON_CRASH;
+>> -			break;
 > 
-> I am almost done with the implementation.
-> Unfortunately I lost most of the last week trying to revive my arm64
-> board (which supports
-> EFI_RNG_PROTOCOL and hence can be used to test the kaslr-seed related
-> stuff), so I was not
-> able to test the implementation.
+> Argh. This break was rather important. "kexec -p" now segfaults on
+> me, as it falls through to parsing non-existent optarg. :-(
 > 
-> Now that the board is up, I think I can test and thrash out any
-> missing clogs in the approach.
 
-Sounds good.
+Sigh. Seems 'kexec -p' was never tested with properly with this 
+patchset. This is one of the problems I see with this patchset, so we 
+definitely would like to get rid of this segmentation fault.
 
-> > I've already added kaslr support (i.e. "virtual randomisation") to
-> > my kexec_file patch set.
-> > # just a few lines of code, though
+Petr, I am going to share my Tested-by for the patch you shared for 
+fixing this issue in the separate thread.
+
+I would request the fix to be picked up earlier into kexec-tools as 
+'kexec -p' is currently broken in upstream kexec-tools.
+
+Regards,
+Bhupesh
+
+
 > 
-> Hmm, have you sent out a new version already (kexec_file_load), as the last
-> version in my inbox still mentions in the cover letter that we need a
-> EFI stub like approach
-> to really support CONFIG_RANDOMIZE_BASE. Or, am I missing something?
-
-No, not yet.
-While I've also added some sort of "physical randomisation",
-I'd like to put my post on hold until v4.17-rc1.
-
-> I would love to have a look at the patch and try it at my end, so
-> could you please share
-> a pointer to the same.
-
-Your test will be very much appreciated.
-
-Thanks,
--Takahiro AKASHI
+>> +			kexec_file_flags |= KEXEC_FILE_ON_CRASH;
+>> +			kexec_flags = KEXEC_ON_CRASH;
+>>   		case OPT_MEM_MIN:
+>>   			mem_min = strtoul(optarg, &endptr, 0);
+>>   			if (*endptr) {
+>> @@ -1383,7 +1366,7 @@ int main(int argc, char *argv[])
+>>   			do_reuse_initrd = 1;
+>>   			break;
+>>   		case OPT_KEXEC_FILE_SYSCALL:
+>> -			/* We already parsed it. Nothing to do. */
+>> +			do_kexec_file_syscall = 1;
+>>   			break;
+>>   		case OPT_STATUS:
+>>   			do_status = 1;
 > 
-> Regards,
-> Bhupesh
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
 
 _______________________________________________
 kexec mailing list
