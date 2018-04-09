@@ -1,21 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 9 Apr 2018 17:39:43 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [Query] ARM64 kaslr support - randomness, seeding and kdump
-Message-ID: <20180409093943.GB25724@localhost.localdomain>
-References: <20180313110747.GJ25863@linaro.org>
- <20180313112016.ocx4qqhji3zfwjhs@lakrids.cambridge.arm.com>
- <CACi5LpN4DTYFVSVqru2j0y=CKr2ztrJ1gCW32sJBU=oUV2fcWw@mail.gmail.com>
- <20180314021050.GK25863@linaro.org>
- <20180314182448.bnvjtgyzipsuxcbe@lakrids.cambridge.arm.com>
- <CACi5LpNyx5VKO6mYB1yXNPENPKhAfAJ7cUSBeVzVtXfF6+EPwg@mail.gmail.com>
- <20180406020948.GE19607@linaro.org>
- <CACi5LpPe_C0fLFzsAHPD54X=D+AsYjvSyZi0yt_6=wFrWmvetw@mail.gmail.com>
- <20180409043138.GF19607@linaro.org>
- <CAKv+Gu-s13JifH5f_BH_LUbSQYFyOW5QQGjN=ZqwBjTs-BMjYQ@mail.gmail.com>
+Received: from mx2.suse.de ([195.135.220.15])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1f5TI4-0003xP-4I
+ for kexec@lists.infradead.org; Mon, 09 Apr 2018 09:40:54 +0000
+Date: Mon, 9 Apr 2018 11:40:20 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: [PATCH] makedumpfile: Do not print ETA value if current progress is 0
+Message-ID: <20180409114020.1b48ba8c@ezekiel.suse.cz>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu-s13JifH5f_BH_LUbSQYFyOW5QQGjN=ZqwBjTs-BMjYQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,89 +20,124 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Takuya Nakayama <tak-nakayama@tg.jp.nec.com>, Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>, Lianbo Jiang <lijiang@redhat.com>, kexec-ml <kexec@lists.infradead.org>
 
-On 04/09/18 at 11:28am, Ard Biesheuvel wrote:
-> On 9 April 2018 at 06:31, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> > Hi,
-> >
-> > On Mon, Apr 09, 2018 at 09:31:34AM +0530, Bhupesh Sharma wrote:
-> >> Hi Akashi,
-> >>
-> >> On Fri, Apr 6, 2018 at 7:39 AM, AKASHI Takahiro
-> >> <takahiro.akashi@linaro.org> wrote:
-> >> > Bhupesh,
-> >> >
-> >> > On Fri, Mar 16, 2018 at 03:05:10PM +0530, Bhupesh Sharma wrote:
-> >> >> On Wed, Mar 14, 2018 at 11:54 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> >> >> > On Wed, Mar 14, 2018 at 11:10:53AM +0900, AKASHI Takahiro wrote:
-> >> >> >> If kaslr-seed has a critical value in terms of security, is kexec-tools
-> >> >> >> a right place? It is exposed to user space albeit for a short time of period.
-> >> >> >
-> >> >> > The kernel zeroes the seed in the DT at boot time, so the current seed
-> >> >> > isn't visible to userspace.
-> >> >> >
-> >> >> > If kexec-tools generates a seed, and inserts it into the DTB that it
-> >> >> > loads, this is only visible to kexec tools or other applications which
-> >> >> > can inspect its memory, so I don't think this is much of a concern.
-> >> >> > Anything with such privilege can presumably kexec() to arbitrary code
-> >> >> > anyhow.
-> >> >> >
-> >> >> > The next kernel will then zero its seed in the DT at boot time, so
-> >> >> > similarly this won't be visible to userspace on the new kernel.
-> >> >> >
-> >> >> > FWIW, having kexec tools generate a seed for the kexec_load() case makes
-> >> >> > sense to me.
-> >> >>
-> >> >> Fair enough. I will try to take a stab at the same and come back with
-> >> >> my findings on this thread.
-> >> >
-> >> > How's your progress here?
-> >>
-> >> I am almost done with the implementation.
-> >> Unfortunately I lost most of the last week trying to revive my arm64
-> >> board (which supports
-> >> EFI_RNG_PROTOCOL and hence can be used to test the kaslr-seed related
-> >> stuff), so I was not
-> >> able to test the implementation.
-> >>
-> >> Now that the board is up, I think I can test and thrash out any
-> >> missing clogs in the approach.
-> >
-> > Sounds good.
-> >
-> >> > I've already added kaslr support (i.e. "virtual randomisation") to
-> >> > my kexec_file patch set.
-> >> > # just a few lines of code, though
-> >>
-> >> Hmm, have you sent out a new version already (kexec_file_load), as the last
-> >> version in my inbox still mentions in the cover letter that we need a
-> >> EFI stub like approach
-> >> to really support CONFIG_RANDOMIZE_BASE. Or, am I missing something?
-> >
-> > No, not yet.
-> > While I've also added some sort of "physical randomisation",
-> > I'd like to put my post on hold until v4.17-rc1.
-> >
-> >> I would love to have a look at the patch and try it at my end, so
-> >> could you please share
-> >> a pointer to the same.
-> >
-> > Your test will be very much appreciated.
-> >
-> 
-> Does this mean we have decided that we will enable KASLR in the kdump
-> kernel anyway, even if x86 disables it explicitly?
+Essentially, the estimated remaining time is calculated as:
 
-x86 doesn't disable kaslr in kernel, we did it in clue scripts. Since
-kdump kernel is not different than normal kernel. But it truly makes no
-any sense to enable kaslr in kdump kernel.
+  elapsed * (100 - progress) / progress
 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+However, print_progress() is also called when progress is 0. The
+result of a floating point division by zero is either NaN (if
+elapsed is zero), or infinity (if the system clock happens to cross
+a second's boundary since reading the start timestamp).
+
+The C standard defines only conversion of floating point values
+within the range of the destination integer variable. This means
+that conversion of NaN or infinity to an integer is undefined
+behaviour. Yes, it happens to produce INT_MIN with GCC on major
+platforms...
+
+This bug has gone unnoticed, because the very first call to
+print_progress() does not specify a start timestamp (so it cannot
+trigger the bug), and all subsequent calls are rate-limited to one
+per second. As a result, the bug is triggered very rarely.
+
+Before commit e5f96e79d69a1d295f19130da00ec6514d28a8ae, the bug also
+caused a buffer overflow. The buffer overflow is mitigated thanks to
+using snprintf() instead of sprintf(), but the program may still
+invoke undefined behaviour.
+
+Note that all other changes in the above-mentioned commit were
+ineffective. They merely reduced the precision of the calculation:
+Why would you add delta.tv_usec as a fraction if the fractional part
+is immediately truncated by a converstion to int64_t?
+
+Additionally, when the original bug is hit, the output is still
+incorrect, e.g. on my system I get:
+
+Copying data                                      : [  0.0 %] /  eta: -9223372036854775808s
+
+For that reason, let me revert the changes from commit
+e5f96e79d69a1d295f19130da00ec6514d28a8ae and fix the bug properly,
+i.e. do not calculate ETA if progress is 0.
+
+Last but not least, part of the issue was probably caused by the
+wrong assumption that integers < 100 can be interpreted with max 3
+ASCII characters, but that's not true for signed integers. To make
+eta_to_human_short() a bit safer, use an unsigned integer type.
+
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ print_info.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
+
+diff --git a/print_info.c b/print_info.c
+index 09e215a..ed701ab 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -16,8 +16,6 @@
+ #include "print_info.h"
+ #include <time.h>
+ #include <string.h>
+-#include <stdint.h>
+-#include <inttypes.h>
+ 
+ #define PROGRESS_MAXLEN		"50"
+ 
+@@ -354,21 +352,18 @@ static void calc_delta(struct timeval *tv_start, struct timeval *delta)
+ }
+ 
+ /* produce less than 12 bytes on msg */
+-static int eta_to_human_short (int64_t secs, char* msg, int maxsize)
++static int eta_to_human_short (unsigned secs, char* msg)
+ {
+ 	strcpy(msg, "eta: ");
+ 	msg += strlen("eta: ");
+ 	if (secs < 100)
+-		snprintf(msg, maxsize, "%"PRId64"s", secs);
++		sprintf(msg, "%us", secs);
+ 	else if (secs < 100 * 60)
+-		snprintf(msg, maxsize, "%"PRId64"m""%"PRId64"s",
+-			secs / 60, secs % 60);
++		sprintf(msg, "%um%us", secs / 60, secs % 60);
+ 	else if (secs < 48 * 3600)
+-		snprintf(msg, maxsize, "%"PRId64"h""%"PRId64"m",
+-			secs / 3600, (secs / 60) % 60);
++		sprintf(msg, "%uh%um", secs / 3600, (secs / 60) % 60);
+ 	else if (secs < 100 * 86400)
+-		snprintf(msg, maxsize, "%"PRId64"d""%"PRId64"h",
+-			secs / 86400, (secs / 3600) % 24);
++		sprintf(msg, "%ud%uh", secs / 86400, (secs / 3600) % 24);
+ 	else
+ 		sprintf(msg, ">2day");
+ 	return 0;
+@@ -384,8 +379,8 @@ print_progress(const char *msg, unsigned long current, unsigned long end, struct
+ 	static unsigned int lapse = 0;
+ 	static const char *spinner = "/|\\-";
+ 	struct timeval delta;
+-	int64_t eta;
+-	char eta_msg[32] = " ";
++	double eta;
++	char eta_msg[16] = " ";
+ 
+ 	if (current < end) {
+ 		tm = time(NULL);
+@@ -396,11 +391,11 @@ print_progress(const char *msg, unsigned long current, unsigned long end, struct
+ 	} else
+ 		progress = 100;
+ 
+-	if (start != NULL) {
++	if (start != NULL && current != 0) {
+ 		calc_delta(start, &delta);
+ 		eta = delta.tv_sec + delta.tv_usec / 1e6;
+ 		eta = (100 - progress) * eta / progress;
+-		eta_to_human_short(eta, eta_msg, sizeof(eta_msg));
++		eta_to_human_short(eta, eta_msg);
+ 	}
+ 	if (flag_ignore_r_char) {
+ 		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s\n",
+-- 
+2.13.6
 
 _______________________________________________
 kexec mailing list
