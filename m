@@ -1,18 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-f194.google.com ([209.85.223.194])
+Received: from mail-io0-x243.google.com ([2607:f8b0:4001:c06::243])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f5SPc-0000mB-Mx
- for kexec@lists.infradead.org; Mon, 09 Apr 2018 08:44:30 +0000
-Received: by mail-io0-f194.google.com with SMTP id e79so8692873ioi.7
- for <kexec@lists.infradead.org>; Mon, 09 Apr 2018 01:44:17 -0700 (PDT)
-Subject: Re: [PATCH] Fix a segmentation fault when trying to run "kexec -p"
-References: <20180405133926.14cc92ef@ezekiel.suse.cz>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Message-ID: <2f760cac-5005-626b-1f4f-ca9436427940@redhat.com>
-Date: Mon, 9 Apr 2018 14:14:09 +0530
+ id 1f5T6a-00061Z-KV
+ for kexec@lists.infradead.org; Mon, 09 Apr 2018 09:28:54 +0000
+Received: by mail-io0-x243.google.com with SMTP id y128so8835567iod.4
+ for <kexec@lists.infradead.org>; Mon, 09 Apr 2018 02:28:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20180405133926.14cc92ef@ezekiel.suse.cz>
-Content-Language: en-US
+In-Reply-To: <20180409043138.GF19607@linaro.org>
+References: <20180313102158.GI25863@linaro.org>
+ <20180313104715.prurmrizho4ddc4l@lakrids.cambridge.arm.com>
+ <20180313110747.GJ25863@linaro.org>
+ <20180313112016.ocx4qqhji3zfwjhs@lakrids.cambridge.arm.com>
+ <CACi5LpN4DTYFVSVqru2j0y=CKr2ztrJ1gCW32sJBU=oUV2fcWw@mail.gmail.com>
+ <20180314021050.GK25863@linaro.org>
+ <20180314182448.bnvjtgyzipsuxcbe@lakrids.cambridge.arm.com>
+ <CACi5LpNyx5VKO6mYB1yXNPENPKhAfAJ7cUSBeVzVtXfF6+EPwg@mail.gmail.com>
+ <20180406020948.GE19607@linaro.org>
+ <CACi5LpPe_C0fLFzsAHPD54X=D+AsYjvSyZi0yt_6=wFrWmvetw@mail.gmail.com>
+ <20180409043138.GF19607@linaro.org>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date: Mon, 9 Apr 2018 11:28:40 +0200
+Message-ID: <CAKv+Gu-s13JifH5f_BH_LUbSQYFyOW5QQGjN=ZqwBjTs-BMjYQ@mail.gmail.com>
+Subject: Re: [Query] ARM64 kaslr support - randomness, seeding and kdump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,44 +30,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, Michal Suchanek <msuchanek@suse.de>
-Cc: horms@verge.net.au, Dave Young <dyoung@redhat.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Bhupesh SHARMA <bhupesh.linux@gmail.com>
 
-On 04/05/2018 05:09 PM, Petr Tesarik wrote:
-> Do not fall through to "--mem-min" when "-p" option is parsed. The
-> break statement was apparently removed by mistake...
-> 
-> Fixes: cb434cbe6f401037e448276bb12056d1fdc3dbfc
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> ---
->   kexec/kexec.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/kexec/kexec.c b/kexec/kexec.c
-> index 612c1c2..313d9fe 100644
-> --- a/kexec/kexec.c
-> +++ b/kexec/kexec.c
-> @@ -1349,6 +1349,7 @@ int main(int argc, char *argv[])
->   			do_sync = 0;
->   			kexec_file_flags |= KEXEC_FILE_ON_CRASH;
->   			kexec_flags = KEXEC_ON_CRASH;
-> +			break;
->   		case OPT_MEM_MIN:
->   			mem_min = strtoul(optarg, &endptr, 0);
->   			if (*endptr) {
-> 
+On 9 April 2018 at 06:31, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
+> Hi,
+>
+> On Mon, Apr 09, 2018 at 09:31:34AM +0530, Bhupesh Sharma wrote:
+>> Hi Akashi,
+>>
+>> On Fri, Apr 6, 2018 at 7:39 AM, AKASHI Takahiro
+>> <takahiro.akashi@linaro.org> wrote:
+>> > Bhupesh,
+>> >
+>> > On Fri, Mar 16, 2018 at 03:05:10PM +0530, Bhupesh Sharma wrote:
+>> >> On Wed, Mar 14, 2018 at 11:54 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> >> > On Wed, Mar 14, 2018 at 11:10:53AM +0900, AKASHI Takahiro wrote:
+>> >> >> If kaslr-seed has a critical value in terms of security, is kexec-tools
+>> >> >> a right place? It is exposed to user space albeit for a short time of period.
+>> >> >
+>> >> > The kernel zeroes the seed in the DT at boot time, so the current seed
+>> >> > isn't visible to userspace.
+>> >> >
+>> >> > If kexec-tools generates a seed, and inserts it into the DTB that it
+>> >> > loads, this is only visible to kexec tools or other applications which
+>> >> > can inspect its memory, so I don't think this is much of a concern.
+>> >> > Anything with such privilege can presumably kexec() to arbitrary code
+>> >> > anyhow.
+>> >> >
+>> >> > The next kernel will then zero its seed in the DT at boot time, so
+>> >> > similarly this won't be visible to userspace on the new kernel.
+>> >> >
+>> >> > FWIW, having kexec tools generate a seed for the kexec_load() case makes
+>> >> > sense to me.
+>> >>
+>> >> Fair enough. I will try to take a stab at the same and come back with
+>> >> my findings on this thread.
+>> >
+>> > How's your progress here?
+>>
+>> I am almost done with the implementation.
+>> Unfortunately I lost most of the last week trying to revive my arm64
+>> board (which supports
+>> EFI_RNG_PROTOCOL and hence can be used to test the kaslr-seed related
+>> stuff), so I was not
+>> able to test the implementation.
+>>
+>> Now that the board is up, I think I can test and thrash out any
+>> missing clogs in the approach.
+>
+> Sounds good.
+>
+>> > I've already added kaslr support (i.e. "virtual randomisation") to
+>> > my kexec_file patch set.
+>> > # just a few lines of code, though
+>>
+>> Hmm, have you sent out a new version already (kexec_file_load), as the last
+>> version in my inbox still mentions in the cover letter that we need a
+>> EFI stub like approach
+>> to really support CONFIG_RANDOMIZE_BASE. Or, am I missing something?
+>
+> No, not yet.
+> While I've also added some sort of "physical randomisation",
+> I'd like to put my post on hold until v4.17-rc1.
+>
+>> I would love to have a look at the patch and try it at my end, so
+>> could you please share
+>> a pointer to the same.
+>
+> Your test will be very much appreciated.
+>
 
-'kexec -p' is currently broken (segfaults) upstream. I tested this fix 
-on my arm64 board, so:
-
-Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
-
-Regards,
-Bhupesh
+Does this mean we have decided that we will enable KASLR in the kdump
+kernel anyway, even if x86 disables it explicitly?
 
 _______________________________________________
 kexec mailing list
