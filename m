@@ -1,15 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f50NW-00061C-K5
- for kexec@lists.infradead.org; Sun, 08 Apr 2018 02:48:27 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 3/3] kexec_file: Load kernel at top of system RAM if
- required
-Date: Sun,  8 Apr 2018 10:47:24 +0800
-Message-Id: <20180408024724.16812-4-bhe@redhat.com>
-In-Reply-To: <20180408024724.16812-1-bhe@redhat.com>
-References: <20180408024724.16812-1-bhe@redhat.com>
+Received: from mail-wm0-f65.google.com ([74.125.82.65])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1f5O5i-0002fF-HZ
+ for kexec@lists.infradead.org; Mon, 09 Apr 2018 04:07:40 +0000
+Received: by mail-wm0-f65.google.com with SMTP id t67so15620678wmt.0
+ for <kexec@lists.infradead.org>; Sun, 08 Apr 2018 21:07:27 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <20180406020948.GE19607@linaro.org>
+References: <CACi5LpMhHt4bjEueOzHZTGpzuR2zoQqXcReL-khoSNLG6=FVmg@mail.gmail.com>
+ <CAKv+Gu8qd=rpJkG_GoVO=kkmc4qx_zZD8c_wwE16gr=8wSShSw@mail.gmail.com>
+ <20180313102158.GI25863@linaro.org>
+ <20180313104715.prurmrizho4ddc4l@lakrids.cambridge.arm.com>
+ <20180313110747.GJ25863@linaro.org>
+ <20180313112016.ocx4qqhji3zfwjhs@lakrids.cambridge.arm.com>
+ <CACi5LpN4DTYFVSVqru2j0y=CKr2ztrJ1gCW32sJBU=oUV2fcWw@mail.gmail.com>
+ <20180314021050.GK25863@linaro.org>
+ <20180314182448.bnvjtgyzipsuxcbe@lakrids.cambridge.arm.com>
+ <CACi5LpNyx5VKO6mYB1yXNPENPKhAfAJ7cUSBeVzVtXfF6+EPwg@mail.gmail.com>
+ <20180406020948.GE19607@linaro.org>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Mon, 9 Apr 2018 09:31:34 +0530
+Message-ID: <CACi5LpPe_C0fLFzsAHPD54X=D+AsYjvSyZi0yt_6=wFrWmvetw@mail.gmail.com>
+Subject: Re: [Query] ARM64 kaslr support - randomness, seeding and kdump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,58 +30,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Yinghai Lu <yinghai@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Bhupesh SHARMA <bhupesh.linux@gmail.com>
 
-For kexec_file loading, if kexec_buf.top_down is 'true', the memory which
-is used to load kernel/initrd/purgatory is supposed to be allocated from
-top to down. This is what we have been doing all along in the old kexec
-loading interface and the kexec loading is still default setting in some
-distributions. However, the current kexec_file loading interface doesn't
-do likt this. The function arch_kexec_walk_mem() it calls ignores checking
-kexec_buf.top_down, but calls walk_system_ram_res() directly to go through
-all resources of System RAM from bottom to up, to try to find memory region
-which can contain the specific kexec buffer, then call locate_mem_hole_callback()
-to allocate memory in that found memory region from top to down. This brings
-confusion. These two interfaces need be unified on behaviour.
+Hi Akashi,
 
-Here add checking if kexec_buf.top_down is 'true' in arch_kexec_walk_mem(),
-if yes, call the newly added walk_system_ram_res_rev() to find memory region
-from top to down to load kernel.
+On Fri, Apr 6, 2018 at 7:39 AM, AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
+> Bhupesh,
+>
+> On Fri, Mar 16, 2018 at 03:05:10PM +0530, Bhupesh Sharma wrote:
+>> On Wed, Mar 14, 2018 at 11:54 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> > On Wed, Mar 14, 2018 at 11:10:53AM +0900, AKASHI Takahiro wrote:
+>> >> If kaslr-seed has a critical value in terms of security, is kexec-tools
+>> >> a right place? It is exposed to user space albeit for a short time of period.
+>> >
+>> > The kernel zeroes the seed in the DT at boot time, so the current seed
+>> > isn't visible to userspace.
+>> >
+>> > If kexec-tools generates a seed, and inserts it into the DTB that it
+>> > loads, this is only visible to kexec tools or other applications which
+>> > can inspect its memory, so I don't think this is much of a concern.
+>> > Anything with such privilege can presumably kexec() to arbitrary code
+>> > anyhow.
+>> >
+>> > The next kernel will then zero its seed in the DT at boot time, so
+>> > similarly this won't be visible to userspace on the new kernel.
+>> >
+>> > FWIW, having kexec tools generate a seed for the kexec_load() case makes
+>> > sense to me.
+>>
+>> Fair enough. I will try to take a stab at the same and come back with
+>> my findings on this thread.
+>
+> How's your progress here?
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yinghai Lu <yinghai@kernel.org>
-Cc: kexec@lists.infradead.org
+I am almost done with the implementation.
+Unfortunately I lost most of the last week trying to revive my arm64
+board (which supports
+EFI_RNG_PROTOCOL and hence can be used to test the kaslr-seed related
+stuff), so I was not
+able to test the implementation.
 
----
- kernel/kexec_file.c | 2 ++
- 1 file changed, 2 insertions(+)
+Now that the board is up, I think I can test and thrash out any
+missing clogs in the approach.
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 57ec39995b23..76e6307f8971 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -445,6 +445,8 @@ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
- 					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
- 					   crashk_res.start, crashk_res.end,
- 					   kbuf, func);
-+	else if (kbuf->top_down)
-+		return walk_system_ram_res_rev(0, ULONG_MAX, kbuf, func);
- 	else
- 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
- }
--- 
-2.13.6
+> I've already added kaslr support (i.e. "virtual randomisation") to
+> my kexec_file patch set.
+> # just a few lines of code, though
 
+Hmm, have you sent out a new version already (kexec_file_load), as the last
+version in my inbox still mentions in the cover letter that we need a
+EFI stub like approach
+to really support CONFIG_RANDOMIZE_BASE. Or, am I missing something?
+
+I would love to have a look at the patch and try it at my end, so
+could you please share
+a pointer to the same.
+
+Regards,
+Bhupesh
 
 _______________________________________________
 kexec mailing list
