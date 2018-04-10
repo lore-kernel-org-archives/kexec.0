@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f61nE-0001pV-Pt
- for kexec@lists.infradead.org; Tue, 10 Apr 2018 22:31:14 +0000
+ id 1f61th-0003kj-S8
+ for kexec@lists.infradead.org; Tue, 10 Apr 2018 22:37:55 +0000
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.15 098/168] x86/gart: Exclude GART aperture from vmcore
-Date: Wed, 11 Apr 2018 00:24:00 +0200
-Message-Id: <20180410212804.429856100@linuxfoundation.org>
-In-Reply-To: <20180410212800.144079021@linuxfoundation.org>
-References: <20180410212800.144079021@linuxfoundation.org>
+Subject: [PATCH 4.14 074/138] x86/gart: Exclude GART aperture from vmcore
+Date: Wed, 11 Apr 2018 00:24:24 +0200
+Message-Id: <20180410212910.724767926@linuxfoundation.org>
+In-Reply-To: <20180410212902.121524696@linuxfoundation.org>
+References: <20180410212902.121524696@linuxfoundation.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,7 +25,7 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: Jiri Bohac <jbohac@suse.cz>, Toshi Kani <toshi.kani@hpe.com>, Baoquan He <bhe@redhat.com>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, joro@8bytes.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, stable@vger.kernel.org, Sasha Levin <alexander.levin@microsoft.com>, Borislav Petkov <bp@alien8.de>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, yinghai@kernel.org, Vivek Goyal <vgoyal@redhat.com>
 
-4.15-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
