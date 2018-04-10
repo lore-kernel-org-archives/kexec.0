@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f5rcm-0007sQ-Ho
- for kexec@lists.infradead.org; Tue, 10 Apr 2018 11:39:46 +0000
-Date: Tue, 10 Apr 2018 13:39:29 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [PATCH v2] makedumpfile: Use integer arithmetics for the progress bar
-Message-ID: <20180410133929.49835969@ezekiel.suse.cz>
-In-Reply-To: <20180410102852.316f07df@ezekiel.suse.cz>
-References: <20180409114020.1b48ba8c@ezekiel.suse.cz>
- <90ec5728-2318-1074-0fc2-b02a69e6c7f4@redhat.com>
- <20180410094707.0d1ec7f2@ezekiel.suse.cz>
- <20180410102852.316f07df@ezekiel.suse.cz>
+ id 1f61nE-0001pV-Pt
+ for kexec@lists.infradead.org; Tue, 10 Apr 2018 22:31:14 +0000
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.15 098/168] x86/gart: Exclude GART aperture from vmcore
+Date: Wed, 11 Apr 2018 00:24:00 +0200
+Message-Id: <20180410212804.429856100@linuxfoundation.org>
+In-Reply-To: <20180410212800.144079021@linuxfoundation.org>
+References: <20180410212800.144079021@linuxfoundation.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,140 +22,166 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Takuya Nakayama <tak-nakayama@tg.jp.nec.com>, kexec-ml <kexec@lists.infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Jiri Bohac <jbohac@suse.cz>, Toshi Kani <toshi.kani@hpe.com>, Baoquan He <bhe@redhat.com>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, joro@8bytes.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, stable@vger.kernel.org, Sasha Levin <alexander.levin@microsoft.com>, Borislav Petkov <bp@alien8.de>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, yinghai@kernel.org, Vivek Goyal <vgoyal@redhat.com>
 
-Essentially, the estimated remaining time is calculated as:
+4.15-stable review patch.  If anyone has any objections, please let me know.
 
-  elapsed * (100 - progress) / progress
+------------------
 
-Since the calculation is done with floating point numbers, it had
-masked a division by zero (if progress is 0), producing a NaN or
-infinity. The following conversion to int produces INT_MIN with GCC
-on major platforms, which originally overflowed the eta buffer. This
-bug was fixed by commit e5f96e79d69a1d295f19130da00ec6514d28a8ae,
-but conversion of NaN and infinity is undefined behaviour in ISO C,
-plus the corresponding output is still wrong, e.g.:
+From: Jiri Bohac <jbohac@suse.cz>
 
-Copying data                                      : [  0.0 %] /  eta: -9223372036854775808s
 
-Most importantly, using the FPU for a progress bar is overkill.
-Since the progress percentage is reported with one decimal digit
-following the decimal point, it can be stored as an integer tenths
-of a percent.
+[ Upstream commit 2a3e83c6f96c513f43ce5a8c9034608ea584a255 ]
 
-Second, the estimated time can be calculated in milliseconds. Up to
-49 days can be represented this way even on 32-bit platforms. Note
-that delta.tv_usec can be ignored in the subtraction, because the
-resulting eta is printed as seconds, so elapsed microseconds are
-irrelevant.
+On machines where the GART aperture is mapped over physical RAM
+/proc/vmcore contains the remapped range and reading it may cause hangs or
+reboots.
 
-Last but not least, the original buffer overflow was probably caused
-by the wrong assumption that integers < 100 can be interpreted with
-less than 3 ASCII characters, but that's not true for signed
-integers. To make eta_to_human_short() a bit safer, use an unsigned
-integer type.
+In the past, the GART region was added into the resource map, implemented
+by commit 56dd669a138c ("[PATCH] Insert GART region into resource map")
 
-Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+However, inserting the iomem_resource from the early GART code caused
+resource conflicts with some AGP drivers (bko#72201), which got avoided by
+reverting the patch in commit 707d4eefbdb3 ("Revert [PATCH] Insert GART
+region into resource map"). This revert introduced the /proc/vmcore bug.
+
+The vmcore ELF header is either prepared by the kernel (when using the
+kexec_file_load syscall) or by the kexec userspace (when using the kexec_load
+syscall). Since we no longer have the GART iomem resource, the userspace
+kexec has no way of knowing which region to exclude from the ELF header.
+
+Changes from v1 of this patch:
+Instead of excluding the aperture from the ELF header, this patch
+makes /proc/vmcore return zeroes in the second kernel when attempting to
+read the aperture region. This is done by reusing the
+gart_oldmem_pfn_is_ram infrastructure originally intended to exclude XEN
+balooned memory. This works for both, the kexec_file_load and kexec_load
+syscalls.
+
+[Note that the GART region is the same in the first and second kernels:
+regardless whether the first kernel fixed up the northbridge/bios setting
+and mapped the aperture over physical memory, the second kernel finds the
+northbridge properly configured by the first kernel and the aperture
+never overlaps with e820 memory because the second kernel has a fake e820
+map created from the crashkernel memory regions. Thus, the second kernel
+keeps the aperture address/size as configured by the first kernel.]
+
+register_oldmem_pfn_is_ram can only register one callback and returns an error
+if the callback has been registered already. Since XEN used to be the only user
+of this function, it never checks the return value. Now that we have more than
+one user, I added a WARN_ON just in case agp, XEN, or any other future user of
+register_oldmem_pfn_is_ram were to step on each other's toes.
+
+Fixes: 707d4eefbdb3 ("Revert [PATCH] Insert GART region into resource map")
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Toshi Kani <toshi.kani@hpe.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: yinghai@kernel.org
+Cc: joro@8bytes.org
+Cc: kexec@lists.infradead.org
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Link: https://lkml.kernel.org/r/20180106010013.73suskgxm7lox7g6@dwarf.suse.cz
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- print_info.c | 43 ++++++++++++++++++++-----------------------
- 1 file changed, 20 insertions(+), 23 deletions(-)
+ arch/x86/kernel/aperture_64.c |   46 +++++++++++++++++++++++++++++++++++++++++-
+ arch/x86/xen/mmu_hvm.c        |    2 -
+ 2 files changed, 46 insertions(+), 2 deletions(-)
 
-diff --git a/print_info.c b/print_info.c
-index 09e215a..6bfcd11 100644
---- a/print_info.c
-+++ b/print_info.c
-@@ -16,8 +16,6 @@
- #include "print_info.h"
- #include <time.h>
- #include <string.h>
--#include <stdint.h>
--#include <inttypes.h>
+--- a/arch/x86/kernel/aperture_64.c
++++ b/arch/x86/kernel/aperture_64.c
+@@ -30,6 +30,7 @@
+ #include <asm/dma.h>
+ #include <asm/amd_nb.h>
+ #include <asm/x86_init.h>
++#include <linux/crash_dump.h>
  
- #define PROGRESS_MAXLEN		"50"
+ /*
+  * Using 512M as goal, in case kexec will load kernel_big
+@@ -56,6 +57,33 @@ int fallback_aper_force __initdata;
  
-@@ -354,21 +352,18 @@ static void calc_delta(struct timeval *tv_start, struct timeval *delta)
- }
+ int fix_aperture __initdata = 1;
  
- /* produce less than 12 bytes on msg */
--static int eta_to_human_short (int64_t secs, char* msg, int maxsize)
-+static int eta_to_human_short (unsigned long secs, char* msg)
- {
- 	strcpy(msg, "eta: ");
- 	msg += strlen("eta: ");
- 	if (secs < 100)
--		snprintf(msg, maxsize, "%"PRId64"s", secs);
-+		sprintf(msg, "%lus", secs);
- 	else if (secs < 100 * 60)
--		snprintf(msg, maxsize, "%"PRId64"m""%"PRId64"s",
--			secs / 60, secs % 60);
-+		sprintf(msg, "%lum%lus", secs / 60, secs % 60);
- 	else if (secs < 48 * 3600)
--		snprintf(msg, maxsize, "%"PRId64"h""%"PRId64"m",
--			secs / 3600, (secs / 60) % 60);
-+		sprintf(msg, "%luh%lum", secs / 3600, (secs / 60) % 60);
- 	else if (secs < 100 * 86400)
--		snprintf(msg, maxsize, "%"PRId64"d""%"PRId64"h",
--			secs / 86400, (secs / 3600) % 24);
-+		sprintf(msg, "%lud%luh", secs / 86400, (secs / 3600) % 24);
- 	else
- 		sprintf(msg, ">2day");
- 	return 0;
-@@ -378,37 +373,39 @@ static int eta_to_human_short (int64_t secs, char* msg, int maxsize)
- void
- print_progress(const char *msg, unsigned long current, unsigned long end, struct timeval *start)
- {
--	float progress;
-+	unsigned progress;	/* in promilles (tenths of a percent) */
- 	time_t tm;
- 	static time_t last_time = 0;
- 	static unsigned int lapse = 0;
- 	static const char *spinner = "/|\\-";
- 	struct timeval delta;
--	int64_t eta;
--	char eta_msg[32] = " ";
-+	unsigned long eta;
-+	char eta_msg[16] = " ";
++#ifdef CONFIG_PROC_VMCORE
++/*
++ * If the first kernel maps the aperture over e820 RAM, the kdump kernel will
++ * use the same range because it will remain configured in the northbridge.
++ * Trying to dump this area via /proc/vmcore may crash the machine, so exclude
++ * it from vmcore.
++ */
++static unsigned long aperture_pfn_start, aperture_page_count;
++
++static int gart_oldmem_pfn_is_ram(unsigned long pfn)
++{
++	return likely((pfn < aperture_pfn_start) ||
++		      (pfn >= aperture_pfn_start + aperture_page_count));
++}
++
++static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
++{
++	aperture_pfn_start = aper_base >> PAGE_SHIFT;
++	aperture_page_count = (32 * 1024 * 1024) << aper_order >> PAGE_SHIFT;
++	WARN_ON(register_oldmem_pfn_is_ram(&gart_oldmem_pfn_is_ram));
++}
++#else
++static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
++{
++}
++#endif
++
+ /* This code runs before the PCI subsystem is initialized, so just
+    access the northbridge directly. */
  
- 	if (current < end) {
- 		tm = time(NULL);
- 		if (tm - last_time < 1)
- 			return;
- 		last_time = tm;
--		progress = (float)current * 100 / end;
-+		progress = current * 1000 / end;
- 	} else
--		progress = 100;
-+		progress = 1000;
+@@ -435,8 +463,16 @@ int __init gart_iommu_hole_init(void)
  
--	if (start != NULL) {
-+	if (start != NULL && progress != 0) {
- 		calc_delta(start, &delta);
--		eta = delta.tv_sec + delta.tv_usec / 1e6;
--		eta = (100 - progress) * eta / progress;
--		eta_to_human_short(eta, eta_msg, sizeof(eta_msg));
-+		eta = 1000 * delta.tv_sec + delta.tv_usec / 1000;
-+		eta = eta / progress - delta.tv_sec;
-+		eta_to_human_short(eta, eta_msg);
+ out:
+ 	if (!fix && !fallback_aper_force) {
+-		if (last_aper_base)
++		if (last_aper_base) {
++			/*
++			 * If this is the kdump kernel, the first kernel
++			 * may have allocated the range over its e820 RAM
++			 * and fixed up the northbridge
++			 */
++			exclude_from_vmcore(last_aper_base, last_aper_order);
++
+ 			return 1;
++		}
+ 		return 0;
  	}
- 	if (flag_ignore_r_char) {
--		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s\n",
--			     msg, progress, spinner[lapse % 4], eta_msg);
-+		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3u.%u %%] %c  %16s\n",
-+			     msg, progress / 10, progress % 10,
-+			     spinner[lapse % 4], eta_msg);
- 	} else {
- 		PROGRESS_MSG("\r");
--		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s",
--			     msg, progress, spinner[lapse % 4], eta_msg);
-+		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3u.%u %%] %c  %16s",
-+			     msg, progress / 10, progress % 10,
-+			     spinner[lapse % 4], eta_msg);
+ 
+@@ -473,6 +509,14 @@ out:
+ 		return 0;
  	}
- 	lapse++;
+ 
++	/*
++	 * If this is the kdump kernel _and_ the first kernel did not
++	 * configure the aperture in the northbridge, this range may
++	 * overlap with the first kernel's memory. We can't access the
++	 * range through vmcore even though it should be part of the dump.
++	 */
++	exclude_from_vmcore(aper_alloc, aper_order);
++
+ 	/* Fix up the north bridges */
+ 	for (i = 0; i < amd_nb_bus_dev_ranges[i].dev_limit; i++) {
+ 		int bus, dev_base, dev_limit;
+--- a/arch/x86/xen/mmu_hvm.c
++++ b/arch/x86/xen/mmu_hvm.c
+@@ -75,6 +75,6 @@ void __init xen_hvm_init_mmu_ops(void)
+ 	if (is_pagetable_dying_supported())
+ 		pv_mmu_ops.exit_mmap = xen_hvm_exit_mmap;
+ #ifdef CONFIG_PROC_VMCORE
+-	register_oldmem_pfn_is_ram(&xen_oldmem_pfn_is_ram);
++	WARN_ON(register_oldmem_pfn_is_ram(&xen_oldmem_pfn_is_ram));
+ #endif
  }
--- 
-2.13.6
+
 
 
 _______________________________________________
