@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f5nzu-0002xF-W0
- for kexec@lists.infradead.org; Tue, 10 Apr 2018 07:47:24 +0000
-Date: Tue, 10 Apr 2018 09:47:07 +0200
+ id 1f5oeG-0003sr-Rp
+ for kexec@lists.infradead.org; Tue, 10 Apr 2018 08:29:11 +0000
+Date: Tue, 10 Apr 2018 10:28:52 +0200
 From: Petr Tesarik <ptesarik@suse.cz>
 Subject: Re: [PATCH] makedumpfile: Do not print ETA value if current
  progress is 0
-Message-ID: <20180410094707.0d1ec7f2@ezekiel.suse.cz>
-In-Reply-To: <90ec5728-2318-1074-0fc2-b02a69e6c7f4@redhat.com>
+Message-ID: <20180410102852.316f07df@ezekiel.suse.cz>
+In-Reply-To: <20180410094707.0d1ec7f2@ezekiel.suse.cz>
 References: <20180409114020.1b48ba8c@ezekiel.suse.cz>
  <90ec5728-2318-1074-0fc2-b02a69e6c7f4@redhat.com>
+ <20180410094707.0d1ec7f2@ezekiel.suse.cz>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,53 +21,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: lijiang <lijiang@redhat.com>
-Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>, Takuya Nakayama <tak-nakayama@tg.jp.nec.com>, kexec-ml <kexec@lists.infradead.org>
+Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Takuya Nakayama <tak-nakayama@tg.jp.nec.com>, kexec-ml <kexec@lists.infradead.org>
 
-T24gVHVlLCAxMCBBcHIgMjAxOCAxNTowOTozNyArMDgwMApsaWppYW5nIDxsaWppYW5nQHJlZGhh
-dC5jb20+IHdyb3RlOgoKPiDlnKggMjAxOOW5tDA05pyIMDnml6UgMTc6NDAsIFBldHIgVGVzYXJp
-ayDlhpnpgZM6Cj5bLi4uXQo+ID4gTGFzdCBidXQgbm90IGxlYXN0LCBwYXJ0IG9mIHRoZSBpc3N1
-ZSB3YXMgcHJvYmFibHkgY2F1c2VkIGJ5IHRoZQo+ID4gd3JvbmcgYXNzdW1wdGlvbiB0aGF0IGlu
-dGVnZXJzIDwgMTAwIGNhbiBiZSBpbnRlcnByZXRlZCB3aXRoIG1heCAzCj4gPiBBU0NJSSBjaGFy
-YWN0ZXJzLCBidXQgdGhhdCdzIG5vdCB0cnVlIGZvciBzaWduZWQgaW50ZWdlcnMuIFRvIG1ha2UK
-PiA+IGV0YV90b19odW1hbl9zaG9ydCgpIGEgYml0IHNhZmVyLCB1c2UgYW4gdW5zaWduZWQgaW50
-ZWdlciB0eXBlLiAgCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFBldHIgVGVzYXJpayA8cHRlc2FyaWtA
-c3VzZS5jb20+ICAKPiBIaSwgUGV0cgo+IEl0IGlzIGdvb2QgdGhhdCBjaGVja3MgdGhlIHZhbHVl
-IG9mICJjdXJyZW50Ii4KPiBUaGUgcHJldmlvdXMgcGF0Y2ggcmVzb2x2ZWQgc3lzdGVtIGNyYXNo
-IGluIGV4Y2VwdGlvbmFsIGNhc2UuIFRoZSBjYWxjdWxhdGlvbgo+IHJlc3VsdCBvZiAiY2FsY19k
-ZWx0YSIgbWF5IGJlIHZlcnkgbGFyZ2UgbnVtYmVyCgpIbW1tLiBUaGUgcmVzdWx0aW5nIEVUQSBp
-cyBpbiBzZWNvbmRzLiBUbyBvdmVyZmxvdyBhIDMyLWJpdCBpbnRlZ2VyLAp0aGUgZWxhcHNlZCB0
-aW1lIHdvdWxkIGhhdmUgdG8gYmUgbW9yZSB0aGFuIDJeMzIgc2Vjb25kcywgb3IgYXBwcm94Lgox
-MzYgeWVhcnMuIEkgdGhpbmsgaXQgaXMgcmVhc29uYWJsZSB0byBhc3N1bWUgdGhhdCBtYWtlZHVt
-cGZpbGUgd2lsbApuZXZlciBydW4gZm9yIG1vcmUgdGhhbiBhIGNlbnR1cnkuLi4KCj4gb3IgZXZl
-biBhIG5lZ2F0aXZlIG51bWJlciB3aGVuIG1ha2luZyB0aGUgdGltZSBqdW1wIHZlcnkgZ3JlYXQu
-CgpZZXMsIHRoZSBjdXJyZW50IGNvZGUgd2lsbCBub3QgcHJvZHVjZSBzZW5zaWJsZSByZXN1bHRz
-IGlmIHRoZSBzeXN0ZW0KY2xvY2sgbW92ZXMgYmFja3dhcmRzLiBXaXRoIG15IHBhdGNoIGl0IHdp
-bGwgbW9zdCBsaWtlbHkgc2F5OiAiPjJkYXkiLgpCdXQgaXQgd2lsbCBub3Qgd29yayBhbnkgYmV0
-dGVyIGlmIHlvdSB1c2UgYSA2NC1iaXQgaW50ZWdlci4KCkluc3RlYWQsIHdlIHNob3VsZCBiZSB1
-c2luZyBjbG9ja19nZXR0aW1lKENMT0NLX01PTk9UT05JQywgLi4uKS4KVGhhdCdzIGEgc2VwYXJh
-dGUgaXNzdWUgdGhhdCBJIGNhbiBzb2x2ZSBpbiBhbm90aGVyIHBhdGNoLgoKPiBJbiB0aGlzIGNh
-c2UsIGl0IGlzIG5vdCBlbm91Z2ggZm9yICJ1bnNpZ25lZAo+IGludGVnZXIgdHlwZSIgYW5kIGRv
-dWJsZS4gVGhlIHN0cnVjdCB0aW1ldmFsIGhhcyB0d28gNjRiaXQgdmFyaWFibGVzIGluIHg4NiA2
-NC4KCkZpcnN0LCBvZiB0aGUgc2Vjb25kIGZpZWxkICh0dl91c2VjKSwgb25seSAyMCBiaXRzIG1h
-eSBhY3R1YWxseSBiZQp1c2VkLCBiZWNhdXNlIGl0IGNhbiBuZXZlciBiZSBncmVhdGVyIHRoYW4g
-b25lIG1pbGxpb24uCgpTZWNvbmQsIHRvIG1ha2UgMTAwJSBzdXJlIHRoYXQgdGhlIHRhcmdldCB2
-YWx1ZSBmaXRzIGludG8gdGhlIGV0YQp2YXJpYWJsZSwgeW91IHdvdWxkIGhhdmUgdG8gY29uc2lk
-ZXIgdGhlIHdvcnN0IGNhc2U6CgogIGVuZCA9IFVMT05HX01BWAogIGN1cnJlbnQgPSAxCiAgcHJv
-Z3Jlc3MgPSAxMDAuMCAvIFVMT05HX01BWAogIGRlbHRhID0geyBVTE9OR19NQVgsIDk5OTk5OSB9
-CiAgZXRhID0gVUxPTkdfTUFYICsgOTk5OTk5LzFlNgogIGV0YSA9ICgxMDAgLSBwcm9ncmVzcykg
-KiBldGEgLyBwcm9ncmVzcwoKVGhlb3JldGljYWxseSwgdGhpcyBnaXZlczoKCiAgZXRhID0gMzQw
-MzQ1ODMxNjE4MjU3NDA5ODcwODUyMTMwNDY1MDM1ODM1ODM3CgpFdmVuIGEgMTI4LWJpdCBpbnRl
-Z2VyIGlzIHRvbyBzbWFsbCB0byBob2xkIHRoaXMgbWF4aW11bSB0aGVvcmV0aWNhbAp2YWx1ZSAo
-MTI5IGJpdHMgd291bGQgYmUgbmVlZGVkKS4KCkxldCdzIHN0YXkgcmVhc29uYWJsZS4gQW55IHZh
-bHVlIHdoaWNoIHJlcHJlc2VudHMgbW9yZSB0aGFuIGEgZmV3Cihkb3plbikgaG91cnMgaXMgbm90
-IHVzYWJsZSBpbiBwcmFjdGljZS4gQnV0IGhleSwgdG8gbWFrZSBzdXJlIHdlCmNhbm5vdCBoaXQg
-dW5kZWZpbmVkIGJlaGF2aW91ciwgd2h5IG5vdCBwYXNzIGEgZG91YmxlIHRvCmV0YV90b19odW1h
-bl9zaG9ydCgpLi4uCgpHb2luZyB0byBzZW5kIGFuIHVwZGF0ZWQgcGF0Y2guCgpQZXRyIFQKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Tue, 10 Apr 2018 09:47:07 +0200
+Petr Tesarik <ptesarik@suse.cz> wrote:
+
+>[...]
+> Let's stay reasonable. Any value which represents more than a few
+> (dozen) hours is not usable in practice. But hey, to make sure we
+> cannot hit undefined behaviour, why not pass a double to
+> eta_to_human_short()...
+
+I gave it a second thought. Using math library functions just to print
+a progress bar is overkill. In fact, using the FPU is already overkill.
+Instead, I'm going to convert the calculations to pure integer
+arithmetic.
+
+Petr T
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
