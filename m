@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by casper.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f5pYN-0003aE-3m
- for kexec@lists.infradead.org; Tue, 10 Apr 2018 09:27:06 +0000
-Received: from penelope.horms.nl (unknown [217.111.208.18])
- by kirsty.vergenet.net (Postfix) with ESMTPA id 7964125B7A3
- for <kexec@lists.infradead.org>; Tue, 10 Apr 2018 19:26:44 +1000 (AEST)
-Date: Tue, 10 Apr 2018 11:26:42 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools 2.0.17-rc1
-Message-ID: <20180410092642.gbawusvilhgctz4l@verge.net.au>
+Received: from mx2.suse.de ([195.135.220.15])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1f5rcm-0007sQ-Ho
+ for kexec@lists.infradead.org; Tue, 10 Apr 2018 11:39:46 +0000
+Date: Tue, 10 Apr 2018 13:39:29 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: [PATCH v2] makedumpfile: Use integer arithmetics for the progress bar
+Message-ID: <20180410133929.49835969@ezekiel.suse.cz>
+In-Reply-To: <20180410102852.316f07df@ezekiel.suse.cz>
+References: <20180409114020.1b48ba8c@ezekiel.suse.cz>
+ <90ec5728-2318-1074-0fc2-b02a69e6c7f4@redhat.com>
+ <20180410094707.0d1ec7f2@ezekiel.suse.cz>
+ <20180410102852.316f07df@ezekiel.suse.cz>
 MIME-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,52 +25,141 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: lijiang <lijiang@redhat.com>
+Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Takuya Nakayama <tak-nakayama@tg.jp.nec.com>, kexec-ml <kexec@lists.infradead.org>
 
-Hi all,
+Essentially, the estimated remaining time is calculated as:
 
-I am happy to announce the release of kexec-tools 2.0.17-rc1.
+  elapsed * (100 - progress) / progress
 
-This is an incremental feature pre-release.
+Since the calculation is done with floating point numbers, it had
+masked a division by zero (if progress is 0), producing a NaN or
+infinity. The following conversion to int produces INT_MIN with GCC
+on major platforms, which originally overflowed the eta buffer. This
+bug was fixed by commit e5f96e79d69a1d295f19130da00ec6514d28a8ae,
+but conversion of NaN and infinity is undefined behaviour in ISO C,
+plus the corresponding output is still wrong, e.g.:
 
-So long as no serious problems arise I intend to release kexec-tools 2.0.17
-in a weeks time. Testing of 2.0.17-rc1 would be greatly appreciated.
+Copying data                                      : [  0.0 %] /  eta: -9223372036854775808s
 
-I do not have any outstanding changes for 2.0.17 at this time.
-And I would like to only accept bug fixes at this time and take take
-features patches once 2.0.17 has been released.
+Most importantly, using the FPU for a progress bar is overkill.
+Since the progress percentage is reported with one decimal digit
+following the decimal point, it can be stored as an integer tenths
+of a percent.
 
-The pre-release can be downloaded from kernel.org:
+Second, the estimated time can be calculated in milliseconds. Up to
+49 days can be represented this way even on 32-bit platforms. Note
+that delta.tv_usec can be ignored in the subtraction, because the
+resulting eta is printed as seconds, so elapsed microseconds are
+irrelevant.
 
-	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.17-rc1.tar.xz
-	https://kernel.org/pub/linux/utils/kernel/kexec/
+Last but not least, the original buffer overflow was probably caused
+by the wrong assumption that integers < 100 can be interpreted with
+less than 3 ASCII characters, but that's not true for signed
+integers. To make eta_to_human_short() a bit safer, use an unsigned
+integer type.
 
-I have also tagged it in git:
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ print_info.c | 43 ++++++++++++++++++++-----------------------
+ 1 file changed, 20 insertions(+), 23 deletions(-)
 
-	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+diff --git a/print_info.c b/print_info.c
+index 09e215a..6bfcd11 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -16,8 +16,6 @@
+ #include "print_info.h"
+ #include <time.h>
+ #include <string.h>
+-#include <stdint.h>
+-#include <inttypes.h>
+ 
+ #define PROGRESS_MAXLEN		"50"
+ 
+@@ -354,21 +352,18 @@ static void calc_delta(struct timeval *tv_start, struct timeval *delta)
+ }
+ 
+ /* produce less than 12 bytes on msg */
+-static int eta_to_human_short (int64_t secs, char* msg, int maxsize)
++static int eta_to_human_short (unsigned long secs, char* msg)
+ {
+ 	strcpy(msg, "eta: ");
+ 	msg += strlen("eta: ");
+ 	if (secs < 100)
+-		snprintf(msg, maxsize, "%"PRId64"s", secs);
++		sprintf(msg, "%lus", secs);
+ 	else if (secs < 100 * 60)
+-		snprintf(msg, maxsize, "%"PRId64"m""%"PRId64"s",
+-			secs / 60, secs % 60);
++		sprintf(msg, "%lum%lus", secs / 60, secs % 60);
+ 	else if (secs < 48 * 3600)
+-		snprintf(msg, maxsize, "%"PRId64"h""%"PRId64"m",
+-			secs / 3600, (secs / 60) % 60);
++		sprintf(msg, "%luh%lum", secs / 3600, (secs / 60) % 60);
+ 	else if (secs < 100 * 86400)
+-		snprintf(msg, maxsize, "%"PRId64"d""%"PRId64"h",
+-			secs / 86400, (secs / 3600) % 24);
++		sprintf(msg, "%lud%luh", secs / 86400, (secs / 3600) % 24);
+ 	else
+ 		sprintf(msg, ">2day");
+ 	return 0;
+@@ -378,37 +373,39 @@ static int eta_to_human_short (int64_t secs, char* msg, int maxsize)
+ void
+ print_progress(const char *msg, unsigned long current, unsigned long end, struct timeval *start)
+ {
+-	float progress;
++	unsigned progress;	/* in promilles (tenths of a percent) */
+ 	time_t tm;
+ 	static time_t last_time = 0;
+ 	static unsigned int lapse = 0;
+ 	static const char *spinner = "/|\\-";
+ 	struct timeval delta;
+-	int64_t eta;
+-	char eta_msg[32] = " ";
++	unsigned long eta;
++	char eta_msg[16] = " ";
+ 
+ 	if (current < end) {
+ 		tm = time(NULL);
+ 		if (tm - last_time < 1)
+ 			return;
+ 		last_time = tm;
+-		progress = (float)current * 100 / end;
++		progress = current * 1000 / end;
+ 	} else
+-		progress = 100;
++		progress = 1000;
+ 
+-	if (start != NULL) {
++	if (start != NULL && progress != 0) {
+ 		calc_delta(start, &delta);
+-		eta = delta.tv_sec + delta.tv_usec / 1e6;
+-		eta = (100 - progress) * eta / progress;
+-		eta_to_human_short(eta, eta_msg, sizeof(eta_msg));
++		eta = 1000 * delta.tv_sec + delta.tv_usec / 1000;
++		eta = eta / progress - delta.tv_sec;
++		eta_to_human_short(eta, eta_msg);
+ 	}
+ 	if (flag_ignore_r_char) {
+-		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s\n",
+-			     msg, progress, spinner[lapse % 4], eta_msg);
++		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3u.%u %%] %c  %16s\n",
++			     msg, progress / 10, progress % 10,
++			     spinner[lapse % 4], eta_msg);
+ 	} else {
+ 		PROGRESS_MSG("\r");
+-		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s",
+-			     msg, progress, spinner[lapse % 4], eta_msg);
++		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3u.%u %%] %c  %16s",
++			     msg, progress / 10, progress % 10,
++			     spinner[lapse % 4], eta_msg);
+ 	}
+ 	lapse++;
+ }
+-- 
+2.13.6
 
-Thanks to everyone who has contributed to kexec.
-
-
-For reference the changes since v2.0.16 are:
-
-090e8eceed79 kexec-tools 2.0.17-rc1
-a0c27338252d Fix a segmentation fault when trying to run "kexec -p"
-5c08af7a068d arm64: fix an issue with kaslr-enabled vmlinux
-b2b05352ae5e kexec: Document -s, -c and -a options in the man page
-20fea93e6caf kexec: Add option to fall back to KEXEC_LOAD when KEXEC_FILE_LOAD is not supported
-b58d076a6ed3 kexec: Add option to revert -s
-cb434cbe6f40 kexec: Do not special-case the -s option
-6259b12f5cc8 kexec: Fix option checks to take KEXEC_FILE_LOAD into account
-61a03fe9795c kexec: Return -ENOSYS when kexec does not know how to call KEXEC_FILE_LOAD
-3720b743ae3c kexec/ppc64: leverage kexec_file_load support
-b10924a7da3c kexec/ppc64: add support to parse ibm, dynamic-memory-v2 property
-c740fdb20482 kexec: add a helper function to add ranges
-060eee589dd1 x86: use old screen_info if needed
-282ff2a5e613 kexec-tools: Make xc_dlhandle static
-58c225a6d762 kexec-tools: Call dlclose() from within __xc_interface_close()
-894bea9335f5 kexec-tools: Perform run-time linking of libxenctrl.so
-401e096166ce kexec-tools 2.0.16.git
 
 _______________________________________________
 kexec mailing list
