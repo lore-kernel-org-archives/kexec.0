@@ -1,27 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22c.google.com ([2607:f8b0:400e:c00::22c])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f5hRs-0006Yr-Mg
- for kexec@lists.infradead.org; Tue, 10 Apr 2018 00:47:50 +0000
-Received: by mail-pf0-x22c.google.com with SMTP id q9so6813368pff.1
- for <kexec@lists.infradead.org>; Mon, 09 Apr 2018 17:47:38 -0700 (PDT)
-Date: Tue, 10 Apr 2018 09:47:44 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [Query] ARM64 kaslr support - randomness, seeding and kdump
-Message-ID: <20180410004742.GG19607@linaro.org>
-References: <20180313112016.ocx4qqhji3zfwjhs@lakrids.cambridge.arm.com>
- <CACi5LpN4DTYFVSVqru2j0y=CKr2ztrJ1gCW32sJBU=oUV2fcWw@mail.gmail.com>
- <20180314021050.GK25863@linaro.org>
- <20180314182448.bnvjtgyzipsuxcbe@lakrids.cambridge.arm.com>
- <CACi5LpNyx5VKO6mYB1yXNPENPKhAfAJ7cUSBeVzVtXfF6+EPwg@mail.gmail.com>
- <20180406020948.GE19607@linaro.org>
- <CACi5LpPe_C0fLFzsAHPD54X=D+AsYjvSyZi0yt_6=wFrWmvetw@mail.gmail.com>
- <20180409043138.GF19607@linaro.org>
- <CAKv+Gu-s13JifH5f_BH_LUbSQYFyOW5QQGjN=ZqwBjTs-BMjYQ@mail.gmail.com>
- <CACi5LpNAz41VZKkchkjc9SdxctK7Ui1zV_x=pyv0cEHFgfdHZQ@mail.gmail.com>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1f5nGF-0006WN-66
+ for kexec@lists.infradead.org; Tue, 10 Apr 2018 07:00:12 +0000
+Date: Tue, 10 Apr 2018 14:59:29 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2 00/11] kexec_file: Clean up purgatory load
+Message-ID: <20180410065929.GA5592@dhcp-128-65.nay.redhat.com>
+References: <20180321112751.22196-1-prudo@linux.vnet.ibm.com>
+ <20180321160042.0f7d1fe21937f37af96a982a@linux-foundation.org>
+ <20180323104116.0a3f00f4@ThinkPad>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CACi5LpNAz41VZKkchkjc9SdxctK7Ui1zV_x=pyv0cEHFgfdHZQ@mail.gmail.com>
+In-Reply-To: <20180323104116.0a3f00f4@ThinkPad>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,121 +25,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+To: Philipp Rudo <prudo@linux.vnet.ibm.com>
+Cc: linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, Apr 09, 2018 at 11:58:21PM +0530, Bhupesh Sharma wrote:
-> Hi Ard,
+On 03/23/18 at 10:41am, Philipp Rudo wrote:
+> Hi Andrew,
+> Hi Dave,
 > 
-> On Mon, Apr 9, 2018 at 2:58 PM, Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> > On 9 April 2018 at 06:31, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> >> Hi,
-> >>
-> >> On Mon, Apr 09, 2018 at 09:31:34AM +0530, Bhupesh Sharma wrote:
-> >>> Hi Akashi,
-> >>>
-> >>> On Fri, Apr 6, 2018 at 7:39 AM, AKASHI Takahiro
-> >>> <takahiro.akashi@linaro.org> wrote:
-> >>> > Bhupesh,
-> >>> >
-> >>> > On Fri, Mar 16, 2018 at 03:05:10PM +0530, Bhupesh Sharma wrote:
-> >>> >> On Wed, Mar 14, 2018 at 11:54 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> >>> >> > On Wed, Mar 14, 2018 at 11:10:53AM +0900, AKASHI Takahiro wrote:
-> >>> >> >> If kaslr-seed has a critical value in terms of security, is kexec-tools
-> >>> >> >> a right place? It is exposed to user space albeit for a short time of period.
-> >>> >> >
-> >>> >> > The kernel zeroes the seed in the DT at boot time, so the current seed
-> >>> >> > isn't visible to userspace.
-> >>> >> >
-> >>> >> > If kexec-tools generates a seed, and inserts it into the DTB that it
-> >>> >> > loads, this is only visible to kexec tools or other applications which
-> >>> >> > can inspect its memory, so I don't think this is much of a concern.
-> >>> >> > Anything with such privilege can presumably kexec() to arbitrary code
-> >>> >> > anyhow.
-> >>> >> >
-> >>> >> > The next kernel will then zero its seed in the DT at boot time, so
-> >>> >> > similarly this won't be visible to userspace on the new kernel.
-> >>> >> >
-> >>> >> > FWIW, having kexec tools generate a seed for the kexec_load() case makes
-> >>> >> > sense to me.
-> >>> >>
-> >>> >> Fair enough. I will try to take a stab at the same and come back with
-> >>> >> my findings on this thread.
-> >>> >
-> >>> > How's your progress here?
-> >>>
-> >>> I am almost done with the implementation.
-> >>> Unfortunately I lost most of the last week trying to revive my arm64
-> >>> board (which supports
-> >>> EFI_RNG_PROTOCOL and hence can be used to test the kaslr-seed related
-> >>> stuff), so I was not
-> >>> able to test the implementation.
-> >>>
-> >>> Now that the board is up, I think I can test and thrash out any
-> >>> missing clogs in the approach.
-> >>
-> >> Sounds good.
-> >>
-> >>> > I've already added kaslr support (i.e. "virtual randomisation") to
-> >>> > my kexec_file patch set.
-> >>> > # just a few lines of code, though
-> >>>
-> >>> Hmm, have you sent out a new version already (kexec_file_load), as the last
-> >>> version in my inbox still mentions in the cover letter that we need a
-> >>> EFI stub like approach
-> >>> to really support CONFIG_RANDOMIZE_BASE. Or, am I missing something?
-> >>
-> >> No, not yet.
-> >> While I've also added some sort of "physical randomisation",
-> >> I'd like to put my post on hold until v4.17-rc1.
-> >>
-> >>> I would love to have a look at the patch and try it at my end, so
-> >>> could you please share
-> >>> a pointer to the same.
-> >>
-> >> Your test will be very much appreciated.
-> >>
-> >
-> > Does this mean we have decided that we will enable KASLR in the kdump
-> > kernel anyway, even if x86 disables it explicitly?
-> 
-> No, we are mainly considering here the 'kexec warm reboot to another
-> kernel' case and not the kdump case (although theoretically both the
-> cases are pretty similar).
+> i checked out linux-next with the patches and it looks good to me. Also made a
+> quick test and everything works fine.
 
-I meant so, too.
+Thank you!  Not sure if it is late about an ack :)
 
--Takahiro AKASHI
+Anyway, for the series:
+Acked-by: Dave Young <dyoung@redhat.com>
 
-> So, I will use the terms primary and
-> secondary kernels below just theoretical clarity:
-> 
-> 1. So let's consider the case where the arm64 primary kernel had
-> CONFIG_RANDOMIZE_BASE set to y and we have a compliant EFI firmware
-> which can support EFI_RNG_PROTOCOL and hence we have a non-zero
-> (valid) seed passed to the primary kernel.
-> 
-> 2. Now the primary kernel reads the kaslr-seed and wipes it to 0 and
-> uses the value to randomize for e.g. the module base address.
-> 
-> 3. In the case of kexec load (not kexec file load) or even kdump (for
-> brevity) , we rely on the user-space kexec-tools to pass an
-> appropriate dtb to the secondary kernel and since kaslr-seed is wiped
-> to 0 by the primary kernel, the secondary will work with *nokaslr* as
-> kaslr-seed is set to 0.
-> 
-> 4. This can be true even in case the secondary kernel had
-> CONFIG_RANDOMIZE_BASE and CONFIG_RANDOMIZE_MODULE_REGION_FULL set to
-> y.
-> 
-> 5. This behaviour probably needs fixing atleast for the kexec (as I
-> can think of no practical use-case for kdump) case.
-> 
-> What are your views on the same?
-> 
-> Regards,
-> Bhupesh
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
