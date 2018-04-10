@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f5pND-0005Fu-1i
- for kexec@lists.infradead.org; Tue, 10 Apr 2018 09:15:39 +0000
-Date: Tue, 10 Apr 2018 11:15:16 +0200
+ id 1f5pSZ-0007ND-RE
+ for kexec@lists.infradead.org; Tue, 10 Apr 2018 09:21:05 +0000
+Date: Tue, 10 Apr 2018 11:12:23 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Fix a segmentation fault when trying to run "kexec -p"
-Message-ID: <20180410091516.aymqdq7jy6u55c6j@verge.net.au>
-References: <20180405133926.14cc92ef@ezekiel.suse.cz>
- <2f760cac-5005-626b-1f4f-ca9436427940@redhat.com>
+Subject: Re: [RESEND PATCH] arm64: fix an issue with kaslr-enabled vmlinux
+Message-ID: <20180410091223.p4xppjp6nrqcwv4m@verge.net.au>
+References: <20180406024528.32124-1-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <2f760cac-5005-626b-1f4f-ca9436427940@redhat.com>
+In-Reply-To: <20180406024528.32124-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,42 +23,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, Michal Suchanek <msuchanek@suse.de>, Petr Tesarik <ptesarik@suse.cz>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: kexec@lists.infradead.org
 
-On Mon, Apr 09, 2018 at 02:14:09PM +0530, Bhupesh Sharma wrote:
-> On 04/05/2018 05:09 PM, Petr Tesarik wrote:
-> > Do not fall through to "--mem-min" when "-p" option is parsed. The
-> > break statement was apparently removed by mistake...
-> > 
-> > Fixes: cb434cbe6f401037e448276bb12056d1fdc3dbfc
-> > Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> > ---
-> >   kexec/kexec.c | 1 +
-> >   1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/kexec/kexec.c b/kexec/kexec.c
-> > index 612c1c2..313d9fe 100644
-> > --- a/kexec/kexec.c
-> > +++ b/kexec/kexec.c
-> > @@ -1349,6 +1349,7 @@ int main(int argc, char *argv[])
-> >   			do_sync = 0;
-> >   			kexec_file_flags |= KEXEC_FILE_ON_CRASH;
-> >   			kexec_flags = KEXEC_ON_CRASH;
-> > +			break;
-> >   		case OPT_MEM_MIN:
-> >   			mem_min = strtoul(optarg, &endptr, 0);
-> >   			if (*endptr) {
-> > 
+On Fri, Apr 06, 2018 at 11:45:28AM +0900, AKASHI Takahiro wrote:
+> Normally vmlinux for arm64 is of ET_EXEC type, while if built with
+> CONFIG_RANDAMIZE_BASE (that is KASLR), it will be of ET_DYN type.
+> Meanwhile, physical address field of segments in vmlinux has actually
+> the same value as virtual address field.
 > 
-> 'kexec -p' is currently broken (segfaults) upstream. I tested this fix on my
-> arm64 board, so:
+> Accordingly, in this case, it totally makes no sense to check for
+> validity of segments against physical memory ranges and, if necessary,
+> relocate them in elf_exec_load() on arm64.
 > 
-> Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
+> This patch allows to unconditionally skip the check on arm64.
+> 
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-Thanks, applied with the fixes tag updated to:
-
-Fixes: cb434cbe6f40 ("kexec: Do not special-case the -s option")
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
