@@ -1,16 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v3 0/2] kexec-tools: arm64: Enable D-cache in purgatory
-References: <cover.1495514291.git.panand@redhat.com>
- <59312080.1090906@arm.com> <1963984d-e78e-a5b2-f1a2-fb0a789a505e@redhat.com>
- <CAB=otbT23ySN4VC6G0sBKF5p4SvsnG8PS-C_beBgn8YJUsbw9Q@mail.gmail.com>
- <71f0a333-8bfb-3755-c9fd-e30bf2280339@cisco.com>
- <5599813d-f83c-d154-287a-c131c48292ca@arm.com>
+Message-Id: <a3c8c1d9fa406ff68484225fd9356ac82f8090b9.1523465700.git.geoff@infradead.org>
+In-Reply-To: <cover.1523465700.git.geoff@infradead.org>
+References: <cover.1523465700.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Message-ID: <79a879dc-e729-15ff-a5df-42684bd7e22a@infradead.org>
-Date: Wed, 11 Apr 2018 08:59:58 -0700
+Subject: [PATCH 4/4] purgatory/ppc64: Fix uninitialized warning
 MIME-Version: 1.0
-In-Reply-To: <5599813d-f83c-d154-287a-c131c48292ca@arm.com>
-Content-Language: en-US
+Date: Wed, 11 Apr 2018 17:03:11 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,30 +14,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>, Kostiantyn Iarmak <kiarmak@cisco.com>
-Cc: Pratyush Anand <panand@redhat.com>, mark.rutland@arm.com, bhe@redhat.com, kexec@lists.infradead.org, horms@verge.net.au, "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Petitboot@lists.ozlabs.org
 
-On 04/04/2018 06:28 AM, James Morse wrote:
-> We ended up with the check-summing code because its the default behaviour of
-> kexec-tools on other architectures.
-> 
-> One alternative is to rip it out for arm64.
-
-Or add arm64 support to kexec-lite:
-
-  https://github.com/antonblanchard/kexec-lite
-
-Or accept my bypass patch:
-
-  http://lists.infradead.org/pipermail/kexec/2015-October/014573.html
-
--Geoff
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Rml4ZXMgd2FybmluZ3MgbGlrZSB0aGVzZSB3aGVuIGJ1aWxkaW5nIGtleGVjIGZvciBwb3dlcnBj
+ICgzMiBiaXQpOgoKICBjb25zb2xlLXBwYzY0LmM6IHdhcm5pbmc6IOKAmCooKHZvaWQgKikmYnVm
+Zis4KeKAmSBtYXkgYmUgdXNlZCB1bmluaXRpYWxpemVkCgpTaWduZWQtb2ZmLWJ5OiBHZW9mZiBM
+ZXZhbmQgPGdlb2ZmQGluZnJhZGVhZC5vcmc+Ci0tLQogcHVyZ2F0b3J5L2FyY2gvcHBjNjQvY29u
+c29sZS1wcGM2NC5jIHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRl
+bGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvcHVyZ2F0b3J5L2FyY2gvcHBjNjQvY29uc29sZS1wcGM2
+NC5jIGIvcHVyZ2F0b3J5L2FyY2gvcHBjNjQvY29uc29sZS1wcGM2NC5jCmluZGV4IGI4MDE4M2Mu
+LjI0MDMzMTIgMTAwNjQ0Ci0tLSBhL3B1cmdhdG9yeS9hcmNoL3BwYzY0L2NvbnNvbGUtcHBjNjQu
+YworKysgYi9wdXJnYXRvcnkvYXJjaC9wcGM2NC9jb25zb2xlLXBwYzY0LmMKQEAgLTI5LDcgKzI5
+LDcgQEAgZXh0ZXJuIGludCBkZWJ1ZzsKIAogdm9pZCBwdXRjaGFyKGludCBjKQogewotCWNoYXIg
+YnVmZlsxNl07CisJY2hhciBidWZmWzE2XSA9ICIiOwogCXVuc2lnbmVkIGxvbmcgKmxidWYgPSAo
+dW5zaWduZWQgbG9uZyAqKWJ1ZmY7CiAKIAlpZiAoIWRlYnVnKSAvKiBydW5uaW5nIG9uIG5vbiBw
+c2VyaWVzICovCi0tIAoyLjE0LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
