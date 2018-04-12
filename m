@@ -1,16 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f6gt1-0003IV-Jw
- for kexec@lists.infradead.org; Thu, 12 Apr 2018 18:23:57 +0000
-Subject: [PATCH v1 2/2] kexec: Remove "weak" from arch_kexec_walk_mem()
- declaration
-From: Bjorn Helgaas <helgaas@kernel.org>
-Date: Thu, 12 Apr 2018 13:23:43 -0500
-Message-ID: <152355742351.36693.10357998251441779301.stgit@bhelgaas-glaptop.roam.corp.google.com>
-In-Reply-To: <152355706051.36693.9856090891621551967.stgit@bhelgaas-glaptop.roam.corp.google.com>
-References: <152355706051.36693.9856090891621551967.stgit@bhelgaas-glaptop.roam.corp.google.com>
-MIME-Version: 1.0
+ id 1f6kv4-0008JM-Lo
+ for kexec@lists.infradead.org; Thu, 12 Apr 2018 22:42:19 +0000
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w3CMdElt035025
+ for <kexec@lists.infradead.org>; Thu, 12 Apr 2018 18:42:06 -0400
+Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2hadr6pc0v-1
+ (version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 12 Apr 2018 18:42:06 -0400
+Received: from localhost
+ by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Thu, 12 Apr 2018 23:42:04 +0100
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Subject: [PATCH 0/3] kexec: limit kexec_load syscall
+Date: Thu, 12 Apr 2018 18:41:48 -0400
+Message-Id: <1523572911-16363-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,50 +28,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Biederman <ebiederm@xmission.com>
-Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: David Howells <dhowells@redhat.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+In environments that require the kexec kernel image to be signed, prevent
+using the kexec_load syscall.  In order for LSMs and IMA to differentiate
+between kexec_load and kexec_file_load syscalls, this patch set adds a
+call to security_kernel_read_file() in kexec_load_check().
 
-Weak header file declarations are error-prone because they make every
-definition weak, and the linker chooses one based on link order (see
-10629d711ed7 ("PCI: Remove __weak annotation from pcibios_get_phb_of_node
-decl")).
+Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-kernel/kexec_file.c contains a weak definition of arch_kexec_walk_mem() and
-arch/powerpc/kernel/machine_kexec_file_64.c contains a definition intended
-to be non-weak.  But the annotation in the header file makes *both*
-definitions weak, so it's unclear which one will be used.
+Mimi Zohar (3):
+  ima: based on the "secure_boot" policy limit syscalls
+  kexec: call LSM hook for kexec_load syscall
+  ima: based on policy require signed kexec kernel images
 
-Remove the "weak" attribute from the declaration so we always prefer a
-non-weak definition over the weak one.
+ kernel/kexec.c                      | 11 +++++++++++
+ security/integrity/ima/ima.h        |  1 +
+ security/integrity/ima/ima_main.c   |  9 +++++++++
+ security/integrity/ima/ima_policy.c | 27 ++++++++++++++++++++-------
+ 4 files changed, 41 insertions(+), 7 deletions(-)
 
-Fixes: 60fe3910bb02 ("kexec_file: Allow arch-specific memory walking for kexec_add_buffer")
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-CC: stable@vger.kernel.org      # v4.10+
----
- include/linux/kexec.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 8bf0ff90885c..e7db550c5fb6 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -159,8 +159,8 @@ struct kexec_buf {
- 	bool top_down;
- };
- 
--int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
--			       int (*func)(struct resource *, void *));
-+int arch_kexec_walk_mem(struct kexec_buf *kbuf,
-+			int (*func)(struct resource *, void *));
- extern int kexec_add_buffer(struct kexec_buf *kbuf);
- int kexec_locate_mem_hole(struct kexec_buf *kbuf);
- #endif /* CONFIG_KEXEC_FILE */
+-- 
+2.7.5
 
 
 _______________________________________________
