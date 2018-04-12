@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: James Morse <james.morse@arm.com>
-Subject: Re: [RFC] arm64: extra entries in /proc/iomem for kexec
-References: <20180314082941.GM25863@linaro.org>
- <2d2e1be6-b925-1595-9b6e-76dd270d396d@redhat.com>
- <20180327101654.GB14737@linaro.org>
- <da2989ec-7fa5-b044-3237-4e75f2fe6d98@arm.com>
- <20180402015330.GA27603@linaro.org> <20180405024203.GD19607@linaro.org>
-Message-ID: <4c59b4c3-cff4-ac69-9576-6bcbf507ef1f@arm.com>
-Date: Thu, 12 Apr 2018 17:01:52 +0100
+Received: from mail.kernel.org ([198.145.29.99])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1f6gsp-0003HF-NT
+ for kexec@lists.infradead.org; Thu, 12 Apr 2018 18:23:45 +0000
+Subject: [PATCH v1 1/2] kexec: Remove "weak" from kexec_file function
+ declarations
+From: Bjorn Helgaas <helgaas@kernel.org>
+Date: Thu, 12 Apr 2018 13:23:36 -0500
+Message-ID: <152355741673.36693.13178321454821440236.stgit@bhelgaas-glaptop.roam.corp.google.com>
+In-Reply-To: <152355706051.36693.9856090891621551967.stgit@bhelgaas-glaptop.roam.corp.google.com>
+References: <152355706051.36693.9856090891621551967.stgit@bhelgaas-glaptop.roam.corp.google.com>
 MIME-Version: 1.0
-In-Reply-To: <20180405024203.GD19607@linaro.org>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,136 +23,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: linux-efi@vger.kernel.org, ard.biesheuvel@linaro.org, jhugo@codeaurora.org, Bhupesh Sharma <bhsharma@redhat.com>, tbaicar@codeaurora.org, kexec@lists.infradead.org, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Eric Biederman <ebiederm@xmission.com>
+Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hi Akashi,
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Sorry I've been sluggish on this issue,
+Weak header file declarations are error-prone because they make every
+definition weak, and the linker chooses one based on link order (see
+10629d711ed7 ("PCI: Remove __weak annotation from pcibios_get_phb_of_node
+decl")).
 
-On 05/04/18 03:42, AKASHI Takahiro wrote:
-> On Mon, Apr 02, 2018 at 10:53:32AM +0900, AKASHI Takahiro wrote:
->> On Tue, Mar 27, 2018 at 02:32:49PM +0100, James Morse wrote:
->>> On 27/03/18 11:16, AKASHI Takahiro wrote:
->>>> On Tue, Mar 20, 2018 at 01:18:34AM +0530, Bhupesh Sharma wrote:
->>>>> On 03/14/2018 01:59 PM, AKASHI Takahiro wrote:
->>>>>> Currently, there is a inconsistent view between (A) and the mainline's:
->>>>>> see (A-1) and (B-1). If this is really a matter, I can fix it.
->>>>>> Kexec-tools can be easily modified to accept both formats, though.
->>>
->>> Ooer, what needs changing in kexec-tools? What happens if someone doesn't update
->>> userspace at the same time?
->>
->> Basically, changes that I made on /proc/iomem in my new format D were:
->> 1. to move NOMAP region entries, formerly named "reserved" and now named
->>    "reserved (no map)", under System RAM
->> 2. to add new entries for firmware-reserved regions as "reserved" also
->>    under System RAM
->>
->> On the other hand, current kexec-tools, in particular kexec command,
->> only scan top-level "System RAM" entries as well as "reserved" entries.
+For the following functions:
 
-as well as?
+  arch_kexec_kernel_image_probe()
+  arch_kexec_kernel_image_load()
+  arch_kimage_file_post_load_cleanup()
+  arch_kexec_kernel_verify_sig()
+  arch_kexec_apply_relocations_add()
+  arch_kexec_apply_relocations()
 
-Does this mean kexec will pick up the reserved region if its written as:
-| 00001000-0009d7ff : System RAM
-|    00001000-00001fff  : reserved
+kernel/kexec_file.c contains weak definitions, and x86 and powerpc arch
+code contains definitions intended to be non-weak.  But the annotations in
+the header file make *all* the definitions weak, so it's unclear which ones
+will be used.
 
+Remove the "weak" attribute from the declarations so we always prefer
+non-weak definitions over the weak ones.
 
->> So if someone doesn't update kexec-tools, secondary kernel may potentially
->> crash during boot time
+Fixes: a43cac0d9dc2 ("kexec: split kexec_file syscall code to kexec_file.c")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+CC: stable@vger.kernel.org      # v4.3+
+---
+ include/linux/kexec.h |   20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-Doesn't this make it a kernel bug? This didn't happen before v4.14 because nomap
-and kexec-don't-write-here were the same thing. Since f56ab9a5b73c they aren't,
-as ACPI_RECLAIM_MEMORY is_usable_memory(). The memblock_reserve() is enough to
-stop the kernel overwriting the region, but not to stop kexec placing the new
-kernel over the top.
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index f16f6ceb3875..8bf0ff90885c 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -277,16 +277,16 @@ int crash_shrink_memory(unsigned long new_size);
+ size_t crash_get_memory_size(void);
+ void crash_free_reserved_phys_range(unsigned long begin, unsigned long end);
+ 
+-int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+-					 unsigned long buf_len);
+-void * __weak arch_kexec_kernel_image_load(struct kimage *image);
+-int __weak arch_kimage_file_post_load_cleanup(struct kimage *image);
+-int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+-					unsigned long buf_len);
+-int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
+-					Elf_Shdr *sechdrs, unsigned int relsec);
+-int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+-					unsigned int relsec);
++int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
++				  unsigned long buf_len);
++void *arch_kexec_kernel_image_load(struct kimage *image);
++int arch_kimage_file_post_load_cleanup(struct kimage *image);
++int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
++				 unsigned long buf_len);
++int arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
++				     unsigned int relsec);
++int arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
++				 unsigned int relsec);
+ void arch_kexec_protect_crashkres(void);
+ void arch_kexec_unprotect_crashkres(void);
+ 
 
-(now I can't see how the efi memory map itself is reserved ... I thought that
-was nomap too, but it looks like its just 'not mapped' when efi_init() is called)
-
-
->> either because
->> a. new kernel (or initrd/dtb) may have been allocated on a NOMAP region
->>    which are not suitable for usable memory, or
->> b. new kernel (or initrd/dtb) may have been allocated on a reserved region
->>    whose contents can be overwritten.
->>
->> While we see (b) even today, (a) is a backward compatibility issue.
-
-(a) doesn't happen because request_standard_resources() checks
-memblock_is_nomap(), and reports those regions as 'reserved'.
-
-
-[...]
-
->>>>> I think we should preserve all the memblock_reserve'd regions. So +1 on this
->>>>> approach from my side. I believe it might help avoid issues we have seen in
->>>>> the past with 'kexec-tools' _incorrectly_ determining which regions to pick
->>>>> from the '/proc/iomem'.
->>>>
->>>> As I said in my reply to Ard's comment, I now know *overkill* is not a big
->>>> issue and I will go for this approach.
->>>
->>> /sys/kernel/debug/memblock/reserved has all kinds of weird stuff in it,
->>> including some smaller-than-a-page reservations that appear to come from the
->>> percpu allocator.
->>>
->>> I agree it will make the implementation simpler, and reserving 'too much' isn't
->>> an issue.
->>
->> Are you suggesting that we should use /sys/kernel/debug/memblock/reserved
->> without modifying current /proc/iomem?
->> (Note that, even in this approach, we need an user-space change.)
-
-Sorry for the late response: no. My point was memblock_reserve() is used for all
-sorts of different things, most of which don't matter for kexec. Its
-reservations are not always page-aligned.
-
-
->> Hmm, overall, this approach will be preferable to format B/E.
-> 
-> What is nice in this approach is that we don't have to make any change
-> on kernel side. Now that I have a patch for kexec-tools, you can try:
-> https://git.linaro.org/people/takahiro.akashi/kexec-tools.git resv_mem2
-
-This requires user-space to mount debugfs too, which requires CONFIG_DEBUG_FS...
-
-We can't expect user-space to upgrade to fix this issue.
-
-
-> # I don't know yet whether people are happy with this fix, and also have
->   kernel patches for my other approaches. They are neither not much
->   complicated.
-
-I don't think we should fix this in userspace, exporting all the
-memblock_reserved() regions as 'reserved' in /proc/iomem looks like the right
-thing to do.
-
-ah, you have patches, I've had a couple of attempts at this too...
-
-
-> On the other hand, kdump failure due to alignment fault at ACPI tables
-> won't be fixed by this patch anyway. I already submitted two different
-> approaches[1],[2].
-> 
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-January/553098.html
-> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-February/557248.html
-> 
-> There can be yet another approach; we would add a list of reserved regions
-> to a dtb property, "linux,usable-memory-range". But I don't like it.
-
-(me neither)
-
-> What do you think?
-
-I prefer [2] above, wasn't there going to be another version, with the core EFI
-stuff split out?
-
-
-Thanks,
-
-James
 
 _______________________________________________
 kexec mailing list
