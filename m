@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f6UGo-0001z9-FJ
- for kexec@lists.infradead.org; Thu, 12 Apr 2018 04:55:40 +0000
-Date: Thu, 12 Apr 2018 12:55:21 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 0/4] Makedumpfile: Add 5-level paging support
-Message-ID: <20180412045521.GP19345@localhost.localdomain>
-References: <20180302054841.22195-1-bhe@redhat.com>
- <20180412024521.GO19345@localhost.localdomain>
- <61D4E5D821F1674CB87C99F080A210BE0118CC47@BPXM01GP.gisp.nec.co.jp>
+ id 1f6Y7D-0007WR-Tb
+ for kexec@lists.infradead.org; Thu, 12 Apr 2018 09:02:01 +0000
+Date: Thu, 12 Apr 2018 11:01:33 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: makedumpfile filters out wrong pages
+Message-ID: <20180412110133.6d6958fc@ezekiel.suse.cz>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <61D4E5D821F1674CB87C99F080A210BE0118CC47@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,80 +20,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
-Cc: "douly.fnst@cn.fujitsu.com" <douly.fnst@cn.fujitsu.com>, "indou.takao@jp.fujitsu.com" <indou.takao@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Keiichi Nakamura <kei-nakamura@vt.jp.nec.com>
+To: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Takuya Nakayama <tak-nakayama@tg.jp.nec.com>, kexec-ml <kexec@lists.infradead.org>
 
-On 04/12/18 at 04:42am, Masaki Tachibana wrote:
-> Hi Baoquan,
-> 
-> Sorry for the late reply.
-> I'll merge the patches into V1.6.4.
+Hello,
 
-That's great, thanks.
+I've just hit a nasty bug in makedumpfile when page cache is filtered
+out (dump level bitmap includes 2 or 4). In short, makedumpfile checks
+PG_swapcache, but since commit 6326fec1122cde256bd2a8c63f2606e08e44ce1d
+this bit is an alias for PG_owner_priv_1. This bit is also used by
+filesystem code (PG_checked) and Xen (PG_pinned and PG_foreign).
 
-> However, I need time to acknowledge formally.
-> Please wait some weeks.
+FTR I haven't hit an issue with the filsystem usage in practice, but
+all my Xen dumps are unusable, because PG_pinned is by design set for
+all page table pages.
 
-Sure, it's not very urgent.
+Anyway, it appears that PG_swapcache is valid only if PG_swapbacked is
+set. I have already submitted a patch to the Linux kernel to export the
+value of PG_swapbacked in VMCOREINFO:
 
-Thanks
-Baoquan
+http://ozlabs.org/~akpm/mmotm/broken-out/kexec-export-pg_swapbacked-to-vmcoreinfo.patch
 
-> 
-> > -----Original Message-----
-> > From: Baoquan He [mailto:bhe@redhat.com]
-> > Sent: Thursday, April 12, 2018 11:45 AM
-> > To: Tachibana Masaki() <mas-tachibana@vf.jp.nec.com>; Hayashi Masahiko() <mas-hayashi@tg.jp.nec.com>;
-> > Nakayama Takuya() <tak-nakayama@tg.jp.nec.com>
-> > Cc: douly.fnst@cn.fujitsu.com; indou.takao@jp.fujitsu.com; kexec@lists.infradead.org
-> > Subject: Re: [PATCH 0/4] Makedumpfile: Add 5-level paging support
-> > 
-> > Hi Tachibana, Nakayama,
-> > 
-> > Ping!
-> > 
-> > Now 5-level suport on x86 64 has been merged into 4.16, do we have plan
-> > to merge this patchset? Or defer to a certain phase?
-> > 
-> > Thanks
-> > Baoquan
-> > 
-> > On 03/02/18 at 01:48pm, Baoquan He wrote:
-> > > Kernel has 5-level paging support and now can support boot-time
-> > > switching between 4/5-level paging mode. This patchset is used to add
-> > > 5-level paging support in makedumpfile.
-> > >
-> > > A kernel fix is posted to export 'pgtable_l5_enabled' to tell if
-> > > the corrupted kernel is in 5-level paging mode.
-> > > https://patchwork.kernel.org/patch/10253399/
-> > >
-> > > Patch 0001 and 0004 were made by Dou Liyang. While it doesn't work on
-> > > the latest 5-level code. So add patch 0002 to introduce 'pgtable_l5_enabled'.
-> > > Change and take out the function check_5level_paging() from dou's old
-> > > patch and add it into patch 0003. Except of these, don't touch other
-> > > part of dou's patches.
-> > >
-> > > Thanks, dou, for the effort!
-> > >
-> > > Baoquan He (2):
-> > >   Makedumpfile: Add pgtable_l5_enabled to number_table
-> > >   Makedumpfile: Add a new function check_5level_paging()
-> > >
-> > > Dou Liyang (2):
-> > >   arch/x86_64: Cleanup the address translation of the 4-level page
-> > >     tables
-> > >   arch/x86_64: Add 5-level paging support
-> > >
-> > >  arch/x86_64.c  | 130 +++++++++++++++++++++++++++++++++++++++++----------------
-> > >  makedumpfile.c |   3 ++
-> > >  makedumpfile.h |  39 +++++++++++------
-> > >  3 files changed, 123 insertions(+), 49 deletions(-)
-> > >
-> > > --
-> > > 2.13.6
-> > >
-> 
-> 
+I plan to make the corresponding makedumpfile change soon. However, it
+seems to me that PG_swapbacked alone should determine whether a page
+should be kept in the dump file, or filtered out. Why do we check
+PG_swapcache instead? PG_swapbacked first appeared in kernel 2.6.28,
+i.e. much later than makedumpfile. Is it simply that nobody has
+reviewed the logic since then?
+
+Petr T
 
 _______________________________________________
 kexec mailing list
