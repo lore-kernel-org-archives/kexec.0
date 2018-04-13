@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x244.google.com ([2607:f8b0:400e:c01::244])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f6sBS-0006pp-Le
- for kexec@lists.infradead.org; Fri, 13 Apr 2018 06:27:44 +0000
-Received: by mail-pl0-x244.google.com with SMTP id bj1-v6so5507728plb.8
- for <kexec@lists.infradead.org>; Thu, 12 Apr 2018 23:27:32 -0700 (PDT)
-From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH] efi: Fix the size not consistent issue when unmapping memory
- map
-Date: Fri, 13 Apr 2018 14:27:16 +0800
-Message-Id: <20180413062716.8040-1-jlee@suse.com>
+ id 1f6smZ-0005RF-Ba
+ for kexec@lists.infradead.org; Fri, 13 Apr 2018 07:06:10 +0000
+From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
+Subject: RE: makedumpfile filters out wrong pages
+Date: Fri, 13 Apr 2018 07:04:59 +0000
+Message-ID: <61D4E5D821F1674CB87C99F080A210BE0118D288@BPXM01GP.gisp.nec.co.jp>
+References: <20180412110133.6d6958fc@ezekiel.suse.cz>
+In-Reply-To: <20180412110133.6d6958fc@ezekiel.suse.cz>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,76 +19,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: linux-efi@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Randy Wright <rwright@hpe.com>, "Lee, Chun-Yi" <jlee@suse.com>, Ingo Molnar <mingo@redhat.com>, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: kexec-ml <kexec@lists.infradead.org>, Keiichi Nakamura <kei-nakamura@vt.jp.nec.com>
 
-When using kdump, SOMETIMES the "size not consistent" warning message
-shows up when the crash kernel boots with early_ioremap_debug parameter:
+Hi Petr,
 
-WARNING: CPU: 0 PID: 0 at ../mm/early_ioremap.c:182 early_iounmap+0x4f/0x12c()
-early_iounmap(ffffffffff200180, 00000118) [0] size not consistent 00000120
+Thank you for important information.
+I will wait for the patch.
 
-The root cause is that the unmapping size of memory map doesn't
-match with the original size when mapping:
+Thanks
+Tachibana
 
-in __efi_memmap_init()
-	map.map = early_memremap(phys_map, data->size);
 
-in efi_memmap_unmap()
-        size = efi.memmap.desc_size * efi.memmap.nr_map;
-        early_memunmap(efi.memmap.map, size);
+> -----Original Message-----
+> From: Petr Tesarik [mailto:ptesarik@suse.cz]
+> Sent: Thursday, April 12, 2018 6:02 PM
+> To: Tachibana Masaki(橘 正樹) <mas-tachibana@vf.jp.nec.com>; Nakayama Takuya(中山 卓也) <tak-nakayama@tg.jp.nec.com>;
+> kexec-ml <kexec@lists.infradead.org>
+> Subject: makedumpfile filters out wrong pages
+> 
+> Hello,
+> 
+> I've just hit a nasty bug in makedumpfile when page cache is filtered
+> out (dump level bitmap includes 2 or 4). In short, makedumpfile checks
+> PG_swapcache, but since commit 6326fec1122cde256bd2a8c63f2606e08e44ce1d
+> this bit is an alias for PG_owner_priv_1. This bit is also used by
+> filesystem code (PG_checked) and Xen (PG_pinned and PG_foreign).
+> 
+> FTR I haven't hit an issue with the filsystem usage in practice, but
+> all my Xen dumps are unusable, because PG_pinned is by design set for
+> all page table pages.
+> 
+> Anyway, it appears that PG_swapcache is valid only if PG_swapbacked is
+> set. I have already submitted a patch to the Linux kernel to export the
+> value of PG_swapbacked in VMCOREINFO:
+> 
+> http://ozlabs.org/~akpm/mmotm/broken-out/kexec-export-pg_swapbacked-to-vmcoreinfo.patch
+> 
+> I plan to make the corresponding makedumpfile change soon. However, it
+> seems to me that PG_swapbacked alone should determine whether a page
+> should be kept in the dump file, or filtered out. Why do we check
+> PG_swapcache instead? PG_swapbacked first appeared in kernel 2.6.28,
+> i.e. much later than makedumpfile. Is it simply that nobody has
+> reviewed the logic since then?
+> 
+> Petr T
 
-But the efi.memmap.nr_map is from __efi_memmap_init(). The remainder
-of size was discarded when calculating the nr_map:
-        map.nr_map = data->size / data->desc_size;
-
-When the original size of memory map region does not equal to the
-result of multiplication. The "size not consistent" warning
-will be triggered.
-
-This issue sometimes was hit by kdump because kexec set the efi map
-size to align with 16 when loading crash kernel image:
-
-in bzImage64_load()
-        efi_map_sz = efi_get_runtime_map_size();
-        efi_map_sz = ALIGN(efi_map_sz, 16);
-
-This patch changes the logic in the unmapping function. Using the
-end address of map to calcuate original size.
-
-Thank Randy Wright for his report and testing. And also thank
-Takashi Iwai for his help to trace issue.
-
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Randy Wright <rwright@hpe.com>
-Cc: Takashi Iwai <tiwai@suse.de>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
----
- drivers/firmware/efi/memmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
-index 5fc7052..1f592d8 100644
---- a/drivers/firmware/efi/memmap.c
-+++ b/drivers/firmware/efi/memmap.c
-@@ -121,7 +121,7 @@ void __init efi_memmap_unmap(void)
- 	if (!efi.memmap.late) {
- 		unsigned long size;
- 
--		size = efi.memmap.desc_size * efi.memmap.nr_map;
-+		size = efi.memmap.map_end - efi.memmap.map;
- 		early_memunmap(efi.memmap.map, size);
- 	} else {
- 		memunmap(efi.memmap.map);
--- 
-2.10.2
 
 
 _______________________________________________
