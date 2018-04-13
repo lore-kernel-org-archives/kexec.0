@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f71Ym-0002g2-J1
- for kexec@lists.infradead.org; Fri, 13 Apr 2018 16:28:26 +0000
+ id 1f71aV-0003Dj-L8
+ for kexec@lists.infradead.org; Fri, 13 Apr 2018 16:30:13 +0000
 From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [PATCH 1/2] Add is_cache_page() helper to check if a page belongs to
- the cache
-Date: Fri, 13 Apr 2018 18:28:09 +0200
-Message-Id: <5e0004648d2a597417542b483a0c3aed114bf03f.1523636414.git.ptesarik@suse.com>
+Subject: [PATCH 2/2] Check PG_swapbacked for swap cache pages
+Date: Fri, 13 Apr 2018 18:29:59 +0200
+Message-Id: <2efa8f466177a492abbe0cb64046ec8cd8b8afdf.1523636414.git.ptesarik@suse.com>
+In-Reply-To: <5e0004648d2a597417542b483a0c3aed114bf03f.1523636414.git.ptesarik@suse.com>
+References: <5e0004648d2a597417542b483a0c3aed114bf03f.1523636414.git.ptesarik@suse.com>
+In-Reply-To: <5e0004648d2a597417542b483a0c3aed114bf03f.1523636414.git.ptesarik@suse.com>
+References: <5e0004648d2a597417542b483a0c3aed114bf03f.1523636414.git.ptesarik@suse.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,64 +25,6 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Takuya Nakayama <tak-nakayama@tg.jp.nec.com>, kexec-ml <kexec@lists.infradead.org>
-
-No functional change, but clarify the purpose of checking isLRU()
-and SwapCache(), and move the check to a single place.
-
-Signed-off-by: Petr Tesarik <ptesarik@suse.com>
----
- makedumpfile.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index d685427..175ba68 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -249,6 +249,12 @@ isHugetlb(unsigned long dtor)
-                     && (SYMBOL(free_huge_page) == dtor));
- }
- 
-+static int
-+is_cache_page(unsigned long flags)
-+{
-+	return isLRU(flags) || isSwapCache(flags);
-+}
-+
- static inline unsigned long
- calculate_len_buf_out(long page_size)
- {
-@@ -5868,7 +5874,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		 * Exclude the non-private cache page.
- 		 */
- 		else if ((info->dump_level & DL_EXCLUDE_CACHE)
--		    && (isLRU(flags) || isSwapCache(flags))
-+		    && is_cache_page(flags)
- 		    && !isPrivate(flags) && !isAnon(mapping)) {
- 			pfn_counter = &pfn_cache;
- 		}
-@@ -5876,7 +5882,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		 * Exclude the cache page whether private or non-private.
- 		 */
- 		else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
--		    && (isLRU(flags) || isSwapCache(flags))
-+		    && is_cache_page(flags)
- 		    && !isAnon(mapping)) {
- 			if (isPrivate(flags))
- 				pfn_counter = &pfn_cache_private;
--- 
-2.13.6
-
-
-From 2efa8f466177a492abbe0cb64046ec8cd8b8afdf Mon Sep 17 00:00:00 2001
-Message-Id: <2efa8f466177a492abbe0cb64046ec8cd8b8afdf.1523636414.git.ptesarik@suse.com>
-In-Reply-To: <5e0004648d2a597417542b483a0c3aed114bf03f.1523636414.git.ptesarik@suse.com>
-References: <5e0004648d2a597417542b483a0c3aed114bf03f.1523636414.git.ptesarik@suse.com>
-From: Petr Tesarik <ptesarik@suse.cz>
-Date: Fri, 13 Apr 2018 17:35:55 +0200
-Subject: [PATCH 2/2] Check PG_swapbacked for swap cache pages
-To: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>,
-    Takuya Nakayama <tak-nakayama@tg.jp.nec.com>,
-    kexec-ml <kexec@lists.infradead.org>
 
 When page cache is filtered out (dump level bitmap includes 2 or 4),
 makedumpfile checks the PG_swapcache bit, but since kernel commit
