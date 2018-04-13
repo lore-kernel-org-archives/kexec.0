@@ -1,16 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f6smZ-0005RF-Ba
- for kexec@lists.infradead.org; Fri, 13 Apr 2018 07:06:10 +0000
-From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
-Subject: RE: makedumpfile filters out wrong pages
-Date: Fri, 13 Apr 2018 07:04:59 +0000
-Message-ID: <61D4E5D821F1674CB87C99F080A210BE0118D288@BPXM01GP.gisp.nec.co.jp>
-References: <20180412110133.6d6958fc@ezekiel.suse.cz>
-In-Reply-To: <20180412110133.6d6958fc@ezekiel.suse.cz>
-Content-Language: ja-JP
+ id 1f6uhF-0001mW-HX
+ for kexec@lists.infradead.org; Fri, 13 Apr 2018 09:08:43 +0000
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w3D97Vpk096482
+ for <kexec@lists.infradead.org>; Fri, 13 Apr 2018 05:08:29 -0400
+Received: from e06smtp15.uk.ibm.com (e06smtp15.uk.ibm.com [195.75.94.111])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2has4usdcu-1
+ (version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 13 Apr 2018 05:08:28 -0400
+Received: from localhost
+ by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <prudo@linux.ibm.com>;
+ Fri, 13 Apr 2018 10:08:25 +0100
+Date: Fri, 13 Apr 2018 11:08:20 +0200
+From: Philipp Rudo <prudo@linux.ibm.com>
+Subject: Re: [PATCH v1 0/2] kexec: Remove "weak" annotations from headers
+In-Reply-To: <152355706051.36693.9856090891621551967.stgit@bhelgaas-glaptop.roam.corp.google.com>
+References: <152355706051.36693.9856090891621551967.stgit@bhelgaas-glaptop.roam.corp.google.com>
 MIME-Version: 1.0
+Message-Id: <20180413110820.662d4879@ThinkPad>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,56 +31,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: kexec-ml <kexec@lists.infradead.org>, Keiichi Nakamura <kei-nakamura@vt.jp.nec.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
 
-Hi Petr,
+Hi Bjorn,
 
-Thank you for important information.
-I will wait for the patch.
+in recent patches AKASHI [1] and I [2] made some changes to the declarations
+you are touching and already removed some of the weak statements. The patches
+got accepted on linux-next and will (hopefully) be pulled for v4.17. So you
+should prepare for some merge conflicts. Nevertheless three weak statements
+still remain (arch_kexec_walk_mem & arch_kexec_apply_relocations*) so your
+patch still makes totally sense.
 
 Thanks
-Tachibana
+Philipp
 
+[1] https://lkml.org/lkml/2018/3/6/201
+[2] https://lkml.org/lkml/2018/3/21/278
 
-> -----Original Message-----
-> From: Petr Tesarik [mailto:ptesarik@suse.cz]
-> Sent: Thursday, April 12, 2018 6:02 PM
-> To: Tachibana Masaki(橘 正樹) <mas-tachibana@vf.jp.nec.com>; Nakayama Takuya(中山 卓也) <tak-nakayama@tg.jp.nec.com>;
-> kexec-ml <kexec@lists.infradead.org>
-> Subject: makedumpfile filters out wrong pages
-> 
-> Hello,
-> 
-> I've just hit a nasty bug in makedumpfile when page cache is filtered
-> out (dump level bitmap includes 2 or 4). In short, makedumpfile checks
-> PG_swapcache, but since commit 6326fec1122cde256bd2a8c63f2606e08e44ce1d
-> this bit is an alias for PG_owner_priv_1. This bit is also used by
-> filesystem code (PG_checked) and Xen (PG_pinned and PG_foreign).
-> 
-> FTR I haven't hit an issue with the filsystem usage in practice, but
-> all my Xen dumps are unusable, because PG_pinned is by design set for
-> all page table pages.
-> 
-> Anyway, it appears that PG_swapcache is valid only if PG_swapbacked is
-> set. I have already submitted a patch to the Linux kernel to export the
-> value of PG_swapbacked in VMCOREINFO:
-> 
-> http://ozlabs.org/~akpm/mmotm/broken-out/kexec-export-pg_swapbacked-to-vmcoreinfo.patch
-> 
-> I plan to make the corresponding makedumpfile change soon. However, it
-> seems to me that PG_swapbacked alone should determine whether a page
-> should be kept in the dump file, or filtered out. Why do we check
-> PG_swapcache instead? PG_swapbacked first appeared in kernel 2.6.28,
-> i.e. much later than makedumpfile. Is it simply that nobody has
-> reviewed the logic since then?
-> 
-> Petr T
+On Thu, 12 Apr 2018 13:23:29 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
+> "Weak" annotations in header files are error-prone because they make
+> every definition weak.  Remove them from include/linux/kexec.h.
+> 
+> These were introduced in two separate commits, so this is in two
+> patches so they can be easily backported to stable kernels (some of
+> them date back to v4.3 and one only goes back to v4.10).
+> 
+> ---
+> 
+> Bjorn Helgaas (2):
+>       kexec: Remove "weak" from kexec_file function declarations
+>       kexec: Remove "weak" from arch_kexec_walk_mem() declaration
+> 
+> 
+>  include/linux/kexec.h |   24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 
 _______________________________________________
