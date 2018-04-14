@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mail-pf0-f195.google.com ([209.85.192.195])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f71aV-0003Dj-L8
- for kexec@lists.infradead.org; Fri, 13 Apr 2018 16:30:13 +0000
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [PATCH 2/2] Check PG_swapbacked for swap cache pages
-Date: Fri, 13 Apr 2018 18:29:59 +0200
-Message-Id: <2efa8f466177a492abbe0cb64046ec8cd8b8afdf.1523636414.git.ptesarik@suse.com>
-In-Reply-To: <5e0004648d2a597417542b483a0c3aed114bf03f.1523636414.git.ptesarik@suse.com>
-References: <5e0004648d2a597417542b483a0c3aed114bf03f.1523636414.git.ptesarik@suse.com>
-In-Reply-To: <5e0004648d2a597417542b483a0c3aed114bf03f.1523636414.git.ptesarik@suse.com>
-References: <5e0004648d2a597417542b483a0c3aed114bf03f.1523636414.git.ptesarik@suse.com>
+ id 1f7ReX-0001ZA-HN
+ for kexec@lists.infradead.org; Sat, 14 Apr 2018 20:20:08 +0000
+Received: by mail-pf0-f195.google.com with SMTP id p15so8680987pff.11
+ for <kexec@lists.infradead.org>; Sat, 14 Apr 2018 13:19:54 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH] arm64: Add support to supply 'kaslr-seed' to secondary kernel
+Date: Sun, 15 Apr 2018 01:49:40 +0530
+Message-Id: <1523737180-7705-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,131 +22,276 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Takuya Nakayama <tak-nakayama@tg.jp.nec.com>, kexec-ml <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: takahiro.akashi@linaro.org, bhsharma@redhat.com, bhupesh.linux@gmail.com, dyoung@redhat.com, horms@verge.net.au
 
-When page cache is filtered out (dump level bitmap includes 2 or 4),
-makedumpfile checks the PG_swapcache bit, but since kernel commit
-6326fec1122cde256bd2a8c63f2606e08e44ce1d (v4.10-rc1~7) this bit is
-an alias for PG_owner_priv_1, which is also used by filesystem
-code (PG_checked) and Xen (PG_pinned and PG_foreign).
+This patch adds the support to supply 'kaslr-seed' to secondary kernel,
+when we do a 'kexec warm reboot to another kernel' (although the
+behaviour remains the same for the 'kdump' case as well) on arm64
+platforms using the 'kexec_load' invocation method.
 
-With these kernels, the PG_swapcache flag is valid only if
-PG_swapbacked is set. A Linux kernel patch has already been
-submitted to export the value of PG_swapbacked in VMCOREINFO.
+Lets consider the case where the primary kernel working on the arm64
+platform supports kaslr (i.e 'CONFIG_RANDOMIZE_BASE' was set to y and
+we have a compliant EFI firmware which supports EFI_RNG_PROTOCOL and
+hence can pass a non-zero (valid) seed to the primary kernel).
 
-Since there are released kernels in the wild which do not export the
-value, a fallback is implemented. I considered these three situations:
+Now the primary kernel reads the 'kaslr-seed' and wipes it to 0 and
+uses the seed value to randomize for e.g. the module base address
+offset.
 
-  1. Kernels before v2.6.28-rc1~244:
-     PG_swapbacked does not exist, so it must not be checked.
-     Instead, check PG_swapcache, which is never overloaded for
-     another purpose.
+In the case of 'kexec_load' (or even kdump for brevity),
+we rely on the user-space kexec-tools to pass an appropriate dtb to the
+secondary kernel and since 'kaslr-seed' is wiped to 0 by the primary
+kernel, the secondary will essentially work with *nokaslr* as
+'kaslr-seed' is set to 0 when it is passed to the secondary kernel.
 
-  2. Kernels between v2.6.28-rc1~244 and v4.10-rc1~7:
-     It is sufficient to check only PG_swapcache, but PG_swapbacked
-     may also be checked (it is always set if PG_swapcache is set).
+This can be true even in case the secondary kernel had
+'CONFIG_RANDOMIZE_BASE' and 'CONFIG_RANDOMIZE_MODULE_REGION_FULL' set to
+y.
 
-  3. Kernels since v4.10-rc1~7:
-     PG_swapbacked must be checked.
+This patch addresses this issue by first checking if the device tree
+provided by the firmware to the kernel supports the 'kaslr-seed'
+property and verifies that it is really wiped to 0. If this condition is
+met, it fixes up the 'kaslr-seed' property by using the getrandom()
+syscall to get a suitable random number.
 
-If PG_swapbacked value is known (exported or read from debuginfo),
-it is always safe to use it (case 2 or 3). If PG_swapbacked is not
-known, it is safe to ignore it for cases 1 and 2, but not 3.
-Thankfully, the new value of PG_swapcache (since v4.10-rc1~7) is
-less than PG_private (which is known), whereas the old value had
-always been greater than PG_private. Moreover, the flags between
-PG_private and PG_swapbacked haven't changed since v4.10-rc1~7, so
-PG_swapbacked can fall back to PG_private + 6 if unknown.
+I verified this patch on my Qualcomm arm64 board and here are some test
+results:
 
-Without this patch, all Xen dumps are unusable, because PG_pinned is
-set for all page table pages.
+1. Ensure that the primary kernel is boot'ed with 'kaslr-seed'
+   dts property and it is really wiped to 0:
 
-Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+   [root@qualcomm-amberwing]# dtc -I dtb -O dts /sys/firmware/fdt | grep -A 10 -i chosen
+   	chosen {
+		kaslr-seed = <0x0 0x0>;
+		...
+	}
+
+2. Now issue 'kexec_load' to load the secondary kernel (let's assume
+   that we are using the same kernel as the secondary kernel):
+   # kexec -l /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname
+     -r`.img --reuse-cmdline -d
+
+3. Issue 'kexec -e' to warm boot to the secondary:
+   # kexec -e
+
+4. Now after the secondary boots, confirm that the load address of the
+   modules is randomized in every successive boot:
+
+   [root@qualcomm-amberwing]# cat /proc/modules
+   sunrpc 524288 1 - Live 0xffff0307db190000
+   vfat 262144 1 - Live 0xffff0307db110000
+   fat 262144 1 vfat, Live 0xffff0307db090000
+   crc32_ce 262144 0 - Live 0xffff0307d8c70000
+   ...
+
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
 ---
- makedumpfile.c | 19 ++++++++++++++++++-
- makedumpfile.h |  2 ++
- 2 files changed, 20 insertions(+), 1 deletion(-)
+ kexec/arch/arm64/kexec-arm64.c | 135 +++++++++++++++++++++++++++++------------
+ 1 file changed, 97 insertions(+), 38 deletions(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 175ba68..ec04a88 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -252,7 +252,18 @@ isHugetlb(unsigned long dtor)
- static int
- is_cache_page(unsigned long flags)
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index 62f37585b788..2ab11227447a 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -15,6 +15,11 @@
+ #include <linux/elf-em.h>
+ #include <elf.h>
+ 
++#include <unistd.h>
++#include <syscall.h>
++#include <errno.h>
++#include <linux/random.h>
++
+ #include "kexec.h"
+ #include "kexec-arm64.h"
+ #include "crashdump.h"
+@@ -392,11 +397,13 @@ static int fdt_setprop_range(void *fdt, int nodeoffset,
+ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
  {
--	return isLRU(flags) || isSwapCache(flags);
-+	if (isLRU(flags))
-+		return TRUE;
-+
-+	/* PG_swapcache is valid only if:
-+	 *   a. PG_swapbacked bit is set, or
-+	 *   b. PG_swapbacked did not exist (kernels before 4.10-rc1).
-+	 */
-+	if ((NUMBER(PG_swapbacked) == NOT_FOUND_NUMBER || isSwapBacked(flags))
-+	    && isSwapCache(flags))
-+		return TRUE;
-+
-+	return FALSE;
- }
+ 	uint32_t address_cells, size_cells;
+-	int range_len;
+-	int nodeoffset;
++	uint64_t fdt_val64;
++	uint64_t *prop;
+ 	char *new_buf = NULL;
++	int len, range_len;
++	int nodeoffset;
+ 	int new_size;
+-	int result;
++	int result, kaslr_seed;
  
- static inline unsigned long
-@@ -1735,6 +1746,7 @@ get_structure_info(void)
- 	ENUM_NUMBER_INIT(PG_lru, "PG_lru");
- 	ENUM_NUMBER_INIT(PG_private, "PG_private");
- 	ENUM_NUMBER_INIT(PG_swapcache, "PG_swapcache");
-+	ENUM_NUMBER_INIT(PG_swapbacked, "PG_swapbacked");
- 	ENUM_NUMBER_INIT(PG_buddy, "PG_buddy");
- 	ENUM_NUMBER_INIT(PG_slab, "PG_slab");
- 	ENUM_NUMBER_INIT(PG_hwpoison, "PG_hwpoison");
-@@ -1988,6 +2000,9 @@ get_value_for_old_linux(void)
- 		NUMBER(PG_private) = PG_private_ORIGINAL;
- 	if (NUMBER(PG_swapcache) == NOT_FOUND_NUMBER)
- 		NUMBER(PG_swapcache) = PG_swapcache_ORIGINAL;
-+	if (NUMBER(PG_swapbacked) == NOT_FOUND_NUMBER
-+	    && NUMBER(PG_swapcache) < NUMBER(PG_private))
-+		NUMBER(PG_swapbacked) = NUMBER(PG_private) + 6;
- 	if (NUMBER(PG_slab) == NOT_FOUND_NUMBER)
- 		NUMBER(PG_slab) = PG_slab_ORIGINAL;
- 	if (NUMBER(PG_head_mask) == NOT_FOUND_NUMBER)
-@@ -2264,6 +2279,7 @@ write_vmcoreinfo_data(void)
- 	WRITE_NUMBER("PG_private", PG_private);
- 	WRITE_NUMBER("PG_head_mask", PG_head_mask);
- 	WRITE_NUMBER("PG_swapcache", PG_swapcache);
-+	WRITE_NUMBER("PG_swapbacked", PG_swapbacked);
- 	WRITE_NUMBER("PG_buddy", PG_buddy);
- 	WRITE_NUMBER("PG_slab", PG_slab);
- 	WRITE_NUMBER("PG_hwpoison", PG_hwpoison);
-@@ -2658,6 +2674,7 @@ read_vmcoreinfo(void)
- 	READ_NUMBER("PG_private", PG_private);
- 	READ_NUMBER("PG_head_mask", PG_head_mask);
- 	READ_NUMBER("PG_swapcache", PG_swapcache);
-+	READ_NUMBER("PG_swapbacked", PG_swapbacked);
- 	READ_NUMBER("PG_slab", PG_slab);
- 	READ_NUMBER("PG_buddy", PG_buddy);
- 	READ_NUMBER("PG_hwpoison", PG_hwpoison);
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 6205ef3..fe306bb 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -155,6 +155,7 @@ test_bit(int nr, unsigned long addr)
- #define isPrivate(flags)	test_bit(NUMBER(PG_private), flags)
- #define isCompoundHead(flags)   (!!((flags) & NUMBER(PG_head_mask)))
- #define isSwapCache(flags)	test_bit(NUMBER(PG_swapcache), flags)
-+#define isSwapBacked(flags)	test_bit(NUMBER(PG_swapbacked), flags)
- #define isHWPOISON(flags)	(test_bit(NUMBER(PG_hwpoison), flags) \
- 				&& (NUMBER(PG_hwpoison) != NOT_FOUND_NUMBER))
+ 	result = fdt_check_header(dtb->buf);
  
-@@ -1881,6 +1882,7 @@ struct number_table {
- 	long	PG_head;
- 	long	PG_head_mask;
- 	long	PG_swapcache;
-+	long	PG_swapbacked;
- 	long	PG_buddy;
- 	long	PG_slab;
- 	long    PG_hwpoison;
+@@ -407,47 +414,99 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 
+ 	result = set_bootargs(dtb, command_line);
+ 
+-	if (on_crash) {
+-		/* determine #address-cells and #size-cells */
+-		result = get_cells_size(dtb->buf, &address_cells, &size_cells);
+-		if (result) {
+-			fprintf(stderr,
+-				"kexec: cannot determine cells-size.\n");
+-			result = -EINVAL;
+-			goto on_error;
+-		}
++	/* determine #address-cells and #size-cells */
++	result = get_cells_size(dtb->buf, &address_cells, &size_cells);
++	if (result) {
++		fprintf(stderr, "kexec: cannot determine cells-size.\n");
++		result = -EINVAL;
++		goto on_error;
++	}
+ 
+-		if (!cells_size_fitted(address_cells, size_cells,
+-					&elfcorehdr_mem)) {
+-			fprintf(stderr,
+-				"kexec: elfcorehdr doesn't fit cells-size.\n");
++	if (!cells_size_fitted(address_cells, size_cells,
++				&elfcorehdr_mem)) {
++		fprintf(stderr, "kexec: elfcorehdr doesn't fit cells-size.\n");
++		result = -EINVAL;
++		goto on_error;
++	}
++
++	if (!cells_size_fitted(address_cells, size_cells,
++				&crash_reserved_mem)) {
++		fprintf(stderr, "kexec: usable memory range doesn't fit cells-size.\n");
++		result = -EINVAL;
++		goto on_error;
++	}
++
++	/* duplicate dt blob */
++	range_len = sizeof(uint32_t) * (address_cells + size_cells);
++	new_size = fdt_totalsize(dtb->buf)
++		+ fdt_prop_len(PROP_ELFCOREHDR, range_len)
++		+ fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len);
++
++	new_buf = xmalloc(new_size);
++	result = fdt_open_into(dtb->buf, new_buf, new_size);
++	if (result) {
++		dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
++				fdt_strerror(result));
++		result = -ENOSPC;
++		goto on_error;
++	}
++
++	/* fixup 'kaslr-seed' with a random value, if supported */
++	nodeoffset = fdt_path_offset(new_buf, "/chosen");
++	prop = fdt_getprop_w(new_buf, nodeoffset,
++			"kaslr-seed", &len);
++	if (!prop || len != sizeof(uint64_t)) {
++		dbgprintf("%s: no kaslr-seed found: %s\n",
++				__func__, fdt_strerror(result));
++		/* for kexec warm reboot case, we don't need to fixup
++		 * other dtb properties
++		 */
++		if (!on_crash)
++			goto free_new_buf;
++
++	} else {
++		kaslr_seed = fdt64_to_cpu(*prop);
++
++		/* kaslr_seed must be wiped clean by primary
++		 * kernel during boot
++		 */
++		if (kaslr_seed != 0) {
++			dbgprintf("%s: kaslr-seed is not wiped to 0.\n",
++					__func__);
+ 			result = -EINVAL;
+ 			goto on_error;
+ 		}
+ 
+-		if (!cells_size_fitted(address_cells, size_cells,
+-					&crash_reserved_mem)) {
+-			fprintf(stderr,
+-				"kexec: usable memory range doesn't fit cells-size.\n");
++		/*
++		 * Invoke the getrandom system call with
++		 * GRND_NONBLOCK, to make sure we
++		 * have a valid random seed to pass to the
++		 * secondary kernel.
++		 */
++		result = syscall(SYS_getrandom, &fdt_val64,
++				sizeof(fdt_val64),
++				GRND_NONBLOCK);
++
++		if(result == -1) {
++			dbgprintf("%s: Reading random bytes failed.\n",
++					__func__);
+ 			result = -EINVAL;
+ 			goto on_error;
+ 		}
+ 
+-		/* duplicate dt blob */
+-		range_len = sizeof(uint32_t) * (address_cells + size_cells);
+-		new_size = fdt_totalsize(dtb->buf)
+-			+ fdt_prop_len(PROP_ELFCOREHDR, range_len)
+-			+ fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len);
+-
+-		new_buf = xmalloc(new_size);
+-		result = fdt_open_into(dtb->buf, new_buf, new_size);
++		nodeoffset = fdt_path_offset(new_buf, "/chosen");
++		result = fdt_setprop_inplace(new_buf,
++				nodeoffset, "kaslr-seed",
++				&fdt_val64, sizeof(fdt_val64));
+ 		if (result) {
+-			dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
+-				fdt_strerror(result));
+-			result = -ENOSPC;
++			dbgprintf("%s: fdt_setprop failed: %s\n",
++					__func__, fdt_strerror(result));
++			result = -EINVAL;
+ 			goto on_error;
+ 		}
++	}
+ 
++	if (on_crash) {
+ 		/* add linux,elfcorehdr */
+ 		nodeoffset = fdt_path_offset(new_buf, "/chosen");
+ 		result = fdt_setprop_range(new_buf, nodeoffset,
+@@ -455,7 +514,7 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 				address_cells, size_cells);
+ 		if (result) {
+ 			dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
+-				fdt_strerror(result));
++					fdt_strerror(result));
+ 			result = -EINVAL;
+ 			goto on_error;
+ 		}
+@@ -467,23 +526,23 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 				address_cells, size_cells);
+ 		if (result) {
+ 			dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
+-				fdt_strerror(result));
++					fdt_strerror(result));
+ 			result = -EINVAL;
+ 			goto on_error;
+ 		}
+-
+-		fdt_pack(new_buf);
+-		dtb->buf = new_buf;
+-		dtb->size = fdt_totalsize(new_buf);
+ 	}
+ 
+-	dump_reservemap(dtb);
++	fdt_pack(new_buf);
++	dtb->buf = new_buf;
++	dtb->size = fdt_totalsize(new_buf);
+ 
++	dump_reservemap(dtb);
+ 
+ 	return result;
+ 
+ on_error:
+ 	fprintf(stderr, "kexec: %s failed.\n", __func__);
++free_new_buf:
+ 	if (new_buf)
+ 		free(new_buf);
+ 
 -- 
-2.13.6
+2.7.4
 
 
 _______________________________________________
