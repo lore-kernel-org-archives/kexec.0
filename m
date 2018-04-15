@@ -1,18 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-f65.google.com ([209.85.215.65])
+Received: from mail-lf0-f68.google.com ([209.85.215.68])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f7RhE-0003Ww-Hs
- for kexec@lists.infradead.org; Sat, 14 Apr 2018 20:22:54 +0000
-Received: by mail-lf0-f65.google.com with SMTP id m200-v6so16898507lfm.4
- for <kexec@lists.infradead.org>; Sat, 14 Apr 2018 13:22:42 -0700 (PDT)
+ id 1f7ncq-00080F-Ia
+ for kexec@lists.infradead.org; Sun, 15 Apr 2018 19:47:51 +0000
+Received: by mail-lf0-f68.google.com with SMTP id p142-v6so19084287lfd.6
+ for <kexec@lists.infradead.org>; Sun, 15 Apr 2018 12:47:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKv+Gu8qd=rpJkG_GoVO=kkmc4qx_zZD8c_wwE16gr=8wSShSw@mail.gmail.com>
-References: <CACi5LpMhHt4bjEueOzHZTGpzuR2zoQqXcReL-khoSNLG6=FVmg@mail.gmail.com>
- <CAKv+Gu8qd=rpJkG_GoVO=kkmc4qx_zZD8c_wwE16gr=8wSShSw@mail.gmail.com>
+In-Reply-To: <CACi5LpN3bV6-TjAkbu9eGdSUfn-pCoEY==Z1qC5VzOZDdnw0-g@mail.gmail.com>
+References: <1521455739-8022-1-git-send-email-bhsharma@redhat.com>
+ <20180319144529.vkfrrkc4bdhwvvbi@dragonfly>
+ <CACi5LpObqAJ=yC_e2G80JsspfzEx50Rq=J2G_UAnoT3UqS4HFQ@mail.gmail.com>
+ <CACi5LpPVbVZBAXynMQ79kkboLrQcw1s-LSuFkSQAnkXtdS8wAA@mail.gmail.com>
+ <20180326123038.GA14737@linaro.org>
+ <e5ed1c04-73db-fda5-602d-f9bd447801da@arm.com>
+ <CACi5LpN3bV6-TjAkbu9eGdSUfn-pCoEY==Z1qC5VzOZDdnw0-g@mail.gmail.com>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Sun, 15 Apr 2018 01:44:16 +0530
-Message-ID: <CACi5LpNKbSejFecV+G8X53t4VDwsTvJywWLgLVw9qsD7u6REvg@mail.gmail.com>
-Subject: Re: [Query] ARM64 kaslr support - randomness, seeding and kdump
+Date: Mon, 16 Apr 2018 01:17:35 +0530
+Message-ID: <CACi5LpNXp5hp1UWnEX52t5SBULD8BGOzTjzYZckUX7EO_ctxQg@mail.gmail.com>
+Subject: Re: [RESEND PATCH 1/2] dt-ops: Add helper API to dump fdt blob
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,129 +30,134 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: James Morse <james.morse@arm.com>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Dave Young <dyoung@redhat.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org
 
-Hi Ard,
+Hello,
 
-On Tue, Mar 13, 2018 at 2:28 AM, Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
-> On 12 March 2018 at 20:14, Bhupesh Sharma <bhsharma@redhat.com> wrote:
->> Hi Ard,
->>
->> I remember we had a discussion on this topic some time ago, but I was
->> working on enabling KASLR support on arm64 boards internally and
->> wanted to check your opinion on the following points (especially to
->> understand if there are any changes in the opinions of the ARM
->> maintainers now):
->>
->> A. Randomness / Seeding for arm64 kaslr:
->>
->> - Currently the arm64 kernel requires a bootloader to provide entropy,
->> by passing a
->>  random u64 value in '/chosen/kaslr-seed' at kernel entry (please see [1])
->>
->> - On platforms which support UEFI firmware, its the responsibility of
->> the UEFI firmware to implement EFI_RNG_PROTOCOL to supply the
->> '/chosen/kaslr-seed' property.
->>
->> - I was wondering if we have any possibility to support a random seed
->> generation like the x86 in the efistub only rather than relying on the
->> UEFI firmwares with EFI_RNG_PROTOCOL for the same - for e.g. by using
->> a randomness seed like the boot time or more proper entropy sources
->> like arm64 system timer (see [2] for x86 example).
->>
->> - I guess that the main problem is that most arm64 UEFI firmware
->> vendors still do not support EFI_RNG_PROTOCOL out of the box. We can
->> use the ChaosKey (see [3]) EFI driver and use this USB key as the
->> source of entropy on the arm64 systems for EFI firmwares which do not
->> provide a EFI_RNG_PROTOCOL implementation, but it might not be very
->> feasible to connect it to all boards in a production environment.
->>
+On Tue, Apr 3, 2018 at 7:28 PM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> Hi James,
 >
-> The problem is that arm64 does not have an architected means of
-> obtaining entropy, and we shouldn't rely on hacks to get pseudo
-> entropy.
+> Sorry for the delay, I had a long weekend last week.
 >
-> Note that EFI_RNG_PROTOCOL is not only used for KASLR, it is also used
-> to seed the kernel entropy pool if the firmware provides an
-> implementation of the protocol.
+> On Tue, Mar 27, 2018 at 7:01 PM, James Morse <james.morse@arm.com> wrote:
+>> Hi Akashi, Bhupesh,
+>>
+>> On 27/03/18 10:04, AKASHI Takahiro wrote:
+>>> On Mon, Mar 26, 2018 at 02:29:31PM +0530, Bhupesh Sharma wrote:
+>>>> On Tue, Mar 20, 2018 at 12:36 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+>>>>> On Mon, Mar 19, 2018 at 8:15 PM, AKASHI Takahiro
+>>>>> <takahiro.akashi@linaro.org> wrote:
+>>>>>> On Mon, Mar 19, 2018 at 04:05:38PM +0530, Bhupesh Sharma wrote:
+>>>>>>> At several occasions it would be useful to dump the fdt
+>>>>>>> blob being passed to the second (kexec/kdump) kernel
+>>>>>>> when '-d' flag is specified while invoking kexec/kdump.
+>>>>>>
+>>>>>> Why not just save binary data to a file and interpret it
+>>>>>> with dtc command?
+>>
+>> I'd prefer this too. It would also let us debug any issue where kexec-tools
+>> produces an invalid DTB. It also lets us test booting the kernel from firmware
+>> with that DTB.
+>
+> I captured the use case where it is not possible to do so. I have seen
+> primary kernel crash before we can get to the command prompt to save
+> the dtb blob. Since the arm64 crashkernel still seems to have issues
+> itself while booting on acpi enabled machines (see
+> <https://www.spinics.net/lists/arm-kernel/msg616632.html>), so we are
+> trying to debug a problem which has two undefined variables :)
+>
+>>>>> Well, there are a couple of reasons for that which can be understood
+>>>>> from a system which is in a production environment (for e.g. I have
+>>>>> worked on one arm64 system in the past which used a yocto based
+>>>>> distribution in which kexec -p was launched with a -d option as a part
+>>>>> of initial ramfs scriptware):
+>>
+>> and panics before you get an interactive prompt or persistent storage? I think
+>> this would be a pretty niche use-case. You could always base64-dump the dtb to
+>> stdout from your script.
+>
+> That is pretty basic case on several new arm64 development boards
+> (e.g. qualcomm, huawei etc) where we are debugging issues in primary
+> kernel boot (and we are not even able to reach the command prompt).
+>
+> If the crashkernel crashes even before the primary kernel does because
+> of the issues in the way DTB is passed to the crashkernel (which can
+> include wrong DTB fields), we better have mechanisms to track the same
+> rather than adding debug prints to the kernels.
+>
+> Note that the print logs are enabled when -d flag is passed to
+> conventional 'kexec-tools' (where we already have several log
+> messages), so I am not sure how adding the dtb print here affects the
+> default (non-debug) case.
+>
+>>>>> - In a production environment, installing and executing tools like dtc
+>>>>> (which might not have been installed by default via 'yum' or 'apt-get
+>>>>> install' or other means is not only an additional step, but we might
+>>>>> not get a chance to run it even if it is installed if we have a early
+>>>>> crash in kdump itself (for e.g. consider the 'acpi table access' issue
+>>>>> in the arm64 crashkernel we discussed some time back
+>>>>> <https://www.spinics.net/lists/arm-kernel/msg616632.html>):
+>>
+>> Wouldn't it be possible to transfer the dumped DTB file off the machine before
+>> the behaviour that brings the machine down? Kdump always requires a setup step
+>> to load the kdump kernel/dtb. You have to decide to add the debug flags at this
+>> point. I don't see how choosing to save the modified-DTB would be any different.
+>
+> Its not always possible to do the same in a customer setup or on
+> remote board-farms.
+>
+>> I assume the flow here is: do thingX, the kernel crashes. Enable kdump, do
+>> thingX, kdump fails to boot. Enable kdump-debug. Do thingX...
+>
+> Please see the use case I shared above
+>
+>>
+>>>>> a) In such a case the primary kernel has already crashed, so we had no
+>>>>> opportunity to run a dtc interpreter there and the kdump kernel itself
+>>>>> has crashed in a very early boot phase. So we didn't get a chance to
+>>>>> execute 'dtc' on the kdump kernel command prompt (if the kdump scripts
+>>>>> are configured not to reboot the primary again).
+>>
+>> Transfer it off the machine, save it somewhere persistent or print it to stdout
+>> in base64.
+>>
+>>
+>>>>> b) Also when an early arm64 kdump crash is reported by a customer, we
+>>>>> usually only have access to the primary and secondary console log
+>>>>> which also might include the 'kexec -p -d' log messages, which can
+>>>>> point us to a discrepancy in dtc nodes like 'linux,usable-memory"
+>>>>> which might have caused a early crashkernel crash.
+>>
+>>>>> Personally, so-far I have found this dtb dumping facility of use in
+>>>>> debugging atleast a couple of arm64 crashkernel crash/panic issues.
+>>>>> Till the arm64 kexec/kdump implementation matures further, I feel this
+>>>>> dumping facility is of good use to ease crashkernel panic debugs.
+>>>>
+>>>> Ping. Do you have any further comments on it?
+>>>
+>>> No.
+>>> While I don't think dumping fdt is so useful as "kexec -d" option
+>>> outputs enough information for me, you can go ahead.
+>>
+>> (likewise)
+>>
 
-Coming back on this, I was doing some experimentation with kernel
-modules (or extending the argument even
-to user-space applications) which relies on random number generation support
-from the kernel using 'getrandom' / 'get_random_bytes' kind of
-syscall/kernel interface, on platforms where we don't have a
-compatible EFI firmware which supports EFI_RNG_PROTOCOL, I was
-thinking that there
-would not be sufficient entropy (inside '/dev/urandom') available for
-the caller kernel modules (or user-space applications)
-and I was looking to enable 'CONFIG_WARN_ALL_UNSEEDED_RANDOM=y' to ensure that
-callers of unseeded randomness in such kernel modules/user-space
-applications are WARN'ed.
+Ping. Any comments on the above points?
 
-1. Instead I saw that random numbers are available on these platforms
-starting from early boot (i.e. crng init is already done):
+If the use case is not clear in the git log message I can try and
+resend this patchset and explain the use case and also maybe capture
+the dtb dump that happens when -d option is used for clarity.
 
-[root@qualcomm-amberwing]# dmesg | grep -i random
-random: crng init done
+IMO getting this in upstream kexec-tools will really help distribution
+guys like us who are debugging early crashes in the crashdump kernel
+itself and enabling upstream primary kernels on newer arm64 boards (in
+such cases, if both the primary and secondary happen to crash very
+early during the boot flow, its very useful to have the dtb logs from
+the kdump tool itself, which can be easily run in debug mode via
+scriptware available in distributions like Fedora/Yocto).
 
-2. The reason is that upstream aarch64 kernel uses the timer counter
-value to generate random numbers starting from early boot (which is
-probable not a good alternative when we have a compatible EFI firmware
-which can pass entropy to the kernel):
-
-'include/linux/timex.h' :
----------------------------
-
-#define random_get_entropy()    get_cycles()
-
-'arch/arm64/include/asm/timex.h' :
--------------------------------------------
-
-/*
- * Use the current timer as a cycle counter since this is what we use for
- * the delay loop.
- */
-#define get_cycles()    arch_timer_read_counter()
-
-'drivers/clocksource/arm_arch_timer.c' :
---------------------------------------------------
-
-u64 (*arch_timer_read_counter)(void) = arch_counter_get_cntvct;
-
-3. And when other linux kernel modules (or even userspace
-applications) try to do some random number generation using the kernel
-support using 'getrandom' / 'get_random_bytes', the entropy is already
-available.
-
-So the caller would be supplied with random numbers, as I confirmed on
-arm64 platforms which do not support EFI_RNG_PROTOCOL:
-
-Also on such platforms 'wait_for_random_bytes' returns 0 indicating
-that the 'urandom' pool has been seeded:
-
-/*
- * Wait for the urandom pool to be seeded and thus guaranteed to supply
- * cryptographically secure random numbers. This applies to: the /dev/urandom
- * device, the get_random_bytes function, and the get_random_{u32,u64,int,long}
- * family of functions. Using any of these functions without first calling
- * this function forfeits the guarantee of security.
- *
- * Returns: 0 if the urandom pool has been seeded.
- *          -ERESTARTSYS if the function was interrupted by a signal.
- */
-int wait_for_random_bytes(void)
-
-4. Accordingly, I wanted to get opinions on whether arm64 timer count is a good
-entropy source on platforms which indeed support EFI_RNG_PROTOCOL? And
-whether we should  be looking to extend 'arch_get_random_*' or
-'random_get_entropy' for arm64, to provide seed/entropy using APIs
-like 'efi_random_get_seed'?
-
-If this seems feasible I can try to take a stab at the same.
-
-Please share your views.
+Please let me know.
 
 Thanks,
 Bhupesh
