@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from smtp.nue.novell.com ([195.135.221.5])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f7uWD-00047a-8M
- for kexec@lists.infradead.org; Mon, 16 Apr 2018 03:09:27 +0000
-Date: Mon, 16 Apr 2018 11:09:04 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1f7xip-0005ib-Ol
+ for kexec@lists.infradead.org; Mon, 16 Apr 2018 06:34:42 +0000
+Date: Mon, 16 Apr 2018 14:34:14 +0800
+From: joeyli <jlee@suse.com>
 Subject: Re: [PATCH] efi: Fix the size not consistent issue when unmapping
  memory map
-Message-ID: <20180416030904.GB26685@dhcp-128-65.nay.redhat.com>
+Message-ID: <20180416063414.GG16023@linux-l9pv.suse>
 References: <20180413062716.8040-1-jlee@suse.com>
  <20180416025734.GA26685@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
@@ -25,11 +25,11 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+To: Dave Young <dyoung@redhat.com>
 Cc: linux-efi@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Takashi Iwai <tiwai@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Randy Wright <rwright@hpe.com>, "Lee,
- Chun-Yi" <jlee@suse.com>, Ingo Molnar <mingo@redhat.com>, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+ Chun-Yi" <joeyli.kernel@gmail.com>, akpm@linux-foundation.org, Ingo Molnar <mingo@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On 04/16/18 at 10:57am, Dave Young wrote:
+On Mon, Apr 16, 2018 at 10:57:34AM +0800, Dave Young wrote:
 > On 04/13/18 at 02:27pm, Lee, Chun-Yi wrote:
 > > When using kdump, SOMETIMES the "size not consistent" warning message
 > > shows up when the crash kernel boots with early_ioremap_debug parameter:
@@ -71,36 +71,20 @@ On 04/16/18 at 10:57am, Dave Young wrote:
 > Good catch.  The kexec code need to be fixed to use a separate buffer so
 > avoid the alignment like what kexec-tools did.  I can submit a fix for
 > that.
+>
 
-Can you try below code, see if it works?
-
-
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 3182908b7e6c..eaee37c54b7b 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -398,11 +398,10 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 	 * little bit simple
- 	 */
- 	efi_map_sz = efi_get_runtime_map_size();
--	efi_map_sz = ALIGN(efi_map_sz, 16);
- 	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
- 				MAX_ELFCOREHDR_STR_LEN;
- 	params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
--	kbuf.bufsz = params_cmdline_sz + efi_map_sz +
-+	kbuf.bufsz = params_cmdline_sz + ALIGN(efi_map_sz, 16)+
- 				sizeof(struct setup_data) +
- 				sizeof(struct efi_setup_data);
+Thanks!
  
-@@ -410,7 +409,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 	if (!params)
- 		return ERR_PTR(-ENOMEM);
- 	efi_map_offset = params_cmdline_sz;
--	efi_setup_data_offset = efi_map_offset + efi_map_sz;
-+	efi_setup_data_offset = efi_map_offset + ALIGN(efi_map_sz, 16);
- 
- 	/* Copy setup header onto bootparams. Documentation/x86/boot.txt */
- 	setup_header_size = 0x0202 + kernel[0x0201] - setup_hdr_offset;
+> But this issue could be a potential issue even if kexec get fixed so it
+> looks worth a fix in efi code as well.  How about mapping only nr_maps
+> *desc_size in __efi_memmap_init?  It looks easier to understand.
+> 
+
+Takashi has another patch as you said. Finally I sent this patch because
+it's smaller.   
+
+Thanks a lot!
+Joey Lee
 
 _______________________________________________
 kexec mailing list
