@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x242.google.com ([2607:f8b0:400e:c00::242])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f7tuD-0002zu-Pt
- for kexec@lists.infradead.org; Mon, 16 Apr 2018 02:30:12 +0000
-Received: by mail-pf0-x242.google.com with SMTP id j11so3258277pff.10
- for <kexec@lists.infradead.org>; Sun, 15 Apr 2018 19:29:59 -0700 (PDT)
-Date: Mon, 16 Apr 2018 11:30:16 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH] arm64: Add support to supply 'kaslr-seed' to secondary
- kernel
-Message-ID: <20180416023014.GD13168@linaro.org>
-References: <1523737180-7705-1-git-send-email-bhsharma@redhat.com>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1f7uLM-0001Kl-3b
+ for kexec@lists.infradead.org; Mon, 16 Apr 2018 02:58:13 +0000
+Date: Mon, 16 Apr 2018 10:57:34 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] efi: Fix the size not consistent issue when unmapping
+ memory map
+Message-ID: <20180416025734.GA26685@dhcp-128-65.nay.redhat.com>
+References: <20180413062716.8040-1-jlee@suse.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1523737180-7705-1-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <20180413062716.8040-1-jlee@suse.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,305 +24,91 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: dyoung@redhat.com, bhupesh.linux@gmail.com, kexec@lists.infradead.org, horms@verge.net.au
+To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Cc: linux-efi@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Takashi Iwai <tiwai@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Randy Wright <rwright@hpe.com>, "Lee,
+ Chun-Yi" <jlee@suse.com>, Ingo Molnar <mingo@redhat.com>, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-Bhupesh,
+On 04/13/18 at 02:27pm, Lee, Chun-Yi wrote:
+> When using kdump, SOMETIMES the "size not consistent" warning message
+> shows up when the crash kernel boots with early_ioremap_debug parameter:
+> 
+> WARNING: CPU: 0 PID: 0 at ../mm/early_ioremap.c:182 early_iounmap+0x4f/0x12c()
+> early_iounmap(ffffffffff200180, 00000118) [0] size not consistent 00000120
+> 
+> The root cause is that the unmapping size of memory map doesn't
+> match with the original size when mapping:
+> 
+> in __efi_memmap_init()
+> 	map.map = early_memremap(phys_map, data->size);
+> 
+> in efi_memmap_unmap()
+>         size = efi.memmap.desc_size * efi.memmap.nr_map;
+>         early_memunmap(efi.memmap.map, size);
+> 
+> But the efi.memmap.nr_map is from __efi_memmap_init(). The remainder
+> of size was discarded when calculating the nr_map:
+>         map.nr_map = data->size / data->desc_size;
+> 
+> When the original size of memory map region does not equal to the
+> result of multiplication. The "size not consistent" warning
+> will be triggered.
+> 
+> This issue sometimes was hit by kdump because kexec set the efi map
+> size to align with 16 when loading crash kernel image:
+> 
+> in bzImage64_load()
+>         efi_map_sz = efi_get_runtime_map_size();
+>         efi_map_sz = ALIGN(efi_map_sz, 16);
+> 
+> This patch changes the logic in the unmapping function. Using the
+> end address of map to calcuate original size.
+> 
+> Thank Randy Wright for his report and testing. And also thank
+> Takashi Iwai for his help to trace issue.
 
-On Sun, Apr 15, 2018 at 01:49:40AM +0530, Bhupesh Sharma wrote:
-> This patch adds the support to supply 'kaslr-seed' to secondary kernel,
-> when we do a 'kexec warm reboot to another kernel' (although the
-> behaviour remains the same for the 'kdump' case as well) on arm64
-> platforms using the 'kexec_load' invocation method.
+Good catch.  The kexec code need to be fixed to use a separate buffer so
+avoid the alignment like what kexec-tools did.  I can submit a fix for
+that.
+
+But this issue could be a potential issue even if kexec get fixed so it
+looks worth a fix in efi code as well.  How about mapping only nr_maps
+*desc_size in __efi_memmap_init?  It looks easier to understand.
+
 > 
-> Lets consider the case where the primary kernel working on the arm64
-> platform supports kaslr (i.e 'CONFIG_RANDOMIZE_BASE' was set to y and
-> we have a compliant EFI firmware which supports EFI_RNG_PROTOCOL and
-> hence can pass a non-zero (valid) seed to the primary kernel).
-> 
-> Now the primary kernel reads the 'kaslr-seed' and wipes it to 0 and
-> uses the seed value to randomize for e.g. the module base address
-> offset.
-> 
-> In the case of 'kexec_load' (or even kdump for brevity),
-> we rely on the user-space kexec-tools to pass an appropriate dtb to the
-> secondary kernel and since 'kaslr-seed' is wiped to 0 by the primary
-> kernel, the secondary will essentially work with *nokaslr* as
-> 'kaslr-seed' is set to 0 when it is passed to the secondary kernel.
-> 
-> This can be true even in case the secondary kernel had
-> 'CONFIG_RANDOMIZE_BASE' and 'CONFIG_RANDOMIZE_MODULE_REGION_FULL' set to
-> y.
-> 
-> This patch addresses this issue by first checking if the device tree
-> provided by the firmware to the kernel supports the 'kaslr-seed'
-> property and verifies that it is really wiped to 0. If this condition is
-> met, it fixes up the 'kaslr-seed' property by using the getrandom()
-> syscall to get a suitable random number.
-> 
-> I verified this patch on my Qualcomm arm64 board and here are some test
-> results:
-> 
-> 1. Ensure that the primary kernel is boot'ed with 'kaslr-seed'
->    dts property and it is really wiped to 0:
-> 
->    [root@qualcomm-amberwing]# dtc -I dtb -O dts /sys/firmware/fdt | grep -A 10 -i chosen
->    	chosen {
-> 		kaslr-seed = <0x0 0x0>;
-> 		...
-> 	}
-> 
-> 2. Now issue 'kexec_load' to load the secondary kernel (let's assume
->    that we are using the same kernel as the secondary kernel):
->    # kexec -l /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname
->      -r`.img --reuse-cmdline -d
-> 
-> 3. Issue 'kexec -e' to warm boot to the secondary:
->    # kexec -e
-> 
-> 4. Now after the secondary boots, confirm that the load address of the
->    modules is randomized in every successive boot:
-> 
->    [root@qualcomm-amberwing]# cat /proc/modules
->    sunrpc 524288 1 - Live 0xffff0307db190000
->    vfat 262144 1 - Live 0xffff0307db110000
->    fat 262144 1 vfat, Live 0xffff0307db090000
->    crc32_ce 262144 0 - Live 0xffff0307d8c70000
->    ...
-> 
-> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Randy Wright <rwright@hpe.com>
+> Cc: Takashi Iwai <tiwai@suse.de>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
 > ---
->  kexec/arch/arm64/kexec-arm64.c | 135 +++++++++++++++++++++++++++++------------
->  1 file changed, 97 insertions(+), 38 deletions(-)
+>  drivers/firmware/efi/memmap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> index 62f37585b788..2ab11227447a 100644
-> --- a/kexec/arch/arm64/kexec-arm64.c
-> +++ b/kexec/arch/arm64/kexec-arm64.c
-> @@ -15,6 +15,11 @@
->  #include <linux/elf-em.h>
->  #include <elf.h>
+> diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
+> index 5fc7052..1f592d8 100644
+> --- a/drivers/firmware/efi/memmap.c
+> +++ b/drivers/firmware/efi/memmap.c
+> @@ -121,7 +121,7 @@ void __init efi_memmap_unmap(void)
+>  	if (!efi.memmap.late) {
+>  		unsigned long size;
 >  
-> +#include <unistd.h>
-> +#include <syscall.h>
-> +#include <errno.h>
-> +#include <linux/random.h>
-> +
->  #include "kexec.h"
->  #include "kexec-arm64.h"
->  #include "crashdump.h"
-> @@ -392,11 +397,13 @@ static int fdt_setprop_range(void *fdt, int nodeoffset,
->  static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
->  {
->  	uint32_t address_cells, size_cells;
-> -	int range_len;
-> -	int nodeoffset;
-> +	uint64_t fdt_val64;
-> +	uint64_t *prop;
->  	char *new_buf = NULL;
-> +	int len, range_len;
-> +	int nodeoffset;
->  	int new_size;
-> -	int result;
-> +	int result, kaslr_seed;
->  
->  	result = fdt_check_header(dtb->buf);
->  
-> @@ -407,47 +414,99 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
->  
->  	result = set_bootargs(dtb, command_line);
->  
-> -	if (on_crash) {
-> -		/* determine #address-cells and #size-cells */
-> -		result = get_cells_size(dtb->buf, &address_cells, &size_cells);
-> -		if (result) {
-> -			fprintf(stderr,
-> -				"kexec: cannot determine cells-size.\n");
-> -			result = -EINVAL;
-> -			goto on_error;
-> -		}
-> +	/* determine #address-cells and #size-cells */
-> +	result = get_cells_size(dtb->buf, &address_cells, &size_cells);
-> +	if (result) {
-> +		fprintf(stderr, "kexec: cannot determine cells-size.\n");
-> +		result = -EINVAL;
-> +		goto on_error;
-> +	}
->  
-> -		if (!cells_size_fitted(address_cells, size_cells,
-> -					&elfcorehdr_mem)) {
-> -			fprintf(stderr,
-> -				"kexec: elfcorehdr doesn't fit cells-size.\n");
-> +	if (!cells_size_fitted(address_cells, size_cells,
-> +				&elfcorehdr_mem)) {
-> +		fprintf(stderr, "kexec: elfcorehdr doesn't fit cells-size.\n");
-> +		result = -EINVAL;
-> +		goto on_error;
-> +	}
-> +
-> +	if (!cells_size_fitted(address_cells, size_cells,
-> +				&crash_reserved_mem)) {
-> +		fprintf(stderr, "kexec: usable memory range doesn't fit cells-size.\n");
-> +		result = -EINVAL;
-> +		goto on_error;
-> +	}
-> +
-> +	/* duplicate dt blob */
-> +	range_len = sizeof(uint32_t) * (address_cells + size_cells);
-> +	new_size = fdt_totalsize(dtb->buf)
-> +		+ fdt_prop_len(PROP_ELFCOREHDR, range_len)
-> +		+ fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len);
-> +
-> +	new_buf = xmalloc(new_size);
-> +	result = fdt_open_into(dtb->buf, new_buf, new_size);
-> +	if (result) {
-> +		dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
-> +				fdt_strerror(result));
-> +		result = -ENOSPC;
-> +		goto on_error;
-> +	}
-> +
-> +	/* fixup 'kaslr-seed' with a random value, if supported */
-> +	nodeoffset = fdt_path_offset(new_buf, "/chosen");
-> +	prop = fdt_getprop_w(new_buf, nodeoffset,
-> +			"kaslr-seed", &len);
-> +	if (!prop || len != sizeof(uint64_t)) {
-
-Do we need this check?
-Please note that people are allowed to provide a dtb explicitly
-at command line and may want to use kexec as bootloader on
-no-uefi platform.
-
-> +		dbgprintf("%s: no kaslr-seed found: %s\n",
-> +				__func__, fdt_strerror(result));
-> +		/* for kexec warm reboot case, we don't need to fixup
-> +		 * other dtb properties
-> +		 */
-> +		if (!on_crash)
-> +			goto free_new_buf;
-> +
-> +	} else {
-> +		kaslr_seed = fdt64_to_cpu(*prop);
-> +
-> +		/* kaslr_seed must be wiped clean by primary
-> +		 * kernel during boot
-> +		 */
-> +		if (kaslr_seed != 0) {
-> +			dbgprintf("%s: kaslr-seed is not wiped to 0.\n",
-> +					__func__);
-
-Ditto
-If this is a user-provided dtb, there is no reason to reject it.
-I think all what is needed here is to feed a *sane* dtb to kexec.
-
-So along with the comment above, it may be useful to add a command line
-option for turning on or off "kaslr-seed".
-
->  			result = -EINVAL;
->  			goto on_error;
->  		}
->  
-> -		if (!cells_size_fitted(address_cells, size_cells,
-> -					&crash_reserved_mem)) {
-> -			fprintf(stderr,
-> -				"kexec: usable memory range doesn't fit cells-size.\n");
-> +		/*
-> +		 * Invoke the getrandom system call with
-> +		 * GRND_NONBLOCK, to make sure we
-> +		 * have a valid random seed to pass to the
-> +		 * secondary kernel.
-> +		 */
-> +		result = syscall(SYS_getrandom, &fdt_val64,
-> +				sizeof(fdt_val64),
-> +				GRND_NONBLOCK);
-
-Why do you use syscall() here?
-
-> +
-> +		if(result == -1) {
-> +			dbgprintf("%s: Reading random bytes failed.\n",
-> +					__func__);
->  			result = -EINVAL;
->  			goto on_error;
->  		}
->  
-> -		/* duplicate dt blob */
-> -		range_len = sizeof(uint32_t) * (address_cells + size_cells);
-> -		new_size = fdt_totalsize(dtb->buf)
-> -			+ fdt_prop_len(PROP_ELFCOREHDR, range_len)
-> -			+ fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len);
-> -
-> -		new_buf = xmalloc(new_size);
-> -		result = fdt_open_into(dtb->buf, new_buf, new_size);
-> +		nodeoffset = fdt_path_offset(new_buf, "/chosen");
-> +		result = fdt_setprop_inplace(new_buf,
-> +				nodeoffset, "kaslr-seed",
-> +				&fdt_val64, sizeof(fdt_val64));
->  		if (result) {
-> -			dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
-> -				fdt_strerror(result));
-> -			result = -ENOSPC;
-> +			dbgprintf("%s: fdt_setprop failed: %s\n",
-> +					__func__, fdt_strerror(result));
-> +			result = -EINVAL;
->  			goto on_error;
->  		}
-> +	}
->  
-> +	if (on_crash) {
->  		/* add linux,elfcorehdr */
->  		nodeoffset = fdt_path_offset(new_buf, "/chosen");
->  		result = fdt_setprop_range(new_buf, nodeoffset,
-> @@ -455,7 +514,7 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
->  				address_cells, size_cells);
->  		if (result) {
->  			dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
-> -				fdt_strerror(result));
-> +					fdt_strerror(result));
->  			result = -EINVAL;
->  			goto on_error;
->  		}
-> @@ -467,23 +526,23 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
->  				address_cells, size_cells);
->  		if (result) {
->  			dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
-> -				fdt_strerror(result));
-> +					fdt_strerror(result));
->  			result = -EINVAL;
->  			goto on_error;
->  		}
-> -
-> -		fdt_pack(new_buf);
-> -		dtb->buf = new_buf;
-> -		dtb->size = fdt_totalsize(new_buf);
->  	}
->  
-> -	dump_reservemap(dtb);
-> +	fdt_pack(new_buf);
-> +	dtb->buf = new_buf;
-> +	dtb->size = fdt_totalsize(new_buf);
->  
-> +	dump_reservemap(dtb);
->  
->  	return result;
->  
->  on_error:
->  	fprintf(stderr, "kexec: %s failed.\n", __func__);
-> +free_new_buf:
-
-Well, technically correct, but it looks odd as it is placed
-on *error* return path.
-You also miss dump_reservemap().
-
-Thanks,
--Takahiro AKASHI
-
->  	if (new_buf)
->  		free(new_buf);
->  
+> -		size = efi.memmap.desc_size * efi.memmap.nr_map;
+> +		size = efi.memmap.map_end - efi.memmap.map;
+>  		early_memunmap(efi.memmap.map, size);
+>  	} else {
+>  		memunmap(efi.memmap.map);
 > -- 
-> 2.7.4
+> 2.10.2
 > 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
