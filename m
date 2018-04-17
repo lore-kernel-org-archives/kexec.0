@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from pandora.armlinux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f8M67-0003Gm-IK
- for kexec@lists.infradead.org; Tue, 17 Apr 2018 08:36:21 +0000
-Date: Tue, 17 Apr 2018 16:36:00 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH] kexec_file: do not add extra alignment to efi memmap
-Message-ID: <20180417083600.GA1972@dhcp-128-65.nay.redhat.com>
+ id 1f8MWe-0000zw-Ls
+ for kexec@lists.infradead.org; Tue, 17 Apr 2018 09:03:46 +0000
+Date: Tue, 17 Apr 2018 10:01:13 +0100
+From: Russell King <rmk@armlinux.org.uk>
+Subject: Re: kdump in upstream kexec-tools
+Message-ID: <20180417090113.GA19564@flint.armlinux.org.uk>
+References: <CACi5LpOfCDgoaq6YphsqiR_cQGx+z_cTeZ-B=5_Bfm5632fPYQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <CACi5LpOfCDgoaq6YphsqiR_cQGx+z_cTeZ-B=5_Bfm5632fPYQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,56 +24,88 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org
-Cc: joeyli <jlee@suse.com>, linux-efi@vger.kernel.org, Randy Wright <rwright@hpe.com>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: khalid.aziz@hp.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, ebiederm@xmission.com, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Chun-Yi reported a kernel warning message below:
-WARNING: CPU: 0 PID: 0 at ../mm/early_ioremap.c:182 early_iounmap+0x4f/0x12c()
-early_iounmap(ffffffffff200180, 00000118) [0] size not consistent 00000120
+On Tue, Apr 17, 2018 at 10:20:08AM +0530, Bhupesh Sharma wrote:
+> Hi,
+> 
+> I was working on improving documentation/structure of the upstream
+> kexec-tools and I was wondering what is the purpose of the 'kdump'
+> directory inside the kexec-tools.
+> 
+> This kdump utility seems to cause confusion with the 'kdump' utility
+> present inside some distributions (for e.g.  '/usr/sbin/kdump' present
+> inside fedora) due to the same naming convention and so we should
+> populate/modify the kdump man page to indicate the same, so as to
+> avoid confusion.
+> 
+> Presently here are the contents of this directory:
+> 
+> # ls kdump/
+> kdump.8  kdump.c  Makefile
+> 
+> - Out of these the kdump man documentation (kdump.8) is just a
+> placeholder as suggested by the man page documentation: "kdump - This
+> is just a placeholder until real man page has been written"
+> 
+> - Looking at kdump.c :
+> 
+> 1. I understand that this code is mainly used to read a crashdump from
+> memory. One can run the same using:
+> 
+> # kdump <start_addr>
+> 
+> where start_addr is basically the start address of the core dump
+> (which can also be represented via the 'elfcorehdr' environment
+> variable being passed to the crash kernel which represents the
+> physical address of the start of the ELF header)
+> 
+> 2. This tool needs READ_ONLY access to /dev/mem (so we need to set
+> CONFIG_STRICT_DEVMEM configuration option accordingly).
+> 
+> 3. The code thereafter reads (via mmap) and verifies the ELF header.
+> Subsequently it reads (via mmap) the program header.
+> 
+> 4. Then we collect all the notes and write on STDOUT all the headers
+> and notes found in the crashdump collected from memory.
+> 
+> So, as per my understanding even in absence of (more powerful) tools
+> like crash (or gdb), we can still go ahead and read the crashdump from
+> memory and display all the headers and notes present in the same on
+> standard serial out interface using this kdump utility.
+> 
+> This is probably a good to have feature for systems which have very
+> simple/minimal rootfs (and I see that a few arm32 systems seem to use
+> the same as well) or are low on memory availability.
+> 
+> Now, I wanted to confirm if the 'kdump' utility for reading crashdump
+> collected from memory is still needed (as the last commit is dated
+> back to 2016 and was done for arm32 systems). If yes, I can go ahead
+> and enhance the kdump man page to include the description given above
+> - so that it helps users understand how to run the tool.
+> 
+> Please share your opinions.
 
-The problem is x86 kexec_file_load adds extra alignment to the efi memmap:
-in bzImage64_load()
-        efi_map_sz = efi_get_runtime_map_size();
-        efi_map_sz = ALIGN(efi_map_sz, 16);
+Firstly, please use:
 
-And __efi_memmap_init maps with the size including the alignment bytes
-but efi_memmap_unmap use nr_maps * desc_size which does not include the
-extra bytes.
+  git://git.armlinux.org.uk/~rmk/kexec-tools.git
 
-The alignment in kexec code is only needed for the kexec buffer internal use
-Actually kexec should pass exact size of the efi memmap to 2nd kernel.
+for ARM systems - this has some important fixes that aren't in the
+mainline repository.
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
-Reported-by: joeyli <jlee@suse.com>
-Tested-by: Randy Wright <rwright@hpe.com>
----
- arch/x86/kernel/kexec-bzimage64.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+I think the kdump tool is dead.  It only supports the 64-bit ELF
+format, and 32-bit ARM can either be 32-bit ELF or 64-bit ELF format
+coredumps, depending whether LPAE is enabled.  I've asked questions
+about this, and not got anywhere, so I now recommend not using that
+tool.
 
---- linux.orig/arch/x86/kernel/kexec-bzimage64.c
-+++ linux/arch/x86/kernel/kexec-bzimage64.c
-@@ -398,11 +398,10 @@ static void *bzImage64_load(struct kimag
- 	 * little bit simple
- 	 */
- 	efi_map_sz = efi_get_runtime_map_size();
--	efi_map_sz = ALIGN(efi_map_sz, 16);
- 	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
- 				MAX_ELFCOREHDR_STR_LEN;
- 	params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
--	kbuf.bufsz = params_cmdline_sz + efi_map_sz +
-+	kbuf.bufsz = params_cmdline_sz + ALIGN(efi_map_sz, 16) +
- 				sizeof(struct setup_data) +
- 				sizeof(struct efi_setup_data);
- 
-@@ -410,7 +409,7 @@ static void *bzImage64_load(struct kimag
- 	if (!params)
- 		return ERR_PTR(-ENOMEM);
- 	efi_map_offset = params_cmdline_sz;
--	efi_setup_data_offset = efi_map_offset + efi_map_sz;
-+	efi_setup_data_offset = efi_map_offset + ALIGN(efi_map_sz, 16);
- 
- 	/* Copy setup header onto bootparams. Documentation/x86/boot.txt */
- 	setup_header_size = 0x0202 + kernel[0x0201] - setup_hdr_offset;
+Have you checked whether objcopy can copy the coredump from
+/proc/vmcore to the filesystem?  That would permit saving of the
+coredump image for later inspection by gdb.
+
+-- 
+Russell King
 
 _______________________________________________
 kexec mailing list
