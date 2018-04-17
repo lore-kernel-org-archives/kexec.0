@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f8RJG-0001Vg-PL
- for kexec@lists.infradead.org; Tue, 17 Apr 2018 14:10:17 +0000
-Date: Tue, 17 Apr 2018 09:09:59 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v1 0/2] kexec: Remove "weak" annotations from headers
-Message-ID: <20180417140959.GG28657@bhelgaas-glaptop.roam.corp.google.com>
-References: <152355706051.36693.9856090891621551967.stgit@bhelgaas-glaptop.roam.corp.google.com>
- <20180413110820.662d4879@ThinkPad>
+Received: from mail-lf0-f67.google.com ([209.85.215.67])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1f8UeD-0004ih-8Y
+ for kexec@lists.infradead.org; Tue, 17 Apr 2018 17:44:08 +0000
+Received: by mail-lf0-f67.google.com with SMTP id i18-v6so13551141lfc.7
+ for <kexec@lists.infradead.org>; Tue, 17 Apr 2018 10:43:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180413110820.662d4879@ThinkPad>
+In-Reply-To: <20180417125134.GF23531@flint.armlinux.org.uk>
+References: <CACi5LpOfCDgoaq6YphsqiR_cQGx+z_cTeZ-B=5_Bfm5632fPYQ@mail.gmail.com>
+ <20180417090113.GA19564@flint.armlinux.org.uk>
+ <CACi5LpNYx07WCXTYZ0ksDt1zwyEcO+JaAGypfLqC=3o8bHr1aQ@mail.gmail.com>
+ <20180417125134.GF23531@flint.armlinux.org.uk>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Tue, 17 Apr 2018 23:13:51 +0530
+Message-ID: <CACi5LpN-210==FHkmwb5CM9Fq3TH3E0mvZpMNGO-gJPYtgCQ6A@mail.gmail.com>
+Subject: Re: kdump in upstream kexec-tools
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,21 +27,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Philipp Rudo <prudo@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
+To: Russell King <rmk@armlinux.org.uk>
+Cc: kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, ebiederm@xmission.com, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, Apr 13, 2018 at 11:08:20AM +0200, Philipp Rudo wrote:
-> Hi Bjorn,
-> 
-> in recent patches AKASHI [1] and I [2] made some changes to the declarations
-> you are touching and already removed some of the weak statements. The patches
-> got accepted on linux-next and will (hopefully) be pulled for v4.17. So you
-> should prepare for some merge conflicts. Nevertheless three weak statements
-> still remain (arch_kexec_walk_mem & arch_kexec_apply_relocations*) so your
-> patch still makes totally sense.
+On Tue, Apr 17, 2018 at 6:21 PM, Russell King <rmk@armlinux.org.uk> wrote:
+> On Tue, Apr 17, 2018 at 04:20:00PM +0530, Bhupesh Sharma wrote:
+>> For e.g I use this tool on my arm64 board as follows:
+>>
+>> a. Read out the 'elfcorehdr' env variable passed to the crash kernel
+>> and pass the same as an argument to the tool:
+>>
+>> Assuming that the 'elfcorehdr' spans the range ->
+>> 0xffdf0000-0xffdf13ff, launch the tool as -
+>>
+>> # kdump
+>> Cannot find the start of the core dump
+>>
+>> # kdump 0xffdf0000 >> output_elf_file
+>>
+>> # file output_elf_file
+>> output: ELF 64-bit LSB core file ARM aarch64, version 1 (SYSV)
+>
+> The contents should basically be the same (possibly with a different
+> section ordering) as /proc/vmcore in the crashdump kernel.  If so,
+> kdump serves no useful purpose, and ends up confusing the situation
+> due to its inability to handle 32-bit ELF coredump files.
+>
+> It seems to me that the presence of /proc/vmcore obsoletes the kdump
+> tool.
 
-Thanks, I see those changes in v4.17-rc1.  I'll update my patches and
-post a v2.
+Fair enough. I will send a patch shortly to remove the obsolete kdump
+tool from 'kexec-tools'.
+
+Thanks,
+Bhupesh
 
 _______________________________________________
 kexec mailing list
