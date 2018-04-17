@@ -1,24 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from stargate.chelsio.com ([12.32.117.8])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f8Izd-0002aX-S3
- for kexec@lists.infradead.org; Tue, 17 Apr 2018 05:17:27 +0000
-Date: Tue, 17 Apr 2018 13:17:06 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [RESEND PATCH 1/2] dt-ops: Add helper API to dump fdt blob
-Message-ID: <20180417051706.GA5894@dhcp-128-65.nay.redhat.com>
-References: <1521455739-8022-1-git-send-email-bhsharma@redhat.com>
- <20180319144529.vkfrrkc4bdhwvvbi@dragonfly>
- <CACi5LpObqAJ=yC_e2G80JsspfzEx50Rq=J2G_UAnoT3UqS4HFQ@mail.gmail.com>
- <CACi5LpPVbVZBAXynMQ79kkboLrQcw1s-LSuFkSQAnkXtdS8wAA@mail.gmail.com>
- <20180326123038.GA14737@linaro.org>
- <e5ed1c04-73db-fda5-602d-f9bd447801da@arm.com>
- <CACi5LpN3bV6-TjAkbu9eGdSUfn-pCoEY==Z1qC5VzOZDdnw0-g@mail.gmail.com>
- <20180416081325.GA4074@dhcp-128-65.nay.redhat.com>
- <CACi5LpOq-JYFTsVsmo7XOiW9ZB51Zy_8C_cJEX679xBwEmBygQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CACi5LpOq-JYFTsVsmo7XOiW9ZB51Zy_8C_cJEX679xBwEmBygQ@mail.gmail.com>
+ id 1f8LId-000344-EV
+ for kexec@lists.infradead.org; Tue, 17 Apr 2018 07:45:15 +0000
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Subject: [PATCH net-next v4 1/3] vmcore: add API to collect hardware dump in
+ second kernel
+Date: Tue, 17 Apr 2018 13:14:17 +0530
+Message-Id: <e69b49f1406d2dcd9cd68e4300939e96cd745559.1523950324.git.rahul.lakkireddy@chelsio.com>
+In-Reply-To: <cover.1523950321.git.rahul.lakkireddy@chelsio.com>
+References: <cover.1523950321.git.rahul.lakkireddy@chelsio.com>
+In-Reply-To: <cover.1523950321.git.rahul.lakkireddy@chelsio.com>
+References: <cover.1523950321.git.rahul.lakkireddy@chelsio.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,125 +20,388 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org
+To: netdev@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: indranil@chelsio.com, nirranjan@chelsio.com, stephen@networkplumber.org, ganeshgr@chelsio.com, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, ebiederm@xmission.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, viro@zeniv.linux.org.uk
 
-On 04/16/18 at 08:39pm, Bhupesh Sharma wrote:
-> Hi Dave,
-> 
-> On Mon, Apr 16, 2018 at 1:43 PM, Dave Young <dyoung@redhat.com> wrote:
-> > Hi Bhupesh,
-> >
-> > On 04/03/18 at 07:28pm, Bhupesh Sharma wrote:
-> >> Hi James,
-> >>
-> >> Sorry for the delay, I had a long weekend last week.
-> >>
-> >> On Tue, Mar 27, 2018 at 7:01 PM, James Morse <james.morse@arm.com> wrote:
-> >> > Hi Akashi, Bhupesh,
-> >> >
-> >> > On 27/03/18 10:04, AKASHI Takahiro wrote:
-> >> >> On Mon, Mar 26, 2018 at 02:29:31PM +0530, Bhupesh Sharma wrote:
-> >> >>> On Tue, Mar 20, 2018 at 12:36 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> >> >>>> On Mon, Mar 19, 2018 at 8:15 PM, AKASHI Takahiro
-> >> >>>> <takahiro.akashi@linaro.org> wrote:
-> >> >>>>> On Mon, Mar 19, 2018 at 04:05:38PM +0530, Bhupesh Sharma wrote:
-> >> >>>>>> At several occasions it would be useful to dump the fdt
-> >> >>>>>> blob being passed to the second (kexec/kdump) kernel
-> >> >>>>>> when '-d' flag is specified while invoking kexec/kdump.
-> >> >>>>>
-> >> >>>>> Why not just save binary data to a file and interpret it
-> >> >>>>> with dtc command?
-> >> >
-> >> > I'd prefer this too. It would also let us debug any issue where kexec-tools
-> >> > produces an invalid DTB. It also lets us test booting the kernel from firmware
-> >> > with that DTB.
-> >>
-> >> I captured the use case where it is not possible to do so. I have seen
-> >> primary kernel crash before we can get to the command prompt to save
-> >> the dtb blob. Since the arm64 crashkernel still seems to have issues
-> >> itself while booting on acpi enabled machines (see
-> >> <https://www.spinics.net/lists/arm-kernel/msg616632.html>), so we are
-> >> trying to debug a problem which has two undefined variables :)
-> >>
-> >> >>>> Well, there are a couple of reasons for that which can be understood
-> >> >>>> from a system which is in a production environment (for e.g. I have
-> >> >>>> worked on one arm64 system in the past which used a yocto based
-> >> >>>> distribution in which kexec -p was launched with a -d option as a part
-> >> >>>> of initial ramfs scriptware):
-> >> >
-> >> > and panics before you get an interactive prompt or persistent storage? I think
-> >> > this would be a pretty niche use-case. You could always base64-dump the dtb to
-> >> > stdout from your script.
-> >>
-> >> That is pretty basic case on several new arm64 development boards
-> >> (e.g. qualcomm, huawei etc) where we are debugging issues in primary
-> >> kernel boot (and we are not even able to reach the command prompt).
-> >>
-> >> If the crashkernel crashes even before the primary kernel does because
-> >> of the issues in the way DTB is passed to the crashkernel (which can
-> >> include wrong DTB fields), we better have mechanisms to track the same
-> >> rather than adding debug prints to the kernels.
-> >
-> > In this case, since userspace always need to run 'kexec -l', there
-> > should be chance to save dtb and dump them in scripts if needed.
-> > If this is doable in scripts I also tend not to add the code in kexec-tools.
-> 
-> Perhaps you missed my latest email which explained the use case better
-> (please see [1]).
-> Please note that I am talking about the 'kexec -p' or the kdump use
-> case rather than the 'kexec -l' or the warm reboot to the second
-> kernel.
+The sequence of actions done by device drivers to append their device
+specific hardware/firmware logs to /proc/vmcore are as follows:
 
-It is a typo, I meant about 'kexec -p' as well
+1. During probe (before hardware is initialized), device drivers
+register to the vmcore module (via vmcore_add_device_dump()), with
+callback function, along with buffer size and log name needed for
+firmware/hardware log collection.
 
-> 
-> In several cases its useful if we are not able to reach the command
-> prompt to just modify the scriptware to launch 'kexec -p' when the
-> ramfs starts up so that we can catch crashes which happen before the
-> primary kernel reaches the command prompt. For example, on freescale
-> boards I found this scriptware mechanism quite useful on yocto based
-> distributions, as you can be porting a new upstream kernel on the
-> board and thus is not very stable while booting and the crashkernel
-> also has issues which causes it to crash. In such cases although we
-> see a panic message from the crashkernel it is very difficult to
-> deduce that it was because of some wrongly fixed up dtb property.
+2. vmcore module allocates the buffer with requested size. It adds
+an Elf note and invokes the device driver's registered callback
+function.
 
-Since kexec -p need to be automated in scripts, add something to dump
-dtb is also doable.
+3. Device driver collects all hardware/firmware logs into the buffer
+and returns control back to vmcore module.
 
-> 
-> Getting a debug log which contains the dtb dump is very useful in
-> above cases for debugging.
-> 
-> Also saving the dtb requires 'dtc' tool to be installed which is an
-> additional dependency.
+Ensure that the device dump buffer size is always aligned to page size
+so that it can be mmaped.
 
-I think it should be not a big problem,  dtc is designed to do this.
+Also, rename alloc_elfnotes_buf() to vmcore_alloc_buf() to make it more
+generic and reserve NT_VMCOREDD note type to indicate vmcore device
+dump.
 
-> 
-> Since we have debug facility/messages already available when we
-> execute 'kexec -p' with '-d' flag we can use the dtb dumps from the
-> tool to debug crashes than happen in the crashkernel also because of
-> wrong dtb fields fixed up by 'kexec-tools'. I was loathe to keep this
-> patch locally and apply to the upstream 'kexec-tools' when debugging
-> these issues as I think it makes sense to improve our debugging
-> capabilities if we know there are issues around the same.
+Suggested-by: Eric Biederman <ebiederm@xmission.com>.
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
+---
+v4:
+- Made __vmcore_add_device_dump() static.
+- Moved compile check to define vmcore_add_device_dump() to
+  crash_dump.h to fix compilation when vmcore.c is not compiled in.
+- Convert ---help--- to help in Kconfig as indicated by checkpatch.
+- Rebased to tip.
 
-Hmm, do you have the example kexec-tools fix-up the dtb content?
+v3:
+- Dropped sysfs crashdd module.
+- Added CONFIG_PROC_VMCORE_DEVICE_DUMP to allow configuring device
+  dump support.
+- Moved logic related to adding dumps from crashdd to vmcore module.
+- Rename all crashdd* to vmcoredd*.
 
-> 
-> Ok, let me resend this patch with a cover letter this time to explain
-> the use case better and also to capture the dtb logs.
-> 
-> [1] https://marc.info/?l=kexec&m=152382169120505&w=2
+v2:
+- Added ABI Documentation for crashdd.
+- Directly use octal permission instead of macro.
 
-Thanks
-Dave
+Changes since rfc v2:
+- Moved exporting crashdd from procfs to sysfs.  Suggested by
+  Stephen Hemminger <stephen@networkplumber.org>
+- Moved code from fs/proc/crashdd.c to fs/crashdd/ directory.
+- Replaced all proc API with sysfs API and updated comments.
+- Calling driver callback before creating the binary file under
+  crashdd sysfs.
+- Changed binary dump file permission from S_IRUSR to S_IRUGO.
+- Changed module name from CRASH_DRIVER_DUMP to CRASH_DEVICE_DUMP.
+
+rfc v2:
+- Collecting logs in 2nd kernel instead of during kernel panic.
+  Suggested by Eric Biederman <ebiederm@xmission.com>.
+- Patch added in this series.
+
+ fs/proc/Kconfig            |  10 +++
+ fs/proc/vmcore.c           | 152 ++++++++++++++++++++++++++++++++++++++++++---
+ include/linux/crash_core.h |   4 ++
+ include/linux/crash_dump.h |  17 +++++
+ include/linux/kcore.h      |   6 ++
+ include/uapi/linux/elf.h   |   1 +
+ 6 files changed, 181 insertions(+), 9 deletions(-)
+
+diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
+index 1ade1206bb89..504c77a444bd 100644
+--- a/fs/proc/Kconfig
++++ b/fs/proc/Kconfig
+@@ -43,6 +43,16 @@ config PROC_VMCORE
+         help
+         Exports the dump image of crashed kernel in ELF format.
+ 
++config PROC_VMCORE_DEVICE_DUMP
++	bool "Device Hardware/Firmware Log Collection"
++	depends on PROC_VMCORE
++	default y
++	help
++	  Device drivers can collect the device specific snapshot of
++	  their hardware or firmware before they are initialized in
++	  crash recovery kernel. If you say Y here, the device dumps
++	  will be added as ELF notes to /proc/vmcore
++
+ config PROC_SYSCTL
+ 	bool "Sysctl support (/proc/sys)" if EXPERT
+ 	depends on PROC_FS
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index a45f0af22a60..7395462d2f86 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -20,6 +20,7 @@
+ #include <linux/init.h>
+ #include <linux/crash_dump.h>
+ #include <linux/list.h>
++#include <linux/mutex.h>
+ #include <linux/vmalloc.h>
+ #include <linux/pagemap.h>
+ #include <linux/uaccess.h>
+@@ -44,6 +45,12 @@ static u64 vmcore_size;
+ 
+ static struct proc_dir_entry *proc_vmcore;
+ 
++#ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
++/* Device Dump list and mutex to synchronize access to list */
++static LIST_HEAD(vmcoredd_list);
++static DEFINE_MUTEX(vmcoredd_mutex);
++#endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
++
+ /*
+  * Returns > 0 for RAM pages, 0 for non-RAM pages, < 0 on error
+  * The called function has to take care of module refcounting.
+@@ -302,10 +309,8 @@ static const struct vm_operations_struct vmcore_mmap_ops = {
+ };
+ 
+ /**
+- * alloc_elfnotes_buf - allocate buffer for ELF note segment in
+- *                      vmalloc memory
+- *
+- * @notes_sz: size of buffer
++ * vmcore_alloc_buf - allocate buffer in vmalloc memory
++ * @sizez: size of buffer
+  *
+  * If CONFIG_MMU is defined, use vmalloc_user() to allow users to mmap
+  * the buffer to user-space by means of remap_vmalloc_range().
+@@ -313,12 +318,12 @@ static const struct vm_operations_struct vmcore_mmap_ops = {
+  * If CONFIG_MMU is not defined, use vzalloc() since mmap_vmcore() is
+  * disabled and there's no need to allow users to mmap the buffer.
+  */
+-static inline char *alloc_elfnotes_buf(size_t notes_sz)
++static inline char *vmcore_alloc_buf(size_t size)
+ {
+ #ifdef CONFIG_MMU
+-	return vmalloc_user(notes_sz);
++	return vmalloc_user(size);
+ #else
+-	return vzalloc(notes_sz);
++	return vzalloc(size);
+ #endif
+ }
+ 
+@@ -665,7 +670,7 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
+ 		return rc;
+ 
+ 	*notes_sz = roundup(phdr_sz, PAGE_SIZE);
+-	*notes_buf = alloc_elfnotes_buf(*notes_sz);
++	*notes_buf = vmcore_alloc_buf(*notes_sz);
+ 	if (!*notes_buf)
+ 		return -ENOMEM;
+ 
+@@ -851,7 +856,7 @@ static int __init merge_note_headers_elf32(char *elfptr, size_t *elfsz,
+ 		return rc;
+ 
+ 	*notes_sz = roundup(phdr_sz, PAGE_SIZE);
+-	*notes_buf = alloc_elfnotes_buf(*notes_sz);
++	*notes_buf = vmcore_alloc_buf(*notes_sz);
+ 	if (!*notes_buf)
+ 		return -ENOMEM;
+ 
+@@ -1145,6 +1150,132 @@ static int __init parse_crash_elf_headers(void)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
++/**
++ * vmcoredd_get_note_size - Get size of the note that will be inserted at
++ * beginning of the dump's buffer.
++ * @name: Note's name
++ *
++ * Gets the overall size of the note that will be inserted at the beginning
++ * of the dump's buffer.  It also adds padding, if necessary to meet
++ * alignment requirements.
++ */
++static inline size_t vmcoredd_get_note_size(const char *name)
++{
++	return CRASH_CORE_NOTE_HEAD_BYTES +
++	       ALIGN(VMCOREDD_NOTE_NAME_BYTES + strlen(name), sizeof(Elf_Word));
++}
++
++/**
++ * vmcoredd_write_note - Write note at the beginning of the dump's buffer
++ * @name: Dump's name
++ * @buf: Output buffer where the note is written
++ * @size: Size of the dump
++ *
++ * Fills beginning of the dump's data with elf note.
++ */
++static void vmcoredd_write_note(const char *name, void *buf, size_t size)
++{
++	struct elf_note *note = (struct elf_note *)buf;
++	Elf_Word *word = (Elf_Word *)note;
++
++	note->n_namesz = ALIGN(VMCOREDD_NOTE_NAME_BYTES + strlen(name),
++			       sizeof(Elf_Word));
++	note->n_descsz = size;
++	note->n_type = NT_VMCOREDD;
++	word += DIV_ROUND_UP(sizeof(*note), sizeof(Elf_Word));
++	snprintf((char *)word, note->n_namesz, "%s_%s", VMCOREDD_NOTE_NAME,
++		 name);
++}
++
++/**
++ * vmcore_add_device_dump - Add a buffer containing device dump to vmcore
++ * @data: dump info.
++ *
++ * Allocate a buffer and invoke the calling driver's dump collect routine.
++ * Write Elf note at the beginning of the buffer to indicate vmcore device
++ * dump and add the dump to global list.
++ */
++static int __vmcore_add_device_dump(struct vmcoredd_data *data)
++{
++	size_t note_size, data_size;
++	struct vmcoredd_node *dump;
++	void *buf = NULL;
++	int ret;
++
++	if (!data || !strlen(data->name) ||
++	    !data->vmcoredd_callback || !data->size)
++		return -EINVAL;
++
++	dump = vzalloc(sizeof(*dump));
++	if (!dump) {
++		ret = -ENOMEM;
++		goto out_err;
++	}
++
++	note_size = vmcoredd_get_note_size(data->name);
++	/* Keep size of the buffer page aligned so that it can be mmaped */
++	data_size = roundup(note_size + data->size, PAGE_SIZE);
++
++	/* Allocate buffer for driver's to write their dumps */
++	buf = vmcore_alloc_buf(data_size);
++	if (!buf) {
++		ret = -ENOMEM;
++		goto out_err;
++	}
++
++	vmcoredd_write_note(data->name, buf, data_size - note_size);
++
++	/* Invoke the driver's dump collection routing */
++	ret = data->vmcoredd_callback(data, buf + note_size);
++	if (ret)
++		goto out_err;
++
++	dump->buf = buf;
++	dump->size = data_size;
++
++	/* Add the dump to driver sysfs list */
++	mutex_lock(&vmcoredd_mutex);
++	list_add_tail(&dump->list, &vmcoredd_list);
++	mutex_unlock(&vmcoredd_mutex);
++
++	return 0;
++
++out_err:
++	if (buf)
++		vfree(buf);
++
++	if (dump)
++		vfree(dump);
++
++	return ret;
++}
++
++int vmcore_add_device_dump(struct vmcoredd_data *data)
++{
++	return __vmcore_add_device_dump(data);
++}
++EXPORT_SYMBOL(vmcore_add_device_dump);
++#endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
++
++/* Free all dumps in vmcore device dump list */
++static void vmcore_free_device_dumps(void)
++{
++#ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
++	mutex_lock(&vmcoredd_mutex);
++	while (!list_empty(&vmcoredd_list)) {
++		struct vmcoredd_node *dump;
++
++		dump = list_first_entry(&vmcoredd_list, struct vmcoredd_node,
++					list);
++		list_del(&dump->list);
++		vfree(dump->buf);
++		vfree(dump);
++	}
++	mutex_unlock(&vmcoredd_mutex);
++#endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
++}
++
+ /* Init function for vmcore module. */
+ static int __init vmcore_init(void)
+ {
+@@ -1192,4 +1323,7 @@ void vmcore_cleanup(void)
+ 		kfree(m);
+ 	}
+ 	free_elfcorebuf();
++
++	/* clear vmcore device dump list */
++	vmcore_free_device_dumps();
+ }
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index b511f6d24b42..3b6b041d84c8 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -27,6 +27,10 @@
+ 				     VMCOREINFO_NOTE_NAME_BYTES +	\
+ 				     VMCOREINFO_BYTES)
+ 
++#define VMCOREDD_MAX_NAME_BYTES  32
++#define VMCOREDD_NOTE_NAME	 "VMCOREDD"
++#define VMCOREDD_NOTE_NAME_BYTES sizeof(VMCOREDD_NOTE_NAME)
++
+ typedef u32 note_buf_t[CRASH_CORE_NOTE_BYTES/4];
+ 
+ void crash_update_vmcoreinfo_safecopy(void *ptr);
+diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+index f7ac2aa93269..658d508d1ec5 100644
+--- a/include/linux/crash_dump.h
++++ b/include/linux/crash_dump.h
+@@ -93,4 +93,21 @@ static inline bool is_kdump_kernel(void) { return 0; }
+ #endif /* CONFIG_CRASH_DUMP */
+ 
+ extern unsigned long saved_max_pfn;
++
++/* Device Dump information to be filled by drivers */
++struct vmcoredd_data {
++	char name[VMCOREDD_MAX_NAME_BYTES]; /* Unique name of the dump */
++	unsigned long size;                 /* Size of the dump */
++	/* Driver's registered callback to be invoked to collect dump */
++	int (*vmcoredd_callback)(struct vmcoredd_data *data, void *buf);
++};
++
++#ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
++int vmcore_add_device_dump(struct vmcoredd_data *data);
++#else
++static inline int vmcore_add_device_dump(struct vmcoredd_data *data)
++{
++	return -EOPNOTSUPP;
++}
++#endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+ #endif /* LINUX_CRASHDUMP_H */
+diff --git a/include/linux/kcore.h b/include/linux/kcore.h
+index 80db19d3a505..aa26e7199060 100644
+--- a/include/linux/kcore.h
++++ b/include/linux/kcore.h
+@@ -28,6 +28,12 @@ struct vmcore {
+ 	loff_t offset;
+ };
+ 
++struct vmcoredd_node {
++	struct list_head list;	/* List of dumps */
++	void *buf;		/* Buffer containing device's dump */
++	unsigned long size;	/* Size of the buffer */
++};
++
+ #ifdef CONFIG_PROC_KCORE
+ extern void kclist_add(struct kcore_list *, void *, size_t, int type);
+ #else
+diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+index e2535d6dcec7..4e12c423b9fe 100644
+--- a/include/uapi/linux/elf.h
++++ b/include/uapi/linux/elf.h
+@@ -421,6 +421,7 @@ typedef struct elf64_shdr {
+ #define NT_ARM_SYSTEM_CALL	0x404	/* ARM system call number */
+ #define NT_ARM_SVE	0x405		/* ARM Scalable Vector Extension registers */
+ #define NT_ARC_V2	0x600		/* ARCv2 accumulator/extra registers */
++#define NT_VMCOREDD	0x700		/* Vmcore Device Dump Note */
+ 
+ /* Note header in a PT_NOTE section */
+ typedef struct elf32_note {
+-- 
+2.14.1
+
 
 _______________________________________________
 kexec mailing list
