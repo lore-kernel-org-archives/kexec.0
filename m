@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f8Q5a-0007kd-2J
- for kexec@lists.infradead.org; Tue, 17 Apr 2018 12:52:07 +0000
-Date: Tue, 17 Apr 2018 13:51:35 +0100
-From: Russell King <rmk@armlinux.org.uk>
-Subject: Re: kdump in upstream kexec-tools
-Message-ID: <20180417125134.GF23531@flint.armlinux.org.uk>
-References: <CACi5LpOfCDgoaq6YphsqiR_cQGx+z_cTeZ-B=5_Bfm5632fPYQ@mail.gmail.com>
- <20180417090113.GA19564@flint.armlinux.org.uk>
- <CACi5LpNYx07WCXTYZ0ksDt1zwyEcO+JaAGypfLqC=3o8bHr1aQ@mail.gmail.com>
+ id 1f8RGa-0003jO-83
+ for kexec@lists.infradead.org; Tue, 17 Apr 2018 14:07:29 +0000
+Date: Tue, 17 Apr 2018 09:07:14 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v1 0/2] kexec: Remove "weak" annotations from headers
+Message-ID: <20180417140714.GF28657@bhelgaas-glaptop.roam.corp.google.com>
+References: <152355706051.36693.9856090891621551967.stgit@bhelgaas-glaptop.roam.corp.google.com>
+ <20180413110820.662d4879@ThinkPad>
+ <20180413092908.GB2119@localhost.localdomain>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CACi5LpNYx07WCXTYZ0ksDt1zwyEcO+JaAGypfLqC=3o8bHr1aQ@mail.gmail.com>
+In-Reply-To: <20180413092908.GB2119@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,36 +25,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: khalid.aziz@hp.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, ebiederm@xmission.com, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Philipp Rudo <prudo@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
 
-On Tue, Apr 17, 2018 at 04:20:00PM +0530, Bhupesh Sharma wrote:
-> For e.g I use this tool on my arm64 board as follows:
+On Fri, Apr 13, 2018 at 05:29:08PM +0800, Baoquan He wrote:
+> Hi Bjorn,
 > 
-> a. Read out the 'elfcorehdr' env variable passed to the crash kernel
-> and pass the same as an argument to the tool:
-> 
-> Assuming that the 'elfcorehdr' spans the range ->
-> 0xffdf0000-0xffdf13ff, launch the tool as -
-> 
-> # kdump
-> Cannot find the start of the core dump
-> 
-> # kdump 0xffdf0000 >> output_elf_file
-> 
-> # file output_elf_file
-> output: ELF 64-bit LSB core file ARM aarch64, version 1 (SYSV)
+> There are changes I have made to solve 5-level conflict with
+> kexec/kdump and also interface unification task, they will involve x86
+> 64 only changes on these functions, I don't think we need remove them if
+> without any obvious impact or error reported.
 
-The contents should basically be the same (possibly with a different
-section ordering) as /proc/vmcore in the crashdump kernel.  If so,
-kdump serves no useful purpose, and ends up confusing the situation
-due to its inability to handle 32-bit ELF coredump files.
+Removing the weak attribute from the declaration in the header file
+does not prevent you from defining a weak function later in the .c
+file.
 
-It seems to me that the presence of /proc/vmcore obsoletes the kdump
-tool.
+We should remove the weak attribute from the header file declaration
+because it can lead to non-obvious errors, e.g., calling the wrong
+version of the function.  There's no build-time or run-time indication
+that this happens, so it's a real trap.
 
--- 
-Russell King
+Bjorn
 
 _______________________________________________
 kexec mailing list
