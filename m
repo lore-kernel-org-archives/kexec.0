@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f8mbh-0003it-Uk
- for kexec@lists.infradead.org; Wed, 18 Apr 2018 12:54:44 +0000
-Date: Wed, 18 Apr 2018 14:54:25 +0200
+ id 1f8mi9-0007Tm-5t
+ for kexec@lists.infradead.org; Wed, 18 Apr 2018 13:01:22 +0000
+Date: Wed, 18 Apr 2018 15:01:08 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: Set -fno-PIC along with -mcmodel=large
-Message-ID: <20180418125425.6tkoopcix5kgisd2@verge.net.au>
-References: <87608dprce.fsf@coreos.com>
- <b6fd5727-9199-1350-c175-8f9a780a095f@infradead.org>
- <bd88df09-e87b-4820-b066-bd6ba90f3c6a@infradead.org>
+Subject: Re: kdump in upstream kexec-tools
+Message-ID: <20180418130107.bwwzgedfiqn5n4gq@verge.net.au>
+References: <CACi5LpOfCDgoaq6YphsqiR_cQGx+z_cTeZ-B=5_Bfm5632fPYQ@mail.gmail.com>
+ <20180417090113.GA19564@flint.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <bd88df09-e87b-4820-b066-bd6ba90f3c6a@infradead.org>
+In-Reply-To: <20180417090113.GA19564@flint.armlinux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,33 +24,79 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: David Michael <david.michael@coreos.com>, kexec@lists.infradead.org
+To: Russell King <rmk@armlinux.org.uk>
+Cc: khalid.aziz@hp.com, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, ebiederm@xmission.com, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, Apr 12, 2018 at 04:37:25PM -0700, Geoff Levand wrote:
-> Hi Simon,
-> 
-> On 02/02/2018 03:48 PM, Geoff Levand wrote:
+On Tue, Apr 17, 2018 at 10:01:13AM +0100, Russell King wrote:
+> On Tue, Apr 17, 2018 at 10:20:08AM +0530, Bhupesh Sharma wrote:
 > > Hi,
 > > 
-> > On 01/07/2018 08:26 AM, David Michael wrote:
-> >> As seen in GCC's gcc/config/aarch64/aarch64.c, -fPIC with large
-> >> code model is unsupported.  This fixes the "sorry, unimplemented"
-> >> errors when building with compilers defaulting to -fPIC.
-> >> ---
-> >>
-> >> purgatory/arch/arm64/entry.S:1:0: sorry, unimplemented: code model 'large' with -fPIC
-> >>
-> >> This change fixes it.  Can something like this be applied?
+> > I was working on improving documentation/structure of the upstream
+> > kexec-tools and I was wondering what is the purpose of the 'kdump'
+> > directory inside the kexec-tools.
 > > 
-> > This change seems reasonable considering large model + PIC is unsupported.
+> > This kdump utility seems to cause confusion with the 'kdump' utility
+> > present inside some distributions (for e.g.  '/usr/sbin/kdump' present
+> > inside fedora) due to the same naming convention and so we should
+> > populate/modify the kdump man page to indicate the same, so as to
+> > avoid confusion.
 > > 
-> > Reviewed by: Geoff Levand <geoff@infradead.org> 
+> > Presently here are the contents of this directory:
+> > 
+> > # ls kdump/
+> > kdump.8  kdump.c  Makefile
+> > 
+> > - Out of these the kdump man documentation (kdump.8) is just a
+> > placeholder as suggested by the man page documentation: "kdump - This
+> > is just a placeholder until real man page has been written"
+> > 
+> > - Looking at kdump.c :
+> > 
+> > 1. I understand that this code is mainly used to read a crashdump from
+> > memory. One can run the same using:
+> > 
+> > # kdump <start_addr>
+> > 
+> > where start_addr is basically the start address of the core dump
+> > (which can also be represented via the 'elfcorehdr' environment
+> > variable being passed to the crash kernel which represents the
+> > physical address of the start of the ELF header)
+> > 
+> > 2. This tool needs READ_ONLY access to /dev/mem (so we need to set
+> > CONFIG_STRICT_DEVMEM configuration option accordingly).
+> > 
+> > 3. The code thereafter reads (via mmap) and verifies the ELF header.
+> > Subsequently it reads (via mmap) the program header.
+> > 
+> > 4. Then we collect all the notes and write on STDOUT all the headers
+> > and notes found in the crashdump collected from memory.
+> > 
+> > So, as per my understanding even in absence of (more powerful) tools
+> > like crash (or gdb), we can still go ahead and read the crashdump from
+> > memory and display all the headers and notes present in the same on
+> > standard serial out interface using this kdump utility.
+> > 
+> > This is probably a good to have feature for systems which have very
+> > simple/minimal rootfs (and I see that a few arm32 systems seem to use
+> > the same as well) or are low on memory availability.
+> > 
+> > Now, I wanted to confirm if the 'kdump' utility for reading crashdump
+> > collected from memory is still needed (as the last commit is dated
+> > back to 2016 and was done for arm32 systems). If yes, I can go ahead
+> > and enhance the kdump man page to include the description given above
+> > - so that it helps users understand how to run the tool.
+> > 
+> > Please share your opinions.
 > 
-> Could you please merged this fix so arm64 builds work OK on Gentoo
-> and Gentoo derivatives.
+> Firstly, please use:
+> 
+>   git://git.armlinux.org.uk/~rmk/kexec-tools.git
+> 
+> for ARM systems - this has some important fixes that aren't in the
+> mainline repository.
 
-Sure, but it really ought to have a Signed-off-by line from David.
+I apologise if this is due to omission on my part,
+can we work towards getting them in the mainline repository?
 
 _______________________________________________
 kexec mailing list
