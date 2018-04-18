@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from stargate.chelsio.com ([12.32.117.8])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f8mFj-0002Us-I7
- for kexec@lists.infradead.org; Wed, 18 Apr 2018 12:32:01 +0000
-Date: Wed, 18 Apr 2018 18:01:16 +0530
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Subject: Re: [PATCH net-next v4 0/3] kernel: add support to collect hardware
- logs in crash recovery kernel
-Message-ID: <20180418123114.GA19159@chelsio.com>
-References: <cover.1523950321.git.rahul.lakkireddy@chelsio.com>
- <20180418061546.GA4551@dhcp-128-65.nay.redhat.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1f8mbh-0003it-Uk
+ for kexec@lists.infradead.org; Wed, 18 Apr 2018 12:54:44 +0000
+Date: Wed, 18 Apr 2018 14:54:25 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] arm64: Set -fno-PIC along with -mcmodel=large
+Message-ID: <20180418125425.6tkoopcix5kgisd2@verge.net.au>
+References: <87608dprce.fsf@coreos.com>
+ <b6fd5727-9199-1350-c175-8f9a780a095f@infradead.org>
+ <bd88df09-e87b-4820-b066-bd6ba90f3c6a@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180418061546.GA4551@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <bd88df09-e87b-4820-b066-bd6ba90f3c6a@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,111 +25,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Indranil Choudhury <indranil@chelsio.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Nirranjan Kirubaharan <nirranjan@chelsio.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "davem@davemloft.net" <davem@davemloft.net>, "stephen@networkplumber.org" <stephen@networkplumber.org>, Ganesh GR <ganeshgr@chelsio.com>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "ebiederm@xmission.com" <ebiederm@xmission.com>
+To: Geoff Levand <geoff@infradead.org>
+Cc: David Michael <david.michael@coreos.com>, kexec@lists.infradead.org
 
-On Wednesday, April 04/18/18, 2018 at 11:45:46 +0530, Dave Young wrote:
-> Hi Rahul,
-> On 04/17/18 at 01:14pm, Rahul Lakkireddy wrote:
-> > On production servers running variety of workloads over time, kernel
-> > panic can happen sporadically after days or even months. It is
-> > important to collect as much debug logs as possible to root cause
-> > and fix the problem, that may not be easy to reproduce. Snapshot of
-> > underlying hardware/firmware state (like register dump, firmware
-> > logs, adapter memory, etc.), at the time of kernel panic will be very
-> > helpful while debugging the culprit device driver.
-> > 
-> > This series of patches add new generic framework that enable device
-> > drivers to collect device specific snapshot of the hardware/firmware
-> > state of the underlying device in the crash recovery kernel. In crash
-> > recovery kernel, the collected logs are added as elf notes to
-> > /proc/vmcore, which is copied by user space scripts for post-analysis.
-> > 
-> > The sequence of actions done by device drivers to append their device
-> > specific hardware/firmware logs to /proc/vmcore are as follows:
-> > 
-> > 1. During probe (before hardware is initialized), device drivers
-> > register to the vmcore module (via vmcore_add_device_dump()), with
-> > callback function, along with buffer size and log name needed for
-> > firmware/hardware log collection.
+On Thu, Apr 12, 2018 at 04:37:25PM -0700, Geoff Levand wrote:
+> Hi Simon,
 > 
-> I assumed the elf notes info should be prepared while kexec_[file_]load
-> phase. But I did not read the old comment, not sure if it has been discussed
-> or not.
+> On 02/02/2018 03:48 PM, Geoff Levand wrote:
+> > Hi,
+> > 
+> > On 01/07/2018 08:26 AM, David Michael wrote:
+> >> As seen in GCC's gcc/config/aarch64/aarch64.c, -fPIC with large
+> >> code model is unsupported.  This fixes the "sorry, unimplemented"
+> >> errors when building with compilers defaulting to -fPIC.
+> >> ---
+> >>
+> >> purgatory/arch/arm64/entry.S:1:0: sorry, unimplemented: code model 'large' with -fPIC
+> >>
+> >> This change fixes it.  Can something like this be applied?
+> > 
+> > This change seems reasonable considering large model + PIC is unsupported.
+> > 
+> > Reviewed by: Geoff Levand <geoff@infradead.org> 
 > 
+> Could you please merged this fix so arm64 builds work OK on Gentoo
+> and Gentoo derivatives.
 
-We must not collect dumps in crashing kernel. Adding more things in
-crash dump path risks not collecting vmcore at all. Eric had
-discussed this in more detail at:
-
-https://lkml.org/lkml/2018/3/24/319
-
-We are safe to collect dumps in the second kernel. Each device dump
-will be exported as an elf note in /proc/vmcore.
-
-> If do this in 2nd kernel a question is driver can be loaded later than vmcore init.
-
-Yes, drivers will add their device dumps after vmcore init.
-
-> How to guarantee the function works if vmcore reading happens before
-> the driver is loaded?
-> 
-> Also it is possible that kdump initramfs does not contains the driver
-> module.
-> 
-> Am I missing something?
-> 
-
-Yes, driver must be in initramfs if it wants to collect and add device
-dump to /proc/vmcore in second kernel.
-
-> > 
-> > 2. vmcore module allocates the buffer with requested size. It adds
-> > an elf note and invokes the device driver's registered callback
-> > function.
-> > 
-> > 3. Device driver collects all hardware/firmware logs into the buffer
-> > and returns control back to vmcore module.
-> > 
-> > The device specific hardware/firmware logs can be seen as elf notes:
-> > 
-> > # readelf -n /proc/vmcore
-> > 
-> > Displaying notes found at file offset 0x00001000 with length 0x04003288:
-> >   Owner                 Data size	Description
-> >   VMCOREDD_cxgb4_0000:02:00.4 0x02000fd8	Unknown note type: (0x00000700)
-> >   VMCOREDD_cxgb4_0000:04:00.4 0x02000fd8	Unknown note type: (0x00000700)
-> >   CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
-> >   CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
-> >   CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
-> >   CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
-> >   CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
-> >   CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
-> >   CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
-> >   CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
-> >   VMCOREINFO           0x0000074f	Unknown note type: (0x00000000)
-> > 
-> > Patch 1 adds API to vmcore module to allow drivers to register callback
-> > to collect the device specific hardware/firmware logs.  The logs will
-> > be added to /proc/vmcore as elf notes.
-> > 
-> > Patch 2 updates read and mmap logic to append device specific hardware/
-> > firmware logs as elf notes.
-> > 
-> > Patch 3 shows a cxgb4 driver example using the API to collect
-> > hardware/firmware logs in crash recovery kernel, before hardware is
-> > initialized.
-> > 
-> > Thanks,
-> > Rahul
-> > 
-> > RFC v1: https://lkml.org/lkml/2018/3/2/542
-> > RFC v2: https://lkml.org/lkml/2018/3/16/326
-> > 
-[...]
-
-Thanks,
-Rahul
+Sure, but it really ought to have a Signed-off-by line from David.
 
 _______________________________________________
 kexec mailing list
