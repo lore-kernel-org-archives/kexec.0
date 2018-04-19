@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f8rpe-0002Na-Rw
- for kexec@lists.infradead.org; Wed, 18 Apr 2018 18:29:29 +0000
-Date: Wed, 18 Apr 2018 19:28:54 +0100
-From: Russell King <rmk@armlinux.org.uk>
-Subject: Re: kdump in upstream kexec-tools
-Message-ID: <20180418182854.GA7183@flint.armlinux.org.uk>
-References: <CACi5LpOfCDgoaq6YphsqiR_cQGx+z_cTeZ-B=5_Bfm5632fPYQ@mail.gmail.com>
- <20180417090113.GA19564@flint.armlinux.org.uk>
- <20180418130107.bwwzgedfiqn5n4gq@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180418130107.bwwzgedfiqn5n4gq@verge.net.au>
+ id 1f8xIZ-0003HX-GJ
+ for kexec@lists.infradead.org; Thu, 19 Apr 2018 00:19:41 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH v3 3/3] kexec_file: Load kernel at top of system RAM if
+ required
+Date: Thu, 19 Apr 2018 08:18:48 +0800
+Message-Id: <20180419001848.3041-4-bhe@redhat.com>
+In-Reply-To: <20180419001848.3041-1-bhe@redhat.com>
+References: <20180419001848.3041-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,102 +18,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: khalid.aziz@hp.com, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, ebiederm@xmission.com, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: linux-kernel@vger.kernel.org, akpm@linux-foundation.org, robh+dt@kernel.org, dan.j.williams@intel.com, nicolas.pitre@linaro.org, josh@joshtriplett.org
+Cc: Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Yinghai Lu <yinghai@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, Apr 18, 2018 at 03:01:08PM +0200, Simon Horman wrote:
-> On Tue, Apr 17, 2018 at 10:01:13AM +0100, Russell King wrote:
-> > On Tue, Apr 17, 2018 at 10:20:08AM +0530, Bhupesh Sharma wrote:
-> > > Hi,
-> > > 
-> > > I was working on improving documentation/structure of the upstream
-> > > kexec-tools and I was wondering what is the purpose of the 'kdump'
-> > > directory inside the kexec-tools.
-> > > 
-> > > This kdump utility seems to cause confusion with the 'kdump' utility
-> > > present inside some distributions (for e.g.  '/usr/sbin/kdump' present
-> > > inside fedora) due to the same naming convention and so we should
-> > > populate/modify the kdump man page to indicate the same, so as to
-> > > avoid confusion.
-> > > 
-> > > Presently here are the contents of this directory:
-> > > 
-> > > # ls kdump/
-> > > kdump.8  kdump.c  Makefile
-> > > 
-> > > - Out of these the kdump man documentation (kdump.8) is just a
-> > > placeholder as suggested by the man page documentation: "kdump - This
-> > > is just a placeholder until real man page has been written"
-> > > 
-> > > - Looking at kdump.c :
-> > > 
-> > > 1. I understand that this code is mainly used to read a crashdump from
-> > > memory. One can run the same using:
-> > > 
-> > > # kdump <start_addr>
-> > > 
-> > > where start_addr is basically the start address of the core dump
-> > > (which can also be represented via the 'elfcorehdr' environment
-> > > variable being passed to the crash kernel which represents the
-> > > physical address of the start of the ELF header)
-> > > 
-> > > 2. This tool needs READ_ONLY access to /dev/mem (so we need to set
-> > > CONFIG_STRICT_DEVMEM configuration option accordingly).
-> > > 
-> > > 3. The code thereafter reads (via mmap) and verifies the ELF header.
-> > > Subsequently it reads (via mmap) the program header.
-> > > 
-> > > 4. Then we collect all the notes and write on STDOUT all the headers
-> > > and notes found in the crashdump collected from memory.
-> > > 
-> > > So, as per my understanding even in absence of (more powerful) tools
-> > > like crash (or gdb), we can still go ahead and read the crashdump from
-> > > memory and display all the headers and notes present in the same on
-> > > standard serial out interface using this kdump utility.
-> > > 
-> > > This is probably a good to have feature for systems which have very
-> > > simple/minimal rootfs (and I see that a few arm32 systems seem to use
-> > > the same as well) or are low on memory availability.
-> > > 
-> > > Now, I wanted to confirm if the 'kdump' utility for reading crashdump
-> > > collected from memory is still needed (as the last commit is dated
-> > > back to 2016 and was done for arm32 systems). If yes, I can go ahead
-> > > and enhance the kdump man page to include the description given above
-> > > - so that it helps users understand how to run the tool.
-> > > 
-> > > Please share your opinions.
-> > 
-> > Firstly, please use:
-> > 
-> >   git://git.armlinux.org.uk/~rmk/kexec-tools.git
-> > 
-> > for ARM systems - this has some important fixes that aren't in the
-> > mainline repository.
-> 
-> I apologise if this is due to omission on my part,
-> can we work towards getting them in the mainline repository?
+For kexec_file loading, if kexec_buf.top_down is 'true', the memory which
+is used to load kernel/initrd/purgatory is supposed to be allocated from
+top to down. This is what we have been doing all along in the old kexec
+loading interface and the kexec loading is still default setting in some
+distributions. However, the current kexec_file loading interface doesn't
+do likt this. The function arch_kexec_walk_mem() it calls ignores checking
+kexec_buf.top_down, but calls walk_system_ram_res() directly to go through
+all resources of System RAM from bottom to up, to try to find memory region
+which can contain the specific kexec buffer, then call locate_mem_hole_callback()
+to allocate memory in that found memory region from top to down. This brings
+confusion. These two interfaces need be unified on behaviour.
 
-The problem on ARM was caused because you applied the wrong version of
-the patches I sent out.  When I noticed and reported it, there was no
-response.
+Here add checking if kexec_buf.top_down is 'true' in arch_kexec_walk_mem(),
+if yes, call the newly added walk_system_ram_res_rev() to find memory region
+from top to down to load kernel.
 
-My only option over that intervening six months is to provide people
-with something that actually works properly on 32-bit ARM has been
-to publish my own kexec-tools git tree with the appropriate fixes in.
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yinghai Lu <yinghai@kernel.org>
+Cc: kexec@lists.infradead.org
+---
+ kernel/kexec_file.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-It now contains a couple more patches than just fixing that up.
-
-If you want to merge from the above URL, be my guest, but as far as
-I'm concerned, it's been proven that sending patches for merging is
-open to mistakes happening.  That wouldn't be too bad if it hadn't
-taken more than six months to get your attention on this issue.
-
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 75d8e7cf040e..7a66d9d5a534 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -518,6 +518,8 @@ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+ 					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+ 					   crashk_res.start, crashk_res.end,
+ 					   kbuf, func);
++	else if (kbuf->top_down)
++		return walk_system_ram_res_rev(0, ULONG_MAX, kbuf, func);
+ 	else
+ 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
+ }
 -- 
-Russell King
+2.13.6
+
 
 _______________________________________________
 kexec mailing list
