@@ -1,22 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from stargate.chelsio.com ([12.32.117.8])
+Received: from userp2130.oracle.com ([156.151.31.86])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f9XP0-0005ER-Ct
- for kexec@lists.infradead.org; Fri, 20 Apr 2018 14:52:44 +0000
-Date: Fri, 20 Apr 2018 20:21:56 +0530
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Subject: Re: [PATCH net-next v4 0/3] kernel: add support to collect hardware
- logs in crash recovery kernel
-Message-ID: <20180420145154.GA32442@chelsio.com>
-References: <cover.1523950321.git.rahul.lakkireddy@chelsio.com>
- <20180418061546.GA4551@dhcp-128-65.nay.redhat.com>
- <20180418123114.GA19159@chelsio.com>
- <20180419014030.GA2340@dhcp-128-65.nay.redhat.com>
- <20180419142747.GA30274@chelsio.com> <87lgdjnt72.fsf@xmission.com>
- <20180420130632.GA32304@chelsio.com> <87po2uhueu.fsf@xmission.com>
+ id 1f9bVb-0004Y8-I6
+ for kexec@lists.infradead.org; Fri, 20 Apr 2018 19:15:49 +0000
+From: Eric DeVolder <eric.devolder@oracle.com>
+Subject: RFC Xen signature verification for kexec
+Message-ID: <81714431-9776-7247-86db-c035fa3d2ce6@oracle.com>
+Date: Fri, 20 Apr 2018 14:12:59 -0500
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87po2uhueu.fsf@xmission.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,156 +17,146 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Indranil Choudhury <indranil@chelsio.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Nirranjan Kirubaharan <nirranjan@chelsio.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stephen@networkplumber.org" <stephen@networkplumber.org>, "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>, Ganesh GR <ganeshgr@chelsio.com>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, "davem@davemloft.net" <davem@davemloft.net>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+To: xen-devel@lists.xen.org, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: Daniel Kiper <daniel.kiper@oracle.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 
-On Friday, April 04/20/18, 2018 at 19:06:09 +0530, Eric W. Biederman wrote:
-> Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
-> 
-> > On Thursday, April 04/19/18, 2018 at 20:23:37 +0530, Eric W. Biederman wrote:
-> >> Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
-> >> 
-> >> > On Thursday, April 04/19/18, 2018 at 07:10:30 +0530, Dave Young wrote:
-> >> >> On 04/18/18 at 06:01pm, Rahul Lakkireddy wrote:
-> >> >> > On Wednesday, April 04/18/18, 2018 at 11:45:46 +0530, Dave Young wrote:
-> >> >> > > Hi Rahul,
-> >> >> > > On 04/17/18 at 01:14pm, Rahul Lakkireddy wrote:
-> >> >> > > > On production servers running variety of workloads over time, kernel
-> >> >> > > > panic can happen sporadically after days or even months. It is
-> >> >> > > > important to collect as much debug logs as possible to root cause
-> >> >> > > > and fix the problem, that may not be easy to reproduce. Snapshot of
-> >> >> > > > underlying hardware/firmware state (like register dump, firmware
-> >> >> > > > logs, adapter memory, etc.), at the time of kernel panic will be very
-> >> >> > > > helpful while debugging the culprit device driver.
-> >> >> > > > 
-> >> >> > > > This series of patches add new generic framework that enable device
-> >> >> > > > drivers to collect device specific snapshot of the hardware/firmware
-> >> >> > > > state of the underlying device in the crash recovery kernel. In crash
-> >> >> > > > recovery kernel, the collected logs are added as elf notes to
-> >> >> > > > /proc/vmcore, which is copied by user space scripts for post-analysis.
-> >> >> > > > 
-> >> >> > > > The sequence of actions done by device drivers to append their device
-> >> >> > > > specific hardware/firmware logs to /proc/vmcore are as follows:
-> >> >> > > > 
-> >> >> > > > 1. During probe (before hardware is initialized), device drivers
-> >> >> > > > register to the vmcore module (via vmcore_add_device_dump()), with
-> >> >> > > > callback function, along with buffer size and log name needed for
-> >> >> > > > firmware/hardware log collection.
-> >> >> > > 
-> >> >> > > I assumed the elf notes info should be prepared while kexec_[file_]load
-> >> >> > > phase. But I did not read the old comment, not sure if it has been discussed
-> >> >> > > or not.
-> >> >> > > 
-> >> >> > 
-> >> >> > We must not collect dumps in crashing kernel. Adding more things in
-> >> >> > crash dump path risks not collecting vmcore at all. Eric had
-> >> >> > discussed this in more detail at:
-> >> >> > 
-> >> >> > https://lkml.org/lkml/2018/3/24/319
-> >> >> > 
-> >> >> > We are safe to collect dumps in the second kernel. Each device dump
-> >> >> > will be exported as an elf note in /proc/vmcore.
-> >> >> 
-> >> >> I understand that we should avoid adding anything in crash path.  And I also
-> >> >> agree to collect device dump in second kernel.  I just assumed device
-> >> >> dump use some memory area to store the debug info and the memory
-> >> >> is persistent so that this can be done in 2 steps, first register the
-> >> >> address in elf header in kexec_load, then collect the dump in 2nd
-> >> >> kernel.  But it seems the driver is doing some other logic to collect
-> >> >> the info instead of just that simple like I thought. 
-> >> >> 
-> >> >
-> >> > It seems simpler, but I'm concerned with waste of memory area, if
-> >> > there are no device dumps being collected in second kernel. In
-> >> > approach proposed in these series, we dynamically allocate memory
-> >> > for the device dumps from second kernel's available memory.
-> >> 
-> >> Don't count that kernel having more than about 128MiB.
-> >> 
-> >
-> > If large dump is expected, Administrator can increase the memory
-> > allocated to the second kernel (using crashkernel boot param), to
-> > ensure device dumps get collected.
-> 
-> Except 128MiB is already a already a huge amount to reserve.  I
-> typically have run crash dumps with 16MiB of memory and thought it was
-> overkill.  Looking below 32MiB seems a bit high but it is small enough
-> that it is still doable.  I am baffled at how 2GiB can be guaranteed to fit
-> in 32MiB (sparse register space?) but if it works reliably.
-> 
+In reading this and providing feedback, I'm hoping to obtain
+community consensus on the following questions:
+- Is there interest in this?
+- Which approach is favored?
+- Are there other approaches/efforts?
+- Other concerns/feedback?
 
-Yes, we skip portions in on-chip memory dump that do not add to debug
-value (such as the large regions reserved for holding Payload data
-going through the device) and hence the overall dump size reduces
-significantly.
+Executive Summary
+Xen currently lacks signature verification infrastructure which makes
+it vulnerable to exploit, even with secure boot mode, such as UEFI.
+This proposal outlines a high-level approach to support signature
+verification for kexec in Xen.
 
-> >> For that reason if for no other it would be nice if it was possible to
-> >> have the driver to not initialize the device and just stand there
-> >> handing out the data a piece at a time as it is read from /proc/vmcore.
-> >> 
-> >
-> > Since cxgb4 is a network driver, it can be used to transfer the dumps
-> > over the network. So we must ensure the dumps get collected and
-> > stored, before device gets initialized to transfer dumps over
-> > the network.
-> 
-> Good point.  For some reason I was thinking it was an infiniband and not
-> an 10GiB ethernet device.
-> 
-> >> The 2GiB number I read earlier concerns me for working in a limited
-> >> environment.
-> >> 
-> >
-> > All dumps, including the 2GB on-chip memory dump, is compressed by
-> > the cxgb4 driver as they are collected. The overall compressed dump
-> > comes out at max 32 MB.
-> >
-> >> It might even make sense to separate this into a completely separate
-> >> module (depended upon the main driver if it makes sense to share
-> >> the functionality) so that people performing crash dumps would not
-> >> hesitate to include the code in their initramfs images.
-> >> 
-> >> I can see splitting a device up into a portion only to be used in case
-> >> of a crash dump and a normal portion like we do for main memory but I
-> >> doubt that makes sense in practice.
-> >> 
-> >
-> > This is not required, especially in case of network drivers, which
-> > must collect underlying device dump and initialize the device to
-> > transfer dumps over the network.
-> 
-> I have a practical concern.  What happens if the previous kernel left
-> the device in such a bad stat the driver can not successfully initialize
-> it.
-> 
-> Does failure to initialize cxgb4 after a crash now mean that you can not
-> capture the crash dump to see the crazy state the device was in?
-> 
-> Typically the initramfs for a crash dump does not include unnecessary
-> drivers so that hardware in states the drivers can't handle won't
-> prevent taking a crash dump.
-> 
-> I understand the issue if you are taking a dump over your 10GiB ethernet
-> it is a moot point.  But if you are writing your dump to disk, or
-> writing it over a management gigabit ethernet then it is still an issue.
-> 
-> Is there a decoupling so that a totally b0rked device can't prevent
-> taking it's own dump?
-> 
+Option 1: Port Linux signature verification into Xen
+Option 2: Enable signature verification in Xen utilizing libgcrypt
 
-As long as we can safely map and access the BAR registers, we
-can collect the dumps regardless of whatever state the device and
-firmware were left in and store it as part of /proc/vmcore. After
-that, we attempt to re-initialize the device and restart the
-firmware. So, even if driver initialization fails at this point,
-we still have the dumps as part of vmcore.
+Overview
+In UEFI secure boot mode, a "root of trust" is established. Typically,
+UEFI secure boot verifies a boot loader, e.g. GRUB2, first. Then the
+bootloader verifies Xen using the UEFI shim protocol and Xen verifies
+the dom0 [Linux] kernel using shim protocol too.  Xen utilizes the
+UEFI shim protocol at boot to verify the dom0 kernel.[1]
 
-Thanks,
-Rahul
+Thus UEFI can be used to boot into a "trusted" Xen and dom0 kernel.
+However, this "trusted" environment is vulnerable to exploit as a dom0
+user space application can be utilized to kexec a second, untrusted
+kernel.
+
+In the Xen environment, the kexec/kdump solution involves user space
+utilities (eg. kexec-tools and makedumpfile), hypervisor support (eg.
+xen/common/kexec.c) and post-mortem analysis tools (eg. crash).
+
+Typically, in the Xen environment, the kexec of a second kernel (plus
+initrd) is requested by /sbin/kexec binary *directly* invoking the Xen
+kexec hypercall (which bypasses dom0) with a data structure pointing
+to loadable segments.  Xen then places these segments into memory.
+This second kernel is not verified, and the system can be rebooted
+into an untrusted kernel.
+
+As it stands today, the Xen hypervisor has no mechanism for signature
+verification, and thus can not prevent this exploit.
+
+NOTE: A solution for signature verification in Xen would perhaps also
+enable a solution for LivePatch signature checking.
+
+
+#####
+Two options for signature verification in Xen
+
+This proposal outlines two options under consideration for enhancing
+Xen to support signature verification of kexec loaded images. The
+first option is essentially to mirror Linux signature verification
+code into Xen. The second option utilizes components from sources
+other than Linux (for example, libgcrypt rather than linux/crypto).
+
+NOTE: An option to utilize dom0 kernel signature verification does not
+prevent the exploit as user space can invoke the hypercall directly,
+bypassing dom0.
+
+#####
+Option 1: Port Linux signature verification into Xen
+
+This option essentially is porting the Linux kexec_file_load()
+system call as a new Xen kexec hypercall operation, for example,
+KEXEC_CMD_kexec_file_load.
+
+The license of Linux and Xen allow for Xen to take files from Linux
+and incorporate into Xen. So in general most of this could be lifted
+from Linux and dropped into Xen with the new hypercall op providing a
+needed wrapper.
+
+Pros:
+- Most of the code already exists in Linux
+
+Cons:
+- This could potentially be taking tens of files from Linux and
+   placing into Xen (linux/crypto has 115 source files). This
+   would be a problematic management scenario going forward with
+   uptaking changes in Linux and merging into Xen, and vice versa.
+
+Changes to kexec-tools:
+- Changes primarily to do_kexec_file_load():
+   - if xen_present()...
+     - Read entire file contents into buffer
+     - Invoke new hypercall op
+
+Changes to Xen:
+- Import linux/crypto, linux/include/crypto, and
+   linux/arch/x86/crypto <-- RSA, SHA, PKCS, etc
+- Import linux/crypto/asymmetric_keys <-- PE handling
+- Import linux/certs  <-- has system_keyring
+- Import security/keys <-- key management
+- Import various accompanying CONFIG settings
+- Implement new hypercall operation,
+   patterning after Linux' kexec_file_load(). One
+   difference would be that rather than passing
+   file handles, Xen would need to be passed pointers
+   to the buffer(s) containing the image(s), as Xen
+   can not read a file (for second kernel and the
+   initrd) from Linux. Xen can access the buffer(s)
+   via copy_from_user().
+
+#####
+Option 2: Enable signature verification in Xen utilizing libgcrypt
+
+This option is similar to Option 1, but utilizes libgcrypt
+crytpo library rather than linux/crypto files.
+
+Pros:
+- Libgcrypt is LGPLv2.1+ license.
+- Eliminates problematic scenario of tracking changes to
+   linux/crypto sources in Xen, and vice versa in Linux.
+
+Cons:
+- Introduces a dependency on libgcrypt
+- Still relying on lifting many Linux kernel sources for PE file
+   handling, certificate handling, etc. However, an alternative
+   source for PE file handling is shim.
+
+Changes to kexec-tools:
+- Exactly same as Option 1 Xen version above
+
+Changes to Xen:
+- Changes are essentially same as Option 1 Xen above, but
+   replacing linux/crypto with libgcrypt. This also involves
+   changes around the API differences between linux/crypto
+   and libgcrypt.
+
+References:
+[1] "XPDDS17: EFI Secure Boot, Shim and Xen: Current Status and
+     Developments - Daniel Kiper - Oracle"
+ 
+https://www.slideshare.net/xen_com_mgr/xppds17-efi-secure-boot-shim-and-xen-current-status-and-developments-daniel-kiper-oracle
 
 _______________________________________________
 kexec mailing list
