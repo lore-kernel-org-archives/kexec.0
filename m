@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2130.oracle.com ([156.151.31.86])
+Received: from stargate.chelsio.com ([12.32.117.8])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1f9bVb-0004Y8-I6
- for kexec@lists.infradead.org; Fri, 20 Apr 2018 19:15:49 +0000
-From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: RFC Xen signature verification for kexec
-Message-ID: <81714431-9776-7247-86db-c035fa3d2ce6@oracle.com>
-Date: Fri, 20 Apr 2018 14:12:59 -0500
-MIME-Version: 1.0
-Content-Language: en-US
+ id 1f9vyP-0004Xd-Bp
+ for kexec@lists.infradead.org; Sat, 21 Apr 2018 17:06:55 +0000
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Subject: [PATCH net-next v5 0/3] kernel: add support to collect hardware logs
+ in crash recovery kernel
+Date: Sat, 21 Apr 2018 22:35:52 +0530
+Message-Id: <cover.1524329561.git.rahul.lakkireddy@chelsio.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,146 +16,140 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: xen-devel@lists.xen.org, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: Daniel Kiper <daniel.kiper@oracle.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To: netdev@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: indranil@chelsio.com, nirranjan@chelsio.com, stephen@networkplumber.org, ganeshgr@chelsio.com, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, ebiederm@xmission.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, viro@zeniv.linux.org.uk
 
-In reading this and providing feedback, I'm hoping to obtain
-community consensus on the following questions:
-- Is there interest in this?
-- Which approach is favored?
-- Are there other approaches/efforts?
-- Other concerns/feedback?
+On production servers running variety of workloads over time, kernel
+panic can happen sporadically after days or even months. It is
+important to collect as much debug logs as possible to root cause
+and fix the problem, that may not be easy to reproduce. Snapshot of
+underlying hardware/firmware state (like register dump, firmware
+logs, adapter memory, etc.), at the time of kernel panic will be very
+helpful while debugging the culprit device driver.
 
-Executive Summary
-Xen currently lacks signature verification infrastructure which makes
-it vulnerable to exploit, even with secure boot mode, such as UEFI.
-This proposal outlines a high-level approach to support signature
-verification for kexec in Xen.
+This series of patches add new generic framework that enable device
+drivers to collect device specific snapshot of the hardware/firmware
+state of the underlying device in the crash recovery kernel. In crash
+recovery kernel, the collected logs are added as elf notes to
+/proc/vmcore, which is copied by user space scripts for post-analysis.
 
-Option 1: Port Linux signature verification into Xen
-Option 2: Enable signature verification in Xen utilizing libgcrypt
+The sequence of actions done by device drivers to append their device
+specific hardware/firmware logs to /proc/vmcore are as follows:
 
-Overview
-In UEFI secure boot mode, a "root of trust" is established. Typically,
-UEFI secure boot verifies a boot loader, e.g. GRUB2, first. Then the
-bootloader verifies Xen using the UEFI shim protocol and Xen verifies
-the dom0 [Linux] kernel using shim protocol too.  Xen utilizes the
-UEFI shim protocol at boot to verify the dom0 kernel.[1]
+1. During probe (before hardware is initialized), device drivers
+register to the vmcore module (via vmcore_add_device_dump()), with
+callback function, along with buffer size and log name needed for
+firmware/hardware log collection.
 
-Thus UEFI can be used to boot into a "trusted" Xen and dom0 kernel.
-However, this "trusted" environment is vulnerable to exploit as a dom0
-user space application can be utilized to kexec a second, untrusted
-kernel.
+2. vmcore module allocates the buffer with requested size. It adds
+an elf note and invokes the device driver's registered callback
+function.
 
-In the Xen environment, the kexec/kdump solution involves user space
-utilities (eg. kexec-tools and makedumpfile), hypervisor support (eg.
-xen/common/kexec.c) and post-mortem analysis tools (eg. crash).
+3. Device driver collects all hardware/firmware logs into the buffer
+and returns control back to vmcore module.
 
-Typically, in the Xen environment, the kexec of a second kernel (plus
-initrd) is requested by /sbin/kexec binary *directly* invoking the Xen
-kexec hypercall (which bypasses dom0) with a data structure pointing
-to loadable segments.  Xen then places these segments into memory.
-This second kernel is not verified, and the system can be rebooted
-into an untrusted kernel.
+The device specific hardware/firmware logs can be seen as elf notes:
 
-As it stands today, the Xen hypervisor has no mechanism for signature
-verification, and thus can not prevent this exploit.
+# readelf -n /proc/vmcore
 
-NOTE: A solution for signature verification in Xen would perhaps also
-enable a solution for LivePatch signature checking.
+Displaying notes found at file offset 0x00001000 with length 0x04003288:
+  Owner                 Data size	Description
+  VMCOREDD_cxgb4_0000:02:00.4 0x02000fd8	Unknown note type: (0x00000700)
+  VMCOREDD_cxgb4_0000:04:00.4 0x02000fd8	Unknown note type: (0x00000700)
+  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+  CORE                 0x00000150	NT_PRSTATUS (prstatus structure)
+  VMCOREINFO           0x0000074f	Unknown note type: (0x00000000)
 
+Patch 1 adds API to vmcore module to allow drivers to register callback
+to collect the device specific hardware/firmware logs.  The logs will
+be added to /proc/vmcore as elf notes.
 
-#####
-Two options for signature verification in Xen
+Patch 2 updates read and mmap logic to append device specific hardware/
+firmware logs as elf notes.
 
-This proposal outlines two options under consideration for enhancing
-Xen to support signature verification of kexec loaded images. The
-first option is essentially to mirror Linux signature verification
-code into Xen. The second option utilizes components from sources
-other than Linux (for example, libgcrypt rather than linux/crypto).
+Patch 3 shows a cxgb4 driver example using the API to collect
+hardware/firmware logs in crash recovery kernel, before hardware is
+initialized.
 
-NOTE: An option to utilize dom0 kernel signature verification does not
-prevent the exploit as user space can invoke the hypercall directly,
-bypassing dom0.
+Thanks,
+Rahul
 
-#####
-Option 1: Port Linux signature verification into Xen
+---
+v5:
+- Removed enabling CONFIG_PROC_VMCORE_DEVICE_DUMP by default and
+  updated help message.
 
-This option essentially is porting the Linux kexec_file_load()
-system call as a new Xen kexec hypercall operation, for example,
-KEXEC_CMD_kexec_file_load.
+v4:
+- Made __vmcore_add_device_dump() static.
+- Moved compile check to define vmcore_add_device_dump() to
+  crash_dump.h to fix compilation when vmcore.c is not compiled in.
+- Convert ---help--- to help in Kconfig as indicated by checkpatch.
+- Rebased to tip.
 
-The license of Linux and Xen allow for Xen to take files from Linux
-and incorporate into Xen. So in general most of this could be lifted
-from Linux and dropped into Xen with the new hypercall op providing a
-needed wrapper.
+v3:
+- Dropped sysfs crashdd module.
+- Exported dumps as elf notes. Suggested by Eric Biederman
+  <ebiederm@xmission.com>.  Added as patch 2 in this version.
+- Added CONFIG_PROC_VMCORE_DEVICE_DUMP to allow configuring device
+  dump support.
+- Moved logic related to adding dumps from crashdd to vmcore module.
+- Rename all crashdd* to vmcoredd*.
+- Updated comments.
 
-Pros:
-- Most of the code already exists in Linux
+v2:
+- Added ABI Documentation for crashdd.
+- Directly use octal permission instead of macro.
 
-Cons:
-- This could potentially be taking tens of files from Linux and
-   placing into Xen (linux/crypto has 115 source files). This
-   would be a problematic management scenario going forward with
-   uptaking changes in Linux and merging into Xen, and vice versa.
+Changes since rfc v2:
+- Moved exporting crashdd from procfs to sysfs. Suggested by
+  Stephen Hemminger <stephen@networkplumber.org>
+- Moved code from fs/proc/crashdd.c to fs/crashdd/ directory.
+- Replaced all proc API with sysfs API and updated comments.
+- Calling driver callback before creating the binary file under
+  crashdd sysfs.
+- Changed binary dump file permission from S_IRUSR to S_IRUGO.
+- Changed module name from CRASH_DRIVER_DUMP to CRASH_DEVICE_DUMP.
 
-Changes to kexec-tools:
-- Changes primarily to do_kexec_file_load():
-   - if xen_present()...
-     - Read entire file contents into buffer
-     - Invoke new hypercall op
+rfc v2:
+- Collecting logs in 2nd kernel instead of during kernel panic.
+  Suggested by Eric Biederman <ebiederm@xmission.com>.
+- Added new crashdd module that exports /proc/crashdd/ containing
+  driver's registered hardware/firmware logs in patch 1.
+- Replaced the API to allow drivers to register their hardware/firmware
+  log collect routine in crash recovery kernel in patch 1.
+- Updated patch 2 to use the new API in patch 1.
 
-Changes to Xen:
-- Import linux/crypto, linux/include/crypto, and
-   linux/arch/x86/crypto <-- RSA, SHA, PKCS, etc
-- Import linux/crypto/asymmetric_keys <-- PE handling
-- Import linux/certs  <-- has system_keyring
-- Import security/keys <-- key management
-- Import various accompanying CONFIG settings
-- Implement new hypercall operation,
-   patterning after Linux' kexec_file_load(). One
-   difference would be that rather than passing
-   file handles, Xen would need to be passed pointers
-   to the buffer(s) containing the image(s), as Xen
-   can not read a file (for second kernel and the
-   initrd) from Linux. Xen can access the buffer(s)
-   via copy_from_user().
+Rahul Lakkireddy (3):
+  vmcore: add API to collect hardware dump in second kernel
+  vmcore: append device dumps to vmcore as elf notes
+  cxgb4: collect hardware dump in second kernel
 
-#####
-Option 2: Enable signature verification in Xen utilizing libgcrypt
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4.h       |   4 +
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.c |  25 ++
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.h |   3 +
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c  |  10 +
+ fs/proc/Kconfig                                  |  15 +
+ fs/proc/vmcore.c                                 | 399 ++++++++++++++++++++++-
+ include/linux/crash_core.h                       |   4 +
+ include/linux/crash_dump.h                       |  17 +
+ include/linux/kcore.h                            |   6 +
+ include/uapi/linux/elf.h                         |   1 +
+ 10 files changed, 471 insertions(+), 13 deletions(-)
 
-This option is similar to Option 1, but utilizes libgcrypt
-crytpo library rather than linux/crypto files.
+-- 
+2.14.1
 
-Pros:
-- Libgcrypt is LGPLv2.1+ license.
-- Eliminates problematic scenario of tracking changes to
-   linux/crypto sources in Xen, and vice versa in Linux.
-
-Cons:
-- Introduces a dependency on libgcrypt
-- Still relying on lifting many Linux kernel sources for PE file
-   handling, certificate handling, etc. However, an alternative
-   source for PE file handling is shim.
-
-Changes to kexec-tools:
-- Exactly same as Option 1 Xen version above
-
-Changes to Xen:
-- Changes are essentially same as Option 1 Xen above, but
-   replacing linux/crypto with libgcrypt. This also involves
-   changes around the API differences between linux/crypto
-   and libgcrypt.
-
-References:
-[1] "XPDDS17: EFI Secure Boot, Shim and Xen: Current Status and
-     Developments - Daniel Kiper - Oracle"
- 
-https://www.slideshare.net/xen_com_mgr/xppds17-efi-secure-boot-shim-and-xen-current-status-and-developments-daniel-kiper-oracle
 
 _______________________________________________
 kexec mailing list
