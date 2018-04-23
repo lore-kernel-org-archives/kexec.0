@@ -1,26 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-lf0-f65.google.com ([209.85.215.65])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fAYrd-000181-4p
- for kexec@lists.infradead.org; Mon, 23 Apr 2018 10:38:31 +0000
-Received: by mail-lf0-f65.google.com with SMTP id z130-v6so14202096lff.5
- for <kexec@lists.infradead.org>; Mon, 23 Apr 2018 03:38:18 -0700 (PDT)
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fAZHj-0007ie-41
+ for kexec@lists.infradead.org; Mon, 23 Apr 2018 11:05:29 +0000
+Received: by mail-lf0-f65.google.com with SMTP id q5-v6so14276362lff.12
+ for <kexec@lists.infradead.org>; Mon, 23 Apr 2018 04:05:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20180417051706.GA5894@dhcp-128-65.nay.redhat.com>
-References: <1521455739-8022-1-git-send-email-bhsharma@redhat.com>
- <20180319144529.vkfrrkc4bdhwvvbi@dragonfly>
- <CACi5LpObqAJ=yC_e2G80JsspfzEx50Rq=J2G_UAnoT3UqS4HFQ@mail.gmail.com>
- <CACi5LpPVbVZBAXynMQ79kkboLrQcw1s-LSuFkSQAnkXtdS8wAA@mail.gmail.com>
- <20180326123038.GA14737@linaro.org>
- <e5ed1c04-73db-fda5-602d-f9bd447801da@arm.com>
- <CACi5LpN3bV6-TjAkbu9eGdSUfn-pCoEY==Z1qC5VzOZDdnw0-g@mail.gmail.com>
- <20180416081325.GA4074@dhcp-128-65.nay.redhat.com>
- <CACi5LpOq-JYFTsVsmo7XOiW9ZB51Zy_8C_cJEX679xBwEmBygQ@mail.gmail.com>
- <20180417051706.GA5894@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <CACi5LpMym2adROYwO-PFTft88Nm74JMkOGecVENKuFn_apw7yA@mail.gmail.com>
+References: <1523737180-7705-1-git-send-email-bhsharma@redhat.com>
+ <20180416023014.GD13168@linaro.org>
+ <CACi5LpMym2adROYwO-PFTft88Nm74JMkOGecVENKuFn_apw7yA@mail.gmail.com>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Mon, 23 Apr 2018 16:08:16 +0530
-Message-ID: <CACi5LpNJehvLrnJ7h7s5_d78ZNPTW=BD+M7X0exObU_jd75aJg@mail.gmail.com>
-Subject: Re: [RESEND PATCH 1/2] dt-ops: Add helper API to dump fdt blob
+Date: Mon, 23 Apr 2018 16:35:10 +0530
+Message-ID: <CACi5LpN6NzDaxtvMK2P1XAbM=vyKQ0RU2shH51wGWKozyDFtfQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: Add support to supply 'kaslr-seed' to secondary
+ kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,132 +27,365 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Dave Young <dyoung@redhat.com>, Simon Horman <horms@verge.net.au>
 
-On Tue, Apr 17, 2018 at 10:47 AM, Dave Young <dyoung@redhat.com> wrote:
-> On 04/16/18 at 08:39pm, Bhupesh Sharma wrote:
->> Hi Dave,
->>
->> On Mon, Apr 16, 2018 at 1:43 PM, Dave Young <dyoung@redhat.com> wrote:
->> > Hi Bhupesh,
->> >
->> > On 04/03/18 at 07:28pm, Bhupesh Sharma wrote:
->> >> Hi James,
->> >>
->> >> Sorry for the delay, I had a long weekend last week.
->> >>
->> >> On Tue, Mar 27, 2018 at 7:01 PM, James Morse <james.morse@arm.com> wrote:
->> >> > Hi Akashi, Bhupesh,
->> >> >
->> >> > On 27/03/18 10:04, AKASHI Takahiro wrote:
->> >> >> On Mon, Mar 26, 2018 at 02:29:31PM +0530, Bhupesh Sharma wrote:
->> >> >>> On Tue, Mar 20, 2018 at 12:36 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
->> >> >>>> On Mon, Mar 19, 2018 at 8:15 PM, AKASHI Takahiro
->> >> >>>> <takahiro.akashi@linaro.org> wrote:
->> >> >>>>> On Mon, Mar 19, 2018 at 04:05:38PM +0530, Bhupesh Sharma wrote:
->> >> >>>>>> At several occasions it would be useful to dump the fdt
->> >> >>>>>> blob being passed to the second (kexec/kdump) kernel
->> >> >>>>>> when '-d' flag is specified while invoking kexec/kdump.
->> >> >>>>>
->> >> >>>>> Why not just save binary data to a file and interpret it
->> >> >>>>> with dtc command?
->> >> >
->> >> > I'd prefer this too. It would also let us debug any issue where kexec-tools
->> >> > produces an invalid DTB. It also lets us test booting the kernel from firmware
->> >> > with that DTB.
->> >>
->> >> I captured the use case where it is not possible to do so. I have seen
->> >> primary kernel crash before we can get to the command prompt to save
->> >> the dtb blob. Since the arm64 crashkernel still seems to have issues
->> >> itself while booting on acpi enabled machines (see
->> >> <https://www.spinics.net/lists/arm-kernel/msg616632.html>), so we are
->> >> trying to debug a problem which has two undefined variables :)
->> >>
->> >> >>>> Well, there are a couple of reasons for that which can be understood
->> >> >>>> from a system which is in a production environment (for e.g. I have
->> >> >>>> worked on one arm64 system in the past which used a yocto based
->> >> >>>> distribution in which kexec -p was launched with a -d option as a part
->> >> >>>> of initial ramfs scriptware):
->> >> >
->> >> > and panics before you get an interactive prompt or persistent storage? I think
->> >> > this would be a pretty niche use-case. You could always base64-dump the dtb to
->> >> > stdout from your script.
->> >>
->> >> That is pretty basic case on several new arm64 development boards
->> >> (e.g. qualcomm, huawei etc) where we are debugging issues in primary
->> >> kernel boot (and we are not even able to reach the command prompt).
->> >>
->> >> If the crashkernel crashes even before the primary kernel does because
->> >> of the issues in the way DTB is passed to the crashkernel (which can
->> >> include wrong DTB fields), we better have mechanisms to track the same
->> >> rather than adding debug prints to the kernels.
->> >
->> > In this case, since userspace always need to run 'kexec -l', there
->> > should be chance to save dtb and dump them in scripts if needed.
->> > If this is doable in scripts I also tend not to add the code in kexec-tools.
->>
->> Perhaps you missed my latest email which explained the use case better
->> (please see [1]).
->> Please note that I am talking about the 'kexec -p' or the kdump use
->> case rather than the 'kexec -l' or the warm reboot to the second
->> kernel.
->
-> It is a typo, I meant about 'kexec -p' as well
->
->>
->> In several cases its useful if we are not able to reach the command
->> prompt to just modify the scriptware to launch 'kexec -p' when the
->> ramfs starts up so that we can catch crashes which happen before the
->> primary kernel reaches the command prompt. For example, on freescale
->> boards I found this scriptware mechanism quite useful on yocto based
->> distributions, as you can be porting a new upstream kernel on the
->> board and thus is not very stable while booting and the crashkernel
->> also has issues which causes it to crash. In such cases although we
->> see a panic message from the crashkernel it is very difficult to
->> deduce that it was because of some wrongly fixed up dtb property.
->
-> Since kexec -p need to be automated in scripts, add something to dump
-> dtb is also doable.
->
->>
->> Getting a debug log which contains the dtb dump is very useful in
->> above cases for debugging.
->>
->> Also saving the dtb requires 'dtc' tool to be installed which is an
->> additional dependency.
->
-> I think it should be not a big problem,  dtc is designed to do this.
->
->>
->> Since we have debug facility/messages already available when we
->> execute 'kexec -p' with '-d' flag we can use the dtb dumps from the
->> tool to debug crashes than happen in the crashkernel also because of
->> wrong dtb fields fixed up by 'kexec-tools'. I was loathe to keep this
->> patch locally and apply to the upstream 'kexec-tools' when debugging
->> these issues as I think it makes sense to improve our debugging
->> capabilities if we know there are issues around the same.
->
-> Hmm, do you have the example kexec-tools fix-up the dtb content?
+Hello Akashi,
 
-Yes, I have sent out the v2 patchset to explain the background better
-and also capture some details on where I found this patchset handy.
-Also added some dtb dumps logs from 'kexec -p -d' for reference (with
-this patchset applied) for clarity.
+On Tue, Apr 17, 2018 at 12:35 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> Hello Akashi,
+>
+> Thanks for the review comments.
+>
+> On Mon, Apr 16, 2018 at 8:00 AM, AKASHI Takahiro
+> <takahiro.akashi@linaro.org> wrote:
+>> Bhupesh,
+>>
+>> On Sun, Apr 15, 2018 at 01:49:40AM +0530, Bhupesh Sharma wrote:
+>>> This patch adds the support to supply 'kaslr-seed' to secondary kernel,
+>>> when we do a 'kexec warm reboot to another kernel' (although the
+>>> behaviour remains the same for the 'kdump' case as well) on arm64
+>>> platforms using the 'kexec_load' invocation method.
+>>>
+>>> Lets consider the case where the primary kernel working on the arm64
+>>> platform supports kaslr (i.e 'CONFIG_RANDOMIZE_BASE' was set to y and
+>>> we have a compliant EFI firmware which supports EFI_RNG_PROTOCOL and
+>>> hence can pass a non-zero (valid) seed to the primary kernel).
+>>>
+>>> Now the primary kernel reads the 'kaslr-seed' and wipes it to 0 and
+>>> uses the seed value to randomize for e.g. the module base address
+>>> offset.
+>>>
+>>> In the case of 'kexec_load' (or even kdump for brevity),
+>>> we rely on the user-space kexec-tools to pass an appropriate dtb to the
+>>> secondary kernel and since 'kaslr-seed' is wiped to 0 by the primary
+>>> kernel, the secondary will essentially work with *nokaslr* as
+>>> 'kaslr-seed' is set to 0 when it is passed to the secondary kernel.
+>>>
+>>> This can be true even in case the secondary kernel had
+>>> 'CONFIG_RANDOMIZE_BASE' and 'CONFIG_RANDOMIZE_MODULE_REGION_FULL' set to
+>>> y.
+>>>
+>>> This patch addresses this issue by first checking if the device tree
+>>> provided by the firmware to the kernel supports the 'kaslr-seed'
+>>> property and verifies that it is really wiped to 0. If this condition is
+>>> met, it fixes up the 'kaslr-seed' property by using the getrandom()
+>>> syscall to get a suitable random number.
+>>>
+>>> I verified this patch on my Qualcomm arm64 board and here are some test
+>>> results:
+>>>
+>>> 1. Ensure that the primary kernel is boot'ed with 'kaslr-seed'
+>>>    dts property and it is really wiped to 0:
+>>>
+>>>    [root@qualcomm-amberwing]# dtc -I dtb -O dts /sys/firmware/fdt | grep -A 10 -i chosen
+>>>       chosen {
+>>>               kaslr-seed = <0x0 0x0>;
+>>>               ...
+>>>       }
+>>>
+>>> 2. Now issue 'kexec_load' to load the secondary kernel (let's assume
+>>>    that we are using the same kernel as the secondary kernel):
+>>>    # kexec -l /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname
+>>>      -r`.img --reuse-cmdline -d
+>>>
+>>> 3. Issue 'kexec -e' to warm boot to the secondary:
+>>>    # kexec -e
+>>>
+>>> 4. Now after the secondary boots, confirm that the load address of the
+>>>    modules is randomized in every successive boot:
+>>>
+>>>    [root@qualcomm-amberwing]# cat /proc/modules
+>>>    sunrpc 524288 1 - Live 0xffff0307db190000
+>>>    vfat 262144 1 - Live 0xffff0307db110000
+>>>    fat 262144 1 vfat, Live 0xffff0307db090000
+>>>    crc32_ce 262144 0 - Live 0xffff0307d8c70000
+>>>    ...
+>>>
+>>> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+>>> ---
+>>>  kexec/arch/arm64/kexec-arm64.c | 135 +++++++++++++++++++++++++++++------------
+>>>  1 file changed, 97 insertions(+), 38 deletions(-)
+>>>
+>>> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+>>> index 62f37585b788..2ab11227447a 100644
+>>> --- a/kexec/arch/arm64/kexec-arm64.c
+>>> +++ b/kexec/arch/arm64/kexec-arm64.c
+>>> @@ -15,6 +15,11 @@
+>>>  #include <linux/elf-em.h>
+>>>  #include <elf.h>
+>>>
+>>> +#include <unistd.h>
+>>> +#include <syscall.h>
+>>> +#include <errno.h>
+>>> +#include <linux/random.h>
+>>> +
+>>>  #include "kexec.h"
+>>>  #include "kexec-arm64.h"
+>>>  #include "crashdump.h"
+>>> @@ -392,11 +397,13 @@ static int fdt_setprop_range(void *fdt, int nodeoffset,
+>>>  static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+>>>  {
+>>>       uint32_t address_cells, size_cells;
+>>> -     int range_len;
+>>> -     int nodeoffset;
+>>> +     uint64_t fdt_val64;
+>>> +     uint64_t *prop;
+>>>       char *new_buf = NULL;
+>>> +     int len, range_len;
+>>> +     int nodeoffset;
+>>>       int new_size;
+>>> -     int result;
+>>> +     int result, kaslr_seed;
+>>>
+>>>       result = fdt_check_header(dtb->buf);
+>>>
+>>> @@ -407,47 +414,99 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+>>>
+>>>       result = set_bootargs(dtb, command_line);
+>>>
+>>> -     if (on_crash) {
+>>> -             /* determine #address-cells and #size-cells */
+>>> -             result = get_cells_size(dtb->buf, &address_cells, &size_cells);
+>>> -             if (result) {
+>>> -                     fprintf(stderr,
+>>> -                             "kexec: cannot determine cells-size.\n");
+>>> -                     result = -EINVAL;
+>>> -                     goto on_error;
+>>> -             }
+>>> +     /* determine #address-cells and #size-cells */
+>>> +     result = get_cells_size(dtb->buf, &address_cells, &size_cells);
+>>> +     if (result) {
+>>> +             fprintf(stderr, "kexec: cannot determine cells-size.\n");
+>>> +             result = -EINVAL;
+>>> +             goto on_error;
+>>> +     }
+>>>
+>>> -             if (!cells_size_fitted(address_cells, size_cells,
+>>> -                                     &elfcorehdr_mem)) {
+>>> -                     fprintf(stderr,
+>>> -                             "kexec: elfcorehdr doesn't fit cells-size.\n");
+>>> +     if (!cells_size_fitted(address_cells, size_cells,
+>>> +                             &elfcorehdr_mem)) {
+>>> +             fprintf(stderr, "kexec: elfcorehdr doesn't fit cells-size.\n");
+>>> +             result = -EINVAL;
+>>> +             goto on_error;
+>>> +     }
+>>> +
+>>> +     if (!cells_size_fitted(address_cells, size_cells,
+>>> +                             &crash_reserved_mem)) {
+>>> +             fprintf(stderr, "kexec: usable memory range doesn't fit cells-size.\n");
+>>> +             result = -EINVAL;
+>>> +             goto on_error;
+>>> +     }
+>>> +
+>>> +     /* duplicate dt blob */
+>>> +     range_len = sizeof(uint32_t) * (address_cells + size_cells);
+>>> +     new_size = fdt_totalsize(dtb->buf)
+>>> +             + fdt_prop_len(PROP_ELFCOREHDR, range_len)
+>>> +             + fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len);
+>>> +
+>>> +     new_buf = xmalloc(new_size);
+>>> +     result = fdt_open_into(dtb->buf, new_buf, new_size);
+>>> +     if (result) {
+>>> +             dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
+>>> +                             fdt_strerror(result));
+>>> +             result = -ENOSPC;
+>>> +             goto on_error;
+>>> +     }
+>>> +
+>>> +     /* fixup 'kaslr-seed' with a random value, if supported */
+>>> +     nodeoffset = fdt_path_offset(new_buf, "/chosen");
+>>> +     prop = fdt_getprop_w(new_buf, nodeoffset,
+>>> +                     "kaslr-seed", &len);
+>>> +     if (!prop || len != sizeof(uint64_t)) {
+>>
+>> Do we need this check?
+>> Please note that people are allowed to provide a dtb explicitly
+>> at command line and may want to use kexec as bootloader on
+>> no-uefi platform.
+>
+> I agree. Lets look at the original behaviour (before this patch). We
+> used to unpack and fixup dtb properties and then pack it back when
+> 'on_crash' was true (i.e only for the kdump case). In case of 'kexec'
+> we do not fixup the dtb (as per my understanding, please correct me if
+> I am wrong here).
+>
+> With this patch I wanted the dtb's kaslr-seed property to be fixed-up
+> (if its supported and is wiped to 0 by the primary kernel). But this
+> check is harmless in case we don't find the 'kaslr-seed' property in
+> the dtb (for e.g. on non-uefi/u-boot based arm64 platforms).
+>
+> In case the property is not seen in the dtb, we just print a debug
+> message (if '-d' flag was used to launch kexec) and proceed to perform
+> fixup of other dtb properties (like 'linux, usable-memory-range) in
+> case 'on_crash' is true (i.e. 'kexec -p' use case). In the 'kexec -l'
+> case since we don't do any other fixups in the original approach so we
+> retain the same behavior here.
+>
+>>> +             dbgprintf("%s: no kaslr-seed found: %s\n",
+>>> +                             __func__, fdt_strerror(result));
+>>> +             /* for kexec warm reboot case, we don't need to fixup
+>>> +              * other dtb properties
+>>> +              */
+>>> +             if (!on_crash)
+>>> +                     goto free_new_buf;
+>>> +
+>>> +     } else {
+>>> +             kaslr_seed = fdt64_to_cpu(*prop);
+>>> +
+>>> +             /* kaslr_seed must be wiped clean by primary
+>>> +              * kernel during boot
+>>> +              */
+>>> +             if (kaslr_seed != 0) {
+>>> +                     dbgprintf("%s: kaslr-seed is not wiped to 0.\n",
+>>> +                                     __func__);
+>>
+>> Ditto
+>> If this is a user-provided dtb, there is no reason to reject it.
+>> I think all what is needed here is to feed a *sane* dtb to kexec.
+>>
+>> So along with the comment above, it may be useful to add a command line
+>> option for turning on or off "kaslr-seed".
+>
+> Please see my comments above. Since the 'kaslr-seed' property just
+> needs to be read from the dtb, we probably don't need a separate
+> command line option for the same as we already have nokaslr available.
+> If we want the secondary kernel to boot with *nokaslr*, we can pass
+> the same to the secondary via the command line arguments.
+>
+> BTW, I also tried the behaviour with --dtb being passed while invoking
+> the 'kexec -l' with the patch in question and the resulting behaviour
+> is correct, i.e. we see that if the secondary kernel supports
+> CONFIG_RANDOMIZE_BASE=y, we get the resulting randomization in module
+> load address (for e.g.):
+>
+> # kexec -l /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname
+> -r`.img --command-line="$(cat /proc/cmdline)" --dtb /sys/firmware/fdt
+> -d
+>
+> # kexec -e
+>
+> On successive kexec warm reboots I see that '/proc/kallsyms' and
+> '/proc/modules' have randomized addresses.
+>
+>>>                       result = -EINVAL;
+>>>                       goto on_error;
+>>>               }
+>>>
+>>> -             if (!cells_size_fitted(address_cells, size_cells,
+>>> -                                     &crash_reserved_mem)) {
+>>> -                     fprintf(stderr,
+>>> -                             "kexec: usable memory range doesn't fit cells-size.\n");
+>>> +             /*
+>>> +              * Invoke the getrandom system call with
+>>> +              * GRND_NONBLOCK, to make sure we
+>>> +              * have a valid random seed to pass to the
+>>> +              * secondary kernel.
+>>> +              */
+>>> +             result = syscall(SYS_getrandom, &fdt_val64,
+>>> +                             sizeof(fdt_val64),
+>>> +                             GRND_NONBLOCK);
+>>
+>> Why do you use syscall() here?
+>
+> I found that the standard way to invokde a getrandom() call is via a
+> SYSCALL (please see
+> <https://nikmav.blogspot.in/2016/10/random-generator-linux.html>).
+>
+>>> +
+>>> +             if(result == -1) {
+>>> +                     dbgprintf("%s: Reading random bytes failed.\n",
+>>> +                                     __func__);
+>>>                       result = -EINVAL;
+>>>                       goto on_error;
+>>>               }
+>>>
+>>> -             /* duplicate dt blob */
+>>> -             range_len = sizeof(uint32_t) * (address_cells + size_cells);
+>>> -             new_size = fdt_totalsize(dtb->buf)
+>>> -                     + fdt_prop_len(PROP_ELFCOREHDR, range_len)
+>>> -                     + fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len);
+>>> -
+>>> -             new_buf = xmalloc(new_size);
+>>> -             result = fdt_open_into(dtb->buf, new_buf, new_size);
+>>> +             nodeoffset = fdt_path_offset(new_buf, "/chosen");
+>>> +             result = fdt_setprop_inplace(new_buf,
+>>> +                             nodeoffset, "kaslr-seed",
+>>> +                             &fdt_val64, sizeof(fdt_val64));
+>>>               if (result) {
+>>> -                     dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
+>>> -                             fdt_strerror(result));
+>>> -                     result = -ENOSPC;
+>>> +                     dbgprintf("%s: fdt_setprop failed: %s\n",
+>>> +                                     __func__, fdt_strerror(result));
+>>> +                     result = -EINVAL;
+>>>                       goto on_error;
+>>>               }
+>>> +     }
+>>>
+>>> +     if (on_crash) {
+>>>               /* add linux,elfcorehdr */
+>>>               nodeoffset = fdt_path_offset(new_buf, "/chosen");
+>>>               result = fdt_setprop_range(new_buf, nodeoffset,
+>>> @@ -455,7 +514,7 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+>>>                               address_cells, size_cells);
+>>>               if (result) {
+>>>                       dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
+>>> -                             fdt_strerror(result));
+>>> +                                     fdt_strerror(result));
+>>>                       result = -EINVAL;
+>>>                       goto on_error;
+>>>               }
+>>> @@ -467,23 +526,23 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+>>>                               address_cells, size_cells);
+>>>               if (result) {
+>>>                       dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
+>>> -                             fdt_strerror(result));
+>>> +                                     fdt_strerror(result));
+>>>                       result = -EINVAL;
+>>>                       goto on_error;
+>>>               }
+>>> -
+>>> -             fdt_pack(new_buf);
+>>> -             dtb->buf = new_buf;
+>>> -             dtb->size = fdt_totalsize(new_buf);
+>>>       }
+>>>
+>>> -     dump_reservemap(dtb);
+>>> +     fdt_pack(new_buf);
+>>> +     dtb->buf = new_buf;
+>>> +     dtb->size = fdt_totalsize(new_buf);
+>>>
+>>> +     dump_reservemap(dtb);
+>>>
+>>>       return result;
+>>>
+>>>  on_error:
+>>>       fprintf(stderr, "kexec: %s failed.\n", __func__);
+>>> +free_new_buf:
+>>
+>> Well, technically correct, but it looks odd as it is placed
+>> on *error* return path.
+>
+> I agree. I was not too comfortable with placing this label here.
+> I will try to find a better approach in v2.
+>
+>> You also miss dump_reservemap().
+>
+> Oops. Sure will fix this in v2.
+>
+> Regards,
+> Bhupesh
 
-You can view the v2 here
-<http://lists.infradead.org/pipermail/kexec/2018-April/020532.html>
+I was about to send a v2 for this feature and was wondering if you
+have any further comments on the comments I shared last on the review
+comments you had for the v1. If yes, I can try and include them in the
+v2.
 
-Regards,
+Please let me know.
+
+Thanks,
 Bhupesh
-
->> Ok, let me resend this patch with a cover letter this time to explain
->> the use case better and also to capture the dtb logs.
->>
->> [1] https://marc.info/?l=kexec&m=152382169120505&w=2
->
-> Thanks
-> Dave
 
 _______________________________________________
 kexec mailing list
