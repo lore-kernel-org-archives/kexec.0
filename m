@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f68.google.com ([74.125.83.68])
+Received: from prv1-mh.provo.novell.com ([137.65.248.33])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fATij-00085G-Ue
- for kexec@lists.infradead.org; Mon, 23 Apr 2018 05:08:59 +0000
-Received: by mail-pg0-f68.google.com with SMTP id m21so4547198pgv.8
- for <kexec@lists.infradead.org>; Sun, 22 Apr 2018 22:08:45 -0700 (PDT)
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH 1/2] Makefile.in: Add uninstall rule
-Date: Mon, 23 Apr 2018 10:30:21 +0530
-Message-Id: <1524459622-2059-2-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1524459622-2059-1-git-send-email-bhsharma@redhat.com>
-References: <1524459622-2059-1-git-send-email-bhsharma@redhat.com>
+ id 1fAVOM-00032Q-8m
+ for kexec@lists.infradead.org; Mon, 23 Apr 2018 06:56:03 +0000
+Message-Id: <5ADD837102000078001BD675@prv1-mh.provo.novell.com>
+Date: Mon, 23 Apr 2018 00:55:45 -0600
+From: "Jan Beulich" <JBeulich@suse.com>
+Subject: Re: [Xen-devel] RFC Xen signature verification for kexec
+References: <81714431-9776-7247-86db-c035fa3d2ce6@oracle.com>
+In-Reply-To: <81714431-9776-7247-86db-c035fa3d2ce6@oracle.com>
+Mime-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,137 +19,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: rmk@armlinux.org.uk, Bhupesh Sharma <bhsharma@redhat.com>, horms@verge.net.au, ebiederm@xmission.com, bhupesh.linux@gmail.com, dyoung@redhat.com, vgoyal@redhat.com
+To: Eric DeVolder <eric.devolder@oracle.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>, kexec@lists.infradead.org, Daniel Kiper <daniel.kiper@oracle.com>, xen-devel@lists.xen.org
 
-Presently the Makedumpfile.in doesn't include a uninstall rule, which is
-useful in case we want to preform a reverse of the install process
-done by Makefile.in
+>>> On 20.04.18 at 21:12, <eric.devolder@oracle.com> wrote:
+> Two options for signature verification in Xen
+> 
+> This proposal outlines two options under consideration for enhancing
+> Xen to support signature verification of kexec loaded images. The
+> first option is essentially to mirror Linux signature verification
+> code into Xen. The second option utilizes components from sources
+> other than Linux (for example, libgcrypt rather than linux/crypto).
+> 
+> NOTE: An option to utilize dom0 kernel signature verification does not
+> prevent the exploit as user space can invoke the hypercall directly,
+> bypassing dom0.
 
-This patch adds this rule, thus making it easier to remove installed
-executables and man pages in case one needs to uninstall the same.
+Not exactly - this option nevertheless exists, albeit is perhaps
+unattractive: No user space component can issue hypercalls
+directly, they always go through the privcmd driver. Hence the
+driver cold snoop the kexec hypercall.
 
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- Makefile.in | 83 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 81 insertions(+), 2 deletions(-)
+> #####
+> Option 2: Enable signature verification in Xen utilizing libgcrypt
+> 
+> This option is similar to Option 1, but utilizes libgcrypt
+> crytpo library rather than linux/crypto files.
+> 
+> Pros:
+> - Libgcrypt is LGPLv2.1+ license.
+> - Eliminates problematic scenario of tracking changes to
+>    linux/crypto sources in Xen, and vice versa in Linux.
 
-diff --git a/Makefile.in b/Makefile.in
-index 54c206fd649c..273d06ebea55 100644
---- a/Makefile.in
-+++ b/Makefile.in
-@@ -182,10 +182,21 @@ BINARIES_i386:=$(KEXEC_TEST)
- BINARIES_x86_64:=$(KEXEC_TEST)
- BINARIES:=$(KEXEC) $(KDUMP) $(VMCORE_DMESG) $(BINARIES_$(ARCH))
- 
--TARGETS:=$(BINARIES) $(MAN_PAGES)
-+UNINSTALL_KDUMP = $(sbindir)/kdump
-+UNINSTALL_KDUMP_MANPAGE = $(mandir)/man8/kdump.8
-+UNINSTALL_KEXEC = $(sbindir)/kexec
-+UNINSTALL_KEXEC_MANPAGE = $(mandir)/man8/kexec.8
-+UNINSTALL_VMCORE_DMESG = $(sbindir)/vmcore-dmesg
-+UNINSTALL_VMCORE_DMESG_MANPAGE = $(mandir)/man8/vmcore-dmesg.8
- 
-+TARGETS:=$(BINARIES) $(MAN_PAGES)
- targets: $(TARGETS)
- 
-+UNINSTALL_TARGETS:=$(UNINSTALL_KDUMP) $(UNINSTALL_KDUMP_MANPAGE) \
-+		   $(UNINSTALL_KEXEC) $(UNINSTALL_KEXEC_MANPAGE) \
-+		   $(UNINSTALL_VMCORE_DMESG) $(UNINSTALL_VMCORE_DMESG_MANPAGE)
-+uninstall-targets: $(UNINSTALL_TARGETS)
-+
- Makefile: Makefile.in config.status
- 	./config.status
- 
-@@ -218,6 +229,7 @@ echo::
- 	@echo ARCH=$(ARCH)
- 	@echo BINARIES=$(BINARIES)
- 	@echo TARGETS=$(TARGETS)
-+	@echo UNINSTALL_TARGETS=$(UNINSTALL_TARGETS)
- 	@echo CC=$(CC)
- 	@echo AR=$(AR)
- 	@echo LD=$(LD)
-@@ -323,5 +335,72 @@ install: $(TARGETS)
- 		fi; \
- 	done
- 
--.PHONY: echo install all targets clean dist-clean distclean \
-+uninstall:
-+	UINSTALL_LIST='$(UNINSTALL_TARGETS)'; for file in $$UINSTALL_LIST ; do \
-+		if test `$(DIRNAME) $$file` =     "$(sbindir)" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(bindir)" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(libexecdir)" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(datadir)" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(sysconfdir)" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(sharedstatedir)" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(localstatedir)" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(libdir)" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(infodir)" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(mandir)/man1" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(mandir)/man2" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(mandir)/man3" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(mandir)/man4" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(mandir)/man5" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(mandir)/man6" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(mandir)/man7" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(mandir)/man8" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(includedir)" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(pkgdatadir)" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(pkglibdir)" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+		if test `$(DIRNAME) $$file` =     "$(pkgincludedir)" ; then \
-+			rm -rf $$file ; \
-+		fi; \
-+	done
-+
-+.PHONY: echo install uninstall all targets uninstall-targets clean dist-clean distclean \
- 	maintainer-clean maintainerclean tarball rpm
--- 
-2.7.4
+As an initial reaction, of the two options presented I'd prefer this
+2nd one, for this specific reason.
+
+> Cons:
+> - Introduces a dependency on libgcrypt
+> - Still relying on lifting many Linux kernel sources for PE file
+>    handling, certificate handling, etc. However, an alternative
+>    source for PE file handling is shim.
+
+That's under the assumption that PE files are the only containers usable
+to carry certificates, which I consider odd, not the least because Linux
+kernel modules aren't PE either. If the kernel was carrying its certificate
+in a way (also) accessible without parsing PE structures, this dependency
+could be dropped.
+
+Jan
+
 
 
 _______________________________________________
