@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193])
+Received: from prv1-mh.provo.novell.com ([137.65.248.33])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fAYgJ-00046T-7B
- for kexec@lists.infradead.org; Mon, 23 Apr 2018 10:26:49 +0000
-Received: by mail-pf0-f193.google.com with SMTP id p15so8907353pff.11
- for <kexec@lists.infradead.org>; Mon, 23 Apr 2018 03:26:36 -0700 (PDT)
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH v2 2/2] kexec-arm64: Add functionality to dump 2nd dtb
-Date: Mon, 23 Apr 2018 15:56:12 +0530
-Message-Id: <1524479172-7707-3-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1524479172-7707-1-git-send-email-bhsharma@redhat.com>
-References: <1524479172-7707-1-git-send-email-bhsharma@redhat.com>
+ id 1fAYmv-0007Mi-Pk
+ for kexec@lists.infradead.org; Mon, 23 Apr 2018 10:33:39 +0000
+Message-Id: <5ADDB67002000078001BD805@prv1-mh.provo.novell.com>
+Date: Mon, 23 Apr 2018 04:33:20 -0600
+From: "Jan Beulich" <JBeulich@suse.com>
+Subject: Re: [Xen-devel] RFC Xen signature verification for kexec
+References: <81714431-9776-7247-86db-c035fa3d2ce6@oracle.com>
+ <5ADD837102000078001BD675@prv1-mh.provo.novell.com>
+ <20180423102500.GI6312@olila.local.net-space.pl>
+In-Reply-To: <20180423102500.GI6312@olila.local.net-space.pl>
+Mime-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,45 +21,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Bhupesh Sharma <bhsharma@redhat.com>, takahiro.akashi@linaro.org, horms@verge.net.au, james.morse@arm.com, bhupesh.linux@gmail.com, dyoung@redhat.com
+To: Daniel Kiper <daniel.kiper@oracle.com>, Eric DeVolder <eric.devolder@oracle.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>, kexec@lists.infradead.org, xen-devel@lists.xen.org
 
-Since during the arm64 kexec_load()/kdump invocation,
-the dtb is passed to the second kernel, it is sometimes useful
-to dump the dtb contents (to verify the correctness
-of the same).
+>>> On 23.04.18 at 12:25, <daniel.kiper@oracle.com> wrote:
+> On Mon, Apr 23, 2018 at 12:55:45AM -0600, Jan Beulich wrote:
+>> >>> On 20.04.18 at 21:12, <eric.devolder@oracle.com> wrote:
+>> > Two options for signature verification in Xen
+>> >
+>> > This proposal outlines two options under consideration for enhancing
+>> > Xen to support signature verification of kexec loaded images. The
+>> > first option is essentially to mirror Linux signature verification
+>> > code into Xen. The second option utilizes components from sources
+>> > other than Linux (for example, libgcrypt rather than linux/crypto).
+>> >
+>> > NOTE: An option to utilize dom0 kernel signature verification does not
+>> > prevent the exploit as user space can invoke the hypercall directly,
+>> > bypassing dom0.
+>>
+>> Not exactly - this option nevertheless exists, albeit is perhaps
+>> unattractive: No user space component can issue hypercalls
+>> directly, they always go through the privcmd driver. Hence the
+>> driver cold snoop the kexec hypercall.
+> 
+> Hmmm... Is not it a problem from security point of view for us in this
+> case? It should not if dom0 kernel is signed. It have to be signed here.
+> Just thinking a loud...
 
-This patch adds this feature which is enabled when '-d' flag is
-used with kexec command line invocation.
+I'm afraid I don't understand: If the Dom0 kernel isn't signed (or hasn't
+been verified), the system is insecure in the first place. No reason to
+bother measuring the kexec kernel then.
 
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- kexec/arch/arm64/kexec-arm64.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+>> > #####
+>> > Option 2: Enable signature verification in Xen utilizing libgcrypt
+>> >
+>> > This option is similar to Option 1, but utilizes libgcrypt
+>> > crytpo library rather than linux/crypto files.
+>> >
+>> > Pros:
+>> > - Libgcrypt is LGPLv2.1+ license.
+>> > - Eliminates problematic scenario of tracking changes to
+>> >    linux/crypto sources in Xen, and vice versa in Linux.
+>>
+>> As an initial reaction, of the two options presented I'd prefer this
+>> 2nd one, for this specific reason.
+>>
+>> > Cons:
+>> > - Introduces a dependency on libgcrypt
+>> > - Still relying on lifting many Linux kernel sources for PE file
+>> >    handling, certificate handling, etc. However, an alternative
+>> >    source for PE file handling is shim.
+>>
+>> That's under the assumption that PE files are the only containers usable
+>> to carry certificates, which I consider odd, not the least because Linux
+>> kernel modules aren't PE either. If the kernel was carrying its certificate
+> 
+> I do not think that we care about kernel modules format here...
 
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 62f37585b788..1b54718465b9 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -477,9 +477,10 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
- 		dtb->size = fdt_totalsize(new_buf);
- 	}
- 
-+	dbgprintf("%s: found %s\n", __func__, dtb->path);
-+	dump_fdt(dtb->buf);
- 	dump_reservemap(dtb);
- 
--
- 	return result;
- 
- on_error:
--- 
-2.7.4
+This was just meant to give an example of a case where PE is not required
+for carrying certificates.
+
+Jan
+
 
 
 _______________________________________________
