@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f194.google.com ([209.85.192.194])
+Received: from mail-pg0-f68.google.com ([74.125.83.68])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fATgx-0007th-Gr
- for kexec@lists.infradead.org; Mon, 23 Apr 2018 05:07:09 +0000
-Received: by mail-pf0-f194.google.com with SMTP id f15so8255052pfn.0
- for <kexec@lists.infradead.org>; Sun, 22 Apr 2018 22:06:57 -0700 (PDT)
+ id 1fATij-00085G-Ue
+ for kexec@lists.infradead.org; Mon, 23 Apr 2018 05:08:59 +0000
+Received: by mail-pg0-f68.google.com with SMTP id m21so4547198pgv.8
+ for <kexec@lists.infradead.org>; Sun, 22 Apr 2018 22:08:45 -0700 (PDT)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH 2/2] Remove obsolete kdump tool
-Date: Mon, 23 Apr 2018 10:30:22 +0530
-Message-Id: <1524459622-2059-3-git-send-email-bhsharma@redhat.com>
+Subject: [PATCH 1/2] Makefile.in: Add uninstall rule
+Date: Mon, 23 Apr 2018 10:30:21 +0530
+Message-Id: <1524459622-2059-2-git-send-email-bhsharma@redhat.com>
 In-Reply-To: <1524459622-2059-1-git-send-email-bhsharma@redhat.com>
 References: <1524459622-2059-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,523 +25,129 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: rmk@armlinux.org.uk, Russell King <rmk@arm.linux.org.uk>, Bhupesh Sharma <bhsharma@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, horms@verge.net.au, ebiederm@xmission.com, bhupesh.linux@gmail.com, dyoung@redhat.com, vgoyal@redhat.com
+Cc: rmk@armlinux.org.uk, Bhupesh Sharma <bhsharma@redhat.com>, horms@verge.net.au, ebiederm@xmission.com, bhupesh.linux@gmail.com, dyoung@redhat.com, vgoyal@redhat.com
 
-The kdump tool presently allows one to generate an ELF file containing
-the ELF header, PT_NOTE and PT_LOAD segments (which can be analyzed
-later by tools like 'readelf') of the crashdump read from memory, when
-passed with an appropriate 'elfcorehdr' value(which represents the
-physical address of the start of the ELF header).
+Presently the Makedumpfile.in doesn't include a uninstall rule, which is
+useful in case we want to preform a reverse of the install process
+done by Makefile.in
 
-With the availability of tools like crash/gdb the analysis of the
-crashdump core has become rather easy, and it makes the kdump tool
-obsolete. Also the same naming convention (man page) causes confusion
-when compared to similarly named distribution specific kdump
-service/utilities.
+This patch adds this rule, thus making it easier to remove installed
+executables and man pages in case one needs to uninstall the same.
 
-Also most distributions (like Fedora for e.g.) now support more
-enhanced kdump service and utilities which can be used to analyze the
-crashdump core contents better. Taking an example of the Fedora
-specific kdump service and utilities, the following sequence of steps
-happen when the primary kernel crashes:
-
-1. If the crashkernel is loaded, then the system starts executing the
-same.
-
-2. When the boot process gets to the point when kdump service is
-started, the crashdump core is usually copied out to disk (for e.g.
-inside '/var/crash') using 'cp' command from '/proc/vmcore':
-   # cp /proc/vmcore <dump-file>
-
-3. Thereafter the system is rebooted back into the normal kernel.
-
-4. Once back to your normal kernel, one can use the crashdump core
-available on hard disk in conjunction with the previously installed
-kernel (with debuginfo) to perform postmortem analysis with tools like
-gdb/crash:
-   # gdb vmlinux <dump-file>
-
-Accordingly, this patch removes the obsolete kdump tool from
-'kexec-tools'.
-
-Cc: Russell King <rmk@arm.linux.org.uk>
-Cc: Simon Horman <horms@verge.net.au>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
 ---
- Makefile.in         |   9 +-
- kdump/Makefile      |  30 -----
- kdump/kdump.8       |  39 -------
- kdump/kdump.c       | 327 ----------------------------------------------------
- kexec-tools.spec.in |   2 -
- 5 files changed, 2 insertions(+), 405 deletions(-)
- delete mode 100644 kdump/Makefile
- delete mode 100644 kdump/kdump.8
- delete mode 100644 kdump/kdump.c
+ Makefile.in | 83 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 81 insertions(+), 2 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 273d06ebea55..fb01134d9880 100644
+index 54c206fd649c..273d06ebea55 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -155,11 +155,6 @@ include $(srcdir)/purgatory/Makefile
- #
- include $(srcdir)/kexec/Makefile
- 
--
--# kdump (read a crashdump from memory)
--#
--include $(srcdir)/kdump/Makefile
--
- # vmcore-dmesg (read dmesg from a vmcore)
- #
- include $(srcdir)/vmcore-dmesg/Makefile
-@@ -177,10 +172,10 @@ SRCS:= $(dist)
- PSRCS:=$(foreach s, $(SRCS), $(PACKAGE_NAME)-$(PACKAGE_VERSION)/$(s))
- PGSRCS:=$(foreach s, $(GENERATED_SRCS), $(PACKAGE_NAME)-$(PACKAGE_VERSION)/$(s))
- 
--MAN_PAGES:=$(KEXEC_MANPAGE) $(KDUMP_MANPAGE) $(VMCORE_DMESG_MANPAGE)
-+MAN_PAGES:=$(KEXEC_MANPAGE) $(VMCORE_DMESG_MANPAGE)
- BINARIES_i386:=$(KEXEC_TEST)
+@@ -182,10 +182,21 @@ BINARIES_i386:=$(KEXEC_TEST)
  BINARIES_x86_64:=$(KEXEC_TEST)
--BINARIES:=$(KEXEC) $(KDUMP) $(VMCORE_DMESG) $(BINARIES_$(ARCH))
-+BINARIES:=$(KEXEC) $(VMCORE_DMESG) $(BINARIES_$(ARCH))
+ BINARIES:=$(KEXEC) $(KDUMP) $(VMCORE_DMESG) $(BINARIES_$(ARCH))
  
- UNINSTALL_KDUMP = $(sbindir)/kdump
- UNINSTALL_KDUMP_MANPAGE = $(mandir)/man8/kdump.8
-diff --git a/kdump/Makefile b/kdump/Makefile
-deleted file mode 100644
-index 307d59d4d3b5..000000000000
---- a/kdump/Makefile
-+++ /dev/null
-@@ -1,30 +0,0 @@
--#
--# kdump (reading a crashdump from memory)
--#
--
--KDUMP_SRCS:= kdump/kdump.c
--
--KDUMP_OBJS = $(call objify, $(KDUMP_SRCS))
--KDUMP_DEPS = $(call depify, $(KDUMP_OBJS))
--
--KDUMP = $(SBINDIR)/kdump
--KDUMP_MANPAGE = $(MANDIR)/man8/kdump.8
--
--dist += kdump/Makefile $(KDUMP_SRCS) kdump/kdump.8
--clean += $(KDUMP_OBJS) $(KDUMP_DEPS) $(KDUMP) $(KDUMP_MANPAGE)
--
---include $(KDUMP_DEPS)
--
--$(KDUMP): CC=$(TARGET_CC)
--$(KDUMP): $(KDUMP_OBJS)
--	@$(MKDIR) -p $(@D)
--	$(LINK.o) -o $@ $^ $(CFLAGS) $(LIBS)
--
--$(KDUMP_MANPAGE): kdump/kdump.8
--	$(MKDIR) -p     $(MANDIR)/man8
--	cp $^ $(KDUMP_MANPAGE)
--echo::
--	@echo "KDUMP_SRCS $(KDUMP_SRCS)"
--	@echo "KDUMP_DEPS $(KDUMP_DEPS)"
--	@echo "KDUMP_OBJS $(KDUMP_OBJS)"
--
-diff --git a/kdump/kdump.8 b/kdump/kdump.8
-deleted file mode 100644
-index e53516262e3f..000000000000
---- a/kdump/kdump.8
-+++ /dev/null
-@@ -1,39 +0,0 @@
--.\"                                      Hey, EMACS: -*- nroff -*-
--.\" First parameter, NAME, should be all caps
--.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
--.\" other parameters are allowed: see man(7), man(1)
--.TH KDUMP 8 "Jul 27, 2005"
--.\" Please adjust this date whenever revising the manpage.
--.\"
--.\" Some roff macros, for reference:
--.\" .nh        disable hyphenation
--.\" .hy        enable hyphenation
--.\" .ad l      left justify
--.\" .ad b      justify to both left and right margins
--.\" .nf        disable filling
--.\" .fi        enable filling
--.\" .br        insert line break
--.\" .sp <n>    insert n+1 empty lines
--.\" for manpage-specific macros, see man(7)
--.SH NAME
--kdump \- This is just a placeholder until real man page has been written
--.SH SYNOPSIS
--.B kdump
--.RI [ options ] " start_address" ...
--.SH DESCRIPTION
--.PP
--.\" TeX users may be more comfortable with the \fB<whatever>\fP and
--.\" \fI<whatever>\fP escape sequences to invode bold face and italics,
--.\" respectively.
--\fBkdump\fP does not have a man page yet.
--.SH OPTIONS
--.\"These programs follow the usual GNU command line syntax, with long
--.\"options starting with two dashes (`-').
--.\"A summary of options is included below.
--.\"For a complete description, see the Info files.
--.SH SEE ALSO
--.SH AUTHOR
--kdump was written by Eric Biederman.
--.PP
--This manual page was written by Khalid Aziz <khalid.aziz@hp.com>,
--for the Debian project (but may be used by others).
-diff --git a/kdump/kdump.c b/kdump/kdump.c
-deleted file mode 100644
-index de46d288dc29..000000000000
---- a/kdump/kdump.c
-+++ /dev/null
-@@ -1,327 +0,0 @@
--#include <stdio.h>
--#include <stdlib.h>
--#include <errno.h>
--#include <string.h>
--#include <unistd.h>
--#include <sys/mman.h>
--#include <sys/types.h>
--#include <sys/stat.h>
--#include <fcntl.h>
--#include <endian.h>
--#include <elf.h>
--
--#if !defined(__BYTE_ORDER) || !defined(__LITTLE_ENDIAN) || !defined(__BIG_ENDIAN)
--#error Endian defines missing
--#endif
--
--#if __BYTE_ORDER == __LITTLE_ENDIAN
--# define ELFDATALOCAL ELFDATA2LSB
--#elif __BYTE_ORDER == __BIG_ENDIAN
--# define ELFDATALOCAL ELFDATA2MSB
--#else
--# error Unknown byte order
--#endif
--
--#define MAP_WINDOW_SIZE (64*1024*1024)
--#define DEV_MEM "/dev/mem"
--
--#define ALIGN_MASK(x,y) (((x) + (y)) & ~(y))
--#define ALIGN(x,y)	ALIGN_MASK(x, (y) - 1)
--
--static void *map_addr(int fd, unsigned long size, off_t offset)
--{
--	unsigned long page_size = getpagesize();
--	unsigned long map_offset = offset & (page_size - 1);
--	size_t len = ALIGN(size + map_offset, page_size);
--	void *result;
--
--	result = mmap(0, len, PROT_READ, MAP_SHARED, fd, offset - map_offset);
--	if (result == MAP_FAILED) {
--		fprintf(stderr, "Cannot mmap " DEV_MEM " offset: %#llx size: %lu: %s\n",
--			(unsigned long long)offset, size, strerror(errno));
--		exit(5);
--	}
--	return result + map_offset;
--}
--
--static void unmap_addr(void *addr, unsigned long size)
--{
--	unsigned long page_size = getpagesize();
--	unsigned long map_offset = (uintptr_t)addr & (page_size - 1);
--	size_t len = ALIGN(size + map_offset, page_size);
--	int ret;
--
--	addr -= map_offset;
--
--	ret = munmap(addr, len);
--	if (ret < 0) {
--		fprintf(stderr, "munmap failed: %s\n",
--			strerror(errno));
--		exit(6);
--	}
--}
--
--static void *xmalloc(size_t size)
--{
--	void *result;
--	result = malloc(size);
--	if (result == NULL) {
--		fprintf(stderr, "malloc of %u bytes failed: %s\n",
--			(unsigned int)size, strerror(errno));
--		exit(7);
--	}
--	return result;
--}
--
--static void *collect_notes(
--	int fd, Elf64_Ehdr *ehdr, Elf64_Phdr *phdr, size_t *note_bytes)
--{
--	int i;
--	size_t bytes, result_bytes;
--	char *notes;
--
--	result_bytes = 0;
--	/* Find the worst case note memory usage */
--	bytes = 0;
--	for(i = 0; i < ehdr->e_phnum; i++) {
--		if (phdr[i].p_type == PT_NOTE) {
--			bytes += phdr[i].p_filesz;
--		}
--	}
--
--	/* Allocate the worst case note array */
--	notes = xmalloc(bytes);
--
--	/* Walk through and capture the notes */
--	for(i = 0; i < ehdr->e_phnum; i++) {
--		Elf64_Nhdr *hdr, *lhdr, *nhdr;
--		void *pnotes;
--		if (phdr[i].p_type != PT_NOTE) {
--			continue;
--		}
--		/* First snapshot the notes */
--		pnotes = map_addr(fd, phdr[i].p_filesz, phdr[i].p_offset);
--		memcpy(notes + result_bytes, pnotes, phdr[i].p_filesz);
--		unmap_addr(pnotes, phdr[i].p_filesz);
--
--		/* Walk through the new notes and find the real length */
--		hdr = (Elf64_Nhdr *)(notes + result_bytes);
--		lhdr = (Elf64_Nhdr *)(notes + result_bytes + phdr[i].p_filesz);
--		for(; hdr < lhdr; hdr = nhdr) {
--			size_t hdr_size;
--			/* If there is not a name this is a invalid/reserved note
--			 * stop here.
--			 */
--			if (hdr->n_namesz == 0) {
--				break;
--			}
--			hdr_size = 
--				sizeof(*hdr) + 
--				((hdr->n_namesz + 3) & ~3) +
--				((hdr->n_descsz + 3) & ~3);
--
--			nhdr = (Elf64_Nhdr *)(((char *)hdr) + hdr_size); 
--			/* if the note does not fit in the segment stop here */
--			if (nhdr > lhdr) {
--				break;
--			}
--			/* Update result_bytes for after each good header */
--			result_bytes = ((char *)hdr) - notes;
--		}
--	}
--	*note_bytes = result_bytes;
--	return notes;
--}
--
--static void *generate_new_headers(
--	Elf64_Ehdr *ehdr, Elf64_Phdr *phdr, size_t note_bytes, size_t *header_bytes)
--{
--	unsigned phnum;
--	size_t bytes;
--	char *headers;
--	Elf64_Ehdr *nehdr;
--	Elf64_Phdr *nphdr;
--	unsigned long long offset;
--	int i;
--	/* Count the number of program headers.
--	 * When we are done there will be only one note header.
--	 */
--	phnum = 1;
--	for(i = 0; i < ehdr->e_phnum; i++) {
--		if (phdr[i].p_type == PT_NOTE) {
--			continue;
--		}
--		phnum++;
--	}
--
--	/* Compute how many bytes we will need for headers */
--	bytes = sizeof(*ehdr) + sizeof(*phdr)*phnum;
--
--	/* Allocate memory for the headers */
--	headers = xmalloc(bytes);
--
--	/* Setup pointers to the new headers */
--	nehdr = (Elf64_Ehdr *)headers;
--	nphdr = (Elf64_Phdr *)(headers + sizeof(*nehdr));
--	
--	/* Copy and adjust the Elf header */
--	memcpy(nehdr, ehdr, sizeof(*nehdr));
--	nehdr->e_phoff = sizeof(*nehdr);
--	nehdr->e_phnum = phnum;
--	nehdr->e_shoff = 0;
--	nehdr->e_shentsize = 0;
--	nehdr->e_shnum = 0;
--	nehdr->e_shstrndx = 0;
--
--	/* Write the note program header */
--	nphdr->p_type = PT_NOTE;
--	nphdr->p_offset = bytes;
--	nphdr->p_vaddr  = 0;
--	nphdr->p_paddr  = 0;
--	nphdr->p_filesz = note_bytes;
--	nphdr->p_memsz  = note_bytes;
--	nphdr->p_flags  = 0;
--	nphdr->p_align  = 0;
--	nphdr++;
--
--	/* Write the rest of the program headers */
--	offset = bytes + note_bytes;
--	for(i = 0; i < ehdr->e_phnum; i++) {
--		if (phdr[i].p_type == PT_NOTE) {
--			continue;
--		}
--		memcpy(nphdr, &phdr[i], sizeof(*nphdr));
--		nphdr->p_offset = offset;
--		nphdr++;
--		offset += phdr[i].p_filesz;
--	}
--	
--	*header_bytes = bytes;
--	return headers;
--}
--
--static void write_all(int fd, const void *buf, size_t count)
--{
--	ssize_t result;
--	size_t written = 0;
--	const char *ptr;
--	size_t left;
--	ptr = buf;
--	left = count;
--	do {
--		result = write(fd, ptr, left);
--		if (result >= 0) {
--			written += result;
--			ptr += result;
--			left -= result;
--		}
--		else if ((errno != EAGAIN) && (errno != EINTR)) {
--			fprintf(stderr, "write failed: %s\n",
--				strerror(errno));
--			exit(8);
--		}
--	} while(written < count);
--}
--
--int main(int argc, char **argv)
--{
--	char *start_addr_str, *end;
--	unsigned long long start_addr;
--	Elf64_Ehdr *ehdr;
--	Elf64_Phdr *phdr;
--	void *notes, *headers;
--	size_t note_bytes, header_bytes;
--	int fd;
--	int i;
--	start_addr_str = 0;
--	if (argc > 2) {
--		fprintf(stderr, "Invalid argument count\n");
--		exit(9);
--	}
--	if (argc == 2) {
--		start_addr_str = argv[1];
--	}
--	if (!start_addr_str) {
--		start_addr_str = getenv("elfcorehdr");
--	}
--	if (!start_addr_str) {
--		fprintf(stderr, "Cannot find the start of the core dump\n");
--		exit(1);
--	}
--	start_addr = strtoull(start_addr_str, &end, 0);
--	if ((start_addr_str == end) || (*end != '\0')) {
--		fprintf(stderr, "Bad core dump start addres: %s\n",
--			start_addr_str);
--		exit(2);
--	}
--	
--	fd = open(DEV_MEM, O_RDONLY);
--	if (fd < 0) {
--		fprintf(stderr, "Cannot open " DEV_MEM ": %s\n",
--			strerror(errno));
--		exit(3);
--	}
--
--	/* Get the elf header */
--	ehdr = map_addr(fd, sizeof(*ehdr), start_addr);
--
--	/* Verify the ELF header */
--	if (	(ehdr->e_ident[EI_MAG0] != ELFMAG0) ||
--		(ehdr->e_ident[EI_MAG1] != ELFMAG1) ||
--		(ehdr->e_ident[EI_MAG2] != ELFMAG2) ||
--		(ehdr->e_ident[EI_MAG3] != ELFMAG3) ||
--		(ehdr->e_ident[EI_CLASS] != ELFCLASS64) ||
--		(ehdr->e_ident[EI_DATA] != ELFDATALOCAL) ||
--		(ehdr->e_ident[EI_VERSION] != EV_CURRENT) ||
--		(ehdr->e_type != ET_CORE) ||
--		(ehdr->e_version != EV_CURRENT) ||
--		(ehdr->e_ehsize != sizeof(Elf64_Ehdr)) ||
--		(ehdr->e_phentsize != sizeof(Elf64_Phdr)) ||
--		(ehdr->e_phnum == 0))
--	{
--		fprintf(stderr, "Invalid Elf header\n");
--		exit(4);
--	}
--	
--	/* Get the program header */
--	phdr = map_addr(fd, sizeof(*phdr)*(ehdr->e_phnum),
--			start_addr + ehdr->e_phoff);
--
--	/* Collect up the notes */
--	note_bytes = 0;
--	notes = collect_notes(fd, ehdr, phdr, &note_bytes);
--	
--	/* Generate new headers */
--	header_bytes = 0;
--	headers = generate_new_headers(ehdr, phdr, note_bytes, &header_bytes);
--
--	/* Write out everything */
--	write_all(STDOUT_FILENO, headers, header_bytes);
--	write_all(STDOUT_FILENO, notes, note_bytes);
--	for(i = 0; i < ehdr->e_phnum; i++) {
--		unsigned long long offset, size;
--		size_t wsize;
--		if (phdr[i].p_type == PT_NOTE) {
--			continue;
--		}
--		offset = phdr[i].p_offset;
--		size   = phdr[i].p_filesz;
--		wsize  = MAP_WINDOW_SIZE;
--		if (wsize > size) {
--			wsize = size;
--		}
--		for(;size > 0; size -= wsize, offset += wsize) {
--			void *buf;
--			wsize = MAP_WINDOW_SIZE;
--			if (wsize > size) {
--				wsize = size;
--			}
--			buf = map_addr(fd, wsize, offset);
--			write_all(STDOUT_FILENO, buf, wsize);
--			unmap_addr(buf, wsize);
--		}
--	}
--	free(notes);
--	close(fd);
--	return 0;
--}
-diff --git a/kexec-tools.spec.in b/kexec-tools.spec.in
-index 8871f2891921..3e57a22dc9ab 100644
---- a/kexec-tools.spec.in
-+++ b/kexec-tools.spec.in
-@@ -30,13 +30,11 @@ make install DESTDIR=${RPM_BUILD_ROOT}
- %files
- %defattr(-,root,root)
- %{_sbindir}/kexec
--%{_sbindir}/kdump
- %{_sbindir}/vmcore-dmesg
- %doc News
- %doc COPYING
- %doc TODO
- %{_mandir}/man8/kexec.8.gz
--%{_mandir}/man8/kdump.8.gz
- %{_mandir}/man8/vmcore-dmesg.8.gz
+-TARGETS:=$(BINARIES) $(MAN_PAGES)
++UNINSTALL_KDUMP = $(sbindir)/kdump
++UNINSTALL_KDUMP_MANPAGE = $(mandir)/man8/kdump.8
++UNINSTALL_KEXEC = $(sbindir)/kexec
++UNINSTALL_KEXEC_MANPAGE = $(mandir)/man8/kexec.8
++UNINSTALL_VMCORE_DMESG = $(sbindir)/vmcore-dmesg
++UNINSTALL_VMCORE_DMESG_MANPAGE = $(mandir)/man8/vmcore-dmesg.8
  
- %changelog
++TARGETS:=$(BINARIES) $(MAN_PAGES)
+ targets: $(TARGETS)
+ 
++UNINSTALL_TARGETS:=$(UNINSTALL_KDUMP) $(UNINSTALL_KDUMP_MANPAGE) \
++		   $(UNINSTALL_KEXEC) $(UNINSTALL_KEXEC_MANPAGE) \
++		   $(UNINSTALL_VMCORE_DMESG) $(UNINSTALL_VMCORE_DMESG_MANPAGE)
++uninstall-targets: $(UNINSTALL_TARGETS)
++
+ Makefile: Makefile.in config.status
+ 	./config.status
+ 
+@@ -218,6 +229,7 @@ echo::
+ 	@echo ARCH=$(ARCH)
+ 	@echo BINARIES=$(BINARIES)
+ 	@echo TARGETS=$(TARGETS)
++	@echo UNINSTALL_TARGETS=$(UNINSTALL_TARGETS)
+ 	@echo CC=$(CC)
+ 	@echo AR=$(AR)
+ 	@echo LD=$(LD)
+@@ -323,5 +335,72 @@ install: $(TARGETS)
+ 		fi; \
+ 	done
+ 
+-.PHONY: echo install all targets clean dist-clean distclean \
++uninstall:
++	UINSTALL_LIST='$(UNINSTALL_TARGETS)'; for file in $$UINSTALL_LIST ; do \
++		if test `$(DIRNAME) $$file` =     "$(sbindir)" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(bindir)" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(libexecdir)" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(datadir)" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(sysconfdir)" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(sharedstatedir)" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(localstatedir)" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(libdir)" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(infodir)" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(mandir)/man1" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(mandir)/man2" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(mandir)/man3" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(mandir)/man4" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(mandir)/man5" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(mandir)/man6" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(mandir)/man7" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(mandir)/man8" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(includedir)" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(pkgdatadir)" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(pkglibdir)" ; then \
++			rm -rf $$file ; \
++		fi; \
++		if test `$(DIRNAME) $$file` =     "$(pkgincludedir)" ; then \
++			rm -rf $$file ; \
++		fi; \
++	done
++
++.PHONY: echo install uninstall all targets uninstall-targets clean dist-clean distclean \
+ 	maintainer-clean maintainerclean tarball rpm
 -- 
 2.7.4
 
