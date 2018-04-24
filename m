@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from prv1-mh.provo.novell.com ([137.65.248.33])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fAwRl-0006RK-IV
- for kexec@lists.infradead.org; Tue, 24 Apr 2018 11:49:42 +0000
-Message-Id: <5ADF19AF02000078001BDED9@prv1-mh.provo.novell.com>
-Date: Tue, 24 Apr 2018 05:49:03 -0600
-From: "Jan Beulich" <JBeulich@suse.com>
-Subject: Re: [Xen-devel] RFC Xen signature verification for kexec
-References: <81714431-9776-7247-86db-c035fa3d2ce6@oracle.com>
- <5ADD837102000078001BD675@prv1-mh.provo.novell.com>
- <20180423102500.GI6312@olila.local.net-space.pl>
- <5ADDB67002000078001BD805@prv1-mh.provo.novell.com>
- <CAFLBxZZPkJU-iifT7037AQzLEd9_uHm8S6FWhP_U1WypMwexyQ@mail.gmail.com>
- <20180424101349.GJ6312@olila.local.net-space.pl>
-In-Reply-To: <20180424101349.GJ6312@olila.local.net-space.pl>
-Mime-Version: 1.0
-Content-Disposition: inline
+Subject: Re: [RFC] arm64: extra entries in /proc/iomem for kexec
+References: <20180314082941.GM25863@linaro.org>
+ <2d2e1be6-b925-1595-9b6e-76dd270d396d@redhat.com>
+ <20180327101654.GB14737@linaro.org>
+ <da2989ec-7fa5-b044-3237-4e75f2fe6d98@arm.com>
+ <20180402015330.GA27603@linaro.org> <20180405024203.GD19607@linaro.org>
+ <4c59b4c3-cff4-ac69-9576-6bcbf507ef1f@arm.com>
+ <20180416100831.GF13168@linaro.org>
+From: James Morse <james.morse@arm.com>
+Message-ID: <954d8b58-579a-c688-36f3-dc8d4b13cef8@arm.com>
+Date: Tue, 24 Apr 2018 17:08:57 +0100
+MIME-Version: 1.0
+In-Reply-To: <20180416100831.GF13168@linaro.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,59 +25,118 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>, Eric DeVolder <eric.devolder@oracle.com>, kexec@lists.infradead.org, George Dunlap <dunlapg@umich.edu>, Xen-devel <xen-devel@lists.xen.org>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: linux-efi@vger.kernel.org, ard.biesheuvel@linaro.org, jhugo@codeaurora.org, Bhupesh Sharma <bhsharma@redhat.com>, tbaicar@codeaurora.org, kexec@lists.infradead.org, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel@lists.infradead.org
 
->>> On 24.04.18 at 12:13, <daniel.kiper@oracle.com> wrote:
-> On Tue, Apr 24, 2018 at 10:46:38AM +0100, George Dunlap wrote:
->> On Mon, Apr 23, 2018 at 11:33 AM, Jan Beulich <JBeulich@suse.com> wrote:
->> >>>> On 23.04.18 at 12:25, <daniel.kiper@oracle.com> wrote:
->> >> On Mon, Apr 23, 2018 at 12:55:45AM -0600, Jan Beulich wrote:
->> >>> >>> On 20.04.18 at 21:12, <eric.devolder@oracle.com> wrote:
->> >>> > Two options for signature verification in Xen
->> >>> >
->> >>> > This proposal outlines two options under consideration for enhancing
->> >>> > Xen to support signature verification of kexec loaded images. The
->> >>> > first option is essentially to mirror Linux signature verification
->> >>> > code into Xen. The second option utilizes components from sources
->> >>> > other than Linux (for example, libgcrypt rather than linux/crypto).
->> >>> >
->> >>> > NOTE: An option to utilize dom0 kernel signature verification does not
->> >>> > prevent the exploit as user space can invoke the hypercall directly,
->> >>> > bypassing dom0.
->> >>>
->> >>> Not exactly - this option nevertheless exists, albeit is perhaps
->> >>> unattractive: No user space component can issue hypercalls
->> >>> directly, they always go through the privcmd driver. Hence the
->> >>> driver cold snoop the kexec hypercall.
->> >>
->> >> Hmmm... Is not it a problem from security point of view for us in this
->> >> case? It should not if dom0 kernel is signed. It have to be signed here.
->> >> Just thinking a loud...
->> >
->> > I'm afraid I don't understand: If the Dom0 kernel isn't signed (or hasn't
->> > been verified), the system is insecure in the first place. No reason to
->> > bother measuring the kexec kernel then.
+Hi Akashi,
+
+On 16/04/18 11:08, AKASHI Takahiro wrote:
+> On Thu, Apr 12, 2018 at 05:01:52PM +0100, James Morse wrote:
+>> On 05/04/18 03:42, AKASHI Takahiro wrote:
+>>> On Mon, Apr 02, 2018 at 10:53:32AM +0900, AKASHI Takahiro wrote:
+>>>> Basically, changes that I made on /proc/iomem in my new format D were:
+>>>> 1. to move NOMAP region entries, formerly named "reserved" and now named
+>>>>    "reserved (no map)", under System RAM
+>>>> 2. to add new entries for firmware-reserved regions as "reserved" also
+>>>>    under System RAM
+>>>>
+>>>> On the other hand, current kexec-tools, in particular kexec command,
+>>>> only scan top-level "System RAM" entries as well as "reserved" entries.
 >>
->> I think you're both saying the same thing.
->>
->> FWIW I wouldn't mind coming up with a hypercall that the privcmd
->> driver refuses to pass-through as-is, and having some way for the
->> tools to ask the kernel to check the signature.
+>> as well as?
 > 
-> I have a feeling that I should reformulate the question: How far the Xen
-> hypervisor trusts the privcmd driver? If the privcmd driver is signed
-> then at first sight there should not be a problem. However, we can be
-> more strict and require that (every? Daniel is running away...) hypercall
-> from privcmd to Xen should be verified somehow. Maybe I am overzealous but
-> I think that it make sense to discuss this now than later have problems.
+> I had few words here.
+> The current kexec-tools assumes that "reserved" entries appear only
+> at the top level. So,
+> 
+>> Does this mean kexec will pick up the reserved region if its written as:
+>> | 00001000-0009d7ff : System RAM
+>> |    00001000-00001fff  : reserved
+> 
+> if this is the case, the range "0x1000-0x1fff" is added to an internal
+> list of memory ranges 
 
-An analogy of this would be that every system call needs verifying by the
-OS, which imo would be insane. Once we established trust in a component,
-we _should_ trust it.
+I found this in get_memory_ranges_iomem_cb()...
 
-Jan
 
+> but will later be *ignored* by locate_hole() function
+> due to its memory type.
+
+Ugh. Great.
+
+
+> That is, the range can potentially be overwritten by loaded kernel/initrd.
+
+So two kernel bugs, one user-space bug, all conspiring.
+
+
+>>>> either because
+>>>> a. new kernel (or initrd/dtb) may have been allocated on a NOMAP region
+>>>>    which are not suitable for usable memory, or
+>>>> b. new kernel (or initrd/dtb) may have been allocated on a reserved region
+>>>>    whose contents can be overwritten.
+>>>>
+>>>> While we see (b) even today, (a) is a backward compatibility issue.
+>>
+>> (a) doesn't happen because request_standard_resources() checks
+>> memblock_is_nomap(), and reports those regions as 'reserved'.
+> 
+> I might have confused you. The assumption here was that we adopt format (D),
+> where all NOMAP regions are sub nodes of "System RAM", but still use
+> the current kexec-tools.
+> As I said above, this will end up an un-expected behavior.
+
+I'd like to fix this without having to fix user-space at the same time. It looks
+like no-one else has second level reserved regions, so we can't blame
+kexec-tools for looking straight at them, then ignoring them.
+
+
+>> We can't expect user-space to upgrade to fix this issue.
+> 
+> I'm not sure what you mean here; we can't fix the issue anyway
+> without changing user-space/kexec-tools as kexec_load system call totally
+> relies on parameters passed by kexec-tools.
+> (The only difference is whether we need additional kernel changes or not.)
+
+It looks like this was always broken because the efi memory map isn't listed as
+'reserved' in /proc/iomem. The fallout for the new stuff is secondary.
+
+
+>>> # I don't know yet whether people are happy with this fix, and also have
+>>>   kernel patches for my other approaches. They are neither not much
+>>>   complicated.
+>>
+>> I don't think we should fix this in userspace, exporting all the
+>> memblock_reserved() regions as 'reserved' in /proc/iomem looks like the right
+>> thing to do.
+> 
+> Again, if you modify /proc/iomem, you have to update kexec-tools, too.
+
+If we squash the memblock_reserved() stuff down so it appears as a top level
+'reserved' region too, I don't think we do. This prevents the efi-memory-map
+being overwritten on kernels since kexec was merged.
+
+Its horribly fiddly to do this. The kernel code/data are special reserved
+regions that we already describe as a subset of system-ram, even though they are
+both also fragments of a bigger memblock_reserved() block.
+
+While we can walk memblock for regions that aren't reserved, allocating memory
+in the loop changes what is reserved. That one O(N) walk ends up being four...
+
+I'm almost done tearing my hair out, I should have a working patch soon...
+
+
+>> wasn't there going to be another version, with the core EFI
+>> stuff split out?
+> 
+> ? I don't remember well ...
+
+https://lkml.org/lkml/2018/2/1/496
+
+
+Thanks,
+
+James
 
 
 _______________________________________________
