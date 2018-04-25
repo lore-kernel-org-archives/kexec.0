@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x244.google.com ([2607:f8b0:400e:c00::244])
+Received: from mail-pg0-x242.google.com ([2607:f8b0:400e:c05::242])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fBDtO-0006JI-Mf
- for kexec@lists.infradead.org; Wed, 25 Apr 2018 06:27:11 +0000
-Received: by mail-pf0-x244.google.com with SMTP id p15so14305011pff.11
- for <kexec@lists.infradead.org>; Tue, 24 Apr 2018 23:27:01 -0700 (PDT)
+ id 1fBDte-0006Mg-Qq
+ for kexec@lists.infradead.org; Wed, 25 Apr 2018 06:27:21 +0000
+Received: by mail-pg0-x242.google.com with SMTP id b9so12603210pgf.6
+ for <kexec@lists.infradead.org>; Tue, 24 Apr 2018 23:27:08 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v9 03/11] arm64: kexec_file: invoke the kernel without
- purgatory
-Date: Wed, 25 Apr 2018 15:26:21 +0900
-Message-Id: <20180425062629.29404-4-takahiro.akashi@linaro.org>
+Subject: [PATCH v9 04/11] arm64: kexec_file: allocate memory walking through
+ memblock list
+Date: Wed, 25 Apr 2018 15:26:22 +0900
+Message-Id: <20180425062629.29404-5-takahiro.akashi@linaro.org>
 In-Reply-To: <20180425062629.29404-1-takahiro.akashi@linaro.org>
 References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -28,84 +28,101 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de
 Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-On arm64, purugatory would do almosty nothing. So just invoke secondary
-kernel directy by jumping into its entry code.
-
-While, in this case, cpu_soft_restart() must be called with dtb address
-in the fifth argument, the behavior still stays compatible with kexec_load
-case as long as the argument is null.
+We need to prevent firmware-reserved memory regions, particularly EFI
+memory map as well as ACPI tables, from being corrupted by loading
+kernel/initrd (or other kexec buffers). We also want to support memory
+allocation in top-down manner in addition to default bottom-up.
+So let's have arm64 specific arch_kexec_walk_mem() which will search
+for available memory ranges in usable memblock list,
+i.e. !NOMAP & !reserved, instead of system resource tree.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will.deacon@arm.com>
 ---
- arch/arm64/kernel/cpu-reset.S       |  6 +++---
- arch/arm64/kernel/machine_kexec.c   | 11 +++++++++--
- arch/arm64/kernel/relocate_kernel.S |  3 ++-
- 3 files changed, 14 insertions(+), 6 deletions(-)
+ arch/arm64/kernel/Makefile             |  3 +-
+ arch/arm64/kernel/machine_kexec_file.c | 57 ++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/kernel/machine_kexec_file.c
 
-diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
-index 8021b46c9743..391df91328ac 100644
---- a/arch/arm64/kernel/cpu-reset.S
-+++ b/arch/arm64/kernel/cpu-reset.S
-@@ -24,9 +24,9 @@
-  *
-  * @el2_switch: Flag to indicate a swich to EL2 is needed.
-  * @entry: Location to jump to for soft reset.
-- * arg0: First argument passed to @entry.
-- * arg1: Second argument passed to @entry.
-- * arg2: Third argument passed to @entry.
-+ * arg0: First argument passed to @entry. (relocation list)
-+ * arg1: Second argument passed to @entry.(physcal kernel entry)
-+ * arg2: Third argument passed to @entry. (physical dtb address)
-  *
-  * Put the CPU into the same state as it would be if it had been reset, and
-  * branch to what would be the reset vector. It must be executed with the
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index f76ea92dff91..f7dbba00be10 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -205,10 +205,17 @@ void machine_kexec(struct kimage *kimage)
- 	 * uses physical addressing to relocate the new image to its final
- 	 * position and transfers control to the image entry point when the
- 	 * relocation is complete.
-+	 * In case of kexec_file_load syscall, we directly start the kernel,
-+	 * skipping purgatory.
- 	 */
--
- 	cpu_soft_restart(kimage != kexec_crash_image,
--		reboot_code_buffer_phys, kimage->head, kimage->start, 0);
-+		reboot_code_buffer_phys, kimage->head, kimage->start,
-+#ifdef CONFIG_KEXEC_FILE
-+				kimage->purgatory_info.purgatory_buf ?
-+						0 : kimage->arch.dtb_mem);
-+#else
-+				0);
-+#endif
- 
- 	BUG(); /* Should never get here. */
- }
-diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-index f407e422a720..95fd94209aae 100644
---- a/arch/arm64/kernel/relocate_kernel.S
-+++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -32,6 +32,7 @@
- ENTRY(arm64_relocate_new_kernel)
- 
- 	/* Setup the list loop variables. */
-+	mov	x18, x2				/* x18 = dtb address */
- 	mov	x17, x1				/* x17 = kimage_start */
- 	mov	x16, x0				/* x16 = kimage_head */
- 	raw_dcache_line_size x15, x0		/* x15 = dcache line size */
-@@ -107,7 +108,7 @@ ENTRY(arm64_relocate_new_kernel)
- 	isb
- 
- 	/* Start new image. */
--	mov	x0, xzr
-+	mov	x0, x18
- 	mov	x1, xzr
- 	mov	x2, xzr
- 	mov	x3, xzr
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index bf825f38d206..2f2b2757ae7a 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -48,8 +48,9 @@ arm64-obj-$(CONFIG_ARM64_ACPI_PARKING_PROTOCOL)	+= acpi_parking_protocol.o
+ arm64-obj-$(CONFIG_PARAVIRT)		+= paravirt.o
+ arm64-obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
+ arm64-obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
+-arm64-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o	\
++arm64-obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
+ 					   cpu-reset.o
++arm64-obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o
+ arm64-obj-$(CONFIG_ARM64_RELOC_TEST)	+= arm64-reloc-test.o
+ arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
+ arm64-obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+new file mode 100644
+index 000000000000..f9ebf54ca247
+--- /dev/null
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -0,0 +1,57 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * kexec_file for arm64
++ *
++ * Copyright (C) 2018 Linaro Limited
++ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
++ *
++ * Most code is derived from arm64 port of kexec-tools
++ */
++
++#define pr_fmt(fmt) "kexec_file: " fmt
++
++#include <linux/ioport.h>
++#include <linux/kernel.h>
++#include <linux/kexec.h>
++#include <linux/memblock.h>
++
++int arch_kexec_walk_mem(struct kexec_buf *kbuf,
++				int (*func)(struct resource *, void *))
++{
++	phys_addr_t start, end;
++	struct resource res;
++	u64 i;
++	int ret = 0;
++
++	if (kbuf->image->type == KEXEC_TYPE_CRASH)
++		return func(&crashk_res, kbuf);
++
++	if (kbuf->top_down)
++		for_each_mem_range_rev(i, &memblock.memory, &memblock.reserved,
++				NUMA_NO_NODE, MEMBLOCK_NONE,
++				&start, &end, NULL) {
++			if (!memblock_is_map_memory(start))
++				continue;
++
++			res.start = start;
++			res.end = end;
++			ret = func(&res, kbuf);
++			if (ret)
++				break;
++		}
++	else
++		for_each_mem_range(i, &memblock.memory, &memblock.reserved,
++				NUMA_NO_NODE, MEMBLOCK_NONE,
++				&start, &end, NULL) {
++			if (!memblock_is_map_memory(start))
++				continue;
++
++			res.start = start;
++			res.end = end;
++			ret = func(&res, kbuf);
++			if (ret)
++				break;
++		}
++
++	return ret;
++}
 -- 
 2.17.0
 
