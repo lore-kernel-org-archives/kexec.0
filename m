@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mail-pf0-x242.google.com ([2607:f8b0:400e:c00::242])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fBBoG-0008OH-D3
- for kexec@lists.infradead.org; Wed, 25 Apr 2018 04:13:38 +0000
-From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
-Subject: RE: [PATCH 2/2] Check PG_swapbacked for swap cache pages
-Date: Wed, 25 Apr 2018 04:12:27 +0000
-Message-ID: <61D4E5D821F1674CB87C99F080A210BE0119C16E@BPXM01GP.gisp.nec.co.jp>
-References: <5e0004648d2a597417542b483a0c3aed114bf03f.1523636414.git.ptesarik@suse.com>
- <2efa8f466177a492abbe0cb64046ec8cd8b8afdf.1523636414.git.ptesarik@suse.com>
- <20180424124325.2ef00cd0@ezekiel.suse.cz>
-In-Reply-To: <20180424124325.2ef00cd0@ezekiel.suse.cz>
-Content-Language: ja-JP
-MIME-Version: 1.0
+ id 1fBDtF-0006Gw-VR
+ for kexec@lists.infradead.org; Wed, 25 Apr 2018 06:26:56 +0000
+Received: by mail-pf0-x242.google.com with SMTP id j11so14306261pff.10
+ for <kexec@lists.infradead.org>; Tue, 24 Apr 2018 23:26:46 -0700 (PDT)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v9 00/11] arm64: kexec: add kexec_file_load() support
+Date: Wed, 25 Apr 2018 15:26:18 +0900
+Message-Id: <20180425062629.29404-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,162 +17,260 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: kexec-ml <kexec@lists.infradead.org>, Keiichi Nakamura <kei-nakamura@vt.jp.nec.com>
+To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de
+Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-Hi Petr,
+This is the ninth round of implementing kexec_file_load() support
+on arm64.[1] Most of the code is based on kexec-tools.
 
-Sorry. I can't take time enough for makedumpfile recently.
-I would like to reply by May 11th.
-Please wait some weeks.
 
-Thanks
-Tachibana
+This patch series enables us to
+  * load the kernel by specifying its file descriptor, instead of user-
+    filled buffer, at kexec_file_load() system call, and
+  * optionally verify its signature at load time for trusted boot.
+Kernel virtual address randomization is also supported since v9.
 
-> -----Original Message-----
-> From: Petr Tesarik [mailto:ptesarik@suse.cz]
-> Sent: Tuesday, April 24, 2018 7:43 PM
-> To: Tachibana Masaki() <mas-tachibana@vf.jp.nec.com>; Nakayama Takuya() <tak-nakayama@tg.jp.nec.com>;
-> kexec-ml <kexec@lists.infradead.org>
-> Subject: Re: [PATCH 2/2] Check PG_swapbacked for swap cache pages
-> 
-> Hi Masaki-san,
-> 
-> what is the status of this patch? Do you have any concerns?
-> 
-> TIA,
-> Petr T
-> 
-> On Fri, 13 Apr 2018 18:29:59 +0200
-> Petr Tesarik <ptesarik@suse.cz> wrote:
-> 
-> > When page cache is filtered out (dump level bitmap includes 2 or 4),
-> > makedumpfile checks the PG_swapcache bit, but since kernel commit
-> > 6326fec1122cde256bd2a8c63f2606e08e44ce1d (v4.10-rc1~7) this bit is
-> > an alias for PG_owner_priv_1, which is also used by filesystem
-> > code (PG_checked) and Xen (PG_pinned and PG_foreign).
-> >
-> > With these kernels, the PG_swapcache flag is valid only if
-> > PG_swapbacked is set. A Linux kernel patch has already been
-> > submitted to export the value of PG_swapbacked in VMCOREINFO.
-> >
-> > Since there are released kernels in the wild which do not export the
-> > value, a fallback is implemented. I considered these three situations:
-> >
-> >   1. Kernels before v2.6.28-rc1~244:
-> >      PG_swapbacked does not exist, so it must not be checked.
-> >      Instead, check PG_swapcache, which is never overloaded for
-> >      another purpose.
-> >
-> >   2. Kernels between v2.6.28-rc1~244 and v4.10-rc1~7:
-> >      It is sufficient to check only PG_swapcache, but PG_swapbacked
-> >      may also be checked (it is always set if PG_swapcache is set).
-> >
-> >   3. Kernels since v4.10-rc1~7:
-> >      PG_swapbacked must be checked.
-> >
-> > If PG_swapbacked value is known (exported or read from debuginfo),
-> > it is always safe to use it (case 2 or 3). If PG_swapbacked is not
-> > known, it is safe to ignore it for cases 1 and 2, but not 3.
-> > Thankfully, the new value of PG_swapcache (since v4.10-rc1~7) is
-> > less than PG_private (which is known), whereas the old value had
-> > always been greater than PG_private. Moreover, the flags between
-> > PG_private and PG_swapbacked haven't changed since v4.10-rc1~7, so
-> > PG_swapbacked can fall back to PG_private + 6 if unknown.
-> >
-> > Without this patch, all Xen dumps are unusable, because PG_pinned is
-> > set for all page table pages.
-> >
-> > Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> > ---
-> >  makedumpfile.c | 19 ++++++++++++++++++-
-> >  makedumpfile.h |  2 ++
-> >  2 files changed, 20 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/makedumpfile.c b/makedumpfile.c
-> > index 175ba68..ec04a88 100644
-> > --- a/makedumpfile.c
-> > +++ b/makedumpfile.c
-> > @@ -252,7 +252,18 @@ isHugetlb(unsigned long dtor)
-> >  static int
-> >  is_cache_page(unsigned long flags)
-> >  {
-> > -	return isLRU(flags) || isSwapCache(flags);
-> > +	if (isLRU(flags))
-> > +		return TRUE;
-> > +
-> > +	/* PG_swapcache is valid only if:
-> > +	 *   a. PG_swapbacked bit is set, or
-> > +	 *   b. PG_swapbacked did not exist (kernels before 4.10-rc1).
-> > +	 */
-> > +	if ((NUMBER(PG_swapbacked) == NOT_FOUND_NUMBER || isSwapBacked(flags))
-> > +	    && isSwapCache(flags))
-> > +		return TRUE;
-> > +
-> > +	return FALSE;
-> >  }
-> >
-> >  static inline unsigned long
-> > @@ -1735,6 +1746,7 @@ get_structure_info(void)
-> >  	ENUM_NUMBER_INIT(PG_lru, "PG_lru");
-> >  	ENUM_NUMBER_INIT(PG_private, "PG_private");
-> >  	ENUM_NUMBER_INIT(PG_swapcache, "PG_swapcache");
-> > +	ENUM_NUMBER_INIT(PG_swapbacked, "PG_swapbacked");
-> >  	ENUM_NUMBER_INIT(PG_buddy, "PG_buddy");
-> >  	ENUM_NUMBER_INIT(PG_slab, "PG_slab");
-> >  	ENUM_NUMBER_INIT(PG_hwpoison, "PG_hwpoison");
-> > @@ -1988,6 +2000,9 @@ get_value_for_old_linux(void)
-> >  		NUMBER(PG_private) = PG_private_ORIGINAL;
-> >  	if (NUMBER(PG_swapcache) == NOT_FOUND_NUMBER)
-> >  		NUMBER(PG_swapcache) = PG_swapcache_ORIGINAL;
-> > +	if (NUMBER(PG_swapbacked) == NOT_FOUND_NUMBER
-> > +	    && NUMBER(PG_swapcache) < NUMBER(PG_private))
-> > +		NUMBER(PG_swapbacked) = NUMBER(PG_private) + 6;
-> >  	if (NUMBER(PG_slab) == NOT_FOUND_NUMBER)
-> >  		NUMBER(PG_slab) = PG_slab_ORIGINAL;
-> >  	if (NUMBER(PG_head_mask) == NOT_FOUND_NUMBER)
-> > @@ -2264,6 +2279,7 @@ write_vmcoreinfo_data(void)
-> >  	WRITE_NUMBER("PG_private", PG_private);
-> >  	WRITE_NUMBER("PG_head_mask", PG_head_mask);
-> >  	WRITE_NUMBER("PG_swapcache", PG_swapcache);
-> > +	WRITE_NUMBER("PG_swapbacked", PG_swapbacked);
-> >  	WRITE_NUMBER("PG_buddy", PG_buddy);
-> >  	WRITE_NUMBER("PG_slab", PG_slab);
-> >  	WRITE_NUMBER("PG_hwpoison", PG_hwpoison);
-> > @@ -2658,6 +2674,7 @@ read_vmcoreinfo(void)
-> >  	READ_NUMBER("PG_private", PG_private);
-> >  	READ_NUMBER("PG_head_mask", PG_head_mask);
-> >  	READ_NUMBER("PG_swapcache", PG_swapcache);
-> > +	READ_NUMBER("PG_swapbacked", PG_swapbacked);
-> >  	READ_NUMBER("PG_slab", PG_slab);
-> >  	READ_NUMBER("PG_buddy", PG_buddy);
-> >  	READ_NUMBER("PG_hwpoison", PG_hwpoison);
-> > diff --git a/makedumpfile.h b/makedumpfile.h
-> > index 6205ef3..fe306bb 100644
-> > --- a/makedumpfile.h
-> > +++ b/makedumpfile.h
-> > @@ -155,6 +155,7 @@ test_bit(int nr, unsigned long addr)
-> >  #define isPrivate(flags)	test_bit(NUMBER(PG_private), flags)
-> >  #define isCompoundHead(flags)   (!!((flags) & NUMBER(PG_head_mask)))
-> >  #define isSwapCache(flags)	test_bit(NUMBER(PG_swapcache), flags)
-> > +#define isSwapBacked(flags)	test_bit(NUMBER(PG_swapbacked), flags)
-> >  #define isHWPOISON(flags)	(test_bit(NUMBER(PG_hwpoison), flags) \
-> >  				&& (NUMBER(PG_hwpoison) != NOT_FOUND_NUMBER))
-> >
-> > @@ -1881,6 +1882,7 @@ struct number_table {
-> >  	long	PG_head;
-> >  	long	PG_head_mask;
-> >  	long	PG_swapcache;
-> > +	long	PG_swapbacked;
-> >  	long	PG_buddy;
-> >  	long	PG_slab;
-> >  	long    PG_hwpoison;
-> 
+Contrary to kexec_load() system call, as we discussed a long time ago,
+users may not be allowed to provide a device tree to the 2nd kernel
+explicitly, hence enforcing a dt blob of the first kernel to be re-used
+internally.
 
+To use kexec_file_load() system call, instead of kexec_load(), at kexec
+command, '-s' option must be specified. See [2] for a necessary patch for
+kexec-tools.
+
+To analyze a generated crash dump file, use the latest master branch of
+crash utility[3]. I always try to submit patches to fix any inconsistencies
+introduced in the latest kernel.
+
+Regarding a kernel image verification, a signature must be presented
+along with the binary itself. A signature is basically a hash value
+calculated against the whole binary data and encrypted by a key which
+will be authenticated by one of the system's trusted certificates.
+Any attempt to read and load a to-be-kexec-ed kernel image through
+a system call will be checked and blocked if the binary's hash value
+doesn't match its associated signature.
+
+There are two methods available now:
+1. implementing arch-specific verification hook of kexec_file_load()
+2. utilizing IMA(Integrity Measurement Architecture)[4] appraisal framework
+
+Before my v7, I believed that my patch only supports (1) but am now
+confident that (2) comes free if IMA is enabled and properly configured.
+
+
+(1) Arch-specific verification hook
+If CONFIG_KEXEC_VERIFY_SIG is enabled, kexec_file_load() invokes an arch-
+defined (and hence file-format-specific) hook function to check for the
+validity of kernel binary.
+
+On x86, a signature is embedded into a PE file (Microsoft's format) header
+of binary. Since arm64's "Image" can also be seen as a PE file as far as
+CONFIG_EFI is enabled, we adopt this format for kernel signing.  
+
+As in the case of UEFI applications, we can create a signed kernel image:
+    $ sbsign --key ${KEY} --cert ${CERT} Image
+
+You may want to use certs/signing_key.pem, which is intended to be used
+for module signing (CONFIG_MODULE_SIG), as ${KEY} and ${CERT} for test
+purpose.
+
+
+(2) IMA appraisal-based
+IMA was first introduced in linux in order to meet TCG (Trusted Computing
+Group) requirement that all the sensitive files be *measured* before
+reading/executing them to detect any untrusted changes/modification.
+Then appraisal feature, which allows us to ensure the integrity of
+files and even prevent them from reading/executing, was added later.
+
+Meanwhile, kexec_file_load() has been merged since v3.17 and evolved to
+enable IMA-appraisal type verification by the commit b804defe4297 ("kexec:
+replace call to copy_file_from_fd() with kernel version").
+
+In this scheme, a signature will be stored in a extended file attribute,
+"security.ima" while a decryption key is hold in a dedicated keyring,
+".ima" or "_ima".  All the necessary process of verification is confined
+in a secure API, kernel_read_file_from_fd(), called by kexec_file_load().
+
+    Please note that powerpc is one of the two architectures now
+    supporting KEXEC_FILE, and that it wishes to exntend IMA,
+    where a signature may be appended to "vmlinux" file[5], like module
+    signing, instead of using an extended file attribute.
+
+While IMA meant to be used with TPM (Trusted Platform Module) on secure
+platform, IMA is still usable without TPM. Here is an example procedure
+about how we can give it a try to run the feature using a self-signed
+root ca for demo/test purposes:
+
+ 1) Generate needed keys and certificates, following "Generate trusted
+    keys" section in README of ima-evm-utils[6].
+
+ 2) Build the kernel with the following kernel configurations, specifying
+    "ima-local-ca.pem" for CONFIG_SYSTEM_TRUSTED_KEYS:
+	CONFIG_EXT4_FS_SECURITY
+	CONFIG_INTEGRITY_SIGNATURE
+	CONFIG_INTEGRITY_ASYMMETRIC_KEYS
+	CONFIG_INTEGRITY_TRUSTED_KEYRING
+	CONFIG_IMA
+	CONFIG_IMA_WRITE_POLICY
+	CONFIG_IMA_READ_POLICY
+	CONFIG_IMA_APPRAISE
+	CONFIG_IMA_APPRAISE_BOOTPARAM
+	CONFIG_SYSTEM_TRUSTED_KEYS
+    Please note that CONFIG_KEXEC_VERIFY_SIG is not, actually should
+    not be, enabled.
+
+ 3) Sign(label) a kernel image binary to be kexec-ed on target filesystem:
+    $ evmctl ima_sign --key /path/to/private_key.pem /your/Image
+
+ 4) Add a command line parameter and boot the kernel:
+    ima_appraise=enforce
+
+ On live system,
+ 5) Set a security policy:
+    $ mount -t securityfs none /sys/kernel/security
+    $ echo "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig" \
+      > /sys/kernel/security/ima/policy
+
+ 6) Add a key for ima:
+    $ keyctl padd asymmetric my_ima_key %:.ima < /path/to/x509_ima.der
+    (or evmctl import /path/to/x509_ima.der <ima_keyring_id>)
+
+ 7) Then try kexec as normal.
+
+
+Concerns(or future works):
+* Support for physical address randomization
+* Signature verification of big endian kernel with CONFIG_KEXEC_VERIFY_SIG
+  While big-endian kernel can support kernel signing, I'm not sure that
+  Image can be recognized as in PE format because x86 standard only
+  defines little-endian-based format.
+* Support for vminux loading
+
+  [1] http://git.linaro.org/people/takahiro.akashi/linux-aarch64.git
+	branch:arm64/kexec_file
+  [2] http://git.linaro.org/people/takahiro.akashi/kexec-tools.git
+	branch:arm64/kexec_file
+  [3] http://github.com/crash-utility/crash.git
+  [4] https://sourceforge.net/p/linux-ima/wiki/Home/
+  [5] http://lkml.iu.edu//hypermail/linux/kernel/1707.0/03669.html
+  [6] https://sourceforge.net/p/linux-ima/ima-evm-utils/ci/master/tree/
+
+
+Changes in v9 (April 25, 2018)
+* rebased to v4.17-rc
+* remove preparatory patches on generic/x86/ppc code
+  They have now been merged in v4.17-rc1.
+* allocate memory based on memblock list instead of system resources
+  This will prevent reserved regions, particularly UEFI/ACPI data,
+  from being corrupted.
+* correct dt property names, linux,initrd-*, in newly-created dtb
+  "linux," was missing.
+* remove alignment requirement for initrd loading
+* add kaslr (kernel virtual address randomization) support
+* misc code clean-up
+* revise commit messages
+
+Changes in v8 (Feb 22, 2018)
+* introduce ARCH_HAS_KEXEC_PURGATORY so that arm64 will be able to skip
+  purgatory
+* remove "ifdef CONFIG_X86_64" stuffs from a re-factored function,
+  prepare_elf64_headers(), making its interface more generic
+  (The original patch was split into two for easier reviews.)
+* modify cpu_soft_restart() so as to let the 2nd kernel jump into its entry
+  code directly without requiring purgatory in case of kexec_file_load
+* remove CONFIG_KEXEC_FILE_IMAGE_FMT and introduce
+  CONFIG_KEXEC_IMAGE_VERIFY_SIG, much similar to x86 but quite redundant
+  for now.
+* In addition, update/modify dependencies of KEXEC_IMAGE_VERIFY_SIG
+
+Changes in v7 (Dec 4, 2017)
+* rebased to v4.15-rc2
+* re-organize the patch set to separate KEXEC_FILE_VERIFY_SIG-related
+  code from the others
+* revamp factored-out code in kernel/kexec_file.c due to the changes
+  in original x86 code
+* redefine walk_sys_ram_res_rev() prototype due to change of callback
+  type in the counterpart, walk_sys_ram_res()
+* make KEXEC_FILE_IMAGE_FMT default on if KEXEC_FILE selected
+
+Changes in v6 (Oct 24, 2017)
+* fix a for-loop bug in _kexec_kernel_image_probe() per Julien
+
+Changes in v5 (Oct 10, 2017)
+* fix kbuild errors around patch #3
+per Julien's comments,
+* fix a bug in walk_system_ram_res_rev() with some cleanup
+* modify fdt_setprop_range() to use vmalloc()
+* modify fill_property() to use memset()
+
+Changes in v4 (Oct 2, 2017)
+* reinstate x86's arch_kexec_kernel_image_load()
+* rename weak arch_kexec_kernel_xxx() to _kexec_kernel_xxx() for
+  better re-use
+* constify kexec_file_loaders[]
+
+Changes in v3 (Sep 15, 2017)
+* fix kbuild test error
+* factor out arch_kexec_kernel_*() & arch_kimage_file_post_load_cleanup()
+* remove CONFIG_CRASH_CORE guard from kexec_file.c
+* add vmapped kernel region to vmcore for gdb backtracing
+  (see prepare_elf64_headers())
+* merge asm/kexec_file.h into asm/kexec.h
+* and some cleanups
+
+Changes in v2 (Sep 8, 2017)
+* move core-header-related functions from crash_core.c to kexec_file.c
+* drop hash-check code from purgatory
+* modify purgatory asm to remove arch_kexec_apply_relocations_add()
+* drop older kernel support
+* drop vmlinux support (at least, for this series)
+
+
+Patch #1 to #10 are essential part for KEXEC_FILE support
+(additionally allowing for IMA-based verification):
+  Patch #1 to #6 are all preparatory patches on generic side.
+  Patch #7 to #11 are to enable kexec_file_load on arm64.
+
+Patch #12 to #13 are for KEXEC_VERIFY_SIG (arch-specific verification)
+support
+
+AKASHI Takahiro (11):
+  asm-generic: add kexec_file_load system call to unistd.h
+  kexec_file: make kexec_image_post_load_cleanup_default() global
+  arm64: kexec_file: invoke the kernel without purgatory
+  arm64: kexec_file: allocate memory walking through memblock list
+  arm64: kexec_file: load initrd and device-tree
+  arm64: kexec_file: allow for loading Image-format kernel
+  arm64: kexec_file: add crash dump support
+  arm64: enable KEXEC_FILE config
+  include: pe.h: remove message[] from mz header definition
+  arm64: kexec_file: add kernel signature verification support
+  arm64: kexec_file: add kaslr support
+
+ arch/arm64/Kconfig                     |  34 ++
+ arch/arm64/include/asm/kexec.h         |  86 +++++
+ arch/arm64/kernel/Makefile             |   3 +-
+ arch/arm64/kernel/cpu-reset.S          |   6 +-
+ arch/arm64/kernel/kexec_image.c        |  99 ++++++
+ arch/arm64/kernel/machine_kexec.c      |  11 +-
+ arch/arm64/kernel/machine_kexec_file.c | 427 +++++++++++++++++++++++++
+ arch/arm64/kernel/relocate_kernel.S    |   3 +-
+ include/linux/kexec.h                  |   1 +
+ include/linux/pe.h                     |   2 +-
+ include/uapi/asm-generic/unistd.h      |   4 +-
+ kernel/kexec_file.c                    |   2 +-
+ 12 files changed, 668 insertions(+), 10 deletions(-)
+ create mode 100644 arch/arm64/kernel/kexec_image.c
+ create mode 100644 arch/arm64/kernel/machine_kexec_file.c
+
+-- 
+2.17.0
 
 
 _______________________________________________
