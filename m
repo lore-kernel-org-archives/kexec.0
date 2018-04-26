@@ -1,20 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from mail-it0-x244.google.com ([2607:f8b0:4001:c0b::244])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fBbW1-0005UZ-IQ
+ for kexec@lists.infradead.org; Thu, 26 Apr 2018 07:40:32 +0000
+Received: by mail-it0-x244.google.com with SMTP id t192-v6so17444186itc.1
+ for <kexec@lists.infradead.org>; Thu, 26 Apr 2018 00:40:18 -0700 (PDT)
+Date: Thu, 26 Apr 2018 16:40:44 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Subject: Re: [RFC] arm64: extra entries in /proc/iomem for kexec
-References: <20180314082941.GM25863@linaro.org>
- <2d2e1be6-b925-1595-9b6e-76dd270d396d@redhat.com>
+Message-ID: <20180426074043.GD21197@linaro.org>
+References: <2d2e1be6-b925-1595-9b6e-76dd270d396d@redhat.com>
  <20180327101654.GB14737@linaro.org>
  <da2989ec-7fa5-b044-3237-4e75f2fe6d98@arm.com>
- <20180402015330.GA27603@linaro.org> <20180405024203.GD19607@linaro.org>
+ <20180402015330.GA27603@linaro.org>
+ <20180405024203.GD19607@linaro.org>
  <4c59b4c3-cff4-ac69-9576-6bcbf507ef1f@arm.com>
  <20180416100831.GF13168@linaro.org>
  <954d8b58-579a-c688-36f3-dc8d4b13cef8@arm.com>
  <20180425092011.GC21197@linaro.org>
-From: James Morse <james.morse@arm.com>
-Message-ID: <4ae3fefb-5800-ab86-5bcd-2638602c5c3d@arm.com>
-Date: Wed, 25 Apr 2018 14:22:07 +0100
+ <4ae3fefb-5800-ab86-5bcd-2638602c5c3d@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20180425092011.GC21197@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <4ae3fefb-5800-ab86-5bcd-2638602c5c3d@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,96 +34,116 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+To: James Morse <james.morse@arm.com>
 Cc: linux-efi@vger.kernel.org, ard.biesheuvel@linaro.org, jhugo@codeaurora.org, Bhupesh Sharma <bhsharma@redhat.com>, tbaicar@codeaurora.org, kexec@lists.infradead.org, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel@lists.infradead.org
 
-Hi Akashi,
+James,
 
-On 25/04/18 10:20, AKASHI Takahiro wrote:
-> On Tue, Apr 24, 2018 at 05:08:57PM +0100, James Morse wrote:
->> On 16/04/18 11:08, AKASHI Takahiro wrote:
->>> On Thu, Apr 12, 2018 at 05:01:52PM +0100, James Morse wrote:
->>>> On 05/04/18 03:42, AKASHI Takahiro wrote:
->>>>> On Mon, Apr 02, 2018 at 10:53:32AM +0900, AKASHI Takahiro wrote:
->>>>>> either because
->>>>>> a. new kernel (or initrd/dtb) may have been allocated on a NOMAP region
->>>>>>    which are not suitable for usable memory, or
->>>>>> b. new kernel (or initrd/dtb) may have been allocated on a reserved region
->>>>>>    whose contents can be overwritten.
->>>>>>
->>>>>> While we see (b) even today, (a) is a backward compatibility issue.
->>>>
->>>> (a) doesn't happen because request_standard_resources() checks
->>>> memblock_is_nomap(), and reports those regions as 'reserved'.
->>>
->>> I might have confused you. The assumption here was that we adopt format (D),
->>> where all NOMAP regions are sub nodes of "System RAM", but still use
->>> the current kexec-tools.
->>> As I said above, this will end up an un-expected behavior.
->>
->> I'd like to fix this without having to fix user-space at the same time. It looks
->> like no-one else has second level reserved regions,
+On Wed, Apr 25, 2018 at 02:22:07PM +0100, James Morse wrote:
+> Hi Akashi,
 > 
-> This was my assumption when I sent out a patch to kexec-tools.
-
-But this would still leave user-space that isn't updated broken.
-
-
->>>>> # I don't know yet whether people are happy with this fix, and also have
->>>>>   kernel patches for my other approaches. They are neither not much
->>>>>   complicated.
->>>>
->>>> I don't think we should fix this in userspace, exporting all the
->>>> memblock_reserved() regions as 'reserved' in /proc/iomem looks like the right
->>>> thing to do.
->>>
->>> Again, if you modify /proc/iomem, you have to update kexec-tools, too.
->>
->> If we squash the memblock_reserved() stuff down so it appears as a top level
->> 'reserved' region too, I don't think we do.
+> On 25/04/18 10:20, AKASHI Takahiro wrote:
+> > On Tue, Apr 24, 2018 at 05:08:57PM +0100, James Morse wrote:
+> >> On 16/04/18 11:08, AKASHI Takahiro wrote:
+> >>> On Thu, Apr 12, 2018 at 05:01:52PM +0100, James Morse wrote:
+> >>>> On 05/04/18 03:42, AKASHI Takahiro wrote:
+> >>>>> On Mon, Apr 02, 2018 at 10:53:32AM +0900, AKASHI Takahiro wrote:
+> >>>>>> either because
+> >>>>>> a. new kernel (or initrd/dtb) may have been allocated on a NOMAP region
+> >>>>>>    which are not suitable for usable memory, or
+> >>>>>> b. new kernel (or initrd/dtb) may have been allocated on a reserved region
+> >>>>>>    whose contents can be overwritten.
+> >>>>>>
+> >>>>>> While we see (b) even today, (a) is a backward compatibility issue.
+> >>>>
+> >>>> (a) doesn't happen because request_standard_resources() checks
+> >>>> memblock_is_nomap(), and reports those regions as 'reserved'.
+> >>>
+> >>> I might have confused you. The assumption here was that we adopt format (D),
+> >>> where all NOMAP regions are sub nodes of "System RAM", but still use
+> >>> the current kexec-tools.
+> >>> As I said above, this will end up an un-expected behavior.
+> >>
+> >> I'd like to fix this without having to fix user-space at the same time. It looks
+> >> like no-one else has second level reserved regions,
+> > 
+> > This was my assumption when I sent out a patch to kexec-tools.
 > 
-> If I correctly understand, you're talking about my format (E).
-> As I said, it will fix the issue without modifying user-space, but
+> But this would still leave user-space that isn't updated broken.
 > 
-> || This does not only look quite noisy but also ignores the fact that
-> || reserved regions are part of System RAM (or memblock.memory).
-
-I agree its noisy, there are significantly more 'reserved' areas, but these are
-all either nomap or memblock_reserved().
-
-Why does it matter if a reserved-region is nomap or memblock_reserved()? Any new
-kernel will learn the difference from the EFI memory map and make its own decisions.
-
-Kexec-tools only needs to know what it can overwrite without clobbering
-important data like the UEFI memory map, or the APCI tables covered by the
-linear map.
-
-
->> This prevents the efi-memory-map
->> being overwritten on kernels since kexec was merged.
->>
->> Its horribly fiddly to do this. The kernel code/data are special reserved
->> regions that we already describe as a subset of system-ram, even though they are
->> both also fragments of a bigger memblock_reserved() block.
 > 
-> Actually, we don't have to avoid kernel code/data regions as copying
-> loaded data to the final destinations will be done at the very end of kexec.
-
-For kexec yes, but that is the existing format of the file, which we shouldn't
-change, otherwise we break something else.
-
-
->> While we can walk memblock for regions that aren't reserved, allocating memory
->> in the loop changes what is reserved. That one O(N) walk ends up being four...
+> >>>>> # I don't know yet whether people are happy with this fix, and also have
+> >>>>>   kernel patches for my other approaches. They are neither not much
+> >>>>>   complicated.
+> >>>>
+> >>>> I don't think we should fix this in userspace, exporting all the
+> >>>> memblock_reserved() regions as 'reserved' in /proc/iomem looks like the right
+> >>>> thing to do.
+> >>>
+> >>> Again, if you modify /proc/iomem, you have to update kexec-tools, too.
+> >>
+> >> If we squash the memblock_reserved() stuff down so it appears as a top level
+> >> 'reserved' region too, I don't think we do.
+> > 
+> > If I correctly understand, you're talking about my format (E).
+> > As I said, it will fix the issue without modifying user-space, but
+> > 
+> > || This does not only look quite noisy but also ignores the fact that
+> > || reserved regions are part of System RAM (or memblock.memory).
 > 
-> At most O(n^2)?
+> I agree its noisy, there are significantly more 'reserved' areas, but these are
+> all either nomap or memblock_reserved().
+> 
+> Why does it matter if a reserved-region is nomap or memblock_reserved()? Any new
+> kernel will learn the difference from the EFI memory map and make its own decisions.
 
-I think for_each_free_mem_range() is smart enough not to do that. Patch incoming...
+Yeah, kernel can do (though kernel won't look though system resources list
+for this purpose anyway), what about kexec-like user applications?
+It may want to seek /proc/iomem to identify all the *usable* memory on
+the system, that is "System RAM", but doesn't care whether some range is
+reserved or not (for some reason) yet does care !NOMAP.
 
+> Kexec-tools only needs to know what it can overwrite without clobbering
+> important data like the UEFI memory map, or the APCI tables covered by the
+> linear map.
+> 
+> 
+> >> This prevents the efi-memory-map
+> >> being overwritten on kernels since kexec was merged.
+> >>
+> >> Its horribly fiddly to do this. The kernel code/data are special reserved
+> >> regions that we already describe as a subset of system-ram, even though they are
+> >> both also fragments of a bigger memblock_reserved() block.
+> > 
+> > Actually, we don't have to avoid kernel code/data regions as copying
+> > loaded data to the final destinations will be done at the very end of kexec.
+> 
+> For kexec yes, but that is the existing format of the file, which we shouldn't
+> change, otherwise we break something else.
+
+One trivial downside in this approach is that a secondary kernel will be
+loaded at an address different from the one of current kernel.
+While it is sane, it looks a bit odd that, every time kexec'ed, a new
+kernel (code/data) is located back and forth :)
+
+> 
+> >> While we can walk memblock for regions that aren't reserved, allocating memory
+> >> in the loop changes what is reserved. That one O(N) walk ends up being four...
+> > 
+> > At most O(n^2)?
+> 
+> I think for_each_free_mem_range() is smart enough not to do that. Patch incoming...
+
+Yes, my v9 of kexec_file patch makes use of it.
 
 Thanks,
+-Takahiro AKASHI
 
-James
+
+> 
+> Thanks,
+> 
+> James
 
 _______________________________________________
 kexec mailing list
