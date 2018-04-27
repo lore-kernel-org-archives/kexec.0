@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [RFC] arm64: extra entries in /proc/iomem for kexec
-References: <2d2e1be6-b925-1595-9b6e-76dd270d396d@redhat.com>
- <20180327101654.GB14737@linaro.org>
- <da2989ec-7fa5-b044-3237-4e75f2fe6d98@arm.com>
- <20180402015330.GA27603@linaro.org> <20180405024203.GD19607@linaro.org>
- <4c59b4c3-cff4-ac69-9576-6bcbf507ef1f@arm.com>
- <20180416100831.GF13168@linaro.org>
- <954d8b58-579a-c688-36f3-dc8d4b13cef8@arm.com>
- <20180425092011.GC21197@linaro.org>
- <4ae3fefb-5800-ab86-5bcd-2638602c5c3d@arm.com>
- <20180426074043.GD21197@linaro.org>
-From: James Morse <james.morse@arm.com>
-Message-ID: <4ed4afed-06a4-0079-8bf9-5fb31601f180@arm.com>
-Date: Thu, 26 Apr 2018 15:26:29 +0100
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fBsEn-0004Yu-2U
+ for kexec@lists.infradead.org; Fri, 27 Apr 2018 01:31:51 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <cover.1524329561.git.rahul.lakkireddy@chelsio.com>
+ <cover.1524329561.git.rahul.lakkireddy@chelsio.com>
+ <1393d2fce1a2c2a0f78431845deae26bc28c16ef.1524329561.git.rahul.lakkireddy@chelsio.com>
+Date: Thu, 26 Apr 2018 20:30:58 -0500
+In-Reply-To: <1393d2fce1a2c2a0f78431845deae26bc28c16ef.1524329561.git.rahul.lakkireddy@chelsio.com>
+ (Rahul Lakkireddy's message of "Sat, 21 Apr 2018 22:35:53 +0530")
+Message-ID: <871sf1a10t.fsf@xmission.com>
 MIME-Version: 1.0
-In-Reply-To: <20180426074043.GD21197@linaro.org>
-Content-Language: en-US
+Subject: Re: [PATCH net-next v5 1/3] vmcore: add API to collect hardware dump
+ in second kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,75 +26,86 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: linux-efi@vger.kernel.org, ard.biesheuvel@linaro.org, jhugo@codeaurora.org, Bhupesh Sharma <bhsharma@redhat.com>, tbaicar@codeaurora.org, kexec@lists.infradead.org, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel@lists.infradead.org
-
-Hi Akashi,
-
-On 26/04/18 08:40, AKASHI Takahiro wrote:
-> On Wed, Apr 25, 2018 at 02:22:07PM +0100, James Morse wrote:
->> On 25/04/18 10:20, AKASHI Takahiro wrote:
->>> On Tue, Apr 24, 2018 at 05:08:57PM +0100, James Morse wrote:
->>>> If we squash the memblock_reserved() stuff down so it appears as a top level
->>>> 'reserved' region too, I don't think we do.
->>>
->>> If I correctly understand, you're talking about my format (E).
->>> As I said, it will fix the issue without modifying user-space, but
->>>
->>> || This does not only look quite noisy but also ignores the fact that
->>> || reserved regions are part of System RAM (or memblock.memory).
->>
->> I agree its noisy, there are significantly more 'reserved' areas, but these are
->> all either nomap or memblock_reserved().
->>
->> Why does it matter if a reserved-region is nomap or memblock_reserved()? Any new
->> kernel will learn the difference from the EFI memory map and make its own decisions.
-> 
-> Yeah, kernel can do (though kernel won't look though system resources list
-> for this purpose anyway), what about kexec-like user applications?
-> It may want to seek /proc/iomem to identify all the *usable* memory on
-> the system, that is "System RAM", but doesn't care whether some range is
-> reserved or not (for some reason) yet does care !NOMAP.
-
-Do you have an example application?
-This would have to be a program digging in /dev/mem where it wants to touch
-memory the kernel has reserved, but doesn't want to receive a signal if it
-touches memory that's nomap. This doesn't seem a likely use-case.
-
-We could change the names for the memblock_reserved()/nomap entries, but as
-kexec-tools spots 'reserved' and almost does the right thing, I kept it as it is.
+To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Cc: indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stephen@networkplumber.org, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ganeshgr@chelsio.com
 
 
->>>> This prevents the efi-memory-map
->>>> being overwritten on kernels since kexec was merged.
->>>>
->>>> Its horribly fiddly to do this. The kernel code/data are special reserved
->>>> regions that we already describe as a subset of system-ram, even though they are
->>>> both also fragments of a bigger memblock_reserved() block.
->>>
->>> Actually, we don't have to avoid kernel code/data regions as copying
->>> loaded data to the final destinations will be done at the very end of kexec.
->>
->> For kexec yes, but that is the existing format of the file, which we shouldn't
->> change, otherwise we break something else.
-> 
-> One trivial downside in this approach is that a secondary kernel will be
-> loaded at an address different from the one of current kernel.
-> While it is sane, it looks a bit odd that, every time kexec'ed, a new> kernel (code/data) is located back and forth :)
+While looking this over I found a bug in the way elf notes are being composed.
 
-Yes, but all versions of the kernel that support kexec will be quite happy with
-this. The memory below the kernel could be re-used since KASLR support was
-merged before kexec.
+Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index a45f0af22a60..7395462d2f86 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -1145,6 +1150,132 @@ static int __init parse_crash_elf_headers(void)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
+> +/**
+> + * vmcoredd_get_note_size - Get size of the note that will be inserted at
+> + * beginning of the dump's buffer.
+> + * @name: Note's name
+> + *
+> + * Gets the overall size of the note that will be inserted at the beginning
+> + * of the dump's buffer.  It also adds padding, if necessary to meet
+> + * alignment requirements.
+> + */
+> +static inline size_t vmcoredd_get_note_size(const char *name)
+> +{
+> +	return CRASH_CORE_NOTE_HEAD_BYTES +
+> +	       ALIGN(VMCOREDD_NOTE_NAME_BYTES + strlen(name), sizeof(Elf_Word));
+> +}
+> +
+> +/**
+> + * vmcoredd_write_note - Write note at the beginning of the dump's buffer
+> + * @name: Dump's name
+> + * @buf: Output buffer where the note is written
+> + * @size: Size of the dump
+> + *
+> + * Fills beginning of the dump's data with elf note.
+> + */
+> +static void vmcoredd_write_note(const char *name, void *buf, size_t size)
+> +{
+> +	struct elf_note *note = (struct elf_note *)buf;
+> +	Elf_Word *word = (Elf_Word *)note;
+> +
+> +	note->n_namesz = ALIGN(VMCOREDD_NOTE_NAME_BYTES + strlen(name),
+> +			       sizeof(Elf_Word));
+> +	note->n_descsz = size;
+> +	note->n_type = NT_VMCOREDD;
+> +	word += DIV_ROUND_UP(sizeof(*note), sizeof(Elf_Word));
+> +	snprintf((char *)word, note->n_namesz, "%s_%s", VMCOREDD_NOTE_NAME,
+> +		 name);
 
-I was more worried that the extra fragmentation would cause kexec-tools to stop
-searching early, as it seems to have a #defined'd limit of how much of that file
-it will parse. But, this would be an existing bug, because there could be many
-nomap regions up-front before any large-enough chunk of system-ram appears.
+I hate to do this to you but as this is ABI I am going to pick on
+this bit of code.
+
+First namesz needs to include the '\0' of the name string.
+Second you did not count the length of "_" namesz.
+Third name needs to be a vendor identifier.  So "LINUX\0\0\0" in our case.
+
+Which means the device name needs to be in the body of the note.
+Perhaps just reserve 32 bytes for the device name?
+Perhaps prefix the device name with a length?
+
+The exact layout is whatever you want NT_VMCOREDD to mean.
+
+> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+> index e2535d6dcec7..4e12c423b9fe 100644
+> --- a/include/uapi/linux/elf.h
+> +++ b/include/uapi/linux/elf.h
+> @@ -421,6 +421,7 @@ typedef struct elf64_shdr {
+>  #define NT_ARM_SYSTEM_CALL	0x404	/* ARM system call number */
+>  #define NT_ARM_SVE	0x405		/* ARM Scalable Vector Extension registers */
+>  #define NT_ARC_V2	0x600		/* ARCv2 accumulator/extra registers */
+> +#define NT_VMCOREDD	0x700		/* Vmcore Device Dump Note */
+>  
+>  /* Note header in a PT_NOTE section */
+>  typedef struct elf32_note {
 
 
-Thanks,
-
-James
+Eric
 
 _______________________________________________
 kexec mailing list
