@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fBzOU-0007rm-CG
- for kexec@lists.infradead.org; Fri, 27 Apr 2018 09:10:20 +0000
-Message-Id: <20180427090045.583830252@redhat.com>
-Date: Fri, 27 Apr 2018 17:00:38 +0800
-From: dyoung@redhat.com
-Subject: [PATCH 2/2] kdump: round up the total memory size to 128M for
- crashkernel reservation
+ id 1fBzSl-0007yT-DD
+ for kexec@lists.infradead.org; Fri, 27 Apr 2018 09:14:45 +0000
+Date: Fri, 27 Apr 2018 17:14:10 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 1/2] kdump/x86: crashkernel=X try to reserve below 896M
+ first then below 4G and MAXMEM
+Message-ID: <20180427091410.GA25338@dhcp-128-65.nay.redhat.com>
+References: <20180427090045.532014306@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline; filename=kdump-crashkernel-roundup-total-mem.patch
-In-Reply-To: <20180427090045.532014306@redhat.com> 
+Content-Disposition: inline
+In-Reply-To: <20180427090045.532014306@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,75 +25,24 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: dyoung@redhat.com, akpm@linux-foundation.org, yinghai@kernel.org, vgoyal@redhat.com, bhe@redhat.com
+Cc: akpm@linux-foundation.org, yinghai@kernel.org, vgoyal@redhat.com, bhe@redhat.com
 
-The total memory size we get in kernel is usually slightly less than 2G with a
-2G memory module machine. The main reason is bios/firmware reserve some area
-it will not export all memory as usable to Linux.
-
-2G memory X86 kvm guest test result of the total_mem value:
-UEFI boot with ovmf: 0x7ef10000
-Legacy boot kvm guest: 0x7ff7cc00
-This is also a problem on arm64 UEFI booted system according to my test.
-
-Thus for example crashkernel=1G-2G:128M,  if we have a 1G memory
-machine, we get total size 1023M from firmware then it will not fall
-into 1G-2G thus no memory reserved.  User will never know that, it is
-hard to let user to know the exact total value we get in kernel
-
-An option is to use dmi/smbios to get physical memory size, but it's not
-reliable as well. According to Prarit hardware vendors sometimes screw this up.
-Thus round up total size to 128M to workaround this problem.
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- kernel/crash_core.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
-
---- linux-x86.orig/kernel/crash_core.c
-+++ linux-x86/kernel/crash_core.c
-@@ -9,6 +9,7 @@
- #include <linux/crash_core.h>
- #include <linux/utsname.h>
- #include <linux/vmalloc.h>
-+#include <linux/sizes.h>
+Hi,
  
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -41,6 +42,15 @@ static int __init parse_crashkernel_mem(
- 					unsigned long long *crash_base)
- {
- 	char *cur = cmdline, *tmp;
-+	unsigned long long total_mem = system_ram;
-+
-+	/*
-+	 * Firmware sometimes reserves some memory regions for it's own use.
-+	 * so we get less than actual system memory size.
-+	 * Workaround this by round up the total size to 128M which is
-+	 * enough for most test cases.
-+	 */
-+	total_mem = roundup(total_mem, SZ_128M);
+This is a resend of below patches:
+http://lists.infradead.org/pipermail/kexec/2017-October/019569.html
  
- 	/* for each entry of the comma-separated list */
- 	do {
-@@ -85,13 +95,13 @@ static int __init parse_crashkernel_mem(
- 			return -EINVAL;
- 		}
- 		cur = tmp;
--		if (size >= system_ram) {
-+		if (size >= total_mem) {
- 			pr_warn("crashkernel: invalid size\n");
- 			return -EINVAL;
- 		}
+I dropped the original patch 1 since Baoquan is not happy with it.
+For patch 2 (the 1st patch in this series), there is some improvement
+comment from Baoquan to create some generic memblock iteration function.
+But nobody has time to work on it for the time being.  According to
+offline discussion with him.  That can be done in the future if someone
+is interested.  We can go with the current kdump only fixes.
  
- 		/* match ? */
--		if (system_ram >= start && system_ram < end) {
-+		if (total_mem >= start && total_mem < end) {
- 			*crash_size = size;
- 			break;
- 		}
-
-
+Other than above,  the patches are just same.
+ 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
