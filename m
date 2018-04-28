@@ -1,21 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fCEW4-0002VO-CD
- for kexec@lists.infradead.org; Sat, 28 Apr 2018 01:19:10 +0000
-Date: Sat, 28 Apr 2018 09:18:45 +0800
+Date: Sat, 28 Apr 2018 17:45:26 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: pciehp 0000:00:1c.0:pcie004: Timeout on hotplug command 0x1038
- (issued 65284 msec ago)
-Message-ID: <20180428011845.GC1675@dhcp-128-65.nay.redhat.com>
-References: <8770820b-85a0-172b-7230-3a44524e6c9f@molgen.mpg.de>
- <20180427192207.GG8199@bhelgaas-glaptop.roam.corp.google.com>
- <b62c2a8e-fe14-6d7d-147c-0ce3b0c0ab2f@codeaurora.org>
- <20180427211255.GI8199@bhelgaas-glaptop.roam.corp.google.com>
- <20180428005620.GB1675@dhcp-128-65.nay.redhat.com>
+Subject: Re: [PATCH v9 02/11] kexec_file: make
+ kexec_image_post_load_cleanup_default() global
+Message-ID: <20180428094526.GA2854@dhcp-128-65.nay.redhat.com>
+References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
+ <20180425062629.29404-3-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180428005620.GB1675@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20180425062629.29404-3-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,80 +21,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Paul Menzel <pmenzel+linux-pci@molgen.mpg.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, Lukas Wunner <lukas@wunner.de>, Eric Biederman <ebiederm@xmission.com>, Bjorn Helgaas <bhelgaas@google.com>, Vivek Goyal <vgoyal@redhat.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, james.morse@arm.com, davem@davemloft.net, vgoyal@redhat.com
 
-On 04/28/18 at 08:56am, Dave Young wrote:
-> On 04/27/18 at 04:12pm, Bjorn Helgaas wrote:
-> > [+cc Eric, Vivek, kexec list]
-> > 
-> > On Fri, Apr 27, 2018 at 03:34:30PM -0400, Sinan Kaya wrote:
-> > > On 4/27/2018 3:22 PM, Bjorn Helgaas wrote:
-> > > > Sinan mooted the idea of using a "no-wait" path of sending the "don't
-> > > > generate hotplug interrupts" command.  I think we should work on this
-> > > > idea a little more.  If we're shutting down the whole system, I can't
-> > > > believe there's much value in *anything* we do in the pciehp_remove()
-> > > > path.
-> > > > 
-> > > > Maybe we should just get rid of pciehp_remove() (and probably
-> > > > pcie_port_remove_service() and the other service driver remove methods)
-> > > > completely.  That dates from when the service drivers could be modules that
-
-Hmm, if it is the remove() method then kexec does not use it.  kexec use
-the shutdown() method instead.  I missed this details when I replied.
-
-> > > > could be potentially unloaded, but unloading them hasn't been possible for
-> > > > years.
-> > > 
-> > > Shutdown path is also used for kexec. Leaving hotplug interrupts
-> > > pending is dangerous for the newly loaded kernel as it leaves
-> > > spurious interrupts during the new kernel boot.
-> > > 
-> > > I think we should always disable the hotplug interrupt on shutdown.
-> > > We might think of not waiting for command-completion as a
-> > > middle-ground or go to polling path instead of interrupts all the
-> > > time.
-> > 
-> > Ah, I forgot about the kexec path.  The kexec path is used for
-> > crashdump, too, so ideally the newly-loaded kernel would defend itself
-> > when possible so it doesn't depend on the original kernel doing things
-> > correctly.
+On 04/25/18 at 03:26pm, AKASHI Takahiro wrote:
+> Change this function from static to global so that arm64 can implement
+> its own arch_kimage_file_post_load_cleanup() later using
+> kexec_image_post_load_cleanup_default().
 > 
-> It is true for kdump.  But kexec needs device shutdown.
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> ---
+>  include/linux/kexec.h | 1 +
+>  kernel/kexec_file.c   | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
 > 
-> > 
-> > Seems like this question of whether to do things in the original
-> > kernel or the kexec-ed kernel comes up periodically, but I can never
-> > remember a definitive answer.  My initial reaction is that it'd be
-> > nice if we didn't have to do *any* shutdown in the original kernel,
-> > but I'm sure there are reasons that's not practical.
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 9e4e638fb505..49ab758f4d91 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -143,6 +143,7 @@ extern const struct kexec_file_ops * const kexec_file_loaders[];
+>  
+>  int kexec_image_probe_default(struct kimage *image, void *buf,
+>  			      unsigned long buf_len);
+> +int kexec_image_post_load_cleanup_default(struct kimage *image);
+>  
+>  /**
+>   * struct kexec_buf - parameters for finding a place for a buffer in memory
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 75d8e7cf040e..eef89d9b1f03 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -78,7 +78,7 @@ void * __weak arch_kexec_kernel_image_load(struct kimage *image)
+>  	return kexec_image_load_default(image);
+>  }
+>  
+> -static int kexec_image_post_load_cleanup_default(struct kimage *image)
+> +int kexec_image_post_load_cleanup_default(struct kimage *image)
+>  {
+>  	if (!image->fops || !image->fops->cleanup)
+>  		return 0;
+> -- 
+> 2.17.0
 > 
-> Devices sometimes assume it is in a good state initialized in firmware boot
-> phase, so we need a shutdown in 1st kernel so that kexec kernel can boot
-> correctly for those devices.  For kdump since kernel already panicked
-> and it is not reliable so we do as less as we can in the 1st kernel
-> crash path, but there are some special handling for kdump in various drivers
-> to reset the devices in 2nd kernel, eg. when it see "reset_devices" kernel parameter.
-> 
-> > 
-> > I copied Eric (kexec maintainer) and Vivek (contact listed in
-> > Documentation/kdump/kdump.txt) in case they have suggestions or would
-> > consider some sort of Documentation/ update.
-> > 
-> > Bjorn
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> Thanks
-> Dave
 > 
 > _______________________________________________
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
+
+Acked-by: Dave Young <dyoung@redhat.com>
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
