@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fCCnm-0008Up-Ak
- for kexec@lists.infradead.org; Fri, 27 Apr 2018 23:29:19 +0000
-Date: Sat, 28 Apr 2018 07:28:43 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 1/2] kdump/x86: crashkernel=X try to reserve below 896M
- first then below 4G and MAXMEM
-Message-ID: <20180427232843.GA30581@MiWiFi-R3L-srv>
-References: <20180427090045.532014306@redhat.com>
- <20180427091410.GA25338@dhcp-128-65.nay.redhat.com>
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fCEAP-0004XM-8F
+ for kexec@lists.infradead.org; Sat, 28 Apr 2018 00:56:47 +0000
+Date: Sat, 28 Apr 2018 08:56:20 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: pciehp 0000:00:1c.0:pcie004: Timeout on hotplug command 0x1038
+ (issued 65284 msec ago)
+Message-ID: <20180428005620.GB1675@dhcp-128-65.nay.redhat.com>
+References: <8770820b-85a0-172b-7230-3a44524e6c9f@molgen.mpg.de>
+ <20180427192207.GG8199@bhelgaas-glaptop.roam.corp.google.com>
+ <b62c2a8e-fe14-6d7d-147c-0ce3b0c0ab2f@codeaurora.org>
+ <20180427211255.GI8199@bhelgaas-glaptop.roam.corp.google.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180427091410.GA25338@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20180427211255.GI8199@bhelgaas-glaptop.roam.corp.google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,37 +27,70 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: yinghai@kernel.org, akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, Paul Menzel <pmenzel+linux-pci@molgen.mpg.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, Lukas Wunner <lukas@wunner.de>, Eric Biederman <ebiederm@xmission.com>, Bjorn Helgaas <bhelgaas@google.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On 04/27/18 at 05:14pm, Dave Young wrote:
-> Hi,
->  
-> This is a resend of below patches:
-> http://lists.infradead.org/pipermail/kexec/2017-October/019569.html
->  
-> I dropped the original patch 1 since Baoquan is not happy with it.
-> For patch 2 (the 1st patch in this series), there is some improvement
-> comment from Baoquan to create some generic memblock iteration function.
-> But nobody has time to work on it for the time being.  According to
-> offline discussion with him.  That can be done in the future if someone
-> is interested.  We can go with the current kdump only fixes.
->  
-> Other than above,  the patches are just same.
+On 04/27/18 at 04:12pm, Bjorn Helgaas wrote:
+> [+cc Eric, Vivek, kexec list]
+> 
+> On Fri, Apr 27, 2018 at 03:34:30PM -0400, Sinan Kaya wrote:
+> > On 4/27/2018 3:22 PM, Bjorn Helgaas wrote:
+> > > Sinan mooted the idea of using a "no-wait" path of sending the "don't
+> > > generate hotplug interrupts" command.  I think we should work on this
+> > > idea a little more.  If we're shutting down the whole system, I can't
+> > > believe there's much value in *anything* we do in the pciehp_remove()
+> > > path.
+> > > 
+> > > Maybe we should just get rid of pciehp_remove() (and probably
+> > > pcie_port_remove_service() and the other service driver remove methods)
+> > > completely.  That dates from when the service drivers could be modules that
+> > > could be potentially unloaded, but unloading them hasn't been possible for
+> > > years.
+> > 
+> > Shutdown path is also used for kexec. Leaving hotplug interrupts
+> > pending is dangerous for the newly loaded kernel as it leaves
+> > spurious interrupts during the new kernel boot.
+> > 
+> > I think we should always disable the hotplug interrupt on shutdown.
+> > We might think of not waiting for command-completion as a
+> > middle-ground or go to polling path instead of interrupts all the
+> > time.
+> 
+> Ah, I forgot about the kexec path.  The kexec path is used for
+> crashdump, too, so ideally the newly-loaded kernel would defend itself
+> when possible so it doesn't depend on the original kernel doing things
+> correctly.
 
-Thanks to work on this. Looks good to me.
+It is true for kdump.  But kexec needs device shutdown.
 
-ACK
+> 
+> Seems like this question of whether to do things in the original
+> kernel or the kexec-ed kernel comes up periodically, but I can never
+> remember a definitive answer.  My initial reaction is that it'd be
+> nice if we didn't have to do *any* shutdown in the original kernel,
+> but I'm sure there are reasons that's not practical.
 
-Acked-by: Baoquan He <bhe@redhat.com>
+Devices sometimes assume it is in a good state initialized in firmware boot
+phase, so we need a shutdown in 1st kernel so that kexec kernel can boot
+correctly for those devices.  For kdump since kernel already panicked
+and it is not reliable so we do as less as we can in the 1st kernel
+crash path, but there are some special handling for kdump in various drivers
+to reset the devices in 2nd kernel, eg. when it see "reset_devices" kernel parameter.
 
-Thanks
-Baoquan
-
+> 
+> I copied Eric (kexec maintainer) and Vivek (contact listed in
+> Documentation/kdump/kdump.txt) in case they have suggestions or would
+> consider some sort of Documentation/ update.
+> 
+> Bjorn
+> 
 > _______________________________________________
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
