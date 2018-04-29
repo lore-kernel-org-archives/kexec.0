@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.codeaurora.org ([198.145.29.96])
+Received: from mail-pg0-f66.google.com ([74.125.83.66])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fCPVb-0001wN-F2
- for kexec@lists.infradead.org; Sat, 28 Apr 2018 13:03:25 +0000
-MIME-Version: 1.0
-Date: Sat, 28 Apr 2018 09:03:09 -0400
-From: okaya@codeaurora.org
-Subject: Re: pciehp 0000:00:1c.0:pcie004: Timeout on hotplug command 0x1038
- (issued 65284 msec ago)
-In-Reply-To: <20180428011845.GC1675@dhcp-128-65.nay.redhat.com>
-References: <8770820b-85a0-172b-7230-3a44524e6c9f@molgen.mpg.de>
- <20180427192207.GG8199@bhelgaas-glaptop.roam.corp.google.com>
- <b62c2a8e-fe14-6d7d-147c-0ce3b0c0ab2f@codeaurora.org>
- <20180427211255.GI8199@bhelgaas-glaptop.roam.corp.google.com>
- <20180428005620.GB1675@dhcp-128-65.nay.redhat.com>
- <20180428011845.GC1675@dhcp-128-65.nay.redhat.com>
-Message-ID: <3ebc908fb196168bf0373875ffc5679e@codeaurora.org>
+ id 1fCts9-00047V-5H
+ for kexec@lists.infradead.org; Sun, 29 Apr 2018 21:28:44 +0000
+Received: by mail-pg0-f66.google.com with SMTP id m21-v6so5009236pgv.8
+ for <kexec@lists.infradead.org>; Sun, 29 Apr 2018 14:28:28 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH v3 1/2] dt-ops: Add helper API to dump fdt blob
+Date: Mon, 30 Apr 2018 02:52:35 +0530
+Message-Id: <1525036956-7440-2-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1525036956-7440-1-git-send-email-bhsharma@redhat.com>
+References: <1525036956-7440-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,94 +19,206 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linux-pci@vger.kernel.org, Paul Menzel <pmenzel+linux-pci@molgen.mpg.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Bjorn Helgaas <bhelgaas@google.com>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Bhupesh Sharma <bhsharma@redhat.com>, takahiro.akashi@linaro.org, horms@verge.net.au, james.morse@arm.com, bhupesh.linux@gmail.com, dyoung@redhat.com
 
-On 2018-04-27 21:18, Dave Young wrote:
-> On 04/28/18 at 08:56am, Dave Young wrote:
->> On 04/27/18 at 04:12pm, Bjorn Helgaas wrote:
->> > [+cc Eric, Vivek, kexec list]
->> >
->> > On Fri, Apr 27, 2018 at 03:34:30PM -0400, Sinan Kaya wrote:
->> > > On 4/27/2018 3:22 PM, Bjorn Helgaas wrote:
->> > > > Sinan mooted the idea of using a "no-wait" path of sending the "don't
->> > > > generate hotplug interrupts" command.  I think we should work on this
->> > > > idea a little more.  If we're shutting down the whole system, I can't
->> > > > believe there's much value in *anything* we do in the pciehp_remove()
->> > > > path.
->> > > >
->> > > > Maybe we should just get rid of pciehp_remove() (and probably
->> > > > pcie_port_remove_service() and the other service driver remove methods)
->> > > > completely.  That dates from when the service drivers could be modules that
-> 
-> Hmm, if it is the remove() method then kexec does not use it.  kexec 
-> use
-> the shutdown() method instead.  I missed this details when I replied.
+At several occasions it would be useful to dump the fdt
+blob being passed to the second (kexec/kdump) kernel
+when '-d' flag is specified while invoking kexec/kdump.
 
-Portdrv hooks up remove handler to shutdown. That's why remove is 
-getting called.
+This allows one to look at the device-tree fields that
+is being passed to the secondary kernel and accordingly
+debug issues.
 
-> 
->> > > > could be potentially unloaded, but unloading them hasn't been possible for
->> > > > years.
->> > >
->> > > Shutdown path is also used for kexec. Leaving hotplug interrupts
->> > > pending is dangerous for the newly loaded kernel as it leaves
->> > > spurious interrupts during the new kernel boot.
->> > >
->> > > I think we should always disable the hotplug interrupt on shutdown.
->> > > We might think of not waiting for command-completion as a
->> > > middle-ground or go to polling path instead of interrupts all the
->> > > time.
->> >
->> > Ah, I forgot about the kexec path.  The kexec path is used for
->> > crashdump, too, so ideally the newly-loaded kernel would defend itself
->> > when possible so it doesn't depend on the original kernel doing things
->> > correctly.
->> 
->> It is true for kdump.  But kexec needs device shutdown.
->> 
->> >
->> > Seems like this question of whether to do things in the original
->> > kernel or the kexec-ed kernel comes up periodically, but I can never
->> > remember a definitive answer.  My initial reaction is that it'd be
->> > nice if we didn't have to do *any* shutdown in the original kernel,
->> > but I'm sure there are reasons that's not practical.
->> 
->> Devices sometimes assume it is in a good state initialized in firmware 
->> boot
->> phase, so we need a shutdown in 1st kernel so that kexec kernel can 
->> boot
->> correctly for those devices.  For kdump since kernel already panicked
->> and it is not reliable so we do as less as we can in the 1st kernel
->> crash path, but there are some special handling for kdump in various 
->> drivers
->> to reset the devices in 2nd kernel, eg. when it see "reset_devices" 
->> kernel parameter.
->> 
->> >
->> > I copied Eric (kexec maintainer) and Vivek (contact listed in
->> > Documentation/kdump/kdump.txt) in case they have suggestions or would
->> > consider some sort of Documentation/ update.
->> >
->> > Bjorn
->> >
->> > _______________________________________________
->> > kexec mailing list
->> > kexec@lists.infradead.org
->> > http://lists.infradead.org/mailman/listinfo/kexec
->> 
->> Thanks
->> Dave
->> 
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
+This can be specially useful for the arm64 case, where
+kexec_load() or kdump passes important information like
+'linux,usable-memory' ranges to the second kernel, and
+the correctness of the ranges can be verified by
+looking at the device-tree dump with '-d' flag specified.
+
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+---
+ kexec/dt-ops.c | 143 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ kexec/dt-ops.h |   1 +
+ 2 files changed, 144 insertions(+)
+
+diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
+index 915dbf55afd2..cb95920e5c3e 100644
+--- a/kexec/dt-ops.c
++++ b/kexec/dt-ops.c
+@@ -8,6 +8,10 @@
+ #include "kexec.h"
+ #include "dt-ops.h"
+ 
++#define ALIGN(x, a)	(((x) + ((a) - 1)) & ~((a) - 1))
++#define PALIGN(p, a)	((void *)(ALIGN((unsigned long)(p), (a))))
++#define GET_CELL(p)	(p += 4, *((const uint32_t *)(p-4)))
++
+ static const char n_chosen[] = "/chosen";
+ 
+ static const char p_bootargs[] = "bootargs";
+@@ -143,3 +147,142 @@ int dtb_delete_property(char *dtb, const char *node, const char *prop)
+ 
+ 	return result;
+ }
++
++static uint64_t is_printable_string(const void* data, uint64_t len)
++{
++	const char *s = data;
++	const char *ss;
++
++	/* Check for zero length strings */
++	if (len == 0)
++		return 0;
++
++	/* String must be terminated with a '\0' */
++	if (s[len - 1] != '\0')
++		return 0;
++
++	ss = s;
++	while (*s)
++		s++;
++
++	/* Traverse till we hit a '\0' or reach 'len' */
++	if (*s != '\0')
++		return 0;
++
++	if ((s + 1 - ss) < len) {
++		/* Handle special cases such as 'bootargs' properties
++		 * in dtb which are actually strings, but they may have
++		 * a format where (s + 1 - ss) < len remains true.
++		 *
++		 * We can catch such cases by checking if (s + 1 - ss)
++		 * is greater than 1
++		 */
++		if ((s + 1 - ss) > 1)
++			return 1;
++
++		return 0;
++	}
++
++	return 1;
++}
++
++static void print_data(const char* data, uint64_t len)
++{
++	uint64_t i;
++	const char *p = data;
++
++	/* Check for non-zero length */
++	if (len == 0)
++		return;
++
++	if (is_printable_string(data, len)) {
++		dbgprintf(" = \"%s\"", (const char *)data);
++	} else if ((len % 4) == 0) {
++		dbgprintf(" = <");
++		for (i = 0; i < len; i += 4) {
++			dbgprintf("0x%08x%s",
++					fdt32_to_cpu(GET_CELL(p)),
++					i < (len - 4) ? " " : "");
++		}
++		dbgprintf(">");
++	} else {
++		dbgprintf(" = [");
++		for (i = 0; i < len; i++)
++			dbgprintf("%02x%s", *p++,
++					i < len - 1 ? " " : "");
++		dbgprintf("]");
++	}
++}
++
++void dump_fdt(void* fdt)
++{
++	struct fdt_header *bph;
++	const char* p_struct;
++	const char* p_strings;
++	const char* p;
++	const char* s;
++	const char* t;
++	uint32_t off_dt;
++	uint32_t off_str;
++	uint32_t tag;
++	uint64_t sz;
++	uint64_t depth;
++	uint64_t shift;
++	uint32_t version;
++
++	depth = 0;
++	shift = 4;
++
++	bph = fdt;
++	off_dt = fdt32_to_cpu(bph->off_dt_struct);
++	off_str = fdt32_to_cpu(bph->off_dt_strings);
++	p_struct = (const char*)fdt + off_dt;
++	p_strings = (const char*)fdt + off_str;
++	version = fdt32_to_cpu(bph->version);
++
++	p = p_struct;
++	while ((tag = fdt32_to_cpu(GET_CELL(p))) != FDT_END) {
++
++		if (tag == FDT_BEGIN_NODE) {
++			s = p;
++			p = PALIGN(p + strlen(s) + 1, 4);
++
++			if (*s == '\0')
++				s = "/";
++
++			dbgprintf("%*s%s {\n", (int)(depth * shift), " ", s);
++
++			depth++;
++			continue;
++		}
++
++		if (tag == FDT_END_NODE) {
++			depth--;
++
++			dbgprintf("%*s};\n", (int)(depth * shift), " ");
++			continue;
++		}
++
++		if (tag == FDT_NOP) {
++			dbgprintf("%*s// [NOP]\n", (int)(depth * shift), " ");
++			continue;
++		}
++
++		if (tag != FDT_PROP) {
++			dbgprintf("%*s ** Unknown tag 0x%08x\n",
++					(int)(depth * shift), " ", tag);
++			break;
++		}
++		sz = fdt32_to_cpu(GET_CELL(p));
++		s = p_strings + fdt32_to_cpu(GET_CELL(p));
++		if (version < 16 && sz >= 8)
++			p = PALIGN(p, 8);
++		t = p;
++
++		p = PALIGN(p + sz, 4);
++
++		dbgprintf("%*s%s", (int)(depth * shift), " ", s);
++		print_data(t, sz);
++		dbgprintf(";\n");
++	}
++}
+diff --git a/kexec/dt-ops.h b/kexec/dt-ops.h
+index e70d15d8ffbf..25b9b569f2b7 100644
+--- a/kexec/dt-ops.h
++++ b/kexec/dt-ops.h
+@@ -9,5 +9,6 @@ int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
+ 	const char *prop, const void *value, int value_len);
+ 
+ int dtb_delete_property(char *dtb, const char *node, const char *prop);
++void dump_fdt(void *fdt) ;
+ 
+ #endif
+-- 
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
