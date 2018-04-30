@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from stargate.chelsio.com ([12.32.117.8])
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fD5q0-0000rg-7q
- for kexec@lists.infradead.org; Mon, 30 Apr 2018 10:15:19 +0000
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Subject: [PATCH net-next v6 2/3] vmcore: append device dumps to vmcore as elf
- notes
-Date: Mon, 30 Apr 2018 15:43:59 +0530
-Message-Id: <07e93ae7ee83047136579bd52399fe062141ece9.1525082669.git.rahul.lakkireddy@chelsio.com>
-In-Reply-To: <cover.1525082669.git.rahul.lakkireddy@chelsio.com>
+ id 1fDF7s-0008JO-Fe
+ for kexec@lists.infradead.org; Mon, 30 Apr 2018 20:10:22 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <cover.1525082669.git.rahul.lakkireddy@chelsio.com>
-In-Reply-To: <cover.1525082669.git.rahul.lakkireddy@chelsio.com>
-References: <cover.1525082669.git.rahul.lakkireddy@chelsio.com>
+Date: Mon, 30 Apr 2018 15:09:30 -0500
+In-Reply-To: <cover.1525082669.git.rahul.lakkireddy@chelsio.com> (Rahul
+ Lakkireddy's message of "Mon, 30 Apr 2018 15:43:57 +0530")
+Message-ID: <87h8ns4ft1.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH net-next v6 0/3] kernel: add support to collect hardware
+ logs in crash recovery kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,378 +20,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: netdev@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: indranil@chelsio.com, nirranjan@chelsio.com, stephen@networkplumber.org, ganeshgr@chelsio.com, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, ebiederm@xmission.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, viro@zeniv.linux.org.uk
+To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Cc: indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stephen@networkplumber.org, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ganeshgr@chelsio.com
 
-Update read and mmap logic to append device dumps as additional notes
-before the other elf notes. We add device dumps before other elf notes
-because the other elf notes may not fill the elf notes buffer
-completely and we will end up with zero-filled data between the elf
-notes and the device dumps. Tools will then try to decode this
-zero-filled data as valid notes and we don't want that. Hence, adding
-device dumps before the other elf notes ensure that zero-filled data
-can be avoided. This also ensures that the device dumps and the
-other elf notes can be properly mmaped at page aligned address.
+Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
 
-Incorporate device dump size into the total vmcore size. Also update
-offsets for other program headers after the device dumps are added.
+> v6:
+> - Reworked device dump elf note name to contain vendor identifier.
+> - Added vmcoredd_header that precedes actual dump in the Elf Note.
+> - Device dump's name is moved inside vmcoredd_header.
+> - Added "CHELSIO" string as vendor identifier in the Elf Note name
+>   for cxgb4 device dumps.
 
-Suggested-by: Eric Biederman <ebiederm@xmission.com>.
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
----
-v6:
-- No changes.
+Yep you did and that is not correct.  My apologies if I was unclear.
 
-v5:
-- No changes.
+An elf note looks like this:
 
-v4:
-- No changes.
+/* Note header in a PT_NOTE section */
+typedef struct elf32_note {
+  Elf32_Word	n_namesz;	/* Name size */
+  Elf32_Word	n_descsz;	/* Content size */
+  Elf32_Word	n_type;		/* Content type */
+} Elf32_Nhdr;
 
-v3:
-- Patch added in this version.
-- Exported dumps as elf notes. Suggested by Eric Biederman
-  <ebiederm@xmission.com>.
+n_descsz is is the length of the body.
 
- fs/proc/vmcore.c | 247 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 243 insertions(+), 4 deletions(-)
+n_namesz is the length of the ``vendor'' but not the vendor of the your
+driver.  It is the ``vendor'' that defines n_type.  So "LINUX" in our
+case.
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 2392be007228..7c6b5ca70056 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -39,6 +39,8 @@ static size_t elfcorebuf_sz_orig;
- 
- static char *elfnotes_buf;
- static size_t elfnotes_sz;
-+/* Size of all notes minus the device dump notes */
-+static size_t elfnotes_orig_sz;
- 
- /* Total size of vmcore file. */
- static u64 vmcore_size;
-@@ -51,6 +53,9 @@ static LIST_HEAD(vmcoredd_list);
- static DEFINE_MUTEX(vmcoredd_mutex);
- #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
- 
-+/* Device Dump Size */
-+static size_t vmcoredd_orig_sz;
-+
- /*
-  * Returns > 0 for RAM pages, 0 for non-RAM pages, < 0 on error
-  * The called function has to take care of module refcounting.
-@@ -185,6 +190,77 @@ static int copy_to(void *target, void *src, size_t size, int userbuf)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
-+static int vmcoredd_copy_dumps(void *dst, u64 start, size_t size, int userbuf)
-+{
-+	struct vmcoredd_node *dump;
-+	u64 offset = 0;
-+	int ret = 0;
-+	size_t tsz;
-+	char *buf;
-+
-+	mutex_lock(&vmcoredd_mutex);
-+	list_for_each_entry(dump, &vmcoredd_list, list) {
-+		if (start < offset + dump->size) {
-+			tsz = min(offset + (u64)dump->size - start, (u64)size);
-+			buf = dump->buf + start - offset;
-+			if (copy_to(dst, buf, tsz, userbuf)) {
-+				ret = -EFAULT;
-+				goto out_unlock;
-+			}
-+
-+			size -= tsz;
-+			start += tsz;
-+			dst += tsz;
-+
-+			/* Leave now if buffer filled already */
-+			if (!size)
-+				goto out_unlock;
-+		}
-+		offset += dump->size;
-+	}
-+
-+out_unlock:
-+	mutex_unlock(&vmcoredd_mutex);
-+	return ret;
-+}
-+
-+static int vmcoredd_mmap_dumps(struct vm_area_struct *vma, unsigned long dst,
-+			       u64 start, size_t size)
-+{
-+	struct vmcoredd_node *dump;
-+	u64 offset = 0;
-+	int ret = 0;
-+	size_t tsz;
-+	char *buf;
-+
-+	mutex_lock(&vmcoredd_mutex);
-+	list_for_each_entry(dump, &vmcoredd_list, list) {
-+		if (start < offset + dump->size) {
-+			tsz = min(offset + (u64)dump->size - start, (u64)size);
-+			buf = dump->buf + start - offset;
-+			if (remap_vmalloc_range_partial(vma, dst, buf, tsz)) {
-+				ret = -EFAULT;
-+				goto out_unlock;
-+			}
-+
-+			size -= tsz;
-+			start += tsz;
-+			dst += tsz;
-+
-+			/* Leave now if buffer filled already */
-+			if (!size)
-+				goto out_unlock;
-+		}
-+		offset += dump->size;
-+	}
-+
-+out_unlock:
-+	mutex_unlock(&vmcoredd_mutex);
-+	return ret;
-+}
-+#endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
-+
- /* Read from the ELF header and then the crash dump. On error, negative value is
-  * returned otherwise number of bytes read are returned.
-  */
-@@ -222,10 +298,41 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
- 	if (*fpos < elfcorebuf_sz + elfnotes_sz) {
- 		void *kaddr;
- 
-+		/* We add device dumps before other elf notes because the
-+		 * other elf notes may not fill the elf notes buffer
-+		 * completely and we will end up with zero-filled data
-+		 * between the elf notes and the device dumps. Tools will
-+		 * then try to decode this zero-filled data as valid notes
-+		 * and we don't want that. Hence, adding device dumps before
-+		 * the other elf notes ensure that zero-filled data can be
-+		 * avoided.
-+		 */
-+#ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
-+		/* Read device dumps */
-+		if (*fpos < elfcorebuf_sz + vmcoredd_orig_sz) {
-+			tsz = min(elfcorebuf_sz + vmcoredd_orig_sz -
-+				  (size_t)*fpos, buflen);
-+			start = *fpos - elfcorebuf_sz;
-+			if (vmcoredd_copy_dumps(buffer, start, tsz, userbuf))
-+				return -EFAULT;
-+
-+			buflen -= tsz;
-+			*fpos += tsz;
-+			buffer += tsz;
-+			acc += tsz;
-+
-+			/* leave now if filled buffer already */
-+			if (!buflen)
-+				return acc;
-+		}
-+#endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
-+
-+		/* Read remaining elf notes */
- 		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)*fpos, buflen);
--		kaddr = elfnotes_buf + *fpos - elfcorebuf_sz;
-+		kaddr = elfnotes_buf + *fpos - elfcorebuf_sz - vmcoredd_orig_sz;
- 		if (copy_to(buffer, kaddr, tsz, userbuf))
- 			return -EFAULT;
-+
- 		buflen -= tsz;
- 		*fpos += tsz;
- 		buffer += tsz;
-@@ -451,11 +558,46 @@ static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
- 	if (start < elfcorebuf_sz + elfnotes_sz) {
- 		void *kaddr;
- 
-+		/* We add device dumps before other elf notes because the
-+		 * other elf notes may not fill the elf notes buffer
-+		 * completely and we will end up with zero-filled data
-+		 * between the elf notes and the device dumps. Tools will
-+		 * then try to decode this zero-filled data as valid notes
-+		 * and we don't want that. Hence, adding device dumps before
-+		 * the other elf notes ensure that zero-filled data can be
-+		 * avoided. This also ensures that the device dumps and
-+		 * other elf notes can be properly mmaped at page aligned
-+		 * address.
-+		 */
-+#ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
-+		/* Read device dumps */
-+		if (start < elfcorebuf_sz + vmcoredd_orig_sz) {
-+			u64 start_off;
-+
-+			tsz = min(elfcorebuf_sz + vmcoredd_orig_sz -
-+				  (size_t)start, size);
-+			start_off = start - elfcorebuf_sz;
-+			if (vmcoredd_mmap_dumps(vma, vma->vm_start + len,
-+						start_off, tsz))
-+				goto fail;
-+
-+			size -= tsz;
-+			start += tsz;
-+			len += tsz;
-+
-+			/* leave now if filled buffer already */
-+			if (!size)
-+				return 0;
-+		}
-+#endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
-+
-+		/* Read remaining elf notes */
- 		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)start, size);
--		kaddr = elfnotes_buf + start - elfcorebuf_sz;
-+		kaddr = elfnotes_buf + start - elfcorebuf_sz - vmcoredd_orig_sz;
- 		if (remap_vmalloc_range_partial(vma, vma->vm_start + len,
- 						kaddr, tsz))
- 			goto fail;
-+
- 		size -= tsz;
- 		start += tsz;
- 		len += tsz;
-@@ -703,6 +845,11 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
- 	/* Modify e_phnum to reflect merged headers. */
- 	ehdr_ptr->e_phnum = ehdr_ptr->e_phnum - nr_ptnote + 1;
- 
-+	/* Store the size of all notes.  We need this to update the note
-+	 * header when the device dumps will be added.
-+	 */
-+	elfnotes_orig_sz = phdr.p_memsz;
-+
- 	return 0;
- }
- 
-@@ -889,6 +1036,11 @@ static int __init merge_note_headers_elf32(char *elfptr, size_t *elfsz,
- 	/* Modify e_phnum to reflect merged headers. */
- 	ehdr_ptr->e_phnum = ehdr_ptr->e_phnum - nr_ptnote + 1;
- 
-+	/* Store the size of all notes.  We need this to update the note
-+	 * header when the device dumps will be added.
-+	 */
-+	elfnotes_orig_sz = phdr.p_memsz;
-+
- 	return 0;
- }
- 
-@@ -981,8 +1133,8 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
- }
- 
- /* Sets offset fields of vmcore elements. */
--static void __init set_vmcore_list_offsets(size_t elfsz, size_t elfnotes_sz,
--					   struct list_head *vc_list)
-+static void set_vmcore_list_offsets(size_t elfsz, size_t elfnotes_sz,
-+				    struct list_head *vc_list)
- {
- 	loff_t vmcore_off;
- 	struct vmcore *m;
-@@ -1201,6 +1353,92 @@ static void vmcoredd_write_note(void *buf, struct vmcoredd_data *data,
- 	memcpy(note_ptr, &vdd_hdr, sizeof(vdd_hdr));
- }
- 
-+/**
-+ * vmcoredd_update_program_headers - Update all Elf program headers
-+ * @elfptr: Pointer to elf header
-+ * @elfnotesz: Size of elf notes aligned to page size
-+ * @vmcoreddsz: Size of device dumps to be added to elf note header
-+ *
-+ * Determine type of Elf header (Elf64 or Elf32) and update the elf note size.
-+ * Also update the offsets of all the program headers after the elf note header.
-+ */
-+static void vmcoredd_update_program_headers(char *elfptr, size_t elfnotesz,
-+					    size_t vmcoreddsz)
-+{
-+	unsigned char *e_ident = (unsigned char *)elfptr;
-+	u64 start, end, size;
-+	loff_t vmcore_off;
-+	u32 i;
-+
-+	vmcore_off = elfcorebuf_sz + elfnotesz;
-+
-+	if (e_ident[EI_CLASS] == ELFCLASS64) {
-+		Elf64_Ehdr *ehdr = (Elf64_Ehdr *)elfptr;
-+		Elf64_Phdr *phdr = (Elf64_Phdr *)(elfptr + sizeof(Elf64_Ehdr));
-+
-+		/* Update all program headers */
-+		for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
-+			if (phdr->p_type == PT_NOTE) {
-+				/* Update note size */
-+				phdr->p_memsz = elfnotes_orig_sz + vmcoreddsz;
-+				phdr->p_filesz = phdr->p_memsz;
-+				continue;
-+			}
-+
-+			start = rounddown(phdr->p_offset, PAGE_SIZE);
-+			end = roundup(phdr->p_offset + phdr->p_memsz,
-+				      PAGE_SIZE);
-+			size = end - start;
-+			phdr->p_offset = vmcore_off + (phdr->p_offset - start);
-+			vmcore_off += size;
-+		}
-+	} else {
-+		Elf32_Ehdr *ehdr = (Elf32_Ehdr *)elfptr;
-+		Elf32_Phdr *phdr = (Elf32_Phdr *)(elfptr + sizeof(Elf32_Ehdr));
-+
-+		/* Update all program headers */
-+		for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
-+			if (phdr->p_type == PT_NOTE) {
-+				/* Update note size */
-+				phdr->p_memsz = elfnotes_orig_sz + vmcoreddsz;
-+				phdr->p_filesz = phdr->p_memsz;
-+				continue;
-+			}
-+
-+			start = rounddown(phdr->p_offset, PAGE_SIZE);
-+			end = roundup(phdr->p_offset + phdr->p_memsz,
-+				      PAGE_SIZE);
-+			size = end - start;
-+			phdr->p_offset = vmcore_off + (phdr->p_offset - start);
-+			vmcore_off += size;
-+		}
-+	}
-+}
-+
-+/**
-+ * vmcoredd_update_size - Update the total size of the device dumps and update
-+ * Elf header
-+ * @dump_size: Size of the current device dump to be added to total size
-+ *
-+ * Update the total size of all the device dumps and update the Elf program
-+ * headers. Calculate the new offsets for the vmcore list and update the
-+ * total vmcore size.
-+ */
-+static void vmcoredd_update_size(size_t dump_size)
-+{
-+	vmcoredd_orig_sz += dump_size;
-+	elfnotes_sz = roundup(elfnotes_orig_sz, PAGE_SIZE) + vmcoredd_orig_sz;
-+	vmcoredd_update_program_headers(elfcorebuf, elfnotes_sz,
-+					vmcoredd_orig_sz);
-+
-+	/* Update vmcore list offsets */
-+	set_vmcore_list_offsets(elfcorebuf_sz, elfnotes_sz, &vmcore_list);
-+
-+	vmcore_size = get_vmcore_size(elfcorebuf_sz, elfnotes_sz,
-+				      &vmcore_list);
-+	proc_vmcore->size = vmcore_size;
-+}
-+
- /**
-  * vmcore_add_device_dump - Add a buffer containing device dump to vmcore
-  * @data: dump info.
-@@ -1255,6 +1493,7 @@ static int __vmcore_add_device_dump(struct vmcoredd_data *data)
- 	list_add_tail(&dump->list, &vmcoredd_list);
- 	mutex_unlock(&vmcoredd_mutex);
- 
-+	vmcoredd_update_size(data_size);
- 	return 0;
- 
- out_err:
--- 
-2.14.1
+The pair "LINUX", NT_VMCOREDD go together.  That pair is what a
+subsequent program must look at to decide how to understand the note.
+
+Please don't use CRASH_CORE_NOTE_HEAD BYTES that obscures things
+unnecessarily, and really is not applicable to this use case.
+ALIGN(sizeof(struct elf_note), 4) is almost as short and it makes
+it clear what your are talking about.
+
+
+Also please don't look too closely as the other note stuff for Elf core
+dumps.  That stuff was not well done from an Elf standards and ABI
+perspective.  Unfortunately by the time I had noticed it was years later
+so not something that is worth the breakage in tools to change now.
+
+Looking at struct vmcoredd_header.
+
+That seems a reasonable structure.  However it is a uapi structure so
+we need to carefully definite it that way.
+
+Perhaps:
+
+#define VMCOREDD_MAX_NAME_BYTES  32
+
+struct vmcoredd_header {
+	__u32 header_len;	/* Length of this header */
+        __u32 reserved;
+        __u64 data_len;		/* Length of this device dump */
+        __u8 dump_name[VMCOREDD_MAX_NAME_BYTES];
+        __u8 reserved2[16];
+};
+
+
+Looking at that I see another siginficant issue.  We can't let the
+device dump be more than 32bits long.  The length of an elf
+note is defined by an elf word which is universally a __u32.
+
+So perhaps vmcoredd_header should look like:
+
+#define VMCOREDD_MAX_NAME_BYTES  44
+
+struct vmcoredd_header {
+	__u32	n_namesz;	/* Name size */
+        __u32	n_descsz;	/* Content size */
+        __u32	n_type;		/* NT_VMDOREDD */
+	__u8	name[8];	/* LINUX\0\0\0 */
+        __u8	dump_name[VMCOREDD_MAX_NAME_BYTES];
+};
+
+The total length of the data dump would be descsz - sizeof(struct
+vmcoredd_header).  The header winds up being a constant 64 bytes this
+way, and includes the elf note header.
+
+Eric
+
+
+
+
+
+
+
+
+
 
 
 _______________________________________________
