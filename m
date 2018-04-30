@@ -1,17 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from smtp.codeaurora.org ([198.145.29.96])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fDF7s-0008JO-Fe
- for kexec@lists.infradead.org; Mon, 30 Apr 2018 20:10:22 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <cover.1525082669.git.rahul.lakkireddy@chelsio.com>
-Date: Mon, 30 Apr 2018 15:09:30 -0500
-In-Reply-To: <cover.1525082669.git.rahul.lakkireddy@chelsio.com> (Rahul
- Lakkireddy's message of "Mon, 30 Apr 2018 15:43:57 +0530")
-Message-ID: <87h8ns4ft1.fsf@xmission.com>
+ id 1fDFin-0007s2-U7
+ for kexec@lists.infradead.org; Mon, 30 Apr 2018 20:48:31 +0000
+Subject: Re: pciehp 0000:00:1c.0:pcie004: Timeout on hotplug command 0x1038
+ (issued 65284 msec ago)
+References: <8770820b-85a0-172b-7230-3a44524e6c9f@molgen.mpg.de>
+ <20180427192207.GG8199@bhelgaas-glaptop.roam.corp.google.com>
+ <b62c2a8e-fe14-6d7d-147c-0ce3b0c0ab2f@codeaurora.org>
+ <20180427211255.GI8199@bhelgaas-glaptop.roam.corp.google.com>
+ <20180428005620.GB1675@dhcp-128-65.nay.redhat.com>
+ <20180428011845.GC1675@dhcp-128-65.nay.redhat.com>
+ <3ebc908fb196168bf0373875ffc5679e@codeaurora.org>
+From: Sinan Kaya <okaya@codeaurora.org>
+Message-ID: <d8d134dc-9757-97cd-7a24-cbb21611d6c6@codeaurora.org>
+Date: Mon, 30 Apr 2018 16:48:15 -0400
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v6 0/3] kernel: add support to collect hardware
- logs in crash recovery kernel
+In-Reply-To: <3ebc908fb196168bf0373875ffc5679e@codeaurora.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,104 +26,26 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Cc: indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stephen@networkplumber.org, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ganeshgr@chelsio.com
+To: Paul Menzel <pmenzel+linux-pci@molgen.mpg.de>
+Cc: linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Bjorn Helgaas <bhelgaas@google.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
-
-> v6:
-> - Reworked device dump elf note name to contain vendor identifier.
-> - Added vmcoredd_header that precedes actual dump in the Elf Note.
-> - Device dump's name is moved inside vmcoredd_header.
-> - Added "CHELSIO" string as vendor identifier in the Elf Note name
->   for cxgb4 device dumps.
-
-Yep you did and that is not correct.  My apologies if I was unclear.
-
-An elf note looks like this:
-
-/* Note header in a PT_NOTE section */
-typedef struct elf32_note {
-  Elf32_Word	n_namesz;	/* Name size */
-  Elf32_Word	n_descsz;	/* Content size */
-  Elf32_Word	n_type;		/* Content type */
-} Elf32_Nhdr;
-
-n_descsz is is the length of the body.
-
-n_namesz is the length of the ``vendor'' but not the vendor of the your
-driver.  It is the ``vendor'' that defines n_type.  So "LINUX" in our
-case.
-
-The pair "LINUX", NT_VMCOREDD go together.  That pair is what a
-subsequent program must look at to decide how to understand the note.
-
-Please don't use CRASH_CORE_NOTE_HEAD BYTES that obscures things
-unnecessarily, and really is not applicable to this use case.
-ALIGN(sizeof(struct elf_note), 4) is almost as short and it makes
-it clear what your are talking about.
-
-
-Also please don't look too closely as the other note stuff for Elf core
-dumps.  That stuff was not well done from an Elf standards and ABI
-perspective.  Unfortunately by the time I had noticed it was years later
-so not something that is worth the breakage in tools to change now.
-
-Looking at struct vmcoredd_header.
-
-That seems a reasonable structure.  However it is a uapi structure so
-we need to carefully definite it that way.
-
-Perhaps:
-
-#define VMCOREDD_MAX_NAME_BYTES  32
-
-struct vmcoredd_header {
-	__u32 header_len;	/* Length of this header */
-        __u32 reserved;
-        __u64 data_len;		/* Length of this device dump */
-        __u8 dump_name[VMCOREDD_MAX_NAME_BYTES];
-        __u8 reserved2[16];
-};
-
-
-Looking at that I see another siginficant issue.  We can't let the
-device dump be more than 32bits long.  The length of an elf
-note is defined by an elf word which is universally a __u32.
-
-So perhaps vmcoredd_header should look like:
-
-#define VMCOREDD_MAX_NAME_BYTES  44
-
-struct vmcoredd_header {
-	__u32	n_namesz;	/* Name size */
-        __u32	n_descsz;	/* Content size */
-        __u32	n_type;		/* NT_VMDOREDD */
-	__u8	name[8];	/* LINUX\0\0\0 */
-        __u8	dump_name[VMCOREDD_MAX_NAME_BYTES];
-};
-
-The total length of the data dump would be descsz - sizeof(struct
-vmcoredd_header).  The header winds up being a constant 64 bytes this
-way, and includes the elf note header.
-
-Eric
-
-
-
-
-
-
-
-
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Qmpvcm4sCgpPbiA0LzI4LzIwMTggOTowMyBBTSwgb2theWFAY29kZWF1cm9yYS5vcmcgd3JvdGU6
+Cj4+IEhtbSwgaWYgaXQgaXMgdGhlIHJlbW92ZSgpIG1ldGhvZCB0aGVuIGtleGVjIGRvZXMgbm90
+IHVzZSBpdC7CoCBrZXhlYyB1c2UKPj4gdGhlIHNodXRkb3duKCkgbWV0aG9kIGluc3RlYWQuwqAg
+SSBtaXNzZWQgdGhpcyBkZXRhaWxzIHdoZW4gSSByZXBsaWVkLgo+IAo+IFBvcnRkcnYgaG9va3Mg
+dXAgcmVtb3ZlIGhhbmRsZXIgdG8gc2h1dGRvd24uIFRoYXQncyB3aHkgcmVtb3ZlIGlzIGdldHRp
+bmcgY2FsbGVkLgoKV2hhdCBzaG91bGQgd2UgZG8gYWJvdXQgdGhpcz8KClNpbmNlIHRoZXJlIGlz
+IGFuIGFjdHVhbCBIVyBlcnJhdGEgaW52b2x2ZWQsIHNob3VsZCB3ZSBxdWlyayB0aGlzIHJvb3Qg
+cG9ydCBhbmQKbm90IHdhaXQgYXMgaWYgcmVtb3ZlL3NodXRkb3duIGRvZXNuJ3QgZXhpc3Q/CgpQ
+YXVsLApZb3UgbWlnaHQgd2FudCB0byBmaWxlIGEgYnVnemlsbGEgc28gdGhhdCB3ZSBjYW4ga2Vl
+cCBvdXIgZGVidWcgZWZmb3J0cyBvdXQgb2YgdGhpcwpsaXN0LgoKU2luYW4KCi0tIApTaW5hbiBL
+YXlhClF1YWxjb21tIERhdGFjZW50ZXIgVGVjaG5vbG9naWVzLCBJbmMuIGFzIGFuIGFmZmlsaWF0
+ZSBvZiBRdWFsY29tbSBUZWNobm9sb2dpZXMsIEluYy4KUXVhbGNvbW0gVGVjaG5vbG9naWVzLCBJ
+bmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwgYSBMaW51eCBGb3VuZGF0
+aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdC4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
