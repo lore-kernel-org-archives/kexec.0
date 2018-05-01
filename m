@@ -1,28 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from out02.mta.xmission.com ([166.70.13.232])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fDdq0-0003WD-U1
- for kexec@lists.infradead.org; Tue, 01 May 2018 22:33:34 +0000
+ id 1fDdxZ-000750-Mz
+ for kexec@lists.infradead.org; Tue, 01 May 2018 22:41:23 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
-References: <b62c2a8e-fe14-6d7d-147c-0ce3b0c0ab2f@codeaurora.org>
- <20180427211255.GI8199@bhelgaas-glaptop.roam.corp.google.com>
- <20180428005620.GB1675@dhcp-128-65.nay.redhat.com>
- <20180428011845.GC1675@dhcp-128-65.nay.redhat.com>
- <3ebc908fb196168bf0373875ffc5679e@codeaurora.org>
- <d8d134dc-9757-97cd-7a24-cbb21611d6c6@codeaurora.org>
- <20180430211740.GG95643@bhelgaas-glaptop.roam.corp.google.com>
- <7285da70-2c3e-c3b7-62e1-fdbb55a77729@codeaurora.org>
- <3549ffe8-7605-d72c-5c09-1436a4288c7d@codeaurora.org>
- <ffe662be-00c7-ab7f-0e88-8119ccfd9600@arm.com>
- <20180501132554.GA11698@bhelgaas-glaptop.roam.corp.google.com>
- <861sevcp74.wl-marc.zyngier@arm.com>
-Date: Tue, 01 May 2018 17:32:32 -0500
-In-Reply-To: <861sevcp74.wl-marc.zyngier@arm.com> (Marc Zyngier's message of
- "Tue, 01 May 2018 17:31:43 +0100")
-Message-ID: <87tvrrypkv.fsf@xmission.com>
+References: <cover.1525197407.git.rahul.lakkireddy@chelsio.com>
+ <cover.1525197407.git.rahul.lakkireddy@chelsio.com>
+ <b6065b53c5446d98ee55e09119f6821f979418d4.1525197408.git.rahul.lakkireddy@chelsio.com>
+Date: Tue, 01 May 2018 17:41:00 -0500
+In-Reply-To: <b6065b53c5446d98ee55e09119f6821f979418d4.1525197408.git.rahul.lakkireddy@chelsio.com>
+ (Rahul Lakkireddy's message of "Tue, 1 May 2018 23:57:45 +0530")
+Message-ID: <87o9hzyp6r.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: pciehp 0000:00:1c.0:pcie004: Timeout on hotplug command 0x1038
- (issued 65284 msec ago)
+Subject: Re: [PATCH net-next v7 1/3] vmcore: add API to collect hardware dump
+ in second kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,181 +26,418 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: linux-pci@vger.kernel.org, Paul Menzel <pmenzel+linux-pci@molgen.mpg.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Cc: indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stephen@networkplumber.org, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, ganeshgr@chelsio.com
 
-Marc Zyngier <marc.zyngier@arm.com> writes:
+Rahul Lakkireddy <rahul.lakkireddy@chelsio.com> writes:
 
-> On Tue, 01 May 2018 14:25:54 +0100,
-> Bjorn Helgaas wrote:
+> The sequence of actions done by device drivers to append their device
+> specific hardware/firmware logs to /proc/vmcore are as follows:
+
+Except for the missing include that the kbuild test robot caught
+I am not seeing a problems.
+
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+> 1. During probe (before hardware is initialized), device drivers
+> register to the vmcore module (via vmcore_add_device_dump()), with
+> callback function, along with buffer size and log name needed for
+> firmware/hardware log collection.
 >
-> Hi Bjorn,
+> 2. vmcore module allocates the buffer with requested size. It adds
+> an Elf note and invokes the device driver's registered callback
+> function.
 >
->> On Tue, May 01, 2018 at 01:59:20PM +0100, Marc Zyngier wrote:
->> > On 01/05/18 13:38, Sinan Kaya wrote:
->> > > +Marc,
->> > > 
->> > > On 4/30/2018 5:27 PM, Sinan Kaya wrote:
->> > >> On 4/30/2018 5:17 PM, Bjorn Helgaas wrote:
->> > >>>> What should we do about this?
->> > >>>>
->> > >>>> Since there is an actual HW errata involved, should we quirk this
->> > >>>> root port and not wait as if remove/shutdown doesn't exist?
->> > >>> I was hoping to avoid a quirk because AFAIK all Intel parts have this
->> > >>> issue so it will be an ongoing maintenance issue.  I tried to avoid
->> > >>> the timeout delays, e.g., with 40b960831cfa ("PCI: pciehp: Compute
->> > >>> timeout from hotplug command start time").
->> > >>>
->> > >>> But we still see the alarming messages, so we should probably add a
->> > >>> quirk to get rid of those.
->> > >>>
->> > >>> But I haven't given up on the idea of getting rid of the
->> > >>> pciehp_remove() path.  I'm not convinced yet that we actually need to
->> > >>> do anything to shut this device down.  I don't like the assumption
->> > >>> that kexec requires this.  The kexec is fundamentally just a branch,
->> > >>> and anything we do before the branch (i.e., in the old kernel), we
->> > >>> should also be able to do after the branch (i.e., in the kexec-ed
->> > >>> kernel).
->> > >>>
->> > >>
->> > >> In my experience with kexec, MSI type edge interrupts are harmless.
->> > >> You might just see a few unhandled interrupt messages during boot
->> > >> if something is pending from the first kernel.
->> > 
->> > Unfortunately, that's not always the case.
->> > 
->> > A number of GICv3/v4 implementations (a very common interrupt controller
->> > on ARM servers) cannot be disabled, which means they will keep writing
->> > to their pending tables long after kexec will have started the new
->> > kernel. And since we don't track memory allocation across kexec, you
->> > end-up with significant chances of observing single bit corruption as
->> > interrupts carry on being delivered. Oh, and you won't actually be able
->> > to take MSIs because you can't even reprogram the damn thing.
->> > 
->> > Yes, this can be considered a HW bug.
->> > 
->> > >> It is the level interrupts that are more concerning. It remains pending
->> > >> until the interrupt source is cleared. CPU never returns from the
->> > >> interrupt handler to actually continue booting the second kernel.
->> > > 
->> > > This makes me wonder why kexec doesn't disable all interrupt sources by
->> > > itself instead of relying on the drivers shutdown routine. Some drivers
->> > > don't even have a shutdown callback. Kexec could have done both as another
->> > > example. Something like.
->> > > 
->> > > 1. Call shutdown for all drivers if available.
->> > > 2. Disable all interrupt sources in the interrupt controller
->> > > 3. Start the new kernel.
->> > 
->> > See above. Although you can shut off the end-point and to some extent
->> > mask interrupts before jumping into the payload, it is not always
->> > possible to go back to a reasonable state where you can take actually MSIs.
->> 
->> This is exactly the sort of thing it would be nice to collect and
->> document as part of the background of "why kexec works the way it
->> does."  It certainly helps explain things that are far from obvious if
->> you don't have the background.
+> 3. Device driver collects all hardware/firmware logs into the buffer
+> and returns control back to vmcore module.
 >
-> I'd certainly be happy to help with it if someone was willing to
-> kickstart such a document. kexec/kdump is a huge bag of "interesting"
-> tricks, and it has driven me mad over the past couple of months (I'm
-> typing this from a laptop that uses kexec as its bootloader, and it is
-> *not fun*).
-
-I don't know if it helps documentation wise but here is my memory of why
-things are the way they are.
-
-Case 1) kexec-on-panic.
-
-In this case we run the new kernel in memory reserved since boot of the
-previous kernel in memory has never been used by any device driver.
-This means on-going DMA transactions that we don't manage to shut off
-are harmless.
-
-In actual execution a bare minimum of hardware is shutdown on the
-kexec-on-panic path.  Ideally it would be nothing.  The crashing kernel
-simply can not be trusted to shut things down itself.
-
-The kernel that is executing in the after the crash loads a bare minimum
-of drivers and does it's best to initialize the hardware.  Ideally if
-something goes wrong the kernel will hang before we write to hardware
-and mess anything up.
-
-With this we get something like a 50% or a 60% success rate of capture
-crashdump in practice in the field.
-
-Everything else that has been tried relies more on the crashing kernel
-and looks great in testing and then turns out to not have a measurable
-success rate in practice.
-
-Using lkdtm you can setup tests of various kinds of kernel corruption
-and failure and see some approximation of the success rate of kexec will
-see in practice.
-
-I forget where we are with iommus, but the principles remain and iommus
-tend to tricky just because they get in the middle of everything.
-
-If someone stares hard enough we are probably at the point on x86 where
-we can remove the irq shutdown code.
-
-The kexec on panic case tends to be tested more on enterprise kernels
-than on normal ones.
-
-Case 2) Ordinary kexec.
-
-The goal is to have a fully functionaly uncompromised system (unlike
-kexec on panic).  Hardware bugs mean that in the general case the only
-place we can shutdown hardware reliably is the drivers themselves.
-
-All devices doing DMA must be shutdown in the kexec'ing kernel.  In part
-because there is no guarantee that we will even load a driver for that
-hardware.
-
-The presence of DMA drove most of the decisions.  But from this thread I
-see that irq handling follows the same pattern.  The best place to shut
-anything down is in the driver where there is full knowledge of how
-things work.
-
-One of the more annoying things that have been discovered is the generic
-pci dma disable bit doesn't work uniformly acrosss hardware.  Which
-means there is no known generic way to shut down dma across the board.
-
-In the prototypes there was only the "remove" method of drivers and that
-worked well.  When it came time to merge the original kexec
-implementation the maintainer of the power mananagement subsystem
-insisted we add a new "shutdown" method instead, because while it is
-necessary to shutdown the hardware you should not need to clean up the
-data structures.
-
-In practice that idea flopped.  The most reliable way I know to run
-kexec is to remmod all of the drivers before runing sys_reboot(...,
-LINUX_REBOT_CMD_KEXEC, ...) so that the shutdown methods get run.
-
-It has been asked and I have given my approval to anyone who wants to do
-the work to switch form the "shutdown" methods to "remove" on the kexec
-path.  But so far it is a big enough project that no one has done that
-yet.
-
-It has been suggested that hardware does not need to be shutdown at the
-end of the kernel before returning to a a firmware method.  Which is
-incorrect.  Most firmware when it regains control triggers a system
-reset to get the hardware back into a usable state, and be able to
-reboot the system.  There is a magic register for this on x86.  On older
-x86 systems and others that transfer control to firmware without doing a
-soft hardware reset of the system and all of the devices.  Without
-shutting down the devices they will work about as well as kexec does
-when you don't remove the devices.  That is why I merged the reboot
-and the kexec code paths.  Well that and so that there is a little
-more testing.
-
-In practice it still seems that rmmod is the only testing that reliably
-happens to drivers.  So not sharing that code path makes kexec more
-fragile than necessary.
-
-Hopefully this helps put things into perspective and can help with your
-docuement.
-
-Eric
+> Ensure that the device dump buffer size is always aligned to page size
+> so that it can be mmaped.
+>
+> Also, rename alloc_elfnotes_buf() to vmcore_alloc_buf() to make it more
+> generic and reserve NT_VMCOREDD note type to indicate vmcore device
+> dump.
+>
+> Suggested-by: Eric Biederman <ebiederm@xmission.com>.
+> Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+> Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
+> ---
+> v7:
+> - Removed "CHELSIO" vendor identifier in Elf Note name. Instead,
+>   writing "LINUX".
+> - Moved vmcoredd_header to new file include/uapi/linux/vmcore.h
+> - Reworked vmcoredd_header to include Elf Note as part of the header
+>   itself.
+> - Removed vmcoredd_get_note_size().
+> - Renamed vmcoredd_write_note() to vmcoredd_write_header().
+> - Replaced all "unsigned long" with "unsigned int" for device dump
+>   size since max size of Elf Word is u32.
+>
+> v6:
+> - Reworked device dump elf note name to contain vendor identifier.
+> - Added vmcoredd_header that precedes actual dump in the Elf Note.
+> - Device dump's name is moved inside vmcoredd_header.
+>
+> v5:
+> - Removed enabling CONFIG_PROC_VMCORE_DEVICE_DUMP by default and
+>   updated help message to indicate that the driver must be present
+>   in second kernel's initramfs to collect the underlying device
+>   snapshot.
+>
+> v4:
+> - Made __vmcore_add_device_dump() static.
+> - Moved compile check to define vmcore_add_device_dump() to
+>   crash_dump.h to fix compilation when vmcore.c is not compiled in.
+> - Convert ---help--- to help in Kconfig as indicated by checkpatch.
+> - Rebased to tip.
+>
+> v3:
+> - Dropped sysfs crashdd module.
+> - Added CONFIG_PROC_VMCORE_DEVICE_DUMP to allow configuring device
+>   dump support.
+> - Moved logic related to adding dumps from crashdd to vmcore module.
+> - Rename all crashdd* to vmcoredd*.
+>
+> v2:
+> - Added ABI Documentation for crashdd.
+> - Directly use octal permission instead of macro.
+>
+> Changes since rfc v2:
+> - Moved exporting crashdd from procfs to sysfs.  Suggested by
+>   Stephen Hemminger <stephen@networkplumber.org>
+> - Moved code from fs/proc/crashdd.c to fs/crashdd/ directory.
+> - Replaced all proc API with sysfs API and updated comments.
+> - Calling driver callback before creating the binary file under
+>   crashdd sysfs.
+> - Changed binary dump file permission from S_IRUSR to S_IRUGO.
+> - Changed module name from CRASH_DRIVER_DUMP to CRASH_DEVICE_DUMP.
+>
+> rfc v2:
+> - Collecting logs in 2nd kernel instead of during kernel panic.
+>   Suggested by Eric Biederman <ebiederm@xmission.com>.
+> - Patch added in this series.
+>
+>  fs/proc/Kconfig             |  15 +++++
+>  fs/proc/vmcore.c            | 140 +++++++++++++++++++++++++++++++++++++++++---
+>  include/linux/crash_dump.h  |  18 ++++++
+>  include/linux/kcore.h       |   6 ++
+>  include/uapi/linux/elf.h    |   1 +
+>  include/uapi/linux/vmcore.h |  16 +++++
+>  6 files changed, 187 insertions(+), 9 deletions(-)
+>  create mode 100644 include/uapi/linux/vmcore.h
+>
+> diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
+> index 1ade1206bb89..0eaeb41453f5 100644
+> --- a/fs/proc/Kconfig
+> +++ b/fs/proc/Kconfig
+> @@ -43,6 +43,21 @@ config PROC_VMCORE
+>          help
+>          Exports the dump image of crashed kernel in ELF format.
+>  
+> +config PROC_VMCORE_DEVICE_DUMP
+> +	bool "Device Hardware/Firmware Log Collection"
+> +	depends on PROC_VMCORE
+> +	default n
+> +	help
+> +	  After kernel panic, device drivers can collect the device
+> +	  specific snapshot of their hardware or firmware before the
+> +	  underlying devices are initialized in crash recovery kernel.
+> +	  Note that the device driver must be present in the crash
+> +	  recovery kernel's initramfs to collect its underlying device
+> +	  snapshot.
+> +
+> +	  If you say Y here, the collected device dumps will be added
+> +	  as ELF notes to /proc/vmcore.
+> +
+>  config PROC_SYSCTL
+>  	bool "Sysctl support (/proc/sys)" if EXPERT
+>  	depends on PROC_FS
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index a45f0af22a60..60fce8dfe4e3 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/init.h>
+>  #include <linux/crash_dump.h>
+>  #include <linux/list.h>
+> +#include <linux/mutex.h>
+>  #include <linux/vmalloc.h>
+>  #include <linux/pagemap.h>
+>  #include <linux/uaccess.h>
+> @@ -44,6 +45,12 @@ static u64 vmcore_size;
+>  
+>  static struct proc_dir_entry *proc_vmcore;
+>  
+> +#ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
+> +/* Device Dump list and mutex to synchronize access to list */
+> +static LIST_HEAD(vmcoredd_list);
+> +static DEFINE_MUTEX(vmcoredd_mutex);
+> +#endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+> +
+>  /*
+>   * Returns > 0 for RAM pages, 0 for non-RAM pages, < 0 on error
+>   * The called function has to take care of module refcounting.
+> @@ -302,10 +309,8 @@ static const struct vm_operations_struct vmcore_mmap_ops = {
+>  };
+>  
+>  /**
+> - * alloc_elfnotes_buf - allocate buffer for ELF note segment in
+> - *                      vmalloc memory
+> - *
+> - * @notes_sz: size of buffer
+> + * vmcore_alloc_buf - allocate buffer in vmalloc memory
+> + * @sizez: size of buffer
+>   *
+>   * If CONFIG_MMU is defined, use vmalloc_user() to allow users to mmap
+>   * the buffer to user-space by means of remap_vmalloc_range().
+> @@ -313,12 +318,12 @@ static const struct vm_operations_struct vmcore_mmap_ops = {
+>   * If CONFIG_MMU is not defined, use vzalloc() since mmap_vmcore() is
+>   * disabled and there's no need to allow users to mmap the buffer.
+>   */
+> -static inline char *alloc_elfnotes_buf(size_t notes_sz)
+> +static inline char *vmcore_alloc_buf(size_t size)
+>  {
+>  #ifdef CONFIG_MMU
+> -	return vmalloc_user(notes_sz);
+> +	return vmalloc_user(size);
+>  #else
+> -	return vzalloc(notes_sz);
+> +	return vzalloc(size);
+>  #endif
+>  }
+>  
+> @@ -665,7 +670,7 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
+>  		return rc;
+>  
+>  	*notes_sz = roundup(phdr_sz, PAGE_SIZE);
+> -	*notes_buf = alloc_elfnotes_buf(*notes_sz);
+> +	*notes_buf = vmcore_alloc_buf(*notes_sz);
+>  	if (!*notes_buf)
+>  		return -ENOMEM;
+>  
+> @@ -851,7 +856,7 @@ static int __init merge_note_headers_elf32(char *elfptr, size_t *elfsz,
+>  		return rc;
+>  
+>  	*notes_sz = roundup(phdr_sz, PAGE_SIZE);
+> -	*notes_buf = alloc_elfnotes_buf(*notes_sz);
+> +	*notes_buf = vmcore_alloc_buf(*notes_sz);
+>  	if (!*notes_buf)
+>  		return -ENOMEM;
+>  
+> @@ -1145,6 +1150,120 @@ static int __init parse_crash_elf_headers(void)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
+> +/**
+> + * vmcoredd_write_header - Write vmcore device dump header at the
+> + * beginning of the dump's buffer.
+> + * @buf: Output buffer where the note is written
+> + * @data: Dump info
+> + * @size: Size of the dump
+> + *
+> + * Fills beginning of the dump's buffer with vmcore device dump header.
+> + */
+> +static void vmcoredd_write_header(void *buf, struct vmcoredd_data *data,
+> +				  u32 size)
+> +{
+> +	struct vmcoredd_header *vdd_hdr = (struct vmcoredd_header *)buf;
+> +
+> +	vdd_hdr->n_namesz = sizeof(vdd_hdr->name);
+> +	vdd_hdr->n_descsz = size + sizeof(vdd_hdr->dump_name);
+> +	vdd_hdr->n_type = NT_VMCOREDD;
+> +
+> +	strncpy((char *)vdd_hdr->name, VMCOREDD_NOTE_NAME,
+> +		sizeof(vdd_hdr->name));
+> +	memcpy(vdd_hdr->dump_name, data->dump_name, sizeof(vdd_hdr->dump_name));
+> +}
+> +
+> +/**
+> + * vmcore_add_device_dump - Add a buffer containing device dump to vmcore
+> + * @data: dump info.
+> + *
+> + * Allocate a buffer and invoke the calling driver's dump collect routine.
+> + * Write Elf note at the beginning of the buffer to indicate vmcore device
+> + * dump and add the dump to global list.
+> + */
+> +static int __vmcore_add_device_dump(struct vmcoredd_data *data)
+> +{
+> +	struct vmcoredd_node *dump;
+> +	void *buf = NULL;
+> +	size_t data_size;
+> +	int ret;
+> +
+> +	if (!data || !strlen(data->dump_name) ||
+> +	    !data->vmcoredd_callback || !data->size)
+> +		return -EINVAL;
+> +
+> +	dump = vzalloc(sizeof(*dump));
+> +	if (!dump) {
+> +		ret = -ENOMEM;
+> +		goto out_err;
+> +	}
+> +
+> +	/* Keep size of the buffer page aligned so that it can be mmaped */
+> +	data_size = roundup(sizeof(struct vmcoredd_header) + data->size,
+> +			    PAGE_SIZE);
+> +
+> +	/* Allocate buffer for driver's to write their dumps */
+> +	buf = vmcore_alloc_buf(data_size);
+> +	if (!buf) {
+> +		ret = -ENOMEM;
+> +		goto out_err;
+> +	}
+> +
+> +	vmcoredd_write_header(buf, data, data_size -
+> +			      sizeof(struct vmcoredd_header));
+> +
+> +	/* Invoke the driver's dump collection routing */
+> +	ret = data->vmcoredd_callback(data, buf +
+> +				      sizeof(struct vmcoredd_header));
+> +	if (ret)
+> +		goto out_err;
+> +
+> +	dump->buf = buf;
+> +	dump->size = data_size;
+> +
+> +	/* Add the dump to driver sysfs list */
+> +	mutex_lock(&vmcoredd_mutex);
+> +	list_add_tail(&dump->list, &vmcoredd_list);
+> +	mutex_unlock(&vmcoredd_mutex);
+> +
+> +	return 0;
+> +
+> +out_err:
+> +	if (buf)
+> +		vfree(buf);
+> +
+> +	if (dump)
+> +		vfree(dump);
+> +
+> +	return ret;
+> +}
+> +
+> +int vmcore_add_device_dump(struct vmcoredd_data *data)
+> +{
+> +	return __vmcore_add_device_dump(data);
+> +}
+> +EXPORT_SYMBOL(vmcore_add_device_dump);
+> +#endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+> +
+> +/* Free all dumps in vmcore device dump list */
+> +static void vmcore_free_device_dumps(void)
+> +{
+> +#ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
+> +	mutex_lock(&vmcoredd_mutex);
+> +	while (!list_empty(&vmcoredd_list)) {
+> +		struct vmcoredd_node *dump;
+> +
+> +		dump = list_first_entry(&vmcoredd_list, struct vmcoredd_node,
+> +					list);
+> +		list_del(&dump->list);
+> +		vfree(dump->buf);
+> +		vfree(dump);
+> +	}
+> +	mutex_unlock(&vmcoredd_mutex);
+> +#endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+> +}
+> +
+>  /* Init function for vmcore module. */
+>  static int __init vmcore_init(void)
+>  {
+> @@ -1192,4 +1311,7 @@ void vmcore_cleanup(void)
+>  		kfree(m);
+>  	}
+>  	free_elfcorebuf();
+> +
+> +	/* clear vmcore device dump list */
+> +	vmcore_free_device_dumps();
+>  }
+> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+> index f7ac2aa93269..3e4ba9d753c8 100644
+> --- a/include/linux/crash_dump.h
+> +++ b/include/linux/crash_dump.h
+> @@ -5,6 +5,7 @@
+>  #include <linux/kexec.h>
+>  #include <linux/proc_fs.h>
+>  #include <linux/elf.h>
+> +#include <uapi/linux/vmcore.h>
+>  
+>  #include <asm/pgtable.h> /* for pgprot_t */
+>  
+> @@ -93,4 +94,21 @@ static inline bool is_kdump_kernel(void) { return 0; }
+>  #endif /* CONFIG_CRASH_DUMP */
+>  
+>  extern unsigned long saved_max_pfn;
+> +
+> +/* Device Dump information to be filled by drivers */
+> +struct vmcoredd_data {
+> +	char dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Unique name of the dump */
+> +	unsigned int size;                       /* Size of the dump */
+> +	/* Driver's registered callback to be invoked to collect dump */
+> +	int (*vmcoredd_callback)(struct vmcoredd_data *data, void *buf);
+> +};
+> +
+> +#ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
+> +int vmcore_add_device_dump(struct vmcoredd_data *data);
+> +#else
+> +static inline int vmcore_add_device_dump(struct vmcoredd_data *data)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +#endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+>  #endif /* LINUX_CRASHDUMP_H */
+> diff --git a/include/linux/kcore.h b/include/linux/kcore.h
+> index 80db19d3a505..8de55e4b5ee9 100644
+> --- a/include/linux/kcore.h
+> +++ b/include/linux/kcore.h
+> @@ -28,6 +28,12 @@ struct vmcore {
+>  	loff_t offset;
+>  };
+>  
+> +struct vmcoredd_node {
+> +	struct list_head list;	/* List of dumps */
+> +	void *buf;		/* Buffer containing device's dump */
+> +	unsigned int size;	/* Size of the buffer */
+> +};
+> +
+>  #ifdef CONFIG_PROC_KCORE
+>  extern void kclist_add(struct kcore_list *, void *, size_t, int type);
+>  #else
+> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+> index e2535d6dcec7..4e12c423b9fe 100644
+> --- a/include/uapi/linux/elf.h
+> +++ b/include/uapi/linux/elf.h
+> @@ -421,6 +421,7 @@ typedef struct elf64_shdr {
+>  #define NT_ARM_SYSTEM_CALL	0x404	/* ARM system call number */
+>  #define NT_ARM_SVE	0x405		/* ARM Scalable Vector Extension registers */
+>  #define NT_ARC_V2	0x600		/* ARCv2 accumulator/extra registers */
+> +#define NT_VMCOREDD	0x700		/* Vmcore Device Dump Note */
+>  
+>  /* Note header in a PT_NOTE section */
+>  typedef struct elf32_note {
+> diff --git a/include/uapi/linux/vmcore.h b/include/uapi/linux/vmcore.h
+> new file mode 100644
+> index 000000000000..f9eab9a37370
+> --- /dev/null
+> +++ b/include/uapi/linux/vmcore.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _UAPI_VMCORE_H
+> +#define _UAPI_VMCORE_H
+> +
+> +#define VMCOREDD_NOTE_NAME "LINUX"
+> +#define VMCOREDD_MAX_NAME_BYTES 44
+> +
+> +struct vmcoredd_header {
+> +	__u32 n_namesz; /* Name size */
+> +	__u32 n_descsz; /* Content size */
+> +	__u32 n_type;   /* NT_VMCOREDD */
+> +	__u8 name[8];   /* LINUX\0\0\0 */
+> +	__u8 dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Device dump's name */
+> +};
+> +
+> +#endif /* _UAPI_VMCORE_H */
 
 _______________________________________________
 kexec mailing list
