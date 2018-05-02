@@ -1,30 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fDrtX-0005mP-8x
- for kexec@lists.infradead.org; Wed, 02 May 2018 13:34:13 +0000
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w42DU5lb012779
- for <kexec@lists.infradead.org>; Wed, 2 May 2018 09:33:54 -0400
-Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2hqbap03e9-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 02 May 2018 09:33:54 -0400
-Received: from localhost
- by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Wed, 2 May 2018 14:33:52 +0100
-Subject: Re: [PATCH 2/3] kexec: call LSM hook for kexec_load syscall
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Wed, 02 May 2018 09:33:48 -0400
-In-Reply-To: <1523572911-16363-3-git-send-email-zohar@linux.vnet.ibm.com>
+ id 1fDt4c-0008F5-Vi
+ for kexec@lists.infradead.org; Wed, 02 May 2018 14:49:40 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1523572911-16363-1-git-send-email-zohar@linux.vnet.ibm.com>
  <1523572911-16363-3-git-send-email-zohar@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Message-Id: <1525268028.5669.276.camel@linux.vnet.ibm.com>
+Date: Wed, 02 May 2018 09:45:30 -0500
+In-Reply-To: <1523572911-16363-3-git-send-email-zohar@linux.vnet.ibm.com>
+ (Mimi Zohar's message of "Thu, 12 Apr 2018 18:41:50 -0400")
+Message-ID: <87h8nqglpx.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 2/3] kexec: call LSM hook for kexec_load syscall
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,28 +24,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Biederman <ebiederm@xmission.com>
-Cc: linux-integrity <linux-integrity@vger.kernel.org>, kexec@lists.infradead.org
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org
 
-Hi Eric,
+Mimi Zohar <zohar@linux.vnet.ibm.com> writes:
 
-I'd really appreciate your reviewing/ack'ing this patch.
-
-thanks,
-
-Mimi
-
-On Thu, 2018-04-12 at 18:41 -0400, Mimi Zohar wrote:
 > Allow LSMs and IMA to differentiate between the kexec_load and
 > kexec_file_load syscalls by adding an "unnecessary" call to
 > security_kernel_read_file() in kexec_load.  This would be similar to the
 > existing init_module syscall calling security_kernel_read_file().
-> 
+
+Given the reasonable desire to load a policy that ensures everything
+has a signature I don't have fundamental objections.
+
+security_kernel_read_file as a hook seems an odd choice.  At the very
+least it has a bad name because there is no file reading going on here.
+
+I am concerned that I don't see CONFIG_KEXEC_VERIFY_SIG being tested
+anywhere.  Which means I could have a kernel compiled without that and I
+would be allowed to use kexec_file_load without signature checking.
+While kexec_load would be denied.
+
+Am I missing something here?
+
+Eric
+
+
+
 > Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 > ---
 >  kernel/kexec.c | 11 +++++++++++
 >  1 file changed, 11 insertions(+)
-> 
+>
 > diff --git a/kernel/kexec.c b/kernel/kexec.c
 > index aed8fb2564b3..d1386cfc6796 100644
 > --- a/kernel/kexec.c
@@ -80,7 +77,7 @@ On Thu, 2018-04-12 at 18:41 -0400, Mimi Zohar wrote:
 >  	/* We only trust the superuser with rebooting the system. */
 >  	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
 >  		return -EPERM;
-> 
+>  
 >  	/*
 > +	 * Allow LSMs and IMA to differentiate between kexec_load and
 > +	 * kexec_file_load syscalls.
@@ -93,7 +90,6 @@ On Thu, 2018-04-12 at 18:41 -0400, Mimi Zohar wrote:
 >  	 * Verify we have a legal set of flags
 >  	 * This leaves us room for future extensions.
 >  	 */
-
 
 _______________________________________________
 kexec mailing list
