@@ -1,17 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fDt4c-0008F5-Vi
- for kexec@lists.infradead.org; Wed, 02 May 2018 14:49:40 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
+ id 1fDtwc-0001Vd-IC
+ for kexec@lists.infradead.org; Wed, 02 May 2018 15:45:34 +0000
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w42Fit0x098057
+ for <kexec@lists.infradead.org>; Wed, 2 May 2018 11:45:14 -0400
+Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2hqe4u6utc-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 02 May 2018 11:45:13 -0400
+Received: from localhost
+ by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Wed, 2 May 2018 16:45:11 +0100
+Subject: Re: [PATCH 2/3] kexec: call LSM hook for kexec_load syscall
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Wed, 02 May 2018 11:45:04 -0400
+In-Reply-To: <87h8nqglpx.fsf@xmission.com>
 References: <1523572911-16363-1-git-send-email-zohar@linux.vnet.ibm.com>
  <1523572911-16363-3-git-send-email-zohar@linux.vnet.ibm.com>
-Date: Wed, 02 May 2018 09:45:30 -0500
-In-Reply-To: <1523572911-16363-3-git-send-email-zohar@linux.vnet.ibm.com>
- (Mimi Zohar's message of "Thu, 12 Apr 2018 18:41:50 -0400")
-Message-ID: <87h8nqglpx.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 2/3] kexec: call LSM hook for kexec_load syscall
+ <87h8nqglpx.fsf@xmission.com>
+Mime-Version: 1.0
+Message-Id: <1525275904.5669.308.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,78 +34,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org
 
-Mimi Zohar <zohar@linux.vnet.ibm.com> writes:
-
-> Allow LSMs and IMA to differentiate between the kexec_load and
-> kexec_file_load syscalls by adding an "unnecessary" call to
-> security_kernel_read_file() in kexec_load.  This would be similar to the
-> existing init_module syscall calling security_kernel_read_file().
-
-Given the reasonable desire to load a policy that ensures everything
-has a signature I don't have fundamental objections.
-
-security_kernel_read_file as a hook seems an odd choice.  At the very
-least it has a bad name because there is no file reading going on here.
-
-I am concerned that I don't see CONFIG_KEXEC_VERIFY_SIG being tested
-anywhere.  Which means I could have a kernel compiled without that and I
-would be allowed to use kexec_file_load without signature checking.
-While kexec_load would be denied.
-
-Am I missing something here?
-
-Eric
-
-
-
-> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-> ---
->  kernel/kexec.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index aed8fb2564b3..d1386cfc6796 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -11,6 +11,7 @@
->  #include <linux/capability.h>
->  #include <linux/mm.h>
->  #include <linux/file.h>
-> +#include <linux/security.h>
->  #include <linux/kexec.h>
->  #include <linux/mutex.h>
->  #include <linux/list.h>
-> @@ -195,11 +196,21 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
->  static inline int kexec_load_check(unsigned long nr_segments,
->  				   unsigned long flags)
->  {
-> +	int result;
-> +
->  	/* We only trust the superuser with rebooting the system. */
->  	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
->  		return -EPERM;
->  
->  	/*
-> +	 * Allow LSMs and IMA to differentiate between kexec_load and
-> +	 * kexec_file_load syscalls.
-> +	 */
-> +	result = security_kernel_read_file(NULL, READING_KEXEC_IMAGE);
-> +	if (result < 0)
-> +		return result;
-> +
-> +	/*
->  	 * Verify we have a legal set of flags
->  	 * This leaves us room for future extensions.
->  	 */
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCAyMDE4LTA1LTAyIGF0IDA5OjQ1IC0wNTAwLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90
+ZToKPiBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC52bmV0LmlibS5jb20+IHdyaXRlczoKPiAKPiA+
+IEFsbG93IExTTXMgYW5kIElNQSB0byBkaWZmZXJlbnRpYXRlIGJldHdlZW4gdGhlIGtleGVjX2xv
+YWQgYW5kCj4gPiBrZXhlY19maWxlX2xvYWQgc3lzY2FsbHMgYnkgYWRkaW5nIGFuICJ1bm5lY2Vz
+c2FyeSIgY2FsbCB0bwo+ID4gc2VjdXJpdHlfa2VybmVsX3JlYWRfZmlsZSgpIGluIGtleGVjX2xv
+YWQuICBUaGlzIHdvdWxkIGJlIHNpbWlsYXIgdG8gdGhlCj4gPiBleGlzdGluZyBpbml0X21vZHVs
+ZSBzeXNjYWxsIGNhbGxpbmcgc2VjdXJpdHlfa2VybmVsX3JlYWRfZmlsZSgpLgo+IAo+IEdpdmVu
+IHRoZSByZWFzb25hYmxlIGRlc2lyZSB0byBsb2FkIGEgcG9saWN5IHRoYXQgZW5zdXJlcyBldmVy
+eXRoaW5nCj4gaGFzIGEgc2lnbmF0dXJlIEkgZG9uJ3QgaGF2ZSBmdW5kYW1lbnRhbCBvYmplY3Rp
+b25zLgo+IAo+IHNlY3VyaXR5X2tlcm5lbF9yZWFkX2ZpbGUgYXMgYSBob29rIHNlZW1zIGFuIG9k
+ZCBjaG9pY2UuICBBdCB0aGUgdmVyeQo+IGxlYXN0IGl0IGhhcyBhIGJhZCBuYW1lIGJlY2F1c2Ug
+dGhlcmUgaXMgbm8gZmlsZSByZWFkaW5nIGdvaW5nIG9uIGhlcmUuCj4gCj4gSSBhbSBjb25jZXJu
+ZWQgdGhhdCBJIGRvbid0IHNlZSBDT05GSUdfS0VYRUNfVkVSSUZZX1NJRyBiZWluZyB0ZXN0ZWQK
+PiBhbnl3aGVyZS4gIFdoaWNoIG1lYW5zIEkgY291bGQgaGF2ZSBhIGtlcm5lbCBjb21waWxlZCB3
+aXRob3V0IHRoYXQgYW5kIEkKPiB3b3VsZCBiZSBhbGxvd2VkIHRvIHVzZSBrZXhlY19maWxlX2xv
+YWQgd2l0aG91dCBzaWduYXR1cmUgY2hlY2tpbmcuCj4gV2hpbGUga2V4ZWNfbG9hZCB3b3VsZCBi
+ZSBkZW5pZWQuCj4gCj4gQW0gSSBtaXNzaW5nIHNvbWV0aGluZyBoZXJlPwoKVGhlIGtleGVjX2Zp
+bGVfbG9hZCgpIGNhbGxzIGtlcm5lbF9yZWFkX2ZpbGVfZnJvbV9mZCgpLCB3aGljaCBpbiB0dXJu
+CmNhbGxzIHNlY3VyaXR5X2tlcm5lbF9yZWFkX2ZpbGUoKS4gwqBTbyBrZXhlY19maWxlX2xvYWQg
+YW5kIGtleGVjX2xvYWQKc3lzY2FsbCB3b3VsZCBiZSB1c2luZyB0aGUgc2FtZSBtZXRob2QgZm9y
+IGVuZm9yY2luZyBzaWduYXR1cmUKdmVyaWZpY2F0aW9uLgoKVGhpcyBpcyBpbmRlcGVuZGVudCBv
+ZiB0aGUgYXJjaGl0ZWN0dXJlIHNwZWNpZmljIG1ldGhvZCBmb3IgdmVyaWZ5aW5nCnNpZ25hdHVy
+ZXMuIMKgVGhlIGNvb3JkaW5hdGlvbiBiZXR3ZWVuIHRoZXNlIHR3byBtZXRob2RzIHdhcyBpbmNs
+dWRlZAppbiB0aGUgbG9ja2Rvd24gcGF0Y2ggc2V0LCBidXQgaXMgYmVpbmcgcmVtb3ZlZCwgYXMg
+d2VsbCB0aGUgZ2F0aW5nIG9mCmtleGVjX2xvYWQgc3lzY2FsbC4gwqBJbnN0ZWFkIG9mIGJlaW5n
+IGJhc2VkIG9uIHRoZSBsb2NrZG93biBmbGFnLCBJCmFzc3VtZSB0aGUgY29vcmRpbmF0aW9uIGJl
+dHdlZW4gdGhlIHR3byBtZXRob2RzIHdpbGwgcmVhcHBlYXIgYmFzZWQgb24KYSBzZWN1cmUgYm9v
+dCBmbGFnIG9mIHNvbWUgc29ydC4KCk1pbWkKCj4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaW1pIFpv
+aGFyIDx6b2hhckBsaW51eC52bmV0LmlibS5jb20+Cj4gPiAtLS0KPiA+ICBrZXJuZWwva2V4ZWMu
+YyB8IDExICsrKysrKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKykK
+PiA+Cj4gPiBkaWZmIC0tZ2l0IGEva2VybmVsL2tleGVjLmMgYi9rZXJuZWwva2V4ZWMuYwo+ID4g
+aW5kZXggYWVkOGZiMjU2NGIzLi5kMTM4NmNmYzY3OTYgMTAwNjQ0Cj4gPiAtLS0gYS9rZXJuZWwv
+a2V4ZWMuYwo+ID4gKysrIGIva2VybmVsL2tleGVjLmMKPiA+IEBAIC0xMSw2ICsxMSw3IEBACj4g
+PiAgI2luY2x1ZGUgPGxpbnV4L2NhcGFiaWxpdHkuaD4KPiA+ICAjaW5jbHVkZSA8bGludXgvbW0u
+aD4KPiA+ICAjaW5jbHVkZSA8bGludXgvZmlsZS5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9zZWN1
+cml0eS5oPgo+ID4gICNpbmNsdWRlIDxsaW51eC9rZXhlYy5oPgo+ID4gICNpbmNsdWRlIDxsaW51
+eC9tdXRleC5oPgo+ID4gICNpbmNsdWRlIDxsaW51eC9saXN0Lmg+Cj4gPiBAQCAtMTk1LDExICsx
+OTYsMjEgQEAgc3RhdGljIGludCBkb19rZXhlY19sb2FkKHVuc2lnbmVkIGxvbmcgZW50cnksIHVu
+c2lnbmVkIGxvbmcgbnJfc2VnbWVudHMsCj4gPiAgc3RhdGljIGlubGluZSBpbnQga2V4ZWNfbG9h
+ZF9jaGVjayh1bnNpZ25lZCBsb25nIG5yX3NlZ21lbnRzLAo+ID4gIAkJCQkgICB1bnNpZ25lZCBs
+b25nIGZsYWdzKQo+ID4gIHsKPiA+ICsJaW50IHJlc3VsdDsKPiA+ICsKPiA+ICAJLyogV2Ugb25s
+eSB0cnVzdCB0aGUgc3VwZXJ1c2VyIHdpdGggcmVib290aW5nIHRoZSBzeXN0ZW0uICovCj4gPiAg
+CWlmICghY2FwYWJsZShDQVBfU1lTX0JPT1QpIHx8IGtleGVjX2xvYWRfZGlzYWJsZWQpCj4gPiAg
+CQlyZXR1cm4gLUVQRVJNOwo+ID4gIAo+ID4gIAkvKgo+ID4gKwkgKiBBbGxvdyBMU01zIGFuZCBJ
+TUEgdG8gZGlmZmVyZW50aWF0ZSBiZXR3ZWVuIGtleGVjX2xvYWQgYW5kCj4gPiArCSAqIGtleGVj
+X2ZpbGVfbG9hZCBzeXNjYWxscy4KPiA+ICsJICovCj4gPiArCXJlc3VsdCA9IHNlY3VyaXR5X2tl
+cm5lbF9yZWFkX2ZpbGUoTlVMTCwgUkVBRElOR19LRVhFQ19JTUFHRSk7Cj4gPiArCWlmIChyZXN1
+bHQgPCAwKQo+ID4gKwkJcmV0dXJuIHJlc3VsdDsKPiA+ICsKPiA+ICsJLyoKPiA+ICAJICogVmVy
+aWZ5IHdlIGhhdmUgYSBsZWdhbCBzZXQgb2YgZmxhZ3MKPiA+ICAJICogVGhpcyBsZWF2ZXMgdXMg
+cm9vbSBmb3IgZnV0dXJlIGV4dGVuc2lvbnMuCj4gPiAgCSAqLwo+IAoKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
+Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8va2V4ZWMK
