@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fEHJN-0002tw-Rb
- for kexec@lists.infradead.org; Thu, 03 May 2018 16:42:31 +0000
+ id 1fEKbi-0003qP-IL
+ for kexec@lists.infradead.org; Thu, 03 May 2018 20:13:40 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1523572911-16363-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1523572911-16363-3-git-send-email-zohar@linux.vnet.ibm.com>
- <87h8nqglpx.fsf@xmission.com>
- <1525275904.5669.308.camel@linux.vnet.ibm.com>
- <87h8nospo5.fsf@xmission.com>
- <6203b1e4-70c3-6d0e-60e0-56c6e8f72ec9@schaufler-ca.com>
-Date: Thu, 03 May 2018 11:42:09 -0500
-In-Reply-To: <6203b1e4-70c3-6d0e-60e0-56c6e8f72ec9@schaufler-ca.com> (Casey
- Schaufler's message of "Thu, 3 May 2018 09:05:22 -0700")
-Message-ID: <87y3h0pu72.fsf@xmission.com>
+Date: Thu, 03 May 2018 15:13:18 -0500
+In-Reply-To: <1523572911-16363-1-git-send-email-zohar@linux.vnet.ibm.com>
+ (Mimi Zohar's message of "Thu, 12 Apr 2018 18:41:48 -0400")
+Message-ID: <87r2mso5up.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/3] kexec: call LSM hook for kexec_load syscall
+Subject: Re: [PATCH 0/3] kexec: limit kexec_load syscall
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,63 +19,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Casey Schaufler <casey@schaufler-ca.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.vnet.ibm.com>
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org
 
-Q2FzZXkgU2NoYXVmbGVyIDxjYXNleUBzY2hhdWZsZXItY2EuY29tPiB3cml0ZXM6Cgo+IE9uIDUv
-My8yMDE4IDg6NTEgQU0sIEVyaWMgVy4gQmllZGVybWFuIHdyb3RlOgo+PiBNaW1pIFpvaGFyIDx6
-b2hhckBsaW51eC52bmV0LmlibS5jb20+IHdyaXRlczoKPj4KPj4+IE9uIFdlZCwgMjAxOC0wNS0w
-MiBhdCAwOTo0NSAtMDUwMCwgRXJpYyBXLiBCaWVkZXJtYW4gd3JvdGU6Cj4+Pj4gTWltaSBab2hh
-ciA8em9oYXJAbGludXgudm5ldC5pYm0uY29tPiB3cml0ZXM6Cj4+Pj4KPj4+Pj4gQWxsb3cgTFNN
-cyBhbmQgSU1BIHRvIGRpZmZlcmVudGlhdGUgYmV0d2VlbiB0aGUga2V4ZWNfbG9hZCBhbmQKPj4+
-Pj4ga2V4ZWNfZmlsZV9sb2FkIHN5c2NhbGxzIGJ5IGFkZGluZyBhbiAidW5uZWNlc3NhcnkiIGNh
-bGwgdG8KPj4+Pj4gc2VjdXJpdHlfa2VybmVsX3JlYWRfZmlsZSgpIGluIGtleGVjX2xvYWQuICBU
-aGlzIHdvdWxkIGJlIHNpbWlsYXIgdG8gdGhlCj4+Pj4+IGV4aXN0aW5nIGluaXRfbW9kdWxlIHN5
-c2NhbGwgY2FsbGluZyBzZWN1cml0eV9rZXJuZWxfcmVhZF9maWxlKCkuCj4+Pj4gR2l2ZW4gdGhl
-IHJlYXNvbmFibGUgZGVzaXJlIHRvIGxvYWQgYSBwb2xpY3kgdGhhdCBlbnN1cmVzIGV2ZXJ5dGhp
-bmcKPj4+PiBoYXMgYSBzaWduYXR1cmUgSSBkb24ndCBoYXZlIGZ1bmRhbWVudGFsIG9iamVjdGlv
-bnMuCj4+Pj4KPj4+PiBzZWN1cml0eV9rZXJuZWxfcmVhZF9maWxlIGFzIGEgaG9vayBzZWVtcyBh
-biBvZGQgY2hvaWNlLiAgQXQgdGhlIHZlcnkKPj4+PiBsZWFzdCBpdCBoYXMgYSBiYWQgbmFtZSBi
-ZWNhdXNlIHRoZXJlIGlzIG5vIGZpbGUgcmVhZGluZyBnb2luZyBvbiBoZXJlLgo+Pj4+Cj4+Pj4g
-SSBhbSBjb25jZXJuZWQgdGhhdCBJIGRvbid0IHNlZSBDT05GSUdfS0VYRUNfVkVSSUZZX1NJRyBi
-ZWluZyB0ZXN0ZWQKPj4+PiBhbnl3aGVyZS4gIFdoaWNoIG1lYW5zIEkgY291bGQgaGF2ZSBhIGtl
-cm5lbCBjb21waWxlZCB3aXRob3V0IHRoYXQgYW5kIEkKPj4+PiB3b3VsZCBiZSBhbGxvd2VkIHRv
-IHVzZSBrZXhlY19maWxlX2xvYWQgd2l0aG91dCBzaWduYXR1cmUgY2hlY2tpbmcuCj4+Pj4gV2hp
-bGUga2V4ZWNfbG9hZCB3b3VsZCBiZSBkZW5pZWQuCj4+Pj4KPj4+PiBBbSBJIG1pc3Npbmcgc29t
-ZXRoaW5nIGhlcmU/Cj4+PiBUaGUga2V4ZWNfZmlsZV9sb2FkKCkgY2FsbHMga2VybmVsX3JlYWRf
-ZmlsZV9mcm9tX2ZkKCksIHdoaWNoIGluIHR1cm4KPj4+IGNhbGxzIHNlY3VyaXR5X2tlcm5lbF9y
-ZWFkX2ZpbGUoKS4gwqBTbyBrZXhlY19maWxlX2xvYWQgYW5kIGtleGVjX2xvYWQKPj4+IHN5c2Nh
-bGwgd291bGQgYmUgdXNpbmcgdGhlIHNhbWUgbWV0aG9kIGZvciBlbmZvcmNpbmcgc2lnbmF0dXJl
-Cj4+PiB2ZXJpZmljYXRpb24uCj4+IEhhdmluZyBsb29rZWQgYXQgeW91ciBwYXRjaGVzIGFuZCB0
-aGUga2VybmVsIGEgbGl0dGxlIG1vcmUgSSB0aGluawo+PiB0aGlzIHNob3VsZCBiZSBhIHNlcGFy
-YXRlIHNlY3VyaXR5IGhvb2sgdGhhdCBkb2VzIG5vdCB0YWtlIGEgZmlsZQo+PiBwYXJhbWV0ZXIu
-Cj4+Cj4+IFJpZ2h0IG5vdyBldmVyeSBvdGhlciBzZWN1cml0eSBtb2R1bGUgYXNzdW1lcyAhZmls
-ZSBpcyBpbml0X21vZHVsZS4KPj4gU28gSSB0aGluayB0aGlzIGNoYW5nZSBoYXMgdGhlIHBvdGVu
-dGlhbCB0byBjb25mdXNlIG90aGVyIHNlY3VyaXR5Cj4+IG1vZHVsZXMsIHdpdGggdGhlIHJlc3Vs
-dCBvZiB1bmludGVuZGVkIHBvbGljeSBiZWluZyBhcHBsaWVkLgo+Pgo+PiBTbyBqdXN0IGZvciBn
-b29kIHNlY3VyaXR5IG1vZHVsZSBoeWdlaW5lIEkgdGhpbmsgdGhpcyBuZWVkcyBhIGRlZGljYXRl
-ZAo+PiBrZXhlY19sb2FkIHNlY3VyaXR5IGhvb2suCj4KPiBJIHdvdWxkIHJhdGhlciBzZWUgdGhl
-IGV4aXN0aW5nIG1vZHVsZXMgdXBkYXRlZCB0aGFuIGEgbmV3Cj4gaG9vayBhZGRlZC4gVG9vIG1h
-bnkgaG9va3Mgc3BvaWwgdGhlIGJyb3RoLiBUd28gaG9va3Mgd2l0aAo+IHRyaXZpYWwgZGlmZmVy
-ZW5jZXMganVzdCBhZGQgdG8gdGhlIGNsdXR0ZXIgYW5kIG1ha2UgaXQgaGFyZGVyCj4gZm9yIG5v
-bi1sc20gZGV2ZWxvcGVycyB0byBmaWd1cmUgb3V0IHdoYXQgdG8gdXNlIGluIHRoZWlyCj4gY29k
-ZS4KClRoZXNlIGFyZSBub3Qgbm9uLXRyaXZpYWwgZGlmZmVyZW5jZXMuICBUaGVyZSBpcyBhYnNv
-bHV0ZWx5IG5vdGhpbmcKZmlsZSByZWxhdGVkIGFib3V0IGtleGVjX2xvYWQuICBOb3IgZm9yIGlu
-aXRfbW9kdWxlIGZvciB0aGF0IG1hdHRlci4KCklmIHNvbWV0aGluZyBpcyBjYWxsZWQgc2VjdXJp
-dHlfa2VybmVsX3JlYWRfZmlsZSBJIHRoaW5rIGl0IGlzIHdob2xseQphcHByb3ByaWF0ZSBmb3Ig
-Y29kZSB0aGF0IHByb2Nlc3NlcyBzdWNoIGEgaG9vayB0byBhc3N1bWUgZmlsZSBpcwpub24tTlVM
-TC4KCldoZW4geW91IGhhdmUgdG8gZGFuY2UgYSBqaWcgKHdoaWNoIGlzIHdoYXQgSSBzZWUgdGhl
-IHNlY3VyaXR5IG1vZHVsZXMKZG9pbmcpIHRvIGZpZ3VyZSBvdXQgd2hvIGlzIGNhbGxpbmcgYSBs
-c20gaG9vayBmb3Igd2hhdCBwdXJwb3NlIEkgdGhpbmsKaXQgaXMgYSBtYWludGVuYW5jZSBwcm9i
-bGVtIHdhaXRpbmcgdG8gaGFwcGVuIGFuZCB0aGF0IHRoZSBob29rIGlzIGJhZGx5CmRlc2lnbmVk
-LgoKQXQgdGhpcyBwb2ludCBJIGRvbid0IGNhcmUgd2hhdCB0aGUgbHNtJ3MgZG8gd2l0aCB0aGUg
-aG9va3MgYnV0IHRoZQpob29rcyBuZWVkIHRvIG1ha2Ugc2Vuc2UgZm9yIHBlb3BsZSBvdXRzaWRl
-IG9mIHRoZSBsc20ncyBhbmQgc29tZXRoaW5nCmFib3V0IHJlYWRpbmcgYSBmaWxlIGluIGEgc3lz
-Y2FsbCB0aGF0IGRvZXNuJ3QgcmVhZCBmaWxlcyBpcyBjb21wbGV0ZQphbmQgdXR0ZXIgbm9uc2Vu
-c2UuCgpFcmljCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Mimi Zohar <zohar@linux.vnet.ibm.com> writes:
+
+> In environments that require the kexec kernel image to be signed, prevent
+> using the kexec_load syscall.  In order for LSMs and IMA to differentiate
+> between kexec_load and kexec_file_load syscalls, this patch set adds a
+> call to security_kernel_read_file() in kexec_load_check().
+
+Having thought about it some more this justification for these changes
+does not work.  The functionality of kexec_load is already root-only.
+So in environments that require the kernel image to be signed just don't
+use kexec_load.  Possibly even compile kexec_load out to save space
+because you will never need it.  You don't need a new security hook to
+do any of that.  Userspace is a very fine mechanism for being the
+instrument of policy.
+
+If you don't trust userspace that needs to be spelled out very clearly.
+You need to talk about what your threat models are.
+
+If the only justification is so that that we can't boot windows if
+someone hacks into userspace it has my nack because that is another kind
+of complete non-sense.
+
+Given that you are not trusting userspace this changeset also probably
+needs to have the kernel-hardening list cc'd.  Because the only possible
+justification I can imagine for something like this is kernel-hardening.
+
+Eric
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
