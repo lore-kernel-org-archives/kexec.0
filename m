@@ -1,31 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from out01.mta.xmission.com ([166.70.13.231])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fEMEx-00016c-Nw
- for kexec@lists.infradead.org; Thu, 03 May 2018 21:58:17 +0000
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w43LsWp7035491
- for <kexec@lists.infradead.org>; Thu, 3 May 2018 17:58:04 -0400
-Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2hr81hehh9-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 03 May 2018 17:58:03 -0400
-Received: from localhost
- by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Thu, 3 May 2018 22:58:01 +0100
-Subject: Re: [PATCH 0/3] kexec: limit kexec_load syscall
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Thu, 03 May 2018 17:57:55 -0400
-In-Reply-To: <87d0yco1vy.fsf@xmission.com>
+ id 1fEMFv-0001JO-Aj
+ for kexec@lists.infradead.org; Thu, 03 May 2018 21:59:16 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1523572911-16363-1-git-send-email-zohar@linux.vnet.ibm.com>
- <87r2mso5up.fsf@xmission.com>	<1525383075.3539.67.camel@linux.vnet.ibm.com>
- <87d0yco1vy.fsf@xmission.com>
-Mime-Version: 1.0
-Message-Id: <1525384675.3539.89.camel@linux.vnet.ibm.com>
+ <87r2mso5up.fsf@xmission.com>
+ <CACdnJuukT4SYLcDwi7+ObqbCDS4ZEAMpgz57OL3_eSevW0QuVg@mail.gmail.com>
+Date: Thu, 03 May 2018 16:58:56 -0500
+In-Reply-To: <CACdnJuukT4SYLcDwi7+ObqbCDS4ZEAMpgz57OL3_eSevW0QuVg@mail.gmail.com>
+ (Matthew Garrett's message of "Thu, 03 May 2018 20:39:48 +0000")
+Message-ID: <876044l7tr.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/3] kexec: limit kexec_load syscall
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,67 +21,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>, kernel-hardening@lists.openwall.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org
+To: Matthew Garrett <mjg59@google.com>
+Cc: kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, LSM List <linux-security-module@vger.kernel.org>, linux-integrity <linux-integrity@vger.kernel.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-T24gVGh1LCAyMDE4LTA1LTAzIGF0IDE2OjM4IC0wNTAwLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90
-ZToKPiBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC52bmV0LmlibS5jb20+IHdyaXRlczoKPiAKPiA+
-IFtDYydpbmcgS2VlcyBhbmQga2VybmVsLWhhcmRlbmluZ10KPiA+Cj4gPiBPbiBUaHUsIDIwMTgt
-MDUtMDMgYXQgMTU6MTMgLTA1MDAsIEVyaWMgVy4gQmllZGVybWFuIHdyb3RlOgo+ID4+IE1pbWkg
-Wm9oYXIgPHpvaGFyQGxpbnV4LnZuZXQuaWJtLmNvbT4gd3JpdGVzOgo+ID4+IAo+ID4+ID4gSW4g
-ZW52aXJvbm1lbnRzIHRoYXQgcmVxdWlyZSB0aGUga2V4ZWMga2VybmVsIGltYWdlIHRvIGJlIHNp
-Z25lZCwgcHJldmVudAo+ID4+ID4gdXNpbmcgdGhlIGtleGVjX2xvYWQgc3lzY2FsbC4gIEluIG9y
-ZGVyIGZvciBMU01zIGFuZCBJTUEgdG8gZGlmZmVyZW50aWF0ZQo+ID4+ID4gYmV0d2VlbiBrZXhl
-Y19sb2FkIGFuZCBrZXhlY19maWxlX2xvYWQgc3lzY2FsbHMsIHRoaXMgcGF0Y2ggc2V0IGFkZHMg
-YQo+ID4+ID4gY2FsbCB0byBzZWN1cml0eV9rZXJuZWxfcmVhZF9maWxlKCkgaW4ga2V4ZWNfbG9h
-ZF9jaGVjaygpLgo+ID4+IAo+ID4+IEhhdmluZyB0aG91Z2h0IGFib3V0IGl0IHNvbWUgbW9yZSB0
-aGlzIGp1c3RpZmljYXRpb24gZm9yIHRoZXNlIGNoYW5nZXMKPiA+PiBkb2VzIG5vdCB3b3JrLiAg
-VGhlIGZ1bmN0aW9uYWxpdHkgb2Yga2V4ZWNfbG9hZCBpcyBhbHJlYWR5IHJvb3Qtb25seS4KPiA+
-PiBTbyBpbiBlbnZpcm9ubWVudHMgdGhhdCByZXF1aXJlIHRoZSBrZXJuZWwgaW1hZ2UgdG8gYmUg
-c2lnbmVkIGp1c3QgZG9uJ3QKPiA+PiB1c2Uga2V4ZWNfbG9hZC4gIFBvc3NpYmx5IGV2ZW4gY29t
-cGlsZSBrZXhlY19sb2FkIG91dCB0byBzYXZlIHNwYWNlCj4gPj4gYmVjYXVzZSB5b3Ugd2lsbCBu
-ZXZlciBuZWVkIGl0LiAgWW91IGRvbid0IG5lZWQgYSBuZXcgc2VjdXJpdHkgaG9vayB0bwo+ID4+
-IGRvIGFueSBvZiB0aGF0LiAgVXNlcnNwYWNlIGlzIGEgdmVyeSBmaW5lIG1lY2hhbmlzbSBmb3Ig
-YmVpbmcgdGhlCj4gPj4gaW5zdHJ1bWVudCBvZiBwb2xpY3kuCj4gPgo+ID4gVHJ1ZSwgZm9yIHRo
-b3NlIGJ1aWxkaW5nIHRoZWlyIG93biBrZXJuZWwsIHRoZXkgY2FuIGRpc2FibGUgdGhlIG9sZAo+
-ID4gc3lzY2FsbHMuIMKgVGhlIGNvbmNlcm4gaXMgbm90IGZvciB0aG9zZSBidWlsZGluZyB0aGVp
-ciBvd24ga2VybmVscywKPiA+IGJ1dCBmb3IgdGhvc2UgdXNpbmcgc3RvY2sga2VybmVscy4gwqAK
-PiA+Cj4gPiBCeSBhZGRpbmcgYW4gTFNNIGhvb2sgaGVyZSBpbiB0aGUga2V4ZWNfbG9hZCBzeXNj
-YWxsLCBhcyBvcHBvc2VkIHRvIGFuCj4gPiBJTUEgc3BlY2lmaWMgaG9vaywgb3RoZXIgTFNNcyBj
-YW4gcGlnZ3kgYmFjayBvbiB0b3Agb2YgaXQuIMKgQ3VycmVudGx5LAo+ID4gYm90aCBsb2FkX3Bp
-biBhbmQgU0VMaW51eCBhcmUgZ2F0aW5nIHRoZSBrZXJuZWwgbW9kdWxlIHN5c2NhbGxzIGJhc2Vk
-Cj4gPiBvbiBzZWN1cml0eV9rZXJuZWxfcmVhZF9maWxlLgo+ID4KPiA+IElmIHRoZXJlIHdhcyBh
-IHNpbWlsYXIgb3B0aW9uIGZvciB0aGUga2VybmVsIGltYWdlLCBJJ20gcHJldHR5IHN1cmUKPiA+
-IG90aGVyIExTTXMgd291bGQgdXNlIGl0Lgo+ID4KPiA+IEZyb20gYW4gSU1BIHBlcnNwZWN0aXZl
-LCB0aGVyZSBuZWVkcyB0byBiZSBzb21lIG1ldGhvZCBmb3Igb25seQo+ID4gYWxsb3dpbmcgc2ln
-bmVkIGNvZGUgdG8gYmUgbG9hZGVkLCBleGVjdXRlZCwgZXRjLiAtIGtlcm5lbCBtb2R1bGVzLAo+
-ID4ga2VybmVsIGltYWdlL2luaXRyYW1mcywgZmlybXdhcmUsIHBvbGljaWVzLgo+IAo+IFdoYXQg
-aXMgdGhlIElNQSBwZXJzcGVjdGl2ZS4gIFdoeSBjYW4ndCBJTUEgdHJ1c3QgYXBwcm9wcmlhdGVs
-eQo+IGF1dGhvcml6ZWQgdXNlcnNwYWNlPwoKU3VwcG9zZSBhIHN5c3RlbSBvd25lciB3YW50cyB0
-byBkZWZpbmUgYSBzeXN0ZW0gd2lkZSBwb2xpY3kgdGhhdApyZXF1aXJlcyBhbGwgY29kZSBiZSBz
-aWduZWQgLSBrZXJuZWwgbW9kdWxlcywgZmlybXdhcmUsIGtleGVjIGltYWdlICYKaW5pdHJhbWZz
-LCBleGVjdXRhYmxlcywgbW1hcHBlZCBmaWxlcywgZXRjIC0gd2l0aG91dCBoYXZpbmcgdG8gcmVi
-dWlsZAp0aGUga2VybmVsLiDCoFdpdGhvdXQgYSBjYWxsIGluIGtleGVjX2xvYWQgdGhhdCBpc24n
-dCBwb3NzaWJsZS4KCj4gCj4gPj4gSWYgeW91IGRvbid0IHRydXN0IHVzZXJzcGFjZSB0aGF0IG5l
-ZWRzIHRvIGJlIHNwZWxsZWQgb3V0IHZlcnkgY2xlYXJseS4KPiA+PiBZb3UgbmVlZCB0byB0YWxr
-IGFib3V0IHdoYXQgeW91ciB0aHJlYXQgbW9kZWxzIGFyZS4KPiA+PiAKPiA+PiBJZiB0aGUgb25s
-eSBqdXN0aWZpY2F0aW9uIGlzIHNvIHRoYXQgdGhhdCB3ZSBjYW4ndCBib290IHdpbmRvd3MgaWYK
-PiA+PiBzb21lb25lIGhhY2tzIGludG8gdXNlcnNwYWNlIGl0IGhhcyBteSBuYWNrIGJlY2F1c2Ug
-dGhhdCBpcyBhbm90aGVyIGtpbmQKPiA+PiBvZiBjb21wbGV0ZSBub24tc2Vuc2UuCj4gPgo+ID4g
-VGhlIHVzZWNhc2UgaXMgdGhlIGFiaWxpdHkgdG8gZ2F0ZSB0aGUga2V4ZWNfbG9hZCB1c2FnZSBp
-biBzdG9jawo+ID4ga2VybmVscy4KPiAKPiBCdXQga2V4ZWNfbG9hZCBpcyBhbHJlYWR5IGdhdGVk
-LiAgSXQgcmVxdWlyZXMgQ0FQX1NZU19CT09ULgoKSXQgaXNuJ3QgYSBtYXR0ZXIgb2Yga2V4ZWNf
-bG9hZCBhbHJlYWR5IGJlaW5nIGdhdGVkLCBidXQgb2Ygd2FudGluZyBhCnNpbmdsZSBwbGFjZSBm
-b3IgZGVmaW5pbmcgYSBzeXN0ZW0gd2lkZSBwb2xpY3ksIGFzIGRlc2NyaWJlZCBhYm92ZS4KCk1p
-bWkKCj4gCj4gPj4gR2l2ZW4gdGhhdCB5b3UgYXJlIG5vdCB0cnVzdGluZyB1c2Vyc3BhY2UgdGhp
-cyBjaGFuZ2VzZXQgYWxzbyBwcm9iYWJseQo+ID4+IG5lZWRzIHRvIGhhdmUgdGhlIGtlcm5lbC1o
-YXJkZW5pbmcgbGlzdCBjYydkLiAgQmVjYXVzZSB0aGUgb25seSBwb3NzaWJsZQo+ID4+IGp1c3Rp
-ZmljYXRpb24gSSBjYW4gaW1hZ2luZSBmb3Igc29tZXRoaW5nIGxpa2UgdGhpcyBpcyBrZXJuZWwt
-aGFyZGVuaW5nLgo+ID4KPiA+IFN1cmUsIENjJ2luZyBsaW51eC1oYXJkZW5pbmcgYW5kIEtlZXMu
-Cj4gPgo+ID4gTWltaQo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Matthew Garrett <mjg59@google.com> writes:
+
+> On Thu, May 3, 2018 at 1:13 PM Eric W. Biederman <ebiederm@xmission.com>
+> wrote:
+>
+>> Mimi Zohar <zohar@linux.vnet.ibm.com> writes:
+>
+>> > In environments that require the kexec kernel image to be signed,
+> prevent
+>> > using the kexec_load syscall.  In order for LSMs and IMA to
+> differentiate
+>> > between kexec_load and kexec_file_load syscalls, this patch set adds a
+>> > call to security_kernel_read_file() in kexec_load_check().
+>
+>> Having thought about it some more this justification for these changes
+>> does not work.  The functionality of kexec_load is already root-only.
+>> So in environments that require the kernel image to be signed just don't
+>> use kexec_load.  Possibly even compile kexec_load out to save space
+>> because you will never need it.  You don't need a new security hook to
+>> do any of that.  Userspace is a very fine mechanism for being the
+>> instrument of policy.
+>
+>> If you don't trust userspace that needs to be spelled out very clearly.
+>> You need to talk about what your threat models are.
+>
+> kexec_load gives root arbitrary power to modify the running kernel image,
+> including the ability to disable enforcement of module signatures.
+
+No.  It does absolutely nothing to the running kernel image.
+Combined with reboot(..., LINUX_REBOOT_CMD_KEXE, ...) it does allow
+booting something different.  It is argubably a little more efficient
+than writing to a file to direct the bootloader to boot something
+different and then calling reboot.  But it is not fundamentally
+different.
+
+> Given
+> that it weakens other security mechanisms that are designed to prevent root
+> from disabling them, it makes sense to allow the imposition of an
+> equivalent restriction.
+
+Say what.  You are saying a lot of words without any specifics.  Not a
+specific threat mode.  Not which security mecahnisms you are worried
+about weakening.  Not what classes of problems you are trying to defend
+against.
+
+I absolutely hate this nonsense.  I thought you already went 20 rounds
+with Linus and learned you need to be upfront with what you are
+concerned about.
+
+I believe reasonable situations can be constructed.  But I am not seeing
+that happen here.
+
+My hand wavy argument to go with yours is that code paths that are root
+only are not audited for security properties.  As such the number of
+exploitable bus you can find in them is larger than normal.  It might be
+a little harder to mount xfs or another filesystem with an exploitable
+file system image but I expect it exists.
+
+Further nothing I have seen you involved with has been about truly
+hardening the system against a hostile root.  I have for the last
+several years been chipping away at that and you have been nowhere to be
+found.
+
+So please be specific.  Talk about which threat you are worried about.
+Because so far this looks like someones effort to look like they were
+doing something without actually caring about real world threats.
+
+Eric
+
+
+
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
