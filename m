@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x242.google.com ([2607:f8b0:4001:c0b::242])
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fEN4R-0004dh-4O
- for kexec@lists.infradead.org; Thu, 03 May 2018 22:51:28 +0000
-Received: by mail-it0-x242.google.com with SMTP id t7-v6so3292506itf.0
- for <kexec@lists.infradead.org>; Thu, 03 May 2018 15:51:16 -0700 (PDT)
-MIME-Version: 1.0
+ id 1fENGh-0007vf-Ly
+ for kexec@lists.infradead.org; Thu, 03 May 2018 23:04:09 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1523572911-16363-1-git-send-email-zohar@linux.vnet.ibm.com>
  <87r2mso5up.fsf@xmission.com>
- <CACdnJuukT4SYLcDwi7+ObqbCDS4ZEAMpgz57OL3_eSevW0QuVg@mail.gmail.com>
- <876044l7tr.fsf@xmission.com>
-In-Reply-To: <876044l7tr.fsf@xmission.com>
-From: Matthew Garrett <mjg59@google.com>
-Date: Thu, 03 May 2018 22:51:05 +0000
-Message-ID: <CACdnJut4R-BQCYcT5_OuFezf8046-HmvvdEP4g7=ADgAW+qdeA@mail.gmail.com>
+ <1525383075.3539.67.camel@linux.vnet.ibm.com>
+ <87d0yco1vy.fsf@xmission.com>
+ <1525384675.3539.89.camel@linux.vnet.ibm.com>
+Date: Thu, 03 May 2018 18:03:47 -0500
+In-Reply-To: <1525384675.3539.89.camel@linux.vnet.ibm.com> (Mimi Zohar's
+ message of "Thu, 03 May 2018 17:57:55 -0400")
+Message-ID: <87fu38jq98.fsf@xmission.com>
+MIME-Version: 1.0
 Subject: Re: [PATCH 0/3] kexec: limit kexec_load syscall
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,55 +23,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com
-Cc: kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, LSM List <linux-security-module@vger.kernel.org>, linux-integrity <linux-integrity@vger.kernel.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Kees Cook <keescook@chromium.org>, kernel-hardening@lists.openwall.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org
 
-On Thu, May 3, 2018 at 2:59 PM Eric W. Biederman <ebiederm@xmission.com>
-wrote:
-
-> Matthew Garrett <mjg59@google.com> writes:
-> > kexec_load gives root arbitrary power to modify the running kernel
-image,
-> > including the ability to disable enforcement of module signatures.
-
-> No.  It does absolutely nothing to the running kernel image.
-> Combined with reboot(..., LINUX_REBOOT_CMD_KEXE, ...) it does allow
-> booting something different.  It is argubably a little more efficient
-> than writing to a file to direct the bootloader to boot something
-> different and then calling reboot.  But it is not fundamentally
-> different.
-
-It absolutely does - https://mjg59.dreamwidth.org/28746.html gives an
-example. The payload just needs to return.
-
-> > Given
-> > that it weakens other security mechanisms that are designed to prevent
-root
-> > from disabling them, it makes sense to allow the imposition of an
-> > equivalent restriction.
-
-> Say what.  You are saying a lot of words without any specifics.  Not a
-> specific threat mode.  Not which security mecahnisms you are worried
-> about weakening.  Not what classes of problems you are trying to defend
-> against.
-
-I have a kernel configured with module.sig_enforce enabled - root is unable
-to load kernel modules that are unsigned, and since sig_enforce is
-bool_enable_only, root is unable to flip that back. Any number of security
-models may be implemented with that assumption. However, root still has
-access to kexec_load(), and can therefore kexec into a dummy payload that
-flips that byte back to 0 and permits loading unsigned module code.
-
-There may well be other mechanisms that permit root to gain arbitrary
-ability to modify kernel code. My argument is that we should treat those as
-bugs, not use their existence as a justification for leaving open known
-cases.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+TWltaSBab2hhciA8em9oYXJAbGludXgudm5ldC5pYm0uY29tPiB3cml0ZXM6Cgo+IE9uIFRodSwg
+MjAxOC0wNS0wMyBhdCAxNjozOCAtMDUwMCwgRXJpYyBXLiBCaWVkZXJtYW4gd3JvdGU6Cj4+IE1p
+bWkgWm9oYXIgPHpvaGFyQGxpbnV4LnZuZXQuaWJtLmNvbT4gd3JpdGVzOgo+PiAKPj4gPiBbQ2Mn
+aW5nIEtlZXMgYW5kIGtlcm5lbC1oYXJkZW5pbmddCj4+ID4KPj4gPiBPbiBUaHUsIDIwMTgtMDUt
+MDMgYXQgMTU6MTMgLTA1MDAsIEVyaWMgVy4gQmllZGVybWFuIHdyb3RlOgo+PiA+PiBNaW1pIFpv
+aGFyIDx6b2hhckBsaW51eC52bmV0LmlibS5jb20+IHdyaXRlczoKPj4gPj4gCj4+ID4+ID4gSW4g
+ZW52aXJvbm1lbnRzIHRoYXQgcmVxdWlyZSB0aGUga2V4ZWMga2VybmVsIGltYWdlIHRvIGJlIHNp
+Z25lZCwgcHJldmVudAo+PiA+PiA+IHVzaW5nIHRoZSBrZXhlY19sb2FkIHN5c2NhbGwuICBJbiBv
+cmRlciBmb3IgTFNNcyBhbmQgSU1BIHRvIGRpZmZlcmVudGlhdGUKPj4gPj4gPiBiZXR3ZWVuIGtl
+eGVjX2xvYWQgYW5kIGtleGVjX2ZpbGVfbG9hZCBzeXNjYWxscywgdGhpcyBwYXRjaCBzZXQgYWRk
+cyBhCj4+ID4+ID4gY2FsbCB0byBzZWN1cml0eV9rZXJuZWxfcmVhZF9maWxlKCkgaW4ga2V4ZWNf
+bG9hZF9jaGVjaygpLgo+PiA+PiAKPj4gPj4gSGF2aW5nIHRob3VnaHQgYWJvdXQgaXQgc29tZSBt
+b3JlIHRoaXMganVzdGlmaWNhdGlvbiBmb3IgdGhlc2UgY2hhbmdlcwo+PiA+PiBkb2VzIG5vdCB3
+b3JrLiAgVGhlIGZ1bmN0aW9uYWxpdHkgb2Yga2V4ZWNfbG9hZCBpcyBhbHJlYWR5IHJvb3Qtb25s
+eS4KPj4gPj4gU28gaW4gZW52aXJvbm1lbnRzIHRoYXQgcmVxdWlyZSB0aGUga2VybmVsIGltYWdl
+IHRvIGJlIHNpZ25lZCBqdXN0IGRvbid0Cj4+ID4+IHVzZSBrZXhlY19sb2FkLiAgUG9zc2libHkg
+ZXZlbiBjb21waWxlIGtleGVjX2xvYWQgb3V0IHRvIHNhdmUgc3BhY2UKPj4gPj4gYmVjYXVzZSB5
+b3Ugd2lsbCBuZXZlciBuZWVkIGl0LiAgWW91IGRvbid0IG5lZWQgYSBuZXcgc2VjdXJpdHkgaG9v
+ayB0bwo+PiA+PiBkbyBhbnkgb2YgdGhhdC4gIFVzZXJzcGFjZSBpcyBhIHZlcnkgZmluZSBtZWNo
+YW5pc20gZm9yIGJlaW5nIHRoZQo+PiA+PiBpbnN0cnVtZW50IG9mIHBvbGljeS4KPj4gPgo+PiA+
+IFRydWUsIGZvciB0aG9zZSBidWlsZGluZyB0aGVpciBvd24ga2VybmVsLCB0aGV5IGNhbiBkaXNh
+YmxlIHRoZSBvbGQKPj4gPiBzeXNjYWxscy4gwqBUaGUgY29uY2VybiBpcyBub3QgZm9yIHRob3Nl
+IGJ1aWxkaW5nIHRoZWlyIG93biBrZXJuZWxzLAo+PiA+IGJ1dCBmb3IgdGhvc2UgdXNpbmcgc3Rv
+Y2sga2VybmVscy4gwqAKPj4gPgo+PiA+IEJ5IGFkZGluZyBhbiBMU00gaG9vayBoZXJlIGluIHRo
+ZSBrZXhlY19sb2FkIHN5c2NhbGwsIGFzIG9wcG9zZWQgdG8gYW4KPj4gPiBJTUEgc3BlY2lmaWMg
+aG9vaywgb3RoZXIgTFNNcyBjYW4gcGlnZ3kgYmFjayBvbiB0b3Agb2YgaXQuIMKgQ3VycmVudGx5
+LAo+PiA+IGJvdGggbG9hZF9waW4gYW5kIFNFTGludXggYXJlIGdhdGluZyB0aGUga2VybmVsIG1v
+ZHVsZSBzeXNjYWxscyBiYXNlZAo+PiA+IG9uIHNlY3VyaXR5X2tlcm5lbF9yZWFkX2ZpbGUuCj4+
+ID4KPj4gPiBJZiB0aGVyZSB3YXMgYSBzaW1pbGFyIG9wdGlvbiBmb3IgdGhlIGtlcm5lbCBpbWFn
+ZSwgSSdtIHByZXR0eSBzdXJlCj4+ID4gb3RoZXIgTFNNcyB3b3VsZCB1c2UgaXQuCj4+ID4KPj4g
+PiBGcm9tIGFuIElNQSBwZXJzcGVjdGl2ZSwgdGhlcmUgbmVlZHMgdG8gYmUgc29tZSBtZXRob2Qg
+Zm9yIG9ubHkKPj4gPiBhbGxvd2luZyBzaWduZWQgY29kZSB0byBiZSBsb2FkZWQsIGV4ZWN1dGVk
+LCBldGMuIC0ga2VybmVsIG1vZHVsZXMsCj4+ID4ga2VybmVsIGltYWdlL2luaXRyYW1mcywgZmly
+bXdhcmUsIHBvbGljaWVzLgo+PiAKPj4gV2hhdCBpcyB0aGUgSU1BIHBlcnNwZWN0aXZlLiAgV2h5
+IGNhbid0IElNQSB0cnVzdCBhcHByb3ByaWF0ZWx5Cj4+IGF1dGhvcml6ZWQgdXNlcnNwYWNlPwo+
+Cj4gU3VwcG9zZSBhIHN5c3RlbSBvd25lciB3YW50cyB0byBkZWZpbmUgYSBzeXN0ZW0gd2lkZSBw
+b2xpY3kgdGhhdAo+IHJlcXVpcmVzIGFsbCBjb2RlIGJlIHNpZ25lZCAtIGtlcm5lbCBtb2R1bGVz
+LCBmaXJtd2FyZSwga2V4ZWMgaW1hZ2UgJgo+IGluaXRyYW1mcywgZXhlY3V0YWJsZXMsIG1tYXBw
+ZWQgZmlsZXMsIGV0YyAtIHdpdGhvdXQgaGF2aW5nIHRvIHJlYnVpbGQKPiB0aGUga2VybmVsLiDC
+oFdpdGhvdXQgYSBjYWxsIGluIGtleGVjX2xvYWQgdGhhdCBpc24ndCBwb3NzaWJsZS4KCk9mIGNv
+dXJzZSBpdCBpcy4gIFlvdSBqdXN0IG1ha2UgaXQgYSByZXF1aXJlbWVudCB0aGF0IGJlZm9yZSBh
+bgpleGVjdXRhYmxlIHdpbGwgYmUgc2lnbmVkIGl0IHdpbGwgYmUgYXVkaXRlZCB0byBzZWUgdGhh
+dCBpdCBkb2Vzbid0CmNhbGwgc3lzX2tleGVjX2xvYWQuICBTaWduaW5nIHByZXN1bWFibHkgbWVh
+bnMgc29tZXRoaW5nLiAgU28gaXQgc2hvdWxkCm5vdCBiZSBoYXJkIHRvIGVuZm9yY2UgYSBwb2xp
+Y3kgbGlrZSB0aGF0IG9uIGEgc3BlY2lhbHR5IHN5c3RlbSBjYWxsCnRoYXQgbW9zdCBhcHBsaWNh
+dGlvbnMgd2lsbCBuZXZlciBjYWxsLgoKPj4gPj4gSWYgeW91IGRvbid0IHRydXN0IHVzZXJzcGFj
+ZSB0aGF0IG5lZWRzIHRvIGJlIHNwZWxsZWQgb3V0IHZlcnkgY2xlYXJseS4KPj4gPj4gWW91IG5l
+ZWQgdG8gdGFsayBhYm91dCB3aGF0IHlvdXIgdGhyZWF0IG1vZGVscyBhcmUuCj4+ID4+IAo+PiA+
+PiBJZiB0aGUgb25seSBqdXN0aWZpY2F0aW9uIGlzIHNvIHRoYXQgdGhhdCB3ZSBjYW4ndCBib290
+IHdpbmRvd3MgaWYKPj4gPj4gc29tZW9uZSBoYWNrcyBpbnRvIHVzZXJzcGFjZSBpdCBoYXMgbXkg
+bmFjayBiZWNhdXNlIHRoYXQgaXMgYW5vdGhlciBraW5kCj4+ID4+IG9mIGNvbXBsZXRlIG5vbi1z
+ZW5zZS4KPj4gPgo+PiA+IFRoZSB1c2VjYXNlIGlzIHRoZSBhYmlsaXR5IHRvIGdhdGUgdGhlIGtl
+eGVjX2xvYWQgdXNhZ2UgaW4gc3RvY2sKPj4gPiBrZXJuZWxzLgo+PiAKPj4gQnV0IGtleGVjX2xv
+YWQgaXMgYWxyZWFkeSBnYXRlZC4gIEl0IHJlcXVpcmVzIENBUF9TWVNfQk9PVC4KPgo+IEl0IGlz
+bid0IGEgbWF0dGVyIG9mIGtleGVjX2xvYWQgYWxyZWFkeSBiZWluZyBnYXRlZCwgYnV0IG9mIHdh
+bnRpbmcgYQo+IHNpbmdsZSBwbGFjZSBmb3IgZGVmaW5pbmcgYSBzeXN0ZW0gd2lkZSBwb2xpY3ks
+IGFzIGRlc2NyaWJlZCBhYm92ZS4KClNpZ25pbmcgaXMgb25seSBhIHRvb2wgdG8gZW5mb3JjZSBh
+IHBvbGljeS4gIFNpZ25pbmcgYnkgaXRzZWxmIGlzIG5vdCBhCnBvbGljeS4gIEVuZm9yY2luZyBh
+bnkgcXVhbGl0eSBjb250cm9scyBpbiB0aGUgc2lnbmVkIGV4ZWN1dGFibGVzIHNob3VsZAp0cml2
+aWFsbHkgcHJldmVudCBrZXhlY19sb2FkIGZyb20gYmVpbmcgdXNlZC4KCkVyaWMKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
+dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8va2V4ZWMK
