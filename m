@@ -1,32 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fEQTt-00052w-Bi
- for kexec@lists.infradead.org; Fri, 04 May 2018 02:29:58 +0000
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w442OBDr177227
- for <kexec@lists.infradead.org>; Thu, 3 May 2018 22:29:46 -0400
-Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2hr8xjkcdf-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 03 May 2018 22:29:46 -0400
-Received: from localhost
- by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Fri, 4 May 2018 03:29:44 +0100
-Subject: Re: [PATCH 0/3] kexec: limit kexec_load syscall
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Thu, 03 May 2018 22:29:37 -0400
-In-Reply-To: <87fu38jq98.fsf@xmission.com>
-References: <1523572911-16363-1-git-send-email-zohar@linux.vnet.ibm.com>
- <87r2mso5up.fsf@xmission.com>	<1525383075.3539.67.camel@linux.vnet.ibm.com>
- <87d0yco1vy.fsf@xmission.com>	<1525384675.3539.89.camel@linux.vnet.ibm.com>
- <87fu38jq98.fsf@xmission.com>
-Mime-Version: 1.0
-Message-Id: <1525400977.3539.199.camel@linux.vnet.ibm.com>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fFWD5-0006Pb-U8
+ for kexec@lists.infradead.org; Mon, 07 May 2018 02:49:09 +0000
+Date: Mon, 7 May 2018 10:48:33 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 1/2] kdump/x86: crashkernel=X try to reserve below 896M
+ first then below 4G and MAXMEM
+Message-ID: <20180507024833.GA3895@dhcp-128-65.nay.redhat.com>
+References: <20180427090045.532014306@redhat.com>
+ <20180427091410.GA25338@dhcp-128-65.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180427091410.GA25338@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,82 +21,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>, kernel-hardening@lists.openwall.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org
+To: akpm@linux-foundation.org
+Cc: bhe@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, yinghai@kernel.org, vgoyal@redhat.com
 
-T24gVGh1LCAyMDE4LTA1LTAzIGF0IDE4OjAzIC0wNTAwLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90
-ZToKPiBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC52bmV0LmlibS5jb20+IHdyaXRlczoKPiAKPiA+
-IE9uIFRodSwgMjAxOC0wNS0wMyBhdCAxNjozOCAtMDUwMCwgRXJpYyBXLiBCaWVkZXJtYW4gd3Jv
-dGU6Cj4gPj4gTWltaSBab2hhciA8em9oYXJAbGludXgudm5ldC5pYm0uY29tPiB3cml0ZXM6Cj4g
-Pj4gCj4gPj4gPiBbQ2MnaW5nIEtlZXMgYW5kIGtlcm5lbC1oYXJkZW5pbmddCj4gPj4gPgo+ID4+
-ID4gT24gVGh1LCAyMDE4LTA1LTAzIGF0IDE1OjEzIC0wNTAwLCBFcmljIFcuIEJpZWRlcm1hbiB3
-cm90ZToKPiA+PiA+PiBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC52bmV0LmlibS5jb20+IHdyaXRl
-czoKPiA+PiA+PiAKPiA+PiA+PiA+IEluIGVudmlyb25tZW50cyB0aGF0IHJlcXVpcmUgdGhlIGtl
-eGVjIGtlcm5lbCBpbWFnZSB0byBiZSBzaWduZWQsIHByZXZlbnQKPiA+PiA+PiA+IHVzaW5nIHRo
-ZSBrZXhlY19sb2FkIHN5c2NhbGwuICBJbiBvcmRlciBmb3IgTFNNcyBhbmQgSU1BIHRvIGRpZmZl
-cmVudGlhdGUKPiA+PiA+PiA+IGJldHdlZW4ga2V4ZWNfbG9hZCBhbmQga2V4ZWNfZmlsZV9sb2Fk
-IHN5c2NhbGxzLCB0aGlzIHBhdGNoIHNldCBhZGRzIGEKPiA+PiA+PiA+IGNhbGwgdG8gc2VjdXJp
-dHlfa2VybmVsX3JlYWRfZmlsZSgpIGluIGtleGVjX2xvYWRfY2hlY2soKS4KPiA+PiA+PiAKPiA+
-PiA+PiBIYXZpbmcgdGhvdWdodCBhYm91dCBpdCBzb21lIG1vcmUgdGhpcyBqdXN0aWZpY2F0aW9u
-IGZvciB0aGVzZSBjaGFuZ2VzCj4gPj4gPj4gZG9lcyBub3Qgd29yay4gIFRoZSBmdW5jdGlvbmFs
-aXR5IG9mIGtleGVjX2xvYWQgaXMgYWxyZWFkeSByb290LW9ubHkuCj4gPj4gPj4gU28gaW4gZW52
-aXJvbm1lbnRzIHRoYXQgcmVxdWlyZSB0aGUga2VybmVsIGltYWdlIHRvIGJlIHNpZ25lZCBqdXN0
-IGRvbid0Cj4gPj4gPj4gdXNlIGtleGVjX2xvYWQuICBQb3NzaWJseSBldmVuIGNvbXBpbGUga2V4
-ZWNfbG9hZCBvdXQgdG8gc2F2ZSBzcGFjZQo+ID4+ID4+IGJlY2F1c2UgeW91IHdpbGwgbmV2ZXIg
-bmVlZCBpdC4gIFlvdSBkb24ndCBuZWVkIGEgbmV3IHNlY3VyaXR5IGhvb2sgdG8KPiA+PiA+PiBk
-byBhbnkgb2YgdGhhdC4gIFVzZXJzcGFjZSBpcyBhIHZlcnkgZmluZSBtZWNoYW5pc20gZm9yIGJl
-aW5nIHRoZQo+ID4+ID4+IGluc3RydW1lbnQgb2YgcG9saWN5Lgo+ID4+ID4KPiA+PiA+IFRydWUs
-IGZvciB0aG9zZSBidWlsZGluZyB0aGVpciBvd24ga2VybmVsLCB0aGV5IGNhbiBkaXNhYmxlIHRo
-ZSBvbGQKPiA+PiA+IHN5c2NhbGxzLiDCoFRoZSBjb25jZXJuIGlzIG5vdCBmb3IgdGhvc2UgYnVp
-bGRpbmcgdGhlaXIgb3duIGtlcm5lbHMsCj4gPj4gPiBidXQgZm9yIHRob3NlIHVzaW5nIHN0b2Nr
-IGtlcm5lbHMuIMKgCj4gPj4gPgo+ID4+ID4gQnkgYWRkaW5nIGFuIExTTSBob29rIGhlcmUgaW4g
-dGhlIGtleGVjX2xvYWQgc3lzY2FsbCwgYXMgb3Bwb3NlZCB0byBhbgo+ID4+ID4gSU1BIHNwZWNp
-ZmljIGhvb2ssIG90aGVyIExTTXMgY2FuIHBpZ2d5IGJhY2sgb24gdG9wIG9mIGl0LiDCoEN1cnJl
-bnRseSwKPiA+PiA+IGJvdGggbG9hZF9waW4gYW5kIFNFTGludXggYXJlIGdhdGluZyB0aGUga2Vy
-bmVsIG1vZHVsZSBzeXNjYWxscyBiYXNlZAo+ID4+ID4gb24gc2VjdXJpdHlfa2VybmVsX3JlYWRf
-ZmlsZS4KPiA+PiA+Cj4gPj4gPiBJZiB0aGVyZSB3YXMgYSBzaW1pbGFyIG9wdGlvbiBmb3IgdGhl
-IGtlcm5lbCBpbWFnZSwgSSdtIHByZXR0eSBzdXJlCj4gPj4gPiBvdGhlciBMU01zIHdvdWxkIHVz
-ZSBpdC4KPiA+PiA+Cj4gPj4gPiBGcm9tIGFuIElNQSBwZXJzcGVjdGl2ZSwgdGhlcmUgbmVlZHMg
-dG8gYmUgc29tZSBtZXRob2QgZm9yIG9ubHkKPiA+PiA+IGFsbG93aW5nIHNpZ25lZCBjb2RlIHRv
-IGJlIGxvYWRlZCwgZXhlY3V0ZWQsIGV0Yy4gLSBrZXJuZWwgbW9kdWxlcywKPiA+PiA+IGtlcm5l
-bCBpbWFnZS9pbml0cmFtZnMsIGZpcm13YXJlLCBwb2xpY2llcy4KPiA+PiAKPiA+PiBXaGF0IGlz
-IHRoZSBJTUEgcGVyc3BlY3RpdmUuICBXaHkgY2FuJ3QgSU1BIHRydXN0IGFwcHJvcHJpYXRlbHkK
-PiA+PiBhdXRob3JpemVkIHVzZXJzcGFjZT8KPiA+Cj4gPiBTdXBwb3NlIGEgc3lzdGVtIG93bmVy
-IHdhbnRzIHRvIGRlZmluZSBhIHN5c3RlbSB3aWRlIHBvbGljeSB0aGF0Cj4gPiByZXF1aXJlcyBh
-bGwgY29kZSBiZSBzaWduZWQgLSBrZXJuZWwgbW9kdWxlcywgZmlybXdhcmUsIGtleGVjIGltYWdl
-ICYKPiA+IGluaXRyYW1mcywgZXhlY3V0YWJsZXMsIG1tYXBwZWQgZmlsZXMsIGV0YyAtIHdpdGhv
-dXQgaGF2aW5nIHRvIHJlYnVpbGQKPiA+IHRoZSBrZXJuZWwuIMKgV2l0aG91dCBhIGNhbGwgaW4g
-a2V4ZWNfbG9hZCB0aGF0IGlzbid0IHBvc3NpYmxlLgo+IAo+IE9mIGNvdXJzZSBpdCBpcy4gIFlv
-dSBqdXN0IG1ha2UgaXQgYSByZXF1aXJlbWVudCB0aGF0IGJlZm9yZSBhbgo+IGV4ZWN1dGFibGUg
-d2lsbCBiZSBzaWduZWQgaXQgd2lsbCBiZSBhdWRpdGVkIHRvIHNlZSB0aGF0IGl0IGRvZXNuJ3QK
-PiBjYWxsIHN5c19rZXhlY19sb2FkLiAgU2lnbmluZyBwcmVzdW1hYmx5IG1lYW5zIHNvbWV0aGlu
-Zy4gIFNvIGl0IHNob3VsZAo+IG5vdCBiZSBoYXJkIHRvIGVuZm9yY2UgYSBwb2xpY3kgbGlrZSB0
-aGF0IG9uIGEgc3BlY2lhbHR5IHN5c3RlbSBjYWxsCj4gdGhhdCBtb3N0IGFwcGxpY2F0aW9ucyB3
-aWxsIG5ldmVyIGNhbGwuCgpJbml0aWFsbHkgSSdtIGhvcGluZyB0aGF0IGZpbGVzIHdpbGwgc2lt
-cGx5IGNvbWUgc2lnbmVkLCBwcm92aWRpbmcKZmlsZSBwcm92ZW5hbmNlLiDCoEFueXRoaW5nIGVs
-c2UgaXMgZ3JhdnkuCgo+ID4+ID4+IElmIHlvdSBkb24ndCB0cnVzdCB1c2Vyc3BhY2UgdGhhdCBu
-ZWVkcyB0byBiZSBzcGVsbGVkIG91dCB2ZXJ5IGNsZWFybHkuCj4gPj4gPj4gWW91IG5lZWQgdG8g
-dGFsayBhYm91dCB3aGF0IHlvdXIgdGhyZWF0IG1vZGVscyBhcmUuCj4gPj4gPj4gCj4gPj4gPj4g
-SWYgdGhlIG9ubHkganVzdGlmaWNhdGlvbiBpcyBzbyB0aGF0IHRoYXQgd2UgY2FuJ3QgYm9vdCB3
-aW5kb3dzIGlmCj4gPj4gPj4gc29tZW9uZSBoYWNrcyBpbnRvIHVzZXJzcGFjZSBpdCBoYXMgbXkg
-bmFjayBiZWNhdXNlIHRoYXQgaXMgYW5vdGhlciBraW5kCj4gPj4gPj4gb2YgY29tcGxldGUgbm9u
-LXNlbnNlLgo+ID4+ID4KPiA+PiA+IFRoZSB1c2VjYXNlIGlzIHRoZSBhYmlsaXR5IHRvIGdhdGUg
-dGhlIGtleGVjX2xvYWQgdXNhZ2UgaW4gc3RvY2sKPiA+PiA+IGtlcm5lbHMuCj4gPj4gCj4gPj4g
-QnV0IGtleGVjX2xvYWQgaXMgYWxyZWFkeSBnYXRlZC4gIEl0IHJlcXVpcmVzIENBUF9TWVNfQk9P
-VC4KPiA+Cj4gPiBJdCBpc24ndCBhIG1hdHRlciBvZiBrZXhlY19sb2FkIGFscmVhZHkgYmVpbmcg
-Z2F0ZWQsIGJ1dCBvZiB3YW50aW5nIGEKPiA+IHNpbmdsZSBwbGFjZSBmb3IgZGVmaW5pbmcgYSBz
-eXN0ZW0gd2lkZSBwb2xpY3ksIGFzIGRlc2NyaWJlZCBhYm92ZS4KPiAKPiBTaWduaW5nIGlzIG9u
-bHkgYSB0b29sIHRvIGVuZm9yY2UgYSBwb2xpY3kuICBTaWduaW5nIGJ5IGl0c2VsZiBpcyBub3Qg
-YQo+IHBvbGljeS4gIEVuZm9yY2luZyBhbnkgcXVhbGl0eSBjb250cm9scyBpbiB0aGUgc2lnbmVk
-IGV4ZWN1dGFibGVzIHNob3VsZAo+IHRyaXZpYWxseSBwcmV2ZW50IGtleGVjX2xvYWQgZnJvbSBi
-ZWluZyB1c2VkLgoKRXhpc3Rpbmcga2VybmVscyBtaWdodCBub3Qgc3VwcG9ydCB0aGUgbmV3ZXIg
-a2V4ZWNfZmlsZV9sb2FkIHN5c2NhbGwsCnNvIHBhY2thZ2VzIGFyZSBjdXJyZW50bHkgYmVpbmcg
-YnVpbHQgdG8gdHJ5IG9uZSBzeXNjYWxsIGFuZCBmYWxsYmFjawp0byB1c2luZyB0aGUgb3RoZXIg
-b25lLiDCoEluIHRoaXMgY2FzZSwgaXQgaGFzIG5vdGhpbmcgdG8gZG8gd2l0aApxdWFsaXR5IGNv
-bnRyb2wuCgpNaW1pCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On 04/27/18 at 05:14pm, Dave Young wrote:
+> Hi,
+>  
+> This is a resend of below patches:
+> http://lists.infradead.org/pipermail/kexec/2017-October/019569.html
+>  
+> I dropped the original patch 1 since Baoquan is not happy with it.
+> For patch 2 (the 1st patch in this series), there is some improvement
+> comment from Baoquan to create some generic memblock iteration function.
+> But nobody has time to work on it for the time being.  According to
+> offline discussion with him.  That can be done in the future if someone
+> is interested.  We can go with the current kdump only fixes.
+>  
+> Other than above,  the patches are just same.
+
+Hi Andrew, do you have concerns about the patches?  It has been used for
+long time in Red Hat kernel, since people do not object them, could you
+pick them if no other concerns?
+
+Thanks
+Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
