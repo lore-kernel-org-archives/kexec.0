@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fFb7n-0004ew-IJ
- for kexec@lists.infradead.org; Mon, 07 May 2018 08:04:07 +0000
-Date: Mon, 7 May 2018 16:03:43 +0800
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fFZi2-0003Iv-J1
+ for kexec@lists.infradead.org; Mon, 07 May 2018 06:33:20 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 3/4] Makedumpfile: Add a new function check_5level_paging()
-Message-ID: <20180507080343.GI19030@localhost.localdomain>
-References: <20180302054841.22195-1-bhe@redhat.com>
- <20180302054841.22195-4-bhe@redhat.com>
- <61D4E5D821F1674CB87C99F080A210BE011A75E5@BPXM01GP.gisp.nec.co.jp>
+Subject: [PATCH v4 0/3] resource: Use list_head to link sibling resource
+Date: Mon,  7 May 2018 14:32:21 +0800
+Message-Id: <20180507063224.24229-1-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <61D4E5D821F1674CB87C99F080A210BE011A75E5@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,79 +20,97 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
-Cc: "douly.fnst@cn.fujitsu.com" <douly.fnst@cn.fujitsu.com>, "indou.takao@jp.fujitsu.com" <indou.takao@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Keiichi Nakamura <kei-nakamura@vt.jp.nec.com>
+To: linux-kernel@vger.kernel.org, akpm@linux-foundation.org, robh+dt@kernel.org, dan.j.williams@intel.com, nicolas.pitre@linaro.org, josh@joshtriplett.org, fengguang.wu@intel.com, bp@suse.de
+Cc: brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, kys@microsoft.com, frowand.list@gmail.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, dyoung@redhat.com, vgoyal@redhat.com, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, jglisse@redhat.com, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, ebiederm@xmission.com, devel@linuxdriverproject.org, davem@davemloft.net
 
-On 05/07/18 at 07:21am, Masaki Tachibana wrote:
-> Hi Baoquan,
-> 
-> Sorry for the late reply.
-> 
-> > +check_5level_paging(void)
-> > +{
-> > +	if (NUMBER(pgtable_l5_enabled) != 0)
-> Is this if (NUMBER(pgtable_l5_enabled) != NOT_FOUND_NUMBER && NUMBER(pgtable_l5_enabled) != 0)  ?
-> If so, I will correct this.
+This patchset is doing:
+1) Replace struct resource's sibling list from singly linked list to
+list_head. Clearing out those pointer operation within singly linked
+list for better code readability.
+2) Based on list_head replacement, add a new function
+walk_system_ram_res_rev() which can does reversed iteration on
+iomem_resource's siblings.
+3) Change kexec_file loading to search system RAM top down for kernel
+loadin, using walk_system_ram_res_rev().
 
-Yes, you are right. For kernel which includes 5-level code, it export
-pgtable_l5_enabled as 0 or 1, however for kernel w/o 5-level code,
-should be NOT_FOUND_NUMBER. Please help correct it.
+Note:
+This patchset passed testing on my kvm guest, x86_64 arch with network
+enabling. The thing we need pay attetion to is that a root resource's
+child member need be initialized specifically with LIST_HEAD_INIT() if
+statically defined or INIT_LIST_HEAD() for dynamically definition. Here
+Just like we do for iomem_resource/ioport_resource, or the change in
+get_pci_domain_busn_res().
 
-Thanks
-Baoquan
 
- 
-> 
-> > -----Original Message-----
-> > From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Baoquan He
-> > Sent: Friday, March 02, 2018 2:49 PM
-> > To: kexec@lists.infradead.org
-> > Cc: douly.fnst@cn.fujitsu.com; indou.takao@jp.fujitsu.com; Hayashi Masahiko() <mas-hayashi@tg.jp.nec.com>;
-> > Baoquan He <bhe@redhat.com>; Tachibana Masaki() <mas-tachibana@vf.jp.nec.com>
-> > Subject: [PATCH 3/4] Makedumpfile: Add a new function check_5level_paging()
-> > 
-> > Use it to check if the corrupted kernel is in 5-level paging.
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> >  arch/x86_64.c | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/arch/x86_64.c b/arch/x86_64.c
-> > index cbe45c2..e88ee0b 100644
-> > --- a/arch/x86_64.c
-> > +++ b/arch/x86_64.c
-> > @@ -33,6 +33,15 @@ get_xen_p2m_mfn(void)
-> >  	return NOT_FOUND_LONG_VALUE;
-> >  }
-> > 
-> > +static int
-> > +check_5level_paging(void)
-> > +{
-> > +	if (NUMBER(pgtable_l5_enabled) != 0)
-> > +		return TRUE;
-> > +	else
-> > +		return FALSE;
-> > +}
-> > +
-> >  unsigned long
-> >  get_kaslr_offset_x86_64(unsigned long vaddr)
-> >  {
-> > --
-> > 2.13.6
-> > 
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Links of the old posting(Boris pointed out that we should use
+https://lkml.kernel.org/r/Message-ID, while it can't be opened from
+my side, so paste all of them here.):
+v3:
+https://lkml.kernel.org/r/20180419001848.3041-1-bhe@redhat.com
+https://lkml.org/lkml/2018/4/18/767
+
+v2:
+https://lkml.kernel.org/r/20180408024724.16812-1-bhe@redhat.com
+https://lkml.org/lkml/2018/4/7/169
+
+v1:
+https://lkml.kernel.org/r/20180322033722.9279-1-bhe@redhat.com
+https://lkml.org/lkml/2018/3/21/952
+
+Changelog:
+v3->v4:
+  Fix several bugs test robot reported. Rewrite cover letter and patch
+  log according to reviewer's comment.
+
+v2->v3:
+  Rename resource functions first_child() and sibling() to
+  resource_first_chils() and resource_sibling(). Dan suggested this.
+
+  Move resource_first_chils() and resource_sibling() to linux/ioport.h
+  and make them as inline function. Rob suggested this. Accordingly add
+  linux/list.h including in linux/ioport.h, please help review if this
+  bring efficiency degradation or code redundancy.
+
+  The change on struct resource {} bring two pointers of size increase,
+  mention this in git log to make it more specifically, Rob suggested
+  this.
+
+v1->v2:
+  Use list_head instead to link resource siblings. This is suggested by
+  Andrew.
+
+  Rewrite walk_system_ram_res_rev() after list_head is taken to link
+  resouce siblings.
+
+Baoquan He (3):
+  resource: Use list_head to link sibling resource
+  resource: add walk_system_ram_res_rev()
+  kexec_file: Load kernel at top of system RAM if required
+
+ arch/microblaze/pci/pci-common.c            |  31 ++--
+ arch/sparc/kernel/ioport.c                  |   2 +-
+ arch/xtensa/include/asm/pci-bridge.h        |   4 +-
+ drivers/eisa/eisa-bus.c                     |   2 +
+ drivers/gpu/drm/drm_memory.c                |   3 +-
+ drivers/gpu/drm/gma500/gtt.c                |   5 +-
+ drivers/hv/vmbus_drv.c                      |  52 +++----
+ drivers/input/joystick/iforce/iforce-main.c |   4 +-
+ drivers/nvdimm/e820.c                       |   2 +-
+ drivers/nvdimm/namespace_devs.c             |   6 +-
+ drivers/nvdimm/nd.h                         |   5 +-
+ drivers/of/address.c                        |   4 +-
+ drivers/parisc/lba_pci.c                    |   4 +-
+ drivers/pci/host/vmd.c                      |   8 +-
+ drivers/pci/probe.c                         |   2 +
+ drivers/pci/setup-bus.c                     |   2 +-
+ include/linux/ioport.h                      |  20 ++-
+ kernel/kexec_file.c                         |   2 +
+ kernel/resource.c                           | 221 ++++++++++++++++------------
+ 19 files changed, 215 insertions(+), 164 deletions(-)
+
+-- 
+2.13.6
+
 
 _______________________________________________
 kexec mailing list
