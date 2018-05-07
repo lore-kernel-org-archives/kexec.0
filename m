@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fFWD5-0006Pb-U8
- for kexec@lists.infradead.org; Mon, 07 May 2018 02:49:09 +0000
-Date: Mon, 7 May 2018 10:48:33 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 1/2] kdump/x86: crashkernel=X try to reserve below 896M
- first then below 4G and MAXMEM
-Message-ID: <20180507024833.GA3895@dhcp-128-65.nay.redhat.com>
-References: <20180427090045.532014306@redhat.com>
- <20180427091410.GA25338@dhcp-128-65.nay.redhat.com>
+Received: from mail-pg0-x234.google.com ([2607:f8b0:400e:c05::234])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fFXwg-00051F-6x
+ for kexec@lists.infradead.org; Mon, 07 May 2018 04:40:19 +0000
+Received: by mail-pg0-x234.google.com with SMTP id p9-v6so16426116pgc.9
+ for <kexec@lists.infradead.org>; Sun, 06 May 2018 21:40:06 -0700 (PDT)
+Date: Mon, 7 May 2018 13:40:51 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v9 02/11] kexec_file: make
+ kexec_image_post_load_cleanup_default() global
+Message-ID: <20180507044050.GC11326@linaro.org>
+References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
+ <20180425062629.29404-3-takahiro.akashi@linaro.org>
+ <cbf66675-1671-32f9-1410-a76986becf85@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180427091410.GA25338@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <cbf66675-1671-32f9-1410-a76986becf85@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,30 +28,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: akpm@linux-foundation.org
-Cc: bhe@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, yinghai@kernel.org, vgoyal@redhat.com
+To: James Morse <james.morse@arm.com>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-On 04/27/18 at 05:14pm, Dave Young wrote:
-> Hi,
->  
-> This is a resend of below patches:
-> http://lists.infradead.org/pipermail/kexec/2017-October/019569.html
->  
-> I dropped the original patch 1 since Baoquan is not happy with it.
-> For patch 2 (the 1st patch in this series), there is some improvement
-> comment from Baoquan to create some generic memblock iteration function.
-> But nobody has time to work on it for the time being.  According to
-> offline discussion with him.  That can be done in the future if someone
-> is interested.  We can go with the current kdump only fixes.
->  
-> Other than above,  the patches are just same.
+On Tue, May 01, 2018 at 06:46:04PM +0100, James Morse wrote:
+> Hi Akashi,
+> 
+> On 25/04/18 07:26, AKASHI Takahiro wrote:
+> > Change this function from static to global so that arm64 can implement
+> > its own arch_kimage_file_post_load_cleanup() later using
+> > kexec_image_post_load_cleanup_default().
+> 
+> Do we need to call kexec_image_post_load_cleanup_default()? All it does is call
+> the image-type fops->cleanup(), which you don't implement in this series.
+> 
+> Is this just-in-case someone adds cleanup() later and is surprised only the
+> arch-level helper is called?
 
-Hi Andrew, do you have concerns about the patches?  It has been used for
-long time in Red Hat kernel, since people do not object them, could you
-pick them if no other concerns?
+Yes, we want not to miss two possibilities:
+- some common clean-up code is added to kexec_image_post_load_cleanup_default()
+- some format(i.e. Image)-specific clean-up code is added to fops->cleanup()
 
-Thanks
-Dave
+-Takahiro AKASHI
+
+> 
+> 
+> Thanks,
+> 
+> James
 
 _______________________________________________
 kexec mailing list
