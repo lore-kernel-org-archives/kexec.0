@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fFaVq-0005qH-1W
- for kexec@lists.infradead.org; Mon, 07 May 2018 07:24:48 +0000
+ id 1fFaWS-0006bX-A9
+ for kexec@lists.infradead.org; Mon, 07 May 2018 07:25:26 +0000
 From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
-Subject: RE: [PATCH 2/4] Makedumpfile: Add pgtable_l5_enabled to number_table
-Date: Mon, 7 May 2018 07:20:11 +0000
-Message-ID: <61D4E5D821F1674CB87C99F080A210BE011A75C8@BPXM01GP.gisp.nec.co.jp>
+Subject: RE: [PATCH 3/4] Makedumpfile: Add a new function check_5level_paging()
+Date: Mon, 7 May 2018 07:21:08 +0000
+Message-ID: <61D4E5D821F1674CB87C99F080A210BE011A75E5@BPXM01GP.gisp.nec.co.jp>
 References: <20180302054841.22195-1-bhe@redhat.com>
- <20180302054841.22195-3-bhe@redhat.com>
-In-Reply-To: <20180302054841.22195-3-bhe@redhat.com>
+ <20180302054841.22195-4-bhe@redhat.com>
+In-Reply-To: <20180302054841.22195-4-bhe@redhat.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -31,13 +31,14 @@ Hi Baoquan,
 
 Sorry for the late reply.
 
-> +	ENUM_NUMBER_INIT(N_ONLINE, "pgtable_l5_enabled");
-Is this ENUM_NUMBER_INIT(pgtable_l5_enabled, "pgtable_l5_enabled");  ?
+> +check_5level_paging(void)
+> +{
+> +	if (NUMBER(pgtable_l5_enabled) != 0)
+Is this if (NUMBER(pgtable_l5_enabled) != NOT_FOUND_NUMBER && NUMBER(pgtable_l5_enabled) != 0)  ?
+If so, I will correct this.
 
-> +	WRITE_NUMBER("N_ONLINE", pgtable_l5_enabled);
-Is this WRITE_NUMBER("pgtable_l5_enabled", pgtable_l5_enabled);  ?
+> +		return TRUE;
 
-If so, I will correct these.
 
 Thanks
 Tachibana
@@ -49,56 +50,35 @@ Tachibana
 > To: kexec@lists.infradead.org
 > Cc: douly.fnst@cn.fujitsu.com; indou.takao@jp.fujitsu.com; Hayashi Masahiko() <mas-hayashi@tg.jp.nec.com>;
 > Baoquan He <bhe@redhat.com>; Tachibana Masaki() <mas-tachibana@vf.jp.nec.com>
-> Subject: [PATCH 2/4] Makedumpfile: Add pgtable_l5_enabled to number_table
+> Subject: [PATCH 3/4] Makedumpfile: Add a new function check_5level_paging()
 > 
-> This is in preparation for later 5-level supporting.
+> Use it to check if the corrupted kernel is in 5-level paging.
 > 
 > Signed-off-by: Baoquan He <bhe@redhat.com>
 > ---
->  makedumpfile.c | 3 +++
->  makedumpfile.h | 1 +
->  2 files changed, 4 insertions(+)
+>  arch/x86_64.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index ed138d3..c1e893a 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -1723,6 +1723,7 @@ get_structure_info(void)
+> diff --git a/arch/x86_64.c b/arch/x86_64.c
+> index cbe45c2..e88ee0b 100644
+> --- a/arch/x86_64.c
+> +++ b/arch/x86_64.c
+> @@ -33,6 +33,15 @@ get_xen_p2m_mfn(void)
+>  	return NOT_FOUND_LONG_VALUE;
+>  }
 > 
->  	ENUM_NUMBER_INIT(NR_FREE_PAGES, "NR_FREE_PAGES");
->  	ENUM_NUMBER_INIT(N_ONLINE, "N_ONLINE");
-> +	ENUM_NUMBER_INIT(N_ONLINE, "pgtable_l5_enabled");
-> 
->  	ENUM_NUMBER_INIT(PG_lru, "PG_lru");
->  	ENUM_NUMBER_INIT(PG_private, "PG_private");
-> @@ -2251,6 +2252,7 @@ write_vmcoreinfo_data(void)
-> 
->  	WRITE_NUMBER("NR_FREE_PAGES", NR_FREE_PAGES);
->  	WRITE_NUMBER("N_ONLINE", N_ONLINE);
-> +	WRITE_NUMBER("N_ONLINE", pgtable_l5_enabled);
-> 
->  	WRITE_NUMBER("PG_lru", PG_lru);
->  	WRITE_NUMBER("PG_private", PG_private);
-> @@ -2645,6 +2647,7 @@ read_vmcoreinfo(void)
-> 
->  	READ_NUMBER("NR_FREE_PAGES", NR_FREE_PAGES);
->  	READ_NUMBER("N_ONLINE", N_ONLINE);
-> +	READ_NUMBER("pgtable_l5_enabled", pgtable_l5_enabled);
-> 
->  	READ_NUMBER("PG_lru", PG_lru);
->  	READ_NUMBER("PG_private", PG_private);
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index 088dfc3..a0d1c13 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -1856,6 +1856,7 @@ struct array_table {
->  struct number_table {
->  	long	NR_FREE_PAGES;
->  	long	N_ONLINE;
-> +	long	pgtable_l5_enabled;
-> 
->  	/*
->   	* Page flags
+> +static int
+> +check_5level_paging(void)
+> +{
+> +	if (NUMBER(pgtable_l5_enabled) != 0)
+> +		return TRUE;
+> +	else
+> +		return FALSE;
+> +}
+> +
+>  unsigned long
+>  get_kaslr_offset_x86_64(unsigned long vaddr)
+>  {
 > --
 > 2.13.6
 > 
