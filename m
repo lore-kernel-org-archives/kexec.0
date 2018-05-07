@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x241.google.com ([2607:f8b0:4001:c06::241])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fFaSH-0003qQ-SW
- for kexec@lists.infradead.org; Mon, 07 May 2018 07:21:08 +0000
-Received: by mail-io0-x241.google.com with SMTP id z4-v6so32497995iof.5
- for <kexec@lists.infradead.org>; Mon, 07 May 2018 00:20:55 -0700 (PDT)
-Date: Mon, 7 May 2018 16:21:41 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v9 06/11] arm64: kexec_file: allow for loading
- Image-format kernel
-Message-ID: <20180507072139.GF11326@linaro.org>
-References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
- <20180425062629.29404-7-takahiro.akashi@linaro.org>
- <c604b578-6667-3532-eac9-55c428001025@arm.com>
+ id 1fFaUW-0005O4-K3
+ for kexec@lists.infradead.org; Mon, 07 May 2018 07:23:43 +0000
+From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
+Subject: RE: [PATCH 1/4] arch/x86_64: Cleanup the address translation of the
+ 4-level page tables
+Date: Mon, 7 May 2018 07:19:45 +0000
+Message-ID: <61D4E5D821F1674CB87C99F080A210BE011A75A8@BPXM01GP.gisp.nec.co.jp>
+References: <20180302054841.22195-1-bhe@redhat.com>
+ <20180302054841.22195-2-bhe@redhat.com>
+In-Reply-To: <20180302054841.22195-2-bhe@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <c604b578-6667-3532-eac9-55c428001025@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,212 +25,231 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: Baoquan He <bhe@redhat.com>
+Cc: "douly.fnst@cn.fujitsu.com" <douly.fnst@cn.fujitsu.com>, "indou.takao@jp.fujitsu.com" <indou.takao@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Keiichi Nakamura <kei-nakamura@vt.jp.nec.com>
 
-James,
+Hi Baoquan,
 
-On Tue, May 01, 2018 at 06:46:11PM +0100, James Morse wrote:
-> Hi Akashi,
+Sorry for the late reply.
+
+
+> +#define PUD_SIZE		(1UL << PUD_SHIFT)
+> +#define PUD_MASK		(~(PUD_SHIFT - 1))
+                        Is this (~(PUD_SIZE - 1)) ?
+If so, I will correct this.
+
+> +#define PMD_SIZE		(1UL << PMD_SHIFT)
+> +#define PMD_MASK		(~(PMD_SIZE - 1))
+
+
+Thanks
+Tachibana
+
+
+> -----Original Message-----
+> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Baoquan He
+> Sent: Friday, March 02, 2018 2:49 PM
+> To: kexec@lists.infradead.org
+> Cc: douly.fnst@cn.fujitsu.com; indou.takao@jp.fujitsu.com; Hayashi Masahiko() <mas-hayashi@tg.jp.nec.com>;
+> Tachibana Masaki() <mas-tachibana@vf.jp.nec.com>
+> Subject: [PATCH 1/4] arch/x86_64: Cleanup the address translation of the 4-level page tables
 > 
-> On 25/04/18 07:26, AKASHI Takahiro wrote:
-> > This patch provides kexec_file_ops for "Image"-format kernel. In this
-> > implementation, a binary is always loaded with a fixed offset identified
-> > in text_offset field of its header.
+> From: Dou Liyang <douly.fnst@cn.fujitsu.com>
+> 
+> Due to the changing of 4-level page tables implementation in kernel, makedumpfile
+> left behind some of the redundant macros. this make the translation not clear and
+> hard to expand the code to support 5-level page tables.
+> 
+> Remove the PML4* and PGDIR_* and unify the macro to get the index of PGD.
+> 
+> Signed-off-by: Dou Liyang <douly.fnst@cn.fujitsu.com>
+> ---
+>  arch/x86_64.c  | 59 +++++++++++++++++++++++++++++++++++-----------------------
+>  makedumpfile.h | 21 +++++++++------------
+>  2 files changed, 45 insertions(+), 35 deletions(-)
+> 
+> diff --git a/arch/x86_64.c b/arch/x86_64.c
+> index 1f24415..cbe45c2 100644
+> --- a/arch/x86_64.c
+> +++ b/arch/x86_64.c
+> @@ -257,7 +257,7 @@ get_versiondep_info_x86_64(void)
+>  unsigned long long
+>  __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  {
+> -	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
+> +	unsigned long page_dir, pgd, pud_paddr, pud_pte, pmd_paddr, pmd_pte;
+>  	unsigned long pte_paddr, pte;
+> 
+>  	/*
+> @@ -269,43 +269,43 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  		if (page_dir == NOT_PADDR)
+>  			return NOT_PADDR;
+>  	}
+> -	page_dir += pml4_index(vaddr) * sizeof(unsigned long);
+> -	if (!readmem(PADDR, page_dir, &pml4, sizeof pml4)) {
+> -		ERRMSG("Can't get pml4 (page_dir:%lx).\n", page_dir);
+> +	page_dir += pgd_index(vaddr) * sizeof(unsigned long);
+> +	if (!readmem(PADDR, page_dir, &pgd, sizeof pgd)) {
+> +		ERRMSG("Can't get pgd (page_dir:%lx).\n", page_dir);
+>  		return NOT_PADDR;
+>  	}
+>  	if (info->vaddr_for_vtop == vaddr)
+> -		MSG("  PGD : %16lx => %16lx\n", page_dir, pml4);
+> +		MSG("  PGD : %16lx => %16lx\n", page_dir, pgd);
+> 
+> -	if (!(pml4 & _PAGE_PRESENT)) {
+> -		ERRMSG("Can't get a valid pml4.\n");
+> +	if (!(pgd & _PAGE_PRESENT)) {
+> +		ERRMSG("Can't get a valid pgd.\n");
+>  		return NOT_PADDR;
+>  	}
+> 
+>  	/*
+>  	 * Get PUD.
+>  	 */
+> -	pgd_paddr  = pml4 & ENTRY_MASK;
+> -	pgd_paddr += pgd_index(vaddr) * sizeof(unsigned long);
+> -	if (!readmem(PADDR, pgd_paddr, &pgd_pte, sizeof pgd_pte)) {
+> -		ERRMSG("Can't get pgd_pte (pgd_paddr:%lx).\n", pgd_paddr);
+> +	pud_paddr  = pgd & ENTRY_MASK;
+> +	pud_paddr += pud_index(vaddr) * sizeof(unsigned long);
+> +	if (!readmem(PADDR, pud_paddr, &pud_pte, sizeof pud_pte)) {
+> +		ERRMSG("Can't get pud_pte (pud_paddr:%lx).\n", pud_paddr);
+>  		return NOT_PADDR;
+>  	}
+>  	if (info->vaddr_for_vtop == vaddr)
+> -		MSG("  PUD : %16lx => %16lx\n", pgd_paddr, pgd_pte);
+> +		MSG("  PUD : %16lx => %16lx\n", pud_paddr, pud_pte);
+> 
+> -	if (!(pgd_pte & _PAGE_PRESENT)) {
+> -		ERRMSG("Can't get a valid pgd_pte.\n");
+> +	if (!(pud_pte & _PAGE_PRESENT)) {
+> +		ERRMSG("Can't get a valid pud_pte.\n");
+>  		return NOT_PADDR;
+>  	}
+> -	if (pgd_pte & _PAGE_PSE)	/* 1GB pages */
+> -		return (pgd_pte & ENTRY_MASK & PGDIR_MASK) +
+> -			(vaddr & ~PGDIR_MASK);
+> +	if (pud_pte & _PAGE_PSE)	/* 1GB pages */
+> +		return (pud_pte & ENTRY_MASK & PUD_MASK) +
+> +			(vaddr & ~PUD_MASK);
+> 
+>  	/*
+>  	 * Get PMD.
+>  	 */
+> -	pmd_paddr  = pgd_pte & ENTRY_MASK;
+> +	pmd_paddr  = pud_pte & ENTRY_MASK;
+>  	pmd_paddr += pmd_index(vaddr) * sizeof(unsigned long);
+>  	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof pmd_pte)) {
+>  		ERRMSG("Can't get pmd_pte (pmd_paddr:%lx).\n", pmd_paddr);
+> @@ -391,15 +391,22 @@ kvtop_xen_x86_64(unsigned long kvaddr)
+> 
+>  	if ((dirp = kvtop_xen_x86_64(SYMBOL(pgd_l4))) == NOT_PADDR)
+>  		return NOT_PADDR;
+> -	dirp += pml4_index(kvaddr) * sizeof(unsigned long long);
+> +
+> +	/*
+> +	 * Get PGD.
+> +	 */
+> +	dirp += pgd_index(kvaddr) * sizeof(unsigned long long);
+>  	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
+>  		return NOT_PADDR;
+> 
+>  	if (!(entry & _PAGE_PRESENT))
+>  		return NOT_PADDR;
+> 
+> +	/*
+> +	 * Get PUD.
+> +	 */
+>  	dirp = entry & ENTRY_MASK;
+> -	dirp += pgd_index(kvaddr) * sizeof(unsigned long long);
+> +	dirp += pud_index(kvaddr) * sizeof(unsigned long long);
+>  	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
+>  		return NOT_PADDR;
+> 
+> @@ -407,9 +414,12 @@ kvtop_xen_x86_64(unsigned long kvaddr)
+>  		return NOT_PADDR;
+> 
+>  	if (entry & _PAGE_PSE)		/* 1GB pages */
+> -		return (entry & ENTRY_MASK & PGDIR_MASK) +
+> -			(kvaddr & ~PGDIR_MASK);
+> +		return (entry & ENTRY_MASK & PUD_MASK) +
+> +			(kvaddr & ~PUD_MASK);
+> 
+> +	/*
+> +	 * Get PMD.
+> +	 */
+>  	dirp = entry & ENTRY_MASK;
+>  	dirp += pmd_index(kvaddr) * sizeof(unsigned long long);
+>  	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
+> @@ -422,6 +432,9 @@ kvtop_xen_x86_64(unsigned long kvaddr)
+>  		return (entry & ENTRY_MASK & PMD_MASK) +
+>  			(kvaddr & ~PMD_MASK);
+> 
+> +	/*
+> +	 * Get PTE.
+> +	 */
+>  	dirp = entry & ENTRY_MASK;
+>  	dirp += pte_index(kvaddr) * sizeof(unsigned long long);
+>  	if (!readmem(PADDR, dirp, &entry, sizeof(entry)))
+> @@ -596,7 +609,7 @@ find_vmemmap_x86_64()
+>  	 * for max_paddr >> 12 page structures
+>  	 */
+>  	high_pfn = max_paddr >> 12;
+> -	pgd_index = pgd4_index(vaddr_base);
+> +	pgd_index = pgd_index(vaddr_base);
+>  	pgd_addr = vaddr_to_paddr(init_level4_pgt); /* address of pgd */
+>  	pgd_addr += pgd_index * sizeof(unsigned long);
+>  	page_structs_per_pud = (PTRS_PER_PUD * PTRS_PER_PMD * info->page_size) /
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 01eece2..088dfc3 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -602,25 +602,22 @@ unsigned long get_kvbase_arm64(void);
+>  /*
+>   * 4 Levels paging
+>   */
+> -#define PML4_SHIFT		(39)
+> -#define PTRS_PER_PML4		(512)
+> -#define PGDIR_SHIFT		(30)
+> -#define PGDIR_SIZE		(1UL << PGDIR_SHIFT)
+> -#define PGDIR_MASK		(~(PGDIR_SIZE - 1))
+> -#define PTRS_PER_PGD		(512)
+>  #define PGD_SHIFT		(39)
+>  #define PUD_SHIFT		(30)
+>  #define PMD_SHIFT		(21)
+> -#define PMD_SIZE		(1UL << PMD_SHIFT)
+> -#define PMD_MASK		(~(PMD_SIZE - 1))
+> +#define PTE_SHIFT		(12)
+> +
+> +#define PTRS_PER_PGD		(512)
+>  #define PTRS_PER_PUD		(512)
+>  #define PTRS_PER_PMD		(512)
+>  #define PTRS_PER_PTE		(512)
+> -#define PTE_SHIFT		(12)
+> 
+> -#define pml4_index(address) (((address) >> PML4_SHIFT) & (PTRS_PER_PML4 - 1))
+> -#define pgd_index(address)  (((address) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
+> -#define pgd4_index(address) (((address) >> PGD_SHIFT) & (PTRS_PER_PGD - 1))
+> +#define PUD_SIZE		(1UL << PUD_SHIFT)
+> +#define PUD_MASK		(~(PUD_SHIFT - 1))
+> +#define PMD_SIZE		(1UL << PMD_SHIFT)
+> +#define PMD_MASK		(~(PMD_SIZE - 1))
+> +
+> +#define pgd_index(address)  (((address) >> PGD_SHIFT) & (PTRS_PER_PGD - 1))
+>  #define pud_index(address)  (((address) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
+>  #define pmd_index(address)  (((address) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
+>  #define pte_index(address)  (((address) >> PTE_SHIFT) & (PTRS_PER_PTE - 1))
+> --
+> 2.13.6
 > 
 > 
-> > diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> > index e4de1223715f..3cba4161818a 100644
-> > --- a/arch/arm64/include/asm/kexec.h
-> > +++ b/arch/arm64/include/asm/kexec.h
-> > @@ -102,6 +102,56 @@ struct kimage_arch {
-> >  	void *dtb_buf;
-> >  };
-> >  
-> > +/**
-> > + * struct arm64_image_header - arm64 kernel image header
-> > + *
-> > + * @pe_sig: Optional PE format 'MZ' signature
-> > + * @branch_code: Instruction to branch to stext
-> > + * @text_offset: Image load offset, little endian
-> > + * @image_size: Effective image size, little endian
-> > + * @flags:
-> > + *	Bit 0: Kernel endianness. 0=little endian, 1=big endian
-> 
-> Page size? What about 'phys_base'?, (whatever that is...)
-> Probably best to refer to Documentation/arm64/booting.txt here, its the
-> authoritative source of what these fields mean.
-
-While we don't care other bit fields for now, I will add the reference
-to the Documentation file.
-
-> 
-> > + * @reserved: Reserved
-> > + * @magic: Magic number, "ARM\x64"
-> > + * @pe_header: Optional offset to a PE format header
-> > + **/
-> > +
-> > +struct arm64_image_header {
-> > +	u8 pe_sig[2];
-> > +	u8 pad[2];
-> > +	u32 branch_code;
-> > +	u64 text_offset;
-> > +	u64 image_size;
-> > +	u64 flags;
-> 
-> __le64 as appropriate here would let tools like sparse catch any missing endian
-> conversion bugs.
-
-OK.
-
-> 
-> > +	u64 reserved[3];
-> > +	u8 magic[4];
-> > +	u32 pe_header;
-> > +};
-> 
-> I'm surprised we don't have a definition for this already, I guess its always
-> done in asm. We have kernel/image.h that holds some of this stuff, if we are
-> going to validate the flags, is it worth adding the code there, (and moving it
-> to include/asm)?
-
-A comment at the beginning of this file says,
-    #ifndef LINKER_SCRIPT
-    #error This file should only be included in vmlinux.lds.S
-    #endif
-Let me think about.
-
-> 
-> > +static const u8 arm64_image_magic[4] = {'A', 'R', 'M', 0x64U};
-> 
-> Any chance this magic could be a pre-processor symbol shared with head.S?
-
-OK.
-
-> 
-> > +
-> > +/**
-> > + * arm64_header_check_magic - Helper to check the arm64 image header.
-> > + *
-> > + * Returns non-zero if header is OK.
-> > + */
-> > +
-> > +static inline int arm64_header_check_magic(const struct arm64_image_header *h)
-> > +{
-> > +	if (!h)
-> > +		return 0;
-> > +
-> > +	if (!h->text_offset)
-> > +		return 0;
-> > +
-> > +	return (h->magic[0] == arm64_image_magic[0]
-> > +		&& h->magic[1] == arm64_image_magic[1]
-> > +		&& h->magic[2] == arm64_image_magic[2]
-> > +		&& h->magic[3] == arm64_image_magic[3]);
-> 
-> memcmp()? Or just define it as a 32bit value?
-
-OK. As you know, I always tried to keep the code not diverted
-from kexec-tools for maintainability reason.
-
-> I guess you skip the MZ prefix as its not present for !EFI?
-
-CONFIG_KEXEC_IMAGE_VERIFY_SIG depends on the fact that the file
-format is PE (that is, EFI is enabled).
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 
-> Could we check branch_code is non-zero, and text-offset points within image-size?
-
-We could do it, but I don't think this check is very useful.
-
-> 
-> We could check that this platform supports the page-size/endian config that this
-> Image was built with... We get a message from the EFI stub if the page-size
-> can't be supported, it would be nice to do the same here (as we can).
-
-There is no restriction on page-size or endianness for kexec.
-What will be the purpose of this check?
-
-> (no idea if kexec-tool checks this stuff, it probably can't get at the id
-> registers to know)
-> 
-> 
-> > diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-> > new file mode 100644
-> > index 000000000000..4dd524ad6611
-> > --- /dev/null
-> > +++ b/arch/arm64/kernel/kexec_image.c
-> > @@ -0,0 +1,79 @@
-> 
-> > +static void *image_load(struct kimage *image,
-> > +				char *kernel, unsigned long kernel_len,
-> > +				char *initrd, unsigned long initrd_len,
-> > +				char *cmdline, unsigned long cmdline_len)
-> > +{
-> > +	struct kexec_buf kbuf;
-> > +	struct arm64_image_header *h = (struct arm64_image_header *)kernel;
-> > +	unsigned long text_offset;
-> > +	int ret;
-> > +
-> > +	/* Load the kernel */
-> > +	kbuf.image = image;
-> > +	kbuf.buf_min = 0;
-> > +	kbuf.buf_max = ULONG_MAX;
-> > +	kbuf.top_down = false;
-> > +
-> > +	kbuf.buffer = kernel;
-> > +	kbuf.bufsz = kernel_len;
-> > +	kbuf.memsz = le64_to_cpu(h->image_size);
-> > +	text_offset = le64_to_cpu(h->text_offset);
-> > +	kbuf.buf_align = SZ_2M;
-> 
-> > +	/* Adjust kernel segment with TEXT_OFFSET */
-> > +	kbuf.memsz += text_offset;
-> > +
-> > +	ret = kexec_add_buffer(&kbuf);
-> > +	if (ret)
-> > +		goto out;
-> > +
-> > +	image->arch.kern_segment = image->nr_segments - 1;
-> 
-> You only seem to use kern_segment here, and in load_other_segments() called
-> below. Could it not be a local variable passed in? Instead of arch-specific data
-> we keep forever?
-
-No, kern_segment is also used in load_other_segments() in machine_kexec_file.c.
-To optimize memory hole allocation logic in locate_mem_hole_callback(),
-we need to know the exact range of kernel image (start and end).
-
-(Known drawback in this code is that Image only occupies one segment, but
-once vmlinux might be supported, it would occupy two segments for text and
-data.)
-
-> 
-> > +	image->segment[image->arch.kern_segment].mem += text_offset;
-> > +	image->segment[image->arch.kern_segment].memsz -= text_offset;
-> > +	image->start = image->segment[image->arch.kern_segment].mem;
-> > +
-> > +	pr_debug("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-> > +				image->segment[image->arch.kern_segment].mem,
-> > +				kbuf.bufsz, kbuf.memsz);
-> > +
-> > +	/* Load additional data */
-> > +	ret = load_other_segments(image, initrd, initrd_len,
-> > +				cmdline, cmdline_len);
-> > +
-> > +out:
-> > +	return ERR_PTR(ret);
-> > +}
-> Looks good,
-
-Thank you for thorough review.
-
--Takahiro AKASHI
-
-
-> Thanks,
-> 
-> James
 
 _______________________________________________
 kexec mailing list
