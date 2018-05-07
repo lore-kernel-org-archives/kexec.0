@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fFZia-0003Lk-7F
- for kexec@lists.infradead.org; Mon, 07 May 2018 06:33:53 +0000
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fFZip-00035W-4w
+ for kexec@lists.infradead.org; Mon, 07 May 2018 06:34:08 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v4 2/3] resource: add walk_system_ram_res_rev()
-Date: Mon,  7 May 2018 14:32:23 +0800
-Message-Id: <20180507063224.24229-3-bhe@redhat.com>
+Subject: [PATCH v4 3/3] kexec_file: Load kernel at top of system RAM if
+ required
+Date: Mon,  7 May 2018 14:32:24 +0800
+Message-Id: <20180507063224.24229-4-bhe@redhat.com>
 In-Reply-To: <20180507063224.24229-1-bhe@redhat.com>
 References: <20180507063224.24229-1-bhe@redhat.com>
-MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,63 +18,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, akpm@linux-foundation.org, robh+dt@kernel.org, dan.j.williams@intel.com, nicolas.pitre@linaro.org, josh@joshtriplett.org, fengguang.wu@intel.com, bp@suse.de
 Cc: brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, kys@microsoft.com, frowand.list@gmail.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, dyoung@redhat.com, vgoyal@redhat.com, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, jglisse@redhat.com, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, ebiederm@xmission.com, devel@linuxdriverproject.org, davem@davemloft.net
 
-VGhpcyBmdW5jdGlvbiwgYmVpbmcgYSB2YXJpYW50IG9mIHdhbGtfc3lzdGVtX3JhbV9yZXMoKSBp
-bnRyb2R1Y2VkIGluCmNvbW1pdCA4Yzg2ZTcwYWNlYWQgKCJyZXNvdXJjZTogcHJvdmlkZSBuZXcg
-ZnVuY3Rpb25zIHRvIHdhbGsgdGhyb3VnaApyZXNvdXJjZXMiKSwgd2Fsa3MgdGhyb3VnaCBhIGxp
-c3Qgb2YgYWxsIHRoZSByZXNvdXJjZXMgb2YgU3lzdGVtIFJBTQppbiByZXZlcnNlZCBvcmRlciwg
-aS5lLiwgZnJvbSBoaWdoZXIgdG8gbG93ZXIuCgpJdCB3aWxsIGJlIHVzZWQgaW4ga2V4ZWNfZmls
-ZSBjb2RlLgoKU2lnbmVkLW9mZi1ieTogQmFvcXVhbiBIZSA8YmhlQHJlZGhhdC5jb20+CkNjOiBB
-bmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPgpDYzogVGhvbWFzIEdsZWl4
-bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+CkNjOiBCcmlqZXNoIFNpbmdoIDxicmlqZXNoLnNpbmdo
-QGFtZC5jb20+CkNjOiAiSsOpcsO0bWUgR2xpc3NlIiA8amdsaXNzZUByZWRoYXQuY29tPgpDYzog
-Qm9yaXNsYXYgUGV0a292IDxicEBzdXNlLmRlPgpDYzogVG9tIExlbmRhY2t5IDx0aG9tYXMubGVu
-ZGFja3lAYW1kLmNvbT4KQ2M6IFdlaSBZYW5nIDxyaWNoYXJkLndlaXlhbmdAZ21haWwuY29tPgot
-LS0KIGluY2x1ZGUvbGludXgvaW9wb3J0LmggfCAgMyArKysKIGtlcm5lbC9yZXNvdXJjZS5jICAg
-ICAgfCA0MCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAyIGZpbGVz
-IGNoYW5nZWQsIDQzIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2lv
-cG9ydC5oIGIvaW5jbHVkZS9saW51eC9pb3BvcnQuaAppbmRleCAyMjVkMTNkMzUwMGEuLjVmMmNm
-YjQ2MGExNCAxMDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9pb3BvcnQuaAorKysgYi9pbmNsdWRl
-L2xpbnV4L2lvcG9ydC5oCkBAIC0yNzgsNiArMjc4LDkgQEAgZXh0ZXJuIGludAogd2Fsa19zeXN0
-ZW1fcmFtX3Jlcyh1NjQgc3RhcnQsIHU2NCBlbmQsIHZvaWQgKmFyZywKIAkJICAgIGludCAoKmZ1
-bmMpKHN0cnVjdCByZXNvdXJjZSAqLCB2b2lkICopKTsKIGV4dGVybiBpbnQKK3dhbGtfc3lzdGVt
-X3JhbV9yZXNfcmV2KHU2NCBzdGFydCwgdTY0IGVuZCwgdm9pZCAqYXJnLAorCQkJaW50ICgqZnVu
-Yykoc3RydWN0IHJlc291cmNlICosIHZvaWQgKikpOworZXh0ZXJuIGludAogd2Fsa19pb21lbV9y
-ZXNfZGVzYyh1bnNpZ25lZCBsb25nIGRlc2MsIHVuc2lnbmVkIGxvbmcgZmxhZ3MsIHU2NCBzdGFy
-dCwgdTY0IGVuZCwKIAkJICAgIHZvaWQgKmFyZywgaW50ICgqZnVuYykoc3RydWN0IHJlc291cmNl
-ICosIHZvaWQgKikpOwogCmRpZmYgLS1naXQgYS9rZXJuZWwvcmVzb3VyY2UuYyBiL2tlcm5lbC9y
-ZXNvdXJjZS5jCmluZGV4IDRmNTYwOTkxYzEzMC4uNmM1MTliMDZlM2Q2IDEwMDY0NAotLS0gYS9r
-ZXJuZWwvcmVzb3VyY2UuYworKysgYi9rZXJuZWwvcmVzb3VyY2UuYwpAQCAtMjMsNiArMjMsOCBA
-QAogI2luY2x1ZGUgPGxpbnV4L3Bmbi5oPgogI2luY2x1ZGUgPGxpbnV4L21tLmg+CiAjaW5jbHVk
-ZSA8bGludXgvcmVzb3VyY2VfZXh0Lmg+CisjaW5jbHVkZSA8bGludXgvc3RyaW5nLmg+CisjaW5j
-bHVkZSA8bGludXgvdm1hbGxvYy5oPgogI2luY2x1ZGUgPGFzbS9pby5oPgogCiAKQEAgLTQ3NSw2
-ICs0NzcsNDQgQEAgaW50IHdhbGtfc3lzdGVtX3JhbV9yZXModTY0IHN0YXJ0LCB1NjQgZW5kLCB2
-b2lkICphcmcsCiB9CiAKIC8qCisgKiBUaGlzIGZ1bmN0aW9uLCBiZWluZyBhIHZhcmlhbnQgb2Yg
-d2Fsa19zeXN0ZW1fcmFtX3JlcygpLCBjYWxscyB0aGUgQGZ1bmMKKyAqIGNhbGxiYWNrIGFnYWlu
-c3QgYWxsIG1lbW9yeSByYW5nZXMgb2YgdHlwZSBTeXN0ZW0gUkFNIHdoaWNoIGFyZSBtYXJrZWQg
-YXMKKyAqIElPUkVTT1VSQ0VfU1lTVEVNX1JBTSBhbmQgSU9SRVNPVUNFX0JVU1kgaW4gcmV2ZXJz
-ZWQgb3JkZXIsIGkuZS4sIGZyb20KKyAqIGhpZ2hlciB0byBsb3dlci4KKyAqLworaW50IHdhbGtf
-c3lzdGVtX3JhbV9yZXNfcmV2KHU2NCBzdGFydCwgdTY0IGVuZCwgdm9pZCAqYXJnLAorCQkJCWlu
-dCAoKmZ1bmMpKHN0cnVjdCByZXNvdXJjZSAqLCB2b2lkICopKQoreworCXVuc2lnbmVkIGxvbmcg
-ZmxhZ3M7CisJc3RydWN0IHJlc291cmNlICpyZXM7CisJaW50IHJldCA9IC0xOworCisJZmxhZ3Mg
-PSBJT1JFU09VUkNFX1NZU1RFTV9SQU0gfCBJT1JFU09VUkNFX0JVU1k7CisKKwlyZWFkX2xvY2so
-JnJlc291cmNlX2xvY2spOworCWxpc3RfZm9yX2VhY2hfZW50cnlfcmV2ZXJzZShyZXMsICZpb21l
-bV9yZXNvdXJjZS5jaGlsZCwgc2libGluZykgeworCQlpZiAoc3RhcnQgPj0gZW5kKQorCQkJYnJl
-YWs7CisJCWlmICgocmVzLT5mbGFncyAmIGZsYWdzKSAhPSBmbGFncykKKwkJCWNvbnRpbnVlOwor
-CQlpZiAocmVzLT5kZXNjICE9IElPUkVTX0RFU0NfTk9ORSkKKwkJCWNvbnRpbnVlOworCQlpZiAo
-cmVzLT5lbmQgPCBzdGFydCkKKwkJCWJyZWFrOworCisJCWlmICgocmVzLT5lbmQgPj0gc3RhcnQp
-ICYmIChyZXMtPnN0YXJ0IDwgZW5kKSkgeworCQkJcmV0ID0gKCpmdW5jKShyZXMsIGFyZyk7CisJ
-CQlpZiAocmV0KQorCQkJCWJyZWFrOworCQl9CisJCWVuZCA9IHJlcy0+c3RhcnQgLSAxOworCisJ
-fQorCXJlYWRfdW5sb2NrKCZyZXNvdXJjZV9sb2NrKTsKKwlyZXR1cm4gcmV0OworfQorCisvKgog
-ICogVGhpcyBmdW5jdGlvbiBjYWxscyB0aGUgQGZ1bmMgY2FsbGJhY2sgYWdhaW5zdCBhbGwgbWVt
-b3J5IHJhbmdlcywgd2hpY2gKICAqIGFyZSByYW5nZXMgbWFya2VkIGFzIElPUkVTT1VSQ0VfTUVN
-IGFuZCBJT1JFU09VQ0VfQlVTWS4KICAqLwotLSAKMi4xMy42CgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9rZXhlYwo=
+For kexec_file loading, if kexec_buf.top_down is 'true', the memory which
+is used to load kernel/initrd/purgatory is supposed to be allocated from
+top to down. This is what we have been doing all along in the old kexec
+loading interface and the kexec loading is still default setting in some
+distributions. However, the current kexec_file loading interface doesn't
+do likt this. The function arch_kexec_walk_mem() it calls ignores checking
+kexec_buf.top_down, but calls walk_system_ram_res() directly to go through
+all resources of System RAM from bottom to up, to try to find memory region
+which can contain the specific kexec buffer, then call locate_mem_hole_callback()
+to allocate memory in that found memory region from top to down. This brings
+confusion especially when KASLR is widely supported , users have to make clear
+why kexec/kdump kernel loading position is different between these two
+interfaces in order to exclude unnecessary noises. Hence these two interfaces
+need be unified on behaviour.
+
+Here add checking if kexec_buf.top_down is 'true' in arch_kexec_walk_mem(),
+if yes, call the newly added walk_system_ram_res_rev() to find memory region
+from top to down to load kernel.
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yinghai Lu <yinghai@kernel.org>
+Cc: kexec@lists.infradead.org
+---
+ kernel/kexec_file.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 75d8e7cf040e..7a66d9d5a534 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -518,6 +518,8 @@ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+ 					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+ 					   crashk_res.start, crashk_res.end,
+ 					   kbuf, func);
++	else if (kbuf->top_down)
++		return walk_system_ram_res_rev(0, ULONG_MAX, kbuf, func);
+ 	else
+ 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
+ }
+-- 
+2.13.6
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
