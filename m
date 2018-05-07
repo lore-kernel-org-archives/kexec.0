@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x244.google.com ([2607:f8b0:4001:c06::244])
+Received: from mail-io0-x241.google.com ([2607:f8b0:4001:c06::241])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fFZAO-00048m-D0
- for kexec@lists.infradead.org; Mon, 07 May 2018 05:58:33 +0000
-Received: by mail-io0-x244.google.com with SMTP id g1-v6so22923244iob.2
- for <kexec@lists.infradead.org>; Sun, 06 May 2018 22:58:22 -0700 (PDT)
-Date: Mon, 7 May 2018 14:59:07 +0900
+ id 1fFaSH-0003qQ-SW
+ for kexec@lists.infradead.org; Mon, 07 May 2018 07:21:08 +0000
+Received: by mail-io0-x241.google.com with SMTP id z4-v6so32497995iof.5
+ for <kexec@lists.infradead.org>; Mon, 07 May 2018 00:20:55 -0700 (PDT)
+Date: Mon, 7 May 2018 16:21:41 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v9 04/11] arm64: kexec_file: allocate memory walking
- through memblock list
-Message-ID: <20180507055906.GE11326@linaro.org>
+Subject: Re: [PATCH v9 06/11] arm64: kexec_file: allow for loading
+ Image-format kernel
+Message-ID: <20180507072139.GF11326@linaro.org>
 References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
- <20180425062629.29404-5-takahiro.akashi@linaro.org>
- <648656ef-1f1e-b0ac-581c-aba1e62f4eee@arm.com>
+ <20180425062629.29404-7-takahiro.akashi@linaro.org>
+ <c604b578-6667-3532-eac9-55c428001025@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <648656ef-1f1e-b0ac-581c-aba1e62f4eee@arm.com>
+In-Reply-To: <c604b578-6667-3532-eac9-55c428001025@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,145 +33,204 @@ Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, cata
 
 James,
 
-On Tue, May 01, 2018 at 06:46:09PM +0100, James Morse wrote:
+On Tue, May 01, 2018 at 06:46:11PM +0100, James Morse wrote:
 > Hi Akashi,
 > 
 > On 25/04/18 07:26, AKASHI Takahiro wrote:
-> > We need to prevent firmware-reserved memory regions, particularly EFI
-> > memory map as well as ACPI tables, from being corrupted by loading
-> > kernel/initrd (or other kexec buffers). We also want to support memory
-> > allocation in top-down manner in addition to default bottom-up.
-> > So let's have arm64 specific arch_kexec_walk_mem() which will search
-> > for available memory ranges in usable memblock list,
-> > i.e. !NOMAP & !reserved, 
+> > This patch provides kexec_file_ops for "Image"-format kernel. In this
+> > implementation, a binary is always loaded with a fixed offset identified
+> > in text_offset field of its header.
 > 
-> > instead of system resource tree.
 > 
-> Didn't we try to fix the system-resource-tree in order to fix regular-kexec to
-> be safe in the EFI-memory-map/ACPI-tables case?
-> 
-> It would be good to avoid having two ways of doing this, and I would like to
-> avoid having extra arch code...
-
-I know what you mean.
-/proc/iomem or system resource is, in my opinion, not the best place to
-describe memory usage of kernel but rather to describe *physical* hardware
-layout. As we are still discussing about "reserved" memory, I don't want
-to depend on it.
-Along with memblock list, we will have more accurate control over memory
-usage.
-
-> 
-> > diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> > new file mode 100644
-> > index 000000000000..f9ebf54ca247
-> > --- /dev/null
-> > +++ b/arch/arm64/kernel/machine_kexec_file.c
-> > @@ -0,0 +1,57 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * kexec_file for arm64
+> > diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> > index e4de1223715f..3cba4161818a 100644
+> > --- a/arch/arm64/include/asm/kexec.h
+> > +++ b/arch/arm64/include/asm/kexec.h
+> > @@ -102,6 +102,56 @@ struct kimage_arch {
+> >  	void *dtb_buf;
+> >  };
+> >  
+> > +/**
+> > + * struct arm64_image_header - arm64 kernel image header
 > > + *
-> > + * Copyright (C) 2018 Linaro Limited
-> > + * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > + *
+> > + * @pe_sig: Optional PE format 'MZ' signature
+> > + * @branch_code: Instruction to branch to stext
+> > + * @text_offset: Image load offset, little endian
+> > + * @image_size: Effective image size, little endian
+> > + * @flags:
+> > + *	Bit 0: Kernel endianness. 0=little endian, 1=big endian
 > 
-> > + * Most code is derived from arm64 port of kexec-tools
-> 
-> How does kexec-tools walk memblock?
+> Page size? What about 'phys_base'?, (whatever that is...)
+> Probably best to refer to Documentation/arm64/booting.txt here, its the
+> authoritative source of what these fields mean.
 
-Will remove this comment from this patch.
-Obviously, this comment is for the rest of the code which will be
-added to succeeding patches (patch #5 and #7).
-
+While we don't care other bit fields for now, I will add the reference
+to the Documentation file.
 
 > 
-> > + */
+> > + * @reserved: Reserved
+> > + * @magic: Magic number, "ARM\x64"
+> > + * @pe_header: Optional offset to a PE format header
+> > + **/
 > > +
-> > +#define pr_fmt(fmt) "kexec_file: " fmt
-> > +
-> > +#include <linux/ioport.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/kexec.h>
-> > +#include <linux/memblock.h>
-> > +
-> > +int arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> > +				int (*func)(struct resource *, void *))
-> > +{
-> > +	phys_addr_t start, end;
-> > +	struct resource res;
-> > +	u64 i;
-> > +	int ret = 0;
-> > +
-> > +	if (kbuf->image->type == KEXEC_TYPE_CRASH)
-> > +		return func(&crashk_res, kbuf);
-> > +
-> > +	if (kbuf->top_down)
-> > +		for_each_mem_range_rev(i, &memblock.memory, &memblock.reserved,
-> > +				NUMA_NO_NODE, MEMBLOCK_NONE,
-> > +				&start, &end, NULL) {
+> > +struct arm64_image_header {
+> > +	u8 pe_sig[2];
+> > +	u8 pad[2];
+> > +	u32 branch_code;
+> > +	u64 text_offset;
+> > +	u64 image_size;
+> > +	u64 flags;
 > 
-> for_each_free_mem_range_reverse() is a more readable version of this helper.
-
-OK. I used to use my own limited list of reserved memory instead of
-memblock.reserved here to exclude verbose ranges.
-
-
-> > +			if (!memblock_is_map_memory(start))
-> > +				continue;
-> 
-> Passing MEMBLOCK_NONE means this walk will never find MEMBLOCK_NOMAP memory.
-
-Sure, I confirmed it.
-
-> 
-> > +			res.start = start;
-> > +			res.end = end;
-> > +			ret = func(&res, kbuf);
-> > +			if (ret)
-> > +				break;
-> > +		}
-> > +	else
-> > +		for_each_mem_range(i, &memblock.memory, &memblock.reserved,
-> > +				NUMA_NO_NODE, MEMBLOCK_NONE,
-> > +				&start, &end, NULL) {
-> 
-> for_each_free_mem_range()?
+> __le64 as appropriate here would let tools like sparse catch any missing endian
+> conversion bugs.
 
 OK.
 
-> > +			if (!memblock_is_map_memory(start))
-> > +				continue;
-> > +
-> > +			res.start = start;
-> > +			res.end = end;
-> > +			ret = func(&res, kbuf);
-> > +			if (ret)
-> > +				break;
-> > +		}
-> > +
-> > +	return ret;
-> > +}
-> > 
 > 
-> With these changes, what we have is almost:
-> arch/powerpc/kernel/machine_kexec_file_64.c::arch_kexec_walk_mem() !
-> (the difference being powerpc doesn't yet support crash-kernels here)
+> > +	u64 reserved[3];
+> > +	u8 magic[4];
+> > +	u32 pe_header;
+> > +};
 > 
-> If the argument is walking memblock gives a better answer than the stringy
-> walk_system_ram_res() thing, is there any mileage in moving this code into
-> kexec_file.c, and using it if !IS_ENABLED(CONFIG_ARCH_DISCARD_MEMBLOCK)?
-> 
-> This would save arm64/powerpc having near-identical implementations.
-> 32bit arm keeps memblock if it has kexec, so it may be useful there too if
-> kexec_file_load() support is added.
+> I'm surprised we don't have a definition for this already, I guess its always
+> done in asm. We have kernel/image.h that holds some of this stuff, if we are
+> going to validate the flags, is it worth adding the code there, (and moving it
+> to include/asm)?
 
-Thanks. I've forgot ppc.
+A comment at the beginning of this file says,
+    #ifndef LINKER_SCRIPT
+    #error This file should only be included in vmlinux.lds.S
+    #endif
+Let me think about.
+
+> 
+> > +static const u8 arm64_image_magic[4] = {'A', 'R', 'M', 0x64U};
+> 
+> Any chance this magic could be a pre-processor symbol shared with head.S?
+
+OK.
+
+> 
+> > +
+> > +/**
+> > + * arm64_header_check_magic - Helper to check the arm64 image header.
+> > + *
+> > + * Returns non-zero if header is OK.
+> > + */
+> > +
+> > +static inline int arm64_header_check_magic(const struct arm64_image_header *h)
+> > +{
+> > +	if (!h)
+> > +		return 0;
+> > +
+> > +	if (!h->text_offset)
+> > +		return 0;
+> > +
+> > +	return (h->magic[0] == arm64_image_magic[0]
+> > +		&& h->magic[1] == arm64_image_magic[1]
+> > +		&& h->magic[2] == arm64_image_magic[2]
+> > +		&& h->magic[3] == arm64_image_magic[3]);
+> 
+> memcmp()? Or just define it as a 32bit value?
+
+OK. As you know, I always tried to keep the code not diverted
+from kexec-tools for maintainability reason.
+
+> I guess you skip the MZ prefix as its not present for !EFI?
+
+CONFIG_KEXEC_IMAGE_VERIFY_SIG depends on the fact that the file
+format is PE (that is, EFI is enabled).
+
+
+> Could we check branch_code is non-zero, and text-offset points within image-size?
+
+We could do it, but I don't think this check is very useful.
+
+> 
+> We could check that this platform supports the page-size/endian config that this
+> Image was built with... We get a message from the EFI stub if the page-size
+> can't be supported, it would be nice to do the same here (as we can).
+
+There is no restriction on page-size or endianness for kexec.
+What will be the purpose of this check?
+
+> (no idea if kexec-tool checks this stuff, it probably can't get at the id
+> registers to know)
+> 
+> 
+> > diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
+> > new file mode 100644
+> > index 000000000000..4dd524ad6611
+> > --- /dev/null
+> > +++ b/arch/arm64/kernel/kexec_image.c
+> > @@ -0,0 +1,79 @@
+> 
+> > +static void *image_load(struct kimage *image,
+> > +				char *kernel, unsigned long kernel_len,
+> > +				char *initrd, unsigned long initrd_len,
+> > +				char *cmdline, unsigned long cmdline_len)
+> > +{
+> > +	struct kexec_buf kbuf;
+> > +	struct arm64_image_header *h = (struct arm64_image_header *)kernel;
+> > +	unsigned long text_offset;
+> > +	int ret;
+> > +
+> > +	/* Load the kernel */
+> > +	kbuf.image = image;
+> > +	kbuf.buf_min = 0;
+> > +	kbuf.buf_max = ULONG_MAX;
+> > +	kbuf.top_down = false;
+> > +
+> > +	kbuf.buffer = kernel;
+> > +	kbuf.bufsz = kernel_len;
+> > +	kbuf.memsz = le64_to_cpu(h->image_size);
+> > +	text_offset = le64_to_cpu(h->text_offset);
+> > +	kbuf.buf_align = SZ_2M;
+> 
+> > +	/* Adjust kernel segment with TEXT_OFFSET */
+> > +	kbuf.memsz += text_offset;
+> > +
+> > +	ret = kexec_add_buffer(&kbuf);
+> > +	if (ret)
+> > +		goto out;
+> > +
+> > +	image->arch.kern_segment = image->nr_segments - 1;
+> 
+> You only seem to use kern_segment here, and in load_other_segments() called
+> below. Could it not be a local variable passed in? Instead of arch-specific data
+> we keep forever?
+
+No, kern_segment is also used in load_other_segments() in machine_kexec_file.c.
+To optimize memory hole allocation logic in locate_mem_hole_callback(),
+we need to know the exact range of kernel image (start and end).
+
+(Known drawback in this code is that Image only occupies one segment, but
+once vmlinux might be supported, it would occupy two segments for text and
+data.)
+
+> 
+> > +	image->segment[image->arch.kern_segment].mem += text_offset;
+> > +	image->segment[image->arch.kern_segment].memsz -= text_offset;
+> > +	image->start = image->segment[image->arch.kern_segment].mem;
+> > +
+> > +	pr_debug("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> > +				image->segment[image->arch.kern_segment].mem,
+> > +				kbuf.bufsz, kbuf.memsz);
+> > +
+> > +	/* Load additional data */
+> > +	ret = load_other_segments(image, initrd, initrd_len,
+> > +				cmdline, cmdline_len);
+> > +
+> > +out:
+> > +	return ERR_PTR(ret);
+> > +}
+> Looks good,
+
+Thank you for thorough review.
 
 -Takahiro AKASHI
 
 
-> 
 > Thanks,
 > 
 > James
