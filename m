@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x244.google.com ([2607:f8b0:400e:c01::244])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fJcnT-0004RZ-M5
- for kexec@lists.infradead.org; Fri, 18 May 2018 10:39:40 +0000
-Received: by mail-pl0-x244.google.com with SMTP id c11-v6so4365463plr.5
- for <kexec@lists.infradead.org>; Fri, 18 May 2018 03:39:29 -0700 (PDT)
-Date: Fri, 18 May 2018 19:39:26 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v9 07/11] arm64: kexec_file: add crash dump support
-Message-ID: <20180518103925.GP2737@linaro.org>
-References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
- <20180425062629.29404-8-takahiro.akashi@linaro.org>
- <f8d8305d-42f5-e1e2-20c4-733cb38cbb8d@arm.com>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fGEXW-0003Qs-Ut
+ for kexec@lists.infradead.org; Wed, 09 May 2018 02:09:13 +0000
+Date: Wed, 9 May 2018 10:08:52 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v4 1/3] resource: Use list_head to link sibling resource
+Message-ID: <20180509020852.GK30581@MiWiFi-R3L-srv>
+References: <20180507063224.24229-2-bhe@redhat.com>
+ <201805071803.2MKgOLTP%fengguang.wu@intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <f8d8305d-42f5-e1e2-20c4-733cb38cbb8d@arm.com>
+In-Reply-To: <201805071803.2MKgOLTP%fengguang.wu@intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,315 +24,220 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: kbuild test robot <lkp@intel.com>
+Cc: nicolas.pitre@linaro.org, brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, kys@microsoft.com, frowand.list@gmail.com, dan.j.williams@intel.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, bp@suse.de, dyoung@redhat.com, vgoyal@redhat.com, ebiederm@xmission.com, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, josh@joshtriplett.org, jglisse@redhat.com, robh+dt@kernel.org, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kbuild-all@01.org, devel@linuxdriverproject.org, akpm@linux-foundation.org, fengguang.wu@intel.com, davem@davemloft.net
 
-On Tue, May 15, 2018 at 06:11:15PM +0100, James Morse wrote:
-> Hi Akashi,
+On 05/07/18 at 07:42pm, kbuild test robot wrote:
+> Hi Baoquan,
 > 
-> On 25/04/18 07:26, AKASHI Takahiro wrote:
-> > Enabling crash dump (kdump) includes
-> > * prepare contents of ELF header of a core dump file, /proc/vmcore,
-> >   using crash_prepare_elf64_headers(), and
-> > * add two device tree properties, "linux,usable-memory-range" and
-> >   "linux,elfcorehdr", which represent repsectively a memory range
+> I love your patch! Yet something to improve:
 > 
-> (Nit: respectively)
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v4.17-rc4 next-20180504]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180507-144345
+> config: powerpc-defconfig (attached as .config)
+> compiler: powerpc64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=powerpc 
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    arch/powerpc/kernel/pci-common.c: In function 'pci_process_bridge_OF_ranges':
+> >> arch/powerpc/kernel/pci-common.c:764:44: error: incompatible types when assigning to type 'struct list_head' from type 'void *'
+>        res->parent = res->child = res->sibling = NULL;
 
-Will fix.
+Pasted code can fix above error.
 
-> 
-> >   to be used by crash dump kernel and the header's location
-> 
-> >  arch/arm64/include/asm/kexec.h         |   4 +
-> >  arch/arm64/kernel/kexec_image.c        |   9 +-
-> >  arch/arm64/kernel/machine_kexec_file.c | 202 +++++++++++++++++++++++++
-> 
-> In this patch, machine_kexec_file.c gains its own private fdt array encoder.
+diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
+index fe9733ffffaa..a7e68f6f9f24 100644
+--- a/arch/powerpc/kernel/pci-common.c
++++ b/arch/powerpc/kernel/pci-common.c
+@@ -761,7 +761,9 @@ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+ 			res->flags = range.flags;
+ 			res->start = range.cpu_addr;
+ 			res->end = range.cpu_addr + range.size - 1;
+-			res->parent = res->child = res->sibling = NULL;
++			res->parent = NULL;
++			INIT_LIST_HEAD(&res->child);
++			INIT_LIST_HEAD(&res->sibling);
+ 		}
+ 	}
+ }
 
-See below.
+>                                                ^
+>    arch/powerpc/kernel/pci-common.c: In function 'reparent_resources':
+> >> arch/powerpc/kernel/pci-common.c:1100:10: error: assignment from incompatible pointer type [-Werror=incompatible-pointer-types]
+>      for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
+>              ^
 
-> 
-> > diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> > index 37c0a9dc2e47..ec674f4d267c 100644
-> > --- a/arch/arm64/kernel/machine_kexec_file.c
-> > +++ b/arch/arm64/kernel/machine_kexec_file.c
-> > @@ -76,6 +81,78 @@ int arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> >  	return ret;
-> >  }
-> >  
-> > +static int __init arch_kexec_file_init(void)
-> > +{
-> > +	/* Those values are used later on loading the kernel */
-> > +	__dt_root_addr_cells = dt_root_addr_cells;
-> > +	__dt_root_size_cells = dt_root_size_cells;
-> > +
-> > +	return 0;
-> > +}
-> > +late_initcall(arch_kexec_file_init);
-> 
-> If we need these is it worth taking them out of __initdata? I note they've been
-> 'temporary' for quite a long time.
+This reparent_resources() function is duplicated with the one in
+arch/microblaze/pci/pci-common.c which has been fixed in v4. I planned
+to move it to kernel/resource.c in a separate patch since it's shared by
+different ARCH, then fix it in this patch.
 
-I think that I had some reason that I didn't do that, but don't remember now.
-If there's no problem, I will take your suggestion.
-
+>    arch/powerpc/kernel/pci-common.c:1100:50: error: assignment from incompatible pointer type [-Werror=incompatible-pointer-types]
+>      for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
+>                                                      ^
+> >> arch/powerpc/kernel/pci-common.c:1113:13: error: incompatible types when assigning to type 'struct list_head' from type 'struct resource *'
+>      res->child = *firstpp;
+>                 ^
+>    arch/powerpc/kernel/pci-common.c:1114:15: error: incompatible types when assigning to type 'struct list_head' from type 'struct resource *'
+>      res->sibling = *pp;
+>                   ^
+> >> arch/powerpc/kernel/pci-common.c:1117:9: error: incompatible types when assigning to type 'struct resource *' from type 'struct list_head'
+>      for (p = res->child; p != NULL; p = p->sibling) {
+>             ^
+>    arch/powerpc/kernel/pci-common.c:1117:36: error: incompatible types when assigning to type 'struct resource *' from type 'struct list_head'
+>      for (p = res->child; p != NULL; p = p->sibling) {
+>                                        ^
+>    cc1: all warnings being treated as errors
 > 
-> > +
-> > +#define FDT_ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
-> > +#define FDT_TAGALIGN(x)	(FDT_ALIGN((x), FDT_TAGSIZE))
-> > +
-> > +static int fdt_prop_len(const char *prop_name, int len)
-> > +{
-> > +	return (strlen(prop_name) + 1) +
-> > +		sizeof(struct fdt_property) +
-> > +		FDT_TAGALIGN(len);
-> > +}
+> vim +764 arch/powerpc/kernel/pci-common.c
 > 
-> This stuff should really be in libfdt.h  Those macros come from
-> libfdt_internal.h, so we're probably doing something wrong here.
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  642  
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  643  /**
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  644   * pci_process_bridge_OF_ranges - Parse PCI bridge resources from device tree
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  645   * @hose: newly allocated pci_controller to be setup
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  646   * @dev: device node of the host bridge
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  647   * @primary: set if primary bus (32 bits only, soon to be deprecated)
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  648   *
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  649   * This function will parse the "ranges" property of a PCI host bridge device
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  650   * node and setup the resource mapping of a pci controller based on its
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  651   * content.
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  652   *
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  653   * Life would be boring if it wasn't for a few issues that we have to deal
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  654   * with here:
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  655   *
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  656   *   - We can only cope with one IO space range and up to 3 Memory space
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  657   *     ranges. However, some machines (thanks Apple !) tend to split their
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  658   *     space into lots of small contiguous ranges. So we have to coalesce.
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  659   *
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  660   *   - Some busses have IO space not starting at 0, which causes trouble with
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  661   *     the way we do our IO resource renumbering. The code somewhat deals with
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  662   *     it for 64 bits but I would expect problems on 32 bits.
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  663   *
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  664   *   - Some 32 bits platforms such as 4xx can have physical space larger than
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  665   *     32 bits so we need to use 64 bits values for the parsing
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  666   */
+> cad5cef6 Greg Kroah-Hartman     2012-12-21  667  void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+> cad5cef6 Greg Kroah-Hartman     2012-12-21  668  				  struct device_node *dev, int primary)
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  669  {
+> 858957ab Kevin Hao              2013-05-16  670  	int memno = 0;
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  671  	struct resource *res;
+> 654837e8 Andrew Murray          2014-02-25  672  	struct of_pci_range range;
+> 654837e8 Andrew Murray          2014-02-25  673  	struct of_pci_range_parser parser;
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  674  
+> b7c670d6 Rob Herring            2017-08-21  675  	printk(KERN_INFO "PCI host bridge %pOF %s ranges:\n",
+> b7c670d6 Rob Herring            2017-08-21  676  	       dev, primary ? "(primary)" : "");
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  677  
+> 654837e8 Andrew Murray          2014-02-25  678  	/* Check for ranges property */
+> 654837e8 Andrew Murray          2014-02-25  679  	if (of_pci_range_parser_init(&parser, dev))
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  680  		return;
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  681  
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  682  	/* Parse it */
+> 654837e8 Andrew Murray          2014-02-25  683  	for_each_of_pci_range(&parser, &range) {
+> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  684  		/* If we failed translation or got a zero-sized region
+> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  685  		 * (some FW try to feed us with non sensical zero sized regions
+> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  686  		 * such as power3 which look like some kind of attempt at exposing
+> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  687  		 * the VGA memory hole)
+> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  688  		 */
+> 654837e8 Andrew Murray          2014-02-25  689  		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  690  			continue;
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  691  
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  692  		/* Act based on address space type */
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  693  		res = NULL;
+> 654837e8 Andrew Murray          2014-02-25  694  		switch (range.flags & IORESOURCE_TYPE_BITS) {
+> 654837e8 Andrew Murray          2014-02-25  695  		case IORESOURCE_IO:
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  696  			printk(KERN_INFO
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  697  			       "  IO 0x%016llx..0x%016llx -> 0x%016llx\n",
+> 654837e8 Andrew Murray          2014-02-25  698  			       range.cpu_addr, range.cpu_addr + range.size - 1,
+> 654837e8 Andrew Murray          2014-02-25  699  			       range.pci_addr);
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  700  
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  701  			/* We support only one IO range */
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  702  			if (hose->pci_io_size) {
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  703  				printk(KERN_INFO
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  704  				       " \\--> Skipped (too many) !\n");
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  705  				continue;
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  706  			}
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  707  #ifdef CONFIG_PPC32
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  708  			/* On 32 bits, limit I/O space to 16MB */
+> 654837e8 Andrew Murray          2014-02-25  709  			if (range.size > 0x01000000)
+> 654837e8 Andrew Murray          2014-02-25  710  				range.size = 0x01000000;
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  711  
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  712  			/* 32 bits needs to map IOs here */
+> 654837e8 Andrew Murray          2014-02-25  713  			hose->io_base_virt = ioremap(range.cpu_addr,
+> 654837e8 Andrew Murray          2014-02-25  714  						range.size);
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  715  
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  716  			/* Expect trouble if pci_addr is not 0 */
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  717  			if (primary)
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  718  				isa_io_base =
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  719  					(unsigned long)hose->io_base_virt;
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  720  #endif /* CONFIG_PPC32 */
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  721  			/* pci_io_size and io_base_phys always represent IO
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  722  			 * space starting at 0 so we factor in pci_addr
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  723  			 */
+> 654837e8 Andrew Murray          2014-02-25  724  			hose->pci_io_size = range.pci_addr + range.size;
+> 654837e8 Andrew Murray          2014-02-25  725  			hose->io_base_phys = range.cpu_addr - range.pci_addr;
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  726  
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  727  			/* Build resource */
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  728  			res = &hose->io_resource;
+> 654837e8 Andrew Murray          2014-02-25  729  			range.cpu_addr = range.pci_addr;
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  730  			break;
+> 654837e8 Andrew Murray          2014-02-25  731  		case IORESOURCE_MEM:
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  732  			printk(KERN_INFO
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  733  			       " MEM 0x%016llx..0x%016llx -> 0x%016llx %s\n",
+> 654837e8 Andrew Murray          2014-02-25  734  			       range.cpu_addr, range.cpu_addr + range.size - 1,
+> 654837e8 Andrew Murray          2014-02-25  735  			       range.pci_addr,
+> 654837e8 Andrew Murray          2014-02-25  736  			       (range.pci_space & 0x40000000) ?
+> 654837e8 Andrew Murray          2014-02-25  737  			       "Prefetch" : "");
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  738  
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  739  			/* We support only 3 memory ranges */
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  740  			if (memno >= 3) {
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  741  				printk(KERN_INFO
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  742  				       " \\--> Skipped (too many) !\n");
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  743  				continue;
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  744  			}
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  745  			/* Handles ISA memory hole space here */
+> 654837e8 Andrew Murray          2014-02-25  746  			if (range.pci_addr == 0) {
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  747  				if (primary || isa_mem_base == 0)
+> 654837e8 Andrew Murray          2014-02-25  748  					isa_mem_base = range.cpu_addr;
+> 654837e8 Andrew Murray          2014-02-25  749  				hose->isa_mem_phys = range.cpu_addr;
+> 654837e8 Andrew Murray          2014-02-25  750  				hose->isa_mem_size = range.size;
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  751  			}
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  752  
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  753  			/* Build resource */
+> 654837e8 Andrew Murray          2014-02-25  754  			hose->mem_offset[memno] = range.cpu_addr -
+> 654837e8 Andrew Murray          2014-02-25  755  							range.pci_addr;
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  756  			res = &hose->mem_resources[memno++];
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  757  			break;
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  758  		}
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  759  		if (res != NULL) {
+> aeba3731 Michael Ellerman       2014-10-16  760  			res->name = dev->full_name;
+> aeba3731 Michael Ellerman       2014-10-16  761  			res->flags = range.flags;
+> aeba3731 Michael Ellerman       2014-10-16  762  			res->start = range.cpu_addr;
+> aeba3731 Michael Ellerman       2014-10-16  763  			res->end = range.cpu_addr + range.size - 1;
+> aeba3731 Michael Ellerman       2014-10-16 @764  			res->parent = res->child = res->sibling = NULL;
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  765  		}
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  766  	}
+> 13dccb9e Benjamin Herrenschmidt 2007-12-11  767  }
+> fa462f2d Benjamin Herrenschmidt 2007-12-20  768  
 > 
+> :::::: The code at line 764 was first introduced by commit
+> :::::: aeba3731b150188685225b510886f1370d8814de powerpc/pci: Fix IO space breakage after of_pci_range_to_resource() change
 > 
-> > +static bool cells_size_fitted(unsigned long base, unsigned long size)
-> > +{
-> > +	/* if *_cells >= 2, cells can hold 64-bit values anyway */
-> > +	if ((__dt_root_addr_cells == 1) && (base >= (1ULL << 32)))
-> > +		return false;
-> > +
-> > +	if ((__dt_root_size_cells == 1) && (size >= (1ULL << 32)))
-> > +		return false;
+> :::::: TO: Michael Ellerman <mpe@ellerman.id.au>
+> :::::: CC: Michael Ellerman <mpe@ellerman.id.au>
 > 
-> Using '> U32_MAX' here may be more readable.
-
-OK
-
-> 
-> > +	return true;
-> > +}
-> > +
-> > +static void fill_property(void *buf, u64 val64, int cells)
-> > +{
-> > +	u32 val32;
-> > +
-> > +	if (cells == 1) {
-> > +		val32 = cpu_to_fdt32((u32)val64);
-> > +		memcpy(buf, &val32, sizeof(val32));
-> > +	} else {
-> 
-> > +		memset(buf, 0, cells * sizeof(u32) - sizeof(u64));
-> > +		buf += cells * sizeof(u32) - sizeof(u64);
-> 
-> Is this trying to clear the 'top' cells and shuffle the pointer to point at the
-> 'bottom' 2? I'm pretty sure this isn't endian safe.
-> 
-> Do we really expect a system to have #address-cells > 2?
-
-I don't know, but just for safety.
-
-> 
-> > +		val64 = cpu_to_fdt64(val64);
-> > +		memcpy(buf, &val64, sizeof(val64));
-> > +	}
-> > +}
-> > +
-> > +static int fdt_setprop_range(void *fdt, int nodeoffset, const char *name,
-> > +				unsigned long addr, unsigned long size)
-> 
-> (the device-tree spec describes a 'ranges' property, which had me confused. This
-> is encoding a prop-encoded-array)
-
-Should we rename it to, say, fdt_setprop_reg()?
-
-
-> > +{
-> > +	void *buf, *prop;
-> > +	size_t buf_size;
-> > +	int result;
-> > +
-> > +	buf_size = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
-> > +	prop = buf = vmalloc(buf_size);
-> 
-> virtual memory allocation for something less than PAGE_SIZE?
-
-I've never cared about that. Let me think again.
-
-> 
-> > +	if (!buf)
-> > +		return -ENOMEM;
-> > +
-> > +	fill_property(prop, addr, __dt_root_addr_cells);
-> > +	prop += __dt_root_addr_cells * sizeof(u32);
-> > +
-> > +	fill_property(prop, size, __dt_root_size_cells);
-> > +
-> > +	result = fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
-> > +
-> > +	vfree(buf);
-> > +
-> > +	return result;
-> > +}
-> 
-> Doesn't this stuff belong in libfdt? I guess there is no 'add array element' api
-> because this the first time we've wanted to create a node with more than
-> key=fixed-size-value.
-> 
-> I don't think this belongs in arch C code. Do we have a plan for getting libfdt
-> to support encoding prop-arrays? Can we put it somewhere anyone else duplicating
-> this will find it, until we can (re)move it?
-
-I will temporarily move all fdt-related stuff to a separate file, but
-
-> I have no idea how that happens... it looks like the devicetree list is the
-> place to ask.
-
-should we always sync with the original dtc/libfdt repository?
-
-> 
-> >  static int setup_dtb(struct kimage *image,
-> >  		unsigned long initrd_load_addr, unsigned long initrd_len,
-> >  		char *cmdline, unsigned long cmdline_len,
-> > @@ -88,10 +165,26 @@ static int setup_dtb(struct kimage *image,
-> >  	int range_len;
-> >  	int ret;
-> >  
-> > +	/* check ranges against root's #address-cells and #size-cells */
-> > +	if (image->type == KEXEC_TYPE_CRASH &&
-> > +		(!cells_size_fitted(image->arch.elf_load_addr,
-> > +				image->arch.elf_headers_sz) ||
-> > +		 !cells_size_fitted(crashk_res.start,
-> > +				crashk_res.end - crashk_res.start + 1))) {
-> > +		pr_err("Crash memory region doesn't fit into DT's root cell sizes.\n");
-> > +		ret = -EINVAL;
-> > +		goto out_err;
-> > +	}
-> 
-> To check I've understood this properly: This can happen if the firmware provided
-> a DTB with 32bit address/size cells, but at least some of the memory requires 64
-> bit address/size cells. This could only happen on a UEFI system where the
-> firmware-DTB doesn't describe memory. ACPI-only systems would have the EFIstub DT.
-
-Probably, yes. I assumed the case where #address-cells and #size-cells
-were just missing in fdt.
-
-> 
-> >  	/* duplicate dt blob */
-> >  	buf_size = fdt_totalsize(initial_boot_params);
-> >  	range_len = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
-> >  
-> > +	if (image->type == KEXEC_TYPE_CRASH)
-> > +		buf_size += fdt_prop_len("linux,elfcorehdr", range_len)
-> > +				+ fdt_prop_len("linux,usable-memory-range",
-> > +								range_len);
-
-                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-> > +
-> >  	if (initrd_load_addr)
-> >  		buf_size += fdt_prop_len("linux,initrd-start", sizeof(u64))
-> >  				+ fdt_prop_len("linux,initrd-end", sizeof(u64));
-> > @@ -113,6 +206,23 @@ static int setup_dtb(struct kimage *image,
-> >  	if (nodeoffset < 0)
-> >  		goto out_err;
-> >  
-> > +	if (image->type == KEXEC_TYPE_CRASH) {
-> > +		/* add linux,elfcorehdr */
-> > +		ret = fdt_setprop_range(buf, nodeoffset, "linux,elfcorehdr",
-> > +				image->arch.elf_load_addr,
-> > +				image->arch.elf_headers_sz);
-> > +		if (ret)
-> > +			goto out_err;
-> > +
-> > +		/* add linux,usable-memory-range */
-> > +		ret = fdt_setprop_range(buf, nodeoffset,
-> > +				"linux,usable-memory-range",
-> > +				crashk_res.start,
-> > +				crashk_res.end - crashk_res.start + 1);
-> 
-> Don't you need to add "linux,usable-memory-range" to the buf_size estimate?
-
-I think the code exists. See above.
-
-> 
-> > +		if (ret)
-> > +			goto out_err;
-> > +	}
-> 
-> > @@ -148,17 +258,109 @@ static int setup_dtb(struct kimage *image,
-> 
-> > +static struct crash_mem *get_crash_memory_ranges(void)
-> > +{
-> > +	unsigned int nr_ranges;
-> > +	struct crash_mem *cmem;
-> > +
-> > +	nr_ranges = 1; /* for exclusion of crashkernel region */
-> > +	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ranges_callback);
-> > +
-> > +	cmem = vmalloc(sizeof(struct crash_mem) +
-> > +			sizeof(struct crash_mem_range) * nr_ranges);
-> > +	if (!cmem)
-> > +		return NULL;
-> > +
-> > +	cmem->max_nr_ranges = nr_ranges;
-> > +	cmem->nr_ranges = 0;
-> > +	walk_system_ram_res(0, -1, cmem, add_mem_range_callback);
-> > +
-> > +	/* Exclude crashkernel region */
-> > +	if (crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end)) {
-> > +		vfree(cmem);
-> > +		return NULL;
-> > +	}
-> > +
-> > +	return cmem;
-> > +}
-> 
-> Could this function be included in prepare_elf_headers() so that the alloc() and
-> free() occur together.
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
 
-Or aiming that arm64 and x86 have similar-look code?
-
-> 
-> > +static int prepare_elf_headers(void **addr, unsigned long *sz)
-> > +{
-> > +	struct crash_mem *cmem;
-> > +	int ret = 0;
-> > +
-> > +	cmem = get_crash_memory_ranges();
-> > +	if (!cmem)
-> > +		return -ENOMEM;
-> > +
-> > +	ret =  crash_prepare_elf64_headers(cmem, true, addr, sz);
-> > +
-> > +	vfree(cmem);
-> 
-> > +	return ret;
-> > +}
-> 
-> All this is moving memory-range information from core-code's
-> walk_system_ram_res() into core-code's struct crash_mem, and excluding
-> crashk_res, which again is accessible to the core code.
-> 
-> It looks like this is duplicated in arch/x86 and arch/arm64 because arm64
-> doesn't have a second 'crashk_low_res' region, and always wants elf64, instead
-> of when IS_ENABLED(CONFIG_X86_64).
-> If we can abstract just those two, more of this could be moved to core code
-> where powerpc can make use of it if they want to support kdump with
-> kexec_file_load().
-> 
-> But, its getting late for cross-architecture dependencies, lets put that on the
-> for-later list. (assuming there isn't a powerpc-kdump series out there adding a
-> third copy of this)
-
-Sure. X86 code has so many exceptional lines in the code :)
-
-Thanks,
--Takahiro AKASHI
-
-
-> 
-> Thanks,
-> 
-> James
 
 _______________________________________________
 kexec mailing list
