@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [223.203.96.7] (helo=barracuda.hxt-semitech.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fH175-0007tU-Mo
- for kexec@lists.infradead.org; Fri, 11 May 2018 06:01:12 +0000
+ id 1fH175-0007tQ-Mm
+ for kexec@lists.infradead.org; Fri, 11 May 2018 06:01:11 +0000
 From: Yanjiang Jin <yanjiang.jin@hxt-semitech.com>
-Subject: [PATCH] How to validate this patch
-Date: Fri, 11 May 2018 14:00:26 +0800
-Message-ID: <1526018427-8710-1-git-send-email-yanjiang.jin@hxt-semitech.com>
+Subject: [PATCH] arm64: update PHYS_OFFSET to conform to kernel
+Date: Fri, 11 May 2018 14:00:27 +0800
+Message-ID: <1526018427-8710-2-git-send-email-yanjiang.jin@hxt-semitech.com>
+In-Reply-To: <1526018427-8710-1-git-send-email-yanjiang.jin@hxt-semitech.com>
+References: <1526018427-8710-1-git-send-email-yanjiang.jin@hxt-semitech.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,50 +25,182 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: yanjiang.jin@hxt-semitech.com, jinyanjiang@gmail.com, horms@verge.net.au
 
-I have a arm64 system, I can find the virtural memory layout during booting:
+Now, according to the kernel's memory.h, converting a virtual address to
+a physical address should be done like below:
+
+        phys_addr_t __x = (phys_addr_t)(x);
+\
+        __x & BIT(VA_BITS - 1) ? (__x & ~PAGE_OFFSET) + PHYS_OFFSET :
+\
+                                 (__x - kimage_voffset); })
+
+We just set PHYS_OFFSET as the start address of the first usable memory
+block in SYSTEM RAM before, but it is defined in kernel as below:
+
+define PHYS_OFFSET ({ VM_BUG_ON(memstart_addr & 1); memstart_addr; })
+
+So we need to calculate PHYS_OFFSET based on some proc nodes.
+
+Without this change, we would get a wrong vmcore.
+Assume that we have a system as below:
 
 Virtual kernel memory layout:
-.............................
-    memory  : 0xffff800000200000 - 0xffff801800000000   ( 98302 MB)
 
-Then I can read the elf_info in vmcore:
+ memory  : 0xffff800000200000 - 0xffff801800000000
 
-readelf -l vmcore
+The first iomem block:
 
-Program Headers:
-Type Offset             VirtAddr           PhysAddr            FileSize
-...............................................................................
+ 00200000-0021ffff : reserved
 
-LOAD 0x0000000076d40000 0xffff80017fe00000 0x0000000180000000 0x0000001680000000
+But in vmcore's elf header, the corresponding memory block as below,
+the last 2M bytes lost due to "iomem" starts from 0x200000.
 
-The end of vmcore's VirtAddr is
+  Type     VirtAddr
+  LOAD     0xffff80017fe00000
 
-(0xffff80017fe00000 + 0x0000001680000000) = 0xFFFF8017FFE00000
+If an application, for example, vmcore-dmesg, wants to access the
+kernel symbol which is located in the last 2M address, it would
+fail with the below error:
 
-The end of vmlinux's VirtAddr is
+  "No program header covering vaddr 0xffff8017ffe90000 found kexec bug?"
 
-0xffff801800000000
-
-They have 0x20000 offset.
-
-If we use vmcore-dmesg to read the log_buf from vmcore, we would get
-the below error:
-
-vmcore-dmesg vmcore
-
-"No program header covering vaddr 0xffff8017ffe90000 found kexec bug?"
-
-Since on my system, log_buf is in 0xffff8017ffe90000, it exceeds the end
-of vmcore VirtAddr.
-
-With my patch, vmcore-dmesg can read all dmesg info happily.
-
-Yanjiang Jin (1):
-  arm64: update PHYS_OFFSET to conform to kernel
-
+Signed-off-by: Yanjiang Jin <yanjiang.jin@hxt-semitech.com>
+---
  kexec/arch/arm64/kexec-arm64.c | 100 +++++++++++++++++++++++++++++++++++++++++
  1 file changed, 100 insertions(+)
 
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index 62f3758..d9e65fb 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -14,6 +14,8 @@
+ #include <sys/stat.h>
+ #include <linux/elf-em.h>
+ #include <elf.h>
++#include <sys/mman.h>
++#include <fcntl.h>
+
+ #include "kexec.h"
+ #include "kexec-arm64.h"
+@@ -33,6 +35,12 @@
+ #define PROP_ELFCOREHDR "linux,elfcorehdr"
+ #define PROP_USABLE_MEM_RANGE "linux,usable-memory-range"
+
++#define DEV_MEM "/dev/mem"
++
++#define ALIGN_MASK(x, y) (((x) + (y)) & ~(y))
++#define ALIGN(x, y)    ALIGN_MASK(x, (y) - 1)
++#define BUFSIZE  (256)
++
+ /* Global varables the core kexec routines expect. */
+
+ unsigned char reuse_initrd;
+@@ -660,6 +668,96 @@ unsigned long phys_to_virt(struct crash_elf_info *elf_info,
+        return v;
+ }
+
++static uint64_t get_kernel_paddr(void)
++{
++       uint64_t start;
++
++       if (parse_iomem_single("Kernel code\n", &start, NULL) == 0) {
++               dbgprintf("kernel load physical addr start = 0x%" PRIu64 "\n",
++                       start);
++               return start;
++       }
++
++       fprintf(stderr, "Cannot determine kernel physical load addr\n");
++       exit(3);
++}
++
++static uint64_t get_kimage_voffset(void)
++{
++       uint64_t kern_vaddr_start;
++       uint64_t kern_paddr_start;
++
++       kern_paddr_start = get_kernel_paddr();
++       kern_vaddr_start = get_kernel_sym("_text");
++
++       return kern_vaddr_start - kern_paddr_start;
++}
++
++static uint64_t kimg_to_phys(uint64_t vaddr)
++{
++       return vaddr - get_kimage_voffset();
++}
++
++static void *map_addr(int fd, unsigned long size, off_t offset)
++{
++       unsigned long page_size = getpagesize();
++       unsigned long map_offset = offset & (page_size - 1);
++       size_t len = ALIGN(size + map_offset, page_size);
++       void *result;
++
++       result = mmap(0, len, PROT_READ, MAP_SHARED, fd, offset - map_offset);
++       if (result == MAP_FAILED) {
++               fprintf(stderr,
++                       "Cannot mmap " DEV_MEM " offset: %#llx size: %lu: %s\n",
++                       (unsigned long long)offset, size, strerror(errno));
++               exit(5);
++       }
++       return result + map_offset;
++}
++
++static void unmap_addr(void *addr, unsigned long size)
++{
++       unsigned long page_size = getpagesize();
++       unsigned long map_offset = (uintptr_t)addr & (page_size - 1);
++       size_t len = ALIGN(size + map_offset, page_size);
++       int ret;
++
++       addr -= map_offset;
++
++       ret = munmap(addr, len);
++       if (ret < 0) {
++               fprintf(stderr, "munmap failed: %s\n",
++                       strerror(errno));
++               exit(6);
++       }
++}
++
++static void init_phys_offset(void)
++{
++       int fd;
++       uint64_t phys_offset;
++       uint64_t memstart_addr_paddr;
++       void *memstart_addr_vaddr;
++
++       memstart_addr_paddr = kimg_to_phys(get_kernel_sym("memstart_addr"));
++
++       fd = open(DEV_MEM, O_RDONLY);
++       if (fd < 0) {
++               fprintf(stderr, "Cannot open " DEV_MEM ": %s\n",
++                       strerror(errno));
++               exit(3);
++       }
++
++       memstart_addr_vaddr = map_addr(fd,
++                       sizeof(memstart_addr_paddr), memstart_addr_paddr);
++
++       phys_offset = *(uint64_t *)memstart_addr_vaddr;
++       unmap_addr(memstart_addr_vaddr, sizeof(memstart_addr_paddr));
++       close(fd);
++
++       set_phys_offset(phys_offset);
++}
++
+ /**
+  * add_segment - Use virt_to_phys when loading elf files.
+  */
+@@ -731,6 +829,8 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
+        unsigned int count;
+        int result;
+
++       init_phys_offset();
++
+        result = get_memory_ranges_iomem(array, &count);
+
+        *range = result ? NULL : array;
 --
 1.8.3.1
 
