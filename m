@@ -1,17 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fG1U5-000541-9q
- for kexec@lists.infradead.org; Tue, 08 May 2018 12:12:47 +0000
-Date: Tue, 8 May 2018 20:12:26 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v4 1/3] resource: Use list_head to link sibling resource
-Message-ID: <20180508121226.GJ30581@MiWiFi-R3L-srv>
-References: <20180507063224.24229-2-bhe@redhat.com>
- <201805072210.H1bsHs9Y%fengguang.wu@intel.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <201805072210.H1bsHs9Y%fengguang.wu@intel.com>
+ id 1fGwzi-0006Ke-16
+ for kexec@lists.infradead.org; Fri, 11 May 2018 01:37:15 +0000
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w4B1Yrsx063292
+ for <kexec@lists.infradead.org>; Thu, 10 May 2018 21:37:08 -0400
+Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2hvvftb2f7-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 10 May 2018 21:37:08 -0400
+Received: from localhost
+ by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Fri, 11 May 2018 02:37:06 +0100
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Subject: [PATCH 3/3] ima: based on policy require signed kexec kernel images
+Date: Thu, 10 May 2018 21:36:48 -0400
+In-Reply-To: <1526002608-27474-1-git-send-email-zohar@linux.vnet.ibm.com>
+References: <1526002608-27474-1-git-send-email-zohar@linux.vnet.ibm.com>
+Message-Id: <1526002608-27474-4-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,108 +30,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kbuild test robot <lkp@intel.com>
-Cc: nicolas.pitre@linaro.org, brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, kys@microsoft.com, frowand.list@gmail.com, dan.j.williams@intel.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, bp@suse.de, dyoung@redhat.com, vgoyal@redhat.com, ebiederm@xmission.com, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, josh@joshtriplett.org, jglisse@redhat.com, robh+dt@kernel.org, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kbuild-all@01.org, devel@linuxdriverproject.org, akpm@linux-foundation.org, fengguang.wu@intel.com, davem@davemloft.net
+To: linux-integrity@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-On 05/07/18 at 11:50pm, kbuild test robot wrote:
-> Hi Baoquan,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v4.17-rc4 next-20180504]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180507-144345
-> config: arm-allmodconfig (attached as .config)
-> compiler: arm-linux-gnueabi-gcc (Debian 7.2.0-11) 7.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=arm 
-> 
-> All errors (new ones prefixed by >>):
+The original kexec_load syscall can not verify file signatures.  This
+patch differentiates between the kexec_load and kexec_file_load
+syscalls.
 
-Thanks, below patch can fix it:
+Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Matthew Garrett <mjg59@google.com>
+---
+ security/integrity/ima/ima.h        | 1 +
+ security/integrity/ima/ima_main.c   | 9 +++++++++
+ security/integrity/ima/ima_policy.c | 2 ++
+ 3 files changed, 12 insertions(+)
 
-
-diff --git a/arch/arm/plat-samsung/pm-check.c b/arch/arm/plat-samsung/pm-check.c
-index cd2c02c68bc3..5494355b1c49 100644
---- a/arch/arm/plat-samsung/pm-check.c
-+++ b/arch/arm/plat-samsung/pm-check.c
-@@ -46,8 +46,8 @@ typedef u32 *(run_fn_t)(struct resource *ptr, u32 *arg);
- static void s3c_pm_run_res(struct resource *ptr, run_fn_t fn, u32 *arg)
- {
- 	while (ptr != NULL) {
--		if (ptr->child != NULL)
--			s3c_pm_run_res(ptr->child, fn, arg);
-+		if (!list_empty(&ptr->child))
-+			s3c_pm_run_res(resource_first_child(&ptr->child), fn, arg);
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 35fe91aa1fc9..03c9c37ee345 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -233,6 +233,7 @@ int ima_policy_show(struct seq_file *m, void *v);
+ #define IMA_APPRAISE_MODULES	0x08
+ #define IMA_APPRAISE_FIRMWARE	0x10
+ #define IMA_APPRAISE_POLICY	0x20
++#define IMA_APPRAISE_KEXEC	0x40
  
- 		if ((ptr->flags & IORESOURCE_SYSTEM_RAM)
- 				== IORESOURCE_SYSTEM_RAM) {
-@@ -57,7 +57,7 @@ static void s3c_pm_run_res(struct resource *ptr, run_fn_t fn, u32 *arg)
- 			arg = (fn)(ptr, arg);
+ #ifdef CONFIG_IMA_APPRAISE
+ int ima_appraise_measurement(enum ima_hooks func,
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 74d0bd7e76d7..754ece08e1c6 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -444,6 +444,15 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
  		}
- 
--		ptr = ptr->sibling;
-+		ptr = resource_sibling(ptr);
+ 		return 0;	/* We rely on module signature checking */
  	}
++
++	if (!file && read_id == READING_KEXEC_IMAGE) {
++		if ((ima_appraise & IMA_APPRAISE_KEXEC) &&
++		    (ima_appraise & IMA_APPRAISE_ENFORCE)) {
++			pr_err("impossible to appraise a kernel image without a file descriptor; try using kexec_file syscall.\n");
++			return -EACCES;	/* INTEGRITY_UNKNOWN */
++		}
++		return 0;
++	}
+ 	return 0;
  }
  
-
-> 
->    arch/arm/plat-samsung/pm-check.c: In function 's3c_pm_run_res':
-> >> arch/arm/plat-samsung/pm-check.c:49:18: error: invalid operands to binary != (have 'struct list_head' and 'void *')
->       if (ptr->child != NULL)
->           ~~~~~~~~~~ ^~
-> >> arch/arm/plat-samsung/pm-check.c:50:19: error: incompatible type for argument 1 of 's3c_pm_run_res'
->        s3c_pm_run_res(ptr->child, fn, arg);
->                       ^~~
->    arch/arm/plat-samsung/pm-check.c:46:13: note: expected 'struct resource *' but argument is of type 'struct list_head'
->     static void s3c_pm_run_res(struct resource *ptr, run_fn_t fn, u32 *arg)
->                 ^~~~~~~~~~~~~~
-> >> arch/arm/plat-samsung/pm-check.c:60:7: error: incompatible types when assigning to type 'struct resource *' from type 'struct list_head'
->       ptr = ptr->sibling;
->           ^
-> 
-> vim +49 arch/arm/plat-samsung/pm-check.c
-> 
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  45  
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  46  static void s3c_pm_run_res(struct resource *ptr, run_fn_t fn, u32 *arg)
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  47  {
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  48  	while (ptr != NULL) {
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12 @49  		if (ptr->child != NULL)
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12 @50  			s3c_pm_run_res(ptr->child, fn, arg);
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  51  
-> 05fee7cf arch/arm/plat-samsung/pm-check.c Toshi Kani 2016-01-26  52  		if ((ptr->flags & IORESOURCE_SYSTEM_RAM)
-> 05fee7cf arch/arm/plat-samsung/pm-check.c Toshi Kani 2016-01-26  53  				== IORESOURCE_SYSTEM_RAM) {
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  54  			S3C_PMDBG("Found system RAM at %08lx..%08lx\n",
-> 840eeeb8 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  55  				  (unsigned long)ptr->start,
-> 840eeeb8 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  56  				  (unsigned long)ptr->end);
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  57  			arg = (fn)(ptr, arg);
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  58  		}
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  59  
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12 @60  		ptr = ptr->sibling;
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  61  	}
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  62  }
-> 549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  63  
-> 
-> :::::: The code at line 49 was first introduced by commit
-> :::::: 549c7e33aeb9bfe441ecf68639d2227bb90978e7 [ARM] S3C: Split the resume memory check code from pm.c
-> 
-> :::::: TO: Ben Dooks <ben-linux@fluff.org>
-> :::::: CC: Ben Dooks <ben-linux@fluff.org>
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index df3e45878a87..a9e96a884867 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -448,6 +448,8 @@ static int ima_appraise_flag(enum ima_hooks func)
+ 		return IMA_APPRAISE_FIRMWARE;
+ 	else if (func == POLICY_CHECK)
+ 		return IMA_APPRAISE_POLICY;
++	else if (func == KEXEC_KERNEL_CHECK)
++		return IMA_APPRAISE_KEXEC;
+ 	return 0;
+ }
+ 
+-- 
+2.7.5
 
 
 _______________________________________________
