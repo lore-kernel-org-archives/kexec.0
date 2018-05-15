@@ -1,12 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fIP8L-0000TS-L9
- for kexec@lists.infradead.org; Tue, 15 May 2018 01:52:11 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 0/2] support kdump for AMD secure memory encryption(sme)
-Date: Tue, 15 May 2018 09:51:31 +0800
-Message-Id: <20180515015133.4363-1-lijiang@redhat.com>
+Received: from mail-pg0-x244.google.com ([2607:f8b0:400e:c05::244])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fIRgs-0006jK-76
+ for kexec@lists.infradead.org; Tue, 15 May 2018 04:35:59 +0000
+Received: by mail-pg0-x244.google.com with SMTP id l2-v6so6428732pgc.7
+ for <kexec@lists.infradead.org>; Mon, 14 May 2018 21:35:47 -0700 (PDT)
+Date: Tue, 15 May 2018 13:35:40 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v9 04/11] arm64: kexec_file: allocate memory walking
+ through memblock list
+Message-ID: <20180515043538.GB2737@linaro.org>
+References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
+ <20180425062629.29404-5-takahiro.akashi@linaro.org>
+ <648656ef-1f1e-b0ac-581c-aba1e62f4eee@arm.com>
+ <20180507055906.GE11326@linaro.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180507055906.GE11326@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,93 +25,166 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: thomas.lendacky@amd.com, dyoung@redhat.com, kexec@lists.infradead.org
+To: James Morse <james.morse@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 
-It is convenient to remap the old memory encrypted to the second kernel by
-calling ioremap_encrypted().
+James,
 
-When sme enabled on AMD server, we also need to support kdump. Because
-the memory is encrypted in the first kernel, we will remap the old memory
-encrypted to the second kernel(crash kernel), and sme is also enabled in
-the second kernel, otherwise the old memory encrypted can not be decrypted.
-Because simply changing the value of a C-bit on a page will not
-automatically encrypt the existing contents of a page, and any data in the
-page prior to the C-bit modification will become unintelligible. A page of
-memory that is marked encrypted will be automatically decrypted when read
-from DRAM and will be automatically encrypted when written to DRAM.
+On Mon, May 07, 2018 at 02:59:07PM +0900, AKASHI Takahiro wrote:
+> James,
+> 
+> On Tue, May 01, 2018 at 06:46:09PM +0100, James Morse wrote:
+> > Hi Akashi,
+> > 
+> > On 25/04/18 07:26, AKASHI Takahiro wrote:
+> > > We need to prevent firmware-reserved memory regions, particularly EFI
+> > > memory map as well as ACPI tables, from being corrupted by loading
+> > > kernel/initrd (or other kexec buffers). We also want to support memory
+> > > allocation in top-down manner in addition to default bottom-up.
+> > > So let's have arm64 specific arch_kexec_walk_mem() which will search
+> > > for available memory ranges in usable memblock list,
+> > > i.e. !NOMAP & !reserved, 
+> > 
+> > > instead of system resource tree.
+> > 
+> > Didn't we try to fix the system-resource-tree in order to fix regular-kexec to
+> > be safe in the EFI-memory-map/ACPI-tables case?
+> > 
+> > It would be good to avoid having two ways of doing this, and I would like to
+> > avoid having extra arch code...
+> 
+> I know what you mean.
+> /proc/iomem or system resource is, in my opinion, not the best place to
+> describe memory usage of kernel but rather to describe *physical* hardware
+> layout. As we are still discussing about "reserved" memory, I don't want
+> to depend on it.
+> Along with memblock list, we will have more accurate control over memory
+> usage.
 
-For the kdump, it is necessary to distinguish whether the memory is
-encrypted. Furthermore, we should also know which part of the memory is
-encrypted or decrypted. We will appropriately remap the memory according
-to the specific situation in order to tell cpu how to deal with the
-data(encrypted or decrypted). For example, when sme enabled, if the old
-memory is encrypted, we will remap the old memory in encrypted way, which
-will automatically decrypt the old memory encrypted when we read those data
-from the remapping address.
+If you don't have further objection, I will take memblock approach
+(with factoring out powerpc's arch_kexec_walk_mem()).
 
- ----------------------------------------------
-| first-kernel | second-kernel | kdump support |
-|      (mem_encrypt=on|off)    |   (yes|no)    | 
-|--------------+---------------+---------------|
-|     on       |     on        |     yes       |
-|     off      |     off       |     yes       |
-|     on       |     off       |     no        |
-|     off      |     on        |     no        |
-|______________|_______________|_______________|
+Thanks,
+-Takahiro AKASHI
 
-Test tools:
-makedumpfile[v1.6.3]: https://github.com/LianboJ/makedumpfile
-commit e1de103eca8f (A draft for kdump vmcore about AMD SME)
-Author: Lianbo Jiang <lijiang@redhat.com>
-Date:   Mon May 14 17:02:40 2018 +0800
-Note: This patch can only dump vmcore in the case of SME enabled.
 
-crash-7.2.1: https://github.com/crash-utility/crash.git
-commit 1e1bd9c4c1be (Fix for the "bpf" command display on Linux 4.17-rc1)
-Author: Dave Anderson <anderson@redhat.com>
-Date:   Fri May 11 15:54:32 2018 -0400
-
-Test environment:
-HP ProLiant DL385Gen10 AMD EPYC 7251
-8-Core Processor
-32768 MB memory
-600 GB disk space
-
-Linux 4.17-rc4:
-git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-commit 75bc37fefc44 ("Linux 4.17-rc4")
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun May 6 16:57:38 2018 -1000
-
-Reference:
-AMD64 Architecture Programmer's Manual
-https://support.amd.com/TechDocs/24593.pdf
-
-Lianbo Jiang (2):
-  add a function(ioremap_encrypted) for kdump when AMD sme enabled.
-  support kdump when AMD secure memory encryption is active
-
- arch/x86/include/asm/dmi.h      | 14 +++++++++++++-
- arch/x86/include/asm/io.h       |  2 ++
- arch/x86/kernel/acpi/boot.c     |  8 ++++++++
- arch/x86/kernel/crash_dump_64.c | 27 +++++++++++++++++++++++++++
- arch/x86/mm/ioremap.c           | 25 +++++++++++++++++--------
- drivers/acpi/tables.c           | 14 +++++++++++++-
- drivers/iommu/amd_iommu_init.c  |  9 ++++++++-
- fs/proc/vmcore.c                | 36 +++++++++++++++++++++++++++++++-----
- include/linux/crash_dump.h      |  4 ++++
- kernel/kexec_core.c             | 12 ++++++++++++
- 10 files changed, 135 insertions(+), 16 deletions(-)
-
--- 
-2.9.5
-
+> > 
+> > > diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> > > new file mode 100644
+> > > index 000000000000..f9ebf54ca247
+> > > --- /dev/null
+> > > +++ b/arch/arm64/kernel/machine_kexec_file.c
+> > > @@ -0,0 +1,57 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * kexec_file for arm64
+> > > + *
+> > > + * Copyright (C) 2018 Linaro Limited
+> > > + * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > > + *
+> > 
+> > > + * Most code is derived from arm64 port of kexec-tools
+> > 
+> > How does kexec-tools walk memblock?
+> 
+> Will remove this comment from this patch.
+> Obviously, this comment is for the rest of the code which will be
+> added to succeeding patches (patch #5 and #7).
+> 
+> 
+> > 
+> > > + */
+> > > +
+> > > +#define pr_fmt(fmt) "kexec_file: " fmt
+> > > +
+> > > +#include <linux/ioport.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/kexec.h>
+> > > +#include <linux/memblock.h>
+> > > +
+> > > +int arch_kexec_walk_mem(struct kexec_buf *kbuf,
+> > > +				int (*func)(struct resource *, void *))
+> > > +{
+> > > +	phys_addr_t start, end;
+> > > +	struct resource res;
+> > > +	u64 i;
+> > > +	int ret = 0;
+> > > +
+> > > +	if (kbuf->image->type == KEXEC_TYPE_CRASH)
+> > > +		return func(&crashk_res, kbuf);
+> > > +
+> > > +	if (kbuf->top_down)
+> > > +		for_each_mem_range_rev(i, &memblock.memory, &memblock.reserved,
+> > > +				NUMA_NO_NODE, MEMBLOCK_NONE,
+> > > +				&start, &end, NULL) {
+> > 
+> > for_each_free_mem_range_reverse() is a more readable version of this helper.
+> 
+> OK. I used to use my own limited list of reserved memory instead of
+> memblock.reserved here to exclude verbose ranges.
+> 
+> 
+> > > +			if (!memblock_is_map_memory(start))
+> > > +				continue;
+> > 
+> > Passing MEMBLOCK_NONE means this walk will never find MEMBLOCK_NOMAP memory.
+> 
+> Sure, I confirmed it.
+> 
+> > 
+> > > +			res.start = start;
+> > > +			res.end = end;
+> > > +			ret = func(&res, kbuf);
+> > > +			if (ret)
+> > > +				break;
+> > > +		}
+> > > +	else
+> > > +		for_each_mem_range(i, &memblock.memory, &memblock.reserved,
+> > > +				NUMA_NO_NODE, MEMBLOCK_NONE,
+> > > +				&start, &end, NULL) {
+> > 
+> > for_each_free_mem_range()?
+> 
+> OK.
+> 
+> > > +			if (!memblock_is_map_memory(start))
+> > > +				continue;
+> > > +
+> > > +			res.start = start;
+> > > +			res.end = end;
+> > > +			ret = func(&res, kbuf);
+> > > +			if (ret)
+> > > +				break;
+> > > +		}
+> > > +
+> > > +	return ret;
+> > > +}
+> > > 
+> > 
+> > With these changes, what we have is almost:
+> > arch/powerpc/kernel/machine_kexec_file_64.c::arch_kexec_walk_mem() !
+> > (the difference being powerpc doesn't yet support crash-kernels here)
+> > 
+> > If the argument is walking memblock gives a better answer than the stringy
+> > walk_system_ram_res() thing, is there any mileage in moving this code into
+> > kexec_file.c, and using it if !IS_ENABLED(CONFIG_ARCH_DISCARD_MEMBLOCK)?
+> > 
+> > This would save arm64/powerpc having near-identical implementations.
+> > 32bit arm keeps memblock if it has kexec, so it may be useful there too if
+> > kexec_file_load() support is added.
+> 
+> Thanks. I've forgot ppc.
+> 
+> -Takahiro AKASHI
+> 
+> 
+> > 
+> > Thanks,
+> > 
+> > James
 
 _______________________________________________
 kexec mailing list
