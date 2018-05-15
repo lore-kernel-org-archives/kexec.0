@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-by2nam01on0082.outbound.protection.outlook.com
- ([104.47.34.82] helo=NAM01-BY2-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fIb2h-0007LK-Cv
- for kexec@lists.infradead.org; Tue, 15 May 2018 14:35:13 +0000
-Subject: Re: [PATCH 1/2] add a function(ioremap_encrypted) for kdump when AMD
- sme enabled.
-References: <20180515015133.4363-1-lijiang@redhat.com>
- <20180515015133.4363-2-lijiang@redhat.com>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <8c8f20cc-b39d-137c-9d71-1e566f905acb@amd.com>
-Date: Tue, 15 May 2018 09:34:49 -0500
+Subject: Re: [PATCH v9 03/11] arm64: kexec_file: invoke the kernel without
+ purgatory
+References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
+ <20180425062629.29404-4-takahiro.akashi@linaro.org>
+ <9c830fe8-56d8-b43a-6265-43d31dffe61a@arm.com>
+ <20180507052208.GD11326@linaro.org>
+ <ece8d3cc-127f-6855-52fb-24e4a1d4e823@arm.com>
+ <20180515044542.GC2737@linaro.org>
+From: James Morse <james.morse@arm.com>
+Message-ID: <fbd2c6c6-be20-a9fa-0303-e4448225df18@arm.com>
+Date: Tue, 15 May 2018 17:15:52 +0100
 MIME-Version: 1.0
-In-Reply-To: <20180515015133.4363-2-lijiang@redhat.com>
+In-Reply-To: <20180515044542.GC2737@linaro.org>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,126 +25,86 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>, linux-kernel@vger.kernel.org
-Cc: dyoung@redhat.com, kexec@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-On 5/14/2018 8:51 PM, Lianbo Jiang wrote:
-> It is convenient to remap the old memory encrypted to the second kernel
-> by calling ioremap_encrypted().
+Hi Akashi,
+
+On 15/05/18 05:45, AKASHI Takahiro wrote:
+> On Fri, May 11, 2018 at 06:03:49PM +0100, James Morse wrote:
+>> On 07/05/18 06:22, AKASHI Takahiro wrote:
+>>> On Tue, May 01, 2018 at 06:46:06PM +0100, James Morse wrote:
+>>>> On 25/04/18 07:26, AKASHI Takahiro wrote:
+>>>>> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+>>>>> index f76ea92dff91..f7dbba00be10 100644
+>>>>> --- a/arch/arm64/kernel/machine_kexec.c
+>>>>> +++ b/arch/arm64/kernel/machine_kexec.c
+>>>>> @@ -205,10 +205,17 @@ void machine_kexec(struct kimage *kimage)
+>>
+>>>>>  	cpu_soft_restart(kimage != kexec_crash_image,
+>>>>> -		reboot_code_buffer_phys, kimage->head, kimage->start, 0);
+>>>>> +		reboot_code_buffer_phys, kimage->head, kimage->start,
+>>>>> +#ifdef CONFIG_KEXEC_FILE
+>>>>> +				kimage->purgatory_info.purgatory_buf ?
+>>>>> +						0 : kimage->arch.dtb_mem);
+>>>>> +#else
+>>>>> +				0);
+>>>>> +#endif
+>>
+>>
+>>>> purgatory_buf seems to only be set in kexec_purgatory_setup_kbuf(), called from
+>>>> kexec_load_purgatory(), which we don't use. How does this get a value?
+>>>>
+>>>> Would it be better to always use kimage->arch.dtb_mem, and ensure that is 0 for
+>>>> regular kexec (as we can't know where the dtb is)? (image_arg may then be a
+>>>> better name).
+>>>
+>>> The problem is arch.dtb_mem is currently defined only if CONFIG_KEXEC_FILE.
+>>
+>> I thought it was ARCH_HAS_KIMAGE_ARCH, which we can define all the time if
+>> that's what we want.
+>>
+>>
+>>> So I would like to
+>>> - merge this patch with patch#8
+>>> - change the condition
+>>>         #ifdef CONFIG_KEXEC_FILE
+>>>        				kimage->file_mode ? kimage->arch.dtb_mem : 0);
+>>>         #else
+>>>         			0);
+>>>         #endif
+>>
+>> If we can avoid even this #ifdef by always having kimage->arch, I'd prefer that.
+>> If we do that 'dtb_mem' would need some thing that indicates its for kexec_file,
+>> as kexec has a DTB too, we just don't know where it is...
 > 
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> ---
->  arch/x86/include/asm/io.h |  2 ++
->  arch/x86/mm/ioremap.c     | 25 +++++++++++++++++--------
->  2 files changed, 19 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-> index f6e5b93..06d2a9f 100644
-> --- a/arch/x86/include/asm/io.h
-> +++ b/arch/x86/include/asm/io.h
-> @@ -192,6 +192,8 @@ extern void __iomem *ioremap_cache(resource_size_t offset, unsigned long size);
->  #define ioremap_cache ioremap_cache
->  extern void __iomem *ioremap_prot(resource_size_t offset, unsigned long size, unsigned long prot_val);
->  #define ioremap_prot ioremap_prot
-> +extern void __iomem *ioremap_encrypted(resource_size_t phys_addr, unsigned long size);
-> +#define ioremap_encrypted ioremap_encrypted
->  
->  /**
->   * ioremap     -   map bus memory into CPU space
-> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-> index c63a545..7a52d1e 100644
-> --- a/arch/x86/mm/ioremap.c
-> +++ b/arch/x86/mm/ioremap.c
-> @@ -131,7 +131,8 @@ static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
->   * caller shouldn't need to know that small detail.
->   */
->  static void __iomem *__ioremap_caller(resource_size_t phys_addr,
-> -		unsigned long size, enum page_cache_mode pcm, void *caller)
-> +		unsigned long size, enum page_cache_mode pcm,
-> +		void *caller, bool encrypted)
->  {
->  	unsigned long offset, vaddr;
->  	resource_size_t last_addr;
-> @@ -199,7 +200,8 @@ static void __iomem *__ioremap_caller(resource_size_t phys_addr,
->  	 * resulting mapping.
->  	 */
->  	prot = PAGE_KERNEL_IO;
-> -	if (sev_active() && mem_flags.desc_other)
-> +	if ((sev_active() && mem_flags.desc_other) ||
-> +			(encrypted && sme_active()))
+> OK, but I want to have a minimum of kexec.arch always exist.
 
-You only need the encrypted check here.  If sme is not active,
-then the pgprot_encrypted will basically be a no-op.
+I'm curious, why? Its 32bytes that is allocated a maximum of twice.
 
-Also, extra indents.
+(my questions on what needs to go in there were because it looked like a third
+user was missing...)
+
+
+> How about this?
+>
+> | struct kimage_arch {
+> | 	phys_addr_t dtb_mem;
+> | #ifdef CONFIG_KEXEC_FILE
+
+#ifdef in structs just breeds more #ifdefs, as the code that accesses those
+members has to be behind the same set of conditions.
+
+Given this, I prefer the #ifdefs around cpu_soft_restart() as it doesn't force
+us to add more #ifdefs later.
+
+For either option without purgatory_info:
+Reviewed-by: James Morse <james.morse@arm.com>
+
 
 Thanks,
-Tom
 
->  		prot = pgprot_encrypted(prot);
->  
->  	switch (pcm) {
-> @@ -291,7 +293,7 @@ void __iomem *ioremap_nocache(resource_size_t phys_addr, unsigned long size)
->  	enum page_cache_mode pcm = _PAGE_CACHE_MODE_UC_MINUS;
->  
->  	return __ioremap_caller(phys_addr, size, pcm,
-> -				__builtin_return_address(0));
-> +				__builtin_return_address(0), false);
->  }
->  EXPORT_SYMBOL(ioremap_nocache);
->  
-> @@ -324,7 +326,7 @@ void __iomem *ioremap_uc(resource_size_t phys_addr, unsigned long size)
->  	enum page_cache_mode pcm = _PAGE_CACHE_MODE_UC;
->  
->  	return __ioremap_caller(phys_addr, size, pcm,
-> -				__builtin_return_address(0));
-> +				__builtin_return_address(0), false);
->  }
->  EXPORT_SYMBOL_GPL(ioremap_uc);
->  
-> @@ -341,7 +343,7 @@ EXPORT_SYMBOL_GPL(ioremap_uc);
->  void __iomem *ioremap_wc(resource_size_t phys_addr, unsigned long size)
->  {
->  	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WC,
-> -					__builtin_return_address(0));
-> +					__builtin_return_address(0), false);
->  }
->  EXPORT_SYMBOL(ioremap_wc);
->  
-> @@ -358,14 +360,21 @@ EXPORT_SYMBOL(ioremap_wc);
->  void __iomem *ioremap_wt(resource_size_t phys_addr, unsigned long size)
->  {
->  	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WT,
-> -					__builtin_return_address(0));
-> +					__builtin_return_address(0), false);
->  }
->  EXPORT_SYMBOL(ioremap_wt);
->  
-> +void __iomem *ioremap_encrypted(resource_size_t phys_addr, unsigned long size)
-> +{
-> +	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WB,
-> +				__builtin_return_address(0), true);
-> +}
-> +EXPORT_SYMBOL(ioremap_encrypted);
-> +
->  void __iomem *ioremap_cache(resource_size_t phys_addr, unsigned long size)
->  {
->  	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WB,
-> -				__builtin_return_address(0));
-> +				__builtin_return_address(0), false);
->  }
->  EXPORT_SYMBOL(ioremap_cache);
->  
-> @@ -374,7 +383,7 @@ void __iomem *ioremap_prot(resource_size_t phys_addr, unsigned long size,
->  {
->  	return __ioremap_caller(phys_addr, size,
->  				pgprot2cachemode(__pgprot(prot_val)),
-> -				__builtin_return_address(0));
-> +				__builtin_return_address(0), false);
->  }
->  EXPORT_SYMBOL(ioremap_prot);
->  
-> 
+James
 
 _______________________________________________
 kexec mailing list
