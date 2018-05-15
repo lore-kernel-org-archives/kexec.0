@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn3nam01on0043.outbound.protection.outlook.com
- ([104.47.33.43] helo=NAM01-BN3-obe.outbound.protection.outlook.com)
+Received: from mail-by2nam01on0082.outbound.protection.outlook.com
+ ([104.47.34.82] helo=NAM01-BY2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fIa3P-0007Rk-Gc
- for kexec@lists.infradead.org; Tue, 15 May 2018 13:31:50 +0000
-Subject: Re: [PATCH 0/2] support kdump for AMD secure memory encryption(sme)
+ id 1fIb2h-0007LK-Cv
+ for kexec@lists.infradead.org; Tue, 15 May 2018 14:35:13 +0000
+Subject: Re: [PATCH 1/2] add a function(ioremap_encrypted) for kdump when AMD
+ sme enabled.
 References: <20180515015133.4363-1-lijiang@redhat.com>
+ <20180515015133.4363-2-lijiang@redhat.com>
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <55bda494-bee4-5696-03e5-fc21c9d6b631@amd.com>
-Date: Tue, 15 May 2018 08:31:25 -0500
+Message-ID: <8c8f20cc-b39d-137c-9d71-1e566f905acb@amd.com>
+Date: Tue, 15 May 2018 09:34:49 -0500
 MIME-Version: 1.0
-In-Reply-To: <20180515015133.4363-1-lijiang@redhat.com>
+In-Reply-To: <20180515015133.4363-2-lijiang@redhat.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -28,88 +30,121 @@ To: Lianbo Jiang <lijiang@redhat.com>, linux-kernel@vger.kernel.org
 Cc: dyoung@redhat.com, kexec@lists.infradead.org
 
 On 5/14/2018 8:51 PM, Lianbo Jiang wrote:
-> It is convenient to remap the old memory encrypted to the second kernel by
-> calling ioremap_encrypted().
+> It is convenient to remap the old memory encrypted to the second kernel
+> by calling ioremap_encrypted().
 > 
-> When sme enabled on AMD server, we also need to support kdump. Because
-> the memory is encrypted in the first kernel, we will remap the old memory
-> encrypted to the second kernel(crash kernel), and sme is also enabled in
-> the second kernel, otherwise the old memory encrypted can not be decrypted.
-> Because simply changing the value of a C-bit on a page will not
-> automatically encrypt the existing contents of a page, and any data in the
-> page prior to the C-bit modification will become unintelligible. A page of
-> memory that is marked encrypted will be automatically decrypted when read
-> from DRAM and will be automatically encrypted when written to DRAM.
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> ---
+>  arch/x86/include/asm/io.h |  2 ++
+>  arch/x86/mm/ioremap.c     | 25 +++++++++++++++++--------
+>  2 files changed, 19 insertions(+), 8 deletions(-)
 > 
-> For the kdump, it is necessary to distinguish whether the memory is
-> encrypted. Furthermore, we should also know which part of the memory is
-> encrypted or decrypted. We will appropriately remap the memory according
-> to the specific situation in order to tell cpu how to deal with the
-> data(encrypted or decrypted). For example, when sme enabled, if the old
-> memory is encrypted, we will remap the old memory in encrypted way, which
-> will automatically decrypt the old memory encrypted when we read those data
-> from the remapping address.
-> 
->  ----------------------------------------------
-> | first-kernel | second-kernel | kdump support |
-> |      (mem_encrypt=on|off)    |   (yes|no)    | 
-> |--------------+---------------+---------------|
-> |     on       |     on        |     yes       |
-> |     off      |     off       |     yes       |
-> |     on       |     off       |     no        |
-> |     off      |     on        |     no        |
-> |______________|_______________|_______________|
-> 
-> Test tools:
-> makedumpfile[v1.6.3]: https://github.com/LianboJ/makedumpfile
-> commit e1de103eca8f (A draft for kdump vmcore about AMD SME)
-> Author: Lianbo Jiang <lijiang@redhat.com>
-> Date:   Mon May 14 17:02:40 2018 +0800
-> Note: This patch can only dump vmcore in the case of SME enabled.
-> 
-> crash-7.2.1: https://github.com/crash-utility/crash.git
-> commit 1e1bd9c4c1be (Fix for the "bpf" command display on Linux 4.17-rc1)
-> Author: Dave Anderson <anderson@redhat.com>
-> Date:   Fri May 11 15:54:32 2018 -0400
-> 
-> Test environment:
-> HP ProLiant DL385Gen10 AMD EPYC 7251
-> 8-Core Processor
-> 32768 MB memory
-> 600 GB disk space
-> 
-> Linux 4.17-rc4:
-> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> commit 75bc37fefc44 ("Linux 4.17-rc4")
-> Author: Linus Torvalds <torvalds@linux-foundation.org>
-> Date:   Sun May 6 16:57:38 2018 -1000
-> 
-> Reference:
-> AMD64 Architecture Programmer's Manual
-> https://support.amd.com/TechDocs/24593.pdf
-> 
+> diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+> index f6e5b93..06d2a9f 100644
+> --- a/arch/x86/include/asm/io.h
+> +++ b/arch/x86/include/asm/io.h
+> @@ -192,6 +192,8 @@ extern void __iomem *ioremap_cache(resource_size_t offset, unsigned long size);
+>  #define ioremap_cache ioremap_cache
+>  extern void __iomem *ioremap_prot(resource_size_t offset, unsigned long size, unsigned long prot_val);
+>  #define ioremap_prot ioremap_prot
+> +extern void __iomem *ioremap_encrypted(resource_size_t phys_addr, unsigned long size);
+> +#define ioremap_encrypted ioremap_encrypted
+>  
+>  /**
+>   * ioremap     -   map bus memory into CPU space
+> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+> index c63a545..7a52d1e 100644
+> --- a/arch/x86/mm/ioremap.c
+> +++ b/arch/x86/mm/ioremap.c
+> @@ -131,7 +131,8 @@ static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
+>   * caller shouldn't need to know that small detail.
+>   */
+>  static void __iomem *__ioremap_caller(resource_size_t phys_addr,
+> -		unsigned long size, enum page_cache_mode pcm, void *caller)
+> +		unsigned long size, enum page_cache_mode pcm,
+> +		void *caller, bool encrypted)
+>  {
+>  	unsigned long offset, vaddr;
+>  	resource_size_t last_addr;
+> @@ -199,7 +200,8 @@ static void __iomem *__ioremap_caller(resource_size_t phys_addr,
+>  	 * resulting mapping.
+>  	 */
+>  	prot = PAGE_KERNEL_IO;
+> -	if (sev_active() && mem_flags.desc_other)
+> +	if ((sev_active() && mem_flags.desc_other) ||
+> +			(encrypted && sme_active()))
 
-Have you also tested this with SEV?  It would be nice if the kdump
-changes you make work with both SME and SEV.
+You only need the encrypted check here.  If sme is not active,
+then the pgprot_encrypted will basically be a no-op.
+
+Also, extra indents.
 
 Thanks,
 Tom
 
-> Lianbo Jiang (2):
->   add a function(ioremap_encrypted) for kdump when AMD sme enabled.
->   support kdump when AMD secure memory encryption is active
-> 
->  arch/x86/include/asm/dmi.h      | 14 +++++++++++++-
->  arch/x86/include/asm/io.h       |  2 ++
->  arch/x86/kernel/acpi/boot.c     |  8 ++++++++
->  arch/x86/kernel/crash_dump_64.c | 27 +++++++++++++++++++++++++++
->  arch/x86/mm/ioremap.c           | 25 +++++++++++++++++--------
->  drivers/acpi/tables.c           | 14 +++++++++++++-
->  drivers/iommu/amd_iommu_init.c  |  9 ++++++++-
->  fs/proc/vmcore.c                | 36 +++++++++++++++++++++++++++++++-----
->  include/linux/crash_dump.h      |  4 ++++
->  kernel/kexec_core.c             | 12 ++++++++++++
->  10 files changed, 135 insertions(+), 16 deletions(-)
+>  		prot = pgprot_encrypted(prot);
+>  
+>  	switch (pcm) {
+> @@ -291,7 +293,7 @@ void __iomem *ioremap_nocache(resource_size_t phys_addr, unsigned long size)
+>  	enum page_cache_mode pcm = _PAGE_CACHE_MODE_UC_MINUS;
+>  
+>  	return __ioremap_caller(phys_addr, size, pcm,
+> -				__builtin_return_address(0));
+> +				__builtin_return_address(0), false);
+>  }
+>  EXPORT_SYMBOL(ioremap_nocache);
+>  
+> @@ -324,7 +326,7 @@ void __iomem *ioremap_uc(resource_size_t phys_addr, unsigned long size)
+>  	enum page_cache_mode pcm = _PAGE_CACHE_MODE_UC;
+>  
+>  	return __ioremap_caller(phys_addr, size, pcm,
+> -				__builtin_return_address(0));
+> +				__builtin_return_address(0), false);
+>  }
+>  EXPORT_SYMBOL_GPL(ioremap_uc);
+>  
+> @@ -341,7 +343,7 @@ EXPORT_SYMBOL_GPL(ioremap_uc);
+>  void __iomem *ioremap_wc(resource_size_t phys_addr, unsigned long size)
+>  {
+>  	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WC,
+> -					__builtin_return_address(0));
+> +					__builtin_return_address(0), false);
+>  }
+>  EXPORT_SYMBOL(ioremap_wc);
+>  
+> @@ -358,14 +360,21 @@ EXPORT_SYMBOL(ioremap_wc);
+>  void __iomem *ioremap_wt(resource_size_t phys_addr, unsigned long size)
+>  {
+>  	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WT,
+> -					__builtin_return_address(0));
+> +					__builtin_return_address(0), false);
+>  }
+>  EXPORT_SYMBOL(ioremap_wt);
+>  
+> +void __iomem *ioremap_encrypted(resource_size_t phys_addr, unsigned long size)
+> +{
+> +	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WB,
+> +				__builtin_return_address(0), true);
+> +}
+> +EXPORT_SYMBOL(ioremap_encrypted);
+> +
+>  void __iomem *ioremap_cache(resource_size_t phys_addr, unsigned long size)
+>  {
+>  	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WB,
+> -				__builtin_return_address(0));
+> +				__builtin_return_address(0), false);
+>  }
+>  EXPORT_SYMBOL(ioremap_cache);
+>  
+> @@ -374,7 +383,7 @@ void __iomem *ioremap_prot(resource_size_t phys_addr, unsigned long size,
+>  {
+>  	return __ioremap_caller(phys_addr, size,
+>  				pgprot2cachemode(__pgprot(prot_val)),
+> -				__builtin_return_address(0));
+> +				__builtin_return_address(0), false);
+>  }
+>  EXPORT_SYMBOL(ioremap_prot);
+>  
 > 
 
 _______________________________________________
