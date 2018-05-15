@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-f67.google.com ([209.85.215.67])
+Received: from mail-lf0-f65.google.com ([209.85.215.65])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fIULB-0005iE-AR
- for kexec@lists.infradead.org; Tue, 15 May 2018 07:25:48 +0000
-Received: by mail-lf0-f67.google.com with SMTP id j193-v6so21813202lfg.6
- for <kexec@lists.infradead.org>; Tue, 15 May 2018 00:25:34 -0700 (PDT)
+ id 1fIUMp-0005vB-1W
+ for kexec@lists.infradead.org; Tue, 15 May 2018 07:27:28 +0000
+Received: by mail-lf0-f65.google.com with SMTP id r25-v6so21815941lfd.1
+ for <kexec@lists.infradead.org>; Tue, 15 May 2018 00:27:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1524733052-3276-1-git-send-email-bhsharma@redhat.com>
-References: <1524733052-3276-1-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1524459622-2059-1-git-send-email-bhsharma@redhat.com>
+References: <1524459622-2059-1-git-send-email-bhsharma@redhat.com>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 15 May 2018 12:50:17 +0530
-Message-ID: <CACi5LpNrpJXSnRhxvnvXVshp7FvnPqm-idW6v540K0oMEt5_ng@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: Add support to supply 'kaslr-seed' to secondary
- kernel
+Date: Tue, 15 May 2018 12:51:52 +0530
+Message-ID: <CACi5LpNuPzNKhLac6Mfpn5P9LUr=QaaCeyz=6RLTjV8YVoTW9w@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Remove obsolete kdump tool and add missing uninstall
+ rule
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,282 +26,56 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Dave Young <dyoung@redhat.com>, Simon Horman <horms@verge.net.au>
+Cc: Russell King <rmk@armlinux.org.uk>, Russell King <rmk@arm.linux.org.uk>, Bhupesh Sharma <bhsharma@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, ebiederm@xmission.com, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Hello Akashi,
+Hello Russell, Simon,
 
-On Thu, Apr 26, 2018 at 2:27 PM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> This patch adds the support to supply 'kaslr-seed' to secondary kernel,
-> when we do a 'kexec warm reboot to another kernel' (although the
-> behaviour remains the same for the 'kdump' case as well) on arm64
-> platforms using the 'kexec_load' invocation method.
+On Mon, Apr 23, 2018 at 10:30 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> This patchset contains two patches:
 >
-> Lets consider the case where the primary kernel working on the arm64
-> platform supports kaslr (i.e 'CONFIG_RANDOMIZE_BASE' was set to y and
-> we have a compliant EFI firmware which supports EFI_RNG_PROTOCOL and
-> hence can pass a non-zero (valid) seed to the primary kernel).
+> [1/2] - Adds a missing uninstall rule to 'Makefile.in' to allow easier
+>         uninstallation of executables and man pages installed via
+>         'make install'
+> [2/2] - Removes obsolete kdump tool as per the discussion on kexec
+>         mailing list (see [1] for details), where a conclusion was
+>         reached that with the availability of tools like crash/gdb the
+>         analysis of the crashdump core has become rather easy, and it
+>         makes the kdump tool obsolete.
 >
-> Now the primary kernel reads the 'kaslr-seed' and wipes it to 0 and
-> uses the seed value to randomize for e.g. the module base address
-> offset.
+>         Also the same naming convention (man page) causes confusion
+>         when compared to similarly named distribution specific kdump
+>         service/utilities, so its better to remove the same from
+>         kexec-tools.
 >
-> In the case of 'kexec_load' (or even kdump for brevity),
-> we rely on the user-space kexec-tools to pass an appropriate dtb to the
-> secondary kernel and since 'kaslr-seed' is wiped to 0 by the primary
-> kernel, the secondary will essentially work with *nokaslr* as
-> 'kaslr-seed' is set to 0 when it is passed to the secondary kernel.
+> I tested the patchset on my apm mustang and qualcomm arm64 boards and
+> the changes seem to work fine.
 >
-> This can be true even in case the secondary kernel had
-> 'CONFIG_RANDOMIZE_BASE' and 'CONFIG_RANDOMIZE_MODULE_REGION_FULL' set to
-> y.
+> [1] http://lists.infradead.org/pipermail/kexec/2018-April/020483.html
 >
-> This patch addresses this issue by first checking if the device tree
-> provided by the firmware to the kernel supports the 'kaslr-seed'
-> property and verifies that it is really wiped to 0. If this condition is
-> met, it fixes up the 'kaslr-seed' property by using the getrandom()
-> syscall to get a suitable random number.
->
-> I verified this patch on my Qualcomm arm64 board and here are some test
-> results:
->
-> 1. Ensure that the primary kernel is boot'ed with 'kaslr-seed'
->    dts property and it is really wiped to 0:
->
->    [root@qualcomm-amberwing]# dtc -I dtb -O dts /sys/firmware/fdt | grep -A 10 -i chosen
->         chosen {
->                 kaslr-seed = <0x0 0x0>;
->                 ...
->         }
->
-> 2. Now issue 'kexec_load' to load the secondary kernel (let's assume
->    that we are using the same kernel as the secondary kernel):
->    # kexec -l /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname
->      -r`.img --reuse-cmdline -d
->
-> 3. Issue 'kexec -e' to warm boot to the secondary:
->    # kexec -e
->
-> 4. Now after the secondary boots, confirm that the load address of the
->    modules is randomized in every successive boot:
->
->    [root@qualcomm-amberwing]# cat /proc/modules
->    sunrpc 524288 1 - Live 0xffff0307db190000
->    vfat 262144 1 - Live 0xffff0307db110000
->    fat 262144 1 vfat, Live 0xffff0307db090000
->    crc32_ce 262144 0 - Live 0xffff0307d8c70000
->    ...
->
-> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> ---
-> Changes since v1:
->  - Addressed Akashi's comments regarding the goto label path.
->  - v1 can be viewed here: https://marc.info/?l=kexec&m=152373724406110&w=2
+> Cc: Russell King <rmk@arm.linux.org.uk>
+> Cc: Simon Horman <horms@verge.net.au>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-Ping. Any comments on this v2?
+Ping. Any comments on this?
 
 Thanks,
 Bhupesh
 
->  kexec/arch/arm64/kexec-arm64.c | 138 +++++++++++++++++++++++++++++------------
->  1 file changed, 100 insertions(+), 38 deletions(-)
+> Bhupesh Sharma (2):
+>   Makefile.in: Add uninstall rule
+>   Remove obsolete kdump tool
 >
-> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> index 62f37585b788..a206c172b1aa 100644
-> --- a/kexec/arch/arm64/kexec-arm64.c
-> +++ b/kexec/arch/arm64/kexec-arm64.c
-> @@ -15,6 +15,11 @@
->  #include <linux/elf-em.h>
->  #include <elf.h>
->
-> +#include <unistd.h>
-> +#include <syscall.h>
-> +#include <errno.h>
-> +#include <linux/random.h>
-> +
->  #include "kexec.h"
->  #include "kexec-arm64.h"
->  #include "crashdump.h"
-> @@ -392,11 +397,13 @@ static int fdt_setprop_range(void *fdt, int nodeoffset,
->  static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
->  {
->         uint32_t address_cells, size_cells;
-> -       int range_len;
-> -       int nodeoffset;
-> +       uint64_t fdt_val64;
-> +       uint64_t *prop;
->         char *new_buf = NULL;
-> +       int len, range_len;
-> +       int nodeoffset;
->         int new_size;
-> -       int result;
-> +       int result, kaslr_seed;
->
->         result = fdt_check_header(dtb->buf);
->
-> @@ -407,47 +414,103 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
->
->         result = set_bootargs(dtb, command_line);
->
-> -       if (on_crash) {
-> -               /* determine #address-cells and #size-cells */
-> -               result = get_cells_size(dtb->buf, &address_cells, &size_cells);
-> -               if (result) {
-> -                       fprintf(stderr,
-> -                               "kexec: cannot determine cells-size.\n");
-> -                       result = -EINVAL;
-> -                       goto on_error;
-> -               }
-> +       /* determine #address-cells and #size-cells */
-> +       result = get_cells_size(dtb->buf, &address_cells, &size_cells);
-> +       if (result) {
-> +               fprintf(stderr, "kexec: cannot determine cells-size.\n");
-> +               result = -EINVAL;
-> +               goto on_error;
-> +       }
->
-> -               if (!cells_size_fitted(address_cells, size_cells,
-> -                                       &elfcorehdr_mem)) {
-> -                       fprintf(stderr,
-> -                               "kexec: elfcorehdr doesn't fit cells-size.\n");
-> +       if (!cells_size_fitted(address_cells, size_cells,
-> +                               &elfcorehdr_mem)) {
-> +               fprintf(stderr, "kexec: elfcorehdr doesn't fit cells-size.\n");
-> +               result = -EINVAL;
-> +               goto on_error;
-> +       }
-> +
-> +       if (!cells_size_fitted(address_cells, size_cells,
-> +                               &crash_reserved_mem)) {
-> +               fprintf(stderr, "kexec: usable memory range doesn't fit cells-size.\n");
-> +               result = -EINVAL;
-> +               goto on_error;
-> +       }
-> +
-> +       /* duplicate dt blob */
-> +       range_len = sizeof(uint32_t) * (address_cells + size_cells);
-> +       new_size = fdt_totalsize(dtb->buf)
-> +               + fdt_prop_len(PROP_ELFCOREHDR, range_len)
-> +               + fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len);
-> +
-> +       new_buf = xmalloc(new_size);
-> +       result = fdt_open_into(dtb->buf, new_buf, new_size);
-> +       if (result) {
-> +               dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
-> +                               fdt_strerror(result));
-> +               result = -ENOSPC;
-> +               goto on_error;
-> +       }
-> +
-> +       /* fixup 'kaslr-seed' with a random value, if supported */
-> +       nodeoffset = fdt_path_offset(new_buf, "/chosen");
-> +       prop = fdt_getprop_w(new_buf, nodeoffset,
-> +                       "kaslr-seed", &len);
-> +       if (!prop || len != sizeof(uint64_t)) {
-> +               dbgprintf("%s: no kaslr-seed found\n",
-> +                               __func__);
-> +               /* for kexec warm reboot case, we don't need to fixup
-> +                * other dtb properties
-> +                */
-> +               if (!on_crash) {
-> +                       dump_reservemap(dtb);
-> +                       if (new_buf)
-> +                               free(new_buf);
-> +
-> +                       return result;
-> +               }
-> +       } else {
-> +               kaslr_seed = fdt64_to_cpu(*prop);
-> +
-> +               /* kaslr_seed must be wiped clean by primary
-> +                * kernel during boot
-> +                */
-> +               if (kaslr_seed != 0) {
-> +                       dbgprintf("%s: kaslr-seed is not wiped to 0.\n",
-> +                                       __func__);
->                         result = -EINVAL;
->                         goto on_error;
->                 }
->
-> -               if (!cells_size_fitted(address_cells, size_cells,
-> -                                       &crash_reserved_mem)) {
-> -                       fprintf(stderr,
-> -                               "kexec: usable memory range doesn't fit cells-size.\n");
-> +               /*
-> +                * Invoke the getrandom system call with
-> +                * GRND_NONBLOCK, to make sure we
-> +                * have a valid random seed to pass to the
-> +                * secondary kernel.
-> +                */
-> +               result = syscall(SYS_getrandom, &fdt_val64,
-> +                               sizeof(fdt_val64),
-> +                               GRND_NONBLOCK);
-> +
-> +               if(result == -1) {
-> +                       dbgprintf("%s: Reading random bytes failed.\n",
-> +                                       __func__);
->                         result = -EINVAL;
->                         goto on_error;
->                 }
->
-> -               /* duplicate dt blob */
-> -               range_len = sizeof(uint32_t) * (address_cells + size_cells);
-> -               new_size = fdt_totalsize(dtb->buf)
-> -                       + fdt_prop_len(PROP_ELFCOREHDR, range_len)
-> -                       + fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len);
-> -
-> -               new_buf = xmalloc(new_size);
-> -               result = fdt_open_into(dtb->buf, new_buf, new_size);
-> +               nodeoffset = fdt_path_offset(new_buf, "/chosen");
-> +               result = fdt_setprop_inplace(new_buf,
-> +                               nodeoffset, "kaslr-seed",
-> +                               &fdt_val64, sizeof(fdt_val64));
->                 if (result) {
-> -                       dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
-> -                               fdt_strerror(result));
-> -                       result = -ENOSPC;
-> +                       dbgprintf("%s: fdt_setprop failed: %s\n",
-> +                                       __func__, fdt_strerror(result));
-> +                       result = -EINVAL;
->                         goto on_error;
->                 }
-> +       }
->
-> +       if (on_crash) {
->                 /* add linux,elfcorehdr */
->                 nodeoffset = fdt_path_offset(new_buf, "/chosen");
->                 result = fdt_setprop_range(new_buf, nodeoffset,
-> @@ -455,7 +518,7 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
->                                 address_cells, size_cells);
->                 if (result) {
->                         dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
-> -                               fdt_strerror(result));
-> +                                       fdt_strerror(result));
->                         result = -EINVAL;
->                         goto on_error;
->                 }
-> @@ -467,18 +530,17 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
->                                 address_cells, size_cells);
->                 if (result) {
->                         dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
-> -                               fdt_strerror(result));
-> +                                       fdt_strerror(result));
->                         result = -EINVAL;
->                         goto on_error;
->                 }
-> -
-> -               fdt_pack(new_buf);
-> -               dtb->buf = new_buf;
-> -               dtb->size = fdt_totalsize(new_buf);
->         }
->
-> -       dump_reservemap(dtb);
-> +       fdt_pack(new_buf);
-> +       dtb->buf = new_buf;
-> +       dtb->size = fdt_totalsize(new_buf);
->
-> +       dump_reservemap(dtb);
->
->         return result;
+>  Makefile.in         |  92 +++++++++++++--
+>  kdump/Makefile      |  30 -----
+>  kdump/kdump.8       |  39 -------
+>  kdump/kdump.c       | 327 ----------------------------------------------------
+>  kexec-tools.spec.in |   2 -
+>  5 files changed, 83 insertions(+), 407 deletions(-)
+>  delete mode 100644 kdump/Makefile
+>  delete mode 100644 kdump/kdump.8
+>  delete mode 100644 kdump/kdump.c
 >
 > --
 > 2.7.4
