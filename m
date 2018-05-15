@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v9 04/11] arm64: kexec_file: allocate memory walking
- through memblock list
+Subject: Re: [PATCH v9 05/11] arm64: kexec_file: load initrd and device-tree
 References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
- <20180425062629.29404-5-takahiro.akashi@linaro.org>
- <648656ef-1f1e-b0ac-581c-aba1e62f4eee@arm.com>
- <20180507055906.GE11326@linaro.org> <20180515043538.GB2737@linaro.org>
+ <20180425062629.29404-6-takahiro.akashi@linaro.org>
 From: James Morse <james.morse@arm.com>
-Message-ID: <84d5da84-81c4-d311-10e9-ba6afaf72a8e@arm.com>
-Date: Tue, 15 May 2018 17:17:41 +0100
+Message-ID: <c10624c0-9962-af38-1dd5-656902180ace@arm.com>
+Date: Tue, 15 May 2018 17:20:00 +0100
 MIME-Version: 1.0
-In-Reply-To: <20180515043538.GB2737@linaro.org>
+In-Reply-To: <20180425062629.29404-6-takahiro.akashi@linaro.org>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -28,57 +25,224 @@ Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, cata
 
 Hi Akashi,
 
-On 15/05/18 05:35, AKASHI Takahiro wrote:
-> On Mon, May 07, 2018 at 02:59:07PM +0900, AKASHI Takahiro wrote:
->> On Tue, May 01, 2018 at 06:46:09PM +0100, James Morse wrote:
->>> On 25/04/18 07:26, AKASHI Takahiro wrote:
->>>> We need to prevent firmware-reserved memory regions, particularly EFI
->>>> memory map as well as ACPI tables, from being corrupted by loading
->>>> kernel/initrd (or other kexec buffers). We also want to support memory
->>>> allocation in top-down manner in addition to default bottom-up.
->>>> So let's have arm64 specific arch_kexec_walk_mem() which will search
->>>> for available memory ranges in usable memblock list,
->>>> i.e. !NOMAP & !reserved, 
->>>
->>>> instead of system resource tree.
->>>
->>> Didn't we try to fix the system-resource-tree in order to fix regular-kexec to
->>> be safe in the EFI-memory-map/ACPI-tables case?
->>>
->>> It would be good to avoid having two ways of doing this, and I would like to
->>> avoid having extra arch code...
->>
->> I know what you mean.
->> /proc/iomem or system resource is, in my opinion, not the best place to
->> describe memory usage of kernel but rather to describe *physical* hardware
->> layout. As we are still discussing about "reserved" memory, I don't want
->> to depend on it.
+On 25/04/18 07:26, AKASHI Takahiro wrote:
+> load_other_segments() is expected to allocate and place all the necessary
+> memory segments other than kernel, including initrd and device-tree
+> blob (and elf core header for crash).
+> While most of the code was borrowed from kexec-tools' counterpart,
+> users may not be allowed to specify dtb explicitly, instead, the dtb
+> presented by a boot loader is reused.
 
-I agree. We have funny stuff that isn't hardware-layout, but is important for
-the next boot. The kernel doesn't have an ABI to support when it queries the
-list itself.
+(Nit: "a boot loader" -> "the original boot loader")
+
+> arch_kimage_kernel_post_load_cleanup() is responsible for freeing arm64-
+> specific data allocated in load_other_segments().
 
 
->> Along with memblock list, we will have more accurate control over memory
->> usage.
+> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> index f9ebf54ca247..b3b9b1725d8a 100644
+> --- a/arch/arm64/kernel/machine_kexec_file.c
+> +++ b/arch/arm64/kernel/machine_kexec_file.c
+> @@ -13,7 +13,26 @@
+>  #include <linux/ioport.h>
+>  #include <linux/kernel.h>
+>  #include <linux/kexec.h>
+> +#include <linux/libfdt.h>
+>  #include <linux/memblock.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/types.h>
+> +#include <asm/byteorder.h>
+> +
+> +static int __dt_root_addr_cells;
+> +static int __dt_root_size_cells;
 
->>> If the argument is walking memblock gives a better answer than the stringy
->>> walk_system_ram_res() thing, is there any mileage in moving this code into
->>> kexec_file.c, and using it if !IS_ENABLED(CONFIG_ARCH_DISCARD_MEMBLOCK)?
->>>
->>> This would save arm64/powerpc having near-identical implementations.
->>> 32bit arm keeps memblock if it has kexec, so it may be useful there too if
->>> kexec_file_load() support is added.
+> @@ -55,3 +74,144 @@ int arch_kexec_walk_mem(struct kexec_buf *kbuf,
+>  
+>  	return ret;
+>  }
+> +
+> +static int setup_dtb(struct kimage *image,
+> +		unsigned long initrd_load_addr, unsigned long initrd_len,
+> +		char *cmdline, unsigned long cmdline_len,
+> +		char **dtb_buf, size_t *dtb_buf_len)
+> +{
+> +	char *buf = NULL;
+> +	size_t buf_size;
+> +	int nodeoffset;
+> +	u64 value;
+> +	int range_len;
+> +	int ret;
+> +
+> +	/* duplicate dt blob */
+> +	buf_size = fdt_totalsize(initial_boot_params);
+> +	range_len = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
 
-> If you don't have further objection, I will take memblock approach
-> (with factoring out powerpc's arch_kexec_walk_mem()).
+These two cells values are 0 here. Did you want
+arch_kexec_file_init() in patch 7 in this patch?
 
-If we're agreed that the memblock walking is generic, then it would be quicker
-to make the arm64 version as close as possible and merge them as a later series.
-(saves a cross arch dependency)
+Ah, range_len isn't used, so, did you want the cells values and this range_len
+thing in in patch 7!?
 
-With that,
-Reviewed-by: James Morse <james.morse@arm.com>
+
+> +
+> +	if (initrd_load_addr)
+> +		buf_size += fdt_prop_len("linux,initrd-start", sizeof(u64))
+> +				+ fdt_prop_len("linux,initrd-end", sizeof(u64));
+> +
+> +	if (cmdline)
+> +		buf_size += fdt_prop_len("bootargs", cmdline_len + 1);
+
+I can't find where fdt_prop_len() .... oh, patch 7. fdt_prop_len() doesn't look
+like the sort of thing that should be created here, but I agree there isn't an
+existing API to do this.
+
+(This must be why powerpc guesses that the fdt won't be more than double in size).
+
+
+> +	buf = vmalloc(buf_size);
+> +	if (!buf) {
+> +		ret = -ENOMEM;
+> +		goto out_err;
+> +	}
+> +
+> +	ret = fdt_open_into(initial_boot_params, buf, buf_size);
+> +	if (ret)
+> +		goto out_err;
+> +
+> +	nodeoffset = fdt_path_offset(buf, "/chosen");
+> +	if (nodeoffset < 0)
+> +		goto out_err;
+> +
+> +	/* add bootargs */
+> +	if (cmdline) {
+> +		ret = fdt_setprop(buf, nodeoffset, "bootargs",
+> +						cmdline, cmdline_len + 1);
+
+fdt_setprop_string()?
+
+
+> +		if (ret)
+> +			goto out_err;
+> +	}
+> +
+> +	/* add initrd-* */
+> +	if (initrd_load_addr) {
+> +		value = cpu_to_fdt64(initrd_load_addr);
+> +		ret = fdt_setprop(buf, nodeoffset, "linux,initrd-start",
+> +				&value, sizeof(value));
+
+sizeof(value) was assumed to be the same as sizeof(u64) earlier.
+fdt_setprop_u64()?
+
+
+> +		if (ret)
+> +			goto out_err;
+> +
+> +		value = cpu_to_fdt64(initrd_load_addr + initrd_len);
+> +		ret = fdt_setprop(buf, nodeoffset, "linux,initrd-end",
+> +				&value, sizeof(value));
+> +		if (ret)
+> +			goto out_err;
+> +	}
+> +
+> +	/* trim a buffer */
+> +	fdt_pack(buf);
+> +	*dtb_buf = buf;
+> +	*dtb_buf_len = fdt_totalsize(buf);
+> +
+> +	return 0;
+> +
+> +out_err:
+> +	vfree(buf);
+> +	return ret;
+> +}
+
+While powerpc has some similar code for updating the initrd and cmdline, it
+makes different assumptions about the size of the dt, and has different behavior
+for memreserve. (looks like we don't expect the initramfs to be memreserved).
+Lets leave unifying that stuff where possible for the future.
+
+
+> +int load_other_segments(struct kimage *image,
+> +			char *initrd, unsigned long initrd_len,
+> +			char *cmdline, unsigned long cmdline_len)
+> +{
+> +	struct kexec_segment *kern_seg;
+> +	struct kexec_buf kbuf;
+> +	unsigned long initrd_load_addr = 0;
+> +	char *dtb = NULL;
+> +	unsigned long dtb_len = 0;
+> +	int ret = 0;
+> +
+> +	kern_seg = &image->segment[image->arch.kern_segment];
+> +	kbuf.image = image;
+> +	/* not allocate anything below the kernel */
+> +	kbuf.buf_min = kern_seg->mem + kern_seg->memsz;
+
+> +	/* load initrd */
+> +	if (initrd) {
+> +		kbuf.buffer = initrd;
+> +		kbuf.bufsz = initrd_len;
+> +		kbuf.memsz = initrd_len;
+
+> +		kbuf.buf_align = 0;
+
+I'm surprised there initrd has no alignment requirement, but kexec_add_buffer()
+rounds this up to PAGE_SIZE.
+
+
+> +		/* within 1GB-aligned window of up to 32GB in size */
+> +		kbuf.buf_max = round_down(kern_seg->mem, SZ_1G)
+> +						+ (unsigned long)SZ_1G * 32;
+> +		kbuf.top_down = false;
+> +
+> +		ret = kexec_add_buffer(&kbuf);
+> +		if (ret)
+> +			goto out_err;
+> +		initrd_load_addr = kbuf.mem;
+> +
+> +		pr_debug("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> +				initrd_load_addr, initrd_len, initrd_len);
+> +	}
+> +
+> +	/* load dtb blob */
+> +	ret = setup_dtb(image, initrd_load_addr, initrd_len,
+> +				cmdline, cmdline_len, &dtb, &dtb_len);
+> +	if (ret) {
+> +		pr_err("Preparing for new dtb failed\n");
+> +		goto out_err;
+> +	}
+> +
+> +	kbuf.buffer = dtb;
+> +	kbuf.bufsz = dtb_len;
+> +	kbuf.memsz = dtb_len;
+> +	/* not across 2MB boundary */
+> +	kbuf.buf_align = SZ_2M;
+> +	kbuf.buf_max = ULONG_MAX;
+> +	kbuf.top_down = true;
+> +
+> +	ret = kexec_add_buffer(&kbuf);
+> +	if (ret)
+> +		goto out_err;
+> +	image->arch.dtb_mem = kbuf.mem;
+> +	image->arch.dtb_buf = dtb;
+> +
+> +	pr_debug("Loaded dtb at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> +			kbuf.mem, dtb_len, dtb_len);
+> +
+> +	return 0;
+> +
+> +out_err:
+> +	vfree(dtb);
+> +	image->arch.dtb_buf = NULL;
+
+Won't kimage_file_post_load_cleanup() always be called if we return an error
+here? Why not leave the free()ing until then?
+
+
+> +	return ret;
+> +}
+
 
 
 Thanks,
