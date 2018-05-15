@@ -1,23 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x242.google.com ([2607:f8b0:400e:c05::242])
+Received: from mail-lf0-f67.google.com ([209.85.215.67])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fISHA-0007qB-QK
- for kexec@lists.infradead.org; Tue, 15 May 2018 05:13:30 +0000
-Received: by mail-pg0-x242.google.com with SMTP id z4-v6so6457549pgu.13
- for <kexec@lists.infradead.org>; Mon, 14 May 2018 22:13:18 -0700 (PDT)
-Date: Tue, 15 May 2018 14:13:11 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v9 06/11] arm64: kexec_file: allow for loading
- Image-format kernel
-Message-ID: <20180515051308.GD2737@linaro.org>
-References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
- <20180425062629.29404-7-takahiro.akashi@linaro.org>
- <c604b578-6667-3532-eac9-55c428001025@arm.com>
- <20180507072139.GF11326@linaro.org>
- <6f0df3a8-a691-80f1-85de-3e0ead852f12@arm.com>
+ id 1fIULB-0005iE-AR
+ for kexec@lists.infradead.org; Tue, 15 May 2018 07:25:48 +0000
+Received: by mail-lf0-f67.google.com with SMTP id j193-v6so21813202lfg.6
+ for <kexec@lists.infradead.org>; Tue, 15 May 2018 00:25:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <6f0df3a8-a691-80f1-85de-3e0ead852f12@arm.com>
+In-Reply-To: <1524733052-3276-1-git-send-email-bhsharma@redhat.com>
+References: <1524733052-3276-1-git-send-email-bhsharma@redhat.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Tue, 15 May 2018 12:50:17 +0530
+Message-ID: <CACi5LpNrpJXSnRhxvnvXVshp7FvnPqm-idW6v540K0oMEt5_ng@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: Add support to supply 'kaslr-seed' to secondary
+ kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,278 +25,287 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: kexec@lists.infradead.org
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Dave Young <dyoung@redhat.com>, Simon Horman <horms@verge.net.au>
 
-James,
+Hello Akashi,
 
-On Fri, May 11, 2018 at 06:07:06PM +0100, James Morse wrote:
-> Hi Akashi,
-> 
-> On 07/05/18 08:21, AKASHI Takahiro wrote:
-> > On Tue, May 01, 2018 at 06:46:11PM +0100, James Morse wrote:
-> >> On 25/04/18 07:26, AKASHI Takahiro wrote:
-> >>> This patch provides kexec_file_ops for "Image"-format kernel. In this
-> >>> implementation, a binary is always loaded with a fixed offset identified
-> >>> in text_offset field of its header.
-> 
-> >>> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> >>> index e4de1223715f..3cba4161818a 100644
-> >>> --- a/arch/arm64/include/asm/kexec.h
-> >>> +++ b/arch/arm64/include/asm/kexec.h
-> >>> @@ -102,6 +102,56 @@ struct kimage_arch {
-> >>>  	void *dtb_buf;
-> >>>  };
-> >>>  
-> >>> +/**
-> >>> + * struct arm64_image_header - arm64 kernel image header
-> >>> + *
-> >>> + * @pe_sig: Optional PE format 'MZ' signature
+On Thu, Apr 26, 2018 at 2:27 PM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> This patch adds the support to supply 'kaslr-seed' to secondary kernel,
+> when we do a 'kexec warm reboot to another kernel' (although the
+> behaviour remains the same for the 'kdump' case as well) on arm64
+> platforms using the 'kexec_load' invocation method.
+>
+> Lets consider the case where the primary kernel working on the arm64
+> platform supports kaslr (i.e 'CONFIG_RANDOMIZE_BASE' was set to y and
+> we have a compliant EFI firmware which supports EFI_RNG_PROTOCOL and
+> hence can pass a non-zero (valid) seed to the primary kernel).
+>
+> Now the primary kernel reads the 'kaslr-seed' and wipes it to 0 and
+> uses the seed value to randomize for e.g. the module base address
+> offset.
+>
+> In the case of 'kexec_load' (or even kdump for brevity),
+> we rely on the user-space kexec-tools to pass an appropriate dtb to the
+> secondary kernel and since 'kaslr-seed' is wiped to 0 by the primary
+> kernel, the secondary will essentially work with *nokaslr* as
+> 'kaslr-seed' is set to 0 when it is passed to the secondary kernel.
+>
+> This can be true even in case the secondary kernel had
+> 'CONFIG_RANDOMIZE_BASE' and 'CONFIG_RANDOMIZE_MODULE_REGION_FULL' set to
+> y.
+>
+> This patch addresses this issue by first checking if the device tree
+> provided by the firmware to the kernel supports the 'kaslr-seed'
+> property and verifies that it is really wiped to 0. If this condition is
+> met, it fixes up the 'kaslr-seed' property by using the getrandom()
+> syscall to get a suitable random number.
+>
+> I verified this patch on my Qualcomm arm64 board and here are some test
+> results:
+>
+> 1. Ensure that the primary kernel is boot'ed with 'kaslr-seed'
+>    dts property and it is really wiped to 0:
+>
+>    [root@qualcomm-amberwing]# dtc -I dtb -O dts /sys/firmware/fdt | grep -A 10 -i chosen
+>         chosen {
+>                 kaslr-seed = <0x0 0x0>;
+>                 ...
+>         }
+>
+> 2. Now issue 'kexec_load' to load the secondary kernel (let's assume
+>    that we are using the same kernel as the secondary kernel):
+>    # kexec -l /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname
+>      -r`.img --reuse-cmdline -d
+>
+> 3. Issue 'kexec -e' to warm boot to the secondary:
+>    # kexec -e
+>
+> 4. Now after the secondary boots, confirm that the load address of the
+>    modules is randomized in every successive boot:
+>
+>    [root@qualcomm-amberwing]# cat /proc/modules
+>    sunrpc 524288 1 - Live 0xffff0307db190000
+>    vfat 262144 1 - Live 0xffff0307db110000
+>    fat 262144 1 vfat, Live 0xffff0307db090000
+>    crc32_ce 262144 0 - Live 0xffff0307d8c70000
+>    ...
+>
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> ---
+> Changes since v1:
+>  - Addressed Akashi's comments regarding the goto label path.
+>  - v1 can be viewed here: https://marc.info/?l=kexec&m=152373724406110&w=2
 
-To be precise, this is NOT a PE signature but MS-DOS header's magic.
-(There is another "PE" signature in PE COFF file header pointed to by
-'pe_header'.)
-I will correct its name.
-
-> >>> + * @branch_code: Instruction to branch to stext
-> >>> + * @text_offset: Image load offset, little endian
-> >>> + * @image_size: Effective image size, little endian
-> >>> + * @flags:
-> >>> + *	Bit 0: Kernel endianness. 0=little endian, 1=big endian
-> >>
-> >> Page size? What about 'phys_base'?, (whatever that is...)
-> >> Probably best to refer to Documentation/arm64/booting.txt here, its the
-> >> authoritative source of what these fields mean.
-> > 
-> > While we don't care other bit fields for now, I will add the reference
-> > to the Documentation file.
-> 
-> Thanks, I don't want to create a second, incomplete set of documentation!
-
-I will leave a minimum of description of parameters here.
-
-> 
-> 
-> >>> +	u64 reserved[3];
-> >>> +	u8 magic[4];
-> >>> +	u32 pe_header;
-> >>> +};
-> >>
-> >> I'm surprised we don't have a definition for this already, I guess its always
-> >> done in asm. We have kernel/image.h that holds some of this stuff, if we are
-> >> going to validate the flags, is it worth adding the code there, (and moving it
-> >> to include/asm)?
-> > 
-> > A comment at the beginning of this file says,
-> >     #ifndef LINKER_SCRIPT
-> >     #error This file should only be included in vmlinux.lds.S
-> >     #endif
-> > Let me think about.
-> 
-> Ah, I missed that.
-> 
-> Having two definitions of something makes me nervous that they can become
-> different... looks like that header belongs to the linker, and shouldn't be used
-> here then.
-
-OK.
-
-> 
-> >> I guess you skip the MZ prefix as its not present for !EFI?
-
-Correct, but MZ checking in probe function is just an informative message.
-
-> > 
-> > CONFIG_KEXEC_IMAGE_VERIFY_SIG depends on the fact that the file
-> > format is PE (that is, EFI is enabled).
-> 
-> So if the signature checking is enabled, its already been checked.
-
-The signature, either MZ or PE, in a file will be actually checked
-in verify_pefile_signature().
-
-> 
-> >> Could we check branch_code is non-zero, and text-offset points within image-size?
-> > 
-> > We could do it, but I don't think this check is very useful.
-> > 
-> >>
-> >> We could check that this platform supports the page-size/endian config that this
-> >> Image was built with... We get a message from the EFI stub if the page-size
-> >> can't be supported, it would be nice to do the same here (as we can).
-> > 
-> > There is no restriction on page-size or endianness for kexec.
-> 
-> No, but it won't boot if the hardware doesn't support it. The kernel will spin
-> at a magic address that is, difficult, to debug without JTAG. The bug report
-> will be "it didn't boot".
-
-OK.
-Added sanity checks for cpu features, endianness as well as page size.
-
-> 
-> > What will be the purpose of this check?
-> 
-> These values are in the header so that the bootloader can check them, then print
-> a meaningful error. Here, kexec_file_load() is playing the part of the bootloader.
-> 
-> I'm assuming kexec_file_load() can only be used to kexec linux... unlike regular
-> kexec. Is this where I'm going wrong?
-> 
-> 
-> >>> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-> >>> new file mode 100644
-> >>> index 000000000000..4dd524ad6611
-> >>> --- /dev/null
-> >>> +++ b/arch/arm64/kernel/kexec_image.c
-> >>> @@ -0,0 +1,79 @@
-> >>
-> >>> +static void *image_load(struct kimage *image,
-> >>> +				char *kernel, unsigned long kernel_len,
-> >>> +				char *initrd, unsigned long initrd_len,
-> >>> +				char *cmdline, unsigned long cmdline_len)
-> >>> +{
-> >>> +	struct kexec_buf kbuf;
-> >>> +	struct arm64_image_header *h = (struct arm64_image_header *)kernel;
-> >>> +	unsigned long text_offset;
-> >>> +	int ret;
-> >>> +
-> >>> +	/* Load the kernel */
-> >>> +	kbuf.image = image;
-> >>> +	kbuf.buf_min = 0;
-> >>> +	kbuf.buf_max = ULONG_MAX;
-> >>> +	kbuf.top_down = false;
-> >>> +
-> >>> +	kbuf.buffer = kernel;
-> >>> +	kbuf.bufsz = kernel_len;
-> >>> +	kbuf.memsz = le64_to_cpu(h->image_size);
-> >>> +	text_offset = le64_to_cpu(h->text_offset);
-> >>> +	kbuf.buf_align = SZ_2M;
-> >>
-> >>> +	/* Adjust kernel segment with TEXT_OFFSET */
-> >>> +	kbuf.memsz += text_offset;
-> >>> +
-> >>> +	ret = kexec_add_buffer(&kbuf);
-> >>> +	if (ret)
-> >>> +		goto out;
-> >>> +
-> >>> +	image->arch.kern_segment = image->nr_segments - 1;
-> >>
-> >> You only seem to use kern_segment here, and in load_other_segments() called
-> >> below. Could it not be a local variable passed in? Instead of arch-specific data
-> >> we keep forever?
-> > 
-> > No, kern_segment is also used in load_other_segments() in machine_kexec_file.c.
-> > To optimize memory hole allocation logic in locate_mem_hole_callback(),
-> > we need to know the exact range of kernel image (start and end).
-> 
-> That's the second user. My badly-made point is one calls the other, but passes
-> the data via some until-kexec lifetime struct. (its not important, just an
-> indicator this worked differently in the past and hasn't been cleaned up).
-> I meant something like [0].
-
-OK, but instead of adding kern_seg, I want to change the interface to:
-
-| extern int load_other_segments(struct kimage *image,
-|		unsigned long kernel_load_addr, unsigned long kernel_size,
-|		char *initrd, unsigned long initrd_len,
-|		char *cmdline, unsigned long cmdline_len);
-
-This way, we will in future be able to address an issue I mentioned in
-my previous e-mail. (If we support vmlinux, the kernel occupies two segments
-for text and data, respectively.)
+Ping. Any comments on this v2?
 
 Thanks,
--Takahiro AKASHI
+Bhupesh
 
-
-> 
-> Thanks,
-> 
-> James
-> 
-> 
-> [0] a diff is worth a thousand words:
-> --------------------%<--------------------
-> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_
-> kexec_file.c
-> index 762f9102899c..c50ce844f09e 100644
-> --- a/arch/arm64/kernel/machine_kexec_file.c
-> +++ b/arch/arm64/kernel/machine_kexec_file.c
-> @@ -325,11 +325,10 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
->         return ret;
->  }
-> 
-> -int load_other_segments(struct kimage *image,
-> +int load_other_segments(struct kimage *image, struct kexec_segment *kern_seg,
->                         char *initrd, unsigned long initrd_len,
->                         char *cmdline, unsigned long cmdline_len)
+>  kexec/arch/arm64/kexec-arm64.c | 138 +++++++++++++++++++++++++++++------------
+>  1 file changed, 100 insertions(+), 38 deletions(-)
+>
+> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> index 62f37585b788..a206c172b1aa 100644
+> --- a/kexec/arch/arm64/kexec-arm64.c
+> +++ b/kexec/arch/arm64/kexec-arm64.c
+> @@ -15,6 +15,11 @@
+>  #include <linux/elf-em.h>
+>  #include <elf.h>
+>
+> +#include <unistd.h>
+> +#include <syscall.h>
+> +#include <errno.h>
+> +#include <linux/random.h>
+> +
+>  #include "kexec.h"
+>  #include "kexec-arm64.h"
+>  #include "crashdump.h"
+> @@ -392,11 +397,13 @@ static int fdt_setprop_range(void *fdt, int nodeoffset,
+>  static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
 >  {
-> -       struct kexec_segment *kern_seg;
->         struct kexec_buf kbuf;
->         void *hdrs_addr;
->         unsigned long hdrs_sz;
-> @@ -368,7 +367,6 @@ int load_other_segments(struct kimage *image,
->                                  image->arch.elf_load_addr, hdrs_sz, hdrs_sz);
+>         uint32_t address_cells, size_cells;
+> -       int range_len;
+> -       int nodeoffset;
+> +       uint64_t fdt_val64;
+> +       uint64_t *prop;
+>         char *new_buf = NULL;
+> +       int len, range_len;
+> +       int nodeoffset;
+>         int new_size;
+> -       int result;
+> +       int result, kaslr_seed;
+>
+>         result = fdt_check_header(dtb->buf);
+>
+> @@ -407,47 +414,103 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+>
+>         result = set_bootargs(dtb, command_line);
+>
+> -       if (on_crash) {
+> -               /* determine #address-cells and #size-cells */
+> -               result = get_cells_size(dtb->buf, &address_cells, &size_cells);
+> -               if (result) {
+> -                       fprintf(stderr,
+> -                               "kexec: cannot determine cells-size.\n");
+> -                       result = -EINVAL;
+> -                       goto on_error;
+> -               }
+> +       /* determine #address-cells and #size-cells */
+> +       result = get_cells_size(dtb->buf, &address_cells, &size_cells);
+> +       if (result) {
+> +               fprintf(stderr, "kexec: cannot determine cells-size.\n");
+> +               result = -EINVAL;
+> +               goto on_error;
+> +       }
+>
+> -               if (!cells_size_fitted(address_cells, size_cells,
+> -                                       &elfcorehdr_mem)) {
+> -                       fprintf(stderr,
+> -                               "kexec: elfcorehdr doesn't fit cells-size.\n");
+> +       if (!cells_size_fitted(address_cells, size_cells,
+> +                               &elfcorehdr_mem)) {
+> +               fprintf(stderr, "kexec: elfcorehdr doesn't fit cells-size.\n");
+> +               result = -EINVAL;
+> +               goto on_error;
+> +       }
+> +
+> +       if (!cells_size_fitted(address_cells, size_cells,
+> +                               &crash_reserved_mem)) {
+> +               fprintf(stderr, "kexec: usable memory range doesn't fit cells-size.\n");
+> +               result = -EINVAL;
+> +               goto on_error;
+> +       }
+> +
+> +       /* duplicate dt blob */
+> +       range_len = sizeof(uint32_t) * (address_cells + size_cells);
+> +       new_size = fdt_totalsize(dtb->buf)
+> +               + fdt_prop_len(PROP_ELFCOREHDR, range_len)
+> +               + fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len);
+> +
+> +       new_buf = xmalloc(new_size);
+> +       result = fdt_open_into(dtb->buf, new_buf, new_size);
+> +       if (result) {
+> +               dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
+> +                               fdt_strerror(result));
+> +               result = -ENOSPC;
+> +               goto on_error;
+> +       }
+> +
+> +       /* fixup 'kaslr-seed' with a random value, if supported */
+> +       nodeoffset = fdt_path_offset(new_buf, "/chosen");
+> +       prop = fdt_getprop_w(new_buf, nodeoffset,
+> +                       "kaslr-seed", &len);
+> +       if (!prop || len != sizeof(uint64_t)) {
+> +               dbgprintf("%s: no kaslr-seed found\n",
+> +                               __func__);
+> +               /* for kexec warm reboot case, we don't need to fixup
+> +                * other dtb properties
+> +                */
+> +               if (!on_crash) {
+> +                       dump_reservemap(dtb);
+> +                       if (new_buf)
+> +                               free(new_buf);
+> +
+> +                       return result;
+> +               }
+> +       } else {
+> +               kaslr_seed = fdt64_to_cpu(*prop);
+> +
+> +               /* kaslr_seed must be wiped clean by primary
+> +                * kernel during boot
+> +                */
+> +               if (kaslr_seed != 0) {
+> +                       dbgprintf("%s: kaslr-seed is not wiped to 0.\n",
+> +                                       __func__);
+>                         result = -EINVAL;
+>                         goto on_error;
+>                 }
+>
+> -               if (!cells_size_fitted(address_cells, size_cells,
+> -                                       &crash_reserved_mem)) {
+> -                       fprintf(stderr,
+> -                               "kexec: usable memory range doesn't fit cells-size.\n");
+> +               /*
+> +                * Invoke the getrandom system call with
+> +                * GRND_NONBLOCK, to make sure we
+> +                * have a valid random seed to pass to the
+> +                * secondary kernel.
+> +                */
+> +               result = syscall(SYS_getrandom, &fdt_val64,
+> +                               sizeof(fdt_val64),
+> +                               GRND_NONBLOCK);
+> +
+> +               if(result == -1) {
+> +                       dbgprintf("%s: Reading random bytes failed.\n",
+> +                                       __func__);
+>                         result = -EINVAL;
+>                         goto on_error;
+>                 }
+>
+> -               /* duplicate dt blob */
+> -               range_len = sizeof(uint32_t) * (address_cells + size_cells);
+> -               new_size = fdt_totalsize(dtb->buf)
+> -                       + fdt_prop_len(PROP_ELFCOREHDR, range_len)
+> -                       + fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len);
+> -
+> -               new_buf = xmalloc(new_size);
+> -               result = fdt_open_into(dtb->buf, new_buf, new_size);
+> +               nodeoffset = fdt_path_offset(new_buf, "/chosen");
+> +               result = fdt_setprop_inplace(new_buf,
+> +                               nodeoffset, "kaslr-seed",
+> +                               &fdt_val64, sizeof(fdt_val64));
+>                 if (result) {
+> -                       dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
+> -                               fdt_strerror(result));
+> -                       result = -ENOSPC;
+> +                       dbgprintf("%s: fdt_setprop failed: %s\n",
+> +                                       __func__, fdt_strerror(result));
+> +                       result = -EINVAL;
+>                         goto on_error;
+>                 }
+> +       }
+>
+> +       if (on_crash) {
+>                 /* add linux,elfcorehdr */
+>                 nodeoffset = fdt_path_offset(new_buf, "/chosen");
+>                 result = fdt_setprop_range(new_buf, nodeoffset,
+> @@ -455,7 +518,7 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+>                                 address_cells, size_cells);
+>                 if (result) {
+>                         dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
+> -                               fdt_strerror(result));
+> +                                       fdt_strerror(result));
+>                         result = -EINVAL;
+>                         goto on_error;
+>                 }
+> @@ -467,18 +530,17 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+>                                 address_cells, size_cells);
+>                 if (result) {
+>                         dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
+> -                               fdt_strerror(result));
+> +                                       fdt_strerror(result));
+>                         result = -EINVAL;
+>                         goto on_error;
+>                 }
+> -
+> -               fdt_pack(new_buf);
+> -               dtb->buf = new_buf;
+> -               dtb->size = fdt_totalsize(new_buf);
 >         }
-> 
-> -       kern_seg = &image->segment[image->arch.kern_segment];
->         kbuf.image = image;
->         /* not allocate anything below the kernel */
->         kbuf.buf_min = kern_seg->mem + kern_seg->memsz;
-> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> index 891f2484969d..085cb69293ca 100644
-> --- a/arch/arm64/include/asm/kexec.h
-> +++ b/arch/arm64/include/asm/kexec.h
-> @@ -173,8 +172,10 @@ static inline int arm64_header_check_pe_sig(const struct ar
-> m64_image_header *h)
->  extern const struct kexec_file_ops kexec_image_ops;
-> 
->  struct kimage;
-> +struct kexec_segment;
-> 
->  extern int load_other_segments(struct kimage *image,
-> +               struct kexec_segment *kern_seg,
->                 char *initrd, unsigned long initrd_len,
->                 char *cmdline, unsigned long cmdline_len);
->  #endif
-> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-> index 7c11beefe65f..0e032d30a79c 100644
-> --- a/arch/arm64/kernel/kexec_image.c
-> +++ b/arch/arm64/kernel/kexec_image.c
-> @@ -37,6 +37,7 @@ static void *image_load(struct kimage *image,
->                                 char *cmdline, unsigned long cmdline_len)
->  {
->         struct kexec_buf kbuf;
-> +       struct kexec_segment *kern_seg;
->         struct arm64_image_header *h = (struct arm64_image_header *)kernel;
->         unsigned long text_offset;
->         int ret;
-> @@ -65,17 +66,17 @@ static void *image_load(struct kimage *image,
->         if (ret)
->                 goto out;
-> 
-> -       image->arch.kern_segment = image->nr_segments - 1;
-> -       image->segment[image->arch.kern_segment].mem += text_offset;
-> -       image->segment[image->arch.kern_segment].memsz -= text_offset;
-> -       image->start = image->segment[image->arch.kern_segment].mem;
-> +       kern_seg = &image->segment[image->nr_segments - 1];
-> +       kern_seg->mem += text_offset;
-> +       kern_seg->memsz -= text_offset;
-> +       image->start = kern_seg->mem;
-> 
->         pr_debug("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-> -                               image->segment[image->arch.kern_segment].mem,
-> +                               kern_seg->mem,
->                                 kbuf.bufsz, kbuf.memsz);
-> 
->         /* Load additional data */
-> -       ret = load_other_segments(image, initrd, initrd_len,
-> +       ret = load_other_segments(image, kern_seg, initrd, initrd_len,
->                                 cmdline, cmdline_len);
-> 
->  out:
-> --------------------%<--------------------
+>
+> -       dump_reservemap(dtb);
+> +       fdt_pack(new_buf);
+> +       dtb->buf = new_buf;
+> +       dtb->size = fdt_totalsize(new_buf);
+>
+> +       dump_reservemap(dtb);
+>
+>         return result;
+>
+> --
+> 2.7.4
+>
 
 _______________________________________________
 kexec mailing list
