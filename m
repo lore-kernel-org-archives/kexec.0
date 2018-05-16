@@ -1,26 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fIvWp-0006yz-Bs
- for kexec@lists.infradead.org; Wed, 16 May 2018 12:27:37 +0000
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w4GCOEIu052609
- for <kexec@lists.infradead.org>; Wed, 16 May 2018 08:27:22 -0400
-Received: from e06smtp13.uk.ibm.com (e06smtp13.uk.ibm.com [195.75.94.109])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2j0kc4bmpx-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 16 May 2018 08:27:22 -0400
-Received: from localhost
- by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <prudo@linux.ibm.com>;
- Wed, 16 May 2018 13:27:21 +0100
-From: Philipp Rudo <prudo@linux.ibm.com>
-Subject: [PATCH] kexec/s390: Add support for kexec_file_load
-Date: Wed, 16 May 2018 14:27:18 +0200
-Message-Id: <20180516122718.15440-1-prudo@linux.ibm.com>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fIwLs-00027O-6r
+ for kexec@lists.infradead.org; Wed, 16 May 2018 13:20:21 +0000
+Subject: Re: [PATCH 1/2] add a function(ioremap_encrypted) for kdump when AMD
+ sme enabled.
+References: <20180515015133.4363-1-lijiang@redhat.com>
+ <20180515015133.4363-2-lijiang@redhat.com>
+ <8c8f20cc-b39d-137c-9d71-1e566f905acb@amd.com>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <7b36c2ea-5e96-d554-aaff-97587bc268e9@redhat.com>
+Date: Wed, 16 May 2018 21:19:54 +0800
+MIME-Version: 1.0
+In-Reply-To: <8c8f20cc-b39d-137c-9d71-1e566f905acb@amd.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,114 +22,91 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
-Cc: linux-s390@vger.kernel.org
+To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org
+Cc: dyoung@redhat.com, kexec@lists.infradead.org
 
-Since kernel 4.17-rc2 s390 supports the kexec_file_load system call. Add
-the new system call to kexec-tools and provide the -s (--kexec-file-syscall)
-option for s390 to support this new feature.
-
-Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
----
- kexec/arch/s390/kexec-image.c | 46 +++++++++++++++++++++++++++++++++++++++++++
- kexec/kexec-syscall.h         |  3 +++
- 2 files changed, 49 insertions(+)
-
-diff --git a/kexec/arch/s390/kexec-image.c b/kexec/arch/s390/kexec-image.c
-index 0c8937b..8b39566 100644
---- a/kexec/arch/s390/kexec-image.c
-+++ b/kexec/arch/s390/kexec-image.c
-@@ -22,6 +22,7 @@
- #include "../../kexec/crashdump.h"
- #include "kexec-s390.h"
- #include <arch/options.h>
-+#include <fcntl.h>
- 
- static uint64_t crash_base, crash_end;
- static char command_line[COMMAND_LINESIZE];
-@@ -45,6 +46,48 @@ int command_line_add(const char *str)
- 	return 0;
- }
- 
-+int image_s390_load_file(int argc, char **argv, struct kexec_info *info)
-+{
-+	const char *ramdisk = NULL;
-+	int opt;
-+
-+	static const struct option options[] =
-+		{
-+			KEXEC_OPTIONS
-+			{"command-line",     1, 0, OPT_APPEND},
-+			{"append",           1, 0, OPT_APPEND},
-+			{"initrd",           1, 0, OPT_RAMDISK},
-+			{0,                  0, 0, 0},
-+		};
-+	static const char short_options[] = KEXEC_OPT_STR "";
-+
-+	while ((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
-+		switch(opt) {
-+		case OPT_APPEND:
-+			if (command_line_add(optarg))
-+				return -1;
-+			break;
-+		case OPT_RAMDISK:
-+			ramdisk = optarg;
-+			break;
-+		}
-+	}
-+
-+	if (ramdisk) {
-+		info->initrd_fd = open(ramdisk, O_RDONLY);
-+		if (info->initrd_fd == -1) {
-+			fprintf(stderr, "Could not open initrd file %s:%s\n",
-+					ramdisk, strerror(errno));
-+			return -1;
-+		}
-+	}
-+
-+	info->command_line = command_line;
-+	info->command_line_len = strlen (command_line) + 1;
-+
-+	return 0;
-+}
-+
- int
- image_s390_load(int argc, char **argv, const char *kernel_buf,
- 		off_t kernel_size, struct kexec_info *info)
-@@ -56,6 +99,9 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
- 	unsigned int ramdisk_origin;
- 	int opt;
- 
-+	if (info->file_mode)
-+		return image_s390_load_file(argc, argv, info);
-+
- 	static const struct option options[] =
- 		{
- 			KEXEC_OPTIONS
-diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
-index 33638c2..b96e02a 100644
---- a/kexec/kexec-syscall.h
-+++ b/kexec/kexec-syscall.h
-@@ -64,6 +64,9 @@
- #ifdef __powerpc64__
- #define __NR_kexec_file_load	382
- #endif
-+#ifdef __s390x__
-+#define __NR_kexec_file_load	381
-+#endif
- 
- #ifndef __NR_kexec_file_load
- /* system call not available for the arch */
--- 
-2.16.3
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgrlnKggMjAxOOW5tDA15pyIMTXml6UgMjI6MzQsIFRvbSBMZW5kYWNreSDlhpnpgZM6Cj4gT24g
+NS8xNC8yMDE4IDg6NTEgUE0sIExpYW5ibyBKaWFuZyB3cm90ZToKPj4gSXQgaXMgY29udmVuaWVu
+dCB0byByZW1hcCB0aGUgb2xkIG1lbW9yeSBlbmNyeXB0ZWQgdG8gdGhlIHNlY29uZCBrZXJuZWwK
+Pj4gYnkgY2FsbGluZyBpb3JlbWFwX2VuY3J5cHRlZCgpLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBM
+aWFuYm8gSmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4KPj4gLS0tCj4+ICBhcmNoL3g4Ni9pbmNs
+dWRlL2FzbS9pby5oIHwgIDIgKysKPj4gIGFyY2gveDg2L21tL2lvcmVtYXAuYyAgICAgfCAyNSAr
+KysrKysrKysrKysrKysrKy0tLS0tLS0tCj4+ICAyIGZpbGVzIGNoYW5nZWQsIDE5IGluc2VydGlv
+bnMoKyksIDggZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9pbmNsdWRl
+L2FzbS9pby5oIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vaW8uaAo+PiBpbmRleCBmNmU1YjkzLi4w
+NmQyYTlmIDEwMDY0NAo+PiAtLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9pby5oCj4+ICsrKyBi
+L2FyY2gveDg2L2luY2x1ZGUvYXNtL2lvLmgKPj4gQEAgLTE5Miw2ICsxOTIsOCBAQCBleHRlcm4g
+dm9pZCBfX2lvbWVtICppb3JlbWFwX2NhY2hlKHJlc291cmNlX3NpemVfdCBvZmZzZXQsIHVuc2ln
+bmVkIGxvbmcgc2l6ZSk7Cj4+ICAjZGVmaW5lIGlvcmVtYXBfY2FjaGUgaW9yZW1hcF9jYWNoZQo+
+PiAgZXh0ZXJuIHZvaWQgX19pb21lbSAqaW9yZW1hcF9wcm90KHJlc291cmNlX3NpemVfdCBvZmZz
+ZXQsIHVuc2lnbmVkIGxvbmcgc2l6ZSwgdW5zaWduZWQgbG9uZyBwcm90X3ZhbCk7Cj4+ICAjZGVm
+aW5lIGlvcmVtYXBfcHJvdCBpb3JlbWFwX3Byb3QKPj4gK2V4dGVybiB2b2lkIF9faW9tZW0gKmlv
+cmVtYXBfZW5jcnlwdGVkKHJlc291cmNlX3NpemVfdCBwaHlzX2FkZHIsIHVuc2lnbmVkIGxvbmcg
+c2l6ZSk7Cj4+ICsjZGVmaW5lIGlvcmVtYXBfZW5jcnlwdGVkIGlvcmVtYXBfZW5jcnlwdGVkCj4+
+ICAKPj4gIC8qKgo+PiAgICogaW9yZW1hcCAgICAgLSAgIG1hcCBidXMgbWVtb3J5IGludG8gQ1BV
+IHNwYWNlCj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9tbS9pb3JlbWFwLmMgYi9hcmNoL3g4Ni9t
+bS9pb3JlbWFwLmMKPj4gaW5kZXggYzYzYTU0NS4uN2E1MmQxZSAxMDA2NDQKPj4gLS0tIGEvYXJj
+aC94ODYvbW0vaW9yZW1hcC5jCj4+ICsrKyBiL2FyY2gveDg2L21tL2lvcmVtYXAuYwo+PiBAQCAt
+MTMxLDcgKzEzMSw4IEBAIHN0YXRpYyB2b2lkIF9faW9yZW1hcF9jaGVja19tZW0ocmVzb3VyY2Vf
+c2l6ZV90IGFkZHIsIHVuc2lnbmVkIGxvbmcgc2l6ZSwKPj4gICAqIGNhbGxlciBzaG91bGRuJ3Qg
+bmVlZCB0byBrbm93IHRoYXQgc21hbGwgZGV0YWlsLgo+PiAgICovCj4+ICBzdGF0aWMgdm9pZCBf
+X2lvbWVtICpfX2lvcmVtYXBfY2FsbGVyKHJlc291cmNlX3NpemVfdCBwaHlzX2FkZHIsCj4+IC0J
+CXVuc2lnbmVkIGxvbmcgc2l6ZSwgZW51bSBwYWdlX2NhY2hlX21vZGUgcGNtLCB2b2lkICpjYWxs
+ZXIpCj4+ICsJCXVuc2lnbmVkIGxvbmcgc2l6ZSwgZW51bSBwYWdlX2NhY2hlX21vZGUgcGNtLAo+
+PiArCQl2b2lkICpjYWxsZXIsIGJvb2wgZW5jcnlwdGVkKQo+PiAgewo+PiAgCXVuc2lnbmVkIGxv
+bmcgb2Zmc2V0LCB2YWRkcjsKPj4gIAlyZXNvdXJjZV9zaXplX3QgbGFzdF9hZGRyOwo+PiBAQCAt
+MTk5LDcgKzIwMCw4IEBAIHN0YXRpYyB2b2lkIF9faW9tZW0gKl9faW9yZW1hcF9jYWxsZXIocmVz
+b3VyY2Vfc2l6ZV90IHBoeXNfYWRkciwKPj4gIAkgKiByZXN1bHRpbmcgbWFwcGluZy4KPj4gIAkg
+Ki8KPj4gIAlwcm90ID0gUEFHRV9LRVJORUxfSU87Cj4+IC0JaWYgKHNldl9hY3RpdmUoKSAmJiBt
+ZW1fZmxhZ3MuZGVzY19vdGhlcikKPj4gKwlpZiAoKHNldl9hY3RpdmUoKSAmJiBtZW1fZmxhZ3Mu
+ZGVzY19vdGhlcikgfHwKPj4gKwkJCShlbmNyeXB0ZWQgJiYgc21lX2FjdGl2ZSgpKSkKPiAKPiBZ
+b3Ugb25seSBuZWVkIHRoZSBlbmNyeXB0ZWQgY2hlY2sgaGVyZS4gIElmIHNtZSBpcyBub3QgYWN0
+aXZlLAo+IHRoZW4gdGhlIHBncHJvdF9lbmNyeXB0ZWQgd2lsbCBiYXNpY2FsbHkgYmUgYSBuby1v
+cC4KPiAKR3JlYXQhIFRoYW5rIHlvdSwgVG9tLgpJdCB3aWxsIGJlIGZpeGVkLgoKTGlhbmJvCj4g
+QWxzbywgZXh0cmEgaW5kZW50cy4KPiAKPiBUaGFua3MsCj4gVG9tCj4gCj4+ICAJCXByb3QgPSBw
+Z3Byb3RfZW5jcnlwdGVkKHByb3QpOwo+PiAgCj4+ICAJc3dpdGNoIChwY20pIHsKPj4gQEAgLTI5
+MSw3ICsyOTMsNyBAQCB2b2lkIF9faW9tZW0gKmlvcmVtYXBfbm9jYWNoZShyZXNvdXJjZV9zaXpl
+X3QgcGh5c19hZGRyLCB1bnNpZ25lZCBsb25nIHNpemUpCj4+ICAJZW51bSBwYWdlX2NhY2hlX21v
+ZGUgcGNtID0gX1BBR0VfQ0FDSEVfTU9ERV9VQ19NSU5VUzsKPj4gIAo+PiAgCXJldHVybiBfX2lv
+cmVtYXBfY2FsbGVyKHBoeXNfYWRkciwgc2l6ZSwgcGNtLAo+PiAtCQkJCV9fYnVpbHRpbl9yZXR1
+cm5fYWRkcmVzcygwKSk7Cj4+ICsJCQkJX19idWlsdGluX3JldHVybl9hZGRyZXNzKDApLCBmYWxz
+ZSk7Cj4+ICB9Cj4+ICBFWFBPUlRfU1lNQk9MKGlvcmVtYXBfbm9jYWNoZSk7Cj4+ICAKPj4gQEAg
+LTMyNCw3ICszMjYsNyBAQCB2b2lkIF9faW9tZW0gKmlvcmVtYXBfdWMocmVzb3VyY2Vfc2l6ZV90
+IHBoeXNfYWRkciwgdW5zaWduZWQgbG9uZyBzaXplKQo+PiAgCWVudW0gcGFnZV9jYWNoZV9tb2Rl
+IHBjbSA9IF9QQUdFX0NBQ0hFX01PREVfVUM7Cj4+ICAKPj4gIAlyZXR1cm4gX19pb3JlbWFwX2Nh
+bGxlcihwaHlzX2FkZHIsIHNpemUsIHBjbSwKPj4gLQkJCQlfX2J1aWx0aW5fcmV0dXJuX2FkZHJl
+c3MoMCkpOwo+PiArCQkJCV9fYnVpbHRpbl9yZXR1cm5fYWRkcmVzcygwKSwgZmFsc2UpOwo+PiAg
+fQo+PiAgRVhQT1JUX1NZTUJPTF9HUEwoaW9yZW1hcF91Yyk7Cj4+ICAKPj4gQEAgLTM0MSw3ICsz
+NDMsNyBAQCBFWFBPUlRfU1lNQk9MX0dQTChpb3JlbWFwX3VjKTsKPj4gIHZvaWQgX19pb21lbSAq
+aW9yZW1hcF93YyhyZXNvdXJjZV9zaXplX3QgcGh5c19hZGRyLCB1bnNpZ25lZCBsb25nIHNpemUp
+Cj4+ICB7Cj4+ICAJcmV0dXJuIF9faW9yZW1hcF9jYWxsZXIocGh5c19hZGRyLCBzaXplLCBfUEFH
+RV9DQUNIRV9NT0RFX1dDLAo+PiAtCQkJCQlfX2J1aWx0aW5fcmV0dXJuX2FkZHJlc3MoMCkpOwo+
+PiArCQkJCQlfX2J1aWx0aW5fcmV0dXJuX2FkZHJlc3MoMCksIGZhbHNlKTsKPj4gIH0KPj4gIEVY
+UE9SVF9TWU1CT0woaW9yZW1hcF93Yyk7Cj4+ICAKPj4gQEAgLTM1OCwxNCArMzYwLDIxIEBAIEVY
+UE9SVF9TWU1CT0woaW9yZW1hcF93Yyk7Cj4+ICB2b2lkIF9faW9tZW0gKmlvcmVtYXBfd3QocmVz
+b3VyY2Vfc2l6ZV90IHBoeXNfYWRkciwgdW5zaWduZWQgbG9uZyBzaXplKQo+PiAgewo+PiAgCXJl
+dHVybiBfX2lvcmVtYXBfY2FsbGVyKHBoeXNfYWRkciwgc2l6ZSwgX1BBR0VfQ0FDSEVfTU9ERV9X
+VCwKPj4gLQkJCQkJX19idWlsdGluX3JldHVybl9hZGRyZXNzKDApKTsKPj4gKwkJCQkJX19idWls
+dGluX3JldHVybl9hZGRyZXNzKDApLCBmYWxzZSk7Cj4+ICB9Cj4+ICBFWFBPUlRfU1lNQk9MKGlv
+cmVtYXBfd3QpOwo+PiAgCj4+ICt2b2lkIF9faW9tZW0gKmlvcmVtYXBfZW5jcnlwdGVkKHJlc291
+cmNlX3NpemVfdCBwaHlzX2FkZHIsIHVuc2lnbmVkIGxvbmcgc2l6ZSkKPj4gK3sKPj4gKwlyZXR1
+cm4gX19pb3JlbWFwX2NhbGxlcihwaHlzX2FkZHIsIHNpemUsIF9QQUdFX0NBQ0hFX01PREVfV0Is
+Cj4+ICsJCQkJX19idWlsdGluX3JldHVybl9hZGRyZXNzKDApLCB0cnVlKTsKPj4gK30KPj4gK0VY
+UE9SVF9TWU1CT0woaW9yZW1hcF9lbmNyeXB0ZWQpOwo+PiArCj4+ICB2b2lkIF9faW9tZW0gKmlv
+cmVtYXBfY2FjaGUocmVzb3VyY2Vfc2l6ZV90IHBoeXNfYWRkciwgdW5zaWduZWQgbG9uZyBzaXpl
+KQo+PiAgewo+PiAgCXJldHVybiBfX2lvcmVtYXBfY2FsbGVyKHBoeXNfYWRkciwgc2l6ZSwgX1BB
+R0VfQ0FDSEVfTU9ERV9XQiwKPj4gLQkJCQlfX2J1aWx0aW5fcmV0dXJuX2FkZHJlc3MoMCkpOwo+
+PiArCQkJCV9fYnVpbHRpbl9yZXR1cm5fYWRkcmVzcygwKSwgZmFsc2UpOwo+PiAgfQo+PiAgRVhQ
+T1JUX1NZTUJPTChpb3JlbWFwX2NhY2hlKTsKPj4gIAo+PiBAQCAtMzc0LDcgKzM4Myw3IEBAIHZv
+aWQgX19pb21lbSAqaW9yZW1hcF9wcm90KHJlc291cmNlX3NpemVfdCBwaHlzX2FkZHIsIHVuc2ln
+bmVkIGxvbmcgc2l6ZSwKPj4gIHsKPj4gIAlyZXR1cm4gX19pb3JlbWFwX2NhbGxlcihwaHlzX2Fk
+ZHIsIHNpemUsCj4+ICAJCQkJcGdwcm90MmNhY2hlbW9kZShfX3BncHJvdChwcm90X3ZhbCkpLAo+
+PiAtCQkJCV9fYnVpbHRpbl9yZXR1cm5fYWRkcmVzcygwKSk7Cj4+ICsJCQkJX19idWlsdGluX3Jl
+dHVybl9hZGRyZXNzKDApLCBmYWxzZSk7Cj4+ICB9Cj4+ICBFWFBPUlRfU1lNQk9MKGlvcmVtYXBf
+cHJvdCk7Cj4+ICAKPj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
