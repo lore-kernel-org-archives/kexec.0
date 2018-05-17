@@ -1,29 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fJKE0-0001ex-Lq
+ id 1fJKE0-0001dy-Jv
  for kexec@lists.infradead.org; Thu, 17 May 2018 14:49:53 +0000
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w4HEiv4W059789
- for <kexec@lists.infradead.org>; Thu, 17 May 2018 10:49:36 -0400
-Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2j1baphsxq-1
+ w4HEjVnG117125
+ for <kexec@lists.infradead.org>; Thu, 17 May 2018 10:49:33 -0400
+Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2j1bj8gxxb-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 17 May 2018 10:49:35 -0400
+ for <kexec@lists.infradead.org>; Thu, 17 May 2018 10:49:32 -0400
 Received: from localhost
- by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Thu, 17 May 2018 15:49:34 +0100
+ Thu, 17 May 2018 15:49:30 +0100
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v2 1/9] ima: based on policy verify firmware signatures
- (pre-allocated buffer)
-Date: Thu, 17 May 2018 10:48:42 -0400
-In-Reply-To: <1526568530-9144-1-git-send-email-zohar@linux.vnet.ibm.com>
-References: <1526568530-9144-1-git-send-email-zohar@linux.vnet.ibm.com>
-Message-Id: <1526568530-9144-2-git-send-email-zohar@linux.vnet.ibm.com>
+Subject: [PATCH v2 0/9] kexec/firmware: support system wide policy requiring
+ signatures
+Date: Thu, 17 May 2018 10:48:41 -0400
+Message-Id: <1526568530-9144-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,34 +35,64 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-integrity@vger.kernel.org
-Cc: Andres Rodriguez <andresx7@gmail.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Luis R . Rodriguez" <mcgrof@suse.com>, Stephen Boyd <stephen.boyd@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, "Serge E . Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
+Cc: Andres Rodriguez <andresx7@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
 
-Don't differentiate between kernel_read_file_id READING_FIRMWARE and
-READING_FIRMWARE_PREALLOC_BUFFER enumerations.
+IMA-appraisal is mostly being used in the embedded or single purpose
+closed system environments.  In these environments, both the Kconfig
+options and the userspace tools can be modified appropriately to limit
+syscalls.  For stock kernels, userspace applications need to continue to
+work with older kernels as well as with newer kernels.
 
-Fixes: a098ecd firmware: support loading into a pre-allocated buffer (since 4.8)
-Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Luis R. Rodriguez <mcgrof@suse.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Serge E. Hallyn <serge@hallyn.com>
-Cc: Stephen Boyd <stephen.boyd@linaro.org>
----
- security/integrity/ima/ima_main.c | 1 +
- 1 file changed, 1 insertion(+)
+In this environment, the customer needs the ability to define a system
+wide IMA policy, such as requiring all kexec'ed images, firmware, kernel
+modules to be signed, without being dependent on either the Kconfig
+options or the userspace tools.[1]
 
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index e771b736aa03..83f84928ad76 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -447,6 +447,7 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
- 
- static int read_idmap[READING_MAX_ID] = {
- 	[READING_FIRMWARE] = FIRMWARE_CHECK,
-+	[READING_FIRMWARE_PREALLOC_BUFFER] = FIRMWARE_CHECK,
- 	[READING_MODULE] = MODULE_CHECK,
- 	[READING_KEXEC_IMAGE] = KEXEC_KERNEL_CHECK,
- 	[READING_KEXEC_INITRAMFS] = KEXEC_INITRAMFS_CHECK,
+This patch set allows the customer to define a policy which requires
+the kexec'ed kernel images, firmware, and/or kernel modules to be
+signed.
+
+New to this patch set is the ability to configure a build time IMA policy,
+which is automatically loaded at run time without needing to specify it
+on the boot command line.  The build time policy rules persist after
+loading a custom kernel policy.
+
+[1] kexec-tools suupports the new syscall based on a flag (-s).
+
+Changelog v3:
+- combined "kexec: limit kexec_load syscall" and "firmware: kernel
+signature verification" patch sets.
+- add support for build time policy.
+- defined generic security_kernel_read_blob() wrapper for
+  security_kernel_read_file(). Suggested by Luis.
+- removed the CONFIG_CFG80211_REQUIRE_SIGNED_REGDB ifdef.  If both REGDB
+  and an IMA-appraisal policy require signed firmware, for now require
+  both signatures.  Subsequent patches might change this.
+- Still unclear if the pre-allocated firmware buffer can be accessed
+  prior to the signature verification completes.
+
+Mimi Zohar (9):
+  ima: based on policy verify firmware signatures (pre-allocated buffer)
+  ima: fix updating the ima_appraise flag
+  security: define security_kernel_read_blob() wrapper
+  kexec: add call to LSM hook in original kexec_load syscall
+  ima: based on policy require signed kexec kernel images
+  firmware: add call to LSM hook before firmware sysfs fallback
+  ima: based on policy require signed firmware (sysfs fallback)
+  ima: add build time policy
+  ima: based on policy prevent loading firmware (pre-allocated buffer)
+
+ drivers/base/firmware_loader/fallback.c |  7 +++
+ include/linux/fs.h                      |  1 +
+ include/linux/security.h                |  6 +++
+ kernel/kexec.c                          | 11 +++++
+ security/integrity/ima/Kconfig          | 58 +++++++++++++++++++++++++
+ security/integrity/ima/ima.h            |  1 +
+ security/integrity/ima/ima_main.c       | 29 +++++++++++++
+ security/integrity/ima/ima_policy.c     | 76 +++++++++++++++++++++++++++------
+ security/security.c                     |  6 +++
+ 9 files changed, 183 insertions(+), 12 deletions(-)
+
 -- 
 2.7.5
 
