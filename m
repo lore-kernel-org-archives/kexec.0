@@ -1,17 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fJJET-0006Ru-HI
- for kexec@lists.infradead.org; Thu, 17 May 2018 13:46:15 +0000
-Subject: Re: [PATCH 0/2] support kdump for AMD secure memory encryption(sme)
-References: <20180515015133.4363-1-lijiang@redhat.com>
- <55bda494-bee4-5696-03e5-fc21c9d6b631@amd.com>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <18309611-c8c4-92cb-161e-f35ef3d243ea@redhat.com>
-Date: Thu, 17 May 2018 21:45:51 +0800
-MIME-Version: 1.0
-In-Reply-To: <55bda494-bee4-5696-03e5-fc21c9d6b631@amd.com>
-Content-Language: en-US
+ id 1fJKE0-0001gB-Lr
+ for kexec@lists.infradead.org; Thu, 17 May 2018 14:49:57 +0000
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w4HEj1BO051731
+ for <kexec@lists.infradead.org>; Thu, 17 May 2018 10:49:39 -0400
+Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2j1amqcd7k-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 17 May 2018 10:49:38 -0400
+Received: from localhost
+ by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Thu, 17 May 2018 15:49:37 +0100
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Subject: [PATCH v2 2/9] ima: fix updating the ima_appraise flag
+Date: Thu, 17 May 2018 10:48:43 -0400
+In-Reply-To: <1526568530-9144-1-git-send-email-zohar@linux.vnet.ibm.com>
+References: <1526568530-9144-1-git-send-email-zohar@linux.vnet.ibm.com>
+Message-Id: <1526568530-9144-3-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,89 +31,90 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org
-Cc: dyoung@redhat.com, kexec@lists.infradead.org
+To: linux-integrity@vger.kernel.org
+Cc: Andres Rodriguez <andresx7@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
 
-5ZyoIDIwMTjlubQwNeaciDE15pelIDIxOjMxLCBUb20gTGVuZGFja3kg5YaZ6YGTOgo+IE9uIDUv
-MTQvMjAxOCA4OjUxIFBNLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4+IEl0IGlzIGNvbnZlbmllbnQg
-dG8gcmVtYXAgdGhlIG9sZCBtZW1vcnkgZW5jcnlwdGVkIHRvIHRoZSBzZWNvbmQga2VybmVsIGJ5
-Cj4+IGNhbGxpbmcgaW9yZW1hcF9lbmNyeXB0ZWQoKS4KPj4KPj4gV2hlbiBzbWUgZW5hYmxlZCBv
-biBBTUQgc2VydmVyLCB3ZSBhbHNvIG5lZWQgdG8gc3VwcG9ydCBrZHVtcC4gQmVjYXVzZQo+PiB0
-aGUgbWVtb3J5IGlzIGVuY3J5cHRlZCBpbiB0aGUgZmlyc3Qga2VybmVsLCB3ZSB3aWxsIHJlbWFw
-IHRoZSBvbGQgbWVtb3J5Cj4+IGVuY3J5cHRlZCB0byB0aGUgc2Vjb25kIGtlcm5lbChjcmFzaCBr
-ZXJuZWwpLCBhbmQgc21lIGlzIGFsc28gZW5hYmxlZCBpbgo+PiB0aGUgc2Vjb25kIGtlcm5lbCwg
-b3RoZXJ3aXNlIHRoZSBvbGQgbWVtb3J5IGVuY3J5cHRlZCBjYW4gbm90IGJlIGRlY3J5cHRlZC4K
-Pj4gQmVjYXVzZSBzaW1wbHkgY2hhbmdpbmcgdGhlIHZhbHVlIG9mIGEgQy1iaXQgb24gYSBwYWdl
-IHdpbGwgbm90Cj4+IGF1dG9tYXRpY2FsbHkgZW5jcnlwdCB0aGUgZXhpc3RpbmcgY29udGVudHMg
-b2YgYSBwYWdlLCBhbmQgYW55IGRhdGEgaW4gdGhlCj4+IHBhZ2UgcHJpb3IgdG8gdGhlIEMtYml0
-IG1vZGlmaWNhdGlvbiB3aWxsIGJlY29tZSB1bmludGVsbGlnaWJsZS4gQSBwYWdlIG9mCj4+IG1l
-bW9yeSB0aGF0IGlzIG1hcmtlZCBlbmNyeXB0ZWQgd2lsbCBiZSBhdXRvbWF0aWNhbGx5IGRlY3J5
-cHRlZCB3aGVuIHJlYWQKPj4gZnJvbSBEUkFNIGFuZCB3aWxsIGJlIGF1dG9tYXRpY2FsbHkgZW5j
-cnlwdGVkIHdoZW4gd3JpdHRlbiB0byBEUkFNLgo+Pgo+PiBGb3IgdGhlIGtkdW1wLCBpdCBpcyBu
-ZWNlc3NhcnkgdG8gZGlzdGluZ3Vpc2ggd2hldGhlciB0aGUgbWVtb3J5IGlzCj4+IGVuY3J5cHRl
-ZC4gRnVydGhlcm1vcmUsIHdlIHNob3VsZCBhbHNvIGtub3cgd2hpY2ggcGFydCBvZiB0aGUgbWVt
-b3J5IGlzCj4+IGVuY3J5cHRlZCBvciBkZWNyeXB0ZWQuIFdlIHdpbGwgYXBwcm9wcmlhdGVseSBy
-ZW1hcCB0aGUgbWVtb3J5IGFjY29yZGluZwo+PiB0byB0aGUgc3BlY2lmaWMgc2l0dWF0aW9uIGlu
-IG9yZGVyIHRvIHRlbGwgY3B1IGhvdyB0byBkZWFsIHdpdGggdGhlCj4+IGRhdGEoZW5jcnlwdGVk
-IG9yIGRlY3J5cHRlZCkuIEZvciBleGFtcGxlLCB3aGVuIHNtZSBlbmFibGVkLCBpZiB0aGUgb2xk
-Cj4+IG1lbW9yeSBpcyBlbmNyeXB0ZWQsIHdlIHdpbGwgcmVtYXAgdGhlIG9sZCBtZW1vcnkgaW4g
-ZW5jcnlwdGVkIHdheSwgd2hpY2gKPj4gd2lsbCBhdXRvbWF0aWNhbGx5IGRlY3J5cHQgdGhlIG9s
-ZCBtZW1vcnkgZW5jcnlwdGVkIHdoZW4gd2UgcmVhZCB0aG9zZSBkYXRhCj4+IGZyb20gdGhlIHJl
-bWFwcGluZyBhZGRyZXNzLgo+Pgo+PiAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLQo+PiB8IGZpcnN0LWtlcm5lbCB8IHNlY29uZC1rZXJuZWwgfCBrZHVtcCBz
-dXBwb3J0IHwKPj4gfCAgICAgIChtZW1fZW5jcnlwdD1vbnxvZmYpICAgIHwgICAoeWVzfG5vKSAg
-ICB8IAo+PiB8LS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLXwK
-Pj4gfCAgICAgb24gICAgICAgfCAgICAgb24gICAgICAgIHwgICAgIHllcyAgICAgICB8Cj4+IHwg
-ICAgIG9mZiAgICAgIHwgICAgIG9mZiAgICAgICB8ICAgICB5ZXMgICAgICAgfAo+PiB8ICAgICBv
-biAgICAgICB8ICAgICBvZmYgICAgICAgfCAgICAgbm8gICAgICAgIHwKPj4gfCAgICAgb2ZmICAg
-ICAgfCAgICAgb24gICAgICAgIHwgICAgIG5vICAgICAgICB8Cj4+IHxfX19fX19fX19fX19fX3xf
-X19fX19fX19fX19fX198X19fX19fX19fX19fX19ffAo+Pgo+PiBUZXN0IHRvb2xzOgo+PiBtYWtl
-ZHVtcGZpbGVbdjEuNi4zXTogaHR0cHM6Ly9naXRodWIuY29tL0xpYW5ib0ovbWFrZWR1bXBmaWxl
-Cj4+IGNvbW1pdCBlMWRlMTAzZWNhOGYgKEEgZHJhZnQgZm9yIGtkdW1wIHZtY29yZSBhYm91dCBB
-TUQgU01FKQo+PiBBdXRob3I6IExpYW5ibyBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+PiBE
-YXRlOiAgIE1vbiBNYXkgMTQgMTc6MDI6NDAgMjAxOCArMDgwMAo+PiBOb3RlOiBUaGlzIHBhdGNo
-IGNhbiBvbmx5IGR1bXAgdm1jb3JlIGluIHRoZSBjYXNlIG9mIFNNRSBlbmFibGVkLgo+Pgo+PiBj
-cmFzaC03LjIuMTogaHR0cHM6Ly9naXRodWIuY29tL2NyYXNoLXV0aWxpdHkvY3Jhc2guZ2l0Cj4+
-IGNvbW1pdCAxZTFiZDljNGMxYmUgKEZpeCBmb3IgdGhlICJicGYiIGNvbW1hbmQgZGlzcGxheSBv
-biBMaW51eCA0LjE3LXJjMSkKPj4gQXV0aG9yOiBEYXZlIEFuZGVyc29uIDxhbmRlcnNvbkByZWRo
-YXQuY29tPgo+PiBEYXRlOiAgIEZyaSBNYXkgMTEgMTU6NTQ6MzIgMjAxOCAtMDQwMAo+Pgo+PiBU
-ZXN0IGVudmlyb25tZW50Ogo+PiBIUCBQcm9MaWFudCBETDM4NUdlbjEwIEFNRCBFUFlDIDcyNTEK
-Pj4gOC1Db3JlIFByb2Nlc3Nvcgo+PiAzMjc2OCBNQiBtZW1vcnkKPj4gNjAwIEdCIGRpc2sgc3Bh
-Y2UKPj4KPj4gTGludXggNC4xNy1yYzQ6Cj4+IGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20v
-bGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQKPj4gY29tbWl0IDc1YmMzN2ZlZmM0
-NCAoIkxpbnV4IDQuMTctcmM0IikKPj4gQXV0aG9yOiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNA
-bGludXgtZm91bmRhdGlvbi5vcmc+Cj4+IERhdGU6ICAgU3VuIE1heSA2IDE2OjU3OjM4IDIwMTgg
-LTEwMDAKPj4KPj4gUmVmZXJlbmNlOgo+PiBBTUQ2NCBBcmNoaXRlY3R1cmUgUHJvZ3JhbW1lcidz
-IE1hbnVhbAo+PiBodHRwczovL3N1cHBvcnQuYW1kLmNvbS9UZWNoRG9jcy8yNDU5My5wZGYKPj4K
-PiAKPiBIYXZlIHlvdSBhbHNvIHRlc3RlZCB0aGlzIHdpdGggU0VWPyAgSXQgd291bGQgYmUgbmlj
-ZSBpZiB0aGUga2R1bXAKPiBjaGFuZ2VzIHlvdSBtYWtlIHdvcmsgd2l0aCBib3RoIFNNRSBhbmQg
-U0VWLgo+IApUaGFuayB5b3UsIFRvbS4KVGhpcyBpcyBhIGdyZWF0IHF1ZXN0aW9uLCB3ZSBvcmln
-aW5hbGx5IHBsYW4gdG8gaW1wbGVtZW50IFNFViBpbiBzdWJzZXF1ZW50IHBhdGNoZXMsIGFuZAp3
-ZSBhcmUgYWxzbyB3b3JraW5nIG9uIFNFViBhdCBwcmVzZW50LgpGdXJ0aGVybW9yZSwgd2UgaGF2
-ZSBhbm90aGVyIGtub3duIGlzc3VlIHRoYXQgdGhlIHN5c3RlbSBjYW4ndCBqdW1wIGludG8gdGhl
-IHNlY29uZCBrZXJuZWwKd2hlbiBTTUUgaXMgZW5hYmxlZCBhbmQga2FzbHIgaXMgZGlzYWJsZWQg
-aW4ga2R1bXAgbW9kZS4gSXQgc2VlbXMgdGhhdCBpcyBhIGNvbXBsZXggcHJvYmxlbXMsCm1heWJl
-IGl0IGlzIHJlbGF0ZWQgdG8ga2FzbHIgYW5kIFNNRSwgY3VycmVudGx5LCBpJ20gbm90IHN1cmUg
-dGhlIHJvb3QgY2F1c2UsIGJ1dCB3ZSB3aWxsCmFsc28gcGxhbiB0byBmaXggaXQuIENhbiB5b3Ug
-Z2l2ZSBtZSBhbnkgYWR2aWNlIGFib3V0IHRoaXMgaXNzdWU/CgpUaGFua3MuCkxpYW5ibwo+IFRo
-YW5rcywKPiBUb20KPiAKPj4gTGlhbmJvIEppYW5nICgyKToKPj4gICBhZGQgYSBmdW5jdGlvbihp
-b3JlbWFwX2VuY3J5cHRlZCkgZm9yIGtkdW1wIHdoZW4gQU1EIHNtZSBlbmFibGVkLgo+PiAgIHN1
-cHBvcnQga2R1bXAgd2hlbiBBTUQgc2VjdXJlIG1lbW9yeSBlbmNyeXB0aW9uIGlzIGFjdGl2ZQo+
-Pgo+PiAgYXJjaC94ODYvaW5jbHVkZS9hc20vZG1pLmggICAgICB8IDE0ICsrKysrKysrKysrKyst
-Cj4+ICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9pby5oICAgICAgIHwgIDIgKysKPj4gIGFyY2gveDg2
-L2tlcm5lbC9hY3BpL2Jvb3QuYyAgICAgfCAgOCArKysrKysrKwo+PiAgYXJjaC94ODYva2VybmVs
-L2NyYXNoX2R1bXBfNjQuYyB8IDI3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKwo+PiAgYXJj
-aC94ODYvbW0vaW9yZW1hcC5jICAgICAgICAgICB8IDI1ICsrKysrKysrKysrKysrKysrLS0tLS0t
-LS0KPj4gIGRyaXZlcnMvYWNwaS90YWJsZXMuYyAgICAgICAgICAgfCAxNCArKysrKysrKysrKysr
-LQo+PiAgZHJpdmVycy9pb21tdS9hbWRfaW9tbXVfaW5pdC5jICB8ICA5ICsrKysrKysrLQo+PiAg
-ZnMvcHJvYy92bWNvcmUuYyAgICAgICAgICAgICAgICB8IDM2ICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKystLS0tLQo+PiAgaW5jbHVkZS9saW51eC9jcmFzaF9kdW1wLmggICAgICB8ICA0
-ICsrKysKPj4gIGtlcm5lbC9rZXhlY19jb3JlLmMgICAgICAgICAgICAgfCAxMiArKysrKysrKysr
-KysKPj4gIDEwIGZpbGVzIGNoYW5nZWQsIDEzNSBpbnNlcnRpb25zKCspLCAxNiBkZWxldGlvbnMo
-LSkKPj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtl
-eGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+As IMA policy rules are added, a mask of the type of rule (eg. kexec
+kernel image, firmware, IMA policy) is updated.  Based on this mask,
+integrity decisions can be made quickly.
+
+Unlike custom IMA policy rules, which replace the original builtin
+policy rules and update the mask, the builtin "secure_boot" policy
+rules were loaded, but did not update the mask.
+
+This patch refactors the code to load custom policies, defining a new
+function named ima_appraise_flag().  The new function is called either
+when loading the builtin "secure_boot" or custom policies.
+
+Fixes: 503ceaef8e2e ("ima: define a set of appraisal rules requiring file signatures")
+Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+---
+ security/integrity/ima/ima_policy.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
+
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 03cbba423e59..8bbc18eb07eb 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -440,6 +440,17 @@ void ima_update_policy_flag(void)
+ 		ima_policy_flag &= ~IMA_APPRAISE;
+ }
+ 
++static int ima_appraise_flag(enum ima_hooks func)
++{
++	if (func == MODULE_CHECK)
++		return IMA_APPRAISE_MODULES;
++	else if (func == FIRMWARE_CHECK)
++		return IMA_APPRAISE_FIRMWARE;
++	else if (func == POLICY_CHECK)
++		return IMA_APPRAISE_POLICY;
++	return 0;
++}
++
+ /**
+  * ima_init_policy - initialize the default measure rules.
+  *
+@@ -478,9 +489,11 @@ void __init ima_init_policy(void)
+ 	 * Insert the appraise rules requiring file signatures, prior to
+ 	 * any other appraise rules.
+ 	 */
+-	for (i = 0; i < secure_boot_entries; i++)
+-		list_add_tail(&secure_boot_rules[i].list,
+-			      &ima_default_rules);
++	for (i = 0; i < secure_boot_entries; i++) {
++		list_add_tail(&secure_boot_rules[i].list, &ima_default_rules);
++		temp_ima_appraise |=
++		    ima_appraise_flag(secure_boot_rules[i].func);
++	}
+ 
+ 	for (i = 0; i < appraise_entries; i++) {
+ 		list_add_tail(&default_appraise_rules[i].list,
+@@ -934,12 +947,9 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 	}
+ 	if (!result && (entry->action == UNKNOWN))
+ 		result = -EINVAL;
+-	else if (entry->func == MODULE_CHECK)
+-		temp_ima_appraise |= IMA_APPRAISE_MODULES;
+-	else if (entry->func == FIRMWARE_CHECK)
+-		temp_ima_appraise |= IMA_APPRAISE_FIRMWARE;
+-	else if (entry->func == POLICY_CHECK)
+-		temp_ima_appraise |= IMA_APPRAISE_POLICY;
++	else if (entry->action == APPRAISE)
++		temp_ima_appraise |= ima_appraise_flag(entry->func);
++
+ 	audit_log_format(ab, "res=%d", !result);
+ 	audit_log_end(ab);
+ 	return result;
+-- 
+2.7.5
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
