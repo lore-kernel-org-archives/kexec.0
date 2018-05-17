@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 17 May 2018 10:15:47 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v9 04/11] arm64: kexec_file: allocate memory walking
- through memblock list
-Message-ID: <20180517021547.GJ24627@MiWiFi-R3L-srv>
-References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
- <20180425062629.29404-5-takahiro.akashi@linaro.org>
- <648656ef-1f1e-b0ac-581c-aba1e62f4eee@arm.com>
- <20180507055906.GE11326@linaro.org>
- <20180517021024.GI24627@MiWiFi-R3L-srv>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fJJET-0006Ru-HI
+ for kexec@lists.infradead.org; Thu, 17 May 2018 13:46:15 +0000
+Subject: Re: [PATCH 0/2] support kdump for AMD secure memory encryption(sme)
+References: <20180515015133.4363-1-lijiang@redhat.com>
+ <55bda494-bee4-5696-03e5-fc21c9d6b631@amd.com>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <18309611-c8c4-92cb-161e-f35ef3d243ea@redhat.com>
+Date: Thu, 17 May 2018 21:45:51 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180517021024.GI24627@MiWiFi-R3L-srv>
+In-Reply-To: <55bda494-bee4-5696-03e5-fc21c9d6b631@amd.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,191 +20,89 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org
+Cc: dyoung@redhat.com, kexec@lists.infradead.org
 
-On 05/17/18 at 10:10am, Baoquan He wrote:
-> On 05/07/18 at 02:59pm, AKASHI Takahiro wrote:
-> > James,
-> > 
-> > On Tue, May 01, 2018 at 06:46:09PM +0100, James Morse wrote:
-> > > Hi Akashi,
-> > > 
-> > > On 25/04/18 07:26, AKASHI Takahiro wrote:
-> > > > We need to prevent firmware-reserved memory regions, particularly EFI
-> > > > memory map as well as ACPI tables, from being corrupted by loading
-> > > > kernel/initrd (or other kexec buffers). We also want to support memory
-> > > > allocation in top-down manner in addition to default bottom-up.
-> > > > So let's have arm64 specific arch_kexec_walk_mem() which will search
-> > > > for available memory ranges in usable memblock list,
-> > > > i.e. !NOMAP & !reserved, 
-> > > 
-> > > > instead of system resource tree.
-> > > 
-> > > Didn't we try to fix the system-resource-tree in order to fix regular-kexec to
-> > > be safe in the EFI-memory-map/ACPI-tables case?
-> > > 
-> > > It would be good to avoid having two ways of doing this, and I would like to
-> > > avoid having extra arch code...
-> > 
-> > I know what you mean.
-> > /proc/iomem or system resource is, in my opinion, not the best place to
-> > describe memory usage of kernel but rather to describe *physical* hardware
-> > layout. As we are still discussing about "reserved" memory, I don't want
-> > to depend on it.
-> > Along with memblock list, we will have more accurate control over memory
-> > usage.
-> 
-> In kexec-tools, we see any usable memory as candidate which can be used
-
-Here I said 'any', it's not accurate. Those memory which need be passed
-to 2nd kernel for use need be excluded, just as we have done in
-kexec-tools.
-
-> to load kexec kernel image/initrd etc. However kexec loading is a
-> preparation work, it just books those position for later kexec kernel
-> jumping after "kexec -e", that is why we need kexec_buf to remember
-> them and do the real content copy of kernel/initrd. Here you use
-> memblock to search available memory, isn't it deviating too far away
-> from the original design in kexec-tools. Assume kexec loading and
-> kexec_file loading should be consistent on loading even though they are
-> done in different space, kernel space and user space.
-> 
-> I didn't follow the earlier post, may miss something.
-> 
-> Thanks
-> Baoquan
-> 
-> > 
-> > > 
-> > > > diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> > > > new file mode 100644
-> > > > index 000000000000..f9ebf54ca247
-> > > > --- /dev/null
-> > > > +++ b/arch/arm64/kernel/machine_kexec_file.c
-> > > > @@ -0,0 +1,57 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * kexec_file for arm64
-> > > > + *
-> > > > + * Copyright (C) 2018 Linaro Limited
-> > > > + * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > > > + *
-> > > 
-> > > > + * Most code is derived from arm64 port of kexec-tools
-> > > 
-> > > How does kexec-tools walk memblock?
-> > 
-> > Will remove this comment from this patch.
-> > Obviously, this comment is for the rest of the code which will be
-> > added to succeeding patches (patch #5 and #7).
-> > 
-> > 
-> > > 
-> > > > + */
-> > > > +
-> > > > +#define pr_fmt(fmt) "kexec_file: " fmt
-> > > > +
-> > > > +#include <linux/ioport.h>
-> > > > +#include <linux/kernel.h>
-> > > > +#include <linux/kexec.h>
-> > > > +#include <linux/memblock.h>
-> > > > +
-> > > > +int arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> > > > +				int (*func)(struct resource *, void *))
-> > > > +{
-> > > > +	phys_addr_t start, end;
-> > > > +	struct resource res;
-> > > > +	u64 i;
-> > > > +	int ret = 0;
-> > > > +
-> > > > +	if (kbuf->image->type == KEXEC_TYPE_CRASH)
-> > > > +		return func(&crashk_res, kbuf);
-> > > > +
-> > > > +	if (kbuf->top_down)
-> > > > +		for_each_mem_range_rev(i, &memblock.memory, &memblock.reserved,
-> > > > +				NUMA_NO_NODE, MEMBLOCK_NONE,
-> > > > +				&start, &end, NULL) {
-> > > 
-> > > for_each_free_mem_range_reverse() is a more readable version of this helper.
-> > 
-> > OK. I used to use my own limited list of reserved memory instead of
-> > memblock.reserved here to exclude verbose ranges.
-> > 
-> > 
-> > > > +			if (!memblock_is_map_memory(start))
-> > > > +				continue;
-> > > 
-> > > Passing MEMBLOCK_NONE means this walk will never find MEMBLOCK_NOMAP memory.
-> > 
-> > Sure, I confirmed it.
-> > 
-> > > 
-> > > > +			res.start = start;
-> > > > +			res.end = end;
-> > > > +			ret = func(&res, kbuf);
-> > > > +			if (ret)
-> > > > +				break;
-> > > > +		}
-> > > > +	else
-> > > > +		for_each_mem_range(i, &memblock.memory, &memblock.reserved,
-> > > > +				NUMA_NO_NODE, MEMBLOCK_NONE,
-> > > > +				&start, &end, NULL) {
-> > > 
-> > > for_each_free_mem_range()?
-> > 
-> > OK.
-> > 
-> > > > +			if (!memblock_is_map_memory(start))
-> > > > +				continue;
-> > > > +
-> > > > +			res.start = start;
-> > > > +			res.end = end;
-> > > > +			ret = func(&res, kbuf);
-> > > > +			if (ret)
-> > > > +				break;
-> > > > +		}
-> > > > +
-> > > > +	return ret;
-> > > > +}
-> > > > 
-> > > 
-> > > With these changes, what we have is almost:
-> > > arch/powerpc/kernel/machine_kexec_file_64.c::arch_kexec_walk_mem() !
-> > > (the difference being powerpc doesn't yet support crash-kernels here)
-> > > 
-> > > If the argument is walking memblock gives a better answer than the stringy
-> > > walk_system_ram_res() thing, is there any mileage in moving this code into
-> > > kexec_file.c, and using it if !IS_ENABLED(CONFIG_ARCH_DISCARD_MEMBLOCK)?
-> > > 
-> > > This would save arm64/powerpc having near-identical implementations.
-> > > 32bit arm keeps memblock if it has kexec, so it may be useful there too if
-> > > kexec_file_load() support is added.
-> > 
-> > Thanks. I've forgot ppc.
-> > 
-> > -Takahiro AKASHI
-> > 
-> > 
-> > > 
-> > > Thanks,
-> > > 
-> > > James
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQwNeaciDE15pelIDIxOjMxLCBUb20gTGVuZGFja3kg5YaZ6YGTOgo+IE9uIDUv
+MTQvMjAxOCA4OjUxIFBNLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4+IEl0IGlzIGNvbnZlbmllbnQg
+dG8gcmVtYXAgdGhlIG9sZCBtZW1vcnkgZW5jcnlwdGVkIHRvIHRoZSBzZWNvbmQga2VybmVsIGJ5
+Cj4+IGNhbGxpbmcgaW9yZW1hcF9lbmNyeXB0ZWQoKS4KPj4KPj4gV2hlbiBzbWUgZW5hYmxlZCBv
+biBBTUQgc2VydmVyLCB3ZSBhbHNvIG5lZWQgdG8gc3VwcG9ydCBrZHVtcC4gQmVjYXVzZQo+PiB0
+aGUgbWVtb3J5IGlzIGVuY3J5cHRlZCBpbiB0aGUgZmlyc3Qga2VybmVsLCB3ZSB3aWxsIHJlbWFw
+IHRoZSBvbGQgbWVtb3J5Cj4+IGVuY3J5cHRlZCB0byB0aGUgc2Vjb25kIGtlcm5lbChjcmFzaCBr
+ZXJuZWwpLCBhbmQgc21lIGlzIGFsc28gZW5hYmxlZCBpbgo+PiB0aGUgc2Vjb25kIGtlcm5lbCwg
+b3RoZXJ3aXNlIHRoZSBvbGQgbWVtb3J5IGVuY3J5cHRlZCBjYW4gbm90IGJlIGRlY3J5cHRlZC4K
+Pj4gQmVjYXVzZSBzaW1wbHkgY2hhbmdpbmcgdGhlIHZhbHVlIG9mIGEgQy1iaXQgb24gYSBwYWdl
+IHdpbGwgbm90Cj4+IGF1dG9tYXRpY2FsbHkgZW5jcnlwdCB0aGUgZXhpc3RpbmcgY29udGVudHMg
+b2YgYSBwYWdlLCBhbmQgYW55IGRhdGEgaW4gdGhlCj4+IHBhZ2UgcHJpb3IgdG8gdGhlIEMtYml0
+IG1vZGlmaWNhdGlvbiB3aWxsIGJlY29tZSB1bmludGVsbGlnaWJsZS4gQSBwYWdlIG9mCj4+IG1l
+bW9yeSB0aGF0IGlzIG1hcmtlZCBlbmNyeXB0ZWQgd2lsbCBiZSBhdXRvbWF0aWNhbGx5IGRlY3J5
+cHRlZCB3aGVuIHJlYWQKPj4gZnJvbSBEUkFNIGFuZCB3aWxsIGJlIGF1dG9tYXRpY2FsbHkgZW5j
+cnlwdGVkIHdoZW4gd3JpdHRlbiB0byBEUkFNLgo+Pgo+PiBGb3IgdGhlIGtkdW1wLCBpdCBpcyBu
+ZWNlc3NhcnkgdG8gZGlzdGluZ3Vpc2ggd2hldGhlciB0aGUgbWVtb3J5IGlzCj4+IGVuY3J5cHRl
+ZC4gRnVydGhlcm1vcmUsIHdlIHNob3VsZCBhbHNvIGtub3cgd2hpY2ggcGFydCBvZiB0aGUgbWVt
+b3J5IGlzCj4+IGVuY3J5cHRlZCBvciBkZWNyeXB0ZWQuIFdlIHdpbGwgYXBwcm9wcmlhdGVseSBy
+ZW1hcCB0aGUgbWVtb3J5IGFjY29yZGluZwo+PiB0byB0aGUgc3BlY2lmaWMgc2l0dWF0aW9uIGlu
+IG9yZGVyIHRvIHRlbGwgY3B1IGhvdyB0byBkZWFsIHdpdGggdGhlCj4+IGRhdGEoZW5jcnlwdGVk
+IG9yIGRlY3J5cHRlZCkuIEZvciBleGFtcGxlLCB3aGVuIHNtZSBlbmFibGVkLCBpZiB0aGUgb2xk
+Cj4+IG1lbW9yeSBpcyBlbmNyeXB0ZWQsIHdlIHdpbGwgcmVtYXAgdGhlIG9sZCBtZW1vcnkgaW4g
+ZW5jcnlwdGVkIHdheSwgd2hpY2gKPj4gd2lsbCBhdXRvbWF0aWNhbGx5IGRlY3J5cHQgdGhlIG9s
+ZCBtZW1vcnkgZW5jcnlwdGVkIHdoZW4gd2UgcmVhZCB0aG9zZSBkYXRhCj4+IGZyb20gdGhlIHJl
+bWFwcGluZyBhZGRyZXNzLgo+Pgo+PiAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLQo+PiB8IGZpcnN0LWtlcm5lbCB8IHNlY29uZC1rZXJuZWwgfCBrZHVtcCBz
+dXBwb3J0IHwKPj4gfCAgICAgIChtZW1fZW5jcnlwdD1vbnxvZmYpICAgIHwgICAoeWVzfG5vKSAg
+ICB8IAo+PiB8LS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLXwK
+Pj4gfCAgICAgb24gICAgICAgfCAgICAgb24gICAgICAgIHwgICAgIHllcyAgICAgICB8Cj4+IHwg
+ICAgIG9mZiAgICAgIHwgICAgIG9mZiAgICAgICB8ICAgICB5ZXMgICAgICAgfAo+PiB8ICAgICBv
+biAgICAgICB8ICAgICBvZmYgICAgICAgfCAgICAgbm8gICAgICAgIHwKPj4gfCAgICAgb2ZmICAg
+ICAgfCAgICAgb24gICAgICAgIHwgICAgIG5vICAgICAgICB8Cj4+IHxfX19fX19fX19fX19fX3xf
+X19fX19fX19fX19fX198X19fX19fX19fX19fX19ffAo+Pgo+PiBUZXN0IHRvb2xzOgo+PiBtYWtl
+ZHVtcGZpbGVbdjEuNi4zXTogaHR0cHM6Ly9naXRodWIuY29tL0xpYW5ib0ovbWFrZWR1bXBmaWxl
+Cj4+IGNvbW1pdCBlMWRlMTAzZWNhOGYgKEEgZHJhZnQgZm9yIGtkdW1wIHZtY29yZSBhYm91dCBB
+TUQgU01FKQo+PiBBdXRob3I6IExpYW5ibyBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+PiBE
+YXRlOiAgIE1vbiBNYXkgMTQgMTc6MDI6NDAgMjAxOCArMDgwMAo+PiBOb3RlOiBUaGlzIHBhdGNo
+IGNhbiBvbmx5IGR1bXAgdm1jb3JlIGluIHRoZSBjYXNlIG9mIFNNRSBlbmFibGVkLgo+Pgo+PiBj
+cmFzaC03LjIuMTogaHR0cHM6Ly9naXRodWIuY29tL2NyYXNoLXV0aWxpdHkvY3Jhc2guZ2l0Cj4+
+IGNvbW1pdCAxZTFiZDljNGMxYmUgKEZpeCBmb3IgdGhlICJicGYiIGNvbW1hbmQgZGlzcGxheSBv
+biBMaW51eCA0LjE3LXJjMSkKPj4gQXV0aG9yOiBEYXZlIEFuZGVyc29uIDxhbmRlcnNvbkByZWRo
+YXQuY29tPgo+PiBEYXRlOiAgIEZyaSBNYXkgMTEgMTU6NTQ6MzIgMjAxOCAtMDQwMAo+Pgo+PiBU
+ZXN0IGVudmlyb25tZW50Ogo+PiBIUCBQcm9MaWFudCBETDM4NUdlbjEwIEFNRCBFUFlDIDcyNTEK
+Pj4gOC1Db3JlIFByb2Nlc3Nvcgo+PiAzMjc2OCBNQiBtZW1vcnkKPj4gNjAwIEdCIGRpc2sgc3Bh
+Y2UKPj4KPj4gTGludXggNC4xNy1yYzQ6Cj4+IGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20v
+bGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQKPj4gY29tbWl0IDc1YmMzN2ZlZmM0
+NCAoIkxpbnV4IDQuMTctcmM0IikKPj4gQXV0aG9yOiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNA
+bGludXgtZm91bmRhdGlvbi5vcmc+Cj4+IERhdGU6ICAgU3VuIE1heSA2IDE2OjU3OjM4IDIwMTgg
+LTEwMDAKPj4KPj4gUmVmZXJlbmNlOgo+PiBBTUQ2NCBBcmNoaXRlY3R1cmUgUHJvZ3JhbW1lcidz
+IE1hbnVhbAo+PiBodHRwczovL3N1cHBvcnQuYW1kLmNvbS9UZWNoRG9jcy8yNDU5My5wZGYKPj4K
+PiAKPiBIYXZlIHlvdSBhbHNvIHRlc3RlZCB0aGlzIHdpdGggU0VWPyAgSXQgd291bGQgYmUgbmlj
+ZSBpZiB0aGUga2R1bXAKPiBjaGFuZ2VzIHlvdSBtYWtlIHdvcmsgd2l0aCBib3RoIFNNRSBhbmQg
+U0VWLgo+IApUaGFuayB5b3UsIFRvbS4KVGhpcyBpcyBhIGdyZWF0IHF1ZXN0aW9uLCB3ZSBvcmln
+aW5hbGx5IHBsYW4gdG8gaW1wbGVtZW50IFNFViBpbiBzdWJzZXF1ZW50IHBhdGNoZXMsIGFuZAp3
+ZSBhcmUgYWxzbyB3b3JraW5nIG9uIFNFViBhdCBwcmVzZW50LgpGdXJ0aGVybW9yZSwgd2UgaGF2
+ZSBhbm90aGVyIGtub3duIGlzc3VlIHRoYXQgdGhlIHN5c3RlbSBjYW4ndCBqdW1wIGludG8gdGhl
+IHNlY29uZCBrZXJuZWwKd2hlbiBTTUUgaXMgZW5hYmxlZCBhbmQga2FzbHIgaXMgZGlzYWJsZWQg
+aW4ga2R1bXAgbW9kZS4gSXQgc2VlbXMgdGhhdCBpcyBhIGNvbXBsZXggcHJvYmxlbXMsCm1heWJl
+IGl0IGlzIHJlbGF0ZWQgdG8ga2FzbHIgYW5kIFNNRSwgY3VycmVudGx5LCBpJ20gbm90IHN1cmUg
+dGhlIHJvb3QgY2F1c2UsIGJ1dCB3ZSB3aWxsCmFsc28gcGxhbiB0byBmaXggaXQuIENhbiB5b3Ug
+Z2l2ZSBtZSBhbnkgYWR2aWNlIGFib3V0IHRoaXMgaXNzdWU/CgpUaGFua3MuCkxpYW5ibwo+IFRo
+YW5rcywKPiBUb20KPiAKPj4gTGlhbmJvIEppYW5nICgyKToKPj4gICBhZGQgYSBmdW5jdGlvbihp
+b3JlbWFwX2VuY3J5cHRlZCkgZm9yIGtkdW1wIHdoZW4gQU1EIHNtZSBlbmFibGVkLgo+PiAgIHN1
+cHBvcnQga2R1bXAgd2hlbiBBTUQgc2VjdXJlIG1lbW9yeSBlbmNyeXB0aW9uIGlzIGFjdGl2ZQo+
+Pgo+PiAgYXJjaC94ODYvaW5jbHVkZS9hc20vZG1pLmggICAgICB8IDE0ICsrKysrKysrKysrKyst
+Cj4+ICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9pby5oICAgICAgIHwgIDIgKysKPj4gIGFyY2gveDg2
+L2tlcm5lbC9hY3BpL2Jvb3QuYyAgICAgfCAgOCArKysrKysrKwo+PiAgYXJjaC94ODYva2VybmVs
+L2NyYXNoX2R1bXBfNjQuYyB8IDI3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKwo+PiAgYXJj
+aC94ODYvbW0vaW9yZW1hcC5jICAgICAgICAgICB8IDI1ICsrKysrKysrKysrKysrKysrLS0tLS0t
+LS0KPj4gIGRyaXZlcnMvYWNwaS90YWJsZXMuYyAgICAgICAgICAgfCAxNCArKysrKysrKysrKysr
+LQo+PiAgZHJpdmVycy9pb21tdS9hbWRfaW9tbXVfaW5pdC5jICB8ICA5ICsrKysrKysrLQo+PiAg
+ZnMvcHJvYy92bWNvcmUuYyAgICAgICAgICAgICAgICB8IDM2ICsrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKystLS0tLQo+PiAgaW5jbHVkZS9saW51eC9jcmFzaF9kdW1wLmggICAgICB8ICA0
+ICsrKysKPj4gIGtlcm5lbC9rZXhlY19jb3JlLmMgICAgICAgICAgICAgfCAxMiArKysrKysrKysr
+KysKPj4gIDEwIGZpbGVzIGNoYW5nZWQsIDEzNSBpbnNlcnRpb25zKCspLCAxNiBkZWxldGlvbnMo
+LSkKPj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtl
+eGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
