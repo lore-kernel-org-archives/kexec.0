@@ -1,17 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fGEXW-0003Qs-Ut
- for kexec@lists.infradead.org; Wed, 09 May 2018 02:09:13 +0000
-Date: Wed, 9 May 2018 10:08:52 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v4 1/3] resource: Use list_head to link sibling resource
-Message-ID: <20180509020852.GK30581@MiWiFi-R3L-srv>
-References: <20180507063224.24229-2-bhe@redhat.com>
- <201805071803.2MKgOLTP%fengguang.wu@intel.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <201805071803.2MKgOLTP%fengguang.wu@intel.com>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fJdba-0006Qq-Q2
+ for kexec@lists.infradead.org; Fri, 18 May 2018 11:31:27 +0000
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w4IBT0tb073507
+ for <kexec@lists.infradead.org>; Fri, 18 May 2018 07:31:11 -0400
+Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2j1swd38c1-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 18 May 2018 07:31:11 -0400
+Received: from localhost
+ by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Fri, 18 May 2018 12:31:08 +0100
+Subject: Re: [PATCH v2 3/9] security: define security_kernel_read_blob()
+ wrapper
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Fri, 18 May 2018 07:30:50 -0400
+In-Reply-To: <87y3ghhbws.fsf@xmission.com>
+References: <1526568530-9144-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1526568530-9144-4-git-send-email-zohar@linux.vnet.ibm.com>
+ <74c096ca-1ad1-799e-df3d-7b1b099333a7@schaufler-ca.com>
+ <87y3ghhbws.fsf@xmission.com>
+Mime-Version: 1.0
+Message-Id: <1526643050.3632.127.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,226 +35,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kbuild test robot <lkp@intel.com>
-Cc: nicolas.pitre@linaro.org, brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, kys@microsoft.com, frowand.list@gmail.com, dan.j.williams@intel.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, bp@suse.de, dyoung@redhat.com, vgoyal@redhat.com, ebiederm@xmission.com, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, josh@joshtriplett.org, jglisse@redhat.com, robh+dt@kernel.org, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kbuild-all@01.org, devel@linuxdriverproject.org, akpm@linux-foundation.org, fengguang.wu@intel.com, davem@davemloft.net
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Casey Schaufler <casey@schaufler-ca.com>
+Cc: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R
+ . Rodriguez" <mcgrof@kernel.org>, Andres Rodriguez <andresx7@gmail.com>, linux-integrity@vger.kernel.org, Stephen Smalley <sds@tycho.nsa.gov>
 
-On 05/07/18 at 07:42pm, kbuild test robot wrote:
-> Hi Baoquan,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v4.17-rc4 next-20180504]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180507-144345
-> config: powerpc-defconfig (attached as .config)
-> compiler: powerpc64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=powerpc 
-> 
-> All errors (new ones prefixed by >>):
-> 
->    arch/powerpc/kernel/pci-common.c: In function 'pci_process_bridge_OF_ranges':
-> >> arch/powerpc/kernel/pci-common.c:764:44: error: incompatible types when assigning to type 'struct list_head' from type 'void *'
->        res->parent = res->child = res->sibling = NULL;
-
-Pasted code can fix above error.
-
-diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-index fe9733ffffaa..a7e68f6f9f24 100644
---- a/arch/powerpc/kernel/pci-common.c
-+++ b/arch/powerpc/kernel/pci-common.c
-@@ -761,7 +761,9 @@ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
- 			res->flags = range.flags;
- 			res->start = range.cpu_addr;
- 			res->end = range.cpu_addr + range.size - 1;
--			res->parent = res->child = res->sibling = NULL;
-+			res->parent = NULL;
-+			INIT_LIST_HEAD(&res->child);
-+			INIT_LIST_HEAD(&res->sibling);
- 		}
- 	}
- }
-
->                                                ^
->    arch/powerpc/kernel/pci-common.c: In function 'reparent_resources':
-> >> arch/powerpc/kernel/pci-common.c:1100:10: error: assignment from incompatible pointer type [-Werror=incompatible-pointer-types]
->      for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
->              ^
-
-This reparent_resources() function is duplicated with the one in
-arch/microblaze/pci/pci-common.c which has been fixed in v4. I planned
-to move it to kernel/resource.c in a separate patch since it's shared by
-different ARCH, then fix it in this patch.
-
->    arch/powerpc/kernel/pci-common.c:1100:50: error: assignment from incompatible pointer type [-Werror=incompatible-pointer-types]
->      for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
->                                                      ^
-> >> arch/powerpc/kernel/pci-common.c:1113:13: error: incompatible types when assigning to type 'struct list_head' from type 'struct resource *'
->      res->child = *firstpp;
->                 ^
->    arch/powerpc/kernel/pci-common.c:1114:15: error: incompatible types when assigning to type 'struct list_head' from type 'struct resource *'
->      res->sibling = *pp;
->                   ^
-> >> arch/powerpc/kernel/pci-common.c:1117:9: error: incompatible types when assigning to type 'struct resource *' from type 'struct list_head'
->      for (p = res->child; p != NULL; p = p->sibling) {
->             ^
->    arch/powerpc/kernel/pci-common.c:1117:36: error: incompatible types when assigning to type 'struct resource *' from type 'struct list_head'
->      for (p = res->child; p != NULL; p = p->sibling) {
->                                        ^
->    cc1: all warnings being treated as errors
-> 
-> vim +764 arch/powerpc/kernel/pci-common.c
-> 
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  642  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  643  /**
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  644   * pci_process_bridge_OF_ranges - Parse PCI bridge resources from device tree
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  645   * @hose: newly allocated pci_controller to be setup
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  646   * @dev: device node of the host bridge
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  647   * @primary: set if primary bus (32 bits only, soon to be deprecated)
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  648   *
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  649   * This function will parse the "ranges" property of a PCI host bridge device
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  650   * node and setup the resource mapping of a pci controller based on its
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  651   * content.
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  652   *
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  653   * Life would be boring if it wasn't for a few issues that we have to deal
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  654   * with here:
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  655   *
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  656   *   - We can only cope with one IO space range and up to 3 Memory space
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  657   *     ranges. However, some machines (thanks Apple !) tend to split their
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  658   *     space into lots of small contiguous ranges. So we have to coalesce.
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  659   *
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  660   *   - Some busses have IO space not starting at 0, which causes trouble with
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  661   *     the way we do our IO resource renumbering. The code somewhat deals with
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  662   *     it for 64 bits but I would expect problems on 32 bits.
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  663   *
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  664   *   - Some 32 bits platforms such as 4xx can have physical space larger than
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  665   *     32 bits so we need to use 64 bits values for the parsing
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  666   */
-> cad5cef6 Greg Kroah-Hartman     2012-12-21  667  void pci_process_bridge_OF_ranges(struct pci_controller *hose,
-> cad5cef6 Greg Kroah-Hartman     2012-12-21  668  				  struct device_node *dev, int primary)
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  669  {
-> 858957ab Kevin Hao              2013-05-16  670  	int memno = 0;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  671  	struct resource *res;
-> 654837e8 Andrew Murray          2014-02-25  672  	struct of_pci_range range;
-> 654837e8 Andrew Murray          2014-02-25  673  	struct of_pci_range_parser parser;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  674  
-> b7c670d6 Rob Herring            2017-08-21  675  	printk(KERN_INFO "PCI host bridge %pOF %s ranges:\n",
-> b7c670d6 Rob Herring            2017-08-21  676  	       dev, primary ? "(primary)" : "");
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  677  
-> 654837e8 Andrew Murray          2014-02-25  678  	/* Check for ranges property */
-> 654837e8 Andrew Murray          2014-02-25  679  	if (of_pci_range_parser_init(&parser, dev))
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  680  		return;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  681  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  682  	/* Parse it */
-> 654837e8 Andrew Murray          2014-02-25  683  	for_each_of_pci_range(&parser, &range) {
-> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  684  		/* If we failed translation or got a zero-sized region
-> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  685  		 * (some FW try to feed us with non sensical zero sized regions
-> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  686  		 * such as power3 which look like some kind of attempt at exposing
-> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  687  		 * the VGA memory hole)
-> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  688  		 */
-> 654837e8 Andrew Murray          2014-02-25  689  		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  690  			continue;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  691  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  692  		/* Act based on address space type */
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  693  		res = NULL;
-> 654837e8 Andrew Murray          2014-02-25  694  		switch (range.flags & IORESOURCE_TYPE_BITS) {
-> 654837e8 Andrew Murray          2014-02-25  695  		case IORESOURCE_IO:
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  696  			printk(KERN_INFO
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  697  			       "  IO 0x%016llx..0x%016llx -> 0x%016llx\n",
-> 654837e8 Andrew Murray          2014-02-25  698  			       range.cpu_addr, range.cpu_addr + range.size - 1,
-> 654837e8 Andrew Murray          2014-02-25  699  			       range.pci_addr);
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  700  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  701  			/* We support only one IO range */
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  702  			if (hose->pci_io_size) {
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  703  				printk(KERN_INFO
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  704  				       " \\--> Skipped (too many) !\n");
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  705  				continue;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  706  			}
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  707  #ifdef CONFIG_PPC32
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  708  			/* On 32 bits, limit I/O space to 16MB */
-> 654837e8 Andrew Murray          2014-02-25  709  			if (range.size > 0x01000000)
-> 654837e8 Andrew Murray          2014-02-25  710  				range.size = 0x01000000;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  711  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  712  			/* 32 bits needs to map IOs here */
-> 654837e8 Andrew Murray          2014-02-25  713  			hose->io_base_virt = ioremap(range.cpu_addr,
-> 654837e8 Andrew Murray          2014-02-25  714  						range.size);
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  715  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  716  			/* Expect trouble if pci_addr is not 0 */
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  717  			if (primary)
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  718  				isa_io_base =
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  719  					(unsigned long)hose->io_base_virt;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  720  #endif /* CONFIG_PPC32 */
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  721  			/* pci_io_size and io_base_phys always represent IO
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  722  			 * space starting at 0 so we factor in pci_addr
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  723  			 */
-> 654837e8 Andrew Murray          2014-02-25  724  			hose->pci_io_size = range.pci_addr + range.size;
-> 654837e8 Andrew Murray          2014-02-25  725  			hose->io_base_phys = range.cpu_addr - range.pci_addr;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  726  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  727  			/* Build resource */
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  728  			res = &hose->io_resource;
-> 654837e8 Andrew Murray          2014-02-25  729  			range.cpu_addr = range.pci_addr;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  730  			break;
-> 654837e8 Andrew Murray          2014-02-25  731  		case IORESOURCE_MEM:
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  732  			printk(KERN_INFO
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  733  			       " MEM 0x%016llx..0x%016llx -> 0x%016llx %s\n",
-> 654837e8 Andrew Murray          2014-02-25  734  			       range.cpu_addr, range.cpu_addr + range.size - 1,
-> 654837e8 Andrew Murray          2014-02-25  735  			       range.pci_addr,
-> 654837e8 Andrew Murray          2014-02-25  736  			       (range.pci_space & 0x40000000) ?
-> 654837e8 Andrew Murray          2014-02-25  737  			       "Prefetch" : "");
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  738  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  739  			/* We support only 3 memory ranges */
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  740  			if (memno >= 3) {
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  741  				printk(KERN_INFO
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  742  				       " \\--> Skipped (too many) !\n");
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  743  				continue;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  744  			}
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  745  			/* Handles ISA memory hole space here */
-> 654837e8 Andrew Murray          2014-02-25  746  			if (range.pci_addr == 0) {
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  747  				if (primary || isa_mem_base == 0)
-> 654837e8 Andrew Murray          2014-02-25  748  					isa_mem_base = range.cpu_addr;
-> 654837e8 Andrew Murray          2014-02-25  749  				hose->isa_mem_phys = range.cpu_addr;
-> 654837e8 Andrew Murray          2014-02-25  750  				hose->isa_mem_size = range.size;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  751  			}
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  752  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  753  			/* Build resource */
-> 654837e8 Andrew Murray          2014-02-25  754  			hose->mem_offset[memno] = range.cpu_addr -
-> 654837e8 Andrew Murray          2014-02-25  755  							range.pci_addr;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  756  			res = &hose->mem_resources[memno++];
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  757  			break;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  758  		}
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  759  		if (res != NULL) {
-> aeba3731 Michael Ellerman       2014-10-16  760  			res->name = dev->full_name;
-> aeba3731 Michael Ellerman       2014-10-16  761  			res->flags = range.flags;
-> aeba3731 Michael Ellerman       2014-10-16  762  			res->start = range.cpu_addr;
-> aeba3731 Michael Ellerman       2014-10-16  763  			res->end = range.cpu_addr + range.size - 1;
-> aeba3731 Michael Ellerman       2014-10-16 @764  			res->parent = res->child = res->sibling = NULL;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  765  		}
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  766  	}
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  767  }
-> fa462f2d Benjamin Herrenschmidt 2007-12-20  768  
-> 
-> :::::: The code at line 764 was first introduced by commit
-> :::::: aeba3731b150188685225b510886f1370d8814de powerpc/pci: Fix IO space breakage after of_pci_range_to_resource() change
-> 
-> :::::: TO: Michael Ellerman <mpe@ellerman.id.au>
-> :::::: CC: Michael Ellerman <mpe@ellerman.id.au>
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCAyMDE4LTA1LTE3IGF0IDIyOjM3IC0wNTAwLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90
+ZToKPiBDYXNleSBTY2hhdWZsZXIgPGNhc2V5QHNjaGF1Zmxlci1jYS5jb20+IHdyaXRlczoKPiAK
+PiA+IE9uIDUvMTcvMjAxOCA3OjQ4IEFNLCBNaW1pIFpvaGFyIHdyb3RlOgo+ID4+IEluIG9yZGVy
+IGZvciBMU01zIGFuZCBJTUEtYXBwcmFpc2FsIHRvIGRpZmZlcmVudGlhdGUgYmV0d2VlbiB0aGUg
+b3JpZ2luYWwKPiA+PiBhbmQgbmV3IHN5c2NhbGxzIChlZy4ga2V4ZWMsIGtlcm5lbCBtb2R1bGVz
+LCBmaXJtd2FyZSksIGJvdGggdGhlIG9yaWdpbmFsCj4gPj4gYW5kIG5ldyBzeXNjYWxscyBtdXN0
+IGNhbGwgYW4gTFNNIGhvb2suCj4gPj4KPiA+PiBDb21taXQgMmU3MmQ1MWI0YWMzICgic2VjdXJp
+dHk6IGludHJvZHVjZSBrZXJuZWxfbW9kdWxlX2Zyb21fZmlsZSBob29rIikKPiA+PiBpbnRyb2R1
+Y2VkIGNhbGxpbmcgc2VjdXJpdHlfa2VybmVsX21vZHVsZV9mcm9tX2ZpbGUoKSBpbiBib3RoIHRo
+ZSBvcmlnaW5hbAo+ID4+IGFuZCBuZXcgc3lzY2FsbHMuICBDb21taXQgYTFkYjc0MjA5NDgzICgi
+bW9kdWxlOiByZXBsYWNlCj4gPj4gY29weV9tb2R1bGVfZnJvbV9mZCB3aXRoIGtlcm5lbCB2ZXJz
+aW9uIikgcmVwbGFjZWQgdGhlc2UgTFNNIGNhbGxzIHdpdGgKPiA+PiBzZWN1cml0eV9rZXJuZWxf
+cmVhZF9maWxlKCkuCj4gPj4KPiA+PiBDb21taXQgZTQwYmE2ZDU2YjQxICgiZmlybXdhcmU6IHJl
+cGxhY2UgY2FsbCB0byBmd19yZWFkX2ZpbGVfY29udGVudHMoKQo+ID4+IHdpdGgga2VybmVsIHZl
+cnNpb24iKSBhbmQgY29tbWl0IGI4MDRkZWZlNDI5NyAgKCJrZXhlYzogcmVwbGFjZSBjYWxsIHRv
+Cj4gPj4gY29weV9maWxlX2Zyb21fZmQoKSB3aXRoIGtlcm5lbCB2ZXJzaW9uIikgcmVwbGFjZWQg
+dGhlaXIgb3duIHZlcnNpb24gb2YKPiA+PiByZWFkaW5nIGEgZmlsZSBmcm9tIHRoZSBrZXJuZWwg
+d2l0aCB0aGUgZ2VuZXJpYwo+ID4+IGtlcm5lbF9yZWFkX2ZpbGVfZnJvbV9wYXRoL2ZkKCkgdmVy
+c2lvbnMsIHdoaWNoIGNhbGwgdGhlIHByZSBhbmQgcG9zdAo+ID4+IHNlY3VyaXR5X2tlcm5lbF9y
+ZWFkX2ZpbGUgTFNNIGhvb2tzLgo+ID4+Cj4gPj4gTWlzc2luZyBhcmUgTFNNIGNhbGxzIGluIHRo
+ZSBvcmlnaW5hbCBrZXhlYyBzeXNjYWxsIGFuZCBmaXJtd2FyZSBzeXNmcwo+ID4+IGZhbGxiYWNr
+IG1ldGhvZC4gIEZyb20gYSB0ZWNobmljYWwgcGVyc3BlY3RpdmUgdGhlcmUgaXMgbm8ganVzdGlm
+aWNhdGlvbgo+ID4+IGZvciBkZWZpbmluZyBhIG5ldyBMU00gaG9vaywgYXMgdGhlIGV4aXN0aW5n
+IHNlY3VyaXR5X2tlcm5lbF9yZWFkX2ZpbGUoKQo+ID4+IHdvcmtzIGp1c3QgZmluZS4gIFRoZSBv
+cmlnaW5hbCBzeXNjYWxscywgaG93ZXZlciwgZG8gbm90IHJlYWQgYSBmaWxlLCBzbwo+ID4+IHRo
+ZSBzZWN1cml0eSBob29rIG5hbWUgaXMgaW5hcHByb3ByaWF0ZS4gIEluc3RlYWQgb2YgZGVmaW5p
+bmcgYSBuZXcgTFNNCj4gPj4gaG9vaywgdGhpcyBwYXRjaCBkZWZpbmVzIHNlY3VyaXR5X2tlcm5l
+bF9yZWFkX2Jsb2IoKSBhcyBhIHdyYXBwZXIgZm9yCj4gPj4gdGhlIGV4aXN0aW5nIExTTSBzZWN1
+cml0eV9rZXJuZWxfZmlsZV9yZWFkKCkgaG9vay4KPiA+Cj4gPiBXaGF0IGEgbWFydmVsb3VzIG9w
+cG9ydHVuaXR5IHRvIGJpa2VzaGVkIQo+ID4KPiA+IEkgcmVhbGx5IGRpc2xpa2UgYWRkaW5nIGFu
+b3RoZXIgc2VjdXJpdHlfIGludGVyZmFjZSBqdXN0IGJlY2F1c2UKPiA+IHRoZSBuYW1lIGlzbid0
+IHF1aXRlIHJpZ2h0LiBFc3BlY2lhbGx5IGEgd3JhcHBlciwgd2hpY2ggaXMganVzdAo+ID4gY29k
+ZSBhbmQgZXhlY3V0aW9uIG92ZXJoZWFkLiBXaHkgbm90IGNoYW5nZSBzZWN1cml0eV9rZXJuZWxf
+cmVhZF9maWxlKCkKPiA+IHRvIHNlY3VyaXR5X2tlcm5lbF9yZWFkX2Jsb2IoKSBldmVyeXdoZXJl
+IGFuZCBiZSBkb25lPwo+IAo+IE5hY2tlZC1ieTogIkVyaWMgVy4gQmllZGVybWFuIiA8ZWJpZWRl
+cm1AeG1pc3Npb24uY29tPgo+IAo+IE5hY2sgb24gdGhpcyBzaGFyaW5nIG5vbnNlbnNlLiAgVGhl
+c2UgdHdvIGludGVyZmFjZXMgZG8gbm90IHNoYXJlIGFueQo+IGNvZGUgaW4gdGhlaXIgaW1wbGVt
+ZW50YXRpb25zIG90aGVyIHRoYW4gdGhlIGlmIHN0YXRlbWVudCB0byBkaXN0aW5ndWlzaAo+IGJl
+dHdlZW4gdGhlIHR3byBjYXNlcy4KPiAKPiBDYXNleSB5b3UgYXJlIHdyb25nLiAgV2UgbmVlZCBz
+b21ldGhpbmcgZGlmZmVyZW50IGhlcmUuCj4gCj4gTWltaSBhIHdyYXBwZXIgZG9lcyBub3QgY3V0
+IGl0LiAgIFRoZSBjb2RlIGlzIG5vdCBzaGFyZWQuICBEZXNwaXRlIHVzaW5nCj4gYSBzaW5nbGUg
+ZnVuY3Rpb24gY2FsbCB0b2RheS4KPiAKPiBJZiB3ZSB3YW50IGNvbXByZWhlbnNpYmxlIGFuZCBt
+YWludGFpbmFibGUgY29kZSBpbiB0aGUgc2VjdXJpdHkgbW9kdWxlcwo+IHdlIG5lZWQgdG8gc3Bs
+aXQgdGhlc2UgdHdvIHBpZWNlcyBvZiBmdW5jdGlvbmFsaXR5IGFwYXJ0LgoKa2VybmVsX3JlYWRf
+ZmlsZSgpIGlzIGEgY29tbW9uLCBnZW5lcmljIG1ldGhvZCBvZiByZWFkaW5nIGEgZmlsZSBmcm9t
+CnRoZSBrZXJuZWwsIHdoaWNoIGlzIGJlaW5nIGNhbGxlZCBmcm9tIGEgbnVtYmVyIG9mIHBsYWNl
+cy4gwqBUaGUKa2VybmVsX3JlYWRfZmlsZV9pZCBlbnVtZXJhdGlvbiBpcyBuZWVkZWQgdG8gZGlm
+ZmVyZW50aWF0ZSBiZXR3ZWVuIHRoZQpjYWxsZXJzLiDCoFRoZSBwdXJwb3NlIG9mIHRoZSBuZXcg
+c2VjdXJpdHlfa2VybmVsX3JlYWRfZmlsZSgpIGNhbGxzIGlzCm5vdCBmb3IgdGhlIGtlcm5lbCB0
+byByZWFkIGEgZmlsZSwgYnV0IGFzIGEgbWV0aG9kIG9mIGlkZW50aWZ5aW5nIHRoZQpvcmlnaW5h
+bCBidWZmZXIgYmFzZWQgbWV0aG9kcyBjb250YWluaW5nIGEgZmlsZS4KCkhhdmluZyB0byBkZWZp
+bmUgYSBzZXBhcmF0ZSBMU00gaG9vayBmb3IgZWFjaCBvZiB0aGUgb3JpZ2luYWwsIG5vbgprZXJu
+ZWxfcmVhZF9maWxlKCksIGJ1ZmZlciBiYXNlZCBtZXRob2QgY2FsbGVycywga2luZCBvZiBtYWtl
+cyBzZW5zZSwKYXMgdGhlIGNhbGxlcnMgdGhlbXNlbHZlcyBhcmUgc3BlY2lmaWMsIGJ1dCBpcyBp
+dCByZWFsbHkgbmVjZXNzYXJ5PwpDb3VsZCB3ZSBkZWZpbmUgYSBuZXcsIGdlbmVyaWMgTFNNIGhv
+b2sgbmFtZWQKc2VjdXJpdHlfa2VybmVsX2J1ZmZlcl9kYXRhKCkgZm9yIHRoaXMgcHVycG9zZT8K
+Ck1pbWkKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
+ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
