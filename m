@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v9 04/11] arm64: kexec_file: allocate memory walking
- through memblock list
-References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
- <20180425062629.29404-5-takahiro.akashi@linaro.org>
- <648656ef-1f1e-b0ac-581c-aba1e62f4eee@arm.com>
- <20180507055906.GE11326@linaro.org> <20180517021024.GI24627@MiWiFi-R3L-srv>
- <20180517021547.GJ24627@MiWiFi-R3L-srv>
-From: James Morse <james.morse@arm.com>
-Message-ID: <d9b8a3ca-93bc-87f9-1316-f45c0dfe47ae@arm.com>
-Date: Thu, 17 May 2018 19:04:31 +0100
+Received: from sonic306-28.consmr.mail.ne1.yahoo.com ([66.163.189.90])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fJTCY-0006m3-Iq
+ for kexec@lists.infradead.org; Fri, 18 May 2018 00:24:56 +0000
+Subject: Re: [PATCH v2 3/9] security: define security_kernel_read_blob()
+ wrapper
+References: <1526568530-9144-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1526568530-9144-4-git-send-email-zohar@linux.vnet.ibm.com>
+From: Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <74c096ca-1ad1-799e-df3d-7b1b099333a7@schaufler-ca.com>
+Date: Thu, 17 May 2018 17:24:36 -0700
 MIME-Version: 1.0
-In-Reply-To: <20180517021547.GJ24627@MiWiFi-R3L-srv>
+In-Reply-To: <1526568530-9144-4-git-send-email-zohar@linux.vnet.ibm.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,97 +25,104 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>, linux-integrity@vger.kernel.org
+Cc: Andres Rodriguez <andresx7@gmail.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
 
-Hi Baoquan,
+On 5/17/2018 7:48 AM, Mimi Zohar wrote:
+> In order for LSMs and IMA-appraisal to differentiate between the original
+> and new syscalls (eg. kexec, kernel modules, firmware), both the original
+> and new syscalls must call an LSM hook.
+>
+> Commit 2e72d51b4ac3 ("security: introduce kernel_module_from_file hook")
+> introduced calling security_kernel_module_from_file() in both the original
+> and new syscalls.  Commit a1db74209483 ("module: replace
+> copy_module_from_fd with kernel version") replaced these LSM calls with
+> security_kernel_read_file().
+>
+> Commit e40ba6d56b41 ("firmware: replace call to fw_read_file_contents()
+> with kernel version") and commit b804defe4297  ("kexec: replace call to
+> copy_file_from_fd() with kernel version") replaced their own version of
+> reading a file from the kernel with the generic
+> kernel_read_file_from_path/fd() versions, which call the pre and post
+> security_kernel_read_file LSM hooks.
+>
+> Missing are LSM calls in the original kexec syscall and firmware sysfs
+> fallback method.  From a technical perspective there is no justification
+> for defining a new LSM hook, as the existing security_kernel_read_file()
+> works just fine.  The original syscalls, however, do not read a file, so
+> the security hook name is inappropriate.  Instead of defining a new LSM
+> hook, this patch defines security_kernel_read_blob() as a wrapper for
+> the existing LSM security_kernel_file_read() hook.
 
-On 17/05/18 03:15, Baoquan He wrote:
-> On 05/17/18 at 10:10am, Baoquan He wrote:
->> On 05/07/18 at 02:59pm, AKASHI Takahiro wrote:
->>> On Tue, May 01, 2018 at 06:46:09PM +0100, James Morse wrote:
->>>> On 25/04/18 07:26, AKASHI Takahiro wrote:
->>>>> We need to prevent firmware-reserved memory regions, particularly EFI
->>>>> memory map as well as ACPI tables, from being corrupted by loading
->>>>> kernel/initrd (or other kexec buffers). We also want to support memory
->>>>> allocation in top-down manner in addition to default bottom-up.
->>>>> So let's have arm64 specific arch_kexec_walk_mem() which will search
->>>>> for available memory ranges in usable memblock list,
->>>>> i.e. !NOMAP & !reserved, 
->>>>
->>>>> instead of system resource tree.
->>>>
->>>> Didn't we try to fix the system-resource-tree in order to fix regular-kexec to
->>>> be safe in the EFI-memory-map/ACPI-tables case?
->>>>
->>>> It would be good to avoid having two ways of doing this, and I would like to
->>>> avoid having extra arch code...
->>>
->>> I know what you mean.
->>> /proc/iomem or system resource is, in my opinion, not the best place to
->>> describe memory usage of kernel but rather to describe *physical* hardware
->>> layout. As we are still discussing about "reserved" memory, I don't want
->>> to depend on it.
->>> Along with memblock list, we will have more accurate control over memory
->>> usage.
->>
->> In kexec-tools, we see any usable memory as candidate which can be used
-> 
-> Here I said 'any', it's not accurate. Those memory which need be passed
-> to 2nd kernel for use need be excluded, just as we have done in
-> kexec-tools.
-> 
->> to load kexec kernel image/initrd etc. However kexec loading is a
->> preparation work, it just books those position for later kexec kernel
->> jumping after "kexec -e", that is why we need kexec_buf to remember
->> them and do the real content copy of kernel/initrd.
+What a marvelous opportunity to bikeshed!
 
-The problem we have on arm64 is /proc/iomem is being used for two things.
-1) Kexec's this is memory I can book for the new kernel.
-2) Kdump's this is memory I must describe for vmcore.
+I really dislike adding another security_ interface just because
+the name isn't quite right. Especially a wrapper, which is just
+code and execution overhead. Why not change security_kernel_read_file()
+to security_kernel_read_blob() everywhere and be done?
 
-We get the memory map from UEFI via the EFI stub, and leave it in
-memblock_reserved() memory. A new kexec kernel needs this to boot: it mustn't
-overwrite it. The same goes for the ACPI tables, they could be reclaimed and
-used as memory, but the new kexec kernel needs them to boot, they are
-memblock_reserved() too.
+>
+> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Luis R. Rodriguez <mcgrof@kernel.org>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Casey Schaufler <casey@schaufler-ca.com>
+>
+> Changelog v2:
+> - Define a generic wrapper named security_kernel_read_blob() for
+> security_kernel_read_file().
+>
+> Changelog v1:
+> - Define and call security_kexec_load(), a wrapper for
+> security_kernel_read_file().
+> ---
+>  include/linux/security.h | 6 ++++++
+>  security/security.c      | 6 ++++++
+>  2 files changed, 12 insertions(+)
+>
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index 63030c85ee19..4db1967a688b 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -323,6 +323,7 @@ int security_kernel_module_request(char *kmod_name);
+>  int security_kernel_read_file(struct file *file, enum kernel_read_file_id id);
+>  int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
+>  				   enum kernel_read_file_id id);
+> +int security_kernel_read_blob(enum kernel_read_file_id id);
+>  int security_task_fix_setuid(struct cred *new, const struct cred *old,
+>  			     int flags);
+>  int security_task_setpgid(struct task_struct *p, pid_t pgid);
+> @@ -922,6 +923,11 @@ static inline int security_kernel_post_read_file(struct file *file,
+>  	return 0;
+>  }
+>  
+> +static inline int security_kernel_read_blob(enum kernel_read_file_id id)
+> +{
+> +	return 0;
+> +}
+> +
+>  static inline int security_task_fix_setuid(struct cred *new,
+>  					   const struct cred *old,
+>  					   int flags)
+> diff --git a/security/security.c b/security/security.c
+> index 68f46d849abe..8f199b2bf4a2 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -1044,6 +1044,12 @@ int security_kernel_read_file(struct file *file, enum kernel_read_file_id id)
+>  }
+>  EXPORT_SYMBOL_GPL(security_kernel_read_file);
+>  
+> +int security_kernel_read_blob(enum kernel_read_file_id id)
+> +{
+> +	return security_kernel_read_file(NULL, id);
+> +}
+> +EXPORT_SYMBOL_GPL(security_kernel_read_blob);
+> +
+>  int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
+>  				   enum kernel_read_file_id id)
+>  {
 
-If we knock all memblock_reserved() regions out of /proc/iomem then kdump
-doesn't work, because /proc/iomem is only generated once. Its a snapshot. The
-initcode/data is an example of memory we release from memblock_reserve() after
-this, then gets used for data we need in the vmcore.
-
-Ideally we would describe all this in /proc/iomem with:
-| 8001e80000-83ff186fff : System RAM
-|   8002080000-8002feffff : [Data you really need to boot]
-
-kexec-tools should not overwrite 'data you really need to boot' unless it knows
-what it is, and that the system will never need it again. (examples: overwrite
-the ACPI tables when booting a non-acpi kernel, overwrite the UEFI memory map if
-the DT has been regenerated for a non-uefi kernel)
-
-But, kexec-tools doesn't parse those second level entries properly. We have a
-bug in user-space, and a bug in the kernel.
-
-Because /proc/iomem is being used for two things, and kexec-tools only parses
-one level, I don't think we can fix this in the kernel without breaking one of
-the use-cases. I think Akashi's fix user-space too approach is the most
-pragmatic approach.
-
-
->> Here you use
->> memblock to search available memory, isn't it deviating too far away
->> from the original design in kexec-tools. Assume kexec loading and
->> kexec_file loading should be consistent on loading even though they are
->> done in different space, kernel space and user space.
-
-Its much easier for us to parse memblock in the kernel as the helpers step over
-the regions we know we don't want. For the resource list we would need to
-strcmp(), and a bunch of handling for the second level entries.
-
-
-Thanks,
-
-James
 
 _______________________________________________
 kexec mailing list
