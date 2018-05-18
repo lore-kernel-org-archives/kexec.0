@@ -1,19 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from mail-pf0-x244.google.com ([2607:f8b0:400e:c00::244])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fJWDQ-0006wH-ER
- for kexec@lists.infradead.org; Fri, 18 May 2018 03:38:02 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1526568530-9144-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1526568530-9144-4-git-send-email-zohar@linux.vnet.ibm.com>
- <74c096ca-1ad1-799e-df3d-7b1b099333a7@schaufler-ca.com>
-Date: Thu, 17 May 2018 22:37:23 -0500
-In-Reply-To: <74c096ca-1ad1-799e-df3d-7b1b099333a7@schaufler-ca.com> (Casey
- Schaufler's message of "Thu, 17 May 2018 17:24:36 -0700")
-Message-ID: <87y3ghhbws.fsf@xmission.com>
+ id 1fJXcX-00045N-Rj
+ for kexec@lists.infradead.org; Fri, 18 May 2018 05:08:03 +0000
+Received: by mail-pf0-x244.google.com with SMTP id a20-v6so3172905pfo.0
+ for <kexec@lists.infradead.org>; Thu, 17 May 2018 22:07:50 -0700 (PDT)
+Date: Fri, 18 May 2018 14:07:47 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v9 04/11] arm64: kexec_file: allocate memory walking
+ through memblock list
+Message-ID: <20180518050741.GJ2737@linaro.org>
+References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
+ <20180425062629.29404-5-takahiro.akashi@linaro.org>
+ <648656ef-1f1e-b0ac-581c-aba1e62f4eee@arm.com>
+ <20180507055906.GE11326@linaro.org>
+ <20180517021024.GI24627@MiWiFi-R3L-srv>
+ <20180517021547.GJ24627@MiWiFi-R3L-srv>
+ <d9b8a3ca-93bc-87f9-1316-f45c0dfe47ae@arm.com>
+ <20180518013735.GP24627@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 3/9] security: define security_kernel_read_blob()
- wrapper
+Content-Disposition: inline
+In-Reply-To: <20180518013735.GP24627@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,59 +33,174 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Casey Schaufler <casey@schaufler-ca.com>
-Cc: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Andres Rodriguez <andresx7@gmail.com>, linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.vnet.ibm.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: herbert@gondor.apana.org.au, arnd@arndb.de, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-Casey Schaufler <casey@schaufler-ca.com> writes:
+Baoquan,
 
-> On 5/17/2018 7:48 AM, Mimi Zohar wrote:
->> In order for LSMs and IMA-appraisal to differentiate between the original
->> and new syscalls (eg. kexec, kernel modules, firmware), both the original
->> and new syscalls must call an LSM hook.
->>
->> Commit 2e72d51b4ac3 ("security: introduce kernel_module_from_file hook")
->> introduced calling security_kernel_module_from_file() in both the original
->> and new syscalls.  Commit a1db74209483 ("module: replace
->> copy_module_from_fd with kernel version") replaced these LSM calls with
->> security_kernel_read_file().
->>
->> Commit e40ba6d56b41 ("firmware: replace call to fw_read_file_contents()
->> with kernel version") and commit b804defe4297  ("kexec: replace call to
->> copy_file_from_fd() with kernel version") replaced their own version of
->> reading a file from the kernel with the generic
->> kernel_read_file_from_path/fd() versions, which call the pre and post
->> security_kernel_read_file LSM hooks.
->>
->> Missing are LSM calls in the original kexec syscall and firmware sysfs
->> fallback method.  From a technical perspective there is no justification
->> for defining a new LSM hook, as the existing security_kernel_read_file()
->> works just fine.  The original syscalls, however, do not read a file, so
->> the security hook name is inappropriate.  Instead of defining a new LSM
->> hook, this patch defines security_kernel_read_blob() as a wrapper for
->> the existing LSM security_kernel_file_read() hook.
->
-> What a marvelous opportunity to bikeshed!
->
-> I really dislike adding another security_ interface just because
-> the name isn't quite right. Especially a wrapper, which is just
-> code and execution overhead. Why not change security_kernel_read_file()
-> to security_kernel_read_blob() everywhere and be done?
+On Fri, May 18, 2018 at 09:37:35AM +0800, Baoquan He wrote:
+> On 05/17/18 at 07:04pm, James Morse wrote:
+> > Hi Baoquan,
+> > 
+> > On 17/05/18 03:15, Baoquan He wrote:
+> > > On 05/17/18 at 10:10am, Baoquan He wrote:
+> > >> On 05/07/18 at 02:59pm, AKASHI Takahiro wrote:
+> > >>> On Tue, May 01, 2018 at 06:46:09PM +0100, James Morse wrote:
+> > >>>> On 25/04/18 07:26, AKASHI Takahiro wrote:
+> > >>>>> We need to prevent firmware-reserved memory regions, particularly EFI
+> > >>>>> memory map as well as ACPI tables, from being corrupted by loading
+> > >>>>> kernel/initrd (or other kexec buffers). We also want to support memory
+> > >>>>> allocation in top-down manner in addition to default bottom-up.
+> > >>>>> So let's have arm64 specific arch_kexec_walk_mem() which will search
+> > >>>>> for available memory ranges in usable memblock list,
+> > >>>>> i.e. !NOMAP & !reserved, 
+> > >>>>
+> > >>>>> instead of system resource tree.
+> > >>>>
+> > >>>> Didn't we try to fix the system-resource-tree in order to fix regular-kexec to
+> > >>>> be safe in the EFI-memory-map/ACPI-tables case?
+> > >>>>
+> > >>>> It would be good to avoid having two ways of doing this, and I would like to
+> > >>>> avoid having extra arch code...
+> > >>>
+> > >>> I know what you mean.
+> > >>> /proc/iomem or system resource is, in my opinion, not the best place to
+> > >>> describe memory usage of kernel but rather to describe *physical* hardware
+> > >>> layout. As we are still discussing about "reserved" memory, I don't want
+> > >>> to depend on it.
+> > >>> Along with memblock list, we will have more accurate control over memory
+> > >>> usage.
+> > >>
+> > >> In kexec-tools, we see any usable memory as candidate which can be used
+> > > 
+> > > Here I said 'any', it's not accurate. Those memory which need be passed
+> > > to 2nd kernel for use need be excluded, just as we have done in
+> > > kexec-tools.
+> > > 
+> > >> to load kexec kernel image/initrd etc. However kexec loading is a
+> > >> preparation work, it just books those position for later kexec kernel
+> > >> jumping after "kexec -e", that is why we need kexec_buf to remember
+> > >> them and do the real content copy of kernel/initrd.
+> > 
+> > The problem we have on arm64 is /proc/iomem is being used for two things.
+> > 1) Kexec's this is memory I can book for the new kernel.
+> > 2) Kdump's this is memory I must describe for vmcore.
+> > 
+> > We get the memory map from UEFI via the EFI stub, and leave it in
+> > memblock_reserved() memory. A new kexec kernel needs this to boot: it mustn't
+> > overwrite it. The same goes for the ACPI tables, they could be reclaimed and
+> > used as memory, but the new kexec kernel needs them to boot, they are
+> > memblock_reserved() too.
+> 
+> Thanks for these details. Seems arm64 is different. In x86 64 memblock
 
-Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Thanks to James from me, too.
 
-Nack on this sharing nonsense.  These two interfaces do not share any
-code in their implementations other than the if statement to distinguish
-between the two cases.
+> is used as bootmem allocator and will be released when buddy takes over.
+> Mainly, using memblock may bring concern that kexec kernel
+> will jump to a unfixed position. This creates an unexpected effect as
+> KASLR is doing, namely kernel could be put at a random position. As we
 
-Casey you are wrong.  We need something different here.
+I don't think that this would be a problem on arm64.
 
-Mimi a wrapper does not cut it.   The code is not shared.  Despite using
-a single function call today.
+> know, kexec was invented for fast kernel dev testing by bypassing
+> firmware reset, and has been taken to reboot those huge server with
+> thousands of devices and large memory for business currently. This extra
+> unpected KASLR effect may cause annoyance even though people have
+> disabled KASLR explicitly for a specific testing purpose.
+> 
+> Besides, discarding the /proc/iomem scanning but taking memblock instead
+> in kernel space works for kexec loading for the time being, the flaw of
+> /proc/iomem still exists and cause problem for user space kexec-tools,
+> as pointed out. Do we have a plan for that?
 
-If we want comprehensible and maintainable code in the security modules
-we need to split these two pieces of functionality apart.
+This was the difference between my and James' standpoint (at leas initially).
+James didn't want to require userspace changes to fix the issue, but
+the reality is that, without modifying it, we can't support kexec and kdump
+perfectly as James explained in his email.
 
-Eric
+> > 
+> > If we knock all memblock_reserved() regions out of /proc/iomem then kdump
+> > doesn't work, because /proc/iomem is only generated once. Its a snapshot. The
+> > initcode/data is an example of memory we release from memblock_reserve() after
+> > this, then gets used for data we need in the vmcore.
+> 
+> Hmm, I'm a little confused here. We have defined different iores type
+> for different memory region. If acpi need be reused by kdump/kexec, we
+> can change to not reclaim it, and add them into /proc/iomem in order to
+> notify components which rely on them to process.
+> 
+> 
+> enum {  
+>         IORES_DESC_NONE                         = 0,
+>         IORES_DESC_CRASH_KERNEL                 = 1,
+>         IORES_DESC_ACPI_TABLES                  = 2,
+>         IORES_DESC_ACPI_NV_STORAGE              = 3,
+>         IORES_DESC_PERSISTENT_MEMORY            = 4,
+>         IORES_DESC_PERSISTENT_MEMORY_LEGACY     = 5,
+>         IORES_DESC_DEVICE_PRIVATE_MEMORY        = 6,
+>         IORES_DESC_DEVICE_PUBLIC_MEMORY         = 7,
+> };
+
+I don't think that is the point.
+Let me give you analogy: x86 has e820 and handles memory layout in kexec/
+kdump with *x86-specific* code in kexec-tools, right? We want to do
+something similar without introducing e820-like data.
+In the current implementation on arm64, however, kexec-tools will only
+recognize top-level entries in /proc/iomem leaving subsequent level of
+entries ignored (except kernel text & data).
+So adding extra hierarchy to /proc/iomem will break the compatibility
+in any way.
+
+The main reason that I insist on memblock in my kexec_file patch
+is that we seem to be still far from reaching to agreement and
+final solution in kexec (opposite to kexec_file) case.
+
+Thanks,
+-Takahiro AKASHI
+
+
+> 
+> Just walk around and talk about it, limited by poor arm64 knowledge, I
+> may not have a complete view. If it's not like what I think about, I
+> will stop, and can come back when I get more background knowledge.
+> 
+> Thanks
+> Baoquan
+> 
+> > 
+> > Ideally we would describe all this in /proc/iomem with:
+> > | 8001e80000-83ff186fff : System RAM
+> > |   8002080000-8002feffff : [Data you really need to boot]
+> > 
+> > kexec-tools should not overwrite 'data you really need to boot' unless it knows
+> > what it is, and that the system will never need it again. (examples: overwrite
+> > the ACPI tables when booting a non-acpi kernel, overwrite the UEFI memory map if
+> > the DT has been regenerated for a non-uefi kernel)
+> > 
+> > But, kexec-tools doesn't parse those second level entries properly. We have a
+> > bug in user-space, and a bug in the kernel.
+> > 
+> > Because /proc/iomem is being used for two things, and kexec-tools only parses
+> > one level, I don't think we can fix this in the kernel without breaking one of
+> > the use-cases. I think Akashi's fix user-space too approach is the most
+> > pragmatic approach.
+> > 
+> > 
+> > >> Here you use
+> > >> memblock to search available memory, isn't it deviating too far away
+> > >> from the original design in kexec-tools. Assume kexec loading and
+> > >> kexec_file loading should be consistent on loading even though they are
+> > >> done in different space, kernel space and user space.
+> > 
+> > Its much easier for us to parse memblock in the kernel as the helpers step over
+> > the regions we know we don't want. For the resource list we would need to
+> > strcmp(), and a bunch of handling for the second level entries.
+> > 
+> > 
+> > Thanks,
+> > 
+> > James
 
 _______________________________________________
 kexec mailing list
