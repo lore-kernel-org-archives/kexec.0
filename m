@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x244.google.com ([2607:f8b0:400e:c01::244])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fJa1q-0002PP-Bh
- for kexec@lists.infradead.org; Fri, 18 May 2018 07:42:20 +0000
-Received: by mail-pl0-x244.google.com with SMTP id c19-v6so4101296pls.6
- for <kexec@lists.infradead.org>; Fri, 18 May 2018 00:42:07 -0700 (PDT)
-Date: Fri, 18 May 2018 16:42:04 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v9 05/11] arm64: kexec_file: load initrd and device-tree
-Message-ID: <20180518074203.GM2737@linaro.org>
-References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
- <20180425062629.29404-6-takahiro.akashi@linaro.org>
- <c10624c0-9962-af38-1dd5-656902180ace@arm.com>
- <20180518071133.GL2737@linaro.org>
+ id 1fJagf-00038x-0V
+ for kexec@lists.infradead.org; Fri, 18 May 2018 08:24:53 +0000
+From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
+Subject: RE: [PATCH v2] makedumpfile: Use integer arithmetics for the
+ progress bar
+Date: Fri, 18 May 2018 08:22:10 +0000
+Message-ID: <61D4E5D821F1674CB87C99F080A210BE011AD57E@BPXM01GP.gisp.nec.co.jp>
+References: <20180409114020.1b48ba8c@ezekiel.suse.cz>
+ <90ec5728-2318-1074-0fc2-b02a69e6c7f4@redhat.com>
+ <20180410094707.0d1ec7f2@ezekiel.suse.cz>
+ <20180410102852.316f07df@ezekiel.suse.cz>
+ <20180410133929.49835969@ezekiel.suse.cz>
+In-Reply-To: <20180410133929.49835969@ezekiel.suse.cz>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180518071133.GL2737@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,271 +28,160 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Petr Tesarik <ptesarik@suse.cz>, lijiang <lijiang@redhat.com>
+Cc: kexec-ml <kexec@lists.infradead.org>, Keiichi Nakamura <kei-nakamura@vt.jp.nec.com>
 
-On Fri, May 18, 2018 at 04:11:35PM +0900, AKASHI Takahiro wrote:
-> James,
-> 
-> On Tue, May 15, 2018 at 05:20:00PM +0100, James Morse wrote:
-> > Hi Akashi,
-> > 
-> > On 25/04/18 07:26, AKASHI Takahiro wrote:
-> > > load_other_segments() is expected to allocate and place all the necessary
-> > > memory segments other than kernel, including initrd and device-tree
-> > > blob (and elf core header for crash).
-> > > While most of the code was borrowed from kexec-tools' counterpart,
-> > > users may not be allowed to specify dtb explicitly, instead, the dtb
-> > > presented by a boot loader is reused.
-> > 
-> > (Nit: "a boot loader" -> "the original boot loader")
-> 
-> OK
-> 
-> > > arch_kimage_kernel_post_load_cleanup() is responsible for freeing arm64-
-> > > specific data allocated in load_other_segments().
-> > 
-> > 
-> > > diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> > > index f9ebf54ca247..b3b9b1725d8a 100644
-> > > --- a/arch/arm64/kernel/machine_kexec_file.c
-> > > +++ b/arch/arm64/kernel/machine_kexec_file.c
-> > > @@ -13,7 +13,26 @@
-> > >  #include <linux/ioport.h>
-> > >  #include <linux/kernel.h>
-> > >  #include <linux/kexec.h>
-> > > +#include <linux/libfdt.h>
-> > >  #include <linux/memblock.h>
-> > > +#include <linux/of_fdt.h>
-> > > +#include <linux/types.h>
-> > > +#include <asm/byteorder.h>
-> > > +
-> > > +static int __dt_root_addr_cells;
-> > > +static int __dt_root_size_cells;
-> > 
-> > > @@ -55,3 +74,144 @@ int arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> > >  
-> > >  	return ret;
-> > >  }
-> > > +
-> > > +static int setup_dtb(struct kimage *image,
-> > > +		unsigned long initrd_load_addr, unsigned long initrd_len,
-> > > +		char *cmdline, unsigned long cmdline_len,
-> > > +		char **dtb_buf, size_t *dtb_buf_len)
-> > > +{
-> > > +	char *buf = NULL;
-> > > +	size_t buf_size;
-> > > +	int nodeoffset;
-> > > +	u64 value;
-> > > +	int range_len;
-> > > +	int ret;
-> > > +
-> > > +	/* duplicate dt blob */
-> > > +	buf_size = fdt_totalsize(initial_boot_params);
-> > > +	range_len = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
-> > 
-> > These two cells values are 0 here. Did you want
-> > arch_kexec_file_init() in patch 7 in this patch?
-> > 
-> > Ah, range_len isn't used, so, did you want the cells values and this range_len
-> > thing in in patch 7!?
-> 
-> Umm, this problem has long existed since my v1 :)
-> I might better re-think about patch order.
-> 
-> > 
-> > > +
-> > > +	if (initrd_load_addr)
-> > > +		buf_size += fdt_prop_len("linux,initrd-start", sizeof(u64))
-> > > +				+ fdt_prop_len("linux,initrd-end", sizeof(u64));
-> > > +
-> > > +	if (cmdline)
-> > > +		buf_size += fdt_prop_len("bootargs", cmdline_len + 1);
-> > 
-> > I can't find where fdt_prop_len() .... oh, patch 7. fdt_prop_len() doesn't look
-> > like the sort of thing that should be created here, but I agree there isn't an
-> > existing API to do this.
-> 
-> Will take care of it.
-> 
-> 
-> > (This must be why powerpc guesses that the fdt won't be more than double in size).
-> > 
-> > 
-> > > +	buf = vmalloc(buf_size);
-> > > +	if (!buf) {
-> > > +		ret = -ENOMEM;
-> > > +		goto out_err;
-> > > +	}
-> > > +
-> > > +	ret = fdt_open_into(initial_boot_params, buf, buf_size);
-> > > +	if (ret)
-> > > +		goto out_err;
-> > > +
-> > > +	nodeoffset = fdt_path_offset(buf, "/chosen");
-> > > +	if (nodeoffset < 0)
-> > > +		goto out_err;
-> > > +
-> > > +	/* add bootargs */
-> > > +	if (cmdline) {
-> > > +		ret = fdt_setprop(buf, nodeoffset, "bootargs",
-> > > +						cmdline, cmdline_len + 1);
-> > 
-> > fdt_setprop_string()?
-> 
-> OK
+Hi Petr and Lianbo,
 
-cmdline_len is passed by system call, kexec_file_load(), and this means
-that we can't believe that cmdline is always terminated with '\0'.
-> 
-> > 
-> > > +		if (ret)
-> > > +			goto out_err;
-> > > +	}
-> > > +
-> > > +	/* add initrd-* */
-> > > +	if (initrd_load_addr) {
-> > > +		value = cpu_to_fdt64(initrd_load_addr);
-> > > +		ret = fdt_setprop(buf, nodeoffset, "linux,initrd-start",
-> > > +				&value, sizeof(value));
-> > 
-> > sizeof(value) was assumed to be the same as sizeof(u64) earlier.
-> > fdt_setprop_u64()?
-> 
-> OK
-> 
-> > 
-> > > +		if (ret)
-> > > +			goto out_err;
-> > > +
-> > > +		value = cpu_to_fdt64(initrd_load_addr + initrd_len);
-> > > +		ret = fdt_setprop(buf, nodeoffset, "linux,initrd-end",
-> > > +				&value, sizeof(value));
-> > > +		if (ret)
-> > > +			goto out_err;
-> > > +	}
-> > > +
-> > > +	/* trim a buffer */
-> > > +	fdt_pack(buf);
-> > > +	*dtb_buf = buf;
-> > > +	*dtb_buf_len = fdt_totalsize(buf);
-> > > +
-> > > +	return 0;
-> > > +
-> > > +out_err:
-> > > +	vfree(buf);
-> > > +	return ret;
-> > > +}
-> > 
-> > While powerpc has some similar code for updating the initrd and cmdline, it
-> > makes different assumptions about the size of the dt, and has different behavior
-> > for memreserve. (looks like we don't expect the initramfs to be memreserved).
-> > Lets leave unifying that stuff where possible for the future.
-> 
-> Sure
-> 
-> > > +int load_other_segments(struct kimage *image,
-> > > +			char *initrd, unsigned long initrd_len,
-> > > +			char *cmdline, unsigned long cmdline_len)
-> > > +{
-> > > +	struct kexec_segment *kern_seg;
-> > > +	struct kexec_buf kbuf;
-> > > +	unsigned long initrd_load_addr = 0;
-> > > +	char *dtb = NULL;
-> > > +	unsigned long dtb_len = 0;
-> > > +	int ret = 0;
-> > > +
-> > > +	kern_seg = &image->segment[image->arch.kern_segment];
-> > > +	kbuf.image = image;
-> > > +	/* not allocate anything below the kernel */
-> > > +	kbuf.buf_min = kern_seg->mem + kern_seg->memsz;
-> > 
-> > > +	/* load initrd */
-> > > +	if (initrd) {
-> > > +		kbuf.buffer = initrd;
-> > > +		kbuf.bufsz = initrd_len;
-> > > +		kbuf.memsz = initrd_len;
-> > 
-> > > +		kbuf.buf_align = 0;
-> > 
-> > I'm surprised there initrd has no alignment requirement,
-> 
-> MeToo.
-> 
-> > but kexec_add_buffer()
-> > rounds this up to PAGE_SIZE.
-> 
-> It seems that kimage_load_segment() requires this, but I'm not sure.
-> 
-> > 
-> > > +		/* within 1GB-aligned window of up to 32GB in size */
-> > > +		kbuf.buf_max = round_down(kern_seg->mem, SZ_1G)
-> > > +						+ (unsigned long)SZ_1G * 32;
-> > > +		kbuf.top_down = false;
-> > > +
-> > > +		ret = kexec_add_buffer(&kbuf);
-> > > +		if (ret)
-> > > +			goto out_err;
-> > > +		initrd_load_addr = kbuf.mem;
-> > > +
-> > > +		pr_debug("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-> > > +				initrd_load_addr, initrd_len, initrd_len);
-> > > +	}
-> > > +
-> > > +	/* load dtb blob */
-> > > +	ret = setup_dtb(image, initrd_load_addr, initrd_len,
-> > > +				cmdline, cmdline_len, &dtb, &dtb_len);
-> > > +	if (ret) {
-> > > +		pr_err("Preparing for new dtb failed\n");
-> > > +		goto out_err;
-> > > +	}
-> > > +
-> > > +	kbuf.buffer = dtb;
-> > > +	kbuf.bufsz = dtb_len;
-> > > +	kbuf.memsz = dtb_len;
-> > > +	/* not across 2MB boundary */
-> > > +	kbuf.buf_align = SZ_2M;
-> > > +	kbuf.buf_max = ULONG_MAX;
-> > > +	kbuf.top_down = true;
-> > > +
-> > > +	ret = kexec_add_buffer(&kbuf);
-> > > +	if (ret)
-> > > +		goto out_err;
-> > > +	image->arch.dtb_mem = kbuf.mem;
-> > > +	image->arch.dtb_buf = dtb;
-> > > +
-> > > +	pr_debug("Loaded dtb at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-> > > +			kbuf.mem, dtb_len, dtb_len);
-> > > +
-> > > +	return 0;
-> > > +
-> > > +out_err:
-> > > +	vfree(dtb);
-> > > +	image->arch.dtb_buf = NULL;
-> > 
-> > Won't kimage_file_post_load_cleanup() always be called if we return an error
-> > here? Why not leave the free()ing until then?
-> 
-> Right.
-> The reason why I left the code here was that we'd better locally clean up
-> all the stuff that were locally allocated if we trivially need to (and can)
-> do so.
-> 
-> As it's redundant, I will remove it.
+Sorry for the late reply.
+I will merge the patch into V1.6.4.
 
-will remove only "image->arch.dtb_buf = NULL."
+Thanks
+Tachibana
 
-> Thanks,
-> -Takahiro AKASHI
+
+> -----Original Message-----
+> From: Petr Tesarik [mailto:ptesarik@suse.cz]
+> Sent: Tuesday, April 10, 2018 8:39 PM
+> To: lijiang <lijiang@redhat.com>
+> Cc: Tachibana Masaki() <mas-tachibana@vf.jp.nec.com>; Nakayama Takuya() <tak-nakayama@tg.jp.nec.com>;
+> kexec-ml <kexec@lists.infradead.org>
+> Subject: [PATCH v2] makedumpfile: Use integer arithmetics for the progress bar
 > 
-> > 
-> > > +	return ret;
-> > > +}
-> > 
-> > 
-> > 
-> > Thanks,
-> > 
-> > James
+> Essentially, the estimated remaining time is calculated as:
+> 
+>   elapsed * (100 - progress) / progress
+> 
+> Since the calculation is done with floating point numbers, it had
+> masked a division by zero (if progress is 0), producing a NaN or
+> infinity. The following conversion to int produces INT_MIN with GCC
+> on major platforms, which originally overflowed the eta buffer. This
+> bug was fixed by commit e5f96e79d69a1d295f19130da00ec6514d28a8ae,
+> but conversion of NaN and infinity is undefined behaviour in ISO C,
+> plus the corresponding output is still wrong, e.g.:
+> 
+> Copying data                                      : [  0.0 %] /  eta: -9223372036854775808s
+> 
+> Most importantly, using the FPU for a progress bar is overkill.
+> Since the progress percentage is reported with one decimal digit
+> following the decimal point, it can be stored as an integer tenths
+> of a percent.
+> 
+> Second, the estimated time can be calculated in milliseconds. Up to
+> 49 days can be represented this way even on 32-bit platforms. Note
+> that delta.tv_usec can be ignored in the subtraction, because the
+> resulting eta is printed as seconds, so elapsed microseconds are
+> irrelevant.
+> 
+> Last but not least, the original buffer overflow was probably caused
+> by the wrong assumption that integers < 100 can be interpreted with
+> less than 3 ASCII characters, but that's not true for signed
+> integers. To make eta_to_human_short() a bit safer, use an unsigned
+> integer type.
+> 
+> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> ---
+>  print_info.c | 43 ++++++++++++++++++++-----------------------
+>  1 file changed, 20 insertions(+), 23 deletions(-)
+> 
+> diff --git a/print_info.c b/print_info.c
+> index 09e215a..6bfcd11 100644
+> --- a/print_info.c
+> +++ b/print_info.c
+> @@ -16,8 +16,6 @@
+>  #include "print_info.h"
+>  #include <time.h>
+>  #include <string.h>
+> -#include <stdint.h>
+> -#include <inttypes.h>
+> 
+>  #define PROGRESS_MAXLEN		"50"
+> 
+> @@ -354,21 +352,18 @@ static void calc_delta(struct timeval *tv_start, struct timeval *delta)
+>  }
+> 
+>  /* produce less than 12 bytes on msg */
+> -static int eta_to_human_short (int64_t secs, char* msg, int maxsize)
+> +static int eta_to_human_short (unsigned long secs, char* msg)
+>  {
+>  	strcpy(msg, "eta: ");
+>  	msg += strlen("eta: ");
+>  	if (secs < 100)
+> -		snprintf(msg, maxsize, "%"PRId64"s", secs);
+> +		sprintf(msg, "%lus", secs);
+>  	else if (secs < 100 * 60)
+> -		snprintf(msg, maxsize, "%"PRId64"m""%"PRId64"s",
+> -			secs / 60, secs % 60);
+> +		sprintf(msg, "%lum%lus", secs / 60, secs % 60);
+>  	else if (secs < 48 * 3600)
+> -		snprintf(msg, maxsize, "%"PRId64"h""%"PRId64"m",
+> -			secs / 3600, (secs / 60) % 60);
+> +		sprintf(msg, "%luh%lum", secs / 3600, (secs / 60) % 60);
+>  	else if (secs < 100 * 86400)
+> -		snprintf(msg, maxsize, "%"PRId64"d""%"PRId64"h",
+> -			secs / 86400, (secs / 3600) % 24);
+> +		sprintf(msg, "%lud%luh", secs / 86400, (secs / 3600) % 24);
+>  	else
+>  		sprintf(msg, ">2day");
+>  	return 0;
+> @@ -378,37 +373,39 @@ static int eta_to_human_short (int64_t secs, char* msg, int maxsize)
+>  void
+>  print_progress(const char *msg, unsigned long current, unsigned long end, struct timeval *start)
+>  {
+> -	float progress;
+> +	unsigned progress;	/* in promilles (tenths of a percent) */
+>  	time_t tm;
+>  	static time_t last_time = 0;
+>  	static unsigned int lapse = 0;
+>  	static const char *spinner = "/|\\-";
+>  	struct timeval delta;
+> -	int64_t eta;
+> -	char eta_msg[32] = " ";
+> +	unsigned long eta;
+> +	char eta_msg[16] = " ";
+> 
+>  	if (current < end) {
+>  		tm = time(NULL);
+>  		if (tm - last_time < 1)
+>  			return;
+>  		last_time = tm;
+> -		progress = (float)current * 100 / end;
+> +		progress = current * 1000 / end;
+>  	} else
+> -		progress = 100;
+> +		progress = 1000;
+> 
+> -	if (start != NULL) {
+> +	if (start != NULL && progress != 0) {
+>  		calc_delta(start, &delta);
+> -		eta = delta.tv_sec + delta.tv_usec / 1e6;
+> -		eta = (100 - progress) * eta / progress;
+> -		eta_to_human_short(eta, eta_msg, sizeof(eta_msg));
+> +		eta = 1000 * delta.tv_sec + delta.tv_usec / 1000;
+> +		eta = eta / progress - delta.tv_sec;
+> +		eta_to_human_short(eta, eta_msg);
+>  	}
+>  	if (flag_ignore_r_char) {
+> -		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s\n",
+> -			     msg, progress, spinner[lapse % 4], eta_msg);
+> +		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3u.%u %%] %c  %16s\n",
+> +			     msg, progress / 10, progress % 10,
+> +			     spinner[lapse % 4], eta_msg);
+>  	} else {
+>  		PROGRESS_MSG("\r");
+> -		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s",
+> -			     msg, progress, spinner[lapse % 4], eta_msg);
+> +		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3u.%u %%] %c  %16s",
+> +			     msg, progress / 10, progress % 10,
+> +			     spinner[lapse % 4], eta_msg);
+>  	}
+>  	lapse++;
+>  }
+> --
+> 2.13.6
+> 
+
+
 
 _______________________________________________
 kexec mailing list
