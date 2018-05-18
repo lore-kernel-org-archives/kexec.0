@@ -1,32 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fJdba-0006Qq-Q2
- for kexec@lists.infradead.org; Fri, 18 May 2018 11:31:27 +0000
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w4IBT0tb073507
- for <kexec@lists.infradead.org>; Fri, 18 May 2018 07:31:11 -0400
-Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2j1swd38c1-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 18 May 2018 07:31:11 -0400
-Received: from localhost
- by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Fri, 18 May 2018 12:31:08 +0100
-Subject: Re: [PATCH v2 3/9] security: define security_kernel_read_blob()
- wrapper
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Fri, 18 May 2018 07:30:50 -0400
-In-Reply-To: <87y3ghhbws.fsf@xmission.com>
-References: <1526568530-9144-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1526568530-9144-4-git-send-email-zohar@linux.vnet.ibm.com>
- <74c096ca-1ad1-799e-df3d-7b1b099333a7@schaufler-ca.com>
- <87y3ghhbws.fsf@xmission.com>
-Mime-Version: 1.0
-Message-Id: <1526643050.3632.127.camel@linux.vnet.ibm.com>
+Received: from mx2.suse.de ([195.135.220.15])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fJemp-0007bP-Lw
+ for kexec@lists.infradead.org; Fri, 18 May 2018 12:47:17 +0000
+Date: Fri, 18 May 2018 14:46:49 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH v2] makedumpfile: Use integer arithmetics for the
+ progress bar
+Message-ID: <20180518144649.7c362ca1@ezekiel.suse.cz>
+In-Reply-To: <61D4E5D821F1674CB87C99F080A210BE011AD57E@BPXM01GP.gisp.nec.co.jp>
+References: <20180409114020.1b48ba8c@ezekiel.suse.cz>
+ <90ec5728-2318-1074-0fc2-b02a69e6c7f4@redhat.com>
+ <20180410094707.0d1ec7f2@ezekiel.suse.cz>
+ <20180410102852.316f07df@ezekiel.suse.cz>
+ <20180410133929.49835969@ezekiel.suse.cz>
+ <61D4E5D821F1674CB87C99F080A210BE011AD57E@BPXM01GP.gisp.nec.co.jp>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,70 +24,183 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, Casey Schaufler <casey@schaufler-ca.com>
-Cc: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R
- . Rodriguez" <mcgrof@kernel.org>, Andres Rodriguez <andresx7@gmail.com>, linux-integrity@vger.kernel.org, Stephen Smalley <sds@tycho.nsa.gov>
+To: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
+Cc: kexec-ml <kexec@lists.infradead.org>, lijiang <lijiang@redhat.com>, Keiichi Nakamura <kei-nakamura@vt.jp.nec.com>
 
-T24gVGh1LCAyMDE4LTA1LTE3IGF0IDIyOjM3IC0wNTAwLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90
-ZToKPiBDYXNleSBTY2hhdWZsZXIgPGNhc2V5QHNjaGF1Zmxlci1jYS5jb20+IHdyaXRlczoKPiAK
-PiA+IE9uIDUvMTcvMjAxOCA3OjQ4IEFNLCBNaW1pIFpvaGFyIHdyb3RlOgo+ID4+IEluIG9yZGVy
-IGZvciBMU01zIGFuZCBJTUEtYXBwcmFpc2FsIHRvIGRpZmZlcmVudGlhdGUgYmV0d2VlbiB0aGUg
-b3JpZ2luYWwKPiA+PiBhbmQgbmV3IHN5c2NhbGxzIChlZy4ga2V4ZWMsIGtlcm5lbCBtb2R1bGVz
-LCBmaXJtd2FyZSksIGJvdGggdGhlIG9yaWdpbmFsCj4gPj4gYW5kIG5ldyBzeXNjYWxscyBtdXN0
-IGNhbGwgYW4gTFNNIGhvb2suCj4gPj4KPiA+PiBDb21taXQgMmU3MmQ1MWI0YWMzICgic2VjdXJp
-dHk6IGludHJvZHVjZSBrZXJuZWxfbW9kdWxlX2Zyb21fZmlsZSBob29rIikKPiA+PiBpbnRyb2R1
-Y2VkIGNhbGxpbmcgc2VjdXJpdHlfa2VybmVsX21vZHVsZV9mcm9tX2ZpbGUoKSBpbiBib3RoIHRo
-ZSBvcmlnaW5hbAo+ID4+IGFuZCBuZXcgc3lzY2FsbHMuICBDb21taXQgYTFkYjc0MjA5NDgzICgi
-bW9kdWxlOiByZXBsYWNlCj4gPj4gY29weV9tb2R1bGVfZnJvbV9mZCB3aXRoIGtlcm5lbCB2ZXJz
-aW9uIikgcmVwbGFjZWQgdGhlc2UgTFNNIGNhbGxzIHdpdGgKPiA+PiBzZWN1cml0eV9rZXJuZWxf
-cmVhZF9maWxlKCkuCj4gPj4KPiA+PiBDb21taXQgZTQwYmE2ZDU2YjQxICgiZmlybXdhcmU6IHJl
-cGxhY2UgY2FsbCB0byBmd19yZWFkX2ZpbGVfY29udGVudHMoKQo+ID4+IHdpdGgga2VybmVsIHZl
-cnNpb24iKSBhbmQgY29tbWl0IGI4MDRkZWZlNDI5NyAgKCJrZXhlYzogcmVwbGFjZSBjYWxsIHRv
-Cj4gPj4gY29weV9maWxlX2Zyb21fZmQoKSB3aXRoIGtlcm5lbCB2ZXJzaW9uIikgcmVwbGFjZWQg
-dGhlaXIgb3duIHZlcnNpb24gb2YKPiA+PiByZWFkaW5nIGEgZmlsZSBmcm9tIHRoZSBrZXJuZWwg
-d2l0aCB0aGUgZ2VuZXJpYwo+ID4+IGtlcm5lbF9yZWFkX2ZpbGVfZnJvbV9wYXRoL2ZkKCkgdmVy
-c2lvbnMsIHdoaWNoIGNhbGwgdGhlIHByZSBhbmQgcG9zdAo+ID4+IHNlY3VyaXR5X2tlcm5lbF9y
-ZWFkX2ZpbGUgTFNNIGhvb2tzLgo+ID4+Cj4gPj4gTWlzc2luZyBhcmUgTFNNIGNhbGxzIGluIHRo
-ZSBvcmlnaW5hbCBrZXhlYyBzeXNjYWxsIGFuZCBmaXJtd2FyZSBzeXNmcwo+ID4+IGZhbGxiYWNr
-IG1ldGhvZC4gIEZyb20gYSB0ZWNobmljYWwgcGVyc3BlY3RpdmUgdGhlcmUgaXMgbm8ganVzdGlm
-aWNhdGlvbgo+ID4+IGZvciBkZWZpbmluZyBhIG5ldyBMU00gaG9vaywgYXMgdGhlIGV4aXN0aW5n
-IHNlY3VyaXR5X2tlcm5lbF9yZWFkX2ZpbGUoKQo+ID4+IHdvcmtzIGp1c3QgZmluZS4gIFRoZSBv
-cmlnaW5hbCBzeXNjYWxscywgaG93ZXZlciwgZG8gbm90IHJlYWQgYSBmaWxlLCBzbwo+ID4+IHRo
-ZSBzZWN1cml0eSBob29rIG5hbWUgaXMgaW5hcHByb3ByaWF0ZS4gIEluc3RlYWQgb2YgZGVmaW5p
-bmcgYSBuZXcgTFNNCj4gPj4gaG9vaywgdGhpcyBwYXRjaCBkZWZpbmVzIHNlY3VyaXR5X2tlcm5l
-bF9yZWFkX2Jsb2IoKSBhcyBhIHdyYXBwZXIgZm9yCj4gPj4gdGhlIGV4aXN0aW5nIExTTSBzZWN1
-cml0eV9rZXJuZWxfZmlsZV9yZWFkKCkgaG9vay4KPiA+Cj4gPiBXaGF0IGEgbWFydmVsb3VzIG9w
-cG9ydHVuaXR5IHRvIGJpa2VzaGVkIQo+ID4KPiA+IEkgcmVhbGx5IGRpc2xpa2UgYWRkaW5nIGFu
-b3RoZXIgc2VjdXJpdHlfIGludGVyZmFjZSBqdXN0IGJlY2F1c2UKPiA+IHRoZSBuYW1lIGlzbid0
-IHF1aXRlIHJpZ2h0LiBFc3BlY2lhbGx5IGEgd3JhcHBlciwgd2hpY2ggaXMganVzdAo+ID4gY29k
-ZSBhbmQgZXhlY3V0aW9uIG92ZXJoZWFkLiBXaHkgbm90IGNoYW5nZSBzZWN1cml0eV9rZXJuZWxf
-cmVhZF9maWxlKCkKPiA+IHRvIHNlY3VyaXR5X2tlcm5lbF9yZWFkX2Jsb2IoKSBldmVyeXdoZXJl
-IGFuZCBiZSBkb25lPwo+IAo+IE5hY2tlZC1ieTogIkVyaWMgVy4gQmllZGVybWFuIiA8ZWJpZWRl
-cm1AeG1pc3Npb24uY29tPgo+IAo+IE5hY2sgb24gdGhpcyBzaGFyaW5nIG5vbnNlbnNlLiAgVGhl
-c2UgdHdvIGludGVyZmFjZXMgZG8gbm90IHNoYXJlIGFueQo+IGNvZGUgaW4gdGhlaXIgaW1wbGVt
-ZW50YXRpb25zIG90aGVyIHRoYW4gdGhlIGlmIHN0YXRlbWVudCB0byBkaXN0aW5ndWlzaAo+IGJl
-dHdlZW4gdGhlIHR3byBjYXNlcy4KPiAKPiBDYXNleSB5b3UgYXJlIHdyb25nLiAgV2UgbmVlZCBz
-b21ldGhpbmcgZGlmZmVyZW50IGhlcmUuCj4gCj4gTWltaSBhIHdyYXBwZXIgZG9lcyBub3QgY3V0
-IGl0LiAgIFRoZSBjb2RlIGlzIG5vdCBzaGFyZWQuICBEZXNwaXRlIHVzaW5nCj4gYSBzaW5nbGUg
-ZnVuY3Rpb24gY2FsbCB0b2RheS4KPiAKPiBJZiB3ZSB3YW50IGNvbXByZWhlbnNpYmxlIGFuZCBt
-YWludGFpbmFibGUgY29kZSBpbiB0aGUgc2VjdXJpdHkgbW9kdWxlcwo+IHdlIG5lZWQgdG8gc3Bs
-aXQgdGhlc2UgdHdvIHBpZWNlcyBvZiBmdW5jdGlvbmFsaXR5IGFwYXJ0LgoKa2VybmVsX3JlYWRf
-ZmlsZSgpIGlzIGEgY29tbW9uLCBnZW5lcmljIG1ldGhvZCBvZiByZWFkaW5nIGEgZmlsZSBmcm9t
-CnRoZSBrZXJuZWwsIHdoaWNoIGlzIGJlaW5nIGNhbGxlZCBmcm9tIGEgbnVtYmVyIG9mIHBsYWNl
-cy4gwqBUaGUKa2VybmVsX3JlYWRfZmlsZV9pZCBlbnVtZXJhdGlvbiBpcyBuZWVkZWQgdG8gZGlm
-ZmVyZW50aWF0ZSBiZXR3ZWVuIHRoZQpjYWxsZXJzLiDCoFRoZSBwdXJwb3NlIG9mIHRoZSBuZXcg
-c2VjdXJpdHlfa2VybmVsX3JlYWRfZmlsZSgpIGNhbGxzIGlzCm5vdCBmb3IgdGhlIGtlcm5lbCB0
-byByZWFkIGEgZmlsZSwgYnV0IGFzIGEgbWV0aG9kIG9mIGlkZW50aWZ5aW5nIHRoZQpvcmlnaW5h
-bCBidWZmZXIgYmFzZWQgbWV0aG9kcyBjb250YWluaW5nIGEgZmlsZS4KCkhhdmluZyB0byBkZWZp
-bmUgYSBzZXBhcmF0ZSBMU00gaG9vayBmb3IgZWFjaCBvZiB0aGUgb3JpZ2luYWwsIG5vbgprZXJu
-ZWxfcmVhZF9maWxlKCksIGJ1ZmZlciBiYXNlZCBtZXRob2QgY2FsbGVycywga2luZCBvZiBtYWtl
-cyBzZW5zZSwKYXMgdGhlIGNhbGxlcnMgdGhlbXNlbHZlcyBhcmUgc3BlY2lmaWMsIGJ1dCBpcyBp
-dCByZWFsbHkgbmVjZXNzYXJ5PwpDb3VsZCB3ZSBkZWZpbmUgYSBuZXcsIGdlbmVyaWMgTFNNIGhv
-b2sgbmFtZWQKc2VjdXJpdHlfa2VybmVsX2J1ZmZlcl9kYXRhKCkgZm9yIHRoaXMgcHVycG9zZT8K
-Ck1pbWkKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
-ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Fri, 18 May 2018 08:22:10 +0000
+Masaki Tachibana <mas-tachibana@vf.jp.nec.com> wrote:
+
+> Hi Petr and Lianbo,
+
+Hi Masaki-san,
+
+> Sorry for the late reply.
+
+No problem. I know how to wait. ;-)
+
+> I will merge the patch into V1.6.4.
+
+Thank you very much!
+
+> 
+> Thanks
+> Tachibana
+> 
+> 
+> > -----Original Message-----
+> > From: Petr Tesarik [mailto:ptesarik@suse.cz]
+> > Sent: Tuesday, April 10, 2018 8:39 PM
+> > To: lijiang <lijiang@redhat.com>
+> > Cc: Tachibana Masaki() <mas-tachibana@vf.jp.nec.com>; Nakayama Takuya() <tak-nakayama@tg.jp.nec.com>;
+> > kexec-ml <kexec@lists.infradead.org>
+> > Subject: [PATCH v2] makedumpfile: Use integer arithmetics for the progress bar
+> > 
+> > Essentially, the estimated remaining time is calculated as:
+> > 
+> >   elapsed * (100 - progress) / progress
+> > 
+> > Since the calculation is done with floating point numbers, it had
+> > masked a division by zero (if progress is 0), producing a NaN or
+> > infinity. The following conversion to int produces INT_MIN with GCC
+> > on major platforms, which originally overflowed the eta buffer. This
+> > bug was fixed by commit e5f96e79d69a1d295f19130da00ec6514d28a8ae,
+> > but conversion of NaN and infinity is undefined behaviour in ISO C,
+> > plus the corresponding output is still wrong, e.g.:
+> > 
+> > Copying data                                      : [  0.0 %] /  eta: -9223372036854775808s
+> > 
+> > Most importantly, using the FPU for a progress bar is overkill.
+> > Since the progress percentage is reported with one decimal digit
+> > following the decimal point, it can be stored as an integer tenths
+> > of a percent.
+> > 
+> > Second, the estimated time can be calculated in milliseconds. Up to
+> > 49 days can be represented this way even on 32-bit platforms. Note
+> > that delta.tv_usec can be ignored in the subtraction, because the
+> > resulting eta is printed as seconds, so elapsed microseconds are
+> > irrelevant.
+> > 
+> > Last but not least, the original buffer overflow was probably caused
+> > by the wrong assumption that integers < 100 can be interpreted with
+> > less than 3 ASCII characters, but that's not true for signed
+> > integers. To make eta_to_human_short() a bit safer, use an unsigned
+> > integer type.
+> > 
+> > Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> > ---
+> >  print_info.c | 43 ++++++++++++++++++++-----------------------
+> >  1 file changed, 20 insertions(+), 23 deletions(-)
+> > 
+> > diff --git a/print_info.c b/print_info.c
+> > index 09e215a..6bfcd11 100644
+> > --- a/print_info.c
+> > +++ b/print_info.c
+> > @@ -16,8 +16,6 @@
+> >  #include "print_info.h"
+> >  #include <time.h>
+> >  #include <string.h>
+> > -#include <stdint.h>
+> > -#include <inttypes.h>
+> > 
+> >  #define PROGRESS_MAXLEN		"50"
+> > 
+> > @@ -354,21 +352,18 @@ static void calc_delta(struct timeval *tv_start, struct timeval *delta)
+> >  }
+> > 
+> >  /* produce less than 12 bytes on msg */
+> > -static int eta_to_human_short (int64_t secs, char* msg, int maxsize)
+> > +static int eta_to_human_short (unsigned long secs, char* msg)
+> >  {
+> >  	strcpy(msg, "eta: ");
+> >  	msg += strlen("eta: ");
+> >  	if (secs < 100)
+> > -		snprintf(msg, maxsize, "%"PRId64"s", secs);
+> > +		sprintf(msg, "%lus", secs);
+> >  	else if (secs < 100 * 60)
+> > -		snprintf(msg, maxsize, "%"PRId64"m""%"PRId64"s",
+> > -			secs / 60, secs % 60);
+> > +		sprintf(msg, "%lum%lus", secs / 60, secs % 60);
+> >  	else if (secs < 48 * 3600)
+> > -		snprintf(msg, maxsize, "%"PRId64"h""%"PRId64"m",
+> > -			secs / 3600, (secs / 60) % 60);
+> > +		sprintf(msg, "%luh%lum", secs / 3600, (secs / 60) % 60);
+> >  	else if (secs < 100 * 86400)
+> > -		snprintf(msg, maxsize, "%"PRId64"d""%"PRId64"h",
+> > -			secs / 86400, (secs / 3600) % 24);
+> > +		sprintf(msg, "%lud%luh", secs / 86400, (secs / 3600) % 24);
+> >  	else
+> >  		sprintf(msg, ">2day");
+> >  	return 0;
+> > @@ -378,37 +373,39 @@ static int eta_to_human_short (int64_t secs, char* msg, int maxsize)
+> >  void
+> >  print_progress(const char *msg, unsigned long current, unsigned long end, struct timeval *start)
+> >  {
+> > -	float progress;
+> > +	unsigned progress;	/* in promilles (tenths of a percent) */
+> >  	time_t tm;
+> >  	static time_t last_time = 0;
+> >  	static unsigned int lapse = 0;
+> >  	static const char *spinner = "/|\\-";
+> >  	struct timeval delta;
+> > -	int64_t eta;
+> > -	char eta_msg[32] = " ";
+> > +	unsigned long eta;
+> > +	char eta_msg[16] = " ";
+> > 
+> >  	if (current < end) {
+> >  		tm = time(NULL);
+> >  		if (tm - last_time < 1)
+> >  			return;
+> >  		last_time = tm;
+> > -		progress = (float)current * 100 / end;
+> > +		progress = current * 1000 / end;
+> >  	} else
+> > -		progress = 100;
+> > +		progress = 1000;
+> > 
+> > -	if (start != NULL) {
+> > +	if (start != NULL && progress != 0) {
+> >  		calc_delta(start, &delta);
+> > -		eta = delta.tv_sec + delta.tv_usec / 1e6;
+> > -		eta = (100 - progress) * eta / progress;
+> > -		eta_to_human_short(eta, eta_msg, sizeof(eta_msg));
+> > +		eta = 1000 * delta.tv_sec + delta.tv_usec / 1000;
+> > +		eta = eta / progress - delta.tv_sec;
+> > +		eta_to_human_short(eta, eta_msg);
+> >  	}
+> >  	if (flag_ignore_r_char) {
+> > -		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s\n",
+> > -			     msg, progress, spinner[lapse % 4], eta_msg);
+> > +		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3u.%u %%] %c  %16s\n",
+> > +			     msg, progress / 10, progress % 10,
+> > +			     spinner[lapse % 4], eta_msg);
+> >  	} else {
+> >  		PROGRESS_MSG("\r");
+> > -		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s",
+> > -			     msg, progress, spinner[lapse % 4], eta_msg);
+> > +		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3u.%u %%] %c  %16s",
+> > +			     msg, progress / 10, progress % 10,
+> > +			     spinner[lapse % 4], eta_msg);
+> >  	}
+> >  	lapse++;
+> >  }
+> > --
+> > 2.13.6
+> >   
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
