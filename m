@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fJagf-00038x-0V
- for kexec@lists.infradead.org; Fri, 18 May 2018 08:24:53 +0000
-From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
-Subject: RE: [PATCH v2] makedumpfile: Use integer arithmetics for the
- progress bar
-Date: Fri, 18 May 2018 08:22:10 +0000
-Message-ID: <61D4E5D821F1674CB87C99F080A210BE011AD57E@BPXM01GP.gisp.nec.co.jp>
-References: <20180409114020.1b48ba8c@ezekiel.suse.cz>
- <90ec5728-2318-1074-0fc2-b02a69e6c7f4@redhat.com>
- <20180410094707.0d1ec7f2@ezekiel.suse.cz>
- <20180410102852.316f07df@ezekiel.suse.cz>
- <20180410133929.49835969@ezekiel.suse.cz>
-In-Reply-To: <20180410133929.49835969@ezekiel.suse.cz>
-Content-Language: ja-JP
+Received: from mail-pl0-x244.google.com ([2607:f8b0:400e:c01::244])
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fJcA8-000317-MZ
+ for kexec@lists.infradead.org; Fri, 18 May 2018 09:59:02 +0000
+Received: by mail-pl0-x244.google.com with SMTP id u6-v6so4304386pls.9
+ for <kexec@lists.infradead.org>; Fri, 18 May 2018 02:58:49 -0700 (PDT)
+Date: Fri, 18 May 2018 18:58:48 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v9 07/11] arm64: kexec_file: add crash dump support
+Message-ID: <20180518095847.GO2737@linaro.org>
+References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
+ <20180425062629.29404-8-takahiro.akashi@linaro.org>
+ <f8d8305d-42f5-e1e2-20c4-733cb38cbb8d@arm.com>
+ <3d70c7d1-4985-a427-ecc6-a7edc84edfff@arm.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3d70c7d1-4985-a427-ecc6-a7edc84edfff@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,160 +28,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>, lijiang <lijiang@redhat.com>
-Cc: kexec-ml <kexec@lists.infradead.org>, Keiichi Nakamura <kei-nakamura@vt.jp.nec.com>
+To: James Morse <james.morse@arm.com>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-Hi Petr and Lianbo,
+On Wed, May 16, 2018 at 09:34:41AM +0100, James Morse wrote:
+> Hi Akashi,
+> 
+> On 15/05/18 18:11, James Morse wrote:
+> > On 25/04/18 07:26, AKASHI Takahiro wrote:
+> >> Enabling crash dump (kdump) includes
+> >> * prepare contents of ELF header of a core dump file, /proc/vmcore,
+> >>   using crash_prepare_elf64_headers(), and
+> >> * add two device tree properties, "linux,usable-memory-range" and
+> >>   "linux,elfcorehdr", which represent repsectively a memory range
+> >>   to be used by crash dump kernel and the header's location
+> 
+> >> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> >> index 37c0a9dc2e47..ec674f4d267c 100644
+> >> --- a/arch/arm64/kernel/machine_kexec_file.c
+> >> +++ b/arch/arm64/kernel/machine_kexec_file.c
+> >> @@ -76,6 +81,78 @@ int arch_kexec_walk_mem(struct kexec_buf *kbuf,
+> 
+> >> +static void fill_property(void *buf, u64 val64, int cells)
+> >> +{
+> >> +	u32 val32;
+> >> +
+> >> +	if (cells == 1) {
+> >> +		val32 = cpu_to_fdt32((u32)val64);
+> >> +		memcpy(buf, &val32, sizeof(val32));
+> >> +	} else {
+> > 
+> >> +		memset(buf, 0, cells * sizeof(u32) - sizeof(u64));
+> >> +		buf += cells * sizeof(u32) - sizeof(u64);
+> > 
+> > Is this trying to clear the 'top' cells and shuffle the pointer to point at the
+> > 'bottom' 2? I'm pretty sure this isn't endian safe.
+> 
+> It came to me at 2am: this only works on big-endian, which is exactly what you
+> want as that is the DT format.
 
-Sorry for the late reply.
-I will merge the patch into V1.6.4.
+Oops, I was almost tricked as I haven't tested kexec on BE
+for a long time :)
 
-Thanks
-Tachibana
+Thanks,
+-Takahiro AKASHI
 
-
-> -----Original Message-----
-> From: Petr Tesarik [mailto:ptesarik@suse.cz]
-> Sent: Tuesday, April 10, 2018 8:39 PM
-> To: lijiang <lijiang@redhat.com>
-> Cc: Tachibana Masaki() <mas-tachibana@vf.jp.nec.com>; Nakayama Takuya() <tak-nakayama@tg.jp.nec.com>;
-> kexec-ml <kexec@lists.infradead.org>
-> Subject: [PATCH v2] makedumpfile: Use integer arithmetics for the progress bar
 > 
-> Essentially, the estimated remaining time is calculated as:
+> > Do we really expect a system to have #address-cells > 2?
 > 
->   elapsed * (100 - progress) / progress
 > 
-> Since the calculation is done with floating point numbers, it had
-> masked a division by zero (if progress is 0), producing a NaN or
-> infinity. The following conversion to int produces INT_MIN with GCC
-> on major platforms, which originally overflowed the eta buffer. This
-> bug was fixed by commit e5f96e79d69a1d295f19130da00ec6514d28a8ae,
-> but conversion of NaN and infinity is undefined behaviour in ISO C,
-> plus the corresponding output is still wrong, e.g.:
+> Thanks,
 > 
-> Copying data                                      : [  0.0 %] /  eta: -9223372036854775808s
-> 
-> Most importantly, using the FPU for a progress bar is overkill.
-> Since the progress percentage is reported with one decimal digit
-> following the decimal point, it can be stored as an integer tenths
-> of a percent.
-> 
-> Second, the estimated time can be calculated in milliseconds. Up to
-> 49 days can be represented this way even on 32-bit platforms. Note
-> that delta.tv_usec can be ignored in the subtraction, because the
-> resulting eta is printed as seconds, so elapsed microseconds are
-> irrelevant.
-> 
-> Last but not least, the original buffer overflow was probably caused
-> by the wrong assumption that integers < 100 can be interpreted with
-> less than 3 ASCII characters, but that's not true for signed
-> integers. To make eta_to_human_short() a bit safer, use an unsigned
-> integer type.
-> 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> ---
->  print_info.c | 43 ++++++++++++++++++++-----------------------
->  1 file changed, 20 insertions(+), 23 deletions(-)
-> 
-> diff --git a/print_info.c b/print_info.c
-> index 09e215a..6bfcd11 100644
-> --- a/print_info.c
-> +++ b/print_info.c
-> @@ -16,8 +16,6 @@
->  #include "print_info.h"
->  #include <time.h>
->  #include <string.h>
-> -#include <stdint.h>
-> -#include <inttypes.h>
-> 
->  #define PROGRESS_MAXLEN		"50"
-> 
-> @@ -354,21 +352,18 @@ static void calc_delta(struct timeval *tv_start, struct timeval *delta)
->  }
-> 
->  /* produce less than 12 bytes on msg */
-> -static int eta_to_human_short (int64_t secs, char* msg, int maxsize)
-> +static int eta_to_human_short (unsigned long secs, char* msg)
->  {
->  	strcpy(msg, "eta: ");
->  	msg += strlen("eta: ");
->  	if (secs < 100)
-> -		snprintf(msg, maxsize, "%"PRId64"s", secs);
-> +		sprintf(msg, "%lus", secs);
->  	else if (secs < 100 * 60)
-> -		snprintf(msg, maxsize, "%"PRId64"m""%"PRId64"s",
-> -			secs / 60, secs % 60);
-> +		sprintf(msg, "%lum%lus", secs / 60, secs % 60);
->  	else if (secs < 48 * 3600)
-> -		snprintf(msg, maxsize, "%"PRId64"h""%"PRId64"m",
-> -			secs / 3600, (secs / 60) % 60);
-> +		sprintf(msg, "%luh%lum", secs / 3600, (secs / 60) % 60);
->  	else if (secs < 100 * 86400)
-> -		snprintf(msg, maxsize, "%"PRId64"d""%"PRId64"h",
-> -			secs / 86400, (secs / 3600) % 24);
-> +		sprintf(msg, "%lud%luh", secs / 86400, (secs / 3600) % 24);
->  	else
->  		sprintf(msg, ">2day");
->  	return 0;
-> @@ -378,37 +373,39 @@ static int eta_to_human_short (int64_t secs, char* msg, int maxsize)
->  void
->  print_progress(const char *msg, unsigned long current, unsigned long end, struct timeval *start)
->  {
-> -	float progress;
-> +	unsigned progress;	/* in promilles (tenths of a percent) */
->  	time_t tm;
->  	static time_t last_time = 0;
->  	static unsigned int lapse = 0;
->  	static const char *spinner = "/|\\-";
->  	struct timeval delta;
-> -	int64_t eta;
-> -	char eta_msg[32] = " ";
-> +	unsigned long eta;
-> +	char eta_msg[16] = " ";
-> 
->  	if (current < end) {
->  		tm = time(NULL);
->  		if (tm - last_time < 1)
->  			return;
->  		last_time = tm;
-> -		progress = (float)current * 100 / end;
-> +		progress = current * 1000 / end;
->  	} else
-> -		progress = 100;
-> +		progress = 1000;
-> 
-> -	if (start != NULL) {
-> +	if (start != NULL && progress != 0) {
->  		calc_delta(start, &delta);
-> -		eta = delta.tv_sec + delta.tv_usec / 1e6;
-> -		eta = (100 - progress) * eta / progress;
-> -		eta_to_human_short(eta, eta_msg, sizeof(eta_msg));
-> +		eta = 1000 * delta.tv_sec + delta.tv_usec / 1000;
-> +		eta = eta / progress - delta.tv_sec;
-> +		eta_to_human_short(eta, eta_msg);
->  	}
->  	if (flag_ignore_r_char) {
-> -		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s\n",
-> -			     msg, progress, spinner[lapse % 4], eta_msg);
-> +		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3u.%u %%] %c  %16s\n",
-> +			     msg, progress / 10, progress % 10,
-> +			     spinner[lapse % 4], eta_msg);
->  	} else {
->  		PROGRESS_MSG("\r");
-> -		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s",
-> -			     msg, progress, spinner[lapse % 4], eta_msg);
-> +		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3u.%u %%] %c  %16s",
-> +			     msg, progress / 10, progress % 10,
-> +			     spinner[lapse % 4], eta_msg);
->  	}
->  	lapse++;
->  }
-> --
-> 2.13.6
-> 
-
-
+> James
 
 _______________________________________________
 kexec mailing list
