@@ -1,34 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fJhKb-00028e-2U
- for kexec@lists.infradead.org; Fri, 18 May 2018 15:30:15 +0000
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w4IFTdwT091619
- for <kexec@lists.infradead.org>; Fri, 18 May 2018 11:29:56 -0400
-Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2j1ynbwqbf-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 18 May 2018 11:29:56 -0400
-Received: from localhost
- by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Fri, 18 May 2018 16:29:53 +0100
-Subject: Re: [PATCH v2 3/9] security: define security_kernel_read_blob()
- wrapper
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Fri, 18 May 2018 11:29:36 -0400
-In-Reply-To: <cb7f7401-ce7e-f4b5-2daa-62eaa78492ca@schaufler-ca.com>
-References: <1526568530-9144-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1526568530-9144-4-git-send-email-zohar@linux.vnet.ibm.com>
- <74c096ca-1ad1-799e-df3d-7b1b099333a7@schaufler-ca.com>
- <87y3ghhbws.fsf@xmission.com>
- <1526643050.3632.127.camel@linux.vnet.ibm.com>
- <cb7f7401-ce7e-f4b5-2daa-62eaa78492ca@schaufler-ca.com>
-Mime-Version: 1.0
-Message-Id: <1526657376.3404.15.camel@linux.vnet.ibm.com>
+Date: Fri, 18 May 2018 10:35:52 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 07/11] arm64: kexec_file: add crash dump support
+Message-ID: <20180518153552.GA23468@rob-hp-laptop>
+References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
+ <20180425062629.29404-8-takahiro.akashi@linaro.org>
+ <0aba6388-8a73-d371-7b92-3594639eb27e@arm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <0aba6388-8a73-d371-7b92-3594639eb27e@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,34 +21,208 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Casey Schaufler <casey@schaufler-ca.com>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R
- . Rodriguez" <mcgrof@kernel.org>, Andres Rodriguez <andresx7@gmail.com>, linux-integrity@vger.kernel.org, Stephen Smalley <sds@tycho.nsa.gov>
+To: James Morse <james.morse@arm.com>
+Cc: devicetree@vger.kernel.org, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-On Fri, 2018-05-18 at 07:58 -0700, Casey Schaufler wrote:
-> On 5/18/2018 4:30 AM, Mimi Zohar wrote:
-
-> > Having to define a separate LSM hook for each of the original, non
-> > kernel_read_file(), buffer based method callers, kind of makes sense,
-> > as the callers themselves are specific, but is it really necessary?
-> > Could we define a new, generic LSM hook named
-> > security_kernel_buffer_data() for this purpose?
+On Tue, May 15, 2018 at 06:12:59PM +0100, James Morse wrote:
+> Hi guys,
 > 
-> If there are two disparate behaviors wrapped into kernel_read_file()
-> Eric (bless him) is right. It should be broken into two hooks. I think
-> that if we look (too) carefully we'll find other places where hooks
-> should get broken up, or combined*. My question is just how important
-> is it that this gets changed?
+> (CC: +RobH, devicetree list)
 
-Other than the LSM call in copy_module_from_user(), this patch set is
-adding the LSM call in kexec_load() and firmware_fallback_sysfs().
+Thanks.
 
-Eric, the question remains whether we need distinct LSM hooks in each
-of these places or can we have a single, generic LSM hook named
-security_kernel_buffer_data()?
+> On 25/04/18 07:26, AKASHI Takahiro wrote:
+> > Enabling crash dump (kdump) includes
+> > * prepare contents of ELF header of a core dump file, /proc/vmcore,
+> >   using crash_prepare_elf64_headers(), and
+> > * add two device tree properties, "linux,usable-memory-range" and
+> >   "linux,elfcorehdr", which represent repsectively a memory range
+> >   to be used by crash dump kernel and the header's location
 
-Mimi
+BTW, I intend to move existing parsing these out of the arch code. 
+Please don't add more DT handling to arch/ unless it is *really* arch 
+specific. I'd assume that the next arch to add kexec support will use 
+these bindings instead of the powerpc way.
 
+> kexec_file_load() on arm64 needs to be able to create a prop encoded array to
+> the FDT, but there doesn't appear to be a libfdt helper to do this.
+> 
+> Akashi's code below adds fdt_setprop_range() to the arch code, and duplicates
+> bits of libfdt_internal.h to do the work.
+> 
+> How should this be done? I'm assuming this is something we need a new API in
+> libfdt.h for. How do these come about, and is there an interim step we can use
+> until then?
+
+Submit patches to upstream dtc and then we can pull it in. Ahead of that 
+you can add it to drivers/of/fdt.c (or maybe fdt_address.c because 
+that's really what this is dealing with).
+
+libfdt has only recently gained the beginnings of address handling.
+
+> 
+> Thanks!
+> 
+> James
+> 
+> > diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> > index 37c0a9dc2e47..ec674f4d267c 100644
+> > --- a/arch/arm64/kernel/machine_kexec_file.c
+> > +++ b/arch/arm64/kernel/machine_kexec_file.c
+> > @@ -76,6 +81,78 @@ int arch_kexec_walk_mem(struct kexec_buf *kbuf,
+> >  	return ret;
+> >  }
+> >  
+> > +static int __init arch_kexec_file_init(void)
+> > +{
+> > +	/* Those values are used later on loading the kernel */
+> > +	__dt_root_addr_cells = dt_root_addr_cells;
+> > +	__dt_root_size_cells = dt_root_size_cells;
+
+I intend to make dt_root_*_cells private, so don't add another user 
+outside of drivers/of/.
+
+> > +
+> > +	return 0;
+> > +}
+> > +late_initcall(arch_kexec_file_init);
+> > +
+> > +#define FDT_ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
+> > +#define FDT_TAGALIGN(x)	(FDT_ALIGN((x), FDT_TAGSIZE))
+> > +
+> > +static int fdt_prop_len(const char *prop_name, int len)
+> > +{
+> > +	return (strlen(prop_name) + 1) +
+> > +		sizeof(struct fdt_property) +
+> > +		FDT_TAGALIGN(len);
+> > +}
+> > +
+> > +static bool cells_size_fitted(unsigned long base, unsigned long size)
+
+I can't imagine this would happen. However, when this is moved to 
+drivers/of/ or dtc, these need to be u64 types to work on 32-bit.
+
+> > +{
+> > +	/* if *_cells >= 2, cells can hold 64-bit values anyway */
+> > +	if ((__dt_root_addr_cells == 1) && (base >= (1ULL << 32)))
+> > +		return false;
+> > +
+> > +	if ((__dt_root_size_cells == 1) && (size >= (1ULL << 32)))
+> > +		return false;
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +static void fill_property(void *buf, u64 val64, int cells)
+> > +{
+> > +	u32 val32;
+
+This should be a __be32 or fdt32 type. So should buf.
+
+> > +
+> > +	if (cells == 1) {
+> > +		val32 = cpu_to_fdt32((u32)val64);
+> > +		memcpy(buf, &val32, sizeof(val32));
+> > +	} else {
+> > +		memset(buf, 0, cells * sizeof(u32) - sizeof(u64));
+> > +		buf += cells * sizeof(u32) - sizeof(u64);
+> > +
+> > +		val64 = cpu_to_fdt64(val64);
+> > +		memcpy(buf, &val64, sizeof(val64));
+
+Look how of_read_number() is implemented. You should be able to do 
+something similar here looping and avoiding the if/else.
+
+> > +	}
+> > +}
+> > +
+> > +static int fdt_setprop_range(void *fdt, int nodeoffset, const char *name,
+> > +				unsigned long addr, unsigned long size)
+
+A very generic sounding function, but really only works on addresses in 
+children of the root node.
+
+> > +{
+> > +	void *buf, *prop;
+> > +	size_t buf_size;
+> > +	int result;
+> > +
+> > +	buf_size = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
+> > +	prop = buf = vmalloc(buf_size);
+
+This can go on the stack instead (and would be required to to work in 
+libfdt).
+
+> > +	if (!buf)
+> > +		return -ENOMEM;
+> > +
+> > +	fill_property(prop, addr, __dt_root_addr_cells);
+> > +	prop += __dt_root_addr_cells * sizeof(u32);
+> > +
+> > +	fill_property(prop, size, __dt_root_size_cells);
+> > +
+> > +	result = fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
+> > +
+> > +	vfree(buf);
+> > +
+> > +	return result;
+> > +}
+> > +
+> >  static int setup_dtb(struct kimage *image,
+> >  		unsigned long initrd_load_addr, unsigned long initrd_len,
+> >  		char *cmdline, unsigned long cmdline_len,
+> > @@ -88,10 +165,26 @@ static int setup_dtb(struct kimage *image,
+> >  	int range_len;
+> >  	int ret;
+> >  
+> > +	/* check ranges against root's #address-cells and #size-cells */
+> > +	if (image->type == KEXEC_TYPE_CRASH &&
+> > +		(!cells_size_fitted(image->arch.elf_load_addr,
+> > +				image->arch.elf_headers_sz) ||
+> > +		 !cells_size_fitted(crashk_res.start,
+> > +				crashk_res.end - crashk_res.start + 1))) {
+> > +		pr_err("Crash memory region doesn't fit into DT's root cell sizes.\n");
+> > +		ret = -EINVAL;
+> > +		goto out_err;
+> > +	}
+> > +
+> >  	/* duplicate dt blob */
+> >  	buf_size = fdt_totalsize(initial_boot_params);
+> >  	range_len = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
+> >  
+> > +	if (image->type == KEXEC_TYPE_CRASH)
+> > +		buf_size += fdt_prop_len("linux,elfcorehdr", range_len)
+> > +				+ fdt_prop_len("linux,usable-memory-range",
+> > +								range_len);
+> > +
+> >  	if (initrd_load_addr)
+> >  		buf_size += fdt_prop_len("linux,initrd-start", sizeof(u64))
+> >  				+ fdt_prop_len("linux,initrd-end", sizeof(u64));
+> > @@ -113,6 +206,23 @@ static int setup_dtb(struct kimage *image,
+> >  	if (nodeoffset < 0)
+> >  		goto out_err;
+> >  
+> > +	if (image->type == KEXEC_TYPE_CRASH) {
+> > +		/* add linux,elfcorehdr */
+> > +		ret = fdt_setprop_range(buf, nodeoffset, "linux,elfcorehdr",
+> > +				image->arch.elf_load_addr,
+> > +				image->arch.elf_headers_sz);
+> > +		if (ret)
+> > +			goto out_err;
+> > +
+> > +		/* add linux,usable-memory-range */
+> > +		ret = fdt_setprop_range(buf, nodeoffset,
+> > +				"linux,usable-memory-range",
+> > +				crashk_res.start,
+> > +				crashk_res.end - crashk_res.start + 1);
+> > +		if (ret)
+> > +			goto out_err;
+> > +	}
+> > +
+> >  	/* add bootargs */
+> >  	if (cmdline) {
+> >  		ret = fdt_setprop(buf, nodeoffset, "bootargs",
+> 
 
 _______________________________________________
 kexec mailing list
