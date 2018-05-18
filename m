@@ -1,20 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from sonic306-27.consmr.mail.ne1.yahoo.com ([66.163.189.89])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fJgqd-0004C9-38
- for kexec@lists.infradead.org; Fri, 18 May 2018 14:59:12 +0000
+ id 1fJhKb-00028e-2U
+ for kexec@lists.infradead.org; Fri, 18 May 2018 15:30:15 +0000
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w4IFTdwT091619
+ for <kexec@lists.infradead.org>; Fri, 18 May 2018 11:29:56 -0400
+Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2j1ynbwqbf-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 18 May 2018 11:29:56 -0400
+Received: from localhost
+ by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Fri, 18 May 2018 16:29:53 +0100
 Subject: Re: [PATCH v2 3/9] security: define security_kernel_read_blob()
  wrapper
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Fri, 18 May 2018 11:29:36 -0400
+In-Reply-To: <cb7f7401-ce7e-f4b5-2daa-62eaa78492ca@schaufler-ca.com>
 References: <1526568530-9144-1-git-send-email-zohar@linux.vnet.ibm.com>
  <1526568530-9144-4-git-send-email-zohar@linux.vnet.ibm.com>
  <74c096ca-1ad1-799e-df3d-7b1b099333a7@schaufler-ca.com>
- <87y3ghhbws.fsf@xmission.com> <1526643050.3632.127.camel@linux.vnet.ibm.com>
-From: Casey Schaufler <casey@schaufler-ca.com>
-Message-ID: <cb7f7401-ce7e-f4b5-2daa-62eaa78492ca@schaufler-ca.com>
-Date: Fri, 18 May 2018 07:58:55 -0700
-MIME-Version: 1.0
-In-Reply-To: <1526643050.3632.127.camel@linux.vnet.ibm.com>
-Content-Language: en-US
+ <87y3ghhbws.fsf@xmission.com>
+ <1526643050.3632.127.camel@linux.vnet.ibm.com>
+ <cb7f7401-ce7e-f4b5-2daa-62eaa78492ca@schaufler-ca.com>
+Mime-Version: 1.0
+Message-Id: <1526657376.3404.15.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,78 +37,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Andres Rodriguez <andresx7@gmail.com>, linux-integrity@vger.kernel.org, Stephen Smalley <sds@tycho.nsa.gov>
+To: Casey Schaufler <casey@schaufler-ca.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R
+ . Rodriguez" <mcgrof@kernel.org>, Andres Rodriguez <andresx7@gmail.com>, linux-integrity@vger.kernel.org, Stephen Smalley <sds@tycho.nsa.gov>
 
-T24gNS8xOC8yMDE4IDQ6MzAgQU0sIE1pbWkgWm9oYXIgd3JvdGU6Cj4gT24gVGh1LCAyMDE4LTA1
-LTE3IGF0IDIyOjM3IC0wNTAwLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90ZToKPj4gQ2FzZXkgU2No
-YXVmbGVyIDxjYXNleUBzY2hhdWZsZXItY2EuY29tPiB3cml0ZXM6Cj4+Cj4+PiBPbiA1LzE3LzIw
-MTggNzo0OCBBTSwgTWltaSBab2hhciB3cm90ZToKPj4+PiBJbiBvcmRlciBmb3IgTFNNcyBhbmQg
-SU1BLWFwcHJhaXNhbCB0byBkaWZmZXJlbnRpYXRlIGJldHdlZW4gdGhlIG9yaWdpbmFsCj4+Pj4g
-YW5kIG5ldyBzeXNjYWxscyAoZWcuIGtleGVjLCBrZXJuZWwgbW9kdWxlcywgZmlybXdhcmUpLCBi
-b3RoIHRoZSBvcmlnaW5hbAo+Pj4+IGFuZCBuZXcgc3lzY2FsbHMgbXVzdCBjYWxsIGFuIExTTSBo
-b29rLgo+Pj4+Cj4+Pj4gQ29tbWl0IDJlNzJkNTFiNGFjMyAoInNlY3VyaXR5OiBpbnRyb2R1Y2Ug
-a2VybmVsX21vZHVsZV9mcm9tX2ZpbGUgaG9vayIpCj4+Pj4gaW50cm9kdWNlZCBjYWxsaW5nIHNl
-Y3VyaXR5X2tlcm5lbF9tb2R1bGVfZnJvbV9maWxlKCkgaW4gYm90aCB0aGUgb3JpZ2luYWwKPj4+
-PiBhbmQgbmV3IHN5c2NhbGxzLiAgQ29tbWl0IGExZGI3NDIwOTQ4MyAoIm1vZHVsZTogcmVwbGFj
-ZQo+Pj4+IGNvcHlfbW9kdWxlX2Zyb21fZmQgd2l0aCBrZXJuZWwgdmVyc2lvbiIpIHJlcGxhY2Vk
-IHRoZXNlIExTTSBjYWxscyB3aXRoCj4+Pj4gc2VjdXJpdHlfa2VybmVsX3JlYWRfZmlsZSgpLgo+
-Pj4+Cj4+Pj4gQ29tbWl0IGU0MGJhNmQ1NmI0MSAoImZpcm13YXJlOiByZXBsYWNlIGNhbGwgdG8g
-ZndfcmVhZF9maWxlX2NvbnRlbnRzKCkKPj4+PiB3aXRoIGtlcm5lbCB2ZXJzaW9uIikgYW5kIGNv
-bW1pdCBiODA0ZGVmZTQyOTcgICgia2V4ZWM6IHJlcGxhY2UgY2FsbCB0bwo+Pj4+IGNvcHlfZmls
-ZV9mcm9tX2ZkKCkgd2l0aCBrZXJuZWwgdmVyc2lvbiIpIHJlcGxhY2VkIHRoZWlyIG93biB2ZXJz
-aW9uIG9mCj4+Pj4gcmVhZGluZyBhIGZpbGUgZnJvbSB0aGUga2VybmVsIHdpdGggdGhlIGdlbmVy
-aWMKPj4+PiBrZXJuZWxfcmVhZF9maWxlX2Zyb21fcGF0aC9mZCgpIHZlcnNpb25zLCB3aGljaCBj
-YWxsIHRoZSBwcmUgYW5kIHBvc3QKPj4+PiBzZWN1cml0eV9rZXJuZWxfcmVhZF9maWxlIExTTSBo
-b29rcy4KPj4+Pgo+Pj4+IE1pc3NpbmcgYXJlIExTTSBjYWxscyBpbiB0aGUgb3JpZ2luYWwga2V4
-ZWMgc3lzY2FsbCBhbmQgZmlybXdhcmUgc3lzZnMKPj4+PiBmYWxsYmFjayBtZXRob2QuICBGcm9t
-IGEgdGVjaG5pY2FsIHBlcnNwZWN0aXZlIHRoZXJlIGlzIG5vIGp1c3RpZmljYXRpb24KPj4+PiBm
-b3IgZGVmaW5pbmcgYSBuZXcgTFNNIGhvb2ssIGFzIHRoZSBleGlzdGluZyBzZWN1cml0eV9rZXJu
-ZWxfcmVhZF9maWxlKCkKPj4+PiB3b3JrcyBqdXN0IGZpbmUuICBUaGUgb3JpZ2luYWwgc3lzY2Fs
-bHMsIGhvd2V2ZXIsIGRvIG5vdCByZWFkIGEgZmlsZSwgc28KPj4+PiB0aGUgc2VjdXJpdHkgaG9v
-ayBuYW1lIGlzIGluYXBwcm9wcmlhdGUuICBJbnN0ZWFkIG9mIGRlZmluaW5nIGEgbmV3IExTTQo+
-Pj4+IGhvb2ssIHRoaXMgcGF0Y2ggZGVmaW5lcyBzZWN1cml0eV9rZXJuZWxfcmVhZF9ibG9iKCkg
-YXMgYSB3cmFwcGVyIGZvcgo+Pj4+IHRoZSBleGlzdGluZyBMU00gc2VjdXJpdHlfa2VybmVsX2Zp
-bGVfcmVhZCgpIGhvb2suCj4+PiBXaGF0IGEgbWFydmVsb3VzIG9wcG9ydHVuaXR5IHRvIGJpa2Vz
-aGVkIQo+Pj4KPj4+IEkgcmVhbGx5IGRpc2xpa2UgYWRkaW5nIGFub3RoZXIgc2VjdXJpdHlfIGlu
-dGVyZmFjZSBqdXN0IGJlY2F1c2UKPj4+IHRoZSBuYW1lIGlzbid0IHF1aXRlIHJpZ2h0LiBFc3Bl
-Y2lhbGx5IGEgd3JhcHBlciwgd2hpY2ggaXMganVzdAo+Pj4gY29kZSBhbmQgZXhlY3V0aW9uIG92
-ZXJoZWFkLiBXaHkgbm90IGNoYW5nZSBzZWN1cml0eV9rZXJuZWxfcmVhZF9maWxlKCkKPj4+IHRv
-IHNlY3VyaXR5X2tlcm5lbF9yZWFkX2Jsb2IoKSBldmVyeXdoZXJlIGFuZCBiZSBkb25lPwo+PiBO
-YWNrZWQtYnk6ICJFcmljIFcuIEJpZWRlcm1hbiIgPGViaWVkZXJtQHhtaXNzaW9uLmNvbT4KPj4K
-Pj4gTmFjayBvbiB0aGlzIHNoYXJpbmcgbm9uc2Vuc2UuICBUaGVzZSB0d28gaW50ZXJmYWNlcyBk
-byBub3Qgc2hhcmUgYW55Cj4+IGNvZGUgaW4gdGhlaXIgaW1wbGVtZW50YXRpb25zIG90aGVyIHRo
-YW4gdGhlIGlmIHN0YXRlbWVudCB0byBkaXN0aW5ndWlzaAo+PiBiZXR3ZWVuIHRoZSB0d28gY2Fz
-ZXMuCj4+Cj4+IENhc2V5IHlvdSBhcmUgd3JvbmcuICBXZSBuZWVkIHNvbWV0aGluZyBkaWZmZXJl
-bnQgaGVyZS4KPj4KPj4gTWltaSBhIHdyYXBwZXIgZG9lcyBub3QgY3V0IGl0LiAgIFRoZSBjb2Rl
-IGlzIG5vdCBzaGFyZWQuICBEZXNwaXRlIHVzaW5nCj4+IGEgc2luZ2xlIGZ1bmN0aW9uIGNhbGwg
-dG9kYXkuCj4+Cj4+IElmIHdlIHdhbnQgY29tcHJlaGVuc2libGUgYW5kIG1haW50YWluYWJsZSBj
-b2RlIGluIHRoZSBzZWN1cml0eSBtb2R1bGVzCj4+IHdlIG5lZWQgdG8gc3BsaXQgdGhlc2UgdHdv
-IHBpZWNlcyBvZiBmdW5jdGlvbmFsaXR5IGFwYXJ0Lgo+IGtlcm5lbF9yZWFkX2ZpbGUoKSBpcyBh
-IGNvbW1vbiwgZ2VuZXJpYyBtZXRob2Qgb2YgcmVhZGluZyBhIGZpbGUgZnJvbQo+IHRoZSBrZXJu
-ZWwsIHdoaWNoIGlzIGJlaW5nIGNhbGxlZCBmcm9tIGEgbnVtYmVyIG9mIHBsYWNlcy4gwqBUaGUK
-PiBrZXJuZWxfcmVhZF9maWxlX2lkIGVudW1lcmF0aW9uIGlzIG5lZWRlZCB0byBkaWZmZXJlbnRp
-YXRlIGJldHdlZW4gdGhlCj4gY2FsbGVycy4gwqBUaGUgcHVycG9zZSBvZiB0aGUgbmV3IHNlY3Vy
-aXR5X2tlcm5lbF9yZWFkX2ZpbGUoKSBjYWxscyBpcwo+IG5vdCBmb3IgdGhlIGtlcm5lbCB0byBy
-ZWFkIGEgZmlsZSwgYnV0IGFzIGEgbWV0aG9kIG9mIGlkZW50aWZ5aW5nIHRoZQo+IG9yaWdpbmFs
-IGJ1ZmZlciBiYXNlZCBtZXRob2RzIGNvbnRhaW5pbmcgYSBmaWxlLgo+Cj4gSGF2aW5nIHRvIGRl
-ZmluZSBhIHNlcGFyYXRlIExTTSBob29rIGZvciBlYWNoIG9mIHRoZSBvcmlnaW5hbCwgbm9uCj4g
-a2VybmVsX3JlYWRfZmlsZSgpLCBidWZmZXIgYmFzZWQgbWV0aG9kIGNhbGxlcnMsIGtpbmQgb2Yg
-bWFrZXMgc2Vuc2UsCj4gYXMgdGhlIGNhbGxlcnMgdGhlbXNlbHZlcyBhcmUgc3BlY2lmaWMsIGJ1
-dCBpcyBpdCByZWFsbHkgbmVjZXNzYXJ5Pwo+IENvdWxkIHdlIGRlZmluZSBhIG5ldywgZ2VuZXJp
-YyBMU00gaG9vayBuYW1lZAo+IHNlY3VyaXR5X2tlcm5lbF9idWZmZXJfZGF0YSgpIGZvciB0aGlz
-IHB1cnBvc2U/CgpJZiB0aGVyZSBhcmUgdHdvIGRpc3BhcmF0ZSBiZWhhdmlvcnMgd3JhcHBlZCBp
-bnRvIGtlcm5lbF9yZWFkX2ZpbGUoKQpFcmljIChibGVzcyBoaW0pIGlzIHJpZ2h0LiBJdCBzaG91
-bGQgYmUgYnJva2VuIGludG8gdHdvIGhvb2tzLiBJIHRoaW5rCnRoYXQgaWYgd2UgbG9vayAodG9v
-KSBjYXJlZnVsbHkgd2UnbGwgZmluZCBvdGhlciBwbGFjZXMgd2hlcmUgaG9va3MKc2hvdWxkIGdl
-dCBicm9rZW4gdXAsIG9yIGNvbWJpbmVkKi4gTXkgcXVlc3Rpb24gaXMganVzdCBob3cgaW1wb3J0
-YW50CmlzIGl0IHRoYXQgdGhpcyBnZXRzIGNoYW5nZWQ/CgotLS0KKiBjYWxsaW5nIHNlY3VyaXR5
-X2lub2RlX3NlY2lkKCkgYW5kIHRoZW4gaW1tZWRpYXRlbHkKICBzZWN1cml0eV9zZWNpZF90b19z
-ZWNjdHgoKSBncmF0ZXMgb24gbXkgc2Vuc2liaWxpdGllcy4KCgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9rZXhlYwo=
+On Fri, 2018-05-18 at 07:58 -0700, Casey Schaufler wrote:
+> On 5/18/2018 4:30 AM, Mimi Zohar wrote:
+
+> > Having to define a separate LSM hook for each of the original, non
+> > kernel_read_file(), buffer based method callers, kind of makes sense,
+> > as the callers themselves are specific, but is it really necessary?
+> > Could we define a new, generic LSM hook named
+> > security_kernel_buffer_data() for this purpose?
+> 
+> If there are two disparate behaviors wrapped into kernel_read_file()
+> Eric (bless him) is right. It should be broken into two hooks. I think
+> that if we look (too) carefully we'll find other places where hooks
+> should get broken up, or combined*. My question is just how important
+> is it that this gets changed?
+
+Other than the LSM call in copy_module_from_user(), this patch set is
+adding the LSM call in kexec_load() and firmware_fallback_sysfs().
+
+Eric, the question remains whether we need distinct LSM hooks in each
+of these places or can we have a single, generic LSM hook named
+security_kernel_buffer_data()?
+
+Mimi
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
