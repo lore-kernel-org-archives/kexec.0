@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fKbm7-00081A-F0
- for kexec@lists.infradead.org; Mon, 21 May 2018 03:46:21 +0000
-Subject: Re: [PATCH 0/2] support kdump for AMD secure memory encryption(sme)
-From: lijiang <lijiang@redhat.com>
-References: <20180515015133.4363-1-lijiang@redhat.com>
- <55bda494-bee4-5696-03e5-fc21c9d6b631@amd.com>
- <18309611-c8c4-92cb-161e-f35ef3d243ea@redhat.com>
-Message-ID: <a0b95743-209a-aca7-33e4-828375df1826@redhat.com>
-Date: Mon, 21 May 2018 11:45:57 +0800
+ id 1fKeEa-0003Iv-87
+ for kexec@lists.infradead.org; Mon, 21 May 2018 06:23:53 +0000
+Date: Mon, 21 May 2018 14:23:30 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 0/2] Remove obsolete kdump tool and add missing uninstall
+ rule
+Message-ID: <20180521062330.GA6036@dhcp-128-65.nay.redhat.com>
+References: <1524459622-2059-1-git-send-email-bhsharma@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <18309611-c8c4-92cb-161e-f35ef3d243ea@redhat.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1524459622-2059-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,96 +20,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org
-Cc: dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: rmk@armlinux.org.uk, kexec@lists.infradead.org, vgoyal@redhat.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, horms@verge.net.au, ebiederm@xmission.com, bhupesh.linux@gmail.com, Russell King <rmk@arm.linux.org.uk>
 
-5ZyoIDIwMTjlubQwNeaciDE35pelIDIxOjQ1LCBsaWppYW5nIOWGmemBkzoKPiDlnKggMjAxOOW5
-tDA15pyIMTXml6UgMjE6MzEsIFRvbSBMZW5kYWNreSDlhpnpgZM6Cj4+IE9uIDUvMTQvMjAxOCA4
-OjUxIFBNLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4+PiBJdCBpcyBjb252ZW5pZW50IHRvIHJlbWFw
-IHRoZSBvbGQgbWVtb3J5IGVuY3J5cHRlZCB0byB0aGUgc2Vjb25kIGtlcm5lbCBieQo+Pj4gY2Fs
-bGluZyBpb3JlbWFwX2VuY3J5cHRlZCgpLgo+Pj4KPj4+IFdoZW4gc21lIGVuYWJsZWQgb24gQU1E
-IHNlcnZlciwgd2UgYWxzbyBuZWVkIHRvIHN1cHBvcnQga2R1bXAuIEJlY2F1c2UKPj4+IHRoZSBt
-ZW1vcnkgaXMgZW5jcnlwdGVkIGluIHRoZSBmaXJzdCBrZXJuZWwsIHdlIHdpbGwgcmVtYXAgdGhl
-IG9sZCBtZW1vcnkKPj4+IGVuY3J5cHRlZCB0byB0aGUgc2Vjb25kIGtlcm5lbChjcmFzaCBrZXJu
-ZWwpLCBhbmQgc21lIGlzIGFsc28gZW5hYmxlZCBpbgo+Pj4gdGhlIHNlY29uZCBrZXJuZWwsIG90
-aGVyd2lzZSB0aGUgb2xkIG1lbW9yeSBlbmNyeXB0ZWQgY2FuIG5vdCBiZSBkZWNyeXB0ZWQuCj4+
-PiBCZWNhdXNlIHNpbXBseSBjaGFuZ2luZyB0aGUgdmFsdWUgb2YgYSBDLWJpdCBvbiBhIHBhZ2Ug
-d2lsbCBub3QKPj4+IGF1dG9tYXRpY2FsbHkgZW5jcnlwdCB0aGUgZXhpc3RpbmcgY29udGVudHMg
-b2YgYSBwYWdlLCBhbmQgYW55IGRhdGEgaW4gdGhlCj4+PiBwYWdlIHByaW9yIHRvIHRoZSBDLWJp
-dCBtb2RpZmljYXRpb24gd2lsbCBiZWNvbWUgdW5pbnRlbGxpZ2libGUuIEEgcGFnZSBvZgo+Pj4g
-bWVtb3J5IHRoYXQgaXMgbWFya2VkIGVuY3J5cHRlZCB3aWxsIGJlIGF1dG9tYXRpY2FsbHkgZGVj
-cnlwdGVkIHdoZW4gcmVhZAo+Pj4gZnJvbSBEUkFNIGFuZCB3aWxsIGJlIGF1dG9tYXRpY2FsbHkg
-ZW5jcnlwdGVkIHdoZW4gd3JpdHRlbiB0byBEUkFNLgo+Pj4KPj4+IEZvciB0aGUga2R1bXAsIGl0
-IGlzIG5lY2Vzc2FyeSB0byBkaXN0aW5ndWlzaCB3aGV0aGVyIHRoZSBtZW1vcnkgaXMKPj4+IGVu
-Y3J5cHRlZC4gRnVydGhlcm1vcmUsIHdlIHNob3VsZCBhbHNvIGtub3cgd2hpY2ggcGFydCBvZiB0
-aGUgbWVtb3J5IGlzCj4+PiBlbmNyeXB0ZWQgb3IgZGVjcnlwdGVkLiBXZSB3aWxsIGFwcHJvcHJp
-YXRlbHkgcmVtYXAgdGhlIG1lbW9yeSBhY2NvcmRpbmcKPj4+IHRvIHRoZSBzcGVjaWZpYyBzaXR1
-YXRpb24gaW4gb3JkZXIgdG8gdGVsbCBjcHUgaG93IHRvIGRlYWwgd2l0aCB0aGUKPj4+IGRhdGEo
-ZW5jcnlwdGVkIG9yIGRlY3J5cHRlZCkuIEZvciBleGFtcGxlLCB3aGVuIHNtZSBlbmFibGVkLCBp
-ZiB0aGUgb2xkCj4+PiBtZW1vcnkgaXMgZW5jcnlwdGVkLCB3ZSB3aWxsIHJlbWFwIHRoZSBvbGQg
-bWVtb3J5IGluIGVuY3J5cHRlZCB3YXksIHdoaWNoCj4+PiB3aWxsIGF1dG9tYXRpY2FsbHkgZGVj
-cnlwdCB0aGUgb2xkIG1lbW9yeSBlbmNyeXB0ZWQgd2hlbiB3ZSByZWFkIHRob3NlIGRhdGEKPj4+
-IGZyb20gdGhlIHJlbWFwcGluZyBhZGRyZXNzLgo+Pj4KPj4+ICAtLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+PiB8IGZpcnN0LWtlcm5lbCB8IHNlY29uZC1r
-ZXJuZWwgfCBrZHVtcCBzdXBwb3J0IHwKPj4+IHwgICAgICAobWVtX2VuY3J5cHQ9b258b2ZmKSAg
-ICB8ICAgKHllc3xubykgICAgfCAKPj4+IHwtLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0r
-LS0tLS0tLS0tLS0tLS0tfAo+Pj4gfCAgICAgb24gICAgICAgfCAgICAgb24gICAgICAgIHwgICAg
-IHllcyAgICAgICB8Cj4+PiB8ICAgICBvZmYgICAgICB8ICAgICBvZmYgICAgICAgfCAgICAgeWVz
-ICAgICAgIHwKPj4+IHwgICAgIG9uICAgICAgIHwgICAgIG9mZiAgICAgICB8ICAgICBubyAgICAg
-ICAgfAo+Pj4gfCAgICAgb2ZmICAgICAgfCAgICAgb24gICAgICAgIHwgICAgIG5vICAgICAgICB8
-Cj4+PiB8X19fX19fX19fX19fX198X19fX19fX19fX19fX19ffF9fX19fX19fX19fX19fX3wKPj4+
-Cj4+PiBUZXN0IHRvb2xzOgo+Pj4gbWFrZWR1bXBmaWxlW3YxLjYuM106IGh0dHBzOi8vZ2l0aHVi
-LmNvbS9MaWFuYm9KL21ha2VkdW1wZmlsZQo+Pj4gY29tbWl0IGUxZGUxMDNlY2E4ZiAoQSBkcmFm
-dCBmb3Iga2R1bXAgdm1jb3JlIGFib3V0IEFNRCBTTUUpCj4+PiBBdXRob3I6IExpYW5ibyBKaWFu
-ZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+Pj4gRGF0ZTogICBNb24gTWF5IDE0IDE3OjAyOjQwIDIw
-MTggKzA4MDAKPj4+IE5vdGU6IFRoaXMgcGF0Y2ggY2FuIG9ubHkgZHVtcCB2bWNvcmUgaW4gdGhl
-IGNhc2Ugb2YgU01FIGVuYWJsZWQuCj4+Pgo+Pj4gY3Jhc2gtNy4yLjE6IGh0dHBzOi8vZ2l0aHVi
-LmNvbS9jcmFzaC11dGlsaXR5L2NyYXNoLmdpdAo+Pj4gY29tbWl0IDFlMWJkOWM0YzFiZSAoRml4
-IGZvciB0aGUgImJwZiIgY29tbWFuZCBkaXNwbGF5IG9uIExpbnV4IDQuMTctcmMxKQo+Pj4gQXV0
-aG9yOiBEYXZlIEFuZGVyc29uIDxhbmRlcnNvbkByZWRoYXQuY29tPgo+Pj4gRGF0ZTogICBGcmkg
-TWF5IDExIDE1OjU0OjMyIDIwMTggLTA0MDAKPj4+Cj4+PiBUZXN0IGVudmlyb25tZW50Ogo+Pj4g
-SFAgUHJvTGlhbnQgREwzODVHZW4xMCBBTUQgRVBZQyA3MjUxCj4+PiA4LUNvcmUgUHJvY2Vzc29y
-Cj4+PiAzMjc2OCBNQiBtZW1vcnkKPj4+IDYwMCBHQiBkaXNrIHNwYWNlCj4+Pgo+Pj4gTGludXgg
-NC4xNy1yYzQ6Cj4+PiBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9n
-aXQvdG9ydmFsZHMvbGludXguZ2l0Cj4+PiBjb21taXQgNzViYzM3ZmVmYzQ0ICgiTGludXggNC4x
-Ny1yYzQiKQo+Pj4gQXV0aG9yOiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRh
-dGlvbi5vcmc+Cj4+PiBEYXRlOiAgIFN1biBNYXkgNiAxNjo1NzozOCAyMDE4IC0xMDAwCj4+Pgo+
-Pj4gUmVmZXJlbmNlOgo+Pj4gQU1ENjQgQXJjaGl0ZWN0dXJlIFByb2dyYW1tZXIncyBNYW51YWwK
-Pj4+IGh0dHBzOi8vc3VwcG9ydC5hbWQuY29tL1RlY2hEb2NzLzI0NTkzLnBkZgo+Pj4KPj4KPj4g
-SGF2ZSB5b3UgYWxzbyB0ZXN0ZWQgdGhpcyB3aXRoIFNFVj8gIEl0IHdvdWxkIGJlIG5pY2UgaWYg
-dGhlIGtkdW1wCj4+IGNoYW5nZXMgeW91IG1ha2Ugd29yayB3aXRoIGJvdGggU01FIGFuZCBTRVYu
-Cj4+Cj4gVGhhbmsgeW91LCBUb20uCj4gVGhpcyBpcyBhIGdyZWF0IHF1ZXN0aW9uLCB3ZSBvcmln
-aW5hbGx5IHBsYW4gdG8gaW1wbGVtZW50IFNFViBpbiBzdWJzZXF1ZW50IHBhdGNoZXMsIGFuZAo+
-IHdlIGFyZSBhbHNvIHdvcmtpbmcgb24gU0VWIGF0IHByZXNlbnQuCj4gRnVydGhlcm1vcmUsIHdl
-IGhhdmUgYW5vdGhlciBrbm93biBpc3N1ZSB0aGF0IHRoZSBzeXN0ZW0gY2FuJ3QganVtcCBpbnRv
-IHRoZSBzZWNvbmQga2VybmVsCj4gd2hlbiBTTUUgaXMgZW5hYmxlZCBhbmQga2FzbHIgaXMgZGlz
-YWJsZWQgaW4ga2R1bXAgbW9kZS4gSXQgc2VlbXMgdGhhdCBpcyBhIGNvbXBsZXggcHJvYmxlbXMs
-Cj4gbWF5YmUgaXQgaXMgcmVsYXRlZCB0byBrYXNsciBhbmQgU01FLCBjdXJyZW50bHksIGknbSBu
-b3Qgc3VyZSB0aGUgcm9vdCBjYXVzZSwgYnV0IHdlIHdpbGwKPiBhbHNvIHBsYW4gdG8gZml4IGl0
-LiBDYW4geW91IGdpdmUgbWUgYW55IGFkdmljZSBhYm91dCB0aGlzIGlzc3VlPwo+CkJhc2VkIG9u
-IHVwc3RyZWFtIDQuMTctcmM1LCB3ZSBoYXZlIHJlY2VudGx5IGZvdW5kIGEgbmV3IGlzc3VlIHRo
-YXQgdGhlIHN5c3RlbSBjYW4ndCBib290IHRvCnVzZSBrZXhlYyB3aGVuIFNNRSBpcyBlbmFibGVk
-IGFuZCBrYXNsciBpcyBkaXNhYmxlZC4gSGF2ZSB5b3UgZXZlciBydW4gaW50byB0aGlzIGlzc3Vl
-PyAKVGhleSBoYXZlIHNpbWlsYXIgcmVwcm9kdWN0aW9uIHNjZW5hcmlvcy4KCkNDIFRvbSAmIEJh
-b3F1YW4KClRoYW5rcy4KTGlhbmJvCgo+IFRoYW5rcy4KPiBMaWFuYm8KPj4gVGhhbmtzLAo+PiBU
-b20KPj4KPj4+IExpYW5ibyBKaWFuZyAoMik6Cj4+PiAgIGFkZCBhIGZ1bmN0aW9uKGlvcmVtYXBf
-ZW5jcnlwdGVkKSBmb3Iga2R1bXAgd2hlbiBBTUQgc21lIGVuYWJsZWQuCj4+PiAgIHN1cHBvcnQg
-a2R1bXAgd2hlbiBBTUQgc2VjdXJlIG1lbW9yeSBlbmNyeXB0aW9uIGlzIGFjdGl2ZQo+Pj4KPj4+
-ICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9kbWkuaCAgICAgIHwgMTQgKysrKysrKysrKysrKy0KPj4+
-ICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9pby5oICAgICAgIHwgIDIgKysKPj4+ICBhcmNoL3g4Ni9r
-ZXJuZWwvYWNwaS9ib290LmMgICAgIHwgIDggKysrKysrKysKPj4+ICBhcmNoL3g4Ni9rZXJuZWwv
-Y3Jhc2hfZHVtcF82NC5jIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+PiAgYXJj
-aC94ODYvbW0vaW9yZW1hcC5jICAgICAgICAgICB8IDI1ICsrKysrKysrKysrKysrKysrLS0tLS0t
-LS0KPj4+ICBkcml2ZXJzL2FjcGkvdGFibGVzLmMgICAgICAgICAgIHwgMTQgKysrKysrKysrKysr
-Ky0KPj4+ICBkcml2ZXJzL2lvbW11L2FtZF9pb21tdV9pbml0LmMgIHwgIDkgKysrKysrKystCj4+
-PiAgZnMvcHJvYy92bWNvcmUuYyAgICAgICAgICAgICAgICB8IDM2ICsrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKystLS0tLQo+Pj4gIGluY2x1ZGUvbGludXgvY3Jhc2hfZHVtcC5oICAgICAg
-fCAgNCArKysrCj4+PiAga2VybmVsL2tleGVjX2NvcmUuYyAgICAgICAgICAgICB8IDEyICsrKysr
-KysrKysrKwo+Pj4gIDEwIGZpbGVzIGNoYW5nZWQsIDEzNSBpbnNlcnRpb25zKCspLCAxNiBkZWxl
-dGlvbnMoLSkKPj4+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hi Bhupesh,
+On 04/23/18 at 10:30am, Bhupesh Sharma wrote:
+> This patchset contains two patches:
+> 
+> [1/2] - Adds a missing uninstall rule to 'Makefile.in' to allow easier
+> 	uninstallation of executables and man pages installed via
+> 	'make install'
+> [2/2] - Removes obsolete kdump tool as per the discussion on kexec
+> 	mailing list (see [1] for details), where a conclusion was
+> 	reached that with the availability of tools like crash/gdb the
+> 	analysis of the crashdump core has become rather easy, and it
+> 	makes the kdump tool obsolete.
+> 
+> 	Also the same naming convention (man page) causes confusion
+> 	when compared to similarly named distribution specific kdump
+> 	service/utilities, so its better to remove the same from
+> 	kexec-tools.
+
+I'm not suer about adding 'make uninstall',  the second patch looks
+good,  can you send 2/2 separately?
+
+> 
+> I tested the patchset on my apm mustang and qualcomm arm64 boards and
+> the changes seem to work fine.
+> 
+> [1] http://lists.infradead.org/pipermail/kexec/2018-April/020483.html
+> 
+> Cc: Russell King <rmk@arm.linux.org.uk>
+> Cc: Simon Horman <horms@verge.net.au>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> 
+> Bhupesh Sharma (2):
+>   Makefile.in: Add uninstall rule
+>   Remove obsolete kdump tool
+> 
+>  Makefile.in         |  92 +++++++++++++--
+>  kdump/Makefile      |  30 -----
+>  kdump/kdump.8       |  39 -------
+>  kdump/kdump.c       | 327 ----------------------------------------------------
+>  kexec-tools.spec.in |   2 -
+>  5 files changed, 83 insertions(+), 407 deletions(-)
+>  delete mode 100644 kdump/Makefile
+>  delete mode 100644 kdump/kdump.8
+>  delete mode 100644 kdump/kdump.c
+> 
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
