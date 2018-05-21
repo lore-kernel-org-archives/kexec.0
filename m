@@ -1,25 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x243.google.com ([2607:f8b0:400e:c00::243])
+Received: from mail-pg0-x241.google.com ([2607:f8b0:400e:c05::241])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fKhBI-0003xl-LO
- for kexec@lists.infradead.org; Mon, 21 May 2018 09:32:42 +0000
-Received: by mail-pf0-x243.google.com with SMTP id o76-v6so6809854pfi.5
- for <kexec@lists.infradead.org>; Mon, 21 May 2018 02:32:29 -0700 (PDT)
-Date: Mon, 21 May 2018 18:32:29 +0900
+ id 1fKhPJ-000182-Vx
+ for kexec@lists.infradead.org; Mon, 21 May 2018 09:47:11 +0000
+Received: by mail-pg0-x241.google.com with SMTP id d14-v6so2546591pgv.8
+ for <kexec@lists.infradead.org>; Mon, 21 May 2018 02:46:59 -0700 (PDT)
+Date: Mon, 21 May 2018 18:46:59 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v9 06/11] arm64: kexec_file: allow for loading
- Image-format kernel
-Message-ID: <20180521093227.GA9887@linaro.org>
+Subject: Re: [PATCH v9 07/11] arm64: kexec_file: add crash dump support
+Message-ID: <20180521094658.GB9887@linaro.org>
 References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
- <20180425062629.29404-7-takahiro.akashi@linaro.org>
- <c604b578-6667-3532-eac9-55c428001025@arm.com>
- <20180507072139.GF11326@linaro.org>
- <6f0df3a8-a691-80f1-85de-3e0ead852f12@arm.com>
- <20180515051308.GD2737@linaro.org>
- <4a8409dc-27b3-1ddc-0427-0ca55edcb893@arm.com>
+ <20180425062629.29404-8-takahiro.akashi@linaro.org>
+ <f8d8305d-42f5-e1e2-20c4-733cb38cbb8d@arm.com>
+ <20180518103925.GP2737@linaro.org>
+ <fa2468a8-ffc9-1447-933d-de41bea50d1f@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <4a8409dc-27b3-1ddc-0427-0ca55edcb893@arm.com>
+In-Reply-To: <fa2468a8-ffc9-1447-933d-de41bea50d1f@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,134 +34,238 @@ Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, cata
 
 James,
 
-I haven't commented on this email.
-
-On Tue, May 15, 2018 at 06:14:37PM +0100, James Morse wrote:
+On Fri, May 18, 2018 at 05:00:55PM +0100, James Morse wrote:
 > Hi Akashi,
 > 
-> On 15/05/18 06:13, AKASHI Takahiro wrote:
-> > On Fri, May 11, 2018 at 06:07:06PM +0100, James Morse wrote:
-> >> On 07/05/18 08:21, AKASHI Takahiro wrote:
-> >>> On Tue, May 01, 2018 at 06:46:11PM +0100, James Morse wrote:
-> >>>> On 25/04/18 07:26, AKASHI Takahiro wrote:
-> >>>>> This patch provides kexec_file_ops for "Image"-format kernel. In this
-> >>>>> implementation, a binary is always loaded with a fixed offset identified
-> >>>>> in text_offset field of its header.
-> >>
-> >>>>> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> >>>>> index e4de1223715f..3cba4161818a 100644
-> >>>>> --- a/arch/arm64/include/asm/kexec.h
-> >>>>> +++ b/arch/arm64/include/asm/kexec.h
+> On 18/05/18 11:39, AKASHI Takahiro wrote:
+> > On Tue, May 15, 2018 at 06:11:15PM +0100, James Morse wrote:
+> >> On 25/04/18 07:26, AKASHI Takahiro wrote:
+> >>> Enabling crash dump (kdump) includes
+> >>> * prepare contents of ELF header of a core dump file, /proc/vmcore,
+> >>>   using crash_prepare_elf64_headers(), and
+> >>> * add two device tree properties, "linux,usable-memory-range" and
+> >>>   "linux,elfcorehdr", which represent repsectively a memory range
 > 
-> >>>> Could we check branch_code is non-zero, and text-offset points within image-size?
-> >>>
-> >>> We could do it, but I don't think this check is very useful.
-> >>>
-> >>>>
-> >>>> We could check that this platform supports the page-size/endian config that this
-> >>>> Image was built with... We get a message from the EFI stub if the page-size
-> >>>> can't be supported, it would be nice to do the same here (as we can).
-> >>>
-> >>> There is no restriction on page-size or endianness for kexec.
+> >>> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> >>> index 37c0a9dc2e47..ec674f4d267c 100644
+> >>> --- a/arch/arm64/kernel/machine_kexec_file.c
+> >>> +++ b/arch/arm64/kernel/machine_kexec_file.c
+> 
+> >>> +static void fill_property(void *buf, u64 val64, int cells)
+> >>> +{
+> >>> +	u32 val32;
+> >>> +
+> >>> +	if (cells == 1) {
+> >>> +		val32 = cpu_to_fdt32((u32)val64);
+> >>> +		memcpy(buf, &val32, sizeof(val32));
+> >>> +	} else {
 > >>
-> >> No, but it won't boot if the hardware doesn't support it. The kernel will spin
-> >> at a magic address that is, difficult, to debug without JTAG. The bug report
-> >> will be "it didn't boot".
+> >>> +		memset(buf, 0, cells * sizeof(u32) - sizeof(u64));
+> >>> +		buf += cells * sizeof(u32) - sizeof(u64);
+> >>
+> >> Is this trying to clear the 'top' cells and shuffle the pointer to point at the
+> >> 'bottom' 2? I'm pretty sure this isn't endian safe.
+> >>
+> >> Do we really expect a system to have #address-cells > 2?
 > > 
-> > OK.
-> > Added sanity checks for cpu features, endianness as well as page size.
+> > I don't know, but just for safety.
+> 
+> Okay, so this is aiming to be a cover-all-cases library function.
+> 
+> 
+> >>> +		val64 = cpu_to_fdt64(val64);
+> >>> +		memcpy(buf, &val64, sizeof(val64));
+> >>> +	}
+> >>> +}
+> >>> +
+> >>> +static int fdt_setprop_range(void *fdt, int nodeoffset, const char *name,
+> >>> +				unsigned long addr, unsigned long size)
+> >>
+> >> (the device-tree spec describes a 'ranges' property, which had me confused. This
+> >> is encoding a prop-encoded-array)
 > > 
-> >>
-> >>> What will be the purpose of this check?
-> >>
-> >> These values are in the header so that the bootloader can check them, then print
-> >> a meaningful error. Here, kexec_file_load() is playing the part of the bootloader.
+> > Should we rename it to, say, fdt_setprop_reg()?
 > 
-> >> I'm assuming kexec_file_load() can only be used to kexec linux... unlike regular
-> >> kexec. Is this where I'm going wrong?
-> 
-> Trying to work this out for myself: we can't support any UEFI application as we
-> can't give it the boot-services environment, so I'm pretty sure
-> kexec_file_load() must be linux-specific.
-> 
-> Can we state somewhere that we only expect arm64 linux to be booted with
-> kexec_file_load()? Its not clear from the kconfig text, which refers to kexec,
-> which explicitly states it can boot other OS. But for kexec_file_load() we're
-> following the kernel's booting.txt.
+> Sure, but I'd really like this code to come from libfdt. I'm hoping for some
+> temporary workaround, lets see what the DT folk say.
 
-While I don't know anything about requirements in booting other OS's nor
-if we can boot them even with kexec, I agree that kexec_file_load is a more
-limited form of booting mechanism. I will add some statement in Kconfig.
+OK, I will follow Rob's suggestion.
 
-> >>>>> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-> >>>>> new file mode 100644
-> >>>>> index 000000000000..4dd524ad6611
-> >>>>> --- /dev/null
-> >>>>> +++ b/arch/arm64/kernel/kexec_image.c
-> >>>>> @@ -0,0 +1,79 @@
-> >>>>
-> >>>>> +static void *image_load(struct kimage *image,
-> >>>>> +				char *kernel, unsigned long kernel_len,
-> >>>>> +				char *initrd, unsigned long initrd_len,
-> >>>>> +				char *cmdline, unsigned long cmdline_len)
-> >>>>> +{
-> >>>>> +	struct kexec_buf kbuf;
-> >>>>> +	struct arm64_image_header *h = (struct arm64_image_header *)kernel;
-> >>>>> +	unsigned long text_offset;
-> >>>>> +	int ret;
-> >>>>> +
-> >>>>> +	/* Load the kernel */
-> >>>>> +	kbuf.image = image;
-> >>>>> +	kbuf.buf_min = 0;
-> >>>>> +	kbuf.buf_max = ULONG_MAX;
-> >>>>> +	kbuf.top_down = false;
-> >>>>> +
-> >>>>> +	kbuf.buffer = kernel;
-> >>>>> +	kbuf.bufsz = kernel_len;
-> >>>>> +	kbuf.memsz = le64_to_cpu(h->image_size);
-> >>>>> +	text_offset = le64_to_cpu(h->text_offset);
-> >>>>> +	kbuf.buf_align = SZ_2M;
-> >>>>
-> >>>>> +	/* Adjust kernel segment with TEXT_OFFSET */
-> >>>>> +	kbuf.memsz += text_offset;
-> >>>>> +
-> >>>>> +	ret = kexec_add_buffer(&kbuf);
-> >>>>> +	if (ret)
-> >>>>> +		goto out;
-> >>>>> +
-> >>>>> +	image->arch.kern_segment = image->nr_segments - 1;
-> >>>>
-> >>>> You only seem to use kern_segment here, and in load_other_segments() called
-> >>>> below. Could it not be a local variable passed in? Instead of arch-specific data
-> >>>> we keep forever?
-> >>>
-> >>> No, kern_segment is also used in load_other_segments() in machine_kexec_file.c.
-> >>> To optimize memory hole allocation logic in locate_mem_hole_callback(),
-> >>> we need to know the exact range of kernel image (start and end).
+> >>> +	if (!buf)
+> >>> +		return -ENOMEM;
+> >>> +
+> >>> +	fill_property(prop, addr, __dt_root_addr_cells);
+> >>> +	prop += __dt_root_addr_cells * sizeof(u32);
+> >>> +
+> >>> +	fill_property(prop, size, __dt_root_size_cells);
+> >>> +
+> >>> +	result = fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
+> >>> +
+> >>> +	vfree(buf);
+> >>> +
+> >>> +	return result;
+> >>> +}
 > >>
-> >> That's the second user. My badly-made point is one calls the other, but passes
-> >> the data via some until-kexec lifetime struct. (its not important, just an
-> >> indicator this worked differently in the past and hasn't been cleaned up).
-> >> I meant something like [0].
+> >> Doesn't this stuff belong in libfdt? I guess there is no 'add array element' api
+> >> because this the first time we've wanted to create a node with more than
+> >> key=fixed-size-value.
+> >>
+> >> I don't think this belongs in arch C code. Do we have a plan for getting libfdt
+> >> to support encoding prop-arrays? Can we put it somewhere anyone else duplicating
+> >> this will find it, until we can (re)move it?
 > > 
-> > OK, but instead of adding kern_seg, I want to change the interface to:
+> > I will temporarily move all fdt-related stuff to a separate file, but
 > > 
-> > | extern int load_other_segments(struct kimage *image,
-> > |		unsigned long kernel_load_addr, unsigned long kernel_size,
-> > |		char *initrd, unsigned long initrd_len,
-> > |		char *cmdline, unsigned long cmdline_len);
+> >> I have no idea how that happens... it looks like the devicetree list is the
+> >> place to ask.
 > > 
-> > This way, we will in future be able to address an issue I mentioned in
-> > my previous e-mail. (If we support vmlinux, the kernel occupies two segments
-> > for text and data, respectively.)
+> > should we always sync with the original dtc/libfdt repository?
 > 
-> Aha, its not from old-stuff, its for future-stuff!
+> I thought so, libfdt is one of those external libraries that the kernel
+> consumes, like acpica. For acpica at least the rule is changes go upstream, then
+> get sync'd back.
 
-I have vmlinux patch, but it is very unlikely for me to submit it :)
+Same above.
+
+> >>>  static int setup_dtb(struct kimage *image,
+> >>>  		unsigned long initrd_load_addr, unsigned long initrd_len,
+> >>>  		char *cmdline, unsigned long cmdline_len,
+> >>> @@ -88,10 +165,26 @@ static int setup_dtb(struct kimage *image,
+> >>>  	int range_len;
+> >>>  	int ret;
+> >>>  
+> >>> +	/* check ranges against root's #address-cells and #size-cells */
+> >>> +	if (image->type == KEXEC_TYPE_CRASH &&
+> >>> +		(!cells_size_fitted(image->arch.elf_load_addr,
+> >>> +				image->arch.elf_headers_sz) ||
+> >>> +		 !cells_size_fitted(crashk_res.start,
+> >>> +				crashk_res.end - crashk_res.start + 1))) {
+> >>> +		pr_err("Crash memory region doesn't fit into DT's root cell sizes.\n");
+> >>> +		ret = -EINVAL;
+> >>> +		goto out_err;
+> >>> +	}
+> >>
+> >> To check I've understood this properly: This can happen if the firmware provided
+> >> a DTB with 32bit address/size cells, but at least some of the memory requires 64
+> >> bit address/size cells. This could only happen on a UEFI system where the
+> >> firmware-DTB doesn't describe memory. ACPI-only systems would have the EFIstub DT.
+> > 
+> > Probably, yes. I assumed the case where #address-cells and #size-cells
+> > were just missing in fdt.
+> 
+> Ah, that's another one. I just wanted to check we could boot on a system where
+> this can happen.
+> 
+> 
+> >>>  	/* duplicate dt blob */
+> >>>  	buf_size = fdt_totalsize(initial_boot_params);
+> >>>  	range_len = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
+> >>>  
+> >>> +	if (image->type == KEXEC_TYPE_CRASH)
+> >>> +		buf_size += fdt_prop_len("linux,elfcorehdr", range_len)
+> >>> +				+ fdt_prop_len("linux,usable-memory-range",
+> >>> +								range_len);
+> 
+> >                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> [...]
+> 
+> >> Don't you need to add "linux,usable-memory-range" to the buf_size estimate?
+> > 
+> > I think the code exists. See above.
+> 
+> Sorry, turns out I can't read!
+> 
+> 
+> >>> +		if (ret)
+> >>> +			goto out_err;
+> >>> +	}
+> >>
+> >>> @@ -148,17 +258,109 @@ static int setup_dtb(struct kimage *image,
+> >>
+> >>> +static struct crash_mem *get_crash_memory_ranges(void)
+> >>> +{
+> >>> +	unsigned int nr_ranges;
+> >>> +	struct crash_mem *cmem;
+> >>> +
+> >>> +	nr_ranges = 1; /* for exclusion of crashkernel region */
+> >>> +	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ranges_callback);
+> >>> +
+> >>> +	cmem = vmalloc(sizeof(struct crash_mem) +
+> >>> +			sizeof(struct crash_mem_range) * nr_ranges);
+> >>> +	if (!cmem)
+> >>> +		return NULL;
+> >>> +
+> >>> +	cmem->max_nr_ranges = nr_ranges;
+> >>> +	cmem->nr_ranges = 0;
+> >>> +	walk_system_ram_res(0, -1, cmem, add_mem_range_callback);
+> >>> +
+> >>> +	/* Exclude crashkernel region */
+> >>> +	if (crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end)) {
+> >>> +		vfree(cmem);
+> >>> +		return NULL;
+> >>> +	}
+> >>> +
+> >>> +	return cmem;
+> >>> +}
+> >>
+> >> Could this function be included in prepare_elf_headers() so that the alloc() and
+> >> free() occur together.
+> > 
+> > Or aiming that arm64 and x86 have similar-look code?
+> 
+> What's the advantage in things looking the same? If they are the same, it
+> probably shouldn't be in per-arch code. Otherwise it should be as simple as
+> possible, otherwise we can't spot the bugs/leaks.
+> 
+> But I think walking memblock here will remove all 'looks the same' properties here.
+
+OK, I will unfold the function in prepare_elf_headers().
+
+> 
+> >>> +static int prepare_elf_headers(void **addr, unsigned long *sz)
+> >>> +{
+> >>> +	struct crash_mem *cmem;
+> >>> +	int ret = 0;
+> >>> +
+> >>> +	cmem = get_crash_memory_ranges();
+> >>> +	if (!cmem)
+> >>> +		return -ENOMEM;
+> >>> +
+> >>> +	ret =  crash_prepare_elf64_headers(cmem, true, addr, sz);
+> >>> +
+> >>> +	vfree(cmem);
+> >>
+> >>> +	return ret;
+> >>> +}
+> >>
+> >> All this is moving memory-range information from core-code's
+> >> walk_system_ram_res() into core-code's struct crash_mem, and excluding
+> >> crashk_res, which again is accessible to the core code.
+> >>
+> >> It looks like this is duplicated in arch/x86 and arch/arm64 because arm64
+> >> doesn't have a second 'crashk_low_res' region, and always wants elf64, instead
+> >> of when IS_ENABLED(CONFIG_X86_64).
+> >> If we can abstract just those two, more of this could be moved to core code
+> >> where powerpc can make use of it if they want to support kdump with
+> >> kexec_file_load().
+> >>
+> >> But, its getting late for cross-architecture dependencies, lets put that on the
+> >> for-later list. (assuming there isn't a powerpc-kdump series out there adding a
+> >> third copy of this)
+> > 
+> > Sure. X86 code has so many exceptional lines in the code :)
+> 
+> They also pass the e820 'usable-memory' map on the cmdline...
+
+Well, according to Dave(RedHat)'s past comment, this type of kernel
+parameters are in a old style, and x86 now has a dedicated memory region
+passed for this sake.
 
 Thanks,
 -Takahiro AKASHI
 
+> 
+> Thanks,
 > 
 > James
 
