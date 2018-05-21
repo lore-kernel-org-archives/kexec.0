@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x244.google.com ([2607:f8b0:400e:c00::244])
+Received: from mail-by2nam03on0041.outbound.protection.outlook.com
+ ([104.47.42.41] helo=NAM03-BY2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fKhpu-0000er-99
- for kexec@lists.infradead.org; Mon, 21 May 2018 10:14:39 +0000
-Received: by mail-pf0-x244.google.com with SMTP id q22-v6so6859407pff.11
- for <kexec@lists.infradead.org>; Mon, 21 May 2018 03:14:28 -0700 (PDT)
-Date: Mon, 21 May 2018 19:14:27 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v9 07/11] arm64: kexec_file: add crash dump support
-Message-ID: <20180521101425.GC9887@linaro.org>
-References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
- <20180425062629.29404-8-takahiro.akashi@linaro.org>
- <0aba6388-8a73-d371-7b92-3594639eb27e@arm.com>
- <20180518153552.GA23468@rob-hp-laptop>
+ id 1fKkmh-0005G4-CP
+ for kexec@lists.infradead.org; Mon, 21 May 2018 13:23:33 +0000
+Subject: Re: [PATCH 0/2] support kdump for AMD secure memory encryption(sme)
+References: <20180515015133.4363-1-lijiang@redhat.com>
+ <55bda494-bee4-5696-03e5-fc21c9d6b631@amd.com>
+ <18309611-c8c4-92cb-161e-f35ef3d243ea@redhat.com>
+ <a0b95743-209a-aca7-33e4-828375df1826@redhat.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <3972e681-d8eb-4f4d-843a-6ddbf339f0bb@amd.com>
+Date: Mon, 21 May 2018 08:23:14 -0500
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180518153552.GA23468@rob-hp-laptop>
+In-Reply-To: <a0b95743-209a-aca7-33e4-828375df1826@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,241 +23,105 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, arnd@arndb.de, dhowells@redhat.com, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: lijiang <lijiang@redhat.com>, linux-kernel@vger.kernel.org
+Cc: dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
-Hi Rob,
-
-On Fri, May 18, 2018 at 10:35:52AM -0500, Rob Herring wrote:
-> On Tue, May 15, 2018 at 06:12:59PM +0100, James Morse wrote:
-> > Hi guys,
-> > 
-> > (CC: +RobH, devicetree list)
-> 
-> Thanks.
-> 
-> > On 25/04/18 07:26, AKASHI Takahiro wrote:
-> > > Enabling crash dump (kdump) includes
-> > > * prepare contents of ELF header of a core dump file, /proc/vmcore,
-> > >   using crash_prepare_elf64_headers(), and
-> > > * add two device tree properties, "linux,usable-memory-range" and
-> > >   "linux,elfcorehdr", which represent repsectively a memory range
-> > >   to be used by crash dump kernel and the header's location
-> 
-> BTW, I intend to move existing parsing these out of the arch code. 
-> Please don't add more DT handling to arch/ unless it is *really* arch 
-> specific. I'd assume that the next arch to add kexec support will use 
-> these bindings instead of the powerpc way.
-
-So do you expect all the fdt-related stuff in my current implementation
-for arm64 to be put into libfdt, or at least drivers/of, from the beginning?
-
-I'm not sure how arch-specific the properties here are. For instance,
-it is only arm64 that uses "linux,usable-memory-range" right now but
-if some other arch follows, it is no more arch-specific.
-# I remember that you didn't like this property :)
-
-> > kexec_file_load() on arm64 needs to be able to create a prop encoded array to
-> > the FDT, but there doesn't appear to be a libfdt helper to do this.
-> > 
-> > Akashi's code below adds fdt_setprop_range() to the arch code, and duplicates
-> > bits of libfdt_internal.h to do the work.
-> > 
-> > How should this be done? I'm assuming this is something we need a new API in
-> > libfdt.h for. How do these come about, and is there an interim step we can use
-> > until then?
-> 
-> Submit patches to upstream dtc and then we can pull it in. Ahead of that 
-> you can add it to drivers/of/fdt.c (or maybe fdt_address.c because 
-> that's really what this is dealing with).
-
-OK, I'm going to try to follow your suggestion.
-
-> libfdt has only recently gained the beginnings of address handling.
-> 
-> > 
-> > Thanks!
-> > 
-> > James
-> > 
-> > > diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> > > index 37c0a9dc2e47..ec674f4d267c 100644
-> > > --- a/arch/arm64/kernel/machine_kexec_file.c
-> > > +++ b/arch/arm64/kernel/machine_kexec_file.c
-> > > @@ -76,6 +81,78 @@ int arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> > >  	return ret;
-> > >  }
-> > >  
-> > > +static int __init arch_kexec_file_init(void)
-> > > +{
-> > > +	/* Those values are used later on loading the kernel */
-> > > +	__dt_root_addr_cells = dt_root_addr_cells;
-> > > +	__dt_root_size_cells = dt_root_size_cells;
-> 
-> I intend to make dt_root_*_cells private, so don't add another user 
-> outside of drivers/of/.
-
-Once cells_size_fitted() moves to drivers/of, there will be no users.
-
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +late_initcall(arch_kexec_file_init);
-> > > +
-> > > +#define FDT_ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
-> > > +#define FDT_TAGALIGN(x)	(FDT_ALIGN((x), FDT_TAGSIZE))
-> > > +
-> > > +static int fdt_prop_len(const char *prop_name, int len)
-> > > +{
-> > > +	return (strlen(prop_name) + 1) +
-> > > +		sizeof(struct fdt_property) +
-> > > +		FDT_TAGALIGN(len);
-> > > +}
-> > > +
-> > > +static bool cells_size_fitted(unsigned long base, unsigned long size)
-> 
-> I can't imagine this would happen. However, when this is moved to 
-> drivers/of/ or dtc, these need to be u64 types to work on 32-bit.
-
-OK.
-
-> > > +	/* if *_cells >= 2, cells can hold 64-bit values anyway */
-> > > +	if ((__dt_root_addr_cells == 1) && (base >= (1ULL << 32)))
-> > > +		return false;
-> > > +
-> > > +	if ((__dt_root_size_cells == 1) && (size >= (1ULL << 32)))
-> > > +		return false;
-> > > +
-> > > +	return true;
-> > > +}
-> > > +
-> > > +static void fill_property(void *buf, u64 val64, int cells)
-> > > +{
-> > > +	u32 val32;
-> 
-> This should be a __be32 or fdt32 type. So should buf.
-
-OK for val32, but buf is a local pointer address.
-
-> > > +
-> > > +	if (cells == 1) {
-> > > +		val32 = cpu_to_fdt32((u32)val64);
-> > > +		memcpy(buf, &val32, sizeof(val32));
-> > > +	} else {
-> > > +		memset(buf, 0, cells * sizeof(u32) - sizeof(u64));
-> > > +		buf += cells * sizeof(u32) - sizeof(u64);
-> > > +
-> > > +		val64 = cpu_to_fdt64(val64);
-> > > +		memcpy(buf, &val64, sizeof(val64));
-> 
-> Look how of_read_number() is implemented. You should be able to do 
-> something similar here looping and avoiding the if/else.
-
-Ah, excellent!
-
-> > > +	}
-> > > +}
-> > > +
-> > > +static int fdt_setprop_range(void *fdt, int nodeoffset, const char *name,
-> > > +				unsigned long addr, unsigned long size)
-> 
-> A very generic sounding function, but really only works on addresses in 
-> children of the root node.
-> 
-> > > +{
-> > > +	void *buf, *prop;
-> > > +	size_t buf_size;
-> > > +	int result;
-> > > +
-> > > +	buf_size = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
-> > > +	prop = buf = vmalloc(buf_size);
-> 
-> This can go on the stack instead (and would be required to to work in 
-> libfdt).
-
-Well, I can't agree with you here since we are now in effort, as far as
-I correctly understand, of purging all the variable-sized arrays on a local
-stack out of the kernel code.
-
-Thank you for your review.
--Takahiro AKASHI
-
-> > > +	if (!buf)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	fill_property(prop, addr, __dt_root_addr_cells);
-> > > +	prop += __dt_root_addr_cells * sizeof(u32);
-> > > +
-> > > +	fill_property(prop, size, __dt_root_size_cells);
-> > > +
-> > > +	result = fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
-> > > +
-> > > +	vfree(buf);
-> > > +
-> > > +	return result;
-> > > +}
-> > > +
-> > >  static int setup_dtb(struct kimage *image,
-> > >  		unsigned long initrd_load_addr, unsigned long initrd_len,
-> > >  		char *cmdline, unsigned long cmdline_len,
-> > > @@ -88,10 +165,26 @@ static int setup_dtb(struct kimage *image,
-> > >  	int range_len;
-> > >  	int ret;
-> > >  
-> > > +	/* check ranges against root's #address-cells and #size-cells */
-> > > +	if (image->type == KEXEC_TYPE_CRASH &&
-> > > +		(!cells_size_fitted(image->arch.elf_load_addr,
-> > > +				image->arch.elf_headers_sz) ||
-> > > +		 !cells_size_fitted(crashk_res.start,
-> > > +				crashk_res.end - crashk_res.start + 1))) {
-> > > +		pr_err("Crash memory region doesn't fit into DT's root cell sizes.\n");
-> > > +		ret = -EINVAL;
-> > > +		goto out_err;
-> > > +	}
-> > > +
-> > >  	/* duplicate dt blob */
-> > >  	buf_size = fdt_totalsize(initial_boot_params);
-> > >  	range_len = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
-> > >  
-> > > +	if (image->type == KEXEC_TYPE_CRASH)
-> > > +		buf_size += fdt_prop_len("linux,elfcorehdr", range_len)
-> > > +				+ fdt_prop_len("linux,usable-memory-range",
-> > > +								range_len);
-> > > +
-> > >  	if (initrd_load_addr)
-> > >  		buf_size += fdt_prop_len("linux,initrd-start", sizeof(u64))
-> > >  				+ fdt_prop_len("linux,initrd-end", sizeof(u64));
-> > > @@ -113,6 +206,23 @@ static int setup_dtb(struct kimage *image,
-> > >  	if (nodeoffset < 0)
-> > >  		goto out_err;
-> > >  
-> > > +	if (image->type == KEXEC_TYPE_CRASH) {
-> > > +		/* add linux,elfcorehdr */
-> > > +		ret = fdt_setprop_range(buf, nodeoffset, "linux,elfcorehdr",
-> > > +				image->arch.elf_load_addr,
-> > > +				image->arch.elf_headers_sz);
-> > > +		if (ret)
-> > > +			goto out_err;
-> > > +
-> > > +		/* add linux,usable-memory-range */
-> > > +		ret = fdt_setprop_range(buf, nodeoffset,
-> > > +				"linux,usable-memory-range",
-> > > +				crashk_res.start,
-> > > +				crashk_res.end - crashk_res.start + 1);
-> > > +		if (ret)
-> > > +			goto out_err;
-> > > +	}
-> > > +
-> > >  	/* add bootargs */
-> > >  	if (cmdline) {
-> > >  		ret = fdt_setprop(buf, nodeoffset, "bootargs",
-> > 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gNS8yMC8yMDE4IDEwOjQ1IFBNLCBsaWppYW5nIHdyb3RlOgo+IOWcqCAyMDE45bm0MDXmnIgx
+N+aXpSAyMTo0NSwgbGlqaWFuZyDlhpnpgZM6Cj4+IOWcqCAyMDE45bm0MDXmnIgxNeaXpSAyMToz
+MSwgVG9tIExlbmRhY2t5IOWGmemBkzoKPj4+IE9uIDUvMTQvMjAxOCA4OjUxIFBNLCBMaWFuYm8g
+Smlhbmcgd3JvdGU6Cj4+Pj4gSXQgaXMgY29udmVuaWVudCB0byByZW1hcCB0aGUgb2xkIG1lbW9y
+eSBlbmNyeXB0ZWQgdG8gdGhlIHNlY29uZCBrZXJuZWwgYnkKPj4+PiBjYWxsaW5nIGlvcmVtYXBf
+ZW5jcnlwdGVkKCkuCj4+Pj4KPj4+PiBXaGVuIHNtZSBlbmFibGVkIG9uIEFNRCBzZXJ2ZXIsIHdl
+IGFsc28gbmVlZCB0byBzdXBwb3J0IGtkdW1wLiBCZWNhdXNlCj4+Pj4gdGhlIG1lbW9yeSBpcyBl
+bmNyeXB0ZWQgaW4gdGhlIGZpcnN0IGtlcm5lbCwgd2Ugd2lsbCByZW1hcCB0aGUgb2xkIG1lbW9y
+eQo+Pj4+IGVuY3J5cHRlZCB0byB0aGUgc2Vjb25kIGtlcm5lbChjcmFzaCBrZXJuZWwpLCBhbmQg
+c21lIGlzIGFsc28gZW5hYmxlZCBpbgo+Pj4+IHRoZSBzZWNvbmQga2VybmVsLCBvdGhlcndpc2Ug
+dGhlIG9sZCBtZW1vcnkgZW5jcnlwdGVkIGNhbiBub3QgYmUgZGVjcnlwdGVkLgo+Pj4+IEJlY2F1
+c2Ugc2ltcGx5IGNoYW5naW5nIHRoZSB2YWx1ZSBvZiBhIEMtYml0IG9uIGEgcGFnZSB3aWxsIG5v
+dAo+Pj4+IGF1dG9tYXRpY2FsbHkgZW5jcnlwdCB0aGUgZXhpc3RpbmcgY29udGVudHMgb2YgYSBw
+YWdlLCBhbmQgYW55IGRhdGEgaW4gdGhlCj4+Pj4gcGFnZSBwcmlvciB0byB0aGUgQy1iaXQgbW9k
+aWZpY2F0aW9uIHdpbGwgYmVjb21lIHVuaW50ZWxsaWdpYmxlLiBBIHBhZ2Ugb2YKPj4+PiBtZW1v
+cnkgdGhhdCBpcyBtYXJrZWQgZW5jcnlwdGVkIHdpbGwgYmUgYXV0b21hdGljYWxseSBkZWNyeXB0
+ZWQgd2hlbiByZWFkCj4+Pj4gZnJvbSBEUkFNIGFuZCB3aWxsIGJlIGF1dG9tYXRpY2FsbHkgZW5j
+cnlwdGVkIHdoZW4gd3JpdHRlbiB0byBEUkFNLgo+Pj4+Cj4+Pj4gRm9yIHRoZSBrZHVtcCwgaXQg
+aXMgbmVjZXNzYXJ5IHRvIGRpc3Rpbmd1aXNoIHdoZXRoZXIgdGhlIG1lbW9yeSBpcwo+Pj4+IGVu
+Y3J5cHRlZC4gRnVydGhlcm1vcmUsIHdlIHNob3VsZCBhbHNvIGtub3cgd2hpY2ggcGFydCBvZiB0
+aGUgbWVtb3J5IGlzCj4+Pj4gZW5jcnlwdGVkIG9yIGRlY3J5cHRlZC4gV2Ugd2lsbCBhcHByb3By
+aWF0ZWx5IHJlbWFwIHRoZSBtZW1vcnkgYWNjb3JkaW5nCj4+Pj4gdG8gdGhlIHNwZWNpZmljIHNp
+dHVhdGlvbiBpbiBvcmRlciB0byB0ZWxsIGNwdSBob3cgdG8gZGVhbCB3aXRoIHRoZQo+Pj4+IGRh
+dGEoZW5jcnlwdGVkIG9yIGRlY3J5cHRlZCkuIEZvciBleGFtcGxlLCB3aGVuIHNtZSBlbmFibGVk
+LCBpZiB0aGUgb2xkCj4+Pj4gbWVtb3J5IGlzIGVuY3J5cHRlZCwgd2Ugd2lsbCByZW1hcCB0aGUg
+b2xkIG1lbW9yeSBpbiBlbmNyeXB0ZWQgd2F5LCB3aGljaAo+Pj4+IHdpbGwgYXV0b21hdGljYWxs
+eSBkZWNyeXB0IHRoZSBvbGQgbWVtb3J5IGVuY3J5cHRlZCB3aGVuIHdlIHJlYWQgdGhvc2UgZGF0
+YQo+Pj4+IGZyb20gdGhlIHJlbWFwcGluZyBhZGRyZXNzLgo+Pj4+Cj4+Pj4gIC0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4+PiB8IGZpcnN0LWtlcm5lbCB8
+IHNlY29uZC1rZXJuZWwgfCBrZHVtcCBzdXBwb3J0IHwKPj4+PiB8ICAgICAgKG1lbV9lbmNyeXB0
+PW9ufG9mZikgICAgfCAgICh5ZXN8bm8pICAgIHwgCj4+Pj4gfC0tLS0tLS0tLS0tLS0tKy0tLS0t
+LS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS18Cj4+Pj4gfCAgICAgb24gICAgICAgfCAgICAgb24g
+ICAgICAgIHwgICAgIHllcyAgICAgICB8Cj4+Pj4gfCAgICAgb2ZmICAgICAgfCAgICAgb2ZmICAg
+ICAgIHwgICAgIHllcyAgICAgICB8Cj4+Pj4gfCAgICAgb24gICAgICAgfCAgICAgb2ZmICAgICAg
+IHwgICAgIG5vICAgICAgICB8Cj4+Pj4gfCAgICAgb2ZmICAgICAgfCAgICAgb24gICAgICAgIHwg
+ICAgIG5vICAgICAgICB8Cj4+Pj4gfF9fX19fX19fX19fX19ffF9fX19fX19fX19fX19fX3xfX19f
+X19fX19fX19fX198Cj4+Pj4KPj4+PiBUZXN0IHRvb2xzOgo+Pj4+IG1ha2VkdW1wZmlsZVt2MS42
+LjNdOiBodHRwczovL2dpdGh1Yi5jb20vTGlhbmJvSi9tYWtlZHVtcGZpbGUKPj4+PiBjb21taXQg
+ZTFkZTEwM2VjYThmIChBIGRyYWZ0IGZvciBrZHVtcCB2bWNvcmUgYWJvdXQgQU1EIFNNRSkKPj4+
+PiBBdXRob3I6IExpYW5ibyBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+Pj4+IERhdGU6ICAg
+TW9uIE1heSAxNCAxNzowMjo0MCAyMDE4ICswODAwCj4+Pj4gTm90ZTogVGhpcyBwYXRjaCBjYW4g
+b25seSBkdW1wIHZtY29yZSBpbiB0aGUgY2FzZSBvZiBTTUUgZW5hYmxlZC4KPj4+Pgo+Pj4+IGNy
+YXNoLTcuMi4xOiBodHRwczovL2dpdGh1Yi5jb20vY3Jhc2gtdXRpbGl0eS9jcmFzaC5naXQKPj4+
+PiBjb21taXQgMWUxYmQ5YzRjMWJlIChGaXggZm9yIHRoZSAiYnBmIiBjb21tYW5kIGRpc3BsYXkg
+b24gTGludXggNC4xNy1yYzEpCj4+Pj4gQXV0aG9yOiBEYXZlIEFuZGVyc29uIDxhbmRlcnNvbkBy
+ZWRoYXQuY29tPgo+Pj4+IERhdGU6ICAgRnJpIE1heSAxMSAxNTo1NDozMiAyMDE4IC0wNDAwCj4+
+Pj4KPj4+PiBUZXN0IGVudmlyb25tZW50Ogo+Pj4+IEhQIFByb0xpYW50IERMMzg1R2VuMTAgQU1E
+IEVQWUMgNzI1MQo+Pj4+IDgtQ29yZSBQcm9jZXNzb3IKPj4+PiAzMjc2OCBNQiBtZW1vcnkKPj4+
+PiA2MDAgR0IgZGlzayBzcGFjZQo+Pj4+Cj4+Pj4gTGludXggNC4xNy1yYzQ6Cj4+Pj4gZ2l0Oi8v
+Z2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4Lmdp
+dAo+Pj4+IGNvbW1pdCA3NWJjMzdmZWZjNDQgKCJMaW51eCA0LjE3LXJjNCIpCj4+Pj4gQXV0aG9y
+OiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRhdGlvbi5vcmc+Cj4+Pj4gRGF0
+ZTogICBTdW4gTWF5IDYgMTY6NTc6MzggMjAxOCAtMTAwMAo+Pj4+Cj4+Pj4gUmVmZXJlbmNlOgo+
+Pj4+IEFNRDY0IEFyY2hpdGVjdHVyZSBQcm9ncmFtbWVyJ3MgTWFudWFsCj4+Pj4gaHR0cHM6Ly9z
+dXBwb3J0LmFtZC5jb20vVGVjaERvY3MvMjQ1OTMucGRmCj4+Pj4KPj4+Cj4+PiBIYXZlIHlvdSBh
+bHNvIHRlc3RlZCB0aGlzIHdpdGggU0VWPyAgSXQgd291bGQgYmUgbmljZSBpZiB0aGUga2R1bXAK
+Pj4+IGNoYW5nZXMgeW91IG1ha2Ugd29yayB3aXRoIGJvdGggU01FIGFuZCBTRVYuCj4+Pgo+PiBU
+aGFuayB5b3UsIFRvbS4KPj4gVGhpcyBpcyBhIGdyZWF0IHF1ZXN0aW9uLCB3ZSBvcmlnaW5hbGx5
+IHBsYW4gdG8gaW1wbGVtZW50IFNFViBpbiBzdWJzZXF1ZW50IHBhdGNoZXMsIGFuZAo+PiB3ZSBh
+cmUgYWxzbyB3b3JraW5nIG9uIFNFViBhdCBwcmVzZW50Lgo+PiBGdXJ0aGVybW9yZSwgd2UgaGF2
+ZSBhbm90aGVyIGtub3duIGlzc3VlIHRoYXQgdGhlIHN5c3RlbSBjYW4ndCBqdW1wIGludG8gdGhl
+IHNlY29uZCBrZXJuZWwKPj4gd2hlbiBTTUUgaXMgZW5hYmxlZCBhbmQga2FzbHIgaXMgZGlzYWJs
+ZWQgaW4ga2R1bXAgbW9kZS4gSXQgc2VlbXMgdGhhdCBpcyBhIGNvbXBsZXggcHJvYmxlbXMsCj4+
+IG1heWJlIGl0IGlzIHJlbGF0ZWQgdG8ga2FzbHIgYW5kIFNNRSwgY3VycmVudGx5LCBpJ20gbm90
+IHN1cmUgdGhlIHJvb3QgY2F1c2UsIGJ1dCB3ZSB3aWxsCj4+IGFsc28gcGxhbiB0byBmaXggaXQu
+IENhbiB5b3UgZ2l2ZSBtZSBhbnkgYWR2aWNlIGFib3V0IHRoaXMgaXNzdWU/Cj4+Cj4gQmFzZWQg
+b24gdXBzdHJlYW0gNC4xNy1yYzUsIHdlIGhhdmUgcmVjZW50bHkgZm91bmQgYSBuZXcgaXNzdWUg
+dGhhdCB0aGUgc3lzdGVtIGNhbid0IGJvb3QgdG8KPiB1c2Uga2V4ZWMgd2hlbiBTTUUgaXMgZW5h
+YmxlZCBhbmQga2FzbHIgaXMgZGlzYWJsZWQuIEhhdmUgeW91IGV2ZXIgcnVuIGludG8gdGhpcyBp
+c3N1ZT8gCj4gVGhleSBoYXZlIHNpbWlsYXIgcmVwcm9kdWN0aW9uIHNjZW5hcmlvcy4KPiAKPiBD
+QyBUb20gJiBCYW9xdWFuCgpJIGhhdmVuJ3QgZW5jb3VudGVyZWQgdGhpcyBpc3N1ZS4gIENhbiB5
+b3Ugc2VuZCB0aGUga2VybmVsIGNvbmZpZyB0aGF0IHlvdQphcmUgdXNpbmc/ICBBbmQgeW91ciBr
+ZXJuZWwgY29tbWFuZCBsaW5lPyAgSSdsbCB0cnkgeW91ciBjb25maWcgYW5kIHNlZSBpZgpJIGNh
+biByZXByb2R1Y2UgdGhlIGlzc3VlLgoKSnVzdCB0byBiZSBjbGFyaWZ5LCB5b3UgcGVyZm9ybSBh
+IHBvd2VyLW9uIGJvb3Qgd2l0aCBTTUUgZW5hYmxlZCBhbmQgS0FTTFIKZGlzYWJsZWQgKGUuZy4g
+bWVtX2VuY3J5cHQ9b24gbm9rYXNsciksIGNvcnJlY3QsIGFuZCB0aGF0IHdvbid0IGJvb3Q/CgpU
+aGFua3MsClRvbQoKPiAKPiBUaGFua3MuCj4gTGlhbmJvCj4gCj4+IFRoYW5rcy4KPj4gTGlhbmJv
+Cj4+PiBUaGFua3MsCj4+PiBUb20KPj4+Cj4+Pj4gTGlhbmJvIEppYW5nICgyKToKPj4+PiAgIGFk
+ZCBhIGZ1bmN0aW9uKGlvcmVtYXBfZW5jcnlwdGVkKSBmb3Iga2R1bXAgd2hlbiBBTUQgc21lIGVu
+YWJsZWQuCj4+Pj4gICBzdXBwb3J0IGtkdW1wIHdoZW4gQU1EIHNlY3VyZSBtZW1vcnkgZW5jcnlw
+dGlvbiBpcyBhY3RpdmUKPj4+Pgo+Pj4+ICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9kbWkuaCAgICAg
+IHwgMTQgKysrKysrKysrKysrKy0KPj4+PiAgYXJjaC94ODYvaW5jbHVkZS9hc20vaW8uaCAgICAg
+ICB8ICAyICsrCj4+Pj4gIGFyY2gveDg2L2tlcm5lbC9hY3BpL2Jvb3QuYyAgICAgfCAgOCArKysr
+KysrKwo+Pj4+ICBhcmNoL3g4Ni9rZXJuZWwvY3Jhc2hfZHVtcF82NC5jIHwgMjcgKysrKysrKysr
+KysrKysrKysrKysrKysrKysrCj4+Pj4gIGFyY2gveDg2L21tL2lvcmVtYXAuYyAgICAgICAgICAg
+fCAyNSArKysrKysrKysrKysrKysrKy0tLS0tLS0tCj4+Pj4gIGRyaXZlcnMvYWNwaS90YWJsZXMu
+YyAgICAgICAgICAgfCAxNCArKysrKysrKysrKysrLQo+Pj4+ICBkcml2ZXJzL2lvbW11L2FtZF9p
+b21tdV9pbml0LmMgIHwgIDkgKysrKysrKystCj4+Pj4gIGZzL3Byb2Mvdm1jb3JlLmMgICAgICAg
+ICAgICAgICAgfCAzNiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0KPj4+PiAg
+aW5jbHVkZS9saW51eC9jcmFzaF9kdW1wLmggICAgICB8ICA0ICsrKysKPj4+PiAga2VybmVsL2tl
+eGVjX2NvcmUuYyAgICAgICAgICAgICB8IDEyICsrKysrKysrKysrKwo+Pj4+ICAxMCBmaWxlcyBj
+aGFuZ2VkLCAxMzUgaW5zZXJ0aW9ucygrKSwgMTYgZGVsZXRpb25zKC0pCj4+Pj4KCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
+dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8va2V4ZWMK
