@@ -1,22 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x241.google.com ([2607:f8b0:400e:c05::241])
+Received: from mail-pf0-x244.google.com ([2607:f8b0:400e:c00::244])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fKhPJ-000182-Vx
- for kexec@lists.infradead.org; Mon, 21 May 2018 09:47:11 +0000
-Received: by mail-pg0-x241.google.com with SMTP id d14-v6so2546591pgv.8
- for <kexec@lists.infradead.org>; Mon, 21 May 2018 02:46:59 -0700 (PDT)
-Date: Mon, 21 May 2018 18:46:59 +0900
+ id 1fKhpu-0000er-99
+ for kexec@lists.infradead.org; Mon, 21 May 2018 10:14:39 +0000
+Received: by mail-pf0-x244.google.com with SMTP id q22-v6so6859407pff.11
+ for <kexec@lists.infradead.org>; Mon, 21 May 2018 03:14:28 -0700 (PDT)
+Date: Mon, 21 May 2018 19:14:27 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Subject: Re: [PATCH v9 07/11] arm64: kexec_file: add crash dump support
-Message-ID: <20180521094658.GB9887@linaro.org>
+Message-ID: <20180521101425.GC9887@linaro.org>
 References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
  <20180425062629.29404-8-takahiro.akashi@linaro.org>
- <f8d8305d-42f5-e1e2-20c4-733cb38cbb8d@arm.com>
- <20180518103925.GP2737@linaro.org>
- <fa2468a8-ffc9-1447-933d-de41bea50d1f@arm.com>
+ <0aba6388-8a73-d371-7b92-3594639eb27e@arm.com>
+ <20180518153552.GA23468@rob-hp-laptop>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <fa2468a8-ffc9-1447-933d-de41bea50d1f@arm.com>
+In-Reply-To: <20180518153552.GA23468@rob-hp-laptop>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,245 +28,235 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, arnd@arndb.de, dhowells@redhat.com, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-James,
+Hi Rob,
 
-On Fri, May 18, 2018 at 05:00:55PM +0100, James Morse wrote:
-> Hi Akashi,
-> 
-> On 18/05/18 11:39, AKASHI Takahiro wrote:
-> > On Tue, May 15, 2018 at 06:11:15PM +0100, James Morse wrote:
-> >> On 25/04/18 07:26, AKASHI Takahiro wrote:
-> >>> Enabling crash dump (kdump) includes
-> >>> * prepare contents of ELF header of a core dump file, /proc/vmcore,
-> >>>   using crash_prepare_elf64_headers(), and
-> >>> * add two device tree properties, "linux,usable-memory-range" and
-> >>>   "linux,elfcorehdr", which represent repsectively a memory range
-> 
-> >>> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> >>> index 37c0a9dc2e47..ec674f4d267c 100644
-> >>> --- a/arch/arm64/kernel/machine_kexec_file.c
-> >>> +++ b/arch/arm64/kernel/machine_kexec_file.c
-> 
-> >>> +static void fill_property(void *buf, u64 val64, int cells)
-> >>> +{
-> >>> +	u32 val32;
-> >>> +
-> >>> +	if (cells == 1) {
-> >>> +		val32 = cpu_to_fdt32((u32)val64);
-> >>> +		memcpy(buf, &val32, sizeof(val32));
-> >>> +	} else {
-> >>
-> >>> +		memset(buf, 0, cells * sizeof(u32) - sizeof(u64));
-> >>> +		buf += cells * sizeof(u32) - sizeof(u64);
-> >>
-> >> Is this trying to clear the 'top' cells and shuffle the pointer to point at the
-> >> 'bottom' 2? I'm pretty sure this isn't endian safe.
-> >>
-> >> Do we really expect a system to have #address-cells > 2?
+On Fri, May 18, 2018 at 10:35:52AM -0500, Rob Herring wrote:
+> On Tue, May 15, 2018 at 06:12:59PM +0100, James Morse wrote:
+> > Hi guys,
 > > 
-> > I don't know, but just for safety.
+> > (CC: +RobH, devicetree list)
 > 
-> Okay, so this is aiming to be a cover-all-cases library function.
+> Thanks.
 > 
+> > On 25/04/18 07:26, AKASHI Takahiro wrote:
+> > > Enabling crash dump (kdump) includes
+> > > * prepare contents of ELF header of a core dump file, /proc/vmcore,
+> > >   using crash_prepare_elf64_headers(), and
+> > > * add two device tree properties, "linux,usable-memory-range" and
+> > >   "linux,elfcorehdr", which represent repsectively a memory range
+> > >   to be used by crash dump kernel and the header's location
 > 
-> >>> +		val64 = cpu_to_fdt64(val64);
-> >>> +		memcpy(buf, &val64, sizeof(val64));
-> >>> +	}
-> >>> +}
-> >>> +
-> >>> +static int fdt_setprop_range(void *fdt, int nodeoffset, const char *name,
-> >>> +				unsigned long addr, unsigned long size)
-> >>
-> >> (the device-tree spec describes a 'ranges' property, which had me confused. This
-> >> is encoding a prop-encoded-array)
-> > 
-> > Should we rename it to, say, fdt_setprop_reg()?
-> 
-> Sure, but I'd really like this code to come from libfdt. I'm hoping for some
-> temporary workaround, lets see what the DT folk say.
+> BTW, I intend to move existing parsing these out of the arch code. 
+> Please don't add more DT handling to arch/ unless it is *really* arch 
+> specific. I'd assume that the next arch to add kexec support will use 
+> these bindings instead of the powerpc way.
 
-OK, I will follow Rob's suggestion.
+So do you expect all the fdt-related stuff in my current implementation
+for arm64 to be put into libfdt, or at least drivers/of, from the beginning?
 
-> >>> +	if (!buf)
-> >>> +		return -ENOMEM;
-> >>> +
-> >>> +	fill_property(prop, addr, __dt_root_addr_cells);
-> >>> +	prop += __dt_root_addr_cells * sizeof(u32);
-> >>> +
-> >>> +	fill_property(prop, size, __dt_root_size_cells);
-> >>> +
-> >>> +	result = fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
-> >>> +
-> >>> +	vfree(buf);
-> >>> +
-> >>> +	return result;
-> >>> +}
-> >>
-> >> Doesn't this stuff belong in libfdt? I guess there is no 'add array element' api
-> >> because this the first time we've wanted to create a node with more than
-> >> key=fixed-size-value.
-> >>
-> >> I don't think this belongs in arch C code. Do we have a plan for getting libfdt
-> >> to support encoding prop-arrays? Can we put it somewhere anyone else duplicating
-> >> this will find it, until we can (re)move it?
-> > 
-> > I will temporarily move all fdt-related stuff to a separate file, but
-> > 
-> >> I have no idea how that happens... it looks like the devicetree list is the
-> >> place to ask.
-> > 
-> > should we always sync with the original dtc/libfdt repository?
-> 
-> I thought so, libfdt is one of those external libraries that the kernel
-> consumes, like acpica. For acpica at least the rule is changes go upstream, then
-> get sync'd back.
+I'm not sure how arch-specific the properties here are. For instance,
+it is only arm64 that uses "linux,usable-memory-range" right now but
+if some other arch follows, it is no more arch-specific.
+# I remember that you didn't like this property :)
 
-Same above.
-
-> >>>  static int setup_dtb(struct kimage *image,
-> >>>  		unsigned long initrd_load_addr, unsigned long initrd_len,
-> >>>  		char *cmdline, unsigned long cmdline_len,
-> >>> @@ -88,10 +165,26 @@ static int setup_dtb(struct kimage *image,
-> >>>  	int range_len;
-> >>>  	int ret;
-> >>>  
-> >>> +	/* check ranges against root's #address-cells and #size-cells */
-> >>> +	if (image->type == KEXEC_TYPE_CRASH &&
-> >>> +		(!cells_size_fitted(image->arch.elf_load_addr,
-> >>> +				image->arch.elf_headers_sz) ||
-> >>> +		 !cells_size_fitted(crashk_res.start,
-> >>> +				crashk_res.end - crashk_res.start + 1))) {
-> >>> +		pr_err("Crash memory region doesn't fit into DT's root cell sizes.\n");
-> >>> +		ret = -EINVAL;
-> >>> +		goto out_err;
-> >>> +	}
-> >>
-> >> To check I've understood this properly: This can happen if the firmware provided
-> >> a DTB with 32bit address/size cells, but at least some of the memory requires 64
-> >> bit address/size cells. This could only happen on a UEFI system where the
-> >> firmware-DTB doesn't describe memory. ACPI-only systems would have the EFIstub DT.
+> > kexec_file_load() on arm64 needs to be able to create a prop encoded array to
+> > the FDT, but there doesn't appear to be a libfdt helper to do this.
 > > 
-> > Probably, yes. I assumed the case where #address-cells and #size-cells
-> > were just missing in fdt.
-> 
-> Ah, that's another one. I just wanted to check we could boot on a system where
-> this can happen.
-> 
-> 
-> >>>  	/* duplicate dt blob */
-> >>>  	buf_size = fdt_totalsize(initial_boot_params);
-> >>>  	range_len = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
-> >>>  
-> >>> +	if (image->type == KEXEC_TYPE_CRASH)
-> >>> +		buf_size += fdt_prop_len("linux,elfcorehdr", range_len)
-> >>> +				+ fdt_prop_len("linux,usable-memory-range",
-> >>> +								range_len);
-> 
-> >                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> [...]
-> 
-> >> Don't you need to add "linux,usable-memory-range" to the buf_size estimate?
+> > Akashi's code below adds fdt_setprop_range() to the arch code, and duplicates
+> > bits of libfdt_internal.h to do the work.
 > > 
-> > I think the code exists. See above.
+> > How should this be done? I'm assuming this is something we need a new API in
+> > libfdt.h for. How do these come about, and is there an interim step we can use
+> > until then?
 > 
-> Sorry, turns out I can't read!
+> Submit patches to upstream dtc and then we can pull it in. Ahead of that 
+> you can add it to drivers/of/fdt.c (or maybe fdt_address.c because 
+> that's really what this is dealing with).
+
+OK, I'm going to try to follow your suggestion.
+
+> libfdt has only recently gained the beginnings of address handling.
 > 
-> 
-> >>> +		if (ret)
-> >>> +			goto out_err;
-> >>> +	}
-> >>
-> >>> @@ -148,17 +258,109 @@ static int setup_dtb(struct kimage *image,
-> >>
-> >>> +static struct crash_mem *get_crash_memory_ranges(void)
-> >>> +{
-> >>> +	unsigned int nr_ranges;
-> >>> +	struct crash_mem *cmem;
-> >>> +
-> >>> +	nr_ranges = 1; /* for exclusion of crashkernel region */
-> >>> +	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ranges_callback);
-> >>> +
-> >>> +	cmem = vmalloc(sizeof(struct crash_mem) +
-> >>> +			sizeof(struct crash_mem_range) * nr_ranges);
-> >>> +	if (!cmem)
-> >>> +		return NULL;
-> >>> +
-> >>> +	cmem->max_nr_ranges = nr_ranges;
-> >>> +	cmem->nr_ranges = 0;
-> >>> +	walk_system_ram_res(0, -1, cmem, add_mem_range_callback);
-> >>> +
-> >>> +	/* Exclude crashkernel region */
-> >>> +	if (crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end)) {
-> >>> +		vfree(cmem);
-> >>> +		return NULL;
-> >>> +	}
-> >>> +
-> >>> +	return cmem;
-> >>> +}
-> >>
-> >> Could this function be included in prepare_elf_headers() so that the alloc() and
-> >> free() occur together.
 > > 
-> > Or aiming that arm64 and x86 have similar-look code?
-> 
-> What's the advantage in things looking the same? If they are the same, it
-> probably shouldn't be in per-arch code. Otherwise it should be as simple as
-> possible, otherwise we can't spot the bugs/leaks.
-> 
-> But I think walking memblock here will remove all 'looks the same' properties here.
-
-OK, I will unfold the function in prepare_elf_headers().
-
-> 
-> >>> +static int prepare_elf_headers(void **addr, unsigned long *sz)
-> >>> +{
-> >>> +	struct crash_mem *cmem;
-> >>> +	int ret = 0;
-> >>> +
-> >>> +	cmem = get_crash_memory_ranges();
-> >>> +	if (!cmem)
-> >>> +		return -ENOMEM;
-> >>> +
-> >>> +	ret =  crash_prepare_elf64_headers(cmem, true, addr, sz);
-> >>> +
-> >>> +	vfree(cmem);
-> >>
-> >>> +	return ret;
-> >>> +}
-> >>
-> >> All this is moving memory-range information from core-code's
-> >> walk_system_ram_res() into core-code's struct crash_mem, and excluding
-> >> crashk_res, which again is accessible to the core code.
-> >>
-> >> It looks like this is duplicated in arch/x86 and arch/arm64 because arm64
-> >> doesn't have a second 'crashk_low_res' region, and always wants elf64, instead
-> >> of when IS_ENABLED(CONFIG_X86_64).
-> >> If we can abstract just those two, more of this could be moved to core code
-> >> where powerpc can make use of it if they want to support kdump with
-> >> kexec_file_load().
-> >>
-> >> But, its getting late for cross-architecture dependencies, lets put that on the
-> >> for-later list. (assuming there isn't a powerpc-kdump series out there adding a
-> >> third copy of this)
+> > Thanks!
 > > 
-> > Sure. X86 code has so many exceptional lines in the code :)
+> > James
+> > 
+> > > diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> > > index 37c0a9dc2e47..ec674f4d267c 100644
+> > > --- a/arch/arm64/kernel/machine_kexec_file.c
+> > > +++ b/arch/arm64/kernel/machine_kexec_file.c
+> > > @@ -76,6 +81,78 @@ int arch_kexec_walk_mem(struct kexec_buf *kbuf,
+> > >  	return ret;
+> > >  }
+> > >  
+> > > +static int __init arch_kexec_file_init(void)
+> > > +{
+> > > +	/* Those values are used later on loading the kernel */
+> > > +	__dt_root_addr_cells = dt_root_addr_cells;
+> > > +	__dt_root_size_cells = dt_root_size_cells;
 > 
-> They also pass the e820 'usable-memory' map on the cmdline...
+> I intend to make dt_root_*_cells private, so don't add another user 
+> outside of drivers/of/.
 
-Well, according to Dave(RedHat)'s past comment, this type of kernel
-parameters are in a old style, and x86 now has a dedicated memory region
-passed for this sake.
+Once cells_size_fitted() moves to drivers/of, there will be no users.
 
-Thanks,
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +late_initcall(arch_kexec_file_init);
+> > > +
+> > > +#define FDT_ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
+> > > +#define FDT_TAGALIGN(x)	(FDT_ALIGN((x), FDT_TAGSIZE))
+> > > +
+> > > +static int fdt_prop_len(const char *prop_name, int len)
+> > > +{
+> > > +	return (strlen(prop_name) + 1) +
+> > > +		sizeof(struct fdt_property) +
+> > > +		FDT_TAGALIGN(len);
+> > > +}
+> > > +
+> > > +static bool cells_size_fitted(unsigned long base, unsigned long size)
+> 
+> I can't imagine this would happen. However, when this is moved to 
+> drivers/of/ or dtc, these need to be u64 types to work on 32-bit.
+
+OK.
+
+> > > +	/* if *_cells >= 2, cells can hold 64-bit values anyway */
+> > > +	if ((__dt_root_addr_cells == 1) && (base >= (1ULL << 32)))
+> > > +		return false;
+> > > +
+> > > +	if ((__dt_root_size_cells == 1) && (size >= (1ULL << 32)))
+> > > +		return false;
+> > > +
+> > > +	return true;
+> > > +}
+> > > +
+> > > +static void fill_property(void *buf, u64 val64, int cells)
+> > > +{
+> > > +	u32 val32;
+> 
+> This should be a __be32 or fdt32 type. So should buf.
+
+OK for val32, but buf is a local pointer address.
+
+> > > +
+> > > +	if (cells == 1) {
+> > > +		val32 = cpu_to_fdt32((u32)val64);
+> > > +		memcpy(buf, &val32, sizeof(val32));
+> > > +	} else {
+> > > +		memset(buf, 0, cells * sizeof(u32) - sizeof(u64));
+> > > +		buf += cells * sizeof(u32) - sizeof(u64);
+> > > +
+> > > +		val64 = cpu_to_fdt64(val64);
+> > > +		memcpy(buf, &val64, sizeof(val64));
+> 
+> Look how of_read_number() is implemented. You should be able to do 
+> something similar here looping and avoiding the if/else.
+
+Ah, excellent!
+
+> > > +	}
+> > > +}
+> > > +
+> > > +static int fdt_setprop_range(void *fdt, int nodeoffset, const char *name,
+> > > +				unsigned long addr, unsigned long size)
+> 
+> A very generic sounding function, but really only works on addresses in 
+> children of the root node.
+> 
+> > > +{
+> > > +	void *buf, *prop;
+> > > +	size_t buf_size;
+> > > +	int result;
+> > > +
+> > > +	buf_size = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
+> > > +	prop = buf = vmalloc(buf_size);
+> 
+> This can go on the stack instead (and would be required to to work in 
+> libfdt).
+
+Well, I can't agree with you here since we are now in effort, as far as
+I correctly understand, of purging all the variable-sized arrays on a local
+stack out of the kernel code.
+
+Thank you for your review.
 -Takahiro AKASHI
 
-> 
-> Thanks,
-> 
-> James
+> > > +	if (!buf)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	fill_property(prop, addr, __dt_root_addr_cells);
+> > > +	prop += __dt_root_addr_cells * sizeof(u32);
+> > > +
+> > > +	fill_property(prop, size, __dt_root_size_cells);
+> > > +
+> > > +	result = fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
+> > > +
+> > > +	vfree(buf);
+> > > +
+> > > +	return result;
+> > > +}
+> > > +
+> > >  static int setup_dtb(struct kimage *image,
+> > >  		unsigned long initrd_load_addr, unsigned long initrd_len,
+> > >  		char *cmdline, unsigned long cmdline_len,
+> > > @@ -88,10 +165,26 @@ static int setup_dtb(struct kimage *image,
+> > >  	int range_len;
+> > >  	int ret;
+> > >  
+> > > +	/* check ranges against root's #address-cells and #size-cells */
+> > > +	if (image->type == KEXEC_TYPE_CRASH &&
+> > > +		(!cells_size_fitted(image->arch.elf_load_addr,
+> > > +				image->arch.elf_headers_sz) ||
+> > > +		 !cells_size_fitted(crashk_res.start,
+> > > +				crashk_res.end - crashk_res.start + 1))) {
+> > > +		pr_err("Crash memory region doesn't fit into DT's root cell sizes.\n");
+> > > +		ret = -EINVAL;
+> > > +		goto out_err;
+> > > +	}
+> > > +
+> > >  	/* duplicate dt blob */
+> > >  	buf_size = fdt_totalsize(initial_boot_params);
+> > >  	range_len = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
+> > >  
+> > > +	if (image->type == KEXEC_TYPE_CRASH)
+> > > +		buf_size += fdt_prop_len("linux,elfcorehdr", range_len)
+> > > +				+ fdt_prop_len("linux,usable-memory-range",
+> > > +								range_len);
+> > > +
+> > >  	if (initrd_load_addr)
+> > >  		buf_size += fdt_prop_len("linux,initrd-start", sizeof(u64))
+> > >  				+ fdt_prop_len("linux,initrd-end", sizeof(u64));
+> > > @@ -113,6 +206,23 @@ static int setup_dtb(struct kimage *image,
+> > >  	if (nodeoffset < 0)
+> > >  		goto out_err;
+> > >  
+> > > +	if (image->type == KEXEC_TYPE_CRASH) {
+> > > +		/* add linux,elfcorehdr */
+> > > +		ret = fdt_setprop_range(buf, nodeoffset, "linux,elfcorehdr",
+> > > +				image->arch.elf_load_addr,
+> > > +				image->arch.elf_headers_sz);
+> > > +		if (ret)
+> > > +			goto out_err;
+> > > +
+> > > +		/* add linux,usable-memory-range */
+> > > +		ret = fdt_setprop_range(buf, nodeoffset,
+> > > +				"linux,usable-memory-range",
+> > > +				crashk_res.start,
+> > > +				crashk_res.end - crashk_res.start + 1);
+> > > +		if (ret)
+> > > +			goto out_err;
+> > > +	}
+> > > +
+> > >  	/* add bootargs */
+> > >  	if (cmdline) {
+> > >  		ret = fdt_setprop(buf, nodeoffset, "bootargs",
+> > 
 
 _______________________________________________
 kexec mailing list
