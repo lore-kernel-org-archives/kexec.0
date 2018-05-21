@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from shards.monkeyblade.net ([184.105.139.130])
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fKnly-0004Mh-13
- for kexec@lists.infradead.org; Mon, 21 May 2018 16:34:59 +0000
-Date: Mon, 21 May 2018 12:34:41 -0400 (EDT)
-Message-Id: <20180521.123441.1933324667176430245.davem@davemloft.net>
-Subject: Re: [PATCH net-next] vmcore: move get_vmcore_size out of __init
-From: David Miller <davem@davemloft.net>
-In-Reply-To: <1526909870-27630-1-git-send-email-rahul.lakkireddy@chelsio.com>
-References: <1526909870-27630-1-git-send-email-rahul.lakkireddy@chelsio.com>
+ id 1fKq4h-0004p1-K8
+ for kexec@lists.infradead.org; Mon, 21 May 2018 19:02:29 +0000
+Date: Mon, 21 May 2018 12:02:15 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] kdump: add default crashkernel reserve kernel config
+ options
+Message-Id: <20180521120215.117d963a7619eb0d1f54bced@linux-foundation.org>
+In-Reply-To: <20180521025337.GA4627@dhcp-128-65.nay.redhat.com>
+References: <20180521025337.GA4627@dhcp-128-65.nay.redhat.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,28 +23,114 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: rahul.lakkireddy@chelsio.com
-Cc: indranil@chelsio.com, netdev@vger.kernel.org, nirranjan@chelsio.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stephen@networkplumber.org, ganeshgr@chelsio.com, ebiederm@xmission.com, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
+To: Dave Young <dyoung@redhat.com>
+Cc: dzickus@redhat.com, Neil Horman <nhorman@redhat.com>, Tony Luck <tony.luck@intel.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Hari Bathini <hbathini@linux.vnet.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Cong Wang <xiyou.wangcong@gmail.com>, Anton Vorontsov <avorontsov@ru.mvista.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Date: Mon, 21 May 2018 19:07:50 +0530
+On Mon, 21 May 2018 10:53:37 +0800 Dave Young <dyoung@redhat.com> wrote:
 
-> Fix below build warning:
+> This is a rework of the crashkernel=auto patches back to 2009 although
+> I'm not sure if below is the last version of the old effort:
+> https://lkml.org/lkml/2009/8/12/61
+> https://lwn.net/Articles/345344/
 > 
-> WARNING: vmlinux.o(.text+0x422bb8): Section mismatch in reference from
-> the function vmcore_add_device_dump() to the function
-> .init.text:get_vmcore_size.constprop.5()
+> I changed the original design, instead of adding the auto reserve logic
+> in code, in this patch just introduce two kernel config options for
+> the default crashkernel value in MB and the threshold of system memory
+> in MB so that only reserve default when system memory is equal or
+> above the threshold.
 > 
-> The function vmcore_add_device_dump() references
-> the function __init get_vmcore_size.constprop.5().
-> This is often because vmcore_add_device_dump lacks a __init
-> annotation or the annotation of get_vmcore_size.constprop.5 is wrong.
+> With the kernel configs distributions can easily change the default
+> values so that people do not need to manually set kernel cmdline
+> for common use cases and one can still overwrite the default value
+> with manual setup or disable it by using crashkernel=0
 > 
-> Fixes: 7efe48df8a3d ("vmcore: append device dumps to vmcore as elf notes")
-> Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-> Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
+> Signed-off-by: Dave Young <dyoung@redhat.com>
+> ---
+> Another difference is with original design the crashkernel size scales
+> with system memory, according to test, large machine may need more
+> memory in kdump kernel because of several factors:
+> 1. cpu numbers, because of the percpu memory allocated for cpus.
+>    (kdump can use nr_cpus=1 to workaround this, but some
+>     arches do not support nr_cpus=X for example powerpc) 
+> 2. IO devices, large system can have a lot of io devices, although we
+>    can try to only add those device drivers we needed, it is still a
+>    problem because of some built-in drivers, some stacked logical devices
+>    eg. device mapper devices, acpi etc.  Even if only considering the
+>    meta data for driver model it will still be a big number eg. sysfs
+>    files etc.
+> 3. The minimum memory requirement for some device drivers are big, even
+>    if some of them have implemented low meory profile.  It is usual to see
+>    10M memory use for a storage driver.
+> 4. user space initramfs size growing.  Busybox is not usable if we need
+>    to add udev support and some complicate storage support.  Use dracut
+>    with systemd, especially networking stuff need more memory.
+> 
+> So probably add another kernel config option to scale the memory size
+> eg.  CRASHKERNEL_DEFAULT_SCALE_RATIO is also good to have,  in RHEL we
+> use base_value + system_mem >> (2^14) for x86.  I'm still hesatating
+> how to describe and add this option. Any suggestions will be appreciated.
+> 
+> ...
+>
+> --- linux-x86.orig/arch/Kconfig
+> +++ linux-x86/arch/Kconfig
+> @@ -10,6 +10,22 @@ config KEXEC_CORE
+>  	select CRASH_CORE
+>  	bool
+>  
+> +config CRASHKERNEL_DEFAULT_THRESHOLD_MB
+> +	int "System memory size threshold for kdump memory default reserving"
+> +	depends on CRASH_CORE
+> +	default 0
+> +	help
+> +	  CRASHKERNEL_DEFAULT_MB is used as default crashkernel value if
+> +	  the system memory size is equal or bigger than the threshold.
 
-Applied, thank you.
+"the threshold" is rather vague.  Can it be clarified?
+
+In fact I'm really struggling to understand the logic here....
+
+
+> +config CRASHKERNEL_DEFAULT_MB
+> +	int "Default crashkernel memory size reserved for kdump"
+> +	depends on CRASH_CORE
+> +	default 0
+> +	help
+> +	  This is used as the default kdump reserved memory size in MB.
+> +	  crashkernel=X kernel cmdline can overwrite this value.
+> +
+>  config HAVE_IMA_KEXEC
+>  	bool
+>  
+> @@ -143,6 +144,24 @@ static int __init parse_crashkernel_simp
+>  	return 0;
+>  }
+>  
+> +static int __init get_crashkernel_default(unsigned long long system_ram,
+> +					  unsigned long long *size)
+> +{
+> +	unsigned long long sz = CONFIG_CRASHKERNEL_DEFAULT_MB;
+> +	unsigned long long thres = CONFIG_CRASHKERNEL_DEFAULT_THRESHOLD_MB;
+> +
+> +	thres *= SZ_1M;
+> +	sz *= SZ_1M;
+> +
+> +	if (sz >= system_ram || system_ram < thres) {
+> +		pr_debug("crashkernel default size can not be used.\n");
+> +		return -EINVAL;
+
+In other words,
+
+	if (system_ram <= CONFIG_CRASHKERNEL_DEFAULT_MB ||
+	    system_ram < CONFIG_CRASHKERNEL_DEFAULT_THRESHOLD_MB)
+		fail;
+
+yes?
+
+How come?  What's happening here?  Perhaps a (good) explanatory comment
+is needed.  And clearer Kconfig text.
+
+All confused :(
 
 _______________________________________________
 kexec mailing list
