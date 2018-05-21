@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-by2nam03on0041.outbound.protection.outlook.com
- ([104.47.42.41] helo=NAM03-BY2-obe.outbound.protection.outlook.com)
+Received: from stargate.chelsio.com ([12.32.117.8])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fKkmh-0005G4-CP
- for kexec@lists.infradead.org; Mon, 21 May 2018 13:23:33 +0000
-Subject: Re: [PATCH 0/2] support kdump for AMD secure memory encryption(sme)
-References: <20180515015133.4363-1-lijiang@redhat.com>
- <55bda494-bee4-5696-03e5-fc21c9d6b631@amd.com>
- <18309611-c8c4-92cb-161e-f35ef3d243ea@redhat.com>
- <a0b95743-209a-aca7-33e4-828375df1826@redhat.com>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <3972e681-d8eb-4f4d-843a-6ddbf339f0bb@amd.com>
-Date: Mon, 21 May 2018 08:23:14 -0500
-MIME-Version: 1.0
-In-Reply-To: <a0b95743-209a-aca7-33e4-828375df1826@redhat.com>
-Content-Language: en-US
+ id 1fKl1Z-0003wH-B8
+ for kexec@lists.infradead.org; Mon, 21 May 2018 13:38:55 +0000
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Subject: [PATCH net-next] vmcore: move get_vmcore_size out of __init
+Date: Mon, 21 May 2018 19:07:50 +0530
+Message-Id: <1526909870-27630-1-git-send-email-rahul.lakkireddy@chelsio.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,105 +15,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>, linux-kernel@vger.kernel.org
-Cc: dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
+To: netdev@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: indranil@chelsio.com, nirranjan@chelsio.com, stephen@networkplumber.org, ganeshgr@chelsio.com, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, ebiederm@xmission.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, davem@davemloft.net, viro@zeniv.linux.org.uk
 
-T24gNS8yMC8yMDE4IDEwOjQ1IFBNLCBsaWppYW5nIHdyb3RlOgo+IOWcqCAyMDE45bm0MDXmnIgx
-N+aXpSAyMTo0NSwgbGlqaWFuZyDlhpnpgZM6Cj4+IOWcqCAyMDE45bm0MDXmnIgxNeaXpSAyMToz
-MSwgVG9tIExlbmRhY2t5IOWGmemBkzoKPj4+IE9uIDUvMTQvMjAxOCA4OjUxIFBNLCBMaWFuYm8g
-Smlhbmcgd3JvdGU6Cj4+Pj4gSXQgaXMgY29udmVuaWVudCB0byByZW1hcCB0aGUgb2xkIG1lbW9y
-eSBlbmNyeXB0ZWQgdG8gdGhlIHNlY29uZCBrZXJuZWwgYnkKPj4+PiBjYWxsaW5nIGlvcmVtYXBf
-ZW5jcnlwdGVkKCkuCj4+Pj4KPj4+PiBXaGVuIHNtZSBlbmFibGVkIG9uIEFNRCBzZXJ2ZXIsIHdl
-IGFsc28gbmVlZCB0byBzdXBwb3J0IGtkdW1wLiBCZWNhdXNlCj4+Pj4gdGhlIG1lbW9yeSBpcyBl
-bmNyeXB0ZWQgaW4gdGhlIGZpcnN0IGtlcm5lbCwgd2Ugd2lsbCByZW1hcCB0aGUgb2xkIG1lbW9y
-eQo+Pj4+IGVuY3J5cHRlZCB0byB0aGUgc2Vjb25kIGtlcm5lbChjcmFzaCBrZXJuZWwpLCBhbmQg
-c21lIGlzIGFsc28gZW5hYmxlZCBpbgo+Pj4+IHRoZSBzZWNvbmQga2VybmVsLCBvdGhlcndpc2Ug
-dGhlIG9sZCBtZW1vcnkgZW5jcnlwdGVkIGNhbiBub3QgYmUgZGVjcnlwdGVkLgo+Pj4+IEJlY2F1
-c2Ugc2ltcGx5IGNoYW5naW5nIHRoZSB2YWx1ZSBvZiBhIEMtYml0IG9uIGEgcGFnZSB3aWxsIG5v
-dAo+Pj4+IGF1dG9tYXRpY2FsbHkgZW5jcnlwdCB0aGUgZXhpc3RpbmcgY29udGVudHMgb2YgYSBw
-YWdlLCBhbmQgYW55IGRhdGEgaW4gdGhlCj4+Pj4gcGFnZSBwcmlvciB0byB0aGUgQy1iaXQgbW9k
-aWZpY2F0aW9uIHdpbGwgYmVjb21lIHVuaW50ZWxsaWdpYmxlLiBBIHBhZ2Ugb2YKPj4+PiBtZW1v
-cnkgdGhhdCBpcyBtYXJrZWQgZW5jcnlwdGVkIHdpbGwgYmUgYXV0b21hdGljYWxseSBkZWNyeXB0
-ZWQgd2hlbiByZWFkCj4+Pj4gZnJvbSBEUkFNIGFuZCB3aWxsIGJlIGF1dG9tYXRpY2FsbHkgZW5j
-cnlwdGVkIHdoZW4gd3JpdHRlbiB0byBEUkFNLgo+Pj4+Cj4+Pj4gRm9yIHRoZSBrZHVtcCwgaXQg
-aXMgbmVjZXNzYXJ5IHRvIGRpc3Rpbmd1aXNoIHdoZXRoZXIgdGhlIG1lbW9yeSBpcwo+Pj4+IGVu
-Y3J5cHRlZC4gRnVydGhlcm1vcmUsIHdlIHNob3VsZCBhbHNvIGtub3cgd2hpY2ggcGFydCBvZiB0
-aGUgbWVtb3J5IGlzCj4+Pj4gZW5jcnlwdGVkIG9yIGRlY3J5cHRlZC4gV2Ugd2lsbCBhcHByb3By
-aWF0ZWx5IHJlbWFwIHRoZSBtZW1vcnkgYWNjb3JkaW5nCj4+Pj4gdG8gdGhlIHNwZWNpZmljIHNp
-dHVhdGlvbiBpbiBvcmRlciB0byB0ZWxsIGNwdSBob3cgdG8gZGVhbCB3aXRoIHRoZQo+Pj4+IGRh
-dGEoZW5jcnlwdGVkIG9yIGRlY3J5cHRlZCkuIEZvciBleGFtcGxlLCB3aGVuIHNtZSBlbmFibGVk
-LCBpZiB0aGUgb2xkCj4+Pj4gbWVtb3J5IGlzIGVuY3J5cHRlZCwgd2Ugd2lsbCByZW1hcCB0aGUg
-b2xkIG1lbW9yeSBpbiBlbmNyeXB0ZWQgd2F5LCB3aGljaAo+Pj4+IHdpbGwgYXV0b21hdGljYWxs
-eSBkZWNyeXB0IHRoZSBvbGQgbWVtb3J5IGVuY3J5cHRlZCB3aGVuIHdlIHJlYWQgdGhvc2UgZGF0
-YQo+Pj4+IGZyb20gdGhlIHJlbWFwcGluZyBhZGRyZXNzLgo+Pj4+Cj4+Pj4gIC0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4+PiB8IGZpcnN0LWtlcm5lbCB8
-IHNlY29uZC1rZXJuZWwgfCBrZHVtcCBzdXBwb3J0IHwKPj4+PiB8ICAgICAgKG1lbV9lbmNyeXB0
-PW9ufG9mZikgICAgfCAgICh5ZXN8bm8pICAgIHwgCj4+Pj4gfC0tLS0tLS0tLS0tLS0tKy0tLS0t
-LS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS18Cj4+Pj4gfCAgICAgb24gICAgICAgfCAgICAgb24g
-ICAgICAgIHwgICAgIHllcyAgICAgICB8Cj4+Pj4gfCAgICAgb2ZmICAgICAgfCAgICAgb2ZmICAg
-ICAgIHwgICAgIHllcyAgICAgICB8Cj4+Pj4gfCAgICAgb24gICAgICAgfCAgICAgb2ZmICAgICAg
-IHwgICAgIG5vICAgICAgICB8Cj4+Pj4gfCAgICAgb2ZmICAgICAgfCAgICAgb24gICAgICAgIHwg
-ICAgIG5vICAgICAgICB8Cj4+Pj4gfF9fX19fX19fX19fX19ffF9fX19fX19fX19fX19fX3xfX19f
-X19fX19fX19fX198Cj4+Pj4KPj4+PiBUZXN0IHRvb2xzOgo+Pj4+IG1ha2VkdW1wZmlsZVt2MS42
-LjNdOiBodHRwczovL2dpdGh1Yi5jb20vTGlhbmJvSi9tYWtlZHVtcGZpbGUKPj4+PiBjb21taXQg
-ZTFkZTEwM2VjYThmIChBIGRyYWZ0IGZvciBrZHVtcCB2bWNvcmUgYWJvdXQgQU1EIFNNRSkKPj4+
-PiBBdXRob3I6IExpYW5ibyBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+Pj4+IERhdGU6ICAg
-TW9uIE1heSAxNCAxNzowMjo0MCAyMDE4ICswODAwCj4+Pj4gTm90ZTogVGhpcyBwYXRjaCBjYW4g
-b25seSBkdW1wIHZtY29yZSBpbiB0aGUgY2FzZSBvZiBTTUUgZW5hYmxlZC4KPj4+Pgo+Pj4+IGNy
-YXNoLTcuMi4xOiBodHRwczovL2dpdGh1Yi5jb20vY3Jhc2gtdXRpbGl0eS9jcmFzaC5naXQKPj4+
-PiBjb21taXQgMWUxYmQ5YzRjMWJlIChGaXggZm9yIHRoZSAiYnBmIiBjb21tYW5kIGRpc3BsYXkg
-b24gTGludXggNC4xNy1yYzEpCj4+Pj4gQXV0aG9yOiBEYXZlIEFuZGVyc29uIDxhbmRlcnNvbkBy
-ZWRoYXQuY29tPgo+Pj4+IERhdGU6ICAgRnJpIE1heSAxMSAxNTo1NDozMiAyMDE4IC0wNDAwCj4+
-Pj4KPj4+PiBUZXN0IGVudmlyb25tZW50Ogo+Pj4+IEhQIFByb0xpYW50IERMMzg1R2VuMTAgQU1E
-IEVQWUMgNzI1MQo+Pj4+IDgtQ29yZSBQcm9jZXNzb3IKPj4+PiAzMjc2OCBNQiBtZW1vcnkKPj4+
-PiA2MDAgR0IgZGlzayBzcGFjZQo+Pj4+Cj4+Pj4gTGludXggNC4xNy1yYzQ6Cj4+Pj4gZ2l0Oi8v
-Z2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4Lmdp
-dAo+Pj4+IGNvbW1pdCA3NWJjMzdmZWZjNDQgKCJMaW51eCA0LjE3LXJjNCIpCj4+Pj4gQXV0aG9y
-OiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRhdGlvbi5vcmc+Cj4+Pj4gRGF0
-ZTogICBTdW4gTWF5IDYgMTY6NTc6MzggMjAxOCAtMTAwMAo+Pj4+Cj4+Pj4gUmVmZXJlbmNlOgo+
-Pj4+IEFNRDY0IEFyY2hpdGVjdHVyZSBQcm9ncmFtbWVyJ3MgTWFudWFsCj4+Pj4gaHR0cHM6Ly9z
-dXBwb3J0LmFtZC5jb20vVGVjaERvY3MvMjQ1OTMucGRmCj4+Pj4KPj4+Cj4+PiBIYXZlIHlvdSBh
-bHNvIHRlc3RlZCB0aGlzIHdpdGggU0VWPyAgSXQgd291bGQgYmUgbmljZSBpZiB0aGUga2R1bXAK
-Pj4+IGNoYW5nZXMgeW91IG1ha2Ugd29yayB3aXRoIGJvdGggU01FIGFuZCBTRVYuCj4+Pgo+PiBU
-aGFuayB5b3UsIFRvbS4KPj4gVGhpcyBpcyBhIGdyZWF0IHF1ZXN0aW9uLCB3ZSBvcmlnaW5hbGx5
-IHBsYW4gdG8gaW1wbGVtZW50IFNFViBpbiBzdWJzZXF1ZW50IHBhdGNoZXMsIGFuZAo+PiB3ZSBh
-cmUgYWxzbyB3b3JraW5nIG9uIFNFViBhdCBwcmVzZW50Lgo+PiBGdXJ0aGVybW9yZSwgd2UgaGF2
-ZSBhbm90aGVyIGtub3duIGlzc3VlIHRoYXQgdGhlIHN5c3RlbSBjYW4ndCBqdW1wIGludG8gdGhl
-IHNlY29uZCBrZXJuZWwKPj4gd2hlbiBTTUUgaXMgZW5hYmxlZCBhbmQga2FzbHIgaXMgZGlzYWJs
-ZWQgaW4ga2R1bXAgbW9kZS4gSXQgc2VlbXMgdGhhdCBpcyBhIGNvbXBsZXggcHJvYmxlbXMsCj4+
-IG1heWJlIGl0IGlzIHJlbGF0ZWQgdG8ga2FzbHIgYW5kIFNNRSwgY3VycmVudGx5LCBpJ20gbm90
-IHN1cmUgdGhlIHJvb3QgY2F1c2UsIGJ1dCB3ZSB3aWxsCj4+IGFsc28gcGxhbiB0byBmaXggaXQu
-IENhbiB5b3UgZ2l2ZSBtZSBhbnkgYWR2aWNlIGFib3V0IHRoaXMgaXNzdWU/Cj4+Cj4gQmFzZWQg
-b24gdXBzdHJlYW0gNC4xNy1yYzUsIHdlIGhhdmUgcmVjZW50bHkgZm91bmQgYSBuZXcgaXNzdWUg
-dGhhdCB0aGUgc3lzdGVtIGNhbid0IGJvb3QgdG8KPiB1c2Uga2V4ZWMgd2hlbiBTTUUgaXMgZW5h
-YmxlZCBhbmQga2FzbHIgaXMgZGlzYWJsZWQuIEhhdmUgeW91IGV2ZXIgcnVuIGludG8gdGhpcyBp
-c3N1ZT8gCj4gVGhleSBoYXZlIHNpbWlsYXIgcmVwcm9kdWN0aW9uIHNjZW5hcmlvcy4KPiAKPiBD
-QyBUb20gJiBCYW9xdWFuCgpJIGhhdmVuJ3QgZW5jb3VudGVyZWQgdGhpcyBpc3N1ZS4gIENhbiB5
-b3Ugc2VuZCB0aGUga2VybmVsIGNvbmZpZyB0aGF0IHlvdQphcmUgdXNpbmc/ICBBbmQgeW91ciBr
-ZXJuZWwgY29tbWFuZCBsaW5lPyAgSSdsbCB0cnkgeW91ciBjb25maWcgYW5kIHNlZSBpZgpJIGNh
-biByZXByb2R1Y2UgdGhlIGlzc3VlLgoKSnVzdCB0byBiZSBjbGFyaWZ5LCB5b3UgcGVyZm9ybSBh
-IHBvd2VyLW9uIGJvb3Qgd2l0aCBTTUUgZW5hYmxlZCBhbmQgS0FTTFIKZGlzYWJsZWQgKGUuZy4g
-bWVtX2VuY3J5cHQ9b24gbm9rYXNsciksIGNvcnJlY3QsIGFuZCB0aGF0IHdvbid0IGJvb3Q/CgpU
-aGFua3MsClRvbQoKPiAKPiBUaGFua3MuCj4gTGlhbmJvCj4gCj4+IFRoYW5rcy4KPj4gTGlhbmJv
-Cj4+PiBUaGFua3MsCj4+PiBUb20KPj4+Cj4+Pj4gTGlhbmJvIEppYW5nICgyKToKPj4+PiAgIGFk
-ZCBhIGZ1bmN0aW9uKGlvcmVtYXBfZW5jcnlwdGVkKSBmb3Iga2R1bXAgd2hlbiBBTUQgc21lIGVu
-YWJsZWQuCj4+Pj4gICBzdXBwb3J0IGtkdW1wIHdoZW4gQU1EIHNlY3VyZSBtZW1vcnkgZW5jcnlw
-dGlvbiBpcyBhY3RpdmUKPj4+Pgo+Pj4+ICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9kbWkuaCAgICAg
-IHwgMTQgKysrKysrKysrKysrKy0KPj4+PiAgYXJjaC94ODYvaW5jbHVkZS9hc20vaW8uaCAgICAg
-ICB8ICAyICsrCj4+Pj4gIGFyY2gveDg2L2tlcm5lbC9hY3BpL2Jvb3QuYyAgICAgfCAgOCArKysr
-KysrKwo+Pj4+ICBhcmNoL3g4Ni9rZXJuZWwvY3Jhc2hfZHVtcF82NC5jIHwgMjcgKysrKysrKysr
-KysrKysrKysrKysrKysrKysrCj4+Pj4gIGFyY2gveDg2L21tL2lvcmVtYXAuYyAgICAgICAgICAg
-fCAyNSArKysrKysrKysrKysrKysrKy0tLS0tLS0tCj4+Pj4gIGRyaXZlcnMvYWNwaS90YWJsZXMu
-YyAgICAgICAgICAgfCAxNCArKysrKysrKysrKysrLQo+Pj4+ICBkcml2ZXJzL2lvbW11L2FtZF9p
-b21tdV9pbml0LmMgIHwgIDkgKysrKysrKystCj4+Pj4gIGZzL3Byb2Mvdm1jb3JlLmMgICAgICAg
-ICAgICAgICAgfCAzNiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0KPj4+PiAg
-aW5jbHVkZS9saW51eC9jcmFzaF9kdW1wLmggICAgICB8ICA0ICsrKysKPj4+PiAga2VybmVsL2tl
-eGVjX2NvcmUuYyAgICAgICAgICAgICB8IDEyICsrKysrKysrKysrKwo+Pj4+ICAxMCBmaWxlcyBj
-aGFuZ2VkLCAxMzUgaW5zZXJ0aW9ucygrKSwgMTYgZGVsZXRpb25zKC0pCj4+Pj4KCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
-dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8va2V4ZWMK
+Fix below build warning:
+
+WARNING: vmlinux.o(.text+0x422bb8): Section mismatch in reference from
+the function vmcore_add_device_dump() to the function
+.init.text:get_vmcore_size.constprop.5()
+
+The function vmcore_add_device_dump() references
+the function __init get_vmcore_size.constprop.5().
+This is often because vmcore_add_device_dump lacks a __init
+annotation or the annotation of get_vmcore_size.constprop.5 is wrong.
+
+Fixes: 7efe48df8a3d ("vmcore: append device dumps to vmcore as elf notes")
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
+---
+ fs/proc/vmcore.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 247c3499e5bd..cfb6674331fd 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -649,8 +649,8 @@ static struct vmcore* __init get_new_element(void)
+ 	return kzalloc(sizeof(struct vmcore), GFP_KERNEL);
+ }
+ 
+-static u64 __init get_vmcore_size(size_t elfsz, size_t elfnotesegsz,
+-				  struct list_head *vc_list)
++static u64 get_vmcore_size(size_t elfsz, size_t elfnotesegsz,
++			   struct list_head *vc_list)
+ {
+ 	u64 size;
+ 	struct vmcore *m;
+-- 
+2.14.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
