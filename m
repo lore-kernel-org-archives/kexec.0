@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fKwLS-00008x-E3
- for kexec@lists.infradead.org; Tue, 22 May 2018 01:44:12 +0000
-Date: Tue, 22 May 2018 09:43:48 +0800
+ id 1fKwPc-0002lU-1P
+ for kexec@lists.infradead.org; Tue, 22 May 2018 01:48:29 +0000
+Date: Tue, 22 May 2018 09:48:05 +0800
 From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH] kdump: add default crashkernel reserve kernel config
  options
-Message-ID: <20180522014348.GA6827@dhcp-128-65.nay.redhat.com>
+Message-ID: <20180522014805.GB6827@dhcp-128-65.nay.redhat.com>
 References: <20180521025337.GA4627@dhcp-128-65.nay.redhat.com>
  <20180521120215.117d963a7619eb0d1f54bced@linux-foundation.org>
 MIME-Version: 1.0
@@ -92,66 +92,17 @@ On 05/21/18 at 12:02pm, Andrew Morton wrote:
 > "the threshold" is rather vague.  Can it be clarified?
 > 
 > In fact I'm really struggling to understand the logic here....
-> 
-> 
-> > +config CRASHKERNEL_DEFAULT_MB
-> > +	int "Default crashkernel memory size reserved for kdump"
-> > +	depends on CRASH_CORE
-> > +	default 0
-> > +	help
-> > +	  This is used as the default kdump reserved memory size in MB.
-> > +	  crashkernel=X kernel cmdline can overwrite this value.
-> > +
-> >  config HAVE_IMA_KEXEC
-> >  	bool
-> >  
-> > @@ -143,6 +144,24 @@ static int __init parse_crashkernel_simp
-> >  	return 0;
-> >  }
-> >  
-> > +static int __init get_crashkernel_default(unsigned long long system_ram,
-> > +					  unsigned long long *size)
-> > +{
-> > +	unsigned long long sz = CONFIG_CRASHKERNEL_DEFAULT_MB;
-> > +	unsigned long long thres = CONFIG_CRASHKERNEL_DEFAULT_THRESHOLD_MB;
-> > +
-> > +	thres *= SZ_1M;
-> > +	sz *= SZ_1M;
-> > +
-> > +	if (sz >= system_ram || system_ram < thres) {
-> > +		pr_debug("crashkernel default size can not be used.\n");
-> > +		return -EINVAL;
-> 
-> In other words,
-> 
-> 	if (system_ram <= CONFIG_CRASHKERNEL_DEFAULT_MB ||
-> 	    system_ram < CONFIG_CRASHKERNEL_DEFAULT_THRESHOLD_MB)
-> 		fail;
-> 
-> yes?
 
-the first comparison is a sanity check for the default reserved
-size, if it is bigger than system ram size it is apparently bad:
-if ( CONFIG_CRASHKERNEL_DEFAULT_MB >= system_ram )
-	fail;
+Sorry I missed this comment, the threshold is like this:
 
-The second comparison is for the threshold setting, it is a designed
-logic like:
-if ( system_ram >= CONFIG_CRASHKERNEL_DEFAULT_THRESHOLD_MB ) then
-	go ahead to use the default value of CONFIG_CRASHKERNEL_DEFAULT_MB
-
-> 
-> How come?  What's happening here?  Perhaps a (good) explanatory comment
-> is needed.  And clearer Kconfig text.
-> 
-> All confused :(
-
-Hmm, scratch head~, will think about how to describe it better.  If you
-have any suggestions just let me know :)
+if system memory size is lower than the threshold then we will do
+nothing and do not reserve crashkernel memory by default.  Eg. if the
+threshold is 1024M then default reservation is only used when system has
+more than 1024M memory, and for those low mem machine we do not reserve by
+default.
 
 Thanks
 Dave
-
 
 _______________________________________________
 kexec mailing list
