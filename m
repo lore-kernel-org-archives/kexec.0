@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x241.google.com ([2607:f8b0:4001:c0b::241])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fL2zb-0003Ky-30
- for kexec@lists.infradead.org; Tue, 22 May 2018 08:50:05 +0000
-Received: by mail-it0-x241.google.com with SMTP id n202-v6so24332448ita.1
- for <kexec@lists.infradead.org>; Tue, 22 May 2018 01:49:51 -0700 (PDT)
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fLJ6r-0006PA-1q
+ for kexec@lists.infradead.org; Wed, 23 May 2018 02:02:39 +0000
+Subject: Re: [PATCH 0/2] support kdump for AMD secure memory encryption(sme)
+References: <20180515015133.4363-1-lijiang@redhat.com>
+ <55bda494-bee4-5696-03e5-fc21c9d6b631@amd.com>
+ <18309611-c8c4-92cb-161e-f35ef3d243ea@redhat.com>
+ <a0b95743-209a-aca7-33e4-828375df1826@redhat.com>
+ <3972e681-d8eb-4f4d-843a-6ddbf339f0bb@amd.com>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <2cabcbab-264a-2ac5-524e-6e3a9e388e56@redhat.com>
+Date: Wed, 23 May 2018 10:02:00 +0800
 MIME-Version: 1.0
-In-Reply-To: <1526977424-25243-1-git-send-email-kernelfans@gmail.com>
-References: <1526977424-25243-1-git-send-email-kernelfans@gmail.com>
-From: Pingfan Liu <kernelfans@gmail.com>
-Date: Tue, 22 May 2018 16:49:50 +0800
-Message-ID: <CAFgQCTu9YGqM+SD48UuhJK4O8Ch+9fZYMen6ReRkTtf81gHpGA@mail.gmail.com>
-Subject: Re: [PATCH v6 (proposal)] powerpc/cpu: enable nr_cpus for crash kernel
+In-Reply-To: <3972e681-d8eb-4f4d-843a-6ddbf339f0bb@amd.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,383 +23,112 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: "Guilherme G . Piccoli" <gpiccoli@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, Paul Mackerras <paulus@ozlabs.org>, Michael Ellerman <mpe@ellerman.id.au>, Dave Young <dyoung@redhat.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org
+Cc: dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
-I had tested this patch for P9/P8/ guest on powerKVM and powerVM. All
-of them works fine.
-
-On Tue, May 22, 2018 at 4:23 PM, Pingfan Liu <kernelfans@gmail.com> wrote:
-> For kexec -p, the boot cpu can be not the cpu0, this causes the problem
-> to alloc paca[]. In theory, there is no requirement to assign cpu's logical
-> id as its present seq by device tree. But we have something like
-> cpu_first_thread_sibling(), which makes assumption on the mapping inside
-> a core. Hence partially changing the mapping, i.e. unbind the mapping of
-> core while keep the mapping inside a core. After this patch, the core with
-> boot-cpu will always be mapped into core 0.
->
-> And at present, the code to discovery cpu spreads over two functions:
-> early_init_dt_scan_cpus() and smp_setup_cpu_maps().
-> This patch tries to fold smp_setup_cpu_maps() into the "previous" one
->
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> ---
-> v5 -> v6:
->   simplify the loop logic (Hope it can answer Benjamin's concern)
->   concentrate the cpu recovery code to early stage (Hope it can answer Michael's concern)
-> Todo: (if this method is accepted)
->   fold the whole smp_setup_cpu_maps()
->
->  arch/powerpc/include/asm/smp.h     |   1 +
->  arch/powerpc/kernel/prom.c         | 123 ++++++++++++++++++++++++++++---------
->  arch/powerpc/kernel/setup-common.c |  58 ++---------------
->  drivers/of/fdt.c                   |   2 +-
->  include/linux/of_fdt.h             |   2 +
->  5 files changed, 103 insertions(+), 83 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/smp.h b/arch/powerpc/include/asm/smp.h
-> index fac963e..80c7693 100644
-> --- a/arch/powerpc/include/asm/smp.h
-> +++ b/arch/powerpc/include/asm/smp.h
-> @@ -30,6 +30,7 @@
->  #include <asm/percpu.h>
->
->  extern int boot_cpuid;
-> +extern int threads_in_core;
->  extern int spinning_secondaries;
->
->  extern void cpu_die(void);
-> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-> index 4922162..2ae0b4a 100644
-> --- a/arch/powerpc/kernel/prom.c
-> +++ b/arch/powerpc/kernel/prom.c
-> @@ -77,7 +77,6 @@ unsigned long tce_alloc_start, tce_alloc_end;
->  u64 ppc64_rma_size;
->  #endif
->  static phys_addr_t first_memblock_size;
-> -static int __initdata boot_cpu_count;
->
->  static int __init early_parse_mem(char *p)
->  {
-> @@ -305,6 +304,14 @@ static void __init check_cpu_feature_properties(unsigned long node)
->         }
->  }
->
-> +struct bootinfo {
-> +       int boot_thread_id;
-> +       unsigned int cpu_cnt;
-> +       int cpu_hwids[NR_CPUS];
-> +       bool avail[NR_CPUS];
-> +};
-> +static struct bootinfo *bt_info;
-> +
->  static int __init early_init_dt_scan_cpus(unsigned long node,
->                                           const char *uname, int depth,
->                                           void *data)
-> @@ -312,10 +319,12 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
->         const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
->         const __be32 *prop;
->         const __be32 *intserv;
-> -       int i, nthreads;
-> +       int i, nthreads, maxidx;
->         int len;
-> -       int found = -1;
-> -       int found_thread = 0;
-> +       int found_thread = -1;
-> +       struct bootinfo *info = data;
-> +       bool avail;
-> +       int rotate_cnt, id;
->
->         /* We are scanning "cpu" nodes only */
->         if (type == NULL || strcmp(type, "cpu") != 0)
-> @@ -325,8 +334,15 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
->         intserv = of_get_flat_dt_prop(node, "ibm,ppc-interrupt-server#s", &len);
->         if (!intserv)
->                 intserv = of_get_flat_dt_prop(node, "reg", &len);
-> +       avail = of_fdt_device_is_available(initial_boot_params, node);
-> +#if 0
-> +       //todo
-> +       if (!avail)
-> +               avail = !of_fdt_property_match_string(node,
-> +                                       "enable-method", "spin-table");
-> +#endif
->
-> -       nthreads = len / sizeof(int);
-> +       threads_in_core = nthreads = len / sizeof(int);
->
->         /*
->          * Now see if any of these threads match our boot cpu.
-> @@ -338,9 +354,10 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
->                  * booted proc.
->                  */
->                 if (fdt_version(initial_boot_params) >= 2) {
-> +                       info->cpu_hwids[info->cpu_cnt] =
-> +                                       be32_to_cpu(intserv[i]);
->                         if (be32_to_cpu(intserv[i]) ==
->                             fdt_boot_cpuid_phys(initial_boot_params)) {
-> -                               found = boot_cpu_count;
->                                 found_thread = i;
->                         }
->                 } else {
-> @@ -351,22 +368,37 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
->                          */
->                         if (of_get_flat_dt_prop(node,
->                                         "linux,boot-cpu", NULL) != NULL)
-> -                               found = boot_cpu_count;
-> +                               found_thread = info->cpu_cnt;
->                 }
-> +               info->avail[info->cpu_cnt] = avail;
-> +
->  #ifdef CONFIG_SMP
->                 /* logical cpu id is always 0 on UP kernels */
-> -               boot_cpu_count++;
-> +               info->cpu_cnt++;
->  #endif
->         }
->
->         /* Not the boot CPU */
-> -       if (found < 0)
-> +       if (found_thread < 0)
->                 return 0;
->
-> -       DBG("boot cpu: logical %d physical %d\n", found,
-> +       /* always mapping boot-core to core 0 to cope with kexec -p */
-> +       maxidx = info->cpu_cnt - 1;
-> +       rotate_cnt = nthreads;
-> +       while (rotate_cnt-- > 0) {
-> +               avail = info->avail[maxidx];
-> +               id = info->cpu_hwids[maxidx];
-> +               for (i = maxidx; i > 0; i--) {
-> +                       info->avail[i] = info->avail[i - 1];
-> +                       info->cpu_hwids[i] = info->cpu_hwids[i - 1];
-> +               }
-> +               info->avail[i] = avail;
-> +               info->cpu_hwids[i] = id;
-> +       }
-> +
-> +       info->boot_thread_id = found_thread;
-> +       DBG("boot cpu: logical %d physical %d\n", found_thread,
->             be32_to_cpu(intserv[found_thread]));
-> -       boot_cpuid = found;
-> -       set_hard_smp_processor_id(found, be32_to_cpu(intserv[found_thread]));
->
->         /*
->          * PAPR defines "logical" PVR values for cpus that
-> @@ -675,6 +707,55 @@ static void __init tm_init(void)
->  static void tm_init(void) { }
->  #endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
->
-> +static void early_setup_cpu_mapping(void)
-> +{
-> +       unsigned int cpu, cnt;
-> +       int nr_cpus_aligned;
-> +
-> +       bt_info = __va(memblock_alloc(sizeof(struct bootinfo),
-> +                       sizeof(unsigned long)));
-> +       memset(bt_info, 0, sizeof(struct bootinfo));
-> +       bt_info->boot_thread_id = -1;
-> +       /* Retrieve CPU related informations from the flat tree
-> +        * (altivec support, boot CPU ID, ...)
-> +        */
-> +       of_scan_flat_dt(early_init_dt_scan_cpus, bt_info);
-> +
-> +       if (bt_info->boot_thread_id < 0) {
-> +               pr_err("Failed to identify boot CPU !\n");
-> +               BUG();
-> +       }
-> +
-> +       boot_cpuid = bt_info->boot_thread_id;
-> +       /* work around subcore mode */
-> +       nr_cpus_aligned = _ALIGN_UP(nr_cpu_ids, threads_in_core);
-> +       if (nr_cpus_aligned != nr_cpu_ids) {
-> +               pr_info("nr_cpus is forced to be aligned up from: %d to: %d\n",
-> +                       nr_cpu_ids, nr_cpus_aligned);
-> +               nr_cpu_ids = nr_cpus_aligned;
-> +       }
-> +       cnt = (nr_cpu_ids < bt_info->cpu_cnt) ? nr_cpu_ids
-> +                       : bt_info->cpu_cnt;
-> +
-> +       allocate_pacas();
-> +       for (cpu = 0; cpu < cnt; cpu++) {
-> +               set_cpu_present(cpu, bt_info->avail[cpu]);
-> +               DBG("set cpu present: %d -> hwid:%d\n",
-> +                       cpu, bt_info->cpu_hwids[cpu]);
-> +               set_hard_smp_processor_id(cpu, bt_info->cpu_hwids[cpu]);
-> +               set_cpu_possible(cpu, true);
-> +       }
-> +
-> +#if defined(CONFIG_SMP) && defined(CONFIG_PPC64)
-> +       /* We'll later wait for secondaries to check in; there are
-> +        * NCPUS-1 non-boot CPUs  :-)
-> +        */
-> +       spinning_secondaries = bt_info->cpu_cnt - 1;
-> +#endif
-> +       memblock_free(__pa(bt_info), sizeof(struct bootinfo));
-> +       bt_info = NULL;
-> +}
-> +
->  void __init early_init_devtree(void *params)
->  {
->         phys_addr_t limit;
-> @@ -745,27 +826,11 @@ void __init early_init_devtree(void *params)
->          * FIXME .. and the initrd too? */
->         move_device_tree();
->
-> -       allocate_pacas();
-> -
->         DBG("Scanning CPUs ...\n");
->
->         dt_cpu_ftrs_scan();
->
-> -       /* Retrieve CPU related informations from the flat tree
-> -        * (altivec support, boot CPU ID, ...)
-> -        */
-> -       of_scan_flat_dt(early_init_dt_scan_cpus, NULL);
-> -       if (boot_cpuid < 0) {
-> -               printk("Failed to identify boot CPU !\n");
-> -               BUG();
-> -       }
-> -
-> -#if defined(CONFIG_SMP) && defined(CONFIG_PPC64)
-> -       /* We'll later wait for secondaries to check in; there are
-> -        * NCPUS-1 non-boot CPUs  :-)
-> -        */
-> -       spinning_secondaries = boot_cpu_count - 1;
-> -#endif
-> +       early_setup_cpu_mapping();
->
->         mmu_early_init_devtree();
->
-> diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-> index 66f7cc6..46d034a 100644
-> --- a/arch/powerpc/kernel/setup-common.c
-> +++ b/arch/powerpc/kernel/setup-common.c
-> @@ -86,7 +86,9 @@ struct machdep_calls *machine_id;
->  EXPORT_SYMBOL(machine_id);
->
->  int boot_cpuid = -1;
-> +int threads_in_core = 1;
->  EXPORT_SYMBOL_GPL(boot_cpuid);
-> +EXPORT_SYMBOL_GPL(threads_in_core);
->
->  /*
->   * These are used in binfmt_elf.c to put aux entries on the stack
-> @@ -460,61 +462,11 @@ void __init smp_setup_cpu_maps(void)
->  {
->         struct device_node *dn;
->         int cpu = 0;
-> -       int nthreads = 1;
-> -
-> -       DBG("smp_setup_cpu_maps()\n");
-> -
-> -       for_each_node_by_type(dn, "cpu") {
-> -               const __be32 *intserv;
-> -               __be32 cpu_be;
-> -               int j, len;
-> -
-> -               DBG("  * %pOF...\n", dn);
-> -
-> -               intserv = of_get_property(dn, "ibm,ppc-interrupt-server#s",
-> -                               &len);
-> -               if (intserv) {
-> -                       DBG("    ibm,ppc-interrupt-server#s -> %d threads\n",
-> -                           nthreads);
-> -               } else {
-> -                       DBG("    no ibm,ppc-interrupt-server#s -> 1 thread\n");
-> -                       intserv = of_get_property(dn, "reg", &len);
-> -                       if (!intserv) {
-> -                               cpu_be = cpu_to_be32(cpu);
-> -                               intserv = &cpu_be;      /* assume logical == phys */
-> -                               len = 4;
-> -                       }
-> -               }
-> -
-> -               nthreads = len / sizeof(int);
-> -
-> -               for (j = 0; j < nthreads && cpu < nr_cpu_ids; j++) {
-> -                       bool avail;
-> -
-> -                       DBG("    thread %d -> cpu %d (hard id %d)\n",
-> -                           j, cpu, be32_to_cpu(intserv[j]));
-> -
-> -                       avail = of_device_is_available(dn);
-> -                       if (!avail)
-> -                               avail = !of_property_match_string(dn,
-> -                                               "enable-method", "spin-table");
-> -
-> -                       set_cpu_present(cpu, avail);
-> -                       set_hard_smp_processor_id(cpu, be32_to_cpu(intserv[j]));
-> -                       set_cpu_possible(cpu, true);
-> -                       cpu++;
-> -               }
-> -
-> -               if (cpu >= nr_cpu_ids) {
-> -                       of_node_put(dn);
-> -                       break;
-> -               }
-> -       }
->
->         /* If no SMT supported, nthreads is forced to 1 */
->         if (!cpu_has_feature(CPU_FTR_SMT)) {
->                 DBG("  SMT disabled ! nthreads forced to 1\n");
-> -               nthreads = 1;
-> +               threads_in_core = 1;
->         }
->
->  #ifdef CONFIG_PPC64
-> @@ -539,7 +491,7 @@ void __init smp_setup_cpu_maps(void)
->
->                 /* Double maxcpus for processors which have SMT capability */
->                 if (cpu_has_feature(CPU_FTR_SMT))
-> -                       maxcpus *= nthreads;
-> +                       maxcpus *= threads_in_core;
->
->                 if (maxcpus > nr_cpu_ids) {
->                         printk(KERN_WARNING
-> @@ -565,7 +517,7 @@ void __init smp_setup_cpu_maps(void)
->          * every CPU in the system. If that is not the case, then some code
->          * here will have to be reworked
->          */
-> -       cpu_init_thread_core_maps(nthreads);
-> +       cpu_init_thread_core_maps(threads_in_core);
->
->         /* Now that possible cpus are set, set nr_cpu_ids for later use */
->         setup_nr_cpu_ids();
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 84aa9d6..16d6b02 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -130,7 +130,7 @@ bool of_fdt_is_big_endian(const void *blob, unsigned long node)
->         return false;
->  }
->
-> -static bool of_fdt_device_is_available(const void *blob, unsigned long node)
-> +bool of_fdt_device_is_available(const void *blob, unsigned long node)
->  {
->         const char *status = fdt_getprop(blob, node, "status", NULL);
->
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index b9cd9eb..28756c5 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -30,6 +30,8 @@ extern void *of_fdt_get_property(const void *blob,
->                                  int *size);
->  extern bool of_fdt_is_big_endian(const void *blob,
->                                  unsigned long node);
-> +extern bool of_fdt_device_is_available(const void *blob,
-> +                       unsigned long node);
->  extern int of_fdt_match(const void *blob, unsigned long node,
->                         const char *const *compat);
->  extern void *of_fdt_unflatten_tree(const unsigned long *blob,
-> --
-> 2.7.4
->
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQwNeaciDIx5pelIDIxOjIzLCBUb20gTGVuZGFja3kg5YaZ6YGTOgo+IE9uIDUv
+MjAvMjAxOCAxMDo0NSBQTSwgbGlqaWFuZyB3cm90ZToKPj4g5ZyoIDIwMTjlubQwNeaciDE35pel
+IDIxOjQ1LCBsaWppYW5nIOWGmemBkzoKPj4+IOWcqCAyMDE45bm0MDXmnIgxNeaXpSAyMTozMSwg
+VG9tIExlbmRhY2t5IOWGmemBkzoKPj4+PiBPbiA1LzE0LzIwMTggODo1MSBQTSwgTGlhbmJvIEpp
+YW5nIHdyb3RlOgo+Pj4+PiBJdCBpcyBjb252ZW5pZW50IHRvIHJlbWFwIHRoZSBvbGQgbWVtb3J5
+IGVuY3J5cHRlZCB0byB0aGUgc2Vjb25kIGtlcm5lbCBieQo+Pj4+PiBjYWxsaW5nIGlvcmVtYXBf
+ZW5jcnlwdGVkKCkuCj4+Pj4+Cj4+Pj4+IFdoZW4gc21lIGVuYWJsZWQgb24gQU1EIHNlcnZlciwg
+d2UgYWxzbyBuZWVkIHRvIHN1cHBvcnQga2R1bXAuIEJlY2F1c2UKPj4+Pj4gdGhlIG1lbW9yeSBp
+cyBlbmNyeXB0ZWQgaW4gdGhlIGZpcnN0IGtlcm5lbCwgd2Ugd2lsbCByZW1hcCB0aGUgb2xkIG1l
+bW9yeQo+Pj4+PiBlbmNyeXB0ZWQgdG8gdGhlIHNlY29uZCBrZXJuZWwoY3Jhc2gga2VybmVsKSwg
+YW5kIHNtZSBpcyBhbHNvIGVuYWJsZWQgaW4KPj4+Pj4gdGhlIHNlY29uZCBrZXJuZWwsIG90aGVy
+d2lzZSB0aGUgb2xkIG1lbW9yeSBlbmNyeXB0ZWQgY2FuIG5vdCBiZSBkZWNyeXB0ZWQuCj4+Pj4+
+IEJlY2F1c2Ugc2ltcGx5IGNoYW5naW5nIHRoZSB2YWx1ZSBvZiBhIEMtYml0IG9uIGEgcGFnZSB3
+aWxsIG5vdAo+Pj4+PiBhdXRvbWF0aWNhbGx5IGVuY3J5cHQgdGhlIGV4aXN0aW5nIGNvbnRlbnRz
+IG9mIGEgcGFnZSwgYW5kIGFueSBkYXRhIGluIHRoZQo+Pj4+PiBwYWdlIHByaW9yIHRvIHRoZSBD
+LWJpdCBtb2RpZmljYXRpb24gd2lsbCBiZWNvbWUgdW5pbnRlbGxpZ2libGUuIEEgcGFnZSBvZgo+
+Pj4+PiBtZW1vcnkgdGhhdCBpcyBtYXJrZWQgZW5jcnlwdGVkIHdpbGwgYmUgYXV0b21hdGljYWxs
+eSBkZWNyeXB0ZWQgd2hlbiByZWFkCj4+Pj4+IGZyb20gRFJBTSBhbmQgd2lsbCBiZSBhdXRvbWF0
+aWNhbGx5IGVuY3J5cHRlZCB3aGVuIHdyaXR0ZW4gdG8gRFJBTS4KPj4+Pj4KPj4+Pj4gRm9yIHRo
+ZSBrZHVtcCwgaXQgaXMgbmVjZXNzYXJ5IHRvIGRpc3Rpbmd1aXNoIHdoZXRoZXIgdGhlIG1lbW9y
+eSBpcwo+Pj4+PiBlbmNyeXB0ZWQuIEZ1cnRoZXJtb3JlLCB3ZSBzaG91bGQgYWxzbyBrbm93IHdo
+aWNoIHBhcnQgb2YgdGhlIG1lbW9yeSBpcwo+Pj4+PiBlbmNyeXB0ZWQgb3IgZGVjcnlwdGVkLiBX
+ZSB3aWxsIGFwcHJvcHJpYXRlbHkgcmVtYXAgdGhlIG1lbW9yeSBhY2NvcmRpbmcKPj4+Pj4gdG8g
+dGhlIHNwZWNpZmljIHNpdHVhdGlvbiBpbiBvcmRlciB0byB0ZWxsIGNwdSBob3cgdG8gZGVhbCB3
+aXRoIHRoZQo+Pj4+PiBkYXRhKGVuY3J5cHRlZCBvciBkZWNyeXB0ZWQpLiBGb3IgZXhhbXBsZSwg
+d2hlbiBzbWUgZW5hYmxlZCwgaWYgdGhlIG9sZAo+Pj4+PiBtZW1vcnkgaXMgZW5jcnlwdGVkLCB3
+ZSB3aWxsIHJlbWFwIHRoZSBvbGQgbWVtb3J5IGluIGVuY3J5cHRlZCB3YXksIHdoaWNoCj4+Pj4+
+IHdpbGwgYXV0b21hdGljYWxseSBkZWNyeXB0IHRoZSBvbGQgbWVtb3J5IGVuY3J5cHRlZCB3aGVu
+IHdlIHJlYWQgdGhvc2UgZGF0YQo+Pj4+PiBmcm9tIHRoZSByZW1hcHBpbmcgYWRkcmVzcy4KPj4+
+Pj4KPj4+Pj4gIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0K
+Pj4+Pj4gfCBmaXJzdC1rZXJuZWwgfCBzZWNvbmQta2VybmVsIHwga2R1bXAgc3VwcG9ydCB8Cj4+
+Pj4+IHwgICAgICAobWVtX2VuY3J5cHQ9b258b2ZmKSAgICB8ICAgKHllc3xubykgICAgfCAKPj4+
+Pj4gfC0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS18Cj4+Pj4+
+IHwgICAgIG9uICAgICAgIHwgICAgIG9uICAgICAgICB8ICAgICB5ZXMgICAgICAgfAo+Pj4+PiB8
+ICAgICBvZmYgICAgICB8ICAgICBvZmYgICAgICAgfCAgICAgeWVzICAgICAgIHwKPj4+Pj4gfCAg
+ICAgb24gICAgICAgfCAgICAgb2ZmICAgICAgIHwgICAgIG5vICAgICAgICB8Cj4+Pj4+IHwgICAg
+IG9mZiAgICAgIHwgICAgIG9uICAgICAgICB8ICAgICBubyAgICAgICAgfAo+Pj4+PiB8X19fX19f
+X19fX19fX198X19fX19fX19fX19fX19ffF9fX19fX19fX19fX19fX3wKPj4+Pj4KPj4+Pj4gVGVz
+dCB0b29sczoKPj4+Pj4gbWFrZWR1bXBmaWxlW3YxLjYuM106IGh0dHBzOi8vZ2l0aHViLmNvbS9M
+aWFuYm9KL21ha2VkdW1wZmlsZQo+Pj4+PiBjb21taXQgZTFkZTEwM2VjYThmIChBIGRyYWZ0IGZv
+ciBrZHVtcCB2bWNvcmUgYWJvdXQgQU1EIFNNRSkKPj4+Pj4gQXV0aG9yOiBMaWFuYm8gSmlhbmcg
+PGxpamlhbmdAcmVkaGF0LmNvbT4KPj4+Pj4gRGF0ZTogICBNb24gTWF5IDE0IDE3OjAyOjQwIDIw
+MTggKzA4MDAKPj4+Pj4gTm90ZTogVGhpcyBwYXRjaCBjYW4gb25seSBkdW1wIHZtY29yZSBpbiB0
+aGUgY2FzZSBvZiBTTUUgZW5hYmxlZC4KPj4+Pj4KPj4+Pj4gY3Jhc2gtNy4yLjE6IGh0dHBzOi8v
+Z2l0aHViLmNvbS9jcmFzaC11dGlsaXR5L2NyYXNoLmdpdAo+Pj4+PiBjb21taXQgMWUxYmQ5YzRj
+MWJlIChGaXggZm9yIHRoZSAiYnBmIiBjb21tYW5kIGRpc3BsYXkgb24gTGludXggNC4xNy1yYzEp
+Cj4+Pj4+IEF1dGhvcjogRGF2ZSBBbmRlcnNvbiA8YW5kZXJzb25AcmVkaGF0LmNvbT4KPj4+Pj4g
+RGF0ZTogICBGcmkgTWF5IDExIDE1OjU0OjMyIDIwMTggLTA0MDAKPj4+Pj4KPj4+Pj4gVGVzdCBl
+bnZpcm9ubWVudDoKPj4+Pj4gSFAgUHJvTGlhbnQgREwzODVHZW4xMCBBTUQgRVBZQyA3MjUxCj4+
+Pj4+IDgtQ29yZSBQcm9jZXNzb3IKPj4+Pj4gMzI3NjggTUIgbWVtb3J5Cj4+Pj4+IDYwMCBHQiBk
+aXNrIHNwYWNlCj4+Pj4+Cj4+Pj4+IExpbnV4IDQuMTctcmM0Ogo+Pj4+PiBnaXQ6Ly9naXQua2Vy
+bmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0Cj4+Pj4+
+IGNvbW1pdCA3NWJjMzdmZWZjNDQgKCJMaW51eCA0LjE3LXJjNCIpCj4+Pj4+IEF1dGhvcjogTGlu
+dXMgVG9ydmFsZHMgPHRvcnZhbGRzQGxpbnV4LWZvdW5kYXRpb24ub3JnPgo+Pj4+PiBEYXRlOiAg
+IFN1biBNYXkgNiAxNjo1NzozOCAyMDE4IC0xMDAwCj4+Pj4+Cj4+Pj4+IFJlZmVyZW5jZToKPj4+
+Pj4gQU1ENjQgQXJjaGl0ZWN0dXJlIFByb2dyYW1tZXIncyBNYW51YWwKPj4+Pj4gaHR0cHM6Ly9z
+dXBwb3J0LmFtZC5jb20vVGVjaERvY3MvMjQ1OTMucGRmCj4+Pj4+Cj4+Pj4KPj4+PiBIYXZlIHlv
+dSBhbHNvIHRlc3RlZCB0aGlzIHdpdGggU0VWPyAgSXQgd291bGQgYmUgbmljZSBpZiB0aGUga2R1
+bXAKPj4+PiBjaGFuZ2VzIHlvdSBtYWtlIHdvcmsgd2l0aCBib3RoIFNNRSBhbmQgU0VWLgo+Pj4+
+Cj4+PiBUaGFuayB5b3UsIFRvbS4KPj4+IFRoaXMgaXMgYSBncmVhdCBxdWVzdGlvbiwgd2Ugb3Jp
+Z2luYWxseSBwbGFuIHRvIGltcGxlbWVudCBTRVYgaW4gc3Vic2VxdWVudCBwYXRjaGVzLCBhbmQK
+Pj4+IHdlIGFyZSBhbHNvIHdvcmtpbmcgb24gU0VWIGF0IHByZXNlbnQuCj4+PiBGdXJ0aGVybW9y
+ZSwgd2UgaGF2ZSBhbm90aGVyIGtub3duIGlzc3VlIHRoYXQgdGhlIHN5c3RlbSBjYW4ndCBqdW1w
+IGludG8gdGhlIHNlY29uZCBrZXJuZWwKPj4+IHdoZW4gU01FIGlzIGVuYWJsZWQgYW5kIGthc2xy
+IGlzIGRpc2FibGVkIGluIGtkdW1wIG1vZGUuIEl0IHNlZW1zIHRoYXQgaXMgYSBjb21wbGV4IHBy
+b2JsZW1zLAo+Pj4gbWF5YmUgaXQgaXMgcmVsYXRlZCB0byBrYXNsciBhbmQgU01FLCBjdXJyZW50
+bHksIGknbSBub3Qgc3VyZSB0aGUgcm9vdCBjYXVzZSwgYnV0IHdlIHdpbGwKPj4+IGFsc28gcGxh
+biB0byBmaXggaXQuIENhbiB5b3UgZ2l2ZSBtZSBhbnkgYWR2aWNlIGFib3V0IHRoaXMgaXNzdWU/
+Cj4+Pgo+PiBCYXNlZCBvbiB1cHN0cmVhbSA0LjE3LXJjNSwgd2UgaGF2ZSByZWNlbnRseSBmb3Vu
+ZCBhIG5ldyBpc3N1ZSB0aGF0IHRoZSBzeXN0ZW0gY2FuJ3QgYm9vdCB0bwo+PiB1c2Uga2V4ZWMg
+d2hlbiBTTUUgaXMgZW5hYmxlZCBhbmQga2FzbHIgaXMgZGlzYWJsZWQuIEhhdmUgeW91IGV2ZXIg
+cnVuIGludG8gdGhpcyBpc3N1ZT8gCj4+IFRoZXkgaGF2ZSBzaW1pbGFyIHJlcHJvZHVjdGlvbiBz
+Y2VuYXJpb3MuCj4+Cj4+IENDIFRvbSAmIEJhb3F1YW4KPiAKPiBJIGhhdmVuJ3QgZW5jb3VudGVy
+ZWQgdGhpcyBpc3N1ZS4gIENhbiB5b3Ugc2VuZCB0aGUga2VybmVsIGNvbmZpZyB0aGF0IHlvdQo+
+IGFyZSB1c2luZz8gIEFuZCB5b3VyIGtlcm5lbCBjb21tYW5kIGxpbmU/ICBJJ2xsIHRyeSB5b3Vy
+IGNvbmZpZyBhbmQgc2VlIGlmCj4gSSBjYW4gcmVwcm9kdWNlIHRoZSBpc3N1ZS4KPiAKVGhhbmsg
+eW91LCBUb20uCkl0IGRvZXNuJ3QgaGF2ZSBhbnl0aGluZyBzcGVjaWFsIGNvbmZpZywgYW5kIGl0
+J3MgYWx3YXlzIHJlcHJvZHVjZWQuCkkgd2lsbCBzZW5kIGFub3RoZXIgZW1haWwgdG8geW91IGFi
+b3V0IGtlcm5lbCBjb25maWcgYW5kIGNvbW1hbmQgbGluZS4KPiBKdXN0IHRvIGJlIGNsYXJpZnks
+IHlvdSBwZXJmb3JtIGEgcG93ZXItb24gYm9vdCB3aXRoIFNNRSBlbmFibGVkIGFuZCBLQVNMUgo+
+IGRpc2FibGVkIChlLmcuIG1lbV9lbmNyeXB0PW9uIG5va2FzbHIpLCBjb3JyZWN0LCBhbmQgdGhh
+dCB3b24ndCBib290Pwo+ClRoZSBzeXN0ZW0gY2FuIGJvb3QgaW4gdGhpcyBjYXNlLgoKVGhhbmtz
+LgpMaWFuYm8KPiBUaGFua3MsCj4gVG9tCj4gCj4+Cj4+IFRoYW5rcy4KPj4gTGlhbmJvCj4+Cj4+
+PiBUaGFua3MuCj4+PiBMaWFuYm8KPj4+PiBUaGFua3MsCj4+Pj4gVG9tCj4+Pj4KPj4+Pj4gTGlh
+bmJvIEppYW5nICgyKToKPj4+Pj4gICBhZGQgYSBmdW5jdGlvbihpb3JlbWFwX2VuY3J5cHRlZCkg
+Zm9yIGtkdW1wIHdoZW4gQU1EIHNtZSBlbmFibGVkLgo+Pj4+PiAgIHN1cHBvcnQga2R1bXAgd2hl
+biBBTUQgc2VjdXJlIG1lbW9yeSBlbmNyeXB0aW9uIGlzIGFjdGl2ZQo+Pj4+Pgo+Pj4+PiAgYXJj
+aC94ODYvaW5jbHVkZS9hc20vZG1pLmggICAgICB8IDE0ICsrKysrKysrKysrKystCj4+Pj4+ICBh
+cmNoL3g4Ni9pbmNsdWRlL2FzbS9pby5oICAgICAgIHwgIDIgKysKPj4+Pj4gIGFyY2gveDg2L2tl
+cm5lbC9hY3BpL2Jvb3QuYyAgICAgfCAgOCArKysrKysrKwo+Pj4+PiAgYXJjaC94ODYva2VybmVs
+L2NyYXNoX2R1bXBfNjQuYyB8IDI3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKwo+Pj4+PiAg
+YXJjaC94ODYvbW0vaW9yZW1hcC5jICAgICAgICAgICB8IDI1ICsrKysrKysrKysrKysrKysrLS0t
+LS0tLS0KPj4+Pj4gIGRyaXZlcnMvYWNwaS90YWJsZXMuYyAgICAgICAgICAgfCAxNCArKysrKysr
+KysrKysrLQo+Pj4+PiAgZHJpdmVycy9pb21tdS9hbWRfaW9tbXVfaW5pdC5jICB8ICA5ICsrKysr
+KysrLQo+Pj4+PiAgZnMvcHJvYy92bWNvcmUuYyAgICAgICAgICAgICAgICB8IDM2ICsrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKystLS0tLQo+Pj4+PiAgaW5jbHVkZS9saW51eC9jcmFzaF9k
+dW1wLmggICAgICB8ICA0ICsrKysKPj4+Pj4gIGtlcm5lbC9rZXhlY19jb3JlLmMgICAgICAgICAg
+ICAgfCAxMiArKysrKysrKysrKysKPj4+Pj4gIDEwIGZpbGVzIGNoYW5nZWQsIDEzNSBpbnNlcnRp
+b25zKCspLCAxNiBkZWxldGlvbnMoLSkKPj4+Pj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4
+ZWMK
