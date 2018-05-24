@@ -1,18 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fLxBo-00020l-SX
- for kexec@lists.infradead.org; Thu, 24 May 2018 20:50:26 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
+ id 1fLzgT-00081t-T2
+ for kexec@lists.infradead.org; Thu, 24 May 2018 23:30:15 +0000
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w4ONOPRI088786
+ for <kexec@lists.infradead.org>; Thu, 24 May 2018 19:30:02 -0400
+Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2j641qes9d-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 24 May 2018 19:30:02 -0400
+Received: from localhost
+ by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Fri, 25 May 2018 00:29:59 +0100
+Subject: Re: [PATCH v3 1/7] security: rename security_kernel_read_file() hook
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Thu, 24 May 2018 19:29:52 -0400
+In-Reply-To: <87po1k2304.fsf@xmission.com>
 References: <1527160176-29269-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1527160176-29269-3-git-send-email-zohar@linux.vnet.ibm.com>
-Date: Thu, 24 May 2018 15:50:03 -0500
-In-Reply-To: <1527160176-29269-3-git-send-email-zohar@linux.vnet.ibm.com>
- (Mimi Zohar's message of "Thu, 24 May 2018 07:09:31 -0400")
-Message-ID: <87k1rs22ys.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v3 2/7] kexec: add call to LSM hook in original kexec_load
- syscall
+ <1527160176-29269-2-git-send-email-zohar@linux.vnet.ibm.com>
+ <87po1k2304.fsf@xmission.com>
+Mime-Version: 1.0
+Message-Id: <1527204592.3424.132.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,66 +33,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Andres Rodriguez <andresx7@gmail.com>, linux-integrity@vger.kernel.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>, James Morris <jmorris@namei.org>, Casey Schaufler <casey@schaufler-ca.com>
+Cc: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R
+ . Rodriguez" <mcgrof@kernel.org>, Andres Rodriguez <andresx7@gmail.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
 
-Mimi Zohar <zohar@linux.vnet.ibm.com> writes:
-
-> In order for LSMs and IMA-appraisal to differentiate between the
-> original and new syscalls, both the original and new syscalls must call
-> an LSM hook.  This patch adds a call to security_kernel_read_data() in
-> the original kexec syscall.
-
-Until the lsm hook mess gets cleaned up.
-
-Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
->
-> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Luis R. Rodriguez <mcgrof@kernel.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: David Howells <dhowells@redhat.com>
-> ---
->  kernel/kexec.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index aed8fb2564b3..061ada41c18c 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -11,6 +11,7 @@
->  #include <linux/capability.h>
->  #include <linux/mm.h>
->  #include <linux/file.h>
-> +#include <linux/security.h>
->  #include <linux/kexec.h>
->  #include <linux/mutex.h>
->  #include <linux/list.h>
-> @@ -195,10 +196,17 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
->  static inline int kexec_load_check(unsigned long nr_segments,
->  				   unsigned long flags)
->  {
-> +	int result;
-> +
->  	/* We only trust the superuser with rebooting the system. */
->  	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
->  		return -EPERM;
->  
-> +	/* Permit LSMs and IMA to fail the kexec */
-> +	result = security_kernel_read_data(NULL, READING_KEXEC_IMAGE);
-> +	if (result < 0)
-> +		return result;
-> +
->  	/*
->  	 * Verify we have a legal set of flags
->  	 * This leaves us room for future extensions.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCAyMDE4LTA1LTI0IGF0IDE1OjQ5IC0wNTAwLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90
+ZToKPiBJIGFscmVhZHkgbmFja2VkIHRoaXMgYXBwcm9hY2ggYmVjYXVzZSB0aGUgdHdvIGNhc2Vz
+IGRvbid0Cj4gc2hhcmUgYSBiaXQgb2YgY29kZS4gIFdoZW4gSSBsb29rZWQgY2xvc2VyIGl0IHdh
+cyBldmVuIGNyYXppZXIuCgpJdCBoYXNuJ3QgYmVlbiBjbGVhciB3aGF0IHlvdSBtZWFudCBieSAi
+dGhlIHR3byBjYXNlcyBkb24ndCBzaGFyZSBhCmJpdCBvZiBjb2RlIi7CoMKgVGhlIGZpcnN0IGF0
+dGVtcHQgY2FsbGVkCnNlY3VyaXR5X2tlcm5lbF9yZWFkX2ZpbGUoKS7CoMKgQXMgcGVyIHlvdXIg
+Y29tbWVudHMsIGtleGVjX2xvYWQgZG9lc24ndApsb2FkIGEgZmlsZS7CoMKgVGhpbmtpbmcgaXQg
+d2FzIGEgbmFtaW5nIGlzc3VlIHRoZSBzZWNvbmQgYXR0ZW1wdApkZWZpbmVkIGEgd3JhcHBlciBu
+YW1lZCBzZWN1cml0eV9rZXJuZWxfcmVhZF9ibG9iKCkgZm9yCnNlY3VyaXR5X2tlcm5lbF9yZWFk
+X2ZpbGUoKS7CoMKgU3RpbGwgdGhpbmtpbmcgaXQgd2FzIGEgbmFtaW5nIGlzc3VlLAp0aGlzIGF0
+dGVtcHQgcmVuYW1lZCB0aGUgc2VjdXJpdHlfa2VybmVsX3JlYWRfZmlsZSgpIHRvCnNlY3VyaXR5
+X2tlcm5lbF9yZWFkX2RhdGEoKS4KCj4gCj4gVGhlIHdheSBpbWEgdXNlcyB0aGlzIGhvb2sgYW5k
+IHRoZSBwb3N0X2xvYWQgaG9vayB0b2RheSBpcyBhIHRyYXZlc3R5LgoKSW5zdGVhZCBvZiBoYXZp
+bmcgbXVsdGlwbGUgZnVuY3Rpb25zLCBlYWNoIGEgYml0IGRpZmZlcmVudCwgZm9yCnJlYWRpbmcg
+YSBmaWxlIGZyb20gdGhlIGtlcm5lbCwga2VybmVsX3JlYWRfZmlsZSgpIGlzIGEgZ2VuZXJpYwpp
+bXBsZW1lbnRhdGlvbiB3aXRoIGJvdGggcHJlIGFuZCBwb3N0IHNlY3VyaXR5IGNhbGxzLgoKIEkg
+dGhpbmsgdGhlIHByZSBhbmQgcG9zdCBzZWN1cml0eSBrZXJuZWxfcmVhZF9maWxlKCkgTFNNIGhv
+b2tzIGFyZQpxdWl0ZSB3ZWxsIHRob3VnaHQgb3V0LiDCoFRoZSBzZWN1cml0eV9rZXJuZWxfcmVh
+ZF9maWxlIGlzIGNhbGxlZApiZWZvcmUgdGhlIGtlcm5lbCByZWFkcyB0aGUgZmlsZS4gwqBUaGUg
+c2VjdXJpdHlfa2VybmVsX3Bvc3RfcmVhZF9maWxlCmlzIGNhbGxlZCBhZnRlciB0aGUga2VybmVs
+IHJlYWRzIHRoZSBmaWxlLgoKPiBUaGUgd2F5IHRoZSBzZWN1cml0eV9rZXJuZWxfZmlsZV9yZWFk
+IGFuZCBzZWN1cml0eV9rZXJuZWxfZmlsZV9wb3N0X3JlYWQKPiBhcmUgY2FsbGVkIHRvZGF5IGFu
+ZCBhcmUgdXNlZCBieSBpbWEgZG9uJ3QgbWFrZSB0aGUgbGVhc3QgbGl0dGxlIGJpdCBvZgo+IHNl
+bnNlLgo+IAo+IEFidXNpbmcgc2VjdXJpdHlfa2VybmVsX2ZpbGVfcmVhZCBpbiB0aGUgbW9kdWxl
+IGxvYWRlciBhbmQgdGhlbiBhYnVzaW5nCj4gc2VjdXJpdHlfa2VybmVsX2ZpbGVfcG9zdF9yZWFk
+IGluIHRoZSBmaXJtd2FyZSBsb2FkZXIgaXMgaW5zYW5lLiAgVGhlCj4gbG9hZHBpbiBsc20gY291
+bGQgbm90IGV2ZW4gZmlndXJlIHRoaXMgb3V0IGFuZCBzbyBpdCBmYWlsZWQgdG8gd29yawo+IGJl
+Y2F1c2Ugb2YgdGhlc2Ugc2hlbmFuaWdoYW5zLgo+IAo+IE9ubHkgaW1wbGVtZW50aW5nIGtlcm5l
+bF9maWxlX3JlYWQgdG8gaGFuZGxlIHRoZSAhZmlsZSBjYXNlIGlzIHByZXR0eQo+IG11Y2ggaW5z
+YW5lLiAgIFRoZXJlIGlzIG5vIHdheSB0aGlzIHNob3VsZCBiZSBleHBhbmRlZCB0byBjb3ZlciBr
+ZXhlYwo+IHVudGlsIHRoZSBjb2RlIGFjdHVhbGx5IG1ha2VzIHNlbnNlLiAgV2UgbmVlZCBhIG1h
+aW50YWluYWJsZSBrZXJuZWwuCgpJdCB3YXNuJ3QgaW1wbGVtZW50ZWQgKm9ubHkqIGZvciB0aGUg
+SU1BICFmaWxlIGNhc2UsIGJ1dCBhcyBhIGdlbmVyaWMKbWVjaGFuaXNtLsKgwqBUcnVlLCBJTUEg
+aXMgb25seSB1c2luZyB0aGUgc2VjdXJpdHlfa2VybmVsX3JlYWRfZmlsZSBob29rCmZvciBkZXRl
+Y3RpbmcgIWZpbGUsIGJ1dCB0aGUgc2VjdXJpdHlfa2VybmVsX3Bvc3RfcmVhZF9maWxlIGhvb2sg
+aXMKdXNlZCBmb3IgdmVyaWZ5aW5nIHRoZSBmaWxlJ3MgaW50ZWdyaXR5LgoKPiBCZWxvdyBpcyB3
+aGVyZSBJIHN1Z2dlc3QgeW91IHN0YXJ0IG9uIHNvcnRpbmcgb3V0IHRoZXNlIHNlY3VyaXR5IGhv
+b2tzLgo+IC0gQWRkaW5nIGEgc2VjdXJpdHlfa2VybmVsX2FyZyB0byBjYXRjaCB3aGVuIHlvdSB3
+YW50IHRvIGFsbG93L2RlbnkgdGhlCj4gICB1c2Ugb2YgYW4gYXJndW1lbnQgdG8gYSBzeXNjYWxs
+LiAgV2hhdCBzZWN1cml0eV9rZXJuZWxfZmlsZV9yZWFkIGFuZAo+ICAgc2VjdXJpdHlfa2VybmVs
+X2ZpbGVfcG9zdF9yZWFkIGhhdmUgYmVlbiBhYnVzZWQgZm9yLgoKQXNzdW1pbmcgd2UgZGVmaW5l
+IGEgbmV3IExTTSBob29rIG5hbWVkICJzZWN1cml0eV9rZXJuZWxfYXJnIiwgd291bGQKd2UgYWxz
+byBkZWZpbmUgYSBuZXcgZW51bWVyYXRpb24gb3IgY291bGQgd2Ugc3RpbGwgdXNlIHRoZSBleGlz
+dGluZwprZXJuZWxfcmVhZF9maWxlX2lkPwoKPiAKPiAtIFJlbW92aW5nIGltYV9maWxlX3JlYWQg
+YmVjYXVzZSBpdCBpcyBjb21wbGV0ZWx5IHN1YnN1bWVkIGJ5IHRoZSBuZXcKPiAgIGNhbGwuCgpU
+aGUgZXhpc3RpbmcgSU1BIGZ1bmN0aW9uIHdvdWxkbid0IGJlIHJlbW92ZWQsIGJ1dCByZW5hbWVk
+IHRvIHdoYXRldmVyCnRoZSBuZXcgTFNNIGhvb2sgaXMgbmFtZWQuCgo+IAo+IC0gUGxlYXNlIG5v
+dGUgd2l0aCBhZGRpbmcgdGhpcyBuZXcgaG9vayB0aGVyZSBpcyBubyBjb2RlIHNoYXJlZCBiZXR3
+ZWVuCj4gICB0aGUgY2FzZXMsIGFuZCB0aGUgbHNtIGNvZGUgYmVjb21lcyBzaW1wbGVyIHNob3J0
+ZXIgd2hlbiBpdCBjYW4gYXNzdW1lCj4gICBzZWN1cml0eV9rZXJuZWxfZmlsZV9wb3N0X3JlYWQg
+YWx3YXlzIHRha2VzIGEgc3RydWN0IGZpbGUuICAoRXZlbiB3aXRoCj4gICB0aGUgYWRkaXRpb24g
+b2YgYSBuZXcgc2VjdXJpdHkgaG9vaykuCgpXZSB3b3VsZCBiZSBkZWZpbmluZyBhIG5ldyBMU00g
+aG9vaywgbm90IHJlbW92aW5nIHRoZSBleGlzdGluZwpzZWN1cml0eV9rZXJuZWxfcmVhZF9maWxl
+IGhvb2ssIGFuZCBvbmx5IHJlbmFtaW5nIHRoZSBJTUEgdXNhZ2Ugb2YgdGhlCmhvb2suCgpJZiBk
+ZWZpbmluZyBhIG5ldyBMU00gaG9vayBuYW1lZCBzZWN1cml0eV9rZXJuZWxfYXJnIG1ha2VzIHlv
+dSBoYXBweSwKSSBkb24ndCBoYXZlIGEgcHJvYmxlbSB3aXRoIGltcGxlbWVudGluZyBpdC4KCkph
+bWVzLCBDYXNleSwgYXJlIHlvdSBPayB3aXRoIHRoaXM/CgpNaW1pCgoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9rZXhlYwo=
