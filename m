@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fLffR-00026y-Gf
- for kexec@lists.infradead.org; Thu, 24 May 2018 02:07:50 +0000
-Date: Thu, 24 May 2018 10:07:17 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] vmcore-dmesg: fix infinite loop if log buffer wraps around
-Message-ID: <20180524020717.GB24627@MiWiFi-R3L-srv>
-References: <931590ebae2be0563ab6fdfa17c84111f393904b.1527108991.git.osandov@fb.com>
+Received: from mx2.suse.de ([195.135.220.15])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fLkBe-0006y0-V3
+ for kexec@lists.infradead.org; Thu, 24 May 2018 06:57:24 +0000
+Date: Thu, 24 May 2018 08:57:08 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH] kdump: add default crashkernel reserve kernel config
+ options
+Message-ID: <20180524085708.31aa311d@ezekiel.suse.cz>
+In-Reply-To: <20180524014905.GB2031@dhcp-128-65.nay.redhat.com>
+References: <20180521025337.GA4627@dhcp-128-65.nay.redhat.com>
+ <20180521120215.117d963a7619eb0d1f54bced@linux-foundation.org>
+ <20180523070641.GA1689@dhcp-128-65.nay.redhat.com>
+ <877enucqr0.fsf@xmission.com>
+ <20180523222236.5a96732e@ezekiel.suse.cz>
+ <20180524014905.GB2031@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <931590ebae2be0563ab6fdfa17c84111f393904b.1527108991.git.osandov@fb.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,59 +28,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Omar Sandoval <osandov@osandov.com>
-Cc: kernel-team@fb.com, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: dzickus@redhat.com, Neil Horman <nhorman@redhat.com>, Tony Luck <tony.luck@intel.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Hari Bathini <hbathini@linux.vnet.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Cong Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On 05/23/18 at 01:59pm, Omar Sandoval wrote:
-> From: Omar Sandoval <osandov@fb.com>
+On Thu, 24 May 2018 09:49:05 +0800
+Dave Young <dyoung@redhat.com> wrote:
+
+> Hi Petr,
 > 
-> We hit a bug where vmcore-dmesg would get stuck in a loop, and since we
-> were redirecting the output to a file, it wouldn't stop until it filled
-> up the disk. This only happened when the dmesg buffer had filled up and
-> wrapped around. It turns out that when we hit the end of the buffer, we
-> are looping back to the first record instead of the beginning of the
-> buffer, which will always loop forever.
+> On 05/23/18 at 10:22pm, Petr Tesarik wrote:
+>[...]
+> > In short, if one size fits none, what good is it to hardcode that "one
+> > size" into the kernel image?  
 > 
-> Fixes: e08d26b3b7f1 ("vmcore-dmesg: avoid allocating large memory chunk for log buf")
-> Signed-off-by: Omar Sandoval <osandov@fb.com>
-> ---
->  vmcore-dmesg/vmcore-dmesg.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
-> index e340ef4..7972788 100644
-> --- a/vmcore-dmesg/vmcore-dmesg.c
-> +++ b/vmcore-dmesg/vmcore-dmesg.c
-> @@ -689,7 +689,7 @@ static void dump_dmesg_structured(int fd)
->  		 */
->  		loglen = struct_val_u16(buf, log_offset_len);
->  		if (!loglen)
-> -			current_idx = log_first_idx;
-> +			current_idx = 0;
+> I agreed with all the things that we can not know the exact memory
+> requirement for 100% use cases.  But that does not means this is useless
+> it is still useful for common use cases of no special and memory hog
+> requirements as I mentioned in another reply it can simplify the kdump
+> deployment for those people who do not need the special setup.
 
-Looks like a good fix, ack it.
+I still tend to disagree. This "common-case" reservation depends on
+things that are defined by user space. It surely does not make it
+easier to build a distribution kernel. Today, I get bug reports that
+the number calculated and added to the boot loader configuration by the
+installer is inaccurate. If I put a fixed number into a kernel config
+option, I will start getting bugs that this number is incorrect (for
+some systems).
 
-Acked-by: Baoquan He <bhe@redhat.com>
+> For example, if this is a workstation I just want to break into a shell
+> to collect some panic info, then I just need a very minimal initrd, then
+> the Kconfig will work just fine.
 
-Strange it isn't found until now, the case which log_next_idx is before
-log_first_idx sholdn't be seen rarely.
+What is "a very minimal initrd"? Last time I had to make a significant
+adjustment to the estimation for openSUSE, this was caused by growing
+user-space requirements (systemd in this case, but I don't want to
+start flamewars on that topic, please).
 
+Anyway, if you want to improve the "common case", then look how IBM
+tries to solve it for firmware-assisted dump (fadump) on powerpc:
 
-Thanks
-Baoquan
+https://patchwork.ozlabs.org/patch/905026/
 
+The main idea is:
 
->  		else
->  			/* Move to next record */
->  			current_idx += loglen;
-> -- 
-> 2.9.5
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> Instead of setting aside a significant chunk of memory nobody can use,
+> [...] reserve a significant chunk of memory that the kernel is prevented
+> from using [...], but applications are free to use it.
+
+That works great, because user space pages are filtered out in the
+common case, so they can be used freely by the panic kernel.
+
+Just my two cents,
+Petr T
 
 _______________________________________________
 kexec mailing list
