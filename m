@@ -1,14 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x242.google.com ([2607:f8b0:400e:c01::242])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fLarN-0007yW-O7
- for kexec@lists.infradead.org; Wed, 23 May 2018 20:59:51 +0000
-Received: by mail-pl0-x242.google.com with SMTP id t12-v6so13746927plo.7
- for <kexec@lists.infradead.org>; Wed, 23 May 2018 13:59:39 -0700 (PDT)
-From: Omar Sandoval <osandov@osandov.com>
-Subject: [PATCH] vmcore-dmesg: fix infinite loop if log buffer wraps around
-Date: Wed, 23 May 2018 13:59:31 -0700
-Message-Id: <931590ebae2be0563ab6fdfa17c84111f393904b.1527108991.git.osandov@fb.com>
+ id 1fLfHT-0004o8-Qn
+ for kexec@lists.infradead.org; Thu, 24 May 2018 01:43:05 +0000
+Date: Thu, 24 May 2018 09:42:34 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] kdump: add default crashkernel reserve kernel config
+ options
+Message-ID: <20180524014234.GA2031@dhcp-128-65.nay.redhat.com>
+References: <20180521025337.GA4627@dhcp-128-65.nay.redhat.com>
+ <20180521120215.117d963a7619eb0d1f54bced@linux-foundation.org>
+ <20180523070641.GA1689@dhcp-128-65.nay.redhat.com>
+ <877enucqr0.fsf@xmission.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <877enucqr0.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,45 +23,98 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
-Cc: kernel-team@fb.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: dzickus@redhat.com, Neil Horman <nhorman@redhat.com>, Tony Luck <tony.luck@intel.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Hari Bathini <hbathini@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Cong Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Anton Vorontsov <avorontsov@ru.mvista.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-From: Omar Sandoval <osandov@fb.com>
+Hi Eric,
+On 05/23/18 at 10:53am, Eric W. Biederman wrote:
+> Dave Young <dyoung@redhat.com> writes:
+> 
+> > [snip]
+> >
+> >> >  
+> >> > +config CRASHKERNEL_DEFAULT_THRESHOLD_MB
+> >> > +	int "System memory size threshold for kdump memory default reserving"
+> >> > +	depends on CRASH_CORE
+> >> > +	default 0
+> >> > +	help
+> >> > +	  CRASHKERNEL_DEFAULT_MB is used as default crashkernel value if
+> >> > +	  the system memory size is equal or bigger than the threshold.
+> >> 
+> >> "the threshold" is rather vague.  Can it be clarified?
+> >> 
+> >> In fact I'm really struggling to understand the logic here....
+> >> 
+> >> 
+> >> > +config CRASHKERNEL_DEFAULT_MB
+> >> > +	int "Default crashkernel memory size reserved for kdump"
+> >> > +	depends on CRASH_CORE
+> >> > +	default 0
+> >> > +	help
+> >> > +	  This is used as the default kdump reserved memory size in MB.
+> >> > +	  crashkernel=X kernel cmdline can overwrite this value.
+> >> > +
+> >> >  config HAVE_IMA_KEXEC
+> >> >  	bool
+> >> >  
+> >> > @@ -143,6 +144,24 @@ static int __init parse_crashkernel_simp
+> >> >  	return 0;
+> >> >  }
+> >> >  
+> >> > +static int __init get_crashkernel_default(unsigned long long system_ram,
+> >> > +					  unsigned long long *size)
+> >> > +{
+> >> > +	unsigned long long sz = CONFIG_CRASHKERNEL_DEFAULT_MB;
+> >> > +	unsigned long long thres = CONFIG_CRASHKERNEL_DEFAULT_THRESHOLD_MB;
+> >> > +
+> >> > +	thres *= SZ_1M;
+> >> > +	sz *= SZ_1M;
+> >> > +
+> >> > +	if (sz >= system_ram || system_ram < thres) {
+> >> > +		pr_debug("crashkernel default size can not be used.\n");
+> >> > +		return -EINVAL;
+> >> 
+> >> In other words,
+> >> 
+> >> 	if (system_ram <= CONFIG_CRASHKERNEL_DEFAULT_MB ||
+> >> 	    system_ram < CONFIG_CRASHKERNEL_DEFAULT_THRESHOLD_MB)
+> >> 		fail;
+> >> 
+> >> yes?
+> >> 
+> >> How come?  What's happening here?  Perhaps a (good) explanatory comment
+> >> is needed.  And clearer Kconfig text.
+> >> 
+> >> All confused :(
+> >
+> > Andrew, I tuned it a bit, removed the check of sz >= system_ram, so if
+> > the size is too large and kernel can not find enough memory it will
+> > still fail in latter code.
+> >
+> > Is below version looks clearer?
+> 
+> What is the advantage of providing this in a kconfig option rather
+> than on the kernel command line as we can now?
 
-We hit a bug where vmcore-dmesg would get stuck in a loop, and since we
-were redirecting the output to a file, it wouldn't stop until it filled
-up the disk. This only happened when the dmesg buffer had filled up and
-wrapped around. It turns out that when we hit the end of the buffer, we
-are looping back to the first record instead of the beginning of the
-buffer, which will always loop forever.
+It is not a replacement of the cmdline, this can be a supplement to
+the crashkernel command line.  For a lot of common use cases if we have
+the auto reservation user just do not need to manually set the cmdline
+for example on a virtual machine and usual setup (except of the
+comlicate storage and very large machines).  The crashkernel=auto
+has been used for long time, Red Hat QE tested it on a lot of different
+lab machines and proved it works well.  Kdump usually just works so admin
+do little work to enable kdump.
 
-Fixes: e08d26b3b7f1 ("vmcore-dmesg: avoid allocating large memory chunk for log buf")
-Signed-off-by: Omar Sandoval <osandov@fb.com>
----
- vmcore-dmesg/vmcore-dmesg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+But the crashkernel=auto implementation has some drawbacks that is it
+is more like embed policy in the code and it is not flexible like a
+config option.
 
-diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
-index e340ef4..7972788 100644
---- a/vmcore-dmesg/vmcore-dmesg.c
-+++ b/vmcore-dmesg/vmcore-dmesg.c
-@@ -689,7 +689,7 @@ static void dump_dmesg_structured(int fd)
- 		 */
- 		loglen = struct_val_u16(buf, log_offset_len);
- 		if (!loglen)
--			current_idx = log_first_idx;
-+			current_idx = 0;
- 		else
- 			/* Move to next record */
- 			current_idx += loglen;
--- 
-2.9.5
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
