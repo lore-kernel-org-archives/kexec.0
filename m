@@ -1,23 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fLm9C-0006u2-If
- for kexec@lists.infradead.org; Thu, 24 May 2018 09:03:05 +0000
-Date: Thu, 24 May 2018 11:02:41 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] kdump: add default crashkernel reserve kernel config
- options
-Message-ID: <20180524110241.3f60997c@ezekiel.suse.cz>
-In-Reply-To: <20180524072627.GA1940@dhcp-128-65.nay.redhat.com>
-References: <20180521025337.GA4627@dhcp-128-65.nay.redhat.com>
- <20180521120215.117d963a7619eb0d1f54bced@linux-foundation.org>
- <20180523070641.GA1689@dhcp-128-65.nay.redhat.com>
- <877enucqr0.fsf@xmission.com>
- <20180523222236.5a96732e@ezekiel.suse.cz>
- <20180524014905.GB2031@dhcp-128-65.nay.redhat.com>
- <20180524085708.31aa311d@ezekiel.suse.cz>
- <20180524072627.GA1940@dhcp-128-65.nay.redhat.com>
-MIME-Version: 1.0
+ id 1fLo8m-0004MF-1C
+ for kexec@lists.infradead.org; Thu, 24 May 2018 11:10:44 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w4OB0WST061006
+ for <kexec@lists.infradead.org>; Thu, 24 May 2018 07:10:27 -0400
+Received: from e06smtp13.uk.ibm.com (e06smtp13.uk.ibm.com [195.75.94.109])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2j5su4xg0v-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 24 May 2018 07:10:27 -0400
+Received: from localhost
+ by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Thu, 24 May 2018 12:10:25 +0100
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Subject: [PATCH v3 0/7] kexec/firmware: support system wide policy requiring
+ signatures
+Date: Thu, 24 May 2018 07:09:29 -0400
+Message-Id: <1527160176-29269-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,54 +30,79 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: dzickus@redhat.com, Neil Horman <nhorman@redhat.com>, Tony Luck <tony.luck@intel.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Hari Bathini <hbathini@linux.vnet.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Cong Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: linux-integrity@vger.kernel.org
+Cc: Andres Rodriguez <andresx7@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
 
-On Thu, 24 May 2018 15:26:27 +0800
-Dave Young <dyoung@redhat.com> wrote:
+IMA-appraisal is mostly being used in the embedded or single purpose
+closed system environments.  In these environments, both the Kconfig
+options and the userspace tools can be modified appropriately to limit
+syscalls.  For stock kernels, userspace applications need to continue to
+work with older kernels as well as with newer kernels.
 
-> On 05/24/18 at 08:57am, Petr Tesarik wrote:
->[...]
-> > What is "a very minimal initrd"? Last time I had to make a significant
-> > adjustment to the estimation for openSUSE, this was caused by growing
-> > user-space requirements (systemd in this case, but I don't want to
-> > start flamewars on that topic, please).  
-> 
-> Still I think we have agreement and same feeling about the userspace
-> memory requirement.   I think although it is hard, we have been still
-> trying to shrink the initramfs memory use.
-> 
-> Besides of distribution use,  why people can not use some minimal
-> initrd?  For example only a basic shell and some necessary tools and
-> basic storage eg. raw disks supported, and he/she can just collect the
-> panic infomation by himself in a shell.
+In this environment, the customer needs the ability to define a system
+wide IMA policy, such as requiring all kexec'ed images, firmware, kernel
+modules to be signed, without being dependent on either the Kconfig
+options or the userspace tools.[1]
 
-Again, I'm having trouble with the definition of a "minimal initrd" and
-also with the definition of a "workstation". I have already seen a sad
-case where kdump started going OOM after connecting a 4K monitor,
-because, well, it needed a bigger framebuffer...
+This patch set allows the customer to define a policy which requires
+the kexec'ed kernel images, firmware, and/or kernel modules to be
+signed.
 
-OTOH you wrote in another mail that RH has tested some values on a
-variety of hardware, so you seem to have a clue. Good for you. I still
-believe it is moving policy into the kernel.
+New to this patch set is the ability to configure a build time IMA policy,
+which is automatically loaded at run time without needing to specify it
+on the boot command line.  The build time policy rules persist after
+loading a custom kernel policy.
 
-Based on past experience, I expect that certain users will argue that
-"crashkernel=auto" should work out of the box on their HPE Superdome
-with 600+ LUNs attached...
+[1] kexec-tools suupports the new syscall based on a flag (-s).
 
-As you wrote elsewhere in the thread:
+Changelog v3:
+Based on James' feedback:
+- Renamed security_kernel_read_file() to security_kernel_read_data().
+- Cleaned up ima_read_data(), replacing if's with switch.
 
-> I means this patch is not trying to force add a fixed value for crashkernel
-> in kernel code. It provides another way one can use on kernel build time
-> the value just works.
+Changelog v2:
+- combined "kexec: limit kexec_load syscall" and "firmware: kernel
+signature verification" patch sets.
+- add support for build time policy.
+- defined generic security_kernel_read_blob() wrapper for
+  security_kernel_read_file(). Suggested by Luis.
+- removed the CONFIG_CFG80211_REQUIRE_SIGNED_REGDB ifdef.  If both REGDB
+  and an IMA-appraisal policy require signed firmware, for now require
+  both signatures.  Subsequent patches might change this.
+- Still unclear if the pre-allocated firmware buffer can be accessed
 
-I don't mind if it is added, although I don't find it very useful.
+Mimi Zohar (7):
+  security: rename security_kernel_read_file() hook
+  kexec: add call to LSM hook in original kexec_load syscall
+  ima: based on policy require signed kexec kernel images
+  firmware: add call to LSM hook before firmware sysfs fallback
+  ima: based on policy require signed firmware (sysfs fallback)
+  ima: add build time policy
+  ima: based on policy prevent loading firmware (pre-allocated buffer)
 
-Petr T
+ drivers/base/firmware_loader/fallback.c |  7 ++++
+ fs/exec.c                               |  2 +-
+ include/linux/fs.h                      |  1 +
+ include/linux/ima.h                     |  4 +--
+ include/linux/security.h                |  4 +--
+ kernel/kexec.c                          |  8 +++++
+ kernel/module.c                         |  2 +-
+ security/integrity/ima/Kconfig          | 58 +++++++++++++++++++++++++++++++++
+ security/integrity/ima/ima.h            |  1 +
+ security/integrity/ima/ima_main.c       | 39 ++++++++++++++++++----
+ security/integrity/ima/ima_policy.c     | 48 +++++++++++++++++++++++++--
+ security/loadpin/loadpin.c              |  2 +-
+ security/security.c                     |  6 ++--
+ 13 files changed, 162 insertions(+), 20 deletions(-)
+
+-- 
+2.7.5
+
 
 _______________________________________________
 kexec mailing list
