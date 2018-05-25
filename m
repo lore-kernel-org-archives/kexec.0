@@ -1,22 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fQgZT-0006Vg-5x
- for kexec@lists.infradead.org; Wed, 06 Jun 2018 22:06:25 +0000
-Date: Thu, 7 Jun 2018 00:06:05 +0200
-From: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Subject: Re: [RFC PATCH v4 7/8] ima: based on policy prevent loading firmware
- (pre-allocated buffer)
-Message-ID: <20180606220605.GJ4511@wotan.suse.de>
-References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1527616920-5415-8-git-send-email-zohar@linux.vnet.ibm.com>
- <20180601191545.GP4511@wotan.suse.de>
- <20180601192545.GR4511@wotan.suse.de>
- <CAGXu5jKkg_=iHGgrED4qB4TCFJaWgLkLp61RHgJ6UEhAj89GwQ@mail.gmail.com>
- <CAKv+Gu9=8s2b-W6a4hHwxhJfFPGuBm5kwsxE_hx98fDUfMUkvQ@mail.gmail.com>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fMELD-0004Xv-Sx
+ for kexec@lists.infradead.org; Fri, 25 May 2018 15:09:18 +0000
+Subject: Re: [PATCH v1 00/10] mm: online/offline 4MB chunks controlled by
+ device driver
+References: <20180523151151.6730-1-david@redhat.com>
+ <20180524075327.GU20441@dhcp22.suse.cz>
+ <14d79dad-ad47-f090-2ec0-c5daf87ac529@redhat.com>
+ <20180524093121.GZ20441@dhcp22.suse.cz>
+ <c0b8bbd5-6c01-f550-ae13-ef80b2255ea6@redhat.com>
+ <20180524120341.GF20441@dhcp22.suse.cz>
+From: David Hildenbrand <david@redhat.com>
+Message-ID: <216ca71b-9880-f013-878b-ae39e865b94b@redhat.com>
+Date: Fri, 25 May 2018 17:08:37 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu9=8s2b-W6a4hHwxhJfFPGuBm5kwsxE_hx98fDUfMUkvQ@mail.gmail.com>
+In-Reply-To: <20180524120341.GF20441@dhcp22.suse.cz>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,163 +29,212 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Rik van Riel <riel@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kexec Mailing List <kexec@lists.infradead.org>, linux-security-module <linux-security-module@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, "Luis R. Rodriguez" <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, linux-integrity <linux-integrity@vger.kernel.org>, "Serge E . Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Vlastimil Babka <vbabka@suse.cz>, Andres Rodriguez <andresx7@gmail.com>
+To: Michal Hocko <mhocko@kernel.org>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>, Jaewon Kim <jaewon31.kim@samsung.com>, Oscar Salvador <osalvador@techadventures.net>, Jan Kara <jack@suse.cz>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Balbir Singh <bsingharora@gmail.com>, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, Hari Bathini <hbathini@linux.vnet.ibm.com>, Rashmica Gupta <rashmica.g@gmail.com>, Ingo Molnar <mingo@kernel.org>, Baoquan He <bhe@redhat.com>, Matthew Wilcox <mawilcox@microsoft.com>, Michael Ellerman <mpe@ellerman.id.au>, Hugh Dickins <hughd@google.com>, Pavel Tatashin <pasha.tatashin@oracle.com>, Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>, Mel Gorman <mgorman@suse.de>, Huang Ying <ying.huang@intel.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Reza Arbab <arbab@linux.vnet.ibm.com>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, Dan Williams <dan.j.williams@intel.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Souptick Joarder <jrdr.linux@gmail.com>, Philippe Ombredanne <pombredanne@nexb.com>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 
-On Wed, Jun 06, 2018 at 08:20:17AM +0200, Ard Biesheuvel wrote:
-> On 6 June 2018 at 00:37, Kees Cook <keescook@chromium.org> wrote:
-> > On Fri, Jun 1, 2018 at 12:25 PM, Luis R. Rodriguez <mcgrof@kernel.org> wrote:
-> >> On Fri, Jun 01, 2018 at 09:15:45PM +0200, Luis R. Rodriguez wrote:
-> >>> On Tue, May 29, 2018 at 02:01:59PM -0400, Mimi Zohar wrote:
-> >>> > Some systems are memory constrained but they need to load very large
-> >>> > firmwares.  The firmware subsystem allows drivers to request this
-> >>> > firmware be loaded from the filesystem, but this requires that the
-> >>> > entire firmware be loaded into kernel memory first before it's provided
-> >>> > to the driver.  This can lead to a situation where we map the firmware
-> >>> > twice, once to load the firmware into kernel memory and once to copy the
-> >>> > firmware into the final resting place.
-> >>> >
-> >>> > To resolve this problem, commit a098ecd2fa7d ("firmware: support loading
-> >>> > into a pre-allocated buffer") introduced request_firmware_into_buf() API
-> >>> > that allows drivers to request firmware be loaded directly into a
-> >>> > pre-allocated buffer.  The QCOM_MDT_LOADER calls dma_alloc_coherent() to
-> >>> > allocate this buffer.  According to Documentation/DMA-API.txt,
-> >>> >
-> >>> >      Consistent memory is memory for which a write by either the
-> >>> >      device or the processor can immediately be read by the processor
-> >>> >      or device without having to worry about caching effects.  (You
-> >>> >      may however need to make sure to flush the processor's write
-> >>> >      buffers before telling devices to read that memory.)
-> >>> >
-> >>> > Devices using pre-allocated DMA memory run the risk of the firmware
-> >>> > being accessible by the device prior to the kernel's firmware signature
-> >>> > verification has completed.
-> >>>
-> >>> Indeed. And since its DMA memory we have *no idea* what can happen in
-> >>> terms of consumption of this firmware from hardware, when it would start
-> >>> consuming it in particular.
-> >>>
-> >>> If the device has its own hardware firmware verification mechanism this is
-> >>> completely obscure to us, but it may however suffice certain security policies.
-> >>>
-> >>> The problem here lies in the conflicting security policies of the kernel wanting
-> >>> to not give away firmware until its complete and the current inability to enable
-> >>> us to have platforms suggest they trust hardware won't do something stupid.
-> >>> This becomes an issue since the semantics of the firmware API preallocated
-> >>> buffer do not require currently allow the kernel to inform LSMs of the fact
-> >>> that a buffer is DMA memory or not, and a way for certain platforms then
-> >>> to say that such use is fine for specific devices.
-> >>>
-> >>> Given a pointer can we determine if a piece of memory is DMA or not?
-> >>
-> >> FWIW
-> >>
-> >> Vlastimil suggests page_zone() or virt_to_page() may be able to.
-> >
-> > I don't see a PAGEFLAG for DMA, but I do see ZONE_DMA for
-> > page_zone()... So maybe something like
-> >
-> > struct page *page;
-> >
-> > page = virt_to_page(address);
-> > if (!page)
-> >    fail closed...
-> > if (page_zone(page) == ZONE_DMA)
-> >     handle dma case...
-> > else
-> >     non-dma
-> >
-> > But I've CCed Laura and Rik, who I always lean on when I have these
-> > kinds of page questions...
-> >
+>> So, no, virtio-mem is not a balloon driver :)
+> [...]
+>>>> 1. "hotplug should simply not depend on kdump at all"
+>>>>
+>>>> In theory yes. In the current state we already have to trigger kdump to
+>>>> reload whenever we add/remove a memory block.
+>>>
+>>> More details please.
+>>
+>> I just had another look at the whole complexity of
+>> makedumfile/kdump/uevents and I'll follow up with a detailed description.
+>>
+>> kdump.service is definitely reloaded when setting a memory block
+>> online/offline (not when adding/removing as I wrongly claimed before).
+>>
+>> I'll follow up with a more detailed description and all the pointers.
 > 
-> That is not going to help. In general, DMA can access any memory in
-> the system (unless a IOMMU is actively preventing that).
-> 
-> The streaming DMA API allows you to map()/unmap() arbitrary pieces of
-> memory for DMA, regardless of how they were allocated. (Some drivers
-> were even doing DMA from the stack at some point, but this broke
-> vmapped stacks so most of these cases have been fixed) Uploading
-> firmware to a device does not require a coherent (as opposed to
-> streaming) mapping for DMA, and so it is perfectly reasonable for a
-> driver to use the streaming API to map the firmware image (wherever it
-> is in memory) and map it.
+> Please make sure to describe what is the architecture then. I have no
+> idea what kdump.servise is supposed to do for example.
 
-This is useful thanks!
+Giving a high level description, going into applicable details:
 
-But let's keep in mind that this isn't about whether or not this should be
-done. This is about informing security layers to make a choice to decide
-whether or not what a solution is doing is banana crazy or not.
 
-> However, the DMA API does impose some ordering. Mapping memory for DMA
-> gives you a DMA address (which may be different from the physical
-> address [depending on the platform]), and this DMA address is what
-> gets programmed into the device, not the virtual or physical address.
-> That means you can be reasonably confident that the device will not be
-> able to consume what is in this memory before it has been mapped for
-> DMA.
+Dump tools always generate the dump file from /proc/vmcore inside the
+kexec environment. This is a vmcore dump in ELF format, with required
+and optional headers and notes.
 
-Again, not for coherent DMA. By *definition* the device *and* processor has
-immediate access to data written *immediately* when dma_alloc_coherent() is
-used. And that is what was used on the qcom drivers last we checked. The call
-sequence is:
 
-qcom_mdt_load() -> qcom_scm_pas_init_image() -> dma_alloc_coherent()
+1. Core collectors
 
-> Also, the DMA api explicitly forbids touching memory mapped for
-> streaming DMA: the device owns it at this point, and so the CPU should
-> refrain from accessing it.
+The tool that writes /proc/vmcore into a file is called "core collector".
 
-Wonderful. I note you said *should*. And again, its up to LSMs to decide
-if that is not good enough.
+"This allows you to specify the command to copy the vmcore. You could
+use the dump filtering program makedumpfile, the default one, to
+retrieve your core, which on some arches can drastically reduce core
+file size." [1]
 
-> So the question is, why is QCOM_MDT_LOADER using a coherent DMA
-> mapping?
+E.g. under RHEL, the only supported core collector is in fact
+makedumpfile [2][3], which is e.g. able to exclude e.g. hwpoison pages,
+which could result otherwise in a crash if you simply copy /proc/vmcore
+into a file on harddisk.
 
-Right and the qcom driver makes it very difficult to decipher and verify.
-*And* when folks were poked about this during patch review it was clearly
-stated that the READING ID should annotate DMA if it was DMA so LSMs
-could be informed.
 
-> That does not make any sense purely for moving firmware into
-> the device, and it is indeed a security hazard if we are trying to
-> perform a signature check before the device is cleared for reading it.
+2. vmcoreinfo
 
-:)
+/proc/vmcore can optionally contain a vmcoreinfo, that exposes some
+magic variables necessary to e.g. find and interpret segments but also
+struct pages. This is generated in "kernel/crash_core.c" in the crashed
+linux kernel.
 
-> Note that qcom_scm_pas_init_image() is documented as
-> 
->         /*
->          * During the scm call memory protection will be enabled for the meta
->          * data blob, so make sure it's physically contiguous, 4K aligned and
->          * non-cachable to avoid XPU violations.
->          */
-> 
-> and dma_alloc_coherent() happens to give them that. Whether the DMA
-> mapping is actually used is a different matter: the code is a bit
-> complex, but it calls into the secure world to set up the region.
+...
+VMCOREINFO_SYMBOL_ARRAY(mem_section);
+VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+...
+VMCOREINFO_NUMBER(PG_hwpoison);
+...
+VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+...
 
-Again, it doesn't matter whether they think its OK, that's fine, it is just
-up to the LSMs to then decide on their own if this is pure crap.
+If not available, it is e.g. tried to extract relevant
+symbols/variables/pointers from vmlinux (similar like e.g. GDB).
 
-> If this is the only counterexample,
 
-The problem is this is the *only* user of request_firmware_into_buf()!
+3. PM_LOAD / Memory holes
 
-> I wouldn't worry about it too much
-> (QCOM have elaborate SoC management layers in the secure world), and
-> simply mandate that only streaming DMA be used for firmware loading,
-> and that the firmware signature verification is performed before the
-> memory is mapped for DMA.
+Each vmcore contains "PM_LOAD" sections. These sections define which
+physical memory areas are available in the vmcore (and to which virtual
+addresses they translate). Generated e.g. in "kernel/kexec_file.c" - and
+in some other places "git grep Elf64_Phdr".
 
-Again, it doesn't matter what they *think*. LSMs want the ability to
-decide as well and its fair for them to want to differentiate coherent
-DMA and say this is not reasonably trustworthy.
+This information is generated in the crashed kernel.
 
-  Luis
+arch/x86/kernel/crash.c:
+ walk_system_ram_res() is effectively used to generate PM_LOAD segments
+
+arch/s390/kernel/crash_dump.c:
+ for_each_mem_range() is effectively used to generate PM_LOAD
+ information
+
+At this point, I don't see how offline sections are treated. I assume
+they are always also included. So PT_LOAD will include all memory, no
+matter if online or offline.
+
+
+4. Reloading kexec/kdump.service
+
+The important thing is that the vmcore *excluding* the actual memory has
+to be prepared by the *old* kernel. The kexec kernel will allow to
+- Read the prepared vmcore (contained in kexec kernel)
+- Read the memory
+
+So dump tools only have the vmcore (esp. PT_LOAD) to figure out which
+physical memory was available in the *old* system. The kexec kernel
+neither reads or interprets segments/struct pages from the old kernel
+(and there would be no way to really do it). All it does is allow to
+read old memory as defined in the prepared vmcore. If that memory is not
+accessible or broken (hwpoison), we will crash the system.
+
+So what does this imply? vmcore (including PT_LOAD sections) has to be
+regenerated every time memory is added/removed from the system.
+Otherwise the data contained in the prepared vmcore is stale. As far as
+I understand this cannot be done by the actual kernel when
+adding/removing memory but has to be done by user space.
+
+The same is e.g. also true when hot(un)plugging CPUs.
+
+This is done by reloading kexec, resulting in a regeneration of the
+vmcore. UDEV events are used to reload kdump.service and therefore
+regenerate. This events are triggered when onlining/offlining a memory
+block.
+
+...
+SUBSYSTEM=="memory", ACTION=="online", PROGRAM="/bin/systemctl
+try-restart kdump.service"
+SUBSYSTEM=="memory", ACTION=="offline", PROGRAM="/bin/systemctl
+try-restart kdump.service"
+...
+
+For "online", this is the right thing to do.
+
+I am right now not 100% if that is the right thing to do for "offline".
+I guess we should regenerate actually after "remove" events, but I
+didn't follow the details. Otherwise it could happen that the vmcore is
+regenerated before the actual removal of memory blocks. So the
+applicable memory blocks would still be included as PT_LOAD in the
+vmcore. If we then remove the actual DIMM then, trying to dump the
+vmcore will result in reading invalid memory. But maybe I am missing
+something there.
+
+
+5. Access to vmcore / memory in the kexec environment
+
+fs/proc/vmcore.c: contains the code for parsing vmcore in the kexec
+kernel, prepared by the crashed kernel. The kexec kernel provides read
+access to /proc/vmcore on this basis.
+
+All PT_LOAD sections will be converted and stored in "vmcore_list".
+
+When reading the vmcore, this list will be used to actually provide
+access to the original crash memory (__read_vmcore()).
+
+So only memory that was originally in vmcore PT_LOAD will be allowed to
+be red.
+
+read_from_oldmem() will perform the actual read. At that point we have
+no control over old page flags or segments. Just a straight memory read.
+
+There is special handling for e.g. XEN in there: pfn_is_ram() can be
+used to hinder reading inflated memory. (register_oldmem_pfn_is_ram)
+
+However reusing that for virtio-mem with multiple devices and queues and
+such might not be possible. It is the last resort :)
+
+
+6. makedumpfile
+
+makedumpfile can exclude free (buddy) pages, hwpoison pages and some
+more. It will *not* exclude reserved pages or balloon (e.g.
+virtio-balloon) inflated pages. So it will read inflated pages and if
+they are zero, save a compressed zero page. However it will (read)
+access that memory.
+
+makedumpfile was adapted to the new SECTION_IS_ONLINE bit (to mask the
+right section address), offline sections will *not* be excluded. So also
+all memory in offline sections will be accessed and dumped - unless
+pages don't fall into PT_LOAD sections ("memory hole"), in this case
+they are not accessed.
+
+
+7. Further information
+
+Some more details can be found in "Documentation/kdump/kdump.txt".
+
+
+"All of the necessary information about the system kernel's core image
+is encoded in the ELF format, and stored in a reserved area of memory
+before a crash. The physical address of the start of the ELF header is
+passed to the dump-capture kernel through the elfcorehdr= boot
+parameter."
+-> I am pretty sure this is why the kexec reload from user space is
+   necessary
+
+"For s390x there are two kdump modes: If a ELF header is specified with
+ the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
+ is done on all other architectures. If no elfcorehdr= kernel parameter
+ is specified, the s390x kdump kernel dynamically creates the header.
+ The second mode has the advantage that for CPU and memory hotplug,
+ kdump has not to be reloaded with kexec_load()."
+
+
+Any experts, please jump in :)
+
+
+
+[1] https://www.systutorials.com/docs/linux/man/5-kdump/
+[2] https://sourceforge.net/projects/makedumpfile/
+[3] git://git.code.sf.net/p/makedumpfile/code
 
 -- 
-Do not panic
+
+Thanks,
+
+David / dhildenb
 
 _______________________________________________
 kexec mailing list
