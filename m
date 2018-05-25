@@ -1,19 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from out01.mta.xmission.com ([166.70.13.231])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fMIkU-0005Nj-Qo
- for kexec@lists.infradead.org; Fri, 25 May 2018 19:51:40 +0000
+ id 1fMItA-0001MW-9g
+ for kexec@lists.infradead.org; Fri, 25 May 2018 20:00:38 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1527160176-29269-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1527160176-29269-2-git-send-email-zohar@linux.vnet.ibm.com>
- <87po1k2304.fsf@xmission.com>
- <alpine.LRH.2.21.1805260139030.11624@namei.org>
-Date: Fri, 25 May 2018 14:51:00 -0500
-In-Reply-To: <alpine.LRH.2.21.1805260139030.11624@namei.org> (James Morris's
- message of "Sat, 26 May 2018 01:41:52 +1000 (AEST)")
-Message-ID: <871sdzy0nv.fsf@xmission.com>
+References: <20180521025337.GA4627@dhcp-128-65.nay.redhat.com>
+ <20180521120215.117d963a7619eb0d1f54bced@linux-foundation.org>
+ <20180523070641.GA1689@dhcp-128-65.nay.redhat.com>
+ <877enucqr0.fsf@xmission.com>
+ <20180523222236.5a96732e@ezekiel.suse.cz>
+ <20180524014905.GB2031@dhcp-128-65.nay.redhat.com>
+ <20180524085708.31aa311d@ezekiel.suse.cz>
+ <87k1rt3tdu.fsf@xmission.com>
+ <20180525065943.03bcb911@ezekiel.suse.cz>
+Date: Fri, 25 May 2018 15:00:13 -0500
+In-Reply-To: <20180525065943.03bcb911@ezekiel.suse.cz> (Petr Tesarik's message
+ of "Fri, 25 May 2018 06:59:43 +0200")
+Message-ID: <87d0xjwlo2.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 1/7] security: rename security_kernel_read_file() hook
+Subject: Re: [PATCH] kdump: add default crashkernel reserve kernel config
+ options
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,46 +28,92 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morris <jmorris@namei.org>
-Cc: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Andres Rodriguez <andresx7@gmail.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.vnet.ibm.com>
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: dzickus@redhat.com, Neil Horman <nhorman@redhat.com>, Tony Luck <tony.luck@intel.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Hari Bathini <hbathini@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Cong Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-James Morris <jmorris@namei.org> writes:
-
-> On Thu, 24 May 2018, Eric W. Biederman wrote:
->
->> Below is where I suggest you start on sorting out these security hooks.
->> - Adding a security_kernel_arg to catch when you want to allow/deny the
->>   use of an argument to a syscall.  What security_kernel_file_read and
->>   security_kernel_file_post_read have been abused for.
->
-> NAK. This abstraction is too semantically weak.
->
-> LSM hooks need to map to stronger semantics so we can reason about what 
-> the hook and the policy is supposed to be mediating.
-
-I will take that as an extremely weak nack as all I did was expose the
-existing code and what the code is currently doing.  I don't see how you
-can NAK what is already being merged and used.
-
-I will be happy to see a better proposal.
-
-The best I can see is to take each and every syscall that my patch
-is calling syscall_kernel_arg and make it it's own hook without an
-enumeration.  I did not see any real duplication between the cases in my
-enumeration so I don't think that will be a problem.  Maybe a bit of a
-challenge for loadpin but otherwise not.
-
-Thank you in this for understanding why I am having problems with the
-current hook.
-
-Eric
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+UGV0ciBUZXNhcmlrIDxwdGVzYXJpa0BzdXNlLmN6PiB3cml0ZXM6Cgo+IFYgVGh1LCAyNCBNYXkg
+MjAxOCAxMTozNDowNSAtMDUwMAo+IGViaWVkZXJtQHhtaXNzaW9uLmNvbSAoRXJpYyBXLiBCaWVk
+ZXJtYW4pIG5hcHPDoW5vOgo+Cj4+IFBldHIgVGVzYXJpayA8cHRlc2FyaWtAc3VzZS5jej4gd3Jp
+dGVzOgo+PiAKPj4gMj4gT24gVGh1LCAyNCBNYXkgMjAxOCAwOTo0OTowNSArMDgwMAo+PiA+IERh
+dmUgWW91bmcgPGR5b3VuZ0ByZWRoYXQuY29tPiB3cm90ZToKPj4gPiAgCj4+ID4+IEhpIFBldHIs
+Cj4+ID4+IAo+PiA+PiBPbiAwNS8yMy8xOCBhdCAxMDoyMnBtLCBQZXRyIFRlc2FyaWsgd3JvdGU6
+Cj4+ID4+Wy4uLl0gIAo+PiA+PiA+IEluIHNob3J0LCBpZiBvbmUgc2l6ZSBmaXRzIG5vbmUsIHdo
+YXQgZ29vZCBpcyBpdCB0byBoYXJkY29kZSB0aGF0ICJvbmUKPj4gPj4gPiBzaXplIiBpbnRvIHRo
+ZSBrZXJuZWwgaW1hZ2U/ICAgIAo+PiA+PiAKPj4gPj4gSSBhZ3JlZWQgd2l0aCBhbGwgdGhlIHRo
+aW5ncyB0aGF0IHdlIGNhbiBub3Qga25vdyB0aGUgZXhhY3QgbWVtb3J5Cj4+ID4+IHJlcXVpcmVt
+ZW50IGZvciAxMDAlIHVzZSBjYXNlcy4gIEJ1dCB0aGF0IGRvZXMgbm90IG1lYW5zIHRoaXMgaXMg
+dXNlbGVzcwo+PiA+PiBpdCBpcyBzdGlsbCB1c2VmdWwgZm9yIGNvbW1vbiB1c2UgY2FzZXMgb2Yg
+bm8gc3BlY2lhbCBhbmQgbWVtb3J5IGhvZwo+PiA+PiByZXF1aXJlbWVudHMgYXMgSSBtZW50aW9u
+ZWQgaW4gYW5vdGhlciByZXBseSBpdCBjYW4gc2ltcGxpZnkgdGhlIGtkdW1wCj4+ID4+IGRlcGxv
+eW1lbnQgZm9yIHRob3NlIHBlb3BsZSB3aG8gZG8gbm90IG5lZWQgdGhlIHNwZWNpYWwgc2V0dXAu
+ICAKPj4gPgo+PiA+IEkgc3RpbGwgdGVuZCB0byBkaXNhZ3JlZS4gVGhpcyAiY29tbW9uLWNhc2Ui
+IHJlc2VydmF0aW9uIGRlcGVuZHMgb24KPj4gPiB0aGluZ3MgdGhhdCBhcmUgZGVmaW5lZCBieSB1
+c2VyIHNwYWNlLiBJdCBzdXJlbHkgZG9lcyBub3QgbWFrZSBpdAo+PiA+IGVhc2llciB0byBidWls
+ZCBhIGRpc3RyaWJ1dGlvbiBrZXJuZWwuIFRvZGF5LCBJIGdldCBidWcgcmVwb3J0cyB0aGF0Cj4+
+ID4gdGhlIG51bWJlciBjYWxjdWxhdGVkIGFuZCBhZGRlZCB0byB0aGUgYm9vdCBsb2FkZXIgY29u
+ZmlndXJhdGlvbiBieSB0aGUKPj4gPiBpbnN0YWxsZXIgaXMgaW5hY2N1cmF0ZS4gSWYgSSBwdXQg
+YSBmaXhlZCBudW1iZXIgaW50byBhIGtlcm5lbCBjb25maWcKPj4gPiBvcHRpb24sIEkgd2lsbCBz
+dGFydCBnZXR0aW5nIGJ1Z3MgdGhhdCB0aGlzIG51bWJlciBpcyBpbmNvcnJlY3QgKGZvcgo+PiA+
+IHNvbWUgc3lzdGVtcykuCj4+ID4gIAo+PiA+PiBGb3IgZXhhbXBsZSwgaWYgdGhpcyBpcyBhIHdv
+cmtzdGF0aW9uIEkganVzdCB3YW50IHRvIGJyZWFrIGludG8gYSBzaGVsbAo+PiA+PiB0byBjb2xs
+ZWN0IHNvbWUgcGFuaWMgaW5mbywgdGhlbiBJIGp1c3QgbmVlZCBhIHZlcnkgbWluaW1hbCBpbml0
+cmQsIHRoZW4KPj4gPj4gdGhlIEtjb25maWcgd2lsbCB3b3JrIGp1c3QgZmluZS4gIAo+PiA+Cj4+
+ID4gV2hhdCBpcyAiYSB2ZXJ5IG1pbmltYWwgaW5pdHJkIj8gTGFzdCB0aW1lIEkgaGFkIHRvIG1h
+a2UgYSBzaWduaWZpY2FudAo+PiA+IGFkanVzdG1lbnQgdG8gdGhlIGVzdGltYXRpb24gZm9yIG9w
+ZW5TVVNFLCB0aGlzIHdhcyBjYXVzZWQgYnkgZ3Jvd2luZwo+PiA+IHVzZXItc3BhY2UgcmVxdWly
+ZW1lbnRzIChzeXN0ZW1kIGluIHRoaXMgY2FzZSwgYnV0IEkgZG9uJ3Qgd2FudCB0bwo+PiA+IHN0
+YXJ0IGZsYW1ld2FycyBvbiB0aGF0IHRvcGljLCBwbGVhc2UpLgo+PiA+Cj4+ID4gQW55d2F5LCBp
+ZiB5b3Ugd2FudCB0byBpbXByb3ZlIHRoZSAiY29tbW9uIGNhc2UiLCB0aGVuIGxvb2sgaG93IElC
+TQo+PiA+IHRyaWVzIHRvIHNvbHZlIGl0IGZvciBmaXJtd2FyZS1hc3Npc3RlZCBkdW1wIChmYWR1
+bXApIG9uIHBvd2VycGM6Cj4+ID4KPj4gPiBodHRwczovL3BhdGNod29yay5vemxhYnMub3JnL3Bh
+dGNoLzkwNTAyNi8KPj4gPgo+PiA+IFRoZSBtYWluIGlkZWEgaXM6Cj4+ID4gIAo+PiA+PiBJbnN0
+ZWFkIG9mIHNldHRpbmcgYXNpZGUgYSBzaWduaWZpY2FudCBjaHVuayBvZiBtZW1vcnkgbm9ib2R5
+IGNhbiB1c2UsCj4+ID4+IFsuLi5dIHJlc2VydmUgYSBzaWduaWZpY2FudCBjaHVuayBvZiBtZW1v
+cnkgdGhhdCB0aGUga2VybmVsIGlzIHByZXZlbnRlZAo+PiA+PiBmcm9tIHVzaW5nIFsuLi5dLCBi
+dXQgYXBwbGljYXRpb25zIGFyZSBmcmVlIHRvIHVzZSBpdC4gIAo+PiA+Cj4+ID4gVGhhdCB3b3Jr
+cyBncmVhdCwgYmVjYXVzZSB1c2VyIHNwYWNlIHBhZ2VzIGFyZSBmaWx0ZXJlZCBvdXQgaW4gdGhl
+Cj4+ID4gY29tbW9uIGNhc2UsIHNvIHRoZXkgY2FuIGJlIHVzZWQgZnJlZWx5IGJ5IHRoZSBwYW5p
+YyBrZXJuZWwuICAKPj4gCj4+IFRoZXkgYWJzb2x1dGVseSBjYW4gbm90IGJlIHVzZWQgaW4gdGhl
+IGtkdW1wIGNhc2UuCj4+IAo+PiBUaGUga2R1bXAgcmVxdWlyZW1lbnQgaXMgdGhhdCB0aGV5IGFy
+ZSBwYWdlcyBuby1vbmUgaW5pdGlhdGVzIGFueSBJL08KPj4gdG8uICBUbyBhdm9pZCB0aGUgcHJv
+YmxlbSBvZiBkZXZpY2VzIGRvaW5nIERNQSBhcyB0aGUgbmV3IGtlcm5lbCBzdGFydHMKPj4gYW5k
+IHJ1bnMuCj4KPiBHb29kIHBvaW50LiBUaGlzIG1lYW5zIHRoYXQgbWVtb3J5IHJlc2VydmVkIGZv
+ciB0aGlzIHB1cnBvc2Ugd291bGQgYWxzbwo+IGhhdmUgdG8gYmUgZXhjbHVkZWQgZnJvbSBhbGxv
+Y2F0aW9ucyB0aGF0IG1heSBiZSBldmVudHVhbGx5IHVzZWQgZm9yCj4gRE1BIHRyYW5zZmVycy4K
+ClRoaW5rIG9mIGEgbmV0d29yayBjYXJkLiAgVGhlIERNQSdzIGZvciBpbmNvbW1pbmcgcGFja2V0
+cyBjYW4gYmUKaW5kZWZpbml0ZWx5IGRlbGF5ZWQgaW50byB0aGUgZnV0dXJlIHVubGVzcyB0aGF0
+IG5ldHdvcmsgY2FyZCBpcwpyZXByb2dyYW1tZWQuICBJZiB0aGUgZHVtcCBrZXJuZWwgZG9lcyBu
+b3QgbG9hZCB0aGUgZHJpdmVyIHRoYXQgd29uJ3QKaGFwcGVuLgoKPj4gIFNlY29uZGFyaWx5IHRv
+IGF2b2lkIHByb2JsZW1zIHdpdGggY3B1cyB0aGF0IHJlZnVzZWQgdG8gaGFsdC4KPgo+IExldCdz
+IGZhY2UgaXQgLSBpZiBzb21lIENQVXMgcmVmdXNlZCB0byBoYWx0LCBhbGwgYmV0cyBhcmUgb2Zm
+LiBUaGUKPiBjb2RlIHJ1bm5pbmcgb24gc3VjaCBhIENQVSBjYW4gYnJlYWsgbWFueSBvdGhlciB0
+aGluZ3MgYmVzaWRlcyBtZW1vcnksCj4gbW9zdCBpbXBvcnRhbnRseSwgaXQgbWF5IG1lZGRsZSB3
+aXRoIHRoZSBIVyByZWdpc3RlcnMgb2YgY3J1Y2lhbAo+IGRldmljZXMgaW4gdGhlIHN5c3RlbS4g
+VG8gYmUgbGVzcyBhYnN0cmFjdCwgSSBoYXZlIHNlZW4gYSBmYWlsdXJlIHRvCj4gc3RvcCBhIENQ
+VSBpbiB0aGUgY3Jhc2hlZCBrZXJuZWwgYSBmZXcgdGltZXMsIGFuZCB0aGUgcGFuaWMga2VybmVs
+Cj4gY291bGQgbmV2ZXIgc3VjY2Vzc2Z1bGx5IHNhdmUgYW55dGhpbmc7IGl0IGFsd2F5cyBjcmFz
+aGVkIGF0IGJvb3Qgb3IgYQo+IGxpdHRsZSBiaXQgbGF0ZXIuCgpDcmFzaGluZyBhdCBib290IGlz
+IGNvbXBhcmF0aXZlbHkgZ29vZC4gIFRoYXQgaXMgcGFydCBvZiB0aGUgZGVzaWduCmNyaXRlcmlh
+LiAgSXQgaXMgYmV0dGVyIHRvIGZhaWwgdG8gc3RhcnR1cCB0aGUga2VybmVsIHRoYW4gdG8gc3Rh
+cnQgYQpjb3JydXB0ZWQga2VybmVsIGFuZCBtYW5nbGUgYSB1c2VycyBkYXRhLgoKQnV0IEkgZG8g
+c2VlIGhvdyBpdCBjYW4gYmUgYSBjcmFwIHNob290IHdoZW4gZGVhbGluZyB3aXRoIGFub3RoZXIg
+Y3B1LgoKVGhlIHVsdGltYXRlIHBvaW50IGlzIHRoYXQgdGhlIGFic29sdXRlIGJlc3Qgd2UgY2Fu
+IGRvIGlzIHRvIHJ1biBhCmtlcm5lbCBpbiBtZW1vcnkgdGhhdCB3ZSBuZXZlciB1c2UgZm9yIGFu
+eXRoaW5nIGVsc2UgYW5kIHRoZW4gd2UgaGF2ZSBhCmZpZ2h0aW5nIGNoYW5jZSBvZiBnZXR0aW5n
+IHRoZSBzeXN0ZW0gd29ya2luZyBhbmQgZ2V0dGluZyBhIHJlcG9ydCBvZgp0aGUgZmFpbHVyZSBv
+dXQgdG8gc29tZXdoZXJlLgoKPiBBbnl3YXksIG9mIGNvdXJzZSB3ZSB3b3VsZCBzdGlsbCBoYXZl
+IHRvIGtlZXAgdGhlIGN1cnJlbnQgbWV0aG9kLAo+IGJlY2F1c2UgdXNlciBwYWdlcyBhcmUgbm90
+IGFsd2F5cyBmaWx0ZXJlZC4gRm9yIGV4YW1wbGUsIGEgbWFqb3IgU1VTRQo+IGFjY291bnQgcnVu
+cyBhIGRhdGFiYXNlIGluIHVzZXIgc3BhY2UgYW5kIGFsc28gaW5zcGVjdHMgaXRzIGRhdGEKPiBz
+dHJ1Y3R1cmVzIGluIGNhc2Ugb2YgYSBzeXN0ZW0gY3Jhc2guCgpBbmQgSSB1bmRlcnN0YW5kIHRo
+ZSBtZW1vcnkgcHJlc3N1cmVzIHRoYXQgd2lsbCBlbmNvdXJhZ2UgcGVvcGxlIHRvIHVzZQp1c2Vy
+IHBhZ2VzIGZvciBleHRyYSBtZW1vcnkgdG8gcnVuIHRoZSBkdW1wIGNhcHR1cmUga2VybmVsIGlu
+LiAgU2hvcnQgb2YKdGhlIHByZXNlbmNlIG9mIGFuIElPTU1VIHRoYXQgYWxsIERNQSB0cmFuc2Zl
+cnMgbXVzdCBnbyB0aHJvdWdoIEkgZG9uJ3QKc2VlIGhvdyB0aG9zZSB1c2VyIHBhZ2VzIGNvdWxk
+IHJlbGlhYmx5IGJlIHVzZWQuCgpFcmljCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
