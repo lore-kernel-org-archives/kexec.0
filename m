@@ -1,23 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fM4pg-0005dJ-Lx
- for kexec@lists.infradead.org; Fri, 25 May 2018 05:00:10 +0000
-Date: Fri, 25 May 2018 06:59:43 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] kdump: add default crashkernel reserve kernel config
- options
-Message-ID: <20180525065943.03bcb911@ezekiel.suse.cz>
-In-Reply-To: <87k1rt3tdu.fsf@xmission.com>
-References: <20180521025337.GA4627@dhcp-128-65.nay.redhat.com>
- <20180521120215.117d963a7619eb0d1f54bced@linux-foundation.org>
- <20180523070641.GA1689@dhcp-128-65.nay.redhat.com>
- <877enucqr0.fsf@xmission.com>
- <20180523222236.5a96732e@ezekiel.suse.cz>
- <20180524014905.GB2031@dhcp-128-65.nay.redhat.com>
- <20180524085708.31aa311d@ezekiel.suse.cz>
- <87k1rt3tdu.fsf@xmission.com>
+ id 1fM7ee-00030M-Rs
+ for kexec@lists.infradead.org; Fri, 25 May 2018 08:01:05 +0000
+Date: Fri, 25 May 2018 16:00:33 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2] Remove obsolete kdump tool
+Message-ID: <20180525080033.GA5310@dhcp-128-65.nay.redhat.com>
+References: <1527147483-11139-1-git-send-email-bhsharma@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1527147483-11139-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,73 +19,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: dzickus@redhat.com, Neil Horman <nhorman@redhat.com>, Tony Luck <tony.luck@intel.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Hari Bathini <hbathini@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Cong Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: kexec@lists.infradead.org, vgoyal@redhat.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, ebiederm@xmission.com, bhupesh.linux@gmail.com, Russell King <rmk@arm.linux.org.uk>
 
-ViBUaHUsIDI0IE1heSAyMDE4IDExOjM0OjA1IC0wNTAwCmViaWVkZXJtQHhtaXNzaW9uLmNvbSAo
-RXJpYyBXLiBCaWVkZXJtYW4pIG5hcHPDoW5vOgoKPiBQZXRyIFRlc2FyaWsgPHB0ZXNhcmlrQHN1
-c2UuY3o+IHdyaXRlczoKPiAKPiAyPiBPbiBUaHUsIDI0IE1heSAyMDE4IDA5OjQ5OjA1ICswODAw
-Cj4gPiBEYXZlIFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiAgCj4gPj4gSGkg
-UGV0ciwKPiA+PiAKPiA+PiBPbiAwNS8yMy8xOCBhdCAxMDoyMnBtLCBQZXRyIFRlc2FyaWsgd3Jv
-dGU6Cj4gPj5bLi4uXSAgCj4gPj4gPiBJbiBzaG9ydCwgaWYgb25lIHNpemUgZml0cyBub25lLCB3
-aGF0IGdvb2QgaXMgaXQgdG8gaGFyZGNvZGUgdGhhdCAib25lCj4gPj4gPiBzaXplIiBpbnRvIHRo
-ZSBrZXJuZWwgaW1hZ2U/ICAgIAo+ID4+IAo+ID4+IEkgYWdyZWVkIHdpdGggYWxsIHRoZSB0aGlu
-Z3MgdGhhdCB3ZSBjYW4gbm90IGtub3cgdGhlIGV4YWN0IG1lbW9yeQo+ID4+IHJlcXVpcmVtZW50
-IGZvciAxMDAlIHVzZSBjYXNlcy4gIEJ1dCB0aGF0IGRvZXMgbm90IG1lYW5zIHRoaXMgaXMgdXNl
-bGVzcwo+ID4+IGl0IGlzIHN0aWxsIHVzZWZ1bCBmb3IgY29tbW9uIHVzZSBjYXNlcyBvZiBubyBz
-cGVjaWFsIGFuZCBtZW1vcnkgaG9nCj4gPj4gcmVxdWlyZW1lbnRzIGFzIEkgbWVudGlvbmVkIGlu
-IGFub3RoZXIgcmVwbHkgaXQgY2FuIHNpbXBsaWZ5IHRoZSBrZHVtcAo+ID4+IGRlcGxveW1lbnQg
-Zm9yIHRob3NlIHBlb3BsZSB3aG8gZG8gbm90IG5lZWQgdGhlIHNwZWNpYWwgc2V0dXAuICAKPiA+
-Cj4gPiBJIHN0aWxsIHRlbmQgdG8gZGlzYWdyZWUuIFRoaXMgImNvbW1vbi1jYXNlIiByZXNlcnZh
-dGlvbiBkZXBlbmRzIG9uCj4gPiB0aGluZ3MgdGhhdCBhcmUgZGVmaW5lZCBieSB1c2VyIHNwYWNl
-LiBJdCBzdXJlbHkgZG9lcyBub3QgbWFrZSBpdAo+ID4gZWFzaWVyIHRvIGJ1aWxkIGEgZGlzdHJp
-YnV0aW9uIGtlcm5lbC4gVG9kYXksIEkgZ2V0IGJ1ZyByZXBvcnRzIHRoYXQKPiA+IHRoZSBudW1i
-ZXIgY2FsY3VsYXRlZCBhbmQgYWRkZWQgdG8gdGhlIGJvb3QgbG9hZGVyIGNvbmZpZ3VyYXRpb24g
-YnkgdGhlCj4gPiBpbnN0YWxsZXIgaXMgaW5hY2N1cmF0ZS4gSWYgSSBwdXQgYSBmaXhlZCBudW1i
-ZXIgaW50byBhIGtlcm5lbCBjb25maWcKPiA+IG9wdGlvbiwgSSB3aWxsIHN0YXJ0IGdldHRpbmcg
-YnVncyB0aGF0IHRoaXMgbnVtYmVyIGlzIGluY29ycmVjdCAoZm9yCj4gPiBzb21lIHN5c3RlbXMp
-Lgo+ID4gIAo+ID4+IEZvciBleGFtcGxlLCBpZiB0aGlzIGlzIGEgd29ya3N0YXRpb24gSSBqdXN0
-IHdhbnQgdG8gYnJlYWsgaW50byBhIHNoZWxsCj4gPj4gdG8gY29sbGVjdCBzb21lIHBhbmljIGlu
-Zm8sIHRoZW4gSSBqdXN0IG5lZWQgYSB2ZXJ5IG1pbmltYWwgaW5pdHJkLCB0aGVuCj4gPj4gdGhl
-IEtjb25maWcgd2lsbCB3b3JrIGp1c3QgZmluZS4gIAo+ID4KPiA+IFdoYXQgaXMgImEgdmVyeSBt
-aW5pbWFsIGluaXRyZCI/IExhc3QgdGltZSBJIGhhZCB0byBtYWtlIGEgc2lnbmlmaWNhbnQKPiA+
-IGFkanVzdG1lbnQgdG8gdGhlIGVzdGltYXRpb24gZm9yIG9wZW5TVVNFLCB0aGlzIHdhcyBjYXVz
-ZWQgYnkgZ3Jvd2luZwo+ID4gdXNlci1zcGFjZSByZXF1aXJlbWVudHMgKHN5c3RlbWQgaW4gdGhp
-cyBjYXNlLCBidXQgSSBkb24ndCB3YW50IHRvCj4gPiBzdGFydCBmbGFtZXdhcnMgb24gdGhhdCB0
-b3BpYywgcGxlYXNlKS4KPiA+Cj4gPiBBbnl3YXksIGlmIHlvdSB3YW50IHRvIGltcHJvdmUgdGhl
-ICJjb21tb24gY2FzZSIsIHRoZW4gbG9vayBob3cgSUJNCj4gPiB0cmllcyB0byBzb2x2ZSBpdCBm
-b3IgZmlybXdhcmUtYXNzaXN0ZWQgZHVtcCAoZmFkdW1wKSBvbiBwb3dlcnBjOgo+ID4KPiA+IGh0
-dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvOTA1MDI2Lwo+ID4KPiA+IFRoZSBtYWlu
-IGlkZWEgaXM6Cj4gPiAgCj4gPj4gSW5zdGVhZCBvZiBzZXR0aW5nIGFzaWRlIGEgc2lnbmlmaWNh
-bnQgY2h1bmsgb2YgbWVtb3J5IG5vYm9keSBjYW4gdXNlLAo+ID4+IFsuLi5dIHJlc2VydmUgYSBz
-aWduaWZpY2FudCBjaHVuayBvZiBtZW1vcnkgdGhhdCB0aGUga2VybmVsIGlzIHByZXZlbnRlZAo+
-ID4+IGZyb20gdXNpbmcgWy4uLl0sIGJ1dCBhcHBsaWNhdGlvbnMgYXJlIGZyZWUgdG8gdXNlIGl0
-LiAgCj4gPgo+ID4gVGhhdCB3b3JrcyBncmVhdCwgYmVjYXVzZSB1c2VyIHNwYWNlIHBhZ2VzIGFy
-ZSBmaWx0ZXJlZCBvdXQgaW4gdGhlCj4gPiBjb21tb24gY2FzZSwgc28gdGhleSBjYW4gYmUgdXNl
-ZCBmcmVlbHkgYnkgdGhlIHBhbmljIGtlcm5lbC4gIAo+IAo+IFRoZXkgYWJzb2x1dGVseSBjYW4g
-bm90IGJlIHVzZWQgaW4gdGhlIGtkdW1wIGNhc2UuCj4gCj4gVGhlIGtkdW1wIHJlcXVpcmVtZW50
-IGlzIHRoYXQgdGhleSBhcmUgcGFnZXMgbm8tb25lIGluaXRpYXRlcyBhbnkgSS9PCj4gdG8uICBU
-byBhdm9pZCB0aGUgcHJvYmxlbSBvZiBkZXZpY2VzIGRvaW5nIERNQSBhcyB0aGUgbmV3IGtlcm5l
-bCBzdGFydHMKPiBhbmQgcnVucy4KCkdvb2QgcG9pbnQuIFRoaXMgbWVhbnMgdGhhdCBtZW1vcnkg
-cmVzZXJ2ZWQgZm9yIHRoaXMgcHVycG9zZSB3b3VsZCBhbHNvCmhhdmUgdG8gYmUgZXhjbHVkZWQg
-ZnJvbSBhbGxvY2F0aW9ucyB0aGF0IG1heSBiZSBldmVudHVhbGx5IHVzZWQgZm9yCkRNQSB0cmFu
-c2ZlcnMuCgo+ICBTZWNvbmRhcmlseSB0byBhdm9pZCBwcm9ibGVtcyB3aXRoIGNwdXMgdGhhdCBy
-ZWZ1c2VkIHRvIGhhbHQuCgpMZXQncyBmYWNlIGl0IC0gaWYgc29tZSBDUFVzIHJlZnVzZWQgdG8g
-aGFsdCwgYWxsIGJldHMgYXJlIG9mZi4gVGhlCmNvZGUgcnVubmluZyBvbiBzdWNoIGEgQ1BVIGNh
-biBicmVhayBtYW55IG90aGVyIHRoaW5ncyBiZXNpZGVzIG1lbW9yeSwKbW9zdCBpbXBvcnRhbnRs
-eSwgaXQgbWF5IG1lZGRsZSB3aXRoIHRoZSBIVyByZWdpc3RlcnMgb2YgY3J1Y2lhbApkZXZpY2Vz
-IGluIHRoZSBzeXN0ZW0uIFRvIGJlIGxlc3MgYWJzdHJhY3QsIEkgaGF2ZSBzZWVuIGEgZmFpbHVy
-ZSB0bwpzdG9wIGEgQ1BVIGluIHRoZSBjcmFzaGVkIGtlcm5lbCBhIGZldyB0aW1lcywgYW5kIHRo
-ZSBwYW5pYyBrZXJuZWwKY291bGQgbmV2ZXIgc3VjY2Vzc2Z1bGx5IHNhdmUgYW55dGhpbmc7IGl0
-IGFsd2F5cyBjcmFzaGVkIGF0IGJvb3Qgb3IgYQpsaXR0bGUgYml0IGxhdGVyLgoKQW55d2F5LCBv
-ZiBjb3Vyc2Ugd2Ugd291bGQgc3RpbGwgaGF2ZSB0byBrZWVwIHRoZSBjdXJyZW50IG1ldGhvZCwK
-YmVjYXVzZSB1c2VyIHBhZ2VzIGFyZSBub3QgYWx3YXlzIGZpbHRlcmVkLiBGb3IgZXhhbXBsZSwg
-YSBtYWpvciBTVVNFCmFjY291bnQgcnVucyBhIGRhdGFiYXNlIGluIHVzZXIgc3BhY2UgYW5kIGFs
-c28gaW5zcGVjdHMgaXRzIGRhdGEKc3RydWN0dXJlcyBpbiBjYXNlIG9mIGEgc3lzdGVtIGNyYXNo
-LgoKUGV0ciBUCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 05/24/18 at 01:08pm, Bhupesh Sharma wrote:
+> The kdump tool presently allows one to generate an ELF file containing
+> the ELF header, PT_NOTE and PT_LOAD segments (which can be analyzed
+> later by tools like 'readelf') of the crashdump read from memory, when
+> passed with an appropriate 'elfcorehdr' value(which represents the
+> physical address of the start of the ELF header).
+> 
+> With the availability of tools like crash/gdb the analysis of the
+> crashdump core has become rather easy, and it makes the kdump tool
+> obsolete. Also the same naming convention (man page) causes confusion
+> when compared to similarly named distribution specific kdump
+> service/utilities.
+> 
+> Also most distributions (like Fedora for e.g.) now support more
+> enhanced kdump service and utilities which can be used to analyze the
+> crashdump core contents better. Taking an example of the Fedora
+> specific kdump service and utilities, the following sequence of steps
+> happen when the primary kernel crashes:
+> 
+> 1. If the crashkernel is loaded, then the system starts executing the
+> same.
+> 
+> 2. When the boot process gets to the point when kdump service is
+> started, the crashdump core is usually copied out to disk (for e.g.
+> inside '/var/crash') using 'cp' command from '/proc/vmcore':
+>    # cp /proc/vmcore <dump-file>
+> 
+> 3. Thereafter the system is rebooted back into the normal kernel.
+> 
+> 4. Once back to your normal kernel, one can use the crashdump core
+> available on hard disk in conjunction with the previously installed
+> kernel (with debuginfo) to perform postmortem analysis with tools like
+> gdb/crash:
+>    # gdb vmlinux <dump-file>
+> 
+> Accordingly, this patch removes the obsolete kdump tool from
+> 'kexec-tools'.
+
+The main issue for me is the manpage kdump.8 cause confusion to people
+The kdump tools is not a main problem to exist or not, but I think
+removing the kdump tool along with the man page looks a good cleanup :)
+
+Reviewed-by: Dave Young <dyoung@redhat.com>
+
+Thanks
+Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
