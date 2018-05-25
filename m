@@ -1,22 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fM2i3-0007Zz-Ja
- for kexec@lists.infradead.org; Fri, 25 May 2018 02:44:05 +0000
-Date: Fri, 25 May 2018 10:43:39 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1fM4pg-0005dJ-Lx
+ for kexec@lists.infradead.org; Fri, 25 May 2018 05:00:10 +0000
+Date: Fri, 25 May 2018 06:59:43 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
 Subject: Re: [PATCH] kdump: add default crashkernel reserve kernel config
  options
-Message-ID: <20180525024339.GA2720@dhcp-128-65.nay.redhat.com>
+Message-ID: <20180525065943.03bcb911@ezekiel.suse.cz>
+In-Reply-To: <87k1rt3tdu.fsf@xmission.com>
 References: <20180521025337.GA4627@dhcp-128-65.nay.redhat.com>
  <20180521120215.117d963a7619eb0d1f54bced@linux-foundation.org>
  <20180523070641.GA1689@dhcp-128-65.nay.redhat.com>
  <877enucqr0.fsf@xmission.com>
- <20180524014234.GA2031@dhcp-128-65.nay.redhat.com>
- <87bmd53t0p.fsf@xmission.com>
+ <20180523222236.5a96732e@ezekiel.suse.cz>
+ <20180524014905.GB2031@dhcp-128-65.nay.redhat.com>
+ <20180524085708.31aa311d@ezekiel.suse.cz>
+ <87k1rt3tdu.fsf@xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87bmd53t0p.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,116 +26,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: dzickus@redhat.com, Neil Horman <nhorman@redhat.com>, Tony Luck <tony.luck@intel.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Hari Bathini <hbathini@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Cong Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Anton Vorontsov <avorontsov@ru.mvista.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+Cc: dzickus@redhat.com, Neil Horman <nhorman@redhat.com>, Tony Luck <tony.luck@intel.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Hari Bathini <hbathini@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Cong Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Eric,
-
-On 05/24/18 at 11:41am, Eric W. Biederman wrote:
-> Dave Young <dyoung@redhat.com> writes:
-> 
-> > Hi Eric,
-> > On 05/23/18 at 10:53am, Eric W. Biederman wrote:
-> >> Dave Young <dyoung@redhat.com> writes:
-> >> 
-> >> > [snip]
-> >> >
-> >> >> >  
-> >> >> > +config CRASHKERNEL_DEFAULT_THRESHOLD_MB
-> >> >> > +	int "System memory size threshold for kdump memory default reserving"
-> >> >> > +	depends on CRASH_CORE
-> >> >> > +	default 0
-> >> >> > +	help
-> >> >> > +	  CRASHKERNEL_DEFAULT_MB is used as default crashkernel value if
-> >> >> > +	  the system memory size is equal or bigger than the threshold.
-> >> >> 
-> >> >> "the threshold" is rather vague.  Can it be clarified?
-> >> >> 
-> >> >> In fact I'm really struggling to understand the logic here....
-> >> >> 
-> >> >> 
-> >> >> > +config CRASHKERNEL_DEFAULT_MB
-> >> >> > +	int "Default crashkernel memory size reserved for kdump"
-> >> >> > +	depends on CRASH_CORE
-> >> >> > +	default 0
-> >> >> > +	help
-> >> >> > +	  This is used as the default kdump reserved memory size in MB.
-> >> >> > +	  crashkernel=X kernel cmdline can overwrite this value.
-> >> >> > +
-> >> >> >  config HAVE_IMA_KEXEC
-> >> >> >  	bool
-> >> >> >  
-> >> >> > @@ -143,6 +144,24 @@ static int __init parse_crashkernel_simp
-> >> >> >  	return 0;
-> >> >> >  }
-> >> >> >  
-> >> >> > +static int __init get_crashkernel_default(unsigned long long system_ram,
-> >> >> > +					  unsigned long long *size)
-> >> >> > +{
-> >> >> > +	unsigned long long sz = CONFIG_CRASHKERNEL_DEFAULT_MB;
-> >> >> > +	unsigned long long thres = CONFIG_CRASHKERNEL_DEFAULT_THRESHOLD_MB;
-> >> >> > +
-> >> >> > +	thres *= SZ_1M;
-> >> >> > +	sz *= SZ_1M;
-> >> >> > +
-> >> >> > +	if (sz >= system_ram || system_ram < thres) {
-> >> >> > +		pr_debug("crashkernel default size can not be used.\n");
-> >> >> > +		return -EINVAL;
-> >> >> 
-> >> >> In other words,
-> >> >> 
-> >> >> 	if (system_ram <= CONFIG_CRASHKERNEL_DEFAULT_MB ||
-> >> >> 	    system_ram < CONFIG_CRASHKERNEL_DEFAULT_THRESHOLD_MB)
-> >> >> 		fail;
-> >> >> 
-> >> >> yes?
-> >> >> 
-> >> >> How come?  What's happening here?  Perhaps a (good) explanatory comment
-> >> >> is needed.  And clearer Kconfig text.
-> >> >> 
-> >> >> All confused :(
-> >> >
-> >> > Andrew, I tuned it a bit, removed the check of sz >= system_ram, so if
-> >> > the size is too large and kernel can not find enough memory it will
-> >> > still fail in latter code.
-> >> >
-> >> > Is below version looks clearer?
-> >> 
-> >> What is the advantage of providing this in a kconfig option rather
-> >> than on the kernel command line as we can now?
-> >
-> > It is not a replacement of the cmdline, this can be a supplement to
-> > the crashkernel command line.  For a lot of common use cases if we have
-> > the auto reservation user just do not need to manually set the cmdline
-> > for example on a virtual machine and usual setup (except of the
-> > comlicate storage and very large machines).  The crashkernel=auto
-> > has been used for long time, Red Hat QE tested it on a lot of different
-> > lab machines and proved it works well.  Kdump usually just works so admin
-> > do little work to enable kdump.
-> >
-> > But the crashkernel=auto implementation has some drawbacks that is it
-> > is more like embed policy in the code and it is not flexible like a
-> > config option.
-> 
-> Have you considered using the builtin command line aka CONFIG_CMDLINE?
-> If as you are reserving a fixed amount of memory as your patch does that
-> should be sufficient, and doable without any kernel changes.
-
-Hmm, even in builtin cmdline it is same as a explict used crashkernel=.
-If we think from a distribution point of view, it will be hard to
-differentiate the builtin provided param and bootloader provided
-params. It looks odd to see two crashkernel= when `cat /proc/cmdline`,
-it will confuse people and there could cause compatibility problems
-because it is explict value visible in kernel cmdline. 
-
-Thanks
-Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+ViBUaHUsIDI0IE1heSAyMDE4IDExOjM0OjA1IC0wNTAwCmViaWVkZXJtQHhtaXNzaW9uLmNvbSAo
+RXJpYyBXLiBCaWVkZXJtYW4pIG5hcHPDoW5vOgoKPiBQZXRyIFRlc2FyaWsgPHB0ZXNhcmlrQHN1
+c2UuY3o+IHdyaXRlczoKPiAKPiAyPiBPbiBUaHUsIDI0IE1heSAyMDE4IDA5OjQ5OjA1ICswODAw
+Cj4gPiBEYXZlIFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiAgCj4gPj4gSGkg
+UGV0ciwKPiA+PiAKPiA+PiBPbiAwNS8yMy8xOCBhdCAxMDoyMnBtLCBQZXRyIFRlc2FyaWsgd3Jv
+dGU6Cj4gPj5bLi4uXSAgCj4gPj4gPiBJbiBzaG9ydCwgaWYgb25lIHNpemUgZml0cyBub25lLCB3
+aGF0IGdvb2QgaXMgaXQgdG8gaGFyZGNvZGUgdGhhdCAib25lCj4gPj4gPiBzaXplIiBpbnRvIHRo
+ZSBrZXJuZWwgaW1hZ2U/ICAgIAo+ID4+IAo+ID4+IEkgYWdyZWVkIHdpdGggYWxsIHRoZSB0aGlu
+Z3MgdGhhdCB3ZSBjYW4gbm90IGtub3cgdGhlIGV4YWN0IG1lbW9yeQo+ID4+IHJlcXVpcmVtZW50
+IGZvciAxMDAlIHVzZSBjYXNlcy4gIEJ1dCB0aGF0IGRvZXMgbm90IG1lYW5zIHRoaXMgaXMgdXNl
+bGVzcwo+ID4+IGl0IGlzIHN0aWxsIHVzZWZ1bCBmb3IgY29tbW9uIHVzZSBjYXNlcyBvZiBubyBz
+cGVjaWFsIGFuZCBtZW1vcnkgaG9nCj4gPj4gcmVxdWlyZW1lbnRzIGFzIEkgbWVudGlvbmVkIGlu
+IGFub3RoZXIgcmVwbHkgaXQgY2FuIHNpbXBsaWZ5IHRoZSBrZHVtcAo+ID4+IGRlcGxveW1lbnQg
+Zm9yIHRob3NlIHBlb3BsZSB3aG8gZG8gbm90IG5lZWQgdGhlIHNwZWNpYWwgc2V0dXAuICAKPiA+
+Cj4gPiBJIHN0aWxsIHRlbmQgdG8gZGlzYWdyZWUuIFRoaXMgImNvbW1vbi1jYXNlIiByZXNlcnZh
+dGlvbiBkZXBlbmRzIG9uCj4gPiB0aGluZ3MgdGhhdCBhcmUgZGVmaW5lZCBieSB1c2VyIHNwYWNl
+LiBJdCBzdXJlbHkgZG9lcyBub3QgbWFrZSBpdAo+ID4gZWFzaWVyIHRvIGJ1aWxkIGEgZGlzdHJp
+YnV0aW9uIGtlcm5lbC4gVG9kYXksIEkgZ2V0IGJ1ZyByZXBvcnRzIHRoYXQKPiA+IHRoZSBudW1i
+ZXIgY2FsY3VsYXRlZCBhbmQgYWRkZWQgdG8gdGhlIGJvb3QgbG9hZGVyIGNvbmZpZ3VyYXRpb24g
+YnkgdGhlCj4gPiBpbnN0YWxsZXIgaXMgaW5hY2N1cmF0ZS4gSWYgSSBwdXQgYSBmaXhlZCBudW1i
+ZXIgaW50byBhIGtlcm5lbCBjb25maWcKPiA+IG9wdGlvbiwgSSB3aWxsIHN0YXJ0IGdldHRpbmcg
+YnVncyB0aGF0IHRoaXMgbnVtYmVyIGlzIGluY29ycmVjdCAoZm9yCj4gPiBzb21lIHN5c3RlbXMp
+Lgo+ID4gIAo+ID4+IEZvciBleGFtcGxlLCBpZiB0aGlzIGlzIGEgd29ya3N0YXRpb24gSSBqdXN0
+IHdhbnQgdG8gYnJlYWsgaW50byBhIHNoZWxsCj4gPj4gdG8gY29sbGVjdCBzb21lIHBhbmljIGlu
+Zm8sIHRoZW4gSSBqdXN0IG5lZWQgYSB2ZXJ5IG1pbmltYWwgaW5pdHJkLCB0aGVuCj4gPj4gdGhl
+IEtjb25maWcgd2lsbCB3b3JrIGp1c3QgZmluZS4gIAo+ID4KPiA+IFdoYXQgaXMgImEgdmVyeSBt
+aW5pbWFsIGluaXRyZCI/IExhc3QgdGltZSBJIGhhZCB0byBtYWtlIGEgc2lnbmlmaWNhbnQKPiA+
+IGFkanVzdG1lbnQgdG8gdGhlIGVzdGltYXRpb24gZm9yIG9wZW5TVVNFLCB0aGlzIHdhcyBjYXVz
+ZWQgYnkgZ3Jvd2luZwo+ID4gdXNlci1zcGFjZSByZXF1aXJlbWVudHMgKHN5c3RlbWQgaW4gdGhp
+cyBjYXNlLCBidXQgSSBkb24ndCB3YW50IHRvCj4gPiBzdGFydCBmbGFtZXdhcnMgb24gdGhhdCB0
+b3BpYywgcGxlYXNlKS4KPiA+Cj4gPiBBbnl3YXksIGlmIHlvdSB3YW50IHRvIGltcHJvdmUgdGhl
+ICJjb21tb24gY2FzZSIsIHRoZW4gbG9vayBob3cgSUJNCj4gPiB0cmllcyB0byBzb2x2ZSBpdCBm
+b3IgZmlybXdhcmUtYXNzaXN0ZWQgZHVtcCAoZmFkdW1wKSBvbiBwb3dlcnBjOgo+ID4KPiA+IGh0
+dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvOTA1MDI2Lwo+ID4KPiA+IFRoZSBtYWlu
+IGlkZWEgaXM6Cj4gPiAgCj4gPj4gSW5zdGVhZCBvZiBzZXR0aW5nIGFzaWRlIGEgc2lnbmlmaWNh
+bnQgY2h1bmsgb2YgbWVtb3J5IG5vYm9keSBjYW4gdXNlLAo+ID4+IFsuLi5dIHJlc2VydmUgYSBz
+aWduaWZpY2FudCBjaHVuayBvZiBtZW1vcnkgdGhhdCB0aGUga2VybmVsIGlzIHByZXZlbnRlZAo+
+ID4+IGZyb20gdXNpbmcgWy4uLl0sIGJ1dCBhcHBsaWNhdGlvbnMgYXJlIGZyZWUgdG8gdXNlIGl0
+LiAgCj4gPgo+ID4gVGhhdCB3b3JrcyBncmVhdCwgYmVjYXVzZSB1c2VyIHNwYWNlIHBhZ2VzIGFy
+ZSBmaWx0ZXJlZCBvdXQgaW4gdGhlCj4gPiBjb21tb24gY2FzZSwgc28gdGhleSBjYW4gYmUgdXNl
+ZCBmcmVlbHkgYnkgdGhlIHBhbmljIGtlcm5lbC4gIAo+IAo+IFRoZXkgYWJzb2x1dGVseSBjYW4g
+bm90IGJlIHVzZWQgaW4gdGhlIGtkdW1wIGNhc2UuCj4gCj4gVGhlIGtkdW1wIHJlcXVpcmVtZW50
+IGlzIHRoYXQgdGhleSBhcmUgcGFnZXMgbm8tb25lIGluaXRpYXRlcyBhbnkgSS9PCj4gdG8uICBU
+byBhdm9pZCB0aGUgcHJvYmxlbSBvZiBkZXZpY2VzIGRvaW5nIERNQSBhcyB0aGUgbmV3IGtlcm5l
+bCBzdGFydHMKPiBhbmQgcnVucy4KCkdvb2QgcG9pbnQuIFRoaXMgbWVhbnMgdGhhdCBtZW1vcnkg
+cmVzZXJ2ZWQgZm9yIHRoaXMgcHVycG9zZSB3b3VsZCBhbHNvCmhhdmUgdG8gYmUgZXhjbHVkZWQg
+ZnJvbSBhbGxvY2F0aW9ucyB0aGF0IG1heSBiZSBldmVudHVhbGx5IHVzZWQgZm9yCkRNQSB0cmFu
+c2ZlcnMuCgo+ICBTZWNvbmRhcmlseSB0byBhdm9pZCBwcm9ibGVtcyB3aXRoIGNwdXMgdGhhdCBy
+ZWZ1c2VkIHRvIGhhbHQuCgpMZXQncyBmYWNlIGl0IC0gaWYgc29tZSBDUFVzIHJlZnVzZWQgdG8g
+aGFsdCwgYWxsIGJldHMgYXJlIG9mZi4gVGhlCmNvZGUgcnVubmluZyBvbiBzdWNoIGEgQ1BVIGNh
+biBicmVhayBtYW55IG90aGVyIHRoaW5ncyBiZXNpZGVzIG1lbW9yeSwKbW9zdCBpbXBvcnRhbnRs
+eSwgaXQgbWF5IG1lZGRsZSB3aXRoIHRoZSBIVyByZWdpc3RlcnMgb2YgY3J1Y2lhbApkZXZpY2Vz
+IGluIHRoZSBzeXN0ZW0uIFRvIGJlIGxlc3MgYWJzdHJhY3QsIEkgaGF2ZSBzZWVuIGEgZmFpbHVy
+ZSB0bwpzdG9wIGEgQ1BVIGluIHRoZSBjcmFzaGVkIGtlcm5lbCBhIGZldyB0aW1lcywgYW5kIHRo
+ZSBwYW5pYyBrZXJuZWwKY291bGQgbmV2ZXIgc3VjY2Vzc2Z1bGx5IHNhdmUgYW55dGhpbmc7IGl0
+IGFsd2F5cyBjcmFzaGVkIGF0IGJvb3Qgb3IgYQpsaXR0bGUgYml0IGxhdGVyLgoKQW55d2F5LCBv
+ZiBjb3Vyc2Ugd2Ugd291bGQgc3RpbGwgaGF2ZSB0byBrZWVwIHRoZSBjdXJyZW50IG1ldGhvZCwK
+YmVjYXVzZSB1c2VyIHBhZ2VzIGFyZSBub3QgYWx3YXlzIGZpbHRlcmVkLiBGb3IgZXhhbXBsZSwg
+YSBtYWpvciBTVVNFCmFjY291bnQgcnVucyBhIGRhdGFiYXNlIGluIHVzZXIgc3BhY2UgYW5kIGFs
+c28gaW5zcGVjdHMgaXRzIGRhdGEKc3RydWN0dXJlcyBpbiBjYXNlIG9mIGEgc3lzdGVtIGNyYXNo
+LgoKUGV0ciBUCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
