@@ -1,30 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fLzgT-00081t-T2
- for kexec@lists.infradead.org; Thu, 24 May 2018 23:30:15 +0000
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w4ONOPRI088786
- for <kexec@lists.infradead.org>; Thu, 24 May 2018 19:30:02 -0400
-Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2j641qes9d-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 24 May 2018 19:30:02 -0400
-Received: from localhost
- by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Fri, 25 May 2018 00:29:59 +0100
-Subject: Re: [PATCH v3 1/7] security: rename security_kernel_read_file() hook
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Thu, 24 May 2018 19:29:52 -0400
-In-Reply-To: <87po1k2304.fsf@xmission.com>
-References: <1527160176-29269-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1527160176-29269-2-git-send-email-zohar@linux.vnet.ibm.com>
- <87po1k2304.fsf@xmission.com>
-Mime-Version: 1.0
-Message-Id: <1527204592.3424.132.camel@linux.vnet.ibm.com>
+ id 1fM2i3-0007Zz-Ja
+ for kexec@lists.infradead.org; Fri, 25 May 2018 02:44:05 +0000
+Date: Fri, 25 May 2018 10:43:39 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] kdump: add default crashkernel reserve kernel config
+ options
+Message-ID: <20180525024339.GA2720@dhcp-128-65.nay.redhat.com>
+References: <20180521025337.GA4627@dhcp-128-65.nay.redhat.com>
+ <20180521120215.117d963a7619eb0d1f54bced@linux-foundation.org>
+ <20180523070641.GA1689@dhcp-128-65.nay.redhat.com>
+ <877enucqr0.fsf@xmission.com>
+ <20180524014234.GA2031@dhcp-128-65.nay.redhat.com>
+ <87bmd53t0p.fsf@xmission.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <87bmd53t0p.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,71 +25,116 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, James Morris <jmorris@namei.org>, Casey Schaufler <casey@schaufler-ca.com>
-Cc: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R
- . Rodriguez" <mcgrof@kernel.org>, Andres Rodriguez <andresx7@gmail.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: dzickus@redhat.com, Neil Horman <nhorman@redhat.com>, Tony Luck <tony.luck@intel.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Hari Bathini <hbathini@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Cong Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Anton Vorontsov <avorontsov@ru.mvista.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-T24gVGh1LCAyMDE4LTA1LTI0IGF0IDE1OjQ5IC0wNTAwLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90
-ZToKPiBJIGFscmVhZHkgbmFja2VkIHRoaXMgYXBwcm9hY2ggYmVjYXVzZSB0aGUgdHdvIGNhc2Vz
-IGRvbid0Cj4gc2hhcmUgYSBiaXQgb2YgY29kZS4gIFdoZW4gSSBsb29rZWQgY2xvc2VyIGl0IHdh
-cyBldmVuIGNyYXppZXIuCgpJdCBoYXNuJ3QgYmVlbiBjbGVhciB3aGF0IHlvdSBtZWFudCBieSAi
-dGhlIHR3byBjYXNlcyBkb24ndCBzaGFyZSBhCmJpdCBvZiBjb2RlIi7CoMKgVGhlIGZpcnN0IGF0
-dGVtcHQgY2FsbGVkCnNlY3VyaXR5X2tlcm5lbF9yZWFkX2ZpbGUoKS7CoMKgQXMgcGVyIHlvdXIg
-Y29tbWVudHMsIGtleGVjX2xvYWQgZG9lc24ndApsb2FkIGEgZmlsZS7CoMKgVGhpbmtpbmcgaXQg
-d2FzIGEgbmFtaW5nIGlzc3VlIHRoZSBzZWNvbmQgYXR0ZW1wdApkZWZpbmVkIGEgd3JhcHBlciBu
-YW1lZCBzZWN1cml0eV9rZXJuZWxfcmVhZF9ibG9iKCkgZm9yCnNlY3VyaXR5X2tlcm5lbF9yZWFk
-X2ZpbGUoKS7CoMKgU3RpbGwgdGhpbmtpbmcgaXQgd2FzIGEgbmFtaW5nIGlzc3VlLAp0aGlzIGF0
-dGVtcHQgcmVuYW1lZCB0aGUgc2VjdXJpdHlfa2VybmVsX3JlYWRfZmlsZSgpIHRvCnNlY3VyaXR5
-X2tlcm5lbF9yZWFkX2RhdGEoKS4KCj4gCj4gVGhlIHdheSBpbWEgdXNlcyB0aGlzIGhvb2sgYW5k
-IHRoZSBwb3N0X2xvYWQgaG9vayB0b2RheSBpcyBhIHRyYXZlc3R5LgoKSW5zdGVhZCBvZiBoYXZp
-bmcgbXVsdGlwbGUgZnVuY3Rpb25zLCBlYWNoIGEgYml0IGRpZmZlcmVudCwgZm9yCnJlYWRpbmcg
-YSBmaWxlIGZyb20gdGhlIGtlcm5lbCwga2VybmVsX3JlYWRfZmlsZSgpIGlzIGEgZ2VuZXJpYwpp
-bXBsZW1lbnRhdGlvbiB3aXRoIGJvdGggcHJlIGFuZCBwb3N0IHNlY3VyaXR5IGNhbGxzLgoKIEkg
-dGhpbmsgdGhlIHByZSBhbmQgcG9zdCBzZWN1cml0eSBrZXJuZWxfcmVhZF9maWxlKCkgTFNNIGhv
-b2tzIGFyZQpxdWl0ZSB3ZWxsIHRob3VnaHQgb3V0LiDCoFRoZSBzZWN1cml0eV9rZXJuZWxfcmVh
-ZF9maWxlIGlzIGNhbGxlZApiZWZvcmUgdGhlIGtlcm5lbCByZWFkcyB0aGUgZmlsZS4gwqBUaGUg
-c2VjdXJpdHlfa2VybmVsX3Bvc3RfcmVhZF9maWxlCmlzIGNhbGxlZCBhZnRlciB0aGUga2VybmVs
-IHJlYWRzIHRoZSBmaWxlLgoKPiBUaGUgd2F5IHRoZSBzZWN1cml0eV9rZXJuZWxfZmlsZV9yZWFk
-IGFuZCBzZWN1cml0eV9rZXJuZWxfZmlsZV9wb3N0X3JlYWQKPiBhcmUgY2FsbGVkIHRvZGF5IGFu
-ZCBhcmUgdXNlZCBieSBpbWEgZG9uJ3QgbWFrZSB0aGUgbGVhc3QgbGl0dGxlIGJpdCBvZgo+IHNl
-bnNlLgo+IAo+IEFidXNpbmcgc2VjdXJpdHlfa2VybmVsX2ZpbGVfcmVhZCBpbiB0aGUgbW9kdWxl
-IGxvYWRlciBhbmQgdGhlbiBhYnVzaW5nCj4gc2VjdXJpdHlfa2VybmVsX2ZpbGVfcG9zdF9yZWFk
-IGluIHRoZSBmaXJtd2FyZSBsb2FkZXIgaXMgaW5zYW5lLiAgVGhlCj4gbG9hZHBpbiBsc20gY291
-bGQgbm90IGV2ZW4gZmlndXJlIHRoaXMgb3V0IGFuZCBzbyBpdCBmYWlsZWQgdG8gd29yawo+IGJl
-Y2F1c2Ugb2YgdGhlc2Ugc2hlbmFuaWdoYW5zLgo+IAo+IE9ubHkgaW1wbGVtZW50aW5nIGtlcm5l
-bF9maWxlX3JlYWQgdG8gaGFuZGxlIHRoZSAhZmlsZSBjYXNlIGlzIHByZXR0eQo+IG11Y2ggaW5z
-YW5lLiAgIFRoZXJlIGlzIG5vIHdheSB0aGlzIHNob3VsZCBiZSBleHBhbmRlZCB0byBjb3ZlciBr
-ZXhlYwo+IHVudGlsIHRoZSBjb2RlIGFjdHVhbGx5IG1ha2VzIHNlbnNlLiAgV2UgbmVlZCBhIG1h
-aW50YWluYWJsZSBrZXJuZWwuCgpJdCB3YXNuJ3QgaW1wbGVtZW50ZWQgKm9ubHkqIGZvciB0aGUg
-SU1BICFmaWxlIGNhc2UsIGJ1dCBhcyBhIGdlbmVyaWMKbWVjaGFuaXNtLsKgwqBUcnVlLCBJTUEg
-aXMgb25seSB1c2luZyB0aGUgc2VjdXJpdHlfa2VybmVsX3JlYWRfZmlsZSBob29rCmZvciBkZXRl
-Y3RpbmcgIWZpbGUsIGJ1dCB0aGUgc2VjdXJpdHlfa2VybmVsX3Bvc3RfcmVhZF9maWxlIGhvb2sg
-aXMKdXNlZCBmb3IgdmVyaWZ5aW5nIHRoZSBmaWxlJ3MgaW50ZWdyaXR5LgoKPiBCZWxvdyBpcyB3
-aGVyZSBJIHN1Z2dlc3QgeW91IHN0YXJ0IG9uIHNvcnRpbmcgb3V0IHRoZXNlIHNlY3VyaXR5IGhv
-b2tzLgo+IC0gQWRkaW5nIGEgc2VjdXJpdHlfa2VybmVsX2FyZyB0byBjYXRjaCB3aGVuIHlvdSB3
-YW50IHRvIGFsbG93L2RlbnkgdGhlCj4gICB1c2Ugb2YgYW4gYXJndW1lbnQgdG8gYSBzeXNjYWxs
-LiAgV2hhdCBzZWN1cml0eV9rZXJuZWxfZmlsZV9yZWFkIGFuZAo+ICAgc2VjdXJpdHlfa2VybmVs
-X2ZpbGVfcG9zdF9yZWFkIGhhdmUgYmVlbiBhYnVzZWQgZm9yLgoKQXNzdW1pbmcgd2UgZGVmaW5l
-IGEgbmV3IExTTSBob29rIG5hbWVkICJzZWN1cml0eV9rZXJuZWxfYXJnIiwgd291bGQKd2UgYWxz
-byBkZWZpbmUgYSBuZXcgZW51bWVyYXRpb24gb3IgY291bGQgd2Ugc3RpbGwgdXNlIHRoZSBleGlz
-dGluZwprZXJuZWxfcmVhZF9maWxlX2lkPwoKPiAKPiAtIFJlbW92aW5nIGltYV9maWxlX3JlYWQg
-YmVjYXVzZSBpdCBpcyBjb21wbGV0ZWx5IHN1YnN1bWVkIGJ5IHRoZSBuZXcKPiAgIGNhbGwuCgpU
-aGUgZXhpc3RpbmcgSU1BIGZ1bmN0aW9uIHdvdWxkbid0IGJlIHJlbW92ZWQsIGJ1dCByZW5hbWVk
-IHRvIHdoYXRldmVyCnRoZSBuZXcgTFNNIGhvb2sgaXMgbmFtZWQuCgo+IAo+IC0gUGxlYXNlIG5v
-dGUgd2l0aCBhZGRpbmcgdGhpcyBuZXcgaG9vayB0aGVyZSBpcyBubyBjb2RlIHNoYXJlZCBiZXR3
-ZWVuCj4gICB0aGUgY2FzZXMsIGFuZCB0aGUgbHNtIGNvZGUgYmVjb21lcyBzaW1wbGVyIHNob3J0
-ZXIgd2hlbiBpdCBjYW4gYXNzdW1lCj4gICBzZWN1cml0eV9rZXJuZWxfZmlsZV9wb3N0X3JlYWQg
-YWx3YXlzIHRha2VzIGEgc3RydWN0IGZpbGUuICAoRXZlbiB3aXRoCj4gICB0aGUgYWRkaXRpb24g
-b2YgYSBuZXcgc2VjdXJpdHkgaG9vaykuCgpXZSB3b3VsZCBiZSBkZWZpbmluZyBhIG5ldyBMU00g
-aG9vaywgbm90IHJlbW92aW5nIHRoZSBleGlzdGluZwpzZWN1cml0eV9rZXJuZWxfcmVhZF9maWxl
-IGhvb2ssIGFuZCBvbmx5IHJlbmFtaW5nIHRoZSBJTUEgdXNhZ2Ugb2YgdGhlCmhvb2suCgpJZiBk
-ZWZpbmluZyBhIG5ldyBMU00gaG9vayBuYW1lZCBzZWN1cml0eV9rZXJuZWxfYXJnIG1ha2VzIHlv
-dSBoYXBweSwKSSBkb24ndCBoYXZlIGEgcHJvYmxlbSB3aXRoIGltcGxlbWVudGluZyBpdC4KCkph
-bWVzLCBDYXNleSwgYXJlIHlvdSBPayB3aXRoIHRoaXM/CgpNaW1pCgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9rZXhlYwo=
+Hi Eric,
+
+On 05/24/18 at 11:41am, Eric W. Biederman wrote:
+> Dave Young <dyoung@redhat.com> writes:
+> 
+> > Hi Eric,
+> > On 05/23/18 at 10:53am, Eric W. Biederman wrote:
+> >> Dave Young <dyoung@redhat.com> writes:
+> >> 
+> >> > [snip]
+> >> >
+> >> >> >  
+> >> >> > +config CRASHKERNEL_DEFAULT_THRESHOLD_MB
+> >> >> > +	int "System memory size threshold for kdump memory default reserving"
+> >> >> > +	depends on CRASH_CORE
+> >> >> > +	default 0
+> >> >> > +	help
+> >> >> > +	  CRASHKERNEL_DEFAULT_MB is used as default crashkernel value if
+> >> >> > +	  the system memory size is equal or bigger than the threshold.
+> >> >> 
+> >> >> "the threshold" is rather vague.  Can it be clarified?
+> >> >> 
+> >> >> In fact I'm really struggling to understand the logic here....
+> >> >> 
+> >> >> 
+> >> >> > +config CRASHKERNEL_DEFAULT_MB
+> >> >> > +	int "Default crashkernel memory size reserved for kdump"
+> >> >> > +	depends on CRASH_CORE
+> >> >> > +	default 0
+> >> >> > +	help
+> >> >> > +	  This is used as the default kdump reserved memory size in MB.
+> >> >> > +	  crashkernel=X kernel cmdline can overwrite this value.
+> >> >> > +
+> >> >> >  config HAVE_IMA_KEXEC
+> >> >> >  	bool
+> >> >> >  
+> >> >> > @@ -143,6 +144,24 @@ static int __init parse_crashkernel_simp
+> >> >> >  	return 0;
+> >> >> >  }
+> >> >> >  
+> >> >> > +static int __init get_crashkernel_default(unsigned long long system_ram,
+> >> >> > +					  unsigned long long *size)
+> >> >> > +{
+> >> >> > +	unsigned long long sz = CONFIG_CRASHKERNEL_DEFAULT_MB;
+> >> >> > +	unsigned long long thres = CONFIG_CRASHKERNEL_DEFAULT_THRESHOLD_MB;
+> >> >> > +
+> >> >> > +	thres *= SZ_1M;
+> >> >> > +	sz *= SZ_1M;
+> >> >> > +
+> >> >> > +	if (sz >= system_ram || system_ram < thres) {
+> >> >> > +		pr_debug("crashkernel default size can not be used.\n");
+> >> >> > +		return -EINVAL;
+> >> >> 
+> >> >> In other words,
+> >> >> 
+> >> >> 	if (system_ram <= CONFIG_CRASHKERNEL_DEFAULT_MB ||
+> >> >> 	    system_ram < CONFIG_CRASHKERNEL_DEFAULT_THRESHOLD_MB)
+> >> >> 		fail;
+> >> >> 
+> >> >> yes?
+> >> >> 
+> >> >> How come?  What's happening here?  Perhaps a (good) explanatory comment
+> >> >> is needed.  And clearer Kconfig text.
+> >> >> 
+> >> >> All confused :(
+> >> >
+> >> > Andrew, I tuned it a bit, removed the check of sz >= system_ram, so if
+> >> > the size is too large and kernel can not find enough memory it will
+> >> > still fail in latter code.
+> >> >
+> >> > Is below version looks clearer?
+> >> 
+> >> What is the advantage of providing this in a kconfig option rather
+> >> than on the kernel command line as we can now?
+> >
+> > It is not a replacement of the cmdline, this can be a supplement to
+> > the crashkernel command line.  For a lot of common use cases if we have
+> > the auto reservation user just do not need to manually set the cmdline
+> > for example on a virtual machine and usual setup (except of the
+> > comlicate storage and very large machines).  The crashkernel=auto
+> > has been used for long time, Red Hat QE tested it on a lot of different
+> > lab machines and proved it works well.  Kdump usually just works so admin
+> > do little work to enable kdump.
+> >
+> > But the crashkernel=auto implementation has some drawbacks that is it
+> > is more like embed policy in the code and it is not flexible like a
+> > config option.
+> 
+> Have you considered using the builtin command line aka CONFIG_CMDLINE?
+> If as you are reserving a fixed amount of memory as your patch does that
+> should be sufficient, and doable without any kernel changes.
+
+Hmm, even in builtin cmdline it is same as a explict used crashkernel=.
+If we think from a distribution point of view, it will be hard to
+differentiate the builtin provided param and bootloader provided
+params. It looks odd to see two crashkernel= when `cat /proc/cmdline`,
+it will confuse people and there could cause compatibility problems
+because it is explict value visible in kernel cmdline. 
+
+Thanks
+Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
