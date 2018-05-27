@@ -1,25 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from mail-wm0-f68.google.com ([74.125.82.68])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fMItA-0001MW-9g
- for kexec@lists.infradead.org; Fri, 25 May 2018 20:00:38 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20180521025337.GA4627@dhcp-128-65.nay.redhat.com>
- <20180521120215.117d963a7619eb0d1f54bced@linux-foundation.org>
- <20180523070641.GA1689@dhcp-128-65.nay.redhat.com>
- <877enucqr0.fsf@xmission.com>
- <20180523222236.5a96732e@ezekiel.suse.cz>
- <20180524014905.GB2031@dhcp-128-65.nay.redhat.com>
- <20180524085708.31aa311d@ezekiel.suse.cz>
- <87k1rt3tdu.fsf@xmission.com>
- <20180525065943.03bcb911@ezekiel.suse.cz>
-Date: Fri, 25 May 2018 15:00:13 -0500
-In-Reply-To: <20180525065943.03bcb911@ezekiel.suse.cz> (Petr Tesarik's message
- of "Fri, 25 May 2018 06:59:43 +0200")
-Message-ID: <87d0xjwlo2.fsf@xmission.com>
+ id 1fN2pO-0007fy-QS
+ for kexec@lists.infradead.org; Sun, 27 May 2018 21:03:48 +0000
+Received: by mail-wm0-f68.google.com with SMTP id t11-v6so27123368wmt.0
+ for <kexec@lists.infradead.org>; Sun, 27 May 2018 14:03:35 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [PATCH] kdump: add default crashkernel reserve kernel config
- options
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Mon, 28 May 2018 02:33:33 +0530
+Message-ID: <CACi5LpO8KVVD_6ZJTW2SiyR8v0uDMA3H9yKHNw1=RKO+fd7KjA@mail.gmail.com>
+Subject: [Query] PAGE_OFFSET on KASLR enabled ARM64 kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,92 +18,146 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: dzickus@redhat.com, Neil Horman <nhorman@redhat.com>, Tony Luck <tony.luck@intel.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Hari Bathini <hbathini@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Cong Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>
 
-UGV0ciBUZXNhcmlrIDxwdGVzYXJpa0BzdXNlLmN6PiB3cml0ZXM6Cgo+IFYgVGh1LCAyNCBNYXkg
-MjAxOCAxMTozNDowNSAtMDUwMAo+IGViaWVkZXJtQHhtaXNzaW9uLmNvbSAoRXJpYyBXLiBCaWVk
-ZXJtYW4pIG5hcHPDoW5vOgo+Cj4+IFBldHIgVGVzYXJpayA8cHRlc2FyaWtAc3VzZS5jej4gd3Jp
-dGVzOgo+PiAKPj4gMj4gT24gVGh1LCAyNCBNYXkgMjAxOCAwOTo0OTowNSArMDgwMAo+PiA+IERh
-dmUgWW91bmcgPGR5b3VuZ0ByZWRoYXQuY29tPiB3cm90ZToKPj4gPiAgCj4+ID4+IEhpIFBldHIs
-Cj4+ID4+IAo+PiA+PiBPbiAwNS8yMy8xOCBhdCAxMDoyMnBtLCBQZXRyIFRlc2FyaWsgd3JvdGU6
-Cj4+ID4+Wy4uLl0gIAo+PiA+PiA+IEluIHNob3J0LCBpZiBvbmUgc2l6ZSBmaXRzIG5vbmUsIHdo
-YXQgZ29vZCBpcyBpdCB0byBoYXJkY29kZSB0aGF0ICJvbmUKPj4gPj4gPiBzaXplIiBpbnRvIHRo
-ZSBrZXJuZWwgaW1hZ2U/ICAgIAo+PiA+PiAKPj4gPj4gSSBhZ3JlZWQgd2l0aCBhbGwgdGhlIHRo
-aW5ncyB0aGF0IHdlIGNhbiBub3Qga25vdyB0aGUgZXhhY3QgbWVtb3J5Cj4+ID4+IHJlcXVpcmVt
-ZW50IGZvciAxMDAlIHVzZSBjYXNlcy4gIEJ1dCB0aGF0IGRvZXMgbm90IG1lYW5zIHRoaXMgaXMg
-dXNlbGVzcwo+PiA+PiBpdCBpcyBzdGlsbCB1c2VmdWwgZm9yIGNvbW1vbiB1c2UgY2FzZXMgb2Yg
-bm8gc3BlY2lhbCBhbmQgbWVtb3J5IGhvZwo+PiA+PiByZXF1aXJlbWVudHMgYXMgSSBtZW50aW9u
-ZWQgaW4gYW5vdGhlciByZXBseSBpdCBjYW4gc2ltcGxpZnkgdGhlIGtkdW1wCj4+ID4+IGRlcGxv
-eW1lbnQgZm9yIHRob3NlIHBlb3BsZSB3aG8gZG8gbm90IG5lZWQgdGhlIHNwZWNpYWwgc2V0dXAu
-ICAKPj4gPgo+PiA+IEkgc3RpbGwgdGVuZCB0byBkaXNhZ3JlZS4gVGhpcyAiY29tbW9uLWNhc2Ui
-IHJlc2VydmF0aW9uIGRlcGVuZHMgb24KPj4gPiB0aGluZ3MgdGhhdCBhcmUgZGVmaW5lZCBieSB1
-c2VyIHNwYWNlLiBJdCBzdXJlbHkgZG9lcyBub3QgbWFrZSBpdAo+PiA+IGVhc2llciB0byBidWls
-ZCBhIGRpc3RyaWJ1dGlvbiBrZXJuZWwuIFRvZGF5LCBJIGdldCBidWcgcmVwb3J0cyB0aGF0Cj4+
-ID4gdGhlIG51bWJlciBjYWxjdWxhdGVkIGFuZCBhZGRlZCB0byB0aGUgYm9vdCBsb2FkZXIgY29u
-ZmlndXJhdGlvbiBieSB0aGUKPj4gPiBpbnN0YWxsZXIgaXMgaW5hY2N1cmF0ZS4gSWYgSSBwdXQg
-YSBmaXhlZCBudW1iZXIgaW50byBhIGtlcm5lbCBjb25maWcKPj4gPiBvcHRpb24sIEkgd2lsbCBz
-dGFydCBnZXR0aW5nIGJ1Z3MgdGhhdCB0aGlzIG51bWJlciBpcyBpbmNvcnJlY3QgKGZvcgo+PiA+
-IHNvbWUgc3lzdGVtcykuCj4+ID4gIAo+PiA+PiBGb3IgZXhhbXBsZSwgaWYgdGhpcyBpcyBhIHdv
-cmtzdGF0aW9uIEkganVzdCB3YW50IHRvIGJyZWFrIGludG8gYSBzaGVsbAo+PiA+PiB0byBjb2xs
-ZWN0IHNvbWUgcGFuaWMgaW5mbywgdGhlbiBJIGp1c3QgbmVlZCBhIHZlcnkgbWluaW1hbCBpbml0
-cmQsIHRoZW4KPj4gPj4gdGhlIEtjb25maWcgd2lsbCB3b3JrIGp1c3QgZmluZS4gIAo+PiA+Cj4+
-ID4gV2hhdCBpcyAiYSB2ZXJ5IG1pbmltYWwgaW5pdHJkIj8gTGFzdCB0aW1lIEkgaGFkIHRvIG1h
-a2UgYSBzaWduaWZpY2FudAo+PiA+IGFkanVzdG1lbnQgdG8gdGhlIGVzdGltYXRpb24gZm9yIG9w
-ZW5TVVNFLCB0aGlzIHdhcyBjYXVzZWQgYnkgZ3Jvd2luZwo+PiA+IHVzZXItc3BhY2UgcmVxdWly
-ZW1lbnRzIChzeXN0ZW1kIGluIHRoaXMgY2FzZSwgYnV0IEkgZG9uJ3Qgd2FudCB0bwo+PiA+IHN0
-YXJ0IGZsYW1ld2FycyBvbiB0aGF0IHRvcGljLCBwbGVhc2UpLgo+PiA+Cj4+ID4gQW55d2F5LCBp
-ZiB5b3Ugd2FudCB0byBpbXByb3ZlIHRoZSAiY29tbW9uIGNhc2UiLCB0aGVuIGxvb2sgaG93IElC
-TQo+PiA+IHRyaWVzIHRvIHNvbHZlIGl0IGZvciBmaXJtd2FyZS1hc3Npc3RlZCBkdW1wIChmYWR1
-bXApIG9uIHBvd2VycGM6Cj4+ID4KPj4gPiBodHRwczovL3BhdGNod29yay5vemxhYnMub3JnL3Bh
-dGNoLzkwNTAyNi8KPj4gPgo+PiA+IFRoZSBtYWluIGlkZWEgaXM6Cj4+ID4gIAo+PiA+PiBJbnN0
-ZWFkIG9mIHNldHRpbmcgYXNpZGUgYSBzaWduaWZpY2FudCBjaHVuayBvZiBtZW1vcnkgbm9ib2R5
-IGNhbiB1c2UsCj4+ID4+IFsuLi5dIHJlc2VydmUgYSBzaWduaWZpY2FudCBjaHVuayBvZiBtZW1v
-cnkgdGhhdCB0aGUga2VybmVsIGlzIHByZXZlbnRlZAo+PiA+PiBmcm9tIHVzaW5nIFsuLi5dLCBi
-dXQgYXBwbGljYXRpb25zIGFyZSBmcmVlIHRvIHVzZSBpdC4gIAo+PiA+Cj4+ID4gVGhhdCB3b3Jr
-cyBncmVhdCwgYmVjYXVzZSB1c2VyIHNwYWNlIHBhZ2VzIGFyZSBmaWx0ZXJlZCBvdXQgaW4gdGhl
-Cj4+ID4gY29tbW9uIGNhc2UsIHNvIHRoZXkgY2FuIGJlIHVzZWQgZnJlZWx5IGJ5IHRoZSBwYW5p
-YyBrZXJuZWwuICAKPj4gCj4+IFRoZXkgYWJzb2x1dGVseSBjYW4gbm90IGJlIHVzZWQgaW4gdGhl
-IGtkdW1wIGNhc2UuCj4+IAo+PiBUaGUga2R1bXAgcmVxdWlyZW1lbnQgaXMgdGhhdCB0aGV5IGFy
-ZSBwYWdlcyBuby1vbmUgaW5pdGlhdGVzIGFueSBJL08KPj4gdG8uICBUbyBhdm9pZCB0aGUgcHJv
-YmxlbSBvZiBkZXZpY2VzIGRvaW5nIERNQSBhcyB0aGUgbmV3IGtlcm5lbCBzdGFydHMKPj4gYW5k
-IHJ1bnMuCj4KPiBHb29kIHBvaW50LiBUaGlzIG1lYW5zIHRoYXQgbWVtb3J5IHJlc2VydmVkIGZv
-ciB0aGlzIHB1cnBvc2Ugd291bGQgYWxzbwo+IGhhdmUgdG8gYmUgZXhjbHVkZWQgZnJvbSBhbGxv
-Y2F0aW9ucyB0aGF0IG1heSBiZSBldmVudHVhbGx5IHVzZWQgZm9yCj4gRE1BIHRyYW5zZmVycy4K
-ClRoaW5rIG9mIGEgbmV0d29yayBjYXJkLiAgVGhlIERNQSdzIGZvciBpbmNvbW1pbmcgcGFja2V0
-cyBjYW4gYmUKaW5kZWZpbml0ZWx5IGRlbGF5ZWQgaW50byB0aGUgZnV0dXJlIHVubGVzcyB0aGF0
-IG5ldHdvcmsgY2FyZCBpcwpyZXByb2dyYW1tZWQuICBJZiB0aGUgZHVtcCBrZXJuZWwgZG9lcyBu
-b3QgbG9hZCB0aGUgZHJpdmVyIHRoYXQgd29uJ3QKaGFwcGVuLgoKPj4gIFNlY29uZGFyaWx5IHRv
-IGF2b2lkIHByb2JsZW1zIHdpdGggY3B1cyB0aGF0IHJlZnVzZWQgdG8gaGFsdC4KPgo+IExldCdz
-IGZhY2UgaXQgLSBpZiBzb21lIENQVXMgcmVmdXNlZCB0byBoYWx0LCBhbGwgYmV0cyBhcmUgb2Zm
-LiBUaGUKPiBjb2RlIHJ1bm5pbmcgb24gc3VjaCBhIENQVSBjYW4gYnJlYWsgbWFueSBvdGhlciB0
-aGluZ3MgYmVzaWRlcyBtZW1vcnksCj4gbW9zdCBpbXBvcnRhbnRseSwgaXQgbWF5IG1lZGRsZSB3
-aXRoIHRoZSBIVyByZWdpc3RlcnMgb2YgY3J1Y2lhbAo+IGRldmljZXMgaW4gdGhlIHN5c3RlbS4g
-VG8gYmUgbGVzcyBhYnN0cmFjdCwgSSBoYXZlIHNlZW4gYSBmYWlsdXJlIHRvCj4gc3RvcCBhIENQ
-VSBpbiB0aGUgY3Jhc2hlZCBrZXJuZWwgYSBmZXcgdGltZXMsIGFuZCB0aGUgcGFuaWMga2VybmVs
-Cj4gY291bGQgbmV2ZXIgc3VjY2Vzc2Z1bGx5IHNhdmUgYW55dGhpbmc7IGl0IGFsd2F5cyBjcmFz
-aGVkIGF0IGJvb3Qgb3IgYQo+IGxpdHRsZSBiaXQgbGF0ZXIuCgpDcmFzaGluZyBhdCBib290IGlz
-IGNvbXBhcmF0aXZlbHkgZ29vZC4gIFRoYXQgaXMgcGFydCBvZiB0aGUgZGVzaWduCmNyaXRlcmlh
-LiAgSXQgaXMgYmV0dGVyIHRvIGZhaWwgdG8gc3RhcnR1cCB0aGUga2VybmVsIHRoYW4gdG8gc3Rh
-cnQgYQpjb3JydXB0ZWQga2VybmVsIGFuZCBtYW5nbGUgYSB1c2VycyBkYXRhLgoKQnV0IEkgZG8g
-c2VlIGhvdyBpdCBjYW4gYmUgYSBjcmFwIHNob290IHdoZW4gZGVhbGluZyB3aXRoIGFub3RoZXIg
-Y3B1LgoKVGhlIHVsdGltYXRlIHBvaW50IGlzIHRoYXQgdGhlIGFic29sdXRlIGJlc3Qgd2UgY2Fu
-IGRvIGlzIHRvIHJ1biBhCmtlcm5lbCBpbiBtZW1vcnkgdGhhdCB3ZSBuZXZlciB1c2UgZm9yIGFu
-eXRoaW5nIGVsc2UgYW5kIHRoZW4gd2UgaGF2ZSBhCmZpZ2h0aW5nIGNoYW5jZSBvZiBnZXR0aW5n
-IHRoZSBzeXN0ZW0gd29ya2luZyBhbmQgZ2V0dGluZyBhIHJlcG9ydCBvZgp0aGUgZmFpbHVyZSBv
-dXQgdG8gc29tZXdoZXJlLgoKPiBBbnl3YXksIG9mIGNvdXJzZSB3ZSB3b3VsZCBzdGlsbCBoYXZl
-IHRvIGtlZXAgdGhlIGN1cnJlbnQgbWV0aG9kLAo+IGJlY2F1c2UgdXNlciBwYWdlcyBhcmUgbm90
-IGFsd2F5cyBmaWx0ZXJlZC4gRm9yIGV4YW1wbGUsIGEgbWFqb3IgU1VTRQo+IGFjY291bnQgcnVu
-cyBhIGRhdGFiYXNlIGluIHVzZXIgc3BhY2UgYW5kIGFsc28gaW5zcGVjdHMgaXRzIGRhdGEKPiBz
-dHJ1Y3R1cmVzIGluIGNhc2Ugb2YgYSBzeXN0ZW0gY3Jhc2guCgpBbmQgSSB1bmRlcnN0YW5kIHRo
-ZSBtZW1vcnkgcHJlc3N1cmVzIHRoYXQgd2lsbCBlbmNvdXJhZ2UgcGVvcGxlIHRvIHVzZQp1c2Vy
-IHBhZ2VzIGZvciBleHRyYSBtZW1vcnkgdG8gcnVuIHRoZSBkdW1wIGNhcHR1cmUga2VybmVsIGlu
-LiAgU2hvcnQgb2YKdGhlIHByZXNlbmNlIG9mIGFuIElPTU1VIHRoYXQgYWxsIERNQSB0cmFuc2Zl
-cnMgbXVzdCBnbyB0aHJvdWdoIEkgZG9uJ3QKc2VlIGhvdyB0aG9zZSB1c2VyIHBhZ2VzIGNvdWxk
-IHJlbGlhYmx5IGJlIHVzZWQuCgpFcmljCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hi ARM64 maintainers,
+
+I am confused about the PAGE_OFFSET value (or the start of the linear
+map) on a KASLR enabled ARM64 kernel that I am seeing on a board which
+supports a compatible EFI firmware (with EFI_RNG_PROTOCOL support).
+
+1. 'arch/arm64/include/asm/memory.h' defines PAGE_OFFSET as:
+
+/*
+ * PAGE_OFFSET - the virtual address of the start of the linear map (top
+ *         (VA_BITS - 1))
+ */
+#define PAGE_OFFSET        (UL(0xffffffffffffffff) - \
+    (UL(1) << (VA_BITS - 1)) + 1)
+
+So for example on a platform with VA_BITS=48, we have:
+PAGE_OFFSET = 0xffff800000000000
+
+2. However, for the KASLR case, we set the 'memstart_offset_seed ' to
+use the 16-bits of the 'kaslr-seed' to randomize the linear region in
+'arch/arm64/kernel/kaslr.c' :
+
+u64 __init kaslr_early_init(u64 dt_phys)
+{
+<snip..>
+    /* use the top 16 bits to randomize the linear region */
+    memstart_offset_seed = seed >> 48;
+<snip..>
+}
+
+3. Now, we use the 'memstart_offset_seed' value to randomize the
+'memstart_addr' value in 'arch/arm64/mm/init.c':
+
+void __init arm64_memblock_init(void)
+{
+<snip..>
+
+    if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
+        extern u16 memstart_offset_seed;
+        u64 range = linear_region_size -
+                (memblock_end_of_DRAM() - memblock_start_of_DRAM());
+
+        /*
+         * If the size of the linear region exceeds, by a sufficient
+         * margin, the size of the region that the available physical
+         * memory spans, randomize the linear region as well.
+         */
+        if (memstart_offset_seed > 0 && range >= ARM64_MEMSTART_ALIGN) {
+            range = range / ARM64_MEMSTART_ALIGN + 1;
+            memstart_addr -= ARM64_MEMSTART_ALIGN *
+                     ((range * memstart_offset_seed) >> 16);
+        }
+    }
+<snip..>
+}
+
+4. Since 'memstart_addr' indicates the start of physical RAM, we
+randomize the same on basis of 'memstart_offset_seed' value above.
+Also the 'memstart_addr' value is available in '/proc/kallsyms' and
+hence can be accessed by user-space applications to read the
+'memstart_addr' value.
+
+5. Now since the PAGE_OFFSET value is also used by several user space
+tools (for e.g. makedumpfile tool uses the same to determine the start
+of linear region and hence to read PT_NOTE fields from /proc/kcore), I
+am not sure how to read the randomized value of the same in the KASLR
+enabled case.
+
+6. Reading the code further and adding some debug prints, it seems the
+'memblock_start_of_DRAM()' value is more closer to the actual start of
+linear region rather than 'memstart_addr' and 'PAGE_OFFSET" in case of
+KASLR enabled kernel:
+
+[root@qualcomm-amberwing] # dmesg | grep -i "arm64_memblock_init" -A 5
+
+[    0.000000] inside arm64_memblock_init, memstart_addr = ffff976a00000000,
+linearstart_addr = ffffe89600200000, memblock_start_of_DRAM = ffffe89600200000,
+PHYS_OFFSET = ffff976a00000000, PAGE_OFFSET = ffff800000000000,
+KIMAGE_VADDR = ffff000008000000, kimage_vaddr = ffff20c2d7800000
+
+[root@qualcomm-amberwing] # dmesg | grep -i "Virtual kernel memory layout" -A 15
+[    0.000000] Virtual kernel memory layout:
+[    0.000000]     modules : 0xffff000000000000 - 0xffff000008000000
+(   128 MB)
+[    0.000000]     vmalloc : 0xffff000008000000 - 0xffff7bdfffff0000
+(126847 GB)
+[    0.000000]       .text : 0xffff20c2d7880000 - 0xffff20c2d8040000
+(  7936 KB)
+[    0.000000]     .rodata : 0xffff20c2d8040000 - 0xffff20c2d83a0000
+(  3456 KB)
+[    0.000000]       .init : 0xffff20c2d83a0000 - 0xffff20c2d8750000
+(  3776 KB)
+[    0.000000]       .data : 0xffff20c2d8750000 - 0xffff20c2d891b200
+(  1837 KB)
+[    0.000000]        .bss : 0xffff20c2d891b200 - 0xffff20c2d90a5198
+(  7720 KB)
+[    0.000000]     fixed   : 0xffff7fdffe790000 - 0xffff7fdffec00000
+(  4544 KB)
+[    0.000000]     PCI I/O : 0xffff7fdffee00000 - 0xffff7fdfffe00000
+(    16 MB)
+[    0.000000]     vmemmap : 0xffff7fe000000000 - 0xffff800000000000
+(   128 GB maximum)
+[    0.000000]               0xffff7ffa25800800 - 0xffff7ffa2b800000
+(    95 MB actual)
+[    0.000000]     memory  : 0xffffe89600200000 - 0xffffe8ae00000000
+( 98302 MB)
+
+As one can see above, the 'memblock_start_of_DRAM()' value of
+0xffffe89600200000 represents the start of linear region:
+
+[    0.000000]     memory  : 0xffffe89600200000 - 0xffffe8ae00000000
+( 98302 MB)
+
+So, my question is to access the start of linear region (which was
+earlier determinable via PAGE_OFFSET macro), whether I should:
+
+- do some back-computation for the start of linear region from the
+'memstart_addr' in user-space, or
+- use a new global variable in kernel which is assigned the value of
+memblock_start_of_DRAM()' and assign it to '/proc/kallsyms', so that
+it can be read by user-space tools, or
+- whether we should rather look at removing the PAGE_OFFSET usage from
+the kernel and replace it with a global variable instead which is
+properly updated for KASLR case as well.
+
+Kindly share your opinions on what can be a suitable solution in this case.
+
+Thanks for your help.
+
+Regards,
+Bhupesh
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
