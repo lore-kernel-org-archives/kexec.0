@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x244.google.com ([2607:f8b0:4001:c06::244])
+Received: from mail-wm0-f67.google.com ([74.125.82.67])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fNBvB-0004Ef-Tc
- for kexec@lists.infradead.org; Mon, 28 May 2018 06:46:23 +0000
-Received: by mail-io0-x244.google.com with SMTP id d73-v6so12968759iog.3
- for <kexec@lists.infradead.org>; Sun, 27 May 2018 23:46:11 -0700 (PDT)
+ id 1fNDzi-0005kk-VG
+ for kexec@lists.infradead.org; Mon, 28 May 2018 08:59:12 +0000
+Received: by mail-wm0-f67.google.com with SMTP id f6-v6so30152928wmc.4
+ for <kexec@lists.infradead.org>; Mon, 28 May 2018 01:59:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACi5LpO8KVVD_6ZJTW2SiyR8v0uDMA3H9yKHNw1=RKO+fd7KjA@mail.gmail.com>
-References: <CACi5LpO8KVVD_6ZJTW2SiyR8v0uDMA3H9yKHNw1=RKO+fd7KjA@mail.gmail.com>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Mon, 28 May 2018 08:46:09 +0200
-Message-ID: <CAKv+Gu_KSDZyoLNUTAM2d769gQRfbtnGRTcU=8xOrYbmj2O4fA@mail.gmail.com>
-Subject: Re: [Query] PAGE_OFFSET on KASLR enabled ARM64 kernel
+In-Reply-To: <20180525100214.apb3zsk2mbw3tnjc@verge.net.au>
+References: <1527147483-11139-1-git-send-email-bhsharma@redhat.com>
+ <20180525080033.GA5310@dhcp-128-65.nay.redhat.com>
+ <20180525100214.apb3zsk2mbw3tnjc@verge.net.au>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Mon, 28 May 2018 14:28:58 +0530
+Message-ID: <CACi5LpOJPAFA61QZHUR+Ay-KD=LnuQtjy=u--_chbF66TpeH4w@mail.gmail.com>
+Subject: Re: [PATCH v2] Remove obsolete kdump tool
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,146 +26,70 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, ebiederm@xmission.com, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Dave Young <dyoung@redhat.com>, Russell King <rmk@arm.linux.org.uk>
 
-On 27 May 2018 at 23:03, Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> Hi ARM64 maintainers,
->
-> I am confused about the PAGE_OFFSET value (or the start of the linear
-> map) on a KASLR enabled ARM64 kernel that I am seeing on a board which
-> supports a compatible EFI firmware (with EFI_RNG_PROTOCOL support).
->
-> 1. 'arch/arm64/include/asm/memory.h' defines PAGE_OFFSET as:
->
-> /*
->  * PAGE_OFFSET - the virtual address of the start of the linear map (top
->  *         (VA_BITS - 1))
->  */
-> #define PAGE_OFFSET        (UL(0xffffffffffffffff) - \
->     (UL(1) << (VA_BITS - 1)) + 1)
->
-> So for example on a platform with VA_BITS=48, we have:
-> PAGE_OFFSET = 0xffff800000000000
->
-> 2. However, for the KASLR case, we set the 'memstart_offset_seed ' to
-> use the 16-bits of the 'kaslr-seed' to randomize the linear region in
-> 'arch/arm64/kernel/kaslr.c' :
->
-> u64 __init kaslr_early_init(u64 dt_phys)
-> {
-> <snip..>
->     /* use the top 16 bits to randomize the linear region */
->     memstart_offset_seed = seed >> 48;
-> <snip..>
-> }
->
-> 3. Now, we use the 'memstart_offset_seed' value to randomize the
-> 'memstart_addr' value in 'arch/arm64/mm/init.c':
->
-> void __init arm64_memblock_init(void)
-> {
-> <snip..>
->
->     if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
->         extern u16 memstart_offset_seed;
->         u64 range = linear_region_size -
->                 (memblock_end_of_DRAM() - memblock_start_of_DRAM());
->
->         /*
->          * If the size of the linear region exceeds, by a sufficient
->          * margin, the size of the region that the available physical
->          * memory spans, randomize the linear region as well.
->          */
->         if (memstart_offset_seed > 0 && range >= ARM64_MEMSTART_ALIGN) {
->             range = range / ARM64_MEMSTART_ALIGN + 1;
->             memstart_addr -= ARM64_MEMSTART_ALIGN *
->                      ((range * memstart_offset_seed) >> 16);
->         }
->     }
-> <snip..>
-> }
->
-> 4. Since 'memstart_addr' indicates the start of physical RAM, we
-> randomize the same on basis of 'memstart_offset_seed' value above.
-> Also the 'memstart_addr' value is available in '/proc/kallsyms' and
-> hence can be accessed by user-space applications to read the
-> 'memstart_addr' value.
->
-> 5. Now since the PAGE_OFFSET value is also used by several user space
-> tools (for e.g. makedumpfile tool uses the same to determine the start
-> of linear region and hence to read PT_NOTE fields from /proc/kcore), I
-> am not sure how to read the randomized value of the same in the KASLR
-> enabled case.
->
-> 6. Reading the code further and adding some debug prints, it seems the
-> 'memblock_start_of_DRAM()' value is more closer to the actual start of
-> linear region rather than 'memstart_addr' and 'PAGE_OFFSET" in case of
-> KASLR enabled kernel:
->
-> [root@qualcomm-amberwing] # dmesg | grep -i "arm64_memblock_init" -A 5
->
-> [    0.000000] inside arm64_memblock_init, memstart_addr = ffff976a00000000,
-> linearstart_addr = ffffe89600200000, memblock_start_of_DRAM = ffffe89600200000,
-> PHYS_OFFSET = ffff976a00000000, PAGE_OFFSET = ffff800000000000,
-> KIMAGE_VADDR = ffff000008000000, kimage_vaddr = ffff20c2d7800000
->
-> [root@qualcomm-amberwing] # dmesg | grep -i "Virtual kernel memory layout" -A 15
-> [    0.000000] Virtual kernel memory layout:
-> [    0.000000]     modules : 0xffff000000000000 - 0xffff000008000000
-> (   128 MB)
-> [    0.000000]     vmalloc : 0xffff000008000000 - 0xffff7bdfffff0000
-> (126847 GB)
-> [    0.000000]       .text : 0xffff20c2d7880000 - 0xffff20c2d8040000
-> (  7936 KB)
-> [    0.000000]     .rodata : 0xffff20c2d8040000 - 0xffff20c2d83a0000
-> (  3456 KB)
-> [    0.000000]       .init : 0xffff20c2d83a0000 - 0xffff20c2d8750000
-> (  3776 KB)
-> [    0.000000]       .data : 0xffff20c2d8750000 - 0xffff20c2d891b200
-> (  1837 KB)
-> [    0.000000]        .bss : 0xffff20c2d891b200 - 0xffff20c2d90a5198
-> (  7720 KB)
-> [    0.000000]     fixed   : 0xffff7fdffe790000 - 0xffff7fdffec00000
-> (  4544 KB)
-> [    0.000000]     PCI I/O : 0xffff7fdffee00000 - 0xffff7fdfffe00000
-> (    16 MB)
-> [    0.000000]     vmemmap : 0xffff7fe000000000 - 0xffff800000000000
-> (   128 GB maximum)
-> [    0.000000]               0xffff7ffa25800800 - 0xffff7ffa2b800000
-> (    95 MB actual)
-> [    0.000000]     memory  : 0xffffe89600200000 - 0xffffe8ae00000000
-> ( 98302 MB)
->
-> As one can see above, the 'memblock_start_of_DRAM()' value of
-> 0xffffe89600200000 represents the start of linear region:
->
-> [    0.000000]     memory  : 0xffffe89600200000 - 0xffffe8ae00000000
-> ( 98302 MB)
->
-> So, my question is to access the start of linear region (which was
-> earlier determinable via PAGE_OFFSET macro), whether I should:
->
-> - do some back-computation for the start of linear region from the
-> 'memstart_addr' in user-space, or
-> - use a new global variable in kernel which is assigned the value of
-> memblock_start_of_DRAM()' and assign it to '/proc/kallsyms', so that
-> it can be read by user-space tools, or
-> - whether we should rather look at removing the PAGE_OFFSET usage from
-> the kernel and replace it with a global variable instead which is
-> properly updated for KASLR case as well.
->
-> Kindly share your opinions on what can be a suitable solution in this case.
->
-> Thanks for your help.
->
+Hello Simon,
 
-Hello Bhupesh,
+On Fri, May 25, 2018 at 3:32 PM, Simon Horman <horms@verge.net.au> wrote:
+> On Fri, May 25, 2018 at 04:00:33PM +0800, Dave Young wrote:
+>> On 05/24/18 at 01:08pm, Bhupesh Sharma wrote:
+>> > The kdump tool presently allows one to generate an ELF file containing
+>> > the ELF header, PT_NOTE and PT_LOAD segments (which can be analyzed
+>> > later by tools like 'readelf') of the crashdump read from memory, when
+>> > passed with an appropriate 'elfcorehdr' value(which represents the
+>> > physical address of the start of the ELF header).
+>> >
+>> > With the availability of tools like crash/gdb the analysis of the
+>> > crashdump core has become rather easy, and it makes the kdump tool
+>> > obsolete. Also the same naming convention (man page) causes confusion
+>> > when compared to similarly named distribution specific kdump
+>> > service/utilities.
+>> >
+>> > Also most distributions (like Fedora for e.g.) now support more
+>> > enhanced kdump service and utilities which can be used to analyze the
+>> > crashdump core contents better. Taking an example of the Fedora
+>> > specific kdump service and utilities, the following sequence of steps
+>> > happen when the primary kernel crashes:
+>> >
+>> > 1. If the crashkernel is loaded, then the system starts executing the
+>> > same.
+>> >
+>> > 2. When the boot process gets to the point when kdump service is
+>> > started, the crashdump core is usually copied out to disk (for e.g.
+>> > inside '/var/crash') using 'cp' command from '/proc/vmcore':
+>> >    # cp /proc/vmcore <dump-file>
+>> >
+>> > 3. Thereafter the system is rebooted back into the normal kernel.
+>> >
+>> > 4. Once back to your normal kernel, one can use the crashdump core
+>> > available on hard disk in conjunction with the previously installed
+>> > kernel (with debuginfo) to perform postmortem analysis with tools like
+>> > gdb/crash:
+>> >    # gdb vmlinux <dump-file>
+>> >
+>> > Accordingly, this patch removes the obsolete kdump tool from
+>> > 'kexec-tools'.
+>>
+>> The main issue for me is the manpage kdump.8 cause confusion to people
+>> The kdump tools is not a main problem to exist or not, but I think
+>> removing the kdump tool along with the man page looks a good cleanup :)
+>>
+>> Reviewed-by: Dave Young <dyoung@redhat.com>
+>
+> Thanks, applied.
 
-Could you explain what the relevance is of PAGE_OFFSET to userland?
-The only thing that should matter is where the actual linear mapping
-of DRAM is, and I am not sure I understand why we care about where it
-resides relative to the base of the linear region.
+Thanks for applying this patch, but it seems some files were missed
+while applying the patch.
+
+I can see that while the changes for Makefile.in where picked (please
+see <https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/>
+for details), the kdump directory is still present in the tree (please
+see <https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/tree/kdump>
+for details).
+
+Regards,
+Bhupesh
 
 _______________________________________________
 kexec mailing list
