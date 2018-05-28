@@ -1,31 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fNG2H-00080V-Q7
- for kexec@lists.infradead.org; Mon, 28 May 2018 11:09:59 +0000
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w4SB96rA014457
- for <kexec@lists.infradead.org>; Mon, 28 May 2018 07:09:44 -0400
-Received: from e06smtp15.uk.ibm.com (e06smtp15.uk.ibm.com [195.75.94.111])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2j8g6ts7rk-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 28 May 2018 07:09:43 -0400
-Received: from localhost
- by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <prudo@linux.ibm.com>;
- Mon, 28 May 2018 12:09:42 +0100
-Date: Mon, 28 May 2018 13:09:37 +0200
-From: Philipp Rudo <prudo@linux.ibm.com>
-Subject: Re: [PATCH] kexec/s390: Add support for kexec_file_load
-In-Reply-To: <20180522081104.calxgxzxel4fqh6j@verge.net.au>
-References: <20180516122718.15440-1-prudo@linux.ibm.com>
- <20180521062440.GB6036@dhcp-128-65.nay.redhat.com>
- <20180522081104.calxgxzxel4fqh6j@verge.net.au>
+ id 1fNHZL-00078T-5l
+ for kexec@lists.infradead.org; Mon, 28 May 2018 12:48:12 +0000
+Date: Mon, 28 May 2018 14:34:00 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH] kdump: add default crashkernel reserve kernel config
+ options
+Message-ID: <20180528143400.4fc68de4@ezekiel.suse.cz>
+In-Reply-To: <87d0xjwlo2.fsf@xmission.com>
+References: <20180521025337.GA4627@dhcp-128-65.nay.redhat.com>
+ <20180521120215.117d963a7619eb0d1f54bced@linux-foundation.org>
+ <20180523070641.GA1689@dhcp-128-65.nay.redhat.com>
+ <877enucqr0.fsf@xmission.com>
+ <20180523222236.5a96732e@ezekiel.suse.cz>
+ <20180524014905.GB2031@dhcp-128-65.nay.redhat.com>
+ <20180524085708.31aa311d@ezekiel.suse.cz>
+ <87k1rt3tdu.fsf@xmission.com>
+ <20180525065943.03bcb911@ezekiel.suse.cz>
+ <87d0xjwlo2.fsf@xmission.com>
 MIME-Version: 1.0
-Message-Id: <20180528130937.76e32ce0@ThinkPad>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,32 +32,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-s390@vger.kernel.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: dzickus@redhat.com, Neil Horman <nhorman@redhat.com>, Tony Luck <tony.luck@intel.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Hari Bathini <hbathini@linux.vnet.ibm.com>, Cong Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Tue, 22 May 2018 10:11:04 +0200
-Simon Horman <horms@verge.net.au> wrote:
+On Fri, 25 May 2018 15:00:13 -0500
+ebiederm@xmission.com (Eric W. Biederman) wrote:
 
-> On Mon, May 21, 2018 at 02:24:40PM +0800, Dave Young wrote:
-> > On 05/16/18 at 02:27pm, Philipp Rudo wrote:  
-> > > Since kernel 4.17-rc2 s390 supports the kexec_file_load system call. Add
-> > > the new system call to kexec-tools and provide the -s (--kexec-file-syscall)
-> > > option for s390 to support this new feature.
-> > > 
-> > > Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>  
+>[...]
+> The ultimate point is that the absolute best we can do is to run a
+> kernel in memory that we never use for anything else and then we have a
+> fighting chance of getting the system working and getting a report of
+> the failure out to somewhere.
+>
+> > Anyway, of course we would still have to keep the current method,
+> > because user pages are not always filtered. For example, a major SUSE
+> > account runs a database in user space and also inspects its data
+> > structures in case of a system crash.  
 > 
-> ...
-> 
-> > Acked-by: Dave Young <dyoung@redhat.com>  
-> 
-> Thanks, applied.
-> 
+> And I understand the memory pressures that will encourage people to use
+> user pages for extra memory to run the dump capture kernel in.  Short of
+> the presence of an IOMMU that all DMA transfers must go through I don't
+> see how those user pages could reliably be used.
 
-Sorry for the late answer, I had the last week off.
-Nevertheless thanks to both of you.
+Absolutely. I fully understand that a system which reuses first
+kernel's memory in some way must be less reliable than the current
+state. However, some people are willing to trade less reliability for
+reduced resource consumption.
 
-Philipp
+Note that we're not talking about reserving a few gigs on a single
+machine with some terabytes of memory (i.e. less than 1% of total RAM),
+rather a few hundred megs of each 4-gig VM on an s390x machine (i.e.
+about 10% of total RAM).
 
+Petr T
 
 _______________________________________________
 kexec mailing list
