@@ -1,25 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fNHZL-00078T-5l
- for kexec@lists.infradead.org; Mon, 28 May 2018 12:48:12 +0000
-Date: Mon, 28 May 2018 14:34:00 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] kdump: add default crashkernel reserve kernel config
- options
-Message-ID: <20180528143400.4fc68de4@ezekiel.suse.cz>
-In-Reply-To: <87d0xjwlo2.fsf@xmission.com>
-References: <20180521025337.GA4627@dhcp-128-65.nay.redhat.com>
- <20180521120215.117d963a7619eb0d1f54bced@linux-foundation.org>
- <20180523070641.GA1689@dhcp-128-65.nay.redhat.com>
- <877enucqr0.fsf@xmission.com>
- <20180523222236.5a96732e@ezekiel.suse.cz>
- <20180524014905.GB2031@dhcp-128-65.nay.redhat.com>
- <20180524085708.31aa311d@ezekiel.suse.cz>
- <87k1rt3tdu.fsf@xmission.com>
- <20180525065943.03bcb911@ezekiel.suse.cz>
- <87d0xjwlo2.fsf@xmission.com>
-MIME-Version: 1.0
+Received: from lgeamrelo13.lge.com ([156.147.23.53] helo=lgeamrelo11.lge.com)
+ by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fNRic-0003uj-HA
+ for kexec@lists.infradead.org; Mon, 28 May 2018 23:38:28 +0000
+From: Hoeun Ryu <hoeun.ryu@lge.com.com>
+Subject: [PATCH] printk: make printk_safe_flush safe in NMI context
+Date: Tue, 29 May 2018 08:34:14 +0900
+Message-Id: <1527550647-3953-1-git-send-email-hoeun.ryu@lge.com.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,43 +15,242 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: dzickus@redhat.com, Neil Horman <nhorman@redhat.com>, Tony Luck <tony.luck@intel.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Hari Bathini <hbathini@linux.vnet.ibm.com>, Cong Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Eric Biederman <ebiederm@xmission.com>, Nicholas Piggin <npiggin@gmail.com>, Cyril Bur <cyrilbur@gmail.com>, Ram Pai <linuxram@us.ibm.com>, Christophe Leroy <christophe.leroy@c-s.fr>, Michael Neuling <mikey@neuling.org>, Thomas Gleixner <tglx@linutronix.de>, Don Zickus <dzickus@redhat.com>, Ingo Molnar <mingo@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>, Andi Kleen <ak@linux.intel.com>, Josh Poimboeuf <jpoimboe@redhat.com>, "Liu, Changcheng" <changcheng.liu@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: kexec@lists.infradead.org, Philippe Ombredanne <pombredanne@nexb.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Hoeun Ryu <hoeun.ryu@lge.com>
 
-On Fri, 25 May 2018 15:00:13 -0500
-ebiederm@xmission.com (Eric W. Biederman) wrote:
+From: Hoeun Ryu <hoeun.ryu@lge.com>
 
->[...]
-> The ultimate point is that the absolute best we can do is to run a
-> kernel in memory that we never use for anything else and then we have a
-> fighting chance of getting the system working and getting a report of
-> the failure out to somewhere.
->
-> > Anyway, of course we would still have to keep the current method,
-> > because user pages are not always filtered. For example, a major SUSE
-> > account runs a database in user space and also inspects its data
-> > structures in case of a system crash.  
-> 
-> And I understand the memory pressures that will encourage people to use
-> user pages for extra memory to run the dump capture kernel in.  Short of
-> the presence of an IOMMU that all DMA transfers must go through I don't
-> see how those user pages could reliably be used.
+ Make printk_safe_flush() safe in NMI context. And printk_safe_flush_on_panic() is
+folded into this function. The prototype of printk_safe_flush() is changed to
+"void printk_safe_flush(bool panic)".
 
-Absolutely. I fully understand that a system which reuses first
-kernel's memory in some way must be less reliable than the current
-state. However, some people are willing to trade less reliability for
-reduced resource consumption.
+ nmi_trigger_cpumask_backtrace() can be called in NMI context. For example the
+function is called in watchdog_overflow_callback() if the flag of hardlockup
+backtrace (sysctl_hardlockup_all_cpu_backtrace) is true and
+watchdog_overflow_callback() function is called in NMI context on some
+architectures.
+ Calling printk_safe_flush() in nmi_trigger_cpumask_backtrace() eventually tries to
+lock logbuf_lock in vprintk_emit() but the logbuf_lock can be already locked in
+preempted contexts (task or irq in this case) or by other CPUs and it may cause
+deadlocks.
+ By making printk_safe_flush() safe in NMI context, the backtrace triggering CPU
+just skips flushing if the lock is not avaiable in NMI context. The messages in
+per-cpu nmi buffer of the backtrace triggering CPU can be lost if the CPU is in
+hard lockup (because irq is disabled here) but if panic() is not called. The
+flushing can be delayed by the next irq work in normal cases.
 
-Note that we're not talking about reserving a few gigs on a single
-machine with some terabytes of memory (i.e. less than 1% of total RAM),
-rather a few hundred megs of each 4-gig VM on an s390x machine (i.e.
-about 10% of total RAM).
+Suggested-by: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Signed-off-by: Hoeun Ryu <hoeun.ryu@lge.com>
+---
+ arch/powerpc/kernel/traps.c    |  2 +-
+ arch/powerpc/kernel/watchdog.c |  2 +-
+ include/linux/printk.h         |  9 ++----
+ kernel/kexec_core.c            |  2 +-
+ kernel/panic.c                 |  4 +--
+ kernel/printk/printk_safe.c    | 62 +++++++++++++++++++++---------------------
+ lib/nmi_backtrace.c            |  2 +-
+ 7 files changed, 39 insertions(+), 44 deletions(-)
 
-Petr T
+diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+index 0904492..c50749c 100644
+--- a/arch/powerpc/kernel/traps.c
++++ b/arch/powerpc/kernel/traps.c
+@@ -160,7 +160,7 @@ extern void panic_flush_kmsg_start(void)
+ 
+ extern void panic_flush_kmsg_end(void)
+ {
+-	printk_safe_flush_on_panic();
++	printk_safe_flush(true);
+ 	kmsg_dump(KMSG_DUMP_PANIC);
+ 	bust_spinlocks(0);
+ 	debug_locks_off();
+diff --git a/arch/powerpc/kernel/watchdog.c b/arch/powerpc/kernel/watchdog.c
+index 6256dc3..3c9138b 100644
+--- a/arch/powerpc/kernel/watchdog.c
++++ b/arch/powerpc/kernel/watchdog.c
+@@ -173,7 +173,7 @@ static void watchdog_smp_panic(int cpu, u64 tb)
+ 
+ 	wd_smp_unlock(&flags);
+ 
+-	printk_safe_flush();
++	printk_safe_flush(false);
+ 	/*
+ 	 * printk_safe_flush() seems to require another print
+ 	 * before anything actually goes out to console.
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index 6d7e800..495fe26 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -203,8 +203,7 @@ void dump_stack_print_info(const char *log_lvl);
+ void show_regs_print_info(const char *log_lvl);
+ extern asmlinkage void dump_stack(void) __cold;
+ extern void printk_safe_init(void);
+-extern void printk_safe_flush(void);
+-extern void printk_safe_flush_on_panic(void);
++extern void printk_safe_flush(bool panic);
+ #else
+ static inline __printf(1, 0)
+ int vprintk(const char *s, va_list args)
+@@ -273,11 +272,7 @@ static inline void printk_safe_init(void)
+ {
+ }
+ 
+-static inline void printk_safe_flush(void)
+-{
+-}
+-
+-static inline void printk_safe_flush_on_panic(void)
++static inline void printk_safe_flush(bool panic)
+ {
+ }
+ #endif
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 20fef1a..1b0876e 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -961,7 +961,7 @@ void crash_kexec(struct pt_regs *regs)
+ 	old_cpu = atomic_cmpxchg(&panic_cpu, PANIC_CPU_INVALID, this_cpu);
+ 	if (old_cpu == PANIC_CPU_INVALID) {
+ 		/* This is the 1st CPU which comes here, so go ahead. */
+-		printk_safe_flush_on_panic();
++		printk_safe_flush(true);
+ 		__crash_kexec(regs);
+ 
+ 		/*
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 42e4874..2f2c86c 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -193,7 +193,7 @@ void panic(const char *fmt, ...)
+ 	 * Bypass the panic_cpu check and call __crash_kexec directly.
+ 	 */
+ 	if (!_crash_kexec_post_notifiers) {
+-		printk_safe_flush_on_panic();
++		printk_safe_flush(true);
+ 		__crash_kexec(NULL);
+ 
+ 		/*
+@@ -218,7 +218,7 @@ void panic(const char *fmt, ...)
+ 	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+ 
+ 	/* Call flush even twice. It tries harder with a single online CPU */
+-	printk_safe_flush_on_panic();
++	printk_safe_flush(true);
+ 	kmsg_dump(KMSG_DUMP_PANIC);
+ 
+ 	/*
+diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
+index 3e3c200..35ea941 100644
+--- a/kernel/printk/printk_safe.c
++++ b/kernel/printk/printk_safe.c
+@@ -244,49 +244,49 @@ static void __printk_safe_flush(struct irq_work *work)
+ }
+ 
+ /**
+- * printk_safe_flush - flush all per-cpu nmi buffers.
++ * printk_safe_flush - flush all per-cpu nmi buffers. it can be called even in NMI
++ *                     context.
++ * @panic: true when the system goes down. It does the best effort to get NMI messages
++ *         into the main ring buffer. Note that it could try harder when there is only
++ *         one CPU online.
+  *
+- * The buffers are flushed automatically via IRQ work. This function
++ * The buffers are flushed automatically via IRQ work in normal cases. This function
+  * is useful only when someone wants to be sure that all buffers have
+  * been flushed at some point.
+  */
+-void printk_safe_flush(void)
++void printk_safe_flush(bool panic)
+ {
+ 	int cpu;
+ 
+-	for_each_possible_cpu(cpu) {
+-#ifdef CONFIG_PRINTK_NMI
+-		__printk_safe_flush(&per_cpu(nmi_print_seq, cpu).work);
+-#endif
+-		__printk_safe_flush(&per_cpu(safe_print_seq, cpu).work);
+-	}
+-}
+-
+-/**
+- * printk_safe_flush_on_panic - flush all per-cpu nmi buffers when the system
+- *	goes down.
+- *
+- * Similar to printk_safe_flush() but it can be called even in NMI context when
+- * the system goes down. It does the best effort to get NMI messages into
+- * the main ring buffer.
+- *
+- * Note that it could try harder when there is only one CPU online.
+- */
+-void printk_safe_flush_on_panic(void)
+-{
+ 	/*
+ 	 * Make sure that we could access the main ring buffer.
+-	 * Do not risk a double release when more CPUs are up.
++	 * Do not risk a double release when more CPUs are up on panic.
+ 	 */
+-	if (in_nmi() && raw_spin_is_locked(&logbuf_lock)) {
+-		if (num_online_cpus() > 1)
++	if (this_cpu_read(printk_context) & PRINTK_NMI_CONTEXT_MASK) {
++		if (panic) {
++			if (num_online_cpus() > 1)
++				return;
++
++			debug_locks_off();
++			raw_spin_lock_init(&logbuf_lock);
++		} else {
++			/*
++			 * Just avoid deadlocks here, we could loose the messages in
++			 * per-cpu nmi buffer in the case that hardlockup happens but
++			 * panic() is not called (irq_work won't work).
++			 * The flushing can be delayed by the next irq_work if flushing
++			 * is skiped here in normal cases.
++			 */
+ 			return;
+-
+-		debug_locks_off();
+-		raw_spin_lock_init(&logbuf_lock);
++		}
+ 	}
+ 
+-	printk_safe_flush();
++	for_each_possible_cpu(cpu) {
++#ifdef CONFIG_PRINTK_NMI
++		__printk_safe_flush(&per_cpu(nmi_print_seq, cpu).work);
++#endif
++		__printk_safe_flush(&per_cpu(safe_print_seq, cpu).work);
++	}
+ }
+ 
+ #ifdef CONFIG_PRINTK_NMI
+@@ -404,5 +404,5 @@ void __init printk_safe_init(void)
+ 	printk_safe_irq_ready = 1;
+ 
+ 	/* Flush pending messages that did not have scheduled IRQ works. */
+-	printk_safe_flush();
++	printk_safe_flush(false);
+ }
+diff --git a/lib/nmi_backtrace.c b/lib/nmi_backtrace.c
+index 61a6b5a..6781698 100644
+--- a/lib/nmi_backtrace.c
++++ b/lib/nmi_backtrace.c
+@@ -79,7 +79,7 @@ void nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
+ 	 * Force flush any remote buffers that might be stuck in IRQ context
+ 	 * and therefore could not run their irq_work.
+ 	 */
+-	printk_safe_flush();
++	printk_safe_flush(false);
+ 
+ 	clear_bit_unlock(0, &backtrace_flag);
+ 	put_cpu();
+-- 
+2.1.4
+
 
 _______________________________________________
 kexec mailing list
