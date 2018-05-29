@@ -1,29 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fNix4-0008Vr-Eq
+ id 1fNix4-0008WG-9o
  for kexec@lists.infradead.org; Tue, 29 May 2018 18:02:34 +0000
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w4THsZbq067078
- for <kexec@lists.infradead.org>; Tue, 29 May 2018 14:02:20 -0400
-Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2j99ecxs9f-1
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w4THsZrv080691
+ for <kexec@lists.infradead.org>; Tue, 29 May 2018 14:02:28 -0400
+Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2j98j7sp40-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 29 May 2018 14:02:19 -0400
+ for <kexec@lists.infradead.org>; Tue, 29 May 2018 14:02:27 -0400
 Received: from localhost
- by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Tue, 29 May 2018 19:02:17 +0100
+ Tue, 29 May 2018 19:02:25 +0100
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v4 2/8] kexec: add call to LSM hook in original kexec_load
- syscall
-Date: Tue, 29 May 2018 14:01:54 -0400
+Subject: [PATCH v4 5/8] ima: based on policy require signed firmware (sysfs
+ fallback)
+Date: Tue, 29 May 2018 14:01:57 -0400
 In-Reply-To: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
-Message-Id: <1527616920-5415-3-git-send-email-zohar@linux.vnet.ibm.com>
+Message-Id: <1527616920-5415-6-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,52 +37,54 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-integrity@vger.kernel.org
-Cc: Andres Rodriguez <andresx7@gmail.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
+Cc: Andres Rodriguez <andresx7@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Luis R . Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
 
-In order for LSMs and IMA-appraisal to differentiate between kexec_load
-and kexec_file_load syscalls, both the original and new syscalls must
-call an LSM hook.  This patch adds a call to security_kernel_load_data()
-in the original kexec_load syscall.
+Luis, is the security_kernel_post_read_file LSM hook in
+firmware_loading_store() still needed after this patch?  Should it be
+calling security_kernel_load_data() instead?
+
+---
+
+With an IMA policy requiring signed firmware, this patch prevents
+the sysfs fallback method of loading firmware.
 
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Luis R. Rodriguez <mcgrof@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
+Cc: Luis R. Rodriguez <mcgrof@suse.com>
 Cc: David Howells <dhowells@redhat.com>
+Cc: Matthew Garrett <mjg59@google.com>
 ---
- kernel/kexec.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ security/integrity/ima/ima_main.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index aed8fb2564b3..68559808fdfa 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -11,6 +11,7 @@
- #include <linux/capability.h>
- #include <linux/mm.h>
- #include <linux/file.h>
-+#include <linux/security.h>
- #include <linux/kexec.h>
- #include <linux/mutex.h>
- #include <linux/list.h>
-@@ -195,10 +196,17 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- static inline int kexec_load_check(unsigned long nr_segments,
- 				   unsigned long flags)
- {
-+	int result;
-+
- 	/* We only trust the superuser with rebooting the system. */
- 	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
- 		return -EPERM;
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index a565d46084c2..4a87f78098c8 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -475,8 +475,10 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
  
-+	/* Permit LSMs and IMA to fail the kexec */
-+	result = security_kernel_load_data(LOADING_KEXEC_IMAGE);
-+	if (result < 0)
-+		return result;
-+
- 	/*
- 	 * Verify we have a legal set of flags
- 	 * This leaves us room for future extensions.
+ 	if (!file && read_id == READING_FIRMWARE) {
+ 		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
+-		    (ima_appraise & IMA_APPRAISE_ENFORCE))
++		    (ima_appraise & IMA_APPRAISE_ENFORCE)) {
++			pr_err("Prevent firmware loading_store.\n");
+ 			return -EACCES;	/* INTEGRITY_UNKNOWN */
++		}
+ 		return 0;
+ 	}
+ 
+@@ -520,6 +522,12 @@ int ima_load_data(enum kernel_load_data_id id)
+ 			pr_err("impossible to appraise a kernel image without a file descriptor; try using kexec_file_load syscall.\n");
+ 			return -EACCES;	/* INTEGRITY_UNKNOWN */
+ 		}
++		break;
++	case LOADING_FIRMWARE:
++		if (ima_appraise & IMA_APPRAISE_FIRMWARE) {
++			pr_err("Prevent firmware sysfs fallback loading.\n");
++			return -EACCES;	/* INTEGRITY_UNKNOWN */
++		}
+ 	default:
+ 		break;
+ 	}
 -- 
 2.7.5
 
