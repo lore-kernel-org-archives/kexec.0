@@ -2,28 +2,28 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fNix4-0008WD-7Q
- for kexec@lists.infradead.org; Tue, 29 May 2018 18:02:31 +0000
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w4THsYpZ067044
- for <kexec@lists.infradead.org>; Tue, 29 May 2018 14:02:25 -0400
-Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2j99ecxseb-1
+ id 1fNix4-0008Vm-9l
+ for kexec@lists.infradead.org; Tue, 29 May 2018 18:02:32 +0000
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w4THsa0x138388
+ for <kexec@lists.infradead.org>; Tue, 29 May 2018 14:02:18 -0400
+Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2j9b1c9wup-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 29 May 2018 14:02:25 -0400
+ for <kexec@lists.infradead.org>; Tue, 29 May 2018 14:02:16 -0400
 Received: from localhost
- by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Tue, 29 May 2018 19:02:22 +0100
+ Tue, 29 May 2018 19:02:14 +0100
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v4 4/8] firmware: add call to LSM hook before firmware sysfs
- fallback
-Date: Tue, 29 May 2018 14:01:56 -0400
+Subject: [PATCH v4 1/8] security: define new LSM hook named
+ security_kernel_load_data
+Date: Tue, 29 May 2018 14:01:53 -0400
 In-Reply-To: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
-Message-Id: <1527616920-5415-5-git-send-email-zohar@linux.vnet.ibm.com>
+Message-Id: <1527616920-5415-2-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,51 +38,143 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-integrity@vger.kernel.org
-Cc: Andres Rodriguez <andresx7@gmail.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Luis R . Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
+Cc: Andres Rodriguez <andresx7@gmail.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Casey Schaufler <casey@schaufler-ca.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
 
-Add an LSM hook prior to allowing firmware sysfs fallback loading.
+Differentiate between the kernel reading a file from the kernel loading
+data provided by userspace.  This patch defines a new LSM hook named
+security_kernel_load_data.
 
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Luis R. Rodriguez <mcgrof@suse.com>
-Cc: David Howells <dhowells@redhat.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Luis R. Rodriguez <mcgrof@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Casey Schaufler <casey@schaufler-ca.com>
 
 Changelog v4:
-- call new LSM security_kernel_arg hook
+- Define new LSM hook named security_kernel_load_data.
+
+Changelog v3:
+- Rename security_kernel_read_file to security_kernel_read_data().
 
 Changelog v2:
-- call security_kernel_read_blob()
-- rename the READING_FIRMWARE_FALLBACK kernel_read_file_id enumeration to
-READING_FIRMWARE_FALLBACK_SYSFS.
----
- drivers/base/firmware_loader/fallback.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+- Define a generic wrapper named security_kernel_read_blob() for
+security_kernel_read_file().
 
-diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-index 358354148dec..2443bda81631 100644
---- a/drivers/base/firmware_loader/fallback.c
-+++ b/drivers/base/firmware_loader/fallback.c
-@@ -651,6 +651,8 @@ static bool fw_force_sysfs_fallback(unsigned int opt_flags)
+Changelog v1:
+- Define and call security_kexec_load(), a wrapper for
+security_kernel_read_file().
+---
+ include/linux/lsm_hooks.h |  6 ++++++
+ include/linux/security.h  | 33 +++++++++++++++++++++++++++++++++
+ security/security.c       |  5 +++++
+ 3 files changed, 44 insertions(+)
+
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index 8f1131c8dd54..a08bc2587b96 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -576,6 +576,10 @@
+  *	userspace to load a kernel module with the given name.
+  *	@kmod_name name of the module requested by the kernel
+  *	Return 0 if successful.
++ * @kernel_load_data:
++ *	Load data provided by userspace.
++ *	@id kernel load data identifier
++ *	Return 0 if permission is granted.
+  * @kernel_read_file:
+  *	Read a file specified by userspace.
+  *	@file contains the file structure pointing to the file being read
+@@ -1582,6 +1586,7 @@ union security_list_options {
+ 	int (*kernel_act_as)(struct cred *new, u32 secid);
+ 	int (*kernel_create_files_as)(struct cred *new, struct inode *inode);
+ 	int (*kernel_module_request)(char *kmod_name);
++	int (*kernel_load_data)(enum kernel_load_data_id id);
+ 	int (*kernel_read_file)(struct file *file, enum kernel_read_file_id id);
+ 	int (*kernel_post_read_file)(struct file *file, char *buf, loff_t size,
+ 				     enum kernel_read_file_id id);
+@@ -1872,6 +1877,7 @@ struct security_hook_heads {
+ 	struct hlist_head cred_getsecid;
+ 	struct hlist_head kernel_act_as;
+ 	struct hlist_head kernel_create_files_as;
++	struct hlist_head kernel_load_data;
+ 	struct hlist_head kernel_read_file;
+ 	struct hlist_head kernel_post_read_file;
+ 	struct hlist_head kernel_module_request;
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 63030c85ee19..3d54d5945755 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -159,6 +159,33 @@ extern int mmap_min_addr_handler(struct ctl_table *table, int write,
+ typedef int (*initxattrs) (struct inode *inode,
+ 			   const struct xattr *xattr_array, void *fs_data);
  
- static bool fw_run_sysfs_fallback(unsigned int opt_flags)
- {
-+	int ret;
 +
- 	if (fw_fallback_config.ignore_sysfs_fallback) {
- 		pr_info_once("Ignoring firmware sysfs fallback due to sysctl knob\n");
- 		return false;
-@@ -659,6 +661,11 @@ static bool fw_run_sysfs_fallback(unsigned int opt_flags)
- 	if ((opt_flags & FW_OPT_NOFALLBACK))
- 		return false;
++#define __kernel_load_data_id(id) \
++	id(UNKNOWN, unknown)		\
++	id(FIRMWARE, firmware)		\
++	id(MODULE, kernel-module)		\
++	id(KEXEC_IMAGE, kexec-image)		\
++	id(MAX_ID, )
++
++#define __data_id_enumify(ENUM, dummy) LOADING_ ## ENUM,
++#define __data_id_stringify(dummy, str) #str,
++
++enum kernel_load_data_id {
++	__kernel_load_data_id(__data_id_enumify)
++};
++
++static const char * const kernel_load_data_str[] = {
++	__kernel_load_data_id(__data_id_stringify)
++};
++
++static inline const char *kernel_load_data_id_str(enum kernel_load_data_id id)
++{
++	if ((unsigned)id >= LOADING_MAX_ID)
++		return kernel_load_data_str[LOADING_UNKNOWN];
++
++	return kernel_load_data_str[id];
++}
++
+ #ifdef CONFIG_SECURITY
  
-+	/* Also permit LSMs and IMA to fail firmware sysfs fallback */
-+	ret = security_kernel_load_data(LOADING_FIRMWARE);
-+	if (ret < 0)
-+		return ret;
-+
- 	return fw_force_sysfs_fallback(opt_flags);
+ struct security_mnt_opts {
+@@ -320,6 +347,7 @@ void security_cred_getsecid(const struct cred *c, u32 *secid);
+ int security_kernel_act_as(struct cred *new, u32 secid);
+ int security_kernel_create_files_as(struct cred *new, struct inode *inode);
+ int security_kernel_module_request(char *kmod_name);
++int security_kernel_load_data(enum kernel_load_data_id id);
+ int security_kernel_read_file(struct file *file, enum kernel_read_file_id id);
+ int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
+ 				   enum kernel_read_file_id id);
+@@ -909,6 +937,11 @@ static inline int security_kernel_module_request(char *kmod_name)
+ 	return 0;
  }
  
++static inline int security_kernel_load_data(enum kernel_load_data_id id)
++{
++	return 0;
++}
++
+ static inline int security_kernel_read_file(struct file *file,
+ 					    enum kernel_read_file_id id)
+ {
+diff --git a/security/security.c b/security/security.c
+index 68f46d849abe..c2de2f134854 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -1056,6 +1056,11 @@ int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
+ }
+ EXPORT_SYMBOL_GPL(security_kernel_post_read_file);
+ 
++int security_kernel_load_data(enum kernel_load_data_id id)
++{
++	return call_int_hook(kernel_load_data, 0, id);
++}
++
+ int security_task_fix_setuid(struct cred *new, const struct cred *old,
+ 			     int flags)
+ {
 -- 
 2.7.5
 
