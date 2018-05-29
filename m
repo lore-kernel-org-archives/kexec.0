@@ -1,18 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x243.google.com ([2a00:1450:400c:c09::243])
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fNgAF-0002Ja-5V
- for kexec@lists.infradead.org; Tue, 29 May 2018 15:04:01 +0000
-Received: by mail-wm0-x243.google.com with SMTP id f8-v6so41632754wmc.4
- for <kexec@lists.infradead.org>; Tue, 29 May 2018 08:03:44 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <1526018427-8710-2-git-send-email-yanjiang.jin@hxt-semitech.com>
-References: <1526018427-8710-1-git-send-email-yanjiang.jin@hxt-semitech.com>
- <1526018427-8710-2-git-send-email-yanjiang.jin@hxt-semitech.com>
-From: Pratyush Anand <pratyush.anand@gmail.com>
-Date: Tue, 29 May 2018 20:33:42 +0530
-Message-ID: <CAHM4w1=5eyi+fL0yyUF1ur4CMvjpCLrOpqSKzvtBt=Le5Kguxg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: update PHYS_OFFSET to conform to kernel
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fNix4-0008WD-7Q
+ for kexec@lists.infradead.org; Tue, 29 May 2018 18:02:31 +0000
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w4THsYpZ067044
+ for <kexec@lists.infradead.org>; Tue, 29 May 2018 14:02:25 -0400
+Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2j99ecxseb-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Tue, 29 May 2018 14:02:25 -0400
+Received: from localhost
+ by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Tue, 29 May 2018 19:02:22 +0100
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Subject: [PATCH v4 4/8] firmware: add call to LSM hook before firmware sysfs
+ fallback
+Date: Tue, 29 May 2018 14:01:56 -0400
+In-Reply-To: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
+References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
+Message-Id: <1527616920-5415-5-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,72 +32,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yanjiang Jin <yanjiang.jin@hxt-semitech.com>
-Cc: jinyanjiang@gmail.com, horms@verge.net.au, kexec@lists.infradead.org
+To: linux-integrity@vger.kernel.org
+Cc: Andres Rodriguez <andresx7@gmail.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Luis R . Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
 
-Hi Yanjiang,
+Add an LSM hook prior to allowing firmware sysfs fallback loading.
 
-On Fri, May 11, 2018 at 11:30 AM, Yanjiang Jin
-<yanjiang.jin@hxt-semitech.com> wrote:
-> Now, according to the kernel's memory.h, converting a virtual address to
-> a physical address should be done like below:
->
->         phys_addr_t __x = (phys_addr_t)(x);
-> \
->         __x & BIT(VA_BITS - 1) ? (__x & ~PAGE_OFFSET) + PHYS_OFFSET :
-> \
->                                  (__x - kimage_voffset); })
->
-> We just set PHYS_OFFSET as the start address of the first usable memory
-> block in SYSTEM RAM before, but it is defined in kernel as below:
->
-> define PHYS_OFFSET ({ VM_BUG_ON(memstart_addr & 1); memstart_addr; })
->
-> So we need to calculate PHYS_OFFSET based on some proc nodes.
->
-> Without this change, we would get a wrong vmcore.
-> Assume that we have a system as below:
->
-> Virtual kernel memory layout:
->
->  memory  : 0xffff800000200000 - 0xffff801800000000
->
-> The first iomem block:
->
->  00200000-0021ffff : reserved
->
-> But in vmcore's elf header, the corresponding memory block as below,
-> the last 2M bytes lost due to "iomem" starts from 0x200000.
->
->   Type     VirtAddr
->   LOAD     0xffff80017fe00000
->
-> If an application, for example, vmcore-dmesg, wants to access the
-> kernel symbol which is located in the last 2M address, it would
-> fail with the below error:
->
->   "No program header covering vaddr 0xffff8017ffe90000 found kexec bug?"
+Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Luis R. Rodriguez <mcgrof@suse.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
 
-I think, fix might not be correct.
+Changelog v4:
+- call new LSM security_kernel_arg hook
 
-Problem is in vmcore-dmesg and that should be fixed and not the kexec.
-See here (https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/tree/vmcore-dmesg/vmcore-dmesg.c?id=HEAD#n261).
-How symbols are extracted from vmcore.
+Changelog v2:
+- call security_kernel_read_blob()
+- rename the READING_FIRMWARE_FALLBACK kernel_read_file_id enumeration to
+READING_FIRMWARE_FALLBACK_SYSFS.
+---
+ drivers/base/firmware_loader/fallback.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-You do have "NUMBER(PHYS_OFFSET)=" information in vmcore.
+diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+index 358354148dec..2443bda81631 100644
+--- a/drivers/base/firmware_loader/fallback.c
++++ b/drivers/base/firmware_loader/fallback.c
+@@ -651,6 +651,8 @@ static bool fw_force_sysfs_fallback(unsigned int opt_flags)
+ 
+ static bool fw_run_sysfs_fallback(unsigned int opt_flags)
+ {
++	int ret;
++
+ 	if (fw_fallback_config.ignore_sysfs_fallback) {
+ 		pr_info_once("Ignoring firmware sysfs fallback due to sysctl knob\n");
+ 		return false;
+@@ -659,6 +661,11 @@ static bool fw_run_sysfs_fallback(unsigned int opt_flags)
+ 	if ((opt_flags & FW_OPT_NOFALLBACK))
+ 		return false;
+ 
++	/* Also permit LSMs and IMA to fail firmware sysfs fallback */
++	ret = security_kernel_load_data(LOADING_FIRMWARE);
++	if (ret < 0)
++		return ret;
++
+ 	return fw_force_sysfs_fallback(opt_flags);
+ }
+ 
+-- 
+2.7.5
 
-You can probably see makedumpfile code, that how to extract
-information from "NUMBER".
-
-Once you know the real PHYS_OFFSET (which could have been random if
-KASLR is enabled), you can fix the problem you are seeing.
-
-Regards
-Pratyush
 
 _______________________________________________
 kexec mailing list
