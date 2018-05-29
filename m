@@ -1,26 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fNix5-0008Vn-ML
- for kexec@lists.infradead.org; Tue, 29 May 2018 18:02:34 +0000
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w4THsX6q080573
- for <kexec@lists.infradead.org>; Tue, 29 May 2018 14:02:17 -0400
-Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2j98j7snmn-1
+ id 1fNixI-00008b-Kx
+ for kexec@lists.infradead.org; Tue, 29 May 2018 18:02:48 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w4THt3Ll095732
+ for <kexec@lists.infradead.org>; Tue, 29 May 2018 14:02:39 -0400
+Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2j98gesdc5-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 29 May 2018 14:02:17 -0400
+ for <kexec@lists.infradead.org>; Tue, 29 May 2018 14:02:37 -0400
 Received: from localhost
- by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Tue, 29 May 2018 19:02:12 +0100
+ Tue, 29 May 2018 19:02:32 +0100
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v4 0/8] kexec/firmware: support system wide policy requiring
- signatures
-Date: Tue, 29 May 2018 14:01:52 -0400
-Message-Id: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
+Subject: [PATCH v4 8/8] module: replace the existing LSM hook in init_module
+Date: Tue, 29 May 2018 14:02:00 -0400
+In-Reply-To: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
+References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
+Message-Id: <1527616920-5415-9-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,88 +37,144 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-integrity@vger.kernel.org
-Cc: Andres Rodriguez <andresx7@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
+Cc: Andres Rodriguez <andresx7@gmail.com>, Paul Moore <paul@paul-moore.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Jeff Vander Stoep <jeffv@google.com>, Casey Schaufler <casey@schaufler-ca.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
 
-Instead of adding the security_kernel_read_file LSM hook - or defining a
-wrapper for security_kernel_read_file LSM hook and adding it, or
-renaming the existing hook to security_kernel_read_data() and adding it
-- in places where the kernel isn't reading a file, this version of the
-patch set defines a new LSM hook named security_kernel_load_data().
+Both the init_module and finit_module syscalls call either directly
+or indirectly the security_kernel_read_file LSM hook.  This patch
+replaces the direct call in init_module with a call to the new
+security_kernel_load_data hook and makes the corresponding changes in
+SELinux and IMA.
 
-The new LSM hook does not replace the existing security_kernel_read_file
-LSM hook, which is still needed, but defines a new LSM hook allowing
-LSMs and IMA-appraisal the opportunity to fail loading userspace
-provided file/data.
-
-The only difference between the two LSM hooks is the LSM hook name and a
-file descriptor.  Whether this is cause enough for requiring a new LSM
-hook, is left to the security community.
-
+Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Jeff Vander Stoep <jeffv@google.com>
+Cc: Paul Moore <paul@paul-moore.com>
+Cc: Casey Schaufler <casey@schaufler-ca.com>
 ---
+ kernel/module.c                   |  2 +-
+ security/integrity/ima/ima_main.c | 24 ++++++++++--------------
+ security/selinux/hooks.c          | 26 ++++++++++++++++++++------
+ 3 files changed, 31 insertions(+), 21 deletions(-)
 
-IMA-appraisal is mostly being used in the embedded or single purpose
-closed system environments.  In these environments, both the Kconfig
-options and the userspace tools can be modified appropriately to limit
-syscalls.  For stock kernels, userspace applications need to continue to
-work with older kernels as well as with newer kernels.
-
-In this environment, the customer needs the ability to define a system
-wide IMA policy, such as requiring all kexec'ed images, firmware, kernel
-modules to be signed, without being dependent on either the Kconfig
-options or the userspace tools.[1]
-
-This patch set allows the customer to define a policy which requires
-the kexec'ed kernel images, firmware, and/or kernel modules to be
-signed.
-
-In addition, this patch set includes the ability to configure a build
-time IMA policy, which is automatically loaded at run time without
-needing to specify it on the boot command line and persists after
-loading a custom kernel policy.
-
-[1] kexec-tools suupports the new syscall based on a flag (-s).
-
-Changelog v4:
-- Define a new LSM hook named security_kernel_load_data().
-- Define kernel_load_data_id enumeration.
-- Replace the existing LSM hook in init_module syscall.
-
-Changelog v3:
-Based on James' feedback:
-- Renamed security_kernel_read_file() to security_kernel_read_data().
-- Defined new kernel_load_data_id enumeration.
-- Cleaned up ima_read_data(), replacing if's with switch.
-
-Changelog v2:
-- combined "kexec: limit kexec_load syscall" and "firmware: kernel
-signature verification" patch sets.
-- add support for build time policy.
-- defined generic security_kernel_read_blob() wrapper for
-  security_kernel_read_file(). Suggested by Luis.
-
-Mimi Zohar (8):
-  security: define new LSM hook named security_kernel_load_data
-  kexec: add call to LSM hook in original kexec_load syscall
-  ima: based on policy require signed kexec kernel images
-  firmware: add call to LSM hook before firmware sysfs fallback
-  ima: based on policy require signed firmware (sysfs fallback)
-  ima: add build time policy
-  ima: based on policy prevent loading firmware (pre-allocated buffer)
-  module: replace the existing LSM hook in init_module
-
- drivers/base/firmware_loader/fallback.c |  7 +++
- include/linux/ima.h                     |  7 +++
- include/linux/lsm_hooks.h               |  6 +++
- include/linux/security.h                | 33 ++++++++++++++
- kernel/kexec.c                          |  8 ++++
- kernel/module.c                         |  2 +-
- security/integrity/ima/Kconfig          | 58 ++++++++++++++++++++++++
- security/integrity/ima/ima.h            |  1 +
- security/integrity/ima/ima_main.c       | 79 ++++++++++++++++++++++++---------
- security/integrity/ima/ima_policy.c     | 48 ++++++++++++++++++--
- security/security.c                     | 10 +++++
- security/selinux/hooks.c                | 26 ++++++++---
- 12 files changed, 255 insertions(+), 30 deletions(-)
+diff --git a/kernel/module.c b/kernel/module.c
+index ce8066b88178..b97c642b5b4d 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -2879,7 +2879,7 @@ static int copy_module_from_user(const void __user *umod, unsigned long len,
+ 	if (info->len < sizeof(*(info->hdr)))
+ 		return -ENOEXEC;
+ 
+-	err = security_kernel_read_file(NULL, READING_MODULE);
++	err = security_kernel_load_data(LOADING_MODULE);
+ 	if (err)
+ 		return err;
+ 
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 3dae605a1604..0ff1d8152f6e 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -441,17 +441,6 @@ static int read_idmap[READING_MAX_ID] = {
+  */
+ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
+ {
+-	bool sig_enforce = is_module_sig_enforced();
+-
+-	if (!file && read_id == READING_MODULE) {
+-		if (!sig_enforce && (ima_appraise & IMA_APPRAISE_MODULES) &&
+-		    (ima_appraise & IMA_APPRAISE_ENFORCE)) {
+-			pr_err("impossible to appraise a module without a file descriptor. sig_enforce kernel parameter might help\n");
+-			return -EACCES;	/* INTEGRITY_UNKNOWN */
+-		}
+-		return 0;	/* We rely on module signature checking */
+-	}
+-
+ 	if (read_id == READING_FIRMWARE_PREALLOC_BUFFER) {
+ 		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
+ 		    (ima_appraise & IMA_APPRAISE_ENFORCE)) {
+@@ -490,9 +479,6 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
+ 		return 0;
+ 	}
+ 
+-	if (!file && read_id == READING_MODULE) /* MODULE_SIG_FORCE enabled */
+-		return 0;
+-
+ 	/* permit signed certs */
+ 	if (!file && read_id == READING_X509_CERTIFICATE)
+ 		return 0;
+@@ -521,6 +507,8 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
+  */
+ int ima_load_data(enum kernel_load_data_id id)
+ {
++	bool sig_enforce;
++
+ 	if ((ima_appraise & IMA_APPRAISE_ENFORCE) != IMA_APPRAISE_ENFORCE)
+ 		return 0;
+ 
+@@ -536,6 +524,14 @@ int ima_load_data(enum kernel_load_data_id id)
+ 			pr_err("Prevent firmware sysfs fallback loading.\n");
+ 			return -EACCES;	/* INTEGRITY_UNKNOWN */
+ 		}
++		break;
++	case LOADING_MODULE:
++		sig_enforce = is_module_sig_enforced();
++
++		if (!sig_enforce && (ima_appraise & IMA_APPRAISE_MODULES)) {
++			pr_err("impossible to appraise a module without a file descriptor. sig_enforce kernel parameter might help\n");
++			return -EACCES;	/* INTEGRITY_UNKNOWN */
++		}
+ 	default:
+ 		break;
+ 	}
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 02ebd1585eaf..e02186470fc5 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -4018,12 +4018,6 @@ static int selinux_kernel_module_from_file(struct file *file)
+ 	u32 sid = current_sid();
+ 	int rc;
+ 
+-	/* init_module */
+-	if (file == NULL)
+-		return avc_has_perm(&selinux_state,
+-				    sid, sid, SECCLASS_SYSTEM,
+-					SYSTEM__MODULE_LOAD, NULL);
+-
+ 	/* finit_module */
+ 
+ 	ad.type = LSM_AUDIT_DATA_FILE;
+@@ -4043,6 +4037,25 @@ static int selinux_kernel_module_from_file(struct file *file)
+ 				SYSTEM__MODULE_LOAD, &ad);
+ }
+ 
++static int selinux_kernel_load_data(enum kernel_load_data_id id)
++{
++	u32 sid;
++	int rc = 0;
++
++	switch (id) {
++	case LOADING_MODULE:
++		sid = current_sid();
++
++		/* init_module */
++		return avc_has_perm(&selinux_state, sid, sid, SECCLASS_SYSTEM,
++				    SYSTEM__MODULE_LOAD, NULL);
++	default:
++		break;
++	}
++
++	return rc;
++}
++
+ static int selinux_kernel_read_file(struct file *file,
+ 				    enum kernel_read_file_id id)
+ {
+@@ -6950,6 +6963,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
+ 	LSM_HOOK_INIT(kernel_act_as, selinux_kernel_act_as),
+ 	LSM_HOOK_INIT(kernel_create_files_as, selinux_kernel_create_files_as),
+ 	LSM_HOOK_INIT(kernel_module_request, selinux_kernel_module_request),
++	LSM_HOOK_INIT(kernel_load_data, selinux_kernel_load_data),
+ 	LSM_HOOK_INIT(kernel_read_file, selinux_kernel_read_file),
+ 	LSM_HOOK_INIT(task_setpgid, selinux_task_setpgid),
+ 	LSM_HOOK_INIT(task_getpgid, selinux_task_getpgid),
 -- 
 2.7.5
 
