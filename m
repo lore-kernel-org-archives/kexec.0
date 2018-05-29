@@ -1,27 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fNdbd-0005xp-0j
- for kexec@lists.infradead.org; Tue, 29 May 2018 12:22:01 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20180521025337.GA4627@dhcp-128-65.nay.redhat.com>
- <20180521120215.117d963a7619eb0d1f54bced@linux-foundation.org>
- <20180523070641.GA1689@dhcp-128-65.nay.redhat.com>
- <877enucqr0.fsf@xmission.com>
- <20180523222236.5a96732e@ezekiel.suse.cz>
- <20180524014905.GB2031@dhcp-128-65.nay.redhat.com>
- <20180524085708.31aa311d@ezekiel.suse.cz>
- <87k1rt3tdu.fsf@xmission.com>
- <20180525065943.03bcb911@ezekiel.suse.cz>
- <87d0xjwlo2.fsf@xmission.com>
- <20180528143400.4fc68de4@ezekiel.suse.cz>
-Date: Tue, 29 May 2018 07:19:16 -0500
-In-Reply-To: <20180528143400.4fc68de4@ezekiel.suse.cz> (Petr Tesarik's message
- of "Mon, 28 May 2018 14:34:00 +0200")
-Message-ID: <874liqu01n.fsf@xmission.com>
+Received: from mail-wm0-x243.google.com ([2a00:1450:400c:c09::243])
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fNgAF-0002Ja-5V
+ for kexec@lists.infradead.org; Tue, 29 May 2018 15:04:01 +0000
+Received: by mail-wm0-x243.google.com with SMTP id f8-v6so41632754wmc.4
+ for <kexec@lists.infradead.org>; Tue, 29 May 2018 08:03:44 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [PATCH] kdump: add default crashkernel reserve kernel config
- options
+In-Reply-To: <1526018427-8710-2-git-send-email-yanjiang.jin@hxt-semitech.com>
+References: <1526018427-8710-1-git-send-email-yanjiang.jin@hxt-semitech.com>
+ <1526018427-8710-2-git-send-email-yanjiang.jin@hxt-semitech.com>
+From: Pratyush Anand <pratyush.anand@gmail.com>
+Date: Tue, 29 May 2018 20:33:42 +0530
+Message-ID: <CAHM4w1=5eyi+fL0yyUF1ur4CMvjpCLrOpqSKzvtBt=Le5Kguxg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: update PHYS_OFFSET to conform to kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,57 +25,68 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: dzickus@redhat.com, Neil Horman <nhorman@redhat.com>, Tony Luck <tony.luck@intel.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Hari Bathini <hbathini@linux.vnet.ibm.com>, Cong Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Yanjiang Jin <yanjiang.jin@hxt-semitech.com>
+Cc: jinyanjiang@gmail.com, horms@verge.net.au, kexec@lists.infradead.org
 
-Petr Tesarik <ptesarik@suse.cz> writes:
+Hi Yanjiang,
 
-> On Fri, 25 May 2018 15:00:13 -0500
-> ebiederm@xmission.com (Eric W. Biederman) wrote:
+On Fri, May 11, 2018 at 11:30 AM, Yanjiang Jin
+<yanjiang.jin@hxt-semitech.com> wrote:
+> Now, according to the kernel's memory.h, converting a virtual address to
+> a physical address should be done like below:
 >
->>[...]
->> The ultimate point is that the absolute best we can do is to run a
->> kernel in memory that we never use for anything else and then we have a
->> fighting chance of getting the system working and getting a report of
->> the failure out to somewhere.
->>
->> > Anyway, of course we would still have to keep the current method,
->> > because user pages are not always filtered. For example, a major SUSE
->> > account runs a database in user space and also inspects its data
->> > structures in case of a system crash.  
->> 
->> And I understand the memory pressures that will encourage people to use
->> user pages for extra memory to run the dump capture kernel in.  Short of
->> the presence of an IOMMU that all DMA transfers must go through I don't
->> see how those user pages could reliably be used.
+>         phys_addr_t __x = (phys_addr_t)(x);
+> \
+>         __x & BIT(VA_BITS - 1) ? (__x & ~PAGE_OFFSET) + PHYS_OFFSET :
+> \
+>                                  (__x - kimage_voffset); })
 >
-> Absolutely. I fully understand that a system which reuses first
-> kernel's memory in some way must be less reliable than the current
-> state. However, some people are willing to trade less reliability for
-> reduced resource consumption.
+> We just set PHYS_OFFSET as the start address of the first usable memory
+> block in SYSTEM RAM before, but it is defined in kernel as below:
+>
+> define PHYS_OFFSET ({ VM_BUG_ON(memstart_addr & 1); memstart_addr; })
+>
+> So we need to calculate PHYS_OFFSET based on some proc nodes.
+>
+> Without this change, we would get a wrong vmcore.
+> Assume that we have a system as below:
+>
+> Virtual kernel memory layout:
+>
+>  memory  : 0xffff800000200000 - 0xffff801800000000
+>
+> The first iomem block:
+>
+>  00200000-0021ffff : reserved
+>
+> But in vmcore's elf header, the corresponding memory block as below,
+> the last 2M bytes lost due to "iomem" starts from 0x200000.
+>
+>   Type     VirtAddr
+>   LOAD     0xffff80017fe00000
+>
+> If an application, for example, vmcore-dmesg, wants to access the
+> kernel symbol which is located in the last 2M address, it would
+> fail with the below error:
+>
+>   "No program header covering vaddr 0xffff8017ffe90000 found kexec bug?"
 
-That is the kind of tradeoff that can easily result in the crash kernel
-eating your data.  I will nack any patch that I see that goes anywhere
-near that kind of solution for the kernel that takes the crash.
+I think, fix might not be correct.
 
-> Note that we're not talking about reserving a few gigs on a single
-> machine with some terabytes of memory (i.e. less than 1% of total RAM),
-> rather a few hundred megs of each 4-gig VM on an s390x machine (i.e.
-> about 10% of total RAM).
+Problem is in vmcore-dmesg and that should be fixed and not the kexec.
+See here (https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/tree/vmcore-dmesg/vmcore-dmesg.c?id=HEAD#n261).
+How symbols are extracted from vmcore.
 
-You should be able to get away with tens of gigs instead of hundreds.
-The biggest reservation I remember anyone ever making is about 100Meg.
-And that was a general purpose configuration not tuned at all.  With the
-maximum size dealing with large machines.
+You do have "NUMBER(PHYS_OFFSET)=" information in vmcore.
 
-kexec on panic grew up on machines with 4Gig or less as it arrived
-before everyone was 64bit.  It should be possible to tune your crash
-dump taking kernel so things run in a reasonable amount of memory for
-the configuration you are talking about.  The usual trade-off is time
-vs generality.  Usually I simply have not seen people with non-embedded
-configurations take the time to tune things.
+You can probably see makedumpfile code, that how to extract
+information from "NUMBER".
 
-Eric
+Once you know the real PHYS_OFFSET (which could have been random if
+KASLR is enabled), you can fix the problem you are seeing.
+
+Regards
+Pratyush
 
 _______________________________________________
 kexec mailing list
