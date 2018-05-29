@@ -1,19 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-x244.google.com ([2a00:1450:4010:c07::244])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fNnHk-0002jD-HA
- for kexec@lists.infradead.org; Tue, 29 May 2018 22:40:10 +0000
-Received: by mail-lf0-x244.google.com with SMTP id g25-v6so1211845lfb.11
- for <kexec@lists.infradead.org>; Tue, 29 May 2018 15:39:56 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <1527616920-5415-9-git-send-email-zohar@linux.vnet.ibm.com>
-References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1527616920-5415-9-git-send-email-zohar@linux.vnet.ibm.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 29 May 2018 18:39:54 -0400
-Message-ID: <CAHC9VhQL+CsqKL83fSZhjEZVSjKKfmLULvehXZ8SZhtK5xzLMQ@mail.gmail.com>
+ id 1fNnp1-000878-2F
+ for kexec@lists.infradead.org; Tue, 29 May 2018 23:14:32 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w4TNDiRv092662
+ for <kexec@lists.infradead.org>; Tue, 29 May 2018 19:14:16 -0400
+Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2j9ewn2qt0-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Tue, 29 May 2018 19:14:15 -0400
+Received: from localhost
+ by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Wed, 30 May 2018 00:14:14 +0100
 Subject: Re: [PATCH v4 8/8] module: replace the existing LSM hook in
  init_module
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Tue, 29 May 2018 19:14:05 -0400
+In-Reply-To: <CAHC9VhQL+CsqKL83fSZhjEZVSjKKfmLULvehXZ8SZhtK5xzLMQ@mail.gmail.com>
+References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1527616920-5415-9-git-send-email-zohar@linux.vnet.ibm.com>
+ <CAHC9VhQL+CsqKL83fSZhjEZVSjKKfmLULvehXZ8SZhtK5xzLMQ@mail.gmail.com>
+Mime-Version: 1.0
+Message-Id: <1527635645.3534.39.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,166 +35,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Jeff Vander Stoep <jeffv@google.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity@vger.kernel.org, Andres Rodriguez <andresx7@gmail.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R
+ . Rodriguez" <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Jeff Vander Stoep <jeffv@google.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity@vger.kernel.org, Andres Rodriguez <andresx7@gmail.com>
 
-On Tue, May 29, 2018 at 2:02 PM, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
-> Both the init_module and finit_module syscalls call either directly
-> or indirectly the security_kernel_read_file LSM hook.  This patch
-> replaces the direct call in init_module with a call to the new
-> security_kernel_load_data hook and makes the corresponding changes in
-> SELinux and IMA.
->
-> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-> Cc: Jeff Vander Stoep <jeffv@google.com>
-> Cc: Paul Moore <paul@paul-moore.com>
-> Cc: Casey Schaufler <casey@schaufler-ca.com>
-> ---
->  kernel/module.c                   |  2 +-
->  security/integrity/ima/ima_main.c | 24 ++++++++++--------------
->  security/selinux/hooks.c          | 26 ++++++++++++++++++++------
->  3 files changed, 31 insertions(+), 21 deletions(-)
->
-> diff --git a/kernel/module.c b/kernel/module.c
-> index ce8066b88178..b97c642b5b4d 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -2879,7 +2879,7 @@ static int copy_module_from_user(const void __user *umod, unsigned long len,
->         if (info->len < sizeof(*(info->hdr)))
->                 return -ENOEXEC;
->
-> -       err = security_kernel_read_file(NULL, READING_MODULE);
-> +       err = security_kernel_load_data(LOADING_MODULE);
->         if (err)
->                 return err;
->
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index 3dae605a1604..0ff1d8152f6e 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -441,17 +441,6 @@ static int read_idmap[READING_MAX_ID] = {
->   */
->  int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
->  {
-> -       bool sig_enforce = is_module_sig_enforced();
-> -
-> -       if (!file && read_id == READING_MODULE) {
-> -               if (!sig_enforce && (ima_appraise & IMA_APPRAISE_MODULES) &&
-> -                   (ima_appraise & IMA_APPRAISE_ENFORCE)) {
-> -                       pr_err("impossible to appraise a module without a file descriptor. sig_enforce kernel parameter might help\n");
-> -                       return -EACCES; /* INTEGRITY_UNKNOWN */
-> -               }
-> -               return 0;       /* We rely on module signature checking */
-> -       }
-> -
->         if (read_id == READING_FIRMWARE_PREALLOC_BUFFER) {
->                 if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
->                     (ima_appraise & IMA_APPRAISE_ENFORCE)) {
-> @@ -490,9 +479,6 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
->                 return 0;
->         }
->
-> -       if (!file && read_id == READING_MODULE) /* MODULE_SIG_FORCE enabled */
-> -               return 0;
-> -
->         /* permit signed certs */
->         if (!file && read_id == READING_X509_CERTIFICATE)
->                 return 0;
-> @@ -521,6 +507,8 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
->   */
->  int ima_load_data(enum kernel_load_data_id id)
->  {
-> +       bool sig_enforce;
-> +
->         if ((ima_appraise & IMA_APPRAISE_ENFORCE) != IMA_APPRAISE_ENFORCE)
->                 return 0;
->
-> @@ -536,6 +524,14 @@ int ima_load_data(enum kernel_load_data_id id)
->                         pr_err("Prevent firmware sysfs fallback loading.\n");
->                         return -EACCES; /* INTEGRITY_UNKNOWN */
->                 }
-> +               break;
-> +       case LOADING_MODULE:
-> +               sig_enforce = is_module_sig_enforced();
-> +
-> +               if (!sig_enforce && (ima_appraise & IMA_APPRAISE_MODULES)) {
-> +                       pr_err("impossible to appraise a module without a file descriptor. sig_enforce kernel parameter might help\n");
-> +                       return -EACCES; /* INTEGRITY_UNKNOWN */
-> +               }
->         default:
->                 break;
->         }
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 02ebd1585eaf..e02186470fc5 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -4018,12 +4018,6 @@ static int selinux_kernel_module_from_file(struct file *file)
->         u32 sid = current_sid();
->         int rc;
->
-> -       /* init_module */
-> -       if (file == NULL)
-> -               return avc_has_perm(&selinux_state,
-> -                                   sid, sid, SECCLASS_SYSTEM,
-> -                                       SYSTEM__MODULE_LOAD, NULL);
-> -
->         /* finit_module */
->
->         ad.type = LSM_AUDIT_DATA_FILE;
-> @@ -4043,6 +4037,25 @@ static int selinux_kernel_module_from_file(struct file *file)
->                                 SYSTEM__MODULE_LOAD, &ad);
->  }
->
-> +static int selinux_kernel_load_data(enum kernel_load_data_id id)
-> +{
-> +       u32 sid;
-> +       int rc = 0;
-> +
-> +       switch (id) {
-> +       case LOADING_MODULE:
-> +               sid = current_sid();
-> +
-> +               /* init_module */
-> +               return avc_has_perm(&selinux_state, sid, sid, SECCLASS_SYSTEM,
-> +                                   SYSTEM__MODULE_LOAD, NULL);
-> +       default:
-> +               break;
-> +       }
-> +
-> +       return rc;
-> +}
-
-I'm not a fan of the duplication here.  If we must have a new LSM hook
-for this, can we at least have it call
-selinux_kernel_module_from_file() so we have all the kernel module
-loading logic/controls in one function?  Yes, I understand there are
-differences between init_module() and finit_module() but I like
-handling them both in one function as we do today.
-
->  static int selinux_kernel_read_file(struct file *file,
->                                     enum kernel_read_file_id id)
->  {
-> @@ -6950,6 +6963,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
->         LSM_HOOK_INIT(kernel_act_as, selinux_kernel_act_as),
->         LSM_HOOK_INIT(kernel_create_files_as, selinux_kernel_create_files_as),
->         LSM_HOOK_INIT(kernel_module_request, selinux_kernel_module_request),
-> +       LSM_HOOK_INIT(kernel_load_data, selinux_kernel_load_data),
->         LSM_HOOK_INIT(kernel_read_file, selinux_kernel_read_file),
->         LSM_HOOK_INIT(task_setpgid, selinux_task_setpgid),
->         LSM_HOOK_INIT(task_getpgid, selinux_task_getpgid),
-> --
-> 2.7.5
->
-
--- 
-paul moore
-www.paul-moore.com
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCAyMDE4LTA1LTI5IGF0IDE4OjM5IC0wNDAwLCBQYXVsIE1vb3JlIHdyb3RlOgpbLi4u
+XQo+ID4gQEAgLTQwNDMsNiArNDAzNywyNSBAQCBzdGF0aWMgaW50IHNlbGludXhfa2VybmVsX21v
+ZHVsZV9mcm9tX2ZpbGUoc3RydWN0IGZpbGUgKmZpbGUpCj4gPiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIFNZU1RFTV9fTU9EVUxFX0xPQUQsICZhZCk7Cj4gPiAgfQo+ID4KPiA+ICtz
+dGF0aWMgaW50IHNlbGludXhfa2VybmVsX2xvYWRfZGF0YShlbnVtIGtlcm5lbF9sb2FkX2RhdGFf
+aWQgaWQpCj4gPiArewo+ID4gKyAgICAgICB1MzIgc2lkOwo+ID4gKyAgICAgICBpbnQgcmMgPSAw
+Owo+ID4gKwo+ID4gKyAgICAgICBzd2l0Y2ggKGlkKSB7Cj4gPiArICAgICAgIGNhc2UgTE9BRElO
+R19NT0RVTEU6Cj4gPiArICAgICAgICAgICAgICAgc2lkID0gY3VycmVudF9zaWQoKTsKPiA+ICsK
+PiA+ICsgICAgICAgICAgICAgICAvKiBpbml0X21vZHVsZSAqLwo+ID4gKyAgICAgICAgICAgICAg
+IHJldHVybiBhdmNfaGFzX3Blcm0oJnNlbGludXhfc3RhdGUsIHNpZCwgc2lkLCBTRUNDTEFTU19T
+WVNURU0sCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBTWVNURU1fX01P
+RFVMRV9MT0FELCBOVUxMKTsKPiA+ICsgICAgICAgZGVmYXVsdDoKPiA+ICsgICAgICAgICAgICAg
+ICBicmVhazsKPiA+ICsgICAgICAgfQo+ID4gKwo+ID4gKyAgICAgICByZXR1cm4gcmM7Cj4gPiAr
+fQo+IAo+IEknbSBub3QgYSBmYW4gb2YgdGhlIGR1cGxpY2F0aW9uIGhlcmUuICBJZiB3ZSBtdXN0
+IGhhdmUgYSBuZXcgTFNNIGhvb2sKPiBmb3IgdGhpcywgY2FuIHdlIGF0IGxlYXN0IGhhdmUgaXQg
+Y2FsbAo+IHNlbGludXhfa2VybmVsX21vZHVsZV9mcm9tX2ZpbGUoKSBzbyB3ZSBoYXZlIGFsbCB0
+aGUga2VybmVsIG1vZHVsZQo+IGxvYWRpbmcgbG9naWMvY29udHJvbHMgaW4gb25lIGZ1bmN0aW9u
+PyAgWWVzLCBJIHVuZGVyc3RhbmQgdGhlcmUgYXJlCj4gZGlmZmVyZW5jZXMgYmV0d2VlbiBpbml0
+X21vZHVsZSgpIGFuZCBmaW5pdF9tb2R1bGUoKSBidXQgSSBsaWtlCj4gaGFuZGxpbmcgdGhlbSBi
+b3RoIGluIG9uZSBmdW5jdGlvbiBhcyB3ZSBkbyB0b2RheS4KClRoZXJlJ3Mgc29tZSBkaXNhZ3Jl
+ZW1lbnQgYXMgdG8gd2hldGhlciB3ZSByZWFsbHkgbmVlZCB0d28gTFNNIGhvb2tzLgrCoFRoaXMg
+c291bmRzIGxpa2UgeW91IHdvdWxkIHByZWZlciBhIHNpbmdsZSBMU00gaG9vaywgbm90IHRoZSB0
+d28gdGhhdAp0aGlzIHBhdGNoIHNldCBpbnRyb2R1Y2VzLgoKV2UgbmVlZCB0byBjb21lIHRvIHNv
+bWUgY29uc2Vuc3VzLiDCoChDb21tZW50cyBhcHByZWNpYXRlZCBpbiAwLzguKQoKTWltaQoKPiAK
+PiA+ICBzdGF0aWMgaW50IHNlbGludXhfa2VybmVsX3JlYWRfZmlsZShzdHJ1Y3QgZmlsZSAqZmls
+ZSwKPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVudW0ga2VybmVsX3Jl
+YWRfZmlsZV9pZCBpZCkKPiA+ICB7Cj4gPiBAQCAtNjk1MCw2ICs2OTYzLDcgQEAgc3RhdGljIHN0
+cnVjdCBzZWN1cml0eV9ob29rX2xpc3Qgc2VsaW51eF9ob29rc1tdIF9fbHNtX3JvX2FmdGVyX2lu
+aXQgPSB7Cj4gPiAgICAgICAgIExTTV9IT09LX0lOSVQoa2VybmVsX2FjdF9hcywgc2VsaW51eF9r
+ZXJuZWxfYWN0X2FzKSwKPiA+ICAgICAgICAgTFNNX0hPT0tfSU5JVChrZXJuZWxfY3JlYXRlX2Zp
+bGVzX2FzLCBzZWxpbnV4X2tlcm5lbF9jcmVhdGVfZmlsZXNfYXMpLAo+ID4gICAgICAgICBMU01f
+SE9PS19JTklUKGtlcm5lbF9tb2R1bGVfcmVxdWVzdCwgc2VsaW51eF9rZXJuZWxfbW9kdWxlX3Jl
+cXVlc3QpLAo+ID4gKyAgICAgICBMU01fSE9PS19JTklUKGtlcm5lbF9sb2FkX2RhdGEsIHNlbGlu
+dXhfa2VybmVsX2xvYWRfZGF0YSksCj4gPiAgICAgICAgIExTTV9IT09LX0lOSVQoa2VybmVsX3Jl
+YWRfZmlsZSwgc2VsaW51eF9rZXJuZWxfcmVhZF9maWxlKSwKPiA+ICAgICAgICAgTFNNX0hPT0tf
+SU5JVCh0YXNrX3NldHBnaWQsIHNlbGludXhfdGFza19zZXRwZ2lkKSwKPiA+ICAgICAgICAgTFNN
+X0hPT0tfSU5JVCh0YXNrX2dldHBnaWQsIHNlbGludXhfdGFza19nZXRwZ2lkKSwKPiA+IC0tCj4g
+PiAyLjcuNQo+ID4KPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
