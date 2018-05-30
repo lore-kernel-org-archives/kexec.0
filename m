@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [223.203.96.7] (helo=barracuda.hxt-semitech.com)
+Received: from mail-wm0-x244.google.com ([2a00:1450:400c:c09::244])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fNrPS-0002qw-3L
- for kexec@lists.infradead.org; Wed, 30 May 2018 03:04:29 +0000
-From: "Jin, Yanjiang" <yanjiang.jin@hxt-semitech.com>
-Subject: RE: [PATCH] arm64: update PHYS_OFFSET to conform to kernel
-Date: Wed, 30 May 2018 03:03:40 +0000
-Message-ID: <77f40316d72044a196f5e9bedfc1627f@HXTBJIDCEMVIW02.hxtcorp.net>
+ id 1fNsXD-0006Fl-3d
+ for kexec@lists.infradead.org; Wed, 30 May 2018 04:16:32 +0000
+Received: by mail-wm0-x244.google.com with SMTP id f8-v6so45118756wmc.4
+ for <kexec@lists.infradead.org>; Tue, 29 May 2018 21:16:15 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <77f40316d72044a196f5e9bedfc1627f@HXTBJIDCEMVIW02.hxtcorp.net>
 References: <1526018427-8710-1-git-send-email-yanjiang.jin@hxt-semitech.com>
  <1526018427-8710-2-git-send-email-yanjiang.jin@hxt-semitech.com>
  <CAHM4w1=5eyi+fL0yyUF1ur4CMvjpCLrOpqSKzvtBt=Le5Kguxg@mail.gmail.com>
-In-Reply-To: <CAHM4w1=5eyi+fL0yyUF1ur4CMvjpCLrOpqSKzvtBt=Le5Kguxg@mail.gmail.com>
-Content-Language: en-US
-MIME-Version: 1.0
+ <77f40316d72044a196f5e9bedfc1627f@HXTBJIDCEMVIW02.hxtcorp.net>
+From: Pratyush Anand <pratyush.anand@gmail.com>
+Date: Wed, 30 May 2018 09:46:13 +0530
+Message-ID: <CAHM4w1nrKWMPMdgP1Uke9WYEp0WrgrJgAaV-oUWMGQMfEAOGfA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: update PHYS_OFFSET to conform to kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,81 +23,104 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <pratyush.anand@gmail.com>
+To: "Jin, Yanjiang" <yanjiang.jin@hxt-semitech.com>
 Cc: "jinyanjiang@gmail.com" <jinyanjiang@gmail.com>, "horms@verge.net.au" <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-SGkgUHJhdHl1c2gsDQoNClRoYW5rcyBmb3IgeW91ciBoZWxwISBidXQgcGxlYXNlIHNlZSBteSBy
-ZXBseSBpbmxpbmUuDQoNClJlZ2FyZHMhDQpZYW5qaWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQo+IEZyb206IFByYXR5dXNoIEFuYW5kIFttYWlsdG86cHJhdHl1c2guYW5hbmRA
-Z21haWwuY29tXQ0KPiBTZW50OiAyMDE45bm0NeaciDI55pelIDIzOjA0DQo+IFRvOiBKaW4sIFlh
-bmppYW5nIDx5YW5qaWFuZy5qaW5AaHh0LXNlbWl0ZWNoLmNvbT4NCj4gQ2M6IGtleGVjQGxpc3Rz
-LmluZnJhZGVhZC5vcmc7IGppbnlhbmppYW5nQGdtYWlsLmNvbTsgaG9ybXNAdmVyZ2UubmV0LmF1
-DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGFybTY0OiB1cGRhdGUgUEhZU19PRkZTRVQgdG8gY29u
-Zm9ybSB0byBrZXJuZWwNCj4NCj4gSGkgWWFuamlhbmcsDQo+DQo+IE9uIEZyaSwgTWF5IDExLCAy
-MDE4IGF0IDExOjMwIEFNLCBZYW5qaWFuZyBKaW4gPHlhbmppYW5nLmppbkBoeHQtc2VtaXRlY2gu
-Y29tPg0KPiB3cm90ZToNCj4gPiBOb3csIGFjY29yZGluZyB0byB0aGUga2VybmVsJ3MgbWVtb3J5
-LmgsIGNvbnZlcnRpbmcgYSB2aXJ0dWFsIGFkZHJlc3MNCj4gPiB0byBhIHBoeXNpY2FsIGFkZHJl
-c3Mgc2hvdWxkIGJlIGRvbmUgbGlrZSBiZWxvdzoNCj4gPg0KPiA+ICAgICAgICAgcGh5c19hZGRy
-X3QgX194ID0gKHBoeXNfYWRkcl90KSh4KTsgXA0KPiA+ICAgICAgICAgX194ICYgQklUKFZBX0JJ
-VFMgLSAxKSA/IChfX3ggJiB+UEFHRV9PRkZTRVQpICsgUEhZU19PRkZTRVQgOg0KPiA+IFwNCj4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoX194IC0ga2ltYWdlX3ZvZmZzZXQp
-OyB9KQ0KPiA+DQo+ID4gV2UganVzdCBzZXQgUEhZU19PRkZTRVQgYXMgdGhlIHN0YXJ0IGFkZHJl
-c3Mgb2YgdGhlIGZpcnN0IHVzYWJsZQ0KPiA+IG1lbW9yeSBibG9jayBpbiBTWVNURU0gUkFNIGJl
-Zm9yZSwgYnV0IGl0IGlzIGRlZmluZWQgaW4ga2VybmVsIGFzIGJlbG93Og0KPiA+DQo+ID4gZGVm
-aW5lIFBIWVNfT0ZGU0VUICh7IFZNX0JVR19PTihtZW1zdGFydF9hZGRyICYgMSk7IG1lbXN0YXJ0
-X2FkZHI7IH0pDQo+ID4NCj4gPiBTbyB3ZSBuZWVkIHRvIGNhbGN1bGF0ZSBQSFlTX09GRlNFVCBi
-YXNlZCBvbiBzb21lIHByb2Mgbm9kZXMuDQo+ID4NCj4gPiBXaXRob3V0IHRoaXMgY2hhbmdlLCB3
-ZSB3b3VsZCBnZXQgYSB3cm9uZyB2bWNvcmUuDQo+ID4gQXNzdW1lIHRoYXQgd2UgaGF2ZSBhIHN5
-c3RlbSBhcyBiZWxvdzoNCj4gPg0KPiA+IFZpcnR1YWwga2VybmVsIG1lbW9yeSBsYXlvdXQ6DQo+
-ID4NCj4gPiAgbWVtb3J5ICA6IDB4ZmZmZjgwMDAwMDIwMDAwMCAtIDB4ZmZmZjgwMTgwMDAwMDAw
-MA0KPiA+DQo+ID4gVGhlIGZpcnN0IGlvbWVtIGJsb2NrOg0KPiA+DQo+ID4gIDAwMjAwMDAwLTAw
-MjFmZmZmIDogcmVzZXJ2ZWQNCj4gPg0KPiA+IEJ1dCBpbiB2bWNvcmUncyBlbGYgaGVhZGVyLCB0
-aGUgY29ycmVzcG9uZGluZyBtZW1vcnkgYmxvY2sgYXMgYmVsb3csDQo+ID4gdGhlIGxhc3QgMk0g
-Ynl0ZXMgbG9zdCBkdWUgdG8gImlvbWVtIiBzdGFydHMgZnJvbSAweDIwMDAwMC4NCj4gPg0KPiA+
-ICAgVHlwZSAgICAgVmlydEFkZHINCj4gPiAgIExPQUQgICAgIDB4ZmZmZjgwMDE3ZmUwMDAwMA0K
-PiA+DQo+ID4gSWYgYW4gYXBwbGljYXRpb24sIGZvciBleGFtcGxlLCB2bWNvcmUtZG1lc2csIHdh
-bnRzIHRvIGFjY2VzcyB0aGUNCj4gPiBrZXJuZWwgc3ltYm9sIHdoaWNoIGlzIGxvY2F0ZWQgaW4g
-dGhlIGxhc3QgMk0gYWRkcmVzcywgaXQgd291bGQgZmFpbA0KPiA+IHdpdGggdGhlIGJlbG93IGVy
-cm9yOg0KPiA+DQo+ID4gICAiTm8gcHJvZ3JhbSBoZWFkZXIgY292ZXJpbmcgdmFkZHIgMHhmZmZm
-ODAxN2ZmZTkwMDAwIGZvdW5kIGtleGVjIGJ1Zz8iDQo+DQo+IEkgdGhpbmssIGZpeCBtaWdodCBu
-b3QgYmUgY29ycmVjdC4NCj4NCj4gUHJvYmxlbSBpcyBpbiB2bWNvcmUtZG1lc2cgYW5kIHRoYXQg
-c2hvdWxkIGJlIGZpeGVkIGFuZCBub3QgdGhlIGtleGVjLg0KPiBTZWUgaGVyZSAoaHR0cHM6Ly9n
-aXQua2VybmVsLm9yZy9wdWIvc2NtL3V0aWxzL2tlcm5lbC9rZXhlYy9rZXhlYy0NCj4gdG9vbHMu
-Z2l0L3RyZWUvdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jP2lkPUhFQUQjbjI2MSkuDQoNCkZp
-cnN0bHksIGZvciBteSBwYXRjaCwgdm1jb3JlLWRtZXNnIGlzIGp1c3QgYW4gYXV4aWxpYXJ5IGFw
-cGxpY2F0aW9uIHRvIGhlbHAgdG8gcmVwcm9kdWNlIHRoaXMgaXNzdWUuIFRoZSBmdW5jdGlvbiwg
-d2hpY2ggaXMgdG8gZ2VuZXJhdGUgdm1jb3JlLCAgaXMgdGhlIHJvb3QgY2F1c2UuDQoNCk9uIHRo
-ZSBvdGhlciBoYW5kLCB2bWNvcmUtZG1lc2cgaXMgdW5kZXIga2V4ZWMtdG9vbHMsIGl0IGhhcyBu
-byBhIHN0YW5kYWxvbmUgZ2l0IHJlcG8uICBFdmVuIHdlIHdhbnQgdG8gZml4IHZtY29yZS1kbWVz
-Zywgd2Ugc3RpbGwgbmVlZCB0byBzZW5kIHRoZSBwYXRjaCB0byBrZXhlYy10b29scywgcmlnaHQ/
-DQoNCllhbmppYW5nDQoNCj4gSG93IHN5bWJvbHMgYXJlIGV4dHJhY3RlZCBmcm9tIHZtY29yZS4N
-Cj4NCj4gWW91IGRvIGhhdmUgIk5VTUJFUihQSFlTX09GRlNFVCk9IiBpbmZvcm1hdGlvbiBpbiB2
-bWNvcmUuDQo+DQo+IFlvdSBjYW4gcHJvYmFibHkgc2VlIG1ha2VkdW1wZmlsZSBjb2RlLCB0aGF0
-IGhvdyB0byBleHRyYWN0IGluZm9ybWF0aW9uIGZyb20NCj4gIk5VTUJFUiIuDQoNCkkgaGF2ZSBz
-ZWVuIG1ha2VkdW1wZmlsZSBiZWZvcmUsIE5VTUJFUihudW1iZXIpIGlzIGp1c3QgcmVhZCBhIG51
-bWJlciBmcm9tIHZtY29yZS4gQnV0IGFzIEkgc2hvdyBiZWZvcmUsIHRoZSByb290IGlzc3VlIGlz
-IHZtY29yZSBjb250YWlucyBhIHdyb25nIG51bWJlciwgbXkgcGF0Y2ggaXMgdG8gZml4IHRoZSB2
-bWNvcmUgZ2VuZXJhdGluZyBpc3N1ZSwgd2UgY2FuJ3QgcmVhZCB2bWNvcmUgYXQgdGhpcyBwb2lu
-dCBzaW5jZSB3ZSBkb24ndCBoYXZlIHZtY29yZSB5ZXQuDQoNCk5VTUJFUihudW1iZXIpID0gcmVh
-ZF92bWNvcmVpbmZvX3Vsb25nKFNUUl9OVU1CRVIoc3RyX251bWJlcikpDQoNCllhbmppYW5nDQoN
-Cj4NCj4gT25jZSB5b3Uga25vdyB0aGUgcmVhbCBQSFlTX09GRlNFVCAod2hpY2ggY291bGQgaGF2
-ZSBiZWVuIHJhbmRvbSBpZiBLQVNMUiBpcw0KPiBlbmFibGVkKSwgeW91IGNhbiBmaXggdGhlIHBy
-b2JsZW0geW91IGFyZSBzZWVpbmcuDQoNCkkgaGF2ZSBib3RoIHZhbGlkYXRlZCB3aXRoL3dpdGhv
-dXQgS0FTTFIsICBhbGwgb2YgdGhlbSB3b3JrZWQgd2VsbCBhZnRlciBhcHBseWluZyBteSBwYXRj
-aC4NCg0KWWFuamlhbmcNCj4NCj4gUmVnYXJkcw0KPiBQcmF0eXVzaA0KDQoNCg0KVGhpcyBlbWFp
-bCBpcyBpbnRlbmRlZCBvbmx5IGZvciB0aGUgbmFtZWQgYWRkcmVzc2VlLiBJdCBtYXkgY29udGFp
-biBpbmZvcm1hdGlvbiB0aGF0IGlzIGNvbmZpZGVudGlhbC9wcml2YXRlLCBsZWdhbGx5IHByaXZp
-bGVnZWQsIG9yIGNvcHlyaWdodC1wcm90ZWN0ZWQsIGFuZCB5b3Ugc2hvdWxkIGhhbmRsZSBpdCBh
-Y2NvcmRpbmdseS4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwgeW91IGRv
-IG5vdCBoYXZlIGxlZ2FsIHJpZ2h0cyB0byByZXRhaW4sIGNvcHksIG9yIGRpc3RyaWJ1dGUgdGhp
-cyBlbWFpbCBvciBpdHMgY29udGVudHMsIGFuZCBzaG91bGQgcHJvbXB0bHkgZGVsZXRlIHRoZSBl
-bWFpbCBhbmQgYWxsIGVsZWN0cm9uaWMgY29waWVzIGluIHlvdXIgc3lzdGVtOyBkbyBub3QgcmV0
-YWluIGNvcGllcyBpbiBhbnkgbWVkaWEuIElmIHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZW1haWwg
-aW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBwcm9tcHRseS4gVGhhbmsgeW91Lg0K
-DQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
-IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hi Yanjiang,
+
+On Wed, May 30, 2018 at 8:33 AM, Jin, Yanjiang
+<yanjiang.jin@hxt-semitech.com> wrote:
+> Hi Pratyush,
+>
+> Thanks for your help! but please see my reply inline.
+>
+
+[...]
+
+>> > If an application, for example, vmcore-dmesg, wants to access the
+>> > kernel symbol which is located in the last 2M address, it would fail
+>> > with the below error:
+>> >
+>> >   "No program header covering vaddr 0xffff8017ffe90000 found kexec bug?"
+>>
+>> I think, fix might not be correct.
+>>
+>> Problem is in vmcore-dmesg and that should be fixed and not the kexec.
+>> See here (https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-
+>> tools.git/tree/vmcore-dmesg/vmcore-dmesg.c?id=HEAD#n261).
+>
+> Firstly, for my patch, vmcore-dmesg is just an auxiliary application to help to reproduce this issue. The function, which is to generate vmcore,  is the root cause.
+
+...and the function which generates vmcore is not the kexec rather the
+secondary kernel.
+
+>
+> On the other hand, vmcore-dmesg is under kexec-tools, it has no a standalone git repo.  Even we want to fix vmcore-dmesg, we still need to send the patch to kexec-tools, right?
+
+Sure. I meant `kexec` application. We have three applications in
+kexec-tools. `kexec`, `vmcore-dmesg` and `kdump`. [I hope kdump is
+useless and we are going to get rid off it very soon.]
+
+>
+> Yanjiang
+>
+>> How symbols are extracted from vmcore.
+>>
+>> You do have "NUMBER(PHYS_OFFSET)=" information in vmcore.
+>>
+>> You can probably see makedumpfile code, that how to extract information from
+>> "NUMBER".
+>
+> I have seen makedumpfile before, NUMBER(number) is just read a number from vmcore. But as I show before, the root issue is vmcore contains a wrong number, my patch is to fix the vmcore generating issue, we can't read vmcore at this point since we don't have vmcore yet.
+
+..and IIUC, you were able to reach correctly till the end of secondary
+kernel where you tried vmcore-dmesg and then you had issue, right?
+
+How did you conclude that vmcore contains wrong number? It's unlikely,
+but if it does then we have problem somewhere in Linux kernel , not
+here.
+
+Have you tried to extract "PHYS_OFFSET" from vmcore either in
+vmcore-dmesg or in makedumpfile and found it not matching to the value
+of "PHYS_OFFSET" from first kernel?
+
+In my understanding flow is like this:
+
+- First kernel will have reserved area for secondary kernel, as well
+as for elfcore.
+- First kernel will embed all the vmcore information notes into
+elfcore (see crash_save_vmcoreinfo_init() ->
+arch_crash_save_vmcoreinfo()). Therefore, we will have PHYS_OFFSET,
+kimage_voffset and VA_BITS information for first kernel in vmcore,
+which is in separate memory and can be read by second kernel
+- elfcore will also have notes about all the other physical memory of
+first kernel which need to be copied by second kernel.
+- Now when crash happens, second kernel should have all the required
+info for reading symbols from first kernel's physical memory, no?
+
+>
+> NUMBER(number) = read_vmcoreinfo_ulong(STR_NUMBER(str_number))
+>
+> Yanjiang
+>
+>>
+>> Once you know the real PHYS_OFFSET (which could have been random if KASLR is
+>> enabled), you can fix the problem you are seeing.
+>
+> I have both validated with/without KASLR,  all of them worked well after applying my patch.
+
+IMHO, even if that works it does not mean that its good a fix. We
+should try to find root cause. Moreover, you might not have /dev/mem
+available for all the configuration where KASLR is enabled.
+
+Regards
+Pratyush
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
