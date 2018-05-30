@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x244.google.com ([2a00:1450:400c:c09::244])
+Received: from [223.203.96.7] (helo=barracuda.hxt-semitech.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fNsXD-0006Fl-3d
- for kexec@lists.infradead.org; Wed, 30 May 2018 04:16:32 +0000
-Received: by mail-wm0-x244.google.com with SMTP id f8-v6so45118756wmc.4
- for <kexec@lists.infradead.org>; Tue, 29 May 2018 21:16:15 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <77f40316d72044a196f5e9bedfc1627f@HXTBJIDCEMVIW02.hxtcorp.net>
+ id 1fNt39-0001oi-SN
+ for kexec@lists.infradead.org; Wed, 30 May 2018 04:49:36 +0000
+From: "Jin, Yanjiang" <yanjiang.jin@hxt-semitech.com>
+Subject: RE: [PATCH] arm64: update PHYS_OFFSET to conform to kernel
+Date: Wed, 30 May 2018 04:49:03 +0000
+Message-ID: <555b2433c16a47ed883c12f6bac66245@HXTBJIDCEMVIW02.hxtcorp.net>
 References: <1526018427-8710-1-git-send-email-yanjiang.jin@hxt-semitech.com>
  <1526018427-8710-2-git-send-email-yanjiang.jin@hxt-semitech.com>
  <CAHM4w1=5eyi+fL0yyUF1ur4CMvjpCLrOpqSKzvtBt=Le5Kguxg@mail.gmail.com>
  <77f40316d72044a196f5e9bedfc1627f@HXTBJIDCEMVIW02.hxtcorp.net>
-From: Pratyush Anand <pratyush.anand@gmail.com>
-Date: Wed, 30 May 2018 09:46:13 +0530
-Message-ID: <CAHM4w1nrKWMPMdgP1Uke9WYEp0WrgrJgAaV-oUWMGQMfEAOGfA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: update PHYS_OFFSET to conform to kernel
+ <CAHM4w1nrKWMPMdgP1Uke9WYEp0WrgrJgAaV-oUWMGQMfEAOGfA@mail.gmail.com>
+In-Reply-To: <CAHM4w1nrKWMPMdgP1Uke9WYEp0WrgrJgAaV-oUWMGQMfEAOGfA@mail.gmail.com>
+Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,104 +23,135 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Jin, Yanjiang" <yanjiang.jin@hxt-semitech.com>
+To: Pratyush Anand <pratyush.anand@gmail.com>
 Cc: "jinyanjiang@gmail.com" <jinyanjiang@gmail.com>, "horms@verge.net.au" <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi Yanjiang,
-
-On Wed, May 30, 2018 at 8:33 AM, Jin, Yanjiang
-<yanjiang.jin@hxt-semitech.com> wrote:
-> Hi Pratyush,
->
-> Thanks for your help! but please see my reply inline.
->
-
-[...]
-
->> > If an application, for example, vmcore-dmesg, wants to access the
->> > kernel symbol which is located in the last 2M address, it would fail
->> > with the below error:
->> >
->> >   "No program header covering vaddr 0xffff8017ffe90000 found kexec bug?"
->>
->> I think, fix might not be correct.
->>
->> Problem is in vmcore-dmesg and that should be fixed and not the kexec.
->> See here (https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-
->> tools.git/tree/vmcore-dmesg/vmcore-dmesg.c?id=HEAD#n261).
->
-> Firstly, for my patch, vmcore-dmesg is just an auxiliary application to help to reproduce this issue. The function, which is to generate vmcore,  is the root cause.
-
-...and the function which generates vmcore is not the kexec rather the
-secondary kernel.
-
->
-> On the other hand, vmcore-dmesg is under kexec-tools, it has no a standalone git repo.  Even we want to fix vmcore-dmesg, we still need to send the patch to kexec-tools, right?
-
-Sure. I meant `kexec` application. We have three applications in
-kexec-tools. `kexec`, `vmcore-dmesg` and `kdump`. [I hope kdump is
-useless and we are going to get rid off it very soon.]
-
->
-> Yanjiang
->
->> How symbols are extracted from vmcore.
->>
->> You do have "NUMBER(PHYS_OFFSET)=" information in vmcore.
->>
->> You can probably see makedumpfile code, that how to extract information from
->> "NUMBER".
->
-> I have seen makedumpfile before, NUMBER(number) is just read a number from vmcore. But as I show before, the root issue is vmcore contains a wrong number, my patch is to fix the vmcore generating issue, we can't read vmcore at this point since we don't have vmcore yet.
-
-..and IIUC, you were able to reach correctly till the end of secondary
-kernel where you tried vmcore-dmesg and then you had issue, right?
-
-How did you conclude that vmcore contains wrong number? It's unlikely,
-but if it does then we have problem somewhere in Linux kernel , not
-here.
-
-Have you tried to extract "PHYS_OFFSET" from vmcore either in
-vmcore-dmesg or in makedumpfile and found it not matching to the value
-of "PHYS_OFFSET" from first kernel?
-
-In my understanding flow is like this:
-
-- First kernel will have reserved area for secondary kernel, as well
-as for elfcore.
-- First kernel will embed all the vmcore information notes into
-elfcore (see crash_save_vmcoreinfo_init() ->
-arch_crash_save_vmcoreinfo()). Therefore, we will have PHYS_OFFSET,
-kimage_voffset and VA_BITS information for first kernel in vmcore,
-which is in separate memory and can be read by second kernel
-- elfcore will also have notes about all the other physical memory of
-first kernel which need to be copied by second kernel.
-- Now when crash happens, second kernel should have all the required
-info for reading symbols from first kernel's physical memory, no?
-
->
-> NUMBER(number) = read_vmcoreinfo_ulong(STR_NUMBER(str_number))
->
-> Yanjiang
->
->>
->> Once you know the real PHYS_OFFSET (which could have been random if KASLR is
->> enabled), you can fix the problem you are seeing.
->
-> I have both validated with/without KASLR,  all of them worked well after applying my patch.
-
-IMHO, even if that works it does not mean that its good a fix. We
-should try to find root cause. Moreover, you might not have /dev/mem
-available for all the configuration where KASLR is enabled.
-
-Regards
-Pratyush
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUHJhdHl1c2ggQW5hbmQg
+W21haWx0bzpwcmF0eXVzaC5hbmFuZEBnbWFpbC5jb21dDQo+IFNlbnQ6IDIwMTjlubQ15pyIMzDm
+l6UgMTI6MTYNCj4gVG86IEppbiwgWWFuamlhbmcgPHlhbmppYW5nLmppbkBoeHQtc2VtaXRlY2gu
+Y29tPg0KPiBDYzoga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZzsgamlueWFuamlhbmdAZ21haWwu
+Y29tOyBob3Jtc0B2ZXJnZS5uZXQuYXUNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gYXJtNjQ6IHVw
+ZGF0ZSBQSFlTX09GRlNFVCB0byBjb25mb3JtIHRvIGtlcm5lbA0KPg0KPiBIaSBZYW5qaWFuZywN
+Cj4NCj4gT24gV2VkLCBNYXkgMzAsIDIwMTggYXQgODozMyBBTSwgSmluLCBZYW5qaWFuZyA8eWFu
+amlhbmcuamluQGh4dC1zZW1pdGVjaC5jb20+DQo+IHdyb3RlOg0KPiA+IEhpIFByYXR5dXNoLA0K
+PiA+DQo+ID4gVGhhbmtzIGZvciB5b3VyIGhlbHAhIGJ1dCBwbGVhc2Ugc2VlIG15IHJlcGx5IGlu
+bGluZS4NCj4gPg0KPg0KPiBbLi4uXQ0KPg0KPiA+PiA+IElmIGFuIGFwcGxpY2F0aW9uLCBmb3Ig
+ZXhhbXBsZSwgdm1jb3JlLWRtZXNnLCB3YW50cyB0byBhY2Nlc3MgdGhlDQo+ID4+ID4ga2VybmVs
+IHN5bWJvbCB3aGljaCBpcyBsb2NhdGVkIGluIHRoZSBsYXN0IDJNIGFkZHJlc3MsIGl0IHdvdWxk
+DQo+ID4+ID4gZmFpbCB3aXRoIHRoZSBiZWxvdyBlcnJvcjoNCj4gPj4gPg0KPiA+PiA+ICAgIk5v
+IHByb2dyYW0gaGVhZGVyIGNvdmVyaW5nIHZhZGRyIDB4ZmZmZjgwMTdmZmU5MDAwMCBmb3VuZCBr
+ZXhlYyBidWc/Ig0KPiA+Pg0KPiA+PiBJIHRoaW5rLCBmaXggbWlnaHQgbm90IGJlIGNvcnJlY3Qu
+DQo+ID4+DQo+ID4+IFByb2JsZW0gaXMgaW4gdm1jb3JlLWRtZXNnIGFuZCB0aGF0IHNob3VsZCBi
+ZSBmaXhlZCBhbmQgbm90IHRoZSBrZXhlYy4NCj4gPj4gU2VlIGhlcmUgKGh0dHBzOi8vZ2l0Lmtl
+cm5lbC5vcmcvcHViL3NjbS91dGlscy9rZXJuZWwva2V4ZWMva2V4ZWMtDQo+ID4+IHRvb2xzLmdp
+dC90cmVlL3ZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYz9pZD1IRUFEI24yNjEpLg0KPiA+DQo+
+ID4gRmlyc3RseSwgZm9yIG15IHBhdGNoLCB2bWNvcmUtZG1lc2cgaXMganVzdCBhbiBhdXhpbGlh
+cnkgYXBwbGljYXRpb24gdG8gaGVscCB0bw0KPiByZXByb2R1Y2UgdGhpcyBpc3N1ZS4gVGhlIGZ1
+bmN0aW9uLCB3aGljaCBpcyB0byBnZW5lcmF0ZSB2bWNvcmUsICBpcyB0aGUgcm9vdCBjYXVzZS4N
+Cj4NCj4gLi4uYW5kIHRoZSBmdW5jdGlvbiB3aGljaCBnZW5lcmF0ZXMgdm1jb3JlIGlzIG5vdCB0
+aGUga2V4ZWMgcmF0aGVyIHRoZSBzZWNvbmRhcnkNCj4ga2VybmVsLg0KPg0KPiA+DQo+ID4gT24g
+dGhlIG90aGVyIGhhbmQsIHZtY29yZS1kbWVzZyBpcyB1bmRlciBrZXhlYy10b29scywgaXQgaGFz
+IG5vIGEgc3RhbmRhbG9uZQ0KPiBnaXQgcmVwby4gIEV2ZW4gd2Ugd2FudCB0byBmaXggdm1jb3Jl
+LWRtZXNnLCB3ZSBzdGlsbCBuZWVkIHRvIHNlbmQgdGhlIHBhdGNoIHRvDQo+IGtleGVjLXRvb2xz
+LCByaWdodD8NCj4NCj4gU3VyZS4gSSBtZWFudCBga2V4ZWNgIGFwcGxpY2F0aW9uLiBXZSBoYXZl
+IHRocmVlIGFwcGxpY2F0aW9ucyBpbiBrZXhlYy10b29scy4NCj4gYGtleGVjYCwgYHZtY29yZS1k
+bWVzZ2AgYW5kIGBrZHVtcGAuIFtJIGhvcGUga2R1bXAgaXMgdXNlbGVzcyBhbmQgd2UgYXJlIGdv
+aW5nDQo+IHRvIGdldCByaWQgb2ZmIGl0IHZlcnkgc29vbi5dDQo+DQo+ID4NCj4gPiBZYW5qaWFu
+Zw0KPiA+DQo+ID4+IEhvdyBzeW1ib2xzIGFyZSBleHRyYWN0ZWQgZnJvbSB2bWNvcmUuDQo+ID4+
+DQo+ID4+IFlvdSBkbyBoYXZlICJOVU1CRVIoUEhZU19PRkZTRVQpPSIgaW5mb3JtYXRpb24gaW4g
+dm1jb3JlLg0KPiA+Pg0KPiA+PiBZb3UgY2FuIHByb2JhYmx5IHNlZSBtYWtlZHVtcGZpbGUgY29k
+ZSwgdGhhdCBob3cgdG8gZXh0cmFjdA0KPiA+PiBpbmZvcm1hdGlvbiBmcm9tICJOVU1CRVIiLg0K
+PiA+DQo+ID4gSSBoYXZlIHNlZW4gbWFrZWR1bXBmaWxlIGJlZm9yZSwgTlVNQkVSKG51bWJlcikg
+aXMganVzdCByZWFkIGEgbnVtYmVyDQo+IGZyb20gdm1jb3JlLiBCdXQgYXMgSSBzaG93IGJlZm9y
+ZSwgdGhlIHJvb3QgaXNzdWUgaXMgdm1jb3JlIGNvbnRhaW5zIGEgd3JvbmcNCj4gbnVtYmVyLCBt
+eSBwYXRjaCBpcyB0byBmaXggdGhlIHZtY29yZSBnZW5lcmF0aW5nIGlzc3VlLCB3ZSBjYW4ndCBy
+ZWFkIHZtY29yZSBhdA0KPiB0aGlzIHBvaW50IHNpbmNlIHdlIGRvbid0IGhhdmUgdm1jb3JlIHll
+dC4NCj4NCj4gLi5hbmQgSUlVQywgeW91IHdlcmUgYWJsZSB0byByZWFjaCBjb3JyZWN0bHkgdGls
+bCB0aGUgZW5kIG9mIHNlY29uZGFyeSBrZXJuZWwNCj4gd2hlcmUgeW91IHRyaWVkIHZtY29yZS1k
+bWVzZyBhbmQgdGhlbiB5b3UgaGFkIGlzc3VlLCByaWdodD8NCj4NCj4gSG93IGRpZCB5b3UgY29u
+Y2x1ZGUgdGhhdCB2bWNvcmUgY29udGFpbnMgd3JvbmcgbnVtYmVyPyBJdCdzIHVubGlrZWx5LCBi
+dXQgaWYgaXQNCj4gZG9lcyB0aGVuIHdlIGhhdmUgcHJvYmxlbSBzb21ld2hlcmUgaW4gTGludXgg
+a2VybmVsICwgbm90IGhlcmUuDQoNCkp1c3QgdXNlICJyZWFkZWxmIiwgSSBjYW4gZmluZCB2bWNv
+cmUgY29udGFpbnMgd3JvbmcgbnVtYmVyOg0KDQoxLiBJbiB0aGUgZmlyc3Qga2VybmVsLCAiZG1l
+c2ciIGFuZCBncmVwIHRoZSBsYXN0IG1lbW9yeSBub2RlIGFzIGJlbG93LCB3ZSBjYW4gc2VlIHRo
+YXQgdGhlIGVuZCBvZiB2aXJ0dWFsIG1lbW9yeSBpcyAweGZmZmY4MDE4MDAwMDAwMDA6DQoNCm1l
+bW9yeSAgOiAweGZmZmY4MDAwMDAyMDAwMDAgLSAweGZmZmY4MDE4MDAwMDAwMDANCg0KIyBoZWFk
+IC0xIC9wcm9jL2lvbWVtDQowMDIwMDAwMC0wMDIxZmZmZiA6IHJlc2VydmVkDQoNCjIuICJrZXhl
+YyAtcCIgYXMgdXN1YWwsIHRoZW4gInJlYWRlbGYgLWEiLCBJIGdvdCBkaWZmZXJlbnQgICJWaXJ0
+QWRkciAicmVzdWx0cyB3aXRoL3dpdGhvdXQgbXkgcGF0Y2goMHhmZmZmODAwMTdmZTAwMDAwIGFu
+ZCAweGZmZmY4MDAxODAwMDAwMDApLiBTbyB0aGUgZW5kIG9mIHZpcnR1YWwgbWVtb3J5IGlzIHdy
+b25nIHdpdGhvdXQgbXkgcGF0Y2guDQoNCihWaXJ0QWRkciArIE1lbVNpeikgPSAoMHhmZmZmODAw
+MTdmZTAwMDAwICsgMHgwMDAwMDAxNjgwMDAwMDAwKSA9IDB4RkZGRjgwMTdGRkUwMDAwMCAhPSAw
+eGZmZmY4MDE4MDAwMDAwMDANCg0KKFZpcnRBZGRyICsgTWVtU2l6KSA9ICgweGZmZmY4MDAxODAw
+MDAwMDAgKyAweDAwMDAwMDE2ODAwMDAwMDApID0gMHhmZmZmODAxODAwMDAwMDAwOw0KDQpTaW5j
+ZSBvbiBteSBlbnZpcm9ubWVudCwgaW9tZW0gc3RhcnRzIGF0IDB4MjAwMDAgYXMgc3RlcCAxIHNo
+b3csIGJ1dCBtZW1zdGFydF9hZGRyIGlzIDAuDQoNCiAjIHJlYWRlbGYgLWEgaW5jb3JyZWN0LXZt
+Y29yZShPbmx5IHNob3cgdGhlIGxhc3QgUHJvZ3JhbSBIZWFkZXIgaGVyZSwgV2l0aG91dCBteSBw
+YXRjaCkNCg0KRUxGIEhlYWRlcjoNCi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLg0KDQpQcm9ncmFt
+IEhlYWRlcnM6DQogIFR5cGUgICAgICAgICAgIE9mZnNldCAgICAgICAgICAgICBWaXJ0QWRkciAg
+ICAgICAgICAgUGh5c0FkZHIgICAgICAgICAgICAgICAgIEZpbGVTaXogICAgICAgICAgICBNZW1T
+aXogICAgICAgICAgICAgIEZsYWdzICBBbGlnbg0KLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4NCiAgTE9BRCAgICAgICAgMHgwMDAwMDAwMDc2ZDQwMDAwIDB4ZmZm
+ZjgwMDE3ZmUwMDAwMCAweDAwMDAwMDAxODAwMDAwMDAgICAgICAgICAgICAgICAgIDB4MDAwMDAw
+MTY4MDAwMDAwMCAweDAwMDAwMDE2ODAwMDAwMDAgIFJXRSAgICAwDQoNCg0KIyByZWFkZWxmIC1h
+IGNvcnJlY3Qtdm1jb3JlIChPbmx5IHNob3cgdGhlIGxhc3QgUHJvZ3JhbSBIZWFkZXIgaGVyZSwg
+d2l0aCBteSBwYXRjaCkNCg0KRUxGIEhlYWRlcjoNCiAgTWFnaWM6ICAgN2YgNDUgNGMgNDYgMDIg
+MDEgMDEgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDANCi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLg0KDQpQcm9ncmFtIEhlYWRlcnM6DQogIFR5cGUgICAgICAgICAgIE9mZnNldCAg
+ICAgICAgICAgICBWaXJ0QWRkciAgICAgICAgICAgUGh5c0FkZHIgICAgICAgICAgICAgICAgICBG
+aWxlU2l6ICAgICAgICAgICAgTWVtU2l6ICAgICAgICAgICAgICBGbGFncyAgQWxpZ24NCi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uDQogIExPQUQgICAgICAg
+ICAgIDB4MDAwMDAwMDA3NmQ0MDAwMCAweGZmZmY4MDAxODAwMDAwMDAgMHgwMDAwMDAwMTgwMDAw
+MDAwICAgICAgICAgICAgICAgMHgwMDAwMDAxNjgwMDAwMDAwIDB4MDAwMDAwMTY4MDAwMDAwMCAg
+UldFICAgIDANCg0KWWFuamlhbmcNCg0KPg0KPiBIYXZlIHlvdSB0cmllZCB0byBleHRyYWN0ICJQ
+SFlTX09GRlNFVCIgZnJvbSB2bWNvcmUgZWl0aGVyIGluIHZtY29yZS1kbWVzZw0KPiBvciBpbiBt
+YWtlZHVtcGZpbGUgYW5kIGZvdW5kIGl0IG5vdCBtYXRjaGluZyB0byB0aGUgdmFsdWUgb2YgIlBI
+WVNfT0ZGU0VUIg0KPiBmcm9tIGZpcnN0IGtlcm5lbD8NCj4NCj4gSW4gbXkgdW5kZXJzdGFuZGlu
+ZyBmbG93IGlzIGxpa2UgdGhpczoNCj4NCj4gLSBGaXJzdCBrZXJuZWwgd2lsbCBoYXZlIHJlc2Vy
+dmVkIGFyZWEgZm9yIHNlY29uZGFyeSBrZXJuZWwsIGFzIHdlbGwgYXMgZm9yIGVsZmNvcmUuDQo+
+IC0gRmlyc3Qga2VybmVsIHdpbGwgZW1iZWQgYWxsIHRoZSB2bWNvcmUgaW5mb3JtYXRpb24gbm90
+ZXMgaW50byBlbGZjb3JlIChzZWUNCj4gY3Jhc2hfc2F2ZV92bWNvcmVpbmZvX2luaXQoKSAtPiBh
+cmNoX2NyYXNoX3NhdmVfdm1jb3JlaW5mbygpKS4gVGhlcmVmb3JlLCB3ZQ0KPiB3aWxsIGhhdmUg
+UEhZU19PRkZTRVQsIGtpbWFnZV92b2Zmc2V0IGFuZCBWQV9CSVRTIGluZm9ybWF0aW9uIGZvciBm
+aXJzdCBrZXJuZWwNCj4gaW4gdm1jb3JlLCB3aGljaCBpcyBpbiBzZXBhcmF0ZSBtZW1vcnkgYW5k
+IGNhbiBiZSByZWFkIGJ5IHNlY29uZCBrZXJuZWwNCj4gLSBlbGZjb3JlIHdpbGwgYWxzbyBoYXZl
+IG5vdGVzIGFib3V0IGFsbCB0aGUgb3RoZXIgcGh5c2ljYWwgbWVtb3J5IG9mIGZpcnN0IGtlcm5l
+bA0KPiB3aGljaCBuZWVkIHRvIGJlIGNvcGllZCBieSBzZWNvbmQga2VybmVsLg0KPiAtIE5vdyB3
+aGVuIGNyYXNoIGhhcHBlbnMsIHNlY29uZCBrZXJuZWwgc2hvdWxkIGhhdmUgYWxsIHRoZSByZXF1
+aXJlZCBpbmZvIGZvcg0KPiByZWFkaW5nIHN5bWJvbHMgZnJvbSBmaXJzdCBrZXJuZWwncyBwaHlz
+aWNhbCBtZW1vcnksIG5vPw0KPg0KPiA+DQo+ID4gTlVNQkVSKG51bWJlcikgPSByZWFkX3ZtY29y
+ZWluZm9fdWxvbmcoU1RSX05VTUJFUihzdHJfbnVtYmVyKSkNCj4gPg0KPiA+IFlhbmppYW5nDQo+
+ID4NCj4gPj4NCj4gPj4gT25jZSB5b3Uga25vdyB0aGUgcmVhbCBQSFlTX09GRlNFVCAod2hpY2gg
+Y291bGQgaGF2ZSBiZWVuIHJhbmRvbSBpZg0KPiA+PiBLQVNMUiBpcyBlbmFibGVkKSwgeW91IGNh
+biBmaXggdGhlIHByb2JsZW0geW91IGFyZSBzZWVpbmcuDQo+ID4NCj4gPiBJIGhhdmUgYm90aCB2
+YWxpZGF0ZWQgd2l0aC93aXRob3V0IEtBU0xSLCAgYWxsIG9mIHRoZW0gd29ya2VkIHdlbGwgYWZ0
+ZXINCj4gYXBwbHlpbmcgbXkgcGF0Y2guDQo+DQo+IElNSE8sIGV2ZW4gaWYgdGhhdCB3b3JrcyBp
+dCBkb2VzIG5vdCBtZWFuIHRoYXQgaXRzIGdvb2QgYSBmaXguIFdlIHNob3VsZCB0cnkgdG8NCj4g
+ZmluZCByb290IGNhdXNlLiBNb3Jlb3ZlciwgeW91IG1pZ2h0IG5vdCBoYXZlIC9kZXYvbWVtIGF2
+YWlsYWJsZSBmb3IgYWxsIHRoZQ0KPiBjb25maWd1cmF0aW9uIHdoZXJlIEtBU0xSIGlzIGVuYWJs
+ZWQuDQoNClllcywgSSBub3RpY2VkIHRoaXMgYmVmb3JlLiBJIHBsYW4gdG8gc2VuZCB2MiBwYXRj
+aCBvbmNlIG15IHYxIHBhdGNoIHNhdGlzZmllcyAgeW91IGFuZCBvdGhlcnMuICBJZiAiIENPTkZJ
+R19ERVZNRU0gaXMgbm90IHNldCIsIEkgd2lsbCB3YXJuIHRoZSB1c2VyIHRoZXkgbWF5IGdldCBh
+IHdyb25nIHZtY29yZSwgdGhlbiBiYWNrIHRvIHVzZSB0aGUgc3RhcnQgb2YgIi9wcm9jL2lvbWVt
+IiBhcyBwcmV2aW91cyBpZiAvZGV2L21lbSBjYW4ndCBmaW5kLg0KDQpZYW5qaWFuZw0KPg0KPiBS
+ZWdhcmRzDQo+IFByYXR5dXNoDQoNCg0KDQpUaGlzIGVtYWlsIGlzIGludGVuZGVkIG9ubHkgZm9y
+IHRoZSBuYW1lZCBhZGRyZXNzZWUuIEl0IG1heSBjb250YWluIGluZm9ybWF0aW9uIHRoYXQgaXMg
+Y29uZmlkZW50aWFsL3ByaXZhdGUsIGxlZ2FsbHkgcHJpdmlsZWdlZCwgb3IgY29weXJpZ2h0LXBy
+b3RlY3RlZCwgYW5kIHlvdSBzaG91bGQgaGFuZGxlIGl0IGFjY29yZGluZ2x5LiBJZiB5b3UgYXJl
+IG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCB5b3UgZG8gbm90IGhhdmUgbGVnYWwgcmlnaHRz
+IHRvIHJldGFpbiwgY29weSwgb3IgZGlzdHJpYnV0ZSB0aGlzIGVtYWlsIG9yIGl0cyBjb250ZW50
+cywgYW5kIHNob3VsZCBwcm9tcHRseSBkZWxldGUgdGhlIGVtYWlsIGFuZCBhbGwgZWxlY3Ryb25p
+YyBjb3BpZXMgaW4geW91ciBzeXN0ZW07IGRvIG5vdCByZXRhaW4gY29waWVzIGluIGFueSBtZWRp
+YS4gSWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlm
+eSB0aGUgc2VuZGVyIHByb21wdGx5LiBUaGFuayB5b3UuDQoNCg0KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
+c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9rZXhlYwo=
