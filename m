@@ -1,32 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fNnzY-0004H4-Be
- for kexec@lists.infradead.org; Tue, 29 May 2018 23:25:26 +0000
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w4TNOLwN175432
- for <kexec@lists.infradead.org>; Tue, 29 May 2018 19:25:13 -0400
-Received: from e06smtp13.uk.ibm.com (e06smtp13.uk.ibm.com [195.75.94.109])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2j9ewnb3nu-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 29 May 2018 19:25:13 -0400
-Received: from localhost
- by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Wed, 30 May 2018 00:25:11 +0100
-Subject: Re: [PATCH v4 8/8] module: replace the existing LSM hook in
- init_module
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Tue, 29 May 2018 19:25:02 -0400
-In-Reply-To: <CAHC9VhQL+CsqKL83fSZhjEZVSjKKfmLULvehXZ8SZhtK5xzLMQ@mail.gmail.com>
+ id 1fNqou-0004bx-OW
+ for kexec@lists.infradead.org; Wed, 30 May 2018 02:26:38 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
  <1527616920-5415-9-git-send-email-zohar@linux.vnet.ibm.com>
  <CAHC9VhQL+CsqKL83fSZhjEZVSjKKfmLULvehXZ8SZhtK5xzLMQ@mail.gmail.com>
-Mime-Version: 1.0
-Message-Id: <1527636302.3534.46.camel@linux.vnet.ibm.com>
+Date: Tue, 29 May 2018 21:25:59 -0500
+In-Reply-To: <CAHC9VhQL+CsqKL83fSZhjEZVSjKKfmLULvehXZ8SZhtK5xzLMQ@mail.gmail.com>
+ (Paul Moore's message of "Tue, 29 May 2018 18:39:54 -0400")
+Message-ID: <8736y9lw08.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v4 8/8] module: replace the existing LSM hook in
+ init_module
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,133 +22,176 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Paul Moore <paul@paul-moore.com>, Kees Cook <keescook@chromium.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R
- . Rodriguez" <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Jeff Vander Stoep <jeffv@google.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity@vger.kernel.org, Andres Rodriguez <andresx7@gmail.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Andres Rodriguez <andresx7@gmail.com>, Jeff Vander Stoep <jeffv@google.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-SGkgS2VlcywKCk1pc3NpbmcgZnJvbSB0aGlzIHBhdGNoIGFyZSB0aGUgbG9hZHBpbiBjaGFuZ2Vz
-LiDCoEJlZm9yZSBpbmNsdWRpbmcKdGhlbSBpbiB0aGUgbmV4dCB2ZXJzaW9uIG9mIHRoaXMgcGF0
-Y2gsIGRvIHlvdSBwcmVmZXIgc2VwYXJhdGluZyB0aGUKaW5pdF9tb2R1bGUgZnJvbSB0aGUgZmlu
-aXRfbW9kdWxlIHN1cHBvcnQgaW4gbG9hZHBpbl9yZWFkX2ZpbGUoKSBvcgprZWVwaW5nIGl0IGFz
-IG9uZSBmdW5jdGlvbiwgbGlrZSBQYXVsIGZvciBTRUxpbnV4PwoKTWltaQoKT24gVHVlLCAyMDE4
-LTA1LTI5IGF0IDE4OjM5IC0wNDAwLCBQYXVsIE1vb3JlIHdyb3RlOgo+IE9uIFR1ZSwgTWF5IDI5
-LCAyMDE4IGF0IDI6MDIgUE0sIE1pbWkgWm9oYXIgPHpvaGFyQGxpbnV4LnZuZXQuaWJtLmNvbT4g
-d3JvdGU6Cj4gPiBCb3RoIHRoZSBpbml0X21vZHVsZSBhbmQgZmluaXRfbW9kdWxlIHN5c2NhbGxz
-IGNhbGwgZWl0aGVyIGRpcmVjdGx5Cj4gPiBvciBpbmRpcmVjdGx5IHRoZSBzZWN1cml0eV9rZXJu
-ZWxfcmVhZF9maWxlIExTTSBob29rLiAgVGhpcyBwYXRjaAo+ID4gcmVwbGFjZXMgdGhlIGRpcmVj
-dCBjYWxsIGluIGluaXRfbW9kdWxlIHdpdGggYSBjYWxsIHRvIHRoZSBuZXcKPiA+IHNlY3VyaXR5
-X2tlcm5lbF9sb2FkX2RhdGEgaG9vayBhbmQgbWFrZXMgdGhlIGNvcnJlc3BvbmRpbmcgY2hhbmdl
-cyBpbgo+ID4gU0VMaW51eCBhbmQgSU1BLgo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IE1pbWkgWm9o
-YXIgPHpvaGFyQGxpbnV4LnZuZXQuaWJtLmNvbT4KPiA+IENjOiBKZWZmIFZhbmRlciBTdG9lcCA8
-amVmZnZAZ29vZ2xlLmNvbT4KPiA+IENjOiBQYXVsIE1vb3JlIDxwYXVsQHBhdWwtbW9vcmUuY29t
-Pgo+ID4gQ2M6IENhc2V5IFNjaGF1ZmxlciA8Y2FzZXlAc2NoYXVmbGVyLWNhLmNvbT4KPiA+IC0t
-LQo+ID4gIGtlcm5lbC9tb2R1bGUuYyAgICAgICAgICAgICAgICAgICB8ICAyICstCj4gPiAgc2Vj
-dXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfbWFpbi5jIHwgMjQgKysrKysrKysrKy0tLS0tLS0tLS0t
-LS0tCj4gPiAgc2VjdXJpdHkvc2VsaW51eC9ob29rcy5jICAgICAgICAgIHwgMjYgKysrKysrKysr
-KysrKysrKysrKystLS0tLS0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDMxIGluc2VydGlvbnMoKyks
-IDIxIGRlbGV0aW9ucygtKQo+ID4KPiA+IGRpZmYgLS1naXQgYS9rZXJuZWwvbW9kdWxlLmMgYi9r
-ZXJuZWwvbW9kdWxlLmMKPiA+IGluZGV4IGNlODA2NmI4ODE3OC4uYjk3YzY0MmI1YjRkIDEwMDY0
-NAo+ID4gLS0tIGEva2VybmVsL21vZHVsZS5jCj4gPiArKysgYi9rZXJuZWwvbW9kdWxlLmMKPiA+
-IEBAIC0yODc5LDcgKzI4NzksNyBAQCBzdGF0aWMgaW50IGNvcHlfbW9kdWxlX2Zyb21fdXNlcihj
-b25zdCB2b2lkIF9fdXNlciAqdW1vZCwgdW5zaWduZWQgbG9uZyBsZW4sCj4gPiAgICAgICAgIGlm
-IChpbmZvLT5sZW4gPCBzaXplb2YoKihpbmZvLT5oZHIpKSkKPiA+ICAgICAgICAgICAgICAgICBy
-ZXR1cm4gLUVOT0VYRUM7Cj4gPgo+ID4gLSAgICAgICBlcnIgPSBzZWN1cml0eV9rZXJuZWxfcmVh
-ZF9maWxlKE5VTEwsIFJFQURJTkdfTU9EVUxFKTsKPiA+ICsgICAgICAgZXJyID0gc2VjdXJpdHlf
-a2VybmVsX2xvYWRfZGF0YShMT0FESU5HX01PRFVMRSk7Cj4gPiAgICAgICAgIGlmIChlcnIpCj4g
-PiAgICAgICAgICAgICAgICAgcmV0dXJuIGVycjsKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvc2VjdXJp
-dHkvaW50ZWdyaXR5L2ltYS9pbWFfbWFpbi5jIGIvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFf
-bWFpbi5jCj4gPiBpbmRleCAzZGFlNjA1YTE2MDQuLjBmZjFkODE1MmY2ZSAxMDA2NDQKPiA+IC0t
-LSBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX21haW4uYwo+ID4gKysrIGIvc2VjdXJpdHkv
-aW50ZWdyaXR5L2ltYS9pbWFfbWFpbi5jCj4gPiBAQCAtNDQxLDE3ICs0NDEsNiBAQCBzdGF0aWMg
-aW50IHJlYWRfaWRtYXBbUkVBRElOR19NQVhfSURdID0gewo+ID4gICAqLwo+ID4gIGludCBpbWFf
-cmVhZF9maWxlKHN0cnVjdCBmaWxlICpmaWxlLCBlbnVtIGtlcm5lbF9yZWFkX2ZpbGVfaWQgcmVh
-ZF9pZCkKPiA+ICB7Cj4gPiAtICAgICAgIGJvb2wgc2lnX2VuZm9yY2UgPSBpc19tb2R1bGVfc2ln
-X2VuZm9yY2VkKCk7Cj4gPiAtCj4gPiAtICAgICAgIGlmICghZmlsZSAmJiByZWFkX2lkID09IFJF
-QURJTkdfTU9EVUxFKSB7Cj4gPiAtICAgICAgICAgICAgICAgaWYgKCFzaWdfZW5mb3JjZSAmJiAo
-aW1hX2FwcHJhaXNlICYgSU1BX0FQUFJBSVNFX01PRFVMRVMpICYmCj4gPiAtICAgICAgICAgICAg
-ICAgICAgIChpbWFfYXBwcmFpc2UgJiBJTUFfQVBQUkFJU0VfRU5GT1JDRSkpIHsKPiA+IC0gICAg
-ICAgICAgICAgICAgICAgICAgIHByX2VycigiaW1wb3NzaWJsZSB0byBhcHByYWlzZSBhIG1vZHVs
-ZSB3aXRob3V0IGEgZmlsZSBkZXNjcmlwdG9yLiBzaWdfZW5mb3JjZSBrZXJuZWwgcGFyYW1ldGVy
-IG1pZ2h0IGhlbHBcbiIpOwo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIC1FQUND
-RVM7IC8qIElOVEVHUklUWV9VTktOT1dOICovCj4gPiAtICAgICAgICAgICAgICAgfQo+ID4gLSAg
-ICAgICAgICAgICAgIHJldHVybiAwOyAgICAgICAvKiBXZSByZWx5IG9uIG1vZHVsZSBzaWduYXR1
-cmUgY2hlY2tpbmcgKi8KPiA+IC0gICAgICAgfQo+ID4gLQo+ID4gICAgICAgICBpZiAocmVhZF9p
-ZCA9PSBSRUFESU5HX0ZJUk1XQVJFX1BSRUFMTE9DX0JVRkZFUikgewo+ID4gICAgICAgICAgICAg
-ICAgIGlmICgoaW1hX2FwcHJhaXNlICYgSU1BX0FQUFJBSVNFX0ZJUk1XQVJFKSAmJgo+ID4gICAg
-ICAgICAgICAgICAgICAgICAoaW1hX2FwcHJhaXNlICYgSU1BX0FQUFJBSVNFX0VORk9SQ0UpKSB7
-Cj4gPiBAQCAtNDkwLDkgKzQ3OSw2IEBAIGludCBpbWFfcG9zdF9yZWFkX2ZpbGUoc3RydWN0IGZp
-bGUgKmZpbGUsIHZvaWQgKmJ1ZiwgbG9mZl90IHNpemUsCj4gPiAgICAgICAgICAgICAgICAgcmV0
-dXJuIDA7Cj4gPiAgICAgICAgIH0KPiA+Cj4gPiAtICAgICAgIGlmICghZmlsZSAmJiByZWFkX2lk
-ID09IFJFQURJTkdfTU9EVUxFKSAvKiBNT0RVTEVfU0lHX0ZPUkNFIGVuYWJsZWQgKi8KPiA+IC0g
-ICAgICAgICAgICAgICByZXR1cm4gMDsKPiA+IC0KPiA+ICAgICAgICAgLyogcGVybWl0IHNpZ25l
-ZCBjZXJ0cyAqLwo+ID4gICAgICAgICBpZiAoIWZpbGUgJiYgcmVhZF9pZCA9PSBSRUFESU5HX1g1
-MDlfQ0VSVElGSUNBVEUpCj4gPiAgICAgICAgICAgICAgICAgcmV0dXJuIDA7Cj4gPiBAQCAtNTIx
-LDYgKzUwNyw4IEBAIGludCBpbWFfcG9zdF9yZWFkX2ZpbGUoc3RydWN0IGZpbGUgKmZpbGUsIHZv
-aWQgKmJ1ZiwgbG9mZl90IHNpemUsCj4gPiAgICovCj4gPiAgaW50IGltYV9sb2FkX2RhdGEoZW51
-bSBrZXJuZWxfbG9hZF9kYXRhX2lkIGlkKQo+ID4gIHsKPiA+ICsgICAgICAgYm9vbCBzaWdfZW5m
-b3JjZTsKPiA+ICsKPiA+ICAgICAgICAgaWYgKChpbWFfYXBwcmFpc2UgJiBJTUFfQVBQUkFJU0Vf
-RU5GT1JDRSkgIT0gSU1BX0FQUFJBSVNFX0VORk9SQ0UpCj4gPiAgICAgICAgICAgICAgICAgcmV0
-dXJuIDA7Cj4gPgo+ID4gQEAgLTUzNiw2ICs1MjQsMTQgQEAgaW50IGltYV9sb2FkX2RhdGEoZW51
-bSBrZXJuZWxfbG9hZF9kYXRhX2lkIGlkKQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgcHJf
-ZXJyKCJQcmV2ZW50IGZpcm13YXJlIHN5c2ZzIGZhbGxiYWNrIGxvYWRpbmcuXG4iKTsKPiA+ICAg
-ICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAtRUFDQ0VTOyAvKiBJTlRFR1JJVFlfVU5LTk9X
-TiAqLwo+ID4gICAgICAgICAgICAgICAgIH0KPiA+ICsgICAgICAgICAgICAgICBicmVhazsKPiA+
-ICsgICAgICAgY2FzZSBMT0FESU5HX01PRFVMRToKPiA+ICsgICAgICAgICAgICAgICBzaWdfZW5m
-b3JjZSA9IGlzX21vZHVsZV9zaWdfZW5mb3JjZWQoKTsKPiA+ICsKPiA+ICsgICAgICAgICAgICAg
-ICBpZiAoIXNpZ19lbmZvcmNlICYmIChpbWFfYXBwcmFpc2UgJiBJTUFfQVBQUkFJU0VfTU9EVUxF
-UykpIHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHByX2VycigiaW1wb3NzaWJsZSB0byBh
-cHByYWlzZSBhIG1vZHVsZSB3aXRob3V0IGEgZmlsZSBkZXNjcmlwdG9yLiBzaWdfZW5mb3JjZSBr
-ZXJuZWwgcGFyYW1ldGVyIG1pZ2h0IGhlbHBcbiIpOwo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgcmV0dXJuIC1FQUNDRVM7IC8qIElOVEVHUklUWV9VTktOT1dOICovCj4gPiArICAgICAgICAg
-ICAgICAgfQo+ID4gICAgICAgICBkZWZhdWx0Ogo+ID4gICAgICAgICAgICAgICAgIGJyZWFrOwo+
-ID4gICAgICAgICB9Cj4gPiBkaWZmIC0tZ2l0IGEvc2VjdXJpdHkvc2VsaW51eC9ob29rcy5jIGIv
-c2VjdXJpdHkvc2VsaW51eC9ob29rcy5jCj4gPiBpbmRleCAwMmViZDE1ODVlYWYuLmUwMjE4NjQ3
-MGZjNSAxMDA2NDQKPiA+IC0tLSBhL3NlY3VyaXR5L3NlbGludXgvaG9va3MuYwo+ID4gKysrIGIv
-c2VjdXJpdHkvc2VsaW51eC9ob29rcy5jCj4gPiBAQCAtNDAxOCwxMiArNDAxOCw2IEBAIHN0YXRp
-YyBpbnQgc2VsaW51eF9rZXJuZWxfbW9kdWxlX2Zyb21fZmlsZShzdHJ1Y3QgZmlsZSAqZmlsZSkK
-PiA+ICAgICAgICAgdTMyIHNpZCA9IGN1cnJlbnRfc2lkKCk7Cj4gPiAgICAgICAgIGludCByYzsK
-PiA+Cj4gPiAtICAgICAgIC8qIGluaXRfbW9kdWxlICovCj4gPiAtICAgICAgIGlmIChmaWxlID09
-IE5VTEwpCj4gPiAtICAgICAgICAgICAgICAgcmV0dXJuIGF2Y19oYXNfcGVybSgmc2VsaW51eF9z
-dGF0ZSwKPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpZCwgc2lkLCBT
-RUNDTEFTU19TWVNURU0sCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgU1lTVEVNX19NT0RVTEVfTE9BRCwgTlVMTCk7Cj4gPiAtCj4gPiAgICAgICAgIC8qIGZpbml0
-X21vZHVsZSAqLwo+ID4KPiA+ICAgICAgICAgYWQudHlwZSA9IExTTV9BVURJVF9EQVRBX0ZJTEU7
-Cj4gPiBAQCAtNDA0Myw2ICs0MDM3LDI1IEBAIHN0YXRpYyBpbnQgc2VsaW51eF9rZXJuZWxfbW9k
-dWxlX2Zyb21fZmlsZShzdHJ1Y3QgZmlsZSAqZmlsZSkKPiA+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgU1lTVEVNX19NT0RVTEVfTE9BRCwgJmFkKTsKPiA+ICB9Cj4gPgo+ID4gK3N0
-YXRpYyBpbnQgc2VsaW51eF9rZXJuZWxfbG9hZF9kYXRhKGVudW0ga2VybmVsX2xvYWRfZGF0YV9p
-ZCBpZCkKPiA+ICt7Cj4gPiArICAgICAgIHUzMiBzaWQ7Cj4gPiArICAgICAgIGludCByYyA9IDA7
-Cj4gPiArCj4gPiArICAgICAgIHN3aXRjaCAoaWQpIHsKPiA+ICsgICAgICAgY2FzZSBMT0FESU5H
-X01PRFVMRToKPiA+ICsgICAgICAgICAgICAgICBzaWQgPSBjdXJyZW50X3NpZCgpOwo+ID4gKwo+
-ID4gKyAgICAgICAgICAgICAgIC8qIGluaXRfbW9kdWxlICovCj4gPiArICAgICAgICAgICAgICAg
-cmV0dXJuIGF2Y19oYXNfcGVybSgmc2VsaW51eF9zdGF0ZSwgc2lkLCBzaWQsIFNFQ0NMQVNTX1NZ
-U1RFTSwKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNZU1RFTV9fTU9E
-VUxFX0xPQUQsIE5VTEwpOwo+ID4gKyAgICAgICBkZWZhdWx0Ogo+ID4gKyAgICAgICAgICAgICAg
-IGJyZWFrOwo+ID4gKyAgICAgICB9Cj4gPiArCj4gPiArICAgICAgIHJldHVybiByYzsKPiA+ICt9
-Cj4gCj4gSSdtIG5vdCBhIGZhbiBvZiB0aGUgZHVwbGljYXRpb24gaGVyZS4gIElmIHdlIG11c3Qg
-aGF2ZSBhIG5ldyBMU00gaG9vawo+IGZvciB0aGlzLCBjYW4gd2UgYXQgbGVhc3QgaGF2ZSBpdCBj
-YWxsCj4gc2VsaW51eF9rZXJuZWxfbW9kdWxlX2Zyb21fZmlsZSgpIHNvIHdlIGhhdmUgYWxsIHRo
-ZSBrZXJuZWwgbW9kdWxlCj4gbG9hZGluZyBsb2dpYy9jb250cm9scyBpbiBvbmUgZnVuY3Rpb24/
-ICBZZXMsIEkgdW5kZXJzdGFuZCB0aGVyZSBhcmUKPiBkaWZmZXJlbmNlcyBiZXR3ZWVuIGluaXRf
-bW9kdWxlKCkgYW5kIGZpbml0X21vZHVsZSgpIGJ1dCBJIGxpa2UKPiBoYW5kbGluZyB0aGVtIGJv
-dGggaW4gb25lIGZ1bmN0aW9uIGFzIHdlIGRvIHRvZGF5Lgo+IAo+ID4gIHN0YXRpYyBpbnQgc2Vs
-aW51eF9rZXJuZWxfcmVhZF9maWxlKHN0cnVjdCBmaWxlICpmaWxlLAo+ID4gICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgZW51bSBrZXJuZWxfcmVhZF9maWxlX2lkIGlkKQo+ID4g
-IHsKPiA+IEBAIC02OTUwLDYgKzY5NjMsNyBAQCBzdGF0aWMgc3RydWN0IHNlY3VyaXR5X2hvb2tf
-bGlzdCBzZWxpbnV4X2hvb2tzW10gX19sc21fcm9fYWZ0ZXJfaW5pdCA9IHsKPiA+ICAgICAgICAg
-TFNNX0hPT0tfSU5JVChrZXJuZWxfYWN0X2FzLCBzZWxpbnV4X2tlcm5lbF9hY3RfYXMpLAo+ID4g
-ICAgICAgICBMU01fSE9PS19JTklUKGtlcm5lbF9jcmVhdGVfZmlsZXNfYXMsIHNlbGludXhfa2Vy
-bmVsX2NyZWF0ZV9maWxlc19hcyksCj4gPiAgICAgICAgIExTTV9IT09LX0lOSVQoa2VybmVsX21v
-ZHVsZV9yZXF1ZXN0LCBzZWxpbnV4X2tlcm5lbF9tb2R1bGVfcmVxdWVzdCksCj4gPiArICAgICAg
-IExTTV9IT09LX0lOSVQoa2VybmVsX2xvYWRfZGF0YSwgc2VsaW51eF9rZXJuZWxfbG9hZF9kYXRh
-KSwKPiA+ICAgICAgICAgTFNNX0hPT0tfSU5JVChrZXJuZWxfcmVhZF9maWxlLCBzZWxpbnV4X2tl
-cm5lbF9yZWFkX2ZpbGUpLAo+ID4gICAgICAgICBMU01fSE9PS19JTklUKHRhc2tfc2V0cGdpZCwg
-c2VsaW51eF90YXNrX3NldHBnaWQpLAo+ID4gICAgICAgICBMU01fSE9PS19JTklUKHRhc2tfZ2V0
-cGdpZCwgc2VsaW51eF90YXNrX2dldHBnaWQpLAo+ID4gLS0KPiA+IDIuNy41Cj4gPgo+IAoKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Paul Moore <paul@paul-moore.com> writes:
+
+> On Tue, May 29, 2018 at 2:02 PM, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
+>> Both the init_module and finit_module syscalls call either directly
+>> or indirectly the security_kernel_read_file LSM hook.  This patch
+>> replaces the direct call in init_module with a call to the new
+>> security_kernel_load_data hook and makes the corresponding changes in
+>> SELinux and IMA.
+>>
+>> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+>> Cc: Jeff Vander Stoep <jeffv@google.com>
+>> Cc: Paul Moore <paul@paul-moore.com>
+>> Cc: Casey Schaufler <casey@schaufler-ca.com>
+>> ---
+>>  kernel/module.c                   |  2 +-
+>>  security/integrity/ima/ima_main.c | 24 ++++++++++--------------
+>>  security/selinux/hooks.c          | 26 ++++++++++++++++++++------
+>>  3 files changed, 31 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/kernel/module.c b/kernel/module.c
+>> index ce8066b88178..b97c642b5b4d 100644
+>> --- a/kernel/module.c
+>> +++ b/kernel/module.c
+>> @@ -2879,7 +2879,7 @@ static int copy_module_from_user(const void __user *umod, unsigned long len,
+>>         if (info->len < sizeof(*(info->hdr)))
+>>                 return -ENOEXEC;
+>>
+>> -       err = security_kernel_read_file(NULL, READING_MODULE);
+>> +       err = security_kernel_load_data(LOADING_MODULE);
+>>         if (err)
+>>                 return err;
+>>
+>> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+>> index 3dae605a1604..0ff1d8152f6e 100644
+>> --- a/security/integrity/ima/ima_main.c
+>> +++ b/security/integrity/ima/ima_main.c
+>> @@ -441,17 +441,6 @@ static int read_idmap[READING_MAX_ID] = {
+>>   */
+>>  int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
+>>  {
+>> -       bool sig_enforce = is_module_sig_enforced();
+>> -
+>> -       if (!file && read_id == READING_MODULE) {
+>> -               if (!sig_enforce && (ima_appraise & IMA_APPRAISE_MODULES) &&
+>> -                   (ima_appraise & IMA_APPRAISE_ENFORCE)) {
+>> -                       pr_err("impossible to appraise a module without a file descriptor. sig_enforce kernel parameter might help\n");
+>> -                       return -EACCES; /* INTEGRITY_UNKNOWN */
+>> -               }
+>> -               return 0;       /* We rely on module signature checking */
+>> -       }
+>> -
+>>         if (read_id == READING_FIRMWARE_PREALLOC_BUFFER) {
+>>                 if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
+>>                     (ima_appraise & IMA_APPRAISE_ENFORCE)) {
+>> @@ -490,9 +479,6 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
+>>                 return 0;
+>>         }
+>>
+>> -       if (!file && read_id == READING_MODULE) /* MODULE_SIG_FORCE enabled */
+>> -               return 0;
+>> -
+>>         /* permit signed certs */
+>>         if (!file && read_id == READING_X509_CERTIFICATE)
+>>                 return 0;
+>> @@ -521,6 +507,8 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
+>>   */
+>>  int ima_load_data(enum kernel_load_data_id id)
+>>  {
+>> +       bool sig_enforce;
+>> +
+>>         if ((ima_appraise & IMA_APPRAISE_ENFORCE) != IMA_APPRAISE_ENFORCE)
+>>                 return 0;
+>>
+>> @@ -536,6 +524,14 @@ int ima_load_data(enum kernel_load_data_id id)
+>>                         pr_err("Prevent firmware sysfs fallback loading.\n");
+>>                         return -EACCES; /* INTEGRITY_UNKNOWN */
+>>                 }
+>> +               break;
+>> +       case LOADING_MODULE:
+>> +               sig_enforce = is_module_sig_enforced();
+>> +
+>> +               if (!sig_enforce && (ima_appraise & IMA_APPRAISE_MODULES)) {
+>> +                       pr_err("impossible to appraise a module without a file descriptor. sig_enforce kernel parameter might help\n");
+>> +                       return -EACCES; /* INTEGRITY_UNKNOWN */
+>> +               }
+>>         default:
+>>                 break;
+>>         }
+>> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+>> index 02ebd1585eaf..e02186470fc5 100644
+>> --- a/security/selinux/hooks.c
+>> +++ b/security/selinux/hooks.c
+>> @@ -4018,12 +4018,6 @@ static int selinux_kernel_module_from_file(struct file *file)
+>>         u32 sid = current_sid();
+>>         int rc;
+>>
+>> -       /* init_module */
+>> -       if (file == NULL)
+>> -               return avc_has_perm(&selinux_state,
+>> -                                   sid, sid, SECCLASS_SYSTEM,
+>> -                                       SYSTEM__MODULE_LOAD, NULL);
+>> -
+>>         /* finit_module */
+>>
+>>         ad.type = LSM_AUDIT_DATA_FILE;
+>> @@ -4043,6 +4037,25 @@ static int selinux_kernel_module_from_file(struct file *file)
+>>                                 SYSTEM__MODULE_LOAD, &ad);
+>>  }
+>>
+>> +static int selinux_kernel_load_data(enum kernel_load_data_id id)
+>> +{
+>> +       u32 sid;
+>> +       int rc = 0;
+>> +
+>> +       switch (id) {
+>> +       case LOADING_MODULE:
+>> +               sid = current_sid();
+>> +
+>> +               /* init_module */
+>> +               return avc_has_perm(&selinux_state, sid, sid, SECCLASS_SYSTEM,
+>> +                                   SYSTEM__MODULE_LOAD, NULL);
+>> +       default:
+>> +               break;
+>> +       }
+>> +
+>> +       return rc;
+>> +}
+>
+> I'm not a fan of the duplication here.
+
+There are a couple of fundamental and strong differences here.
+
+selinux_kernel_load_data only has the current_sid to work with.
+
+selinux_module_data_from_file is all about the logic of how
+to get fsec or isec from the file and from the inode.
+
+For selinux and for every other lsm that uses the hooks that difference
+of whether or not you have a file leads to different logic and different
+code.  There is no meaningful sharing between the two cases.
+
+In selinux all of the meaningful sharing happens with calls to
+avc_has_perm(... SYSTEM__MODULE_LOAD, ...);
+
+So as far as I can see talking about duplication is unfounded there is
+none.
+
+> If we must have a new LSM hook
+> for this, can we at least have it call
+> selinux_kernel_module_from_file() so we have all the kernel module
+> loading logic/controls in one function?  Yes, I understand there are
+> differences between init_module() and finit_module() but I like
+> handling them both in one function as we do today.
+
+Except even today the actual logic is not shared in a single function.
+The only thing that happens in a single function is a switch statement
+that calls different functions.
+
+So what is the point of having a ``common'' function?
+
+Eric
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
