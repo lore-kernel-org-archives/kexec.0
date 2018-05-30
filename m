@@ -1,11 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from [223.203.96.7] (helo=barracuda.hxt-semitech.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fNrPS-0002qw-3L
+ for kexec@lists.infradead.org; Wed, 30 May 2018 03:04:29 +0000
+From: "Jin, Yanjiang" <yanjiang.jin@hxt-semitech.com>
+Subject: RE: [PATCH] arm64: update PHYS_OFFSET to conform to kernel
+Date: Wed, 30 May 2018 03:03:40 +0000
+Message-ID: <77f40316d72044a196f5e9bedfc1627f@HXTBJIDCEMVIW02.hxtcorp.net>
+References: <1526018427-8710-1-git-send-email-yanjiang.jin@hxt-semitech.com>
+ <1526018427-8710-2-git-send-email-yanjiang.jin@hxt-semitech.com>
+ <CAHM4w1=5eyi+fL0yyUF1ur4CMvjpCLrOpqSKzvtBt=Le5Kguxg@mail.gmail.com>
+In-Reply-To: <CAHM4w1=5eyi+fL0yyUF1ur4CMvjpCLrOpqSKzvtBt=Le5Kguxg@mail.gmail.com>
+Content-Language: en-US
 MIME-Version: 1.0
-In-Reply-To: <CACi5LpO8KVVD_6ZJTW2SiyR8v0uDMA3H9yKHNw1=RKO+fd7KjA@mail.gmail.com>
-References: <CACi5LpO8KVVD_6ZJTW2SiyR8v0uDMA3H9yKHNw1=RKO+fd7KjA@mail.gmail.com>
-From: Pratyush Anand <pratyush.anand@gmail.com>
-Date: Wed, 30 May 2018 08:05:28 +0530
-Message-ID: <CAHM4w1nFn0T0MOF7=hnE7kxAmH4gLbbXXb_BjjKwEqyNFtqYwA@mail.gmail.com>
-Subject: Re: [Query] PAGE_OFFSET on KASLR enabled ARM64 kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -14,58 +21,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Pratyush Anand <pratyush.anand@gmail.com>
+Cc: "jinyanjiang@gmail.com" <jinyanjiang@gmail.com>, "horms@verge.net.au" <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi Bhupesh,
-
-
-On Mon, May 28, 2018 at 2:33 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> Hi ARM64 maintainers,
-
-[...]
-
->
-> 4. Since 'memstart_addr' indicates the start of physical RAM, we
-> randomize the same on basis of 'memstart_offset_seed' value above.
-> Also the 'memstart_addr' value is available in '/proc/kallsyms' and
-> hence can be accessed by user-space applications to read the
-> 'memstart_addr' value.
-
-User space can read, only when a system has either CONFIG_DEVMEM or
-CONFIG_PROC_KCORE  enabled. But, we can have a system which has
-CONFIG_RANDOMIZE_BASE enabled but none of the kernel memory access
-interface (other than kdump/vmcore).
-
->
-> 5. Now since the PAGE_OFFSET value is also used by several user space
-> tools (for e.g. makedumpfile tool uses the same to determine the start
-> of linear region and hence to read PT_NOTE fields from /proc/kcore), I
-> am not sure how to read the randomized value of the same in the KASLR
-> enabled case.
->
-
-Do we have a use case other than makedumpfile (I mean where we do not
-have vmcore access)? For makedumpfile, we have following information
-in vmcore, and I hope, that should be sufficient to find physical
-address of any symbol from vmcore.
-
-358         VMCOREINFO_NUMBER(VA_BITS);
-359         /* Please note VMCOREINFO_NUMBER() uses "%d", not "%x" */
-360         vmcoreinfo_append_str("NUMBER(kimage_voffset)=0x%llx\n",
-361                                                 kimage_voffset);
-362         vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
-363                                                 PHYS_OFFSET);
-
-
-Regards
-Pratyush
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgUHJhdHl1c2gsDQoNClRoYW5rcyBmb3IgeW91ciBoZWxwISBidXQgcGxlYXNlIHNlZSBteSBy
+ZXBseSBpbmxpbmUuDQoNClJlZ2FyZHMhDQpZYW5qaWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tDQo+IEZyb206IFByYXR5dXNoIEFuYW5kIFttYWlsdG86cHJhdHl1c2guYW5hbmRA
+Z21haWwuY29tXQ0KPiBTZW50OiAyMDE45bm0NeaciDI55pelIDIzOjA0DQo+IFRvOiBKaW4sIFlh
+bmppYW5nIDx5YW5qaWFuZy5qaW5AaHh0LXNlbWl0ZWNoLmNvbT4NCj4gQ2M6IGtleGVjQGxpc3Rz
+LmluZnJhZGVhZC5vcmc7IGppbnlhbmppYW5nQGdtYWlsLmNvbTsgaG9ybXNAdmVyZ2UubmV0LmF1
+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGFybTY0OiB1cGRhdGUgUEhZU19PRkZTRVQgdG8gY29u
+Zm9ybSB0byBrZXJuZWwNCj4NCj4gSGkgWWFuamlhbmcsDQo+DQo+IE9uIEZyaSwgTWF5IDExLCAy
+MDE4IGF0IDExOjMwIEFNLCBZYW5qaWFuZyBKaW4gPHlhbmppYW5nLmppbkBoeHQtc2VtaXRlY2gu
+Y29tPg0KPiB3cm90ZToNCj4gPiBOb3csIGFjY29yZGluZyB0byB0aGUga2VybmVsJ3MgbWVtb3J5
+LmgsIGNvbnZlcnRpbmcgYSB2aXJ0dWFsIGFkZHJlc3MNCj4gPiB0byBhIHBoeXNpY2FsIGFkZHJl
+c3Mgc2hvdWxkIGJlIGRvbmUgbGlrZSBiZWxvdzoNCj4gPg0KPiA+ICAgICAgICAgcGh5c19hZGRy
+X3QgX194ID0gKHBoeXNfYWRkcl90KSh4KTsgXA0KPiA+ICAgICAgICAgX194ICYgQklUKFZBX0JJ
+VFMgLSAxKSA/IChfX3ggJiB+UEFHRV9PRkZTRVQpICsgUEhZU19PRkZTRVQgOg0KPiA+IFwNCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoX194IC0ga2ltYWdlX3ZvZmZzZXQp
+OyB9KQ0KPiA+DQo+ID4gV2UganVzdCBzZXQgUEhZU19PRkZTRVQgYXMgdGhlIHN0YXJ0IGFkZHJl
+c3Mgb2YgdGhlIGZpcnN0IHVzYWJsZQ0KPiA+IG1lbW9yeSBibG9jayBpbiBTWVNURU0gUkFNIGJl
+Zm9yZSwgYnV0IGl0IGlzIGRlZmluZWQgaW4ga2VybmVsIGFzIGJlbG93Og0KPiA+DQo+ID4gZGVm
+aW5lIFBIWVNfT0ZGU0VUICh7IFZNX0JVR19PTihtZW1zdGFydF9hZGRyICYgMSk7IG1lbXN0YXJ0
+X2FkZHI7IH0pDQo+ID4NCj4gPiBTbyB3ZSBuZWVkIHRvIGNhbGN1bGF0ZSBQSFlTX09GRlNFVCBi
+YXNlZCBvbiBzb21lIHByb2Mgbm9kZXMuDQo+ID4NCj4gPiBXaXRob3V0IHRoaXMgY2hhbmdlLCB3
+ZSB3b3VsZCBnZXQgYSB3cm9uZyB2bWNvcmUuDQo+ID4gQXNzdW1lIHRoYXQgd2UgaGF2ZSBhIHN5
+c3RlbSBhcyBiZWxvdzoNCj4gPg0KPiA+IFZpcnR1YWwga2VybmVsIG1lbW9yeSBsYXlvdXQ6DQo+
+ID4NCj4gPiAgbWVtb3J5ICA6IDB4ZmZmZjgwMDAwMDIwMDAwMCAtIDB4ZmZmZjgwMTgwMDAwMDAw
+MA0KPiA+DQo+ID4gVGhlIGZpcnN0IGlvbWVtIGJsb2NrOg0KPiA+DQo+ID4gIDAwMjAwMDAwLTAw
+MjFmZmZmIDogcmVzZXJ2ZWQNCj4gPg0KPiA+IEJ1dCBpbiB2bWNvcmUncyBlbGYgaGVhZGVyLCB0
+aGUgY29ycmVzcG9uZGluZyBtZW1vcnkgYmxvY2sgYXMgYmVsb3csDQo+ID4gdGhlIGxhc3QgMk0g
+Ynl0ZXMgbG9zdCBkdWUgdG8gImlvbWVtIiBzdGFydHMgZnJvbSAweDIwMDAwMC4NCj4gPg0KPiA+
+ICAgVHlwZSAgICAgVmlydEFkZHINCj4gPiAgIExPQUQgICAgIDB4ZmZmZjgwMDE3ZmUwMDAwMA0K
+PiA+DQo+ID4gSWYgYW4gYXBwbGljYXRpb24sIGZvciBleGFtcGxlLCB2bWNvcmUtZG1lc2csIHdh
+bnRzIHRvIGFjY2VzcyB0aGUNCj4gPiBrZXJuZWwgc3ltYm9sIHdoaWNoIGlzIGxvY2F0ZWQgaW4g
+dGhlIGxhc3QgMk0gYWRkcmVzcywgaXQgd291bGQgZmFpbA0KPiA+IHdpdGggdGhlIGJlbG93IGVy
+cm9yOg0KPiA+DQo+ID4gICAiTm8gcHJvZ3JhbSBoZWFkZXIgY292ZXJpbmcgdmFkZHIgMHhmZmZm
+ODAxN2ZmZTkwMDAwIGZvdW5kIGtleGVjIGJ1Zz8iDQo+DQo+IEkgdGhpbmssIGZpeCBtaWdodCBu
+b3QgYmUgY29ycmVjdC4NCj4NCj4gUHJvYmxlbSBpcyBpbiB2bWNvcmUtZG1lc2cgYW5kIHRoYXQg
+c2hvdWxkIGJlIGZpeGVkIGFuZCBub3QgdGhlIGtleGVjLg0KPiBTZWUgaGVyZSAoaHR0cHM6Ly9n
+aXQua2VybmVsLm9yZy9wdWIvc2NtL3V0aWxzL2tlcm5lbC9rZXhlYy9rZXhlYy0NCj4gdG9vbHMu
+Z2l0L3RyZWUvdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jP2lkPUhFQUQjbjI2MSkuDQoNCkZp
+cnN0bHksIGZvciBteSBwYXRjaCwgdm1jb3JlLWRtZXNnIGlzIGp1c3QgYW4gYXV4aWxpYXJ5IGFw
+cGxpY2F0aW9uIHRvIGhlbHAgdG8gcmVwcm9kdWNlIHRoaXMgaXNzdWUuIFRoZSBmdW5jdGlvbiwg
+d2hpY2ggaXMgdG8gZ2VuZXJhdGUgdm1jb3JlLCAgaXMgdGhlIHJvb3QgY2F1c2UuDQoNCk9uIHRo
+ZSBvdGhlciBoYW5kLCB2bWNvcmUtZG1lc2cgaXMgdW5kZXIga2V4ZWMtdG9vbHMsIGl0IGhhcyBu
+byBhIHN0YW5kYWxvbmUgZ2l0IHJlcG8uICBFdmVuIHdlIHdhbnQgdG8gZml4IHZtY29yZS1kbWVz
+Zywgd2Ugc3RpbGwgbmVlZCB0byBzZW5kIHRoZSBwYXRjaCB0byBrZXhlYy10b29scywgcmlnaHQ/
+DQoNCllhbmppYW5nDQoNCj4gSG93IHN5bWJvbHMgYXJlIGV4dHJhY3RlZCBmcm9tIHZtY29yZS4N
+Cj4NCj4gWW91IGRvIGhhdmUgIk5VTUJFUihQSFlTX09GRlNFVCk9IiBpbmZvcm1hdGlvbiBpbiB2
+bWNvcmUuDQo+DQo+IFlvdSBjYW4gcHJvYmFibHkgc2VlIG1ha2VkdW1wZmlsZSBjb2RlLCB0aGF0
+IGhvdyB0byBleHRyYWN0IGluZm9ybWF0aW9uIGZyb20NCj4gIk5VTUJFUiIuDQoNCkkgaGF2ZSBz
+ZWVuIG1ha2VkdW1wZmlsZSBiZWZvcmUsIE5VTUJFUihudW1iZXIpIGlzIGp1c3QgcmVhZCBhIG51
+bWJlciBmcm9tIHZtY29yZS4gQnV0IGFzIEkgc2hvdyBiZWZvcmUsIHRoZSByb290IGlzc3VlIGlz
+IHZtY29yZSBjb250YWlucyBhIHdyb25nIG51bWJlciwgbXkgcGF0Y2ggaXMgdG8gZml4IHRoZSB2
+bWNvcmUgZ2VuZXJhdGluZyBpc3N1ZSwgd2UgY2FuJ3QgcmVhZCB2bWNvcmUgYXQgdGhpcyBwb2lu
+dCBzaW5jZSB3ZSBkb24ndCBoYXZlIHZtY29yZSB5ZXQuDQoNCk5VTUJFUihudW1iZXIpID0gcmVh
+ZF92bWNvcmVpbmZvX3Vsb25nKFNUUl9OVU1CRVIoc3RyX251bWJlcikpDQoNCllhbmppYW5nDQoN
+Cj4NCj4gT25jZSB5b3Uga25vdyB0aGUgcmVhbCBQSFlTX09GRlNFVCAod2hpY2ggY291bGQgaGF2
+ZSBiZWVuIHJhbmRvbSBpZiBLQVNMUiBpcw0KPiBlbmFibGVkKSwgeW91IGNhbiBmaXggdGhlIHBy
+b2JsZW0geW91IGFyZSBzZWVpbmcuDQoNCkkgaGF2ZSBib3RoIHZhbGlkYXRlZCB3aXRoL3dpdGhv
+dXQgS0FTTFIsICBhbGwgb2YgdGhlbSB3b3JrZWQgd2VsbCBhZnRlciBhcHBseWluZyBteSBwYXRj
+aC4NCg0KWWFuamlhbmcNCj4NCj4gUmVnYXJkcw0KPiBQcmF0eXVzaA0KDQoNCg0KVGhpcyBlbWFp
+bCBpcyBpbnRlbmRlZCBvbmx5IGZvciB0aGUgbmFtZWQgYWRkcmVzc2VlLiBJdCBtYXkgY29udGFp
+biBpbmZvcm1hdGlvbiB0aGF0IGlzIGNvbmZpZGVudGlhbC9wcml2YXRlLCBsZWdhbGx5IHByaXZp
+bGVnZWQsIG9yIGNvcHlyaWdodC1wcm90ZWN0ZWQsIGFuZCB5b3Ugc2hvdWxkIGhhbmRsZSBpdCBh
+Y2NvcmRpbmdseS4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwgeW91IGRv
+IG5vdCBoYXZlIGxlZ2FsIHJpZ2h0cyB0byByZXRhaW4sIGNvcHksIG9yIGRpc3RyaWJ1dGUgdGhp
+cyBlbWFpbCBvciBpdHMgY29udGVudHMsIGFuZCBzaG91bGQgcHJvbXB0bHkgZGVsZXRlIHRoZSBl
+bWFpbCBhbmQgYWxsIGVsZWN0cm9uaWMgY29waWVzIGluIHlvdXIgc3lzdGVtOyBkbyBub3QgcmV0
+YWluIGNvcGllcyBpbiBhbnkgbWVkaWEuIElmIHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZW1haWwg
+aW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBwcm9tcHRseS4gVGhhbmsgeW91Lg0K
+DQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
+IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
