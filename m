@@ -1,20 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-f66.google.com ([209.85.215.66])
+Received: from mail-lf0-x244.google.com ([2a00:1450:4010:c07::244])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fOryk-0003kb-SO
- for kexec@lists.infradead.org; Fri, 01 Jun 2018 21:53:00 +0000
-Received: by mail-lf0-f66.google.com with SMTP id j13-v6so12393209lfb.13
- for <kexec@lists.infradead.org>; Fri, 01 Jun 2018 14:52:48 -0700 (PDT)
+ id 1fOsXM-0001i7-PZ
+ for kexec@lists.infradead.org; Fri, 01 Jun 2018 22:28:46 +0000
+Received: by mail-lf0-x244.google.com with SMTP id q11-v6so16940850lfc.7
+ for <kexec@lists.infradead.org>; Fri, 01 Jun 2018 15:28:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5c78224a-528d-7aa5-58ba-858681f03b6a@redhat.com>
-References: <CACi5LpO8KVVD_6ZJTW2SiyR8v0uDMA3H9yKHNw1=RKO+fd7KjA@mail.gmail.com>
- <CAKv+Gu_KSDZyoLNUTAM2d769gQRfbtnGRTcU=8xOrYbmj2O4fA@mail.gmail.com>
- <CACi5LpN=fSGhgNFOQysJWWzFarchFa1q2R_-J05uQs3wxrANRA@mail.gmail.com>
- <5c78224a-528d-7aa5-58ba-858681f03b6a@redhat.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Sat, 2 Jun 2018 03:22:46 +0530
-Message-ID: <CACi5LpPMSUbyYAHi+SAEEj-cCXC6b2wgnkE0wrFpZEdL5wh4vg@mail.gmail.com>
-Subject: Re: [Query] PAGE_OFFSET on KASLR enabled ARM64 kernel
+In-Reply-To: <1527780226.3427.20.camel@linux.vnet.ibm.com>
+References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1527616920-5415-9-git-send-email-zohar@linux.vnet.ibm.com>
+ <CAHC9VhQL+CsqKL83fSZhjEZVSjKKfmLULvehXZ8SZhtK5xzLMQ@mail.gmail.com>
+ <1527635645.3534.39.camel@linux.vnet.ibm.com>
+ <CAHC9VhQQX-JAnV-6jEOsug-6siyO9mrNa=rYK9Whg-MYcfHxgA@mail.gmail.com>
+ <1527780226.3427.20.camel@linux.vnet.ibm.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 1 Jun 2018 18:28:30 -0400
+Message-ID: <CAHC9VhSjeruk_EM3DZ0fu8aq8_qbhD9BtfhtJ0Ery8mOMu2wrw@mail.gmail.com>
+Subject: Re: [PATCH v4a 8/8] module: replace the existing LSM hook in
+ init_module
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,300 +30,180 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, "Luis R . Rodriguez" <mcgrof@kernel.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Jeff Vander Stoep <jeffv@google.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity@vger.kernel.org, Andres Rodriguez <andresx7@gmail.com>
 
-On Sat, Jun 2, 2018 at 3:11 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> On 05/31/2018 10:21 AM, Bhupesh Sharma wrote:
->>
->> Hi Ard,
->>
->> Sorry I was out for most of the day yesterday. Please see my responses
->> inline.
->>
->> On Mon, May 28, 2018 at 12:16 PM, Ard Biesheuvel
->> <ard.biesheuvel@linaro.org> wrote:
->>>
->>> On 27 May 2018 at 23:03, Bhupesh Sharma <bhsharma@redhat.com> wrote:
->>>>
->>>> Hi ARM64 maintainers,
->>>>
->>>> I am confused about the PAGE_OFFSET value (or the start of the linear
->>>> map) on a KASLR enabled ARM64 kernel that I am seeing on a board which
->>>> supports a compatible EFI firmware (with EFI_RNG_PROTOCOL support).
->>>>
->>>> 1. 'arch/arm64/include/asm/memory.h' defines PAGE_OFFSET as:
->>>>
->>>> /*
->>>>   * PAGE_OFFSET - the virtual address of the start of the linear map
->>>> (top
->>>>   *         (VA_BITS - 1))
->>>>   */
->>>> #define PAGE_OFFSET        (UL(0xffffffffffffffff) - \
->>>>      (UL(1) << (VA_BITS - 1)) + 1)
->>>>
->>>> So for example on a platform with VA_BITS=48, we have:
->>>> PAGE_OFFSET = 0xffff800000000000
->>>>
->>>> 2. However, for the KASLR case, we set the 'memstart_offset_seed ' to
->>>> use the 16-bits of the 'kaslr-seed' to randomize the linear region in
->>>> 'arch/arm64/kernel/kaslr.c' :
->>>>
->>>> u64 __init kaslr_early_init(u64 dt_phys)
->>>> {
->>>> <snip..>
->>>>      /* use the top 16 bits to randomize the linear region */
->>>>      memstart_offset_seed = seed >> 48;
->>>> <snip..>
->>>> }
->>>>
->>>> 3. Now, we use the 'memstart_offset_seed' value to randomize the
->>>> 'memstart_addr' value in 'arch/arm64/mm/init.c':
->>>>
->>>> void __init arm64_memblock_init(void)
->>>> {
->>>> <snip..>
->>>>
->>>>      if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
->>>>          extern u16 memstart_offset_seed;
->>>>          u64 range = linear_region_size -
->>>>                  (memblock_end_of_DRAM() - memblock_start_of_DRAM());
->>>>
->>>>          /*
->>>>           * If the size of the linear region exceeds, by a sufficient
->>>>           * margin, the size of the region that the available physical
->>>>           * memory spans, randomize the linear region as well.
->>>>           */
->>>>          if (memstart_offset_seed > 0 && range >= ARM64_MEMSTART_ALIGN)
->>>> {
->>>>              range = range / ARM64_MEMSTART_ALIGN + 1;
->>>>              memstart_addr -= ARM64_MEMSTART_ALIGN *
->>>>                       ((range * memstart_offset_seed) >> 16);
->>>>          }
->>>>      }
->>>> <snip..>
->>>> }
->>>>
->>>> 4. Since 'memstart_addr' indicates the start of physical RAM, we
->>>> randomize the same on basis of 'memstart_offset_seed' value above.
->>>> Also the 'memstart_addr' value is available in '/proc/kallsyms' and
->>>> hence can be accessed by user-space applications to read the
->>>> 'memstart_addr' value.
->>>>
->>>> 5. Now since the PAGE_OFFSET value is also used by several user space
->>>> tools (for e.g. makedumpfile tool uses the same to determine the start
->>>> of linear region and hence to read PT_NOTE fields from /proc/kcore), I
->>>> am not sure how to read the randomized value of the same in the KASLR
->>>> enabled case.
->>>>
->>>> 6. Reading the code further and adding some debug prints, it seems the
->>>> 'memblock_start_of_DRAM()' value is more closer to the actual start of
->>>> linear region rather than 'memstart_addr' and 'PAGE_OFFSET" in case of
->>>> KASLR enabled kernel:
->>>>
->>>> [root@qualcomm-amberwing] # dmesg | grep -i "arm64_memblock_init" -A 5
->>>>
->>>> [    0.000000] inside arm64_memblock_init, memstart_addr =
->>>> ffff976a00000000,
->>>> linearstart_addr = ffffe89600200000, memblock_start_of_DRAM =
->>>> ffffe89600200000,
->>>> PHYS_OFFSET = ffff976a00000000, PAGE_OFFSET = ffff800000000000,
->>>> KIMAGE_VADDR = ffff000008000000, kimage_vaddr = ffff20c2d7800000
->>>>
->>>> [root@qualcomm-amberwing] # dmesg | grep -i "Virtual kernel memory
->>>> layout" -A 15
->>>> [    0.000000] Virtual kernel memory layout:
->>>> [    0.000000]     modules : 0xffff000000000000 - 0xffff000008000000
->>>> (   128 MB)
->>>> [    0.000000]     vmalloc : 0xffff000008000000 - 0xffff7bdfffff0000
->>>> (126847 GB)
->>>> [    0.000000]       .text : 0xffff20c2d7880000 - 0xffff20c2d8040000
->>>> (  7936 KB)
->>>> [    0.000000]     .rodata : 0xffff20c2d8040000 - 0xffff20c2d83a0000
->>>> (  3456 KB)
->>>> [    0.000000]       .init : 0xffff20c2d83a0000 - 0xffff20c2d8750000
->>>> (  3776 KB)
->>>> [    0.000000]       .data : 0xffff20c2d8750000 - 0xffff20c2d891b200
->>>> (  1837 KB)
->>>> [    0.000000]        .bss : 0xffff20c2d891b200 - 0xffff20c2d90a5198
->>>> (  7720 KB)
->>>> [    0.000000]     fixed   : 0xffff7fdffe790000 - 0xffff7fdffec00000
->>>> (  4544 KB)
->>>> [    0.000000]     PCI I/O : 0xffff7fdffee00000 - 0xffff7fdfffe00000
->>>> (    16 MB)
->>>> [    0.000000]     vmemmap : 0xffff7fe000000000 - 0xffff800000000000
->>>> (   128 GB maximum)
->>>> [    0.000000]               0xffff7ffa25800800 - 0xffff7ffa2b800000
->>>> (    95 MB actual)
->>>> [    0.000000]     memory  : 0xffffe89600200000 - 0xffffe8ae00000000
->>>> ( 98302 MB)
->>>>
->>>> As one can see above, the 'memblock_start_of_DRAM()' value of
->>>> 0xffffe89600200000 represents the start of linear region:
->>>>
->>>> [    0.000000]     memory  : 0xffffe89600200000 - 0xffffe8ae00000000
->>>> ( 98302 MB)
->>>>
->>>> So, my question is to access the start of linear region (which was
->>>> earlier determinable via PAGE_OFFSET macro), whether I should:
->>>>
->>>> - do some back-computation for the start of linear region from the
->>>> 'memstart_addr' in user-space, or
->>>> - use a new global variable in kernel which is assigned the value of
->>>> memblock_start_of_DRAM()' and assign it to '/proc/kallsyms', so that
->>>> it can be read by user-space tools, or
->>>> - whether we should rather look at removing the PAGE_OFFSET usage from
->>>> the kernel and replace it with a global variable instead which is
->>>> properly updated for KASLR case as well.
->>>>
->>>> Kindly share your opinions on what can be a suitable solution in this
->>>> case.
->>>>
->>>> Thanks for your help.
->>>>
->>>
->>> Hello Bhupesh,
->>>
->>> Could you explain what the relevance is of PAGE_OFFSET to userland?
->>> The only thing that should matter is where the actual linear mapping
->>> of DRAM is, and I am not sure I understand why we care about where it
->>> resides relative to the base of the linear region.
->>
->>
->> Actually certain user-space tools like makedumpfile (which is used to
->> generate and compress the vmcore) and crash-utility (which is used to
->> debug the vmcore), rely on the PAGE_OFFSET value (which denotes the
->> base of the linear map region) to determine virtual to physical
->> mapping of the addresses lying in the linear region .
->>
->> One specific use case that I am working on at the moment is the
->> makedumpfile '--mem-usage', which allows one to see the page numbers
->> of current system (1st kernel) in different use (please see
->> MAKEDUMPFILE(8) for more details).
->>
->> Using this we can know how many pages are dumpable when different
->> dump_level is specified when invoking the makedumpfile.
->>
->> Normally, makedumpfile analyses the contents of '/proc/kcore' (while
->> excluding the crashkernel range), and then calculates the page number
->> of different kind per vmcoreinfo.
->>
->> For e.g. here is an output from my arm64 board (a non KASLR boot):
->>
->>      TYPE            PAGES                   EXCLUDABLE      DESCRIPTION
->>
->> ----------------------------------------------------------------------
->>      ZERO            49524                   yes             Pages
->> filled with zero
->>      NON_PRI_CACHE   15143                   yes             Cache
->> pages without private flag
->>      PRI_CACHE       29147                   yes             Cache
->> pages with private flag
->>      USER            3684                    yes             User process
->> pages
->>      FREE            1450569                 yes             Free pages
->>      KERN_DATA       14243                   no              Dumpable
->> kernel data
->>
->>      page size:              65536
->>      Total pages on system:  1562310
->>      Total size on system:   102387548160     Byte
->>
->> This use case requires directly reading the '/proc/kcore' and the
->> hence the PAGE_OFFSET value is used to determine the base address of
->> the linear region, whose value is not static in case of KASLR boot.
->>
->> Another use-case is where the crash-utility uses the PAGE_OFFSET value
->> to perform a virtual-to-physical conversion for the address lying in
->> the linear region:
->>
->> ulong
->> arm64_VTOP(ulong addr)
->> {
->>      if (machdep->flags & NEW_VMEMMAP) {
->>          if (addr >= machdep->machspec->page_offset)
->>              return machdep->machspec->phys_offset
->>                  + (addr - machdep->machspec->page_offset);
->>
->> <..snip..>
->> }
->>
+On Thu, May 31, 2018 at 11:23 AM, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
+> Both the init_module and finit_module syscalls call either directly
+> or indirectly the security_kernel_read_file LSM hook.  This patch
+> replaces the direct call in init_module with a call to the new
+> security_kernel_load_data hook and makes the corresponding changes
+> in SELinux, LoadPin, and IMA.
 >
-> Another confusing concept is the rounded-up value of 'memstart_addr' in
-> 'arch/arm64/mm/init.c' when booting a non-KASLR_ kernel and when the value
-> of memblock_start_of_DRAM() < ARM64_MEMSTART_ALIGN:
+> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+> Cc: Jeff Vander Stoep <jeffv@google.com>
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: Casey Schaufler <casey@schaufler-ca.com>
+> Cc: Kees Cook <keescook@chromium.org>
 >
-> void __init arm64_memblock_init(void)
-> {
+> ---
+> Changelog:
+> - For SELinux, have both the security_kernel_read_file and
+> security_kernel_load_data LSM hooks call selinux_kernel_read_file().
+> - LoadPin: replace existing init_module LSM hook support with
+> new security_kernel_load_data hook.
 >
-> <..snip..>
->         /*
->          * Select a suitable value for the base of physical memory.
->          */
->         memstart_addr = round_down(memblock_start_of_DRAM(),
->                                    ARM64_MEMSTART_ALIGN);
-> <..snip..>
-> }
->
-> For example, let's consider a case (which I see on my qualcomm board) where
-> memblock_start_of_DRAM() = 0x200000 and ARM64_MEMSTART_ALIGN = 0x40000000 (I
-> am using VA_BITS = 48 and a 64K page size), in this case
-> memstart_addr is calculated at 0, as the round_down results in a value of 0.
->
-> This is in contrast with the definition of the 'memblock_start_of_DRAM':
->
-> /* lowest address */
-> phys_addr_t __init_memblock memblock_start_of_DRAM(void)
-> {
->         return memblock.memory.regions[0].base;
-> }
->
-> As indicated by logs below, the first memblock region base starts from
-> 0x200000 rather than the 'memstart_addr' value (which is 0)
->
-> # dmesg | grep -i "Processing" -A 5
-> [    0.000000] efi: Processing EFI memory map:
-> [    0.000000] efi:   0x000000200000-0x00000021ffff [Runtime Data |RUN|  |
-> |  |  |  |  |   |WB|WT|WC|UC]
-> [    0.000000] efi:   0x000000400000-0x0000005fffff [ACPI Memory NVS |   |
-> |  |  |  |  |  |   |  |  |  |UC]
->
-> # head -1 /proc/iomem
-> 00200000-0021ffff : reserved
->
-> Since we define 'PHYS_OFFSET' as the physical address of the start of memory
-> it would be 0 in this case:
->
-> /* PHYS_OFFSET - the physical address of the start of memory. */
-> #define PHYS_OFFSET             ({ VM_BUG_ON(memstart_addr & 1);
-> memstart_addr; })
->
-> On the other hand, the first memblock starts from 0x200000, so my question
-> is whether we should update the user-space tools which use the memblocks
-> listed in '/proc/iomem' to obtain the value of PHY_OFFSET (by reading the
-> base of the 1st memblock) and read the value of 'memstart_addr' somehow in
-> user-space to get the PHY_OFFSET, or should the change be done at the kernel
-> end to calculate 'memstart_addr' as:
->
->
->         /*
->          * Select a suitable value for the base of physical memory.
->          */
->         memstart_addr = round_down(memblock_start_of_DRAM(),
->                                    ARM64_MEMSTART_ALIGN);
->         if (memstart_addr)
+>  kernel/module.c                   |  2 +-
+>  security/integrity/ima/ima_main.c | 24 ++++++++++--------------
+>  security/loadpin/loadpin.c        | 15 +++++++++++++++
+>  security/selinux/hooks.c          | 15 +++++++++++++++
+>  4 files changed, 41 insertions(+), 15 deletions(-)
 
-Sorry for the typo: I meant if (!memstart_addr) above
+As mentioned in the previous iteration, I have no strong opinion on
+the question of the LSM hooks, but the SELinux bits look okay to me.
 
-Regards,
-Bhupesh
+Acked-by: Paul Moore <paul@paul-moore.com>
 
->                 memstart_addr = memblock_start_of_DRAM();
+> diff --git a/kernel/module.c b/kernel/module.c
+> index ce8066b88178..b97c642b5b4d 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -2879,7 +2879,7 @@ static int copy_module_from_user(const void __user *umod, unsigned long len,
+>         if (info->len < sizeof(*(info->hdr)))
+>                 return -ENOEXEC;
 >
-> Please share your views.
+> -       err = security_kernel_read_file(NULL, READING_MODULE);
+> +       err = security_kernel_load_data(LOADING_MODULE);
+>         if (err)
+>                 return err;
 >
-> Thanks,
-> Bhupesh
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 5a7696152982..cd33a2eff496 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -438,17 +438,6 @@ static int read_idmap[READING_MAX_ID] = {
+>   */
+>  int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
+>  {
+> -       bool sig_enforce = is_module_sig_enforced();
+> -
+> -       if (!file && read_id == READING_MODULE) {
+> -               if (!sig_enforce && (ima_appraise & IMA_APPRAISE_MODULES) &&
+> -                   (ima_appraise & IMA_APPRAISE_ENFORCE)) {
+> -                       pr_err("impossible to appraise a module without a file descriptor. sig_enforce kernel parameter might help\n");
+> -                       return -EACCES; /* INTEGRITY_UNKNOWN */
+> -               }
+> -               return 0;       /* We rely on module signature checking */
+> -       }
+> -
+>         if (read_id == READING_FIRMWARE_PREALLOC_BUFFER) {
+>                 if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
+>                     (ima_appraise & IMA_APPRAISE_ENFORCE)) {
+> @@ -487,9 +476,6 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
+>                 return 0;
+>         }
+>
+> -       if (!file && read_id == READING_MODULE) /* MODULE_SIG_FORCE enabled */
+> -               return 0;
+> -
+>         /* permit signed certs */
+>         if (!file && read_id == READING_X509_CERTIFICATE)
+>                 return 0;
+> @@ -518,6 +504,8 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
+>   */
+>  int ima_load_data(enum kernel_load_data_id id)
+>  {
+> +       bool sig_enforce;
+> +
+>         if ((ima_appraise & IMA_APPRAISE_ENFORCE) != IMA_APPRAISE_ENFORCE)
+>                 return 0;
+>
+> @@ -533,6 +521,14 @@ int ima_load_data(enum kernel_load_data_id id)
+>                         pr_err("Prevent firmware sysfs fallback loading.\n");
+>                         return -EACCES; /* INTEGRITY_UNKNOWN */
+>                 }
+> +               break;
+> +       case LOADING_MODULE:
+> +               sig_enforce = is_module_sig_enforced();
+> +
+> +               if (!sig_enforce && (ima_appraise & IMA_APPRAISE_MODULES)) {
+> +                       pr_err("impossible to appraise a module without a file descriptor. sig_enforce kernel parameter might help\n");
+> +                       return -EACCES; /* INTEGRITY_UNKNOWN */
+> +               }
+>         default:
+>                 break;
+>         }
+> diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
+> index 5fa191252c8f..a9c07bfbc338 100644
+> --- a/security/loadpin/loadpin.c
+> +++ b/security/loadpin/loadpin.c
+> @@ -173,9 +173,24 @@ static int loadpin_read_file(struct file *file, enum kernel_read_file_id id)
+>         return 0;
+>  }
+>
+> +static int loadpin_load_data(enum kernel_load_data_id id)
+> +{
+> +       int rc = 0;
+> +
+> +       switch (id) {
+> +       case LOADING_MODULE:
+> +               rc = loadpin_read_file(NULL, READING_MODULE);
+> +       default:
+> +               break;
+> +       }
+> +
+> +       return rc;
+> +}
+> +
+>  static struct security_hook_list loadpin_hooks[] __lsm_ro_after_init = {
+>         LSM_HOOK_INIT(sb_free_security, loadpin_sb_free_security),
+>         LSM_HOOK_INIT(kernel_read_file, loadpin_read_file),
+> +       LSM_HOOK_INIT(kernel_load_data, loadpin_load_data),
+>  };
+>
+>  void __init loadpin_add_hooks(void)
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 02ebd1585eaf..475aed9ee2c7 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -4059,6 +4059,20 @@ static int selinux_kernel_read_file(struct file *file,
+>         return rc;
+>  }
+>
+> +static int selinux_kernel_load_data(enum kernel_load_data_id id)
+> +{
+> +       int rc = 0;
+> +
+> +       switch (id) {
+> +       case LOADING_MODULE:
+> +               rc = selinux_kernel_module_from_file(NULL);
+> +       default:
+> +               break;
+> +       }
+> +
+> +       return rc;
+> +}
+> +
+>  static int selinux_task_setpgid(struct task_struct *p, pid_t pgid)
+>  {
+>         return avc_has_perm(&selinux_state,
+> @@ -6950,6 +6964,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
+>         LSM_HOOK_INIT(kernel_act_as, selinux_kernel_act_as),
+>         LSM_HOOK_INIT(kernel_create_files_as, selinux_kernel_create_files_as),
+>         LSM_HOOK_INIT(kernel_module_request, selinux_kernel_module_request),
+> +       LSM_HOOK_INIT(kernel_load_data, selinux_kernel_load_data),
+>         LSM_HOOK_INIT(kernel_read_file, selinux_kernel_read_file),
+>         LSM_HOOK_INIT(task_setpgid, selinux_task_setpgid),
+>         LSM_HOOK_INIT(task_getpgid, selinux_task_getpgid),
+> --
+> 2.7.5
+>
+
+
+
+-- 
+paul moore
+www.paul-moore.com
 
 _______________________________________________
 kexec mailing list
