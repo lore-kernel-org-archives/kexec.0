@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x244.google.com ([2a00:1450:400c:c09::244])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fOcP8-0001os-Jc
- for kexec@lists.infradead.org; Fri, 01 Jun 2018 05:15:14 +0000
-Received: by mail-wm0-x244.google.com with SMTP id o13-v6so541762wmf.4
- for <kexec@lists.infradead.org>; Thu, 31 May 2018 22:14:58 -0700 (PDT)
+ id 1fOoe8-0007mo-S1
+ for kexec@lists.infradead.org; Fri, 01 Jun 2018 18:19:30 +0000
+Date: Fri, 1 Jun 2018 20:19:13 +0200
+From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Subject: Re: [PATCH v4 4/8] firmware: add call to LSM hook before firmware
+ sysfs fallback
+Message-ID: <20180601181913.GN4511@wotan.suse.de>
+References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1527616920-5415-5-git-send-email-zohar@linux.vnet.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <b1d81713dda4443db10cde70aa7a4ac9@HXTBJIDCEMVIW02.hxtcorp.net>
-References: <b1d81713dda4443db10cde70aa7a4ac9@HXTBJIDCEMVIW02.hxtcorp.net>
-From: Pratyush Anand <pratyush.anand@gmail.com>
-Date: Fri, 1 Jun 2018 10:44:56 +0530
-Message-ID: <CAHM4w1m0=gCpgKWP7u-2JkA7zgk9erCOC2u9HhzR0LtsZ3wyfA@mail.gmail.com>
-Subject: Re: Re: [PATCH] arm64: update PHYS_OFFSET to conform to kernel
+Content-Disposition: inline
+In-Reply-To: <1527616920-5415-5-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,92 +21,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Jin, Yanjiang" <yanjiang.jin@hxt-semitech.com>
-Cc: "jinyanjiang@gmail.com" <jinyanjiang@gmail.com>, Bhupesh Sharma <bhsharma@redhat.com>, "horms@verge.net.au" <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Zheng,
- Joey" <yu.zheng@hxt-semitech.com>
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, Andres Rodriguez <andresx7@gmail.com>
 
-T24gVGh1LCBNYXkgMzEsIDIwMTggYXQgMTE6MDEgQU0sIEppbiwgWWFuamlhbmcKPHlhbmppYW5n
-LmppbkBoeHQtc2VtaXRlY2guY29tPiB3cm90ZToKPiBIaSBCaHVwZXNoLAo+Cj4gMS4gIFRvIGJl
-IGNsZWFyZXIsIEkgbGlzdGVkIG15IG1lbW9yeSBsYXlvdXQgYWdhaW4gaGVyZToKPgo+IEluIHRo
-ZSBmaXJzdCBrZXJuZWwsIGV4ZWN1dGUgdGhlIGJlbG93IGNvbW1hbmQgdG8gZ2V0IHRoZSBsYXN0
-IHZpcnR1YWwgbWVtb3J5Ogo+Cj4gI2RtZXNnIHwgZ3JlcCBtZW1vcnkKPiAuLi4uLi4uLi4uCj4g
-bWVtb3J5ICA6IDB4ZmZmZjgwMDAwMDIwMDAwMCAtIDB4ZmZmZjgwMTgwMDAwMDAwMAo+Cj4gVGhl
-IHVzZSByZWFkZWxmIHRvIGdldCB0aGUgbGFzdCBQcm9ncmFtIEhlYWRlciBmcm9tIHZtY29yZToK
-Pgo+ICMgcmVhZGVsZiAtbCB2bWNvcmUKPgo+IEVMRiBIZWFkZXI6Cj4gLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uCj4KPiBQcm9ncmFtIEhlYWRlcnM6Cj4gICBUeXBlICAgICAgICAgICBPZmZzZXQg
-ICAgICAgICAgICAgVmlydEFkZHIgICAgICAgICAgIFBoeXNBZGRyICAgICAgICAgICAgICAgICBG
-aWxlU2l6ICAgICAgICAgICAgTWVtU2l6ICAgICAgICAgICAgICBGbGFncyAgQWxpZ24KPiAuLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLgo+ICAgTE9BRCAgICAgICAg
-MHgwMDAwMDAwMDc2ZDQwMDAwIDB4ZmZmZjgwMDE3ZmUwMDAwMCAweDAwMDAwMDAxODAwMDAwMDAg
-ICAgICAgICAgICAgICAgIDB4MDAwMDAwMTY4MDAwMDAwMCAweDAwMDAwMDE2ODAwMDAwMDAgIFJX
-RSAgICAwCj4KPiBEbyBhIHNpbXBsZSBjYWxjdWxhdGlvbjoKPgo+IChWaXJ0QWRkciArIE1lbVNp
-eikgPSAweGZmZmY4MDAxN2ZlMDAwMDAgKyAweDAwMDAwMDE2ODAwMDAwMDAgPSAweEZGRkY4MDE3
-RkZFMDAwMDAgIT0gMHhmZmZmODAxODAwMDAwMDAwLgo+Cj4gVGhlIGVuZCB2aXJ0dWFsIG1lbW9y
-eSBub2RlIGFyZSBtaXNtYXRjaCBiZXR3ZWVuIHZtbGludXggYW5kIHZtY29yZS4gSWYgeW91IGRv
-IHRoZSBzYW1lIDMgc3RlcHMsIEkgdGhpbmsgeW91IHdpbGwgZ2V0IHRoZSBzYW1lIHJlc3VsdHMg
-YXMgbWluZS4KPgo+Cj4gMi4gQnV0IHdoeSB5b3UgY2Fu4oCZdCByZXByb2R1Y2UgbXkgaXNzdWU/
-IFRoZSByZWFzb24gaXMgbXkgYWRkcmVzcyBvZiBzeW1ib2wg4oCcbG9nX2J1ZuKAnSBpcyBsb2Nh
-dGVkIGluIHRoZSBsYXN0IDJNLgo+IEkgZ3Vlc3MgaXQgaXNu4oCZdCBpbiB0aGUgbGFzdCAyTSBi
-eXRlcyBvbiB5b3VyIGVudmlyb25tZW50LCBzbyB3ZSBnZXQgdGhlIGRpZmZlcmVudCB2bWNvcmUt
-ZG1lc2cgcmVzdWx0cy4KPiBZb3UgY2FuIHNpbXBseSBjaGVjayB0aGUgbG9nX2J1ZuKAmXMgYWRk
-cmVzcyB0aHJvdWdoIGNyYXNoIGFzIGJlbG93Ogo+Cj4gY3Jhc2g+IHByaW50IGxvZ19idWYKPiAk
-MSA9IDB4ZmZmZjgwMTdmZmU5MDAwMCAiIgo+Cj4gSW4gdm1jb3JlLWRtZXNnLmMsIHRoZSBmdW5j
-dGlvbiBkdW1wX2RtZXNnX3N0cnVjdHVyZWQoKSB3YW50cyB0byBnZXQgbG9nX2J1ZiBvZmZzZXQg
-dGhyb3VnaCB0aGUgYmVsb3cgY29kZXM6Cj4KPiBsb2dfYnVmX29mZnNldCA9IHJlYWRfZmlsZV9w
-b2ludGVyKGZkLCB2YWRkcl90b19vZmZzZXQobG9nX2J1Zl92YWRkcikpOwo+IGxvZ19idWZfb2Zm
-c2V0ID0gdmFkZHJfdG9fb2Zmc2V0KGxvZ19idWYpOwo+Cj4gRXJyb3IgaGFwcGVucyBpbiB2YWRk
-cl90b19vZmZzZXQoKSwgaXQgcmVwb3J0cyB0aGUgYmVsb3cgZXJyb3Igb24gbXkgYm9hcmQ6Cj4g
-4oCcTm8gcHJvZ3JhbSBoZWFkZXIgY292ZXJpbmcgdmFkZHIgMHhmZmZmODAxN2ZmZTkwMDAwIGZv
-dW5kIGtleGVjIGJ1Zz/igJ0KCk9LLCBzbyBpdCBoYXBwZW5lZCBiZWNhdXNlIFZpcnR1YWwgQWRk
-cmVzcyBwcm9ncmFtbWVkIGluIFBUX0xPQUQgd2FzCm5vdCBjb3JyZWN0IGluIGtleGVjLXRvb2xz
-LgoKPgo+IElmIEkgYWRqdXN0IG15IG1lbW9yeeKAmXMgbGF5b3V0LCBkb27igJl0IHB1dCBsb2df
-YnVmIGludG8gdGhlIGxhc3QgMk0sIHZtY29yZS1kbWVzZyB3aWxsIHN1Y2NlZWQuIEJ1dCB0aGlz
-IGlzc3VlIHN0aWxsIGV4aXN0cywgdm1saW51eCBhbmQgdm1jb3Jl4oCZcyBsYXlvdXRzIGFyZSBt
-aXNtYXRjaC4KPgo+IGxvZ19idWYgaW4gdGhlIGxhc3QgMk0gaXMgbm90IGNvbW1vbiwgYnV0IGl0
-IGRvZXMgaGFwcGVuIG9uIG15IGJvYXJkLgoKT0suCgo+Cj4KPiAzLiBOb3cgbGV0J3MgZ28gYmFj
-ayB0byB0aGUgY29kZSBpdHNlbGYuIE5vIG1hdHRlciB3ZSBjYW4gcmVwcm9kdWNlIHRoaXMgYnVn
-IG9yIG5vdCwgcGh5c19vZmZzZXTigJlzIGNvZGXigJlzIGlzc3VlIGFsd2F5cyBleGlzdHMuCj4K
-PiBJbiBrZXJuZWw6Cj4gYXJtNjRfbWVtYmxvY2tfaW5pdCgpIGNhbGxzIHJvdW5kX2Rvd24gdG8g
-cmVjYWxjdWxhdGUgbWVtc3RhcnRfYWRkcjoKPgo+IG1lbXN0YXJ0X2FkZHIgPSByb3VuZF9kb3du
-KG1lbWJsb2NrX3N0YXJ0X29mX0RSQU0oKSwgIEFSTTY0X01FTVNUQVJUX0FMSUdOKTsKPgo+IG1l
-bWJsb2NrX3N0YXJ0X29mX0RSQU0oKSBpcyAweDIwMDAwMCwgaXQgaXMgdGhlIGZpcnN0IG1lbWJs
-b2Nr4oCZcyBiYXNlLgo+IEFSTTY0X01FTVNUQVJUX0FMSUdOIGlzIDB4NDAwMDAwMDAgb24gbXkg
-Ym9hcmQuCj4KPiBTbyBtZW1zdGFydF9hZGRyIGlzIDAsIGFuZCBwaHlzX29mZnNldCA9IG1lbXN0
-YXJ0X2FkZHIgPSAwOwoKSHVtbSwgT0ssIHNvIHlvdXIgUEhZU19PRkZTRVQgaXMgbm90IHNhbWUg
-YXMgdGhlIGxvd2VzdCBzdGFydCBhZGRyZXNzCmluIC9wcm9jL2lvbWVtLiBTbywgd2UgbWF5IGFs
-d2F5cyBoYXZlIHByb2JsZW0sIHdoZW4gc3RhcnQgb2YgRFJBTSBpcwpuZWl0aGVyIDAgbm9yIG11
-bHRpcGxlIG9mIEFSTTY0X01FTVNUQVJUX0FMSUdOLgoKPgo+IEJ1dCBpbiBrZXhlYy10b29sczoK
-PiBwaHlzX29mZnNldCBpcyBzZXQgaW4gdGhlIGZ1bmN0aW9uIGdldF9tZW1vcnlfcmFuZ2VzX2lv
-bWVtX2NiKCkgOgo+Cj4gZ2V0X21lbW9yeV9yYW5nZXNfaW9tZW1fY2IoKS0+c2V0X3BoeXNfb2Zm
-c2V0KCkuCj4KPiBUaGlzIGZ1bmN0aW9uIGlzIGp1c3QgZ2V0IHRoZSBmaXJzdCBtZW1ibG9ja+KA
-mXMgYmFzZShmaXJzdCBibG9jayBvZiDigJwvcHJvYy9pb21lbeKAnSksIG5vIHJvdW5kX2Rvd24o
-KSBvcGVyYXRpb24uCj4KPiBUbyBhbGlnbiB3aXRoIGtlcm5lbCwga2V4ZWMtdG9vbHMgc2hvdWxk
-IGNhbGwgdGhlIHNpbWlsYXIgcm91bmRfZG93bigpIGZ1bmN0aW9uIGZvciB0aGlzIGJhc2UuIEJ1
-dCBvYnZpb3VzbHksIGtleGVjLXRvb2xzIGRvZXNu4oCZdCBkbyB0aGlzIHN0ZXAuCj4gSXTigJlz
-IGhhcmQgdG8gZ2V0IGtlcm5lbOKAmXMgcm91bmRfZG93biBwYXJhbWV0ZXJzIGluIGtleGVjLXRv
-b2xzLCBidXQgcmVhZCBtZW1zdGFydF9hZGRy4oCZcyB2YWx1ZSBmcm9tIERFVk1FTSBpcyBzYWZl
-LCB3ZSBjYW4gYWx3YXlzIGdldCB0aGUgY29ycmVjdCB2YWx1ZSByZWdhcmRsZXNzIG9mIHdoZXRo
-ZXIgS0FTTFIgaXMgZW5hYmxlZC4KClJlYWRpbmcgZnJvbSAvZGV2L21lbSBpcyBub3QgYSBnb29k
-IGlkZWEsIGJlY2F1c2Ugb2Ygc2ltcGxlIHJlYXNvbgp0aGF0IC9kZXYvbWVtIG1heSBub3QgYmUg
-YXZhaWxhYmxlIGluIGFsbCB0aGUgY2FzZXMuCldlIGNhbiBoYXZlIG9uZSB3YXkgb3IgYW5vdGhl
-ciB0byBrbm93IEFSTTY0X01FTVNUQVJUX0FMSUdOIGluIHVzZXIKc3BhY2UuIEZvciBleGFtcGxl
-LCBieSBsb29raW5nIGFmdGVyIHRvcCBiaXRzIG9mIF90ZXh0LCB3ZSBjYW4ga25vdwp0aGUgVkFf
-QklUUy4gSWYgd2Uga25vdyB0aGUgVkFfQklUUywgd2UgY2FuIGtub3cgdGhlIHBhZ2UgdGFibGUg
-c2l6ZQphbmQgbGV2ZWwsIGFuZCBzbyBjYW4gbm93IFBVRF9TSElGVCBldGMuIEJ1dCwgdGhhdCBt
-YXkgbm90IGJlIHRoZQpzb2x1dGlvbiB3aGVuIEtBU0xSIGlzIGVuYWJsZWQuCgpMZXRzIHNlZSB3
-aGF0IG90aGVycyBzYXlzLiBJIHRoaW5rIG9uIHRoZSBzYW1lIGxpbmUgYXMgQmh1cGVzaCBoYWQK
-c2FpZC4gV2Ugd2lsbCBuZWVkIGl0IHRvIGZpeCBpbiBrZXhlYy10b29scyBhcyB3ZWxsIGFzIGtl
-cm5lbC4KCklNTywgIGtleGVjLXRvb2xzIG1heSB3cml0ZSBvbmx5IHJlYWwgcGh5c2ljYWwgYWRk
-cmVzcyBpbiBQVF9MT0FEIGFuZApjYW4gd3JpdGUgYW4gaW52YWxpZCAoMCkgdmlydHVhbCBhZGRy
-ZXNzIChpZiBpdCBpcyBub3QgYWJsZSB0bwpjYWxjdWxhdGUgdGhlIHNhbWUgY29ycmVjdGx5KS4g
-S2VybmVsIGNhbiB1cGRhdGUgdGhlIHZpcnR1YWwgYWRkcmVzcwp3aXRoIGNvcnJlY3QgdmFsdWUg
-aWYgaXQgaXMgaW52YWxpZC4KClJlZ2FyZHMKUHJhdHl1c2gKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8va2V4ZWMK
+On Tue, May 29, 2018 at 02:01:56PM -0400, Mimi Zohar wrote:
+> Add an LSM hook prior to allowing firmware sysfs fallback loading.
+
+Acked-by: Luis R. Rodriguez <mcgrof@kernel.org>
+
+> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+> Cc: Luis R. Rodriguez <mcgrof@suse.com>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> 
+> Changelog v4:
+> - call new LSM security_kernel_arg hook
+> 
+> Changelog v2:
+> - call security_kernel_read_blob()
+> - rename the READING_FIRMWARE_FALLBACK kernel_read_file_id enumeration to
+> READING_FIRMWARE_FALLBACK_SYSFS.
+> ---
+>  drivers/base/firmware_loader/fallback.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+> index 358354148dec..2443bda81631 100644
+> --- a/drivers/base/firmware_loader/fallback.c
+> +++ b/drivers/base/firmware_loader/fallback.c
+> @@ -651,6 +651,8 @@ static bool fw_force_sysfs_fallback(unsigned int opt_flags)
+>  
+>  static bool fw_run_sysfs_fallback(unsigned int opt_flags)
+>  {
+> +	int ret;
+> +
+>  	if (fw_fallback_config.ignore_sysfs_fallback) {
+>  		pr_info_once("Ignoring firmware sysfs fallback due to sysctl knob\n");
+>  		return false;
+> @@ -659,6 +661,11 @@ static bool fw_run_sysfs_fallback(unsigned int opt_flags)
+>  	if ((opt_flags & FW_OPT_NOFALLBACK))
+>  		return false;
+>  
+> +	/* Also permit LSMs and IMA to fail firmware sysfs fallback */
+> +	ret = security_kernel_load_data(LOADING_FIRMWARE);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	return fw_force_sysfs_fallback(opt_flags);
+>  }
+>  
+> -- 
+> 2.7.5
+> 
+> 
+
+-- 
+Do not panic
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
