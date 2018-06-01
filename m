@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-f67.google.com ([209.85.215.67])
+Received: from mail-lf0-f66.google.com ([209.85.215.66])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fOry8-0003bq-4h
- for kexec@lists.infradead.org; Fri, 01 Jun 2018 21:52:22 +0000
-Received: by mail-lf0-f67.google.com with SMTP id t134-v6so16828894lff.6
- for <kexec@lists.infradead.org>; Fri, 01 Jun 2018 14:52:09 -0700 (PDT)
+ id 1fOryk-0003kb-SO
+ for kexec@lists.infradead.org; Fri, 01 Jun 2018 21:53:00 +0000
+Received: by mail-lf0-f66.google.com with SMTP id j13-v6so12393209lfb.13
+ for <kexec@lists.infradead.org>; Fri, 01 Jun 2018 14:52:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACi5LpMqUNLWkx9=Ur=FT=cxAEt-6hjh64-4ZFDhm2qADjEd3w@mail.gmail.com>
-References: <b1d81713dda4443db10cde70aa7a4ac9@HXTBJIDCEMVIW02.hxtcorp.net>
- <CACi5LpMqUNLWkx9=Ur=FT=cxAEt-6hjh64-4ZFDhm2qADjEd3w@mail.gmail.com>
+In-Reply-To: <5c78224a-528d-7aa5-58ba-858681f03b6a@redhat.com>
+References: <CACi5LpO8KVVD_6ZJTW2SiyR8v0uDMA3H9yKHNw1=RKO+fd7KjA@mail.gmail.com>
+ <CAKv+Gu_KSDZyoLNUTAM2d769gQRfbtnGRTcU=8xOrYbmj2O4fA@mail.gmail.com>
+ <CACi5LpN=fSGhgNFOQysJWWzFarchFa1q2R_-J05uQs3wxrANRA@mail.gmail.com>
+ <5c78224a-528d-7aa5-58ba-858681f03b6a@redhat.com>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Sat, 2 Jun 2018 03:22:07 +0530
-Message-ID: <CACi5LpN3P3vCTkz+rsCd8BurvtTaNdZsx_-bYmhig9cyvVxpcA@mail.gmail.com>
-Subject: Re: Re: [PATCH] arm64: update PHYS_OFFSET to conform to kernel
+Date: Sat, 2 Jun 2018 03:22:46 +0530
+Message-ID: <CACi5LpPMSUbyYAHi+SAEEj-cCXC6b2wgnkE0wrFpZEdL5wh4vg@mail.gmail.com>
+Subject: Re: [Query] PAGE_OFFSET on KASLR enabled ARM64 kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,327 +23,306 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Jin, Yanjiang" <yanjiang.jin@hxt-semitech.com>
-Cc: "jinyanjiang@gmail.com" <jinyanjiang@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Zheng,
- Joey" <yu.zheng@hxt-semitech.com>, "horms@verge.net.au" <horms@verge.net.au>
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-T24gU2F0LCBKdW4gMiwgMjAxOCBhdCAzOjIwIEFNLCBCaHVwZXNoIFNoYXJtYSA8YmhzaGFybWFA
-cmVkaGF0LmNvbT4gd3JvdGU6Cj4gSGkgWWFuamlhbmcsCj4KPiBUaGFua3MsIHRoZSBkZXNjcmlw
-dGlvbiBvZiB0aGUgaXNzdWUgaXMgbW9yZSBjbGVhciBub3cuCj4KPiBBbHNvIEkgbWFuYWdlZCB0
-byBmaXggbXkgcXVhbGNvbW0gYm9hcmQgdG8gcmVwcm9kdWNlIHRoaXMgaXNzdWUuCj4gUGxlYXNl
-IHNlZSBtb3JlIGNvbW1lbnRzIGlubGluZToKPgo+IE9uIFRodSwgTWF5IDMxLCAyMDE4IGF0IDEx
-OjAxIEFNLCBKaW4sIFlhbmppYW5nCj4gPHlhbmppYW5nLmppbkBoeHQtc2VtaXRlY2guY29tPiB3
-cm90ZToKPj4gSGkgQmh1cGVzaCwKPj4KPj4gMS4gIFRvIGJlIGNsZWFyZXIsIEkgbGlzdGVkIG15
-IG1lbW9yeSBsYXlvdXQgYWdhaW4gaGVyZToKPj4KPj4gSW4gdGhlIGZpcnN0IGtlcm5lbCwgZXhl
-Y3V0ZSB0aGUgYmVsb3cgY29tbWFuZCB0byBnZXQgdGhlIGxhc3QgdmlydHVhbCBtZW1vcnk6Cj4+
-Cj4+ICNkbWVzZyB8IGdyZXAgbWVtb3J5Cj4+IC4uLi4uLi4uLi4KPj4gbWVtb3J5ICA6IDB4ZmZm
-ZjgwMDAwMDIwMDAwMCAtIDB4ZmZmZjgwMTgwMDAwMDAwMAo+Pgo+PiBUaGUgdXNlIHJlYWRlbGYg
-dG8gZ2V0IHRoZSBsYXN0IFByb2dyYW0gSGVhZGVyIGZyb20gdm1jb3JlOgo+Pgo+PiAjIHJlYWRl
-bGYgLWwgdm1jb3JlCj4+Cj4+IEVMRiBIZWFkZXI6Cj4+IC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Lgo+Pgo+PiBQcm9ncmFtIEhlYWRlcnM6Cj4+ICAgVHlwZSAgICAgICAgICAgT2Zmc2V0ICAgICAg
-ICAgICAgIFZpcnRBZGRyICAgICAgICAgICBQaHlzQWRkciAgICAgICAgICAgICAgICAgRmlsZVNp
-eiAgICAgICAgICAgIE1lbVNpeiAgICAgICAgICAgICAgRmxhZ3MgIEFsaWduCj4+IC4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uCj4+ICAgTE9BRCAgICAgICAgMHgw
-MDAwMDAwMDc2ZDQwMDAwIDB4ZmZmZjgwMDE3ZmUwMDAwMCAweDAwMDAwMDAxODAwMDAwMDAgICAg
-ICAgICAgICAgICAgIDB4MDAwMDAwMTY4MDAwMDAwMCAweDAwMDAwMDE2ODAwMDAwMDAgIFJXRSAg
-ICAwCj4+Cj4+IERvIGEgc2ltcGxlIGNhbGN1bGF0aW9uOgo+Pgo+PiAoVmlydEFkZHIgKyBNZW1T
-aXopID0gMHhmZmZmODAwMTdmZTAwMDAwICsgMHgwMDAwMDAxNjgwMDAwMDAwID0gMHhGRkZGODAx
-N0ZGRTAwMDAwICE9IDB4ZmZmZjgwMTgwMDAwMDAwMC4KPj4KPj4gVGhlIGVuZCB2aXJ0dWFsIG1l
-bW9yeSBub2RlIGFyZSBtaXNtYXRjaCBiZXR3ZWVuIHZtbGludXggYW5kIHZtY29yZS4gSWYgeW91
-IGRvIHRoZSBzYW1lIDMgc3RlcHMsIEkgdGhpbmsgeW91IHdpbGwgZ2V0IHRoZSBzYW1lIHJlc3Vs
-dHMgYXMgbWluZS4KPj4KPj4KPj4gMi4gQnV0IHdoeSB5b3UgY2Fu4oCZdCByZXByb2R1Y2UgbXkg
-aXNzdWU/IFRoZSByZWFzb24gaXMgbXkgYWRkcmVzcyBvZiBzeW1ib2wg4oCcbG9nX2J1ZuKAnSBp
-cyBsb2NhdGVkIGluIHRoZSBsYXN0IDJNLgo+PiBJIGd1ZXNzIGl0IGlzbuKAmXQgaW4gdGhlIGxh
-c3QgMk0gYnl0ZXMgb24geW91ciBlbnZpcm9ubWVudCwgc28gd2UgZ2V0IHRoZSBkaWZmZXJlbnQg
-dm1jb3JlLWRtZXNnIHJlc3VsdHMuCj4+IFlvdSBjYW4gc2ltcGx5IGNoZWNrIHRoZSBsb2dfYnVm
-4oCZcyBhZGRyZXNzIHRocm91Z2ggY3Jhc2ggYXMgYmVsb3c6Cj4+Cj4+IGNyYXNoPiBwcmludCBs
-b2dfYnVmCj4+ICQxID0gMHhmZmZmODAxN2ZmZTkwMDAwICIiCj4+Cj4+IEluIHZtY29yZS1kbWVz
-Zy5jLCB0aGUgZnVuY3Rpb24gZHVtcF9kbWVzZ19zdHJ1Y3R1cmVkKCkgd2FudHMgdG8gZ2V0IGxv
-Z19idWYgb2Zmc2V0IHRocm91Z2ggdGhlIGJlbG93IGNvZGVzOgo+Pgo+PiBsb2dfYnVmX29mZnNl
-dCA9IHJlYWRfZmlsZV9wb2ludGVyKGZkLCB2YWRkcl90b19vZmZzZXQobG9nX2J1Zl92YWRkcikp
-Owo+PiBsb2dfYnVmX29mZnNldCA9IHZhZGRyX3RvX29mZnNldChsb2dfYnVmKTsKPj4KPj4gRXJy
-b3IgaGFwcGVucyBpbiB2YWRkcl90b19vZmZzZXQoKSwgaXQgcmVwb3J0cyB0aGUgYmVsb3cgZXJy
-b3Igb24gbXkgYm9hcmQ6Cj4+IOKAnE5vIHByb2dyYW0gaGVhZGVyIGNvdmVyaW5nIHZhZGRyIDB4
-ZmZmZjgwMTdmZmU5MDAwMCBmb3VuZCBrZXhlYyBidWc/4oCdCj4+Cj4+IElmIEkgYWRqdXN0IG15
-IG1lbW9yeeKAmXMgbGF5b3V0LCBkb27igJl0IHB1dCBsb2dfYnVmIGludG8gdGhlIGxhc3QgMk0s
-IHZtY29yZS1kbWVzZyB3aWxsIHN1Y2NlZWQuIEJ1dCB0aGlzIGlzc3VlIHN0aWxsIGV4aXN0cywg
-dm1saW51eCBhbmQgdm1jb3Jl4oCZcyBsYXlvdXRzIGFyZSBtaXNtYXRjaC4KPj4KPj4gbG9nX2J1
-ZiBpbiB0aGUgbGFzdCAyTSBpcyBub3QgY29tbW9uLCBidXQgaXQgZG9lcyBoYXBwZW4gb24gbXkg
-Ym9hcmQuCj4+Cj4+Cj4+IDMuIE5vdyBsZXQncyBnbyBiYWNrIHRvIHRoZSBjb2RlIGl0c2VsZi4g
-Tm8gbWF0dGVyIHdlIGNhbiByZXByb2R1Y2UgdGhpcyBidWcgb3Igbm90LCBwaHlzX29mZnNldOKA
-mXMgY29kZeKAmXMgaXNzdWUgYWx3YXlzIGV4aXN0cy4KPj4KPj4gSW4ga2VybmVsOgo+PiBhcm02
-NF9tZW1ibG9ja19pbml0KCkgY2FsbHMgcm91bmRfZG93biB0byByZWNhbGN1bGF0ZSBtZW1zdGFy
-dF9hZGRyOgo+Pgo+PiBtZW1zdGFydF9hZGRyID0gcm91bmRfZG93bihtZW1ibG9ja19zdGFydF9v
-Zl9EUkFNKCksICBBUk02NF9NRU1TVEFSVF9BTElHTik7Cj4+Cj4+IG1lbWJsb2NrX3N0YXJ0X29m
-X0RSQU0oKSBpcyAweDIwMDAwMCwgaXQgaXMgdGhlIGZpcnN0IG1lbWJsb2Nr4oCZcyBiYXNlLgo+
-PiBBUk02NF9NRU1TVEFSVF9BTElHTiBpcyAweDQwMDAwMDAwIG9uIG15IGJvYXJkLgo+Pgo+PiBT
-byBtZW1zdGFydF9hZGRyIGlzIDAsIGFuZCBwaHlzX29mZnNldCA9IG1lbXN0YXJ0X2FkZHIgPSAw
-Owo+Pgo+PiBCdXQgaW4ga2V4ZWMtdG9vbHM6Cj4+IHBoeXNfb2Zmc2V0IGlzIHNldCBpbiB0aGUg
-ZnVuY3Rpb24gZ2V0X21lbW9yeV9yYW5nZXNfaW9tZW1fY2IoKSA6Cj4+Cj4+IGdldF9tZW1vcnlf
-cmFuZ2VzX2lvbWVtX2NiKCktPnNldF9waHlzX29mZnNldCgpLgo+Pgo+PiBUaGlzIGZ1bmN0aW9u
-IGlzIGp1c3QgZ2V0IHRoZSBmaXJzdCBtZW1ibG9ja+KAmXMgYmFzZShmaXJzdCBibG9jayBvZiDi
-gJwvcHJvYy9pb21lbeKAnSksIG5vIHJvdW5kX2Rvd24oKSBvcGVyYXRpb24uCj4+Cj4+IFRvIGFs
-aWduIHdpdGgga2VybmVsLCBrZXhlYy10b29scyBzaG91bGQgY2FsbCB0aGUgc2ltaWxhciByb3Vu
-ZF9kb3duKCkgZnVuY3Rpb24gZm9yIHRoaXMgYmFzZS4gQnV0IG9idmlvdXNseSwga2V4ZWMtdG9v
-bHMgZG9lc27igJl0IGRvIHRoaXMgc3RlcC4KPj4gSXTigJlzIGhhcmQgdG8gZ2V0IGtlcm5lbOKA
-mXMgcm91bmRfZG93biBwYXJhbWV0ZXJzIGluIGtleGVjLXRvb2xzLCBidXQgcmVhZCBtZW1zdGFy
-dF9hZGRy4oCZcyB2YWx1ZSBmcm9tIERFVk1FTSBpcyBzYWZlLCB3ZSBjYW4gYWx3YXlzIGdldCB0
-aGUgY29ycmVjdCB2YWx1ZSByZWdhcmRsZXNzIG9mIHdoZXRoZXIgS0FTTFIgaXMgZW5hYmxlZC4K
-Pgo+IFRoZSBwcm9ibGVtIHN0YXRlbWVudCBpcyBtb3JlIGNsZWFyZXIgbm93ICh0aGFua3MgZm9y
-IGRldGFpbGluZyB0aGUKPiBlbnZpcm9ubWVudCBpbiB5b3VyIGxhc3QgZW1haWwpLgo+Cj4gSSB0
-aGluayBJIHVuZGVyc3RhbmQgdGhlIGlzc3VlIHdpdGggJ21lbXN0YXJ0X2FkZHInIGJlaW5nIDAg
-YW5kIGl0IGlzCj4gcGFydCBvZiBhIGZldyBLQVNMUiAoYWx0aG91Z2ggYSBmZXcgb2YgdGhlbSBh
-cmUgdmFsaWQgZm9yIG5vbi1LQVNMUgo+IGNhc2UgYXMgd2VsbCkgcmVsYXRlZCBxdWVyaWVzIHRo
-YXQgSSBoYXZlIHJlY2VudGx5IGFza2VkIGFybTY0IGtlcm5lbAo+IG1haW50YWluZXJzIHVwc3Ry
-ZWFtIChwbGVhc2Ugc2VlIFsxXSBmb3IgZGV0YWlscykuCj4KPiBUaGVyZSBJIGhhdmUgYXNrZWQg
-dGhlIG1haW50YWluZXJzIGFib3V0IHRoZWlyIHZpZXdzIHJlZ2FyZGluZyB3aGV0aGVyCj4gd2Ug
-c2hvdWxkIHVwZGF0ZSB0aGUgdXNlci1zcGFjZSB0b29scyB3aGljaCB1c2UgdGhlIG1lbWJsb2Nr
-cyBsaXN0ZWQKPiBpbiAnL3Byb2MvaW9tZW0nIHRvIG9idGFpbiB0aGUgdmFsdWUgb2YgUEhZX09G
-RlNFVCAoYnkgcmVhZGluZyB0aGUKPiBiYXNlIG9mIHRoZSAxc3QgbWVtYmxvY2spIGFuZCByZWFk
-IHRoZSB2YWx1ZSBvZiAnbWVtc3RhcnRfYWRkcicKPiBzb21laG93IGluIHVzZXItc3BhY2UgdG8g
-Z2V0IHRoZSBQSFlfT0ZGU0VULCBvciBzaG91bGQgdGhlIGNoYW5nZSBiZQo+IGRvbmUgYXQgdGhl
-IGtlcm5lbCBlbmQgdG8gY2FsY3VsYXRlICdtZW1zdGFydF9hZGRyJyBhczoKPgo+ICAgICAgICAg
-LyoKPiAgICAgICAgICAqIFNlbGVjdCBhIHN1aXRhYmxlIHZhbHVlIGZvciB0aGUgYmFzZSBvZiBw
-aHlzaWNhbCBtZW1vcnkuCj4gICAgICAgICAgKi8KPiAgICAgICAgIG1lbXN0YXJ0X2FkZHIgPSBy
-b3VuZF9kb3duKG1lbWJsb2NrX3N0YXJ0X29mX0RSQU0oKSwKPiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIEFSTTY0X01FTVNUQVJUX0FMSUdOKTsKPiAgICAgICAgIGlmIChtZW1z
-dGFydF9hZGRyKQoKU29ycnkgZm9yIHRoZSB0eXBvOiBJIG1lYW50IGlmICghbWVtc3RhcnRfYWRk
-cikgYWJvdmUKClRoYW5rcywKQmh1cGVzaAoKPiAgICAgICAgICAgICAgICAgbWVtc3RhcnRfYWRk
-ciA9IG1lbWJsb2NrX3N0YXJ0X29mX0RSQU0oKTsKPgo+IExldCdzIHdhaXQgZm9yIGFuIHVwZGF0
-ZSBmcm9tIHRoZSBBUk02NCBrZXJuZWwgbWFpbnRhaW5lcnMsIGJlY2F1c2UgSQo+IHRoaW5rIHRo
-aXMgY2hhbmdlIG1pZ2h0IGJlIG5lZWRlZCBpbiBvdGhlciB1c2VyLXNwYWNlIHRvb2xzIChpZiB3
-ZQo+IGRlY2lkZSB0byBtYWtlIHRoZSBjaGFuZ2UgaW4gdGhlIHVzZXItc3BhY2Ugc2lkZSkgZS5n
-LiBtYWtlZHVtcGZpbGUgaW4KPiBhZGRpdGlvbiB0byBrZXhlYy10b29scyB0byBjb3JyZWN0bHkg
-aGFuZGxlIHRoaXMgdW5pcXVlIHVzZS1jYXNlIHdoZXJlCj4gd2UgaGF2ZSB2YWx1ZSBvZiBtZW1i
-bG9ja19zdGFydF9vZl9EUkFNKCkgPCBBUk02NF9NRU1TVEFSVF9BTElHTgo+Cj4gWzFdIGh0dHBz
-Oi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2FybS1rZXJuZWwvbXNnNjU1OTMzLmh0bWwKPgo+IFRo
-YW5rcywKPiBCaHVwZXNoCj4KPgo+Pgo+Pj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPj4+
-IEZyb206IEJodXBlc2ggU2hhcm1hIFttYWlsdG86YmhzaGFybWFAcmVkaGF0LmNvbV0KPj4+IFNl
-bnQ6IDIwMTjlubQ15pyIMzDml6UgMjM6NTYKPj4+IFRvOiBKaW4sIFlhbmppYW5nIDx5YW5qaWFu
-Zy5qaW5AaHh0LXNlbWl0ZWNoLmNvbT47IFByYXR5dXNoIEFuYW5kCj4+PiA8cHJhdHl1c2guYW5h
-bmRAZ21haWwuY29tPgo+Pj4gQ2M6IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmc7IGppbnlhbmpp
-YW5nQGdtYWlsLmNvbTsgaG9ybXNAdmVyZ2UubmV0LmF1Owo+Pj4gWmhlbmcsIEpvZXkgPHl1Lnpo
-ZW5nQGh4dC1zZW1pdGVjaC5jb20+Cj4+PiBTdWJqZWN0OiBb5q2k6YKu5Lu25Y+v6IO95a2Y5Zyo
-6aOO6ZmpXSBSZTogW1BBVENIXSBhcm02NDogdXBkYXRlIFBIWVNfT0ZGU0VUIHRvCj4+PiBjb25m
-b3JtIHRvIGtlcm5lbAo+Pj4KPj4+IE9uIDA1LzMwLzIwMTggMDM6NTAgUE0sIEppbiwgWWFuamlh
-bmcgd3JvdGU6Cj4+PiA+Cj4+PiA+Cj4+PiA+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+
-Pj4gPj4gRnJvbTogQmh1cGVzaCBTaGFybWEgW21haWx0bzpiaHNoYXJtYUByZWRoYXQuY29tXQo+
-Pj4gPj4gU2VudDogMjAxOOW5tDXmnIgzMOaXpSAxNjozOQo+Pj4gPj4gVG86IEppbiwgWWFuamlh
-bmcgPHlhbmppYW5nLmppbkBoeHQtc2VtaXRlY2guY29tPjsgUHJhdHl1c2ggQW5hbmQKPj4+ID4+
-IDxwcmF0eXVzaC5hbmFuZEBnbWFpbC5jb20+Cj4+PiA+PiBDYzoga2V4ZWNAbGlzdHMuaW5mcmFk
-ZWFkLm9yZzsgamlueWFuamlhbmdAZ21haWwuY29tOwo+Pj4gPj4gaG9ybXNAdmVyZ2UubmV0LmF1
-OyBaaGVuZywgSm9leSA8eXUuemhlbmdAaHh0LXNlbWl0ZWNoLmNvbT4KPj4+ID4+IFN1YmplY3Q6
-IFJlOiBbUEFUQ0hdIGFybTY0OiB1cGRhdGUgUEhZU19PRkZTRVQgdG8gY29uZm9ybSB0byBrZXJu
-ZWwKPj4+ID4+Cj4+PiA+PiBIaSBZYW5qaWFuZywKPj4+ID4+Cj4+PiA+PiBPbiAwNS8zMC8yMDE4
-IDAxOjA5IFBNLCBKaW4sIFlhbmppYW5nIHdyb3RlOgo+Pj4gPj4+Cj4+PiA+Pj4KPj4+ID4+Pj4g
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPj4+ID4+Pj4gRnJvbTogUHJhdHl1c2ggQW5hbmQg
-W21haWx0bzpwcmF0eXVzaC5hbmFuZEBnbWFpbC5jb21dCj4+PiA+Pj4+IFNlbnQ6IDIwMTjlubQ1
-5pyIMzDml6UgMTI6MTYKPj4+ID4+Pj4gVG86IEppbiwgWWFuamlhbmcgPHlhbmppYW5nLmppbkBo
-eHQtc2VtaXRlY2guY29tPgo+Pj4gPj4+PiBDYzoga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZzsg
-amlueWFuamlhbmdAZ21haWwuY29tOwo+Pj4gPj4+PiBob3Jtc0B2ZXJnZS5uZXQuYXUKPj4+ID4+
-Pj4gU3ViamVjdDogUmU6IFtQQVRDSF0gYXJtNjQ6IHVwZGF0ZSBQSFlTX09GRlNFVCB0byBjb25m
-b3JtIHRvIGtlcm5lbAo+Pj4gPj4+Pgo+Pj4gPj4+PiBIaSBZYW5qaWFuZywKPj4+ID4+Pj4KPj4+
-ID4+Pj4gT24gV2VkLCBNYXkgMzAsIDIwMTggYXQgODozMyBBTSwgSmluLCBZYW5qaWFuZwo+Pj4g
-Pj4+PiA8eWFuamlhbmcuamluQGh4dC1zZW1pdGVjaC5jb20+Cj4+PiA+Pj4+IHdyb3RlOgo+Pj4g
-Pj4+Pj4gSGkgUHJhdHl1c2gsCj4+PiA+Pj4+Pgo+Pj4gPj4+Pj4gVGhhbmtzIGZvciB5b3VyIGhl
-bHAhIGJ1dCBwbGVhc2Ugc2VlIG15IHJlcGx5IGlubGluZS4KPj4+ID4+Pj4+Cj4+PiA+Pj4+Cj4+
-PiA+Pj4+IFsuLi5dCj4+PiA+Pj4+Cj4+PiA+Pj4+Pj4+IElmIGFuIGFwcGxpY2F0aW9uLCBmb3Ig
-ZXhhbXBsZSwgdm1jb3JlLWRtZXNnLCB3YW50cyB0byBhY2Nlc3MKPj4+ID4+Pj4+Pj4gdGhlIGtl
-cm5lbCBzeW1ib2wgd2hpY2ggaXMgbG9jYXRlZCBpbiB0aGUgbGFzdCAyTSBhZGRyZXNzLCBpdAo+
-Pj4gPj4+Pj4+PiB3b3VsZCBmYWlsIHdpdGggdGhlIGJlbG93IGVycm9yOgo+Pj4gPj4+Pj4+Pgo+
-Pj4gPj4+Pj4+PiAgICAgIk5vIHByb2dyYW0gaGVhZGVyIGNvdmVyaW5nIHZhZGRyIDB4ZmZmZjgw
-MTdmZmU5MDAwMCBmb3VuZAo+Pj4gPj4+Pj4+PiBrZXhlYwo+Pj4gPj4gYnVnPyIKPj4+ID4+Pj4+
-Pgo+Pj4gPj4+Pj4+IEkgdGhpbmssIGZpeCBtaWdodCBub3QgYmUgY29ycmVjdC4KPj4+ID4+Pj4+
-Pgo+Pj4gPj4+Pj4+IFByb2JsZW0gaXMgaW4gdm1jb3JlLWRtZXNnIGFuZCB0aGF0IHNob3VsZCBi
-ZSBmaXhlZCBhbmQgbm90IHRoZSBrZXhlYy4KPj4+ID4+Pj4+PiBTZWUgaGVyZQo+Pj4gPj4+Pj4+
-IChodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vdXRpbHMva2VybmVsL2tleGVjL2tleGVj
-LQo+Pj4gPj4+Pj4+IHRvb2xzLmdpdC90cmVlL3ZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYz9p
-ZD1IRUFEI24yNjEpLgo+Pj4gPj4+Pj4KPj4+ID4+Pj4+IEZpcnN0bHksIGZvciBteSBwYXRjaCwg
-dm1jb3JlLWRtZXNnIGlzIGp1c3QgYW4gYXV4aWxpYXJ5Cj4+PiA+Pj4+PiBhcHBsaWNhdGlvbiB0
-byBoZWxwIHRvCj4+PiA+Pj4+IHJlcHJvZHVjZSB0aGlzIGlzc3VlLiBUaGUgZnVuY3Rpb24sIHdo
-aWNoIGlzIHRvIGdlbmVyYXRlIHZtY29yZSwKPj4+ID4+Pj4gaXMgdGhlIHJvb3QKPj4+ID4+IGNh
-dXNlLgo+Pj4gPj4+Pgo+Pj4gPj4+PiAuLi5hbmQgdGhlIGZ1bmN0aW9uIHdoaWNoIGdlbmVyYXRl
-cyB2bWNvcmUgaXMgbm90IHRoZSBrZXhlYyByYXRoZXIKPj4+ID4+Pj4gdGhlIHNlY29uZGFyeSBr
-ZXJuZWwuCj4+PiA+Pj4+Cj4+PiA+Pj4+Pgo+Pj4gPj4+Pj4gT24gdGhlIG90aGVyIGhhbmQsIHZt
-Y29yZS1kbWVzZyBpcyB1bmRlciBrZXhlYy10b29scywgaXQgaGFzIG5vIGEKPj4+ID4+Pj4+IHN0
-YW5kYWxvbmUKPj4+ID4+Pj4gZ2l0IHJlcG8uICBFdmVuIHdlIHdhbnQgdG8gZml4IHZtY29yZS1k
-bWVzZywgd2Ugc3RpbGwgbmVlZCB0byBzZW5kCj4+PiA+Pj4+IHRoZSBwYXRjaCB0byBrZXhlYy10
-b29scywgcmlnaHQ/Cj4+PiA+Pj4+Cj4+PiA+Pj4+IFN1cmUuIEkgbWVhbnQgYGtleGVjYCBhcHBs
-aWNhdGlvbi4gV2UgaGF2ZSB0aHJlZSBhcHBsaWNhdGlvbnMgaW4ga2V4ZWMtdG9vbHMuCj4+PiA+
-Pj4+IGBrZXhlY2AsIGB2bWNvcmUtZG1lc2dgIGFuZCBga2R1bXBgLiBbSSBob3BlIGtkdW1wIGlz
-IHVzZWxlc3MgYW5kCj4+PiA+Pj4+IHdlIGFyZSBnb2luZyB0byBnZXQgcmlkIG9mZiBpdCB2ZXJ5
-IHNvb24uXQo+Pj4gPj4+Pgo+Pj4gPj4+Pj4KPj4+ID4+Pj4+IFlhbmppYW5nCj4+PiA+Pj4+Pgo+
-Pj4gPj4+Pj4+IEhvdyBzeW1ib2xzIGFyZSBleHRyYWN0ZWQgZnJvbSB2bWNvcmUuCj4+PiA+Pj4+
-Pj4KPj4+ID4+Pj4+PiBZb3UgZG8gaGF2ZSAiTlVNQkVSKFBIWVNfT0ZGU0VUKT0iIGluZm9ybWF0
-aW9uIGluIHZtY29yZS4KPj4+ID4+Pj4+Pgo+Pj4gPj4+Pj4+IFlvdSBjYW4gcHJvYmFibHkgc2Vl
-IG1ha2VkdW1wZmlsZSBjb2RlLCB0aGF0IGhvdyB0byBleHRyYWN0Cj4+PiA+Pj4+Pj4gaW5mb3Jt
-YXRpb24gZnJvbSAiTlVNQkVSIi4KPj4+ID4+Pj4+Cj4+PiA+Pj4+PiBJIGhhdmUgc2VlbiBtYWtl
-ZHVtcGZpbGUgYmVmb3JlLCBOVU1CRVIobnVtYmVyKSBpcyBqdXN0IHJlYWQgYQo+Pj4gPj4+Pj4g
-bnVtYmVyCj4+PiA+Pj4+IGZyb20gdm1jb3JlLiBCdXQgYXMgSSBzaG93IGJlZm9yZSwgdGhlIHJv
-b3QgaXNzdWUgaXMgdm1jb3JlCj4+PiA+Pj4+IGNvbnRhaW5zIGEgd3JvbmcgbnVtYmVyLCBteSBw
-YXRjaCBpcyB0byBmaXggdGhlIHZtY29yZSBnZW5lcmF0aW5nCj4+PiA+Pj4+IGlzc3VlLCB3ZSBj
-YW4ndCByZWFkIHZtY29yZSBhdCB0aGlzIHBvaW50IHNpbmNlIHdlIGRvbid0IGhhdmUgdm1jb3Jl
-IHlldC4KPj4+ID4+Pj4KPj4+ID4+Pj4gLi5hbmQgSUlVQywgeW91IHdlcmUgYWJsZSB0byByZWFj
-aCBjb3JyZWN0bHkgdGlsbCB0aGUgZW5kIG9mCj4+PiA+Pj4+IHNlY29uZGFyeSBrZXJuZWwgd2hl
-cmUgeW91IHRyaWVkIHZtY29yZS1kbWVzZyBhbmQgdGhlbiB5b3UgaGFkCj4+PiA+Pj4+IGlzc3Vl
-LAo+Pj4gPj4gcmlnaHQ/Cj4+PiA+Pj4+Cj4+PiA+Pj4+IEhvdyBkaWQgeW91IGNvbmNsdWRlIHRo
-YXQgdm1jb3JlIGNvbnRhaW5zIHdyb25nIG51bWJlcj8gSXQncwo+Pj4gPj4+PiB1bmxpa2VseSwg
-YnV0IGlmIGl0IGRvZXMgdGhlbiB3ZSBoYXZlIHByb2JsZW0gc29tZXdoZXJlIGluIExpbnV4Cj4+
-PiA+Pj4+IGtlcm5lbCAsIG5vdAo+Pj4gPj4gaGVyZS4KPj4+ID4+Pgo+Pj4gPj4+IEhpIFByYXR5
-dXNoLAo+Pj4gPj4+Cj4+PiA+Pj4gSSB0aGluayBJIGhhdmUgZm91bmQgdGhlIHJvb3QgY2F1c2Uu
-IEluIExpbnV4IGtlcm5lbCwKPj4+ID4+PiBtZW1ibG9ja19tYXJrX25vbWFwKCkKPj4+ID4+IHdp
-bGwgcmVzZXJ2ZSBzb21lIG1lbW9yeSByYW5nZXMgZm9yIEVGSSwgc3VjaCBhcwo+Pj4gPj4gRUZJ
-X1JVTlRJTUVfU0VSVklDRVNfREFUQSwgRUZJX0JPT1RfU0VSVklDRVNfREFUQS4gT24gbXkKPj4+
-IGVudmlyb25tZW50LAo+Pj4gPj4gdGhlIGZpcnN0IDJNIG1lbW9yeSBpcyBFRklfUlVOVElNRV9T
-RVJWSUNFU19EQVRBLCBzbyBpdCBjYW4ndCBiZSBzZWVuCj4+PiA+PiBpbiBrZXJuZWwuIFdlIGFs
-c28gY2FuJ3Qgc2V0IHRoaXMgRUZJIG1lbW9yeSBhcyAicmVzZXJ2ZWQiLCBvbmx5Cj4+PiA+PiBF
-RklfQUNQSV9SRUNMQUlNX01FTU9SWSdzIG1lbW9yeSBjYW4gYmUgc2V0IGFzICJyZXNlcnZlZCIg
-YW5kIHNlZW4gaW4KPj4+IGtlcm5lbC4KPj4+ID4+PiBTbyBJIGRvbid0IHRoaW5rIHRoaXMgaXMg
-YSBrZXJuZWwgaXNzdWUsIHdlIHNob3VsZCBmaXggaXQgaW4ga2V4ZWMtdG9vbHMuCj4+PiA+Pj4g
-QXR0YWNoIGtlcm5lbCdzIGNhbGwgc3RhY2sgZm9yIHJlZmVyZW5jZS4KPj4+ID4+Pgo+Pj4gPj4+
-IGRyaXZlcnMvZmlybXdhcmUvZWZpL2FybS1pbml0LmMKPj4+ID4+Pgo+Pj4gPj4+IGVmaV9pbml0
-KCktPnJlc2VydmVfcmVnaW9ucygpLT5tZW1ibG9ja19tYXJrX25vbWFwKCkKPj4+ID4+Pgo+Pj4g
-Pj4+IEhpIEJodXBlc2gsCj4+PiA+Pj4KPj4+ID4+PiBJIGd1ZXNzIHlvdXIgZW52aXJvbm1lbnQg
-aGFzIG5vIEVGSSBzdXBwb3J0LCBvciB0aGUgZmlyc3QgbWVtYmxvY2sKPj4+ID4+PiBpcyBub3QK
-Pj4+ID4+IHJlc2VydmVkIGZvciBFRkksIHNvIHlvdSBjYW4ndCByZXByb2R1Y2UgdGhpcyBpc3N1
-ZS4KPj4+ID4+Cj4+PiA+PiBQZXJoYXBzIHlvdSBtaXNzZWQgcmVhZGluZyBteSBlYXJsaWVyIHRo
-cmVhZHMgb24gdGhlIHN1YmplY3Qgb2YKPj4+ID4+IEVGSV9BQ1BJX1JFQ0xBSU1fTUVNT1JZIHJl
-Z2lvbnMgYmVpbmcgbWFwcGVkIGFzIE5PTUFQIGFuZCBob3cgaXQKPj4+ID4+IGNhdXNlcyB0aGUg
-Y3Jhc2hrZXJuZWwgdG8gcGFuaWMgKHBsZWFzZSBnbyB0aHJvdWdoIFsxXSkuCj4+PiA+Pgo+Pj4g
-Pj4gQXMgb2Ygbm93IHdlIGhhdmVuJ3QgZm91bmQgYSBhY2NlcHRhYmxlLXRvLWFsbCBzb2x1dGlv
-biBmb3IgdGhlIGlzc3VlCj4+PiA+PiBhbmQgaXQgbmVlZHMgdG8gYmUgZml4ZWQgaW4gdGhlICdr
-ZXhlYy10b29scycgd2l0aCBhIG1pbm9yIGZpeCBpbiB0aGUga2VybmVsIHNpZGUKPj4+IGFzIHdl
-bGwuCj4+PiA+Pgo+Pj4gPj4gU28sIGNvbWluZyBiYWNrIHRvIG15IGVudmlyb25tZW50IGRldGFp
-bHMsIGl0IGhhcyBib3RoIEVGSSBzdXBwb3J0IGFzCj4+PiA+PiB3ZWxsIGFzIEVGSSBBQ1BJIFJF
-Q0xBSU0gcmVnaW9ucy4KPj4+ID4+Cj4+PiA+PiBIb3dldmVyIHdlIG1heSBiZSBoaXR0aW5nIGEg
-c3BlY2lhbCBjYXNlIGluIHlvdXIgZW52aXJvbm1lbnQsIHNvIEkKPj4+ID4+IHRoaW5rIGJlZm9y
-ZSB3ZSBjYW4gZGlzY3VzcyB5b3VyIHBhdGNoIGZ1cnRoZXIgKGFzIGJvdGggUHJhdHl1c2ggYW5k
-Cj4+PiA+PiBteXNlbGYgaGF2ZSBjb25jZXJucyB3aXRoIHRoZSBzYW1lKSwgd291bGQgcmVxdWVz
-dCB5b3UgdG8gc2hhcmUgdGhlCj4+PiA+PiBmb2xsb3dpbmc6Cj4+PiA+Pgo+Pj4gPj4gLSBvdXRw
-dXQgb2Yga2VybmVsIGRtZXNnIHdpdGggJ2VmaT1kZWJ1ZycgYWRkZWQgaW4gdGhlIGJvb3Rhcmdz
-Cj4+PiA+PiAod2hpY2ggd2lsbCBoZWxwIHVzIHNlZSBob3cgdGhlIG1lbWJsb2NrcyBhcmUgbWFy
-a2VkIGF0IHlvdXIgc2V0dXAgLQo+Pj4gPj4gSSBhbSBzcGVjaWZpY2FsbHkgaW50ZXJlc3RlZCBp
-biB0aGUgbG9ncyBhZnRlciB0aGUgbGluZSAnUHJvY2Vzc2luZwo+Pj4gPj4gRUZJIG1lbW9yeSBt
-YXAnKSwKPj4+ID4KPj4+ID4gSSBtYWRlIG1vcmUgaW52ZXN0aWdhdGlvbiBvbiBteSBib2FyZC4g
-ICBJIGJlbGlldmUgdGhhdCB0aGUgZmlybXdhcmUgZGVzaWduCj4+PiBsZWFkcyB0aGlzIGRpZmZl
-cmVuY2VzIGJldHdlZW4gb3VyIGVudmlyb25tZW50czoKPj4+ID4KPj4+ID4gTXkgZmlybXdhcmUg
-ZGVmaW5lcyB0aGUgZmlyc3QgdHdvIEVGSSBibG9jayBhcyBiZWxvdzoKPj4+ID4KPj4+ID4gUmVn
-aW9uMTogMHgwMDAwMDAwMDAwMDAtMHgwMDAwMDAyMDAwMDAgW0VmaVJlc2VydmVkTWVtVHlwZV0K
-Pj4+ID4gUmVnaW9uMjogMHgwMDAwMDAyMDAwMDAtMHgwMDAwMDAyMWZmZmZmIFtFZmlSdW50aW1l
-U2VydmljZURhdGFdCj4+PiA+Cj4+PiA+IEJ1dCBFRkkgQVBJIHdvbid0IHJldHVybiB0aGUgIkVm
-aVJlc2VydmVkTWVtVHlwZSIgbWVtb3J5IHRvIExpbnV4IGtlcm5lbAo+Pj4gZm9yIHNlY3VyaXR5
-IHJlYXNvbnMsIHNvIGtlcm5lbCBjYW4ndCBnZXQgYW55IGluZm8gYWJvdXQgdGhlIGZpcnN0IG1l
-bSBibG9jaywga2VybmVsCj4+PiBjYW4gb25seSBzZWUgcmVnaW9uMiBhcyBiZWxvdzoKPj4+ID4K
-Pj4+ID4gZWZpOiBQcm9jZXNzaW5nIEVGSSBtZW1vcnkgbWFwOgo+Pj4gPiBlZmk6ICAgMHgwMDAw
-MDAyMDAwMDAtMHgwMDAwMDAyMWZmZmYgW1J1bnRpbWUgRGF0YSAgICAgICB8UlVOfCAgfCAgfCAg
-fCAgfCAgfCAgfAo+Pj4gfFdCfFdUfFdDfFVDXQo+Pj4gPgo+Pj4gPiAjIGhlYWQgLTEgL3Byb2Mv
-aW9tZW0KPj4+ID4gMDAyMDAwMDAtMDAyMWZmZmYgOiByZXNlcnZlZAo+Pj4KPj4+IEkgaGF2ZSB0
-aGUgc2FtZSBjYXNlIG9uIGJvYXJkcyBhdCBteSBlbmQ6Cj4+Pgo+Pj4gIyBoZWFkIC0xIC9wcm9j
-L2lvbWVtCj4+PiAwMDIwMDAwMC0wMDIxZmZmZiA6IHJlc2VydmVkCj4+Pgo+Pj4gIyBkbWVzZyB8
-IGdyZXAgLWkgIlByb2Nlc3NpbmcgRUZJIG1lbW9yeSBtYXAiIC1BIDUKPj4+IFsgICAgMC4wMDAw
-MDBdIGVmaTogUHJvY2Vzc2luZyBFRkkgbWVtb3J5IG1hcDoKPj4+IFsgICAgMC4wMDAwMDBdIGVm
-aTogICAweDAwMDAwMDIwMDAwMC0weDAwMDAwMDIxZmZmZiBbUnVudGltZSBEYXRhCj4+PiB8UlVO
-fCAgfCAgfCAgfCAgfCAgfCAgfCAgIHxXQnxXVHxXQ3xVQ10KPj4+IFsgICAgMC4wMDAwMDBdIGVm
-aTogICAweDAwMDAwMDQwMDAwMC0weDAwMDAwMDVmZmZmZiBbQUNQSSBNZW1vcnkgTlZTCj4+PiB8
-ICAgfCAgfCAgfCAgfCAgfCAgfCAgfCAgIHwgIHwgIHwgIHxVQ10KPj4+IFsgICAgMC4wMDAwMDBd
-IGVmaTogICAweDAwMDAwMDgwMDAwMC0weDAwMDAwMDgxZmZmZiBbQUNQSSBNZW1vcnkgTlZTCj4+
-PiB8ICAgfCAgfCAgfCAgfCAgfCAgfCAgfCAgIHwgIHwgIHwgIHxVQ10KPj4+IFsgICAgMC4wMDAw
-MDBdIGVmaTogICAweDAwMDAwMDgyMDAwMC0weDAwMDAwMTYwMGZmZiBbQ29udmVudGlvbmFsCj4+
-PiBNZW1vcnl8ICAgfCAgfCAgfCAgfCAgfCAgfCAgfCAgIHxXQnxXVHxXQ3xVQ10KPj4+IFsgICAg
-MC4wMDAwMDBdIGVmaTogICAweDAwMDAwMTYwMTAwMC0weDAwMDAwMjdmZmZmZiBbTG9hZGVyIERh
-dGEKPj4+IHwgICB8ICB8ICB8ICB8ICB8ICB8ICB8ICAgfFdCfFdUfFdDfFVDXQo+Pj4KPj4+IFNv
-LCBubyB5b3VyIGVudmlyb25tZW50IGlzIG5vdCBhIHNwZWNpYWwgb25lIChhcyBJIGFsc28gdXNl
-IEFURiBhcyB0aGUKPj4+IEVMMyBib290IGZpcm13YXJlKSwgc2VlIG1vcmUgYmVsb3cgLi4KPj4+
-Cj4+PiA+IFRoZXJlIGFyZSBtYW55IEVmaVJlc2VydmVkTWVtVHlwZSByZWdpb25zIGluIEFSTTY0
-J3MgZmlybXdhcmUgaWYgaXQKPj4+IHN1cHBvcnRzIFRydXN0Wm9uZSwgYnV0IGlmIGEgZmlybXdh
-cmUgZG9lc24ndCBwdXQgdGhpcyB0eXBlIG9mIG1lbW9yeSByZWdpb24gYXQKPj4+IHRoZSBzdGFy
-dCBvZiBwaHlzaWNhbCBtZW1vcnksIHRoaXMgZXJyb3Igd291bGRuJ3QgaGFwcGVuLiBJIGRvbid0
-IHRoaW5rIGZpcm13YXJlCj4+PiBoYXMgZXJyb3Igc2luY2UgaXQgY2FuIHJlc2VydmUgYW55IG1l
-bW9yeSByZWdpb25zLCB3ZSdkIGJldHRlciB1cGRhdGUga2V4ZWMtCj4+PiB0b29scy4KPj4+ID4g
-QW55d2F5LCByZWFkIG1lbXN0YXJ0X2FkZHIgZnJvbSAvZGV2L21lbSBjYW4gYWx3YXlzIGdldCAg
-YSBjb3JyZWN0IHZhbHVlIGlmCj4+PiBERVZNRU0gaXMgZGVmaW5lZC4KPj4+Cj4+PiAuLiBBdCBt
-eSBzaWRlIHdpdGggdGhlIGxhdGVzdCB1cHN0cmVhbSBrZXJuZWwgKHdpdGggY29tbWl0Cj4+PiBm
-NTZhYjlhNWI3M2NhMmFlZTc3N2NjZGYyZDM1NWFlMmRkMzFkYjVhIHJldmVydGVkIHRvIGFsbG93
-IGNyYXNoa2VybmVsIHRvCj4+PiBib290IHdoaWxlIGFjY2Vzc2luZyBBQ1BJIHRhYmxlcykgYW5k
-IGxhdGVzdCB1cHN0cmVhbSBrZXhlYy10b29scywgSSBjYW4gYm9vdCB0aGUKPj4+IGNyYXNoa2Vy
-bmVsIHByb3Blcmx5LCBjb2xsZWN0IHRoZSB2bWNvcmUgcHJvcGVybHkgYW5kIGFuYWx5emUgdGhl
-IGNyYXNoIGR1bXAgdmlhCj4+PiB0b29scyBsaWtlIGdkYiBhbmQgY3Jhc2ggYWxzby4KPj4+Cj4+
-PiBTbywgSSB3b3VsZCB0cnkgdG8gYWxzbyB1c2UgdGhlIHZtY29yZS1kbWVzZyB0b29sIGFuZCBz
-ZWUgaWYgSSBnZXQgYW55IGlzc3VlcyB3aXRoCj4+PiB0aGUgc2FtZS4gVGlsbCB0aGVuIHlvdSBj
-YW4gdHJ5IGFuZCBzZWUgaWYgdGhlcmUgYXJlIGFueSBvdGhlciBvYnZpb3VzIGRpZmZlcmVuY2Vz
-Cj4+PiBpbiB5b3VyIGVudmlyb25tZW50IHdoaWNoIG1pZ2h0IGJlIGNhdXNpbmcgdGhpcyBpc3N1
-ZSBhdCB5b3VyIGVuZC4KPj4+Cj4+PiBUaGFua3MsCj4+PiBCaHVwZXNoCj4+Pgo+Pj4KPj4+ID4+
-IC0gaWYgeW91IGFyZSB1c2luZyBhIHB1YmxpYyBhcm02NCBwbGF0Zm9ybSBtYXliZSB5b3UgY2Fu
-IHNoYXJlIHRoZQo+Pj4gPj4gQ09ORklHIGZpbGUsCj4+PiA+PiAtIG91dHB1dCBvZiAnY2F0IC9w
-cm9jL2lvbWVtJwo+Pj4gPj4KPj4+ID4+IFsxXSBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0
-cy9hcm0ta2VybmVsL21zZzYxNjYzMi5odG1sCj4+PiA+Pgo+Pj4gPj4gVGhhbmtzLAo+Pj4gPj4g
-Qmh1cGVzaAo+Pj4gPj4KPj4+ID4+Pj4gSGF2ZSB5b3UgdHJpZWQgdG8gZXh0cmFjdCAiUEhZU19P
-RkZTRVQiIGZyb20gdm1jb3JlIGVpdGhlciBpbgo+Pj4gPj4+PiB2bWNvcmUtZG1lc2cgb3IgaW4g
-bWFrZWR1bXBmaWxlIGFuZCBmb3VuZCBpdCBub3QgbWF0Y2hpbmcgdG8gdGhlCj4+PiA+Pj4+IHZh
-bHVlIG9mCj4+PiA+PiAiUEhZU19PRkZTRVQiCj4+PiA+Pj4+IGZyb20gZmlyc3Qga2VybmVsPwo+
-Pj4gPj4+Pgo+Pj4gPj4+PiBJbiBteSB1bmRlcnN0YW5kaW5nIGZsb3cgaXMgbGlrZSB0aGlzOgo+
-Pj4gPj4+Pgo+Pj4gPj4+PiAtIEZpcnN0IGtlcm5lbCB3aWxsIGhhdmUgcmVzZXJ2ZWQgYXJlYSBm
-b3Igc2Vjb25kYXJ5IGtlcm5lbCwgYXMKPj4+ID4+Pj4gd2VsbCBhcyBmb3IKPj4+ID4+IGVsZmNv
-cmUuCj4+PiA+Pj4+IC0gRmlyc3Qga2VybmVsIHdpbGwgZW1iZWQgYWxsIHRoZSB2bWNvcmUgaW5m
-b3JtYXRpb24gbm90ZXMgaW50bwo+Pj4gPj4+PiBlbGZjb3JlIChzZWUKPj4+ID4+Pj4gY3Jhc2hf
-c2F2ZV92bWNvcmVpbmZvX2luaXQoKSAtPiBhcmNoX2NyYXNoX3NhdmVfdm1jb3JlaW5mbygpKS4K
-Pj4+ID4+Pj4gVGhlcmVmb3JlLCB3ZSB3aWxsIGhhdmUgUEhZU19PRkZTRVQsIGtpbWFnZV92b2Zm
-c2V0IGFuZCBWQV9CSVRTCj4+PiA+Pj4+IGluZm9ybWF0aW9uIGZvciBmaXJzdCBrZXJuZWwgaW4g
-dm1jb3JlLCB3aGljaCBpcyBpbiBzZXBhcmF0ZSBtZW1vcnkKPj4+ID4+Pj4gYW5kIGNhbiBiZSBy
-ZWFkIGJ5IHNlY29uZCBrZXJuZWwKPj4+ID4+Pj4gLSBlbGZjb3JlIHdpbGwgYWxzbyBoYXZlIG5v
-dGVzIGFib3V0IGFsbCB0aGUgb3RoZXIgcGh5c2ljYWwgbWVtb3J5Cj4+PiA+Pj4+IG9mIGZpcnN0
-IGtlcm5lbCB3aGljaCBuZWVkIHRvIGJlIGNvcGllZCBieSBzZWNvbmQga2VybmVsLgo+Pj4gPj4+
-PiAtIE5vdyB3aGVuIGNyYXNoIGhhcHBlbnMsIHNlY29uZCBrZXJuZWwgc2hvdWxkIGhhdmUgYWxs
-IHRoZQo+Pj4gPj4+PiByZXF1aXJlZCBpbmZvIGZvciByZWFkaW5nIHN5bWJvbHMgZnJvbSBmaXJz
-dCBrZXJuZWwncyBwaHlzaWNhbCBtZW1vcnksIG5vPwo+Pj4gPj4+Pgo+Pj4gPj4+Pj4KPj4+ID4+
-Pj4+IE5VTUJFUihudW1iZXIpID0gcmVhZF92bWNvcmVpbmZvX3Vsb25nKFNUUl9OVU1CRVIoc3Ry
-X251bWJlcikpCj4+PiA+Pj4+Pgo+Pj4gPj4+Pj4gWWFuamlhbmcKPj4+ID4+Pj4+Cj4+PiA+Pj4+
-Pj4KPj4+ID4+Pj4+PiBPbmNlIHlvdSBrbm93IHRoZSByZWFsIFBIWVNfT0ZGU0VUICh3aGljaCBj
-b3VsZCBoYXZlIGJlZW4gcmFuZG9tCj4+PiA+Pj4+Pj4gaWYgS0FTTFIgaXMgZW5hYmxlZCksIHlv
-dSBjYW4gZml4IHRoZSBwcm9ibGVtIHlvdSBhcmUgc2VlaW5nLgo+Pj4gPj4+Pj4KPj4+ID4+Pj4+
-IEkgaGF2ZSBib3RoIHZhbGlkYXRlZCB3aXRoL3dpdGhvdXQgS0FTTFIsICBhbGwgb2YgdGhlbSB3
-b3JrZWQgd2VsbAo+Pj4gPj4+Pj4gYWZ0ZXIKPj4+ID4+Pj4gYXBwbHlpbmcgbXkgcGF0Y2guCj4+
-PiA+Pj4+Cj4+PiA+Pj4+IElNSE8sIGV2ZW4gaWYgdGhhdCB3b3JrcyBpdCBkb2VzIG5vdCBtZWFu
-IHRoYXQgaXRzIGdvb2QgYSBmaXguIFdlCj4+PiA+Pj4+IHNob3VsZCB0cnkgdG8gZmluZCByb290
-IGNhdXNlLiBNb3Jlb3ZlciwgeW91IG1pZ2h0IG5vdCBoYXZlCj4+PiA+Pj4+IC9kZXYvbWVtIGF2
-YWlsYWJsZSBmb3IgYWxsIHRoZSBjb25maWd1cmF0aW9uIHdoZXJlIEtBU0xSIGlzIGVuYWJsZWQu
-Cj4+PiA+Pj4+Cj4+PiA+Pj4+IFJlZ2FyZHMKPj4+ID4+Pj4gUHJhdHl1c2gKPj4+ID4+Pgo+Pj4g
-Pj4+Cj4+PiA+Pj4KPj4+ID4+PiBUaGlzIGVtYWlsIGlzIGludGVuZGVkIG9ubHkgZm9yIHRoZSBu
-YW1lZCBhZGRyZXNzZWUuIEl0IG1heSBjb250YWluCj4+PiA+PiBpbmZvcm1hdGlvbiB0aGF0IGlz
-IGNvbmZpZGVudGlhbC9wcml2YXRlLCBsZWdhbGx5IHByaXZpbGVnZWQsIG9yCj4+PiA+PiBjb3B5
-cmlnaHQtcHJvdGVjdGVkLCBhbmQgeW91IHNob3VsZCBoYW5kbGUgaXQgYWNjb3JkaW5nbHkuIElm
-IHlvdSBhcmUKPj4+ID4+IG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCB5b3UgZG8gbm90IGhh
-dmUgbGVnYWwgcmlnaHRzIHRvIHJldGFpbiwKPj4+ID4+IGNvcHksIG9yIGRpc3RyaWJ1dGUgdGhp
-cyBlbWFpbCBvciBpdHMgY29udGVudHMsIGFuZCBzaG91bGQgcHJvbXB0bHkKPj4+ID4+IGRlbGV0
-ZSB0aGUgZW1haWwgYW5kIGFsbCBlbGVjdHJvbmljIGNvcGllcyBpbiB5b3VyIHN5c3RlbTsgZG8g
-bm90Cj4+PiA+PiByZXRhaW4gY29waWVzIGluIGFueSBtZWRpYS4gSWYgeW91IGhhdmUgcmVjZWl2
-ZWQgdGhpcyBlbWFpbCBpbiBlcnJvciwgcGxlYXNlCj4+PiBub3RpZnkgdGhlIHNlbmRlciBwcm9t
-cHRseS4gVGhhbmsgeW91Lgo+Pj4gPj4+Cj4+PiA+Pj4KPj4+ID4KPj4+ID4KPj4+ID4KPj4+ID4K
-Pj4+ID4gVGhpcyBlbWFpbCBpcyBpbnRlbmRlZCBvbmx5IGZvciB0aGUgbmFtZWQgYWRkcmVzc2Vl
-LiBJdCBtYXkgY29udGFpbgo+Pj4gaW5mb3JtYXRpb24gdGhhdCBpcyBjb25maWRlbnRpYWwvcHJp
-dmF0ZSwgbGVnYWxseSBwcml2aWxlZ2VkLCBvciBjb3B5cmlnaHQtcHJvdGVjdGVkLAo+Pj4gYW5k
-IHlvdSBzaG91bGQgaGFuZGxlIGl0IGFjY29yZGluZ2x5LiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50
-ZW5kZWQgcmVjaXBpZW50LCB5b3UKPj4+IGRvIG5vdCBoYXZlIGxlZ2FsIHJpZ2h0cyB0byByZXRh
-aW4sIGNvcHksIG9yIGRpc3RyaWJ1dGUgdGhpcyBlbWFpbCBvciBpdHMgY29udGVudHMsIGFuZAo+
-Pj4gc2hvdWxkIHByb21wdGx5IGRlbGV0ZSB0aGUgZW1haWwgYW5kIGFsbCBlbGVjdHJvbmljIGNv
-cGllcyBpbiB5b3VyIHN5c3RlbTsgZG8gbm90Cj4+PiByZXRhaW4gY29waWVzIGluIGFueSBtZWRp
-YS4gSWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlm
-eQo+Pj4gdGhlIHNlbmRlciBwcm9tcHRseS4gVGhhbmsgeW91Lgo+Pj4gPgo+Pj4gPgo+Pgo+Pgo+
-Pgo+Pgo+PiBUaGlzIGVtYWlsIGlzIGludGVuZGVkIG9ubHkgZm9yIHRoZSBuYW1lZCBhZGRyZXNz
-ZWUuIEl0IG1heSBjb250YWluIGluZm9ybWF0aW9uIHRoYXQgaXMgY29uZmlkZW50aWFsL3ByaXZh
-dGUsIGxlZ2FsbHkgcHJpdmlsZWdlZCwgb3IgY29weXJpZ2h0LXByb3RlY3RlZCwgYW5kIHlvdSBz
-aG91bGQgaGFuZGxlIGl0IGFjY29yZGluZ2x5LiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQg
-cmVjaXBpZW50LCB5b3UgZG8gbm90IGhhdmUgbGVnYWwgcmlnaHRzIHRvIHJldGFpbiwgY29weSwg
-b3IgZGlzdHJpYnV0ZSB0aGlzIGVtYWlsIG9yIGl0cyBjb250ZW50cywgYW5kIHNob3VsZCBwcm9t
-cHRseSBkZWxldGUgdGhlIGVtYWlsIGFuZCBhbGwgZWxlY3Ryb25pYyBjb3BpZXMgaW4geW91ciBz
-eXN0ZW07IGRvIG5vdCByZXRhaW4gY29waWVzIGluIGFueSBtZWRpYS4gSWYgeW91IGhhdmUgcmVj
-ZWl2ZWQgdGhpcyBlbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIHByb21w
-dGx5LiBUaGFuayB5b3UuCj4+Cj4+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Sat, Jun 2, 2018 at 3:11 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> On 05/31/2018 10:21 AM, Bhupesh Sharma wrote:
+>>
+>> Hi Ard,
+>>
+>> Sorry I was out for most of the day yesterday. Please see my responses
+>> inline.
+>>
+>> On Mon, May 28, 2018 at 12:16 PM, Ard Biesheuvel
+>> <ard.biesheuvel@linaro.org> wrote:
+>>>
+>>> On 27 May 2018 at 23:03, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+>>>>
+>>>> Hi ARM64 maintainers,
+>>>>
+>>>> I am confused about the PAGE_OFFSET value (or the start of the linear
+>>>> map) on a KASLR enabled ARM64 kernel that I am seeing on a board which
+>>>> supports a compatible EFI firmware (with EFI_RNG_PROTOCOL support).
+>>>>
+>>>> 1. 'arch/arm64/include/asm/memory.h' defines PAGE_OFFSET as:
+>>>>
+>>>> /*
+>>>>   * PAGE_OFFSET - the virtual address of the start of the linear map
+>>>> (top
+>>>>   *         (VA_BITS - 1))
+>>>>   */
+>>>> #define PAGE_OFFSET        (UL(0xffffffffffffffff) - \
+>>>>      (UL(1) << (VA_BITS - 1)) + 1)
+>>>>
+>>>> So for example on a platform with VA_BITS=48, we have:
+>>>> PAGE_OFFSET = 0xffff800000000000
+>>>>
+>>>> 2. However, for the KASLR case, we set the 'memstart_offset_seed ' to
+>>>> use the 16-bits of the 'kaslr-seed' to randomize the linear region in
+>>>> 'arch/arm64/kernel/kaslr.c' :
+>>>>
+>>>> u64 __init kaslr_early_init(u64 dt_phys)
+>>>> {
+>>>> <snip..>
+>>>>      /* use the top 16 bits to randomize the linear region */
+>>>>      memstart_offset_seed = seed >> 48;
+>>>> <snip..>
+>>>> }
+>>>>
+>>>> 3. Now, we use the 'memstart_offset_seed' value to randomize the
+>>>> 'memstart_addr' value in 'arch/arm64/mm/init.c':
+>>>>
+>>>> void __init arm64_memblock_init(void)
+>>>> {
+>>>> <snip..>
+>>>>
+>>>>      if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
+>>>>          extern u16 memstart_offset_seed;
+>>>>          u64 range = linear_region_size -
+>>>>                  (memblock_end_of_DRAM() - memblock_start_of_DRAM());
+>>>>
+>>>>          /*
+>>>>           * If the size of the linear region exceeds, by a sufficient
+>>>>           * margin, the size of the region that the available physical
+>>>>           * memory spans, randomize the linear region as well.
+>>>>           */
+>>>>          if (memstart_offset_seed > 0 && range >= ARM64_MEMSTART_ALIGN)
+>>>> {
+>>>>              range = range / ARM64_MEMSTART_ALIGN + 1;
+>>>>              memstart_addr -= ARM64_MEMSTART_ALIGN *
+>>>>                       ((range * memstart_offset_seed) >> 16);
+>>>>          }
+>>>>      }
+>>>> <snip..>
+>>>> }
+>>>>
+>>>> 4. Since 'memstart_addr' indicates the start of physical RAM, we
+>>>> randomize the same on basis of 'memstart_offset_seed' value above.
+>>>> Also the 'memstart_addr' value is available in '/proc/kallsyms' and
+>>>> hence can be accessed by user-space applications to read the
+>>>> 'memstart_addr' value.
+>>>>
+>>>> 5. Now since the PAGE_OFFSET value is also used by several user space
+>>>> tools (for e.g. makedumpfile tool uses the same to determine the start
+>>>> of linear region and hence to read PT_NOTE fields from /proc/kcore), I
+>>>> am not sure how to read the randomized value of the same in the KASLR
+>>>> enabled case.
+>>>>
+>>>> 6. Reading the code further and adding some debug prints, it seems the
+>>>> 'memblock_start_of_DRAM()' value is more closer to the actual start of
+>>>> linear region rather than 'memstart_addr' and 'PAGE_OFFSET" in case of
+>>>> KASLR enabled kernel:
+>>>>
+>>>> [root@qualcomm-amberwing] # dmesg | grep -i "arm64_memblock_init" -A 5
+>>>>
+>>>> [    0.000000] inside arm64_memblock_init, memstart_addr =
+>>>> ffff976a00000000,
+>>>> linearstart_addr = ffffe89600200000, memblock_start_of_DRAM =
+>>>> ffffe89600200000,
+>>>> PHYS_OFFSET = ffff976a00000000, PAGE_OFFSET = ffff800000000000,
+>>>> KIMAGE_VADDR = ffff000008000000, kimage_vaddr = ffff20c2d7800000
+>>>>
+>>>> [root@qualcomm-amberwing] # dmesg | grep -i "Virtual kernel memory
+>>>> layout" -A 15
+>>>> [    0.000000] Virtual kernel memory layout:
+>>>> [    0.000000]     modules : 0xffff000000000000 - 0xffff000008000000
+>>>> (   128 MB)
+>>>> [    0.000000]     vmalloc : 0xffff000008000000 - 0xffff7bdfffff0000
+>>>> (126847 GB)
+>>>> [    0.000000]       .text : 0xffff20c2d7880000 - 0xffff20c2d8040000
+>>>> (  7936 KB)
+>>>> [    0.000000]     .rodata : 0xffff20c2d8040000 - 0xffff20c2d83a0000
+>>>> (  3456 KB)
+>>>> [    0.000000]       .init : 0xffff20c2d83a0000 - 0xffff20c2d8750000
+>>>> (  3776 KB)
+>>>> [    0.000000]       .data : 0xffff20c2d8750000 - 0xffff20c2d891b200
+>>>> (  1837 KB)
+>>>> [    0.000000]        .bss : 0xffff20c2d891b200 - 0xffff20c2d90a5198
+>>>> (  7720 KB)
+>>>> [    0.000000]     fixed   : 0xffff7fdffe790000 - 0xffff7fdffec00000
+>>>> (  4544 KB)
+>>>> [    0.000000]     PCI I/O : 0xffff7fdffee00000 - 0xffff7fdfffe00000
+>>>> (    16 MB)
+>>>> [    0.000000]     vmemmap : 0xffff7fe000000000 - 0xffff800000000000
+>>>> (   128 GB maximum)
+>>>> [    0.000000]               0xffff7ffa25800800 - 0xffff7ffa2b800000
+>>>> (    95 MB actual)
+>>>> [    0.000000]     memory  : 0xffffe89600200000 - 0xffffe8ae00000000
+>>>> ( 98302 MB)
+>>>>
+>>>> As one can see above, the 'memblock_start_of_DRAM()' value of
+>>>> 0xffffe89600200000 represents the start of linear region:
+>>>>
+>>>> [    0.000000]     memory  : 0xffffe89600200000 - 0xffffe8ae00000000
+>>>> ( 98302 MB)
+>>>>
+>>>> So, my question is to access the start of linear region (which was
+>>>> earlier determinable via PAGE_OFFSET macro), whether I should:
+>>>>
+>>>> - do some back-computation for the start of linear region from the
+>>>> 'memstart_addr' in user-space, or
+>>>> - use a new global variable in kernel which is assigned the value of
+>>>> memblock_start_of_DRAM()' and assign it to '/proc/kallsyms', so that
+>>>> it can be read by user-space tools, or
+>>>> - whether we should rather look at removing the PAGE_OFFSET usage from
+>>>> the kernel and replace it with a global variable instead which is
+>>>> properly updated for KASLR case as well.
+>>>>
+>>>> Kindly share your opinions on what can be a suitable solution in this
+>>>> case.
+>>>>
+>>>> Thanks for your help.
+>>>>
+>>>
+>>> Hello Bhupesh,
+>>>
+>>> Could you explain what the relevance is of PAGE_OFFSET to userland?
+>>> The only thing that should matter is where the actual linear mapping
+>>> of DRAM is, and I am not sure I understand why we care about where it
+>>> resides relative to the base of the linear region.
+>>
+>>
+>> Actually certain user-space tools like makedumpfile (which is used to
+>> generate and compress the vmcore) and crash-utility (which is used to
+>> debug the vmcore), rely on the PAGE_OFFSET value (which denotes the
+>> base of the linear map region) to determine virtual to physical
+>> mapping of the addresses lying in the linear region .
+>>
+>> One specific use case that I am working on at the moment is the
+>> makedumpfile '--mem-usage', which allows one to see the page numbers
+>> of current system (1st kernel) in different use (please see
+>> MAKEDUMPFILE(8) for more details).
+>>
+>> Using this we can know how many pages are dumpable when different
+>> dump_level is specified when invoking the makedumpfile.
+>>
+>> Normally, makedumpfile analyses the contents of '/proc/kcore' (while
+>> excluding the crashkernel range), and then calculates the page number
+>> of different kind per vmcoreinfo.
+>>
+>> For e.g. here is an output from my arm64 board (a non KASLR boot):
+>>
+>>      TYPE            PAGES                   EXCLUDABLE      DESCRIPTION
+>>
+>> ----------------------------------------------------------------------
+>>      ZERO            49524                   yes             Pages
+>> filled with zero
+>>      NON_PRI_CACHE   15143                   yes             Cache
+>> pages without private flag
+>>      PRI_CACHE       29147                   yes             Cache
+>> pages with private flag
+>>      USER            3684                    yes             User process
+>> pages
+>>      FREE            1450569                 yes             Free pages
+>>      KERN_DATA       14243                   no              Dumpable
+>> kernel data
+>>
+>>      page size:              65536
+>>      Total pages on system:  1562310
+>>      Total size on system:   102387548160     Byte
+>>
+>> This use case requires directly reading the '/proc/kcore' and the
+>> hence the PAGE_OFFSET value is used to determine the base address of
+>> the linear region, whose value is not static in case of KASLR boot.
+>>
+>> Another use-case is where the crash-utility uses the PAGE_OFFSET value
+>> to perform a virtual-to-physical conversion for the address lying in
+>> the linear region:
+>>
+>> ulong
+>> arm64_VTOP(ulong addr)
+>> {
+>>      if (machdep->flags & NEW_VMEMMAP) {
+>>          if (addr >= machdep->machspec->page_offset)
+>>              return machdep->machspec->phys_offset
+>>                  + (addr - machdep->machspec->page_offset);
+>>
+>> <..snip..>
+>> }
+>>
+>
+> Another confusing concept is the rounded-up value of 'memstart_addr' in
+> 'arch/arm64/mm/init.c' when booting a non-KASLR_ kernel and when the value
+> of memblock_start_of_DRAM() < ARM64_MEMSTART_ALIGN:
+>
+> void __init arm64_memblock_init(void)
+> {
+>
+> <..snip..>
+>         /*
+>          * Select a suitable value for the base of physical memory.
+>          */
+>         memstart_addr = round_down(memblock_start_of_DRAM(),
+>                                    ARM64_MEMSTART_ALIGN);
+> <..snip..>
+> }
+>
+> For example, let's consider a case (which I see on my qualcomm board) where
+> memblock_start_of_DRAM() = 0x200000 and ARM64_MEMSTART_ALIGN = 0x40000000 (I
+> am using VA_BITS = 48 and a 64K page size), in this case
+> memstart_addr is calculated at 0, as the round_down results in a value of 0.
+>
+> This is in contrast with the definition of the 'memblock_start_of_DRAM':
+>
+> /* lowest address */
+> phys_addr_t __init_memblock memblock_start_of_DRAM(void)
+> {
+>         return memblock.memory.regions[0].base;
+> }
+>
+> As indicated by logs below, the first memblock region base starts from
+> 0x200000 rather than the 'memstart_addr' value (which is 0)
+>
+> # dmesg | grep -i "Processing" -A 5
+> [    0.000000] efi: Processing EFI memory map:
+> [    0.000000] efi:   0x000000200000-0x00000021ffff [Runtime Data |RUN|  |
+> |  |  |  |  |   |WB|WT|WC|UC]
+> [    0.000000] efi:   0x000000400000-0x0000005fffff [ACPI Memory NVS |   |
+> |  |  |  |  |  |   |  |  |  |UC]
+>
+> # head -1 /proc/iomem
+> 00200000-0021ffff : reserved
+>
+> Since we define 'PHYS_OFFSET' as the physical address of the start of memory
+> it would be 0 in this case:
+>
+> /* PHYS_OFFSET - the physical address of the start of memory. */
+> #define PHYS_OFFSET             ({ VM_BUG_ON(memstart_addr & 1);
+> memstart_addr; })
+>
+> On the other hand, the first memblock starts from 0x200000, so my question
+> is whether we should update the user-space tools which use the memblocks
+> listed in '/proc/iomem' to obtain the value of PHY_OFFSET (by reading the
+> base of the 1st memblock) and read the value of 'memstart_addr' somehow in
+> user-space to get the PHY_OFFSET, or should the change be done at the kernel
+> end to calculate 'memstart_addr' as:
+>
+>
+>         /*
+>          * Select a suitable value for the base of physical memory.
+>          */
+>         memstart_addr = round_down(memblock_start_of_DRAM(),
+>                                    ARM64_MEMSTART_ALIGN);
+>         if (memstart_addr)
+
+Sorry for the typo: I meant if (!memstart_addr) above
+
+Regards,
+Bhupesh
+
+>                 memstart_addr = memblock_start_of_DRAM();
+>
+> Please share your views.
+>
+> Thanks,
+> Bhupesh
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
