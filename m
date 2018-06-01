@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fOoe8-0007mo-S1
- for kexec@lists.infradead.org; Fri, 01 Jun 2018 18:19:30 +0000
-Date: Fri, 1 Jun 2018 20:19:13 +0200
+ id 1fOofv-0000wQ-8h
+ for kexec@lists.infradead.org; Fri, 01 Jun 2018 18:21:25 +0000
+Date: Fri, 1 Jun 2018 20:21:07 +0200
 From: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Subject: Re: [PATCH v4 4/8] firmware: add call to LSM hook before firmware
- sysfs fallback
-Message-ID: <20180601181913.GN4511@wotan.suse.de>
+Subject: Re: [PATCH v4 5/8] ima: based on policy require signed firmware
+ (sysfs fallback)
+Message-ID: <20180601182107.GO4511@wotan.suse.de>
 References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1527616920-5415-5-git-send-email-zohar@linux.vnet.ibm.com>
+ <1527616920-5415-6-git-send-email-zohar@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1527616920-5415-5-git-send-email-zohar@linux.vnet.ibm.com>
+In-Reply-To: <1527616920-5415-6-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,54 +26,64 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, Andres Rodriguez <andresx7@gmail.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, Matthew Garrett <mjg59@google.com>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, Andres Rodriguez <andresx7@gmail.com>
 
-On Tue, May 29, 2018 at 02:01:56PM -0400, Mimi Zohar wrote:
-> Add an LSM hook prior to allowing firmware sysfs fallback loading.
+On Tue, May 29, 2018 at 02:01:57PM -0400, Mimi Zohar wrote:
+> Luis, is the security_kernel_post_read_file LSM hook in
+> firmware_loading_store() still needed after this patch?  Should it be
+> calling security_kernel_load_data() instead?
 
-Acked-by: Luis R. Rodriguez <mcgrof@kernel.org>
+That's up to Kees to decide as he added that hook, and knows
+what LSMs may be doing with it. From my perspective it is confusing
+to have that hook there so I think it could be removed now.
 
+Kees?
+
+  Luis
+
+> 
+> ---
+> 
+> With an IMA policy requiring signed firmware, this patch prevents
+> the sysfs fallback method of loading firmware.
+> 
 > Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 > Cc: Luis R. Rodriguez <mcgrof@suse.com>
 > Cc: David Howells <dhowells@redhat.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> 
-> Changelog v4:
-> - call new LSM security_kernel_arg hook
-> 
-> Changelog v2:
-> - call security_kernel_read_blob()
-> - rename the READING_FIRMWARE_FALLBACK kernel_read_file_id enumeration to
-> READING_FIRMWARE_FALLBACK_SYSFS.
+> Cc: Matthew Garrett <mjg59@google.com>
 > ---
->  drivers/base/firmware_loader/fallback.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  security/integrity/ima/ima_main.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-> index 358354148dec..2443bda81631 100644
-> --- a/drivers/base/firmware_loader/fallback.c
-> +++ b/drivers/base/firmware_loader/fallback.c
-> @@ -651,6 +651,8 @@ static bool fw_force_sysfs_fallback(unsigned int opt_flags)
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index a565d46084c2..4a87f78098c8 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -475,8 +475,10 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
 >  
->  static bool fw_run_sysfs_fallback(unsigned int opt_flags)
->  {
-> +	int ret;
-> +
->  	if (fw_fallback_config.ignore_sysfs_fallback) {
->  		pr_info_once("Ignoring firmware sysfs fallback due to sysctl knob\n");
->  		return false;
-> @@ -659,6 +661,11 @@ static bool fw_run_sysfs_fallback(unsigned int opt_flags)
->  	if ((opt_flags & FW_OPT_NOFALLBACK))
->  		return false;
+>  	if (!file && read_id == READING_FIRMWARE) {
+>  		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
+> -		    (ima_appraise & IMA_APPRAISE_ENFORCE))
+> +		    (ima_appraise & IMA_APPRAISE_ENFORCE)) {
+> +			pr_err("Prevent firmware loading_store.\n");
+>  			return -EACCES;	/* INTEGRITY_UNKNOWN */
+> +		}
+>  		return 0;
+>  	}
 >  
-> +	/* Also permit LSMs and IMA to fail firmware sysfs fallback */
-> +	ret = security_kernel_load_data(LOADING_FIRMWARE);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	return fw_force_sysfs_fallback(opt_flags);
->  }
->  
+> @@ -520,6 +522,12 @@ int ima_load_data(enum kernel_load_data_id id)
+>  			pr_err("impossible to appraise a kernel image without a file descriptor; try using kexec_file_load syscall.\n");
+>  			return -EACCES;	/* INTEGRITY_UNKNOWN */
+>  		}
+> +		break;
+> +	case LOADING_FIRMWARE:
+> +		if (ima_appraise & IMA_APPRAISE_FIRMWARE) {
+> +			pr_err("Prevent firmware sysfs fallback loading.\n");
+> +			return -EACCES;	/* INTEGRITY_UNKNOWN */
+> +		}
+>  	default:
+>  		break;
+>  	}
 > -- 
 > 2.7.5
 > 
