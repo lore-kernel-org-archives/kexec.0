@@ -1,33 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-wm0-x244.google.com ([2a00:1450:400c:c09::244])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fOPR5-00049s-Ex
- for kexec@lists.infradead.org; Thu, 31 May 2018 15:24:36 +0000
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w4VFEco0051304
- for <kexec@lists.infradead.org>; Thu, 31 May 2018 11:24:07 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2jagr6gw9t-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 31 May 2018 11:24:06 -0400
-Received: from localhost
- by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Thu, 31 May 2018 16:24:04 +0100
-Subject: [PATCH v4a 8/8] module: replace the existing LSM hook in init_module
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Thu, 31 May 2018 11:23:46 -0400
-In-Reply-To: <CAHC9VhQQX-JAnV-6jEOsug-6siyO9mrNa=rYK9Whg-MYcfHxgA@mail.gmail.com>
-References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1527616920-5415-9-git-send-email-zohar@linux.vnet.ibm.com>
- <CAHC9VhQL+CsqKL83fSZhjEZVSjKKfmLULvehXZ8SZhtK5xzLMQ@mail.gmail.com>
- <1527635645.3534.39.camel@linux.vnet.ibm.com>
- <CAHC9VhQQX-JAnV-6jEOsug-6siyO9mrNa=rYK9Whg-MYcfHxgA@mail.gmail.com>
-Mime-Version: 1.0
-Message-Id: <1527780226.3427.20.camel@linux.vnet.ibm.com>
+ id 1fOcP8-0001os-Jc
+ for kexec@lists.infradead.org; Fri, 01 Jun 2018 05:15:14 +0000
+Received: by mail-wm0-x244.google.com with SMTP id o13-v6so541762wmf.4
+ for <kexec@lists.infradead.org>; Thu, 31 May 2018 22:14:58 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <b1d81713dda4443db10cde70aa7a4ac9@HXTBJIDCEMVIW02.hxtcorp.net>
+References: <b1d81713dda4443db10cde70aa7a4ac9@HXTBJIDCEMVIW02.hxtcorp.net>
+From: Pratyush Anand <pratyush.anand@gmail.com>
+Date: Fri, 1 Jun 2018 10:44:56 +0530
+Message-ID: <CAHM4w1m0=gCpgKWP7u-2JkA7zgk9erCOC2u9HhzR0LtsZ3wyfA@mail.gmail.com>
+Subject: Re: Re: [PATCH] arm64: update PHYS_OFFSET to conform to kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,175 +20,92 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Paul Moore <paul@paul-moore.com>, Kees Cook <keescook@chromium.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R
- . Rodriguez" <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Jeff Vander Stoep <jeffv@google.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity@vger.kernel.org, Andres Rodriguez <andresx7@gmail.com>
+To: "Jin, Yanjiang" <yanjiang.jin@hxt-semitech.com>
+Cc: "jinyanjiang@gmail.com" <jinyanjiang@gmail.com>, Bhupesh Sharma <bhsharma@redhat.com>, "horms@verge.net.au" <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Zheng,
+ Joey" <yu.zheng@hxt-semitech.com>
 
-Both the init_module and finit_module syscalls call either directly
-or indirectly the security_kernel_read_file LSM hook.  This patch
-replaces the direct call in init_module with a call to the new
-security_kernel_load_data hook and makes the corresponding changes
-in SELinux, LoadPin, and IMA.
-
-Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Paul Moore <paul@paul-moore.com>
-Cc: Casey Schaufler <casey@schaufler-ca.com>
-Cc: Kees Cook <keescook@chromium.org>
-
----
-Changelog:
-- For SELinux, have both the security_kernel_read_file and
-security_kernel_load_data LSM hooks call selinux_kernel_read_file().
-- LoadPin: replace existing init_module LSM hook support with
-new security_kernel_load_data hook.
-
- kernel/module.c                   |  2 +-
- security/integrity/ima/ima_main.c | 24 ++++++++++--------------
- security/loadpin/loadpin.c        | 15 +++++++++++++++
- security/selinux/hooks.c          | 15 +++++++++++++++
- 4 files changed, 41 insertions(+), 15 deletions(-)
-
-diff --git a/kernel/module.c b/kernel/module.c
-index ce8066b88178..b97c642b5b4d 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2879,7 +2879,7 @@ static int copy_module_from_user(const void __user *umod, unsigned long len,
- 	if (info->len < sizeof(*(info->hdr)))
- 		return -ENOEXEC;
- 
--	err = security_kernel_read_file(NULL, READING_MODULE);
-+	err = security_kernel_load_data(LOADING_MODULE);
- 	if (err)
- 		return err;
- 
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 5a7696152982..cd33a2eff496 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -438,17 +438,6 @@ static int read_idmap[READING_MAX_ID] = {
-  */
- int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
- {
--	bool sig_enforce = is_module_sig_enforced();
--
--	if (!file && read_id == READING_MODULE) {
--		if (!sig_enforce && (ima_appraise & IMA_APPRAISE_MODULES) &&
--		    (ima_appraise & IMA_APPRAISE_ENFORCE)) {
--			pr_err("impossible to appraise a module without a file descriptor. sig_enforce kernel parameter might help\n");
--			return -EACCES;	/* INTEGRITY_UNKNOWN */
--		}
--		return 0;	/* We rely on module signature checking */
--	}
--
- 	if (read_id == READING_FIRMWARE_PREALLOC_BUFFER) {
- 		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
- 		    (ima_appraise & IMA_APPRAISE_ENFORCE)) {
-@@ -487,9 +476,6 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 		return 0;
- 	}
- 
--	if (!file && read_id == READING_MODULE) /* MODULE_SIG_FORCE enabled */
--		return 0;
--
- 	/* permit signed certs */
- 	if (!file && read_id == READING_X509_CERTIFICATE)
- 		return 0;
-@@ -518,6 +504,8 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
-  */
- int ima_load_data(enum kernel_load_data_id id)
- {
-+	bool sig_enforce;
-+
- 	if ((ima_appraise & IMA_APPRAISE_ENFORCE) != IMA_APPRAISE_ENFORCE)
- 		return 0;
- 
-@@ -533,6 +521,14 @@ int ima_load_data(enum kernel_load_data_id id)
- 			pr_err("Prevent firmware sysfs fallback loading.\n");
- 			return -EACCES;	/* INTEGRITY_UNKNOWN */
- 		}
-+		break;
-+	case LOADING_MODULE:
-+		sig_enforce = is_module_sig_enforced();
-+
-+		if (!sig_enforce && (ima_appraise & IMA_APPRAISE_MODULES)) {
-+			pr_err("impossible to appraise a module without a file descriptor. sig_enforce kernel parameter might help\n");
-+			return -EACCES;	/* INTEGRITY_UNKNOWN */
-+		}
- 	default:
- 		break;
- 	}
-diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
-index 5fa191252c8f..a9c07bfbc338 100644
---- a/security/loadpin/loadpin.c
-+++ b/security/loadpin/loadpin.c
-@@ -173,9 +173,24 @@ static int loadpin_read_file(struct file *file, enum kernel_read_file_id id)
- 	return 0;
- }
- 
-+static int loadpin_load_data(enum kernel_load_data_id id)
-+{
-+	int rc = 0;
-+
-+	switch (id) {
-+	case LOADING_MODULE:
-+		rc = loadpin_read_file(NULL, READING_MODULE);
-+	default:
-+		break;
-+	}
-+
-+	return rc;
-+}
-+
- static struct security_hook_list loadpin_hooks[] __lsm_ro_after_init = {
- 	LSM_HOOK_INIT(sb_free_security, loadpin_sb_free_security),
- 	LSM_HOOK_INIT(kernel_read_file, loadpin_read_file),
-+	LSM_HOOK_INIT(kernel_load_data, loadpin_load_data),
- };
- 
- void __init loadpin_add_hooks(void)
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 02ebd1585eaf..475aed9ee2c7 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -4059,6 +4059,20 @@ static int selinux_kernel_read_file(struct file *file,
- 	return rc;
- }
- 
-+static int selinux_kernel_load_data(enum kernel_load_data_id id)
-+{
-+	int rc = 0;
-+
-+	switch (id) {
-+	case LOADING_MODULE:
-+		rc = selinux_kernel_module_from_file(NULL);
-+	default:
-+		break;
-+	}
-+
-+	return rc;
-+}
-+
- static int selinux_task_setpgid(struct task_struct *p, pid_t pgid)
- {
- 	return avc_has_perm(&selinux_state,
-@@ -6950,6 +6964,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
- 	LSM_HOOK_INIT(kernel_act_as, selinux_kernel_act_as),
- 	LSM_HOOK_INIT(kernel_create_files_as, selinux_kernel_create_files_as),
- 	LSM_HOOK_INIT(kernel_module_request, selinux_kernel_module_request),
-+	LSM_HOOK_INIT(kernel_load_data, selinux_kernel_load_data),
- 	LSM_HOOK_INIT(kernel_read_file, selinux_kernel_read_file),
- 	LSM_HOOK_INIT(task_setpgid, selinux_task_setpgid),
- 	LSM_HOOK_INIT(task_getpgid, selinux_task_getpgid),
--- 
-2.7.5
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBNYXkgMzEsIDIwMTggYXQgMTE6MDEgQU0sIEppbiwgWWFuamlhbmcKPHlhbmppYW5n
+LmppbkBoeHQtc2VtaXRlY2guY29tPiB3cm90ZToKPiBIaSBCaHVwZXNoLAo+Cj4gMS4gIFRvIGJl
+IGNsZWFyZXIsIEkgbGlzdGVkIG15IG1lbW9yeSBsYXlvdXQgYWdhaW4gaGVyZToKPgo+IEluIHRo
+ZSBmaXJzdCBrZXJuZWwsIGV4ZWN1dGUgdGhlIGJlbG93IGNvbW1hbmQgdG8gZ2V0IHRoZSBsYXN0
+IHZpcnR1YWwgbWVtb3J5Ogo+Cj4gI2RtZXNnIHwgZ3JlcCBtZW1vcnkKPiAuLi4uLi4uLi4uCj4g
+bWVtb3J5ICA6IDB4ZmZmZjgwMDAwMDIwMDAwMCAtIDB4ZmZmZjgwMTgwMDAwMDAwMAo+Cj4gVGhl
+IHVzZSByZWFkZWxmIHRvIGdldCB0aGUgbGFzdCBQcm9ncmFtIEhlYWRlciBmcm9tIHZtY29yZToK
+Pgo+ICMgcmVhZGVsZiAtbCB2bWNvcmUKPgo+IEVMRiBIZWFkZXI6Cj4gLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uCj4KPiBQcm9ncmFtIEhlYWRlcnM6Cj4gICBUeXBlICAgICAgICAgICBPZmZzZXQg
+ICAgICAgICAgICAgVmlydEFkZHIgICAgICAgICAgIFBoeXNBZGRyICAgICAgICAgICAgICAgICBG
+aWxlU2l6ICAgICAgICAgICAgTWVtU2l6ICAgICAgICAgICAgICBGbGFncyAgQWxpZ24KPiAuLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLgo+ICAgTE9BRCAgICAgICAg
+MHgwMDAwMDAwMDc2ZDQwMDAwIDB4ZmZmZjgwMDE3ZmUwMDAwMCAweDAwMDAwMDAxODAwMDAwMDAg
+ICAgICAgICAgICAgICAgIDB4MDAwMDAwMTY4MDAwMDAwMCAweDAwMDAwMDE2ODAwMDAwMDAgIFJX
+RSAgICAwCj4KPiBEbyBhIHNpbXBsZSBjYWxjdWxhdGlvbjoKPgo+IChWaXJ0QWRkciArIE1lbVNp
+eikgPSAweGZmZmY4MDAxN2ZlMDAwMDAgKyAweDAwMDAwMDE2ODAwMDAwMDAgPSAweEZGRkY4MDE3
+RkZFMDAwMDAgIT0gMHhmZmZmODAxODAwMDAwMDAwLgo+Cj4gVGhlIGVuZCB2aXJ0dWFsIG1lbW9y
+eSBub2RlIGFyZSBtaXNtYXRjaCBiZXR3ZWVuIHZtbGludXggYW5kIHZtY29yZS4gSWYgeW91IGRv
+IHRoZSBzYW1lIDMgc3RlcHMsIEkgdGhpbmsgeW91IHdpbGwgZ2V0IHRoZSBzYW1lIHJlc3VsdHMg
+YXMgbWluZS4KPgo+Cj4gMi4gQnV0IHdoeSB5b3UgY2Fu4oCZdCByZXByb2R1Y2UgbXkgaXNzdWU/
+IFRoZSByZWFzb24gaXMgbXkgYWRkcmVzcyBvZiBzeW1ib2wg4oCcbG9nX2J1ZuKAnSBpcyBsb2Nh
+dGVkIGluIHRoZSBsYXN0IDJNLgo+IEkgZ3Vlc3MgaXQgaXNu4oCZdCBpbiB0aGUgbGFzdCAyTSBi
+eXRlcyBvbiB5b3VyIGVudmlyb25tZW50LCBzbyB3ZSBnZXQgdGhlIGRpZmZlcmVudCB2bWNvcmUt
+ZG1lc2cgcmVzdWx0cy4KPiBZb3UgY2FuIHNpbXBseSBjaGVjayB0aGUgbG9nX2J1ZuKAmXMgYWRk
+cmVzcyB0aHJvdWdoIGNyYXNoIGFzIGJlbG93Ogo+Cj4gY3Jhc2g+IHByaW50IGxvZ19idWYKPiAk
+MSA9IDB4ZmZmZjgwMTdmZmU5MDAwMCAiIgo+Cj4gSW4gdm1jb3JlLWRtZXNnLmMsIHRoZSBmdW5j
+dGlvbiBkdW1wX2RtZXNnX3N0cnVjdHVyZWQoKSB3YW50cyB0byBnZXQgbG9nX2J1ZiBvZmZzZXQg
+dGhyb3VnaCB0aGUgYmVsb3cgY29kZXM6Cj4KPiBsb2dfYnVmX29mZnNldCA9IHJlYWRfZmlsZV9w
+b2ludGVyKGZkLCB2YWRkcl90b19vZmZzZXQobG9nX2J1Zl92YWRkcikpOwo+IGxvZ19idWZfb2Zm
+c2V0ID0gdmFkZHJfdG9fb2Zmc2V0KGxvZ19idWYpOwo+Cj4gRXJyb3IgaGFwcGVucyBpbiB2YWRk
+cl90b19vZmZzZXQoKSwgaXQgcmVwb3J0cyB0aGUgYmVsb3cgZXJyb3Igb24gbXkgYm9hcmQ6Cj4g
+4oCcTm8gcHJvZ3JhbSBoZWFkZXIgY292ZXJpbmcgdmFkZHIgMHhmZmZmODAxN2ZmZTkwMDAwIGZv
+dW5kIGtleGVjIGJ1Zz/igJ0KCk9LLCBzbyBpdCBoYXBwZW5lZCBiZWNhdXNlIFZpcnR1YWwgQWRk
+cmVzcyBwcm9ncmFtbWVkIGluIFBUX0xPQUQgd2FzCm5vdCBjb3JyZWN0IGluIGtleGVjLXRvb2xz
+LgoKPgo+IElmIEkgYWRqdXN0IG15IG1lbW9yeeKAmXMgbGF5b3V0LCBkb27igJl0IHB1dCBsb2df
+YnVmIGludG8gdGhlIGxhc3QgMk0sIHZtY29yZS1kbWVzZyB3aWxsIHN1Y2NlZWQuIEJ1dCB0aGlz
+IGlzc3VlIHN0aWxsIGV4aXN0cywgdm1saW51eCBhbmQgdm1jb3Jl4oCZcyBsYXlvdXRzIGFyZSBt
+aXNtYXRjaC4KPgo+IGxvZ19idWYgaW4gdGhlIGxhc3QgMk0gaXMgbm90IGNvbW1vbiwgYnV0IGl0
+IGRvZXMgaGFwcGVuIG9uIG15IGJvYXJkLgoKT0suCgo+Cj4KPiAzLiBOb3cgbGV0J3MgZ28gYmFj
+ayB0byB0aGUgY29kZSBpdHNlbGYuIE5vIG1hdHRlciB3ZSBjYW4gcmVwcm9kdWNlIHRoaXMgYnVn
+IG9yIG5vdCwgcGh5c19vZmZzZXTigJlzIGNvZGXigJlzIGlzc3VlIGFsd2F5cyBleGlzdHMuCj4K
+PiBJbiBrZXJuZWw6Cj4gYXJtNjRfbWVtYmxvY2tfaW5pdCgpIGNhbGxzIHJvdW5kX2Rvd24gdG8g
+cmVjYWxjdWxhdGUgbWVtc3RhcnRfYWRkcjoKPgo+IG1lbXN0YXJ0X2FkZHIgPSByb3VuZF9kb3du
+KG1lbWJsb2NrX3N0YXJ0X29mX0RSQU0oKSwgIEFSTTY0X01FTVNUQVJUX0FMSUdOKTsKPgo+IG1l
+bWJsb2NrX3N0YXJ0X29mX0RSQU0oKSBpcyAweDIwMDAwMCwgaXQgaXMgdGhlIGZpcnN0IG1lbWJs
+b2Nr4oCZcyBiYXNlLgo+IEFSTTY0X01FTVNUQVJUX0FMSUdOIGlzIDB4NDAwMDAwMDAgb24gbXkg
+Ym9hcmQuCj4KPiBTbyBtZW1zdGFydF9hZGRyIGlzIDAsIGFuZCBwaHlzX29mZnNldCA9IG1lbXN0
+YXJ0X2FkZHIgPSAwOwoKSHVtbSwgT0ssIHNvIHlvdXIgUEhZU19PRkZTRVQgaXMgbm90IHNhbWUg
+YXMgdGhlIGxvd2VzdCBzdGFydCBhZGRyZXNzCmluIC9wcm9jL2lvbWVtLiBTbywgd2UgbWF5IGFs
+d2F5cyBoYXZlIHByb2JsZW0sIHdoZW4gc3RhcnQgb2YgRFJBTSBpcwpuZWl0aGVyIDAgbm9yIG11
+bHRpcGxlIG9mIEFSTTY0X01FTVNUQVJUX0FMSUdOLgoKPgo+IEJ1dCBpbiBrZXhlYy10b29sczoK
+PiBwaHlzX29mZnNldCBpcyBzZXQgaW4gdGhlIGZ1bmN0aW9uIGdldF9tZW1vcnlfcmFuZ2VzX2lv
+bWVtX2NiKCkgOgo+Cj4gZ2V0X21lbW9yeV9yYW5nZXNfaW9tZW1fY2IoKS0+c2V0X3BoeXNfb2Zm
+c2V0KCkuCj4KPiBUaGlzIGZ1bmN0aW9uIGlzIGp1c3QgZ2V0IHRoZSBmaXJzdCBtZW1ibG9ja+KA
+mXMgYmFzZShmaXJzdCBibG9jayBvZiDigJwvcHJvYy9pb21lbeKAnSksIG5vIHJvdW5kX2Rvd24o
+KSBvcGVyYXRpb24uCj4KPiBUbyBhbGlnbiB3aXRoIGtlcm5lbCwga2V4ZWMtdG9vbHMgc2hvdWxk
+IGNhbGwgdGhlIHNpbWlsYXIgcm91bmRfZG93bigpIGZ1bmN0aW9uIGZvciB0aGlzIGJhc2UuIEJ1
+dCBvYnZpb3VzbHksIGtleGVjLXRvb2xzIGRvZXNu4oCZdCBkbyB0aGlzIHN0ZXAuCj4gSXTigJlz
+IGhhcmQgdG8gZ2V0IGtlcm5lbOKAmXMgcm91bmRfZG93biBwYXJhbWV0ZXJzIGluIGtleGVjLXRv
+b2xzLCBidXQgcmVhZCBtZW1zdGFydF9hZGRy4oCZcyB2YWx1ZSBmcm9tIERFVk1FTSBpcyBzYWZl
+LCB3ZSBjYW4gYWx3YXlzIGdldCB0aGUgY29ycmVjdCB2YWx1ZSByZWdhcmRsZXNzIG9mIHdoZXRo
+ZXIgS0FTTFIgaXMgZW5hYmxlZC4KClJlYWRpbmcgZnJvbSAvZGV2L21lbSBpcyBub3QgYSBnb29k
+IGlkZWEsIGJlY2F1c2Ugb2Ygc2ltcGxlIHJlYXNvbgp0aGF0IC9kZXYvbWVtIG1heSBub3QgYmUg
+YXZhaWxhYmxlIGluIGFsbCB0aGUgY2FzZXMuCldlIGNhbiBoYXZlIG9uZSB3YXkgb3IgYW5vdGhl
+ciB0byBrbm93IEFSTTY0X01FTVNUQVJUX0FMSUdOIGluIHVzZXIKc3BhY2UuIEZvciBleGFtcGxl
+LCBieSBsb29raW5nIGFmdGVyIHRvcCBiaXRzIG9mIF90ZXh0LCB3ZSBjYW4ga25vdwp0aGUgVkFf
+QklUUy4gSWYgd2Uga25vdyB0aGUgVkFfQklUUywgd2UgY2FuIGtub3cgdGhlIHBhZ2UgdGFibGUg
+c2l6ZQphbmQgbGV2ZWwsIGFuZCBzbyBjYW4gbm93IFBVRF9TSElGVCBldGMuIEJ1dCwgdGhhdCBt
+YXkgbm90IGJlIHRoZQpzb2x1dGlvbiB3aGVuIEtBU0xSIGlzIGVuYWJsZWQuCgpMZXRzIHNlZSB3
+aGF0IG90aGVycyBzYXlzLiBJIHRoaW5rIG9uIHRoZSBzYW1lIGxpbmUgYXMgQmh1cGVzaCBoYWQK
+c2FpZC4gV2Ugd2lsbCBuZWVkIGl0IHRvIGZpeCBpbiBrZXhlYy10b29scyBhcyB3ZWxsIGFzIGtl
+cm5lbC4KCklNTywgIGtleGVjLXRvb2xzIG1heSB3cml0ZSBvbmx5IHJlYWwgcGh5c2ljYWwgYWRk
+cmVzcyBpbiBQVF9MT0FEIGFuZApjYW4gd3JpdGUgYW4gaW52YWxpZCAoMCkgdmlydHVhbCBhZGRy
+ZXNzIChpZiBpdCBpcyBub3QgYWJsZSB0bwpjYWxjdWxhdGUgdGhlIHNhbWUgY29ycmVjdGx5KS4g
+S2VybmVsIGNhbiB1cGRhdGUgdGhlIHZpcnR1YWwgYWRkcmVzcwp3aXRoIGNvcnJlY3QgdmFsdWUg
+aWYgaXQgaXMgaW52YWxpZC4KClJlZ2FyZHMKUHJhdHl1c2gKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8va2V4ZWMK
