@@ -1,20 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fOsoY-0001Xe-Ru
- for kexec@lists.infradead.org; Fri, 01 Jun 2018 22:46:32 +0000
-Date: Sat, 2 Jun 2018 00:46:17 +0200
-From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+ id 1fOt6i-0002XC-KO
+ for kexec@lists.infradead.org; Fri, 01 Jun 2018 23:05:18 +0000
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w51N4B7Z140733
+ for <kexec@lists.infradead.org>; Fri, 1 Jun 2018 19:05:05 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2jbaj2aq64-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 01 Jun 2018 19:05:04 -0400
+Received: from localhost
+ by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Sat, 2 Jun 2018 00:05:02 +0100
 Subject: Re: [PATCH v4 5/8] ima: based on policy require signed firmware
  (sysfs fallback)
-Message-ID: <20180601224617.GU4511@wotan.suse.de>
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Fri, 01 Jun 2018 19:04:45 -0400
+In-Reply-To: <20180601224617.GU4511@wotan.suse.de>
 References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
  <1527616920-5415-6-git-send-email-zohar@linux.vnet.ibm.com>
  <20180601182107.GO4511@wotan.suse.de>
  <1527892795.13403.26.camel@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1527892795.13403.26.camel@linux.vnet.ibm.com>
+ <20180601224617.GU4511@wotan.suse.de>
+Mime-Version: 1.0
+Message-Id: <1527894285.13403.43.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,41 +37,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, "Luis R. Rodriguez" <mcgrof@kernel.org>, Matthew Garrett <mjg59@google.com>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, Andres Rodriguez <andresx7@gmail.com>
+To: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, Andres Rodriguez <andresx7@gmail.com>
 
-On Fri, Jun 01, 2018 at 06:39:55PM -0400, Mimi Zohar wrote:
-> On Fri, 2018-06-01 at 20:21 +0200, Luis R. Rodriguez wrote:
-> > On Tue, May 29, 2018 at 02:01:57PM -0400, Mimi Zohar wrote:
-> > > Luis, is the security_kernel_post_read_file LSM hook in
-> > > firmware_loading_store() still needed after this patch?  Should it be
-> > > calling security_kernel_load_data() instead?
-> > =
-
-> > That's up to Kees to decide as he added that hook, and knows
-> > what LSMs may be doing with it. From my perspective it is confusing
-> > to have that hook there so I think it could be removed now.
-> > =
-
-> > Kees?
-> =
-
-> Commit=A06593d92 ("firmware_class: perform new LSM checks") references
-> two methods of loading firmware -=A0=A0filesystem-found firmware and
-> demand-loaded blobs. =A0I assume this call in firmware_loading_store()
-> is the demand-loaded blobs. =A0Does that method still exist? =A0Is it
-> still being used?
-
-Yeah its the stupid sysfs interface. So likely loadpin needs porting
-as you IMA as you did.
-
-  Luis
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU2F0LCAyMDE4LTA2LTAyIGF0IDAwOjQ2ICswMjAwLCBMdWlzIFIuIFJvZHJpZ3VleiB3cm90
+ZToKPiBPbiBGcmksIEp1biAwMSwgMjAxOCBhdCAwNjozOTo1NVBNIC0wNDAwLCBNaW1pIFpvaGFy
+IHdyb3RlOgo+ID4gT24gRnJpLCAyMDE4LTA2LTAxIGF0IDIwOjIxICswMjAwLCBMdWlzIFIuIFJv
+ZHJpZ3VleiB3cm90ZToKPiA+ID4gT24gVHVlLCBNYXkgMjksIDIwMTggYXQgMDI6MDE6NTdQTSAt
+MDQwMCwgTWltaSBab2hhciB3cm90ZToKPiA+ID4gPiBMdWlzLCBpcyB0aGUgc2VjdXJpdHlfa2Vy
+bmVsX3Bvc3RfcmVhZF9maWxlIExTTSBob29rIGluCj4gPiA+ID4gZmlybXdhcmVfbG9hZGluZ19z
+dG9yZSgpIHN0aWxsIG5lZWRlZCBhZnRlciB0aGlzIHBhdGNoPyAgU2hvdWxkIGl0IGJlCj4gPiA+
+ID4gY2FsbGluZyBzZWN1cml0eV9rZXJuZWxfbG9hZF9kYXRhKCkgaW5zdGVhZD8KPiA+ID4gCj4g
+PiA+IFRoYXQncyB1cCB0byBLZWVzIHRvIGRlY2lkZSBhcyBoZSBhZGRlZCB0aGF0IGhvb2ssIGFu
+ZCBrbm93cwo+ID4gPiB3aGF0IExTTXMgbWF5IGJlIGRvaW5nIHdpdGggaXQuIEZyb20gbXkgcGVy
+c3BlY3RpdmUgaXQgaXMgY29uZnVzaW5nCj4gPiA+IHRvIGhhdmUgdGhhdCBob29rIHRoZXJlIHNv
+IEkgdGhpbmsgaXQgY291bGQgYmUgcmVtb3ZlZCBub3cuCj4gPiA+IAo+ID4gPiBLZWVzPwo+ID4g
+Cj4gPiBDb21taXTCoDY1OTNkOTIgKCJmaXJtd2FyZV9jbGFzczogcGVyZm9ybSBuZXcgTFNNIGNo
+ZWNrcyIpIHJlZmVyZW5jZXMKPiA+IHR3byBtZXRob2RzIG9mIGxvYWRpbmcgZmlybXdhcmUgLcKg
+wqBmaWxlc3lzdGVtLWZvdW5kIGZpcm13YXJlIGFuZAo+ID4gZGVtYW5kLWxvYWRlZCBibG9icy4g
+wqBJIGFzc3VtZSB0aGlzIGNhbGwgaW4gZmlybXdhcmVfbG9hZGluZ19zdG9yZSgpCj4gPiBpcyB0
+aGUgZGVtYW5kLWxvYWRlZCBibG9icy4gwqBEb2VzIHRoYXQgbWV0aG9kIHN0aWxsIGV4aXN0PyDC
+oElzIGl0Cj4gPiBzdGlsbCBiZWluZyB1c2VkPwo+IAo+IFllYWggaXRzIHRoZSBzdHVwaWQgc3lz
+ZnMgaW50ZXJmYWNlLiBTbyBsaWtlbHkgbG9hZHBpbiBuZWVkcyBwb3J0aW5nCj4gYXMgeW91IElN
+QSBhcyB5b3UgZGlkLgoKSW4gdGhpcyBjYXNlLCBpdCBkb2Vzbid0IGxvb2sgbGlrZSB0aGUgY2Fs
+bCB0bwpzZWN1cml0eV9rZXJuZWxfcG9zdF9yZWFkX2ZpbGUoKSBzaG91bGQgYmUgY2hhbmdlZCwg
+d2hpY2ggbWVhbnMgdGhhdAphbGwgdGhlIExTTXMgYW5kIElNQSBzdGlsbCBuZWVkIHRvIHN1cHBv
+cnQgIWZpbGUuCsKgCk1pbWkKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
