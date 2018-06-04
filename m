@@ -1,32 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from h2.hallyn.com ([78.46.35.8] helo=mail.hallyn.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fPvYJ-0002hF-Dc
- for kexec@lists.infradead.org; Mon, 04 Jun 2018 19:54:05 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w54JoLef016251
- for <kexec@lists.infradead.org>; Mon, 4 Jun 2018 15:53:52 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2jd9bnecda-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 04 Jun 2018 15:53:51 -0400
-Received: from localhost
- by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Mon, 4 Jun 2018 20:53:49 +0100
-Subject: Re: [PATCH v4 0/8] kexec/firmware: support system wide policy
- requiring signatures
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Mon, 04 Jun 2018 15:53:40 -0400
-In-Reply-To: <20180604193215.GA13553@mail.hallyn.com>
+ id 1fPve6-0005Mp-JI
+ for kexec@lists.infradead.org; Mon, 04 Jun 2018 20:00:41 +0000
+Date: Mon, 4 Jun 2018 14:59:50 -0500
+From: "Serge E. Hallyn" <serge@hallyn.com>
+Subject: Re: [PATCH v4 1/8] security: define new LSM hook named
+ security_kernel_load_data
+Message-ID: <20180604195950.GB14454@mail.hallyn.com>
 References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1528121025.3237.116.camel@linux.vnet.ibm.com>
- <20180604193215.GA13553@mail.hallyn.com>
-Mime-Version: 1.0
-Message-Id: <1528142020.3237.138.camel@linux.vnet.ibm.com>
+ <1527616920-5415-2-git-send-email-zohar@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1527616920-5415-2-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,50 +21,156 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Andres Rodriguez <andresx7@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, "Luis R . Rodriguez" <mcgrof@kernel.org>, James Morris <james.l.morris@oracle.com>, Jessica Yu <jeyu@kernel.org>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity <linux-integrity@vger.kernel.org>, Paul Moore <paul@paul-moore.com>
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity@vger.kernel.org, Andres Rodriguez <andresx7@gmail.com>
 
-T24gTW9uLCAyMDE4LTA2LTA0IGF0IDE0OjMyIC0wNTAwLCBTZXJnZSBFLiBIYWxseW4gd3JvdGU6
-Cj4gUXVvdGluZyBNaW1pIFpvaGFyICh6b2hhckBsaW51eC52bmV0LmlibS5jb20pOgo+ID4gT24g
-VHVlLCAyMDE4LTA1LTI5IGF0IDE0OjAxIC0wNDAwLCBNaW1pIFpvaGFyIHdyb3RlOgo+ID4gPiBJ
-bnN0ZWFkIG9mIGFkZGluZyB0aGUgc2VjdXJpdHlfa2VybmVsX3JlYWRfZmlsZSBMU00gaG9vayAt
-IG9yIGRlZmluaW5nIGEKPiA+ID4gd3JhcHBlciBmb3Igc2VjdXJpdHlfa2VybmVsX3JlYWRfZmls
-ZSBMU00gaG9vayBhbmQgYWRkaW5nIGl0LCBvcgo+ID4gPiByZW5hbWluZyB0aGUgZXhpc3Rpbmcg
-aG9vayB0byBzZWN1cml0eV9rZXJuZWxfcmVhZF9kYXRhKCkgYW5kIGFkZGluZyBpdAo+ID4gPiAt
-IGluIHBsYWNlcyB3aGVyZSB0aGUga2VybmVsIGlzbid0IHJlYWRpbmcgYSBmaWxlLCB0aGlzIHZl
-cnNpb24gb2YgdGhlCj4gPiA+IHBhdGNoIHNldCBkZWZpbmVzIGEgbmV3IExTTSBob29rIG5hbWVk
-IHNlY3VyaXR5X2tlcm5lbF9sb2FkX2RhdGEoKS4KPiA+ID4gCj4gPiA+IFRoZSBuZXcgTFNNIGhv
-b2sgZG9lcyBub3QgcmVwbGFjZSB0aGUgZXhpc3Rpbmcgc2VjdXJpdHlfa2VybmVsX3JlYWRfZmls
-ZQo+ID4gPiBMU00gaG9vaywgd2hpY2ggaXMgc3RpbGwgbmVlZGVkLCBidXQgZGVmaW5lcyBhIG5l
-dyBMU00gaG9vayBhbGxvd2luZwo+ID4gPiBMU01zIGFuZCBJTUEtYXBwcmFpc2FsIHRoZSBvcHBv
-cnR1bml0eSB0byBmYWlsIGxvYWRpbmcgdXNlcnNwYWNlCj4gPiA+IHByb3ZpZGVkIGZpbGUvZGF0
-YS4KPiA+ID4gCj4gPiA+IFRoZSBvbmx5IGRpZmZlcmVuY2UgYmV0d2VlbiB0aGUgdHdvIExTTSBo
-b29rcyBpcyB0aGUgTFNNIGhvb2sgbmFtZSBhbmQgYQo+ID4gPiBmaWxlIGRlc2NyaXB0b3IuICBX
-aGV0aGVyIHRoaXMgaXMgY2F1c2UgZW5vdWdoIGZvciByZXF1aXJpbmcgYSBuZXcgTFNNCj4gPiA+
-IGhvb2ssIGlzIGxlZnQgdG8gdGhlIHNlY3VyaXR5IGNvbW11bml0eS4KPiA+IAo+ID4gUGF1bCBk
-b2VzIG5vdCBoYXZlIGEgcHJlZmVyZW5jZSBhcyB0byBhZGRpbmcgYSBuZXcgTFNNIGhvb2sgb3Ig
-Y2FsbGluZwo+ID4gdGhlIGV4aXN0aW5nIGhvb2suIMKgRWl0aGVyIHdheSBpcyBmaW5lLCBhcyBs
-b25nIGFzIGJvdGggdGhlIG5ldyBhbmQKPiA+IGV4aXN0aW5nIGhvb2tzIGNhbGwgdGhlIGV4aXN0
-aW5nIGZ1bmN0aW9uLgo+ID4gCj4gPiBDYXNleSBkaWRuJ3QgbGlrZSB0aGUgaWRlYSBvZiBhIHdy
-YXBwZXIuCj4gPiBKYW1lcyBzdWdnZXN0ZWQgcmVuYW1pbmcgdGhlIExTTSBob29rLgo+ID4gCj4g
-PiBUaGUgbWFpbnRhaW5lcnMgZm9yIHRoZSBjYWxsZXJzIG9mIHRoZSBMU00gaG9vayBwcmVmZXIg
-YSBtZWFuaW5nZnVsCj4gPiBMU00gaG9vayBuYW1lLiDCoFRoZSAibnVsbCIgYXJndW1lbnQgaXMg
-bm90IGFzIG11Y2ggb2YgYSBjb25jZXJuLiDCoE9ubHkKPiA+IEVyaWMgc2VlbXMgdG8gYmUgYXNr
-aW5nIGZvciBhIHNlcGFyYXRlLCBuZXcgTFNNIGhvb2ssIHdpdGhvdXQgdGhlCj4gPiAibnVsbCIg
-YXJndW1lbnQuCj4gPiAKPiA+IFVubGVzcyBzb21lb25lIHJlYWxseSBvYmplY3RzLCB0byBhY2Nv
-bW1vZGF0ZSBFcmljIHdlJ2xsIGRlZmluZSBhIG5ldwo+ID4gTFNNIGhvb2sgbmFtZWQgc2VjdXJp
-dHlfa2VybmVsX2xvYWRfZGF0YS4gwqBFcmljLCBhcmUgeW91IHBsYW5uaW5nIG9uCj4gCj4gSSdt
-IGNvbmZ1c2VkIC0gaXNuJ3QgdGhhdCB3aGF0IHRoaXMgcGF0Y2hzZXQgZGlkPyA6KQoKUmlnaHQu
-IMKgSSdtIHRyeWluZyB0byBnZXQgY29uc2Vuc3VzIHdoZXRoZXIgaXQgaXMgbmVlZGVkLgoKPiAK
-PiA+IEFjaydpbmcgcGF0Y2hlcyAxICYgMj8KPiA+IAo+ID4gTWltaQo+IC0tCj4gVG8gdW5zdWJz
-Y3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LXNl
-Y3VyaXR5LW1vZHVsZSIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZn
-ZXIua2VybmVsLm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5l
-bC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4
-ZWMK
+Quoting Mimi Zohar (zohar@linux.vnet.ibm.com):
+> Differentiate between the kernel reading a file from the kernel loading
+> data provided by userspace.  This patch defines a new LSM hook named
+> security_kernel_load_data.
+> 
+> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+
+Acked-by: Serge Hallyn <serge@hallyn.com>
+
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Luis R. Rodriguez <mcgrof@kernel.org>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Casey Schaufler <casey@schaufler-ca.com>
+> 
+> Changelog v4:
+> - Define new LSM hook named security_kernel_load_data.
+> 
+> Changelog v3:
+> - Rename security_kernel_read_file to security_kernel_read_data().
+> 
+> Changelog v2:
+> - Define a generic wrapper named security_kernel_read_blob() for
+> security_kernel_read_file().
+> 
+> Changelog v1:
+> - Define and call security_kexec_load(), a wrapper for
+> security_kernel_read_file().
+> ---
+>  include/linux/lsm_hooks.h |  6 ++++++
+>  include/linux/security.h  | 33 +++++++++++++++++++++++++++++++++
+>  security/security.c       |  5 +++++
+>  3 files changed, 44 insertions(+)
+> 
+> diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+> index 8f1131c8dd54..a08bc2587b96 100644
+> --- a/include/linux/lsm_hooks.h
+> +++ b/include/linux/lsm_hooks.h
+> @@ -576,6 +576,10 @@
+>   *	userspace to load a kernel module with the given name.
+>   *	@kmod_name name of the module requested by the kernel
+>   *	Return 0 if successful.
+> + * @kernel_load_data:
+> + *	Load data provided by userspace.
+> + *	@id kernel load data identifier
+> + *	Return 0 if permission is granted.
+>   * @kernel_read_file:
+>   *	Read a file specified by userspace.
+>   *	@file contains the file structure pointing to the file being read
+> @@ -1582,6 +1586,7 @@ union security_list_options {
+>  	int (*kernel_act_as)(struct cred *new, u32 secid);
+>  	int (*kernel_create_files_as)(struct cred *new, struct inode *inode);
+>  	int (*kernel_module_request)(char *kmod_name);
+> +	int (*kernel_load_data)(enum kernel_load_data_id id);
+>  	int (*kernel_read_file)(struct file *file, enum kernel_read_file_id id);
+>  	int (*kernel_post_read_file)(struct file *file, char *buf, loff_t size,
+>  				     enum kernel_read_file_id id);
+> @@ -1872,6 +1877,7 @@ struct security_hook_heads {
+>  	struct hlist_head cred_getsecid;
+>  	struct hlist_head kernel_act_as;
+>  	struct hlist_head kernel_create_files_as;
+> +	struct hlist_head kernel_load_data;
+>  	struct hlist_head kernel_read_file;
+>  	struct hlist_head kernel_post_read_file;
+>  	struct hlist_head kernel_module_request;
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index 63030c85ee19..3d54d5945755 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -159,6 +159,33 @@ extern int mmap_min_addr_handler(struct ctl_table *table, int write,
+>  typedef int (*initxattrs) (struct inode *inode,
+>  			   const struct xattr *xattr_array, void *fs_data);
+>  
+> +
+> +#define __kernel_load_data_id(id) \
+> +	id(UNKNOWN, unknown)		\
+> +	id(FIRMWARE, firmware)		\
+> +	id(MODULE, kernel-module)		\
+> +	id(KEXEC_IMAGE, kexec-image)		\
+> +	id(MAX_ID, )
+> +
+> +#define __data_id_enumify(ENUM, dummy) LOADING_ ## ENUM,
+> +#define __data_id_stringify(dummy, str) #str,
+> +
+> +enum kernel_load_data_id {
+> +	__kernel_load_data_id(__data_id_enumify)
+> +};
+> +
+> +static const char * const kernel_load_data_str[] = {
+> +	__kernel_load_data_id(__data_id_stringify)
+> +};
+> +
+> +static inline const char *kernel_load_data_id_str(enum kernel_load_data_id id)
+> +{
+> +	if ((unsigned)id >= LOADING_MAX_ID)
+> +		return kernel_load_data_str[LOADING_UNKNOWN];
+> +
+> +	return kernel_load_data_str[id];
+> +}
+> +
+>  #ifdef CONFIG_SECURITY
+>  
+>  struct security_mnt_opts {
+> @@ -320,6 +347,7 @@ void security_cred_getsecid(const struct cred *c, u32 *secid);
+>  int security_kernel_act_as(struct cred *new, u32 secid);
+>  int security_kernel_create_files_as(struct cred *new, struct inode *inode);
+>  int security_kernel_module_request(char *kmod_name);
+> +int security_kernel_load_data(enum kernel_load_data_id id);
+>  int security_kernel_read_file(struct file *file, enum kernel_read_file_id id);
+>  int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
+>  				   enum kernel_read_file_id id);
+> @@ -909,6 +937,11 @@ static inline int security_kernel_module_request(char *kmod_name)
+>  	return 0;
+>  }
+>  
+> +static inline int security_kernel_load_data(enum kernel_load_data_id id)
+> +{
+> +	return 0;
+> +}
+> +
+>  static inline int security_kernel_read_file(struct file *file,
+>  					    enum kernel_read_file_id id)
+>  {
+> diff --git a/security/security.c b/security/security.c
+> index 68f46d849abe..c2de2f134854 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -1056,6 +1056,11 @@ int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
+>  }
+>  EXPORT_SYMBOL_GPL(security_kernel_post_read_file);
+>  
+> +int security_kernel_load_data(enum kernel_load_data_id id)
+> +{
+> +	return call_int_hook(kernel_load_data, 0, id);
+> +}
+> +
+>  int security_task_fix_setuid(struct cred *new, const struct cred *old,
+>  			     int flags)
+>  {
+> -- 
+> 2.7.5
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
