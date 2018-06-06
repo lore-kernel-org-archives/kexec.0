@@ -1,38 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-lf0-f67.google.com ([209.85.215.67])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fQKkD-0003mn-2N
- for kexec@lists.infradead.org; Tue, 05 Jun 2018 22:48:02 +0000
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w55MiC6d078389
- for <kexec@lists.infradead.org>; Tue, 5 Jun 2018 18:47:47 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2je3988m1r-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 05 Jun 2018 18:47:47 -0400
-Received: from localhost
- by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Tue, 5 Jun 2018 23:47:45 +0100
-Subject: Re: [PATCH v4a 8/8] module: replace the existing LSM hook in
- init_module
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-In-Reply-To: <CAGXu5j+9P9HLvwC4WfHoxXsz7vYA_raStVDPzA=tNR9f9vr9=Q@mail.gmail.com>
-References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1527616920-5415-9-git-send-email-zohar@linux.vnet.ibm.com>
- <CAHC9VhQL+CsqKL83fSZhjEZVSjKKfmLULvehXZ8SZhtK5xzLMQ@mail.gmail.com>
- <1527635645.3534.39.camel@linux.vnet.ibm.com>
- <CAHC9VhQQX-JAnV-6jEOsug-6siyO9mrNa=rYK9Whg-MYcfHxgA@mail.gmail.com>
- <1527780226.3427.20.camel@linux.vnet.ibm.com>
- <CAGXu5jLXSEWHorm6=h9+1cP-y8ZX2_ALcra6g9x7Tm-O0kU3DQ@mail.gmail.com>
- <1528234513.3557.16.camel@linux.vnet.ibm.com>
- <CAGXu5j+9P9HLvwC4WfHoxXsz7vYA_raStVDPzA=tNR9f9vr9=Q@mail.gmail.com>
-Date: Tue, 05 Jun 2018 18:40:11 -0400
-Mime-Version: 1.0
-Message-Id: <1528238411.3557.32.camel@linux.vnet.ibm.com>
+ id 1fQRFm-0006vM-SI
+ for kexec@lists.infradead.org; Wed, 06 Jun 2018 05:45:04 +0000
+Received: by mail-lf0-f67.google.com with SMTP id o9-v6so7158762lfk.1
+ for <kexec@lists.infradead.org>; Tue, 05 Jun 2018 22:44:52 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <20180605100151.7fd54381@ezekiel.suse.cz>
+References: <20180605100151.7fd54381@ezekiel.suse.cz>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Wed, 6 Jun 2018 11:06:28 +0530
+Message-ID: <CACi5LpMJ9whXxpMvQDw4_4kRNaATGGq4fWt7nRRJTMrdN_q_nQ@mail.gmail.com>
+Subject: Re: panic kexec broken on ARM64?
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,38 +20,113 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kees Cook <keescook@chromium.org>
-Cc: Paul Moore <paul@paul-moore.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kexec Mailing List <kexec@lists.infradead.org>, "Luis
- R . Rodriguez" <mcgrof@kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, linux-security-module <linux-security-module@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, Jeff Vander Stoep <jeffv@google.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity <linux-integrity@vger.kernel.org>, James Morris <jmorris@namei.org>, Andres Rodriguez <andresx7@gmail.com>
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: Matthias Brugger <mbrugger@suse.com>, kexec mailing list <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-T24gVHVlLCAyMDE4LTA2LTA1IGF0IDE1OjI2IC0wNzAwLCBLZWVzIENvb2sgd3JvdGU6Cj4gT24g
-VHVlLCBKdW4gNSwgMjAxOCBhdCAyOjM1IFBNLCBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC52bmV0
-LmlibS5jb20+IHdyb3RlOgo+ID4gT24gVHVlLCAyMDE4LTA2LTA1IGF0IDEyOjQ1IC0wNzAwLCBL
-ZWVzIENvb2sgd3JvdGU6Cj4gPgo+ID4+IEFuZCBpZiB5b3UgbXVzdCBoYXZlIGEgc2VwYXJhdGUg
-ZW51bSwgcGxlYXNlIGNoYW5nZSB0aGlzIHRvIGZhaWwKPiA+PiBjbG9zZWQgaW5zdGVhZCBvZiBv
-cGVuIChhbmQgbWFyayB0aGUgZmFsbC10aHJvdWdoKToKPiA+Pgo+ID4+IGludCByYyA9IC1FUEVS
-TTsKPiA+Pgo+ID4+IHN3aXRjaCAoaWQpIHsKPiA+PiBjYXNlIExPQURJTkdfTU9EVUxFOgo+ID4+
-ICAgICByYyA9IGxvYWRwaW5fcmVhZF9maWxlKE5VTEwsIFJFQURJTkdfTU9EVUxFKTsKPiA+PiAg
-ICAgLyogRmFsbC10aHJvdWdoICovCj4gPj4gZGVmYXVsdDoKPiA+PiAgICAgYnJlYWs7Cj4gPj4g
-fQo+ID4KPiA+IFRoaXMgd2lsbCBmYWlsIHRoZSBzeXNmcyBmaXJtd2FyZSBmYWxsYmFjayBsb2Fk
-aW5nIGFuZCB0aGUga2V4ZWNfbG9hZAo+ID4gc3lzY2FsbCB3aXRob3V0IGFueSBtZXNzYWdlLCBh
-cyB5b3UgaGF2ZSBmb3IgaW5pdF9tb2R1bGUuICBJcyB0aGF0Cj4gPiB3aGF0IHlvdSB3YW50Pwo+
-IAo+IEknZCBwcmVmZXIgdGhlcmUgYmUgYSBmdWxsIG1hcHBpbmcgb2YgdGhlIGVudW1zIHNvIHRo
-YXQgZXZlcnl0aGluZwo+IGdldHMgcGFzc2VkIGludG8gbG9hZHBpbl9yZWFkX2ZpbGUoKSA6KQo+
-IAo+IENhbiB0aGUgZW51bSBiZSBzaGFyZWQgb3IgaXMgdGhhdCBub25zZW5zaWNhbD8KCkNvbnNp
-ZGVyaW5nIHRoaXMgaXMgdjQgb2YgdGhlIHBhdGNoIHNldCwgaXQncyBwcmV0dHkgb2J2aW91cyBJ
-IGRpZApldmVyeXRoaW5nIHBvc3NpYmxlIG5vdCB0byBkZWZpbmUgYSBuZXcgTFNNIGhvb2suIMKg
-RXZlbiBpZiB3ZSBjYW4ndApyZS11c2UgdGhlIGV4aXN0aW5nIGVudW0sIHdlIGNvdWxkIGRlZmlu
-ZSB0aGUgbmV3IGVudW0gaW4gdGVybXMKb2bCoF9fa2VybmVsX3JlYWRfZmlsZV9pZC4KCmVudW0g
-a2VybmVsX2xvYWRfZGF0YV9pZCB7CiAgICAgICAgX19rZXJuZWxfcmVhZF9maWxlX2lkKF9fZGF0
-YV9pZF9lbnVtaWZ5KQp9OwoKc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBrZXJuZWxfbG9hZF9k
-YXRhX3N0cltdID0gewogICAgICAgIF9fa2VybmVsX3JlYWRfZmlsZV9pZChfX2RhdGFfaWRfc3Ry
-aW5naWZ5KQp9OwoKRXJpYywgU2VyZ2UsIHdvdWxkIHVzaW5nIGVpdGhlciB0aGUgZXhpc3Rpbmcg
-X19rZXJuZWxfcmVhZF9maWxlX2lkCmVudW0gb3IgdGhlIGFib3ZlIGRlZmluaXRpb25zIGJlIGFj
-Y2VwdGFibGU/CgpNaW1pCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hello Petr,
+
+On Tue, Jun 5, 2018 at 1:31 PM, Petr Tesarik <ptesarik@suse.cz> wrote:
+> Hi all,
+>
+> I have observed hangs after crash on a Raspberry Pi 3 Model B+ board
+> when a panic kernel is loaded. I attached a hardware debugger and found
+> out that all CPU cores were stopped except one which was stuck in the
+> idle thread. It seems that irq_set_irqchip_state() may sleep, which is
+> definitely not safe after a kernel panic.
+
+Normally we limit the number of cpus in the crash kernel to 1 (via
+maxcpus=1) in distributions like fedora. Can you please share the
+command-line/bootargs which you use to invoke the crash kernel.
+
+Also do you get any console output from the crash kernel (you can try
+passing earlycon to the crash kernel to see if it crashes early
+enough)? If yes, can you please share the same.
+
+> If I'm right, then this is broken in general, but I have only ever seen
+> it on RPi 3 Model B+ (even RPi3 Model B works fine), so the issue may
+> be more subtle. FWIW the code for 32-bit ARM seems to work just fine
+> without this code in machine_kexec_mask_interrupts():
+>
+>                 /*
+>                  * First try to remove the active state. If this
+>                  * fails, try to EOI the interrupt.
+>                  */
+>                 ret = irq_set_irqchip_state(i, IRQCHIP_STATE_ACTIVE, false);
+>
+> I wonder what breaks if this call to irq_set_irqchip_state() is removed.
+>
+> For reference, here is a stack trace of the process which originally
+> triggered the panic:
+>
+> #0  __switch_to (prev=0xffff000008e62a00 <init_task>, next=0xffff80002b796080) at ../arch/arm64/kernel/process.c:355
+> #1  0xffff0000088f584c in context_switch (rf=<optimized out>, next=<optimized out>, prev=<optimized out>, rq=<optimized out>) at ../kernel/sched/core.c:2896
+> #2  __schedule (preempt=false) at ../kernel/sched/core.c:3457
+> #3  0xffff0000088f5eac in schedule () at ../kernel/sched/core.c:3516
+> #4  0xffff0000088f9448 in schedule_timeout (timeout=<optimized out>) at ../kernel/time/timer.c:1743
+> #5  0xffff0000088f6afc in do_wait_for_common (state=<optimized out>, timeout=500, action=<optimized out>, x=<optimized out>) at ../kernel/sched/completion.c:77
+> #6  __wait_for_common (state=<optimized out>, timeout=<optimized out>, action=<optimized out>, x=<optimized out>) at ../kernel/sched/completion.c:96
+> #7  wait_for_common (x=0xffff000008e53848 <init_thread_union+14408>, timeout=500, state=<optimized out>) at ../kernel/sched/completion.c:104
+> #8  0xffff0000088f6c1c in wait_for_completion_timeout (x=0xffff000008e53848 <init_thread_union+14408>, timeout=500) at ../kernel/sched/completion.c:144
+> #9  0xffff000000a19f1c in usb_start_wait_urb (urb=0xffff80002c1cd700, timeout=5000, actual_length=0xffff000008e538dc <init_thread_union+14556>)
+>     at ../drivers/usb/core/message.c:61
+> #10 0xffff000000a1a05c in usb_internal_control_msg (timeout=<optimized out>, len=<optimized out>, data=<optimized out>, cmd=<optimized out>, pipe=<optimized out>,
+>     usb_dev=<optimized out>) at ../drivers/usb/core/message.c:100
+> #11 usb_control_msg (dev=0xffff80002c348000, pipe=2147484800, request=161 '\241', requesttype=192 '\300', value=0, index=152, data=0xffff80002b6fa080, size=4,
+>     timeout=5000) at ../drivers/usb/core/message.c:151
+> #12 0xffff000001001cd0 in lan78xx_read_reg (index=152, data=0xffff000008e5396c <init_thread_union+14700>, dev=<optimized out>, dev=<optimized out>)
+>     at ../drivers/net/usb/lan78xx.c:425
+
+Hmmm, this seems a bit misplaced, but are you using a usb-ethernet
+adapter which causes a URB submission to timeout?
+
+> #13 0xffff00000100365c in lan78xx_irq_bus_sync_unlock (irqd=<optimized out>) at ../drivers/net/usb/lan78xx.c:1909
+> #14 0xffff00000813e590 in chip_bus_sync_unlock (desc=<optimized out>) at ../kernel/irq/internals.h:129
+> #15 __irq_put_desc_unlock (desc=0xffff80002c361c00, flags=128, bus=true) at ../kernel/irq/irqdesc.c:804
+> #16 0xffff00000813f604 in irq_put_desc_busunlock (flags=<optimized out>, desc=<optimized out>) at ../kernel/irq/internals.h:155
+> #17 irq_set_irqchip_state (irq=<optimized out>, which=<optimized out>, val=false) at ../kernel/irq/manage.c:2136
+> #18 0xffff00000809b7d4 in machine_kexec_mask_interrupts () at ../arch/arm64/kernel/machine_kexec.c:233
+> #19 machine_crash_shutdown (regs=<optimized out>) at ../arch/arm64/kernel/machine_kexec.c:259
+> #20 0xffff000008180fd4 in __crash_kexec (regs=0xffff000008e53d70 <init_thread_union+15728>) at ../kernel/kexec_core.c:943
+> #21 0xffff0000081810e4 in crash_kexec (regs=0xffff000008e53d70 <init_thread_union+15728>) at ../kernel/kexec_core.c:965
+> #22 0xffff00000808ab58 in die (str=<optimized out>, regs=0xffff000008e53d70 <init_thread_union+15728>, err=-2046820348) at ../arch/arm64/kernel/traps.c:266
+> #23 0xffff0000080a1c14 in __do_kernel_fault (mm=0x0, addr=0, esr=2248146948, regs=0xffff000008e53d70 <init_thread_union+15728>) at ../arch/arm64/mm/fault.c:226
+> #24 0xffff0000088fc8dc in do_page_fault (addr=0, esr=2248146948, regs=0xffff000008e53d70 <init_thread_union+15728>) at ../arch/arm64/mm/fault.c:476
+> #25 0xffff0000088fccdc in do_translation_fault (addr=0, esr=2248146948, regs=0xffff000008e53d70 <init_thread_union+15728>) at ../arch/arm64/mm/fault.c:502
+> #26 0xffff000008081478 in do_mem_abort (addr=0, esr=2248146948, regs=0xffff000008e53d70 <init_thread_union+15728>) at ../arch/arm64/mm/fault.c:657
+> #27 0xffff000008082dd0 in el1_sync () at ../arch/arm64/kernel/entry.S:548
+
+The ESR value from the logs (2248146948) indicates the following about
+the panic causes (see ARMv8 Architecture Reference Manual for more
+details):
+
+EC -> 100001, Instruction Abort taken without a change in Exception
+level (Used for MMU faults generated by instruction accesses and
+Synchronous external aborts, including synchronous parity or ECC
+errors. Not used for debug related exceptions.)
+FnV -> 0, FAR is valid
+IFSC -> 000100, Translation fault, level 0
+
+So in brief an Instruction Abort was taken at exception level EL1(?)
+which was caused by a translation fault at level 0 and the FAR
+register holds the faulting Virtual Address.
+
+So, since you have the hardware debugger, can you try and see the
+values of FAR (Fault Address Register) and ELR registers at this point
+via the debugger and see if they can indicate the Faulty Address from
+which the exception was taken and debug using the same.
+
+If you can share the earlycon messages from the crashkernel and the
+values of the above registers, can help you further with debugging the
+issue which you are seeing.
+
+Thanks,
+Bhupesh
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
