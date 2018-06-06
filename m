@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-f67.google.com ([209.85.215.67])
+Received: from mail-it0-x243.google.com ([2607:f8b0:4001:c0b::243])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fQRFm-0006vM-SI
- for kexec@lists.infradead.org; Wed, 06 Jun 2018 05:45:04 +0000
-Received: by mail-lf0-f67.google.com with SMTP id o9-v6so7158762lfk.1
- for <kexec@lists.infradead.org>; Tue, 05 Jun 2018 22:44:52 -0700 (PDT)
+ id 1fQRo5-0003fI-1L
+ for kexec@lists.infradead.org; Wed, 06 Jun 2018 06:20:31 +0000
+Received: by mail-it0-x243.google.com with SMTP id j186-v6so6530869ita.5
+ for <kexec@lists.infradead.org>; Tue, 05 Jun 2018 23:20:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20180605100151.7fd54381@ezekiel.suse.cz>
-References: <20180605100151.7fd54381@ezekiel.suse.cz>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Wed, 6 Jun 2018 11:06:28 +0530
-Message-ID: <CACi5LpMJ9whXxpMvQDw4_4kRNaATGGq4fWt7nRRJTMrdN_q_nQ@mail.gmail.com>
-Subject: Re: panic kexec broken on ARM64?
+In-Reply-To: <CAGXu5jKkg_=iHGgrED4qB4TCFJaWgLkLp61RHgJ6UEhAj89GwQ@mail.gmail.com>
+References: <1527616920-5415-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1527616920-5415-8-git-send-email-zohar@linux.vnet.ibm.com>
+ <20180601191545.GP4511@wotan.suse.de> <20180601192545.GR4511@wotan.suse.de>
+ <CAGXu5jKkg_=iHGgrED4qB4TCFJaWgLkLp61RHgJ6UEhAj89GwQ@mail.gmail.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date: Wed, 6 Jun 2018 08:20:17 +0200
+Message-ID: <CAKv+Gu9=8s2b-W6a4hHwxhJfFPGuBm5kwsxE_hx98fDUfMUkvQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 7/8] ima: based on policy prevent loading firmware
+ (pre-allocated buffer)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,107 +28,119 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: Matthias Brugger <mbrugger@suse.com>, kexec mailing list <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Rik van Riel <riel@redhat.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kexec Mailing List <kexec@lists.infradead.org>, linux-security-module <linux-security-module@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, "Luis R. Rodriguez" <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, linux-integrity <linux-integrity@vger.kernel.org>, "Serge E . Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Vlastimil Babka <vbabka@suse.cz>, Andres Rodriguez <andresx7@gmail.com>
 
-Hello Petr,
-
-On Tue, Jun 5, 2018 at 1:31 PM, Petr Tesarik <ptesarik@suse.cz> wrote:
-> Hi all,
+On 6 June 2018 at 00:37, Kees Cook <keescook@chromium.org> wrote:
+> On Fri, Jun 1, 2018 at 12:25 PM, Luis R. Rodriguez <mcgrof@kernel.org> wrote:
+>> On Fri, Jun 01, 2018 at 09:15:45PM +0200, Luis R. Rodriguez wrote:
+>>> On Tue, May 29, 2018 at 02:01:59PM -0400, Mimi Zohar wrote:
+>>> > Some systems are memory constrained but they need to load very large
+>>> > firmwares.  The firmware subsystem allows drivers to request this
+>>> > firmware be loaded from the filesystem, but this requires that the
+>>> > entire firmware be loaded into kernel memory first before it's provided
+>>> > to the driver.  This can lead to a situation where we map the firmware
+>>> > twice, once to load the firmware into kernel memory and once to copy the
+>>> > firmware into the final resting place.
+>>> >
+>>> > To resolve this problem, commit a098ecd2fa7d ("firmware: support loading
+>>> > into a pre-allocated buffer") introduced request_firmware_into_buf() API
+>>> > that allows drivers to request firmware be loaded directly into a
+>>> > pre-allocated buffer.  The QCOM_MDT_LOADER calls dma_alloc_coherent() to
+>>> > allocate this buffer.  According to Documentation/DMA-API.txt,
+>>> >
+>>> >      Consistent memory is memory for which a write by either the
+>>> >      device or the processor can immediately be read by the processor
+>>> >      or device without having to worry about caching effects.  (You
+>>> >      may however need to make sure to flush the processor's write
+>>> >      buffers before telling devices to read that memory.)
+>>> >
+>>> > Devices using pre-allocated DMA memory run the risk of the firmware
+>>> > being accessible by the device prior to the kernel's firmware signature
+>>> > verification has completed.
+>>>
+>>> Indeed. And since its DMA memory we have *no idea* what can happen in
+>>> terms of consumption of this firmware from hardware, when it would start
+>>> consuming it in particular.
+>>>
+>>> If the device has its own hardware firmware verification mechanism this is
+>>> completely obscure to us, but it may however suffice certain security policies.
+>>>
+>>> The problem here lies in the conflicting security policies of the kernel wanting
+>>> to not give away firmware until its complete and the current inability to enable
+>>> us to have platforms suggest they trust hardware won't do something stupid.
+>>> This becomes an issue since the semantics of the firmware API preallocated
+>>> buffer do not require currently allow the kernel to inform LSMs of the fact
+>>> that a buffer is DMA memory or not, and a way for certain platforms then
+>>> to say that such use is fine for specific devices.
+>>>
+>>> Given a pointer can we determine if a piece of memory is DMA or not?
+>>
+>> FWIW
+>>
+>> Vlastimil suggests page_zone() or virt_to_page() may be able to.
 >
-> I have observed hangs after crash on a Raspberry Pi 3 Model B+ board
-> when a panic kernel is loaded. I attached a hardware debugger and found
-> out that all CPU cores were stopped except one which was stuck in the
-> idle thread. It seems that irq_set_irqchip_state() may sleep, which is
-> definitely not safe after a kernel panic.
-
-Normally we limit the number of cpus in the crash kernel to 1 (via
-maxcpus=1) in distributions like fedora. Can you please share the
-command-line/bootargs which you use to invoke the crash kernel.
-
-Also do you get any console output from the crash kernel (you can try
-passing earlycon to the crash kernel to see if it crashes early
-enough)? If yes, can you please share the same.
-
-> If I'm right, then this is broken in general, but I have only ever seen
-> it on RPi 3 Model B+ (even RPi3 Model B works fine), so the issue may
-> be more subtle. FWIW the code for 32-bit ARM seems to work just fine
-> without this code in machine_kexec_mask_interrupts():
+> I don't see a PAGEFLAG for DMA, but I do see ZONE_DMA for
+> page_zone()... So maybe something like
 >
->                 /*
->                  * First try to remove the active state. If this
->                  * fails, try to EOI the interrupt.
->                  */
->                 ret = irq_set_irqchip_state(i, IRQCHIP_STATE_ACTIVE, false);
+> struct page *page;
 >
-> I wonder what breaks if this call to irq_set_irqchip_state() is removed.
+> page = virt_to_page(address);
+> if (!page)
+>    fail closed...
+> if (page_zone(page) == ZONE_DMA)
+>     handle dma case...
+> else
+>     non-dma
 >
-> For reference, here is a stack trace of the process which originally
-> triggered the panic:
+> But I've CCed Laura and Rik, who I always lean on when I have these
+> kinds of page questions...
 >
-> #0  __switch_to (prev=0xffff000008e62a00 <init_task>, next=0xffff80002b796080) at ../arch/arm64/kernel/process.c:355
-> #1  0xffff0000088f584c in context_switch (rf=<optimized out>, next=<optimized out>, prev=<optimized out>, rq=<optimized out>) at ../kernel/sched/core.c:2896
-> #2  __schedule (preempt=false) at ../kernel/sched/core.c:3457
-> #3  0xffff0000088f5eac in schedule () at ../kernel/sched/core.c:3516
-> #4  0xffff0000088f9448 in schedule_timeout (timeout=<optimized out>) at ../kernel/time/timer.c:1743
-> #5  0xffff0000088f6afc in do_wait_for_common (state=<optimized out>, timeout=500, action=<optimized out>, x=<optimized out>) at ../kernel/sched/completion.c:77
-> #6  __wait_for_common (state=<optimized out>, timeout=<optimized out>, action=<optimized out>, x=<optimized out>) at ../kernel/sched/completion.c:96
-> #7  wait_for_common (x=0xffff000008e53848 <init_thread_union+14408>, timeout=500, state=<optimized out>) at ../kernel/sched/completion.c:104
-> #8  0xffff0000088f6c1c in wait_for_completion_timeout (x=0xffff000008e53848 <init_thread_union+14408>, timeout=500) at ../kernel/sched/completion.c:144
-> #9  0xffff000000a19f1c in usb_start_wait_urb (urb=0xffff80002c1cd700, timeout=5000, actual_length=0xffff000008e538dc <init_thread_union+14556>)
->     at ../drivers/usb/core/message.c:61
-> #10 0xffff000000a1a05c in usb_internal_control_msg (timeout=<optimized out>, len=<optimized out>, data=<optimized out>, cmd=<optimized out>, pipe=<optimized out>,
->     usb_dev=<optimized out>) at ../drivers/usb/core/message.c:100
-> #11 usb_control_msg (dev=0xffff80002c348000, pipe=2147484800, request=161 '\241', requesttype=192 '\300', value=0, index=152, data=0xffff80002b6fa080, size=4,
->     timeout=5000) at ../drivers/usb/core/message.c:151
-> #12 0xffff000001001cd0 in lan78xx_read_reg (index=152, data=0xffff000008e5396c <init_thread_union+14700>, dev=<optimized out>, dev=<optimized out>)
->     at ../drivers/net/usb/lan78xx.c:425
 
-Hmmm, this seems a bit misplaced, but are you using a usb-ethernet
-adapter which causes a URB submission to timeout?
+That is not going to help. In general, DMA can access any memory in
+the system (unless a IOMMU is actively preventing that).
 
-> #13 0xffff00000100365c in lan78xx_irq_bus_sync_unlock (irqd=<optimized out>) at ../drivers/net/usb/lan78xx.c:1909
-> #14 0xffff00000813e590 in chip_bus_sync_unlock (desc=<optimized out>) at ../kernel/irq/internals.h:129
-> #15 __irq_put_desc_unlock (desc=0xffff80002c361c00, flags=128, bus=true) at ../kernel/irq/irqdesc.c:804
-> #16 0xffff00000813f604 in irq_put_desc_busunlock (flags=<optimized out>, desc=<optimized out>) at ../kernel/irq/internals.h:155
-> #17 irq_set_irqchip_state (irq=<optimized out>, which=<optimized out>, val=false) at ../kernel/irq/manage.c:2136
-> #18 0xffff00000809b7d4 in machine_kexec_mask_interrupts () at ../arch/arm64/kernel/machine_kexec.c:233
-> #19 machine_crash_shutdown (regs=<optimized out>) at ../arch/arm64/kernel/machine_kexec.c:259
-> #20 0xffff000008180fd4 in __crash_kexec (regs=0xffff000008e53d70 <init_thread_union+15728>) at ../kernel/kexec_core.c:943
-> #21 0xffff0000081810e4 in crash_kexec (regs=0xffff000008e53d70 <init_thread_union+15728>) at ../kernel/kexec_core.c:965
-> #22 0xffff00000808ab58 in die (str=<optimized out>, regs=0xffff000008e53d70 <init_thread_union+15728>, err=-2046820348) at ../arch/arm64/kernel/traps.c:266
-> #23 0xffff0000080a1c14 in __do_kernel_fault (mm=0x0, addr=0, esr=2248146948, regs=0xffff000008e53d70 <init_thread_union+15728>) at ../arch/arm64/mm/fault.c:226
-> #24 0xffff0000088fc8dc in do_page_fault (addr=0, esr=2248146948, regs=0xffff000008e53d70 <init_thread_union+15728>) at ../arch/arm64/mm/fault.c:476
-> #25 0xffff0000088fccdc in do_translation_fault (addr=0, esr=2248146948, regs=0xffff000008e53d70 <init_thread_union+15728>) at ../arch/arm64/mm/fault.c:502
-> #26 0xffff000008081478 in do_mem_abort (addr=0, esr=2248146948, regs=0xffff000008e53d70 <init_thread_union+15728>) at ../arch/arm64/mm/fault.c:657
-> #27 0xffff000008082dd0 in el1_sync () at ../arch/arm64/kernel/entry.S:548
+The streaming DMA API allows you to map()/unmap() arbitrary pieces of
+memory for DMA, regardless of how they were allocated. (Some drivers
+were even doing DMA from the stack at some point, but this broke
+vmapped stacks so most of these cases have been fixed) Uploading
+firmware to a device does not require a coherent (as opposed to
+streaming) mapping for DMA, and so it is perfectly reasonable for a
+driver to use the streaming API to map the firmware image (wherever it
+is in memory) and map it.
 
-The ESR value from the logs (2248146948) indicates the following about
-the panic causes (see ARMv8 Architecture Reference Manual for more
-details):
+However, the DMA API does impose some ordering. Mapping memory for DMA
+gives you a DMA address (which may be different from the physical
+address [depending on the platform]), and this DMA address is what
+gets programmed into the device, not the virtual or physical address.
+That means you can be reasonably confident that the device will not be
+able to consume what is in this memory before it has been mapped for
+DMA. Also, the DMA api explicitly forbids touching memory mapped for
+streaming DMA: the device owns it at this point, and so the CPU should
+refrain from accessing it.
 
-EC -> 100001, Instruction Abort taken without a change in Exception
-level (Used for MMU faults generated by instruction accesses and
-Synchronous external aborts, including synchronous parity or ECC
-errors. Not used for debug related exceptions.)
-FnV -> 0, FAR is valid
-IFSC -> 000100, Translation fault, level 0
+So the question is, why is QCOM_MDT_LOADER using a coherent DMA
+mapping? That does not make any sense purely for moving firmware into
+the device, and it is indeed a security hazard if we are trying to
+perform a signature check before the device is cleared for reading it.
 
-So in brief an Instruction Abort was taken at exception level EL1(?)
-which was caused by a translation fault at level 0 and the FAR
-register holds the faulting Virtual Address.
+Note that qcom_scm_pas_init_image() is documented as
 
-So, since you have the hardware debugger, can you try and see the
-values of FAR (Fault Address Register) and ELR registers at this point
-via the debugger and see if they can indicate the Faulty Address from
-which the exception was taken and debug using the same.
+        /*
+         * During the scm call memory protection will be enabled for the meta
+         * data blob, so make sure it's physically contiguous, 4K aligned and
+         * non-cachable to avoid XPU violations.
+         */
 
-If you can share the earlycon messages from the crashkernel and the
-values of the above registers, can help you further with debugging the
-issue which you are seeing.
+and dma_alloc_coherent() happens to give them that. Whether the DMA
+mapping is actually used is a different matter: the code is a bit
+complex, but it calls into the secure world to set up the region.
 
-Thanks,
-Bhupesh
+If this is the only counterexample, I wouldn't worry about it too much
+(QCOM have elaborate SoC management layers in the secure world), and
+simply mandate that only streaming DMA be used for firmware loading,
+and that the firmware signature verification is performed before the
+memory is mapped for DMA.
 
 _______________________________________________
 kexec mailing list
