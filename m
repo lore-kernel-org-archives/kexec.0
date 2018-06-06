@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Date: Wed, 6 Jun 2018 09:58:58 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
 Subject: Re: panic kexec broken on ARM64?
+Message-ID: <20180606095858.04b800a0@ezekiel.suse.cz>
+In-Reply-To: <CACi5LpMJ9whXxpMvQDw4_4kRNaATGGq4fWt7nRRJTMrdN_q_nQ@mail.gmail.com>
 References: <20180605100151.7fd54381@ezekiel.suse.cz>
- <8028219f-0d14-eafd-86b7-359ee927bcd3@arm.com>
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Message-ID: <5e539510-01b7-ebc5-778e-b49a5261f9bc@i2se.com>
-Date: Wed, 6 Jun 2018 09:02:04 +0200
+ <CACi5LpMJ9whXxpMvQDw4_4kRNaATGGq4fWt7nRRJTMrdN_q_nQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <8028219f-0d14-eafd-86b7-359ee927bcd3@arm.com>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,56 +15,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>, Petr Tesarik <ptesarik@suse.cz>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "takahiro.akashi@linaro.org" <takahiro.akashi@linaro.org>, Matthias Brugger <mbrugger@suse.com>, kexec mailing list <kexec@lists.infradead.org>, linux-arm-kernel@lists.infradead.org
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Matthias Brugger <mbrugger@suse.com>, kexec mailing list <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-Hi Petr,
+On Wed, 6 Jun 2018 11:06:28 +0530
+Bhupesh Sharma <bhsharma@redhat.com> wrote:
 
-Am 05.06.2018 um 19:46 schrieb James Morse:
-> Hi Petr,
->
-> (CC: +Akashi, Marc)
->
-> On 05/06/18 09:01, Petr Tesarik wrote:
->> I have observed hangs after crash on a Raspberry Pi 3 Model B+ board
->> when a panic kernel is loaded.
-> kdump is a best-effort thing, it looks like this is a case where the
-> crashed-kernel can't tear itself down.
->
-> Do you have the rest of the stack trace? Was it handling an irq when it decided
-> to panic?:
-> https://lkml.org/lkml/2018/3/13/1134
+> Hello Petr,
+> 
+> On Tue, Jun 5, 2018 at 1:31 PM, Petr Tesarik <ptesarik@suse.cz> wrote:
+> > Hi all,
+> >
+> > I have observed hangs after crash on a Raspberry Pi 3 Model B+ board
+> > when a panic kernel is loaded. I attached a hardware debugger and found
+> > out that all CPU cores were stopped except one which was stuck in the
+> > idle thread. It seems that irq_set_irqchip_state() may sleep, which is
+> > definitely not safe after a kernel panic.  
+>[...]
+> Also do you get any console output from the crash kernel (you can try
+> passing earlycon to the crash kernel to see if it crashes early
+> enough)? If yes, can you please share the same.
 
-the Raspberry Pi 3 B+ support is very fresh (linux-next). Since i didn't 
-see a version, i need to doublecheck.
+Maybe I wasn't clear enough. The crashed kernel does not even get to
+the kexec's purgatory code, so there cannot be any output from the
+crash kernel.
 
-You are actually using linux-next and not the downstream kernel?
+>[...]
+> > #12 0xffff000001001cd0 in lan78xx_read_reg (index=152, data=0xffff000008e5396c <init_thread_union+14700>, dev=<optimized out>, dev=<optimized out>)
+> >     at ../drivers/net/usb/lan78xx.c:425  
+> 
+> Hmmm, this seems a bit misplaced, but are you using a usb-ethernet
+> adapter which causes a URB submission to timeout?
 
->
->> I attached a hardware debugger and found
->> out that all CPU cores were stopped except one which was stuck in the
->> idle thread. It seems that irq_set_irqchip_state() may sleep, which is
->> definitely not safe after a kernel panic.
-> I don't know much about irqchip stuff, but __irq_get_desc_lock() takes a
-> raw_spin_lock(), and calls gic_irq_get_irqchip_state() which is just poking
-> around in mmio registers, this should all be safe unless you re-entered the same
-> code.
->
->
->> If I'm right, then this is broken in general, but I have only ever seen
->> it on RPi 3 Model B+ (even RPi3 Model B works fine), so the issue may
->> be more subtle.
-> Is there a hardware difference around the interrupt controller on these?
-@James:
-No, but the RPi 3 B has a different USB network chip on board (smsc95xx, 
-Fast ethernet) instead of lan78xx (Gigabit ethernet).
+Yes, RPi 3 B+ contains an on-board Microchip LAN7515, which is indeed a
+USB device.
 
-Stefan
+>[...]
+> > #26 0xffff000008081478 in do_mem_abort (addr=0, esr=2248146948, regs=0xffff000008e53d70 <init_thread_union+15728>) at ../arch/arm64/mm/fault.c:657
+> > #27 0xffff000008082dd0 in el1_sync () at ../arch/arm64/kernel/entry.S:548  
+> 
+> The ESR value from the logs (2248146948) indicates the following about
+> the panic causes (see ARMv8 Architecture Reference Manual for more
+> details):
 
+Thank you for all the detailx, but that's not relevant here. I am
+crashing my system intentionally to debug the kexec/kdump
+infrastructure...
+
+Petr T
 
 _______________________________________________
 kexec mailing list
