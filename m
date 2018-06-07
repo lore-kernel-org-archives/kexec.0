@@ -1,22 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fMELD-0004Xv-Sx
- for kexec@lists.infradead.org; Fri, 25 May 2018 15:09:18 +0000
-Subject: Re: [PATCH v1 00/10] mm: online/offline 4MB chunks controlled by
- device driver
-References: <20180523151151.6730-1-david@redhat.com>
- <20180524075327.GU20441@dhcp22.suse.cz>
- <14d79dad-ad47-f090-2ec0-c5daf87ac529@redhat.com>
- <20180524093121.GZ20441@dhcp22.suse.cz>
- <c0b8bbd5-6c01-f550-ae13-ef80b2255ea6@redhat.com>
- <20180524120341.GF20441@dhcp22.suse.cz>
-From: David Hildenbrand <david@redhat.com>
-Message-ID: <216ca71b-9880-f013-878b-ae39e865b94b@redhat.com>
-Date: Fri, 25 May 2018 17:08:37 +0200
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fQwCs-0001LC-FZ
+ for kexec@lists.infradead.org; Thu, 07 Jun 2018 14:48:23 +0000
+Content-Disposition: inline
 MIME-Version: 1.0
-In-Reply-To: <20180524120341.GF20441@dhcp22.suse.cz>
-Content-Language: en-US
+From: Ben Hutchings <ben@decadent.org.uk>
+Date: Thu, 07 Jun 2018 15:05:21 +0100
+Message-ID: <lsq.1528380321.116027276@decadent.org.uk>
+Subject: [PATCH 3.16 106/410] x86/gart: Exclude GART aperture from vmcore
+In-Reply-To: <lsq.1528380320.647747352@decadent.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,212 +22,166 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michal Hocko <mhocko@kernel.org>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>, Jaewon Kim <jaewon31.kim@samsung.com>, Oscar Salvador <osalvador@techadventures.net>, Jan Kara <jack@suse.cz>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Balbir Singh <bsingharora@gmail.com>, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, Hari Bathini <hbathini@linux.vnet.ibm.com>, Rashmica Gupta <rashmica.g@gmail.com>, Ingo Molnar <mingo@kernel.org>, Baoquan He <bhe@redhat.com>, Matthew Wilcox <mawilcox@microsoft.com>, Michael Ellerman <mpe@ellerman.id.au>, Hugh Dickins <hughd@google.com>, Pavel Tatashin <pasha.tatashin@oracle.com>, Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>, Mel Gorman <mgorman@suse.de>, Huang Ying <ying.huang@intel.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Reza Arbab <arbab@linux.vnet.ibm.com>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, Dan Williams <dan.j.williams@intel.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Souptick Joarder <jrdr.linux@gmail.com>, Philippe Ombredanne <pombredanne@nexb.com>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Jiri Bohac <jbohac@suse.cz>, Baoquan He <bhe@redhat.com>, Toshi Kani <toshi.kani@hpe.com>, David Airlie <airlied@linux.ie>, Dave Young <dyoung@redhat.com>, joro@8bytes.org, kexec@lists.infradead.org, Borislav Petkov <bp@alien8.de>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, yinghai@kernel.org, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
->> So, no, virtio-mem is not a balloon driver :)
-> [...]
->>>> 1. "hotplug should simply not depend on kdump at all"
->>>>
->>>> In theory yes. In the current state we already have to trigger kdump to
->>>> reload whenever we add/remove a memory block.
->>>
->>> More details please.
->>
->> I just had another look at the whole complexity of
->> makedumfile/kdump/uevents and I'll follow up with a detailed description.
->>
->> kdump.service is definitely reloaded when setting a memory block
->> online/offline (not when adding/removing as I wrongly claimed before).
->>
->> I'll follow up with a more detailed description and all the pointers.
-> 
-> Please make sure to describe what is the architecture then. I have no
-> idea what kdump.servise is supposed to do for example.
+3.16.57-rc1 review patch.  If anyone has any objections, please let me know.
 
-Giving a high level description, going into applicable details:
+------------------
 
+From: Jiri Bohac <jbohac@suse.cz>
 
-Dump tools always generate the dump file from /proc/vmcore inside the
-kexec environment. This is a vmcore dump in ELF format, with required
-and optional headers and notes.
+commit 2a3e83c6f96c513f43ce5a8c9034608ea584a255 upstream.
 
+On machines where the GART aperture is mapped over physical RAM
+/proc/vmcore contains the remapped range and reading it may cause hangs or
+reboots.
 
-1. Core collectors
+In the past, the GART region was added into the resource map, implemented
+by commit 56dd669a138c ("[PATCH] Insert GART region into resource map")
 
-The tool that writes /proc/vmcore into a file is called "core collector".
+However, inserting the iomem_resource from the early GART code caused
+resource conflicts with some AGP drivers (bko#72201), which got avoided by
+reverting the patch in commit 707d4eefbdb3 ("Revert [PATCH] Insert GART
+region into resource map"). This revert introduced the /proc/vmcore bug.
 
-"This allows you to specify the command to copy the vmcore. You could
-use the dump filtering program makedumpfile, the default one, to
-retrieve your core, which on some arches can drastically reduce core
-file size." [1]
+The vmcore ELF header is either prepared by the kernel (when using the
+kexec_file_load syscall) or by the kexec userspace (when using the kexec_load
+syscall). Since we no longer have the GART iomem resource, the userspace
+kexec has no way of knowing which region to exclude from the ELF header.
 
-E.g. under RHEL, the only supported core collector is in fact
-makedumpfile [2][3], which is e.g. able to exclude e.g. hwpoison pages,
-which could result otherwise in a crash if you simply copy /proc/vmcore
-into a file on harddisk.
+Changes from v1 of this patch:
+Instead of excluding the aperture from the ELF header, this patch
+makes /proc/vmcore return zeroes in the second kernel when attempting to
+read the aperture region. This is done by reusing the
+gart_oldmem_pfn_is_ram infrastructure originally intended to exclude XEN
+balooned memory. This works for both, the kexec_file_load and kexec_load
+syscalls.
 
+[Note that the GART region is the same in the first and second kernels:
+regardless whether the first kernel fixed up the northbridge/bios setting
+and mapped the aperture over physical memory, the second kernel finds the
+northbridge properly configured by the first kernel and the aperture
+never overlaps with e820 memory because the second kernel has a fake e820
+map created from the crashkernel memory regions. Thus, the second kernel
+keeps the aperture address/size as configured by the first kernel.]
 
-2. vmcoreinfo
+register_oldmem_pfn_is_ram can only register one callback and returns an error
+if the callback has been registered already. Since XEN used to be the only user
+of this function, it never checks the return value. Now that we have more than
+one user, I added a WARN_ON just in case agp, XEN, or any other future user of
+register_oldmem_pfn_is_ram were to step on each other's toes.
 
-/proc/vmcore can optionally contain a vmcoreinfo, that exposes some
-magic variables necessary to e.g. find and interpret segments but also
-struct pages. This is generated in "kernel/crash_core.c" in the crashed
-linux kernel.
+Fixes: 707d4eefbdb3 ("Revert [PATCH] Insert GART region into resource map")
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Toshi Kani <toshi.kani@hpe.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: yinghai@kernel.org
+Cc: joro@8bytes.org
+Cc: kexec@lists.infradead.org
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Link: https://lkml.kernel.org/r/20180106010013.73suskgxm7lox7g6@dwarf.suse.cz
+[bwh: Backported to 3.16: adjust filename]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ arch/x86/kernel/aperture_64.c | 46 ++++++++++++++++++++++++++++++++++-
+ arch/x86/xen/mmu.c            |  2 +-
+ 2 files changed, 46 insertions(+), 2 deletions(-)
 
-...
-VMCOREINFO_SYMBOL_ARRAY(mem_section);
-VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
-...
-VMCOREINFO_NUMBER(PG_hwpoison);
-...
-VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
-...
+--- a/arch/x86/kernel/aperture_64.c
++++ b/arch/x86/kernel/aperture_64.c
+@@ -29,6 +29,7 @@
+ #include <asm/dma.h>
+ #include <asm/amd_nb.h>
+ #include <asm/x86_init.h>
++#include <linux/crash_dump.h>
+ 
+ /*
+  * Using 512M as goal, in case kexec will load kernel_big
+@@ -55,6 +56,33 @@ int fallback_aper_force __initdata;
+ 
+ int fix_aperture __initdata = 1;
+ 
++#ifdef CONFIG_PROC_VMCORE
++/*
++ * If the first kernel maps the aperture over e820 RAM, the kdump kernel will
++ * use the same range because it will remain configured in the northbridge.
++ * Trying to dump this area via /proc/vmcore may crash the machine, so exclude
++ * it from vmcore.
++ */
++static unsigned long aperture_pfn_start, aperture_page_count;
++
++static int gart_oldmem_pfn_is_ram(unsigned long pfn)
++{
++	return likely((pfn < aperture_pfn_start) ||
++		      (pfn >= aperture_pfn_start + aperture_page_count));
++}
++
++static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
++{
++	aperture_pfn_start = aper_base >> PAGE_SHIFT;
++	aperture_page_count = (32 * 1024 * 1024) << aper_order >> PAGE_SHIFT;
++	WARN_ON(register_oldmem_pfn_is_ram(&gart_oldmem_pfn_is_ram));
++}
++#else
++static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
++{
++}
++#endif
++
+ /* This code runs before the PCI subsystem is initialized, so just
+    access the northbridge directly. */
+ 
+@@ -436,8 +464,16 @@ int __init gart_iommu_hole_init(void)
+ 
+ out:
+ 	if (!fix && !fallback_aper_force) {
+-		if (last_aper_base)
++		if (last_aper_base) {
++			/*
++			 * If this is the kdump kernel, the first kernel
++			 * may have allocated the range over its e820 RAM
++			 * and fixed up the northbridge
++			 */
++			exclude_from_vmcore(last_aper_base, last_aper_order);
++
+ 			return 1;
++		}
+ 		return 0;
+ 	}
+ 
+@@ -474,6 +510,14 @@ out:
+ 		return 0;
+ 	}
+ 
++	/*
++	 * If this is the kdump kernel _and_ the first kernel did not
++	 * configure the aperture in the northbridge, this range may
++	 * overlap with the first kernel's memory. We can't access the
++	 * range through vmcore even though it should be part of the dump.
++	 */
++	exclude_from_vmcore(aper_alloc, aper_order);
++
+ 	/* Fix up the north bridges */
+ 	for (i = 0; i < amd_nb_bus_dev_ranges[i].dev_limit; i++) {
+ 		int bus, dev_base, dev_limit;
+--- a/arch/x86/xen/mmu.c
++++ b/arch/x86/xen/mmu.c
+@@ -2500,7 +2500,7 @@ void __init xen_hvm_init_mmu_ops(void)
+ 	if (is_pagetable_dying_supported())
+ 		pv_mmu_ops.exit_mmap = xen_hvm_exit_mmap;
+ #ifdef CONFIG_PROC_VMCORE
+-	register_oldmem_pfn_is_ram(&xen_oldmem_pfn_is_ram);
++	WARN_ON(register_oldmem_pfn_is_ram(&xen_oldmem_pfn_is_ram));
+ #endif
+ }
+ #endif
 
-If not available, it is e.g. tried to extract relevant
-symbols/variables/pointers from vmlinux (similar like e.g. GDB).
-
-
-3. PM_LOAD / Memory holes
-
-Each vmcore contains "PM_LOAD" sections. These sections define which
-physical memory areas are available in the vmcore (and to which virtual
-addresses they translate). Generated e.g. in "kernel/kexec_file.c" - and
-in some other places "git grep Elf64_Phdr".
-
-This information is generated in the crashed kernel.
-
-arch/x86/kernel/crash.c:
- walk_system_ram_res() is effectively used to generate PM_LOAD segments
-
-arch/s390/kernel/crash_dump.c:
- for_each_mem_range() is effectively used to generate PM_LOAD
- information
-
-At this point, I don't see how offline sections are treated. I assume
-they are always also included. So PT_LOAD will include all memory, no
-matter if online or offline.
-
-
-4. Reloading kexec/kdump.service
-
-The important thing is that the vmcore *excluding* the actual memory has
-to be prepared by the *old* kernel. The kexec kernel will allow to
-- Read the prepared vmcore (contained in kexec kernel)
-- Read the memory
-
-So dump tools only have the vmcore (esp. PT_LOAD) to figure out which
-physical memory was available in the *old* system. The kexec kernel
-neither reads or interprets segments/struct pages from the old kernel
-(and there would be no way to really do it). All it does is allow to
-read old memory as defined in the prepared vmcore. If that memory is not
-accessible or broken (hwpoison), we will crash the system.
-
-So what does this imply? vmcore (including PT_LOAD sections) has to be
-regenerated every time memory is added/removed from the system.
-Otherwise the data contained in the prepared vmcore is stale. As far as
-I understand this cannot be done by the actual kernel when
-adding/removing memory but has to be done by user space.
-
-The same is e.g. also true when hot(un)plugging CPUs.
-
-This is done by reloading kexec, resulting in a regeneration of the
-vmcore. UDEV events are used to reload kdump.service and therefore
-regenerate. This events are triggered when onlining/offlining a memory
-block.
-
-...
-SUBSYSTEM=="memory", ACTION=="online", PROGRAM="/bin/systemctl
-try-restart kdump.service"
-SUBSYSTEM=="memory", ACTION=="offline", PROGRAM="/bin/systemctl
-try-restart kdump.service"
-...
-
-For "online", this is the right thing to do.
-
-I am right now not 100% if that is the right thing to do for "offline".
-I guess we should regenerate actually after "remove" events, but I
-didn't follow the details. Otherwise it could happen that the vmcore is
-regenerated before the actual removal of memory blocks. So the
-applicable memory blocks would still be included as PT_LOAD in the
-vmcore. If we then remove the actual DIMM then, trying to dump the
-vmcore will result in reading invalid memory. But maybe I am missing
-something there.
-
-
-5. Access to vmcore / memory in the kexec environment
-
-fs/proc/vmcore.c: contains the code for parsing vmcore in the kexec
-kernel, prepared by the crashed kernel. The kexec kernel provides read
-access to /proc/vmcore on this basis.
-
-All PT_LOAD sections will be converted and stored in "vmcore_list".
-
-When reading the vmcore, this list will be used to actually provide
-access to the original crash memory (__read_vmcore()).
-
-So only memory that was originally in vmcore PT_LOAD will be allowed to
-be red.
-
-read_from_oldmem() will perform the actual read. At that point we have
-no control over old page flags or segments. Just a straight memory read.
-
-There is special handling for e.g. XEN in there: pfn_is_ram() can be
-used to hinder reading inflated memory. (register_oldmem_pfn_is_ram)
-
-However reusing that for virtio-mem with multiple devices and queues and
-such might not be possible. It is the last resort :)
-
-
-6. makedumpfile
-
-makedumpfile can exclude free (buddy) pages, hwpoison pages and some
-more. It will *not* exclude reserved pages or balloon (e.g.
-virtio-balloon) inflated pages. So it will read inflated pages and if
-they are zero, save a compressed zero page. However it will (read)
-access that memory.
-
-makedumpfile was adapted to the new SECTION_IS_ONLINE bit (to mask the
-right section address), offline sections will *not* be excluded. So also
-all memory in offline sections will be accessed and dumped - unless
-pages don't fall into PT_LOAD sections ("memory hole"), in this case
-they are not accessed.
-
-
-7. Further information
-
-Some more details can be found in "Documentation/kdump/kdump.txt".
-
-
-"All of the necessary information about the system kernel's core image
-is encoded in the ELF format, and stored in a reserved area of memory
-before a crash. The physical address of the start of the ELF header is
-passed to the dump-capture kernel through the elfcorehdr= boot
-parameter."
--> I am pretty sure this is why the kexec reload from user space is
-   necessary
-
-"For s390x there are two kdump modes: If a ELF header is specified with
- the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
- is done on all other architectures. If no elfcorehdr= kernel parameter
- is specified, the s390x kdump kernel dynamically creates the header.
- The second mode has the advantage that for CPU and memory hotplug,
- kdump has not to be reloaded with kexec_load()."
-
-
-Any experts, please jump in :)
-
-
-
-[1] https://www.systutorials.com/docs/linux/man/5-kdump/
-[2] https://sourceforge.net/projects/makedumpfile/
-[3] git://git.code.sf.net/p/makedumpfile/code
-
--- 
-
-Thanks,
-
-David / dhildenb
 
 _______________________________________________
 kexec mailing list
