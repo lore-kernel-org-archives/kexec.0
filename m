@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f68.google.com ([74.125.83.68])
+Received: from mail-io0-x244.google.com ([2607:f8b0:4001:c06::244])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fSd28-000120-0O
- for kexec@lists.infradead.org; Tue, 12 Jun 2018 06:44:20 +0000
-Received: by mail-pg0-f68.google.com with SMTP id z1-v6so10973722pgv.12
- for <kexec@lists.infradead.org>; Mon, 11 Jun 2018 23:43:49 -0700 (PDT)
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH] arm64/mm: Introduce a variable to hold base address of linear
- region
-Date: Tue, 12 Jun 2018 12:06:01 +0530
-Message-Id: <1528785361-24477-1-git-send-email-bhsharma@redhat.com>
+ id 1fSdBV-0002iG-TE
+ for kexec@lists.infradead.org; Tue, 12 Jun 2018 06:53:44 +0000
+Received: by mail-io0-x244.google.com with SMTP id l25-v6so26781704ioh.12
+ for <kexec@lists.infradead.org>; Mon, 11 Jun 2018 23:53:30 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <1528785361-24477-1-git-send-email-bhsharma@redhat.com>
+References: <1528785361-24477-1-git-send-email-bhsharma@redhat.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date: Tue, 12 Jun 2018 08:53:29 +0200
+Message-ID: <CAKv+Gu8Hs+CArdkAWoBPbr_p-nq5+0oPwOPg0NsJDRMkE_bM9A@mail.gmail.com>
+Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
+ linear region
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,107 +21,122 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, catalin.marinas@arm.com, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, bhupesh.linux@gmail.com
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Kexec Mailing List <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-The start of the linear region map on a KASLR enabled ARM64 machine -
-which supports a compatible EFI firmware (with EFI_RNG_PROTOCOL
-support), is no longer correctly represented by the PAGE_OFFSET macro,
-since it is defined as:
+On 12 June 2018 at 08:36, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> The start of the linear region map on a KASLR enabled ARM64 machine -
+> which supports a compatible EFI firmware (with EFI_RNG_PROTOCOL
+> support), is no longer correctly represented by the PAGE_OFFSET macro,
+> since it is defined as:
+>
+>     (UL(1) << (VA_BITS - 1)) + 1)
+>
 
-    (UL(1) << (VA_BITS - 1)) + 1)
+PAGE_OFFSET is the VA of the start of the linear map. The linear map
+can be sparsely populated with actual memory, regardless of whether
+KASLR is in effect or not. The only difference in the presence of
+KASLR is that there may be such a hole at the beginning, but that does
+not mean the linear map has moved, or that the value of PAGE_OFFSET is
+now wrong.
 
-So taking an example of a platform with VA_BITS=48, this gives a static
-value of:
-PAGE_OFFSET = 0xffff800000000000
+> So taking an example of a platform with VA_BITS=48, this gives a static
+> value of:
+> PAGE_OFFSET = 0xffff800000000000
+>
+> However, for the KASLR case, we use the 'memstart_offset_seed'
+> to randomize the linear region - since 'memstart_addr' indicates the
+> start of physical RAM, we randomize the same on basis
+> of 'memstart_offset_seed' value.
+>
+> As the PAGE_OFFSET value is used presently by several user space
+> tools (for e.g. makedumpfile and crash tools) to determine the start
+> of linear region and hence to read addresses (like PT_NOTE fields) from
+> '/proc/kcore' for the non-KASLR boot cases, so it would be better to
+> use 'memblock_start_of_DRAM()' value (converted to virtual) as
+> the start of linear region for the KASLR cases and default to
+> the PAGE_OFFSET value for non-KASLR cases to indicate the start of
+> linear region.
+>
 
-However, for the KASLR case, we use the 'memstart_offset_seed'
-to randomize the linear region - since 'memstart_addr' indicates the
-start of physical RAM, we randomize the same on basis
-of 'memstart_offset_seed' value.
+Userland code that assumes that the linear map cannot have a hole at
+the beginning should be fixed.
 
-As the PAGE_OFFSET value is used presently by several user space
-tools (for e.g. makedumpfile and crash tools) to determine the start
-of linear region and hence to read addresses (like PT_NOTE fields) from
-'/proc/kcore' for the non-KASLR boot cases, so it would be better to
-use 'memblock_start_of_DRAM()' value (converted to virtual) as
-the start of linear region for the KASLR cases and default to
-the PAGE_OFFSET value for non-KASLR cases to indicate the start of
-linear region.
+> I tested this on my qualcomm (which supports EFI_RNG_PROTOCOL)
+> and apm mustang (which does not support EFI_RNG_PROTOCOL) arm64 boards
+> and was able to use a modified user space utility (like kexec-tools and
+> makedumpfile) to determine the start of linear region correctly for
+> both the KASLR and non-KASLR boot cases.
+>
 
-I tested this on my qualcomm (which supports EFI_RNG_PROTOCOL)
-and apm mustang (which does not support EFI_RNG_PROTOCOL) arm64 boards
-and was able to use a modified user space utility (like kexec-tools and
-makedumpfile) to determine the start of linear region correctly for
-both the KASLR and non-KASLR boot cases.
+Can you explain the nature of the changes to the userland code?
 
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: James Morse <james.morse@arm.com>
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- arch/arm64/include/asm/memory.h | 3 +++
- arch/arm64/kernel/arm64ksyms.c  | 1 +
- arch/arm64/mm/init.c            | 3 +++
- 3 files changed, 7 insertions(+)
-
-diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-index 49d99214f43c..bfd0915ecaf8 100644
---- a/arch/arm64/include/asm/memory.h
-+++ b/arch/arm64/include/asm/memory.h
-@@ -178,6 +178,9 @@ extern s64			memstart_addr;
- /* PHYS_OFFSET - the physical address of the start of memory. */
- #define PHYS_OFFSET		({ VM_BUG_ON(memstart_addr & 1); memstart_addr; })
- 
-+/* the virtual base of the linear region. */
-+extern s64			linear_reg_start_addr;
-+
- /* the virtual base of the kernel image (minus TEXT_OFFSET) */
- extern u64			kimage_vaddr;
- 
-diff --git a/arch/arm64/kernel/arm64ksyms.c b/arch/arm64/kernel/arm64ksyms.c
-index d894a20b70b2..a92238ea45ff 100644
---- a/arch/arm64/kernel/arm64ksyms.c
-+++ b/arch/arm64/kernel/arm64ksyms.c
-@@ -42,6 +42,7 @@ EXPORT_SYMBOL(__arch_copy_in_user);
- 
- 	/* physical memory */
- EXPORT_SYMBOL(memstart_addr);
-+EXPORT_SYMBOL(linear_reg_start_addr);
- 
- 	/* string / mem functions */
- EXPORT_SYMBOL(strchr);
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 325cfb3b858a..29447adb0eef 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -60,6 +60,7 @@
-  * that cannot be mistaken for a real physical address.
-  */
- s64 memstart_addr __ro_after_init = -1;
-+s64 linear_reg_start_addr __ro_after_init = PAGE_OFFSET;
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
- 
- #ifdef CONFIG_BLK_DEV_INITRD
-@@ -452,6 +453,8 @@ void __init arm64_memblock_init(void)
- 		}
- 	}
- 
-+	linear_reg_start_addr = __phys_to_virt(memblock_start_of_DRAM());
-+
- 	/*
- 	 * Register the kernel text, kernel data, initrd, and initial
- 	 * pagetables with memblock.
--- 
-2.7.4
-
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Cc: James Morse <james.morse@arm.com>
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> ---
+>  arch/arm64/include/asm/memory.h | 3 +++
+>  arch/arm64/kernel/arm64ksyms.c  | 1 +
+>  arch/arm64/mm/init.c            | 3 +++
+>  3 files changed, 7 insertions(+)
+>
+> diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+> index 49d99214f43c..bfd0915ecaf8 100644
+> --- a/arch/arm64/include/asm/memory.h
+> +++ b/arch/arm64/include/asm/memory.h
+> @@ -178,6 +178,9 @@ extern s64                  memstart_addr;
+>  /* PHYS_OFFSET - the physical address of the start of memory. */
+>  #define PHYS_OFFSET            ({ VM_BUG_ON(memstart_addr & 1); memstart_addr; })
+>
+> +/* the virtual base of the linear region. */
+> +extern s64                     linear_reg_start_addr;
+> +
+>  /* the virtual base of the kernel image (minus TEXT_OFFSET) */
+>  extern u64                     kimage_vaddr;
+>
+> diff --git a/arch/arm64/kernel/arm64ksyms.c b/arch/arm64/kernel/arm64ksyms.c
+> index d894a20b70b2..a92238ea45ff 100644
+> --- a/arch/arm64/kernel/arm64ksyms.c
+> +++ b/arch/arm64/kernel/arm64ksyms.c
+> @@ -42,6 +42,7 @@ EXPORT_SYMBOL(__arch_copy_in_user);
+>
+>         /* physical memory */
+>  EXPORT_SYMBOL(memstart_addr);
+> +EXPORT_SYMBOL(linear_reg_start_addr);
+>
+>         /* string / mem functions */
+>  EXPORT_SYMBOL(strchr);
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 325cfb3b858a..29447adb0eef 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -60,6 +60,7 @@
+>   * that cannot be mistaken for a real physical address.
+>   */
+>  s64 memstart_addr __ro_after_init = -1;
+> +s64 linear_reg_start_addr __ro_after_init = PAGE_OFFSET;
+>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
+>
+>  #ifdef CONFIG_BLK_DEV_INITRD
+> @@ -452,6 +453,8 @@ void __init arm64_memblock_init(void)
+>                 }
+>         }
+>
+> +       linear_reg_start_addr = __phys_to_virt(memblock_start_of_DRAM());
+> +
+>         /*
+>          * Register the kernel text, kernel data, initrd, and initial
+>          * pagetables with memblock.
+> --
+> 2.7.4
+>
 
 _______________________________________________
 kexec mailing list
