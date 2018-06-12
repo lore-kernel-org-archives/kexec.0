@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga14.intel.com ([192.55.52.115])
+Received: from mga17.intel.com ([192.55.52.151])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fSaPt-0005x3-41
- for kexec@lists.infradead.org; Tue, 12 Jun 2018 03:56:23 +0000
-Date: Tue, 12 Jun 2018 11:55:46 +0800
+ id 1fSb4d-0005QG-OO
+ for kexec@lists.infradead.org; Tue, 12 Jun 2018 04:38:29 +0000
+Date: Tue, 12 Jun 2018 12:37:50 +0800
 From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v5 1/4] resource: Move reparent_resources() to
- kernel/resource.c and make it public
-Message-ID: <201806121130.gf9upRAU%fengguang.wu@intel.com>
-References: <20180612032831.29747-2-bhe@redhat.com>
+Subject: Re: [PATCH v5 2/4] resource: Use list_head to link sibling resource
+Message-ID: <201806121242.NKm8SoJR%fengguang.wu@intel.com>
+References: <20180612032831.29747-3-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="7JfCtLOvnd9MIVvH"
+Content-Type: multipart/mixed; boundary="azLHFNyN32YCQGCU"
 Content-Disposition: inline
-In-Reply-To: <20180612032831.29747-2-bhe@redhat.com>
+In-Reply-To: <20180612032831.29747-3-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,10 +23,10 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Baoquan He <bhe@redhat.com>
-Cc: nicolas.pitre@linaro.org, brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, Paul Mackerras <paulus@samba.org>, baiyaowei@cmss.chinamobile.com, kys@microsoft.com, frowand.list@gmail.com, dan.j.williams@intel.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, Michael Ellerman <mpe@ellerman.id.au>, patrik.r.jakobsson@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, bp@suse.de, dyoung@redhat.com, vgoyal@redhat.com, ebiederm@xmission.com, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, josh@joshtriplett.org, jglisse@redhat.com, robh+dt@kernel.org, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kbuild-all@01.org, devel@linuxdriverproject.org, akpm@linux-foundation.org, fengguang.wu@intel.com, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
+Cc: nicolas.pitre@linaro.org, brijesh.singh@amd.com, thomas.lendacky@amd.com, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, frowand.list@gmail.com, tglx@linutronix.de, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, bp@suse.de, dyoung@redhat.com, vgoyal@redhat.com, ebiederm@xmission.com, devicetree@vger.kernel.org, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, josh@joshtriplett.org, jglisse@redhat.com, robh+dt@kernel.org, seanpaul@chromium.org, bhelgaas@google.com, dan.j.williams@intel.com, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kbuild-all@01.org, devel@linuxdriverproject.org, akpm@linux-foundation.org, fengguang.wu@intel.com, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
 
 
---7JfCtLOvnd9MIVvH
+--azLHFNyN32YCQGCU
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
@@ -46,54 +45,86 @@ reproduce:
         # save the attached .config to linux build tree
         make ARCH=i386 
 
-Note: the linux-review/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180612-113600 HEAD 5545e79eef6387857faf41cdffa7be6b1f5d4efe builds fine.
-      It only hurts bisectibility.
-
 All errors (new ones prefixed by >>):
 
->> kernel/resource.c:990:12: error: static declaration of 'reparent_resources' follows non-static declaration
-    static int reparent_resources(struct resource *parent,
-               ^~~~~~~~~~~~~~~~~~
-   In file included from kernel/resource.c:14:0:
-   include/linux/ioport.h:195:5: note: previous declaration of 'reparent_resources' was here
-    int reparent_resources(struct resource *parent, struct resource *res);
-        ^~~~~~~~~~~~~~~~~~
-   kernel/resource.c:990:12: warning: 'reparent_resources' defined but not used [-Wunused-function]
-    static int reparent_resources(struct resource *parent,
-               ^~~~~~~~~~~~~~~~~~
+   kernel/resource.c: In function 'reparent_resources':
+>> kernel/resource.c:1005:26: error: passing argument 2 of 'list_add' from incompatible pointer type [-Werror=incompatible-pointer-types]
+     list_add(&res->sibling, &p->sibling.prev);
+                             ^
+   In file included from include/linux/ioport.h:15:0,
+                    from kernel/resource.c:14:
+   include/linux/list.h:77:20: note: expected 'struct list_head *' but argument is of type 'struct list_head **'
+    static inline void list_add(struct list_head *new, struct list_head *head)
+                       ^~~~~~~~
+   In file included from include/linux/list.h:9:0,
+                    from include/linux/ioport.h:15,
+                    from kernel/resource.c:14:
+>> kernel/resource.c:1013:26: error: 'new' undeclared (first use in this function); did you mean 'net'?
+     list_for_each_entry(p, &new->child, sibling) {
+                             ^
+   include/linux/kernel.h:963:26: note: in definition of macro 'container_of'
+     void *__mptr = (void *)(ptr);     \
+                             ^~~
+   include/linux/list.h:377:2: note: in expansion of macro 'list_entry'
+     list_entry((ptr)->next, type, member)
+     ^~~~~~~~~~
+   include/linux/list.h:464:13: note: in expansion of macro 'list_first_entry'
+     for (pos = list_first_entry(head, typeof(*pos), member); \
+                ^~~~~~~~~~~~~~~~
+   kernel/resource.c:1013:2: note: in expansion of macro 'list_for_each_entry'
+     list_for_each_entry(p, &new->child, sibling) {
+     ^~~~~~~~~~~~~~~~~~~
+   kernel/resource.c:1013:26: note: each undeclared identifier is reported only once for each function it appears in
+     list_for_each_entry(p, &new->child, sibling) {
+                             ^
+   include/linux/kernel.h:963:26: note: in definition of macro 'container_of'
+     void *__mptr = (void *)(ptr);     \
+                             ^~~
+   include/linux/list.h:377:2: note: in expansion of macro 'list_entry'
+     list_entry((ptr)->next, type, member)
+     ^~~~~~~~~~
+   include/linux/list.h:464:13: note: in expansion of macro 'list_first_entry'
+     for (pos = list_first_entry(head, typeof(*pos), member); \
+                ^~~~~~~~~~~~~~~~
+   kernel/resource.c:1013:2: note: in expansion of macro 'list_for_each_entry'
+     list_for_each_entry(p, &new->child, sibling) {
+     ^~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
-vim +/reparent_resources +990 kernel/resource.c
+vim +/list_add +1005 kernel/resource.c
 
-   985	
-   986	/*
-   987	 * Reparent resource children of pr that conflict with res
-   988	 * under res, and make res replace those children.
-   989	 */
- > 990	static int reparent_resources(struct resource *parent,
-   991					     struct resource *res)
-   992	{
-   993		struct resource *p, **pp;
-   994		struct resource **firstpp = NULL;
-   995	
-   996		for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
-   997			if (p->end < res->start)
-   998				continue;
-   999			if (res->end < p->start)
-  1000				break;
-  1001			if (p->start < res->start || p->end > res->end)
-  1002				return -1;	/* not completely contained */
-  1003			if (firstpp == NULL)
-  1004				firstpp = pp;
-  1005		}
-  1006		if (firstpp == NULL)
-  1007			return -1;	/* didn't find any conflicting entries? */
-  1008		res->parent = parent;
-  1009		res->child = *firstpp;
-  1010		res->sibling = *pp;
-  1011		*firstpp = res;
-  1012		*pp = NULL;
-  1013		for (p = res->child; p != NULL; p = p->sibling) {
-  1014			p->parent = res;
+   983	
+   984	/*
+   985	 * Reparent resource children of pr that conflict with res
+   986	 * under res, and make res replace those children.
+   987	 */
+   988	int reparent_resources(struct resource *parent, struct resource *res)
+   989	{
+   990		struct resource *p, *first = NULL;
+   991	
+   992		list_for_each_entry(p, &parent->child, sibling) {
+   993			if (p->end < res->start)
+   994				continue;
+   995			if (res->end < p->start)
+   996				break;
+   997			if (p->start < res->start || p->end > res->end)
+   998				return -1;	/* not completely contained */
+   999			if (first == NULL)
+  1000				first = p;
+  1001		}
+  1002		if (first == NULL)
+  1003			return -1;	/* didn't find any conflicting entries? */
+  1004		res->parent = parent;
+> 1005		list_add(&res->sibling, &p->sibling.prev);
+  1006		INIT_LIST_HEAD(&res->child);
+  1007	
+  1008		/*
+  1009		 * From first to p's previous sibling, they all fall into
+  1010		 * res's region, change them as res's children.
+  1011		 */
+  1012		list_cut_position(&res->child, first->sibling.prev, res->sibling.prev);
+> 1013		list_for_each_entry(p, &new->child, sibling) {
+  1014	                p->parent = new;
   1015			pr_debug("PCI: Reparented %s %pR under %s\n",
   1016				 p->name, p, res->name);
   1017		}
@@ -106,12 +137,12 @@ vim +/reparent_resources +990 kernel/resource.c
 0-DAY kernel test infrastructure                Open Source Technology Center
 https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
---7JfCtLOvnd9MIVvH
+--azLHFNyN32YCQGCU
 Content-Type: application/gzip
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-H4sICDBBH1sAAy5jb25maWcAjFxbc+M2sn7Pr2AlVadmqk4mvo3jPaf8AJGghJggGAKUZL+w
+H4sICC5FH1sAAy5jb25maWcAjFxbc+M2sn7Pr2AlVadmqk4mvo3jPaf8AJGghJggGAKUZL+w
 NDLHo4oteXXJzvz70w1Q4q2hnK3dTYxugLh0f31BQ7/89EvADvvN22K/Wi5eX38EL9W62i72
 1XPwdfVa/W8QqSBVJuCRMJ+AOVmtD99/W13f3QY3ny5//3QRPFTbdfUahJv119XLAbquNuuf
 fvkJ/vsLNL69wyjb/wlelstffw8+RNWX1WId/P7p+tPFr5e3H92/AW+o0liMy/ndbXl9df+j
@@ -230,7 +261,7 @@ Brw8vmh9kqlUdJ9/2h1BhsqSGTwmGpp1L9e70SLzU9Eg4wwucODHaUKARuaphjRy/9zOTt8/
 SKhWnDqOejtn4YRLFExrxowrRVqZV+LCgozT4OxfsomM144w0U4Od1jFQGEiAEqaf5S3hKxD
 WMlb1VPD0clkB7bAqOAHb89iz/wHnXGabHBYAAA=
 
---7JfCtLOvnd9MIVvH
+--azLHFNyN32YCQGCU
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -241,5 +272,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---7JfCtLOvnd9MIVvH--
+--azLHFNyN32YCQGCU--
 
