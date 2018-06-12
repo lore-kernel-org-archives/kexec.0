@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ua0-x244.google.com ([2607:f8b0:400c:c08::244])
+Received: from mail-eopbgr70124.outbound.protection.outlook.com
+ ([40.107.7.124] helo=EUR04-HE1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fSefw-0007DR-Hv
- for kexec@lists.infradead.org; Tue, 12 Jun 2018 08:29:14 +0000
-Received: by mail-ua0-x244.google.com with SMTP id i3-v6so15386703uad.4
- for <kexec@lists.infradead.org>; Tue, 12 Jun 2018 01:29:01 -0700 (PDT)
+ id 1fSjSb-0005hU-RR
+ for kexec@lists.infradead.org; Tue, 12 Jun 2018 13:36:14 +0000
+From: Arnaud Ferraris <arnaud.ferraris.external@sigfox.com>
+Subject: [RFC] fitImage support on ARM64
+Message-ID: <5e99ff9a-cc16-ba15-3391-909253046ae5@sigfox.com>
+Date: Tue, 12 Jun 2018 15:35:27 +0200
 MIME-Version: 1.0
-In-Reply-To: <20180612032831.29747-2-bhe@redhat.com>
-References: <20180612032831.29747-1-bhe@redhat.com>
- <20180612032831.29747-2-bhe@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 12 Jun 2018 11:29:00 +0300
-Message-ID: <CAHp75Vd6v4+RTq-5uw_BJpT6=w2KGjTfU+rEst6+8igs2cyntw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/4] resource: Move reparent_resources() to
- kernel/resource.c and make it public
+Content-Type: multipart/mixed; boundary="------------EF63C4B0D60D8D92E3EFE508"
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,66 +19,98 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, brijesh.singh@amd.com, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, Keith Busch <keith.busch@intel.com>, Max Filippov <jcmvbkbc@gmail.com>, Paul Mackerras <paulus@samba.org>, baiyaowei@cmss.chinamobile.com, KY Srinivasan <kys@microsoft.com>, Frank Rowand <frowand.list@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Hemminger <sthemmin@microsoft.com>, linux-nvdimm@lists.01.org, Michael Ellerman <mpe@ellerman.id.au>, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, linux-input <linux-input@vger.kernel.org>, Gustavo Padovan <gustavo@padovan.org>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Tom Lendacky <thomas.lendacky@amd.com>, Haiyang Zhang <haiyangz@microsoft.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Yinghai Lu <yinghai@kernel.org>, Jon Derrick <jonathan.derrick@intel.com>, Chris Zankel <chris@zankel.net>, Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Eric Biederman <ebiederm@xmission.com>, devel@linuxdriverproject.org, Andrew Morton <akpm@linux-foundation.org>, kbuild test robot <fengguang.wu@intel.com>, "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" <linuxppc-dev@lists.ozlabs.org>, "David S. Miller" <davem@davemloft.net>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au
 
-On Tue, Jun 12, 2018 at 6:28 AM, Baoquan He <bhe@redhat.com> wrote:
-> reparent_resources() is duplicated in arch/microblaze/pci/pci-common.c
-> and arch/powerpc/kernel/pci-common.c, so move it to kernel/resource.c
-> so that it's shared. Later its code also need be updated using list_head
-> to replace singly linked list.
+This is a multi-part message in MIME format.
+--------------EF63C4B0D60D8D92E3EFE508
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-While this is a good deduplication of the code, some requirements for
-public functions would be good to satisfy.
+Hi,
 
-> +/*
-> + * Reparent resource children of pr that conflict with res
-> + * under res, and make res replace those children.
-> + */
+I started working on implementing fitImage support in kexec.
 
-kernel doc format, though...
+Regarding image parsing & loading, things are going quite well, but I 
+realized the only way to load a device tree and/or initramfs for now was 
+to have them stored in files separated from the kernel.
 
-> +static int reparent_resources(struct resource *parent,
-> +                                    struct resource *res)
+I came up with a solution that requires appending new fields to the 
+kexec_info structure (see attached patch), and wonder if that sounds 
+right to you ? I guess other architectures might benefit from this 
+support, so I didn't want an ARM64-specific solution.
 
-...is it really public with static keyword?!
+Any comment will be welcome !
 
+Regards,
+Arnaud
 
+--------------EF63C4B0D60D8D92E3EFE508
+Content-Type: text/x-patch;
+ name="kexec-arm64-fitimage-loading.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="kexec-arm64-fitimage-loading.patch"
 
-> +{
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index 62f3758..5888a6c 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -544,6 +544,10 @@ int arm64_load_other_segments(struct kexec_info *info,
+ 	if (arm64_opts.dtb) {
+ 		dtb.name = "dtb_user";
+ 		dtb.buf = slurp_file(arm64_opts.dtb, &dtb.size);
++	} else if (info->dtb) {
++		dtb.name = "dtb_fit";
++		dtb.buf = info->dtb;
++		dtb.size = info->dtb_size;
+ 	} else {
+ 		result = read_1st_dtb(&dtb);
 
-> +       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
-> +               if (p->end < res->start)
-> +                       continue;
-> +               if (res->end < p->start)
-> +                       break;
+@@ -568,8 +572,13 @@ int arm64_load_other_segments(struct kexec_info *info,
+ 	else
+ 		hole_max = ULONG_MAX;
 
-> +               if (p->start < res->start || p->end > res->end)
-> +                       return -1;      /* not completely contained */
+-	if (arm64_opts.initrd) {
+-		initrd_buf = slurp_file(arm64_opts.initrd, &initrd_size);
++	if (arm64_opts.initrd || info->initrd) {
++		if (arm64_opts.initrd)
++			initrd_buf = slurp_file(arm64_opts.initrd, &initrd_size);
++		else {
++			initrd_buf = info->initrd;
++			initrd_size = info->initrd_size;
++		}
 
-Usually we are expecting real eeror codes.
+ 		if (!initrd_buf)
+ 			fprintf(stderr, "kexec: Empty ramdisk file.\n");
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index d445fbe..9ac1537 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -166,6 +166,10 @@ struct kexec_info {
+ 	int initrd_fd;
+ 	char *command_line;
+ 	int command_line_len;
++	char *initrd;
++	off_t initrd_size;
++	char *dtb;
++	off_t dtb_size;
+ };
 
-> +               if (firstpp == NULL)
-> +                       firstpp = pp;
-> +       }
+ struct arch_map_entry {
 
-> +       if (firstpp == NULL)
-> +               return -1;      /* didn't find any conflicting entries? */
-
-Ditto.
-
-> +}
-> +EXPORT_SYMBOL(reparent_resources);
-
--- 
-With Best Regards,
-Andy Shevchenko
+--------------EF63C4B0D60D8D92E3EFE508
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--------------EF63C4B0D60D8D92E3EFE508--
+
