@@ -1,23 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-f68.google.com ([209.85.215.68])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fTN4u-0002q2-S4
- for kexec@lists.infradead.org; Thu, 14 Jun 2018 07:53:59 +0000
-Received: by mail-lf0-f68.google.com with SMTP id u4-v6so7927224lff.3
- for <kexec@lists.infradead.org>; Thu, 14 Jun 2018 00:53:46 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <3a05cd0e-466e-4fb6-a78a-4b363e21aaab@arm.com>
-References: <1528785361-24477-1-git-send-email-bhsharma@redhat.com>
- <CAKv+Gu8Hs+CArdkAWoBPbr_p-nq5+0oPwOPg0NsJDRMkE_bM9A@mail.gmail.com>
- <CACi5LpNdg=Enp66BybNNuj5tQOp3ggyX=tm_SVzr8v2qCRteDw@mail.gmail.com>
- <d801005a-5f7a-8fe4-a486-bc6443a406a3@arm.com>
- <CACi5LpOJ7Q7nbo9m_HGqr44+n_iEtreZt+Uxtf2PzcHSzTdKuA@mail.gmail.com>
- <3a05cd0e-466e-4fb6-a78a-4b363e21aaab@arm.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Thu, 14 Jun 2018 13:23:44 +0530
-Message-ID: <CACi5LpMJnFthKUJGfMWgDyMTM65oTtOvsRGCtMDjWP32qDptbQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
- linear region
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fTNva-00034i-9J
+ for kexec@lists.infradead.org; Thu, 14 Jun 2018 08:48:24 +0000
+From: Lianbo Jiang <lijiang@redhat.com>
+Subject: [PATCH 0/2 V2] Support kdump for AMD secure memory encryption(sme)
+Date: Thu, 14 Jun 2018 16:47:46 +0800
+Message-Id: <20180614084748.9617-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,246 +15,166 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kexec Mailing List <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: thomas.lendacky@amd.com, dyoung@redhat.com, kexec@lists.infradead.org
 
-Hello James,
+It is convenient to remap the old memory encrypted to the second kernel by
+calling ioremap_encrypted().
 
-Thanks for your inputs, please see my responses inline.
+When sme enabled on AMD server, we also need to support kdump. Because
+the memory is encrypted in the first kernel, we will remap the old memory
+encrypted to the second kernel(crash kernel), and sme is also enabled in
+the second kernel, otherwise the old memory encrypted can not be decrypted.
+Because simply changing the value of a C-bit on a page will not
+automatically encrypt the existing contents of a page, and any data in the
+page prior to the C-bit modification will become unintelligible. A page of
+memory that is marked encrypted will be automatically decrypted when read
+from DRAM and will be automatically encrypted when written to DRAM.
 
-On Wed, Jun 13, 2018 at 3:59 PM, James Morse <james.morse@arm.com> wrote:
-> Hi Bhupesh,
->
-> On 13/06/18 06:16, Bhupesh Sharma wrote:
->> On Tue, Jun 12, 2018 at 3:42 PM, James Morse <james.morse@arm.com> wrote:
->>> On 12/06/18 09:25, Bhupesh Sharma wrote:
->>>> On Tue, Jun 12, 2018 at 12:23 PM, Ard Biesheuvel wrote:
->>>>> Userland code that assumes that the linear map cannot have a hole at
->>>>> the beginning should be fixed.
->
->>>> That is a separate case (although that needs fixing as well via a
->>>> kernel patch probably as the user-space tools rely on '/proc/iomem'
->>>> contents to determine the first System RAM/reserved range).
->>>
->>> This is for kexec-tools generating the kdump vmcore ELF headers in user-space?
->>
->> Yes, but again, I would like to reiterate that the case where I see a
->> hole at the start of the System RAM range (as I listed above) is just
->> a specific case, which probably deserves a separate patch. The current
->> patch though is for a generic issue (please see more details below).
->
->
->>>> # readelf -l vmcore
->>>>
->>>> ELF Header:
->>>> ........................
->>>>
->>>> Program Headers:
->>>>   Type           Offset             VirtAddr           PhysAddr
->>>>          FileSiz            MemSiz              Flags  Align
->>>> ..............................................................................................................................................................
->>>>   LOAD        0x0000000076d40000 0xffff80017fe00000 0x0000000180000000
->>>>                 0x0000001680000000 0x0000001680000000  RWE    0
->>>>
->>>> 3. So if we do a simple calculation:
->>>>
->>>> (VirtAddr + MemSiz) = 0xffff80017fe00000 + 0x0000001680000000 =
->>>> 0xFFFF8017FFE00000 != 0xffff801800000000.
->>>>
->>>> which indicates that the end virtual memory nodes are not the same
->>>> between vmlinux and vmcore.
->>>
->>> If I've followed this properly: the problem is that to generate the ELF headers
->>> in the post-kdump vmcore, at kdump-load-time kexec-tools has to guess the
->>> virtual addresses of the 'System RAM' regions it can see in /proc/iomem.
->>>
->>> The problem you are hitting is an invisible hole at the beginning of RAM,
->>> meaning user-space's guess_phys_to_virt() is off by the size of this hole.
->>>
->>> Isn't KASLR a special case for this? You must have to correct for that after
->>> kdump has happened, based on an elf-note in the vmcore. Can't we always do this?
->>
->> No, I hit this issue both for the KASLR and non-KASLR boot cases.
->
-> Because in both cases there is a hole at the beginning of the linear-map. KASLR
-> is a special-case of this as the kernel adds a variable sized hole to do the
-> randomization.
->
-> Surely treating this as one case makes your user-space code simpler.
+For the kdump, it is necessary to distinguish whether the memory is
+encrypted. Furthermore, we should also know which part of the memory is
+encrypted or decrypted. We will appropriately remap the memory according
+to the specific situation in order to tell cpu how to deal with the
+data(encrypted or decrypted). For example, when sme enabled, if the old
+memory is encrypted, we will remap the old memory in encrypted way, which
+will automatically decrypt the old memory encrypted when we read those data
+from the remapping address.
 
-Ok.
+ ----------------------------------------------
+| first-kernel | second-kernel | kdump support |
+|      (mem_encrypt=on|off)    |   (yes|no)    | 
+|--------------+---------------+---------------|
+|     on       |     on        |     yes       |
+|     off      |     off       |     yes       |
+|     on       |     off       |     no        |
+|     off      |     on        |     no        |
+|______________|_______________|_______________|
 
->> Fixing this in kernel space seems better to me as the definition of
->
-> Is there a kernel bug? Changing the definitions of internal kernel variables for
-> the benefit of code digging in /proc/kcore|/dev/mem isn't going to fly.
+Test tools:
+makedumpfile[v1.6.3]: https://github.com/LianboJ/makedumpfile
+commit e1de103eca8f (A draft for kdump vmcore about AMD SME)
+Author: Lianbo Jiang <lijiang@redhat.com>
+Date:   Mon May 14 17:02:40 2018 +0800
+Note: This patch can only dump vmcore in the case of SME enabled.
 
-Indeed, I am not advocating to change the kernel space code just to
-suit the user-space tools. However in this particular case the
-'memstart_addr' and PHY_OFFSET value are computed as 0 which IMO is
-not the real representation of the start of System RAM as the 1st
-memory block available in Linux starts from 2MB [as confirmed by the
-'memblock_start_of_DRAM()' value of 0x200000] and indicated by
-'/proc/iomem':
+crash-7.2.1: https://github.com/crash-utility/crash.git
+commit 1e1bd9c4c1be (Fix for the "bpf" command display on Linux 4.17-rc1)
+Author: Dave Anderson <anderson@redhat.com>
+Date:   Fri May 11 15:54:32 2018 -0400
 
-# head -1 /proc/iomem
-00200000-0021ffff : reserved
+Test environment:
+HP ProLiant DL385Gen10 AMD EPYC 7251
+8-Core Processor
+32768 MB memory
+600 GB disk space
 
-I think reading the kernel code and finding 'memstart_addr' and
-PHY_OFFSET as 0, one gets the notion that the base of System RAM
-starts from 0, which is incorrect in the above case as it starts from
-2MB as the 1st block is of the type EfiReservedMemType
+Linux 4.17-rc7:
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+commit b04e217704b7 ("Linux 4.17-rc7")
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun May 27 13:01:47 2018 -0700
 
->> 'memstart_addr' is that it indicates the start of the physical ram,
->> but since in this case there is a hole at the start of the system ram
->> visible in Linux (and thus to user-space), but 'memstart_addr' is
->> still 0 which seems contradictory at the least. This causes PHY_OFFSET
->> to be 0 as well, which is again contradictory.
->
->
->>>> This happens because the kexec-tools rely on 'proc/iomem' contents
->>>> while 'memstart_addr' is computed as 0 by kernel (as value of
->>>> memblock_start_of_DRAM() < ARM64_MEMSTART_ALIGN).
->>>
->>>> Returning back to this patch, this is a generic requirement where we
->>>> need the linear region start/base addresses in user-space applications
->>>> which is used to read addresses which lie in the linear region (for
->>>> e.g. when we read /proc/kcore contents).
->
-> [...]
->
->>> This patch adds a variable that nothing uses, its going to be removed. You can't
->>> depend on reading this via /dev/mem.
->>>
->>> Could you add the information you need as an elf-note to the vmcore instead? You
->>> must already pick these up to handle kaslr. (from memory, this is where the
->>> kaslr-offset is described to user-space after we kdump).
->
->
->> No you are mixing up the two cases (please see above), the issue which
->> this patch fixes is for use cases where we don't have the vmcore
->> available in case of 'live' debugging via makedumpfile and crash tools
->> (we only have '/proc/kcore' or 'vmlinux' available in such cases). I
->> detailed the use case in [1] better (in a reply to Ard), I will detail
->> the use-case again below:
->
-> Okay, so not kdump...
->
->
->> One specific use case that I am working on at the moment is the
->> makedumpfile '--mem-usage', which allows one to see the page numbers
->> of current system (1st kernel) in different use (please see
->> MAKEDUMPFILE(8) for more details).
->
-> https://linux.die.net/man/8/makedumpfile :
-> | Name: makedumpfile - make a small dumpfile of kdump
->
-> ... but now we are talking about kdump again ...
->
->
->> Using this we can know how many pages are dumpable when different
->> dump_level is specified when invoking the makedumpfile.
->>
->> Normally, makedumpfile analyses the contents of '/proc/kcore' (while
->> excluding the crashkernel range), and then calculates the page number
->> of different kind per vmcoreinfo.
->
-> $ apt-get source makedumpfile
-> $ cd makedumpfile-1.5.3
-> $ grep -r "kcore" .
-> $
->
-> I suspect there are two pieces of software with the same name here.
+Reference:
+AMD64 Architecture Programmer's Manual
+https://support.amd.com/TechDocs/24593.pdf
 
-Here is the makedumpfile upstream git tree -
-git://git.code.sf.net/p/makedumpfile/code
+Some changes based on V1:
+1. remove the sme_active() check in __ioremap_caller().
+2. remove the '#ifdef' stuff throughout this patch.
+3. put some logic into the early_memremap_pgprot_adjust() and clean the
+previous unnecessary changes, for example: arch/x86/include/asm/dmi.h,
+arch/x86/kernel/acpi/boot.c, drivers/acpi/tables.c.
+4. rewrite two functions, copy_oldmem_page() and
+copy_oldmem_page_encrypted().
+5. distingish sme_active() and sev_active(), when a distinction doesn't
+need, mem_encrypt_active() will be used.
+6. clean compile warning in copy_device_table().
 
-$ grep -r "kcore" .
+Some known issues:
+1. about SME
+Upstream kernel doesn't work when we use kexec in the follow command. The
+system will hang.
+(This issue doesn't matter with the kdump patch.)
 
-./elf_info.c:int set_kcore_vmcoreinfo(uint64_t vmcoreinfo_addr,
-uint64_t vmcoreinfo_len)
-<..snip..>
-./makedumpfile.8:# makedumpfile \-f \-\-mem\-usage /proc/kcore
-<..snip..>
+Reproduce steps:
+ # kexec -l /boot/vmlinuz-4.17.0-rc7+ --initrd=/boot/initramfs-4.17.0-rc7+.img --command-line="root=/dev/mapper/rhel_hp--dl385g10--03-root ro mem_encrypt=on rd.lvm.lv=rhel_hp-dl385g10-03/root rd.lvm.lv=rhel_hp-dl385g10-03/swap console=ttyS0,115200n81 LANG=en_US.UTF-8 earlyprintk=serial debug nokaslr"
+ # kexec -e (or reboot)
 
->> This use case requires directly reading the '/proc/kcore' and the
->> hence the PAGE_OFFSET value is used to determine the base address of
->> the linear region, whose value is not static in case of KASLR boot.
->
-> Eh? I thought PAGE_OFFSET was a compile-time constant, and it was PHYS_OFFSET
-> has a value other the aligned base of memory for KASLR.
+The system will hang:
+[ 1248.932239] kexec_core: Starting new kernel
+early console in extract_kernel
+input_data: 0x000000087e91c3b4
+input_len: 0x000000000067fcbd
+output: 0x000000087d400000
+output_len: 0x0000000001b6fa90
+kernel_total_size: 0x0000000001a9d000
+trampoline_32bit: 0x0000000000099000
 
-Indeed, I tried to capture the dilemma in [1], just to recap:
+Decompressing Linux... 
+Parsing ELF...        [-here the system will hang]
 
-'arch/arm64/include/asm/memory.h' defines PAGE_OFFSET as:
+2. about SEV
+Upstream kernel doesn't work about SEV on our machine, some drivers always
+go wrong. We don't have the suitable machine to test SEV for kdump patch.
+Maybe it is resonable to improve SEV in another patch. When SEV works
+fine, we will test the kdump patch for SEV. 
 
-/*
- * PAGE_OFFSET - the virtual address of the start of the linear map (top
- *         (VA_BITS - 1))
- */
-#define PAGE_OFFSET        (UL(0xffffffffffffffff) - \
-    (UL(1) << (VA_BITS - 1)) + 1)
+[  369.426131] INFO: task systemd-udevd:865 blocked for more than 120 seconds.
+[  369.433177]       Not tainted 4.17.0-rc5+ #60
+[  369.437585] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[  369.445783] systemd-udevd   D    0   865    813 0x80000004
+[  369.451323] Call Trace:
+[  369.453815]  ? __schedule+0x290/0x870
+[  369.457523]  schedule+0x32/0x80
+[  369.460714]  __sev_do_cmd_locked+0x1f6/0x2a0 [ccp]
+[  369.465556]  ? cleanup_uevent_env+0x10/0x10
+[  369.470084]  ? remove_wait_queue+0x60/0x60
+[  369.474219]  ? 0xffffffffc0247000
+[  369.477572]  __sev_platform_init_locked+0x2b/0x70 [ccp]
+[  369.482843]  sev_platform_init+0x1d/0x30 [ccp]
+[  369.487333]  psp_pci_init+0x40/0xe0 [ccp]
+[  369.491380]  ? 0xffffffffc0247000
+[  369.494936]  sp_mod_init+0x18/0x1000 [ccp]
+[  369.499071]  do_one_initcall+0x4e/0x1d4
+[  369.502944]  ? _cond_resched+0x15/0x30
+[  369.506728]  ? kmem_cache_alloc_trace+0xae/0x1d0
+[  369.511386]  ? do_init_module+0x22/0x220
+[  369.515345]  do_init_module+0x5a/0x220
+[  369.519444]  load_module+0x21cb/0x2a50
+[  369.523227]  ? m_show+0x1c0/0x1c0
+[  369.526571]  ? security_capable+0x3f/0x60
+[  369.530611]  __do_sys_finit_module+0x94/0xe0
+[  369.534915]  do_syscall_64+0x5b/0x180
+[  369.538607]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  369.543698] RIP: 0033:0x7f708e6311b9
+[  369.547536] RSP: 002b:00007ffff9d32aa8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+[  369.555162] RAX: ffffffffffffffda RBX: 000055602a04c2d0 RCX: 00007f708e6311b9
+[  369.562346] RDX: 0000000000000000 RSI: 00007f708ef52039 RDI: 0000000000000008
+[  369.569801] RBP: 00007f708ef52039 R08: 0000000000000000 R09: 000055602a048b20
+[  369.576988] R10: 0000000000000008 R11: 0000000000000246 R12: 0000000000000000
+[  369.584177] R13: 000055602a075260 R14: 0000000000020000 R15: 0000000000000000
 
-However, for the KASLR case, we set the 'memstart_offset_seed ' to
-use the 16-bits of the 'kaslr-seed' to randomize the linear region in
-'arch/arm64/kernel/kaslr.c' :
+Lianbo Jiang (2):
+  Add a function(ioremap_encrypted) for kdump when AMD sme enabled.
+  Support kdump when AMD secure memory encryption is active
 
-u64 __init kaslr_early_init(u64 dt_phys)
-{
-<snip..>
-    /* use the top 16 bits to randomize the linear region */
-    memstart_offset_seed = seed >> 48;
-<snip..>
-}
+ arch/x86/include/asm/io.h       |  3 +++
+ arch/x86/kernel/crash_dump_64.c | 42 +++++++++++++++++++++++++++++++----------
+ arch/x86/mm/ioremap.c           | 28 +++++++++++++++++++--------
+ drivers/iommu/amd_iommu_init.c  | 14 +++++++++++++-
+ fs/proc/vmcore.c                | 20 +++++++++++++++-----
+ include/linux/crash_dump.h      |  5 +++++
+ kernel/kexec_core.c             | 12 ++++++++++++
+ 7 files changed, 100 insertions(+), 24 deletions(-)
 
-So, either we should have a uniform way of representing the virtual
-base of the linear range both in KASLR and non-KASLR boot cases (macro
-or variable?). or  we should rather look at removing the PAGE_OFFSET
-usage from
-the kernel (or atleast the confusing comment from 'memory.h') - again
-please see [1] for the suggested approaches (bottom part of the query)
+-- 
+2.9.5
 
->
->> Another use-case is where the crash-utility uses the PAGE_OFFSET value
->> to perform a virtual-to-physical conversion for the address lying in
->> the linear region:
->
-> In all cases the problem you have is assuming the first 'System RAM' value in
-> /proc/iomem is the base of DRAM, which you can use a PHYS_OFFSET in your
-> user-space phys2virt() calculation.
->
-> What information do you need to make this work?
->
-> You can evidently read kernel variables, why can't you read memstart_addr and do:
-> | #define __phys_to_virt(x)                             \
-> |                       ((unsigned long)((x) - memstart_addr) | PAGE_OFFSET)
->
-> based on the physical addresses in /proc/iomem, and PAGE_OFFSET pulled out of
-> the vmlinux.
->
-> Reading memstart_addr is fragile, we might need to rename it
-> wednesday_memstart_addr. If user-space needs this value to work with
-> /proc/{kcore,vmcore} we should expose something like 'p2v_offset' as an elf-note
-> on those files. (looks like they both have elf-headers).
-
-Again I had suggested reading memstart_addr as one of the approaches
-in [1], but seems we couldn't reach a conclusion, so I sent out this
-approach to trigger another round of discussion.
-
-BTW adding 'p2v_offset' as an elf-note seems like a good idea. If this
-seems suitable, I can try and spin patch(es) using this approach (both
-for the kernel and user-space tools).
-
-Please share your views,
-
-[1] https://www.spinics.net/lists/arm-kernel/msg655933.html
-
-Thanks,
-Bhupesh
 
 _______________________________________________
 kexec mailing list
