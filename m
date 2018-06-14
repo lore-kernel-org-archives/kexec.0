@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
- linear region
-References: <1528785361-24477-1-git-send-email-bhsharma@redhat.com>
- <CAKv+Gu8Hs+CArdkAWoBPbr_p-nq5+0oPwOPg0NsJDRMkE_bM9A@mail.gmail.com>
- <CACi5LpNdg=Enp66BybNNuj5tQOp3ggyX=tm_SVzr8v2qCRteDw@mail.gmail.com>
- <d801005a-5f7a-8fe4-a486-bc6443a406a3@arm.com>
- <CACi5LpOJ7Q7nbo9m_HGqr44+n_iEtreZt+Uxtf2PzcHSzTdKuA@mail.gmail.com>
- <3a05cd0e-466e-4fb6-a78a-4b363e21aaab@arm.com>
- <CACi5LpMJnFthKUJGfMWgDyMTM65oTtOvsRGCtMDjWP32qDptbQ@mail.gmail.com>
-From: James Morse <james.morse@arm.com>
-Message-ID: <92ff5220-f863-4edc-bc9f-bd802d2efa9c@arm.com>
-Date: Thu, 14 Jun 2018 17:17:11 +0100
+Received: from mga05.intel.com ([192.55.52.43])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fTXdm-0008Bm-8v
+ for kexec@lists.infradead.org; Thu, 14 Jun 2018 19:10:40 +0000
+Date: Fri, 15 Jun 2018 03:24:19 +0800
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 2/2 V2] Support kdump when AMD secure memory encryption
+ is active
+Message-ID: <201806150155.KM1fUaJB%fengguang.wu@intel.com>
+References: <20180614084748.9617-3-lijiang@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CACi5LpMJnFthKUJGfMWgDyMTM65oTtOvsRGCtMDjWP32qDptbQ@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180614084748.9617-3-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,119 +24,134 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kexec Mailing List <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Lianbo Jiang <lijiang@redhat.com>
+Cc: thomas.lendacky@amd.com, dyoung@redhat.com, kexec@lists.infradead.org, kbuild-all@01.org, linux-kernel@vger.kernel.org
 
-Hi Bhupesh,
+Hi Lianbo,
 
-On 14/06/18 08:53, Bhupesh Sharma wrote:
-> On Wed, Jun 13, 2018 at 3:59 PM, James Morse <james.morse@arm.com> wrote:
->> On 13/06/18 06:16, Bhupesh Sharma wrote:
->>> On Tue, Jun 12, 2018 at 3:42 PM, James Morse <james.morse@arm.com> wrote:
->>>> If I've followed this properly: the problem is that to generate the ELF headers
->>>> in the post-kdump vmcore, at kdump-load-time kexec-tools has to guess the
->>>> virtual addresses of the 'System RAM' regions it can see in /proc/iomem.
->>>>
->>>> The problem you are hitting is an invisible hole at the beginning of RAM,
->>>> meaning user-space's guess_phys_to_virt() is off by the size of this hole.
->>>>
->>>> Isn't KASLR a special case for this? You must have to correct for that after
->>>> kdump has happened, based on an elf-note in the vmcore. Can't we always do this?
->>>
->>> No, I hit this issue both for the KASLR and non-KASLR boot cases.
->>
->> Because in both cases there is a hole at the beginning of the linear-map. KASLR
->> is a special-case of this as the kernel adds a variable sized hole to do the
->> randomization.
->>
->> Surely treating this as one case makes your user-space code simpler.
-> 
-> Ok.
-> 
->>> Fixing this in kernel space seems better to me as the definition of
->>
->> Is there a kernel bug? Changing the definitions of internal kernel variables for
->> the benefit of code digging in /proc/kcore|/dev/mem isn't going to fly.
-> 
-> Indeed, I am not advocating to change the kernel space code just to
-> suit the user-space tools. However in this particular case the
-> 'memstart_addr' and PHY_OFFSET value are computed as 0 which IMO
+Thank you for the patch! Perhaps something to improve:
 
-(What is PHY_OFFSET? I assume you mean PHYS_OFFSET, which is the same as
-memstart_addr ... why do you quote them together?)
+[auto build test WARNING on linus/master]
+[also build test WARNING on v4.17 next-20180614]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Lianbo-Jiang/Support-kdump-for-AMD-secure-memory-encryption-sme/20180614-164938
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
 
 
-> is
-> not the real representation of the start of System RAM as the 1st
-> memory block available in Linux starts from 2MB [as confirmed by the
-> 'memblock_start_of_DRAM()' value of 0x200000] and indicated by
-> '/proc/iomem':
-> 
-> # head -1 /proc/iomem
-> 00200000-0021ffff : reserved
+vim +904 drivers/iommu/amd_iommu_init.c
 
-You have assumptions about what memstart_addr is based on its name. Names of
-kernel variables get further from their actual use over time.
+   854	
+   855	
+   856	static bool copy_device_table(void)
+   857	{
+   858		u64 int_ctl, int_tab_len, entry = 0, last_entry = 0;
+   859		struct dev_table_entry *old_devtb = NULL;
+   860		u32 lo, hi, devid, old_devtb_size;
+   861		phys_addr_t old_devtb_phys;
+   862		struct amd_iommu *iommu;
+   863		u16 dom_id, dte_v, irq_v;
+   864		gfp_t gfp_flag;
+   865		u64 tmp;
+   866	
+   867		if (!amd_iommu_pre_enabled)
+   868			return false;
+   869	
+   870		pr_warn("Translation is already enabled - trying to copy translation structures\n");
+   871		for_each_iommu(iommu) {
+   872			/* All IOMMUs should use the same device table with the same size */
+   873			lo = readl(iommu->mmio_base + MMIO_DEV_TABLE_OFFSET);
+   874			hi = readl(iommu->mmio_base + MMIO_DEV_TABLE_OFFSET + 4);
+   875			entry = (((u64) hi) << 32) + lo;
+   876			if (last_entry && last_entry != entry) {
+   877				pr_err("IOMMU:%d should use the same dev table as others!\n",
+   878					iommu->index);
+   879				return false;
+   880			}
+   881			last_entry = entry;
+   882	
+   883			old_devtb_size = ((entry & ~PAGE_MASK) + 1) << 12;
+   884			if (old_devtb_size != dev_table_size) {
+   885				pr_err("The device table size of IOMMU:%d is not expected!\n",
+   886					iommu->index);
+   887				return false;
+   888			}
+   889		}
+   890	
+   891		old_devtb_phys = entry & PAGE_MASK;
+   892		/*
+   893		 *  When sme enable in the first kernel, old_devtb_phys includes the
+   894		 *  memory encryption mask(sme_me_mask), we must remove the memory
+   895		 *  encryption mask to obtain the true physical address in kdump mode.
+   896		 */
+   897		if (mem_encrypt_active() && is_kdump_kernel())
+   898			old_devtb_phys = __sme_clr(old_devtb_phys);
+   899		if (old_devtb_phys >= 0x100000000ULL) {
+   900			pr_err("The address of old device table is above 4G, not trustworthy!\n");
+   901			return false;
+   902		}
+   903		if (mem_encrypt_active() && is_kdump_kernel())
+ > 904			old_devtb = (void *)ioremap_encrypted(old_devtb_phys,
+   905							     dev_table_size);
+   906		else
+   907			old_devtb = memremap(old_devtb_phys,
+   908					    dev_table_size, MEMREMAP_WB);
+   909		if (!old_devtb)
+   910			return false;
+   911	
+   912		gfp_flag = GFP_KERNEL | __GFP_ZERO | GFP_DMA32;
+   913		old_dev_tbl_cpy = (void *)__get_free_pages(gfp_flag,
+   914					get_order(dev_table_size));
+   915		if (old_dev_tbl_cpy == NULL) {
+   916			pr_err("Failed to allocate memory for copying old device table!\n");
+   917			return false;
+   918		}
+   919	
+   920		for (devid = 0; devid <= amd_iommu_last_bdf; ++devid) {
+   921			old_dev_tbl_cpy[devid] = old_devtb[devid];
+   922			dom_id = old_devtb[devid].data[1] & DEV_DOMID_MASK;
+   923			dte_v = old_devtb[devid].data[0] & DTE_FLAG_V;
+   924	
+   925			if (dte_v && dom_id) {
+   926				old_dev_tbl_cpy[devid].data[0] = old_devtb[devid].data[0];
+   927				old_dev_tbl_cpy[devid].data[1] = old_devtb[devid].data[1];
+   928				__set_bit(dom_id, amd_iommu_pd_alloc_bitmap);
+   929				/* If gcr3 table existed, mask it out */
+   930				if (old_devtb[devid].data[0] & DTE_FLAG_GV) {
+   931					tmp = DTE_GCR3_VAL_B(~0ULL) << DTE_GCR3_SHIFT_B;
+   932					tmp |= DTE_GCR3_VAL_C(~0ULL) << DTE_GCR3_SHIFT_C;
+   933					old_dev_tbl_cpy[devid].data[1] &= ~tmp;
+   934					tmp = DTE_GCR3_VAL_A(~0ULL) << DTE_GCR3_SHIFT_A;
+   935					tmp |= DTE_FLAG_GV;
+   936					old_dev_tbl_cpy[devid].data[0] &= ~tmp;
+   937				}
+   938			}
+   939	
+   940			irq_v = old_devtb[devid].data[2] & DTE_IRQ_REMAP_ENABLE;
+   941			int_ctl = old_devtb[devid].data[2] & DTE_IRQ_REMAP_INTCTL_MASK;
+   942			int_tab_len = old_devtb[devid].data[2] & DTE_IRQ_TABLE_LEN_MASK;
+   943			if (irq_v && (int_ctl || int_tab_len)) {
+   944				if ((int_ctl != DTE_IRQ_REMAP_INTCTL) ||
+   945				    (int_tab_len != DTE_IRQ_TABLE_LEN)) {
+   946					pr_err("Wrong old irq remapping flag: %#x\n", devid);
+   947					return false;
+   948				}
+   949	
+   950			        old_dev_tbl_cpy[devid].data[2] = old_devtb[devid].data[2];
+   951			}
+   952		}
+   953		memunmap(old_devtb);
+   954	
+   955		return true;
+   956	}
+   957	
 
-The purpose of this variable isn't to store where a hypothetical-lowest-page of
-memory would be in the linear map. The kernel doesn't have a handy variable for
-this, because on-one needs to know.
-
-
-> I think reading the kernel code and finding 'memstart_addr' and
-> PHY_OFFSET as 0, one gets the notion 
-
-notion -> assumption based on the name
-
-It's just a name. Anyone reading this should grep for how the value is used.
-It's added/subtracted from addresses as part of phys_to_virt()/virt_to_phs(). It
-must be some kind of offset. What does it mean on its own? Probably nothing.
-
-
-> that the base of System RAM starts from 0,
-> which is incorrect in the above case as it starts from
-> 2MB as the 1st block is of the type EfiReservedMemType
-
-What will they assume if the value is negative?
-
-[...]
-
-> So, either we should have a uniform way of representing the virtual
-> base of the linear range
-
-What needs to know this? RAM will be somewhere between PAGE_OFFSET and the top
-of the address space. Anyone who wants to know where has a specific page in
-mind, phys_to_virt() or page_address() tell them where their page is.
-
-
-> or  we should rather look at removing the PAGE_OFFSET
-> usage from
-> the kernel (or atleast the confusing comment from 'memory.h')
-
-This?:
-| PAGE_OFFSET - the virtual address of the start of the linear map
-
-Nothing here says its the virtual address of any particular physical page. Its
-the start of the region of VA space that holds the 1:1 mapping of RAM. Its value
-is generated at compile time, we have no idea where RAM will be until we boot,
-how could this be the address of any particular page?
-
-
-> BTW adding 'p2v_offset' as an elf-note seems like a good idea. If this
-> seems suitable, I can try and spin patch(es) using this approach (both
-> for the kernel and user-space tools).
-
-You seem to be using this for user-space phys_to_virt() based on values found in
-/proc/iomem. This should give you what you want, and isolate your user-space
-from the kernel's unexpected naming of variables.
-
-I'd suggest a 64bit offset that is added to a physical address to get where in
-the linear map this page would be, if its mapped.
-
-
-Thanks,
-
-James
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
 _______________________________________________
 kexec mailing list
