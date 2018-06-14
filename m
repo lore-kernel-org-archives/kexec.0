@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-f66.google.com ([209.85.215.66])
+Received: from mail-lf0-f68.google.com ([209.85.215.68])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fTLfx-0006Qq-RK
- for kexec@lists.infradead.org; Thu, 14 Jun 2018 06:24:18 +0000
-Received: by mail-lf0-f66.google.com with SMTP id n15-v6so7532208lfn.10
- for <kexec@lists.infradead.org>; Wed, 13 Jun 2018 23:23:55 -0700 (PDT)
+ id 1fTN4u-0002q2-S4
+ for kexec@lists.infradead.org; Thu, 14 Jun 2018 07:53:59 +0000
+Received: by mail-lf0-f68.google.com with SMTP id u4-v6so7927224lff.3
+ for <kexec@lists.infradead.org>; Thu, 14 Jun 2018 00:53:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20180613101124.GB26280@arm.com>
+In-Reply-To: <3a05cd0e-466e-4fb6-a78a-4b363e21aaab@arm.com>
 References: <1528785361-24477-1-git-send-email-bhsharma@redhat.com>
  <CAKv+Gu8Hs+CArdkAWoBPbr_p-nq5+0oPwOPg0NsJDRMkE_bM9A@mail.gmail.com>
  <CACi5LpNdg=Enp66BybNNuj5tQOp3ggyX=tm_SVzr8v2qCRteDw@mail.gmail.com>
  <d801005a-5f7a-8fe4-a486-bc6443a406a3@arm.com>
  <CACi5LpOJ7Q7nbo9m_HGqr44+n_iEtreZt+Uxtf2PzcHSzTdKuA@mail.gmail.com>
- <20180613101124.GB26280@arm.com>
+ <3a05cd0e-466e-4fb6-a78a-4b363e21aaab@arm.com>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Thu, 14 Jun 2018 11:53:53 +0530
-Message-ID: <CACi5LpMV7_+tHH-OnMC1R59ZrhOGPXz5qy9MN2O7MVTmGnK33Q@mail.gmail.com>
+Date: Thu, 14 Jun 2018 13:23:44 +0530
+Message-ID: <CACi5LpMJnFthKUJGfMWgDyMTM65oTtOvsRGCtMDjWP32qDptbQ@mail.gmail.com>
 Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
  linear region
 List-Id: <kexec.lists.infradead.org>
@@ -30,171 +30,241 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kexec Mailing List <kexec@lists.infradead.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kexec Mailing List <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-Hi Will,
+Hello James,
 
-On Wed, Jun 13, 2018 at 3:41 PM, Will Deacon <will.deacon@arm.com> wrote:
-> On Wed, Jun 13, 2018 at 10:46:56AM +0530, Bhupesh Sharma wrote:
+Thanks for your inputs, please see my responses inline.
+
+On Wed, Jun 13, 2018 at 3:59 PM, James Morse <james.morse@arm.com> wrote:
+> Hi Bhupesh,
+>
+> On 13/06/18 06:16, Bhupesh Sharma wrote:
 >> On Tue, Jun 12, 2018 at 3:42 PM, James Morse <james.morse@arm.com> wrote:
->> > On 12/06/18 09:25, Bhupesh Sharma wrote:
->> >> On Tue, Jun 12, 2018 at 12:23 PM, Ard Biesheuvel
->> >> <ard.biesheuvel@linaro.org> wrote:
->> >>> On 12 June 2018 at 08:36, Bhupesh Sharma <bhsharma@redhat.com> wrote:
->> >>>> The start of the linear region map on a KASLR enabled ARM64 machine -
->> >>>> which supports a compatible EFI firmware (with EFI_RNG_PROTOCOL
->> >>>> support), is no longer correctly represented by the PAGE_OFFSET macro,
->> >>>> since it is defined as:
->> >>>>
->> >>>>     (UL(1) << (VA_BITS - 1)) + 1)
->> >
->> >>> PAGE_OFFSET is the VA of the start of the linear map. The linear map
->> >>> can be sparsely populated with actual memory, regardless of whether
->> >>> KASLR is in effect or not. The only difference in the presence of
->> >>> KASLR is that there may be such a hole at the beginning, but that does
->> >>> not mean the linear map has moved, or that the value of PAGE_OFFSET is
->> >>> now wrong.
->> >
->> >>>> So taking an example of a platform with VA_BITS=48, this gives a static
->> >>>> value of:
->> >>>> PAGE_OFFSET = 0xffff800000000000
->> >>>>
->> >>>> However, for the KASLR case, we use the 'memstart_offset_seed'
->> >>>> to randomize the linear region - since 'memstart_addr' indicates the
->> >>>> start of physical RAM, we randomize the same on basis
->> >>>> of 'memstart_offset_seed' value.
->> >>>>
->> >>>> As the PAGE_OFFSET value is used presently by several user space
->> >>>> tools (for e.g. makedumpfile and crash tools) to determine the start
->> >>>> of linear region and hence to read addresses (like PT_NOTE fields) from
->> >>>> '/proc/kcore' for the non-KASLR boot cases, so it would be better to
->> >>>> use 'memblock_start_of_DRAM()' value (converted to virtual) as
->> >>>> the start of linear region for the KASLR cases and default to
->> >>>> the PAGE_OFFSET value for non-KASLR cases to indicate the start of
->> >>>> linear region.
->> >
->> >>> Userland code that assumes that the linear map cannot have a hole at
->> >>> the beginning should be fixed.
->> >
->> >> That is a separate case (although that needs fixing as well via a
->> >> kernel patch probably as the user-space tools rely on '/proc/iomem'
->> >> contents to determine the first System RAM/reserved range).
->> >
->> > This is for kexec-tools generating the kdump vmcore ELF headers in user-space?
+>>> On 12/06/18 09:25, Bhupesh Sharma wrote:
+>>>> On Tue, Jun 12, 2018 at 12:23 PM, Ard Biesheuvel wrote:
+>>>>> Userland code that assumes that the linear map cannot have a hole at
+>>>>> the beginning should be fixed.
+>
+>>>> That is a separate case (although that needs fixing as well via a
+>>>> kernel patch probably as the user-space tools rely on '/proc/iomem'
+>>>> contents to determine the first System RAM/reserved range).
+>>>
+>>> This is for kexec-tools generating the kdump vmcore ELF headers in user-space?
 >>
 >> Yes, but again, I would like to reiterate that the case where I see a
 >> hole at the start of the System RAM range (as I listed above) is just
 >> a specific case, which probably deserves a separate patch. The current
 >> patch though is for a generic issue (please see more details below).
+>
+>
+>>>> # readelf -l vmcore
+>>>>
+>>>> ELF Header:
+>>>> ........................
+>>>>
+>>>> Program Headers:
+>>>>   Type           Offset             VirtAddr           PhysAddr
+>>>>          FileSiz            MemSiz              Flags  Align
+>>>> ..............................................................................................................................................................
+>>>>   LOAD        0x0000000076d40000 0xffff80017fe00000 0x0000000180000000
+>>>>                 0x0000001680000000 0x0000001680000000  RWE    0
+>>>>
+>>>> 3. So if we do a simple calculation:
+>>>>
+>>>> (VirtAddr + MemSiz) = 0xffff80017fe00000 + 0x0000001680000000 =
+>>>> 0xFFFF8017FFE00000 != 0xffff801800000000.
+>>>>
+>>>> which indicates that the end virtual memory nodes are not the same
+>>>> between vmlinux and vmcore.
+>>>
+>>> If I've followed this properly: the problem is that to generate the ELF headers
+>>> in the post-kdump vmcore, at kdump-load-time kexec-tools has to guess the
+>>> virtual addresses of the 'System RAM' regions it can see in /proc/iomem.
+>>>
+>>> The problem you are hitting is an invisible hole at the beginning of RAM,
+>>> meaning user-space's guess_phys_to_virt() is off by the size of this hole.
+>>>
+>>> Isn't KASLR a special case for this? You must have to correct for that after
+>>> kdump has happened, based on an elf-note in the vmcore. Can't we always do this?
 >>
->> >> 1. In that particular case (see [1]) the EFI firmware sets the first
->> >> EFI block as EfiReservedMemType:
->> >>
->> >> Region1: 0x000000000000-0x000000200000 [EfiReservedMemType]
->> >> Region2: 0x000000200000-0x00000021fffff [EfiRuntimeServiceData]
->> >>
->> >> Since EFI firmware won't return the "EfiReservedMemType" memory to
->> >> Linux kernel,
->> >
->> > (Its linux that makes this choice in
->> > drivers/firmware/efi/arm-init.c::is_usable_memory())
->> >
->> >
->> >> so the kernel can't get any info about the first mem
->> >> block, and kernel can only see region2 as below:
->> >>
->> >> efi: Processing EFI memory map:
->> >> efi:   0x000000200000-0x00000021ffff [Runtime Data       |RUN|  |  |
->> >> |  |  |  |   |WB|WT|WC|UC]
->> >>
->> >> # head -1 /proc/iomem
->> >> 00200000-0021ffff : reserved
->> >>
->> >> 2a. If we add debug prints to 'arch/arm64/mm/init.c' to print the
->> >> kernel Virtual map we can see that the memory node is set to:
->> >>
->> >> # dmesg | grep memory
->> >> ..........
->> >> memory  : 0xffff800000200000 - 0xffff801800000000
->> >>
->> >> 2b. Now if we use kexec-tools to obtain a crash vmcore we can see that
->> >> if we use 'readelf' to get the last program Header from vmcore (logs
->> >> below are for the non-kaslr case):
->> >>
->> >> # readelf -l vmcore
->> >>
->> >> ELF Header:
->> >> ........................
->> >>
->> >> Program Headers:
->> >>   Type           Offset             VirtAddr           PhysAddr
->> >>          FileSiz            MemSiz              Flags  Align
->> >> ..............................................................................................................................................................
->> >>   LOAD        0x0000000076d40000 0xffff80017fe00000 0x0000000180000000
->> >>                 0x0000001680000000 0x0000001680000000  RWE    0
->> >>
->> >> 3. So if we do a simple calculation:
->> >>
->> >> (VirtAddr + MemSiz) = 0xffff80017fe00000 + 0x0000001680000000 =
->> >> 0xFFFF8017FFE00000 != 0xffff801800000000.
->> >>
->> >> which indicates that the end virtual memory nodes are not the same
->> >> between vmlinux and vmcore.
->> >
->> > If I've followed this properly: the problem is that to generate the ELF headers
->> > in the post-kdump vmcore, at kdump-load-time kexec-tools has to guess the
->> > virtual addresses of the 'System RAM' regions it can see in /proc/iomem.
->> >
->> > The problem you are hitting is an invisible hole at the beginning of RAM,
->> > meaning user-space's guess_phys_to_virt() is off by the size of this hole.
->> >
->> > Isn't KASLR a special case for this? You must have to correct for that after
->> > kdump has happened, based on an elf-note in the vmcore. Can't we always do this?
->>
->> No, I hit this issue both for the KASLR and non-KASLR boot cases. We
->> can fix this either in kernel or user-space.
->>
+>> No, I hit this issue both for the KASLR and non-KASLR boot cases.
+>
+> Because in both cases there is a hole at the beginning of the linear-map. KASLR
+> is a special-case of this as the kernel adds a variable sized hole to do the
+> randomization.
+>
+> Surely treating this as one case makes your user-space code simpler.
+
+Ok.
+
 >> Fixing this in kernel space seems better to me as the definition of
+>
+> Is there a kernel bug? Changing the definitions of internal kernel variables for
+> the benefit of code digging in /proc/kcore|/dev/mem isn't going to fly.
+
+Indeed, I am not advocating to change the kernel space code just to
+suit the user-space tools. However in this particular case the
+'memstart_addr' and PHY_OFFSET value are computed as 0 which IMO is
+not the real representation of the start of System RAM as the 1st
+memory block available in Linux starts from 2MB [as confirmed by the
+'memblock_start_of_DRAM()' value of 0x200000] and indicated by
+'/proc/iomem':
+
+# head -1 /proc/iomem
+00200000-0021ffff : reserved
+
+I think reading the kernel code and finding 'memstart_addr' and
+PHY_OFFSET as 0, one gets the notion that the base of System RAM
+starts from 0, which is incorrect in the above case as it starts from
+2MB as the 1st block is of the type EfiReservedMemType
+
 >> 'memstart_addr' is that it indicates the start of the physical ram,
 >> but since in this case there is a hole at the start of the system ram
 >> visible in Linux (and thus to user-space), but 'memstart_addr' is
 >> still 0 which seems contradictory at the least. This causes PHY_OFFSET
 >> to be 0 as well, which is again contradictory.
 >
-> Contradictory to who?
+>
+>>>> This happens because the kexec-tools rely on 'proc/iomem' contents
+>>>> while 'memstart_addr' is computed as 0 by kernel (as value of
+>>>> memblock_start_of_DRAM() < ARM64_MEMSTART_ALIGN).
+>>>
+>>>> Returning back to this patch, this is a generic requirement where we
+>>>> need the linear region start/base addresses in user-space applications
+>>>> which is used to read addresses which lie in the linear region (for
+>>>> e.g. when we read /proc/kcore contents).
+>
+> [...]
+>
+>>> This patch adds a variable that nothing uses, its going to be removed. You can't
+>>> depend on reading this via /dev/mem.
+>>>
+>>> Could you add the information you need as an elf-note to the vmcore instead? You
+>>> must already pick these up to handle kaslr. (from memory, this is where the
+>>> kaslr-offset is described to user-space after we kdump).
+>
+>
+>> No you are mixing up the two cases (please see above), the issue which
+>> this patch fixes is for use cases where we don't have the vmcore
+>> available in case of 'live' debugging via makedumpfile and crash tools
+>> (we only have '/proc/kcore' or 'vmlinux' available in such cases). I
+>> detailed the use case in [1] better (in a reply to Ard), I will detail
+>> the use-case again below:
+>
+> Okay, so not kdump...
+>
+>
+>> One specific use case that I am working on at the moment is the
+>> makedumpfile '--mem-usage', which allows one to see the page numbers
+>> of current system (1st kernel) in different use (please see
+>> MAKEDUMPFILE(8) for more details).
+>
+> https://linux.die.net/man/8/makedumpfile :
+> | Name: makedumpfile - make a small dumpfile of kdump
+>
+> ... but now we are talking about kdump again ...
+>
+>
+>> Using this we can know how many pages are dumpable when different
+>> dump_level is specified when invoking the makedumpfile.
+>>
+>> Normally, makedumpfile analyses the contents of '/proc/kcore' (while
+>> excluding the crashkernel range), and then calculates the page number
+>> of different kind per vmcoreinfo.
+>
+> $ apt-get source makedumpfile
+> $ cd makedumpfile-1.5.3
+> $ grep -r "kcore" .
+> $
+>
+> I suspect there are two pieces of software with the same name here.
 
-I meant that the 'memstart_addr' and PHY_OFFSET value are computed as
-0 in the above particular case, which is not the real representation
-of the start of System RAM as the 1st memory block available in Linux
-starts from 2MB [as confirmed by the 'memblock_start_of_DRAM()' value
-of 0x200000] and indicated by '/proc/iomem':
+Here is the makedumpfile upstream git tree -
+git://git.code.sf.net/p/makedumpfile/code
 
-# head -1 /proc/iomem
-00200000-0021ffff : reserved
+$ grep -r "kcore" .
 
-> Userspace has no business messing around with this
-> stuff and I'm reluctant to make this an ABI by adding a symbol with a
-> special name. Why can't the various constants needed by these tools be
-> exported in the ELF headers for kcore/vmcore, or as a NOTE as James
-> suggests? That sounds a lot less fragile to me.
+./elf_info.c:int set_kcore_vmcoreinfo(uint64_t vmcoreinfo_addr,
+uint64_t vmcoreinfo_len)
+<..snip..>
+./makedumpfile.8:# makedumpfile \-f \-\-mem\-usage /proc/kcore
+<..snip..>
 
-But we already add the 'memstart_addr' variable to kallsyms in the
-kernel, don't we? And so user-space tools do use the same - so we
-already have a precedent available.
+>> This use case requires directly reading the '/proc/kcore' and the
+>> hence the PAGE_OFFSET value is used to determine the base address of
+>> the linear region, whose value is not static in case of KASLR boot.
+>
+> Eh? I thought PAGE_OFFSET was a compile-time constant, and it was PHYS_OFFSET
+> has a value other the aligned base of memory for KASLR.
 
-Again this patch was an attempt to start a conversation as my query
-towards determining the base of linear range by either:
+Indeed, I tried to capture the dilemma in [1], just to recap:
 
-- reading the 'memstart_addr' and backcomputing the start of linear range, or
-- adding a new variable (which this patch does), or
-- use other approaches
+'arch/arm64/include/asm/memory.h' defines PAGE_OFFSET as:
 
-did not see a conclusion (please see [1]).
+/*
+ * PAGE_OFFSET - the virtual address of the start of the linear map (top
+ *         (VA_BITS - 1))
+ */
+#define PAGE_OFFSET        (UL(0xffffffffffffffff) - \
+    (UL(1) << (VA_BITS - 1)) + 1)
+
+However, for the KASLR case, we set the 'memstart_offset_seed ' to
+use the 16-bits of the 'kaslr-seed' to randomize the linear region in
+'arch/arm64/kernel/kaslr.c' :
+
+u64 __init kaslr_early_init(u64 dt_phys)
+{
+<snip..>
+    /* use the top 16 bits to randomize the linear region */
+    memstart_offset_seed = seed >> 48;
+<snip..>
+}
+
+So, either we should have a uniform way of representing the virtual
+base of the linear range both in KASLR and non-KASLR boot cases (macro
+or variable?). or  we should rather look at removing the PAGE_OFFSET
+usage from
+the kernel (or atleast the confusing comment from 'memory.h') - again
+please see [1] for the suggested approaches (bottom part of the query)
+
+>
+>> Another use-case is where the crash-utility uses the PAGE_OFFSET value
+>> to perform a virtual-to-physical conversion for the address lying in
+>> the linear region:
+>
+> In all cases the problem you have is assuming the first 'System RAM' value in
+> /proc/iomem is the base of DRAM, which you can use a PHYS_OFFSET in your
+> user-space phys2virt() calculation.
+>
+> What information do you need to make this work?
+>
+> You can evidently read kernel variables, why can't you read memstart_addr and do:
+> | #define __phys_to_virt(x)                             \
+> |                       ((unsigned long)((x) - memstart_addr) | PAGE_OFFSET)
+>
+> based on the physical addresses in /proc/iomem, and PAGE_OFFSET pulled out of
+> the vmlinux.
+>
+> Reading memstart_addr is fragile, we might need to rename it
+> wednesday_memstart_addr. If user-space needs this value to work with
+> /proc/{kcore,vmcore} we should expose something like 'p2v_offset' as an elf-note
+> on those files. (looks like they both have elf-headers).
+
+Again I had suggested reading memstart_addr as one of the approaches
+in [1], but seems we couldn't reach a conclusion, so I sent out this
+approach to trigger another round of discussion.
+
+BTW adding 'p2v_offset' as an elf-note seems like a good idea. If this
+seems suitable, I can try and spin patch(es) using this approach (both
+for the kernel and user-space tools).
+
+Please share your views,
 
 [1] https://www.spinics.net/lists/arm-kernel/msg655933.html
 
-Regards,
+Thanks,
 Bhupesh
 
 _______________________________________________
