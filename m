@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from mail-he1eur01on070c.outbound.protection.outlook.com
+ ([2a01:111:f400:fe1e::70c]
+ helo=EUR01-HE1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fTOmW-0007wJ-Cl
- for kexec@lists.infradead.org; Thu, 14 Jun 2018 09:43:06 +0000
-From: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile tries to output infinite ETA
-Date: Thu, 14 Jun 2018 09:42:06 +0000
-Message-ID: <61D4E5D821F1674CB87C99F080A210BE011B6401@BPXM01GP.gisp.nec.co.jp>
-References: <CAPyQhPLctgUWK-56FL7-k_p0=68=8j_z8vE8M_0X5CkANw_pJg@mail.gmail.com>
- <CAPyQhP+juWLja=4jiCm017mw30x=XBiM5iXOF-63+xE0fY=JJA@mail.gmail.com>
-In-Reply-To: <CAPyQhP+juWLja=4jiCm017mw30x=XBiM5iXOF-63+xE0fY=JJA@mail.gmail.com>
-Content-Language: ja-JP
+ id 1fTSgM-0002qr-Tq
+ for kexec@lists.infradead.org; Thu, 14 Jun 2018 13:53:00 +0000
+Subject: Re: [RFC] fitImage support on ARM64
+References: <5e99ff9a-cc16-ba15-3391-909253046ae5@sigfox.com>
+ <CACi5LpM9E0OfCZaeMDUc_eC5uqM=0dBpZ1ouTVQcBrH+TK=WmA@mail.gmail.com>
+From: Arnaud Ferraris <arnaud.ferraris.external@sigfox.com>
+Message-ID: <fa0b5a48-0ec1-e7db-fe4b-856f020d80fa@sigfox.com>
+Date: Thu, 14 Jun 2018 15:52:40 +0200
 MIME-Version: 1.0
+In-Reply-To: <CACi5LpM9E0OfCZaeMDUc_eC5uqM=0dBpZ1ouTVQcBrH+TK=WmA@mail.gmail.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,109 +22,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Breen <michael.breen@mpstor.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Keiichi Nakamura <kei-nakamura@vt.jp.nec.com>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec mailing list <kexec@lists.infradead.org>
 
-Hi Michael,
-
-Thank you very much for your comment.
-Certainly makedumpfile can print an invalid value at the progress bar.
-Well, this problem was also argued in other mails, and Petr Tesarik posted the patch.
-I'll merge the v2 patch into v1.6.4.
-We are debugging V1.6.4 now and planning to release it within a month.
-
-http://lists.infradead.org/pipermail/kexec/2018-March/020139.html
-http://lists.infradead.org/pipermail/kexec/2018-April/020426.html
-http://lists.infradead.org/pipermail/kexec/2018-April/020436.html
-
-Thanks,
-Tachibana
-
-> -----Original Message-----
-> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Michael Breen
-> Sent: Wednesday, June 13, 2018 5:06 PM
-> To: kexec@lists.infradead.org
-> Subject: Re: [PATCH] makedumpfile tries to output infinite ETA
-> 
-> makedumpfile-1.6.3
-> 
-> At the beginning of writing the dumpfile, print_progress can attempt
-> to output a progress line like
-> 
-> Copying data                    : [  0.0 %] -  eta: -2147483648s
-> 
-> This happens because the ETA can evaluate as infinity when there has
-> not yet been any progress: the number it is trying to output is the
-> result of casting an infinite float to an int, which is undefined,
-> i.e., compiler-dependent. Where it has not been possible to calculate
-> a sensible ETA, no attempt should be made to output one.
-> 
-> More seriously in this case, combined with "eta: ", this length
-> exceeds the remaining characters of the buffer into which it is
-> writing (eta_msg).
-> 
-> This code executes even if the progress output is disabled, so there
-> is no workaround not involving a code change.
-> 
-> (While not an immediate issue, there are also some type discrepancies,
-> e.g., print_progress takes unsigned longs but is passed mdf_pfn_t
-> which is unsigned long long.)
-> 
-> A minimal, tested fix is:
-> 
-> --- makedumpfile-1.6.3.org/print_info.c    2018-01-26 01:30:25.000000000 +0000
-> +++ makedumpfile-1.6.3/print_info.c    2018-06-11 14:44:48.111182518 +0100
-> @@ -16,6 +16,7 @@
->  #include "print_info.h"
->  #include <time.h>
->  #include <string.h>
-> +#include <math.h>
-> 
->  #define PROGRESS_MAXLEN        "50"
-> 
-> @@ -395,7 +396,8 @@ print_progress(const char *msg, unsigned
->          calc_delta(start, &delta);
->          eta = delta.tv_sec + delta.tv_usec / 1e6;
->          eta = (100 - progress) * eta / progress;
-> -        eta_to_human_short(eta, eta_msg);
-> +        if (isfinite(eta))
-> +            eta_to_human_short(eta, eta_msg);
->      }
->      if (flag_ignore_r_char) {
->          PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c  %16s\n",
-> 
-> --
-> CONFIDENTIALITY
-> This e-mail message and any attachments thereto, is
-> intended only for use by the addressee(s) named herein and may contain
-> legally privileged and/or confidential information. If you are not the
-> intended recipient of this e-mail message, you are hereby notified that any
-> dissemination, distribution or copying of this e-mail message, and any
-> attachments thereto, is strictly prohibited. If you have received this
-> e-mail message in error, please immediately notify the sender and
-> permanently delete the original and any copies of this email and any prints
-> thereof.
-> ABSENT AN EXPRESS STATEMENT TO THE CONTRARY HEREINABOVE, THIS
-> E-MAIL IS NOT INTENDED AS A SUBSTITUTE FOR A WRITING. Notwithstanding the
-> Uniform Electronic Transactions Act or the applicability of any other law
-> of similar substance and effect, absent an express statement to the
-> contrary hereinabove, this e-mail message its contents, and any attachments
-> hereto are not intended to represent an offer or acceptance to enter into a
-> contract and are not otherwise intended to bind the sender, MPSTOR, or any
-> other person or entity.
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gQmh1cGVzaCwKClRoYW5rcyBmb3IgeW91ciBhbnN3ZXIuCgpPbiAxNC8wNi8yMDE4IDA3
+OjUwLCBCaHVwZXNoIFNoYXJtYSB3cm90ZToKPiBGSVQgaXMgYSB1LWJvb3QgY29uc3RydWN0IC0g
+c28gb25lIHF1ZXN0aW9uIHRvIHVuZGVyc3RhbmQgdGhlCj4gYmFja2dyb3VuZCBiZXR0ZXIgLSBh
+cmUgeW91IHVzaW5nIHUtYm9vdCBib290bG9hZGVyIHRvIGJvb3QgdGhlIExpbnV4Cj4ga2VybmVs
+IG9uIHlvdXIgYXJtNjQgcGxhdGZvcm1zPwpXZSBhcmUgaW5kZWVkIHVzaW5nIHUtYm9vdCAodGhp
+cyBpcyBhIE1hcnZlbGwgQXJtYWRhIDM3MDAtYmFzZWQgYm9hcmQpLgoKPiBJZiB5ZXMsIGNhbiB5
+b3UgcGxlYXNlIGNvbmZpcm0gdGhhdCBpdCBpcyBub3QgYSBwcm9kdWN0IHRhcmdldGluZwo+IHNl
+cnZlciBtYXJrZXRzPwpJdCBpcyBub3QsIGFjdHVhbGx5IHdlIGFyZSBidWlsZGluZyBhbiBJb1Qg
+Z2F0ZXdheS4KCj4gRm9yIHRoZSBub3JtYWwga2V4ZWMgLXAgb3BlcmF0aW9uIChpLmUuIG5vdCB0
+aGUga2V4ZWMgZmlsZV9sb2FkCj4gb3BlcmF0aW9uKSwgd2UgcmVseSBvbiBwYXNzaW5nIHRoZSBk
+ZXZpY2UgdHJlZSB0byB0aGUgY3Jhc2hrZXJuZWwgdmlhCj4gZHRiPSBvcHRpb24gKHdoaWNoIGlz
+IGRvbmUgYnkga2V4ZWMtdG9vbHMpLCBzbyBob3cgZG8geW91IHBsYW4gdG8KPiBoYW5kbGUgdGhl
+IHNhbWU/CkkgYWRkZWQgMiBmaWVsZHMgdG8gdGhlIGtleGVjX2luZm8gc3RydWN0dXJlIGZvciB0
+aGUgZHRiLCBhbmQgYW5vdGhlciAyIApmb3IgdGhlIGluaXRyZDoKCiDCoMKgwqAgY2hhciAqaW5p
+dHJkOwogwqDCoMKgIG9mZl90IGluaXRyZF9zaXplOwogwqDCoMKgIGNoYXIgKmR0YjsKIMKgwqDC
+oCBvZmZfdCBkdGJfc2l6ZTsKCldoaWxlIHBhcnNpbmcgdGhlIEZJVCBpbWFnZSwgSSBqdXN0IGZp
+bGwgdGhlc2UgZmllbGRzIHdpdGggdGhlIHJpZ2h0IApkYXRhIHBvaW50ZXJzICYgc2l6ZSwgYW5k
+IGZvciBhcm02NCB0aGVzZSBhcmUgdG8gYmUgdXNlZCB3aXRoaW4gdGhlIAphcm02NF9sb2FkX290
+aGVyX3NlZ21lbnRzIGZ1bmN0aW9uIGluIGtleGVjLWFybTY0LmM6CgogwqDCoMKgwqAgaWYgKGFy
+bTY0X29wdHMuZHRiKSB7CiDCoMKgwqDCoCDCoMKgwqAgZHRiLm5hbWUgPSAiZHRiX3VzZXIiOwog
+wqDCoMKgwqAgwqDCoMKgIGR0Yi5idWYgPSBzbHVycF9maWxlKGFybTY0X29wdHMuZHRiLCAmZHRi
+LnNpemUpOworwqDCoMKgIH0gZWxzZSBpZiAoaW5mby0+ZHRiKSB7CivCoMKgwqAgwqDCoMKgIGR0
+Yi5uYW1lID0gImR0Yl9maXQiOworwqDCoMKgIMKgwqDCoCBkdGIuYnVmID0gaW5mby0+ZHRiOwor
+wqDCoMKgIMKgwqDCoCBkdGIuc2l6ZSA9IGluZm8tPmR0Yl9zaXplOwogwqDCoMKgwqAgfSBlbHNl
+IHsKIMKgwqDCoMKgIMKgwqDCoCByZXN1bHQgPSByZWFkXzFzdF9kdGIoJmR0Yik7CgpTYW1lIGtp
+bmQgb2YgcHJvY2Vzc2luZyBpcyB1c2VkIGZvciB0aGUgaW5pdHJkLgoKRm9yIHRoaXMgYXJjaGl0
+ZWN0dXJlIGF0IGxlYXN0LCBGSVQgaW1hZ2Ugc3VwcG9ydCBpcyBvbmx5IGEgZmV3IGxpbmVzIG9m
+IAphcmNoLXNwZWNpZmljIGNvZGUgOyB0aGUgYmlnIHBhcnQgKEZJVCBpbWFnZSBwYXJzaW5nIGFu
+ZCBiaW5hcnkgYmxvYnMgCmV4dHJhY3Rpb24pIGNhbiBiZSBzaGFyZWQsIGp1c3QgbGlrZSB0aGUg
+Y29kZSBmb3IgdUltYWdlIHN1cHBvcnQgaXMuCgo+IElmIHdlIG5lZWQgdG8gYnJpbmcgb3V0IHRo
+ZSBkdGIgZnJvbSB0aGUgRklUIGltYWdlIHRvIHN1cHBvcnQgdGhlCj4gY3VycmVudCBkZXNpZ24s
+IGRvIHdlIHJlYWxseSByZXF1aXJlIHRoZSBwaWVjZW1lYWwgRklUIGltYWdlIHN1cHBvcnQKPiBp
+biBrZXhlYy10b29scz8KSXQgZG9lc24ndCBsb29rIGxpa2UgYSBodWdlIHBpZWNlIG9mIGRldiB0
+byBtZSwgYWN0dWFsbHkgSSBhbHJlYWR5IGhhdmUgCmEgd29ya2luZyBpbXBsZW1lbnRhdGlvbiAo
+YSBiYXNpYyBvbmUsIG9ubHkgZXh0cmFjdGluZyB0aGUgCmtlcm5lbC9kdGIvaW5pdHJkIGJpbmFy
+eSBibG9icyBmcm9tIHRoZSBGSVQgaW1hZ2UgYW5kIGZlZWRpbmcgdGhlbSB0byAKa2V4ZWNfbG9h
+ZCwgd2l0aCBubyBoYXNoIG9yIHNpZ25hdHVyZSBjaGVja2luZykgdXNpbmcgdGhlIGxpYmZkdCAK
+Y3VycmVudGx5IGluY2x1ZGVkIGluIGtleGVjLXRvb2xzLgoKUmVnYXJkcywKQXJuYXVkCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
+IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
