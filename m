@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 2/3] arm64: acpi,efi: fix alignment fault in accessing
- ACPI tables at kdump
-References: <20180615075623.13454-1-takahiro.akashi@linaro.org>
- <20180615075623.13454-3-takahiro.akashi@linaro.org>
-From: James Morse <james.morse@arm.com>
-Message-ID: <026a4d23-ac91-ed35-d711-c55882242037@arm.com>
-Date: Fri, 15 Jun 2018 17:30:08 +0100
+Date: Fri, 15 Jun 2018 17:52:26 +0100
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
+ linear region
+Message-ID: <20180615165225.GD2202@arm.com>
+References: <1528785361-24477-1-git-send-email-bhsharma@redhat.com>
+ <CAKv+Gu8Hs+CArdkAWoBPbr_p-nq5+0oPwOPg0NsJDRMkE_bM9A@mail.gmail.com>
+ <CACi5LpNdg=Enp66BybNNuj5tQOp3ggyX=tm_SVzr8v2qCRteDw@mail.gmail.com>
+ <d801005a-5f7a-8fe4-a486-bc6443a406a3@arm.com>
+ <CACi5LpOJ7Q7nbo9m_HGqr44+n_iEtreZt+Uxtf2PzcHSzTdKuA@mail.gmail.com>
+ <20180613101124.GB26280@arm.com>
+ <CACi5LpMV7_+tHH-OnMC1R59ZrhOGPXz5qy9MN2O7MVTmGnK33Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20180615075623.13454-3-takahiro.akashi@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CACi5LpMV7_+tHH-OnMC1R59ZrhOGPXz5qy9MN2O7MVTmGnK33Q@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,209 +26,91 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, al.stone@linaro.org, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, tbaicar@codeaurora.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, hanjun.guo@linaro.org, sudeep.holla@arm.com, akpm@linux-foundation.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kexec Mailing List <kexec@lists.infradead.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-Hi Akashi,
+Hi Bhupesh,
 
-On 15/06/18 08:56, AKASHI Takahiro wrote:
-> This is a fix against the issue that crash dump kernel may hang up
-> during booting, which can happen on any ACPI-based system with "ACPI
-> Reclaim Memory."
+On Thu, Jun 14, 2018 at 11:53:53AM +0530, Bhupesh Sharma wrote:
+> On Wed, Jun 13, 2018 at 3:41 PM, Will Deacon <will.deacon@arm.com> wrote:
+> > On Wed, Jun 13, 2018 at 10:46:56AM +0530, Bhupesh Sharma wrote:
+> >> On Tue, Jun 12, 2018 at 3:42 PM, James Morse <james.morse@arm.com> wrote:
+> >> > On 12/06/18 09:25, Bhupesh Sharma wrote:
+> >> >> 2b. Now if we use kexec-tools to obtain a crash vmcore we can see that
+> >> >> if we use 'readelf' to get the last program Header from vmcore (logs
+> >> >> below are for the non-kaslr case):
+> >> >>
+> >> >> # readelf -l vmcore
+> >> >>
+> >> >> ELF Header:
+> >> >> ........................
+> >> >>
+> >> >> Program Headers:
+> >> >>   Type           Offset             VirtAddr           PhysAddr
+> >> >>          FileSiz            MemSiz              Flags  Align
+> >> >> ..............................................................................................................................................................
+> >> >>   LOAD        0x0000000076d40000 0xffff80017fe00000 0x0000000180000000
+> >> >>                 0x0000001680000000 0x0000001680000000  RWE    0
+> >> >>
+> >> >> 3. So if we do a simple calculation:
+> >> >>
+> >> >> (VirtAddr + MemSiz) = 0xffff80017fe00000 + 0x0000001680000000 =
+> >> >> 0xFFFF8017FFE00000 != 0xffff801800000000.
+> >> >>
+> >> >> which indicates that the end virtual memory nodes are not the same
+> >> >> between vmlinux and vmcore.
+> >> >
+> >> > If I've followed this properly: the problem is that to generate the ELF headers
+> >> > in the post-kdump vmcore, at kdump-load-time kexec-tools has to guess the
+> >> > virtual addresses of the 'System RAM' regions it can see in /proc/iomem.
+> >> >
+> >> > The problem you are hitting is an invisible hole at the beginning of RAM,
+> >> > meaning user-space's guess_phys_to_virt() is off by the size of this hole.
+> >> >
+> >> > Isn't KASLR a special case for this? You must have to correct for that after
+> >> > kdump has happened, based on an elf-note in the vmcore. Can't we always do this?
+> >>
+> >> No, I hit this issue both for the KASLR and non-KASLR boot cases. We
+> >> can fix this either in kernel or user-space.
+> >>
+> >> Fixing this in kernel space seems better to me as the definition of
+> >> 'memstart_addr' is that it indicates the start of the physical ram,
+> >> but since in this case there is a hole at the start of the system ram
+> >> visible in Linux (and thus to user-space), but 'memstart_addr' is
+> >> still 0 which seems contradictory at the least. This causes PHY_OFFSET
+> >> to be 0 as well, which is again contradictory.
+> >
+> > Contradictory to who?
 > 
-> (kernel messages after panic kicked off kdump)
-> 	   (snip...)
-> 	Bye!
-> 	   (snip...)
-> 	ACPI: Core revision 20170728
-> 	pud=000000002e7d0003, *pmd=000000002e7c0003, *pte=00e8000039710707
-> 	Internal error: Oops: 96000021 [#1] SMP
-> 	Modules linked in:
-> 	CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.14.0-rc6 #1
-> 	task: ffff000008d05180 task.stack: ffff000008cc0000
-> 	PC is at acpi_ns_lookup+0x25c/0x3c0
-> 	LR is at acpi_ds_load1_begin_op+0xa4/0x294
-> 	   (snip...)
-> 	Process swapper/0 (pid: 0, stack limit = 0xffff000008cc0000)
-> 	Call trace:
-> 	   (snip...)
-> 	[<ffff0000084a6764>] acpi_ns_lookup+0x25c/0x3c0
-> 	[<ffff00000849b4f8>] acpi_ds_load1_begin_op+0xa4/0x294
-> 	[<ffff0000084ad4ac>] acpi_ps_build_named_op+0xc4/0x198
-> 	[<ffff0000084ad6cc>] acpi_ps_create_op+0x14c/0x270
-> 	[<ffff0000084acfa8>] acpi_ps_parse_loop+0x188/0x5c8
-> 	[<ffff0000084ae048>] acpi_ps_parse_aml+0xb0/0x2b8
-> 	[<ffff0000084a8e10>] acpi_ns_one_complete_parse+0x144/0x184
-> 	[<ffff0000084a8e98>] acpi_ns_parse_table+0x48/0x68
-> 	[<ffff0000084a82cc>] acpi_ns_load_table+0x4c/0xdc
-> 	[<ffff0000084b32f8>] acpi_tb_load_namespace+0xe4/0x264
-> 	[<ffff000008baf9b4>] acpi_load_tables+0x48/0xc0
-> 	[<ffff000008badc20>] acpi_early_init+0x9c/0xd0
-> 	[<ffff000008b70d50>] start_kernel+0x3b4/0x43c
-> 	Code: b9008fb9 2a000318 36380054 32190318 (b94002c0)
-> 	---[ end trace c46ed37f9651c58e ]---
-> 	Kernel panic - not syncing: Fatal exception
-> 	Rebooting in 10 seconds..
+> I meant that the 'memstart_addr' and PHY_OFFSET value are computed as
+> 0 in the above particular case, which is not the real representation
+> of the start of System RAM as the 1st memory block available in Linux
+> starts from 2MB [as confirmed by the 'memblock_start_of_DRAM()' value
+> of 0x200000] and indicated by '/proc/iomem':
 > 
-> (diagnosis)
-> * This fault is a data abort, alignment fault (ESR=0x96000021)
->   during reading out ACPI table.
-> * Initial ACPI tables are normally stored in system ram and marked as
->   "ACPI Reclaim memory" by the firmware.
-> * After the commit f56ab9a5b73c ("efi/arm: Don't mark ACPI reclaim
->   memory as MEMBLOCK_NOMAP"), those regions are differently handled
->   as they are "memblock-reserved", without NOMAP bit.
-> * So they are now excluded from device tree's "usable-memory-range"
->   which kexec-tools determines based on a current view of /proc/iomem.
-> * When crash dump kernel boots up, it tries to accesses ACPI tables by
->   mapping them with ioremap(), not ioremap_cache(), in acpi_os_ioremap()
->   since they are no longer part of mapped system ram.
-> * Given that ACPI accessor/helper functions are compiled in without
->   unaligned access support (ACPI_MISALIGNMENT_NOT_SUPPORTED),
->   any unaligned access to ACPI tables can cause a fatal panic.
+> # head -1 /proc/iomem
+> 00200000-0021ffff : reserved
+
+Who said it's supposed to be the "real representation of the start of System
+RAM"? The kernel is fine with this being 0 in the case you describe. How
+about we rename the variable to 'memstart_addr_sometimes_zero'? Does that
+help?
+
+> > Userspace has no business messing around with this
+> > stuff and I'm reluctant to make this an ABI by adding a symbol with a
+> > special name. Why can't the various constants needed by these tools be
+> > exported in the ELF headers for kcore/vmcore, or as a NOTE as James
+> > suggests? That sounds a lot less fragile to me.
 > 
-> With this patch, acpi_os_ioremap() always honors memory attribute
-> information provided by the firmware (EFI) and retaining cacheability
-> allows the kernel safe access to ACPI tables.
+> But we already add the 'memstart_addr' variable to kallsyms in the
+> kernel, don't we? And so user-space tools do use the same - so we
+> already have a precedent available.
 
+Whoa, whoa -- hold up! The implication here is that variables exposed via
+kallsyms are ABI. That's simply not true, otherwise we'd be breaking the
+ABI every kernel release.
 
-> Please note that arm_enable_runtime_services() is now renamed to
-> efi_enter_virtual_mode() due to the similarity to x86's.
-
-Just a rename?:
->  drivers/firmware/efi/arm-runtime.c | 27 ++++++++++++---------------
-
-
-
-> diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
-> index 32f465a80e4e..d53c95f4e1a9 100644
-> --- a/arch/arm64/include/asm/acpi.h
-> +++ b/arch/arm64/include/asm/acpi.h
-> @@ -29,18 +31,22 @@
->  
->  /* Basic configuration for ACPI */
->  #ifdef	CONFIG_ACPI
-> +pgprot_t __acpi_get_mem_attribute(phys_addr_t addr);
-> +
->  /* ACPI table mapping after acpi_permanent_mmap is set */
->  static inline void __iomem *acpi_os_ioremap(acpi_physical_address phys,
->  					    acpi_size size)
->  {
-> +	/* For normal memory we already have a cacheable mapping. */
-> +	if (memblock_is_map_memory(phys))
-> +		return (void __iomem *)__phys_to_virt(phys);
-
->  	/*
-> -	 * EFI's reserve_regions() call adds memory with the WB attribute
-> -	 * to memblock via early_init_dt_add_memory_arch().
-> +	 * We should still honor the memory's attribute here because
-> +	 * crash dump kernel possibly excludes some ACPI (reclaim)
-> +	 * regions from memblock list.
->  	 */
-
-(Even without kdump we would still need this. Regions ACPI wants mapped may not
-be covered by the linear map. In this case we need to use the attributes
-firmware described in the UEFI memory map. Kdump exacerbates this by
-artificially reducing the range of the linear map.)
-
-
-> -	if (!memblock_is_memory(phys))
-> -		return ioremap(phys, size);
-> -
-> -	return ioremap_cache(phys, size);
-> +	return __ioremap(phys, size, __acpi_get_mem_attribute(phys));
->  }
-
-
-
-> diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/arm-runtime.c
-> index 5889cbea60b8..566ef0a9edb5 100644
-> --- a/drivers/firmware/efi/arm-runtime.c
-> +++ b/drivers/firmware/efi/arm-runtime.c
-> @@ -106,46 +106,43 @@ static bool __init efi_virtmap_init(void)
->   * non-early mapping of the UEFI system table and virtual mappings for all
->   * EFI_MEMORY_RUNTIME regions.
->   */
-> -static int __init arm_enable_runtime_services(void)
-> +void __init efi_enter_virtual_mode(void)
->  {
->  	u64 mapsize;
->  
->  	if (!efi_enabled(EFI_BOOT)) {
->  		pr_info("EFI services will not be available.\n");
-> -		return 0;
-> +		return;
-> +	}
-> +
-> +	mapsize = efi.memmap.desc_size * efi.memmap.nr_map;
-> +
-> +	if (efi_memmap_init_late(efi.memmap.phys_map, mapsize)) {
-> +		pr_err("Failed to remap EFI memory map\n");
-> +		return;
->  	}
->  
->  	if (efi_runtime_disabled()) {
->  		pr_info("EFI runtime services will be disabled.\n");
-> -		return 0;
-> +		return;
->  	}
->  
->  	if (efi_enabled(EFI_RUNTIME_SERVICES)) {
->  		pr_info("EFI runtime services access via paravirt.\n");
-> -		return 0;
-> +		return;
->  	}
->  
->  	pr_info("Remapping and enabling EFI services.\n");
->  
-> -	mapsize = efi.memmap.desc_size * efi.memmap.nr_map;
-> -
-> -	if (efi_memmap_init_late(efi.memmap.phys_map, mapsize)) {
-> -		pr_err("Failed to remap EFI memory map\n");
-> -		return -ENOMEM;
-> -	}
-> -
->  	if (!efi_virtmap_init()) {
->  		pr_err("UEFI virtual mapping missing or invalid -- runtime services will not be available\n");
-> -		return -ENOMEM;
-> +		return;
->  	}
->  
->  	/* Set up runtime services function pointers */
->  	efi_native_runtime_setup();
->  	set_bit(EFI_RUNTIME_SERVICES, &efi.flags);
-> -
-> -	return 0;
->  }
-
-Please have the drivers/firmware/efi/arm-runtime.c changes in a separate patch
-(maybe combine it with patch 3). The 'efi/arm: ' prefix is more likely to catch
-the maintainers attention.
-
-I think this is what Ard meant by:
-| Could you please move the changes to this file and init/main.c into a
-| separate patch?
-
-https://patchwork.kernel.org/patch/10361761/
-
-
-> -early_initcall(arm_enable_runtime_services);
-
-With just this patch, surely nothing ever calls arm_enable_runtime_services(),
-and now acpi_os_ioremap() will return device memory for anything that isn't part
-of the linear region. (This breaks RAS).
-
-This will make it difficult to bisect through for any RAS or
-efi-runtime-services issue. Its easily fixed: please put the efi+init changes in
-a patch before the acpi_os_ioremap() changes.
-
-
-Otherwise, looks good to me!
-
-
-Thanks,
-
-James
+Will
 
 _______________________________________________
 kexec mailing list
