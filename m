@@ -1,14 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mail-pg0-x243.google.com ([2607:f8b0:400e:c05::243])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fU6Yj-0005RY-5o
- for kexec@lists.infradead.org; Sat, 16 Jun 2018 08:27:46 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 4/4 V3] Help to dump the old memory encrypted into vmcore file
-Date: Sat, 16 Jun 2018 16:27:14 +0800
-Message-Id: <20180616082714.32035-5-lijiang@redhat.com>
-In-Reply-To: <20180616082714.32035-1-lijiang@redhat.com>
-References: <20180616082714.32035-1-lijiang@redhat.com>
+ id 1fUn9h-0002z8-00
+ for kexec@lists.infradead.org; Mon, 18 Jun 2018 05:56:46 +0000
+Received: by mail-pg0-x243.google.com with SMTP id l65-v6so7006377pgl.8
+ for <kexec@lists.infradead.org>; Sun, 17 Jun 2018 22:56:34 -0700 (PDT)
+Date: Mon, 18 Jun 2018 14:57:12 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH 0/3] arm64: kexec,kdump: fix boot failures on acpi-only
+ system
+Message-ID: <20180618055711.GE23681@linaro.org>
+References: <20180615075623.13454-1-takahiro.akashi@linaro.org>
+ <81a9a385-3b9f-113d-96f0-379be74c19f0@arm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <81a9a385-3b9f-113d-96f0-379be74c19f0@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,201 +23,85 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: thomas.lendacky@amd.com, iommu@lists.linux-foundation.org, dyoung@redhat.com, kexec@lists.infradead.org
+To: James Morse <james.morse@arm.com>
+Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, al.stone@linaro.org, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, tbaicar@codeaurora.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, hanjun.guo@linaro.org, sudeep.holla@arm.com, akpm@linux-foundation.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-In kdump mode, we need to dump the old memory into vmcore file,
-if SME is enabled in the first kernel, we must remap the old
-memory in encrypted manner, which will be automatically decrypted
-when we read from DRAM. It helps to parse the vmcore for some tools.
+James,
 
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
-Some changes:
-1. add a new file and modify Makefile.
-2. remove some code in sev_active().
+Thank you for follow-up explanation.
+I have nothing to add :)
 
- arch/x86/kernel/Makefile             |  1 +
- arch/x86/kernel/crash_dump_encrypt.c | 53 ++++++++++++++++++++++++++++++++++++
- fs/proc/vmcore.c                     | 20 ++++++++++----
- include/linux/crash_dump.h           | 11 ++++++++
- 4 files changed, 79 insertions(+), 6 deletions(-)
- create mode 100644 arch/x86/kernel/crash_dump_encrypt.c
+-Takahiro AKASHI
 
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 02d6f5c..afb5bad 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -96,6 +96,7 @@ obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec_$(BITS).o
- obj-$(CONFIG_KEXEC_CORE)	+= relocate_kernel_$(BITS).o crash.o
- obj-$(CONFIG_KEXEC_FILE)	+= kexec-bzimage64.o
- obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
-+obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= crash_dump_encrypt.o
- obj-y				+= kprobes/
- obj-$(CONFIG_MODULES)		+= module.o
- obj-$(CONFIG_DOUBLEFAULT)	+= doublefault.o
-diff --git a/arch/x86/kernel/crash_dump_encrypt.c b/arch/x86/kernel/crash_dump_encrypt.c
-new file mode 100644
-index 0000000..e44ef33
---- /dev/null
-+++ b/arch/x86/kernel/crash_dump_encrypt.c
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *	Memory preserving reboot related code.
-+ *
-+ *	Created by: Lianbo Jiang (lijiang@redhat.com)
-+ *	Copyright (C) RedHat Corporation, 2018. All rights reserved
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/crash_dump.h>
-+#include <linux/uaccess.h>
-+#include <linux/io.h>
-+
-+/**
-+ * copy_oldmem_page_encrypted - copy one page from "oldmem encrypted"
-+ * @pfn: page frame number to be copied
-+ * @buf: target memory address for the copy; this can be in kernel address
-+ *	space or user address space (see @userbuf)
-+ * @csize: number of bytes to copy
-+ * @offset: offset in bytes into the page (based on pfn) to begin the copy
-+ * @userbuf: if set, @buf is in user address space, use copy_to_user(),
-+ *	otherwise @buf is in kernel address space, use memcpy().
-+ *
-+ * Copy a page from "oldmem encrypted". For this page, there is no pte
-+ * mapped in the current kernel. We stitch up a pte, similar to
-+ * kmap_atomic.
-+ */
-+
-+ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
-+		size_t csize, unsigned long offset, int userbuf)
-+{
-+	void  *vaddr;
-+
-+	if (!csize)
-+		return 0;
-+
-+	vaddr = (__force void *)ioremap_encrypted(pfn << PAGE_SHIFT,
-+						  PAGE_SIZE);
-+	if (!vaddr)
-+		return -ENOMEM;
-+
-+	if (userbuf) {
-+		if (copy_to_user((void __user *)buf, vaddr + offset, csize)) {
-+			iounmap((void __iomem *)vaddr);
-+			return -EFAULT;
-+		}
-+	} else
-+		memcpy(buf, vaddr + offset, csize);
-+
-+	set_iounmap_nonlazy();
-+	iounmap((void __iomem *)vaddr);
-+	return csize;
-+}
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index a45f0af..5200266 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -25,6 +25,8 @@
- #include <linux/uaccess.h>
- #include <asm/io.h>
- #include "internal.h"
-+#include <linux/mem_encrypt.h>
-+#include <asm/pgtable.h>
- 
- /* List representing chunks of contiguous memory areas and their offsets in
-  * vmcore file.
-@@ -86,7 +88,8 @@ static int pfn_is_ram(unsigned long pfn)
- 
- /* Reads a page from the oldmem device from given offset. */
- static ssize_t read_from_oldmem(char *buf, size_t count,
--				u64 *ppos, int userbuf)
-+				u64 *ppos, int userbuf,
-+				bool encrypted)
- {
- 	unsigned long pfn, offset;
- 	size_t nr_bytes;
-@@ -108,8 +111,11 @@ static ssize_t read_from_oldmem(char *buf, size_t count,
- 		if (pfn_is_ram(pfn) == 0)
- 			memset(buf, 0, nr_bytes);
- 		else {
--			tmp = copy_oldmem_page(pfn, buf, nr_bytes,
--						offset, userbuf);
-+			tmp = encrypted ? copy_oldmem_page_encrypted(pfn,
-+					    buf, nr_bytes, offset, userbuf)
-+					: copy_oldmem_page(pfn, buf, nr_bytes,
-+							   offset, userbuf);
-+
- 			if (tmp < 0)
- 				return tmp;
- 		}
-@@ -143,7 +149,7 @@ void __weak elfcorehdr_free(unsigned long long addr)
-  */
- ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0);
-+	return read_from_oldmem(buf, count, ppos, 0, false);
- }
- 
- /*
-@@ -151,7 +157,7 @@ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-  */
- ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0);
-+	return read_from_oldmem(buf, count, ppos, 0, sme_active());
- }
- 
- /*
-@@ -161,6 +167,7 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
- 				  unsigned long from, unsigned long pfn,
- 				  unsigned long size, pgprot_t prot)
- {
-+	prot = pgprot_encrypted(prot);
- 	return remap_pfn_range(vma, from, pfn, size, prot);
- }
- 
-@@ -235,7 +242,8 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
- 					    m->offset + m->size - *fpos,
- 					    buflen);
- 			start = m->paddr + *fpos - m->offset;
--			tmp = read_from_oldmem(buffer, tsz, &start, userbuf);
-+			tmp = read_from_oldmem(buffer, tsz, &start, userbuf,
-+						sme_active());
- 			if (tmp < 0)
- 				return tmp;
- 			buflen -= tsz;
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index f7ac2aa..f3414ff 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -25,6 +25,17 @@ extern int remap_oldmem_pfn_range(struct vm_area_struct *vma,
- 
- extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
- 						unsigned long, int);
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+extern ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
-+					   size_t csize, unsigned long offset,
-+					   int userbuf);
-+#else
-+static inline ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
-+					size_t csize, unsigned long offset,
-+					int userbuf) {
-+	return csize;
-+}
-+#endif
- void vmcore_cleanup(void);
- 
- /* Architecture code defines this if there are other possible ELF
--- 
-2.9.5
-
+On Fri, Jun 15, 2018 at 05:29:32PM +0100, James Morse wrote:
+> Hi Akashi,
+> 
+> Thanks for putting this together,
+> 
+> On 15/06/18 08:56, AKASHI Takahiro wrote:
+> > This patch series is a set of bug fixes to address kexec/kdump
+> > failures which are sometimes observed on ACPI-only system and reported
+> > in LAK-ML before.
+> > 
+> > In short, the phenomena are:
+> > 1. kexec'ed kernel can fail to boot because some ACPI table is corrupted
+> >    by a new kernel (or other data) being loaded into System RAM. Currently
+> >    kexec may possibly allocate space ignoring such "reserved" regions.
+> >    We will see no messages after "Bye!"
+> > 
+> > 2. crash dump (kdump) kernel can fail to boot and get into panic due to
+> >    an alignment fault when accessing ACPI tables. This can happen because
+> >    those tables are not always properly aligned while they are mapped
+> >    non-cacheable (ioremap'ed) as they are not recognized as part of System
+> >    RAM under the current implementation.
+> > 
+> > After discussing several possibilities to address those issues,
+> > the agreed approach, in my understanding, is
+> > * to add resource entries for every "reserved", i.e. memblock_reserve(),
+> >   regions to /proc/iomem.
+> >   (NOMAP regions, also marked as "reserved," remains at top-level for
+> >   backward compatibility.)
+> 
+> This means user-space can tell the difference between reserved-system-ram and
+> reserved-address-space.
+> 
+> 
+> > * For case (1), user space (kexec-tools) should rule out such regions
+> >   in searching for free space for loaded data.
+> 
+> ... but doesn't today, because it fails to account for second-level entries.
+> We've always had second-level entries, so this is a user-space bug. We need both
+> fixed to fix the issue.
+> 
+> Our attempts to fix this just in the kernel reached a dead end, because Kdump
+> needs to include reserved-system-ram, whereas kexec has to avoid it. User-space
+> needs to be able to tell reserved-system-ram and reserved-address-space apart.
+> Hence we need to expose that information, and pick it up in user-space.
+> 
+> Patched-kernel and unpatch-user-space will work the same way it does today, as
+> the additional reserved regions are ignored by user-space.
+> 
+> Unpatched-kernel and patched-user-space will also work the same way it does
+> today as the additional reserved regions are missing.
+> 
+> I think this is the only way forwards on this issue...
+> 
+> 
+> > * For case (2), the kernel should access ACPI tables by mapping
+> >   them with appropriate memory attributes described in UEFI memory map.
+> >   (This means that it doesn't require any changes in /proc/iomem, and
+> >   hence user space.)
+> 
+> (this one is handled entirely in the kernel)
+> 
+> 
+> Thanks,
+> 
+> James
 
 _______________________________________________
 kexec mailing list
