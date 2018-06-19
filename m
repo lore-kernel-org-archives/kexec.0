@@ -1,9 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 19 Jun 2018 09:55:41 +0100
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
+Received: from [223.203.96.7] (helo=barracuda.hxt-semitech.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fVD2v-0005Vt-Ec
+ for kexec@lists.infradead.org; Tue, 19 Jun 2018 09:35:35 +0000
+From: "Jin, Yanjiang" <yanjiang.jin@hxt-semitech.com>
+Subject: RE: [PATCH] arm64/mm: Introduce a variable to hold base address of
  linear region
-Message-ID: <20180619085541.GB13984@arm.com>
+Date: Tue, 19 Jun 2018 09:34:56 +0000
+Message-ID: <6860c284f1c74faa95edd6cf866ec80d@HXTBJIDCEMVIW02.hxtcorp.net>
 References: <1528785361-24477-1-git-send-email-bhsharma@redhat.com>
  <CAKv+Gu8Hs+CArdkAWoBPbr_p-nq5+0oPwOPg0NsJDRMkE_bM9A@mail.gmail.com>
  <CACi5LpNdg=Enp66BybNNuj5tQOp3ggyX=tm_SVzr8v2qCRteDw@mail.gmail.com>
@@ -13,9 +17,10 @@ References: <1528785361-24477-1-git-send-email-bhsharma@redhat.com>
  <CACi5LpMJnFthKUJGfMWgDyMTM65oTtOvsRGCtMDjWP32qDptbQ@mail.gmail.com>
  <92ff5220-f863-4edc-bc9f-bd802d2efa9c@arm.com>
  <d5e01f4bedc649ff8a2ee17b17c1c33d@HXTBJIDCEMVIW02.hxtcorp.net>
+ <20180619085541.GB13984@arm.com>
+In-Reply-To: <20180619085541.GB13984@arm.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <d5e01f4bedc649ff8a2ee17b17c1c33d@HXTBJIDCEMVIW02.hxtcorp.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,49 +29,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Jin, Yanjiang" <yanjiang.jin@hxt-semitech.com>
+To: Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-On Tue, Jun 19, 2018 at 03:02:15AM +0000, Jin, Yanjiang wrote:
-> > You seem to be using this for user-space phys_to_virt() based on values found in
-> > /proc/iomem. This should give you what you want, and isolate your user-space
-> > from the kernel's unexpected naming of variables.
-> 
-> I don't know could I simplify this problem?
-> Let's ignore what memstart_addr represents here, we just want to implement
-> phys_to_virt() in an userspace applications(kexec-tools or others).
-> 
-> ARM64 Kernel has a below definition:
-> 
-> #define __phys_to_virt(x)       ((unsigned long)((x) - PHYS_OFFSET) | PAGE_OFFSET)
-> 
-> So userspace app must know PHYS_OFFSET(equal to memstart_addr now). Seems
-> this is very simple, but memstart_addr has gone through several operations
-> in arm64_memblock_init() depends on different Kernel configurations, so
-> userspace app needs to know many additional definitions as following:
-> 
-> memblock_start_of_DRAM(),  (ifdef CONFIG_SPARSEMEM_VMEMMAP),
-> ARM64_MEMSTART_SHIFT,  SECTION_SIZE_BITS,  PAGE_OFFSET,
-> memblock_end_of_DRAM(), IS_ENABLED(CONFIG_RANDOMIZE_BASE),
-> memstart_offset_seed.
-> 
-> It is hard to know all above in kexec-tools now. Originally I planned to
-> read memstart_addr's value from "/dev/mem", but someone thought not all
-> Kernels enable "/dev/mem", we'd better find a more generic approach. So we
-> want to get some suggestions from ARM kernel community.
-> Can we export this variable in Kernel side through sysconf() or other
-> similar methods? Or someone can provide an effect way to get
-> memstart_addr's value?
 
-I thought the suggestion from James was to expose this via an ELF NOTE
-in kcore and vmcore (or in the header directly if that's possible, but
-I'm not sure about it)?
 
-Will
+> -----Original Message-----
+> From: Will Deacon [mailto:will.deacon@arm.com]
+> Sent: 2018年6月19日 16:56
+> To: Jin, Yanjiang <yanjiang.jin@hxt-semitech.com>
+> Cc: James Morse <james.morse@arm.com>; Bhupesh Sharma
+> <bhsharma@redhat.com>; Mark Rutland <mark.rutland@arm.com>; Ard
+> Biesheuvel <ard.biesheuvel@linaro.org>; Catalin Marinas
+> <catalin.marinas@arm.com>; Kexec Mailing List <kexec@lists.infradead.org>;
+> AKASHI Takahiro <takahiro.akashi@linaro.org>; Bhupesh SHARMA
+> <bhupesh.linux@gmail.com>; linux-arm-kernel <linux-arm-
+> kernel@lists.infradead.org>
+> Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
+> linear region
+>
+> On Tue, Jun 19, 2018 at 03:02:15AM +0000, Jin, Yanjiang wrote:
+> > > You seem to be using this for user-space phys_to_virt() based on
+> > > values found in /proc/iomem. This should give you what you want, and
+> > > isolate your user-space from the kernel's unexpected naming of variables.
+> >
+> > I don't know could I simplify this problem?
+> > Let's ignore what memstart_addr represents here, we just want to
+> > implement
+> > phys_to_virt() in an userspace applications(kexec-tools or others).
+> >
+> > ARM64 Kernel has a below definition:
+> >
+> > #define __phys_to_virt(x)       ((unsigned long)((x) - PHYS_OFFSET) |
+> PAGE_OFFSET)
+> >
+> > So userspace app must know PHYS_OFFSET(equal to memstart_addr now).
+> > Seems this is very simple, but memstart_addr has gone through several
+> > operations in arm64_memblock_init() depends on different Kernel
+> > configurations, so userspace app needs to know many additional definitions as
+> following:
+> >
+> > memblock_start_of_DRAM(),  (ifdef CONFIG_SPARSEMEM_VMEMMAP),
+> > ARM64_MEMSTART_SHIFT,  SECTION_SIZE_BITS,  PAGE_OFFSET,
+> > memblock_end_of_DRAM(), IS_ENABLED(CONFIG_RANDOMIZE_BASE),
+> > memstart_offset_seed.
+> >
+> > It is hard to know all above in kexec-tools now. Originally I planned
+> > to read memstart_addr's value from "/dev/mem", but someone thought not
+> > all Kernels enable "/dev/mem", we'd better find a more generic
+> > approach. So we want to get some suggestions from ARM kernel community.
+> > Can we export this variable in Kernel side through sysconf() or other
+> > similar methods? Or someone can provide an effect way to get
+> > memstart_addr's value?
+>
+> I thought the suggestion from James was to expose this via an ELF NOTE in kcore
+> and vmcore (or in the header directly if that's possible, but I'm not sure about it)?
+
+Hi Will,
+
+Thanks for your reply firstly. But same as DEVMEM, kcore is not a must-have, so we can't depend on it.
+On the other hand, phys_to_virt() is called during generating vmcore in Kexec-tools, vmcore also can't help this issue.
+Unfortunately, not all platforms support analyzing Kernel config in userspace application, so Kexec-tools can't know some key kernel options. If not so, we can simulate the whole arm64_memblock_init()  progress in kexec-tools.
+
+Thanks,
+Yanjiang
+>
+> Will
+
+
+
+This email is intended only for the named addressee. It may contain information that is confidential/private, legally privileged, or copyright-protected, and you should handle it accordingly. If you are not the intended recipient, you do not have legal rights to retain, copy, or distribute this email or its contents, and should promptly delete the email and all electronic copies in your system; do not retain copies in any media. If you have received this email in error, please notify the sender promptly. Thank you.
+
+
 
 _______________________________________________
 kexec mailing list
