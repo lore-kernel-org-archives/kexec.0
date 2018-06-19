@@ -1,14 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v2 1/4] arm64: export memblock_reserve()d regions via
- /proc/iomem
-References: <20180619064424.6642-1-takahiro.akashi@linaro.org>
- <20180619064424.6642-2-takahiro.akashi@linaro.org>
-From: Dave Kleikamp <dave.kleikamp@oracle.com>
-Message-ID: <72307608-90e0-4842-edc1-d3b284782940@oracle.com>
-Date: Tue, 19 Jun 2018 08:37:17 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fVHsy-00065j-QC
+ for kexec@lists.infradead.org; Tue, 19 Jun 2018 14:45:34 +0000
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w5JEcmtI100542
+ for <kexec@lists.infradead.org>; Tue, 19 Jun 2018 10:45:19 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2jq159r0v4-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Tue, 19 Jun 2018 10:45:18 -0400
+Received: from localhost
+ by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <hbathini@linux.ibm.com>;
+ Tue, 19 Jun 2018 15:45:16 +0100
+Subject: [PATCH] makedumpfile/ppc64: Increase the VA range
+From: Hari Bathini <hbathini@linux.ibm.com>
+Date: Tue, 19 Jun 2018 20:15:09 +0530
 MIME-Version: 1.0
-In-Reply-To: <20180619064424.6642-2-takahiro.akashi@linaro.org>
-Content-Language: en-US
+Message-Id: <152941950897.27658.15976744741411711134.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,56 +33,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, ard.biesheuvel@linaro.org
-Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, al.stone@linaro.org, bhsharma@redhat.com, tbaicar@codeaurora.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, james.morse@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>, Takuya Nakayama <tak-nakayama@tg.jp.nec.com>
+Cc: Dave Young <dyoung@redhat.com>, ptesarik@suse.cz, Kexec-ml <kexec@lists.infradead.org>, piliu@redhat.com, andrej.skvortzov@gmail.com
 
-On 06/19/2018 01:44 AM, AKASHI Takahiro wrote:
+* Required for kernel 4.17
 
-> +static int __init reserve_memblock_reserved_regions(void)
-> +{
-> +	phys_addr_t start, end, roundup_end = 0;
-> +	struct resource *mem, *res;
-> +	u64 i;
-> +
-> +	for_each_reserved_mem_region(i, &start, &end) {
-> +		if (end <= roundup_end)
-> +			continue; /* done already */
-> +
-> +		start = __pfn_to_phys(PFN_DOWN(start));
-> +		end = __pfn_to_phys(PFN_UP(end)) - 1;
-> +		roundup_end = end;
-> +
-> +		res = kzalloc(sizeof(*res), GFP_ATOMIC);
-> +		if (WARN_ON(!res))
-> +			return -ENOMEM;
-> +		res->start = start;
-> +		res->end = end;
-> +		res->name  = "reserved";
-> +		res->flags = IORESOURCE_MEM;
-> +
-> +		mem = request_resource_conflict(&iomem_resource, res);
-> +		/*
-> +		 * We expected memblock_reserve() regions to conflict with
-> +		 * memory created by request_standard_resources().
-> +		 */
-> +		if (WARN_ON_ONCE(!mem))
-> +			continue;
-> +		kfree(res);
+Since kernel commit c2b4d8b7417a ("powerpc/mm/hash64: Increase the VA
+range"), the max virtual (effective) address value has been increased
+to 4PB. Update page table index values accordingly.
 
-Why is kfree() after the conditional continue? This is a memory leak.
+Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+---
+ arch/ppc64.c   |    5 ++++-
+ makedumpfile.h |    1 +
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-> +
-> +		reserve_region_with_split(mem, start, end, "reserved");
-> +	}
-> +
-> +	return 0;
-> +}
-> +arch_initcall(reserve_memblock_reserved_regions);
-> +
->  u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
->  
->  void __init setup_arch(char **cmdline_p)
-> 
+diff --git a/arch/ppc64.c b/arch/ppc64.c
+index 8bdbcc5..8b6f7d5 100644
+--- a/arch/ppc64.c
++++ b/arch/ppc64.c
+@@ -248,7 +248,10 @@ ppc64_vmalloc_init(void)
+ 
+ 			if (info->kernel_version >= KERNEL_VERSION(4, 12, 0)) {
+ 				info->l2_index_size = PMD_INDEX_SIZE_L4_64K_4_12;
+-				info->l3_index_size = PUD_INDEX_SIZE_L4_64K_4_12;
++				if (info->kernel_version >= KERNEL_VERSION(4, 17, 0))
++					info->l3_index_size = PUD_INDEX_SIZE_L4_64K_4_17;
++				else
++					info->l3_index_size = PUD_INDEX_SIZE_L4_64K_4_12;
+ 				info->l4_index_size = PGD_INDEX_SIZE_L4_64K_4_12;
+ 			} else {
+ 				info->l2_index_size = PMD_INDEX_SIZE_L4_64K_4_6;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 121eab2..4960e43 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -703,6 +703,7 @@ unsigned long get_kvbase_arm64(void);
+ #define PMD_INDEX_SIZE_L4_64K_4_12 10
+ #define PUD_INDEX_SIZE_L4_64K_4_12 7
+ #define PGD_INDEX_SIZE_L4_64K_4_12 8
++#define PUD_INDEX_SIZE_L4_64K_4_17 10
+ #define PTE_INDEX_SIZE_RADIX_64K  5
+ #define PMD_INDEX_SIZE_RADIX_64K  9
+ #define PUD_INDEX_SIZE_RADIX_64K  9
+
 
 _______________________________________________
 kexec mailing list
