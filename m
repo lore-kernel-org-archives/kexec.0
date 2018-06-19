@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v2 1/4] arm64: export memblock_reserve()d regions via
- /proc/iomem
-References: <20180619064424.6642-1-takahiro.akashi@linaro.org>
- <20180619064424.6642-2-takahiro.akashi@linaro.org>
- <72307608-90e0-4842-edc1-d3b284782940@oracle.com>
- <ca9e5d9d-e090-f9e0-bc10-3297c9e3b7e1@arm.com>
-From: Dave Kleikamp <dave.kleikamp@oracle.com>
-Message-ID: <891c3e5a-9760-1353-4a2c-0900082dd245@oracle.com>
-Date: Tue, 19 Jun 2018 10:22:46 -0500
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by casper.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fVIeQ-0001WW-L1
+ for kexec@lists.infradead.org; Tue, 19 Jun 2018 15:34:37 +0000
+Date: Tue, 19 Jun 2018 17:34:13 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] arm64: Add support to supply 'kaslr-seed' to
+ secondary kernel
+Message-ID: <20180619153413.i5laoxvhj4d52kex@verge.net.au>
+References: <1524733052-3276-1-git-send-email-bhsharma@redhat.com>
+ <CACi5LpNrpJXSnRhxvnvXVshp7FvnPqm-idW6v540K0oMEt5_ng@mail.gmail.com>
+ <40ef0d33-a4c8-6cee-af15-e81eef7b1cf4@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <ca9e5d9d-e090-f9e0-bc10-3297c9e3b7e1@arm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <40ef0d33-a4c8-6cee-af15-e81eef7b1cf4@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,106 +26,103 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, ard.biesheuvel@linaro.org
-Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, al.stone@linaro.org, bhsharma@redhat.com, tbaicar@codeaurora.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hanjun.guo@linaro.org, sudeep.holla@arm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-On 06/19/2018 10:00 AM, James Morse wrote:
-> Hi Dave,
+On Mon, Jun 18, 2018 at 11:26:11AM +0530, Bhupesh Sharma wrote:
+> Hello Simon,
 > 
-> On 19/06/18 14:37, Dave Kleikamp wrote:
->> On 06/19/2018 01:44 AM, AKASHI Takahiro wrote:
->>> +static int __init reserve_memblock_reserved_regions(void)
->>> +{
->>> +	phys_addr_t start, end, roundup_end = 0;
->>> +	struct resource *mem, *res;
->>> +	u64 i;
->>> +
->>> +	for_each_reserved_mem_region(i, &start, &end) {
->>> +		if (end <= roundup_end)
->>> +			continue; /* done already */
->>> +
->>> +		start = __pfn_to_phys(PFN_DOWN(start));
->>> +		end = __pfn_to_phys(PFN_UP(end)) - 1;
->>> +		roundup_end = end;
->>> +
->>> +		res = kzalloc(sizeof(*res), GFP_ATOMIC);
->>> +		if (WARN_ON(!res))
->>> +			return -ENOMEM;
->>> +		res->start = start;
->>> +		res->end = end;
->>> +		res->name  = "reserved";
->>> +		res->flags = IORESOURCE_MEM;
->>> +
->>> +		mem = request_resource_conflict(&iomem_resource, res);
->>> +		/*
->>> +		 * We expected memblock_reserve() regions to conflict with
->>> +		 * memory created by request_standard_resources().
->>> +		 */
->>> +		if (WARN_ON_ONCE(!mem))
->>> +			continue;
->>> +		kfree(res);
->>
->> Why is kfree() after the conditional continue? This is a memory leak.
-> 
-> request_resource_conflict() inserts res into the iomem_resource tree, or returns
-> the conflict if there is already something at this address.
-> 
-> We expect something at this address: a 'System RAM' section added by
-> request_resource(). This code wants the conflicting 'System RAM' entry so that
-> reserve_region_with_split() can fill in the gaps below it with 'reserved'. See
-> the commit-message for an example.
-> 
-> If there was no conflict, it means the memory map doesn't look like we expect,
-> we can't pass NULL to reserve_region_with_split(), and we just inserted the
-> 'reserved' at the top level. Freeing res at this point would be a use-after-free
-> hanging from /proc/iomem.
-> This code generates a WARN_ON_ONCE() and leaves the 'reserved' description where
-> it is.
+> On 05/15/2018 12:50 PM, Bhupesh Sharma wrote:
+> > Hello Akashi,
+> > 
+> > On Thu, Apr 26, 2018 at 2:27 PM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> > > This patch adds the support to supply 'kaslr-seed' to secondary kernel,
+> > > when we do a 'kexec warm reboot to another kernel' (although the
+> > > behaviour remains the same for the 'kdump' case as well) on arm64
+> > > platforms using the 'kexec_load' invocation method.
+> > > 
+> > > Lets consider the case where the primary kernel working on the arm64
+> > > platform supports kaslr (i.e 'CONFIG_RANDOMIZE_BASE' was set to y and
+> > > we have a compliant EFI firmware which supports EFI_RNG_PROTOCOL and
+> > > hence can pass a non-zero (valid) seed to the primary kernel).
+> > > 
+> > > Now the primary kernel reads the 'kaslr-seed' and wipes it to 0 and
+> > > uses the seed value to randomize for e.g. the module base address
+> > > offset.
+> > > 
+> > > In the case of 'kexec_load' (or even kdump for brevity),
+> > > we rely on the user-space kexec-tools to pass an appropriate dtb to the
+> > > secondary kernel and since 'kaslr-seed' is wiped to 0 by the primary
+> > > kernel, the secondary will essentially work with *nokaslr* as
+> > > 'kaslr-seed' is set to 0 when it is passed to the secondary kernel.
+> > > 
+> > > This can be true even in case the secondary kernel had
+> > > 'CONFIG_RANDOMIZE_BASE' and 'CONFIG_RANDOMIZE_MODULE_REGION_FULL' set to
+> > > y.
+> > > 
+> > > This patch addresses this issue by first checking if the device tree
+> > > provided by the firmware to the kernel supports the 'kaslr-seed'
+> > > property and verifies that it is really wiped to 0. If this condition is
+> > > met, it fixes up the 'kaslr-seed' property by using the getrandom()
+> > > syscall to get a suitable random number.
+> > > 
+> > > I verified this patch on my Qualcomm arm64 board and here are some test
+> > > results:
+> > > 
+> > > 1. Ensure that the primary kernel is boot'ed with 'kaslr-seed'
+> > >     dts property and it is really wiped to 0:
+> > > 
+> > >     [root@qualcomm-amberwing]# dtc -I dtb -O dts /sys/firmware/fdt | grep -A 10 -i chosen
+> > >          chosen {
+> > >                  kaslr-seed = <0x0 0x0>;
+> > >                  ...
+> > >          }
+> > > 
+> > > 2. Now issue 'kexec_load' to load the secondary kernel (let's assume
+> > >     that we are using the same kernel as the secondary kernel):
+> > >     # kexec -l /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname
+> > >       -r`.img --reuse-cmdline -d
+> > > 
+> > > 3. Issue 'kexec -e' to warm boot to the secondary:
+> > >     # kexec -e
+> > > 
+> > > 4. Now after the secondary boots, confirm that the load address of the
+> > >     modules is randomized in every successive boot:
+> > > 
+> > >     [root@qualcomm-amberwing]# cat /proc/modules
+> > >     sunrpc 524288 1 - Live 0xffff0307db190000
+> > >     vfat 262144 1 - Live 0xffff0307db110000
+> > >     fat 262144 1 vfat, Live 0xffff0307db090000
+> > >     crc32_ce 262144 0 - Live 0xffff0307d8c70000
+> > >     ...
+> > > 
+> > > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> > > ---
+> > > Changes since v1:
+> > >   - Addressed Akashi's comments regarding the goto label path.
+> > >   - v1 can be viewed here: https://marc.info/?l=kexec&m=152373724406110&w=2
+> > 
+> > Ping. Any comments on this v2?
 
-Okay. I get it.
+...
 
-> Trying to cleanup here is pointless, we can remove the resource entry and free
-> it ... but we still want to report it as reserved, which is what just happened,
-> just not quite how we we wanted it.
+> Ping. Seems we don't have comments on this v2 (since the last month or so).
 > 
-> If you ever see this warning, it means some RAM stopped being nomap between
-> request_resources() and reserve_memblock_reserved_regions(). I can't find any
-> case where that ever happens.
+> Having the capability to pass an appropriate 'kaslr-seed' value to the
+> secondary kernel is important for booting KASLR enabled secondary kernels -
+> which is an important use case for kexec for distributions like Fedora.
 > 
+> Kindly consider applying this patch which has been properly tested on a
+> couple of arm64 machines both for KASLR and non-KASLR boot cases.
 > 
-> If all that makes sense: how can I improve the comment above the WARN_ON_ONCE()
-> to make it clearer?
+> Right now, I am forced to keep this patch locally and refer KASLR users on
+> arm64 to my public github tree which has this patch committed on top of the
+> upstream kexec-tools. I would prefer to route them to the upstream
+> kexec-tools itself (rather than my github tree), once this patch is applied
+> there.
 
-I guess something like you described above.
-
-/*
- * We expect a 'System RAM' section at this address. In the unexpected
- * case where one is not found, request_resource_conflict() will insert
- * res into the iomem_resource tree.
- */
-
-Do you think this is clearer?
-
-> 
-> 
-> Thanks,
-> 
-> James
-> 
-> 
->>> +
->>> +		reserve_region_with_split(mem, start, end, "reserved");
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +arch_initcall(reserve_memblock_reserved_regions);
->>> +
->>>  u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
->>>  
->>>  void __init setup_arch(char **cmdline_p)
->>>
-> 
+Thanks for the patch, applied.
+My questions were covered in the review of v1.
 
 _______________________________________________
 kexec mailing list
