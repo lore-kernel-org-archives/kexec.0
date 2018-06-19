@@ -1,6 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
- linear region
+Received: from mail-lf0-f65.google.com ([209.85.215.65])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fVE1a-0003x6-U2
+ for kexec@lists.infradead.org; Tue, 19 Jun 2018 10:38:13 +0000
+Received: by mail-lf0-f65.google.com with SMTP id u5-v6so8114869lff.13
+ for <kexec@lists.infradead.org>; Tue, 19 Jun 2018 03:38:00 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <09260c7e-8b9d-bc3c-5bca-0fd75417f552@arm.com>
 References: <CAKv+Gu8Hs+CArdkAWoBPbr_p-nq5+0oPwOPg0NsJDRMkE_bM9A@mail.gmail.com>
  <CACi5LpNdg=Enp66BybNNuj5tQOp3ggyX=tm_SVzr8v2qCRteDw@mail.gmail.com>
  <d801005a-5f7a-8fe4-a486-bc6443a406a3@arm.com>
@@ -13,12 +19,12 @@ References: <CAKv+Gu8Hs+CArdkAWoBPbr_p-nq5+0oPwOPg0NsJDRMkE_bM9A@mail.gmail.com>
  <6860c284f1c74faa95edd6cf866ec80d@HXTBJIDCEMVIW02.hxtcorp.net>
  <20180619094045.GD13984@arm.com>
  <a720d91be20844cd9ed84728268300d9@HXTBJIDCEMVIW02.hxtcorp.net>
-From: James Morse <james.morse@arm.com>
-Message-ID: <09260c7e-8b9d-bc3c-5bca-0fd75417f552@arm.com>
-Date: Tue, 19 Jun 2018 11:16:06 +0100
-MIME-Version: 1.0
-In-Reply-To: <a720d91be20844cd9ed84728268300d9@HXTBJIDCEMVIW02.hxtcorp.net>
-Content-Language: en-US
+ <09260c7e-8b9d-bc3c-5bca-0fd75417f552@arm.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Tue, 19 Jun 2018 16:07:57 +0530
+Message-ID: <CACi5LpMoKP4eG5XhYe5hf5VC9MOY8KuHK=j0ujb8GFpyjAuAww@mail.gmail.com>
+Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
+ linear region
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,129 +33,117 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Jin, Yanjiang" <yanjiang.jin@hxt-semitech.com>, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "Jin,
+ Yanjiang" <yanjiang.jin@hxt-semitech.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-Hi Yanjiang, Will,
-
-On 19/06/18 10:57, Jin, Yanjiang wrote:
->> -----Original Message-----
->> From: Will Deacon [mailto:will.deacon@arm.com]
->> Sent: 2018年6月19日 17:41
->> To: Jin, Yanjiang <yanjiang.jin@hxt-semitech.com>
->> Cc: James Morse <james.morse@arm.com>; Bhupesh Sharma
->> <bhsharma@redhat.com>; Mark Rutland <mark.rutland@arm.com>; Ard
->> Biesheuvel <ard.biesheuvel@linaro.org>; Catalin Marinas
->> <catalin.marinas@arm.com>; Kexec Mailing List <kexec@lists.infradead.org>;
->> AKASHI Takahiro <takahiro.akashi@linaro.org>; Bhupesh SHARMA
->> <bhupesh.linux@gmail.com>; linux-arm-kernel <linux-arm-
->> kernel@lists.infradead.org>
->> Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
->> linear region
->>
->> On Tue, Jun 19, 2018 at 09:34:56AM +0000, Jin, Yanjiang wrote:
->>>> On Tue, Jun 19, 2018 at 03:02:15AM +0000, Jin, Yanjiang wrote:
->>>>>> You seem to be using this for user-space phys_to_virt() based on
->>>>>> values found in /proc/iomem. This should give you what you want,
->>>>>> and isolate your user-space from the kernel's unexpected naming of
->> variables.
->>>>>
->>>>> I don't know could I simplify this problem?
->>>>> Let's ignore what memstart_addr represents here, we just want to
->>>>> implement
->>>>> phys_to_virt() in an userspace applications(kexec-tools or others).
->>>>>
->>>>> ARM64 Kernel has a below definition:
->>>>>
->>>>> #define __phys_to_virt(x)       ((unsigned long)((x) - PHYS_OFFSET) |
->>>> PAGE_OFFSET)
->>>>>
->>>>> So userspace app must know PHYS_OFFSET(equal to memstart_addr now).
->>>>> Seems this is very simple, but memstart_addr has gone through
->>>>> several operations in arm64_memblock_init() depends on different
->>>>> Kernel configurations, so userspace app needs to know many
->>>>> additional definitions as
->>>> following:
->>>>>
->>>>> memblock_start_of_DRAM(),  (ifdef CONFIG_SPARSEMEM_VMEMMAP),
->>>>> ARM64_MEMSTART_SHIFT,  SECTION_SIZE_BITS,  PAGE_OFFSET,
->>>>> memblock_end_of_DRAM(), IS_ENABLED(CONFIG_RANDOMIZE_BASE),
->>>>> memstart_offset_seed.
->>>>>
->>>>> It is hard to know all above in kexec-tools now. Originally I
->>>>> planned to read memstart_addr's value from "/dev/mem", but someone
->>>>> thought not all Kernels enable "/dev/mem", we'd better find a more
->>>>> generic approach. So we want to get some suggestions from ARM kernel
->> community.
->>>>> Can we export this variable in Kernel side through sysconf() or
->>>>> other similar methods? Or someone can provide an effect way to get
->>>>> memstart_addr's value?
->>>>
->>>> I thought the suggestion from James was to expose this via an ELF
->>>> NOTE in kcore and vmcore (or in the header directly if that's possible, but I'm
->> not sure about it)?
->>>
->>> Thanks for your reply firstly. But same as DEVMEM, kcore is not a
->>> must-have, so we can't depend on it.
->>
->> Neither is KEXEC. We can select PROC_KCORE from KEXEC if it helps.
->>
->>> On the other hand, phys_to_virt() is called during generating vmcore
->>> in Kexec-tools, vmcore also can't help this issue.
->>
->> I don't understand this part. If you have the vmcore in your hand, why can't you
->> grok the pv offset from the note and use that in phys_to_virt()?
-> 
-> It is a chicken-and-egg issue.
-> phys_to virt() is for crashdump setup. To generate vmcore, we must call
-> phys_to_virt(). At this point, no vmcore exists.
-
-Its needed for the parts of the ELF header that kexec-tools generates at kdump
-load time?
-
-So adding this pv_offset to the key=value data crash_save_vmcoreinfo_init()
-saves isn't available early enough?
-
-
-If we select PROC_KCORE for KEXEC so you know you will have /proc/kcore if the
-system supports kdump. We should probably provide the same information in the
-PT_NOTE section of the /proc/kcore file.
-
-
-(I thought the kdump kernel exported that crash_save_vmcoreinfo_init() data as
-an elf-note itself, but digging deeper I see the kernel exposes the physical
-address in /sys/kernel/vmcoreinfo. Presumably its passed back via the kdump
-elfcorehdr.)
-
-
->>> Unfortunately, not all platforms support analyzing Kernel config in
->>> userspace application, so Kexec-tools can't know some key kernel options.
->>> If not so, we can simulate the whole arm64_memblock_init()  progress
->>> in kexec-tools.
->>
->> I don't understand what the kernel config has to do with kexec tools.
-> 
-> I mean that if we can know kernel .config in all circumstances, we can calculate memstart_addr  as below in Kexec-tools:
-> 
-> 
->         memstart_addr = round_down(memblock_start_of_DRAM(),
->                                    ARM64_MEMSTART_ALIGN);
-
-This wouldn't work for KASLR. Having the kernel provide you with the offset
-means you are insulated from the details of phys_to_virt() and what affects
-these values. It should be possible to do this in the same way for all
-architectures.
-
-
-Thanks,
-
-James
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgSmFtZXMsCgpPbiBUdWUsIEp1biAxOSwgMjAxOCBhdCAzOjQ2IFBNLCBKYW1lcyBNb3JzZSA8
+amFtZXMubW9yc2VAYXJtLmNvbT4gd3JvdGU6Cj4gSGkgWWFuamlhbmcsIFdpbGwsCj4KPiBPbiAx
+OS8wNi8xOCAxMDo1NywgSmluLCBZYW5qaWFuZyB3cm90ZToKPj4+IC0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tCj4+PiBGcm9tOiBXaWxsIERlYWNvbiBbbWFpbHRvOndpbGwuZGVhY29uQGFybS5j
+b21dCj4+PiBTZW50OiAyMDE45bm0NuaciDE55pelIDE3OjQxCj4+PiBUbzogSmluLCBZYW5qaWFu
+ZyA8eWFuamlhbmcuamluQGh4dC1zZW1pdGVjaC5jb20+Cj4+PiBDYzogSmFtZXMgTW9yc2UgPGph
+bWVzLm1vcnNlQGFybS5jb20+OyBCaHVwZXNoIFNoYXJtYQo+Pj4gPGJoc2hhcm1hQHJlZGhhdC5j
+b20+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgQXJkCj4+PiBCaWVzaGV1
+dmVsIDxhcmQuYmllc2hldXZlbEBsaW5hcm8ub3JnPjsgQ2F0YWxpbiBNYXJpbmFzCj4+PiA8Y2F0
+YWxpbi5tYXJpbmFzQGFybS5jb20+OyBLZXhlYyBNYWlsaW5nIExpc3QgPGtleGVjQGxpc3RzLmlu
+ZnJhZGVhZC5vcmc+Owo+Pj4gQUtBU0hJIFRha2FoaXJvIDx0YWthaGlyby5ha2FzaGlAbGluYXJv
+Lm9yZz47IEJodXBlc2ggU0hBUk1BCj4+PiA8Ymh1cGVzaC5saW51eEBnbWFpbC5jb20+OyBsaW51
+eC1hcm0ta2VybmVsIDxsaW51eC1hcm0tCj4+PiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz4K
+Pj4+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGFybTY0L21tOiBJbnRyb2R1Y2UgYSB2YXJpYWJsZSB0
+byBob2xkIGJhc2UgYWRkcmVzcyBvZgo+Pj4gbGluZWFyIHJlZ2lvbgo+Pj4KPj4+IE9uIFR1ZSwg
+SnVuIDE5LCAyMDE4IGF0IDA5OjM0OjU2QU0gKzAwMDAsIEppbiwgWWFuamlhbmcgd3JvdGU6Cj4+
+Pj4+IE9uIFR1ZSwgSnVuIDE5LCAyMDE4IGF0IDAzOjAyOjE1QU0gKzAwMDAsIEppbiwgWWFuamlh
+bmcgd3JvdGU6Cj4+Pj4+Pj4gWW91IHNlZW0gdG8gYmUgdXNpbmcgdGhpcyBmb3IgdXNlci1zcGFj
+ZSBwaHlzX3RvX3ZpcnQoKSBiYXNlZCBvbgo+Pj4+Pj4+IHZhbHVlcyBmb3VuZCBpbiAvcHJvYy9p
+b21lbS4gVGhpcyBzaG91bGQgZ2l2ZSB5b3Ugd2hhdCB5b3Ugd2FudCwKPj4+Pj4+PiBhbmQgaXNv
+bGF0ZSB5b3VyIHVzZXItc3BhY2UgZnJvbSB0aGUga2VybmVsJ3MgdW5leHBlY3RlZCBuYW1pbmcg
+b2YKPj4+IHZhcmlhYmxlcy4KPj4+Pj4+Cj4+Pj4+PiBJIGRvbid0IGtub3cgY291bGQgSSBzaW1w
+bGlmeSB0aGlzIHByb2JsZW0/Cj4+Pj4+PiBMZXQncyBpZ25vcmUgd2hhdCBtZW1zdGFydF9hZGRy
+IHJlcHJlc2VudHMgaGVyZSwgd2UganVzdCB3YW50IHRvCj4+Pj4+PiBpbXBsZW1lbnQKPj4+Pj4+
+IHBoeXNfdG9fdmlydCgpIGluIGFuIHVzZXJzcGFjZSBhcHBsaWNhdGlvbnMoa2V4ZWMtdG9vbHMg
+b3Igb3RoZXJzKS4KPj4+Pj4+Cj4+Pj4+PiBBUk02NCBLZXJuZWwgaGFzIGEgYmVsb3cgZGVmaW5p
+dGlvbjoKPj4+Pj4+Cj4+Pj4+PiAjZGVmaW5lIF9fcGh5c190b192aXJ0KHgpICAgICAgICgodW5z
+aWduZWQgbG9uZykoKHgpIC0gUEhZU19PRkZTRVQpIHwKPj4+Pj4gUEFHRV9PRkZTRVQpCj4+Pj4+
+Pgo+Pj4+Pj4gU28gdXNlcnNwYWNlIGFwcCBtdXN0IGtub3cgUEhZU19PRkZTRVQoZXF1YWwgdG8g
+bWVtc3RhcnRfYWRkciBub3cpLgo+Pj4+Pj4gU2VlbXMgdGhpcyBpcyB2ZXJ5IHNpbXBsZSwgYnV0
+IG1lbXN0YXJ0X2FkZHIgaGFzIGdvbmUgdGhyb3VnaAo+Pj4+Pj4gc2V2ZXJhbCBvcGVyYXRpb25z
+IGluIGFybTY0X21lbWJsb2NrX2luaXQoKSBkZXBlbmRzIG9uIGRpZmZlcmVudAo+Pj4+Pj4gS2Vy
+bmVsIGNvbmZpZ3VyYXRpb25zLCBzbyB1c2Vyc3BhY2UgYXBwIG5lZWRzIHRvIGtub3cgbWFueQo+
+Pj4+Pj4gYWRkaXRpb25hbCBkZWZpbml0aW9ucyBhcwo+Pj4+PiBmb2xsb3dpbmc6Cj4+Pj4+Pgo+
+Pj4+Pj4gbWVtYmxvY2tfc3RhcnRfb2ZfRFJBTSgpLCAgKGlmZGVmIENPTkZJR19TUEFSU0VNRU1f
+Vk1FTU1BUCksCj4+Pj4+PiBBUk02NF9NRU1TVEFSVF9TSElGVCwgIFNFQ1RJT05fU0laRV9CSVRT
+LCAgUEFHRV9PRkZTRVQsCj4+Pj4+PiBtZW1ibG9ja19lbmRfb2ZfRFJBTSgpLCBJU19FTkFCTEVE
+KENPTkZJR19SQU5ET01JWkVfQkFTRSksCj4+Pj4+PiBtZW1zdGFydF9vZmZzZXRfc2VlZC4KPj4+
+Pj4+Cj4+Pj4+PiBJdCBpcyBoYXJkIHRvIGtub3cgYWxsIGFib3ZlIGluIGtleGVjLXRvb2xzIG5v
+dy4gT3JpZ2luYWxseSBJCj4+Pj4+PiBwbGFubmVkIHRvIHJlYWQgbWVtc3RhcnRfYWRkcidzIHZh
+bHVlIGZyb20gIi9kZXYvbWVtIiwgYnV0IHNvbWVvbmUKPj4+Pj4+IHRob3VnaHQgbm90IGFsbCBL
+ZXJuZWxzIGVuYWJsZSAiL2Rldi9tZW0iLCB3ZSdkIGJldHRlciBmaW5kIGEgbW9yZQo+Pj4+Pj4g
+Z2VuZXJpYyBhcHByb2FjaC4gU28gd2Ugd2FudCB0byBnZXQgc29tZSBzdWdnZXN0aW9ucyBmcm9t
+IEFSTSBrZXJuZWwKPj4+IGNvbW11bml0eS4KPj4+Pj4+IENhbiB3ZSBleHBvcnQgdGhpcyB2YXJp
+YWJsZSBpbiBLZXJuZWwgc2lkZSB0aHJvdWdoIHN5c2NvbmYoKSBvcgo+Pj4+Pj4gb3RoZXIgc2lt
+aWxhciBtZXRob2RzPyBPciBzb21lb25lIGNhbiBwcm92aWRlIGFuIGVmZmVjdCB3YXkgdG8gZ2V0
+Cj4+Pj4+PiBtZW1zdGFydF9hZGRyJ3MgdmFsdWU/Cj4+Pj4+Cj4+Pj4+IEkgdGhvdWdodCB0aGUg
+c3VnZ2VzdGlvbiBmcm9tIEphbWVzIHdhcyB0byBleHBvc2UgdGhpcyB2aWEgYW4gRUxGCj4+Pj4+
+IE5PVEUgaW4ga2NvcmUgYW5kIHZtY29yZSAob3IgaW4gdGhlIGhlYWRlciBkaXJlY3RseSBpZiB0
+aGF0J3MgcG9zc2libGUsIGJ1dCBJJ20KPj4+IG5vdCBzdXJlIGFib3V0IGl0KT8KPj4+Pgo+Pj4+
+IFRoYW5rcyBmb3IgeW91ciByZXBseSBmaXJzdGx5LiBCdXQgc2FtZSBhcyBERVZNRU0sIGtjb3Jl
+IGlzIG5vdCBhCj4+Pj4gbXVzdC1oYXZlLCBzbyB3ZSBjYW4ndCBkZXBlbmQgb24gaXQuCj4+Pgo+
+Pj4gTmVpdGhlciBpcyBLRVhFQy4gV2UgY2FuIHNlbGVjdCBQUk9DX0tDT1JFIGZyb20gS0VYRUMg
+aWYgaXQgaGVscHMuCj4+Pgo+Pj4+IE9uIHRoZSBvdGhlciBoYW5kLCBwaHlzX3RvX3ZpcnQoKSBp
+cyBjYWxsZWQgZHVyaW5nIGdlbmVyYXRpbmcgdm1jb3JlCj4+Pj4gaW4gS2V4ZWMtdG9vbHMsIHZt
+Y29yZSBhbHNvIGNhbid0IGhlbHAgdGhpcyBpc3N1ZS4KPj4+Cj4+PiBJIGRvbid0IHVuZGVyc3Rh
+bmQgdGhpcyBwYXJ0LiBJZiB5b3UgaGF2ZSB0aGUgdm1jb3JlIGluIHlvdXIgaGFuZCwgd2h5IGNh
+bid0IHlvdQo+Pj4gZ3JvayB0aGUgcHYgb2Zmc2V0IGZyb20gdGhlIG5vdGUgYW5kIHVzZSB0aGF0
+IGluIHBoeXNfdG9fdmlydCgpPwo+Pgo+PiBJdCBpcyBhIGNoaWNrZW4tYW5kLWVnZyBpc3N1ZS4K
+Pj4gcGh5c190byB2aXJ0KCkgaXMgZm9yIGNyYXNoZHVtcCBzZXR1cC4gVG8gZ2VuZXJhdGUgdm1j
+b3JlLCB3ZSBtdXN0IGNhbGwKPj4gcGh5c190b192aXJ0KCkuIEF0IHRoaXMgcG9pbnQsIG5vIHZt
+Y29yZSBleGlzdHMuCj4KPiBJdHMgbmVlZGVkIGZvciB0aGUgcGFydHMgb2YgdGhlIEVMRiBoZWFk
+ZXIgdGhhdCBrZXhlYy10b29scyBnZW5lcmF0ZXMgYXQga2R1bXAKPiBsb2FkIHRpbWU/Cj4KPiBT
+byBhZGRpbmcgdGhpcyBwdl9vZmZzZXQgdG8gdGhlIGtleT12YWx1ZSBkYXRhIGNyYXNoX3NhdmVf
+dm1jb3JlaW5mb19pbml0KCkKPiBzYXZlcyBpc24ndCBhdmFpbGFibGUgZWFybHkgZW5vdWdoPwoK
+WWVzLCBvbmUgY2FzZSB3aGVyZSBpdCBpcyBub3QgYWN0dWFsbHkgYXZhaWxhYmxlIGVhcmx5IGVu
+b3VnaCBmb3IKbWFrZWR1bXBmaWxlIHVzYWdlIGlzIGlmIHdlIGFyZSBkZXRlcm1pbmluZyB0aGUg
+UFRfTk9URSBjb250ZW50cyBmcm9tCnRoZSAnL3Byb2Mva2NvcmUnIG9uIGEgJ2xpdmUnIHN5c3Rl
+bQoKU2VlIDxodHRwczovL2dpdGh1Yi5jb20vYmh1cGVzaC1zaGFybWEvbWFrZWR1bXBmaWxlL2Js
+b2IvZGV2ZWwvZWxmX2luZm8uYyNMMzc1Pgpmb3IgZXhhbXBsZToKCmludCBzZXRfa2NvcmVfdm1j
+b3JlaW5mbyh1aW50NjRfdCB2bWNvcmVpbmZvX2FkZHIsIHVpbnQ2NF90IHZtY29yZWluZm9fbGVu
+KQoKewoKPHNuaXAuLj4Ka3ZhZGRyID0gKHVsb25nKXZtY29yZWluZm9fYWRkciArIFBBR0VfT0ZG
+U0VUOwoKfQoKTm93IHRoZSBwcm9ibGVtIGF0IGhhbmQgaXMgdG8gZGV0ZXJtaW5lIHRoZSBvZmZz
+ZXQgYXQgd2hpY2ggdGhlCnB2X29mZnNldCAoa2V5PXZhbHVlIGRhdGEgcGFpcikgbGllcyBpbiB0
+aGUgJy9wcm9jL2tjb3JlJyAoSSBhc3N1bWUKdGhhdCB3aGVuIHlvdSBtZW50aW9uZWQgYWJvdmUg
+YW5kIGVhcmxpZXIgYWJvdXQgYWRkaW5nIHRoaXMgcGFpciB0bwp0aGUgZWxmbm90ZXMgeW91IG1l
+YW50IGJvdGggdGhlIHZtY29yZWluZm8gYW5kICdwcm9jL2tjb3JlJyksIGFzIHdlCmNhbiBoYXZl
+ICduJyBudW1iZXIgb2YgUFRfTE9BRCBzZWdtZW50cy4KClNvLCB3ZSBoYXZlIGEgY2hpY2tlbiBh
+bmQgZWdnIHNpdHVhdGlvbiBpbiBzdWNoIGNhc2UocykuIERvIHlvdSBoYXZlCmFueSBwb2ludGVy
+cyBvbiBob3cgd2UgY2FuIGZpeCBzdWNoIHVzZS1jYXNlcy4KClRoYW5rcywKQmh1cGVzaAoKPiBJ
+ZiB3ZSBzZWxlY3QgUFJPQ19LQ09SRSBmb3IgS0VYRUMgc28geW91IGtub3cgeW91IHdpbGwgaGF2
+ZSAvcHJvYy9rY29yZSBpZiB0aGUKPiBzeXN0ZW0gc3VwcG9ydHMga2R1bXAuIFdlIHNob3VsZCBw
+cm9iYWJseSBwcm92aWRlIHRoZSBzYW1lIGluZm9ybWF0aW9uIGluIHRoZQo+IFBUX05PVEUgc2Vj
+dGlvbiBvZiB0aGUgL3Byb2Mva2NvcmUgZmlsZS4KPgo+Cj4gKEkgdGhvdWdodCB0aGUga2R1bXAg
+a2VybmVsIGV4cG9ydGVkIHRoYXQgY3Jhc2hfc2F2ZV92bWNvcmVpbmZvX2luaXQoKSBkYXRhIGFz
+Cj4gYW4gZWxmLW5vdGUgaXRzZWxmLCBidXQgZGlnZ2luZyBkZWVwZXIgSSBzZWUgdGhlIGtlcm5l
+bCBleHBvc2VzIHRoZSBwaHlzaWNhbAo+IGFkZHJlc3MgaW4gL3N5cy9rZXJuZWwvdm1jb3JlaW5m
+by4gUHJlc3VtYWJseSBpdHMgcGFzc2VkIGJhY2sgdmlhIHRoZSBrZHVtcAo+IGVsZmNvcmVoZHIu
+KQo+Cj4KPj4+PiBVbmZvcnR1bmF0ZWx5LCBub3QgYWxsIHBsYXRmb3JtcyBzdXBwb3J0IGFuYWx5
+emluZyBLZXJuZWwgY29uZmlnIGluCj4+Pj4gdXNlcnNwYWNlIGFwcGxpY2F0aW9uLCBzbyBLZXhl
+Yy10b29scyBjYW4ndCBrbm93IHNvbWUga2V5IGtlcm5lbCBvcHRpb25zLgo+Pj4+IElmIG5vdCBz
+bywgd2UgY2FuIHNpbXVsYXRlIHRoZSB3aG9sZSBhcm02NF9tZW1ibG9ja19pbml0KCkgIHByb2dy
+ZXNzCj4+Pj4gaW4ga2V4ZWMtdG9vbHMuCj4+Pgo+Pj4gSSBkb24ndCB1bmRlcnN0YW5kIHdoYXQg
+dGhlIGtlcm5lbCBjb25maWcgaGFzIHRvIGRvIHdpdGgga2V4ZWMgdG9vbHMuCj4+Cj4+IEkgbWVh
+biB0aGF0IGlmIHdlIGNhbiBrbm93IGtlcm5lbCAuY29uZmlnIGluIGFsbCBjaXJjdW1zdGFuY2Vz
+LCB3ZSBjYW4gY2FsY3VsYXRlIG1lbXN0YXJ0X2FkZHIgIGFzIGJlbG93IGluIEtleGVjLXRvb2xz
+Ogo+Pgo+Pgo+PiAgICAgICAgIG1lbXN0YXJ0X2FkZHIgPSByb3VuZF9kb3duKG1lbWJsb2NrX3N0
+YXJ0X29mX0RSQU0oKSwKPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBBUk02
+NF9NRU1TVEFSVF9BTElHTik7Cj4KPiBUaGlzIHdvdWxkbid0IHdvcmsgZm9yIEtBU0xSLiBIYXZp
+bmcgdGhlIGtlcm5lbCBwcm92aWRlIHlvdSB3aXRoIHRoZSBvZmZzZXQKPiBtZWFucyB5b3UgYXJl
+IGluc3VsYXRlZCBmcm9tIHRoZSBkZXRhaWxzIG9mIHBoeXNfdG9fdmlydCgpIGFuZCB3aGF0IGFm
+ZmVjdHMKPiB0aGVzZSB2YWx1ZXMuIEl0IHNob3VsZCBiZSBwb3NzaWJsZSB0byBkbyB0aGlzIGlu
+IHRoZSBzYW1lIHdheSBmb3IgYWxsCj4gYXJjaGl0ZWN0dXJlcy4KPgo+Cj4gVGhhbmtzLAo+Cj4g
+SmFtZXMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtl
+eGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
