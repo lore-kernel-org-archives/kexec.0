@@ -1,24 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [223.203.96.7] (helo=barracuda.hxt-semitech.com)
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fV6un-0001pw-2h
- for kexec@lists.infradead.org; Tue, 19 Jun 2018 03:02:50 +0000
-From: "Jin, Yanjiang" <yanjiang.jin@hxt-semitech.com>
-Subject: RE: [PATCH] arm64/mm: Introduce a variable to hold base address of
- linear region
-Date: Tue, 19 Jun 2018 03:02:15 +0000
-Message-ID: <d5e01f4bedc649ff8a2ee17b17c1c33d@HXTBJIDCEMVIW02.hxtcorp.net>
-References: <1528785361-24477-1-git-send-email-bhsharma@redhat.com>
- <CAKv+Gu8Hs+CArdkAWoBPbr_p-nq5+0oPwOPg0NsJDRMkE_bM9A@mail.gmail.com>
- <CACi5LpNdg=Enp66BybNNuj5tQOp3ggyX=tm_SVzr8v2qCRteDw@mail.gmail.com>
- <d801005a-5f7a-8fe4-a486-bc6443a406a3@arm.com>
- <CACi5LpOJ7Q7nbo9m_HGqr44+n_iEtreZt+Uxtf2PzcHSzTdKuA@mail.gmail.com>
- <3a05cd0e-466e-4fb6-a78a-4b363e21aaab@arm.com>
- <CACi5LpMJnFthKUJGfMWgDyMTM65oTtOvsRGCtMDjWP32qDptbQ@mail.gmail.com>
- <92ff5220-f863-4edc-bc9f-bd802d2efa9c@arm.com>
-In-Reply-To: <92ff5220-f863-4edc-bc9f-bd802d2efa9c@arm.com>
-Content-Language: en-US
+ id 1fV78t-0007f9-7Q
+ for kexec@lists.infradead.org; Tue, 19 Jun 2018 03:17:17 +0000
+Date: Tue, 19 Jun 2018 11:16:53 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 4/4 V3] Help to dump the old memory encrypted into vmcore
+ file
+Message-ID: <20180619031653.GA7101@dhcp-128-65.nay.redhat.com>
+References: <20180616082714.32035-1-lijiang@redhat.com>
+ <20180616082714.32035-5-lijiang@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180616082714.32035-5-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,175 +21,276 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kexec Mailing List <kexec@lists.infradead.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Lianbo Jiang <lijiang@redhat.com>
+Cc: thomas.lendacky@amd.com, iommu@lists.linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+
+On 06/16/18 at 04:27pm, Lianbo Jiang wrote:
+> In kdump mode, we need to dump the old memory into vmcore file,
+> if SME is enabled in the first kernel, we must remap the old
+> memory in encrypted manner, which will be automatically decrypted
+> when we read from DRAM. It helps to parse the vmcore for some tools.
+> 
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> ---
+> Some changes:
+> 1. add a new file and modify Makefile.
+> 2. remove some code in sev_active().
+> 
+>  arch/x86/kernel/Makefile             |  1 +
+>  arch/x86/kernel/crash_dump_encrypt.c | 53 ++++++++++++++++++++++++++++++++++++
+>  fs/proc/vmcore.c                     | 20 ++++++++++----
+>  include/linux/crash_dump.h           | 11 ++++++++
+>  4 files changed, 79 insertions(+), 6 deletions(-)
+>  create mode 100644 arch/x86/kernel/crash_dump_encrypt.c
+> 
+> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> index 02d6f5c..afb5bad 100644
+> --- a/arch/x86/kernel/Makefile
+> +++ b/arch/x86/kernel/Makefile
+> @@ -96,6 +96,7 @@ obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec_$(BITS).o
+>  obj-$(CONFIG_KEXEC_CORE)	+= relocate_kernel_$(BITS).o crash.o
+>  obj-$(CONFIG_KEXEC_FILE)	+= kexec-bzimage64.o
+>  obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
+> +obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= crash_dump_encrypt.o
+>  obj-y				+= kprobes/
+>  obj-$(CONFIG_MODULES)		+= module.o
+>  obj-$(CONFIG_DOUBLEFAULT)	+= doublefault.o
+> diff --git a/arch/x86/kernel/crash_dump_encrypt.c b/arch/x86/kernel/crash_dump_encrypt.c
+> new file mode 100644
+> index 0000000..e44ef33
+> --- /dev/null
+> +++ b/arch/x86/kernel/crash_dump_encrypt.c
+> @@ -0,0 +1,53 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + *	Memory preserving reboot related code.
+> + *
+> + *	Created by: Lianbo Jiang (lijiang@redhat.com)
+> + *	Copyright (C) RedHat Corporation, 2018. All rights reserved
+> + */
+> +
+> +#include <linux/errno.h>
+> +#include <linux/crash_dump.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/io.h>
+> +
+> +/**
+> + * copy_oldmem_page_encrypted - copy one page from "oldmem encrypted"
+> + * @pfn: page frame number to be copied
+> + * @buf: target memory address for the copy; this can be in kernel address
+> + *	space or user address space (see @userbuf)
+> + * @csize: number of bytes to copy
+> + * @offset: offset in bytes into the page (based on pfn) to begin the copy
+> + * @userbuf: if set, @buf is in user address space, use copy_to_user(),
+> + *	otherwise @buf is in kernel address space, use memcpy().
+> + *
+> + * Copy a page from "oldmem encrypted". For this page, there is no pte
+> + * mapped in the current kernel. We stitch up a pte, similar to
+> + * kmap_atomic.
+> + */
+> +
+> +ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
+> +		size_t csize, unsigned long offset, int userbuf)
+> +{
+> +	void  *vaddr;
+> +
+> +	if (!csize)
+> +		return 0;
+> +
+> +	vaddr = (__force void *)ioremap_encrypted(pfn << PAGE_SHIFT,
+> +						  PAGE_SIZE);
+> +	if (!vaddr)
+> +		return -ENOMEM;
+> +
+> +	if (userbuf) {
+> +		if (copy_to_user((void __user *)buf, vaddr + offset, csize)) {
+> +			iounmap((void __iomem *)vaddr);
+> +			return -EFAULT;
+> +		}
+> +	} else
+> +		memcpy(buf, vaddr + offset, csize);
+> +
+> +	set_iounmap_nonlazy();
+> +	iounmap((void __iomem *)vaddr);
+> +	return csize;
+> +}
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index a45f0af..5200266 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -25,6 +25,8 @@
+>  #include <linux/uaccess.h>
+>  #include <asm/io.h>
+>  #include "internal.h"
+> +#include <linux/mem_encrypt.h>
+> +#include <asm/pgtable.h>
+>  
+>  /* List representing chunks of contiguous memory areas and their offsets in
+>   * vmcore file.
+> @@ -86,7 +88,8 @@ static int pfn_is_ram(unsigned long pfn)
+>  
+>  /* Reads a page from the oldmem device from given offset. */
+>  static ssize_t read_from_oldmem(char *buf, size_t count,
+> -				u64 *ppos, int userbuf)
+> +				u64 *ppos, int userbuf,
+> +				bool encrypted)
+>  {
+>  	unsigned long pfn, offset;
+>  	size_t nr_bytes;
+> @@ -108,8 +111,11 @@ static ssize_t read_from_oldmem(char *buf, size_t count,
+>  		if (pfn_is_ram(pfn) == 0)
+>  			memset(buf, 0, nr_bytes);
+>  		else {
+> -			tmp = copy_oldmem_page(pfn, buf, nr_bytes,
+> -						offset, userbuf);
+> +			tmp = encrypted ? copy_oldmem_page_encrypted(pfn,
+> +					    buf, nr_bytes, offset, userbuf)
+> +					: copy_oldmem_page(pfn, buf, nr_bytes,
+> +							   offset, userbuf);
+> +
+>  			if (tmp < 0)
+>  				return tmp;
+>  		}
+> @@ -143,7 +149,7 @@ void __weak elfcorehdr_free(unsigned long long addr)
+>   */
+>  ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+>  {
+> -	return read_from_oldmem(buf, count, ppos, 0);
+> +	return read_from_oldmem(buf, count, ppos, 0, false);
+
+The elf header actually stays in kdump kernel reserved memory so it is
+not "oldmem", the original function is misleading and doing unnecessary
+things.  But as for your patch maybe using it as is is good for the time
+being and add a code comment why the encrypted is "false".
+
+	/* elfcorehdr stays in kdump kernel memory and it is not encrypted. */
+	return read_from_oldmem(buf, count, ppos, 0, false);
 
 
+I'm thinking to move the function to something like below, still not sure
+memremap works on every arches or not, still need more test
 
-> -----Original Message-----
-> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of James
-> Morse
-> Sent: 2018年6月15日 0:17
-> To: Bhupesh Sharma <bhsharma@redhat.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>; Ard Biesheuvel
-> <ard.biesheuvel@linaro.org>; Catalin Marinas <catalin.marinas@arm.com>;
-> Kexec Mailing List <kexec@lists.infradead.org>; Will Deacon
-> <will.deacon@arm.com>; AKASHI Takahiro <takahiro.akashi@linaro.org>;
-> Bhupesh SHARMA <bhupesh.linux@gmail.com>; linux-arm-kernel <linux-arm-
-> kernel@lists.infradead.org>
-> Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
-> linear region
->
-> Hi Bhupesh,
->
-> On 14/06/18 08:53, Bhupesh Sharma wrote:
-> > On Wed, Jun 13, 2018 at 3:59 PM, James Morse <james.morse@arm.com>
-> wrote:
-> >> On 13/06/18 06:16, Bhupesh Sharma wrote:
-> >>> On Tue, Jun 12, 2018 at 3:42 PM, James Morse <james.morse@arm.com>
-> wrote:
-> >>>> If I've followed this properly: the problem is that to generate the
-> >>>> ELF headers in the post-kdump vmcore, at kdump-load-time
-> >>>> kexec-tools has to guess the virtual addresses of the 'System RAM' regions
-> it can see in /proc/iomem.
-> >>>>
-> >>>> The problem you are hitting is an invisible hole at the beginning
-> >>>> of RAM, meaning user-space's guess_phys_to_virt() is off by the size of this
-> hole.
-> >>>>
-> >>>> Isn't KASLR a special case for this? You must have to correct for
-> >>>> that after kdump has happened, based on an elf-note in the vmcore. Can't
-> we always do this?
-> >>>
-> >>> No, I hit this issue both for the KASLR and non-KASLR boot cases.
-> >>
-> >> Because in both cases there is a hole at the beginning of the
-> >> linear-map. KASLR is a special-case of this as the kernel adds a
-> >> variable sized hole to do the randomization.
-> >>
-> >> Surely treating this as one case makes your user-space code simpler.
-> >
-> > Ok.
-> >
-> >>> Fixing this in kernel space seems better to me as the definition of
-> >>
-> >> Is there a kernel bug? Changing the definitions of internal kernel
-> >> variables for the benefit of code digging in /proc/kcore|/dev/mem isn't going
-> to fly.
-> >
-> > Indeed, I am not advocating to change the kernel space code just to
-> > suit the user-space tools. However in this particular case the
-> > 'memstart_addr' and PHY_OFFSET value are computed as 0 which IMO
->
-> (What is PHY_OFFSET? I assume you mean PHYS_OFFSET, which is the same as
-> memstart_addr ... why do you quote them together?)
->
->
-> > is
-> > not the real representation of the start of System RAM as the 1st
-> > memory block available in Linux starts from 2MB [as confirmed by the
-> > 'memblock_start_of_DRAM()' value of 0x200000] and indicated by
-> > '/proc/iomem':
-> >
-> > # head -1 /proc/iomem
-> > 00200000-0021ffff : reserved
->
-> You have assumptions about what memstart_addr is based on its name. Names
-> of kernel variables get further from their actual use over time.
->
-> The purpose of this variable isn't to store where a hypothetical-lowest-page of
-> memory would be in the linear map. The kernel doesn't have a handy variable for
-> this, because on-one needs to know.
->
->
-> > I think reading the kernel code and finding 'memstart_addr' and
-> > PHY_OFFSET as 0, one gets the notion
->
-> notion -> assumption based on the name
->
-> It's just a name. Anyone reading this should grep for how the value is used.
-> It's added/subtracted from addresses as part of phys_to_virt()/virt_to_phs(). It
-> must be some kind of offset. What does it mean on its own? Probably nothing.
->
->
-> > that the base of System RAM starts from 0, which is incorrect in the
-> > above case as it starts from 2MB as the 1st block is of the type
-> > EfiReservedMemType
->
-> What will they assume if the value is negative?
->
-> [...]
->
-> > So, either we should have a uniform way of representing the virtual
-> > base of the linear range
->
-> What needs to know this? RAM will be somewhere between PAGE_OFFSET and
-> the top of the address space. Anyone who wants to know where has a specific
-> page in mind, phys_to_virt() or page_address() tell them where their page is.
->
->
-> > or  we should rather look at removing the PAGE_OFFSET usage from the
-> > kernel (or atleast the confusing comment from 'memory.h')
->
-> This?:
-> | PAGE_OFFSET - the virtual address of the start of the linear map
->
-> Nothing here says its the virtual address of any particular physical page. Its the
-> start of the region of VA space that holds the 1:1 mapping of RAM. Its value is
-> generated at compile time, we have no idea where RAM will be until we boot,
-> how could this be the address of any particular page?
->
->
-> > BTW adding 'p2v_offset' as an elf-note seems like a good idea. If this
-> > seems suitable, I can try and spin patch(es) using this approach (both
-> > for the kernel and user-space tools).
->
-> You seem to be using this for user-space phys_to_virt() based on values found in
-> /proc/iomem. This should give you what you want, and isolate your user-space
-> from the kernel's unexpected naming of variables.
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index cfb6674331fd..40c01cc42b38 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -136,6 +136,24 @@ static ssize_t read_from_oldmem(char *buf, size_t count,
+ 	return read;
+ }
+ 
++static ssize_t read_from_mem(char *buf, size_t count, u64 *ppos)
++{
++	resource_size_t offset = (resource_size_t)*ppos;
++	char *kbuf;
++
++	if (!count)
++		return 0;
++
++	kbuf = memremap(offset, count, MEMREMAP_WB);
++	if (!kbuf)
++		return 0;
++
++	memcpy(buf, kbuf, count);
++	memunmap(kbuf);
++
++	return count;
++}
++
+ /*
+  * Architectures may override this function to allocate ELF header in 2nd kernel
+  */
+@@ -155,7 +173,7 @@ void __weak elfcorehdr_free(unsigned long long addr)
+  */
+ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+ {
+-	return read_from_oldmem(buf, count, ppos, 0);
++	return read_from_mem(buf, count, ppos);
+ }
+ 
+ /*
+ 
 
-I don't know could I simplify this problem?
-Let's ignore what memstart_addr represents here, we just want to implement phys_to_virt() in an userspace applications(kexec-tools or others).
+>  }
+>  
+>  /*
+> @@ -151,7 +157,7 @@ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+>   */
+>  ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
+>  {
+> -	return read_from_oldmem(buf, count, ppos, 0);
+> +	return read_from_oldmem(buf, count, ppos, 0, sme_active());
+>  }
+>  
+>  /*
+> @@ -161,6 +167,7 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
+>  				  unsigned long from, unsigned long pfn,
+>  				  unsigned long size, pgprot_t prot)
+>  {
+> +	prot = pgprot_encrypted(prot);
+>  	return remap_pfn_range(vma, from, pfn, size, prot);
+>  }
+>  
+> @@ -235,7 +242,8 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+>  					    m->offset + m->size - *fpos,
+>  					    buflen);
+>  			start = m->paddr + *fpos - m->offset;
+> -			tmp = read_from_oldmem(buffer, tsz, &start, userbuf);
+> +			tmp = read_from_oldmem(buffer, tsz, &start, userbuf,
+> +						sme_active());
+>  			if (tmp < 0)
+>  				return tmp;
+>  			buflen -= tsz;
+> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+> index f7ac2aa..f3414ff 100644
+> --- a/include/linux/crash_dump.h
+> +++ b/include/linux/crash_dump.h
+> @@ -25,6 +25,17 @@ extern int remap_oldmem_pfn_range(struct vm_area_struct *vma,
+>  
+>  extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
+>  						unsigned long, int);
+> +#ifdef CONFIG_AMD_MEM_ENCRYPT
+> +extern ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
+> +					   size_t csize, unsigned long offset,
+> +					   int userbuf);
+> +#else
+> +static inline ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
+> +					size_t csize, unsigned long offset,
+> +					int userbuf) {
 
-ARM64 Kernel has a below definition:
+Personally I prefer below because it is too long:
 
-#define __phys_to_virt(x)       ((unsigned long)((x) - PHYS_OFFSET) | PAGE_OFFSET)
+static inline
+ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
+				   unsigned long offset, int userbuf)
+{
+	return 0;
+}
+			
 
-So userspace app must know PHYS_OFFSET(equal to memstart_addr now). Seems this is very simple, but memstart_addr has gone through several operations in arm64_memblock_init() depends on different Kernel configurations, so userspace app needs to know many additional definitions as following:
+> +	return csize;
 
-memblock_start_of_DRAM(),  (ifdef CONFIG_SPARSEMEM_VMEMMAP),  ARM64_MEMSTART_SHIFT,  SECTION_SIZE_BITS,  PAGE_OFFSET, memblock_end_of_DRAM(),
-IS_ENABLED(CONFIG_RANDOMIZE_BASE), memstart_offset_seed.
+As above it should be return 0;
 
-It is hard to know all above in kexec-tools now. Originally I planned to read memstart_addr's value from "/dev/mem", but someone thought not all Kernels enable "/dev/mem", we'd better find a more generic approach. So we want to get some suggestions from ARM kernel community.
-Can we export this variable in Kernel side through sysconf() or other similar methods? Or someone can provide an effect way to get memstart_addr's value?
-
-Thanks,
-Yanjiang
-
-
->
-> I'd suggest a 64bit offset that is added to a physical address to get where in the
-> linear map this page would be, if its mapped.
->
->
-> Thanks,
->
-> James
->
+> +}
+> +#endif
+>  void vmcore_cleanup(void);
+>  
+>  /* Architecture code defines this if there are other possible ELF
+> -- 
+> 2.9.5
+> 
+> 
 > _______________________________________________
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
 
-
-
-This email is intended only for the named addressee. It may contain information that is confidential/private, legally privileged, or copyright-protected, and you should handle it accordingly. If you are not the intended recipient, you do not have legal rights to retain, copy, or distribute this email or its contents, and should promptly delete the email and all electronic copies in your system; do not retain copies in any media. If you have received this email in error, please notify the sender promptly. Thank you.
-
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
