@@ -1,32 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-f67.google.com ([209.85.215.67])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fVFHH-0000Ry-NB
- for kexec@lists.infradead.org; Tue, 19 Jun 2018 11:58:31 +0000
-Received: by mail-lf0-f67.google.com with SMTP id q11-v6so29696520lfc.7
- for <kexec@lists.infradead.org>; Tue, 19 Jun 2018 04:58:17 -0700 (PDT)
+Subject: Re: [PATCH v2 1/4] arm64: export memblock_reserve()d regions via
+ /proc/iomem
+References: <20180619064424.6642-1-takahiro.akashi@linaro.org>
+ <20180619064424.6642-2-takahiro.akashi@linaro.org>
+From: Dave Kleikamp <dave.kleikamp@oracle.com>
+Message-ID: <72307608-90e0-4842-edc1-d3b284782940@oracle.com>
+Date: Tue, 19 Jun 2018 08:37:17 -0500
 MIME-Version: 1.0
-In-Reply-To: <b0d40351-8d78-fd69-cc87-d5ea5eaabd2a@arm.com>
-References: <CAKv+Gu8Hs+CArdkAWoBPbr_p-nq5+0oPwOPg0NsJDRMkE_bM9A@mail.gmail.com>
- <CACi5LpNdg=Enp66BybNNuj5tQOp3ggyX=tm_SVzr8v2qCRteDw@mail.gmail.com>
- <d801005a-5f7a-8fe4-a486-bc6443a406a3@arm.com>
- <CACi5LpOJ7Q7nbo9m_HGqr44+n_iEtreZt+Uxtf2PzcHSzTdKuA@mail.gmail.com>
- <3a05cd0e-466e-4fb6-a78a-4b363e21aaab@arm.com>
- <CACi5LpMJnFthKUJGfMWgDyMTM65oTtOvsRGCtMDjWP32qDptbQ@mail.gmail.com>
- <92ff5220-f863-4edc-bc9f-bd802d2efa9c@arm.com>
- <d5e01f4bedc649ff8a2ee17b17c1c33d@HXTBJIDCEMVIW02.hxtcorp.net>
- <20180619085541.GB13984@arm.com>
- <6860c284f1c74faa95edd6cf866ec80d@HXTBJIDCEMVIW02.hxtcorp.net>
- <20180619094045.GD13984@arm.com>
- <a720d91be20844cd9ed84728268300d9@HXTBJIDCEMVIW02.hxtcorp.net>
- <09260c7e-8b9d-bc3c-5bca-0fd75417f552@arm.com>
- <CACi5LpMoKP4eG5XhYe5hf5VC9MOY8KuHK=j0ujb8GFpyjAuAww@mail.gmail.com>
- <b0d40351-8d78-fd69-cc87-d5ea5eaabd2a@arm.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 19 Jun 2018 17:28:15 +0530
-Message-ID: <CACi5LpM2GV-vwcEGeCE20QW0PVmDcKnjz017sYBAwYRfZ24AzA@mail.gmail.com>
-Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
- linear region
+In-Reply-To: <20180619064424.6642-2-takahiro.akashi@linaro.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,93 +17,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "Jin,
- Yanjiang" <yanjiang.jin@hxt-semitech.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, ard.biesheuvel@linaro.org
+Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, al.stone@linaro.org, bhsharma@redhat.com, tbaicar@codeaurora.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, james.morse@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-SGkgSmFtZXMsCgpPbiBUdWUsIEp1biAxOSwgMjAxOCBhdCA0OjU2IFBNLCBKYW1lcyBNb3JzZSA8
-amFtZXMubW9yc2VAYXJtLmNvbT4gd3JvdGU6Cj4gSGkgQmh1cGVzaCwKPgo+IE9uIDE5LzA2LzE4
-IDExOjM3LCBCaHVwZXNoIFNoYXJtYSB3cm90ZToKPj4gT24gVHVlLCBKdW4gMTksIDIwMTggYXQg
-Mzo0NiBQTSwgSmFtZXMgTW9yc2UgPGphbWVzLm1vcnNlQGFybS5jb20+IHdyb3RlOgo+Pj4gT24g
-MTkvMDYvMTggMTA6NTcsIEppbiwgWWFuamlhbmcgd3JvdGU6Cj4+Pj4+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tCj4+Pj4+IEZyb206IFdpbGwgRGVhY29uIFttYWlsdG86d2lsbC5kZWFjb25A
-YXJtLmNvbV0KPj4+Pj4gU2VudDogMjAxOOW5tDbmnIgxOeaXpSAxNzo0MQo+Pj4+PiBUbzogSmlu
-LCBZYW5qaWFuZyA8eWFuamlhbmcuamluQGh4dC1zZW1pdGVjaC5jb20+Cj4+Pj4+IENjOiBKYW1l
-cyBNb3JzZSA8amFtZXMubW9yc2VAYXJtLmNvbT47IEJodXBlc2ggU2hhcm1hCj4+Pj4+IDxiaHNo
-YXJtYUByZWRoYXQuY29tPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IEFy
-ZAo+Pj4+PiBCaWVzaGV1dmVsIDxhcmQuYmllc2hldXZlbEBsaW5hcm8ub3JnPjsgQ2F0YWxpbiBN
-YXJpbmFzCj4+Pj4+IDxjYXRhbGluLm1hcmluYXNAYXJtLmNvbT47IEtleGVjIE1haWxpbmcgTGlz
-dCA8a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZz47Cj4+Pj4+IEFLQVNISSBUYWthaGlybyA8dGFr
-YWhpcm8uYWthc2hpQGxpbmFyby5vcmc+OyBCaHVwZXNoIFNIQVJNQQo+Pj4+PiA8Ymh1cGVzaC5s
-aW51eEBnbWFpbC5jb20+OyBsaW51eC1hcm0ta2VybmVsIDxsaW51eC1hcm0tCj4+Pj4+IGtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnPgo+Pj4+PiBTdWJqZWN0OiBSZTogW1BBVENIXSBhcm02NC9t
-bTogSW50cm9kdWNlIGEgdmFyaWFibGUgdG8gaG9sZCBiYXNlIGFkZHJlc3Mgb2YKPj4+Pj4gbGlu
-ZWFyIHJlZ2lvbgo+Cj4+Pj4+Pj4+IEl0IGlzIGhhcmQgdG8ga25vdyBhbGwgYWJvdmUgaW4ga2V4
-ZWMtdG9vbHMgbm93LiBPcmlnaW5hbGx5IEkKPj4+Pj4+Pj4gcGxhbm5lZCB0byByZWFkIG1lbXN0
-YXJ0X2FkZHIncyB2YWx1ZSBmcm9tICIvZGV2L21lbSIsIGJ1dCBzb21lb25lCj4+Pj4+Pj4+IHRo
-b3VnaHQgbm90IGFsbCBLZXJuZWxzIGVuYWJsZSAiL2Rldi9tZW0iLCB3ZSdkIGJldHRlciBmaW5k
-IGEgbW9yZQo+Pj4+Pj4+PiBnZW5lcmljIGFwcHJvYWNoLiBTbyB3ZSB3YW50IHRvIGdldCBzb21l
-IHN1Z2dlc3Rpb25zIGZyb20gQVJNIGtlcm5lbAo+Pj4+PiBjb21tdW5pdHkuCj4+Pj4+Pj4+IENh
-biB3ZSBleHBvcnQgdGhpcyB2YXJpYWJsZSBpbiBLZXJuZWwgc2lkZSB0aHJvdWdoIHN5c2NvbmYo
-KSBvcgo+Pj4+Pj4+PiBvdGhlciBzaW1pbGFyIG1ldGhvZHM/IE9yIHNvbWVvbmUgY2FuIHByb3Zp
-ZGUgYW4gZWZmZWN0IHdheSB0byBnZXQKPj4+Pj4+Pj4gbWVtc3RhcnRfYWRkcidzIHZhbHVlPwo+
-Pj4+Pj4+Cj4+Pj4+Pj4gSSB0aG91Z2h0IHRoZSBzdWdnZXN0aW9uIGZyb20gSmFtZXMgd2FzIHRv
-IGV4cG9zZSB0aGlzIHZpYSBhbiBFTEYKPj4+Pj4+PiBOT1RFIGluIGtjb3JlIGFuZCB2bWNvcmUg
-KG9yIGluIHRoZSBoZWFkZXIgZGlyZWN0bHkgaWYgdGhhdCdzIHBvc3NpYmxlLCBidXQgSSdtCj4+
-Pj4+IG5vdCBzdXJlIGFib3V0IGl0KT8KPj4+Pj4+Cj4+Pj4+PiBUaGFua3MgZm9yIHlvdXIgcmVw
-bHkgZmlyc3RseS4gQnV0IHNhbWUgYXMgREVWTUVNLCBrY29yZSBpcyBub3QgYQo+Pj4+Pj4gbXVz
-dC1oYXZlLCBzbyB3ZSBjYW4ndCBkZXBlbmQgb24gaXQuCj4+Pj4+Cj4+Pj4+IE5laXRoZXIgaXMg
-S0VYRUMuIFdlIGNhbiBzZWxlY3QgUFJPQ19LQ09SRSBmcm9tIEtFWEVDIGlmIGl0IGhlbHBzLgo+
-Pj4+Pgo+Pj4+Pj4gT24gdGhlIG90aGVyIGhhbmQsIHBoeXNfdG9fdmlydCgpIGlzIGNhbGxlZCBk
-dXJpbmcgZ2VuZXJhdGluZyB2bWNvcmUKPj4+Pj4+IGluIEtleGVjLXRvb2xzLCB2bWNvcmUgYWxz
-byBjYW4ndCBoZWxwIHRoaXMgaXNzdWUuCj4+Pj4+Cj4+Pj4+IEkgZG9uJ3QgdW5kZXJzdGFuZCB0
-aGlzIHBhcnQuIElmIHlvdSBoYXZlIHRoZSB2bWNvcmUgaW4geW91ciBoYW5kLCB3aHkgY2FuJ3Qg
-eW91Cj4+Pj4+IGdyb2sgdGhlIHB2IG9mZnNldCBmcm9tIHRoZSBub3RlIGFuZCB1c2UgdGhhdCBp
-biBwaHlzX3RvX3ZpcnQoKT8KPj4+Pgo+Pj4+IEl0IGlzIGEgY2hpY2tlbi1hbmQtZWdnIGlzc3Vl
-Lgo+Pj4+IHBoeXNfdG8gdmlydCgpIGlzIGZvciBjcmFzaGR1bXAgc2V0dXAuIFRvIGdlbmVyYXRl
-IHZtY29yZSwgd2UgbXVzdCBjYWxsCj4+Pj4gcGh5c190b192aXJ0KCkuIEF0IHRoaXMgcG9pbnQs
-IG5vIHZtY29yZSBleGlzdHMuCj4+Pgo+Pj4gSXRzIG5lZWRlZCBmb3IgdGhlIHBhcnRzIG9mIHRo
-ZSBFTEYgaGVhZGVyIHRoYXQga2V4ZWMtdG9vbHMgZ2VuZXJhdGVzIGF0IGtkdW1wCj4+PiBsb2Fk
-IHRpbWU/Cj4+Pgo+Pj4gU28gYWRkaW5nIHRoaXMgcHZfb2Zmc2V0IHRvIHRoZSBrZXk9dmFsdWUg
-ZGF0YSBjcmFzaF9zYXZlX3ZtY29yZWluZm9faW5pdCgpCj4+PiBzYXZlcyBpc24ndCBhdmFpbGFi
-bGUgZWFybHkgZW5vdWdoPwo+Cj4+IFllcywgb25lIGNhc2Ugd2hlcmUgaXQgaXMgbm90IGFjdHVh
-bGx5IGF2YWlsYWJsZSBlYXJseSBlbm91Z2ggZm9yCj4+IG1ha2VkdW1wZmlsZSB1c2FnZSBpcyBp
-ZiB3ZSBhcmUgZGV0ZXJtaW5pbmcgdGhlIFBUX05PVEUgY29udGVudHMgZnJvbQo+PiB0aGUgJy9w
-cm9jL2tjb3JlJyBvbiBhICdsaXZlJyBzeXN0ZW0KPgo+PiBpbnQgc2V0X2tjb3JlX3ZtY29yZWlu
-Zm8odWludDY0X3Qgdm1jb3JlaW5mb19hZGRyLCB1aW50NjRfdCB2bWNvcmVpbmZvX2xlbikKPj4K
-Pj4gewo+Pgo+PiA8c25pcC4uPgo+PiBrdmFkZHIgPSAodWxvbmcpdm1jb3JlaW5mb19hZGRyICsg
-UEFHRV9PRkZTRVQ7Cj4+Cj4+IH0KPgo+IFlvdSBhcmUgdHJ5aW5nIHRvIHJlYWQgdGhlIHZtY29y
-ZWluZm8gdGhyb3VnaCAvcHJvYy9rY29yZSBnaXZlbiBrbm93bGVkZ2Ugb2YgaXRzCj4gcGh5c2lj
-YWwgYWRkcmVzcy4KPgo+IEknbSBzdWdnZXN0aW5nIGFkZGluZyB0aGUgY29udGVudHMgb2Ygdm1j
-b3JlaW5mbyBhcyBhIFBUX05PVEUgc2VjdGlvbiBvZgo+IC9wcm9jL2tjb3JlJ3MgRUxGIGhlYWRl
-ci4gTm8gc3BlY2lhbCBrbm93bGVkZ2UgbmVjZXNzYXJ5LCBhbnkgZWxmLXBhcnNlciBzaG91bGQK
-PiBiZSBhYmxlIHRvIGR1bXAgdGhlIHZhbHVlcy4KPgo+Cj4+IE5vdyB0aGUgcHJvYmxlbSBhdCBo
-YW5kIGlzIHRvIGRldGVybWluZSB0aGUgb2Zmc2V0IGF0IHdoaWNoIHRoZQo+PiBwdl9vZmZzZXQg
-KGtleT12YWx1ZSBkYXRhIHBhaXIpIGxpZXMgaW4gdGhlICcvcHJvYy9rY29yZScgKEkgYXNzdW1l
-Cj4+IHRoYXQgd2hlbiB5b3UgbWVudGlvbmVkIGFib3ZlIGFuZCBlYXJsaWVyIGFib3V0IGFkZGlu
-ZyB0aGlzIHBhaXIgdG8KPj4gdGhlIGVsZm5vdGVzIHlvdSBtZWFudCBib3RoIHRoZSB2bWNvcmVp
-bmZvIGFuZCAncHJvYy9rY29yZScpLCBhcyB3ZQo+PiBjYW4gaGF2ZSAnbicgbnVtYmVyIG9mIFBU
-X0xPQUQgc2VnbWVudHMuCj4KPiBJdCBsb29rcyBsaWtlIHRoZXJlIGlzIGFscmVhZHkgYSBOT1RF
-IHNlY3Rpb24gd2l0aCBjb3JlIGluZm8gaW4gdGhlcmU6Cj4gfCAjIHJlYWRlbGYgLWwgL3Byb2Mv
-a2NvcmUKPiB8Cj4gfCBFbGYgZmlsZSB0eXBlIGlzIENPUkUgKENvcmUgZmlsZSkKPiB8IEVudHJ5
-IHBvaW50IDB4MAo+IHwgVGhlcmUgYXJlIDE2IHByb2dyYW0gaGVhZGVycywgc3RhcnRpbmcgYXQg
-b2Zmc2V0IDY0Cj4gfAo+IHwgUHJvZ3JhbSBIZWFkZXJzOgo+IHwgIFR5cGUgICAgICAgICAgIE9m
-ZnNldCAgICAgICAgICAgICBWaXJ0QWRkciAgICAgICAgICAgUGh5c0FkZHIKPiB8ICAgICAgICAg
-ICAgICAgICBGaWxlU2l6ICAgICAgICAgICAgTWVtU2l6ICAgICAgICAgICAgICBGbGFncyAgQWxp
-Z24KPiB8ICAgTk9URSAgICAgICAgICAgMHgwMDAwMDAwMDAwMDAwM2MwIDB4MDAwMDAwMDAwMDAw
-MDAwMCAweDAwMDAwMDAwMDAwMDAwMDAKPiB8ICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwMDAw
-MDAxMTE0IDB4MDAwMDAwMDAwMDAwMDAwMCAgICAgICAgIDB4MAo+Cj4gSSBhc3N1bWUgd2UgY2Fu
-IGFkZCBtb3JlIG5vdGVzIHdpdGhvdXQgYnJlYWtpbmcgdGhlIGV4aXN0aW5nIHVzZXIuLi4KPgo+
-IChhbmQgaXQgbG9va3MgbGlrZSB0aGVyZSBhcmUgc29tZSBicm9rZW4gX19wYShrZXJuZWwgc3lt
-Ym9sKSB1c2VycyBpbiB0aGVyZS4KClRoYW5rcyBmb3IgeW91ciBpbnB1dHMuCgpJIGFtIHdvcmtp
-bmcgb24gZml4ZXMgb24gdGhlIGFib3ZlIGxpbmVzIGZvciBrZXJuZWwgYW5kIHVzZXItc3BhY2UK
-dG9vbHMgKGxpa2UgbWFrZWR1bXBmaWxlLCBjcmFzaC11dGlsaXR5IGFuZCBrZXhlYy10b29scyku
-CgpJIHdpbGwgcG9zdCBzb21lIFJGQyBwYXRjaGVzIG9uIHRoZSBzYW1lIGxpbmVzIChvciBjb21l
-IGJhY2sgaW4gY2FzZSBJCmdldCBzdHVjayBzb21ld2hlcmUpIHNob3J0bHkuCgpUaGFua3MsCkJo
-dXBlc2gKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtl
-eGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 06/19/2018 01:44 AM, AKASHI Takahiro wrote:
+
+> +static int __init reserve_memblock_reserved_regions(void)
+> +{
+> +	phys_addr_t start, end, roundup_end = 0;
+> +	struct resource *mem, *res;
+> +	u64 i;
+> +
+> +	for_each_reserved_mem_region(i, &start, &end) {
+> +		if (end <= roundup_end)
+> +			continue; /* done already */
+> +
+> +		start = __pfn_to_phys(PFN_DOWN(start));
+> +		end = __pfn_to_phys(PFN_UP(end)) - 1;
+> +		roundup_end = end;
+> +
+> +		res = kzalloc(sizeof(*res), GFP_ATOMIC);
+> +		if (WARN_ON(!res))
+> +			return -ENOMEM;
+> +		res->start = start;
+> +		res->end = end;
+> +		res->name  = "reserved";
+> +		res->flags = IORESOURCE_MEM;
+> +
+> +		mem = request_resource_conflict(&iomem_resource, res);
+> +		/*
+> +		 * We expected memblock_reserve() regions to conflict with
+> +		 * memory created by request_standard_resources().
+> +		 */
+> +		if (WARN_ON_ONCE(!mem))
+> +			continue;
+> +		kfree(res);
+
+Why is kfree() after the conditional continue? This is a memory leak.
+
+> +
+> +		reserve_region_with_split(mem, start, end, "reserved");
+> +	}
+> +
+> +	return 0;
+> +}
+> +arch_initcall(reserve_memblock_reserved_regions);
+> +
+>  u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
+>  
+>  void __init setup_arch(char **cmdline_p)
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
