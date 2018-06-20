@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mail-sn1nam02on060f.outbound.protection.outlook.com
+ ([2a01:111:f400:fe44::60f]
+ helo=NAM02-SN1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fVbEl-00088L-1Q
- for kexec@lists.infradead.org; Wed, 20 Jun 2018 11:25:21 +0000
-Subject: Re: [PATCH] makedumpfile: Do not print ETA value if current progress
- is 0
-References: <20180409114020.1b48ba8c@ezekiel.suse.cz>
- <90ec5728-2318-1074-0fc2-b02a69e6c7f4@redhat.com>
- <20180410094707.0d1ec7f2@ezekiel.suse.cz>
- <b7e96843-7a88-1c2f-6b62-09ed94f8c78e@redhat.com>
- <20180620091733.290580b9@ezekiel.suse.cz>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <7d1bf253-89af-a6f9-4579-04378e514d71@redhat.com>
-Date: Wed, 20 Jun 2018 19:24:59 +0800
+ id 1fVfXi-0007dx-Ms
+ for kexec@lists.infradead.org; Wed, 20 Jun 2018 16:01:19 +0000
+Subject: Re: [PATCH 1/4 V3] Add a function(ioremap_encrypted) for kdump when
+ AMD sme enabled
+References: <20180616082714.32035-1-lijiang@redhat.com>
+ <20180616082714.32035-2-lijiang@redhat.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <e5bb19b7-7db4-1c1c-d8bd-cc44d6b7bebb@amd.com>
+Date: Wed, 20 Jun 2018 11:00:52 -0500
 MIME-Version: 1.0
-In-Reply-To: <20180620091733.290580b9@ezekiel.suse.cz>
+In-Reply-To: <20180616082714.32035-2-lijiang@redhat.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,27 +23,158 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>, Dave Young <dyoung@redhat.com>, Takuya Nakayama <tak-nakayama@tg.jp.nec.com>, kexec-ml <kexec@lists.infradead.org>
+To: Lianbo Jiang <lijiang@redhat.com>, linux-kernel@vger.kernel.org
+Cc: dyoung@redhat.com, iommu@lists.linux-foundation.org, kexec@lists.infradead.org
 
-5ZyoIDIwMTjlubQwNuaciDIw5pelIDE1OjE3LCBQZXRyIFRlc2FyaWsg5YaZ6YGTOgo+IEhpIExp
-YW5ibywKPiAKPiBPbiBXZWQsIDIwIEp1biAyMDE4IDExOjA3OjQ2ICswODAwCj4gbGlqaWFuZyA8
-bGlqaWFuZ0ByZWRoYXQuY29tPiB3cm90ZToKPiAKPj4g5ZyoIDIwMTjlubQwNOaciDEw5pelIDE1
-OjQ3LCBQZXRyIFRlc2FyaWsg5YaZ6YGTOgo+PiBbLi4uXQo+Pj4gWWVzLCB0aGUgY3VycmVudCBj
-b2RlIHdpbGwgbm90IHByb2R1Y2Ugc2Vuc2libGUgcmVzdWx0cyBpZiB0aGUgc3lzdGVtCj4+PiBj
-bG9jayBtb3ZlcyBiYWNrd2FyZHMuIFdpdGggbXkgcGF0Y2ggaXQgd2lsbCBtb3N0IGxpa2VseSBz
-YXk6ICI+MmRheSIuCj4+PiBCdXQgaXQgd2lsbCBub3Qgd29yayBhbnkgYmV0dGVyIGlmIHlvdSB1
-c2UgYSA2NC1iaXQgaW50ZWdlci4KPj4+Cj4+PiBJbnN0ZWFkLCB3ZSBzaG91bGQgYmUgdXNpbmcg
-Y2xvY2tfZ2V0dGltZShDTE9DS19NT05PVE9OSUMsIC4uLikuCj4+PiBUaGF0J3MgYSBzZXBhcmF0
-ZSBpc3N1ZSB0aGF0IEkgY2FuIHNvbHZlIGluIGFub3RoZXIgcGF0Y2guICAKPj4gSGksIFBldHIK
-Pj4gUHJldmlvdXNseSBtZW50aW9uZWQgdGhhdCB5b3Ugd291bGQgc29sdmUgdGhpcyBpc3N1ZSwg
-d291bGQgeW91IGhhdmUgYW55IHBsYW5zCj4+IGFib3V0IHRoaXMgaXNzdWU/Cj4gCj4gVGhhbmsg
-eW91IGZvciB0aGUgcmVtaW5kZXIuIFllcywgbGV0IG1lIGRvIGl0IG5vdyEKPiAKPiBQZXRyIFQK
-PiAKU3dpZnQgYWN0aW9uISBJIGhhdmUgc2VlbiB5b3VyIHBhdGNoZXMsIHRoYW5rIHlvdS4KCkxp
-YW5ibwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
-ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On 6/16/2018 3:27 AM, Lianbo Jiang wrote:
+> It is convenient to remap the old memory encrypted to the second
+> kernel by calling ioremap_encrypted().
+> 
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> ---
+> Some changes:
+> 1. remove the sme_active() check in __ioremap_caller().
+> 2. put some logic into the early_memremap_pgprot_adjust() for
+> early memremap.
+> 
+>  arch/x86/include/asm/io.h |  3 +++
+>  arch/x86/mm/ioremap.c     | 28 ++++++++++++++++++++--------
+>  2 files changed, 23 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+> index f6e5b93..989d60b 100644
+> --- a/arch/x86/include/asm/io.h
+> +++ b/arch/x86/include/asm/io.h
+> @@ -192,6 +192,9 @@ extern void __iomem *ioremap_cache(resource_size_t offset, unsigned long size);
+>  #define ioremap_cache ioremap_cache
+>  extern void __iomem *ioremap_prot(resource_size_t offset, unsigned long size, unsigned long prot_val);
+>  #define ioremap_prot ioremap_prot
+> +extern void __iomem *ioremap_encrypted(resource_size_t phys_addr,
+> +					unsigned long size);
+> +#define ioremap_encrypted ioremap_encrypted
+>  
+>  /**
+>   * ioremap     -   map bus memory into CPU space
+> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+> index c63a545..e365fc4 100644
+> --- a/arch/x86/mm/ioremap.c
+> +++ b/arch/x86/mm/ioremap.c
+> @@ -24,6 +24,7 @@
+>  #include <asm/pgalloc.h>
+>  #include <asm/pat.h>
+>  #include <asm/setup.h>
+> +#include <linux/crash_dump.h>
+>  
+>  #include "physaddr.h"
+>  
+> @@ -131,7 +132,8 @@ static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
+>   * caller shouldn't need to know that small detail.
+>   */
+>  static void __iomem *__ioremap_caller(resource_size_t phys_addr,
+> -		unsigned long size, enum page_cache_mode pcm, void *caller)
+> +		unsigned long size, enum page_cache_mode pcm,
+> +		void *caller, bool encrypted)
+>  {
+>  	unsigned long offset, vaddr;
+>  	resource_size_t last_addr;
+> @@ -199,7 +201,7 @@ static void __iomem *__ioremap_caller(resource_size_t phys_addr,
+>  	 * resulting mapping.
+>  	 */
+>  	prot = PAGE_KERNEL_IO;
+> -	if (sev_active() && mem_flags.desc_other)
+> +	if ((sev_active() && mem_flags.desc_other) || encrypted)
+>  		prot = pgprot_encrypted(prot);
+>  
+>  	switch (pcm) {
+> @@ -291,7 +293,7 @@ void __iomem *ioremap_nocache(resource_size_t phys_addr, unsigned long size)
+>  	enum page_cache_mode pcm = _PAGE_CACHE_MODE_UC_MINUS;
+>  
+>  	return __ioremap_caller(phys_addr, size, pcm,
+> -				__builtin_return_address(0));
+> +				__builtin_return_address(0), false);
+>  }
+>  EXPORT_SYMBOL(ioremap_nocache);
+>  
+> @@ -324,7 +326,7 @@ void __iomem *ioremap_uc(resource_size_t phys_addr, unsigned long size)
+>  	enum page_cache_mode pcm = _PAGE_CACHE_MODE_UC;
+>  
+>  	return __ioremap_caller(phys_addr, size, pcm,
+> -				__builtin_return_address(0));
+> +				__builtin_return_address(0), false);
+>  }
+>  EXPORT_SYMBOL_GPL(ioremap_uc);
+>  
+> @@ -341,7 +343,7 @@ EXPORT_SYMBOL_GPL(ioremap_uc);
+>  void __iomem *ioremap_wc(resource_size_t phys_addr, unsigned long size)
+>  {
+>  	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WC,
+> -					__builtin_return_address(0));
+> +					__builtin_return_address(0), false);
+>  }
+>  EXPORT_SYMBOL(ioremap_wc);
+>  
+> @@ -358,14 +360,21 @@ EXPORT_SYMBOL(ioremap_wc);
+>  void __iomem *ioremap_wt(resource_size_t phys_addr, unsigned long size)
+>  {
+>  	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WT,
+> -					__builtin_return_address(0));
+> +					__builtin_return_address(0), false);
+>  }
+>  EXPORT_SYMBOL(ioremap_wt);
+>  
+> +void __iomem *ioremap_encrypted(resource_size_t phys_addr, unsigned long size)
+> +{
+> +	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WB,
+> +				__builtin_return_address(0), true);
+> +}
+> +EXPORT_SYMBOL(ioremap_encrypted);
+> +
+>  void __iomem *ioremap_cache(resource_size_t phys_addr, unsigned long size)
+>  {
+>  	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WB,
+> -				__builtin_return_address(0));
+> +				__builtin_return_address(0), false);
+>  }
+>  EXPORT_SYMBOL(ioremap_cache);
+>  
+> @@ -374,7 +383,7 @@ void __iomem *ioremap_prot(resource_size_t phys_addr, unsigned long size,
+>  {
+>  	return __ioremap_caller(phys_addr, size,
+>  				pgprot2cachemode(__pgprot(prot_val)),
+> -				__builtin_return_address(0));
+> +				__builtin_return_address(0), false);
+>  }
+>  EXPORT_SYMBOL(ioremap_prot);
+>  
+> @@ -688,6 +697,9 @@ pgprot_t __init early_memremap_pgprot_adjust(resource_size_t phys_addr,
+>  	if (encrypted_prot && memremap_should_map_decrypted(phys_addr, size))
+>  		encrypted_prot = false;
+>  
+> +	if (sme_active() && is_kdump_kernel())
+> +		encrypted_prot = false;
+> +
+
+This change doesn't seem to go with the patch description.  Maybe it
+should be a separate patch?  Or provide more detail in the description
+for this change.
+
+What is this change addressing?  What early_memremap() calls were failing
+that required this?  If this truly is required, you can probably move it
+up into the "if (sme_active())" block a few lines higher in the function.
+
+Thanks,
+Tom
+
+>  	return encrypted_prot ? pgprot_encrypted(prot)
+>  			      : pgprot_decrypted(prot);
+>  }
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
