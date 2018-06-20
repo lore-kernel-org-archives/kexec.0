@@ -1,34 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-f66.google.com ([209.85.215.66])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fVXVZ-0000jk-64
- for kexec@lists.infradead.org; Wed, 20 Jun 2018 07:26:29 +0000
-Received: by mail-lf0-f66.google.com with SMTP id i15-v6so3380261lfc.2
- for <kexec@lists.infradead.org>; Wed, 20 Jun 2018 00:26:14 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <51cf54d6a19f4837b74218b000cc23bc@HXTBJIDCEMVIW02.hxtcorp.net>
-References: <CAKv+Gu8Hs+CArdkAWoBPbr_p-nq5+0oPwOPg0NsJDRMkE_bM9A@mail.gmail.com>
- <CACi5LpNdg=Enp66BybNNuj5tQOp3ggyX=tm_SVzr8v2qCRteDw@mail.gmail.com>
- <d801005a-5f7a-8fe4-a486-bc6443a406a3@arm.com>
- <CACi5LpOJ7Q7nbo9m_HGqr44+n_iEtreZt+Uxtf2PzcHSzTdKuA@mail.gmail.com>
- <3a05cd0e-466e-4fb6-a78a-4b363e21aaab@arm.com>
- <CACi5LpMJnFthKUJGfMWgDyMTM65oTtOvsRGCtMDjWP32qDptbQ@mail.gmail.com>
- <92ff5220-f863-4edc-bc9f-bd802d2efa9c@arm.com>
- <d5e01f4bedc649ff8a2ee17b17c1c33d@HXTBJIDCEMVIW02.hxtcorp.net>
- <20180619085541.GB13984@arm.com>
- <6860c284f1c74faa95edd6cf866ec80d@HXTBJIDCEMVIW02.hxtcorp.net>
- <20180619094045.GD13984@arm.com>
- <a720d91be20844cd9ed84728268300d9@HXTBJIDCEMVIW02.hxtcorp.net>
- <09260c7e-8b9d-bc3c-5bca-0fd75417f552@arm.com>
- <CACi5LpMoKP4eG5XhYe5hf5VC9MOY8KuHK=j0ujb8GFpyjAuAww@mail.gmail.com>
- <b0d40351-8d78-fd69-cc87-d5ea5eaabd2a@arm.com>
- <CACi5LpM2GV-vwcEGeCE20QW0PVmDcKnjz017sYBAwYRfZ24AzA@mail.gmail.com>
- <51cf54d6a19f4837b74218b000cc23bc@HXTBJIDCEMVIW02.hxtcorp.net>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Wed, 20 Jun 2018 12:56:11 +0530
-Message-ID: <CACi5LpMXpSWUP97R2VWjf==LdxPBCKTcpKjQjCs4j3Kz9SzYGg@mail.gmail.com>
-Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
- linear region
+ id 1fVZlE-0000Fk-Ed
+ for kexec@lists.infradead.org; Wed, 20 Jun 2018 09:50:47 +0000
+From: Petr Tesarik <ptesarik@suse.com>
+Subject: [PATCH 1/2] makedumpfile: Use monotonic clock to calculate ETA and
+ stats
+Date: Wed, 20 Jun 2018 11:50:18 +0200
+Message-Id: <20180620095019.18449-1-ptesarik@suse.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,140 +16,466 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Jin, Yanjiang" <yanjiang.jin@hxt-semitech.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec <kexec-bounces@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: lijiang <lijiang@redhat.com>, kexec-ml <kexec@lists.infradead.org>
+Cc: Petr Tesarik <ptesarik@suse.com>
 
-SGkgWWFuamlhbmcsCgpPbiBXZWQsIEp1biAyMCwgMjAxOCBhdCA3OjQ2IEFNLCBKaW4sIFlhbmpp
-YW5nCjx5YW5qaWFuZy5qaW5AaHh0LXNlbWl0ZWNoLmNvbT4gd3JvdGU6Cj4gSGkgSmFtZXMsIEJo
-dXBlc2gsCj4KPiBJZiAvcHJvYy9rY29yZSBhbHdheXMgZXhpc3RzIGluIGtleGVjL2tkdW1wLCBJ
-IHRoaW5rIHRoaXMgaXNzdWUgY2FuIGJlIGZpeGVkIGVhc2lseS4gQnV0IGl0IHJlcXVpcmVzICB0
-aGF0IEtleGVjL2tkdW1wIGhhdmUgdG8gcmVseSBvbiAiIENPTkZJR19QUk9DX0tDT1JFPXkiLgo+
-IEkgYW0gbm90IHN1cmUgaWYgd2UgY2FuIHBlcnN1YWRlIEtleGVjLXRvb2xzIGNvbW11bml0eSB0
-byBhY2NlcHQgdGhpcy4KCk1vc3QgZGlzdHJpYnV0aW9ucyBsaWtlIFVidW50dSBhbmQgRmVkb3Jh
-IGFscmVhZHkgZW5hYmxlCkNPTkZJR19QUk9DX0tDT1JFIGJ5IGRlZmF1bHQsIHRvIHN1cHBvcnQg
-dXNlci1zcGFjZSB0b29scyBsaWtlCmNyYXNoLXV0aWxpdHkgYW5kIG1ha2VkdW1wZmlsZSB3aGlj
-aCBjYW4gYmUgdXNlZCBmb3IgJ2xpdmUnIGRlYnVnZ2luZwpvZiBhIHByaW1hcnkga2VybmVsICh3
-aXRob3V0IHRoZSByZXF1aXJlbWVudCBvZiBiZWluZyBpbiB0aGUgc2Vjb25kYXJ5Cm9yIGNyYXNo
-IGtlcm5lbCkuCgpGb3Igc3VjaCBjYXNlcy4gJy9wcm9jL2tjb3JlJyBhbmQgJ3ZtbGludXgnIGFy
-ZSB0aGUgb25seSBhdmFpbGFibGUKc291cmNlcyBmb3IgUFRfTk9URS9QVF9MT0FEIHNlZ21lbnRz
-IGFuZCBrZXJuZWwgc3ltYm9scyByZXNwZWN0aXZlbHkuCgpTaW5jZSB3ZSBuZWVkIHRvIHN1cHBv
-cnQgYWxsIHN1Y2ggZXhpc3RpbmcgdXNlci1zcGFjZSB1dGlsaXRpZXMgKHdoaWNoCndvcmsgd2Vs
-bCB3aXRoIG90aGVyIGFyY2hzIGxpa2UgeDg2IGFuZCBwcGM2NCksIHdlIG5lZWQgdG8gaGF2ZSBh
-CnNvbHV0aW9uIHdoaWNoIHdvcmtzIHdpdGhvdXQgbW9kaWZ5aW5nIG1vc3Qgb2YgdGhlbSAtIHRo
-ZSByZXN0IChsaWtlCmtleGVjLXRvb2xzKSBjYW4gYmUgZWFzaWx5IG1vZGlmaWVkIHRvIGZvbGxv
-dyB0aGUgc2FtZSBhcHByb2FjaC4KCkkgd291bGQgc2hhcmUgc29tZSBwYXRjaGVzIHNvb24gb24g
-dGhlIHNhbWUgbGluZXMgYm90aCBmb3Iga2VybmVsIGFuZAp1c2VyLXNwYWNlLgoKVGhhbmtzLApC
-aHVwZXNoCgo+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+PiBGcm9tOiBCaHVwZXNoIFNo
-YXJtYSBbbWFpbHRvOmJoc2hhcm1hQHJlZGhhdC5jb21dCj4+IFNlbnQ6IDIwMTjlubQ25pyIMTnm
-l6UgMTk6NTgKPj4gVG86IEphbWVzIE1vcnNlIDxqYW1lcy5tb3JzZUBhcm0uY29tPgo+PiBDYzog
-SmluLCBZYW5qaWFuZyA8eWFuamlhbmcuamluQGh4dC1zZW1pdGVjaC5jb20+OyBXaWxsIERlYWNv
-bgo+PiA8d2lsbC5kZWFjb25AYXJtLmNvbT47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFy
-bS5jb20+OyBBcmQKPj4gQmllc2hldXZlbCA8YXJkLmJpZXNoZXV2ZWxAbGluYXJvLm9yZz47IENh
-dGFsaW4gTWFyaW5hcwo+PiA8Y2F0YWxpbi5tYXJpbmFzQGFybS5jb20+OyBLZXhlYyBNYWlsaW5n
-IExpc3QgPGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmc+Owo+PiBBS0FTSEkgVGFrYWhpcm8gPHRh
-a2FoaXJvLmFrYXNoaUBsaW5hcm8ub3JnPjsgQmh1cGVzaCBTSEFSTUEKPj4gPGJodXBlc2gubGlu
-dXhAZ21haWwuY29tPjsgbGludXgtYXJtLWtlcm5lbCA8bGludXgtYXJtLQo+PiBrZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZz4KPj4gU3ViamVjdDogUmU6IFtQQVRDSF0gYXJtNjQvbW06IEludHJv
-ZHVjZSBhIHZhcmlhYmxlIHRvIGhvbGQgYmFzZSBhZGRyZXNzIG9mCj4+IGxpbmVhciByZWdpb24K
-Pj4KPj4gSGkgSmFtZXMsCj4+Cj4+IE9uIFR1ZSwgSnVuIDE5LCAyMDE4IGF0IDQ6NTYgUE0sIEph
-bWVzIE1vcnNlIDxqYW1lcy5tb3JzZUBhcm0uY29tPiB3cm90ZToKPj4gPiBIaSBCaHVwZXNoLAo+
-PiA+Cj4+ID4gT24gMTkvMDYvMTggMTE6MzcsIEJodXBlc2ggU2hhcm1hIHdyb3RlOgo+PiA+PiBP
-biBUdWUsIEp1biAxOSwgMjAxOCBhdCAzOjQ2IFBNLCBKYW1lcyBNb3JzZSA8amFtZXMubW9yc2VA
-YXJtLmNvbT4KPj4gd3JvdGU6Cj4+ID4+PiBPbiAxOS8wNi8xOCAxMDo1NywgSmluLCBZYW5qaWFu
-ZyB3cm90ZToKPj4gPj4+Pj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPj4gPj4+Pj4gRnJv
-bTogV2lsbCBEZWFjb24gW21haWx0bzp3aWxsLmRlYWNvbkBhcm0uY29tXQo+PiA+Pj4+PiBTZW50
-OiAyMDE45bm0NuaciDE55pelIDE3OjQxCj4+ID4+Pj4+IFRvOiBKaW4sIFlhbmppYW5nIDx5YW5q
-aWFuZy5qaW5AaHh0LXNlbWl0ZWNoLmNvbT4KPj4gPj4+Pj4gQ2M6IEphbWVzIE1vcnNlIDxqYW1l
-cy5tb3JzZUBhcm0uY29tPjsgQmh1cGVzaCBTaGFybWEKPj4gPj4+Pj4gPGJoc2hhcm1hQHJlZGhh
-dC5jb20+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgQXJkCj4+ID4+Pj4+
-IEJpZXNoZXV2ZWwgPGFyZC5iaWVzaGV1dmVsQGxpbmFyby5vcmc+OyBDYXRhbGluIE1hcmluYXMK
-Pj4gPj4+Pj4gPGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tPjsgS2V4ZWMgTWFpbGluZyBMaXN0Cj4+
-ID4+Pj4+IDxrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnPjsgQUtBU0hJIFRha2FoaXJvCj4+ID4+
-Pj4+IDx0YWthaGlyby5ha2FzaGlAbGluYXJvLm9yZz47IEJodXBlc2ggU0hBUk1BCj4+ID4+Pj4+
-IDxiaHVwZXNoLmxpbnV4QGdtYWlsLmNvbT47IGxpbnV4LWFybS1rZXJuZWwgPGxpbnV4LWFybS0K
-Pj4gPj4+Pj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+Cj4+ID4+Pj4+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0hdIGFybTY0L21tOiBJbnRyb2R1Y2UgYSB2YXJpYWJsZSB0byBob2xkIGJhc2UKPj4g
-Pj4+Pj4gYWRkcmVzcyBvZiBsaW5lYXIgcmVnaW9uCj4+ID4KPj4gPj4+Pj4+Pj4gSXQgaXMgaGFy
-ZCB0byBrbm93IGFsbCBhYm92ZSBpbiBrZXhlYy10b29scyBub3cuIE9yaWdpbmFsbHkgSQo+PiA+
-Pj4+Pj4+PiBwbGFubmVkIHRvIHJlYWQgbWVtc3RhcnRfYWRkcidzIHZhbHVlIGZyb20gIi9kZXYv
-bWVtIiwgYnV0Cj4+ID4+Pj4+Pj4+IHNvbWVvbmUgdGhvdWdodCBub3QgYWxsIEtlcm5lbHMgZW5h
-YmxlICIvZGV2L21lbSIsIHdlJ2QgYmV0dGVyCj4+ID4+Pj4+Pj4+IGZpbmQgYSBtb3JlIGdlbmVy
-aWMgYXBwcm9hY2guIFNvIHdlIHdhbnQgdG8gZ2V0IHNvbWUKPj4gPj4+Pj4+Pj4gc3VnZ2VzdGlv
-bnMgZnJvbSBBUk0ga2VybmVsCj4+ID4+Pj4+IGNvbW11bml0eS4KPj4gPj4+Pj4+Pj4gQ2FuIHdl
-IGV4cG9ydCB0aGlzIHZhcmlhYmxlIGluIEtlcm5lbCBzaWRlIHRocm91Z2ggc3lzY29uZigpIG9y
-Cj4+ID4+Pj4+Pj4+IG90aGVyIHNpbWlsYXIgbWV0aG9kcz8gT3Igc29tZW9uZSBjYW4gcHJvdmlk
-ZSBhbiBlZmZlY3Qgd2F5IHRvCj4+ID4+Pj4+Pj4+IGdldCBtZW1zdGFydF9hZGRyJ3MgdmFsdWU/
-Cj4+ID4+Pj4+Pj4KPj4gPj4+Pj4+PiBJIHRob3VnaHQgdGhlIHN1Z2dlc3Rpb24gZnJvbSBKYW1l
-cyB3YXMgdG8gZXhwb3NlIHRoaXMgdmlhIGFuCj4+ID4+Pj4+Pj4gRUxGIE5PVEUgaW4ga2NvcmUg
-YW5kIHZtY29yZSAob3IgaW4gdGhlIGhlYWRlciBkaXJlY3RseSBpZgo+PiA+Pj4+Pj4+IHRoYXQn
-cyBwb3NzaWJsZSwgYnV0IEknbQo+PiA+Pj4+PiBub3Qgc3VyZSBhYm91dCBpdCk/Cj4+ID4+Pj4+
-Pgo+PiA+Pj4+Pj4gVGhhbmtzIGZvciB5b3VyIHJlcGx5IGZpcnN0bHkuIEJ1dCBzYW1lIGFzIERF
-Vk1FTSwga2NvcmUgaXMgbm90IGEKPj4gPj4+Pj4+IG11c3QtaGF2ZSwgc28gd2UgY2FuJ3QgZGVw
-ZW5kIG9uIGl0Lgo+PiA+Pj4+Pgo+PiA+Pj4+PiBOZWl0aGVyIGlzIEtFWEVDLiBXZSBjYW4gc2Vs
-ZWN0IFBST0NfS0NPUkUgZnJvbSBLRVhFQyBpZiBpdCBoZWxwcy4KPj4gPj4+Pj4KPj4gPj4+Pj4+
-IE9uIHRoZSBvdGhlciBoYW5kLCBwaHlzX3RvX3ZpcnQoKSBpcyBjYWxsZWQgZHVyaW5nIGdlbmVy
-YXRpbmcKPj4gPj4+Pj4+IHZtY29yZSBpbiBLZXhlYy10b29scywgdm1jb3JlIGFsc28gY2FuJ3Qg
-aGVscCB0aGlzIGlzc3VlLgo+PiA+Pj4+Pgo+PiA+Pj4+PiBJIGRvbid0IHVuZGVyc3RhbmQgdGhp
-cyBwYXJ0LiBJZiB5b3UgaGF2ZSB0aGUgdm1jb3JlIGluIHlvdXIgaGFuZCwKPj4gPj4+Pj4gd2h5
-IGNhbid0IHlvdSBncm9rIHRoZSBwdiBvZmZzZXQgZnJvbSB0aGUgbm90ZSBhbmQgdXNlIHRoYXQg
-aW4KPj4gcGh5c190b192aXJ0KCk/Cj4+ID4+Pj4KPj4gPj4+PiBJdCBpcyBhIGNoaWNrZW4tYW5k
-LWVnZyBpc3N1ZS4KPj4gPj4+PiBwaHlzX3RvIHZpcnQoKSBpcyBmb3IgY3Jhc2hkdW1wIHNldHVw
-LiBUbyBnZW5lcmF0ZSB2bWNvcmUsIHdlIG11c3QKPj4gPj4+PiBjYWxsIHBoeXNfdG9fdmlydCgp
-LiBBdCB0aGlzIHBvaW50LCBubyB2bWNvcmUgZXhpc3RzLgo+PiA+Pj4KPj4gPj4+IEl0cyBuZWVk
-ZWQgZm9yIHRoZSBwYXJ0cyBvZiB0aGUgRUxGIGhlYWRlciB0aGF0IGtleGVjLXRvb2xzCj4+ID4+
-PiBnZW5lcmF0ZXMgYXQga2R1bXAgbG9hZCB0aW1lPwo+PiA+Pj4KPj4gPj4+IFNvIGFkZGluZyB0
-aGlzIHB2X29mZnNldCB0byB0aGUga2V5PXZhbHVlIGRhdGEKPj4gPj4+IGNyYXNoX3NhdmVfdm1j
-b3JlaW5mb19pbml0KCkgc2F2ZXMgaXNuJ3QgYXZhaWxhYmxlIGVhcmx5IGVub3VnaD8KPj4gPgo+
-PiA+PiBZZXMsIG9uZSBjYXNlIHdoZXJlIGl0IGlzIG5vdCBhY3R1YWxseSBhdmFpbGFibGUgZWFy
-bHkgZW5vdWdoIGZvcgo+PiA+PiBtYWtlZHVtcGZpbGUgdXNhZ2UgaXMgaWYgd2UgYXJlIGRldGVy
-bWluaW5nIHRoZSBQVF9OT1RFIGNvbnRlbnRzIGZyb20KPj4gPj4gdGhlICcvcHJvYy9rY29yZScg
-b24gYSAnbGl2ZScgc3lzdGVtCj4+ID4KPj4gPj4gaW50IHNldF9rY29yZV92bWNvcmVpbmZvKHVp
-bnQ2NF90IHZtY29yZWluZm9fYWRkciwgdWludDY0X3QKPj4gPj4gdm1jb3JlaW5mb19sZW4pCj4+
-ID4+Cj4+ID4+IHsKPj4gPj4KPj4gPj4gPHNuaXAuLj4KPj4gPj4ga3ZhZGRyID0gKHVsb25nKXZt
-Y29yZWluZm9fYWRkciArIFBBR0VfT0ZGU0VUOwo+PiA+Pgo+PiA+PiB9Cj4+ID4KPj4gPiBZb3Ug
-YXJlIHRyeWluZyB0byByZWFkIHRoZSB2bWNvcmVpbmZvIHRocm91Z2ggL3Byb2Mva2NvcmUgZ2l2
-ZW4KPj4gPiBrbm93bGVkZ2Ugb2YgaXRzIHBoeXNpY2FsIGFkZHJlc3MuCj4+ID4KPj4gPiBJJ20g
-c3VnZ2VzdGluZyBhZGRpbmcgdGhlIGNvbnRlbnRzIG9mIHZtY29yZWluZm8gYXMgYSBQVF9OT1RF
-IHNlY3Rpb24KPj4gPiBvZiAvcHJvYy9rY29yZSdzIEVMRiBoZWFkZXIuIE5vIHNwZWNpYWwga25v
-d2xlZGdlIG5lY2Vzc2FyeSwgYW55Cj4+ID4gZWxmLXBhcnNlciBzaG91bGQgYmUgYWJsZSB0byBk
-dW1wIHRoZSB2YWx1ZXMuCj4+ID4KPj4gPgo+PiA+PiBOb3cgdGhlIHByb2JsZW0gYXQgaGFuZCBp
-cyB0byBkZXRlcm1pbmUgdGhlIG9mZnNldCBhdCB3aGljaCB0aGUKPj4gPj4gcHZfb2Zmc2V0IChr
-ZXk9dmFsdWUgZGF0YSBwYWlyKSBsaWVzIGluIHRoZSAnL3Byb2Mva2NvcmUnIChJIGFzc3VtZQo+
-PiA+PiB0aGF0IHdoZW4geW91IG1lbnRpb25lZCBhYm92ZSBhbmQgZWFybGllciBhYm91dCBhZGRp
-bmcgdGhpcyBwYWlyIHRvCj4+ID4+IHRoZSBlbGZub3RlcyB5b3UgbWVhbnQgYm90aCB0aGUgdm1j
-b3JlaW5mbyBhbmQgJ3Byb2Mva2NvcmUnKSwgYXMgd2UKPj4gPj4gY2FuIGhhdmUgJ24nIG51bWJl
-ciBvZiBQVF9MT0FEIHNlZ21lbnRzLgo+PiA+Cj4+ID4gSXQgbG9va3MgbGlrZSB0aGVyZSBpcyBh
-bHJlYWR5IGEgTk9URSBzZWN0aW9uIHdpdGggY29yZSBpbmZvIGluIHRoZXJlOgo+PiA+IHwgIyBy
-ZWFkZWxmIC1sIC9wcm9jL2tjb3JlCj4+ID4gfAo+PiA+IHwgRWxmIGZpbGUgdHlwZSBpcyBDT1JF
-IChDb3JlIGZpbGUpCj4+ID4gfCBFbnRyeSBwb2ludCAweDAKPj4gPiB8IFRoZXJlIGFyZSAxNiBw
-cm9ncmFtIGhlYWRlcnMsIHN0YXJ0aW5nIGF0IG9mZnNldCA2NAo+PiA+IHwKPj4gPiB8IFByb2dy
-YW0gSGVhZGVyczoKPj4gPiB8ICBUeXBlICAgICAgICAgICBPZmZzZXQgICAgICAgICAgICAgVmly
-dEFkZHIgICAgICAgICAgIFBoeXNBZGRyCj4+ID4gfCAgICAgICAgICAgICAgICAgRmlsZVNpeiAg
-ICAgICAgICAgIE1lbVNpeiAgICAgICAgICAgICAgRmxhZ3MgIEFsaWduCj4+ID4gfCAgIE5PVEUg
-ICAgICAgICAgIDB4MDAwMDAwMDAwMDAwMDNjMCAweDAwMDAwMDAwMDAwMDAwMDAgMHgwMDAwMDAw
-MDAwMDAwMDAwCj4+ID4gfCAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMDAwMDAwMTExNCAweDAw
-MDAwMDAwMDAwMDAwMDAgICAgICAgICAweDAKPj4gPgo+PiA+IEkgYXNzdW1lIHdlIGNhbiBhZGQg
-bW9yZSBub3RlcyB3aXRob3V0IGJyZWFraW5nIHRoZSBleGlzdGluZyB1c2VyLi4uCj4+ID4KPj4g
-PiAoYW5kIGl0IGxvb2tzIGxpa2UgdGhlcmUgYXJlIHNvbWUgYnJva2VuIF9fcGEoa2VybmVsIHN5
-bWJvbCkgdXNlcnMgaW4gdGhlcmUuCj4+Cj4+IFRoYW5rcyBmb3IgeW91ciBpbnB1dHMuCj4+Cj4+
-IEkgYW0gd29ya2luZyBvbiBmaXhlcyBvbiB0aGUgYWJvdmUgbGluZXMgZm9yIGtlcm5lbCBhbmQg
-dXNlci1zcGFjZSB0b29scyAobGlrZQo+PiBtYWtlZHVtcGZpbGUsIGNyYXNoLXV0aWxpdHkgYW5k
-IGtleGVjLXRvb2xzKS4KPj4KPj4gSSB3aWxsIHBvc3Qgc29tZSBSRkMgcGF0Y2hlcyBvbiB0aGUg
-c2FtZSBsaW5lcyAob3IgY29tZSBiYWNrIGluIGNhc2UgSSBnZXQgc3R1Y2sKPj4gc29tZXdoZXJl
-KSBzaG9ydGx5Lgo+Pgo+PiBUaGFua3MsCj4+IEJodXBlc2gKPgo+Cj4KPiBUaGlzIGVtYWlsIGlz
-IGludGVuZGVkIG9ubHkgZm9yIHRoZSBuYW1lZCBhZGRyZXNzZWUuIEl0IG1heSBjb250YWluIGlu
-Zm9ybWF0aW9uIHRoYXQgaXMgY29uZmlkZW50aWFsL3ByaXZhdGUsIGxlZ2FsbHkgcHJpdmlsZWdl
-ZCwgb3IgY29weXJpZ2h0LXByb3RlY3RlZCwgYW5kIHlvdSBzaG91bGQgaGFuZGxlIGl0IGFjY29y
-ZGluZ2x5LiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCB5b3UgZG8gbm90
-IGhhdmUgbGVnYWwgcmlnaHRzIHRvIHJldGFpbiwgY29weSwgb3IgZGlzdHJpYnV0ZSB0aGlzIGVt
-YWlsIG9yIGl0cyBjb250ZW50cywgYW5kIHNob3VsZCBwcm9tcHRseSBkZWxldGUgdGhlIGVtYWls
-IGFuZCBhbGwgZWxlY3Ryb25pYyBjb3BpZXMgaW4geW91ciBzeXN0ZW07IGRvIG5vdCByZXRhaW4g
-Y29waWVzIGluIGFueSBtZWRpYS4gSWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlbWFpbCBpbiBl
-cnJvciwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIHByb21wdGx5LiBUaGFuayB5b3UuCj4KPgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
-bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Execution time should be always measured by a monotonic clock,
+because the system clock may be affected by discontinuous jumps,
+e.g. when time is set manually by an admin.
+
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ makedumpfile.c | 84 +++++++++++++++++++++++++++++-----------------------------
+ print_info.c   | 30 +++++++++++----------
+ print_info.h   |  6 ++---
+ 3 files changed, 61 insertions(+), 59 deletions(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 450825b..5908b5a 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -5364,7 +5364,7 @@ _exclude_free_page(struct cycle *cycle)
+ {
+ 	int i, nr_zones, num_nodes, node;
+ 	unsigned long node_zones, zone, spanned_pages, pgdat;
+-	struct timeval tv_start;
++	struct timespec ts_start;
+ 
+ 	if ((node = next_online_node(0)) < 0) {
+ 		ERRMSG("Can't get next online node.\n");
+@@ -5374,7 +5374,7 @@ _exclude_free_page(struct cycle *cycle)
+ 		ERRMSG("Can't get pgdat list.\n");
+ 		return FALSE;
+ 	}
+-	gettimeofday(&tv_start, NULL);
++	clock_gettime(CLOCK_MONOTONIC, &ts_start);
+ 
+ 	for (num_nodes = 1; num_nodes <= vt.numnodes; num_nodes++) {
+ 
+@@ -5420,7 +5420,7 @@ _exclude_free_page(struct cycle *cycle)
+ 	 * print [100 %]
+ 	 */
+ 	print_progress(PROGRESS_FREE_PAGES, vt.numnodes, vt.numnodes, NULL);
+-	print_execution_time(PROGRESS_FREE_PAGES, &tv_start);
++	print_execution_time(PROGRESS_FREE_PAGES, &ts_start);
+ 
+ 	return TRUE;
+ }
+@@ -5567,7 +5567,7 @@ create_1st_bitmap_file(void)
+  	char buf[info->page_size];
+ 	mdf_pfn_t pfn, pfn_start, pfn_end, pfn_bitmap1;
+ 	unsigned long long phys_start, phys_end;
+-	struct timeval tv_start;
++	struct timespec ts_start;
+ 	off_t offset_page;
+ 
+ 	if (info->flag_refiltering)
+@@ -5597,7 +5597,7 @@ create_1st_bitmap_file(void)
+ 		offset_page += info->page_size;
+ 	}
+ 
+-	gettimeofday(&tv_start, NULL);
++	clock_gettime(CLOCK_MONOTONIC, &ts_start);
+ 
+ 	/*
+ 	 * If page is on memory hole, set bit on the 1st-bitmap.
+@@ -5629,7 +5629,7 @@ create_1st_bitmap_file(void)
+ 	 */
+ 	if (!info->flag_mem_usage) {
+ 		print_progress(PROGRESS_HOLES, info->max_mapnr, info->max_mapnr, NULL);
+-		print_execution_time(PROGRESS_HOLES, &tv_start);
++		print_execution_time(PROGRESS_HOLES, &ts_start);
+ 	}
+ 
+ 	if (!sync_1st_bitmap())
+@@ -5731,7 +5731,7 @@ create_bitmap_from_memhole(struct cycle *cycle, struct dump_bitmap *bitmap, int
+ 	mdf_pfn_t pfn_start_roundup, pfn_end_round;
+ 	unsigned long pfn_start_byte, pfn_end_byte;
+ 	unsigned int num_pt_loads = get_num_pt_loads();
+-	struct timeval tv_start;
++	struct timespec ts_start;
+ 
+ 	/*
+ 	 * At first, clear all the bits on the bitmap.
+@@ -5741,7 +5741,7 @@ create_bitmap_from_memhole(struct cycle *cycle, struct dump_bitmap *bitmap, int
+ 	/*
+ 	 * If page is on memory hole, set bit on the bitmap.
+ 	 */
+-	gettimeofday(&tv_start, NULL);
++	clock_gettime(CLOCK_MONOTONIC, &ts_start);
+ 	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
+ 		pfn_start = MAX(paddr_to_pfn(phys_start), cycle->start_pfn);
+ 		pfn_end = MIN(paddr_to_pfn(phys_end), cycle->end_pfn);
+@@ -5786,7 +5786,7 @@ create_bitmap_from_memhole(struct cycle *cycle, struct dump_bitmap *bitmap, int
+ 	 * print 100 %
+ 	 */
+ 	print_progress(PROGRESS_HOLES, info->max_mapnr, info->max_mapnr, NULL);
+-	print_execution_time(PROGRESS_HOLES, &tv_start);
++	print_execution_time(PROGRESS_HOLES, &ts_start);
+ 
+ 	return TRUE;
+ }
+@@ -6046,14 +6046,14 @@ exclude_unnecessary_pages(struct cycle *cycle)
+ {
+ 	unsigned int mm;
+ 	struct mem_map_data *mmd;
+-	struct timeval tv_start;
++	struct timespec ts_start;
+ 
+ 	if (is_xen_memory() && !info->dom0_mapnr) {
+ 		ERRMSG("Can't get max domain-0 PFN for excluding pages.\n");
+ 		return FALSE;
+ 	}
+ 
+-	gettimeofday(&tv_start, NULL);
++	clock_gettime(CLOCK_MONOTONIC, &ts_start);
+ 
+ 	for (mm = 0; mm < info->num_mem_map; mm++) {
+ 
+@@ -6077,7 +6077,7 @@ exclude_unnecessary_pages(struct cycle *cycle)
+ 	 */
+ 	if (!info->flag_mem_usage) {
+ 		print_progress(PROGRESS_UNN_PAGES, info->num_mem_map, info->num_mem_map, NULL);
+-		print_execution_time(PROGRESS_UNN_PAGES, &tv_start);
++		print_execution_time(PROGRESS_UNN_PAGES, &ts_start);
+ 	}
+ 
+ 	return TRUE;
+@@ -7475,7 +7475,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ 	unsigned long frac_head, frac_tail;
+ 	off_t off_seg_load, off_memory;
+ 	Elf64_Phdr load;
+-	struct timeval tv_start;
++	struct timespec ts_start;
+ 	struct cycle cycle = {0};
+ 
+ 	if (!info->flag_elf_dumpfile)
+@@ -7500,7 +7500,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ 	if (!(phnum = get_phnum_memory()))
+ 		return FALSE;
+ 
+-	gettimeofday(&tv_start, NULL);
++	clock_gettime(CLOCK_MONOTONIC, &ts_start);
+ 
+ 	for (i = 0; i < phnum; i++) {
+ 		if (!get_phdr_memory(i, &load))
+@@ -7548,7 +7548,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ 				}
+ 
+ 				if ((num_dumped % per) == 0)
+-					print_progress(PROGRESS_COPY, num_dumped, num_dumpable, &tv_start);
++					print_progress(PROGRESS_COPY, num_dumped, num_dumpable, &ts_start);
+ 
+ 				num_dumped++;
+ 
+@@ -7667,8 +7667,8 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ 	/*
+ 	 * print [100 %]
+ 	 */
+-	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable, &tv_start);
+-	print_execution_time(PROGRESS_COPY, &tv_start);
++	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable, &ts_start);
++	print_execution_time(PROGRESS_COPY, &ts_start);
+ 	PROGRESS_MSG("\n");
+ 
+ 	return TRUE;
+@@ -8004,8 +8004,8 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+ 	mdf_pfn_t per;
+ 	mdf_pfn_t start_pfn, end_pfn;
+ 	struct page_desc pd;
+-	struct timeval tv_start;
+-	struct timeval last, new;
++	struct timespec ts_start;
++	struct timespec last, new;
+ 	pthread_t **threads = NULL;
+ 	struct thread_args *kdump_thread_args = NULL;
+ 	void *thread_result;
+@@ -8043,7 +8043,7 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+ 	per = info->num_dumpable / 10000;
+ 	per = per ? per : 1;
+ 
+-	gettimeofday(&tv_start, NULL);
++	clock_gettime(CLOCK_MONOTONIC, &ts_start);
+ 
+ 	start_pfn = cycle->start_pfn;
+ 	end_pfn   = cycle->end_pfn;
+@@ -8091,7 +8091,7 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+ 		 * The next pfn is smallest pfn in all page_flag_buf.
+ 		 */
+ 		sem_wait(&info->page_flag_buf_sem);
+-		gettimeofday(&last, NULL);
++		clock_gettime(CLOCK_MONOTONIC, &last);
+ 		while (1) {
+ 			current_pfn = end_pfn;
+ 
+@@ -8134,7 +8134,7 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+ 			 * So we should recheck.
+ 			 */
+ 			if (info->page_flag_buf[consuming]->ready != FLAG_READY) {
+-				gettimeofday(&new, NULL);
++				clock_gettime(CLOCK_MONOTONIC, &new);
+ 				if (new.tv_sec - last.tv_sec > WAIT_TIME) {
+ 					ERRMSG("Can't get data of pfn.\n");
+ 					goto out;
+@@ -8147,7 +8147,7 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+ 		}
+ 
+ 		if ((num_dumped % per) == 0)
+-			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &tv_start);
++			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &ts_start);
+ 
+ 		num_dumped++;
+ 
+@@ -8183,8 +8183,8 @@ finish:
+ 	/*
+ 	 * print [100 %]
+ 	 */
+-	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &tv_start);
+-	print_execution_time(PROGRESS_COPY, &tv_start);
++	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &ts_start);
++	print_execution_time(PROGRESS_COPY, &ts_start);
+ 	PROGRESS_MSG("\n");
+ 
+ out:
+@@ -8234,7 +8234,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+ 	struct page_desc pd;
+ 	unsigned char buf[info->page_size], *buf_out = NULL;
+ 	unsigned long len_buf_out;
+-	struct timeval tv_start;
++	struct timespec ts_start;
+ 	const off_t failed = (off_t)-1;
+ 	unsigned long len_buf_out_zlib, len_buf_out_lzo, len_buf_out_snappy;
+ 
+@@ -8295,12 +8295,12 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+ 			end_pfn = info->split_end_pfn;
+ 	}
+ 
+-	gettimeofday(&tv_start, NULL);
++	clock_gettime(CLOCK_MONOTONIC, &ts_start);
+ 
+ 	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+ 
+ 		if ((num_dumped % per) == 0)
+-			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &tv_start);
++			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &ts_start);
+ 
+ 		/*
+ 		 * Check the excluded page.
+@@ -8380,8 +8380,8 @@ out:
+ 		free(wrkmem);
+ #endif
+ 
+-	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &tv_start);
+-	print_execution_time(PROGRESS_COPY, &tv_start);
++	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &ts_start);
++	print_execution_time(PROGRESS_COPY, &ts_start);
+ 
+ 	return ret;
+ }
+@@ -8743,7 +8743,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+ 	off_t offset_data=0;
+ 	struct disk_dump_header *dh = info->dump_header;
+ 	unsigned char buf[info->page_size];
+-	struct timeval tv_start;
++	struct timespec ts_start;
+ 
+ 	cd_header->offset
+ 		= (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size + dh->bitmap_blocks)
+@@ -8825,7 +8825,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+ 	}
+ 	free_bitmap2_buffer();
+ 
+-	gettimeofday(&tv_start, NULL);
++	clock_gettime(CLOCK_MONOTONIC, &ts_start);
+ 
+ 	/*
+ 	 * Write the remainder.
+@@ -8838,8 +8838,8 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+ 	/*
+ 	 * print [100 %]
+ 	 */
+-	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &tv_start);
+-	print_execution_time(PROGRESS_COPY, &tv_start);
++	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &ts_start);
++	print_execution_time(PROGRESS_COPY, &ts_start);
+ 	PROGRESS_MSG("\n");
+ 
+ 	return TRUE;
+@@ -9559,10 +9559,10 @@ exclude_xen4_user_domain(void)
+ int
+ exclude_xen_user_domain(void)
+ {
+-	struct timeval tv_start;
++	struct timespec ts_start;
+ 	int ret;
+ 
+-	gettimeofday(&tv_start, NULL);
++	clock_gettime(CLOCK_MONOTONIC, &ts_start);
+ 
+ 	if (info->xen_crash_info.com &&
+ 	    info->xen_crash_info.com->xen_major_version >= 4)
+@@ -9574,7 +9574,7 @@ exclude_xen_user_domain(void)
+ 	 * print [100 %]
+ 	 */
+ 	print_progress(PROGRESS_XEN_DOMAIN, 1, 1, NULL);
+-	print_execution_time(PROGRESS_XEN_DOMAIN, &tv_start);
++	print_execution_time(PROGRESS_XEN_DOMAIN, &ts_start);
+ 
+ 	return ret;
+ }
+@@ -10498,7 +10498,7 @@ reassemble_kdump_pages(void)
+ 	struct disk_dump_header dh;
+ 	struct page_desc pd, pd_zero;
+ 	struct cache_data cd_pd, cd_data;
+-	struct timeval tv_start;
++	struct timespec ts_start;
+ 	char *data = NULL;
+ 	unsigned long data_buf_size = info->page_size;
+ 
+@@ -10534,7 +10534,7 @@ reassemble_kdump_pages(void)
+ 	/*
+ 	 * Write page header of zero-filled page.
+ 	 */
+-	gettimeofday(&tv_start, NULL);
++	clock_gettime(CLOCK_MONOTONIC, &ts_start);
+ 	if (info->dump_level & DL_EXCLUDE_ZERO) {
+ 		/*
+ 		 * makedumpfile outputs the data of zero-filled page at first
+@@ -10569,7 +10569,7 @@ reassemble_kdump_pages(void)
+ 
+ 			num_dumped++;
+ 
+-			print_progress(PROGRESS_COPY, num_dumped, num_dumpable, &tv_start);
++			print_progress(PROGRESS_COPY, num_dumped, num_dumpable, &ts_start);
+ 
+ 			if (lseek(fd, offset_ph_org, SEEK_SET) < 0) {
+ 				ERRMSG("Can't seek a file(%s). %s\n",
+@@ -10666,8 +10666,8 @@ reassemble_kdump_pages(void)
+ 						    size_eraseinfo))
+ 			goto out;
+ 	}
+-	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable, &tv_start);
+-	print_execution_time(PROGRESS_COPY, &tv_start);
++	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable, &ts_start);
++	print_execution_time(PROGRESS_COPY, &ts_start);
+ 
+ 	ret = TRUE;
+ out:
+diff --git a/print_info.c b/print_info.c
+index 6bfcd11..732d5b8 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -19,6 +19,8 @@
+ 
+ #define PROGRESS_MAXLEN		"50"
+ 
++#define NSEC_PER_SEC		1000000000L
++
+ int message_level;
+ int flag_strerr_message;
+ int flag_ignore_r_char; /* 0: '\r' is effective. 1: not effective. */
+@@ -338,16 +340,16 @@ print_usage(void)
+ 	MSG("\n");
+ }
+ 
+-static void calc_delta(struct timeval *tv_start, struct timeval *delta)
++static void calc_delta(struct timespec *ts_start, struct timespec *delta)
+ {
+-	struct timeval tv_end;
++	struct timespec ts_end;
+ 
+-	gettimeofday(&tv_end, NULL);
+-	delta->tv_sec = tv_end.tv_sec - tv_start->tv_sec;
+-	delta->tv_usec = tv_end.tv_usec - tv_start->tv_usec;
+-	if (delta->tv_usec < 0) {
++	clock_gettime(CLOCK_MONOTONIC, &ts_end);
++	delta->tv_sec = ts_end.tv_sec - ts_start->tv_sec;
++	delta->tv_nsec = ts_end.tv_nsec - ts_start->tv_nsec;
++	if (delta->tv_nsec < 0) {
+ 		delta->tv_sec--;
+-		delta->tv_usec += 1000000;
++		delta->tv_nsec += NSEC_PER_SEC;
+ 	}
+ }
+ 
+@@ -371,14 +373,14 @@ static int eta_to_human_short (unsigned long secs, char* msg)
+ 
+ 
+ void
+-print_progress(const char *msg, unsigned long current, unsigned long end, struct timeval *start)
++print_progress(const char *msg, unsigned long current, unsigned long end, struct timespec *start)
+ {
+ 	unsigned progress;	/* in promilles (tenths of a percent) */
+ 	time_t tm;
+ 	static time_t last_time = 0;
+ 	static unsigned int lapse = 0;
+ 	static const char *spinner = "/|\\-";
+-	struct timeval delta;
++	struct timespec delta;
+ 	unsigned long eta;
+ 	char eta_msg[16] = " ";
+ 
+@@ -393,7 +395,7 @@ print_progress(const char *msg, unsigned long current, unsigned long end, struct
+ 
+ 	if (start != NULL && progress != 0) {
+ 		calc_delta(start, &delta);
+-		eta = 1000 * delta.tv_sec + delta.tv_usec / 1000;
++		eta = 1000 * delta.tv_sec + delta.tv_nsec / (NSEC_PER_SEC / 1000);
+ 		eta = eta / progress - delta.tv_sec;
+ 		eta_to_human_short(eta, eta_msg);
+ 	}
+@@ -411,12 +413,12 @@ print_progress(const char *msg, unsigned long current, unsigned long end, struct
+ }
+ 
+ void
+-print_execution_time(char *step_name, struct timeval *tv_start)
++print_execution_time(char *step_name, struct timespec *ts_start)
+ {
+-	struct timeval delta;
++	struct timespec delta;
+ 
+-	calc_delta(tv_start, &delta);
++	calc_delta(ts_start, &delta);
+ 	REPORT_MSG("STEP [%s] : %ld.%06ld seconds\n",
+-		   step_name, delta.tv_sec, delta.tv_usec);
++		   step_name, delta.tv_sec, delta.tv_nsec / 1000);
+ }
+ 
+diff --git a/print_info.h b/print_info.h
+index 1ce3593..49b70f4 100644
+--- a/print_info.h
++++ b/print_info.h
+@@ -17,7 +17,7 @@
+ #define _PRINT_INFO_H
+ 
+ #include <stdio.h>
+-#include <sys/time.h>
++#include <time.h>
+ 
+ extern int message_level;
+ extern int flag_strerr_message;
+@@ -25,9 +25,9 @@ extern int flag_ignore_r_char;
+ 
+ void show_version(void);
+ void print_usage(void);
+-void print_progress(const char *msg, unsigned long current, unsigned long end, struct timeval *start);
++void print_progress(const char *msg, unsigned long current, unsigned long end, struct timespec *start);
+ 
+-void print_execution_time(char *step_name, struct timeval *tv_start);
++void print_execution_time(char *step_name, struct timespec *ts_start);
+ 
+ /*
+  * Message texts
+-- 
+2.16.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
