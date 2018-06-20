@@ -1,19 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by casper.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fVIeQ-0001WW-L1
- for kexec@lists.infradead.org; Tue, 19 Jun 2018 15:34:37 +0000
-Date: Tue, 19 Jun 2018 17:34:13 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] arm64: Add support to supply 'kaslr-seed' to
- secondary kernel
-Message-ID: <20180619153413.i5laoxvhj4d52kex@verge.net.au>
-References: <1524733052-3276-1-git-send-email-bhsharma@redhat.com>
- <CACi5LpNrpJXSnRhxvnvXVshp7FvnPqm-idW6v540K0oMEt5_ng@mail.gmail.com>
- <40ef0d33-a4c8-6cee-af15-e81eef7b1cf4@redhat.com>
+Received: from [223.203.96.7] (helo=barracuda.hxt-semitech.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fVSgc-00036F-VK
+ for kexec@lists.infradead.org; Wed, 20 Jun 2018 02:17:37 +0000
+From: "Jin, Yanjiang" <yanjiang.jin@hxt-semitech.com>
+Subject: RE: [PATCH] arm64/mm: Introduce a variable to hold base address of
+ linear region
+Date: Wed, 20 Jun 2018 02:16:59 +0000
+Message-ID: <51cf54d6a19f4837b74218b000cc23bc@HXTBJIDCEMVIW02.hxtcorp.net>
+References: <CAKv+Gu8Hs+CArdkAWoBPbr_p-nq5+0oPwOPg0NsJDRMkE_bM9A@mail.gmail.com>
+ <CACi5LpNdg=Enp66BybNNuj5tQOp3ggyX=tm_SVzr8v2qCRteDw@mail.gmail.com>
+ <d801005a-5f7a-8fe4-a486-bc6443a406a3@arm.com>
+ <CACi5LpOJ7Q7nbo9m_HGqr44+n_iEtreZt+Uxtf2PzcHSzTdKuA@mail.gmail.com>
+ <3a05cd0e-466e-4fb6-a78a-4b363e21aaab@arm.com>
+ <CACi5LpMJnFthKUJGfMWgDyMTM65oTtOvsRGCtMDjWP32qDptbQ@mail.gmail.com>
+ <92ff5220-f863-4edc-bc9f-bd802d2efa9c@arm.com>
+ <d5e01f4bedc649ff8a2ee17b17c1c33d@HXTBJIDCEMVIW02.hxtcorp.net>
+ <20180619085541.GB13984@arm.com>
+ <6860c284f1c74faa95edd6cf866ec80d@HXTBJIDCEMVIW02.hxtcorp.net>
+ <20180619094045.GD13984@arm.com>
+ <a720d91be20844cd9ed84728268300d9@HXTBJIDCEMVIW02.hxtcorp.net>
+ <09260c7e-8b9d-bc3c-5bca-0fd75417f552@arm.com>
+ <CACi5LpMoKP4eG5XhYe5hf5VC9MOY8KuHK=j0ujb8GFpyjAuAww@mail.gmail.com>
+ <b0d40351-8d78-fd69-cc87-d5ea5eaabd2a@arm.com>
+ <CACi5LpM2GV-vwcEGeCE20QW0PVmDcKnjz017sYBAwYRfZ24AzA@mail.gmail.com>
+In-Reply-To: <CACi5LpM2GV-vwcEGeCE20QW0PVmDcKnjz017sYBAwYRfZ24AzA@mail.gmail.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <40ef0d33-a4c8-6cee-af15-e81eef7b1cf4@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,109 +35,125 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
+To: Bhupesh Sharma <bhsharma@redhat.com>, James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec <kexec-bounces@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-On Mon, Jun 18, 2018 at 11:26:11AM +0530, Bhupesh Sharma wrote:
-> Hello Simon,
-> 
-> On 05/15/2018 12:50 PM, Bhupesh Sharma wrote:
-> > Hello Akashi,
-> > 
-> > On Thu, Apr 26, 2018 at 2:27 PM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> > > This patch adds the support to supply 'kaslr-seed' to secondary kernel,
-> > > when we do a 'kexec warm reboot to another kernel' (although the
-> > > behaviour remains the same for the 'kdump' case as well) on arm64
-> > > platforms using the 'kexec_load' invocation method.
-> > > 
-> > > Lets consider the case where the primary kernel working on the arm64
-> > > platform supports kaslr (i.e 'CONFIG_RANDOMIZE_BASE' was set to y and
-> > > we have a compliant EFI firmware which supports EFI_RNG_PROTOCOL and
-> > > hence can pass a non-zero (valid) seed to the primary kernel).
-> > > 
-> > > Now the primary kernel reads the 'kaslr-seed' and wipes it to 0 and
-> > > uses the seed value to randomize for e.g. the module base address
-> > > offset.
-> > > 
-> > > In the case of 'kexec_load' (or even kdump for brevity),
-> > > we rely on the user-space kexec-tools to pass an appropriate dtb to the
-> > > secondary kernel and since 'kaslr-seed' is wiped to 0 by the primary
-> > > kernel, the secondary will essentially work with *nokaslr* as
-> > > 'kaslr-seed' is set to 0 when it is passed to the secondary kernel.
-> > > 
-> > > This can be true even in case the secondary kernel had
-> > > 'CONFIG_RANDOMIZE_BASE' and 'CONFIG_RANDOMIZE_MODULE_REGION_FULL' set to
-> > > y.
-> > > 
-> > > This patch addresses this issue by first checking if the device tree
-> > > provided by the firmware to the kernel supports the 'kaslr-seed'
-> > > property and verifies that it is really wiped to 0. If this condition is
-> > > met, it fixes up the 'kaslr-seed' property by using the getrandom()
-> > > syscall to get a suitable random number.
-> > > 
-> > > I verified this patch on my Qualcomm arm64 board and here are some test
-> > > results:
-> > > 
-> > > 1. Ensure that the primary kernel is boot'ed with 'kaslr-seed'
-> > >     dts property and it is really wiped to 0:
-> > > 
-> > >     [root@qualcomm-amberwing]# dtc -I dtb -O dts /sys/firmware/fdt | grep -A 10 -i chosen
-> > >          chosen {
-> > >                  kaslr-seed = <0x0 0x0>;
-> > >                  ...
-> > >          }
-> > > 
-> > > 2. Now issue 'kexec_load' to load the secondary kernel (let's assume
-> > >     that we are using the same kernel as the secondary kernel):
-> > >     # kexec -l /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname
-> > >       -r`.img --reuse-cmdline -d
-> > > 
-> > > 3. Issue 'kexec -e' to warm boot to the secondary:
-> > >     # kexec -e
-> > > 
-> > > 4. Now after the secondary boots, confirm that the load address of the
-> > >     modules is randomized in every successive boot:
-> > > 
-> > >     [root@qualcomm-amberwing]# cat /proc/modules
-> > >     sunrpc 524288 1 - Live 0xffff0307db190000
-> > >     vfat 262144 1 - Live 0xffff0307db110000
-> > >     fat 262144 1 vfat, Live 0xffff0307db090000
-> > >     crc32_ce 262144 0 - Live 0xffff0307d8c70000
-> > >     ...
-> > > 
-> > > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> > > ---
-> > > Changes since v1:
-> > >   - Addressed Akashi's comments regarding the goto label path.
-> > >   - v1 can be viewed here: https://marc.info/?l=kexec&m=152373724406110&w=2
-> > 
-> > Ping. Any comments on this v2?
-
-...
-
-> Ping. Seems we don't have comments on this v2 (since the last month or so).
-> 
-> Having the capability to pass an appropriate 'kaslr-seed' value to the
-> secondary kernel is important for booting KASLR enabled secondary kernels -
-> which is an important use case for kexec for distributions like Fedora.
-> 
-> Kindly consider applying this patch which has been properly tested on a
-> couple of arm64 machines both for KASLR and non-KASLR boot cases.
-> 
-> Right now, I am forced to keep this patch locally and refer KASLR users on
-> arm64 to my public github tree which has this patch committed on top of the
-> upstream kexec-tools. I would prefer to route them to the upstream
-> kexec-tools itself (rather than my github tree), once this patch is applied
-> there.
-
-Thanks for the patch, applied.
-My questions were covered in the review of v1.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgSmFtZXMsIEJodXBlc2gsDQoNCklmIC9wcm9jL2tjb3JlIGFsd2F5cyBleGlzdHMgaW4ga2V4
+ZWMva2R1bXAsIEkgdGhpbmsgdGhpcyBpc3N1ZSBjYW4gYmUgZml4ZWQgZWFzaWx5LiBCdXQgaXQg
+cmVxdWlyZXMgIHRoYXQgS2V4ZWMva2R1bXAgaGF2ZSB0byByZWx5IG9uICIgQ09ORklHX1BST0Nf
+S0NPUkU9eSIuDQpJIGFtIG5vdCBzdXJlIGlmIHdlIGNhbiBwZXJzdWFkZSBLZXhlYy10b29scyBj
+b21tdW5pdHkgdG8gYWNjZXB0IHRoaXMuDQoNClRoYW5rcywNCllhbmppYW5nDQoNCj4gLS0tLS1P
+cmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQmh1cGVzaCBTaGFybWEgW21haWx0bzpiaHNo
+YXJtYUByZWRoYXQuY29tXQ0KPiBTZW50OiAyMDE45bm0NuaciDE55pelIDE5OjU4DQo+IFRvOiBK
+YW1lcyBNb3JzZSA8amFtZXMubW9yc2VAYXJtLmNvbT4NCj4gQ2M6IEppbiwgWWFuamlhbmcgPHlh
+bmppYW5nLmppbkBoeHQtc2VtaXRlY2guY29tPjsgV2lsbCBEZWFjb24NCj4gPHdpbGwuZGVhY29u
+QGFybS5jb20+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgQXJkDQo+IEJp
+ZXNoZXV2ZWwgPGFyZC5iaWVzaGV1dmVsQGxpbmFyby5vcmc+OyBDYXRhbGluIE1hcmluYXMNCj4g
+PGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tPjsgS2V4ZWMgTWFpbGluZyBMaXN0IDxrZXhlY0BsaXN0
+cy5pbmZyYWRlYWQub3JnPjsNCj4gQUtBU0hJIFRha2FoaXJvIDx0YWthaGlyby5ha2FzaGlAbGlu
+YXJvLm9yZz47IEJodXBlc2ggU0hBUk1BDQo+IDxiaHVwZXNoLmxpbnV4QGdtYWlsLmNvbT47IGxp
+bnV4LWFybS1rZXJuZWwgPGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+
+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGFybTY0L21tOiBJbnRyb2R1Y2UgYSB2YXJpYWJsZSB0
+byBob2xkIGJhc2UgYWRkcmVzcyBvZg0KPiBsaW5lYXIgcmVnaW9uDQo+DQo+IEhpIEphbWVzLA0K
+Pg0KPiBPbiBUdWUsIEp1biAxOSwgMjAxOCBhdCA0OjU2IFBNLCBKYW1lcyBNb3JzZSA8amFtZXMu
+bW9yc2VAYXJtLmNvbT4gd3JvdGU6DQo+ID4gSGkgQmh1cGVzaCwNCj4gPg0KPiA+IE9uIDE5LzA2
+LzE4IDExOjM3LCBCaHVwZXNoIFNoYXJtYSB3cm90ZToNCj4gPj4gT24gVHVlLCBKdW4gMTksIDIw
+MTggYXQgMzo0NiBQTSwgSmFtZXMgTW9yc2UgPGphbWVzLm1vcnNlQGFybS5jb20+DQo+IHdyb3Rl
+Og0KPiA+Pj4gT24gMTkvMDYvMTggMTA6NTcsIEppbiwgWWFuamlhbmcgd3JvdGU6DQo+ID4+Pj4+
+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+Pj4+IEZyb206IFdpbGwgRGVhY29uIFtt
+YWlsdG86d2lsbC5kZWFjb25AYXJtLmNvbV0NCj4gPj4+Pj4gU2VudDogMjAxOOW5tDbmnIgxOeaX
+pSAxNzo0MQ0KPiA+Pj4+PiBUbzogSmluLCBZYW5qaWFuZyA8eWFuamlhbmcuamluQGh4dC1zZW1p
+dGVjaC5jb20+DQo+ID4+Pj4+IENjOiBKYW1lcyBNb3JzZSA8amFtZXMubW9yc2VAYXJtLmNvbT47
+IEJodXBlc2ggU2hhcm1hDQo+ID4+Pj4+IDxiaHNoYXJtYUByZWRoYXQuY29tPjsgTWFyayBSdXRs
+YW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IEFyZA0KPiA+Pj4+PiBCaWVzaGV1dmVsIDxhcmQu
+Ymllc2hldXZlbEBsaW5hcm8ub3JnPjsgQ2F0YWxpbiBNYXJpbmFzDQo+ID4+Pj4+IDxjYXRhbGlu
+Lm1hcmluYXNAYXJtLmNvbT47IEtleGVjIE1haWxpbmcgTGlzdA0KPiA+Pj4+PiA8a2V4ZWNAbGlz
+dHMuaW5mcmFkZWFkLm9yZz47IEFLQVNISSBUYWthaGlybw0KPiA+Pj4+PiA8dGFrYWhpcm8uYWth
+c2hpQGxpbmFyby5vcmc+OyBCaHVwZXNoIFNIQVJNQQ0KPiA+Pj4+PiA8Ymh1cGVzaC5saW51eEBn
+bWFpbC5jb20+OyBsaW51eC1hcm0ta2VybmVsIDxsaW51eC1hcm0tDQo+ID4+Pj4+IGtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnPg0KPiA+Pj4+PiBTdWJqZWN0OiBSZTogW1BBVENIXSBhcm02NC9t
+bTogSW50cm9kdWNlIGEgdmFyaWFibGUgdG8gaG9sZCBiYXNlDQo+ID4+Pj4+IGFkZHJlc3Mgb2Yg
+bGluZWFyIHJlZ2lvbg0KPiA+DQo+ID4+Pj4+Pj4+IEl0IGlzIGhhcmQgdG8ga25vdyBhbGwgYWJv
+dmUgaW4ga2V4ZWMtdG9vbHMgbm93LiBPcmlnaW5hbGx5IEkNCj4gPj4+Pj4+Pj4gcGxhbm5lZCB0
+byByZWFkIG1lbXN0YXJ0X2FkZHIncyB2YWx1ZSBmcm9tICIvZGV2L21lbSIsIGJ1dA0KPiA+Pj4+
+Pj4+PiBzb21lb25lIHRob3VnaHQgbm90IGFsbCBLZXJuZWxzIGVuYWJsZSAiL2Rldi9tZW0iLCB3
+ZSdkIGJldHRlcg0KPiA+Pj4+Pj4+PiBmaW5kIGEgbW9yZSBnZW5lcmljIGFwcHJvYWNoLiBTbyB3
+ZSB3YW50IHRvIGdldCBzb21lDQo+ID4+Pj4+Pj4+IHN1Z2dlc3Rpb25zIGZyb20gQVJNIGtlcm5l
+bA0KPiA+Pj4+PiBjb21tdW5pdHkuDQo+ID4+Pj4+Pj4+IENhbiB3ZSBleHBvcnQgdGhpcyB2YXJp
+YWJsZSBpbiBLZXJuZWwgc2lkZSB0aHJvdWdoIHN5c2NvbmYoKSBvcg0KPiA+Pj4+Pj4+PiBvdGhl
+ciBzaW1pbGFyIG1ldGhvZHM/IE9yIHNvbWVvbmUgY2FuIHByb3ZpZGUgYW4gZWZmZWN0IHdheSB0
+bw0KPiA+Pj4+Pj4+PiBnZXQgbWVtc3RhcnRfYWRkcidzIHZhbHVlPw0KPiA+Pj4+Pj4+DQo+ID4+
+Pj4+Pj4gSSB0aG91Z2h0IHRoZSBzdWdnZXN0aW9uIGZyb20gSmFtZXMgd2FzIHRvIGV4cG9zZSB0
+aGlzIHZpYSBhbg0KPiA+Pj4+Pj4+IEVMRiBOT1RFIGluIGtjb3JlIGFuZCB2bWNvcmUgKG9yIGlu
+IHRoZSBoZWFkZXIgZGlyZWN0bHkgaWYNCj4gPj4+Pj4+PiB0aGF0J3MgcG9zc2libGUsIGJ1dCBJ
+J20NCj4gPj4+Pj4gbm90IHN1cmUgYWJvdXQgaXQpPw0KPiA+Pj4+Pj4NCj4gPj4+Pj4+IFRoYW5r
+cyBmb3IgeW91ciByZXBseSBmaXJzdGx5LiBCdXQgc2FtZSBhcyBERVZNRU0sIGtjb3JlIGlzIG5v
+dCBhDQo+ID4+Pj4+PiBtdXN0LWhhdmUsIHNvIHdlIGNhbid0IGRlcGVuZCBvbiBpdC4NCj4gPj4+
+Pj4NCj4gPj4+Pj4gTmVpdGhlciBpcyBLRVhFQy4gV2UgY2FuIHNlbGVjdCBQUk9DX0tDT1JFIGZy
+b20gS0VYRUMgaWYgaXQgaGVscHMuDQo+ID4+Pj4+DQo+ID4+Pj4+PiBPbiB0aGUgb3RoZXIgaGFu
+ZCwgcGh5c190b192aXJ0KCkgaXMgY2FsbGVkIGR1cmluZyBnZW5lcmF0aW5nDQo+ID4+Pj4+PiB2
+bWNvcmUgaW4gS2V4ZWMtdG9vbHMsIHZtY29yZSBhbHNvIGNhbid0IGhlbHAgdGhpcyBpc3N1ZS4N
+Cj4gPj4+Pj4NCj4gPj4+Pj4gSSBkb24ndCB1bmRlcnN0YW5kIHRoaXMgcGFydC4gSWYgeW91IGhh
+dmUgdGhlIHZtY29yZSBpbiB5b3VyIGhhbmQsDQo+ID4+Pj4+IHdoeSBjYW4ndCB5b3UgZ3JvayB0
+aGUgcHYgb2Zmc2V0IGZyb20gdGhlIG5vdGUgYW5kIHVzZSB0aGF0IGluDQo+IHBoeXNfdG9fdmly
+dCgpPw0KPiA+Pj4+DQo+ID4+Pj4gSXQgaXMgYSBjaGlja2VuLWFuZC1lZ2cgaXNzdWUuDQo+ID4+
+Pj4gcGh5c190byB2aXJ0KCkgaXMgZm9yIGNyYXNoZHVtcCBzZXR1cC4gVG8gZ2VuZXJhdGUgdm1j
+b3JlLCB3ZSBtdXN0DQo+ID4+Pj4gY2FsbCBwaHlzX3RvX3ZpcnQoKS4gQXQgdGhpcyBwb2ludCwg
+bm8gdm1jb3JlIGV4aXN0cy4NCj4gPj4+DQo+ID4+PiBJdHMgbmVlZGVkIGZvciB0aGUgcGFydHMg
+b2YgdGhlIEVMRiBoZWFkZXIgdGhhdCBrZXhlYy10b29scw0KPiA+Pj4gZ2VuZXJhdGVzIGF0IGtk
+dW1wIGxvYWQgdGltZT8NCj4gPj4+DQo+ID4+PiBTbyBhZGRpbmcgdGhpcyBwdl9vZmZzZXQgdG8g
+dGhlIGtleT12YWx1ZSBkYXRhDQo+ID4+PiBjcmFzaF9zYXZlX3ZtY29yZWluZm9faW5pdCgpIHNh
+dmVzIGlzbid0IGF2YWlsYWJsZSBlYXJseSBlbm91Z2g/DQo+ID4NCj4gPj4gWWVzLCBvbmUgY2Fz
+ZSB3aGVyZSBpdCBpcyBub3QgYWN0dWFsbHkgYXZhaWxhYmxlIGVhcmx5IGVub3VnaCBmb3INCj4g
+Pj4gbWFrZWR1bXBmaWxlIHVzYWdlIGlzIGlmIHdlIGFyZSBkZXRlcm1pbmluZyB0aGUgUFRfTk9U
+RSBjb250ZW50cyBmcm9tDQo+ID4+IHRoZSAnL3Byb2Mva2NvcmUnIG9uIGEgJ2xpdmUnIHN5c3Rl
+bQ0KPiA+DQo+ID4+IGludCBzZXRfa2NvcmVfdm1jb3JlaW5mbyh1aW50NjRfdCB2bWNvcmVpbmZv
+X2FkZHIsIHVpbnQ2NF90DQo+ID4+IHZtY29yZWluZm9fbGVuKQ0KPiA+Pg0KPiA+PiB7DQo+ID4+
+DQo+ID4+IDxzbmlwLi4+DQo+ID4+IGt2YWRkciA9ICh1bG9uZyl2bWNvcmVpbmZvX2FkZHIgKyBQ
+QUdFX09GRlNFVDsNCj4gPj4NCj4gPj4gfQ0KPiA+DQo+ID4gWW91IGFyZSB0cnlpbmcgdG8gcmVh
+ZCB0aGUgdm1jb3JlaW5mbyB0aHJvdWdoIC9wcm9jL2tjb3JlIGdpdmVuDQo+ID4ga25vd2xlZGdl
+IG9mIGl0cyBwaHlzaWNhbCBhZGRyZXNzLg0KPiA+DQo+ID4gSSdtIHN1Z2dlc3RpbmcgYWRkaW5n
+IHRoZSBjb250ZW50cyBvZiB2bWNvcmVpbmZvIGFzIGEgUFRfTk9URSBzZWN0aW9uDQo+ID4gb2Yg
+L3Byb2Mva2NvcmUncyBFTEYgaGVhZGVyLiBObyBzcGVjaWFsIGtub3dsZWRnZSBuZWNlc3Nhcnks
+IGFueQ0KPiA+IGVsZi1wYXJzZXIgc2hvdWxkIGJlIGFibGUgdG8gZHVtcCB0aGUgdmFsdWVzLg0K
+PiA+DQo+ID4NCj4gPj4gTm93IHRoZSBwcm9ibGVtIGF0IGhhbmQgaXMgdG8gZGV0ZXJtaW5lIHRo
+ZSBvZmZzZXQgYXQgd2hpY2ggdGhlDQo+ID4+IHB2X29mZnNldCAoa2V5PXZhbHVlIGRhdGEgcGFp
+cikgbGllcyBpbiB0aGUgJy9wcm9jL2tjb3JlJyAoSSBhc3N1bWUNCj4gPj4gdGhhdCB3aGVuIHlv
+dSBtZW50aW9uZWQgYWJvdmUgYW5kIGVhcmxpZXIgYWJvdXQgYWRkaW5nIHRoaXMgcGFpciB0bw0K
+PiA+PiB0aGUgZWxmbm90ZXMgeW91IG1lYW50IGJvdGggdGhlIHZtY29yZWluZm8gYW5kICdwcm9j
+L2tjb3JlJyksIGFzIHdlDQo+ID4+IGNhbiBoYXZlICduJyBudW1iZXIgb2YgUFRfTE9BRCBzZWdt
+ZW50cy4NCj4gPg0KPiA+IEl0IGxvb2tzIGxpa2UgdGhlcmUgaXMgYWxyZWFkeSBhIE5PVEUgc2Vj
+dGlvbiB3aXRoIGNvcmUgaW5mbyBpbiB0aGVyZToNCj4gPiB8ICMgcmVhZGVsZiAtbCAvcHJvYy9r
+Y29yZQ0KPiA+IHwNCj4gPiB8IEVsZiBmaWxlIHR5cGUgaXMgQ09SRSAoQ29yZSBmaWxlKQ0KPiA+
+IHwgRW50cnkgcG9pbnQgMHgwDQo+ID4gfCBUaGVyZSBhcmUgMTYgcHJvZ3JhbSBoZWFkZXJzLCBz
+dGFydGluZyBhdCBvZmZzZXQgNjQNCj4gPiB8DQo+ID4gfCBQcm9ncmFtIEhlYWRlcnM6DQo+ID4g
+fCAgVHlwZSAgICAgICAgICAgT2Zmc2V0ICAgICAgICAgICAgIFZpcnRBZGRyICAgICAgICAgICBQ
+aHlzQWRkcg0KPiA+IHwgICAgICAgICAgICAgICAgIEZpbGVTaXogICAgICAgICAgICBNZW1TaXog
+ICAgICAgICAgICAgIEZsYWdzICBBbGlnbg0KPiA+IHwgICBOT1RFICAgICAgICAgICAweDAwMDAw
+MDAwMDAwMDAzYzAgMHgwMDAwMDAwMDAwMDAwMDAwIDB4MDAwMDAwMDAwMDAwMDAwMA0KPiA+IHwg
+ICAgICAgICAgICAgICAgICAweDAwMDAwMDAwMDAwMDExMTQgMHgwMDAwMDAwMDAwMDAwMDAwICAg
+ICAgICAgMHgwDQo+ID4NCj4gPiBJIGFzc3VtZSB3ZSBjYW4gYWRkIG1vcmUgbm90ZXMgd2l0aG91
+dCBicmVha2luZyB0aGUgZXhpc3RpbmcgdXNlci4uLg0KPiA+DQo+ID4gKGFuZCBpdCBsb29rcyBs
+aWtlIHRoZXJlIGFyZSBzb21lIGJyb2tlbiBfX3BhKGtlcm5lbCBzeW1ib2wpIHVzZXJzIGluIHRo
+ZXJlLg0KPg0KPiBUaGFua3MgZm9yIHlvdXIgaW5wdXRzLg0KPg0KPiBJIGFtIHdvcmtpbmcgb24g
+Zml4ZXMgb24gdGhlIGFib3ZlIGxpbmVzIGZvciBrZXJuZWwgYW5kIHVzZXItc3BhY2UgdG9vbHMg
+KGxpa2UNCj4gbWFrZWR1bXBmaWxlLCBjcmFzaC11dGlsaXR5IGFuZCBrZXhlYy10b29scykuDQo+
+DQo+IEkgd2lsbCBwb3N0IHNvbWUgUkZDIHBhdGNoZXMgb24gdGhlIHNhbWUgbGluZXMgKG9yIGNv
+bWUgYmFjayBpbiBjYXNlIEkgZ2V0IHN0dWNrDQo+IHNvbWV3aGVyZSkgc2hvcnRseS4NCj4NCj4g
+VGhhbmtzLA0KPiBCaHVwZXNoDQoNCg0KDQpUaGlzIGVtYWlsIGlzIGludGVuZGVkIG9ubHkgZm9y
+IHRoZSBuYW1lZCBhZGRyZXNzZWUuIEl0IG1heSBjb250YWluIGluZm9ybWF0aW9uIHRoYXQgaXMg
+Y29uZmlkZW50aWFsL3ByaXZhdGUsIGxlZ2FsbHkgcHJpdmlsZWdlZCwgb3IgY29weXJpZ2h0LXBy
+b3RlY3RlZCwgYW5kIHlvdSBzaG91bGQgaGFuZGxlIGl0IGFjY29yZGluZ2x5LiBJZiB5b3UgYXJl
+IG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCB5b3UgZG8gbm90IGhhdmUgbGVnYWwgcmlnaHRz
+IHRvIHJldGFpbiwgY29weSwgb3IgZGlzdHJpYnV0ZSB0aGlzIGVtYWlsIG9yIGl0cyBjb250ZW50
+cywgYW5kIHNob3VsZCBwcm9tcHRseSBkZWxldGUgdGhlIGVtYWlsIGFuZCBhbGwgZWxlY3Ryb25p
+YyBjb3BpZXMgaW4geW91ciBzeXN0ZW07IGRvIG5vdCByZXRhaW4gY29waWVzIGluIGFueSBtZWRp
+YS4gSWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlm
+eSB0aGUgc2VuZGVyIHByb21wdGx5LiBUaGFuayB5b3UuDQoNCg0KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
+c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9rZXhlYwo=
