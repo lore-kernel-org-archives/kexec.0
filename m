@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mail-pf0-f193.google.com ([209.85.192.193])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fVwkb-00008o-OZ
- for kexec@lists.infradead.org; Thu, 21 Jun 2018 10:23:39 +0000
-Date: Thu, 21 Jun 2018 18:23:21 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 2/4 V3] Allocate pages for kdump without encryption when
- SME is enabled
-Message-ID: <20180621102321.GK29979@MiWiFi-R3L-srv>
-References: <20180616082714.32035-1-lijiang@redhat.com>
- <20180616082714.32035-3-lijiang@redhat.com>
- <20180621015306.GG29979@MiWiFi-R3L-srv>
- <e74e94b6-97dc-23d9-6262-44a7ae8d63bd@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <e74e94b6-97dc-23d9-6262-44a7ae8d63bd@redhat.com>
+ id 1fVwly-0000aq-Bq
+ for kexec@lists.infradead.org; Thu, 21 Jun 2018 10:25:13 +0000
+Received: by mail-pf0-f193.google.com with SMTP id r11-v6so1321174pfl.6
+ for <kexec@lists.infradead.org>; Thu, 21 Jun 2018 03:24:51 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH v4 0/2] Add capability to dump fdt blob for arm64 platforms
+Date: Thu, 21 Jun 2018 15:54:36 +0530
+Message-Id: <1529576678-14615-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,57 +17,132 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: thomas.lendacky@amd.com, iommu@lists.linux-foundation.org, dyoung@redhat.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: bhsharma@redhat.com, takahiro.akashi@linaro.org, horms@verge.net.au, james.morse@arm.com, bhupesh.linux@gmail.com, dyoung@redhat.com
 
-T24gMDYvMjEvMTggYXQgMDE6MDZwbSwgbGlqaWFuZyB3cm90ZToKPiDlnKggMjAxOOW5tDA25pyI
-MjHml6UgMDk6NTMsIEJhb3F1YW4gSGUg5YaZ6YGTOgo+ID4gT24gMDYvMTYvMTggYXQgMDQ6Mjdw
-bSwgTGlhbmJvIEppYW5nIHdyb3RlOgo+ID4+IFdoZW4gU01FIGlzIGVuYWJsZWQgaW4gdGhlIGZp
-cnN0IGtlcm5lbCwgd2Ugd2lsbCBhbGxvY2F0ZSBwYWdlcwo+ID4+IGZvciBrZHVtcCB3aXRob3V0
-IGVuY3J5cHRpb24gaW4gb3JkZXIgdG8gYmUgYWJsZSB0byBib290IHRoZQo+ID4+IHNlY29uZCBr
-ZXJuZWwgaW4gdGhlIHNhbWUgbWFubmVyIGFzIGtleGVjLCB3aGljaCBoZWxwcyB0byBrZWVwCj4g
-Pj4gdGhlIHNhbWUgY29kZSBzdHlsZS4KPiA+Pgo+ID4+IFNpZ25lZC1vZmYtYnk6IExpYW5ibyBK
-aWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+ID4+IC0tLQo+ID4+ICBrZXJuZWwva2V4ZWNfY29y
-ZS5jIHwgMTIgKysrKysrKysrKysrCj4gPj4gIDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25z
-KCspCj4gPj4KPiA+PiBkaWZmIC0tZ2l0IGEva2VybmVsL2tleGVjX2NvcmUuYyBiL2tlcm5lbC9r
-ZXhlY19jb3JlLmMKPiA+PiBpbmRleCAyMGZlZjFhLi4zYzIyYTliIDEwMDY0NAo+ID4+IC0tLSBh
-L2tlcm5lbC9rZXhlY19jb3JlLmMKPiA+PiArKysgYi9rZXJuZWwva2V4ZWNfY29yZS5jCj4gPj4g
-QEAgLTQ3MSw2ICs0NzEsMTYgQEAgc3RhdGljIHN0cnVjdCBwYWdlICpraW1hZ2VfYWxsb2NfY3Jh
-c2hfY29udHJvbF9wYWdlcyhzdHJ1Y3Qga2ltYWdlICppbWFnZSwKPiA+PiAgCQl9Cj4gPj4gIAl9
-Cj4gPj4gIAo+ID4+ICsJaWYgKHBhZ2VzKSB7Cj4gPj4gKwkJdW5zaWduZWQgaW50IGNvdW50LCBp
-Owo+ID4+ICsKPiA+PiArCQlwYWdlcy0+bWFwcGluZyA9IE5VTEw7Cj4gPj4gKwkJc2V0X3BhZ2Vf
-cHJpdmF0ZShwYWdlcywgb3JkZXIpOwo+ID4+ICsJCWNvdW50ID0gMSA8PCBvcmRlcjsKPiA+PiAr
-CQlmb3IgKGkgPSAwOyBpIDwgY291bnQ7IGkrKykKPiA+PiArCQkJU2V0UGFnZVJlc2VydmVkKHBh
-Z2VzICsgaSk7Cj4gPiAKPiA+IEkgZ3Vlc3MgeW91IG1pZ2h0IGltaXRhdGUgdGhlIGtleGVjIGNh
-c2UsIGhvd2V2ZXIga2V4ZWMgZ2V0IHBhZ2VzIGZyb20KPiA+IGJ1ZGR5LiBDcmFzaCBwYWdlcyBh
-cmUgcmVzZXJ2ZWQgaW4gbWVtYmxvY2ssIHRoZXNlIGNvZGVzIG1pZ2h0IG1ha2Ugbm8gc2Vuc2Uu
-Cj4gPiAKPiBUaGFua3MgZm9yIHlvdXIgY29tbWVudHMuCj4gV2UgaGF2ZSBjaGFuZ2VkIHRoZSBh
-dHRyaWJ1dGUgb2YgcGFnZXMsIHNvIHRoZSBvcmlnaW5hbCBhdHRyaWJ1dGUgb2YgcGFnZXMgd2ls
-bCBiZQo+IHJlc3RvcmVkIHdoZW4gdGhleSBmcmVlLgoKSG1tLCB5b3UgY2FuIGNoZWNrIHdoYXQg
-a2ltYWdlX2ZyZWUoKSBpcyBkb2luZywgYW5kIHdoZXJlCmtpbWFnZS0+Y29udHJvbF9wYWdlcywg
-ZGVzdF9wYWdlcywgdW51c2FibGVfcGFnZXMgaXMgYXNzaWduZWQuIERvIHlvdQprbm93IHdoZXJl
-IHRoZXNlIG9yaWdpbmFsIGF0dHJpYnV0ZSBvZiBwYWdlcyBjb21lcyBmcm9tIGFuZCB0aGV5IGFy
-ZQp1c2VkL25lZWRlZCBpbiBDUkFTSCBjYXNlLCBpZiB5b3UgY2FyZSBhYm91dCB0aGVtPwoKPiAK
-PiA+PiArCQlhcmNoX2tleGVjX3Bvc3RfYWxsb2NfcGFnZXMocGFnZV9hZGRyZXNzKHBhZ2VzKSwg
-MSA8PCBvcmRlciwgMCk7Cj4gPj4gKwl9Cj4gPj4gIAlyZXR1cm4gcGFnZXM7Cj4gPj4gIH0KPiA+
-PiAgCj4gPj4gQEAgLTg2NSw2ICs4NzUsNyBAQCBzdGF0aWMgaW50IGtpbWFnZV9sb2FkX2NyYXNo
-X3NlZ21lbnQoc3RydWN0IGtpbWFnZSAqaW1hZ2UsCj4gPj4gIAkJCXJlc3VsdCAgPSAtRU5PTUVN
-Owo+ID4+ICAJCQlnb3RvIG91dDsKPiA+PiAgCQl9Cj4gPj4gKwkJYXJjaF9rZXhlY19wb3N0X2Fs
-bG9jX3BhZ2VzKHBhZ2VfYWRkcmVzcyhwYWdlKSwgMSwgMCk7Cj4gPj4gIAkJcHRyID0ga21hcChw
-YWdlKTsKPiA+PiAgCQlwdHIgKz0gbWFkZHIgJiB+UEFHRV9NQVNLOwo+ID4+ICAJCW1jaHVuayA9
-IG1pbl90KHNpemVfdCwgbWJ5dGVzLAo+ID4+IEBAIC04ODIsNiArODkzLDcgQEAgc3RhdGljIGlu
-dCBraW1hZ2VfbG9hZF9jcmFzaF9zZWdtZW50KHN0cnVjdCBraW1hZ2UgKmltYWdlLAo+ID4+ICAJ
-CQlyZXN1bHQgPSBjb3B5X2Zyb21fdXNlcihwdHIsIGJ1ZiwgdWNodW5rKTsKPiA+PiAgCQlrZXhl
-Y19mbHVzaF9pY2FjaGVfcGFnZShwYWdlKTsKPiA+PiAgCQlrdW5tYXAocGFnZSk7Cj4gPj4gKwkJ
-YXJjaF9rZXhlY19wcmVfZnJlZV9wYWdlcyhwYWdlX2FkZHJlc3MocGFnZSksIDEpOwo+ID4+ICAJ
-CWlmIChyZXN1bHQpIHsKPiA+PiAgCQkJcmVzdWx0ID0gLUVGQVVMVDsKPiA+PiAgCQkJZ290byBv
-dXQ7Cj4gPj4gLS0gCj4gPj4gMi45LjUKPiA+Pgo+ID4+Cj4gPj4gX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiA+PiBrZXhlYyBtYWlsaW5nIGxpc3QKPiA+
-PiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gPj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Changes since v3:
+----------------
+ - Addressed comments from Akashi regarding:
+   ~ Using sensible names for variables and pointers.
+   ~ Removing usage of local pointer variable in 'dump_fdt()' function.
+   ~ Tried addressing a comment regarding converting GET_CELL macro to
+     inline function, but the final implementation became more tricky, so
+     dropped the same and decided to go ahead with the macro for
+     simplicity.
+ - v3 can be viewed here: https://www.spinics.net/lists/kexec/msg20544.html
+
+Changes since v2:
+----------------
+ - Added ascii prints for printing bootargs.
+ - v2 can be viewed here: http://lists.infradead.org/pipermail/kexec/2018-April/020532.html
+
+Changes since v1:
+----------------
+ - No functional changes: Just added a cover letter to explain the
+   background better and also capture some details on where I found this
+   patchset handy. Also added some dtb dumps logs from 'kexec -p -d' for
+   reference (with this patchset applied) for clarity.
+ - v1 can be viewed here: http://lists.infradead.org/pipermail/kexec/2018-April/020407.html
+
+While working on a couple of issues related to primary kernel crash on freescale
+and huawei arm64 boards, I noticed that the primary kernel crashed before it could reach
+the command prompt but was able to launch some early initramfs scriptware. 
+
+In the initial initramfs scriptware crashkernel loading was automated along
+with auto load of other userspace applications (for e.g. on the freescale board
+there are networking applications like ODP/DPDK which can be launched automatically via
+scriptware).
+
+I was hoping that the crashkernel would be able to load when the primary kernel crashes,
+and using the crash core dump thus obtained, I would be able to debug the problem which
+caused the primary kernel to crash late in the boot flow (before reaching the boot prompt).
+
+Unfortunately currently we can experience an early crash in crashkernel itself
+(on such example is the 'acpi table access' issue in the arm64 crashkernel
+which we discussed some time back upstream
+<https://www.spinics.net/lists/arm-kernel/msg616632.html>):
+
+In such cases, we have no opportunity to obtain the crash core dump which can be
+used to debug the primary kernel crash.
+
+Now, looking at just the panic messages from the crashkernel in such cases is sometimes
+not very useful in debugging what might have caused it to crash when the primary kernel
+is able to atleast boot past that point on the same hardware platform.
+
+Debugging the issue closer (especially on the request for help on the freescale board), I
+realized that the crashkernel crash may be caused by improper/buggy fixing of 'dtb'
+being passed to the crashkernel - especially the 'linux,usable-memory-range' property.
+
+For such cases, I found that dumping the dtb blob entries from kexec-tools is
+a useful debugging tip as I could identify the 'linux,usable-memory-range'
+property did not contain ACPI RECLAIM region entries.
+
+Please note that since the primary kernel crashes before the command prompt
+can be reached, it is not possible to run a dtc interpreter there (and it
+also adds the requirement for an additional 'dtc' tool to be present in the initramfs).
+
+Also, it might not be possible to always correctly time the 'dtc' interpreter loading
+via the initramfs scriptware and store the binary/hex output to a storage device
+just after the crashkernel is loaded via 'kexec -p' as the storage driver itself
+might have panick'ed during the meanwhile.
+
+In view of the above, it would be useful to dump the fdt blob being passed to the second
+(kexec/kdump) kernel when '-d' flag is specified while invoking kexec/kdump. This allows
+ one to look at the device-tree fields that is being passed to the secondary
+kernel and accordingly debug issues.
+
+This can be specially useful for the arm64 case, where we are still fixing up some issues
+with the upstream kexec-tools/arm64 kernel.
+
+I loathe to keep this patch locally and apply it locally on top of the upstream 'kexec-tools'
+patches when debugging such issues, so it would be probably good to have this feature
+available in upstream itself.
+
+Here is an example output of the dtb dump(on an arm64 board), on serial console with
+the patchset applied and 'kexec -p' launched used with a '-d' flag using initramfs scriptware:
+
+<..snip..>
+
+setup_2nd_dtb: found /sys/firmware/fdt
+ / {
+    #size-cells = <0x00000002>;
+    #address-cells = <0x00000002>;
+    chosen {
+        linux,usable-memory-range = <0x00000000 0xdfe00000 0x00000000 0x20000000>;
+        linux,elfcorehdr = <0x00000000 0xffdf0000 0x00000000 0x00001400>;
+        kaslr-seed = <0x00000000 0x00000000>;
+        linux,uefi-mmap-desc-ver = <0x00000001>;
+        linux,uefi-mmap-desc-size = <0x00000030>;
+        linux,uefi-mmap-size = <0x000020a0>;
+        linux,uefi-mmap-start = <0x00000000 0x07a81018>;
+        linux,uefi-system-table = <0x00000000 0x17fc0018>;
+	bootargs = "root=/dev/mapper/rhel_qualcomm--amberwing--rep--15-root ro rd.lvm.lv=rhel_qualcomm-amberwing-rep-15/root rd.lvm.lv=rhel_qualcomm-amberwing-rep-15/swap";
+        linux,initrd-end = <0x00000000 0x05e8a7a1>;
+        linux,initrd-start = <0x00000000 0x04b49000>;
+    };
+ };
+
+<..snip..>
+
+Bhupesh Sharma (2):
+  dt-ops: Add helper API to dump fdt blob
+  kexec-arm64: Add functionality to dump 2nd dtb
+
+ kexec/arch/arm64/kexec-arm64.c |   2 +
+ kexec/dt-ops.c                 | 141 +++++++++++++++++++++++++++++++++++++++++
+ kexec/dt-ops.h                 |   1 +
+ 3 files changed, 144 insertions(+)
+
+-- 
+2.7.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
