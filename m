@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fVuWO-0002uI-Ft
- for kexec@lists.infradead.org; Thu, 21 Jun 2018 08:01:01 +0000
-Received: by mail-pf0-f193.google.com with SMTP id r11-v6so1125498pfl.6
- for <kexec@lists.infradead.org>; Thu, 21 Jun 2018 01:00:37 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] dt-ops: Add helper API to dump fdt blob
-From: Bhupesh Sharma <bhsharma@redhat.com>
-References: <1525036956-7440-1-git-send-email-bhsharma@redhat.com>
- <1525036956-7440-2-git-send-email-bhsharma@redhat.com>
- <20180508021420.GH11326@linaro.org>
- <feceb9c5-088b-5db2-c45f-79d53eece79a@redhat.com>
-Message-ID: <f121cde1-2e21-d98b-1a4d-464de90e9467@redhat.com>
-Date: Thu, 21 Jun 2018 13:30:28 +0530
+ id 1fVv7u-0002Yl-JH
+ for kexec@lists.infradead.org; Thu, 21 Jun 2018 08:39:43 +0000
+Date: Thu, 21 Jun 2018 16:39:15 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 3/4 V3] Remap the device table of IOMMU in encrypted
+ manner for kdump
+Message-ID: <20180621083915.GE3815@MiWiFi-R3L-srv>
+References: <20180616082714.32035-1-lijiang@redhat.com>
+ <20180616082714.32035-4-lijiang@redhat.com>
+ <60c6f00e-0eb3-d39c-6a1e-8a1dc1e095af@amd.com>
+ <c591dec2-2135-2e96-8ace-87cbf4b055bf@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <feceb9c5-088b-5db2-c45f-79d53eece79a@redhat.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <c591dec2-2135-2e96-8ace-87cbf4b055bf@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,79 +23,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, bhupesh.linux@gmail.com, dyoung@redhat.com, horms@verge.net.au, james.morse@arm.com
+To: lijiang <lijiang@redhat.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>, iommu@lists.linux-foundation.org, dyoung@redhat.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 
-Hi Akashi,
-
-On 06/20/2018 03:59 PM, Bhupesh Sharma wrote:
-> Hi Akashi,
-> 
-> Apologies for delay in replying. Somehow my email filter rules messed up 
-> and the review email was sent to another folder.
-> 
-> Please see my comments inline:
-> 
-> On 05/08/2018 07:44 AM, AKASHI Takahiro wrote:
->> Bhupesh,
->>
->> On Mon, Apr 30, 2018 at 02:52:35AM +0530, Bhupesh Sharma wrote:
->>> At several occasions it would be useful to dump the fdt
->>> blob being passed to the second (kexec/kdump) kernel
->>> when '-d' flag is specified while invoking kexec/kdump.
->>>
->>> This allows one to look at the device-tree fields that
->>> is being passed to the secondary kernel and accordingly
->>> debug issues.
->>>
->>> This can be specially useful for the arm64 case, where
->>> kexec_load() or kdump passes important information like
->>> 'linux,usable-memory' ranges to the second kernel, and
->>> the correctness of the ranges can be verified by
->>> looking at the device-tree dump with '-d' flag specified.
->>>
->>> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
->>> ---
->>>   kexec/dt-ops.c | 143 
->>> +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->>>   kexec/dt-ops.h |   1 +
->>>   2 files changed, 144 insertions(+)
->>>
->>> diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
->>> index 915dbf55afd2..cb95920e5c3e 100644
->>> --- a/kexec/dt-ops.c
->>> +++ b/kexec/dt-ops.c
->>> @@ -8,6 +8,10 @@
->>>   #include "kexec.h"
->>>   #include "dt-ops.h"
->>> +#define ALIGN(x, a)    (((x) + ((a) - 1)) & ~((a) - 1))
->>> +#define PALIGN(p, a)    ((void *)(ALIGN((unsigned long)(p), (a))))
->>
->> Pointer doesn't always fit to unsigned long.
->>
->>> +#define GET_CELL(p)    (p += 4, *((const uint32_t *)(p-4)))
->>
->> Tricky :) Inline function would be better.
-> 
-> Ok.
-> 
-
-Well, I was working on converting this into an inline function, but the 
-final implementation turned out to be more 'trickier' then the macro, so 
-I would suggest that we stick to the macro for now (for the v4) and 
-later when I can think of a better approach, I will submit another patch 
-to fix the issue.
-
-Please let me know in case of any concerns.
-I would try to send out v4 later today.
-
-Thanks,
-Bhupesh
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDYvMjEvMTggYXQgMDE6NDJwbSwgbGlqaWFuZyB3cm90ZToKPiDlnKggMjAxOOW5tDA25pyI
+MjHml6UgMDA6NDIsIFRvbSBMZW5kYWNreSDlhpnpgZM6Cj4gPiBPbiA2LzE2LzIwMTggMzoyNyBB
+TSwgTGlhbmJvIEppYW5nIHdyb3RlOgo+ID4+IEluIGtkdW1wIG1vZGUsIGl0IHdpbGwgY29weSB0
+aGUgZGV2aWNlIHRhYmxlIG9mIElPTU1VIGZyb20gdGhlIG9sZAo+ID4+IGRldmljZSB0YWJsZSwg
+d2hpY2ggaXMgZW5jcnlwdGVkIHdoZW4gU01FIGlzIGVuYWJsZWQgaW4gdGhlIGZpcnN0Cj4gPj4g
+a2VybmVsLiBTbyB3ZSBtdXN0IHJlbWFwIGl0IGluIGVuY3J5cHRlZCBtYW5uZXIgaW4gb3JkZXIg
+dG8gYmUKPiA+PiBhdXRvbWF0aWNhbGx5IGRlY3J5cHRlZCB3aGVuIHdlIHJlYWQuCj4gPj4KPiA+
+PiBTaWduZWQtb2ZmLWJ5OiBMaWFuYm8gSmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4KPiA+PiAt
+LS0KPiA+PiBTb21lIGNoYW5nZXM6Cj4gPj4gMS4gYWRkIHNvbWUgY29tbWVudHMKPiA+PiAyLiBj
+bGVhbiBjb21waWxlIHdhcm5pbmcuCj4gPj4KPiA+PiAgZHJpdmVycy9pb21tdS9hbWRfaW9tbXVf
+aW5pdC5jIHwgMTUgKysrKysrKysrKysrKystCj4gPj4gIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNl
+cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gPj4KPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9p
+b21tdS9hbWRfaW9tbXVfaW5pdC5jIGIvZHJpdmVycy9pb21tdS9hbWRfaW9tbXVfaW5pdC5jCj4g
+Pj4gaW5kZXggOTA0YzU3NS4uYTIwYWY0YyAxMDA2NDQKPiA+PiAtLS0gYS9kcml2ZXJzL2lvbW11
+L2FtZF9pb21tdV9pbml0LmMKPiA+PiArKysgYi9kcml2ZXJzL2lvbW11L2FtZF9pb21tdV9pbml0
+LmMKPiA+PiBAQCAtODg5LDExICs4ODksMjQgQEAgc3RhdGljIGJvb2wgY29weV9kZXZpY2VfdGFi
+bGUodm9pZCkKPiA+PiAgCX0KPiA+PiAgCj4gPj4gIAlvbGRfZGV2dGJfcGh5cyA9IGVudHJ5ICYg
+UEFHRV9NQVNLOwo+ID4+ICsKPiA+PiArCS8qCj4gPj4gKwkgKiAgV2hlbiBzbWUgZW5hYmxlIGlu
+IHRoZSBmaXJzdCBrZXJuZWwsIG9sZF9kZXZ0Yl9waHlzIGluY2x1ZGVzIHRoZQo+ID4+ICsJICog
+IG1lbW9yeSBlbmNyeXB0aW9uIG1hc2soc21lX21lX21hc2spLCB3ZSBtdXN0IHJlbW92ZSB0aGUg
+bWVtb3J5Cj4gPj4gKwkgKiAgZW5jcnlwdGlvbiBtYXNrIHRvIG9idGFpbiB0aGUgdHJ1ZSBwaHlz
+aWNhbCBhZGRyZXNzIGluIGtkdW1wIG1vZGUuCj4gPj4gKwkgKi8KPiA+PiArCWlmIChtZW1fZW5j
+cnlwdF9hY3RpdmUoKSAmJiBpc19rZHVtcF9rZXJuZWwoKSkKPiA+PiArCQlvbGRfZGV2dGJfcGh5
+cyA9IF9fc21lX2NscihvbGRfZGV2dGJfcGh5cyk7Cj4gPj4gKwo+ID4gCj4gPiBZb3UgY2FuIHBy
+b2JhYmx5IGp1c3QgdXNlICJpZiAoaXNfa2R1bXBfa2VybmVsKCkpIiBoZXJlLCBzaW5jZSBtZW1v
+cnkKPiA+IGVuY3J5cHRpb24gaXMgZWl0aGVyIG9uIGluIGJvdGggdGhlIGZpcnN0IGFuZCBzZWNv
+bmQga2VybmVsIG9yIG9mZiBpbgo+ID4gYm90aCB0aGUgZmlyc3QgYW5kIHNlY29uZCBrZXJuZWwu
+ICBBdCB3aGljaCBwb2ludCBfX3NtZV9jbHIoKSB3aWxsIGRvCj4gPiB0aGUgcHJvcGVyIHRoaW5n
+Lgo+ID4gCj4gPiBBY3R1YWxseSwgdGhpcyBuZWVkcyB0byBiZSBkb25lIG5vIG1hdHRlciB3aGF0
+LiAgV2hlbiBkb2luZyBlaXRoZXIgdGhlCj4gPiBpb3JlbWFwX2VuY3J5cHRlZCgpIG9yIHRoZSBt
+ZW1yZW1hcCgpLCB0aGUgcGh5c2ljYWwgYWRkcmVzcyBzaG91bGQgbm90Cj4gPiBpbmNsdWRlIHRo
+ZSBlbmNyeXB0aW9uIGJpdC9tYXNrLgo+ID4gCj4gPiBUaGFua3MsCj4gPiBUb20KPiA+IAo+IFRo
+YW5rcyBmb3IgeW91ciBjb21tZW50cy4gSWYgd2UgZG9uJ3QgcmVtb3ZlIHRoZSBtZW1vcnkgZW5j
+cnlwdGlvbiBtYXNrLCBpdCB3aWxsCj4gcmV0dXJuIGZhbHNlIGJlY2F1c2UgdGhlICdvbGRfZGV2
+dGJfcGh5cyA+PSAweDEwMDAwMDAwMFVMTCcgbWF5IGJlY29tZSB0cnVlLgoKTGlhbmJvLCB5b3Ug
+bWF5IG5vdCBnZXQgd2hhdCBUb20gc3VnZ2VzdGVkLiBUb20gbWVhbnMgbm8gbWF0dGVyIHdoYXQg
+aXQKaXMsIGVuY3J5cHRlZCBvciBub3QgaW4gMXN0IGtlcm5lbCwgd2UgbmVlZCBnZXQgcHVyZSBw
+aHlzaWNhbGwgYWRkcmVzcywKYW5kIHVzaW5nIGJlbG93IGNvZGUgaXMgYWx3YXlzIHJpZ2h0IGZv
+ciBib3RoIGNhc2VzLgoKCWlmIChpc19rZHVtcF9rZXJuZWwoKSkKCQlvbGRfZGV2dGJfcGh5cyA9
+IF9fc21lX2NscihvbGRfZGV2dGJfcGh5cyk7CgpBbmQgdGhpcyBpcyBzaW1wbGVyLiBZb3UgZXZl
+biBjYW4gYWRkIG9uZSBsaW5lIG9mIGNvZGUgY29tbWVudCB0byBzYXkKbGlrZSAiUGh5c2ljYWwg
+YWRkcmVzcyB3L28gZW5jcnlwdGlvbiBtYXNrIGlzIG5lZWRlZCBoZXJlLiIKPiAKPiBMaWFuYm8K
+PiA+PiAgCWlmIChvbGRfZGV2dGJfcGh5cyA+PSAweDEwMDAwMDAwMFVMTCkgewo+ID4+ICAJCXBy
+X2VycigiVGhlIGFkZHJlc3Mgb2Ygb2xkIGRldmljZSB0YWJsZSBpcyBhYm92ZSA0Rywgbm90IHRy
+dXN0d29ydGh5IVxuIik7Cj4gPj4gIAkJcmV0dXJuIGZhbHNlOwo+ID4+ICAJfQo+ID4+IC0Jb2xk
+X2RldnRiID0gbWVtcmVtYXAob2xkX2RldnRiX3BoeXMsIGRldl90YWJsZV9zaXplLCBNRU1SRU1B
+UF9XQik7Cj4gPj4gKwlvbGRfZGV2dGIgPSAobWVtX2VuY3J5cHRfYWN0aXZlKCkgJiYgaXNfa2R1
+bXBfa2VybmVsKCkpCj4gPj4gKwkJICAgID8gKF9fZm9yY2Ugdm9pZCAqKWlvcmVtYXBfZW5jcnlw
+dGVkKG9sZF9kZXZ0Yl9waHlzLAo+ID4+ICsJCQkJCQkJZGV2X3RhYmxlX3NpemUpCj4gPj4gKwkJ
+ICAgIDogbWVtcmVtYXAob2xkX2RldnRiX3BoeXMsIGRldl90YWJsZV9zaXplLCBNRU1SRU1BUF9X
+Qik7PiArCj4gPj4gIAlpZiAoIW9sZF9kZXZ0YikKPiA+PiAgCQlyZXR1cm4gZmFsc2U7Cj4gPj4g
+IAo+ID4+Cj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KPiBrZXhlYyBtYWlsaW5nIGxpc3QKPiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0
+CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9rZXhlYwo=
