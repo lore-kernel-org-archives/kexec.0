@@ -1,22 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mail-pf0-x244.google.com ([2607:f8b0:400e:c00::244])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fWCC0-0003pW-R3
- for kexec@lists.infradead.org; Fri, 22 Jun 2018 02:52:58 +0000
-Date: Fri, 22 Jun 2018 10:52:35 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 3/4 V3] Remap the device table of IOMMU in encrypted
- manner for kdump
-Message-ID: <20180622025235.GN29979@MiWiFi-R3L-srv>
-References: <20180616082714.32035-1-lijiang@redhat.com>
- <20180616082714.32035-4-lijiang@redhat.com>
- <60c6f00e-0eb3-d39c-6a1e-8a1dc1e095af@amd.com>
- <c591dec2-2135-2e96-8ace-87cbf4b055bf@redhat.com>
- <20180621083915.GE3815@MiWiFi-R3L-srv>
- <4c71ac2a-5c53-f1b1-8de6-4b7b944d5d06@amd.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4c71ac2a-5c53-f1b1-8de6-4b7b944d5d06@amd.com>
+ id 1fWYAJ-0003C0-PU
+ for kexec@lists.infradead.org; Sat, 23 Jun 2018 02:20:42 +0000
+Received: by mail-pf0-x244.google.com with SMTP id y5-v6so4000046pfn.4
+ for <kexec@lists.infradead.org>; Fri, 22 Jun 2018 19:20:28 -0700 (PDT)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v10 00/14] arm64: kexec: add kexec_file_load() support
+Date: Sat, 23 Jun 2018 11:20:44 +0900
+Message-Id: <20180623022058.10935-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,81 +17,291 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: dyoung@redhat.com, iommu@lists.linux-foundation.org, kexec@lists.infradead.org, lijiang <lijiang@redhat.com>, linux-kernel@vger.kernel.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de
+Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-T24gMDYvMjEvMTggYXQgMDg6MTJhbSwgVG9tIExlbmRhY2t5IHdyb3RlOgo+IE9uIDYvMjEvMjAx
-OCAzOjM5IEFNLCBCYW9xdWFuIEhlIHdyb3RlOgo+ID4gT24gMDYvMjEvMTggYXQgMDE6NDJwbSwg
-bGlqaWFuZyB3cm90ZToKPiA+PiDlnKggMjAxOOW5tDA25pyIMjHml6UgMDA6NDIsIFRvbSBMZW5k
-YWNreSDlhpnpgZM6Cj4gPj4+IE9uIDYvMTYvMjAxOCAzOjI3IEFNLCBMaWFuYm8gSmlhbmcgd3Jv
-dGU6Cj4gPj4+PiBJbiBrZHVtcCBtb2RlLCBpdCB3aWxsIGNvcHkgdGhlIGRldmljZSB0YWJsZSBv
-ZiBJT01NVSBmcm9tIHRoZSBvbGQKPiA+Pj4+IGRldmljZSB0YWJsZSwgd2hpY2ggaXMgZW5jcnlw
-dGVkIHdoZW4gU01FIGlzIGVuYWJsZWQgaW4gdGhlIGZpcnN0Cj4gPj4+PiBrZXJuZWwuIFNvIHdl
-IG11c3QgcmVtYXAgaXQgaW4gZW5jcnlwdGVkIG1hbm5lciBpbiBvcmRlciB0byBiZQo+ID4+Pj4g
-YXV0b21hdGljYWxseSBkZWNyeXB0ZWQgd2hlbiB3ZSByZWFkLgo+ID4+Pj4KPiA+Pj4+IFNpZ25l
-ZC1vZmYtYnk6IExpYW5ibyBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+ID4+Pj4gLS0tCj4g
-Pj4+PiBTb21lIGNoYW5nZXM6Cj4gPj4+PiAxLiBhZGQgc29tZSBjb21tZW50cwo+ID4+Pj4gMi4g
-Y2xlYW4gY29tcGlsZSB3YXJuaW5nLgo+ID4+Pj4KPiA+Pj4+ICBkcml2ZXJzL2lvbW11L2FtZF9p
-b21tdV9pbml0LmMgfCAxNSArKysrKysrKysrKysrKy0KPiA+Pj4+ICAxIGZpbGUgY2hhbmdlZCwg
-MTQgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+ID4+Pj4KPiA+Pj4+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL2lvbW11L2FtZF9pb21tdV9pbml0LmMgYi9kcml2ZXJzL2lvbW11L2FtZF9pb21t
-dV9pbml0LmMKPiA+Pj4+IGluZGV4IDkwNGM1NzUuLmEyMGFmNGMgMTAwNjQ0Cj4gPj4+PiAtLS0g
-YS9kcml2ZXJzL2lvbW11L2FtZF9pb21tdV9pbml0LmMKPiA+Pj4+ICsrKyBiL2RyaXZlcnMvaW9t
-bXUvYW1kX2lvbW11X2luaXQuYwo+ID4+Pj4gQEAgLTg4OSwxMSArODg5LDI0IEBAIHN0YXRpYyBi
-b29sIGNvcHlfZGV2aWNlX3RhYmxlKHZvaWQpCj4gPj4+PiAgCX0KPiA+Pj4+ICAKPiA+Pj4+ICAJ
-b2xkX2RldnRiX3BoeXMgPSBlbnRyeSAmIFBBR0VfTUFTSzsKPiA+Pj4+ICsKPiA+Pj4+ICsJLyoK
-PiA+Pj4+ICsJICogIFdoZW4gc21lIGVuYWJsZSBpbiB0aGUgZmlyc3Qga2VybmVsLCBvbGRfZGV2
-dGJfcGh5cyBpbmNsdWRlcyB0aGUKPiA+Pj4+ICsJICogIG1lbW9yeSBlbmNyeXB0aW9uIG1hc2so
-c21lX21lX21hc2spLCB3ZSBtdXN0IHJlbW92ZSB0aGUgbWVtb3J5Cj4gPj4+PiArCSAqICBlbmNy
-eXB0aW9uIG1hc2sgdG8gb2J0YWluIHRoZSB0cnVlIHBoeXNpY2FsIGFkZHJlc3MgaW4ga2R1bXAg
-bW9kZS4KPiA+Pj4+ICsJICovCj4gPj4+PiArCWlmIChtZW1fZW5jcnlwdF9hY3RpdmUoKSAmJiBp
-c19rZHVtcF9rZXJuZWwoKSkKPiA+Pj4+ICsJCW9sZF9kZXZ0Yl9waHlzID0gX19zbWVfY2xyKG9s
-ZF9kZXZ0Yl9waHlzKTsKPiA+Pj4+ICsKPiA+Pj4KPiA+Pj4gWW91IGNhbiBwcm9iYWJseSBqdXN0
-IHVzZSAiaWYgKGlzX2tkdW1wX2tlcm5lbCgpKSIgaGVyZSwgc2luY2UgbWVtb3J5Cj4gPj4+IGVu
-Y3J5cHRpb24gaXMgZWl0aGVyIG9uIGluIGJvdGggdGhlIGZpcnN0IGFuZCBzZWNvbmQga2VybmVs
-IG9yIG9mZiBpbgo+ID4+PiBib3RoIHRoZSBmaXJzdCBhbmQgc2Vjb25kIGtlcm5lbC4gIEF0IHdo
-aWNoIHBvaW50IF9fc21lX2NscigpIHdpbGwgZG8KPiA+Pj4gdGhlIHByb3BlciB0aGluZy4KPiA+
-Pj4KPiA+Pj4gQWN0dWFsbHksIHRoaXMgbmVlZHMgdG8gYmUgZG9uZSBubyBtYXR0ZXIgd2hhdC4g
-IFdoZW4gZG9pbmcgZWl0aGVyIHRoZQo+ID4+PiBpb3JlbWFwX2VuY3J5cHRlZCgpIG9yIHRoZSBt
-ZW1yZW1hcCgpLCB0aGUgcGh5c2ljYWwgYWRkcmVzcyBzaG91bGQgbm90Cj4gPj4+IGluY2x1ZGUg
-dGhlIGVuY3J5cHRpb24gYml0L21hc2suCj4gPj4+Cj4gPj4+IFRoYW5rcywKPiA+Pj4gVG9tCj4g
-Pj4+Cj4gPj4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLiBJZiB3ZSBkb24ndCByZW1vdmUgdGhl
-IG1lbW9yeSBlbmNyeXB0aW9uIG1hc2ssIGl0IHdpbGwKPiA+PiByZXR1cm4gZmFsc2UgYmVjYXVz
-ZSB0aGUgJ29sZF9kZXZ0Yl9waHlzID49IDB4MTAwMDAwMDAwVUxMJyBtYXkgYmVjb21lIHRydWUu
-Cj4gPiAKPiA+IExpYW5ibywgeW91IG1heSBub3QgZ2V0IHdoYXQgVG9tIHN1Z2dlc3RlZC4gVG9t
-IG1lYW5zIG5vIG1hdHRlciB3aGF0IGl0Cj4gPiBpcywgZW5jcnlwdGVkIG9yIG5vdCBpbiAxc3Qg
-a2VybmVsLCB3ZSBuZWVkIGdldCBwdXJlIHBoeXNpY2FsbCBhZGRyZXNzLAo+ID4gYW5kIHVzaW5n
-IGJlbG93IGNvZGUgaXMgYWx3YXlzIHJpZ2h0IGZvciBib3RoIGNhc2VzLgo+ID4gCj4gPiAJaWYg
-KGlzX2tkdW1wX2tlcm5lbCgpKQo+ID4gCQlvbGRfZGV2dGJfcGh5cyA9IF9fc21lX2NscihvbGRf
-ZGV2dGJfcGh5cyk7Cj4gPiAKPiA+IEFuZCB0aGlzIGlzIHNpbXBsZXIuIFlvdSBldmVuIGNhbiBh
-ZGQgb25lIGxpbmUgb2YgY29kZSBjb21tZW50IHRvIHNheQo+ID4gbGlrZSAiUGh5c2ljYWwgYWRk
-cmVzcyB3L28gZW5jcnlwdGlvbiBtYXNrIGlzIG5lZWRlZCBoZXJlLiIKPiAKPiBFdmVuIHNpbXBs
-ZXIsIHRoZXJlJ3Mgbm8gbmVlZCB0byBldmVuIGNoZWNrIGZvciBpc19rZHVtcF9rZXJuZWwoKS4g
-IFRoZQo+IF9fc21lX2NscigpIHNob3VsZCBhbHdheXMgYmUgZG9uZSBpZiB0aGUgcGh5c2ljYWwg
-YWRkcmVzcyBpcyBnb2luZyB0byBiZQo+IHVzZWQgZm9yIHNvbWUgZm9ybSBvZiBpbyBvciBtZW1v
-cnkgcmVtYXBwaW5nLgo+IAo+IFNvIHlvdSBjb3VsZCBqdXN0IGNoYW5nZSB0aGUgZXhpc3Rpbmc6
-Cj4gCj4gCW9sZF9kZXZ0Yl9waHlzID0gZW50cnkgJiBQQUdFX01BU0s7Cj4gCj4gdG86Cj4gCj4g
-CW9sZF9kZXZ0Yl9waHlzID0gX19zbWVfY2xyKGVudHJ5KSAmIFBBR0VfTUFTSzsKCkFncmVlLCB0
-aGlzIGlzIGV2ZW4gYmV0dGVyLgoKPiAKPiA+Pgo+ID4+IExpYW5ibwo+ID4+Pj4gIAlpZiAob2xk
-X2RldnRiX3BoeXMgPj0gMHgxMDAwMDAwMDBVTEwpIHsKPiA+Pj4+ICAJCXByX2VycigiVGhlIGFk
-ZHJlc3Mgb2Ygb2xkIGRldmljZSB0YWJsZSBpcyBhYm92ZSA0Rywgbm90IHRydXN0d29ydGh5IVxu
-Iik7Cj4gPj4+PiAgCQlyZXR1cm4gZmFsc2U7Cj4gPj4+PiAgCX0KPiA+Pj4+IC0Jb2xkX2RldnRi
-ID0gbWVtcmVtYXAob2xkX2RldnRiX3BoeXMsIGRldl90YWJsZV9zaXplLCBNRU1SRU1BUF9XQik7
-Cj4gPj4+PiArCW9sZF9kZXZ0YiA9IChtZW1fZW5jcnlwdF9hY3RpdmUoKSAmJiBpc19rZHVtcF9r
-ZXJuZWwoKSkKPiA+Pj4+ICsJCSAgICA/IChfX2ZvcmNlIHZvaWQgKilpb3JlbWFwX2VuY3J5cHRl
-ZChvbGRfZGV2dGJfcGh5cywKPiA+Pj4+ICsJCQkJCQkJZGV2X3RhYmxlX3NpemUpCj4gPj4+PiAr
-CQkgICAgOiBtZW1yZW1hcChvbGRfZGV2dGJfcGh5cywgZGV2X3RhYmxlX3NpemUsIE1FTVJFTUFQ
-X1dCKTs+ICsKPiA+Pj4+ICAJaWYgKCFvbGRfZGV2dGIpCj4gPj4+PiAgCQlyZXR1cm4gZmFsc2U7
-Cj4gPj4+PiAgCj4gPj4+Pgo+ID4+Cj4gPj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KPiA+PiBrZXhlYyBtYWlsaW5nIGxpc3QKPiA+PiBrZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCj4gPj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9rZXhlYwo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCj4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
-Zwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+This is the tenth round of implementing kexec_file_load() support
+on arm64.[1] (See "Changes" below)
+Most of the code is based on kexec-tools.
+
+
+This patch series enables us to
+  * load the kernel by specifying its file descriptor, instead of user-
+    filled buffer, at kexec_file_load() system call, and
+  * optionally verify its signature at load time for trusted boot.
+Kernel virtual address randomization is also supported since v9.
+
+Contrary to kexec_load() system call, as we discussed a long time ago,
+users may not be allowed to provide a device tree to the 2nd kernel
+explicitly, hence enforcing a dt blob of the first kernel to be re-used
+internally.
+
+To use kexec_file_load() system call, instead of kexec_load(), at kexec
+command, '-s' option must be specified. See [2] for a necessary patch for
+kexec-tools.
+
+To analyze a generated crash dump file, use the latest master branch of
+crash utility[3]. I always try to submit patches to fix any inconsistencies
+introduced in the latest kernel.
+
+Regarding a kernel image verification, a signature must be presented
+along with the binary itself. A signature is basically a hash value
+calculated against the whole binary data and encrypted by a key which
+will be authenticated by one of the system's trusted certificates.
+Any attempt to read and load a to-be-kexec-ed kernel image through
+a system call will be checked and blocked if the binary's hash value
+doesn't match its associated signature.
+
+There are two methods available now:
+1. implementing arch-specific verification hook of kexec_file_load()
+2. utilizing IMA(Integrity Measurement Architecture)[4] appraisal framework
+
+Before my v7, I believed that my patch only supports (1) but am now
+confident that (2) comes free if IMA is enabled and properly configured.
+
+
+(1) Arch-specific verification hook
+If CONFIG_KEXEC_VERIFY_SIG is enabled, kexec_file_load() invokes an arch-
+defined (and hence file-format-specific) hook function to check for the
+validity of kernel binary.
+
+On x86, a signature is embedded into a PE file (Microsoft's format) header
+of binary. Since arm64's "Image" can also be seen as a PE file as far as
+CONFIG_EFI is enabled, we adopt this format for kernel signing.  
+
+As in the case of UEFI applications, we can create a signed kernel image:
+    $ sbsign --key ${KEY} --cert ${CERT} Image
+
+You may want to use certs/signing_key.pem, which is intended to be used
+for module signing (CONFIG_MODULE_SIG), as ${KEY} and ${CERT} for test
+purpose.
+
+
+(2) IMA appraisal-based
+IMA was first introduced in linux in order to meet TCG (Trusted Computing
+Group) requirement that all the sensitive files be *measured* before
+reading/executing them to detect any untrusted changes/modification.
+Then appraisal feature, which allows us to ensure the integrity of
+files and even prevent them from reading/executing, was added later.
+
+Meanwhile, kexec_file_load() has been merged since v3.17 and evolved to
+enable IMA-appraisal type verification by the commit b804defe4297 ("kexec:
+replace call to copy_file_from_fd() with kernel version").
+
+In this scheme, a signature will be stored in a extended file attribute,
+"security.ima" while a decryption key is hold in a dedicated keyring,
+".ima" or "_ima".  All the necessary process of verification is confined
+in a secure API, kernel_read_file_from_fd(), called by kexec_file_load().
+
+    Please note that powerpc is one of the two architectures now
+    supporting KEXEC_FILE, and that it wishes to exntend IMA,
+    where a signature may be appended to "vmlinux" file[5], like module
+    signing, instead of using an extended file attribute.
+
+While IMA meant to be used with TPM (Trusted Platform Module) on secure
+platform, IMA is still usable without TPM. Here is an example procedure
+about how we can give it a try to run the feature using a self-signed
+root ca for demo/test purposes:
+
+ 1) Generate needed keys and certificates, following "Generate trusted
+    keys" section in README of ima-evm-utils[6].
+
+ 2) Build the kernel with the following kernel configurations, specifying
+    "ima-local-ca.pem" for CONFIG_SYSTEM_TRUSTED_KEYS:
+	CONFIG_EXT4_FS_SECURITY
+	CONFIG_INTEGRITY_SIGNATURE
+	CONFIG_INTEGRITY_ASYMMETRIC_KEYS
+	CONFIG_INTEGRITY_TRUSTED_KEYRING
+	CONFIG_IMA
+	CONFIG_IMA_WRITE_POLICY
+	CONFIG_IMA_READ_POLICY
+	CONFIG_IMA_APPRAISE
+	CONFIG_IMA_APPRAISE_BOOTPARAM
+	CONFIG_SYSTEM_TRUSTED_KEYS
+    Please note that CONFIG_KEXEC_VERIFY_SIG is not, actually should
+    not be, enabled.
+
+ 3) Sign(label) a kernel image binary to be kexec-ed on target filesystem:
+    $ evmctl ima_sign --key /path/to/private_key.pem /your/Image
+
+ 4) Add a command line parameter and boot the kernel:
+    ima_appraise=enforce
+
+ On live system,
+ 5) Set a security policy:
+    $ mount -t securityfs none /sys/kernel/security
+    $ echo "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig" \
+      > /sys/kernel/security/ima/policy
+
+ 6) Add a key for ima:
+    $ keyctl padd asymmetric my_ima_key %:.ima < /path/to/x509_ima.der
+    (or evmctl import /path/to/x509_ima.der <ima_keyring_id>)
+
+ 7) Then try kexec as normal.
+
+
+Concerns(or future works):
+* Support for physical address randomization
+* Signature verification of big endian kernel with CONFIG_KEXEC_VERIFY_SIG
+  While big-endian kernel can support kernel signing, I'm not sure that
+  Image can be recognized as in PE format because x86 standard only
+  defines little-endian-based format.
+* Support for vminux loading
+
+  [1] http://git.linaro.org/people/takahiro.akashi/linux-aarch64.git
+	branch:arm64/kexec_file
+  [2] http://git.linaro.org/people/takahiro.akashi/kexec-tools.git
+	branch:arm64/kexec_file
+  [3] http://github.com/crash-utility/crash.git
+  [4] https://sourceforge.net/p/linux-ima/wiki/Home/
+  [5] http://lkml.iu.edu//hypermail/linux/kernel/1707.0/03669.html
+  [6] https://sourceforge.net/p/linux-ima/ima-evm-utils/ci/master/tree/
+
+
+Changes in v10 (June 23, 2018)
+* rebased to v4.18-rc
+* change syscall numer of kexec_file_load from 292 to 293
+* factor out memblock-based arch_kexec_walk_mem() from powerpc and
+  merge it into generic one
+* move generic fdt helper functions from arm64 dir to drivers/of
+  (dt_root_[addr|size]_cells are no longer __initdata.)
+* modify fill_property() to use 'while' loop
+* modify fdt_setprop_reg() to allocate a buffer on stack
+* modify setup_dtb() to use fdt_setprop_u64()
+* pass kernel_load_addr/size directly as arguments, instead of via
+  kimage_arch.kern_segment, at load_other_segments()
+* refuse loading an image which cannot be supported in image loader,
+  adding cpu-feature(MMFR0) helper functions
+* modify prepare_elf_headers() to use kmalloc() instead of vmalloc()
+* always pass arch.dtb_mem as the fourth argument to cpu_soft_restart()
+  in machine_kexec() while dtb_mem will be zero in kexec case
+
+Changes in v9 (April 25, 2018)
+* rebased to v4.17-rc
+* remove preparatory patches on generic/x86/ppc code
+  They have now been merged in v4.17-rc1.
+* allocate memory based on memblock list instead of system resources
+  This will prevent reserved regions, particularly UEFI/ACPI data,
+  from being corrupted.
+* correct dt property names, linux,initrd-*, in newly-created dtb
+  "linux," was missing.
+* remove alignment requirement for initrd loading
+* add kaslr (kernel virtual address randomization) support
+* misc code clean-up
+* revise commit messages
+
+Changes in v8 (Feb 22, 2018)
+* introduce ARCH_HAS_KEXEC_PURGATORY so that arm64 will be able to skip
+  purgatory
+* remove "ifdef CONFIG_X86_64" stuffs from a re-factored function,
+  prepare_elf64_headers(), making its interface more generic
+  (The original patch was split into two for easier reviews.)
+* modify cpu_soft_restart() so as to let the 2nd kernel jump into its entry
+  code directly without requiring purgatory in case of kexec_file_load
+* remove CONFIG_KEXEC_FILE_IMAGE_FMT and introduce
+  CONFIG_KEXEC_IMAGE_VERIFY_SIG, much similar to x86 but quite redundant
+  for now.
+* In addition, update/modify dependencies of KEXEC_IMAGE_VERIFY_SIG
+
+Changes in v7 (Dec 4, 2017)
+* rebased to v4.15-rc2
+* re-organize the patch set to separate KEXEC_FILE_VERIFY_SIG-related
+  code from the others
+* revamp factored-out code in kernel/kexec_file.c due to the changes
+  in original x86 code
+* redefine walk_sys_ram_res_rev() prototype due to change of callback
+  type in the counterpart, walk_sys_ram_res()
+* make KEXEC_FILE_IMAGE_FMT default on if KEXEC_FILE selected
+
+Changes in v6 (Oct 24, 2017)
+* fix a for-loop bug in _kexec_kernel_image_probe() per Julien
+
+Changes in v5 (Oct 10, 2017)
+* fix kbuild errors around patch #3
+per Julien's comments,
+* fix a bug in walk_system_ram_res_rev() with some cleanup
+* modify fdt_setprop_range() to use vmalloc()
+* modify fill_property() to use memset()
+
+Changes in v4 (Oct 2, 2017)
+* reinstate x86's arch_kexec_kernel_image_load()
+* rename weak arch_kexec_kernel_xxx() to _kexec_kernel_xxx() for
+  better re-use
+* constify kexec_file_loaders[]
+
+Changes in v3 (Sep 15, 2017)
+* fix kbuild test error
+* factor out arch_kexec_kernel_*() & arch_kimage_file_post_load_cleanup()
+* remove CONFIG_CRASH_CORE guard from kexec_file.c
+* add vmapped kernel region to vmcore for gdb backtracing
+  (see prepare_elf64_headers())
+* merge asm/kexec_file.h into asm/kexec.h
+* and some cleanups
+
+Changes in v2 (Sep 8, 2017)
+* move core-header-related functions from crash_core.c to kexec_file.c
+* drop hash-check code from purgatory
+* modify purgatory asm to remove arch_kexec_apply_relocations_add()
+* drop older kernel support
+* drop vmlinux support (at least, for this series)
+
+
+Patch #1 to #10 are essential part for KEXEC_FILE support
+(additionally allowing for IMA-based verification):
+  Patch #1 to #6 are all preparatory patches on generic side.
+  Patch #7 to #11 are to enable kexec_file_load on arm64.
+
+Patch #12 to #13 are for KEXEC_VERIFY_SIG (arch-specific verification)
+support
+
+AKASHI Takahiro (14):
+  asm-generic: add kexec_file_load system call to unistd.h
+  kexec_file: make kexec_image_post_load_cleanup_default() global
+  powerpc, kexec_file: factor out memblock-based arch_kexec_walk_mem()
+  of/fdt: add helper functions for handling properties
+  arm64: add image head flag definitions
+  arm64: cpufeature: add MMFR0 helper functions
+  arm64: enable KEXEC_FILE config
+  arm64: kexec_file: load initrd and device-tree
+  arm64: kexec_file: allow for loading Image-format kernel
+  arm64: kexec_file: add crash dump support
+  arm64: kexec_file: invoke the kernel without purgatory
+  include: pe.h: remove message[] from mz header definition
+  arm64: kexec_file: add kernel signature verification support
+  arm64: kexec_file: add kaslr support
+
+ arch/arm64/Kconfig                          |  34 +++
+ arch/arm64/include/asm/boot.h               |  15 +
+ arch/arm64/include/asm/cpufeature.h         |  48 ++++
+ arch/arm64/include/asm/kexec.h              |  48 ++++
+ arch/arm64/kernel/Makefile                  |   3 +-
+ arch/arm64/kernel/cpu-reset.S               |   8 +-
+ arch/arm64/kernel/head.S                    |   2 +-
+ arch/arm64/kernel/kexec_image.c             | 128 +++++++++
+ arch/arm64/kernel/machine_kexec.c           |  12 +-
+ arch/arm64/kernel/machine_kexec_file.c      | 291 ++++++++++++++++++++
+ arch/arm64/kernel/relocate_kernel.S         |   3 +-
+ arch/powerpc/kernel/machine_kexec_file_64.c |  53 ----
+ drivers/of/fdt.c                            |  62 ++++-
+ include/linux/kexec.h                       |   1 +
+ include/linux/of_fdt.h                      |  10 +-
+ include/linux/pe.h                          |   2 +-
+ include/uapi/asm-generic/unistd.h           |   4 +-
+ kernel/kexec_file.c                         |  54 +++-
+ 18 files changed, 709 insertions(+), 69 deletions(-)
+ create mode 100644 arch/arm64/kernel/kexec_image.c
+ create mode 100644 arch/arm64/kernel/machine_kexec_file.c
+
+-- 
+2.17.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
