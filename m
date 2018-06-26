@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fXXMq-0004qB-Kc
- for kexec@lists.infradead.org; Mon, 25 Jun 2018 19:41:42 +0000
-Subject: Re: [PATCH] makedumpfile/ppc64: Increase the VA range
-References: <152941950897.27658.15976744741411711134.stgit@hbathini.in.ibm.com>
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Message-ID: <96850b7d-473b-4a9d-5886-ee5ec854b84d@redhat.com>
-Date: Mon, 25 Jun 2018 15:41:11 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fXtwe-0004vG-3b
+ for kexec@lists.infradead.org; Tue, 26 Jun 2018 19:48:09 +0000
+Received: from EX13MTAUWA001.ant.amazon.com
+ (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+ by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (8.14.7/8.14.7) with
+ ESMTP id w5QJlkw9062831
+ (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL)
+ for <kexec@lists.infradead.org>; Tue, 26 Jun 2018 19:47:53 GMT
+From: Munehisa Kamata <kamatam@amazon.com>
+Subject: [PATCH 1/2] arm64: increase command line size to 2048
+Date: Tue, 26 Jun 2018 12:47:28 -0700
+Message-ID: <1530042449-19329-1-git-send-email-kamatam@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <152941950897.27658.15976744741411711134.stgit@hbathini.in.ibm.com>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,67 +26,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>, piliu@redhat.com, ptesarik@suse.cz, Kexec-ml <kexec@lists.infradead.org>, andrej.skvortzov@gmail.com, Takuya Nakayama <tak-nakayama@tg.jp.nec.com>, Dave Young <dyoung@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Munehisa Kamata <kamatam@amazon.com>
 
-Hi Hari,
+Otherwise, we can hit the current 512 chars limit before hitting the
+Linux kernel's one, where allows 2048 chars in arm64.
 
-Sorry for the late response.
-I'm taking over the maintainer role of makedumpfile from Tachibana-san.
+Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
+---
+ kexec/arch/arm64/kexec-arm64.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This patch is queued for v1.6.4.
+diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
+index bf724ef..22e4b69 100644
+--- a/kexec/arch/arm64/kexec-arm64.h
++++ b/kexec/arch/arm64/kexec-arm64.h
+@@ -15,7 +15,7 @@
+ 
+ #define BOOT_BLOCK_VERSION 17
+ #define BOOT_BLOCK_LAST_COMP_VERSION 16
+-#define COMMAND_LINE_SIZE 512
++#define COMMAND_LINE_SIZE 2048 /* from kernel */
+ 
+ #define KiB(x) ((x) * 1024UL)
+ #define MiB(x) (KiB(x) * 1024UL)
+-- 
+2.7.4
 
-Thanks,
-Kazu
-
-On 6/19/2018 10:45 AM, Hari Bathini wrote:
-> * Required for kernel 4.17
-> 
-> Since kernel commit c2b4d8b7417a ("powerpc/mm/hash64: Increase the VA
-> range"), the max virtual (effective) address value has been increased
-> to 4PB. Update page table index values accordingly.
-> 
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> ---
->  arch/ppc64.c   |    5 ++++-
->  makedumpfile.h |    1 +
->  2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/ppc64.c b/arch/ppc64.c
-> index 8bdbcc5..8b6f7d5 100644
-> --- a/arch/ppc64.c
-> +++ b/arch/ppc64.c
-> @@ -248,7 +248,10 @@ ppc64_vmalloc_init(void)
->  
->  			if (info->kernel_version >= KERNEL_VERSION(4, 12, 0)) {
->  				info->l2_index_size = PMD_INDEX_SIZE_L4_64K_4_12;
-> -				info->l3_index_size = PUD_INDEX_SIZE_L4_64K_4_12;
-> +				if (info->kernel_version >= KERNEL_VERSION(4, 17, 0))
-> +					info->l3_index_size = PUD_INDEX_SIZE_L4_64K_4_17;
-> +				else
-> +					info->l3_index_size = PUD_INDEX_SIZE_L4_64K_4_12;
->  				info->l4_index_size = PGD_INDEX_SIZE_L4_64K_4_12;
->  			} else {
->  				info->l2_index_size = PMD_INDEX_SIZE_L4_64K_4_6;
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index 121eab2..4960e43 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -703,6 +703,7 @@ unsigned long get_kvbase_arm64(void);
->  #define PMD_INDEX_SIZE_L4_64K_4_12 10
->  #define PUD_INDEX_SIZE_L4_64K_4_12 7
->  #define PGD_INDEX_SIZE_L4_64K_4_12 8
-> +#define PUD_INDEX_SIZE_L4_64K_4_17 10
->  #define PTE_INDEX_SIZE_RADIX_64K  5
->  #define PMD_INDEX_SIZE_RADIX_64K  9
->  #define PUD_INDEX_SIZE_RADIX_64K  9
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
 
 _______________________________________________
 kexec mailing list
