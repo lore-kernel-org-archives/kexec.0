@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29])
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fXtwe-0004vG-3b
- for kexec@lists.infradead.org; Tue, 26 Jun 2018 19:48:09 +0000
-Received: from EX13MTAUWA001.ant.amazon.com
- (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
- by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (8.14.7/8.14.7) with
- ESMTP id w5QJlkw9062831
+ id 1fXtwk-0004vj-5m
+ for kexec@lists.infradead.org; Tue, 26 Jun 2018 19:48:15 +0000
+Received: from EX13MTAUWB001.ant.amazon.com
+ (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+ by email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com (8.14.7/8.14.7) with
+ ESMTP id w5QJlw75036112
  (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL)
- for <kexec@lists.infradead.org>; Tue, 26 Jun 2018 19:47:53 GMT
+ for <kexec@lists.infradead.org>; Tue, 26 Jun 2018 19:48:02 GMT
 From: Munehisa Kamata <kamatam@amazon.com>
-Subject: [PATCH 1/2] arm64: increase command line size to 2048
-Date: Tue, 26 Jun 2018 12:47:28 -0700
-Message-ID: <1530042449-19329-1-git-send-email-kamatam@amazon.com>
+Subject: [PATCH 2/2] arm64: error out if kernel command line is too long
+Date: Tue, 26 Jun 2018 12:47:29 -0700
+Message-ID: <1530042449-19329-2-git-send-email-kamatam@amazon.com>
+In-Reply-To: <1530042449-19329-1-git-send-email-kamatam@amazon.com>
+References: <1530042449-19329-1-git-send-email-kamatam@amazon.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -29,27 +31,37 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Munehisa Kamata <kamatam@amazon.com>
 
-Otherwise, we can hit the current 512 chars limit before hitting the
-Linux kernel's one, where allows 2048 chars in arm64.
+Currently, in arm64, kexec silently truncates kernel command line longer
+than COMMAND_LINE_SIZE - 1. Error out in that case as some other
+architectures already do that. The error message is copied from x86_64.
 
+Suggested-by: Tom Kirchner <tjk@amazon.com>
 Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
 ---
- kexec/arch/arm64/kexec-arm64.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kexec/arch/arm64/kexec-arm64.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
-index bf724ef..22e4b69 100644
---- a/kexec/arch/arm64/kexec-arm64.h
-+++ b/kexec/arch/arm64/kexec-arm64.h
-@@ -15,7 +15,7 @@
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index 62f3758..8200064 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -536,8 +536,15 @@ int arm64_load_other_segments(struct kexec_info *info,
+ 	char command_line[COMMAND_LINE_SIZE] = "";
  
- #define BOOT_BLOCK_VERSION 17
- #define BOOT_BLOCK_LAST_COMP_VERSION 16
--#define COMMAND_LINE_SIZE 512
-+#define COMMAND_LINE_SIZE 2048 /* from kernel */
+ 	if (arm64_opts.command_line) {
++		if (strlen(arm64_opts.command_line) >
++		    sizeof(command_line) - 1) {
++			fprintf(stderr,
++				"Kernel command line too long for kernel!\n");
++			return EFAILED;
++		}
++
+ 		strncpy(command_line, arm64_opts.command_line,
+-			sizeof(command_line));
++			sizeof(command_line) - 1);
+ 		command_line[sizeof(command_line) - 1] = 0;
+ 	}
  
- #define KiB(x) ((x) * 1024UL)
- #define MiB(x) (KiB(x) * 1024UL)
 -- 
 2.7.4
 
