@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fY4Il-00051u-0e
- for kexec@lists.infradead.org; Wed, 27 Jun 2018 06:51:40 +0000
-Date: Wed, 27 Jun 2018 08:51:25 +0200
+ id 1fY99R-0001jz-4O
+ for kexec@lists.infradead.org; Wed, 27 Jun 2018 12:02:22 +0000
+Date: Wed, 27 Jun 2018 14:02:06 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] arm64: error out if kernel command line is too long
-Message-ID: <20180627065125.swbswslhi7ry4uyx@verge.net.au>
-References: <1530042449-19329-1-git-send-email-kamatam@amazon.com>
- <1530042449-19329-2-git-send-email-kamatam@amazon.com>
+Subject: Re: [PATCH v4 1/2] dt-ops: Add helper API to dump fdt blob
+Message-ID: <20180627120205.w64fzgcaydyip6x3@verge.net.au>
+References: <1529576678-14615-1-git-send-email-bhsharma@redhat.com>
+ <1529576678-14615-2-git-send-email-bhsharma@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1530042449-19329-2-git-send-email-kamatam@amazon.com>
+In-Reply-To: <1529576678-14615-2-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,59 +24,232 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Munehisa Kamata <kamatam@amazon.com>
-Cc: kexec@lists.infradead.org
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: dyoung@redhat.com, bhupesh.linux@gmail.com, kexec@lists.infradead.org, james.morse@arm.com, takahiro.akashi@linaro.org
 
-On Tue, Jun 26, 2018 at 12:47:29PM -0700, Munehisa Kamata wrote:
-> Currently, in arm64, kexec silently truncates kernel command line longer
-> than COMMAND_LINE_SIZE - 1. Error out in that case as some other
-> architectures already do that. The error message is copied from x86_64.
+On Thu, Jun 21, 2018 at 03:54:37PM +0530, Bhupesh Sharma wrote:
+> At several occasions it would be useful to dump the fdt
+> blob being passed to the second (kexec/kdump) kernel
+> when '-d' flag is specified while invoking kexec/kdump.
 > 
-> Suggested-by: Tom Kirchner <tjk@amazon.com>
-> Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
+> This allows one to look at the device-tree fields that
+> is being passed to the secondary kernel and accordingly
+> debug issues.
+> 
+> This can be specially useful for the arm64 case, where
+> kexec_load() or kdump passes important information like
+> 'linux,usable-memory' ranges to the second kernel, and
+> the correctness of the ranges can be verified by
+> looking at the device-tree dump with '-d' flag specified.
+> 
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
 > ---
->  kexec/arch/arm64/kexec-arm64.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-
-
-Hi,
-
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
-
-Reviewed-by: Simon Horman <horms@verge.net.au>
-
+>  kexec/dt-ops.c | 141 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  kexec/dt-ops.h |   1 +
+>  2 files changed, 142 insertions(+)
 > 
-> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> index 62f3758..8200064 100644
-> --- a/kexec/arch/arm64/kexec-arm64.c
-> +++ b/kexec/arch/arm64/kexec-arm64.c
-> @@ -536,8 +536,15 @@ int arm64_load_other_segments(struct kexec_info *info,
->  	char command_line[COMMAND_LINE_SIZE] = "";
+> diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
+> index 915dbf55afd2..80ebfd31b4b6 100644
+> --- a/kexec/dt-ops.c
+> +++ b/kexec/dt-ops.c
+> @@ -8,6 +8,10 @@
+>  #include "kexec.h"
+>  #include "dt-ops.h"
 >  
->  	if (arm64_opts.command_line) {
-> +		if (strlen(arm64_opts.command_line) >
-> +		    sizeof(command_line) - 1) {
+> +#define ALIGN(x, a)	(((x) + ((a) - 1)) & ~((a) - 1))
+> +#define PALIGN(p, a)	((void *)(ALIGN((unsigned long)(p), (a))))
+> +#define GET_CELL(p)	(p += 4, *((const uint32_t *)(p - 4)))
+> +
 
-> +			fprintf(stderr,
-> +				"Kernel command line too long for kernel!\n");
-> +			return EFAILED;
+I see the above in scripts/dtc/util.c in the kernel tree, which is licensed
+GPL v2, whereas this file is licensed GPL v2 or later. Is there is
+also a published GPL v2 or later version somewhere?
+
+>  static const char n_chosen[] = "/chosen";
+>  
+>  static const char p_bootargs[] = "bootargs";
+> @@ -143,3 +147,140 @@ int dtb_delete_property(char *dtb, const char *node, const char *prop)
+>  
+>  	return result;
+>  }
+> +
+> +static uint64_t is_printable_string(const void* data, uint64_t len)
+
+uint64_t seems to be a strange return type. Perhaps bool would be best.
+
+> +{
+> +	const char *s = data;
+> +	const char *ss;
+
+I think naming s as str and ss as start would enhance
+code readability.
+
+> +
+> +	/* Check for zero length strings */
+> +	if (len == 0)
+> +		return 0;
+> +
+> +	/* String must be terminated with a '\0' */
+> +	if (s[len - 1] != '\0')
+> +		return 0;
+> +
+> +	ss = s;
+> +	while (*s)
+> +		s++;
+> +
+> +	/* Traverse till we hit a '\0' or reach 'len' */
+> +	if (*s != '\0')
+> +		return 0;
+
+The two conditions above are: while s is not 0; if s != 0.
+How can the if condition ever be true?
+
+Also, do you want to check that the characters traversed are printable?
+If not perhaps the name of the function should change.
+
+> +
+> +	if ((s + 1 - ss) < len) {
+> +		/* Handle special cases such as 'bootargs' properties
+> +		 * in dtb which are actually strings, but they may have
+> +		 * a format where (s + 1 - ss) < len remains true.
+> +		 *
+> +		 * We can catch such cases by checking if (s + 1 - ss)
+> +		 * is greater than 1
+> +		 */
+> +		if ((s + 1 - ss) > 1)
+> +			return 1;
+
+Is this covering the case where null-terminated strings are imeded in 'data'?
+And ensuring that the is at least one non-null byte in the first string?
+If so, I think the comment could be improved, explaining things in terms of
+multiple strings. And I'm not sure you need the outermost if condition.
+
+> +
+> +		return 0;
+> +	}
+> +
+> +	return 1;
+> +}
+> +
+> +static void print_data(const char* data, uint64_t len)
+> +{
+> +	uint64_t i;
+> +	const char *p_data = data;
+> +
+> +	/* Check for non-zero length */
+> +	if (len == 0)
+> +		return;
+> +
+> +	if (is_printable_string(data, len)) {
+> +		dbgprintf(" = \"%s\"", (const char *)data);
+> +	} else if ((len % 4) == 0) {
+> +		dbgprintf(" = <");
+> +		for (i = 0; i < len; i += 4) {
+> +			dbgprintf("0x%08x%s",
+> +					fdt32_to_cpu(GET_CELL(p_data)),
+> +					i < (len - 4) ? " " : "");
+> +		}
+> +		dbgprintf(">");
+
+Is there a performance benefit of using fdt32_to_cpu()
+that justifies the extra complexity here?
+
+> +	} else {
+> +		dbgprintf(" = [");
+> +		for (i = 0; i < len; i++)
+> +			dbgprintf("%02x%s", *p_data++,
+> +					i < len - 1 ? " " : "");
+> +		dbgprintf("]");
+> +	}
+> +}
+> +
+> +void dump_fdt(void* fdt)
+> +{
+> +	struct fdt_header *bph;
+> +	const char* p_struct;
+> +	const char* p_strings;
+> +	const char* p_data;
+> +	const char* s_data;
+> +	uint32_t off_dt;
+> +	uint32_t off_str;
+> +	uint32_t tag;
+> +	uint64_t sz;
+> +	uint64_t depth;
+> +	uint64_t shift;
+
+Can they type of depth and shift be int?
+It would avoid the (int) casting below.
+
+> +	uint32_t version;
+> +
+> +	depth = 0;
+> +	shift = 4;
+> +
+> +	bph = fdt;
+> +	off_dt = fdt32_to_cpu(bph->off_dt_struct);
+> +	off_str = fdt32_to_cpu(bph->off_dt_strings);
+> +	p_struct = (const char*)fdt + off_dt;
+> +	p_strings = (const char*)fdt + off_str;
+> +	version = fdt32_to_cpu(bph->version);
+> +
+> +	p_data = p_struct;
+> +	while ((tag = fdt32_to_cpu(GET_CELL(p_data))) != FDT_END) {
+> +		if (tag == FDT_BEGIN_NODE) {
+> +			s_data = p_data;
+> +			p_data = PALIGN(p_data + strlen(s_data) + 1, 4);
+> +
+> +			if (*s_data == '\0')
+> +				s_data = "/";
+> +
+> +			dbgprintf("%*s%s {\n", (int)(depth * shift), " ", s_data);
+> +
+> +			depth++;
+> +			continue;
 > +		}
 > +
->  		strncpy(command_line, arm64_opts.command_line,
-> -			sizeof(command_line));
-> +			sizeof(command_line) - 1);
->  		command_line[sizeof(command_line) - 1] = 0;
->  	}
+> +		if (tag == FDT_END_NODE) {
+> +			depth--;
+> +
+> +			dbgprintf("%*s};\n", (int)(depth * shift), " ");
+> +			continue;
+> +		}
+> +
+> +		if (tag == FDT_NOP) {
+> +			dbgprintf("%*s// [NOP]\n", (int)(depth * shift), " ");
+> +			continue;
+> +		}
+> +
+> +		if (tag != FDT_PROP) {
+> +			dbgprintf("%*s ** Unknown tag 0x%08x\n",
+> +					(int)(depth * shift), " ", tag);
+> +			break;
+> +		}
+> +
+> +		sz = fdt32_to_cpu(GET_CELL(p_data));
+> +		s_data = p_strings + fdt32_to_cpu(GET_CELL(p_data));
+> +		if (version < 16 && sz >= 8)
+> +			p_data = PALIGN(p_data, 8);
+> +
+> +		dbgprintf("%*s%s", (int)(depth * shift), " ", s_data);
+> +		print_data(p_data, sz);
+> +		dbgprintf(";\n");
+> +
+> +		p_data = PALIGN(p_data + sz, 4);
+> +	}
+> +}
+> diff --git a/kexec/dt-ops.h b/kexec/dt-ops.h
+> index e70d15d8ffbf..25b9b569f2b7 100644
+> --- a/kexec/dt-ops.h
+> +++ b/kexec/dt-ops.h
+> @@ -9,5 +9,6 @@ int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
+>  	const char *prop, const void *value, int value_len);
 >  
+>  int dtb_delete_property(char *dtb, const char *node, const char *prop);
+> +void dump_fdt(void *fdt) ;
+>  
+>  #endif
 > -- 
 > 2.7.4
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 > 
 
 _______________________________________________
