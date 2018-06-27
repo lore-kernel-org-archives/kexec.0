@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-x243.google.com ([2a00:1450:4864:20::243])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fXvLk-000754-I7
- for kexec@lists.infradead.org; Tue, 26 Jun 2018 21:18:18 +0000
-Received: by mail-lj1-x243.google.com with SMTP id i125-v6so9901484lji.2
- for <kexec@lists.infradead.org>; Tue, 26 Jun 2018 14:17:56 -0700 (PDT)
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fY4HF-0003Tx-SJ
+ for kexec@lists.infradead.org; Wed, 27 Jun 2018 06:50:08 +0000
+Date: Wed, 27 Jun 2018 08:49:47 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] arm64: increase command line size to 2048
+Message-ID: <20180627064946.65pfbswtjpytqteh@verge.net.au>
+References: <1530042449-19329-1-git-send-email-kamatam@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <b741eca8c2d1bee8a8db7136c3061064@codeaurora.org>
-References: <CAAGQ2nQNQ-aFkcrQHNA6H5TZ1tTovtfO_0Ohfndn9jXy13Hc6A@mail.gmail.com>
- <b741eca8c2d1bee8a8db7136c3061064@codeaurora.org>
-From: Andy Strohman <andy@uplevelsystems.com>
-Date: Tue, 26 Jun 2018 14:17:54 -0700
-Message-ID: <CAAGQ2nSG2QGHrOv+S77qTs8hdMgEEsNBFoDGa9wLiEKE1nDZmA@mail.gmail.com>
-Subject: Re: kexec failures on ipq4019
+Content-Disposition: inline
+In-Reply-To: <1530042449-19329-1-git-send-email-kamatam@amazon.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,90 +23,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: sricharan@codeaurora.org
-Cc: linux-arm-msm@vger.kernel.org, kexec@lists.infradead.org, linux-arm-msm-owner@vger.kernel.org
+To: Munehisa Kamata <kamatam@amazon.com>
+Cc: kexec@lists.infradead.org
 
-On Sun, Jun 17, 2018 at 11:31 PM,  <sricharan@codeaurora.org> wrote:
-> Hi Andy,
->
-> On 2018-06-16 06:37, Andy Strohman wrote:
->>
->> Hi,
->>
->>   I'm trying to get kexec to work consistently for ipq4019.  I load
->> the crash kernel like this:
->>
->> kexec --type zImage -p zImage-initramfs
->> --dtb=image-qcom-ipq4019-eap1300.dtb --append="maxcpus=1
->> reset_devices" --image-size=34419456
->>
->>   I have reserved 64MB of memory for the crash kernel with parameter:
->> crashkernel=64M
->>
->>   This seems to work ~70% of the time. When it doesn't work, I see the
->> "bye!" message followed by a 5-10 second hang without output.  Then
->> the machine resets.
->>
->>   I've been testing with:
->> echo c > /proc/sysrq-trigger
->>
->>   Does anyone have an idea of what may be causing the failures or how
->> to troubleshoot this?
->>
->
->  I will try to reproduce this and get back to you shortly.
->
-> Regards,
->  Sricharan
->
->
->>   I'm using OpenWRT with kernel 4.14.37.   I added the following patch
->> in order to load the crash kernel:
->>
->> --- a/arch/arm/mach-qcom/platsmp.c
->> +++ b/arch/arm/mach-qcom/platsmp.c
->> @@ -332,6 +332,12 @@ static void __init qcom_smp_prepare_cpus
->>   }
->>  }
->>
->> +/* Needed by kexec and platform_can_cpu_hotplug() */
->> +int qcom_cpu_kill(unsigned int cpu)
->> +{
->> +    return 1;
->> +}
->> +
->>  static const struct smp_operations smp_msm8660_ops __initconst = {
->>   .smp_prepare_cpus = qcom_smp_prepare_cpus,
->>   .smp_secondary_init = qcom_secondary_init,
->> @@ -358,6 +364,7 @@ static const struct smp_operations qcom_
->>   .smp_boot_secondary = kpssv2_boot_secondary,
->>  #ifdef CONFIG_HOTPLUG_CPU
->>   .cpu_die = qcom_cpu_die,
->> +    .cpu_kill       = qcom_cpu_kill,
->>  #endif
->>  };
->>  CPU_METHOD_OF_DECLARE(qcom_smp_kpssv2, "qcom,kpss-acc-v2",
->> &qcom_smp_kpssv2_ops);
->>
->>
->> Thanks,
->>
->> Andy
+On Tue, Jun 26, 2018 at 12:47:28PM -0700, Munehisa Kamata wrote:
+> Otherwise, we can hit the current 512 chars limit before hitting the
+> Linux kernel's one, where allows 2048 chars in arm64.
+> 
+> Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
 
-Hi Sricharan,
+Hi,
 
-  Thanks for your response.  Did you get a chance to try this out?  If
-so, were you able to reproduce?
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
 
-Thanks,
+Reviewed-by: Simon Horman <horms@verge.net.au>
 
-Andy
-
--- 
-http://www.uplevelsystems.com <http://www.uplevelsystems.com>
-
-
-
+> ---
+>  kexec/arch/arm64/kexec-arm64.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
+> index bf724ef..22e4b69 100644
+> --- a/kexec/arch/arm64/kexec-arm64.h
+> +++ b/kexec/arch/arm64/kexec-arm64.h
+> @@ -15,7 +15,7 @@
+>  
+>  #define BOOT_BLOCK_VERSION 17
+>  #define BOOT_BLOCK_LAST_COMP_VERSION 16
+> -#define COMMAND_LINE_SIZE 512
+> +#define COMMAND_LINE_SIZE 2048 /* from kernel */
+>  
+>  #define KiB(x) ((x) * 1024UL)
+>  #define MiB(x) (KiB(x) * 1024UL)
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
