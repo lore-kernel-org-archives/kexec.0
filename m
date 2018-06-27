@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fY9Br-0002F2-8R
- for kexec@lists.infradead.org; Wed, 27 Jun 2018 12:04:56 +0000
-Date: Wed, 27 Jun 2018 14:04:38 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 2/2] kexec-arm64: Add functionality to dump 2nd dtb
-Message-ID: <20180627120437.gdq66rfr7q2yiynd@verge.net.au>
-References: <1529576678-14615-1-git-send-email-bhsharma@redhat.com>
- <1529576678-14615-3-git-send-email-bhsharma@redhat.com>
+Received: from mail-ot0-x230.google.com ([2607:f8b0:4003:c0f::230])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fYCCt-0006GV-VS
+ for kexec@lists.infradead.org; Wed, 27 Jun 2018 15:18:10 +0000
+Received: by mail-ot0-x230.google.com with SMTP id v24-v6so2584049otk.13
+ for <kexec@lists.infradead.org>; Wed, 27 Jun 2018 08:17:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1529576678-14615-3-git-send-email-bhsharma@redhat.com>
+From: Chris Murphy <lists@colorremedies.com>
+Date: Wed, 27 Jun 2018 09:17:55 -0600
+Message-ID: <CAJCQCtQEom-_J9Gji-WRgj3V_2zjUWXxUhPkc+jCj+N2KP3rJw@mail.gmail.com>
+Subject: kdump on VFAT?
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,43 +22,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: dyoung@redhat.com, bhupesh.linux@gmail.com, kexec@lists.infradead.org, james.morse@arm.com, takahiro.akashi@linaro.org
+To: kexec@lists.infradead.org
 
-On Thu, Jun 21, 2018 at 03:54:38PM +0530, Bhupesh Sharma wrote:
-> Since during the arm64 kexec_load()/kdump invocation,
-> the dtb is passed to the second kernel, it is sometimes useful
-> to dump the dtb contents (to verify the correctness
-> of the same).
-> 
-> This patch adds this feature which is enabled when '-d' flag is
-> used with kexec command line invocation.
+Hi,
 
-This seems significantly more verbose than what -d already outputs.
-Perhaps a second debug level is warranted here?
+Buried in this Fedora thread on the BootLoaderSpec, is the discussion on the
+technical merit (or not) of using VFAT for /boot which is currently
+where kdump drops the vmcore dumpfiles. So I'm wondering if
+there are any developer concerns about dumps going to VFAT and also if
+a viable work around is putting crash dumps in /var instead?
 
-> 
-> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> ---
->  kexec/arch/arm64/kexec-arm64.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> index a206c172b1aa..47df756bd595 100644
-> --- a/kexec/arch/arm64/kexec-arm64.c
-> +++ b/kexec/arch/arm64/kexec-arm64.c
-> @@ -540,6 +540,8 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
->  	dtb->buf = new_buf;
->  	dtb->size = fdt_totalsize(new_buf);
->  
-> +	dbgprintf("%s: found %s\n", __func__, dtb->path);
-> +	dump_fdt(dtb->buf);
->  	dump_reservemap(dtb);
->  
->  	return result;
-> -- 
-> 2.7.4
-> 
+For reference, BootLoaderSpec in effect requires VFAT for $BOOT which
+would contain bootloader configuration, kernel, initramfs, and would
+be mounted at /boot
+
+Fedora thread to make BootLoaderSpec default in Fedora 29 (note that
+really this feature only implements BootLoaderSpec file format for
+bootloader configuration; not the full spec that includes the VFAT
+requirement - that's still under discussion).
+https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/message/CTKJBECHWEVF5IN6FO5TV7SIYWIMKYRT/
+
+
+BootLoaderSpec
+https://www.freedesktop.org/wiki/Specifications/BootLoaderSpec/
+https://github.com/systemd/systemd/blob/master/doc/BOOT_LOADER_SPECIFICATION.md
+
+
+
+-- 
+Chris Murphy
 
 _______________________________________________
 kexec mailing list
