@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x244.google.com ([2607:f8b0:4001:c06::244])
+Received: from mail-pl0-x243.google.com ([2607:f8b0:400e:c01::243])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fa0mS-0008Dq-VB
- for kexec@lists.infradead.org; Mon, 02 Jul 2018 15:30:28 +0000
-Received: by mail-io0-x244.google.com with SMTP id v26-v6so2832098iog.5
- for <kexec@lists.infradead.org>; Mon, 02 Jul 2018 08:30:10 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <1530542283-26145-8-git-send-email-zohar@linux.vnet.ibm.com>
+ id 1fa3bg-0001JB-Ei
+ for kexec@lists.infradead.org; Mon, 02 Jul 2018 18:31:26 +0000
+Received: by mail-pl0-x243.google.com with SMTP id k1-v6so8336142plt.2
+ for <kexec@lists.infradead.org>; Mon, 02 Jul 2018 11:31:13 -0700 (PDT)
+Subject: Re: [PATCH v5 3/8] ima: based on policy require signed kexec kernel
+ images
 References: <1530542283-26145-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1530542283-26145-8-git-send-email-zohar@linux.vnet.ibm.com>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Mon, 2 Jul 2018 17:30:09 +0200
-Message-ID: <CAKv+Gu-nky1yX59TL2FNQ-0q7Sy399t2WpVWSy7jqYpQY4Fxjw@mail.gmail.com>
-Subject: Re: [PATCH v5 7/8] ima: based on policy warn about loading firmware
- (pre-allocated buffer)
+ <1530542283-26145-4-git-send-email-zohar@linux.vnet.ibm.com>
+From: J Freyensee <why2jjj.linux@gmail.com>
+Message-ID: <840dae63-5a90-1327-437e-1ed92e165754@gmail.com>
+Date: Mon, 2 Jul 2018 11:31:09 -0700
+MIME-Version: 1.0
+In-Reply-To: <1530542283-26145-4-git-send-email-zohar@linux.vnet.ibm.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,136 +23,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Kees Cook <keescook@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Luis R . Rodriguez" <mcgrof@suse.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-security-module <linux-security-module@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eric Biederman <ebiederm@xmission.com>, linux-integrity <linux-integrity@vger.kernel.org>, "Serge E . Hallyn" <serge@hallyn.com>, Andres Rodriguez <andresx7@gmail.com>
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>, linux-integrity@vger.kernel.org
+Cc: Andres Rodriguez <andresx7@gmail.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
 
-On 2 July 2018 at 16:38, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
-> Some systems are memory constrained but they need to load very large
-> firmwares.  The firmware subsystem allows drivers to request this
-> firmware be loaded from the filesystem, but this requires that the
-> entire firmware be loaded into kernel memory first before it's provided
-> to the driver.  This can lead to a situation where we map the firmware
-> twice, once to load the firmware into kernel memory and once to copy the
-> firmware into the final resting place.
->
-> To resolve this problem, commit a098ecd2fa7d ("firmware: support loading
-> into a pre-allocated buffer") introduced request_firmware_into_buf() API
-> that allows drivers to request firmware be loaded directly into a
-> pre-allocated buffer. (Based on the mailing list discussions, calling
-> dma_alloc_coherent() is unnecessary and confusing.)
->
-> (Very broken/buggy) devices using pre-allocated memory run the risk of
-> the firmware being accessible to the device prior to the completion of
-> IMA's signature verification.  For the time being, this patch emits a
-> warning, but does not prevent the loading of the firmware.
->
-
-As I attempted to explain in the exchange with Luis, this has nothing
-to do with broken or buggy devices, but is simply the reality we have
-to deal with on platforms that lack IOMMUs.
-
-Even if you load into one buffer, carry out the signature verification
-and *only then* copy it to another buffer, a bus master could
-potentially read it from the first buffer as well. Mapping for DMA
-does *not* mean 'making the memory readable by the device' unless
-IOMMUs are being used. Otherwise, a bus master can read it from the
-first buffer, or even patch the code that performs the security check
-in the first place. For such platforms, copying the data around to
-prevent the device from reading it is simply pointless, as well as any
-other mitigation in software to protect yourself from misbehaving bus
-masters.
-
-So issuing a warning in this particular case is rather arbitrary. On
-these platforms, all bus masters can read (and modify) all of your
-memory all of the time, and as long as the firmware loader code takes
-care not to provide the DMA address to the device until after the
-verification is complete, it really has done all it reasonably can in
-the environment that it is expected to operate in.
-
-(The use of dma_alloc_coherent() is a bit of a red herring here, as it
-incorporates the DMA map operation. However, DMA map is a no-op on
-systems with cache coherent 1:1 DMA [iow, all PCs and most arm64
-platforms unless they have IOMMUs], and so there is not much
-difference between memory allocated with kmalloc() or with
-dma_alloc_coherent() in terms of whether the device can access it
-freely)
-
-
-
-
-
-
-> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-> Cc: Luis R. Rodriguez <mcgrof@suse.com>
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Serge E. Hallyn <serge@hallyn.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
->
-> ---
-> Changelog v5:
-> - Instead of preventing loading firmware from a pre-allocate buffer,
-> emit a warning.
->
->  security/integrity/ima/ima_main.c | 25 ++++++++++++++++---------
->  1 file changed, 16 insertions(+), 9 deletions(-)
->
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index e467664965e7..7da123d980ea 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -416,6 +416,15 @@ void ima_post_path_mknod(struct dentry *dentry)
->                 iint->flags |= IMA_NEW_FILE;
->  }
->
-> +static int read_idmap[READING_MAX_ID] = {
-> +       [READING_FIRMWARE] = FIRMWARE_CHECK,
-> +       [READING_FIRMWARE_PREALLOC_BUFFER] = FIRMWARE_CHECK,
-> +       [READING_MODULE] = MODULE_CHECK,
-> +       [READING_KEXEC_IMAGE] = KEXEC_KERNEL_CHECK,
-> +       [READING_KEXEC_INITRAMFS] = KEXEC_INITRAMFS_CHECK,
-> +       [READING_POLICY] = POLICY_CHECK
-> +};
-> +
->  /**
->   * ima_read_file - pre-measure/appraise hook decision based on policy
->   * @file: pointer to the file to be measured/appraised/audit
-> @@ -439,18 +448,16 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
->                 }
->                 return 0;       /* We rely on module signature checking */
->         }
-> +
-> +       if (read_id == READING_FIRMWARE_PREALLOC_BUFFER) {
-> +               if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
-> +                   (ima_appraise & IMA_APPRAISE_ENFORCE)) {
-> +                       pr_warn("device might be able to access firmware prior to signature verification completion.\n");
-> +               }
-> +       }
->         return 0;
->  }
->
-> -static int read_idmap[READING_MAX_ID] = {
-> -       [READING_FIRMWARE] = FIRMWARE_CHECK,
-> -       [READING_FIRMWARE_PREALLOC_BUFFER] = FIRMWARE_CHECK,
-> -       [READING_MODULE] = MODULE_CHECK,
-> -       [READING_KEXEC_IMAGE] = KEXEC_KERNEL_CHECK,
-> -       [READING_KEXEC_INITRAMFS] = KEXEC_INITRAMFS_CHECK,
-> -       [READING_POLICY] = POLICY_CHECK
-> -};
-> -
->  /**
->   * ima_post_read_file - in memory collect/appraise/audit measurement
->   * @file: pointer to the file to be measured/appraised/audit
-> --
-> 2.7.5
->
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgpPbiA3LzIvMTggNzozNyBBTSwgTWltaSBab2hhciB3cm90ZToKPiBUaGUgb3JpZ2luYWwga2V4
+ZWNfbG9hZCBzeXNjYWxsIGNhbiBub3QgdmVyaWZ5IGZpbGUgc2lnbmF0dXJlcywgbm9yIGNhbgo+
+IHRoZSBrZXhlYyBpbWFnZSBiZSBtZWFzdXJlZC4gIEJhc2VkIG9uIHBvbGljeSwgZGVueSB0aGUg
+a2V4ZWNfbG9hZAo+IHN5c2NhbGwuCgoKQ3VyaW9zaXR5IHF1ZXN0aW9uOiBJIHRob3VnaHQga2V4
+ZWNfbG9hZCgpIHN5c2NhbGwgd2FzIHVzZWQgdG8gbG9hZCBhIApjcmFzaGR1bXA/wqAgSWYgdGhp
+cyBpcyB0cnVlLCBob3cgd291bGQgdGhpcyB3b3JrIGlmIGtleGVjX2xvYWQoKSBpcyAKYmVpbmcg
+ZGVuaWVkP8KgIEkgZG9uJ3QgdGhpbmsgSSdkIHdhbnQgdG8gYmUgaGluZGVyZWQgaW4gY2FzZXMg
+d2hlcmUgSSdtIAp0cnlpbmcgdG8gZGlhZ25vc2UgYSBjcmFzaC4KClRoYW5rcywKSmF5CgoKPiBT
+aWduZWQtb2ZmLWJ5OiBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC52bmV0LmlibS5jb20+Cj4gQ2M6
+IEVyaWMgQmllZGVybWFuIDxlYmllZGVybUB4bWlzc2lvbi5jb20+Cj4gQ2M6IEx1aXMgUi4gUm9k
+cmlndWV6IDxtY2dyb2ZAa2VybmVsLm9yZz4KPiBDYzogS2VlcyBDb29rIDxrZWVzY29va0BjaHJv
+bWl1bS5vcmc+Cj4gQ2M6IERhdmlkIEhvd2VsbHMgPGRob3dlbGxzQHJlZGhhdC5jb20+Cj4KPiAt
+LS0KPiBDaGFuZ2Vsb2cgdjM6Cj4gLSB1c2Ugc3dpdGNoL2Nhc2UKPgo+ICAgaW5jbHVkZS9saW51
+eC9pbWEuaCAgICAgICAgICAgICAgICAgfCAgNyArKysrKysrCj4gICBzZWN1cml0eS9pbnRlZ3Jp
+dHkvaW1hL2ltYS5oICAgICAgICB8ICAxICsKPiAgIHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1h
+X21haW4uYyAgIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gICBzZWN1cml0eS9p
+bnRlZ3JpdHkvaW1hL2ltYV9wb2xpY3kuYyB8ICAyICsrCj4gICBzZWN1cml0eS9zZWN1cml0eS5j
+ICAgICAgICAgICAgICAgICB8ICA3ICsrKysrKy0KPiAgIDUgZmlsZXMgY2hhbmdlZCwgNDMgaW5z
+ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+Cj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgv
+aW1hLmggYi9pbmNsdWRlL2xpbnV4L2ltYS5oCj4gaW5kZXggMGU0NjQ3ZTBlYjYwLi44NDgwNmI1
+NGI1MGEgMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9saW51eC9pbWEuaAo+ICsrKyBiL2luY2x1ZGUv
+bGludXgvaW1hLmgKPiBAQCAtMTEsNiArMTEsNyBAQAo+ICAgI2RlZmluZSBfTElOVVhfSU1BX0gK
+PiAgIAo+ICAgI2luY2x1ZGUgPGxpbnV4L2ZzLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9zZWN1cml0
+eS5oPgo+ICAgI2luY2x1ZGUgPGxpbnV4L2tleGVjLmg+Cj4gICBzdHJ1Y3QgbGludXhfYmlucHJt
+Owo+ICAgCj4gQEAgLTE5LDYgKzIwLDcgQEAgZXh0ZXJuIGludCBpbWFfYnBybV9jaGVjayhzdHJ1
+Y3QgbGludXhfYmlucHJtICpicHJtKTsKPiAgIGV4dGVybiBpbnQgaW1hX2ZpbGVfY2hlY2soc3Ry
+dWN0IGZpbGUgKmZpbGUsIGludCBtYXNrLCBpbnQgb3BlbmVkKTsKPiAgIGV4dGVybiB2b2lkIGlt
+YV9maWxlX2ZyZWUoc3RydWN0IGZpbGUgKmZpbGUpOwo+ICAgZXh0ZXJuIGludCBpbWFfZmlsZV9t
+bWFwKHN0cnVjdCBmaWxlICpmaWxlLCB1bnNpZ25lZCBsb25nIHByb3QpOwo+ICtleHRlcm4gaW50
+IGltYV9sb2FkX2RhdGEoZW51bSBrZXJuZWxfbG9hZF9kYXRhX2lkIGlkKTsKPiAgIGV4dGVybiBp
+bnQgaW1hX3JlYWRfZmlsZShzdHJ1Y3QgZmlsZSAqZmlsZSwgZW51bSBrZXJuZWxfcmVhZF9maWxl
+X2lkIGlkKTsKPiAgIGV4dGVybiBpbnQgaW1hX3Bvc3RfcmVhZF9maWxlKHN0cnVjdCBmaWxlICpm
+aWxlLCB2b2lkICpidWYsIGxvZmZfdCBzaXplLAo+ICAgCQkJICAgICAgZW51bSBrZXJuZWxfcmVh
+ZF9maWxlX2lkIGlkKTsKPiBAQCAtNDksNiArNTEsMTEgQEAgc3RhdGljIGlubGluZSBpbnQgaW1h
+X2ZpbGVfbW1hcChzdHJ1Y3QgZmlsZSAqZmlsZSwgdW5zaWduZWQgbG9uZyBwcm90KQo+ICAgCXJl
+dHVybiAwOwo+ICAgfQo+ICAgCj4gK3N0YXRpYyBpbmxpbmUgaW50IGltYV9sb2FkX2RhdGEoZW51
+bSBrZXJuZWxfbG9hZF9kYXRhX2lkIGlkKQo+ICt7Cj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiAg
+IHN0YXRpYyBpbmxpbmUgaW50IGltYV9yZWFkX2ZpbGUoc3RydWN0IGZpbGUgKmZpbGUsIGVudW0g
+a2VybmVsX3JlYWRfZmlsZV9pZCBpZCkKPiAgIHsKPiAgIAlyZXR1cm4gMDsKPiBkaWZmIC0tZ2l0
+IGEvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWEuaCBiL3NlY3VyaXR5L2ludGVncml0eS9pbWEv
+aW1hLmgKPiBpbmRleCAyYWIxYWZmZmZhMzYuLjU4OGU0ODEzMzcwYyAxMDA2NDQKPiAtLS0gYS9z
+ZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYS5oCj4gKysrIGIvc2VjdXJpdHkvaW50ZWdyaXR5L2lt
+YS9pbWEuaAo+IEBAIC0yMzIsNiArMjMyLDcgQEAgaW50IGltYV9wb2xpY3lfc2hvdyhzdHJ1Y3Qg
+c2VxX2ZpbGUgKm0sIHZvaWQgKnYpOwo+ICAgI2RlZmluZSBJTUFfQVBQUkFJU0VfTU9EVUxFUwkw
+eDA4Cj4gICAjZGVmaW5lIElNQV9BUFBSQUlTRV9GSVJNV0FSRQkweDEwCj4gICAjZGVmaW5lIElN
+QV9BUFBSQUlTRV9QT0xJQ1kJMHgyMAo+ICsjZGVmaW5lIElNQV9BUFBSQUlTRV9LRVhFQwkweDQw
+Cj4gICAKPiAgICNpZmRlZiBDT05GSUdfSU1BX0FQUFJBSVNFCj4gICBpbnQgaW1hX2FwcHJhaXNl
+X21lYXN1cmVtZW50KGVudW0gaW1hX2hvb2tzIGZ1bmMsCj4gZGlmZiAtLWdpdCBhL3NlY3VyaXR5
+L2ludGVncml0eS9pbWEvaW1hX21haW4uYyBiL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX21h
+aW4uYwo+IGluZGV4IGRjYTQ0Y2Y3ODM4ZS4uNzFmZWNmZWYwOTM5IDEwMDY0NAo+IC0tLSBhL3Nl
+Y3VyaXR5L2ludGVncml0eS9pbWEvaW1hX21haW4uYwo+ICsrKyBiL3NlY3VyaXR5L2ludGVncml0
+eS9pbWEvaW1hX21haW4uYwo+IEBAIC00OTYsNiArNDk2LDMzIEBAIGludCBpbWFfcG9zdF9yZWFk
+X2ZpbGUoc3RydWN0IGZpbGUgKmZpbGUsIHZvaWQgKmJ1ZiwgbG9mZl90IHNpemUsCj4gICAJCQkJ
+ICAgTUFZX1JFQUQsIGZ1bmMsIDApOwo+ICAgfQo+ICAgCj4gKy8qKgo+ICsgKiBpbWFfbG9hZF9k
+YXRhIC0gYXBwcmFpc2UgZGVjaXNpb24gYmFzZWQgb24gcG9saWN5Cj4gKyAqIEBpZDoga2VybmVs
+IGxvYWQgZGF0YSBjYWxsZXIgaWRlbnRpZmllcgo+ICsgKgo+ICsgKiBDYWxsZXJzIG9mIHRoaXMg
+TFNNIGhvb2sgY2FuIG5vdCBtZWFzdXJlLCBhcHByYWlzZSwgb3IgYXVkaXQgdGhlCj4gKyAqIGRh
+dGEgcHJvdmlkZWQgYnkgdXNlcnNwYWNlLiAgRW5mb3JjZSBwb2xpY3kgcnVsZXMgcmVxdXJpbmcg
+YSBmaWxlCj4gKyAqIHNpZ25hdHVyZSAoZWcuIGtleGVjJ2VkIGtlcm5lbCBpbWFnZSkuCj4gKyAq
+Cj4gKyAqIEZvciBwZXJtaXNzaW9uIHJldHVybiAwLCBvdGhlcndpc2UgcmV0dXJuIC1FQUNDRVMu
+Cj4gKyAqLwo+ICtpbnQgaW1hX2xvYWRfZGF0YShlbnVtIGtlcm5lbF9sb2FkX2RhdGFfaWQgaWQp
+Cj4gK3sKPiArCWlmICgoaW1hX2FwcHJhaXNlICYgSU1BX0FQUFJBSVNFX0VORk9SQ0UpICE9IElN
+QV9BUFBSQUlTRV9FTkZPUkNFKQo+ICsJCXJldHVybiAwOwo+ICsKPiArCXN3aXRjaCAoaWQpIHsK
+PiArCWNhc2UgTE9BRElOR19LRVhFQ19JTUFHRToKPiArCQlpZiAoaW1hX2FwcHJhaXNlICYgSU1B
+X0FQUFJBSVNFX0tFWEVDKSB7Cj4gKwkJCXByX2VycigiaW1wb3NzaWJsZSB0byBhcHByYWlzZSBh
+IGtlcm5lbCBpbWFnZSB3aXRob3V0IGEgZmlsZSBkZXNjcmlwdG9yOyB0cnkgdXNpbmcga2V4ZWNf
+ZmlsZV9sb2FkIHN5c2NhbGwuXG4iKTsKPiArCQkJcmV0dXJuIC1FQUNDRVM7CS8qIElOVEVHUklU
+WV9VTktOT1dOICovCj4gKwkJfQo+ICsJZGVmYXVsdDoKPiArCQlicmVhazsKPiArCX0KPiArCXJl
+dHVybiAwOwo+ICt9Cj4gKwo+ICAgc3RhdGljIGludCBfX2luaXQgaW5pdF9pbWEodm9pZCkKPiAg
+IHsKPiAgIAlpbnQgZXJyb3I7Cj4gZGlmZiAtLWdpdCBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEv
+aW1hX3BvbGljeS5jIGIvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfcG9saWN5LmMKPiBpbmRl
+eCA3ZjRhNGRlN2U4MzEuLmViZmIzODliNzlkZiAxMDA2NDQKPiAtLS0gYS9zZWN1cml0eS9pbnRl
+Z3JpdHkvaW1hL2ltYV9wb2xpY3kuYwo+ICsrKyBiL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1h
+X3BvbGljeS5jCj4gQEAgLTQ0OCw2ICs0NDgsOCBAQCBzdGF0aWMgaW50IGltYV9hcHByYWlzZV9m
+bGFnKGVudW0gaW1hX2hvb2tzIGZ1bmMpCj4gICAJCXJldHVybiBJTUFfQVBQUkFJU0VfRklSTVdB
+UkU7Cj4gICAJZWxzZSBpZiAoZnVuYyA9PSBQT0xJQ1lfQ0hFQ0spCj4gICAJCXJldHVybiBJTUFf
+QVBQUkFJU0VfUE9MSUNZOwo+ICsJZWxzZSBpZiAoZnVuYyA9PSBLRVhFQ19LRVJORUxfQ0hFQ0sp
+Cj4gKwkJcmV0dXJuIElNQV9BUFBSQUlTRV9LRVhFQzsKPiAgIAlyZXR1cm4gMDsKPiAgIH0KPiAg
+IAo+IGRpZmYgLS1naXQgYS9zZWN1cml0eS9zZWN1cml0eS5jIGIvc2VjdXJpdHkvc2VjdXJpdHku
+Ywo+IGluZGV4IDA1ZmU1YjE5MzJkNy4uN2I4NzBkZjBhMzM1IDEwMDY0NAo+IC0tLSBhL3NlY3Vy
+aXR5L3NlY3VyaXR5LmMKPiArKysgYi9zZWN1cml0eS9zZWN1cml0eS5jCj4gQEAgLTEwNjMsNyAr
+MTA2MywxMiBAQCBFWFBPUlRfU1lNQk9MX0dQTChzZWN1cml0eV9rZXJuZWxfcG9zdF9yZWFkX2Zp
+bGUpOwo+ICAgCj4gICBpbnQgc2VjdXJpdHlfa2VybmVsX2xvYWRfZGF0YShlbnVtIGtlcm5lbF9s
+b2FkX2RhdGFfaWQgaWQpCj4gICB7Cj4gLQlyZXR1cm4gY2FsbF9pbnRfaG9vayhrZXJuZWxfbG9h
+ZF9kYXRhLCAwLCBpZCk7Cj4gKwlpbnQgcmV0Owo+ICsKPiArCXJldCA9IGNhbGxfaW50X2hvb2so
+a2VybmVsX2xvYWRfZGF0YSwgMCwgaWQpOwo+ICsJaWYgKHJldCkKPiArCQlyZXR1cm4gcmV0Owo+
+ICsJcmV0dXJuIGltYV9sb2FkX2RhdGEoaWQpOwo+ICAgfQo+ICAgCj4gICBpbnQgc2VjdXJpdHlf
+dGFza19maXhfc2V0dWlkKHN0cnVjdCBjcmVkICpuZXcsIGNvbnN0IHN0cnVjdCBjcmVkICpvbGQs
+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMg
+bWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
