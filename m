@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga06.intel.com ([134.134.136.31])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1faHjo-0006fc-HC
- for kexec@lists.infradead.org; Tue, 03 Jul 2018 09:36:46 +0000
-Date: Tue, 3 Jul 2018 17:35:56 +0800
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v5 8/8] module: replace the existing LSM hook in
- init_module
-Message-ID: <201807031757.qpz6yHPo%fengguang.wu@intel.com>
-References: <1530542283-26145-9-git-send-email-zohar@linux.vnet.ibm.com>
+ id 1faHmg-00081I-SD
+ for kexec@lists.infradead.org; Tue, 03 Jul 2018 09:39:44 +0000
+Date: Tue, 3 Jul 2018 11:39:24 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
+ AMD sme enabled
+Message-ID: <20180703093924.GA5748@zn.tnic>
+References: <20180702072639.10110-1-lijiang@redhat.com>
+ <20180702072639.10110-2-lijiang@redhat.com>
+ <20180702101451.GB28730@zn.tnic>
+ <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1530542283-26145-9-git-send-email-zohar@linux.vnet.ibm.com>
+In-Reply-To: <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,43 +27,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Andres Rodriguez <andresx7@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, kbuild-all@01.org, Jeff Vander Stoep <jeffv@google.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
+To: lijiang <lijiang@redhat.com>
+Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com
 
-Hi Mimi,
+On Tue, Jul 03, 2018 at 10:17:19AM +0800, lijiang wrote:
+> for example, the elfcorehdr. In fact, the elfcorehdr and notes
 
-I love your patch! Perhaps something to improve:
+You mean this?
 
-[auto build test WARNING on integrity/next-integrity]
-[also build test WARNING on v4.18-rc3 next-20180702]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+ ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
+ {
+-       return read_from_oldmem(buf, count, ppos, 0);
++       return read_from_oldmem(buf, count, ppos, 0, sme_active());
 
-url:    https://github.com/0day-ci/linux/commits/Mimi-Zohar/kexec-firmware-support-system-wide-policy-requiring-signatures/20180703-011114
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
+That looks encrypted to me.
 
+> call the same function(read_from_oldmem->ioremap_cache), in this case,
+> it is very difficult to properly remap the memory if the caller don't
+> care whether the memory is encrypted.
 
-sparse warnings: (new ones prefixed by >>)
+So beef up the logic in __ioremap_caller() to figure out based on the
+address whether to access the memory encrypted or not. You can find out
+the elfcorehdr address in the capture kernel.
 
->> security/loadpin/loadpin.c:178:40: sparse: mixing different enum types
-   security/loadpin/loadpin.c:178:40:     int enum kernel_load_data_id  versus
-   security/loadpin/loadpin.c:178:40:     int enum kernel_read_file_id
+-- 
+Regards/Gruss,
+    Boris.
 
-vim +178 security/loadpin/loadpin.c
-
-   175	
-   176	static int loadpin_load_data(enum kernel_load_data_id id)
-   177	{
- > 178		return loadpin_read_file(NULL, id);
-   179	}
-   180	
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
