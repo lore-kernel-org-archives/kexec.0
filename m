@@ -1,23 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-f196.google.com ([209.85.208.196])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1faKCr-0005pD-Na
- for kexec@lists.infradead.org; Tue, 03 Jul 2018 12:14:56 +0000
-Received: by mail-lj1-f196.google.com with SMTP id 1-v6so1349449ljv.9
- for <kexec@lists.infradead.org>; Tue, 03 Jul 2018 05:14:40 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20180703064726.GU23681@linaro.org>
-References: <20180619064424.6642-1-takahiro.akashi@linaro.org>
- <20180619064424.6642-2-takahiro.akashi@linaro.org>
- <72307608-90e0-4842-edc1-d3b284782940@oracle.com>
- <ca9e5d9d-e090-f9e0-bc10-3297c9e3b7e1@arm.com>
- <891c3e5a-9760-1353-4a2c-0900082dd245@oracle.com>
- <20180703064726.GU23681@linaro.org>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 3 Jul 2018 17:44:37 +0530
-Message-ID: <CACi5LpNhQ+jBvNL2F2w5aMpUd61JkzZSV=HsBLxCx6DRy2d7Vw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] arm64: export memblock_reserve()d regions via
- /proc/iomem
+ id 1faKXX-0000F8-J3
+ for kexec@lists.infradead.org; Tue, 03 Jul 2018 12:36:17 +0000
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w63CUXWd143542
+ for <kexec@lists.infradead.org>; Tue, 3 Jul 2018 08:36:04 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2k0927rnnq-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Tue, 03 Jul 2018 08:36:03 -0400
+Received: from localhost
+ by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Tue, 3 Jul 2018 13:35:59 +0100
+Subject: Re: [PATCH v5 1/8] security: define new LSM hook named
+ security_kernel_load_data
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Tue, 03 Jul 2018 08:35:41 -0400
+In-Reply-To: <64f467a5-e907-ee3e-495b-b2c731715037@gmail.com>
+References: <1530542283-26145-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1530542283-26145-2-git-send-email-zohar@linux.vnet.ibm.com>
+ <64f467a5-e907-ee3e-495b-b2c731715037@gmail.com>
+Mime-Version: 1.0
+Message-Id: <1530621341.3452.5.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,136 +34,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Dave Kleikamp <dave.kleikamp@oracle.com>, James Morse <james.morse@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, akpm@linux-foundation.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Mark Rutland <mark.rutland@arm.com>, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, Al Stone <al.stone@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, tbaicar@codeaurora.org, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Hanjun Guo <hanjun.guo@linaro.org>, sudeep.holla@arm.com, Dave Young <dyoung@redhat.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: J Freyensee <why2jjj.linux@gmail.com>, linux-integrity@vger.kernel.org
+Cc: Andres Rodriguez <andresx7@gmail.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Casey Schaufler <casey@schaufler-ca.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
 
-On Tue, Jul 3, 2018 at 12:17 PM, AKASHI Takahiro
-<takahiro.akashi@linaro.org> wrote:
-> On Tue, Jun 19, 2018 at 10:22:46AM -0500, Dave Kleikamp wrote:
->> On 06/19/2018 10:00 AM, James Morse wrote:
->> > Hi Dave,
->> >
->> > On 19/06/18 14:37, Dave Kleikamp wrote:
->> >> On 06/19/2018 01:44 AM, AKASHI Takahiro wrote:
->> >>> +static int __init reserve_memblock_reserved_regions(void)
->> >>> +{
->> >>> + phys_addr_t start, end, roundup_end = 0;
->> >>> + struct resource *mem, *res;
->> >>> + u64 i;
->> >>> +
->> >>> + for_each_reserved_mem_region(i, &start, &end) {
->> >>> +         if (end <= roundup_end)
->> >>> +                 continue; /* done already */
->> >>> +
->> >>> +         start = __pfn_to_phys(PFN_DOWN(start));
->> >>> +         end = __pfn_to_phys(PFN_UP(end)) - 1;
->> >>> +         roundup_end = end;
->> >>> +
->> >>> +         res = kzalloc(sizeof(*res), GFP_ATOMIC);
->> >>> +         if (WARN_ON(!res))
->> >>> +                 return -ENOMEM;
->> >>> +         res->start = start;
->> >>> +         res->end = end;
->> >>> +         res->name  = "reserved";
->> >>> +         res->flags = IORESOURCE_MEM;
->> >>> +
->> >>> +         mem = request_resource_conflict(&iomem_resource, res);
->> >>> +         /*
->> >>> +          * We expected memblock_reserve() regions to conflict with
->> >>> +          * memory created by request_standard_resources().
->> >>> +          */
->> >>> +         if (WARN_ON_ONCE(!mem))
->> >>> +                 continue;
->> >>> +         kfree(res);
->> >>
->> >> Why is kfree() after the conditional continue? This is a memory leak.
->> >
->> > request_resource_conflict() inserts res into the iomem_resource tree, or returns
->> > the conflict if there is already something at this address.
->> >
->> > We expect something at this address: a 'System RAM' section added by
->> > request_resource(). This code wants the conflicting 'System RAM' entry so that
->> > reserve_region_with_split() can fill in the gaps below it with 'reserved'. See
->> > the commit-message for an example.
->> >
->> > If there was no conflict, it means the memory map doesn't look like we expect,
->> > we can't pass NULL to reserve_region_with_split(), and we just inserted the
->> > 'reserved' at the top level. Freeing res at this point would be a use-after-free
->> > hanging from /proc/iomem.
->> > This code generates a WARN_ON_ONCE() and leaves the 'reserved' description where
->> > it is.
->>
->> Okay. I get it.
->>
->> > Trying to cleanup here is pointless, we can remove the resource entry and free
->> > it ... but we still want to report it as reserved, which is what just happened,
->> > just not quite how we we wanted it.
->> >
->> > If you ever see this warning, it means some RAM stopped being nomap between
->> > request_resources() and reserve_memblock_reserved_regions(). I can't find any
->> > case where that ever happens.
->> >
->> >
->> > If all that makes sense: how can I improve the comment above the WARN_ON_ONCE()
->> > to make it clearer?
->>
->> I guess something like you described above.
->>
->> /*
->>  * We expect a 'System RAM' section at this address. In the unexpected
->>  * case where one is not found, request_resource_conflict() will insert
->>  * res into the iomem_resource tree.
->>  */
->>
->> Do you think this is clearer?
->
-> If this is the only change needed in my patchset, I'd like the maintainers
-> to take care of it instead of my posting another version.
->
-
-+1.
-
-crashkernel booting on arm64 machines which support boot via acpi
-tables is broken since a long time, so it would be great to get these
-into upstream asap.
-
-I think the comment can be addressed while picking up the patchset in
-the maintainer's tree.
-
-I am not sure whether it will go through the ARM tree (Will) or the
-EFI tree (Ard), but since this has a Tested-by (from myself) and
-Reviewed-by (from James), probably this can be pulled in to allow
-further tests via the maintainer's tree.
-
-Thanks,
-Bhupesh
-
-
->> >
->> >
->> > Thanks,
->> >
->> > James
->> >
->> >
->> >>> +
->> >>> +         reserve_region_with_split(mem, start, end, "reserved");
->> >>> + }
->> >>> +
->> >>> + return 0;
->> >>> +}
->> >>> +arch_initcall(reserve_memblock_reserved_regions);
->> >>> +
->> >>>  u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
->> >>>
->> >>>  void __init setup_arch(char **cmdline_p)
->> >>>
->> >
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCAyMDE4LTA3LTAyIGF0IDExOjQ1IC0wNzAwLCBKIEZyZXllbnNlZSB3cm90ZToKPiAK
+PiBPbiA3LzIvMTggNzozNyBBTSwgTWltaSBab2hhciB3cm90ZToKPiA+IERpZmZlcmVudGlhdGUg
+YmV0d2VlbiB0aGUga2VybmVsIHJlYWRpbmcgYSBmaWxlIGZyb20gdGhlIGtlcm5lbCBsb2FkaW5n
+Cj4gPiBkYXRhIHByb3ZpZGVkIGJ5IHVzZXJzcGFjZS4gIFRoaXMgcGF0Y2ggZGVmaW5lcyBhIG5l
+dyBMU00gaG9vayBuYW1lZAo+ID4gc2VjdXJpdHlfa2VybmVsX2xvYWRfZGF0YS4KPiAKPiBJZiB0
+aGlzIHBhdGNoIHNlcmllcyBpcyByZS1kb25lLCBjYW4gd2UgdHdlYWsgdGhlIGRlc2NyaXB0aW9u
+IGhlcmUgCj4gcGxlYXNlP8KgIEZyb20gd2hhdCBJIHVuZGVyc3Rvb2Qgb2YgdGhlIGNvZGUgaW4g
+dGhpcyBwYXRjaCwgSSdkIHR3ZWFrIGl0IGFzOgo+IAo+ICJEaWZmZXJlbnRpYXRlIGJldHdlZW4g
+dGhlIGtlcm5lbCByZWFkaW5nIGEgZmlsZSBzcGVjaWZpZWQgYnkgdXNlcnNwYWNlIAo+IGFuZCB0
+aGUga2VybmVsIGxvYWRpbmcgYSBibG9jayBvZiBkYXRhIHByb3ZpZGVkIGJ5IHVzZXJzcGFjZS7C
+oCBUaGlzIAo+IHBhdGNoIGRlZmluZXMgYSBuZXcgTFNNIGhvb2sgbmFtZWQgc2VjdXJpdHlfa2Vy
+bmVsX2xvYWRfZGF0YSgpLiIKPiAKPiAgRnJvbSB0aGUgZGVzY3JpcHRpb24sIEkgZ290IGEgdGFk
+IGNvbmZ1c2VkIGlmIHRoZSB0aGUga2VybmVsCj4gcmVhZGluZyBhIGZpbGUgd2FzIGFsc28gcHJv
+dmlkZWQgYnkgdXNlcnNwYWNlIChJIGtub3cgaXQgbWF5IGJlIDJuZC0KPiBuYXR1cmUgdG8gcGVv
+cGxlIG9uIHRoaXMgbGlzdCwgSSdtIHN0aWxsIGxlYXJuaW5nIHRoaXMga2VybmVsCj4gbW9kdWxl
+KS4KCkNvdWxkIHdlIHJlcGxhY2UgImEgYmxvY2sgb2YgZGF0YSBwcm92aWRlZCBieSB1c2Vyc3Bh
+Y2UiIHdpdGgganVzdAoiZGF0YSBwcm92aWRlZCBieSB1c2Vyc3BhY2UiPwoKTWltaQoKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
+bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
