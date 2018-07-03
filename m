@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x244.google.com ([2607:f8b0:400e:c00::244])
+Received: from mga06.intel.com ([134.134.136.31])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1faFIJ-0002Dt-7j
- for kexec@lists.infradead.org; Tue, 03 Jul 2018 07:00:17 +0000
-Received: by mail-pf0-x244.google.com with SMTP id l123-v6so530666pfl.13
- for <kexec@lists.infradead.org>; Tue, 03 Jul 2018 00:00:00 -0700 (PDT)
-Date: Tue, 3 Jul 2018 16:01:08 +0900
-From: "takahiro.akashi@linaro.org" <takahiro.akashi@linaro.org>
-Subject: Re: panic kexec broken on ARM64?
-Message-ID: <20180703070106.GV23681@linaro.org>
-References: <20180605100151.7fd54381@ezekiel.suse.cz>
- <8028219f-0d14-eafd-86b7-359ee927bcd3@arm.com>
- <5e539510-01b7-ebc5-778e-b49a5261f9bc@i2se.com>
- <2865150f-ebca-4c6b-fc4b-93bfab5f0e91@arm.com>
- <86lgbm96dq.wl-marc.zyngier@arm.com>
+ id 1faHjo-0006fc-HC
+ for kexec@lists.infradead.org; Tue, 03 Jul 2018 09:36:46 +0000
+Date: Tue, 3 Jul 2018 17:35:56 +0800
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v5 8/8] module: replace the existing LSM hook in
+ init_module
+Message-ID: <201807031757.qpz6yHPo%fengguang.wu@intel.com>
+References: <1530542283-26145-9-git-send-email-zohar@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <86lgbm96dq.wl-marc.zyngier@arm.com>
+In-Reply-To: <1530542283-26145-9-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,99 +24,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, Matthias Brugger <mbrugger@suse.com>, kexec mailing list <kexec@lists.infradead.org>, Petr Tesarik <ptesarik@suse.cz>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Andres Rodriguez <andresx7@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, kbuild-all@01.org, Jeff Vander Stoep <jeffv@google.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
 
-Marc, James,
+Hi Mimi,
 
-I'd like to re-ignite the discussion.
+I love your patch! Perhaps something to improve:
 
-On Sun, Jun 10, 2018 at 01:24:17PM +0100, Marc Zyngier wrote:
-> On Wed, 06 Jun 2018 12:37:02 +0100,
-> James Morse wrote:
-> > 
-> > Hi Stefan,
-> > 
-> > On 06/06/18 08:02, Stefan Wahren wrote:
-> > > Am 05.06.2018 um 19:46 schrieb James Morse:
-> > >> On 05/06/18 09:01, Petr Tesarik wrote:
-> > >>> I attached a hardware debugger and found
-> > >>> out that all CPU cores were stopped except one which was stuck in the
-> > >>> idle thread. It seems that irq_set_irqchip_state() may sleep, which is
-> > >>> definitely not safe after a kernel panic.
-> > 
-> > >> I don't know much about irqchip stuff, but __irq_get_desc_lock() takes a
-> > >> raw_spin_lock(), and calls gic_irq_get_irqchip_state() which is just poking
-> > >> around in mmio registers, this should all be safe unless you re-entered the same
-> > >> code.
-> > 
-> > >>> If I'm right, then this is broken in general, but I have only ever seen
-> > >>> it on RPi 3 Model B+ (even RPi3 Model B works fine), so the issue may
-> > >>> be more subtle.
-> > 
-> > >> Is there a hardware difference around the interrupt controller on these?
-> > 
-> > > No, but the RPi 3 B has a different USB network chip on board (smsc95xx, Fast
-> > > ethernet) instead of lan78xx (Gigabit ethernet).
-> > 
-> > Bingo: its the lan78xx driver that is sleeping from the irqchip
-> > callbacks; The smsc95xx driver doesn't have a struct irq_chip, which
-> > is why the RPi-3-B doesn't do this.
-> > 
-> > It may be valid for kdump to only teardown the 'root irqdomain' (if
-> > that even means anything). I assume these secondary irqchip's would
-> > have a summary-interrupt that goes to another irqchip. But I can't
-> > see a way to tell them apart..,
-> 
-> There is none. A cascaded irqchip is just like a root irqchip, just
-> that its output line is connected to another irqchip. But we have no
-> easy way to identify the parent. Also, this particular driver looks
-> quite creative (it reinvents the wheel for chained interrupts -- see
-> intr_complete and lan78xx_status), meaning that even if we could have
-> a magic way of identify a chained irqchip, we'd miss that one. Broken.
-> 
-> > I think we need to wait until after the merge window for Marc's
-> > wisdom on this!
-> 
-> Overall, I can't think of an easy fix. We have a few options, but none
-> of them involve a centralised change:
-> 
-> 1) We provide a reset infrastructure for irqchips, with an opt-in
->    mechanism. This involves changing the way we teardown irqs at
->    crash-time, and we'd then need some notion of reset ordering (think
->    of the layered ITS and GICv3, for example).
+[auto build test WARNING on integrity/next-integrity]
+[also build test WARNING on v4.18-rc3 next-20180702]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-Does this mean that all the irqchips have to be implemented with reset?
-> 
-> 2) We provide a way to identify interrupts that are ultimately backed
->    by a root controller, which implies walking down the hierarchy for
+url:    https://github.com/0day-ci/linux/commits/Mimi-Zohar/kexec-firmware-support-system-wide-policy-requiring-signatures/20180703-011114
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
 
-To be clear, from bottom to top (or root), right?
 
->    each one of them. Fairly expensive, but minimal in way of changes
->    in the crash code. Requires a per-irqchip flag, but ordering comes
->    in for free.
-> 
-> 3) We do the same as (2), but at the irqdomain level. Not sure that's
->    any better, and it may be even more complicated and bring back some
->    ordering issues.
+sparse warnings: (new ones prefixed by >>)
 
-Do you think that the same thing may happen in case of pci/msi?
-I have no confidence but MSI has some kind of irq domain hierarchy.
+>> security/loadpin/loadpin.c:178:40: sparse: mixing different enum types
+   security/loadpin/loadpin.c:178:40:     int enum kernel_load_data_id  versus
+   security/loadpin/loadpin.c:178:40:     int enum kernel_read_file_id
 
-Thanks,
--Takahiro AKASHI
+vim +178 security/loadpin/loadpin.c
 
-> I'm currently angling for (2), with (1) as a final hammer option once
-> we have nuked all the individual interrupts (useful for the GICv3
-> redistributor case).
-> 
-> Thoughts?
-> 
-> 	M.
-> 
-> -- 
-> Jazz is not dead, it just smell funny.
+   175	
+   176	static int loadpin_load_data(enum kernel_load_data_id id)
+   177	{
+ > 178		return loadpin_read_file(NULL, id);
+   179	}
+   180	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
 _______________________________________________
 kexec mailing list
