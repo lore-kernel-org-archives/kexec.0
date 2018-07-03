@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v2 1/4] arm64: export memblock_reserve()d regions via
- /proc/iomem
-References: <20180619064424.6642-1-takahiro.akashi@linaro.org>
- <20180619064424.6642-2-takahiro.akashi@linaro.org>
- <72307608-90e0-4842-edc1-d3b284782940@oracle.com>
- <ca9e5d9d-e090-f9e0-bc10-3297c9e3b7e1@arm.com>
- <891c3e5a-9760-1353-4a2c-0900082dd245@oracle.com>
- <20180703064726.GU23681@linaro.org>
-From: Dave Kleikamp <dave.kleikamp@oracle.com>
-Message-ID: <a9c38b0d-db67-2f5b-ea0e-ec6e45d2c4c9@oracle.com>
-Date: Tue, 3 Jul 2018 11:12:23 -0500
+Subject: Re: [PATCH v10 08/14] arm64: kexec_file: load initrd and device-tree
+References: <20180623022058.10935-1-takahiro.akashi@linaro.org>
+ <20180623022058.10935-9-takahiro.akashi@linaro.org>
+From: James Morse <james.morse@arm.com>
+Message-ID: <1e401f4e-6176-990d-476c-31ae3f28f26c@arm.com>
+Date: Tue, 3 Jul 2018 17:32:09 +0100
 MIME-Version: 1.0
-In-Reply-To: <20180703064726.GU23681@linaro.org>
+In-Reply-To: <20180623022058.10935-9-takahiro.akashi@linaro.org>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,119 +20,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, ard.biesheuvel@linaro.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, al.stone@linaro.org, bhsharma@redhat.com, tbaicar@codeaurora.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hanjun.guo@linaro.org, sudeep.holla@arm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de
+Cc: bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ard.biesheuvel@linaro.org
 
-On 07/03/2018 01:47 AM, AKASHI Takahiro wrote:
-> On Tue, Jun 19, 2018 at 10:22:46AM -0500, Dave Kleikamp wrote:
->> On 06/19/2018 10:00 AM, James Morse wrote:
->>> Hi Dave,
->>>
->>> On 19/06/18 14:37, Dave Kleikamp wrote:
->>>> On 06/19/2018 01:44 AM, AKASHI Takahiro wrote:
->>>>> +static int __init reserve_memblock_reserved_regions(void)
->>>>> +{
->>>>> +	phys_addr_t start, end, roundup_end = 0;
->>>>> +	struct resource *mem, *res;
->>>>> +	u64 i;
->>>>> +
->>>>> +	for_each_reserved_mem_region(i, &start, &end) {
->>>>> +		if (end <= roundup_end)
->>>>> +			continue; /* done already */
->>>>> +
->>>>> +		start = __pfn_to_phys(PFN_DOWN(start));
->>>>> +		end = __pfn_to_phys(PFN_UP(end)) - 1;
->>>>> +		roundup_end = end;
->>>>> +
->>>>> +		res = kzalloc(sizeof(*res), GFP_ATOMIC);
->>>>> +		if (WARN_ON(!res))
->>>>> +			return -ENOMEM;
->>>>> +		res->start = start;
->>>>> +		res->end = end;
->>>>> +		res->name  = "reserved";
->>>>> +		res->flags = IORESOURCE_MEM;
->>>>> +
->>>>> +		mem = request_resource_conflict(&iomem_resource, res);
->>>>> +		/*
->>>>> +		 * We expected memblock_reserve() regions to conflict with
->>>>> +		 * memory created by request_standard_resources().
->>>>> +		 */
->>>>> +		if (WARN_ON_ONCE(!mem))
->>>>> +			continue;
->>>>> +		kfree(res);
->>>>
->>>> Why is kfree() after the conditional continue? This is a memory leak.
->>>
->>> request_resource_conflict() inserts res into the iomem_resource tree, or returns
->>> the conflict if there is already something at this address.
->>>
->>> We expect something at this address: a 'System RAM' section added by
->>> request_resource(). This code wants the conflicting 'System RAM' entry so that
->>> reserve_region_with_split() can fill in the gaps below it with 'reserved'. See
->>> the commit-message for an example.
->>>
->>> If there was no conflict, it means the memory map doesn't look like we expect,
->>> we can't pass NULL to reserve_region_with_split(), and we just inserted the
->>> 'reserved' at the top level. Freeing res at this point would be a use-after-free
->>> hanging from /proc/iomem.
->>> This code generates a WARN_ON_ONCE() and leaves the 'reserved' description where
->>> it is.
->>
->> Okay. I get it.
->>
->>> Trying to cleanup here is pointless, we can remove the resource entry and free
->>> it ... but we still want to report it as reserved, which is what just happened,
->>> just not quite how we we wanted it.
->>>
->>> If you ever see this warning, it means some RAM stopped being nomap between
->>> request_resources() and reserve_memblock_reserved_regions(). I can't find any
->>> case where that ever happens.
->>>
->>>
->>> If all that makes sense: how can I improve the comment above the WARN_ON_ONCE()
->>> to make it clearer?
->>
->> I guess something like you described above.
->>
->> /*
->>  * We expect a 'System RAM' section at this address. In the unexpected
->>  * case where one is not found, request_resource_conflict() will insert
->>  * res into the iomem_resource tree.
->>  */
->>
->> Do you think this is clearer?
+Hi Akashi,
+
+On 23/06/18 03:20, AKASHI Takahiro wrote:
+> load_other_segments() is expected to allocate and place all the necessary
+> memory segments other than kernel, including initrd and device-tree
+> blob (and elf core header for crash).
+> While most of the code was borrowed from kexec-tools' counterpart,
+> users may not be allowed to specify dtb explicitly, instead, the dtb
+> presented by the original boot loader is reused.
 > 
-> If this is the only change needed in my patchset, I'd like the maintainers
-> to take care of it instead of my posting another version.
+> arch_kimage_kernel_post_load_cleanup() is responsible for freeing arm64-
+> specific data allocated in load_other_segments().
 
-Agreed. The sooner this gets fixed, the better.
+
+> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> index c38a8048ed00..7115c4f915dc 100644
+> --- a/arch/arm64/kernel/machine_kexec_file.c
+> +++ b/arch/arm64/kernel/machine_kexec_file.c
+
+> +static int setup_dtb(struct kimage *image,
+> +		unsigned long initrd_load_addr, unsigned long initrd_len,
+> +		char *cmdline, unsigned long cmdline_len,
+> +		char **dtb_buf, size_t *dtb_buf_len)
+> +{
+> +	char *buf = NULL;
+> +	size_t buf_size;
+> +	int nodeoffset;
+> +	u64 value;
+> +	int ret;
+> +
+> +	/* duplicate dt blob */
+> +	buf_size = fdt_totalsize(initial_boot_params);
+> +
+> +	if (initrd_load_addr) {
+> +		buf_size += fdt_prop_len("linux,initrd-start", sizeof(u64));
+> +		buf_size += fdt_prop_len("linux,initrd-end", sizeof(u64));
+> +	}
+> +
+> +	if (cmdline)
+> +		buf_size += fdt_prop_len("bootargs", cmdline_len + 1);
+
+(a comment here about the possibility of an embedded NULL may avoid surprises later)
+
+
+> +	buf = vmalloc(buf_size);
+> +	if (!buf) {
+> +		ret = -ENOMEM;
+> +		goto out_err;
+> +	}
+> +
+> +	ret = fdt_open_into(initial_boot_params, buf, buf_size);
+> +	if (ret)
+> +		goto out_err;
+> +
+> +	nodeoffset = fdt_path_offset(buf, "/chosen");
+> +	if (nodeoffset < 0)
+> +		goto out_err;
+
+This doesn't update 'ret', so we return the 0/success from above...
+
+
+> +
+> +	/* add bootargs */
+> +	if (cmdline) {
+> +		ret = fdt_setprop(buf, nodeoffset, "bootargs",
+> +						cmdline, cmdline_len + 1);
+> +		if (ret)
+> +			goto out_err;
+> +	}
+
+So (cmdline_len == 0) from user-space means keep the old cmdline. Sounds
+sensible. Is this documented anywhere?
+
+powerpc does the opposite, it deletes the bootargs in this case. Are we happy
+making his a per-arch thing?
+
+
+> +	/* add initrd-* */
+> +	if (initrd_load_addr) {
+> +		value = cpu_to_fdt64(initrd_load_addr);
+> +		ret = fdt_setprop_u64(buf, nodeoffset, "linux,initrd-start",
+> +							value);
+> +		if (ret)
+> +			goto out_err;
+> +
+> +		value = cpu_to_fdt64(initrd_load_addr + initrd_len);
+> +		ret = fdt_setprop_u64(buf, nodeoffset, "linux,initrd-end",
+> +							value);
+> +		if (ret)
+> +			goto out_err;
+> +	}
+
+Won't this do the same with the initrd? Re-use the old values if no new one was
+provided? I can't find anything that deletes the property by the time we come to
+kexec, and the old physical addresses may have been re-used by who-knows-what.
+
+(powerpc has some code to: /* If there's no new initrd, delete the old initrd's
+info. */)
+
+
 
 Thanks,
-Dave
 
-> 
-> Thanks,
-> -Takahiro AKASHI
-> 
->>>
->>>
->>> Thanks,
->>>
->>> James
->>>
->>>
->>>>> +
->>>>> +		reserve_region_with_split(mem, start, end, "reserved");
->>>>> +	}
->>>>> +
->>>>> +	return 0;
->>>>> +}
->>>>> +arch_initcall(reserve_memblock_reserved_regions);
->>>>> +
->>>>>  u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
->>>>>  
->>>>>  void __init setup_arch(char **cmdline_p)
->>>>>
->>>
+James
 
 _______________________________________________
 kexec mailing list
