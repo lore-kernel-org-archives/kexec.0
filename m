@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v10 13/14] arm64: kexec_file: add kernel signature
- verification support
-References: <20180623022058.10935-1-takahiro.akashi@linaro.org>
- <20180623022058.10935-14-takahiro.akashi@linaro.org>
-From: James Morse <james.morse@arm.com>
-Message-ID: <ff77f2d9-82c6-8fbb-3696-e1fcfd61c333@arm.com>
-Date: Tue, 3 Jul 2018 18:47:38 +0100
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1faQJd-00052O-AI
+ for kexec@lists.infradead.org; Tue, 03 Jul 2018 18:46:18 +0000
+Subject: Re: [PATCH] arm64: Fix calculation of page_offset in case we are
+ running cases other than mem-usage
+References: <1530308908-15528-1-git-send-email-bhsharma@redhat.com>
+ <CACi5LpP14A5Lf2wgszMxF520y+epphTQatrOaS7CZ9CT13Nvtg@mail.gmail.com>
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Message-ID: <2feb77ba-9b52-7aad-a216-a36824ea8b47@redhat.com>
+Date: Tue, 3 Jul 2018 14:45:52 -0400
 MIME-Version: 1.0
-In-Reply-To: <20180623022058.10935-14-takahiro.akashi@linaro.org>
+In-Reply-To: <CACi5LpP14A5Lf2wgszMxF520y+epphTQatrOaS7CZ9CT13Nvtg@mail.gmail.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,73 +25,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec mailing list <kexec@lists.infradead.org>
 
-Hi Akashi,
-
-On 23/06/18 03:20, AKASHI Takahiro wrote:
-> With this patch, kernel verification can be done without IMA security
-> subsystem enabled. Turn on CONFIG_KEXEC_VERIFY_SIG instead.
+On 7/3/2018 1:23 AM, Bhupesh Sharma wrote:
+> Hello Kazu-san,
 > 
-> On x86, a signature is embedded into a PE file (Microsoft's format) header
-> of binary. Since arm64's "Image" can also be seen as a PE file as far as
-> CONFIG_EFI is enabled, we adopt this format for kernel signing.
+> On Sat, Jun 30, 2018 at 3:18 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+>> Patch f49ca13e5eed5bbdc69e0fd5ef099cb46050cb3d added '--mem-usage'
+>> support for arm64 architecture.
+>>
+>> However, we also need to make sure that the calculation of
+>> 'page_offset' is valid in case we are running cases other than
+>> '--mem-usage'.
+>>
+>> This patch does the same. I tested this patch on my qualcomm and apm
+>> mustang arm64 boards.
+>>
+>> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+>> ---
+>>  arch/arm64.c | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/arch/arm64.c b/arch/arm64.c
+>> index c9dab677f2c9..2fd3e1874376 100644
+>> --- a/arch/arm64.c
+>> +++ b/arch/arm64.c
+>> @@ -222,6 +222,12 @@ get_stext_symbol(void)
+>>  int
+>>  get_machdep_info_arm64(void)
+>>  {
+>> +       /* Check if va_bits is still not initialized. If still 0, call
+>> +        * get_versiondep_info() to initialize the same.
+>> +        */
+>> +       if (!va_bits)
+>> +               get_versiondep_info_arm64();
+>> +
+>>         if (!calculate_plat_config()) {
+>>                 ERRMSG("Can't determine platform config values\n");
+>>                 return FALSE;
+>> --
+>> 2.7.4
+>>
 > 
-> You can create a signed kernel image with:
->     $ sbsign --key ${KEY} --cert ${CERT} Image
+> This is an important fix for arm64 makedumpfile as it fixes issues
+> reported with Fedora when we use makedumpfile for cases other than
+> '--mem-usage'.
+> 
+> So kindly consider this one for the next makedumpfile release.
 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index f68318f61c85..5133c22a01ab 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -845,6 +845,30 @@ config KEXEC_FILE
->  	  for kernel and initramfs as opposed to list of segments as
->  	  accepted by previous system call.
->  
-> +config KEXEC_VERIFY_SIG
-> +	bool "Verify kernel signature during kexec_file_load() syscall"
-> +	depends on KEXEC_FILE
-> +	help
-> +	  Select this option to verify a signature with loaded kernel
-> +	  image. If configured, any attempt of loading a image without
-> +	  valid signature will fail.
-> +
-> +	  In addition to that option, you need to enable signature
-> +	  verification for the corresponding kernel image type being
-> +	  loaded in order for this to work.
-> +
-> +config KEXEC_IMAGE_VERIFY_SIG
-> +	bool "Enable Image signature verification support"
-> +	default y
-> +	depends on KEXEC_VERIFY_SIG
-> +	depends on EFI && SIGNED_PE_FILE_VERIFICATION
-> +	help
-> +	  Enable Image signature verification support.
-> +
-> +comment "Image signature verification is missing yet"
-> +	depends on KEXEC_VERIFY_SIG
-> +	depends on !EFI || !SIGNED_PE_FILE_VERIFICATION
+Hi Bhupesh,
 
+I understood its importance and I think that this problem should be
+fixed before the v1.6.4 release.  Thanks for letting me know it.
 
-This comment thing is a good idea, but its also a bit confusing... it took me
-quite a while to work out what was missing. Could we phrase it something like:
-"Support for PE file signature verification disabled!"
-This tells us its about PE files, and its probably a missing config option
-somewhere, not some code that hasn't been written yet. (which was my first
-assumption!).
-
-KEXEC_VERIFY_SIG presumably turns on just the IMA verification, which verifies
-the Image, but not in the same way as KEXEC_IMAGE_VERIFY_SIG.... (if I've
-understood it properly) Is there any reason to have these as separate enables?
-Couldn't we 'select SIGNED_PE_FILE_VERIFICATION if EFI' in KEXEC_VERIFY_SIG?
-This would mean there is one option to verify signatures, instead of two...
-(does it really depend on EFI?)
-
+I've reviewed the patch and the process flow of arm64 architecture
+around it.  It looks good to me, and applied.
 
 Thanks,
+Kazu
 
-James
+> 
+> Regards,
+> Bhupesh
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
