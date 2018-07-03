@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1faJGm-0005LN-Eg
- for kexec@lists.infradead.org; Tue, 03 Jul 2018 11:14:54 +0000
-Date: Tue, 3 Jul 2018 13:14:28 +0200
-From: Borislav Petkov <bp@alien8.de>
+ id 1faJRG-0002dP-Gy
+ for kexec@lists.infradead.org; Tue, 03 Jul 2018 11:25:44 +0000
 Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
  AMD sme enabled
-Message-ID: <20180703111428.GB5748@zn.tnic>
 References: <20180702072639.10110-1-lijiang@redhat.com>
- <20180702072639.10110-2-lijiang@redhat.com>
- <20180702101451.GB28730@zn.tnic>
+ <20180702072639.10110-2-lijiang@redhat.com> <20180702101451.GB28730@zn.tnic>
  <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
- <895db996-febd-d50c-91af-4f1ef3d27bd8@redhat.com>
+ <20180703093924.GA5748@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <55b86851-4978-9289-8a1f-012c6114ec9e@redhat.com>
+Date: Tue, 3 Jul 2018 19:25:21 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <895db996-febd-d50c-91af-4f1ef3d27bd8@redhat.com>
+In-Reply-To: <20180703093924.GA5748@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,52 +23,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
 Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com
 
-On Tue, Jul 03, 2018 at 06:58:14PM +0800, lijiang wrote:
-> For kdump, the elf header finally use the crash kernel reserved memory, it is not an old memory.
-
-Lamme repeat my suggestion:
-
-So beef up the logic in __ioremap_caller() to figure out based on the
-address whether to access the memory encrypted or not. In general, you
-can deduce, based on the region you're mapping, whether you need to map
-in encrypted or decrypted.
-
-For example:
-
-        addr = elfcorehdr_addr;
-
-        /* Read Elf header */
-        rc = elfcorehdr_read((char *)&ehdr, sizeof(Elf64_Ehdr), &addr);
-        if (rc < 0)
-                return rc;
-
-elfcorehdr_addr has that elfcorehdr address. So you can check which address
-you're mapping and do:
-
-__ioremap_caller:
-
-...
-	prot = __ioremap_compute_prot(...);
-
-and that __ioremap_compute_prot() function which you will add will have
-all that logic to determine encrypted or not by comparing addresses etc.
-
-Does that make more sense?
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQwN+aciDAz5pelIDE3OjM5LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IFR1ZSwgSnVsIDAzLCAyMDE4IGF0IDEwOjE3OjE5QU0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
+IGZvciBleGFtcGxlLCB0aGUgZWxmY29yZWhkci4gSW4gZmFjdCwgdGhlIGVsZmNvcmVoZHIgYW5k
+IG5vdGVzCj4gCj4gWW91IG1lYW4gdGhpcz8KPiAKPiAgc3NpemVfdCBfX3dlYWsgZWxmY29yZWhk
+cl9yZWFkX25vdGVzKGNoYXIgKmJ1Ziwgc2l6ZV90IGNvdW50LCB1NjQgKnBwb3MpCj4gIHsKPiAt
+ICAgICAgIHJldHVybiByZWFkX2Zyb21fb2xkbWVtKGJ1ZiwgY291bnQsIHBwb3MsIDApOwo+ICsg
+ICAgICAgcmV0dXJuIHJlYWRfZnJvbV9vbGRtZW0oYnVmLCBjb3VudCwgcHBvcywgMCwgc21lX2Fj
+dGl2ZSgpKTsKPiAKPiBUaGF0IGxvb2tzIGVuY3J5cHRlZCB0byBtZS4KPiAKVGhlIGVsZiBub3Rl
+cyBpcyBhbiBvbGQgbWVtb3J5LCBpdCBpcyBlbmNyeXB0ZWQuCgpCdXQgdGhlIGVsZiBoZWFkZXIg
+aXMgYSBjcmFzaCBrZXJuZWwgcmVzZXJ2ZWQgbWVtb3J5LCB3aGljaCBpcyB1bmVuY3J5cHRlZC4K
+IHNzaXplX3QgX193ZWFrIGVsZmNvcmVoZHJfcmVhZChjaGFyICpidWYsIHNpemVfdCBjb3VudCwg
+dTY0ICpwcG9zKQogewotCXJldHVybiByZWFkX2Zyb21fb2xkbWVtKGJ1ZiwgY291bnQsIHBwb3Ms
+IDApOworCXJldHVybiByZWFkX2Zyb21fb2xkbWVtKGJ1ZiwgY291bnQsIHBwb3MsIDAsIGZhbHNl
+KTsKIH0KClRoZXkgY2FsbCB0aGUgc2FtZSBmdW5jdGlvbihyZWFkX2Zyb21fb2xkbWVtLT5pb3Jl
+bWFwX2NhY2hlKSwgc28gaXQgaXMgaGFyZCB0bwpwcm9wZXJseSByZW1hcCB0aGUgbWVtb3J5IGlm
+IHdlIGRvbid0IHVzZSB0aGUgcGFyYW1ldGVyIHRvIGRpc3Rpbmd1aXNoLiAKClJlZ2FyZHMsCkxp
+YW5ibwo+PiBjYWxsIHRoZSBzYW1lIGZ1bmN0aW9uKHJlYWRfZnJvbV9vbGRtZW0tPmlvcmVtYXBf
+Y2FjaGUpLCBpbiB0aGlzIGNhc2UsCj4+IGl0IGlzIHZlcnkgZGlmZmljdWx0IHRvIHByb3Blcmx5
+IHJlbWFwIHRoZSBtZW1vcnkgaWYgdGhlIGNhbGxlciBkb24ndAo+PiBjYXJlIHdoZXRoZXIgdGhl
+IG1lbW9yeSBpcyBlbmNyeXB0ZWQuCj4gCj4gU28gYmVlZiB1cCB0aGUgbG9naWMgaW4gX19pb3Jl
+bWFwX2NhbGxlcigpIHRvIGZpZ3VyZSBvdXQgYmFzZWQgb24gdGhlCj4gYWRkcmVzcyB3aGV0aGVy
+IHRvIGFjY2VzcyB0aGUgbWVtb3J5IGVuY3J5cHRlZCBvciBub3QuIFlvdSBjYW4gZmluZCBvdXQK
+PiB0aGUgZWxmY29yZWhkciBhZGRyZXNzIGluIHRoZSBjYXB0dXJlIGtlcm5lbC4KPiAKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
+bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
