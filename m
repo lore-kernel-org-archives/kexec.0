@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mail-lf0-f68.google.com ([209.85.215.68])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1faAsw-0005se-Qm
- for kexec@lists.infradead.org; Tue, 03 Jul 2018 02:17:44 +0000
-Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
- AMD sme enabled
-References: <20180702072639.10110-1-lijiang@redhat.com>
- <20180702072639.10110-2-lijiang@redhat.com> <20180702101451.GB28730@zn.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
-Date: Tue, 3 Jul 2018 10:17:19 +0800
+ id 1faDnI-0006xc-6Y
+ for kexec@lists.infradead.org; Tue, 03 Jul 2018 05:24:06 +0000
+Received: by mail-lf0-f68.google.com with SMTP id y127-v6so522125lfc.8
+ for <kexec@lists.infradead.org>; Mon, 02 Jul 2018 22:23:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20180702101451.GB28730@zn.tnic>
-Content-Language: en-US
+In-Reply-To: <1530308908-15528-1-git-send-email-bhsharma@redhat.com>
+References: <1530308908-15528-1-git-send-email-bhsharma@redhat.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Tue, 3 Jul 2018 10:53:50 +0530
+Message-ID: <CACi5LpP14A5Lf2wgszMxF520y+epphTQatrOaS7CZ9CT13Nvtg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: Fix calculation of page_offset in case we are
+ running cases other than mem-usage
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,43 +21,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com
+To: kexec mailing list <kexec@lists.infradead.org>
+Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Bhupesh Sharma <bhsharma@redhat.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, k-hagio@ab.jp.nec.com
 
-5ZyoIDIwMTjlubQwN+aciDAy5pelIDE4OjE0LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IE1vbiwgSnVsIDAyLCAyMDE4IGF0IDAzOjI2OjM1UE0gKzA4MDAsIExpYW5ibyBKaWFuZyB3cm90
-ZToKPj4gQEAgLTEzMSw3ICsxMzIsOCBAQCBzdGF0aWMgdm9pZCBfX2lvcmVtYXBfY2hlY2tfbWVt
-KHJlc291cmNlX3NpemVfdCBhZGRyLCB1bnNpZ25lZCBsb25nIHNpemUsCj4+ICAgKiBjYWxsZXIg
-c2hvdWxkbid0IG5lZWQgdG8ga25vdyB0aGF0IHNtYWxsIGRldGFpbC4KPj4gICAqLwo+PiAgc3Rh
-dGljIHZvaWQgX19pb21lbSAqX19pb3JlbWFwX2NhbGxlcihyZXNvdXJjZV9zaXplX3QgcGh5c19h
-ZGRyLAo+PiAtCQl1bnNpZ25lZCBsb25nIHNpemUsIGVudW0gcGFnZV9jYWNoZV9tb2RlIHBjbSwg
-dm9pZCAqY2FsbGVyKQo+PiArCQl1bnNpZ25lZCBsb25nIHNpemUsIGVudW0gcGFnZV9jYWNoZV9t
-b2RlIHBjbSwKPj4gKwkJdm9pZCAqY2FsbGVyLCBib29sIGVuY3J5cHRlZCkKPiAKPiBTbyBpbnN0
-ZWFkIG9mIHNwcmlua2xpbmcgdGhhdCBAZW5jcnlwdGVkIGFyZ3VtZW50IGV2ZXJ5d2hlcmUgYW5k
-IHRoZW4KPiBzZXR0aW5nIGl0IGJhc2VkIG9uIHNtZV9hY3RpdmUoKSAuLi4KPiAKPj4gIHsKPj4g
-IAl1bnNpZ25lZCBsb25nIG9mZnNldCwgdmFkZHI7Cj4+ICAJcmVzb3VyY2Vfc2l6ZV90IGxhc3Rf
-YWRkcjsKPj4gQEAgLTE5OSw3ICsyMDEsNyBAQCBzdGF0aWMgdm9pZCBfX2lvbWVtICpfX2lvcmVt
-YXBfY2FsbGVyKHJlc291cmNlX3NpemVfdCBwaHlzX2FkZHIsCj4+ICAJICogcmVzdWx0aW5nIG1h
-cHBpbmcuCj4+ICAJICovCj4+ICAJcHJvdCA9IFBBR0VfS0VSTkVMX0lPOwo+PiAtCWlmIChzZXZf
-YWN0aXZlKCkgJiYgbWVtX2ZsYWdzLmRlc2Nfb3RoZXIpCj4+ICsJaWYgKChzZXZfYWN0aXZlKCkg
-JiYgbWVtX2ZsYWdzLmRlc2Nfb3RoZXIpIHx8IGVuY3J5cHRlZCkKPiAKPiAuLi4gd2h5IGNhbid0
-IHlvdSBzaW1wbHkgZG8geW91ciBjaGVja3M6Cj4gCj4gCXNtZV9hY3RpdmUoKSAmJiBpc19rZHVt
-cF9rZXJuZWwoKQo+IAo+IGhlcmUgc28gdGhhdCBfX2lvcmVtYXBfY2FsbGVyKCkgY2FuIGF1dG9t
-YXRpY2FsbHkgY2hvb3NlIHRoZSBwcm9wZXIKPiBwZ3Byb3QgdmFsdWUgd2hlbiBpb3JlbWFwcGlu
-ZyB0aGUgbWVtb3J5IGluIHRoZSBrZHVtcCBrZXJuZWw/Cj4gCj4gQW5kIHRoaXMgd2F5IHRoZSBj
-YWxsZXJzIGRvbid0IGV2ZW4gaGF2ZSB0byBjYXJlIHdoZXRoZXIgdGhlIG1lbW9yeSBpcwo+IGVu
-Y3J5cHRlZCBvciBub3Q/Cj4gClRoYW5rIHlvdSwgQm9yaXMuIEknbSB2ZXJ5IGdsYWQgdG8gcmVh
-ZCB5b3VyIGNvbW1lbnRzLiBUaGF0J3MgYSBnb29kIGlkZWEsIGJ1dCBpdCBoYXMgc29tZQp1bmVu
-Y3J5cHRlZCBtZW1vcnkgaW4ga2R1bXAgbW9kZSwgZm9yIGV4YW1wbGUsIHRoZSBlbGZjb3JlaGRy
-LiBJbiBmYWN0LCB0aGUgZWxmY29yZWhkciBhbmQKbm90ZXMgY2FsbCB0aGUgc2FtZSBmdW5jdGlv
-bihyZWFkX2Zyb21fb2xkbWVtLT5pb3JlbWFwX2NhY2hlKSwgaW4gdGhpcyBjYXNlLCBpdCBpcyB2
-ZXJ5CmRpZmZpY3VsdCB0byBwcm9wZXJseSByZW1hcCB0aGUgbWVtb3J5IGlmIHRoZSBjYWxsZXIg
-ZG9uJ3QgY2FyZSB3aGV0aGVyIHRoZSBtZW1vcnkgaXMgZW5jcnlwdGVkLgoKUmVnYXJkcywKTGlh
-bmJvCj4+ICAJCXByb3QgPSBwZ3Byb3RfZW5jcnlwdGVkKHByb3QpOwo+PiAgCj4+ICAJc3dpdGNo
-IChwY20pIHsKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hello Kazu-san,
+
+On Sat, Jun 30, 2018 at 3:18 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> Patch f49ca13e5eed5bbdc69e0fd5ef099cb46050cb3d added '--mem-usage'
+> support for arm64 architecture.
+>
+> However, we also need to make sure that the calculation of
+> 'page_offset' is valid in case we are running cases other than
+> '--mem-usage'.
+>
+> This patch does the same. I tested this patch on my qualcomm and apm
+> mustang arm64 boards.
+>
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> ---
+>  arch/arm64.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/arm64.c b/arch/arm64.c
+> index c9dab677f2c9..2fd3e1874376 100644
+> --- a/arch/arm64.c
+> +++ b/arch/arm64.c
+> @@ -222,6 +222,12 @@ get_stext_symbol(void)
+>  int
+>  get_machdep_info_arm64(void)
+>  {
+> +       /* Check if va_bits is still not initialized. If still 0, call
+> +        * get_versiondep_info() to initialize the same.
+> +        */
+> +       if (!va_bits)
+> +               get_versiondep_info_arm64();
+> +
+>         if (!calculate_plat_config()) {
+>                 ERRMSG("Can't determine platform config values\n");
+>                 return FALSE;
+> --
+> 2.7.4
+>
+
+This is an important fix for arm64 makedumpfile as it fixes issues
+reported with Fedora when we use makedumpfile for cases other than
+'--mem-usage'.
+
+So kindly consider this one for the next makedumpfile release.
+
+Regards,
+Bhupesh
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
