@@ -1,23 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x242.google.com ([2607:f8b0:4001:c0b::242])
+Received: from mail-pf0-x244.google.com ([2607:f8b0:400e:c00::244])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1faF57-0004a6-IG
- for kexec@lists.infradead.org; Tue, 03 Jul 2018 06:46:36 +0000
-Received: by mail-it0-x242.google.com with SMTP id 188-v6so1608775ita.5
- for <kexec@lists.infradead.org>; Mon, 02 Jul 2018 23:46:22 -0700 (PDT)
-Date: Tue, 3 Jul 2018 15:47:27 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v2 1/4] arm64: export memblock_reserve()d regions via
- /proc/iomem
-Message-ID: <20180703064726.GU23681@linaro.org>
-References: <20180619064424.6642-1-takahiro.akashi@linaro.org>
- <20180619064424.6642-2-takahiro.akashi@linaro.org>
- <72307608-90e0-4842-edc1-d3b284782940@oracle.com>
- <ca9e5d9d-e090-f9e0-bc10-3297c9e3b7e1@arm.com>
- <891c3e5a-9760-1353-4a2c-0900082dd245@oracle.com>
+ id 1faFIJ-0002Dt-7j
+ for kexec@lists.infradead.org; Tue, 03 Jul 2018 07:00:17 +0000
+Received: by mail-pf0-x244.google.com with SMTP id l123-v6so530666pfl.13
+ for <kexec@lists.infradead.org>; Tue, 03 Jul 2018 00:00:00 -0700 (PDT)
+Date: Tue, 3 Jul 2018 16:01:08 +0900
+From: "takahiro.akashi@linaro.org" <takahiro.akashi@linaro.org>
+Subject: Re: panic kexec broken on ARM64?
+Message-ID: <20180703070106.GV23681@linaro.org>
+References: <20180605100151.7fd54381@ezekiel.suse.cz>
+ <8028219f-0d14-eafd-86b7-359ee927bcd3@arm.com>
+ <5e539510-01b7-ebc5-778e-b49a5261f9bc@i2se.com>
+ <2865150f-ebca-4c6b-fc4b-93bfab5f0e91@arm.com>
+ <86lgbm96dq.wl-marc.zyngier@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <891c3e5a-9760-1353-4a2c-0900082dd245@oracle.com>
+In-Reply-To: <86lgbm96dq.wl-marc.zyngier@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,113 +29,99 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Kleikamp <dave.kleikamp@oracle.com>
-Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, al.stone@linaro.org, graeme.gregory@linaro.org, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, tbaicar@codeaurora.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>, hanjun.guo@linaro.org, sudeep.holla@arm.com, akpm@linux-foundation.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, Matthias Brugger <mbrugger@suse.com>, kexec mailing list <kexec@lists.infradead.org>, Petr Tesarik <ptesarik@suse.cz>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
 
-On Tue, Jun 19, 2018 at 10:22:46AM -0500, Dave Kleikamp wrote:
-> On 06/19/2018 10:00 AM, James Morse wrote:
-> > Hi Dave,
-> > 
-> > On 19/06/18 14:37, Dave Kleikamp wrote:
-> >> On 06/19/2018 01:44 AM, AKASHI Takahiro wrote:
-> >>> +static int __init reserve_memblock_reserved_regions(void)
-> >>> +{
-> >>> +	phys_addr_t start, end, roundup_end = 0;
-> >>> +	struct resource *mem, *res;
-> >>> +	u64 i;
-> >>> +
-> >>> +	for_each_reserved_mem_region(i, &start, &end) {
-> >>> +		if (end <= roundup_end)
-> >>> +			continue; /* done already */
-> >>> +
-> >>> +		start = __pfn_to_phys(PFN_DOWN(start));
-> >>> +		end = __pfn_to_phys(PFN_UP(end)) - 1;
-> >>> +		roundup_end = end;
-> >>> +
-> >>> +		res = kzalloc(sizeof(*res), GFP_ATOMIC);
-> >>> +		if (WARN_ON(!res))
-> >>> +			return -ENOMEM;
-> >>> +		res->start = start;
-> >>> +		res->end = end;
-> >>> +		res->name  = "reserved";
-> >>> +		res->flags = IORESOURCE_MEM;
-> >>> +
-> >>> +		mem = request_resource_conflict(&iomem_resource, res);
-> >>> +		/*
-> >>> +		 * We expected memblock_reserve() regions to conflict with
-> >>> +		 * memory created by request_standard_resources().
-> >>> +		 */
-> >>> +		if (WARN_ON_ONCE(!mem))
-> >>> +			continue;
-> >>> +		kfree(res);
-> >>
-> >> Why is kfree() after the conditional continue? This is a memory leak.
-> > 
-> > request_resource_conflict() inserts res into the iomem_resource tree, or returns
-> > the conflict if there is already something at this address.
-> > 
-> > We expect something at this address: a 'System RAM' section added by
-> > request_resource(). This code wants the conflicting 'System RAM' entry so that
-> > reserve_region_with_split() can fill in the gaps below it with 'reserved'. See
-> > the commit-message for an example.
-> > 
-> > If there was no conflict, it means the memory map doesn't look like we expect,
-> > we can't pass NULL to reserve_region_with_split(), and we just inserted the
-> > 'reserved' at the top level. Freeing res at this point would be a use-after-free
-> > hanging from /proc/iomem.
-> > This code generates a WARN_ON_ONCE() and leaves the 'reserved' description where
-> > it is.
-> 
-> Okay. I get it.
-> 
-> > Trying to cleanup here is pointless, we can remove the resource entry and free
-> > it ... but we still want to report it as reserved, which is what just happened,
-> > just not quite how we we wanted it.
-> > 
-> > If you ever see this warning, it means some RAM stopped being nomap between
-> > request_resources() and reserve_memblock_reserved_regions(). I can't find any
-> > case where that ever happens.
-> > 
-> > 
-> > If all that makes sense: how can I improve the comment above the WARN_ON_ONCE()
-> > to make it clearer?
-> 
-> I guess something like you described above.
-> 
-> /*
->  * We expect a 'System RAM' section at this address. In the unexpected
->  * case where one is not found, request_resource_conflict() will insert
->  * res into the iomem_resource tree.
->  */
-> 
-> Do you think this is clearer?
+Marc, James,
 
-If this is the only change needed in my patchset, I'd like the maintainers
-to take care of it instead of my posting another version.
+I'd like to re-ignite the discussion.
+
+On Sun, Jun 10, 2018 at 01:24:17PM +0100, Marc Zyngier wrote:
+> On Wed, 06 Jun 2018 12:37:02 +0100,
+> James Morse wrote:
+> > 
+> > Hi Stefan,
+> > 
+> > On 06/06/18 08:02, Stefan Wahren wrote:
+> > > Am 05.06.2018 um 19:46 schrieb James Morse:
+> > >> On 05/06/18 09:01, Petr Tesarik wrote:
+> > >>> I attached a hardware debugger and found
+> > >>> out that all CPU cores were stopped except one which was stuck in the
+> > >>> idle thread. It seems that irq_set_irqchip_state() may sleep, which is
+> > >>> definitely not safe after a kernel panic.
+> > 
+> > >> I don't know much about irqchip stuff, but __irq_get_desc_lock() takes a
+> > >> raw_spin_lock(), and calls gic_irq_get_irqchip_state() which is just poking
+> > >> around in mmio registers, this should all be safe unless you re-entered the same
+> > >> code.
+> > 
+> > >>> If I'm right, then this is broken in general, but I have only ever seen
+> > >>> it on RPi 3 Model B+ (even RPi3 Model B works fine), so the issue may
+> > >>> be more subtle.
+> > 
+> > >> Is there a hardware difference around the interrupt controller on these?
+> > 
+> > > No, but the RPi 3 B has a different USB network chip on board (smsc95xx, Fast
+> > > ethernet) instead of lan78xx (Gigabit ethernet).
+> > 
+> > Bingo: its the lan78xx driver that is sleeping from the irqchip
+> > callbacks; The smsc95xx driver doesn't have a struct irq_chip, which
+> > is why the RPi-3-B doesn't do this.
+> > 
+> > It may be valid for kdump to only teardown the 'root irqdomain' (if
+> > that even means anything). I assume these secondary irqchip's would
+> > have a summary-interrupt that goes to another irqchip. But I can't
+> > see a way to tell them apart..,
+> 
+> There is none. A cascaded irqchip is just like a root irqchip, just
+> that its output line is connected to another irqchip. But we have no
+> easy way to identify the parent. Also, this particular driver looks
+> quite creative (it reinvents the wheel for chained interrupts -- see
+> intr_complete and lan78xx_status), meaning that even if we could have
+> a magic way of identify a chained irqchip, we'd miss that one. Broken.
+> 
+> > I think we need to wait until after the merge window for Marc's
+> > wisdom on this!
+> 
+> Overall, I can't think of an easy fix. We have a few options, but none
+> of them involve a centralised change:
+> 
+> 1) We provide a reset infrastructure for irqchips, with an opt-in
+>    mechanism. This involves changing the way we teardown irqs at
+>    crash-time, and we'd then need some notion of reset ordering (think
+>    of the layered ITS and GICv3, for example).
+
+Does this mean that all the irqchips have to be implemented with reset?
+> 
+> 2) We provide a way to identify interrupts that are ultimately backed
+>    by a root controller, which implies walking down the hierarchy for
+
+To be clear, from bottom to top (or root), right?
+
+>    each one of them. Fairly expensive, but minimal in way of changes
+>    in the crash code. Requires a per-irqchip flag, but ordering comes
+>    in for free.
+> 
+> 3) We do the same as (2), but at the irqdomain level. Not sure that's
+>    any better, and it may be even more complicated and bring back some
+>    ordering issues.
+
+Do you think that the same thing may happen in case of pci/msi?
+I have no confidence but MSI has some kind of irq domain hierarchy.
 
 Thanks,
 -Takahiro AKASHI
 
-> > 
-> > 
-> > Thanks,
-> > 
-> > James
-> > 
-> > 
-> >>> +
-> >>> +		reserve_region_with_split(mem, start, end, "reserved");
-> >>> +	}
-> >>> +
-> >>> +	return 0;
-> >>> +}
-> >>> +arch_initcall(reserve_memblock_reserved_regions);
-> >>> +
-> >>>  u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
-> >>>  
-> >>>  void __init setup_arch(char **cmdline_p)
-> >>>
-> > 
+> I'm currently angling for (2), with (1) as a final hammer option once
+> we have nuked all the individual interrupts (useful for the GICv3
+> redistributor case).
+> 
+> Thoughts?
+> 
+> 	M.
+> 
+> -- 
+> Jazz is not dead, it just smell funny.
 
 _______________________________________________
 kexec mailing list
