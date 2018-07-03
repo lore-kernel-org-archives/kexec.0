@@ -1,18 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-f68.google.com ([209.85.215.68])
+Received: from mail-it0-x242.google.com ([2607:f8b0:4001:c0b::242])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1faDnI-0006xc-6Y
- for kexec@lists.infradead.org; Tue, 03 Jul 2018 05:24:06 +0000
-Received: by mail-lf0-f68.google.com with SMTP id y127-v6so522125lfc.8
- for <kexec@lists.infradead.org>; Mon, 02 Jul 2018 22:23:53 -0700 (PDT)
+ id 1faF57-0004a6-IG
+ for kexec@lists.infradead.org; Tue, 03 Jul 2018 06:46:36 +0000
+Received: by mail-it0-x242.google.com with SMTP id 188-v6so1608775ita.5
+ for <kexec@lists.infradead.org>; Mon, 02 Jul 2018 23:46:22 -0700 (PDT)
+Date: Tue, 3 Jul 2018 15:47:27 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v2 1/4] arm64: export memblock_reserve()d regions via
+ /proc/iomem
+Message-ID: <20180703064726.GU23681@linaro.org>
+References: <20180619064424.6642-1-takahiro.akashi@linaro.org>
+ <20180619064424.6642-2-takahiro.akashi@linaro.org>
+ <72307608-90e0-4842-edc1-d3b284782940@oracle.com>
+ <ca9e5d9d-e090-f9e0-bc10-3297c9e3b7e1@arm.com>
+ <891c3e5a-9760-1353-4a2c-0900082dd245@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <1530308908-15528-1-git-send-email-bhsharma@redhat.com>
-References: <1530308908-15528-1-git-send-email-bhsharma@redhat.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 3 Jul 2018 10:53:50 +0530
-Message-ID: <CACi5LpP14A5Lf2wgszMxF520y+epphTQatrOaS7CZ9CT13Nvtg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: Fix calculation of page_offset in case we are
- running cases other than mem-usage
+Content-Disposition: inline
+In-Reply-To: <891c3e5a-9760-1353-4a2c-0900082dd245@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,56 +30,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec mailing list <kexec@lists.infradead.org>
-Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Bhupesh Sharma <bhsharma@redhat.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, k-hagio@ab.jp.nec.com
+To: Dave Kleikamp <dave.kleikamp@oracle.com>
+Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, al.stone@linaro.org, graeme.gregory@linaro.org, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, tbaicar@codeaurora.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>, hanjun.guo@linaro.org, sudeep.holla@arm.com, akpm@linux-foundation.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hello Kazu-san,
+On Tue, Jun 19, 2018 at 10:22:46AM -0500, Dave Kleikamp wrote:
+> On 06/19/2018 10:00 AM, James Morse wrote:
+> > Hi Dave,
+> > 
+> > On 19/06/18 14:37, Dave Kleikamp wrote:
+> >> On 06/19/2018 01:44 AM, AKASHI Takahiro wrote:
+> >>> +static int __init reserve_memblock_reserved_regions(void)
+> >>> +{
+> >>> +	phys_addr_t start, end, roundup_end = 0;
+> >>> +	struct resource *mem, *res;
+> >>> +	u64 i;
+> >>> +
+> >>> +	for_each_reserved_mem_region(i, &start, &end) {
+> >>> +		if (end <= roundup_end)
+> >>> +			continue; /* done already */
+> >>> +
+> >>> +		start = __pfn_to_phys(PFN_DOWN(start));
+> >>> +		end = __pfn_to_phys(PFN_UP(end)) - 1;
+> >>> +		roundup_end = end;
+> >>> +
+> >>> +		res = kzalloc(sizeof(*res), GFP_ATOMIC);
+> >>> +		if (WARN_ON(!res))
+> >>> +			return -ENOMEM;
+> >>> +		res->start = start;
+> >>> +		res->end = end;
+> >>> +		res->name  = "reserved";
+> >>> +		res->flags = IORESOURCE_MEM;
+> >>> +
+> >>> +		mem = request_resource_conflict(&iomem_resource, res);
+> >>> +		/*
+> >>> +		 * We expected memblock_reserve() regions to conflict with
+> >>> +		 * memory created by request_standard_resources().
+> >>> +		 */
+> >>> +		if (WARN_ON_ONCE(!mem))
+> >>> +			continue;
+> >>> +		kfree(res);
+> >>
+> >> Why is kfree() after the conditional continue? This is a memory leak.
+> > 
+> > request_resource_conflict() inserts res into the iomem_resource tree, or returns
+> > the conflict if there is already something at this address.
+> > 
+> > We expect something at this address: a 'System RAM' section added by
+> > request_resource(). This code wants the conflicting 'System RAM' entry so that
+> > reserve_region_with_split() can fill in the gaps below it with 'reserved'. See
+> > the commit-message for an example.
+> > 
+> > If there was no conflict, it means the memory map doesn't look like we expect,
+> > we can't pass NULL to reserve_region_with_split(), and we just inserted the
+> > 'reserved' at the top level. Freeing res at this point would be a use-after-free
+> > hanging from /proc/iomem.
+> > This code generates a WARN_ON_ONCE() and leaves the 'reserved' description where
+> > it is.
+> 
+> Okay. I get it.
+> 
+> > Trying to cleanup here is pointless, we can remove the resource entry and free
+> > it ... but we still want to report it as reserved, which is what just happened,
+> > just not quite how we we wanted it.
+> > 
+> > If you ever see this warning, it means some RAM stopped being nomap between
+> > request_resources() and reserve_memblock_reserved_regions(). I can't find any
+> > case where that ever happens.
+> > 
+> > 
+> > If all that makes sense: how can I improve the comment above the WARN_ON_ONCE()
+> > to make it clearer?
+> 
+> I guess something like you described above.
+> 
+> /*
+>  * We expect a 'System RAM' section at this address. In the unexpected
+>  * case where one is not found, request_resource_conflict() will insert
+>  * res into the iomem_resource tree.
+>  */
+> 
+> Do you think this is clearer?
 
-On Sat, Jun 30, 2018 at 3:18 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> Patch f49ca13e5eed5bbdc69e0fd5ef099cb46050cb3d added '--mem-usage'
-> support for arm64 architecture.
->
-> However, we also need to make sure that the calculation of
-> 'page_offset' is valid in case we are running cases other than
-> '--mem-usage'.
->
-> This patch does the same. I tested this patch on my qualcomm and apm
-> mustang arm64 boards.
->
-> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> ---
->  arch/arm64.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/arch/arm64.c b/arch/arm64.c
-> index c9dab677f2c9..2fd3e1874376 100644
-> --- a/arch/arm64.c
-> +++ b/arch/arm64.c
-> @@ -222,6 +222,12 @@ get_stext_symbol(void)
->  int
->  get_machdep_info_arm64(void)
->  {
-> +       /* Check if va_bits is still not initialized. If still 0, call
-> +        * get_versiondep_info() to initialize the same.
-> +        */
-> +       if (!va_bits)
-> +               get_versiondep_info_arm64();
-> +
->         if (!calculate_plat_config()) {
->                 ERRMSG("Can't determine platform config values\n");
->                 return FALSE;
-> --
-> 2.7.4
->
+If this is the only change needed in my patchset, I'd like the maintainers
+to take care of it instead of my posting another version.
 
-This is an important fix for arm64 makedumpfile as it fixes issues
-reported with Fedora when we use makedumpfile for cases other than
-'--mem-usage'.
+Thanks,
+-Takahiro AKASHI
 
-So kindly consider this one for the next makedumpfile release.
-
-Regards,
-Bhupesh
+> > 
+> > 
+> > Thanks,
+> > 
+> > James
+> > 
+> > 
+> >>> +
+> >>> +		reserve_region_with_split(mem, start, end, "reserved");
+> >>> +	}
+> >>> +
+> >>> +	return 0;
+> >>> +}
+> >>> +arch_initcall(reserve_memblock_reserved_regions);
+> >>> +
+> >>>  u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
+> >>>  
+> >>>  void __init setup_arch(char **cmdline_p)
+> >>>
+> > 
 
 _______________________________________________
 kexec mailing list
