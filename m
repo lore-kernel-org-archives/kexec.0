@@ -1,21 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mail-lj1-f196.google.com ([209.85.208.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1faJjy-0001Fd-1m
- for kexec@lists.infradead.org; Tue, 03 Jul 2018 11:45:03 +0000
-Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
- AMD sme enabled
-References: <20180702072639.10110-1-lijiang@redhat.com>
- <20180702072639.10110-2-lijiang@redhat.com> <20180702101451.GB28730@zn.tnic>
- <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
- <895db996-febd-d50c-91af-4f1ef3d27bd8@redhat.com>
- <20180703111428.GB5748@zn.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <4fbb843b-9597-a48b-8b6f-00e354b91950@redhat.com>
-Date: Tue, 3 Jul 2018 19:44:40 +0800
+ id 1faKCr-0005pD-Na
+ for kexec@lists.infradead.org; Tue, 03 Jul 2018 12:14:56 +0000
+Received: by mail-lj1-f196.google.com with SMTP id 1-v6so1349449ljv.9
+ for <kexec@lists.infradead.org>; Tue, 03 Jul 2018 05:14:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20180703111428.GB5748@zn.tnic>
-Content-Language: en-US
+In-Reply-To: <20180703064726.GU23681@linaro.org>
+References: <20180619064424.6642-1-takahiro.akashi@linaro.org>
+ <20180619064424.6642-2-takahiro.akashi@linaro.org>
+ <72307608-90e0-4842-edc1-d3b284782940@oracle.com>
+ <ca9e5d9d-e090-f9e0-bc10-3297c9e3b7e1@arm.com>
+ <891c3e5a-9760-1353-4a2c-0900082dd245@oracle.com>
+ <20180703064726.GU23681@linaro.org>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Tue, 3 Jul 2018 17:44:37 +0530
+Message-ID: <CACi5LpNhQ+jBvNL2F2w5aMpUd61JkzZSV=HsBLxCx6DRy2d7Vw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] arm64: export memblock_reserve()d regions via
+ /proc/iomem
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,34 +26,136 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Dave Kleikamp <dave.kleikamp@oracle.com>, James Morse <james.morse@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, akpm@linux-foundation.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Mark Rutland <mark.rutland@arm.com>, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, Al Stone <al.stone@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, tbaicar@codeaurora.org, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Hanjun Guo <hanjun.guo@linaro.org>, sudeep.holla@arm.com, Dave Young <dyoung@redhat.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-5ZyoIDIwMTjlubQwN+aciDAz5pelIDE5OjE0LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IFR1ZSwgSnVsIDAzLCAyMDE4IGF0IDA2OjU4OjE0UE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
-IEZvciBrZHVtcCwgdGhlIGVsZiBoZWFkZXIgZmluYWxseSB1c2UgdGhlIGNyYXNoIGtlcm5lbCBy
-ZXNlcnZlZCBtZW1vcnksIGl0IGlzIG5vdCBhbiBvbGQgbWVtb3J5Lgo+IAo+IExhbW1lIHJlcGVh
-dCBteSBzdWdnZXN0aW9uOgo+IAo+IFNvIGJlZWYgdXAgdGhlIGxvZ2ljIGluIF9faW9yZW1hcF9j
-YWxsZXIoKSB0byBmaWd1cmUgb3V0IGJhc2VkIG9uIHRoZQo+IGFkZHJlc3Mgd2hldGhlciB0byBh
-Y2Nlc3MgdGhlIG1lbW9yeSBlbmNyeXB0ZWQgb3Igbm90LiBJbiBnZW5lcmFsLCB5b3UKPiBjYW4g
-ZGVkdWNlLCBiYXNlZCBvbiB0aGUgcmVnaW9uIHlvdSdyZSBtYXBwaW5nLCB3aGV0aGVyIHlvdSBu
-ZWVkIHRvIG1hcAo+IGluIGVuY3J5cHRlZCBvciBkZWNyeXB0ZWQuCj4gCj4gRm9yIGV4YW1wbGU6
-Cj4gCj4gICAgICAgICBhZGRyID0gZWxmY29yZWhkcl9hZGRyOwo+IAo+ICAgICAgICAgLyogUmVh
-ZCBFbGYgaGVhZGVyICovCj4gICAgICAgICByYyA9IGVsZmNvcmVoZHJfcmVhZCgoY2hhciAqKSZl
-aGRyLCBzaXplb2YoRWxmNjRfRWhkciksICZhZGRyKTsKPiAgICAgICAgIGlmIChyYyA8IDApCj4g
-ICAgICAgICAgICAgICAgIHJldHVybiByYzsKPiAKPiBlbGZjb3JlaGRyX2FkZHIgaGFzIHRoYXQg
-ZWxmY29yZWhkciBhZGRyZXNzLiBTbyB5b3UgY2FuIGNoZWNrIHdoaWNoIGFkZHJlc3MKPiB5b3Un
-cmUgbWFwcGluZyBhbmQgZG86Cj4gCj4gX19pb3JlbWFwX2NhbGxlcjoKPiAKPiAuLi4KPiAJcHJv
-dCA9IF9faW9yZW1hcF9jb21wdXRlX3Byb3QoLi4uKTsKPiAKPiBhbmQgdGhhdCBfX2lvcmVtYXBf
-Y29tcHV0ZV9wcm90KCkgZnVuY3Rpb24gd2hpY2ggeW91IHdpbGwgYWRkIHdpbGwgaGF2ZQo+IGFs
-bCB0aGF0IGxvZ2ljIHRvIGRldGVybWluZSBlbmNyeXB0ZWQgb3Igbm90IGJ5IGNvbXBhcmluZyBh
-ZGRyZXNzZXMgZXRjLgo+IAo+IERvZXMgdGhhdCBtYWtlIG1vcmUgc2Vuc2U/Cj4gClRoYW5rIHlv
-dSwgQm9yaXMuIEdvb2QgaWRlYSwgSSB3aWxsIHJldGhpbmsgYWJvdXQgdGhpcyBpc3N1ZSBhbmQg
-cG9zdCBpdCBhZ2Fpbi4KClJlZ2FyZHMsCkxpYW5ibwoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
-ZXhlYwo=
+On Tue, Jul 3, 2018 at 12:17 PM, AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
+> On Tue, Jun 19, 2018 at 10:22:46AM -0500, Dave Kleikamp wrote:
+>> On 06/19/2018 10:00 AM, James Morse wrote:
+>> > Hi Dave,
+>> >
+>> > On 19/06/18 14:37, Dave Kleikamp wrote:
+>> >> On 06/19/2018 01:44 AM, AKASHI Takahiro wrote:
+>> >>> +static int __init reserve_memblock_reserved_regions(void)
+>> >>> +{
+>> >>> + phys_addr_t start, end, roundup_end = 0;
+>> >>> + struct resource *mem, *res;
+>> >>> + u64 i;
+>> >>> +
+>> >>> + for_each_reserved_mem_region(i, &start, &end) {
+>> >>> +         if (end <= roundup_end)
+>> >>> +                 continue; /* done already */
+>> >>> +
+>> >>> +         start = __pfn_to_phys(PFN_DOWN(start));
+>> >>> +         end = __pfn_to_phys(PFN_UP(end)) - 1;
+>> >>> +         roundup_end = end;
+>> >>> +
+>> >>> +         res = kzalloc(sizeof(*res), GFP_ATOMIC);
+>> >>> +         if (WARN_ON(!res))
+>> >>> +                 return -ENOMEM;
+>> >>> +         res->start = start;
+>> >>> +         res->end = end;
+>> >>> +         res->name  = "reserved";
+>> >>> +         res->flags = IORESOURCE_MEM;
+>> >>> +
+>> >>> +         mem = request_resource_conflict(&iomem_resource, res);
+>> >>> +         /*
+>> >>> +          * We expected memblock_reserve() regions to conflict with
+>> >>> +          * memory created by request_standard_resources().
+>> >>> +          */
+>> >>> +         if (WARN_ON_ONCE(!mem))
+>> >>> +                 continue;
+>> >>> +         kfree(res);
+>> >>
+>> >> Why is kfree() after the conditional continue? This is a memory leak.
+>> >
+>> > request_resource_conflict() inserts res into the iomem_resource tree, or returns
+>> > the conflict if there is already something at this address.
+>> >
+>> > We expect something at this address: a 'System RAM' section added by
+>> > request_resource(). This code wants the conflicting 'System RAM' entry so that
+>> > reserve_region_with_split() can fill in the gaps below it with 'reserved'. See
+>> > the commit-message for an example.
+>> >
+>> > If there was no conflict, it means the memory map doesn't look like we expect,
+>> > we can't pass NULL to reserve_region_with_split(), and we just inserted the
+>> > 'reserved' at the top level. Freeing res at this point would be a use-after-free
+>> > hanging from /proc/iomem.
+>> > This code generates a WARN_ON_ONCE() and leaves the 'reserved' description where
+>> > it is.
+>>
+>> Okay. I get it.
+>>
+>> > Trying to cleanup here is pointless, we can remove the resource entry and free
+>> > it ... but we still want to report it as reserved, which is what just happened,
+>> > just not quite how we we wanted it.
+>> >
+>> > If you ever see this warning, it means some RAM stopped being nomap between
+>> > request_resources() and reserve_memblock_reserved_regions(). I can't find any
+>> > case where that ever happens.
+>> >
+>> >
+>> > If all that makes sense: how can I improve the comment above the WARN_ON_ONCE()
+>> > to make it clearer?
+>>
+>> I guess something like you described above.
+>>
+>> /*
+>>  * We expect a 'System RAM' section at this address. In the unexpected
+>>  * case where one is not found, request_resource_conflict() will insert
+>>  * res into the iomem_resource tree.
+>>  */
+>>
+>> Do you think this is clearer?
+>
+> If this is the only change needed in my patchset, I'd like the maintainers
+> to take care of it instead of my posting another version.
+>
+
++1.
+
+crashkernel booting on arm64 machines which support boot via acpi
+tables is broken since a long time, so it would be great to get these
+into upstream asap.
+
+I think the comment can be addressed while picking up the patchset in
+the maintainer's tree.
+
+I am not sure whether it will go through the ARM tree (Will) or the
+EFI tree (Ard), but since this has a Tested-by (from myself) and
+Reviewed-by (from James), probably this can be pulled in to allow
+further tests via the maintainer's tree.
+
+Thanks,
+Bhupesh
+
+
+>> >
+>> >
+>> > Thanks,
+>> >
+>> > James
+>> >
+>> >
+>> >>> +
+>> >>> +         reserve_region_with_split(mem, start, end, "reserved");
+>> >>> + }
+>> >>> +
+>> >>> + return 0;
+>> >>> +}
+>> >>> +arch_initcall(reserve_memblock_reserved_regions);
+>> >>> +
+>> >>>  u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
+>> >>>
+>> >>>  void __init setup_arch(char **cmdline_p)
+>> >>>
+>> >
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
