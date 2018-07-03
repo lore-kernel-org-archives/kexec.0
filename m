@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v10 07/14] arm64: enable KEXEC_FILE config
+Subject: Re: [PATCH v10 13/14] arm64: kexec_file: add kernel signature
+ verification support
 References: <20180623022058.10935-1-takahiro.akashi@linaro.org>
- <20180623022058.10935-8-takahiro.akashi@linaro.org>
+ <20180623022058.10935-14-takahiro.akashi@linaro.org>
 From: James Morse <james.morse@arm.com>
-Message-ID: <9545cb7f-9648-660a-f034-a94f186a8224@arm.com>
-Date: Tue, 3 Jul 2018 17:33:20 +0100
+Message-ID: <ff77f2d9-82c6-8fbb-3696-e1fcfd61c333@arm.com>
+Date: Tue, 3 Jul 2018 18:47:38 +0100
 MIME-Version: 1.0
-In-Reply-To: <20180623022058.10935-8-takahiro.akashi@linaro.org>
+In-Reply-To: <20180623022058.10935-14-takahiro.akashi@linaro.org>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,39 +27,62 @@ Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, cata
 Hi Akashi,
 
 On 23/06/18 03:20, AKASHI Takahiro wrote:
-> Modify arm64/Kconfig to enable kexec_file_load support.
+> With this patch, kernel verification can be done without IMA security
+> subsystem enabled. Turn on CONFIG_KEXEC_VERIFY_SIG instead.
+> 
+> On x86, a signature is embedded into a PE file (Microsoft's format) header
+> of binary. Since arm64's "Image" can also be seen as a PE file as far as
+> CONFIG_EFI is enabled, we adopt this format for kernel signing.
+> 
+> You can create a signed kernel image with:
+>     $ sbsign --key ${KEY} --cert ${CERT} Image
 
 > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 42c090cf0292..f68318f61c85 100644
+> index f68318f61c85..5133c22a01ab 100644
 > --- a/arch/arm64/Kconfig
 > +++ b/arch/arm64/Kconfig
-> @@ -835,6 +835,16 @@ config KEXEC
->  	  but it is independent of the system firmware.   And like a reboot
->  	  you can start any kernel with it, not just Linux.
+> @@ -845,6 +845,30 @@ config KEXEC_FILE
+>  	  for kernel and initramfs as opposed to list of segments as
+>  	  accepted by previous system call.
 >  
-> +config KEXEC_FILE
-> +	bool "kexec file based system call"
-> +	select KEXEC_CORE
-> +	select BUILD_BIN2C
-
-Wasn't BIN2C only needed for purgatory?
-
-x86/powerpc/s390 all select CRYPTO_SHA256 here, presumably for arch-specific
-verification mechanisms. I assume we're using SIGNED_PE_FILE_VERIFICATION instead.
-
-
+> +config KEXEC_VERIFY_SIG
+> +	bool "Verify kernel signature during kexec_file_load() syscall"
+> +	depends on KEXEC_FILE
 > +	help
-> +	  This is new version of kexec system call. This system call is
-> +	  file based and takes file descriptors as system call argument
-> +	  for kernel and initramfs as opposed to list of segments as
-> +	  accepted by previous system call.
+> +	  Select this option to verify a signature with loaded kernel
+> +	  image. If configured, any attempt of loading a image without
+> +	  valid signature will fail.
 > +
->  config CRASH_DUMP
->  	bool "Build kdump crash kernel"
->  	help
+> +	  In addition to that option, you need to enable signature
+> +	  verification for the corresponding kernel image type being
+> +	  loaded in order for this to work.
+> +
+> +config KEXEC_IMAGE_VERIFY_SIG
+> +	bool "Enable Image signature verification support"
+> +	default y
+> +	depends on KEXEC_VERIFY_SIG
+> +	depends on EFI && SIGNED_PE_FILE_VERIFICATION
+> +	help
+> +	  Enable Image signature verification support.
+> +
+> +comment "Image signature verification is missing yet"
+> +	depends on KEXEC_VERIFY_SIG
+> +	depends on !EFI || !SIGNED_PE_FILE_VERIFICATION
 
 
-Acked-by: James Morse <james.morse@arm.com>
+This comment thing is a good idea, but its also a bit confusing... it took me
+quite a while to work out what was missing. Could we phrase it something like:
+"Support for PE file signature verification disabled!"
+This tells us its about PE files, and its probably a missing config option
+somewhere, not some code that hasn't been written yet. (which was my first
+assumption!).
+
+KEXEC_VERIFY_SIG presumably turns on just the IMA verification, which verifies
+the Image, but not in the same way as KEXEC_IMAGE_VERIFY_SIG.... (if I've
+understood it properly) Is there any reason to have these as separate enables?
+Couldn't we 'select SIGNED_PE_FILE_VERIFICATION if EFI' in KEXEC_VERIFY_SIG?
+This would mean there is one option to verify signatures, instead of two...
+(does it really depend on EFI?)
 
 
 Thanks,
