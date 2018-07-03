@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v10 03/14] powerpc, kexec_file: factor out memblock-based
- arch_kexec_walk_mem()
+Subject: Re: [PATCH v10 07/14] arm64: enable KEXEC_FILE config
 References: <20180623022058.10935-1-takahiro.akashi@linaro.org>
- <20180623022058.10935-4-takahiro.akashi@linaro.org>
+ <20180623022058.10935-8-takahiro.akashi@linaro.org>
 From: James Morse <james.morse@arm.com>
-Message-ID: <8a59db79-6379-550b-b20e-01036626904e@arm.com>
-Date: Tue, 3 Jul 2018 17:36:24 +0100
+Message-ID: <9545cb7f-9648-660a-f034-a94f186a8224@arm.com>
+Date: Tue, 3 Jul 2018 17:33:20 +0100
 MIME-Version: 1.0
-In-Reply-To: <20180623022058.10935-4-takahiro.akashi@linaro.org>
+In-Reply-To: <20180623022058.10935-8-takahiro.akashi@linaro.org>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,71 +21,43 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
 Hi Akashi,
 
 On 23/06/18 03:20, AKASHI Takahiro wrote:
-> Memblock list is another source for usable system memory layout.
-> A merged new arch_kexec_walk_mem() will walk through either io resource
-> list or memblock list depending on CONFIG_ARCH_DISCARD_MEMBLOCK so that
-> arm64, in addition to powerpc, will be able to utilize this generic
-> function for kexec_file.
+> Modify arm64/Kconfig to enable kexec_file_load support.
 
-> diff --git a/arch/powerpc/kernel/machine_kexec_file_64.c b/arch/powerpc/kernel/machine_kexec_file_64.c
-> index 0bd23dc789a4..3d4be91786ce 100644
-> --- a/arch/powerpc/kernel/machine_kexec_file_64.c
-> +++ b/arch/powerpc/kernel/machine_kexec_file_64.c
-
-Does this file still need its memblock.h include?
-
-
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 63c7ce1c0c3e..563acd1c9a61 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -16,6 +16,7 @@
->  #include <linux/file.h>
->  #include <linux/slab.h>
->  #include <linux/kexec.h>
-> +#include <linux/memblock.h>
->  #include <linux/mutex.h>
->  #include <linux/list.h>
->  #include <linux/fs.h>
-> @@ -501,6 +502,53 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
->  	return locate_mem_hole_bottom_up(start, end, kbuf);
->  }
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 42c090cf0292..f68318f61c85 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -835,6 +835,16 @@ config KEXEC
+>  	  but it is independent of the system firmware.   And like a reboot
+>  	  you can start any kernel with it, not just Linux.
 >  
-> +#if defined(CONFIG_HAVE_MEMBLOCK) && !defined(CONFIG_ARCH_DISCARD_MEMBLOCK)
+> +config KEXEC_FILE
+> +	bool "kexec file based system call"
+> +	select KEXEC_CORE
+> +	select BUILD_BIN2C
 
-The only caller is also guarded by these same ifdefs. Can't we remove this and
-rely on the compilers dead-code elimination to remove this function when its not
-needed?
+Wasn't BIN2C only needed for purgatory?
 
-
-> +static int kexec_walk_memblock(struct kexec_buf *kbuf,
-> +			       int (*func)(struct resource *, void *))
-> +{
-> +	u64 i;
-> +	phys_addr_t mstart, mend;
-> +	struct resource res = { };
-> +	int ret = 0;
+x86/powerpc/s390 all select CRYPTO_SHA256 here, presumably for arch-specific
+verification mechanisms. I assume we're using SIGNED_PE_FILE_VERIFICATION instead.
 
 
-Keeping this patch as 'just' moving code would avoid having to play
-spot-the-difference:
-
-> +	if (kbuf->image->type == KEXEC_TYPE_CRASH)
-> +		return func(&crashk_res, kbuf);
-
-This will be new for powerpc, but any attempt to use it should be caught by
-arch_kexec_kernel_image_probe(), which has:
-|	/* We don't support crash kernels yet. */
-|	if (image->type == KEXEC_TYPE_CRASH)
-|		return -EOPNOTSUPP;
+> +	help
+> +	  This is new version of kexec system call. This system call is
+> +	  file based and takes file descriptors as system call argument
+> +	  for kernel and initramfs as opposed to list of segments as
+> +	  accepted by previous system call.
+> +
+>  config CRASH_DUMP
+>  	bool "Build kdump crash kernel"
+>  	help
 
 
-Looks good to me! For what its worth:
 Acked-by: James Morse <james.morse@arm.com>
 
 
