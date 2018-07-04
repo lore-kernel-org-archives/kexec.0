@@ -1,24 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x243.google.com ([2607:f8b0:400e:c00::243])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fadKv-0007z9-RI
- for kexec@lists.infradead.org; Wed, 04 Jul 2018 08:40:30 +0000
-Received: by mail-pf0-x243.google.com with SMTP id z24-v6so2332137pfe.7
- for <kexec@lists.infradead.org>; Wed, 04 Jul 2018 01:40:17 -0700 (PDT)
-Date: Wed, 4 Jul 2018 17:41:25 +0900
-From: "takahiro.akashi@linaro.org" <takahiro.akashi@linaro.org>
-Subject: Re: panic kexec broken on ARM64?
-Message-ID: <20180704084123.GC28220@linaro.org>
-References: <20180605100151.7fd54381@ezekiel.suse.cz>
- <8028219f-0d14-eafd-86b7-359ee927bcd3@arm.com>
- <5e539510-01b7-ebc5-778e-b49a5261f9bc@i2se.com>
- <2865150f-ebca-4c6b-fc4b-93bfab5f0e91@arm.com>
- <86lgbm96dq.wl-marc.zyngier@arm.com>
- <20180703070106.GV23681@linaro.org>
- <86601wzn3h.wl-marc.zyngier@arm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <86601wzn3h.wl-marc.zyngier@arm.com>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fafX3-0005Vh-3r
+ for kexec@lists.infradead.org; Wed, 04 Jul 2018 11:01:10 +0000
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w64B09AZ125886
+ for <kexec@lists.infradead.org>; Wed, 4 Jul 2018 07:00:54 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2k0v9s9nn8-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 04 Jul 2018 07:00:53 -0400
+Received: from localhost
+ by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <prudo@linux.ibm.com>;
+ Wed, 4 Jul 2018 12:00:51 +0100
+From: Philipp Rudo <prudo@linux.ibm.com>
+Subject: [PATCH 1/1] x86/purgatory: Add missing FORCE to Makefile target
+Date: Wed,  4 Jul 2018 13:00:44 +0200
+In-Reply-To: <20180704110044.29279-1-prudo@linux.ibm.com>
+References: <20180704110044.29279-1-prudo@linux.ibm.com>
+Message-Id: <20180704110044.29279-2-prudo@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,126 +30,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, Matthias Brugger <mbrugger@suse.com>, kexec mailing list <kexec@lists.infradead.org>, Petr Tesarik <ptesarik@suse.cz>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>
+Cc: x86@kernel.org, kexec@lists.infradead.org
 
-On Tue, Jul 03, 2018 at 09:58:44AM +0100, Marc Zyngier wrote:
-> On 03/07/18 08:01, takahiro.akashi@linaro.org wrote:
-> > Marc, James,
-> > 
-> > I'd like to re-ignite the discussion.
-> > 
-> > On Sun, Jun 10, 2018 at 01:24:17PM +0100, Marc Zyngier wrote:
-> >> On Wed, 06 Jun 2018 12:37:02 +0100,
-> >> James Morse wrote:
-> >>>
-> >>> Hi Stefan,
-> >>>
-> >>> On 06/06/18 08:02, Stefan Wahren wrote:
-> >>>> Am 05.06.2018 um 19:46 schrieb James Morse:
-> >>>>> On 05/06/18 09:01, Petr Tesarik wrote:
-> >>>>>> I attached a hardware debugger and found
-> >>>>>> out that all CPU cores were stopped except one which was stuck in the
-> >>>>>> idle thread. It seems that irq_set_irqchip_state() may sleep, which is
-> >>>>>> definitely not safe after a kernel panic.
-> >>>
-> >>>>> I don't know much about irqchip stuff, but __irq_get_desc_lock() takes a
-> >>>>> raw_spin_lock(), and calls gic_irq_get_irqchip_state() which is just poking
-> >>>>> around in mmio registers, this should all be safe unless you re-entered the same
-> >>>>> code.
-> >>>
-> >>>>>> If I'm right, then this is broken in general, but I have only ever seen
-> >>>>>> it on RPi 3 Model B+ (even RPi3 Model B works fine), so the issue may
-> >>>>>> be more subtle.
-> >>>
-> >>>>> Is there a hardware difference around the interrupt controller on these?
-> >>>
-> >>>> No, but the RPi 3 B has a different USB network chip on board (smsc95xx, Fast
-> >>>> ethernet) instead of lan78xx (Gigabit ethernet).
-> >>>
-> >>> Bingo: its the lan78xx driver that is sleeping from the irqchip
-> >>> callbacks; The smsc95xx driver doesn't have a struct irq_chip, which
-> >>> is why the RPi-3-B doesn't do this.
-> >>>
-> >>> It may be valid for kdump to only teardown the 'root irqdomain' (if
-> >>> that even means anything). I assume these secondary irqchip's would
-> >>> have a summary-interrupt that goes to another irqchip. But I can't
-> >>> see a way to tell them apart..,
-> >>
-> >> There is none. A cascaded irqchip is just like a root irqchip, just
-> >> that its output line is connected to another irqchip. But we have no
-> >> easy way to identify the parent. Also, this particular driver looks
-> >> quite creative (it reinvents the wheel for chained interrupts -- see
-> >> intr_complete and lan78xx_status), meaning that even if we could have
-> >> a magic way of identify a chained irqchip, we'd miss that one. Broken.
-> >>
-> >>> I think we need to wait until after the merge window for Marc's
-> >>> wisdom on this!
-> >>
-> >> Overall, I can't think of an easy fix. We have a few options, but none
-> >> of them involve a centralised change:
-> >>
-> >> 1) We provide a reset infrastructure for irqchips, with an opt-in
-> >>    mechanism. This involves changing the way we teardown irqs at
-> >>    crash-time, and we'd then need some notion of reset ordering (think
-> >>    of the layered ITS and GICv3, for example).
-> > 
-> > Does this mean that all the irqchips have to be implemented with reset?
-> 
-> No. Only those that want to be reset at kexec time.
+Without FORCE make does not detect changes only made to the command line
+options. So object files might not be re-built even when they should be.
+Fix this by adding FORCE where it is missing.
 
-I don't get the point yet. Who should have reset interface?
-What is the criteria?
+Fixes: df6f2801f511 ("kernel/kexec_file.c: move purgatories sha256 to common code")
+Cc: <stable@vger.kernel.org> # 4.17
+Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
+---
+ arch/x86/purgatory/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> >>
-> >> 2) We provide a way to identify interrupts that are ultimately backed
-> >>    by a root controller, which implies walking down the hierarchy for
-> > 
-> > To be clear, from bottom to top (or root), right?
-> 
-> I'm not sure I understand your question. The idea is to walk the
-> irq_data chain, until we hit a root irqchip. If we do hit one, we
-> deactivate/eoi/disable this interrupt. If we don't, we do nothing.
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index 2e9ee023e6bc..81a8e33115ad 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -6,7 +6,7 @@ purgatory-y := purgatory.o stack.o setup-x86_$(BITS).o sha256.o entry64.o string
+ targets += $(purgatory-y)
+ PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
+ 
+-$(obj)/sha256.o: $(srctree)/lib/sha256.c
++$(obj)/sha256.o: $(srctree)/lib/sha256.c FORCE
+ 	$(call if_changed_rule,cc_o_c)
+ 
+ LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
+-- 
+2.16.4
 
-I thought that we would traverse the (chained irq) hierarchy from
-bottom to top and call deactivate or others in that order.
-Am I wrong here?
-
-> This would avoid the above brokenness, and still ensures that no
-> interrupt reaches the CPU.
-> 
-> > 
-> >>    each one of them. Fairly expensive, but minimal in way of changes
-> >>    in the crash code. Requires a per-irqchip flag, but ordering comes
-> >>    in for free.
-> >>
-> >> 3) We do the same as (2), but at the irqdomain level. Not sure that's
-> >>    any better, and it may be even more complicated and bring back some
-> >>    ordering issues.
-> > 
-> > Do you think that the same thing may happen in case of pci/msi?
-> > I have no confidence but MSI has some kind of irq domain hierarchy.
-> 
-> Anything can happen, as people implement their interrupt infrastructure
-> in weird and wonderful ways. So we need to be prepared for the worse.
-> 
-> I've pushed 3 patches on a branch[1]. It is mostly untested, but it
-> should allow the above RPi3 disaster to cope with kexec.
-
-I don't have any hardware that sees this kind of issue and can't test.
-
--Takahiro AKASHI
-
-> 	M.
-> 
-> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/root-irqchip
-> 
-> -- 
-> Jazz is not dead, it just smell funny.
 
 _______________________________________________
 kexec mailing list
