@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-vi1eur04on0717.outbound.protection.outlook.com
- ([2a01:111:f400:fe0e::717]
- helo=EUR04-VI1-obe.outbound.protection.outlook.com)
+Received: from mail-ua0-x242.google.com ([2607:f8b0:400c:c08::242])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fb3nr-0005oG-FN
- for kexec@lists.infradead.org; Thu, 05 Jul 2018 12:56:12 +0000
-From: Arnaud Ferraris <arnaud.ferraris.external@sigfox.com>
-Subject: [PATCH 3/3] kexec: arm64: Add fitImage support
-Date: Thu,  5 Jul 2018 14:55:35 +0200
-Message-Id: <1530795335-20867-4-git-send-email-arnaud.ferraris.external@sigfox.com>
-In-Reply-To: <1530795335-20867-1-git-send-email-arnaud.ferraris.external@sigfox.com>
-References: <1530795335-20867-1-git-send-email-arnaud.ferraris.external@sigfox.com>
+ id 1fakvd-0001lO-AY
+ for kexec@lists.infradead.org; Wed, 04 Jul 2018 16:46:55 +0000
+Received: by mail-ua0-x242.google.com with SMTP id r18-v6so3778305ual.13
+ for <kexec@lists.infradead.org>; Wed, 04 Jul 2018 09:46:42 -0700 (PDT)
 MIME-Version: 1.0
+In-Reply-To: <20180704041038.8190-2-bhe@redhat.com>
+References: <20180704041038.8190-1-bhe@redhat.com>
+ <20180704041038.8190-2-bhe@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 4 Jul 2018 19:46:41 +0300
+Message-ID: <CAHp75VfWLcQq4XGM3RyfO_ENx=3=WrCEhtOw+a0Sfwz_OpQ0UQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/4] resource: Move reparent_resources() to
+ kernel/resource.c and make it public
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,153 +26,200 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au, kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, brijesh.singh@amd.com, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, Keith Busch <keith.busch@intel.com>, Max Filippov <jcmvbkbc@gmail.com>, baiyaowei@cmss.chinamobile.com, KY Srinivasan <kys@microsoft.com>, Frank Rowand <frowand.list@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Hemminger <sthemmin@microsoft.com>, linux-nvdimm@lists.01.org, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, linux-input <linux-input@vger.kernel.org>, Gustavo Padovan <gustavo@padovan.org>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Tom Lendacky <thomas.lendacky@amd.com>, Haiyang Zhang <haiyangz@microsoft.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Yinghai Lu <yinghai@kernel.org>, Jon Derrick <jonathan.derrick@intel.com>, Chris Zankel <chris@zankel.net>, Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, devel@linuxdriverproject.org, Andrew Morton <akpm@linux-foundation.org>, kbuild test robot <fengguang.wu@intel.com>, "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" <linuxppc-dev@lists.ozlabs.org>, "David S. Miller" <davem@davemloft.net>
 
-Signed-off-by: Arnaud Ferraris <arnaud.ferraris.external@sigfox.com>
----
- kexec/arch/arm64/Makefile               |  2 ++
- kexec/arch/arm64/kexec-arm64.c          | 15 +++++++++++--
- kexec/arch/arm64/kexec-arm64.h          |  4 ++++
- kexec/arch/arm64/kexec-fitImage-arm64.c | 40 +++++++++++++++++++++++++++++++++
- kexec/kexec.h                           |  4 ++++
- 5 files changed, 63 insertions(+), 2 deletions(-)
- create mode 100644 kexec/arch/arm64/kexec-fitImage-arm64.c
+On Wed, Jul 4, 2018 at 7:10 AM, Baoquan He <bhe@redhat.com> wrote:
+> reparent_resources() is duplicated in arch/microblaze/pci/pci-common.c
+> and arch/powerpc/kernel/pci-common.c, so move it to kernel/resource.c
+> so that it's shared.
 
-diff --git a/kexec/arch/arm64/Makefile b/kexec/arch/arm64/Makefile
-index 9d9111c..e33209e 100644
---- a/kexec/arch/arm64/Makefile
-+++ b/kexec/arch/arm64/Makefile
-@@ -15,9 +15,11 @@ arm64_KEXEC_SRCS += \
- 	kexec/arch/arm64/kexec-arm64.c \
- 	kexec/arch/arm64/kexec-elf-arm64.c \
- 	kexec/arch/arm64/kexec-uImage-arm64.c \
-+	kexec/arch/arm64/kexec-fitImage-arm64.c \
- 	kexec/arch/arm64/kexec-image-arm64.c
- 
- arm64_UIMAGE = kexec/kexec-uImage.c
-+arm64_FITIMAGE = kexec/kexec-fitImage.c
- 
- arm64_ARCH_REUSE_INITRD =
- arm64_ADD_SEGMENT =
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 7a12479..344037c 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -55,6 +55,8 @@ struct file_type file_type[] = {
- 	{"vmlinux", elf_arm64_probe, elf_arm64_load, elf_arm64_usage},
- 	{"Image", image_arm64_probe, image_arm64_load, image_arm64_usage},
- 	{"uImage", uImage_arm64_probe, uImage_arm64_load, uImage_arm64_usage},
-+	{"fitImage", fitImage_arm64_probe, fitImage_arm64_load,
-+		fitImage_arm64_usage},
- };
- 
- int file_types = sizeof(file_type) / sizeof(file_type[0]);
-@@ -613,6 +615,10 @@ int arm64_load_other_segments(struct kexec_info *info,
- 	if (arm64_opts.dtb) {
- 		dtb.name = "dtb_user";
- 		dtb.buf = slurp_file(arm64_opts.dtb, &dtb.size);
-+	} else if (info->dtb) {
-+		dtb.name = "dtb_user";
-+		dtb.buf = info->dtb;
-+		dtb.size = info->dtb_size;
- 	} else {
- 		result = read_1st_dtb(&dtb);
- 
-@@ -637,8 +643,13 @@ int arm64_load_other_segments(struct kexec_info *info,
- 	else
- 		hole_max = ULONG_MAX;
- 
--	if (arm64_opts.initrd) {
--		initrd_buf = slurp_file(arm64_opts.initrd, &initrd_size);
-+	if (arm64_opts.initrd || info->initrd) {
-+		if (arm64_opts.initrd)
-+			initrd_buf = slurp_file(arm64_opts.initrd, &initrd_size);
-+		else {
-+			initrd_buf = info->initrd;
-+			initrd_size = info->initrd_size;
-+		}
- 
- 		if (!initrd_buf)
- 			fprintf(stderr, "kexec: Empty ramdisk file.\n");
-diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
-index 22e4b69..cd05b0b 100644
---- a/kexec/arch/arm64/kexec-arm64.h
-+++ b/kexec/arch/arm64/kexec-arm64.h
-@@ -34,6 +34,10 @@ int uImage_arm64_probe(const char *buf, off_t len);
- int uImage_arm64_load(int argc, char **argv, const char *buf, off_t len,
- 		      struct kexec_info *info);
- void uImage_arm64_usage(void);
-+int fitImage_arm64_probe(const char *buf, off_t len);
-+int fitImage_arm64_load(int argc, char **argv, const char *buf, off_t len,
-+		      struct kexec_info *info);
-+void fitImage_arm64_usage(void);
- 
- off_t initrd_base;
- off_t initrd_size;
-diff --git a/kexec/arch/arm64/kexec-fitImage-arm64.c b/kexec/arch/arm64/kexec-fitImage-arm64.c
-new file mode 100644
-index 0000000..1085f1b
---- /dev/null
-+++ b/kexec/arch/arm64/kexec-fitImage-arm64.c
-@@ -0,0 +1,40 @@
-+/*
-+ * fitImage support for ARM64
-+ */
-+
-+#include <stdint.h>
-+#include <string.h>
-+#include <sys/types.h>
-+#include <image.h>
-+#include <kexec-fitImage.h>
-+#include "../../kexec.h"
-+#include "kexec-arm64.h"
-+
-+int fitImage_arm64_probe(const char *buf, off_t len)
-+{
-+	return fitImage_probe(buf, len, IH_ARCH_ARM64);
-+}
-+
-+int fitImage_arm64_load(int argc, char **argv, const char *buf, off_t len,
-+	struct kexec_info *info)
-+{
-+	struct FitImage_contents img;
-+	int ret;
-+
-+	ret = fitImage_load(buf, len, &img);
-+	if (ret)
-+		return ret;
-+
-+	info->initrd = img.initrd;
-+	info->initrd_size = img.initrd_size;
-+	info->dtb = img.dtb;
-+	info->dtb_size = img.dtb_size;
-+
-+	return image_arm64_load(argc, argv, img.kernel, img.kernel_size, info);
-+}
-+
-+void fitImage_arm64_usage(void)
-+{
-+	printf(
-+"     An ARM64 fitImage file, compressed or not, big or little endian.\n\n");
-+}
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index a97b9ce..19a807a 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -166,6 +166,10 @@ struct kexec_info {
- 	int initrd_fd;
- 	char *command_line;
- 	int command_line_len;
-+	const char *initrd;
-+	off_t initrd_size;
-+	const char *dtb;
-+	off_t dtb_size;
- 
- 	int skip_checks;
- };
+With couple of comments below,
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+P.S. In some commit message in this series you used 'likt' instead of 'like'.
+
+>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  arch/microblaze/pci/pci-common.c | 37 -------------------------------------
+>  arch/powerpc/kernel/pci-common.c | 35 -----------------------------------
+>  include/linux/ioport.h           |  1 +
+>  kernel/resource.c                | 39 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 40 insertions(+), 72 deletions(-)
+>
+> diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
+> index f34346d56095..7899bafab064 100644
+> --- a/arch/microblaze/pci/pci-common.c
+> +++ b/arch/microblaze/pci/pci-common.c
+> @@ -619,43 +619,6 @@ int pcibios_add_device(struct pci_dev *dev)
+>  EXPORT_SYMBOL(pcibios_add_device);
+>
+>  /*
+> - * Reparent resource children of pr that conflict with res
+> - * under res, and make res replace those children.
+> - */
+> -static int __init reparent_resources(struct resource *parent,
+> -                                    struct resource *res)
+> -{
+> -       struct resource *p, **pp;
+> -       struct resource **firstpp = NULL;
+> -
+> -       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
+> -               if (p->end < res->start)
+> -                       continue;
+> -               if (res->end < p->start)
+> -                       break;
+> -               if (p->start < res->start || p->end > res->end)
+> -                       return -1;      /* not completely contained */
+> -               if (firstpp == NULL)
+> -                       firstpp = pp;
+> -       }
+> -       if (firstpp == NULL)
+> -               return -1;      /* didn't find any conflicting entries? */
+> -       res->parent = parent;
+> -       res->child = *firstpp;
+> -       res->sibling = *pp;
+> -       *firstpp = res;
+> -       *pp = NULL;
+> -       for (p = res->child; p != NULL; p = p->sibling) {
+> -               p->parent = res;
+> -               pr_debug("PCI: Reparented %s [%llx..%llx] under %s\n",
+> -                        p->name,
+> -                        (unsigned long long)p->start,
+> -                        (unsigned long long)p->end, res->name);
+> -       }
+> -       return 0;
+> -}
+> -
+> -/*
+>   *  Handle resources of PCI devices.  If the world were perfect, we could
+>   *  just allocate all the resource regions and do nothing more.  It isn't.
+>   *  On the other hand, we cannot just re-allocate all devices, as it would
+> diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
+> index fe9733ffffaa..926035bb378d 100644
+> --- a/arch/powerpc/kernel/pci-common.c
+> +++ b/arch/powerpc/kernel/pci-common.c
+> @@ -1088,41 +1088,6 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+>  EXPORT_SYMBOL(pcibios_align_resource);
+>
+>  /*
+> - * Reparent resource children of pr that conflict with res
+> - * under res, and make res replace those children.
+> - */
+> -static int reparent_resources(struct resource *parent,
+> -                                    struct resource *res)
+> -{
+> -       struct resource *p, **pp;
+> -       struct resource **firstpp = NULL;
+> -
+> -       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
+> -               if (p->end < res->start)
+> -                       continue;
+> -               if (res->end < p->start)
+> -                       break;
+> -               if (p->start < res->start || p->end > res->end)
+> -                       return -1;      /* not completely contained */
+> -               if (firstpp == NULL)
+> -                       firstpp = pp;
+> -       }
+> -       if (firstpp == NULL)
+> -               return -1;      /* didn't find any conflicting entries? */
+> -       res->parent = parent;
+> -       res->child = *firstpp;
+> -       res->sibling = *pp;
+> -       *firstpp = res;
+> -       *pp = NULL;
+> -       for (p = res->child; p != NULL; p = p->sibling) {
+> -               p->parent = res;
+> -               pr_debug("PCI: Reparented %s %pR under %s\n",
+> -                        p->name, p, res->name);
+> -       }
+> -       return 0;
+> -}
+> -
+> -/*
+>   *  Handle resources of PCI devices.  If the world were perfect, we could
+>   *  just allocate all the resource regions and do nothing more.  It isn't.
+>   *  On the other hand, we cannot just re-allocate all devices, as it would
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index da0ebaec25f0..dfdcd0bfe54e 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -192,6 +192,7 @@ extern int allocate_resource(struct resource *root, struct resource *new,
+>  struct resource *lookup_resource(struct resource *root, resource_size_t start);
+>  int adjust_resource(struct resource *res, resource_size_t start,
+>                     resource_size_t size);
+> +int reparent_resources(struct resource *parent, struct resource *res);
+>  resource_size_t resource_alignment(struct resource *res);
+>  static inline resource_size_t resource_size(const struct resource *res)
+>  {
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index 30e1bc68503b..d1cbf4b50e17 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -983,6 +983,45 @@ int adjust_resource(struct resource *res, resource_size_t start,
+>  }
+>  EXPORT_SYMBOL(adjust_resource);
+>
+> +/*
+
+/** ?
+
+> + * reparent_resources - reparent resource children of parent that res covers
+> + * @parent: parent resource descriptor
+> + * @res: resource descriptor desired by caller
+> + *
+> + * Reparent resource children of 'parent' that conflict with 'res'
+> + * under 'res', and make 'res' replace those children.
+
+Describe error codes, please.
+
+> + */
+> +int reparent_resources(struct resource *parent, struct resource *res)
+> +{
+> +       struct resource *p, **pp;
+> +       struct resource **firstpp = NULL;
+> +
+> +       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
+> +               if (p->end < res->start)
+> +                       continue;
+> +               if (res->end < p->start)
+> +                       break;
+> +               if (p->start < res->start || p->end > res->end)
+> +                       return -ENOTSUPP;       /* not completely contained */
+> +               if (firstpp == NULL)
+> +                       firstpp = pp;
+> +       }
+> +       if (firstpp == NULL)
+> +               return -ECANCELED; /* didn't find any conflicting entries? */
+> +       res->parent = parent;
+> +       res->child = *firstpp;
+> +       res->sibling = *pp;
+> +       *firstpp = res;
+> +       *pp = NULL;
+> +       for (p = res->child; p != NULL; p = p->sibling) {
+> +               p->parent = res;
+> +               pr_debug("PCI: Reparented %s %pR under %s\n",
+> +                        p->name, p, res->name);
+> +       }
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL(reparent_resources);
+> +
+>  static void __init __reserve_region_with_split(struct resource *root,
+>                 resource_size_t start, resource_size_t end,
+>                 const char *name)
+> --
+> 2.13.6
+>
+
+
+
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
 
 _______________________________________________
 kexec mailing list
