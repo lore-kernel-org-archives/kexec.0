@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1faZ9c-0007aO-OQ
- for kexec@lists.infradead.org; Wed, 04 Jul 2018 04:12:34 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v6 4/4] kexec_file: Load kernel at top of system RAM if
- required
-Date: Wed,  4 Jul 2018 12:10:38 +0800
-Message-Id: <20180704041038.8190-5-bhe@redhat.com>
-In-Reply-To: <20180704041038.8190-1-bhe@redhat.com>
-References: <20180704041038.8190-1-bhe@redhat.com>
+Subject: Re: panic kexec broken on ARM64?
+References: <20180605100151.7fd54381@ezekiel.suse.cz>
+ <8028219f-0d14-eafd-86b7-359ee927bcd3@arm.com>
+ <5e539510-01b7-ebc5-778e-b49a5261f9bc@i2se.com>
+ <2865150f-ebca-4c6b-fc4b-93bfab5f0e91@arm.com>
+ <86lgbm96dq.wl-marc.zyngier@arm.com> <20180703070106.GV23681@linaro.org>
+ <86601wzn3h.wl-marc.zyngier@arm.com> <20180704084123.GC28220@linaro.org>
+From: James Morse <james.morse@arm.com>
+Message-ID: <3df2d32d-867b-2237-d2a0-9fd6d7302eb3@arm.com>
+Date: Wed, 4 Jul 2018 13:47:11 +0100
+MIME-Version: 1.0
+In-Reply-To: <20180704084123.GC28220@linaro.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,60 +20,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, akpm@linux-foundation.org, robh+dt@kernel.org, dan.j.williams@intel.com, nicolas.pitre@linaro.org, josh@joshtriplett.org, fengguang.wu@intel.com, bp@suse.de, andy.shevchenko@gmail.com
-Cc: brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, kys@microsoft.com, frowand.list@gmail.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, dyoung@redhat.com, vgoyal@redhat.com, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, jglisse@redhat.com, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, ebiederm@xmission.com, devel@linuxdriverproject.org, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
+To: "takahiro.akashi@linaro.org" <takahiro.akashi@linaro.org>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, Matthias Brugger <mbrugger@suse.com>, Marc Zyngier <marc.zyngier@arm.com>, kexec mailing list <kexec@lists.infradead.org>, Petr Tesarik <ptesarik@suse.cz>, linux-arm-kernel@lists.infradead.org
 
-For kexec_file loading, if kexec_buf.top_down is 'true', the memory which
-is used to load kernel/initrd/purgatory is supposed to be allocated from
-top to down. This is what we have been doing all along in the old kexec
-loading interface and the kexec loading is still default setting in some
-distributions. However, the current kexec_file loading interface doesn't
-do likt this. The function arch_kexec_walk_mem() it calls ignores checking
-kexec_buf.top_down, but calls walk_system_ram_res() directly to go through
-all resources of System RAM from bottom to up, to try to find memory region
-which can contain the specific kexec buffer, then call locate_mem_hole_callback()
-to allocate memory in that found memory region from top to down. This brings
-confusion especially when KASLR is widely supported , users have to make clear
-why kexec/kdump kernel loading position is different between these two
-interfaces in order to exclude unnecessary noises. Hence these two interfaces
-need be unified on behaviour.
+Hi Akashi,
 
-Here add checking if kexec_buf.top_down is 'true' in arch_kexec_walk_mem(),
-if yes, call the newly added walk_system_ram_res_rev() to find memory region
-from top to down to load kernel.
+On 04/07/18 09:41, takahiro.akashi@linaro.org wrote:
+> On Tue, Jul 03, 2018 at 09:58:44AM +0100, Marc Zyngier wrote:
+>> On 03/07/18 08:01, takahiro.akashi@linaro.org wrote:
+>>> On Sun, Jun 10, 2018 at 01:24:17PM +0100, Marc Zyngier wrote:
+>>>> On Wed, 06 Jun 2018 12:37:02 +0100 James Morse wrote:,
+>>>>> Bingo: its the lan78xx driver that is sleeping from the irqchip
+>>>>> callbacks; The smsc95xx driver doesn't have a struct irq_chip, which
+>>>>> is why the RPi-3-B doesn't do this.
+>>>>>
+>>>>> It may be valid for kdump to only teardown the 'root irqdomain' (if
+>>>>> that even means anything). I assume these secondary irqchip's would
+>>>>> have a summary-interrupt that goes to another irqchip. But I can't
+>>>>> see a way to tell them apart..,
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yinghai Lu <yinghai@kernel.org>
-Cc: kexec@lists.infradead.org
----
- kernel/kexec_file.c | 2 ++
- 1 file changed, 2 insertions(+)
+>>>> Overall, I can't think of an easy fix. We have a few options, but none
+>>>> of them involve a centralised change:
+>>>>
+>>>> 1) We provide a reset infrastructure for irqchips, with an opt-in
+>>>>    mechanism. This involves changing the way we teardown irqs at
+>>>>    crash-time, and we'd then need some notion of reset ordering (think
+>>>>    of the layered ITS and GICv3, for example).
+>>>
+>>> Does this mean that all the irqchips have to be implemented with reset?
+>>
+>> No. Only those that want to be reset at kexec time.
+> 
+> I don't get the point yet.
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index c6a3b6851372..75226c1d08ce 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -518,6 +518,8 @@ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
- 					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
- 					   crashk_res.start, crashk_res.end,
- 					   kbuf, func);
-+	else if (kbuf->top_down)
-+		return walk_system_ram_res_rev(0, ULONG_MAX, kbuf, func);
- 	else
- 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
- }
--- 
-2.13.6
+(this stuff is new to me, below terminology is probably wrong:)
 
+It seems there is actually a tree of irqchips, which feed interrupts through the
+tree via some summary-interrupt.
+The problem is one of these later-irqchips is on the other end of the USB bus,
+and requires a fair amount of sleeping in order to reset it.
+
+The trick is everything comes through the root irqchip. So we can reset that to
+disable all the other interrupts in this tree.
+
+This only works until the new kernel re-enables the summary-interrupt, it needs
+to reset the irqchip that the summary-interrupt leads to first.
+
+(I assume shared summary-interrupts are somehow forbidden).
+
+
+> Who should have reset interface?
+> What is the criteria?
+
+(reset-interface -> be reset at kdump time)
+
+Just the root irchip that all interrupts have to come through.
+
+
+Thanks,
+
+James
 
 _______________________________________________
 kexec mailing list
