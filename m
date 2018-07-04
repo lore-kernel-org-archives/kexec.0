@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1faZ8d-0006kH-SX
- for kexec@lists.infradead.org; Wed, 04 Jul 2018 04:11:42 +0000
+ id 1faZ9K-0007K1-0R
+ for kexec@lists.infradead.org; Wed, 04 Jul 2018 04:12:16 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v6 1/4] resource: Move reparent_resources() to
- kernel/resource.c and make it public
-Date: Wed,  4 Jul 2018 12:10:35 +0800
-Message-Id: <20180704041038.8190-2-bhe@redhat.com>
+Subject: [PATCH v6 3/4] resource: add walk_system_ram_res_rev()
+Date: Wed,  4 Jul 2018 12:10:37 +0800
+Message-Id: <20180704041038.8190-4-bhe@redhat.com>
 In-Reply-To: <20180704041038.8190-1-bhe@redhat.com>
 References: <20180704041038.8190-1-bhe@redhat.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,187 +18,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, akpm@linux-foundation.org, robh+dt@kernel.org, dan.j.williams@intel.com, nicolas.pitre@linaro.org, josh@joshtriplett.org, fengguang.wu@intel.com, bp@suse.de, andy.shevchenko@gmail.com
 Cc: brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, kys@microsoft.com, frowand.list@gmail.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, dyoung@redhat.com, vgoyal@redhat.com, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, jglisse@redhat.com, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, ebiederm@xmission.com, devel@linuxdriverproject.org, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
 
-reparent_resources() is duplicated in arch/microblaze/pci/pci-common.c
-and arch/powerpc/kernel/pci-common.c, so move it to kernel/resource.c
-so that it's shared.
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- arch/microblaze/pci/pci-common.c | 37 -------------------------------------
- arch/powerpc/kernel/pci-common.c | 35 -----------------------------------
- include/linux/ioport.h           |  1 +
- kernel/resource.c                | 39 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 40 insertions(+), 72 deletions(-)
-
-diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-index f34346d56095..7899bafab064 100644
---- a/arch/microblaze/pci/pci-common.c
-+++ b/arch/microblaze/pci/pci-common.c
-@@ -619,43 +619,6 @@ int pcibios_add_device(struct pci_dev *dev)
- EXPORT_SYMBOL(pcibios_add_device);
- 
- /*
-- * Reparent resource children of pr that conflict with res
-- * under res, and make res replace those children.
-- */
--static int __init reparent_resources(struct resource *parent,
--				     struct resource *res)
--{
--	struct resource *p, **pp;
--	struct resource **firstpp = NULL;
--
--	for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
--		if (p->end < res->start)
--			continue;
--		if (res->end < p->start)
--			break;
--		if (p->start < res->start || p->end > res->end)
--			return -1;	/* not completely contained */
--		if (firstpp == NULL)
--			firstpp = pp;
--	}
--	if (firstpp == NULL)
--		return -1;	/* didn't find any conflicting entries? */
--	res->parent = parent;
--	res->child = *firstpp;
--	res->sibling = *pp;
--	*firstpp = res;
--	*pp = NULL;
--	for (p = res->child; p != NULL; p = p->sibling) {
--		p->parent = res;
--		pr_debug("PCI: Reparented %s [%llx..%llx] under %s\n",
--			 p->name,
--			 (unsigned long long)p->start,
--			 (unsigned long long)p->end, res->name);
--	}
--	return 0;
--}
--
--/*
-  *  Handle resources of PCI devices.  If the world were perfect, we could
-  *  just allocate all the resource regions and do nothing more.  It isn't.
-  *  On the other hand, we cannot just re-allocate all devices, as it would
-diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-index fe9733ffffaa..926035bb378d 100644
---- a/arch/powerpc/kernel/pci-common.c
-+++ b/arch/powerpc/kernel/pci-common.c
-@@ -1088,41 +1088,6 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
- EXPORT_SYMBOL(pcibios_align_resource);
- 
- /*
-- * Reparent resource children of pr that conflict with res
-- * under res, and make res replace those children.
-- */
--static int reparent_resources(struct resource *parent,
--				     struct resource *res)
--{
--	struct resource *p, **pp;
--	struct resource **firstpp = NULL;
--
--	for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
--		if (p->end < res->start)
--			continue;
--		if (res->end < p->start)
--			break;
--		if (p->start < res->start || p->end > res->end)
--			return -1;	/* not completely contained */
--		if (firstpp == NULL)
--			firstpp = pp;
--	}
--	if (firstpp == NULL)
--		return -1;	/* didn't find any conflicting entries? */
--	res->parent = parent;
--	res->child = *firstpp;
--	res->sibling = *pp;
--	*firstpp = res;
--	*pp = NULL;
--	for (p = res->child; p != NULL; p = p->sibling) {
--		p->parent = res;
--		pr_debug("PCI: Reparented %s %pR under %s\n",
--			 p->name, p, res->name);
--	}
--	return 0;
--}
--
--/*
-  *  Handle resources of PCI devices.  If the world were perfect, we could
-  *  just allocate all the resource regions and do nothing more.  It isn't.
-  *  On the other hand, we cannot just re-allocate all devices, as it would
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index da0ebaec25f0..dfdcd0bfe54e 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -192,6 +192,7 @@ extern int allocate_resource(struct resource *root, struct resource *new,
- struct resource *lookup_resource(struct resource *root, resource_size_t start);
- int adjust_resource(struct resource *res, resource_size_t start,
- 		    resource_size_t size);
-+int reparent_resources(struct resource *parent, struct resource *res);
- resource_size_t resource_alignment(struct resource *res);
- static inline resource_size_t resource_size(const struct resource *res)
- {
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 30e1bc68503b..d1cbf4b50e17 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -983,6 +983,45 @@ int adjust_resource(struct resource *res, resource_size_t start,
- }
- EXPORT_SYMBOL(adjust_resource);
- 
-+/*
-+ * reparent_resources - reparent resource children of parent that res covers
-+ * @parent: parent resource descriptor
-+ * @res: resource descriptor desired by caller
-+ *
-+ * Reparent resource children of 'parent' that conflict with 'res'
-+ * under 'res', and make 'res' replace those children.
-+ */
-+int reparent_resources(struct resource *parent, struct resource *res)
-+{
-+	struct resource *p, **pp;
-+	struct resource **firstpp = NULL;
-+
-+	for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
-+		if (p->end < res->start)
-+			continue;
-+		if (res->end < p->start)
-+			break;
-+		if (p->start < res->start || p->end > res->end)
-+			return -ENOTSUPP;	/* not completely contained */
-+		if (firstpp == NULL)
-+			firstpp = pp;
-+	}
-+	if (firstpp == NULL)
-+		return -ECANCELED; /* didn't find any conflicting entries? */
-+	res->parent = parent;
-+	res->child = *firstpp;
-+	res->sibling = *pp;
-+	*firstpp = res;
-+	*pp = NULL;
-+	for (p = res->child; p != NULL; p = p->sibling) {
-+		p->parent = res;
-+		pr_debug("PCI: Reparented %s %pR under %s\n",
-+			 p->name, p, res->name);
-+	}
-+	return 0;
-+}
-+EXPORT_SYMBOL(reparent_resources);
-+
- static void __init __reserve_region_with_split(struct resource *root,
- 		resource_size_t start, resource_size_t end,
- 		const char *name)
--- 
-2.13.6
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+VGhpcyBmdW5jdGlvbiwgYmVpbmcgYSB2YXJpYW50IG9mIHdhbGtfc3lzdGVtX3JhbV9yZXMoKSBp
+bnRyb2R1Y2VkIGluCmNvbW1pdCA4Yzg2ZTcwYWNlYWQgKCJyZXNvdXJjZTogcHJvdmlkZSBuZXcg
+ZnVuY3Rpb25zIHRvIHdhbGsgdGhyb3VnaApyZXNvdXJjZXMiKSwgd2Fsa3MgdGhyb3VnaCBhIGxp
+c3Qgb2YgYWxsIHRoZSByZXNvdXJjZXMgb2YgU3lzdGVtIFJBTQppbiByZXZlcnNlZCBvcmRlciwg
+aS5lLiwgZnJvbSBoaWdoZXIgdG8gbG93ZXIuCgpJdCB3aWxsIGJlIHVzZWQgaW4ga2V4ZWNfZmls
+ZSBjb2RlLgoKU2lnbmVkLW9mZi1ieTogQmFvcXVhbiBIZSA8YmhlQHJlZGhhdC5jb20+CkNjOiBB
+bmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPgpDYzogVGhvbWFzIEdsZWl4
+bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+CkNjOiBCcmlqZXNoIFNpbmdoIDxicmlqZXNoLnNpbmdo
+QGFtZC5jb20+CkNjOiAiSsOpcsO0bWUgR2xpc3NlIiA8amdsaXNzZUByZWRoYXQuY29tPgpDYzog
+Qm9yaXNsYXYgUGV0a292IDxicEBzdXNlLmRlPgpDYzogVG9tIExlbmRhY2t5IDx0aG9tYXMubGVu
+ZGFja3lAYW1kLmNvbT4KQ2M6IFdlaSBZYW5nIDxyaWNoYXJkLndlaXlhbmdAZ21haWwuY29tPgot
+LS0KIGluY2x1ZGUvbGludXgvaW9wb3J0LmggfCAgMyArKysKIGtlcm5lbC9yZXNvdXJjZS5jICAg
+ICAgfCA0MCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAyIGZpbGVz
+IGNoYW5nZWQsIDQzIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2lv
+cG9ydC5oIGIvaW5jbHVkZS9saW51eC9pb3BvcnQuaAppbmRleCBiNzQ1NmFlODg5ZGQuLjA2NmNj
+MjYzZTJjYyAxMDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9pb3BvcnQuaAorKysgYi9pbmNsdWRl
+L2xpbnV4L2lvcG9ydC5oCkBAIC0yNzksNiArMjc5LDkgQEAgZXh0ZXJuIGludAogd2Fsa19zeXN0
+ZW1fcmFtX3Jlcyh1NjQgc3RhcnQsIHU2NCBlbmQsIHZvaWQgKmFyZywKIAkJICAgIGludCAoKmZ1
+bmMpKHN0cnVjdCByZXNvdXJjZSAqLCB2b2lkICopKTsKIGV4dGVybiBpbnQKK3dhbGtfc3lzdGVt
+X3JhbV9yZXNfcmV2KHU2NCBzdGFydCwgdTY0IGVuZCwgdm9pZCAqYXJnLAorCQkJaW50ICgqZnVu
+Yykoc3RydWN0IHJlc291cmNlICosIHZvaWQgKikpOworZXh0ZXJuIGludAogd2Fsa19pb21lbV9y
+ZXNfZGVzYyh1bnNpZ25lZCBsb25nIGRlc2MsIHVuc2lnbmVkIGxvbmcgZmxhZ3MsIHU2NCBzdGFy
+dCwgdTY0IGVuZCwKIAkJICAgIHZvaWQgKmFyZywgaW50ICgqZnVuYykoc3RydWN0IHJlc291cmNl
+ICosIHZvaWQgKikpOwogCmRpZmYgLS1naXQgYS9rZXJuZWwvcmVzb3VyY2UuYyBiL2tlcm5lbC9y
+ZXNvdXJjZS5jCmluZGV4IDZkNjQ3YTM4MjRiMS4uNGM1ZmJlZjRlYTI0IDEwMDY0NAotLS0gYS9r
+ZXJuZWwvcmVzb3VyY2UuYworKysgYi9rZXJuZWwvcmVzb3VyY2UuYwpAQCAtMjMsNiArMjMsOCBA
+QAogI2luY2x1ZGUgPGxpbnV4L3Bmbi5oPgogI2luY2x1ZGUgPGxpbnV4L21tLmg+CiAjaW5jbHVk
+ZSA8bGludXgvcmVzb3VyY2VfZXh0Lmg+CisjaW5jbHVkZSA8bGludXgvc3RyaW5nLmg+CisjaW5j
+bHVkZSA8bGludXgvdm1hbGxvYy5oPgogI2luY2x1ZGUgPGFzbS9pby5oPgogCiAKQEAgLTQ0Myw2
+ICs0NDUsNDQgQEAgaW50IHdhbGtfc3lzdGVtX3JhbV9yZXModTY0IHN0YXJ0LCB1NjQgZW5kLCB2
+b2lkICphcmcsCiB9CiAKIC8qCisgKiBUaGlzIGZ1bmN0aW9uLCBiZWluZyBhIHZhcmlhbnQgb2Yg
+d2Fsa19zeXN0ZW1fcmFtX3JlcygpLCBjYWxscyB0aGUgQGZ1bmMKKyAqIGNhbGxiYWNrIGFnYWlu
+c3QgYWxsIG1lbW9yeSByYW5nZXMgb2YgdHlwZSBTeXN0ZW0gUkFNIHdoaWNoIGFyZSBtYXJrZWQg
+YXMKKyAqIElPUkVTT1VSQ0VfU1lTVEVNX1JBTSBhbmQgSU9SRVNPVUNFX0JVU1kgaW4gcmV2ZXJz
+ZWQgb3JkZXIsIGkuZS4sIGZyb20KKyAqIGhpZ2hlciB0byBsb3dlci4KKyAqLworaW50IHdhbGtf
+c3lzdGVtX3JhbV9yZXNfcmV2KHU2NCBzdGFydCwgdTY0IGVuZCwgdm9pZCAqYXJnLAorCQkJCWlu
+dCAoKmZ1bmMpKHN0cnVjdCByZXNvdXJjZSAqLCB2b2lkICopKQoreworCXVuc2lnbmVkIGxvbmcg
+ZmxhZ3M7CisJc3RydWN0IHJlc291cmNlICpyZXM7CisJaW50IHJldCA9IC0xOworCisJZmxhZ3Mg
+PSBJT1JFU09VUkNFX1NZU1RFTV9SQU0gfCBJT1JFU09VUkNFX0JVU1k7CisKKwlyZWFkX2xvY2so
+JnJlc291cmNlX2xvY2spOworCWxpc3RfZm9yX2VhY2hfZW50cnlfcmV2ZXJzZShyZXMsICZpb21l
+bV9yZXNvdXJjZS5jaGlsZCwgc2libGluZykgeworCQlpZiAoc3RhcnQgPj0gZW5kKQorCQkJYnJl
+YWs7CisJCWlmICgocmVzLT5mbGFncyAmIGZsYWdzKSAhPSBmbGFncykKKwkJCWNvbnRpbnVlOwor
+CQlpZiAocmVzLT5kZXNjICE9IElPUkVTX0RFU0NfTk9ORSkKKwkJCWNvbnRpbnVlOworCQlpZiAo
+cmVzLT5lbmQgPCBzdGFydCkKKwkJCWJyZWFrOworCisJCWlmICgocmVzLT5lbmQgPj0gc3RhcnQp
+ICYmIChyZXMtPnN0YXJ0IDwgZW5kKSkgeworCQkJcmV0ID0gKCpmdW5jKShyZXMsIGFyZyk7CisJ
+CQlpZiAocmV0KQorCQkJCWJyZWFrOworCQl9CisJCWVuZCA9IHJlcy0+c3RhcnQgLSAxOworCisJ
+fQorCXJlYWRfdW5sb2NrKCZyZXNvdXJjZV9sb2NrKTsKKwlyZXR1cm4gcmV0OworfQorCisvKgog
+ICogVGhpcyBmdW5jdGlvbiBjYWxscyB0aGUgQGZ1bmMgY2FsbGJhY2sgYWdhaW5zdCBhbGwgbWVt
+b3J5IHJhbmdlcywgd2hpY2gKICAqIGFyZSByYW5nZXMgbWFya2VkIGFzIElPUkVTT1VSQ0VfTUVN
+IGFuZCBJT1JFU09VQ0VfQlVTWS4KICAqLwotLSAKMi4xMy42CgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
+c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9rZXhlYwo=
