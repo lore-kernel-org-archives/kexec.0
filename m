@@ -1,24 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1faZFk-0001kN-PU
- for kexec@lists.infradead.org; Wed, 04 Jul 2018 04:18:54 +0000
-Date: Wed, 4 Jul 2018 12:18:34 +0800
+ id 1faZ9c-0007aO-OQ
+ for kexec@lists.infradead.org; Wed, 04 Jul 2018 04:12:34 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v5 1/4] resource: Move reparent_resources() to
- kernel/resource.c and make it public
-Message-ID: <20180704041834.GA2762@MiWiFi-R3L-srv>
-References: <20180612032831.29747-1-bhe@redhat.com>
- <20180612032831.29747-2-bhe@redhat.com>
- <CAHp75Vd6v4+RTq-5uw_BJpT6=w2KGjTfU+rEst6+8igs2cyntw@mail.gmail.com>
- <20180612093812.GC1820@MiWiFi-R3L-srv>
- <CAHp75Vf_kBLkE6v=JyOdfNoWktWEfKs7JzRP1XEc4TeuT5xqfw@mail.gmail.com>
- <CAHp75Vdaqj+n=F7wSB9PFGpf9Ok2XZzKcq_H0DzmtjmN-4UUfw@mail.gmail.com>
- <20180703145503.GA1225@MiWiFi-R3L-srv>
- <CAHp75VeEjhcYF4Fy4O_srdv_nEGGjGwAHhZufscB_tiLQVQ=FQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeEjhcYF4Fy4O_srdv_nEGGjGwAHhZufscB_tiLQVQ=FQ@mail.gmail.com>
+Subject: [PATCH v6 4/4] kexec_file: Load kernel at top of system RAM if
+ required
+Date: Wed,  4 Jul 2018 12:10:38 +0800
+Message-Id: <20180704041038.8190-5-bhe@redhat.com>
+In-Reply-To: <20180704041038.8190-1-bhe@redhat.com>
+References: <20180704041038.8190-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,58 +18,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, brijesh.singh@amd.com, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, Keith Busch <keith.busch@intel.com>, Max Filippov <jcmvbkbc@gmail.com>, Paul Mackerras <paulus@samba.org>, baiyaowei@cmss.chinamobile.com, KY Srinivasan <kys@microsoft.com>, Frank Rowand <frowand.list@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Hemminger <sthemmin@microsoft.com>, linux-nvdimm@lists.01.org, Michael Ellerman <mpe@ellerman.id.au>, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, linux-input <linux-input@vger.kernel.org>, Gustavo Padovan <gustavo@padovan.org>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Tom Lendacky <thomas.lendacky@amd.com>, Haiyang Zhang <haiyangz@microsoft.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Yinghai Lu <yinghai@kernel.org>, Jon Derrick <jonathan.derrick@intel.com>, Chris Zankel <chris@zankel.net>, Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Eric Biederman <ebiederm@xmission.com>, devel@linuxdriverproject.org, Andrew Morton <akpm@linux-foundation.org>, kbuild test robot <fengguang.wu@intel.com>, "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" <linuxppc-dev@lists.ozlabs.org>, "David S. Miller" <davem@davemloft.net>
+To: linux-kernel@vger.kernel.org, akpm@linux-foundation.org, robh+dt@kernel.org, dan.j.williams@intel.com, nicolas.pitre@linaro.org, josh@joshtriplett.org, fengguang.wu@intel.com, bp@suse.de, andy.shevchenko@gmail.com
+Cc: brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, kys@microsoft.com, frowand.list@gmail.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, dyoung@redhat.com, vgoyal@redhat.com, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, jglisse@redhat.com, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, ebiederm@xmission.com, devel@linuxdriverproject.org, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
 
-On 07/03/18 at 11:57pm, Andy Shevchenko wrote:
-> On Tue, Jul 3, 2018 at 5:55 PM, Baoquan He <bhe@redhat.com> wrote:
-> > On 06/12/18 at 05:24pm, Andy Shevchenko wrote:
-> >> On Tue, Jun 12, 2018 at 5:20 PM, Andy Shevchenko
-> >> <andy.shevchenko@gmail.com> wrote:
-> 
-> >> > I briefly looked at the code and error codes we have, so, my proposal
-> >> > is one of the following
-> >>
-> >> >  - use -ECANCELED (not the best choice for first occurrence here,
-> >> > though I can't find better)
-> >>
-> >> Actually -ENOTSUPP might suit the first case (although the actual
-> >> would be something like -EOVERLAP, which we don't have)
-> >
-> > Sorry for late reply, and many thanks for your great suggestion.
-> >
-> 
-> > I am fine to use -ENOTSUPP as the first returned value, and -ECANCELED
-> > for the 2nd one.
-> 
-> I have no strong opinion, but I like (slightly better) this approach ^^^
+For kexec_file loading, if kexec_buf.top_down is 'true', the memory which
+is used to load kernel/initrd/purgatory is supposed to be allocated from
+top to down. This is what we have been doing all along in the old kexec
+loading interface and the kexec loading is still default setting in some
+distributions. However, the current kexec_file loading interface doesn't
+do likt this. The function arch_kexec_walk_mem() it calls ignores checking
+kexec_buf.top_down, but calls walk_system_ram_res() directly to go through
+all resources of System RAM from bottom to up, to try to find memory region
+which can contain the specific kexec buffer, then call locate_mem_hole_callback()
+to allocate memory in that found memory region from top to down. This brings
+confusion especially when KASLR is widely supported , users have to make clear
+why kexec/kdump kernel loading position is different between these two
+interfaces in order to exclude unnecessary noises. Hence these two interfaces
+need be unified on behaviour.
 
-Done, post v6 in this way, many thanks.
+Here add checking if kexec_buf.top_down is 'true' in arch_kexec_walk_mem(),
+if yes, call the newly added walk_system_ram_res_rev() to find memory region
+from top to down to load kernel.
 
-> 
-> > Or define an enum as you suggested inside the function
-> > or in header file.
-> 
-> >
-> > Or use -EBUSY for the first case because existing resource is
-> > overlapping but not fully contained by 'res'; and -EINVAL for
-> > the 2nd case since didn't find any one resources which is contained by
-> > 'res', means we passed in a invalid resource.
-> >
-> > All is fine to me, I can repost with each of them.
-> 
-> >> >  - use positive integers (or enum), like
-> >> >   #define RES_REPARENTED 0
-> >> >   #define RES_OVERLAPPED 1
-> >> >   #define RES_NOCONFLICT 2
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yinghai Lu <yinghai@kernel.org>
+Cc: kexec@lists.infradead.org
+---
+ kernel/kexec_file.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index c6a3b6851372..75226c1d08ce 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -518,6 +518,8 @@ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+ 					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+ 					   crashk_res.start, crashk_res.end,
+ 					   kbuf, func);
++	else if (kbuf->top_down)
++		return walk_system_ram_res_rev(0, ULONG_MAX, kbuf, func);
+ 	else
+ 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
+ }
+-- 
+2.13.6
+
 
 _______________________________________________
 kexec mailing list
