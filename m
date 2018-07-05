@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: panic kexec broken on ARM64?
-References: <20180605100151.7fd54381@ezekiel.suse.cz>
- <8028219f-0d14-eafd-86b7-359ee927bcd3@arm.com>
- <5e539510-01b7-ebc5-778e-b49a5261f9bc@i2se.com>
- <2865150f-ebca-4c6b-fc4b-93bfab5f0e91@arm.com>
- <86lgbm96dq.wl-marc.zyngier@arm.com> <20180703070106.GV23681@linaro.org>
- <86601wzn3h.wl-marc.zyngier@arm.com> <20180704084123.GC28220@linaro.org>
- <23306e9e-fec6-298d-af2d-018f63b06ab1@arm.com>
- <20180705101326.GM28220@linaro.org>
-From: Marc Zyngier <marc.zyngier@arm.com>
-Message-ID: <a95ec854-ff32-c808-befe-b2db112f6c1e@arm.com>
-Date: Thu, 5 Jul 2018 11:19:43 +0100
+Subject: Re: [PATCH v2 3/4] efi/arm: map UEFI memory map earlier on boot
+References: <20180619064424.6642-1-takahiro.akashi@linaro.org>
+ <20180619064424.6642-4-takahiro.akashi@linaro.org>
+ <20180704170655.GD8370@arm.com>
+ <CAKv+Gu9_rYYyQ+t89otz46DR0D4GDj-cCjhx9q=p+D8LWFRkgQ@mail.gmail.com>
+ <20180705094313.GL28220@linaro.org>
+From: James Morse <james.morse@arm.com>
+Message-ID: <ec1a5f0f-99e3-fda1-9a64-5c2539817190@arm.com>
+Date: Thu, 5 Jul 2018 12:02:15 +0100
 MIME-Version: 1.0
-In-Reply-To: <20180705101326.GM28220@linaro.org>
-Content-Language: en-GB
+In-Reply-To: <20180705094313.GL28220@linaro.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,130 +23,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "takahiro.akashi@linaro.org" <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Stefan Wahren <stefan.wahren@i2se.com>, Petr Tesarik <ptesarik@suse.cz>, Matthias Brugger <mbrugger@suse.com>, kexec mailing list <kexec@lists.infradead.org>, linux-arm-kernel@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, "Baicar, Tyler" <tbaicar@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Hanjun Guo <hanjun.guo@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-On 05/07/18 11:13, takahiro.akashi@linaro.org wrote:
-> On Wed, Jul 04, 2018 at 10:02:24AM +0100, Marc Zyngier wrote:
->> On 04/07/18 09:41, takahiro.akashi@linaro.org wrote:
->>> On Tue, Jul 03, 2018 at 09:58:44AM +0100, Marc Zyngier wrote:
->>>> On 03/07/18 08:01, takahiro.akashi@linaro.org wrote:
->>>>> Marc, James,
->>>>>
->>>>> I'd like to re-ignite the discussion.
->>>>>
->>>>> On Sun, Jun 10, 2018 at 01:24:17PM +0100, Marc Zyngier wrote:
->>>>>> On Wed, 06 Jun 2018 12:37:02 +0100,
->>>>>> James Morse wrote:
->>>>>>>
->>>>>>> Hi Stefan,
->>>>>>>
->>>>>>> On 06/06/18 08:02, Stefan Wahren wrote:
->>>>>>>> Am 05.06.2018 um 19:46 schrieb James Morse:
->>>>>>>>> On 05/06/18 09:01, Petr Tesarik wrote:
->>>>>>>>>> I attached a hardware debugger and found
->>>>>>>>>> out that all CPU cores were stopped except one which was stuck in the
->>>>>>>>>> idle thread. It seems that irq_set_irqchip_state() may sleep, which is
->>>>>>>>>> definitely not safe after a kernel panic.
->>>>>>>
->>>>>>>>> I don't know much about irqchip stuff, but __irq_get_desc_lock() takes a
->>>>>>>>> raw_spin_lock(), and calls gic_irq_get_irqchip_state() which is just poking
->>>>>>>>> around in mmio registers, this should all be safe unless you re-entered the same
->>>>>>>>> code.
->>>>>>>
->>>>>>>>>> If I'm right, then this is broken in general, but I have only ever seen
->>>>>>>>>> it on RPi 3 Model B+ (even RPi3 Model B works fine), so the issue may
->>>>>>>>>> be more subtle.
->>>>>>>
->>>>>>>>> Is there a hardware difference around the interrupt controller on these?
->>>>>>>
->>>>>>>> No, but the RPi 3 B has a different USB network chip on board (smsc95xx, Fast
->>>>>>>> ethernet) instead of lan78xx (Gigabit ethernet).
->>>>>>>
->>>>>>> Bingo: its the lan78xx driver that is sleeping from the irqchip
->>>>>>> callbacks; The smsc95xx driver doesn't have a struct irq_chip, which
->>>>>>> is why the RPi-3-B doesn't do this.
->>>>>>>
->>>>>>> It may be valid for kdump to only teardown the 'root irqdomain' (if
->>>>>>> that even means anything). I assume these secondary irqchip's would
->>>>>>> have a summary-interrupt that goes to another irqchip. But I can't
->>>>>>> see a way to tell them apart..,
->>>>>>
->>>>>> There is none. A cascaded irqchip is just like a root irqchip, just
->>>>>> that its output line is connected to another irqchip. But we have no
->>>>>> easy way to identify the parent. Also, this particular driver looks
->>>>>> quite creative (it reinvents the wheel for chained interrupts -- see
->>>>>> intr_complete and lan78xx_status), meaning that even if we could have
->>>>>> a magic way of identify a chained irqchip, we'd miss that one. Broken.
->>>>>>
->>>>>>> I think we need to wait until after the merge window for Marc's
->>>>>>> wisdom on this!
->>>>>>
->>>>>> Overall, I can't think of an easy fix. We have a few options, but none
->>>>>> of them involve a centralised change:
->>>>>>
->>>>>> 1) We provide a reset infrastructure for irqchips, with an opt-in
->>>>>>    mechanism. This involves changing the way we teardown irqs at
->>>>>>    crash-time, and we'd then need some notion of reset ordering (think
->>>>>>    of the layered ITS and GICv3, for example).
->>>>>
->>>>> Does this mean that all the irqchips have to be implemented with reset?
+Hi Akashi,
+
+On 05/07/18 10:43, AKASHI Takahiro wrote:
+> On Wed, Jul 04, 2018 at 08:49:32PM +0200, Ard Biesheuvel wrote:
+>> On 4 July 2018 at 19:06, Will Deacon <will.deacon@arm.com> wrote:
+>>> On Tue, Jun 19, 2018 at 03:44:23PM +0900, AKASHI Takahiro wrote:
+>>>> Since arm_enter_runtime_services() was modified to always create a virtual
+>>>> mapping of UEFI memory map in the previous patch, it is now renamed to
+>>>> efi_enter_virtual_mode() and called earlier before acpi_load_tables()
+>>>> in acpi_early_init().
 >>>>
->>>> No. Only those that want to be reset at kexec time.
->>>
->>> I don't get the point yet. Who should have reset interface?
->>> What is the criteria?
+>>>> This will allow us to use UEFI memory map in acpi_os_ioremap() to create
+>>>> mappings of ACPI tables using memory attributes described in UEFI memory
+>>>> map.
+
+>>> Hmm, this is ugly as hell. Is there nothing else we can piggy-back off?
+>>> It's also fairly jarring that, on x86, efi_enter_virtual_mode() is called
+>>> a few lines later, *after* acpi_early_init() has been called.
+
+>> Currently, there is a gap where we have already torn down the early
+>> mapping and haven't created the definitive mapping of the UEFI memory
+>> map. There are other reasons why this is an issue, and I recently
+>> proposed [0] myself to address one of them
+
+>> Akashi-san, could you please confirm whether the patch below would be
+>> sufficient for you? Apologies for going back and forth on this, but I
+>> agree with Will that we should try to avoid warts like the one above
+>> in generic code.
 >>
->> The criteria is "this irqchip requires a reset to be safely used in the
->> secondary kernel". This is a judgement call from the person writing the
->> driver.
+>> [0] https://marc.info/?l=linux-efi&m=152930773507524&w=2
 > 
-> This doesn't tell me anything more than "do it if you need it."
-> So let me ask you in other words.
-> Does gic driver need to provide a reset function?
-> Whether yes or no, why do you think so?
+> I think that this patch will also work.
+> Please drop my patch#2 and #3 if you want to pick up my patchset, Will.
 
-Because I know the architecture and I can assess that it needs it. Case
-in point: The RDs have memory tables. kexec without disabling LPIs, and
-you end-up with memory corruption.
+Patch 2 is what changes arm_enable_runtime_services() to map the efi memory map
+before bailing out due to efi=noruntime.
 
-Sorry, but there is no magic bullet. You have to understand what you're
-doing.
+Without it, 'efi=noruntime' means no-acpi-tables.
 
-> 
->>
->>>
->>>>>>
->>>>>> 2) We provide a way to identify interrupts that are ultimately backed
->>>>>>    by a root controller, which implies walking down the hierarchy for
->>>>>
->>>>> To be clear, from bottom to top (or root), right?
->>>>
->>>> I'm not sure I understand your question. The idea is to walk the
->>>> irq_data chain, until we hit a root irqchip. If we do hit one, we
->>>> deactivate/eoi/disable this interrupt. If we don't, we do nothing.
->>>
->>> I thought that we would traverse the (chained irq) hierarchy from
->>> bottom to top and call deactivate or others in that order.
->>> Am I wrong here?
->>
->> You *cannot* traverse a hierarchy through a chained irq. At that stage,
->> irq_data->parent_data is NULL.
-> 
-> What do you mean by "at that stage?"
 
-At the point you reach a secondary interrupt controller that exposese a
-chained IRQ.
+Thanks,
 
-> In your patch, "genirq: Add predicate for irq served by root irqchip,"
-> irq_irqchip_is_root() dereferences its parent_data.
-
-And? Hierarchies and chained controllers are two orthogonal concepts.
-You can have a hierarchy on top of a chained controller, and that
-doesn't make it a root controller.
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+James
 
 _______________________________________________
 kexec mailing list
