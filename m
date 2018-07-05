@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fb1D6-0001Ci-CN
- for kexec@lists.infradead.org; Thu, 05 Jul 2018 10:10:02 +0000
-Date: Thu, 5 Jul 2018 18:09:39 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v6 1/4] resource: Move reparent_resources() to
- kernel/resource.c and make it public
-Message-ID: <20180705100939.GD1225@MiWiFi-R3L-srv>
-References: <20180704041038.8190-1-bhe@redhat.com>
- <20180704041038.8190-2-bhe@redhat.com>
- <CAHp75VfWLcQq4XGM3RyfO_ENx=3=WrCEhtOw+a0Sfwz_OpQ0UQ@mail.gmail.com>
+Date: Thu, 5 Jul 2018 17:48:24 +0100
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v2 3/4] efi/arm: map UEFI memory map earlier on boot
+Message-ID: <20180705164824.GA7445@arm.com>
+References: <20180619064424.6642-1-takahiro.akashi@linaro.org>
+ <20180619064424.6642-4-takahiro.akashi@linaro.org>
+ <20180704170655.GD8370@arm.com>
+ <CAKv+Gu9_rYYyQ+t89otz46DR0D4GDj-cCjhx9q=p+D8LWFRkgQ@mail.gmail.com>
+ <20180705094313.GL28220@linaro.org>
+ <ec1a5f0f-99e3-fda1-9a64-5c2539817190@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAHp75VfWLcQq4XGM3RyfO_ENx=3=WrCEhtOw+a0Sfwz_OpQ0UQ@mail.gmail.com>
+In-Reply-To: <ec1a5f0f-99e3-fda1-9a64-5c2539817190@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,205 +24,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, brijesh.singh@amd.com, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, Keith Busch <keith.busch@intel.com>, Max Filippov <jcmvbkbc@gmail.com>, baiyaowei@cmss.chinamobile.com, KY Srinivasan <kys@microsoft.com>, Frank Rowand <frowand.list@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Hemminger <sthemmin@microsoft.com>, linux-nvdimm@lists.01.org, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, linux-input <linux-input@vger.kernel.org>, Gustavo Padovan <gustavo@padovan.org>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Tom Lendacky <thomas.lendacky@amd.com>, Haiyang Zhang <haiyangz@microsoft.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Yinghai Lu <yinghai@kernel.org>, Jon Derrick <jonathan.derrick@intel.com>, Chris Zankel <chris@zankel.net>, Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, devel@linuxdriverproject.org, Andrew Morton <akpm@linux-foundation.org>, kbuild test robot <fengguang.wu@intel.com>, "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" <linuxppc-dev@lists.ozlabs.org>, "David S. Miller" <davem@davemloft.net>
+To: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, "Baicar, Tyler" <tbaicar@codeaurora.org>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-On 07/04/18 at 07:46pm, Andy Shevchenko wrote:
-> On Wed, Jul 4, 2018 at 7:10 AM, Baoquan He <bhe@redhat.com> wrote:
-> > reparent_resources() is duplicated in arch/microblaze/pci/pci-common.c
-> > and arch/powerpc/kernel/pci-common.c, so move it to kernel/resource.c
-> > so that it's shared.
+On Thu, Jul 05, 2018 at 12:02:15PM +0100, James Morse wrote:
+> On 05/07/18 10:43, AKASHI Takahiro wrote:
+> > On Wed, Jul 04, 2018 at 08:49:32PM +0200, Ard Biesheuvel wrote:
+> >> On 4 July 2018 at 19:06, Will Deacon <will.deacon@arm.com> wrote:
+> >>> On Tue, Jun 19, 2018 at 03:44:23PM +0900, AKASHI Takahiro wrote:
+> >>>> Since arm_enter_runtime_services() was modified to always create a virtual
+> >>>> mapping of UEFI memory map in the previous patch, it is now renamed to
+> >>>> efi_enter_virtual_mode() and called earlier before acpi_load_tables()
+> >>>> in acpi_early_init().
+> >>>>
+> >>>> This will allow us to use UEFI memory map in acpi_os_ioremap() to create
+> >>>> mappings of ACPI tables using memory attributes described in UEFI memory
+> >>>> map.
 > 
-> With couple of comments below,
+> >>> Hmm, this is ugly as hell. Is there nothing else we can piggy-back off?
+> >>> It's also fairly jarring that, on x86, efi_enter_virtual_mode() is called
+> >>> a few lines later, *after* acpi_early_init() has been called.
+> 
+> >> Currently, there is a gap where we have already torn down the early
+> >> mapping and haven't created the definitive mapping of the UEFI memory
+> >> map. There are other reasons why this is an issue, and I recently
+> >> proposed [0] myself to address one of them
+> 
+> >> Akashi-san, could you please confirm whether the patch below would be
+> >> sufficient for you? Apologies for going back and forth on this, but I
+> >> agree with Will that we should try to avoid warts like the one above
+> >> in generic code.
+> >>
+> >> [0] https://marc.info/?l=linux-efi&m=152930773507524&w=2
+> > 
+> > I think that this patch will also work.
+> > Please drop my patch#2 and #3 if you want to pick up my patchset, Will.
+> 
+> Patch 2 is what changes arm_enable_runtime_services() to map the efi memory map
+> before bailing out due to efi=noruntime.
+> 
+> Without it, 'efi=noruntime' means no-acpi-tables.
 
-Sure, will fix these and repost with your reviewed-by, thanks. Should be
-after I reproduce and fix those issues reported by test robot.
+So it sounds like we want patch 2. Akashi, given that this series is only
+four patches, please can you send out a v3 with the stuff that should be
+reviewed and merged? Otherwise, there's a real risk we end up with breakage
+that goes unnoticed initially.
 
-> 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
-> P.S. In some commit message in this series you used 'likt' instead of 'like'.
-> 
-> >
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> >  arch/microblaze/pci/pci-common.c | 37 -------------------------------------
-> >  arch/powerpc/kernel/pci-common.c | 35 -----------------------------------
-> >  include/linux/ioport.h           |  1 +
-> >  kernel/resource.c                | 39 +++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 40 insertions(+), 72 deletions(-)
-> >
-> > diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-> > index f34346d56095..7899bafab064 100644
-> > --- a/arch/microblaze/pci/pci-common.c
-> > +++ b/arch/microblaze/pci/pci-common.c
-> > @@ -619,43 +619,6 @@ int pcibios_add_device(struct pci_dev *dev)
-> >  EXPORT_SYMBOL(pcibios_add_device);
-> >
-> >  /*
-> > - * Reparent resource children of pr that conflict with res
-> > - * under res, and make res replace those children.
-> > - */
-> > -static int __init reparent_resources(struct resource *parent,
-> > -                                    struct resource *res)
-> > -{
-> > -       struct resource *p, **pp;
-> > -       struct resource **firstpp = NULL;
-> > -
-> > -       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
-> > -               if (p->end < res->start)
-> > -                       continue;
-> > -               if (res->end < p->start)
-> > -                       break;
-> > -               if (p->start < res->start || p->end > res->end)
-> > -                       return -1;      /* not completely contained */
-> > -               if (firstpp == NULL)
-> > -                       firstpp = pp;
-> > -       }
-> > -       if (firstpp == NULL)
-> > -               return -1;      /* didn't find any conflicting entries? */
-> > -       res->parent = parent;
-> > -       res->child = *firstpp;
-> > -       res->sibling = *pp;
-> > -       *firstpp = res;
-> > -       *pp = NULL;
-> > -       for (p = res->child; p != NULL; p = p->sibling) {
-> > -               p->parent = res;
-> > -               pr_debug("PCI: Reparented %s [%llx..%llx] under %s\n",
-> > -                        p->name,
-> > -                        (unsigned long long)p->start,
-> > -                        (unsigned long long)p->end, res->name);
-> > -       }
-> > -       return 0;
-> > -}
-> > -
-> > -/*
-> >   *  Handle resources of PCI devices.  If the world were perfect, we could
-> >   *  just allocate all the resource regions and do nothing more.  It isn't.
-> >   *  On the other hand, we cannot just re-allocate all devices, as it would
-> > diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-> > index fe9733ffffaa..926035bb378d 100644
-> > --- a/arch/powerpc/kernel/pci-common.c
-> > +++ b/arch/powerpc/kernel/pci-common.c
-> > @@ -1088,41 +1088,6 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
-> >  EXPORT_SYMBOL(pcibios_align_resource);
-> >
-> >  /*
-> > - * Reparent resource children of pr that conflict with res
-> > - * under res, and make res replace those children.
-> > - */
-> > -static int reparent_resources(struct resource *parent,
-> > -                                    struct resource *res)
-> > -{
-> > -       struct resource *p, **pp;
-> > -       struct resource **firstpp = NULL;
-> > -
-> > -       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
-> > -               if (p->end < res->start)
-> > -                       continue;
-> > -               if (res->end < p->start)
-> > -                       break;
-> > -               if (p->start < res->start || p->end > res->end)
-> > -                       return -1;      /* not completely contained */
-> > -               if (firstpp == NULL)
-> > -                       firstpp = pp;
-> > -       }
-> > -       if (firstpp == NULL)
-> > -               return -1;      /* didn't find any conflicting entries? */
-> > -       res->parent = parent;
-> > -       res->child = *firstpp;
-> > -       res->sibling = *pp;
-> > -       *firstpp = res;
-> > -       *pp = NULL;
-> > -       for (p = res->child; p != NULL; p = p->sibling) {
-> > -               p->parent = res;
-> > -               pr_debug("PCI: Reparented %s %pR under %s\n",
-> > -                        p->name, p, res->name);
-> > -       }
-> > -       return 0;
-> > -}
-> > -
-> > -/*
-> >   *  Handle resources of PCI devices.  If the world were perfect, we could
-> >   *  just allocate all the resource regions and do nothing more.  It isn't.
-> >   *  On the other hand, we cannot just re-allocate all devices, as it would
-> > diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> > index da0ebaec25f0..dfdcd0bfe54e 100644
-> > --- a/include/linux/ioport.h
-> > +++ b/include/linux/ioport.h
-> > @@ -192,6 +192,7 @@ extern int allocate_resource(struct resource *root, struct resource *new,
-> >  struct resource *lookup_resource(struct resource *root, resource_size_t start);
-> >  int adjust_resource(struct resource *res, resource_size_t start,
-> >                     resource_size_t size);
-> > +int reparent_resources(struct resource *parent, struct resource *res);
-> >  resource_size_t resource_alignment(struct resource *res);
-> >  static inline resource_size_t resource_size(const struct resource *res)
-> >  {
-> > diff --git a/kernel/resource.c b/kernel/resource.c
-> > index 30e1bc68503b..d1cbf4b50e17 100644
-> > --- a/kernel/resource.c
-> > +++ b/kernel/resource.c
-> > @@ -983,6 +983,45 @@ int adjust_resource(struct resource *res, resource_size_t start,
-> >  }
-> >  EXPORT_SYMBOL(adjust_resource);
-> >
-> > +/*
-> 
-> /** ?
-> 
-> > + * reparent_resources - reparent resource children of parent that res covers
-> > + * @parent: parent resource descriptor
-> > + * @res: resource descriptor desired by caller
-> > + *
-> > + * Reparent resource children of 'parent' that conflict with 'res'
-> > + * under 'res', and make 'res' replace those children.
-> 
-> Describe error codes, please.
-> 
-> > + */
-> > +int reparent_resources(struct resource *parent, struct resource *res)
-> > +{
-> > +       struct resource *p, **pp;
-> > +       struct resource **firstpp = NULL;
-> > +
-> > +       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
-> > +               if (p->end < res->start)
-> > +                       continue;
-> > +               if (res->end < p->start)
-> > +                       break;
-> > +               if (p->start < res->start || p->end > res->end)
-> > +                       return -ENOTSUPP;       /* not completely contained */
-> > +               if (firstpp == NULL)
-> > +                       firstpp = pp;
-> > +       }
-> > +       if (firstpp == NULL)
-> > +               return -ECANCELED; /* didn't find any conflicting entries? */
-> > +       res->parent = parent;
-> > +       res->child = *firstpp;
-> > +       res->sibling = *pp;
-> > +       *firstpp = res;
-> > +       *pp = NULL;
-> > +       for (p = res->child; p != NULL; p = p->sibling) {
-> > +               p->parent = res;
-> > +               pr_debug("PCI: Reparented %s %pR under %s\n",
-> > +                        p->name, p, res->name);
-> > +       }
-> > +       return 0;
-> > +}
-> > +EXPORT_SYMBOL(reparent_resources);
-> > +
-> >  static void __init __reserve_region_with_split(struct resource *root,
-> >                 resource_size_t start, resource_size_t end,
-> >                 const char *name)
-> > --
-> > 2.13.6
-> >
-> 
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+Thanks,
+
+Will
 
 _______________________________________________
 kexec mailing list
