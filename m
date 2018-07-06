@@ -1,32 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fbMW4-0000Ys-VT
- for kexec@lists.infradead.org; Fri, 06 Jul 2018 08:55:04 +0000
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w668nN6x021417
- for <kexec@lists.infradead.org>; Fri, 6 Jul 2018 04:54:44 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2k23fs4d7x-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 06 Jul 2018 04:54:44 -0400
-Received: from localhost
- by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <prudo@linux.ibm.com>;
- Fri, 6 Jul 2018 09:54:42 +0100
-Date: Fri, 6 Jul 2018 10:54:29 +0200
-From: Philipp Rudo <prudo@linux.ibm.com>
-Subject: Re: [PATCH 0/1] x86/purgatory: Fix Makefile bug
-In-Reply-To: <20180706083029.GB32538@dhcp-128-65.nay.redhat.com>
-References: <20180704110044.29279-1-prudo@linux.ibm.com>
- <20180705064620.GA24455@dhcp-128-65.nay.redhat.com>
- <20180705104332.0ba5c9ab@ThinkPad>
- <20180706083029.GB32538@dhcp-128-65.nay.redhat.com>
+Date: Fri, 6 Jul 2018 14:37:59 +0100
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v2 3/4] efi/arm: map UEFI memory map earlier on boot
+Message-ID: <20180706133758.GB11172@arm.com>
+References: <20180619064424.6642-1-takahiro.akashi@linaro.org>
+ <20180619064424.6642-4-takahiro.akashi@linaro.org>
+ <20180704170655.GD8370@arm.com>
+ <CAKv+Gu9_rYYyQ+t89otz46DR0D4GDj-cCjhx9q=p+D8LWFRkgQ@mail.gmail.com>
+ <20180705094313.GL28220@linaro.org>
+ <ec1a5f0f-99e3-fda1-9a64-5c2539817190@arm.com>
+ <20180705164824.GA7445@arm.com>
+ <CAKv+Gu-c0wcscUZzRqOTAHg-L70jFf80T=7x6pVPe7iK8-wykw@mail.gmail.com>
+ <20180706004226.GO28220@linaro.org>
+ <20180706013311.GP28220@linaro.org>
 MIME-Version: 1.0
-Message-Id: <20180706105429.07991cae@ThinkPad>
+Content-Disposition: inline
+In-Reply-To: <20180706013311.GP28220@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,68 +28,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@redhat.com>, kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Andrew Morton <akpm@linux-foundation.org>, "Baicar, Tyler" <tbaicar@codeaurora.org>, Bhupesh Sharma <bhsharma@redhat.com>, Dave Young <dyoung@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Al Stone <al.stone@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>
 
-Hi Andrew,
+Hi Akashi,
 
-can you send this fix to Linus like the original patch?
-
-Can you also tell me if the bug is severe enough to go to stable? For
-productive systems the bug shouldn't cause any problem because they are usually
-build from scratch. For developers however, it can cause quite a pain while
-debugging.
-
-@Dave: Thanks for looking into this.
-
-Thanks
-Philipp
-
-
-On Fri, 6 Jul 2018 16:30:29 +0800
-Dave Young <dyoung@redhat.com> wrote:
-
-> Hi Philipp,
+On Fri, Jul 06, 2018 at 10:33:13AM +0900, AKASHI Takahiro wrote:
+> On Fri, Jul 06, 2018 at 09:42:28AM +0900, AKASHI Takahiro wrote:
+> > I almost believed that my patch#2 was just a preparatory one for patch#3
+> > where arm_enable_runtime_services() is moved aggressively forward.
+> > But acpi_os_ioremap() is not a __init function and I can now agree to
+> > keeping patch#2.
+> > 
+> > Meanwhile, the consequent code with Ard's patch would look like:
+> > ---8<---
+> > static int __init arm_enable_runtime_services(void)
+> > {
+> >         ...
+> >         efi_memmap_unmap();
+> > 
+> >         mapsize = efi.memmap.desc_size * efi.memmap.nr_map;
+> > 
+> >         if (efi_memmap_init_late(efi.memmap.phys_map, mapsize)) {
+> >                 pr_err("Failed to remap EFI memory map\n");
+> >                 return 0;
+> >         }
+> >         ...
+> > }
+> > --->8---
+> > It seems to me that it makes no sense.
 > 
-> On 07/05/18 at 10:43am, Philipp Rudo wrote:
-> > Hi Dave,
-> > 
-> > On Thu, 5 Jul 2018 14:46:20 +0800
-> > Dave Young <dyoung@redhat.com> wrote:
-> >   
-> > > On 07/04/18 at 01:00pm, Philipp Rudo wrote:  
-> > > > Hi everybody,
-> > > > 
-> > > > when i moved the purgatories sha256 implementation to common code, i forgot
-> > > > to add FORCE to the new Makefile target. This patch fixes it.    
-> > > 
-> > > Hi Philipp,
-> > > 
-> > > Do you have the exact steps of how to reproduce your problem?  
-> > 
-> > I only tested it on s390, but on x86 it should work the same way.
-> > 
-> > - Build the kernel without the fix
-> > - Add some flag to the purgatories KBUILD_CFLAGS,I used
-> >   -fno-asynchronous-unwind-tables
-> > - Re-build the kernel
-> > 
-> > When you look at make's output you see that sha256.o is not re-build in the
-> > last step. Also readelf -S still shows the .eh_frame section for sha256.o.
-> > 
-> > With the fix sha256.o is re-build in the last step.
-> > 
-> > Hope that helps.  
+> Oops, it does. Comments at efi_memmap_init_late() say:
+> ---8<---
+>  * The reason there are two EFI memmap initialisation
+>  * (efi_memmap_init_early() and this late version) is because the
+>  * early EFI memmap should be explicitly unmapped once EFI
+>  * initialisation is complete as the fixmap space used to map the EFI
+>  * memmap (via early_memremap()) is a scarce resource.
+> --->8---
 > 
-> Thanks for explanation.
+> > Is it okay to take them out?
 > 
-> For the patch:
-> Acked-by: Dave Young <dyoung@redhat.com>
-> 
-> Thanks
-> Dave
-> 
+> Never mind.
 
+I'm struggling with your monologue...
+
+Please can you send a v3 of the series, containing the patches that you
+think are necessary, along with the Acks you've collected?
+
+Thanks,
+
+Will
 
 _______________________________________________
 kexec mailing list
