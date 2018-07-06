@@ -1,26 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x543.google.com ([2607:f8b0:4864:20::543])
+Received: from mail-lf0-f68.google.com ([209.85.215.68])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fbFbZ-0003UF-Fr
- for kexec@lists.infradead.org; Fri, 06 Jul 2018 01:32:15 +0000
-Received: by mail-pg1-x543.google.com with SMTP id z1-v6so132670pgv.12
- for <kexec@lists.infradead.org>; Thu, 05 Jul 2018 18:32:01 -0700 (PDT)
-Date: Fri, 6 Jul 2018 10:33:13 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v2 3/4] efi/arm: map UEFI memory map earlier on boot
-Message-ID: <20180706013311.GP28220@linaro.org>
-References: <20180619064424.6642-1-takahiro.akashi@linaro.org>
- <20180619064424.6642-4-takahiro.akashi@linaro.org>
- <20180704170655.GD8370@arm.com>
- <CAKv+Gu9_rYYyQ+t89otz46DR0D4GDj-cCjhx9q=p+D8LWFRkgQ@mail.gmail.com>
- <20180705094313.GL28220@linaro.org>
- <ec1a5f0f-99e3-fda1-9a64-5c2539817190@arm.com>
- <20180705164824.GA7445@arm.com>
- <CAKv+Gu-c0wcscUZzRqOTAHg-L70jFf80T=7x6pVPe7iK8-wykw@mail.gmail.com>
- <20180706004226.GO28220@linaro.org>
+ id 1fbKUX-0008Il-Q4
+ for kexec@lists.infradead.org; Fri, 06 Jul 2018 06:45:19 +0000
+Received: by mail-lf0-f68.google.com with SMTP id l16-v6so8917760lfc.13
+ for <kexec@lists.infradead.org>; Thu, 05 Jul 2018 23:45:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180706004226.GO28220@linaro.org>
+In-Reply-To: <1530795335-20867-1-git-send-email-arnaud.ferraris.external@sigfox.com>
+References: <1530795335-20867-1-git-send-email-arnaud.ferraris.external@sigfox.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Fri, 6 Jul 2018 12:07:37 +0530
+Message-ID: <CACi5LpP=aGG-aPe47e_xwqir_zhMpbQ+e7aTuB_Nn3CMDkEn2Q@mail.gmail.com>
+Subject: Re: [PATCH 0/3] arm64: add support for loading kernel from FITimage
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,96 +24,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Andrew Morton <akpm@linux-foundation.org>, "Baicar, Tyler" <tbaicar@codeaurora.org>, Bhupesh Sharma <bhsharma@redhat.com>, Dave Young <dyoung@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Al Stone <al.stone@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>
+To: Arnaud Ferraris <arnaud.ferraris.external@sigfox.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec mailing list <kexec@lists.infradead.org>
 
-On Fri, Jul 06, 2018 at 09:42:28AM +0900, AKASHI Takahiro wrote:
-> On Fri, Jul 06, 2018 at 12:31:49AM +0200, Ard Biesheuvel wrote:
-> > On 5 July 2018 at 18:48, Will Deacon <will.deacon@arm.com> wrote:
-> > > On Thu, Jul 05, 2018 at 12:02:15PM +0100, James Morse wrote:
-> > >> On 05/07/18 10:43, AKASHI Takahiro wrote:
-> > >> > On Wed, Jul 04, 2018 at 08:49:32PM +0200, Ard Biesheuvel wrote:
-> > >> >> On 4 July 2018 at 19:06, Will Deacon <will.deacon@arm.com> wrote:
-> > >> >>> On Tue, Jun 19, 2018 at 03:44:23PM +0900, AKASHI Takahiro wrote:
-> > >> >>>> Since arm_enter_runtime_services() was modified to always create a virtual
-> > >> >>>> mapping of UEFI memory map in the previous patch, it is now renamed to
-> > >> >>>> efi_enter_virtual_mode() and called earlier before acpi_load_tables()
-> > >> >>>> in acpi_early_init().
-> > >> >>>>
-> > >> >>>> This will allow us to use UEFI memory map in acpi_os_ioremap() to create
-> > >> >>>> mappings of ACPI tables using memory attributes described in UEFI memory
-> > >> >>>> map.
-> > >>
-> > >> >>> Hmm, this is ugly as hell. Is there nothing else we can piggy-back off?
-> > >> >>> It's also fairly jarring that, on x86, efi_enter_virtual_mode() is called
-> > >> >>> a few lines later, *after* acpi_early_init() has been called.
-> > >>
-> > >> >> Currently, there is a gap where we have already torn down the early
-> > >> >> mapping and haven't created the definitive mapping of the UEFI memory
-> > >> >> map. There are other reasons why this is an issue, and I recently
-> > >> >> proposed [0] myself to address one of them
-> > >>
-> > >> >> Akashi-san, could you please confirm whether the patch below would be
-> > >> >> sufficient for you? Apologies for going back and forth on this, but I
-> > >> >> agree with Will that we should try to avoid warts like the one above
-> > >> >> in generic code.
-> > >> >>
-> > >> >> [0] https://marc.info/?l=linux-efi&m=152930773507524&w=2
-> > >> >
-> > >> > I think that this patch will also work.
-> > >> > Please drop my patch#2 and #3 if you want to pick up my patchset, Will.
-> > >>
-> > >> Patch 2 is what changes arm_enable_runtime_services() to map the efi memory map
-> > >> before bailing out due to efi=noruntime.
-> > >>
-> > >> Without it, 'efi=noruntime' means no-acpi-tables.
-> > >
-> > > So it sounds like we want patch 2. Akashi, given that this series is only
-> > > four patches, please can you send out a v3 with the stuff that should be
-> > > reviewed and merged? Otherwise, there's a real risk we end up with breakage
-> > > that goes unnoticed initially.
-> > >
-> > 
-> > Yes, we want patches #1, #2 and #4, and this one can be replaced with
-> > my patch above. Everything can be taken via the arm64 tree as far as I
-> > am concerned.
-> 
-> I almost believed that my patch#2 was just a preparatory one for patch#3
-> where arm_enable_runtime_services() is moved aggressively forward.
-> But acpi_os_ioremap() is not a __init function and I can now agree to
-> keeping patch#2.
-> 
-> Meanwhile, the consequent code with Ard's patch would look like:
-> ---8<---
-> static int __init arm_enable_runtime_services(void)
-> {
->         ...
->         efi_memmap_unmap();
-> 
->         mapsize = efi.memmap.desc_size * efi.memmap.nr_map;
-> 
->         if (efi_memmap_init_late(efi.memmap.phys_map, mapsize)) {
->                 pr_err("Failed to remap EFI memory map\n");
->                 return 0;
->         }
->         ...
-> }
-> --->8---
-> It seems to me that it makes no sense.
+Hello Arnaud,
 
-Oops, it does. Comments at efi_memmap_init_late() say:
----8<---
- * The reason there are two EFI memmap initialisation
- * (efi_memmap_init_early() and this late version) is because the
- * early EFI memmap should be explicitly unmapped once EFI
- * initialisation is complete as the fixmap space used to map the EFI
- * memmap (via early_memremap()) is a scarce resource.
---->8---
+Thanks for the patch.
 
-> Is it okay to take them out?
+On Thu, Jul 5, 2018 at 6:25 PM, Arnaud Ferraris
+<arnaud.ferraris.external@sigfox.com> wrote:
+> Hi all,
+>
+> FITimages are an image format used by U-boot, allowing to embed a kernel with
+> the associated device tree and initramfs into a single file, using the device
+> tree file format.
+> Unfortunately, for now kexec doesn't recognize the FITimage format.
 
-Never mind.
-> 
-> -Takahiro AKASHI
+Hmm, I think I mentioned this earlier, but why do we need kexec to
+support the FIT image format? See the FIT image (or the .itb file)
+will be parsed by the u-boot bootloader and the respective components
+will be loaded by it at the appropriate load addresses (for the kernel
+Image it would be the load address mentioned in the 'loadaddr' u-boot
+environment variable and for the dtb it would be as per the arm64
+architecture dtb offset placement constraints). Something like (which
+I copied from logs on my arm32 board):
+
+<..snip..>
+kernel loaded at 0x80008000, end = 0x802bddd0
+Loading Device Tree to 8fe44000, end 8fe49947 ... OK
+
+Starting kernel ...
+
+<..snip..>
+
+So, the images are already placed at appropriate addresses by u-boot
+and we simply do the following at the u-boot prompt:
+
+<u-boot> bootm ${loadaddr}
+
+So, I am trying to understand the use-case behind FIT image support in
+kexec. Do we need kexec-tools to be aware of the FIT format when the
+kernel itself it loaded in an uncompressed format (e.g. Image or
+vmlinux).
+
+If you can share your .its file and explain the use case better (may
+be with the u-boot logs) it would help in the review.
+
+I have other comments on the individual patches, but I will hold them
+till the problem we are trying to solve here is clearer to me.
+
+Thanks,
+Bhupesh
+
+
+> This patchset adds a generic FITimage loader & parser, and implements loading
+> a kernel/dtb/initrd for the ARM64 architecture.
+>
+> Arnaud Ferraris (3):
+>   kexec: Move zlib buffer decompression function
+>   kexec: fitImage: Add fitImage parser and loader
+>   kexec: arm64: Add fitImage support
+>
+>  include/Makefile                        |   1 +
+>  include/kexec-fitImage.h                |  18 +++
+>  kexec/Makefile                          |   4 +
+>  kexec/arch/arm64/Makefile               |   2 +
+>  kexec/arch/arm64/kexec-arm64.c          |  15 ++-
+>  kexec/arch/arm64/kexec-arm64.h          |   4 +
+>  kexec/arch/arm64/kexec-fitImage-arm64.c |  40 ++++++
+>  kexec/kexec-fitImage.c                  | 223 ++++++++++++++++++++++++++++++++
+>  kexec/kexec-uImage.c                    | 100 +-------------
+>  kexec/kexec-zlib.h                      |   1 +
+>  kexec/kexec.h                           |   4 +
+>  kexec/zlib.c                            | 100 ++++++++++++++
+>  12 files changed, 413 insertions(+), 99 deletions(-)
+>  create mode 100644 include/kexec-fitImage.h
+>  create mode 100644 kexec/arch/arm64/kexec-fitImage-arm64.c
+>  create mode 100644 kexec/kexec-fitImage.c
+>
+> --
+> 2.7.4
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
