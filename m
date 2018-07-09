@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from mail-pf0-x241.google.com ([2607:f8b0:400e:c00::241])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fbbWB-0003Wk-Pc
- for kexec@lists.infradead.org; Sat, 07 Jul 2018 00:56:09 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1530871650-3582-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <CA+55aFzK5z4VQEMQAOqVHXpm+o_gd_eg5Vecck07E=WmoO6BFA@mail.gmail.com>
- <CAGXu5jKrM_3ymnmcJ+AE1A3uVPDJykRj0z5B8sDoxM6zUnX-Rg@mail.gmail.com>
- <945be212-8e82-9dd8-930f-4e5c11dcae77@i-love.sakura.ne.jp>
-Date: Fri, 06 Jul 2018 19:55:26 -0500
-In-Reply-To: <945be212-8e82-9dd8-930f-4e5c11dcae77@i-love.sakura.ne.jp>
- (Tetsuo Handa's message of "Sat, 7 Jul 2018 08:35:28 +0900")
-Message-ID: <87zhz3sw3l.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] uts: Don't randomize "struct uts_namespace".
+ id 1fcJhv-0000C4-Iu
+ for kexec@lists.infradead.org; Mon, 09 Jul 2018 00:07:13 +0000
+Received: by mail-pf0-x241.google.com with SMTP id q7-v6so11210160pff.2
+ for <kexec@lists.infradead.org>; Sun, 08 Jul 2018 17:07:00 -0700 (PDT)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v3 0/3] arm64: kexec,
+ kdump: fix boot failures on acpi-only system
+Date: Mon,  9 Jul 2018 09:07:47 +0900
+Message-Id: <20180709000750.22172-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,29 +18,94 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, Linus Torvalds <torvalds@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: catalin.marinas@arm.com, will.deacon@arm.com, ard.biesheuvel@linaro.org
+Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, al.stone@linaro.org, bhsharma@redhat.com, tbaicar@codeaurora.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> writes:
+This patch series is a set of bug fixes to address kexec/kdump
+failures which are sometimes observed on ACPI-only system and reported
+in LAK-ML before.
 
-> I'm waiting for response from makedumpfile developers.
->
-> But makedumpfile is a tool for saving kernel crash dump.
-> If makedumpfile cannot work, we cannot use kernel crash dump.
+In short, the phenomena are:
+1. kexec'ed kernel can fail to boot because some ACPI table is corrupted
+   by a new kernel (or other data) being loaded into System RAM. Currently
+   kexec may possibly allocate space ignoring such "reserved" regions.
+   We will see no messages after "Bye!"
 
-I suspect the version string is comparable in size to the pointer to the
-version string and as such would be a better candidate to include in the
-handful of elf notes we provide for the mkdumpfile & it's ilk to bootstram.
+2. crash dump (kdump) kernel can fail to boot and get into panic due to
+   an alignment fault when accessing ACPI tables. This can happen because
+   those tables are not always properly aligned while they are mapped
+   non-cacheable (ioremap'ed) as they are not recognized as part of System
+   RAM under the current implementation.
 
-I assume getting the kernel's version string will be enough to track
-back to an individual vmlinux and figure out the layout of everything
-else.
+After discussing several possibilities to address those issues,
+the agreed approach, in my understanding, is
+* to add resource entries for every "reserved", i.e. memblock_reserve(),
+  regions to /proc/iomem.
+  (NOMAP regions, also marked as "reserved," remains at top-level for
+  backward compatibility. User-space can tell the difference between
+  reserved-system-ram and reserved-address-space.)
+* For case (1), user space (kexec-tools) should rule out such regions
+  in searching for free space for loaded data.
+* For case (2), the kernel should access ACPI tables by mapping
+  them with appropriate memory attributes described in UEFI memory map.
+  (This means that it doesn't require any changes in /proc/iomem, and
+  hence user space.)
 
-Eric
+Please find past discussions about /proc/iomem in [1].
+--- more words from James ---
+Our attempts to fix this just in the kernel reached a dead end, because Kdump
+needs to include reserved-system-ram, whereas kexec has to avoid it. User-space
+needs to be able to tell reserved-system-ram and reserved-address-space apart.
+Hence we need to expose that information, and pick it up in user-space.
+
+Patched-kernel and unpatch-user-space will work the same way it does today, as
+the additional reserved regions are ignored by user-space.
+
+Unpatched-kernel and patched-user-space will also work the same way it does
+today as the additional reserved regions are missing.
+--->8---
+
+Patch#1 addresses kexec case, for which you are also required to update
+user space. See necessary patches in [2]. If you want to review Patch#1,
+please also take a look at and review [2].
+
+Patch#2 and #3 addresses kdump case. Ard's patch [4] needs to be applied
+preliminarily.
+
+
+Changes in v3 (2018, July 9, 2018)
+* drop the v2's patch#3, preferring [4]
+
+Changes in v2 (2018, June 19, 2018)
+* re-organise v1's patch#2 and #3 into v2's #2, #3 and #4
+  not to break bisect
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-March/565980.html
+[2] https://git.linaro.org/people/takahiro.akashi/kexec-tools.git arm64/resv_mem
+[3] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-April/573655.html
+[4] https://marc.info/?l=linux-efi&m=152930773507524&w=2
+
+AKASHI Takahiro (2):
+  efi/arm: map UEFI memory map even w/o runtime services enabled
+  arm64: acpi: fix alignment fault in accessing ACPI
+
+James Morse (1):
+  arm64: export memblock_reserve()d regions via /proc/iomem
+
+ arch/arm64/include/asm/acpi.h      | 23 ++++++++++++------
+ arch/arm64/kernel/acpi.c           | 11 +++------
+ arch/arm64/kernel/setup.c          | 38 ++++++++++++++++++++++++++++++
+ drivers/firmware/efi/arm-runtime.c | 14 +++++------
+ 4 files changed, 64 insertions(+), 22 deletions(-)
+
+-- 
+2.17.0
+
 
 _______________________________________________
 kexec mailing list
