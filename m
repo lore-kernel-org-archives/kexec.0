@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x243.google.com ([2607:f8b0:4001:c06::243])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fcQJ7-0002Xj-1K
- for kexec@lists.infradead.org; Mon, 09 Jul 2018 07:10:06 +0000
-Received: by mail-io0-x243.google.com with SMTP id q4-v6so16149391iob.2
- for <kexec@lists.infradead.org>; Mon, 09 Jul 2018 00:09:50 -0700 (PDT)
-Date: Mon, 9 Jul 2018 16:11:08 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v4 0/2] Add capability to dump fdt blob for arm64 platforms
-Message-ID: <20180709071107.GT28220@linaro.org>
-References: <1529576678-14615-1-git-send-email-bhsharma@redhat.com>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fcMTd-0000VW-RO
+ for kexec@lists.infradead.org; Mon, 09 Jul 2018 03:09:25 +0000
+Date: Mon, 9 Jul 2018 11:04:03 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v6 2/4] resource: Use list_head to link sibling resource
+Message-ID: <20180709030403.GJ3047@MiWiFi-R3L-srv>
+References: <20180704041038.8190-3-bhe@redhat.com>
+ <201807042347.hfDcKxmG%fengguang.wu@intel.com>
+ <20180708025946.GI3047@MiWiFi-R3L-srv>
+ <CAHp75VcjGQutVtZ90C0huUGCY6yj8H0Wo0tMdrbLmLsRQ+x4XQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1529576678-14615-1-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <CAHp75VcjGQutVtZ90C0huUGCY6yj8H0Wo0tMdrbLmLsRQ+x4XQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,142 +26,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: dyoung@redhat.com, bhupesh.linux@gmail.com, kexec@lists.infradead.org, james.morse@arm.com, horms@verge.net.au
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, brijesh.singh@amd.com, Tom Lendacky <thomas.lendacky@amd.com>, David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, Keith Busch <keith.busch@intel.com>, Max Filippov <jcmvbkbc@gmail.com>, baiyaowei@cmss.chinamobile.com, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Hemminger <sthemmin@microsoft.com>, kbuild test robot <lkp@intel.com>, linux-nvdimm@lists.01.org, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, linux-input <linux-input@vger.kernel.org>, Gustavo Padovan <gustavo@padovan.org>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, devicetree <devicetree@vger.kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Bjorn Helgaas <bhelgaas@google.com>, Dan Williams <dan.j.williams@intel.com>, Yinghai Lu <yinghai@kernel.org>, Jon Derrick <jonathan.derrick@intel.com>, Chris Zankel <chris@zankel.net>, Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kbuild-all@01.org, devel@linuxdriverproject.org, Andrew Morton <akpm@linux-foundation.org>, kbuild test robot <fengguang.wu@intel.com>, "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" <linuxppc-dev@lists.ozlabs.org>, "David S. Miller" <davem@davemloft.net>
 
-Bhupesh, Simon,
+On 07/08/18 at 08:48pm, Andy Shevchenko wrote:
+> On Sun, Jul 8, 2018 at 5:59 AM, Baoquan He <bhe@redhat.com> wrote:
+> > On 07/05/18 at 01:00am, kbuild test robot wrote:
+> 
+> > However, I didn't find below branch. And tried to open it in web
+> > broswer, also failed.
+> 
+> While this is kinda valid point...
+> 
+> > Could you help have a look at this?
+> 
+> ...isn't obvious that you didn't change the file mentioned in a report?
+> Just take latest linux-next and you will see.
 
-#I'm afraid that I gonna rehash the old discussion.
+Yes, it's clear to me. Just want to use the way to cross compile them on
+ia64 and mips, hope I can find out all missed places on these ARCHes.
+Now I think I can apply patches on linux-next, and use the config
+attached to compile. Thanks.
 
-Looking into ppc's kexec-tools code, I found that ppc version of
-this tool has a similar feature and it saves a new dtb into a file,
-named "debug.dtb."
-See save_fixed_up_dtb() in kexec/arch/ppc/fixup_dtb.c
-
-Even if it is a debug feature, we'd better go in the same way
-(if possible).
-
-Thanks,
--Takahiro AKASHI
-
-
-On Thu, Jun 21, 2018 at 03:54:36PM +0530, Bhupesh Sharma wrote:
-> Changes since v3:
-> ----------------
->  - Addressed comments from Akashi regarding:
->    ~ Using sensible names for variables and pointers.
->    ~ Removing usage of local pointer variable in 'dump_fdt()' function.
->    ~ Tried addressing a comment regarding converting GET_CELL macro to
->      inline function, but the final implementation became more tricky, so
->      dropped the same and decided to go ahead with the macro for
->      simplicity.
->  - v3 can be viewed here: https://www.spinics.net/lists/kexec/msg20544.html
 > 
-> Changes since v2:
-> ----------------
->  - Added ascii prints for printing bootargs.
->  - v2 can be viewed here: http://lists.infradead.org/pipermail/kexec/2018-April/020532.html
 > 
-> Changes since v1:
-> ----------------
->  - No functional changes: Just added a cover letter to explain the
->    background better and also capture some details on where I found this
->    patchset handy. Also added some dtb dumps logs from 'kexec -p -d' for
->    reference (with this patchset applied) for clarity.
->  - v1 can be viewed here: http://lists.infradead.org/pipermail/kexec/2018-April/020407.html
+> >> All error/warnings (new ones prefixed by >>):
+> >>
+> >> >> arch/mips/pci/pci-rc32434.c:57:11: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+> >>      .child = &rc32434_res_pci_mem2
+> >>               ^
+> >>    arch/mips/pci/pci-rc32434.c:57:11: note: (near initialization for 'rc32434_res_pci_mem1.child.next')
+> >> >> arch/mips/pci/pci-rc32434.c:51:47: warning: missing braces around initializer [-Wmissing-braces]
+> >>     static struct resource rc32434_res_pci_mem1 = {
+> >>                                                   ^
+> >>    arch/mips/pci/pci-rc32434.c:60:47: warning: missing braces around initializer [-Wmissing-braces]
+> >>     static struct resource rc32434_res_pci_mem2 = {
+> >>                                                   ^
+> >>    cc1: some warnings being treated as errors
+> >>
+> >> vim +57 arch/mips/pci/pci-rc32434.c
+> >>
+> >> 73b4390f Ralf Baechle 2008-07-16  50
+> >> 73b4390f Ralf Baechle 2008-07-16 @51  static struct resource rc32434_res_pci_mem1 = {
+> >> 73b4390f Ralf Baechle 2008-07-16  52          .name = "PCI MEM1",
+> >> 73b4390f Ralf Baechle 2008-07-16  53          .start = 0x50000000,
+> >> 73b4390f Ralf Baechle 2008-07-16  54          .end = 0x5FFFFFFF,
+> >> 73b4390f Ralf Baechle 2008-07-16  55          .flags = IORESOURCE_MEM,
+> >> 73b4390f Ralf Baechle 2008-07-16  56          .sibling = NULL,
+> >> 73b4390f Ralf Baechle 2008-07-16 @57          .child = &rc32434_res_pci_mem2
+> >> 73b4390f Ralf Baechle 2008-07-16  58  };
+> >> 73b4390f Ralf Baechle 2008-07-16  59
+> >>
+> >> :::::: The code at line 57 was first introduced by commit
+> >> :::::: 73b4390fb23456964201abda79f1210fe337d01a [MIPS] Routerboard 532: Support for base system
+> >>
+> >> :::::: TO: Ralf Baechle <ralf@linux-mips.org>
+> >> :::::: CC: Ralf Baechle <ralf@linux-mips.org>
+> >>
+> >> ---
+> >> 0-DAY kernel test infrastructure                Open Source Technology Center
+> >> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> >
+> >
 > 
-> While working on a couple of issues related to primary kernel crash on freescale
-> and huawei arm64 boards, I noticed that the primary kernel crashed before it could reach
-> the command prompt but was able to launch some early initramfs scriptware. 
 > 
-> In the initial initramfs scriptware crashkernel loading was automated along
-> with auto load of other userspace applications (for e.g. on the freescale board
-> there are networking applications like ODP/DPDK which can be launched automatically via
-> scriptware).
-> 
-> I was hoping that the crashkernel would be able to load when the primary kernel crashes,
-> and using the crash core dump thus obtained, I would be able to debug the problem which
-> caused the primary kernel to crash late in the boot flow (before reaching the boot prompt).
-> 
-> Unfortunately currently we can experience an early crash in crashkernel itself
-> (on such example is the 'acpi table access' issue in the arm64 crashkernel
-> which we discussed some time back upstream
-> <https://www.spinics.net/lists/arm-kernel/msg616632.html>):
-> 
-> In such cases, we have no opportunity to obtain the crash core dump which can be
-> used to debug the primary kernel crash.
-> 
-> Now, looking at just the panic messages from the crashkernel in such cases is sometimes
-> not very useful in debugging what might have caused it to crash when the primary kernel
-> is able to atleast boot past that point on the same hardware platform.
-> 
-> Debugging the issue closer (especially on the request for help on the freescale board), I
-> realized that the crashkernel crash may be caused by improper/buggy fixing of 'dtb'
-> being passed to the crashkernel - especially the 'linux,usable-memory-range' property.
-> 
-> For such cases, I found that dumping the dtb blob entries from kexec-tools is
-> a useful debugging tip as I could identify the 'linux,usable-memory-range'
-> property did not contain ACPI RECLAIM region entries.
-> 
-> Please note that since the primary kernel crashes before the command prompt
-> can be reached, it is not possible to run a dtc interpreter there (and it
-> also adds the requirement for an additional 'dtc' tool to be present in the initramfs).
-> 
-> Also, it might not be possible to always correctly time the 'dtc' interpreter loading
-> via the initramfs scriptware and store the binary/hex output to a storage device
-> just after the crashkernel is loaded via 'kexec -p' as the storage driver itself
-> might have panick'ed during the meanwhile.
-> 
-> In view of the above, it would be useful to dump the fdt blob being passed to the second
-> (kexec/kdump) kernel when '-d' flag is specified while invoking kexec/kdump. This allows
->  one to look at the device-tree fields that is being passed to the secondary
-> kernel and accordingly debug issues.
-> 
-> This can be specially useful for the arm64 case, where we are still fixing up some issues
-> with the upstream kexec-tools/arm64 kernel.
-> 
-> I loathe to keep this patch locally and apply it locally on top of the upstream 'kexec-tools'
-> patches when debugging such issues, so it would be probably good to have this feature
-> available in upstream itself.
-> 
-> Here is an example output of the dtb dump(on an arm64 board), on serial console with
-> the patchset applied and 'kexec -p' launched used with a '-d' flag using initramfs scriptware:
-> 
-> <..snip..>
-> 
-> setup_2nd_dtb: found /sys/firmware/fdt
->  / {
->     #size-cells = <0x00000002>;
->     #address-cells = <0x00000002>;
->     chosen {
->         linux,usable-memory-range = <0x00000000 0xdfe00000 0x00000000 0x20000000>;
->         linux,elfcorehdr = <0x00000000 0xffdf0000 0x00000000 0x00001400>;
->         kaslr-seed = <0x00000000 0x00000000>;
->         linux,uefi-mmap-desc-ver = <0x00000001>;
->         linux,uefi-mmap-desc-size = <0x00000030>;
->         linux,uefi-mmap-size = <0x000020a0>;
->         linux,uefi-mmap-start = <0x00000000 0x07a81018>;
->         linux,uefi-system-table = <0x00000000 0x17fc0018>;
-> 	bootargs = "root=/dev/mapper/rhel_qualcomm--amberwing--rep--15-root ro rd.lvm.lv=rhel_qualcomm-amberwing-rep-15/root rd.lvm.lv=rhel_qualcomm-amberwing-rep-15/swap";
->         linux,initrd-end = <0x00000000 0x05e8a7a1>;
->         linux,initrd-start = <0x00000000 0x04b49000>;
->     };
->  };
-> 
-> <..snip..>
-> 
-> Bhupesh Sharma (2):
->   dt-ops: Add helper API to dump fdt blob
->   kexec-arm64: Add functionality to dump 2nd dtb
-> 
->  kexec/arch/arm64/kexec-arm64.c |   2 +
->  kexec/dt-ops.c                 | 141 +++++++++++++++++++++++++++++++++++++++++
->  kexec/dt-ops.h                 |   1 +
->  3 files changed, 144 insertions(+)
 > 
 > -- 
-> 2.7.4
-> 
+> With Best Regards,
+> Andy Shevchenko
 
 _______________________________________________
 kexec mailing list
