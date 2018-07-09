@@ -1,15 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v10 03/14] powerpc, kexec_file: factor out memblock-based
- arch_kexec_walk_mem()
-References: <20180623022058.10935-1-takahiro.akashi@linaro.org>
- <20180623022058.10935-4-takahiro.akashi@linaro.org>
- <8a59db79-6379-550b-b20e-01036626904e@arm.com>
- <20180709054953.GR28220@linaro.org>
-From: James Morse <james.morse@arm.com>
-Message-ID: <68e7d558-91bf-a6f4-3e59-b93d5db0d77b@arm.com>
-Date: Mon, 9 Jul 2018 12:03:13 +0100
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fcWe0-0003k3-MW
+ for kexec@lists.infradead.org; Mon, 09 Jul 2018 13:56:02 +0000
+Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
+ AMD sme enabled
+References: <20180702072639.10110-1-lijiang@redhat.com>
+ <20180702072639.10110-2-lijiang@redhat.com> <20180702101451.GB28730@zn.tnic>
+ <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
+ <895db996-febd-d50c-91af-4f1ef3d27bd8@redhat.com>
+ <20180703111428.GB5748@zn.tnic>
+ <4fbb843b-9597-a48b-8b6f-00e354b91950@redhat.com>
+ <e7357038-08bd-7ba8-5357-7c91d21d10fe@redhat.com>
+ <20180709092901.GA22182@nazgul.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <fc6a47ca-1b16-eba5-d15e-ca294e01af93@redhat.com>
+Date: Mon, 9 Jul 2018 21:55:35 +0800
 MIME-Version: 1.0
-In-Reply-To: <20180709054953.GR28220@linaro.org>
+In-Reply-To: <20180709092901.GA22182@nazgul.tnic>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,64 +27,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com
 
-Hi Akashi,
-
-On 09/07/18 06:49, AKASHI Takahiro wrote:
-> On Tue, Jul 03, 2018 at 05:36:24PM +0100, James Morse wrote:
->> On 23/06/18 03:20, AKASHI Takahiro wrote:
->>> Memblock list is another source for usable system memory layout.
->>> A merged new arch_kexec_walk_mem() will walk through either io resource
->>> list or memblock list depending on CONFIG_ARCH_DISCARD_MEMBLOCK so that
->>> arm64, in addition to powerpc, will be able to utilize this generic
->>> function for kexec_file.
->>
->>> diff --git a/arch/powerpc/kernel/machine_kexec_file_64.c b/arch/powerpc/kernel/machine_kexec_file_64.c
->>> index 0bd23dc789a4..3d4be91786ce 100644
->>> --- a/arch/powerpc/kernel/machine_kexec_file_64.c
->>> +++ b/arch/powerpc/kernel/machine_kexec_file_64.c
-
->>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->>> index 63c7ce1c0c3e..563acd1c9a61 100644
->>> --- a/kernel/kexec_file.c
->>> +++ b/kernel/kexec_file.c
->>> @@ -16,6 +16,7 @@
->>>  #include <linux/file.h>
->>>  #include <linux/slab.h>
->>>  #include <linux/kexec.h>
->>> +#include <linux/memblock.h>
->>>  #include <linux/mutex.h>
->>>  #include <linux/list.h>
->>>  #include <linux/fs.h>
->>> @@ -501,6 +502,53 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
->>>  	return locate_mem_hole_bottom_up(start, end, kbuf);
->>>  }
->>>  
->>> +#if defined(CONFIG_HAVE_MEMBLOCK) && !defined(CONFIG_ARCH_DISCARD_MEMBLOCK)
->>
->> The only caller is also guarded by these same ifdefs. Can't we remove this and
->> rely on the compilers dead-code elimination to remove this function when its not
->> needed?
-> 
-> I don't think we can remove this #ifdef.
-> "for_each_free_mem_range[_reverse]()" is defined under CONFIG_HAVE_MEMBLOCK
-> in memblock.h. If some architecture wants to support KEXEC_FILE but
-> doesn't have HAVE_MEMBLOCK, compiling kexec_file.c will fail.
-
-Ah, I'd missed this, turns out memblock isn't ubiquitous!
-
-
-Thanks,
-
-James
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQwN+aciDA55pelIDE3OjI5LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IE1vbiwgSnVsIDA5LCAyMDE4IGF0IDAyOjI4OjExUE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
+IExhc3Qgd2VlaywgSSBoYWQgdHJpZWQgbWFueSB3YXlzIHRvIGRvIHRoaXMgd29yaywgYnV0IGl0
+IGxvb2tzCj4+IGxpa2UgdGhhdCB0aGUgd2F5cyBvZiBkZWR1Y2luZyBhZGRyZXNzIGlzIG5vdCBz
+dWl0YWJsZSB0byBhbm90aGVyCj4+IHNjZW5hcmlvcywgc3VjaCBhcyBtYXBwaW5nIHNvbWUgZGV2
+aWNlcyBtbWlvIHNwYWNlLCB3aGljaCBhcmUKPj4gdW5lbmNyeXB0ZWQsIGFuZCB0aGUgZGV2aWNl
+IG1taW8gc3BhY2UgaXMgb3V0c2lkZSBrZHVtcCBrZXJuZWwgbGlrZQo+PiB0aGUgb2xkIG1lbW9y
+eSwgYnV0IHRoZSBvbGQgbWVtb3J5IGlzIGVuY3J5cHRlZCwgd2UgY2FuJ3QgZmluZCB0aGUKPj4g
+Z2VuZXJhbCBydWxlcyB0byBkZWNpZGUgd2hlbiB0byBlbmNyeXB0IG9yIG5vdC4KPiAKPiBJZiB3
+ZSBjYW4ndCBmaW5kIHRoZSAiZ2VuZXJhbCBydWxlcyIgaG93IGlzIHRoZSBjYWxsZXIgc3VwcG9z
+ZWQgdG8ga25vdwo+IGhvdyB0byBhY2Nlc3MgdGhlIG1lbW9yeT8KPiAKQWJvdXQgdGhpcyBpc3N1
+ZSwgaSB3YW50IHRvIHVzZSBhbiBleGFtcGxlIHRvIGRlc2NyaWJlIGl0LgovKiBkcml2ZXJzL2lv
+bW11L2FtZF9pb21tdV9pbml0LmMgKi8Kc3RhdGljIHU4IF9faW9tZW0gKiBfX2luaXQgaW9tbXVf
+bWFwX21taW9fc3BhY2UodTY0IGFkZHJlc3MsIHU2NCBlbmQpCnsKICAgICAgICBpZiAoIXJlcXVl
+c3RfbWVtX3JlZ2lvbihhZGRyZXNzLCBlbmQsICJhbWRfaW9tbXUiKSkgewogICAgICAgICAgICAg
+ICAgcHJfZXJyKCJBTUQtVmk6IENhbiBub3QgcmVzZXJ2ZSBtZW1vcnkgcmVnaW9uICVsbHgtJWxs
+eCBmb3IgbW1pb1xuIiwKICAgICAgICAgICAgICAgICAgICAgICAgYWRkcmVzcywgZW5kKTsKICAg
+ICAgICAgICAgICAgIHByX2VycigiQU1ELVZpOiBUaGlzIGlzIGEgQklPUyBidWcuIFBsZWFzZSBj
+b250YWN0IHlvdXIgaGFyZHdhcmUgdmVuZG9yXG4iKTsKICAgICAgICAgICAgICAgIHJldHVybiBO
+VUxMOwogICAgICAgIH0KCiAgICAgICAgcmV0dXJuICh1OCBfX2lvbWVtICopaW9yZW1hcF9ub2Nh
+Y2hlKGFkZHJlc3MsIGVuZCk7Cn0KCltyb290QGhwLWRsMzg1ZzEwLTAzIGxpbnV4XSMgY2F0IC9w
+cm9jL2lvbWVtIHxncmVwIC1pIGNyYXNoCiAgN2ZhMDAwMDAwLTg3OWZmZmZmZiA6IENyYXNoIGtl
+cm5lbApbcm9vdEBocC1kbDM4NWcxMC0wMyBsaW51eF0jIGNhdCAvcHJvYy9pb21lbSB8Z3JlcCBh
+bWRfaW9tbXUKICA5YzgwMDAwMC05Yzg3ZmZmZiA6IGFtZF9pb21tdQogIGE5ODAwMDAwLWE5ODdm
+ZmZmIDogYW1kX2lvbW11CiAgYjY4MDAwMDAtYjY4N2ZmZmYgOiBhbWRfaW9tbXUKICBjMzgwMDAw
+MC1jMzg3ZmZmZiA6IGFtZF9pb21tdQogIGQwODAwMDAwLWQwODdmZmZmIDogYW1kX2lvbW11CiAg
+ZGQ4MDAwMDAtZGQ4N2ZmZmYgOiBhbWRfaW9tbXUKICBlYTgwMDAwMC1lYTg3ZmZmZiA6IGFtZF9p
+b21tdQogIGZkODAwMDAwLWZkODdmZmZmIDogYW1kX2lvbW11CgpPYnZpb3VzbHksIHRoZSBpb21t
+dSBtbWlvIHNwYWNlIGlzIG5vdCBlbmNyeXB0ZWQsIGFuZCB0aGUgZGV2aWNlIG1taW8gc3BhY2Ug
+aXMgb3V0c2lkZSBrZHVtcAprZXJuZWwuIFdlIGtub3cgdGhhdCB0aGUgb2xkIG1lbW9yeSBpcyBl
+bmNyeXB0ZWQsIGFuZCB0aGUgb2xkIG1lbW9yeSBpcyBhbHNvIG91dHNpZGUga2R1bXAKa2VybmVs
+LiBGb3IgdGhlIGN1cnJlbnQgY2FzZSwgZTgyMF9fZ2V0X2VudHJ5X3R5cGUoKSBhbmQgd2Fsa19p
+b21lbV9yZXNfZGVzYygpIGNhbid0IGdldCB0aGUKZGVzaXJlZCByZXN1bHQsIHNvIHdlIGNhbid0
+IGFsc28gZGVjaWRlIHdoZXRoZXIgZW5jcnlwdGlvbiBvciBub3QgYWNjb3JkaW5nIHRvIHRoaXMg
+cmVzdWx0KHJ1bGVzKS4KSWYgd2Ugd2FudCB0byBrbm93IHdoZXRoZXIgZW5jcnlwdGlvbiBvciBu
+b3QgYnkgZGVkdWNpbmcgdGhlIGFkZHJlc3MsIHdlIHdpbGwgbmVlZCB0byByZWFkCnRoZSBjb250
+ZW50IG9mIG1lbW9yeSBhbmQgaGF2ZSBhIHJlZmVyZW5jZSB2YWx1ZSBmb3IgY29tcGFyaXNvbiwg
+dGhlbiB3aGF0J3MgYSByZWZlcmVuY2UgdmFsdWU/ClNvbWV0aW1lcyB3ZSBkb24ndCBrbm93IHRo
+YXQuCgpSZWdhcmRzLApMaWFuYm8KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
