@@ -1,24 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fcSU1-0006RA-43
- for kexec@lists.infradead.org; Mon, 09 Jul 2018 09:29:28 +0000
-Date: Mon, 9 Jul 2018 11:29:01 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
- AMD sme enabled
-Message-ID: <20180709092901.GA22182@nazgul.tnic>
-References: <20180702072639.10110-1-lijiang@redhat.com>
- <20180702072639.10110-2-lijiang@redhat.com>
- <20180702101451.GB28730@zn.tnic>
- <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
- <895db996-febd-d50c-91af-4f1ef3d27bd8@redhat.com>
- <20180703111428.GB5748@zn.tnic>
- <4fbb843b-9597-a48b-8b6f-00e354b91950@redhat.com>
- <e7357038-08bd-7ba8-5357-7c91d21d10fe@redhat.com>
+Subject: Re: [PATCH v3 0/3] arm64: kexec, kdump: fix boot failures on acpi-only
+ system
+References: <20180709000750.22172-1-takahiro.akashi@linaro.org>
+From: James Morse <james.morse@arm.com>
+Message-ID: <f52f8607-ed7e-40fd-002c-13cb34bb0396@arm.com>
+Date: Mon, 9 Jul 2018 11:56:36 +0100
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <e7357038-08bd-7ba8-5357-7c91d21d10fe@redhat.com>
+In-Reply-To: <20180709000750.22172-1-takahiro.akashi@linaro.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,26 +20,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, al.stone@linaro.org, ard.biesheuvel@linaro.org, bhsharma@redhat.com, tbaicar@codeaurora.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hanjun.guo@linaro.org, sudeep.holla@arm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-On Mon, Jul 09, 2018 at 02:28:11PM +0800, lijiang wrote:
-> Last week, I had tried many ways to do this work, but it looks
-> like that the ways of deducing address is not suitable to another
-> scenarios, such as mapping some devices mmio space, which are
-> unencrypted, and the device mmio space is outside kdump kernel like
-> the old memory, but the old memory is encrypted, we can't find the
-> general rules to decide when to encrypt or not.
+Hi Akashi,
 
-If we can't find the "general rules" how is the caller supposed to know
-how to access the memory?
+On 09/07/18 01:07, AKASHI Takahiro wrote:
+> Patch#2 and #3 addresses kdump case. Ard's patch [4] needs to be applied
+> preliminarily.
 
--- 
-Regards/Gruss,
-    Boris.
+I missed this, and was then surprised by [0], when I tested kdump.
 
-ECO tip #101: Trim your mails when you reply.
---
+Could you re-post this with all the dependencies in the series? These changes
+need to be tested together and merged at the same time, otherwise kdump can't be
+tested and we risk the maintainer picking up broken code.
+
+
+Thanks,
+
+James
+
+
+[0] failed kdump boot on Seattle
+------------------%<------------------
+ACPI: Added _OSI(3.0 _SCP Extensions)
+ACPI: Added _OSI(Processor Aggregator Device)
+ACPI: Added _OSI(Linux-Dell-Video)
+Unable to handle kernel paging request at virtual address ffff2007
+Mem abort info:
+  ESR = 0x96000021
+  Exception class = DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+Data abort info:
+  ISV = 0, ISS = 0x00000021
+  CM = 0, WnR = 0
+swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
+pgd=00000080ffdfd803, pud=00000080ffdfc803, pm3
+Internal error: Oops: 96000021 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 1 PID: 1 Comm: swapper/0 Tainted: G S                4.18.0-1
+Hardware name: AMD Overdrive/Supercharger/Default string, BIOS RO6
+pstate: 10400005 (nzcV daif +PAN -UAO)
+pc : acpi_ns_lookup+0x550/0x740
+lr : acpi_ns_lookup+0x2f8/0x740
+[...]
+Process swapper/0 (pid: 1, stack limit = 0x(____ptrval____))
+Call trace:
+ acpi_ns_lookup+0x550/0x740
+ acpi_ds_load2_begin_op+0x568/0x87c
+  acpi_ds_exec_begin_op+0x50/0x388
+ acpi_ps_build_named_op+0x1cc/0x3dc
+ acpi_ps_create_op+0x4f4/0x864
+ acpi_ps_parse_loop+0x40c/0x133c
+ acpi_ps_parse_aml+0x1f4/0x5a8
+ acpi_ps_execute_table+0x24c/0x2e0
+ acpi_ns_execute_table+0x354/0x408
+ acpi_ns_parse_table+0x5c/0x94
+ acpi_ns_load_table+0x40/0xf8
+ acpi_tb_load_namespace+0x31c/0x510
+ acpi_load_tables+0x48/0x13c
+ acpi_init+0x170/0x5c8
+ do_one_initcall+0xc0/0x2b0
+ kernel_init_freeable+0x3d4/0x484
+ kernel_init+0x10/0x118
+ ret_from_fork+0x10/0x18
+Code: f90037a2 aa1303e0 97dfd654 f94037a2 (b9400260)
+---[ end trace d678006368422baa ]---
+Kernel panic - not syncing: Attempted to kill init! exitcode=0x00b
+------------------%<------------------
 
 _______________________________________________
 kexec mailing list
