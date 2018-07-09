@@ -1,32 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-pg1-x544.google.com ([2607:f8b0:4864:20::544])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fcc2m-0006YO-Kj
- for kexec@lists.infradead.org; Mon, 09 Jul 2018 19:41:58 +0000
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w69JdM2W087589
- for <kexec@lists.infradead.org>; Mon, 9 Jul 2018 15:41:43 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2k4d2pbqcm-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 09 Jul 2018 15:41:43 -0400
-Received: from localhost
- by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Mon, 9 Jul 2018 20:41:41 +0100
-Subject: Re: [PATCH v5 7/8] ima: based on policy warn about loading firmware
- (pre-allocated buffer)
-From: Mimi Zohar <zohar@linux.ibm.com>
-Date: Mon, 09 Jul 2018 15:41:34 -0400
-In-Reply-To: <CAKv+Gu-nky1yX59TL2FNQ-0q7Sy399t2WpVWSy7jqYpQY4Fxjw@mail.gmail.com>
-References: <1530542283-26145-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1530542283-26145-8-git-send-email-zohar@linux.vnet.ibm.com>
- <CAKv+Gu-nky1yX59TL2FNQ-0q7Sy399t2WpVWSy7jqYpQY4Fxjw@mail.gmail.com>
-Mime-Version: 1.0
-Message-Id: <1531165294.3332.40.camel@linux.ibm.com>
+ id 1fcfJd-0001uC-Ly
+ for kexec@lists.infradead.org; Mon, 09 Jul 2018 23:11:35 +0000
+Received: by mail-pg1-x544.google.com with SMTP id y5-v6so1564587pgv.1
+ for <kexec@lists.infradead.org>; Mon, 09 Jul 2018 16:11:23 -0700 (PDT)
+Date: Tue, 10 Jul 2018 08:12:42 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v3 0/3] arm64: kexec,kdump: fix boot failures on
+ acpi-only system
+Message-ID: <20180709231240.GV28220@linaro.org>
+References: <20180709000750.22172-1-takahiro.akashi@linaro.org>
+ <f52f8607-ed7e-40fd-002c-13cb34bb0396@arm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <f52f8607-ed7e-40fd-002c-13cb34bb0396@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,69 +23,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Kees Cook <keescook@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Luis R . Rodriguez" <mcgrof@suse.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-security-module <linux-security-module@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, "Luis
- R . Rodriguez" <mcgrof@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eric Biederman <ebiederm@xmission.com>, linux-integrity <linux-integrity@vger.kernel.org>, "Serge E . Hallyn" <serge@hallyn.com>, Andres Rodriguez <andresx7@gmail.com>
+To: James Morse <james.morse@arm.com>
+Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, al.stone@linaro.org, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, tbaicar@codeaurora.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, hanjun.guo@linaro.org, sudeep.holla@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-T24gTW9uLCAyMDE4LTA3LTAyIGF0IDE3OjMwICswMjAwLCBBcmQgQmllc2hldXZlbCB3cm90ZToK
-PiBPbiAyIEp1bHkgMjAxOCBhdCAxNjozOCwgTWltaSBab2hhciA8em9oYXJAbGludXgudm5ldC5p
-Ym0uY29tPiB3cm90ZToKPiA+IFNvbWUgc3lzdGVtcyBhcmUgbWVtb3J5IGNvbnN0cmFpbmVkIGJ1
-dCB0aGV5IG5lZWQgdG8gbG9hZCB2ZXJ5IGxhcmdlCj4gPiBmaXJtd2FyZXMuICBUaGUgZmlybXdh
-cmUgc3Vic3lzdGVtIGFsbG93cyBkcml2ZXJzIHRvIHJlcXVlc3QgdGhpcwo+ID4gZmlybXdhcmUg
-YmUgbG9hZGVkIGZyb20gdGhlIGZpbGVzeXN0ZW0sIGJ1dCB0aGlzIHJlcXVpcmVzIHRoYXQgdGhl
-Cj4gPiBlbnRpcmUgZmlybXdhcmUgYmUgbG9hZGVkIGludG8ga2VybmVsIG1lbW9yeSBmaXJzdCBi
-ZWZvcmUgaXQncyBwcm92aWRlZAo+ID4gdG8gdGhlIGRyaXZlci4gIFRoaXMgY2FuIGxlYWQgdG8g
-YSBzaXR1YXRpb24gd2hlcmUgd2UgbWFwIHRoZSBmaXJtd2FyZQo+ID4gdHdpY2UsIG9uY2UgdG8g
-bG9hZCB0aGUgZmlybXdhcmUgaW50byBrZXJuZWwgbWVtb3J5IGFuZCBvbmNlIHRvIGNvcHkgdGhl
-Cj4gPiBmaXJtd2FyZSBpbnRvIHRoZSBmaW5hbCByZXN0aW5nIHBsYWNlLgo+ID4KPiA+IFRvIHJl
-c29sdmUgdGhpcyBwcm9ibGVtLCBjb21taXQgYTA5OGVjZDJmYTdkICgiZmlybXdhcmU6IHN1cHBv
-cnQgbG9hZGluZwo+ID4gaW50byBhIHByZS1hbGxvY2F0ZWQgYnVmZmVyIikgaW50cm9kdWNlZCBy
-ZXF1ZXN0X2Zpcm13YXJlX2ludG9fYnVmKCkgQVBJCj4gPiB0aGF0IGFsbG93cyBkcml2ZXJzIHRv
-IHJlcXVlc3QgZmlybXdhcmUgYmUgbG9hZGVkIGRpcmVjdGx5IGludG8gYQo+ID4gcHJlLWFsbG9j
-YXRlZCBidWZmZXIuIChCYXNlZCBvbiB0aGUgbWFpbGluZyBsaXN0IGRpc2N1c3Npb25zLCBjYWxs
-aW5nCj4gPiBkbWFfYWxsb2NfY29oZXJlbnQoKSBpcyB1bm5lY2Vzc2FyeSBhbmQgY29uZnVzaW5n
-LikKPiA+Cj4gPiAoVmVyeSBicm9rZW4vYnVnZ3kpIGRldmljZXMgdXNpbmcgcHJlLWFsbG9jYXRl
-ZCBtZW1vcnkgcnVuIHRoZSByaXNrIG9mCj4gPiB0aGUgZmlybXdhcmUgYmVpbmcgYWNjZXNzaWJs
-ZSB0byB0aGUgZGV2aWNlIHByaW9yIHRvIHRoZSBjb21wbGV0aW9uIG9mCj4gPiBJTUEncyBzaWdu
-YXR1cmUgdmVyaWZpY2F0aW9uLiAgRm9yIHRoZSB0aW1lIGJlaW5nLCB0aGlzIHBhdGNoIGVtaXRz
-IGEKPiA+IHdhcm5pbmcsIGJ1dCBkb2VzIG5vdCBwcmV2ZW50IHRoZSBsb2FkaW5nIG9mIHRoZSBm
-aXJtd2FyZS4KPiA+Cj4gCj4gQXMgSSBhdHRlbXB0ZWQgdG8gZXhwbGFpbiBpbiB0aGUgZXhjaGFu
-Z2Ugd2l0aCBMdWlzLCB0aGlzIGhhcyBub3RoaW5nCj4gdG8gZG8gd2l0aCBicm9rZW4gb3IgYnVn
-Z3kgZGV2aWNlcywgYnV0IGlzIHNpbXBseSB0aGUgcmVhbGl0eSB3ZSBoYXZlCj4gdG8gZGVhbCB3
-aXRoIG9uIHBsYXRmb3JtcyB0aGF0IGxhY2sgSU9NTVVzLgoKPiBFdmVuIGlmIHlvdSBsb2FkIGlu
-dG8gb25lIGJ1ZmZlciwgY2Fycnkgb3V0IHRoZSBzaWduYXR1cmUgdmVyaWZpY2F0aW9uCj4gYW5k
-ICpvbmx5IHRoZW4qIGNvcHkgaXQgdG8gYW5vdGhlciBidWZmZXIsIGEgYnVzIG1hc3RlciBjb3Vs
-ZAo+IHBvdGVudGlhbGx5IHJlYWQgaXQgZnJvbSB0aGUgZmlyc3QgYnVmZmVyIGFzIHdlbGwuIE1h
-cHBpbmcgZm9yIERNQQo+IGRvZXMgKm5vdCogbWVhbiAnbWFraW5nIHRoZSBtZW1vcnkgcmVhZGFi
-bGUgYnkgdGhlIGRldmljZScgdW5sZXNzCj4gSU9NTVVzIGFyZSBiZWluZyB1c2VkLiBPdGhlcndp
-c2UsIGEgYnVzIG1hc3RlciBjYW4gcmVhZCBpdCBmcm9tIHRoZQo+IGZpcnN0IGJ1ZmZlciwgb3Ig
-ZXZlbiBwYXRjaCB0aGUgY29kZSB0aGF0IHBlcmZvcm1zIHRoZSBzZWN1cml0eSBjaGVjawo+IGlu
-IHRoZSBmaXJzdCBwbGFjZS4gRm9yIHN1Y2ggcGxhdGZvcm1zLCBjb3B5aW5nIHRoZSBkYXRhIGFy
-b3VuZCB0bwo+IHByZXZlbnQgdGhlIGRldmljZSBmcm9tIHJlYWRpbmcgaXQgaXMgc2ltcGx5IHBv
-aW50bGVzcywgYXMgd2VsbCBhcyBhbnkKPiBvdGhlciBtaXRpZ2F0aW9uIGluIHNvZnR3YXJlIHRv
-IHByb3RlY3QgeW91cnNlbGYgZnJvbSBtaXNiZWhhdmluZyBidXMKPiBtYXN0ZXJzLgoKVGhhbmsg
-eW91IGZvciB0YWtpbmcgdGhlIHRpbWUgdG8gZXhwbGFpbiB0aGlzIGFnYWluLgoKPiBTbyBpc3N1
-aW5nIGEgd2FybmluZyBpbiB0aGlzIHBhcnRpY3VsYXIgY2FzZSBpcyByYXRoZXIgYXJiaXRyYXJ5
-LiBPbgo+IHRoZXNlIHBsYXRmb3JtcywgYWxsIGJ1cyBtYXN0ZXJzIGNhbiByZWFkIChhbmQgbW9k
-aWZ5KSBhbGwgb2YgeW91cgo+IG1lbW9yeSBhbGwgb2YgdGhlIHRpbWUsIGFuZCBhcyBsb25nIGFz
-IHRoZSBmaXJtd2FyZSBsb2FkZXIgY29kZSB0YWtlcwo+IGNhcmUgbm90IHRvIHByb3ZpZGUgdGhl
-IERNQSBhZGRyZXNzIHRvIHRoZSBkZXZpY2UgdW50aWwgYWZ0ZXIgdGhlCj4gdmVyaWZpY2F0aW9u
-IGlzIGNvbXBsZXRlLCBpdCByZWFsbHkgaGFzIGRvbmUgYWxsIGl0IHJlYXNvbmFibHkgY2FuIGlu
-Cj4gdGhlIGVudmlyb25tZW50IHRoYXQgaXQgaXMgZXhwZWN0ZWQgdG8gb3BlcmF0ZSBpbi4KClNv
-IGZvciB0aGUgbm9uLUlPTU1VIHN5c3RlbSBjYXNlLCBkaWZmZXJlbnRpYXRpbmcgYmV0d2VlbiBw
-cmUtCmFsbG9jYXRlZCBidWZmZXJzIHZzLiB1c2luZyB0d28gYnVmZmVycyBkb2Vzbid0IG1ha2Ug
-c2Vuc2UuCgo+IAo+IChUaGUgdXNlIG9mIGRtYV9hbGxvY19jb2hlcmVudCgpIGlzIGEgYml0IG9m
-IGEgcmVkIGhlcnJpbmcgaGVyZSwgYXMgaXQKPiBpbmNvcnBvcmF0ZXMgdGhlIERNQSBtYXAgb3Bl
-cmF0aW9uLiBIb3dldmVyLCBETUEgbWFwIGlzIGEgbm8tb3Agb24KPiBzeXN0ZW1zIHdpdGggY2Fj
-aGUgY29oZXJlbnQgMToxIERNQSBbaW93LCBhbGwgUENzIGFuZCBtb3N0IGFybTY0Cj4gcGxhdGZv
-cm1zIHVubGVzcyB0aGV5IGhhdmUgSU9NTVVzXSwgYW5kIHNvIHRoZXJlIGlzIG5vdCBtdWNoCj4g
-ZGlmZmVyZW5jZSBiZXR3ZWVuIG1lbW9yeSBhbGxvY2F0ZWQgd2l0aCBrbWFsbG9jKCkgb3Igd2l0
-aAo+IGRtYV9hbGxvY19jb2hlcmVudCgpIGluIHRlcm1zIG9mIHdoZXRoZXIgdGhlIGRldmljZSBj
-YW4gYWNjZXNzIGl0Cj4gZnJlZWx5KQogwqAKV2hhdCBhYm91dCBzeXN0ZW1zIHdpdGggYW4gSU9N
-TVU/CgpNaW1pCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Mon, Jul 09, 2018 at 11:56:36AM +0100, James Morse wrote:
+> Hi Akashi,
+> 
+> On 09/07/18 01:07, AKASHI Takahiro wrote:
+> > Patch#2 and #3 addresses kdump case. Ard's patch [4] needs to be applied
+> > preliminarily.
+> 
+> I missed this, and was then surprised by [0], when I tested kdump.
+> 
+> Could you re-post this with all the dependencies in the series? These changes
+
+No problem, but I wonder why applying patch#2 didn't fail without
+Ard's as apparently the context for the given hunk is different.
+---
+        efi_memmap_unmap(); <== here
+
++       mapsize = efi.memmap.desc_size * efi.memmap.nr_map;
++
+...
+---
+
+-Takahiro AKASHI
+
+> need to be tested together and merged at the same time, otherwise kdump can't be
+> tested and we risk the maintainer picking up broken code.
+> 
+> 
+> Thanks,
+> 
+> James
+> 
+> 
+> [0] failed kdump boot on Seattle
+> ------------------%<------------------
+> ACPI: Added _OSI(3.0 _SCP Extensions)
+> ACPI: Added _OSI(Processor Aggregator Device)
+> ACPI: Added _OSI(Linux-Dell-Video)
+> Unable to handle kernel paging request at virtual address ffff2007
+> Mem abort info:
+>   ESR = 0x96000021
+>   Exception class = DABT (current EL), IL = 32 bits
+>   SET = 0, FnV = 0
+>   EA = 0, S1PTW = 0
+> Data abort info:
+>   ISV = 0, ISS = 0x00000021
+>   CM = 0, WnR = 0
+> swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
+> pgd=00000080ffdfd803, pud=00000080ffdfc803, pm3
+> Internal error: Oops: 96000021 [#1] PREEMPT SMP
+> Modules linked in:
+> CPU: 1 PID: 1 Comm: swapper/0 Tainted: G S                4.18.0-1
+> Hardware name: AMD Overdrive/Supercharger/Default string, BIOS RO6
+> pstate: 10400005 (nzcV daif +PAN -UAO)
+> pc : acpi_ns_lookup+0x550/0x740
+> lr : acpi_ns_lookup+0x2f8/0x740
+> [...]
+> Process swapper/0 (pid: 1, stack limit = 0x(____ptrval____))
+> Call trace:
+>  acpi_ns_lookup+0x550/0x740
+>  acpi_ds_load2_begin_op+0x568/0x87c
+>   acpi_ds_exec_begin_op+0x50/0x388
+>  acpi_ps_build_named_op+0x1cc/0x3dc
+>  acpi_ps_create_op+0x4f4/0x864
+>  acpi_ps_parse_loop+0x40c/0x133c
+>  acpi_ps_parse_aml+0x1f4/0x5a8
+>  acpi_ps_execute_table+0x24c/0x2e0
+>  acpi_ns_execute_table+0x354/0x408
+>  acpi_ns_parse_table+0x5c/0x94
+>  acpi_ns_load_table+0x40/0xf8
+>  acpi_tb_load_namespace+0x31c/0x510
+>  acpi_load_tables+0x48/0x13c
+>  acpi_init+0x170/0x5c8
+>  do_one_initcall+0xc0/0x2b0
+>  kernel_init_freeable+0x3d4/0x484
+>  kernel_init+0x10/0x118
+>  ret_from_fork+0x10/0x18
+> Code: f90037a2 aa1303e0 97dfd654 f94037a2 (b9400260)
+> ---[ end trace d678006368422baa ]---
+> Kernel panic - not syncing: Attempted to kill init! exitcode=0x00b
+> ------------------%<------------------
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
