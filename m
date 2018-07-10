@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x241.google.com ([2607:f8b0:400e:c01::241])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fd9lX-0004WA-4B
- for kexec@lists.infradead.org; Wed, 11 Jul 2018 07:42:25 +0000
-Received: by mail-pl0-x241.google.com with SMTP id m16-v6so8806847pls.11
- for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 00:42:12 -0700 (PDT)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v11 06/15] arm64: add image head flag definitions
-Date: Wed, 11 Jul 2018 16:41:54 +0900
-Message-Id: <20180711074203.3019-7-takahiro.akashi@linaro.org>
-In-Reply-To: <20180711074203.3019-1-takahiro.akashi@linaro.org>
-References: <20180711074203.3019-1-takahiro.akashi@linaro.org>
+Received: from mga09.intel.com ([134.134.136.24])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fch49-0002kb-C9
+ for kexec@lists.infradead.org; Tue, 10 Jul 2018 01:03:43 +0000
+Date: Tue, 10 Jul 2018 08:59:28 +0800
+From: Ye Xiaolong <xiaolong.ye@intel.com>
+Subject: Re: [kbuild-all] [PATCH v6 2/4] resource: Use list_head to link
+ sibling resource
+Message-ID: <20180710005927.GG10005@yexl-desktop>
+References: <20180704041038.8190-3-bhe@redhat.com>
+ <201807042347.hfDcKxmG%fengguang.wu@intel.com>
+ <20180708025946.GI3047@MiWiFi-R3L-srv>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180708025946.GI3047@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,67 +22,109 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de
-Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: nicolas.pitre@linaro.org, brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, frowand.list@gmail.com, dan.j.williams@intel.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, kbuild test robot <lkp@intel.com>, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, andy.shevchenko@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, bp@suse.de, dyoung@redhat.com, vgoyal@redhat.com, kbuild-all@01.org, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, josh@joshtriplett.org, jglisse@redhat.com, robh+dt@kernel.org, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, devel@linuxdriverproject.org, akpm@linux-foundation.org, fengguang.wu@intel.com, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
 
-Those image head's flags will be used later by kexec_file loader.
+Hi,
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Acked-by: James Morse <james.morse@arm.com>
----
- arch/arm64/include/asm/boot.h | 15 +++++++++++++++
- arch/arm64/kernel/head.S      |  2 +-
- 2 files changed, 16 insertions(+), 1 deletion(-)
+On 07/08, Baoquan He wrote:
+>Hi,
+>
+>On 07/05/18 at 01:00am, kbuild test robot wrote:
+>> Hi Baoquan,
+>> 
+>> I love your patch! Yet something to improve:
+>> 
+>> [auto build test ERROR on linus/master]
+>> [also build test ERROR on v4.18-rc3 next-20180704]
+>> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>
+>Thanks for telling. 
+>
+>I cloned 0day-ci/linut to my local pc.
+>https://github.com/0day-ci/linux.git
+>
+>However, I didn't find below branch. And tried to open it in web
+>broswer, also failed.
+>
 
-diff --git a/arch/arm64/include/asm/boot.h b/arch/arm64/include/asm/boot.h
-index 355e552a9175..0bab7eed3012 100644
---- a/arch/arm64/include/asm/boot.h
-+++ b/arch/arm64/include/asm/boot.h
-@@ -5,6 +5,21 @@
- 
- #include <asm/sizes.h>
- 
-+#define ARM64_MAGIC		"ARM\x64"
-+
-+#define HEAD_FLAG_BE_SHIFT		0
-+#define HEAD_FLAG_PAGE_SIZE_SHIFT	1
-+#define HEAD_FLAG_BE_MASK		0x1
-+#define HEAD_FLAG_PAGE_SIZE_MASK	0x3
-+
-+#define HEAD_FLAG_BE			1
-+#define HEAD_FLAG_PAGE_SIZE_4K		1
-+#define HEAD_FLAG_PAGE_SIZE_16K		2
-+#define HEAD_FLAG_PAGE_SIZE_64K		3
-+
-+#define head_flag_field(flags, field) \
-+		(((flags) >> field##_SHIFT) & field##_MASK)
-+
- /*
-  * arm64 requires the DTB to be 8 byte aligned and
-  * not exceed 2MB in size.
-diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index b0853069702f..8cbac6232ed1 100644
---- a/arch/arm64/kernel/head.S
-+++ b/arch/arm64/kernel/head.S
-@@ -91,7 +91,7 @@ _head:
- 	.quad	0				// reserved
- 	.quad	0				// reserved
- 	.quad	0				// reserved
--	.ascii	"ARM\x64"			// Magic number
-+	.ascii	ARM64_MAGIC			// Magic number
- #ifdef CONFIG_EFI
- 	.long	pe_header - _head		// Offset to the PE header.
- 
--- 
-2.17.0
+Sorry for the inconvenience, 0day bot didn't push the branch to github successfully,
+Just push it manually, you can have a try again.
 
+Thanks,
+Xiaolong
+
+
+>
+>> url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180704-121402
+>> config: mips-rb532_defconfig (attached as .config)
+>> compiler: mipsel-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
+>> reproduce:
+>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>         chmod +x ~/bin/make.cross
+>>         # save the attached .config to linux build tree
+>>         GCC_VERSION=7.2.0 make.cross ARCH=mips 
+>
+>I did find a old one which is for the old version 5 post.
+>
+>[bhe@linux]$ git remote -v
+>0day-ci	https://github.com/0day-ci/linux.git (fetch)
+>0day-ci	https://github.com/0day-ci/linux.git (push)
+>[bhe@dhcp-128-28 linux]$ git branch -a| grep Baoquan| grep resource
+>  remotes/0day-ci/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180612-113600
+>
+>Could you help have a look at this?
+>
+>Thanks
+>Baoquan
+>
+>> 
+>> All error/warnings (new ones prefixed by >>):
+>> 
+>> >> arch/mips/pci/pci-rc32434.c:57:11: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+>>      .child = &rc32434_res_pci_mem2
+>>               ^
+>>    arch/mips/pci/pci-rc32434.c:57:11: note: (near initialization for 'rc32434_res_pci_mem1.child.next')
+>> >> arch/mips/pci/pci-rc32434.c:51:47: warning: missing braces around initializer [-Wmissing-braces]
+>>     static struct resource rc32434_res_pci_mem1 = {
+>>                                                   ^
+>>    arch/mips/pci/pci-rc32434.c:60:47: warning: missing braces around initializer [-Wmissing-braces]
+>>     static struct resource rc32434_res_pci_mem2 = {
+>>                                                   ^
+>>    cc1: some warnings being treated as errors
+>> 
+>> vim +57 arch/mips/pci/pci-rc32434.c
+>> 
+>> 73b4390f Ralf Baechle 2008-07-16  50  
+>> 73b4390f Ralf Baechle 2008-07-16 @51  static struct resource rc32434_res_pci_mem1 = {
+>> 73b4390f Ralf Baechle 2008-07-16  52  	.name = "PCI MEM1",
+>> 73b4390f Ralf Baechle 2008-07-16  53  	.start = 0x50000000,
+>> 73b4390f Ralf Baechle 2008-07-16  54  	.end = 0x5FFFFFFF,
+>> 73b4390f Ralf Baechle 2008-07-16  55  	.flags = IORESOURCE_MEM,
+>> 73b4390f Ralf Baechle 2008-07-16  56  	.sibling = NULL,
+>> 73b4390f Ralf Baechle 2008-07-16 @57  	.child = &rc32434_res_pci_mem2
+>> 73b4390f Ralf Baechle 2008-07-16  58  };
+>> 73b4390f Ralf Baechle 2008-07-16  59  
+>> 
+>> :::::: The code at line 57 was first introduced by commit
+>> :::::: 73b4390fb23456964201abda79f1210fe337d01a [MIPS] Routerboard 532: Support for base system
+>> 
+>> :::::: TO: Ralf Baechle <ralf@linux-mips.org>
+>> :::::: CC: Ralf Baechle <ralf@linux-mips.org>
+>> 
+>> ---
+>> 0-DAY kernel test infrastructure                Open Source Technology Center
+>> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>
+>
+>_______________________________________________
+>kbuild-all mailing list
+>kbuild-all@lists.01.org
+>https://lists.01.org/mailman/listinfo/kbuild-all
 
 _______________________________________________
 kexec mailing list
