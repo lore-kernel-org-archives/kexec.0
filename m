@@ -1,22 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x242.google.com ([2607:f8b0:4001:c0b::242])
+Received: from mail-pl0-x241.google.com ([2607:f8b0:400e:c01::241])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fcmZq-0008Ez-Sw
- for kexec@lists.infradead.org; Tue, 10 Jul 2018 06:56:48 +0000
-Received: by mail-it0-x242.google.com with SMTP id s7-v6so28950589itb.4
- for <kexec@lists.infradead.org>; Mon, 09 Jul 2018 23:56:36 -0700 (PDT)
+ id 1fcnC2-0007R1-1E
+ for kexec@lists.infradead.org; Tue, 10 Jul 2018 07:36:16 +0000
+Received: by mail-pl0-x241.google.com with SMTP id 6-v6so7235251plb.0
+ for <kexec@lists.infradead.org>; Tue, 10 Jul 2018 00:36:03 -0700 (PDT)
+Date: Tue, 10 Jul 2018 16:37:22 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v10 08/14] arm64: kexec_file: load initrd and device-tree
+Message-ID: <20180710073719.GW28220@linaro.org>
+References: <20180623022058.10935-1-takahiro.akashi@linaro.org>
+ <20180623022058.10935-9-takahiro.akashi@linaro.org>
+ <1e401f4e-6176-990d-476c-31ae3f28f26c@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKv+Gu-knHeBRGqo+2pb3X9cCjwovEykoXUf=DZyP7aJpoS60A@mail.gmail.com>
-References: <1530542283-26145-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1530542283-26145-8-git-send-email-zohar@linux.vnet.ibm.com>
- <CAKv+Gu-nky1yX59TL2FNQ-0q7Sy399t2WpVWSy7jqYpQY4Fxjw@mail.gmail.com>
- <1531165294.3332.40.camel@linux.ibm.com>
- <CAKv+Gu-knHeBRGqo+2pb3X9cCjwovEykoXUf=DZyP7aJpoS60A@mail.gmail.com>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Tue, 10 Jul 2018 08:56:35 +0200
-Message-ID: <CAKv+Gu8qjzh_Tta=n9C+cfXO29e_5RcLqfQSpvR5r7QmqzHbEg@mail.gmail.com>
-Subject: Re: [PATCH v5 7/8] ima: based on policy warn about loading firmware
- (pre-allocated buffer)
+Content-Disposition: inline
+In-Reply-To: <1e401f4e-6176-990d-476c-31ae3f28f26c@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,118 +27,178 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Kees Cook <keescook@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Luis R . Rodriguez" <mcgrof@suse.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-security-module <linux-security-module@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eric Biederman <ebiederm@xmission.com>, linux-integrity <linux-integrity@vger.kernel.org>, "Serge E . Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Andres Rodriguez <andresx7@gmail.com>
+To: James Morse <james.morse@arm.com>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-On 10 July 2018 at 08:51, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-> On 9 July 2018 at 21:41, Mimi Zohar <zohar@linux.ibm.com> wrote:
->> On Mon, 2018-07-02 at 17:30 +0200, Ard Biesheuvel wrote:
->>> On 2 July 2018 at 16:38, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
->>> > Some systems are memory constrained but they need to load very large
->>> > firmwares.  The firmware subsystem allows drivers to request this
->>> > firmware be loaded from the filesystem, but this requires that the
->>> > entire firmware be loaded into kernel memory first before it's provided
->>> > to the driver.  This can lead to a situation where we map the firmware
->>> > twice, once to load the firmware into kernel memory and once to copy the
->>> > firmware into the final resting place.
->>> >
->>> > To resolve this problem, commit a098ecd2fa7d ("firmware: support loading
->>> > into a pre-allocated buffer") introduced request_firmware_into_buf() API
->>> > that allows drivers to request firmware be loaded directly into a
->>> > pre-allocated buffer. (Based on the mailing list discussions, calling
->>> > dma_alloc_coherent() is unnecessary and confusing.)
->>> >
->>> > (Very broken/buggy) devices using pre-allocated memory run the risk of
->>> > the firmware being accessible to the device prior to the completion of
->>> > IMA's signature verification.  For the time being, this patch emits a
->>> > warning, but does not prevent the loading of the firmware.
->>> >
->>>
->>> As I attempted to explain in the exchange with Luis, this has nothing
->>> to do with broken or buggy devices, but is simply the reality we have
->>> to deal with on platforms that lack IOMMUs.
->>
->>> Even if you load into one buffer, carry out the signature verification
->>> and *only then* copy it to another buffer, a bus master could
->>> potentially read it from the first buffer as well. Mapping for DMA
->>> does *not* mean 'making the memory readable by the device' unless
->>> IOMMUs are being used. Otherwise, a bus master can read it from the
->>> first buffer, or even patch the code that performs the security check
->>> in the first place. For such platforms, copying the data around to
->>> prevent the device from reading it is simply pointless, as well as any
->>> other mitigation in software to protect yourself from misbehaving bus
->>> masters.
->>
->> Thank you for taking the time to explain this again.
->>
->>> So issuing a warning in this particular case is rather arbitrary. On
->>> these platforms, all bus masters can read (and modify) all of your
->>> memory all of the time, and as long as the firmware loader code takes
->>> care not to provide the DMA address to the device until after the
->>> verification is complete, it really has done all it reasonably can in
->>> the environment that it is expected to operate in.
->>
->> So for the non-IOMMU system case, differentiating between pre-
->> allocated buffers vs. using two buffers doesn't make sense.
->>
->>>
->>> (The use of dma_alloc_coherent() is a bit of a red herring here, as it
->>> incorporates the DMA map operation. However, DMA map is a no-op on
->>> systems with cache coherent 1:1 DMA [iow, all PCs and most arm64
->>> platforms unless they have IOMMUs], and so there is not much
->>> difference between memory allocated with kmalloc() or with
->>> dma_alloc_coherent() in terms of whether the device can access it
->>> freely)
->>
->> What about systems with an IOMMU?
->>
->
-> On systems with an IOMMU, performing the DMA map will create an entry
-> in the IOMMU page tables for the physical region associated with the
-> buffer, making the region accessible to the device. For platforms in
-> this category, using dma_alloc_coherent() for allocating a buffer to
-> pass firmware to the device does open a window where the device could
-> theoretically access this data while the validation is still in
-> progress.
->
-> Note that the device still needs to be informed about the address of
-> the buffer: just calling dma_alloc_coherent() will not allow the
-> device to find the firmware image in its memory space, and arbitrary
-> DMA accesses performed by the device will trigger faults that are
-> reported to the OS. So the window between DMA map (or
-> dma_alloc_coherent()) and the device specific command to pass the DMA
-> buffer address to the device is not inherently unsafe IMO, but I do
-> understand the need to cover this scenario.
->
-> As I pointed out before, using coherent DMA buffers to perform
-> streaming DMA is generally a bad idea, since they may be allocated
-> from a finite pool, and may use uncached mappings, making the access
-> slower than necessary (while streaming DMA can use any kmalloc'ed
-> buffer and will just flush the contents of the caches to main memory
-> when the DMA map is performed).
->
-> So to summarize again: in my opinion, using a single buffer is not a
-> problem as long as the validation completes before the DMA map is
-> performed. This will provide the expected guarantees on systems with
-> IOMMUs, and will not complicate matters on systems where there is no
-> point in obsessing about this anyway given that devices can access all
-> of memory whenever they want to.
->
-> As for the Qualcomm case: dma_alloc_coherent() is not needed here but
-> simply ends up being used because it was already wired up in the
-> qualcomm specific secure world API, which amounts to doing syscalls
-> into a higher privilege level than the one the kernel itself runs at.
-> So again, reasoning about whether the secure world will look at your
-> data before you checked the sig is rather pointless, and adding
-> special cases to the IMA api to cater for this use case seems like a
-> waste of engineering and review effort to me. If we have to do
-> something to tie up this loose end, let's try switching it to the
-> streaming DMA api instead.
->
+James,
 
-Forgot to mention: the Qualcomm case is about passing data to the CPU
-running at another privilege level, so IOMMU vs !IOMMU is not a factor
-here.
+On Tue, Jul 03, 2018 at 05:32:09PM +0100, James Morse wrote:
+> Hi Akashi,
+> 
+> On 23/06/18 03:20, AKASHI Takahiro wrote:
+> > load_other_segments() is expected to allocate and place all the necessary
+> > memory segments other than kernel, including initrd and device-tree
+> > blob (and elf core header for crash).
+> > While most of the code was borrowed from kexec-tools' counterpart,
+> > users may not be allowed to specify dtb explicitly, instead, the dtb
+> > presented by the original boot loader is reused.
+> > 
+> > arch_kimage_kernel_post_load_cleanup() is responsible for freeing arm64-
+> > specific data allocated in load_other_segments().
+> 
+> 
+> > diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> > index c38a8048ed00..7115c4f915dc 100644
+> > --- a/arch/arm64/kernel/machine_kexec_file.c
+> > +++ b/arch/arm64/kernel/machine_kexec_file.c
+> 
+> > +static int setup_dtb(struct kimage *image,
+> > +		unsigned long initrd_load_addr, unsigned long initrd_len,
+> > +		char *cmdline, unsigned long cmdline_len,
+> > +		char **dtb_buf, size_t *dtb_buf_len)
+> > +{
+> > +	char *buf = NULL;
+> > +	size_t buf_size;
+> > +	int nodeoffset;
+> > +	u64 value;
+> > +	int ret;
+> > +
+> > +	/* duplicate dt blob */
+> > +	buf_size = fdt_totalsize(initial_boot_params);
+> > +
+> > +	if (initrd_load_addr) {
+> > +		buf_size += fdt_prop_len("linux,initrd-start", sizeof(u64));
+> > +		buf_size += fdt_prop_len("linux,initrd-end", sizeof(u64));
+> > +	}
+> > +
+> > +	if (cmdline)
+> > +		buf_size += fdt_prop_len("bootargs", cmdline_len + 1);
+> 
+> (a comment here about the possibility of an embedded NULL may avoid surprises later)
+> 
+> 
+> > +	buf = vmalloc(buf_size);
+> > +	if (!buf) {
+> > +		ret = -ENOMEM;
+> > +		goto out_err;
+> > +	}
+> > +
+> > +	ret = fdt_open_into(initial_boot_params, buf, buf_size);
+> > +	if (ret)
+> > +		goto out_err;
+> > +
+> > +	nodeoffset = fdt_path_offset(buf, "/chosen");
+> > +	if (nodeoffset < 0)
+> > +		goto out_err;
+> 
+> This doesn't update 'ret', so we return the 0/success from above...
+
+OK. Will fix it.
+
+> 
+> > +
+> > +	/* add bootargs */
+> > +	if (cmdline) {
+> > +		ret = fdt_setprop(buf, nodeoffset, "bootargs",
+> > +						cmdline, cmdline_len + 1);
+> > +		if (ret)
+> > +			goto out_err;
+> > +	}
+> 
+> So (cmdline_len == 0) from user-space means keep the old cmdline. Sounds
+> sensible. Is this documented anywhere?
+
+Very good catch, James.
+To be a bit surprise, --append (and --cmdline) option belongs to arch-
+specific options in terms of implementation. Apparently, a standard man page
+of kexec(8) say little about it, in particular, for device-tree-based system.
+
+As far as arm64 is concerned, the fact is a bit complicated.
+User space kexec accepts --append as well as --reuse-cmdline, and
+along with yet another --dtb option, a resulting command line for new
+kernel (or bootargs in new dtb) would look to be:
+
+	--append=A | --reuse-cmdline |     --dtb
+		   |                 |   n    |    y(bootargs=B)
+
+	    n            n               S(*1)      B(*2)
+	    n            y               S          S(*3)
+	    y            n               A          A
+	    y            y              S+A        S+A(*4)
+
+      where S: the cmdline parameters of the running system
+		 (equal to bootargs in system's dtb)
+
+You are talking about case(1) above.
+
+Given that we can have an explicit option, --reuse-cmdline, the cmdline
+in (1) should be NULL. Meanwhile, we specify --dtb here, which means
+that we want to re-use system's dtb, implying that we also want to
+reuse a cmdline parameter. (This can be arguable, though)
+
+So I would say that we have both reasons to go for and go against.
+
+# Likewise,
+# I wonder why the cmdnline would not be B or A+B, respectively,
+in case of (3) and (4). But it's a different issue.
+
+> powerpc does the opposite, it deletes the bootargs in this case. Are we happy
+> making his a per-arch thing?
+
+My compromise solution is:
+a.to maintain compatibility with powerpc at system call level, that is,
+  replacing bootargs in new dtb if user explicitly specifies cmdline
+  argument, otherwise nullifying bootargs,
+b.yet maintain compatibility with arm64's kexec behavior at command line
+  interface level. If neither --append nor --dtb is not specified,
+  user space kexec will reuse the system's command line whether or not
+  --reuse-cmdline is used.
+
+(Do you follow me?)
+
+So kexec and kexec_file on arm64 will still behave in exactly the same way,
+but differently from ppc at command level for now.
+The point is that, if we might want or need to change this behavior
+(at any time in the future), we would only have to modify user space kexec.
+Kernel semantics will never break.
+
+(b) requires additional small modification on kexec-tools, but kexec_file
+support is yet to be upstreamed anyway.
+
+> 
+> > +	/* add initrd-* */
+> > +	if (initrd_load_addr) {
+> > +		value = cpu_to_fdt64(initrd_load_addr);
+> > +		ret = fdt_setprop_u64(buf, nodeoffset, "linux,initrd-start",
+> > +							value);
+> > +		if (ret)
+> > +			goto out_err;
+> > +
+> > +		value = cpu_to_fdt64(initrd_load_addr + initrd_len);
+> > +		ret = fdt_setprop_u64(buf, nodeoffset, "linux,initrd-end",
+> > +							value);
+> > +		if (ret)
+> > +			goto out_err;
+> > +	}
+> 
+> Won't this do the same with the initrd? Re-use the old values if no new one was
+> provided? I can't find anything that deletes the property by the time we come to
+> kexec, and the old physical addresses may have been re-used by who-knows-what.
+> 
+> (powerpc has some code to: /* If there's no new initrd, delete the old initrd's
+> info. */)
+
+Yeah, I think that deleting properties would be a right way to go.
+Will fix.
+
+Thanks,
+-Takahiro AKASHI
+
+> 
+> 
+> Thanks,
+> 
+> James
 
 _______________________________________________
 kexec mailing list
