@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x243.google.com ([2607:f8b0:400e:c00::243])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fcfnn-0003E7-4T
- for kexec@lists.infradead.org; Mon, 09 Jul 2018 23:42:44 +0000
-Received: by mail-pf0-x243.google.com with SMTP id y8-v6so14733388pfm.10
- for <kexec@lists.infradead.org>; Mon, 09 Jul 2018 16:42:30 -0700 (PDT)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v3.1 4/4] arm64: acpi: fix alignment fault in accessing ACPI
-Date: Tue, 10 Jul 2018 08:42:29 +0900
-Message-Id: <20180709234229.20181-5-takahiro.akashi@linaro.org>
-In-Reply-To: <20180709234229.20181-1-takahiro.akashi@linaro.org>
-References: <20180709234229.20181-1-takahiro.akashi@linaro.org>
+Received: from mail-it0-x242.google.com ([2607:f8b0:4001:c0b::242])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fcmUw-0006OD-3b
+ for kexec@lists.infradead.org; Tue, 10 Jul 2018 06:51:43 +0000
+Received: by mail-it0-x242.google.com with SMTP id w16-v6so7597352ita.0
+ for <kexec@lists.infradead.org>; Mon, 09 Jul 2018 23:51:31 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <1531165294.3332.40.camel@linux.ibm.com>
+References: <1530542283-26145-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1530542283-26145-8-git-send-email-zohar@linux.vnet.ibm.com>
+ <CAKv+Gu-nky1yX59TL2FNQ-0q7Sy399t2WpVWSy7jqYpQY4Fxjw@mail.gmail.com>
+ <1531165294.3332.40.camel@linux.ibm.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date: Tue, 10 Jul 2018 08:51:30 +0200
+Message-ID: <CAKv+Gu-knHeBRGqo+2pb3X9cCjwovEykoXUf=DZyP7aJpoS60A@mail.gmail.com>
+Subject: Re: [PATCH v5 7/8] ima: based on policy warn about loading firmware
+ (pre-allocated buffer)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,185 +24,119 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, ard.biesheuvel@linaro.org
-Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, al.stone@linaro.org, bhsharma@redhat.com, tbaicar@codeaurora.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Kees Cook <keescook@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Luis R . Rodriguez" <mcgrof@suse.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-security-module <linux-security-module@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eric Biederman <ebiederm@xmission.com>, linux-integrity <linux-integrity@vger.kernel.org>, "Serge E . Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Andres Rodriguez <andresx7@gmail.com>
 
-This is a fix against the issue that crash dump kernel may hang up
-during booting, which can happen on any ACPI-based system with "ACPI
-Reclaim Memory."
+On 9 July 2018 at 21:41, Mimi Zohar <zohar@linux.ibm.com> wrote:
+> On Mon, 2018-07-02 at 17:30 +0200, Ard Biesheuvel wrote:
+>> On 2 July 2018 at 16:38, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
+>> > Some systems are memory constrained but they need to load very large
+>> > firmwares.  The firmware subsystem allows drivers to request this
+>> > firmware be loaded from the filesystem, but this requires that the
+>> > entire firmware be loaded into kernel memory first before it's provided
+>> > to the driver.  This can lead to a situation where we map the firmware
+>> > twice, once to load the firmware into kernel memory and once to copy the
+>> > firmware into the final resting place.
+>> >
+>> > To resolve this problem, commit a098ecd2fa7d ("firmware: support loading
+>> > into a pre-allocated buffer") introduced request_firmware_into_buf() API
+>> > that allows drivers to request firmware be loaded directly into a
+>> > pre-allocated buffer. (Based on the mailing list discussions, calling
+>> > dma_alloc_coherent() is unnecessary and confusing.)
+>> >
+>> > (Very broken/buggy) devices using pre-allocated memory run the risk of
+>> > the firmware being accessible to the device prior to the completion of
+>> > IMA's signature verification.  For the time being, this patch emits a
+>> > warning, but does not prevent the loading of the firmware.
+>> >
+>>
+>> As I attempted to explain in the exchange with Luis, this has nothing
+>> to do with broken or buggy devices, but is simply the reality we have
+>> to deal with on platforms that lack IOMMUs.
+>
+>> Even if you load into one buffer, carry out the signature verification
+>> and *only then* copy it to another buffer, a bus master could
+>> potentially read it from the first buffer as well. Mapping for DMA
+>> does *not* mean 'making the memory readable by the device' unless
+>> IOMMUs are being used. Otherwise, a bus master can read it from the
+>> first buffer, or even patch the code that performs the security check
+>> in the first place. For such platforms, copying the data around to
+>> prevent the device from reading it is simply pointless, as well as any
+>> other mitigation in software to protect yourself from misbehaving bus
+>> masters.
+>
+> Thank you for taking the time to explain this again.
+>
+>> So issuing a warning in this particular case is rather arbitrary. On
+>> these platforms, all bus masters can read (and modify) all of your
+>> memory all of the time, and as long as the firmware loader code takes
+>> care not to provide the DMA address to the device until after the
+>> verification is complete, it really has done all it reasonably can in
+>> the environment that it is expected to operate in.
+>
+> So for the non-IOMMU system case, differentiating between pre-
+> allocated buffers vs. using two buffers doesn't make sense.
+>
+>>
+>> (The use of dma_alloc_coherent() is a bit of a red herring here, as it
+>> incorporates the DMA map operation. However, DMA map is a no-op on
+>> systems with cache coherent 1:1 DMA [iow, all PCs and most arm64
+>> platforms unless they have IOMMUs], and so there is not much
+>> difference between memory allocated with kmalloc() or with
+>> dma_alloc_coherent() in terms of whether the device can access it
+>> freely)
+>
+> What about systems with an IOMMU?
+>
 
-(kernel messages after panic kicked off kdump)
-	   (snip...)
-	Bye!
-	   (snip...)
-	ACPI: Core revision 20170728
-	pud=000000002e7d0003, *pmd=000000002e7c0003, *pte=00e8000039710707
-	Internal error: Oops: 96000021 [#1] SMP
-	Modules linked in:
-	CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.14.0-rc6 #1
-	task: ffff000008d05180 task.stack: ffff000008cc0000
-	PC is at acpi_ns_lookup+0x25c/0x3c0
-	LR is at acpi_ds_load1_begin_op+0xa4/0x294
-	   (snip...)
-	Process swapper/0 (pid: 0, stack limit = 0xffff000008cc0000)
-	Call trace:
-	   (snip...)
-	[<ffff0000084a6764>] acpi_ns_lookup+0x25c/0x3c0
-	[<ffff00000849b4f8>] acpi_ds_load1_begin_op+0xa4/0x294
-	[<ffff0000084ad4ac>] acpi_ps_build_named_op+0xc4/0x198
-	[<ffff0000084ad6cc>] acpi_ps_create_op+0x14c/0x270
-	[<ffff0000084acfa8>] acpi_ps_parse_loop+0x188/0x5c8
-	[<ffff0000084ae048>] acpi_ps_parse_aml+0xb0/0x2b8
-	[<ffff0000084a8e10>] acpi_ns_one_complete_parse+0x144/0x184
-	[<ffff0000084a8e98>] acpi_ns_parse_table+0x48/0x68
-	[<ffff0000084a82cc>] acpi_ns_load_table+0x4c/0xdc
-	[<ffff0000084b32f8>] acpi_tb_load_namespace+0xe4/0x264
-	[<ffff000008baf9b4>] acpi_load_tables+0x48/0xc0
-	[<ffff000008badc20>] acpi_early_init+0x9c/0xd0
-	[<ffff000008b70d50>] start_kernel+0x3b4/0x43c
-	Code: b9008fb9 2a000318 36380054 32190318 (b94002c0)
-	---[ end trace c46ed37f9651c58e ]---
-	Kernel panic - not syncing: Fatal exception
-	Rebooting in 10 seconds..
+On systems with an IOMMU, performing the DMA map will create an entry
+in the IOMMU page tables for the physical region associated with the
+buffer, making the region accessible to the device. For platforms in
+this category, using dma_alloc_coherent() for allocating a buffer to
+pass firmware to the device does open a window where the device could
+theoretically access this data while the validation is still in
+progress.
 
-(diagnosis)
-* This fault is a data abort, alignment fault (ESR=0x96000021)
-  during reading out ACPI table.
-* Initial ACPI tables are normally stored in system ram and marked as
-  "ACPI Reclaim memory" by the firmware.
-* After the commit f56ab9a5b73c ("efi/arm: Don't mark ACPI reclaim
-  memory as MEMBLOCK_NOMAP"), those regions are differently handled
-  as they are "memblock-reserved", without NOMAP bit.
-* So they are now excluded from device tree's "usable-memory-range"
-  which kexec-tools determines based on a current view of /proc/iomem.
-* When crash dump kernel boots up, it tries to accesses ACPI tables by
-  mapping them with ioremap(), not ioremap_cache(), in acpi_os_ioremap()
-  since they are no longer part of mapped system ram.
-* Given that ACPI accessor/helper functions are compiled in without
-  unaligned access support (ACPI_MISALIGNMENT_NOT_SUPPORTED),
-  any unaligned access to ACPI tables can cause a fatal panic.
+Note that the device still needs to be informed about the address of
+the buffer: just calling dma_alloc_coherent() will not allow the
+device to find the firmware image in its memory space, and arbitrary
+DMA accesses performed by the device will trigger faults that are
+reported to the OS. So the window between DMA map (or
+dma_alloc_coherent()) and the device specific command to pass the DMA
+buffer address to the device is not inherently unsafe IMO, but I do
+understand the need to cover this scenario.
 
-With this patch, acpi_os_ioremap() always honors memory attribute
-information provided by the firmware (EFI) and retaining cacheability
-allows the kernel safe access to ACPI tables.
+As I pointed out before, using coherent DMA buffers to perform
+streaming DMA is generally a bad idea, since they may be allocated
+from a finite pool, and may use uncached mappings, making the access
+slower than necessary (while streaming DMA can use any kmalloc'ed
+buffer and will just flush the contents of the caches to main memory
+when the DMA map is performed).
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: James Morse <james.morse@arm.com>
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Reported-by and Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- arch/arm64/include/asm/acpi.h | 23 ++++++++++++++++-------
- arch/arm64/kernel/acpi.c      | 11 +++--------
- 2 files changed, 19 insertions(+), 15 deletions(-)
+So to summarize again: in my opinion, using a single buffer is not a
+problem as long as the validation completes before the DMA map is
+performed. This will provide the expected guarantees on systems with
+IOMMUs, and will not complicate matters on systems where there is no
+point in obsessing about this anyway given that devices can access all
+of memory whenever they want to.
 
-diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
-index 0db62a4cbce2..68bc18cb2b85 100644
---- a/arch/arm64/include/asm/acpi.h
-+++ b/arch/arm64/include/asm/acpi.h
-@@ -12,10 +12,12 @@
- #ifndef _ASM_ACPI_H
- #define _ASM_ACPI_H
- 
-+#include <linux/efi.h>
- #include <linux/memblock.h>
- #include <linux/psci.h>
- 
- #include <asm/cputype.h>
-+#include <asm/io.h>
- #include <asm/smp_plat.h>
- #include <asm/tlbflush.h>
- 
-@@ -29,18 +31,22 @@
- 
- /* Basic configuration for ACPI */
- #ifdef	CONFIG_ACPI
-+pgprot_t __acpi_get_mem_attribute(phys_addr_t addr);
-+
- /* ACPI table mapping after acpi_permanent_mmap is set */
- static inline void __iomem *acpi_os_ioremap(acpi_physical_address phys,
- 					    acpi_size size)
- {
-+	/* For normal memory we already have a cacheable mapping. */
-+	if (memblock_is_map_memory(phys))
-+		return (void __iomem *)__phys_to_virt(phys);
-+
- 	/*
--	 * EFI's reserve_regions() call adds memory with the WB attribute
--	 * to memblock via early_init_dt_add_memory_arch().
-+	 * We should still honor the memory's attribute here because
-+	 * crash dump kernel possibly excludes some ACPI (reclaim)
-+	 * regions from memblock list.
- 	 */
--	if (!memblock_is_memory(phys))
--		return ioremap(phys, size);
--
--	return ioremap_cache(phys, size);
-+	return __ioremap(phys, size, __acpi_get_mem_attribute(phys));
- }
- #define acpi_os_ioremap acpi_os_ioremap
- 
-@@ -129,7 +135,10 @@ static inline const char *acpi_get_enable_method(int cpu)
-  * for compatibility.
-  */
- #define acpi_disable_cmcff 1
--pgprot_t arch_apei_get_mem_attribute(phys_addr_t addr);
-+static inline pgprot_t arch_apei_get_mem_attribute(phys_addr_t addr)
-+{
-+	return __acpi_get_mem_attribute(addr);
-+}
- #endif /* CONFIG_ACPI_APEI */
- 
- #ifdef CONFIG_ACPI_NUMA
-diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-index 7b09487ff8fb..ed46dc188b22 100644
---- a/arch/arm64/kernel/acpi.c
-+++ b/arch/arm64/kernel/acpi.c
-@@ -18,6 +18,7 @@
- #include <linux/acpi.h>
- #include <linux/bootmem.h>
- #include <linux/cpumask.h>
-+#include <linux/efi.h>
- #include <linux/efi-bgrt.h>
- #include <linux/init.h>
- #include <linux/irq.h>
-@@ -29,13 +30,9 @@
- 
- #include <asm/cputype.h>
- #include <asm/cpu_ops.h>
-+#include <asm/pgtable.h>
- #include <asm/smp_plat.h>
- 
--#ifdef CONFIG_ACPI_APEI
--# include <linux/efi.h>
--# include <asm/pgtable.h>
--#endif
--
- int acpi_noirq = 1;		/* skip ACPI IRQ initialization */
- int acpi_disabled = 1;
- EXPORT_SYMBOL(acpi_disabled);
-@@ -239,8 +236,7 @@ void __init acpi_boot_table_init(void)
- 	}
- }
- 
--#ifdef CONFIG_ACPI_APEI
--pgprot_t arch_apei_get_mem_attribute(phys_addr_t addr)
-+pgprot_t __acpi_get_mem_attribute(phys_addr_t addr)
- {
- 	/*
- 	 * According to "Table 8 Map: EFI memory types to AArch64 memory
-@@ -261,4 +257,3 @@ pgprot_t arch_apei_get_mem_attribute(phys_addr_t addr)
- 		return __pgprot(PROT_NORMAL_NC);
- 	return __pgprot(PROT_DEVICE_nGnRnE);
- }
--#endif
+As for the Qualcomm case: dma_alloc_coherent() is not needed here but
+simply ends up being used because it was already wired up in the
+qualcomm specific secure world API, which amounts to doing syscalls
+into a higher privilege level than the one the kernel itself runs at.
+So again, reasoning about whether the secure world will look at your
+data before you checked the sig is rather pointless, and adding
+special cases to the IMA api to cater for this use case seems like a
+waste of engineering and review effort to me. If we have to do
+something to tie up this loose end, let's try switching it to the
+streaming DMA api instead.
+
 -- 
-2.17.0
-
+Ard.
 
 _______________________________________________
 kexec mailing list
