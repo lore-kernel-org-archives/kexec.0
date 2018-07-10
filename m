@@ -1,20 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x242.google.com ([2607:f8b0:4001:c0b::242])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fcxXs-0002Tc-AM
- for kexec@lists.infradead.org; Tue, 10 Jul 2018 18:39:30 +0000
-Received: by mail-it0-x242.google.com with SMTP id l16-v6so90603ita.0
- for <kexec@lists.infradead.org>; Tue, 10 Jul 2018 11:39:17 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <93c42065-bece-a4c7-ed99-5e98f91315a6@arm.com>
-References: <20180709234229.20181-1-takahiro.akashi@linaro.org>
- <20180709234229.20181-3-takahiro.akashi@linaro.org>
- <93c42065-bece-a4c7-ed99-5e98f91315a6@arm.com>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Tue, 10 Jul 2018 20:39:16 +0200
-Message-ID: <CAKv+Gu_fajf3_P0wKpdV34Ungu=fn0=WG1U_MSQ9WF_2GFRfDA@mail.gmail.com>
-Subject: Re: [PATCH v3.1 2/4] efi/arm: preserve early mapping of UEFI memory
- map longer for BGRT
+ id 1fcxft-00089o-MU
+ for kexec@lists.infradead.org; Tue, 10 Jul 2018 18:47:47 +0000
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w6AIi6FV117621
+ for <kexec@lists.infradead.org>; Tue, 10 Jul 2018 14:47:32 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2k4xnepde6-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Tue, 10 Jul 2018 14:47:31 -0400
+Received: from localhost
+ by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Tue, 10 Jul 2018 19:47:29 +0100
+Subject: Re: [PATCH v5 7/8] ima: based on policy warn about loading firmware
+ (pre-allocated buffer)
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Tue, 10 Jul 2018 14:47:21 -0400
+In-Reply-To: <CAKv+Gu8qjzh_Tta=n9C+cfXO29e_5RcLqfQSpvR5r7QmqzHbEg@mail.gmail.com>
+References: <1530542283-26145-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1530542283-26145-8-git-send-email-zohar@linux.vnet.ibm.com>
+ <CAKv+Gu-nky1yX59TL2FNQ-0q7Sy399t2WpVWSy7jqYpQY4Fxjw@mail.gmail.com>
+ <1531165294.3332.40.camel@linux.ibm.com>
+ <CAKv+Gu-knHeBRGqo+2pb3X9cCjwovEykoXUf=DZyP7aJpoS60A@mail.gmail.com>
+ <CAKv+Gu8qjzh_Tta=n9C+cfXO29e_5RcLqfQSpvR5r7QmqzHbEg@mail.gmail.com>
+Mime-Version: 1.0
+Message-Id: <1531248441.3332.142.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,80 +37,128 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, "Baicar, Tyler" <tbaicar@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Dave Young <dyoung@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Kees Cook <keescook@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Luis R . Rodriguez" <mcgrof@suse.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-security-module <linux-security-module@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, "Luis
+ R . Rodriguez" <mcgrof@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eric Biederman <ebiederm@xmission.com>, linux-integrity <linux-integrity@vger.kernel.org>, "Serge E . Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Andres Rodriguez <andresx7@gmail.com>
 
-On 10 July 2018 at 19:57, James Morse <james.morse@arm.com> wrote:
-> Hi Ard,
->
-> On 10/07/18 00:42, AKASHI Takahiro wrote:
->> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->>
->> The BGRT code validates the contents of the table against the UEFI
->> memory map, and so it expects it to be mapped when the code runs.
->>
->> On ARM, this is currently not the case, since we tear down the early
->> mapping after efi_init() completes, and only create the permanent
->> mapping in arm_enable_runtime_services(), which executes as an early
->> initcall, but still leaves a window where the UEFI memory map is not
->> mapped.
->>
->> So move the call to efi_memmap_unmap() from efi_init() to
->> arm_enable_runtime_services().
->
-> I don't have a machine that generates a BGRT, but I can see that efi_mem_type()
-> call in efi_bgrt_init() would cause the same problems we have with kexec and acpi.
->
-
-I'm not sure I follow. The BGRT table only contains natively aligned
-fields, so the alignment faults should not occur when accessing this
-table after kexec. The issue addressed by this patch is that
-efi_mem_type() bails when called while EFI_MEMMAP is cleared.
-
->
->> diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
->> index b5214c143fee..388a929baf95 100644
->> --- a/drivers/firmware/efi/arm-init.c
->> +++ b/drivers/firmware/efi/arm-init.c
->> @@ -259,7 +259,6 @@ void __init efi_init(void)
->>
->>       reserve_regions();
->>       efi_esrt_init();
->> -     efi_memmap_unmap();
->>
->>       memblock_reserve(params.mmap & PAGE_MASK,
->>                        PAGE_ALIGN(params.mmap_size +
->> diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/arm-runtime.c
->> index 5889cbea60b8..59a8c0ec94d5 100644
->> --- a/drivers/firmware/efi/arm-runtime.c
->> +++ b/drivers/firmware/efi/arm-runtime.c
->> @@ -115,6 +115,8 @@ static int __init arm_enable_runtime_services(void)
->>               return 0;
->>       }
->>
->> +     efi_memmap_unmap();
->
-> This can get called twice if uefi_init() fails after setting the EFI_BOOT flag,
-> but this can only happen if the system table signature is wrong, (or we're out
-> of memory really early).
->
-
-I guess we should check the EFI_MEMMAP attribute here as well then.
-
-> I think this is harmless as we end up passing NULL to early_memunmap() which
-> WARN()s and returns as its outside the fixmap range. Its just more noise on
-> systems with a corrupt efi system table.
->
-> Acked-by: James Morse <james.morse@arm.com>
->
-
-Thanks James
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCAyMDE4LTA3LTEwIGF0IDA4OjU2ICswMjAwLCBBcmQgQmllc2hldXZlbCB3cm90ZToK
+PiBPbiAxMCBKdWx5IDIwMTggYXQgMDg6NTEsIEFyZCBCaWVzaGV1dmVsIDxhcmQuYmllc2hldXZl
+bEBsaW5hcm8ub3JnPiB3cm90ZToKPiA+IE9uIDkgSnVseSAyMDE4IGF0IDIxOjQxLCBNaW1pIFpv
+aGFyIDx6b2hhckBsaW51eC5pYm0uY29tPiB3cm90ZToKPiA+PiBPbiBNb24sIDIwMTgtMDctMDIg
+YXQgMTc6MzAgKzAyMDAsIEFyZCBCaWVzaGV1dmVsIHdyb3RlOgo+ID4+PiBPbiAyIEp1bHkgMjAx
+OCBhdCAxNjozOCwgTWltaSBab2hhciA8em9oYXJAbGludXgudm5ldC5pYm0uY29tPiB3cm90ZToK
+PiA+Pj4gPiBTb21lIHN5c3RlbXMgYXJlIG1lbW9yeSBjb25zdHJhaW5lZCBidXQgdGhleSBuZWVk
+IHRvIGxvYWQgdmVyeSBsYXJnZQo+ID4+PiA+IGZpcm13YXJlcy4gIFRoZSBmaXJtd2FyZSBzdWJz
+eXN0ZW0gYWxsb3dzIGRyaXZlcnMgdG8gcmVxdWVzdCB0aGlzCj4gPj4+ID4gZmlybXdhcmUgYmUg
+bG9hZGVkIGZyb20gdGhlIGZpbGVzeXN0ZW0sIGJ1dCB0aGlzIHJlcXVpcmVzIHRoYXQgdGhlCj4g
+Pj4+ID4gZW50aXJlIGZpcm13YXJlIGJlIGxvYWRlZCBpbnRvIGtlcm5lbCBtZW1vcnkgZmlyc3Qg
+YmVmb3JlIGl0J3MgcHJvdmlkZWQKPiA+Pj4gPiB0byB0aGUgZHJpdmVyLiAgVGhpcyBjYW4gbGVh
+ZCB0byBhIHNpdHVhdGlvbiB3aGVyZSB3ZSBtYXAgdGhlIGZpcm13YXJlCj4gPj4+ID4gdHdpY2Us
+IG9uY2UgdG8gbG9hZCB0aGUgZmlybXdhcmUgaW50byBrZXJuZWwgbWVtb3J5IGFuZCBvbmNlIHRv
+IGNvcHkgdGhlCj4gPj4+ID4gZmlybXdhcmUgaW50byB0aGUgZmluYWwgcmVzdGluZyBwbGFjZS4K
+PiA+Pj4gPgo+ID4+PiA+IFRvIHJlc29sdmUgdGhpcyBwcm9ibGVtLCBjb21taXQgYTA5OGVjZDJm
+YTdkICgiZmlybXdhcmU6IHN1cHBvcnQgbG9hZGluZwo+ID4+PiA+IGludG8gYSBwcmUtYWxsb2Nh
+dGVkIGJ1ZmZlciIpIGludHJvZHVjZWQgcmVxdWVzdF9maXJtd2FyZV9pbnRvX2J1ZigpIEFQSQo+
+ID4+PiA+IHRoYXQgYWxsb3dzIGRyaXZlcnMgdG8gcmVxdWVzdCBmaXJtd2FyZSBiZSBsb2FkZWQg
+ZGlyZWN0bHkgaW50byBhCj4gPj4+ID4gcHJlLWFsbG9jYXRlZCBidWZmZXIuIChCYXNlZCBvbiB0
+aGUgbWFpbGluZyBsaXN0IGRpc2N1c3Npb25zLCBjYWxsaW5nCj4gPj4+ID4gZG1hX2FsbG9jX2Nv
+aGVyZW50KCkgaXMgdW5uZWNlc3NhcnkgYW5kIGNvbmZ1c2luZy4pCj4gPj4+ID4KPiA+Pj4gPiAo
+VmVyeSBicm9rZW4vYnVnZ3kpIGRldmljZXMgdXNpbmcgcHJlLWFsbG9jYXRlZCBtZW1vcnkgcnVu
+IHRoZSByaXNrIG9mCj4gPj4+ID4gdGhlIGZpcm13YXJlIGJlaW5nIGFjY2Vzc2libGUgdG8gdGhl
+IGRldmljZSBwcmlvciB0byB0aGUgY29tcGxldGlvbiBvZgo+ID4+PiA+IElNQSdzIHNpZ25hdHVy
+ZSB2ZXJpZmljYXRpb24uICBGb3IgdGhlIHRpbWUgYmVpbmcsIHRoaXMgcGF0Y2ggZW1pdHMgYQo+
+ID4+PiA+IHdhcm5pbmcsIGJ1dCBkb2VzIG5vdCBwcmV2ZW50IHRoZSBsb2FkaW5nIG9mIHRoZSBm
+aXJtd2FyZS4KPiA+Pj4gPgo+ID4+Pgo+ID4+PiBBcyBJIGF0dGVtcHRlZCB0byBleHBsYWluIGlu
+IHRoZSBleGNoYW5nZSB3aXRoIEx1aXMsIHRoaXMgaGFzIG5vdGhpbmcKPiA+Pj4gdG8gZG8gd2l0
+aCBicm9rZW4gb3IgYnVnZ3kgZGV2aWNlcywgYnV0IGlzIHNpbXBseSB0aGUgcmVhbGl0eSB3ZSBo
+YXZlCj4gPj4+IHRvIGRlYWwgd2l0aCBvbiBwbGF0Zm9ybXMgdGhhdCBsYWNrIElPTU1Vcy4KPiA+
+Pgo+ID4+PiBFdmVuIGlmIHlvdSBsb2FkIGludG8gb25lIGJ1ZmZlciwgY2Fycnkgb3V0IHRoZSBz
+aWduYXR1cmUgdmVyaWZpY2F0aW9uCj4gPj4+IGFuZCAqb25seSB0aGVuKiBjb3B5IGl0IHRvIGFu
+b3RoZXIgYnVmZmVyLCBhIGJ1cyBtYXN0ZXIgY291bGQKPiA+Pj4gcG90ZW50aWFsbHkgcmVhZCBp
+dCBmcm9tIHRoZSBmaXJzdCBidWZmZXIgYXMgd2VsbC4gTWFwcGluZyBmb3IgRE1BCj4gPj4+IGRv
+ZXMgKm5vdCogbWVhbiAnbWFraW5nIHRoZSBtZW1vcnkgcmVhZGFibGUgYnkgdGhlIGRldmljZScg
+dW5sZXNzCj4gPj4+IElPTU1VcyBhcmUgYmVpbmcgdXNlZC4gT3RoZXJ3aXNlLCBhIGJ1cyBtYXN0
+ZXIgY2FuIHJlYWQgaXQgZnJvbSB0aGUKPiA+Pj4gZmlyc3QgYnVmZmVyLCBvciBldmVuIHBhdGNo
+IHRoZSBjb2RlIHRoYXQgcGVyZm9ybXMgdGhlIHNlY3VyaXR5IGNoZWNrCj4gPj4+IGluIHRoZSBm
+aXJzdCBwbGFjZS4gRm9yIHN1Y2ggcGxhdGZvcm1zLCBjb3B5aW5nIHRoZSBkYXRhIGFyb3VuZCB0
+bwo+ID4+PiBwcmV2ZW50IHRoZSBkZXZpY2UgZnJvbSByZWFkaW5nIGl0IGlzIHNpbXBseSBwb2lu
+dGxlc3MsIGFzIHdlbGwgYXMgYW55Cj4gPj4+IG90aGVyIG1pdGlnYXRpb24gaW4gc29mdHdhcmUg
+dG8gcHJvdGVjdCB5b3Vyc2VsZiBmcm9tIG1pc2JlaGF2aW5nIGJ1cwo+ID4+PiBtYXN0ZXJzLgo+
+ID4+Cj4gPj4gVGhhbmsgeW91IGZvciB0YWtpbmcgdGhlIHRpbWUgdG8gZXhwbGFpbiB0aGlzIGFn
+YWluLgo+ID4+Cj4gPj4+IFNvIGlzc3VpbmcgYSB3YXJuaW5nIGluIHRoaXMgcGFydGljdWxhciBj
+YXNlIGlzIHJhdGhlciBhcmJpdHJhcnkuIE9uCj4gPj4+IHRoZXNlIHBsYXRmb3JtcywgYWxsIGJ1
+cyBtYXN0ZXJzIGNhbiByZWFkIChhbmQgbW9kaWZ5KSBhbGwgb2YgeW91cgo+ID4+PiBtZW1vcnkg
+YWxsIG9mIHRoZSB0aW1lLCBhbmQgYXMgbG9uZyBhcyB0aGUgZmlybXdhcmUgbG9hZGVyIGNvZGUg
+dGFrZXMKPiA+Pj4gY2FyZSBub3QgdG8gcHJvdmlkZSB0aGUgRE1BIGFkZHJlc3MgdG8gdGhlIGRl
+dmljZSB1bnRpbCBhZnRlciB0aGUKPiA+Pj4gdmVyaWZpY2F0aW9uIGlzIGNvbXBsZXRlLCBpdCBy
+ZWFsbHkgaGFzIGRvbmUgYWxsIGl0IHJlYXNvbmFibHkgY2FuIGluCj4gPj4+IHRoZSBlbnZpcm9u
+bWVudCB0aGF0IGl0IGlzIGV4cGVjdGVkIHRvIG9wZXJhdGUgaW4uCj4gPj4KPiA+PiBTbyBmb3Ig
+dGhlIG5vbi1JT01NVSBzeXN0ZW0gY2FzZSwgZGlmZmVyZW50aWF0aW5nIGJldHdlZW4gcHJlLQo+
+ID4+IGFsbG9jYXRlZCBidWZmZXJzIHZzLiB1c2luZyB0d28gYnVmZmVycyBkb2Vzbid0IG1ha2Ug
+c2Vuc2UuCj4gPj4KPiA+Pj4KPiA+Pj4gKFRoZSB1c2Ugb2YgZG1hX2FsbG9jX2NvaGVyZW50KCkg
+aXMgYSBiaXQgb2YgYSByZWQgaGVycmluZyBoZXJlLCBhcyBpdAo+ID4+PiBpbmNvcnBvcmF0ZXMg
+dGhlIERNQSBtYXAgb3BlcmF0aW9uLiBIb3dldmVyLCBETUEgbWFwIGlzIGEgbm8tb3Agb24KPiA+
+Pj4gc3lzdGVtcyB3aXRoIGNhY2hlIGNvaGVyZW50IDE6MSBETUEgW2lvdywgYWxsIFBDcyBhbmQg
+bW9zdCBhcm02NAo+ID4+PiBwbGF0Zm9ybXMgdW5sZXNzIHRoZXkgaGF2ZSBJT01NVXNdLCBhbmQg
+c28gdGhlcmUgaXMgbm90IG11Y2gKPiA+Pj4gZGlmZmVyZW5jZSBiZXR3ZWVuIG1lbW9yeSBhbGxv
+Y2F0ZWQgd2l0aCBrbWFsbG9jKCkgb3Igd2l0aAo+ID4+PiBkbWFfYWxsb2NfY29oZXJlbnQoKSBp
+biB0ZXJtcyBvZiB3aGV0aGVyIHRoZSBkZXZpY2UgY2FuIGFjY2VzcyBpdAo+ID4+PiBmcmVlbHkp
+Cj4gPj4KPiA+PiBXaGF0IGFib3V0IHN5c3RlbXMgd2l0aCBhbiBJT01NVT8KPiA+Pgo+ID4KPiA+
+IE9uIHN5c3RlbXMgd2l0aCBhbiBJT01NVSwgcGVyZm9ybWluZyB0aGUgRE1BIG1hcCB3aWxsIGNy
+ZWF0ZSBhbiBlbnRyeQo+ID4gaW4gdGhlIElPTU1VIHBhZ2UgdGFibGVzIGZvciB0aGUgcGh5c2lj
+YWwgcmVnaW9uIGFzc29jaWF0ZWQgd2l0aCB0aGUKPiA+IGJ1ZmZlciwgbWFraW5nIHRoZSByZWdp
+b24gYWNjZXNzaWJsZSB0byB0aGUgZGV2aWNlLiBGb3IgcGxhdGZvcm1zIGluCj4gPiB0aGlzIGNh
+dGVnb3J5LCB1c2luZyBkbWFfYWxsb2NfY29oZXJlbnQoKSBmb3IgYWxsb2NhdGluZyBhIGJ1ZmZl
+ciB0bwo+ID4gcGFzcyBmaXJtd2FyZSB0byB0aGUgZGV2aWNlIGRvZXMgb3BlbiBhIHdpbmRvdyB3
+aGVyZSB0aGUgZGV2aWNlIGNvdWxkCj4gPiB0aGVvcmV0aWNhbGx5IGFjY2VzcyB0aGlzIGRhdGEg
+d2hpbGUgdGhlIHZhbGlkYXRpb24gaXMgc3RpbGwgaW4KPiA+IHByb2dyZXNzLgo+ID4KPiA+IE5v
+dGUgdGhhdCB0aGUgZGV2aWNlIHN0aWxsIG5lZWRzIHRvIGJlIGluZm9ybWVkIGFib3V0IHRoZSBh
+ZGRyZXNzIG9mCj4gPiB0aGUgYnVmZmVyOiBqdXN0IGNhbGxpbmcgZG1hX2FsbG9jX2NvaGVyZW50
+KCkgd2lsbCBub3QgYWxsb3cgdGhlCj4gPiBkZXZpY2UgdG8gZmluZCB0aGUgZmlybXdhcmUgaW1h
+Z2UgaW4gaXRzIG1lbW9yeSBzcGFjZSwgYW5kIGFyYml0cmFyeQo+ID4gRE1BIGFjY2Vzc2VzIHBl
+cmZvcm1lZCBieSB0aGUgZGV2aWNlIHdpbGwgdHJpZ2dlciBmYXVsdHMgdGhhdCBhcmUKPiA+IHJl
+cG9ydGVkIHRvIHRoZSBPUy4gU28gdGhlIHdpbmRvdyBiZXR3ZWVuIERNQSBtYXAgKG9yCj4gPiBk
+bWFfYWxsb2NfY29oZXJlbnQoKSkgYW5kIHRoZSBkZXZpY2Ugc3BlY2lmaWMgY29tbWFuZCB0byBw
+YXNzIHRoZSBETUEKPiA+IGJ1ZmZlciBhZGRyZXNzIHRvIHRoZSBkZXZpY2UgaXMgbm90IGluaGVy
+ZW50bHkgdW5zYWZlIElNTywgYnV0IEkgZG8KPiA+IHVuZGVyc3RhbmQgdGhlIG5lZWQgdG8gY292
+ZXIgdGhpcyBzY2VuYXJpby4KPiA+Cj4gPiBBcyBJIHBvaW50ZWQgb3V0IGJlZm9yZSwgdXNpbmcg
+Y29oZXJlbnQgRE1BIGJ1ZmZlcnMgdG8gcGVyZm9ybQo+ID4gc3RyZWFtaW5nIERNQSBpcyBnZW5l
+cmFsbHkgYSBiYWQgaWRlYSwgc2luY2UgdGhleSBtYXkgYmUgYWxsb2NhdGVkCj4gPiBmcm9tIGEg
+ZmluaXRlIHBvb2wsIGFuZCBtYXkgdXNlIHVuY2FjaGVkIG1hcHBpbmdzLCBtYWtpbmcgdGhlIGFj
+Y2Vzcwo+ID4gc2xvd2VyIHRoYW4gbmVjZXNzYXJ5ICh3aGlsZSBzdHJlYW1pbmcgRE1BIGNhbiB1
+c2UgYW55IGttYWxsb2MnZWQKPiA+IGJ1ZmZlciBhbmQgd2lsbCBqdXN0IGZsdXNoIHRoZSBjb250
+ZW50cyBvZiB0aGUgY2FjaGVzIHRvIG1haW4gbWVtb3J5Cj4gPiB3aGVuIHRoZSBETUEgbWFwIGlz
+IHBlcmZvcm1lZCkuCj4gPgo+ID4gU28gdG8gc3VtbWFyaXplIGFnYWluOiBpbiBteSBvcGluaW9u
+LCB1c2luZyBhIHNpbmdsZSBidWZmZXIgaXMgbm90IGEKPiA+IHByb2JsZW0gYXMgbG9uZyBhcyB0
+aGUgdmFsaWRhdGlvbiBjb21wbGV0ZXMgYmVmb3JlIHRoZSBETUEgbWFwIGlzCj4gPiBwZXJmb3Jt
+ZWQuIFRoaXMgd2lsbCBwcm92aWRlIHRoZSBleHBlY3RlZCBndWFyYW50ZWVzIG9uIHN5c3RlbXMg
+d2l0aAo+ID4gSU9NTVVzLCBhbmQgd2lsbCBub3QgY29tcGxpY2F0ZSBtYXR0ZXJzIG9uIHN5c3Rl
+bXMgd2hlcmUgdGhlcmUgaXMgbm8KPiA+IHBvaW50IGluIG9ic2Vzc2luZyBhYm91dCB0aGlzIGFu
+eXdheSBnaXZlbiB0aGF0IGRldmljZXMgY2FuIGFjY2VzcyBhbGwKPiA+IG9mIG1lbW9yeSB3aGVu
+ZXZlciB0aGV5IHdhbnQgdG8uCgpJdCBzb3VuZCBsaWtlIGFzIGxvbmcgYXMgdGhlIHByZS1hbGxv
+Y2F0ZWQgYnVmZmVyIGlzIG5vdCBiZWluZyByZS0KdXNlZCwgZWl0aGVyIGJ5IGJlaW5nIG1hcHBl
+ZCB0byBtdWx0aXBsZSBkZXZpY2VzIG9yIHVzZWQgdG8gbG9hZAptdWx0aXBsZSBmaXJtd2FyZSBi
+bG9icywgaXQgaXMgc2FmZS4KCj4gPgo+ID4gQXMgZm9yIHRoZSBRdWFsY29tbSBjYXNlOiBkbWFf
+YWxsb2NfY29oZXJlbnQoKSBpcyBub3QgbmVlZGVkIGhlcmUgYnV0Cj4gPiBzaW1wbHkgZW5kcyB1
+cCBiZWluZyB1c2VkIGJlY2F1c2UgaXQgd2FzIGFscmVhZHkgd2lyZWQgdXAgaW4gdGhlCj4gPiBx
+dWFsY29tbSBzcGVjaWZpYyBzZWN1cmUgd29ybGQgQVBJLCB3aGljaCBhbW91bnRzIHRvIGRvaW5n
+IHN5c2NhbGxzCj4gPiBpbnRvIGEgaGlnaGVyIHByaXZpbGVnZSBsZXZlbCB0aGFuIHRoZSBvbmUg
+dGhlIGtlcm5lbCBpdHNlbGYgcnVucyBhdC4KPiA+IFNvIGFnYWluLCByZWFzb25pbmcgYWJvdXQg
+d2hldGhlciB0aGUgc2VjdXJlIHdvcmxkIHdpbGwgbG9vayBhdCB5b3VyCj4gPiBkYXRhIGJlZm9y
+ZSB5b3UgY2hlY2tlZCB0aGUgc2lnIGlzIHJhdGhlciBwb2ludGxlc3MsIGFuZCBhZGRpbmcKPiA+
+IHNwZWNpYWwgY2FzZXMgdG8gdGhlIElNQSBhcGkgdG8gY2F0ZXIgZm9yIHRoaXMgdXNlIGNhc2Ug
+c2VlbXMgbGlrZSBhCj4gPiB3YXN0ZSBvZiBlbmdpbmVlcmluZyBhbmQgcmV2aWV3IGVmZm9ydCB0
+byBtZS4gSWYgd2UgaGF2ZSB0byBkbwo+ID4gc29tZXRoaW5nIHRvIHRpZSB1cCB0aGlzIGxvb3Nl
+IGVuZCwgbGV0J3MgdHJ5IHN3aXRjaGluZyBpdCB0byB0aGUKPiA+IHN0cmVhbWluZyBETUEgYXBp
+IGluc3RlYWQuCj4gPgo+IAo+IEZvcmdvdCB0byBtZW50aW9uOiB0aGUgUXVhbGNvbW0gY2FzZSBp
+cyBhYm91dCBwYXNzaW5nIGRhdGEgdG8gdGhlIENQVQo+IHJ1bm5pbmcgYXQgYW5vdGhlciBwcml2
+aWxlZ2UgbGV2ZWwsIHNvIElPTU1VIHZzICFJT01NVSBpcyBub3QgYSBmYWN0b3IKPiBoZXJlLgoK
+QWdyZWVkLiDCoEl0IHNvdW5kcyBsaWtlIHRoZSBkZXBlbmRlbmN5IHdvdWxkIGJlIG9uIHdoZXRo
+ZXIgdGhlIGJ1ZmZlcgpoYXMgYmVlbiBETUEgbWFwcGVkLgoKTWltaQoKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
+Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8va2V4ZWMK
