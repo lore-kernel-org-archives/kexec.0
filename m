@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v10 08/14] arm64: kexec_file: load initrd and device-tree
-References: <20180623022058.10935-1-takahiro.akashi@linaro.org>
- <20180623022058.10935-9-takahiro.akashi@linaro.org>
- <1e401f4e-6176-990d-476c-31ae3f28f26c@arm.com>
- <20180710073719.GW28220@linaro.org>
+Subject: Re: [PATCH v3.1 2/4] efi/arm: preserve early mapping of UEFI memory
+ map longer for BGRT
+References: <20180709234229.20181-1-takahiro.akashi@linaro.org>
+ <20180709234229.20181-3-takahiro.akashi@linaro.org>
 From: James Morse <james.morse@arm.com>
-Message-ID: <27eda5b7-f9ad-2918-c302-3669d4b72fd0@arm.com>
-Date: Tue, 10 Jul 2018 16:25:03 +0100
+Message-ID: <93c42065-bece-a4c7-ed99-5e98f91315a6@arm.com>
+Date: Tue, 10 Jul 2018 18:57:31 +0100
 MIME-Version: 1.0
-In-Reply-To: <20180710073719.GW28220@linaro.org>
+In-Reply-To: <20180709234229.20181-3-takahiro.akashi@linaro.org>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,128 +21,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: ard.biesheuvel@linaro.org
+Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, al.stone@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, tbaicar@codeaurora.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, hanjun.guo@linaro.org, sudeep.holla@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hi Akashi,
+Hi Ard,
 
-On 10/07/18 08:37, AKASHI Takahiro wrote:
-> On Tue, Jul 03, 2018 at 05:32:09PM +0100, James Morse wrote:
->> On 23/06/18 03:20, AKASHI Takahiro wrote:
->>> load_other_segments() is expected to allocate and place all the necessary
->>> memory segments other than kernel, including initrd and device-tree
->>> blob (and elf core header for crash).
->>> While most of the code was borrowed from kexec-tools' counterpart,
->>> users may not be allowed to specify dtb explicitly, instead, the dtb
->>> presented by the original boot loader is reused.
->>>
->>> arch_kimage_kernel_post_load_cleanup() is responsible for freeing arm64-
->>> specific data allocated in load_other_segments().
-
->>> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
->>> index c38a8048ed00..7115c4f915dc 100644
->>> --- a/arch/arm64/kernel/machine_kexec_file.c
->>> +++ b/arch/arm64/kernel/machine_kexec_file.c
->>
->>> +static int setup_dtb(struct kimage *image,
->>> +		unsigned long initrd_load_addr, unsigned long initrd_len,
->>> +		char *cmdline, unsigned long cmdline_len,
->>> +		char **dtb_buf, size_t *dtb_buf_len)
->>> +{
-
-[..]
-
->>> +	/* add bootargs */
->>> +	if (cmdline) {
->>> +		ret = fdt_setprop(buf, nodeoffset, "bootargs",
->>> +						cmdline, cmdline_len + 1);
->>> +		if (ret)
->>> +			goto out_err;
->>> +	}
->>
->> So (cmdline_len == 0) from user-space means keep the old cmdline. Sounds
->> sensible. Is this documented anywhere?
-
-> To be a bit surprise, --append (and --cmdline) option belongs to arch-
-> specific options in terms of implementation. Apparently, a standard man page
-> of kexec(8) say little about it, in particular, for device-tree-based system.
+On 10/07/18 00:42, AKASHI Takahiro wrote:
+> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 > 
-> As far as arm64 is concerned, the fact is a bit complicated.
-> User space kexec accepts --append as well as --reuse-cmdline, and
-> along with yet another --dtb option, a resulting command line for new
-> kernel (or bootargs in new dtb) would look to be:
+> The BGRT code validates the contents of the table against the UEFI
+> memory map, and so it expects it to be mapped when the code runs.
 > 
-> 	--append=A | --reuse-cmdline |     --dtb
-> 		   |                 |   n    |    y(bootargs=B)
+> On ARM, this is currently not the case, since we tear down the early
+> mapping after efi_init() completes, and only create the permanent
+> mapping in arm_enable_runtime_services(), which executes as an early
+> initcall, but still leaves a window where the UEFI memory map is not
+> mapped.
 > 
-> 	    n            n               S(*1)      B(*2)
-> 	    n            y               S          S(*3)
-> 	    y            n               A          A
-> 	    y            y              S+A        S+A(*4)
-> 
->       where S: the cmdline parameters of the running system
-> 		 (equal to bootargs in system's dtb)
+> So move the call to efi_memmap_unmap() from efi_init() to
+> arm_enable_runtime_services().
 
-(I'm afraid I don't understand this table, but the text below helps...)
+I don't have a machine that generates a BGRT, but I can see that efi_mem_type()
+call in efi_bgrt_init() would cause the same problems we have with kexec and acpi.
 
 
-> You are talking about case(1) above.
-> 
-> Given that we can have an explicit option, --reuse-cmdline, the cmdline
-> in (1) should be NULL. Meanwhile, we specify --dtb here, which means
-> that we want to re-use system's dtb, implying that we also want to
-> reuse a cmdline parameter. (This can be arguable, though)
+> diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
+> index b5214c143fee..388a929baf95 100644
+> --- a/drivers/firmware/efi/arm-init.c
+> +++ b/drivers/firmware/efi/arm-init.c
+> @@ -259,7 +259,6 @@ void __init efi_init(void)
+>  
+>  	reserve_regions();
+>  	efi_esrt_init();
+> -	efi_memmap_unmap();
+>  
+>  	memblock_reserve(params.mmap & PAGE_MASK,
+>  			 PAGE_ALIGN(params.mmap_size +
+> diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/arm-runtime.c
+> index 5889cbea60b8..59a8c0ec94d5 100644
+> --- a/drivers/firmware/efi/arm-runtime.c
+> +++ b/drivers/firmware/efi/arm-runtime.c
+> @@ -115,6 +115,8 @@ static int __init arm_enable_runtime_services(void)
+>  		return 0;
+>  	}
+>  
+> +	efi_memmap_unmap();
 
-Sounds like this is all user-space's problem!
+This can get called twice if uefi_init() fails after setting the EFI_BOOT flag,
+but this can only happen if the system table signature is wrong, (or we're out
+of memory really early).
 
+I think this is harmless as we end up passing NULL to early_memunmap() which
+WARN()s and returns as its outside the fixmap range. Its just more noise on
+systems with a corrupt efi system table.
 
-> So I would say that we have both reasons to go for and go against.
-> 
-> # Likewise,
-> # I wonder why the cmdnline would not be B or A+B, respectively,
-> in case of (3) and (4). But it's a different issue.
-> 
->> powerpc does the opposite, it deletes the bootargs in this case. Are we happy
->> making his a per-arch thing?
-> 
-> My compromise solution is:
-> a.to maintain compatibility with powerpc at system call level, 
-
-This sounds like the right thing to do.
-
-
->   that is,
->   replacing bootargs in new dtb if user explicitly specifies cmdline
->   argument, otherwise nullifying bootargs,
-> b.yet maintain compatibility with arm64's kexec behavior at command line
->   interface level. If neither --append nor --dtb is not specified,
->   user space kexec will reuse the system's command line whether or not
->   --reuse-cmdline is used.
-
-(a and b aren't options this time: you're proposing to do a-and-b)
-
-
-> (Do you follow me?)
-
-I think so:
-The syscall will behave the same as powerpc meaning the kernel will never re-use
-the existing cmdline in the dtb, even if that means (trying to) boot without one.
-
-If user-space wants to re-use the command line, it should read /proc/cmdline and
-feed the string back into the kernel.
-
-
-> So kexec and kexec_file on arm64 will still behave in exactly the same way,
-> but differently from ppc at command level for now.
-
-> The point is that, if we might want or need to change this behavior
-> (at any time in the future), we would only have to modify user space kexec.
-> Kernel semantics will never break.
-> 
-> (b) requires additional small modification on kexec-tools, but kexec_file
-> support is yet to be upstreamed anyway.
-
-Makes sense!
+Acked-by: James Morse <james.morse@arm.com>
 
 
 Thanks,
