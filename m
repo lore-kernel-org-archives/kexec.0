@@ -1,30 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail-pl0-x244.google.com ([2607:f8b0:400e:c01::244])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fczE9-0006Jm-6E
- for kexec@lists.infradead.org; Tue, 10 Jul 2018 20:27:14 +0000
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w6AKPsU7106182
- for <kexec@lists.infradead.org>; Tue, 10 Jul 2018 16:26:58 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2k50my0e6y-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 10 Jul 2018 16:26:58 -0400
-Received: from localhost
- by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Tue, 10 Jul 2018 21:26:56 +0100
-Subject: Re: [PATCH v5 2/8] kexec: add call to LSM hook in original
- kexec_load syscall
-From: Mimi Zohar <zohar@linux.ibm.com>
-Date: Tue, 10 Jul 2018 16:26:51 -0400
-In-Reply-To: <1530542283-26145-3-git-send-email-zohar@linux.vnet.ibm.com>
-References: <1530542283-26145-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1530542283-26145-3-git-send-email-zohar@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Message-Id: <1531254411.3332.146.camel@linux.ibm.com>
+ id 1fd5B0-0000tY-C7
+ for kexec@lists.infradead.org; Wed, 11 Jul 2018 02:48:23 +0000
+Received: by mail-pl0-x244.google.com with SMTP id t6-v6so8477787plo.7
+ for <kexec@lists.infradead.org>; Tue, 10 Jul 2018 19:48:12 -0700 (PDT)
+Date: Wed, 11 Jul 2018 11:49:33 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v10 08/14] arm64: kexec_file: load initrd and device-tree
+Message-ID: <20180711024932.GX28220@linaro.org>
+References: <20180623022058.10935-1-takahiro.akashi@linaro.org>
+ <20180623022058.10935-9-takahiro.akashi@linaro.org>
+ <1e401f4e-6176-990d-476c-31ae3f28f26c@arm.com>
+ <20180710073719.GW28220@linaro.org>
+ <27eda5b7-f9ad-2918-c302-3669d4b72fd0@arm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <27eda5b7-f9ad-2918-c302-3669d4b72fd0@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,62 +29,146 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: linux-security-module@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+To: James Morse <james.morse@arm.com>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-Hi Eric,
-
-Can I get your Ack on this patch?
-
-Mimi
-
-On Mon, 2018-07-02 at 10:37 -0400, Mimi Zohar wrote:
-> In order for LSMs and IMA-appraisal to differentiate between kexec_load
-> and kexec_file_load syscalls, both the original and new syscalls must
-> call an LSM hook.  This patch adds a call to security_kernel_load_data()
-> in the original kexec_load syscall.
+On Tue, Jul 10, 2018 at 04:25:03PM +0100, James Morse wrote:
+> Hi Akashi,
 > 
-> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Luis R. Rodriguez <mcgrof@kernel.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: David Howells <dhowells@redhat.com>
-> Acked-by: Serge Hallyn <serge@hallyn.com>
-> ---
->  kernel/kexec.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> On 10/07/18 08:37, AKASHI Takahiro wrote:
+> > On Tue, Jul 03, 2018 at 05:32:09PM +0100, James Morse wrote:
+> >> On 23/06/18 03:20, AKASHI Takahiro wrote:
+> >>> load_other_segments() is expected to allocate and place all the necessary
+> >>> memory segments other than kernel, including initrd and device-tree
+> >>> blob (and elf core header for crash).
+> >>> While most of the code was borrowed from kexec-tools' counterpart,
+> >>> users may not be allowed to specify dtb explicitly, instead, the dtb
+> >>> presented by the original boot loader is reused.
+> >>>
+> >>> arch_kimage_kernel_post_load_cleanup() is responsible for freeing arm64-
+> >>> specific data allocated in load_other_segments().
 > 
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index aed8fb2564b3..68559808fdfa 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -11,6 +11,7 @@
->  #include <linux/capability.h>
->  #include <linux/mm.h>
->  #include <linux/file.h>
-> +#include <linux/security.h>
->  #include <linux/kexec.h>
->  #include <linux/mutex.h>
->  #include <linux/list.h>
-> @@ -195,10 +196,17 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
->  static inline int kexec_load_check(unsigned long nr_segments,
->  				   unsigned long flags)
->  {
-> +	int result;
-> +
->  	/* We only trust the superuser with rebooting the system. */
->  	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
->  		return -EPERM;
+> >>> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> >>> index c38a8048ed00..7115c4f915dc 100644
+> >>> --- a/arch/arm64/kernel/machine_kexec_file.c
+> >>> +++ b/arch/arm64/kernel/machine_kexec_file.c
+> >>
+> >>> +static int setup_dtb(struct kimage *image,
+> >>> +		unsigned long initrd_load_addr, unsigned long initrd_len,
+> >>> +		char *cmdline, unsigned long cmdline_len,
+> >>> +		char **dtb_buf, size_t *dtb_buf_len)
+> >>> +{
 > 
-> +	/* Permit LSMs and IMA to fail the kexec */
-> +	result = security_kernel_load_data(LOADING_KEXEC_IMAGE);
-> +	if (result < 0)
-> +		return result;
-> +
->  	/*
->  	 * Verify we have a legal set of flags
->  	 * This leaves us room for future extensions.
+> [..]
+> 
+> >>> +	/* add bootargs */
+> >>> +	if (cmdline) {
+> >>> +		ret = fdt_setprop(buf, nodeoffset, "bootargs",
+> >>> +						cmdline, cmdline_len + 1);
+> >>> +		if (ret)
+> >>> +			goto out_err;
+> >>> +	}
+> >>
+> >> So (cmdline_len == 0) from user-space means keep the old cmdline. Sounds
+> >> sensible. Is this documented anywhere?
+> 
+> > To be a bit surprise, --append (and --cmdline) option belongs to arch-
+> > specific options in terms of implementation. Apparently, a standard man page
+> > of kexec(8) say little about it, in particular, for device-tree-based system.
+> > 
+> > As far as arm64 is concerned, the fact is a bit complicated.
+> > User space kexec accepts --append as well as --reuse-cmdline, and
+> > along with yet another --dtb option, a resulting command line for new
+> > kernel (or bootargs in new dtb) would look to be:
+> > 
+> > 	--append=A | --reuse-cmdline |     --dtb
+> > 		   |                 |   n    |    y(bootargs=B)
+> > 
+> > 	    n            n               S(*1)      B(*2)
+> > 	    n            y               S          S(*3)
+> > 	    y            n               A          A
+> > 	    y            y              S+A        S+A(*4)
+> > 
+> >       where S: the cmdline parameters of the running system
+> > 		 (equal to bootargs in system's dtb)
+> 
+> (I'm afraid I don't understand this table, but the text below helps...)
 
+(Really? I believed that it was obvious.)
+
+> 
+> > You are talking about case(1) above.
+> > 
+> > Given that we can have an explicit option, --reuse-cmdline, the cmdline
+> > in (1) should be NULL. Meanwhile, we specify --dtb here, which means
+> > that we want to re-use system's dtb, implying that we also want to
+> > reuse a cmdline parameter. (This can be arguable, though)
+> 
+> Sounds like this is all user-space's problem!
+
+I dare not say it's a bug :)
+
+> 
+> > So I would say that we have both reasons to go for and go against.
+> > 
+> > # Likewise,
+> > # I wonder why the cmdnline would not be B or A+B, respectively,
+> > in case of (3) and (4). But it's a different issue.
+> > 
+> >> powerpc does the opposite, it deletes the bootargs in this case. Are we happy
+> >> making his a per-arch thing?
+> > 
+> > My compromise solution is:
+> > a.to maintain compatibility with powerpc at system call level, 
+> 
+> This sounds like the right thing to do.
+> 
+> 
+> >   that is,
+> >   replacing bootargs in new dtb if user explicitly specifies cmdline
+> >   argument, otherwise nullifying bootargs,
+> > b.yet maintain compatibility with arm64's kexec behavior at command line
+> >   interface level. If neither --append nor --dtb is not specified,
+> >   user space kexec will reuse the system's command line whether or not
+> >   --reuse-cmdline is used.
+> 
+> (a and b aren't options this time: you're proposing to do a-and-b)
+
+Yes.
+
+> 
+> > (Do you follow me?)
+> 
+> I think so:
+> The syscall will behave the same as powerpc meaning the kernel will never re-use
+> the existing cmdline in the dtb, even if that means (trying to) boot without one.
+> 
+> If user-space wants to re-use the command line, it should read /proc/cmdline and
+> feed the string back into the kernel.
+
+Thank you for rephrasing.
+
+> 
+> > So kexec and kexec_file on arm64 will still behave in exactly the same way,
+> > but differently from ppc at command level for now.
+> 
+> > The point is that, if we might want or need to change this behavior
+> > (at any time in the future), we would only have to modify user space kexec.
+> > Kernel semantics will never break.
+> > 
+> > (b) requires additional small modification on kexec-tools, but kexec_file
+> > support is yet to be upstreamed anyway.
+> 
+> Makes sense!
+
+The next version will go with this approach.
+
+-Takahiro AKASHI
+
+> 
+> Thanks,
+> 
+> James
 
 _______________________________________________
 kexec mailing list
