@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x241.google.com ([2607:f8b0:400e:c00::241])
+Received: from mail-pl0-x242.google.com ([2607:f8b0:400e:c01::242])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fd9md-00060r-81
- for kexec@lists.infradead.org; Wed, 11 Jul 2018 07:43:45 +0000
-Received: by mail-pf0-x241.google.com with SMTP id j3-v6so17857169pfh.11
- for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 00:43:21 -0700 (PDT)
+ id 1fd9lp-00050t-4K
+ for kexec@lists.infradead.org; Wed, 11 Jul 2018 07:42:59 +0000
+Received: by mail-pl0-x242.google.com with SMTP id c41-v6so8806001plj.10
+ for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 00:42:30 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v11 14/15] arm64: kexec_file: add kernel signature
- verification support
-Date: Wed, 11 Jul 2018 16:42:02 +0900
-Message-Id: <20180711074203.3019-15-takahiro.akashi@linaro.org>
+Subject: [PATCH v11 08/15] arm64: enable KEXEC_FILE config
+Date: Wed, 11 Jul 2018 16:41:56 +0900
+Message-Id: <20180711074203.3019-9-takahiro.akashi@linaro.org>
 In-Reply-To: <20180711074203.3019-1-takahiro.akashi@linaro.org>
 References: <20180711074203.3019-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -28,100 +27,76 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de
 Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-With this patch, kernel verification can be done without IMA security
-subsystem enabled. Turn on CONFIG_KEXEC_VERIFY_SIG instead.
-
-On x86, a signature is embedded into a PE file (Microsoft's format) header
-of binary. Since arm64's "Image" can also be seen as a PE file as far as
-CONFIG_EFI is enabled, we adopt this format for kernel signing.
-
-You can create a signed kernel image with:
-    $ sbsign --key ${KEY} --cert ${CERT} Image
+Modify arm64/Kconfig to enable kexec_file_load support.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will.deacon@arm.com>
+Acked-by: James Morse <james.morse@arm.com>
 ---
- arch/arm64/Kconfig              | 24 ++++++++++++++++++++++++
- arch/arm64/kernel/kexec_image.c | 15 +++++++++++++++
- 2 files changed, 39 insertions(+)
+ arch/arm64/Kconfig                     |  9 +++++++++
+ arch/arm64/kernel/Makefile             |  3 ++-
+ arch/arm64/kernel/machine_kexec_file.c | 16 ++++++++++++++++
+ 3 files changed, 27 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/kernel/machine_kexec_file.c
 
 diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index a9a3a5583c8b..1445eb2fc833 100644
+index 42c090cf0292..a9a3a5583c8b 100644
 --- a/arch/arm64/Kconfig
 +++ b/arch/arm64/Kconfig
-@@ -844,6 +844,30 @@ config KEXEC_FILE
- 	  for kernel and initramfs as opposed to list of segments as
- 	  accepted by previous system call.
+@@ -835,6 +835,15 @@ config KEXEC
+ 	  but it is independent of the system firmware.   And like a reboot
+ 	  you can start any kernel with it, not just Linux.
  
-+config KEXEC_VERIFY_SIG
-+	bool "Verify kernel signature during kexec_file_load() syscall"
-+	depends on KEXEC_FILE
++config KEXEC_FILE
++	bool "kexec file based system call"
++	select KEXEC_CORE
 +	help
-+	  Select this option to verify a signature with loaded kernel
-+	  image. If configured, any attempt of loading a image without
-+	  valid signature will fail.
-+
-+	  In addition to that option, you need to enable signature
-+	  verification for the corresponding kernel image type being
-+	  loaded in order for this to work.
-+
-+config KEXEC_IMAGE_VERIFY_SIG
-+	bool "Enable Image signature verification support"
-+	default y
-+	depends on KEXEC_VERIFY_SIG
-+	depends on EFI && SIGNED_PE_FILE_VERIFICATION
-+	help
-+	  Enable Image signature verification support.
-+
-+comment "Support for PE file signature verification disabled"
-+	depends on KEXEC_VERIFY_SIG
-+	depends on !EFI || !SIGNED_PE_FILE_VERIFICATION
++	  This is new version of kexec system call. This system call is
++	  file based and takes file descriptors as system call argument
++	  for kernel and initramfs as opposed to list of segments as
++	  accepted by previous system call.
 +
  config CRASH_DUMP
  	bool "Build kdump crash kernel"
  	help
-diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index df1e341d3a28..bb0a95add197 100644
---- a/arch/arm64/kernel/kexec_image.c
-+++ b/arch/arm64/kernel/kexec_image.c
-@@ -13,6 +13,7 @@
- #include <linux/kernel.h>
- #include <linux/kexec.h>
- #include <linux/string.h>
-+#include <linux/verification.h>
- #include <asm/boot.h>
- #include <asm/byteorder.h>
- #include <asm/cpufeature.h>
-@@ -28,6 +29,9 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
- 			!memcmp(&h->magic, ARM64_MAGIC, sizeof(ARM64_MAGIC)))
- 		return -EINVAL;
- 
-+	pr_debug("PE format: %s\n",
-+			memcmp(&h->mz_magic, "MZ", 2) ?  "no" : "yes");
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index 0025f8691046..06281e1ad7ed 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -48,8 +48,9 @@ arm64-obj-$(CONFIG_ARM64_ACPI_PARKING_PROTOCOL)	+= acpi_parking_protocol.o
+ arm64-obj-$(CONFIG_PARAVIRT)		+= paravirt.o
+ arm64-obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
+ arm64-obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
+-arm64-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o	\
++arm64-obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
+ 					   cpu-reset.o
++arm64-obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o
+ arm64-obj-$(CONFIG_ARM64_RELOC_TEST)	+= arm64-reloc-test.o
+ arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
+ arm64-obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+new file mode 100644
+index 000000000000..c38a8048ed00
+--- /dev/null
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -0,0 +1,16 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * kexec_file for arm64
++ *
++ * Copyright (C) 2018 Linaro Limited
++ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
++ *
++ */
 +
- 	return 0;
- }
- 
-@@ -107,7 +111,18 @@ static void *image_load(struct kimage *image,
- 	return ERR_PTR(ret);
- }
- 
-+#ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
-+static int image_verify_sig(const char *kernel, unsigned long kernel_len)
-+{
-+	return verify_pefile_signature(kernel, kernel_len, NULL,
-+				       VERIFYING_KEXEC_PE_SIGNATURE);
-+}
-+#endif
++#define pr_fmt(fmt) "kexec_file: " fmt
 +
- const struct kexec_file_ops kexec_image_ops = {
- 	.probe = image_probe,
- 	.load = image_load,
-+#ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
-+	.verify_sig = image_verify_sig,
-+#endif
- };
++#include <linux/kexec.h>
++
++const struct kexec_file_ops * const kexec_file_loaders[] = {
++	NULL
++};
 -- 
 2.17.0
 
