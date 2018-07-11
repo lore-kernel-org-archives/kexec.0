@@ -1,28 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
- linear region
-References: <CAKv+Gu8Hs+CArdkAWoBPbr_p-nq5+0oPwOPg0NsJDRMkE_bM9A@mail.gmail.com>
- <d801005a-5f7a-8fe4-a486-bc6443a406a3@arm.com>
- <CACi5LpOJ7Q7nbo9m_HGqr44+n_iEtreZt+Uxtf2PzcHSzTdKuA@mail.gmail.com>
- <3a05cd0e-466e-4fb6-a78a-4b363e21aaab@arm.com>
- <CACi5LpMJnFthKUJGfMWgDyMTM65oTtOvsRGCtMDjWP32qDptbQ@mail.gmail.com>
- <92ff5220-f863-4edc-bc9f-bd802d2efa9c@arm.com>
- <d5e01f4bedc649ff8a2ee17b17c1c33d@HXTBJIDCEMVIW02.hxtcorp.net>
- <20180619085541.GB13984@arm.com>
- <6860c284f1c74faa95edd6cf866ec80d@HXTBJIDCEMVIW02.hxtcorp.net>
- <20180619094045.GD13984@arm.com>
- <a720d91be20844cd9ed84728268300d9@HXTBJIDCEMVIW02.hxtcorp.net>
- <09260c7e-8b9d-bc3c-5bca-0fd75417f552@arm.com>
- <CACi5LpMoKP4eG5XhYe5hf5VC9MOY8KuHK=j0ujb8GFpyjAuAww@mail.gmail.com>
- <b0d40351-8d78-fd69-cc87-d5ea5eaabd2a@arm.com>
- <CACi5LpM2GV-vwcEGeCE20QW0PVmDcKnjz017sYBAwYRfZ24AzA@mail.gmail.com>
- <51cf54d6a19f4837b74218b000cc23bc@HXTBJIDCEMVIW02.hxtcorp.net>
- <CACi5LpMXpSWUP97R2VWjf==LdxPBCKTcpKjQjCs4j3Kz9SzYGg@mail.gmail.com>
-From: James Morse <james.morse@arm.com>
-Message-ID: <cb5cf891-cf46-3afc-0c77-6667165caf7a@arm.com>
-Date: Wed, 11 Jul 2018 14:24:08 +0100
+Received: from www262.sakura.ne.jp ([202.181.97.72])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fdFmT-0002th-FA
+ for kexec@lists.infradead.org; Wed, 11 Jul 2018 14:08:02 +0000
+Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
+ by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id w6BE7ShU025937
+ for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 23:07:28 +0900 (JST)
+ (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126074194044.bbtec.net [126.74.194.44])
+ (authenticated bits=0)
+ by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id w6BE7SWB025934
+ (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+ for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 23:07:28 +0900 (JST)
+ (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Fwd: Re: [PATCH] uts: Don't randomize "struct uts_namespace".
+References: <271dcdcd-d622-552c-338a-5eeca5e2b4a0@i-love.sakura.ne.jp>
+From: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <f14c277e-99a4-af6c-c220-7e2c6c831694@i-love.sakura.ne.jp>
+Date: Wed, 11 Jul 2018 23:07:33 +0900
 MIME-Version: 1.0
-In-Reply-To: <CACi5LpMXpSWUP97R2VWjf==LdxPBCKTcpKjQjCs4j3Kz9SzYGg@mail.gmail.com>
+In-Reply-To: <271dcdcd-d622-552c-338a-5eeca5e2b4a0@i-love.sakura.ne.jp>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -36,39 +33,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "Jin,
- Yanjiang" <yanjiang.jin@hxt-semitech.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec <kexec-bounces@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Omar Sandoval <osandov@fb.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: kexec@lists.infradead.org
 
-Hi Bhupesh,
+Subject: Re: [PATCH] uts: Don't randomize "struct uts_namespace".
+To: Linus Torvalds <torvalds@linux-foundation.org>, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: Kees Cook <keescook@chromium.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Date: Sat, 7 Jul 2018 08:10:08 +0900
 
-(CC: +Omar)
+Hello Ken'ichi,
 
-On 20/06/18 08:26, Bhupesh Sharma wrote:
-> On Wed, Jun 20, 2018 at 7:46 AM, Jin, Yanjiang
-> <yanjiang.jin@hxt-semitech.com> wrote:
->>> From: Bhupesh Sharma [mailto:bhsharma@redhat.com]
->>> On Tue, Jun 19, 2018 at 4:56 PM, James Morse <james.morse@arm.com> wrote:
->>>> I'm suggesting adding the contents of vmcoreinfo as a PT_NOTE section
->>>> of /proc/kcore's ELF header. No special knowledge necessary, any
->>>> elf-parser should be able to dump the values.
+I noticed that makedumpfile ( https://sourceforge.net/p/makedumpfile/code/ )
+can no longer detect kernel version correctly because "struct uts_namespace"
+(which is exposed to userspace via vmcoreinfo) is subjected to randomization
+by GCC_PLUGIN_RANDSTRUCT kernel config option since 4.13.
 
-[..]
->>> I am working on fixes on the above lines for kernel and user-space tools (like
->>> makedumpfile, crash-utility and kexec-tools).
->>>
->>> I will post some RFC patches on the same lines (or come back in case I get stuck
->>> somewhere) shortly.
+The code was introduced by below commit.
 
-I spotted this series from Omar:
-https://lkml.org/lkml/2018/7/6/866
+  commit bfc8fe181c822ad0d8495ceda3c7109a407192f0
+  Author: ken1_ohmichi <ken1_ohmichi>
+  Date:   Fri Dec 22 07:41:14 2006 +0000
 
-Hopefully it does what you need?
+      linux-2.6.19 support.
+      On linux-2.6.18 or former, the release information could be gotten from
+      the symbol "system_utsname". But on linux-2.6.19, it can be done from the
+      symbol "init_uts_ns". A new makedumpfile can get the release information
+      from the existing symbol.
 
+Can you detect kernel version without using "struct uts_namespace" ?
 
-Thanks,
+On 2018/07/07 1:11, Linus Torvalds wrote:
+> On Fri, Jul 6, 2018 at 3:07 AM Tetsuo Handa
+> <penguin-kernel@i-love.sakura.ne.jp> wrote:
+>>
+>> I noticed that makedumpfile utility is failing to check kernel version, for
+>> it depends on offset of "struct uts_namespace"->name being sizeof(int).
+> 
+> For something like this, we fix makedumpfile instead. This is not a
+> "user program" using system calls etc, this is something that delves
+> into the kernel dump and tries to make sense of it.
+> 
+> Where is the makedumpfile source code? What is it trying to do, and why?
+> 
+> One option is to just say "hey, you can't make much sense of a
+> randomized kernel dump anyway, so don't even try".
+> 
+>                  Linus
+> 
 
-James
 
 _______________________________________________
 kexec mailing list
