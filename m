@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x542.google.com ([2607:f8b0:4864:20::542])
+Received: from mail-pl0-x241.google.com ([2607:f8b0:400e:c01::241])
  by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fd9lD-000548-Hm
- for kexec@lists.infradead.org; Wed, 11 Jul 2018 07:42:05 +0000
-Received: by mail-pg1-x542.google.com with SMTP id p23-v6so2535688pgv.13
- for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 00:41:52 -0700 (PDT)
+ id 1fd9lz-0005Ao-Pk
+ for kexec@lists.infradead.org; Wed, 11 Jul 2018 07:42:54 +0000
+Received: by mail-pl0-x241.google.com with SMTP id s24-v6so8804197plq.6
+ for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 00:42:41 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v11 04/15] kexec_file: kexec_walk_memblock() only walks a
- dedicated region at kdump
-Date: Wed, 11 Jul 2018 16:41:52 +0900
-Message-Id: <20180711074203.3019-5-takahiro.akashi@linaro.org>
+Subject: [PATCH v11 09/15] arm64: kexec_file: load initrd and device-tree
+Date: Wed, 11 Jul 2018 16:41:57 +0900
+Message-Id: <20180711074203.3019-10-takahiro.akashi@linaro.org>
 In-Reply-To: <20180711074203.3019-1-takahiro.akashi@linaro.org>
 References: <20180711074203.3019-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -28,32 +27,252 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de
 Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-In kdump case, there exists only one dedicated memoblock region as usable
-memory (crashk_res). With this patch, kexec_walk_memblock() runs a given
-callback function on this region.
+load_other_segments() is expected to allocate and place all the necessary
+memory segments other than kernel, including initrd and device-tree
+blob (and elf core header for crash).
+While most of the code was borrowed from kexec-tools' counterpart,
+users may not be allowed to specify dtb explicitly, instead, the dtb
+presented by the original boot loader is reused.
+
+arch_kimage_kernel_post_load_cleanup() is responsible for freeing arm64-
+specific data allocated in load_other_segments().
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
 ---
- kernel/kexec_file.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/include/asm/kexec.h         |  16 +++
+ arch/arm64/kernel/machine_kexec_file.c | 184 +++++++++++++++++++++++++
+ 2 files changed, 200 insertions(+)
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index b088324fb3ad..ebf06c3e168d 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -511,6 +511,9 @@ static int kexec_walk_memblock(struct kexec_buf *kbuf,
- 	phys_addr_t mstart, mend;
- 	struct resource res = { };
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index e17f0529a882..01bbf6cebf12 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -93,6 +93,22 @@ static inline void crash_prepare_suspend(void) {}
+ static inline void crash_post_resume(void) {}
+ #endif
  
-+	if (kbuf->image->type == KEXEC_TYPE_CRASH)
-+		return func(&crashk_res, kbuf);
++#ifdef CONFIG_KEXEC_FILE
++#define ARCH_HAS_KIMAGE_ARCH
 +
- 	if (kbuf->top_down) {
- 		for_each_free_mem_range_reverse(i, NUMA_NO_NODE, 0,
- 						&mstart, &mend, NULL) {
++struct kimage_arch {
++	phys_addr_t dtb_mem;
++	void *dtb_buf;
++};
++
++struct kimage;
++
++extern int load_other_segments(struct kimage *image,
++		unsigned long kernel_load_addr, unsigned long kernel_size,
++		char *initrd, unsigned long initrd_len,
++		char *cmdline, unsigned long cmdline_len);
++#endif
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index c38a8048ed00..ca00681c25c6 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -5,12 +5,196 @@
+  * Copyright (C) 2018 Linaro Limited
+  * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
+  *
++ * Most code is derived from arm64 port of kexec-tools
+  */
+ 
+ #define pr_fmt(fmt) "kexec_file: " fmt
+ 
++#include <linux/ioport.h>
++#include <linux/kernel.h>
+ #include <linux/kexec.h>
++#include <linux/libfdt.h>
++#include <linux/memblock.h>
++#include <linux/of_fdt.h>
++#include <linux/types.h>
++#include <asm/byteorder.h>
+ 
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ 	NULL
+ };
++
++int arch_kimage_file_post_load_cleanup(struct kimage *image)
++{
++	vfree(image->arch.dtb_buf);
++	image->arch.dtb_buf = NULL;
++
++	return kexec_image_post_load_cleanup_default(image);
++}
++
++static int setup_dtb(struct kimage *image,
++		unsigned long initrd_load_addr, unsigned long initrd_len,
++		char *cmdline, unsigned long cmdline_len,
++		char **dtb_buf, size_t *dtb_buf_len)
++{
++	char *buf = NULL;
++	size_t buf_size;
++	int nodeoffset;
++	u64 value;
++	int ret;
++
++	/* duplicate dt blob */
++	buf_size = fdt_totalsize(initial_boot_params);
++
++	if (initrd_load_addr) {
++		/* can be redundant, but trimmed at the end */
++		buf_size += fdt_prop_len("linux,initrd-start", sizeof(u64));
++		buf_size += fdt_prop_len("linux,initrd-end", sizeof(u64));
++	}
++
++	if (cmdline)
++		/* can be redundant, but trimmed at the end */
++		buf_size += fdt_prop_len("bootargs", cmdline_len + 1);
++
++	buf = vmalloc(buf_size);
++	if (!buf) {
++		ret = -ENOMEM;
++		goto out_err;
++	}
++
++	ret = fdt_open_into(initial_boot_params, buf, buf_size);
++	if (ret) {
++		ret = -EINVAL;
++		goto out_err;
++	}
++
++	nodeoffset = fdt_path_offset(buf, "/chosen");
++	if (nodeoffset < 0) {
++		ret = -EINVAL;
++		goto out_err;
++	}
++
++	/* add bootargs */
++	if (cmdline) {
++		ret = fdt_setprop_string(buf, nodeoffset, "bootargs", cmdline);
++		if (ret) {
++			ret = -EINVAL;
++			goto out_err;
++		}
++	} else {
++		ret = fdt_delprop(buf, nodeoffset, "bootargs");
++		if (ret && (ret != -FDT_ERR_NOTFOUND)) {
++			ret = -EINVAL;
++			goto out_err;
++		}
++	}
++
++	/* add initrd-* */
++	if (initrd_load_addr) {
++		value = cpu_to_fdt64(initrd_load_addr);
++		ret = fdt_setprop_u64(buf, nodeoffset, "linux,initrd-start",
++							value);
++		if (ret) {
++			ret = -EINVAL;
++			goto out_err;
++		}
++
++		value = cpu_to_fdt64(initrd_load_addr + initrd_len);
++		ret = fdt_setprop_u64(buf, nodeoffset, "linux,initrd-end",
++							value);
++		if (ret) {
++			ret = -EINVAL;
++			goto out_err;
++		}
++	} else {
++		ret = fdt_delprop(buf, nodeoffset, "linux,initrd-start");
++		if (ret && (ret != -FDT_ERR_NOTFOUND)) {
++			ret = -EINVAL;
++			goto out_err;
++		}
++
++		ret = fdt_delprop(buf, nodeoffset, "linux,initrd-end");
++		if (ret && (ret != -FDT_ERR_NOTFOUND)) {
++			ret = -EINVAL;
++			goto out_err;
++		}
++	}
++
++	/* trim a buffer */
++	fdt_pack(buf);
++	*dtb_buf = buf;
++	*dtb_buf_len = fdt_totalsize(buf);
++
++	return 0;
++
++out_err:
++	vfree(buf);
++	return ret;
++}
++
++int load_other_segments(struct kimage *image,
++			unsigned long kernel_load_addr,
++			unsigned long kernel_size,
++			char *initrd, unsigned long initrd_len,
++			char *cmdline, unsigned long cmdline_len)
++{
++	struct kexec_buf kbuf;
++	unsigned long initrd_load_addr = 0;
++	char *dtb = NULL;
++	unsigned long dtb_len = 0;
++	int ret = 0;
++
++	kbuf.image = image;
++	/* not allocate anything below the kernel */
++	kbuf.buf_min = kernel_load_addr + kernel_size;
++
++	/* load initrd */
++	if (initrd) {
++		kbuf.buffer = initrd;
++		kbuf.bufsz = initrd_len;
++		kbuf.memsz = initrd_len;
++		kbuf.buf_align = 0;
++		/* within 1GB-aligned window of up to 32GB in size */
++		kbuf.buf_max = round_down(kernel_load_addr, SZ_1G)
++						+ (unsigned long)SZ_1G * 32;
++		kbuf.top_down = false;
++
++		ret = kexec_add_buffer(&kbuf);
++		if (ret)
++			goto out_err;
++		initrd_load_addr = kbuf.mem;
++
++		pr_debug("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++				initrd_load_addr, initrd_len, initrd_len);
++	}
++
++	/* load dtb blob */
++	ret = setup_dtb(image, initrd_load_addr, initrd_len,
++				cmdline, cmdline_len, &dtb, &dtb_len);
++	if (ret) {
++		pr_err("Preparing for new dtb failed\n");
++		goto out_err;
++	}
++
++	kbuf.buffer = dtb;
++	kbuf.bufsz = dtb_len;
++	kbuf.memsz = dtb_len;
++	/* not across 2MB boundary */
++	kbuf.buf_align = SZ_2M;
++	kbuf.buf_max = ULONG_MAX;
++	kbuf.top_down = true;
++
++	ret = kexec_add_buffer(&kbuf);
++	if (ret)
++		goto out_err;
++	image->arch.dtb_mem = kbuf.mem;
++	image->arch.dtb_buf = dtb;
++
++	pr_debug("Loaded dtb at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++			kbuf.mem, dtb_len, dtb_len);
++
++	return 0;
++
++out_err:
++	vfree(dtb);
++	return ret;
++}
 -- 
 2.17.0
 
