@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x541.google.com ([2607:f8b0:4864:20::541])
+Received: from mail-pg1-x542.google.com ([2607:f8b0:4864:20::542])
  by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fd9mp-0005IX-8F
- for kexec@lists.infradead.org; Wed, 11 Jul 2018 07:43:46 +0000
-Received: by mail-pg1-x541.google.com with SMTP id e6-v6so2687453pgv.2
- for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 00:43:33 -0700 (PDT)
+ id 1fd9lD-000548-Hm
+ for kexec@lists.infradead.org; Wed, 11 Jul 2018 07:42:05 +0000
+Received: by mail-pg1-x542.google.com with SMTP id p23-v6so2535688pgv.13
+ for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 00:41:52 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v11 15/15] arm64: kexec_file: add kaslr support
-Date: Wed, 11 Jul 2018 16:42:03 +0900
-Message-Id: <20180711074203.3019-16-takahiro.akashi@linaro.org>
+Subject: [PATCH v11 04/15] kexec_file: kexec_walk_memblock() only walks a
+ dedicated region at kdump
+Date: Wed, 11 Jul 2018 16:41:52 +0900
+Message-Id: <20180711074203.3019-5-takahiro.akashi@linaro.org>
 In-Reply-To: <20180711074203.3019-1-takahiro.akashi@linaro.org>
 References: <20180711074203.3019-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,45 +28,32 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de
 Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-Adding "kaslr-seed" to dtb enables triggering kaslr, or kernel virtual
-address randomization, at secondary kernel boot. We always do this as
-it will have no harm on kaslr-incapable kernel.
-
-We don't have any "switch" to turn off this feature directly, but still
-can suppress it by passing "nokaslr" as a kernel boot argument.
+In kdump case, there exists only one dedicated memoblock region as usable
+memory (crashk_res). With this patch, kexec_walk_memblock() runs a given
+callback function on this region.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
 ---
- arch/arm64/kernel/machine_kexec_file.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ kernel/kexec_file.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 261564df7210..99d771afe88e 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -16,6 +16,7 @@
- #include <linux/libfdt.h>
- #include <linux/memblock.h>
- #include <linux/of_fdt.h>
-+#include <linux/random.h>
- #include <linux/slab.h>
- #include <linux/types.h>
- #include <linux/vmalloc.h>
-@@ -161,6 +162,12 @@ static int setup_dtb(struct kimage *image,
- 		}
- 	}
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index b088324fb3ad..ebf06c3e168d 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -511,6 +511,9 @@ static int kexec_walk_memblock(struct kexec_buf *kbuf,
+ 	phys_addr_t mstart, mend;
+ 	struct resource res = { };
  
-+	/* add kaslr-seed */
-+	get_random_bytes(&value, sizeof(value));
-+	ret = fdt_setprop(buf, nodeoffset, "kaslr-seed", &value, sizeof(value));
-+	if (ret)
-+		goto out_err;
++	if (kbuf->image->type == KEXEC_TYPE_CRASH)
++		return func(&crashk_res, kbuf);
 +
- 	/* trim a buffer */
- 	fdt_pack(buf);
- 	*dtb_buf = buf;
+ 	if (kbuf->top_down) {
+ 		for_each_free_mem_range_reverse(i, NUMA_NO_NODE, 0,
+ 						&mstart, &mend, NULL) {
 -- 
 2.17.0
 
