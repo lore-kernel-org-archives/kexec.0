@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22a.google.com ([2607:f8b0:400e:c00::22a])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fd9lN-0004Op-C0
- for kexec@lists.infradead.org; Wed, 11 Jul 2018 07:42:50 +0000
-Received: by mail-pf0-x22a.google.com with SMTP id e10-v6so17873786pfn.1
- for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 00:42:01 -0700 (PDT)
+Received: from mail-pg1-x541.google.com ([2607:f8b0:4864:20::541])
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fd9mp-0005IX-8F
+ for kexec@lists.infradead.org; Wed, 11 Jul 2018 07:43:46 +0000
+Received: by mail-pg1-x541.google.com with SMTP id e6-v6so2687453pgv.2
+ for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 00:43:33 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v11 05/15] of/fdt: add helper functions for handling properties
-Date: Wed, 11 Jul 2018 16:41:53 +0900
-Message-Id: <20180711074203.3019-6-takahiro.akashi@linaro.org>
+Subject: [PATCH v11 15/15] arm64: kexec_file: add kaslr support
+Date: Wed, 11 Jul 2018 16:42:03 +0900
+Message-Id: <20180711074203.3019-16-takahiro.akashi@linaro.org>
 In-Reply-To: <20180711074203.3019-1-takahiro.akashi@linaro.org>
 References: <20180711074203.3019-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -25,130 +25,47 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de
-Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Rob Herring <robh+dt@kernel.org>, james.morse@arm.com, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-These functions will be used later to handle kexec-specific properties
-in arm64's kexec_file implementation.
+Adding "kaslr-seed" to dtb enables triggering kaslr, or kernel virtual
+address randomization, at secondary kernel boot. We always do this as
+it will have no harm on kaslr-incapable kernel.
+
+We don't have any "switch" to turn off this feature directly, but still
+can suppress it by passing "nokaslr" as a kernel boot argument.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
 ---
- drivers/of/fdt.c       | 62 ++++++++++++++++++++++++++++++++++++++++--
- include/linux/of_fdt.h | 10 +++++--
- 2 files changed, 68 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/machine_kexec_file.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 6da20b9688f7..f7c9d69ce86c 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -25,6 +25,7 @@
- #include <linux/debugfs.h>
- #include <linux/serial_core.h>
- #include <linux/sysfs.h>
-+#include <linux/types.h>
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index 261564df7210..99d771afe88e 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -16,6 +16,7 @@
+ #include <linux/libfdt.h>
+ #include <linux/memblock.h>
+ #include <linux/of_fdt.h>
++#include <linux/random.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ #include <linux/vmalloc.h>
+@@ -161,6 +162,12 @@ static int setup_dtb(struct kimage *image,
+ 		}
+ 	}
  
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #include <asm/page.h>
-@@ -537,8 +538,8 @@ void *of_fdt_unflatten_tree(const unsigned long *blob,
- EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
- 
- /* Everything below here references initial_boot_params directly. */
--int __initdata dt_root_addr_cells;
--int __initdata dt_root_size_cells;
-+int dt_root_addr_cells;
-+int dt_root_size_cells;
- 
- void *initial_boot_params;
- 
-@@ -1330,3 +1331,60 @@ late_initcall(of_fdt_raw_init);
- #endif
- 
- #endif /* CONFIG_OF_EARLY_FLATTREE */
++	/* add kaslr-seed */
++	get_random_bytes(&value, sizeof(value));
++	ret = fdt_setprop(buf, nodeoffset, "kaslr-seed", &value, sizeof(value));
++	if (ret)
++		goto out_err;
 +
-+bool of_fdt_cells_size_fitted(u64 base, u64 size)
-+{
-+	/* if *_cells >= 2, cells can hold 64-bit values anyway */
-+	if ((dt_root_addr_cells == 1) && (base > U32_MAX))
-+		return false;
-+
-+	if ((dt_root_size_cells == 1) && (size > U32_MAX))
-+		return false;
-+
-+	return true;
-+}
-+
-+size_t of_fdt_reg_cells_size(void)
-+{
-+	return (dt_root_addr_cells + dt_root_size_cells) * sizeof(u32);
-+}
-+
-+#define FDT_ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
-+#define FDT_TAGALIGN(x)	(FDT_ALIGN((x), FDT_TAGSIZE))
-+
-+int fdt_prop_len(const char *prop_name, int len)
-+{
-+	return (strlen(prop_name) + 1) +
-+		sizeof(struct fdt_property) +
-+		FDT_TAGALIGN(len);
-+}
-+
-+static void fill_property(void *buf, u64 val64, int cells)
-+{
-+	__be32 val32;
-+
-+	while (cells) {
-+		val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
-+		memcpy(buf, &val32, sizeof(val32));
-+		buf += sizeof(val32);
-+	}
-+}
-+
-+int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
-+						u64 addr, u64 size)
-+{
-+	char buf[sizeof(__be32) * 2 * 2];
-+		/* assume dt_root_[addr|size]_cells <= 2 */
-+	void *prop;
-+	size_t buf_size;
-+
-+	buf_size = of_fdt_reg_cells_size();
-+	prop = buf;
-+
-+	fill_property(prop, addr, dt_root_addr_cells);
-+	prop += dt_root_addr_cells * sizeof(u32);
-+
-+	fill_property(prop, size, dt_root_size_cells);
-+
-+	return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
-+}
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index b9cd9ebdf9b9..9615d6142578 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -37,8 +37,8 @@ extern void *of_fdt_unflatten_tree(const unsigned long *blob,
- 				   struct device_node **mynodes);
- 
- /* TBD: Temporary export of fdt globals - remove when code fully merged */
--extern int __initdata dt_root_addr_cells;
--extern int __initdata dt_root_size_cells;
-+extern int dt_root_addr_cells;
-+extern int dt_root_size_cells;
- extern void *initial_boot_params;
- 
- extern char __dtb_start[];
-@@ -108,5 +108,11 @@ static inline void unflatten_device_tree(void) {}
- static inline void unflatten_and_copy_device_tree(void) {}
- #endif /* CONFIG_OF_EARLY_FLATTREE */
- 
-+bool of_fdt_cells_size_fitted(u64 base, u64 size);
-+size_t of_fdt_reg_cells_size(void);
-+int fdt_prop_len(const char *prop_name, int len);
-+int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
-+						u64 addr, u64 size);
-+
- #endif /* __ASSEMBLY__ */
- #endif /* _LINUX_OF_FDT_H */
+ 	/* trim a buffer */
+ 	fdt_pack(buf);
+ 	*dtb_buf = buf;
 -- 
 2.17.0
 
