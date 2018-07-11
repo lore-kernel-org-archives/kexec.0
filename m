@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x241.google.com ([2607:f8b0:400e:c01::241])
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fd9lh-00057B-HW
- for kexec@lists.infradead.org; Wed, 11 Jul 2018 07:42:37 +0000
-Received: by mail-pl0-x241.google.com with SMTP id z9-v6so8795974plo.1
- for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 00:42:22 -0700 (PDT)
+Received: from mail-pl0-x243.google.com ([2607:f8b0:400e:c01::243])
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fd9mY-0004dU-E0
+ for kexec@lists.infradead.org; Wed, 11 Jul 2018 07:43:27 +0000
+Received: by mail-pl0-x243.google.com with SMTP id 30-v6so8796847pld.13
+ for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 00:43:16 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v11 07/15] arm64: cpufeature: add MMFR0 helper functions
-Date: Wed, 11 Jul 2018 16:41:55 +0900
-Message-Id: <20180711074203.3019-8-takahiro.akashi@linaro.org>
+Subject: [PATCH v11 13/15] include: pe.h: remove message[] from mz header
+ definition
+Date: Wed, 11 Jul 2018 16:42:01 +0900
+Message-Id: <20180711074203.3019-14-takahiro.akashi@linaro.org>
 In-Reply-To: <20180711074203.3019-1-takahiro.akashi@linaro.org>
 References: <20180711074203.3019-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,81 +28,37 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de
 Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-Those helper functions for MMFR0 register will be used later by kexec_file
-loader.
+message[] field won't be part of the definition of mz header.
+
+This change is crucial for enabling kexec_file_load on arm64 because
+arm64's "Image" binary, as in PE format, doesn't have any data for it and
+accordingly the following check in pefile_parse_binary() will fail:
+
+	chkaddr(cursor, mz->peaddr, sizeof(*pe));
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Reviewed-by: James Morse <james.morse@arm.com>
+Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: David S. Miller <davem@davemloft.net>
 ---
- arch/arm64/include/asm/cpufeature.h | 48 +++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ include/linux/pe.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-index 1717ba1db35d..cd90b5252d6d 100644
---- a/arch/arm64/include/asm/cpufeature.h
-+++ b/arch/arm64/include/asm/cpufeature.h
-@@ -486,11 +486,59 @@ static inline bool system_supports_32bit_el0(void)
- 	return cpus_have_const_cap(ARM64_HAS_32BIT_EL0);
- }
+diff --git a/include/linux/pe.h b/include/linux/pe.h
+index 143ce75be5f0..3482b18a48b5 100644
+--- a/include/linux/pe.h
++++ b/include/linux/pe.h
+@@ -166,7 +166,7 @@ struct mz_hdr {
+ 	uint16_t oem_info;	/* oem specific */
+ 	uint16_t reserved1[10];	/* reserved */
+ 	uint32_t peaddr;	/* address of pe header */
+-	char     message[64];	/* message to print */
++	char     message[];	/* message to print */
+ };
  
-+static inline bool system_supports_4kb_granule(void)
-+{
-+	u64 mmfr0;
-+	u32 val;
-+
-+	mmfr0 =	read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
-+	val = cpuid_feature_extract_unsigned_field(mmfr0,
-+						ID_AA64MMFR0_TGRAN4_SHIFT);
-+
-+	return val == ID_AA64MMFR0_TGRAN4_SUPPORTED;
-+}
-+
-+static inline bool system_supports_64kb_granule(void)
-+{
-+	u64 mmfr0;
-+	u32 val;
-+
-+	mmfr0 =	read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
-+	val = cpuid_feature_extract_unsigned_field(mmfr0,
-+						ID_AA64MMFR0_TGRAN64_SHIFT);
-+
-+	return val == ID_AA64MMFR0_TGRAN64_SUPPORTED;
-+}
-+
-+static inline bool system_supports_16kb_granule(void)
-+{
-+	u64 mmfr0;
-+	u32 val;
-+
-+	mmfr0 =	read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
-+	val = cpuid_feature_extract_unsigned_field(mmfr0,
-+						ID_AA64MMFR0_TGRAN16_SHIFT);
-+
-+	return val == ID_AA64MMFR0_TGRAN16_SUPPORTED;
-+}
-+
- static inline bool system_supports_mixed_endian_el0(void)
- {
- 	return id_aa64mmfr0_mixed_endian_el0(read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1));
- }
- 
-+static inline bool system_supports_mixed_endian(void)
-+{
-+	u64 mmfr0;
-+	u32 val;
-+
-+	mmfr0 =	read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
-+	val = cpuid_feature_extract_unsigned_field(mmfr0,
-+						ID_AA64MMFR0_BIGENDEL_SHIFT);
-+
-+	return val == 0x1;
-+}
-+
- static inline bool system_supports_fpsimd(void)
- {
- 	return !cpus_have_const_cap(ARM64_HAS_NO_FPSIMD);
+ struct mz_reloc {
 -- 
 2.17.0
 
