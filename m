@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-pl0-x241.google.com ([2607:f8b0:400e:c01::241])
  by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fd9lz-0005Ao-Pk
- for kexec@lists.infradead.org; Wed, 11 Jul 2018 07:42:54 +0000
-Received: by mail-pl0-x241.google.com with SMTP id s24-v6so8804197plq.6
- for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 00:42:41 -0700 (PDT)
+ id 1fd9lh-00057B-HW
+ for kexec@lists.infradead.org; Wed, 11 Jul 2018 07:42:37 +0000
+Received: by mail-pl0-x241.google.com with SMTP id z9-v6so8795974plo.1
+ for <kexec@lists.infradead.org>; Wed, 11 Jul 2018 00:42:22 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v11 09/15] arm64: kexec_file: load initrd and device-tree
-Date: Wed, 11 Jul 2018 16:41:57 +0900
-Message-Id: <20180711074203.3019-10-takahiro.akashi@linaro.org>
+Subject: [PATCH v11 07/15] arm64: cpufeature: add MMFR0 helper functions
+Date: Wed, 11 Jul 2018 16:41:55 +0900
+Message-Id: <20180711074203.3019-8-takahiro.akashi@linaro.org>
 In-Reply-To: <20180711074203.3019-1-takahiro.akashi@linaro.org>
 References: <20180711074203.3019-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,252 +27,81 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de
 Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-load_other_segments() is expected to allocate and place all the necessary
-memory segments other than kernel, including initrd and device-tree
-blob (and elf core header for crash).
-While most of the code was borrowed from kexec-tools' counterpart,
-users may not be allowed to specify dtb explicitly, instead, the dtb
-presented by the original boot loader is reused.
-
-arch_kimage_kernel_post_load_cleanup() is responsible for freeing arm64-
-specific data allocated in load_other_segments().
+Those helper functions for MMFR0 register will be used later by kexec_file
+loader.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will.deacon@arm.com>
+Reviewed-by: James Morse <james.morse@arm.com>
 ---
- arch/arm64/include/asm/kexec.h         |  16 +++
- arch/arm64/kernel/machine_kexec_file.c | 184 +++++++++++++++++++++++++
- 2 files changed, 200 insertions(+)
+ arch/arm64/include/asm/cpufeature.h | 48 +++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index e17f0529a882..01bbf6cebf12 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -93,6 +93,22 @@ static inline void crash_prepare_suspend(void) {}
- static inline void crash_post_resume(void) {}
- #endif
+diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+index 1717ba1db35d..cd90b5252d6d 100644
+--- a/arch/arm64/include/asm/cpufeature.h
++++ b/arch/arm64/include/asm/cpufeature.h
+@@ -486,11 +486,59 @@ static inline bool system_supports_32bit_el0(void)
+ 	return cpus_have_const_cap(ARM64_HAS_32BIT_EL0);
+ }
  
-+#ifdef CONFIG_KEXEC_FILE
-+#define ARCH_HAS_KIMAGE_ARCH
-+
-+struct kimage_arch {
-+	phys_addr_t dtb_mem;
-+	void *dtb_buf;
-+};
-+
-+struct kimage;
-+
-+extern int load_other_segments(struct kimage *image,
-+		unsigned long kernel_load_addr, unsigned long kernel_size,
-+		char *initrd, unsigned long initrd_len,
-+		char *cmdline, unsigned long cmdline_len);
-+#endif
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index c38a8048ed00..ca00681c25c6 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -5,12 +5,196 @@
-  * Copyright (C) 2018 Linaro Limited
-  * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
-  *
-+ * Most code is derived from arm64 port of kexec-tools
-  */
- 
- #define pr_fmt(fmt) "kexec_file: " fmt
- 
-+#include <linux/ioport.h>
-+#include <linux/kernel.h>
- #include <linux/kexec.h>
-+#include <linux/libfdt.h>
-+#include <linux/memblock.h>
-+#include <linux/of_fdt.h>
-+#include <linux/types.h>
-+#include <asm/byteorder.h>
- 
- const struct kexec_file_ops * const kexec_file_loaders[] = {
- 	NULL
- };
-+
-+int arch_kimage_file_post_load_cleanup(struct kimage *image)
++static inline bool system_supports_4kb_granule(void)
 +{
-+	vfree(image->arch.dtb_buf);
-+	image->arch.dtb_buf = NULL;
++	u64 mmfr0;
++	u32 val;
 +
-+	return kexec_image_post_load_cleanup_default(image);
++	mmfr0 =	read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
++	val = cpuid_feature_extract_unsigned_field(mmfr0,
++						ID_AA64MMFR0_TGRAN4_SHIFT);
++
++	return val == ID_AA64MMFR0_TGRAN4_SUPPORTED;
 +}
 +
-+static int setup_dtb(struct kimage *image,
-+		unsigned long initrd_load_addr, unsigned long initrd_len,
-+		char *cmdline, unsigned long cmdline_len,
-+		char **dtb_buf, size_t *dtb_buf_len)
++static inline bool system_supports_64kb_granule(void)
 +{
-+	char *buf = NULL;
-+	size_t buf_size;
-+	int nodeoffset;
-+	u64 value;
-+	int ret;
++	u64 mmfr0;
++	u32 val;
 +
-+	/* duplicate dt blob */
-+	buf_size = fdt_totalsize(initial_boot_params);
++	mmfr0 =	read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
++	val = cpuid_feature_extract_unsigned_field(mmfr0,
++						ID_AA64MMFR0_TGRAN64_SHIFT);
 +
-+	if (initrd_load_addr) {
-+		/* can be redundant, but trimmed at the end */
-+		buf_size += fdt_prop_len("linux,initrd-start", sizeof(u64));
-+		buf_size += fdt_prop_len("linux,initrd-end", sizeof(u64));
-+	}
-+
-+	if (cmdline)
-+		/* can be redundant, but trimmed at the end */
-+		buf_size += fdt_prop_len("bootargs", cmdline_len + 1);
-+
-+	buf = vmalloc(buf_size);
-+	if (!buf) {
-+		ret = -ENOMEM;
-+		goto out_err;
-+	}
-+
-+	ret = fdt_open_into(initial_boot_params, buf, buf_size);
-+	if (ret) {
-+		ret = -EINVAL;
-+		goto out_err;
-+	}
-+
-+	nodeoffset = fdt_path_offset(buf, "/chosen");
-+	if (nodeoffset < 0) {
-+		ret = -EINVAL;
-+		goto out_err;
-+	}
-+
-+	/* add bootargs */
-+	if (cmdline) {
-+		ret = fdt_setprop_string(buf, nodeoffset, "bootargs", cmdline);
-+		if (ret) {
-+			ret = -EINVAL;
-+			goto out_err;
-+		}
-+	} else {
-+		ret = fdt_delprop(buf, nodeoffset, "bootargs");
-+		if (ret && (ret != -FDT_ERR_NOTFOUND)) {
-+			ret = -EINVAL;
-+			goto out_err;
-+		}
-+	}
-+
-+	/* add initrd-* */
-+	if (initrd_load_addr) {
-+		value = cpu_to_fdt64(initrd_load_addr);
-+		ret = fdt_setprop_u64(buf, nodeoffset, "linux,initrd-start",
-+							value);
-+		if (ret) {
-+			ret = -EINVAL;
-+			goto out_err;
-+		}
-+
-+		value = cpu_to_fdt64(initrd_load_addr + initrd_len);
-+		ret = fdt_setprop_u64(buf, nodeoffset, "linux,initrd-end",
-+							value);
-+		if (ret) {
-+			ret = -EINVAL;
-+			goto out_err;
-+		}
-+	} else {
-+		ret = fdt_delprop(buf, nodeoffset, "linux,initrd-start");
-+		if (ret && (ret != -FDT_ERR_NOTFOUND)) {
-+			ret = -EINVAL;
-+			goto out_err;
-+		}
-+
-+		ret = fdt_delprop(buf, nodeoffset, "linux,initrd-end");
-+		if (ret && (ret != -FDT_ERR_NOTFOUND)) {
-+			ret = -EINVAL;
-+			goto out_err;
-+		}
-+	}
-+
-+	/* trim a buffer */
-+	fdt_pack(buf);
-+	*dtb_buf = buf;
-+	*dtb_buf_len = fdt_totalsize(buf);
-+
-+	return 0;
-+
-+out_err:
-+	vfree(buf);
-+	return ret;
++	return val == ID_AA64MMFR0_TGRAN64_SUPPORTED;
 +}
 +
-+int load_other_segments(struct kimage *image,
-+			unsigned long kernel_load_addr,
-+			unsigned long kernel_size,
-+			char *initrd, unsigned long initrd_len,
-+			char *cmdline, unsigned long cmdline_len)
++static inline bool system_supports_16kb_granule(void)
 +{
-+	struct kexec_buf kbuf;
-+	unsigned long initrd_load_addr = 0;
-+	char *dtb = NULL;
-+	unsigned long dtb_len = 0;
-+	int ret = 0;
++	u64 mmfr0;
++	u32 val;
 +
-+	kbuf.image = image;
-+	/* not allocate anything below the kernel */
-+	kbuf.buf_min = kernel_load_addr + kernel_size;
++	mmfr0 =	read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
++	val = cpuid_feature_extract_unsigned_field(mmfr0,
++						ID_AA64MMFR0_TGRAN16_SHIFT);
 +
-+	/* load initrd */
-+	if (initrd) {
-+		kbuf.buffer = initrd;
-+		kbuf.bufsz = initrd_len;
-+		kbuf.memsz = initrd_len;
-+		kbuf.buf_align = 0;
-+		/* within 1GB-aligned window of up to 32GB in size */
-+		kbuf.buf_max = round_down(kernel_load_addr, SZ_1G)
-+						+ (unsigned long)SZ_1G * 32;
-+		kbuf.top_down = false;
-+
-+		ret = kexec_add_buffer(&kbuf);
-+		if (ret)
-+			goto out_err;
-+		initrd_load_addr = kbuf.mem;
-+
-+		pr_debug("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+				initrd_load_addr, initrd_len, initrd_len);
-+	}
-+
-+	/* load dtb blob */
-+	ret = setup_dtb(image, initrd_load_addr, initrd_len,
-+				cmdline, cmdline_len, &dtb, &dtb_len);
-+	if (ret) {
-+		pr_err("Preparing for new dtb failed\n");
-+		goto out_err;
-+	}
-+
-+	kbuf.buffer = dtb;
-+	kbuf.bufsz = dtb_len;
-+	kbuf.memsz = dtb_len;
-+	/* not across 2MB boundary */
-+	kbuf.buf_align = SZ_2M;
-+	kbuf.buf_max = ULONG_MAX;
-+	kbuf.top_down = true;
-+
-+	ret = kexec_add_buffer(&kbuf);
-+	if (ret)
-+		goto out_err;
-+	image->arch.dtb_mem = kbuf.mem;
-+	image->arch.dtb_buf = dtb;
-+
-+	pr_debug("Loaded dtb at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+			kbuf.mem, dtb_len, dtb_len);
-+
-+	return 0;
-+
-+out_err:
-+	vfree(dtb);
-+	return ret;
++	return val == ID_AA64MMFR0_TGRAN16_SUPPORTED;
 +}
++
+ static inline bool system_supports_mixed_endian_el0(void)
+ {
+ 	return id_aa64mmfr0_mixed_endian_el0(read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1));
+ }
+ 
++static inline bool system_supports_mixed_endian(void)
++{
++	u64 mmfr0;
++	u32 val;
++
++	mmfr0 =	read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
++	val = cpuid_feature_extract_unsigned_field(mmfr0,
++						ID_AA64MMFR0_BIGENDEL_SHIFT);
++
++	return val == 0x1;
++}
++
+ static inline bool system_supports_fpsimd(void)
+ {
+ 	return !cpus_have_const_cap(ARM64_HAS_NO_FPSIMD);
 -- 
 2.17.0
 
