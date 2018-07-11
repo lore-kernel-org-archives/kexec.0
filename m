@@ -1,22 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x244.google.com ([2607:f8b0:400e:c01::244])
+Received: from mail-it0-x242.google.com ([2607:f8b0:4001:c0b::242])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fd5B0-0000tY-C7
- for kexec@lists.infradead.org; Wed, 11 Jul 2018 02:48:23 +0000
-Received: by mail-pl0-x244.google.com with SMTP id t6-v6so8477787plo.7
- for <kexec@lists.infradead.org>; Tue, 10 Jul 2018 19:48:12 -0700 (PDT)
-Date: Wed, 11 Jul 2018 11:49:33 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v10 08/14] arm64: kexec_file: load initrd and device-tree
-Message-ID: <20180711024932.GX28220@linaro.org>
-References: <20180623022058.10935-1-takahiro.akashi@linaro.org>
- <20180623022058.10935-9-takahiro.akashi@linaro.org>
- <1e401f4e-6176-990d-476c-31ae3f28f26c@arm.com>
- <20180710073719.GW28220@linaro.org>
- <27eda5b7-f9ad-2918-c302-3669d4b72fd0@arm.com>
+ id 1fd8YX-0001Ip-4z
+ for kexec@lists.infradead.org; Wed, 11 Jul 2018 06:24:54 +0000
+Received: by mail-it0-x242.google.com with SMTP id v71-v6so1974437itb.3
+ for <kexec@lists.infradead.org>; Tue, 10 Jul 2018 23:24:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <27eda5b7-f9ad-2918-c302-3669d4b72fd0@arm.com>
+In-Reply-To: <20180710191951.GF1731@minitux>
+References: <1530542283-26145-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1530542283-26145-8-git-send-email-zohar@linux.vnet.ibm.com>
+ <CAKv+Gu-nky1yX59TL2FNQ-0q7Sy399t2WpVWSy7jqYpQY4Fxjw@mail.gmail.com>
+ <1531165294.3332.40.camel@linux.ibm.com>
+ <CAKv+Gu-knHeBRGqo+2pb3X9cCjwovEykoXUf=DZyP7aJpoS60A@mail.gmail.com>
+ <CAKv+Gu8qjzh_Tta=n9C+cfXO29e_5RcLqfQSpvR5r7QmqzHbEg@mail.gmail.com>
+ <20180710191951.GF1731@minitux>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date: Wed, 11 Jul 2018 08:24:41 +0200
+Message-ID: <CAKv+Gu_C0H9LoqeC3PkKhaKr0TQys=1TcYFNG-JUivnN_YgBKQ@mail.gmail.com>
+Subject: Re: [PATCH v5 7/8] ima: based on policy warn about loading firmware
+ (pre-allocated buffer)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,146 +31,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andres Rodriguez <andresx7@gmail.com>, Kees Cook <keescook@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Luis R . Rodriguez" <mcgrof@suse.com>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, linux-security-module <linux-security-module@vger.kernel.org>, "Luis R . Rodriguez" <mcgrof@kernel.org>, linux-integrity <linux-integrity@vger.kernel.org>, "Serge E . Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Eric Biederman <ebiederm@xmission.com>
 
-On Tue, Jul 10, 2018 at 04:25:03PM +0100, James Morse wrote:
-> Hi Akashi,
-> 
-> On 10/07/18 08:37, AKASHI Takahiro wrote:
-> > On Tue, Jul 03, 2018 at 05:32:09PM +0100, James Morse wrote:
-> >> On 23/06/18 03:20, AKASHI Takahiro wrote:
-> >>> load_other_segments() is expected to allocate and place all the necessary
-> >>> memory segments other than kernel, including initrd and device-tree
-> >>> blob (and elf core header for crash).
-> >>> While most of the code was borrowed from kexec-tools' counterpart,
-> >>> users may not be allowed to specify dtb explicitly, instead, the dtb
-> >>> presented by the original boot loader is reused.
-> >>>
-> >>> arch_kimage_kernel_post_load_cleanup() is responsible for freeing arm64-
-> >>> specific data allocated in load_other_segments().
-> 
-> >>> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> >>> index c38a8048ed00..7115c4f915dc 100644
-> >>> --- a/arch/arm64/kernel/machine_kexec_file.c
-> >>> +++ b/arch/arm64/kernel/machine_kexec_file.c
-> >>
-> >>> +static int setup_dtb(struct kimage *image,
-> >>> +		unsigned long initrd_load_addr, unsigned long initrd_len,
-> >>> +		char *cmdline, unsigned long cmdline_len,
-> >>> +		char **dtb_buf, size_t *dtb_buf_len)
-> >>> +{
-> 
+On 10 July 2018 at 21:19, Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
+> On Mon 09 Jul 23:56 PDT 2018, Ard Biesheuvel wrote:
+>
+>> On 10 July 2018 at 08:51, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+>> > On 9 July 2018 at 21:41, Mimi Zohar <zohar@linux.ibm.com> wrote:
+>> >> On Mon, 2018-07-02 at 17:30 +0200, Ard Biesheuvel wrote:
+>> >>> On 2 July 2018 at 16:38, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
 > [..]
-> 
-> >>> +	/* add bootargs */
-> >>> +	if (cmdline) {
-> >>> +		ret = fdt_setprop(buf, nodeoffset, "bootargs",
-> >>> +						cmdline, cmdline_len + 1);
-> >>> +		if (ret)
-> >>> +			goto out_err;
-> >>> +	}
-> >>
-> >> So (cmdline_len == 0) from user-space means keep the old cmdline. Sounds
-> >> sensible. Is this documented anywhere?
-> 
-> > To be a bit surprise, --append (and --cmdline) option belongs to arch-
-> > specific options in terms of implementation. Apparently, a standard man page
-> > of kexec(8) say little about it, in particular, for device-tree-based system.
-> > 
-> > As far as arm64 is concerned, the fact is a bit complicated.
-> > User space kexec accepts --append as well as --reuse-cmdline, and
-> > along with yet another --dtb option, a resulting command line for new
-> > kernel (or bootargs in new dtb) would look to be:
-> > 
-> > 	--append=A | --reuse-cmdline |     --dtb
-> > 		   |                 |   n    |    y(bootargs=B)
-> > 
-> > 	    n            n               S(*1)      B(*2)
-> > 	    n            y               S          S(*3)
-> > 	    y            n               A          A
-> > 	    y            y              S+A        S+A(*4)
-> > 
-> >       where S: the cmdline parameters of the running system
-> > 		 (equal to bootargs in system's dtb)
-> 
-> (I'm afraid I don't understand this table, but the text below helps...)
+>> > So to summarize again: in my opinion, using a single buffer is not a
+>> > problem as long as the validation completes before the DMA map is
+>> > performed. This will provide the expected guarantees on systems with
+>> > IOMMUs, and will not complicate matters on systems where there is no
+>> > point in obsessing about this anyway given that devices can access all
+>> > of memory whenever they want to.
+>> >
+>> > As for the Qualcomm case: dma_alloc_coherent() is not needed here but
+>> > simply ends up being used because it was already wired up in the
+>> > qualcomm specific secure world API, which amounts to doing syscalls
+>> > into a higher privilege level than the one the kernel itself runs at.
+>
+> As I said before, the dma_alloc_coherent() referred to in this
+> discussion holds parameters for the Trustzone call, i.e. it will hold
+> the address to the buffer that the firmware was loaded into - it won't
+> hold any data that comes from the actual firmware.
+>
 
-(Really? I believed that it was obvious.)
+Ah yes, I forgot that detail. Thanks for reminding me.
 
-> 
-> > You are talking about case(1) above.
-> > 
-> > Given that we can have an explicit option, --reuse-cmdline, the cmdline
-> > in (1) should be NULL. Meanwhile, we specify --dtb here, which means
-> > that we want to re-use system's dtb, implying that we also want to
-> > reuse a cmdline parameter. (This can be arguable, though)
-> 
-> Sounds like this is all user-space's problem!
+>> > So again, reasoning about whether the secure world will look at your
+>> > data before you checked the sig is rather pointless, and adding
+>> > special cases to the IMA api to cater for this use case seems like a
+>> > waste of engineering and review effort to me.
+>
+> Forgive me if I'm missing something in the implementation here, but
+> aren't the IMA checks done before request_firmware*() returns?
+>
 
-I dare not say it's a bug :)
+The issue under discussion is whether calling request_firmware() to
+load firmware into a buffer that may be readable by the device while
+the IMA checks are in progress constitutes a security hazard.
 
-> 
-> > So I would say that we have both reasons to go for and go against.
-> > 
-> > # Likewise,
-> > # I wonder why the cmdnline would not be B or A+B, respectively,
-> > in case of (3) and (4). But it's a different issue.
-> > 
-> >> powerpc does the opposite, it deletes the bootargs in this case. Are we happy
-> >> making his a per-arch thing?
-> > 
-> > My compromise solution is:
-> > a.to maintain compatibility with powerpc at system call level, 
-> 
-> This sounds like the right thing to do.
-> 
-> 
-> >   that is,
-> >   replacing bootargs in new dtb if user explicitly specifies cmdline
-> >   argument, otherwise nullifying bootargs,
-> > b.yet maintain compatibility with arm64's kexec behavior at command line
-> >   interface level. If neither --append nor --dtb is not specified,
-> >   user space kexec will reuse the system's command line whether or not
-> >   --reuse-cmdline is used.
-> 
-> (a and b aren't options this time: you're proposing to do a-and-b)
+>> > If we have to do
+>> > something to tie up this loose end, let's try switching it to the
+>> > streaming DMA api instead.
+>> >
+>>
+>> Forgot to mention: the Qualcomm case is about passing data to the CPU
+>> running at another privilege level, so IOMMU vs !IOMMU is not a factor
+>> here.
+>
+> Further more, all scenarios we've look at so far is completely
+> sequential, so if the firmware request fails we won't invoke the
+> Trustzone operation that would consume the memory or we won't turn on
+> the power to the CPU that would execute the firmware.
+>
+>
+> Tbh the only case I can think of where there would be a "race condition"
+> here is if we have a device that is polling the last byte of a
+> predefined firmware memory area for the firmware loader to read some
+> specific data into it. In cases where the firmware request is followed
+> by some explicit signalling to the device (or a power on sequence) I'm
+> unable to see the issue discussed here.
+>
 
-Yes.
+I agree. But the latter part is platform specific, and so it requires
+some degree of trust in the driver author on the part of the IMA
+routines that request_firmware() is called at an appropriate time.
 
-> 
-> > (Do you follow me?)
-> 
-> I think so:
-> The syscall will behave the same as powerpc meaning the kernel will never re-use
-> the existing cmdline in the dtb, even if that means (trying to) boot without one.
-> 
-> If user-space wants to re-use the command line, it should read /proc/cmdline and
-> feed the string back into the kernel.
+The point I am trying to make in this thread is that there are cases
+where it makes no sense for the kernel to reason about these things,
+given that higher privilege levels such as the TrustZone secure world
+own the kernel's execution context entirely already, and given that
+masters that are not behind an IOMMU can read and write all of memory
+all of the time anyway.
 
-Thank you for rephrasing.
+The bottom line is that reality does not respect the layering that IMA
+assumes, and so the only meaningful way to treat some of the use cases
+is simply to ignore them entirely. So we should still perform all the
+checks, but we will have to live with the limited utility of doing so
+in some scenarios (and not print nasty warnings to the kernel log for
+such cases)
 
-> 
-> > So kexec and kexec_file on arm64 will still behave in exactly the same way,
-> > but differently from ppc at command level for now.
-> 
-> > The point is that, if we might want or need to change this behavior
-> > (at any time in the future), we would only have to modify user space kexec.
-> > Kernel semantics will never break.
-> > 
-> > (b) requires additional small modification on kexec-tools, but kexec_file
-> > support is yet to be upstreamed anyway.
-> 
-> Makes sense!
-
-The next version will go with this approach.
-
--Takahiro AKASHI
-
-> 
-> Thanks,
-> 
-> James
+-- 
+Ard.
 
 _______________________________________________
 kexec mailing list
