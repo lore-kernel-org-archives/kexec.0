@@ -1,20 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fcj3d-00022M-UT
- for kexec@lists.infradead.org; Tue, 10 Jul 2018 03:11:19 +0000
-Date: Tue, 10 Jul 2018 11:10:55 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [kbuild-all] [PATCH v6 2/4] resource: Use list_head to link
- sibling resource
-Message-ID: <20180710031055.GC1969@MiWiFi-R3L-srv>
-References: <20180704041038.8190-3-bhe@redhat.com>
- <201807042347.hfDcKxmG%fengguang.wu@intel.com>
- <20180708025946.GI3047@MiWiFi-R3L-srv>
- <20180710005927.GG10005@yexl-desktop>
+Subject: Re: [PATCH] arm64/mm: Introduce a variable to hold base address of
+ linear region
+References: <CAKv+Gu8Hs+CArdkAWoBPbr_p-nq5+0oPwOPg0NsJDRMkE_bM9A@mail.gmail.com>
+ <d801005a-5f7a-8fe4-a486-bc6443a406a3@arm.com>
+ <CACi5LpOJ7Q7nbo9m_HGqr44+n_iEtreZt+Uxtf2PzcHSzTdKuA@mail.gmail.com>
+ <3a05cd0e-466e-4fb6-a78a-4b363e21aaab@arm.com>
+ <CACi5LpMJnFthKUJGfMWgDyMTM65oTtOvsRGCtMDjWP32qDptbQ@mail.gmail.com>
+ <92ff5220-f863-4edc-bc9f-bd802d2efa9c@arm.com>
+ <d5e01f4bedc649ff8a2ee17b17c1c33d@HXTBJIDCEMVIW02.hxtcorp.net>
+ <20180619085541.GB13984@arm.com>
+ <6860c284f1c74faa95edd6cf866ec80d@HXTBJIDCEMVIW02.hxtcorp.net>
+ <20180619094045.GD13984@arm.com>
+ <a720d91be20844cd9ed84728268300d9@HXTBJIDCEMVIW02.hxtcorp.net>
+ <09260c7e-8b9d-bc3c-5bca-0fd75417f552@arm.com>
+ <CACi5LpMoKP4eG5XhYe5hf5VC9MOY8KuHK=j0ujb8GFpyjAuAww@mail.gmail.com>
+ <b0d40351-8d78-fd69-cc87-d5ea5eaabd2a@arm.com>
+ <CACi5LpM2GV-vwcEGeCE20QW0PVmDcKnjz017sYBAwYRfZ24AzA@mail.gmail.com>
+ <51cf54d6a19f4837b74218b000cc23bc@HXTBJIDCEMVIW02.hxtcorp.net>
+ <CACi5LpMXpSWUP97R2VWjf==LdxPBCKTcpKjQjCs4j3Kz9SzYGg@mail.gmail.com>
+From: James Morse <james.morse@arm.com>
+Message-ID: <cb5cf891-cf46-3afc-0c77-6667165caf7a@arm.com>
+Date: Wed, 11 Jul 2018 14:24:08 +0100
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180710005927.GG10005@yexl-desktop>
+In-Reply-To: <CACi5LpMXpSWUP97R2VWjf==LdxPBCKTcpKjQjCs4j3Kz9SzYGg@mail.gmail.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,107 +36,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ye Xiaolong <xiaolong.ye@intel.com>
-Cc: nicolas.pitre@linaro.org, brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, frowand.list@gmail.com, dan.j.williams@intel.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, kbuild test robot <lkp@intel.com>, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, andy.shevchenko@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, bp@suse.de, dyoung@redhat.com, vgoyal@redhat.com, kbuild-all@01.org, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, josh@joshtriplett.org, jglisse@redhat.com, robh+dt@kernel.org, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, devel@linuxdriverproject.org, akpm@linux-foundation.org, fengguang.wu@intel.com, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "Jin,
+ Yanjiang" <yanjiang.jin@hxt-semitech.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec <kexec-bounces@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Omar Sandoval <osandov@fb.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-On 07/10/18 at 08:59am, Ye Xiaolong wrote:
-> Hi,
-> 
-> On 07/08, Baoquan He wrote:
-> >Hi,
-> >
-> >On 07/05/18 at 01:00am, kbuild test robot wrote:
-> >> Hi Baoquan,
-> >> 
-> >> I love your patch! Yet something to improve:
-> >> 
-> >> [auto build test ERROR on linus/master]
-> >> [also build test ERROR on v4.18-rc3 next-20180704]
-> >> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> >
-> >Thanks for telling. 
-> >
-> >I cloned 0day-ci/linut to my local pc.
-> >https://github.com/0day-ci/linux.git
-> >
-> >However, I didn't find below branch. And tried to open it in web
-> >broswer, also failed.
-> >
-> 
-> Sorry for the inconvenience, 0day bot didn't push the branch to github successfully,
-> Just push it manually, you can have a try again.
+Hi Bhupesh,
 
-Thanks, Xiaolong, I have applied them on top of linux-next/master, and
-copy the config file attached, and run the command to reproduce as
-suggested. Now I have fixed all those issues reported, will repost.
+(CC: +Omar)
 
-> 
-> >
-> >> url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180704-121402
-> >> config: mips-rb532_defconfig (attached as .config)
-> >> compiler: mipsel-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
-> >> reproduce:
-> >>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >>         chmod +x ~/bin/make.cross
-> >>         # save the attached .config to linux build tree
-> >>         GCC_VERSION=7.2.0 make.cross ARCH=mips 
-> >
-> >I did find a old one which is for the old version 5 post.
-> >
-> >[bhe@linux]$ git remote -v
-> >0day-ci	https://github.com/0day-ci/linux.git (fetch)
-> >0day-ci	https://github.com/0day-ci/linux.git (push)
-> >[bhe@dhcp-128-28 linux]$ git branch -a| grep Baoquan| grep resource
-> >  remotes/0day-ci/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180612-113600
-> >
-> >Could you help have a look at this?
-> >
-> >Thanks
-> >Baoquan
-> >
-> >> 
-> >> All error/warnings (new ones prefixed by >>):
-> >> 
-> >> >> arch/mips/pci/pci-rc32434.c:57:11: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
-> >>      .child = &rc32434_res_pci_mem2
-> >>               ^
-> >>    arch/mips/pci/pci-rc32434.c:57:11: note: (near initialization for 'rc32434_res_pci_mem1.child.next')
-> >> >> arch/mips/pci/pci-rc32434.c:51:47: warning: missing braces around initializer [-Wmissing-braces]
-> >>     static struct resource rc32434_res_pci_mem1 = {
-> >>                                                   ^
-> >>    arch/mips/pci/pci-rc32434.c:60:47: warning: missing braces around initializer [-Wmissing-braces]
-> >>     static struct resource rc32434_res_pci_mem2 = {
-> >>                                                   ^
-> >>    cc1: some warnings being treated as errors
-> >> 
-> >> vim +57 arch/mips/pci/pci-rc32434.c
-> >> 
-> >> 73b4390f Ralf Baechle 2008-07-16  50  
-> >> 73b4390f Ralf Baechle 2008-07-16 @51  static struct resource rc32434_res_pci_mem1 = {
-> >> 73b4390f Ralf Baechle 2008-07-16  52  	.name = "PCI MEM1",
-> >> 73b4390f Ralf Baechle 2008-07-16  53  	.start = 0x50000000,
-> >> 73b4390f Ralf Baechle 2008-07-16  54  	.end = 0x5FFFFFFF,
-> >> 73b4390f Ralf Baechle 2008-07-16  55  	.flags = IORESOURCE_MEM,
-> >> 73b4390f Ralf Baechle 2008-07-16  56  	.sibling = NULL,
-> >> 73b4390f Ralf Baechle 2008-07-16 @57  	.child = &rc32434_res_pci_mem2
-> >> 73b4390f Ralf Baechle 2008-07-16  58  };
-> >> 73b4390f Ralf Baechle 2008-07-16  59  
-> >> 
-> >> :::::: The code at line 57 was first introduced by commit
-> >> :::::: 73b4390fb23456964201abda79f1210fe337d01a [MIPS] Routerboard 532: Support for base system
-> >> 
-> >> :::::: TO: Ralf Baechle <ralf@linux-mips.org>
-> >> :::::: CC: Ralf Baechle <ralf@linux-mips.org>
-> >> 
-> >> ---
-> >> 0-DAY kernel test infrastructure                Open Source Technology Center
-> >> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> >
-> >
-> >_______________________________________________
-> >kbuild-all mailing list
-> >kbuild-all@lists.01.org
-> >https://lists.01.org/mailman/listinfo/kbuild-all
+On 20/06/18 08:26, Bhupesh Sharma wrote:
+> On Wed, Jun 20, 2018 at 7:46 AM, Jin, Yanjiang
+> <yanjiang.jin@hxt-semitech.com> wrote:
+>>> From: Bhupesh Sharma [mailto:bhsharma@redhat.com]
+>>> On Tue, Jun 19, 2018 at 4:56 PM, James Morse <james.morse@arm.com> wrote:
+>>>> I'm suggesting adding the contents of vmcoreinfo as a PT_NOTE section
+>>>> of /proc/kcore's ELF header. No special knowledge necessary, any
+>>>> elf-parser should be able to dump the values.
+
+[..]
+>>> I am working on fixes on the above lines for kernel and user-space tools (like
+>>> makedumpfile, crash-utility and kexec-tools).
+>>>
+>>> I will post some RFC patches on the same lines (or come back in case I get stuck
+>>> somewhere) shortly.
+
+I spotted this series from Omar:
+https://lkml.org/lkml/2018/7/6/866
+
+Hopefully it does what you need?
+
+
+Thanks,
+
+James
 
 _______________________________________________
 kexec mailing list
