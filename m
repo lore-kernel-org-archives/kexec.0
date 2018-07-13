@@ -1,27 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fe2Se-0000u6-Pn
- for kexec@lists.infradead.org; Fri, 13 Jul 2018 18:06:34 +0000
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w6DI4FcL128102
- for <kexec@lists.infradead.org>; Fri, 13 Jul 2018 14:06:28 -0400
+ id 1fe2Sg-0000vT-Ty
+ for kexec@lists.infradead.org; Fri, 13 Jul 2018 18:06:38 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w6DI4LK0114422
+ for <kexec@lists.infradead.org>; Fri, 13 Jul 2018 14:06:29 -0400
 Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2k6vn9kkuj-1
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2k6xv1njt9-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 13 Jul 2018 14:06:27 -0400
+ for <kexec@lists.infradead.org>; Fri, 13 Jul 2018 14:06:28 -0400
 Received: from localhost
  by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Fri, 13 Jul 2018 19:06:25 +0100
+ Fri, 13 Jul 2018 19:06:27 +0100
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v6 3/8] ima: based on policy require signed kexec kernel images
-Date: Fri, 13 Jul 2018 14:05:58 -0400
+Subject: [PATCH v6 4/8] firmware: add call to LSM hook before firmware sysfs
+ fallback
+Date: Fri, 13 Jul 2018 14:05:59 -0400
 In-Reply-To: <1531505163-20227-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1531505163-20227-1-git-send-email-zohar@linux.vnet.ibm.com>
-Message-Id: <1531505163-20227-4-git-send-email-zohar@linux.vnet.ibm.com>
+Message-Id: <1531505163-20227-5-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,140 +38,50 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-integrity@vger.kernel.org
-Cc: Andres Rodriguez <andresx7@gmail.com>, Kees Cook <keescook@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
+Cc: Andres Rodriguez <andresx7@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R . Rodriguez" <mcgrof@kernel.org>
 
-The original kexec_load syscall can not verify file signatures, nor can
-the kexec image be measured.  Based on policy, deny the kexec_load
-syscall.
+Add an LSM hook prior to allowing firmware sysfs fallback loading.
 
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>
+Acked-by: Luis R. Rodriguez <mcgrof@kernel.org>
 
 ---
-Changelog v3:
-- use switch/case
+Changelog v4:
+- call new LSM security_kernel_load_data hook
 
- include/linux/ima.h                 |  7 +++++++
- security/integrity/ima/ima.h        |  1 +
- security/integrity/ima/ima_main.c   | 27 +++++++++++++++++++++++++++
- security/integrity/ima/ima_policy.c |  2 ++
- security/security.c                 |  7 ++++++-
- 5 files changed, 43 insertions(+), 1 deletion(-)
+Changelog v2:
+- call security_kernel_read_blob()
+- rename the READING_FIRMWARE_FALLBACK kernel_read_file_id enumeration to
+READING_FIRMWARE_FALLBACK_SYSFS.
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 0e4647e0eb60..84806b54b50a 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -11,6 +11,7 @@
- #define _LINUX_IMA_H
+ drivers/base/firmware_loader/fallback.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+index 7f732744f0d3..202324291542 100644
+--- a/drivers/base/firmware_loader/fallback.c
++++ b/drivers/base/firmware_loader/fallback.c
+@@ -651,6 +651,8 @@ static bool fw_force_sysfs_fallback(enum fw_opt opt_flags)
  
- #include <linux/fs.h>
-+#include <linux/security.h>
- #include <linux/kexec.h>
- struct linux_binprm;
- 
-@@ -19,6 +20,7 @@ extern int ima_bprm_check(struct linux_binprm *bprm);
- extern int ima_file_check(struct file *file, int mask, int opened);
- extern void ima_file_free(struct file *file);
- extern int ima_file_mmap(struct file *file, unsigned long prot);
-+extern int ima_load_data(enum kernel_load_data_id id);
- extern int ima_read_file(struct file *file, enum kernel_read_file_id id);
- extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 			      enum kernel_read_file_id id);
-@@ -49,6 +51,11 @@ static inline int ima_file_mmap(struct file *file, unsigned long prot)
- 	return 0;
- }
- 
-+static inline int ima_load_data(enum kernel_load_data_id id)
-+{
-+	return 0;
-+}
-+
- static inline int ima_read_file(struct file *file, enum kernel_read_file_id id)
+ static bool fw_run_sysfs_fallback(enum fw_opt opt_flags)
  {
- 	return 0;
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 354bb5716ce3..78c15264b17b 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -232,6 +232,7 @@ int ima_policy_show(struct seq_file *m, void *v);
- #define IMA_APPRAISE_MODULES	0x08
- #define IMA_APPRAISE_FIRMWARE	0x10
- #define IMA_APPRAISE_POLICY	0x20
-+#define IMA_APPRAISE_KEXEC	0x40
- 
- #ifdef CONFIG_IMA_APPRAISE
- int ima_appraise_measurement(enum ima_hooks func,
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index dca44cf7838e..71fecfef0939 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -496,6 +496,33 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 				   MAY_READ, func, 0);
- }
- 
-+/**
-+ * ima_load_data - appraise decision based on policy
-+ * @id: kernel load data caller identifier
-+ *
-+ * Callers of this LSM hook can not measure, appraise, or audit the
-+ * data provided by userspace.  Enforce policy rules requring a file
-+ * signature (eg. kexec'ed kernel image).
-+ *
-+ * For permission return 0, otherwise return -EACCES.
-+ */
-+int ima_load_data(enum kernel_load_data_id id)
-+{
-+	if ((ima_appraise & IMA_APPRAISE_ENFORCE) != IMA_APPRAISE_ENFORCE)
-+		return 0;
-+
-+	switch (id) {
-+	case LOADING_KEXEC_IMAGE:
-+		if (ima_appraise & IMA_APPRAISE_KEXEC) {
-+			pr_err("impossible to appraise a kernel image without a file descriptor; try using kexec_file_load syscall.\n");
-+			return -EACCES;	/* INTEGRITY_UNKNOWN */
-+		}
-+	default:
-+		break;
-+	}
-+	return 0;
-+}
-+
- static int __init init_ima(void)
- {
- 	int error;
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 7f4a4de7e831..ebfb389b79df 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -448,6 +448,8 @@ static int ima_appraise_flag(enum ima_hooks func)
- 		return IMA_APPRAISE_FIRMWARE;
- 	else if (func == POLICY_CHECK)
- 		return IMA_APPRAISE_POLICY;
-+	else if (func == KEXEC_KERNEL_CHECK)
-+		return IMA_APPRAISE_KEXEC;
- 	return 0;
- }
- 
-diff --git a/security/security.c b/security/security.c
-index 05fe5b1932d7..7b870df0a335 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -1063,7 +1063,12 @@ EXPORT_SYMBOL_GPL(security_kernel_post_read_file);
- 
- int security_kernel_load_data(enum kernel_load_data_id id)
- {
--	return call_int_hook(kernel_load_data, 0, id);
 +	int ret;
 +
-+	ret = call_int_hook(kernel_load_data, 0, id);
-+	if (ret)
+ 	if (fw_fallback_config.ignore_sysfs_fallback) {
+ 		pr_info_once("Ignoring firmware sysfs fallback due to sysctl knob\n");
+ 		return false;
+@@ -659,6 +661,11 @@ static bool fw_run_sysfs_fallback(enum fw_opt opt_flags)
+ 	if ((opt_flags & FW_OPT_NOFALLBACK))
+ 		return false;
+ 
++	/* Also permit LSMs and IMA to fail firmware sysfs fallback */
++	ret = security_kernel_load_data(LOADING_FIRMWARE);
++	if (ret < 0)
 +		return ret;
-+	return ima_load_data(id);
++
+ 	return fw_force_sysfs_fallback(opt_flags);
  }
  
- int security_task_fix_setuid(struct cred *new, const struct cred *old,
 -- 
 2.7.5
 
