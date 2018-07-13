@@ -1,27 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x241.google.com ([2607:f8b0:400e:c00::241])
+Received: from mail-pl0-x243.google.com ([2607:f8b0:400e:c01::243])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fdiJ3-00069d-Ht
- for kexec@lists.infradead.org; Thu, 12 Jul 2018 20:35:20 +0000
-Received: by mail-pf0-x241.google.com with SMTP id e10-v6so21270105pfn.1
- for <kexec@lists.infradead.org>; Thu, 12 Jul 2018 13:35:06 -0700 (PDT)
-Date: Thu, 12 Jul 2018 13:37:46 -0700
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v5 7/8] ima: based on policy warn about loading firmware
- (pre-allocated buffer)
-Message-ID: <20180712203746.GG545@tuxbook-pro>
-References: <1530542283-26145-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1530542283-26145-8-git-send-email-zohar@linux.vnet.ibm.com>
- <CAKv+Gu-nky1yX59TL2FNQ-0q7Sy399t2WpVWSy7jqYpQY4Fxjw@mail.gmail.com>
- <1531165294.3332.40.camel@linux.ibm.com>
- <CAKv+Gu-knHeBRGqo+2pb3X9cCjwovEykoXUf=DZyP7aJpoS60A@mail.gmail.com>
- <CAKv+Gu8qjzh_Tta=n9C+cfXO29e_5RcLqfQSpvR5r7QmqzHbEg@mail.gmail.com>
- <20180710191951.GF1731@minitux>
- <CAKv+Gu_C0H9LoqeC3PkKhaKr0TQys=1TcYFNG-JUivnN_YgBKQ@mail.gmail.com>
- <1531425793.3568.275.camel@linux.ibm.com>
+ id 1fdm1S-0002rt-Dl
+ for kexec@lists.infradead.org; Fri, 13 Jul 2018 00:33:24 +0000
+Received: by mail-pl0-x243.google.com with SMTP id f4-v6so7182013plb.9
+ for <kexec@lists.infradead.org>; Thu, 12 Jul 2018 17:33:11 -0700 (PDT)
+Date: Fri, 13 Jul 2018 09:34:36 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v3.1 0/4] arm64: kexec,kdump: fix boot failures on
+ acpi-only system
+Message-ID: <20180713003434.GZ28220@linaro.org>
+References: <20180709234229.20181-1-takahiro.akashi@linaro.org>
+ <20180712164918.GA26935@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1531425793.3568.275.camel@linux.ibm.com>
+In-Reply-To: <20180712164918.GA26935@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,54 +23,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Andres Rodriguez <andresx7@gmail.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Luis R . Rodriguez" <mcgrof@suse.com>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, linux-security-module <linux-security-module@vger.kernel.org>, "Luis R . Rodriguez" <mcgrof@kernel.org>, linux-integrity <linux-integrity@vger.kernel.org>, "Serge E . Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Eric Biederman <ebiederm@xmission.com>
+To: Will Deacon <will.deacon@arm.com>
+Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, al.stone@linaro.org, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, tbaicar@codeaurora.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, james.morse@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-On Thu 12 Jul 13:03 PDT 2018, Mimi Zohar wrote:
+On Thu, Jul 12, 2018 at 05:49:19PM +0100, Will Deacon wrote:
+> Hi Akashi,
+> 
+> On Tue, Jul 10, 2018 at 08:42:25AM +0900, AKASHI Takahiro wrote:
+> > This patch series is a set of bug fixes to address kexec/kdump
+> > failures which are sometimes observed on ACPI-only system and reported
+> > in LAK-ML before.
+> 
+> I tried picking this up, along with Ard's fixup, but I'm seeing a build
+> failure for allmodconfig:
+> 
+> arch/arm64/kernel/acpi.o: In function `__acpi_get_mem_attribute':
+> acpi.c:(.text+0x60): undefined reference to `efi_mem_attributes'
+> 
+> I didn't investigate further. Please can you fix this?
 
-> On Wed, 2018-07-11 at 08:24 +0200, Ard Biesheuvel wrote:
-> > On 10 July 2018 at 21:19, Bjorn Andersson <bjorn.andersson@linaro.org> =
-wrote:
-> =
+Because CONFIG_ACPI is on and CONFIG_EFI is off.
 
-> > > Tbh the only case I can think of where there would be a "race conditi=
-on"
-> > > here is if we have a device that is polling the last byte of a
-> > > predefined firmware memory area for the firmware loader to read some
-> > > specific data into it. In cases where the firmware request is followed
-> > > by some explicit signalling to the device (or a power on sequence) I'm
-> > > unable to see the issue discussed here.
-> > >
-> > =
+This can happen in allmodconfig as CONFIG_EFI depends on
+!CONFIG_CPU_BIG_ENDIAN, which is actually on in this case.
 
-> > I agree. But the latter part is platform specific, and so it requires
-> > some degree of trust in the driver author on the part of the IMA
-> > routines that request_firmware() is called at an appropriate time.
-> =
+Looking at __acpi_get_mem_attributes(), since there is no information
+available on memory attributes, what we can do at best is
+  * return PAGE_KERNEL (= cacheable) for mapped memory,
+  * return DEVICE_nGnRnE (= non-cacheable) otherwise
+(See a hunk to be applied on top of my patch#4.)
 
-> Exactly. =A0Qualcomm could be using the pre-allocated buffer
-> appropriately, but that doesn't guarantee how it will be used in the
-> future.
-> =
+I think that, after applying, acpi_os_ioremap() would work almost
+in the same way as the original before my patchset given that
+MAP memblock attribute is used only under CONFIG_EFI for now.
 
+Make sense?
 
-Agreed.
+-Takahiro AKASHI
 
-But a device that starts operate on the firmware memory before it's
-fully loaded (and verified) will likely hit other nasty issues. Using a
-traditional request_firmware() and memcpy() or simply mapping the buffer
-into the remote piecemeal would have the same issue.
-
-So I think that regardless of using IMA, if you don't have the ability
-to control your device's view of the entire firmware buffer atomically
-you must write your device drivers accordingly.
-
-Regards,
-Bjorn
+> Will
+---8<---
+diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+index ed46dc188b22..cad3ed2666ef 100644
+--- a/arch/arm64/kernel/acpi.c
++++ b/arch/arm64/kernel/acpi.c
+@@ -238,6 +238,7 @@ void __init acpi_boot_table_init(void)
+ 
+ pgprot_t __acpi_get_mem_attribute(phys_addr_t addr)
+ {
++#ifdef CONFIG_EFI
+ 	/*
+ 	 * According to "Table 8 Map: EFI memory types to AArch64 memory
+ 	 * types" of UEFI 2.5 section 2.3.6.1, each EFI memory type is
+@@ -255,5 +256,9 @@ pgprot_t __acpi_get_mem_attribute(phys_addr_t addr)
+ 		return __pgprot(PROT_NORMAL_WT);
+ 	if (attr & EFI_MEMORY_WC)
+ 		return __pgprot(PROT_NORMAL_NC);
++#else
++	if (memblock_is_map_memory(addr))
++		return PAGE_KERNEL;
++#endif
+ 	return __pgprot(PROT_DEVICE_nGnRnE);
+ }
 
 _______________________________________________
 kexec mailing list
