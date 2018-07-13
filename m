@@ -1,19 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x241.google.com ([2607:f8b0:4001:c0b::241])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fdqxo-00054u-Ot
- for kexec@lists.infradead.org; Fri, 13 Jul 2018 05:49:58 +0000
-Received: by mail-it0-x241.google.com with SMTP id 188-v6so9960259ita.5
- for <kexec@lists.infradead.org>; Thu, 12 Jul 2018 22:49:46 -0700 (PDT)
+ id 1fe1ZE-0000nF-E7
+ for kexec@lists.infradead.org; Fri, 13 Jul 2018 17:09:18 +0000
+Date: Fri, 13 Jul 2018 19:08:57 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
+ AMD sme enabled
+Message-ID: <20180713170857.GB17896@nazgul.tnic>
+References: <20180702072639.10110-1-lijiang@redhat.com>
+ <20180702072639.10110-2-lijiang@redhat.com>
+ <20180702101451.GB28730@zn.tnic>
+ <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
+ <895db996-febd-d50c-91af-4f1ef3d27bd8@redhat.com>
+ <20180703111428.GB5748@zn.tnic>
+ <4fbb843b-9597-a48b-8b6f-00e354b91950@redhat.com>
+ <e7357038-08bd-7ba8-5357-7c91d21d10fe@redhat.com>
+ <20180709092901.GA22182@nazgul.tnic>
+ <fc6a47ca-1b16-eba5-d15e-ca294e01af93@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20180713003434.GZ28220@linaro.org>
-References: <20180709234229.20181-1-takahiro.akashi@linaro.org>
- <20180712164918.GA26935@arm.com> <20180713003434.GZ28220@linaro.org>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Fri, 13 Jul 2018 07:49:45 +0200
-Message-ID: <CAKv+Gu9PT75XTXGsh1jc5roRO_d2QYKEamq42mfbsXzmerAUzA@mail.gmail.com>
-Subject: Re: [PATCH v3.1 0/4] arm64: kexec,kdump: fix boot failures on
- acpi-only system
+Content-Disposition: inline
+In-Reply-To: <fc6a47ca-1b16-eba5-d15e-ca294e01af93@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,53 +33,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, "Baicar, Tyler" <tbaicar@codeaurora.org>, Bhupesh Sharma <bhsharma@redhat.com>, Dave Young <dyoung@redhat.com>, James Morse <james.morse@arm.com>, Mark Rutland <mark.rutland@arm.com>, Al Stone <al.stone@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>
+To: lijiang <lijiang@redhat.com>
+Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com
 
-On 13 July 2018 at 02:34, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> On Thu, Jul 12, 2018 at 05:49:19PM +0100, Will Deacon wrote:
->> Hi Akashi,
->>
->> On Tue, Jul 10, 2018 at 08:42:25AM +0900, AKASHI Takahiro wrote:
->> > This patch series is a set of bug fixes to address kexec/kdump
->> > failures which are sometimes observed on ACPI-only system and reported
->> > in LAK-ML before.
->>
->> I tried picking this up, along with Ard's fixup, but I'm seeing a build
->> failure for allmodconfig:
->>
->> arch/arm64/kernel/acpi.o: In function `__acpi_get_mem_attribute':
->> acpi.c:(.text+0x60): undefined reference to `efi_mem_attributes'
->>
->> I didn't investigate further. Please can you fix this?
->
-> Because CONFIG_ACPI is on and CONFIG_EFI is off.
->
-> This can happen in allmodconfig as CONFIG_EFI depends on
-> !CONFIG_CPU_BIG_ENDIAN, which is actually on in this case.
->
+On Mon, Jul 09, 2018 at 09:55:35PM +0800, lijiang wrote:
+> About this issue, i want to use an example to describe it.
+> /* drivers/iommu/amd_iommu_init.c */
+> static u8 __iomem * __init iommu_map_mmio_space(u64 address, u64 end)
 
-Allowing both CONFIG_ACPI and CONFIG_CPU_BIG_ENDIAN to be configured
-makes no sense at all. Things will surely break if you start using BE
-memory accesses while parsing ACPI tables.
+Those addresses come from the IVHD header which is an ACPI table. So the
+dump kernel can find that out too.
 
-Allowing CONFIG_ACPI without CONFIG_EFI makes no sense either, since
-on arm64, the only way to find the ACPI tables is through a UEFI
-configuration table.
+> Obviously, the iommu mmio space is not encrypted, and the device
+> mmio space is outside kdump kernel. We know that the old memory is
+> encrypted, and the old memory is also outside kdump kernel. For the
+> current case, e820__get_entry_type() and walk_iomem_res_desc() can't
+> get the desired result, so we can't also decide whether encryption
+> or not according to this result(rules). If we want to know whether
+> encryption or not by deducing the address, we will need to read the
+> content of memory and have a reference value for comparison, then
+> what's a reference value? Sometimes we don't know that.
 
-> Looking at __acpi_get_mem_attributes(), since there is no information
-> available on memory attributes, what we can do at best is
->   * return PAGE_KERNEL (= cacheable) for mapped memory,
->   * return DEVICE_nGnRnE (= non-cacheable) otherwise
-> (See a hunk to be applied on top of my patch#4.)
->
-> I think that, after applying, acpi_os_ioremap() would work almost
-> in the same way as the original before my patchset given that
-> MAP memblock attribute is used only under CONFIG_EFI for now.
->
-> Make sense?
->
+Again, if we don't know that how is the *caller* supposed to know
+whether the memory is encrypted or not? Because
 
-Let's keep your code as is but fix the Kconfig dependencies instead.
+"we" == "caller"
+
+in the kdump kernel.
+
+And the more important question is, why are we dumping MMIO space of the
+previous kernel *at* *all*? That doesn't make any sense to me.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
 
 _______________________________________________
 kexec mailing list
