@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yb0-f194.google.com ([209.85.213.194])
+Received: from mail-yw0-f196.google.com ([209.85.161.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1feWmT-0001Qj-I5
- for kexec@lists.infradead.org; Sun, 15 Jul 2018 02:29:05 +0000
-Received: by mail-yb0-f194.google.com with SMTP id s1-v6so14229182ybk.3
- for <kexec@lists.infradead.org>; Sat, 14 Jul 2018 19:28:46 -0700 (PDT)
+ id 1feWn6-0001W3-1j
+ for kexec@lists.infradead.org; Sun, 15 Jul 2018 02:29:41 +0000
+Received: by mail-yw0-f196.google.com with SMTP id k18-v6so13089622ywm.11
+ for <kexec@lists.infradead.org>; Sat, 14 Jul 2018 19:29:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1531505163-20227-6-git-send-email-zohar@linux.vnet.ibm.com>
+In-Reply-To: <1531505163-20227-7-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1531505163-20227-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1531505163-20227-6-git-send-email-zohar@linux.vnet.ibm.com>
+ <1531505163-20227-7-git-send-email-zohar@linux.vnet.ibm.com>
 From: Kees Cook <keescook@chromium.org>
-Date: Sat, 14 Jul 2018 19:27:42 -0700
-Message-ID: <CAGXu5jKWGONcAfxrU_vk4g=La24NDSzS=scZWxp27xJdO_R0zA@mail.gmail.com>
-Subject: Re: [PATCH v6 5/8] ima: based on policy require signed firmware
- (sysfs fallback)
+Date: Sat, 14 Jul 2018 19:28:28 -0700
+Message-ID: <CAGXu5jL8_nbUKKNO-PCyGwOdQ+vjPZ7_17FKNH1fssgtfjk=Rw@mail.gmail.com>
+Subject: Re: [PATCH v6 6/8] ima: add build time policy
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,15 +26,19 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Luis R . Rodriguez" <mcgrof@suse.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-security-module <linux-security-module@vger.kernel.org>, Matthew Garrett <mjg59@google.com>, LKML <linux-kernel@vger.kernel.org>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, linux-integrity <linux-integrity@vger.kernel.org>, Andres Rodriguez <andresx7@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kexec Mailing List <kexec@lists.infradead.org>, linux-security-module <linux-security-module@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, linux-integrity <linux-integrity@vger.kernel.org>, Andres Rodriguez <andresx7@gmail.com>
 
 On Fri, Jul 13, 2018 at 11:06 AM, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
-> With an IMA policy requiring signed firmware, this patch prevents
-> the sysfs fallback method of loading firmware.
+> IMA by default does not measure, appraise or audit files, but can be
+> enabled at runtime by specifying a builtin policy on the boot command line
+> or by loading a custom policy.
+>
+> This patch defines a build time policy, which verifies kernel modules,
+> firmware, kexec image, and/or the IMA policy signatures.  This build time
+> policy is automatically enabled at runtime and persists after loading a
+> custom policy.
 >
 > Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-> Cc: Luis R. Rodriguez <mcgrof@suse.com>
-> Cc: Matthew Garrett <mjg59@google.com>
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
