@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yb0-f195.google.com ([209.85.213.195])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1feWso-0004Rq-7S
- for kexec@lists.infradead.org; Sun, 15 Jul 2018 02:35:39 +0000
-Received: by mail-yb0-f195.google.com with SMTP id s1-v6so14231572ybk.3
- for <kexec@lists.infradead.org>; Sat, 14 Jul 2018 19:35:21 -0700 (PDT)
+Subject: Re: [PATCH v11 03/15] powerpc, kexec_file: factor out memblock-based
+ arch_kexec_walk_mem()
+References: <20180711074203.3019-1-takahiro.akashi@linaro.org>
+ <20180711074203.3019-4-takahiro.akashi@linaro.org>
+ <20180714015223.GA2745@dhcp-128-65.nay.redhat.com>
+From: James Morse <james.morse@arm.com>
+Message-ID: <2a4ec965-5258-5835-3022-8f403a2f6bdd@arm.com>
+Date: Mon, 16 Jul 2018 12:04:09 +0100
 MIME-Version: 1.0
-In-Reply-To: <1531505163-20227-9-git-send-email-zohar@linux.vnet.ibm.com>
-References: <1531505163-20227-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1531505163-20227-9-git-send-email-zohar@linux.vnet.ibm.com>
-From: Kees Cook <keescook@chromium.org>
-Date: Sat, 14 Jul 2018 19:34:19 -0700
-Message-ID: <CAGXu5jKGvQLKV_LmyYaOaF_G6CzF6kUp03cROz1+1PWHEMdrZg@mail.gmail.com>
-Subject: Re: [PATCH v6 8/8] ima: based on policy warn about loading firmware
- (pre-allocated buffer)
+In-Reply-To: <20180714015223.GA2745@dhcp-128-65.nay.redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,56 +22,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Luis R . Rodriguez" <mcgrof@suse.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-security-module <linux-security-module@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, linux-integrity <linux-integrity@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andres Rodriguez <andresx7@gmail.com>
+To: Dave Young <dyoung@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, davem@davemloft.net, vgoyal@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Fri, Jul 13, 2018 at 11:06 AM, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
-> Some systems are memory constrained but they need to load very large
-> firmwares.  The firmware subsystem allows drivers to request this
-> firmware be loaded from the filesystem, but this requires that the
-> entire firmware be loaded into kernel memory first before it's provided
-> to the driver.  This can lead to a situation where we map the firmware
-> twice, once to load the firmware into kernel memory and once to copy the
-> firmware into the final resting place.
->
-> To resolve this problem, commit a098ecd2fa7d ("firmware: support loading
-> into a pre-allocated buffer") introduced request_firmware_into_buf() API
-> that allows drivers to request firmware be loaded directly into a
-> pre-allocated buffer.
->
-> Do devices using pre-allocated memory run the risk of the firmware being
-> accessible to the device prior to the completion of IMA's signature
-> verification any more than when using two buffers? (Refer to mailing list
-> discussion[1]).
->
-> Only on systems with an IOMMU can the access be prevented.  As long as
-> the signature verification completes prior to the DMA map is performed,
-> the device can not access the buffer.  This implies that the same buffer
-> can not be re-used.  Can we ensure the buffer has not been DMA mapped
-> before using the pre-allocated buffer?
->
-> [1] https://lkml.org/lkml/2018/7/10/56
->
-> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-> Cc: Luis R. Rodriguez <mcgrof@suse.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Hi Dave,
 
-I can't decide if it's worth adding the link (maybe using the
-lkml.kernel.org url[1]) directly in the code or not.
+On 14/07/18 02:52, Dave Young wrote:
+> On 07/11/18 at 04:41pm, AKASHI Takahiro wrote:
+>> Memblock list is another source for usable system memory layout.
+>> So powerpc's arch_kexec_walk_mem() is moved to kexec_file.c so that
+>> other memblock-based architectures, particularly arm64, can also utilise
+>> it. A moved function is now renamed to kexec_walk_memblock() and merged
+>> into the existing arch_kexec_walk_mem() for general use, either resource
+>> list or memblock list.
+>>
+>> A consequent function will not work for kdump with memblock list, but
+>> this will be fixed in the next patch.
 
-Either way:
+>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+>> @@ -513,6 +563,10 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
+>>  int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+>>  			       int (*func)(struct resource *, void *))
+>>  {
+>> +	if (IS_ENABLED(CONFIG_HAVE_MEMBLOCK) &&
+>> +			!IS_ENABLED(CONFIG_ARCH_DISCARD_MEMBLOCK))
+>> +		return kexec_walk_memblock(kbuf, func);
+> 
+> AKASHI, I'm not sure if this works on all arches, for example I chekced
+> the .config on my Nokia N900 kernel tree, there is HAVE_MEMBLOCK=y and
+> no CONFIG_ARCH_DISCARD_MEMBLOCK, in 32bit arm code no arch_kexec_walk_mem()
+By doesn't work you mean it's a change in behaviour?
+I think this is fine because 32bit arm doesn't support KEXEC_FILE, (this file is
+kexec_file specific right?).
 
--Kees
+It only affects architectures with MEMBLOCK and KEXEC_FILE: powerpc, s390 and
+soon arm64. s390 keeps its behaviour because it provides arch_kexec_walk_mem(),
+and powerpc's is copied in here as its generic 'memblock describes my memory'
+stuff. The implementation would be the same on arm64, so we're doing this to
+avoid duplicating otherwise generic arch code. I think 32bit arm should be able
+to use this too if it gets KEXEC_FILE support. (32bit arms' KEXEC already
+depends on MEMBLOCK).
 
-[1] https://lkml.kernel.org/r/CAKv+Gu-knHeBRGqo+2pb3X9cCjwovEykoXUf=DZyP7aJpoS60A@mail.gmail.com
 
--- 
-Kees Cook
-Pixel Security
+Thanks,
+
+James
 
 _______________________________________________
 kexec mailing list
