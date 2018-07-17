@@ -1,22 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x244.google.com ([2607:f8b0:400e:c00::244])
+Received: from mail-pf0-x242.google.com ([2607:f8b0:400e:c00::242])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ffIGf-000198-WF
- for kexec@lists.infradead.org; Tue, 17 Jul 2018 05:11:23 +0000
-Received: by mail-pf0-x244.google.com with SMTP id j26-v6so2937820pfi.10
- for <kexec@lists.infradead.org>; Mon, 16 Jul 2018 22:11:11 -0700 (PDT)
-Date: Tue, 17 Jul 2018 14:12:23 +0900
+ id 1ffIYl-0007hX-7H
+ for kexec@lists.infradead.org; Tue, 17 Jul 2018 05:30:05 +0000
+Received: by mail-pf0-x242.google.com with SMTP id j8-v6so2821150pff.6
+ for <kexec@lists.infradead.org>; Mon, 16 Jul 2018 22:29:53 -0700 (PDT)
+Date: Tue, 17 Jul 2018 14:31:05 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v3.1 0/4] arm64: kexec,kdump: fix boot failures on
- acpi-only system
-Message-ID: <20180717051222.GA11258@linaro.org>
-References: <20180709234229.20181-1-takahiro.akashi@linaro.org>
- <20180712164918.GA26935@arm.com>
- <20180713003434.GZ28220@linaro.org>
- <CAKv+Gu9PT75XTXGsh1jc5roRO_d2QYKEamq42mfbsXzmerAUzA@mail.gmail.com>
+Subject: Re: [PATCH v11 03/15] powerpc, kexec_file: factor out memblock-based
+ arch_kexec_walk_mem()
+Message-ID: <20180717053104.GB11258@linaro.org>
+References: <20180711074203.3019-1-takahiro.akashi@linaro.org>
+ <20180711074203.3019-4-takahiro.akashi@linaro.org>
+ <20180714015223.GA2745@dhcp-128-65.nay.redhat.com>
+ <2a4ec965-5258-5835-3022-8f403a2f6bdd@arm.com>
+ <20180716122412.GA7160@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu9PT75XTXGsh1jc5roRO_d2QYKEamq42mfbsXzmerAUzA@mail.gmail.com>
+In-Reply-To: <20180716122412.GA7160@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,62 +30,91 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, "Baicar, Tyler" <tbaicar@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, James Morse <james.morse@arm.com>, Hanjun Guo <hanjun.guo@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Dave Young <dyoung@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, arnd@arndb.de, dhowells@redhat.com, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, davem@davemloft.net, vgoyal@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
 
-Will,
+Hi Dave,
 
-On Fri, Jul 13, 2018 at 07:49:45AM +0200, Ard Biesheuvel wrote:
-> On 13 July 2018 at 02:34, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> > On Thu, Jul 12, 2018 at 05:49:19PM +0100, Will Deacon wrote:
-> >> Hi Akashi,
-> >>
-> >> On Tue, Jul 10, 2018 at 08:42:25AM +0900, AKASHI Takahiro wrote:
-> >> > This patch series is a set of bug fixes to address kexec/kdump
-> >> > failures which are sometimes observed on ACPI-only system and reported
-> >> > in LAK-ML before.
-> >>
-> >> I tried picking this up, along with Ard's fixup, but I'm seeing a build
-> >> failure for allmodconfig:
-> >>
-> >> arch/arm64/kernel/acpi.o: In function `__acpi_get_mem_attribute':
-> >> acpi.c:(.text+0x60): undefined reference to `efi_mem_attributes'
-> >>
-> >> I didn't investigate further. Please can you fix this?
-> >
-> > Because CONFIG_ACPI is on and CONFIG_EFI is off.
-> >
-> > This can happen in allmodconfig as CONFIG_EFI depends on
-> > !CONFIG_CPU_BIG_ENDIAN, which is actually on in this case.
-> >
+On Mon, Jul 16, 2018 at 08:24:12PM +0800, Dave Young wrote:
+> On 07/16/18 at 12:04pm, James Morse wrote:
+> > Hi Dave,
+> > 
+> > On 14/07/18 02:52, Dave Young wrote:
+> > > On 07/11/18 at 04:41pm, AKASHI Takahiro wrote:
+> > >> Memblock list is another source for usable system memory layout.
+> > >> So powerpc's arch_kexec_walk_mem() is moved to kexec_file.c so that
+> > >> other memblock-based architectures, particularly arm64, can also utilise
+> > >> it. A moved function is now renamed to kexec_walk_memblock() and merged
+> > >> into the existing arch_kexec_walk_mem() for general use, either resource
+> > >> list or memblock list.
+> > >>
+> > >> A consequent function will not work for kdump with memblock list, but
+> > >> this will be fixed in the next patch.
+> > 
+> > >> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> > 
+> > >> @@ -513,6 +563,10 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
+> > >>  int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+> > >>  			       int (*func)(struct resource *, void *))
+> > >>  {
+> > >> +	if (IS_ENABLED(CONFIG_HAVE_MEMBLOCK) &&
+> > >> +			!IS_ENABLED(CONFIG_ARCH_DISCARD_MEMBLOCK))
+> > >> +		return kexec_walk_memblock(kbuf, func);
+> > > 
+> > > AKASHI, I'm not sure if this works on all arches, for example I chekced
+> > > the .config on my Nokia N900 kernel tree, there is HAVE_MEMBLOCK=y and
+> > > no CONFIG_ARCH_DISCARD_MEMBLOCK, in 32bit arm code no arch_kexec_walk_mem()
+> > By doesn't work you mean it's a change in behaviour?
+> > I think this is fine because 32bit arm doesn't support KEXEC_FILE, (this file is
+> > kexec_file specific right?).
 > 
-> Allowing both CONFIG_ACPI and CONFIG_CPU_BIG_ENDIAN to be configured
-> makes no sense at all. Things will surely break if you start using BE
-> memory accesses while parsing ACPI tables.
+> Ah, replied on a train, I forgot this is only for kexec_file, sorry
+> about that.  Please ignore the comment.
 > 
-> Allowing CONFIG_ACPI without CONFIG_EFI makes no sense either, since
-> on arm64, the only way to find the ACPI tables is through a UEFI
-> configuration table.
+> But since we have a weak function arch_kexec_walk_mem, adding another
+> condition branch within this weak function looks not good.
+> Something like below would be better:
+
+I see your concern here, but
 
 
-Do you agree to this?
+> int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+> {
+>         int ret;
+> 
+> 	+ if use memblock
+> 	+	ret = kexec_walk_memblock()
+> 	+ else
+>         	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
+> 
+>         return ret == 1 ? 0 : -EADDRNOTAVAIL;
+> }
 
+what if yet another architecture comes to kexec_file and wanna
+take a third approach? How can it override those functions?
+Depending on kernel configuration, it might re-define either
+kexec_walk_memblock() or arch_kexec_walk_mem(). It sounds weird to me.
+
+Thanks,
 -Takahiro AKASHI
 
-> > Looking at __acpi_get_mem_attributes(), since there is no information
-> > available on memory attributes, what we can do at best is
-> >   * return PAGE_KERNEL (= cacheable) for mapped memory,
-> >   * return DEVICE_nGnRnE (= non-cacheable) otherwise
-> > (See a hunk to be applied on top of my patch#4.)
-> >
-> > I think that, after applying, acpi_os_ioremap() would work almost
-> > in the same way as the original before my patchset given that
-> > MAP memblock attribute is used only under CONFIG_EFI for now.
-> >
-> > Make sense?
-> >
 > 
-> Let's keep your code as is but fix the Kconfig dependencies instead.
+> > 
+> > It only affects architectures with MEMBLOCK and KEXEC_FILE: powerpc, s390 and
+> > soon arm64. s390 keeps its behaviour because it provides arch_kexec_walk_mem(),
+> > and powerpc's is copied in here as its generic 'memblock describes my memory'
+> > stuff. The implementation would be the same on arm64, so we're doing this to
+> > avoid duplicating otherwise generic arch code. I think 32bit arm should be able
+> > to use this too if it gets KEXEC_FILE support. (32bit arms' KEXEC already
+> > depends on MEMBLOCK).
+> > 
+> > 
+> > Thanks,
+> > 
+> > James
+> 
+> Thanks
+> Dave
 
 _______________________________________________
 kexec mailing list
