@@ -1,13 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v11 09/15] arm64: kexec_file: load initrd and device-tree
+Received: from mail-pf0-x241.google.com ([2607:f8b0:400e:c00::241])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fff9I-0002Pg-Mk
+ for kexec@lists.infradead.org; Wed, 18 Jul 2018 05:37:18 +0000
+Received: by mail-pf0-x241.google.com with SMTP id l9-v6so1639522pff.9
+ for <kexec@lists.infradead.org>; Tue, 17 Jul 2018 22:37:05 -0700 (PDT)
+Date: Wed, 18 Jul 2018 14:38:20 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v11 03/15] powerpc, kexec_file: factor out memblock-based
+ arch_kexec_walk_mem()
+Message-ID: <20180718053818.GF11258@linaro.org>
 References: <20180711074203.3019-1-takahiro.akashi@linaro.org>
- <20180711074203.3019-10-takahiro.akashi@linaro.org>
-From: James Morse <james.morse@arm.com>
-Message-ID: <c5199d62-16f3-a0f2-fdf5-7dcbf6a02cd6@arm.com>
-Date: Tue, 17 Jul 2018 17:57:06 +0100
+ <20180711074203.3019-4-takahiro.akashi@linaro.org>
+ <20180714015223.GA2745@dhcp-128-65.nay.redhat.com>
+ <2a4ec965-5258-5835-3022-8f403a2f6bdd@arm.com>
+ <20180716122412.GA7160@dhcp-128-65.nay.redhat.com>
+ <20180717053104.GB11258@linaro.org>
+ <20180717074923.GA8591@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20180711074203.3019-10-takahiro.akashi@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180717074923.GA8591@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,99 +32,146 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, arnd@arndb.de, dhowells@redhat.com, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, davem@davemloft.net, vgoyal@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
 
-Hi Akashi,
+Dave,
 
-On 11/07/18 08:41, AKASHI Takahiro wrote:
-> load_other_segments() is expected to allocate and place all the necessary
-> memory segments other than kernel, including initrd and device-tree
-> blob (and elf core header for crash).
-> While most of the code was borrowed from kexec-tools' counterpart,
-> users may not be allowed to specify dtb explicitly, instead, the dtb
-> presented by the original boot loader is reused.
+On Tue, Jul 17, 2018 at 03:49:23PM +0800, Dave Young wrote:
+> Hi AKASHI,
+> On 07/17/18 at 02:31pm, AKASHI Takahiro wrote:
+> > Hi Dave,
+> > 
+> > On Mon, Jul 16, 2018 at 08:24:12PM +0800, Dave Young wrote:
+> > > On 07/16/18 at 12:04pm, James Morse wrote:
+> > > > Hi Dave,
+> > > > 
+> > > > On 14/07/18 02:52, Dave Young wrote:
+> > > > > On 07/11/18 at 04:41pm, AKASHI Takahiro wrote:
+> > > > >> Memblock list is another source for usable system memory layout.
+> > > > >> So powerpc's arch_kexec_walk_mem() is moved to kexec_file.c so that
+> > > > >> other memblock-based architectures, particularly arm64, can also utilise
+> > > > >> it. A moved function is now renamed to kexec_walk_memblock() and merged
+> > > > >> into the existing arch_kexec_walk_mem() for general use, either resource
+> > > > >> list or memblock list.
+> > > > >>
+> > > > >> A consequent function will not work for kdump with memblock list, but
+> > > > >> this will be fixed in the next patch.
+> > > > 
+> > > > >> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> > > > 
+> > > > >> @@ -513,6 +563,10 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
+> > > > >>  int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+> > > > >>  			       int (*func)(struct resource *, void *))
+> > > > >>  {
+> > > > >> +	if (IS_ENABLED(CONFIG_HAVE_MEMBLOCK) &&
+> > > > >> +			!IS_ENABLED(CONFIG_ARCH_DISCARD_MEMBLOCK))
+> > > > >> +		return kexec_walk_memblock(kbuf, func);
+> > > > > 
+> > > > > AKASHI, I'm not sure if this works on all arches, for example I chekced
+> > > > > the .config on my Nokia N900 kernel tree, there is HAVE_MEMBLOCK=y and
+> > > > > no CONFIG_ARCH_DISCARD_MEMBLOCK, in 32bit arm code no arch_kexec_walk_mem()
+> > > > By doesn't work you mean it's a change in behaviour?
+> > > > I think this is fine because 32bit arm doesn't support KEXEC_FILE, (this file is
+> > > > kexec_file specific right?).
+> > > 
+> > > Ah, replied on a train, I forgot this is only for kexec_file, sorry
+> > > about that.  Please ignore the comment.
+> > > 
+> > > But since we have a weak function arch_kexec_walk_mem, adding another
+> > > condition branch within this weak function looks not good.
+> > > Something like below would be better:
+> > 
+> > I see your concern here, but
+> > 
+> > 
+> > > int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+> > > {
+> > >         int ret;
+> > > 
+> > > 	+ if use memblock
+> > > 	+	ret = kexec_walk_memblock()
+> > > 	+ else
+> > >         	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
+> > > 
+> > >         return ret == 1 ? 0 : -EADDRNOTAVAIL;
+> > > }
+> > 
+> > what if yet another architecture comes to kexec_file and wanna
+> > take a third approach? How can it override those functions?
+> > Depending on kernel configuration, it might re-define either
+> > kexec_walk_memblock() or arch_kexec_walk_mem(). It sounds weird to me.
 > 
-> arch_kimage_kernel_post_load_cleanup() is responsible for freeing arm64-
-> specific data allocated in load_other_segments().
+> I also feel this weird, but it is slightly better because currently no
+> user need another overriding requirement, and I feel it is not expected to have in
+> the future for the memblock use.
+> 
+> Rethinking about this issue, we can just remove the weak function and
+> just use general function.
 
-> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> index c38a8048ed00..ca00681c25c6 100644
-> --- a/arch/arm64/kernel/machine_kexec_file.c
-> +++ b/arch/arm64/kernel/machine_kexec_file.c
+Do you really want to remove "weak" attribute?
 
-> +int arch_kimage_file_post_load_cleanup(struct kimage *image)
-> +{
-> +	vfree(image->arch.dtb_buf);
-> +	image->arch.dtb_buf = NULL;
-> +
-> +	return kexec_image_post_load_cleanup_default(image);
-> +}
+> Currently with your patch applied only s390 use arch_kexec_walk_mem like
+> below:
+> /*
+>  * The kernel is loaded to a fixed location. Turn off kexec_locate_mem_hole
+>  * and provide kbuf->mem by hand.
+>  */
+> int arch_kexec_walk_mem(struct kexec_buf *kbuf,
+>                         int (*func)(struct resource *, void *))
+> {
+>         return 1;
+> }
+> 
+> AFAIK, all other users initialize kbuf->mem as NULL, so we can check
 
-A nit from sparse:
-| warning: symbol 'arch_kimage_file_post_load_cleanup' was not declared
+As a matter of fact, nobody initializes kbuf->mem before calling
+kexec_add_buffer (in turn, kexec_locate_mem_hole()).
 
-Can we add a definition for this to a header file somewhere. asm/kexec.h is
-probably the best bet.
+> kbuf->mem in int kexec_locate_mem_hole:
+> 
+> if (kbuf->mem)
+> 	return 0;
+> 
+> if use memblock
+> 	kexec_walk_memblock
+> else
+> 	kexec_walk_mem
 
+I think that your solution will work for existing architectures
+with appropriate patches, but to take your approach, as I said above,
+we will have to modify every call site on all kexec_file-capable architectures.
 
-> +static int setup_dtb(struct kimage *image,
-> +		unsigned long initrd_load_addr, unsigned long initrd_len,
-> +		char *cmdline, unsigned long cmdline_len,
-> +		char **dtb_buf, size_t *dtb_buf_len)
-> +{
-
-> +	/* add initrd-* */
-> +	if (initrd_load_addr) {
-> +		value = cpu_to_fdt64(initrd_load_addr);
-> +		ret = fdt_setprop_u64(buf, nodeoffset, "linux,initrd-start",
-> +							value);
-
-fdt_setprop_u64() already does the endian conversion.
-
-From scripts/dtc/libfdt/libfdt.h, its implemented as:
-| 	fdt64_t tmp = cpu_to_fdt64(val);
-| 	return fdt_setprop(fdt, nodeoffset, name, &tmp, sizeof(tmp));
-
-(I think you were using setprop directly in an older version)
-
-
-This leads to:
-| ------------[ cut here ]------------
-| initrd not fully accessible via the linear mapping -- please check your
-| bootloader ...
-| WARNING: CPU: 0 PID: 0 at ../arch/arm64/mm/init.c:429
-| arm64_memblock_init+0x150/0x3d8
-| Modules linked in:
-| CPU: 0 PID: 0 Comm: swapper Not tainted 4.18.0-rc5-00015-g95b5c843d0da #10150
-| Hardware name: AMD Seattle (Rev.B0) Development Board (Overdrive) (DT)
-| pstate: 60000085 (nZCv daIf -PAN -UAO)
-| pc : arm64_memblock_init+0x150/0x3d8
-| lr : arm64_memblock_init+0x150/0x3d8
-
-| Call trace:
-| arm64_memblock_init+0x150/0x3d8
-| setup_arch+0x1c0/0x510
-| start_kernel+0x80/0x418
-| random: get_random_bytes called from print_oops_end_marker+0x4c/0x68 with
-| crng_init=0
-| ---[ end trace 0000000000000000 ]---
-
-
-Which is caused by the values being miles outside ram due to the extra byte
-swapping:
-| morse@frikadeller:~$ sudo dtc -I dtb -O dts /sys/firmware/fdt  | grep initrd
-|                 linux,initrd-end = <0x900b6c05 0x80000000>;
-|                 linux,initrd-start = <0x906a04 0x80000000>;
-
-
-With the two extra cpu_to_fdt64() calls removed:
-Reviewed-by: James Morse <james.morse@arm.com>
-
+If this is what you expect, I will work on it, but I don't think
+that it would be a better idea.
 
 Thanks,
+-Takahiro AKASHI
 
-James
+> > 
+> > Thanks,
+> > -Takahiro AKASHI
+> > 
+> > > 
+> > > > 
+> > > > It only affects architectures with MEMBLOCK and KEXEC_FILE: powerpc, s390 and
+> > > > soon arm64. s390 keeps its behaviour because it provides arch_kexec_walk_mem(),
+> > > > and powerpc's is copied in here as its generic 'memblock describes my memory'
+> > > > stuff. The implementation would be the same on arm64, so we're doing this to
+> > > > avoid duplicating otherwise generic arch code. I think 32bit arm should be able
+> > > > to use this too if it gets KEXEC_FILE support. (32bit arms' KEXEC already
+> > > > depends on MEMBLOCK).
+> > > > 
+> > > > 
+> > > > Thanks,
+> > > > 
+> > > > James
+> > > 
+> > > Thanks
+> > > Dave
+> 
+> Thanks
+> Dave
 
 _______________________________________________
 kexec mailing list
