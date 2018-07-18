@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-f65.google.com ([209.85.160.65])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fg1jX-0003ZV-F6
- for kexec@lists.infradead.org; Thu, 19 Jul 2018 05:44:14 +0000
-Received: by mail-pl0-f65.google.com with SMTP id p23-v6so3100785plo.6
- for <kexec@lists.infradead.org>; Wed, 18 Jul 2018 22:44:01 -0700 (PDT)
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH 2/2] arm64: Add runtime kaslr offset if it exists
-Date: Thu, 19 Jul 2018 11:13:41 +0530
-Message-Id: <1531979021-31780-3-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1531979021-31780-1-git-send-email-bhsharma@redhat.com>
-References: <1531979021-31780-1-git-send-email-bhsharma@redhat.com>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1ffcb1-0003eX-1x
+ for kexec@lists.infradead.org; Wed, 18 Jul 2018 02:53:44 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH v7 4/4] kexec_file: Load kernel at top of system RAM if
+ required
+Date: Wed, 18 Jul 2018 10:49:44 +0800
+Message-Id: <20180718024944.577-5-bhe@redhat.com>
+In-Reply-To: <20180718024944.577-1-bhe@redhat.com>
+References: <20180718024944.577-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,137 +23,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: bhsharma@redhat.com, bhupesh.linux@gmail.com, k-hagio@ab.jp.nec.com
+To: linux-kernel@vger.kernel.org, akpm@linux-foundation.org, robh+dt@kernel.org, dan.j.williams@intel.com, nicolas.pitre@linaro.org, josh@joshtriplett.org, fengguang.wu@intel.com, bp@suse.de, andy.shevchenko@gmail.com
+Cc: brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, kys@microsoft.com, frowand.list@gmail.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, dyoung@redhat.com, vgoyal@redhat.com, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, jglisse@redhat.com, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, ebiederm@xmission.com, devel@linuxdriverproject.org, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
 
-If we have to erase a symbol from vmcore whose address is not present in
-vmcoreinfo, then we need to pass vmlinux as well to get the symbol
-address.
-When kaslr is enabled, virtual address of all the kernel symbols are
-randomized with an offset. vmlinux always has a static address, but all
-the arch specific calculation are based on run time kernel address. So
-we need to find a way to translate symbol address from vmlinux to kernel
-run time address.
+For kexec_file loading, if kexec_buf.top_down is 'true', the memory which
+is used to load kernel/initrd/purgatory is supposed to be allocated from
+top to down. This is what we have been doing all along in the old kexec
+loading interface and the kexec loading is still default setting in some
+distributions. However, the current kexec_file loading interface doesn't
+do like this. The function arch_kexec_walk_mem() it calls ignores checking
+kexec_buf.top_down, but calls walk_system_ram_res() directly to go through
+all resources of System RAM from bottom to up, to try to find memory region
+which can contain the specific kexec buffer, then call locate_mem_hole_callback()
+to allocate memory in that found memory region from top to down. This brings
+confusion especially when KASLR is widely supported , users have to make clear
+why kexec/kdump kernel loading position is different between these two
+interfaces in order to exclude unnecessary noises. Hence these two interfaces
+need be unified on behaviour.
 
-Without this patch:
-   # cat > scrub.conf << EOF
-   [vmlinux]
-   erase jiffies
-   erase init_task.utime
-   for tsk in init_task.tasks.next within task_struct:tasks
-       erase tsk.utime
-   endfor
-   EOF
+Here add checking if kexec_buf.top_down is 'true' in arch_kexec_walk_mem(),
+if yes, call the newly added walk_system_ram_res_rev() to find memory region
+from top to down to load kernel.
 
-  # makedumpfile --split -d 31 -x vmlinux --config scrub.conf vmcore dumpfile_{1,2,3}
-  readpage_elf: Attempt to read non-existent page at 0xffffa8a5bf180000.
-  readmem: type_addr: 1, addr:ffffa8a5bf180000, size:8
-  vaddr_to_paddr_arm64: Can't read pgd
-  readmem: Can't convert a virtual address(ffff0000092a542c) to physical
-  address.
-  readmem: type_addr: 0, addr:ffff0000092a542c, size:390
-  check_release: Can't get the address of system_utsname
-
-After this patch check_release() is ok, and also we are able to erase
-symbol from vmcore (I checked this with kernel 4.18.0-rc4+):
-
-  # makedumpfile --split -d 31 -x vmlinux --config scrub.conf vmcore dumpfile_{1,2,3}
-  The kernel version is not supported.
-  The makedumpfile operation may be incomplete.
-  Checking for memory holes                         : [100.0 %] \
-  Checking for memory holes                         : [100.0 %] |
-  Checking foExcluding unnecessary pages                       : [100.0 %]
-  \
-  Excluding unnecessary pages                       : [100.0 %] \
-
-  The dumpfiles are saved to dumpfile_1, dumpfile_2, and dumpfile_3.
-
-  makedumpfile Completed.
-
-This feature also requires a fix in the kernel as well which has been submitted
-upstream (see[0]).
-
-[0] https://patchwork.kernel.org/patch/10533333/
-
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yinghai Lu <yinghai@kernel.org>
+Cc: kexec@lists.infradead.org
 ---
- arch/arm64.c   | 41 +++++++++++++++++++++++++++++++++++++++++
- makedumpfile.h |  3 ++-
- 2 files changed, 43 insertions(+), 1 deletion(-)
+ kernel/kexec_file.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64.c b/arch/arm64.c
-index 9e8c77c76935..9772022605ec 100644
---- a/arch/arm64.c
-+++ b/arch/arm64.c
-@@ -181,6 +181,47 @@ get_phys_base_arm64(void)
- 	return TRUE;
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index c6a3b6851372..75226c1d08ce 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -518,6 +518,8 @@ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+ 					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+ 					   crashk_res.start, crashk_res.end,
+ 					   kbuf, func);
++	else if (kbuf->top_down)
++		return walk_system_ram_res_rev(0, ULONG_MAX, kbuf, func);
+ 	else
+ 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
  }
- 
-+unsigned long
-+get_kaslr_offset_arm64(unsigned long vaddr)
-+{
-+	unsigned int i;
-+	char buf[BUFSIZE_FGETS], *endp;
-+
-+	if (!info->kaslr_offset && info->file_vmcoreinfo) {
-+		if (fseek(info->file_vmcoreinfo, 0, SEEK_SET) < 0) {
-+			ERRMSG("Can't seek the vmcoreinfo file(%s). %s\n",
-+					info->name_vmcoreinfo, strerror(errno));
-+			return FALSE;
-+		}
-+
-+		while (fgets(buf, BUFSIZE_FGETS, info->file_vmcoreinfo)) {
-+			i = strlen(buf);
-+			if (!i)
-+				break;
-+			if (buf[i - 1] == '\n')
-+				buf[i - 1] = '\0';
-+			if (strncmp(buf, STR_KERNELOFFSET,
-+					strlen(STR_KERNELOFFSET)) == 0) {
-+				info->kaslr_offset =
-+					strtoul(buf+strlen(STR_KERNELOFFSET),&endp,16);
-+				DEBUG_MSG("info->kaslr_offset: %lx\n", info->kaslr_offset);
-+			}
-+		}
-+	}
-+
-+	if (vaddr >= __START_KERNEL_map &&
-+			vaddr < __START_KERNEL_map + info->kaslr_offset) {
-+		DEBUG_MSG("info->kaslr_offset: %lx\n", info->kaslr_offset);
-+		return info->kaslr_offset;
-+	} else {
-+		/*
-+		 * TODO: we need to check if it is vmalloc/vmmemmap/module
-+		 * address, we will have different offset
-+		 */
-+		return 0;
-+	}
-+}
-+
- ulong
- get_stext_symbol(void)
- {
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 5297279f0f3b..4daf71ef14b7 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -967,12 +967,13 @@ unsigned long long vaddr_to_paddr_arm64(unsigned long vaddr);
- int get_versiondep_info_arm64(void);
- int get_xen_basic_info_arm64(void);
- int get_xen_info_arm64(void);
-+unsigned long get_kaslr_offset_arm64(unsigned long vaddr);
- #define find_vmemmap()		stub_false()
- #define vaddr_to_paddr(X)	vaddr_to_paddr_arm64(X)
- #define get_phys_base()		get_phys_base_arm64()
- #define get_machdep_info()	get_machdep_info_arm64()
- #define get_versiondep_info()	get_versiondep_info_arm64()
--#define get_kaslr_offset(X)	stub_false()
-+#define get_kaslr_offset(X)	get_kaslr_offset_arm64(X)
- #define get_xen_basic_info_arch(X) get_xen_basic_info_arm64(X)
- #define get_xen_info_arch(X) get_xen_info_arm64(X)
- #define is_phys_addr(X)		stub_true_ul(X)
 -- 
-2.7.4
+2.13.6
 
 
 _______________________________________________
