@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f194.google.com ([209.85.192.194])
+Received: from mail-pl0-f65.google.com ([209.85.160.65])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fg1jU-0003ZT-5u
- for kexec@lists.infradead.org; Thu, 19 Jul 2018 05:44:09 +0000
-Received: by mail-pf0-f194.google.com with SMTP id l123-v6so3317204pfl.13
- for <kexec@lists.infradead.org>; Wed, 18 Jul 2018 22:43:56 -0700 (PDT)
+ id 1fg1jX-0003ZV-F6
+ for kexec@lists.infradead.org; Thu, 19 Jul 2018 05:44:14 +0000
+Received: by mail-pl0-f65.google.com with SMTP id p23-v6so3100785plo.6
+ for <kexec@lists.infradead.org>; Wed, 18 Jul 2018 22:44:01 -0700 (PDT)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH 1/2] arm64: Get 'info->page_offset' from PT_LOAD segments to
- support KASLR boot cases
-Date: Thu, 19 Jul 2018 11:13:40 +0530
-Message-Id: <1531979021-31780-2-git-send-email-bhsharma@redhat.com>
+Subject: [PATCH 2/2] arm64: Add runtime kaslr offset if it exists
+Date: Thu, 19 Jul 2018 11:13:41 +0530
+Message-Id: <1531979021-31780-3-git-send-email-bhsharma@redhat.com>
 In-Reply-To: <1531979021-31780-1-git-send-email-bhsharma@redhat.com>
 References: <1531979021-31780-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -28,128 +27,132 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: bhsharma@redhat.com, bhupesh.linux@gmail.com, k-hagio@ab.jp.nec.com
 
-The existing methodology to obtain 'info->page_offset' from reading
-_stext symbol (from kallsyms) doesn't work well in KASLR boot cases on
-arm64 machines as the PAGE_OFFSET (or the virtual address which
-indicates the start of the linear region) can be randomized as well
-on basis of the kaslr-seed.
+If we have to erase a symbol from vmcore whose address is not present in
+vmcoreinfo, then we need to pass vmlinux as well to get the symbol
+address.
+When kaslr is enabled, virtual address of all the kernel symbols are
+randomized with an offset. vmlinux always has a static address, but all
+the arch specific calculation are based on run time kernel address. So
+we need to find a way to translate symbol address from vmlinux to kernel
+run time address.
 
-Since the value of PAGE_OFFSET inside the kernel is randomized in such
-cases and there is no existing mechanism of conveying this value from
-kernel-space to user-space, so we can use the method used by archs like
-x86_64 to generate the 'info->page_offset' value from the PT_LOAD
-segments by subtracting the phy_addr from virt_addr of a PT_LOAD
-segment.
+Without this patch:
+   # cat > scrub.conf << EOF
+   [vmlinux]
+   erase jiffies
+   erase init_task.utime
+   for tsk in init_task.tasks.next within task_struct:tasks
+       erase tsk.utime
+   endfor
+   EOF
 
-This approach works fine both with KASLR and non-KASLR boot cases.
+  # makedumpfile --split -d 31 -x vmlinux --config scrub.conf vmcore dumpfile_{1,2,3}
+  readpage_elf: Attempt to read non-existent page at 0xffffa8a5bf180000.
+  readmem: type_addr: 1, addr:ffffa8a5bf180000, size:8
+  vaddr_to_paddr_arm64: Can't read pgd
+  readmem: Can't convert a virtual address(ffff0000092a542c) to physical
+  address.
+  readmem: type_addr: 0, addr:ffff0000092a542c, size:390
+  check_release: Can't get the address of system_utsname
 
-I tested this on my qualcomm-amberwing board. Here are some logs from
-the KASLR boot cases:
+After this patch check_release() is ok, and also we are able to erase
+symbol from vmcore (I checked this with kernel 4.18.0-rc4+):
 
-- Verify that the EFI firmware supports 'kaslr-seed':
+  # makedumpfile --split -d 31 -x vmlinux --config scrub.conf vmcore dumpfile_{1,2,3}
+  The kernel version is not supported.
+  The makedumpfile operation may be incomplete.
+  Checking for memory holes                         : [100.0 %] \
+  Checking for memory holes                         : [100.0 %] |
+  Checking foExcluding unnecessary pages                       : [100.0 %]
+  \
+  Excluding unnecessary pages                       : [100.0 %] \
 
-	chosen {
-		kaslr-seed = <0x0 0x0>;
-		<..snip..>
-	};
+  The dumpfiles are saved to dumpfile_1, dumpfile_2, and dumpfile_3.
 
-- Verify that '--mem-usage' works well after this fix as well (I used
-  kernel 4.18.0-rc4+ for my checks):
+  makedumpfile Completed.
 
-The kernel version is not supported.
-The makedumpfile operation may be incomplete.
+This feature also requires a fix in the kernel as well which has been submitted
+upstream (see[0]).
 
-TYPE		PAGES			EXCLUDABLE	DESCRIPTION
-----------------------------------------------------------------------
-ZERO		4396            	yes		Pages filled
-with zero
-NON_PRI_CACHE	27859           	yes		Cache pages
-without private flag
-PRI_CACHE	18490           	yes		Cache pages with
-private flag
-USER		2728            	yes		User process
-pages
-FREE		1465848         	yes		Free pages
-KERN_DATA	18537           	no		Dumpable kernel
-data
-
-page size:		65536
-Total pages on system:	1537858
-Total size on system:	100785061888     Byte
+[0] https://patchwork.kernel.org/patch/10533333/
 
 Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
 ---
- arch/arm64.c   | 23 ++++++++++++++++++-----
- common.h       |  1 +
- makedumpfile.h |  1 +
- 3 files changed, 20 insertions(+), 5 deletions(-)
+ arch/arm64.c   | 41 +++++++++++++++++++++++++++++++++++++++++
+ makedumpfile.h |  3 ++-
+ 2 files changed, 43 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64.c b/arch/arm64.c
-index 2fd3e1874376..9e8c77c76935 100644
+index 9e8c77c76935..9772022605ec 100644
 --- a/arch/arm64.c
 +++ b/arch/arm64.c
-@@ -265,6 +265,9 @@ get_xen_info_arm64(void)
- int
- get_versiondep_info_arm64(void)
- {
-+	int i;
-+	unsigned long long phys_start;
-+	unsigned long long virt_start;
- 	ulong _stext;
+@@ -181,6 +181,47 @@ get_phys_base_arm64(void)
+ 	return TRUE;
+ }
  
- 	_stext = get_stext_symbol();
-@@ -289,12 +292,22 @@ get_versiondep_info_arm64(void)
- 		return FALSE;
- 	}
- 
--	info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
--
--	DEBUG_MSG("page_offset=%lx, va_bits=%d\n", info->page_offset,
--			va_bits);
-+	if (get_num_pt_loads()) {
-+		for (i = 0;
-+			get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
-+			i++) {
-+			if (virt_start != NOT_KV_ADDR
-+					&& virt_start < __START_KERNEL_map
-+					&& phys_start != NOT_PADDR && phys_start != NOT_PADDR_ARM64) {
-+				info->page_offset = virt_start - phys_start;
-+				DEBUG_MSG("info->page_offset: %lx, VA_BITS: %d\n",
-+						info->page_offset, va_bits);
-+				return TRUE;
++unsigned long
++get_kaslr_offset_arm64(unsigned long vaddr)
++{
++	unsigned int i;
++	char buf[BUFSIZE_FGETS], *endp;
++
++	if (!info->kaslr_offset && info->file_vmcoreinfo) {
++		if (fseek(info->file_vmcoreinfo, 0, SEEK_SET) < 0) {
++			ERRMSG("Can't seek the vmcoreinfo file(%s). %s\n",
++					info->name_vmcoreinfo, strerror(errno));
++			return FALSE;
++		}
++
++		while (fgets(buf, BUFSIZE_FGETS, info->file_vmcoreinfo)) {
++			i = strlen(buf);
++			if (!i)
++				break;
++			if (buf[i - 1] == '\n')
++				buf[i - 1] = '\0';
++			if (strncmp(buf, STR_KERNELOFFSET,
++					strlen(STR_KERNELOFFSET)) == 0) {
++				info->kaslr_offset =
++					strtoul(buf+strlen(STR_KERNELOFFSET),&endp,16);
++				DEBUG_MSG("info->kaslr_offset: %lx\n", info->kaslr_offset);
 +			}
 +		}
 +	}
- 
--	return TRUE;
-+	return FALSE;
- }
- 
- /*
-diff --git a/common.h b/common.h
-index 6e2f657a79c7..a8181777dbb7 100644
---- a/common.h
-+++ b/common.h
-@@ -48,6 +48,7 @@
- #define NOT_MEMMAP_ADDR	(0x0)
- #define NOT_KV_ADDR	(0x0)
- #define NOT_PADDR	(ULONGLONG_MAX)
-+#define NOT_PADDR_ARM64	(0x0000000010a80000UL)
- #define BADADDR  	((ulong)(-1))
- 
- #endif  /* COMMON_H */
++
++	if (vaddr >= __START_KERNEL_map &&
++			vaddr < __START_KERNEL_map + info->kaslr_offset) {
++		DEBUG_MSG("info->kaslr_offset: %lx\n", info->kaslr_offset);
++		return info->kaslr_offset;
++	} else {
++		/*
++		 * TODO: we need to check if it is vmalloc/vmmemmap/module
++		 * address, we will have different offset
++		 */
++		return 0;
++	}
++}
++
+ ulong
+ get_stext_symbol(void)
+ {
 diff --git a/makedumpfile.h b/makedumpfile.h
-index 5ff94b8e4ac6..5297279f0f3b 100644
+index 5297279f0f3b..4daf71ef14b7 100644
 --- a/makedumpfile.h
 +++ b/makedumpfile.h
-@@ -2020,6 +2020,7 @@ struct domain_list {
- #define MFNS_PER_FRAME		(info->page_size / sizeof(unsigned long))
- 
- #ifdef __aarch64__
-+#define __START_KERNEL_map		(0xffffffff80000000UL)
- unsigned long long kvtop_xen_arm64(unsigned long kvaddr);
- #define kvtop_xen(X)	kvtop_xen_arm64(X)
- #endif /* aarch64 */
+@@ -967,12 +967,13 @@ unsigned long long vaddr_to_paddr_arm64(unsigned long vaddr);
+ int get_versiondep_info_arm64(void);
+ int get_xen_basic_info_arm64(void);
+ int get_xen_info_arm64(void);
++unsigned long get_kaslr_offset_arm64(unsigned long vaddr);
+ #define find_vmemmap()		stub_false()
+ #define vaddr_to_paddr(X)	vaddr_to_paddr_arm64(X)
+ #define get_phys_base()		get_phys_base_arm64()
+ #define get_machdep_info()	get_machdep_info_arm64()
+ #define get_versiondep_info()	get_versiondep_info_arm64()
+-#define get_kaslr_offset(X)	stub_false()
++#define get_kaslr_offset(X)	get_kaslr_offset_arm64(X)
+ #define get_xen_basic_info_arch(X) get_xen_basic_info_arm64(X)
+ #define get_xen_info_arch(X) get_xen_info_arm64(X)
+ #define is_phys_addr(X)		stub_true_ul(X)
 -- 
 2.7.4
 
