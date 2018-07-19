@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 19 Jul 2018 10:23:25 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v11 03/15] powerpc, kexec_file: factor out memblock-based
- arch_kexec_walk_mem()
-Message-ID: <20180719022325.GA2773@dhcp-128-65.nay.redhat.com>
-References: <20180711074203.3019-1-takahiro.akashi@linaro.org>
- <20180711074203.3019-4-takahiro.akashi@linaro.org>
- <20180716122623.GB7160@dhcp-128-65.nay.redhat.com>
- <c8c09929-165a-b710-6993-0b149a0c3b99@arm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <c8c09929-165a-b710-6993-0b149a0c3b99@arm.com>
+Received: from mail-pg1-f193.google.com ([209.85.215.193])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fg1jQ-0003ZN-Hm
+ for kexec@lists.infradead.org; Thu, 19 Jul 2018 05:44:05 +0000
+Received: by mail-pg1-f193.google.com with SMTP id k3-v6so3082273pgq.5
+ for <kexec@lists.infradead.org>; Wed, 18 Jul 2018 22:43:51 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH 0/2] arm64, makedumpfile: A couple of KASLR related fixes
+Date: Thu, 19 Jul 2018 11:13:39 +0530
+Message-Id: <1531979021-31780-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,48 +17,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, davem@davemloft.net, vgoyal@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
+To: kexec@lists.infradead.org
+Cc: bhsharma@redhat.com, bhupesh.linux@gmail.com, k-hagio@ab.jp.nec.com
 
-Hi James,
-On 07/18/18 at 05:52pm, James Morse wrote:
-> Hi Dave, Akashi,
-> 
-> On 16/07/18 13:26, Dave Young wrote:
-> > On 07/11/18 at 04:41pm, AKASHI Takahiro wrote:
-> >> Memblock list is another source for usable system memory layout.
-> >> So powerpc's arch_kexec_walk_mem() is moved to kexec_file.c so that
-> >> other memblock-based architectures, particularly arm64, can also utilise
-> >> it. A moved function is now renamed to kexec_walk_memblock() and merged
-> >> into the existing arch_kexec_walk_mem() for general use, either resource
-> >> list or memblock list.
-> >>
-> >> A consequent function will not work for kdump with memblock list, but
-> >> this will be fixed in the next patch.
-> > 
-> > If this breaks something, then it would be good to fold the following
-> > patch in this patch so that bisect can still work?
-> 
-> This patch is just moving code from arch/powerpc that is generic.
-> powerpc doesn't support kdump via kexec_file, so nothing is damaged by adding
-> this new code in the next patch.
-> 
-> arm64 would need this kdump support, but it doesn't use it until patch 11.
+This patchset contains a couple of patches which provide important
+arm64 fixes for KASLR boot cases:
 
-Ok, then I'm fine with it, thanks for the explanation.
+PATCH 1 -> Addresses the issue with 'info->page_offset' calculation for
+           KASLR cases.
+PATCH 2 -> Addresses the issue with filtering not able to translate
+           symbol address from vmlinux to kernel run time address in
+	   case of KASLR boot.
 
-> 
-> 
-> Thanks,
-> 
-> James
+Bhupesh Sharma (2):
+  arm64: Get 'info->page_offset' from PT_LOAD segments to support KASLR
+    boot cases
+  arm64: Add runtime kaslr offset if it exists
 
-Thanks
-Dave
+ arch/arm64.c   | 64 +++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+ common.h       |  1 +
+ makedumpfile.h |  4 +++-
+ 3 files changed, 63 insertions(+), 6 deletions(-)
+
+-- 
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
