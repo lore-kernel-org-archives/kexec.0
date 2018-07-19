@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ffcb1-0003eX-1x
- for kexec@lists.infradead.org; Wed, 18 Jul 2018 02:53:44 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v7 4/4] kexec_file: Load kernel at top of system RAM if
- required
-Date: Wed, 18 Jul 2018 10:49:44 +0800
-Message-Id: <20180718024944.577-5-bhe@redhat.com>
-In-Reply-To: <20180718024944.577-1-bhe@redhat.com>
-References: <20180718024944.577-1-bhe@redhat.com>
+Subject: Re: [PATCH] arm64, kaslr: export offset in VMCOREINFO ELF notes
+References: <1531949864-27447-1-git-send-email-bhsharma@redhat.com>
+From: James Morse <james.morse@arm.com>
+Message-ID: <d8959ca1-65a1-f59c-bfc4-b048c75add26@arm.com>
+Date: Thu, 19 Jul 2018 12:31:13 +0100
+MIME-Version: 1.0
+In-Reply-To: <1531949864-27447-1-git-send-email-bhsharma@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,60 +15,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, akpm@linux-foundation.org, robh+dt@kernel.org, dan.j.williams@intel.com, nicolas.pitre@linaro.org, josh@joshtriplett.org, fengguang.wu@intel.com, bp@suse.de, andy.shevchenko@gmail.com
-Cc: brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, kys@microsoft.com, frowand.list@gmail.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, dyoung@redhat.com, vgoyal@redhat.com, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, jglisse@redhat.com, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, ebiederm@xmission.com, devel@linuxdriverproject.org, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, Catalin Marinas <catalin.marinas@arm.com>, bhupesh.linux@gmail.com, linux-arm-kernel@lists.infradead.org
 
-For kexec_file loading, if kexec_buf.top_down is 'true', the memory which
-is used to load kernel/initrd/purgatory is supposed to be allocated from
-top to down. This is what we have been doing all along in the old kexec
-loading interface and the kexec loading is still default setting in some
-distributions. However, the current kexec_file loading interface doesn't
-do like this. The function arch_kexec_walk_mem() it calls ignores checking
-kexec_buf.top_down, but calls walk_system_ram_res() directly to go through
-all resources of System RAM from bottom to up, to try to find memory region
-which can contain the specific kexec buffer, then call locate_mem_hole_callback()
-to allocate memory in that found memory region from top to down. This brings
-confusion especially when KASLR is widely supported , users have to make clear
-why kexec/kdump kernel loading position is different between these two
-interfaces in order to exclude unnecessary noises. Hence these two interfaces
-need be unified on behaviour.
+Hi Bhupesh,
 
-Here add checking if kexec_buf.top_down is 'true' in arch_kexec_walk_mem(),
-if yes, call the newly added walk_system_ram_res_rev() to find memory region
-from top to down to load kernel.
+On 18/07/18 22:37, Bhupesh Sharma wrote:
+> Include KASLR offset in VMCOREINFO ELF notes to assist in debugging.
+> 
+> makedumpfile user-space utility will need fixup to use this KASLR offset
+> to work with cases where we need to find a way to translate symbol
+> address from vmlinux to kernel run time address in case of KASLR boot on
+> arm64.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yinghai Lu <yinghai@kernel.org>
-Cc: kexec@lists.infradead.org
----
- kernel/kexec_file.c | 2 ++
- 1 file changed, 2 insertions(+)
+You need the kernel VA for a symbol. Isn't this what kallsyms is for?
+| root@frikadeller:~# cat /proc/kallsyms | grep swapper_pg_dir
+| ffff5404610d0000 B swapper_pg_dir
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index c6a3b6851372..75226c1d08ce 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -518,6 +518,8 @@ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
- 					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
- 					   crashk_res.start, crashk_res.end,
- 					   kbuf, func);
-+	else if (kbuf->top_down)
-+		return walk_system_ram_res_rev(0, ULONG_MAX, kbuf, func);
- 	else
- 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
- }
--- 
-2.13.6
+This is the KASLR address, the vmlinux has:
+| root@frikadeller:~/linux/build_arm64# nm -s vmlinux | grep swapper_pg_dir
+| ffff0000096d0000 B swapper_pg_dir
 
+
+This is in the vmcoreinfo too, so you can work if out from the vmcore too:
+| root@frikadeller:~# dd if=/proc/kcore bs=8K count=1 2>/dev/null | strings |
+| grep swapper_pg_dir
+| SYMBOL(swapper_pg_dir)=ffff5404610d0000
+
+
+I picked swapper_pg_dir, but you could use any of the vmcore:SYMBOL() addresses
+to work out this offset. (you should expect the kernel to rename these symbols
+at a whim).
+
+
+Thanks,
+
+James
 
 _______________________________________________
 kexec mailing list
