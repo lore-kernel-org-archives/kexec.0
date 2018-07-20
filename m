@@ -1,26 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fgNtE-0000FV-DW
- for kexec@lists.infradead.org; Fri, 20 Jul 2018 05:23:41 +0000
-Date: Fri, 20 Jul 2018 13:23:04 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
- AMD sme enabled
-Message-ID: <20180720052304.GA9146@dhcp-128-65.nay.redhat.com>
-References: <20180702101451.GB28730@zn.tnic>
- <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
- <895db996-febd-d50c-91af-4f1ef3d27bd8@redhat.com>
- <20180703111428.GB5748@zn.tnic>
- <4fbb843b-9597-a48b-8b6f-00e354b91950@redhat.com>
- <e7357038-08bd-7ba8-5357-7c91d21d10fe@redhat.com>
- <20180709092901.GA22182@nazgul.tnic>
- <fc6a47ca-1b16-eba5-d15e-ca294e01af93@redhat.com>
- <20180713170857.GB17896@nazgul.tnic>
- <33453712-9b0b-e8b9-08a6-de09e0806dd6@redhat.com>
+Received: from mail-pg1-x543.google.com ([2607:f8b0:4864:20::543])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fgO1i-0004Ta-DM
+ for kexec@lists.infradead.org; Fri, 20 Jul 2018 05:32:28 +0000
+Received: by mail-pg1-x543.google.com with SMTP id r5-v6so5830371pgv.0
+ for <kexec@lists.infradead.org>; Thu, 19 Jul 2018 22:32:15 -0700 (PDT)
+Date: Fri, 20 Jul 2018 14:33:34 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v11 03/15] powerpc, kexec_file: factor out memblock-based
+ arch_kexec_walk_mem()
+Message-ID: <20180720053333.GJ11258@linaro.org>
+References: <20180711074203.3019-4-takahiro.akashi@linaro.org>
+ <20180714015223.GA2745@dhcp-128-65.nay.redhat.com>
+ <2a4ec965-5258-5835-3022-8f403a2f6bdd@arm.com>
+ <20180716122412.GA7160@dhcp-128-65.nay.redhat.com>
+ <20180717053104.GB11258@linaro.org>
+ <20180717074923.GA8591@dhcp-128-65.nay.redhat.com>
+ <20180718053818.GF11258@linaro.org>
+ <20180718061350.GA5086@dhcp-128-65.nay.redhat.com>
+ <20180718064041.GI11258@linaro.org>
+ <20180718064519.GB5324@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <33453712-9b0b-e8b9-08a6-de09e0806dd6@redhat.com>
+In-Reply-To: <20180718064519.GB5324@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,73 +31,167 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>, bhe@redhat.com
-Cc: thomas.lendacky@amd.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, Borislav Petkov <bp@alien8.de>, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de
+To: Dave Young <dyoung@redhat.com>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, arnd@arndb.de, dhowells@redhat.com, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, davem@davemloft.net, vgoyal@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
 
-T24gMDcvMjAvMTggYXQgMDE6MDZwbSwgbGlqaWFuZyB3cm90ZToKPiDlnKggMjAxOOW5tDA35pyI
-MTTml6UgMDE6MDgsIEJvcmlzbGF2IFBldGtvdiDlhpnpgZM6Cj4gPiBPbiBNb24sIEp1bCAwOSwg
-MjAxOCBhdCAwOTo1NTozNVBNICswODAwLCBsaWppYW5nIHdyb3RlOgo+ID4+IEFib3V0IHRoaXMg
-aXNzdWUsIGkgd2FudCB0byB1c2UgYW4gZXhhbXBsZSB0byBkZXNjcmliZSBpdC4KPiA+PiAvKiBk
-cml2ZXJzL2lvbW11L2FtZF9pb21tdV9pbml0LmMgKi8KPiA+PiBzdGF0aWMgdTggX19pb21lbSAq
-IF9faW5pdCBpb21tdV9tYXBfbW1pb19zcGFjZSh1NjQgYWRkcmVzcywgdTY0IGVuZCkKPiA+IAo+
-ID4gVGhvc2UgYWRkcmVzc2VzIGNvbWUgZnJvbSB0aGUgSVZIRCBoZWFkZXIgd2hpY2ggaXMgYW4g
-QUNQSSB0YWJsZS4gU28gdGhlCj4gPiBkdW1wIGtlcm5lbCBjYW4gZmluZCB0aGF0IG91dCB0b28u
-Cj4gPiBTdXJlLiBJIG1pZ2h0IHVuZGVyc3RhbmQgeW91ciBtZWFucywgdGhhdCB3aWxsIGhhdmUg
-dG8gZmluZCBhbGwgYWRkcmVzcyBvdXQgaW4KPiBvcmRlciB0byBjb3ZlciBhbnkgY2FzZXMgaW4g
-a2R1bXAga2VybmVsLCB0aG9zZSBhZGRyZXNzICBtaWdodCBpbmNsdWRlIE1NSU8KPiBzcGFjZSwg
-SFBFVCwgQUNQSSBkZXZpY2UgdGFibGUsIEVSU1QsIGFuZCBzbyBvbi4uLiAKPiAKPiA+PiBPYnZp
-b3VzbHksIHRoZSBpb21tdSBtbWlvIHNwYWNlIGlzIG5vdCBlbmNyeXB0ZWQsIGFuZCB0aGUgZGV2
-aWNlCj4gPj4gbW1pbyBzcGFjZSBpcyBvdXRzaWRlIGtkdW1wIGtlcm5lbC4gV2Uga25vdyB0aGF0
-IHRoZSBvbGQgbWVtb3J5IGlzCj4gPj4gZW5jcnlwdGVkLCBhbmQgdGhlIG9sZCBtZW1vcnkgaXMg
-YWxzbyBvdXRzaWRlIGtkdW1wIGtlcm5lbC4gRm9yIHRoZQo+ID4+IGN1cnJlbnQgY2FzZSwgZTgy
-MF9fZ2V0X2VudHJ5X3R5cGUoKSBhbmQgd2Fsa19pb21lbV9yZXNfZGVzYygpIGNhbid0Cj4gPj4g
-Z2V0IHRoZSBkZXNpcmVkIHJlc3VsdCwgc28gd2UgY2FuJ3QgYWxzbyBkZWNpZGUgd2hldGhlciBl
-bmNyeXB0aW9uCj4gPj4gb3Igbm90IGFjY29yZGluZyB0byB0aGlzIHJlc3VsdChydWxlcykuIElm
-IHdlIHdhbnQgdG8ga25vdyB3aGV0aGVyCj4gPj4gZW5jcnlwdGlvbiBvciBub3QgYnkgZGVkdWNp
-bmcgdGhlIGFkZHJlc3MsIHdlIHdpbGwgbmVlZCB0byByZWFkIHRoZQo+ID4+IGNvbnRlbnQgb2Yg
-bWVtb3J5IGFuZCBoYXZlIGEgcmVmZXJlbmNlIHZhbHVlIGZvciBjb21wYXJpc29uLCB0aGVuCj4g
-Pj4gd2hhdCdzIGEgcmVmZXJlbmNlIHZhbHVlPyBTb21ldGltZXMgd2UgZG9uJ3Qga25vdyB0aGF0
-Lgo+ID4gCj4gPiBBZ2FpbiwgaWYgd2UgZG9uJ3Qga25vdyB0aGF0IGhvdyBpcyB0aGUgKmNhbGxl
-ciogc3VwcG9zZWQgdG8ga25vdwo+ID4gd2hldGhlciB0aGUgbWVtb3J5IGlzIGVuY3J5cHRlZCBv
-ciBub3Q/IEJlY2F1c2UKPiA+IAo+ID4gIndlIiA9PSAiY2FsbGVyIgo+ID4gCj4gPiBpbiB0aGUg
-a2R1bXAga2VybmVsLgo+ID4gCj4gPiBBbmQgdGhlIG1vcmUgaW1wb3J0YW50IHF1ZXN0aW9uIGlz
-LCB3aHkgYXJlIHdlIGR1bXBpbmcgTU1JTyBzcGFjZSBvZiB0aGUKPiA+IHByZXZpb3VzIGtlcm5l
-bCAqYXQqICphbGwqPyBUaGF0IGRvZXNuJ3QgbWFrZSBhbnkgc2Vuc2UgdG8gbWUuCj4gPiAKPiBT
-b3JyeSBmb3IgbXkgbGF0ZSByZXBseS4KPiBIZXJlLCBpdCBkb2Vzbid0IG5lZWQgdG8gZHVtcCBN
-TUlPIHNwYWNlIG9mIHRoZSBwcmV2aW91cyBrZXJuZWwsIHdoZW4gdGhlCj4ga2R1bXAga2VybmVs
-IGJvb3QsIHRoZSBNTUlPIGFkZHJlc3Mgd2lsbCBiZSByZW1hcHBlZCBpbiBkZWNyeXB0aW9uIG1h
-bm5lcnMsCj4gYnV0IHRoZSBNTUlPIGFkZHJlc3MgZG9uJ3QgYmVsb25nIHRvIHRoZSByYW5nZSBv
-ZiB0aGUgY3Jhc2ggcmVzZXJ2ZWQgbWVtb3J5LAo+IGZvciB0aGUga2R1bXAga2VybmVsLCB0aGUg
-TU1JTyBzcGFjZShhZGRyZXNzKSBhbmQgSU9NTVUgZGV2aWNlIHRhYmxlKGFkZHJlc3MpCj4gYXJl
-IG91dHNpZGUgYWRkcmVzcywgd2hlcmVhcywgdGhlIElPTU1VIGRldmljZSB0YWJsZSBpcyBlbmNy
-eXB0ZWQgaW4gdGhlIGZpcnN0Cj4ga2VybmVsLCB0aGUga2R1bXAga2VybmVsIHdpbGwgbmVlZCB0
-byBjb3B5IHRoZSBjb250ZW50IG9mIElPTU1VIGRldmljZSB0YWJsZQo+IGZyb20gdGhlIGZpcnN0
-IGtlcm5lbCB3aGVuIHRoZSBrZHVtcCBrZXJuZWwgYm9vdCwgc28gdGhlIElPTU1VIGRldmljZSB0
-YWJsZSB3aWxsCj4gYmUgcmVtYXBwZWQgaW4gZW5jcnlwdGlvbiBtYW5uZXJzLgo+IFNvIHNvbWUg
-b2YgdGhlbSByZXF1aXJlIHRvIGJlIHJlbWFwcGVkIGluIGVuY3J5cHRpb24gbWFubmVycywgYW5k
-IHNvbWUoYWRkcmVzcykKPiByZXF1aXJlIHRvIGJlIHJlbWFwcGVkIGluIGRlY3J5cHRpb24gbWFu
-bmVycy4KPiAKClRoZXJlIGNvdWxkIGJlIHNvbWUgbWlzdW5kZXJzdGFuZGluZyBoZXJlLiAgRnJv
-bSB0aGUgY29kZQpjb3B5X2RldmljZV90YWJsZSBpbiBhbWRfaW9tbXVfaW5pdC5jLCAgaW9tbXUg
-dGFibGUgZW50cnkgaXMgcmV0cmlldmVkCmJ5IHJlYWQgbW1pbyBhZGRyZXNzLCB0aGVuIHVzZSBt
-ZW1yZW1hcCB0byBtYXAgdGhlIGVudHJ5IGFkZHJlc3MgZm9yCmNvcHlpbmcgdGhlIGRldmljZSB0
-YWJsZSwgc28gdGhlIHRoaW5nIHJlbGF0ZWQgdG8geW91ciBwYXRjaCBpcyB0aGUgZGV2CnRhYmxl
-IGVudHJ5IGFkZHJlc3Mgbm90IHRoZSBtbWlvIGFkZHJlc3MuCgpBcyBmb3Igd2h5IG5lZWQgY29w
-eSB0aGUgb2xkIGRldiB0YWJsZSwgSSB0aGluayBpdCBpcyBmb3IgYWRkcmVzc2luZwpvbi1mbGln
-aHQgRE1BIGlzc3VlLCAganVzdCBsaWtlIHRoZSBnaXQgbG9nIG9mIGJlbG93IGNvbW1pdCBhbHRo
-b3VnaCB0aGUKY29tbWl0IGlzIGZvciBJbnRlbCBJT01NVSBidXQgSSB0aGluayBBTUQgSU9NTVUg
-c29sdXRpb24gaXMgc2ltaWxhcjoKCmNvbW1pdCAwOTFkNDJlNDNkMjFiNmNhN2VjMzliZjVmOWUx
-N2JjMGJkOGQ0MzEyCkF1dGhvcjogSm9lcmcgUm9lZGVsIDxqcm9lZGVsQHN1c2UuZGU+CkRhdGU6
-ICAgRnJpIEp1biAxMiAxMTo1NjoxMCAyMDE1ICswMjAwCgogICAgaW9tbXUvdnQtZDogQ29weSB0
-cmFuc2xhdGlvbiB0YWJsZXMgZnJvbSBvbGQga2VybmVsCiAgICAKICAgIElmIHdlIGFyZSBpbiBh
-IGtkdW1wIGtlcm5lbCBhbmQgZmluZCB0cmFuc2xhdGlvbiBlbmFibGVkIGluCiAgICB0aGUgaW9t
-bXUsIHRyeSB0byBjb3B5IHRoZSB0cmFuc2xhdGlvbiB0YWJsZXMgZnJvbSB0aGUgb2xkCiAgICBr
-ZXJuZWwgdG8gcHJlc2VydmUgdGhlIG1hcHBpbmdzIHVudGlsIHRoZSBkZXZpY2UgZHJpdmVyCiAg
-ICB0YWtlcyBvdmVyLgoKQmFvcXVhbiBrbm93cyBtb3JlIGFib3V0IHRoaXMgSSB0aGluayBoZSBj
-YW4gY29ycmVjdCBpZiBJJ20gd3JvbmcuCgpUaGFua3MKRGF2ZQoKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8va2V4ZWMK
+Dave,
+
+On Wed, Jul 18, 2018 at 02:45:19PM +0800, Dave Young wrote:
+> On 07/18/18 at 03:40pm, AKASHI Takahiro wrote:
+> > On Wed, Jul 18, 2018 at 02:13:50PM +0800, Dave Young wrote:
+> > > Hi AKASHI,
+> > > 
+> > > On 07/18/18 at 02:38pm, AKASHI Takahiro wrote:
+> > > > Dave,
+> > > > 
+> > > > On Tue, Jul 17, 2018 at 03:49:23PM +0800, Dave Young wrote:
+> > > > > Hi AKASHI,
+> > > > > On 07/17/18 at 02:31pm, AKASHI Takahiro wrote:
+> > > > > > Hi Dave,
+> > > > > > 
+> > > > > > On Mon, Jul 16, 2018 at 08:24:12PM +0800, Dave Young wrote:
+> > > > > > > On 07/16/18 at 12:04pm, James Morse wrote:
+> > > > > > > > Hi Dave,
+> > > > > > > > 
+> > > > > > > > On 14/07/18 02:52, Dave Young wrote:
+> > > > > > > > > On 07/11/18 at 04:41pm, AKASHI Takahiro wrote:
+> > > > > > > > >> Memblock list is another source for usable system memory layout.
+> > > > > > > > >> So powerpc's arch_kexec_walk_mem() is moved to kexec_file.c so that
+> > > > > > > > >> other memblock-based architectures, particularly arm64, can also utilise
+> > > > > > > > >> it. A moved function is now renamed to kexec_walk_memblock() and merged
+> > > > > > > > >> into the existing arch_kexec_walk_mem() for general use, either resource
+> > > > > > > > >> list or memblock list.
+> > > > > > > > >>
+> > > > > > > > >> A consequent function will not work for kdump with memblock list, but
+> > > > > > > > >> this will be fixed in the next patch.
+> > > > > > > > 
+> > > > > > > > >> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> > > > > > > > 
+> > > > > > > > >> @@ -513,6 +563,10 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
+> > > > > > > > >>  int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+> > > > > > > > >>  			       int (*func)(struct resource *, void *))
+> > > > > > > > >>  {
+> > > > > > > > >> +	if (IS_ENABLED(CONFIG_HAVE_MEMBLOCK) &&
+> > > > > > > > >> +			!IS_ENABLED(CONFIG_ARCH_DISCARD_MEMBLOCK))
+> > > > > > > > >> +		return kexec_walk_memblock(kbuf, func);
+> > > > > > > > > 
+> > > > > > > > > AKASHI, I'm not sure if this works on all arches, for example I chekced
+> > > > > > > > > the .config on my Nokia N900 kernel tree, there is HAVE_MEMBLOCK=y and
+> > > > > > > > > no CONFIG_ARCH_DISCARD_MEMBLOCK, in 32bit arm code no arch_kexec_walk_mem()
+> > > > > > > > By doesn't work you mean it's a change in behaviour?
+> > > > > > > > I think this is fine because 32bit arm doesn't support KEXEC_FILE, (this file is
+> > > > > > > > kexec_file specific right?).
+> > > > > > > 
+> > > > > > > Ah, replied on a train, I forgot this is only for kexec_file, sorry
+> > > > > > > about that.  Please ignore the comment.
+> > > > > > > 
+> > > > > > > But since we have a weak function arch_kexec_walk_mem, adding another
+> > > > > > > condition branch within this weak function looks not good.
+> > > > > > > Something like below would be better:
+> > > > > > 
+> > > > > > I see your concern here, but
+> > > > > > 
+> > > > > > 
+> > > > > > > int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+> > > > > > > {
+> > > > > > >         int ret;
+> > > > > > > 
+> > > > > > > 	+ if use memblock
+> > > > > > > 	+	ret = kexec_walk_memblock()
+> > > > > > > 	+ else
+> > > > > > >         	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
+> > > > > > > 
+> > > > > > >         return ret == 1 ? 0 : -EADDRNOTAVAIL;
+> > > > > > > }
+> > > > > > 
+> > > > > > what if yet another architecture comes to kexec_file and wanna
+> > > > > > take a third approach? How can it override those functions?
+> > > > > > Depending on kernel configuration, it might re-define either
+> > > > > > kexec_walk_memblock() or arch_kexec_walk_mem(). It sounds weird to me.
+> > > > > 
+> > > > > I also feel this weird, but it is slightly better because currently no
+> > > > > user need another overriding requirement, and I feel it is not expected to have in
+> > > > > the future for the memblock use.
+> > > > > 
+> > > > > Rethinking about this issue, we can just remove the weak function and
+> > > > > just use general function.
+> > > > 
+> > > > Do you really want to remove "weak" attribute?
+> > > > 
+> > > > > Currently with your patch applied only s390 use arch_kexec_walk_mem like
+> > > > > below:
+> > > > > /*
+> > > > >  * The kernel is loaded to a fixed location. Turn off kexec_locate_mem_hole
+> > > > >  * and provide kbuf->mem by hand.
+> > > > >  */
+> > > > > int arch_kexec_walk_mem(struct kexec_buf *kbuf,
+> > > > >                         int (*func)(struct resource *, void *))
+> > > > > {
+> > > > >         return 1;
+> > > > > }
+> > > > > 
+> > > > > AFAIK, all other users initialize kbuf->mem as NULL, so we can check
+> > > > 
+> > > > As a matter of fact, nobody initializes kbuf->mem before calling
+> > > > kexec_add_buffer (in turn, kexec_locate_mem_hole()).
+> > > 
+> > > Not sure we understand each other..
+> > > Let's take an example in arch/x86/kernel/kexec-bzimage64.c:
+> > > bzImage64_load() :
+> > > 	struct kexec_buf kbuf = { .image = image, .buf_max = ULONG_MAX,
+> > > 				.top_down = true };
+> > > 
+> > > Except the three fields above other members will be initialized as zero
+> > > when compiling including the kbuf->mem
+> > 
+> > Ah, you're right.
+> > (My armr64 patch doesn't use struct initializer, though.)
+> > 
+> > > > 
+> > > > > kbuf->mem in int kexec_locate_mem_hole:
+> > > > > 
+> > > > > if (kbuf->mem)
+> > > > > 	return 0;
+> > > > > 
+> > > > > if use memblock
+> > > > > 	kexec_walk_memblock
+> > > > > else
+> > > > > 	kexec_walk_mem
+> > > 
+> > > kexec_walk_resource will be better than kexec_walk_mem
+> > > 
+> > > > 
+> > > > I think that your solution will work for existing architectures
+> > > > with appropriate patches, but to take your approach, as I said above,
+> > > > we will have to modify every call site on all kexec_file-capable architectures.
+> > > > 
+> > > > If this is what you expect, I will work on it, but I don't think
+> > > > that it would be a better idea.
+> > 
+> > So you would expect me to modify my own arm64 code as well as s390.
+> 
+> Yes :)  But I had not get time to read all your patches so I was not
+> aware the struct initialization in arm64 code so I assumed only s390
+> need a change..
+
+Okay, but I don't want to mix cross-arch changes into a single patch,
+prefer to leave the current patch as it is and add an additional patch
+as you suggested here.
+
+Is that OK for you?
+
+Thanks,
+-Takahiro AKASHI
+
+
+> Thanks
+> Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
