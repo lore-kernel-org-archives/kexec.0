@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fgS8F-0005y5-7b
- for kexec@lists.infradead.org; Fri, 20 Jul 2018 09:55:28 +0000
-Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
- AMD sme enabled
+ id 1fgSNO-0003nJ-BY
+ for kexec@lists.infradead.org; Fri, 20 Jul 2018 10:11:07 +0000
+Date: Fri, 20 Jul 2018 13:08:36 +0300
+In-Reply-To: <562d8611-750d-3624-1a1b-df21f39812d6@redhat.com>
 References: <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
  <895db996-febd-d50c-91af-4f1ef3d27bd8@redhat.com>
  <20180703111428.GB5748@zn.tnic>
@@ -16,12 +16,12 @@ References: <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
  <33453712-9b0b-e8b9-08a6-de09e0806dd6@redhat.com>
  <20180720052304.GA9146@dhcp-128-65.nay.redhat.com>
  <20180720073245.GA26926@nazgul.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <562d8611-750d-3624-1a1b-df21f39812d6@redhat.com>
-Date: Fri, 20 Jul 2018 17:55:04 +0800
+ <562d8611-750d-3624-1a1b-df21f39812d6@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20180720073245.GA26926@nazgul.tnic>
-Content-Language: en-US
+Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
+ AMD sme enabled
+From: Boris Petkov <bp@alien8.de>
+Message-ID: <54D39850-F883-4EC6-B160-0CD88D47A997@alien8.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,50 +30,22 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
+To: lijiang <lijiang@redhat.com>, Dave Young <dyoung@redhat.com>
 Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de
 
-5ZyoIDIwMTjlubQwN+aciDIw5pelIDE1OjMyLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IEZyaSwgSnVsIDIwLCAyMDE4IGF0IDAxOjIzOjA0UE0gKzA4MDAsIERhdmUgWW91bmcgd3JvdGU6
-Cj4+PiBIZXJlLCBpdCBkb2Vzbid0IG5lZWQgdG8gZHVtcCBNTUlPIHNwYWNlIG9mIHRoZSBwcmV2
-aW91cyBrZXJuZWwsIHdoZW4gdGhlCj4+PiBrZHVtcCBrZXJuZWwgYm9vdCwgdGhlIE1NSU8gYWRk
-cmVzcyB3aWxsIGJlIHJlbWFwcGVkIGluIGRlY3J5cHRpb24gbWFubmVycywKPj4+IGJ1dCB0aGUg
-TU1JTyBhZGRyZXNzIGRvbid0IGJlbG9uZyB0byB0aGUgcmFuZ2Ugb2YgdGhlIGNyYXNoIHJlc2Vy
-dmVkIG1lbW9yeSwKPj4+IGZvciB0aGUga2R1bXAga2VybmVsLCB0aGUgTU1JTyBzcGFjZShhZGRy
-ZXNzKSBhbmQgSU9NTVUgZGV2aWNlIHRhYmxlKGFkZHJlc3MpCj4+PiBhcmUgb3V0c2lkZSBhZGRy
-ZXNzLCB3aGVyZWFzLCB0aGUgSU9NTVUgZGV2aWNlIHRhYmxlIGlzIGVuY3J5cHRlZCBpbiB0aGUg
-Zmlyc3QKPj4+IGtlcm5lbCwgdGhlIGtkdW1wIGtlcm5lbCB3aWxsIG5lZWQgdG8gY29weSB0aGUg
-Y29udGVudCBvZiBJT01NVSBkZXZpY2UgdGFibGUKPj4+IGZyb20gdGhlIGZpcnN0IGtlcm5lbCB3
-aGVuIHRoZSBrZHVtcCBrZXJuZWwgYm9vdCwgc28gdGhlIElPTU1VIGRldmljZSB0YWJsZSB3aWxs
-Cj4+PiBiZSByZW1hcHBlZCBpbiBlbmNyeXB0aW9uIG1hbm5lcnMuCj4gCj4gLUVOT0ZDS0lOR1BB
-UlNFCj4gCj4gSSBiZWxpZXZlIHlvdSdyZSB0aGUgb25seSBvbmUgd2hvIHVuZGVyc3RhbmRzIHRo
-YXQgaHVtb25nb3VzIHNlbnRlbmNlLlNvcnJ5IGZvciB0aGlzLgoKPiBIb3cgYWJvdXQgdXNpbmcg
-YSBmdWxsc3RvcCBmcm9tIHRpbWUgdG8gdGltZS4gQW5kIFdURiBpcyAiZW5jcnlwdGlvbgo+IG1h
-bm5lcnMiPwo+IAo+Pj4gU28gc29tZSBvZiB0aGVtIHJlcXVpcmUgdG8gYmUgcmVtYXBwZWQgaW4g
-ZW5jcnlwdGlvbiBtYW5uZXJzLCBhbmQgc29tZShhZGRyZXNzKQo+Pj4gcmVxdWlyZSB0byBiZSBy
-ZW1hcHBlZCBpbiBkZWNyeXB0aW9uIG1hbm5lcnMuCj4gCj4+IFRoZXJlIGNvdWxkIGJlIHNvbWUg
-bWlzdW5kZXJzdGFuZGluZyBoZXJlLgo+IAo+IEhlbGwgeWVhaCB0aGVyZSdzIGEgbWlzdW5kZXJz
-dGFuZGluZyEKPiAKPiBDYW4geW91IGZvbGtzIGZpcnN0IHJlbGF4LCBzaXQgZG93biBhbmQgZXhw
-bGFpbiB0aGUgd2hvbGUgcHJvYmxlbSBpbgo+ICpwbGFpbiogRW5nbGlzaCB1c2luZyAqc2ltcGxl
-KiBzZW50ZW5jZXMuICpOb3QqIGxpa2UgdGhlIHVucGFyc2VhYmxlCj4gbWVzcyBhYm92ZS4gVXNl
-IHNpbXBsZSwgZGVjbGFyYXRvcnkgc2VudGVuY2VzIGFuZCBkb24ndCBldmVuIHRyeSB0bwo+IHNv
-dW5kIGZhbmN5Ogo+IAo+ICJUaGUgZmlyc3Qga2VybmVsIGJvb3RzLiBJdCdzIG1lbW9yeSBpcyBl
-bmNyeXB0ZWQuLi4gTm93LCB0aGUgc2Vjb25kCj4ga2VybmVsIGJvb3RzLiBJdCBtdXN0IGRvIEEg
-YmVjYXVzZSBvZiBCLiBJbiBvcmRlciB0byBkbyBBLCBpdCBuZWVkcyB0bwo+IGRvIEMuIEJlY2F1
-c2UgRC4uLiIKPiAKPiBBbmQgc28gb24uIEV4cGxhaW4gd2hhdCB0aGUgcHJvYmxlbSBpcyBmaXJz
-dC4gVGhlbiBleHBsYWluIHRoZSBwcm9wb3NlZAo+IHNvbHV0aW9uLiBFeHBsYWluICp3aHkqIGl0
-IG5lZWRzIHRvIGJlIGRvbmUgdGhpcyB3YXkuCj4gCj4gV2hlbiB5b3UndmUgd3JpdHRlbiB5b3Vy
-IGV4cGxhbmF0aW9uLCB0cnkgdG8gcmVhZCBpdCBhcyBzb21lb25lIHdobwo+IGRvZXNuJ3Qga25v
-dyBrZHVtcCBhbmQgKnRoaW5rKiBoYXJkIHdoZXRoZXIgeW91ciBleHBsYW5hdGlvbiBtYWtlcwo+
-IHNlbnNlLiBJZiBpdCBkb2Vzbid0LCBmaXggaXQgYW5kIHJlYWQgaXQgYWdhaW4uIFJpbnNlIGFu
-ZCByZXBlYXQuIFVudGlsCj4gaXQgaXMgY2xlYXIgdG8gdW5lbmxpZ2h0ZW5lZCByZWFkZXJzIHRv
-by4KPiAKVGhhbmtzIGZvciB5b3VyIGFkdmljZSwgSSB3aWxsIHJld3JpdGUgdGhlIGxvZyBhbmQg
-c2VuZCB0aGVtIGFnYWluLgoKPiBJdCBpcyBhYm91dCB0aW1lIHRoaXMgaHVycmllZCB0aHJvd2lu
-ZyBvZiBoYWxmLWJha2VkIHBhdGNoZXMgYXQKPiBtYWludGFpbmVycyBhbmQgc2VlaW5nIHdoYXQg
-c3RpY2tzLCBzdG9wcyEKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On July 20, 2018 12:55:04 PM GMT+03:00, lijiang <lijiang@redhat.com> wrote:>
+>Thanks for your advice, I will rewrite the log and send them again.
+
+Do not send them again - explain the problem properly first!
+
+-- 
+Sent from a small device: formatting sux and brevity is inevitable. 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
