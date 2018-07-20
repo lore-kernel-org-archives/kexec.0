@@ -1,13 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fgPuU-0008Lu-Uk
- for kexec@lists.infradead.org; Fri, 20 Jul 2018 07:33:08 +0000
-Date: Fri, 20 Jul 2018 09:32:45 +0200
-From: Borislav Petkov <bp@alien8.de>
+ id 1fgS8F-0005y5-7b
+ for kexec@lists.infradead.org; Fri, 20 Jul 2018 09:55:28 +0000
 Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
  AMD sme enabled
-Message-ID: <20180720073245.GA26926@nazgul.tnic>
 References: <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
  <895db996-febd-d50c-91af-4f1ef3d27bd8@redhat.com>
  <20180703111428.GB5748@zn.tnic>
@@ -18,9 +15,13 @@ References: <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
  <20180713170857.GB17896@nazgul.tnic>
  <33453712-9b0b-e8b9-08a6-de09e0806dd6@redhat.com>
  <20180720052304.GA9146@dhcp-128-65.nay.redhat.com>
+ <20180720073245.GA26926@nazgul.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <562d8611-750d-3624-1a1b-df21f39812d6@redhat.com>
+Date: Fri, 20 Jul 2018 17:55:04 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180720052304.GA9146@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20180720073245.GA26926@nazgul.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,64 +30,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, lijiang <lijiang@redhat.com>
+To: Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
 Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de
 
-On Fri, Jul 20, 2018 at 01:23:04PM +0800, Dave Young wrote:
-> > Here, it doesn't need to dump MMIO space of the previous kernel, when the
-> > kdump kernel boot, the MMIO address will be remapped in decryption manners,
-> > but the MMIO address don't belong to the range of the crash reserved memory,
-> > for the kdump kernel, the MMIO space(address) and IOMMU device table(address)
-> > are outside address, whereas, the IOMMU device table is encrypted in the first
-> > kernel, the kdump kernel will need to copy the content of IOMMU device table
-> > from the first kernel when the kdump kernel boot, so the IOMMU device table will
-> > be remapped in encryption manners.
-
--ENOFCKINGPARSE
-
-I believe you're the only one who understands that humongous sentence.
-How about using a fullstop from time to time. And WTF is "encryption
-manners"?
-
-> > So some of them require to be remapped in encryption manners, and some(address)
-> > require to be remapped in decryption manners.
-
-> There could be some misunderstanding here.
-
-Hell yeah there's a misunderstanding!
-
-Can you folks first relax, sit down and explain the whole problem in
-*plain* English using *simple* sentences. *Not* like the unparseable
-mess above. Use simple, declaratory sentences and don't even try to
-sound fancy:
-
-"The first kernel boots. It's memory is encrypted... Now, the second
-kernel boots. It must do A because of B. In order to do A, it needs to
-do C. Because D..."
-
-And so on. Explain what the problem is first. Then explain the proposed
-solution. Explain *why* it needs to be done this way.
-
-When you've written your explanation, try to read it as someone who
-doesn't know kdump and *think* hard whether your explanation makes
-sense. If it doesn't, fix it and read it again. Rinse and repeat. Until
-it is clear to unenlightened readers too.
-
-It is about time this hurried throwing of half-baked patches at
-maintainers and seeing what sticks, stops!
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQwN+aciDIw5pelIDE1OjMyLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IEZyaSwgSnVsIDIwLCAyMDE4IGF0IDAxOjIzOjA0UE0gKzA4MDAsIERhdmUgWW91bmcgd3JvdGU6
+Cj4+PiBIZXJlLCBpdCBkb2Vzbid0IG5lZWQgdG8gZHVtcCBNTUlPIHNwYWNlIG9mIHRoZSBwcmV2
+aW91cyBrZXJuZWwsIHdoZW4gdGhlCj4+PiBrZHVtcCBrZXJuZWwgYm9vdCwgdGhlIE1NSU8gYWRk
+cmVzcyB3aWxsIGJlIHJlbWFwcGVkIGluIGRlY3J5cHRpb24gbWFubmVycywKPj4+IGJ1dCB0aGUg
+TU1JTyBhZGRyZXNzIGRvbid0IGJlbG9uZyB0byB0aGUgcmFuZ2Ugb2YgdGhlIGNyYXNoIHJlc2Vy
+dmVkIG1lbW9yeSwKPj4+IGZvciB0aGUga2R1bXAga2VybmVsLCB0aGUgTU1JTyBzcGFjZShhZGRy
+ZXNzKSBhbmQgSU9NTVUgZGV2aWNlIHRhYmxlKGFkZHJlc3MpCj4+PiBhcmUgb3V0c2lkZSBhZGRy
+ZXNzLCB3aGVyZWFzLCB0aGUgSU9NTVUgZGV2aWNlIHRhYmxlIGlzIGVuY3J5cHRlZCBpbiB0aGUg
+Zmlyc3QKPj4+IGtlcm5lbCwgdGhlIGtkdW1wIGtlcm5lbCB3aWxsIG5lZWQgdG8gY29weSB0aGUg
+Y29udGVudCBvZiBJT01NVSBkZXZpY2UgdGFibGUKPj4+IGZyb20gdGhlIGZpcnN0IGtlcm5lbCB3
+aGVuIHRoZSBrZHVtcCBrZXJuZWwgYm9vdCwgc28gdGhlIElPTU1VIGRldmljZSB0YWJsZSB3aWxs
+Cj4+PiBiZSByZW1hcHBlZCBpbiBlbmNyeXB0aW9uIG1hbm5lcnMuCj4gCj4gLUVOT0ZDS0lOR1BB
+UlNFCj4gCj4gSSBiZWxpZXZlIHlvdSdyZSB0aGUgb25seSBvbmUgd2hvIHVuZGVyc3RhbmRzIHRo
+YXQgaHVtb25nb3VzIHNlbnRlbmNlLlNvcnJ5IGZvciB0aGlzLgoKPiBIb3cgYWJvdXQgdXNpbmcg
+YSBmdWxsc3RvcCBmcm9tIHRpbWUgdG8gdGltZS4gQW5kIFdURiBpcyAiZW5jcnlwdGlvbgo+IG1h
+bm5lcnMiPwo+IAo+Pj4gU28gc29tZSBvZiB0aGVtIHJlcXVpcmUgdG8gYmUgcmVtYXBwZWQgaW4g
+ZW5jcnlwdGlvbiBtYW5uZXJzLCBhbmQgc29tZShhZGRyZXNzKQo+Pj4gcmVxdWlyZSB0byBiZSBy
+ZW1hcHBlZCBpbiBkZWNyeXB0aW9uIG1hbm5lcnMuCj4gCj4+IFRoZXJlIGNvdWxkIGJlIHNvbWUg
+bWlzdW5kZXJzdGFuZGluZyBoZXJlLgo+IAo+IEhlbGwgeWVhaCB0aGVyZSdzIGEgbWlzdW5kZXJz
+dGFuZGluZyEKPiAKPiBDYW4geW91IGZvbGtzIGZpcnN0IHJlbGF4LCBzaXQgZG93biBhbmQgZXhw
+bGFpbiB0aGUgd2hvbGUgcHJvYmxlbSBpbgo+ICpwbGFpbiogRW5nbGlzaCB1c2luZyAqc2ltcGxl
+KiBzZW50ZW5jZXMuICpOb3QqIGxpa2UgdGhlIHVucGFyc2VhYmxlCj4gbWVzcyBhYm92ZS4gVXNl
+IHNpbXBsZSwgZGVjbGFyYXRvcnkgc2VudGVuY2VzIGFuZCBkb24ndCBldmVuIHRyeSB0bwo+IHNv
+dW5kIGZhbmN5Ogo+IAo+ICJUaGUgZmlyc3Qga2VybmVsIGJvb3RzLiBJdCdzIG1lbW9yeSBpcyBl
+bmNyeXB0ZWQuLi4gTm93LCB0aGUgc2Vjb25kCj4ga2VybmVsIGJvb3RzLiBJdCBtdXN0IGRvIEEg
+YmVjYXVzZSBvZiBCLiBJbiBvcmRlciB0byBkbyBBLCBpdCBuZWVkcyB0bwo+IGRvIEMuIEJlY2F1
+c2UgRC4uLiIKPiAKPiBBbmQgc28gb24uIEV4cGxhaW4gd2hhdCB0aGUgcHJvYmxlbSBpcyBmaXJz
+dC4gVGhlbiBleHBsYWluIHRoZSBwcm9wb3NlZAo+IHNvbHV0aW9uLiBFeHBsYWluICp3aHkqIGl0
+IG5lZWRzIHRvIGJlIGRvbmUgdGhpcyB3YXkuCj4gCj4gV2hlbiB5b3UndmUgd3JpdHRlbiB5b3Vy
+IGV4cGxhbmF0aW9uLCB0cnkgdG8gcmVhZCBpdCBhcyBzb21lb25lIHdobwo+IGRvZXNuJ3Qga25v
+dyBrZHVtcCBhbmQgKnRoaW5rKiBoYXJkIHdoZXRoZXIgeW91ciBleHBsYW5hdGlvbiBtYWtlcwo+
+IHNlbnNlLiBJZiBpdCBkb2Vzbid0LCBmaXggaXQgYW5kIHJlYWQgaXQgYWdhaW4uIFJpbnNlIGFu
+ZCByZXBlYXQuIFVudGlsCj4gaXQgaXMgY2xlYXIgdG8gdW5lbmxpZ2h0ZW5lZCByZWFkZXJzIHRv
+by4KPiAKVGhhbmtzIGZvciB5b3VyIGFkdmljZSwgSSB3aWxsIHJld3JpdGUgdGhlIGxvZyBhbmQg
+c2VuZCB0aGVtIGFnYWluLgoKPiBJdCBpcyBhYm91dCB0aW1lIHRoaXMgaHVycmllZCB0aHJvd2lu
+ZyBvZiBoYWxmLWJha2VkIHBhdGNoZXMgYXQKPiBtYWludGFpbmVycyBhbmQgc2VlaW5nIHdoYXQg
+c3RpY2tzLCBzdG9wcyEKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
