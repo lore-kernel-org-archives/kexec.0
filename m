@@ -1,18 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-f193.google.com ([209.85.208.193])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fgALE-0002pr-8C
- for kexec@lists.infradead.org; Thu, 19 Jul 2018 14:55:42 +0000
-Received: by mail-lj1-f193.google.com with SMTP id r13-v6so7966098ljg.10
- for <kexec@lists.infradead.org>; Thu, 19 Jul 2018 07:55:29 -0700 (PDT)
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fgNdl-0000Ai-8t
+ for kexec@lists.infradead.org; Fri, 20 Jul 2018 05:07:42 +0000
+Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
+ AMD sme enabled
+References: <20180702072639.10110-1-lijiang@redhat.com>
+ <20180702072639.10110-2-lijiang@redhat.com> <20180702101451.GB28730@zn.tnic>
+ <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
+ <895db996-febd-d50c-91af-4f1ef3d27bd8@redhat.com>
+ <20180703111428.GB5748@zn.tnic>
+ <4fbb843b-9597-a48b-8b6f-00e354b91950@redhat.com>
+ <e7357038-08bd-7ba8-5357-7c91d21d10fe@redhat.com>
+ <20180709092901.GA22182@nazgul.tnic>
+ <fc6a47ca-1b16-eba5-d15e-ca294e01af93@redhat.com>
+ <20180713170857.GB17896@nazgul.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <33453712-9b0b-e8b9-08a6-de09e0806dd6@redhat.com>
+Date: Fri, 20 Jul 2018 13:06:59 +0800
 MIME-Version: 1.0
-In-Reply-To: <d8959ca1-65a1-f59c-bfc4-b048c75add26@arm.com>
-References: <1531949864-27447-1-git-send-email-bhsharma@redhat.com>
- <d8959ca1-65a1-f59c-bfc4-b048c75add26@arm.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Thu, 19 Jul 2018 20:25:27 +0530
-Message-ID: <CACi5LpOa-BMRSTShS019DDv7MoxNfpnnsqjwR3z13GZC49NrSA@mail.gmail.com>
-Subject: Re: [PATCH] arm64, kaslr: export offset in VMCOREINFO ELF notes
+In-Reply-To: <20180713170857.GB17896@nazgul.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,121 +29,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com
 
-Hi James,
-
-On Thu, Jul 19, 2018 at 5:01 PM, James Morse <james.morse@arm.com> wrote:
-> Hi Bhupesh,
->
-> On 18/07/18 22:37, Bhupesh Sharma wrote:
->> Include KASLR offset in VMCOREINFO ELF notes to assist in debugging.
->>
->> makedumpfile user-space utility will need fixup to use this KASLR offset
->> to work with cases where we need to find a way to translate symbol
->> address from vmlinux to kernel run time address in case of KASLR boot on
->> arm64.
->
-> You need the kernel VA for a symbol. Isn't this what kallsyms is for?
-> | root@frikadeller:~# cat /proc/kallsyms | grep swapper_pg_dir
-> | ffff5404610d0000 B swapper_pg_dir
-
-Its already used by other archs like x86_64. See
-'arch/x86/kernel/machine_kexec_64.c' :
-
-void arch_crash_save_vmcoreinfo(void)
-{
-    <..snip..>
-    vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
-                  kaslr_offset());
-    <..snip..>
-}
-
-Its just that we are enabling this feature for arm64 now that the
-KASLR boot cases are more widely seen on arm64 boards (as newer EFI
-firmware implementations are available which support EFI_RNG_PROTOCOL
-and hence KASLR boot).
-
-And we want existing user-space application(s) to work similarly on
-arm64 distributions as they work historically on other archs like
-x86_64 (in most cases the user-space user is not even aware, if he is
-developing for or using an underlying hardware which is arm64 or
-x86_64)
-
-> This is the KASLR address, the vmlinux has:
-> | root@frikadeller:~/linux/build_arm64# nm -s vmlinux | grep swapper_pg_dir
-> | ffff0000096d0000 B swapper_pg_dir
->
->
-> This is in the vmcoreinfo too, so you can work if out from the vmcore too:
-> | root@frikadeller:~# dd if=/proc/kcore bs=8K count=1 2>/dev/null | strings |
-> | grep swapper_pg_dir
-> | SYMBOL(swapper_pg_dir)=ffff5404610d0000
->
->
-> I picked swapper_pg_dir, but you could use any of the vmcore:SYMBOL() addresses
-> to work out this offset. (you should expect the kernel to rename these symbols
-> at a whim).
->
-
-Perhaps you missed what the above makedumpfile command was doing, so
-let me summarize again:
-
-The above makedumpfile command is trying to 'split' a vmcore file into
-smaller sub dumpfiles on the basis of some filtering rules. These
-rules are defined via a .conf file (scrub.conf in my example below).
-
-Lets see what MAKEDUMPFILE(8) documents about the '--split' option:
-
---split
-              Split the dump data to multiple DUMPFILEs in parallel.
-If specifying DUMPFILEs on different  storage  devices,  a  device
-can share I/O load with other devices and it reduces time for saving
-the
-dump data. The file size of each DUMPFILE is smaller than the system
-memory size which is  divided by the number of DUMPFILEs. This feature
-supports only the kdump-compressed format.
-
-So, this use-case expects 'vmlinux' and 'vmcore' as mandatory inputs.
-
-Now, coming back to the use-case:
-
-# makedumpfile --split -d 31 -x vmlinux --config scrub.conf vmcore
-dumpfile_{1,2,3}
-
-Here, 'scrub.conf ' is defined to erase symbols 'jiffies',
-'init_task.utime' and 'tsk.utime'
-
- # cat > scrub.conf << EOF
-   [vmlinux]
-   erase jiffies
-   erase init_task.utime
-   for tsk in init_task.tasks.next within task_struct:tasks
-       erase tsk.utime
-   endfor
-   EOF
-
-This is usually used to erase company-confidential or non-important
-symbols from a vmcore before handing it over to a debugger (which uses
-this vmcore to determine the root-cause of a crash) - as there can be
-some sensitive symbols which a reporter may not want the debugger to
-read.
-
-So, in this use case both vmlinux (which contains the symbols) and
-vmcore are mandatory inputs and we cannot kallsyms. as it breaks the
-existing user-space use-cases and the .conf file can be user-defined
-(and hence he can pick any symbol/functions which might not even be
-present in 'kallsyms'). So no we cannot use 'kallsyms' here.
-
-Thanks,
-Bhupesh
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQwN+aciDE05pelIDAxOjA4LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IE1vbiwgSnVsIDA5LCAyMDE4IGF0IDA5OjU1OjM1UE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
+IEFib3V0IHRoaXMgaXNzdWUsIGkgd2FudCB0byB1c2UgYW4gZXhhbXBsZSB0byBkZXNjcmliZSBp
+dC4KPj4gLyogZHJpdmVycy9pb21tdS9hbWRfaW9tbXVfaW5pdC5jICovCj4+IHN0YXRpYyB1OCBf
+X2lvbWVtICogX19pbml0IGlvbW11X21hcF9tbWlvX3NwYWNlKHU2NCBhZGRyZXNzLCB1NjQgZW5k
+KQo+IAo+IFRob3NlIGFkZHJlc3NlcyBjb21lIGZyb20gdGhlIElWSEQgaGVhZGVyIHdoaWNoIGlz
+IGFuIEFDUEkgdGFibGUuIFNvIHRoZQo+IGR1bXAga2VybmVsIGNhbiBmaW5kIHRoYXQgb3V0IHRv
+by4KPiBTdXJlLiBJIG1pZ2h0IHVuZGVyc3RhbmQgeW91ciBtZWFucywgdGhhdCB3aWxsIGhhdmUg
+dG8gZmluZCBhbGwgYWRkcmVzcyBvdXQgaW4Kb3JkZXIgdG8gY292ZXIgYW55IGNhc2VzIGluIGtk
+dW1wIGtlcm5lbCwgdGhvc2UgYWRkcmVzcyAgbWlnaHQgaW5jbHVkZSBNTUlPCnNwYWNlLCBIUEVU
+LCBBQ1BJIGRldmljZSB0YWJsZSwgRVJTVCwgYW5kIHNvIG9uLi4uIAoKPj4gT2J2aW91c2x5LCB0
+aGUgaW9tbXUgbW1pbyBzcGFjZSBpcyBub3QgZW5jcnlwdGVkLCBhbmQgdGhlIGRldmljZQo+PiBt
+bWlvIHNwYWNlIGlzIG91dHNpZGUga2R1bXAga2VybmVsLiBXZSBrbm93IHRoYXQgdGhlIG9sZCBt
+ZW1vcnkgaXMKPj4gZW5jcnlwdGVkLCBhbmQgdGhlIG9sZCBtZW1vcnkgaXMgYWxzbyBvdXRzaWRl
+IGtkdW1wIGtlcm5lbC4gRm9yIHRoZQo+PiBjdXJyZW50IGNhc2UsIGU4MjBfX2dldF9lbnRyeV90
+eXBlKCkgYW5kIHdhbGtfaW9tZW1fcmVzX2Rlc2MoKSBjYW4ndAo+PiBnZXQgdGhlIGRlc2lyZWQg
+cmVzdWx0LCBzbyB3ZSBjYW4ndCBhbHNvIGRlY2lkZSB3aGV0aGVyIGVuY3J5cHRpb24KPj4gb3Ig
+bm90IGFjY29yZGluZyB0byB0aGlzIHJlc3VsdChydWxlcykuIElmIHdlIHdhbnQgdG8ga25vdyB3
+aGV0aGVyCj4+IGVuY3J5cHRpb24gb3Igbm90IGJ5IGRlZHVjaW5nIHRoZSBhZGRyZXNzLCB3ZSB3
+aWxsIG5lZWQgdG8gcmVhZCB0aGUKPj4gY29udGVudCBvZiBtZW1vcnkgYW5kIGhhdmUgYSByZWZl
+cmVuY2UgdmFsdWUgZm9yIGNvbXBhcmlzb24sIHRoZW4KPj4gd2hhdCdzIGEgcmVmZXJlbmNlIHZh
+bHVlPyBTb21ldGltZXMgd2UgZG9uJ3Qga25vdyB0aGF0Lgo+IAo+IEFnYWluLCBpZiB3ZSBkb24n
+dCBrbm93IHRoYXQgaG93IGlzIHRoZSAqY2FsbGVyKiBzdXBwb3NlZCB0byBrbm93Cj4gd2hldGhl
+ciB0aGUgbWVtb3J5IGlzIGVuY3J5cHRlZCBvciBub3Q/IEJlY2F1c2UKPiAKPiAid2UiID09ICJj
+YWxsZXIiCj4gCj4gaW4gdGhlIGtkdW1wIGtlcm5lbC4KPiAKPiBBbmQgdGhlIG1vcmUgaW1wb3J0
+YW50IHF1ZXN0aW9uIGlzLCB3aHkgYXJlIHdlIGR1bXBpbmcgTU1JTyBzcGFjZSBvZiB0aGUKPiBw
+cmV2aW91cyBrZXJuZWwgKmF0KiAqYWxsKj8gVGhhdCBkb2Vzbid0IG1ha2UgYW55IHNlbnNlIHRv
+IG1lLgo+IApTb3JyeSBmb3IgbXkgbGF0ZSByZXBseS4KSGVyZSwgaXQgZG9lc24ndCBuZWVkIHRv
+IGR1bXAgTU1JTyBzcGFjZSBvZiB0aGUgcHJldmlvdXMga2VybmVsLCB3aGVuIHRoZQprZHVtcCBr
+ZXJuZWwgYm9vdCwgdGhlIE1NSU8gYWRkcmVzcyB3aWxsIGJlIHJlbWFwcGVkIGluIGRlY3J5cHRp
+b24gbWFubmVycywKYnV0IHRoZSBNTUlPIGFkZHJlc3MgZG9uJ3QgYmVsb25nIHRvIHRoZSByYW5n
+ZSBvZiB0aGUgY3Jhc2ggcmVzZXJ2ZWQgbWVtb3J5LApmb3IgdGhlIGtkdW1wIGtlcm5lbCwgdGhl
+IE1NSU8gc3BhY2UoYWRkcmVzcykgYW5kIElPTU1VIGRldmljZSB0YWJsZShhZGRyZXNzKQphcmUg
+b3V0c2lkZSBhZGRyZXNzLCB3aGVyZWFzLCB0aGUgSU9NTVUgZGV2aWNlIHRhYmxlIGlzIGVuY3J5
+cHRlZCBpbiB0aGUgZmlyc3QKa2VybmVsLCB0aGUga2R1bXAga2VybmVsIHdpbGwgbmVlZCB0byBj
+b3B5IHRoZSBjb250ZW50IG9mIElPTU1VIGRldmljZSB0YWJsZQpmcm9tIHRoZSBmaXJzdCBrZXJu
+ZWwgd2hlbiB0aGUga2R1bXAga2VybmVsIGJvb3QsIHNvIHRoZSBJT01NVSBkZXZpY2UgdGFibGUg
+d2lsbApiZSByZW1hcHBlZCBpbiBlbmNyeXB0aW9uIG1hbm5lcnMuClNvIHNvbWUgb2YgdGhlbSBy
+ZXF1aXJlIHRvIGJlIHJlbWFwcGVkIGluIGVuY3J5cHRpb24gbWFubmVycywgYW5kIHNvbWUoYWRk
+cmVzcykKcmVxdWlyZSB0byBiZSByZW1hcHBlZCBpbiBkZWNyeXB0aW9uIG1hbm5lcnMuCgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
+ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
