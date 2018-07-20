@@ -1,28 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x244.google.com ([2607:f8b0:400e:c01::244])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fgOqG-0004dD-Vy
- for kexec@lists.infradead.org; Fri, 20 Jul 2018 06:24:42 +0000
-Received: by mail-pl0-x244.google.com with SMTP id z7-v6so2956270plo.9
- for <kexec@lists.infradead.org>; Thu, 19 Jul 2018 23:24:30 -0700 (PDT)
-Date: Fri, 20 Jul 2018 15:25:49 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v11 03/15] powerpc, kexec_file: factor out memblock-based
- arch_kexec_walk_mem()
-Message-ID: <20180720062548.GL11258@linaro.org>
-References: <2a4ec965-5258-5835-3022-8f403a2f6bdd@arm.com>
- <20180716122412.GA7160@dhcp-128-65.nay.redhat.com>
- <20180717053104.GB11258@linaro.org>
- <20180717074923.GA8591@dhcp-128-65.nay.redhat.com>
- <20180718053818.GF11258@linaro.org>
- <20180718061350.GA5086@dhcp-128-65.nay.redhat.com>
- <20180718064041.GI11258@linaro.org>
- <20180718064519.GB5324@dhcp-128-65.nay.redhat.com>
- <20180720053333.GJ11258@linaro.org>
- <20180720055727.GA9487@dhcp-128-65.nay.redhat.com>
+ id 1fgPuU-0008Lu-Uk
+ for kexec@lists.infradead.org; Fri, 20 Jul 2018 07:33:08 +0000
+Date: Fri, 20 Jul 2018 09:32:45 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
+ AMD sme enabled
+Message-ID: <20180720073245.GA26926@nazgul.tnic>
+References: <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
+ <895db996-febd-d50c-91af-4f1ef3d27bd8@redhat.com>
+ <20180703111428.GB5748@zn.tnic>
+ <4fbb843b-9597-a48b-8b6f-00e354b91950@redhat.com>
+ <e7357038-08bd-7ba8-5357-7c91d21d10fe@redhat.com>
+ <20180709092901.GA22182@nazgul.tnic>
+ <fc6a47ca-1b16-eba5-d15e-ca294e01af93@redhat.com>
+ <20180713170857.GB17896@nazgul.tnic>
+ <33453712-9b0b-e8b9-08a6-de09e0806dd6@redhat.com>
+ <20180720052304.GA9146@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180720055727.GA9487@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20180720052304.GA9146@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,180 +33,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, arnd@arndb.de, dhowells@redhat.com, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, davem@davemloft.net, vgoyal@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Dave Young <dyoung@redhat.com>, lijiang <lijiang@redhat.com>
+Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de
 
-On Fri, Jul 20, 2018 at 01:57:27PM +0800, Dave Young wrote:
-> On 07/20/18 at 02:33pm, AKASHI Takahiro wrote:
-> > Dave,
-> > 
-> > On Wed, Jul 18, 2018 at 02:45:19PM +0800, Dave Young wrote:
-> > > On 07/18/18 at 03:40pm, AKASHI Takahiro wrote:
-> > > > On Wed, Jul 18, 2018 at 02:13:50PM +0800, Dave Young wrote:
-> > > > > Hi AKASHI,
-> > > > > 
-> > > > > On 07/18/18 at 02:38pm, AKASHI Takahiro wrote:
-> > > > > > Dave,
-> > > > > > 
-> > > > > > On Tue, Jul 17, 2018 at 03:49:23PM +0800, Dave Young wrote:
-> > > > > > > Hi AKASHI,
-> > > > > > > On 07/17/18 at 02:31pm, AKASHI Takahiro wrote:
-> > > > > > > > Hi Dave,
-> > > > > > > > 
-> > > > > > > > On Mon, Jul 16, 2018 at 08:24:12PM +0800, Dave Young wrote:
-> > > > > > > > > On 07/16/18 at 12:04pm, James Morse wrote:
-> > > > > > > > > > Hi Dave,
-> > > > > > > > > > 
-> > > > > > > > > > On 14/07/18 02:52, Dave Young wrote:
-> > > > > > > > > > > On 07/11/18 at 04:41pm, AKASHI Takahiro wrote:
-> > > > > > > > > > >> Memblock list is another source for usable system memory layout.
-> > > > > > > > > > >> So powerpc's arch_kexec_walk_mem() is moved to kexec_file.c so that
-> > > > > > > > > > >> other memblock-based architectures, particularly arm64, can also utilise
-> > > > > > > > > > >> it. A moved function is now renamed to kexec_walk_memblock() and merged
-> > > > > > > > > > >> into the existing arch_kexec_walk_mem() for general use, either resource
-> > > > > > > > > > >> list or memblock list.
-> > > > > > > > > > >>
-> > > > > > > > > > >> A consequent function will not work for kdump with memblock list, but
-> > > > > > > > > > >> this will be fixed in the next patch.
-> > > > > > > > > > 
-> > > > > > > > > > >> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > > > > > > > > > 
-> > > > > > > > > > >> @@ -513,6 +563,10 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
-> > > > > > > > > > >>  int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> > > > > > > > > > >>  			       int (*func)(struct resource *, void *))
-> > > > > > > > > > >>  {
-> > > > > > > > > > >> +	if (IS_ENABLED(CONFIG_HAVE_MEMBLOCK) &&
-> > > > > > > > > > >> +			!IS_ENABLED(CONFIG_ARCH_DISCARD_MEMBLOCK))
-> > > > > > > > > > >> +		return kexec_walk_memblock(kbuf, func);
-> > > > > > > > > > > 
-> > > > > > > > > > > AKASHI, I'm not sure if this works on all arches, for example I chekced
-> > > > > > > > > > > the .config on my Nokia N900 kernel tree, there is HAVE_MEMBLOCK=y and
-> > > > > > > > > > > no CONFIG_ARCH_DISCARD_MEMBLOCK, in 32bit arm code no arch_kexec_walk_mem()
-> > > > > > > > > > By doesn't work you mean it's a change in behaviour?
-> > > > > > > > > > I think this is fine because 32bit arm doesn't support KEXEC_FILE, (this file is
-> > > > > > > > > > kexec_file specific right?).
-> > > > > > > > > 
-> > > > > > > > > Ah, replied on a train, I forgot this is only for kexec_file, sorry
-> > > > > > > > > about that.  Please ignore the comment.
-> > > > > > > > > 
-> > > > > > > > > But since we have a weak function arch_kexec_walk_mem, adding another
-> > > > > > > > > condition branch within this weak function looks not good.
-> > > > > > > > > Something like below would be better:
-> > > > > > > > 
-> > > > > > > > I see your concern here, but
-> > > > > > > > 
-> > > > > > > > 
-> > > > > > > > > int kexec_locate_mem_hole(struct kexec_buf *kbuf)
-> > > > > > > > > {
-> > > > > > > > >         int ret;
-> > > > > > > > > 
-> > > > > > > > > 	+ if use memblock
-> > > > > > > > > 	+	ret = kexec_walk_memblock()
-> > > > > > > > > 	+ else
-> > > > > > > > >         	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
-> > > > > > > > > 
-> > > > > > > > >         return ret == 1 ? 0 : -EADDRNOTAVAIL;
-> > > > > > > > > }
-> > > > > > > > 
-> > > > > > > > what if yet another architecture comes to kexec_file and wanna
-> > > > > > > > take a third approach? How can it override those functions?
-> > > > > > > > Depending on kernel configuration, it might re-define either
-> > > > > > > > kexec_walk_memblock() or arch_kexec_walk_mem(). It sounds weird to me.
-> > > > > > > 
-> > > > > > > I also feel this weird, but it is slightly better because currently no
-> > > > > > > user need another overriding requirement, and I feel it is not expected to have in
-> > > > > > > the future for the memblock use.
-> > > > > > > 
-> > > > > > > Rethinking about this issue, we can just remove the weak function and
-> > > > > > > just use general function.
-> > > > > > 
-> > > > > > Do you really want to remove "weak" attribute?
-> > > > > > 
-> > > > > > > Currently with your patch applied only s390 use arch_kexec_walk_mem like
-> > > > > > > below:
-> > > > > > > /*
-> > > > > > >  * The kernel is loaded to a fixed location. Turn off kexec_locate_mem_hole
-> > > > > > >  * and provide kbuf->mem by hand.
-> > > > > > >  */
-> > > > > > > int arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> > > > > > >                         int (*func)(struct resource *, void *))
-> > > > > > > {
-> > > > > > >         return 1;
-> > > > > > > }
-> > > > > > > 
-> > > > > > > AFAIK, all other users initialize kbuf->mem as NULL, so we can check
-> > > > > > 
-> > > > > > As a matter of fact, nobody initializes kbuf->mem before calling
-> > > > > > kexec_add_buffer (in turn, kexec_locate_mem_hole()).
-> > > > > 
-> > > > > Not sure we understand each other..
-> > > > > Let's take an example in arch/x86/kernel/kexec-bzimage64.c:
-> > > > > bzImage64_load() :
-> > > > > 	struct kexec_buf kbuf = { .image = image, .buf_max = ULONG_MAX,
-> > > > > 				.top_down = true };
-> > > > > 
-> > > > > Except the three fields above other members will be initialized as zero
-> > > > > when compiling including the kbuf->mem
-> > > > 
-> > > > Ah, you're right.
-> > > > (My armr64 patch doesn't use struct initializer, though.)
-> > > > 
-> > > > > > 
-> > > > > > > kbuf->mem in int kexec_locate_mem_hole:
-> > > > > > > 
-> > > > > > > if (kbuf->mem)
-> > > > > > > 	return 0;
-> > > > > > > 
-> > > > > > > if use memblock
-> > > > > > > 	kexec_walk_memblock
-> > > > > > > else
-> > > > > > > 	kexec_walk_mem
-> > > > > 
-> > > > > kexec_walk_resource will be better than kexec_walk_mem
-> > > > > 
-> > > > > > 
-> > > > > > I think that your solution will work for existing architectures
-> > > > > > with appropriate patches, but to take your approach, as I said above,
-> > > > > > we will have to modify every call site on all kexec_file-capable architectures.
-> > > > > > 
-> > > > > > If this is what you expect, I will work on it, but I don't think
-> > > > > > that it would be a better idea.
-> > > > 
-> > > > So you would expect me to modify my own arm64 code as well as s390.
-> > > 
-> > > Yes :)  But I had not get time to read all your patches so I was not
-> > > aware the struct initialization in arm64 code so I assumed only s390
-> > > need a change..
-> > 
-> > Okay, but I don't want to mix cross-arch changes into a single patch,
-> > prefer to leave the current patch as it is and add an additional patch
-> > as you suggested here.
-> Hi AKASHI,
-> 
-> Maybe add another patch to drop s390 walk function first, then follow
-> with this patch with the modification about common code restructure.
-> 
-> Is this better? For example:
-> 03/15 s390, drop s390 arch_kexec_mem_walk
-> 04/15 powerpc, kexec_file: factor out memblock-based arch_kexec_walk_mem
+On Fri, Jul 20, 2018 at 01:23:04PM +0800, Dave Young wrote:
+> > Here, it doesn't need to dump MMIO space of the previous kernel, when the
+> > kdump kernel boot, the MMIO address will be remapped in decryption manners,
+> > but the MMIO address don't belong to the range of the crash reserved memory,
+> > for the kdump kernel, the MMIO space(address) and IOMMU device table(address)
+> > are outside address, whereas, the IOMMU device table is encrypted in the first
+> > kernel, the kdump kernel will need to copy the content of IOMMU device table
+> > from the first kernel when the kdump kernel boot, so the IOMMU device table will
+> > be remapped in encryption manners.
 
-That's fine to me, too.
+-ENOFCKINGPARSE
 
-Thanks,
--Takahiro AKASHI
+I believe you're the only one who understands that humongous sentence.
+How about using a fullstop from time to time. And WTF is "encryption
+manners"?
 
-> > 
-> > Is that OK for you?
-> > 
-> > Thanks,
-> > -Takahiro AKASHI
-> > 
-> > 
-> > > Thanks
-> > > Dave
-> 
-> Thanks
-> Dave
+> > So some of them require to be remapped in encryption manners, and some(address)
+> > require to be remapped in decryption manners.
+
+> There could be some misunderstanding here.
+
+Hell yeah there's a misunderstanding!
+
+Can you folks first relax, sit down and explain the whole problem in
+*plain* English using *simple* sentences. *Not* like the unparseable
+mess above. Use simple, declaratory sentences and don't even try to
+sound fancy:
+
+"The first kernel boots. It's memory is encrypted... Now, the second
+kernel boots. It must do A because of B. In order to do A, it needs to
+do C. Because D..."
+
+And so on. Explain what the problem is first. Then explain the proposed
+solution. Explain *why* it needs to be done this way.
+
+When you've written your explanation, try to read it as someone who
+doesn't know kdump and *think* hard whether your explanation makes
+sense. If it doesn't, fix it and read it again. Rinse and repeat. Until
+it is clear to unenlightened readers too.
+
+It is about time this hurried throwing of half-baked patches at
+maintainers and seeing what sticks, stops!
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
 
 _______________________________________________
 kexec mailing list
