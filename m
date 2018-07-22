@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from duke.felloff.net ([216.126.196.34])
  by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fgv2C-0001Pd-1y
- for kexec@lists.infradead.org; Sat, 21 Jul 2018 16:47:10 +0000
-Message-ID: <1AD2A76B46A10571107915DE89919D3B@felloff.net>
-Subject: kexec support for plan9 on x86
-Date: Sat, 21 Jul 2018 18:46:42 +0200
+ id 1fhLwM-00029a-SL
+ for kexec@lists.infradead.org; Sun, 22 Jul 2018 21:30:56 +0000
+Message-ID: <2DF82DADC53F8AA5B4753BD4E47E728F@felloff.net>
+Subject: kexec support for plan9 continued
+Date: Sun, 22 Jul 2018 23:30:35 +0200
 From: cinap_lenrek@felloff.net
 MIME-Version: 1.0
 Content-Type: multipart/mixed;
-	boundary="upas-phqurfdcxavjghyqkvncqijeij"
+	boundary="upas-hsczwykhmkswciltqanpwzirtj"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,49 +23,38 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
 This is a multi-part message in MIME format.
---upas-phqurfdcxavjghyqkvncqijeij
+--upas-hsczwykhmkswciltqanpwzirtj
 Content-Disposition: inline
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 
-implemented support in kexec-tools to boot plan9 kernel last night
-(see attachment).
+good day.
 
-this is very basic support. it loads the kernel and provides it
-a memory map (from info->memory_range) in its config area and also
-has a optional parameter to pass additional plan9.ini configuration.
+previous mail seems to be stuck in moderation for some
+reason. can someone please check?
 
-but i have a couple of questions:
+anyway, theres some progress.
 
-who's in charge?
+i'v changed the 9front kernel to cope with missing acpi
+table pointer and use the memory map now looking for the
+RSD PTR structure in the ACPI reserved area.
 
-is here interest in supporting other OS than linux such as plan9
-in the official kexec-tools? or should i write my own plan9 loader
-for linux using the kexec_load() syscall directly?
+the linux framebuffer stuff appears to be an issue with
+the vmware framebuffer driver only. if i force it to use
+vesa i get a linear framebuffer with the physical address
+of it just fine. wrote a tool that generates the required
+boot parameter for plan9. still would be nice to have the
+framebuffer mode info in kexec itself for multiboot no?
+given that it already tries to do vga state manegement
+for x86 (--reset-vga).
 
-on uefi systems, the address of the RSDT is passed to the kernel
-in the config area as theres no known region to search for it.
-this is done in 9front by the bootloader (as we do not want to
-call back into crappy uefi code from our kernel once virtual
-memory and interrups are set up). but i'v not seen any of the
-kexec modules implement such a thing. so where do i get that
-information from? how does linux locate the acpi tables?
+attached is the plan9 support code.
 
-on a uefi systems, theres no cga text mode. when linear
-framebuffer was already set up. we pass this information in
-the config area (done by efi loader using the GOP). but i havnt
-seen any kexec module to implement passing the framebuffer
-configuration to the new kernel. so where do i get that
-that information in linux? this is also needed for proper
-multiboot support.
-
-the 9front kernel supports multiboot specification, but your
-multiboot loader expects all multiboot images to be ELF files.
-as well. what are you THINKING? :-)
+so is there interest in supporting this upstream?
 
 --
 cinap
---upas-phqurfdcxavjghyqkvncqijeij
+--upas-hsczwykhmkswciltqanpwzirtj
 Content-Disposition: attachment; filename=kexec-plan9-x86.c
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
@@ -182,14 +171,28 @@ static int
 e820conf(struct kexec_info *info)
 {
 	struct memory_range *r;
-	int n;
+	int n, t;
 
 	conf += snprintf(conf, confend-conf, "*e820=");
 	r = info->memory_range;
 	for(n = info->memory_ranges; n > 0; n--, r++){
-		if(r->type != RANGE_RAM)
+		switch(r->type){
+		default:
 			continue;
-		conf += snprintf(conf, confend-conf, "1 %#llx %#llx ", r->start, r->end+1);
+		case RANGE_RAM:
+			t = 1;
+			break;
+		case RANGE_RESERVED:
+			t = 2;
+			break;
+		case RANGE_ACPI:
+			t = 3;
+			break;
+		case RANGE_ACPI_NVS:
+			t = 4;
+			break;
+		}
+		conf += snprintf(conf, confend-conf, "%d %.16llx %.16llx ", t, r->start, r->end+1);
 		if(conf >= confend)
 			break;
 	}
@@ -278,7 +281,7 @@ int plan9_x86_load(int argc, char **argv, const char *buf, off_t len,
 	return 0;
 }
 
---upas-phqurfdcxavjghyqkvncqijeij
+--upas-hsczwykhmkswciltqanpwzirtj
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -289,5 +292,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---upas-phqurfdcxavjghyqkvncqijeij--
+--upas-hsczwykhmkswciltqanpwzirtj--
 
