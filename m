@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x241.google.com ([2607:f8b0:400e:c01::241])
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fhQ8c-0000sI-TV
- for kexec@lists.infradead.org; Mon, 23 Jul 2018 01:59:52 +0000
-Received: by mail-pl0-x241.google.com with SMTP id 94-v6so7540537ple.12
- for <kexec@lists.infradead.org>; Sun, 22 Jul 2018 18:59:38 -0700 (PDT)
+Received: from mail-pl0-x243.google.com ([2607:f8b0:400e:c01::243])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fhTXv-0005y5-9r
+ for kexec@lists.infradead.org; Mon, 23 Jul 2018 05:38:13 +0000
+Received: by mail-pl0-x243.google.com with SMTP id e11-v6so7763841plb.3
+ for <kexec@lists.infradead.org>; Sun, 22 Jul 2018 22:37:59 -0700 (PDT)
+Date: Mon, 23 Jul 2018 14:39:25 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v4 3/5] efi/arm: preserve early mapping of UEFI memory map
- longer for BGRT
-Date: Mon, 23 Jul 2018 10:57:30 +0900
-Message-Id: <20180723015732.24252-4-takahiro.akashi@linaro.org>
-In-Reply-To: <20180723015732.24252-1-takahiro.akashi@linaro.org>
-References: <20180723015732.24252-1-takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v11 11/15] arm64: kexec_file: add crash dump support
+Message-ID: <20180723053923.GN11258@linaro.org>
+References: <20180711074203.3019-1-takahiro.akashi@linaro.org>
+ <20180711074203.3019-12-takahiro.akashi@linaro.org>
+ <9efd0567-35dc-7435-74d6-1b540f3e5b9f@arm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <9efd0567-35dc-7435-74d6-1b540f3e5b9f@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,64 +23,118 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, lenb@kernel.org, ard.biesheuvel@linaro.org
-Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, al.stone@linaro.org, bhsharma@redhat.com, tbaicar@codeaurora.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, james.morse@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: James Morse <james.morse@arm.com>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-
-The BGRT code validates the contents of the table against the UEFI
-memory map, and so it expects it to be mapped when the code runs.
-
-On ARM, this is currently not the case, since we tear down the early
-mapping after efi_init() completes, and only create the permanent
-mapping in arm_enable_runtime_services(), which executes as an early
-initcall, but still leaves a window where the UEFI memory map is not
-mapped.
-
-So move the call to efi_memmap_unmap() from efi_init() to
-arm_enable_runtime_services().
-
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
----
- drivers/firmware/efi/arm-init.c    | 1 -
- drivers/firmware/efi/arm-runtime.c | 2 ++
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
-index b5214c143fee..388a929baf95 100644
---- a/drivers/firmware/efi/arm-init.c
-+++ b/drivers/firmware/efi/arm-init.c
-@@ -259,7 +259,6 @@ void __init efi_init(void)
- 
- 	reserve_regions();
- 	efi_esrt_init();
--	efi_memmap_unmap();
- 
- 	memblock_reserve(params.mmap & PAGE_MASK,
- 			 PAGE_ALIGN(params.mmap_size +
-diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/arm-runtime.c
-index 5889cbea60b8..59a8c0ec94d5 100644
---- a/drivers/firmware/efi/arm-runtime.c
-+++ b/drivers/firmware/efi/arm-runtime.c
-@@ -115,6 +115,8 @@ static int __init arm_enable_runtime_services(void)
- 		return 0;
- 	}
- 
-+	efi_memmap_unmap();
-+
- 	if (efi_runtime_disabled()) {
- 		pr_info("EFI runtime services will be disabled.\n");
- 		return 0;
--- 
-2.18.0
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgSmFtZXMsCgpPbiBXZWQsIEp1bCAxOCwgMjAxOCBhdCAwNTo1MDoyMlBNICswMTAwLCBKYW1l
+cyBNb3JzZSB3cm90ZToKPiBIaSBBa2FzaGksCj4gCj4gT24gMTEvMDcvMTggMDg6NDEsIEFLQVNI
+SSBUYWthaGlybyB3cm90ZToKPiA+IEVuYWJsaW5nIGNyYXNoIGR1bXAgKGtkdW1wKSBpbmNsdWRl
+cwo+ID4gKiBwcmVwYXJlIGNvbnRlbnRzIG9mIEVMRiBoZWFkZXIgb2YgYSBjb3JlIGR1bXAgZmls
+ZSwgL3Byb2Mvdm1jb3JlLAo+ID4gICB1c2luZyBjcmFzaF9wcmVwYXJlX2VsZjY0X2hlYWRlcnMo
+KSwgYW5kCj4gPiAqIGFkZCB0d28gZGV2aWNlIHRyZWUgcHJvcGVydGllcywgImxpbnV4LHVzYWJs
+ZS1tZW1vcnktcmFuZ2UiIGFuZAo+ID4gICAibGludXgsZWxmY29yZWhkciIsIHdoaWNoIHJlcHJl
+c2VudCByZXNwZWN0aXZlbHkgYSBtZW1vcnkgcmFuZ2UKPiA+ICAgdG8gYmUgdXNlZCBieSBjcmFz
+aCBkdW1wIGtlcm5lbCBhbmQgdGhlIGhlYWRlcidzIGxvY2F0aW9uCj4gCj4gPiBkaWZmIC0tZ2l0
+IGEvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9rZXhlYy5oIGIvYXJjaC9hcm02NC9pbmNsdWRlL2Fz
+bS9rZXhlYy5oCj4gPiBpbmRleCA2OTMzMzY5NGUzZTIuLmVlYjU3NjY5MjhiMCAxMDA2NDQKPiA+
+IC0tLSBhL2FyY2gvYXJtNjQvaW5jbHVkZS9hc20va2V4ZWMuaAo+ID4gKysrIGIvYXJjaC9hcm02
+NC9pbmNsdWRlL2FzbS9rZXhlYy5oCj4gPiBAQCAtOTksNiArOTksMTAgQEAgc3RhdGljIGlubGlu
+ZSB2b2lkIGNyYXNoX3Bvc3RfcmVzdW1lKHZvaWQpIHt9Cj4gPiAgc3RydWN0IGtpbWFnZV9hcmNo
+IHsKPiA+ICAJcGh5c19hZGRyX3QgZHRiX21lbTsKPiA+ICAJdm9pZCAqZHRiX2J1ZjsKPiA+ICsJ
+LyogQ29yZSBFTEYgaGVhZGVyIGJ1ZmZlciAqLwo+IAo+ID4gKwl2b2lkICplbGZfaGVhZGVyczsK
+PiAKPiBTaG91bGRuJ3QgdGhpcyBiZSBhIHBoeXNfYWRkcl90IGlmIGl0IGNvbWVzIGZyb20ga2J1
+Zi5tZW0/CgpEbyB5b3UgbWVhbiBlbGZfbG9hZF9hZGRyPyBZb3UncmUgcmlnaHQuCkJ1dCBrZXhl
+Y19idWYgZGVmaW5lZCBtZW0gYXMgdW5zaWduZWQgbG9uZyBhbmQgc28gSSdkIHJhdGhlciBjaGFu
+Z2UKZHRiX21lbSB0byB1bnNpZ25lZCBsb25nIGluc3RlYWQgb2YgZWxmX2xvYWRfYWRkciwgd2hp
+Y2ggd2lsbCBhbHNvIGJlCnJlbmFtZWQgdG8gZWxmX2hlYWRlcnNfbWVtIGZvciBjbGFyaWZpY2F0
+aW9uLgoKPiAoZHRiX21lbSBpcywgYW5kIHRoZXkgdHlwZSB0ZWxscyB1cyB3aGljaCB3YXkgcm91
+bmQgdGhlIHJ1bnRpbWUva2V4ZWMtdGltZQo+IHBvaW50ZXJzIGFyZSkKPiAKPiAKPiA+ICsJdW5z
+aWduZWQgbG9uZyBlbGZfaGVhZGVyc19zejsKPiA+ICsJdW5zaWduZWQgbG9uZyBlbGZfbG9hZF9h
+ZGRyOwo+ID4gIH07Cj4gPiAgCj4gPiAgLyoqCj4gCj4gCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9h
+cm02NC9rZXJuZWwvbWFjaGluZV9rZXhlY19maWxlLmMgYi9hcmNoL2FybTY0L2tlcm5lbC9tYWNo
+aW5lX2tleGVjX2ZpbGUuYwo+ID4gaW5kZXggYTBiNDRmZTE4Yjk1Li4yNjE1NjRkZjcyMTAgMTAw
+NjQ0Cj4gPiAtLS0gYS9hcmNoL2FybTY0L2tlcm5lbC9tYWNoaW5lX2tleGVjX2ZpbGUuYwo+ID4g
+KysrIGIvYXJjaC9hcm02NC9rZXJuZWwvbWFjaGluZV9rZXhlY19maWxlLmMKPiA+IEBAIC0xMzIs
+NiArMTczLDQ1IEBAIHN0YXRpYyBpbnQgc2V0dXBfZHRiKHN0cnVjdCBraW1hZ2UgKmltYWdlLAo+
+ID4gIAlyZXR1cm4gcmV0Owo+ID4gIH0KPiA+ICAKPiA+ICtzdGF0aWMgaW50IHByZXBhcmVfZWxm
+X2hlYWRlcnModm9pZCAqKmFkZHIsIHVuc2lnbmVkIGxvbmcgKnN6KQo+ID4gK3sKPiA+ICsJc3Ry
+dWN0IGNyYXNoX21lbSAqY21lbTsKPiA+ICsJdW5zaWduZWQgaW50IG5yX3JhbmdlczsKPiA+ICsJ
+aW50IHJldDsKPiA+ICsJdTY0IGk7Cj4gPiArCXBoeXNfYWRkcl90IHN0YXJ0LCBlbmQ7Cj4gCj4g
+PiArCW5yX3JhbmdlcyA9IDE7IC8qIGZvciBleGNsdXNpb24gb2YgY3Jhc2hrZXJuZWwgcmVnaW9u
+ICovCj4gPiArCWZvcl9lYWNoX21lbV9yYW5nZShpLCAmbWVtYmxvY2subWVtb3J5LCBOVUxMLCBO
+VU1BX05PX05PREUsIDAsCj4gPiArCQkJCQkJCSZzdGFydCwgJmVuZCwgTlVMTCkKPiAKPiBOaXQ6
+IGZsYWdzID0gTUVNQkxPQ0tfTk9ORT8gSnVzdCB0byBtYWtlIGl0IG9idmlvdXMgdGhpcyBpcyBo
+b3cgTUVNQkxPQ0tfTk9NQVAKPiByZWdpb25zIGFyZSB3ZWVkZWQgb3V0LgoKT0suCgo+IFRoaXMg
+aXMgZ29pbmcgdG8gZ2V0IGludGVyZXN0aW5nIGlmIHdlIGV2ZXIgc3VwcG9ydCBob3RwbHVnZ2Fi
+bGUgbWVtb3J5Li4uIGJ1dAo+IGl0IHdvcmtzIGZvciBub3cgYW5kIGltcGxpY2l0bHkgcmVtb3Zl
+cyB0aGUgbm9tYXAgcmVnaW9ucy4KPiAKPiAKPiA+ICsJCW5yX3JhbmdlcysrOwo+IAo+ID4gKwo+
+ID4gKwljbWVtID0ga21hbGxvYyhzaXplb2Yoc3RydWN0IGNyYXNoX21lbSkgKwo+ID4gKwkJCXNp
+emVvZihzdHJ1Y3QgY3Jhc2hfbWVtX3JhbmdlKSAqIG5yX3JhbmdlcywgR0ZQX0tFUk5FTCk7Cj4g
+PiArCWlmICghY21lbSkKPiA+ICsJCXJldHVybiAtRU5PTUVNOwo+ID4gKwo+ID4gKwljbWVtLT5t
+YXhfbnJfcmFuZ2VzID0gbnJfcmFuZ2VzOwo+ID4gKwljbWVtLT5ucl9yYW5nZXMgPSAwOwo+ID4g
+Kwlmb3JfZWFjaF9tZW1fcmFuZ2UoaSwgJm1lbWJsb2NrLm1lbW9yeSwgTlVMTCwgTlVNQV9OT19O
+T0RFLCAwLAo+ID4gKwkJCQkJCQkmc3RhcnQsICZlbmQsIE5VTEwpIHsKPiA+ICsJCWNtZW0tPnJh
+bmdlc1tjbWVtLT5ucl9yYW5nZXNdLnN0YXJ0ID0gc3RhcnQ7Cj4gPiArCQljbWVtLT5yYW5nZXNb
+Y21lbS0+bnJfcmFuZ2VzXS5lbmQgPSBlbmQgLSAxOwo+ID4gKwkJY21lbS0+bnJfcmFuZ2VzKys7
+Cj4gPiArCX0KPiA+ICsKPiA+ICsJLyogRXhjbHVkZSBjcmFzaGtlcm5lbCByZWdpb24gKi8KPiA+
+ICsJcmV0ID0gY3Jhc2hfZXhjbHVkZV9tZW1fcmFuZ2UoY21lbSwgY3Jhc2hrX3Jlcy5zdGFydCwg
+Y3Jhc2hrX3Jlcy5lbmQpOwo+IAo+IAo+ID4gKwlpZiAocmV0KQo+ID4gKwkJZ290byBvdXQ7Cj4g
+PiArCj4gPiArCXJldCA9ICBjcmFzaF9wcmVwYXJlX2VsZjY0X2hlYWRlcnMoY21lbSwgdHJ1ZSwg
+YWRkciwgc3opOwo+ID4gKwo+ID4gK291dDoKPiAKPiBOaXQ6IFlvdSBjb3VsZCBzYXZlIHRoZSBn
+b3RvIGlmIHlvdSB3cm90ZSB0aGlzIGFzOgo+IHwJaWYgKCFyZXQpCj4gfAkJcmV0ID0gY3Jhc2hf
+cHJlcGFyZV9lbGY2NF9oZWFkZXJzKGNtZW0sIHRydWUsIGFkZHIsIHN6KTsKCk9LLgoKPiA+ICsJ
+a2ZyZWUoY21lbSk7Cj4gPiArCXJldHVybiByZXQ7Cj4gPiArfQo+ID4gKwo+ID4gIGludCBsb2Fk
+X290aGVyX3NlZ21lbnRzKHN0cnVjdCBraW1hZ2UgKmltYWdlLAo+ID4gIAkJCXVuc2lnbmVkIGxv
+bmcga2VybmVsX2xvYWRfYWRkciwKPiA+ICAJCQl1bnNpZ25lZCBsb25nIGtlcm5lbF9zaXplLAo+
+ID4gQEAgLTEzOSwxMSArMjE5LDQzIEBAIGludCBsb2FkX290aGVyX3NlZ21lbnRzKHN0cnVjdCBr
+aW1hZ2UgKmltYWdlLAo+ID4gIAkJCWNoYXIgKmNtZGxpbmUsIHVuc2lnbmVkIGxvbmcgY21kbGlu
+ZV9sZW4pCj4gPiAgewo+ID4gIAlzdHJ1Y3Qga2V4ZWNfYnVmIGtidWY7Cj4gPiArCXZvaWQgKmhk
+cnNfYWRkcjsKPiA+ICsJdW5zaWduZWQgbG9uZyBoZHJzX3N6Owo+ID4gIAl1bnNpZ25lZCBsb25n
+IGluaXRyZF9sb2FkX2FkZHIgPSAwOwo+ID4gIAljaGFyICpkdGIgPSBOVUxMOwo+ID4gIAl1bnNp
+Z25lZCBsb25nIGR0Yl9sZW4gPSAwOwo+ID4gIAlpbnQgcmV0ID0gMDsKPiA+ICAKPiA+ICsJLyog
+bG9hZCBlbGYgY29yZSBoZWFkZXIgKi8KPiA+ICsJaWYgKGltYWdlLT50eXBlID09IEtFWEVDX1RZ
+UEVfQ1JBU0gpIHsKPiA+ICsJCXJldCA9IHByZXBhcmVfZWxmX2hlYWRlcnMoJmhkcnNfYWRkciwg
+JmhkcnNfc3opOwo+ID4gKwkJaWYgKHJldCkgewo+ID4gKwkJCXByX2VycigiUHJlcGFyaW5nIGVs
+ZiBjb3JlIGhlYWRlciBmYWlsZWRcbiIpOwo+ID4gKwkJCWdvdG8gb3V0X2VycjsKPiA+ICsJCX0K
+PiA+ICsKPiA+ICsJCWtidWYuaW1hZ2UgPSBpbWFnZTsKPiA+ICsJCWtidWYuYnVmZmVyID0gaGRy
+c19hZGRyOwo+ID4gKwkJa2J1Zi5idWZzeiA9IGhkcnNfc3o7Cj4gPiArCQlrYnVmLm1lbXN6ID0g
+aGRyc19zejsKPiAKPiA+ICsJCWtidWYuYnVmX2FsaWduID0gUEFHRV9TSVpFOwo+IAo+IFdob3Nl
+IFBBR0VfU0laRT8KPiAKPiBXb24ndCB0aGlzIGJyZWFrIGlmIHRoZSBrZHVtcCBrZXJuZWwgaXMg
+NjRLIHBhZ2VzLCBidXQgdGhlIGZpcnN0IGtlcm5lbCB1c2VzIDRLPwo+IFNob3VsZCB3ZSBjaGFu
+Z2UgdGhpcyB0byB0aGUgbGFyZ2VzdCBzdXBwb3J0ZWQgUEFHRV9TSVpFOiBTWl82NEs/CgpBaCwg
+eWVzLgoKPiA+ICsJCWtidWYuYnVmX21pbiA9IGNyYXNoa19yZXMuc3RhcnQ7Cj4gPiArCQlrYnVm
+LmJ1Zl9tYXggPSBjcmFzaGtfcmVzLmVuZCArIDE7Cj4gPiArCQlrYnVmLnRvcF9kb3duID0gdHJ1
+ZTsKPiA+ICsKPiA+ICsJCXJldCA9IGtleGVjX2FkZF9idWZmZXIoJmtidWYpOwo+ID4gKwkJaWYg
+KHJldCkgewo+ID4gKwkJCXZmcmVlKGhkcnNfYWRkcik7Cj4gPiArCQkJZ290byBvdXRfZXJyOwo+
+ID4gKwkJfQo+ID4gKwkJaW1hZ2UtPmFyY2guZWxmX2hlYWRlcnMgPSBoZHJzX2FkZHI7Cj4gPiAr
+CQlpbWFnZS0+YXJjaC5lbGZfaGVhZGVyc19zeiA9IGhkcnNfc3o7Cj4gPiArCQlpbWFnZS0+YXJj
+aC5lbGZfbG9hZF9hZGRyID0ga2J1Zi5tZW07Cj4gPiArCj4gPiArCQlwcl9kZWJ1ZygiTG9hZGVk
+IGVsZiBjb3JlIGhlYWRlciBhdCAweCVseCBidWZzej0weCVseCBtZW1zej0weCVseFxuIiwKPiA+
+ICsJCQkJIGltYWdlLT5hcmNoLmVsZl9sb2FkX2FkZHIsIGhkcnNfc3osIGhkcnNfc3opOwo+ID4g
+Kwl9Cj4gPiArCj4gPiAgCWtidWYuaW1hZ2UgPSBpbWFnZTsKPiA+ICAJLyogbm90IGFsbG9jYXRl
+IGFueXRoaW5nIGJlbG93IHRoZSBrZXJuZWwgKi8KPiA+ICAJa2J1Zi5idWZfbWluID0ga2VybmVs
+X2xvYWRfYWRkciArIGtlcm5lbF9zaXplOwo+IAo+IAo+IEkgdGhpbmsgdGhlIGluaXRyYW1mcyBj
+YW4gZXNjYXBlIHRoZSBjcmFzaCBrZXJuZWwgcmFuZ2UgYmVjYXVzZSB5b3UgYWRkIHRvIHRoZQo+
+IGJ1Zl9tYXggcmVnaW9uOgo+IHwJLyogd2l0aGluIDFHQi1hbGlnbmVkIHdpbmRvdyBvZiB1cCB0
+byAzMkdCIGluIHNpemUgKi8KPiB8CWtidWYuYnVmX21heCA9IHJvdW5kX2Rvd24oa2VybmVsX2xv
+YWRfYWRkciwgU1pfMUcpCj4gfAkJCQnigIMrICh1bnNpZ25lZCBsb25nKVNaXzFHICogMzI7CgpO
+byB3b3JyaWVzLgprZXhlY19hZGRfYnVmZmVyKCkgd2lsbCBsaW1pdCB0aGUgc2VhcmNoIG9ubHkg
+d2l0aGluIGNyYXNoa19yZXMgYW55d2F5LgoKT24gdGhlIG90aGVyIGhhbmQsIHRoZSBjb2RlOgo+
+ID4gKwlpZiAoaW1hZ2UtPnR5cGUgPT0gS0VYRUNfVFlQRV9DUkFTSCkgewogICAgICAgICAgICAg
+ICAgKHNuaXApCj4gPiArCQlrYnVmLmJ1Zl9taW4gPSBjcmFzaGtfcmVzLnN0YXJ0Owo+ID4gKwkJ
+a2J1Zi5idWZfbWF4ID0gY3Jhc2hrX3Jlcy5lbmQgKyAxOwpjYW4gYmUgbWlzbGVhZGluZy4gSSB3
+aWxsIGZpeCBpdCBhcyBmb2xsb3dzOgp8CQlrYnVmLmJ1Zl9taW4gPSBrZXJuZWxfbG9hZF9hZGRy
+ICsga2VybmVsX3NpemU7CnwJCWtidWYuYnVmX21heCA9IFVMT05HX01BWDsKKGFuZCBsaWtld2lz
+ZSwgd2lsbCBmaXggaW1hZ2VfbG9hZCgpLikKClRoYW5rIHlvdSBhZ2FpbiBmb3IgeW91ciB2YWx1
+YWJsZSBjb21tZW50cy4KQXJlIHlvdSByZXZpZXdpbmcgb3RoZXIgcGF0Y2hlcyBpbiBteSB2MTE/
+CklmIG5vdCwgSSB3aWxsIHBvc3QgdjEyIHRvbW9ycm93LgoKLVRha2FoaXJvIEFLQVNISQoKPiAK
+PiBJIHRoaW5rIHdlIG5lZWQgYSBoZWxwZXIgdG8gY2xhbXAgdGhlc2UgbWluL21heCByYW5nZXMg
+dG8gd2l0aGluIHRoZSBjcmFzaAo+IGtlcm5lbCByYW5nZSwgYXMgaXRzIG5lZWRzIGRvaW5nIGlu
+IGEgZmV3IHBsYWNlcy4KPiAKPiAKPiBUaGFua3MsCj4gCj4gSmFtZXMKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
+Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8va2V4ZWMK
