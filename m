@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x543.google.com ([2607:f8b0:4864:20::543])
+Received: from mail-pg1-x544.google.com ([2607:f8b0:4864:20::544])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fhQ8K-0001Jg-NN
- for kexec@lists.infradead.org; Mon, 23 Jul 2018 01:59:41 +0000
-Received: by mail-pg1-x543.google.com with SMTP id r5-v6so11060442pgv.0
- for <kexec@lists.infradead.org>; Sun, 22 Jul 2018 18:59:22 -0700 (PDT)
+ id 1fhQ8h-0001sS-EK
+ for kexec@lists.infradead.org; Mon, 23 Jul 2018 02:00:08 +0000
+Received: by mail-pg1-x544.google.com with SMTP id e6-v6so11058887pgv.2
+ for <kexec@lists.infradead.org>; Sun, 22 Jul 2018 18:59:45 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v4 2/5] drivers: acpi: add dependency of EFI for arm64
-Date: Mon, 23 Jul 2018 10:57:29 +0900
-Message-Id: <20180723015732.24252-3-takahiro.akashi@linaro.org>
+Subject: [PATCH v4 4/5] efi/arm: map UEFI memory map even w/o runtime services
+ enabled
+Date: Mon, 23 Jul 2018 10:57:31 +0900
+Message-Id: <20180723015732.24252-5-takahiro.akashi@linaro.org>
 In-Reply-To: <20180723015732.24252-1-takahiro.akashi@linaro.org>
 References: <20180723015732.24252-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,36 +28,58 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, lenb@kernel.org, ard.biesheuvel@linaro.org
 Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, graeme.gregory@linaro.org, al.stone@linaro.org, bhsharma@redhat.com, tbaicar@codeaurora.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-As Ard suggested, CONFIG_ACPI && !CONFIG_EFI doesn't make sense on arm64,
-while CONFIG_ACPI and CONFIG_CPU_BIG_ENDIAN doesn't make sense either.
+Under the current implementation, UEFI memory map will be mapped and made
+available in virtual mappings only if runtime services are enabled.
+But in a later patch, we want to use UEFI memory map in acpi_os_ioremap()
+to create mappings of ACPI tables using memory attributes described in
+UEFI memory map.
+See the following commit:
+    arm64: acpi: fix alignment fault in accessing ACPI tables
 
-As CONFIG_EFI already has a dependency of !CONFIG_CPU_BIG_ENDIAN, it is
-good enough to add a dependency of CONFIG_EFI to avoid any useless
-combination of configuration.
+So, as a first step, arm_enter_runtime_services() is modified, alongside
+Ard's patch[1], so that UEFI memory map will not be freed even if
+efi=noruntime.
 
-This bug, reported by Will, will be revealed when my patch series,
-"arm64: kexec,kdump: fix boot failures on acpi-only system," is applied
-and the kernel is built under allmodconfig.
+[1] https://marc.info/?l=linux-efi&m=152930773507524&w=2
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 ---
- drivers/acpi/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/efi/arm-runtime.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-index b533eeb6139d..15ab1daaa808 100644
---- a/drivers/acpi/Kconfig
-+++ b/drivers/acpi/Kconfig
-@@ -6,7 +6,7 @@
- menuconfig ACPI
- 	bool "ACPI (Advanced Configuration and Power Interface) Support"
- 	depends on !IA64_HP_SIM
--	depends on IA64 || X86 || ARM64
-+	depends on IA64 || X86 || (ARM64 && EFI)
- 	depends on PCI
- 	select PNP
- 	default y if (IA64 || X86)
+diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/arm-runtime.c
+index 59a8c0ec94d5..a00934d263c5 100644
+--- a/drivers/firmware/efi/arm-runtime.c
++++ b/drivers/firmware/efi/arm-runtime.c
+@@ -117,6 +117,13 @@ static int __init arm_enable_runtime_services(void)
+ 
+ 	efi_memmap_unmap();
+ 
++	mapsize = efi.memmap.desc_size * efi.memmap.nr_map;
++
++	if (efi_memmap_init_late(efi.memmap.phys_map, mapsize)) {
++		pr_err("Failed to remap EFI memory map\n");
++		return 0;
++	}
++
+ 	if (efi_runtime_disabled()) {
+ 		pr_info("EFI runtime services will be disabled.\n");
+ 		return 0;
+@@ -129,13 +136,6 @@ static int __init arm_enable_runtime_services(void)
+ 
+ 	pr_info("Remapping and enabling EFI services.\n");
+ 
+-	mapsize = efi.memmap.desc_size * efi.memmap.nr_map;
+-
+-	if (efi_memmap_init_late(efi.memmap.phys_map, mapsize)) {
+-		pr_err("Failed to remap EFI memory map\n");
+-		return -ENOMEM;
+-	}
+-
+ 	if (!efi_virtmap_init()) {
+ 		pr_err("UEFI virtual mapping missing or invalid -- runtime services will not be available\n");
+ 		return -ENOMEM;
 -- 
 2.18.0
 
