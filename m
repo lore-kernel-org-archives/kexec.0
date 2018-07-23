@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fhdzG-0002Ie-Sf
- for kexec@lists.infradead.org; Mon, 23 Jul 2018 16:47:09 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH 1/2] arm64: Get 'info->page_offset' from PT_LOAD
- segments to support KASLR boot cases
-Date: Mon, 23 Jul 2018 16:45:20 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC035590BC@BPXM09GP.gisp.nec.co.jp>
-References: <1531979021-31780-1-git-send-email-bhsharma@redhat.com>
- <1531979021-31780-2-git-send-email-bhsharma@redhat.com>
- <bf9dee4f-852d-fc6b-999a-02ea99dceb4d@redhat.com>
- <CACi5LpOKQ9TX9yWus6i9ZG_Ha8A+vPqs09o1Jh0B9O5vYED9BA@mail.gmail.com>
-In-Reply-To: <CACi5LpOKQ9TX9yWus6i9ZG_Ha8A+vPqs09o1Jh0B9O5vYED9BA@mail.gmail.com>
-Content-Language: en-US
+Subject: Re: [PATCH v11 11/15] arm64: kexec_file: add crash dump support
+References: <20180711074203.3019-1-takahiro.akashi@linaro.org>
+ <20180711074203.3019-12-takahiro.akashi@linaro.org>
+ <9efd0567-35dc-7435-74d6-1b540f3e5b9f@arm.com>
+ <20180723053923.GN11258@linaro.org>
+From: James Morse <james.morse@arm.com>
+Message-ID: <8600c940-158a-f64f-8271-32f8fb40f198@arm.com>
+Date: Mon, 23 Jul 2018 18:04:00 +0100
 MIME-Version: 1.0
+In-Reply-To: <20180723053923.GN11258@linaro.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,195 +18,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: kexec mailing list <kexec@lists.infradead.org>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-Hi Bhupesh,
-
-On 7/22/2018 3:44 AM, Bhupesh Sharma wrote:
-> Hello Kazu,
-> 
-> Many thanks for your review comments.
-> 
-> On Sat, Jul 21, 2018 at 3:18 AM, Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
->>
->> On 7/19/2018 1:43 AM, Bhupesh Sharma wrote:
->>> The existing methodology to obtain 'info->page_offset' from reading
->>> _stext symbol (from kallsyms) doesn't work well in KASLR boot cases on
->>> arm64 machines as the PAGE_OFFSET (or the virtual address which
->>> indicates the start of the linear region) can be randomized as well
->>> on basis of the kaslr-seed.
->>>
->>> Since the value of PAGE_OFFSET inside the kernel is randomized in such
->>> cases and there is no existing mechanism of conveying this value from
->>> kernel-space to user-space, so we can use the method used by archs like
->>> x86_64 to generate the 'info->page_offset' value from the PT_LOAD
->>> segments by subtracting the phy_addr from virt_addr of a PT_LOAD
->>> segment.
->>>
->>> This approach works fine both with KASLR and non-KASLR boot cases.
->>>
->>> I tested this on my qualcomm-amberwing board. Here are some logs from
->>> the KASLR boot cases:
->>>
->>> - Verify that the EFI firmware supports 'kaslr-seed':
->>>
->>>       chosen {
->>>               kaslr-seed = <0x0 0x0>;
->>>               <..snip..>
->>>       };
->>>
->>> - Verify that '--mem-usage' works well after this fix as well (I used
->>>   kernel 4.18.0-rc4+ for my checks):
->>>
->>> The kernel version is not supported.
->>> The makedumpfile operation may be incomplete.
->>>
->>> TYPE          PAGES                   EXCLUDABLE      DESCRIPTION
->>> ----------------------------------------------------------------------
->>> ZERO          4396                    yes             Pages filled
->>> with zero
->>> NON_PRI_CACHE 27859                   yes             Cache pages
->>> without private flag
->>> PRI_CACHE     18490                   yes             Cache pages with
->>> private flag
->>> USER          2728                    yes             User process
->>> pages
->>> FREE          1465848                 yes             Free pages
->>> KERN_DATA     18537                   no              Dumpable kernel
->>> data
->>>
->>> page size:            65536
->>> Total pages on system:        1537858
->>> Total size on system: 100785061888     Byte
->>>
->>> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
->>> ---
->>>  arch/arm64.c   | 23 ++++++++++++++++++-----
->>>  common.h       |  1 +
->>>  makedumpfile.h |  1 +
->>>  3 files changed, 20 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/arch/arm64.c b/arch/arm64.c
->>> index 2fd3e1874376..9e8c77c76935 100644
->>> --- a/arch/arm64.c
->>> +++ b/arch/arm64.c
->>> @@ -265,6 +265,9 @@ get_xen_info_arm64(void)
->>>  int
->>>  get_versiondep_info_arm64(void)
->>>  {
->>> +     int i;
->>> +     unsigned long long phys_start;
->>> +     unsigned long long virt_start;
->>>       ulong _stext;
->>>
->>>       _stext = get_stext_symbol();
->>> @@ -289,12 +292,22 @@ get_versiondep_info_arm64(void)
->>>               return FALSE;
->>>       }
->>>
->>
->>> -     info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
->>> -
->>> -     DEBUG_MSG("page_offset=%lx, va_bits=%d\n", info->page_offset,
->>> -                     va_bits);
->>
->> According to makedumpfile commit 4944f93484 ("x86_64: Calculate page_offset
->> in case of re-filtering/sadump/virsh dump"), in case of re-filtering,
->> we don't have any PT_LOAD.  So, with this patch, we cannot re-filter
->> dump file on arm64 system?
->>
->> If we cannot, is it better to leave the above behind the following
->> pt_load section for re-filtering non-KASLR dump?
->>
->>> +     if (get_num_pt_loads()) {
->>> +             for (i = 0;
->>> +                     get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
->>> +                     i++) {
->>> +                     if (virt_start != NOT_KV_ADDR
->>> +                                     && virt_start < __START_KERNEL_map
->>> +                                     && phys_start != NOT_PADDR && phys_start != NOT_PADDR_ARM64) {
->>> +                             info->page_offset = virt_start - phys_start;
->>> +                             DEBUG_MSG("info->page_offset: %lx, VA_BITS: %d\n",
->>> +                                             info->page_offset, va_bits);
->>> +                             return TRUE;
->>> +                     }
->>> +             }
->>> +     }
->>
->> I'll adjust some indents for readability.
->>
->>>
->>> -     return TRUE;
->>> +     return FALSE;
->>>  }
->>>
->>>  /*
->>> diff --git a/common.h b/common.h
->>> index 6e2f657a79c7..a8181777dbb7 100644
->>> --- a/common.h
->>> +++ b/common.h
->>> @@ -48,6 +48,7 @@
->>>  #define NOT_MEMMAP_ADDR      (0x0)
->>>  #define NOT_KV_ADDR  (0x0)
->>>  #define NOT_PADDR    (ULONGLONG_MAX)
->>
->>> +#define NOT_PADDR_ARM64      (0x0000000010a80000UL)
->>
->> I think that this should not be in common.h, because it's not for
->> arch-specific definitions, so I'll move it to makedumpfile.h.
->>
->>>  #define BADADDR      ((ulong)(-1))
->>>
->>>  #endif  /* COMMON_H */
->>> diff --git a/makedumpfile.h b/makedumpfile.h
->>> index 5ff94b8e4ac6..5297279f0f3b 100644
->>> --- a/makedumpfile.h
->>> +++ b/makedumpfile.h
->>> @@ -2020,6 +2020,7 @@ struct domain_list {
->>>  #define MFNS_PER_FRAME               (info->page_size / sizeof(unsigned long))
->>>
->>>  #ifdef __aarch64__
->>> +#define __START_KERNEL_map           (0xffffffff80000000UL)
->>
->> This #ifdef here is for the definitions related to Xen extraction.
->> I'll move it to the same place as the above.
->>
->>>  unsigned long long kvtop_xen_arm64(unsigned long kvaddr);
->>>  #define kvtop_xen(X) kvtop_xen_arm64(X)
->>>  #endif /* aarch64 */
->>>
->>
->> I attached a patch that was applied my suggestions.
->> How about it?
-> 
-> I agree. The patch looks good with the suggested changes.
-> Please go ahead and feel free to apply the modified patch.
-
-OK, I'll apply it.
-
-With respect to the 2/2 patch, I'm waiting for the kernel patch
-to be merged.
-
-If need be, I can apply the 1/2 patch separately from the 2/2 patch,
-because I think they are not directly connected with each other.
-
-Thanks,
-Kazu
-
-p.s. it seems that I cannot send emails to gmail for now,
-so dropped your gmail address. sorry for the inconvenience.
-
-> 
-> Thanks a lot for your help.
-> Regards,
-> Bhupesh
->
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgQWthc2hpLAoKT24gMjMvMDcvMTggMDY6MzksIEFLQVNISSBUYWthaGlybyB3cm90ZToKPiBP
+biBXZWQsIEp1bCAxOCwgMjAxOCBhdCAwNTo1MDoyMlBNICswMTAwLCBKYW1lcyBNb3JzZSB3cm90
+ZToKPj4gT24gMTEvMDcvMTggMDg6NDEsIEFLQVNISSBUYWthaGlybyB3cm90ZToKPj4+IEVuYWJs
+aW5nIGNyYXNoIGR1bXAgKGtkdW1wKSBpbmNsdWRlcwo+Pj4gKiBwcmVwYXJlIGNvbnRlbnRzIG9m
+IEVMRiBoZWFkZXIgb2YgYSBjb3JlIGR1bXAgZmlsZSwgL3Byb2Mvdm1jb3JlLAo+Pj4gICB1c2lu
+ZyBjcmFzaF9wcmVwYXJlX2VsZjY0X2hlYWRlcnMoKSwgYW5kCj4+PiAqIGFkZCB0d28gZGV2aWNl
+IHRyZWUgcHJvcGVydGllcywgImxpbnV4LHVzYWJsZS1tZW1vcnktcmFuZ2UiIGFuZAo+Pj4gICAi
+bGludXgsZWxmY29yZWhkciIsIHdoaWNoIHJlcHJlc2VudCByZXNwZWN0aXZlbHkgYSBtZW1vcnkg
+cmFuZ2UKPj4+ICAgdG8gYmUgdXNlZCBieSBjcmFzaCBkdW1wIGtlcm5lbCBhbmQgdGhlIGhlYWRl
+cidzIGxvY2F0aW9uCj4+Cj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9r
+ZXhlYy5oIGIvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9rZXhlYy5oCj4+PiBpbmRleCA2OTMzMzY5
+NGUzZTIuLmVlYjU3NjY5MjhiMCAxMDA2NDQKPj4+IC0tLSBhL2FyY2gvYXJtNjQvaW5jbHVkZS9h
+c20va2V4ZWMuaAo+Pj4gKysrIGIvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9rZXhlYy5oCj4+PiBA
+QCAtOTksNiArOTksMTAgQEAgc3RhdGljIGlubGluZSB2b2lkIGNyYXNoX3Bvc3RfcmVzdW1lKHZv
+aWQpIHt9Cj4+PiAgc3RydWN0IGtpbWFnZV9hcmNoIHsKPj4+ICAJcGh5c19hZGRyX3QgZHRiX21l
+bTsKPj4+ICAJdm9pZCAqZHRiX2J1ZjsKPj4+ICsJLyogQ29yZSBFTEYgaGVhZGVyIGJ1ZmZlciAq
+Lwo+Pgo+Pj4gKwl2b2lkICplbGZfaGVhZGVyczsKPj4KPj4gU2hvdWxkbid0IHRoaXMgYmUgYSBw
+aHlzX2FkZHJfdCBpZiBpdCBjb21lcyBmcm9tIGtidWYubWVtPwo+IAo+IERvIHlvdSBtZWFuIGVs
+Zl9sb2FkX2FkZHI/IFlvdSdyZSByaWdodC4KPiBCdXQga2V4ZWNfYnVmIGRlZmluZWQgbWVtIGFz
+IHVuc2lnbmVkIGxvbmcgYW5kIHNvIEknZCByYXRoZXIgY2hhbmdlCj4gZHRiX21lbSB0byB1bnNp
+Z25lZCBsb25nIGluc3RlYWQgb2YgZWxmX2xvYWRfYWRkciwgd2hpY2ggd2lsbCBhbHNvIGJlCj4g
+cmVuYW1lZCB0byBlbGZfaGVhZGVyc19tZW0gZm9yIGNsYXJpZmljYXRpb24uCgo+PiAoZHRiX21l
+bSBpcywgYW5kIHRoZXkgdHlwZSB0ZWxscyB1cyB3aGljaCB3YXkgcm91bmQgdGhlIHJ1bnRpbWUv
+a2V4ZWMtdGltZQo+PiBwb2ludGVycyBhcmUpCgpNeSBwcmVmZXJlbmNlIHdvdWxkIGJlIGZvciBw
+aHlzaWNhbCBhZGRyZXNzZXMgdG8gYWx3YXlzIGJlIHBoeXNfYWRkcl90LCBidXQgYXMKbG9uZyBh
+cyB3ZSBjYW4gZWFzaWx5IHNwb3QgdGhlIGRpZmZlcmVuY2Uga2V4ZWMtdGltZSB2ZXJzdXMgcnVu
+dGltZSBhZGRyZXNzZXMsCml0IHdpbGwgc2F2ZSBidWdzIHdoZXJlIHdlIHVzZSB0aGUgd3Jvbmcg
+b25lLgoKCj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9rZXJuZWwvbWFjaGluZV9rZXhlY19m
+aWxlLmMgYi9hcmNoL2FybTY0L2tlcm5lbC9tYWNoaW5lX2tleGVjX2ZpbGUuYwo+Pj4gaW5kZXgg
+YTBiNDRmZTE4Yjk1Li4yNjE1NjRkZjcyMTAgMTAwNjQ0Cj4+PiAtLS0gYS9hcmNoL2FybTY0L2tl
+cm5lbC9tYWNoaW5lX2tleGVjX2ZpbGUuYwo+Pj4gKysrIGIvYXJjaC9hcm02NC9rZXJuZWwvbWFj
+aGluZV9rZXhlY19maWxlLmMKPj4+IEBAIC0xMzIsNiArMTczLDQ1IEBAIHN0YXRpYyBpbnQgc2V0
+dXBfZHRiKHN0cnVjdCBraW1hZ2UgKmltYWdlLAoKPj4+ICsJCWtidWYuYnVmX21pbiA9IGNyYXNo
+a19yZXMuc3RhcnQ7Cj4+PiArCQlrYnVmLmJ1Zl9tYXggPSBjcmFzaGtfcmVzLmVuZCArIDE7Cj4+
+PiArCQlrYnVmLnRvcF9kb3duID0gdHJ1ZTsKPj4+ICsKPj4+ICsJCXJldCA9IGtleGVjX2FkZF9i
+dWZmZXIoJmtidWYpOwo+Pj4gKwkJaWYgKHJldCkgewo+Pj4gKwkJCXZmcmVlKGhkcnNfYWRkcik7
+Cj4+PiArCQkJZ290byBvdXRfZXJyOwo+Pj4gKwkJfQo+Pj4gKwkJaW1hZ2UtPmFyY2guZWxmX2hl
+YWRlcnMgPSBoZHJzX2FkZHI7Cj4+PiArCQlpbWFnZS0+YXJjaC5lbGZfaGVhZGVyc19zeiA9IGhk
+cnNfc3o7Cj4+PiArCQlpbWFnZS0+YXJjaC5lbGZfbG9hZF9hZGRyID0ga2J1Zi5tZW07Cj4+PiAr
+Cj4+PiArCQlwcl9kZWJ1ZygiTG9hZGVkIGVsZiBjb3JlIGhlYWRlciBhdCAweCVseCBidWZzej0w
+eCVseCBtZW1zej0weCVseFxuIiwKPj4+ICsJCQkJIGltYWdlLT5hcmNoLmVsZl9sb2FkX2FkZHIs
+IGhkcnNfc3osIGhkcnNfc3opOwo+Pj4gKwl9Cj4+PiArCj4+PiAgCWtidWYuaW1hZ2UgPSBpbWFn
+ZTsKPj4+ICAJLyogbm90IGFsbG9jYXRlIGFueXRoaW5nIGJlbG93IHRoZSBrZXJuZWwgKi8KPj4+
+ICAJa2J1Zi5idWZfbWluID0ga2VybmVsX2xvYWRfYWRkciArIGtlcm5lbF9zaXplOwoKPj4gSSB0
+aGluayB0aGUgaW5pdHJhbWZzIGNhbiBlc2NhcGUgdGhlIGNyYXNoIGtlcm5lbCByYW5nZSBiZWNh
+dXNlIHlvdSBhZGQgdG8gdGhlCj4+IGJ1Zl9tYXggcmVnaW9uOgo+PiB8CS8qIHdpdGhpbiAxR0It
+YWxpZ25lZCB3aW5kb3cgb2YgdXAgdG8gMzJHQiBpbiBzaXplICovCj4+IHwJa2J1Zi5idWZfbWF4
+ID0gcm91bmRfZG93bihrZXJuZWxfbG9hZF9hZGRyLCBTWl8xRykKPj4gfAkJCQnigIMrICh1bnNp
+Z25lZCBsb25nKVNaXzFHICogMzI7Cj4gCj4gTm8gd29ycmllcy4KPiBrZXhlY19hZGRfYnVmZmVy
+KCkgd2lsbCBsaW1pdCB0aGUgc2VhcmNoIG9ubHkgd2l0aGluIGNyYXNoa19yZXMgYW55d2F5LgoK
+dmlhIGFyY2hfa2V4ZWNfd2Fsa19tZW0oKT8gR290IGl0LgoKQnV0IHN0cmFuZ2VseSB0aGUgYnVm
+X21pbiBhbmQgYnVmX21heCBzdGlsbCBtYXR0ZXIgYmVjYXVzZQpsb2NhdGVfbWVtX2hvbGVfY2Fs
+bGJhY2soKSB1c2VzIHRoZW0uCgoKPiBBcmUgeW91IHJldmlld2luZyBvdGhlciBwYXRjaGVzIGlu
+IG15IHYxMT8KPiBJZiBub3QsIEkgd2lsbCBwb3N0IHYxMiB0b21vcnJvdy4KCk5vLCAoSSB0cnkg
+dG8gYmF0Y2ggcmVwbGllcyB0byBhdm9pZCB0aGF0IGhhcHBlbmluZykuCkknbSByZWFkaW5nIHVw
+IG9uIFNlY3VyZS1ib290IGFuZCB0cnlpbmcgdG8gdGVzdCB0aGUgcGVfdmVyaWZpY2F0aW9uIHN0
+dWZmLi4uCgoKVGhhbmtzLAoKSmFtZXMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
