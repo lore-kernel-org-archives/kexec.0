@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v11 11/15] arm64: kexec_file: add crash dump support
-References: <20180711074203.3019-1-takahiro.akashi@linaro.org>
- <20180711074203.3019-12-takahiro.akashi@linaro.org>
- <9efd0567-35dc-7435-74d6-1b540f3e5b9f@arm.com>
- <20180723053923.GN11258@linaro.org>
+Subject: Re: [PATCH] arm64, kaslr: export offset in VMCOREINFO ELF notes
+References: <1531949864-27447-1-git-send-email-bhsharma@redhat.com>
+ <d8959ca1-65a1-f59c-bfc4-b048c75add26@arm.com>
+ <CACi5LpOa-BMRSTShS019DDv7MoxNfpnnsqjwR3z13GZC49NrSA@mail.gmail.com>
 From: James Morse <james.morse@arm.com>
-Message-ID: <8600c940-158a-f64f-8271-32f8fb40f198@arm.com>
-Date: Mon, 23 Jul 2018 18:04:00 +0100
+Message-ID: <9c4d7c8d-3f0b-ff2f-68e8-03638a5fe2a4@arm.com>
+Date: Mon, 23 Jul 2018 18:05:47 +0100
 MIME-Version: 1.0
-In-Reply-To: <20180723053923.GN11258@linaro.org>
+In-Reply-To: <CACi5LpOa-BMRSTShS019DDv7MoxNfpnnsqjwR3z13GZC49NrSA@mail.gmail.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -18,69 +17,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-SGkgQWthc2hpLAoKT24gMjMvMDcvMTggMDY6MzksIEFLQVNISSBUYWthaGlybyB3cm90ZToKPiBP
-biBXZWQsIEp1bCAxOCwgMjAxOCBhdCAwNTo1MDoyMlBNICswMTAwLCBKYW1lcyBNb3JzZSB3cm90
-ZToKPj4gT24gMTEvMDcvMTggMDg6NDEsIEFLQVNISSBUYWthaGlybyB3cm90ZToKPj4+IEVuYWJs
-aW5nIGNyYXNoIGR1bXAgKGtkdW1wKSBpbmNsdWRlcwo+Pj4gKiBwcmVwYXJlIGNvbnRlbnRzIG9m
-IEVMRiBoZWFkZXIgb2YgYSBjb3JlIGR1bXAgZmlsZSwgL3Byb2Mvdm1jb3JlLAo+Pj4gICB1c2lu
-ZyBjcmFzaF9wcmVwYXJlX2VsZjY0X2hlYWRlcnMoKSwgYW5kCj4+PiAqIGFkZCB0d28gZGV2aWNl
-IHRyZWUgcHJvcGVydGllcywgImxpbnV4LHVzYWJsZS1tZW1vcnktcmFuZ2UiIGFuZAo+Pj4gICAi
-bGludXgsZWxmY29yZWhkciIsIHdoaWNoIHJlcHJlc2VudCByZXNwZWN0aXZlbHkgYSBtZW1vcnkg
-cmFuZ2UKPj4+ICAgdG8gYmUgdXNlZCBieSBjcmFzaCBkdW1wIGtlcm5lbCBhbmQgdGhlIGhlYWRl
-cidzIGxvY2F0aW9uCj4+Cj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9r
-ZXhlYy5oIGIvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9rZXhlYy5oCj4+PiBpbmRleCA2OTMzMzY5
-NGUzZTIuLmVlYjU3NjY5MjhiMCAxMDA2NDQKPj4+IC0tLSBhL2FyY2gvYXJtNjQvaW5jbHVkZS9h
-c20va2V4ZWMuaAo+Pj4gKysrIGIvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9rZXhlYy5oCj4+PiBA
-QCAtOTksNiArOTksMTAgQEAgc3RhdGljIGlubGluZSB2b2lkIGNyYXNoX3Bvc3RfcmVzdW1lKHZv
-aWQpIHt9Cj4+PiAgc3RydWN0IGtpbWFnZV9hcmNoIHsKPj4+ICAJcGh5c19hZGRyX3QgZHRiX21l
-bTsKPj4+ICAJdm9pZCAqZHRiX2J1ZjsKPj4+ICsJLyogQ29yZSBFTEYgaGVhZGVyIGJ1ZmZlciAq
-Lwo+Pgo+Pj4gKwl2b2lkICplbGZfaGVhZGVyczsKPj4KPj4gU2hvdWxkbid0IHRoaXMgYmUgYSBw
-aHlzX2FkZHJfdCBpZiBpdCBjb21lcyBmcm9tIGtidWYubWVtPwo+IAo+IERvIHlvdSBtZWFuIGVs
-Zl9sb2FkX2FkZHI/IFlvdSdyZSByaWdodC4KPiBCdXQga2V4ZWNfYnVmIGRlZmluZWQgbWVtIGFz
-IHVuc2lnbmVkIGxvbmcgYW5kIHNvIEknZCByYXRoZXIgY2hhbmdlCj4gZHRiX21lbSB0byB1bnNp
-Z25lZCBsb25nIGluc3RlYWQgb2YgZWxmX2xvYWRfYWRkciwgd2hpY2ggd2lsbCBhbHNvIGJlCj4g
-cmVuYW1lZCB0byBlbGZfaGVhZGVyc19tZW0gZm9yIGNsYXJpZmljYXRpb24uCgo+PiAoZHRiX21l
-bSBpcywgYW5kIHRoZXkgdHlwZSB0ZWxscyB1cyB3aGljaCB3YXkgcm91bmQgdGhlIHJ1bnRpbWUv
-a2V4ZWMtdGltZQo+PiBwb2ludGVycyBhcmUpCgpNeSBwcmVmZXJlbmNlIHdvdWxkIGJlIGZvciBw
-aHlzaWNhbCBhZGRyZXNzZXMgdG8gYWx3YXlzIGJlIHBoeXNfYWRkcl90LCBidXQgYXMKbG9uZyBh
-cyB3ZSBjYW4gZWFzaWx5IHNwb3QgdGhlIGRpZmZlcmVuY2Uga2V4ZWMtdGltZSB2ZXJzdXMgcnVu
-dGltZSBhZGRyZXNzZXMsCml0IHdpbGwgc2F2ZSBidWdzIHdoZXJlIHdlIHVzZSB0aGUgd3Jvbmcg
-b25lLgoKCj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9rZXJuZWwvbWFjaGluZV9rZXhlY19m
-aWxlLmMgYi9hcmNoL2FybTY0L2tlcm5lbC9tYWNoaW5lX2tleGVjX2ZpbGUuYwo+Pj4gaW5kZXgg
-YTBiNDRmZTE4Yjk1Li4yNjE1NjRkZjcyMTAgMTAwNjQ0Cj4+PiAtLS0gYS9hcmNoL2FybTY0L2tl
-cm5lbC9tYWNoaW5lX2tleGVjX2ZpbGUuYwo+Pj4gKysrIGIvYXJjaC9hcm02NC9rZXJuZWwvbWFj
-aGluZV9rZXhlY19maWxlLmMKPj4+IEBAIC0xMzIsNiArMTczLDQ1IEBAIHN0YXRpYyBpbnQgc2V0
-dXBfZHRiKHN0cnVjdCBraW1hZ2UgKmltYWdlLAoKPj4+ICsJCWtidWYuYnVmX21pbiA9IGNyYXNo
-a19yZXMuc3RhcnQ7Cj4+PiArCQlrYnVmLmJ1Zl9tYXggPSBjcmFzaGtfcmVzLmVuZCArIDE7Cj4+
-PiArCQlrYnVmLnRvcF9kb3duID0gdHJ1ZTsKPj4+ICsKPj4+ICsJCXJldCA9IGtleGVjX2FkZF9i
-dWZmZXIoJmtidWYpOwo+Pj4gKwkJaWYgKHJldCkgewo+Pj4gKwkJCXZmcmVlKGhkcnNfYWRkcik7
-Cj4+PiArCQkJZ290byBvdXRfZXJyOwo+Pj4gKwkJfQo+Pj4gKwkJaW1hZ2UtPmFyY2guZWxmX2hl
-YWRlcnMgPSBoZHJzX2FkZHI7Cj4+PiArCQlpbWFnZS0+YXJjaC5lbGZfaGVhZGVyc19zeiA9IGhk
-cnNfc3o7Cj4+PiArCQlpbWFnZS0+YXJjaC5lbGZfbG9hZF9hZGRyID0ga2J1Zi5tZW07Cj4+PiAr
-Cj4+PiArCQlwcl9kZWJ1ZygiTG9hZGVkIGVsZiBjb3JlIGhlYWRlciBhdCAweCVseCBidWZzej0w
-eCVseCBtZW1zej0weCVseFxuIiwKPj4+ICsJCQkJIGltYWdlLT5hcmNoLmVsZl9sb2FkX2FkZHIs
-IGhkcnNfc3osIGhkcnNfc3opOwo+Pj4gKwl9Cj4+PiArCj4+PiAgCWtidWYuaW1hZ2UgPSBpbWFn
-ZTsKPj4+ICAJLyogbm90IGFsbG9jYXRlIGFueXRoaW5nIGJlbG93IHRoZSBrZXJuZWwgKi8KPj4+
-ICAJa2J1Zi5idWZfbWluID0ga2VybmVsX2xvYWRfYWRkciArIGtlcm5lbF9zaXplOwoKPj4gSSB0
-aGluayB0aGUgaW5pdHJhbWZzIGNhbiBlc2NhcGUgdGhlIGNyYXNoIGtlcm5lbCByYW5nZSBiZWNh
-dXNlIHlvdSBhZGQgdG8gdGhlCj4+IGJ1Zl9tYXggcmVnaW9uOgo+PiB8CS8qIHdpdGhpbiAxR0It
-YWxpZ25lZCB3aW5kb3cgb2YgdXAgdG8gMzJHQiBpbiBzaXplICovCj4+IHwJa2J1Zi5idWZfbWF4
-ID0gcm91bmRfZG93bihrZXJuZWxfbG9hZF9hZGRyLCBTWl8xRykKPj4gfAkJCQnigIMrICh1bnNp
-Z25lZCBsb25nKVNaXzFHICogMzI7Cj4gCj4gTm8gd29ycmllcy4KPiBrZXhlY19hZGRfYnVmZmVy
-KCkgd2lsbCBsaW1pdCB0aGUgc2VhcmNoIG9ubHkgd2l0aGluIGNyYXNoa19yZXMgYW55d2F5LgoK
-dmlhIGFyY2hfa2V4ZWNfd2Fsa19tZW0oKT8gR290IGl0LgoKQnV0IHN0cmFuZ2VseSB0aGUgYnVm
-X21pbiBhbmQgYnVmX21heCBzdGlsbCBtYXR0ZXIgYmVjYXVzZQpsb2NhdGVfbWVtX2hvbGVfY2Fs
-bGJhY2soKSB1c2VzIHRoZW0uCgoKPiBBcmUgeW91IHJldmlld2luZyBvdGhlciBwYXRjaGVzIGlu
-IG15IHYxMT8KPiBJZiBub3QsIEkgd2lsbCBwb3N0IHYxMiB0b21vcnJvdy4KCk5vLCAoSSB0cnkg
-dG8gYmF0Y2ggcmVwbGllcyB0byBhdm9pZCB0aGF0IGhhcHBlbmluZykuCkknbSByZWFkaW5nIHVw
-IG9uIFNlY3VyZS1ib290IGFuZCB0cnlpbmcgdG8gdGVzdCB0aGUgcGVfdmVyaWZpY2F0aW9uIHN0
-dWZmLi4uCgoKVGhhbmtzLAoKSmFtZXMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hi Bhupesh,
+
+(CC: +mips list, looks like mips is missing vmcore's KERNELOFFSET too.
+Start of this thread: https://lkml.org/lkml/2018/7/18/951 )
+
+On 19/07/18 15:55, Bhupesh Sharma wrote:
+> On Thu, Jul 19, 2018 at 5:01 PM, James Morse <james.morse@arm.com> wrote:
+>> On 18/07/18 22:37, Bhupesh Sharma wrote:
+>>> Include KASLR offset in VMCOREINFO ELF notes to assist in debugging.
+>>>
+>>> makedumpfile user-space utility will need fixup to use this KASLR offset
+>>> to work with cases where we need to find a way to translate symbol
+>>> address from vmlinux to kernel run time address in case of KASLR boot on
+>>> arm64.
+>>
+>> You need the kernel VA for a symbol. Isn't this what kallsyms is for?
+>> | root@frikadeller:~# cat /proc/kallsyms | grep swapper_pg_dir
+>> | ffff5404610d0000 B swapper_pg_dir
+
+> Its already used by other archs like x86_64.
+> Its just that we are enabling this feature for arm64 now that the
+> KASLR boot cases are more widely seen on arm64 boards (as newer EFI
+> firmware implementations are available which support EFI_RNG_PROTOCOL
+> and hence KASLR boot).
+> 
+> And we want existing user-space application(s) to work similarly on
+> arm64 distributions as they work historically on other archs like
+> x86_64 (in most cases the user-space user is not even aware, if he is
+> developing for or using an underlying hardware which is arm64 or
+> x86_64)
+
+Aha, so its ABI. This is the information that should be in the commit message as
+it describes why this patch should be merged.
+
+... Ideally core code would do this, that way this information won't be missed
+when an architecture adds KASLR support.
+
+But mips has CONFIG_RANDOMIZE_BASE, and doesn't provide kaslr_offset(),
+and x86 always provides this value, not just if CONFIG_RANDOMIZE_BASE is
+selected. I can't see a way to do this without touching all three architectures.
+(we can try and tidy it up once its clear whether mips needs this too)
+
+
+I think the patch is fine, but could you re-post it with a commit message that
+describes that vmcore parsing in user-space already expects this value in the
+notes. We're providing it for portability of those existing tools with x86.
+
+
+>> I picked swapper_pg_dir, but you could use any of the vmcore:SYMBOL() addresses
+>> to work out this offset. (you should expect the kernel to rename these symbols
+>> at a whim).
+>>
+> 
+> Perhaps you missed what the above makedumpfile command was doing, so
+> let me summarize again:
+
+Yes, I glossed over it, all that seemed relevant is you are trying to find the
+kernel-va of a symbol from the value in the vmlinux.
+
+
+> as it breaks the
+> existing user-space use-cases and the .conf file can be user-defined
+> (and hence he can pick any symbol/functions
+
+My suggestion was you can calculate the offset between the link-time and
+run-time address from information you already have. You just need one of each.
+This would be better as its independent of how the kernel does the relocation.
+
+But, this is irrelevant as 'KERNELOFFSET=' is already an ABI string.
+
+
+> which might not even be present in 'kallsyms').
+
+Eh? How can that happen? I thought even modules had their symbols added to kallsyms.
+
+
+
+Thanks,
+
+James
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
