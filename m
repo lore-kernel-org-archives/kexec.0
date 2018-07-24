@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x541.google.com ([2607:f8b0:4864:20::541])
+Received: from mail-pg1-x544.google.com ([2607:f8b0:4864:20::544])
  by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fhrHw-0005hF-R3
- for kexec@lists.infradead.org; Tue, 24 Jul 2018 06:59:17 +0000
-Received: by mail-pg1-x541.google.com with SMTP id r1-v6so2181198pgp.11
- for <kexec@lists.infradead.org>; Mon, 23 Jul 2018 23:59:06 -0700 (PDT)
+ id 1fhrHK-0005dN-Ls
+ for kexec@lists.infradead.org; Tue, 24 Jul 2018 06:58:39 +0000
+Received: by mail-pg1-x544.google.com with SMTP id y4-v6so2180944pgp.9
+ for <kexec@lists.infradead.org>; Mon, 23 Jul 2018 23:58:28 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v12 14/16] include: pe.h: remove message[] from mz header
- definition
-Date: Tue, 24 Jul 2018 15:57:57 +0900
-Message-Id: <20180724065759.19186-15-takahiro.akashi@linaro.org>
+Subject: [PATCH v12 09/16] arm64: enable KEXEC_FILE config
+Date: Tue, 24 Jul 2018 15:57:52 +0900
+Message-Id: <20180724065759.19186-10-takahiro.akashi@linaro.org>
 In-Reply-To: <20180724065759.19186-1-takahiro.akashi@linaro.org>
 References: <20180724065759.19186-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -28,37 +27,76 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-message[] field won't be part of the definition of mz header.
-
-This change is crucial for enabling kexec_file_load on arm64 because
-arm64's "Image" binary, as in PE format, doesn't have any data for it and
-accordingly the following check in pefile_parse_binary() will fail:
-
-	chkaddr(cursor, mz->peaddr, sizeof(*pe));
+Modify arm64/Kconfig to enable kexec_file_load support.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: David S. Miller <davem@davemloft.net>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Acked-by: James Morse <james.morse@arm.com>
 ---
- include/linux/pe.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/Kconfig                     |  9 +++++++++
+ arch/arm64/kernel/Makefile             |  3 ++-
+ arch/arm64/kernel/machine_kexec_file.c | 16 ++++++++++++++++
+ 3 files changed, 27 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/kernel/machine_kexec_file.c
 
-diff --git a/include/linux/pe.h b/include/linux/pe.h
-index 143ce75be5f0..3482b18a48b5 100644
---- a/include/linux/pe.h
-+++ b/include/linux/pe.h
-@@ -166,7 +166,7 @@ struct mz_hdr {
- 	uint16_t oem_info;	/* oem specific */
- 	uint16_t reserved1[10];	/* reserved */
- 	uint32_t peaddr;	/* address of pe header */
--	char     message[64];	/* message to print */
-+	char     message[];	/* message to print */
- };
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 42c090cf0292..a9a3a5583c8b 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -835,6 +835,15 @@ config KEXEC
+ 	  but it is independent of the system firmware.   And like a reboot
+ 	  you can start any kernel with it, not just Linux.
  
- struct mz_reloc {
++config KEXEC_FILE
++	bool "kexec file based system call"
++	select KEXEC_CORE
++	help
++	  This is new version of kexec system call. This system call is
++	  file based and takes file descriptors as system call argument
++	  for kernel and initramfs as opposed to list of segments as
++	  accepted by previous system call.
++
+ config CRASH_DUMP
+ 	bool "Build kdump crash kernel"
+ 	help
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index 0025f8691046..06281e1ad7ed 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -48,8 +48,9 @@ arm64-obj-$(CONFIG_ARM64_ACPI_PARKING_PROTOCOL)	+= acpi_parking_protocol.o
+ arm64-obj-$(CONFIG_PARAVIRT)		+= paravirt.o
+ arm64-obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
+ arm64-obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
+-arm64-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o	\
++arm64-obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
+ 					   cpu-reset.o
++arm64-obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o
+ arm64-obj-$(CONFIG_ARM64_RELOC_TEST)	+= arm64-reloc-test.o
+ arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
+ arm64-obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+new file mode 100644
+index 000000000000..c38a8048ed00
+--- /dev/null
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -0,0 +1,16 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * kexec_file for arm64
++ *
++ * Copyright (C) 2018 Linaro Limited
++ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
++ *
++ */
++
++#define pr_fmt(fmt) "kexec_file: " fmt
++
++#include <linux/kexec.h>
++
++const struct kexec_file_ops * const kexec_file_loaders[] = {
++	NULL
++};
 -- 
 2.18.0
 
