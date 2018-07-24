@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x543.google.com ([2607:f8b0:4864:20::543])
+Received: from mail-pf1-f196.google.com ([209.85.210.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fhrH2-0001t2-8N
- for kexec@lists.infradead.org; Tue, 24 Jul 2018 06:58:41 +0000
-Received: by mail-pg1-x543.google.com with SMTP id k3-v6so2186486pgq.5
- for <kexec@lists.infradead.org>; Mon, 23 Jul 2018 23:58:10 -0700 (PDT)
+ id 1fhrGu-0001nj-37
+ for kexec@lists.infradead.org; Tue, 24 Jul 2018 06:58:40 +0000
+Received: by mail-pf1-f196.google.com with SMTP id k21-v6so620547pff.11
+ for <kexec@lists.infradead.org>; Mon, 23 Jul 2018 23:58:01 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v12 07/16] arm64: add image head flag definitions
-Date: Tue, 24 Jul 2018 15:57:50 +0900
-Message-Id: <20180724065759.19186-8-takahiro.akashi@linaro.org>
+Subject: [PATCH v12 06/16] of/fdt: add helper functions for handling properties
+Date: Tue, 24 Jul 2018 15:57:49 +0900
+Message-Id: <20180724065759.19186-7-takahiro.akashi@linaro.org>
 In-Reply-To: <20180724065759.19186-1-takahiro.akashi@linaro.org>
 References: <20180724065759.19186-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -25,58 +25,130 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
-Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
+Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Rob Herring <robh+dt@kernel.org>, james.morse@arm.com, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 
-Those image head's flags will be used later by kexec_file loader.
+These functions will be used later to handle kexec-specific properties
+in arm64's kexec_file implementation.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Acked-by: James Morse <james.morse@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
 ---
- arch/arm64/include/asm/boot.h | 15 +++++++++++++++
- arch/arm64/kernel/head.S      |  2 +-
- 2 files changed, 16 insertions(+), 1 deletion(-)
+ drivers/of/fdt.c       | 62 ++++++++++++++++++++++++++++++++++++++++--
+ include/linux/of_fdt.h | 10 +++++--
+ 2 files changed, 68 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/include/asm/boot.h b/arch/arm64/include/asm/boot.h
-index 355e552a9175..0bab7eed3012 100644
---- a/arch/arm64/include/asm/boot.h
-+++ b/arch/arm64/include/asm/boot.h
-@@ -5,6 +5,21 @@
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 6da20b9688f7..f7c9d69ce86c 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -25,6 +25,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/serial_core.h>
+ #include <linux/sysfs.h>
++#include <linux/types.h>
  
- #include <asm/sizes.h>
+ #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+ #include <asm/page.h>
+@@ -537,8 +538,8 @@ void *of_fdt_unflatten_tree(const unsigned long *blob,
+ EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
  
-+#define ARM64_MAGIC		"ARM\x64"
-+
-+#define HEAD_FLAG_BE_SHIFT		0
-+#define HEAD_FLAG_PAGE_SIZE_SHIFT	1
-+#define HEAD_FLAG_BE_MASK		0x1
-+#define HEAD_FLAG_PAGE_SIZE_MASK	0x3
-+
-+#define HEAD_FLAG_BE			1
-+#define HEAD_FLAG_PAGE_SIZE_4K		1
-+#define HEAD_FLAG_PAGE_SIZE_16K		2
-+#define HEAD_FLAG_PAGE_SIZE_64K		3
-+
-+#define head_flag_field(flags, field) \
-+		(((flags) >> field##_SHIFT) & field##_MASK)
-+
- /*
-  * arm64 requires the DTB to be 8 byte aligned and
-  * not exceed 2MB in size.
-diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index b0853069702f..8cbac6232ed1 100644
---- a/arch/arm64/kernel/head.S
-+++ b/arch/arm64/kernel/head.S
-@@ -91,7 +91,7 @@ _head:
- 	.quad	0				// reserved
- 	.quad	0				// reserved
- 	.quad	0				// reserved
--	.ascii	"ARM\x64"			// Magic number
-+	.ascii	ARM64_MAGIC			// Magic number
- #ifdef CONFIG_EFI
- 	.long	pe_header - _head		// Offset to the PE header.
+ /* Everything below here references initial_boot_params directly. */
+-int __initdata dt_root_addr_cells;
+-int __initdata dt_root_size_cells;
++int dt_root_addr_cells;
++int dt_root_size_cells;
  
+ void *initial_boot_params;
+ 
+@@ -1330,3 +1331,60 @@ late_initcall(of_fdt_raw_init);
+ #endif
+ 
+ #endif /* CONFIG_OF_EARLY_FLATTREE */
++
++bool of_fdt_cells_size_fitted(u64 base, u64 size)
++{
++	/* if *_cells >= 2, cells can hold 64-bit values anyway */
++	if ((dt_root_addr_cells == 1) && (base > U32_MAX))
++		return false;
++
++	if ((dt_root_size_cells == 1) && (size > U32_MAX))
++		return false;
++
++	return true;
++}
++
++size_t of_fdt_reg_cells_size(void)
++{
++	return (dt_root_addr_cells + dt_root_size_cells) * sizeof(u32);
++}
++
++#define FDT_ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
++#define FDT_TAGALIGN(x)	(FDT_ALIGN((x), FDT_TAGSIZE))
++
++int fdt_prop_len(const char *prop_name, int len)
++{
++	return (strlen(prop_name) + 1) +
++		sizeof(struct fdt_property) +
++		FDT_TAGALIGN(len);
++}
++
++static void fill_property(void *buf, u64 val64, int cells)
++{
++	__be32 val32;
++
++	while (cells) {
++		val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
++		memcpy(buf, &val32, sizeof(val32));
++		buf += sizeof(val32);
++	}
++}
++
++int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
++						u64 addr, u64 size)
++{
++	char buf[sizeof(__be32) * 2 * 2];
++		/* assume dt_root_[addr|size]_cells <= 2 */
++	void *prop;
++	size_t buf_size;
++
++	buf_size = of_fdt_reg_cells_size();
++	prop = buf;
++
++	fill_property(prop, addr, dt_root_addr_cells);
++	prop += dt_root_addr_cells * sizeof(u32);
++
++	fill_property(prop, size, dt_root_size_cells);
++
++	return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
++}
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index b9cd9ebdf9b9..9615d6142578 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -37,8 +37,8 @@ extern void *of_fdt_unflatten_tree(const unsigned long *blob,
+ 				   struct device_node **mynodes);
+ 
+ /* TBD: Temporary export of fdt globals - remove when code fully merged */
+-extern int __initdata dt_root_addr_cells;
+-extern int __initdata dt_root_size_cells;
++extern int dt_root_addr_cells;
++extern int dt_root_size_cells;
+ extern void *initial_boot_params;
+ 
+ extern char __dtb_start[];
+@@ -108,5 +108,11 @@ static inline void unflatten_device_tree(void) {}
+ static inline void unflatten_and_copy_device_tree(void) {}
+ #endif /* CONFIG_OF_EARLY_FLATTREE */
+ 
++bool of_fdt_cells_size_fitted(u64 base, u64 size);
++size_t of_fdt_reg_cells_size(void);
++int fdt_prop_len(const char *prop_name, int len);
++int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
++						u64 addr, u64 size);
++
+ #endif /* __ASSEMBLY__ */
+ #endif /* _LINUX_OF_FDT_H */
 -- 
 2.18.0
 
