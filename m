@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x443.google.com ([2607:f8b0:4864:20::443])
+Received: from mail-pg1-x543.google.com ([2607:f8b0:4864:20::543])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fhrGO-00019w-O2
- for kexec@lists.infradead.org; Tue, 24 Jul 2018 06:57:46 +0000
-Received: by mail-pf1-x443.google.com with SMTP id x17-v6so623011pfh.5
- for <kexec@lists.infradead.org>; Mon, 23 Jul 2018 23:57:30 -0700 (PDT)
+ id 1fhrH2-0001t2-8N
+ for kexec@lists.infradead.org; Tue, 24 Jul 2018 06:58:41 +0000
+Received: by mail-pg1-x543.google.com with SMTP id k3-v6so2186486pgq.5
+ for <kexec@lists.infradead.org>; Mon, 23 Jul 2018 23:58:10 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v12 03/16] s390, kexec_file: drop arch_kexec_mem_walk()
-Date: Tue, 24 Jul 2018 15:57:46 +0900
-Message-Id: <20180724065759.19186-4-takahiro.akashi@linaro.org>
+Subject: [PATCH v12 07/16] arm64: add image head flag definitions
+Date: Tue, 24 Jul 2018 15:57:50 +0900
+Message-Id: <20180724065759.19186-8-takahiro.akashi@linaro.org>
 In-Reply-To: <20180724065759.19186-1-takahiro.akashi@linaro.org>
 References: <20180724065759.19186-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,62 +27,56 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-Since s390 already knows where to locate buffers, calling
-arch_kexec_mem_walk() has no sense. So we can just drop it as kbuf->mem
-indicates this while all other architectures sets it to 0 initially.
-
-This change is a preparatory work for the next patch, where all the
-variant memory walks, either on system resource or memblock, will be
-put in one common place so that it will satisfy all the architectures'
-need.
+Those image head's flags will be used later by kexec_file loader.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Acked-by: James Morse <james.morse@arm.com>
 ---
- arch/s390/kernel/machine_kexec_file.c | 10 ----------
- kernel/kexec_file.c                   |  4 ++++
- 2 files changed, 4 insertions(+), 10 deletions(-)
+ arch/arm64/include/asm/boot.h | 15 +++++++++++++++
+ arch/arm64/kernel/head.S      |  2 +-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-index f413f57f8d20..32023b4f9dc0 100644
---- a/arch/s390/kernel/machine_kexec_file.c
-+++ b/arch/s390/kernel/machine_kexec_file.c
-@@ -134,16 +134,6 @@ int kexec_file_add_initrd(struct kimage *image, struct s390_load_data *data,
- 	return ret;
- }
+diff --git a/arch/arm64/include/asm/boot.h b/arch/arm64/include/asm/boot.h
+index 355e552a9175..0bab7eed3012 100644
+--- a/arch/arm64/include/asm/boot.h
++++ b/arch/arm64/include/asm/boot.h
+@@ -5,6 +5,21 @@
  
--/*
-- * The kernel is loaded to a fixed location. Turn off kexec_locate_mem_hole
-- * and provide kbuf->mem by hand.
-- */
--int arch_kexec_walk_mem(struct kexec_buf *kbuf,
--			int (*func)(struct resource *, void *))
--{
--	return 1;
--}
--
- int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
- 				     Elf_Shdr *section,
- 				     const Elf_Shdr *relsec,
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 63c7ce1c0c3e..bf39df5e5bb9 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -534,6 +534,10 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
- {
- 	int ret;
+ #include <asm/sizes.h>
  
-+	/* Arch knows where to place */
-+	if (kbuf->mem)
-+		return 0;
++#define ARM64_MAGIC		"ARM\x64"
 +
- 	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
++#define HEAD_FLAG_BE_SHIFT		0
++#define HEAD_FLAG_PAGE_SIZE_SHIFT	1
++#define HEAD_FLAG_BE_MASK		0x1
++#define HEAD_FLAG_PAGE_SIZE_MASK	0x3
++
++#define HEAD_FLAG_BE			1
++#define HEAD_FLAG_PAGE_SIZE_4K		1
++#define HEAD_FLAG_PAGE_SIZE_16K		2
++#define HEAD_FLAG_PAGE_SIZE_64K		3
++
++#define head_flag_field(flags, field) \
++		(((flags) >> field##_SHIFT) & field##_MASK)
++
+ /*
+  * arm64 requires the DTB to be 8 byte aligned and
+  * not exceed 2MB in size.
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index b0853069702f..8cbac6232ed1 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -91,7 +91,7 @@ _head:
+ 	.quad	0				// reserved
+ 	.quad	0				// reserved
+ 	.quad	0				// reserved
+-	.ascii	"ARM\x64"			// Magic number
++	.ascii	ARM64_MAGIC			// Magic number
+ #ifdef CONFIG_EFI
+ 	.long	pe_header - _head		// Offset to the PE header.
  
- 	return ret == 1 ? 0 : -EADDRNOTAVAIL;
 -- 
 2.18.0
 
