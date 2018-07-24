@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-f196.google.com ([209.85.210.196])
+Received: from mail-pl0-x244.google.com ([2607:f8b0:400e:c01::244])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fhrGu-0001nj-37
- for kexec@lists.infradead.org; Tue, 24 Jul 2018 06:58:40 +0000
-Received: by mail-pf1-f196.google.com with SMTP id k21-v6so620547pff.11
- for <kexec@lists.infradead.org>; Mon, 23 Jul 2018 23:58:01 -0700 (PDT)
+ id 1fhrHY-0002QV-CN
+ for kexec@lists.infradead.org; Tue, 24 Jul 2018 06:59:07 +0000
+Received: by mail-pl0-x244.google.com with SMTP id z7-v6so1325683plo.9
+ for <kexec@lists.infradead.org>; Mon, 23 Jul 2018 23:58:42 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v12 06/16] of/fdt: add helper functions for handling properties
-Date: Tue, 24 Jul 2018 15:57:49 +0900
-Message-Id: <20180724065759.19186-7-takahiro.akashi@linaro.org>
+Subject: [PATCH v12 11/16] arm64: kexec_file: allow for loading Image-format
+ kernel
+Date: Tue, 24 Jul 2018 15:57:54 +0900
+Message-Id: <20180724065759.19186-12-takahiro.akashi@linaro.org>
 In-Reply-To: <20180724065759.19186-1-takahiro.akashi@linaro.org>
 References: <20180724065759.19186-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -25,130 +26,218 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
-Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Rob Herring <robh+dt@kernel.org>, james.morse@arm.com, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-These functions will be used later to handle kexec-specific properties
-in arm64's kexec_file implementation.
+This patch provides kexec_file_ops for "Image"-format kernel. In this
+implementation, a binary is always loaded with a fixed offset identified
+in text_offset field of its header.
+
+Regarding signature verification for trusted boot, this patch doesn't
+contains CONFIG_KEXEC_VERIFY_SIG support, which is to be added later
+in this series, but file-attribute-based verification is still a viable
+option by enabling IMA security subsystem.
+
+You can sign(label) a to-be-kexec'ed kernel image on target file system
+with:
+    $ evmctl ima_sign --key /path/to/private_key.pem Image
+
+On live system, you must have IMA enforced with, at least, the following
+security policy:
+    "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig"
+
+See more details about IMA here:
+    https://sourceforge.net/p/linux-ima/wiki/Home/
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Reviewed-by: James Morse <james.morse@arm.com>
 ---
- drivers/of/fdt.c       | 62 ++++++++++++++++++++++++++++++++++++++++--
- include/linux/of_fdt.h | 10 +++++--
- 2 files changed, 68 insertions(+), 4 deletions(-)
+ arch/arm64/include/asm/kexec.h         |  28 +++++++
+ arch/arm64/kernel/Makefile             |   2 +-
+ arch/arm64/kernel/kexec_image.c        | 108 +++++++++++++++++++++++++
+ arch/arm64/kernel/machine_kexec_file.c |   1 +
+ 4 files changed, 138 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/kernel/kexec_image.c
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 6da20b9688f7..f7c9d69ce86c 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -25,6 +25,7 @@
- #include <linux/debugfs.h>
- #include <linux/serial_core.h>
- #include <linux/sysfs.h>
-+#include <linux/types.h>
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 026f7e408f0c..5d102a1054b3 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -101,6 +101,34 @@ struct kimage_arch {
+ 	unsigned long dtb_mem;
+ };
  
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #include <asm/page.h>
-@@ -537,8 +538,8 @@ void *of_fdt_unflatten_tree(const unsigned long *blob,
- EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
- 
- /* Everything below here references initial_boot_params directly. */
--int __initdata dt_root_addr_cells;
--int __initdata dt_root_size_cells;
-+int dt_root_addr_cells;
-+int dt_root_size_cells;
- 
- void *initial_boot_params;
- 
-@@ -1330,3 +1331,60 @@ late_initcall(of_fdt_raw_init);
- #endif
- 
- #endif /* CONFIG_OF_EARLY_FLATTREE */
++/**
++ * struct arm64_image_header - arm64 kernel image header
++ * See Documentation/arm64/booting.txt for details
++ *
++ * @mz_magic: DOS header magic number ('MZ', optional)
++ * @code1: Instruction (branch to stext)
++ * @text_offset: Image load offset
++ * @image_size: Effective image size
++ * @flags: Bit-field flags
++ * @reserved: Reserved
++ * @magic: Magic number
++ * @pe_header: Offset to PE COFF header (optional)
++ **/
 +
-+bool of_fdt_cells_size_fitted(u64 base, u64 size)
++struct arm64_image_header {
++	__le16 mz_magic; /* also code0 */
++	__le16 pad;
++	__le32 code1;
++	__le64 text_offset;
++	__le64 image_size;
++	__le64 flags;
++	__le64 reserved[3];
++	__le32 magic;
++	__le32 pe_header;
++};
++
++extern const struct kexec_file_ops kexec_image_ops;
++
+ struct kimage;
+ 
+ extern int arch_kimage_file_post_load_cleanup(struct kimage *image);
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index 06281e1ad7ed..a9cc7752f276 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -50,7 +50,7 @@ arm64-obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
+ arm64-obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
+ arm64-obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
+ 					   cpu-reset.o
+-arm64-obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o
++arm64-obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o kexec_image.o
+ arm64-obj-$(CONFIG_ARM64_RELOC_TEST)	+= arm64-reloc-test.o
+ arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
+ arm64-obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
+diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
+new file mode 100644
+index 000000000000..d64f5e9f9d22
+--- /dev/null
++++ b/arch/arm64/kernel/kexec_image.c
+@@ -0,0 +1,108 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Kexec image loader
++
++ * Copyright (C) 2018 Linaro Limited
++ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
++ */
++
++#define pr_fmt(fmt)	"kexec_file(Image): " fmt
++
++#include <linux/err.h>
++#include <linux/errno.h>
++#include <linux/kernel.h>
++#include <linux/kexec.h>
++#include <linux/string.h>
++#include <asm/boot.h>
++#include <asm/byteorder.h>
++#include <asm/cpufeature.h>
++#include <asm/memory.h>
++
++static int image_probe(const char *kernel_buf, unsigned long kernel_len)
 +{
-+	/* if *_cells >= 2, cells can hold 64-bit values anyway */
-+	if ((dt_root_addr_cells == 1) && (base > U32_MAX))
-+		return false;
++	const struct arm64_image_header *h;
 +
-+	if ((dt_root_size_cells == 1) && (size > U32_MAX))
-+		return false;
++	h = (const struct arm64_image_header *)(kernel_buf);
 +
-+	return true;
++	if (!h || (kernel_len < sizeof(*h)) ||
++			memcmp(&h->magic, ARM64_MAGIC, sizeof(h->magic)))
++		return -EINVAL;
++
++	return 0;
 +}
 +
-+size_t of_fdt_reg_cells_size(void)
++static void *image_load(struct kimage *image,
++				char *kernel, unsigned long kernel_len,
++				char *initrd, unsigned long initrd_len,
++				char *cmdline, unsigned long cmdline_len)
 +{
-+	return (dt_root_addr_cells + dt_root_size_cells) * sizeof(u32);
++	struct arm64_image_header *h;
++	u64 flags, value;
++	struct kexec_buf kbuf;
++	unsigned long text_offset;
++	struct kexec_segment *kernel_segment;
++	int ret;
++
++	/* Don't support old kernel */
++	h = (struct arm64_image_header *)kernel;
++	if (!h->text_offset)
++		return ERR_PTR(-EINVAL);
++
++	/* Check cpu features */
++	flags = le64_to_cpu(h->flags);
++	value = head_flag_field(flags, HEAD_FLAG_BE);
++	if (((value == HEAD_FLAG_BE) && !IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)) ||
++	    ((value != HEAD_FLAG_BE) && IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)))
++		if (!system_supports_mixed_endian())
++			return ERR_PTR(-EINVAL);
++
++	value = head_flag_field(flags, HEAD_FLAG_PAGE_SIZE);
++	if (((value == HEAD_FLAG_PAGE_SIZE_4K) &&
++			!system_supports_4kb_granule()) ||
++	    ((value == HEAD_FLAG_PAGE_SIZE_64K) &&
++			!system_supports_64kb_granule()) ||
++	    ((value == HEAD_FLAG_PAGE_SIZE_16K) &&
++			!system_supports_16kb_granule()))
++		return ERR_PTR(-EINVAL);
++
++	/* Load the kernel */
++	kbuf.image = image;
++	kbuf.buf_min = 0;
++	kbuf.buf_max = ULONG_MAX;
++	kbuf.top_down = false;
++
++	kbuf.buffer = kernel;
++	kbuf.bufsz = kernel_len;
++	kbuf.mem = 0;
++	kbuf.memsz = le64_to_cpu(h->image_size);
++	text_offset = le64_to_cpu(h->text_offset);
++	kbuf.buf_align = MIN_KIMG_ALIGN;
++
++	/* Adjust kernel segment with TEXT_OFFSET */
++	kbuf.memsz += text_offset;
++
++	ret = kexec_add_buffer(&kbuf);
++	if (ret)
++		return ERR_PTR(ret);
++
++	kernel_segment = &image->segment[image->nr_segments - 1];
++	kernel_segment->mem += text_offset;
++	kernel_segment->memsz -= text_offset;
++	image->start = kernel_segment->mem;
++
++	pr_debug("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++				kernel_segment->mem, kbuf.bufsz,
++				kernel_segment->memsz);
++
++	/* Load additional data */
++	ret = load_other_segments(image,
++				kernel_segment->mem, kernel_segment->memsz,
++				initrd, initrd_len, cmdline, cmdline_len);
++
++	return ERR_PTR(ret);
 +}
 +
-+#define FDT_ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
-+#define FDT_TAGALIGN(x)	(FDT_ALIGN((x), FDT_TAGSIZE))
-+
-+int fdt_prop_len(const char *prop_name, int len)
-+{
-+	return (strlen(prop_name) + 1) +
-+		sizeof(struct fdt_property) +
-+		FDT_TAGALIGN(len);
-+}
-+
-+static void fill_property(void *buf, u64 val64, int cells)
-+{
-+	__be32 val32;
-+
-+	while (cells) {
-+		val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
-+		memcpy(buf, &val32, sizeof(val32));
-+		buf += sizeof(val32);
-+	}
-+}
-+
-+int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
-+						u64 addr, u64 size)
-+{
-+	char buf[sizeof(__be32) * 2 * 2];
-+		/* assume dt_root_[addr|size]_cells <= 2 */
-+	void *prop;
-+	size_t buf_size;
-+
-+	buf_size = of_fdt_reg_cells_size();
-+	prop = buf;
-+
-+	fill_property(prop, addr, dt_root_addr_cells);
-+	prop += dt_root_addr_cells * sizeof(u32);
-+
-+	fill_property(prop, size, dt_root_size_cells);
-+
-+	return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
-+}
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index b9cd9ebdf9b9..9615d6142578 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -37,8 +37,8 @@ extern void *of_fdt_unflatten_tree(const unsigned long *blob,
- 				   struct device_node **mynodes);
++const struct kexec_file_ops kexec_image_ops = {
++	.probe = image_probe,
++	.load = image_load,
++};
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index b28fbb0659c9..b8297f10e2ef 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -20,6 +20,7 @@
+ #include <asm/byteorder.h>
  
- /* TBD: Temporary export of fdt globals - remove when code fully merged */
--extern int __initdata dt_root_addr_cells;
--extern int __initdata dt_root_size_cells;
-+extern int dt_root_addr_cells;
-+extern int dt_root_size_cells;
- extern void *initial_boot_params;
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
++	&kexec_image_ops,
+ 	NULL
+ };
  
- extern char __dtb_start[];
-@@ -108,5 +108,11 @@ static inline void unflatten_device_tree(void) {}
- static inline void unflatten_and_copy_device_tree(void) {}
- #endif /* CONFIG_OF_EARLY_FLATTREE */
- 
-+bool of_fdt_cells_size_fitted(u64 base, u64 size);
-+size_t of_fdt_reg_cells_size(void);
-+int fdt_prop_len(const char *prop_name, int len);
-+int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
-+						u64 addr, u64 size);
-+
- #endif /* __ASSEMBLY__ */
- #endif /* _LINUX_OF_FDT_H */
 -- 
 2.18.0
 
