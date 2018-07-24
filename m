@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x22b.google.com ([2607:f8b0:400e:c01::22b])
+Received: from mail-pf1-x443.google.com ([2607:f8b0:4864:20::443])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fhrGF-0000wm-CE
- for kexec@lists.infradead.org; Tue, 24 Jul 2018 06:57:36 +0000
-Received: by mail-pl0-x22b.google.com with SMTP id f6-v6so1333558plo.1
- for <kexec@lists.infradead.org>; Mon, 23 Jul 2018 23:57:21 -0700 (PDT)
+ id 1fhrGO-00019w-O2
+ for kexec@lists.infradead.org; Tue, 24 Jul 2018 06:57:46 +0000
+Received: by mail-pf1-x443.google.com with SMTP id x17-v6so623011pfh.5
+ for <kexec@lists.infradead.org>; Mon, 23 Jul 2018 23:57:30 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v12 02/16] kexec_file: make
- kexec_image_post_load_cleanup_default() global
-Date: Tue, 24 Jul 2018 15:57:45 +0900
-Message-Id: <20180724065759.19186-3-takahiro.akashi@linaro.org>
+Subject: [PATCH v12 03/16] s390, kexec_file: drop arch_kexec_mem_walk()
+Date: Tue, 24 Jul 2018 15:57:46 +0900
+Message-Id: <20180724065759.19186-4-takahiro.akashi@linaro.org>
 In-Reply-To: <20180724065759.19186-1-takahiro.akashi@linaro.org>
 References: <20180724065759.19186-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -28,44 +27,62 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-Change this function from static to global so that arm64 can implement
-its own arch_kimage_file_post_load_cleanup() later using
-kexec_image_post_load_cleanup_default().
+Since s390 already knows where to locate buffers, calling
+arch_kexec_mem_walk() has no sense. So we can just drop it as kbuf->mem
+indicates this while all other architectures sets it to 0 initially.
+
+This change is a preparatory work for the next patch, where all the
+variant memory walks, either on system resource or memblock, will be
+put in one common place so that it will satisfy all the architectures'
+need.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Acked-by: Dave Young <dyoung@redhat.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Dave Young <dyoung@redhat.com>
 Cc: Vivek Goyal <vgoyal@redhat.com>
 Cc: Baoquan He <bhe@redhat.com>
 ---
- include/linux/kexec.h | 1 +
- kernel/kexec_file.c   | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/s390/kernel/machine_kexec_file.c | 10 ----------
+ kernel/kexec_file.c                   |  4 ++++
+ 2 files changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 9e4e638fb505..49ab758f4d91 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -143,6 +143,7 @@ extern const struct kexec_file_ops * const kexec_file_loaders[];
- 
- int kexec_image_probe_default(struct kimage *image, void *buf,
- 			      unsigned long buf_len);
-+int kexec_image_post_load_cleanup_default(struct kimage *image);
- 
- /**
-  * struct kexec_buf - parameters for finding a place for a buffer in memory
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index c6a3b6851372..63c7ce1c0c3e 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -78,7 +78,7 @@ void * __weak arch_kexec_kernel_image_load(struct kimage *image)
- 	return kexec_image_load_default(image);
+diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
+index f413f57f8d20..32023b4f9dc0 100644
+--- a/arch/s390/kernel/machine_kexec_file.c
++++ b/arch/s390/kernel/machine_kexec_file.c
+@@ -134,16 +134,6 @@ int kexec_file_add_initrd(struct kimage *image, struct s390_load_data *data,
+ 	return ret;
  }
  
--static int kexec_image_post_load_cleanup_default(struct kimage *image)
-+int kexec_image_post_load_cleanup_default(struct kimage *image)
+-/*
+- * The kernel is loaded to a fixed location. Turn off kexec_locate_mem_hole
+- * and provide kbuf->mem by hand.
+- */
+-int arch_kexec_walk_mem(struct kexec_buf *kbuf,
+-			int (*func)(struct resource *, void *))
+-{
+-	return 1;
+-}
+-
+ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+ 				     Elf_Shdr *section,
+ 				     const Elf_Shdr *relsec,
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 63c7ce1c0c3e..bf39df5e5bb9 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -534,6 +534,10 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
  {
- 	if (!image->fops || !image->fops->cleanup)
- 		return 0;
+ 	int ret;
+ 
++	/* Arch knows where to place */
++	if (kbuf->mem)
++		return 0;
++
+ 	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
+ 
+ 	return ret == 1 ? 0 : -EADDRNOTAVAIL;
 -- 
 2.18.0
 
