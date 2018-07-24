@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-f65.google.com ([209.85.167.65])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fhpjC-0008G5-20
- for kexec@lists.infradead.org; Tue, 24 Jul 2018 05:19:19 +0000
-Received: by mail-lf1-f65.google.com with SMTP id f135-v6so355829lfg.10
- for <kexec@lists.infradead.org>; Mon, 23 Jul 2018 22:19:07 -0700 (PDT)
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fhqpi-0007kf-0q
+ for kexec@lists.infradead.org; Tue, 24 Jul 2018 06:30:08 +0000
+Date: Tue, 24 Jul 2018 08:29:50 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: kexec support for plan9 on x86
+Message-ID: <20180724062950.abqla2wqqny53ad7@verge.net.au>
+References: <1AD2A76B46A10571107915DE89919D3B@felloff.net>
 MIME-Version: 1.0
-In-Reply-To: <20180723133527.GA9450@arm.com>
-References: <20180709234229.20181-1-takahiro.akashi@linaro.org>
- <20180712164918.GA26935@arm.com> <20180713003434.GZ28220@linaro.org>
- <CAKv+Gu9PT75XTXGsh1jc5roRO_d2QYKEamq42mfbsXzmerAUzA@mail.gmail.com>
- <20180717051222.GA11258@linaro.org> <20180723133527.GA9450@arm.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 24 Jul 2018 10:49:05 +0530
-Message-ID: <CACi5LpO=ObREcWfr6Y+7+bv3c1VkOEkw80CLELHDO6QD4xbeow@mail.gmail.com>
-Subject: Re: [PATCH v3.1 0/4] arm64: kexec,kdump: fix boot failures on
- acpi-only system
+Content-Disposition: inline
+In-Reply-To: <1AD2A76B46A10571107915DE89919D3B@felloff.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,57 +23,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "Baicar,
- Tyler" <tbaicar@codeaurora.org>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Hanjun Guo <hanjun.guo@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: cinap_lenrek@felloff.net
+Cc: kexec@lists.infradead.org
 
-Hi Will,
+On Sat, Jul 21, 2018 at 06:46:42PM +0200, cinap_lenrek@felloff.net wrote:
+> implemented support in kexec-tools to boot plan9 kernel last night
+> (see attachment).
+> 
+> this is very basic support. it loads the kernel and provides it
+> a memory map (from info->memory_range) in its config area and also
+> has a optional parameter to pass additional plan9.ini configuration.
+> 
+> but i have a couple of questions:
+> 
+> who's in charge?
 
-On Mon, Jul 23, 2018 at 7:05 PM, Will Deacon <will.deacon@arm.com> wrote:
-> On Tue, Jul 17, 2018 at 02:12:23PM +0900, AKASHI Takahiro wrote:
->> On Fri, Jul 13, 2018 at 07:49:45AM +0200, Ard Biesheuvel wrote:
->> > On 13 July 2018 at 02:34, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
->> > > On Thu, Jul 12, 2018 at 05:49:19PM +0100, Will Deacon wrote:
->> > >> Hi Akashi,
->> > >>
->> > >> On Tue, Jul 10, 2018 at 08:42:25AM +0900, AKASHI Takahiro wrote:
->> > >> > This patch series is a set of bug fixes to address kexec/kdump
->> > >> > failures which are sometimes observed on ACPI-only system and reported
->> > >> > in LAK-ML before.
->> > >>
->> > >> I tried picking this up, along with Ard's fixup, but I'm seeing a build
->> > >> failure for allmodconfig:
->> > >>
->> > >> arch/arm64/kernel/acpi.o: In function `__acpi_get_mem_attribute':
->> > >> acpi.c:(.text+0x60): undefined reference to `efi_mem_attributes'
->> > >>
->> > >> I didn't investigate further. Please can you fix this?
->> > >
->> > > Because CONFIG_ACPI is on and CONFIG_EFI is off.
->> > >
->> > > This can happen in allmodconfig as CONFIG_EFI depends on
->> > > !CONFIG_CPU_BIG_ENDIAN, which is actually on in this case.
->> > >
->> >
->> > Allowing both CONFIG_ACPI and CONFIG_CPU_BIG_ENDIAN to be configured
->> > makes no sense at all. Things will surely break if you start using BE
->> > memory accesses while parsing ACPI tables.
->> >
->> > Allowing CONFIG_ACPI without CONFIG_EFI makes no sense either, since
->> > on arm64, the only way to find the ACPI tables is through a UEFI
->> > configuration table.
->>
->>
->> Do you agree to this?
->
-> Yes; please post a new series which resolves these dependencies and includes
-> Ard's fixup from before.
+I am the maintainer of kexec-tools.
 
-I see that Akashi has already posted a v4 here with the suggested fixes:
-https://lkml.org/lkml/2018/7/22/321
+> is here interest in supporting other OS than linux such as plan9
+> in the official kexec-tools? or should i write my own plan9 loader
+> for linux using the kexec_load() syscall directly?
 
-Thanks,
-Bhupesh
+I think that if there is a good amount of code re-use and there
+is an intention to keep the plan9 code maintained then it
+is reasonable to include support in the current kexec-tools tree.
+
+> on uefi systems, the address of the RSDT is passed to the kernel
+> in the config area as theres no known region to search for it.
+> this is done in 9front by the bootloader (as we do not want to
+> call back into crappy uefi code from our kernel once virtual
+> memory and interrups are set up). but i'v not seen any of the
+> kexec modules implement such a thing. so where do i get that
+> information from? how does linux locate the acpi tables?
+> 
+> on a uefi systems, theres no cga text mode. when linear
+> framebuffer was already set up. we pass this information in
+> the config area (done by efi loader using the GOP). but i havnt
+> seen any kexec module to implement passing the framebuffer
+> configuration to the new kernel. so where do i get that
+> that information in linux? this is also needed for proper
+> multiboot support.
+
+Its been a long time since I worked on kexec in that depth -
+it was on ia64. Perhaps others on the list have some more recent
+experience that can help guide you.
+
+> the 9front kernel supports multiboot specification, but your
+> multiboot loader expects all multiboot images to be ELF files.
+> as well. what are you THINKING? :-)
+
+I'm not sure that I was involved in the project when that
+design decision was made. But in general I would say that its
+entirely reasonable to make enhancements so long as we can
+be sure that existing boot-cases don't break.
 
 _______________________________________________
 kexec mailing list
