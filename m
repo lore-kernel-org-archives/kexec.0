@@ -1,14 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH] arm64, kaslr: export offset in VMCOREINFO ELF notes
-References: <1531949864-27447-1-git-send-email-bhsharma@redhat.com>
- <d8959ca1-65a1-f59c-bfc4-b048c75add26@arm.com>
- <CACi5LpOa-BMRSTShS019DDv7MoxNfpnnsqjwR3z13GZC49NrSA@mail.gmail.com>
-From: James Morse <james.morse@arm.com>
-Message-ID: <9c4d7c8d-3f0b-ff2f-68e8-03638a5fe2a4@arm.com>
-Date: Mon, 23 Jul 2018 18:05:47 +0100
+Received: from mail-lf1-f65.google.com ([209.85.167.65])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fhphn-00084p-AW
+ for kexec@lists.infradead.org; Tue, 24 Jul 2018 05:17:52 +0000
+Received: by mail-lf1-f65.google.com with SMTP id y200-v6so2073126lfd.7
+ for <kexec@lists.infradead.org>; Mon, 23 Jul 2018 22:17:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACi5LpOa-BMRSTShS019DDv7MoxNfpnnsqjwR3z13GZC49NrSA@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC035590BC@BPXM09GP.gisp.nec.co.jp>
+References: <1531979021-31780-1-git-send-email-bhsharma@redhat.com>
+ <1531979021-31780-2-git-send-email-bhsharma@redhat.com>
+ <bf9dee4f-852d-fc6b-999a-02ea99dceb4d@redhat.com>
+ <CACi5LpOKQ9TX9yWus6i9ZG_Ha8A+vPqs09o1Jh0B9O5vYED9BA@mail.gmail.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC035590BC@BPXM09GP.gisp.nec.co.jp>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Tue, 24 Jul 2018 10:47:38 +0530
+Message-ID: <CACi5LpNdaKAa+YzS0zp2e16tewkcqkRay0QqbZcJGjDtK+5TTA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: Get 'info->page_offset' from PT_LOAD segments
+ to support KASLR boot cases
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,89 +29,201 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec mailing list <kexec@lists.infradead.org>
 
-Hi Bhupesh,
+Hi Kazu,
 
-(CC: +mips list, looks like mips is missing vmcore's KERNELOFFSET too.
-Start of this thread: https://lkml.org/lkml/2018/7/18/951 )
-
-On 19/07/18 15:55, Bhupesh Sharma wrote:
-> On Thu, Jul 19, 2018 at 5:01 PM, James Morse <james.morse@arm.com> wrote:
->> On 18/07/18 22:37, Bhupesh Sharma wrote:
->>> Include KASLR offset in VMCOREINFO ELF notes to assist in debugging.
+On Mon, Jul 23, 2018 at 10:15 PM, Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
+> Hi Bhupesh,
+>
+> On 7/22/2018 3:44 AM, Bhupesh Sharma wrote:
+>> Hello Kazu,
+>>
+>> Many thanks for your review comments.
+>>
+>> On Sat, Jul 21, 2018 at 3:18 AM, Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
 >>>
->>> makedumpfile user-space utility will need fixup to use this KASLR offset
->>> to work with cases where we need to find a way to translate symbol
->>> address from vmlinux to kernel run time address in case of KASLR boot on
->>> arm64.
+>>> On 7/19/2018 1:43 AM, Bhupesh Sharma wrote:
+>>>> The existing methodology to obtain 'info->page_offset' from reading
+>>>> _stext symbol (from kallsyms) doesn't work well in KASLR boot cases on
+>>>> arm64 machines as the PAGE_OFFSET (or the virtual address which
+>>>> indicates the start of the linear region) can be randomized as well
+>>>> on basis of the kaslr-seed.
+>>>>
+>>>> Since the value of PAGE_OFFSET inside the kernel is randomized in such
+>>>> cases and there is no existing mechanism of conveying this value from
+>>>> kernel-space to user-space, so we can use the method used by archs like
+>>>> x86_64 to generate the 'info->page_offset' value from the PT_LOAD
+>>>> segments by subtracting the phy_addr from virt_addr of a PT_LOAD
+>>>> segment.
+>>>>
+>>>> This approach works fine both with KASLR and non-KASLR boot cases.
+>>>>
+>>>> I tested this on my qualcomm-amberwing board. Here are some logs from
+>>>> the KASLR boot cases:
+>>>>
+>>>> - Verify that the EFI firmware supports 'kaslr-seed':
+>>>>
+>>>>       chosen {
+>>>>               kaslr-seed = <0x0 0x0>;
+>>>>               <..snip..>
+>>>>       };
+>>>>
+>>>> - Verify that '--mem-usage' works well after this fix as well (I used
+>>>>   kernel 4.18.0-rc4+ for my checks):
+>>>>
+>>>> The kernel version is not supported.
+>>>> The makedumpfile operation may be incomplete.
+>>>>
+>>>> TYPE          PAGES                   EXCLUDABLE      DESCRIPTION
+>>>> ----------------------------------------------------------------------
+>>>> ZERO          4396                    yes             Pages filled
+>>>> with zero
+>>>> NON_PRI_CACHE 27859                   yes             Cache pages
+>>>> without private flag
+>>>> PRI_CACHE     18490                   yes             Cache pages with
+>>>> private flag
+>>>> USER          2728                    yes             User process
+>>>> pages
+>>>> FREE          1465848                 yes             Free pages
+>>>> KERN_DATA     18537                   no              Dumpable kernel
+>>>> data
+>>>>
+>>>> page size:            65536
+>>>> Total pages on system:        1537858
+>>>> Total size on system: 100785061888     Byte
+>>>>
+>>>> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+>>>> ---
+>>>>  arch/arm64.c   | 23 ++++++++++++++++++-----
+>>>>  common.h       |  1 +
+>>>>  makedumpfile.h |  1 +
+>>>>  3 files changed, 20 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64.c b/arch/arm64.c
+>>>> index 2fd3e1874376..9e8c77c76935 100644
+>>>> --- a/arch/arm64.c
+>>>> +++ b/arch/arm64.c
+>>>> @@ -265,6 +265,9 @@ get_xen_info_arm64(void)
+>>>>  int
+>>>>  get_versiondep_info_arm64(void)
+>>>>  {
+>>>> +     int i;
+>>>> +     unsigned long long phys_start;
+>>>> +     unsigned long long virt_start;
+>>>>       ulong _stext;
+>>>>
+>>>>       _stext = get_stext_symbol();
+>>>> @@ -289,12 +292,22 @@ get_versiondep_info_arm64(void)
+>>>>               return FALSE;
+>>>>       }
+>>>>
+>>>
+>>>> -     info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
+>>>> -
+>>>> -     DEBUG_MSG("page_offset=%lx, va_bits=%d\n", info->page_offset,
+>>>> -                     va_bits);
+>>>
+>>> According to makedumpfile commit 4944f93484 ("x86_64: Calculate page_offset
+>>> in case of re-filtering/sadump/virsh dump"), in case of re-filtering,
+>>> we don't have any PT_LOAD.  So, with this patch, we cannot re-filter
+>>> dump file on arm64 system?
+>>>
+>>> If we cannot, is it better to leave the above behind the following
+>>> pt_load section for re-filtering non-KASLR dump?
+>>>
+>>>> +     if (get_num_pt_loads()) {
+>>>> +             for (i = 0;
+>>>> +                     get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
+>>>> +                     i++) {
+>>>> +                     if (virt_start != NOT_KV_ADDR
+>>>> +                                     && virt_start < __START_KERNEL_map
+>>>> +                                     && phys_start != NOT_PADDR && phys_start != NOT_PADDR_ARM64) {
+>>>> +                             info->page_offset = virt_start - phys_start;
+>>>> +                             DEBUG_MSG("info->page_offset: %lx, VA_BITS: %d\n",
+>>>> +                                             info->page_offset, va_bits);
+>>>> +                             return TRUE;
+>>>> +                     }
+>>>> +             }
+>>>> +     }
+>>>
+>>> I'll adjust some indents for readability.
+>>>
+>>>>
+>>>> -     return TRUE;
+>>>> +     return FALSE;
+>>>>  }
+>>>>
+>>>>  /*
+>>>> diff --git a/common.h b/common.h
+>>>> index 6e2f657a79c7..a8181777dbb7 100644
+>>>> --- a/common.h
+>>>> +++ b/common.h
+>>>> @@ -48,6 +48,7 @@
+>>>>  #define NOT_MEMMAP_ADDR      (0x0)
+>>>>  #define NOT_KV_ADDR  (0x0)
+>>>>  #define NOT_PADDR    (ULONGLONG_MAX)
+>>>
+>>>> +#define NOT_PADDR_ARM64      (0x0000000010a80000UL)
+>>>
+>>> I think that this should not be in common.h, because it's not for
+>>> arch-specific definitions, so I'll move it to makedumpfile.h.
+>>>
+>>>>  #define BADADDR      ((ulong)(-1))
+>>>>
+>>>>  #endif  /* COMMON_H */
+>>>> diff --git a/makedumpfile.h b/makedumpfile.h
+>>>> index 5ff94b8e4ac6..5297279f0f3b 100644
+>>>> --- a/makedumpfile.h
+>>>> +++ b/makedumpfile.h
+>>>> @@ -2020,6 +2020,7 @@ struct domain_list {
+>>>>  #define MFNS_PER_FRAME               (info->page_size / sizeof(unsigned long))
+>>>>
+>>>>  #ifdef __aarch64__
+>>>> +#define __START_KERNEL_map           (0xffffffff80000000UL)
+>>>
+>>> This #ifdef here is for the definitions related to Xen extraction.
+>>> I'll move it to the same place as the above.
+>>>
+>>>>  unsigned long long kvtop_xen_arm64(unsigned long kvaddr);
+>>>>  #define kvtop_xen(X) kvtop_xen_arm64(X)
+>>>>  #endif /* aarch64 */
+>>>>
+>>>
+>>> I attached a patch that was applied my suggestions.
+>>> How about it?
 >>
->> You need the kernel VA for a symbol. Isn't this what kallsyms is for?
->> | root@frikadeller:~# cat /proc/kallsyms | grep swapper_pg_dir
->> | ffff5404610d0000 B swapper_pg_dir
+>> I agree. The patch looks good with the suggested changes.
+>> Please go ahead and feel free to apply the modified patch.
+>
+> OK, I'll apply it.
+>
+> With respect to the 2/2 patch, I'm waiting for the kernel patch
+> to be merged.
+>
+> If need be, I can apply the 1/2 patch separately from the 2/2 patch,
+> because I think they are not directly connected with each other.
 
-> Its already used by other archs like x86_64.
-> Its just that we are enabling this feature for arm64 now that the
-> KASLR boot cases are more widely seen on arm64 boards (as newer EFI
-> firmware implementations are available which support EFI_RNG_PROTOCOL
-> and hence KASLR boot).
-> 
-> And we want existing user-space application(s) to work similarly on
-> arm64 distributions as they work historically on other archs like
-> x86_64 (in most cases the user-space user is not even aware, if he is
-> developing for or using an underlying hardware which is arm64 or
-> x86_64)
+Sure, I think we can handle 2/2 patch when it's kernel part is
+reviewed properly by the arm64 kernel maintainer(s). We can apply 1/2
+patch in the meanwhile.
 
-Aha, so its ABI. This is the information that should be in the commit message as
-it describes why this patch should be merged.
+> p.s. it seems that I cannot send emails to gmail for now,
+> so dropped your gmail address. sorry for the inconvenience.
 
-... Ideally core code would do this, that way this information won't be missed
-when an architecture adds KASLR support.
-
-But mips has CONFIG_RANDOMIZE_BASE, and doesn't provide kaslr_offset(),
-and x86 always provides this value, not just if CONFIG_RANDOMIZE_BASE is
-selected. I can't see a way to do this without touching all three architectures.
-(we can try and tidy it up once its clear whether mips needs this too)
-
-
-I think the patch is fine, but could you re-post it with a commit message that
-describes that vmcore parsing in user-space already expects this value in the
-notes. We're providing it for portability of those existing tools with x86.
-
-
->> I picked swapper_pg_dir, but you could use any of the vmcore:SYMBOL() addresses
->> to work out this offset. (you should expect the kernel to rename these symbols
->> at a whim).
->>
-> 
-> Perhaps you missed what the above makedumpfile command was doing, so
-> let me summarize again:
-
-Yes, I glossed over it, all that seemed relevant is you are trying to find the
-kernel-va of a symbol from the value in the vmlinux.
-
-
-> as it breaks the
-> existing user-space use-cases and the .conf file can be user-defined
-> (and hence he can pick any symbol/functions
-
-My suggestion was you can calculate the offset between the link-time and
-run-time address from information you already have. You just need one of each.
-This would be better as its independent of how the kernel does the relocation.
-
-But, this is irrelevant as 'KERNELOFFSET=' is already an ABI string.
-
-
-> which might not even be present in 'kallsyms').
-
-Eh? How can that happen? I thought even modules had their symbols added to kallsyms.
-
-
+Sure, I use the gmail address just as a backup to read/answer upstream
+replies once I am out of office (as it is easier to access on my
+phone).
 
 Thanks,
+Bhupesh
 
-James
+>>
+>> Thanks a lot for your help.
+>> Regards,
+>> Bhupesh
+>>
 
 _______________________________________________
 kexec mailing list
