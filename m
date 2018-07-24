@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fhqrf-0000hL-Ve
- for kexec@lists.infradead.org; Tue, 24 Jul 2018 06:32:09 +0000
-Date: Tue, 24 Jul 2018 08:31:54 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 0/2] Add capability to dump fdt blob for arm64 platforms
-Message-ID: <20180724063110.lclgpne27o5xbws3@verge.net.au>
-References: <1529576678-14615-1-git-send-email-bhsharma@redhat.com>
- <20180709071107.GT28220@linaro.org>
- <d2102b2d-b3bb-4d5d-19d9-51a7f3eed7a7@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <d2102b2d-b3bb-4d5d-19d9-51a7f3eed7a7@redhat.com>
+Received: from mail-pg1-x541.google.com ([2607:f8b0:4864:20::541])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fhrFy-0000tM-Jq
+ for kexec@lists.infradead.org; Tue, 24 Jul 2018 06:57:17 +0000
+Received: by mail-pg1-x541.google.com with SMTP id r1-v6so2177489pgp.11
+ for <kexec@lists.infradead.org>; Mon, 23 Jul 2018 23:57:11 -0700 (PDT)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v12 01/16] asm-generic: add kexec_file_load system call to
+ unistd.h
+Date: Tue, 24 Jul 2018 15:57:44 +0900
+Message-Id: <20180724065759.19186-2-takahiro.akashi@linaro.org>
+In-Reply-To: <20180724065759.19186-1-takahiro.akashi@linaro.org>
+References: <20180724065759.19186-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,51 +20,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, dyoung@redhat.com, bhupesh.linux@gmail.com, kexec@lists.infradead.org, james.morse@arm.com
+To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-On Tue, Jul 17, 2018 at 02:13:42AM +0530, Bhupesh Sharma wrote:
-> Hi Akashi,
-> 
-> On 07/09/2018 12:41 PM, AKASHI Takahiro wrote:
-> > Bhupesh, Simon,
-> > 
-> > #I'm afraid that I gonna rehash the old discussion.
-> > 
-> > Looking into ppc's kexec-tools code, I found that ppc version of
-> > this tool has a similar feature and it saves a new dtb into a file,
-> > named "debug.dtb."
-> > See save_fixed_up_dtb() in kexec/arch/ppc/fixup_dtb.c
-> > 
-> > Even if it is a debug feature, we'd better go in the same way
-> > (if possible).
-> 
-> Thanks for sharing the same.
-> 
-> I had a look earlier also at the ppc - "debug.dtb" code in kexec-tools, but
-> this is again fails to fulfill the same purpose that we are trying to
-> resolve for early primary kernel crash(es) on arm64 machines, because of
-> which we are not able to reach the command prompt with the primary kernel
-> itself.
-> 
-> We would need to either reach the command prompt to dump out/save the
-> "debug.dtb" file when we are running the primary kernel (which is
-> unfortunately not always possible wit latest kernels on some of the arm64
-> machines), or use some initramfs scriptware to dump out the same to some
-> secondary storage device (nfs server or usb stick).
-> 
-> So, I would still suggest to stick with the approach I proposed for now (and
-> we can take a similar approach as ppc for arm64 later on) once we have
-> kexec, kdump and other user-space utilities (which rely on the kexec kernel
-> framework) working stably on arm64 machines (with latest upstream kernels).
+The initial user of this system call number is arm64.
 
-That sounds like a reasonable argument to me.
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+---
+ include/uapi/asm-generic/unistd.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Akashi, what do you think?
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index 42990676a55e..c81f4a0df51f 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -734,9 +734,11 @@ __SYSCALL(__NR_pkey_free,     sys_pkey_free)
+ __SYSCALL(__NR_statx,     sys_statx)
+ #define __NR_io_pgetevents 292
+ __SC_COMP(__NR_io_pgetevents, sys_io_pgetevents, compat_sys_io_pgetevents)
++#define __NR_kexec_file_load 293
++__SYSCALL(__NR_kexec_file_load,     sys_kexec_file_load)
+ 
+ #undef __NR_syscalls
+-#define __NR_syscalls 293
++#define __NR_syscalls 294
+ 
+ /*
+  * 32 bit systems traditionally used different
+-- 
+2.18.0
+
 
 _______________________________________________
 kexec mailing list
