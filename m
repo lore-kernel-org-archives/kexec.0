@@ -1,21 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x543.google.com ([2607:f8b0:4864:20::543])
+Received: from mail-wm0-x242.google.com ([2a00:1450:400c:c09::242])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fi7ht-00020n-8f
- for kexec@lists.infradead.org; Wed, 25 Jul 2018 00:31:10 +0000
-Received: by mail-pg1-x543.google.com with SMTP id z8-v6so4013543pgu.8
- for <kexec@lists.infradead.org>; Tue, 24 Jul 2018 17:30:58 -0700 (PDT)
-Date: Wed, 25 Jul 2018 09:32:29 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v4 0/2] Add capability to dump fdt blob for arm64 platforms
-Message-ID: <20180725003228.GB11258@linaro.org>
-References: <1529576678-14615-1-git-send-email-bhsharma@redhat.com>
- <20180709071107.GT28220@linaro.org>
- <d2102b2d-b3bb-4d5d-19d9-51a7f3eed7a7@redhat.com>
- <20180724063110.lclgpne27o5xbws3@verge.net.au>
+ id 1fiFRG-0006yj-LU
+ for kexec@lists.infradead.org; Wed, 25 Jul 2018 08:46:32 +0000
+Received: by mail-wm0-x242.google.com with SMTP id f21-v6so5170313wmc.5
+ for <kexec@lists.infradead.org>; Wed, 25 Jul 2018 01:46:19 -0700 (PDT)
+Received: from [192.168.0.20] ([94.10.28.213])
+ by smtp.googlemail.com with ESMTPSA id
+ i125-v6sm7899872wmd.23.2018.07.25.01.46.17
+ for <kexec@lists.infradead.org>
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Wed, 25 Jul 2018 01:46:17 -0700 (PDT)
+From: Chris Clayton <chris2553@googlemail.com>
+Subject: (Possible) fix for "Unhandled rela relocation: R_X86_64_PLT32" error
+Message-ID: <e590dc81-7df7-746d-98f2-710f85e03467@googlemail.com>
+Date: Wed, 25 Jul 2018 09:46:10 +0100
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180724063110.lclgpne27o5xbws3@verge.net.au>
+Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,56 +29,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: dyoung@redhat.com, Bhupesh Sharma <bhsharma@redhat.com>, bhupesh.linux@gmail.com, kexec@lists.infradead.org, james.morse@arm.com
+To: kexec@lists.infradead.org
 
-On Tue, Jul 24, 2018 at 08:31:54AM +0200, Simon Horman wrote:
-> On Tue, Jul 17, 2018 at 02:13:42AM +0530, Bhupesh Sharma wrote:
-> > Hi Akashi,
-> > 
-> > On 07/09/2018 12:41 PM, AKASHI Takahiro wrote:
-> > > Bhupesh, Simon,
-> > > 
-> > > #I'm afraid that I gonna rehash the old discussion.
-> > > 
-> > > Looking into ppc's kexec-tools code, I found that ppc version of
-> > > this tool has a similar feature and it saves a new dtb into a file,
-> > > named "debug.dtb."
-> > > See save_fixed_up_dtb() in kexec/arch/ppc/fixup_dtb.c
-> > > 
-> > > Even if it is a debug feature, we'd better go in the same way
-> > > (if possible).
-> > 
-> > Thanks for sharing the same.
-> > 
-> > I had a look earlier also at the ppc - "debug.dtb" code in kexec-tools, but
-> > this is again fails to fulfill the same purpose that we are trying to
-> > resolve for early primary kernel crash(es) on arm64 machines, because of
-> > which we are not able to reach the command prompt with the primary kernel
-> > itself.
-> > 
-> > We would need to either reach the command prompt to dump out/save the
-> > "debug.dtb" file when we are running the primary kernel (which is
-> > unfortunately not always possible wit latest kernels on some of the arm64
-> > machines),
+Hi.
 
-Although I'm not sure how it cannot be possible,
+I haven't rebooted my laptop with kexec for quite some time, but when I tried to this morning I got the error you will
+see in $SUBJECT.  The error occurs with both kexec-tools-2.0.17 or -2.0.16 run on either 4.18.0-rc6+ (built from a git
+pull this morning) or 4.14.57 kernels.
 
-> or use some initramfs scriptware to dump out the same to some
-> > secondary storage device (nfs server or usb stick).
-> > 
-> > So, I would still suggest to stick with the approach I proposed for now (and
-> > we can take a similar approach as ppc for arm64 later on) once we have
-> > kexec, kdump and other user-space utilities (which rely on the kexec kernel
-> > framework) working stably on arm64 machines (with latest upstream kernels).
-> 
-> That sounds like a reasonable argument to me.
-> 
-> Akashi, what do you think?
+I searched for "R_X86_64_PLT32" and found that there was a change to the kernel that may be related -
+b21ebf2fb4cde1618915a97cc773e287ff49173e x86: Treat R_X86_64_PLT32 as R_X86_64_PC32. So I replicated the change that
+patch made to arch/x86/kernel/machine_kexec_64.c in kexec/arch/x86_64/kexec-elf-rel-x86_64.c and kexec now reboots into
+the new kernel.
 
-it's fine to me, too.
+I don't know enough about relocations and the like to know whether my 'fix' is correct and the best way to go about it,
+but I've included it below for your consideration.
 
--Takahiro AKASHI
+Signed-off-by: Chris Clayton <chris2553@googlemail.com>
+
+--- kexec-tools-2.0.17/kexec/arch/x86_64/kexec-elf-rel-x86_64.c.orig	2018-07-25 08:48:24.152054030 +0100
++++ kexec-tools-2.0.17/kexec/arch/x86_64/kexec-elf-rel-x86_64.c	2018-07-25 08:49:16.860055330 +0100
+@@ -79,6 +79,7 @@ void machine_apply_elf_rel(struct mem_eh
+ 			goto overflow;
+ 		break;
+ 	case R_X86_64_PC32:
++	case R_X86_64_PLT32:
+ 		*(uint32_t *)location = value - address;
+ 		break;
+ 	default:
 
 _______________________________________________
 kexec mailing list
