@@ -1,14 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-f193.google.com ([209.85.215.193])
+Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fk1j9-00057U-NV
- for kexec@lists.infradead.org; Mon, 30 Jul 2018 06:32:23 +0000
-Received: by mail-pg1-f193.google.com with SMTP id s7-v6so6680561pgv.3
- for <kexec@lists.infradead.org>; Sun, 29 Jul 2018 23:32:09 -0700 (PDT)
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH v2] arm64, kaslr: export offset in VMCOREINFO ELF notes
-Date: Mon, 30 Jul 2018 11:54:43 +0530
-Message-Id: <1532931883-16132-1-git-send-email-bhsharma@redhat.com>
+ id 1fifsN-0007EN-67
+ for kexec@lists.infradead.org; Thu, 26 Jul 2018 13:00:16 +0000
+Date: Thu, 26 Jul 2018 14:59:57 +0200
+From: Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH v7 4/4] kexec_file: Load kernel at top of system RAM if
+ required
+Message-ID: <20180726125957.GH28386@dhcp22.suse.cz>
+References: <20180718024944.577-1-bhe@redhat.com>
+ <20180718024944.577-5-bhe@redhat.com>
+ <20180718153326.b795e9ea7835432a56cd7011@linux-foundation.org>
+ <20180719151753.GB7147@localhost.localdomain>
+ <20180723143443.GD18181@dhcp22.suse.cz>
+ <20180725064813.GI6480@MiWiFi-R3L-srv>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180725064813.GI6480@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,103 +25,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, catalin.marinas@arm.com, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, takahiro.akashi@linaro.org, James Morse <james.morse@arm.com>, bhupesh.linux@gmail.com
+To: Baoquan He <bhe@redhat.com>
+Cc: nicolas.pitre@linaro.org, brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, kys@microsoft.com, frowand.list@gmail.com, dan.j.williams@intel.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, andy.shevchenko@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, bp@suse.de, dyoung@redhat.com, vgoyal@redhat.com, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, josh@joshtriplett.org, jglisse@redhat.com, robh+dt@kernel.org, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, devel@linuxdriverproject.org, Andrew Morton <akpm@linux-foundation.org>, fengguang.wu@intel.com, linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
 
-Include KASLR offset in arm64 VMCOREINFO ELF notes to assist in
-debugging. vmcore parsing in user-space already expects this value in
-the notes and we are providing it for portability of those existing
-tools with x86.
+On Wed 25-07-18 14:48:13, Baoquan He wrote:
+> On 07/23/18 at 04:34pm, Michal Hocko wrote:
+> > On Thu 19-07-18 23:17:53, Baoquan He wrote:
+> > > Kexec has been a formal feature in our distro, and customers owning
+> > > those kind of very large machine can make use of this feature to speed
+> > > up the reboot process. On uefi machine, the kexec_file loading will
+> > > search place to put kernel under 4G from top to down. As we know, the
+> > > 1st 4G space is DMA32 ZONE, dma, pci mmcfg, bios etc all try to consume
+> > > it. It may have possibility to not be able to find a usable space for
+> > > kernel/initrd. From the top down of the whole memory space, we don't
+> > > have this worry. 
+> > 
+> > I do not have the full context here but let me note that you should be
+> > careful when doing top-down reservation because you can easily get into
+> > hotplugable memory and break the hotremove usecase. We even warn when
+> > this is done. See memblock_find_in_range_node
+> 
+> Kexec read kernel/initrd file into buffer, just search usable positions
+> for them to do the later copying. You can see below struct kexec_segment, 
+> for the old kexec_load, kernel/initrd are read into user space buffer,
+> the @buf stores the user space buffer address, @mem stores the position
+> where kernel/initrd will be put. In kernel, it calls
+> kimage_load_normal_segment() to copy user space buffer to intermediate
+> pages which are allocated with flag GFP_KERNEL. These intermediate pages
+> are recorded as entries, later when user execute "kexec -e" to trigger
+> kexec jumping, it will do the final copying from the intermediate pages
+> to the real destination pages which @mem pointed. Because we can't touch
+> the existed data in 1st kernel when do kexec kernel loading. With my
+> understanding, GFP_KERNEL will make those intermediate pages be
+> allocated inside immovable area, it won't impact hotplugging. But the
+> @mem we searched in the whole system RAM might be lost along with
+> hotplug. Hence we need do kexec kernel again when hotplug event is
+> detected.
 
-Ideally we would like core code to do this (so that way this
-information won't be missed when an architecture adds KASLR support),
-but mips has CONFIG_RANDOMIZE_BASE, and doesn't provide kaslr_offset(),
-so I am not sure if this is needed for mips (and other such similar arch
-cases in future). So, lets keep this architecture specific for now.
+I am not sure I am following. If @mem is placed at movable node then the
+memory hotremove simply won't work, because we are seeing reserved pages
+and do not know what to do about them. They are not migrateable.
+Allocating intermediate pages from other nodes doesn't really help.
 
-As an example of a user-space use-case, consider the
-makedumpfile user-space utility which will need fixup to use this
-KASLR offset to work with cases where we need to find a way to
-translate symbol address from vmlinux to kernel run time address
-in case of KASLR boot on arm64.
-
-I have already submitted the makedumpfile user-space patch upstream
-and the maintainer has suggested to wait for the kernel changes to be
-included (see [0]).
-
-I tested this on my qualcomm amberwing board both for KASLR and
-non-KASLR boot cases:
-
-Without this patch:
-   # cat > scrub.conf << EOF
-   [vmlinux]
-   erase jiffies
-   erase init_task.utime
-   for tsk in init_task.tasks.next within task_struct:tasks
-       erase tsk.utime
-   endfor
-   EOF
-
-  # makedumpfile --split -d 31 -x vmlinux --config scrub.conf vmcore dumpfile_{1,2,3}
-  readpage_elf: Attempt to read non-existent page at 0xffffa8a5bf180000.
-  readmem: type_addr: 1, addr:ffffa8a5bf180000, size:8
-  vaddr_to_paddr_arm64: Can't read pgd
-  readmem: Can't convert a virtual address(ffff0000092a542c) to physical
-  address.
-  readmem: type_addr: 0, addr:ffff0000092a542c, size:390
-  check_release: Can't get the address of system_utsname
-
-After this patch check_release() is ok, and also we are able to erase
-symbol from vmcore (I checked this with kernel 4.18.0-rc4+):
-
-  # makedumpfile --split -d 31 -x vmlinux --config scrub.conf vmcore dumpfile_{1,2,3}
-  The kernel version is not supported.
-  The makedumpfile operation may be incomplete.
-  Checking for memory holes                         : [100.0 %] \
-  Checking for memory holes                         : [100.0 %] |
-  Checking foExcluding unnecessary pages                       : [100.0 %]
-  \
-  Excluding unnecessary pages                       : [100.0 %] \
-
-  The dumpfiles are saved to dumpfile_1, dumpfile_2, and dumpfile_3.
-
-  makedumpfile Completed.
-
-[0] https://www.spinics.net/lists/kexec/msg21195.html
-
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
-Changes since v1:
- - Addressed review comments from James regarding commit log
- - v1 can be viewed here: https://lkml.org/lkml/2018/7/18/951
- - v2 is rebased against linux-next/master
-
- arch/arm64/kernel/machine_kexec.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index f62effc6e064..028df356a5fd 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -360,4 +360,5 @@ void arch_crash_save_vmcoreinfo(void)
- 						kimage_voffset);
- 	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
- 						PHYS_OFFSET);
-+	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
- }
+The memblock code warns exactly for that reason.
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
 
 _______________________________________________
 kexec mailing list
