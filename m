@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v12 10/16] arm64: kexec_file: load initrd and device-tree
+Subject: Re: [PATCH v12 01/16] asm-generic: add kexec_file_load system call to
+ unistd.h
 References: <20180724065759.19186-1-takahiro.akashi@linaro.org>
- <20180724065759.19186-11-takahiro.akashi@linaro.org>
+ <20180724065759.19186-2-takahiro.akashi@linaro.org>
 From: James Morse <james.morse@arm.com>
-Message-ID: <99f87d6c-b5e3-4f98-5f3b-7032ff4780b1@arm.com>
-Date: Thu, 26 Jul 2018 14:34:55 +0100
+Message-ID: <f77fe157-f9f6-8dfc-eca0-1ecd687f671f@arm.com>
+Date: Thu, 26 Jul 2018 14:35:50 +0100
 MIME-Version: 1.0
-In-Reply-To: <20180724065759.19186-11-takahiro.akashi@linaro.org>
+In-Reply-To: <20180724065759.19186-2-takahiro.akashi@linaro.org>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,48 +27,33 @@ Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, cata
 Hi Akashi,
 
 On 24/07/18 07:57, AKASHI Takahiro wrote:
-> load_other_segments() is expected to allocate and place all the necessary
-> memory segments other than kernel, including initrd and device-tree
-> blob (and elf core header for crash).
-> While most of the code was borrowed from kexec-tools' counterpart,
-> users may not be allowed to specify dtb explicitly, instead, the dtb
-> presented by the original boot loader is reused.
-> 
-> arch_kimage_kernel_post_load_cleanup() is responsible for freeing arm64-
-> specific data allocated in load_other_segments().
+> The initial user of this system call number is arm64.
 
-Since v11 you've renamed struct kimage_arch's dtb_buf as dtb, but not changed
-the struct. This series doesn't build until patch 12 where you fix it. This will
-cause anyone trying to bisect through here a problem.
-
+This patch conflicts with commit db7a2d1809a5 ("asm-generic: unistd.h: Wire up
+sys_rseq") in the arm64 tree.
 
 Thanks,
 
 James
 
-> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> index e17f0529a882..026f7e408f0c 100644
-> --- a/arch/arm64/include/asm/kexec.h
-> +++ b/arch/arm64/include/asm/kexec.h
-
-> +struct kimage_arch {
-> +	void *dtb_buf;
-> +	unsigned long dtb_mem;
-> +};
-
-> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> index c38a8048ed00..b28fbb0659c9 100644
-> --- a/arch/arm64/kernel/machine_kexec_file.c
-> +++ b/arch/arm64/kernel/machine_kexec_file.c
-
-> +int arch_kimage_file_post_load_cleanup(struct kimage *image)
-> +{
-> +	vfree(image->arch.dtb);
-> +	image->arch.dtb = NULL;
-> +
-> +	return kexec_image_post_load_cleanup_default(image);
-> +}
-
+> diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+> index 42990676a55e..c81f4a0df51f 100644
+> --- a/include/uapi/asm-generic/unistd.h
+> +++ b/include/uapi/asm-generic/unistd.h
+> @@ -734,9 +734,11 @@ __SYSCALL(__NR_pkey_free,     sys_pkey_free)
+>  __SYSCALL(__NR_statx,     sys_statx)
+>  #define __NR_io_pgetevents 292
+>  __SC_COMP(__NR_io_pgetevents, sys_io_pgetevents, compat_sys_io_pgetevents)
+> +#define __NR_kexec_file_load 293
+> +__SYSCALL(__NR_kexec_file_load,     sys_kexec_file_load)
+>  
+>  #undef __NR_syscalls
+> -#define __NR_syscalls 293
+> +#define __NR_syscalls 294
+>  
+>  /*
+>   * 32 bit systems traditionally used different
+> 
 
 _______________________________________________
 kexec mailing list
