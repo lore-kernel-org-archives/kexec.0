@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v12 15/16] arm64: kexec_file: add kernel signature
- verification support
+Subject: Re: [PATCH v12 16/16] arm64: kexec_file: add kaslr support
 References: <20180724065759.19186-1-takahiro.akashi@linaro.org>
- <20180724065759.19186-16-takahiro.akashi@linaro.org>
+ <20180724065759.19186-17-takahiro.akashi@linaro.org>
 From: James Morse <james.morse@arm.com>
-Message-ID: <d3704585-9404-a56b-883a-30c123084ada@arm.com>
-Date: Thu, 26 Jul 2018 14:39:25 +0100
+Message-ID: <50b31f17-fc85-aa72-06f5-d3b62060a91f@arm.com>
+Date: Thu, 26 Jul 2018 14:40:49 +0100
 MIME-Version: 1.0
-In-Reply-To: <20180724065759.19186-16-takahiro.akashi@linaro.org>
+In-Reply-To: <20180724065759.19186-17-takahiro.akashi@linaro.org>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,47 +26,55 @@ Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, cata
 Hi Akashi,
 
 On 24/07/18 07:57, AKASHI Takahiro wrote:
-> With this patch, kernel verification can be done without IMA security
-> subsystem enabled. Turn on CONFIG_KEXEC_VERIFY_SIG instead.
-> 
-> On x86, a signature is embedded into a PE file (Microsoft's format) header
-> of binary. Since arm64's "Image" can also be seen as a PE file as far as
-> CONFIG_EFI is enabled, we adopt this format for kernel signing.
-> 
-> You can create a signed kernel image with:
->     $ sbsign --key ${KEY} --cert ${CERT} Image
+> Adding "kaslr-seed" to dtb enables triggering kaslr, or kernel virtual
+> address randomization, at secondary kernel boot.
 
-Reviewed-by: James Morse <james.morse@arm.com>
+Hmm, there are three things that get moved by CONFIG_RANDOMIZE_BASE. The kernel
+physical placement when booted via the EFIstub, the kernel-text VAs and the
+location of memory in the linear-map region. Adding the kaslr-seed only does the
+last two.
 
-
-> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-> index d64f5e9f9d22..578d358632d0 100644
-> --- a/arch/arm64/kernel/kexec_image.c
-> +++ b/arch/arm64/kernel/kexec_image.c
-> @@ -102,7 +106,18 @@ static void *image_load(struct kimage *image,
->  	return ERR_PTR(ret);
->  }
->  
-> +#ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
-> +static int image_verify_sig(const char *kernel, unsigned long kernel_len)
-> +{
-> +	return verify_pefile_signature(kernel, kernel_len, NULL,
-> +				       VERIFYING_KEXEC_PE_SIGNATURE);
-> +}
-> +#endif
-
-This is identical to x86's PE image verification helper. We can clean this up
-later by providing some kexec_image_verify_pe() in the core kexec_file code. Its
-not worth doing now.
+This means the physical placement of the new kernel is predictable from
+/proc/iomem ... but this also tells you the physical placement of the current
+kernel, so I don't think this is a problem.
 
 
->  const struct kexec_file_ops kexec_image_ops = {
->  	.probe = image_probe,
->  	.load = image_load,
-> +#ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
-> +	.verify_sig = image_verify_sig,
-> +#endif
->  };
+> We always do this as it will have no harm on kaslr-incapable kernel.
+
+> We don't have any "switch" to turn off this feature directly, but still
+> can suppress it by passing "nokaslr" as a kernel boot argument.
+
+
+> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> index 7356da5a53d5..47a4fbd0dc34 100644
+> --- a/arch/arm64/kernel/machine_kexec_file.c
+> +++ b/arch/arm64/kernel/machine_kexec_file.c
+> @@ -158,6 +160,12 @@ static int setup_dtb(struct kimage *image,
+
+Don't you need to reserve some space in the area you vmalloc()d for the DT?
+
+
+> +	/* add kaslr-seed */
+> +	get_random_bytes(&value, sizeof(value));
+
+What happens if the crng isn't ready?
+
+It looks like this will print a warning that these random-bytes aren't really up
+to standard, but the new kernel doesn't know this happened.
+
+crng_ready() isn't exposed, all we could do now is
+wait_for_random_bytes(), but that may wait forever because we do this
+unconditionally.
+
+I'd prefer to leave this feature until we can check crng_ready(), and skip
+adding a dodgy-seed if its not-ready. This avoids polluting the next-kernel's
+entropy pool.
+
+
+> +	ret = fdt_setprop(buf, nodeoffset, "kaslr-seed", &value, sizeof(value));
+
+Nit: It would be nice if this string were in a header file somewhere, to void
+future refactoring typos.
 
 
 Thanks,
