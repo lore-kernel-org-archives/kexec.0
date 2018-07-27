@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x542.google.com ([2607:f8b0:4864:20::542])
+Received: from mail-pg1-x541.google.com ([2607:f8b0:4864:20::541])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fiwiS-00088g-EG
- for kexec@lists.infradead.org; Fri, 27 Jul 2018 06:59:10 +0000
-Received: by mail-pg1-x542.google.com with SMTP id e6-v6so2683377pgv.2
- for <kexec@lists.infradead.org>; Thu, 26 Jul 2018 23:58:58 -0700 (PDT)
-Date: Fri, 27 Jul 2018 16:00:31 +0900
+ id 1fix3w-0001Wt-53
+ for kexec@lists.infradead.org; Fri, 27 Jul 2018 07:21:21 +0000
+Received: by mail-pg1-x541.google.com with SMTP id p23-v6so2701158pgv.13
+ for <kexec@lists.infradead.org>; Fri, 27 Jul 2018 00:21:10 -0700 (PDT)
+Date: Fri, 27 Jul 2018 16:22:43 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v12 12/16] arm64: kexec_file: add crash dump support
-Message-ID: <20180727070030.GG11258@linaro.org>
+Subject: Re: [PATCH v12 13/16] arm64: kexec_file: invoke the kernel without
+ purgatory
+Message-ID: <20180727072242.GH11258@linaro.org>
 References: <20180724065759.19186-1-takahiro.akashi@linaro.org>
- <20180724065759.19186-13-takahiro.akashi@linaro.org>
- <e7605411-c54f-c744-43a7-aecc0e36e3f3@arm.com>
+ <20180724065759.19186-14-takahiro.akashi@linaro.org>
+ <b9257c90-a538-fb82-b9de-574d68d06fbd@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <e7605411-c54f-c744-43a7-aecc0e36e3f3@arm.com>
+In-Reply-To: <b9257c90-a538-fb82-b9de-574d68d06fbd@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,118 +31,62 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: James Morse <james.morse@arm.com>
 Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-On Thu, Jul 26, 2018 at 02:36:58PM +0100, James Morse wrote:
+On Thu, Jul 26, 2018 at 02:36:07PM +0100, James Morse wrote:
 > Hi Akashi,
 > 
 > On 24/07/18 07:57, AKASHI Takahiro wrote:
-> > Enabling crash dump (kdump) includes
-> > * prepare contents of ELF header of a core dump file, /proc/vmcore,
-> >   using crash_prepare_elf64_headers(), and
-> > * add two device tree properties, "linux,usable-memory-range" and
-> >   "linux,elfcorehdr", which represent respectively a memory range
-> >   to be used by crash dump kernel and the header's location
+> > On arm64, purgatory would do almost nothing. So just invoke secondary
+> > kernel directly by jumping into its entry code.
+> > 
+> > While, in this case, cpu_soft_restart() must be called with dtb address
+> > in the fifth argument, the behavior still stays compatible with kexec_load
+> > case as long as the argument is null.
 > 
-> > diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> > index 5d102a1054b3..1b2c27026ae0 100644
-> > --- a/arch/arm64/include/asm/kexec.h
-> > +++ b/arch/arm64/include/asm/kexec.h
-> > @@ -97,8 +97,12 @@ static inline void crash_post_resume(void) {}
-> >  #define ARCH_HAS_KIMAGE_ARCH
-> >  
-> >  struct kimage_arch {
-> 
-> > -	void *dtb_buf;
-> > +	void *dtb;
-> 
-> This change should be in an earlier patch, otherwise this series doesn't build
-> during bisect.
+> This patch conflicts with commit 76f4e2da45b4 ("arm64: kexec: always reset to
+> EL2 if present") in the arm64 tree.
 
-Will fix.
+I haven't noticed Mark's patch.
 
-> With the build-issues fixed:
-> Reviewed-by: James Morse <james.morse@arm.com>
-> 
-> Some boring Nits:
-> 
-> >  	unsigned long dtb_mem;
-> > +	/* Core ELF header buffer */
-> > +	void *elf_headers;
-> > +	unsigned long elf_headers_mem;
-> > +	unsigned long elf_headers_sz;
-> >  };
-> > diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> > index b8297f10e2ef..7356da5a53d5 100644
-> > --- a/arch/arm64/kernel/machine_kexec_file.c
-> > +++ b/arch/arm64/kernel/machine_kexec_file.c
-> > @@ -38,12 +44,30 @@ static int setup_dtb(struct kimage *image,
-> >  		void **dtb_buf, unsigned long *dtb_buf_len)
-> >  {
-> >  	void *buf = NULL;
-> > -	size_t buf_size;
-> > +	size_t buf_size, range_size;
-> >  	int nodeoffset;
-> >  	int ret;
-> >  
-> >  	/* duplicate dt blob */
-> >  	buf_size = fdt_totalsize(initial_boot_params);
-> > +	range_size = of_fdt_reg_cells_size();
-> > +
-> > +	if (image->type == KEXEC_TYPE_CRASH) {
-> > +		buf_size += fdt_prop_len("linux,elfcorehdr", range_size);
-> > +		buf_size += fdt_prop_len("linux,usable-memory-range",
-> > +								range_size);
-> > +	}
-> 
-> Nit: it would be better if these strings were defined in a header file somewhere
-> so we don't risk a typo if this gets refactored.
+I'm going to have to refresh my memory regarding why I introduced
+el2_switch when I implemented kdump.
+According to my current memory, however, I added
+kvm_arch_hardware_enable/disable(), and associated functions, to gracefully
+shutdown EL2 in case of kexec. Since we have no chance to call reset
+function (via notifier) at kdump, I believed that el2_switch was necessary
+for better chance of successful kdump.
 
-Nit??
-Well, I do understand your concern, but it's a bit headache.
-If we handle them in such a way, we may want to handle others, such as
-linux,initrd-start/end, chosen and bootargs, as well in this file.
-They are not kexec specific and should go into a common header. This will
-end up propagating similar changes to other no-kexec-related occurrences
-under drivers/of.
-
-So I want to keep the following def's local in this file for easy
-maintenance.
-#define FDT_PSTR_KEXEC_ELFHDR  "linux,elfcorehdr"
-#define FDT_PSTR_MEM_RANGE     "linux,usable-memory-range"
-#define FDT_PSTR_INITRD_ST     "linux,initrd-start"
-#define FDT_PSTR_INITRD_END    "linux,initrd-end"
-#define FDT_PSTR_BOOTARGS       "bootargs"
-#define FDT_PSTR_KASLR_SEED     "kaslr-seed"
-
-> 
-> 
-> > @@ -129,6 +170,43 @@ static int setup_dtb(struct kimage *image,
-> >  	return ret;
-> >  }
-> >  
-> > +static int prepare_elf_headers(void **addr, unsigned long *sz)
-> > +{
-> > +	struct crash_mem *cmem;
-> > +	unsigned int nr_ranges;
-> > +	int ret;
-> > +	u64 i;
-> > +	phys_addr_t start, end;
-> > +
-> > +	nr_ranges = 1; /* for exclusion of crashkernel region */
-> 
-> > +	for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE, 0,
-> > +							&start, &end, NULL)
-> 
-> Nit: MEMBLOCK_NONE
-
-OK
-
+Thanks,
 -Takahiro AKASHI
 
-
-> 
 > Thanks,
 > 
 > James
+> 
+> > diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> > index f76ea92dff91..830a5063e09d 100644
+> > --- a/arch/arm64/kernel/machine_kexec.c
+> > +++ b/arch/arm64/kernel/machine_kexec.c
+> > @@ -205,10 +205,18 @@ void machine_kexec(struct kimage *kimage)
+> >  	 * uses physical addressing to relocate the new image to its final
+> >  	 * position and transfers control to the image entry point when the
+> >  	 * relocation is complete.
+> > +	 * In kexec case, kimage->start points to purgatory assuming that
+> > +	 * kernel entry and dtb address are embedded in purgatory by
+> > +	 * userspace (kexec-tools).
+> > +	 * In kexec_file case, the kernel starts directly without purgatory.
+> >  	 */
+> > -
+> >  	cpu_soft_restart(kimage != kexec_crash_image,
+> > -		reboot_code_buffer_phys, kimage->head, kimage->start, 0);
+> > +		reboot_code_buffer_phys, kimage->head, kimage->start,
+> > +#ifdef CONFIG_KEXEC_FILE
+> > +						kimage->arch.dtb_mem);
+> > +#else
+> > +						0);
+> > +#endif
+> >  
+> >  	BUG(); /* Should never get here. */
+> >  }
 
 _______________________________________________
 kexec mailing list
