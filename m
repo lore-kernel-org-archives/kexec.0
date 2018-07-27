@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x441.google.com ([2607:f8b0:4864:20::441])
+Received: from mail-pg1-x542.google.com ([2607:f8b0:4864:20::542])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fivEF-0006XD-MH
- for kexec@lists.infradead.org; Fri, 27 Jul 2018 05:23:54 +0000
-Received: by mail-pf1-x441.google.com with SMTP id j26-v6so1330646pfi.10
- for <kexec@lists.infradead.org>; Thu, 26 Jul 2018 22:23:41 -0700 (PDT)
-Date: Fri, 27 Jul 2018 14:25:14 +0900
+ id 1fivQV-0003qu-TN
+ for kexec@lists.infradead.org; Fri, 27 Jul 2018 05:36:33 +0000
+Received: by mail-pg1-x542.google.com with SMTP id n7-v6so2554859pgq.4
+ for <kexec@lists.infradead.org>; Thu, 26 Jul 2018 22:36:21 -0700 (PDT)
+Date: Fri, 27 Jul 2018 14:37:55 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v12 04/16] powerpc, kexec_file: factor out memblock-based
- arch_kexec_walk_mem()
-Message-ID: <20180727052513.GE11258@linaro.org>
+Subject: Re: [PATCH v12 10/16] arm64: kexec_file: load initrd and device-tree
+Message-ID: <20180727053754.GF11258@linaro.org>
 References: <20180724065759.19186-1-takahiro.akashi@linaro.org>
- <20180724065759.19186-5-takahiro.akashi@linaro.org>
- <20180725123129.GA2361@dhcp-128-65.nay.redhat.com>
+ <20180724065759.19186-11-takahiro.akashi@linaro.org>
+ <99f87d6c-b5e3-4f98-5f3b-7032ff4780b1@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180725123129.GA2361@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <99f87d6c-b5e3-4f98-5f3b-7032ff4780b1@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,227 +27,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james.morse@arm.com, davem@davemloft.net, vgoyal@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
+To: James Morse <james.morse@arm.com>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-On Wed, Jul 25, 2018 at 08:31:29PM +0800, Dave Young wrote:
-> On 07/24/18 at 03:57pm, AKASHI Takahiro wrote:
-> > Memblock list is another source for usable system memory layout.
-> > So move powerpc's arch_kexec_walk_mem() to common code so that other
-> > memblock-based architectures, particularly arm64, can also utilise it.
-> > A moved function is now renamed to kexec_walk_memblock() and integrated
-> > into kexec_locate_mem_hole(), which will now be usable for all
-> > architectures with no need for overriding arch_kexec_walk_mem().
-> > 
-> > kexec_walk_memblock() will not work for kdump in this form, this will be
-> > fixed in the next patch.
-> > 
-> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-> > Cc: Dave Young <dyoung@redhat.com>
-> > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > Cc: Baoquan He <bhe@redhat.com>
-> > Acked-by: James Morse <james.morse@arm.com>
-> > ---
-> >  arch/powerpc/kernel/machine_kexec_file_64.c | 54 -------------------
-> >  include/linux/kexec.h                       |  2 -
-> >  kernel/kexec_file.c                         | 58 ++++++++++++++++++++-
-> >  3 files changed, 56 insertions(+), 58 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/kernel/machine_kexec_file_64.c b/arch/powerpc/kernel/machine_kexec_file_64.c
-> > index 0bd23dc789a4..5357b09902c5 100644
-> > --- a/arch/powerpc/kernel/machine_kexec_file_64.c
-> > +++ b/arch/powerpc/kernel/machine_kexec_file_64.c
-> > @@ -24,7 +24,6 @@
-> >  
-> >  #include <linux/slab.h>
-> >  #include <linux/kexec.h>
-> > -#include <linux/memblock.h>
-> >  #include <linux/of_fdt.h>
-> >  #include <linux/libfdt.h>
-> >  #include <asm/ima.h>
-> > @@ -46,59 +45,6 @@ int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
-> >  	return kexec_image_probe_default(image, buf, buf_len);
-> >  }
-> >  
-> > -/**
-> > - * arch_kexec_walk_mem - call func(data) for each unreserved memory block
-> > - * @kbuf:	Context info for the search. Also passed to @func.
-> > - * @func:	Function to call for each memory block.
-> > - *
-> > - * This function is used by kexec_add_buffer and kexec_locate_mem_hole
-> > - * to find unreserved memory to load kexec segments into.
-> > - *
-> > - * Return: The memory walk will stop when func returns a non-zero value
-> > - * and that value will be returned. If all free regions are visited without
-> > - * func returning non-zero, then zero will be returned.
-> > - */
-> > -int arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> > -			int (*func)(struct resource *, void *))
-> > -{
-> > -	int ret = 0;
-> > -	u64 i;
-> > -	phys_addr_t mstart, mend;
-> > -	struct resource res = { };
-> > -
-> > -	if (kbuf->top_down) {
-> > -		for_each_free_mem_range_reverse(i, NUMA_NO_NODE, 0,
-> > -						&mstart, &mend, NULL) {
-> > -			/*
-> > -			 * In memblock, end points to the first byte after the
-> > -			 * range while in kexec, end points to the last byte
-> > -			 * in the range.
-> > -			 */
-> > -			res.start = mstart;
-> > -			res.end = mend - 1;
-> > -			ret = func(&res, kbuf);
-> > -			if (ret)
-> > -				break;
-> > -		}
-> > -	} else {
-> > -		for_each_free_mem_range(i, NUMA_NO_NODE, 0, &mstart, &mend,
-> > -					NULL) {
-> > -			/*
-> > -			 * In memblock, end points to the first byte after the
-> > -			 * range while in kexec, end points to the last byte
-> > -			 * in the range.
-> > -			 */
-> > -			res.start = mstart;
-> > -			res.end = mend - 1;
-> > -			ret = func(&res, kbuf);
-> > -			if (ret)
-> > -				break;
-> > -		}
-> > -	}
-> > -
-> > -	return ret;
-> > -}
-> > -
-> >  /**
-> >   * setup_purgatory - initialize the purgatory's global variables
-> >   * @image:		kexec image.
-> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> > index 49ab758f4d91..c196bfd11bee 100644
-> > --- a/include/linux/kexec.h
-> > +++ b/include/linux/kexec.h
-> > @@ -184,8 +184,6 @@ int __weak arch_kexec_apply_relocations(struct purgatory_info *pi,
-> >  					const Elf_Shdr *relsec,
-> >  					const Elf_Shdr *symtab);
-> >  
-> > -int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> > -			       int (*func)(struct resource *, void *));
-> >  extern int kexec_add_buffer(struct kexec_buf *kbuf);
-> >  int kexec_locate_mem_hole(struct kexec_buf *kbuf);
-> >  
-> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > index bf39df5e5bb9..2f0691b0f8ad 100644
-> > --- a/kernel/kexec_file.c
-> > +++ b/kernel/kexec_file.c
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/file.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/kexec.h>
-> > +#include <linux/memblock.h>
-> >  #include <linux/mutex.h>
-> >  #include <linux/list.h>
-> >  #include <linux/fs.h>
-> > @@ -501,6 +502,55 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
-> >  	return locate_mem_hole_bottom_up(start, end, kbuf);
-> >  }
-> >  
-> > +#if defined(CONFIG_HAVE_MEMBLOCK) && !defined(CONFIG_ARCH_DISCARD_MEMBLOCK)
-> > +static int kexec_walk_memblock(struct kexec_buf *kbuf,
-> > +			       int (*func)(struct resource *, void *))
-> > +{
-> > +	int ret = 0;
-> > +	u64 i;
-> > +	phys_addr_t mstart, mend;
-> > +	struct resource res = { };
-> > +
-> > +	if (kbuf->top_down) {
-> > +		for_each_free_mem_range_reverse(i, NUMA_NO_NODE, 0,
-> > +						&mstart, &mend, NULL) {
-> > +			/*
-> > +			 * In memblock, end points to the first byte after the
-> > +			 * range while in kexec, end points to the last byte
-> > +			 * in the range.
-> > +			 */
-> > +			res.start = mstart;
-> > +			res.end = mend - 1;
-> > +			ret = func(&res, kbuf);
-> > +			if (ret)
-> > +				break;
-> > +		}
-> > +	} else {
-> > +		for_each_free_mem_range(i, NUMA_NO_NODE, 0, &mstart, &mend,
-> > +					NULL) {
-> > +			/*
-> > +			 * In memblock, end points to the first byte after the
-> > +			 * range while in kexec, end points to the last byte
-> > +			 * in the range.
-> > +			 */
-> > +			res.start = mstart;
-> > +			res.end = mend - 1;
-> > +			ret = func(&res, kbuf);
-> > +			if (ret)
-> > +				break;
-> > +		}
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +#else
-> > +static int kexec_walk_memblock(struct kexec_buf *kbuf,
-> > +			       int (*func)(struct resource *, void *))
-> > +{
-> > +	return 0;
-> > +}
-> > +#endif
-> > +
-> >  /**
-> >   * arch_kexec_walk_mem - call func(data) on free memory regions
-> >   * @kbuf:	Context info for the search. Also passed to @func.
-> > @@ -510,7 +560,7 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
-> >   * and that value will be returned. If all free regions are visited without
-> >   * func returning non-zero, then zero will be returned.
-> >   */
-> > -int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> > +static int arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> >  			       int (*func)(struct resource *, void *))
-> >  {
-> >  	if (kbuf->image->type == KEXEC_TYPE_CRASH)
-> > @@ -538,7 +588,11 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
-> >  	if (kbuf->mem)
-> >  		return 0;
-> >  
-> > -	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
-> > +	if (IS_ENABLED(CONFIG_HAVE_MEMBLOCK) &&
-> > +			!IS_ENABLED(CONFIG_ARCH_DISCARD_MEMBLOCK))
-> > +		ret = kexec_walk_memblock(kbuf, locate_mem_hole_callback);
-> > +	else
-> > +		ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
+On Thu, Jul 26, 2018 at 02:34:55PM +0100, James Morse wrote:
+> Hi Akashi,
 > 
-> AKASHI, since it is not weak function now, it would be better to rename
-> the function for example name it as kexec_walk_resource()
+> On 24/07/18 07:57, AKASHI Takahiro wrote:
+> > load_other_segments() is expected to allocate and place all the necessary
+> > memory segments other than kernel, including initrd and device-tree
+> > blob (and elf core header for crash).
+> > While most of the code was borrowed from kexec-tools' counterpart,
+> > users may not be allowed to specify dtb explicitly, instead, the dtb
+> > presented by the original boot loader is reused.
+> > 
+> > arch_kimage_kernel_post_load_cleanup() is responsible for freeing arm64-
+> > specific data allocated in load_other_segments().
+> 
+> Since v11 you've renamed struct kimage_arch's dtb_buf as dtb, but not changed
+> the struct. This series doesn't build until patch 12 where you fix it. This will
+> cause anyone trying to bisect through here a problem.
 
-OK.
+Right. My last-minute change introduced this screw-up.
+I will double-check at v13.
 
+Thanks,
 -Takahiro AKASHI
 
-
-> Other than this,
 > 
-> Acked-by: Dave Young <dyoung@redhat.com>
+> Thanks,
 > 
-> >  
-> >  	return ret == 1 ? 0 : -EADDRNOTAVAIL;
-> >  }
-> > -- 
-> > 2.18.0
-> > 
+> James
 > 
-> Thanks
-> Dave
+> > diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> > index e17f0529a882..026f7e408f0c 100644
+> > --- a/arch/arm64/include/asm/kexec.h
+> > +++ b/arch/arm64/include/asm/kexec.h
+> 
+> > +struct kimage_arch {
+> > +	void *dtb_buf;
+> > +	unsigned long dtb_mem;
+> > +};
+> 
+> > diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> > index c38a8048ed00..b28fbb0659c9 100644
+> > --- a/arch/arm64/kernel/machine_kexec_file.c
+> > +++ b/arch/arm64/kernel/machine_kexec_file.c
+> 
+> > +int arch_kimage_file_post_load_cleanup(struct kimage *image)
+> > +{
+> > +	vfree(image->arch.dtb);
+> > +	image->arch.dtb = NULL;
+> > +
+> > +	return kexec_image_post_load_cleanup_default(image);
+> > +}
+> 
 
 _______________________________________________
 kexec mailing list
