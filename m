@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x242.google.com ([2607:f8b0:400e:c01::242])
+Received: from mail-io0-x241.google.com ([2607:f8b0:4001:c06::241])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fiy86-00030R-Ch
- for kexec@lists.infradead.org; Fri, 27 Jul 2018 08:29:49 +0000
-Received: by mail-pl0-x242.google.com with SMTP id z7-v6so2010247plo.9
- for <kexec@lists.infradead.org>; Fri, 27 Jul 2018 01:29:32 -0700 (PDT)
-Date: Fri, 27 Jul 2018 17:31:06 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v12 16/16] arm64: kexec_file: add kaslr support
-Message-ID: <20180727083104.GI11258@linaro.org>
+ id 1fiz3N-00014E-5z
+ for kexec@lists.infradead.org; Fri, 27 Jul 2018 09:28:55 +0000
+Received: by mail-io0-x241.google.com with SMTP id z20-v6so3649995iol.0
+ for <kexec@lists.infradead.org>; Fri, 27 Jul 2018 02:28:42 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <405b6708-4518-d81e-3938-39032c2b487e@arm.com>
 References: <20180724065759.19186-1-takahiro.akashi@linaro.org>
  <20180724065759.19186-17-takahiro.akashi@linaro.org>
  <50b31f17-fc85-aa72-06f5-d3b62060a91f@arm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <50b31f17-fc85-aa72-06f5-d3b62060a91f@arm.com>
+ <20180727083104.GI11258@linaro.org>
+ <405b6708-4518-d81e-3938-39032c2b487e@arm.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date: Fri, 27 Jul 2018 11:28:41 +0200
+Message-ID: <CAKv+Gu9jw9rFx5P3vO8Frq5=LCWugScRiNHfb2ceHkgtS9opLA@mail.gmail.com>
+Subject: Re: [PATCH v12 16/16] arm64: kexec_file: add kaslr support
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,102 +24,85 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: James Morse <james.morse@arm.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, Baoquan He <bhe@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, David Howells <dhowells@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kexec Mailing List <kexec@lists.infradead.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Dave Young <dyoung@redhat.com>, "David S. Miller" <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, Jul 26, 2018 at 02:40:49PM +0100, James Morse wrote:
-> Hi Akashi,
-> 
-> On 24/07/18 07:57, AKASHI Takahiro wrote:
-> > Adding "kaslr-seed" to dtb enables triggering kaslr, or kernel virtual
-> > address randomization, at secondary kernel boot.
-> 
-> Hmm, there are three things that get moved by CONFIG_RANDOMIZE_BASE. The kernel
-> physical placement when booted via the EFIstub, the kernel-text VAs and the
-> location of memory in the linear-map region. Adding the kaslr-seed only does the
-> last two.
-
-Yes, but I think that I and Mark has agreed that "kaslr" meant
-"virtual" randomisation, not including "physical" randomisation.
-
-> This means the physical placement of the new kernel is predictable from
-> /proc/iomem ... but this also tells you the physical placement of the current
-> kernel, so I don't think this is a problem.
-> 
-> 
-> > We always do this as it will have no harm on kaslr-incapable kernel.
-> 
-> > We don't have any "switch" to turn off this feature directly, but still
-> > can suppress it by passing "nokaslr" as a kernel boot argument.
-> 
-> 
-> > diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> > index 7356da5a53d5..47a4fbd0dc34 100644
-> > --- a/arch/arm64/kernel/machine_kexec_file.c
-> > +++ b/arch/arm64/kernel/machine_kexec_file.c
-> > @@ -158,6 +160,12 @@ static int setup_dtb(struct kimage *image,
-> 
-> Don't you need to reserve some space in the area you vmalloc()d for the DT?
-
-No, I don't think so.
-All the data to be loaded are temporarily saved in kexec buffers,
-which will eventually be copied to target locations in machine_kexec
-(arm64_relocate_new_kernel, which, unlike its name, will handle
-not only kernel but also other data as well).
-
-> 
-> > +	/* add kaslr-seed */
-> > +	get_random_bytes(&value, sizeof(value));
-> 
-> What happens if the crng isn't ready?
-> 
-> It looks like this will print a warning that these random-bytes aren't really up
-> to standard, but the new kernel doesn't know this happened.
-> 
-> crng_ready() isn't exposed, all we could do now is
-> wait_for_random_bytes(), but that may wait forever because we do this
-> unconditionally.
-> 
-> I'd prefer to leave this feature until we can check crng_ready(), and skip
-> adding a dodgy-seed if its not-ready. This avoids polluting the next-kernel's
-> entropy pool.
-
-OK. I would try to follow the same way as Bhupesh's userspace patch
-does for kaslr-seed:
-http://lists.infradead.org/pipermail/kexec/2018-April/020564.html
-
-  if (not found kaslr-seed in 1st kernel's dtb)
-     don't care; go ahead
-  else
-     if (current kaslr-seed != 0)
-        error
-     if (crng_ready()) ; FIXME, it's a local macro
-        get_random_bytes(non-blocking)
-        set new kaslr-seed
-     else
-        error
-
-> 
-> > +	ret = fdt_setprop(buf, nodeoffset, "kaslr-seed", &value, sizeof(value));
-> 
-> Nit: It would be nice if this string were in a header file somewhere, to void
-> future refactoring typos.
-
-OK. (but in this file for now as I mentioned in my previous reply)
-
-Thanks,
--Takahiro AKASHI
-
-> 
-> Thanks,
-> 
-> James
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMjcgSnVseSAyMDE4IGF0IDExOjIyLCBKYW1lcyBNb3JzZSA8amFtZXMubW9yc2VAYXJtLmNv
+bT4gd3JvdGU6Cj4gSGkgQWthc2hpLAo+Cj4KPiBPbiAwNy8yNy8yMDE4IDA5OjMxIEFNLCBBS0FT
+SEkgVGFrYWhpcm8gd3JvdGU6Cj4KPiBPbiBUaHUsIEp1bCAyNiwgMjAxOCBhdCAwMjo0MDo0OVBN
+ICswMTAwLCBKYW1lcyBNb3JzZSB3cm90ZToKPgo+IE9uIDI0LzA3LzE4IDA3OjU3LCBBS0FTSEkg
+VGFrYWhpcm8gd3JvdGU6Cj4KPiBBZGRpbmcgImthc2xyLXNlZWQiIHRvIGR0YiBlbmFibGVzIHRy
+aWdnZXJpbmcga2FzbHIsIG9yIGtlcm5lbCB2aXJ0dWFsCj4gYWRkcmVzcyByYW5kb21pemF0aW9u
+LCBhdCBzZWNvbmRhcnkga2VybmVsIGJvb3QuCj4KPiBIbW0sIHRoZXJlIGFyZSB0aHJlZSB0aGlu
+Z3MgdGhhdCBnZXQgbW92ZWQgYnkgQ09ORklHX1JBTkRPTUlaRV9CQVNFLiBUaGUKPiBrZXJuZWwK
+PiBwaHlzaWNhbCBwbGFjZW1lbnQgd2hlbiBib290ZWQgdmlhIHRoZSBFRklzdHViLCB0aGUga2Vy
+bmVsLXRleHQgVkFzIGFuZCB0aGUKPiBsb2NhdGlvbiBvZiBtZW1vcnkgaW4gdGhlIGxpbmVhci1t
+YXAgcmVnaW9uLiBBZGRpbmcgdGhlIGthc2xyLXNlZWQgb25seSBkb2VzCj4gdGhlCj4gbGFzdCB0
+d28uCj4KPiBZZXMsIGJ1dCBJIHRoaW5rIHRoYXQgSSBhbmQgTWFyayBoYXMgYWdyZWVkIHRoYXQg
+Imthc2xyIiBtZWFudAo+ICJ2aXJ0dWFsIiByYW5kb21pc2F0aW9uLCBub3QgaW5jbHVkaW5nICJw
+aHlzaWNhbCIgcmFuZG9taXNhdGlvbi4KPgo+IE9rYXksIEknbGwgdXBkYXRlIG15IHRlcm1pbm9s
+b2d5IQo+Cj4KPiBUaGlzIG1lYW5zIHRoZSBwaHlzaWNhbCBwbGFjZW1lbnQgb2YgdGhlIG5ldyBr
+ZXJuZWwgaXMgcHJlZGljdGFibGUgZnJvbQo+IC9wcm9jL2lvbWVtIC4uLiBidXQgdGhpcyBhbHNv
+IHRlbGxzIHlvdSB0aGUgcGh5c2ljYWwgcGxhY2VtZW50IG9mIHRoZQo+IGN1cnJlbnQKPiBrZXJu
+ZWwsIHNvIEkgZG9uJ3QgdGhpbmsgdGhpcyBpcyBhIHByb2JsZW0uCj4KPgo+IFdlIGFsd2F5cyBk
+byB0aGlzIGFzIGl0IHdpbGwgaGF2ZSBubyBoYXJtIG9uIGthc2xyLWluY2FwYWJsZSBrZXJuZWwu
+Cj4KPiBXZSBkb24ndCBoYXZlIGFueSAic3dpdGNoIiB0byB0dXJuIG9mZiB0aGlzIGZlYXR1cmUg
+ZGlyZWN0bHksIGJ1dCBzdGlsbAo+IGNhbiBzdXBwcmVzcyBpdCBieSBwYXNzaW5nICJub2thc2xy
+IiBhcyBhIGtlcm5lbCBib290IGFyZ3VtZW50Lgo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQv
+a2VybmVsL21hY2hpbmVfa2V4ZWNfZmlsZS5jCj4gYi9hcmNoL2FybTY0L2tlcm5lbC9tYWNoaW5l
+X2tleGVjX2ZpbGUuYwo+IGluZGV4IDczNTZkYTVhNTNkNS4uNDdhNGZiZDBkYzM0IDEwMDY0NAo+
+IC0tLSBhL2FyY2gvYXJtNjQva2VybmVsL21hY2hpbmVfa2V4ZWNfZmlsZS5jCj4gKysrIGIvYXJj
+aC9hcm02NC9rZXJuZWwvbWFjaGluZV9rZXhlY19maWxlLmMKPiBAQCAtMTU4LDYgKzE2MCwxMiBA
+QCBzdGF0aWMgaW50IHNldHVwX2R0YihzdHJ1Y3Qga2ltYWdlICppbWFnZSwKPgo+IERvbid0IHlv
+dSBuZWVkIHRvIHJlc2VydmUgc29tZSBzcGFjZSBpbiB0aGUgYXJlYSB5b3Ugdm1hbGxvYygpZCBm
+b3IgdGhlIERUPwo+Cj4gTm8sIEkgZG9uJ3QgdGhpbmsgc28uCj4gQWxsIHRoZSBkYXRhIHRvIGJl
+IGxvYWRlZCBhcmUgdGVtcG9yYXJpbHkgc2F2ZWQgaW4ga2V4ZWMgYnVmZmVycywKPiB3aGljaCB3
+aWxsIGV2ZW50dWFsbHkgYmUgY29waWVkIHRvIHRhcmdldCBsb2NhdGlvbnMgaW4gbWFjaGluZV9r
+ZXhlYwo+IChhcm02NF9yZWxvY2F0ZV9uZXdfa2VybmVsLCB3aGljaCwgdW5saWtlIGl0cyBuYW1l
+LCB3aWxsIGhhbmRsZQo+IG5vdCBvbmx5IGtlcm5lbCBidXQgYWxzbyBvdGhlciBkYXRhIGFzIHdl
+bGwpLgo+Cj4KPiBJIHRoaW5rIHdlJ3JlIHNwZWFraW5nIGF0IGNyb3NzIHB1cnBvc2VzLiBEb24n
+dCB5b3UgbmVlZDoKPgo+IHwgYnVmX3NpemUgKz0gZmR0X3Byb3BfbGVuKCJrYXNscuKAlXNlZWQi
+LCBzaXplb2YodTY0KSk7Cj4KPgo+IFlvdSBjYW4ndCBhc3N1bWUgdGhlIGV4aXN0aW5nIERUQiBo
+YWQgYSBrYXNsci1zZWVkIHByb3BlcnR5LCBhbmQgdGhlCj4gZGlmZmVyZW5jZSBtYXkgdGFrZSB1
+cyBvdmVyIGEgUEFHRV9TSVpFIGJvdW5kYXJ5Lgo+Cj4KPgo+Cj4gKyAvKiBhZGQga2FzbHItc2Vl
+ZCAqLwo+ICsgZ2V0X3JhbmRvbV9ieXRlcygmdmFsdWUsIHNpemVvZih2YWx1ZSkpOwo+Cj4gV2hh
+dCBoYXBwZW5zIGlmIHRoZSBjcm5nIGlzbid0IHJlYWR5Pwo+Cj4gSXQgbG9va3MgbGlrZSB0aGlz
+IHdpbGwgcHJpbnQgYSB3YXJuaW5nIHRoYXQgdGhlc2UgcmFuZG9tLWJ5dGVzIGFyZW4ndAo+IHJl
+YWxseSB1cAo+IHRvIHN0YW5kYXJkLCBidXQgdGhlIG5ldyBrZXJuZWwgZG9lc24ndCBrbm93IHRo
+aXMgaGFwcGVuZWQuCj4KPiBjcm5nX3JlYWR5KCkgaXNuJ3QgZXhwb3NlZCwgYWxsIHdlIGNvdWxk
+IGRvIG5vdyBpcwo+IHdhaXRfZm9yX3JhbmRvbV9ieXRlcygpLCBidXQgdGhhdCBtYXkgd2FpdCBm
+b3JldmVyIGJlY2F1c2Ugd2UgZG8gdGhpcwo+IHVuY29uZGl0aW9uYWxseS4KPgo+IEknZCBwcmVm
+ZXIgdG8gbGVhdmUgdGhpcyBmZWF0dXJlIHVudGlsIHdlIGNhbiBjaGVjayBjcm5nX3JlYWR5KCks
+IGFuZCBza2lwCj4gYWRkaW5nIGEgZG9kZ3ktc2VlZCBpZiBpdHMgbm90LXJlYWR5LiBUaGlzIGF2
+b2lkcyBwb2xsdXRpbmcgdGhlCj4gbmV4dC1rZXJuZWwncwo+IGVudHJvcHkgcG9vbC4KPgo+IE9L
+LiBJIHdvdWxkIHRyeSB0byBmb2xsb3cgdGhlIHNhbWUgd2F5IGFzIEJodXBlc2gncyB1c2Vyc3Bh
+Y2UgcGF0Y2gKPiBkb2VzIGZvciBrYXNsci1zZWVkOgo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL3BpcGVybWFpbC9rZXhlYy8yMDE4LUFwcmlsLzAyMDU2NC5odG1sCj4KPgo+IChJIHJlYWxs
+eSBkb24ndCB1bmRlcnN0YW5kIHRoaXMgJ2NvcHlpbmcgY29kZSBmcm9tIHVzZXItc3BhY2UnIHRo
+YXQgaGFwcGVucwo+IHdpdGgga2V4ZWNfZmlsZV9sb2FkKQo+Cj4KPiAgIGlmIChub3QgZm91bmQg
+a2FzbHItc2VlZCBpbiAxc3Qga2VybmVsJ3MgZHRiKQo+ICAgICAgZG9uJ3QgY2FyZTsgZ28gYWhl
+YWQKPgo+Cj4gRG9uJyB0IGJvdGhlci4gQXMgeW91IHNheSBpbiB0aGUgY29tbWl0LW1lc3NhZ2Ug
+aXRzIGhhcm1sZXNzIGlmIHRoZSBuZXcKPiBrZXJuZWwgZG9lc24ndCBzdXBwb3J0IGl0Lgo+IEFs
+d2F5cyBoYXZpbmcgdGhpcyB3b3VsZCBsZXQgeW91IHVzZSBrZXhlY19maWxlX2xvYWQgYXMgYSBi
+b290bG9hZGVyIHRoYXQKPiBjYW4gZ2V0IHRoZSBjcm5nIHRvCj4gcHJvdmlkZSBkZWNlbnQgZW50
+cm9weSBldmVuIGlmIHRoZSBwbGF0Zm9ybSBib290bG9hZGVyIGNhbid0Lgo+Cj4KPiAgIGVsc2UK
+PiAgICAgIGlmIChjdXJyZW50IGthc2xyLXNlZWQgIT0gMCkKPiAgICAgICAgIGVycm9yCj4KPgo+
+IERvbid0IGJvdGhlci4gSWYgdGhpcyBoYXBwZW5zIGl0cyBhIGJ1ZyBpbiBhbm90aGVyIHBhcnQg
+b2YgdGhlIGtlcm5lbCB0aGF0Cj4gZG9lc24ndCBhZmZlY3QgdGhpcyBvbmUuIFdlIGFyZW4ndCBz
+ZWNvbmQtZ3Vlc3NpbmcgdGhlIGZpbGUtc3lzdGVtIHdoZW4gd2UKPiByZWFkIHRoZSBrZXJuZWwt
+ZmQsIGxldHMga2VlcCB0aGlzIHNpbXBsZS4KPgo+ICAgICAgaWYgKGNybmdfcmVhZHkoKSkgOyBG
+SVhNRSwgaXQncyBhIGxvY2FsIG1hY3JvCj4gICAgICAgICBnZXRfcmFuZG9tX2J5dGVzKG5vbi1i
+bG9ja2luZykKPiAgICAgICAgIHNldCBuZXcga2FzbHItc2VlZAo+ICAgICAgZWxzZQo+ICAgICAg
+ICAgZXJyb3IKPgo+IGVycm9yPyBTb21ldGhpbmcgbGlrZSBwcl93YXJuX29uY2UoKS4KPgo+IEkg
+dGhvdWdodCB0aGUga2FzbHItc2VlZCB3YXMgYWRkZWQgdG8gdGhlIGVudHJvcHkgcG9vbCwgYnV0
+IG5vdyBJIGxvb2sgYWdhaW4KPiBJIHNlZSBpdHMgYSBzZXBhcmF0ZSBFRkkgdGFibGUuIFNvIHRo
+ZSBuZXcga2VybmVsIHdpbGwgYWRkIHRoZSBzYW1lIGVudHJvcHkKPiAuLi4gdGhhdCBkb2Vzbid0
+IHNvdW5kIGNsZXZlci4gKEkgY2FuJ3Qgc2VlIHdoZXJlIGl0cyB6ZXJvJ2Qgb3IKPiByZS1pbml0
+aWFsaXNlZCkKPgoKV2UgZG8gaGF2ZSBhIGhvb2sgZm9yIHRoYXQ6IGdyZXAgZm9yIHVwZGF0ZV9l
+ZmlfcmFuZG9tX3NlZWQoKQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
