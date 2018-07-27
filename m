@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x541.google.com ([2607:f8b0:4864:20::541])
+Received: from mail-wr1-x443.google.com ([2a00:1450:4864:20::443])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fix3w-0001Wt-53
- for kexec@lists.infradead.org; Fri, 27 Jul 2018 07:21:21 +0000
-Received: by mail-pg1-x541.google.com with SMTP id p23-v6so2701158pgv.13
- for <kexec@lists.infradead.org>; Fri, 27 Jul 2018 00:21:10 -0700 (PDT)
-Date: Fri, 27 Jul 2018 16:22:43 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v12 13/16] arm64: kexec_file: invoke the kernel without
- purgatory
-Message-ID: <20180727072242.GH11258@linaro.org>
-References: <20180724065759.19186-1-takahiro.akashi@linaro.org>
- <20180724065759.19186-14-takahiro.akashi@linaro.org>
- <b9257c90-a538-fb82-b9de-574d68d06fbd@arm.com>
+ id 1fixw4-0006J3-Ob
+ for kexec@lists.infradead.org; Fri, 27 Jul 2018 08:17:18 +0000
+Received: by mail-wr1-x443.google.com with SMTP id v14-v6so4169967wro.5
+ for <kexec@lists.infradead.org>; Fri, 27 Jul 2018 01:17:06 -0700 (PDT)
+Subject: Re: [PATCH 0/3] arm64: add support for loading kernel from FITimage
+From: Arnaud Ferraris <arnaud.ferraris@gmail.com>
+References: <1530795335-20867-1-git-send-email-arnaud.ferraris.external@sigfox.com>
+ <CACi5LpP=aGG-aPe47e_xwqir_zhMpbQ+e7aTuB_Nn3CMDkEn2Q@mail.gmail.com>
+ <598fab1c-3dbb-d11a-19e7-aa430509b1ee@sigfox.com>
+Message-ID: <affc6be0-08ea-4f7d-8cb1-736b51a971d9@gmail.com>
+Date: Fri, 27 Jul 2018 10:17:03 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <b9257c90-a538-fb82-b9de-574d68d06fbd@arm.com>
+In-Reply-To: <598fab1c-3dbb-d11a-19e7-aa430509b1ee@sigfox.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,71 +23,121 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Thomas Perrot <thomas.perrot@sigfox.com>, Simon Horman <horms@verge.net.au>, kexec mailing list <kexec@lists.infradead.org>
 
-On Thu, Jul 26, 2018 at 02:36:07PM +0100, James Morse wrote:
-> Hi Akashi,
-> 
-> On 24/07/18 07:57, AKASHI Takahiro wrote:
-> > On arm64, purgatory would do almost nothing. So just invoke secondary
-> > kernel directly by jumping into its entry code.
-> > 
-> > While, in this case, cpu_soft_restart() must be called with dtb address
-> > in the fifth argument, the behavior still stays compatible with kexec_load
-> > case as long as the argument is null.
-> 
-> This patch conflicts with commit 76f4e2da45b4 ("arm64: kexec: always reset to
-> EL2 if present") in the arm64 tree.
-
-I haven't noticed Mark's patch.
-
-I'm going to have to refresh my memory regarding why I introduced
-el2_switch when I implemented kdump.
-According to my current memory, however, I added
-kvm_arch_hardware_enable/disable(), and associated functions, to gracefully
-shutdown EL2 in case of kexec. Since we have no chance to call reset
-function (via notifier) at kdump, I believed that el2_switch was necessary
-for better chance of successful kdump.
-
-Thanks,
--Takahiro AKASHI
-
-> Thanks,
-> 
-> James
-> 
-> > diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> > index f76ea92dff91..830a5063e09d 100644
-> > --- a/arch/arm64/kernel/machine_kexec.c
-> > +++ b/arch/arm64/kernel/machine_kexec.c
-> > @@ -205,10 +205,18 @@ void machine_kexec(struct kimage *kimage)
-> >  	 * uses physical addressing to relocate the new image to its final
-> >  	 * position and transfers control to the image entry point when the
-> >  	 * relocation is complete.
-> > +	 * In kexec case, kimage->start points to purgatory assuming that
-> > +	 * kernel entry and dtb address are embedded in purgatory by
-> > +	 * userspace (kexec-tools).
-> > +	 * In kexec_file case, the kernel starts directly without purgatory.
-> >  	 */
-> > -
-> >  	cpu_soft_restart(kimage != kexec_crash_image,
-> > -		reboot_code_buffer_phys, kimage->head, kimage->start, 0);
-> > +		reboot_code_buffer_phys, kimage->head, kimage->start,
-> > +#ifdef CONFIG_KEXEC_FILE
-> > +						kimage->arch.dtb_mem);
-> > +#else
-> > +						0);
-> > +#endif
-> >  
-> >  	BUG(); /* Should never get here. */
-> >  }
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gQmh1cGVzaCwKCkRpZCB5b3UgaGF2ZSBhIGNoYW5jZSB0byBoYXZlIGEgbG9vayBhdCBt
+eSBlbWFpbCA/CgpNb3Jlb3ZlciwgSSdtIGFkZGluZCBUaG9tYXMgUGVycm90IHRvIHRoZSBjb252
+ZXJzYXRpb24sIGFzIGhlIHdpbCBiZSAKdGFraW5nIG92ZXIgbXkgd29yayBhdCBTaWdmb3gsIGFu
+ZCB3aWxsIG1vc3QgcHJvYmFibHkgd2FudCB0byBmb2xsb3cgCnRoaXMgbWF0dGVyLgoKQmVzdCBy
+ZWdhcmRzLAoKQXJuYXVkCgoKT24gMDYvMDcvMjAxOCAxNjozOSwgQXJuYXVkIEZlcnJhcmlzIHdy
+b3RlOgo+IEhlbGxvIEJodXBlc2gsCj4KPiBUaGFua3MgZm9yIHlvdXIgYW5zd2VyLgo+Cj4gT24g
+MDYvMDcvMjAxOCAwODozNywgQmh1cGVzaCBTaGFybWEgd3JvdGU6Cj4+IEhtbSwgSSB0aGluayBJ
+IG1lbnRpb25lZCB0aGlzIGVhcmxpZXIsIGJ1dCB3aHkgZG8gd2UgbmVlZCBrZXhlYyB0bwo+PiBz
+dXBwb3J0IHRoZSBGSVQgaW1hZ2UgZm9ybWF0PyBTZWUgdGhlIEZJVCBpbWFnZSAob3IgdGhlIC5p
+dGIgZmlsZSkKPj4gd2lsbCBiZSBwYXJzZWQgYnkgdGhlIHUtYm9vdCBib290bG9hZGVyIGFuZCB0
+aGUgcmVzcGVjdGl2ZSBjb21wb25lbnRzCj4+IHdpbGwgYmUgbG9hZGVkIGJ5IGl0IGF0IHRoZSBh
+cHByb3ByaWF0ZSBsb2FkIGFkZHJlc3NlcyAoZm9yIHRoZSBrZXJuZWwKPj4gSW1hZ2UgaXQgd291
+bGQgYmUgdGhlIGxvYWQgYWRkcmVzcyBtZW50aW9uZWQgaW4gdGhlICdsb2FkYWRkcicgdS1ib290
+Cj4+IGVudmlyb25tZW50IHZhcmlhYmxlIGFuZCBmb3IgdGhlIGR0YiBpdCB3b3VsZCBiZSBhcyBw
+ZXIgdGhlIGFybTY0Cj4+IGFyY2hpdGVjdHVyZSBkdGIgb2Zmc2V0IHBsYWNlbWVudCBjb25zdHJh
+aW50cykuCj4+Cj4+IDwuLi4+Cj4+Cj4+IFNvLCBJIGFtIHRyeWluZyB0byB1bmRlcnN0YW5kIHRo
+ZSB1c2UtY2FzZSBiZWhpbmQgRklUIGltYWdlIHN1cHBvcnQgaW4KPj4ga2V4ZWMuIERvIHdlIG5l
+ZWQga2V4ZWMtdG9vbHMgdG8gYmUgYXdhcmUgb2YgdGhlIEZJVCBmb3JtYXQgd2hlbiB0aGUKPj4g
+a2VybmVsIGl0c2VsZiBpdCBsb2FkZWQgaW4gYW4gdW5jb21wcmVzc2VkIGZvcm1hdCAoZS5nLiBJ
+bWFnZSBvcgo+PiB2bWxpbnV4KS4KPgo+IE9rLCBJJ2xsIGRvIG15IGJlc3QgdG8gZXhwbGFpbiBv
+dXIgdXNlIGNhc2UgOiBVLWJvb3QgaW5kZWVkIGRvZXMgYSBncmVhdAo+IGpvYiBhdCBwYXJzaW5n
+IGFuZCBsb2FkaW5nIHRoZSBGSVQgaW1hZ2UgY29tcG9uZW50cyBhdCB0aGUgYXBwcm9wcmlhdGUK
+PiBhZGRyZXNzZXMuCj4KPiBIb3dldmVyLCB3ZSB1c2Uga2V4ZWMgKHdpdGggb3B0aW9uIC1wKSB0
+byBsb2FkIGEgY3Jhc2gga2VybmVsIHRvIGJlIAo+IGV4ZWN1dGVkCj4gaW4gY2FzZSBvZiBhIHBh
+bmljLiBNb3Jlb3Zlciwgd2UgbmVlZCB0byBsb2FkIHRoaXMga2VybmVsIGFsb25nIHdpdGggCj4g
+aXRzIG93bgo+IGR0YiBBTkQgaW5pdHJkICh0aGUgaW5pdHJkIGlzIHZlcnkgaW1wb3J0YW50LCBh
+cyBpdCBjb250YWlucyBhIHNwZWNpYWwgCj4gYm9vdAo+IHNjcmlwdCB3aGljaCB1c2VzIG1ha2Vk
+dW1wZmlsZSB0byBjcmVhdGUgYSBkdW1wIG9mIHRoZSBjcmFzaGVkIGtlcm5lbCBmb3IKPiBmdXJ0
+aGVyIGFuYWx5c2lzKS4KPgo+IFRoZSBGSVQgaW1hZ2Ugd2UgbG9hZCB0aHJvdWdoIGtleGVjIGlz
+IG5vdCBuZWNlc3NhcmlseSB0aGUgc2FtZSBhcyB0aGUgCj4gb25lCj4gd2UgbG9hZCB0aHJvdWdo
+IHUtYm9vdCwgdGhlIGluaXRyZCBiZWluZyBkaWZmZXJlbnQsIGJ1dCB0aGUga2VybmVsIGFuZCAK
+PiBkdGIKPiBjb3VsZCBiZSBzcGVjaWZpYyB0b28uCj4KPiBBbGwgaW4gYWxsLCB0aGlzIGNvdWxk
+IGJlIGRvbmUgYnkgdXNpbmcgYSB1SW1hZ2UgZm9yIHRoZSBrZXJuZWwrZHRiIGFuZCBhCj4gc2Vw
+YXJhdGUgaW5pdHJkIGZpbGUsIGJ1dCB0aGlzIGlzIG5vdCBhbiBvcHRpb24gaW4gb3VyIGNhc2Us
+IGR1ZSB0byB0aGUKPiBudW1iZXIgb2YgZGV2aWNlcyBhbmQgYXJjaGl0ZWN0dXJlcyBvdXIgYnVp
+bGQgc3lzdGVtIHN1cHBvcnRzLCB3aGljaCAKPiBpcyB3aHkKPiB3ZSBuZWVkIHRoaXMgRklUIGlt
+YWdlIHN1cHBvcnQuCj4KPj4gSWYgeW91IGNhbiBzaGFyZSB5b3VyIC5pdHMgZmlsZSBhbmQgZXhw
+bGFpbiB0aGUgdXNlIGNhc2UgYmV0dGVyIChtYXkKPj4gYmUgd2l0aCB0aGUgdS1ib290IGxvZ3Mp
+IGl0IHdvdWxkIGhlbHAgaW4gdGhlIHJldmlldy4KPgo+IFN1cmUsIHRoZSAuaXRzIGZpbGUgY29u
+dGVudHMgZm9sbG93Lgo+Cj4gQmVzdCByZWdhcmRzLAo+Cj4gQXJuYXVkCj4KPiAtLS0KPiAvZHRz
+LXYxLzsKPgo+IC8gewo+IMKgwqDCoMKgwqDCoMKgIGRlc2NyaXB0aW9uID0gIlUtQm9vdCBmaXRJ
+bWFnZSBmb3IgU0lHRk9YIAo+IFRhcE9TLzQuMTQuMjkrZ2l0QVVUT0lOQys4MDk2MDc5NDAzL2Ez
+NzAwIjsKPiDCoMKgwqDCoMKgwqDCoCAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPgo+IMKgwqDCoMKg
+wqDCoMKgIGltYWdlcyB7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGtlcm5lbEAx
+IHsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRlc2Ny
+aXB0aW9uID0gIkxpbnV4IGtlcm5lbCI7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBkYXRhID0gL2luY2Jpbi8oImxpbnV4LmJpbiIpOwo+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdHlwZSA9ICJrZXJuZWwiOwo+
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYXJjaCA9ICJh
+cm02NCI7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBv
+cyA9ICJsaW51eCI7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBjb21wcmVzc2lvbiA9ICJnemlwIjsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIGxvYWQgPSA8MHgwMDA4MDAwMD47Cj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlbnRyeSA9IDwweDAwMDgwMDAwPjsKPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGhhc2hAMSB7Cj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgYWxnbyA9ICJzaGEyNTYiOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgfTsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTsKPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZmR0QHNpZ2ZveF9zaWdmb3gtYnMtYTM3MDAu
+ZHRiIHsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRl
+c2NyaXB0aW9uID0gIkZsYXR0ZW5lZCBEZXZpY2UgVHJlZSBibG9iIjsKPiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRhdGEgPSAKPiAvaW5jYmluLygiYXJj
+aC9hcm02NC9ib290L2R0cy9zaWdmb3gvc2lnZm94LWJzLWEzNzAwLmR0YiIpOwo+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdHlwZSA9ICJmbGF0X2R0IjsK
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGFyY2ggPSAi
+YXJtNjQiOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+Y29tcHJlc3Npb24gPSAibm9uZSI7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBsb2FkID0gPDB4MDE4MDAwMDA+Owo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaGFzaEAxIHsKPiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBhbGdvID0gInNoYTI1
+NiI7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Owo+
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Owo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCByYW1kaXNrQDEgewo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgZGVzY3JpcHRpb24gPSAidGFwb3MtaW1hZ2UtaW5pdHJhbWZzIjsKPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRhdGEgPSAvaW5j
+YmluLyg8cGF0aC90by9pbml0cmQ+KTsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHR5cGUgPSAicmFtZGlzayI7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBhcmNoID0gImFybTY0IjsKPiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG9zID0gImxpbnV4IjsKPiDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbXByZXNzaW9uID0gImd6
+aXAiOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbG9h
+ZCA9IDwweDAyMDAwMDAwPjsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIGVudHJ5ID0gPDB4MDIwMDAwMDA+Owo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaGFzaEAxIHsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBhbGdvID0gInNoYTI1NiI7
+Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Owo+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Owo+IMKgwqDCoMKgfTsKPgo+IMKgwqDCoMKg
+wqDCoMKgIGNvbmZpZ3VyYXRpb25zIHsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+ZGVmYXVsdCA9ICJjb25mQHNpZ2ZveF9zaWdmb3gtYnMtYTM3MDAuZHRiIjsKPiDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgY29uZkBzaWdmb3hfc2lnZm94LWJzLWEzNzAwLmR0YiB7Cj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkZXNjcmlwdGlvbiA9ICIxIExpbnV4IGtlcm5lbCwgRkRU
+IGJsb2IsIHJhbWRpc2siOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAga2VybmVsID0gImtlcm5l
+bEAxIjsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZkdCA9ICJmZHRAc2lnZm94X3NpZ2ZveC1i
+cy1hMzcwMC5kdGIiOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmFtZGlzayA9ICJyYW1kaXNr
+QDEiOwo+Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBo
+YXNoQDEgewo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIGFsZ28gPSAic2hhMjU2IjsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIH07Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCBzaWduYXR1cmVAMSB7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYWxnbyA9ICJzaGEyNTYs
+cnNhMjA0OCI7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAga2V5LW5hbWUtaGludCA9ICJrZXJuZWwiOwo+IMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCBzaWduLWltYWdlcyA9ICJrZXJuZWwiLCAiZmR0IiwgInJhbWRp
+c2siOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTsK
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTsKPiDCoMKgwqDCoH07Cj4gfTsKPgo+
+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBrZXhl
+YyBtYWlsaW5nIGxpc3QKPiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8va2V4ZWMK
