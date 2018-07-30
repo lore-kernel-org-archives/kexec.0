@@ -1,21 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x241.google.com ([2607:f8b0:4001:c06::241])
+Received: from mail-pg1-f193.google.com ([209.85.215.193])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fiz3N-00014E-5z
- for kexec@lists.infradead.org; Fri, 27 Jul 2018 09:28:55 +0000
-Received: by mail-io0-x241.google.com with SMTP id z20-v6so3649995iol.0
- for <kexec@lists.infradead.org>; Fri, 27 Jul 2018 02:28:42 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <405b6708-4518-d81e-3938-39032c2b487e@arm.com>
-References: <20180724065759.19186-1-takahiro.akashi@linaro.org>
- <20180724065759.19186-17-takahiro.akashi@linaro.org>
- <50b31f17-fc85-aa72-06f5-d3b62060a91f@arm.com>
- <20180727083104.GI11258@linaro.org>
- <405b6708-4518-d81e-3938-39032c2b487e@arm.com>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Fri, 27 Jul 2018 11:28:41 +0200
-Message-ID: <CAKv+Gu9jw9rFx5P3vO8Frq5=LCWugScRiNHfb2ceHkgtS9opLA@mail.gmail.com>
-Subject: Re: [PATCH v12 16/16] arm64: kexec_file: add kaslr support
+ id 1fk1j9-00057U-NV
+ for kexec@lists.infradead.org; Mon, 30 Jul 2018 06:32:23 +0000
+Received: by mail-pg1-f193.google.com with SMTP id s7-v6so6680561pgv.3
+ for <kexec@lists.infradead.org>; Sun, 29 Jul 2018 23:32:09 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH v2] arm64, kaslr: export offset in VMCOREINFO ELF notes
+Date: Mon, 30 Jul 2018 11:54:43 +0530
+Message-Id: <1532931883-16132-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,85 +17,105 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, Baoquan He <bhe@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, David Howells <dhowells@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kexec Mailing List <kexec@lists.infradead.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Dave Young <dyoung@redhat.com>, "David S. Miller" <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, catalin.marinas@arm.com, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, takahiro.akashi@linaro.org, James Morse <james.morse@arm.com>, bhupesh.linux@gmail.com
 
-T24gMjcgSnVseSAyMDE4IGF0IDExOjIyLCBKYW1lcyBNb3JzZSA8amFtZXMubW9yc2VAYXJtLmNv
-bT4gd3JvdGU6Cj4gSGkgQWthc2hpLAo+Cj4KPiBPbiAwNy8yNy8yMDE4IDA5OjMxIEFNLCBBS0FT
-SEkgVGFrYWhpcm8gd3JvdGU6Cj4KPiBPbiBUaHUsIEp1bCAyNiwgMjAxOCBhdCAwMjo0MDo0OVBN
-ICswMTAwLCBKYW1lcyBNb3JzZSB3cm90ZToKPgo+IE9uIDI0LzA3LzE4IDA3OjU3LCBBS0FTSEkg
-VGFrYWhpcm8gd3JvdGU6Cj4KPiBBZGRpbmcgImthc2xyLXNlZWQiIHRvIGR0YiBlbmFibGVzIHRy
-aWdnZXJpbmcga2FzbHIsIG9yIGtlcm5lbCB2aXJ0dWFsCj4gYWRkcmVzcyByYW5kb21pemF0aW9u
-LCBhdCBzZWNvbmRhcnkga2VybmVsIGJvb3QuCj4KPiBIbW0sIHRoZXJlIGFyZSB0aHJlZSB0aGlu
-Z3MgdGhhdCBnZXQgbW92ZWQgYnkgQ09ORklHX1JBTkRPTUlaRV9CQVNFLiBUaGUKPiBrZXJuZWwK
-PiBwaHlzaWNhbCBwbGFjZW1lbnQgd2hlbiBib290ZWQgdmlhIHRoZSBFRklzdHViLCB0aGUga2Vy
-bmVsLXRleHQgVkFzIGFuZCB0aGUKPiBsb2NhdGlvbiBvZiBtZW1vcnkgaW4gdGhlIGxpbmVhci1t
-YXAgcmVnaW9uLiBBZGRpbmcgdGhlIGthc2xyLXNlZWQgb25seSBkb2VzCj4gdGhlCj4gbGFzdCB0
-d28uCj4KPiBZZXMsIGJ1dCBJIHRoaW5rIHRoYXQgSSBhbmQgTWFyayBoYXMgYWdyZWVkIHRoYXQg
-Imthc2xyIiBtZWFudAo+ICJ2aXJ0dWFsIiByYW5kb21pc2F0aW9uLCBub3QgaW5jbHVkaW5nICJw
-aHlzaWNhbCIgcmFuZG9taXNhdGlvbi4KPgo+IE9rYXksIEknbGwgdXBkYXRlIG15IHRlcm1pbm9s
-b2d5IQo+Cj4KPiBUaGlzIG1lYW5zIHRoZSBwaHlzaWNhbCBwbGFjZW1lbnQgb2YgdGhlIG5ldyBr
-ZXJuZWwgaXMgcHJlZGljdGFibGUgZnJvbQo+IC9wcm9jL2lvbWVtIC4uLiBidXQgdGhpcyBhbHNv
-IHRlbGxzIHlvdSB0aGUgcGh5c2ljYWwgcGxhY2VtZW50IG9mIHRoZQo+IGN1cnJlbnQKPiBrZXJu
-ZWwsIHNvIEkgZG9uJ3QgdGhpbmsgdGhpcyBpcyBhIHByb2JsZW0uCj4KPgo+IFdlIGFsd2F5cyBk
-byB0aGlzIGFzIGl0IHdpbGwgaGF2ZSBubyBoYXJtIG9uIGthc2xyLWluY2FwYWJsZSBrZXJuZWwu
-Cj4KPiBXZSBkb24ndCBoYXZlIGFueSAic3dpdGNoIiB0byB0dXJuIG9mZiB0aGlzIGZlYXR1cmUg
-ZGlyZWN0bHksIGJ1dCBzdGlsbAo+IGNhbiBzdXBwcmVzcyBpdCBieSBwYXNzaW5nICJub2thc2xy
-IiBhcyBhIGtlcm5lbCBib290IGFyZ3VtZW50Lgo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQv
-a2VybmVsL21hY2hpbmVfa2V4ZWNfZmlsZS5jCj4gYi9hcmNoL2FybTY0L2tlcm5lbC9tYWNoaW5l
-X2tleGVjX2ZpbGUuYwo+IGluZGV4IDczNTZkYTVhNTNkNS4uNDdhNGZiZDBkYzM0IDEwMDY0NAo+
-IC0tLSBhL2FyY2gvYXJtNjQva2VybmVsL21hY2hpbmVfa2V4ZWNfZmlsZS5jCj4gKysrIGIvYXJj
-aC9hcm02NC9rZXJuZWwvbWFjaGluZV9rZXhlY19maWxlLmMKPiBAQCAtMTU4LDYgKzE2MCwxMiBA
-QCBzdGF0aWMgaW50IHNldHVwX2R0YihzdHJ1Y3Qga2ltYWdlICppbWFnZSwKPgo+IERvbid0IHlv
-dSBuZWVkIHRvIHJlc2VydmUgc29tZSBzcGFjZSBpbiB0aGUgYXJlYSB5b3Ugdm1hbGxvYygpZCBm
-b3IgdGhlIERUPwo+Cj4gTm8sIEkgZG9uJ3QgdGhpbmsgc28uCj4gQWxsIHRoZSBkYXRhIHRvIGJl
-IGxvYWRlZCBhcmUgdGVtcG9yYXJpbHkgc2F2ZWQgaW4ga2V4ZWMgYnVmZmVycywKPiB3aGljaCB3
-aWxsIGV2ZW50dWFsbHkgYmUgY29waWVkIHRvIHRhcmdldCBsb2NhdGlvbnMgaW4gbWFjaGluZV9r
-ZXhlYwo+IChhcm02NF9yZWxvY2F0ZV9uZXdfa2VybmVsLCB3aGljaCwgdW5saWtlIGl0cyBuYW1l
-LCB3aWxsIGhhbmRsZQo+IG5vdCBvbmx5IGtlcm5lbCBidXQgYWxzbyBvdGhlciBkYXRhIGFzIHdl
-bGwpLgo+Cj4KPiBJIHRoaW5rIHdlJ3JlIHNwZWFraW5nIGF0IGNyb3NzIHB1cnBvc2VzLiBEb24n
-dCB5b3UgbmVlZDoKPgo+IHwgYnVmX3NpemUgKz0gZmR0X3Byb3BfbGVuKCJrYXNscuKAlXNlZWQi
-LCBzaXplb2YodTY0KSk7Cj4KPgo+IFlvdSBjYW4ndCBhc3N1bWUgdGhlIGV4aXN0aW5nIERUQiBo
-YWQgYSBrYXNsci1zZWVkIHByb3BlcnR5LCBhbmQgdGhlCj4gZGlmZmVyZW5jZSBtYXkgdGFrZSB1
-cyBvdmVyIGEgUEFHRV9TSVpFIGJvdW5kYXJ5Lgo+Cj4KPgo+Cj4gKyAvKiBhZGQga2FzbHItc2Vl
-ZCAqLwo+ICsgZ2V0X3JhbmRvbV9ieXRlcygmdmFsdWUsIHNpemVvZih2YWx1ZSkpOwo+Cj4gV2hh
-dCBoYXBwZW5zIGlmIHRoZSBjcm5nIGlzbid0IHJlYWR5Pwo+Cj4gSXQgbG9va3MgbGlrZSB0aGlz
-IHdpbGwgcHJpbnQgYSB3YXJuaW5nIHRoYXQgdGhlc2UgcmFuZG9tLWJ5dGVzIGFyZW4ndAo+IHJl
-YWxseSB1cAo+IHRvIHN0YW5kYXJkLCBidXQgdGhlIG5ldyBrZXJuZWwgZG9lc24ndCBrbm93IHRo
-aXMgaGFwcGVuZWQuCj4KPiBjcm5nX3JlYWR5KCkgaXNuJ3QgZXhwb3NlZCwgYWxsIHdlIGNvdWxk
-IGRvIG5vdyBpcwo+IHdhaXRfZm9yX3JhbmRvbV9ieXRlcygpLCBidXQgdGhhdCBtYXkgd2FpdCBm
-b3JldmVyIGJlY2F1c2Ugd2UgZG8gdGhpcwo+IHVuY29uZGl0aW9uYWxseS4KPgo+IEknZCBwcmVm
-ZXIgdG8gbGVhdmUgdGhpcyBmZWF0dXJlIHVudGlsIHdlIGNhbiBjaGVjayBjcm5nX3JlYWR5KCks
-IGFuZCBza2lwCj4gYWRkaW5nIGEgZG9kZ3ktc2VlZCBpZiBpdHMgbm90LXJlYWR5LiBUaGlzIGF2
-b2lkcyBwb2xsdXRpbmcgdGhlCj4gbmV4dC1rZXJuZWwncwo+IGVudHJvcHkgcG9vbC4KPgo+IE9L
-LiBJIHdvdWxkIHRyeSB0byBmb2xsb3cgdGhlIHNhbWUgd2F5IGFzIEJodXBlc2gncyB1c2Vyc3Bh
-Y2UgcGF0Y2gKPiBkb2VzIGZvciBrYXNsci1zZWVkOgo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL3BpcGVybWFpbC9rZXhlYy8yMDE4LUFwcmlsLzAyMDU2NC5odG1sCj4KPgo+IChJIHJlYWxs
-eSBkb24ndCB1bmRlcnN0YW5kIHRoaXMgJ2NvcHlpbmcgY29kZSBmcm9tIHVzZXItc3BhY2UnIHRo
-YXQgaGFwcGVucwo+IHdpdGgga2V4ZWNfZmlsZV9sb2FkKQo+Cj4KPiAgIGlmIChub3QgZm91bmQg
-a2FzbHItc2VlZCBpbiAxc3Qga2VybmVsJ3MgZHRiKQo+ICAgICAgZG9uJ3QgY2FyZTsgZ28gYWhl
-YWQKPgo+Cj4gRG9uJyB0IGJvdGhlci4gQXMgeW91IHNheSBpbiB0aGUgY29tbWl0LW1lc3NhZ2Ug
-aXRzIGhhcm1sZXNzIGlmIHRoZSBuZXcKPiBrZXJuZWwgZG9lc24ndCBzdXBwb3J0IGl0Lgo+IEFs
-d2F5cyBoYXZpbmcgdGhpcyB3b3VsZCBsZXQgeW91IHVzZSBrZXhlY19maWxlX2xvYWQgYXMgYSBi
-b290bG9hZGVyIHRoYXQKPiBjYW4gZ2V0IHRoZSBjcm5nIHRvCj4gcHJvdmlkZSBkZWNlbnQgZW50
-cm9weSBldmVuIGlmIHRoZSBwbGF0Zm9ybSBib290bG9hZGVyIGNhbid0Lgo+Cj4KPiAgIGVsc2UK
-PiAgICAgIGlmIChjdXJyZW50IGthc2xyLXNlZWQgIT0gMCkKPiAgICAgICAgIGVycm9yCj4KPgo+
-IERvbid0IGJvdGhlci4gSWYgdGhpcyBoYXBwZW5zIGl0cyBhIGJ1ZyBpbiBhbm90aGVyIHBhcnQg
-b2YgdGhlIGtlcm5lbCB0aGF0Cj4gZG9lc24ndCBhZmZlY3QgdGhpcyBvbmUuIFdlIGFyZW4ndCBz
-ZWNvbmQtZ3Vlc3NpbmcgdGhlIGZpbGUtc3lzdGVtIHdoZW4gd2UKPiByZWFkIHRoZSBrZXJuZWwt
-ZmQsIGxldHMga2VlcCB0aGlzIHNpbXBsZS4KPgo+ICAgICAgaWYgKGNybmdfcmVhZHkoKSkgOyBG
-SVhNRSwgaXQncyBhIGxvY2FsIG1hY3JvCj4gICAgICAgICBnZXRfcmFuZG9tX2J5dGVzKG5vbi1i
-bG9ja2luZykKPiAgICAgICAgIHNldCBuZXcga2FzbHItc2VlZAo+ICAgICAgZWxzZQo+ICAgICAg
-ICAgZXJyb3IKPgo+IGVycm9yPyBTb21ldGhpbmcgbGlrZSBwcl93YXJuX29uY2UoKS4KPgo+IEkg
-dGhvdWdodCB0aGUga2FzbHItc2VlZCB3YXMgYWRkZWQgdG8gdGhlIGVudHJvcHkgcG9vbCwgYnV0
-IG5vdyBJIGxvb2sgYWdhaW4KPiBJIHNlZSBpdHMgYSBzZXBhcmF0ZSBFRkkgdGFibGUuIFNvIHRo
-ZSBuZXcga2VybmVsIHdpbGwgYWRkIHRoZSBzYW1lIGVudHJvcHkKPiAuLi4gdGhhdCBkb2Vzbid0
-IHNvdW5kIGNsZXZlci4gKEkgY2FuJ3Qgc2VlIHdoZXJlIGl0cyB6ZXJvJ2Qgb3IKPiByZS1pbml0
-aWFsaXNlZCkKPgoKV2UgZG8gaGF2ZSBhIGhvb2sgZm9yIHRoYXQ6IGdyZXAgZm9yIHVwZGF0ZV9l
-ZmlfcmFuZG9tX3NlZWQoKQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Include KASLR offset in arm64 VMCOREINFO ELF notes to assist in
+debugging. vmcore parsing in user-space already expects this value in
+the notes and we are providing it for portability of those existing
+tools with x86.
+
+Ideally we would like core code to do this (so that way this
+information won't be missed when an architecture adds KASLR support),
+but mips has CONFIG_RANDOMIZE_BASE, and doesn't provide kaslr_offset(),
+so I am not sure if this is needed for mips (and other such similar arch
+cases in future). So, lets keep this architecture specific for now.
+
+As an example of a user-space use-case, consider the
+makedumpfile user-space utility which will need fixup to use this
+KASLR offset to work with cases where we need to find a way to
+translate symbol address from vmlinux to kernel run time address
+in case of KASLR boot on arm64.
+
+I have already submitted the makedumpfile user-space patch upstream
+and the maintainer has suggested to wait for the kernel changes to be
+included (see [0]).
+
+I tested this on my qualcomm amberwing board both for KASLR and
+non-KASLR boot cases:
+
+Without this patch:
+   # cat > scrub.conf << EOF
+   [vmlinux]
+   erase jiffies
+   erase init_task.utime
+   for tsk in init_task.tasks.next within task_struct:tasks
+       erase tsk.utime
+   endfor
+   EOF
+
+  # makedumpfile --split -d 31 -x vmlinux --config scrub.conf vmcore dumpfile_{1,2,3}
+  readpage_elf: Attempt to read non-existent page at 0xffffa8a5bf180000.
+  readmem: type_addr: 1, addr:ffffa8a5bf180000, size:8
+  vaddr_to_paddr_arm64: Can't read pgd
+  readmem: Can't convert a virtual address(ffff0000092a542c) to physical
+  address.
+  readmem: type_addr: 0, addr:ffff0000092a542c, size:390
+  check_release: Can't get the address of system_utsname
+
+After this patch check_release() is ok, and also we are able to erase
+symbol from vmcore (I checked this with kernel 4.18.0-rc4+):
+
+  # makedumpfile --split -d 31 -x vmlinux --config scrub.conf vmcore dumpfile_{1,2,3}
+  The kernel version is not supported.
+  The makedumpfile operation may be incomplete.
+  Checking for memory holes                         : [100.0 %] \
+  Checking for memory holes                         : [100.0 %] |
+  Checking foExcluding unnecessary pages                       : [100.0 %]
+  \
+  Excluding unnecessary pages                       : [100.0 %] \
+
+  The dumpfiles are saved to dumpfile_1, dumpfile_2, and dumpfile_3.
+
+  makedumpfile Completed.
+
+[0] https://www.spinics.net/lists/kexec/msg21195.html
+
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+---
+Changes since v1:
+ - Addressed review comments from James regarding commit log
+ - v1 can be viewed here: https://lkml.org/lkml/2018/7/18/951
+ - v2 is rebased against linux-next/master
+
+ arch/arm64/kernel/machine_kexec.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index f62effc6e064..028df356a5fd 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -360,4 +360,5 @@ void arch_crash_save_vmcoreinfo(void)
+ 						kimage_voffset);
+ 	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
+ 						PHYS_OFFSET);
++	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
+ }
+-- 
+2.7.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
