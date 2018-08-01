@@ -1,18 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-f196.google.com ([209.85.208.196])
+Received: from mail-pl0-x241.google.com ([2607:f8b0:400e:c01::241])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fkRgx-0002j1-Dn
- for kexec@lists.infradead.org; Tue, 31 Jul 2018 10:15:50 +0000
-Received: by mail-lj1-f196.google.com with SMTP id w16-v6so9614747ljh.12
- for <kexec@lists.infradead.org>; Tue, 31 Jul 2018 03:15:36 -0700 (PDT)
+ id 1fkm1A-00027x-Nj
+ for kexec@lists.infradead.org; Wed, 01 Aug 2018 07:58:02 +0000
+Received: by mail-pl0-x241.google.com with SMTP id m1-v6so8396056plt.6
+ for <kexec@lists.infradead.org>; Wed, 01 Aug 2018 00:57:49 -0700 (PDT)
+Date: Wed, 1 Aug 2018 16:57:21 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v12 16/16] arm64: kexec_file: add kaslr support
+Message-ID: <20180801075720.GM11258@linaro.org>
+References: <20180724065759.19186-1-takahiro.akashi@linaro.org>
+ <20180724065759.19186-17-takahiro.akashi@linaro.org>
+ <50b31f17-fc85-aa72-06f5-d3b62060a91f@arm.com>
+ <20180727083104.GI11258@linaro.org>
+ <405b6708-4518-d81e-3938-39032c2b487e@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20180731092629.GD4680@arm.com>
-References: <1532931883-16132-1-git-send-email-bhsharma@redhat.com>
- <303e32f7-ff47-ea9b-d5a0-45a22e44d0a9@arm.com> <20180731092629.GD4680@arm.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 31 Jul 2018 15:45:33 +0530
-Message-ID: <CACi5LpMkuq78Vn6uncZ=StR8dSHzptiZnT9mmQR+OcaLv-ck_Q@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64, kaslr: export offset in VMCOREINFO ELF notes
+Content-Disposition: inline
+In-Reply-To: <405b6708-4518-d81e-3938-39032c2b487e@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,72 +25,91 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: James Morse <james.morse@arm.com>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-Hi Will, James,
-
-On Tue, Jul 31, 2018 at 2:56 PM, Will Deacon <will.deacon@arm.com> wrote:
-> On Tue, Jul 31, 2018 at 10:19:35AM +0100, James Morse wrote:
->> Hi Bhupesh,
->>
->> On 30/07/18 07:24, Bhupesh Sharma wrote:
->> > Include KASLR offset in arm64 VMCOREINFO ELF notes to assist in
->> > debugging. vmcore parsing in user-space already expects this value in
->> > the notes and we are providing it for portability of those existing
->> > tools with x86.
->> >
->> > Ideally we would like core code to do this (so that way this
->> > information won't be missed when an architecture adds KASLR support),
->> > but mips has CONFIG_RANDOMIZE_BASE, and doesn't provide kaslr_offset(),
->> > so I am not sure if this is needed for mips (and other such similar arch
->> > cases in future). So, lets keep this architecture specific for now.
->>
->> (heh, I assumed you would rewrite my train-of-thought, but I guess this works!)
->>
->>
->> > As an example of a user-space use-case, consider the
->> > makedumpfile user-space utility which will need fixup to use this
->> > KASLR offset to work with cases where we need to find a way to
->> > translate symbol address from vmlinux to kernel run time address
->> > in case of KASLR boot on arm64.
->>
->> Acked-by: James Morse <james.morse@arm.com>
-
-Thanks James.
-
->> If we want to send this to stable, it looks like it should have been part of the
->> KASLR series, f80fb3a3d5084 ("arm64: add support for kernel ASLR") was merged
->> for v4.6.
->> CC: <stable@vger.kernel.org> # 4.6.x
->
-> Hmm, does this warrant a stable backport? This hasn't ever worked, right?
-
-Yes, it is a new feature being enabled/tested in user-space utilities
-now for arm64 (although it's being used for x86_64 since some time).
-
-I would like the user-space utilities to do away with the arch
-specific code (as much as possible) for KASLR features, but we are
-still kind of stabilizing the same on various archs, so the user-space
-cleanup is one of items on my to-do list.
-
-However, since kernel and user-space features are frequently
-backported to older versions (e.g. RHEL and OpenSuse), so it would
-help to send this patch to stable as well, so that stable kernels >=
-4.6.x can work well with such backported user-space utilities and
-utilize KASLR features on arm64 well.
-
-As such, I see no side-effect of adding this information to the
-vmcoreinfo in the stable kernels as well.
-
-Thanks,
-Bhupesh
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SmFtZXMsCgpBbGwgdGhlIGNoYW5nZXMgbWVudGlvbmVkIGJlbG93IHdlcmUgYXBwbGllZCB0byBt
+eSBjb21pbmcgdjEzLgoKT24gRnJpLCBKdWwgMjcsIDIwMTggYXQgMTA6MjI6MzFBTSArMDEwMCwg
+SmFtZXMgTW9yc2Ugd3JvdGU6Cj4gSGkgQWthc2hpLAo+IAo+IAo+IE9uIDA3LzI3LzIwMTggMDk6
+MzEgQU0sIEFLQVNISSBUYWthaGlybyB3cm90ZToKPiA+T24gVGh1LCBKdWwgMjYsIDIwMTggYXQg
+MDI6NDA6NDlQTSArMDEwMCwgSmFtZXMgTW9yc2Ugd3JvdGU6Cj4gPj5PbiAyNC8wNy8xOCAwNzo1
+NywgQUtBU0hJIFRha2FoaXJvIHdyb3RlOgo+ID4+PkFkZGluZyAia2FzbHItc2VlZCIgdG8gZHRi
+IGVuYWJsZXMgdHJpZ2dlcmluZyBrYXNsciwgb3Iga2VybmVsIHZpcnR1YWwKPiA+Pj5hZGRyZXNz
+IHJhbmRvbWl6YXRpb24sIGF0IHNlY29uZGFyeSBrZXJuZWwgYm9vdC4KPiA+PkhtbSwgdGhlcmUg
+YXJlIHRocmVlIHRoaW5ncyB0aGF0IGdldCBtb3ZlZCBieSBDT05GSUdfUkFORE9NSVpFX0JBU0Uu
+IFRoZSBrZXJuZWwKPiA+PnBoeXNpY2FsIHBsYWNlbWVudCB3aGVuIGJvb3RlZCB2aWEgdGhlIEVG
+SXN0dWIsIHRoZSBrZXJuZWwtdGV4dCBWQXMgYW5kIHRoZQo+ID4+bG9jYXRpb24gb2YgbWVtb3J5
+IGluIHRoZSBsaW5lYXItbWFwIHJlZ2lvbi4gQWRkaW5nIHRoZSBrYXNsci1zZWVkIG9ubHkgZG9l
+cyB0aGUKPiA+Pmxhc3QgdHdvLgo+ID5ZZXMsIGJ1dCBJIHRoaW5rIHRoYXQgSSBhbmQgTWFyayBo
+YXMgYWdyZWVkIHRoYXQgImthc2xyIiBtZWFudAo+ID4idmlydHVhbCIgcmFuZG9taXNhdGlvbiwg
+bm90IGluY2x1ZGluZyAicGh5c2ljYWwiIHJhbmRvbWlzYXRpb24uCj4gT2theSwgSSdsbCB1cGRh
+dGUgbXkgdGVybWlub2xvZ3khCj4gCj4gCj4gPj5UaGlzIG1lYW5zIHRoZSBwaHlzaWNhbCBwbGFj
+ZW1lbnQgb2YgdGhlIG5ldyBrZXJuZWwgaXMgcHJlZGljdGFibGUgZnJvbQo+ID4+L3Byb2MvaW9t
+ZW0gLi4uIGJ1dCB0aGlzIGFsc28gdGVsbHMgeW91IHRoZSBwaHlzaWNhbCBwbGFjZW1lbnQgb2Yg
+dGhlIGN1cnJlbnQKPiA+Pmtlcm5lbCwgc28gSSBkb24ndCB0aGluayB0aGlzIGlzIGEgcHJvYmxl
+bS4KPiA+Pgo+ID4+Cj4gPj4+V2UgYWx3YXlzIGRvIHRoaXMgYXMgaXQgd2lsbCBoYXZlIG5vIGhh
+cm0gb24ga2FzbHItaW5jYXBhYmxlIGtlcm5lbC4KPiA+Pj5XZSBkb24ndCBoYXZlIGFueSAic3dp
+dGNoIiB0byB0dXJuIG9mZiB0aGlzIGZlYXR1cmUgZGlyZWN0bHksIGJ1dCBzdGlsbAo+ID4+PmNh
+biBzdXBwcmVzcyBpdCBieSBwYXNzaW5nICJub2thc2xyIiBhcyBhIGtlcm5lbCBib290IGFyZ3Vt
+ZW50Lgo+ID4+Cj4gPj4+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQva2VybmVsL21hY2hpbmVfa2V4
+ZWNfZmlsZS5jIGIvYXJjaC9hcm02NC9rZXJuZWwvbWFjaGluZV9rZXhlY19maWxlLmMKPiA+Pj5p
+bmRleCA3MzU2ZGE1YTUzZDUuLjQ3YTRmYmQwZGMzNCAxMDA2NDQKPiA+Pj4tLS0gYS9hcmNoL2Fy
+bTY0L2tlcm5lbC9tYWNoaW5lX2tleGVjX2ZpbGUuYwo+ID4+PisrKyBiL2FyY2gvYXJtNjQva2Vy
+bmVsL21hY2hpbmVfa2V4ZWNfZmlsZS5jCj4gPj4+QEAgLTE1OCw2ICsxNjAsMTIgQEAgc3RhdGlj
+IGludCBzZXR1cF9kdGIoc3RydWN0IGtpbWFnZSAqaW1hZ2UsCj4gPj5Eb24ndCB5b3UgbmVlZCB0
+byByZXNlcnZlIHNvbWUgc3BhY2UgaW4gdGhlIGFyZWEgeW91IHZtYWxsb2MoKWQgZm9yIHRoZSBE
+VD8KPiA+Tm8sIEkgZG9uJ3QgdGhpbmsgc28uCj4gPkFsbCB0aGUgZGF0YSB0byBiZSBsb2FkZWQg
+YXJlIHRlbXBvcmFyaWx5IHNhdmVkIGluIGtleGVjIGJ1ZmZlcnMsCj4gPndoaWNoIHdpbGwgZXZl
+bnR1YWxseSBiZSBjb3BpZWQgdG8gdGFyZ2V0IGxvY2F0aW9ucyBpbiBtYWNoaW5lX2tleGVjCj4g
+Pihhcm02NF9yZWxvY2F0ZV9uZXdfa2VybmVsLCB3aGljaCwgdW5saWtlIGl0cyBuYW1lLCB3aWxs
+IGhhbmRsZQo+ID5ub3Qgb25seSBrZXJuZWwgYnV0IGFsc28gb3RoZXIgZGF0YSBhcyB3ZWxsKS4K
+PiAKPiBJIHRoaW5rIHdlJ3JlIHNwZWFraW5nIGF0IGNyb3NzIHB1cnBvc2VzLiBEb24ndCB5b3Ug
+bmVlZDoKPiAKPiB8IGJ1Zl9zaXplICs9IGZkdF9wcm9wX2xlbigia2FzbHLigJVzZWVkIiwgc2l6
+ZW9mKHU2NCkpOwo+IAo+IAo+IFlvdSBjYW4ndCBhc3N1bWUgdGhlIGV4aXN0aW5nIERUQiBoYWQg
+YSBrYXNsci1zZWVkIHByb3BlcnR5LCBhbmQgdGhlCj4gZGlmZmVyZW5jZSBtYXkgdGFrZSB1cyBv
+dmVyIGEgUEFHRV9TSVpFIGJvdW5kYXJ5LgoKSSBzZWUsIEkgd2lsbCBhZGQgdGhhdC4KCj4gCj4g
+Pgo+ID4+Cj4gPj4+KwkvKiBhZGQga2FzbHItc2VlZCAqLwo+ID4+PisJZ2V0X3JhbmRvbV9ieXRl
+cygmdmFsdWUsIHNpemVvZih2YWx1ZSkpOwo+ID4+V2hhdCBoYXBwZW5zIGlmIHRoZSBjcm5nIGlz
+bid0IHJlYWR5Pwo+ID4+Cj4gPj5JdCBsb29rcyBsaWtlIHRoaXMgd2lsbCBwcmludCBhIHdhcm5p
+bmcgdGhhdCB0aGVzZSByYW5kb20tYnl0ZXMgYXJlbid0IHJlYWxseSB1cAo+ID4+dG8gc3RhbmRh
+cmQsIGJ1dCB0aGUgbmV3IGtlcm5lbCBkb2Vzbid0IGtub3cgdGhpcyBoYXBwZW5lZC4KPiA+Pgo+
+ID4+Y3JuZ19yZWFkeSgpIGlzbid0IGV4cG9zZWQsIGFsbCB3ZSBjb3VsZCBkbyBub3cgaXMKPiA+
+PndhaXRfZm9yX3JhbmRvbV9ieXRlcygpLCBidXQgdGhhdCBtYXkgd2FpdCBmb3JldmVyIGJlY2F1
+c2Ugd2UgZG8gdGhpcwo+ID4+dW5jb25kaXRpb25hbGx5Lgo+ID4+Cj4gPj5JJ2QgcHJlZmVyIHRv
+IGxlYXZlIHRoaXMgZmVhdHVyZSB1bnRpbCB3ZSBjYW4gY2hlY2sgY3JuZ19yZWFkeSgpLCBhbmQg
+c2tpcAo+ID4+YWRkaW5nIGEgZG9kZ3ktc2VlZCBpZiBpdHMgbm90LXJlYWR5LiBUaGlzIGF2b2lk
+cyBwb2xsdXRpbmcgdGhlIG5leHQta2VybmVsJ3MKPiA+PmVudHJvcHkgcG9vbC4KPiA+T0suIEkg
+d291bGQgdHJ5IHRvIGZvbGxvdyB0aGUgc2FtZSB3YXkgYXMgQmh1cGVzaCdzIHVzZXJzcGFjZSBw
+YXRjaAo+ID5kb2VzIGZvciBrYXNsci1zZWVkOgo+ID5odHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
+Zy9waXBlcm1haWwva2V4ZWMvMjAxOC1BcHJpbC8wMjA1NjQuaHRtbAo+IAo+IChJIHJlYWxseSBk
+b24ndCB1bmRlcnN0YW5kIHRoaXMgJ2NvcHlpbmcgY29kZSBmcm9tIHVzZXItc3BhY2UnIHRoYXQg
+aGFwcGVucwo+IHdpdGgga2V4ZWNfZmlsZV9sb2FkKQo+IAo+IAo+ID4gICBpZiAobm90IGZvdW5k
+IGthc2xyLXNlZWQgaW4gMXN0IGtlcm5lbCdzIGR0YikKPiA+ICAgICAgZG9uJ3QgY2FyZTsgZ28g
+YWhlYWQKPiAKPiBEb24nIHQgYm90aGVyLiBBcyB5b3Ugc2F5IGluIHRoZSBjb21taXQtbWVzc2Fn
+ZSBpdHMgaGFybWxlc3MgaWYgdGhlIG5ldwo+IGtlcm5lbCBkb2Vzbid0IHN1cHBvcnQgaXQuCj4g
+QWx3YXlzIGhhdmluZyB0aGlzIHdvdWxkIGxldCB5b3UgdXNlIGtleGVjX2ZpbGVfbG9hZCBhcyBh
+IGJvb3Rsb2FkZXIgdGhhdAo+IGNhbiBnZXQgdGhlIGNybmcgdG8KPiBwcm92aWRlIGRlY2VudCBl
+bnRyb3B5IGV2ZW4gaWYgdGhlIHBsYXRmb3JtIGJvb3Rsb2FkZXIgY2FuJ3QuCgpPSywgYnV0IGFu
+eXdheSBwcmV2aW91cyAia2FzbHItc2VlZCIgd2lsbCBiZSBkcm9wcGVkIGZpcnN0LgoKPiAKPiA+
+ICAgZWxzZQo+ID4gICAgICBpZiAoY3VycmVudCBrYXNsci1zZWVkICE9IDApCj4gPiAgICAgICAg
+IGVycm9yCj4gCj4gRG9uJ3QgYm90aGVyLiBJZiB0aGlzIGhhcHBlbnMgaXRzIGEgYnVnIGluIGFu
+b3RoZXIgcGFydCBvZiB0aGUga2VybmVsIHRoYXQKPiBkb2Vzbid0IGFmZmVjdCB0aGlzIG9uZS4g
+V2UgYXJlbid0IHNlY29uZC1ndWVzc2luZyB0aGUgZmlsZS1zeXN0ZW0gd2hlbiB3ZQo+IHJlYWQg
+dGhlIGtlcm5lbC1mZCwgbGV0cyBrZWVwIHRoaXMgc2ltcGxlLgoKT0sKCj4gPiAgICAgIGlmIChj
+cm5nX3JlYWR5KCkpIDsgRklYTUUsIGl0J3MgYSBsb2NhbCBtYWNybwo+ID4gICAgICAgICBnZXRf
+cmFuZG9tX2J5dGVzKG5vbi1ibG9ja2luZykKPiA+ICAgICAgICAgc2V0IG5ldyBrYXNsci1zZWVk
+Cj4gPiAgICAgIGVsc2UKPiA+ICAgICAgICAgZXJyb3IKPiBlcnJvcj8gU29tZXRoaW5nIGxpa2Ug
+cHJfd2Fybl9vbmNlKCkuCgpJdCB3YXMgY2hhbmdlZCB0byBwcl9ub3RpY2UoKSBzaW5jZSB0aGVy
+ZSBpcyBub3RoaW5nIHdyb25nLgoKVGhhbmtzLAotVGFrYWhpcm8gQUtBU0hJCgo+IEkgdGhvdWdo
+dCB0aGUga2FzbHItc2VlZCB3YXMgYWRkZWQgdG8gdGhlIGVudHJvcHkgcG9vbCwgYnV0IG5vdyBJ
+IGxvb2sgYWdhaW4KPiBJIHNlZSBpdHMgYSBzZXBhcmF0ZSBFRkkgdGFibGUuIFNvIHRoZSBuZXcg
+a2VybmVsIHdpbGwgYWRkIHRoZSBzYW1lIGVudHJvcHkKPiAuLi4gdGhhdCBkb2Vzbid0IHNvdW5k
+IGNsZXZlci4gKEkgY2FuJ3Qgc2VlIHdoZXJlIGl0cyB6ZXJvJ2Qgb3IKPiByZS1pbml0aWFsaXNl
+ZCkKPiAKPiAKPiAKPiBUaGFua3MsCj4gCj4gSmFtZXMKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+a2V4ZWMK
