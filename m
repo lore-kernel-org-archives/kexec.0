@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mail-pf1-x443.google.com ([2607:f8b0:4864:20::443])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fky1j-0005ik-6l
- for kexec@lists.infradead.org; Wed, 01 Aug 2018 20:47:24 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile: when using refiltering, initialize
- bitmap1 from the kdump file's bitmap2
-Date: Wed, 1 Aug 2018 20:45:07 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03559B0D@BPXM09GP.gisp.nec.co.jp>
-References: <1533026695-14819-1-git-send-email-piliu@redhat.com>
-In-Reply-To: <1533026695-14819-1-git-send-email-piliu@redhat.com>
-Content-Language: en-US
+ id 1fl14X-0004dp-73
+ for kexec@lists.infradead.org; Thu, 02 Aug 2018 00:02:31 +0000
+Received: by mail-pf1-x443.google.com with SMTP id a26-v6so220911pfo.4
+ for <kexec@lists.infradead.org>; Wed, 01 Aug 2018 17:02:16 -0700 (PDT)
+Date: Thu, 2 Aug 2018 09:01:52 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v13 03/16] s390, kexec_file: drop arch_kexec_mem_walk()
+Message-ID: <20180802000150.GN11258@linaro.org>
+References: <20180801075820.3753-1-takahiro.akashi@linaro.org>
+ <20180801075820.3753-4-takahiro.akashi@linaro.org>
+ <20180801102951.527cfc57@ThinkPad>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180801102951.527cfc57@ThinkPad>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,87 +27,123 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <piliu@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Philipp Rudo <prudo@linux.ibm.com>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james.morse@arm.com, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-Hi Pingfan,
+Hi,
 
-Thank you for the patch.
+On Wed, Aug 01, 2018 at 10:29:51AM +0200, Philipp Rudo wrote:
+> Hey Akashi,
+> 
+> I kept thinking about this patch and remembered why I didn't made the change
+> you are suggesting now.
 
-On 7/31/2018 4:44 AM, Pingfan Liu wrote:
-> When refiltering on kdump format file, there is no info about pt_load[] for
-> exclude_nodata_pages(), and also we can not expect more data than the kdump
-> file can provide, hence this patch suggests to initialize the refiltered
-> bitmap1 from the kdump file's bitmap2.
+Hmm.
 
-I understood the issue (I don't have any vmcore which can reproduce it,
-though), but since the bitmap1 is written to the refiltered dump file,
-I think that we should not change the meaning of bitmap1 if possible,
-which is "a page on memory hole".
+> The problem is when you only check for kbuf->mem you are excluding address 0,
+> which might be a valid address to load the kernel to. On s390 this is actually
+> done when the kernel is not loaded via a boot loader. For kexec_file however,
+> we cut off the first few kB of the image and jump directly to 'startup'. So
+> checking for !0 does not cause a problem here.
 
-For instance, with the patch, crash using the bitmaps prints a different
-message for the same "excluded" paddr:
+Yeah, as Dave(RedHat) described, all the current kexec-capable architectures,
+except arm64, implicitly initialize kbuf.mem to zero with "kbuf = { ... }"
+initializer. So surely my change would not break anything on the existing code.
+On the other hand, I also see your concern here.
 
-  -read_diskdump: PAGE_EXCLUDED: paddr/pfn: 2613e130/2613e
-  +read_diskdump: SEEK_ERROR: paddr/pfn: 2613e130/2613e !page_is_ram
+> Anyway, the long term safer solution would be something like
+> 
+> #define KEXEC_BUF_MEM_UNKNOWN (-1UL)
+> 
+> for architectures to tell common code to search a fitting mem hole.
 
-and makedumpfile's -e option using the bitmap1 cannot be utilized when
-refiltering, these are not favorable.
+This would require the existing code on every arch to be modified, which
+I think should be avoided if possible. Instead,
+we'd better define in linux/kexec.h:
+  #ifndef KEXEC_BUF_MEM_UNKNOWN
+  #define KEXEC_BUF_MEM_UNKNOWN 0
+  #endif
+and then check for kbuf in kexec_locate_mem_hole():
+  if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
+        return 0;
+  ...
 
-So how about initializing the refiltered *bitmap2* from the kdump file's
-bitmap2 ?  I'm checking if this works.
+This way if some arch wants to treat *zero* as a valid address, it can
+redefine this macro in arch/asm/kexec.h.
 
 Thanks,
-Kazu
+-Takahiro AKASHI
 
 > 
-> Note about the bug reported by the following ops:
->   makedumpfile -l --message-level 1 -d 31 /proc/vmcore /path/to/vmcore
->   makedumpfile  --split  -d 31 ./vmcore dumpfile_{1,2,3} 2>&1
-> and hit the following error:
->   Excluding unnecessary pages                       : [100.0 %] \
->   readpage_kdump_compressed: pfn(9b) is excluded from /var/crash/127.0.0.1-2018-07-02-22:10:38/vmcore.
->   readmem: type_addr: 1, addr:9b000, size:4096
->   read_pfn: Can't get the page data.
->   writeout_multiple_dumpfiles: Child process(2277) finished incompletely.(256)
->   Copying data                                      : [ 24.6 %] -           eta: 2s
->   makedumpfile Failed.
+> Back then I didn't do the change because I had the other workaround, which
+> didn't require a common code change. But when you are touching the code now it
+> is worth thinking about it.
 > 
-> Signed-off-by: Pingfan Liu <piliu@redhat.com>
-> ---
->  makedumpfile.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+> Just wanted to let you know
+> Philipp
 > 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 101fa7c..af24359 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -5544,6 +5544,7 @@ copy_1st_bitmap_from_memory(void)
 > 
->  	bitmap_offset = (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size)
->  			 * dh->block_size;
-> +	bitmap_offset += info->len_bitmap / 2;
+> On Wed,  1 Aug 2018 16:58:07 +0900
+> AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
 > 
->  	if (lseek(info->fd_memory, bitmap_offset, SEEK_SET) < 0) {
->  		ERRMSG("Can't seek %s. %s\n",
-> @@ -5593,8 +5594,11 @@ create_1st_bitmap_file(void)
->  	struct timespec ts_start;
->  	off_t offset_page;
+> > Since s390 already knows where to locate buffers, calling
+> > arch_kexec_mem_walk() has no sense. So we can just drop it as kbuf->mem
+> > indicates this while all other architectures sets it to 0 initially.
+> > 
+> > This change is a preparatory work for the next patch, where all the
+> > variant memory walks, either on system resource or memblock, will be
+> > put in one common place so that it will satisfy all the architectures'
+> > need.
+> > 
+> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
+> > Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> > Cc: Dave Young <dyoung@redhat.com>
+> > Cc: Vivek Goyal <vgoyal@redhat.com>
+> > Cc: Baoquan He <bhe@redhat.com>
+> > ---
+> >  arch/s390/kernel/machine_kexec_file.c | 10 ----------
+> >  kernel/kexec_file.c                   |  4 ++++
+> >  2 files changed, 4 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
+> > index f413f57f8d20..32023b4f9dc0 100644
+> > --- a/arch/s390/kernel/machine_kexec_file.c
+> > +++ b/arch/s390/kernel/machine_kexec_file.c
+> > @@ -134,16 +134,6 @@ int kexec_file_add_initrd(struct kimage *image, struct s390_load_data *data,
+> >  	return ret;
+> >  }
+> >  
+> > -/*
+> > - * The kernel is loaded to a fixed location. Turn off kexec_locate_mem_hole
+> > - * and provide kbuf->mem by hand.
+> > - */
+> > -int arch_kexec_walk_mem(struct kexec_buf *kbuf,
+> > -			int (*func)(struct resource *, void *))
+> > -{
+> > -	return 1;
+> > -}
+> > -
+> >  int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+> >  				     Elf_Shdr *section,
+> >  				     const Elf_Shdr *relsec,
+> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> > index 63c7ce1c0c3e..bf39df5e5bb9 100644
+> > --- a/kernel/kexec_file.c
+> > +++ b/kernel/kexec_file.c
+> > @@ -534,6 +534,10 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+> >  {
+> >  	int ret;
+> >  
+> > +	/* Arch knows where to place */
+> > +	if (kbuf->mem)
+> > +		return 0;
+> > +
+> >  	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
+> >  
+> >  	return ret == 1 ? 0 : -EADDRNOTAVAIL;
 > 
-> -	if (info->flag_refiltering)
-> +	if (info->flag_refiltering) {
-> +		/* no hole info in kdump file, set it as 0 for refiltering */
-> +		pfn_memhole = 0;
->  		return copy_1st_bitmap_from_memory();
-> +	}
-> 
->  	if (info->flag_sadump)
->  		return sadump_copy_1st_bitmap_from_memory();
-> --
-> 2.7.4
-> 
-
-
 
 _______________________________________________
 kexec mailing list
