@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1533224994.16128.81.camel@infradead.org>
-Subject: Re: panic kexec broken on ARM64?
-From: David Woodhouse <dwmw2@infradead.org>
-In-Reply-To: <a95ec854-ff32-c808-befe-b2db112f6c1e@arm.com>
-References: <20180605100151.7fd54381@ezekiel.suse.cz>
- <8028219f-0d14-eafd-86b7-359ee927bcd3@arm.com>
- <5e539510-01b7-ebc5-778e-b49a5261f9bc@i2se.com>
- <2865150f-ebca-4c6b-fc4b-93bfab5f0e91@arm.com>
- <86lgbm96dq.wl-marc.zyngier@arm.com> <20180703070106.GV23681@linaro.org>
- <86601wzn3h.wl-marc.zyngier@arm.com> <20180704084123.GC28220@linaro.org>
- <23306e9e-fec6-298d-af2d-018f63b06ab1@arm.com>
- <20180705101326.GM28220@linaro.org>
- <a95ec854-ff32-c808-befe-b2db112f6c1e@arm.com>
-Date: Thu, 02 Aug 2018 16:49:54 +0100
-Mime-Version: 1.0
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1flJCf-0000nc-7m
+ for kexec@lists.infradead.org; Thu, 02 Aug 2018 19:24:07 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile: when using refiltering, initialize
+ bitmap1 from the kdump file's bitmap2
+Date: Thu, 2 Aug 2018 19:22:24 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03559C87@BPXM09GP.gisp.nec.co.jp>
+References: <1533026695-14819-1-git-send-email-piliu@redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03559B0D@BPXM09GP.gisp.nec.co.jp>
+ <d401bbda-2110-bd8a-7777-1fe2bd104ceb@redhat.com>
+In-Reply-To: <d401bbda-2110-bd8a-7777-1fe2bd104ceb@redhat.com>
+Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,176 +22,123 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============5345671134811559939=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>, "takahiro.akashi@linaro.org" <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Stefan Wahren <stefan.wahren@i2se.com>, Petr Tesarik <ptesarik@suse.cz>, Matthias Brugger <mbrugger@suse.com>, kexec mailing list <kexec@lists.infradead.org>, linux-arm-kernel@lists.infradead.org
+To: piliu <piliu@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+
+On 8/2/2018 3:36 AM, piliu wrote:
+> 
+> 
+> On 08/02/2018 04:45 AM, Kazuhito Hagio wrote:
+> > Hi Pingfan,
+> >
+> > Thank you for the patch.
+> >
+> > On 7/31/2018 4:44 AM, Pingfan Liu wrote:
+> >> When refiltering on kdump format file, there is no info about pt_load[] for
+> >> exclude_nodata_pages(), and also we can not expect more data than the kdump
+> >> file can provide, hence this patch suggests to initialize the refiltered
+> >> bitmap1 from the kdump file's bitmap2.
+> >
+> > I understood the issue (I don't have any vmcore which can reproduce it,
+> > though), but since the bitmap1 is written to the refiltered dump file,
+> > I think that we should not change the meaning of bitmap1 if possible,
+> > which is "a page on memory hole".
+> >
+> > For instance, with the patch, crash using the bitmaps prints a different
+> > message for the same "excluded" paddr:
+> >
+> >   -read_diskdump: PAGE_EXCLUDED: paddr/pfn: 2613e130/2613e
+> >   +read_diskdump: SEEK_ERROR: paddr/pfn: 2613e130/2613e !page_is_ram
+> >
+> > and makedumpfile's -e option using the bitmap1 cannot be utilized when
+> > refiltering, these are not favorable.
+> >
+> > So how about initializing the refiltered *bitmap2* from the kdump file's
+> > bitmap2 ?  I'm checking if this works.
+> >
+> Yes, it sounds a good idea.
+
+OK, as far as I've looked into it, this way looks good.
+Can you modify the patch?
+
+Thanks,
+Kazu
+
+> 
+> Thanks,
+> Pingfan
+> 
+> > Thanks,
+> > Kazu
+> >
+> >>
+> >> Note about the bug reported by the following ops:
+> >>   makedumpfile -l --message-level 1 -d 31 /proc/vmcore /path/to/vmcore
+> >>   makedumpfile  --split  -d 31 ./vmcore dumpfile_{1,2,3} 2>&1
+> >> and hit the following error:
+> >>   Excluding unnecessary pages                       : [100.0 %] \
+> >>   readpage_kdump_compressed: pfn(9b) is excluded from
+> /var/crash/127.0.0.1-2018-07-02-22:10:38/vmcore.
+> >>   readmem: type_addr: 1, addr:9b000, size:4096
+> >>   read_pfn: Can't get the page data.
+> >>   writeout_multiple_dumpfiles: Child process(2277) finished incompletely.(256)
+> >>   Copying data                                      : [ 24.6 %] -           eta: 2s
+> >>   makedumpfile Failed.
+> >>
+> >> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> >> ---
+> >>  makedumpfile.c | 6 +++++-
+> >>  1 file changed, 5 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/makedumpfile.c b/makedumpfile.c
+> >> index 101fa7c..af24359 100644
+> >> --- a/makedumpfile.c
+> >> +++ b/makedumpfile.c
+> >> @@ -5544,6 +5544,7 @@ copy_1st_bitmap_from_memory(void)
+> >>
+> >>  	bitmap_offset = (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size)
+> >>  			 * dh->block_size;
+> >> +	bitmap_offset += info->len_bitmap / 2;
+> >>
+> >>  	if (lseek(info->fd_memory, bitmap_offset, SEEK_SET) < 0) {
+> >>  		ERRMSG("Can't seek %s. %s\n",
+> >> @@ -5593,8 +5594,11 @@ create_1st_bitmap_file(void)
+> >>  	struct timespec ts_start;
+> >>  	off_t offset_page;
+> >>
+> >> -	if (info->flag_refiltering)
+> >> +	if (info->flag_refiltering) {
+> >> +		/* no hole info in kdump file, set it as 0 for refiltering */
+> >> +		pfn_memhole = 0;
+> >>  		return copy_1st_bitmap_from_memory();
+> >> +	}
+> >>
+> >>  	if (info->flag_sadump)
+> >>  		return sadump_copy_1st_bitmap_from_memory();
+> >> --
+> >> 2.7.4
+> >>
+> >
+> >
+> >
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> >
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 
---===============5345671134811559939==
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/x-pkcs7-signature"; boundary="=-vh/9Etbp6G3pFTXhQtrI"
-
-
---=-vh/9Etbp6G3pFTXhQtrI
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-
-
-On Thu, 2018-07-05 at 11:19 +0100, Marc Zyngier wrote:
-> >> The criteria is "this irqchip requires a reset to be safely used in th=
-e
-> >> secondary kernel". This is a judgement call from the person writing th=
-e
-> >> driver.
-> >=C2=A0
-> > This doesn't tell me anything more than "do it if you need it."
-> > So let me ask you in other words.
-> > Does gic driver need to provide a reset function?
-> > Whether yes or no, why do you think so?
->=20
-> Because I know the architecture and I can assess that it needs it. Case
-> in point: The RDs have memory tables. kexec without disabling LPIs, and
-> you end-up with memory corruption.
->=20
-> Sorry, but there is no magic bullet. You have to understand what you're
-> doing.
-
-Remember, kexec and kdump are subtly different things.
-
-In the case of an orderly kexec, sure you can go walking chains of
-interrupt controllers (and other devices) and nicely quiescing them.
-
-In the kdump case it's different. You really want as few instructions
-as possible between realising you're going to panic, and entering the
-kdump kernel. You NMI=C2=B9 all the other cores to dump their state, and
-just GTFO.
-
-In the kdump case you also aren't *reusing* the memory, which means
-that existing memory tables which are being accessed by hardware
-shouldn't be an issue. You can let the second kernel reset it all from
-a controlled and not-already-panicking environment.
-
---=C2=A0
-dwmw2
-
-
-=C2=B9 Oops no NMI. Doh.
-
---=-vh/9Etbp6G3pFTXhQtrI
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEFQw
-ggUxMIIEGaADAgECAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBCwUAMIGXMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
-VQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTAeFw0xNzEyMjEwMDAwMDBaFw0xODEyMjEyMzU5
-NTlaMCQxIjAgBgkqhkiG9w0BCQEWE2R3bXcyQGluZnJhZGVhZC5vcmcwggEiMA0GCSqGSIb3DQEB
-AQUAA4IBDwAwggEKAoIBAQDgzLNWa18DNpGUj/ZeH0Sgz53ESIbzdPw3OJeuNP6jZhxZojbyfxbM
-hETscxI/Hj6UZ4a7sHm5BkVjlsB1Af2Za/PXUt8MmLAcPMHkMPGunvkUibEvblDvpqMkQZlaZM+t
-5PqFmWkbehLaEvbpNY7dmEAAeKh4klTzJzrr5AAzaCQ32cA2e3+DEIv5O5l9ViMIjy/JM+xMQrfX
-3PZ0chY1PaVWjg59d4Uno+5LRDbgCnPkKJX4ysBGadibjBGQGJEZCjh94iiEebn2KsRLvtrJ72Ph
-3W2HDEdngW3YP0wujFQVs81U7L8XN3kdPRsa9zNqGtYQP/+1KMMJQ57hnfi9AgMBAAGjggHpMIIB
-5TAfBgNVHSMEGDAWgBSCr2yM+MX+lmF86B89K3FIXsSLwDAdBgNVHQ4EFgQUpL+/5lli9jmj2KHj
-ryyhnB2xRt0wDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwIAYDVR0lBBkwFwYIKwYBBQUH
-AwQGCysGAQQBsjEBAwUCMBEGCWCGSAGG+EIBAQQEAwIFIDBGBgNVHSAEPzA9MDsGDCsGAQQBsjEB
-AgEBATArMCkGCCsGAQUFBwIBFh1odHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8E
-UzBRME+gTaBLhklodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50
-aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKG
-SWh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5k
-U2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAe
-BgNVHREEFzAVgRNkd213MkBpbmZyYWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQCK28BdbVJ9
-QKQqTDfXwogAYiRBEGptfE1Bjy4F5vC6eWJqOJ15vunxjLwdbZYb4L0qrJlh+ZHHHlbIK8uEZu7N
-XHUntmWMbGbZiu7JgrbSXJK1ct9gxrN/sdWYJ+JDjVHg7GfDTvTTPa26JMRqJsO1TjjyDX7A3K39
-TjV8C0hqXvwF9BsNf+qBeWO6GVzJ5572awY221hc1umibmZaKV4fg+7fS7qscx5TSuIc6uvMBQhm
-7NQiCq6euMMWBDUDlotQCDW0ilm0OuLW3IVLuZCm6Msc+6hT9+dCT4JUvxTHZnnO7uLCxV+Ujad+
-PH3itRm38i96p2zvwgLr8vwWA0ckMIIFMTCCBBmgAwIBAgIQTUYRMpPx2e52jnkx1q87gDANBgkq
-hkiG9w0BAQsFADCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQ
-MA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENP
-TU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTcx
-MjIxMDAwMDAwWhcNMTgxMjIxMjM1OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRl
-YWQub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4MyzVmtfAzaRlI/2Xh9EoM+d
-xEiG83T8NziXrjT+o2YcWaI28n8WzIRE7HMSPx4+lGeGu7B5uQZFY5bAdQH9mWvz11LfDJiwHDzB
-5DDxrp75FImxL25Q76ajJEGZWmTPreT6hZlpG3oS2hL26TWO3ZhAAHioeJJU8yc66+QAM2gkN9nA
-Nnt/gxCL+TuZfVYjCI8vyTPsTEK319z2dHIWNT2lVo4OfXeFJ6PuS0Q24Apz5CiV+MrARmnYm4wR
-kBiRGQo4feIohHm59irES77aye9j4d1thwxHZ4Ft2D9MLoxUFbPNVOy/Fzd5HT0bGvczahrWED//
-tSjDCUOe4Z34vQIDAQABo4IB6TCCAeUwHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8Aw
-HQYDVR0OBBYEFKS/v+ZZYvY5o9ih468soZwdsUbdMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8E
-AjAAMCAGA1UdJQQZMBcGCCsGAQUFBwMEBgsrBgEEAbIxAQMFAjARBglghkgBhvhCAQEEBAMCBSAw
-RgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAQEwKzApBggrBgEFBQcCARYdaHR0cHM6Ly9zZWN1cmUu
-Y29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2NybC5jb21vZG9jYS5jb20v
-Q09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNybDCBiwYIKwYB
-BQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FD
-bGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQGCCsGAQUFBzABhhhodHRw
-Oi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkq
-hkiG9w0BAQsFAAOCAQEAitvAXW1SfUCkKkw318KIAGIkQRBqbXxNQY8uBebwunliajideb7p8Yy8
-HW2WG+C9KqyZYfmRxx5WyCvLhGbuzVx1J7ZljGxm2YruyYK20lyStXLfYMazf7HVmCfiQ41R4Oxn
-w0700z2tuiTEaibDtU448g1+wNyt/U41fAtIal78BfQbDX/qgXljuhlcyeee9msGNttYXNbpom5m
-WileH4Pu30u6rHMeU0riHOrrzAUIZuzUIgqunrjDFgQ1A5aLUAg1tIpZtDri1tyFS7mQpujLHPuo
-U/fnQk+CVL8Ux2Z5zu7iwsVflI2nfjx94rUZt/Iveqds78IC6/L8FgNHJDCCBeYwggPOoAMCAQIC
-EGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNVBAYTAkdCMRswGQYDVQQI
-ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
-QSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4X
-DTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
-cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
-aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvrOeV6wodnVAFsc4
-A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf+bGBSyD9aH95dDSmeny1
-nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcfWlP8dSsE3Rfywq09N0Zf
-xcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqzaaPpGRqXB7IMjtf7tTmU2
-jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDKCMPybTjoNCQuelc0IAaO
-4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAUu69+Aj36pvE8hI6t7jiY
-7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1UdDwEB/wQEAwIBhjASBgNV
-HRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8ERTBDMEGgP6A9hjtodHRw
-Oi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDBx
-BggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
-T1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20w
-DQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2SQgG1NgvNc3fQP7TcePo
-7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs0j8CGpfb+SJA3GaBQ+39
-4k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDMKVmU/PUWNMKSTvtlenlx
-Bhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+E2pvOUtY+hPebuPtTbq7
-vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfHM5tdhYF/8v5UY5g2xANP
-ECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4jkhJiA7EuTecP/CFtR72
-uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1tyZR2niOYihZ+FCbtf3D9
-mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4ognzgXtgtdk3ShrtOS1iA
-N2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAbR9HWdFqzcOoB/hxfEyIQ
-px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
-ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
-QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
-U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODA4MDIxNTQ5NTRaMC8GCSqG
-SIb3DQEJBDEiBCBm6ELqu12Z98+io7JLoJtqZbA3XOFSbqlDMlZKGqqI6jCBvQYJKwYBBAGCNxAE
-MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
-IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
-jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
-cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
-aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAEIiGJxihSRD
-bP30lZUWA0BDfbA8SGDNvHd9x/38uIAO9I7oCFAf234g9xFiZgeymM75t7j8B0jKxQW9CWor9IOq
-+OZQpl0Fh1zpqup+ONhT/57oazArryLyOx5jjWBI2meV2Aeo4AyRomK3TRlv39WegOZ+VFpJBVet
-ldpFXpqT2nEM8y4lZ6Ly4bOEo7JvjzxSV3M12irVr4MdtoAZSimQMKbv4uXRahD65yWtQiMq5oaK
-sFDxOJQvhu1IpnZmPEdUuotRtVX8Lw66vxownV7/gP+dJ3h5aGmbxPmjTLTJLb4BCqrEk09l8uTP
-+VgIOOCPaGjhaW8d+ko9wQxW9WQAAAAAAAA=
-
-
---=-vh/9Etbp6G3pFTXhQtrI--
-
-
-
---===============5345671134811559939==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============5345671134811559939==--
-
-
