@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1flJCf-0000nc-7m
- for kexec@lists.infradead.org; Thu, 02 Aug 2018 19:24:07 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile: when using refiltering, initialize
- bitmap1 from the kdump file's bitmap2
-Date: Thu, 2 Aug 2018 19:22:24 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03559C87@BPXM09GP.gisp.nec.co.jp>
+ id 1flQS4-0000m2-B0
+ for kexec@lists.infradead.org; Fri, 03 Aug 2018 03:08:30 +0000
+Subject: Re: [PATCH] makedumpfile: when using refiltering, initialize bitmap1
+ from the kdump file's bitmap2
 References: <1533026695-14819-1-git-send-email-piliu@redhat.com>
  <4AE2DC15AC0B8543882A74EA0D43DBEC03559B0D@BPXM09GP.gisp.nec.co.jp>
  <d401bbda-2110-bd8a-7777-1fe2bd104ceb@redhat.com>
-In-Reply-To: <d401bbda-2110-bd8a-7777-1fe2bd104ceb@redhat.com>
-Content-Language: en-US
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03559C87@BPXM09GP.gisp.nec.co.jp>
+From: piliu <piliu@redhat.com>
+Message-ID: <17e97ca1-b90c-39e0-863d-ba2e8d4cded0@redhat.com>
+Date: Fri, 3 Aug 2018 11:08:10 +0800
 MIME-Version: 1.0
+In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03559C87@BPXM09GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,117 +26,123 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: piliu <piliu@redhat.com>
+To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 8/2/2018 3:36 AM, piliu wrote:
-> 
-> 
-> On 08/02/2018 04:45 AM, Kazuhito Hagio wrote:
-> > Hi Pingfan,
-> >
-> > Thank you for the patch.
-> >
-> > On 7/31/2018 4:44 AM, Pingfan Liu wrote:
-> >> When refiltering on kdump format file, there is no info about pt_load[] for
-> >> exclude_nodata_pages(), and also we can not expect more data than the kdump
-> >> file can provide, hence this patch suggests to initialize the refiltered
-> >> bitmap1 from the kdump file's bitmap2.
-> >
-> > I understood the issue (I don't have any vmcore which can reproduce it,
-> > though), but since the bitmap1 is written to the refiltered dump file,
-> > I think that we should not change the meaning of bitmap1 if possible,
-> > which is "a page on memory hole".
-> >
-> > For instance, with the patch, crash using the bitmaps prints a different
-> > message for the same "excluded" paddr:
-> >
-> >   -read_diskdump: PAGE_EXCLUDED: paddr/pfn: 2613e130/2613e
-> >   +read_diskdump: SEEK_ERROR: paddr/pfn: 2613e130/2613e !page_is_ram
-> >
-> > and makedumpfile's -e option using the bitmap1 cannot be utilized when
-> > refiltering, these are not favorable.
-> >
-> > So how about initializing the refiltered *bitmap2* from the kdump file's
-> > bitmap2 ?  I'm checking if this works.
-> >
-> Yes, it sounds a good idea.
 
-OK, as far as I've looked into it, this way looks good.
-Can you modify the patch?
+
+On 08/03/2018 03:22 AM, Kazuhito Hagio wrote:
+> On 8/2/2018 3:36 AM, piliu wrote:
+>>
+>>
+>> On 08/02/2018 04:45 AM, Kazuhito Hagio wrote:
+>>> Hi Pingfan,
+>>>
+>>> Thank you for the patch.
+>>>
+>>> On 7/31/2018 4:44 AM, Pingfan Liu wrote:
+>>>> When refiltering on kdump format file, there is no info about pt_load[] for
+>>>> exclude_nodata_pages(), and also we can not expect more data than the kdump
+>>>> file can provide, hence this patch suggests to initialize the refiltered
+>>>> bitmap1 from the kdump file's bitmap2.
+>>>
+>>> I understood the issue (I don't have any vmcore which can reproduce it,
+>>> though), but since the bitmap1 is written to the refiltered dump file,
+>>> I think that we should not change the meaning of bitmap1 if possible,
+>>> which is "a page on memory hole".
+>>>
+>>> For instance, with the patch, crash using the bitmaps prints a different
+>>> message for the same "excluded" paddr:
+>>>
+>>>   -read_diskdump: PAGE_EXCLUDED: paddr/pfn: 2613e130/2613e
+>>>   +read_diskdump: SEEK_ERROR: paddr/pfn: 2613e130/2613e !page_is_ram
+>>>
+>>> and makedumpfile's -e option using the bitmap1 cannot be utilized when
+>>> refiltering, these are not favorable.
+>>>
+>>> So how about initializing the refiltered *bitmap2* from the kdump file's
+>>> bitmap2 ?  I'm checking if this works.
+>>>
+>> Yes, it sounds a good idea.
+> 
+> OK, as far as I've looked into it, this way looks good.
+> Can you modify the patch?
+> 
+
+OK, will send out V2 soon
 
 Thanks,
-Kazu
-
+Pingfan
 > 
-> Thanks,
-> Pingfan
+>>
+>> Thanks,
+>> Pingfan
+>>
+>>> Thanks,
+>>> Kazu
+>>>
+>>>>
+>>>> Note about the bug reported by the following ops:
+>>>>   makedumpfile -l --message-level 1 -d 31 /proc/vmcore /path/to/vmcore
+>>>>   makedumpfile  --split  -d 31 ./vmcore dumpfile_{1,2,3} 2>&1
+>>>> and hit the following error:
+>>>>   Excluding unnecessary pages                       : [100.0 %] \
+>>>>   readpage_kdump_compressed: pfn(9b) is excluded from
+>> /var/crash/127.0.0.1-2018-07-02-22:10:38/vmcore.
+>>>>   readmem: type_addr: 1, addr:9b000, size:4096
+>>>>   read_pfn: Can't get the page data.
+>>>>   writeout_multiple_dumpfiles: Child process(2277) finished incompletely.(256)
+>>>>   Copying data                                      : [ 24.6 %] -           eta: 2s
+>>>>   makedumpfile Failed.
+>>>>
+>>>> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+>>>> ---
+>>>>  makedumpfile.c | 6 +++++-
+>>>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/makedumpfile.c b/makedumpfile.c
+>>>> index 101fa7c..af24359 100644
+>>>> --- a/makedumpfile.c
+>>>> +++ b/makedumpfile.c
+>>>> @@ -5544,6 +5544,7 @@ copy_1st_bitmap_from_memory(void)
+>>>>
+>>>>  	bitmap_offset = (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size)
+>>>>  			 * dh->block_size;
+>>>> +	bitmap_offset += info->len_bitmap / 2;
+>>>>
+>>>>  	if (lseek(info->fd_memory, bitmap_offset, SEEK_SET) < 0) {
+>>>>  		ERRMSG("Can't seek %s. %s\n",
+>>>> @@ -5593,8 +5594,11 @@ create_1st_bitmap_file(void)
+>>>>  	struct timespec ts_start;
+>>>>  	off_t offset_page;
+>>>>
+>>>> -	if (info->flag_refiltering)
+>>>> +	if (info->flag_refiltering) {
+>>>> +		/* no hole info in kdump file, set it as 0 for refiltering */
+>>>> +		pfn_memhole = 0;
+>>>>  		return copy_1st_bitmap_from_memory();
+>>>> +	}
+>>>>
+>>>>  	if (info->flag_sadump)
+>>>>  		return sadump_copy_1st_bitmap_from_memory();
+>>>> --
+>>>> 2.7.4
+>>>>
+>>>
+>>>
+>>>
+>>> _______________________________________________
+>>> kexec mailing list
+>>> kexec@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/kexec
+>>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
 > 
-> > Thanks,
-> > Kazu
-> >
-> >>
-> >> Note about the bug reported by the following ops:
-> >>   makedumpfile -l --message-level 1 -d 31 /proc/vmcore /path/to/vmcore
-> >>   makedumpfile  --split  -d 31 ./vmcore dumpfile_{1,2,3} 2>&1
-> >> and hit the following error:
-> >>   Excluding unnecessary pages                       : [100.0 %] \
-> >>   readpage_kdump_compressed: pfn(9b) is excluded from
-> /var/crash/127.0.0.1-2018-07-02-22:10:38/vmcore.
-> >>   readmem: type_addr: 1, addr:9b000, size:4096
-> >>   read_pfn: Can't get the page data.
-> >>   writeout_multiple_dumpfiles: Child process(2277) finished incompletely.(256)
-> >>   Copying data                                      : [ 24.6 %] -           eta: 2s
-> >>   makedumpfile Failed.
-> >>
-> >> Signed-off-by: Pingfan Liu <piliu@redhat.com>
-> >> ---
-> >>  makedumpfile.c | 6 +++++-
-> >>  1 file changed, 5 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/makedumpfile.c b/makedumpfile.c
-> >> index 101fa7c..af24359 100644
-> >> --- a/makedumpfile.c
-> >> +++ b/makedumpfile.c
-> >> @@ -5544,6 +5544,7 @@ copy_1st_bitmap_from_memory(void)
-> >>
-> >>  	bitmap_offset = (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size)
-> >>  			 * dh->block_size;
-> >> +	bitmap_offset += info->len_bitmap / 2;
-> >>
-> >>  	if (lseek(info->fd_memory, bitmap_offset, SEEK_SET) < 0) {
-> >>  		ERRMSG("Can't seek %s. %s\n",
-> >> @@ -5593,8 +5594,11 @@ create_1st_bitmap_file(void)
-> >>  	struct timespec ts_start;
-> >>  	off_t offset_page;
-> >>
-> >> -	if (info->flag_refiltering)
-> >> +	if (info->flag_refiltering) {
-> >> +		/* no hole info in kdump file, set it as 0 for refiltering */
-> >> +		pfn_memhole = 0;
-> >>  		return copy_1st_bitmap_from_memory();
-> >> +	}
-> >>
-> >>  	if (info->flag_sadump)
-> >>  		return sadump_copy_1st_bitmap_from_memory();
-> >> --
-> >> 2.7.4
-> >>
-> >
-> >
-> >
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> >
 > 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-
 
 _______________________________________________
 kexec mailing list
