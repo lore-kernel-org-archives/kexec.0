@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mail-pl0-x244.google.com ([2607:f8b0:400e:c01::244])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fnPEB-0000sO-5O
- for kexec@lists.infradead.org; Wed, 08 Aug 2018 14:14:20 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCHv3] makedumpfile: when using refiltering, initialize
- refiltered bitmap2 from the kdump file's bitmap2
-Date: Wed, 8 Aug 2018 14:13:17 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC0355A061@BPXM09GP.gisp.nec.co.jp>
-References: <1533705704-13805-1-git-send-email-piliu@redhat.com>
-In-Reply-To: <1533705704-13805-1-git-send-email-piliu@redhat.com>
-Content-Language: en-US
+ id 1fnXXf-0001CT-LI
+ for kexec@lists.infradead.org; Wed, 08 Aug 2018 23:07:01 +0000
+Received: by mail-pl0-x244.google.com with SMTP id t17-v6so1661384ply.13
+ for <kexec@lists.infradead.org>; Wed, 08 Aug 2018 16:06:49 -0700 (PDT)
 MIME-Version: 1.0
+References: <20180801210804.175176-1-ndesaulniers@google.com>
+In-Reply-To: <20180801210804.175176-1-ndesaulniers@google.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Wed, 8 Aug 2018 16:06:37 -0700
+Message-ID: <CAKwvOd=WZB=x86zqu=vFDoJgpWnfCj0K3qXv14vtysfv3ioi1w@mail.gmail.com>
+Subject: Re: [PATCH] x86/kexec: prefer _THIS_IP_ to current_text_addr
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,118 +24,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <piliu@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com, hpa@zytor.com, "Eric W . Biederman" <ebiederm@xmission.com>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>, Greg KH <gregkh@linuxfoundation.org>, x86@kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Philippe Ombredanne <pombredanne@nexb.com>, Nathan Chancellor <natechancellor@gmail.com>
 
-Hi Pingfan,
-
-Thank you for the update.
-Looks good, and applied.
-
-Kazu
-
-On 8/8/2018 1:21 AM, Pingfan Liu wrote:
-> When refiltering on kdump format file, there is no info about pt_load[] for
-> exclude_nodata_pages(), and also we can not expect more data than the kdump
-> file can provide, hence this patch suggests to initialize the refiltered
-> bitmap2 from the kdump file's bitmap2. As for the statics of pfn_hole, it
-> should be calculated and discount the bits in kdump file's bitmap1.
-> 
-> Note about the bug reported by the following ops:
->   makedumpfile -l --message-level 1 -d 31 /proc/vmcore /path/to/vmcore
->   makedumpfile  --split  -d 31 ./vmcore dumpfile_{1,2,3} 2>&1
-> And get the following error:
->   Excluding unnecessary pages                       : [100.0 %] \
->   readpage_kdump_compressed: pfn(9b) is excluded from /var/crash/127.0.0.1-2018-07-02-22:10:38/vmcore.
->   readmem: type_addr: 1, addr:9b000, size:4096
->   read_pfn: Can't get the page data.
->   writeout_multiple_dumpfiles: Child process(2277) finished incompletely.(256)
->   Copying data                                      : [ 24.6 %] -           eta: 2s
->   makedumpfile Failed.
-> 
-> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+bumping for review
+On Wed, Aug 1, 2018 at 2:08 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+>
+> As part of the effort to reduce the code duplication between _THIS_IP_
+> and current_text_addr(), let's consolidate callers of
+> current_text_addr() to use _THIS_IP_.
+>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 > ---
-> v2 -> v3: fix the statics of pfn_hole
->  makedumpfile.c | 39 ++++++++++++++++++++++++++++++++++-----
->  1 file changed, 34 insertions(+), 5 deletions(-)
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 915cbf4..edb7687 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -5516,6 +5516,26 @@ out:
->  			  "follow free lists instead of mem_map array.\n");
+>  arch/x86/include/asm/kexec.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index f327236f0fa7..86924d594ecd 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -21,6 +21,7 @@
+>  #ifndef __ASSEMBLY__
+>
+>  #include <linux/string.h>
+> +#include <linux/kernel.h>
+>
+>  #include <asm/page.h>
+>  #include <asm/ptrace.h>
+> @@ -132,7 +133,7 @@ static inline void crash_setup_regs(struct pt_regs *newregs,
+>                 asm volatile("movl %%cs, %%eax;" :"=a"(newregs->cs));
+>                 asm volatile("pushfq; popq %0" :"=m"(newregs->flags));
+>  #endif
+> -               newregs->ip = (unsigned long)current_text_addr();
+> +               newregs->ip = _THIS_IP_;
+>         }
 >  }
-> 
-> +static mdf_pfn_t count_bits(char *buf, int sz)
-> +{
-> +	char *p = buf;
-> +	int i, j;
-> +	mdf_pfn_t cnt = 0;
-> +	for (i = 0; i < sz; i++, p++) {
-> +		if (*p == 0)
-> +			continue;
-> +		else if (*p == 0xff) {
-> +			cnt += 8;
-> +			continue;
-> +		}
-> +		for (j = 0; j < 8; j++) {
-> +			if (*p & 1<<j)
-> +				cnt++;
-> +		}
-> +	}
-> +	return cnt;
-> +}
-> +
->  /*
->   * If using a dumpfile in kdump-compressed format as a source file
->   * instead of /proc/vmcore, 1st-bitmap of a new dumpfile must be
-> @@ -5549,6 +5569,7 @@ copy_1st_bitmap_from_memory(void)
->  					info->name_memory, strerror(errno));
->  			return FALSE;
->  		}
-> +		pfn_memhole -= count_bits(buf, sizeof(buf));
->  		if (write(info->bitmap1->fd, buf, sizeof(buf)) != sizeof(buf)) {
->  			ERRMSG("Can't write the bitmap(%s). %s\n",
->  			    info->bitmap1->file_name, strerror(errno));
-> @@ -6093,19 +6114,27 @@ copy_bitmap_buffer(void)
->  int
->  copy_bitmap_file(void)
->  {
-> -	off_t offset;
-> +	off_t base, offset = 0;
->  	unsigned char buf[info->page_size];
->   	const off_t failed = (off_t)-1;
-> +	int fd;
-> +	struct disk_dump_header *dh = info->dh_memory;
-> 
-> -	offset = 0;
-> +	if (info->flag_refiltering) {
-> +		fd = info->fd_memory;
-> +		base = info->len_bitmap / 2;
-> +		base +=  (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size) * dh->block_size;
-> +	} else {
-> +		fd = info->bitmap1->fd;
-> +		base = info->bitmap1->offset;
-> +	}
->  	while (offset < (info->len_bitmap / 2)) {
-> -		if (lseek(info->bitmap1->fd, info->bitmap1->offset + offset,
-> -		    SEEK_SET) == failed) {
-> +		if (lseek(fd,  base + offset, SEEK_SET) == failed) {
->  			ERRMSG("Can't seek the bitmap(%s). %s\n",
->  			    info->name_bitmap, strerror(errno));
->  			return FALSE;
->  		}
-> -		if (read(info->bitmap1->fd, buf, sizeof(buf)) != sizeof(buf)) {
-> +		if (read(fd, buf, sizeof(buf)) != sizeof(buf)) {
->  			ERRMSG("Can't read the dump memory(%s). %s\n",
->  			    info->name_memory, strerror(errno));
->  			return FALSE;
+>
 > --
-> 2.7.4
-> 
+> 2.18.0.597.ga71716f1ad-goog
+>
 
 
+-- 
+Thanks,
+~Nick Desaulniers
 
 _______________________________________________
 kexec mailing list
