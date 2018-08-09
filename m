@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 9 Aug 2018 00:14:05 -0400 (EDT)
-From: Pingfan Liu <piliu@redhat.com>
-Message-ID: <1235507889.17337085.1533788045597.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20180809033416.GA5069@dhcp-128-65.nay.redhat.com>
-References: <20180801075820.3753-1-takahiro.akashi@linaro.org>
- <20180801075820.3753-4-takahiro.akashi@linaro.org>
- <20180801102951.527cfc57@ThinkPad> <20180802000150.GN11258@linaro.org>
- <20180806055047.GC4246@dhcp-128-65.nay.redhat.com>
- <20180809033416.GA5069@dhcp-128-65.nay.redhat.com>
-Subject: Re: [PATCH v13 03/16] s390, kexec_file: drop arch_kexec_mem_walk()
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fncSi-0007Ta-Cp
+ for kexec@lists.infradead.org; Thu, 09 Aug 2018 04:22:14 +0000
+Date: Thu, 9 Aug 2018 12:21:53 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] x86, kdump: Fix efi=noruntime NULL pointer dereference
+Message-ID: <20180809042153.GA4377@dhcp-128-65.nay.redhat.com>
+References: <1533737025.4936.3.camel@gmx.de>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1533737025.4936.3.camel@gmx.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,186 +23,116 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: dhowells@redhat.com, herbert@gondor.apana.org.au, bhe@redhat.com, ard biesheuvel <ard.biesheuvel@linaro.org>, catalin marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, will deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, heiko carstens <heiko.carstens@de.ibm.com>, Philipp Rudo <prudo@linux.ibm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james morse <james.morse@arm.com>, "piliu@redhat.com Thiago Jung Bauermann" <bauerman@linux.vnet.ibm.com>, davem@davemloft.net, vgoyal@redhat.com
+To: Mike Galbraith <efault@gmx.de>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>
+
+Hi Mike,
+
+Thanks for the patch!
+On 08/08/18 at 04:03pm, Mike Galbraith wrote:
+> When booting with efi=noruntime, we call efi_runtime_map_copy() while
+> loading the kdump kernel, and trip over a NULL efi.memmap.map.  Avoid
+> that and a useless allocation when the only mapping we can use (1:1)
+> is not available.
+
+At first glance, efi_get_runtime_map_size should return 0 in case
+noruntime.
+
+Also since we are here, would you mind to restructure the bzImage64_load
+function, and try to move all efi related code to setup_efi_state()?
 
 
+setup_boot_parameters(struct kimage *image, struct boot_params *params,
+                      unsigned long params_load_addr,
+                      unsigned int efi_map_offset, unsigned int efi_map_sz,
+                      unsigned int efi_setup_data_offset)
+{
+[snip]
 
+#ifdef CONFIG_EFI
+        /* Setup EFI state */
+        setup_efi_state(params, params_load_addr, efi_map_offset, efi_map_sz,
+                        efi_setup_data_offset);
+#endif
 
+[snip]
+}
 
------ Original Message -----
-> From: "Dave Young" <dyoung@redhat.com>
-> To: "AKASHI Takahiro" <takahiro.akashi@linaro.org>, "Philipp Rudo" <prudo@linux.ibm.com>, "catalin marinas"
-> <catalin.marinas@arm.com>, "will deacon" <will.deacon@arm.com>, dhowells@redhat.com, vgoyal@redhat.com,
-> herbert@gondor.apana.org.au, davem@davemloft.net, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, "heiko
-> carstens" <heiko.carstens@de.ibm.com>, "ard biesheuvel" <ard.biesheuvel@linaro.org>, "james morse"
-> <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-> linux-kernel@vger.kernel.org, "piliu@redhat.com Thiago Jung Bauermann" <bauerman@linux.vnet.ibm.com>
-> Sent: Thursday, August 9, 2018 11:34:16 AM
-> Subject: Re: [PATCH v13 03/16] s390, kexec_file: drop arch_kexec_mem_walk()
+Currently bzImage64_load prepares the efi_map_offset, efi_map_sz,
+ and efi_setup_data_offset and then pass it to setup_boot_parameters and
+setup_efi_state.  It should be better to move those efi_* variables to
+setup_efi_state().
+
+So we can call setup_efi_state only when efi runtime is enabled.
+
 > 
-> Add more cc. Pingfan Liu confirmed ppc does not use 0 as valid address,
-> if so it should be safe.
+> Signed-off-by: Mike Galbraith <efault@gmx.de>
+> ---
+>  arch/x86/kernel/kexec-bzimage64.c |   22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
 > 
-> Pingfan, can you add more words?
-> 
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -122,9 +122,6 @@ static int setup_efi_info_memmap(struct
+>  	unsigned long efi_map_phys_addr = params_load_addr + efi_map_offset;
+>  	struct efi_info *ei = &params->efi_info;
+>  
+> -	if (!efi_map_sz)
+> -		return 0;
+> -
+>  	efi_runtime_map_copy(efi_map, efi_map_sz);
+>  
+>  	ei->efi_memmap = efi_map_phys_addr & 0xffffffff;
+> @@ -176,7 +173,7 @@ setup_efi_state(struct boot_params *para
+>  	 * acpi_rsdp=<addr> on kernel command line to make second kernel boot
+>  	 * without efi.
+>  	 */
+> -	if (efi_enabled(EFI_OLD_MEMMAP))
+> +	if (efi_enabled(EFI_OLD_MEMMAP) || !efi_enabled(EFI_MEMMAP))
+>  		return 0;
+>  
+>  	ei->efi_loader_signature = current_ei->efi_loader_signature;
+> @@ -338,7 +335,7 @@ static void *bzImage64_load(struct kimag
+>  	struct kexec_entry64_regs regs64;
+>  	void *stack;
+>  	unsigned int setup_hdr_offset = offsetof(struct boot_params, hdr);
+> -	unsigned int efi_map_offset, efi_map_sz, efi_setup_data_offset;
+> +	unsigned int efi_map_offset = 0, efi_map_sz = 0, efi_setup_data_offset = 0;
+>  	struct kexec_buf kbuf = { .image = image, .buf_max = ULONG_MAX,
+>  				  .top_down = true };
+>  	struct kexec_buf pbuf = { .image = image, .buf_min = MIN_PURGATORY_ADDR,
+> @@ -397,19 +394,22 @@ static void *bzImage64_load(struct kimag
+>  	 * have to create separate segment for each. Keeps things
+>  	 * little bit simple
+>  	 */
+> -	efi_map_sz = efi_get_runtime_map_size();
+>  	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
+>  				MAX_ELFCOREHDR_STR_LEN;
+>  	params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
+> -	kbuf.bufsz = params_cmdline_sz + ALIGN(efi_map_sz, 16) +
+> -				sizeof(struct setup_data) +
+> -				sizeof(struct efi_setup_data);
+> +	kbuf.bufsz = params_cmdline_sz + sizeof(struct setup_data);
+> +
+> +	/* Now add space for the efi stuff if we have a useable 1:1 mapping. */
+> +	if (!efi_enabled(EFI_OLD_MEMMAP) && efi_enabled(EFI_MEMMAP)) {
+> +		efi_map_sz = efi_get_runtime_map_size();
+> +		kbuf.bufsz += ALIGN(efi_map_sz, 16) + sizeof(struct efi_setup_data);
+> +		efi_map_offset = params_cmdline_sz;
+> +		efi_setup_data_offset = efi_map_offset + ALIGN(efi_map_sz, 16);
+> +	}
+>  
+>  	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
+>  	if (!params)
+>  		return ERR_PTR(-ENOMEM);
+> -	efi_map_offset = params_cmdline_sz;
+> -	efi_setup_data_offset = efi_map_offset + ALIGN(efi_map_sz, 16);
+>  
+>  	/* Copy setup header onto bootparams. Documentation/x86/boot.txt */
+>  	setup_header_size = 0x0202 + kernel[0x0201] - setup_hdr_offset;
 
-ppc64 uses a few KB starting from 0 for exception handler.
-
-> On 08/06/18 at 01:50pm, Dave Young wrote:
-> > Add Thiago in cc so that he can review from powerpc point of view.
-> > 
-> > On 08/02/18 at 09:01am, AKASHI Takahiro wrote:
-> > > Hi,
-> > > 
-> > > On Wed, Aug 01, 2018 at 10:29:51AM +0200, Philipp Rudo wrote:
-> > > > Hey Akashi,
-> > > > 
-> > > > I kept thinking about this patch and remembered why I didn't made the
-> > > > change
-> > > > you are suggesting now.
-> > > 
-> > > Hmm.
-> > > 
-> > > > The problem is when you only check for kbuf->mem you are excluding
-> > > > address 0,
-> > > > which might be a valid address to load the kernel to. On s390 this is
-> > > > actually
-> > > > done when the kernel is not loaded via a boot loader. For kexec_file
-> > > > however,
-> > > > we cut off the first few kB of the image and jump directly to
-> > > > 'startup'. So
-> > > > checking for !0 does not cause a problem here.
-> > > 
-> > > Yeah, as Dave(RedHat) described, all the current kexec-capable
-> > > architectures,
-> > > except arm64, implicitly initialize kbuf.mem to zero with "kbuf = { ...
-> > > }"
-> > > initializer. So surely my change would not break anything on the existing
-> > > code.
-> > > On the other hand, I also see your concern here.
-> > > 
-> > > > Anyway, the long term safer solution would be something like
-> > > > 
-> > > > #define KEXEC_BUF_MEM_UNKNOWN (-1UL)
-> > > > 
-> > > > for architectures to tell common code to search a fitting mem hole.
-> > > 
-> > > This would require the existing code on every arch to be modified, which
-> > > I think should be avoided if possible. Instead,
-> > > we'd better define in linux/kexec.h:
-> > >   #ifndef KEXEC_BUF_MEM_UNKNOWN
-> > >   #define KEXEC_BUF_MEM_UNKNOWN 0
-> > >   #endif
-> > > and then check for kbuf in kexec_locate_mem_hole():
-> > >   if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
-> > >         return 0;
-> > >   ...
-> > > 
-> > > This way if some arch wants to treat *zero* as a valid address, it can
-> > > redefine this macro in arch/asm/kexec.h.
-> > 
-> > I think this way works if powerpc is safe for using zero as the unknown
-> > address in this case.  Thiago, can you provide some review?
-> > 
-> > Philipp, thanks for catching the problem!
-> > 
-> > > 
-> > > Thanks,
-> > > -Takahiro AKASHI
-> > > 
-> > > > 
-> > > > Back then I didn't do the change because I had the other workaround,
-> > > > which
-> > > > didn't require a common code change. But when you are touching the code
-> > > > now it
-> > > > is worth thinking about it.
-> > > > 
-> > > > Just wanted to let you know
-> > > > Philipp
-> > > > 
-> > > > 
-> > > > On Wed,  1 Aug 2018 16:58:07 +0900
-> > > > AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> > > > 
-> > > > > Since s390 already knows where to locate buffers, calling
-> > > > > arch_kexec_mem_walk() has no sense. So we can just drop it as
-> > > > > kbuf->mem
-> > > > > indicates this while all other architectures sets it to 0 initially.
-> > > > > 
-> > > > > This change is a preparatory work for the next patch, where all the
-> > > > > variant memory walks, either on system resource or memblock, will be
-> > > > > put in one common place so that it will satisfy all the
-> > > > > architectures'
-> > > > > need.
-> > > > > 
-> > > > > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > > > > Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
-> > > > > Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> > > > > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> > > > > Cc: Dave Young <dyoung@redhat.com>
-> > > > > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > > > > Cc: Baoquan He <bhe@redhat.com>
-> > > > > ---
-> > > > >  arch/s390/kernel/machine_kexec_file.c | 10 ----------
-> > > > >  kernel/kexec_file.c                   |  4 ++++
-> > > > >  2 files changed, 4 insertions(+), 10 deletions(-)
-> > > > > 
-> > > > > diff --git a/arch/s390/kernel/machine_kexec_file.c
-> > > > > b/arch/s390/kernel/machine_kexec_file.c
-> > > > > index f413f57f8d20..32023b4f9dc0 100644
-> > > > > --- a/arch/s390/kernel/machine_kexec_file.c
-> > > > > +++ b/arch/s390/kernel/machine_kexec_file.c
-> > > > > @@ -134,16 +134,6 @@ int kexec_file_add_initrd(struct kimage *image,
-> > > > > struct s390_load_data *data,
-> > > > >  	return ret;
-> > > > >  }
-> > > > >  
-> > > > > -/*
-> > > > > - * The kernel is loaded to a fixed location. Turn off
-> > > > > kexec_locate_mem_hole
-> > > > > - * and provide kbuf->mem by hand.
-> > > > > - */
-> > > > > -int arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> > > > > -			int (*func)(struct resource *, void *))
-> > > > > -{
-> > > > > -	return 1;
-> > > > > -}
-> > > > > -
-> > > > >  int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-> > > > >  				     Elf_Shdr *section,
-> > > > >  				     const Elf_Shdr *relsec,
-> > > > > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > > > > index 63c7ce1c0c3e..bf39df5e5bb9 100644
-> > > > > --- a/kernel/kexec_file.c
-> > > > > +++ b/kernel/kexec_file.c
-> > > > > @@ -534,6 +534,10 @@ int kexec_locate_mem_hole(struct kexec_buf
-> > > > > *kbuf)
-> > > > >  {
-> > > > >  	int ret;
-> > > > >  
-> > > > > +	/* Arch knows where to place */
-> > > > > +	if (kbuf->mem)
-> > > > > +		return 0;
-> > > > > +
-> > > > >  	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
-> > > > >  
-> > > > >  	return ret == 1 ? 0 : -EADDRNOTAVAIL;
-> > > > 
-> > > 
-> > > _______________________________________________
-> > > kexec mailing list
-> > > kexec@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/kexec
-> > 
-> > Thanks
-> > Dave
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
