@@ -1,18 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl0-x242.google.com ([2607:f8b0:400e:c01::242])
+Received: from mail-lj1-f195.google.com ([209.85.208.195])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fpKSn-0005uE-1q
- for kexec@lists.infradead.org; Mon, 13 Aug 2018 21:33:22 +0000
-Received: by mail-pl0-x242.google.com with SMTP id t17-v6so7411220ply.13
- for <kexec@lists.infradead.org>; Mon, 13 Aug 2018 14:33:08 -0700 (PDT)
+ id 1fq1tJ-0001dW-2c
+ for kexec@lists.infradead.org; Wed, 15 Aug 2018 19:55:38 +0000
+Received: by mail-lj1-f195.google.com with SMTP id s12-v6so1868341ljj.0
+ for <kexec@lists.infradead.org>; Wed, 15 Aug 2018 12:55:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20180801210804.175176-1-ndesaulniers@google.com>
- <CAKwvOd=WZB=x86zqu=vFDoJgpWnfCj0K3qXv14vtysfv3ioi1w@mail.gmail.com>
-In-Reply-To: <CAKwvOd=WZB=x86zqu=vFDoJgpWnfCj0K3qXv14vtysfv3ioi1w@mail.gmail.com>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Mon, 13 Aug 2018 14:32:56 -0700
-Message-ID: <CAKwvOd=qGTv1F3CsEeNjuJ93BD9zTnUekUHgvw4Ttpx7us5JdA@mail.gmail.com>
-Subject: Re: [PATCH] x86/kexec: prefer _THIS_IP_ to current_text_addr
+In-Reply-To: <CACi5LpNdaKAa+YzS0zp2e16tewkcqkRay0QqbZcJGjDtK+5TTA@mail.gmail.com>
+References: <1531979021-31780-1-git-send-email-bhsharma@redhat.com>
+ <1531979021-31780-2-git-send-email-bhsharma@redhat.com>
+ <bf9dee4f-852d-fc6b-999a-02ea99dceb4d@redhat.com>
+ <CACi5LpOKQ9TX9yWus6i9ZG_Ha8A+vPqs09o1Jh0B9O5vYED9BA@mail.gmail.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC035590BC@BPXM09GP.gisp.nec.co.jp>
+ <CACi5LpNdaKAa+YzS0zp2e16tewkcqkRay0QqbZcJGjDtK+5TTA@mail.gmail.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Thu, 16 Aug 2018 01:25:24 +0530
+Message-ID: <CACi5LpOh12o3T7FHFSV+4aYEtWS9ZLebyoW1yJ0EnegZJ6Nj2Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: Get 'info->page_offset' from PT_LOAD segments
+ to support KASLR boot cases
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,61 +30,210 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com, hpa@zytor.com, "Eric W . Biederman" <ebiederm@xmission.com>, horms@verge.net.au
-Cc: Kate Stewart <kstewart@linuxfoundation.org>, Greg KH <gregkh@linuxfoundation.org>, x86@kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Philippe Ombredanne <pombredanne@nexb.com>, Nathan Chancellor <natechancellor@gmail.com>
+To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec mailing list <kexec@lists.infradead.org>
 
-+ Simon (kexec)
+Hi Kazu,
 
-bumping for review.
-On Wed, Aug 8, 2018 at 4:06 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+On Tue, Jul 24, 2018 at 10:47 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> Hi Kazu,
 >
-> bumping for review
-> On Wed, Aug 1, 2018 at 2:08 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
-> >
-> > As part of the effort to reduce the code duplication between _THIS_IP_
-> > and current_text_addr(), let's consolidate callers of
-> > current_text_addr() to use _THIS_IP_.
-> >
-> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > ---
-> >  arch/x86/include/asm/kexec.h | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-> > index f327236f0fa7..86924d594ecd 100644
-> > --- a/arch/x86/include/asm/kexec.h
-> > +++ b/arch/x86/include/asm/kexec.h
-> > @@ -21,6 +21,7 @@
-> >  #ifndef __ASSEMBLY__
-> >
-> >  #include <linux/string.h>
-> > +#include <linux/kernel.h>
-> >
-> >  #include <asm/page.h>
-> >  #include <asm/ptrace.h>
-> > @@ -132,7 +133,7 @@ static inline void crash_setup_regs(struct pt_regs *newregs,
-> >                 asm volatile("movl %%cs, %%eax;" :"=a"(newregs->cs));
-> >                 asm volatile("pushfq; popq %0" :"=m"(newregs->flags));
-> >  #endif
-> > -               newregs->ip = (unsigned long)current_text_addr();
-> > +               newregs->ip = _THIS_IP_;
-> >         }
-> >  }
-> >
-> > --
-> > 2.18.0.597.ga71716f1ad-goog
-> >
+> On Mon, Jul 23, 2018 at 10:15 PM, Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
+>> Hi Bhupesh,
+>>
+>> On 7/22/2018 3:44 AM, Bhupesh Sharma wrote:
+>>> Hello Kazu,
+>>>
+>>> Many thanks for your review comments.
+>>>
+>>> On Sat, Jul 21, 2018 at 3:18 AM, Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
+>>>>
+>>>> On 7/19/2018 1:43 AM, Bhupesh Sharma wrote:
+>>>>> The existing methodology to obtain 'info->page_offset' from reading
+>>>>> _stext symbol (from kallsyms) doesn't work well in KASLR boot cases on
+>>>>> arm64 machines as the PAGE_OFFSET (or the virtual address which
+>>>>> indicates the start of the linear region) can be randomized as well
+>>>>> on basis of the kaslr-seed.
+>>>>>
+>>>>> Since the value of PAGE_OFFSET inside the kernel is randomized in such
+>>>>> cases and there is no existing mechanism of conveying this value from
+>>>>> kernel-space to user-space, so we can use the method used by archs like
+>>>>> x86_64 to generate the 'info->page_offset' value from the PT_LOAD
+>>>>> segments by subtracting the phy_addr from virt_addr of a PT_LOAD
+>>>>> segment.
+>>>>>
+>>>>> This approach works fine both with KASLR and non-KASLR boot cases.
+>>>>>
+>>>>> I tested this on my qualcomm-amberwing board. Here are some logs from
+>>>>> the KASLR boot cases:
+>>>>>
+>>>>> - Verify that the EFI firmware supports 'kaslr-seed':
+>>>>>
+>>>>>       chosen {
+>>>>>               kaslr-seed = <0x0 0x0>;
+>>>>>               <..snip..>
+>>>>>       };
+>>>>>
+>>>>> - Verify that '--mem-usage' works well after this fix as well (I used
+>>>>>   kernel 4.18.0-rc4+ for my checks):
+>>>>>
+>>>>> The kernel version is not supported.
+>>>>> The makedumpfile operation may be incomplete.
+>>>>>
+>>>>> TYPE          PAGES                   EXCLUDABLE      DESCRIPTION
+>>>>> ----------------------------------------------------------------------
+>>>>> ZERO          4396                    yes             Pages filled
+>>>>> with zero
+>>>>> NON_PRI_CACHE 27859                   yes             Cache pages
+>>>>> without private flag
+>>>>> PRI_CACHE     18490                   yes             Cache pages with
+>>>>> private flag
+>>>>> USER          2728                    yes             User process
+>>>>> pages
+>>>>> FREE          1465848                 yes             Free pages
+>>>>> KERN_DATA     18537                   no              Dumpable kernel
+>>>>> data
+>>>>>
+>>>>> page size:            65536
+>>>>> Total pages on system:        1537858
+>>>>> Total size on system: 100785061888     Byte
+>>>>>
+>>>>> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+>>>>> ---
+>>>>>  arch/arm64.c   | 23 ++++++++++++++++++-----
+>>>>>  common.h       |  1 +
+>>>>>  makedumpfile.h |  1 +
+>>>>>  3 files changed, 20 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/arm64.c b/arch/arm64.c
+>>>>> index 2fd3e1874376..9e8c77c76935 100644
+>>>>> --- a/arch/arm64.c
+>>>>> +++ b/arch/arm64.c
+>>>>> @@ -265,6 +265,9 @@ get_xen_info_arm64(void)
+>>>>>  int
+>>>>>  get_versiondep_info_arm64(void)
+>>>>>  {
+>>>>> +     int i;
+>>>>> +     unsigned long long phys_start;
+>>>>> +     unsigned long long virt_start;
+>>>>>       ulong _stext;
+>>>>>
+>>>>>       _stext = get_stext_symbol();
+>>>>> @@ -289,12 +292,22 @@ get_versiondep_info_arm64(void)
+>>>>>               return FALSE;
+>>>>>       }
+>>>>>
+>>>>
+>>>>> -     info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
+>>>>> -
+>>>>> -     DEBUG_MSG("page_offset=%lx, va_bits=%d\n", info->page_offset,
+>>>>> -                     va_bits);
+>>>>
+>>>> According to makedumpfile commit 4944f93484 ("x86_64: Calculate page_offset
+>>>> in case of re-filtering/sadump/virsh dump"), in case of re-filtering,
+>>>> we don't have any PT_LOAD.  So, with this patch, we cannot re-filter
+>>>> dump file on arm64 system?
+>>>>
+>>>> If we cannot, is it better to leave the above behind the following
+>>>> pt_load section for re-filtering non-KASLR dump?
+>>>>
+>>>>> +     if (get_num_pt_loads()) {
+>>>>> +             for (i = 0;
+>>>>> +                     get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
+>>>>> +                     i++) {
+>>>>> +                     if (virt_start != NOT_KV_ADDR
+>>>>> +                                     && virt_start < __START_KERNEL_map
+>>>>> +                                     && phys_start != NOT_PADDR && phys_start != NOT_PADDR_ARM64) {
+>>>>> +                             info->page_offset = virt_start - phys_start;
+>>>>> +                             DEBUG_MSG("info->page_offset: %lx, VA_BITS: %d\n",
+>>>>> +                                             info->page_offset, va_bits);
+>>>>> +                             return TRUE;
+>>>>> +                     }
+>>>>> +             }
+>>>>> +     }
+>>>>
+>>>> I'll adjust some indents for readability.
+>>>>
+>>>>>
+>>>>> -     return TRUE;
+>>>>> +     return FALSE;
+>>>>>  }
+>>>>>
+>>>>>  /*
+>>>>> diff --git a/common.h b/common.h
+>>>>> index 6e2f657a79c7..a8181777dbb7 100644
+>>>>> --- a/common.h
+>>>>> +++ b/common.h
+>>>>> @@ -48,6 +48,7 @@
+>>>>>  #define NOT_MEMMAP_ADDR      (0x0)
+>>>>>  #define NOT_KV_ADDR  (0x0)
+>>>>>  #define NOT_PADDR    (ULONGLONG_MAX)
+>>>>
+>>>>> +#define NOT_PADDR_ARM64      (0x0000000010a80000UL)
+>>>>
+>>>> I think that this should not be in common.h, because it's not for
+>>>> arch-specific definitions, so I'll move it to makedumpfile.h.
+>>>>
+>>>>>  #define BADADDR      ((ulong)(-1))
+>>>>>
+>>>>>  #endif  /* COMMON_H */
+>>>>> diff --git a/makedumpfile.h b/makedumpfile.h
+>>>>> index 5ff94b8e4ac6..5297279f0f3b 100644
+>>>>> --- a/makedumpfile.h
+>>>>> +++ b/makedumpfile.h
+>>>>> @@ -2020,6 +2020,7 @@ struct domain_list {
+>>>>>  #define MFNS_PER_FRAME               (info->page_size / sizeof(unsigned long))
+>>>>>
+>>>>>  #ifdef __aarch64__
+>>>>> +#define __START_KERNEL_map           (0xffffffff80000000UL)
+>>>>
+>>>> This #ifdef here is for the definitions related to Xen extraction.
+>>>> I'll move it to the same place as the above.
+>>>>
+>>>>>  unsigned long long kvtop_xen_arm64(unsigned long kvaddr);
+>>>>>  #define kvtop_xen(X) kvtop_xen_arm64(X)
+>>>>>  #endif /* aarch64 */
+>>>>>
+>>>>
+>>>> I attached a patch that was applied my suggestions.
+>>>> How about it?
+>>>
+>>> I agree. The patch looks good with the suggested changes.
+>>> Please go ahead and feel free to apply the modified patch.
+>>
+>> OK, I'll apply it.
+>>
+>> With respect to the 2/2 patch, I'm waiting for the kernel patch
+>> to be merged.
+>>
+>> If need be, I can apply the 1/2 patch separately from the 2/2 patch,
+>> because I think they are not directly connected with each other.
 >
+> Sure, I think we can handle 2/2 patch when it's kernel part is
+> reviewed properly by the arm64 kernel maintainer(s). We can apply 1/2
+> patch in the meanwhile.
 >
-> --
+>> p.s. it seems that I cannot send emails to gmail for now,
+>> so dropped your gmail address. sorry for the inconvenience.
+>
+> Sure, I use the gmail address just as a backup to read/answer upstream
+> replies once I am out of office (as it is easier to access on my
+> phone).
+>
 > Thanks,
-> ~Nick Desaulniers
+> Bhupesh
 
+The kernel patch is now accepted in Linus's tree:
+commit e401b7c2c69008ad2fcdc154f7c5421281c90042
+Author: Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Mon Jul 30 11:54:43 2018 +0530
 
+    arm64, kaslr: export offset in VMCOREINFO ELF notes
 
--- 
+Can you please pick this patchset and now apply it to makedumpfile source?
+
 Thanks,
-~Nick Desaulniers
+Bhupesh
 
 _______________________________________________
 kexec mailing list
