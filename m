@@ -1,23 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-f195.google.com ([209.85.208.195])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fq1tJ-0001dW-2c
- for kexec@lists.infradead.org; Wed, 15 Aug 2018 19:55:38 +0000
-Received: by mail-lj1-f195.google.com with SMTP id s12-v6so1868341ljj.0
- for <kexec@lists.infradead.org>; Wed, 15 Aug 2018 12:55:26 -0700 (PDT)
+ id 1fqAws-0003Wz-2t
+ for kexec@lists.infradead.org; Thu, 16 Aug 2018 05:35:55 +0000
+Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
+ AMD sme enabled
+References: <4ae1cfb5-0a4b-2aac-2575-024e2c74826f@redhat.com>
+ <895db996-febd-d50c-91af-4f1ef3d27bd8@redhat.com>
+ <20180703111428.GB5748@zn.tnic>
+ <4fbb843b-9597-a48b-8b6f-00e354b91950@redhat.com>
+ <e7357038-08bd-7ba8-5357-7c91d21d10fe@redhat.com>
+ <20180709092901.GA22182@nazgul.tnic>
+ <fc6a47ca-1b16-eba5-d15e-ca294e01af93@redhat.com>
+ <20180713170857.GB17896@nazgul.tnic>
+ <33453712-9b0b-e8b9-08a6-de09e0806dd6@redhat.com>
+ <20180720052304.GA9146@dhcp-128-65.nay.redhat.com>
+ <20180720073245.GA26926@nazgul.tnic>
+ <562d8611-750d-3624-1a1b-df21f39812d6@redhat.com>
+ <54D39850-F883-4EC6-B160-0CD88D47A997@alien8.de>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <53536964-2b57-4630-de91-3d4da2b643a8@redhat.com>
+Date: Thu, 16 Aug 2018 13:35:28 +0800
 MIME-Version: 1.0
-In-Reply-To: <CACi5LpNdaKAa+YzS0zp2e16tewkcqkRay0QqbZcJGjDtK+5TTA@mail.gmail.com>
-References: <1531979021-31780-1-git-send-email-bhsharma@redhat.com>
- <1531979021-31780-2-git-send-email-bhsharma@redhat.com>
- <bf9dee4f-852d-fc6b-999a-02ea99dceb4d@redhat.com>
- <CACi5LpOKQ9TX9yWus6i9ZG_Ha8A+vPqs09o1Jh0B9O5vYED9BA@mail.gmail.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC035590BC@BPXM09GP.gisp.nec.co.jp>
- <CACi5LpNdaKAa+YzS0zp2e16tewkcqkRay0QqbZcJGjDtK+5TTA@mail.gmail.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Thu, 16 Aug 2018 01:25:24 +0530
-Message-ID: <CACi5LpOh12o3T7FHFSV+4aYEtWS9ZLebyoW1yJ0EnegZJ6Nj2Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: Get 'info->page_offset' from PT_LOAD segments
- to support KASLR boot cases
+In-Reply-To: <54D39850-F883-4EC6-B160-0CD88D47A997@alien8.de>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,216 +32,138 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec mailing list <kexec@lists.infradead.org>
+To: Boris Petkov <bp@alien8.de>
+Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>
 
-Hi Kazu,
-
-On Tue, Jul 24, 2018 at 10:47 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> Hi Kazu,
->
-> On Mon, Jul 23, 2018 at 10:15 PM, Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
->> Hi Bhupesh,
->>
->> On 7/22/2018 3:44 AM, Bhupesh Sharma wrote:
->>> Hello Kazu,
->>>
->>> Many thanks for your review comments.
->>>
->>> On Sat, Jul 21, 2018 at 3:18 AM, Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
->>>>
->>>> On 7/19/2018 1:43 AM, Bhupesh Sharma wrote:
->>>>> The existing methodology to obtain 'info->page_offset' from reading
->>>>> _stext symbol (from kallsyms) doesn't work well in KASLR boot cases on
->>>>> arm64 machines as the PAGE_OFFSET (or the virtual address which
->>>>> indicates the start of the linear region) can be randomized as well
->>>>> on basis of the kaslr-seed.
->>>>>
->>>>> Since the value of PAGE_OFFSET inside the kernel is randomized in such
->>>>> cases and there is no existing mechanism of conveying this value from
->>>>> kernel-space to user-space, so we can use the method used by archs like
->>>>> x86_64 to generate the 'info->page_offset' value from the PT_LOAD
->>>>> segments by subtracting the phy_addr from virt_addr of a PT_LOAD
->>>>> segment.
->>>>>
->>>>> This approach works fine both with KASLR and non-KASLR boot cases.
->>>>>
->>>>> I tested this on my qualcomm-amberwing board. Here are some logs from
->>>>> the KASLR boot cases:
->>>>>
->>>>> - Verify that the EFI firmware supports 'kaslr-seed':
->>>>>
->>>>>       chosen {
->>>>>               kaslr-seed = <0x0 0x0>;
->>>>>               <..snip..>
->>>>>       };
->>>>>
->>>>> - Verify that '--mem-usage' works well after this fix as well (I used
->>>>>   kernel 4.18.0-rc4+ for my checks):
->>>>>
->>>>> The kernel version is not supported.
->>>>> The makedumpfile operation may be incomplete.
->>>>>
->>>>> TYPE          PAGES                   EXCLUDABLE      DESCRIPTION
->>>>> ----------------------------------------------------------------------
->>>>> ZERO          4396                    yes             Pages filled
->>>>> with zero
->>>>> NON_PRI_CACHE 27859                   yes             Cache pages
->>>>> without private flag
->>>>> PRI_CACHE     18490                   yes             Cache pages with
->>>>> private flag
->>>>> USER          2728                    yes             User process
->>>>> pages
->>>>> FREE          1465848                 yes             Free pages
->>>>> KERN_DATA     18537                   no              Dumpable kernel
->>>>> data
->>>>>
->>>>> page size:            65536
->>>>> Total pages on system:        1537858
->>>>> Total size on system: 100785061888     Byte
->>>>>
->>>>> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
->>>>> ---
->>>>>  arch/arm64.c   | 23 ++++++++++++++++++-----
->>>>>  common.h       |  1 +
->>>>>  makedumpfile.h |  1 +
->>>>>  3 files changed, 20 insertions(+), 5 deletions(-)
->>>>>
->>>>> diff --git a/arch/arm64.c b/arch/arm64.c
->>>>> index 2fd3e1874376..9e8c77c76935 100644
->>>>> --- a/arch/arm64.c
->>>>> +++ b/arch/arm64.c
->>>>> @@ -265,6 +265,9 @@ get_xen_info_arm64(void)
->>>>>  int
->>>>>  get_versiondep_info_arm64(void)
->>>>>  {
->>>>> +     int i;
->>>>> +     unsigned long long phys_start;
->>>>> +     unsigned long long virt_start;
->>>>>       ulong _stext;
->>>>>
->>>>>       _stext = get_stext_symbol();
->>>>> @@ -289,12 +292,22 @@ get_versiondep_info_arm64(void)
->>>>>               return FALSE;
->>>>>       }
->>>>>
->>>>
->>>>> -     info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
->>>>> -
->>>>> -     DEBUG_MSG("page_offset=%lx, va_bits=%d\n", info->page_offset,
->>>>> -                     va_bits);
->>>>
->>>> According to makedumpfile commit 4944f93484 ("x86_64: Calculate page_offset
->>>> in case of re-filtering/sadump/virsh dump"), in case of re-filtering,
->>>> we don't have any PT_LOAD.  So, with this patch, we cannot re-filter
->>>> dump file on arm64 system?
->>>>
->>>> If we cannot, is it better to leave the above behind the following
->>>> pt_load section for re-filtering non-KASLR dump?
->>>>
->>>>> +     if (get_num_pt_loads()) {
->>>>> +             for (i = 0;
->>>>> +                     get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
->>>>> +                     i++) {
->>>>> +                     if (virt_start != NOT_KV_ADDR
->>>>> +                                     && virt_start < __START_KERNEL_map
->>>>> +                                     && phys_start != NOT_PADDR && phys_start != NOT_PADDR_ARM64) {
->>>>> +                             info->page_offset = virt_start - phys_start;
->>>>> +                             DEBUG_MSG("info->page_offset: %lx, VA_BITS: %d\n",
->>>>> +                                             info->page_offset, va_bits);
->>>>> +                             return TRUE;
->>>>> +                     }
->>>>> +             }
->>>>> +     }
->>>>
->>>> I'll adjust some indents for readability.
->>>>
->>>>>
->>>>> -     return TRUE;
->>>>> +     return FALSE;
->>>>>  }
->>>>>
->>>>>  /*
->>>>> diff --git a/common.h b/common.h
->>>>> index 6e2f657a79c7..a8181777dbb7 100644
->>>>> --- a/common.h
->>>>> +++ b/common.h
->>>>> @@ -48,6 +48,7 @@
->>>>>  #define NOT_MEMMAP_ADDR      (0x0)
->>>>>  #define NOT_KV_ADDR  (0x0)
->>>>>  #define NOT_PADDR    (ULONGLONG_MAX)
->>>>
->>>>> +#define NOT_PADDR_ARM64      (0x0000000010a80000UL)
->>>>
->>>> I think that this should not be in common.h, because it's not for
->>>> arch-specific definitions, so I'll move it to makedumpfile.h.
->>>>
->>>>>  #define BADADDR      ((ulong)(-1))
->>>>>
->>>>>  #endif  /* COMMON_H */
->>>>> diff --git a/makedumpfile.h b/makedumpfile.h
->>>>> index 5ff94b8e4ac6..5297279f0f3b 100644
->>>>> --- a/makedumpfile.h
->>>>> +++ b/makedumpfile.h
->>>>> @@ -2020,6 +2020,7 @@ struct domain_list {
->>>>>  #define MFNS_PER_FRAME               (info->page_size / sizeof(unsigned long))
->>>>>
->>>>>  #ifdef __aarch64__
->>>>> +#define __START_KERNEL_map           (0xffffffff80000000UL)
->>>>
->>>> This #ifdef here is for the definitions related to Xen extraction.
->>>> I'll move it to the same place as the above.
->>>>
->>>>>  unsigned long long kvtop_xen_arm64(unsigned long kvaddr);
->>>>>  #define kvtop_xen(X) kvtop_xen_arm64(X)
->>>>>  #endif /* aarch64 */
->>>>>
->>>>
->>>> I attached a patch that was applied my suggestions.
->>>> How about it?
->>>
->>> I agree. The patch looks good with the suggested changes.
->>> Please go ahead and feel free to apply the modified patch.
->>
->> OK, I'll apply it.
->>
->> With respect to the 2/2 patch, I'm waiting for the kernel patch
->> to be merged.
->>
->> If need be, I can apply the 1/2 patch separately from the 2/2 patch,
->> because I think they are not directly connected with each other.
->
-> Sure, I think we can handle 2/2 patch when it's kernel part is
-> reviewed properly by the arm64 kernel maintainer(s). We can apply 1/2
-> patch in the meanwhile.
->
->> p.s. it seems that I cannot send emails to gmail for now,
->> so dropped your gmail address. sorry for the inconvenience.
->
-> Sure, I use the gmail address just as a backup to read/answer upstream
-> replies once I am out of office (as it is easier to access on my
-> phone).
->
-> Thanks,
-> Bhupesh
-
-The kernel patch is now accepted in Linus's tree:
-commit e401b7c2c69008ad2fcdc154f7c5421281c90042
-Author: Bhupesh Sharma <bhsharma@redhat.com>
-Date:   Mon Jul 30 11:54:43 2018 +0530
-
-    arm64, kaslr: export offset in VMCOREINFO ELF notes
-
-Can you please pick this patchset and now apply it to makedumpfile source?
-
-Thanks,
-Bhupesh
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQwN+aciDIw5pelIDE4OjA4LCBCb3JpcyBQZXRrb3Yg5YaZ6YGTOgo+IE9uIEp1
+bHkgMjAsIDIwMTggMTI6NTU6MDQgUE0gR01UKzAzOjAwLCBsaWppYW5nIDxsaWppYW5nQHJlZGhh
+dC5jb20+IHdyb3RlOj4KPj4gVGhhbmtzIGZvciB5b3VyIGFkdmljZSwgSSB3aWxsIHJld3JpdGUg
+dGhlIGxvZyBhbmQgc2VuZCB0aGVtIGFnYWluLgo+IAo+IERvIG5vdCBzZW5kIHRoZW0gYWdhaW4g
+LSBleHBsYWluIHRoZSBwcm9ibGVtIHByb3Blcmx5IGZpcnN0IQo+IApJIGhhdmUgY29tcGFyZWQg
+dHdvIHNvbHV0aW9ucyB0byBoYW5kbGUgdGhlIGVuY3J5cHRlZCBtZW1vcnksIHRoZSBzb2x1dGlv
+biBBIGlzIG1pbmUsIHRoZSBzb2x1dGlvbiBCIGlzIEJvcmlzJ3MuCkhlcmUgd2Ugb25seSB0YWxr
+IGFib3V0IHRoZSBjYXNlIHRoYXQgU01FIGlzIGFjdGl2ZSBpbiB0aGUgZmlyc3Qga2VybmVsLCBh
+bmQgb25seSBjYXJlIGl0J3MgYWN0aXZlIHRvbyBpbiBrZHVtcAprZXJuZWwuIEZvciBzb2x1dGlv
+biBBIGFuZCBzb2x1dGlvbiBCLCB0aGVzZSBmb3VyIGNhc2VzIGFyZSBzYW1lLgphLiBkdW1wIHZt
+Y29yZQogICBJdCBpcyBlbmNyeXB0ZWQgaW4gdGhlIGZpcnN0IGtlcm5lbCwgYW5kIG5lZWRzIGJl
+IHJlYWQgb3V0IGluIGtkdW1wIGtlcm5lbC4KYi4gY3Jhc2ggbm90ZXMKICAgV2hlbiBkdW1waW5n
+IHZtY29yZSwgdGhlIHBlb3BsZSB1c3VhbGx5IG5lZWQgdG8gcmVhZCB0aGUgdXNlZnVsIGluZm9y
+bWF0aW9uIGZyb20gbm90ZXMsIGFuZCB0aGUgbm90ZXMKICAgaXMgYWxzbyBlbmNyeXB0ZWQuCmMu
+IGlvbW11IGRldmljZSB0YWJsZQogICBJdCBpcyBhbGxvY2F0ZWQgYnkga2VybmVsLCBuZWVkIGZp
+bGwgaXRzIHBvaW50ZXIgaW50byBtbWlvIG9mIGFtZCBpb21tdS4gSXQncyBlbmNyeXB0ZWQgaW4g
+dGhlIGZpcnN0IGtlcm5lbCwKICAgbmVlZCByZWFkIHRoZSBvbGQgY29udGVudCB0byBhbmFseXpl
+IGFuZCBnZXQgdXNlZnVsIGluZm9ybWF0aW9uLgpkLiBtbWlvIG9mIGFtZCBpb21tdQogICBSZWdp
+c3RlciByZXBvcnRlZCBieSBhbWQgZmlybXdhcmUsIGl0J3Mgbm90IFJBTSwgd2UgZG9uJ3QgZW5j
+cnlwdCBpbiBib3RoIHRoZSBmaXJzdCBrZXJuZWwgYW5kIGtkdW1wIGtlcm5lbC4KClNvbHV0aW9u
+IEE6CiAgIDEuIGFkZCBhIG5ldyBib29sIHBhcmFtZXRlciAiZW5jcnlwdGVkIiB0byBfX2lvcmVt
+YXBfY2FsbGVyKCkKICAgICAgSXQgaXMgYSBsb3cgbGV2ZWwgZnVuY3Rpb24sIGFuZCBjaGVjayB0
+aGUgbmV3bHkgYWRkZWQgcGFyYW1ldGVyLCBpZiBpdCdzIHRydWUgYW5kIGluIGtkdW1wIGtlcm5l
+bCwgd2lsbAogICAgICByZW1hcCB0aGUgbWVtb3J5IHdpdGggc21lIG1hc2suCiAgIDIuIGFkZCBh
+IG5ldyBmdW5jdGlvbiBpb3JlbWFwX2VuY3J5cHRlZCgpIHRvIGV4cGxpY2l0bHkgcGFzc2VkIGlu
+IGEgInRydWUiIHZhbHVlIGZvciAiZW5jcnlwdGVkIi4gRm9yIGFib3ZlCiAgICAgIGEsIGIsIGMs
+IHdlIHdpbGwgY2FsbCBpb3JlbWFwX2VuY3J5cHRlZCgpOwogICAzLiBhZGp1c3QgYWxsIGV4aXN0
+ZWQgaW9yZW1hcCB3cmFwcGVyIGZ1bmN0aW9ucywgcGFzc2VkIGluICJmYWxzZSIgZm9yIGVuY3J5
+cHRlZCB0byBtYWtlIHRoZW0gYW4gYmVmb3JlLgoKICAgICAgaW9yZW1hcF9lbmNyeXB0ZWQoKVwK
+ICAgICAgaW9yZW1hcF9jYWNoZSgpICAgICB8CiAgICAgIGlvcmVtYXBfcHJvdCgpICAgICAgfAog
+ICAgICBpb3JlbWFwX3d0KCkgICAgICAgIHwtPl9faW9yZW1hcF9jYWxsZXIoKQogICAgICBpb3Jl
+bWFwX3djKCkgICAgICAgIHwKICAgICAgaW9yZW1hcF91YygpICAgICAgICB8CiAgICAgIGlvcmVt
+YXBfbm9jYWNoZSgpICAvICAgIAoKU29sdXRpb24gQihCb3JpcyBzdWdnZXN0ZWQpOgogICAxLiBu
+byBuZWVkIHRvIGFkZCBhIG5ldyBmdW5jdGlvbihpb3JlbWFwX2VuY3J5cHRlZCksIGNoZWNrIHdo
+ZXRoZXIgdGhlIG9sZCBtZW1vcnkgaXMgZW5jcnlwdGVkIGJ5IGNvbXBhcmluZyB0aGUgYWRkcmVz
+cy4KICAgMi4gYWRkIG5ldyBmdW5jdGlvbnMgdG8gY2hlY2sgd2hldGhlciB0aGUgb2xkIG1lbW9y
+eSBpcyBlbmNyeXB0ZWQgZm9yIGFsbCBjYXNlcy4KICAgICAgYS4gZHVtcCB2bWNvcmUKICAgICAg
+ICAgYm9vbCBhZGRyX2lzX29sZF9tZW1vcnkodW5zaWduZCBsb25nIGFkZHIpCiAgICAgIGIuIGNy
+YXNoIG5vdGVzCiAgICAgICAgIGJvb2wgYWRkcl9pc19jcmFzaF9ub3Rlcyh1bnNpZ25lZCBsb25n
+IGFkZHIpCiAgICAgIGMuIGlvbW11IGRldmljZSB0YWJsZQogICAgICAgICBib29sIGFkZHJfaXNf
+aW9tbXVfZGV2aWNlX3RhYmxlKHVuc2lnbmVkIGxvbmcgYWRkcikKICAgMy4gd2hlbiByZW1hcHBp
+bmcgdGhlIG1lbW9yeSwgaXQgd2lsbCBjYWxsIGFsbCBuZXcgZnVuY3Rpb25zLCBhbmQgY2hlY2sg
+d2hldGhlciB0aGUgbWVtb3J5IGlzIGVuY3J5cHRlZCBpbiBfX2lvcmVtYXBfY2FsbGVyKCkuCiAg
+ICAgIF9faW9yZW1hcF9jYWxsZXIoKS0+X19pb3JlbWFwX2NvbXB1dGVfcHJvdCgpLT4gLy0+IGFk
+ZHJfaXNfY3Jhc2hfbm90ZXMoKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwtPiBhZGRyX2lzX2lvbW11X2RldmljZV90YWJsZSgpCiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfC0+IGFkZHJfaXNf
+b2xkX21lbW9yeSgpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgXCAuLi4uLi4KICAgRm9yIHNvbHV0aW9uIEIsIGkgbWFkZSBkcmFmdCBwYXRjaCBm
+b3IgZGVtb25zdHJhdGlvbiwganVzdCBwYXN0ZWQgdGhlbSBhdCBib3R0b20uCgoKQ29uY2x1c2lv
+bjoKCiAgU29sdXRpb24gQToKICAgICAgYWR2YW50YWdlczoKICAgICAgICAgICAgICAgICAgMSku
+IEl0J3MgdmVyeSBzaW1wbGUgYW5kIHZlcnkgY2xlYW4sIGxlc3MgY29kZSBjaGFuZ2U7CiAgICAg
+ICAgICAgICAgICAgIDIpLiBJdCdzIGVhc2llciB0byB1bmRlcnN0YW5kLgogICAgICBkaXNhZHZh
+bnRhZ2VzOgogICAgICAgICAgICAgICAgICAxKS4gTmVlZCBjaGFuZ2UgdGhlIGludGVyZmFjZSBv
+ZiBfX2lvcmVtYXBfY2FsbGVyKCkgYW5kIGFkanVzdCBpdHMgd3JhcHBlciBmdW5jdGlvbnM7CiAg
+ICAgICAgICAgICAgICAgIDIpLiBOZWVkIGNhbGwgaW9yZW1hcF9lbmNyeXB0ZWQoKSBleHBsaWNp
+dGx5IGZvciB2bWNvcmUvY3Jhc2ggbm90ZXMvZGV2IHRhYmxlIHJlYWRpbmcuCgogIFNvbHV0aW9u
+IEI6CiAgICAgIGFkdmFudGFnZXM6CiAgICAgICAgICAgICAgICAgMSkuIE5vIG5lZWQgdG8gdG91
+Y2ggaW50ZXJmYWNlOwogICAgICAgICAgICAgICAgIDIpLiBBdXRvbWF0aWNhbGx5IGRldGVjdCBh
+bmQgZG8gaW5zaWRlIF9faW9yZW1hcF9jYWxsZXIoKS4KICAgICAgZGlzYWR2YW50YWdlczoKICAg
+ICAgICAgICAgICAgICAxKS4gTmVlZCBhZGQgZWFjaCBmdW5jdGlvbiBmb3IgZWFjaCBraW5kIG9m
+IGVuY3J5cHRlZCBvbGQgbWVtb3J5IHJlYWRpbmc7CiAgICAgICAgICAgICAgICAgMikuIEluIHRo
+ZSBmdXR1cmUsIG5lZWQgYWRkIHRoZXNlIGtpbmRzIG9mIGZ1bmN0aW9ucyB0b28gZm9yIGludGVs
+IE1LVE1FOwogICAgICAgICAgICAgICAgIDMpLiBJdCdzIG1vcmUgY29tcGxpY2F0ZWQgYW5kIG1v
+cmUgY29kZSBjaGFuZ2VzLgoKSSBwZXJzb25hbGx5IHByZWZlciBzb2x1dGlvbiBBLCB3aGljaCBp
+cyBwcmVzZW50ZWQgaW4gcG9zdGVkIHBhdGNoZXMuCldoYXQgZG8geW91IHRoaW5rLCBCb3Jpcz8g
+QW5kIG90aGVyIHJldmlld2Vycz8KClRoYW5rcywKTGlhbmJvCgoKCgpUaGUgc29sdXRpb24gQiB3
+aWxsIGJlIGRlc2NyaWJlZCBieSBwc2V1ZG8tY29kZSwgZm9yIGV4YW1wbGU6CgogICBtb2RpZmll
+ZCBmaWxlOiBkcml2ZXJzL2lvbW11L2FtZF9pb21tdV9pbml0LmMKICAgaW5saW5lIGJvb2wgYWRk
+cl9pc19pb21tdV9kZXZpY2VfdGFibGUodW5zaWduZWQgbG9uZyBhZGRyKSB7CiAgICAgICAgc3Ry
+dWN0IGFtZF9pb21tdSAqaW9tbXU7CgogICAgICAgIC8qIHNlYXJjaCB0aGUgYWRkciAqLwogICAg
+ICAgIGZvcl9lYWNoX2lvbW11KGlvbW11KSB7CiAgICAgICAgICAgIGxvID0gcmVhZGwoaW9tbXUt
+Pm1taW9fYmFzZSArIE1NSU9fREVWX1RBQkxFX09GRlNFVCk7CiAgICAgICAgICAgIGhpID0gcmVh
+ZGwoaW9tbXUtPm1taW9fYmFzZSArIE1NSU9fREVWX1RBQkxFX09GRlNFVCArIDQpOwogICAgICAg
+ICAgICBlbnRyeSA9ICgoKHU2NCkgaGkpIDw8IDMyKSArIGxvOwogICAgICAgICAgICAvKiBjaGVj
+ayB3aGV0aGVyIGl0IGlzIGFuIGlvbW11IGRldmljZSB0YWJsZSBhZGRyZXNzICovCiAgICAgICAg
+ICAgIGlmIChhZGRyID09IGVudHJ5KSB7CiAgICAgICAgICAgICAgICByZXR1cm4gdHJ1ZTsKICAg
+ICAgICAgICAgfQogICAgICAgIH0KICAgICAgICByZXR1cm4gZmFsc2U7CiAgIH0KCiAgIG1vZGlm
+aWVkIGZpbGU6IGZzL3Byb2Mvdm1jb3JlLmMKICAgaW5saW5lIGJvb2wgYWRkcl9pc19jcmFzaF9u
+b3Rlcyh1bnNpZ25lZCBsb25nIGFkZHIpIHsKICAgICAgIEVsZjY0X0VoZHIgZWhkcjsKICAgICAg
+IAogICAgICAgLyogY29kZSAqLwoKICAgICAgIHJjID0gZWxmY29yZWhkcl9yZWFkKChjaGFyKikm
+ZWhkciwgc2l6ZW9mKEVMRjY0X0VoZHIpLCAmZWxmY29yZWhkcl9hZGRyKTsKICAgICAgIGVsZmNv
+cmVidWZfc3pfb3JpZyA9IHNpemVvZihFbGY2NF9FaGRyKSArIGVoZHIuZV9waG51bSpzaXplb2Yo
+RWxmNjRfUGhkcik7CiAgICAgICByYyA9IGVsZmNvcmVoZHJfcmVhZChlbGZjb3JlYnVmLCBlbGZj
+b3JlYnVmX3N6X29yaWcsICZlbGZjb3JlaGRyX2FkZHIpOwogICAgICAgZWhkcl9wdHIgPSAoRWxm
+NjRfRWhkciopKGVsZmNvcmVidWYgKyAxKTsKCiAgICAgICAvKiBzZWFyY2ggdGhlIGFkZHIgKi8K
+ICAgICAgIGZvciAoaSA9IDA7IGkgPCBlaGRyX3B0ci0+ZV9waG51bTsgaSsrLCBwaGRyX3B0cisr
+KSB7CiAgICAgICAgICAgb2Zmc2V0ID0gcGhkcl9wdHItPnBfb2Zmc2V0OwogICAgICAgICAgIC8q
+IGlmIGZvdW5kIGl0LCBicmVhayB0aGUgbG9vcCAqLwogICAgICAgICAgIGlmIChvZmZzZXQgPT0g
+YWRkcikKICAgICAgICAgICAgICAgcmV0dXJuIHRydWU7CiAgICAgICB9CiAgICAgICByZXR1cm4g
+ZmFsc2U7CiAgIH0KCiAgIG1vZGlmaWVkIGZpbGU6IGZzL3Byb2Mvdm1jb3JlLmMKICAgaW5saW5l
+IGJvb2wgYWRkcl9pc19vbGRfbWVtb3J5KHVuc2lnbmQgbG9uZyBhZGRyKSB7CiAgICAgIHN0cnVj
+dCB2bWNvcmUgKm07CgogICAgICAvKiBjb2RlICovCgogICAgICAvKnNlYXJjaCB0aGUgYWRkciov
+CiAgICAgIGxpc3RfZm9yX2VhY2hfZW50cnkobSwgJnZtY29yZV9saXN0LCBsaXN0KSB7CiAgICAg
+ICAgICAvKiBjb2RlICovCiAgICAgICAgICAKICAgICAgICAgIHN6ID0gbWluX3QodW5zaWduZWQg
+bG9uZyBsb25nLCBtLT5vZmZzZXQgKyBtLT5zaXplIC0gKnBvcywgc2l6ZSk7CiAgICAgICAgICBz
+dGFydCA9IG0tPnBhZGRyICsgKnBvcyAtIG0tPm9mZnNldDsKICAgICAgICAgIAogICAgICAgICAg
+ZG8gewogICAgICAgICAgICAgLyogaWYgZm91bmQgaXQsIGJyZWFrIHRoZSBsb29wICovIAogICAg
+ICAgICAgICAgaWYgKGFkZHIgPT0gc3RhcnQpCiAgICAgICAgICAgICAgICAgIHJldHVybiB0cnVl
+OwoKICAgICAgICAgICAgICBvZmZzZXQgPSAodW5zaWduZWQgbG9uZykoKnN0YXJ0ICUgUEFHRV9T
+SVpFKTsKICAgICAgICAgICAgICBieXRlcyA9IFBBR0VfU0laRSAtIG9mZnNldDsKICAgICAgICAg
+ICAgICBzdGFydCArPSBieXRlczsKICAgICAgICAgICAgICBzeiAtPSBieXRlczsKCiAgICAgICAg
+ICAgICAgLyogY29kZSAqLwoKICAgICAgICAgIH0gd2hpbGUgKHN6KTsKICAgICAgfQogICAgICBy
+ZXR1cm4gZmFsc2U7CiAgIH0KCiAgIG1vZGlmaWVkIGZpbGU6IGFyY2gveDg2L21tL2lvcmVtYXAu
+YwogICBzdGF0aWMgdm9pZCBfX2lvcmVtYXBfY29tcHV0ZV9wcm90KHJlc291cmNlX3NpemVfdCBh
+ZGRyLCB1bnNpZ25lZCBsb25nIHNpemUsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgcGdwcm90X3QgKnByb3QpCiAgIHsKICAgICAgICBib29sIGVuY3J5cHRlZF9wcm90ID0gZmFs
+c2U7CgogICAgICAgIC8qIGNvZGUgKi8KCiAgICAgICAgaWYgKCFpc19rZHVtcF9rZXJuZWwoKSkK
+ICAgICAgICAgICAgcmV0dXJuOwoKICAgICAgICBpZiAoYWRkcl9pc19pb21tdV9kZXZpY2VfdGFi
+bGUoYWRkcikpCiAgICAgICAgICAgIGVuY3J5cHRlZF9wcm90ID0gdHJ1ZTsKCiAgICAgICAgaWYg
+KGFkZHJfaXNfY3Jhc2hfbm90ZXMoYWRkcikpCiAgICAgICAgICAgIGVuY3J5cHRlZF9wcm90ID0g
+dHJ1ZTsKCiAgICAgICAgaWYgKGFkZHJfaXNfb2xkX21lbW9yeShhZGRyKSkKICAgICAgICAgICAg
+ZW5jcnlwdGVkX3Byb3QgPSB0cnVlOwoKICAgICAgICAvKiBjb2RlICovCiAgICAgICAgCiAgICAg
+ICAgKnByb3QgPSBlbmNyeXB0ZWRfcHJvdCA/IHBncHJvdF9lbmNyeXB0ZWQoKnByb3QpCiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICA6IHBncHJvdF9kZWNyeXB0ZWQoKnByb3QpOwogICB9
+CgogICBtb2RpZmllZCBmaWxlOiBhcmNoL3g4Ni9tbS9pb3JlbWFwLmMKICAgc3RhdGljIHZvaWQg
+X19pb21lbSAqX19pb3JlbWFwX2NhbGxlcihyZXNvdXJjZV9zaXplX3QgcGh5c19hZGRyLAogICAg
+ICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBzaXplLCBlbnVtIHBhZ2VfY2FjaGVfbW9kZSBwY20s
+IHZvaWQgKmNhbGxlcikKICAgewogICAgICAgIC8qIGNvZGUgKi8KCiAgICAgICAgIHByb3QgPSBQ
+QUdFX0tFUk5FTF9JTzsKICAgICAgICAgaWYgKHNldl9hY3RpdmUoKSAmJiBtZW1fZmxhZ3MuZGVz
+Y19vdGhlcikKICAgICAgICAgICAgICAgIHByb3QgPSBwZ3Byb3RfZW5jcnlwdGVkKHByb3QpOwog
+ICAgICAgCiAgICAgICAgLyogY2hlY2sgd2hldGhlciB0aGUgbWVtb3J5IGlzIGVuY3J5cHRlZCAq
+LyAgCiAgICAgICAgX19pb3JlbWFwX2NvbXB1dGVfcHJvdChwaHlzX2FkZHIsIHNpemUsICZwcm90
+KTsKCiAgICAgICAgc3dpdGNoIChwY20pIHsKICAgICAgICBjYXNlIF9QQUdFX0NBQ0hFX01PREVf
+VUM6CiAgICAgICAgZGVmYXVsdDoKCiAgICAgICAgLyogY29kZSAqLwogICB9CgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
+a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2tleGVjCg==
