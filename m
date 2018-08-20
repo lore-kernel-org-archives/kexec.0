@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x543.google.com ([2607:f8b0:4864:20::543])
+Received: from mail-pg1-f196.google.com ([209.85.215.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1froSI-0002Oc-P6
- for kexec@lists.infradead.org; Mon, 20 Aug 2018 17:59:08 +0000
-Received: by mail-pg1-x543.google.com with SMTP id y5-v6so7159402pgv.1
- for <kexec@lists.infradead.org>; Mon, 20 Aug 2018 10:58:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20180801210804.175176-1-ndesaulniers@google.com>
- <CAKwvOd=WZB=x86zqu=vFDoJgpWnfCj0K3qXv14vtysfv3ioi1w@mail.gmail.com>
- <CAKwvOd=qGTv1F3CsEeNjuJ93BD9zTnUekUHgvw4Ttpx7us5JdA@mail.gmail.com>
-In-Reply-To: <CAKwvOd=qGTv1F3CsEeNjuJ93BD9zTnUekUHgvw4Ttpx7us5JdA@mail.gmail.com>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Mon, 20 Aug 2018 10:58:41 -0700
-Message-ID: <CAKwvOd=U0aMsUmBytK7vq=ORj+Npw7FqZ50EMEJPnmTG15N7dg@mail.gmail.com>
-Subject: Re: [PATCH] x86/kexec: prefer _THIS_IP_ to current_text_addr
+ id 1frq7k-0002VI-II
+ for kexec@lists.infradead.org; Mon, 20 Aug 2018 19:46:02 +0000
+Received: by mail-pg1-f196.google.com with SMTP id h8-v6so832196pgs.4
+ for <kexec@lists.infradead.org>; Mon, 20 Aug 2018 12:45:49 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH] arm64: Add a generic method of determining invalid phy-addr
+ for calculating 'info->page_offset'
+Date: Tue, 21 Aug 2018 01:15:40 +0530
+Message-Id: <1534794340-1244-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,65 +18,132 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com, hpa@zytor.com, "Eric W . Biederman" <ebiederm@xmission.com>, Simon Horman <horms@verge.net.au>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>, Greg KH <gregkh@linuxfoundation.org>, x86@kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Philippe Ombredanne <pombredanne@nexb.com>, Nathan Chancellor <natechancellor@gmail.com>
+To: kexec@lists.infradead.org
+Cc: bhsharma@redhat.com, bhupesh.linux@gmail.com, k-hagio@ab.jp.nec.com
 
-+ akpm, Linus
+Commit 94c97db3fe859ca14d7b38b0ae9ee0ffb83689d2 (arm64: Get
+'info->page_offset' from PT_LOAD segments to support KASLR boot cases)
+added a method to determine 'info->page_offset' from PT_LOAD segments
+for arm64 platforms.
 
-Bumping for review.
+In this commit we hardcoded the NOT_PADDR_ARM64 macro as
+0x0000000010a80000UL which was a valid value on
+qualcomm-amberwing boards.
 
-On Mon, Aug 13, 2018 at 2:32 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> + Simon (kexec)
->
-> bumping for review.
-> On Wed, Aug 8, 2018 at 4:06 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
-> >
-> > bumping for review
-> > On Wed, Aug 1, 2018 at 2:08 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
-> > >
-> > > As part of the effort to reduce the code duplication between _THIS_IP_
-> > > and current_text_addr(), let's consolidate callers of
-> > > current_text_addr() to use _THIS_IP_.
-> > >
-> > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > > ---
-> > >  arch/x86/include/asm/kexec.h | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-> > > index f327236f0fa7..86924d594ecd 100644
-> > > --- a/arch/x86/include/asm/kexec.h
-> > > +++ b/arch/x86/include/asm/kexec.h
-> > > @@ -21,6 +21,7 @@
-> > >  #ifndef __ASSEMBLY__
-> > >
-> > >  #include <linux/string.h>
-> > > +#include <linux/kernel.h>
-> > >
-> > >  #include <asm/page.h>
-> > >  #include <asm/ptrace.h>
-> > > @@ -132,7 +133,7 @@ static inline void crash_setup_regs(struct pt_regs *newregs,
-> > >                 asm volatile("movl %%cs, %%eax;" :"=a"(newregs->cs));
-> > >                 asm volatile("pushfq; popq %0" :"=m"(newregs->flags));
-> > >  #endif
-> > > -               newregs->ip = (unsigned long)current_text_addr();
-> > > +               newregs->ip = _THIS_IP_;
-> > >         }
-> > >  }
-> > >
-> > > --
-> > > 2.18.0.597.ga71716f1ad-goog
-> > >
+However, I was testing this change on several other arm64 boards
+like apm-mustang, huawei-taishan and hp-moonshot and saw that
+this value can vary on the basic of the "Kernel code" memory range
+placement.
 
+This patch determines the "Kernel code" memory range from
+'/proc/iomem' listing and uses the same to determine the
+NOT_PADDR_ARM64 value, which makes this calculation platform
+independent and this works well on apm-mustang, huawei-taishan,
+qualcomm-amberwing and hp-moonshot platforms.
+
+Here are some logs on my huawei-taishan board with kernel version
+4.18.0-rc8:
+
+The kernel version is not supported.
+The makedumpfile operation may be incomplete.
+
+TYPE		PAGES			EXCLUDABLE	DESCRIPTION
+----------------------------------------------------------------------
+ZERO		83081           	yes		Pages filled with zero
+NON_PRI_CACHE	6330            	yes		Cache pages without private flag
+PRI_CACHE	927             	yes		Cache pages with private flag
+USER		2659            	yes		User process pages
+FREE		4053998         	yes		Free pages
+KERN_DATA	35331           	no		Dumpable kernel data
+
+page size:		65536
+Total pages on system:	4182326
+Total size on system:	274092916736     Byte
+
+Fixes: 94c97db3fe859ca14d7b38b0ae9ee0ffb83689d2 (arm64: Get
+	'info->page_offset' from PT_LOAD segments to support KASLR boot
+	cases)
+
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+---
+ arch/arm64.c   | 26 ++++++++++++++++++++++++--
+ makedumpfile.h |  1 -
+ 2 files changed, 24 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64.c b/arch/arm64.c
+index 362609668ea2..e0b30c812124 100644
+--- a/arch/arm64.c
++++ b/arch/arm64.c
+@@ -303,10 +303,25 @@ get_xen_info_arm64(void)
+ 	return ERROR;
+ }
+ 
++/* We want to exclude the kernel code mem region while calculating the
++ * info->page_offset for arm64 arch
++ */
++static struct memory_range kernel_code_mem_range;
++
++static int kernel_code_resource_callback(void *data, int nr,
++					  char *str,
++					  unsigned long base,
++					  unsigned long length)
++{
++	kernel_code_mem_range.start = base;
++	kernel_code_mem_range.end   = base + length - 1;
++	return 0;
++}
++
+ int
+ get_versiondep_info_arm64(void)
+ {
+-	int i;
++	int i, ret;
+ 	unsigned long long phys_start;
+ 	unsigned long long virt_start;
+ 	ulong _stext;
+@@ -333,6 +348,13 @@ get_versiondep_info_arm64(void)
+ 		return FALSE;
+ 	}
+ 
++	ret = iomem_for_each_line("Kernel code\n",
++					kernel_code_resource_callback, NULL);
++	if (ret != 1) {
++		ERRMSG("Cannot find a proper Kernel code memory range in /proc/iomem\n");
++		return FALSE;
++	}
++
+ 	if (get_num_pt_loads()) {
+ 		for (i = 0;
+ 		    get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
+@@ -340,7 +362,7 @@ get_versiondep_info_arm64(void)
+ 			if (virt_start != NOT_KV_ADDR
+ 			    && virt_start < __START_KERNEL_map
+ 			    && phys_start != NOT_PADDR
+-			    && phys_start != NOT_PADDR_ARM64) {
++			    && phys_start != kernel_code_mem_range.start) {
+ 				info->page_offset = virt_start - phys_start;
+ 				DEBUG_MSG("info->page_offset: %lx, VA_BITS: %d\n",
+ 						info->page_offset, va_bits);
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 3244d31ae43a..9fefe150829f 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -544,7 +544,6 @@ unsigned long get_kvbase_arm64(void);
+ #define KVBASE			get_kvbase_arm64()
+ 
+ #define __START_KERNEL_map	(0xffffffff80000000UL)
+-#define NOT_PADDR_ARM64		(0x0000000010a80000UL)
+ 
+ #endif /* aarch64 */
+ 
 -- 
-Thanks,
-~Nick Desaulniers
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
