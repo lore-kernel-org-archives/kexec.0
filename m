@@ -1,25 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-f65.google.com ([209.85.167.65])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1frqCE-0004bq-Vc
- for kexec@lists.infradead.org; Mon, 20 Aug 2018 19:50:40 +0000
-Received: by mail-lf1-f65.google.com with SMTP id z11-v6so9506635lff.9
- for <kexec@lists.infradead.org>; Mon, 20 Aug 2018 12:50:28 -0700 (PDT)
+ id 1frsok-0000l9-79
+ for kexec@lists.infradead.org; Mon, 20 Aug 2018 22:38:36 +0000
+Date: Tue, 21 Aug 2018 06:38:17 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: kexec: fix for "Unhandled rela relocation: R_X86_64_PLT32" error
+Message-ID: <20180820151901.GA29313@MiWiFi-R3L-srv>
+References: <e590dc81-7df7-746d-98f2-710f85e03467@googlemail.com>
+ <20180820083718.GZ4113@MiWiFi-R3L-srv>
+ <cbf043a7-8e95-9486-3441-07ef8f2f86f5@googlemail.com>
+ <20180820121721.GA4113@MiWiFi-R3L-srv>
+ <20180820122131.GB4113@MiWiFi-R3L-srv>
+ <aabec0ea-6611-dc95-3f12-391469790d53@googlemail.com>
 MIME-Version: 1.0
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC0355A60A@BPXM09GP.gisp.nec.co.jp>
-References: <1531979021-31780-1-git-send-email-bhsharma@redhat.com>
- <1531979021-31780-2-git-send-email-bhsharma@redhat.com>
- <bf9dee4f-852d-fc6b-999a-02ea99dceb4d@redhat.com>
- <CACi5LpOKQ9TX9yWus6i9ZG_Ha8A+vPqs09o1Jh0B9O5vYED9BA@mail.gmail.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC035590BC@BPXM09GP.gisp.nec.co.jp>
- <CACi5LpNdaKAa+YzS0zp2e16tewkcqkRay0QqbZcJGjDtK+5TTA@mail.gmail.com>
- <CACi5LpOh12o3T7FHFSV+4aYEtWS9ZLebyoW1yJ0EnegZJ6Nj2Q@mail.gmail.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC0355A60A@BPXM09GP.gisp.nec.co.jp>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 21 Aug 2018 01:20:26 +0530
-Message-ID: <CACi5LpOwSbDL9QFo=OobWZ=bGOgk5qUUjXxEWJ+TGjvNK_qnEw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: Get 'info->page_offset' from PT_LOAD segments
- to support KASLR boot cases
+Content-Disposition: inline
+In-Reply-To: <aabec0ea-6611-dc95-3f12-391469790d53@googlemail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,51 +28,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: kexec mailing list <kexec@lists.infradead.org>
+To: Chris Clayton <chris2553@googlemail.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-Hi Kazu,
+On 08/20/18 at 04:12pm, Chris Clayton wrote:
+> 
+> 
+> On 20/08/2018 13:21, Baoquan He wrote:
+> > Hi Chris,
+> > 
+> > On 08/20/18 at 08:17pm, Baoquan He wrote:
+> >> In response to a change in binutils, commit b21ebf2fb4c
+> >> (x86: Treat R_X86_64_PLT32 as R_X86_64_PC32) was applied to
+> >> the linux kernel during the 4.16 development cycle and has
+> >> since been backported to earlier stable kernel series. The
+> >> change results in the failure message in $SUBJECT when
+> >> rebooting via kexec.
+> >>
+> >> Fix this by replicating the change in kexec.
+> >>
+> 
+> OK.
+> 
+> >> Signed-off-by: Chris Clayton <chris2553@googlemail.com>
+> > 
+> > I adjusted the patch log a little bit, you have tested it on upstream
+> > kernel, right?
+> > 
+> 
+> At the time of my original message (25 July 2018), 4.18.0-rc6+ was the latest upstream. I tested my change on that and
+> on the latest stable 4.14 series kernel, which was 4.14.57. I've just tested it with 4.18.3 and 4.14.65 and it works
+> fine. I don't have a 4.19 development kernel installed at the moment - I'm busy with other stuff.
 
-On Mon, Aug 20, 2018 at 8:54 PM, Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
-> Hello Bhupesh,
->
-> On 8/15/2018 3:55 PM, Bhupesh Sharma wrote:
->> The kernel patch is now accepted in Linus's tree:
->> commit e401b7c2c69008ad2fcdc154f7c5421281c90042
->> Author: Bhupesh Sharma <bhsharma@redhat.com>
->> Date:   Mon Jul 30 11:54:43 2018 +0530
->>
->>     arm64, kaslr: export offset in VMCOREINFO ELF notes
->>
->> Can you please pick this patchset and now apply it to makedumpfile source?
->
-> Thank you for informing me about it, and sorry for my delayed response.
-> I applied the patches to the devel branch.
->
-> commit 616c98d1abac6f348f13cfe55e2df5e1d5d26781
-> Author: Bhupesh Sharma <bhsharma@redhat.com>
-> Date:   Thu Jul 19 11:13:41 2018 +0530
->
->     [PATCH] arm64: Add runtime kaslr offset if it exists
->
-> commit 94c97db3fe859ca14d7b38b0ae9ee0ffb83689d2
-> Author: Bhupesh Sharma <bhsharma@redhat.com>
-> Date:   Thu Jul 19 11:13:40 2018 +0530
->
->     [PATCH] arm64: Get 'info->page_offset' from PT_LOAD segments to support KASLR boot cases
->
+I think it's fine and enough, ack this patch.
 
-Thanks. I have sent out another fix for
-94c97db3fe859ca14d7b38b0ae9ee0ffb83689d2 here
-<http://lists.infradead.org/pipermail/kexec/2018-August/021390.html>,
-which removes the
-hardcoded NOT_PADDR_ARM64 macro value and makes it platform independent.
+Acked-by: Baoquan He <bhe@redhat.com>
 
-Kindly review the same and consider it applying to the makedumpfile
-code as well.
+By the way, feel free to repost with this format so that Simon won't
+miss it. And you can add my ack when you repost. Surely you can also
+wait for Simon or ping him later in this threaad.
 
-Regards,
-Bhupesh
+
+Thanks
+Baoquan
+> 
+> 
+> > Thanks
+> > Baoquan
+> > 
+> >> ---
+> >>  kexec/arch/x86_64/kexec-elf-rel-x86_64.c | 1 +
+> >>  1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
+> >> index 7fdde73..db85b44 100644
+> >> --- a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
+> >> +++ b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
+> >> @@ -79,6 +79,7 @@ void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
+> >>  			goto overflow;
+> >>  		break;
+> >>  	case R_X86_64_PC32: 
+> >> +	case R_X86_64_PLT32:
+> >>  		*(uint32_t *)location = value - address;
+> >>  		break;
+> >>  	default:
+> >> -- 
+> >> 2.13.6
+> >>
+> >>
+> >> _______________________________________________
+> >> kexec mailing list
+> >> kexec@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
