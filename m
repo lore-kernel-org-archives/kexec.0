@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mail-it0-x244.google.com ([2607:f8b0:4001:c0b::244])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1frsok-0000l9-79
- for kexec@lists.infradead.org; Mon, 20 Aug 2018 22:38:36 +0000
-Date: Tue, 21 Aug 2018 06:38:17 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: kexec: fix for "Unhandled rela relocation: R_X86_64_PLT32" error
-Message-ID: <20180820151901.GA29313@MiWiFi-R3L-srv>
-References: <e590dc81-7df7-746d-98f2-710f85e03467@googlemail.com>
- <20180820083718.GZ4113@MiWiFi-R3L-srv>
- <cbf043a7-8e95-9486-3441-07ef8f2f86f5@googlemail.com>
- <20180820121721.GA4113@MiWiFi-R3L-srv>
- <20180820122131.GB4113@MiWiFi-R3L-srv>
- <aabec0ea-6611-dc95-3f12-391469790d53@googlemail.com>
+ id 1frtuv-00019z-Qj
+ for kexec@lists.infradead.org; Mon, 20 Aug 2018 23:49:03 +0000
+Received: by mail-it0-x244.google.com with SMTP id 139-v6so1840074itf.0
+ for <kexec@lists.infradead.org>; Mon, 20 Aug 2018 16:48:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <aabec0ea-6611-dc95-3f12-391469790d53@googlemail.com>
+References: <20180801210804.175176-1-ndesaulniers@google.com>
+ <CAKwvOd=WZB=x86zqu=vFDoJgpWnfCj0K3qXv14vtysfv3ioi1w@mail.gmail.com>
+ <CAKwvOd=qGTv1F3CsEeNjuJ93BD9zTnUekUHgvw4Ttpx7us5JdA@mail.gmail.com>
+ <CAKwvOd=U0aMsUmBytK7vq=ORj+Npw7FqZ50EMEJPnmTG15N7dg@mail.gmail.com>
+In-Reply-To: <CAKwvOd=U0aMsUmBytK7vq=ORj+Npw7FqZ50EMEJPnmTG15N7dg@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 20 Aug 2018 16:48:38 -0700
+Message-ID: <CA+55aFxHtbq=X9Jaes1qwVAhu5mx0eTahUjd7ijxgW44JjFaYQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/kexec: prefer _THIS_IP_ to current_text_addr
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,78 +27,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chris Clayton <chris2553@googlemail.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Philippe Ombredanne <pombredanne@nexb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, the arch/x86 maintainers <x86@kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, natechancellor@gmail.com, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Peter Anvin <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>
 
-On 08/20/18 at 04:12pm, Chris Clayton wrote:
-> 
-> 
-> On 20/08/2018 13:21, Baoquan He wrote:
-> > Hi Chris,
-> > 
-> > On 08/20/18 at 08:17pm, Baoquan He wrote:
-> >> In response to a change in binutils, commit b21ebf2fb4c
-> >> (x86: Treat R_X86_64_PLT32 as R_X86_64_PC32) was applied to
-> >> the linux kernel during the 4.16 development cycle and has
-> >> since been backported to earlier stable kernel series. The
-> >> change results in the failure message in $SUBJECT when
-> >> rebooting via kexec.
-> >>
-> >> Fix this by replicating the change in kexec.
-> >>
-> 
-> OK.
-> 
-> >> Signed-off-by: Chris Clayton <chris2553@googlemail.com>
-> > 
-> > I adjusted the patch log a little bit, you have tested it on upstream
-> > kernel, right?
-> > 
-> 
-> At the time of my original message (25 July 2018), 4.18.0-rc6+ was the latest upstream. I tested my change on that and
-> on the latest stable 4.14 series kernel, which was 4.14.57. I've just tested it with 4.18.3 and 4.14.65 and it works
-> fine. I don't have a 4.19 development kernel installed at the moment - I'm busy with other stuff.
+On Mon, Aug 20, 2018 at 10:58 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> + akpm, Linus
+>
+> Bumping for review.
 
-I think it's fine and enough, ack this patch.
+Ugh. I am not personally a huge fan of this endless "fix up one at a time".
 
-Acked-by: Baoquan He <bhe@redhat.com>
+Just do a patch that removes current_text_addr() entirely and be done
+with it, if that's what we want the end result to be.
 
-By the way, feel free to repost with this format so that Simon won't
-miss it. And you can add my ack when you repost. Surely you can also
-wait for Simon or ping him later in this threaad.
+Don't bother with these small "let's remove the remaining ones one by
+one". Just get it over and done with.
 
-
-Thanks
-Baoquan
-> 
-> 
-> > Thanks
-> > Baoquan
-> > 
-> >> ---
-> >>  kexec/arch/x86_64/kexec-elf-rel-x86_64.c | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
-> >> index 7fdde73..db85b44 100644
-> >> --- a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
-> >> +++ b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
-> >> @@ -79,6 +79,7 @@ void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
-> >>  			goto overflow;
-> >>  		break;
-> >>  	case R_X86_64_PC32: 
-> >> +	case R_X86_64_PLT32:
-> >>  		*(uint32_t *)location = value - address;
-> >>  		break;
-> >>  	default:
-> >> -- 
-> >> 2.13.6
-> >>
-> >>
-> >> _______________________________________________
-> >> kexec mailing list
-> >> kexec@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/kexec
+                Linus
 
 _______________________________________________
 kexec mailing list
