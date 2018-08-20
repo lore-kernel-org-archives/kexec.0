@@ -1,21 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wr1-x444.google.com ([2a00:1450:4864:20::444])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1frlqy-0002qh-Vu
- for kexec@lists.infradead.org; Mon, 20 Aug 2018 15:12:26 +0000
-Received: by mail-wr1-x444.google.com with SMTP id z96-v6so4636442wrb.8
- for <kexec@lists.infradead.org>; Mon, 20 Aug 2018 08:12:14 -0700 (PDT)
-From: Chris Clayton <chris2553@googlemail.com>
-Subject: Re: kexec: fix for "Unhandled rela relocation: R_X86_64_PLT32" error
-References: <e590dc81-7df7-746d-98f2-710f85e03467@googlemail.com>
- <20180820083718.GZ4113@MiWiFi-R3L-srv>
- <cbf043a7-8e95-9486-3441-07ef8f2f86f5@googlemail.com>
- <20180820121721.GA4113@MiWiFi-R3L-srv> <20180820122131.GB4113@MiWiFi-R3L-srv>
-Message-ID: <aabec0ea-6611-dc95-3f12-391469790d53@googlemail.com>
-Date: Mon, 20 Aug 2018 16:12:02 +0100
+ id 1frm41-00086V-5i
+ for kexec@lists.infradead.org; Mon, 20 Aug 2018 15:25:56 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH 1/2] arm64: Get 'info->page_offset' from PT_LOAD
+ segments to support KASLR boot cases
+Date: Mon, 20 Aug 2018 15:24:37 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC0355A60A@BPXM09GP.gisp.nec.co.jp>
+References: <1531979021-31780-1-git-send-email-bhsharma@redhat.com>
+ <1531979021-31780-2-git-send-email-bhsharma@redhat.com>
+ <bf9dee4f-852d-fc6b-999a-02ea99dceb4d@redhat.com>
+ <CACi5LpOKQ9TX9yWus6i9ZG_Ha8A+vPqs09o1Jh0B9O5vYED9BA@mail.gmail.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC035590BC@BPXM09GP.gisp.nec.co.jp>
+ <CACi5LpNdaKAa+YzS0zp2e16tewkcqkRay0QqbZcJGjDtK+5TTA@mail.gmail.com>
+ <CACi5LpOh12o3T7FHFSV+4aYEtWS9ZLebyoW1yJ0EnegZJ6Nj2Q@mail.gmail.com>
+In-Reply-To: <CACi5LpOh12o3T7FHFSV+4aYEtWS9ZLebyoW1yJ0EnegZJ6Nj2Q@mail.gmail.com>
+Content-Language: en-US
 MIME-Version: 1.0
-In-Reply-To: <20180820122131.GB4113@MiWiFi-R3L-srv>
-Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,67 +30,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: kexec mailing list <kexec@lists.infradead.org>
 
+Hello Bhupesh,
 
-
-On 20/08/2018 13:21, Baoquan He wrote:
-> Hi Chris,
+On 8/15/2018 3:55 PM, Bhupesh Sharma wrote:
+> The kernel patch is now accepted in Linus's tree:
+> commit e401b7c2c69008ad2fcdc154f7c5421281c90042
+> Author: Bhupesh Sharma <bhsharma@redhat.com>
+> Date:   Mon Jul 30 11:54:43 2018 +0530
 > 
-> On 08/20/18 at 08:17pm, Baoquan He wrote:
->> In response to a change in binutils, commit b21ebf2fb4c
->> (x86: Treat R_X86_64_PLT32 as R_X86_64_PC32) was applied to
->> the linux kernel during the 4.16 development cycle and has
->> since been backported to earlier stable kernel series. The
->> change results in the failure message in $SUBJECT when
->> rebooting via kexec.
->>
->> Fix this by replicating the change in kexec.
->>
-
-OK.
-
->> Signed-off-by: Chris Clayton <chris2553@googlemail.com>
+>     arm64, kaslr: export offset in VMCOREINFO ELF notes
 > 
-> I adjusted the patch log a little bit, you have tested it on upstream
-> kernel, right?
+> Can you please pick this patchset and now apply it to makedumpfile source?
+
+Thank you for informing me about it, and sorry for my delayed response.
+I applied the patches to the devel branch.
+
+commit 616c98d1abac6f348f13cfe55e2df5e1d5d26781
+Author: Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Thu Jul 19 11:13:41 2018 +0530
+
+    [PATCH] arm64: Add runtime kaslr offset if it exists
+
+commit 94c97db3fe859ca14d7b38b0ae9ee0ffb83689d2
+Author: Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Thu Jul 19 11:13:40 2018 +0530
+
+    [PATCH] arm64: Get 'info->page_offset' from PT_LOAD segments to support KASLR boot cases
+
+Thanks,
+Kazu
+
 > 
-
-At the time of my original message (25 July 2018), 4.18.0-rc6+ was the latest upstream. I tested my change on that and
-on the latest stable 4.14 series kernel, which was 4.14.57. I've just tested it with 4.18.3 and 4.14.65 and it works
-fine. I don't have a 4.19 development kernel installed at the moment - I'm busy with other stuff.
-
-Chris
-
-
-> Thanks
-> Baoquan
-> 
->> ---
->>  kexec/arch/x86_64/kexec-elf-rel-x86_64.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
->> index 7fdde73..db85b44 100644
->> --- a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
->> +++ b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
->> @@ -79,6 +79,7 @@ void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
->>  			goto overflow;
->>  		break;
->>  	case R_X86_64_PC32: 
->> +	case R_X86_64_PLT32:
->>  		*(uint32_t *)location = value - address;
->>  		break;
->>  	default:
->> -- 
->> 2.13.6
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
+> Thanks,
+> Bhupesh
 
 _______________________________________________
 kexec mailing list
