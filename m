@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fqHy6-0004nv-Pc
- for kexec@lists.infradead.org; Thu, 16 Aug 2018 13:05:41 +0000
-Subject: [PATCH 2/2] Fix kexec forbidding kernels signed with keys in the
- secondary keyring to boot
-From: David Howells <dhowells@redhat.com>
-Date: Thu, 16 Aug 2018 14:05:23 +0100
-Message-ID: <153442472298.17751.5395559214488109936.stgit@warthog.procyon.org.uk>
-In-Reply-To: <153442471049.17751.3835342719465644394.stgit@warthog.procyon.org.uk>
-References: <153442471049.17751.3835342719465644394.stgit@warthog.procyon.org.uk>
+ id 1frfgs-00033x-GR
+ for kexec@lists.infradead.org; Mon, 20 Aug 2018 08:37:36 +0000
+Date: Mon, 20 Aug 2018 16:37:18 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: (Possible) fix for "Unhandled rela relocation: R_X86_64_PLT32"
+ error
+Message-ID: <20180820083718.GZ4113@MiWiFi-R3L-srv>
+References: <e590dc81-7df7-746d-98f2-710f85e03467@googlemail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <e590dc81-7df7-746d-98f2-710f85e03467@googlemail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,44 +24,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: yannik@sembritzki.me, torvalds@linux-foundation.org
-Cc: James.Bottomley@HansenPartnership.com, gregkh@linuxfoundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, dhowells@redhat.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, dyoung@redhat.com
+To: Chris Clayton <chris2553@googlemail.com>
+Cc: kexec@lists.infradead.org
 
-From: Yannik Sembritzki <yannik@sembritzki.me>
+On 07/25/18 at 09:46am, Chris Clayton wrote:
+> Hi.
+> 
+> I haven't rebooted my laptop with kexec for quite some time, but when I tried to this morning I got the error you will
+> see in $SUBJECT.  The error occurs with both kexec-tools-2.0.17 or -2.0.16 run on either 4.18.0-rc6+ (built from a git
+> pull this morning) or 4.14.57 kernels.
+> 
+> I searched for "R_X86_64_PLT32" and found that there was a change to the kernel that may be related -
+> b21ebf2fb4cde1618915a97cc773e287ff49173e x86: Treat R_X86_64_PLT32 as R_X86_64_PC32. So I replicated the change that
+> patch made to arch/x86/kernel/machine_kexec_64.c in kexec/arch/x86_64/kexec-elf-rel-x86_64.c and kexec now reboots into
+> the new kernel.
+> 
+> I don't know enough about relocations and the like to know whether my 'fix' is correct and the best way to go about it,
+> but I've included it below for your consideration.
+> 
+> Signed-off-by: Chris Clayton <chris2553@googlemail.com>
+> 
+> --- kexec-tools-2.0.17/kexec/arch/x86_64/kexec-elf-rel-x86_64.c.orig	2018-07-25 08:48:24.152054030 +0100
+> +++ kexec-tools-2.0.17/kexec/arch/x86_64/kexec-elf-rel-x86_64.c	2018-07-25 08:49:16.860055330 +0100
+> @@ -79,6 +79,7 @@ void machine_apply_elf_rel(struct mem_eh
+>  			goto overflow;
+>  		break;
+>  	case R_X86_64_PC32:
+> +	case R_X86_64_PLT32:
 
-The split of .system_keyring into .builtin_trusted_keys and
-.secondary_trusted_keys broke kexec, thereby preventing kernels signed by
-keys which are now in the secondary keyring from being kexec'd.
+Looks like a good fix, could you make a formal patch, e.g rearrange the
+patch log, I woule like to ack it.
 
-Fix this by passing VERIFY_USE_SECONDARY_KEYRING to
-verify_pefile_signature().
-
-Fixes: d3bfe84129f6 ("certs: Add a secondary system keyring that can be added to dynamically")
-Signed-off-by: Yannik Sembritzki <yannik@sembritzki.me>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: kexec@lists.infradead.org
-cc: keyrings@vger.kernel.org
-cc: linux-security-module@vger.kernel.org
-cc: stable@vger.kernel.org
----
-
- arch/x86/kernel/kexec-bzimage64.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 7326078eaa7a..278cd07228dd 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -532,7 +532,7 @@ static int bzImage64_cleanup(void *loader_data)
- static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
- {
- 	return verify_pefile_signature(kernel, kernel_len,
--				       NULL,
-+				       VERIFY_USE_SECONDARY_KEYRING,
- 				       VERIFYING_KEXEC_PE_SIGNATURE);
- }
- #endif
-
+>  		*(uint32_t *)location = value - address;
+>  		break;
+>  	default:
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
