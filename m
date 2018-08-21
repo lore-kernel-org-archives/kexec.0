@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from mail-it0-x243.google.com ([2607:f8b0:4001:c0b::243])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fs5xz-00059r-9K
- for kexec@lists.infradead.org; Tue, 21 Aug 2018 12:41:00 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20180801210804.175176-1-ndesaulniers@google.com>
- <CAKwvOd=WZB=x86zqu=vFDoJgpWnfCj0K3qXv14vtysfv3ioi1w@mail.gmail.com>
- <CAKwvOd=qGTv1F3CsEeNjuJ93BD9zTnUekUHgvw4Ttpx7us5JdA@mail.gmail.com>
- <CAKwvOd=U0aMsUmBytK7vq=ORj+Npw7FqZ50EMEJPnmTG15N7dg@mail.gmail.com>
- <CA+55aFxHtbq=X9Jaes1qwVAhu5mx0eTahUjd7ijxgW44JjFaYQ@mail.gmail.com>
-Date: Tue, 21 Aug 2018 14:40:02 +0200
-In-Reply-To: <CA+55aFxHtbq=X9Jaes1qwVAhu5mx0eTahUjd7ijxgW44JjFaYQ@mail.gmail.com>
- (Linus Torvalds's message of "Mon, 20 Aug 2018 16:48:38 -0700")
-Message-ID: <87bm9v28rh.fsf@xmission.com>
+ id 1fs6sN-0005xl-LN
+ for kexec@lists.infradead.org; Tue, 21 Aug 2018 13:39:16 +0000
+Received: by mail-it0-x243.google.com with SMTP id d9-v6so4144526itf.2
+ for <kexec@lists.infradead.org>; Tue, 21 Aug 2018 06:39:05 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [PATCH] x86/kexec: prefer _THIS_IP_ to current_text_addr
+In-Reply-To: <20180809091333.GA8008@dhcp-128-65.nay.redhat.com>
+References: <1533737025.4936.3.camel@gmx.de>
+ <20180809042153.GA4377@dhcp-128-65.nay.redhat.com>
+ <1533800010.5087.71.camel@gmx.de>
+ <20180809091333.GA8008@dhcp-128-65.nay.redhat.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date: Tue, 21 Aug 2018 15:39:04 +0200
+Message-ID: <CAKv+Gu8KKwNkUdx7tSxEosRvydxmQ2yaasHRJn_LcHPs7p2UYQ@mail.gmail.com>
+Subject: Re: [PATCH] x86, kdump: Fix efi=noruntime NULL pointer dereference
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,35 +27,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Philippe Ombredanne <pombredanne@nexb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, the arch/x86 maintainers <x86@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, natechancellor@gmail.com, Ingo Molnar <mingo@redhat.com>, Peter Anvin <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: linux-efi <linux-efi@vger.kernel.org>, Baoquan He <bhe@redhat.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Mike Galbraith <efault@gmx.de>, Kexec Mailing List <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-
-> On Mon, Aug 20, 2018 at 10:58 AM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
+On 9 August 2018 at 11:13, Dave Young <dyoung@redhat.com> wrote:
+> On 08/09/18 at 09:33am, Mike Galbraith wrote:
+>> On Thu, 2018-08-09 at 12:21 +0800, Dave Young wrote:
+>> > Hi Mike,
+>> >
+>> > Thanks for the patch!
+>> > On 08/08/18 at 04:03pm, Mike Galbraith wrote:
+>> > > When booting with efi=noruntime, we call efi_runtime_map_copy() while
+>> > > loading the kdump kernel, and trip over a NULL efi.memmap.map.  Avoid
+>> > > that and a useless allocation when the only mapping we can use (1:1)
+>> > > is not available.
+>> >
+>> > At first glance, efi_get_runtime_map_size should return 0 in case
+>> > noruntime.
 >>
->> + akpm, Linus
->>
->> Bumping for review.
+>> What efi does internally at unmap time is to leave everything except
+>> efi.mmap.map untouched, setting it to NULL and turning off EFI_MEMMAP,
+>> rendering efi.mmap.map accessors useless/unsafe without first checking
+>> EFI_MEMMAP.
 >
-> Ugh. I am not personally a huge fan of this endless "fix up one at a time".
+> Probably the x86 efi_init should reset nr_map to zero in case runtime is
+> disabled.  But let's see how Ard thinks about this and cc linux-efi.
 >
-> Just do a patch that removes current_text_addr() entirely and be done
-> with it, if that's what we want the end result to be.
+> As for efi_get_runtime_map_size, it was introduced for x86 kexec use.
+> for copying runtime maps,  so I think it is reasonable this function
+> return zero in case no runtime.
 >
-> Don't bother with these small "let's remove the remaining ones one by
-> one". Just get it over and done with.
 
-One is generic code the other is assembly but the both appear to do the
-same thing without unexpected complexity.
+I don't see the patch in the context so I cannot comment in great detail.
 
-That said the patch earlier in this thread has clearly never been
-compiled as it is using THIS_IP instead of _THIS_IP_ and there is not
-a define of THIS_IP in the kernel.
+In any case, it is better to decouple EFI_MEMMAP from EFI_RUNTIME
+dependencies. On x86, one may imply the other, but this is not
+generally the case.
 
-Eric
-
+That means that efi_get_runtime_map_size() should probably check the
+EFI_RUNTIME flag, and return 0 if it is cleared. Perhaps there are
+other places where EFI_MEMMAP flag checks are missing, but I consider
+that a separate issue.
 
 _______________________________________________
 kexec mailing list
