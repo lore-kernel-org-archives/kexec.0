@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v4 1/5] arm64: export memblock_reserve()d regions via
- /proc/iomem
-From: James Morse <james.morse@arm.com>
+Received: from mail-wr1-x443.google.com ([2a00:1450:4864:20::443])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fsCTu-0002Za-7i
+ for kexec@lists.infradead.org; Tue, 21 Aug 2018 19:38:23 +0000
+Received: by mail-wr1-x443.google.com with SMTP id v90-v6so13657206wrc.0
+ for <kexec@lists.infradead.org>; Tue, 21 Aug 2018 12:38:11 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <38e0224a-46f8-85c3-abe2-5e89d16810ea@arm.com>
 References: <20180723015732.24252-1-takahiro.akashi@linaro.org>
  <20180723015732.24252-2-takahiro.akashi@linaro.org>
  <CALAqxLU3+tu09M5=D-6xCqweKenfXtZuBGy6tqEP2DoGAs-LNA@mail.gmail.com>
  <38e0224a-46f8-85c3-abe2-5e89d16810ea@arm.com>
-Message-ID: <55a21245-7bc2-a700-20ce-1103fbadf72b@arm.com>
-Date: Tue, 21 Aug 2018 17:48:05 +0100
-MIME-Version: 1.0
-In-Reply-To: <38e0224a-46f8-85c3-abe2-5e89d16810ea@arm.com>
-Content-Language: en-US
+From: John Stultz <john.stultz@linaro.org>
+Date: Tue, 21 Aug 2018 12:38:09 -0700
+Message-ID: <CALAqxLX=BBcjR3kbK8nhddzdtv7tMiDs2OcvMA-e9QNw6Lv3hg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/5] arm64: export memblock_reserve()d regions via
+ /proc/iomem
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,96 +24,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Stultz <john.stultz@linaro.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, al.stone@linaro.org, G Gregory <graeme.gregory@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, tbaicar@codeaurora.org, Will Deacon <will.deacon@arm.com>, lkml <linux-kernel@vger.kernel.org>, hanjun.guo@linaro.org, Sudeep Holla <sudeep.holla@arm.com>, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Len Brown <lenb@kernel.org>
+To: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, al.stone@linaro.org, G Gregory <graeme.gregory@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, bhsharma@redhat.com, tbaicar@codeaurora.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, lkml <linux-kernel@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, hanjun.guo@linaro.org, Catalin Marinas <catalin.marinas@arm.com>, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Len Brown <lenb@kernel.org>
 
-T24gMDgvMjEvMjAxOCAxMToyMiBBTSwgSmFtZXMgTW9yc2Ugd3JvdGU6Cj4gT24gMDgvMjEvMjAx
-OCAwNTozOSBBTSwgSm9obiBTdHVsdHogd3JvdGU6Cj4+IE9uIFN1biwgSnVsIDIyLCAyMDE4IGF0
-IDY6NTcgUE0sIEFLQVNISSBUYWthaGlybwo+PiA8dGFrYWhpcm8uYWthc2hpQGxpbmFyby5vcmc+
-IHdyb3RlOgo+Pj4gRnJvbTogSmFtZXMgTW9yc2UgPGphbWVzLm1vcnNlQGFybS5jb20+Cj4+Pgo+
-Pj4gVGhlcmUgaGFzIGJlZW4gc29tZSBjb25mdXNpb24gYXJvdW5kIHdoYXQgaXMgbmVjZXNzYXJ5
-IHRvIHByZXZlbnQga2V4ZWMKPj4+IG92ZXJ3cml0aW5nIGltcG9ydGFudCBtZW1vcnkgcmVnaW9u
-cy4gbWVtYmxvY2s6IHJlc2VydmUsIG9yIG5vbWFwPwo+Pj4gT25seSBtZW1ibG9jayBub21hcCBy
-ZWdpb25zIGFyZSByZXBvcnRlZCB2aWEgL3Byb2MvaW9tZW0sIGtleGVjJ3MKPj4+IHVzZXItc3Bh
-Y2UgZG9lc24ndCBrbm93IGFib3V0IG1lbWJsb2NrX3Jlc2VydmUoKWQgcmVnaW9ucy4KPj4+Cj4+
-PiBVbnRpbCBjb21taXQgZjU2YWI5YTViNzNjYSAoImVmaS9hcm06IERvbid0IG1hcmsgQUNQSSBy
-ZWNsYWltIG1lbW9yeQo+Pj4gYXMgTUVNQkxPQ0tfTk9NQVAiKSB0aGUgQUNQSSB0YWJsZXMgd2Vy
-ZSBub21hcCwgbm93IHRoZXkgYXJlIHJlc2VydmVkCj4+PiBhbmQgdGh1cyBwb3NzaWJsZSBmb3Ig
-a2V4ZWMgdG8gb3ZlcndyaXRlIHdpdGggdGhlIG5ldyBrZXJuZWwgb3IgaW5pdHJkLgo+Pj4gQnV0
-IHRoaXMgd2FzIGFsd2F5cyBicm9rZW4sIGFzIHRoZSBVRUZJIG1lbW9yeSBtYXAgaXMgYWxzbyBy
-ZXNlcnZlZAo+Pj4gYW5kIG5vdCBtYXJrZWQgYXMgbm9tYXAuCj4+Pgo+Pj4gRXhwb3J0aW5nIGJv
-dGggbm9tYXAgYW5kIHJlc2VydmVkIG1lbWJsb2NrIHR5cGVzIGlzIGEgbnVpc2FuY2UgYXMKPj4+
-IHRoZXkgbGl2ZSBpbiBkaWZmZXJlbnQgbWVtYmxvY2sgc3RydWN0dXJlcyB3aGljaCB3ZSBjYW4n
-dCB3YWxrIGF0Cj4+PiB0aGUgc2FtZSB0aW1lLgo+Pj4KPj4+IFRha2UgYSBzZWNvbmQgd2FsayBv
-dmVyIG1lbWJsb2NrLnJlc2VydmVkIGFuZCBhZGQgbmV3ICdyZXNlcnZlZCcKPj4+IHN1Ym5vZGVz
-IGZvciB0aGUgbWVtYmxvY2tfcmVzZXJ2ZWQoKSByZWdpb25zIHRoYXQgYXJlbid0IGFscmVhZHkK
-Pj4+IGRlc2NyaWJlZCBieSB0aGUgZXhpc3RpbmcgY29kZS4gKGUuZy4gS2VybmVsIENvZGUpCj4+
-Pgo+Pj4gV2UgdXNlIHJlc2VydmVfcmVnaW9uX3dpdGhfc3BsaXQoKSB0byBmaW5kIHRoZSBnYXBz
-IGluIGV4aXN0aW5nIG5hbWVkCj4+PiByZWdpb25zLiBUaGlzIGhhbmRsZXMgdGhlIGdhcCBiZXR3
-ZWVuICdrZXJuZWwgY29kZScgYW5kICdrZXJuZWwgZGF0YScKPj4+IHdoaWNoIGlzIG1lbWJsb2Nr
-X3Jlc2VydmUoKWQsIGJ1dCBhbHJlYWR5IHBhcnRpYWxseSBkZXNjcmliZWQgYnkKPj4+IHJlcXVl
-c3Rfc3RhbmRhcmRfcmVzb3VyY2VzKCkuIGUuZy46Cj4+PiB8IDgwMDAwMDAwLWRmZmZmZmZmIDog
-U3lzdGVtIFJBTQo+Pj4gfMKgwqAgODAwODAwMDAtODBmZmZmZmYgOiBLZXJuZWwgY29kZQo+Pj4g
-fMKgwqAgODEwMDAwMDAtODE1OGZmZmYgOiByZXNlcnZlZAo+Pj4gfMKgwqAgODE1OTAwMDAtODIz
-N2VmZmYgOiBLZXJuZWwgZGF0YQo+Pj4gfMKgwqAgYTAwMDAwMDAtZGZmZmZmZmYgOiBDcmFzaCBr
-ZXJuZWwKPj4+IHwgZTAwZjAwMDAtZjk0OWZmZmYgOiBTeXN0ZW0gUkFNCj4+Pgo+Pj4gcmVzZXJ2
-ZV9yZWdpb25fd2l0aF9zcGxpdCBuZWVkcyBremFsbG9jKCkgd2hpY2ggaXNuJ3QgYXZhaWxhYmxl
-IHdoZW4KPj4+IHJlcXVlc3Rfc3RhbmRhcmRfcmVzb3VyY2VzKCkgaXMgY2FsbGVkLCB1c2UgYW4g
-aW5pdGNhbGwuCj4gCj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9rZXJuZWwvc2V0dXAuYyBi
-L2FyY2gvYXJtNjQva2VybmVsL3NldHVwLmMKPj4+IGluZGV4IDMwYWQyZjA4NWQxZi4uNWI0ZmFj
-NDM0Yzg0IDEwMDY0NAo+Pj4gLS0tIGEvYXJjaC9hcm02NC9rZXJuZWwvc2V0dXAuYwo+Pj4gKysr
-IGIvYXJjaC9hcm02NC9rZXJuZWwvc2V0dXAuYwo+Pj4gQEAgLTI0MSw2ICsyNDEsNDQgQEAgc3Rh
-dGljIHZvaWQgX19pbml0IHJlcXVlc3Rfc3RhbmRhcmRfcmVzb3VyY2VzKHZvaWQpCj4gCj4+PiAr
-c3RhdGljIGludCBfX2luaXQgcmVzZXJ2ZV9tZW1ibG9ja19yZXNlcnZlZF9yZWdpb25zKHZvaWQp
-Cj4gCj4+PiArwqDCoMKgwqDCoMKgIGZvcl9lYWNoX3Jlc2VydmVkX21lbV9yZWdpb24oaSwgJnN0
-YXJ0LCAmZW5kKSB7Cj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoZW5kIDw9
-IHJvdW5kdXBfZW5kKQo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIGNvbnRpbnVlOyAvKiBkb25lIGFscmVhZHkgKi8KPj4+ICsKPj4+ICvCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIHN0YXJ0ID0gX19wZm5fdG9fcGh5cyhQRk5fRE9XTihzdGFydCkp
-Owo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZW5kID0gX19wZm5fdG9fcGh5cyhQ
-Rk5fVVAoZW5kKSkgLSAxOwo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcm91bmR1
-cF9lbmQgPSBlbmQ7Cj4+PiArCj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXMg
-PSBremFsbG9jKHNpemVvZigqcmVzKSwgR0ZQX0FUT01JQyk7Cj4+PiArwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBpZiAoV0FSTl9PTighcmVzKSkKPj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gLUVOT01FTTsKPj4+ICvCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIHJlcy0+c3RhcnQgPSBzdGFydDsKPj4+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIHJlcy0+ZW5kID0gZW5kOwo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgcmVzLT5uYW1lwqAgPSAicmVzZXJ2ZWQiOwo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgcmVzLT5mbGFncyA9IElPUkVTT1VSQ0VfTUVNOwo+Pj4gKwo+Pj4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbWVtID0gcmVxdWVzdF9yZXNvdXJjZV9jb25mbGljdCgm
-aW9tZW1fcmVzb3VyY2UsIHJlcyk7Cj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAv
-Kgo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqIFdlIGV4cGVjdGVkIG1lbWJs
-b2NrX3Jlc2VydmUoKSByZWdpb25zIHRvIGNvbmZsaWN0IHdpdGgKPj4+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgKiBtZW1vcnkgY3JlYXRlZCBieSByZXF1ZXN0X3N0YW5kYXJkX3Jl
-c291cmNlcygpLgo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqLwo+Pj4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgKFdBUk5fT05fT05DRSghbWVtKSkKCgo+PiBT
-aW5jZSB0aGlzIHBhdGNoIGxhbmRlZCwgb24gdGhlIEhpS2V5IGJvYXJkIGF0IGJvb3R1cCBJJ20g
-c2VlaW5nOgo+Pgo+PiBbwqDCoMKgIDAuNDUxODg0XSBXQVJOSU5HOiBDUFU6IDEgUElEOiAxIGF0
-IGFyY2gvYXJtNjQva2VybmVsL3NldHVwLmM6MjcxCj4+IHJlc2VydmVfbWVtYmxvY2tfcmVzZXJ2
-ZWRfcmVnaW9ucysweGQ0LzB4MTNjCgo+PiDCoEZyb20gc2tpbW1pbmcgdGhlIHBhdGNoLCBpdCBz
-ZWVtcyB0aGlzIGlzIG1heWJlIGV4cGVjdGVkPyBPciBzaG91bGQKPj4gdGhpcyB3YXJuaW5nIHJh
-aXNlIGV5ZWJyb3dzPyBJIGNhbid0IHF1aXRlIGZpZ3VyZSBpdCBvdXQuCj4gCj4gVWdoLCBzb3Jy
-eSBmb3IgdGhlIG5vaXNlISBUaGlzIGlzIHdhcm5pbmcgdGhhdCB0aGVyZSBpcyBzb21ldGhpbmcg
-d3JvbmcKPiB3aXRoIG91ciBhc3N1bXB0aW9ucyBhYm91dCB3aGF0IHR5cGVzIG9mIG1lbW9yeSBl
-eGlzdC4KPiAKPiAKPj4gSXQgc2VlbXMgdG8gdHJpZ2dlciBvbiB0aGUgcHN0b3JlIG1lbW9yeSBh
-dCAweDIxZjAwMDAwLTB4MjFmZmZmZmYuCj4gCj4gLi4uIHBtZW0gLi4uCgoKPiBTbywgdGhpcyBp
-cyBhIG1lbWJsb2NrX3Jlc2VydmVkKCkgcmFuZ2UgdGhhdCBpc24ndCBhY3R1YWxseSBtZW1vcnku
-Cj4gCj4gVGhpcyBoYXBwZW5zIGJlY2F1c2UgeW91ciBEVCBoYXMgY2FydmVkIHRoZXNlIHJlZ2lv
-bnMgb3V0IG9mIHRoZSBtZW1vcnkKPiBub2RlLCBidXQgYWRkZWQgYSBuYW1lZCAncmVzZXJ2ZWQt
-bWVtb3J5JyByZWdpb24gZm9yIHRoZW0sIGp1c3QgaW4gY2FzZT8KPiBJJ20gbm90IHN1cmUgd2hh
-dCBpdCBtZWFucyBpZiAncmVzZXJ2ZWQtbWVtb3J5JyBpcyBub3QgYWxzbyBkZXNjcmliZWQgYXMK
-PiBtZW1vcnkuLi4uCj4gCj4gWW91IGRvIG5lZWQgdGhlIGNhcnZlLW91dCwgb3RoZXJ3aXNlIHRo
-aXMgZ2V0cyBjb3ZlcmVkIGJ5IHRoZSBsaW5lYXIKPiBtYXAsIGFuZCB3aGVuIHlvdSB0aHJvdyBp
-biB0aGF0ICd1bmJ1ZmZlcmVkJyBwcm9wZXJ0eSB5b3UgZ2V0IGJvdGggYQo+IGNhY2hlYWJsZSBh
-bmQgdW5jYWNoZWFibGUgbWFwcGluZyBvZiB0aGUgc2FtZSBwYWdlLgoKCkhtbSwgbG9va3MgbGlr
-ZSBpdHMgKGV2ZW4pIG1vcmUgY29tcGxpY2F0ZWQgdGhhbiBJIHRob3VnaHQsIG9mX3Jlc2VydmVk
-X21lbS5jJ3MgCmRlZmluaXRpb24gb2YgJ25vbWFwJyBpcyBtZW1ibG9ja19yZW1vdmUoKSwgbm90
-IG1lbWJsb2NrX21hcmtfbm9tYXAoKS4KClRoaXMgbWlnaHQgYmUgbW9yZSBjb21tb24gdG8gYWxs
-IHVzZXJzIG9mIERUcyBtZW1yZXNlcnZlLgoKClRoYW5rcywKCkphbWVzCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
-ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2tleGVjCg==
+On Tue, Aug 21, 2018 at 3:22 AM, James Morse <james.morse@arm.com> wrote:
+> On 08/21/2018 05:39 AM, John Stultz wrote:
+>>
+>> Since this patch landed, on the HiKey board at bootup I'm seeing:
+>>
+>> [    0.451884] WARNING: CPU: 1 PID: 1 at arch/arm64/kernel/setup.c:271
+>> reserve_memblock_reserved_regions+0xd4/0x13c
+...
+>>  From skimming the patch, it seems this is maybe expected? Or should
+>> this warning raise eyebrows? I can't quite figure it out.
+>
+> Ugh, sorry for the noise! This is warning that there is something wrong
+> with our assumptions about what types of memory exist.
+>
+>
+>> It seems to trigger on the pstore memory at 0x21f00000-0x21ffffff.
+>
+>
+> ... pmem ...
+>
+>>
+>> /proc/iomem now has:
+>> ...
+>> 07410000-21efffff : System RAM
+>>    11000000-1113cfff : reserved
+>
+>
+>> 21f00000-21ffffff : reserved
+>
+>
+> ^ This entry is what triggered the warning.
+>
+> It expects that meblock_reserved() memory is also described as memory.
+> (memblock keeps them as separate lists, so its possible to reserve
+> memory that doesn't exist... which it looks like your system is doing)
+
+So yea, I suspect the hikey dts isn't quite right here then. I've
+always thought how it setup the memory was a bit strange:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts#n30
+
+So from your mail, I suspect the hole in the memory map for the pstore
+buffer isn't correct, and we should rework that.
+
+I'll give that a shot here and make sure pstore still works properly.
+
+thanks
+-john
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
