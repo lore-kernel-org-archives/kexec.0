@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x243.google.com ([2607:f8b0:4001:c0b::243])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fs6sN-0005xl-LN
- for kexec@lists.infradead.org; Tue, 21 Aug 2018 13:39:16 +0000
-Received: by mail-it0-x243.google.com with SMTP id d9-v6so4144526itf.2
- for <kexec@lists.infradead.org>; Tue, 21 Aug 2018 06:39:05 -0700 (PDT)
+ id 1fs8aA-0005rV-PY
+ for kexec@lists.infradead.org; Tue, 21 Aug 2018 15:28:36 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH] arm64: Add a generic method of determining invalid
+ phy-addr for calculating 'info->page_offset'
+Date: Tue, 21 Aug 2018 15:27:53 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC0355A8EF@BPXM09GP.gisp.nec.co.jp>
+References: <1534794340-1244-1-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1534794340-1244-1-git-send-email-bhsharma@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
-In-Reply-To: <20180809091333.GA8008@dhcp-128-65.nay.redhat.com>
-References: <1533737025.4936.3.camel@gmx.de>
- <20180809042153.GA4377@dhcp-128-65.nay.redhat.com>
- <1533800010.5087.71.camel@gmx.de>
- <20180809091333.GA8008@dhcp-128-65.nay.redhat.com>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Tue, 21 Aug 2018 15:39:04 +0200
-Message-ID: <CAKv+Gu8KKwNkUdx7tSxEosRvydxmQ2yaasHRJn_LcHPs7p2UYQ@mail.gmail.com>
-Subject: Re: [PATCH] x86, kdump: Fix efi=noruntime NULL pointer dereference
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,47 +24,191 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linux-efi <linux-efi@vger.kernel.org>, Baoquan He <bhe@redhat.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Mike Galbraith <efault@gmx.de>, Kexec Mailing List <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 9 August 2018 at 11:13, Dave Young <dyoung@redhat.com> wrote:
-> On 08/09/18 at 09:33am, Mike Galbraith wrote:
->> On Thu, 2018-08-09 at 12:21 +0800, Dave Young wrote:
->> > Hi Mike,
->> >
->> > Thanks for the patch!
->> > On 08/08/18 at 04:03pm, Mike Galbraith wrote:
->> > > When booting with efi=noruntime, we call efi_runtime_map_copy() while
->> > > loading the kdump kernel, and trip over a NULL efi.memmap.map.  Avoid
->> > > that and a useless allocation when the only mapping we can use (1:1)
->> > > is not available.
->> >
->> > At first glance, efi_get_runtime_map_size should return 0 in case
->> > noruntime.
->>
->> What efi does internally at unmap time is to leave everything except
->> efi.mmap.map untouched, setting it to NULL and turning off EFI_MEMMAP,
->> rendering efi.mmap.map accessors useless/unsafe without first checking
->> EFI_MEMMAP.
->
-> Probably the x86 efi_init should reset nr_map to zero in case runtime is
-> disabled.  But let's see how Ard thinks about this and cc linux-efi.
->
-> As for efi_get_runtime_map_size, it was introduced for x86 kexec use.
-> for copying runtime maps,  so I think it is reasonable this function
-> return zero in case no runtime.
->
+Hi Bhupesh,
 
-I don't see the patch in the context so I cannot comment in great detail.
+On 8/20/2018 3:45 PM, Bhupesh Sharma wrote:
+> Commit 94c97db3fe859ca14d7b38b0ae9ee0ffb83689d2 (arm64: Get
+> 'info->page_offset' from PT_LOAD segments to support KASLR boot cases)
+> added a method to determine 'info->page_offset' from PT_LOAD segments
+> for arm64 platforms.
+> 
+> In this commit we hardcoded the NOT_PADDR_ARM64 macro as
+> 0x0000000010a80000UL which was a valid value on
+> qualcomm-amberwing boards.
+> 
+> However, I was testing this change on several other arm64 boards
+> like apm-mustang, huawei-taishan and hp-moonshot and saw that
+> this value can vary on the basic of the "Kernel code" memory range
+> placement.
+> 
+> This patch determines the "Kernel code" memory range from
+> '/proc/iomem' listing and uses the same to determine the
+> NOT_PADDR_ARM64 value, which makes this calculation platform
+> independent and this works well on apm-mustang, huawei-taishan,
+> qualcomm-amberwing and hp-moonshot platforms.
 
-In any case, it is better to decouple EFI_MEMMAP from EFI_RUNTIME
-dependencies. On x86, one may imply the other, but this is not
-generally the case.
+I don't have any arm64 system for now, but I think that a "Kernel code"
+range in /proc/iomem on 2nd kernel will be different from the one on
+1st kernel.  Does it process /proc/vmcore correctly on 2nd kernel?
+If it doesn't, we have to find another way..
 
-That means that efi_get_runtime_map_size() should probably check the
-EFI_RUNTIME flag, and return 0 if it is cleared. Perhaps there are
-other places where EFI_MEMMAP flag checks are missing, but I consider
-that a separate issue.
+This is the condition for x86_64:
+
+    if (virt_start != NOT_KV_ADDR          ... *1 (0x0)
+        && virt_start < __START_KERNEL_map ... *2 (0xffffffff80000000)
+        && phys_start != NOT_PADDR) {      ... *3 (~0ULL)
+
+These are how we get the appropriate values on x86_64:
+
+# readelf -l vmcore  # I got with cp command
+...
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  NOTE           0x0000000000001000 0x0000000000000000 0x0000000000000000 // PT_NOTE
+                 0x00000000000009c8 0x00000000000009c8         0
+  LOAD           0x0000000000002000 0xffffffff96c00000 0x000000000f800000 skipped by *2
+                 0x0000000001656000 0x0000000001656000  RWE    0
+  LOAD           0x0000000001658000 0xffff976b00001000 0x0000000000001000 picked
+                 0x000000000009ec00 0x000000000009ec00  RWE    0
+  LOAD           0x00000000016f7000 0xffff976b00100000 0x0000000000100000
+                 0x000000002cf00000 0x000000002cf00000  RWE    0
+  LOAD           0x000000002e5f7000 0xffff976b35000000 0x0000000035000000
+                 0x000000004aff7000 0x000000004aff7000  RWE    0
+
+# readelf -l /proc/kcore
+...
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  NOTE           0x0000000000000238 0x0000000000000000 0x0000000000000000 // PT_NOTE
+                 0x00000000000011e4 0x0000000000000000         0
+  LOAD           0x00007fffff602000 0xffffffffff600000 0xffffffffffffffff skipped by *3
+                 0x0000000000800000 0x0000000000800000  RWE    1000
+  LOAD           0x00007fff96c02000 0xffffffff96c00000 0x000000000f800000 skipped by *2
+                 0x0000000001656000 0x0000000001656000  RWE    1000
+  LOAD           0x00003228c0002000 0xffffb228c0000000 0xffffffffffffffff skipped by *3
+                 0x00001fffffffffff 0x00001fffffffffff  RWE    1000
+  LOAD           0x00007fffc0002000 0xffffffffc0000000 0xffffffffffffffff skipped by *2
+                 0x000000003f000000 0x000000003f000000  RWE    1000
+  LOAD           0x0000176b00003000 0xffff976b00001000 0x0000000000001000 picked
+                 0x000000000009e000 0x000000000009e000  RWE    1000
+  LOAD           0x00006f1880002000 0xffffef1880000000 0xffffffffffffffff
+                 0x0000000000003000 0x0000000000003000  RWE    1000
+  LOAD           0x0000176b00102000 0xffff976b00100000 0x0000000000100000
+                 0x000000007fef7000 0x000000007fef7000  RWE    1000
+  LOAD           0x00006f1880006000 0xffffef1880004000 0xffffffffffffffff
+                 0x0000000001ffc000 0x0000000001ffc000  RWE    1000
+
+If a value like NOT_PADDR_ARM64 is needed, can we find the condition
+which consists of only static and common values first?
+It would be better that there is something evidence or data as well.
+
+Thanks,
+Kazu
+
+> 
+> Here are some logs on my huawei-taishan board with kernel version
+> 4.18.0-rc8:
+> 
+> The kernel version is not supported.
+> The makedumpfile operation may be incomplete.
+> 
+> TYPE		PAGES			EXCLUDABLE	DESCRIPTION
+> ----------------------------------------------------------------------
+> ZERO		83081           	yes		Pages filled with zero
+> NON_PRI_CACHE	6330            	yes		Cache pages without private flag
+> PRI_CACHE	927             	yes		Cache pages with private flag
+> USER		2659            	yes		User process pages
+> FREE		4053998         	yes		Free pages
+> KERN_DATA	35331           	no		Dumpable kernel data
+> 
+> page size:		65536
+> Total pages on system:	4182326
+> Total size on system:	274092916736     Byte
+> 
+> Fixes: 94c97db3fe859ca14d7b38b0ae9ee0ffb83689d2 (arm64: Get
+> 	'info->page_offset' from PT_LOAD segments to support KASLR boot
+> 	cases)
+> 
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> ---
+>  arch/arm64.c   | 26 ++++++++++++++++++++++++--
+>  makedumpfile.h |  1 -
+>  2 files changed, 24 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64.c b/arch/arm64.c
+> index 362609668ea2..e0b30c812124 100644
+> --- a/arch/arm64.c
+> +++ b/arch/arm64.c
+> @@ -303,10 +303,25 @@ get_xen_info_arm64(void)
+>  	return ERROR;
+>  }
+> 
+> +/* We want to exclude the kernel code mem region while calculating the
+> + * info->page_offset for arm64 arch
+> + */
+> +static struct memory_range kernel_code_mem_range;
+> +
+> +static int kernel_code_resource_callback(void *data, int nr,
+> +					  char *str,
+> +					  unsigned long base,
+> +					  unsigned long length)
+> +{
+> +	kernel_code_mem_range.start = base;
+> +	kernel_code_mem_range.end   = base + length - 1;
+> +	return 0;
+> +}
+> +
+>  int
+>  get_versiondep_info_arm64(void)
+>  {
+> -	int i;
+> +	int i, ret;
+>  	unsigned long long phys_start;
+>  	unsigned long long virt_start;
+>  	ulong _stext;
+> @@ -333,6 +348,13 @@ get_versiondep_info_arm64(void)
+>  		return FALSE;
+>  	}
+> 
+> +	ret = iomem_for_each_line("Kernel code\n",
+> +					kernel_code_resource_callback, NULL);
+> +	if (ret != 1) {
+> +		ERRMSG("Cannot find a proper Kernel code memory range in /proc/iomem\n");
+> +		return FALSE;
+> +	}
+> +
+>  	if (get_num_pt_loads()) {
+>  		for (i = 0;
+>  		    get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
+> @@ -340,7 +362,7 @@ get_versiondep_info_arm64(void)
+>  			if (virt_start != NOT_KV_ADDR
+>  			    && virt_start < __START_KERNEL_map
+>  			    && phys_start != NOT_PADDR
+> -			    && phys_start != NOT_PADDR_ARM64) {
+> +			    && phys_start != kernel_code_mem_range.start) {
+>  				info->page_offset = virt_start - phys_start;
+>  				DEBUG_MSG("info->page_offset: %lx, VA_BITS: %d\n",
+>  						info->page_offset, va_bits);
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 3244d31ae43a..9fefe150829f 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -544,7 +544,6 @@ unsigned long get_kvbase_arm64(void);
+>  #define KVBASE			get_kvbase_arm64()
+> 
+>  #define __START_KERNEL_map	(0xffffffff80000000UL)
+> -#define NOT_PADDR_ARM64		(0x0000000010a80000UL)
+> 
+>  #endif /* aarch64 */
+> 
+> --
+> 2.7.4
+> 
+
+
 
 _______________________________________________
 kexec mailing list
