@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-f68.google.com ([209.85.167.68])
+Received: from out01.mta.xmission.com ([166.70.13.231])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fs4ja-0000Vj-OJ
- for kexec@lists.infradead.org; Tue, 21 Aug 2018 11:22:06 +0000
-Received: by mail-lf1-f68.google.com with SMTP id f135-v6so13274985lfg.10
- for <kexec@lists.infradead.org>; Tue, 21 Aug 2018 04:21:52 -0700 (PDT)
+ id 1fs5xz-00059r-9K
+ for kexec@lists.infradead.org; Tue, 21 Aug 2018 12:41:00 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20180801210804.175176-1-ndesaulniers@google.com>
+ <CAKwvOd=WZB=x86zqu=vFDoJgpWnfCj0K3qXv14vtysfv3ioi1w@mail.gmail.com>
+ <CAKwvOd=qGTv1F3CsEeNjuJ93BD9zTnUekUHgvw4Ttpx7us5JdA@mail.gmail.com>
+ <CAKwvOd=U0aMsUmBytK7vq=ORj+Npw7FqZ50EMEJPnmTG15N7dg@mail.gmail.com>
+ <CA+55aFxHtbq=X9Jaes1qwVAhu5mx0eTahUjd7ijxgW44JjFaYQ@mail.gmail.com>
+Date: Tue, 21 Aug 2018 14:40:02 +0200
+In-Reply-To: <CA+55aFxHtbq=X9Jaes1qwVAhu5mx0eTahUjd7ijxgW44JjFaYQ@mail.gmail.com>
+ (Linus Torvalds's message of "Mon, 20 Aug 2018 16:48:38 -0700")
+Message-ID: <87bm9v28rh.fsf@xmission.com>
 MIME-Version: 1.0
-In-Reply-To: <aabec0ea-6611-dc95-3f12-391469790d53@googlemail.com>
-References: <e590dc81-7df7-746d-98f2-710f85e03467@googlemail.com>
- <20180820083718.GZ4113@MiWiFi-R3L-srv>
- <cbf043a7-8e95-9486-3441-07ef8f2f86f5@googlemail.com>
- <20180820121721.GA4113@MiWiFi-R3L-srv> <20180820122131.GB4113@MiWiFi-R3L-srv>
- <aabec0ea-6611-dc95-3f12-391469790d53@googlemail.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 21 Aug 2018 16:51:49 +0530
-Message-ID: <CACi5LpP3mVre_uNAGaHFaSzRKAk2BKoRNC-vpvkkt-Yf8zYujA@mail.gmail.com>
-Subject: Re: kexec: fix for "Unhandled rela relocation: R_X86_64_PLT32" error
+Subject: Re: [PATCH] x86/kexec: prefer _THIS_IP_ to current_text_addr
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,88 +27,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chris Clayton <chris2553@googlemail.com>, Simon Horman <horms@verge.net.au>
-Cc: Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec mailing list <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Philippe Ombredanne <pombredanne@nexb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, the arch/x86 maintainers <x86@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, natechancellor@gmail.com, Ingo Molnar <mingo@redhat.com>, Peter Anvin <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>
 
-Thanks for this fix Chris,
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-I have tested this fix on Fedora 29 and it works fine.
-
-On Mon, Aug 20, 2018 at 8:42 PM, Chris Clayton <chris2553@googlemail.com> wrote:
->
->
-> On 20/08/2018 13:21, Baoquan He wrote:
->> Hi Chris,
+> On Mon, Aug 20, 2018 at 10:58 AM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
 >>
->> On 08/20/18 at 08:17pm, Baoquan He wrote:
->>> In response to a change in binutils, commit b21ebf2fb4c
->>> (x86: Treat R_X86_64_PLT32 as R_X86_64_PC32) was applied to
->>> the linux kernel during the 4.16 development cycle and has
->>> since been backported to earlier stable kernel series. The
->>> change results in the failure message in $SUBJECT when
->>> rebooting via kexec.
->>>
->>> Fix this by replicating the change in kexec.
->>>
->
-> OK.
->
->>> Signed-off-by: Chris Clayton <chris2553@googlemail.com>
+>> + akpm, Linus
 >>
->> I adjusted the patch log a little bit, you have tested it on upstream
->> kernel, right?
->>
+>> Bumping for review.
 >
-> At the time of my original message (25 July 2018), 4.18.0-rc6+ was the latest upstream. I tested my change on that and
-> on the latest stable 4.14 series kernel, which was 4.14.57. I've just tested it with 4.18.3 and 4.14.65 and it works
-> fine. I don't have a 4.19 development kernel installed at the moment - I'm busy with other stuff.
+> Ugh. I am not personally a huge fan of this endless "fix up one at a time".
 >
-> Chris
+> Just do a patch that removes current_text_addr() entirely and be done
+> with it, if that's what we want the end result to be.
 >
->
->> Thanks
->> Baoquan
->>
->>> ---
->>>  kexec/arch/x86_64/kexec-elf-rel-x86_64.c | 1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
->>> index 7fdde73..db85b44 100644
->>> --- a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
->>> +++ b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
->>> @@ -79,6 +79,7 @@ void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
->>>                      goto overflow;
->>>              break;
->>>      case R_X86_64_PC32:
->>> +    case R_X86_64_PLT32:
->>>              *(uint32_t *)location = value - address;
->>>              break;
->>>      default:
->>> --
->>> 2.13.6
->>>
->>>
+> Don't bother with these small "let's remove the remaining ones one by
+> one". Just get it over and done with.
 
-Hi Simon,
+One is generic code the other is assembly but the both appear to do the
+same thing without unexpected complexity.
 
-This patch fixes an important issue because of which both kdump and
-kexec have become non-operational with newer kernels (> 4.18)
+That said the patch earlier in this thread has clearly never been
+compiled as it is using THIS_IP instead of _THIS_IP_ and there is not
+a define of THIS_IP in the kernel.
 
-We are seeing this issue with newer Fedora versions (for e.g. Fedora
-29, please see <https://bugzilla.redhat.com/show_bug.cgi?id=1619122>
-for details), so would request you to apply this as an 'urgent' fix to
-make sure that the kexec/kdump code keeps working fine with newer
-kernel versions as well.
+Eric
 
-I have tested this on a Fedora 29 x86_64 host and I no longer
-encounter the 'Unhandled rela relocation: R_X86_64_PLT32' error.
-
-Please feel free to add to this patch:
-Tested-by and Acked-by: Bhupesh Sharma <bhsharma@redhat.com>
-
-Thanks,
-Bhupesh
 
 _______________________________________________
 kexec mailing list
