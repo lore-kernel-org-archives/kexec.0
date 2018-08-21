@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x444.google.com ([2607:f8b0:4864:20::444])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fs9UX-0005NJ-97
- for kexec@lists.infradead.org; Tue, 21 Aug 2018 16:26:53 +0000
-Received: by mail-pf1-x444.google.com with SMTP id l9-v6so8730689pff.9
- for <kexec@lists.infradead.org>; Tue, 21 Aug 2018 09:26:36 -0700 (PDT)
+Subject: Re: [PATCH v4 1/5] arm64: export memblock_reserve()d regions via
+ /proc/iomem
+From: James Morse <james.morse@arm.com>
+References: <20180723015732.24252-1-takahiro.akashi@linaro.org>
+ <20180723015732.24252-2-takahiro.akashi@linaro.org>
+ <CALAqxLU3+tu09M5=D-6xCqweKenfXtZuBGy6tqEP2DoGAs-LNA@mail.gmail.com>
+ <38e0224a-46f8-85c3-abe2-5e89d16810ea@arm.com>
+Message-ID: <55a21245-7bc2-a700-20ce-1103fbadf72b@arm.com>
+Date: Tue, 21 Aug 2018 17:48:05 +0100
 MIME-Version: 1.0
-References: <20180801210804.175176-1-ndesaulniers@google.com>
- <CAKwvOd=WZB=x86zqu=vFDoJgpWnfCj0K3qXv14vtysfv3ioi1w@mail.gmail.com>
- <CAKwvOd=qGTv1F3CsEeNjuJ93BD9zTnUekUHgvw4Ttpx7us5JdA@mail.gmail.com>
- <CAKwvOd=U0aMsUmBytK7vq=ORj+Npw7FqZ50EMEJPnmTG15N7dg@mail.gmail.com>
- <CA+55aFxHtbq=X9Jaes1qwVAhu5mx0eTahUjd7ijxgW44JjFaYQ@mail.gmail.com>
- <87bm9v28rh.fsf@xmission.com>
-In-Reply-To: <87bm9v28rh.fsf@xmission.com>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Tue, 21 Aug 2018 09:26:24 -0700
-Message-ID: <CAKwvOdkWL_2yTnJqM6n6R9UCPwY4iz-9BQYGN2MDAk9EzumUvA@mail.gmail.com>
-Subject: Re: [PATCH] x86/kexec: prefer _THIS_IP_ to current_text_addr
+In-Reply-To: <38e0224a-46f8-85c3-abe2-5e89d16810ea@arm.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,66 +19,96 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W . Biederman" <ebiederm@xmission.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Simon Horman <horms@verge.net.au>, Philippe Ombredanne <pombredanne@nexb.com>, Greg KH <gregkh@linuxfoundation.org>, x86@kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, mingo@redhat.com, hpa@zytor.com, Nathan Chancellor <natechancellor@gmail.com>, Thomas Gleixner <tglx@linutronix.de>
+To: John Stultz <john.stultz@linaro.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, al.stone@linaro.org, G Gregory <graeme.gregory@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, tbaicar@codeaurora.org, Will Deacon <will.deacon@arm.com>, lkml <linux-kernel@vger.kernel.org>, hanjun.guo@linaro.org, Sudeep Holla <sudeep.holla@arm.com>, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Len Brown <lenb@kernel.org>
 
-On Tue, Aug 21, 2018 at 5:40 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> Linus Torvalds <torvalds@linux-foundation.org> writes:
->
-> > On Mon, Aug 20, 2018 at 10:58 AM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> >>
-> >> + akpm, Linus
-> >>
-> >> Bumping for review.
-> >
-> > Ugh. I am not personally a huge fan of this endless "fix up one at a time".
-> >
-> > Just do a patch that removes current_text_addr() entirely and be done
-> > with it, if that's what we want the end result to be.
-> >
-> > Don't bother with these small "let's remove the remaining ones one by
-> > one". Just get it over and done with.
-
-Linus,
-No problem. Will send a V2 that rips off the band-aid.
-
-I explained my thoughts on the process more in
-https://lkml.org/lkml/2018/8/1/1689, which akpm agreed with.  I was
-hoping that I wouldn't have to bother you with a tree-wide change, but
-if code review takes 3 weeks...
-
-Also, I was hoping to save the small but many clean ups as starter
-patches for some newbies that we're asking me how to get started
-contributing to the kernel, but I can find other good first bugs for
-them.
-
->
-> One is generic code the other is assembly but the both appear to do the
-> same thing without unexpected complexity.
->
-> That said the patch earlier in this thread has clearly never been
-> compiled as it is using THIS_IP instead of _THIS_IP_ and there is not
-> a define of THIS_IP in the kernel.
-
-Eric,
-Please triple check your email client or whatever you're using to
-download patches, as I suspect one of them may be stripping
-leading+trailing underscores.  That would be quite problematic for
-code review or applying patch files.  I've seen some text renderers
-treat the underscores as markdown and italicize the contained word.
-https://lkml.org/lkml/2018/8/1/1608 shows the underscores.
-
--- 
-Thanks,
-~Nick Desaulniers
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDgvMjEvMjAxOCAxMToyMiBBTSwgSmFtZXMgTW9yc2Ugd3JvdGU6Cj4gT24gMDgvMjEvMjAx
+OCAwNTozOSBBTSwgSm9obiBTdHVsdHogd3JvdGU6Cj4+IE9uIFN1biwgSnVsIDIyLCAyMDE4IGF0
+IDY6NTcgUE0sIEFLQVNISSBUYWthaGlybwo+PiA8dGFrYWhpcm8uYWthc2hpQGxpbmFyby5vcmc+
+IHdyb3RlOgo+Pj4gRnJvbTogSmFtZXMgTW9yc2UgPGphbWVzLm1vcnNlQGFybS5jb20+Cj4+Pgo+
+Pj4gVGhlcmUgaGFzIGJlZW4gc29tZSBjb25mdXNpb24gYXJvdW5kIHdoYXQgaXMgbmVjZXNzYXJ5
+IHRvIHByZXZlbnQga2V4ZWMKPj4+IG92ZXJ3cml0aW5nIGltcG9ydGFudCBtZW1vcnkgcmVnaW9u
+cy4gbWVtYmxvY2s6IHJlc2VydmUsIG9yIG5vbWFwPwo+Pj4gT25seSBtZW1ibG9jayBub21hcCBy
+ZWdpb25zIGFyZSByZXBvcnRlZCB2aWEgL3Byb2MvaW9tZW0sIGtleGVjJ3MKPj4+IHVzZXItc3Bh
+Y2UgZG9lc24ndCBrbm93IGFib3V0IG1lbWJsb2NrX3Jlc2VydmUoKWQgcmVnaW9ucy4KPj4+Cj4+
+PiBVbnRpbCBjb21taXQgZjU2YWI5YTViNzNjYSAoImVmaS9hcm06IERvbid0IG1hcmsgQUNQSSBy
+ZWNsYWltIG1lbW9yeQo+Pj4gYXMgTUVNQkxPQ0tfTk9NQVAiKSB0aGUgQUNQSSB0YWJsZXMgd2Vy
+ZSBub21hcCwgbm93IHRoZXkgYXJlIHJlc2VydmVkCj4+PiBhbmQgdGh1cyBwb3NzaWJsZSBmb3Ig
+a2V4ZWMgdG8gb3ZlcndyaXRlIHdpdGggdGhlIG5ldyBrZXJuZWwgb3IgaW5pdHJkLgo+Pj4gQnV0
+IHRoaXMgd2FzIGFsd2F5cyBicm9rZW4sIGFzIHRoZSBVRUZJIG1lbW9yeSBtYXAgaXMgYWxzbyBy
+ZXNlcnZlZAo+Pj4gYW5kIG5vdCBtYXJrZWQgYXMgbm9tYXAuCj4+Pgo+Pj4gRXhwb3J0aW5nIGJv
+dGggbm9tYXAgYW5kIHJlc2VydmVkIG1lbWJsb2NrIHR5cGVzIGlzIGEgbnVpc2FuY2UgYXMKPj4+
+IHRoZXkgbGl2ZSBpbiBkaWZmZXJlbnQgbWVtYmxvY2sgc3RydWN0dXJlcyB3aGljaCB3ZSBjYW4n
+dCB3YWxrIGF0Cj4+PiB0aGUgc2FtZSB0aW1lLgo+Pj4KPj4+IFRha2UgYSBzZWNvbmQgd2FsayBv
+dmVyIG1lbWJsb2NrLnJlc2VydmVkIGFuZCBhZGQgbmV3ICdyZXNlcnZlZCcKPj4+IHN1Ym5vZGVz
+IGZvciB0aGUgbWVtYmxvY2tfcmVzZXJ2ZWQoKSByZWdpb25zIHRoYXQgYXJlbid0IGFscmVhZHkK
+Pj4+IGRlc2NyaWJlZCBieSB0aGUgZXhpc3RpbmcgY29kZS4gKGUuZy4gS2VybmVsIENvZGUpCj4+
+Pgo+Pj4gV2UgdXNlIHJlc2VydmVfcmVnaW9uX3dpdGhfc3BsaXQoKSB0byBmaW5kIHRoZSBnYXBz
+IGluIGV4aXN0aW5nIG5hbWVkCj4+PiByZWdpb25zLiBUaGlzIGhhbmRsZXMgdGhlIGdhcCBiZXR3
+ZWVuICdrZXJuZWwgY29kZScgYW5kICdrZXJuZWwgZGF0YScKPj4+IHdoaWNoIGlzIG1lbWJsb2Nr
+X3Jlc2VydmUoKWQsIGJ1dCBhbHJlYWR5IHBhcnRpYWxseSBkZXNjcmliZWQgYnkKPj4+IHJlcXVl
+c3Rfc3RhbmRhcmRfcmVzb3VyY2VzKCkuIGUuZy46Cj4+PiB8IDgwMDAwMDAwLWRmZmZmZmZmIDog
+U3lzdGVtIFJBTQo+Pj4gfMKgwqAgODAwODAwMDAtODBmZmZmZmYgOiBLZXJuZWwgY29kZQo+Pj4g
+fMKgwqAgODEwMDAwMDAtODE1OGZmZmYgOiByZXNlcnZlZAo+Pj4gfMKgwqAgODE1OTAwMDAtODIz
+N2VmZmYgOiBLZXJuZWwgZGF0YQo+Pj4gfMKgwqAgYTAwMDAwMDAtZGZmZmZmZmYgOiBDcmFzaCBr
+ZXJuZWwKPj4+IHwgZTAwZjAwMDAtZjk0OWZmZmYgOiBTeXN0ZW0gUkFNCj4+Pgo+Pj4gcmVzZXJ2
+ZV9yZWdpb25fd2l0aF9zcGxpdCBuZWVkcyBremFsbG9jKCkgd2hpY2ggaXNuJ3QgYXZhaWxhYmxl
+IHdoZW4KPj4+IHJlcXVlc3Rfc3RhbmRhcmRfcmVzb3VyY2VzKCkgaXMgY2FsbGVkLCB1c2UgYW4g
+aW5pdGNhbGwuCj4gCj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9rZXJuZWwvc2V0dXAuYyBi
+L2FyY2gvYXJtNjQva2VybmVsL3NldHVwLmMKPj4+IGluZGV4IDMwYWQyZjA4NWQxZi4uNWI0ZmFj
+NDM0Yzg0IDEwMDY0NAo+Pj4gLS0tIGEvYXJjaC9hcm02NC9rZXJuZWwvc2V0dXAuYwo+Pj4gKysr
+IGIvYXJjaC9hcm02NC9rZXJuZWwvc2V0dXAuYwo+Pj4gQEAgLTI0MSw2ICsyNDEsNDQgQEAgc3Rh
+dGljIHZvaWQgX19pbml0IHJlcXVlc3Rfc3RhbmRhcmRfcmVzb3VyY2VzKHZvaWQpCj4gCj4+PiAr
+c3RhdGljIGludCBfX2luaXQgcmVzZXJ2ZV9tZW1ibG9ja19yZXNlcnZlZF9yZWdpb25zKHZvaWQp
+Cj4gCj4+PiArwqDCoMKgwqDCoMKgIGZvcl9lYWNoX3Jlc2VydmVkX21lbV9yZWdpb24oaSwgJnN0
+YXJ0LCAmZW5kKSB7Cj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoZW5kIDw9
+IHJvdW5kdXBfZW5kKQo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIGNvbnRpbnVlOyAvKiBkb25lIGFscmVhZHkgKi8KPj4+ICsKPj4+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHN0YXJ0ID0gX19wZm5fdG9fcGh5cyhQRk5fRE9XTihzdGFydCkp
+Owo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZW5kID0gX19wZm5fdG9fcGh5cyhQ
+Rk5fVVAoZW5kKSkgLSAxOwo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcm91bmR1
+cF9lbmQgPSBlbmQ7Cj4+PiArCj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXMg
+PSBremFsbG9jKHNpemVvZigqcmVzKSwgR0ZQX0FUT01JQyk7Cj4+PiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBpZiAoV0FSTl9PTighcmVzKSkKPj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gLUVOT01FTTsKPj4+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHJlcy0+c3RhcnQgPSBzdGFydDsKPj4+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHJlcy0+ZW5kID0gZW5kOwo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgcmVzLT5uYW1lwqAgPSAicmVzZXJ2ZWQiOwo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgcmVzLT5mbGFncyA9IElPUkVTT1VSQ0VfTUVNOwo+Pj4gKwo+Pj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbWVtID0gcmVxdWVzdF9yZXNvdXJjZV9jb25mbGljdCgm
+aW9tZW1fcmVzb3VyY2UsIHJlcyk7Cj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAv
+Kgo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqIFdlIGV4cGVjdGVkIG1lbWJs
+b2NrX3Jlc2VydmUoKSByZWdpb25zIHRvIGNvbmZsaWN0IHdpdGgKPj4+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgKiBtZW1vcnkgY3JlYXRlZCBieSByZXF1ZXN0X3N0YW5kYXJkX3Jl
+c291cmNlcygpLgo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqLwo+Pj4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgKFdBUk5fT05fT05DRSghbWVtKSkKCgo+PiBT
+aW5jZSB0aGlzIHBhdGNoIGxhbmRlZCwgb24gdGhlIEhpS2V5IGJvYXJkIGF0IGJvb3R1cCBJJ20g
+c2VlaW5nOgo+Pgo+PiBbwqDCoMKgIDAuNDUxODg0XSBXQVJOSU5HOiBDUFU6IDEgUElEOiAxIGF0
+IGFyY2gvYXJtNjQva2VybmVsL3NldHVwLmM6MjcxCj4+IHJlc2VydmVfbWVtYmxvY2tfcmVzZXJ2
+ZWRfcmVnaW9ucysweGQ0LzB4MTNjCgo+PiDCoEZyb20gc2tpbW1pbmcgdGhlIHBhdGNoLCBpdCBz
+ZWVtcyB0aGlzIGlzIG1heWJlIGV4cGVjdGVkPyBPciBzaG91bGQKPj4gdGhpcyB3YXJuaW5nIHJh
+aXNlIGV5ZWJyb3dzPyBJIGNhbid0IHF1aXRlIGZpZ3VyZSBpdCBvdXQuCj4gCj4gVWdoLCBzb3Jy
+eSBmb3IgdGhlIG5vaXNlISBUaGlzIGlzIHdhcm5pbmcgdGhhdCB0aGVyZSBpcyBzb21ldGhpbmcg
+d3JvbmcKPiB3aXRoIG91ciBhc3N1bXB0aW9ucyBhYm91dCB3aGF0IHR5cGVzIG9mIG1lbW9yeSBl
+eGlzdC4KPiAKPiAKPj4gSXQgc2VlbXMgdG8gdHJpZ2dlciBvbiB0aGUgcHN0b3JlIG1lbW9yeSBh
+dCAweDIxZjAwMDAwLTB4MjFmZmZmZmYuCj4gCj4gLi4uIHBtZW0gLi4uCgoKPiBTbywgdGhpcyBp
+cyBhIG1lbWJsb2NrX3Jlc2VydmVkKCkgcmFuZ2UgdGhhdCBpc24ndCBhY3R1YWxseSBtZW1vcnku
+Cj4gCj4gVGhpcyBoYXBwZW5zIGJlY2F1c2UgeW91ciBEVCBoYXMgY2FydmVkIHRoZXNlIHJlZ2lv
+bnMgb3V0IG9mIHRoZSBtZW1vcnkKPiBub2RlLCBidXQgYWRkZWQgYSBuYW1lZCAncmVzZXJ2ZWQt
+bWVtb3J5JyByZWdpb24gZm9yIHRoZW0sIGp1c3QgaW4gY2FzZT8KPiBJJ20gbm90IHN1cmUgd2hh
+dCBpdCBtZWFucyBpZiAncmVzZXJ2ZWQtbWVtb3J5JyBpcyBub3QgYWxzbyBkZXNjcmliZWQgYXMK
+PiBtZW1vcnkuLi4uCj4gCj4gWW91IGRvIG5lZWQgdGhlIGNhcnZlLW91dCwgb3RoZXJ3aXNlIHRo
+aXMgZ2V0cyBjb3ZlcmVkIGJ5IHRoZSBsaW5lYXIKPiBtYXAsIGFuZCB3aGVuIHlvdSB0aHJvdyBp
+biB0aGF0ICd1bmJ1ZmZlcmVkJyBwcm9wZXJ0eSB5b3UgZ2V0IGJvdGggYQo+IGNhY2hlYWJsZSBh
+bmQgdW5jYWNoZWFibGUgbWFwcGluZyBvZiB0aGUgc2FtZSBwYWdlLgoKCkhtbSwgbG9va3MgbGlr
+ZSBpdHMgKGV2ZW4pIG1vcmUgY29tcGxpY2F0ZWQgdGhhbiBJIHRob3VnaHQsIG9mX3Jlc2VydmVk
+X21lbS5jJ3MgCmRlZmluaXRpb24gb2YgJ25vbWFwJyBpcyBtZW1ibG9ja19yZW1vdmUoKSwgbm90
+IG1lbWJsb2NrX21hcmtfbm9tYXAoKS4KClRoaXMgbWlnaHQgYmUgbW9yZSBjb21tb24gdG8gYWxs
+IHVzZXJzIG9mIERUcyBtZW1yZXNlcnZlLgoKClRoYW5rcywKCkphbWVzCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
+ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2tleGVjCg==
