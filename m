@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wr1-x443.google.com ([2a00:1450:4864:20::443])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fsCTu-0002Za-7i
- for kexec@lists.infradead.org; Tue, 21 Aug 2018 19:38:23 +0000
-Received: by mail-wr1-x443.google.com with SMTP id v90-v6so13657206wrc.0
- for <kexec@lists.infradead.org>; Tue, 21 Aug 2018 12:38:11 -0700 (PDT)
+ id 1fsQIU-0003Eq-Jc
+ for kexec@lists.infradead.org; Wed, 22 Aug 2018 10:23:32 +0000
+Date: Wed, 22 Aug 2018 18:23:10 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] x86, kdump: Fix efi=noruntime NULL pointer dereference
+Message-ID: <20180822102310.GA19827@dhcp-128-65.nay.redhat.com>
+References: <1533737025.4936.3.camel@gmx.de>
+ <20180809042153.GA4377@dhcp-128-65.nay.redhat.com>
+ <1533800010.5087.71.camel@gmx.de>
+ <20180809091333.GA8008@dhcp-128-65.nay.redhat.com>
+ <CAKv+Gu8KKwNkUdx7tSxEosRvydxmQ2yaasHRJn_LcHPs7p2UYQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <38e0224a-46f8-85c3-abe2-5e89d16810ea@arm.com>
-References: <20180723015732.24252-1-takahiro.akashi@linaro.org>
- <20180723015732.24252-2-takahiro.akashi@linaro.org>
- <CALAqxLU3+tu09M5=D-6xCqweKenfXtZuBGy6tqEP2DoGAs-LNA@mail.gmail.com>
- <38e0224a-46f8-85c3-abe2-5e89d16810ea@arm.com>
-From: John Stultz <john.stultz@linaro.org>
-Date: Tue, 21 Aug 2018 12:38:09 -0700
-Message-ID: <CALAqxLX=BBcjR3kbK8nhddzdtv7tMiDs2OcvMA-e9QNw6Lv3hg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] arm64: export memblock_reserve()d regions via
- /proc/iomem
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu8KKwNkUdx7tSxEosRvydxmQ2yaasHRJn_LcHPs7p2UYQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,56 +27,139 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, al.stone@linaro.org, G Gregory <graeme.gregory@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, bhsharma@redhat.com, tbaicar@codeaurora.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, lkml <linux-kernel@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, hanjun.guo@linaro.org, Catalin Marinas <catalin.marinas@arm.com>, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Len Brown <lenb@kernel.org>
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: linux-efi <linux-efi@vger.kernel.org>, Baoquan He <bhe@redhat.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Mike Galbraith <efault@gmx.de>, Kexec Mailing List <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
 
-On Tue, Aug 21, 2018 at 3:22 AM, James Morse <james.morse@arm.com> wrote:
-> On 08/21/2018 05:39 AM, John Stultz wrote:
->>
->> Since this patch landed, on the HiKey board at bootup I'm seeing:
->>
->> [    0.451884] WARNING: CPU: 1 PID: 1 at arch/arm64/kernel/setup.c:271
->> reserve_memblock_reserved_regions+0xd4/0x13c
-...
->>  From skimming the patch, it seems this is maybe expected? Or should
->> this warning raise eyebrows? I can't quite figure it out.
->
-> Ugh, sorry for the noise! This is warning that there is something wrong
-> with our assumptions about what types of memory exist.
->
->
->> It seems to trigger on the pstore memory at 0x21f00000-0x21ffffff.
->
->
-> ... pmem ...
->
->>
->> /proc/iomem now has:
->> ...
->> 07410000-21efffff : System RAM
->>    11000000-1113cfff : reserved
->
->
->> 21f00000-21ffffff : reserved
->
->
-> ^ This entry is what triggered the warning.
->
-> It expects that meblock_reserved() memory is also described as memory.
-> (memblock keeps them as separate lists, so its possible to reserve
-> memory that doesn't exist... which it looks like your system is doing)
+On 08/21/18 at 03:39pm, Ard Biesheuvel wrote:
+> On 9 August 2018 at 11:13, Dave Young <dyoung@redhat.com> wrote:
+> > On 08/09/18 at 09:33am, Mike Galbraith wrote:
+> >> On Thu, 2018-08-09 at 12:21 +0800, Dave Young wrote:
+> >> > Hi Mike,
+> >> >
+> >> > Thanks for the patch!
+> >> > On 08/08/18 at 04:03pm, Mike Galbraith wrote:
+> >> > > When booting with efi=noruntime, we call efi_runtime_map_copy() while
+> >> > > loading the kdump kernel, and trip over a NULL efi.memmap.map.  Avoid
+> >> > > that and a useless allocation when the only mapping we can use (1:1)
+> >> > > is not available.
+> >> >
+> >> > At first glance, efi_get_runtime_map_size should return 0 in case
+> >> > noruntime.
+> >>
+> >> What efi does internally at unmap time is to leave everything except
+> >> efi.mmap.map untouched, setting it to NULL and turning off EFI_MEMMAP,
+> >> rendering efi.mmap.map accessors useless/unsafe without first checking
+> >> EFI_MEMMAP.
+> >
+> > Probably the x86 efi_init should reset nr_map to zero in case runtime is
+> > disabled.  But let's see how Ard thinks about this and cc linux-efi.
+> >
+> > As for efi_get_runtime_map_size, it was introduced for x86 kexec use.
+> > for copying runtime maps,  so I think it is reasonable this function
+> > return zero in case no runtime.
+> >
+> 
+> I don't see the patch in the context so I cannot comment in great detail.
 
-So yea, I suspect the hikey dts isn't quite right here then. I've
-always thought how it setup the memory was a bit strange:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts#n30
+The patch is below:
+https://lore.kernel.org/lkml/1533737025.4936.3.camel@gmx.de
 
-So from your mail, I suspect the hole in the memory map for the pstore
-buffer isn't correct, and we should rework that.
+> 
+> In any case, it is better to decouple EFI_MEMMAP from EFI_RUNTIME
+> dependencies. On x86, one may imply the other, but this is not
+> generally the case.
+> 
+> That means that efi_get_runtime_map_size() should probably check the
+> EFI_RUNTIME flag, and return 0 if it is cleared. Perhaps there are
+> other places where EFI_MEMMAP flag checks are missing, but I consider
+> that a separate issue.
 
-I'll give that a shot here and make sure pstore still works properly.
+Yes, I also agree with to check EFI_RUNTIME_SERVICES. There is no point for
+efi_get_runtime_map_size to return a value other than 0 in case EFI_RUNTIME_SERVICES
+is not set ie. via efi=noruntime
 
-thanks
--john
+Is below patch acceptable?  The copy function can be changed to return
+an error in case map size == 0, but that can be done later along with
+the caller size cleanups in kexec code
+---------------------------------------------------------------------------
+
+efi: check EFI_RUNTIME_SERVICES flag in runtime map copying code
+
+Mike reported a kexec_file_load NULL pointer dereference bug like below:
+[    5.878262] BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+[    5.879868] PGD 800000013c1f1067 P4D 800000013c1f1067 PUD 13aea7067 PMD 0 
+[    5.881225] Oops: 0000 [#1] SMP PTI
+[    5.882068] Modules linked in:
+[    5.882851] CPU: 0 PID: 394 Comm: kexec Kdump: loaded Not tainted 4.17.0-rc2+ #648
+[    5.884333] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[    5.885843] RIP: 0010:memcpy_erms+0x6/0x10
+[    5.886789] RSP: 0018:ffffc9000058bd00 EFLAGS: 00010246
+[    5.887899] RAX: ffff880138e050b0 RBX: 00000000000980b0 RCX: 0000000000000ba0
+[    5.889304] RDX: 0000000000000ba0 RSI: 0000000000000000 RDI: ffff880138e050b0
+[    5.890977] RBP: ffff880138e04000 R08: 0000000000000017 R09: 0000000000000002
+[    5.892524] R10: 0000000000099000 R11: 00000000000052d0 R12: 0000000039400200
+[    5.893967] R13: ffff880138e05000 R14: 0000000000000ba0 R15: ffffc90000a4d000
+[    5.895378] FS:  00007f167c9e6740(0000) GS:ffff88013fc00000(0000) knlGS:0000000000000000
+[    5.896953] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    5.898143] CR2: 0000000000000000 CR3: 000000013c3ec002 CR4: 00000000001606f0
+[    5.899542] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    5.900962] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    5.902552] Call Trace:
+[    5.903267]  efi_runtime_map_copy+0x28/0x30
+[    5.904956]  bzImage64_load+0x59d/0x736
+[    5.906881]  ? arch_kexec_kernel_image_load+0x6d/0x70
+[    5.908243]  ? __se_sys_kexec_file_load+0x24b/0x750
+[    5.909352]  ? _cond_resched+0x19/0x30
+[    5.910286]  ? do_syscall_64+0x65/0x180
+[    5.911229]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[    5.912365] Code: 90 90 90 90 90 eb 1e 0f 1f 00 48 89 f8 48 89 d1 48 c1 e9 03 83 e2 07 f3 48 a5 89 d1 f3 a4 c3 66 0f 1f 44 00 00 48 89 f8 48 89 d1 <f3> a4 c3 0f 1f 80 00 00 00 00 48 89 f8 48 83 fa 20 72 7e 40 38 
+[    5.916235] RIP: memcpy_erms+0x6/0x10 RSP: ffffc9000058bd00
+[    5.917507] CR2: 0000000000000000
+[    5.918762] ---[ end trace 5cf4c4b3b93d7fdd ]---
+
+Changing efi_get_runtime_map_size to return 0 in case runtime is
+disabled.
+
+Also moving to check EFI_RUNTIME_SERVICES in efi_runtime_map_copy 
+
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+ drivers/firmware/efi/runtime-map.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+--- linux-x86.orig/drivers/firmware/efi/runtime-map.c
++++ linux-x86/drivers/firmware/efi/runtime-map.c
+@@ -138,12 +138,18 @@ add_sysfs_runtime_map_entry(struct kobje
+ 
+ int efi_get_runtime_map_size(void)
+ {
+-	return efi.memmap.nr_map * efi.memmap.desc_size;
++	if (efi_enabled(EFI_RUNTIME_SERVICES))
++		return efi.memmap.nr_map * efi.memmap.desc_size;
++
++	return 0;
+ }
+ 
+ int efi_get_runtime_map_desc_size(void)
+ {
+-	return efi.memmap.desc_size;
++	if (efi_enabled(EFI_RUNTIME_SERVICES))
++		return efi.memmap.desc_size;
++
++	return 0;
+ }
+ 
+ int efi_runtime_map_copy(void *buf, size_t bufsz)
+@@ -163,7 +169,7 @@ int __init efi_runtime_map_init(struct k
+ 	struct efi_runtime_map_entry *entry;
+ 	efi_memory_desc_t *md;
+ 
+-	if (!efi_enabled(EFI_MEMMAP))
++	if (!efi_enabled(EFI_RUNTIME_SERVICES))
+ 		return 0;
+ 
+ 	map_entries = kcalloc(efi.memmap.nr_map, sizeof(entry), GFP_KERNEL);
+
 
 _______________________________________________
 kexec mailing list
