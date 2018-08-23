@@ -1,17 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v4 1/5] arm64: export memblock_reserve()d regions via
- /proc/iomem
-References: <20180723015732.24252-1-takahiro.akashi@linaro.org>
- <20180723015732.24252-2-takahiro.akashi@linaro.org>
- <CALAqxLU3+tu09M5=D-6xCqweKenfXtZuBGy6tqEP2DoGAs-LNA@mail.gmail.com>
- <38e0224a-46f8-85c3-abe2-5e89d16810ea@arm.com>
- <CALAqxLX=BBcjR3kbK8nhddzdtv7tMiDs2OcvMA-e9QNw6Lv3hg@mail.gmail.com>
-From: James Morse <james.morse@arm.com>
-Message-ID: <dc5a9115-7536-6d72-18fd-60b5322c870c@arm.com>
-Date: Thu, 23 Aug 2018 13:35:08 +0100
+Received: from mail.skyhub.de ([5.9.137.197])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fsrQL-00026A-69
+ for kexec@lists.infradead.org; Thu, 23 Aug 2018 15:21:27 +0000
+Date: Thu, 23 Aug 2018 17:21:02 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
+ AMD sme enabled
+Message-ID: <20180823152102.GF21323@nazgul.tnic>
+References: <e7357038-08bd-7ba8-5357-7c91d21d10fe@redhat.com>
+ <20180709092901.GA22182@nazgul.tnic>
+ <fc6a47ca-1b16-eba5-d15e-ca294e01af93@redhat.com>
+ <20180713170857.GB17896@nazgul.tnic>
+ <33453712-9b0b-e8b9-08a6-de09e0806dd6@redhat.com>
+ <20180720052304.GA9146@dhcp-128-65.nay.redhat.com>
+ <20180720073245.GA26926@nazgul.tnic>
+ <562d8611-750d-3624-1a1b-df21f39812d6@redhat.com>
+ <54D39850-F883-4EC6-B160-0CD88D47A997@alien8.de>
+ <53536964-2b57-4630-de91-3d4da2b643a8@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CALAqxLX=BBcjR3kbK8nhddzdtv7tMiDs2OcvMA-e9QNw6Lv3hg@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <53536964-2b57-4630-de91-3d4da2b643a8@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,56 +33,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, al.stone@linaro.org, G Gregory <graeme.gregory@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, bhsharma@redhat.com, tbaicar@codeaurora.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, lkml <linux-kernel@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, hanjun.guo@linaro.org, Catalin Marinas <catalin.marinas@arm.com>, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Len Brown <lenb@kernel.org>
+To: lijiang <lijiang@redhat.com>
+Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>
 
-Hi John,
+On Thu, Aug 16, 2018 at 01:35:28PM +0800, lijiang wrote:
+> I personally prefer solution A, which is presented in posted patches.
+> What do you think, Boris? And other reviewers?
 
-On 21/08/18 20:38, John Stultz wrote:
-> On Tue, Aug 21, 2018 at 3:22 AM, James Morse <james.morse@arm.com> wrote:
->> On 08/21/2018 05:39 AM, John Stultz wrote:
->>>
->>> Since this patch landed, on the HiKey board at bootup I'm seeing:
->>>
->>> [    0.451884] WARNING: CPU: 1 PID: 1 at arch/arm64/kernel/setup.c:271
->>> reserve_memblock_reserved_regions+0xd4/0x13c
-> ...
->>>  From skimming the patch, it seems this is maybe expected? Or should
->>> this warning raise eyebrows? I can't quite figure it out.
->>
+Ok, thanks for taking the time and effort in explaning this in detail.
 
->>> /proc/iomem now has:
->>> ...
->>> 07410000-21efffff : System RAM
->>>    11000000-1113cfff : reserved
->>
->>
->>> 21f00000-21ffffff : reserved
->>
->>
->> ^ This entry is what triggered the warning.
->>
->> It expects that meblock_reserved() memory is also described as memory.
->> (memblock keeps them as separate lists, so its possible to reserve
->> memory that doesn't exist... which it looks like your system is doing)
-> 
-> So yea, I suspect the hikey dts isn't quite right here then.
+Solution B really turns out to be too complex after all. So as long as
+that @encrypted argument does not need to propagate any further than a
+couple of helpers - as it does now - I guess we can do solution A.
 
-The DT mem-reserve code goes and memblock_removes() some regions, instead of
-marking them nomap.
+BUT! Wait until next week before sending your patches again because the
+merge window isn't over yet.
 
-Given memblock has a for_each_resv_unavail_range() that explicitly walks
-reserved && !memory, it looks like this is expected, and its just me thinking
-this is strange.
+Thx.
 
-I will come up with a version of this patch that walks the 'System RAM'
-resources that were created during boot, and adds the memblock_reserved()
-regions to them, which should stop this happening.
+-- 
+Regards/Gruss,
+    Boris.
 
-
-Thanks,
-
-James
+ECO tip #101: Trim your mails when you reply.
+--
 
 _______________________________________________
 kexec mailing list
