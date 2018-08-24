@@ -1,26 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from mout.gmx.net ([212.227.15.19])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fsrQL-00026A-69
- for kexec@lists.infradead.org; Thu, 23 Aug 2018 15:21:27 +0000
-Date: Thu, 23 Aug 2018 17:21:02 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 1/5 V5] Add a function(ioremap_encrypted) for kdump when
- AMD sme enabled
-Message-ID: <20180823152102.GF21323@nazgul.tnic>
-References: <e7357038-08bd-7ba8-5357-7c91d21d10fe@redhat.com>
- <20180709092901.GA22182@nazgul.tnic>
- <fc6a47ca-1b16-eba5-d15e-ca294e01af93@redhat.com>
- <20180713170857.GB17896@nazgul.tnic>
- <33453712-9b0b-e8b9-08a6-de09e0806dd6@redhat.com>
- <20180720052304.GA9146@dhcp-128-65.nay.redhat.com>
- <20180720073245.GA26926@nazgul.tnic>
- <562d8611-750d-3624-1a1b-df21f39812d6@redhat.com>
- <54D39850-F883-4EC6-B160-0CD88D47A997@alien8.de>
- <53536964-2b57-4630-de91-3d4da2b643a8@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <53536964-2b57-4630-de91-3d4da2b643a8@redhat.com>
+ id 1ft42I-00033Q-TQ
+ for kexec@lists.infradead.org; Fri, 24 Aug 2018 04:49:28 +0000
+Message-ID: <1535086138.4661.9.camel@gmx.de>
+Subject: Re: [PATCH] x86, kdump: Fix efi=noruntime NULL pointer dereference
+From: Mike Galbraith <efault@gmx.de>
+Date: Fri, 24 Aug 2018 06:48:58 +0200
+In-Reply-To: <20180823035705.GA5743@dhcp-128-65.nay.redhat.com>
+References: <1533737025.4936.3.camel@gmx.de>
+ <20180809042153.GA4377@dhcp-128-65.nay.redhat.com>
+ <1533800010.5087.71.camel@gmx.de>
+ <20180809091333.GA8008@dhcp-128-65.nay.redhat.com>
+ <CAKv+Gu8KKwNkUdx7tSxEosRvydxmQ2yaasHRJn_LcHPs7p2UYQ@mail.gmail.com>
+ <20180822102310.GA19827@dhcp-128-65.nay.redhat.com>
+ <20180823035705.GA5743@dhcp-128-65.nay.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,30 +28,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>
+To: Dave Young <dyoung@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-efi <linux-efi@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>
 
-On Thu, Aug 16, 2018 at 01:35:28PM +0800, lijiang wrote:
-> I personally prefer solution A, which is presented in posted patches.
-> What do you think, Boris? And other reviewers?
+On Thu, 2018-08-23 at 11:57 +0800, Dave Young wrote:
+> 
+> Mike, since we are going this way, I'm working on a kexec code cleanup,
+> but it needs careful testing so still need some time.
+> 
+> Can you help test below efi fix and provide you tested-by if it works?
 
-Ok, thanks for taking the time and effort in explaning this in detail.
+While it averts the efi=noruntime oops on kdump kernel load, the kernel
+does not boot when kdump is triggered.  Bailing in setup_efi_state() in
+addition restores functionality.
 
-Solution B really turns out to be too complex after all. So as long as
-that @encrypted argument does not need to propagate any further than a
-couple of helpers - as it does now - I guess we can do solution A.
-
-BUT! Wait until next week before sending your patches again because the
-merge window isn't over yet.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
+	-Mike
 
 _______________________________________________
 kexec mailing list
