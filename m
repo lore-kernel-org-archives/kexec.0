@@ -1,23 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-f68.google.com ([209.85.167.68])
+Received: from mail-it0-x236.google.com ([2607:f8b0:4001:c0b::236])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ftDhh-0005nH-RR
- for kexec@lists.infradead.org; Fri, 24 Aug 2018 15:08:51 +0000
-Received: by mail-lf1-f68.google.com with SMTP id x26-v6so4873845lfi.7
- for <kexec@lists.infradead.org>; Fri, 24 Aug 2018 08:08:39 -0700 (PDT)
+ id 1fuWR2-0004Pw-KA
+ for kexec@lists.infradead.org; Tue, 28 Aug 2018 05:21:03 +0000
+Received: by mail-it0-x236.google.com with SMTP id j198-v6so1178852ita.0
+ for <kexec@lists.infradead.org>; Mon, 27 Aug 2018 22:20:47 -0700 (PDT)
+Date: Tue, 28 Aug 2018 14:21:09 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v13 03/16] s390, kexec_file: drop arch_kexec_mem_walk()
+Message-ID: <20180828052107.GE12252@linaro.org>
+References: <20180801075820.3753-1-takahiro.akashi@linaro.org>
+ <20180801075820.3753-4-takahiro.akashi@linaro.org>
+ <20180801102951.527cfc57@ThinkPad>
+ <20180802000150.GN11258@linaro.org>
+ <20180806055047.GC4246@dhcp-128-65.nay.redhat.com>
+ <20180809033416.GA5069@dhcp-128-65.nay.redhat.com>
+ <1235507889.17337085.1533788045597.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20180824075655.szxmhx3qvlg7uohm@verge.net.au>
-References: <e590dc81-7df7-746d-98f2-710f85e03467@googlemail.com>
- <20180820083718.GZ4113@MiWiFi-R3L-srv>
- <cbf043a7-8e95-9486-3441-07ef8f2f86f5@googlemail.com>
- <20180820121721.GA4113@MiWiFi-R3L-srv> <20180820122131.GB4113@MiWiFi-R3L-srv>
- <aabec0ea-6611-dc95-3f12-391469790d53@googlemail.com>
- <CACi5LpP3mVre_uNAGaHFaSzRKAk2BKoRNC-vpvkkt-Yf8zYujA@mail.gmail.com>
- <20180824075655.szxmhx3qvlg7uohm@verge.net.au>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Fri, 24 Aug 2018 20:38:36 +0530
-Message-ID: <CACi5LpMDTEQYSEY+ycqrcEMihLKkRU+hWbYUAz-xAeVYxVpjhw@mail.gmail.com>
-Subject: Re: kexec: fix for "Unhandled rela relocation: R_X86_64_PLT32" error
+Content-Disposition: inline
+In-Reply-To: <1235507889.17337085.1533788045597.JavaMail.zimbra@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,143 +31,201 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Bhupesh SHARMA <bhupesh.linux@gmail.com>, Chris Clayton <chris2553@googlemail.com>, kexec mailing list <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: dhowells@redhat.com, herbert@gondor.apana.org.au, Pingfan Liu <piliu@redhat.com>, ard biesheuvel <ard.biesheuvel@linaro.org>, catalin marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, will deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, heiko carstens <heiko.carstens@de.ibm.com>, Philipp Rudo <prudo@linux.ibm.com>, "piliu@redhat.com Thiago Jung Bauermann" <bauerman@linux.vnet.ibm.com>, bhe@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james morse <james.morse@arm.com>, davem@davemloft.net, vgoyal@redhat.com
 
-Hi Simon,
+Hi Dave,
 
-On Fri, Aug 24, 2018 at 1:26 PM, Simon Horman <horms@verge.net.au> wrote:
-> On Tue, Aug 21, 2018 at 04:51:49PM +0530, Bhupesh Sharma wrote:
->> Thanks for this fix Chris,
->>
->> I have tested this fix on Fedora 29 and it works fine.
->>
->> On Mon, Aug 20, 2018 at 8:42 PM, Chris Clayton <chris2553@googlemail.com> wrote:
->> >
->> >
->> > On 20/08/2018 13:21, Baoquan He wrote:
->> >> Hi Chris,
->> >>
->> >> On 08/20/18 at 08:17pm, Baoquan He wrote:
->> >>> In response to a change in binutils, commit b21ebf2fb4c
->> >>> (x86: Treat R_X86_64_PLT32 as R_X86_64_PC32) was applied to
->> >>> the linux kernel during the 4.16 development cycle and has
->> >>> since been backported to earlier stable kernel series. The
->> >>> change results in the failure message in $SUBJECT when
->> >>> rebooting via kexec.
->> >>>
->> >>> Fix this by replicating the change in kexec.
->> >>>
->> >
->> > OK.
->> >
->> >>> Signed-off-by: Chris Clayton <chris2553@googlemail.com>
->> >>
->> >> I adjusted the patch log a little bit, you have tested it on upstream
->> >> kernel, right?
->> >>
->> >
->> > At the time of my original message (25 July 2018), 4.18.0-rc6+ was the latest upstream. I tested my change on that and
->> > on the latest stable 4.14 series kernel, which was 4.14.57. I've just tested it with 4.18.3 and 4.14.65 and it works
->> > fine. I don't have a 4.19 development kernel installed at the moment - I'm busy with other stuff.
->> >
->> > Chris
->> >
->> >
->> >> Thanks
->> >> Baoquan
->> >>
->> >>> ---
->> >>>  kexec/arch/x86_64/kexec-elf-rel-x86_64.c | 1 +
->> >>>  1 file changed, 1 insertion(+)
->> >>>
->> >>> diff --git a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
->> >>> index 7fdde73..db85b44 100644
->> >>> --- a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
->> >>> +++ b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
->> >>> @@ -79,6 +79,7 @@ void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
->> >>>                      goto overflow;
->> >>>              break;
->> >>>      case R_X86_64_PC32:
->> >>> +    case R_X86_64_PLT32:
->> >>>              *(uint32_t *)location = value - address;
->> >>>              break;
->> >>>      default:
->> >>> --
->> >>> 2.13.6
->> >>>
->> >>>
->>
->> Hi Simon,
->>
->> This patch fixes an important issue because of which both kdump and
->> kexec have become non-operational with newer kernels (> 4.18)
->>
->> We are seeing this issue with newer Fedora versions (for e.g. Fedora
->> 29, please see <https://bugzilla.redhat.com/show_bug.cgi?id=1619122>
->> for details), so would request you to apply this as an 'urgent' fix to
->> make sure that the kexec/kdump code keeps working fine with newer
->> kernel versions as well.
->>
->> I have tested this on a Fedora 29 x86_64 host and I no longer
->> encounter the 'Unhandled rela relocation: R_X86_64_PLT32' error.
->>
->> Please feel free to add to this patch:
->> Tested-by and Acked-by: Bhupesh Sharma <bhsharma@redhat.com>
->
-> Thanks, and apologies for the delay - I was travelling.
->
-> For some reason the patch did not apply cleanly so I did so by hand.
-> The result is as follows:
+On Thu, Aug 09, 2018 at 12:14:05AM -0400, Pingfan Liu wrote:
+> 
+> 
+> 
+> 
+> ----- Original Message -----
+> > From: "Dave Young" <dyoung@redhat.com>
+> > To: "AKASHI Takahiro" <takahiro.akashi@linaro.org>, "Philipp Rudo" <prudo@linux.ibm.com>, "catalin marinas"
+> > <catalin.marinas@arm.com>, "will deacon" <will.deacon@arm.com>, dhowells@redhat.com, vgoyal@redhat.com,
+> > herbert@gondor.apana.org.au, davem@davemloft.net, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, "heiko
+> > carstens" <heiko.carstens@de.ibm.com>, "ard biesheuvel" <ard.biesheuvel@linaro.org>, "james morse"
+> > <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+> > linux-kernel@vger.kernel.org, "piliu@redhat.com Thiago Jung Bauermann" <bauerman@linux.vnet.ibm.com>
+> > Sent: Thursday, August 9, 2018 11:34:16 AM
+> > Subject: Re: [PATCH v13 03/16] s390, kexec_file: drop arch_kexec_mem_walk()
+> > 
+> > Add more cc. Pingfan Liu confirmed ppc does not use 0 as valid address,
+> > if so it should be safe.
+> > 
+> > Pingfan, can you add more words?
+> > 
+> 
+> ppc64 uses a few KB starting from 0 for exception handler.
 
-Thanks for your help. Yes the format looks fine and applies cleanly
-for me via 'git am'
-Sorry to bother you during your travel, but this might affect folks
-using newer kernels so it might be useful to have this included in the
-tree.
+It assures that 0 (zero) is valid, but won't be assigned as a result of
+kexec_add_buffer().
 
-Regards,
-Bhupesh
+So do you think that yet I should submit another patch set, introducing
+explicit KEXEC_BUF_MEM_UNKNOWN, while assuming 0 by default is safe for now?
 
-> From b9de21ef51a7ceab7122a707c188602eae22c4ee Mon Sep 17 00:00:00 2001
-> From: Chris Clayton <chris2553@googlemail.com>
-> Date: Mon, 20 Aug 2018 12:00:31 +0100
-> Subject: [PATCH] kexec: fix for "Unhandled rela relocation: R_X86_64_PLT32"
->  error
->
-> In response to a change in binutils, commit b21ebf2fb4c
-> (x86: Treat R_X86_64_PLT32 as R_X86_64_PC32) was applied to
-> the linux kernel during the 4.16 development cycle and has
-> since been backported to earlier stable kernel series. The
-> change results in the failure message in $SUBJECT when
-> rebooting via kexec.
->
-> Fix this by replicating the change in kexec.
->
-> Signed-off-by: Chris Clayton <chris2553@googlemail.com>
-> Acked-by: Baoquan He <bhe@redhat.com>
-> Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
-> Acked-by: Bhupesh Sharma <bhsharma@redhat.com>
-> Signed-off-by: Simon Horman <horms@verge.net.au>
-> ---
->  kexec/arch/x86_64/kexec-elf-rel-x86_64.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
-> index 7fdde73a5eca..db85b443238d 100644
-> --- a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
-> +++ b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
-> @@ -79,6 +79,7 @@ void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
->                         goto overflow;
->                 break;
->         case R_X86_64_PC32:
-> +       case R_X86_64_PLT32:
->                 *(uint32_t *)location = value - address;
->                 break;
->         default:
-> --
-> 2.11.0
->
+Now that this is the only comment against my v13, it's up to you.
+
+Thanks,
+-Takahiro AKASHI
+
+
+> > On 08/06/18 at 01:50pm, Dave Young wrote:
+> > > Add Thiago in cc so that he can review from powerpc point of view.
+> > > 
+> > > On 08/02/18 at 09:01am, AKASHI Takahiro wrote:
+> > > > Hi,
+> > > > 
+> > > > On Wed, Aug 01, 2018 at 10:29:51AM +0200, Philipp Rudo wrote:
+> > > > > Hey Akashi,
+> > > > > 
+> > > > > I kept thinking about this patch and remembered why I didn't made the
+> > > > > change
+> > > > > you are suggesting now.
+> > > > 
+> > > > Hmm.
+> > > > 
+> > > > > The problem is when you only check for kbuf->mem you are excluding
+> > > > > address 0,
+> > > > > which might be a valid address to load the kernel to. On s390 this is
+> > > > > actually
+> > > > > done when the kernel is not loaded via a boot loader. For kexec_file
+> > > > > however,
+> > > > > we cut off the first few kB of the image and jump directly to
+> > > > > 'startup'. So
+> > > > > checking for !0 does not cause a problem here.
+> > > > 
+> > > > Yeah, as Dave(RedHat) described, all the current kexec-capable
+> > > > architectures,
+> > > > except arm64, implicitly initialize kbuf.mem to zero with "kbuf = { ...
+> > > > }"
+> > > > initializer. So surely my change would not break anything on the existing
+> > > > code.
+> > > > On the other hand, I also see your concern here.
+> > > > 
+> > > > > Anyway, the long term safer solution would be something like
+> > > > > 
+> > > > > #define KEXEC_BUF_MEM_UNKNOWN (-1UL)
+> > > > > 
+> > > > > for architectures to tell common code to search a fitting mem hole.
+> > > > 
+> > > > This would require the existing code on every arch to be modified, which
+> > > > I think should be avoided if possible. Instead,
+> > > > we'd better define in linux/kexec.h:
+> > > >   #ifndef KEXEC_BUF_MEM_UNKNOWN
+> > > >   #define KEXEC_BUF_MEM_UNKNOWN 0
+> > > >   #endif
+> > > > and then check for kbuf in kexec_locate_mem_hole():
+> > > >   if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
+> > > >         return 0;
+> > > >   ...
+> > > > 
+> > > > This way if some arch wants to treat *zero* as a valid address, it can
+> > > > redefine this macro in arch/asm/kexec.h.
+> > > 
+> > > I think this way works if powerpc is safe for using zero as the unknown
+> > > address in this case.  Thiago, can you provide some review?
+> > > 
+> > > Philipp, thanks for catching the problem!
+> > > 
+> > > > 
+> > > > Thanks,
+> > > > -Takahiro AKASHI
+> > > > 
+> > > > > 
+> > > > > Back then I didn't do the change because I had the other workaround,
+> > > > > which
+> > > > > didn't require a common code change. But when you are touching the code
+> > > > > now it
+> > > > > is worth thinking about it.
+> > > > > 
+> > > > > Just wanted to let you know
+> > > > > Philipp
+> > > > > 
+> > > > > 
+> > > > > On Wed,  1 Aug 2018 16:58:07 +0900
+> > > > > AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
+> > > > > 
+> > > > > > Since s390 already knows where to locate buffers, calling
+> > > > > > arch_kexec_mem_walk() has no sense. So we can just drop it as
+> > > > > > kbuf->mem
+> > > > > > indicates this while all other architectures sets it to 0 initially.
+> > > > > > 
+> > > > > > This change is a preparatory work for the next patch, where all the
+> > > > > > variant memory walks, either on system resource or memblock, will be
+> > > > > > put in one common place so that it will satisfy all the
+> > > > > > architectures'
+> > > > > > need.
+> > > > > > 
+> > > > > > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > > > > > Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
+> > > > > > Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> > > > > > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> > > > > > Cc: Dave Young <dyoung@redhat.com>
+> > > > > > Cc: Vivek Goyal <vgoyal@redhat.com>
+> > > > > > Cc: Baoquan He <bhe@redhat.com>
+> > > > > > ---
+> > > > > >  arch/s390/kernel/machine_kexec_file.c | 10 ----------
+> > > > > >  kernel/kexec_file.c                   |  4 ++++
+> > > > > >  2 files changed, 4 insertions(+), 10 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/arch/s390/kernel/machine_kexec_file.c
+> > > > > > b/arch/s390/kernel/machine_kexec_file.c
+> > > > > > index f413f57f8d20..32023b4f9dc0 100644
+> > > > > > --- a/arch/s390/kernel/machine_kexec_file.c
+> > > > > > +++ b/arch/s390/kernel/machine_kexec_file.c
+> > > > > > @@ -134,16 +134,6 @@ int kexec_file_add_initrd(struct kimage *image,
+> > > > > > struct s390_load_data *data,
+> > > > > >  	return ret;
+> > > > > >  }
+> > > > > >  
+> > > > > > -/*
+> > > > > > - * The kernel is loaded to a fixed location. Turn off
+> > > > > > kexec_locate_mem_hole
+> > > > > > - * and provide kbuf->mem by hand.
+> > > > > > - */
+> > > > > > -int arch_kexec_walk_mem(struct kexec_buf *kbuf,
+> > > > > > -			int (*func)(struct resource *, void *))
+> > > > > > -{
+> > > > > > -	return 1;
+> > > > > > -}
+> > > > > > -
+> > > > > >  int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+> > > > > >  				     Elf_Shdr *section,
+> > > > > >  				     const Elf_Shdr *relsec,
+> > > > > > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> > > > > > index 63c7ce1c0c3e..bf39df5e5bb9 100644
+> > > > > > --- a/kernel/kexec_file.c
+> > > > > > +++ b/kernel/kexec_file.c
+> > > > > > @@ -534,6 +534,10 @@ int kexec_locate_mem_hole(struct kexec_buf
+> > > > > > *kbuf)
+> > > > > >  {
+> > > > > >  	int ret;
+> > > > > >  
+> > > > > > +	/* Arch knows where to place */
+> > > > > > +	if (kbuf->mem)
+> > > > > > +		return 0;
+> > > > > > +
+> > > > > >  	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
+> > > > > >  
+> > > > > >  	return ret == 1 ? 0 : -EADDRNOTAVAIL;
+> > > > > 
+> > > > 
+> > > > _______________________________________________
+> > > > kexec mailing list
+> > > > kexec@lists.infradead.org
+> > > > http://lists.infradead.org/mailman/listinfo/kexec
+> > > 
+> > > Thanks
+> > > Dave
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> > 
 
 _______________________________________________
 kexec mailing list
