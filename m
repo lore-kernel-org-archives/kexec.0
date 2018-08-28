@@ -1,14 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x236.google.com ([2607:f8b0:4001:c0b::236])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fuWR2-0004Pw-KA
- for kexec@lists.infradead.org; Tue, 28 Aug 2018 05:21:03 +0000
-Received: by mail-it0-x236.google.com with SMTP id j198-v6so1178852ita.0
- for <kexec@lists.infradead.org>; Mon, 27 Aug 2018 22:20:47 -0700 (PDT)
-Date: Tue, 28 Aug 2018 14:21:09 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Date: Tue, 28 Aug 2018 21:43:47 +0800
+From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH v13 03/16] s390, kexec_file: drop arch_kexec_mem_walk()
-Message-ID: <20180828052107.GE12252@linaro.org>
+Message-ID: <20180828134347.GB12178@dhcp-128-65.nay.redhat.com>
 References: <20180801075820.3753-1-takahiro.akashi@linaro.org>
  <20180801075820.3753-4-takahiro.akashi@linaro.org>
  <20180801102951.527cfc57@ThinkPad>
@@ -16,9 +10,10 @@ References: <20180801075820.3753-1-takahiro.akashi@linaro.org>
  <20180806055047.GC4246@dhcp-128-65.nay.redhat.com>
  <20180809033416.GA5069@dhcp-128-65.nay.redhat.com>
  <1235507889.17337085.1533788045597.JavaMail.zimbra@redhat.com>
+ <20180828052107.GE12252@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1235507889.17337085.1533788045597.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20180828052107.GE12252@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,201 +26,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: dhowells@redhat.com, herbert@gondor.apana.org.au, Pingfan Liu <piliu@redhat.com>, ard biesheuvel <ard.biesheuvel@linaro.org>, catalin marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, will deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, heiko carstens <heiko.carstens@de.ibm.com>, Philipp Rudo <prudo@linux.ibm.com>, "piliu@redhat.com Thiago Jung Bauermann" <bauerman@linux.vnet.ibm.com>, bhe@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james morse <james.morse@arm.com>, davem@davemloft.net, vgoyal@redhat.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Pingfan Liu <piliu@redhat.com>, Philipp Rudo <prudo@linux.ibm.com>, catalin marinas <catalin.marinas@arm.com>, will deacon <will.deacon@arm.com>, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko carstens <heiko.carstens@de.ibm.com>, ard biesheuvel <ard.biesheuvel@linaro.org>, james morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "piliu@redhat.com Thiago Jung Bauermann" <bauerman@linux.vnet.ibm.com>
 
-Hi Dave,
-
-On Thu, Aug 09, 2018 at 12:14:05AM -0400, Pingfan Liu wrote:
+Hi AKASHI,
+On 08/28/18 at 02:21pm, AKASHI Takahiro wrote:
+> Hi Dave,
 > 
+> On Thu, Aug 09, 2018 at 12:14:05AM -0400, Pingfan Liu wrote:
+> > 
+> > 
+> > 
+> > 
+> > ----- Original Message -----
+> > > From: "Dave Young" <dyoung@redhat.com>
+> > > To: "AKASHI Takahiro" <takahiro.akashi@linaro.org>, "Philipp Rudo" <prudo@linux.ibm.com>, "catalin marinas"
+> > > <catalin.marinas@arm.com>, "will deacon" <will.deacon@arm.com>, dhowells@redhat.com, vgoyal@redhat.com,
+> > > herbert@gondor.apana.org.au, davem@davemloft.net, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, "heiko
+> > > carstens" <heiko.carstens@de.ibm.com>, "ard biesheuvel" <ard.biesheuvel@linaro.org>, "james morse"
+> > > <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+> > > linux-kernel@vger.kernel.org, "piliu@redhat.com Thiago Jung Bauermann" <bauerman@linux.vnet.ibm.com>
+> > > Sent: Thursday, August 9, 2018 11:34:16 AM
+> > > Subject: Re: [PATCH v13 03/16] s390, kexec_file: drop arch_kexec_mem_walk()
+> > > 
+> > > Add more cc. Pingfan Liu confirmed ppc does not use 0 as valid address,
+> > > if so it should be safe.
+> > > 
+> > > Pingfan, can you add more words?
+> > > 
+> > 
+> > ppc64 uses a few KB starting from 0 for exception handler.
 > 
+> It assures that 0 (zero) is valid, but won't be assigned as a result of
+> kexec_add_buffer().
 > 
+> So do you think that yet I should submit another patch set, introducing
+> explicit KEXEC_BUF_MEM_UNKNOWN, while assuming 0 by default is safe for now?
 > 
-> ----- Original Message -----
-> > From: "Dave Young" <dyoung@redhat.com>
-> > To: "AKASHI Takahiro" <takahiro.akashi@linaro.org>, "Philipp Rudo" <prudo@linux.ibm.com>, "catalin marinas"
-> > <catalin.marinas@arm.com>, "will deacon" <will.deacon@arm.com>, dhowells@redhat.com, vgoyal@redhat.com,
-> > herbert@gondor.apana.org.au, davem@davemloft.net, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, "heiko
-> > carstens" <heiko.carstens@de.ibm.com>, "ard biesheuvel" <ard.biesheuvel@linaro.org>, "james morse"
-> > <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-> > linux-kernel@vger.kernel.org, "piliu@redhat.com Thiago Jung Bauermann" <bauerman@linux.vnet.ibm.com>
-> > Sent: Thursday, August 9, 2018 11:34:16 AM
-> > Subject: Re: [PATCH v13 03/16] s390, kexec_file: drop arch_kexec_mem_walk()
-> > 
-> > Add more cc. Pingfan Liu confirmed ppc does not use 0 as valid address,
-> > if so it should be safe.
-> > 
-> > Pingfan, can you add more words?
-> > 
-> 
-> ppc64 uses a few KB starting from 0 for exception handler.
+> Now that this is the only comment against my v13, it's up to you.
 
-It assures that 0 (zero) is valid, but won't be assigned as a result of
-kexec_add_buffer().
+I'm fine with your proposal.  It is simple enough, and we can look into
+it when it becomes a problem in the future which is unlikely.
 
-So do you think that yet I should submit another patch set, introducing
-explicit KEXEC_BUF_MEM_UNKNOWN, while assuming 0 by default is safe for now?
-
-Now that this is the only comment against my v13, it's up to you.
-
-Thanks,
--Takahiro AKASHI
-
-
-> > On 08/06/18 at 01:50pm, Dave Young wrote:
-> > > Add Thiago in cc so that he can review from powerpc point of view.
-> > > 
-> > > On 08/02/18 at 09:01am, AKASHI Takahiro wrote:
-> > > > Hi,
-> > > > 
-> > > > On Wed, Aug 01, 2018 at 10:29:51AM +0200, Philipp Rudo wrote:
-> > > > > Hey Akashi,
-> > > > > 
-> > > > > I kept thinking about this patch and remembered why I didn't made the
-> > > > > change
-> > > > > you are suggesting now.
-> > > > 
-> > > > Hmm.
-> > > > 
-> > > > > The problem is when you only check for kbuf->mem you are excluding
-> > > > > address 0,
-> > > > > which might be a valid address to load the kernel to. On s390 this is
-> > > > > actually
-> > > > > done when the kernel is not loaded via a boot loader. For kexec_file
-> > > > > however,
-> > > > > we cut off the first few kB of the image and jump directly to
-> > > > > 'startup'. So
-> > > > > checking for !0 does not cause a problem here.
-> > > > 
-> > > > Yeah, as Dave(RedHat) described, all the current kexec-capable
-> > > > architectures,
-> > > > except arm64, implicitly initialize kbuf.mem to zero with "kbuf = { ...
-> > > > }"
-> > > > initializer. So surely my change would not break anything on the existing
-> > > > code.
-> > > > On the other hand, I also see your concern here.
-> > > > 
-> > > > > Anyway, the long term safer solution would be something like
-> > > > > 
-> > > > > #define KEXEC_BUF_MEM_UNKNOWN (-1UL)
-> > > > > 
-> > > > > for architectures to tell common code to search a fitting mem hole.
-> > > > 
-> > > > This would require the existing code on every arch to be modified, which
-> > > > I think should be avoided if possible. Instead,
-> > > > we'd better define in linux/kexec.h:
-> > > >   #ifndef KEXEC_BUF_MEM_UNKNOWN
-> > > >   #define KEXEC_BUF_MEM_UNKNOWN 0
-> > > >   #endif
-> > > > and then check for kbuf in kexec_locate_mem_hole():
-> > > >   if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
-> > > >         return 0;
-> > > >   ...
-> > > > 
-> > > > This way if some arch wants to treat *zero* as a valid address, it can
-> > > > redefine this macro in arch/asm/kexec.h.
-> > > 
-> > > I think this way works if powerpc is safe for using zero as the unknown
-> > > address in this case.  Thiago, can you provide some review?
-> > > 
-> > > Philipp, thanks for catching the problem!
-> > > 
-> > > > 
-> > > > Thanks,
-> > > > -Takahiro AKASHI
-> > > > 
-> > > > > 
-> > > > > Back then I didn't do the change because I had the other workaround,
-> > > > > which
-> > > > > didn't require a common code change. But when you are touching the code
-> > > > > now it
-> > > > > is worth thinking about it.
-> > > > > 
-> > > > > Just wanted to let you know
-> > > > > Philipp
-> > > > > 
-> > > > > 
-> > > > > On Wed,  1 Aug 2018 16:58:07 +0900
-> > > > > AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> > > > > 
-> > > > > > Since s390 already knows where to locate buffers, calling
-> > > > > > arch_kexec_mem_walk() has no sense. So we can just drop it as
-> > > > > > kbuf->mem
-> > > > > > indicates this while all other architectures sets it to 0 initially.
-> > > > > > 
-> > > > > > This change is a preparatory work for the next patch, where all the
-> > > > > > variant memory walks, either on system resource or memblock, will be
-> > > > > > put in one common place so that it will satisfy all the
-> > > > > > architectures'
-> > > > > > need.
-> > > > > > 
-> > > > > > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > > > > > Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
-> > > > > > Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> > > > > > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> > > > > > Cc: Dave Young <dyoung@redhat.com>
-> > > > > > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > > > > > Cc: Baoquan He <bhe@redhat.com>
-> > > > > > ---
-> > > > > >  arch/s390/kernel/machine_kexec_file.c | 10 ----------
-> > > > > >  kernel/kexec_file.c                   |  4 ++++
-> > > > > >  2 files changed, 4 insertions(+), 10 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/arch/s390/kernel/machine_kexec_file.c
-> > > > > > b/arch/s390/kernel/machine_kexec_file.c
-> > > > > > index f413f57f8d20..32023b4f9dc0 100644
-> > > > > > --- a/arch/s390/kernel/machine_kexec_file.c
-> > > > > > +++ b/arch/s390/kernel/machine_kexec_file.c
-> > > > > > @@ -134,16 +134,6 @@ int kexec_file_add_initrd(struct kimage *image,
-> > > > > > struct s390_load_data *data,
-> > > > > >  	return ret;
-> > > > > >  }
-> > > > > >  
-> > > > > > -/*
-> > > > > > - * The kernel is loaded to a fixed location. Turn off
-> > > > > > kexec_locate_mem_hole
-> > > > > > - * and provide kbuf->mem by hand.
-> > > > > > - */
-> > > > > > -int arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> > > > > > -			int (*func)(struct resource *, void *))
-> > > > > > -{
-> > > > > > -	return 1;
-> > > > > > -}
-> > > > > > -
-> > > > > >  int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-> > > > > >  				     Elf_Shdr *section,
-> > > > > >  				     const Elf_Shdr *relsec,
-> > > > > > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > > > > > index 63c7ce1c0c3e..bf39df5e5bb9 100644
-> > > > > > --- a/kernel/kexec_file.c
-> > > > > > +++ b/kernel/kexec_file.c
-> > > > > > @@ -534,6 +534,10 @@ int kexec_locate_mem_hole(struct kexec_buf
-> > > > > > *kbuf)
-> > > > > >  {
-> > > > > >  	int ret;
-> > > > > >  
-> > > > > > +	/* Arch knows where to place */
-> > > > > > +	if (kbuf->mem)
-> > > > > > +		return 0;
-> > > > > > +
-> > > > > >  	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
-> > > > > >  
-> > > > > >  	return ret == 1 ? 0 : -EADDRNOTAVAIL;
-> > > > > 
-> > > > 
-> > > > _______________________________________________
-> > > > kexec mailing list
-> > > > kexec@lists.infradead.org
-> > > > http://lists.infradead.org/mailman/listinfo/kexec
-> > > 
-> > > Thanks
-> > > Dave
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> > 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
