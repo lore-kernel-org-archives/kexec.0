@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fvNgU-0001vy-Sq
- for kexec@lists.infradead.org; Thu, 30 Aug 2018 14:12:32 +0000
-Date: Thu, 30 Aug 2018 22:12:02 +0800
+ id 1fvNi0-0002Nn-A4
+ for kexec@lists.infradead.org; Thu, 30 Aug 2018 14:14:05 +0000
+Date: Thu, 30 Aug 2018 22:13:49 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 0/3] Add restrictions for kexec/kdump jumping between
- 5-level and 4-level kernel
-Message-ID: <20180830141202.GA14702@192.168.1.2>
+Subject: Re: [PATCH 3/3] x86/kdump/64: Change the upper limit of crashkernel
+ reservation
+Message-ID: <20180830141349.GB14702@192.168.1.2>
 References: <20180829141624.13985-1-bhe@redhat.com>
- <20180830135855.rylamc7mx2ur3tab@kshutemo-mobl1>
+ <20180829141624.13985-4-bhe@redhat.com>
+ <20180830135037.efhruljtekoozgxr@kshutemo-mobl1>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180830135855.rylamc7mx2ur3tab@kshutemo-mobl1>
+In-Reply-To: <20180830135037.efhruljtekoozgxr@kshutemo-mobl1>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,46 +29,19 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Kirill A. Shutemov" <kirill@shutemov.name>
 Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org, kirill.shutemov@linux.intel.com
 
-On 08/30/18 at 04:58pm, Kirill A. Shutemov wrote:
-> On Wed, Aug 29, 2018 at 10:16:21PM +0800, Baoquan He wrote:
-> > This was suggested by Kirill several months ago, I worked out several
-> > patches to fix, then interrupted by other issues. So sort them out
-> > now and post for reviewing.
-> 
-> Thanks for doing this.
-> 
-> > The current upstream kernel supports 5-level paging mode and supports
-> > dynamically choosing paging mode during bootup according to kernel
-> > image, hardware and kernel parameter setting. This flexibility brings
-> > several issues for kexec/kdump:
-> > 1)
-> > Switching between paging modes, requires changes into target kernel.
-> > It means you cannot kexec() 4-level paging kernel from 5-level paging
-> > kernel if 4-level paging kernel doesn't include changes. 
+On 08/30/18 at 04:50pm, Kirill A. Shutemov wrote:
+> On Wed, Aug 29, 2018 at 10:16:24PM +0800, Baoquan He wrote:
+> > Restrict kdump to only reserve crashkernel below 64TB. Since the kdump
+> > jumping may be from 5-level to 4-level, and the kdump kernel is put
+> > above 64TB in 5-level kernel, then the jumping will fail. And the
+> > crashkernel reservation is done during the 1st kernel bootup, there's
+> > no way to detect the paging mode of kdump kernel at that time.
 > > 
-> > 2)
-> > Switching from 5-level paging to 4-level paging kernel would fail, if
-> > kexec() put kernel image above 64TiB of memory.
+> > Hence change the upper limmit of crashkernel reservation to 64TB
 > 
-> I'm not entirely sure that 64TiB is the limit here. Technically, 4-level
-> paging allows to address 256TiB in 1-to-1 mapping. We just don't have
-> machines with that wide physical address space (which don't support
-> 5-level paging too).
+> s/limmit/limit/
 
-Hmm, afaik, the MAX_PHYSMEM_BITS limits the maximum address space
-which physical RAM can mapped to. We have 256TB for the whole address
-space for 4-level paging, that includes user space and kernel space,
-it might not allow 256TB entirely for the direct mapping.
-And the direct mapping is only for physical RAM mapping, and
-kexec/kdump only cares about the physical RAM space and load them
-inside.
-
-# define MAX_PHYSMEM_BITS       (pgtable_l5_enabled() ? 52 : 46)
-
-Not sure if my understanding is right, please correct me if I am wrong.
-
-Thanks
-Baoquan
+Thanks, will change.
 
 _______________________________________________
 kexec mailing list
