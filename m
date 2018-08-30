@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mail-pf1-x444.google.com ([2607:f8b0:4864:20::444])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fv1HE-0005g1-0U
- for kexec@lists.infradead.org; Wed, 29 Aug 2018 14:16:57 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH 3/3] x86/kdump/64: Change the upper limit of crashkernel
+ id 1fvNLb-00015F-F6
+ for kexec@lists.infradead.org; Thu, 30 Aug 2018 13:50:56 +0000
+Received: by mail-pf1-x444.google.com with SMTP id i26-v6so3898839pfo.12
+ for <kexec@lists.infradead.org>; Thu, 30 Aug 2018 06:50:44 -0700 (PDT)
+Date: Thu, 30 Aug 2018 16:50:37 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+Subject: Re: [PATCH 3/3] x86/kdump/64: Change the upper limit of crashkernel
  reservation
-Date: Wed, 29 Aug 2018 22:16:24 +0800
-Message-Id: <20180829141624.13985-4-bhe@redhat.com>
-In-Reply-To: <20180829141624.13985-1-bhe@redhat.com>
+Message-ID: <20180830135037.efhruljtekoozgxr@kshutemo-mobl1>
 References: <20180829141624.13985-1-bhe@redhat.com>
+ <20180829141624.13985-4-bhe@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180829141624.13985-4-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,66 +23,26 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com, kirill.shutemov@linux.intel.com
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org, kirill.shutemov@linux.intel.com
 
-Restrict kdump to only reserve crashkernel below 64TB. Since the kdump
-jumping may be from 5-level to 4-level, and the kdump kernel is put
-above 64TB in 5-level kernel, then the jumping will fail. And the
-crashkernel reservation is done during the 1st kernel bootup, there's
-no way to detect the paging mode of kdump kernel at that time.
+On Wed, Aug 29, 2018 at 10:16:24PM +0800, Baoquan He wrote:
+> Restrict kdump to only reserve crashkernel below 64TB. Since the kdump
+> jumping may be from 5-level to 4-level, and the kdump kernel is put
+> above 64TB in 5-level kernel, then the jumping will fail. And the
+> crashkernel reservation is done during the 1st kernel bootup, there's
+> no way to detect the paging mode of kdump kernel at that time.
+> 
+> Hence change the upper limmit of crashkernel reservation to 64TB
 
-Hence change the upper limmit of crashkernel reservation to 64TB
-on x86_64.
+s/limmit/limit/
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- arch/x86/kernel/setup.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 8fe740e22030..1a6389096782 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -451,16 +451,26 @@ static void __init memblock_x86_reserve_range_setup_data(void)
- #define CRASH_ALIGN		(16 << 20)
- 
- /*
-- * Keep the crash kernel below this limit.  On 32 bits earlier kernels
-- * would limit the kernel to the low 512 MiB due to mapping restrictions.
-- * On 64bit, old kexec-tools need to under 896MiB.
-+ * Keep the crash kernel below this limit.
-+ *
-+ * On 32 bits earlier kernels would limit the kernel to the low
-+ * 512 MiB due to mapping restrictions.
-+ *
-+ * On 64bit, old kexec-tools need to be under 896MiB. The later
-+ * supports to put kernel above 4G, up to system RAM top. Here
-+ * kdump kernel need be restricted to be under 64TB, which is
-+ * the upper limit of system RAM in 4-level paing mode. Since
-+ * the kdump jumping could be from 5-level to 4-level, the jumping
-+ * will fail if kernel is put above 64TB, and there's no way to
-+ * detect the paging mode of the kernel which will be loaded for
-+ * dumping during the 1st kernel boots up.
-  */
- #ifdef CONFIG_X86_32
- # define CRASH_ADDR_LOW_MAX	(512 << 20)
- # define CRASH_ADDR_HIGH_MAX	(512 << 20)
- #else
- # define CRASH_ADDR_LOW_MAX	(896UL << 20)
--# define CRASH_ADDR_HIGH_MAX	MAXMEM
-+# define CRASH_ADDR_HIGH_MAX	(1ULL < 46)
- #endif
- 
- static int __init reserve_crashkernel_low(void)
 -- 
-2.13.6
-
+ Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
