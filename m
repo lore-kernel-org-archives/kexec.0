@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fvefB-0008Es-Ks
- for kexec@lists.infradead.org; Fri, 31 Aug 2018 08:20:19 +0000
+ id 1fvefV-0000Is-Rd
+ for kexec@lists.infradead.org; Fri, 31 Aug 2018 08:20:39 +0000
 From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 3/5 V6] kexec: allocate unencrypted control pages for kdump in
- case SME is enabled
-Date: Fri, 31 Aug 2018 16:19:28 +0800
-Message-Id: <20180831081930.31561-4-lijiang@redhat.com>
+Subject: [PATCH 4/5 V6] iommu/amd_iommu: remap the device table of IOMMU with
+ the memory encryption mask for kdump
+Date: Fri, 31 Aug 2018 16:19:29 +0800
+Message-Id: <20180831081930.31561-5-lijiang@redhat.com>
 In-Reply-To: <20180831081930.31561-1-lijiang@redhat.com>
 References: <20180831081930.31561-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,51 +26,44 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com
 
-When SME is enabled in the first kernel, we will allocate unencrypted pages
-for kdump in order to be able to boot the kdump kernel like kexec.
+In kdump kernel, it will copy the device table of IOMMU from the old device
+table, which is encrypted when SME is enabled in the first kernel. So we
+have to remap the old device table with the memory encryption mask.
 
 Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
 ---
- kernel/kexec_core.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/iommu/amd_iommu_init.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 23a83a4da38a..e7efcd1a977b 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -471,6 +471,16 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 84b3e4445d46..3931c7de7c69 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -902,12 +902,22 @@ static bool copy_device_table(void)
  		}
  	}
  
-+	if (pages) {
-+		/*
-+		 * For kdump, we need to ensure that these pages are
-+		 * unencrypted pages if SME is enabled.
-+		 * By the way, it is unnecessary to call the arch_
-+		 * kexec_pre_free_pages(), which will make the code
-+		 * become more simple.
-+		 */
-+		arch_kexec_post_alloc_pages(page_address(pages), 1 << order, 0);
-+	}
- 	return pages;
- }
+-	old_devtb_phys = entry & PAGE_MASK;
++	/*
++	 * When SME is enabled in the first kernel, the entry includes the
++	 * memory encryption mask(sme_me_mask), we must remove the memory
++	 * encryption mask to obtain the true physical address in kdump kernel.
++	 */
++	old_devtb_phys = __sme_clr(entry) & PAGE_MASK;
++
+ 	if (old_devtb_phys >= 0x100000000ULL) {
+ 		pr_err("The address of old device table is above 4G, not trustworthy!\n");
+ 		return false;
+ 	}
+-	old_devtb = memremap(old_devtb_phys, dev_table_size, MEMREMAP_WB);
++	old_devtb = (sme_active() && is_kdump_kernel())
++		    ? (__force void *)ioremap_encrypted(old_devtb_phys,
++							dev_table_size)
++		    : memremap(old_devtb_phys, dev_table_size, MEMREMAP_WB);
++
+ 	if (!old_devtb)
+ 		return false;
  
-@@ -867,6 +877,7 @@ static int kimage_load_crash_segment(struct kimage *image,
- 			result  = -ENOMEM;
- 			goto out;
- 		}
-+		arch_kexec_post_alloc_pages(page_address(page), 1, 0);
- 		ptr = kmap(page);
- 		ptr += maddr & ~PAGE_MASK;
- 		mchunk = min_t(size_t, mbytes,
-@@ -884,6 +895,7 @@ static int kimage_load_crash_segment(struct kimage *image,
- 			result = copy_from_user(ptr, buf, uchunk);
- 		kexec_flush_icache_page(page);
- 		kunmap(page);
-+		arch_kexec_pre_free_pages(page_address(page), 1);
- 		if (result) {
- 			result = -EFAULT;
- 			goto out;
 -- 
 2.17.1
 
