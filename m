@@ -1,15 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from mail-pl1-x644.google.com ([2607:f8b0:4864:20::644])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fvefV-0000mh-Re
- for kexec@lists.infradead.org; Fri, 31 Aug 2018 08:20:40 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 5/5 V6] kdump/vmcore: support encrypted old memory with SME
- enabled
-Date: Fri, 31 Aug 2018 16:19:30 +0800
-Message-Id: <20180831081930.31561-6-lijiang@redhat.com>
-In-Reply-To: <20180831081930.31561-1-lijiang@redhat.com>
-References: <20180831081930.31561-1-lijiang@redhat.com>
+ id 1fwZFR-0004Ru-SR
+ for kexec@lists.infradead.org; Sun, 02 Sep 2018 20:45:31 +0000
+Received: by mail-pl1-x644.google.com with SMTP id w14-v6so7674888plp.6
+ for <kexec@lists.infradead.org>; Sun, 02 Sep 2018 13:45:17 -0700 (PDT)
+Date: Sun, 2 Sep 2018 23:45:10 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+Subject: Re: [PATCH 0/3] Add restrictions for kexec/kdump jumping between
+ 5-level and 4-level kernel
+Message-ID: <20180902204510.enghtkdnjenfhimp@kshutemo-mobl1>
+References: <20180829141624.13985-1-bhe@redhat.com>
+ <20180830135855.rylamc7mx2ur3tab@kshutemo-mobl1>
+ <20180830141202.GA14702@192.168.1.2>
+ <20180830142739.gfpa23nvex7xbkkf@black.fi.intel.com>
+ <20180830145751.GC14702@192.168.1.2>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180830145751.GC14702@192.168.1.2>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,224 +26,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com
+To: Baoquan He <bhe@redhat.com>
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 
-In kdump kernel, we need to dump the old memory into vmcore file,if SME
-is enabled in the first kernel, we have to remap the old memory with the
-memory encryption mask, which will be automatically decrypted when we
-read from DRAM.
+On Thu, Aug 30, 2018 at 10:57:51PM +0800, Baoquan He wrote:
+> On 08/30/18 at 05:27pm, Kirill A. Shutemov wrote:
+> > On Thu, Aug 30, 2018 at 02:12:02PM +0000, Baoquan He wrote:
+> > > On 08/30/18 at 04:58pm, Kirill A. Shutemov wrote:
+> > > > On Wed, Aug 29, 2018 at 10:16:21PM +0800, Baoquan He wrote:
+> > > > > This was suggested by Kirill several months ago, I worked out several
+> > > > > patches to fix, then interrupted by other issues. So sort them out
+> > > > > now and post for reviewing.
+> > > > 
+> > > > Thanks for doing this.
+> > > > 
+> > > > > The current upstream kernel supports 5-level paging mode and supports
+> > > > > dynamically choosing paging mode during bootup according to kernel
+> > > > > image, hardware and kernel parameter setting. This flexibility brings
+> > > > > several issues for kexec/kdump:
+> > > > > 1)
+> > > > > Switching between paging modes, requires changes into target kernel.
+> > > > > It means you cannot kexec() 4-level paging kernel from 5-level paging
+> > > > > kernel if 4-level paging kernel doesn't include changes. 
+> > > > > 
+> > > > > 2)
+> > > > > Switching from 5-level paging to 4-level paging kernel would fail, if
+> > > > > kexec() put kernel image above 64TiB of memory.
+> > > > 
+> > > > I'm not entirely sure that 64TiB is the limit here. Technically, 4-level
+> > > > paging allows to address 256TiB in 1-to-1 mapping. We just don't have
+> > > > machines with that wide physical address space (which don't support
+> > > > 5-level paging too).
+> > > 
+> > > Hmm, afaik, the MAX_PHYSMEM_BITS limits the maximum address space
+> > > which physical RAM can mapped to. We have 256TB for the whole address
+> > > space for 4-level paging, that includes user space and kernel space,
+> > > it might not allow 256TB entirely for the direct mapping.
+> > > And the direct mapping is only for physical RAM mapping, and
+> > > kexec/kdump only cares about the physical RAM space and load them
+> > > inside.
+> > > 
+> > > # define MAX_PHYSMEM_BITS       (pgtable_l5_enabled() ? 52 : 46)
+> > > 
+> > > Not sure if my understanding is right, please correct me if I am wrong.
+> > 
+> > IIRC, we only care about the place kexec puts the kernel before it gets
+> > decompressed. After the decompression kernel will be put into the right
+> > spot.
+> > 
+> > Decompression is done in early boot where we use 1-to-1 mapping (not a
+> > usual kernel virtual memory layout). All 256TiB should be reachable.
+> 
+> My understanding that is although it's 1:1 identity mapping, it still
+> has to be inside available physical RAM region. I don't remember what
+> the old code did, now in __startup_64(),
 
-For SME kdump, there are two cases that doesn't support:
+I'm talking about the code that runs before __startup_64(), in
+arch/x86/boot/compressed. Physcal memory start at virtual address 0 there,
+without PAGE_OFFSET.
 
- ----------------------------------------------
-| first-kernel | second-kernel | kdump support |
-|      (mem_encrypt=on|off)    |   (yes|no)    |
-|--------------+---------------+---------------|
-|     on       |     on        |     yes       |
-|     off      |     off       |     yes       |
-|     on       |     off       |     no        |
-|     off      |     on        |     no        |
-|______________|_______________|_______________|
+> you can see that there's a check like below, and at this time, it's
+> still identity mapping.
+> 
+>         /* Is the address too large? */
+>         if (physaddr >> MAX_PHYSMEM_BITS)
+>                 for (;;);
+> 
+> Thanks
+> Baoquan
 
-1. SME is enabled in the first kernel, but SME is disabled in kdump kernel
-In this case, because the old memory is encrypted, we can't decrypt the
-old memory.
-
-2. SME is disabled in the first kernel, but SME is enabled in kdump kernel
-On the one hand, the old memory is unencrypted, the old memory can be dumped
-as usual, we don't need to enable SME in kdump kernel; On the other hand, it
-will increase the complexity of the code, we will have to consider how to
-pass the SME flag from the first kernel to the kdump kernel, it is really
-too expensive to do this.
-
-This patches are only for SME kdump, the patches don't support SEV kdump.
-
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- arch/x86/kernel/Makefile             |  1 +
- arch/x86/kernel/crash_dump_encrypt.c | 53 ++++++++++++++++++++++++++++
- fs/proc/vmcore.c                     | 21 +++++++----
- include/linux/crash_dump.h           | 12 +++++++
- 4 files changed, 81 insertions(+), 6 deletions(-)
- create mode 100644 arch/x86/kernel/crash_dump_encrypt.c
-
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 8824d01c0c35..dfbeae0e35ce 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -97,6 +97,7 @@ obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec_$(BITS).o
- obj-$(CONFIG_KEXEC_CORE)	+= relocate_kernel_$(BITS).o crash.o
- obj-$(CONFIG_KEXEC_FILE)	+= kexec-bzimage64.o
- obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
-+obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= crash_dump_encrypt.o
- obj-y				+= kprobes/
- obj-$(CONFIG_MODULES)		+= module.o
- obj-$(CONFIG_DOUBLEFAULT)	+= doublefault.o
-diff --git a/arch/x86/kernel/crash_dump_encrypt.c b/arch/x86/kernel/crash_dump_encrypt.c
-new file mode 100644
-index 000000000000..e1b1a577f197
---- /dev/null
-+++ b/arch/x86/kernel/crash_dump_encrypt.c
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *	Memory preserving reboot related code.
-+ *
-+ *	Created by: Lianbo Jiang (lijiang@redhat.com)
-+ *	Copyright (C) RedHat Corporation, 2018. All rights reserved
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/crash_dump.h>
-+#include <linux/uaccess.h>
-+#include <linux/io.h>
-+
-+/**
-+ * copy_oldmem_page_encrypted - copy one page from "oldmem encrypted"
-+ * @pfn: page frame number to be copied
-+ * @buf: target memory address for the copy; this can be in kernel address
-+ *	space or user address space (see @userbuf)
-+ * @csize: number of bytes to copy
-+ * @offset: offset in bytes into the page (based on pfn) to begin the copy
-+ * @userbuf: if set, @buf is in user address space, use copy_to_user(),
-+ *	otherwise @buf is in kernel address space, use memcpy().
-+ *
-+ * Copy a page from "oldmem encrypted". For this page, there is no pte
-+ * mapped in the current kernel. We stitch up a pte, similar to
-+ * kmap_atomic.
-+ */
-+
-+ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
-+		size_t csize, unsigned long offset, int userbuf)
-+{
-+	void  *vaddr;
-+
-+	if (!csize)
-+		return 0;
-+
-+	vaddr = (__force void *)ioremap_encrypted(pfn << PAGE_SHIFT,
-+						  PAGE_SIZE);
-+	if (!vaddr)
-+		return -ENOMEM;
-+
-+	if (userbuf) {
-+		if (copy_to_user((void __user *)buf, vaddr + offset, csize)) {
-+			iounmap((void __iomem *)vaddr);
-+			return -EFAULT;
-+		}
-+	} else
-+		memcpy(buf, vaddr + offset, csize);
-+
-+	set_iounmap_nonlazy();
-+	iounmap((void __iomem *)vaddr);
-+	return csize;
-+}
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index cbde728f8ac6..3065c8bada6a 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -25,6 +25,9 @@
- #include <linux/pagemap.h>
- #include <linux/uaccess.h>
- #include <asm/io.h>
-+#include <linux/io.h>
-+#include <linux/mem_encrypt.h>
-+#include <asm/pgtable.h>
- #include "internal.h"
- 
- /* List representing chunks of contiguous memory areas and their offsets in
-@@ -98,7 +101,8 @@ static int pfn_is_ram(unsigned long pfn)
- 
- /* Reads a page from the oldmem device from given offset. */
- static ssize_t read_from_oldmem(char *buf, size_t count,
--				u64 *ppos, int userbuf)
-+				u64 *ppos, int userbuf,
-+				bool encrypted)
- {
- 	unsigned long pfn, offset;
- 	size_t nr_bytes;
-@@ -120,8 +124,11 @@ static ssize_t read_from_oldmem(char *buf, size_t count,
- 		if (pfn_is_ram(pfn) == 0)
- 			memset(buf, 0, nr_bytes);
- 		else {
--			tmp = copy_oldmem_page(pfn, buf, nr_bytes,
--						offset, userbuf);
-+			tmp = encrypted ? copy_oldmem_page_encrypted(pfn,
-+					    buf, nr_bytes, offset, userbuf)
-+					: copy_oldmem_page(pfn, buf, nr_bytes,
-+							   offset, userbuf);
-+
- 			if (tmp < 0)
- 				return tmp;
- 		}
-@@ -155,7 +162,7 @@ void __weak elfcorehdr_free(unsigned long long addr)
-  */
- ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0);
-+	return read_from_oldmem(buf, count, ppos, 0, false);
- }
- 
- /*
-@@ -163,7 +170,7 @@ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-  */
- ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0);
-+	return read_from_oldmem(buf, count, ppos, 0, sme_active());
- }
- 
- /*
-@@ -173,6 +180,7 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
- 				  unsigned long from, unsigned long pfn,
- 				  unsigned long size, pgprot_t prot)
- {
-+	prot = pgprot_encrypted(prot);
- 	return remap_pfn_range(vma, from, pfn, size, prot);
- }
- 
-@@ -351,7 +359,8 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
- 					    m->offset + m->size - *fpos,
- 					    buflen);
- 			start = m->paddr + *fpos - m->offset;
--			tmp = read_from_oldmem(buffer, tsz, &start, userbuf);
-+			tmp = read_from_oldmem(buffer, tsz, &start, userbuf,
-+						sme_active());
- 			if (tmp < 0)
- 				return tmp;
- 			buflen -= tsz;
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index 3e4ba9d753c8..a7e7be8b0502 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -26,6 +26,18 @@ extern int remap_oldmem_pfn_range(struct vm_area_struct *vma,
- 
- extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
- 						unsigned long, int);
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+extern ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
-+					   size_t csize, unsigned long offset,
-+					   int userbuf);
-+#else
-+static inline
-+ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
-+				    unsigned long offset, int userbuf)
-+{
-+	return 0;
-+}
-+#endif
- void vmcore_cleanup(void);
- 
- /* Architecture code defines this if there are other possible ELF
 -- 
-2.17.1
-
+ Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
