@@ -1,23 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-x644.google.com ([2607:f8b0:4864:20::644])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fwZFR-0004Ru-SR
- for kexec@lists.infradead.org; Sun, 02 Sep 2018 20:45:31 +0000
-Received: by mail-pl1-x644.google.com with SMTP id w14-v6so7674888plp.6
- for <kexec@lists.infradead.org>; Sun, 02 Sep 2018 13:45:17 -0700 (PDT)
-Date: Sun, 2 Sep 2018 23:45:10 +0300
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
-Subject: Re: [PATCH 0/3] Add restrictions for kexec/kdump jumping between
- 5-level and 4-level kernel
-Message-ID: <20180902204510.enghtkdnjenfhimp@kshutemo-mobl1>
-References: <20180829141624.13985-1-bhe@redhat.com>
- <20180830135855.rylamc7mx2ur3tab@kshutemo-mobl1>
- <20180830141202.GA14702@192.168.1.2>
- <20180830142739.gfpa23nvex7xbkkf@black.fi.intel.com>
- <20180830145751.GC14702@192.168.1.2>
+ id 1fwerw-0006jb-Vp
+ for kexec@lists.infradead.org; Mon, 03 Sep 2018 02:45:38 +0000
+Date: Mon, 3 Sep 2018 10:45:12 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 2/5 V6] x86/ioremap: strengthen the logic in
+ early_memremap_pgprot_adjust() to adjust encryption mask
+Message-ID: <20180903024512.GA2568@dhcp-128-65.nay.redhat.com>
+References: <20180831081930.31561-1-lijiang@redhat.com>
+ <20180831081930.31561-3-lijiang@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180830145751.GC14702@192.168.1.2>
+In-Reply-To: <20180831081930.31561-3-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,77 +25,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Lianbo Jiang <lijiang@redhat.com>
+Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de
 
-On Thu, Aug 30, 2018 at 10:57:51PM +0800, Baoquan He wrote:
-> On 08/30/18 at 05:27pm, Kirill A. Shutemov wrote:
-> > On Thu, Aug 30, 2018 at 02:12:02PM +0000, Baoquan He wrote:
-> > > On 08/30/18 at 04:58pm, Kirill A. Shutemov wrote:
-> > > > On Wed, Aug 29, 2018 at 10:16:21PM +0800, Baoquan He wrote:
-> > > > > This was suggested by Kirill several months ago, I worked out several
-> > > > > patches to fix, then interrupted by other issues. So sort them out
-> > > > > now and post for reviewing.
-> > > > 
-> > > > Thanks for doing this.
-> > > > 
-> > > > > The current upstream kernel supports 5-level paging mode and supports
-> > > > > dynamically choosing paging mode during bootup according to kernel
-> > > > > image, hardware and kernel parameter setting. This flexibility brings
-> > > > > several issues for kexec/kdump:
-> > > > > 1)
-> > > > > Switching between paging modes, requires changes into target kernel.
-> > > > > It means you cannot kexec() 4-level paging kernel from 5-level paging
-> > > > > kernel if 4-level paging kernel doesn't include changes. 
-> > > > > 
-> > > > > 2)
-> > > > > Switching from 5-level paging to 4-level paging kernel would fail, if
-> > > > > kexec() put kernel image above 64TiB of memory.
-> > > > 
-> > > > I'm not entirely sure that 64TiB is the limit here. Technically, 4-level
-> > > > paging allows to address 256TiB in 1-to-1 mapping. We just don't have
-> > > > machines with that wide physical address space (which don't support
-> > > > 5-level paging too).
-> > > 
-> > > Hmm, afaik, the MAX_PHYSMEM_BITS limits the maximum address space
-> > > which physical RAM can mapped to. We have 256TB for the whole address
-> > > space for 4-level paging, that includes user space and kernel space,
-> > > it might not allow 256TB entirely for the direct mapping.
-> > > And the direct mapping is only for physical RAM mapping, and
-> > > kexec/kdump only cares about the physical RAM space and load them
-> > > inside.
-> > > 
-> > > # define MAX_PHYSMEM_BITS       (pgtable_l5_enabled() ? 52 : 46)
-> > > 
-> > > Not sure if my understanding is right, please correct me if I am wrong.
-> > 
-> > IIRC, we only care about the place kexec puts the kernel before it gets
-> > decompressed. After the decompression kernel will be put into the right
-> > spot.
-> > 
-> > Decompression is done in early boot where we use 1-to-1 mapping (not a
-> > usual kernel virtual memory layout). All 256TiB should be reachable.
+On 08/31/18 at 04:19pm, Lianbo Jiang wrote:
+> For kdump kernel, when SME is enabled, the acpi table and dmi table will need
+> to be remapped without the memory encryption mask. So we have to strengthen
+> the logic in early_memremap_pgprot_adjust(), which makes us have an opportunity
+> to adjust the memory encryption mask.
 > 
-> My understanding that is although it's 1:1 identity mapping, it still
-> has to be inside available physical RAM region. I don't remember what
-> the old code did, now in __startup_64(),
-
-I'm talking about the code that runs before __startup_64(), in
-arch/x86/boot/compressed. Physcal memory start at virtual address 0 there,
-without PAGE_OFFSET.
-
-> you can see that there's a check like below, and at this time, it's
-> still identity mapping.
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> ---
+>  arch/x86/mm/ioremap.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 > 
->         /* Is the address too large? */
->         if (physaddr >> MAX_PHYSMEM_BITS)
->                 for (;;);
-> 
-> Thanks
-> Baoquan
+> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+> index e01e6c695add..f9d9a39955f3 100644
+> --- a/arch/x86/mm/ioremap.c
+> +++ b/arch/x86/mm/ioremap.c
+> @@ -689,8 +689,15 @@ pgprot_t __init early_memremap_pgprot_adjust(resource_size_t phys_addr,
+>  	encrypted_prot = true;
+>  
+>  	if (sme_active()) {
+> +                /*
+> +                 * In kdump kernel, the acpi table and dmi table will need
+> +                 * to be remapped without the memory encryption mask. Here
+> +                 * we have to strengthen the logic to adjust the memory
+> +                 * encryption mask.
 
--- 
- Kirill A. Shutemov
+Assume the acpi/dmi tables are identical for both 1st kernel and kdump
+kernel, I'm not sure what is the difference, why need special handling
+for kdump. Can you add more explanations?
+
+> +                 */
+>  		if (early_memremap_is_setup_data(phys_addr, size) ||
+> -		    memremap_is_efi_data(phys_addr, size))
+> +		    memremap_is_efi_data(phys_addr, size) ||
+> +		    is_kdump_kernel())
+>  			encrypted_prot = false;
+>  	}
+>  
+> -- 
+> 2.17.1
+> 
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
