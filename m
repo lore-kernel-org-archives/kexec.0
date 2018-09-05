@@ -1,24 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a01:7a0:2:106d:700::1])
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fxSm6-0006Kp-Qa
- for kexec@lists.infradead.org; Wed, 05 Sep 2018 08:03:00 +0000
-Date: Wed, 5 Sep 2018 10:02:35 +0200 (CEST)
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 1/3] x86/boot: Add bit fields into xloadflags for 5-level
- kernel checking
-In-Reply-To: <7a1147d7-05af-98fe-3a14-b18ea445c2b5@zytor.com>
-Message-ID: <alpine.DEB.2.21.1809051002020.1416@nanos.tec.linutronix.de>
-References: <20180829141624.13985-1-bhe@redhat.com>
- <20180829141624.13985-2-bhe@redhat.com>
- <6ea94875-ae07-6220-eb3e-d3f830cdac03@zytor.com>
- <20180904034414.GI1740@192.168.1.3>
- <4546fc39-4982-4c91-c812-0df1e9bc9e20@zytor.com>
- <20180904052036.GJ1740@192.168.1.3>
- <c4f65956-ad99-84ee-d4bf-044a6f0c5010@zytor.com>
- <20180904084231.ubyjaqp4xhqcnper@kshutemo-mobl1>
- <7a1147d7-05af-98fe-3a14-b18ea445c2b5@zytor.com>
-MIME-Version: 1.0
+ id 1fxY4h-0003qu-Nu
+ for kexec@lists.infradead.org; Wed, 05 Sep 2018 13:42:39 +0000
+From: Lianbo Jiang <lijiang@redhat.com>
+Subject: [PATCH] kdump: fix an error that can not parse the e820 reserved
+ region
+Date: Wed,  5 Sep 2018 21:41:04 +0800
+Message-Id: <20180905134104.18237-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,41 +16,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Kirill A. Shutemov" <kirill@shutemov.name>, mingo@kernel.org, kirill.shutemov@linux.intel.com
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au, dyoung@redhat.com
 
-On Tue, 4 Sep 2018, H. Peter Anvin wrote:
+When kexec-tools load the kernel and initramfs for kdump, kexec-tools will
+read /proc/iomem and recreate the e820 ranges for kdump kernel. But it fails
+to parse the e820 reserved region, because the memcmp() is case sensitive
+when comparing the string. In fact, it may be "Reserved" or "reserved" in
+the /proc/iomem, so we use the strncasecmp() instead of the memcmp() to fix
+it.
 
-> On 09/04/18 01:42, Kirill A. Shutemov wrote:
-> > 
-> > Switching between 4- and 5-level paging modes (in either direction)
-> > requires paing disabling. It means the code that does the switching has to
-> > be under 4G otherwise we would lose control.
-> > 
-> > We handle the switching correctly in kernel decompression code, but not on
-> > kexec caller side.
-> > 
-> > XLF_5LEVEL indicates that kernel decompression code can deal with
-> > switching between paging modes and it's safe to jump there in 5-level
-> > paging mode.
-> > 
-> > As an alternative we can change kexec to switch to 4-level paging mode
-> > before starting the new kernel. Not sure how hard it will be.
-> > 
-> 
-> Have a flag saying entering in 5-level mode is fine.  However, you really
-> should support returning to 4-level mode in kexec.  It is *much* easier to do
-> on the caller side as you have total control of memory allocation there.
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+---
+ kexec/arch/i386/crashdump-x86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Works for a regular kexec, but not for starting a crash kernel....
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 437e8a8..6669c1a 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -287,7 +287,7 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
+ 			type = RANGE_PRAM;
+ 		} else if(memcmp(str,"Persistent Memory\n",18) == 0 ) {
+ 			type = RANGE_PMEM;
+-		} else if(memcmp(str,"reserved\n",9) == 0 ) {
++		} else if(strncasecmp(str,"reserved\n",9) == 0 ) {
+ 			type = RANGE_RESERVED;
+ 		} else if (memcmp(str, "GART\n", 5) == 0) {
+ 			gart_start = start;
+-- 
+2.17.1
 
-Thanks,
-
-	tglx
 
 _______________________________________________
 kexec mailing list
