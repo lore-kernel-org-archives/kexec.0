@@ -1,24 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+Received: from galois.linutronix.de ([2a01:7a0:2:106d:700::1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fxRax-0003d0-H4
- for kexec@lists.infradead.org; Wed, 05 Sep 2018 06:47:20 +0000
-Date: Wed, 5 Sep 2018 14:46:58 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 2/5 V6] x86/ioremap: strengthen the logic in
- early_memremap_pgprot_adjust() to adjust encryption mask
-Message-ID: <20180905064658.GA10310@dhcp-128-65.nay.redhat.com>
-References: <20180831081930.31561-1-lijiang@redhat.com>
- <20180831081930.31561-3-lijiang@redhat.com>
- <20180903024512.GA2568@dhcp-128-65.nay.redhat.com>
- <d2229538-51d5-ead7-c7e5-f4afe5b53693@redhat.com>
- <20180904004417.GA9842@dhcp-128-65.nay.redhat.com>
- <20180904012902.GB9842@dhcp-128-65.nay.redhat.com>
- <20180904015131.GA10877@dhcp-128-65.nay.redhat.com>
- <3a9ae246-0c3a-753a-41e2-f2788a882c50@redhat.com>
+ id 1fxSm6-0006Kp-Qa
+ for kexec@lists.infradead.org; Wed, 05 Sep 2018 08:03:00 +0000
+Date: Wed, 5 Sep 2018 10:02:35 +0200 (CEST)
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 1/3] x86/boot: Add bit fields into xloadflags for 5-level
+ kernel checking
+In-Reply-To: <7a1147d7-05af-98fe-3a14-b18ea445c2b5@zytor.com>
+Message-ID: <alpine.DEB.2.21.1809051002020.1416@nanos.tec.linutronix.de>
+References: <20180829141624.13985-1-bhe@redhat.com>
+ <20180829141624.13985-2-bhe@redhat.com>
+ <6ea94875-ae07-6220-eb3e-d3f830cdac03@zytor.com>
+ <20180904034414.GI1740@192.168.1.3>
+ <4546fc39-4982-4c91-c812-0df1e9bc9e20@zytor.com>
+ <20180904052036.GJ1740@192.168.1.3>
+ <c4f65956-ad99-84ee-d4bf-044a6f0c5010@zytor.com>
+ <20180904084231.ubyjaqp4xhqcnper@kshutemo-mobl1>
+ <7a1147d7-05af-98fe-3a14-b18ea445c2b5@zytor.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3a9ae246-0c3a-753a-41e2-f2788a882c50@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,35 +31,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: thomas.lendacky@amd.com, linux-efi <linux-efi@vger.kernel.org>, bhe@redhat.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Kirill A. Shutemov" <kirill@shutemov.name>, mingo@kernel.org, kirill.shutemov@linux.intel.com
 
-[snip]
+On Tue, 4 Sep 2018, H. Peter Anvin wrote:
+
+> On 09/04/18 01:42, Kirill A. Shutemov wrote:
+> > 
+> > Switching between 4- and 5-level paging modes (in either direction)
+> > requires paing disabling. It means the code that does the switching has to
+> > be under 4G otherwise we would lose control.
+> > 
+> > We handle the switching correctly in kernel decompression code, but not on
+> > kexec caller side.
+> > 
+> > XLF_5LEVEL indicates that kernel decompression code can deal with
+> > switching between paging modes and it's safe to jump there in 5-level
+> > paging mode.
+> > 
+> > As an alternative we can change kexec to switch to 4-level paging mode
+> > before starting the new kernel. Not sure how hard it will be.
+> > 
 > 
-> As previously mentioned, there are also many differences between kexec and kdump. In general,
-> kexec needs to look at all of available physical memory, but kdump doesn't need.
-> 
-> For kexec, kexec-tools will read /sys/firmware/memmap and recreate the e820 ranges for the 2nd
-> kernel. If it fails, will use /proc/iomem.
-> 
-> For kdump, kexec-tools will read /proc/iomem and recreate the e820 ranges for kdump kernel.
-> BTW: we can not get the range of persistent memory from /proc/iomem. So e820 ranges don't contain
-> the persistent memory in kdump kernel, this is the real reason why i need to strengthen the logic
-> of adjusting memory encryption mask.
+> Have a flag saying entering in 5-level mode is fine.  However, you really
+> should support returning to 4-level mode in kexec.  It is *much* easier to do
+> on the caller side as you have total control of memory allocation there.
 
-"persistent memory" is different, I think you meant about some reserved
-memory instead
+Works for a regular kexec, but not for starting a crash kernel....
 
-> 
-> If kexec-tools also use /sys/firmware/memmap for kdump(like kexec), kdump kernel can also work
-> without a fix, but the kexec-tools will have to be modified. Are you sure that you want me to
-> fix kexec-tools instead of kernel?
+Thanks,
 
-Yes, please fix kexec-tools to pass reserved ranges in e820, you will
-not need this patch then.
-
-Thanks
-Dave
+	tglx
 
 _______________________________________________
 kexec mailing list
