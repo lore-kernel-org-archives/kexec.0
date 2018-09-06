@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fxk3y-0000Mq-Me
- for kexec@lists.infradead.org; Thu, 06 Sep 2018 02:30:32 +0000
-Date: Thu, 6 Sep 2018 10:30:09 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1fxmj8-0002wg-RV
+ for kexec@lists.infradead.org; Thu, 06 Sep 2018 05:21:12 +0000
 Subject: Re: [PATCH] kdump: fix an error that can not parse the e820 reserved
  region
-Message-ID: <20180906023009.GA12218@dhcp-128-65.nay.redhat.com>
 References: <20180905134104.18237-1-lijiang@redhat.com>
+ <20180906023009.GA12218@dhcp-128-65.nay.redhat.com>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <baa1671b-aff0-0fbf-1a04-ecbec8f6f2f5@redhat.com>
+Date: Thu, 6 Sep 2018 13:20:49 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180905134104.18237-1-lijiang@redhat.com>
+In-Reply-To: <20180906023009.GA12218@dhcp-128-65.nay.redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,59 +21,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>
+To: Dave Young <dyoung@redhat.com>
 Cc: horms@verge.net.au, kexec@lists.infradead.org
 
-Hi Lianbo,
-
-On 09/05/18 at 09:41pm, Lianbo Jiang wrote:
-> When kexec-tools load the kernel and initramfs for kdump, kexec-tools will
-> read /proc/iomem and recreate the e820 ranges for kdump kernel. But it fails
-> to parse the e820 reserved region, because the memcmp() is case sensitive
-> when comparing the string. In fact, it may be "Reserved" or "reserved" in
-> the /proc/iomem, so we use the strncasecmp() instead of the memcmp() to fix
-> it.
-> 
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> ---
->  kexec/arch/i386/crashdump-x86.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index 437e8a8..6669c1a 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -287,7 +287,7 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
->  			type = RANGE_PRAM;
->  		} else if(memcmp(str,"Persistent Memory\n",18) == 0 ) {
->  			type = RANGE_PMEM;
-> -		} else if(memcmp(str,"reserved\n",9) == 0 ) {
-> +		} else if(strncasecmp(str,"reserved\n",9) == 0 ) {
->  			type = RANGE_RESERVED;
-
-It would be better to use two memcmp in two "else if" for "reserved" and "Reserved"
-
-BTW, add one whitespace before the function arguments. 
-
->  		} else if (memcmp(str, "GART\n", 5) == 0) {
->  			gart_start = start;
-> -- 
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-Thanks
-Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQwOeaciDA25pelIDEwOjMwLCBEYXZlIFlvdW5nIOWGmemBkzoKPiBIaSBMaWFu
+Ym8sCj4gCj4gT24gMDkvMDUvMTggYXQgMDk6NDFwbSwgTGlhbmJvIEppYW5nIHdyb3RlOgo+PiBX
+aGVuIGtleGVjLXRvb2xzIGxvYWQgdGhlIGtlcm5lbCBhbmQgaW5pdHJhbWZzIGZvciBrZHVtcCwg
+a2V4ZWMtdG9vbHMgd2lsbAo+PiByZWFkIC9wcm9jL2lvbWVtIGFuZCByZWNyZWF0ZSB0aGUgZTgy
+MCByYW5nZXMgZm9yIGtkdW1wIGtlcm5lbC4gQnV0IGl0IGZhaWxzCj4+IHRvIHBhcnNlIHRoZSBl
+ODIwIHJlc2VydmVkIHJlZ2lvbiwgYmVjYXVzZSB0aGUgbWVtY21wKCkgaXMgY2FzZSBzZW5zaXRp
+dmUKPj4gd2hlbiBjb21wYXJpbmcgdGhlIHN0cmluZy4gSW4gZmFjdCwgaXQgbWF5IGJlICJSZXNl
+cnZlZCIgb3IgInJlc2VydmVkIiBpbgo+PiB0aGUgL3Byb2MvaW9tZW0sIHNvIHdlIHVzZSB0aGUg
+c3RybmNhc2VjbXAoKSBpbnN0ZWFkIG9mIHRoZSBtZW1jbXAoKSB0byBmaXgKPj4gaXQuCj4+Cj4+
+IFNpZ25lZC1vZmYtYnk6IExpYW5ibyBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+PiAtLS0K
+Pj4gIGtleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmMgfCAyICstCj4+ICAxIGZpbGUgY2hh
+bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2tl
+eGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmMgYi9rZXhlYy9hcmNoL2kzODYvY3Jhc2hkdW1w
+LXg4Ni5jCj4+IGluZGV4IDQzN2U4YTguLjY2NjljMWEgMTAwNjQ0Cj4+IC0tLSBhL2tleGVjL2Fy
+Y2gvaTM4Ni9jcmFzaGR1bXAteDg2LmMKPj4gKysrIGIva2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVt
+cC14ODYuYwo+PiBAQCAtMjg3LDcgKzI4Nyw3IEBAIHN0YXRpYyBpbnQgZ2V0X2NyYXNoX21lbW9y
+eV9yYW5nZXMoc3RydWN0IG1lbW9yeV9yYW5nZSAqKnJhbmdlLCBpbnQgKnJhbmdlcywKPj4gIAkJ
+CXR5cGUgPSBSQU5HRV9QUkFNOwo+PiAgCQl9IGVsc2UgaWYobWVtY21wKHN0ciwiUGVyc2lzdGVu
+dCBNZW1vcnlcbiIsMTgpID09IDAgKSB7Cj4+ICAJCQl0eXBlID0gUkFOR0VfUE1FTTsKPj4gLQkJ
+fSBlbHNlIGlmKG1lbWNtcChzdHIsInJlc2VydmVkXG4iLDkpID09IDAgKSB7Cj4+ICsJCX0gZWxz
+ZSBpZihzdHJuY2FzZWNtcChzdHIsInJlc2VydmVkXG4iLDkpID09IDAgKSB7Cj4+ICAJCQl0eXBl
+ID0gUkFOR0VfUkVTRVJWRUQ7Cj4gCj4gSXQgd291bGQgYmUgYmV0dGVyIHRvIHVzZSB0d28gbWVt
+Y21wIGluIHR3byAiZWxzZSBpZiIgZm9yICJyZXNlcnZlZCIgYW5kICJSZXNlcnZlZCIKPiAKCk9r
+LCBpIHdpbGwgcG9zdCB2MiBhZ2FpbiBsYXRlci4KVGhhbmtzLgoKPiBCVFcsIGFkZCBvbmUgd2hp
+dGVzcGFjZSBiZWZvcmUgdGhlIGZ1bmN0aW9uIGFyZ3VtZW50cy4gCj4gCj4+ICAJCX0gZWxzZSBp
+ZiAobWVtY21wKHN0ciwgIkdBUlRcbiIsIDUpID09IDApIHsKPj4gIAkJCWdhcnRfc3RhcnQgPSBz
+dGFydDsKPj4gLS0gCj4+IDIuMTcuMQo+Pgo+Pgo+PiBfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwo+PiBrZXhlYyBtYWlsaW5nIGxpc3QKPj4ga2V4ZWNAbGlz
+dHMuaW5mcmFkZWFkLm9yZwo+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2tleGVjCj4gCj4gVGhhbmtzCj4gRGF2ZQo+IAoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9rZXhlYwo=
