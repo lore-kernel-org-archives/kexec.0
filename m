@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fyDuG-000058-0E
- for kexec@lists.infradead.org; Fri, 07 Sep 2018 10:22:55 +0000
+ id 1fyEqZ-0000mL-NK
+ for kexec@lists.infradead.org; Fri, 07 Sep 2018 11:22:46 +0000
 Subject: Patch "Fix kexec forbidding kernels signed with keys in the secondary
- keyring to boot" has been added to the 4.14-stable tree
+ keyring to boot" has been added to the 4.9-stable tree
 From: <gregkh@linuxfoundation.org>
-Date: Fri, 07 Sep 2018 12:19:38 +0200
-Message-ID: <153631557848239@kroah.com>
+Date: Fri, 07 Sep 2018 13:22:22 +0200
+Message-ID: <1536319342167104@kroah.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -29,12 +29,12 @@ This is a note to let you know that I've just added the patch titled
 
     Fix kexec forbidding kernels signed with keys in the secondary keyring to boot
 
-to the 4.14-stable tree which can be found at:
+to the 4.9-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
      fix-kexec-forbidding-kernels-signed-with-keys-in-the-secondary-keyring-to-boot.patch
-and it can be found in the queue-4.14 subdirectory.
+and it can be found in the queue-4.9 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
@@ -72,7 +72,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/arch/x86/kernel/kexec-bzimage64.c
 +++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -532,7 +532,7 @@ static int bzImage64_cleanup(void *loade
+@@ -529,7 +529,7 @@ static int bzImage64_cleanup(void *loade
  static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
  {
  	return verify_pefile_signature(kernel, kernel_len,
@@ -85,8 +85,8 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 Patches currently in stable-queue which might be from yannik@sembritzki.me are
 
-queue-4.14/replace-magic-for-trusting-the-secondary-keyring-with-define.patch
-queue-4.14/fix-kexec-forbidding-kernels-signed-with-keys-in-the-secondary-keyring-to-boot.patch
+queue-4.9/replace-magic-for-trusting-the-secondary-keyring-with-define.patch
+queue-4.9/fix-kexec-forbidding-kernels-signed-with-keys-in-the-secondary-keyring-to-boot.patch
 
 _______________________________________________
 kexec mailing list
