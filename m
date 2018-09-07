@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fyD7J-0008Ua-IB
- for kexec@lists.infradead.org; Fri, 07 Sep 2018 09:31:59 +0000
+ id 1fyDuG-000058-0E
+ for kexec@lists.infradead.org; Fri, 07 Sep 2018 10:22:55 +0000
 Subject: Patch "Fix kexec forbidding kernels signed with keys in the secondary
- keyring to boot" has been added to the 4.18-stable tree
+ keyring to boot" has been added to the 4.14-stable tree
 From: <gregkh@linuxfoundation.org>
-Date: Fri, 07 Sep 2018 11:31:19 +0200
-Message-ID: <153631267919813@kroah.com>
+Date: Fri, 07 Sep 2018 12:19:38 +0200
+Message-ID: <153631557848239@kroah.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -29,12 +29,12 @@ This is a note to let you know that I've just added the patch titled
 
     Fix kexec forbidding kernels signed with keys in the secondary keyring to boot
 
-to the 4.18-stable tree which can be found at:
+to the 4.14-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
      fix-kexec-forbidding-kernels-signed-with-keys-in-the-secondary-keyring-to-boot.patch
-and it can be found in the queue-4.18 subdirectory.
+and it can be found in the queue-4.14 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
@@ -85,8 +85,8 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 Patches currently in stable-queue which might be from yannik@sembritzki.me are
 
-queue-4.18/replace-magic-for-trusting-the-secondary-keyring-with-define.patch
-queue-4.18/fix-kexec-forbidding-kernels-signed-with-keys-in-the-secondary-keyring-to-boot.patch
+queue-4.14/replace-magic-for-trusting-the-secondary-keyring-with-define.patch
+queue-4.14/fix-kexec-forbidding-kernels-signed-with-keys-in-the-secondary-keyring-to-boot.patch
 
 _______________________________________________
 kexec mailing list
