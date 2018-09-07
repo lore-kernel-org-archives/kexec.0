@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fyO4H-00052j-0j
- for kexec@lists.infradead.org; Fri, 07 Sep 2018 21:13:30 +0000
+ id 1fyOGc-0002Cy-MH
+ for kexec@lists.infradead.org; Fri, 07 Sep 2018 21:26:16 +0000
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.18 025/145] Fix kexec forbidding kernels signed with keys in
+Subject: [PATCH 4.14 17/89] Fix kexec forbidding kernels signed with keys in
  the secondary keyring to boot
-Date: Fri,  7 Sep 2018 23:08:11 +0200
-Message-Id: <20180907210905.703424333@linuxfoundation.org>
-In-Reply-To: <20180907210903.617721278@linuxfoundation.org>
-References: <20180907210903.617721278@linuxfoundation.org>
+Date: Fri,  7 Sep 2018 23:09:11 +0200
+Message-Id: <20180907210854.770395068@linuxfoundation.org>
+In-Reply-To: <20180907210852.341064285@linuxfoundation.org>
+References: <20180907210852.341064285@linuxfoundation.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,7 +26,7 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, stable@vger.kernel.org, David Howells <dhowells@redhat.com>, Yannik Sembritzki <yannik@sembritzki.me>, keyrings@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, stable@kernel.org
 
-4.18-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
