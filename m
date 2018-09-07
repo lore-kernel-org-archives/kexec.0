@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x442.google.com ([2607:f8b0:4864:20::442])
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fyBfd-0001XA-UL
- for kexec@lists.infradead.org; Fri, 07 Sep 2018 07:59:15 +0000
-Received: by mail-pf1-x442.google.com with SMTP id k19-v6so6642686pfi.1
- for <kexec@lists.infradead.org>; Fri, 07 Sep 2018 00:59:03 -0700 (PDT)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v14 05/16] kexec_file: kexec_walk_memblock() only walks a
- dedicated region at kdump
-Date: Fri,  7 Sep 2018 16:56:42 +0900
-Message-Id: <20180907075653.4696-6-takahiro.akashi@linaro.org>
-In-Reply-To: <20180907075653.4696-1-takahiro.akashi@linaro.org>
-References: <20180907075653.4696-1-takahiro.akashi@linaro.org>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73] helo=mx1.redhat.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fyByL-0004w2-A2
+ for kexec@lists.infradead.org; Fri, 07 Sep 2018 08:18:50 +0000
+From: Lianbo Jiang <lijiang@redhat.com>
+Subject: [PATCH 1/4 v7] x86/ioremap: add a function ioremap_encrypted() to
+ remap kdump old memory
+Date: Fri,  7 Sep 2018 16:18:02 +0800
+Message-Id: <20180907081805.368-2-lijiang@redhat.com>
+In-Reply-To: <20180907081805.368-1-lijiang@redhat.com>
+References: <20180907081805.368-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,53 +23,126 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
-Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, prudo@linux.ibm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: thomas.lendacky@amd.com, bhe@redhat.com, joro@8bytes.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com
 
-In kdump case, there exists only one dedicated memblock region as usable
-memory (crashk_res). With this patch, kexec_walk_memblock() runs a given
-callback function on this region.
+When SME is enabled on AMD machine, the memory is encrypted in the first
+kernel. In this case, SME also needs to be enabled in kdump kernel, and
+we have to remap the old memory with the memory encryption mask.
 
-Cosmetic change: 0 to MEMBLOCK_NONE at for_each_free_mem_range*()
-
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
 ---
- kernel/kexec_file.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/io.h |  3 +++
+ arch/x86/mm/ioremap.c     | 25 +++++++++++++++++--------
+ 2 files changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 370d7eab49fe..2f615a7968dd 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -511,8 +511,11 @@ static int kexec_walk_memblock(struct kexec_buf *kbuf,
- 	phys_addr_t mstart, mend;
- 	struct resource res = { };
+diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+index 6de64840dd22..f8795f9581c7 100644
+--- a/arch/x86/include/asm/io.h
++++ b/arch/x86/include/asm/io.h
+@@ -192,6 +192,9 @@ extern void __iomem *ioremap_cache(resource_size_t offset, unsigned long size);
+ #define ioremap_cache ioremap_cache
+ extern void __iomem *ioremap_prot(resource_size_t offset, unsigned long size, unsigned long prot_val);
+ #define ioremap_prot ioremap_prot
++extern void __iomem *ioremap_encrypted(resource_size_t phys_addr,
++					unsigned long size);
++#define ioremap_encrypted ioremap_encrypted
  
-+	if (kbuf->image->type == KEXEC_TYPE_CRASH)
-+		return func(&crashk_res, kbuf);
+ /**
+  * ioremap     -   map bus memory into CPU space
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index c63a545ec199..e01e6c695add 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -24,6 +24,7 @@
+ #include <asm/pgalloc.h>
+ #include <asm/pat.h>
+ #include <asm/setup.h>
++#include <linux/crash_dump.h>
+ 
+ #include "physaddr.h"
+ 
+@@ -131,7 +132,8 @@ static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
+  * caller shouldn't need to know that small detail.
+  */
+ static void __iomem *__ioremap_caller(resource_size_t phys_addr,
+-		unsigned long size, enum page_cache_mode pcm, void *caller)
++		unsigned long size, enum page_cache_mode pcm,
++		void *caller, bool encrypted)
+ {
+ 	unsigned long offset, vaddr;
+ 	resource_size_t last_addr;
+@@ -199,7 +201,7 @@ static void __iomem *__ioremap_caller(resource_size_t phys_addr,
+ 	 * resulting mapping.
+ 	 */
+ 	prot = PAGE_KERNEL_IO;
+-	if (sev_active() && mem_flags.desc_other)
++	if ((sev_active() && mem_flags.desc_other) || encrypted)
+ 		prot = pgprot_encrypted(prot);
+ 
+ 	switch (pcm) {
+@@ -291,7 +293,7 @@ void __iomem *ioremap_nocache(resource_size_t phys_addr, unsigned long size)
+ 	enum page_cache_mode pcm = _PAGE_CACHE_MODE_UC_MINUS;
+ 
+ 	return __ioremap_caller(phys_addr, size, pcm,
+-				__builtin_return_address(0));
++				__builtin_return_address(0), false);
+ }
+ EXPORT_SYMBOL(ioremap_nocache);
+ 
+@@ -324,7 +326,7 @@ void __iomem *ioremap_uc(resource_size_t phys_addr, unsigned long size)
+ 	enum page_cache_mode pcm = _PAGE_CACHE_MODE_UC;
+ 
+ 	return __ioremap_caller(phys_addr, size, pcm,
+-				__builtin_return_address(0));
++				__builtin_return_address(0), false);
+ }
+ EXPORT_SYMBOL_GPL(ioremap_uc);
+ 
+@@ -341,7 +343,7 @@ EXPORT_SYMBOL_GPL(ioremap_uc);
+ void __iomem *ioremap_wc(resource_size_t phys_addr, unsigned long size)
+ {
+ 	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WC,
+-					__builtin_return_address(0));
++					__builtin_return_address(0), false);
+ }
+ EXPORT_SYMBOL(ioremap_wc);
+ 
+@@ -358,14 +360,21 @@ EXPORT_SYMBOL(ioremap_wc);
+ void __iomem *ioremap_wt(resource_size_t phys_addr, unsigned long size)
+ {
+ 	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WT,
+-					__builtin_return_address(0));
++					__builtin_return_address(0), false);
+ }
+ EXPORT_SYMBOL(ioremap_wt);
+ 
++void __iomem *ioremap_encrypted(resource_size_t phys_addr, unsigned long size)
++{
++	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WB,
++				__builtin_return_address(0), true);
++}
++EXPORT_SYMBOL(ioremap_encrypted);
 +
- 	if (kbuf->top_down) {
--		for_each_free_mem_range_reverse(i, NUMA_NO_NODE, 0,
-+		for_each_free_mem_range_reverse(i, NUMA_NO_NODE, MEMBLOCK_NONE,
- 						&mstart, &mend, NULL) {
- 			/*
- 			 * In memblock, end points to the first byte after the
-@@ -526,8 +529,8 @@ static int kexec_walk_memblock(struct kexec_buf *kbuf,
- 				break;
- 		}
- 	} else {
--		for_each_free_mem_range(i, NUMA_NO_NODE, 0, &mstart, &mend,
--					NULL) {
-+		for_each_free_mem_range(i, NUMA_NO_NODE, MEMBLOCK_NONE,
-+					&mstart, &mend, NULL) {
- 			/*
- 			 * In memblock, end points to the first byte after the
- 			 * range while in kexec, end points to the last byte
+ void __iomem *ioremap_cache(resource_size_t phys_addr, unsigned long size)
+ {
+ 	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WB,
+-				__builtin_return_address(0));
++				__builtin_return_address(0), false);
+ }
+ EXPORT_SYMBOL(ioremap_cache);
+ 
+@@ -374,7 +383,7 @@ void __iomem *ioremap_prot(resource_size_t phys_addr, unsigned long size,
+ {
+ 	return __ioremap_caller(phys_addr, size,
+ 				pgprot2cachemode(__pgprot(prot_val)),
+-				__builtin_return_address(0));
++				__builtin_return_address(0), false);
+ }
+ EXPORT_SYMBOL(ioremap_prot);
+ 
 -- 
-2.18.0
+2.17.1
 
 
 _______________________________________________
