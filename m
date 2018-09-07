@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-f193.google.com ([209.85.210.193])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fyBil-0003FL-Iv
- for kexec@lists.infradead.org; Fri, 07 Sep 2018 08:02:40 +0000
-Received: by mail-pf1-f193.google.com with SMTP id i26-v6so6619666pfo.12
- for <kexec@lists.infradead.org>; Fri, 07 Sep 2018 01:02:17 -0700 (PDT)
+Received: from mail-pl1-x62a.google.com ([2607:f8b0:4864:20::62a])
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fyBfJ-0001WI-Gj
+ for kexec@lists.infradead.org; Fri, 07 Sep 2018 07:58:55 +0000
+Received: by mail-pl1-x62a.google.com with SMTP id b12-v6so6222102plr.8
+ for <kexec@lists.infradead.org>; Fri, 07 Sep 2018 00:58:42 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v14 12/16] arm64: kexec_file: add crash dump support
-Date: Fri,  7 Sep 2018 17:00:36 +0900
-Message-Id: <20180907080040.4967-7-takahiro.akashi@linaro.org>
-In-Reply-To: <20180907080040.4967-1-takahiro.akashi@linaro.org>
-References: <20180907080040.4967-1-takahiro.akashi@linaro.org>
+Subject: [PATCH v14 03/16] s390, kexec_file: drop arch_kexec_mem_walk()
+Date: Fri,  7 Sep 2018 16:56:40 +0900
+Message-Id: <20180907075653.4696-4-takahiro.akashi@linaro.org>
+In-Reply-To: <20180907075653.4696-1-takahiro.akashi@linaro.org>
+References: <20180907075653.4696-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,211 +27,83 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, prudo@linux.ibm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-Enabling crash dump (kdump) includes
-* prepare contents of ELF header of a core dump file, /proc/vmcore,
-  using crash_prepare_elf64_headers(), and
-* add two device tree properties, "linux,usable-memory-range" and
-  "linux,elfcorehdr", which represent respectively a memory range
-  to be used by crash dump kernel and the header's location
+Since s390 already knows where to locate buffers, calling
+arch_kexec_mem_walk() has no sense. So we can just drop it as kbuf->mem
+indicates this while all other architectures sets it to 0 initially.
+
+This change is a preparatory work for the next patch, where all the
+variant memory walks, either on system resource or memblock, will be
+put in one common place so that it will satisfy all the architectures'
+need.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Reviewed-by: James Morse <james.morse@arm.com>
+Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
 ---
- arch/arm64/include/asm/kexec.h         |   4 +
- arch/arm64/kernel/machine_kexec_file.c | 113 ++++++++++++++++++++++++-
- 2 files changed, 114 insertions(+), 3 deletions(-)
+ arch/s390/kernel/machine_kexec_file.c | 10 ----------
+ include/linux/kexec.h                 |  8 ++++++++
+ kernel/kexec_file.c                   |  4 ++++
+ 3 files changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 5e673481b3a3..1b2c27026ae0 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -99,6 +99,10 @@ static inline void crash_post_resume(void) {}
- struct kimage_arch {
- 	void *dtb;
- 	unsigned long dtb_mem;
-+	/* Core ELF header buffer */
-+	void *elf_headers;
-+	unsigned long elf_headers_mem;
-+	unsigned long elf_headers_sz;
- };
- 
- /**
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 05fb2d4e6fef..ecaecb122cad 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -16,10 +16,14 @@
- #include <linux/libfdt.h>
- #include <linux/memblock.h>
- #include <linux/of_fdt.h>
-+#include <linux/slab.h>
- #include <linux/types.h>
-+#include <linux/vmalloc.h>
- #include <asm/byteorder.h>
- 
- /* relevant device tree properties */
-+#define FDT_PSTR_KEXEC_ELFHDR	"linux,elfcorehdr"
-+#define FDT_PSTR_MEM_RANGE	"linux,usable-memory-range"
- #define FDT_PSTR_INITRD_STA	"linux,initrd-start"
- #define FDT_PSTR_INITRD_END	"linux,initrd-end"
- #define FDT_PSTR_BOOTARGS	"bootargs"
-@@ -34,6 +38,10 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- 	vfree(image->arch.dtb);
- 	image->arch.dtb = NULL;
- 
-+	vfree(image->arch.elf_headers);
-+	image->arch.elf_headers = NULL;
-+	image->arch.elf_headers_sz = 0;
-+
- 	return kexec_image_post_load_cleanup_default(image);
- }
- 
-@@ -43,12 +51,29 @@ static int setup_dtb(struct kimage *image,
- 		void **dtb_buf, unsigned long *dtb_buf_len)
- {
- 	void *buf = NULL;
--	size_t buf_size;
-+	size_t buf_size, range_size;
- 	int nodeoffset;
- 	int ret;
- 
-+	/* check ranges against root's #address-cells and #size-cells */
-+	if (image->type == KEXEC_TYPE_CRASH &&
-+		(!of_fdt_cells_size_fitted(image->arch.elf_headers_mem,
-+				image->arch.elf_headers_sz) ||
-+		 !of_fdt_cells_size_fitted(crashk_res.start,
-+				crashk_res.end - crashk_res.start + 1))) {
-+		pr_err("Crash memory region doesn't fit into DT's root cell sizes.\n");
-+		ret = -EINVAL;
-+		goto out_err;
-+	}
-+
- 	/* duplicate dt blob */
- 	buf_size = fdt_totalsize(initial_boot_params);
-+	range_size = of_fdt_reg_cells_size();
-+
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		buf_size += fdt_prop_len(FDT_PSTR_KEXEC_ELFHDR, range_size);
-+		buf_size += fdt_prop_len(FDT_PSTR_MEM_RANGE, range_size);
-+	}
- 
- 	if (initrd_load_addr) {
- 		/* can be redundant, but trimmed at the end */
-@@ -78,6 +103,22 @@ static int setup_dtb(struct kimage *image,
- 		goto out_err;
- 	}
- 
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		/* add linux,elfcorehdr */
-+		ret = fdt_setprop_reg(buf, nodeoffset, FDT_PSTR_KEXEC_ELFHDR,
-+				image->arch.elf_headers_mem,
-+				image->arch.elf_headers_sz);
-+		if (ret)
-+			goto out_err;
-+
-+		/* add linux,usable-memory-range */
-+		ret = fdt_setprop_reg(buf, nodeoffset, FDT_PSTR_MEM_RANGE,
-+				crashk_res.start,
-+				crashk_res.end - crashk_res.start + 1);
-+		if (ret)
-+			goto out_err;
-+	}
-+
- 	/* add bootargs */
- 	if (cmdline) {
- 		ret = fdt_setprop_string(buf, nodeoffset, FDT_PSTR_BOOTARGS,
-@@ -135,6 +176,43 @@ static int setup_dtb(struct kimage *image,
+diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
+index f413f57f8d20..32023b4f9dc0 100644
+--- a/arch/s390/kernel/machine_kexec_file.c
++++ b/arch/s390/kernel/machine_kexec_file.c
+@@ -134,16 +134,6 @@ int kexec_file_add_initrd(struct kimage *image, struct s390_load_data *data,
  	return ret;
  }
  
-+static int prepare_elf_headers(void **addr, unsigned long *sz)
-+{
-+	struct crash_mem *cmem;
-+	unsigned int nr_ranges;
-+	int ret;
-+	u64 i;
-+	phys_addr_t start, end;
+-/*
+- * The kernel is loaded to a fixed location. Turn off kexec_locate_mem_hole
+- * and provide kbuf->mem by hand.
+- */
+-int arch_kexec_walk_mem(struct kexec_buf *kbuf,
+-			int (*func)(struct resource *, void *))
+-{
+-	return 1;
+-}
+-
+ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+ 				     Elf_Shdr *section,
+ 				     const Elf_Shdr *relsec,
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 49ab758f4d91..f378cb786f1b 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -145,6 +145,14 @@ int kexec_image_probe_default(struct kimage *image, void *buf,
+ 			      unsigned long buf_len);
+ int kexec_image_post_load_cleanup_default(struct kimage *image);
+ 
++/*
++ * If kexec_buf.mem is set to this value, kexec_locate_mem_hole()
++ * will try to allocate free memory. Arch may overwrite it.
++ */
++#ifndef KEXEC_BUF_MEM_UNKNOWN
++#define KEXEC_BUF_MEM_UNKNOWN 0
++#endif
 +
-+	nr_ranges = 1; /* for exclusion of crashkernel region */
-+	for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
-+					MEMBLOCK_NONE, &start, &end, NULL)
-+		nr_ranges++;
-+
-+	cmem = kmalloc(sizeof(struct crash_mem) +
-+			sizeof(struct crash_mem_range) * nr_ranges, GFP_KERNEL);
-+	if (!cmem)
-+		return -ENOMEM;
-+
-+	cmem->max_nr_ranges = nr_ranges;
-+	cmem->nr_ranges = 0;
-+	for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
-+					MEMBLOCK_NONE, &start, &end, NULL) {
-+		cmem->ranges[cmem->nr_ranges].start = start;
-+		cmem->ranges[cmem->nr_ranges].end = end - 1;
-+		cmem->nr_ranges++;
-+	}
-+
-+	/* Exclude crashkernel region */
-+	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
-+
-+	if (!ret)
-+		ret =  crash_prepare_elf64_headers(cmem, true, addr, sz);
-+
-+	kfree(cmem);
-+	return ret;
-+}
-+
- int load_other_segments(struct kimage *image,
- 			unsigned long kernel_load_addr,
- 			unsigned long kernel_size,
-@@ -142,14 +220,43 @@ int load_other_segments(struct kimage *image,
- 			char *cmdline, unsigned long cmdline_len)
+ /**
+  * struct kexec_buf - parameters for finding a place for a buffer in memory
+  * @image:	kexec image in which memory to search.
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 63c7ce1c0c3e..0fcaa86219d1 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -534,6 +534,10 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
  {
- 	struct kexec_buf kbuf;
--	void *dtb = NULL;
--	unsigned long initrd_load_addr = 0, dtb_len;
-+	void *headers, *dtb = NULL;
-+	unsigned long headers_sz, initrd_load_addr = 0, dtb_len;
- 	int ret = 0;
+ 	int ret;
  
- 	kbuf.image = image;
- 	/* not allocate anything below the kernel */
- 	kbuf.buf_min = kernel_load_addr + kernel_size;
++	/* Arch knows where to place */
++	if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
++		return 0;
++
+ 	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
  
-+	/* load elf core header */
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		ret = prepare_elf_headers(&headers, &headers_sz);
-+		if (ret) {
-+			pr_err("Preparing elf core header failed\n");
-+			goto out_err;
-+		}
-+
-+		kbuf.buffer = headers;
-+		kbuf.bufsz = headers_sz;
-+		kbuf.mem = 0;
-+		kbuf.memsz = headers_sz;
-+		kbuf.buf_align = SZ_64K; /* largest supported page size */
-+		kbuf.buf_max = ULONG_MAX;
-+		kbuf.top_down = true;
-+
-+		ret = kexec_add_buffer(&kbuf);
-+		if (ret) {
-+			vfree(headers);
-+			goto out_err;
-+		}
-+		image->arch.elf_headers = headers;
-+		image->arch.elf_headers_mem = kbuf.mem;
-+		image->arch.elf_headers_sz = headers_sz;
-+
-+		pr_debug("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+			 image->arch.elf_headers_mem, headers_sz, headers_sz);
-+	}
-+
- 	/* load initrd */
- 	if (initrd) {
- 		kbuf.buffer = initrd;
+ 	return ret == 1 ? 0 : -EADDRNOTAVAIL;
 -- 
 2.18.0
 
