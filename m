@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fyEqZ-0000mL-NK
- for kexec@lists.infradead.org; Fri, 07 Sep 2018 11:22:46 +0000
-Subject: Patch "Fix kexec forbidding kernels signed with keys in the secondary
- keyring to boot" has been added to the 4.9-stable tree
-From: <gregkh@linuxfoundation.org>
-Date: Fri, 07 Sep 2018 13:22:22 +0200
-Message-ID: <1536319342167104@kroah.com>
+Subject: Re: [PATCH v14 06/16] of/fdt: add helper functions for handling
+ properties
+References: <20180907080040.4967-1-takahiro.akashi@linaro.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Message-ID: <a535515a-92f1-fc33-bdb9-6f5e0392cb11@gmail.com>
+Date: Fri, 7 Sep 2018 12:53:58 -0700
 MIME-Version: 1.0
+In-Reply-To: <20180907080040.4967-1-takahiro.akashi@linaro.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,72 +20,169 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dhowells@redhat.com, gregkh@linuxfoundation.org, kexec@lists.infradead.org, stable@kernel.org, torvalds@linux-foundation.org, yannik@sembritzki.me
-Cc: stable-commits@vger.kernel.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, prudo@linux.ibm.com, Rob Herring <robh+dt@kernel.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
+
+On 09/07/18 01:00, AKASHI Takahiro wrote:
+> These functions will be used later to handle kexec-specific properties
+> in arm64's kexec_file implementation.
+> 
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> ---
+>  drivers/of/fdt.c       | 62 ++++++++++++++++++++++++++++++++++++++++--
+>  include/linux/of_fdt.h | 10 +++++--
+>  2 files changed, 68 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 800ad252cf9c..dc960cea1355 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/serial_core.h>
+>  #include <linux/sysfs.h>
+> +#include <linux/types.h>
+>  
+>  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+>  #include <asm/page.h>
+> @@ -537,8 +538,8 @@ void *of_fdt_unflatten_tree(const unsigned long *blob,
+>  EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
+>  
+>  /* Everything below here references initial_boot_params directly. */
+> -int __initdata dt_root_addr_cells;
+> -int __initdata dt_root_size_cells;
+> +int dt_root_addr_cells;
+> +int dt_root_size_cells;
+>  
+>  void *initial_boot_params;
+>  
+> @@ -1323,3 +1324,60 @@ late_initcall(of_fdt_raw_init);
+>  #endif
+>  
+>  #endif /* CONFIG_OF_EARLY_FLATTREE */
+> +
+
+Please add comment:
+
+/* helper functions for arm64 kexec */
 
 
-This is a note to let you know that I've just added the patch titled
+> +bool of_fdt_cells_size_fitted(u64 base, u64 size)
 
-    Fix kexec forbidding kernels signed with keys in the secondary keyring to boot
-
-to the 4.9-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     fix-kexec-forbidding-kernels-signed-with-keys-in-the-secondary-keyring-to-boot.patch
-and it can be found in the queue-4.9 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
+Please rename as of_fdt_range_valid()
 
 
-From ea93102f32244e3f45c8b26260be77ed0cc1d16c Mon Sep 17 00:00:00 2001
-From: Yannik Sembritzki <yannik@sembritzki.me>
-Date: Thu, 16 Aug 2018 14:05:23 +0100
-Subject: Fix kexec forbidding kernels signed with keys in the secondary keyring to boot
+> +{
+> +	/* if *_cells >= 2, cells can hold 64-bit values anyway */
+> +	if ((dt_root_addr_cells == 1) && (base > U32_MAX))
+> +		return false;
+> +
+> +	if ((dt_root_size_cells == 1) && (size > U32_MAX))
+> +		return false;
 
-From: Yannik Sembritzki <yannik@sembritzki.me>
-
-commit ea93102f32244e3f45c8b26260be77ed0cc1d16c upstream.
-
-The split of .system_keyring into .builtin_trusted_keys and
-.secondary_trusted_keys broke kexec, thereby preventing kernels signed by
-keys which are now in the secondary keyring from being kexec'd.
-
-Fix this by passing VERIFY_USE_SECONDARY_KEYRING to
-verify_pefile_signature().
-
-Fixes: d3bfe84129f6 ("certs: Add a secondary system keyring that can be added to dynamically")
-Signed-off-by: Yannik Sembritzki <yannik@sembritzki.me>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Cc: kexec@lists.infradead.org
-Cc: keyrings@vger.kernel.org
-Cc: linux-security-module@vger.kernel.org
-Cc: stable@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/kernel/kexec-bzimage64.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -529,7 +529,7 @@ static int bzImage64_cleanup(void *loade
- static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
- {
- 	return verify_pefile_signature(kernel, kernel_len,
--				       NULL,
-+				       VERIFY_USE_SECONDARY_KEYRING,
- 				       VERIFYING_KEXEC_PE_SIGNATURE);
- }
- #endif
+Should also check that base + size does not wrap around.
 
 
-Patches currently in stable-queue which might be from yannik@sembritzki.me are
+> +
+> +	return true;
+> +}
+> +
+> +size_t of_fdt_reg_cells_size(void)
 
-queue-4.9/replace-magic-for-trusting-the-secondary-keyring-with-define.patch
-queue-4.9/fix-kexec-forbidding-kernels-signed-with-keys-in-the-secondary-keyring-to-boot.patch
+Please rename as of_fdt_root_range_size()
+
+
+> +{
+> +	return (dt_root_addr_cells + dt_root_size_cells) * sizeof(u32);
+> +}
+> +
+> +#define FDT_ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
+> +#define FDT_TAGALIGN(x)	(FDT_ALIGN((x), FDT_TAGSIZE))
+> +
+> +int fdt_prop_len(const char *prop_name, int len)
+
+Please rename as fdt_len_added_prop()
+
+
+> +{
+> +	return (strlen(prop_name) + 1) +
+> +		sizeof(struct fdt_property) +
+> +		FDT_TAGALIGN(len);
+> +}
+> +
+
+Please add comment, something like:
+
+/* cells must be 1 or 2 */
+
+
+> +static void fill_property(void *buf, u64 val64, int cells)
+
+Please rename as cpu64_to_fdt_cells()
+
+Thanks,
+
+Frank
+
+> +{
+> +	__be32 val32;
+> +
+> +	while (cells) {
+> +		val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
+> +		memcpy(buf, &val32, sizeof(val32));
+> +		buf += sizeof(val32);
+> +	}
+> +}
+> +
+> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
+> +						u64 addr, u64 size)
+> +{
+> +	char buf[sizeof(__be32) * 2 * 2];
+> +		/* assume dt_root_[addr|size]_cells <= 2 */
+> +	void *prop;
+> +	size_t buf_size;
+> +
+> +	buf_size = of_fdt_reg_cells_size();
+> +	prop = buf;
+> +
+> +	fill_property(prop, addr, dt_root_addr_cells);
+> +	prop += dt_root_addr_cells * sizeof(u32);
+> +
+> +	fill_property(prop, size, dt_root_size_cells);
+> +
+> +	return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
+> +}
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index b9cd9ebdf9b9..9615d6142578 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -37,8 +37,8 @@ extern void *of_fdt_unflatten_tree(const unsigned long *blob,
+>  				   struct device_node **mynodes);
+>  
+>  /* TBD: Temporary export of fdt globals - remove when code fully merged */
+> -extern int __initdata dt_root_addr_cells;
+> -extern int __initdata dt_root_size_cells;
+> +extern int dt_root_addr_cells;
+> +extern int dt_root_size_cells;
+>  extern void *initial_boot_params;
+>  
+>  extern char __dtb_start[];
+> @@ -108,5 +108,11 @@ static inline void unflatten_device_tree(void) {}
+>  static inline void unflatten_and_copy_device_tree(void) {}
+>  #endif /* CONFIG_OF_EARLY_FLATTREE */
+>  
+> +bool of_fdt_cells_size_fitted(u64 base, u64 size);
+> +size_t of_fdt_reg_cells_size(void);
+> +int fdt_prop_len(const char *prop_name, int len);
+> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
+> +						u64 addr, u64 size);
+> +
+>  #endif /* __ASSEMBLY__ */
+>  #endif /* _LINUX_OF_FDT_H */
+> 
+
 
 _______________________________________________
 kexec mailing list
