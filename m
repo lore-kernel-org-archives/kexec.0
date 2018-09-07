@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-f180.google.com ([209.85.215.180])
+Received: from mail-pg1-f196.google.com ([209.85.215.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fyBh3-0000ue-Kz
- for kexec@lists.infradead.org; Fri, 07 Sep 2018 08:00:46 +0000
-Received: by mail-pg1-f180.google.com with SMTP id b129-v6so6574774pga.13
- for <kexec@lists.infradead.org>; Fri, 07 Sep 2018 00:58:30 -0700 (PDT)
+ id 1fyBhg-0002tX-Ao
+ for kexec@lists.infradead.org; Fri, 07 Sep 2018 08:01:22 +0000
+Received: by mail-pg1-f196.google.com with SMTP id y4-v6so6589858pgp.9
+ for <kexec@lists.infradead.org>; Fri, 07 Sep 2018 01:01:09 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v14 02/16] kexec_file: make
- kexec_image_post_load_cleanup_default() global
-Date: Fri,  7 Sep 2018 16:56:39 +0900
-Message-Id: <20180907075653.4696-3-takahiro.akashi@linaro.org>
-In-Reply-To: <20180907075653.4696-1-takahiro.akashi@linaro.org>
-References: <20180907075653.4696-1-takahiro.akashi@linaro.org>
+Subject: [PATCH v14 06/16] of/fdt: add helper functions for handling properties
+Date: Fri,  7 Sep 2018 17:00:30 +0900
+Message-Id: <20180907080040.4967-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,46 +23,130 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
-Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, prudo@linux.ibm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
+Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, prudo@linux.ibm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, Rob Herring <robh+dt@kernel.org>, james.morse@arm.com, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 
-Change this function from static to global so that arm64 can implement
-its own arch_kimage_file_post_load_cleanup() later using
-kexec_image_post_load_cleanup_default().
+These functions will be used later to handle kexec-specific properties
+in arm64's kexec_file implementation.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Acked-by: Dave Young <dyoung@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
 ---
- include/linux/kexec.h | 1 +
- kernel/kexec_file.c   | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/of/fdt.c       | 62 ++++++++++++++++++++++++++++++++++++++++--
+ include/linux/of_fdt.h | 10 +++++--
+ 2 files changed, 68 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 9e4e638fb505..49ab758f4d91 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -143,6 +143,7 @@ extern const struct kexec_file_ops * const kexec_file_loaders[];
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 800ad252cf9c..dc960cea1355 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -25,6 +25,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/serial_core.h>
+ #include <linux/sysfs.h>
++#include <linux/types.h>
  
- int kexec_image_probe_default(struct kimage *image, void *buf,
- 			      unsigned long buf_len);
-+int kexec_image_post_load_cleanup_default(struct kimage *image);
+ #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+ #include <asm/page.h>
+@@ -537,8 +538,8 @@ void *of_fdt_unflatten_tree(const unsigned long *blob,
+ EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
  
- /**
-  * struct kexec_buf - parameters for finding a place for a buffer in memory
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index c6a3b6851372..63c7ce1c0c3e 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -78,7 +78,7 @@ void * __weak arch_kexec_kernel_image_load(struct kimage *image)
- 	return kexec_image_load_default(image);
- }
+ /* Everything below here references initial_boot_params directly. */
+-int __initdata dt_root_addr_cells;
+-int __initdata dt_root_size_cells;
++int dt_root_addr_cells;
++int dt_root_size_cells;
  
--static int kexec_image_post_load_cleanup_default(struct kimage *image)
-+int kexec_image_post_load_cleanup_default(struct kimage *image)
- {
- 	if (!image->fops || !image->fops->cleanup)
- 		return 0;
+ void *initial_boot_params;
+ 
+@@ -1323,3 +1324,60 @@ late_initcall(of_fdt_raw_init);
+ #endif
+ 
+ #endif /* CONFIG_OF_EARLY_FLATTREE */
++
++bool of_fdt_cells_size_fitted(u64 base, u64 size)
++{
++	/* if *_cells >= 2, cells can hold 64-bit values anyway */
++	if ((dt_root_addr_cells == 1) && (base > U32_MAX))
++		return false;
++
++	if ((dt_root_size_cells == 1) && (size > U32_MAX))
++		return false;
++
++	return true;
++}
++
++size_t of_fdt_reg_cells_size(void)
++{
++	return (dt_root_addr_cells + dt_root_size_cells) * sizeof(u32);
++}
++
++#define FDT_ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
++#define FDT_TAGALIGN(x)	(FDT_ALIGN((x), FDT_TAGSIZE))
++
++int fdt_prop_len(const char *prop_name, int len)
++{
++	return (strlen(prop_name) + 1) +
++		sizeof(struct fdt_property) +
++		FDT_TAGALIGN(len);
++}
++
++static void fill_property(void *buf, u64 val64, int cells)
++{
++	__be32 val32;
++
++	while (cells) {
++		val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
++		memcpy(buf, &val32, sizeof(val32));
++		buf += sizeof(val32);
++	}
++}
++
++int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
++						u64 addr, u64 size)
++{
++	char buf[sizeof(__be32) * 2 * 2];
++		/* assume dt_root_[addr|size]_cells <= 2 */
++	void *prop;
++	size_t buf_size;
++
++	buf_size = of_fdt_reg_cells_size();
++	prop = buf;
++
++	fill_property(prop, addr, dt_root_addr_cells);
++	prop += dt_root_addr_cells * sizeof(u32);
++
++	fill_property(prop, size, dt_root_size_cells);
++
++	return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
++}
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index b9cd9ebdf9b9..9615d6142578 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -37,8 +37,8 @@ extern void *of_fdt_unflatten_tree(const unsigned long *blob,
+ 				   struct device_node **mynodes);
+ 
+ /* TBD: Temporary export of fdt globals - remove when code fully merged */
+-extern int __initdata dt_root_addr_cells;
+-extern int __initdata dt_root_size_cells;
++extern int dt_root_addr_cells;
++extern int dt_root_size_cells;
+ extern void *initial_boot_params;
+ 
+ extern char __dtb_start[];
+@@ -108,5 +108,11 @@ static inline void unflatten_device_tree(void) {}
+ static inline void unflatten_and_copy_device_tree(void) {}
+ #endif /* CONFIG_OF_EARLY_FLATTREE */
+ 
++bool of_fdt_cells_size_fitted(u64 base, u64 size);
++size_t of_fdt_reg_cells_size(void);
++int fdt_prop_len(const char *prop_name, int len);
++int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
++						u64 addr, u64 size);
++
+ #endif /* __ASSEMBLY__ */
+ #endif /* _LINUX_OF_FDT_H */
 -- 
 2.18.0
 
