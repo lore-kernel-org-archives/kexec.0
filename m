@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fyOGc-0002Cy-MH
- for kexec@lists.infradead.org; Fri, 07 Sep 2018 21:26:16 +0000
+ id 1fyOPi-00068S-74
+ for kexec@lists.infradead.org; Fri, 07 Sep 2018 21:35:39 +0000
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 17/89] Fix kexec forbidding kernels signed with keys in
+Subject: [PATCH 4.9 42/63] Fix kexec forbidding kernels signed with keys in
  the secondary keyring to boot
-Date: Fri,  7 Sep 2018 23:09:11 +0200
-Message-Id: <20180907210854.770395068@linuxfoundation.org>
-In-Reply-To: <20180907210852.341064285@linuxfoundation.org>
-References: <20180907210852.341064285@linuxfoundation.org>
+Date: Fri,  7 Sep 2018 23:10:13 +0200
+Message-Id: <20180907211015.278423823@linuxfoundation.org>
+In-Reply-To: <20180907211012.965501324@linuxfoundation.org>
+References: <20180907211012.965501324@linuxfoundation.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,7 +26,7 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, stable@vger.kernel.org, David Howells <dhowells@redhat.com>, Yannik Sembritzki <yannik@sembritzki.me>, keyrings@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, stable@kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -57,7 +57,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/arch/x86/kernel/kexec-bzimage64.c
 +++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -532,7 +532,7 @@ static int bzImage64_cleanup(void *loade
+@@ -529,7 +529,7 @@ static int bzImage64_cleanup(void *loade
  static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
  {
  	return verify_pefile_signature(kernel, kernel_len,
