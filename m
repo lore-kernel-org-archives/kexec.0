@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from duke.felloff.net ([216.126.196.34])
  by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1fzhll-0006cJ-PR
- for kexec@lists.infradead.org; Tue, 11 Sep 2018 12:27:55 +0000
-Date: Tue, 11 Sep 2018 14:27:35 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] multiboot-x86: pass framebuffer information when requested
-Message-ID: <20180911122735.eib55j7sew47hgeo@verge.net.au>
-References: <69E6683EA6F9200C6AE6CDD7F567E6D0@felloff.net>
+ id 1fzm95-0003pB-Cz
+ for kexec@lists.infradead.org; Tue, 11 Sep 2018 17:08:13 +0000
+Message-ID: <26D69B9654740B54BC6FFDD09ADDFC3D@felloff.net>
+Date: Tue, 11 Sep 2018 19:07:41 +0200
+From: cinap_lenrek@felloff.net
+Subject: Re: [PATCH] multiboot-x86: support for non-elf kernels
+In-Reply-To: 20180911115318.b5hdt6njw6tsjzmi@verge.net.au
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <69E6683EA6F9200C6AE6CDD7F567E6D0@felloff.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,24 +21,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: cinap_lenrek@felloff.net
+To: horms@verge.net.au
 Cc: kexec@lists.infradead.org
 
-On Thu, Aug 02, 2018 at 04:05:30PM +0200, cinap_lenrek@felloff.net wrote:
-> When the kernel requests video information, pass it the
-> framebuffer information in the multiboot header from
-> the linux framebuffer ioctl's.
-> 
-> With the arch specific --reset-vga or --consolve-vga
-> options, purgatory will reset the framebuffer so pass
-> information for standard ega text mode.
-> 
-> Signed-off-by: Friedemann Gerold <cinap_lenrek@felloff.net>
+> Is it desirable for this check to be run for each iteration of the loop.
 
-This seems reasonable to me, but I would value a third-party review
-of this change.
+thats is not really the case. that statemet is executed exactly once.
+the first check in the loop body looks for the multiboot header
+signature and continues the loop if not found. once that check
+passes the iteration ends as we return at the bottom of the loop
+body, and there are no other continues.
 
-Reviewed-by: Simon Horman <horms@verge.net.au>
+	for (mbh_offset = 0; mbh_offset <= (len - 12); mbh_offset += 4)
+ 	{
+ 		/* Search for a multiboot header */
+		mbh = (struct multiboot_header *)(headerbuf + mbh_offset);
+ 		if (mbh->magic != MULTIBOOT_MAGIC 
+ 		    || ((mbh->magic+mbh->flags+mbh->checksum) & 0xffffffff))
+ 		{
+			/* Not a multiboot header */
+ 			continue;
+ 		}
+....
+
+--
+cinap
 
 _______________________________________________
 kexec mailing list
