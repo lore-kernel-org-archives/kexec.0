@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g2bzT-0000Ha-6k
- for kexec@lists.infradead.org; Wed, 19 Sep 2018 12:54:37 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 3/3 v2] x86/kexec_file: add reserved e820 ranges to kdump
- kernel e820 table
-Date: Wed, 19 Sep 2018 20:52:51 +0800
-Message-Id: <20180919125251.8181-4-lijiang@redhat.com>
-In-Reply-To: <20180919125251.8181-1-lijiang@redhat.com>
+Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1g2cYV-0008D9-Do
+ for kexec@lists.infradead.org; Wed, 19 Sep 2018 13:30:13 +0000
+Date: Wed, 19 Sep 2018 15:29:49 +0200
+From: Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH 1/3 v2] resource: fix an error which walks through iomem
+ resources
+Message-ID: <20180919132949.GB9122@nazgul.tnic>
 References: <20180919125251.8181-1-lijiang@redhat.com>
+ <20180919125251.8181-2-lijiang@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180919125251.8181-2-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,52 +21,23 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, bp@suse.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
+To: Lianbo Jiang <lijiang@redhat.com>
+Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
 
-E820 reserved ranges is useful in kdump kernel, we have added this in
-kexec-tools code.
-
-One reason is PCI mmconf (extended mode) requires reserved region
-otherwise it falls back to legacy mode.
-
-When AMD SME kdump support, it needs to map dmi table area as unencrypted.
-For normal boot these ranges sit in e820 reserved ranges thus the early
-ioremap code naturally map them as unencrypted. So if we have same e820
-reserve setup in kdump kernel then it will just work like normal kernel.
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- arch/x86/kernel/crash.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index ae724a6e0a5f..3460be990e0c 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -384,6 +384,11 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
- 			memmap_entry_callback);
- 
-+	/* Add all reserved ranges */
-+	cmd.type = E820_TYPE_RESERVED;
-+	walk_iomem_res_desc(IORES_DESC_NONE, 0, 0, -1, &cmd,
-+			memmap_entry_callback);
-+
- 	/* Add crashk_low_res region */
- 	if (crashk_low_res.end) {
- 		ei.addr = crashk_low_res.start;
--- 
-2.17.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCBTZXAgMTksIDIwMTggYXQgMDg6NTI6NDlQTSArMDgwMCwgTGlhbmJvIEppYW5nIHdy
+b3RlOgoKLi4uCgo+IEluIGZhY3QsIHdlIHNob3VsZCBnZXQgdGhlIHJlc291cmNlIEEgYW5kIEIg
+d2hlbiB3ZSB3YWxrIHRocm91Z2ggdGhlCj4gd2hvbGUgdHJlZSwgYnV0IGl0IG9ubHkgZ2V0cyB0
+aGUgcmVzb3VyY2UgQSwgdGhlIHJlc291cmNlIEIgaXMgbWlzc2VkLgo+IAo+IFNpZ25lZC1vZmYt
+Ynk6IERhdmUgWW91bmcgPGR5b3VuZ0ByZWRoYXQuY29tPgo+IFNpZ25lZC1vZmYtYnk6IExpYW5i
+byBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgoKQmVmb3JlIGxvb2tpbmcgYXQgdGhpczogdGhl
+IFNPQiBjaGFpbiBvZiBhbGwgdGhyZWUgcGF0Y2hlcyBpcyB3cm9uZy4KSGludDogc2VlIHNlY3Rp
+b24gMTIpIGluIERvY3VtZW50YXRpb24vcHJvY2Vzcy9zdWJtaXR0aW5nLXBhdGNoZXMucnN0Cgot
+LSAKUmVnYXJkcy9HcnVzcywKICAgIEJvcmlzLgoKU1VTRSBMaW51eCBHbWJILCBHRjogRmVsaXgg
+SW1lbmTDtnJmZmVyLCBKYW5lIFNtaXRoYXJkLCBHcmFoYW0gTm9ydG9uLCBIUkIgMjEyODQgKEFH
+IE7DvHJuYmVyZykKLS0gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
