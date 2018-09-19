@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g2bz1-00005R-8h
- for kexec@lists.infradead.org; Wed, 19 Sep 2018 12:54:34 +0000
+ id 1g2byq-0008Rs-PF
+ for kexec@lists.infradead.org; Wed, 19 Sep 2018 12:54:31 +0000
 From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 1/3 v2] resource: fix an error which walks through iomem
- resources
-Date: Wed, 19 Sep 2018 20:52:49 +0800
-Message-Id: <20180919125251.8181-2-lijiang@redhat.com>
-In-Reply-To: <20180919125251.8181-1-lijiang@redhat.com>
-References: <20180919125251.8181-1-lijiang@redhat.com>
+Subject: [PATCH 0/3 v2] add reserved e820 ranges to the kdump kernel e820 table
+Date: Wed, 19 Sep 2018 20:52:48 +0800
+Message-Id: <20180919125251.8181-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,65 +23,45 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, bp@suse.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
 
-When we walk through iomem resources by calling walk_iomem_res_desc(),
-the values of the function parameter may be modified in the while loop
-of __walk_iomem_res_desc(), which will cause us to not get the desired
-result in some cases.
+E820 reserved ranges is useful in kdump kernel, we have added this in
+kexec-tools code.
 
-At present, it only restores the original value of res->end, but it
-doesn't restore the original value of res->flags in the while loop of
-__walk_iomem _res_desc(). Whenever the find_next_iomem_res() finds a
-resource and returns the result, the original values of this resource
-will be modified, which might lead to an error in the next loop. For
-example:
+One reason is PCI mmconf (extended mode) requires reserved region otherwise
+it falls back to legacy mode.
 
-The original value of resource flags is:
- res->flags=0x80000200(initial value)
+Furthermore, when AMD SME kdump support, it needs to map dmi table area as
+unencrypted. For normal boot these ranges sit in e820 reserved ranges thus
+the early ioremap code naturally map them as unencrypted. So if we have same
+e820 reserve setup in kdump kernel then it will just work like normal kernel.
 
-p->flags   _ 0x81000200 _                _ 0x80000200 _
-          /              \              /              \
-|________|_______A________|____|_....._|______B_________|..........___|
-0                                                            0xffffffff
-                (memory address ranges)
+Kdump use walk_iomem_res_desc to iterate resources then add matched desc to
+e820 table for the kdump kernel.
 
-Note: if ((p->flags & res->flags) != res->flags) continue;
+But IORES_DESC_NONE resource type includes several different e820 types, we
+need add exact e820 type to the kdump kernel e820 table thus need an extra
+checking in memmap_entry_callback() to match the e820 type and resource name.
 
-When the resource A is found, the original value of this resource flags
-will be changed to 0x81000200(res->flags=0x81000200), and continue to
-look for the next resource, when the loop reaches resource B, it can not
-get the resource B any more(you can refer to the for loop of find_next
-_iomem_res()), because the value of conditional expression will become
-true and will also jump the resource B.
+By the way, we also fix an error which walks through iomem resources, the
+values of the function parameter may be modified in the while loop of
+__walk_iomem_res_desc(), which will cause us to not get the desired result
+in some cases.
 
-In fact, we should get the resource A and B when we walk through the
-whole tree, but it only gets the resource A, the resource B is missed.
+Changes since v1:
+1. We modified the value of flags to "0", when walking through the whole
+tree for e820 reserved ranges.
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- kernel/resource.c | 2 ++
- 1 file changed, 2 insertions(+)
+Lianbo Jiang (3):
+  resource: fix an error which walks through iomem resources
+  x86/kexec_file: add e820 entry in case e820 type string matches to io
+    resource name
+  x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 30e1bc68503b..f5d9fc70a04c 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -375,6 +375,7 @@ static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
- 				 int (*func)(struct resource *, void *))
- {
- 	u64 orig_end = res->end;
-+	u64 orig_flags = res->flags;
- 	int ret = -1;
- 
- 	while ((res->start < res->end) &&
-@@ -385,6 +386,7 @@ static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
- 
- 		res->start = res->end + 1;
- 		res->end = orig_end;
-+		res->flags = orig_flags;
- 	}
- 
- 	return ret;
+ arch/x86/include/asm/e820/api.h |  2 ++
+ arch/x86/kernel/crash.c         | 11 ++++++++++-
+ arch/x86/kernel/e820.c          |  2 +-
+ kernel/resource.c               |  3 +++
+ 4 files changed, 16 insertions(+), 2 deletions(-)
+
 -- 
 2.17.1
 
