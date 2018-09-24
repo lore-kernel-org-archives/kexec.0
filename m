@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g4V2Y-0006Kr-1o
- for kexec@lists.infradead.org; Mon, 24 Sep 2018 17:52:59 +0000
-Date: Mon, 24 Sep 2018 12:52:42 -0500
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1g4Z8K-00011G-5D
+ for kexec@lists.infradead.org; Mon, 24 Sep 2018 22:15:13 +0000
+Subject: [PATCH 1/3] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
 From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 1/3 v3] resource: fix an error which walks through iomem
- resources
-Message-ID: <20180924175241.GO224714@bhelgaas-glaptop.roam.corp.google.com>
-References: <20180921073211.20097-1-lijiang@redhat.com>
- <20180921073211.20097-2-lijiang@redhat.com>
+Date: Mon, 24 Sep 2018 17:14:46 -0500
+Message-ID: <153782728660.130337.15572354657557294628.stgit@bhelgaas-glaptop.roam.corp.google.com>
+In-Reply-To: <153782698067.130337.12079523922130875402.stgit@bhelgaas-glaptop.roam.corp.google.com>
+References: <153782698067.130337.12079523922130875402.stgit@bhelgaas-glaptop.roam.corp.google.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180921073211.20097-2-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,89 +23,48 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Lianbo Jiang <lijiang@redhat.com>
-Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, bp@suse.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
+Cc: dan.j.williams@intel.com, brijesh.singh@amd.com, bhe@redhat.com, thomas.lendacky@amd.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, tglx@linutronix.de, bp@suse.de, dyoung@redhat.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, Sep 21, 2018 at 03:32:09PM +0800, Lianbo Jiang wrote:
-> When we walk through iomem resources by calling walk_iomem_res_desc(),
-> the values of the function parameter may be modified in the while loop
-> of __walk_iomem_res_desc(), which will cause us to not get the desired
-> result in some cases.
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-If I understand correctly, the issue is caused by the interaction
-between __walk_iomem_res_desc() and find_next_iomem_res() in this
-path:
+The only use of KEXEC_BACKUP_SRC_END is as an argument to
+walk_system_ram_res():
 
-  __walk_iomem_res_desc
-    find_next_iomem_res
-      res->flags = p->flags;            # <-- problem
+  int crash_load_segments(struct kimage *image)
+  {
+    ...
+    walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
+                        image, determine_backup_region);
 
-This path is used by the following interfaces, and I think your patch
-would fix the issue for them:
+walk_system_ram_res() expects "start, end" arguments that are inclusive,
+i.e., the range to be walked includes both the start and end addresses.
 
-  walk_iomem_res_desc()
-  walk_system_ram_res()
-  walk_mem_res()
+KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
+first address *past* the desired 0-64KB range.
 
-However, find_next_iomem_res() is also used directly by
-walk_system_ram_range().  I think that path has the same problem, and
-your patch does not fix that path.
+Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
+region is [0-0xffff], not [0-0x10000].
 
-I have a few more comments related to the existing code that I'll post
-soon.
+Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ arch/x86/include/asm/kexec.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> At present, it only restores the original value of res->end, but it
-> doesn't restore the original value of res->flags in the while loop of
-> __walk_iomem _res_desc(). Whenever the find_next_iomem_res() finds a
-> resource and returns the result, the original values of this resource
-> will be modified, which might lead to an error in the next loop. For
-> example:
-> 
-> The original value of resource flags is:
->  res->flags=0x80000200(initial value)
-> 
-> p->flags   _ 0x81000200 _                _ 0x80000200 _
->           /              \              /              \
-> |________|_______A________|____|_....._|______B_________|..........___|
-> 0                                                            0xffffffff
->                 (memory address ranges)
-> 
-> Note: if ((p->flags & res->flags) != res->flags) continue;
-> 
-> When the resource A is found, the original value of this resource flags
-> will be changed to 0x81000200(res->flags=0x81000200), and continue to
-> look for the next resource, when the loop reaches resource B, it can not
-> get the resource B any more(you can refer to the for loop of find_next
-> _iomem_res()), because the value of conditional expression will become
-> true and will also jump the resource B.
-> 
-> In fact, we should get the resource A and B when we walk through the
-> whole tree, but it only gets the resource A, the resource B is missed.
-> 
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> ---
->  kernel/resource.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/resource.c b/kernel/resource.c
-> index 30e1bc68503b..f5d9fc70a04c 100644
-> --- a/kernel/resource.c
-> +++ b/kernel/resource.c
-> @@ -375,6 +375,7 @@ static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
->  				 int (*func)(struct resource *, void *))
->  {
->  	u64 orig_end = res->end;
-> +	u64 orig_flags = res->flags;
->  	int ret = -1;
->  
->  	while ((res->start < res->end) &&
-> @@ -385,6 +386,7 @@ static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
->  
->  		res->start = res->end + 1;
->  		res->end = orig_end;
-> +		res->flags = orig_flags;
->  	}
->  
->  	return ret;
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index f327236f0fa7..5125fca472bb 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -67,7 +67,7 @@ struct kimage;
+ 
+ /* Memory to backup during crash kdump */
+ #define KEXEC_BACKUP_SRC_START	(0UL)
+-#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
++#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
+ 
+ /*
+  * CPU does not save ss and sp on stack if execution is already
+
 
 _______________________________________________
 kexec mailing list
