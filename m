@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g4Z8K-00011G-5D
+ id 1g4Z8K-00010A-5H
  for kexec@lists.infradead.org; Mon, 24 Sep 2018 22:15:13 +0000
-Subject: [PATCH 1/3] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
+Subject: [PATCH 0/3] find_next_iomem_res() fixes
 From: Bjorn Helgaas <helgaas@kernel.org>
-Date: Mon, 24 Sep 2018 17:14:46 -0500
-Message-ID: <153782728660.130337.15572354657557294628.stgit@bhelgaas-glaptop.roam.corp.google.com>
-In-Reply-To: <153782698067.130337.12079523922130875402.stgit@bhelgaas-glaptop.roam.corp.google.com>
-References: <153782698067.130337.12079523922130875402.stgit@bhelgaas-glaptop.roam.corp.google.com>
+Date: Mon, 24 Sep 2018 17:14:37 -0500
+Message-ID: <153782698067.130337.12079523922130875402.stgit@bhelgaas-glaptop.roam.corp.google.com>
+In-Reply-To: <20180921073211.20097-2-lijiang@redhat.com>
+References: <20180921073211.20097-2-lijiang@redhat.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,46 +25,31 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Lianbo Jiang <lijiang@redhat.com>
 Cc: dan.j.williams@intel.com, brijesh.singh@amd.com, bhe@redhat.com, thomas.lendacky@amd.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, tglx@linutronix.de, bp@suse.de, dyoung@redhat.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+Hi Lianbo,
 
-The only use of KEXEC_BACKUP_SRC_END is as an argument to
-walk_system_ram_res():
+These three patches are a possible replacement for your first patch
+("[PATCH 1/3 v3] resource: fix an error which walks through iomem
+resources").
 
-  int crash_load_segments(struct kimage *image)
-  {
-    ...
-    walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
-                        image, determine_backup_region);
+I think the interface of find_next_iomem_res() can be improved to make
+the code easier to read and also avoid the errors you're fixing.
 
-walk_system_ram_res() expects "start, end" arguments that are inclusive,
-i.e., the range to be walked includes both the start and end addresses.
+I can't test these, so they've only been compiled.  If you can test
+them and if you like them, feel free to incorporate them into your
+series.  If not, just drop them (but please at least fix the same
+error in walk_system_ram_range()).
 
-KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
-first address *past* the desired 0-64KB range.
-
-Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
-region is [0-0xffff], not [0-0x10000].
-
-Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- arch/x86/include/asm/kexec.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index f327236f0fa7..5125fca472bb 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -67,7 +67,7 @@ struct kimage;
- 
- /* Memory to backup during crash kdump */
- #define KEXEC_BACKUP_SRC_START	(0UL)
--#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
-+#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
- 
- /*
-  * CPU does not save ss and sp on stack if execution is already
+Bjorn Helgaas (3):
+      x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
+      resource: Include resource end in walk_*() interfaces
+      resource: Fix find_next_iomem_res() iteration issue
 
+
+ arch/x86/include/asm/kexec.h |    2 -
+ kernel/resource.c            |   96 ++++++++++++++++++------------------------
+ 2 files changed, 43 insertions(+), 55 deletions(-)
 
 _______________________________________________
 kexec mailing list
