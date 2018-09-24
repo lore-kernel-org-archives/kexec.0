@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g4Z8K-00010A-5H
- for kexec@lists.infradead.org; Mon, 24 Sep 2018 22:15:13 +0000
-Subject: [PATCH 0/3] find_next_iomem_res() fixes
+ id 1g4Z8a-00012q-Ml
+ for kexec@lists.infradead.org; Mon, 24 Sep 2018 22:15:30 +0000
+Subject: [PATCH 2/3] resource: Include resource end in walk_*() interfaces
 From: Bjorn Helgaas <helgaas@kernel.org>
-Date: Mon, 24 Sep 2018 17:14:37 -0500
-Message-ID: <153782698067.130337.12079523922130875402.stgit@bhelgaas-glaptop.roam.corp.google.com>
-In-Reply-To: <20180921073211.20097-2-lijiang@redhat.com>
-References: <20180921073211.20097-2-lijiang@redhat.com>
+Date: Mon, 24 Sep 2018 17:14:55 -0500
+Message-ID: <153782729511.130337.17128646882631701192.stgit@bhelgaas-glaptop.roam.corp.google.com>
+In-Reply-To: <153782698067.130337.12079523922130875402.stgit@bhelgaas-glaptop.roam.corp.google.com>
+References: <153782698067.130337.12079523922130875402.stgit@bhelgaas-glaptop.roam.corp.google.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,31 +25,62 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Lianbo Jiang <lijiang@redhat.com>
 Cc: dan.j.williams@intel.com, brijesh.singh@amd.com, bhe@redhat.com, thomas.lendacky@amd.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, tglx@linutronix.de, bp@suse.de, dyoung@redhat.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Lianbo,
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-These three patches are a possible replacement for your first patch
-("[PATCH 1/3 v3] resource: fix an error which walks through iomem
-resources").
+find_next_iomem_res() finds an iomem resource that covers part of a range
+described by "start, end".  All callers expect that range to be inclusive,
+i.e., both start and end are included, but find_next_iomem_res() doesn't
+handle the end address correctly.
 
-I think the interface of find_next_iomem_res() can be improved to make
-the code easier to read and also avoid the errors you're fixing.
+If it finds an iomem resource that contains exactly the end address, it
+skips it, e.g., if "start, end" is [0x0-0x10000] and there happens to be an
+iomem resource [mem 0x10000-0x10000] (the single byte at 0x10000), we skip
+it:
 
-I can't test these, so they've only been compiled.  If you can test
-them and if you like them, feel free to incorporate them into your
-series.  If not, just drop them (but please at least fix the same
-error in walk_system_ram_range()).
+  find_next_iomem_res(...)
+  {
+    start = 0x0;
+    end = 0x10000;
+    for (p = next_resource(...)) {
+      # p->start = 0x10000;
+      # p->end = 0x10000;
+      # we *should* return this resource, but this condition is false:
+      if ((p->end >= start) && (p->start < end))
+        break;
 
+Adjust find_next_iomem_res() so it allows a resource that includes the
+single byte at the end of the range.  This is a corner case that we
+probably don't see in practice.
+
+Fixes: 58c1b5b07907 ("[PATCH] memory hotadd fixes: find_next_system_ram catch range fix")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
+ kernel/resource.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Bjorn Helgaas (3):
-      x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
-      resource: Include resource end in walk_*() interfaces
-      resource: Fix find_next_iomem_res() iteration issue
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 30e1bc68503b..155ec873ea4d 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -319,7 +319,7 @@ int release_resource(struct resource *old)
+ EXPORT_SYMBOL(release_resource);
+ 
+ /*
+- * Finds the lowest iomem resource existing within [res->start.res->end).
++ * Finds the lowest iomem resource existing within [res->start..res->end].
+  * The caller must specify res->start, res->end, res->flags, and optionally
+  * desc.  If found, returns 0, res is overwritten, if not found, returns -1.
+  * This function walks the whole tree and not just first level children until
+@@ -352,7 +352,7 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
+ 			p = NULL;
+ 			break;
+ 		}
+-		if ((p->end >= start) && (p->start < end))
++		if ((p->end >= start) && (p->start <= end))
+ 			break;
+ 	}
+ 
 
-
- arch/x86/include/asm/kexec.h |    2 -
- kernel/resource.c            |   96 ++++++++++++++++++------------------------
- 2 files changed, 43 insertions(+), 55 deletions(-)
 
 _______________________________________________
 kexec mailing list
