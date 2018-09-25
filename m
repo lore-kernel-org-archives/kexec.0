@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr710082.outbound.protection.outlook.com
- ([40.107.71.82] helo=NAM05-BY2-obe.outbound.protection.outlook.com)
+Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g4oPu-0000E4-5U
- for kexec@lists.infradead.org; Tue, 25 Sep 2018 14:34:24 +0000
-From: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+ id 1g4r6U-0002kX-4w
+ for kexec@lists.infradead.org; Tue, 25 Sep 2018 17:26:58 +0000
+Date: Tue, 25 Sep 2018 19:26:08 +0200
+From: Borislav Petkov <bp@suse.de>
 Subject: Re: [PATCH] x86/boot: Fix kexec booting failure after SEV early boot
  support
-Date: Tue, 25 Sep 2018 14:33:48 +0000
-Message-ID: <6e15796e-31e9-2dc6-4a31-5c1b01554b45@amd.com>
+Message-ID: <20180925172608.GB15464@zn.tnic>
 References: <20180925111020.23834-1-kasong@redhat.com>
-In-Reply-To: <20180925111020.23834-1-kasong@redhat.com>
-Content-Language: en-US
-Content-ID: <CF965B29EA876340B16CB7BC6D31989D@namprd12.prod.outlook.com>
+ <6e15796e-31e9-2dc6-4a31-5c1b01554b45@amd.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <6e15796e-31e9-2dc6-4a31-5c1b01554b45@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,153 +21,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "Singh, Brijesh" <brijesh.singh@amd.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, "dyoung@redhat.com" <dyoung@redhat.com>
+To: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>, Kairui Song <kasong@redhat.com>
+Cc: "Singh, Brijesh" <brijesh.singh@amd.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "dyoung@redhat.com" <dyoung@redhat.com>
 
-On 09/25/2018 06:10 AM, Kairui Song wrote:
-> Commit 1958b5fc4010 ("x86/boot: Add early boot support when running
-> with SEV active") is causing kexec becomes sometimes unstable, kexec
-> reboot won't start a second kernel bypassing BIOS boot process, instead,
-> the system got reset.
-> 
-> That's because, in get_sev_encryption_bit function, we are using
-> 32-bit RIP-relative addressing to read the value of enc_bit, but
-> kexec may alloc the early boot up code to a higher location, which
-> is beyond 32-bit addressing limit. Some garbage will be read and
-> get_sev_encryption_bit will return the wrong value, which lead to
-> wrong memory page flag.
-> 
-> This patch adds a get_sev_encryption_bit_64 function to avoid this
-> problem. 64-bit early boot code will use this function instead, it
-> uses native RIP addressing to read the enc_bit which have no problem
-> with any location.
-> 
-> Fixes: 1958b5fc4010 ("x86/boot: Add early boot support when running with SEV active")
-> Signed-off-by: Kairui Song <kasong@redhat.com>
-
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-
-> ---
->  arch/x86/boot/compressed/mem_encrypt.S | 64 ++++++++++++++++++--------
->  1 file changed, 45 insertions(+), 19 deletions(-)
-> 
-> diff --git a/arch/x86/boot/compressed/mem_encrypt.S b/arch/x86/boot/compressed/mem_encrypt.S
-> index eaa843a52907..41933550449a 100644
-> --- a/arch/x86/boot/compressed/mem_encrypt.S
-> +++ b/arch/x86/boot/compressed/mem_encrypt.S
-> @@ -18,27 +18,13 @@
->  
->  	.text
->  	.code32
-> -ENTRY(get_sev_encryption_bit)
-> +do_get_sev_encryption_bit:
->  	xor	%eax, %eax
->  
->  #ifdef CONFIG_AMD_MEM_ENCRYPT
->  	push	%ebx
->  	push	%ecx
->  	push	%edx
-> -	push	%edi
-> -
-> -	/*
-> -	 * RIP-relative addressing is needed to access the encryption bit
-> -	 * variable. Since we are running in 32-bit mode we need this call/pop
-> -	 * sequence to get the proper relative addressing.
-> -	 */
-> -	call	1f
-> -1:	popl	%edi
-> -	subl	$1b, %edi
-> -
-> -	movl	enc_bit(%edi), %eax
-> -	cmpl	$0, %eax
-> -	jge	.Lsev_exit
->  
->  	/* Check if running under a hypervisor */
->  	movl	$1, %eax
-> @@ -69,25 +55,65 @@ ENTRY(get_sev_encryption_bit)
->  
->  	movl	%ebx, %eax
->  	andl	$0x3f, %eax		/* Return the encryption bit location */
-> -	movl	%eax, enc_bit(%edi)
->  	jmp	.Lsev_exit
->  
->  .Lno_sev:
->  	xor	%eax, %eax
-> -	movl	%eax, enc_bit(%edi)
->  
->  .Lsev_exit:
-> -	pop	%edi
->  	pop	%edx
->  	pop	%ecx
->  	pop	%ebx
->  
-> +#endif	/* CONFIG_AMD_MEM_ENCRYPT */
-> +
-> +	ret
-> +
-> +ENTRY(get_sev_encryption_bit)
-> +	xor	%eax, %eax
-> +
-> +#ifdef CONFIG_AMD_MEM_ENCRYPT
-> +	push	%edi
-> +
-> +	/*
-> +	 * RIP-relative addressing is needed to access the encryption bit
-> +	 * variable. Since we are running in 32-bit mode we need this call/pop
-> +	 * sequence to get the proper relative addressing.
-> +	 */
-> +	call	1f
-> +1:	popl	%edi
-> +	subl	$1b, %edi
-> +
-> +	movl	enc_bit(%edi), %eax
-> +	cmpl	$0, %eax
-> +	jge 2f
-> +
-> +	call    do_get_sev_encryption_bit
-> +	movl	%eax, enc_bit(%edi)
-> +2:
-> +	pop	%edi
->  #endif	/* CONFIG_AMD_MEM_ENCRYPT */
->  
->  	ret
->  ENDPROC(get_sev_encryption_bit)
->  
->  	.code64
-> +ENTRY(get_sev_encryption_bit_64)
-> +	xor	%rax, %rax
-> +
-> +#ifdef CONFIG_AMD_MEM_ENCRYPT
-> +	movl	enc_bit(%rip), %eax
-> +	cmpl	$0, %eax
-> +	jge 1f
-> +
-> +	call    do_get_sev_encryption_bit
-> +	movl	%eax, enc_bit(%rip)
-> +1:
-> +#endif	/* CONFIG_AMD_MEM_ENCRYPT */
-> +
-> +	ret
-> +ENDPROC(get_sev_encryption_bit_64)
-> +
->  ENTRY(set_sev_encryption_mask)
->  #ifdef CONFIG_AMD_MEM_ENCRYPT
->  	push	%rbp
-> @@ -95,7 +121,7 @@ ENTRY(set_sev_encryption_mask)
->  
->  	movq	%rsp, %rbp		/* Save current stack pointer */
->  
-> -	call	get_sev_encryption_bit	/* Get the encryption bit position */
-> +	call	get_sev_encryption_bit_64	/* Get the encryption bit position */
->  	testl	%eax, %eax
->  	jz	.Lno_sev_mask
->  
-> 
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCBTZXAgMjUsIDIwMTggYXQgMDI6MzM6NDhQTSArMDAwMCwgTGVuZGFja3ksIFRob21h
+cyB3cm90ZToKPiBPbiAwOS8yNS8yMDE4IDA2OjEwIEFNLCBLYWlydWkgU29uZyB3cm90ZToKPiA+
+IENvbW1pdCAxOTU4YjVmYzQwMTAgKCJ4ODYvYm9vdDogQWRkIGVhcmx5IGJvb3Qgc3VwcG9ydCB3
+aGVuIHJ1bm5pbmcKPiA+IHdpdGggU0VWIGFjdGl2ZSIpIGlzIGNhdXNpbmcga2V4ZWMgYmVjb21l
+cyBzb21ldGltZXMgdW5zdGFibGUsIGtleGVjCj4gPiByZWJvb3Qgd29uJ3Qgc3RhcnQgYSBzZWNv
+bmQga2VybmVsIGJ5cGFzc2luZyBCSU9TIGJvb3QgcHJvY2VzcywgaW5zdGVhZCwKPiA+IHRoZSBz
+eXN0ZW0gZ290IHJlc2V0Lgo+ID4gCj4gPiBUaGF0J3MgYmVjYXVzZSwgaW4gZ2V0X3Nldl9lbmNy
+eXB0aW9uX2JpdCBmdW5jdGlvbiwgd2UgYXJlIHVzaW5nCj4gPiAzMi1iaXQgUklQLXJlbGF0aXZl
+IGFkZHJlc3NpbmcgdG8gcmVhZCB0aGUgdmFsdWUgb2YgZW5jX2JpdCwgYnV0Cj4gPiBrZXhlYyBt
+YXkgYWxsb2MgdGhlIGVhcmx5IGJvb3QgdXAgY29kZSB0byBhIGhpZ2hlciBsb2NhdGlvbiwgd2hp
+Y2gKPiA+IGlzIGJleW9uZCAzMi1iaXQgYWRkcmVzc2luZyBsaW1pdC4gU29tZSBnYXJiYWdlIHdp
+bGwgYmUgcmVhZCBhbmQKPiA+IGdldF9zZXZfZW5jcnlwdGlvbl9iaXQgd2lsbCByZXR1cm4gdGhl
+IHdyb25nIHZhbHVlLCB3aGljaCBsZWFkIHRvCj4gPiB3cm9uZyBtZW1vcnkgcGFnZSBmbGFnLgo+
+ID4gCj4gPiBUaGlzIHBhdGNoIGFkZHMgYSBnZXRfc2V2X2VuY3J5cHRpb25fYml0XzY0IGZ1bmN0
+aW9uIHRvIGF2b2lkIHRoaXMKPiA+IHByb2JsZW0uIDY0LWJpdCBlYXJseSBib290IGNvZGUgd2ls
+bCB1c2UgdGhpcyBmdW5jdGlvbiBpbnN0ZWFkLCBpdAo+ID4gdXNlcyBuYXRpdmUgUklQIGFkZHJl
+c3NpbmcgdG8gcmVhZCB0aGUgZW5jX2JpdCB3aGljaCBoYXZlIG5vIHByb2JsZW0KPiA+IHdpdGgg
+YW55IGxvY2F0aW9uLgo+ID4gCj4gPiBGaXhlczogMTk1OGI1ZmM0MDEwICgieDg2L2Jvb3Q6IEFk
+ZCBlYXJseSBib290IHN1cHBvcnQgd2hlbiBydW5uaW5nIHdpdGggU0VWIGFjdGl2ZSIpCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBLYWlydWkgU29uZyA8a2Fzb25nQHJlZGhhdC5jb20+Cj4gCj4gUmV2aWV3
+ZWQtYnk6IFRvbSBMZW5kYWNreSA8dGhvbWFzLmxlbmRhY2t5QGFtZC5jb20+Cj4gCj4gPiAtLS0K
+PiA+ICBhcmNoL3g4Ni9ib290L2NvbXByZXNzZWQvbWVtX2VuY3J5cHQuUyB8IDY0ICsrKysrKysr
+KysrKysrKysrKy0tLS0tLS0tCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKyks
+IDE5IGRlbGV0aW9ucygtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvYm9vdC9jb21w
+cmVzc2VkL21lbV9lbmNyeXB0LlMgYi9hcmNoL3g4Ni9ib290L2NvbXByZXNzZWQvbWVtX2VuY3J5
+cHQuUwo+ID4gaW5kZXggZWFhODQzYTUyOTA3Li40MTkzMzU1MDQ0OWEgMTAwNjQ0Cj4gPiAtLS0g
+YS9hcmNoL3g4Ni9ib290L2NvbXByZXNzZWQvbWVtX2VuY3J5cHQuUwo+ID4gKysrIGIvYXJjaC94
+ODYvYm9vdC9jb21wcmVzc2VkL21lbV9lbmNyeXB0LlMKPiA+IEBAIC0xOCwyNyArMTgsMTMgQEAK
+PiA+ICAKPiA+ICAJLnRleHQKPiA+ICAJLmNvZGUzMgo+ID4gLUVOVFJZKGdldF9zZXZfZW5jcnlw
+dGlvbl9iaXQpCj4gPiArZG9fZ2V0X3Nldl9lbmNyeXB0aW9uX2JpdDoKPiA+ICAJeG9yCSVlYXgs
+ICVlYXgKPiA+ICAKPiA+ICAjaWZkZWYgQ09ORklHX0FNRF9NRU1fRU5DUllQVAo+ID4gIAlwdXNo
+CSVlYngKPiA+ICAJcHVzaAklZWN4Cj4gPiAgCXB1c2gJJWVkeAo+ID4gLQlwdXNoCSVlZGkKPiA+
+IC0KPiA+IC0JLyoKPiA+IC0JICogUklQLXJlbGF0aXZlIGFkZHJlc3NpbmcgaXMgbmVlZGVkIHRv
+IGFjY2VzcyB0aGUgZW5jcnlwdGlvbiBiaXQKPiA+IC0JICogdmFyaWFibGUuIFNpbmNlIHdlIGFy
+ZSBydW5uaW5nIGluIDMyLWJpdCBtb2RlIHdlIG5lZWQgdGhpcyBjYWxsL3BvcAo+ID4gLQkgKiBz
+ZXF1ZW5jZSB0byBnZXQgdGhlIHByb3BlciByZWxhdGl2ZSBhZGRyZXNzaW5nLgo+ID4gLQkgKi8K
+PiA+IC0JY2FsbAkxZgo+ID4gLTE6CXBvcGwJJWVkaQo+ID4gLQlzdWJsCSQxYiwgJWVkaQo+ID4g
+LQo+ID4gLQltb3ZsCWVuY19iaXQoJWVkaSksICVlYXgKPiA+IC0JY21wbAkkMCwgJWVheAo+ID4g
+LQlqZ2UJLkxzZXZfZXhpdAo+ID4gIAo+ID4gIAkvKiBDaGVjayBpZiBydW5uaW5nIHVuZGVyIGEg
+aHlwZXJ2aXNvciAqLwo+ID4gIAltb3ZsCSQxLCAlZWF4Cj4gPiBAQCAtNjksMjUgKzU1LDY1IEBA
+IEVOVFJZKGdldF9zZXZfZW5jcnlwdGlvbl9iaXQpCj4gPiAgCj4gPiAgCW1vdmwJJWVieCwgJWVh
+eAo+ID4gIAlhbmRsCSQweDNmLCAlZWF4CQkvKiBSZXR1cm4gdGhlIGVuY3J5cHRpb24gYml0IGxv
+Y2F0aW9uICovCj4gPiAtCW1vdmwJJWVheCwgZW5jX2JpdCglZWRpKQoKSUlOTSwgdGhlIHByb2Js
+ZW0gY2FuIGJlIGFkZHJlc3NlZCBpbiBhIHNpbXBsZXIgd2F5IGJ5IGdldHRpbmcgcmlkIG9mCmVu
+Y19iaXQgYW5kIHRodXMgZ2V0dGluZyByaWQgb2YgdGhlIG5lZWQgdG8gZG8gcmVsYXRpdmUgYWRk
+cmVzc2luZyBvZgphbnl0aGluZyBhbmQgc2ltcGx5IGRvaW5nIHRoZSB3aG9sZSBkYW5jZSBvZiBm
+aWd1cmluZyBvdXQgdGhlIEMtYml0IGVhY2gKdGltZS4gSXQgcHJvYmFibHkgd291bGRuJ3QgYmUg
+ZXZlbiBtZWFzdXJhYmxlLi4uCgotLSAKUmVnYXJkcy9HcnVzcywKICAgIEJvcmlzLgoKU1VTRSBM
+aW51eCBHbWJILCBHRjogRmVsaXggSW1lbmTDtnJmZmVyLCBKYW5lIFNtaXRoYXJkLCBHcmFoYW0g
+Tm9ydG9uLCBIUkIgMjEyODQgKEFHIE7DvHJuYmVyZykKLS0gCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2tleGVjCg==
