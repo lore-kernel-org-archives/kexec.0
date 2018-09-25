@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g4hSm-0006Ah-Rg
- for kexec@lists.infradead.org; Tue, 25 Sep 2018 07:08:54 +0000
-Subject: Re: [PATCH 1/3 v3] resource: fix an error which walks through iomem
- resources
-References: <20180921073211.20097-1-lijiang@redhat.com>
- <20180921073211.20097-2-lijiang@redhat.com>
- <20180924175241.GO224714@bhelgaas-glaptop.roam.corp.google.com>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <01551d06-c421-5df3-b19f-fc66f3639e4f@redhat.com>
-Date: Tue, 25 Sep 2018 15:08:01 +0800
+ id 1g4jBj-0000k1-6j
+ for kexec@lists.infradead.org; Tue, 25 Sep 2018 08:59:24 +0000
+Date: Tue, 25 Sep 2018 16:58:46 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 3/3] resource: Fix find_next_iomem_res() iteration issue
+Message-ID: <20180925085846.GY2555@MiWiFi-R3L-srv>
+References: <153782698067.130337.12079523922130875402.stgit@bhelgaas-glaptop.roam.corp.google.com>
+ <153782730364.130337.17794279728329113665.stgit@bhelgaas-glaptop.roam.corp.google.com>
 MIME-Version: 1.0
-In-Reply-To: <20180924175241.GO224714@bhelgaas-glaptop.roam.corp.google.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <153782730364.130337.17794279728329113665.stgit@bhelgaas-glaptop.roam.corp.google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,74 +20,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, bp@suse.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
+Cc: dan.j.williams@intel.com, brijesh.singh@amd.com, Lianbo Jiang <lijiang@redhat.com>, thomas.lendacky@amd.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, tglx@linutronix.de, bp@suse.de, dyoung@redhat.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-5ZyoIDIwMTjlubQwOeaciDI15pelIDAxOjUyLCBCam9ybiBIZWxnYWFzIOWGmemBkzoKPiBPbiBG
-cmksIFNlcCAyMSwgMjAxOCBhdCAwMzozMjowOVBNICswODAwLCBMaWFuYm8gSmlhbmcgd3JvdGU6
-Cj4+IFdoZW4gd2Ugd2FsayB0aHJvdWdoIGlvbWVtIHJlc291cmNlcyBieSBjYWxsaW5nIHdhbGtf
-aW9tZW1fcmVzX2Rlc2MoKSwKPj4gdGhlIHZhbHVlcyBvZiB0aGUgZnVuY3Rpb24gcGFyYW1ldGVy
-IG1heSBiZSBtb2RpZmllZCBpbiB0aGUgd2hpbGUgbG9vcAo+PiBvZiBfX3dhbGtfaW9tZW1fcmVz
-X2Rlc2MoKSwgd2hpY2ggd2lsbCBjYXVzZSB1cyB0byBub3QgZ2V0IHRoZSBkZXNpcmVkCj4+IHJl
-c3VsdCBpbiBzb21lIGNhc2VzLgo+IAo+IElmIEkgdW5kZXJzdGFuZCBjb3JyZWN0bHksIHRoZSBp
-c3N1ZSBpcyBjYXVzZWQgYnkgdGhlIGludGVyYWN0aW9uCj4gYmV0d2VlbiBfX3dhbGtfaW9tZW1f
-cmVzX2Rlc2MoKSBhbmQgZmluZF9uZXh0X2lvbWVtX3JlcygpIGluIHRoaXMKPiBwYXRoOgo+IAo+
-ICAgX193YWxrX2lvbWVtX3Jlc19kZXNjCj4gICAgIGZpbmRfbmV4dF9pb21lbV9yZXMKPiAgICAg
-ICByZXMtPmZsYWdzID0gcC0+ZmxhZ3M7ICAgICAgICAgICAgIyA8LS0gcHJvYmxlbQo+IAo+IFRo
-aXMgcGF0aCBpcyB1c2VkIGJ5IHRoZSBmb2xsb3dpbmcgaW50ZXJmYWNlcywgYW5kIEkgdGhpbmsg
-eW91ciBwYXRjaAo+IHdvdWxkIGZpeCB0aGUgaXNzdWUgZm9yIHRoZW06Cj4gCj4gICB3YWxrX2lv
-bWVtX3Jlc19kZXNjKCkKPiAgIHdhbGtfc3lzdGVtX3JhbV9yZXMoKQo+ICAgd2Fsa19tZW1fcmVz
-KCkKPiAKPiBIb3dldmVyLCBmaW5kX25leHRfaW9tZW1fcmVzKCkgaXMgYWxzbyB1c2VkIGRpcmVj
-dGx5IGJ5Cj4gd2Fsa19zeXN0ZW1fcmFtX3JhbmdlKCkuICBJIHRoaW5rIHRoYXQgcGF0aCBoYXMg
-dGhlIHNhbWUgcHJvYmxlbSwgYW5kCj4geW91ciBwYXRjaCBkb2VzIG5vdCBmaXggdGhhdCBwYXRo
-Lgo+IApUaGFua3MgZm9yIHlvdXIgY29tbWVudC4gCk9yaWdpbmFsbHksIG15IHBhdGNoIDEgb25s
-eSBmaXhlZCB0aGlzIGlzc3VlIGluIGtkdW1wIHBhdGgsIG9mIGNvdXJzZSwgaSBjYW4KYWxzbyBp
-bXByb3ZlIHRoaXMgcGF0Y2ggYW5kIGZpeCB0aGUgc2FtZSBpc3N1ZSBpbiB3YWxrX3N5c3RlbV9y
-YW1fcmFuZ2UoKS4KSWYgeW91IGhhdmUgZml4ZWQgdGhpcyBpc3N1ZSwgaXQncyBnb29kIHRvIG1l
-LgoKPiBJIGhhdmUgYSBmZXcgbW9yZSBjb21tZW50cyByZWxhdGVkIHRvIHRoZSBleGlzdGluZyBj
-b2RlIHRoYXQgSSdsbCBwb3N0Cj4gc29vbi4KPiAKPj4gQXQgcHJlc2VudCwgaXQgb25seSByZXN0
-b3JlcyB0aGUgb3JpZ2luYWwgdmFsdWUgb2YgcmVzLT5lbmQsIGJ1dCBpdAo+PiBkb2Vzbid0IHJl
-c3RvcmUgdGhlIG9yaWdpbmFsIHZhbHVlIG9mIHJlcy0+ZmxhZ3MgaW4gdGhlIHdoaWxlIGxvb3Ag
-b2YKPj4gX193YWxrX2lvbWVtIF9yZXNfZGVzYygpLiBXaGVuZXZlciB0aGUgZmluZF9uZXh0X2lv
-bWVtX3JlcygpIGZpbmRzIGEKPj4gcmVzb3VyY2UgYW5kIHJldHVybnMgdGhlIHJlc3VsdCwgdGhl
-IG9yaWdpbmFsIHZhbHVlcyBvZiB0aGlzIHJlc291cmNlCj4+IHdpbGwgYmUgbW9kaWZpZWQsIHdo
-aWNoIG1pZ2h0IGxlYWQgdG8gYW4gZXJyb3IgaW4gdGhlIG5leHQgbG9vcC4gRm9yCj4+IGV4YW1w
-bGU6Cj4+Cj4+IFRoZSBvcmlnaW5hbCB2YWx1ZSBvZiByZXNvdXJjZSBmbGFncyBpczoKPj4gIHJl
-cy0+ZmxhZ3M9MHg4MDAwMDIwMChpbml0aWFsIHZhbHVlKQo+Pgo+PiBwLT5mbGFncyAgIF8gMHg4
-MTAwMDIwMCBfICAgICAgICAgICAgICAgIF8gMHg4MDAwMDIwMCBfCj4+ICAgICAgICAgICAvICAg
-ICAgICAgICAgICBcICAgICAgICAgICAgICAvICAgICAgICAgICAgICBcCj4+IHxfX19fX19fX3xf
-X19fX19fQV9fX19fX19ffF9fX198Xy4uLi4uX3xfX19fX19CX19fX19fX19ffC4uLi4uLi4uLi5f
-X198Cj4+IDAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAweGZmZmZmZmZmCj4+ICAgICAgICAgICAgICAgICAobWVtb3J5IGFkZHJlc3Mg
-cmFuZ2VzKQo+Pgo+PiBOb3RlOiBpZiAoKHAtPmZsYWdzICYgcmVzLT5mbGFncykgIT0gcmVzLT5m
-bGFncykgY29udGludWU7Cj4+Cj4+IFdoZW4gdGhlIHJlc291cmNlIEEgaXMgZm91bmQsIHRoZSBv
-cmlnaW5hbCB2YWx1ZSBvZiB0aGlzIHJlc291cmNlIGZsYWdzCj4+IHdpbGwgYmUgY2hhbmdlZCB0
-byAweDgxMDAwMjAwKHJlcy0+ZmxhZ3M9MHg4MTAwMDIwMCksIGFuZCBjb250aW51ZSB0bwo+PiBs
-b29rIGZvciB0aGUgbmV4dCByZXNvdXJjZSwgd2hlbiB0aGUgbG9vcCByZWFjaGVzIHJlc291cmNl
-IEIsIGl0IGNhbiBub3QKPj4gZ2V0IHRoZSByZXNvdXJjZSBCIGFueSBtb3JlKHlvdSBjYW4gcmVm
-ZXIgdG8gdGhlIGZvciBsb29wIG9mIGZpbmRfbmV4dAo+PiBfaW9tZW1fcmVzKCkpLCBiZWNhdXNl
-IHRoZSB2YWx1ZSBvZiBjb25kaXRpb25hbCBleHByZXNzaW9uIHdpbGwgYmVjb21lCj4+IHRydWUg
-YW5kIHdpbGwgYWxzbyBqdW1wIHRoZSByZXNvdXJjZSBCLgo+Pgo+PiBJbiBmYWN0LCB3ZSBzaG91
-bGQgZ2V0IHRoZSByZXNvdXJjZSBBIGFuZCBCIHdoZW4gd2Ugd2FsayB0aHJvdWdoIHRoZQo+PiB3
-aG9sZSB0cmVlLCBidXQgaXQgb25seSBnZXRzIHRoZSByZXNvdXJjZSBBLCB0aGUgcmVzb3VyY2Ug
-QiBpcyBtaXNzZWQuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IExpYW5ibyBKaWFuZyA8bGlqaWFuZ0By
-ZWRoYXQuY29tPgo+PiAtLS0KPj4gIGtlcm5lbC9yZXNvdXJjZS5jIHwgMiArKwo+PiAgMSBmaWxl
-IGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEva2VybmVsL3Jlc291
-cmNlLmMgYi9rZXJuZWwvcmVzb3VyY2UuYwo+PiBpbmRleCAzMGUxYmM2ODUwM2IuLmY1ZDlmYzcw
-YTA0YyAxMDA2NDQKPj4gLS0tIGEva2VybmVsL3Jlc291cmNlLmMKPj4gKysrIGIva2VybmVsL3Jl
-c291cmNlLmMKPj4gQEAgLTM3NSw2ICszNzUsNyBAQCBzdGF0aWMgaW50IF9fd2Fsa19pb21lbV9y
-ZXNfZGVzYyhzdHJ1Y3QgcmVzb3VyY2UgKnJlcywgdW5zaWduZWQgbG9uZyBkZXNjLAo+PiAgCQkJ
-CSBpbnQgKCpmdW5jKShzdHJ1Y3QgcmVzb3VyY2UgKiwgdm9pZCAqKSkKPj4gIHsKPj4gIAl1NjQg
-b3JpZ19lbmQgPSByZXMtPmVuZDsKPj4gKwl1NjQgb3JpZ19mbGFncyA9IHJlcy0+ZmxhZ3M7Cj4+
-ICAJaW50IHJldCA9IC0xOwo+PiAgCj4+ICAJd2hpbGUgKChyZXMtPnN0YXJ0IDwgcmVzLT5lbmQp
-ICYmCj4+IEBAIC0zODUsNiArMzg2LDcgQEAgc3RhdGljIGludCBfX3dhbGtfaW9tZW1fcmVzX2Rl
-c2Moc3RydWN0IHJlc291cmNlICpyZXMsIHVuc2lnbmVkIGxvbmcgZGVzYywKPj4gIAo+PiAgCQly
-ZXMtPnN0YXJ0ID0gcmVzLT5lbmQgKyAxOwo+PiAgCQlyZXMtPmVuZCA9IG9yaWdfZW5kOwo+PiAr
-CQlyZXMtPmZsYWdzID0gb3JpZ19mbGFnczsKPj4gIAl9Cj4+ICAKPj4gIAlyZXR1cm4gcmV0OwoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
-bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Bjorn,
+
+On 09/24/18 at 05:15pm, Bjorn Helgaas wrote:
+> @@ -359,32 +362,31 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
+>  	read_unlock(&resource_lock);
+>  	if (!p)
+>  		return -1;
+> +
+>  	/* copy data */
+> -	if (res->start < p->start)
+> -		res->start = p->start;
+> -	if (res->end > p->end)
+> -		res->end = p->end;
+> +	res->start = max(start, p->start);
+> +	res->end = min(end, p->end);
+>  	res->flags = p->flags;
+
+I think this fix is good. However, is it OK to keep res->flags always,
+never touch it in find_next_iomem_res()? We just iterate and update
+region, its start and end. So just removing that "res->flags = p->flags;"
+line might involve much less code changes.
+
+Thanks
+Baoquan
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
