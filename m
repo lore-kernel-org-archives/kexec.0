@@ -1,27 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pg1-x541.google.com ([2607:f8b0:4864:20::541])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g52kn-0005Gm-Q8
- for kexec@lists.infradead.org; Wed, 26 Sep 2018 05:52:57 +0000
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com
- [10.5.11.22])
- (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
- (No client certificate requested)
- by mx1.redhat.com (Postfix) with ESMTPS id C6240C05000B
- for <kexec@lists.infradead.org>; Wed, 26 Sep 2018 05:52:20 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-101.pek2.redhat.com
- [10.72.12.101])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id D94C9106A783
- for <kexec@lists.infradead.org>; Wed, 26 Sep 2018 05:52:18 +0000 (UTC)
-Subject: Re: [PATCH 0/4 v7] Support kdump for AMD secure memory encryption(SME)
-References: <20180907081805.368-1-lijiang@redhat.com>
- <fd8af3af-3b7c-75a6-ad67-b2efe78011fb@amd.com>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <bdf6961d-3013-f707-bfc9-c55f0c02aba0@redhat.com>
-Date: Wed, 26 Sep 2018 13:52:14 +0800
+ id 1g52oG-0006kl-Nk
+ for kexec@lists.infradead.org; Wed, 26 Sep 2018 05:56:31 +0000
+Received: by mail-pg1-x541.google.com with SMTP id n31-v6so6426870pgm.7
+ for <kexec@lists.infradead.org>; Tue, 25 Sep 2018 22:55:57 -0700 (PDT)
+Date: Wed, 26 Sep 2018 14:57:07 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v14 06/16] of/fdt: add helper functions for handling
+ properties
+Message-ID: <20180926055704.GC27322@linaro.org>
+References: <20180907080040.4967-1-takahiro.akashi@linaro.org>
+ <a535515a-92f1-fc33-bdb9-6f5e0392cb11@gmail.com>
+ <8403dfd5-3188-219b-966c-72b009f94e0f@gmail.com>
+ <16a39f7f-a8cc-72a1-89a7-e9b49a4d6547@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <fd8af3af-3b7c-75a6-ad67-b2efe78011fb@amd.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <16a39f7f-a8cc-72a1-89a7-e9b49a4d6547@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,154 +25,259 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: prudo@linux.ibm.com, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, Rob Herring <robh+dt@kernel.org>, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james.morse@arm.com, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-5ZyoIDIwMTjlubQwOeaciDI25pelIDAzOjEwLCBMZW5kYWNreSwgVGhvbWFzIOWGmemBkzoKPiBP
-biAwOS8wNy8yMDE4IDAzOjE4IEFNLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4+IFdoZW4gU01FIGlz
-IGVuYWJsZWQgb24gQU1EIG1hY2hpbmUsIHdlIGFsc28gbmVlZCB0byBzdXBwb3J0IGtkdW1wLiBC
-ZWNhdXNlCj4+IHRoZSBtZW1vcnkgaXMgZW5jcnlwdGVkIGluIHRoZSBmaXJzdCBrZXJuZWwsIHdl
-IHdpbGwgcmVtYXAgdGhlIG9sZCBtZW1vcnkKPj4gdG8gdGhlIGtkdW1wIGtlcm5lbCBmb3IgZHVt
-cGluZyBkYXRhLCBhbmQgU01FIGlzIGFsc28gZW5hYmxlZCBpbiB0aGUga2R1bXAKPj4ga2VybmVs
-LCBvdGhlcndpc2UgdGhlIG9sZCBtZW1vcnkgY2FuIG5vdCBiZSBkZWNyeXB0ZWQuCj4+Cj4+IEZv
-ciB0aGUga2R1bXAsIGl0IGlzIG5lY2Vzc2FyeSB0byBkaXN0aW5ndWlzaCB3aGV0aGVyIHRoZSBt
-ZW1vcnkgaXMgZW5jcnlwdGVkLgo+PiBGdXJ0aGVybW9yZSwgd2Ugc2hvdWxkIGFsc28ga25vdyB3
-aGljaCBwYXJ0IG9mIHRoZSBtZW1vcnkgaXMgZW5jcnlwdGVkIG9yCj4+IGRlY3J5cHRlZC4gV2Ug
-d2lsbCBhcHByb3ByaWF0ZWx5IHJlbWFwIHRoZSBtZW1vcnkgYWNjb3JkaW5nIHRvIHRoZSBzcGVj
-aWZpYwo+PiBzaXR1YXRpb24gaW4gb3JkZXIgdG8gdGVsbCBjcHUgaG93IHRvIGFjY2VzcyB0aGUg
-bWVtb3J5Lgo+Pgo+PiBBcyB3ZSBrbm93LCBhIHBhZ2Ugb2YgbWVtb3J5IHRoYXQgaXMgbWFya2Vk
-IGFzIGVuY3J5cHRlZCwgd2hpY2ggd2lsbCBiZQo+PiBhdXRvbWF0aWNhbGx5IGRlY3J5cHRlZCB3
-aGVuIHJlYWQgZnJvbSBEUkFNLCBhbmQgd2lsbCBhbHNvIGJlIGF1dG9tYXRpY2FsbHkKPj4gZW5j
-cnlwdGVkIHdoZW4gd3JpdHRlbiB0byBEUkFNLiBJZiB0aGUgb2xkIG1lbW9yeSBpcyBlbmNyeXB0
-ZWQsIHdlIGhhdmUgdG8KPj4gcmVtYXAgdGhlIG9sZCBtZW1vcnkgd2l0aCB0aGUgbWVtb3J5IGVu
-Y3J5cHRpb24gbWFzaywgd2hpY2ggd2lsbCBhdXRvbWF0aWNhbGx5Cj4+IGRlY3J5cHQgdGhlIG9s
-ZCBtZW1vcnkgd2hlbiB3ZSByZWFkIHRob3NlIGRhdGEuCj4+Cj4+IEZvciBrZHVtcChTTUUpLCB0
-aGVyZSBhcmUgdHdvIGNhc2VzIHRoYXQgZG9lc24ndCBzdXBwb3J0Ogo+Pgo+PiAgLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiB8IGZpcnN0LWtlcm5lbCB8
-IHNlY29uZC1rZXJuZWwgfCBrZHVtcCBzdXBwb3J0IHwKPj4gfCAgICAgIChtZW1fZW5jcnlwdD1v
-bnxvZmYpICAgIHwgICAoeWVzfG5vKSAgICB8Cj4+IHwtLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0t
-LS0tLS0rLS0tLS0tLS0tLS0tLS0tfAo+PiB8ICAgICBvbiAgICAgICB8ICAgICBvbiAgICAgICAg
-fCAgICAgeWVzICAgICAgIHwKPj4gfCAgICAgb2ZmICAgICAgfCAgICAgb2ZmICAgICAgIHwgICAg
-IHllcyAgICAgICB8Cj4+IHwgICAgIG9uICAgICAgIHwgICAgIG9mZiAgICAgICB8ICAgICBubyAg
-ICAgICAgfAo+PiB8ICAgICBvZmYgICAgICB8ICAgICBvbiAgICAgICAgfCAgICAgbm8gICAgICAg
-IHwKPj4gfF9fX19fX19fX19fX19ffF9fX19fX19fX19fX19fX3xfX19fX19fX19fX19fX198Cj4+
-Cj4+IDEuIFNNRSBpcyBlbmFibGVkIGluIHRoZSBmaXJzdCBrZXJuZWwsIGJ1dCBTTUUgaXMgZGlz
-YWJsZWQgaW4ga2R1bXAga2VybmVsCj4+IEluIHRoaXMgY2FzZSwgYmVjYXVzZSB0aGUgb2xkIG1l
-bW9yeSBpcyBlbmNyeXB0ZWQsIHdlIGNhbid0IGRlY3J5cHQgdGhlCj4+IG9sZCBtZW1vcnkuCj4+
-Cj4+IDIuIFNNRSBpcyBkaXNhYmxlZCBpbiB0aGUgZmlyc3Qga2VybmVsLCBidXQgU01FIGlzIGVu
-YWJsZWQgaW4ga2R1bXAga2VybmVsCj4+IEl0IGlzIHVubmVjZXNzYXJ5IHRvIHN1cHBvcnQgaW4g
-dGhpcyBjYXNlLCBiZWNhdXNlIHRoZSBvbGQgbWVtb3J5IGlzCj4+IHVuZW5jcnlwdGVkLCB0aGUg
-b2xkIG1lbW9yeSBjYW4gYmUgZHVtcGVkIGFzIHVzdWFsLCB3ZSBkb24ndCBuZWVkIHRvIGVuYWJs
-ZQo+PiBTTUUgaW4ga2R1bXAga2VybmVsLiBBbm90aGVyLCBJZiB3ZSBtdXN0IHN1cHBvcnQgdGhl
-IHNjZW5hcmlvLCBpdCB3aWxsCj4+IGluY3JlYXNlIHRoZSBjb21wbGV4aXR5IG9mIHRoZSBjb2Rl
-LCB3ZSB3aWxsIGhhdmUgdG8gY29uc2lkZXIgaG93IHRvIHBhc3MKPj4gdGhlIFNNRSBmbGFnIGZy
-b20gdGhlIGZpcnN0IGtlcm5lbCB0byB0aGUga2R1bXAga2VybmVsLCBpbiBvcmRlciB0byBsZXQg
-dGhlCj4+IGtkdW1wIGtlcm5lbCBrbm93IHRoYXQgd2hldGhlciB0aGUgb2xkIG1lbW9yeSBpcyBl
-bmNyeXB0ZWQuCj4+Cj4+IFRoZXJlIGFyZSB0d28gbWV0aG9kcyB0byBwYXNzIHRoZSBTTUUgZmxh
-ZyB0byB0aGUga2R1bXAga2VybmVsLiBUaGUgZmlyc3QKPj4gbWV0aG9kIGlzIHRvIG1vZGlmeSB0
-aGUgYXNzZW1ibHkgY29kZSwgd2hpY2ggaW5jbHVkZXMgc29tZSBjb21tb24gY29kZSBhbmQKPj4g
-dGhlIHBhdGggaXMgdG9vIGxvbmcuIFRoZSBzZWNvbmQgbWV0aG9kIGlzIHRvIHVzZSBrZXhlYyB0
-b29sLCB3aGljaCBjb3VsZAo+PiByZXF1aXJlIHRoZSBTTUUgZmxhZyB0byBiZSBleHBvcnRlZCBp
-biB0aGUgZmlyc3Qga2VybmVsIGJ5ICJwcm9jIiBvciAic3lzZnMiLAo+PiBrZXhlYyB0b29scyB3
-aWxsIHJlYWQgdGhlIFNNRSBmbGFnIGZyb20gInByb2MiIG9yICJzeXNmcyIgd2hlbiB3ZSB1c2Ug
-a2V4ZWMKPj4gdG9vbHMgdG8gbG9hZCBpbWFnZSwgc3Vic2VxdWVudGx5IHRoZSBTTUUgZmxhZyB3
-aWxsIGJlIHNhdmVkIGluIGJvb3RfcGFyYW1zLAo+PiB3ZSBjYW4gcHJvcGVybHkgcmVtYXAgdGhl
-IG9sZCBtZW1vcnkgYWNjb3JkaW5nIHRvIHRoZSBwcmV2aW91c2x5IHNhdmVkIFNNRQo+PiBmbGFn
-LiBCdXQgaXQgaXMgdG9vIGV4cGVuc2l2ZSB0byBkbyB0aGlzLgo+Pgo+PiBUaGlzIHBhdGNoZXMg
-YXJlIG9ubHkgZm9yIFNNRSBrZHVtcCwgdGhlIHBhdGNoZXMgZG9uJ3Qgc3VwcG9ydCBTRVYga2R1
-bXAuCj4gCj4gUmV2aWV3ZWQtYnk6IFRvbSBMZW5kYWNreSA8dGhvbWFzLmxlbmRhY2t5QGFtZC5j
-b20+Cj4gCgpUaGFuayB5b3UsIFRvbS4gSSdtIHZlcnkgZ2xhZCB0aGF0IHlvdSB3b3VsZCBsaWtl
-IHRvIHJldmlldyBteSBwYXRjaGVzLCBhbmQKYWxzbyBnYXZlIG1lIHNvbWUgYWR2aWNlIHRvIGlt
-cHJvdmUgdGhlc2UgcGF0Y2hlcy4KCj4gSnVzdCBjdXJpb3VzLCBhcmUgeW91IHBsYW5uaW5nIHRv
-IGFkZCBTRVYga2R1bXAgc3VwcG9ydCBhZnRlciB0aGlzPwo+IAoKWWVzLCB3ZSBhcmUgcGxhbm5p
-bmcgdG8gYWRkIFNFViBrZHVtcCBzdXBwb3J0IGFmdGVyIHRoaXMuCkFuZCBpIGFsc28gd2VsY29t
-ZSB0aGF0IHlvdSB3b3VsZCBsaWtlIHRvIHJldmlldyBteSBTRVYga2R1bXAgcGF0Y2ggYWdhaW4u
-Cgo+IEFsc28sIGEgcXVlc3Rpb24gYmVsb3cuLi4KPiAKPj4KPj4gVGVzdCB0b29sczoKPj4gbWFr
-ZWR1bXBmaWxlW3YxLjYuM106IGh0dHBzOi8vZ2l0aHViLmNvbS9MaWFuYm9KL21ha2VkdW1wZmls
-ZQo+PiBjb21taXQgZTFkZTEwM2VjYThmIChBIGRyYWZ0IGZvciBrZHVtcCB2bWNvcmUgYWJvdXQg
-QU1EIFNNRSkKPj4gTm90ZTogVGhpcyBwYXRjaCBjYW4gb25seSBkdW1wIHZtY29yZSBpbiB0aGUg
-Y2FzZSBvZiBTTUUgZW5hYmxlZC4KPj4KPj4gY3Jhc2gtNy4yLjM6IGh0dHBzOi8vZ2l0aHViLmNv
-bS9jcmFzaC11dGlsaXR5L2NyYXNoLmdpdAo+PiBjb21taXQgMDAxZjc3YTA1NTg1IChGaXggZm9y
-IExpbnV4IDQuMTktcmMxIGFuZCBsYXRlciBrZXJuZWxzIHRoYXQgY29udGFpbgo+PiAgICAgICAg
-ICAgICAgICAgICAgICBrZXJuZWwgY29tbWl0NzI5MGQ1ODA5NTcxMmE4OWY4NDVlMWJjYTA1MzM0
-Nzk2ZGQ0OWVkMikKPj4KPj4ga2V4ZWMtdG9vbHMtMi4wLjE3OiBnaXQ6Ly9naXQua2VybmVsLm9y
-Zy9wdWIvc2NtL3V0aWxzL2tlcm5lbC9rZXhlYy9rZXhlYy10b29scy5naXQKPj4gY29tbWl0IGI5
-ZGUyMWVmNTFhNyAoa2V4ZWM6IGZpeCBmb3IgIlVuaGFuZGxlZCByZWxhIHJlbG9jYXRpb246IFJf
-WDg2XzY0X1BMVDMyIiBlcnJvcikKPj4gTm90ZToKPj4gQmVmb3JlIHlvdSBsb2FkIHRoZSBrZXJu
-ZWwgYW5kIGluaXRyYW1mcyBmb3Iga2R1bXAsIHRoaXMgcGF0Y2goaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvcGlwZXJtYWlsL2tleGVjLzIwMTgtU2VwdGVtYmVyLzAyMTQ2MC5odG1sKQo+PiBt
-dXN0IGJlIG1lcmdlZCB0byBrZXhlYy10b29scywgYW5kIHRoZW4gdGhlIGtkdW1wIGtlcm5lbCB3
-aWxsIHdvcmsgd2VsbC4gQmVjYXVzZSB0aGVyZQo+PiBpcyBhIHBhdGNoIHdoaWNoIGlzIHJlbW92
-ZWQgYmFzZWQgb24gdjYoeDg2L2lvcmVtYXA6IHN0cmVuZ3RoZW4gdGhlIGxvZ2ljIGluIGVhcmx5
-X21lbXJlbWFwX3BncHJvdF9hZGp1c3QoKQo+PiB0byBhZGp1c3QgZW5jcnlwdGlvbiBtYXNrKS4K
-Pj4KPj4gVGVzdCBlbnZpcm9ubWVudDoKPj4gSFAgUHJvTGlhbnQgREwzODVHZW4xMCBBTUQgRVBZ
-QyA3MjUxCj4+IDgtQ29yZSBQcm9jZXNzb3IKPj4gMzI3NjggTUIgbWVtb3J5Cj4+IDYwMCBHQiBk
-aXNrIHNwYWNlCj4+Cj4+IExpbnV4IDQuMTktcmMyOgo+PiBnaXQ6Ly9naXQua2VybmVsLm9yZy9w
-dWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0Cj4+IGNvbW1pdCA1NzM2
-MTg0NmI1MmJjNjg2MTEyZGE2Y2E1MzY4ZDExMjEwNzk2ODA0Cj4+Cj4+IFJlZmVyZW5jZToKPj4g
-QU1ENjQgQXJjaGl0ZWN0dXJlIFByb2dyYW1tZXIncyBNYW51YWwKPj4gaHR0cHM6Ly9zdXBwb3J0
-LmFtZC5jb20vVGVjaERvY3MvMjQ1OTMucGRmCj4+Cj4+IENoYW5nZXMgc2luY2UgdjY6Cj4+IDEu
-IFRoZXJlIGlzIGEgcGF0Y2ggd2hpY2ggaXMgcmVtb3ZlZCBiYXNlZCBvbiB2Ni4KPj4gKHg4Ni9p
-b3JlbWFwOiBzdHJlbmd0aGVuIHRoZSBsb2dpYyBpbiBlYXJseV9tZW1yZW1hcF9wZ3Byb3RfYWRq
-dXN0KCkgdG8gYWRqdXN0IGVuY3J5cHRpb24gbWFzaykKPj4gRGF2ZSBZb3VuZyBzdWdnZXN0cyB0
-aGF0IHRoaXMgcGF0Y2ggY2FuIGJlIHJlbW92ZWQgYW5kIGZpeCB0aGUga2V4ZWMtdG9vbHMuCj4+
-IFJlZmVyZW5jZTogaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2tleGVjLzIw
-MTgtU2VwdGVtYmVyLzAyMTQ2MC5odG1sKQo+PiAyLiBVcGRhdGUgdGhlIHBhdGNoIGxvZy4KPj4K
-Pj4gU29tZSBrbm93biBpc3N1ZXM6Cj4+IDEuIGFib3V0IFNNRQo+PiBVcHN0cmVhbSBrZXJuZWwg
-d2lsbCBoYW5nIG9uIEhQIG1hY2hpbmUoREwzODVHZW4xMCBBTUQgRVBZQyA3MjUxKSB3aGVuCj4+
-IHdlIGV4ZWN1dGUgdGhlIGtleGVjIGNvbW1hbmQgYXMgZm9sbG93Ogo+Pgo+PiAjIGtleGVjIC1s
-IC9ib290L3ZtbGludXotNC4xOS4wLXJjMisgLS1pbml0cmQ9L2Jvb3QvaW5pdHJhbWZzLTQuMTku
-MC1yYzIrLmltZyAtLWNvbW1hbmQtbGluZT0icm9vdD0vZGV2L21hcHBlci9yaGVsX2hwLS1kbDM4
-NWcxMC0tMDMtcm9vdCBybyBtZW1fZW5jcnlwdD1vbiByZC5sdm0ubHY9cmhlbF9ocC1kbDM4NWcx
-MC0wMy9yb290IHJkLmx2bS5sdj1yaGVsX2hwLWRsMzg1ZzEwLTAzL3N3YXAgY29uc29sZT10dHlT
-MCwxMTUyMDBuODEgTEFORz1lbl9VUy5VVEYtOCBlYXJseXByaW50az1zZXJpYWwgZGVidWcgbm9r
-YXNsciIKPj4gIyBrZXhlYyAtZSAob3IgcmVib290KQo+Pgo+PiBCdXQgdGhpcyBpc3N1ZSBjYW4g
-bm90IGJlIHJlcHJvZHVjZWQgb24gc3BlZWR3YXkgbWFjaGluZSwgYW5kIHRoaXMgaXNzdWUKPj4g
-aXMgaXJyZWxldmFudCB0byBteSBwb3N0ZWQgcGF0Y2hlcy4KPj4KPj4gVGhlIGtlcm5lbCBsb2c6
-Cj4+IFsgMTI0OC45MzIyMzldIGtleGVjX2NvcmU6IFN0YXJ0aW5nIG5ldyBrZXJuZWwKPj4gZWFy
-bHkgY29uc29sZSBpbiBleHRyYWN0X2tlcm5lbAo+PiBpbnB1dF9kYXRhOiAweDAwMDAwMDA4N2U5
-MWMzYjQKPj4gaW5wdXRfbGVuOiAweDAwMDAwMDAwMDA2N2ZjYmQKPj4gb3V0cHV0OiAweDAwMDAw
-MDA4N2Q0MDAwMDAKPj4gb3V0cHV0X2xlbjogMHgwMDAwMDAwMDAxYjZmYTkwCj4+IGtlcm5lbF90
-b3RhbF9zaXplOiAweDAwMDAwMDAwMDFhOWQwMDAKPj4gdHJhbXBvbGluZV8zMmJpdDogMHgwMDAw
-MDAwMDAwMDk5MDAwCj4+Cj4+IERlY29tcHJlc3NpbmcgTGludXguLi4KPj4gUGFyc2luZyBFTEYu
-Li4gICAgICAgIFstLS1IZXJlIHRoZSBzeXN0ZW0gd2lsbCBoYW5nXQo+IAo+IERvIHlvdSBrbm93
-IHRoZSByZWFzb24gZm9yIHRoZSBoYW5nPyAgSXQgbG9va3MgbGlrZSBpdCBpcyBoYW5naW5nIGlu
-Cj4gcGFyc2VfZWxmKCkuICBDYW4geW91IGFkZCBzb21lIGRlYnVnIHRvIHBhcnNlX2VsZigpIHRv
-IHNlZSBpZiB0aGUKPiB2YWx1ZSBvZiBlaGRyLmVfcGhudW0gaXMgdmFsaWQgKG1heWJlIGl0IGlz
-IG5vdCBhIHZhbGlkIHZhbHVlIGFuZCBzbwo+IHRoZSBsb29wIHRha2VzIGZvcmV2ZXIpPwo+IAoK
-UHJldmlvdXNseSwgaSBoYWQgbG9hbmVkIGEgc3BlZWR3YXkgbWFjaGluZSwgaG93ZXZlciBpIGNv
-dWxkIG5vdCByZXByb2R1Y2UgdGhpcwppc3N1ZSBvbiB0aGlzIG1hY2hpbmUuIEJ1dCBvbiB0aGUg
-J0hQIFByb0xpYW50IERMMzg1R2VuMTAnIG1hY2hpbmUsIHRoaXMgaXNzdWUKd2FzIGFsd2F5cyBy
-ZXByb2R1Y2VkLihidHc6IHRoZSBjb2RlIGlzIHRoZSBzYW1lLikKCkknbSBub3Qgc3VyZSB3aGV0
-aGVyIHRoaXMgaXNzdWUgaXMgcmVsYXRlIHRvIGhhcmR3YXJlLiBJIGhhZCBwcmludGVkIHRoZXNl
-IHZhbHVlcywKYW5kIGkgcmVtZW1iZXJlZCB0aGF0IHRoZSB2YWx1ZSBvZiBlaGRyLmVfcGh1bSB3
-YXMgdmFsaWQuCgpCZWNhdXNlIHRoaXMgaXNzdWUgaXMgb25seSByZXByb2R1Y2VkIG9uIERMMzg1
-R2VuMTAgbWFjaGluZSwgaSBkZWNyZWFzZWQgdGhlIHByaW9yaXR5Cm9mIGRlYWxpbmcgd2l0aCB0
-aGlzIGlzc3VlLgoKSWYgeW91IGFsc28gY2FyZSBhYm91dCB0aGlzIGlzc3VlLCBpIGNhbiBjcmVh
-dGUgYSBuZXcgZW1haWwgdGhyZWFkIHRvIHRyYWNlIHRoaXMgaXNzdWUuCldoYXQgZG8geW91IHRo
-aW5rIGFib3V0IHRoaXM/CgpUaGFua3MKTGlhbmJvCgo+IFRoYW5rcywKPiBUb20KPiAKPj4KPj4K
-Pj4gTGlhbmJvIEppYW5nICg0KToKPj4gICB4ODYvaW9yZW1hcDogYWRkIGEgZnVuY3Rpb24gaW9y
-ZW1hcF9lbmNyeXB0ZWQoKSB0byByZW1hcCBrZHVtcCBvbGQKPj4gICAgIG1lbW9yeQo+PiAgIGtl
-eGVjOiBhbGxvY2F0ZSB1bmVuY3J5cHRlZCBjb250cm9sIHBhZ2VzIGZvciBrZHVtcCBpbiBjYXNl
-IFNNRSBpcwo+PiAgICAgZW5hYmxlZAo+PiAgIGFtZF9pb21tdTogcmVtYXAgdGhlIGRldmljZSB0
-YWJsZSBvZiBJT01NVSB3aXRoIHRoZSBtZW1vcnkgZW5jcnlwdGlvbgo+PiAgICAgbWFzayBmb3Ig
-a2R1bXAKPj4gICBrZHVtcC92bWNvcmU6IHN1cHBvcnQgZW5jcnlwdGVkIG9sZCBtZW1vcnkgd2l0
-aCBTTUUgZW5hYmxlZAo+Pgo+PiAgYXJjaC94ODYvaW5jbHVkZS9hc20vaW8uaCAgICAgICAgICAg
-IHwgIDMgKysKPj4gIGFyY2gveDg2L2tlcm5lbC9NYWtlZmlsZSAgICAgICAgICAgICB8ICAxICsK
-Pj4gIGFyY2gveDg2L2tlcm5lbC9jcmFzaF9kdW1wX2VuY3J5cHQuYyB8IDUzICsrKysrKysrKysr
-KysrKysrKysrKysrKysrKysKPj4gIGFyY2gveDg2L21tL2lvcmVtYXAuYyAgICAgICAgICAgICAg
-ICB8IDI1ICsrKysrKysrLS0tLS0KPj4gIGRyaXZlcnMvaW9tbXUvYW1kX2lvbW11X2luaXQuYyAg
-ICAgICB8IDE0ICsrKysrKy0tCj4+ICBmcy9wcm9jL3ZtY29yZS5jICAgICAgICAgICAgICAgICAg
-ICAgfCAyMSArKysrKysrLS0tLQo+PiAgaW5jbHVkZS9saW51eC9jcmFzaF9kdW1wLmggICAgICAg
-ICAgIHwgMTIgKysrKysrKwo+PiAga2VybmVsL2tleGVjX2NvcmUuYyAgICAgICAgICAgICAgICAg
-IHwgMTIgKysrKysrKwo+PiAgOCBmaWxlcyBjaGFuZ2VkLCAxMjUgaW5zZXJ0aW9ucygrKSwgMTYg
-ZGVsZXRpb25zKC0pCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC94ODYva2VybmVsL2NyYXNo
-X2R1bXBfZW5jcnlwdC5jCj4+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KPiBrZXhlYyBtYWlsaW5nIGxpc3QKPiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo+
-IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMg
-bWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Frank,
+
+On Fri, Sep 14, 2018 at 10:19:38AM -0700, Frank Rowand wrote:
+> On 09/13/18 18:26, Frank Rowand wrote:
+> > I was re-reading this while answering a later email in the thread.  After reading
+> > other patches in the series that were not sent to me, I have a better understanding
+> > of the intent behind this patch, and some changes to my previous reply.
+> > 
+> > The intent of the helper functions is related to properties whose values are
+> > tuples of the same format as the "reg" property of the "/memory" nodes.  For
+> > example, the "linux,usable-memory-range" and "linux,elfcoredhr" properties of
+> > the "/chosen" node.
+> > 
+> > The patch header and the function names should be updated to reflect this intent.
+> > This means most or all of my previous suggested function name changes are no longer
+> > useful.
+> > 
+> > Please add devicetree@vger.kernel.org to the next version of this patch and to
+> > the patches that use the functions in this patch.
+> > 
+> > 
+> > On 09/07/18 12:53, Frank Rowand wrote:
+> >> On 09/07/18 01:00, AKASHI Takahiro wrote:
+> >>> These functions will be used later to handle kexec-specific properties
+> >>> in arm64's kexec_file implementation.
+> >>>
+> >>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> >>> Cc: Rob Herring <robh+dt@kernel.org>
+> >>> Cc: Frank Rowand <frowand.list@gmail.com>
+> >>> ---
+> >>>  drivers/of/fdt.c       | 62 ++++++++++++++++++++++++++++++++++++++++--
+> >>>  include/linux/of_fdt.h | 10 +++++--
+> >>>  2 files changed, 68 insertions(+), 4 deletions(-)
+> >>>
+> >>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> >>> index 800ad252cf9c..dc960cea1355 100644
+> >>> --- a/drivers/of/fdt.c
+> >>> +++ b/drivers/of/fdt.c
+> >>> @@ -25,6 +25,7 @@
+> >>>  #include <linux/debugfs.h>
+> >>>  #include <linux/serial_core.h>
+> >>>  #include <linux/sysfs.h>
+> >>> +#include <linux/types.h>
+> >>>  
+> >>>  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+> >>>  #include <asm/page.h>
+> >>> @@ -537,8 +538,8 @@ void *of_fdt_unflatten_tree(const unsigned long *blob,
+> >>>  EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
+> >>>  
+> >>>  /* Everything below here references initial_boot_params directly. */
+> >>> -int __initdata dt_root_addr_cells;
+> >>> -int __initdata dt_root_size_cells;
+> >>> +int dt_root_addr_cells;
+> >>> +int dt_root_size_cells;
+> >>>  
+> >>>  void *initial_boot_params;
+> >>>  
+> >>> @@ -1323,3 +1324,60 @@ late_initcall(of_fdt_raw_init);
+> >>>  #endif
+> >>>  
+> >>>  #endif /* CONFIG_OF_EARLY_FLATTREE */
+> >>> +
+> > 
+> > Global comment: this code should not be using the variables
+> > dt_root_addr_cells and dt_root_size_cells.  These variables are
+> > __initdata.
+> > 
+> > The code that is using these helpers is acting upon a specific FDT
+> > (copied from initial_boot_params).  This code should be getting the
+> > values of the root node's "#address-cells" and "#size-cells" from
+> > the FDT.
+> 
+> There will be new functions available soon to return the values of
+> a node's "#address-cells" and "#size-cells" from an fdt.  They are
+> fdt_address_cells() and fdt_size_cells().
+> 
+> Rob submitted the patch to add them yesterday in "[PATCH 3/3] scripts/dtc:
+> Update to upstream version v1.4.7-14-gc86da84d30e4" [1]
+
+Will this patch go into mainline in v4.20 merge window?
+
+>   [1] https://lkml.kernel.org/r/<20180913202828.15372-3-robh@kernel.org>
+
+Unfortunately, fdt_addresses.c where fdt_address_cells() and
+fdt_size_cells() are defined is NOT compiled in the kernel.
+I will submit a patch.
+
+-Takahiro Akashi
+
+
+> -Frank
+> 
+> 
+> > 
+> > 
+> >> Please add comment:
+> >>
+> >> /* helper functions for arm64 kexec */
+> >>
+> >>
+> >>> +bool of_fdt_cells_size_fitted(u64 base, u64 size)
+> >>
+> >> Please rename as of_fdt_range_valid()
+> > 
+> > I'm not entirely sure of what the caller in 12/16 is trying to ensure
+> > with this function.
+> > 
+> > (1) At the minimum (and what the implementation in of_fdt_cells_size_fitted()
+> > does) is make sure that an address and size tuple are consistent with
+> > the root properties "#address-cells" and "#size-cells".
+> > 
+> > The caller in 12/16 is using this check to validate values for the
+> > properties  "linux,elfcorehdr" and "linux,usable-memory-range".
+> > 
+> > (2) A more complete check _might_ be to ensure that the values also
+> > specify memory that is available to the kernel.  This memory is described
+> > by the "reg" property of one or more "/memory" nodes.
+> > 
+> > This second check is probably what is actually desired.
+> > 
+> > One possible issue to note is that the binding for "linux,usable-memory-range"
+> > suggests that available memory could be described by an EFI memory map.
+> > I am not familiar with how or when an EFI memory map might exist instead
+> > of the "/memory" nodes.
+> > 
+> > 
+> >>> +{
+> >>> +	/* if *_cells >= 2, cells can hold 64-bit values anyway */
+> >>> +	if ((dt_root_addr_cells == 1) && (base > U32_MAX))
+> >>> +		return false;
+> >>> +
+> >>> +	if ((dt_root_size_cells == 1) && (size > U32_MAX))
+> >>> +		return false;
+> >>
+> >> Should also check that base + size does not wrap around.
+> >>
+> >>
+> >>> +
+> >>> +	return true;
+> >>> +}
+> >>> +
+> >>> +size_t of_fdt_reg_cells_size(void)
+> >>
+> >> Please rename as of_fdt_root_range_size()
+> > 
+> > Even better would be to remove this function and replace the one place
+> > that it is called from with the one line of code in this function.
+> > 
+> > -Frank
+> > 
+> > 
+> >>> +{
+> >>> +	return (dt_root_addr_cells + dt_root_size_cells) * sizeof(u32);
+> >>> +}
+> >>> +
+> >>> +#define FDT_ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
+> >>> +#define FDT_TAGALIGN(x)	(FDT_ALIGN((x), FDT_TAGSIZE))
+> >>> +
+> >>> +int fdt_prop_len(const char *prop_name, int len)
+> >>
+> >> Please rename as fdt_len_added_prop()
+> >>
+> >>
+> >>> +{
+> >>> +	return (strlen(prop_name) + 1) +
+> >>> +		sizeof(struct fdt_property) +
+> >>> +		FDT_TAGALIGN(len);
+> >>> +}
+> >>> +
+> >>
+> >> Please add comment, something like:
+> >>
+> >> /* cells must be 1 or 2 */
+> >>
+> >>
+> >>> +static void fill_property(void *buf, u64 val64, int cells)
+> >>
+> >> Please rename as cpu64_to_fdt_cells()
+> >>
+> >> Thanks,
+> >>
+> >> Frank
+> >>
+> >>> +{
+> >>> +	__be32 val32;
+> >>> +
+> >>> +	while (cells) {
+> >>> +		val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
+> >>> +		memcpy(buf, &val32, sizeof(val32));
+> >>> +		buf += sizeof(val32);
+> >>> +	}
+> >>> +}
+> >>> +
+> >>> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
+> >>> +						u64 addr, u64 size)
+> >>> +{
+> >>> +	char buf[sizeof(__be32) * 2 * 2];
+> >>> +		/* assume dt_root_[addr|size]_cells <= 2 */
+> >>> +	void *prop;
+> >>> +	size_t buf_size;
+> >>> +
+> >>> +	buf_size = of_fdt_reg_cells_size();
+> >>> +	prop = buf;
+> >>> +
+> >>> +	fill_property(prop, addr, dt_root_addr_cells);
+> >>> +	prop += dt_root_addr_cells * sizeof(u32);
+> >>> +
+> >>> +	fill_property(prop, size, dt_root_size_cells);
+> >>> +
+> >>> +	return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
+> >>> +}
+> >>> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> >>> index b9cd9ebdf9b9..9615d6142578 100644
+> >>> --- a/include/linux/of_fdt.h
+> >>> +++ b/include/linux/of_fdt.h
+> >>> @@ -37,8 +37,8 @@ extern void *of_fdt_unflatten_tree(const unsigned long *blob,
+> >>>  				   struct device_node **mynodes);
+> >>>  
+> >>>  /* TBD: Temporary export of fdt globals - remove when code fully merged */
+> >>> -extern int __initdata dt_root_addr_cells;
+> >>> -extern int __initdata dt_root_size_cells;
+> >>> +extern int dt_root_addr_cells;
+> >>> +extern int dt_root_size_cells;
+> >>>  extern void *initial_boot_params;
+> >>>  
+> >>>  extern char __dtb_start[];
+> >>> @@ -108,5 +108,11 @@ static inline void unflatten_device_tree(void) {}
+> >>>  static inline void unflatten_and_copy_device_tree(void) {}
+> >>>  #endif /* CONFIG_OF_EARLY_FLATTREE */
+> >>>  
+> >>> +bool of_fdt_cells_size_fitted(u64 base, u64 size);
+> >>> +size_t of_fdt_reg_cells_size(void);
+> >>> +int fdt_prop_len(const char *prop_name, int len);
+> >>> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
+> >>> +						u64 addr, u64 size);
+> >>> +
+> >>>  #endif /* __ASSEMBLY__ */
+> >>>  #endif /* _LINUX_OF_FDT_H */
+> >>>
+> >>
+> >>
+> > 
+> > 
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
