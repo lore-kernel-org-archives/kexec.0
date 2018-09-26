@@ -1,18 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g5A1X-0004Ir-QA
- for kexec@lists.infradead.org; Wed, 26 Sep 2018 13:39:13 +0000
-Subject: Re: [PATCH 0/3] find_next_iomem_res() fixes
-From: lijiang <lijiang@redhat.com>
-References: <20180921073211.20097-2-lijiang@redhat.com>
- <153782698067.130337.12079523922130875402.stgit@bhelgaas-glaptop.roam.corp.google.com>
- <1894f2ba-42ab-c044-ea0c-63eab98d9815@redhat.com>
-Message-ID: <4295243b-20b4-9d21-5863-bab102a6a6d9@redhat.com>
-Date: Wed, 26 Sep 2018 21:36:48 +0800
+ id 1g5D7d-0005Kq-Hs
+ for kexec@lists.infradead.org; Wed, 26 Sep 2018 16:57:12 +0000
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w8QGs1Jd007342
+ for <kexec@lists.infradead.org>; Wed, 26 Sep 2018 12:56:34 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2mrdrbgxev-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 26 Sep 2018 12:56:34 -0400
+Received: from localhost
+ by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <hbathini@linux.ibm.com>;
+ Wed, 26 Sep 2018 17:56:31 +0100
+Subject: [PATCH] makedumpfile/ppc64: increase MAX_PHYSMEM_BITS to 128TB
+From: Hari Bathini <hbathini@linux.ibm.com>
+Date: Wed, 26 Sep 2018 22:26:26 +0530
 MIME-Version: 1.0
-In-Reply-To: <1894f2ba-42ab-c044-ea0c-63eab98d9815@redhat.com>
-Content-Language: en-US
+Message-Id: <153798098618.3701.11236762967901266676.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,41 +29,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, akpm@linux-foundation.org, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, dan.j.williams@intel.com, bp@suse.de, dyoung@redhat.com, tglx@linutronix.de, Vivek Goyal <vgoyal@redhat.com>
+To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: Kexec-ml <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>, Petr Tesarik <ptesarik@suse.cz>
 
-5ZyoIDIwMTjlubQwOeaciDI25pelIDE3OjIyLCBsaWppYW5nIOWGmemBkzoKPiAKPiAKPiDlnKgg
-MjAxOOW5tDA55pyIMjXml6UgMDY6MTQsIEJqb3JuIEhlbGdhYXMg5YaZ6YGTOgo+PiBIaSBMaWFu
-Ym8sCj4+Cj4+IFRoZXNlIHRocmVlIHBhdGNoZXMgYXJlIGEgcG9zc2libGUgcmVwbGFjZW1lbnQg
-Zm9yIHlvdXIgZmlyc3QgcGF0Y2gKPj4gKCJbUEFUQ0ggMS8zIHYzXSByZXNvdXJjZTogZml4IGFu
-IGVycm9yIHdoaWNoIHdhbGtzIHRocm91Z2ggaW9tZW0KPj4gcmVzb3VyY2VzIikuCj4+Cj4+IEkg
-dGhpbmsgdGhlIGludGVyZmFjZSBvZiBmaW5kX25leHRfaW9tZW1fcmVzKCkgY2FuIGJlIGltcHJv
-dmVkIHRvIG1ha2UKPj4gdGhlIGNvZGUgZWFzaWVyIHRvIHJlYWQgYW5kIGFsc28gYXZvaWQgdGhl
-IGVycm9ycyB5b3UncmUgZml4aW5nLgo+Pgo+PiBJIGNhbid0IHRlc3QgdGhlc2UsIHNvIHRoZXkn
-dmUgb25seSBiZWVuIGNvbXBpbGVkLiAgSWYgeW91IGNhbiB0ZXN0Cj4+IHRoZW0gYW5kIGlmIHlv
-dSBsaWtlIHRoZW0sIGZlZWwgZnJlZSB0byBpbmNvcnBvcmF0ZSB0aGVtIGludG8geW91cgo+PiBz
-ZXJpZXMuICBJZiBub3QsIGp1c3QgZHJvcCB0aGVtIChidXQgcGxlYXNlIGF0IGxlYXN0IGZpeCB0
-aGUgc2FtZQo+PiBlcnJvciBpbiB3YWxrX3N5c3RlbV9yYW1fcmFuZ2UoKSkuCj4+Cj4gSGksIEJq
-b3JuCj4gU29ycnkgZm9yIG15IGxhdGUgcmVwbHkgYWJvdXQgdGhpcy4gTm8gbmVlZCB0byBpbmNv
-cnBvcmF0ZSB0aGVtIGludG8KPiBteSBwYXRjaCBzZXJpZXMsIHlvdSBtaWdodCBmcmVlbHkgc3Vi
-bWl0IHRoZW0gdG8gdXBzdHJlYW0uCj4gCj4gSSB3aWxsIHRlc3QgeW91ciBwYXRjaGVzIHdoZXRo
-ZXIgaXQgY2FuIGFsc28gd29yayB3ZWxsIGZvciBteSBjYXNlLCBhbmQKPiB5b3Ugd2lsbCBnZXQg
-ZmVlZGJhY2sgYWJvdXQgbXkgdGVzdCBsYXRlci4KPiAKRm9yIG15IGNhc2UsIHlvdXIgcGF0Y2hl
-cyBjYW4gYWxzbyB3b3JrIHdlbGwuCgo+IFRoYW5rcy4KPiBMaWFuYm8KPiAKPj4gLS0tCj4+Cj4+
-IEJqb3JuIEhlbGdhYXMgKDMpOgo+PiAgICAgICB4ODYva2V4ZWM6IENvcnJlY3QgS0VYRUNfQkFD
-S1VQX1NSQ19FTkQgb2ZmLWJ5LW9uZSBlcnJvcgo+PiAgICAgICByZXNvdXJjZTogSW5jbHVkZSBy
-ZXNvdXJjZSBlbmQgaW4gd2Fsa18qKCkgaW50ZXJmYWNlcwo+PiAgICAgICByZXNvdXJjZTogRml4
-IGZpbmRfbmV4dF9pb21lbV9yZXMoKSBpdGVyYXRpb24gaXNzdWUKPj4KPj4KPj4gIGFyY2gveDg2
-L2luY2x1ZGUvYXNtL2tleGVjLmggfCAgICAyIC0KPj4gIGtlcm5lbC9yZXNvdXJjZS5jICAgICAg
-ICAgICAgfCAgIDk2ICsrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+
-PiAgMiBmaWxlcyBjaGFuZ2VkLCA0MyBpbnNlcnRpb25zKCspLCA1NSBkZWxldGlvbnMoLSkKPj4K
-Pj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPj4ga2V4
-ZWMgbWFpbGluZyBsaXN0Cj4+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPj4gaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo+PgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
-eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9rZXhlYwo=
+* Required for kernel 4.19
+
+With kernel commit 7d4340bb92a9 ("powerpc/mm: Increase MAX_PHYSMEM_BITS
+to 128TB with SPARSEMEM_VMEMMAP config"), MAX_PHYSMEM_BITS is bumped up
+to 47. Make the appropriate update here.
+
+Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+---
+ arch/ppc64.c   |    5 +++++
+ makedumpfile.h |    1 +
+ 2 files changed, 6 insertions(+)
+
+diff --git a/arch/ppc64.c b/arch/ppc64.c
+index 8b6f7d5..947a125 100644
+--- a/arch/ppc64.c
++++ b/arch/ppc64.c
+@@ -481,6 +481,11 @@ set_ppc64_max_physmem_bits(void)
+ 		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+ 		return TRUE;
+ 
++	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_19;
++	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
++		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
++		return TRUE;
++
+ 	return FALSE;
+ }
+ 
+diff --git a/makedumpfile.h b/makedumpfile.h
+index d1fcd87..46ebe2e 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -673,6 +673,7 @@ unsigned long get_kvbase_arm64(void);
+ #define _SECTION_SIZE_BITS	(24)
+ #define _MAX_PHYSMEM_BITS_ORIG  (44)
+ #define _MAX_PHYSMEM_BITS_3_7   (46)
++#define _MAX_PHYSMEM_BITS_4_19  (47)
+ #define REGION_SHIFT            (60UL)
+ #define VMEMMAP_REGION_ID       (0xfUL)
+ 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
