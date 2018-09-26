@@ -1,21 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-wr1-f42.google.com ([209.85.221.42])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g56Dr-00067V-0B
- for kexec@lists.infradead.org; Wed, 26 Sep 2018 09:35:09 +0000
-Subject: Re: [PATCH 1/4 v8] x86/ioremap: add a function ioremap_encrypted() to
- remap kdump old memory
-From: lijiang <lijiang@redhat.com>
-References: <20180907081805.368-1-lijiang@redhat.com>
- <20180907081805.368-2-lijiang@redhat.com>
- <20180926022123.GA2555@MiWiFi-R3L-srv>
- <e6cd5448-b314-e142-1169-9e3e907faf16@redhat.com>
- <e7634c77-1657-4665-3bc4-bd00196f28e4@redhat.com>
-Message-ID: <c076568c-aaf8-9b83-40bd-55c406bd88d0@redhat.com>
-Date: Wed, 26 Sep 2018 17:34:21 +0800
+ id 1g56MG-0002Hc-R6
+ for kexec@lists.infradead.org; Wed, 26 Sep 2018 09:43:54 +0000
+Received: by mail-wr1-f42.google.com with SMTP id u12-v6so26245636wrr.4
+ for <kexec@lists.infradead.org>; Wed, 26 Sep 2018 02:43:21 -0700 (PDT)
+Received: from t-5.eu (p57AB938E.dip0.t-ipconnect.de. [87.171.147.142])
+ by smtp.gmail.com with ESMTPSA id f18-v6sm4149400wrw.32.2018.09.26.02.43.18
+ for <kexec@lists.infradead.org>
+ (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+ Wed, 26 Sep 2018 02:43:18 -0700 (PDT)
+Received: from t-5.eu (localhost [127.0.0.1])
+ by t-5.eu (Postfix) with ESMTP id AD255167A4E
+ for <kexec@lists.infradead.org>; Wed, 26 Sep 2018 11:43:17 +0200 (CEST)
 MIME-Version: 1.0
-In-Reply-To: <e7634c77-1657-4665-3bc4-bd00196f28e4@redhat.com>
-Content-Language: en-US
+Date: Wed, 26 Sep 2018 11:43:17 +0200
+From: =?UTF-8?Q?J=C3=BCrgen_Herrmann?= <t-5@t-5.eu>
+Subject: Re: cannot get kdump to work, kexec stops in load_segments()
+In-Reply-To: <73ee47d5aea541566c89ff264c2d39ed@t-5.eu>
+References: <73ee47d5aea541566c89ff264c2d39ed@t-5.eu>
+Message-ID: <e10057f18c5c50faa4e10238c8ad1547@t-5.eu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,178 +28,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: "Lendacky, Thomas" <thomas.lendacky@amd.com>, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>
+To: kexec@lists.infradead.org
 
-When SME is enabled on AMD machine, the memory is encrypted in the first
-kernel. In this case, SME also needs to be enabled in kdump kernel, and
-we have to remap the old memory with the memory encryption mask.
-
-Here we only talk about the case that SME is active in the first kernel,
-and only care it's active too in kdump kernel. there are four cases we
-need considered.
-
-a. dump vmcore
-   It is encrypted in the first kernel, and needs be read out in kdump
-   kernel.
-
-b. crash notes
-   When dumping vmcore, the people usually need to read the useful
-   information from notes, and the notes is also encrypted.
-
-c. iommu device table
-   It is allocated by kernel, need fill its pointer into mmio of amd iommu.
-   It's encrypted in the first kernel, need read the old content to analyze
-   and get useful information.
-
-d. mmio of amd iommu
-   Register reported by amd firmware, it's not RAM, we don't encrypt in
-   both the first kernel and kdump kernel.
-
-To achieve the goal, the solution is:
-1. add a new bool parameter "encrypted" to __ioremap_caller()
-   It is a low level function, and check the newly added parameter, if it's
-   true and in kdump kernel, will remap the memory with sme mask.
-
-2. add a new function ioremap_encrypted() to explicitly passed in a "true"
-   value for "encrypted".
-   For above a, b, c, we will call ioremap_encrypted();
-
-3. adjust all existed ioremap wrapper functions, passed in "false" for
-   encrypted to make them an before.
-
-   ioremap_encrypted()\
-   ioremap_cache()     |
-   ioremap_prot()      |
-   ioremap_wt()        |->__ioremap_caller()
-   ioremap_wc()        |
-   ioremap_uc()        |
-   ioremap_nocache()  /
-
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
-Changes since v7:
-1. Only modify patch log(suggested by Baoquan He)
-
- arch/x86/include/asm/io.h |  3 +++
- arch/x86/mm/ioremap.c     | 25 +++++++++++++++++--------
- 2 files changed, 20 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-index 6de64840dd22..f8795f9581c7 100644
---- a/arch/x86/include/asm/io.h
-+++ b/arch/x86/include/asm/io.h
-@@ -192,6 +192,9 @@ extern void __iomem *ioremap_cache(resource_size_t offset, unsigned long size);
- #define ioremap_cache ioremap_cache
- extern void __iomem *ioremap_prot(resource_size_t offset, unsigned long size, unsigned long prot_val);
- #define ioremap_prot ioremap_prot
-+extern void __iomem *ioremap_encrypted(resource_size_t phys_addr,
-+					unsigned long size);
-+#define ioremap_encrypted ioremap_encrypted
- 
- /**
-  * ioremap     -   map bus memory into CPU space
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index c63a545ec199..e01e6c695add 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -24,6 +24,7 @@
- #include <asm/pgalloc.h>
- #include <asm/pat.h>
- #include <asm/setup.h>
-+#include <linux/crash_dump.h>
- 
- #include "physaddr.h"
- 
-@@ -131,7 +132,8 @@ static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
-  * caller shouldn't need to know that small detail.
-  */
- static void __iomem *__ioremap_caller(resource_size_t phys_addr,
--		unsigned long size, enum page_cache_mode pcm, void *caller)
-+		unsigned long size, enum page_cache_mode pcm,
-+		void *caller, bool encrypted)
- {
- 	unsigned long offset, vaddr;
- 	resource_size_t last_addr;
-@@ -199,7 +201,7 @@ static void __iomem *__ioremap_caller(resource_size_t phys_addr,
- 	 * resulting mapping.
- 	 */
- 	prot = PAGE_KERNEL_IO;
--	if (sev_active() && mem_flags.desc_other)
-+	if ((sev_active() && mem_flags.desc_other) || encrypted)
- 		prot = pgprot_encrypted(prot);
- 
- 	switch (pcm) {
-@@ -291,7 +293,7 @@ void __iomem *ioremap_nocache(resource_size_t phys_addr, unsigned long size)
- 	enum page_cache_mode pcm = _PAGE_CACHE_MODE_UC_MINUS;
- 
- 	return __ioremap_caller(phys_addr, size, pcm,
--				__builtin_return_address(0));
-+				__builtin_return_address(0), false);
- }
- EXPORT_SYMBOL(ioremap_nocache);
- 
-@@ -324,7 +326,7 @@ void __iomem *ioremap_uc(resource_size_t phys_addr, unsigned long size)
- 	enum page_cache_mode pcm = _PAGE_CACHE_MODE_UC;
- 
- 	return __ioremap_caller(phys_addr, size, pcm,
--				__builtin_return_address(0));
-+				__builtin_return_address(0), false);
- }
- EXPORT_SYMBOL_GPL(ioremap_uc);
- 
-@@ -341,7 +343,7 @@ EXPORT_SYMBOL_GPL(ioremap_uc);
- void __iomem *ioremap_wc(resource_size_t phys_addr, unsigned long size)
- {
- 	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WC,
--					__builtin_return_address(0));
-+					__builtin_return_address(0), false);
- }
- EXPORT_SYMBOL(ioremap_wc);
- 
-@@ -358,14 +360,21 @@ EXPORT_SYMBOL(ioremap_wc);
- void __iomem *ioremap_wt(resource_size_t phys_addr, unsigned long size)
- {
- 	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WT,
--					__builtin_return_address(0));
-+					__builtin_return_address(0), false);
- }
- EXPORT_SYMBOL(ioremap_wt);
- 
-+void __iomem *ioremap_encrypted(resource_size_t phys_addr, unsigned long size)
-+{
-+	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WB,
-+				__builtin_return_address(0), true);
-+}
-+EXPORT_SYMBOL(ioremap_encrypted);
-+
- void __iomem *ioremap_cache(resource_size_t phys_addr, unsigned long size)
- {
- 	return __ioremap_caller(phys_addr, size, _PAGE_CACHE_MODE_WB,
--				__builtin_return_address(0));
-+				__builtin_return_address(0), false);
- }
- EXPORT_SYMBOL(ioremap_cache);
- 
-@@ -374,7 +383,7 @@ void __iomem *ioremap_prot(resource_size_t phys_addr, unsigned long size,
- {
- 	return __ioremap_caller(phys_addr, size,
- 				pgprot2cachemode(__pgprot(prot_val)),
--				__builtin_return_address(0));
-+				__builtin_return_address(0), false);
- }
- EXPORT_SYMBOL(ioremap_prot);
- 
--- 
-2.17.1
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+QW0gMjAuOS4yMDE4IDE5OjUyLCBzY2hyaWViIErDvHJnZW4gSGVycm1hbm46Cj4gSGVsbG8hCj4g
+Cj4gSSBhbSB0cnlpbmcgdG8gZGVidWcgYSBoYW5nIGluIGJ0cmZzLXNlbmQ6IEkgdGFsa2VkIHRv
+IHRoZSBndXlzIG9uIHRoZQo+IGxpbnV4LWJ0cmZzCj4gbWFpbGluZyBsaXN0IGFuZCB0aGV5IG5l
+ZWQgYSBrZHVtcCBvZiB0aGUgc3RhdGUgd2hlbiB0aGUgaGFuZyBoYXBwZW5zLgo+IAo+IEkgYWxy
+ZWFkeSBzZXQgdXAga2R1bXA6Cj4gJCBrZHVtcC1jb25maWcgc2hvdwo+IERVTVBfTU9ERTogICAg
+ICAgIGtkdW1wCj4gVVNFX0tEVU1QOiAgICAgICAgMQo+IEtEVU1QX1NZU0NUTDogICAgIGtlcm5l
+bC5wYW5pY19vbl9vb3BzPTEKPiBLRFVNUF9DT1JFRElSOiAgICAvdmFyL2NyYXNoCj4gY3Jhc2hr
+ZXJuZWwgYWRkcjogMHgyNDAwMDAwMAo+ICAgIC92bWxpbnV6OiBzeW1ib2xpYyBsaW5rIHRvIGJv
+b3Qvdm1saW51ei00LjE1LjAtMzQtZ2VuZXJpYwo+IGtkdW1wIGluaXRyZDoKPiAgICAvaW5pdHJk
+LmltZzogc3ltYm9saWMgbGluayB0byBib290L2luaXRyZC5pbWctNC4xNS4wLTM0LWdlbmVyaWMK
+PiBjdXJyZW50IHN0YXRlOiAgICByZWFkeSB0byBrZHVtcAo+IAo+IGtleGVjIGNvbW1hbmQ6Cj4g
+ICAvc2Jpbi9rZXhlYyAtcCAtZCAtLWNvbW1hbmQtbGluZT0iQk9PVF9JTUFHRT0vdm1saW51ei00
+LjE4LjYKPiByb290PVVVSUQ9YTkxNGMxNDEtNzJiZi00NDhiLTg0N2YtZDY0ZWU4MmQ4YjdiIHJv
+IHJvb3RmbGFncz1zdWJ2b2w9QAo+IHF1aWV0IHNwbGFzaCB2dC5oYW5kb2ZmPTEgbnJfY3B1cz0x
+IHN5c3RlbWQudW5pdD1rZHVtcC10b29scy5zZXJ2aWNlCj4gaXJxcG9sbCBub3VzYiBhdGFfcGlp
+eC5wcmVmZXJfbXNfaHlwZXJ2PTAiIC0taW5pdHJkPS9pbml0cmQuaW1nCj4gL3ZtbGludXoKPiAK
+PiBLZXJuZWwgdmVyc2lvbiBpcyA0LjE4LjYgZnJvbSBrZXJuZWwub3JnCj4gCj4gQ1BVOiBJbnRl
+bChSKSBDb3JlKFRNKSBpNS04MjUwVSBDUFUgQCAxLjYwR0h6Cj4gCj4gSSBkaWQgYSBsaXR0bGUg
+ZGlnZ2luZyBpbiB0aGUga2VybmVsIGNvZGUgd2l0aCBwcmludGsoKSBzdGF0ZW1lbnRzIGFuZAo+
+IHRoZSBleGVjdXRpb24gc3RvcHMgaW4gYXJjaC94ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQu
+YyBpbiBmdW5jdGlvbgo+IGxvYWRfc2VnbWVudHMoKS4gVGhlIGxhc3QgcHJpbnRrIEkgc2VlIGlz
+IGJlZm9yZSB0aGUgY2FsbCBvZiAKPiBsb2FkX3NlZ21lbnRzKCkuCj4gCj4gQSBzY3JlZW5zaG90
+IG9mIHRoZSAidGVzdC1jcmFzaCIgY2FuIGJlIHNlZW4gaGVyZToKPiBodHRwczovL3QtNS5ldS9v
+d25jbG91ZC9pbmRleC5waHAvcy9XQ3hvTnVTcW5LVmc2SjcKPiAKPiBXaGF0IGVsc2UgZG8gSSBu
+ZWVkIHRvIHByb3ZpZGUgaW4gdGVybXMgb2YgaW5mb3JtYXRpb24/Cj4gCj4gQmVzdCByZWdhcmRz
+LAo+IErDvHJnZW4KCkFueWJvZHk/PwoKLS0gCkrDvHJnZW4gSGVycm1hbm4KaHR0cHM6Ly90LTUu
+ZXUKQUxiZXJ0c3RyYcOfZSAyCjk0MzI3IEJvZ2VuCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
+eGVjCg==
