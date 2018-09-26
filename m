@@ -1,29 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g53AO-0005EC-Mg
- for kexec@lists.infradead.org; Wed, 26 Sep 2018 06:19:24 +0000
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com
- [10.5.11.16])
- (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
- (No client certificate requested)
- by mx1.redhat.com (Postfix) with ESMTPS id 4220BC05001D
- for <kexec@lists.infradead.org>; Wed, 26 Sep 2018 06:18:50 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-101.pek2.redhat.com
- [10.72.12.101])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 54FC45F702
- for <kexec@lists.infradead.org>; Wed, 26 Sep 2018 06:18:47 +0000 (UTC)
-Subject: Re: [PATCH 1/4 v7] x86/ioremap: add a function ioremap_encrypted() to
- remap kdump old memory
-References: <20180907081805.368-1-lijiang@redhat.com>
- <20180907081805.368-2-lijiang@redhat.com>
- <20180926022123.GA2555@MiWiFi-R3L-srv>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <e6cd5448-b314-e142-1169-9e3e907faf16@redhat.com>
-Date: Wed, 26 Sep 2018 14:18:43 +0800
+ id 1g54KA-0001gD-D1
+ for kexec@lists.infradead.org; Wed, 26 Sep 2018 07:33:32 +0000
+Date: Wed, 26 Sep 2018 15:32:52 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] x86/boot: Fix kexec booting failure after SEV early boot
+ support
+Message-ID: <20180926073252.GC2555@MiWiFi-R3L-srv>
+References: <20180925111020.23834-1-kasong@redhat.com>
+ <6e15796e-31e9-2dc6-4a31-5c1b01554b45@amd.com>
+ <20180925172608.GB15464@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20180926022123.GA2555@MiWiFi-R3L-srv>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180925172608.GB15464@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,105 +22,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Borislav Petkov <bp@suse.de>
+Cc: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>, "Singh,
+ Brijesh" <brijesh.singh@amd.com>, Kairui Song <kasong@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "dyoung@redhat.com" <dyoung@redhat.com>
 
-5ZyoIDIwMTjlubQwOeaciDI25pelIDEwOjIxLCBCYW9xdWFuIEhlIOWGmemBkzoKPiBIaSBMaWFu
-Ym8sCj4gCj4gT24gMDkvMDcvMTggYXQgMDQ6MThwbSwgTGlhbmJvIEppYW5nIHdyb3RlOgo+PiBX
-aGVuIFNNRSBpcyBlbmFibGVkIG9uIEFNRCBtYWNoaW5lLCB0aGUgbWVtb3J5IGlzIGVuY3J5cHRl
-ZCBpbiB0aGUgZmlyc3QKPj4ga2VybmVsLiBJbiB0aGlzIGNhc2UsIFNNRSBhbHNvIG5lZWRzIHRv
-IGJlIGVuYWJsZWQgaW4ga2R1bXAga2VybmVsLCBhbmQKPj4gd2UgaGF2ZSB0byByZW1hcCB0aGUg
-b2xkIG1lbW9yeSB3aXRoIHRoZSBtZW1vcnkgZW5jcnlwdGlvbiBtYXNrLgo+IAo+IFRoaXMgcGF0
-Y2ggc2VyaWVzIGxvb2tzIGdvb2QgdG8gbWUuIE9uZSB0aGluZyBpcyBpbiB5b3VyIHY1IHBvc3Qs
-IEJvcmlzCj4gcmV2aWV3ZWQgYW5kIGNvbXBsYWluZWQgYWJvdXQgdGhlIGdpdCBsb2csIHdlIHdv
-cmtlZCB0b2dldGhlciB0byBtYWtlIGFuCj4gZG9jdW1lbnQgdG8gZXhwbGFpbiwgd29uZGVyaW5n
-IHdoeSB5b3UgZG9uJ3QgcmVhcnJhbmdlIGl0IGludG8gbG9nIG9mCj4gdGhpcyBwYXRjaC4gT3Ro
-ZXIgdGhhbiB0aGlzLCBhbGwgbG9va3MgZmluZS4KPiAKPiBodHRwOi8vbGttbC5rZXJuZWwub3Jn
-L3IvNTM1MzY5NjQtMmI1Ny00NjMwLWRlOTEtM2Q0ZGEyYjY0M2E4QHJlZGhhdC5jb20KPiAKVGhh
-bmsgeW91LCBCYW9xdWFuLgoKUHJldmlvdXNseSBpIGhhZCBjb25zaWRlcmVkIHdoZXRoZXIgaSBz
-aG91bGQgcHV0IHRoZXNlIGV4cGxhaW5pbmcgaW50byBwYXRjaCBsb2csCmJlY2F1c2UgdGhlc2Ug
-Y29udGVudHMgYXJlIGEgbGl0dGxlIG1vcmUsIGkgbWlnaHQganVzdCBwdXQgdGhlIGRlc2NyaXB0
-aW9uIG9mClNvbHV0aW9uIEEgaW50byB0aGlzIHBhdGNoIGxvZyBhbmQgcG9zdCB0aGlzIHBhdGNo
-IGFnYWluLgoKTGlhbmJvCj4gCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IExpYW5ibyBKaWFuZyA8bGlq
-aWFuZ0ByZWRoYXQuY29tPgo+PiAtLS0KPj4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL2lvLmggfCAg
-MyArKysKPj4gIGFyY2gveDg2L21tL2lvcmVtYXAuYyAgICAgfCAyNSArKysrKysrKysrKysrKysr
-Ky0tLS0tLS0tCj4+ICAyIGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDggZGVsZXRp
-b25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9pby5oIGIvYXJj
-aC94ODYvaW5jbHVkZS9hc20vaW8uaAo+PiBpbmRleCA2ZGU2NDg0MGRkMjIuLmY4Nzk1Zjk1ODFj
-NyAxMDA2NDQKPj4gLS0tIGEvYXJjaC94ODYvaW5jbHVkZS9hc20vaW8uaAo+PiArKysgYi9hcmNo
-L3g4Ni9pbmNsdWRlL2FzbS9pby5oCj4+IEBAIC0xOTIsNiArMTkyLDkgQEAgZXh0ZXJuIHZvaWQg
-X19pb21lbSAqaW9yZW1hcF9jYWNoZShyZXNvdXJjZV9zaXplX3Qgb2Zmc2V0LCB1bnNpZ25lZCBs
-b25nIHNpemUpOwo+PiAgI2RlZmluZSBpb3JlbWFwX2NhY2hlIGlvcmVtYXBfY2FjaGUKPj4gIGV4
-dGVybiB2b2lkIF9faW9tZW0gKmlvcmVtYXBfcHJvdChyZXNvdXJjZV9zaXplX3Qgb2Zmc2V0LCB1
-bnNpZ25lZCBsb25nIHNpemUsIHVuc2lnbmVkIGxvbmcgcHJvdF92YWwpOwo+PiAgI2RlZmluZSBp
-b3JlbWFwX3Byb3QgaW9yZW1hcF9wcm90Cj4+ICtleHRlcm4gdm9pZCBfX2lvbWVtICppb3JlbWFw
-X2VuY3J5cHRlZChyZXNvdXJjZV9zaXplX3QgcGh5c19hZGRyLAo+PiArCQkJCQl1bnNpZ25lZCBs
-b25nIHNpemUpOwo+PiArI2RlZmluZSBpb3JlbWFwX2VuY3J5cHRlZCBpb3JlbWFwX2VuY3J5cHRl
-ZAo+PiAgCj4+ICAvKioKPj4gICAqIGlvcmVtYXAgICAgIC0gICBtYXAgYnVzIG1lbW9yeSBpbnRv
-IENQVSBzcGFjZQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvbW0vaW9yZW1hcC5jIGIvYXJjaC94
-ODYvbW0vaW9yZW1hcC5jCj4+IGluZGV4IGM2M2E1NDVlYzE5OS4uZTAxZTZjNjk1YWRkIDEwMDY0
-NAo+PiAtLS0gYS9hcmNoL3g4Ni9tbS9pb3JlbWFwLmMKPj4gKysrIGIvYXJjaC94ODYvbW0vaW9y
-ZW1hcC5jCj4+IEBAIC0yNCw2ICsyNCw3IEBACj4+ICAjaW5jbHVkZSA8YXNtL3BnYWxsb2MuaD4K
-Pj4gICNpbmNsdWRlIDxhc20vcGF0Lmg+Cj4+ICAjaW5jbHVkZSA8YXNtL3NldHVwLmg+Cj4+ICsj
-aW5jbHVkZSA8bGludXgvY3Jhc2hfZHVtcC5oPgo+PiAgCj4+ICAjaW5jbHVkZSAicGh5c2FkZHIu
-aCIKPj4gIAo+PiBAQCAtMTMxLDcgKzEzMiw4IEBAIHN0YXRpYyB2b2lkIF9faW9yZW1hcF9jaGVj
-a19tZW0ocmVzb3VyY2Vfc2l6ZV90IGFkZHIsIHVuc2lnbmVkIGxvbmcgc2l6ZSwKPj4gICAqIGNh
-bGxlciBzaG91bGRuJ3QgbmVlZCB0byBrbm93IHRoYXQgc21hbGwgZGV0YWlsLgo+PiAgICovCj4+
-ICBzdGF0aWMgdm9pZCBfX2lvbWVtICpfX2lvcmVtYXBfY2FsbGVyKHJlc291cmNlX3NpemVfdCBw
-aHlzX2FkZHIsCj4+IC0JCXVuc2lnbmVkIGxvbmcgc2l6ZSwgZW51bSBwYWdlX2NhY2hlX21vZGUg
-cGNtLCB2b2lkICpjYWxsZXIpCj4+ICsJCXVuc2lnbmVkIGxvbmcgc2l6ZSwgZW51bSBwYWdlX2Nh
-Y2hlX21vZGUgcGNtLAo+PiArCQl2b2lkICpjYWxsZXIsIGJvb2wgZW5jcnlwdGVkKQo+PiAgewo+
-PiAgCXVuc2lnbmVkIGxvbmcgb2Zmc2V0LCB2YWRkcjsKPj4gIAlyZXNvdXJjZV9zaXplX3QgbGFz
-dF9hZGRyOwo+PiBAQCAtMTk5LDcgKzIwMSw3IEBAIHN0YXRpYyB2b2lkIF9faW9tZW0gKl9faW9y
-ZW1hcF9jYWxsZXIocmVzb3VyY2Vfc2l6ZV90IHBoeXNfYWRkciwKPj4gIAkgKiByZXN1bHRpbmcg
-bWFwcGluZy4KPj4gIAkgKi8KPj4gIAlwcm90ID0gUEFHRV9LRVJORUxfSU87Cj4+IC0JaWYgKHNl
-dl9hY3RpdmUoKSAmJiBtZW1fZmxhZ3MuZGVzY19vdGhlcikKPj4gKwlpZiAoKHNldl9hY3RpdmUo
-KSAmJiBtZW1fZmxhZ3MuZGVzY19vdGhlcikgfHwgZW5jcnlwdGVkKQo+PiAgCQlwcm90ID0gcGdw
-cm90X2VuY3J5cHRlZChwcm90KTsKPj4gIAo+PiAgCXN3aXRjaCAocGNtKSB7Cj4+IEBAIC0yOTEs
-NyArMjkzLDcgQEAgdm9pZCBfX2lvbWVtICppb3JlbWFwX25vY2FjaGUocmVzb3VyY2Vfc2l6ZV90
-IHBoeXNfYWRkciwgdW5zaWduZWQgbG9uZyBzaXplKQo+PiAgCWVudW0gcGFnZV9jYWNoZV9tb2Rl
-IHBjbSA9IF9QQUdFX0NBQ0hFX01PREVfVUNfTUlOVVM7Cj4+ICAKPj4gIAlyZXR1cm4gX19pb3Jl
-bWFwX2NhbGxlcihwaHlzX2FkZHIsIHNpemUsIHBjbSwKPj4gLQkJCQlfX2J1aWx0aW5fcmV0dXJu
-X2FkZHJlc3MoMCkpOwo+PiArCQkJCV9fYnVpbHRpbl9yZXR1cm5fYWRkcmVzcygwKSwgZmFsc2Up
-Owo+PiAgfQo+PiAgRVhQT1JUX1NZTUJPTChpb3JlbWFwX25vY2FjaGUpOwo+PiAgCj4+IEBAIC0z
-MjQsNyArMzI2LDcgQEAgdm9pZCBfX2lvbWVtICppb3JlbWFwX3VjKHJlc291cmNlX3NpemVfdCBw
-aHlzX2FkZHIsIHVuc2lnbmVkIGxvbmcgc2l6ZSkKPj4gIAllbnVtIHBhZ2VfY2FjaGVfbW9kZSBw
-Y20gPSBfUEFHRV9DQUNIRV9NT0RFX1VDOwo+PiAgCj4+ICAJcmV0dXJuIF9faW9yZW1hcF9jYWxs
-ZXIocGh5c19hZGRyLCBzaXplLCBwY20sCj4+IC0JCQkJX19idWlsdGluX3JldHVybl9hZGRyZXNz
-KDApKTsKPj4gKwkJCQlfX2J1aWx0aW5fcmV0dXJuX2FkZHJlc3MoMCksIGZhbHNlKTsKPj4gIH0K
-Pj4gIEVYUE9SVF9TWU1CT0xfR1BMKGlvcmVtYXBfdWMpOwo+PiAgCj4+IEBAIC0zNDEsNyArMzQz
-LDcgQEAgRVhQT1JUX1NZTUJPTF9HUEwoaW9yZW1hcF91Yyk7Cj4+ICB2b2lkIF9faW9tZW0gKmlv
-cmVtYXBfd2MocmVzb3VyY2Vfc2l6ZV90IHBoeXNfYWRkciwgdW5zaWduZWQgbG9uZyBzaXplKQo+
-PiAgewo+PiAgCXJldHVybiBfX2lvcmVtYXBfY2FsbGVyKHBoeXNfYWRkciwgc2l6ZSwgX1BBR0Vf
-Q0FDSEVfTU9ERV9XQywKPj4gLQkJCQkJX19idWlsdGluX3JldHVybl9hZGRyZXNzKDApKTsKPj4g
-KwkJCQkJX19idWlsdGluX3JldHVybl9hZGRyZXNzKDApLCBmYWxzZSk7Cj4+ICB9Cj4+ICBFWFBP
-UlRfU1lNQk9MKGlvcmVtYXBfd2MpOwo+PiAgCj4+IEBAIC0zNTgsMTQgKzM2MCwyMSBAQCBFWFBP
-UlRfU1lNQk9MKGlvcmVtYXBfd2MpOwo+PiAgdm9pZCBfX2lvbWVtICppb3JlbWFwX3d0KHJlc291
-cmNlX3NpemVfdCBwaHlzX2FkZHIsIHVuc2lnbmVkIGxvbmcgc2l6ZSkKPj4gIHsKPj4gIAlyZXR1
-cm4gX19pb3JlbWFwX2NhbGxlcihwaHlzX2FkZHIsIHNpemUsIF9QQUdFX0NBQ0hFX01PREVfV1Qs
-Cj4+IC0JCQkJCV9fYnVpbHRpbl9yZXR1cm5fYWRkcmVzcygwKSk7Cj4+ICsJCQkJCV9fYnVpbHRp
-bl9yZXR1cm5fYWRkcmVzcygwKSwgZmFsc2UpOwo+PiAgfQo+PiAgRVhQT1JUX1NZTUJPTChpb3Jl
-bWFwX3d0KTsKPj4gIAo+PiArdm9pZCBfX2lvbWVtICppb3JlbWFwX2VuY3J5cHRlZChyZXNvdXJj
-ZV9zaXplX3QgcGh5c19hZGRyLCB1bnNpZ25lZCBsb25nIHNpemUpCj4+ICt7Cj4+ICsJcmV0dXJu
-IF9faW9yZW1hcF9jYWxsZXIocGh5c19hZGRyLCBzaXplLCBfUEFHRV9DQUNIRV9NT0RFX1dCLAo+
-PiArCQkJCV9fYnVpbHRpbl9yZXR1cm5fYWRkcmVzcygwKSwgdHJ1ZSk7Cj4+ICt9Cj4+ICtFWFBP
-UlRfU1lNQk9MKGlvcmVtYXBfZW5jcnlwdGVkKTsKPj4gKwo+PiAgdm9pZCBfX2lvbWVtICppb3Jl
-bWFwX2NhY2hlKHJlc291cmNlX3NpemVfdCBwaHlzX2FkZHIsIHVuc2lnbmVkIGxvbmcgc2l6ZSkK
-Pj4gIHsKPj4gIAlyZXR1cm4gX19pb3JlbWFwX2NhbGxlcihwaHlzX2FkZHIsIHNpemUsIF9QQUdF
-X0NBQ0hFX01PREVfV0IsCj4+IC0JCQkJX19idWlsdGluX3JldHVybl9hZGRyZXNzKDApKTsKPj4g
-KwkJCQlfX2J1aWx0aW5fcmV0dXJuX2FkZHJlc3MoMCksIGZhbHNlKTsKPj4gIH0KPj4gIEVYUE9S
-VF9TWU1CT0woaW9yZW1hcF9jYWNoZSk7Cj4+ICAKPj4gQEAgLTM3NCw3ICszODMsNyBAQCB2b2lk
-IF9faW9tZW0gKmlvcmVtYXBfcHJvdChyZXNvdXJjZV9zaXplX3QgcGh5c19hZGRyLCB1bnNpZ25l
-ZCBsb25nIHNpemUsCj4+ICB7Cj4+ICAJcmV0dXJuIF9faW9yZW1hcF9jYWxsZXIocGh5c19hZGRy
-LCBzaXplLAo+PiAgCQkJCXBncHJvdDJjYWNoZW1vZGUoX19wZ3Byb3QocHJvdF92YWwpKSwKPj4g
-LQkJCQlfX2J1aWx0aW5fcmV0dXJuX2FkZHJlc3MoMCkpOwo+PiArCQkJCV9fYnVpbHRpbl9yZXR1
-cm5fYWRkcmVzcygwKSwgZmFsc2UpOwo+PiAgfQo+PiAgRVhQT1JUX1NZTUJPTChpb3JlbWFwX3By
-b3QpOwo+PiAgCj4+IC0tIAo+PiAyLjE3LjEKPj4KPiAKPiBfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwo+IGtleGVjIG1haWxpbmcgbGlzdAo+IGtleGVjQGxp
-c3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2tleGVjCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 09/25/18 at 07:26pm, Borislav Petkov wrote:
+> IINM, the problem can be addressed in a simpler way by getting rid of
+> enc_bit and thus getting rid of the need to do relative addressing of
+> anything and simply doing the whole dance of figuring out the C-bit each
+> time. It probably wouldn't be even measurable...
+
+Couldn't agree more.
+
+Obviously enc_bit is redundent here. We only check eax each time,
+removing it can fix the RIP-relative addressing issue in kexec.
+
+diff --git a/arch/x86/boot/compressed/mem_encrypt.S b/arch/x86/boot/compressed/mem_encrypt.S
+index eaa843a52907..0b60eb867d25 100644
+--- a/arch/x86/boot/compressed/mem_encrypt.S
++++ b/arch/x86/boot/compressed/mem_encrypt.S
+@@ -27,19 +27,6 @@ ENTRY(get_sev_encryption_bit)
+ 	push	%edx
+ 	push	%edi
+ 
+-	/*
+-	 * RIP-relative addressing is needed to access the encryption bit
+-	 * variable. Since we are running in 32-bit mode we need this call/pop
+-	 * sequence to get the proper relative addressing.
+-	 */
+-	call	1f
+-1:	popl	%edi
+-	subl	$1b, %edi
+-
+-	movl	enc_bit(%edi), %eax
+-	cmpl	$0, %eax
+-	jge	.Lsev_exit
+-
+ 	/* Check if running under a hypervisor */
+ 	movl	$1, %eax
+ 	cpuid
+@@ -69,12 +56,10 @@ ENTRY(get_sev_encryption_bit)
+ 
+ 	movl	%ebx, %eax
+ 	andl	$0x3f, %eax		/* Return the encryption bit location */
+-	movl	%eax, enc_bit(%edi)
+ 	jmp	.Lsev_exit
+ 
+ .Lno_sev:
+ 	xor	%eax, %eax
+-	movl	%eax, enc_bit(%edi)
+ 
+ .Lsev_exit:
+ 	pop	%edi
+@@ -113,9 +98,6 @@ ENTRY(set_sev_encryption_mask)
+ ENDPROC(set_sev_encryption_mask)
+ 
+ 	.data
+-enc_bit:
+-	.int	0xffffffff
+-
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ 	.balign	8
+ GLOBAL(sme_me_mask)
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
