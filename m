@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g59ls-00088V-JJ
- for kexec@lists.infradead.org; Wed, 26 Sep 2018 13:22:29 +0000
-Date: Wed, 26 Sep 2018 21:21:18 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] x86/boot: Fix kexec booting failure after SEV early boot
- support
-Message-ID: <20180926132118.GF2555@MiWiFi-R3L-srv>
-References: <20180925111020.23834-1-kasong@redhat.com>
- <6e15796e-31e9-2dc6-4a31-5c1b01554b45@amd.com>
- <20180925172608.GB15464@zn.tnic>
- <20180926073252.GC2555@MiWiFi-R3L-srv>
- <20180926112208.GE2555@MiWiFi-R3L-srv>
- <3b41fee3-e2f6-2e36-d2ca-1074c5f62bb8@amd.com>
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1g5A1X-0004Ir-QA
+ for kexec@lists.infradead.org; Wed, 26 Sep 2018 13:39:13 +0000
+Subject: Re: [PATCH 0/3] find_next_iomem_res() fixes
+From: lijiang <lijiang@redhat.com>
+References: <20180921073211.20097-2-lijiang@redhat.com>
+ <153782698067.130337.12079523922130875402.stgit@bhelgaas-glaptop.roam.corp.google.com>
+ <1894f2ba-42ab-c044-ea0c-63eab98d9815@redhat.com>
+Message-ID: <4295243b-20b4-9d21-5863-bab102a6a6d9@redhat.com>
+Date: Wed, 26 Sep 2018 21:36:48 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3b41fee3-e2f6-2e36-d2ca-1074c5f62bb8@amd.com>
+In-Reply-To: <1894f2ba-42ab-c044-ea0c-63eab98d9815@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,99 +21,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>, Kairui Song <kasong@redhat.com>
-Cc: "Singh, Brijesh" <brijesh.singh@amd.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, "dyoung@redhat.com" <dyoung@redhat.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, akpm@linux-foundation.org, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, dan.j.williams@intel.com, bp@suse.de, dyoung@redhat.com, tglx@linutronix.de, Vivek Goyal <vgoyal@redhat.com>
 
-On 09/26/18 at 01:01pm, Lendacky, Thomas wrote:
-> On 09/26/2018 06:22 AM, Baoquan He wrote:
-> > On 09/26/18 at 03:32pm, Baoquan He wrote:
-> >> On 09/25/18 at 07:26pm, Borislav Petkov wrote:
-> >>> IINM, the problem can be addressed in a simpler way by getting rid of
-> >>> enc_bit and thus getting rid of the need to do relative addressing of
-> >>> anything and simply doing the whole dance of figuring out the C-bit each
-> >>> time. It probably wouldn't be even measurable...
-> >>
-> >> Couldn't agree more.
-> >>
-> >> Obviously enc_bit is redundent here. We only check eax each time,
-> >> removing it can fix the RIP-relative addressing issue in kexec.
-> > 
-> > OK, in distros CONFIG_AMD_MEM_ENCRYPT=y is set by default usually.
-> > enc_bit can save once in normal boot, then fetch and skip the cpuid
-> > detection in initialize_identity_maps(). However this only speeds up in
-> > amd system with SME, on intel cpu and amd cpu w/o sme, it still needs to
-> > do cpuid twice. Removing it should be not measurable as Boris said.
-> > Not sure if Tom has other concern.
-> 
-> No concern from me.  The original version of the patch did not cache the
-> value, that was added based on the patch series feedback.  So, if there
-> is no concern about executing some extra CPUID/RDMSR instructions, then
-> it would certainly simplify the code quite a bit.
-
-OK, thanks for confirming this, Tom.
-
-Then, maybe Kairui can repost below code with formal patch log after
-testing. I have tested on a intel machine with 48G memory, and
-CONFIG_AMD_MEM_ENCRYPT=y, it works well. Maybe add Boris's Suggested-By,
-and CC me.
-
-Thanks
-Baoquan
-
-> >>
-> >> diff --git a/arch/x86/boot/compressed/mem_encrypt.S b/arch/x86/boot/compressed/mem_encrypt.S
-> >> index eaa843a52907..0b60eb867d25 100644
-> >> --- a/arch/x86/boot/compressed/mem_encrypt.S
-> >> +++ b/arch/x86/boot/compressed/mem_encrypt.S
-> >> @@ -27,19 +27,6 @@ ENTRY(get_sev_encryption_bit)
-> >>  	push	%edx
-> >>  	push	%edi
-> >>  
-> >> -	/*
-> >> -	 * RIP-relative addressing is needed to access the encryption bit
-> >> -	 * variable. Since we are running in 32-bit mode we need this call/pop
-> >> -	 * sequence to get the proper relative addressing.
-> >> -	 */
-> >> -	call	1f
-> >> -1:	popl	%edi
-> >> -	subl	$1b, %edi
-> >> -
-> >> -	movl	enc_bit(%edi), %eax
-> >> -	cmpl	$0, %eax
-> >> -	jge	.Lsev_exit
-> >> -
-> >>  	/* Check if running under a hypervisor */
-> >>  	movl	$1, %eax
-> >>  	cpuid
-> >> @@ -69,12 +56,10 @@ ENTRY(get_sev_encryption_bit)
-> >>  
-> >>  	movl	%ebx, %eax
-> >>  	andl	$0x3f, %eax		/* Return the encryption bit location */
-> >> -	movl	%eax, enc_bit(%edi)
-> >>  	jmp	.Lsev_exit
-> >>  
-> >>  .Lno_sev:
-> >>  	xor	%eax, %eax
-> >> -	movl	%eax, enc_bit(%edi)
-> >>  
-> >>  .Lsev_exit:
-> >>  	pop	%edi
-> >> @@ -113,9 +98,6 @@ ENTRY(set_sev_encryption_mask)
-> >>  ENDPROC(set_sev_encryption_mask)
-> >>  
-> >>  	.data
-> >> -enc_bit:
-> >> -	.int	0xffffffff
-> >> -
-> >>  #ifdef CONFIG_AMD_MEM_ENCRYPT
-> >>  	.balign	8
-> >>  GLOBAL(sme_me_mask)
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQwOeaciDI25pelIDE3OjIyLCBsaWppYW5nIOWGmemBkzoKPiAKPiAKPiDlnKgg
+MjAxOOW5tDA55pyIMjXml6UgMDY6MTQsIEJqb3JuIEhlbGdhYXMg5YaZ6YGTOgo+PiBIaSBMaWFu
+Ym8sCj4+Cj4+IFRoZXNlIHRocmVlIHBhdGNoZXMgYXJlIGEgcG9zc2libGUgcmVwbGFjZW1lbnQg
+Zm9yIHlvdXIgZmlyc3QgcGF0Y2gKPj4gKCJbUEFUQ0ggMS8zIHYzXSByZXNvdXJjZTogZml4IGFu
+IGVycm9yIHdoaWNoIHdhbGtzIHRocm91Z2ggaW9tZW0KPj4gcmVzb3VyY2VzIikuCj4+Cj4+IEkg
+dGhpbmsgdGhlIGludGVyZmFjZSBvZiBmaW5kX25leHRfaW9tZW1fcmVzKCkgY2FuIGJlIGltcHJv
+dmVkIHRvIG1ha2UKPj4gdGhlIGNvZGUgZWFzaWVyIHRvIHJlYWQgYW5kIGFsc28gYXZvaWQgdGhl
+IGVycm9ycyB5b3UncmUgZml4aW5nLgo+Pgo+PiBJIGNhbid0IHRlc3QgdGhlc2UsIHNvIHRoZXkn
+dmUgb25seSBiZWVuIGNvbXBpbGVkLiAgSWYgeW91IGNhbiB0ZXN0Cj4+IHRoZW0gYW5kIGlmIHlv
+dSBsaWtlIHRoZW0sIGZlZWwgZnJlZSB0byBpbmNvcnBvcmF0ZSB0aGVtIGludG8geW91cgo+PiBz
+ZXJpZXMuICBJZiBub3QsIGp1c3QgZHJvcCB0aGVtIChidXQgcGxlYXNlIGF0IGxlYXN0IGZpeCB0
+aGUgc2FtZQo+PiBlcnJvciBpbiB3YWxrX3N5c3RlbV9yYW1fcmFuZ2UoKSkuCj4+Cj4gSGksIEJq
+b3JuCj4gU29ycnkgZm9yIG15IGxhdGUgcmVwbHkgYWJvdXQgdGhpcy4gTm8gbmVlZCB0byBpbmNv
+cnBvcmF0ZSB0aGVtIGludG8KPiBteSBwYXRjaCBzZXJpZXMsIHlvdSBtaWdodCBmcmVlbHkgc3Vi
+bWl0IHRoZW0gdG8gdXBzdHJlYW0uCj4gCj4gSSB3aWxsIHRlc3QgeW91ciBwYXRjaGVzIHdoZXRo
+ZXIgaXQgY2FuIGFsc28gd29yayB3ZWxsIGZvciBteSBjYXNlLCBhbmQKPiB5b3Ugd2lsbCBnZXQg
+ZmVlZGJhY2sgYWJvdXQgbXkgdGVzdCBsYXRlci4KPiAKRm9yIG15IGNhc2UsIHlvdXIgcGF0Y2hl
+cyBjYW4gYWxzbyB3b3JrIHdlbGwuCgo+IFRoYW5rcy4KPiBMaWFuYm8KPiAKPj4gLS0tCj4+Cj4+
+IEJqb3JuIEhlbGdhYXMgKDMpOgo+PiAgICAgICB4ODYva2V4ZWM6IENvcnJlY3QgS0VYRUNfQkFD
+S1VQX1NSQ19FTkQgb2ZmLWJ5LW9uZSBlcnJvcgo+PiAgICAgICByZXNvdXJjZTogSW5jbHVkZSBy
+ZXNvdXJjZSBlbmQgaW4gd2Fsa18qKCkgaW50ZXJmYWNlcwo+PiAgICAgICByZXNvdXJjZTogRml4
+IGZpbmRfbmV4dF9pb21lbV9yZXMoKSBpdGVyYXRpb24gaXNzdWUKPj4KPj4KPj4gIGFyY2gveDg2
+L2luY2x1ZGUvYXNtL2tleGVjLmggfCAgICAyIC0KPj4gIGtlcm5lbC9yZXNvdXJjZS5jICAgICAg
+ICAgICAgfCAgIDk2ICsrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+
+PiAgMiBmaWxlcyBjaGFuZ2VkLCA0MyBpbnNlcnRpb25zKCspLCA1NSBkZWxldGlvbnMoLSkKPj4K
+Pj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPj4ga2V4
+ZWMgbWFpbGluZyBsaXN0Cj4+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPj4gaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo+PgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
+eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9rZXhlYwo=
