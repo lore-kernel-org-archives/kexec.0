@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g5XBa-0003oo-6u
- for kexec@lists.infradead.org; Thu, 27 Sep 2018 14:22:36 +0000
-Subject: [PATCH 3/3] resource: Fix find_next_iomem_res() iteration issue
-From: Bjorn Helgaas <helgaas@kernel.org>
-Date: Thu, 27 Sep 2018 09:22:09 -0500
-Message-ID: <153805812916.1157.177580438135143788.stgit@bhelgaas-glaptop.roam.corp.google.com>
-In-Reply-To: <153805773703.1157.14773321497580233478.stgit@bhelgaas-glaptop.roam.corp.google.com>
-References: <153805773703.1157.14773321497580233478.stgit@bhelgaas-glaptop.roam.corp.google.com>
+ id 1g5XgR-0006yt-68
+ for kexec@lists.infradead.org; Thu, 27 Sep 2018 14:54:30 +0000
+Subject: Re: [PATCH v7 RESEND 1/4] x86/ioremap: add a function
+ ioremap_encrypted() to remap kdump old memory
+References: <20180927071954.29615-1-lijiang@redhat.com>
+ <20180927071954.29615-2-lijiang@redhat.com> <20180927131737.GA19779@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <6306eaa9-d81e-2fa4-8978-63503a7ecce4@redhat.com>
+Date: Thu, 27 Sep 2018 22:53:47 +0800
 MIME-Version: 1.0
+In-Reply-To: <20180927131737.GA19779@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,224 +21,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: dan.j.williams@intel.com, brijesh.singh@amd.com, Lianbo Jiang <lijiang@redhat.com>, bhe@redhat.com, thomas.lendacky@amd.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, tglx@linutronix.de, bp@suse.de, dyoung@redhat.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: Borislav Petkov <bp@suse.de>
+Cc: thomas.lendacky@amd.com, jroedel@suse.de, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
 
-From: Bjorn Helgaas <bhelgaas@google.com>
-
-Previously find_next_iomem_res() used "*res" as both an input parameter for
-the range to search and the type of resource to search for, and an output
-parameter for the resource we found, which makes the interface confusing.
-
-The current callers use find_next_iomem_res() incorrectly because they
-allocate a single struct resource and use it for repeated calls to
-find_next_iomem_res().  When find_next_iomem_res() returns a resource, it
-overwrites the start, end, flags, and desc members of the struct.  If we
-call find_next_iomem_res() again, we must update or restore these fields.
-The previous code restored res.start and res.end, but not res.flags or
-res.desc.
-
-Since the callers did not restore res.flags, if they searched for flags
-IORESOURCE_MEM | IORESOURCE_BUSY and found a resource with flags
-IORESOURCE_MEM | IORESOURCE_BUSY | IORESOURCE_SYSRAM, the next search would
-incorrectly skip resources unless they were also marked as
-IORESOURCE_SYSRAM.
-
-Fix this by restructuring the interface so it takes explicit "start, end,
-flags" parameters and uses "*res" only as an output parameter.
-
-Original-patch: http://lore.kernel.org/lkml/20180921073211.20097-2-lijiang@redhat.com
-Based-on-patch-by: Lianbo Jiang <lijiang@redhat.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- kernel/resource.c |   94 +++++++++++++++++++++++------------------------------
- 1 file changed, 41 insertions(+), 53 deletions(-)
-
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 155ec873ea4d..9891ea90cc8f 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -319,23 +319,26 @@ int release_resource(struct resource *old)
- EXPORT_SYMBOL(release_resource);
- 
- /*
-- * Finds the lowest iomem resource existing within [res->start..res->end].
-- * The caller must specify res->start, res->end, res->flags, and optionally
-- * desc.  If found, returns 0, res is overwritten, if not found, returns -1.
-- * This function walks the whole tree and not just first level children until
-- * and unless first_level_children_only is true.
-+ * Finds the lowest iomem resource that covers part of [start..end].  The
-+ * caller must specify start, end, flags, and desc (which may be
-+ * IORES_DESC_NONE).
-+ *
-+ * If a resource is found, returns 0 and *res is overwritten with the part
-+ * of the resource that's within [start..end]; if none is found, returns
-+ * -1.
-+ *
-+ * This function walks the whole tree and not just first level children
-+ * unless first_level_children_only is true.
-  */
--static int find_next_iomem_res(struct resource *res, unsigned long desc,
--			       bool first_level_children_only)
-+static int find_next_iomem_res(resource_size_t start, resource_size_t end,
-+			       unsigned long flags, unsigned long desc,
-+			       bool first_level_children_only,
-+			       struct resource *res)
- {
--	resource_size_t start, end;
- 	struct resource *p;
- 	bool sibling_only = false;
- 
- 	BUG_ON(!res);
--
--	start = res->start;
--	end = res->end;
- 	BUG_ON(start >= end);
- 
- 	if (first_level_children_only)
-@@ -344,7 +347,7 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
- 	read_lock(&resource_lock);
- 
- 	for (p = iomem_resource.child; p; p = next_resource(p, sibling_only)) {
--		if ((p->flags & res->flags) != res->flags)
-+		if ((p->flags & flags) != flags)
- 			continue;
- 		if ((desc != IORES_DESC_NONE) && (desc != p->desc))
- 			continue;
-@@ -359,32 +362,31 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
- 	read_unlock(&resource_lock);
- 	if (!p)
- 		return -1;
-+
- 	/* copy data */
--	if (res->start < p->start)
--		res->start = p->start;
--	if (res->end > p->end)
--		res->end = p->end;
-+	res->start = max(start, p->start);
-+	res->end = min(end, p->end);
- 	res->flags = p->flags;
- 	res->desc = p->desc;
- 	return 0;
- }
- 
--static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
--				 bool first_level_children_only,
--				 void *arg,
-+static int __walk_iomem_res_desc(resource_size_t start, resource_size_t end,
-+				 unsigned long flags, unsigned long desc,
-+				 bool first_level_children_only, void *arg,
- 				 int (*func)(struct resource *, void *))
- {
--	u64 orig_end = res->end;
-+	struct resource res;
- 	int ret = -1;
- 
--	while ((res->start < res->end) &&
--	       !find_next_iomem_res(res, desc, first_level_children_only)) {
--		ret = (*func)(res, arg);
-+	while (start < end &&
-+	       !find_next_iomem_res(start, end, flags, desc,
-+				    first_level_children_only, &res)) {
-+		ret = (*func)(&res, arg);
- 		if (ret)
- 			break;
- 
--		res->start = res->end + 1;
--		res->end = orig_end;
-+		start = res.end + 1;
- 	}
- 
- 	return ret;
-@@ -407,13 +409,7 @@ static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
- int walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start,
- 		u64 end, void *arg, int (*func)(struct resource *, void *))
- {
--	struct resource res;
--
--	res.start = start;
--	res.end = end;
--	res.flags = flags;
--
--	return __walk_iomem_res_desc(&res, desc, false, arg, func);
-+	return __walk_iomem_res_desc(start, end, flags, desc, false, arg, func);
- }
- EXPORT_SYMBOL_GPL(walk_iomem_res_desc);
- 
-@@ -427,13 +423,9 @@ EXPORT_SYMBOL_GPL(walk_iomem_res_desc);
- int walk_system_ram_res(u64 start, u64 end, void *arg,
- 				int (*func)(struct resource *, void *))
- {
--	struct resource res;
--
--	res.start = start;
--	res.end = end;
--	res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-+	unsigned long flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
- 
--	return __walk_iomem_res_desc(&res, IORES_DESC_NONE, true,
-+	return __walk_iomem_res_desc(start, end, flags, IORES_DESC_NONE, true,
- 				     arg, func);
- }
- 
-@@ -444,13 +436,9 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
- int walk_mem_res(u64 start, u64 end, void *arg,
- 		 int (*func)(struct resource *, void *))
- {
--	struct resource res;
--
--	res.start = start;
--	res.end = end;
--	res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-+	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
- 
--	return __walk_iomem_res_desc(&res, IORES_DESC_NONE, true,
-+	return __walk_iomem_res_desc(start, end, flags, IORES_DESC_NONE, true,
- 				     arg, func);
- }
- 
-@@ -464,25 +452,25 @@ int walk_mem_res(u64 start, u64 end, void *arg,
- int walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
- 		void *arg, int (*func)(unsigned long, unsigned long, void *))
- {
-+	resource_size_t start, end;
-+	unsigned long flags;
- 	struct resource res;
- 	unsigned long pfn, end_pfn;
--	u64 orig_end;
- 	int ret = -1;
- 
--	res.start = (u64) start_pfn << PAGE_SHIFT;
--	res.end = ((u64)(start_pfn + nr_pages) << PAGE_SHIFT) - 1;
--	res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
--	orig_end = res.end;
--	while ((res.start < res.end) &&
--		(find_next_iomem_res(&res, IORES_DESC_NONE, true) >= 0)) {
-+	start = (u64) start_pfn << PAGE_SHIFT;
-+	end = ((u64)(start_pfn + nr_pages) << PAGE_SHIFT) - 1;
-+	flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-+	while (start < end &&
-+	       !find_next_iomem_res(start, end, flags, IORES_DESC_NONE,
-+				    true, &res)) {
- 		pfn = (res.start + PAGE_SIZE - 1) >> PAGE_SHIFT;
- 		end_pfn = (res.end + 1) >> PAGE_SHIFT;
- 		if (end_pfn > pfn)
- 			ret = (*func)(pfn, end_pfn - pfn, arg);
- 		if (ret)
- 			break;
--		res.start = res.end + 1;
--		res.end = orig_end;
-+		start = res.end + 1;
- 	}
- 	return ret;
- }
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQwOeaciDI35pelIDIxOjE3LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IFRodSwgU2VwIDI3LCAyMDE4IGF0IDAzOjE5OjUxUE0gKzA4MDAsIExpYW5ibyBKaWFuZyB3cm90
+ZToKPj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2lvLmggYi9hcmNoL3g4Ni9p
+bmNsdWRlL2FzbS9pby5oCj4+IGluZGV4IDZkZTY0ODQwZGQyMi4uZjg3OTVmOTU4MWM3IDEwMDY0
+NAo+PiAtLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9pby5oCj4+ICsrKyBiL2FyY2gveDg2L2lu
+Y2x1ZGUvYXNtL2lvLmgKPj4gQEAgLTE5Miw2ICsxOTIsOSBAQCBleHRlcm4gdm9pZCBfX2lvbWVt
+ICppb3JlbWFwX2NhY2hlKHJlc291cmNlX3NpemVfdCBvZmZzZXQsIHVuc2lnbmVkIGxvbmcgc2l6
+ZSk7Cj4+ICAjZGVmaW5lIGlvcmVtYXBfY2FjaGUgaW9yZW1hcF9jYWNoZQo+PiAgZXh0ZXJuIHZv
+aWQgX19pb21lbSAqaW9yZW1hcF9wcm90KHJlc291cmNlX3NpemVfdCBvZmZzZXQsIHVuc2lnbmVk
+IGxvbmcgc2l6ZSwgdW5zaWduZWQgbG9uZyBwcm90X3ZhbCk7Cj4+ICAjZGVmaW5lIGlvcmVtYXBf
+cHJvdCBpb3JlbWFwX3Byb3QKPj4gK2V4dGVybiB2b2lkIF9faW9tZW0gKmlvcmVtYXBfZW5jcnlw
+dGVkKHJlc291cmNlX3NpemVfdCBwaHlzX2FkZHIsCj4+ICsJCQkJCXVuc2lnbmVkIGxvbmcgc2l6
+ZSk7Cj4gCj4gTm8gbmVlZCB0byBicmVhayB0aGlzIGxpbmUgLSBzZWUgaG93IHRoZSBvdGhlciBl
+eHRlcm5zIGRvbid0Lgo+IApPaywgaSB3aWxsIGZpeCBpdC4gCgpJZiBubyBuZWVkIHRvIGJyZWFr
+IHRoaXMgbGluZSwgaXQgd2lsbCBjYXVzZSBhIHdhcm5pbmcgb2YgZXhjZWVkaW5nIDgwIGNoYXJh
+Y3RlcnMgcGVyIGxpbmUuCgo+PiArI2RlZmluZSBpb3JlbWFwX2VuY3J5cHRlZCBpb3JlbWFwX2Vu
+Y3J5cHRlZAo+PiAgCj4+ICAvKioKPj4gICAqIGlvcmVtYXAgICAgIC0gICBtYXAgYnVzIG1lbW9y
+eSBpbnRvIENQVSBzcGFjZQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvbW0vaW9yZW1hcC5jIGIv
+YXJjaC94ODYvbW0vaW9yZW1hcC5jCj4+IGluZGV4IGM2M2E1NDVlYzE5OS4uZTAxZTZjNjk1YWRk
+IDEwMDY0NAo+PiAtLS0gYS9hcmNoL3g4Ni9tbS9pb3JlbWFwLmMKPj4gKysrIGIvYXJjaC94ODYv
+bW0vaW9yZW1hcC5jCj4+IEBAIC0yNCw2ICsyNCw3IEBACj4+ICAjaW5jbHVkZSA8YXNtL3BnYWxs
+b2MuaD4KPj4gICNpbmNsdWRlIDxhc20vcGF0Lmg+Cj4+ICAjaW5jbHVkZSA8YXNtL3NldHVwLmg+
+Cj4+ICsjaW5jbHVkZSA8bGludXgvY3Jhc2hfZHVtcC5oPgo+IAo+IFdoYXQgaXMgdGhhdCBpbmNs
+dWRlIGZvciBhbmQgd2h5IGlzIGl0IG5vdCB1cCB0aGVyZSB3aXRoIHRoZSA8bGludXgvLi4uCj4g
+aW5jbHVkZXMgaW5zdGVhZCBoZXJlIHdpdGggdGhlIDxhc20vLi4+IG9uZXM/Cj4gClRoYW5rIHlv
+dSBmb3IgcG9pbnRpbmcgb3V0IHRoaXMgaXNzdWUsIGkgZm9yZ290IHRvIHJlbW92ZSB0aGlzIGhl
+YWRlciBmaWxlLiAKCkkgd2lsbCBnZXQgcmlkIG9mIHRoaXMgaGVhZGVyIGZpbGUgYW5kIHBvc3Qg
+dGhpcyBwYXRjaCBhZ2Fpbi4KClJlZ2FyZHMsCkxpYW5ibwoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9rZXhlYwo=
