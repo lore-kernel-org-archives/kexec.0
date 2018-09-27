@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g5XBM-0003oY-UU
+ id 1g5XBM-0003oQ-UV
  for kexec@lists.infradead.org; Thu, 27 Sep 2018 14:22:22 +0000
-Subject: [PATCH 1/3] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
+Subject: [PATCH 0/3] find_next_iomem_res() fixes
 From: Bjorn Helgaas <helgaas@kernel.org>
-Date: Thu, 27 Sep 2018 09:21:55 -0500
-Message-ID: <153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com>
-In-Reply-To: <153805773703.1157.14773321497580233478.stgit@bhelgaas-glaptop.roam.corp.google.com>
-References: <153805773703.1157.14773321497580233478.stgit@bhelgaas-glaptop.roam.corp.google.com>
+Date: Thu, 27 Sep 2018 09:21:49 -0500
+Message-ID: <153805773703.1157.14773321497580233478.stgit@bhelgaas-glaptop.roam.corp.google.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,46 +23,38 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: dan.j.williams@intel.com, brijesh.singh@amd.com, Lianbo Jiang <lijiang@redhat.com>, bhe@redhat.com, thomas.lendacky@amd.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, tglx@linutronix.de, bp@suse.de, dyoung@redhat.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+These fix:
 
-The only use of KEXEC_BACKUP_SRC_END is as an argument to
-walk_system_ram_res():
+  - A kexec off-by-one error that we probably never see in practice (only
+    affects a resource starting at exactly 640KB).
 
-  int crash_load_segments(struct kimage *image)
-  {
-    ...
-    walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
-                        image, determine_backup_region);
+  - A corner case in walk_iomem_res_desc(), walk_system_ram_res(), etc that
+    we probably also never see in practice (only affects a single byte
+    resource at the very end of the region we're searching)
 
-walk_system_ram_res() expects "start, end" arguments that are inclusive,
-i.e., the range to be walked includes both the start and end addresses.
+  - An issue in walk_iomem_res_desc() that apparently causes a kdump issue
+    (see Lianbo's note at [1]).
 
-KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
-first address *past* the desired 0-640KB range.
+I think we need to fix the kdump issue either by these patches
+(specifically the last one) or by the patch Lianbo posted [2].
 
-Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
-region is [0-0x9ffff], not [0-0xa0000].
+I'm hoping to avoid deciding and merging these myself, but I'm not
+sure who really wants to own kernel/resource.c.
 
-Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+[1] https://lore.kernel.org/lkml/01551d06-c421-5df3-b19f-fc66f3639e4f@redhat.com
+[2] https://lore.kernel.org/lkml/20180921073211.20097-2-lijiang@redhat.com
+
 ---
- arch/x86/include/asm/kexec.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index f327236f0fa7..5125fca472bb 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -67,7 +67,7 @@ struct kimage;
- 
- /* Memory to backup during crash kdump */
- #define KEXEC_BACKUP_SRC_START	(0UL)
--#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
-+#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
- 
- /*
-  * CPU does not save ss and sp on stack if execution is already
+Bjorn Helgaas (3):
+      x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
+      resource: Include resource end in walk_*() interfaces
+      resource: Fix find_next_iomem_res() iteration issue
 
+
+ arch/x86/include/asm/kexec.h |    2 -
+ kernel/resource.c            |   96 ++++++++++++++++++------------------------
+ 2 files changed, 43 insertions(+), 55 deletions(-)
 
 _______________________________________________
 kexec mailing list
