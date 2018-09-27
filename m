@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g5XBa-0003og-6x
- for kexec@lists.infradead.org; Thu, 27 Sep 2018 14:22:35 +0000
-Subject: [PATCH 2/3] resource: Include resource end in walk_*() interfaces
+ id 1g5XBa-0003oo-6u
+ for kexec@lists.infradead.org; Thu, 27 Sep 2018 14:22:36 +0000
+Subject: [PATCH 3/3] resource: Fix find_next_iomem_res() iteration issue
 From: Bjorn Helgaas <helgaas@kernel.org>
-Date: Thu, 27 Sep 2018 09:22:02 -0500
-Message-ID: <153805812254.1157.16736368485811773752.stgit@bhelgaas-glaptop.roam.corp.google.com>
+Date: Thu, 27 Sep 2018 09:22:09 -0500
+Message-ID: <153805812916.1157.177580438135143788.stgit@bhelgaas-glaptop.roam.corp.google.com>
 In-Reply-To: <153805773703.1157.14773321497580233478.stgit@bhelgaas-glaptop.roam.corp.google.com>
 References: <153805773703.1157.14773321497580233478.stgit@bhelgaas-glaptop.roam.corp.google.com>
 MIME-Version: 1.0
@@ -27,59 +27,212 @@ Cc: dan.j.williams@intel.com, brijesh.singh@amd.com, Lianbo Jiang <lijiang@redha
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-find_next_iomem_res() finds an iomem resource that covers part of a range
-described by "start, end".  All callers expect that range to be inclusive,
-i.e., both start and end are included, but find_next_iomem_res() doesn't
-handle the end address correctly.
+Previously find_next_iomem_res() used "*res" as both an input parameter for
+the range to search and the type of resource to search for, and an output
+parameter for the resource we found, which makes the interface confusing.
 
-If it finds an iomem resource that contains exactly the end address, it
-skips it, e.g., if "start, end" is [0x0-0x10000] and there happens to be an
-iomem resource [mem 0x10000-0x10000] (the single byte at 0x10000), we skip
-it:
+The current callers use find_next_iomem_res() incorrectly because they
+allocate a single struct resource and use it for repeated calls to
+find_next_iomem_res().  When find_next_iomem_res() returns a resource, it
+overwrites the start, end, flags, and desc members of the struct.  If we
+call find_next_iomem_res() again, we must update or restore these fields.
+The previous code restored res.start and res.end, but not res.flags or
+res.desc.
 
-  find_next_iomem_res(...)
-  {
-    start = 0x0;
-    end = 0x10000;
-    for (p = next_resource(...)) {
-      # p->start = 0x10000;
-      # p->end = 0x10000;
-      # we *should* return this resource, but this condition is false:
-      if ((p->end >= start) && (p->start < end))
-        break;
+Since the callers did not restore res.flags, if they searched for flags
+IORESOURCE_MEM | IORESOURCE_BUSY and found a resource with flags
+IORESOURCE_MEM | IORESOURCE_BUSY | IORESOURCE_SYSRAM, the next search would
+incorrectly skip resources unless they were also marked as
+IORESOURCE_SYSRAM.
 
-Adjust find_next_iomem_res() so it allows a resource that includes the
-single byte at the end of the range.  This is a corner case that we
-probably don't see in practice.
+Fix this by restructuring the interface so it takes explicit "start, end,
+flags" parameters and uses "*res" only as an output parameter.
 
-Fixes: 58c1b5b07907 ("[PATCH] memory hotadd fixes: find_next_system_ram catch range fix")
+Original-patch: http://lore.kernel.org/lkml/20180921073211.20097-2-lijiang@redhat.com
+Based-on-patch-by: Lianbo Jiang <lijiang@redhat.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- kernel/resource.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/resource.c |   94 +++++++++++++++++++++++------------------------------
+ 1 file changed, 41 insertions(+), 53 deletions(-)
 
 diff --git a/kernel/resource.c b/kernel/resource.c
-index 30e1bc68503b..155ec873ea4d 100644
+index 155ec873ea4d..9891ea90cc8f 100644
 --- a/kernel/resource.c
 +++ b/kernel/resource.c
-@@ -319,7 +319,7 @@ int release_resource(struct resource *old)
+@@ -319,23 +319,26 @@ int release_resource(struct resource *old)
  EXPORT_SYMBOL(release_resource);
  
  /*
-- * Finds the lowest iomem resource existing within [res->start.res->end).
-+ * Finds the lowest iomem resource existing within [res->start..res->end].
-  * The caller must specify res->start, res->end, res->flags, and optionally
-  * desc.  If found, returns 0, res is overwritten, if not found, returns -1.
-  * This function walks the whole tree and not just first level children until
-@@ -352,7 +352,7 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
- 			p = NULL;
+- * Finds the lowest iomem resource existing within [res->start..res->end].
+- * The caller must specify res->start, res->end, res->flags, and optionally
+- * desc.  If found, returns 0, res is overwritten, if not found, returns -1.
+- * This function walks the whole tree and not just first level children until
+- * and unless first_level_children_only is true.
++ * Finds the lowest iomem resource that covers part of [start..end].  The
++ * caller must specify start, end, flags, and desc (which may be
++ * IORES_DESC_NONE).
++ *
++ * If a resource is found, returns 0 and *res is overwritten with the part
++ * of the resource that's within [start..end]; if none is found, returns
++ * -1.
++ *
++ * This function walks the whole tree and not just first level children
++ * unless first_level_children_only is true.
+  */
+-static int find_next_iomem_res(struct resource *res, unsigned long desc,
+-			       bool first_level_children_only)
++static int find_next_iomem_res(resource_size_t start, resource_size_t end,
++			       unsigned long flags, unsigned long desc,
++			       bool first_level_children_only,
++			       struct resource *res)
+ {
+-	resource_size_t start, end;
+ 	struct resource *p;
+ 	bool sibling_only = false;
+ 
+ 	BUG_ON(!res);
+-
+-	start = res->start;
+-	end = res->end;
+ 	BUG_ON(start >= end);
+ 
+ 	if (first_level_children_only)
+@@ -344,7 +347,7 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
+ 	read_lock(&resource_lock);
+ 
+ 	for (p = iomem_resource.child; p; p = next_resource(p, sibling_only)) {
+-		if ((p->flags & res->flags) != res->flags)
++		if ((p->flags & flags) != flags)
+ 			continue;
+ 		if ((desc != IORES_DESC_NONE) && (desc != p->desc))
+ 			continue;
+@@ -359,32 +362,31 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
+ 	read_unlock(&resource_lock);
+ 	if (!p)
+ 		return -1;
++
+ 	/* copy data */
+-	if (res->start < p->start)
+-		res->start = p->start;
+-	if (res->end > p->end)
+-		res->end = p->end;
++	res->start = max(start, p->start);
++	res->end = min(end, p->end);
+ 	res->flags = p->flags;
+ 	res->desc = p->desc;
+ 	return 0;
+ }
+ 
+-static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
+-				 bool first_level_children_only,
+-				 void *arg,
++static int __walk_iomem_res_desc(resource_size_t start, resource_size_t end,
++				 unsigned long flags, unsigned long desc,
++				 bool first_level_children_only, void *arg,
+ 				 int (*func)(struct resource *, void *))
+ {
+-	u64 orig_end = res->end;
++	struct resource res;
+ 	int ret = -1;
+ 
+-	while ((res->start < res->end) &&
+-	       !find_next_iomem_res(res, desc, first_level_children_only)) {
+-		ret = (*func)(res, arg);
++	while (start < end &&
++	       !find_next_iomem_res(start, end, flags, desc,
++				    first_level_children_only, &res)) {
++		ret = (*func)(&res, arg);
+ 		if (ret)
  			break;
- 		}
--		if ((p->end >= start) && (p->start < end))
-+		if ((p->end >= start) && (p->start <= end))
- 			break;
+ 
+-		res->start = res->end + 1;
+-		res->end = orig_end;
++		start = res.end + 1;
  	}
  
+ 	return ret;
+@@ -407,13 +409,7 @@ static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
+ int walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start,
+ 		u64 end, void *arg, int (*func)(struct resource *, void *))
+ {
+-	struct resource res;
+-
+-	res.start = start;
+-	res.end = end;
+-	res.flags = flags;
+-
+-	return __walk_iomem_res_desc(&res, desc, false, arg, func);
++	return __walk_iomem_res_desc(start, end, flags, desc, false, arg, func);
+ }
+ EXPORT_SYMBOL_GPL(walk_iomem_res_desc);
+ 
+@@ -427,13 +423,9 @@ EXPORT_SYMBOL_GPL(walk_iomem_res_desc);
+ int walk_system_ram_res(u64 start, u64 end, void *arg,
+ 				int (*func)(struct resource *, void *))
+ {
+-	struct resource res;
+-
+-	res.start = start;
+-	res.end = end;
+-	res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
++	unsigned long flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+ 
+-	return __walk_iomem_res_desc(&res, IORES_DESC_NONE, true,
++	return __walk_iomem_res_desc(start, end, flags, IORES_DESC_NONE, true,
+ 				     arg, func);
+ }
+ 
+@@ -444,13 +436,9 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
+ int walk_mem_res(u64 start, u64 end, void *arg,
+ 		 int (*func)(struct resource *, void *))
+ {
+-	struct resource res;
+-
+-	res.start = start;
+-	res.end = end;
+-	res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
++	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+ 
+-	return __walk_iomem_res_desc(&res, IORES_DESC_NONE, true,
++	return __walk_iomem_res_desc(start, end, flags, IORES_DESC_NONE, true,
+ 				     arg, func);
+ }
+ 
+@@ -464,25 +452,25 @@ int walk_mem_res(u64 start, u64 end, void *arg,
+ int walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
+ 		void *arg, int (*func)(unsigned long, unsigned long, void *))
+ {
++	resource_size_t start, end;
++	unsigned long flags;
+ 	struct resource res;
+ 	unsigned long pfn, end_pfn;
+-	u64 orig_end;
+ 	int ret = -1;
+ 
+-	res.start = (u64) start_pfn << PAGE_SHIFT;
+-	res.end = ((u64)(start_pfn + nr_pages) << PAGE_SHIFT) - 1;
+-	res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+-	orig_end = res.end;
+-	while ((res.start < res.end) &&
+-		(find_next_iomem_res(&res, IORES_DESC_NONE, true) >= 0)) {
++	start = (u64) start_pfn << PAGE_SHIFT;
++	end = ((u64)(start_pfn + nr_pages) << PAGE_SHIFT) - 1;
++	flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
++	while (start < end &&
++	       !find_next_iomem_res(start, end, flags, IORES_DESC_NONE,
++				    true, &res)) {
+ 		pfn = (res.start + PAGE_SIZE - 1) >> PAGE_SHIFT;
+ 		end_pfn = (res.end + 1) >> PAGE_SHIFT;
+ 		if (end_pfn > pfn)
+ 			ret = (*func)(pfn, end_pfn - pfn, arg);
+ 		if (ret)
+ 			break;
+-		res.start = res.end + 1;
+-		res.end = orig_end;
++		start = res.end + 1;
+ 	}
+ 	return ret;
+ }
 
 
 _______________________________________________
