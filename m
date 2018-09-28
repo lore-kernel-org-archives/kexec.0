@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x444.google.com ([2607:f8b0:4864:20::444])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g5mb7-0004xH-OK
- for kexec@lists.infradead.org; Fri, 28 Sep 2018 06:50:36 +0000
-Received: by mail-pf1-x444.google.com with SMTP id j8-v6so3634848pff.6
- for <kexec@lists.infradead.org>; Thu, 27 Sep 2018 23:49:32 -0700 (PDT)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v15 15/16] arm64: kexec_file: add kernel signature
- verification support
-Date: Fri, 28 Sep 2018 15:48:40 +0900
-Message-Id: <20180928064841.14117-16-takahiro.akashi@linaro.org>
-In-Reply-To: <20180928064841.14117-1-takahiro.akashi@linaro.org>
-References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
+ id 1g5neR-0006tI-Os
+ for kexec@lists.infradead.org; Fri, 28 Sep 2018 07:58:03 +0000
+Date: Fri, 28 Sep 2018 09:57:11 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v7 RESEND 2/4] kexec: allocate unencrypted control pages
+ for kdump in case SME is enabled
+Message-ID: <20180928075654.GA20768@zn.tnic>
+References: <20180927071954.29615-1-lijiang@redhat.com>
+ <20180927071954.29615-3-lijiang@redhat.com>
+ <20180927165323.GC19779@zn.tnic>
+ <ef91c6cd-03dd-1a72-eea8-97d05d0ad370@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <ef91c6cd-03dd-1a72-eea8-97d05d0ad370@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,107 +27,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
-Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, prudo@linux.ibm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
+To: lijiang <lijiang@redhat.com>
+Cc: thomas.lendacky@amd.com, jroedel@suse.de, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
 
-With this patch, kernel verification can be done without IMA security
-subsystem enabled. Turn on CONFIG_KEXEC_VERIFY_SIG instead.
+On Fri, Sep 28, 2018 at 11:52:21AM +0800, lijiang wrote:
+> There are two functions that are usually called in pairs, they are:
+> arch_kexec_post_alloc_pages() and arch_kexec_pre_free_pages().
+> 
+> One marks the pages as decrypted, another one marks the pages as encrypted.
+> 
+> But for the crash control pages, no need to call arch_kexec_pre_free_pages(),
+> there are three reasons:
+> 1. Crash pages are reserved in memblock, these pages are only used by kdump,
+>    no other people uses these pages;
+> 
+> 2. Whenever crash pages are allocated, these pages are always marked as
+>    decrypted(when SME is active);
+> 
+> 3. If we plan to call the arch_kexe_pre_free_pages(), we have to store these
+> pages to somewhere, which will have more code changes.
 
-On x86, a signature is embedded into a PE file (Microsoft's format) header
-of binary. Since arm64's "Image" can also be seen as a PE file as far as
-CONFIG_EFI is enabled, we adopt this format for kernel signing.
+I don't think any of that answers the question *why* control pages do
+not need to be marked encrypted again. And I think the reason is simple:
+because you don't really need to, because once the crash kernel is done,
+you reboot the box.
 
-You can create a signed kernel image with:
-    $ sbsign --key ${KEY} --cert ${CERT} Image
-
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Reviewed-by: James Morse <james.morse@arm.com>
----
- arch/arm64/Kconfig              | 24 ++++++++++++++++++++++++
- arch/arm64/kernel/kexec_image.c | 15 +++++++++++++++
- 2 files changed, 39 insertions(+)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 5eb18d0cb513..e7de9500bf0b 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -852,6 +852,30 @@ config KEXEC_FILE
- 	  for kernel and initramfs as opposed to list of segments as
- 	  accepted by previous system call.
- 
-+config KEXEC_VERIFY_SIG
-+	bool "Verify kernel signature during kexec_file_load() syscall"
-+	depends on KEXEC_FILE
-+	help
-+	  Select this option to verify a signature with loaded kernel
-+	  image. If configured, any attempt of loading a image without
-+	  valid signature will fail.
-+
-+	  In addition to that option, you need to enable signature
-+	  verification for the corresponding kernel image type being
-+	  loaded in order for this to work.
-+
-+config KEXEC_IMAGE_VERIFY_SIG
-+	bool "Enable Image signature verification support"
-+	default y
-+	depends on KEXEC_VERIFY_SIG
-+	depends on EFI && SIGNED_PE_FILE_VERIFICATION
-+	help
-+	  Enable Image signature verification support.
-+
-+comment "Support for PE file signature verification disabled"
-+	depends on KEXEC_VERIFY_SIG
-+	depends on !EFI || !SIGNED_PE_FILE_VERIFICATION
-+
- config CRASH_DUMP
- 	bool "Build kdump crash kernel"
- 	help
-diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index d64f5e9f9d22..578d358632d0 100644
---- a/arch/arm64/kernel/kexec_image.c
-+++ b/arch/arm64/kernel/kexec_image.c
-@@ -13,6 +13,7 @@
- #include <linux/kernel.h>
- #include <linux/kexec.h>
- #include <linux/string.h>
-+#include <linux/verification.h>
- #include <asm/boot.h>
- #include <asm/byteorder.h>
- #include <asm/cpufeature.h>
-@@ -28,6 +29,9 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
- 			memcmp(&h->magic, ARM64_MAGIC, sizeof(h->magic)))
- 		return -EINVAL;
- 
-+	pr_debug("PE format: %s\n",
-+			memcmp(&h->mz_magic, "MZ", 2) ?  "no" : "yes");
-+
- 	return 0;
- }
- 
-@@ -102,7 +106,18 @@ static void *image_load(struct kimage *image,
- 	return ERR_PTR(ret);
- }
- 
-+#ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
-+static int image_verify_sig(const char *kernel, unsigned long kernel_len)
-+{
-+	return verify_pefile_signature(kernel, kernel_len, NULL,
-+				       VERIFYING_KEXEC_PE_SIGNATURE);
-+}
-+#endif
-+
- const struct kexec_file_ops kexec_image_ops = {
- 	.probe = image_probe,
- 	.load = image_load,
-+#ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
-+	.verify_sig = image_verify_sig,
-+#endif
- };
 -- 
-2.19.0
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
