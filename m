@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-pg1-x544.google.com ([2607:f8b0:4864:20::544])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g5maw-0004rp-Jd
- for kexec@lists.infradead.org; Fri, 28 Sep 2018 06:50:24 +0000
-Received: by mail-pg1-x544.google.com with SMTP id n31-v6so3727187pgm.7
- for <kexec@lists.infradead.org>; Thu, 27 Sep 2018 23:49:16 -0700 (PDT)
+ id 1g5mb7-0004yj-NL
+ for kexec@lists.infradead.org; Fri, 28 Sep 2018 06:50:25 +0000
+Received: by mail-pg1-x544.google.com with SMTP id i4-v6so3119166pgq.9
+ for <kexec@lists.infradead.org>; Thu, 27 Sep 2018 23:49:36 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v15 12/16] arm64: kexec_file: add crash dump support
-Date: Fri, 28 Sep 2018 15:48:37 +0900
-Message-Id: <20180928064841.14117-13-takahiro.akashi@linaro.org>
+Subject: [PATCH v15 16/16] arm64: kexec_file: add kaslr support
+Date: Fri, 28 Sep 2018 15:48:41 +0900
+Message-Id: <20180928064841.14117-17-takahiro.akashi@linaro.org>
 In-Reply-To: <20180928064841.14117-1-takahiro.akashi@linaro.org>
 References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
@@ -25,212 +25,113 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
-Cc: devicetree@vger.kernel.org, ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, prudo@linux.ibm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, Rob Herring <robh+dt@kernel.org>, james.morse@arm.com, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, prudo@linux.ibm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-Enabling crash dump (kdump) includes
-* prepare contents of ELF header of a core dump file, /proc/vmcore,
-  using crash_prepare_elf64_headers(), and
-* add two device tree properties, "linux,usable-memory-range" and
-  "linux,elfcorehdr", which represent respectively a memory range
-  to be used by crash dump kernel and the header's location
+Adding "kaslr-seed" to dtb enables triggering kaslr, or kernel virtual
+address randomization, at secondary kernel boot. We always do this as
+it will have no harm on kaslr-incapable kernel.
+
+We don't have any "switch" to turn off this feature directly, but still
+can suppress it by passing "nokaslr" as a kernel boot argument.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will.deacon@arm.com>
-Reviewed-by: James Morse <james.morse@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
 ---
- arch/arm64/include/asm/kexec.h         |   4 +
- arch/arm64/kernel/machine_kexec_file.c | 109 ++++++++++++++++++++++++-
- 2 files changed, 110 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/machine_kexec_file.c | 45 ++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 5e673481b3a3..1b2c27026ae0 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -99,6 +99,10 @@ static inline void crash_post_resume(void) {}
- struct kimage_arch {
- 	void *dtb;
- 	unsigned long dtb_mem;
-+	/* Core ELF header buffer */
-+	void *elf_headers;
-+	unsigned long elf_headers_mem;
-+	unsigned long elf_headers_sz;
- };
- 
- /**
 diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 05fb2d4e6fef..4b5ea256c84c 100644
+index 4b5ea256c84c..c2ca7c921e7a 100644
 --- a/arch/arm64/kernel/machine_kexec_file.c
 +++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -16,10 +16,14 @@
+@@ -16,6 +16,7 @@
  #include <linux/libfdt.h>
  #include <linux/memblock.h>
  #include <linux/of_fdt.h>
-+#include <linux/slab.h>
++#include <linux/random.h>
+ #include <linux/slab.h>
  #include <linux/types.h>
-+#include <linux/vmalloc.h>
- #include <asm/byteorder.h>
- 
- /* relevant device tree properties */
-+#define FDT_PSTR_KEXEC_ELFHDR	"linux,elfcorehdr"
-+#define FDT_PSTR_MEM_RANGE	"linux,usable-memory-range"
+ #include <linux/vmalloc.h>
+@@ -27,6 +28,7 @@
  #define FDT_PSTR_INITRD_STA	"linux,initrd-start"
  #define FDT_PSTR_INITRD_END	"linux,initrd-end"
  #define FDT_PSTR_BOOTARGS	"bootargs"
-@@ -34,6 +38,10 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- 	vfree(image->arch.dtb);
- 	image->arch.dtb = NULL;
++#define FDT_PSTR_KASLR_SEED	"kaslr-seed"
  
-+	vfree(image->arch.elf_headers);
-+	image->arch.elf_headers = NULL;
-+	image->arch.elf_headers_sz = 0;
-+
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ 	&kexec_image_ops,
+@@ -45,6 +47,32 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
  	return kexec_image_post_load_cleanup_default(image);
  }
  
-@@ -43,12 +51,25 @@ static int setup_dtb(struct kimage *image,
- 		void **dtb_buf, unsigned long *dtb_buf_len)
- {
- 	void *buf = NULL;
--	size_t buf_size;
-+	int addr_cells, size_cells;
-+	size_t buf_size, range_size;
++/* crng needs to have been initialized for providing kaslr-seed */
++static int random_ready;
++
++static void random_ready_notified(struct random_ready_callback *unused)
++{
++	random_ready = 1;
++}
++
++static struct random_ready_callback random_ready_cb = {
++	.func = random_ready_notified,
++};
++
++static __init int init_random_ready_cb(void)
++{
++	int ret;
++
++	ret = add_random_ready_callback(&random_ready_cb);
++	if (ret == -EALREADY)
++		random_ready = 1;
++	else if (ret)
++		pr_warn("failed to add a callback for random_ready\n");
++
++	return 0;
++}
++late_initcall(init_random_ready_cb)
++
+ static int setup_dtb(struct kimage *image,
+ 		unsigned long initrd_load_addr, unsigned long initrd_len,
+ 		char *cmdline, unsigned long cmdline_len,
+@@ -54,6 +82,7 @@ static int setup_dtb(struct kimage *image,
+ 	int addr_cells, size_cells;
+ 	size_t buf_size, range_size;
  	int nodeoffset;
++	u64 value;
  	int ret;
  
  	/* duplicate dt blob */
- 	buf_size = fdt_totalsize(initial_boot_params);
-+	addr_cells = fdt_address_cells(initial_boot_params, 0);
-+	if (addr_cells < 0)
-+		return -EINVAL;
-+	size_cells = fdt_size_cells(initial_boot_params, 0);
-+	if (size_cells < 0)
-+		return -EINVAL;
-+	range_size = (addr_cells + size_cells) * sizeof(u32);
-+
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		buf_size += fdt_prop_len(FDT_PSTR_KEXEC_ELFHDR, range_size);
-+		buf_size += fdt_prop_len(FDT_PSTR_MEM_RANGE, range_size);
-+	}
- 
- 	if (initrd_load_addr) {
+@@ -81,6 +110,8 @@ static int setup_dtb(struct kimage *image,
  		/* can be redundant, but trimmed at the end */
-@@ -78,6 +99,22 @@ static int setup_dtb(struct kimage *image,
- 		goto out_err;
+ 		buf_size += fdt_prop_len(FDT_PSTR_BOOTARGS, cmdline_len);
+ 
++	buf_size += fdt_prop_len(FDT_PSTR_KASLR_SEED, sizeof(u64));
++
+ 	buf = vmalloc(buf_size);
+ 	if (!buf) {
+ 		ret = -ENOMEM;
+@@ -160,6 +191,20 @@ static int setup_dtb(struct kimage *image,
+ 		}
  	}
  
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		/* add linux,elfcorehdr */
-+		ret = fdt_setprop_reg(buf, nodeoffset, FDT_PSTR_KEXEC_ELFHDR,
-+				image->arch.elf_headers_mem,
-+				image->arch.elf_headers_sz);
-+		if (ret)
-+			goto out_err;
-+
-+		/* add linux,usable-memory-range */
-+		ret = fdt_setprop_reg(buf, nodeoffset, FDT_PSTR_MEM_RANGE,
-+				crashk_res.start,
-+				crashk_res.end - crashk_res.start + 1);
-+		if (ret)
-+			goto out_err;
-+	}
-+
- 	/* add bootargs */
- 	if (cmdline) {
- 		ret = fdt_setprop_string(buf, nodeoffset, FDT_PSTR_BOOTARGS,
-@@ -135,6 +172,43 @@ static int setup_dtb(struct kimage *image,
- 	return ret;
- }
- 
-+static int prepare_elf_headers(void **addr, unsigned long *sz)
-+{
-+	struct crash_mem *cmem;
-+	unsigned int nr_ranges;
-+	int ret;
-+	u64 i;
-+	phys_addr_t start, end;
-+
-+	nr_ranges = 1; /* for exclusion of crashkernel region */
-+	for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
-+					MEMBLOCK_NONE, &start, &end, NULL)
-+		nr_ranges++;
-+
-+	cmem = kmalloc(sizeof(struct crash_mem) +
-+			sizeof(struct crash_mem_range) * nr_ranges, GFP_KERNEL);
-+	if (!cmem)
-+		return -ENOMEM;
-+
-+	cmem->max_nr_ranges = nr_ranges;
-+	cmem->nr_ranges = 0;
-+	for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
-+					MEMBLOCK_NONE, &start, &end, NULL) {
-+		cmem->ranges[cmem->nr_ranges].start = start;
-+		cmem->ranges[cmem->nr_ranges].end = end - 1;
-+		cmem->nr_ranges++;
-+	}
-+
-+	/* Exclude crashkernel region */
-+	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
-+
-+	if (!ret)
-+		ret =  crash_prepare_elf64_headers(cmem, true, addr, sz);
-+
-+	kfree(cmem);
-+	return ret;
-+}
-+
- int load_other_segments(struct kimage *image,
- 			unsigned long kernel_load_addr,
- 			unsigned long kernel_size,
-@@ -142,14 +216,43 @@ int load_other_segments(struct kimage *image,
- 			char *cmdline, unsigned long cmdline_len)
- {
- 	struct kexec_buf kbuf;
--	void *dtb = NULL;
--	unsigned long initrd_load_addr = 0, dtb_len;
-+	void *headers, *dtb = NULL;
-+	unsigned long headers_sz, initrd_load_addr = 0, dtb_len;
- 	int ret = 0;
- 
- 	kbuf.image = image;
- 	/* not allocate anything below the kernel */
- 	kbuf.buf_min = kernel_load_addr + kernel_size;
- 
-+	/* load elf core header */
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		ret = prepare_elf_headers(&headers, &headers_sz);
++	/* add kaslr-seed */
++	fdt_delprop(buf, nodeoffset, FDT_PSTR_KASLR_SEED);
++	if (random_ready) {
++		get_random_bytes(&value, sizeof(value));
++		ret = fdt_setprop_u64(buf, nodeoffset, FDT_PSTR_KASLR_SEED,
++							value);
 +		if (ret) {
-+			pr_err("Preparing elf core header failed\n");
++			ret = -EINVAL;
 +			goto out_err;
 +		}
-+
-+		kbuf.buffer = headers;
-+		kbuf.bufsz = headers_sz;
-+		kbuf.mem = 0;
-+		kbuf.memsz = headers_sz;
-+		kbuf.buf_align = SZ_64K; /* largest supported page size */
-+		kbuf.buf_max = ULONG_MAX;
-+		kbuf.top_down = true;
-+
-+		ret = kexec_add_buffer(&kbuf);
-+		if (ret) {
-+			vfree(headers);
-+			goto out_err;
-+		}
-+		image->arch.elf_headers = headers;
-+		image->arch.elf_headers_mem = kbuf.mem;
-+		image->arch.elf_headers_sz = headers_sz;
-+
-+		pr_debug("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+			 image->arch.elf_headers_mem, headers_sz, headers_sz);
++	} else {
++		pr_notice("kaslr-seed won't be fed\n");
 +	}
 +
- 	/* load initrd */
- 	if (initrd) {
- 		kbuf.buffer = initrd;
+ 	/* trim a buffer */
+ 	fdt_pack(buf);
+ 	*dtb_buf = buf;
 -- 
 2.19.0
 
