@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1g5tER-0007Sg-M9
+ for kexec@lists.infradead.org; Fri, 28 Sep 2018 13:55:00 +0000
+Date: Fri, 28 Sep 2018 15:54:39 +0200
+From: Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH 2/3] resource: Include resource end in walk_*() interfaces
+Message-ID: <20180928135439.GD21895@zn.tnic>
+References: <153805773703.1157.14773321497580233478.stgit@bhelgaas-glaptop.roam.corp.google.com>
+ <153805812254.1157.16736368485811773752.stgit@bhelgaas-glaptop.roam.corp.google.com>
 MIME-Version: 1.0
-References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
- <20180928064841.14117-7-takahiro.akashi@linaro.org>
-In-Reply-To: <20180928064841.14117-7-takahiro.akashi@linaro.org>
-From: Rob Herring <robh+dt@kernel.org>
-Date: Fri, 28 Sep 2018 08:44:42 -0500
-Message-ID: <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
-Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling
- properties
+Content-Disposition: inline
+In-Reply-To: <153805812254.1157.16736368485811773752.stgit@bhelgaas-glaptop.roam.corp.google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,141 +20,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, David Gibson <david@gibson.dropbear.id.au>
-Cc: prudo@linux.ibm.com, Herbert Xu <herbert@gondor.apana.org.au>, Baoquan He <bhe@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, Frank Rowand <frowand.list@gmail.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, David Howells <dhowells@redhat.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, James Morse <james.morse@arm.com>, dyoung@redhat.com, David Miller <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: dan.j.williams@intel.com, brijesh.singh@amd.com, Lianbo Jiang <lijiang@redhat.com>, bhe@redhat.com, thomas.lendacky@amd.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-+David Gibson
-
-On Fri, Sep 28, 2018 at 1:48 AM AKASHI Takahiro
-<takahiro.akashi@linaro.org> wrote:
->
-> These functions will be used later to handle kexec-specific properties
-> in arm64's kexec_file implementation.
->
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> ---
->  drivers/of/fdt.c       | 56 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_fdt.h |  4 +++
->  2 files changed, 60 insertions(+)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 800ad252cf9c..c65c31562ccb 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -25,6 +25,7 @@
->  #include <linux/debugfs.h>
->  #include <linux/serial_core.h>
->  #include <linux/sysfs.h>
-> +#include <linux/types.h>
->
->  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
->  #include <asm/page.h>
-> @@ -1323,3 +1324,58 @@ late_initcall(of_fdt_raw_init);
->  #endif
->
->  #endif /* CONFIG_OF_EARLY_FLATTREE */
-> +
-> +#define FDT_ALIGN(x, a)        (((x) + (a) - 1) & ~((a) - 1))
-> +#define FDT_TAGALIGN(x)        (FDT_ALIGN((x), FDT_TAGSIZE))
-> +
-> +int fdt_prop_len(const char *prop_name, int len)
-> +{
-> +       return (strlen(prop_name) + 1) +
-> +               sizeof(struct fdt_property) +
-> +               FDT_TAGALIGN(len);
-
-Looks like you are using this to calculate how much space you need to
-allocate in addition to the current DTB for a couple of new or
-replaced properties. I'm not sure that this calculation is completely
-accurate. And it is strange there doesn't seem to be any libfdt
-function for this already. It would be simpler to just add some fixed
-additional amount.
-
-Maybe David G has comments on this?
-
-> +}
-> +
-
-The rest of this should go in drivers/of/fdt_address.c. Ultimately, it
-should go into libfdt, but I'm fine with having it in the kernel for
-now.
-
-> +static void fill_property(void *buf, u64 val64, int cells)
-> +{
-> +       __be32 val32;
-> +
-> +       while (cells) {
-> +               val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
-> +               memcpy(buf, &val32, sizeof(val32));
-> +               buf += sizeof(val32);
-
-This is kind of hard to read. I would copy u-boot's fdt_pack_reg function.
-
-BTW, for purposes of moving to libfdt, we'll need the authors'
-(Masahiro Yamada and Hans de Goede) permission to dual license.
-
-> +       }
-> +}
-> +
-> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
-> +                                               u64 addr, u64 size)
-> +{
-> +       int addr_cells, size_cells;
-> +       char buf[sizeof(__be32) * 2 * 2];
-> +               /* assume dt_root_[addr|size]_cells <= 2 */
-> +       void *prop;
-> +       size_t buf_size;
-> +
-> +       addr_cells = fdt_address_cells(fdt, 0);
-> +       if (addr_cells < 0)
-> +               return addr_cells;
-> +       size_cells = fdt_size_cells(fdt, 0);
-> +       if (size_cells < 0)
-> +               return size_cells;
-> +
-> +       /* if *_cells >= 2, cells can hold 64-bit values anyway */
-> +       if ((addr_cells == 1) && (addr > U32_MAX))
-> +               return -FDT_ERR_BADVALUE;
-> +
-> +       if ((size_cells == 1) && (size > U32_MAX))
-> +               return -FDT_ERR_BADVALUE;
-> +
-> +       buf_size = (addr_cells + size_cells) * sizeof(u32);
-> +       prop = buf;
-> +
-> +       fill_property(prop, addr, addr_cells);
-> +       prop += addr_cells * sizeof(u32);
-> +
-> +       fill_property(prop, size, size_cells);
-> +
-> +       return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
-> +}
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index b9cd9ebdf9b9..842af6ea92ea 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -108,5 +108,9 @@ static inline void unflatten_device_tree(void) {}
->  static inline void unflatten_and_copy_device_tree(void) {}
->  #endif /* CONFIG_OF_EARLY_FLATTREE */
->
-> +int fdt_prop_len(const char *prop_name, int len);
-> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
-> +                                               u64 addr, u64 size);
-> +
->  #endif /* __ASSEMBLY__ */
->  #endif /* _LINUX_OF_FDT_H */
-> --
-> 2.19.0
->
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBTZXAgMjcsIDIwMTggYXQgMDk6MjI6MDJBTSAtMDUwMCwgQmpvcm4gSGVsZ2FhcyB3
+cm90ZToKPiBGcm9tOiBCam9ybiBIZWxnYWFzIDxiaGVsZ2Fhc0Bnb29nbGUuY29tPgo+IAo+IGZp
+bmRfbmV4dF9pb21lbV9yZXMoKSBmaW5kcyBhbiBpb21lbSByZXNvdXJjZSB0aGF0IGNvdmVycyBw
+YXJ0IG9mIGEgcmFuZ2UKPiBkZXNjcmliZWQgYnkgInN0YXJ0LCBlbmQiLiAgQWxsIGNhbGxlcnMg
+ZXhwZWN0IHRoYXQgcmFuZ2UgdG8gYmUgaW5jbHVzaXZlLAo+IGkuZS4sIGJvdGggc3RhcnQgYW5k
+IGVuZCBhcmUgaW5jbHVkZWQsIGJ1dCBmaW5kX25leHRfaW9tZW1fcmVzKCkgZG9lc24ndAo+IGhh
+bmRsZSB0aGUgZW5kIGFkZHJlc3MgY29ycmVjdGx5Lgo+IAo+IElmIGl0IGZpbmRzIGFuIGlvbWVt
+IHJlc291cmNlIHRoYXQgY29udGFpbnMgZXhhY3RseSB0aGUgZW5kIGFkZHJlc3MsIGl0Cj4gc2tp
+cHMgaXQsIGUuZy4sIGlmICJzdGFydCwgZW5kIiBpcyBbMHgwLTB4MTAwMDBdIGFuZCB0aGVyZSBo
+YXBwZW5zIHRvIGJlIGFuCj4gaW9tZW0gcmVzb3VyY2UgW21lbSAweDEwMDAwLTB4MTAwMDBdICh0
+aGUgc2luZ2xlIGJ5dGUgYXQgMHgxMDAwMCksIHdlIHNraXAKPiBpdDoKPiAKPiAgIGZpbmRfbmV4
+dF9pb21lbV9yZXMoLi4uKQo+ICAgewo+ICAgICBzdGFydCA9IDB4MDsKPiAgICAgZW5kID0gMHgx
+MDAwMDsKPiAgICAgZm9yIChwID0gbmV4dF9yZXNvdXJjZSguLi4pKSB7Cj4gICAgICAgIyBwLT5z
+dGFydCA9IDB4MTAwMDA7Cj4gICAgICAgIyBwLT5lbmQgPSAweDEwMDAwOwo+ICAgICAgICMgd2Ug
+KnNob3VsZCogcmV0dXJuIHRoaXMgcmVzb3VyY2UsIGJ1dCB0aGlzIGNvbmRpdGlvbiBpcyBmYWxz
+ZToKPiAgICAgICBpZiAoKHAtPmVuZCA+PSBzdGFydCkgJiYgKHAtPnN0YXJ0IDwgZW5kKSkKPiAg
+ICAgICAgIGJyZWFrOwo+IAo+IEFkanVzdCBmaW5kX25leHRfaW9tZW1fcmVzKCkgc28gaXQgYWxs
+b3dzIGEgcmVzb3VyY2UgdGhhdCBpbmNsdWRlcyB0aGUKPiBzaW5nbGUgYnl0ZSBhdCB0aGUgZW5k
+IG9mIHRoZSByYW5nZS4gIFRoaXMgaXMgYSBjb3JuZXIgY2FzZSB0aGF0IHdlCj4gcHJvYmFibHkg
+ZG9uJ3Qgc2VlIGluIHByYWN0aWNlLgoKVGhpcyBpcyBob3cgb25lIHNob3VsZCB3cml0ZSBjb21t
+aXQgbWVzc2FnZXMhIFRoYW5rcyBmb3IgdGhhdCAtIGl0IHdhcyBhCmpveSAtIGZvciBhIGNoYW5n
+ZSAtIHRvIHJlYWQgaXQgOi0pCgo+IAo+IEZpeGVzOiA1OGMxYjViMDc5MDcgKCJbUEFUQ0hdIG1l
+bW9yeSBob3RhZGQgZml4ZXM6IGZpbmRfbmV4dF9zeXN0ZW1fcmFtIGNhdGNoIHJhbmdlIGZpeCIp
+Cj4gU2lnbmVkLW9mZi1ieTogQmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4KPiAt
+LS0KPiAga2VybmVsL3Jlc291cmNlLmMgfCAgICA0ICsrLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDIg
+aW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKClJldmlld2VkLWJ5OiBCb3Jpc2xhdiBQZXRr
+b3YgPGJwQHN1c2UuZGU+Cgo+IGRpZmYgLS1naXQgYS9rZXJuZWwvcmVzb3VyY2UuYyBiL2tlcm5l
+bC9yZXNvdXJjZS5jCj4gaW5kZXggMzBlMWJjNjg1MDNiLi4xNTVlYzg3M2VhNGQgMTAwNjQ0Cj4g
+LS0tIGEva2VybmVsL3Jlc291cmNlLmMKPiArKysgYi9rZXJuZWwvcmVzb3VyY2UuYwo+IEBAIC0z
+MTksNyArMzE5LDcgQEAgaW50IHJlbGVhc2VfcmVzb3VyY2Uoc3RydWN0IHJlc291cmNlICpvbGQp
+Cj4gIEVYUE9SVF9TWU1CT0wocmVsZWFzZV9yZXNvdXJjZSk7Cj4gIAo+ICAvKgo+IC0gKiBGaW5k
+cyB0aGUgbG93ZXN0IGlvbWVtIHJlc291cmNlIGV4aXN0aW5nIHdpdGhpbiBbcmVzLT5zdGFydC5y
+ZXMtPmVuZCkuCgpXaGF0IEknbSBzdGlsbCB3b25kZXJpbmcgYWJvdXQgaXMsIHdoeSB3YXMgaXQg
+ZXZlciBldmVuIGNvbnNpZGVyZWQgdG8KaGF2ZSBhIG5vbi1pbmNsdXNpdmUgcmFuZ2UuIExvb2tp
+bmcgYXQgdGhlIGdpdCBoaXN0b3J5LCBlc3BlY2lhbGx5CjU4YzFiNWIwNzkwNyBhbmQgMjg0MmYx
+MTQxOTcwNCAtIGl0IGxvb2tzIGxpa2UgaXQgd2FzIGFuIG9taXNzaW9uIGFuZAp0aGVuIHVzZXJz
+IHN0YXJ0ZWQgdXNpbmcgaXQgd2l0aCBpbmNsdXNpdmUgcmFuZ2VzLgoKVGh4LgoKLS0gClJlZ2Fy
+ZHMvR3J1c3MsCiAgICBCb3Jpcy4KClNVU0UgTGludXggR21iSCwgR0Y6IEZlbGl4IEltZW5kw7Zy
+ZmZlciwgSmFuZSBTbWl0aGFyZCwgR3JhaGFtIE5vcnRvbiwgSFJCIDIxMjg0IChBRyBOw7xybmJl
+cmcpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhl
+YyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
