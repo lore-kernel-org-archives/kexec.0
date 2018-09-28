@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g5sch-0005fZ-UU
- for kexec@lists.infradead.org; Fri, 28 Sep 2018 13:16:01 +0000
-Date: Fri, 28 Sep 2018 15:15:54 +0200
-From: Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH 1/3] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one
- error
-Message-ID: <20180928131554.GC21895@zn.tnic>
-References: <153805773703.1157.14773321497580233478.stgit@bhelgaas-glaptop.roam.corp.google.com>
- <153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com>
+References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
+ <20180928064841.14117-7-takahiro.akashi@linaro.org>
+In-Reply-To: <20180928064841.14117-7-takahiro.akashi@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Date: Fri, 28 Sep 2018 08:44:42 -0500
+Message-ID: <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
+Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling
+ properties
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,43 +16,141 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: dan.j.williams@intel.com, brijesh.singh@amd.com, Lianbo Jiang <lijiang@redhat.com>, bhe@redhat.com, thomas.lendacky@amd.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, David Gibson <david@gibson.dropbear.id.au>
+Cc: prudo@linux.ibm.com, Herbert Xu <herbert@gondor.apana.org.au>, Baoquan He <bhe@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, Frank Rowand <frowand.list@gmail.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, David Howells <dhowells@redhat.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, James Morse <james.morse@arm.com>, dyoung@redhat.com, David Miller <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
 
-T24gVGh1LCBTZXAgMjcsIDIwMTggYXQgMDk6MjE6NTVBTSAtMDUwMCwgQmpvcm4gSGVsZ2FhcyB3
-cm90ZToKPiBGcm9tOiBCam9ybiBIZWxnYWFzIDxiaGVsZ2Fhc0Bnb29nbGUuY29tPgo+IAo+IFRo
-ZSBvbmx5IHVzZSBvZiBLRVhFQ19CQUNLVVBfU1JDX0VORCBpcyBhcyBhbiBhcmd1bWVudCB0bwo+
-IHdhbGtfc3lzdGVtX3JhbV9yZXMoKToKPiAKPiAgIGludCBjcmFzaF9sb2FkX3NlZ21lbnRzKHN0
-cnVjdCBraW1hZ2UgKmltYWdlKQo+ICAgewo+ICAgICAuLi4KPiAgICAgd2Fsa19zeXN0ZW1fcmFt
-X3JlcyhLRVhFQ19CQUNLVVBfU1JDX1NUQVJULCBLRVhFQ19CQUNLVVBfU1JDX0VORCwKPiAgICAg
-ICAgICAgICAgICAgICAgICAgICBpbWFnZSwgZGV0ZXJtaW5lX2JhY2t1cF9yZWdpb24pOwo+IAo+
-IHdhbGtfc3lzdGVtX3JhbV9yZXMoKSBleHBlY3RzICJzdGFydCwgZW5kIiBhcmd1bWVudHMgdGhh
-dCBhcmUgaW5jbHVzaXZlLAo+IGkuZS4sIHRoZSByYW5nZSB0byBiZSB3YWxrZWQgaW5jbHVkZXMg
-Ym90aCB0aGUgc3RhcnQgYW5kIGVuZCBhZGRyZXNzZXMuCj4gCj4gS0VYRUNfQkFDS1VQX1NSQ19F
-TkQgd2FzIHByZXZpb3VzbHkgZGVmaW5lZCBhcyAoNjQwICogMTAyNFVMKSwgd2hpY2ggaXMgdGhl
-Cj4gZmlyc3QgYWRkcmVzcyAqcGFzdCogdGhlIGRlc2lyZWQgMC02NDBLQiByYW5nZS4KPiAKPiBE
-ZWZpbmUgS0VYRUNfQkFDS1VQX1NSQ19FTkQgYXMgKDY0MCAqIDEwMjRVTCAtIDEpIHNvIHRoZSBL
-RVhFQ19CQUNLVVBfU1JDCj4gcmVnaW9uIGlzIFswLTB4OWZmZmZdLCBub3QgWzAtMHhhMDAwMF0u
-Cj4gCj4gRml4ZXM6IGRkNWY3MjYwNzZjYyAoImtleGVjOiBzdXBwb3J0IGZvciBrZXhlYyBvbiBw
-YW5pYyB1c2luZyBuZXcgc3lzdGVtIGNhbGwiKQo+IFNpZ25lZC1vZmYtYnk6IEJqb3JuIEhlbGdh
-YXMgPGJoZWxnYWFzQGdvb2dsZS5jb20+Cj4gLS0tCj4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL2tl
-eGVjLmggfCAgICAyICstCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxl
-dGlvbigtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9rZXhlYy5oIGIv
-YXJjaC94ODYvaW5jbHVkZS9hc20va2V4ZWMuaAo+IGluZGV4IGYzMjcyMzZmMGZhNy4uNTEyNWZj
-YTQ3MmJiIDEwMDY0NAo+IC0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2tleGVjLmgKPiArKysg
-Yi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9rZXhlYy5oCj4gQEAgLTY3LDcgKzY3LDcgQEAgc3RydWN0
-IGtpbWFnZTsKPiAgCj4gIC8qIE1lbW9yeSB0byBiYWNrdXAgZHVyaW5nIGNyYXNoIGtkdW1wICov
-Cj4gICNkZWZpbmUgS0VYRUNfQkFDS1VQX1NSQ19TVEFSVAkoMFVMKQo+IC0jZGVmaW5lIEtFWEVD
-X0JBQ0tVUF9TUkNfRU5ECSg2NDAgKiAxMDI0VUwpCS8qIDY0MEsgKi8KPiArI2RlZmluZSBLRVhF
-Q19CQUNLVVBfU1JDX0VORAkoNjQwICogMTAyNFVMIC0gMSkJLyogNjQwSyAqLwo+ICAKPiAgLyoK
-PiAgICogQ1BVIGRvZXMgbm90IHNhdmUgc3MgYW5kIHNwIG9uIHN0YWNrIGlmIGV4ZWN1dGlvbiBp
-cyBhbHJlYWR5CgpSZXZpZXdlZC1ieTogQm9yaXNsYXYgUGV0a292IDxicEBzdXNlLmRlPgoKLS0g
-ClJlZ2FyZHMvR3J1c3MsCiAgICBCb3Jpcy4KClNVU0UgTGludXggR21iSCwgR0Y6IEZlbGl4IElt
-ZW5kw7ZyZmZlciwgSmFuZSBTbWl0aGFyZCwgR3JhaGFtIE5vcnRvbiwgSFJCIDIxMjg0IChBRyBO
-w7xybmJlcmcpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
++David Gibson
+
+On Fri, Sep 28, 2018 at 1:48 AM AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
+>
+> These functions will be used later to handle kexec-specific properties
+> in arm64's kexec_file implementation.
+>
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  drivers/of/fdt.c       | 56 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_fdt.h |  4 +++
+>  2 files changed, 60 insertions(+)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 800ad252cf9c..c65c31562ccb 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/serial_core.h>
+>  #include <linux/sysfs.h>
+> +#include <linux/types.h>
+>
+>  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+>  #include <asm/page.h>
+> @@ -1323,3 +1324,58 @@ late_initcall(of_fdt_raw_init);
+>  #endif
+>
+>  #endif /* CONFIG_OF_EARLY_FLATTREE */
+> +
+> +#define FDT_ALIGN(x, a)        (((x) + (a) - 1) & ~((a) - 1))
+> +#define FDT_TAGALIGN(x)        (FDT_ALIGN((x), FDT_TAGSIZE))
+> +
+> +int fdt_prop_len(const char *prop_name, int len)
+> +{
+> +       return (strlen(prop_name) + 1) +
+> +               sizeof(struct fdt_property) +
+> +               FDT_TAGALIGN(len);
+
+Looks like you are using this to calculate how much space you need to
+allocate in addition to the current DTB for a couple of new or
+replaced properties. I'm not sure that this calculation is completely
+accurate. And it is strange there doesn't seem to be any libfdt
+function for this already. It would be simpler to just add some fixed
+additional amount.
+
+Maybe David G has comments on this?
+
+> +}
+> +
+
+The rest of this should go in drivers/of/fdt_address.c. Ultimately, it
+should go into libfdt, but I'm fine with having it in the kernel for
+now.
+
+> +static void fill_property(void *buf, u64 val64, int cells)
+> +{
+> +       __be32 val32;
+> +
+> +       while (cells) {
+> +               val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
+> +               memcpy(buf, &val32, sizeof(val32));
+> +               buf += sizeof(val32);
+
+This is kind of hard to read. I would copy u-boot's fdt_pack_reg function.
+
+BTW, for purposes of moving to libfdt, we'll need the authors'
+(Masahiro Yamada and Hans de Goede) permission to dual license.
+
+> +       }
+> +}
+> +
+> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
+> +                                               u64 addr, u64 size)
+> +{
+> +       int addr_cells, size_cells;
+> +       char buf[sizeof(__be32) * 2 * 2];
+> +               /* assume dt_root_[addr|size]_cells <= 2 */
+> +       void *prop;
+> +       size_t buf_size;
+> +
+> +       addr_cells = fdt_address_cells(fdt, 0);
+> +       if (addr_cells < 0)
+> +               return addr_cells;
+> +       size_cells = fdt_size_cells(fdt, 0);
+> +       if (size_cells < 0)
+> +               return size_cells;
+> +
+> +       /* if *_cells >= 2, cells can hold 64-bit values anyway */
+> +       if ((addr_cells == 1) && (addr > U32_MAX))
+> +               return -FDT_ERR_BADVALUE;
+> +
+> +       if ((size_cells == 1) && (size > U32_MAX))
+> +               return -FDT_ERR_BADVALUE;
+> +
+> +       buf_size = (addr_cells + size_cells) * sizeof(u32);
+> +       prop = buf;
+> +
+> +       fill_property(prop, addr, addr_cells);
+> +       prop += addr_cells * sizeof(u32);
+> +
+> +       fill_property(prop, size, size_cells);
+> +
+> +       return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
+> +}
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index b9cd9ebdf9b9..842af6ea92ea 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -108,5 +108,9 @@ static inline void unflatten_device_tree(void) {}
+>  static inline void unflatten_and_copy_device_tree(void) {}
+>  #endif /* CONFIG_OF_EARLY_FLATTREE */
+>
+> +int fdt_prop_len(const char *prop_name, int len);
+> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
+> +                                               u64 addr, u64 size);
+> +
+>  #endif /* __ASSEMBLY__ */
+>  #endif /* _LINUX_OF_FDT_H */
+> --
+> 2.19.0
+>
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
