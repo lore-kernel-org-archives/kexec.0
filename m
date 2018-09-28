@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x544.google.com ([2607:f8b0:4864:20::544])
+Received: from mail-pg1-x543.google.com ([2607:f8b0:4864:20::543])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g5ma0-0004fj-UT
- for kexec@lists.infradead.org; Fri, 28 Sep 2018 06:48:55 +0000
-Received: by mail-pg1-x544.google.com with SMTP id d19-v6so3748036pgv.1
- for <kexec@lists.infradead.org>; Thu, 27 Sep 2018 23:48:18 -0700 (PDT)
+ id 1g5maF-0004iL-4l
+ for kexec@lists.infradead.org; Fri, 28 Sep 2018 06:49:05 +0000
+Received: by mail-pg1-x543.google.com with SMTP id t70-v6so3706052pgd.12
+ for <kexec@lists.infradead.org>; Thu, 27 Sep 2018 23:48:33 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v15 05/16] kexec_file: kexec_walk_memblock() only walks a
- dedicated region at kdump
-Date: Fri, 28 Sep 2018 15:48:30 +0900
-Message-Id: <20180928064841.14117-6-takahiro.akashi@linaro.org>
+Subject: [PATCH v15 08/16] arm64: cpufeature: add MMFR0 helper functions
+Date: Fri, 28 Sep 2018 15:48:33 +0900
+Message-Id: <20180928064841.14117-9-takahiro.akashi@linaro.org>
 In-Reply-To: <20180928064841.14117-1-takahiro.akashi@linaro.org>
 References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
@@ -28,48 +27,81 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, prudo@linux.ibm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-In kdump case, there exists only one dedicated memblock region as usable
-memory (crashk_res). With this patch, kexec_walk_memblock() runs a given
-callback function on this region.
-
-Cosmetic change: 0 to MEMBLOCK_NONE at for_each_free_mem_range*()
+Those helper functions for MMFR0 register will be used later by kexec_file
+loader.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Reviewed-by: James Morse <james.morse@arm.com>
 ---
- kernel/kexec_file.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/cpufeature.h | 48 +++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 370d7eab49fe..2f615a7968dd 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -511,8 +511,11 @@ static int kexec_walk_memblock(struct kexec_buf *kbuf,
- 	phys_addr_t mstart, mend;
- 	struct resource res = { };
+diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+index 1717ba1db35d..cd90b5252d6d 100644
+--- a/arch/arm64/include/asm/cpufeature.h
++++ b/arch/arm64/include/asm/cpufeature.h
+@@ -486,11 +486,59 @@ static inline bool system_supports_32bit_el0(void)
+ 	return cpus_have_const_cap(ARM64_HAS_32BIT_EL0);
+ }
  
-+	if (kbuf->image->type == KEXEC_TYPE_CRASH)
-+		return func(&crashk_res, kbuf);
++static inline bool system_supports_4kb_granule(void)
++{
++	u64 mmfr0;
++	u32 val;
 +
- 	if (kbuf->top_down) {
--		for_each_free_mem_range_reverse(i, NUMA_NO_NODE, 0,
-+		for_each_free_mem_range_reverse(i, NUMA_NO_NODE, MEMBLOCK_NONE,
- 						&mstart, &mend, NULL) {
- 			/*
- 			 * In memblock, end points to the first byte after the
-@@ -526,8 +529,8 @@ static int kexec_walk_memblock(struct kexec_buf *kbuf,
- 				break;
- 		}
- 	} else {
--		for_each_free_mem_range(i, NUMA_NO_NODE, 0, &mstart, &mend,
--					NULL) {
-+		for_each_free_mem_range(i, NUMA_NO_NODE, MEMBLOCK_NONE,
-+					&mstart, &mend, NULL) {
- 			/*
- 			 * In memblock, end points to the first byte after the
- 			 * range while in kexec, end points to the last byte
++	mmfr0 =	read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
++	val = cpuid_feature_extract_unsigned_field(mmfr0,
++						ID_AA64MMFR0_TGRAN4_SHIFT);
++
++	return val == ID_AA64MMFR0_TGRAN4_SUPPORTED;
++}
++
++static inline bool system_supports_64kb_granule(void)
++{
++	u64 mmfr0;
++	u32 val;
++
++	mmfr0 =	read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
++	val = cpuid_feature_extract_unsigned_field(mmfr0,
++						ID_AA64MMFR0_TGRAN64_SHIFT);
++
++	return val == ID_AA64MMFR0_TGRAN64_SUPPORTED;
++}
++
++static inline bool system_supports_16kb_granule(void)
++{
++	u64 mmfr0;
++	u32 val;
++
++	mmfr0 =	read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
++	val = cpuid_feature_extract_unsigned_field(mmfr0,
++						ID_AA64MMFR0_TGRAN16_SHIFT);
++
++	return val == ID_AA64MMFR0_TGRAN16_SUPPORTED;
++}
++
+ static inline bool system_supports_mixed_endian_el0(void)
+ {
+ 	return id_aa64mmfr0_mixed_endian_el0(read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1));
+ }
+ 
++static inline bool system_supports_mixed_endian(void)
++{
++	u64 mmfr0;
++	u32 val;
++
++	mmfr0 =	read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
++	val = cpuid_feature_extract_unsigned_field(mmfr0,
++						ID_AA64MMFR0_BIGENDEL_SHIFT);
++
++	return val == 0x1;
++}
++
+ static inline bool system_supports_fpsimd(void)
+ {
+ 	return !cpus_have_const_cap(ARM64_HAS_NO_FPSIMD);
 -- 
 2.19.0
 
