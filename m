@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x444.google.com ([2607:f8b0:4864:20::444])
+Received: from mail-pg1-x541.google.com ([2607:f8b0:4864:20::541])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g5maF-0004li-4g
- for kexec@lists.infradead.org; Fri, 28 Sep 2018 06:49:08 +0000
-Received: by mail-pf1-x444.google.com with SMTP id j26-v6so3613109pfi.10
- for <kexec@lists.infradead.org>; Thu, 27 Sep 2018 23:48:41 -0700 (PDT)
+ id 1g5mad-0004rA-AO
+ for kexec@lists.infradead.org; Fri, 28 Sep 2018 06:49:33 +0000
+Received: by mail-pg1-x541.google.com with SMTP id q19-v6so3716755pgn.10
+ for <kexec@lists.infradead.org>; Thu, 27 Sep 2018 23:49:04 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v15 09/16] arm64: enable KEXEC_FILE config
-Date: Fri, 28 Sep 2018 15:48:34 +0900
-Message-Id: <20180928064841.14117-10-takahiro.akashi@linaro.org>
+Subject: [PATCH v15 11/16] arm64: kexec_file: allow for loading Image-format
+ kernel
+Date: Fri, 28 Sep 2018 15:48:36 +0900
+Message-Id: <20180928064841.14117-12-takahiro.akashi@linaro.org>
 In-Reply-To: <20180928064841.14117-1-takahiro.akashi@linaro.org>
 References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
@@ -27,76 +28,216 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, prudo@linux.ibm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-Modify arm64/Kconfig to enable kexec_file_load support.
+This patch provides kexec_file_ops for "Image"-format kernel. In this
+implementation, a binary is always loaded with a fixed offset identified
+in text_offset field of its header.
+
+Regarding signature verification for trusted boot, this patch doesn't
+contains CONFIG_KEXEC_VERIFY_SIG support, which is to be added later
+in this series, but file-attribute-based verification is still a viable
+option by enabling IMA security subsystem.
+
+You can sign(label) a to-be-kexec'ed kernel image on target file system
+with:
+    $ evmctl ima_sign --key /path/to/private_key.pem Image
+
+On live system, you must have IMA enforced with, at least, the following
+security policy:
+    "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig"
+
+See more details about IMA here:
+    https://sourceforge.net/p/linux-ima/wiki/Home/
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will.deacon@arm.com>
-Acked-by: James Morse <james.morse@arm.com>
+Reviewed-by: James Morse <james.morse@arm.com>
 ---
- arch/arm64/Kconfig                     |  9 +++++++++
- arch/arm64/kernel/Makefile             |  3 ++-
- arch/arm64/kernel/machine_kexec_file.c | 16 ++++++++++++++++
- 3 files changed, 27 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/kernel/machine_kexec_file.c
+ arch/arm64/include/asm/kexec.h         |  28 +++++++
+ arch/arm64/kernel/Makefile             |   2 +-
+ arch/arm64/kernel/kexec_image.c        | 108 +++++++++++++++++++++++++
+ arch/arm64/kernel/machine_kexec_file.c |   1 +
+ 4 files changed, 138 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/kernel/kexec_image.c
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 1b1a0e95c751..5eb18d0cb513 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -843,6 +843,15 @@ config KEXEC
- 	  but it is independent of the system firmware.   And like a reboot
- 	  you can start any kernel with it, not just Linux.
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 157b2897d911..5e673481b3a3 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -101,6 +101,34 @@ struct kimage_arch {
+ 	unsigned long dtb_mem;
+ };
  
-+config KEXEC_FILE
-+	bool "kexec file based system call"
-+	select KEXEC_CORE
-+	help
-+	  This is new version of kexec system call. This system call is
-+	  file based and takes file descriptors as system call argument
-+	  for kernel and initramfs as opposed to list of segments as
-+	  accepted by previous system call.
++/**
++ * struct arm64_image_header - arm64 kernel image header
++ * See Documentation/arm64/booting.txt for details
++ *
++ * @mz_magic: DOS header magic number ('MZ', optional)
++ * @code1: Instruction (branch to stext)
++ * @text_offset: Image load offset
++ * @image_size: Effective image size
++ * @flags: Bit-field flags
++ * @reserved: Reserved
++ * @magic: Magic number
++ * @pe_header: Offset to PE COFF header (optional)
++ **/
 +
- config CRASH_DUMP
- 	bool "Build kdump crash kernel"
- 	help
++struct arm64_image_header {
++	__le16 mz_magic; /* also code0 */
++	__le16 pad;
++	__le32 code1;
++	__le64 text_offset;
++	__le64 image_size;
++	__le64 flags;
++	__le64 reserved[3];
++	__le32 magic;
++	__le32 pe_header;
++};
++
++extern const struct kexec_file_ops kexec_image_ops;
++
+ struct kimage;
+ 
+ extern int arch_kimage_file_post_load_cleanup(struct kimage *image);
 diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 4c8b13bede80..030a39bff117 100644
+index 030a39bff117..48868255f09c 100644
 --- a/arch/arm64/kernel/Makefile
 +++ b/arch/arm64/kernel/Makefile
-@@ -49,8 +49,9 @@ arm64-obj-$(CONFIG_ARM64_ACPI_PARKING_PROTOCOL)	+= acpi_parking_protocol.o
- arm64-obj-$(CONFIG_PARAVIRT)		+= paravirt.o
- arm64-obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
+@@ -51,7 +51,7 @@ arm64-obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
  arm64-obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
--arm64-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o	\
-+arm64-obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
+ arm64-obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
  					   cpu-reset.o
-+arm64-obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o
+-arm64-obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o
++arm64-obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o kexec_image.o
  arm64-obj-$(CONFIG_ARM64_RELOC_TEST)	+= arm64-reloc-test.o
  arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
  arm64-obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
 new file mode 100644
-index 000000000000..c38a8048ed00
+index 000000000000..d64f5e9f9d22
 --- /dev/null
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -0,0 +1,16 @@
++++ b/arch/arm64/kernel/kexec_image.c
+@@ -0,0 +1,108 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * kexec_file for arm64
-+ *
++ * Kexec image loader
++
 + * Copyright (C) 2018 Linaro Limited
 + * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
-+ *
 + */
 +
-+#define pr_fmt(fmt) "kexec_file: " fmt
++#define pr_fmt(fmt)	"kexec_file(Image): " fmt
 +
++#include <linux/err.h>
++#include <linux/errno.h>
++#include <linux/kernel.h>
 +#include <linux/kexec.h>
++#include <linux/string.h>
++#include <asm/boot.h>
++#include <asm/byteorder.h>
++#include <asm/cpufeature.h>
++#include <asm/memory.h>
 +
-+const struct kexec_file_ops * const kexec_file_loaders[] = {
-+	NULL
++static int image_probe(const char *kernel_buf, unsigned long kernel_len)
++{
++	const struct arm64_image_header *h;
++
++	h = (const struct arm64_image_header *)(kernel_buf);
++
++	if (!h || (kernel_len < sizeof(*h)) ||
++			memcmp(&h->magic, ARM64_MAGIC, sizeof(h->magic)))
++		return -EINVAL;
++
++	return 0;
++}
++
++static void *image_load(struct kimage *image,
++				char *kernel, unsigned long kernel_len,
++				char *initrd, unsigned long initrd_len,
++				char *cmdline, unsigned long cmdline_len)
++{
++	struct arm64_image_header *h;
++	u64 flags, value;
++	struct kexec_buf kbuf;
++	unsigned long text_offset;
++	struct kexec_segment *kernel_segment;
++	int ret;
++
++	/* Don't support old kernel */
++	h = (struct arm64_image_header *)kernel;
++	if (!h->text_offset)
++		return ERR_PTR(-EINVAL);
++
++	/* Check cpu features */
++	flags = le64_to_cpu(h->flags);
++	value = head_flag_field(flags, HEAD_FLAG_BE);
++	if (((value == HEAD_FLAG_BE) && !IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)) ||
++	    ((value != HEAD_FLAG_BE) && IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)))
++		if (!system_supports_mixed_endian())
++			return ERR_PTR(-EINVAL);
++
++	value = head_flag_field(flags, HEAD_FLAG_PAGE_SIZE);
++	if (((value == HEAD_FLAG_PAGE_SIZE_4K) &&
++			!system_supports_4kb_granule()) ||
++	    ((value == HEAD_FLAG_PAGE_SIZE_64K) &&
++			!system_supports_64kb_granule()) ||
++	    ((value == HEAD_FLAG_PAGE_SIZE_16K) &&
++			!system_supports_16kb_granule()))
++		return ERR_PTR(-EINVAL);
++
++	/* Load the kernel */
++	kbuf.image = image;
++	kbuf.buf_min = 0;
++	kbuf.buf_max = ULONG_MAX;
++	kbuf.top_down = false;
++
++	kbuf.buffer = kernel;
++	kbuf.bufsz = kernel_len;
++	kbuf.mem = 0;
++	kbuf.memsz = le64_to_cpu(h->image_size);
++	text_offset = le64_to_cpu(h->text_offset);
++	kbuf.buf_align = MIN_KIMG_ALIGN;
++
++	/* Adjust kernel segment with TEXT_OFFSET */
++	kbuf.memsz += text_offset;
++
++	ret = kexec_add_buffer(&kbuf);
++	if (ret)
++		return ERR_PTR(ret);
++
++	kernel_segment = &image->segment[image->nr_segments - 1];
++	kernel_segment->mem += text_offset;
++	kernel_segment->memsz -= text_offset;
++	image->start = kernel_segment->mem;
++
++	pr_debug("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++				kernel_segment->mem, kbuf.bufsz,
++				kernel_segment->memsz);
++
++	/* Load additional data */
++	ret = load_other_segments(image,
++				kernel_segment->mem, kernel_segment->memsz,
++				initrd, initrd_len, cmdline, cmdline_len);
++
++	return ERR_PTR(ret);
++}
++
++const struct kexec_file_ops kexec_image_ops = {
++	.probe = image_probe,
++	.load = image_load,
 +};
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index f53f14bd1700..05fb2d4e6fef 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -25,6 +25,7 @@
+ #define FDT_PSTR_BOOTARGS	"bootargs"
+ 
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
++	&kexec_image_ops,
+ 	NULL
+ };
+ 
 -- 
 2.19.0
 
