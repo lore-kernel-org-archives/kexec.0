@@ -1,22 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g6B0s-0004vo-15
- for kexec@lists.infradead.org; Sat, 29 Sep 2018 08:54:12 +0000
-Date: Sat, 29 Sep 2018 10:53:54 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v7 RESEND 2/4] kexec: allocate unencrypted control pages
- for kdump in case SME is enabled
-Message-ID: <20180929085354.GC11115@zn.tnic>
+ id 1g6Bfv-00032N-ML
+ for kexec@lists.infradead.org; Sat, 29 Sep 2018 09:36:37 +0000
+Subject: Re: [PATCH v7 RESEND 4/4] kdump/vmcore: support encrypted old memory
+ with SME enabled
 References: <20180927071954.29615-1-lijiang@redhat.com>
- <20180927071954.29615-3-lijiang@redhat.com>
- <20180927165323.GC19779@zn.tnic>
- <ef91c6cd-03dd-1a72-eea8-97d05d0ad370@redhat.com>
- <20180928075654.GA20768@zn.tnic>
- <2c5000d8-9f20-cc85-6d41-d6ece314c6ba@redhat.com>
+ <20180927071954.29615-5-lijiang@redhat.com> <20180928083852.GA21895@zn.tnic>
+ <1c27b9a9-ae93-011a-b003-a50ecc22ccc5@redhat.com>
+ <20180929083052.GA13786@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <76d9d338-2fc1-a8a5-8f12-c25d2ad092f3@redhat.com>
+Date: Sat, 29 Sep 2018 17:36:04 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2c5000d8-9f20-cc85-6d41-d6ece314c6ba@redhat.com>
+In-Reply-To: <20180929083052.GA13786@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,27 +23,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
+To: Borislav Petkov <bp@suse.de>
 Cc: thomas.lendacky@amd.com, jroedel@suse.de, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
 
-On Fri, Sep 28, 2018 at 06:09:04PM +0800, lijiang wrote:
-> But there are another cases, we might load or unload the crash kernel image and
-> initrafms, maybe again and again for test or debug, we don't reboot at once. For
-
-I don't think this qualifies even as a use case - this is what you do
-during development.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQwOeaciDI55pelIDE2OjMwLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IFNhdCwgU2VwIDI5LCAyMDE4IGF0IDAyOjI0OjUyUE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
+IEF0IGZpcnN0LCBpIGFkZGVkIGFuIGlucHV0IHBhcmFtZXRlciBmb3IgcmVhZF9mcm9tX29sZG1l
+bSgpIGJlY2F1c2Ugb2YgZW5jcnlwdGlvbihTTUUpLiBCdXQKPj4gZm9yIGF2b2lkaW5nIHRvIGFs
+c28gYWRkIHRoZSBzYW1lIHBhcmFtZXRlciBmb3IgY29weV9vbGRtZW1fcGFnZSgpLCBzbyBpIGFk
+ZGVkIGEgbmV3IGZ1bmN0aW9uCj4+IGNvcHlfb2xkbWVtX3BhZ2VfZW5jcnlwdGVkKCkuIE1heWJl
+IHlvdSBoYWQgbm90aWNlZCB0aGF0IHRoZXNlIGZ1bmN0aW9ucyB3ZXJlIHZlcnkgc2ltaWxhci4K
+PiAKPiBJZiB5b3UgaGF2ZSB0d28gdmVyeSBzaW1pbGFyIGZ1bmN0aW9ucywgeW91IGFkZCBhICpz
+dGF0aWMqIHdvcmtob3JzZSBmdW5jdGlvbjoKPiAKPiBzdGF0aWMgc3NpemVfdCBfX2NvcHlfb2xk
+bWVtX3BhZ2UodW5zaWduZWQgbG9uZyBwZm4sIGNoYXIgKmJ1Ziwgc2l6ZV90IGNzaXplLCB1bnNp
+Z25lZCBsb25nIG9mZnNldCwKPiAJCQkJICBpbnQgdXNlcmJ1ZiwgYm9vbCBlbmNyeXB0ZWQpCj4g
+Cj4gYW5kIHlvdSBkZWZpbmUgdHdvIHdyYXBwZXJzOgo+IAo+IGNvcHlfb2xkbWVtX3BhZ2UoKQo+
+IGNvcHlfb2xkbWVtX3BhZ2VfZW5jcnlwdGVkKCkKPiAKPiB3aGljaCBib3RoIGNhbGwgX19jb3B5
+X29sZG1lbV9wYWdlKCkgd2l0aCB0aGUgYXBwcm9wcmlhdGUgcGFyYW1ldGVycy4KPiAKCkdyZWF0
+ISBQcmV2aW91c2x5IGkgd2FzIGFmcmFpZCB0aGF0IHRoZSBtYWludGFpbmVyIG1pZ2h0IGRpc2Fn
+cmVlIHdpdGgKcmV3cml0aW5nIHRoZSBmdW5jdGlvbiBjb3B5X29sZG1lbV9wYWdlKCkuCgpUaGF0
+J3MgcmVhbGx5IGdyZWF0LiBJIHdpbGwgbW9kaWZ5IHRoaXMgcGF0Y2ggYW5kIHBvc3QgdGhlIHNl
+cmllcyBhZ2Fpbi4KClRoYW5rcy4KTGlhbmJvCj4gQnV0IHlvdSBkbyAqbm90KiBkbyBhIHNlcGFy
+YXRlIGNvbXBpbGF0aW9uIHVuaXQganVzdCBiZWNhdXNlLiBOb25lIG9mCj4gdGhlIHJlYXNvbnMg
+eW91J3ZlIG1lbnRpb25lZCB3YXJyYW50IGhhdmluZyBhIHNlcGFyYXRlIGNvbXBpbGF0aW9uCj4g
+dW5pdCB3aGlsZSB5b3UgYWxyZWFkeSBoYXZlICp0aGUqIHBlcmZlY3QgcGxhY2UgdG8gcHV0IGV2
+ZXJ5dGhpbmcgLQo+IGFyY2gveDg2L2tlcm5lbC9jcmFzaF9kdW1wXzY0LmMKPiAKPj4gU28gc29y
+cnksIGhlcmUgIm9sZG1lbSBlbmNyeXB0ZWQiIG1lYW5zIHRoZSAib2xkIG1lbW9yeSBpcyBlbmNy
+eXB0ZWQiLgo+IAo+IEkga25vdyB3aGF0IGl0IG1lYW5zIC0gSSdtIHRyeWluZyB0byBleHBsYWlu
+IHRvIHlvdSB0byB3cml0ZSBpdCBvdXQKPiBpbiBwbGFpbiBlbmdsaXNoIGFuZCBub3QgdXNlIHNv
+bWUgc3RyYW5nZSBjb25zdHJ1Y3RzIGxpa2UgIm9sZG1lbQo+IGVuY3J5cHRlZCIuCj4gCj4gQSBy
+ZWFkZXIgd291bGQgd29uZGVyOiB3aHkgaXMgdGhpcyB0aGluZyBzZW1pLWFiYnJldmlhdGVkIGFu
+ZCBpbgo+IHF1b3RhdGlvbiBtYXJrcz8gRG9lcyB0aGF0IG1lYW4gYW55dGhpbmcgc3BlY2lhbD8K
+PiAKPiBPdXIgY29tbWVudHMgc2hvdWxkIG5vdCBiZSB3cml0ZS1vbmx5LiBTbyBhZnRlciB5b3Un
+dmUgd3JpdHRlbiBpdCwgdHJ5Cj4gdG8gcmVhZCBpdCBhcyBzb21lb25lIHdobyBzZWVzIHRoZSBj
+b2RlIGZvciB0aGUgZmlyc3QgdGltZSBhbmQgdGhpbmsKPiBoYXJkIHdoZXRoZXIgc2hlL2hlIHdp
+bGwgdW5kZXJzdGFuZCBpdC4KPiAKPiBEbyB5b3UgY2F0Y2ggbXkgZHJpZnQgbm93Pwo+IApZZXMs
+IGdvdCBpdC4gVGhhbmtzIGZvciB5b3VyIHZhbHVhYmxlIHRpbWUgYW5kIHBhdGllbmNlLgoKUmVn
+YXJkcywKTGlhbmJvCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
