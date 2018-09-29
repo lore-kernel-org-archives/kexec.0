@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g6Bfv-00032N-ML
- for kexec@lists.infradead.org; Sat, 29 Sep 2018 09:36:37 +0000
-Subject: Re: [PATCH v7 RESEND 4/4] kdump/vmcore: support encrypted old memory
- with SME enabled
-References: <20180927071954.29615-1-lijiang@redhat.com>
- <20180927071954.29615-5-lijiang@redhat.com> <20180928083852.GA21895@zn.tnic>
- <1c27b9a9-ae93-011a-b003-a50ecc22ccc5@redhat.com>
- <20180929083052.GA13786@zn.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <76d9d338-2fc1-a8a5-8f12-c25d2ad092f3@redhat.com>
-Date: Sat, 29 Sep 2018 17:36:04 +0800
-MIME-Version: 1.0
-In-Reply-To: <20180929083052.GA13786@zn.tnic>
-Content-Language: en-US
+ id 1g6HPY-00062w-VO
+ for kexec@lists.infradead.org; Sat, 29 Sep 2018 15:44:07 +0000
+From: Lianbo Jiang <lijiang@redhat.com>
+Subject: [PATCH 0/4 v8] Support kdump for AMD secure memory encryption(SME)
+Date: Sat, 29 Sep 2018 23:43:29 +0800
+Message-Id: <20180929154333.3116-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,46 +15,166 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@suse.de>
-Cc: thomas.lendacky@amd.com, jroedel@suse.de, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
+To: linux-kernel@vger.kernel.org
+Cc: thomas.lendacky@amd.com, jroedel@suse.de, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, bp@suse.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
 
-5ZyoIDIwMTjlubQwOeaciDI55pelIDE2OjMwLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IFNhdCwgU2VwIDI5LCAyMDE4IGF0IDAyOjI0OjUyUE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
-IEF0IGZpcnN0LCBpIGFkZGVkIGFuIGlucHV0IHBhcmFtZXRlciBmb3IgcmVhZF9mcm9tX29sZG1l
-bSgpIGJlY2F1c2Ugb2YgZW5jcnlwdGlvbihTTUUpLiBCdXQKPj4gZm9yIGF2b2lkaW5nIHRvIGFs
-c28gYWRkIHRoZSBzYW1lIHBhcmFtZXRlciBmb3IgY29weV9vbGRtZW1fcGFnZSgpLCBzbyBpIGFk
-ZGVkIGEgbmV3IGZ1bmN0aW9uCj4+IGNvcHlfb2xkbWVtX3BhZ2VfZW5jcnlwdGVkKCkuIE1heWJl
-IHlvdSBoYWQgbm90aWNlZCB0aGF0IHRoZXNlIGZ1bmN0aW9ucyB3ZXJlIHZlcnkgc2ltaWxhci4K
-PiAKPiBJZiB5b3UgaGF2ZSB0d28gdmVyeSBzaW1pbGFyIGZ1bmN0aW9ucywgeW91IGFkZCBhICpz
-dGF0aWMqIHdvcmtob3JzZSBmdW5jdGlvbjoKPiAKPiBzdGF0aWMgc3NpemVfdCBfX2NvcHlfb2xk
-bWVtX3BhZ2UodW5zaWduZWQgbG9uZyBwZm4sIGNoYXIgKmJ1Ziwgc2l6ZV90IGNzaXplLCB1bnNp
-Z25lZCBsb25nIG9mZnNldCwKPiAJCQkJICBpbnQgdXNlcmJ1ZiwgYm9vbCBlbmNyeXB0ZWQpCj4g
-Cj4gYW5kIHlvdSBkZWZpbmUgdHdvIHdyYXBwZXJzOgo+IAo+IGNvcHlfb2xkbWVtX3BhZ2UoKQo+
-IGNvcHlfb2xkbWVtX3BhZ2VfZW5jcnlwdGVkKCkKPiAKPiB3aGljaCBib3RoIGNhbGwgX19jb3B5
-X29sZG1lbV9wYWdlKCkgd2l0aCB0aGUgYXBwcm9wcmlhdGUgcGFyYW1ldGVycy4KPiAKCkdyZWF0
-ISBQcmV2aW91c2x5IGkgd2FzIGFmcmFpZCB0aGF0IHRoZSBtYWludGFpbmVyIG1pZ2h0IGRpc2Fn
-cmVlIHdpdGgKcmV3cml0aW5nIHRoZSBmdW5jdGlvbiBjb3B5X29sZG1lbV9wYWdlKCkuCgpUaGF0
-J3MgcmVhbGx5IGdyZWF0LiBJIHdpbGwgbW9kaWZ5IHRoaXMgcGF0Y2ggYW5kIHBvc3QgdGhlIHNl
-cmllcyBhZ2Fpbi4KClRoYW5rcy4KTGlhbmJvCj4gQnV0IHlvdSBkbyAqbm90KiBkbyBhIHNlcGFy
-YXRlIGNvbXBpbGF0aW9uIHVuaXQganVzdCBiZWNhdXNlLiBOb25lIG9mCj4gdGhlIHJlYXNvbnMg
-eW91J3ZlIG1lbnRpb25lZCB3YXJyYW50IGhhdmluZyBhIHNlcGFyYXRlIGNvbXBpbGF0aW9uCj4g
-dW5pdCB3aGlsZSB5b3UgYWxyZWFkeSBoYXZlICp0aGUqIHBlcmZlY3QgcGxhY2UgdG8gcHV0IGV2
-ZXJ5dGhpbmcgLQo+IGFyY2gveDg2L2tlcm5lbC9jcmFzaF9kdW1wXzY0LmMKPiAKPj4gU28gc29y
-cnksIGhlcmUgIm9sZG1lbSBlbmNyeXB0ZWQiIG1lYW5zIHRoZSAib2xkIG1lbW9yeSBpcyBlbmNy
-eXB0ZWQiLgo+IAo+IEkga25vdyB3aGF0IGl0IG1lYW5zIC0gSSdtIHRyeWluZyB0byBleHBsYWlu
-IHRvIHlvdSB0byB3cml0ZSBpdCBvdXQKPiBpbiBwbGFpbiBlbmdsaXNoIGFuZCBub3QgdXNlIHNv
-bWUgc3RyYW5nZSBjb25zdHJ1Y3RzIGxpa2UgIm9sZG1lbQo+IGVuY3J5cHRlZCIuCj4gCj4gQSBy
-ZWFkZXIgd291bGQgd29uZGVyOiB3aHkgaXMgdGhpcyB0aGluZyBzZW1pLWFiYnJldmlhdGVkIGFu
-ZCBpbgo+IHF1b3RhdGlvbiBtYXJrcz8gRG9lcyB0aGF0IG1lYW4gYW55dGhpbmcgc3BlY2lhbD8K
-PiAKPiBPdXIgY29tbWVudHMgc2hvdWxkIG5vdCBiZSB3cml0ZS1vbmx5LiBTbyBhZnRlciB5b3Un
-dmUgd3JpdHRlbiBpdCwgdHJ5Cj4gdG8gcmVhZCBpdCBhcyBzb21lb25lIHdobyBzZWVzIHRoZSBj
-b2RlIGZvciB0aGUgZmlyc3QgdGltZSBhbmQgdGhpbmsKPiBoYXJkIHdoZXRoZXIgc2hlL2hlIHdp
-bGwgdW5kZXJzdGFuZCBpdC4KPiAKPiBEbyB5b3UgY2F0Y2ggbXkgZHJpZnQgbm93Pwo+IApZZXMs
-IGdvdCBpdC4gVGhhbmtzIGZvciB5b3VyIHZhbHVhYmxlIHRpbWUgYW5kIHBhdGllbmNlLgoKUmVn
-YXJkcywKTGlhbmJvCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+When SME is enabled on AMD machine, it also needs to support kdump. Because
+the memory is encrypted in the first kernel, the old memory will be remapped
+to kdump kernel for dumping data, and SME is also enabled in kdump kernel,
+otherwise the old memory can not be decrypted.
+
+For the kdump, it is necessary to distinguish whether the memory is encrypted.
+Furthermore, that should also know which part of the memory is encrypted or
+decrypted. It will appropriately remap the memory according to the specific
+situation in order to tell cpu how to access the memory.
+
+As we know, a page of memory that is marked as encrypted, which will be
+automatically decrypted when read from DRAM, and will also be automatically
+encrypted when written to DRAM. If the old memory is encrypted, it has to
+remap the old memory with the memory encryption mask, which will automatically
+decrypt the old memory when read from DRAM.
+
+For kdump(SME), there are two cases that doesn't support:
+
+ ----------------------------------------------
+| first-kernel | second-kernel | kdump support |
+|      (mem_encrypt=on|off)    |   (yes|no)    |
+|--------------+---------------+---------------|
+|     on       |     on        |     yes       |
+|     off      |     off       |     yes       |
+|     on       |     off       |     no        |
+|     off      |     on        |     no        |
+|______________|_______________|_______________|
+
+1. SME is enabled in the first kernel, but SME is disabled in kdump kernel
+In this case, because the old memory is encrypted, it can't be decrypted.
+The root cause is that the encryption key is not visible to any software
+runnint on the CPU cores(AMD cpu with SME), and is randomly generated on
+eache system reset. That is to say, kdump kernel won't have a chance to
+get the encryption key. So the encrypted memory can not be decrypted
+unless SME is active.
+
+2. SME is disabled in the first kernel, but SME is enabled in kdump kernel
+It is unnecessary to support in this case, because the old memory is
+dencrypted, the old memory can be dumped as usual, that doesn't need to
+enable SME in kdump kernel. Another, If the scenario must be supported, it
+will increase the complexity of the code, that will have to consider how to
+pass the SME flag from the first kernel to the kdump kernel, in order to let
+kdump kernel know that whether the old memory is encrypted.
+
+There are two methods to pass the SME flag to the kdump kernel. The first
+method is to modify the assembly code, which includes some common code and
+the path is too long. The second method is to use kexec tool, which could
+require the SME flag to be exported in the first kernel by "proc" or "sysfs",
+kexec tools will read the SME flag from "proc" or "sysfs" when we use kexec
+tools to load image, subsequently the SME flag will be saved in boot_params,
+that can properly remap the old memory according to the previously saved SME
+flag. But it is too expensive to do this.
+
+This patches are only for SME kdump, the patches don't support SEV kdump.
+
+Test tools:
+makedumpfile[v1.6.3]: https://github.com/LianboJ/makedumpfile
+commit <e1de103eca8f> "A draft for kdump vmcore about AMD SME"
+Note: This patch can only dump vmcore in the case of SME enabled.
+
+crash-7.2.3: https://github.com/crash-utility/crash.git
+commit <001f77a05585> "Fix for Linux 4.19-rc1 and later kernels that contain kernel commit <7290d5809571>"
+
+kexec-tools-2.0.17: git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+commit <b9de21ef51a7> "kexec: fix for "Unhandled rela relocation: R_X86_64_PLT32" error"
+
+Note:
+Before you load the kernel and initramfs for kdump, this patch(
+http://lists.infradead.org/pipermail/kexec/2018-September/021460.html) must be merged
+to kexec-tools, and then the kdump kernel will work well. Because there is a patch
+which is removed based on v6(x86/ioremap: strengthen the logic in
+early_memremap_pgprot_adjust() to adjust encryption mask).
+
+Test environment:
+HP ProLiant DL385Gen10 AMD EPYC 7251
+8-Core Processor
+32768 MB memory
+600 GB disk space
+
+Linux 4.19-rc5:
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+commit <6bf4ca7fbc85> "Linux 4.19-rc5"
+
+Reference:
+AMD64 Architecture Programmer's Manual
+https://support.amd.com/TechDocs/24593.pdf
+
+Changes since v6:
+1. There is a patch which is removed based on v6.
+(x86/ioremap: strengthen the logic in early_memremap_pgprot_adjust() to adjust encryption mask)
+Dave Young suggests that this patch can be removed and fix the kexec-tools.
+Reference: http://lists.infradead.org/pipermail/kexec/2018-September/021460.html)
+2. Update the patch log.
+
+Changes since v7:
+1. Improve patch log for patch 1/4(Suggested by Baoquan He)
+2. Add Reviewed-by for all patches(Tom Lendacky <thomas.lendacky@amd.com>)
+3. Add Acked-by for patch 3/4(Joerg Roedel <jroedel@suse.de>)
+4. Remove header file(linux/crash_dump.h) from
+arch/x86/mm/ioremap.c(Suggested by Borislav)
+5. Modify comment and patch log for patch 2/4(Suggested by Borislav)
+6. Delete a file arch/x86/kernel/crash_dump_encrypt.c and rewrite some
+functions(Suggested by Borislav)
+7. Modify all code style issue(Suggested by Borislav)
+
+Some known issues:
+1. about SME
+Upstream kernel will hang on HP machine(DL385Gen10 AMD EPYC 7251) when
+we execute the kexec command as follow:
+
+# kexec -l /boot/vmlinuz-4.19.0-rc5+ --initrd=/boot/initramfs-4.19.0-rc5+.img --command-line="root=/dev/mapper/rhel_hp--dl385g10--03-root ro mem_encrypt=on rd.lvm.lv=rhel_hp-dl385g10-03/root rd.lvm.lv=rhel_hp-dl385g10-03/swap console=ttyS0,115200n81 LANG=en_US.UTF-8 earlyprintk=serial debug nokaslr"
+# kexec -e (or reboot)
+
+But this issue can not be reproduced on speedway machine, and this issue
+is irrelevant to my posted patches.
+
+The kernel log:
+[ 1248.932239] kexec_core: Starting new kernel
+early console in extract_kernel
+input_data: 0x000000087e91c3b4
+input_len: 0x000000000067fcbd
+output: 0x000000087d400000
+output_len: 0x0000000001b6fa90
+kernel_total_size: 0x0000000001a9d000
+trampoline_32bit: 0x0000000000099000
+
+Decompressing Linux...
+Parsing ELF...        [---Here the system will hang]
+
+Lianbo Jiang (4):
+  x86/ioremap: add a function ioremap_encrypted() to remap kdump old
+    memory
+  kexec: allocate decrypted control pages for kdump in case SME is
+    enabled
+  iommu/amd: Remap the device table of IOMMU with the memory encryption
+    mask for kdump
+  kdump/vmcore: support encrypted old memory with SME enabled
+
+ arch/x86/include/asm/io.h       |  2 +
+ arch/x86/kernel/crash_dump_64.c | 65 ++++++++++++++++++++++++++++-----
+ arch/x86/mm/ioremap.c           | 24 ++++++++----
+ drivers/iommu/amd_iommu_init.c  | 14 ++++++-
+ fs/proc/vmcore.c                | 24 +++++++++---
+ include/linux/crash_dump.h      |  3 ++
+ kernel/kexec_core.c             | 14 +++++++
+ 7 files changed, 121 insertions(+), 25 deletions(-)
+
+-- 
+2.17.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
