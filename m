@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g6HQG-0006EQ-8u
- for kexec@lists.infradead.org; Sat, 29 Sep 2018 15:44:49 +0000
+ id 1g6HQW-0006Jd-0O
+ for kexec@lists.infradead.org; Sat, 29 Sep 2018 15:45:06 +0000
 From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 3/4 v8] iommu/amd: Remap the device table of IOMMU with the
- memory encryption mask for kdump
-Date: Sat, 29 Sep 2018 23:43:32 +0800
-Message-Id: <20180929154333.3116-4-lijiang@redhat.com>
+Subject: [PATCH 4/4 v8] kdump/vmcore: support encrypted old memory with SME
+ enabled
+Date: Sat, 29 Sep 2018 23:43:33 +0800
+Message-Id: <20180929154333.3116-5-lijiang@redhat.com>
 In-Reply-To: <20180929154333.3116-1-lijiang@redhat.com>
 References: <20180929154333.3116-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,46 +26,247 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: thomas.lendacky@amd.com, jroedel@suse.de, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, bp@suse.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
 
-In kdump kernel, it will copy the device table of IOMMU from the old device
-table, which is encrypted when SME is enabled in the first kernel. So the
-old device table has to be remapped with the memory encryption mask.
+In kdump kernel, the old memory needs to be dumped into vmcore file.
+If SME is enabled in the first kernel, the old memory has to be
+remapped with the memory encryption mask, which will be automatically
+decrypted when read from DRAM.
+
+For SME kdump, there are two cases that doesn't support:
+
+ ----------------------------------------------
+| first-kernel | second-kernel | kdump support |
+|      (mem_encrypt=on|off)    |   (yes|no)    |
+|--------------+---------------+---------------|
+|     on       |     on        |     yes       |
+|     off      |     off       |     yes       |
+|     on       |     off       |     no        |
+|     off      |     on        |     no        |
+|______________|_______________|_______________|
+
+1. SME is enabled in the first kernel, but SME is disabled in kdump kernel
+In this case, because the old memory is encrypted, it can't be decrypted.
+The root cause is that the encryption key is not visible to any software
+runnint on the CPU cores(AMD cpu with SME), and is randomly generated on
+eache system reset. That is to say, kdump kernel won't have a chance to
+get the encryption key. So the encrypted memory can not be decrypted
+unless SME is active.
+
+2. SME is disabled in the first kernel, but SME is enabled in kdump kernel
+On the one hand, the old memory is decrypted, the old memory can be dumped
+as usual, so SME doesn't need to be enabled in kdump kernel; On the other
+hand, it will increase the complexity of the code, because that will have
+to consider how to pass the SME flag from the first kernel to the kdump
+kernel, it is really too expensive to do this.
+
+This patches are only for SME kdump, the patches don't support SEV kdump.
 
 Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
 Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Acked-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/amd_iommu_init.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+Changes since v7:
+1. Delete a file arch/x86/kernel/crash_dump_encrypt.c, and move the
+copy_oldmem_page_encrypted() to arch/x86/kernel/crash_dump_64.c, also
+rewrite some functions.(Suggested by Borislav)
+2. Modify all code style issue.(Suggested by Borislav)
+3. Remove a reduntant header file.(Suggested by Borislav)
+4. Improve patch log.(Suggested by Borislav)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 84b3e4445d46..3931c7de7c69 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -902,12 +902,22 @@ static bool copy_device_table(void)
+ arch/x86/kernel/crash_dump_64.c | 65 ++++++++++++++++++++++++++++-----
+ fs/proc/vmcore.c                | 24 +++++++++---
+ include/linux/crash_dump.h      |  3 ++
+ 3 files changed, 77 insertions(+), 15 deletions(-)
+
+diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
+index 4f2e0778feac..6adbde592c44 100644
+--- a/arch/x86/kernel/crash_dump_64.c
++++ b/arch/x86/kernel/crash_dump_64.c
+@@ -12,7 +12,7 @@
+ #include <linux/io.h>
+ 
+ /**
+- * copy_oldmem_page - copy one page from "oldmem"
++ * __copy_oldmem_page - copy one page from "old memory encrypted or decrypted"
+  * @pfn: page frame number to be copied
+  * @buf: target memory address for the copy; this can be in kernel address
+  *	space or user address space (see @userbuf)
+@@ -20,31 +20,78 @@
+  * @offset: offset in bytes into the page (based on pfn) to begin the copy
+  * @userbuf: if set, @buf is in user address space, use copy_to_user(),
+  *	otherwise @buf is in kernel address space, use memcpy().
++ * @encrypted: if true, the old memory is encrypted.
++ *             if false, the old memory is decrypted.
+  *
+- * Copy a page from "oldmem". For this page, there is no pte mapped
+- * in the current kernel. We stitch up a pte, similar to kmap_atomic.
++ * Copy a page from "old memory encrypted or decrypted". For this page, there
++ * is no pte mapped in the current kernel. We stitch up a pte, similar to
++ * kmap_atomic.
+  */
+-ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
+-		size_t csize, unsigned long offset, int userbuf)
++static ssize_t __copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
++				  unsigned long offset, int userbuf,
++				  bool encrypted)
+ {
+ 	void  *vaddr;
+ 
+ 	if (!csize)
+ 		return 0;
+ 
+-	vaddr = ioremap_cache(pfn << PAGE_SHIFT, PAGE_SIZE);
++	if (encrypted)
++		vaddr = (__force void *)ioremap_encrypted(pfn << PAGE_SHIFT, PAGE_SIZE);
++	else
++		vaddr = (__force void *)ioremap_cache(pfn << PAGE_SHIFT, PAGE_SIZE);
++
+ 	if (!vaddr)
+ 		return -ENOMEM;
+ 
+ 	if (userbuf) {
+-		if (copy_to_user(buf, vaddr + offset, csize)) {
+-			iounmap(vaddr);
++		if (copy_to_user((void __user *)buf, vaddr + offset, csize)) {
++			iounmap((void __iomem *)vaddr);
+ 			return -EFAULT;
  		}
- 	}
+ 	} else
+ 		memcpy(buf, vaddr + offset, csize);
  
--	old_devtb_phys = entry & PAGE_MASK;
-+	/*
-+	 * When SME is enabled in the first kernel, the entry includes the
-+	 * memory encryption mask(sme_me_mask), we must remove the memory
-+	 * encryption mask to obtain the true physical address in kdump kernel.
-+	 */
-+	old_devtb_phys = __sme_clr(entry) & PAGE_MASK;
+ 	set_iounmap_nonlazy();
+-	iounmap(vaddr);
++	iounmap((void __iomem *)vaddr);
+ 	return csize;
+ }
 +
- 	if (old_devtb_phys >= 0x100000000ULL) {
- 		pr_err("The address of old device table is above 4G, not trustworthy!\n");
- 		return false;
- 	}
--	old_devtb = memremap(old_devtb_phys, dev_table_size, MEMREMAP_WB);
-+	old_devtb = (sme_active() && is_kdump_kernel())
-+		    ? (__force void *)ioremap_encrypted(old_devtb_phys,
-+							dev_table_size)
-+		    : memremap(old_devtb_phys, dev_table_size, MEMREMAP_WB);
++/**
++ * copy_oldmem_page - copy one page from "old memory decrypted"
++ * @pfn: page frame number to be copied
++ * @buf: target memory address for the copy; this can be in kernel address
++ *	space or user address space (see @userbuf)
++ * @csize: number of bytes to copy
++ * @offset: offset in bytes into the page (based on pfn) to begin the copy
++ * @userbuf: if set, @buf is in user address space, use copy_to_user(),
++ *	otherwise @buf is in kernel address space, use memcpy().
++ *
++ * Copy a page from "old memory decrypted". For this page, there is no pte
++ * mapped in the current kernel. We stitch up a pte, similar to kmap_atomic.
++ */
++ssize_t copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
++			 unsigned long offset, int userbuf)
++{
++	return __copy_oldmem_page(pfn, buf, csize, offset, userbuf, false);
++}
 +
- 	if (!old_devtb)
- 		return false;
++/**
++ * copy_oldmem_page_encrypted - copy one page from "old memory encrypted"
++ * @pfn: page frame number to be copied
++ * @buf: target memory address for the copy; this can be in kernel address
++ *	space or user address space (see @userbuf)
++ * @csize: number of bytes to copy
++ * @offset: offset in bytes into the page (based on pfn) to begin the copy
++ * @userbuf: if set, @buf is in user address space, use copy_to_user(),
++ *	otherwise @buf is in kernel address space, use memcpy().
++ *
++ * Copy a page from "old memory encrypted". For this page, there is no pte
++ * mapped in the current kernel. We stitch up a pte, similar to
++ * kmap_atomic.
++ */
++ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
++				   unsigned long offset, int userbuf)
++{
++	return __copy_oldmem_page(pfn, buf, csize, offset, userbuf, true);
++}
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index cbde728f8ac6..42c32d06f7da 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -24,6 +24,8 @@
+ #include <linux/vmalloc.h>
+ #include <linux/pagemap.h>
+ #include <linux/uaccess.h>
++#include <linux/mem_encrypt.h>
++#include <asm/pgtable.h>
+ #include <asm/io.h>
+ #include "internal.h"
  
+@@ -98,7 +100,8 @@ static int pfn_is_ram(unsigned long pfn)
+ 
+ /* Reads a page from the oldmem device from given offset. */
+ static ssize_t read_from_oldmem(char *buf, size_t count,
+-				u64 *ppos, int userbuf)
++				u64 *ppos, int userbuf,
++				bool encrypted)
+ {
+ 	unsigned long pfn, offset;
+ 	size_t nr_bytes;
+@@ -120,8 +123,15 @@ static ssize_t read_from_oldmem(char *buf, size_t count,
+ 		if (pfn_is_ram(pfn) == 0)
+ 			memset(buf, 0, nr_bytes);
+ 		else {
+-			tmp = copy_oldmem_page(pfn, buf, nr_bytes,
+-						offset, userbuf);
++			if (encrypted)
++				tmp = copy_oldmem_page_encrypted(pfn, buf,
++								 nr_bytes,
++								 offset,
++								 userbuf);
++			else
++				tmp = copy_oldmem_page(pfn, buf, nr_bytes,
++						       offset, userbuf);
++
+ 			if (tmp < 0)
+ 				return tmp;
+ 		}
+@@ -155,7 +165,7 @@ void __weak elfcorehdr_free(unsigned long long addr)
+  */
+ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+ {
+-	return read_from_oldmem(buf, count, ppos, 0);
++	return read_from_oldmem(buf, count, ppos, 0, false);
+ }
+ 
+ /*
+@@ -163,7 +173,7 @@ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+  */
+ ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
+ {
+-	return read_from_oldmem(buf, count, ppos, 0);
++	return read_from_oldmem(buf, count, ppos, 0, sme_active());
+ }
+ 
+ /*
+@@ -173,6 +183,7 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
+ 				  unsigned long from, unsigned long pfn,
+ 				  unsigned long size, pgprot_t prot)
+ {
++	prot = pgprot_encrypted(prot);
+ 	return remap_pfn_range(vma, from, pfn, size, prot);
+ }
+ 
+@@ -351,7 +362,8 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+ 					    m->offset + m->size - *fpos,
+ 					    buflen);
+ 			start = m->paddr + *fpos - m->offset;
+-			tmp = read_from_oldmem(buffer, tsz, &start, userbuf);
++			tmp = read_from_oldmem(buffer, tsz, &start,
++					       userbuf, sme_active());
+ 			if (tmp < 0)
+ 				return tmp;
+ 			buflen -= tsz;
+diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+index 3e4ba9d753c8..cf382594568f 100644
+--- a/include/linux/crash_dump.h
++++ b/include/linux/crash_dump.h
+@@ -26,6 +26,9 @@ extern int remap_oldmem_pfn_range(struct vm_area_struct *vma,
+ 
+ extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
+ 						unsigned long, int);
++extern ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
++					  size_t csize, unsigned long offset,
++					  int userbuf);
+ void vmcore_cleanup(void);
+ 
+ /* Architecture code defines this if there are other possible ELF
 -- 
 2.17.1
 
