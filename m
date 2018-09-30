@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Sun, 30 Sep 2018 18:08:34 +0800
+Date: Sun, 30 Sep 2018 18:10:01 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v15 04/16] powerpc, kexec_file: factor out memblock-based
- arch_kexec_walk_mem()
-Message-ID: <20180930100834.GD6950@dhcp-128-65.nay.redhat.com>
+Subject: Re: [PATCH v15 05/16] kexec_file: kexec_walk_memblock() only walks a
+ dedicated region at kdump
+Message-ID: <20180930101001.GE6950@dhcp-128-65.nay.redhat.com>
 References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
- <20180928064841.14117-5-takahiro.akashi@linaro.org>
+ <20180928064841.14117-6-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180928064841.14117-5-takahiro.akashi@linaro.org>
+In-Reply-To: <20180928064841.14117-6-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,68 +22,62 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, prudo@linux.ibm.com, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, "Eric W. Biederman" <ebiederm@xmission.com>, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james.morse@arm.com, davem@davemloft.net, vgoyal@redhat.com
-
-Hi AKASHI,
+Cc: prudo@linux.ibm.com, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james.morse@arm.com, davem@davemloft.net, vgoyal@redhat.com
 
 On 09/28/18 at 03:48pm, AKASHI Takahiro wrote:
-> Memblock list is another source for usable system memory layout.
-> So move powerpc's arch_kexec_walk_mem() to common code so that other
-> memblock-based architectures, particularly arm64, can also utilise it.
-> A moved function is now renamed to kexec_walk_memblock() and integrated
-> into kexec_locate_mem_hole(), which will now be usable for all
-> architectures with no need for overriding arch_kexec_walk_mem().
+> In kdump case, there exists only one dedicated memblock region as usable
+> memory (crashk_res). With this patch, kexec_walk_memblock() runs a given
+> callback function on this region.
 > 
-> With this change, arch_kexec_walk_mem() need no longer be a weak function,
-> and was now renamed to kexec_walk_resources().
-> 
-> Since powerpc doesn't support kdump in its kexec_file_load(), the current
-> kexec_walk_memblock() won't work for kdump either in this form, this will
-> be fixed in the next patch.
+> Cosmetic change: 0 to MEMBLOCK_NONE at for_each_free_mem_range*()
 > 
 > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-> Acked-by: Dave Young <dyoung@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
 > Cc: Vivek Goyal <vgoyal@redhat.com>
 > Cc: Baoquan He <bhe@redhat.com>
-> Acked-by: James Morse <james.morse@arm.com>
 
-[snip]
+Acked-by: Dave Young <dyoung@redhat.com>
 
+> ---
+>  kernel/kexec_file.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 370d7eab49fe..2f615a7968dd 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -511,8 +511,11 @@ static int kexec_walk_memblock(struct kexec_buf *kbuf,
+>  	phys_addr_t mstart, mend;
+>  	struct resource res = { };
+>  
+> +	if (kbuf->image->type == KEXEC_TYPE_CRASH)
+> +		return func(&crashk_res, kbuf);
 > +
->  /**
->   * arch_kexec_walk_mem - call func(data) on free memory regions
-
-The function name should be updated as well.
-
->   * @kbuf:	Context info for the search. Also passed to @func.
-> @@ -510,8 +560,8 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
->   * and that value will be returned. If all free regions are visited without
->   * func returning non-zero, then zero will be returned.
->   */
-> -int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> -			       int (*func)(struct resource *, void *))
-> +static int kexec_walk_resources(struct kexec_buf *kbuf,
-> +				int (*func)(struct resource *, void *))
->  {
->  	if (kbuf->image->type == KEXEC_TYPE_CRASH)
->  		return walk_iomem_res_desc(crashk_res.desc,
-> @@ -538,7 +588,11 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
->  	if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
->  		return 0;
->  
-> -	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
-> +	if (IS_ENABLED(CONFIG_HAVE_MEMBLOCK) &&
-> +			!IS_ENABLED(CONFIG_ARCH_DISCARD_MEMBLOCK))
-> +		ret = kexec_walk_memblock(kbuf, locate_mem_hole_callback);
-> +	else
-> +		ret = kexec_walk_resources(kbuf, locate_mem_hole_callback);
->  
->  	return ret == 1 ? 0 : -EADDRNOTAVAIL;
->  }
+>  	if (kbuf->top_down) {
+> -		for_each_free_mem_range_reverse(i, NUMA_NO_NODE, 0,
+> +		for_each_free_mem_range_reverse(i, NUMA_NO_NODE, MEMBLOCK_NONE,
+>  						&mstart, &mend, NULL) {
+>  			/*
+>  			 * In memblock, end points to the first byte after the
+> @@ -526,8 +529,8 @@ static int kexec_walk_memblock(struct kexec_buf *kbuf,
+>  				break;
+>  		}
+>  	} else {
+> -		for_each_free_mem_range(i, NUMA_NO_NODE, 0, &mstart, &mend,
+> -					NULL) {
+> +		for_each_free_mem_range(i, NUMA_NO_NODE, MEMBLOCK_NONE,
+> +					&mstart, &mend, NULL) {
+>  			/*
+>  			 * In memblock, end points to the first byte after the
+>  			 * range while in kexec, end points to the last byte
 > -- 
 > 2.19.0
 > 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 Thanks
 Dave
