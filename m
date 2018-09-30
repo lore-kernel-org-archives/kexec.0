@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g6Y1B-0005Us-Su
- for kexec@lists.infradead.org; Sun, 30 Sep 2018 09:28:03 +0000
-Date: Sun, 30 Sep 2018 17:27:41 +0800
+Date: Sun, 30 Sep 2018 18:08:34 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 1/3] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one
- error
-Message-ID: <20180930092741.GC6950@dhcp-128-65.nay.redhat.com>
-References: <153805773703.1157.14773321497580233478.stgit@bhelgaas-glaptop.roam.corp.google.com>
- <153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com>
- <20180930092110.GB6950@dhcp-128-65.nay.redhat.com>
+Subject: Re: [PATCH v15 04/16] powerpc, kexec_file: factor out memblock-based
+ arch_kexec_walk_mem()
+Message-ID: <20180930100834.GD6950@dhcp-128-65.nay.redhat.com>
+References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
+ <20180928064841.14117-5-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180930092110.GB6950@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20180928064841.14117-5-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,34 +21,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, Lianbo Jiang <lijiang@redhat.com>, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, akpm@linux-foundation.org, bp@suse.de, dan.j.williams@intel.com, Vivek Goyal <vgoyal@redhat.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, prudo@linux.ibm.com, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, "Eric W. Biederman" <ebiederm@xmission.com>, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james.morse@arm.com, davem@davemloft.net, vgoyal@redhat.com
 
-On 09/30/18 at 05:21pm, Dave Young wrote:
-> Hi Bjorn,
+Hi AKASHI,
+
+On 09/28/18 at 03:48pm, AKASHI Takahiro wrote:
+> Memblock list is another source for usable system memory layout.
+> So move powerpc's arch_kexec_walk_mem() to common code so that other
+> memblock-based architectures, particularly arm64, can also utilise it.
+> A moved function is now renamed to kexec_walk_memblock() and integrated
+> into kexec_locate_mem_hole(), which will now be usable for all
+> architectures with no need for overriding arch_kexec_walk_mem().
 > 
-> On 09/27/18 at 09:21am, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > The only use of KEXEC_BACKUP_SRC_END is as an argument to
-> > walk_system_ram_res():
-> > 
-> >   int crash_load_segments(struct kimage *image)
-> >   {
-> >     ...
-> >     walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
-> >                         image, determine_backup_region);
-> > 
-> > walk_system_ram_res() expects "start, end" arguments that are inclusive,
-> > i.e., the range to be walked includes both the start and end addresses.
+> With this change, arch_kexec_walk_mem() need no longer be a weak function,
+> and was now renamed to kexec_walk_resources().
 > 
-> Looking at the function comment of find_next_iomem_res,  the res->end
-> should be exclusive, am I missing something?
+> Since powerpc doesn't support kdump in its kexec_file_load(), the current
+> kexec_walk_memblock() won't work for kdump either in this form, this will
+> be fixed in the next patch.
+> 
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+> Acked-by: Dave Young <dyoung@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Acked-by: James Morse <james.morse@arm.com>
 
-Oops,  you fix it in 2nd patch, I apparently miss that.
+[snip]
 
-Since the fix of checking the end is in another patch, probably merge
-these two patches so that they are in one patch to avoid break bisect. 
+> +
+>  /**
+>   * arch_kexec_walk_mem - call func(data) on free memory regions
+
+The function name should be updated as well.
+
+>   * @kbuf:	Context info for the search. Also passed to @func.
+> @@ -510,8 +560,8 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
+>   * and that value will be returned. If all free regions are visited without
+>   * func returning non-zero, then zero will be returned.
+>   */
+> -int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+> -			       int (*func)(struct resource *, void *))
+> +static int kexec_walk_resources(struct kexec_buf *kbuf,
+> +				int (*func)(struct resource *, void *))
+>  {
+>  	if (kbuf->image->type == KEXEC_TYPE_CRASH)
+>  		return walk_iomem_res_desc(crashk_res.desc,
+> @@ -538,7 +588,11 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+>  	if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
+>  		return 0;
+>  
+> -	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
+> +	if (IS_ENABLED(CONFIG_HAVE_MEMBLOCK) &&
+> +			!IS_ENABLED(CONFIG_ARCH_DISCARD_MEMBLOCK))
+> +		ret = kexec_walk_memblock(kbuf, locate_mem_hole_callback);
+> +	else
+> +		ret = kexec_walk_resources(kbuf, locate_mem_hole_callback);
+>  
+>  	return ret == 1 ? 0 : -EADDRNOTAVAIL;
+>  }
+> -- 
+> 2.19.0
+> 
 
 Thanks
 Dave
