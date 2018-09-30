@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g6XF3-0004u4-2k
- for kexec@lists.infradead.org; Sun, 30 Sep 2018 08:38:18 +0000
-Subject: Re: [PATCH v9 4/4] kdump/vmcore: support encrypted old memory with
- SME enabled
-From: lijiang <lijiang@redhat.com>
-References: <20180930031033.22110-1-lijiang@redhat.com>
- <20180930031033.22110-5-lijiang@redhat.com>
-Message-ID: <be7b47f9-6be6-e0d1-2c2a-9125bc74b818@redhat.com>
-Date: Sun, 30 Sep 2018 16:37:41 +0800
+ id 1g6Xut-0003ff-Px
+ for kexec@lists.infradead.org; Sun, 30 Sep 2018 09:21:33 +0000
+Date: Sun, 30 Sep 2018 17:21:10 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 1/3] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one
+ error
+Message-ID: <20180930092110.GB6950@dhcp-128-65.nay.redhat.com>
+References: <153805773703.1157.14773321497580233478.stgit@bhelgaas-glaptop.roam.corp.google.com>
+ <153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com>
 MIME-Version: 1.0
-In-Reply-To: <20180930031033.22110-5-lijiang@redhat.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,268 +25,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: thomas.lendacky@amd.com, jroedel@suse.de, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, bp@suse.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, Lianbo Jiang <lijiang@redhat.com>, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, dan.j.williams@intel.com, bp@suse.de, tglx@linutronix.de, Vivek Goyal <vgoyal@redhat.com>
 
-In kdump kernel, the old memory needs to be dumped into vmcore file.
-If SME is enabled in the first kernel, the old memory has to be
-remapped with the memory encryption mask, which will be automatically
-decrypted when read from DRAM.
+Hi Bjorn,
 
-For SME kdump, there are two cases that doesn't support:
+On 09/27/18 at 09:21am, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> The only use of KEXEC_BACKUP_SRC_END is as an argument to
+> walk_system_ram_res():
+> 
+>   int crash_load_segments(struct kimage *image)
+>   {
+>     ...
+>     walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
+>                         image, determine_backup_region);
+> 
+> walk_system_ram_res() expects "start, end" arguments that are inclusive,
+> i.e., the range to be walked includes both the start and end addresses.
 
- ----------------------------------------------
-| first-kernel | second-kernel | kdump support |
-|      (mem_encrypt=on|off)    |   (yes|no)    |
-|--------------+---------------+---------------|
-|     on       |     on        |     yes       |
-|     off      |     off       |     yes       |
-|     on       |     off       |     no        |
-|     off      |     on        |     no        |
-|______________|_______________|_______________|
-
-1. SME is enabled in the first kernel, but SME is disabled in kdump kernel
-In this case, because the old memory is encrypted, it can't be decrypted.
-The root cause is that the encryption key is not visible to any software
-runnint on the CPU cores(AMD cpu with SME), and is randomly generated on
-eache system reset. That is to say, kdump kernel won't have a chance to
-get the encryption key. So the encrypted memory can not be decrypted
-unless SME is active.
-
-2. SME is disabled in the first kernel, but SME is enabled in kdump kernel
-On the one hand, the old memory is decrypted, the old memory can be dumped
-as usual, so SME doesn't need to be enabled in kdump kernel; On the other
-hand, it will increase the complexity of the code, because that will have
-to consider how to pass the SME flag from the first kernel to the kdump
-kernel, it is really too expensive to do this.
-
-This patches are only for SME kdump, the patches don't support SEV kdump.
-
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
----
-Changes since v7:
-1. Delete a file arch/x86/kernel/crash_dump_encrypt.c, and move the
-copy_oldmem_page_encrypted() to arch/x86/kernel/crash_dump_64.c, also
-rewrite some functions.(Suggested by Borislav)
-2. Modify all code style issue.(Suggested by Borislav)
-3. Remove a reduntant header file.(Suggested by Borislav)
-4. Improve patch log.(Suggested by Borislav)
-5. Modify compile error "fs/proc/vmcore.c:115: undefined reference
-   to `copy_oldmem_page_encrypted'"
-6. Modify compile error "arch/x86//kernel/crash_dump_64.c:93:9:
-   error: redefinition of 'copy_oldmem_page_encrypted'"
-
- arch/x86/kernel/crash_dump_64.c | 65 ++++++++++++++++++++++++++++-----
- fs/proc/vmcore.c                | 24 +++++++++---
- include/linux/crash_dump.h      | 13 +++++++
- 3 files changed, 87 insertions(+), 15 deletions(-)
-
-diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
-index 4f2e0778feac..6adbde592c44 100644
---- a/arch/x86/kernel/crash_dump_64.c
-+++ b/arch/x86/kernel/crash_dump_64.c
-@@ -12,7 +12,7 @@
- #include <linux/io.h>
- 
- /**
-- * copy_oldmem_page - copy one page from "oldmem"
-+ * __copy_oldmem_page - copy one page from "old memory encrypted or decrypted"
-  * @pfn: page frame number to be copied
-  * @buf: target memory address for the copy; this can be in kernel address
-  *	space or user address space (see @userbuf)
-@@ -20,31 +20,78 @@
-  * @offset: offset in bytes into the page (based on pfn) to begin the copy
-  * @userbuf: if set, @buf is in user address space, use copy_to_user(),
-  *	otherwise @buf is in kernel address space, use memcpy().
-+ * @encrypted: if true, the old memory is encrypted.
-+ *             if false, the old memory is decrypted.
-  *
-- * Copy a page from "oldmem". For this page, there is no pte mapped
-- * in the current kernel. We stitch up a pte, similar to kmap_atomic.
-+ * Copy a page from "old memory encrypted or decrypted". For this page, there
-+ * is no pte mapped in the current kernel. We stitch up a pte, similar to
-+ * kmap_atomic.
-  */
--ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
--		size_t csize, unsigned long offset, int userbuf)
-+static ssize_t __copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
-+				  unsigned long offset, int userbuf,
-+				  bool encrypted)
- {
- 	void  *vaddr;
- 
- 	if (!csize)
- 		return 0;
- 
--	vaddr = ioremap_cache(pfn << PAGE_SHIFT, PAGE_SIZE);
-+	if (encrypted)
-+		vaddr = (__force void *)ioremap_encrypted(pfn << PAGE_SHIFT, PAGE_SIZE);
-+	else
-+		vaddr = (__force void *)ioremap_cache(pfn << PAGE_SHIFT, PAGE_SIZE);
-+
- 	if (!vaddr)
- 		return -ENOMEM;
- 
- 	if (userbuf) {
--		if (copy_to_user(buf, vaddr + offset, csize)) {
--			iounmap(vaddr);
-+		if (copy_to_user((void __user *)buf, vaddr + offset, csize)) {
-+			iounmap((void __iomem *)vaddr);
- 			return -EFAULT;
- 		}
- 	} else
- 		memcpy(buf, vaddr + offset, csize);
- 
- 	set_iounmap_nonlazy();
--	iounmap(vaddr);
-+	iounmap((void __iomem *)vaddr);
- 	return csize;
- }
-+
-+/**
-+ * copy_oldmem_page - copy one page from "old memory decrypted"
-+ * @pfn: page frame number to be copied
-+ * @buf: target memory address for the copy; this can be in kernel address
-+ *	space or user address space (see @userbuf)
-+ * @csize: number of bytes to copy
-+ * @offset: offset in bytes into the page (based on pfn) to begin the copy
-+ * @userbuf: if set, @buf is in user address space, use copy_to_user(),
-+ *	otherwise @buf is in kernel address space, use memcpy().
-+ *
-+ * Copy a page from "old memory decrypted". For this page, there is no pte
-+ * mapped in the current kernel. We stitch up a pte, similar to kmap_atomic.
-+ */
-+ssize_t copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
-+			 unsigned long offset, int userbuf)
-+{
-+	return __copy_oldmem_page(pfn, buf, csize, offset, userbuf, false);
-+}
-+
-+/**
-+ * copy_oldmem_page_encrypted - copy one page from "old memory encrypted"
-+ * @pfn: page frame number to be copied
-+ * @buf: target memory address for the copy; this can be in kernel address
-+ *	space or user address space (see @userbuf)
-+ * @csize: number of bytes to copy
-+ * @offset: offset in bytes into the page (based on pfn) to begin the copy
-+ * @userbuf: if set, @buf is in user address space, use copy_to_user(),
-+ *	otherwise @buf is in kernel address space, use memcpy().
-+ *
-+ * Copy a page from "old memory encrypted". For this page, there is no pte
-+ * mapped in the current kernel. We stitch up a pte, similar to
-+ * kmap_atomic.
-+ */
-+ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
-+				   unsigned long offset, int userbuf)
-+{
-+	return __copy_oldmem_page(pfn, buf, csize, offset, userbuf, true);
-+}
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index cbde728f8ac6..42c32d06f7da 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -24,6 +24,8 @@
- #include <linux/vmalloc.h>
- #include <linux/pagemap.h>
- #include <linux/uaccess.h>
-+#include <linux/mem_encrypt.h>
-+#include <asm/pgtable.h>
- #include <asm/io.h>
- #include "internal.h"
- 
-@@ -98,7 +100,8 @@ static int pfn_is_ram(unsigned long pfn)
- 
- /* Reads a page from the oldmem device from given offset. */
- static ssize_t read_from_oldmem(char *buf, size_t count,
--				u64 *ppos, int userbuf)
-+				u64 *ppos, int userbuf,
-+				bool encrypted)
- {
- 	unsigned long pfn, offset;
- 	size_t nr_bytes;
-@@ -120,8 +123,15 @@ static ssize_t read_from_oldmem(char *buf, size_t count,
- 		if (pfn_is_ram(pfn) == 0)
- 			memset(buf, 0, nr_bytes);
- 		else {
--			tmp = copy_oldmem_page(pfn, buf, nr_bytes,
--						offset, userbuf);
-+			if (encrypted)
-+				tmp = copy_oldmem_page_encrypted(pfn, buf,
-+								 nr_bytes,
-+								 offset,
-+								 userbuf);
-+			else
-+				tmp = copy_oldmem_page(pfn, buf, nr_bytes,
-+						       offset, userbuf);
-+
- 			if (tmp < 0)
- 				return tmp;
- 		}
-@@ -155,7 +165,7 @@ void __weak elfcorehdr_free(unsigned long long addr)
-  */
- ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0);
-+	return read_from_oldmem(buf, count, ppos, 0, false);
- }
- 
- /*
-@@ -163,7 +173,7 @@ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-  */
- ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0);
-+	return read_from_oldmem(buf, count, ppos, 0, sme_active());
- }
- 
- /*
-@@ -173,6 +183,7 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
- 				  unsigned long from, unsigned long pfn,
- 				  unsigned long size, pgprot_t prot)
- {
-+	prot = pgprot_encrypted(prot);
- 	return remap_pfn_range(vma, from, pfn, size, prot);
- }
- 
-@@ -351,7 +362,8 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
- 					    m->offset + m->size - *fpos,
- 					    buflen);
- 			start = m->paddr + *fpos - m->offset;
--			tmp = read_from_oldmem(buffer, tsz, &start, userbuf);
-+			tmp = read_from_oldmem(buffer, tsz, &start,
-+					       userbuf, sme_active());
- 			if (tmp < 0)
- 				return tmp;
- 			buflen -= tsz;
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index 3e4ba9d753c8..84d8ddcb818e 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -26,6 +26,19 @@ extern int remap_oldmem_pfn_range(struct vm_area_struct *vma,
- 
- extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
- 						unsigned long, int);
-+#if defined(CONFIG_AMD_MEM_ENCRYPT) || defined(CONFIG_X86_64)
-+extern ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
-+					  size_t csize, unsigned long offset,
-+					  int userbuf);
-+#else
-+static inline
-+ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
-+				   unsigned long offset, int userbuf)
-+{
-+	return 0;
-+}
-+#endif
-+
- void vmcore_cleanup(void);
- 
- /* Architecture code defines this if there are other possible ELF
--- 
-2.17.1
+Looking at the function comment of find_next_iomem_res,  the res->end
+should be exclusive, am I missing something?
 
 
+/*
+ * Finds the lowest iomem resource existing within [res->start.res->end).
+ * The caller must specify res->start, res->end, res->flags, and optionally
+ * desc.  If found, returns 0, res is overwritten, if not found, returns -1.
+ * This function walks the whole tree and not just first level children until
+ * and unless first_level_children_only is true.
+ */
+static int find_next_iomem_res(struct resource *res, unsigned long desc,
+                               bool first_level_children_only)
+
+
+> 
+> KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
+> first address *past* the desired 0-640KB range.
+> 
+> Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
+> region is [0-0x9ffff], not [0-0xa0000].
+> 
+> Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  arch/x86/include/asm/kexec.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index f327236f0fa7..5125fca472bb 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -67,7 +67,7 @@ struct kimage;
+>  
+>  /* Memory to backup during crash kdump */
+>  #define KEXEC_BACKUP_SRC_START	(0UL)
+> -#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
+> +#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
+>  
+>  /*
+>   * CPU does not save ss and sp on stack if execution is already
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
