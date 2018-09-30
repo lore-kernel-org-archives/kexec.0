@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g6S9D-0002R3-El
- for kexec@lists.infradead.org; Sun, 30 Sep 2018 03:12:00 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH v8 RESEND 4/4] kdump/vmcore: support encrypted old memory with
+ id 1g6XF3-0004u4-2k
+ for kexec@lists.infradead.org; Sun, 30 Sep 2018 08:38:18 +0000
+Subject: Re: [PATCH v9 4/4] kdump/vmcore: support encrypted old memory with
  SME enabled
-Date: Sun, 30 Sep 2018 11:10:33 +0800
-Message-Id: <20180930031033.22110-5-lijiang@redhat.com>
-In-Reply-To: <20180930031033.22110-1-lijiang@redhat.com>
+From: lijiang <lijiang@redhat.com>
 References: <20180930031033.22110-1-lijiang@redhat.com>
+ <20180930031033.22110-5-lijiang@redhat.com>
+Message-ID: <be7b47f9-6be6-e0d1-2c2a-9125bc74b818@redhat.com>
+Date: Sun, 30 Sep 2018 16:37:41 +0800
+MIME-Version: 1.0
+In-Reply-To: <20180930031033.22110-5-lijiang@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,7 +21,6 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
@@ -71,7 +73,9 @@ rewrite some functions.(Suggested by Borislav)
 3. Remove a reduntant header file.(Suggested by Borislav)
 4. Improve patch log.(Suggested by Borislav)
 5. Modify compile error "fs/proc/vmcore.c:115: undefined reference
-   to `copy_oldmem_page_encrypted'" 
+   to `copy_oldmem_page_encrypted'"
+6. Modify compile error "arch/x86//kernel/crash_dump_64.c:93:9:
+   error: redefinition of 'copy_oldmem_page_encrypted'"
 
  arch/x86/kernel/crash_dump_64.c | 65 ++++++++++++++++++++++++++++-----
  fs/proc/vmcore.c                | 24 +++++++++---
@@ -263,7 +267,7 @@ index 3e4ba9d753c8..84d8ddcb818e 100644
  
  extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
  						unsigned long, int);
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
++#if defined(CONFIG_AMD_MEM_ENCRYPT) || defined(CONFIG_X86_64)
 +extern ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
 +					  size_t csize, unsigned long offset,
 +					  int userbuf);
@@ -281,6 +285,7 @@ index 3e4ba9d753c8..84d8ddcb818e 100644
  /* Architecture code defines this if there are other possible ELF
 -- 
 2.17.1
+
 
 
 _______________________________________________
