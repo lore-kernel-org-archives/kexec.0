@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 1 Oct 2018 13:52:26 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v15 07/16] arm64: add image head flag definitions
-Message-ID: <20181001125225.7tlfzt5n25sckhyy@lakrids.cambridge.arm.com>
-References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
- <20180928064841.14117-8-takahiro.akashi@linaro.org>
+Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1g74iY-0001ph-Ss
+ for kexec@lists.infradead.org; Mon, 01 Oct 2018 20:23:02 +0000
+Date: Mon, 1 Oct 2018 22:22:44 +0200
+From: Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH v9 4/4] kdump/vmcore: support encrypted old memory with
+ SME enabled
+Message-ID: <20181001202244.GB8350@zn.tnic>
+References: <20180930031033.22110-1-lijiang@redhat.com>
+ <20180930031033.22110-5-lijiang@redhat.com>
+ <be7b47f9-6be6-e0d1-2c2a-9125bc74b818@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180928064841.14117-8-takahiro.akashi@linaro.org>
+In-Reply-To: <be7b47f9-6be6-e0d1-2c2a-9125bc74b818@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,82 +22,102 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: prudo@linux.ibm.com, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james.morse@arm.com, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: lijiang <lijiang@redhat.com>
+Cc: thomas.lendacky@amd.com, jroedel@suse.de, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
 
-On Fri, Sep 28, 2018 at 03:48:32PM +0900, AKASHI Takahiro wrote:
-> Those image head's flags will be used later by kexec_file loader.
-> 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Acked-by: James Morse <james.morse@arm.com>
-> ---
->  arch/arm64/include/asm/boot.h | 15 +++++++++++++++
->  arch/arm64/kernel/head.S      |  2 +-
->  2 files changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/boot.h b/arch/arm64/include/asm/boot.h
-> index 355e552a9175..0bab7eed3012 100644
-> --- a/arch/arm64/include/asm/boot.h
-> +++ b/arch/arm64/include/asm/boot.h
-> @@ -5,6 +5,21 @@
->  
->  #include <asm/sizes.h>
->  
-> +#define ARM64_MAGIC		"ARM\x64"
-> +
-> +#define HEAD_FLAG_BE_SHIFT		0
-> +#define HEAD_FLAG_PAGE_SIZE_SHIFT	1
-> +#define HEAD_FLAG_BE_MASK		0x1
-> +#define HEAD_FLAG_PAGE_SIZE_MASK	0x3
-> +
-> +#define HEAD_FLAG_BE			1
-
-These already exist in some form in arch/arm64/kernel/image.h; can we
-please factor those out rather than duplicating them?
-
-I'd be happy if you'd update image.h to use the new HEAD_FLAG_* names,
-and removed the old definitions.
-
-> +#define HEAD_FLAG_PAGE_SIZE_4K		1
-> +#define HEAD_FLAG_PAGE_SIZE_16K		2
-> +#define HEAD_FLAG_PAGE_SIZE_64K		3
-
-I appreciate these are new, since we didn't previously need definitions.
-
-Thanks,
-Mark.
-
-> +
-> +#define head_flag_field(flags, field) \
-> +		(((flags) >> field##_SHIFT) & field##_MASK)
-> +
->  /*
->   * arm64 requires the DTB to be 8 byte aligned and
->   * not exceed 2MB in size.
-> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-> index b0853069702f..8cbac6232ed1 100644
-> --- a/arch/arm64/kernel/head.S
-> +++ b/arch/arm64/kernel/head.S
-> @@ -91,7 +91,7 @@ _head:
->  	.quad	0				// reserved
->  	.quad	0				// reserved
->  	.quad	0				// reserved
-> -	.ascii	"ARM\x64"			// Magic number
-> +	.ascii	ARM64_MAGIC			// Magic number
->  #ifdef CONFIG_EFI
->  	.long	pe_header - _head		// Offset to the PE header.
->  
-> -- 
-> 2.19.0
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU3VuLCBTZXAgMzAsIDIwMTggYXQgMDQ6Mzc6NDFQTSArMDgwMCwgbGlqaWFuZyB3cm90ZToK
+PiBJbiBrZHVtcCBrZXJuZWwsIHRoZSBvbGQgbWVtb3J5IG5lZWRzIHRvIGJlIGR1bXBlZCBpbnRv
+IHZtY29yZSBmaWxlLgo+IElmIFNNRSBpcyBlbmFibGVkIGluIHRoZSBmaXJzdCBrZXJuZWwsIHRo
+ZSBvbGQgbWVtb3J5IGhhcyB0byBiZQo+IHJlbWFwcGVkIHdpdGggdGhlIG1lbW9yeSBlbmNyeXB0
+aW9uIG1hc2ssIHdoaWNoIHdpbGwgYmUgYXV0b21hdGljYWxseQo+IGRlY3J5cHRlZCB3aGVuIHJl
+YWQgZnJvbSBEUkFNLgo+IAo+IEZvciBTTUUga2R1bXAsIHRoZXJlIGFyZSB0d28gY2FzZXMgdGhh
+dCBkb2Vzbid0IHN1cHBvcnQ6CgpHZXQgcmlkIG9mIHRob3NlIHR3byBjYXNlcyBpbiB0aGUgY29t
+bWl0IG1lc3NhZ2UuCgo+IAo+ICAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tCj4gfCBmaXJzdC1rZXJuZWwgfCBzZWNvbmQta2VybmVsIHwga2R1bXAgc3VwcG9y
+dCB8Cj4gfCAgICAgIChtZW1fZW5jcnlwdD1vbnxvZmYpICAgIHwgICAoeWVzfG5vKSAgICB8Cj4g
+fC0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS18Cj4gfCAgICAg
+b24gICAgICAgfCAgICAgb24gICAgICAgIHwgICAgIHllcyAgICAgICB8Cj4gfCAgICAgb2ZmICAg
+ICAgfCAgICAgb2ZmICAgICAgIHwgICAgIHllcyAgICAgICB8Cj4gfCAgICAgb24gICAgICAgfCAg
+ICAgb2ZmICAgICAgIHwgICAgIG5vICAgICAgICB8Cj4gfCAgICAgb2ZmICAgICAgfCAgICAgb24g
+ICAgICAgIHwgICAgIG5vICAgICAgICB8Cj4gfF9fX19fX19fX19fX19ffF9fX19fX19fX19fX19f
+X3xfX19fX19fX19fX19fX198Cj4gCj4gMS4gU01FIGlzIGVuYWJsZWQgaW4gdGhlIGZpcnN0IGtl
+cm5lbCwgYnV0IFNNRSBpcyBkaXNhYmxlZCBpbiBrZHVtcCBrZXJuZWwKPiBJbiB0aGlzIGNhc2Us
+IGJlY2F1c2UgdGhlIG9sZCBtZW1vcnkgaXMgZW5jcnlwdGVkLCBpdCBjYW4ndCBiZSBkZWNyeXB0
+ZWQuCj4gVGhlIHJvb3QgY2F1c2UgaXMgdGhhdCB0aGUgZW5jcnlwdGlvbiBrZXkgaXMgbm90IHZp
+c2libGUgdG8gYW55IHNvZnR3YXJlCj4gcnVubmludCBvbiB0aGUgQ1BVIGNvcmVzKEFNRCBjcHUg
+d2l0aCBTTUUpLCBhbmQgaXMgcmFuZG9tbHkgZ2VuZXJhdGVkIG9uCj4gZWFjaGUgc3lzdGVtIHJl
+c2V0LiBUaGF0IGlzIHRvIHNheSwga2R1bXAga2VybmVsIHdvbid0IGhhdmUgYSBjaGFuY2UgdG8K
+PiBnZXQgdGhlIGVuY3J5cHRpb24ga2V5LiBTbyB0aGUgZW5jcnlwdGVkIG1lbW9yeSBjYW4gbm90
+IGJlIGRlY3J5cHRlZAo+IHVubGVzcyBTTUUgaXMgYWN0aXZlLgo+IAo+IDIuIFNNRSBpcyBkaXNh
+YmxlZCBpbiB0aGUgZmlyc3Qga2VybmVsLCBidXQgU01FIGlzIGVuYWJsZWQgaW4ga2R1bXAga2Vy
+bmVsCj4gT24gdGhlIG9uZSBoYW5kLCB0aGUgb2xkIG1lbW9yeSBpcyBkZWNyeXB0ZWQsIHRoZSBv
+bGQgbWVtb3J5IGNhbiBiZSBkdW1wZWQKPiBhcyB1c3VhbCwgc28gU01FIGRvZXNuJ3QgbmVlZCB0
+byBiZSBlbmFibGVkIGluIGtkdW1wIGtlcm5lbDsgT24gdGhlIG90aGVyCj4gaGFuZCwgaXQgd2ls
+bCBpbmNyZWFzZSB0aGUgY29tcGxleGl0eSBvZiB0aGUgY29kZSwgYmVjYXVzZSB0aGF0IHdpbGwg
+aGF2ZQo+IHRvIGNvbnNpZGVyIGhvdyB0byBwYXNzIHRoZSBTTUUgZmxhZyBmcm9tIHRoZSBmaXJz
+dCBrZXJuZWwgdG8gdGhlIGtkdW1wCj4ga2VybmVsLCBpdCBpcyByZWFsbHkgdG9vIGV4cGVuc2l2
+ZSB0byBkbyB0aGlzLgo+IAo+IFRoaXMgcGF0Y2hlcyBhcmUgb25seSBmb3IgU01FIGtkdW1wLCB0
+aGUgcGF0Y2hlcyBkb24ndCBzdXBwb3J0IFNFViBrZHVtcC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBM
+aWFuYm8gSmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4KPiBSZXZpZXdlZC1ieTogVG9tIExlbmRh
+Y2t5IDx0aG9tYXMubGVuZGFja3lAYW1kLmNvbT4KCllvdSBjYW5ub3Qga2VlcCBSZXZpZXdlZC1i
+eTogdGFncyBvbiBwYXRjaGVzIHdoaWNoIHlvdSBjaGFuZ2UgaW4gYQpub24tdHJpdmlhbCBtYW5u
+ZXIuCgo+IC0tLQo+IENoYW5nZXMgc2luY2Ugdjc6Cj4gMS4gRGVsZXRlIGEgZmlsZSBhcmNoL3g4
+Ni9rZXJuZWwvY3Jhc2hfZHVtcF9lbmNyeXB0LmMsIGFuZCBtb3ZlIHRoZQo+IGNvcHlfb2xkbWVt
+X3BhZ2VfZW5jcnlwdGVkKCkgdG8gYXJjaC94ODYva2VybmVsL2NyYXNoX2R1bXBfNjQuYywgYWxz
+bwo+IHJld3JpdGUgc29tZSBmdW5jdGlvbnMuKFN1Z2dlc3RlZCBieSBCb3Jpc2xhdikKPiAyLiBN
+b2RpZnkgYWxsIGNvZGUgc3R5bGUgaXNzdWUuKFN1Z2dlc3RlZCBieSBCb3Jpc2xhdikKPiAzLiBS
+ZW1vdmUgYSByZWR1bnRhbnQgaGVhZGVyIGZpbGUuKFN1Z2dlc3RlZCBieSBCb3Jpc2xhdikKPiA0
+LiBJbXByb3ZlIHBhdGNoIGxvZy4oU3VnZ2VzdGVkIGJ5IEJvcmlzbGF2KQo+IDUuIE1vZGlmeSBj
+b21waWxlIGVycm9yICJmcy9wcm9jL3ZtY29yZS5jOjExNTogdW5kZWZpbmVkIHJlZmVyZW5jZQo+
+ICAgIHRvIGBjb3B5X29sZG1lbV9wYWdlX2VuY3J5cHRlZCciCj4gNi4gTW9kaWZ5IGNvbXBpbGUg
+ZXJyb3IgImFyY2gveDg2Ly9rZXJuZWwvY3Jhc2hfZHVtcF82NC5jOjkzOjk6Cj4gICAgZXJyb3I6
+IHJlZGVmaW5pdGlvbiBvZiAnY29weV9vbGRtZW1fcGFnZV9lbmNyeXB0ZWQnIgo+IAo+ICBhcmNo
+L3g4Ni9rZXJuZWwvY3Jhc2hfZHVtcF82NC5jIHwgNjUgKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKy0tLS0tCj4gIGZzL3Byb2Mvdm1jb3JlLmMgICAgICAgICAgICAgICAgfCAyNCArKysrKysr
+KystLS0KPiAgaW5jbHVkZS9saW51eC9jcmFzaF9kdW1wLmggICAgICB8IDEzICsrKysrKysKPiAg
+MyBmaWxlcyBjaGFuZ2VkLCA4NyBpbnNlcnRpb25zKCspLCAxNSBkZWxldGlvbnMoLSkKPiAKPiBk
+aWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2NyYXNoX2R1bXBfNjQuYyBiL2FyY2gveDg2L2tl
+cm5lbC9jcmFzaF9kdW1wXzY0LmMKPiBpbmRleCA0ZjJlMDc3OGZlYWMuLjZhZGJkZTU5MmM0NCAx
+MDA2NDQKPiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwvY3Jhc2hfZHVtcF82NC5jCj4gKysrIGIvYXJj
+aC94ODYva2VybmVsL2NyYXNoX2R1bXBfNjQuYwo+IEBAIC0xMiw3ICsxMiw3IEBACj4gICNpbmNs
+dWRlIDxsaW51eC9pby5oPgo+ICAKPiAgLyoqCj4gLSAqIGNvcHlfb2xkbWVtX3BhZ2UgLSBjb3B5
+IG9uZSBwYWdlIGZyb20gIm9sZG1lbSIKPiArICogX19jb3B5X29sZG1lbV9wYWdlIC0gY29weSBv
+bmUgcGFnZSBmcm9tICJvbGQgbWVtb3J5IGVuY3J5cHRlZCBvciBkZWNyeXB0ZWQiCgpEYW1taXQs
+IHdoYXQncyBpdCB3aXRoIHRob3NlICJvbGQgbWVtb3J5IGVuY3J5cHRlZCBvciBkZWNyeXB0ZWQi
+IGluIHF1b3RhdGlvbgptYXJrcz8hIFdoYXQgaXMgd3Jvbmcgd2l0aCBzaW1wbHkgc2F5aW5nOgoK
+Q29weSBvbmUgcGFnZSBvZiB0aGUgb2xkIGtlcm5lbCdzIG1lbW9yeS4gSWYgQGVuY3J5cHRlZCBp
+cyBzZXQsIHRoZSBvbGQKbWVtb3J5IHdpbGwgYmUgcmVtYXBwZWQgd2l0aCB0aGUgZW5jcnlwdGlv
+biBtYXNrLgoKSG93IGhhcmQgaXMgdGhhdD8hCgo+ICAgKiBAcGZuOiBwYWdlIGZyYW1lIG51bWJl
+ciB0byBiZSBjb3BpZWQKPiAgICogQGJ1ZjogdGFyZ2V0IG1lbW9yeSBhZGRyZXNzIGZvciB0aGUg
+Y29weTsgdGhpcyBjYW4gYmUgaW4ga2VybmVsIGFkZHJlc3MKPiAgICoJc3BhY2Ugb3IgdXNlciBh
+ZGRyZXNzIHNwYWNlIChzZWUgQHVzZXJidWYpCj4gQEAgLTIwLDMxICsyMCw3OCBAQAo+ICAgKiBA
+b2Zmc2V0OiBvZmZzZXQgaW4gYnl0ZXMgaW50byB0aGUgcGFnZSAoYmFzZWQgb24gcGZuKSB0byBi
+ZWdpbiB0aGUgY29weQo+ICAgKiBAdXNlcmJ1ZjogaWYgc2V0LCBAYnVmIGlzIGluIHVzZXIgYWRk
+cmVzcyBzcGFjZSwgdXNlIGNvcHlfdG9fdXNlcigpLAo+ICAgKglvdGhlcndpc2UgQGJ1ZiBpcyBp
+biBrZXJuZWwgYWRkcmVzcyBzcGFjZSwgdXNlIG1lbWNweSgpLgo+ICsgKiBAZW5jcnlwdGVkOiBp
+ZiB0cnVlLCB0aGUgb2xkIG1lbW9yeSBpcyBlbmNyeXB0ZWQuCj4gKyAqICAgICAgICAgICAgIGlm
+IGZhbHNlLCB0aGUgb2xkIG1lbW9yeSBpcyBkZWNyeXB0ZWQuCj4gICAqCj4gLSAqIENvcHkgYSBw
+YWdlIGZyb20gIm9sZG1lbSIuIEZvciB0aGlzIHBhZ2UsIHRoZXJlIGlzIG5vIHB0ZSBtYXBwZWQK
+PiAtICogaW4gdGhlIGN1cnJlbnQga2VybmVsLiBXZSBzdGl0Y2ggdXAgYSBwdGUsIHNpbWlsYXIg
+dG8ga21hcF9hdG9taWMuCj4gKyAqIENvcHkgYSBwYWdlIGZyb20gIm9sZCBtZW1vcnkgZW5jcnlw
+dGVkIG9yIGRlY3J5cHRlZCIuIEZvciB0aGlzIHBhZ2UsIHRoZXJlCj4gKyAqIGlzIG5vIHB0ZSBt
+YXBwZWQgaW4gdGhlIGN1cnJlbnQga2VybmVsLiBXZSBzdGl0Y2ggdXAgYSBwdGUsIHNpbWlsYXIg
+dG8KPiArICoga21hcF9hdG9taWMuCj4gICAqLwoKVGhpcyBmdW5jdGlvbiBpcyBzdGF0aWMgbm93
+IC0gd2h5IGRvZXMgaXQgbmVlZCB0byBrZWVwIHRoZSBjb21tZW50cwphYm92ZSBpdD8gQW5kIHlv
+dSd2ZSBkdXBsaWNhdGVkIGFsbW9zdCB0aGUgc2FtZSBjb21tZW50ICp0aHJlZSogdGltZXMKbm93
+LiBXaHk/CgpIYXZlIHRoZSB3aG9sZSBjb21tZW50ICpvbmNlKiBhbmQgb25seSBvbmUgbGluZSBz
+ZW50ZW5jZXMgb3ZlciB0aGUgb3RoZXIKZnVuY3Rpb25zIGV4cGxhaW5pbmcgdGhlIGRpZmZlcmVu
+Y2Ugb25seS4KCj4gLXNzaXplX3QgY29weV9vbGRtZW1fcGFnZSh1bnNpZ25lZCBsb25nIHBmbiwg
+Y2hhciAqYnVmLAo+IC0JCXNpemVfdCBjc2l6ZSwgdW5zaWduZWQgbG9uZyBvZmZzZXQsIGludCB1
+c2VyYnVmKQo+ICtzdGF0aWMgc3NpemVfdCBfX2NvcHlfb2xkbWVtX3BhZ2UodW5zaWduZWQgbG9u
+ZyBwZm4sIGNoYXIgKmJ1Ziwgc2l6ZV90IGNzaXplLAo+ICsJCQkJICB1bnNpZ25lZCBsb25nIG9m
+ZnNldCwgaW50IHVzZXJidWYsCj4gKwkJCQkgIGJvb2wgZW5jcnlwdGVkKQo+ICB7Cj4gIAl2b2lk
+ICAqdmFkZHI7CgotLSAKUmVnYXJkcy9HcnVzcywKICAgIEJvcmlzLgoKU1VTRSBMaW51eCBHbWJI
+LCBHRjogRmVsaXggSW1lbmTDtnJmZmVyLCBKYW5lIFNtaXRoYXJkLCBHcmFoYW0gTm9ydG9uLCBI
+UkIgMjEyODQgKEFHIE7DvHJuYmVyZykKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
