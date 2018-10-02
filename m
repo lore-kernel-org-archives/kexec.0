@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
+Received: from mail-pl1-x642.google.com ([2607:f8b0:4864:20::642])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g74iY-0001ph-Ss
- for kexec@lists.infradead.org; Mon, 01 Oct 2018 20:23:02 +0000
-Date: Mon, 1 Oct 2018 22:22:44 +0200
-From: Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH v9 4/4] kdump/vmcore: support encrypted old memory with
- SME enabled
-Message-ID: <20181001202244.GB8350@zn.tnic>
-References: <20180930031033.22110-1-lijiang@redhat.com>
- <20180930031033.22110-5-lijiang@redhat.com>
- <be7b47f9-6be6-e0d1-2c2a-9125bc74b818@redhat.com>
+ id 1g7E1T-0001CX-Po
+ for kexec@lists.infradead.org; Tue, 02 Oct 2018 06:19:09 +0000
+Received: by mail-pl1-x642.google.com with SMTP id az3-v6so128377plb.4
+ for <kexec@lists.infradead.org>; Mon, 01 Oct 2018 23:18:57 -0700 (PDT)
+Date: Tue, 2 Oct 2018 15:20:23 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v15 04/16] powerpc, kexec_file: factor out memblock-based
+ arch_kexec_walk_mem()
+Message-ID: <20181002062021.GE32578@linaro.org>
+References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
+ <20180928064841.14117-5-takahiro.akashi@linaro.org>
+ <20180930100834.GD6950@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <be7b47f9-6be6-e0d1-2c2a-9125bc74b818@redhat.com>
+In-Reply-To: <20180930100834.GD6950@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,102 +24,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: thomas.lendacky@amd.com, jroedel@suse.de, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
+To: Dave Young <dyoung@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, prudo@linux.ibm.com, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, "Eric W. Biederman" <ebiederm@xmission.com>, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james.morse@arm.com, davem@davemloft.net, vgoyal@redhat.com
 
-T24gU3VuLCBTZXAgMzAsIDIwMTggYXQgMDQ6Mzc6NDFQTSArMDgwMCwgbGlqaWFuZyB3cm90ZToK
-PiBJbiBrZHVtcCBrZXJuZWwsIHRoZSBvbGQgbWVtb3J5IG5lZWRzIHRvIGJlIGR1bXBlZCBpbnRv
-IHZtY29yZSBmaWxlLgo+IElmIFNNRSBpcyBlbmFibGVkIGluIHRoZSBmaXJzdCBrZXJuZWwsIHRo
-ZSBvbGQgbWVtb3J5IGhhcyB0byBiZQo+IHJlbWFwcGVkIHdpdGggdGhlIG1lbW9yeSBlbmNyeXB0
-aW9uIG1hc2ssIHdoaWNoIHdpbGwgYmUgYXV0b21hdGljYWxseQo+IGRlY3J5cHRlZCB3aGVuIHJl
-YWQgZnJvbSBEUkFNLgo+IAo+IEZvciBTTUUga2R1bXAsIHRoZXJlIGFyZSB0d28gY2FzZXMgdGhh
-dCBkb2Vzbid0IHN1cHBvcnQ6CgpHZXQgcmlkIG9mIHRob3NlIHR3byBjYXNlcyBpbiB0aGUgY29t
-bWl0IG1lc3NhZ2UuCgo+IAo+ICAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tCj4gfCBmaXJzdC1rZXJuZWwgfCBzZWNvbmQta2VybmVsIHwga2R1bXAgc3VwcG9y
-dCB8Cj4gfCAgICAgIChtZW1fZW5jcnlwdD1vbnxvZmYpICAgIHwgICAoeWVzfG5vKSAgICB8Cj4g
-fC0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS18Cj4gfCAgICAg
-b24gICAgICAgfCAgICAgb24gICAgICAgIHwgICAgIHllcyAgICAgICB8Cj4gfCAgICAgb2ZmICAg
-ICAgfCAgICAgb2ZmICAgICAgIHwgICAgIHllcyAgICAgICB8Cj4gfCAgICAgb24gICAgICAgfCAg
-ICAgb2ZmICAgICAgIHwgICAgIG5vICAgICAgICB8Cj4gfCAgICAgb2ZmICAgICAgfCAgICAgb24g
-ICAgICAgIHwgICAgIG5vICAgICAgICB8Cj4gfF9fX19fX19fX19fX19ffF9fX19fX19fX19fX19f
-X3xfX19fX19fX19fX19fX198Cj4gCj4gMS4gU01FIGlzIGVuYWJsZWQgaW4gdGhlIGZpcnN0IGtl
-cm5lbCwgYnV0IFNNRSBpcyBkaXNhYmxlZCBpbiBrZHVtcCBrZXJuZWwKPiBJbiB0aGlzIGNhc2Us
-IGJlY2F1c2UgdGhlIG9sZCBtZW1vcnkgaXMgZW5jcnlwdGVkLCBpdCBjYW4ndCBiZSBkZWNyeXB0
-ZWQuCj4gVGhlIHJvb3QgY2F1c2UgaXMgdGhhdCB0aGUgZW5jcnlwdGlvbiBrZXkgaXMgbm90IHZp
-c2libGUgdG8gYW55IHNvZnR3YXJlCj4gcnVubmludCBvbiB0aGUgQ1BVIGNvcmVzKEFNRCBjcHUg
-d2l0aCBTTUUpLCBhbmQgaXMgcmFuZG9tbHkgZ2VuZXJhdGVkIG9uCj4gZWFjaGUgc3lzdGVtIHJl
-c2V0LiBUaGF0IGlzIHRvIHNheSwga2R1bXAga2VybmVsIHdvbid0IGhhdmUgYSBjaGFuY2UgdG8K
-PiBnZXQgdGhlIGVuY3J5cHRpb24ga2V5LiBTbyB0aGUgZW5jcnlwdGVkIG1lbW9yeSBjYW4gbm90
-IGJlIGRlY3J5cHRlZAo+IHVubGVzcyBTTUUgaXMgYWN0aXZlLgo+IAo+IDIuIFNNRSBpcyBkaXNh
-YmxlZCBpbiB0aGUgZmlyc3Qga2VybmVsLCBidXQgU01FIGlzIGVuYWJsZWQgaW4ga2R1bXAga2Vy
-bmVsCj4gT24gdGhlIG9uZSBoYW5kLCB0aGUgb2xkIG1lbW9yeSBpcyBkZWNyeXB0ZWQsIHRoZSBv
-bGQgbWVtb3J5IGNhbiBiZSBkdW1wZWQKPiBhcyB1c3VhbCwgc28gU01FIGRvZXNuJ3QgbmVlZCB0
-byBiZSBlbmFibGVkIGluIGtkdW1wIGtlcm5lbDsgT24gdGhlIG90aGVyCj4gaGFuZCwgaXQgd2ls
-bCBpbmNyZWFzZSB0aGUgY29tcGxleGl0eSBvZiB0aGUgY29kZSwgYmVjYXVzZSB0aGF0IHdpbGwg
-aGF2ZQo+IHRvIGNvbnNpZGVyIGhvdyB0byBwYXNzIHRoZSBTTUUgZmxhZyBmcm9tIHRoZSBmaXJz
-dCBrZXJuZWwgdG8gdGhlIGtkdW1wCj4ga2VybmVsLCBpdCBpcyByZWFsbHkgdG9vIGV4cGVuc2l2
-ZSB0byBkbyB0aGlzLgo+IAo+IFRoaXMgcGF0Y2hlcyBhcmUgb25seSBmb3IgU01FIGtkdW1wLCB0
-aGUgcGF0Y2hlcyBkb24ndCBzdXBwb3J0IFNFViBrZHVtcC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBM
-aWFuYm8gSmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4KPiBSZXZpZXdlZC1ieTogVG9tIExlbmRh
-Y2t5IDx0aG9tYXMubGVuZGFja3lAYW1kLmNvbT4KCllvdSBjYW5ub3Qga2VlcCBSZXZpZXdlZC1i
-eTogdGFncyBvbiBwYXRjaGVzIHdoaWNoIHlvdSBjaGFuZ2UgaW4gYQpub24tdHJpdmlhbCBtYW5u
-ZXIuCgo+IC0tLQo+IENoYW5nZXMgc2luY2Ugdjc6Cj4gMS4gRGVsZXRlIGEgZmlsZSBhcmNoL3g4
-Ni9rZXJuZWwvY3Jhc2hfZHVtcF9lbmNyeXB0LmMsIGFuZCBtb3ZlIHRoZQo+IGNvcHlfb2xkbWVt
-X3BhZ2VfZW5jcnlwdGVkKCkgdG8gYXJjaC94ODYva2VybmVsL2NyYXNoX2R1bXBfNjQuYywgYWxz
-bwo+IHJld3JpdGUgc29tZSBmdW5jdGlvbnMuKFN1Z2dlc3RlZCBieSBCb3Jpc2xhdikKPiAyLiBN
-b2RpZnkgYWxsIGNvZGUgc3R5bGUgaXNzdWUuKFN1Z2dlc3RlZCBieSBCb3Jpc2xhdikKPiAzLiBS
-ZW1vdmUgYSByZWR1bnRhbnQgaGVhZGVyIGZpbGUuKFN1Z2dlc3RlZCBieSBCb3Jpc2xhdikKPiA0
-LiBJbXByb3ZlIHBhdGNoIGxvZy4oU3VnZ2VzdGVkIGJ5IEJvcmlzbGF2KQo+IDUuIE1vZGlmeSBj
-b21waWxlIGVycm9yICJmcy9wcm9jL3ZtY29yZS5jOjExNTogdW5kZWZpbmVkIHJlZmVyZW5jZQo+
-ICAgIHRvIGBjb3B5X29sZG1lbV9wYWdlX2VuY3J5cHRlZCciCj4gNi4gTW9kaWZ5IGNvbXBpbGUg
-ZXJyb3IgImFyY2gveDg2Ly9rZXJuZWwvY3Jhc2hfZHVtcF82NC5jOjkzOjk6Cj4gICAgZXJyb3I6
-IHJlZGVmaW5pdGlvbiBvZiAnY29weV9vbGRtZW1fcGFnZV9lbmNyeXB0ZWQnIgo+IAo+ICBhcmNo
-L3g4Ni9rZXJuZWwvY3Jhc2hfZHVtcF82NC5jIHwgNjUgKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKy0tLS0tCj4gIGZzL3Byb2Mvdm1jb3JlLmMgICAgICAgICAgICAgICAgfCAyNCArKysrKysr
-KystLS0KPiAgaW5jbHVkZS9saW51eC9jcmFzaF9kdW1wLmggICAgICB8IDEzICsrKysrKysKPiAg
-MyBmaWxlcyBjaGFuZ2VkLCA4NyBpbnNlcnRpb25zKCspLCAxNSBkZWxldGlvbnMoLSkKPiAKPiBk
-aWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2NyYXNoX2R1bXBfNjQuYyBiL2FyY2gveDg2L2tl
-cm5lbC9jcmFzaF9kdW1wXzY0LmMKPiBpbmRleCA0ZjJlMDc3OGZlYWMuLjZhZGJkZTU5MmM0NCAx
-MDA2NDQKPiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwvY3Jhc2hfZHVtcF82NC5jCj4gKysrIGIvYXJj
-aC94ODYva2VybmVsL2NyYXNoX2R1bXBfNjQuYwo+IEBAIC0xMiw3ICsxMiw3IEBACj4gICNpbmNs
-dWRlIDxsaW51eC9pby5oPgo+ICAKPiAgLyoqCj4gLSAqIGNvcHlfb2xkbWVtX3BhZ2UgLSBjb3B5
-IG9uZSBwYWdlIGZyb20gIm9sZG1lbSIKPiArICogX19jb3B5X29sZG1lbV9wYWdlIC0gY29weSBv
-bmUgcGFnZSBmcm9tICJvbGQgbWVtb3J5IGVuY3J5cHRlZCBvciBkZWNyeXB0ZWQiCgpEYW1taXQs
-IHdoYXQncyBpdCB3aXRoIHRob3NlICJvbGQgbWVtb3J5IGVuY3J5cHRlZCBvciBkZWNyeXB0ZWQi
-IGluIHF1b3RhdGlvbgptYXJrcz8hIFdoYXQgaXMgd3Jvbmcgd2l0aCBzaW1wbHkgc2F5aW5nOgoK
-Q29weSBvbmUgcGFnZSBvZiB0aGUgb2xkIGtlcm5lbCdzIG1lbW9yeS4gSWYgQGVuY3J5cHRlZCBp
-cyBzZXQsIHRoZSBvbGQKbWVtb3J5IHdpbGwgYmUgcmVtYXBwZWQgd2l0aCB0aGUgZW5jcnlwdGlv
-biBtYXNrLgoKSG93IGhhcmQgaXMgdGhhdD8hCgo+ICAgKiBAcGZuOiBwYWdlIGZyYW1lIG51bWJl
-ciB0byBiZSBjb3BpZWQKPiAgICogQGJ1ZjogdGFyZ2V0IG1lbW9yeSBhZGRyZXNzIGZvciB0aGUg
-Y29weTsgdGhpcyBjYW4gYmUgaW4ga2VybmVsIGFkZHJlc3MKPiAgICoJc3BhY2Ugb3IgdXNlciBh
-ZGRyZXNzIHNwYWNlIChzZWUgQHVzZXJidWYpCj4gQEAgLTIwLDMxICsyMCw3OCBAQAo+ICAgKiBA
-b2Zmc2V0OiBvZmZzZXQgaW4gYnl0ZXMgaW50byB0aGUgcGFnZSAoYmFzZWQgb24gcGZuKSB0byBi
-ZWdpbiB0aGUgY29weQo+ICAgKiBAdXNlcmJ1ZjogaWYgc2V0LCBAYnVmIGlzIGluIHVzZXIgYWRk
-cmVzcyBzcGFjZSwgdXNlIGNvcHlfdG9fdXNlcigpLAo+ICAgKglvdGhlcndpc2UgQGJ1ZiBpcyBp
-biBrZXJuZWwgYWRkcmVzcyBzcGFjZSwgdXNlIG1lbWNweSgpLgo+ICsgKiBAZW5jcnlwdGVkOiBp
-ZiB0cnVlLCB0aGUgb2xkIG1lbW9yeSBpcyBlbmNyeXB0ZWQuCj4gKyAqICAgICAgICAgICAgIGlm
-IGZhbHNlLCB0aGUgb2xkIG1lbW9yeSBpcyBkZWNyeXB0ZWQuCj4gICAqCj4gLSAqIENvcHkgYSBw
-YWdlIGZyb20gIm9sZG1lbSIuIEZvciB0aGlzIHBhZ2UsIHRoZXJlIGlzIG5vIHB0ZSBtYXBwZWQK
-PiAtICogaW4gdGhlIGN1cnJlbnQga2VybmVsLiBXZSBzdGl0Y2ggdXAgYSBwdGUsIHNpbWlsYXIg
-dG8ga21hcF9hdG9taWMuCj4gKyAqIENvcHkgYSBwYWdlIGZyb20gIm9sZCBtZW1vcnkgZW5jcnlw
-dGVkIG9yIGRlY3J5cHRlZCIuIEZvciB0aGlzIHBhZ2UsIHRoZXJlCj4gKyAqIGlzIG5vIHB0ZSBt
-YXBwZWQgaW4gdGhlIGN1cnJlbnQga2VybmVsLiBXZSBzdGl0Y2ggdXAgYSBwdGUsIHNpbWlsYXIg
-dG8KPiArICoga21hcF9hdG9taWMuCj4gICAqLwoKVGhpcyBmdW5jdGlvbiBpcyBzdGF0aWMgbm93
-IC0gd2h5IGRvZXMgaXQgbmVlZCB0byBrZWVwIHRoZSBjb21tZW50cwphYm92ZSBpdD8gQW5kIHlv
-dSd2ZSBkdXBsaWNhdGVkIGFsbW9zdCB0aGUgc2FtZSBjb21tZW50ICp0aHJlZSogdGltZXMKbm93
-LiBXaHk/CgpIYXZlIHRoZSB3aG9sZSBjb21tZW50ICpvbmNlKiBhbmQgb25seSBvbmUgbGluZSBz
-ZW50ZW5jZXMgb3ZlciB0aGUgb3RoZXIKZnVuY3Rpb25zIGV4cGxhaW5pbmcgdGhlIGRpZmZlcmVu
-Y2Ugb25seS4KCj4gLXNzaXplX3QgY29weV9vbGRtZW1fcGFnZSh1bnNpZ25lZCBsb25nIHBmbiwg
-Y2hhciAqYnVmLAo+IC0JCXNpemVfdCBjc2l6ZSwgdW5zaWduZWQgbG9uZyBvZmZzZXQsIGludCB1
-c2VyYnVmKQo+ICtzdGF0aWMgc3NpemVfdCBfX2NvcHlfb2xkbWVtX3BhZ2UodW5zaWduZWQgbG9u
-ZyBwZm4sIGNoYXIgKmJ1Ziwgc2l6ZV90IGNzaXplLAo+ICsJCQkJICB1bnNpZ25lZCBsb25nIG9m
-ZnNldCwgaW50IHVzZXJidWYsCj4gKwkJCQkgIGJvb2wgZW5jcnlwdGVkKQo+ICB7Cj4gIAl2b2lk
-ICAqdmFkZHI7CgotLSAKUmVnYXJkcy9HcnVzcywKICAgIEJvcmlzLgoKU1VTRSBMaW51eCBHbWJI
-LCBHRjogRmVsaXggSW1lbmTDtnJmZmVyLCBKYW5lIFNtaXRoYXJkLCBHcmFoYW0gTm9ydG9uLCBI
-UkIgMjEyODQgKEFHIE7DvHJuYmVyZykKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Sun, Sep 30, 2018 at 06:08:34PM +0800, Dave Young wrote:
+> Hi AKASHI,
+> 
+> On 09/28/18 at 03:48pm, AKASHI Takahiro wrote:
+> > Memblock list is another source for usable system memory layout.
+> > So move powerpc's arch_kexec_walk_mem() to common code so that other
+> > memblock-based architectures, particularly arm64, can also utilise it.
+> > A moved function is now renamed to kexec_walk_memblock() and integrated
+> > into kexec_locate_mem_hole(), which will now be usable for all
+> > architectures with no need for overriding arch_kexec_walk_mem().
+> > 
+> > With this change, arch_kexec_walk_mem() need no longer be a weak function,
+> > and was now renamed to kexec_walk_resources().
+> > 
+> > Since powerpc doesn't support kdump in its kexec_file_load(), the current
+> > kexec_walk_memblock() won't work for kdump either in this form, this will
+> > be fixed in the next patch.
+> > 
+> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+> > Acked-by: Dave Young <dyoung@redhat.com>
+> > Cc: Vivek Goyal <vgoyal@redhat.com>
+> > Cc: Baoquan He <bhe@redhat.com>
+> > Acked-by: James Morse <james.morse@arm.com>
+> 
+> [snip]
+> 
+> > +
+> >  /**
+> >   * arch_kexec_walk_mem - call func(data) on free memory regions
+> 
+> The function name should be updated as well.
+
+Ah, thank you.
+-Takahiro Akashi
+
+> >   * @kbuf:	Context info for the search. Also passed to @func.
+> > @@ -510,8 +560,8 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
+> >   * and that value will be returned. If all free regions are visited without
+> >   * func returning non-zero, then zero will be returned.
+> >   */
+> > -int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+> > -			       int (*func)(struct resource *, void *))
+> > +static int kexec_walk_resources(struct kexec_buf *kbuf,
+> > +				int (*func)(struct resource *, void *))
+> >  {
+> >  	if (kbuf->image->type == KEXEC_TYPE_CRASH)
+> >  		return walk_iomem_res_desc(crashk_res.desc,
+> > @@ -538,7 +588,11 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+> >  	if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
+> >  		return 0;
+> >  
+> > -	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
+> > +	if (IS_ENABLED(CONFIG_HAVE_MEMBLOCK) &&
+> > +			!IS_ENABLED(CONFIG_ARCH_DISCARD_MEMBLOCK))
+> > +		ret = kexec_walk_memblock(kbuf, locate_mem_hole_callback);
+> > +	else
+> > +		ret = kexec_walk_resources(kbuf, locate_mem_hole_callback);
+> >  
+> >  	return ret == 1 ? 0 : -EADDRNOTAVAIL;
+> >  }
+> > -- 
+> > 2.19.0
+> > 
+> 
+> Thanks
+> Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
