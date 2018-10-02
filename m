@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-pl1-x642.google.com ([2607:f8b0:4864:20::642])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g7E1T-0001CX-Po
- for kexec@lists.infradead.org; Tue, 02 Oct 2018 06:19:09 +0000
-Received: by mail-pl1-x642.google.com with SMTP id az3-v6so128377plb.4
- for <kexec@lists.infradead.org>; Mon, 01 Oct 2018 23:18:57 -0700 (PDT)
-Date: Tue, 2 Oct 2018 15:20:23 +0900
+ id 1g7FZY-0005pC-Od
+ for kexec@lists.infradead.org; Tue, 02 Oct 2018 07:58:26 +0000
+Received: by mail-pl1-x642.google.com with SMTP id 30-v6so454427plb.10
+ for <kexec@lists.infradead.org>; Tue, 02 Oct 2018 00:58:14 -0700 (PDT)
+Date: Tue, 2 Oct 2018 16:59:40 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v15 04/16] powerpc, kexec_file: factor out memblock-based
- arch_kexec_walk_mem()
-Message-ID: <20181002062021.GE32578@linaro.org>
+Subject: Re: [PATCH v15 07/16] arm64: add image head flag definitions
+Message-ID: <20181002075939.GG32578@linaro.org>
 References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
- <20180928064841.14117-5-takahiro.akashi@linaro.org>
- <20180930100834.GD6950@dhcp-128-65.nay.redhat.com>
+ <20180928064841.14117-8-takahiro.akashi@linaro.org>
+ <20181001125225.7tlfzt5n25sckhyy@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20180930100834.GD6950@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20181001125225.7tlfzt5n25sckhyy@lakrids.cambridge.arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,76 +27,97 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, prudo@linux.ibm.com, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, "Eric W. Biederman" <ebiederm@xmission.com>, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james.morse@arm.com, davem@davemloft.net, vgoyal@redhat.com
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: prudo@linux.ibm.com, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james.morse@arm.com, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
-On Sun, Sep 30, 2018 at 06:08:34PM +0800, Dave Young wrote:
-> Hi AKASHI,
-> 
-> On 09/28/18 at 03:48pm, AKASHI Takahiro wrote:
-> > Memblock list is another source for usable system memory layout.
-> > So move powerpc's arch_kexec_walk_mem() to common code so that other
-> > memblock-based architectures, particularly arm64, can also utilise it.
-> > A moved function is now renamed to kexec_walk_memblock() and integrated
-> > into kexec_locate_mem_hole(), which will now be usable for all
-> > architectures with no need for overriding arch_kexec_walk_mem().
-> > 
-> > With this change, arch_kexec_walk_mem() need no longer be a weak function,
-> > and was now renamed to kexec_walk_resources().
-> > 
-> > Since powerpc doesn't support kdump in its kexec_file_load(), the current
-> > kexec_walk_memblock() won't work for kdump either in this form, this will
-> > be fixed in the next patch.
+Hi Mark,
+
+On Mon, Oct 01, 2018 at 01:52:26PM +0100, Mark Rutland wrote:
+> On Fri, Sep 28, 2018 at 03:48:32PM +0900, AKASHI Takahiro wrote:
+> > Those image head's flags will be used later by kexec_file loader.
 > > 
 > > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-> > Acked-by: Dave Young <dyoung@redhat.com>
-> > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > Cc: Baoquan He <bhe@redhat.com>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Will Deacon <will.deacon@arm.com>
 > > Acked-by: James Morse <james.morse@arm.com>
-> 
-> [snip]
-> 
+> > ---
+> >  arch/arm64/include/asm/boot.h | 15 +++++++++++++++
+> >  arch/arm64/kernel/head.S      |  2 +-
+> >  2 files changed, 16 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm64/include/asm/boot.h b/arch/arm64/include/asm/boot.h
+> > index 355e552a9175..0bab7eed3012 100644
+> > --- a/arch/arm64/include/asm/boot.h
+> > +++ b/arch/arm64/include/asm/boot.h
+> > @@ -5,6 +5,21 @@
+> >  
+> >  #include <asm/sizes.h>
+> >  
+> > +#define ARM64_MAGIC		"ARM\x64"
 > > +
-> >  /**
-> >   * arch_kexec_walk_mem - call func(data) on free memory regions
+> > +#define HEAD_FLAG_BE_SHIFT		0
+> > +#define HEAD_FLAG_PAGE_SIZE_SHIFT	1
+> > +#define HEAD_FLAG_BE_MASK		0x1
+> > +#define HEAD_FLAG_PAGE_SIZE_MASK	0x3
+> > +
+> > +#define HEAD_FLAG_BE			1
 > 
-> The function name should be updated as well.
+> These already exist in some form in arch/arm64/kernel/image.h; can we
+> please factor those out rather than duplicating them?
 
-Ah, thank you.
+Sure.
+
+> I'd be happy if you'd update image.h to use the new HEAD_FLAG_* names,
+> and removed the old definitions.
+
+I want to make sure two things;
+
+1. Do you assume all the existing __HEAD_FLAG_xyz's NOT be renamed
+   (say, to HEAD_FLAG_xyz)?
+
+2. Do you mind removing this check in image.h?
+   (we also need to manage 'CONFIG_EFI' part of image.h.)
+
+>       #ifndef LINKER_SCRIPT
+>       #error This file should only be included in vmlinux.lds.S
+>       #endif
+
+
+Thanks,
 -Takahiro Akashi
 
-> >   * @kbuf:	Context info for the search. Also passed to @func.
-> > @@ -510,8 +560,8 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
-> >   * and that value will be returned. If all free regions are visited without
-> >   * func returning non-zero, then zero will be returned.
-> >   */
-> > -int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> > -			       int (*func)(struct resource *, void *))
-> > +static int kexec_walk_resources(struct kexec_buf *kbuf,
-> > +				int (*func)(struct resource *, void *))
-> >  {
-> >  	if (kbuf->image->type == KEXEC_TYPE_CRASH)
-> >  		return walk_iomem_res_desc(crashk_res.desc,
-> > @@ -538,7 +588,11 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
-> >  	if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
-> >  		return 0;
+> > +#define HEAD_FLAG_PAGE_SIZE_4K		1
+> > +#define HEAD_FLAG_PAGE_SIZE_16K		2
+> > +#define HEAD_FLAG_PAGE_SIZE_64K		3
+> 
+> I appreciate these are new, since we didn't previously need definitions.
+> 
+> Thanks,
+> Mark.
+> 
+> > +
+> > +#define head_flag_field(flags, field) \
+> > +		(((flags) >> field##_SHIFT) & field##_MASK)
+> > +
+> >  /*
+> >   * arm64 requires the DTB to be 8 byte aligned and
+> >   * not exceed 2MB in size.
+> > diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+> > index b0853069702f..8cbac6232ed1 100644
+> > --- a/arch/arm64/kernel/head.S
+> > +++ b/arch/arm64/kernel/head.S
+> > @@ -91,7 +91,7 @@ _head:
+> >  	.quad	0				// reserved
+> >  	.quad	0				// reserved
+> >  	.quad	0				// reserved
+> > -	.ascii	"ARM\x64"			// Magic number
+> > +	.ascii	ARM64_MAGIC			// Magic number
+> >  #ifdef CONFIG_EFI
+> >  	.long	pe_header - _head		// Offset to the PE header.
 > >  
-> > -	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
-> > +	if (IS_ENABLED(CONFIG_HAVE_MEMBLOCK) &&
-> > +			!IS_ENABLED(CONFIG_ARCH_DISCARD_MEMBLOCK))
-> > +		ret = kexec_walk_memblock(kbuf, locate_mem_hole_callback);
-> > +	else
-> > +		ret = kexec_walk_resources(kbuf, locate_mem_hole_callback);
-> >  
-> >  	return ret == 1 ? 0 : -EADDRNOTAVAIL;
-> >  }
 > > -- 
 > > 2.19.0
 > > 
-> 
-> Thanks
-> Dave
 
 _______________________________________________
 kexec mailing list
