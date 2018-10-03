@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g7JVq-0003TE-MY
- for kexec@lists.infradead.org; Tue, 02 Oct 2018 12:11:20 +0000
-Date: Tue, 2 Oct 2018 20:10:33 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v2] kdump: fix an error that can not parse the e820
- reserved region
-Message-ID: <20181002121033.GA10450@dhcp-128-65.nay.redhat.com>
-References: <20180906055618.3210-1-lijiang@redhat.com>
- <20180907010550.GA30391@dhcp-128-65.nay.redhat.com>
- <20181002120250.jlkvvau2oqcfffxb@verge.net.au>
+ id 1g7YIs-0006Wh-QP
+ for kexec@lists.infradead.org; Wed, 03 Oct 2018 03:58:29 +0000
+Subject: Re: [PATCH v8 RESEND 0/4] Support kdump for AMD secure memory
+ encryption(SME)
+References: <20180930031033.22110-1-lijiang@redhat.com>
+ <20181002114012.GB29859@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <43da68b1-fda0-c033-39e1-907d01f13354@redhat.com>
+Date: Wed, 3 Oct 2018 11:57:59 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20181002120250.jlkvvau2oqcfffxb@verge.net.au>
+In-Reply-To: <20181002114012.GB29859@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,59 +21,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, Lianbo Jiang <lijiang@redhat.com>
+To: Borislav Petkov <bp@suse.de>
+Cc: thomas.lendacky@amd.com, jroedel@suse.de, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
 
-On 10/02/18 at 02:02pm, Simon Horman wrote:
-> On Fri, Sep 07, 2018 at 09:05:50AM +0800, Dave Young wrote:
-> > On 09/06/18 at 01:56pm, Lianbo Jiang wrote:
-> > > When kexec-tools load the kernel and initramfs for kdump, kexec-tools will
-> > > read /proc/iomem and recreate the e820 ranges for kdump kernel. But it fails
-> > > to parse the e820 reserved region, because the memcmp() is case sensitive
-> > > when comparing the string. In fact, it may be "Reserved" or "reserved" in
-> > > the /proc/iomem, so we have to fix these cases.
-> > > 
-> > > Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> > > ---
-> > >  kexec/arch/i386/crashdump-x86.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> > > index 437e8a8..140f45b 100644
-> > > --- a/kexec/arch/i386/crashdump-x86.c
-> > > +++ b/kexec/arch/i386/crashdump-x86.c
-> > > @@ -289,6 +289,8 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
-> > >  			type = RANGE_PMEM;
-> > >  		} else if(memcmp(str,"reserved\n",9) == 0 ) {
-> > >  			type = RANGE_RESERVED;
-> > > +		} else if (memcmp(str, "Reserved\n", 9) == 0) {
-> > > +			type = RANGE_RESERVED;
-> > >  		} else if (memcmp(str, "GART\n", 5) == 0) {
-> > >  			gart_start = start;
-> > >  			gart_end = end;
-> > > -- 
-> > > 2.17.1
-> > > 
-> > > 
-> > > _______________________________________________
-> > > kexec mailing list
-> > > kexec@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/kexec
-> > 
-> > Reviewed-by: Dave Young <dyoung@redhat.com>
-> 
-> Sorry for letting this slip through the cracks.
-> I've applied this now.
-
-Simon, thank you!
-
-Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMOaciDAy5pelIDE5OjQwLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IFN1biwgU2VwIDMwLCAyMDE4IGF0IDExOjEwOjI5QU0gKzA4MDAsIExpYW5ibyBKaWFuZyB3cm90
+ZToKPj4gV2hlbiBTTUUgaXMgZW5hYmxlZCBvbiBBTUQgbWFjaGluZSwgaXQgYWxzbyBuZWVkcyB0
+byBzdXBwb3J0IGtkdW1wLiBCZWNhdXNlCj4gCj4gT2ssIEkndmUgY2xlYW5lZCB0aGVtIHVwIGhl
+YXZpbHkgYW5kIHB1c2hlZCB0aGVtIGhlcmU6Cj4gCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9w
+dWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvYnAvYnAuZ2l0LCBicmFuY2ggcmM2KzAtc21lLWtkdW1w
+Cj4gCj4gSG93ZXZlciwgdGVzdGluZyBvbiBteSB6ZW4gYm94IGRvZXNuJ3QgZ28gYXMgcGxhbm5l
+ZC4gQW5kIHRoaXMgaXMgZXZlbiBiZWZvcmUKPiB5b3VyIHBhdGNoZXMuCj4gCj4gSSBsb2FkIHRo
+ZSBrZHVtcCBrZXJuZWwgd2l0aCBrZXhlYy10b29scyBmcm9tIHRoZSBnaXQtcmVwbyArIHRoZSBw
+YXRjaCB5b3UKPiBtZW50aW9uOgo+IAo+ICMgfi9icGV0a292L2Jpbi9zYmluL2tleGVjIC1wIC9i
+b290L3ZtbGludXotNC4xOS4wLXJjNisgLS1pbml0cmQgL2Jvb3QvaW5pdHJkLTQuMTkuMC1yYzYr
+IC0tY29tbWFuZC1saW5lPSJyb290PS9kZXYvbWFwcGVyL3VidW50dS0tMDEwMjM2MDEyMTMyLS12
+Zy1sZWFwMTUgc3BsYXNoPXNpbGVudCBzaG93b3B0cyBjb25zb2xlPXR0eVM1LDExNTIwMCBjb25z
+b2xlPXR0eTAgZGVidWcgaWdub3JlX2xvZ2xldmVsIGxvZ19idWZfbGVuPTE2TSAxIGlycXBvbGwg
+bWF4Y3B1cz0xIHJlc2V0X2RldmljZXMgdmdhPW5vcm1hbCIKPiAKPiB2ZXJpZnkgdGhhdCBpdCBo
+YXMgYmVlbiBsb2FkZWQ6Cj4gCj4gIyBncmVwIC4gL3N5cy9rZXJuZWwva2V4ZWNfKgo+IC9zeXMv
+a2VybmVsL2tleGVjX2NyYXNoX2xvYWRlZDoxCj4gL3N5cy9rZXJuZWwva2V4ZWNfY3Jhc2hfc2l6
+ZToyNjg0MzU0NTYKPiAvc3lzL2tlcm5lbC9rZXhlY19sb2FkZWQ6MAo+IAo+IGFuZCB0aGVuIHRy
+aWdnZXIgdGhlIHBhbmljOgo+IAo+ICMgZWNobyBjID4gL3Byb2Mvc3lzcnEtdHJpZ2dlcgo+IAo+
+IGFuZCBJIHNlZSB0aGUgcGFuaWMgaGFwcGVuaW5nIGluIHRoZSBzZXJpYWwgY29uc29sZSBidXQg
+dGhlbiBub3RoaW5nLgo+IFRoZSBib3ggcmVzZXRzIGluc3RlYWQuCj4gCj4gU28gc29tZXRoaW5n
+J3Mgc3RpbGwgYnJva2VuLgo+IAoKU29ycnkgZm9yIG15IGxhdGUgcmVwbHkgYmVjYXVzZSBvZiBh
+IGhvbGlkYXkuCgpJIG5vdGljZWQgdGhhdCB5b3VyIHRlc3Qgd2FzIGJhc2VkIG9uIFtwYXRjaCB2
+OCBSRVNFTkQgNC80XSwgY291bGQgeW91IHBsZWFzZQp0ZXN0IGl0IGJhc2VkIG9uIFtwYXRjaCB2
+OSA0LzRdPyBCZWNhdXNlIHRoZSBbcGF0Y2ggdjggUkVTRU5EIDQvNF0gaGFkIGEgY29tcGlsZQpl
+cnJvciwgYW5kIHRoYXQgaGFkIGJlZW4gZml4ZWQgaW4gW3BhdGNoIHY5IDQvNF0uCgpPciBpIGlt
+cHJvdmUgcGF0Y2ggbG9nIGFuZCBjb21tZW50IGluIHRoZSBjb2RlIGZvciBbcGF0Y2ggdjkgNC80
+XSBiYXNlZCBvbiB5b3VyCmNvbW1lbnRzLCBhbmQgcG9zdCB0aGUgc2VyaWVzIGFnYWluLCBhbHNv
+IHByb3ZpZGUgbXkgdGVzdCByZXN1bHQgYWJvdXQgdGhlIHNlcmllcy4gCkRvIHlvdSB0aGluayBh
+Ym91dD8KClRoYW5rcy4KTGlhbmJvCgo+IFRyeWluZyB0aGUga2V4ZWMgLWwva2V4ZWMgLWUgZ2Ft
+ZSB3b3JrcyAtIHRoZSBzZWNvbmQga2VybmVsIGdldHMga2V4ZWNlZAo+IHByb3Blcmx5Lgo+IAoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
+bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
