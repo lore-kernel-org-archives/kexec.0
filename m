@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from emailgw01.pnnl.gov ([192.101.109.61])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g7obz-0008Mj-Ci
- for kexec@lists.infradead.org; Wed, 03 Oct 2018 21:23:16 +0000
-From: "Maier, Kurt H" <khm@pnnl.gov>
-Subject: support for non-elf kernels on x86
-Date: Wed, 3 Oct 2018 21:22:56 +0000
-Message-ID: <23bd8cbccc5f882c52db871cef49c3a71d15b14f.camel@pnnl.gov>
-Content-Language: en-US
-Content-ID: <52F4DCA6EE739548BA0A8C25BF836462@pnnl.gov>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1g800v-00080v-Oa
+ for kexec@lists.infradead.org; Thu, 04 Oct 2018 09:33:46 +0000
+Subject: Re: [PATCH v8 RESEND 0/4] Support kdump for AMD secure memory
+ encryption(SME)
+References: <20180930031033.22110-1-lijiang@redhat.com>
+ <20181002114012.GB29859@zn.tnic>
+ <43da68b1-fda0-c033-39e1-907d01f13354@redhat.com>
+ <20181003113435.GB4436@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <dac69aae-27cf-9c93-a0ee-b65e241e1dd6@redhat.com>
+Date: Thu, 4 Oct 2018 17:33:14 +0800
 MIME-Version: 1.0
+In-Reply-To: <20181003113435.GB4436@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,21 +23,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Borislav Petkov <bp@suse.de>
+Cc: thomas.lendacky@amd.com, jroedel@suse.de, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
 
-Hi,
-
-When can we expect this feature to land?  It's working on my local site
-but I'd like to stop having to maintain a local patch queue.
-
-Thanks,
-khm
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMOaciDAz5pelIDE5OjM0LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IFdlZCwgT2N0IDAzLCAyMDE4IGF0IDExOjU3OjU5QU0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
+IEkgbm90aWNlZCB0aGF0IHlvdXIgdGVzdCB3YXMgYmFzZWQgb24gW3BhdGNoIHY4IFJFU0VORCA0
+LzRdLAo+IAo+IEhvdyBkaWQgeW91IG5vdGljZSB0aGF0Pwo+IAo+IExldCdzIHNlZSwgdGhlIHBh
+dGNoIGluIHF1ZXN0aW9uIGlzIHRoaXMgb25lOgo+IAo+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcv
+cHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2JwL2JwLmdpdC9jb21taXQvP2g9cmM2JTJiMC1zbWUt
+a2R1bXAmaWQ9NGEwZjJhZGY2Y2YzNzRlZDNlNzQyMTM0ZTQwNTkxZWEzM2Q1NWIwNQo+IAo+IGFu
+ZCBpdCBoYXMgYSBMaW5rIHRhZzoKPiAKPiBMaW5rOiBodHRwczovL2xrbWwua2VybmVsLm9yZy9y
+L2JlN2I0N2Y5LTZiZTYtZTBkMS0yYzJhLTkxMjViYzc0YjgxOEByZWRoYXQuY29tCj4gCj4gTm93
+IGxldCdzIG9wZW4gdGhhdCBsaW5rIHRhZy4gSSBkb24ndCBrbm93IGFib3V0IHlvdSBidXQgbXkg
+YnJvd3NlciBzYXlzOgo+IAo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvYmU3YjQ3Zjkt
+NmJlNi1lMGQxLTJjMmEtOTEyNWJjNzRiODE4QHJlZGhhdC5jb20vVC8jdQo+IAo+IHdoaWNoIHBv
+aW50cyB0bwo+IAo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjkgNC80XSBrZHVtcC92bWNvcmU6IHN1
+cHBvcnQgZW5jcnlwdGVkIG9sZCBtZW1vcnkgd2l0aCBTTUUgZW5hYmxlZAo+IAo+IExvb2tpbmcg
+YXQgdGhhdCBtYWlsLCBpdHMgbWVzc2FnZSBpZCBpczoKPiAKPiBNZXNzYWdlLUlEOiA8YmU3YjQ3
+ZjktNmJlNi1lMGQxLTJjMmEtOTEyNWJjNzRiODE4QHJlZGhhdC5jb20+Cj4gCj4gSXQgbG9va3Mg
+dG8gbWUgaXQgaXMgYWxyZWFkeSB2OSwgbm8/Cj4gCgpBY2NvcmRpbmcgdG8geW91ciBkZXNjcmlw
+dGlvbiwgaXQgc2VlbXMgdGhhdCB0aGUgcGF0Y2ggaXMgdjkuIEluIGZhY3QsIHRoZXJlIGlzIG9u
+bHkKZGlmZmVyZW50IHRoZSBjb250ZW50IG9mIGhlYWRlciBmaWxlIGJldHdlZW4gW3BhdGNoIHY4
+IFJFU0VORCA0LzRdIGFuZCBbcGF0Y2ggdjkgNC80XS4KCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xp
+bnV4L2NyYXNoX2R1bXAuaCBiL2luY2x1ZGUvbGludXgvY3Jhc2hfZHVtcC5oCmluZGV4IDNlNGJh
+OWQ3NTNjOC4uODRkOGRkY2I4MThlIDEwMDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L2NyYXNoX2R1
+bXAuaAorKysgYi9pbmNsdWRlL2xpbnV4L2NyYXNoX2R1bXAuaApAQCAtMjYsNiArMjYsMTkgQEAg
+ZXh0ZXJuIGludCByZW1hcF9vbGRtZW1fcGZuX3JhbmdlKHN0cnVjdCB2bV9hcmVhX3N0cnVjdCAq
+dm1hLAogCiBleHRlcm4gc3NpemVfdCBjb3B5X29sZG1lbV9wYWdlKHVuc2lnbmVkIGxvbmcsIGNo
+YXIgKiwgc2l6ZV90LAogCQkJCQkJdW5zaWduZWQgbG9uZywgaW50KTsKKyNpZiBkZWZpbmVkKENP
+TkZJR19BTURfTUVNX0VOQ1JZUFQpIHx8IGRlZmluZWQoQ09ORklHX1g4Nl82NCkKK2V4dGVybiBz
+c2l6ZV90IGNvcHlfb2xkbWVtX3BhZ2VfZW5jcnlwdGVkKHVuc2lnbmVkIGxvbmcgcGZuLCBjaGFy
+ICpidWYsCisJCQkJCSAgc2l6ZV90IGNzaXplLCB1bnNpZ25lZCBsb25nIG9mZnNldCwKKwkJCQkJ
+ICBpbnQgdXNlcmJ1Zik7CisjZWxzZQorc3RhdGljIGlubGluZQorc3NpemVfdCBjb3B5X29sZG1l
+bV9wYWdlX2VuY3J5cHRlZCh1bnNpZ25lZCBsb25nIHBmbiwgY2hhciAqYnVmLCBzaXplX3QgY3Np
+emUsCisJCQkJICAgdW5zaWduZWQgbG9uZyBvZmZzZXQsIGludCB1c2VyYnVmKQoreworCXJldHVy
+biAwOworfQorI2VuZGlmCisKCgpJIGhhdmUgdGVzdGVkIHRoZSBwYXRjaCBhZ2FpbiBiYXNlZCBv
+biB1cHN0cmVhbSA0LjE5LjAtcmM2LCBpdCB3b3JrcyB2ZXJ5IHdlbGwuCgpJJ20gbm90IHN1cmUg
+d2hldGhlciB5b3VyIG1hY2hpbmUgaGFzIGFsc28gU01FIGZlYXR1cmUuIElmIGl0IGhhcyBubyBT
+TUUgZmVhdHVyZSBhbmQKcHJldmlvdXNseSBrZHVtcCBjb3VsZCB3b3JrIHdlbGwsIGFmdGVyIHdl
+IGFwcGx5IHRoZXNlIHBhdGNoZXMsIGtkdW1wIHNob3VsZCBiZSBhYmxlCnRvIHdvcmsgcHJvcGVy
+bHkgdG9vLiBJIHN1Z2dlc3QgYSBjb21wYXJpc29uIHRlc3QgZm9yIHRoZW0uIEJlY2F1c2UgaXQg
+aXMgc2ltaWxhciB0bwp0aGUgc2l0dWF0aW9uIHRoYXQgU01FIGlzIGRpc2FibGVkLgoKSWYgeW91
+ciBtYWNoaW5lIGhhcyBTTUUgZmVhdHVyZSBhbmQgU01FIGlzIGFsc28gZW5hYmxlZCwgdGhlc2Ug
+cGF0Y2hlcyBzaG91bGQgYmUgYXBwbGllZApiZWZvcmUgd2UgdGVzdCBrZHVtcCwgb3RoZXJ3aXNl
+IGtkdW1wIHdvbid0IHdvcmsuCgpUaGlzIHdhcyB5b3VyIGNvbW1hbmQgdGhhdCBsb2FkZWQgY3Jh
+c2gga2VybmVsIGFuZCBpbml0cmQ6CiMgfi9icGV0a292L2Jpbi9zYmluL2tleGVjIC1wIC9ib290
+L3ZtbGludXotNC4xOS4wLXJjNisgLS1pbml0cmQgL2Jvb3QvaW5pdHJkLTQuMTkuMC1yYzYrIC0t
+Y29tbWFuZC1saW5lPSJyb290PS9kZXYvbWFwcGVyL3VidW50dS0tMDEwMjM2MDEyMTMyLS12Zy1s
+ZWFwMTUgc3BsYXNoPXNpbGVudCBzaG93b3B0cyBjb25zb2xlPXR0eVM1LDExNTIwMCBjb25zb2xl
+PXR0eTAgZGVidWcgaWdub3JlX2xvZ2xldmVsIGxvZ19idWZfbGVuPTE2TSAxIGlycXBvbGwgbWF4
+Y3B1cz0xIHJlc2V0X2RldmljZXMgdmdhPW5vcm1hbCIKCklmIHRoaXMgb3B0aW9uKENPTkZJR19B
+TURfTUVNX0VOQ1JZUFRfQUNUSVZFX0JZX0RFRkFVTFQpIHdhcyBub3QgZW5hYmxlZCBieSBkZWZh
+dWx0LAp0aGF0IGp1c3QgdGVzdGVkIHRoZSBjYXNlIHdoaWNoIFNNRSB3YXMgZGlzYWJsZWQoYmVj
+YXVzZSBpdCBoYWQgbm8gIm1lbV9lbmNyeXB0PW9uIgppbiB0aGUga2VybmVsIGNvbW1hbmQtbGlu
+ZSkuIEFzIHByZXZpb3VzbHkgbWVudGlvbmVkLCBtYXliZSBpdCBpcyBuZWNlc3NhcnkgdG8gZG8K
+YSBjb21wYXJpc29uIHRlc3QgZm9yIHRoZW0uCgpJIGhhdmUgbm8gdGVzdCBlbnZpcm9ubWVudCBm
+b3IgVWJ1bnR1LiBXb3VsZCB5b3UgbGlrZSB0byBzaGFyZSB0aGUgcGFuaWMgbG9nPyAKClRoYW5r
+cy4KTGlhbmJvCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
