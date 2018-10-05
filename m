@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g9Nbo-0003T1-Iz
- for kexec@lists.infradead.org; Mon, 08 Oct 2018 04:57:34 +0000
-Subject: Re: [PATCH v2] kdump: fix an error that can not parse the e820
- reserved region
-References: <20180906055618.3210-1-lijiang@redhat.com>
- <20180907010550.GA30391@dhcp-128-65.nay.redhat.com>
- <20181002120250.jlkvvau2oqcfffxb@verge.net.au>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <37651910-31d5-a312-ae1d-3658318400ba@redhat.com>
-Date: Mon, 8 Oct 2018 12:57:10 +0800
+Date: Fri, 5 Oct 2018 15:09:59 +1000
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling
+ properties
+Message-ID: <20181005050959.GP7004@umbus.fritz.box>
+References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
+ <20180928064841.14117-7-takahiro.akashi@linaro.org>
+ <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
+ <6a8d3ddb-c3bc-c044-4d6c-55e110d89e72@gmail.com>
+ <20181005050627.GL32578@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20181002120250.jlkvvau2oqcfffxb@verge.net.au>
-Content-Language: en-US
+In-Reply-To: <20181005050627.GL32578@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,44 +19,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============6939294516545129151=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org
+To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 
-5ZyoIDIwMTjlubQxMOaciDAy5pelIDIwOjAyLCBTaW1vbiBIb3JtYW4g5YaZ6YGTOgo+IE9uIEZy
-aSwgU2VwIDA3LCAyMDE4IGF0IDA5OjA1OjUwQU0gKzA4MDAsIERhdmUgWW91bmcgd3JvdGU6Cj4+
-IE9uIDA5LzA2LzE4IGF0IDAxOjU2cG0sIExpYW5ibyBKaWFuZyB3cm90ZToKPj4+IFdoZW4ga2V4
-ZWMtdG9vbHMgbG9hZCB0aGUga2VybmVsIGFuZCBpbml0cmFtZnMgZm9yIGtkdW1wLCBrZXhlYy10
-b29scyB3aWxsCj4+PiByZWFkIC9wcm9jL2lvbWVtIGFuZCByZWNyZWF0ZSB0aGUgZTgyMCByYW5n
-ZXMgZm9yIGtkdW1wIGtlcm5lbC4gQnV0IGl0IGZhaWxzCj4+PiB0byBwYXJzZSB0aGUgZTgyMCBy
-ZXNlcnZlZCByZWdpb24sIGJlY2F1c2UgdGhlIG1lbWNtcCgpIGlzIGNhc2Ugc2Vuc2l0aXZlCj4+
-PiB3aGVuIGNvbXBhcmluZyB0aGUgc3RyaW5nLiBJbiBmYWN0LCBpdCBtYXkgYmUgIlJlc2VydmVk
-IiBvciAicmVzZXJ2ZWQiIGluCj4+PiB0aGUgL3Byb2MvaW9tZW0sIHNvIHdlIGhhdmUgdG8gZml4
-IHRoZXNlIGNhc2VzLgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IExpYW5ibyBKaWFuZyA8bGlqaWFu
-Z0ByZWRoYXQuY29tPgo+Pj4gLS0tCj4+PiAga2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYu
-YyB8IDIgKysKPj4+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCj4+Pgo+Pj4gZGlm
-ZiAtLWdpdCBhL2tleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmMgYi9rZXhlYy9hcmNoL2kz
-ODYvY3Jhc2hkdW1wLXg4Ni5jCj4+PiBpbmRleCA0MzdlOGE4Li4xNDBmNDViIDEwMDY0NAo+Pj4g
-LS0tIGEva2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYwo+Pj4gKysrIGIva2V4ZWMvYXJj
-aC9pMzg2L2NyYXNoZHVtcC14ODYuYwo+Pj4gQEAgLTI4OSw2ICsyODksOCBAQCBzdGF0aWMgaW50
-IGdldF9jcmFzaF9tZW1vcnlfcmFuZ2VzKHN0cnVjdCBtZW1vcnlfcmFuZ2UgKipyYW5nZSwgaW50
-ICpyYW5nZXMsCj4+PiAgCQkJdHlwZSA9IFJBTkdFX1BNRU07Cj4+PiAgCQl9IGVsc2UgaWYobWVt
-Y21wKHN0ciwicmVzZXJ2ZWRcbiIsOSkgPT0gMCApIHsKPj4+ICAJCQl0eXBlID0gUkFOR0VfUkVT
-RVJWRUQ7Cj4+PiArCQl9IGVsc2UgaWYgKG1lbWNtcChzdHIsICJSZXNlcnZlZFxuIiwgOSkgPT0g
-MCkgewo+Pj4gKwkJCXR5cGUgPSBSQU5HRV9SRVNFUlZFRDsKPj4+ICAJCX0gZWxzZSBpZiAobWVt
-Y21wKHN0ciwgIkdBUlRcbiIsIDUpID09IDApIHsKPj4+ICAJCQlnYXJ0X3N0YXJ0ID0gc3RhcnQ7
-Cj4+PiAgCQkJZ2FydF9lbmQgPSBlbmQ7Cj4+PiAtLSAKPj4+IDIuMTcuMQo+Pj4KPj4+Cj4+PiBf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+Pj4ga2V4ZWMg
-bWFpbGluZyBsaXN0Cj4+PiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4+PiBodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCj4+Cj4+IFJldmlld2VkLWJ5
-OiBEYXZlIFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4KPiAKPiBTb3JyeSBmb3IgbGV0dGluZyB0
-aGlzIHNsaXAgdGhyb3VnaCB0aGUgY3JhY2tzLgo+IEkndmUgYXBwbGllZCB0aGlzIG5vdy4KPiAK
-ClRoYW5rIHlvdSwgU2ltb24gYW5kIERhdmUuCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KPiBrZXhlYyBtYWlsaW5nIGxpc3QKPiBrZXhlY0BsaXN0cy5p
-bmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9rZXhlYwo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+
+--===============6939294516545129151==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="movZSYdJ761vCHaE"
+Content-Disposition: inline
+
+
+--movZSYdJ761vCHaE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Oct 05, 2018 at 02:06:29PM +0900, AKASHI, Takahiro wrote:
+[snip]
+> > >> +{
+> > >> +       return (strlen(prop_name) + 1) +
+> > >> +               sizeof(struct fdt_property) +
+> > >> +               FDT_TAGALIGN(len);
+> > >=20
+> > > Looks like you are using this to calculate how much space you need to
+> > > allocate in addition to the current DTB for a couple of new or
+> > > replaced properties. I'm not sure that this calculation is completely
+> > > accurate. And it is strange there doesn't seem to be any libfdt
+> > > function for this already. It would be simpler to just add some fixed
+> > > additional amount.
+> > >=20
+> > > Maybe David G has comments on this?
+>=20
+> I'm not quit sure why it's not that accurate, but as I said in a reply to
+> David's comment, I will take your suggestion.
+
+I think it is accurate, but it is not robust.  It might not be
+accurate if we ever make further tweaks to the libfdt format.  libfdt
+is supposed to abstract those changes away, but if you make
+assumptions like this, you break that abstraction.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--movZSYdJ761vCHaE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlu28iUACgkQbDjKyiDZ
+s5LH/xAAh/vDxj2xanbrQLZ61bxAfKiW22OR2z7VIuRvPfYqjJaXsEal1uX1BNYW
+qYhYO6/VqBHvI56fs0EDNQT5PSc5NWK4v2xHgm+SfJACkNhMvHHLaWxFPw3pTSHT
++X4HjyiFV4FLw3lgP8AyuL/1ZHUkEEJyLvfUtwEcZLQ7gyO7KXJYk8tvZaZTbnNy
+U3vbrwlrJ8FDXtuV1udW4nMAOV5uWC3QjjERbz/tIllajFNV4JwUAsIpIN79VDRn
+eSMoKFQwzlLUjQ0sqSEb0fLu8EDz06hS2jJ6E33qIiUsZmvK3tJuriKbRAXaKZ4C
+ZZ7o1x8g0Sgwjzv1Thm4fVB/eG/b4aMzpNzcEPoiT8n3cMUEsA/2Ukxfl1DtcJC/
++H1X/hnQcJlltualZ5AjRlslJ4BA15w2GGTOlVCk9V9EYsp49f8oItATVoR+EUOj
+pau5CqQyT6CwRDqvAajsRNOr9+zIAfNS8WZo75Twhj7iqBGxodFqaCNayvJtX93U
+oASIp61DcVaSohRqOaaBoQUS0ye+xMEbDGr1gOLZGDoQI9sS0mElWOHsN967Ua/q
+xAxyB3jrNbQPp/qFqRWcq6F+Dsnbp11wONiao1wDEQCx4z1EKnRZdIPyari72B65
+vUKObiGBU+XRUE6tkzN/YWTGbtzVIbjdKKc5P53oM4lVh0PnZzU=
+=MPmg
+-----END PGP SIGNATURE-----
+
+--movZSYdJ761vCHaE--
+
+
+--===============6939294516545129151==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============6939294516545129151==--
+
