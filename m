@@ -1,27 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g8U92-0001Om-5A
- for kexec@lists.infradead.org; Fri, 05 Oct 2018 17:44:15 +0000
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w95HdOP4086989
- for <kexec@lists.infradead.org>; Fri, 5 Oct 2018 13:43:56 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2mxan0ebbf-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 05 Oct 2018 13:43:56 -0400
-Received: from localhost
- by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <nayna@linux.vnet.ibm.com>;
- Fri, 5 Oct 2018 18:43:53 +0100
-From: Nayna Jain <nayna@linux.vnet.ibm.com>
-Subject: [PATCH v5 5/5] x86/ima: define arch_get_ima_policy() for x86
-Date: Fri,  5 Oct 2018 23:10:15 +0530
-In-Reply-To: <20181005174015.21939-1-nayna@linux.vnet.ibm.com>
-References: <20181005174015.21939-1-nayna@linux.vnet.ibm.com>
-Message-Id: <20181005174015.21939-6-nayna@linux.vnet.ibm.com>
+ id 1g8jKL-0005Nu-5f
+ for kexec@lists.infradead.org; Sat, 06 Oct 2018 09:56:51 +0000
+Date: Sat, 6 Oct 2018 11:56:27 +0200
+From: Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH v8 RESEND 0/4] Support kdump for AMD secure memory
+ encryption(SME)
+Message-ID: <20181006095627.GA30555@zn.tnic>
+References: <20180930031033.22110-1-lijiang@redhat.com>
+ <20181002114012.GB29859@zn.tnic>
+ <43da68b1-fda0-c033-39e1-907d01f13354@redhat.com>
+ <20181003113435.GB4436@zn.tnic>
+ <dac69aae-27cf-9c93-a0ee-b65e241e1dd6@redhat.com>
+ <20181004190221.GA17667@zn.tnic>
+ <0d1c112c-37b7-ee9d-b3d6-6d8e3df02d78@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <0d1c112c-37b7-ee9d-b3d6-6d8e3df02d78@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,121 +26,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-integrity@vger.kernel.org
-Cc: linux-efi@vger.kernel.org, Eric Richter <erichte@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, jforbes@redhat.com
+To: lijiang <lijiang@redhat.com>
+Cc: thomas.lendacky@amd.com, jroedel@suse.de, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
 
-From: Eric Richter <erichte@linux.ibm.com>
-
-On x86, there are two methods of verifying a kexec'ed kernel image
-signature being loaded via the kexec_file_load syscall - an architecture
-specific implementaton or a IMA KEXEC_KERNEL_CHECK appraisal rule. Neither
-of these methods verify the kexec'ed kernel image signature being loaded
-via the kexec_load syscall.
-
-Secure boot enabled systems require kexec images to be signed. Therefore,
-this patch loads an IMA KEXEC_KERNEL_CHECK policy rule on secure boot
-enabled systems not configured with CONFIG_KEXEC_VERIFY_SIG enabled.
-
-When IMA_APPRAISE_BOOTPARAM is configured, different IMA appraise modes
-(eg. fix, log) can be specified on the boot command line, allowing unsigned
-or invalidly signed kernel images to be kexec'ed. This patch permits
-enabling IMA_APPRAISE_BOOTPARAM or IMA_ARCH_POLICY, but not both.
-
-Signed-off-by: Eric Richter <erichte@linux.ibm.com>
-- Removed the policy KEXEC_ORIG_KERNEL_CHECK which was defined to
-  disable the kexec_load syscall.
-- arch_get_ima_policy() uses arch_ima_get_secureboot() to get secureboot
-  state
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
----
- arch/x86/kernel/ima_arch.c     | 18 ++++++++++++++++++
- include/linux/ima.h            |  4 ++++
- security/integrity/ima/Kconfig | 10 +++++++++-
- 3 files changed, 31 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/ima_arch.c b/arch/x86/kernel/ima_arch.c
-index bb5a88d2b271..245976e49a55 100644
---- a/arch/x86/kernel/ima_arch.c
-+++ b/arch/x86/kernel/ima_arch.c
-@@ -15,3 +15,21 @@ bool arch_ima_get_secureboot(void)
- 	else
- 		return false;
- }
-+
-+/* arch rules for audit and user mode */
-+static const char * const sb_arch_rules[] = {
-+#ifndef CONFIG_KEXEC_VERIFY_SIG
-+	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig",
-+#endif /* CONFIG_KEXEC_VERIFY_SIG */
-+	"measure func=KEXEC_KERNEL_CHECK",
-+	NULL
-+};
-+
-+#ifdef CONFIG_IMA_ARCH_POLICY
-+const char * const *arch_get_ima_policy(void)
-+{
-+	if (arch_ima_get_secureboot())
-+		return sb_arch_rules;
-+	return NULL;
-+}
-+#endif
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 350fa957f8a6..dabd3abdf671 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -39,10 +39,14 @@ static inline bool arch_ima_get_secureboot(void)
- }
- #endif
- 
-+#if defined(CONFIG_X86) && defined(CONFIG_IMA_ARCH_POLICY)
-+extern const char * const *arch_get_ima_policy(void);
-+#else
- static inline const char * const *arch_get_ima_policy(void)
- {
- 	return NULL;
- }
-+#endif
- 
- #else
- static inline int ima_bprm_check(struct linux_binprm *bprm)
-diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-index 13b446328dda..a18f8c6d13b5 100644
---- a/security/integrity/ima/Kconfig
-+++ b/security/integrity/ima/Kconfig
-@@ -157,6 +157,14 @@ config IMA_APPRAISE
- 	  <http://linux-ima.sourceforge.net>
- 	  If unsure, say N.
- 
-+config IMA_ARCH_POLICY
-+        bool "Enable loading an IMA architecture specific policy"
-+        depends on KEXEC_VERIFY_SIG || IMA_APPRAISE && INTEGRITY_ASYMMETRIC_KEYS
-+        default n
-+        help
-+          This option enables loading an IMA architecture specific policy
-+          based on run time secure boot flags.
-+
- config IMA_APPRAISE_BUILD_POLICY
- 	bool "IMA build time configured policy rules"
- 	depends on IMA_APPRAISE && INTEGRITY_ASYMMETRIC_KEYS
-@@ -217,7 +225,7 @@ config IMA_APPRAISE_REQUIRE_POLICY_SIGS
- 
- config IMA_APPRAISE_BOOTPARAM
- 	bool "ima_appraise boot parameter"
--	depends on IMA_APPRAISE
-+	depends on IMA_APPRAISE && !IMA_ARCH_POLICY
- 	default y
- 	help
- 	  This option enables the different "ima_appraise=" modes
--- 
-2.13.6
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCBPY3QgMDUsIDIwMTggYXQgMDE6NTI6MjZQTSArMDgwMCwgbGlqaWFuZyB3cm90ZToK
+PiAgICAgIGIuIGFkZCB0aGUgcGFyYW1ldGVyICJtZW1fZW5jcnlwdD1vbiIgZm9yIGtlcm5lbCBj
+b21tYW5kLWxpbmUgdG8gZ3J1Yi5jZmcsIGlmCj4gICAgICAgICB0aGlzIG1hY2hpbmUgaGFzIFNN
+RSBmZWF0dXJlLiBBbmQgYWxzbyBhZGQgY3Jhc2hrZXJuZWw9eHgsIHdoaWNoIHdpbGwgcmVzZXJ2
+ZQo+ICAgICAgICAgbWVtb3J5IGZvciBrZHVtcC4KCk9rLCBJJ20gZG9pbmcgdGhlIHNpbXBsZXIg
+Y3Jhc2hrZXJuZWw9IGNtZGxpbmU6CgpjcmFzaGtlcm5lbD0yNTZNCgpUaGF0IHNheXM6CgpbICAg
+IDAuMDExOTE4XSBSZXNlcnZpbmcgMjU2TUIgb2YgbWVtb3J5IGF0IDY0ME1CIGZvciBjcmFzaGtl
+cm5lbCAoU3lzdGVtIFJBTTogMjYyMDMwTUIpCgo+IFN0ZXAgNTogcmVib290LCBhbmQgdGhlbiBs
+b2FkIHRoZSBjcmFzaCBrZXJuZWwgaW1hZ2UgYW5kIGtkdW1wIGluaXRyYW1mcy4KPiAKPiAgICAg
+IGE6IFdoZW4gU01FIGlzIGVuYWJsZWQsIGkgdXNlIHRoaXMgY29tbWFuZCB0byBsb2FkIHRoZW06
+Cj4gCj4gICAgICAgICAja2V4ZWMgLXAgL2Jvb3Qvdm1saW51ei00LjE5LjAtcmM2KyAtLWluaXRy
+ZD0vYm9vdC9pbml0cmFtZnMtNC4xOS4wLXJjNitrZHVtcC5pbWcgLS1jb21tYW5kLWxpbmU9InJv
+b3Q9L2Rldi9tYXBwZXIvcmhlbF9ocC0tZGwzODVnMTAtLTAzLXJvb3Qgcm8gcmQubHZtLmx2PXJo
+ZWxfaHAtZGwzODVnMTAtMDMvcm9vdCByZC5sdm0ubHY9cmhlbF9ocC1kbDM4NWcxMC0wMy9zd2Fw
+IG1lbV9lbmNyeXB0PW9uIGNvbnNvbGU9dHR5UzAsMTE1MjAwbjgxIExBTkc9ZW5fVVMuVVRGLTgg
+ZWFybHlwcmludGs9c2VyaWFsIGRlYnVnIGlycXBvbGwgbnJfY3B1cz0xIHJlc2V0X2RldmljZXMg
+Y2dyb3VwX2Rpc2FibGU9bWVtb3J5IG1jZT1vZmYgbnVtYT1vZmYgdWRldi5jaGlsZHJlbi1tYXg9
+MiBwYW5pYz0xMCByb290ZmxhZ3M9bm9mYWlsIGFjcGlfbm9fbWVtaG90cGx1ZyB0cmFuc3BhcmVu
+dF9odWdlcGFnZT1uZXZlciBkaXNhYmxlX2NwdV9hcGljaWQ9MCIKCk9rLCBkaWQgdGhhdCwgbXkg
+Y21kbGluZSBpczoKCn4vYnBldGtvdi9zcmMva2V4ZWMtdG9vbHMvYnVpbGQvc2Jpbi9rZXhlYyAt
+cCAvYm9vdC92bWxpbnV6LTQuMTkuMC1yYzYrIC0taW5pdHJkPS9ib290L2luaXRyZC00LjE5LjAt
+cmM2KyAtLWNvbW1hbmQtbGluZT0icm9vdD0vZGV2L21hcHBlci91YnVudHUtLTAxMDIzNjAxMjEz
+Mi0tdmctbGVhcDE1IHJkLmx2bS5sdj11YnVudHUtLTAxMDIzNjAxMjEzMi0tdmctbGVhcDE1L3Jv
+b3QgcmQubHZtLmx2PXVidW50dS0tMDEwMjM2MDEyMTMyLS12Zy1sZWFwMTUvc3dhcCBzcGxhc2g9
+c2lsZW50IHNob3dvcHRzIGNvbnNvbGU9dHR5UzUsMTE1MjAwIGNvbnNvbGU9dHR5MCBkZWJ1ZyBp
+Z25vcmVfbG9nbGV2ZWwgbG9nX2J1Zl9sZW49MTZNIG5yX2NwdXM9MSBpcnFwb2xsIG1heGNwdXM9
+MSByZXNldF9kZXZpY2VzIHZnYT1ub3JtYWwgbWVtX2VuY3J5cHQ9b24gTEFORz1lbl9VUy5VVEYt
+OCBlYXJseXByaW50az1zZXJpYWwgY2dyb3VwX2Rpc2FibGU9bWVtb3J5IG1jZT1vZmYgbnVtYT1v
+ZmYgdWRldi5jaGlsZHJlbi1tYXg9MiBwYW5pYz0xMCByb290ZmxhZ3M9bm9mYWlsIGFjcGlfbm9f
+bWVtaG90cGx1ZyB0cmFuc3BhcmVudF9odWdlcGFnZT1uZXZlciBkaXNhYmxlX2NwdV9hcGljaWQ9
+MCIKClZlcmlmaWVkIGl0IGxvYWRlZCBvazoKCiQgZ3JlcCAuIC9zeXMva2VybmVsL2tleGVjXyoK
+L3N5cy9rZXJuZWwva2V4ZWNfY3Jhc2hfbG9hZGVkOjEKL3N5cy9rZXJuZWwva2V4ZWNfY3Jhc2hf
+c2l6ZToyNjg0MzU0NTYKL3N5cy9rZXJuZWwva2V4ZWNfbG9hZGVkOjAKCj4gU3RlcCA2OiB0cmln
+Z2VyIHBhbmljIGJ5IHN5c3JxCj4gICAgICAgICAjZWNobyBjID4gL3Byb2Mvc3lzcnEtdHJpZ2dl
+cgoKRGlkIHRoYXQgYW5kIEkgZ290IGludG8gdGhlIGtkdW1wIGtlcm5lbCB3aXRoIFNNRS4gU28g
+SSdkIGd1ZXNzIHlvdXIga2R1bXAKa2VybmVsIGNvbW1hbmQgbGluZSB3YXMgbmVlZGVkIC0gSSB3
+YXMgbWlzc2luZyBhIGJ1bmNoIG9mIHN3aXRjaGVzIGFuZApyZW1vdGUtZGVidWdnaW5nIGEgYm94
+IGtleGVjaW5nIGlzIG5vdCBmdW4uCgpTbyB0aGFua3MgYSBsb3QgZm9yIHRoZSBkZXRhaWxlZCBz
+dGVwcywgSSdtIHB1dHRpbmcgdGhlbSB0byBteSBub3Rlcy4KCi0tIApSZWdhcmRzL0dydXNzLAog
+ICAgQm9yaXMuCgpTVVNFIExpbnV4IEdtYkgsIEdGOiBGZWxpeCBJbWVuZMO2cmZmZXIsIEphbmUg
+U21pdGhhcmQsIEdyYWhhbSBOb3J0b24sIEhSQiAyMTI4NCAoQUcgTsO8cm5iZXJnKQoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
+aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
