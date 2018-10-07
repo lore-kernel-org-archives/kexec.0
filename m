@@ -1,24 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pf1-f196.google.com ([209.85.210.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g92GK-0000Bq-04
- for kexec@lists.infradead.org; Sun, 07 Oct 2018 06:09:57 +0000
-Subject: Re: [PATCH v8 RESEND 0/4] Support kdump for AMD secure memory
- encryption(SME)
-References: <20180930031033.22110-1-lijiang@redhat.com>
- <20181002114012.GB29859@zn.tnic>
- <43da68b1-fda0-c033-39e1-907d01f13354@redhat.com>
- <20181003113435.GB4436@zn.tnic>
- <dac69aae-27cf-9c93-a0ee-b65e241e1dd6@redhat.com>
- <20181004190221.GA17667@zn.tnic>
- <0d1c112c-37b7-ee9d-b3d6-6d8e3df02d78@redhat.com>
- <20181006095627.GA30555@zn.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <1ae4de5d-4857-4804-10ae-d415e79d861e@redhat.com>
-Date: Sun, 7 Oct 2018 14:09:25 +0800
-MIME-Version: 1.0
-In-Reply-To: <20181006095627.GA30555@zn.tnic>
-Content-Language: en-US
+ id 1g98YU-0001eA-U0
+ for kexec@lists.infradead.org; Sun, 07 Oct 2018 12:53:09 +0000
+Received: by mail-pf1-f196.google.com with SMTP id m77-v6so7111060pfi.8
+ for <kexec@lists.infradead.org>; Sun, 07 Oct 2018 05:52:56 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH] Use VMCOREINTO inside '/proc/kcore' if available
+Date: Sun,  7 Oct 2018 18:22:49 +0530
+Message-Id: <1538916769-3499-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,55 +17,361 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@suse.de>
-Cc: thomas.lendacky@amd.com, jroedel@suse.de, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
+To: kexec@lists.infradead.org
+Cc: bhsharma@redhat.com, bhupesh.linux@gmail.com, ptesarik@suse.cz, k-hagio@ab.jp.nec.com
 
-5ZyoIDIwMTjlubQxMOaciDA25pelIDE3OjU2LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IEZyaSwgT2N0IDA1LCAyMDE4IGF0IDAxOjUyOjI2UE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
-ICAgICAgYi4gYWRkIHRoZSBwYXJhbWV0ZXIgIm1lbV9lbmNyeXB0PW9uIiBmb3Iga2VybmVsIGNv
-bW1hbmQtbGluZSB0byBncnViLmNmZywgaWYKPj4gICAgICAgICB0aGlzIG1hY2hpbmUgaGFzIFNN
-RSBmZWF0dXJlLiBBbmQgYWxzbyBhZGQgY3Jhc2hrZXJuZWw9eHgsIHdoaWNoIHdpbGwgcmVzZXJ2
-ZQo+PiAgICAgICAgIG1lbW9yeSBmb3Iga2R1bXAuCj4gCj4gT2ssIEknbSBkb2luZyB0aGUgc2lt
-cGxlciBjcmFzaGtlcm5lbD0gY21kbGluZToKPiAKPiBjcmFzaGtlcm5lbD0yNTZNCj4gCj4gVGhh
-dCBzYXlzOgo+IAo+IFsgICAgMC4wMTE5MThdIFJlc2VydmluZyAyNTZNQiBvZiBtZW1vcnkgYXQg
-NjQwTUIgZm9yIGNyYXNoa2VybmVsIChTeXN0ZW0gUkFNOiAyNjIwMzBNQikKPiAKPj4gU3RlcCA1
-OiByZWJvb3QsIGFuZCB0aGVuIGxvYWQgdGhlIGNyYXNoIGtlcm5lbCBpbWFnZSBhbmQga2R1bXAg
-aW5pdHJhbWZzLgo+Pgo+PiAgICAgIGE6IFdoZW4gU01FIGlzIGVuYWJsZWQsIGkgdXNlIHRoaXMg
-Y29tbWFuZCB0byBsb2FkIHRoZW06Cj4+Cj4+ICAgICAgICAgI2tleGVjIC1wIC9ib290L3ZtbGlu
-dXotNC4xOS4wLXJjNisgLS1pbml0cmQ9L2Jvb3QvaW5pdHJhbWZzLTQuMTkuMC1yYzYra2R1bXAu
-aW1nIC0tY29tbWFuZC1saW5lPSJyb290PS9kZXYvbWFwcGVyL3JoZWxfaHAtLWRsMzg1ZzEwLS0w
-My1yb290IHJvIHJkLmx2bS5sdj1yaGVsX2hwLWRsMzg1ZzEwLTAzL3Jvb3QgcmQubHZtLmx2PXJo
-ZWxfaHAtZGwzODVnMTAtMDMvc3dhcCBtZW1fZW5jcnlwdD1vbiBjb25zb2xlPXR0eVMwLDExNTIw
-MG44MSBMQU5HPWVuX1VTLlVURi04IGVhcmx5cHJpbnRrPXNlcmlhbCBkZWJ1ZyBpcnFwb2xsIG5y
-X2NwdXM9MSByZXNldF9kZXZpY2VzIGNncm91cF9kaXNhYmxlPW1lbW9yeSBtY2U9b2ZmIG51bWE9
-b2ZmIHVkZXYuY2hpbGRyZW4tbWF4PTIgcGFuaWM9MTAgcm9vdGZsYWdzPW5vZmFpbCBhY3BpX25v
-X21lbWhvdHBsdWcgdHJhbnNwYXJlbnRfaHVnZXBhZ2U9bmV2ZXIgZGlzYWJsZV9jcHVfYXBpY2lk
-PTAiCj4gCj4gT2ssIGRpZCB0aGF0LCBteSBjbWRsaW5lIGlzOgo+IAo+IH4vYnBldGtvdi9zcmMv
-a2V4ZWMtdG9vbHMvYnVpbGQvc2Jpbi9rZXhlYyAtcCAvYm9vdC92bWxpbnV6LTQuMTkuMC1yYzYr
-IC0taW5pdHJkPS9ib290L2luaXRyZC00LjE5LjAtcmM2KyAtLWNvbW1hbmQtbGluZT0icm9vdD0v
-ZGV2L21hcHBlci91YnVudHUtLTAxMDIzNjAxMjEzMi0tdmctbGVhcDE1IHJkLmx2bS5sdj11YnVu
-dHUtLTAxMDIzNjAxMjEzMi0tdmctbGVhcDE1L3Jvb3QgcmQubHZtLmx2PXVidW50dS0tMDEwMjM2
-MDEyMTMyLS12Zy1sZWFwMTUvc3dhcCBzcGxhc2g9c2lsZW50IHNob3dvcHRzIGNvbnNvbGU9dHR5
-UzUsMTE1MjAwIGNvbnNvbGU9dHR5MCBkZWJ1ZyBpZ25vcmVfbG9nbGV2ZWwgbG9nX2J1Zl9sZW49
-MTZNIG5yX2NwdXM9MSBpcnFwb2xsIG1heGNwdXM9MSByZXNldF9kZXZpY2VzIHZnYT1ub3JtYWwg
-bWVtX2VuY3J5cHQ9b24gTEFORz1lbl9VUy5VVEYtOCBlYXJseXByaW50az1zZXJpYWwgY2dyb3Vw
-X2Rpc2FibGU9bWVtb3J5IG1jZT1vZmYgbnVtYT1vZmYgdWRldi5jaGlsZHJlbi1tYXg9MiBwYW5p
-Yz0xMCByb290ZmxhZ3M9bm9mYWlsIGFjcGlfbm9fbWVtaG90cGx1ZyB0cmFuc3BhcmVudF9odWdl
-cGFnZT1uZXZlciBkaXNhYmxlX2NwdV9hcGljaWQ9MCIKPiAKPiBWZXJpZmllZCBpdCBsb2FkZWQg
-b2s6Cj4gCj4gJCBncmVwIC4gL3N5cy9rZXJuZWwva2V4ZWNfKgo+IC9zeXMva2VybmVsL2tleGVj
-X2NyYXNoX2xvYWRlZDoxCj4gL3N5cy9rZXJuZWwva2V4ZWNfY3Jhc2hfc2l6ZToyNjg0MzU0NTYK
-PiAvc3lzL2tlcm5lbC9rZXhlY19sb2FkZWQ6MAo+IAo+PiBTdGVwIDY6IHRyaWdnZXIgcGFuaWMg
-Ynkgc3lzcnEKPj4gICAgICAgICAjZWNobyBjID4gL3Byb2Mvc3lzcnEtdHJpZ2dlcgo+IAo+IERp
-ZCB0aGF0IGFuZCBJIGdvdCBpbnRvIHRoZSBrZHVtcCBrZXJuZWwgd2l0aCBTTUUuIFNvIEknZCBn
-dWVzcyB5b3VyIGtkdW1wCj4ga2VybmVsIGNvbW1hbmQgbGluZSB3YXMgbmVlZGVkIC0gSSB3YXMg
-bWlzc2luZyBhIGJ1bmNoIG9mIHN3aXRjaGVzIGFuZAo+IHJlbW90ZS1kZWJ1Z2dpbmcgYSBib3gg
-a2V4ZWNpbmcgaXMgbm90IGZ1bi4KPiAKPiBTbyB0aGFua3MgYSBsb3QgZm9yIHRoZSBkZXRhaWxl
-ZCBzdGVwcywgSSdtIHB1dHRpbmcgdGhlbSB0byBteSBub3Rlcy4KPiAKCkl0J3MgbXkgcGxlYXN1
-cmUuCkFsc28gdGhhbmtzIGZvciB5b3VyIHBhdGllbmNlIGFuZCBoZWxwLgoKUmVnYXJkcywKTGlh
-bmJvCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhl
-YyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Commit 94c97db3fe859ca14d7b38b0ae9ee0ffb83689d2 (arm64: Get
+'info->page_offset' from PT_LOAD segments to support KASLR boot cases)
+added a method to determine 'info->page_offset' from PT_LOAD segments
+for arm64 platforms.
+
+In this commit we hardcoded the NOT_PADDR_ARM64 macro as
+0x0000000010a80000UL which was a valid value on qualcomm-amberwing
+boards.
+
+However, I was testing this change on several other arm64 boards
+like apm-mustang, huawei-taishan and hp-moonshot and saw that
+this value can vary on the basic of the "Kernel code" memory
+range placement.
+
+To fix the same, this patchset uses a new approach. Since kernel
+version 4.19-rc5 (Commit
+23c85094fe1895caefdd19ef624ee687ec5f4507 ["proc/kcore: add vmcoreinfo
+note to /proc/kcore"]), '/proc/kcore' contains a new
+PT_NOTE which carries the VMCOREINFO information.
+
+If the same is available, we can use it for makedumpfile
+'show_mem_usage()' and other functionality. This is especially useful
+for architectures like arm64 as we can get kernel symbols like
+'VA_BITS' and 'kimage_voffset' from the '/proc/kcore' itself and use it
+to calculate 'info->page_offset' when we make a call to
+'get_page_offset()'.
+
+This VMCOREINFO note provides us a standard interface which can be
+leveraged while debugging live (or primary) kernel with makedumpfile
+(and other user-space tools), especially to derive the machine specific
+details (for e.g. VA_BITS, PHYS_OFFSET and kimage_voffset for arm64
+arch).
+
+I also verified the makedumpfile functionality in crash kernel with this
+patchset. Here are some details of the tests I ran:
+
+Testing:
+--------
+1. Architectures tested:
+   a) arm64 :- huawei-taishan, apm-mustang and qualcomm-amberwing boards.
+   b) x86_64 :- Dell optiplex workstation.
+      (NOTE that x86_64 makedumpfile --mem-usage use-case is currently
+      broken with upstream kernel, but I have debugged the root-cause
+      and will separately send a patch to fix the same).
+
+2. Use-cases tested:
+   a) Primary kernel ->
+      [] --mem-usage:
+         # makedumpfile -f --mem-usage /proc/kcore
+
+      [] filtering use-case:
+         # makedumpfile --split -d 31 -x vmlinux --config scrub.conf vmcore dumpfile_{1,2,3}
+
+      [] dumpfile creation:
+         # makedumpfile -d 31 -x vmlinux vmcore dumpfile
+
+   b) Crash kernel ->
+      [] dumpfile creation:
+         # makedumpfile -l --message-level 31 -d 31 /proc/vmcore dump
+
+3. Kernel versions tested:
+   a) Kernel version 4.19-rc5 and above on both arm64 and x86_64.
+   b) Fedora 28 on x86_64.
+   c) Kernel version 4.14 on arm64.
+
+Fixes: 94c97db3fe859ca14d7b38b0ae9ee0ffb83689d2 "arm64: Get 'info->page_offset' from PT_LOAD segments to support KASLR boot cases"
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+---
+ arch/arm64.c   | 114 +++++++++++++++++++++++++++++++++++++++++++--------------
+ makedumpfile.c |  67 ++++++++++++++++++++++++++++++---
+ makedumpfile.h |   2 +-
+ 3 files changed, 149 insertions(+), 34 deletions(-)
+
+diff --git a/arch/arm64.c b/arch/arm64.c
+index 362609668ea2..d695eff628f0 100644
+--- a/arch/arm64.c
++++ b/arch/arm64.c
+@@ -53,6 +53,7 @@ static unsigned long kimage_voffset;
+ #define PAGE_OFFSET_42 ((0xffffffffffffffffUL) << 42)
+ #define PAGE_OFFSET_47 ((0xffffffffffffffffUL) << 47)
+ #define PAGE_OFFSET_48 ((0xffffffffffffffffUL) << 48)
++#define __PAGE_OFFSET(x) ((0xffffffffffffffffUL) << (x - 1))
+ 
+ #define pgd_val(x)		((x).pgd)
+ #define pud_val(x)		(pgd_val((x).pgd))
+@@ -311,45 +312,104 @@ get_versiondep_info_arm64(void)
+ 	unsigned long long virt_start;
+ 	ulong _stext;
+ 
+-	_stext = get_stext_symbol();
+-	if (!_stext) {
+-		ERRMSG("Can't get the symbol of _stext.\n");
+-		return FALSE;
+-	}
++	/* Calculate 'VA_BITS'. */
+ 
+-	/* Derive va_bits as per arch/arm64/Kconfig */
+-	if ((_stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
+-		va_bits = 36;
+-	} else if ((_stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
+-		va_bits = 39;
+-	} else if ((_stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
+-		va_bits = 42;
+-	} else if ((_stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
+-		va_bits = 47;
+-	} else if ((_stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
+-		va_bits = 48;
++	/* Since kernel version 4.19, '/proc/kcore' contains a new
++	 * PT_NOTE which carries the VMCOREINFO information.
++	 *
++	 * If the same is available, use it as it already contains the
++	 * value of 'VA_BITS' on the machine.
++	 *
++	 * Otherwise, we can read the '_stext' symbol and determine the
++	 * 'VA_BITS' value from the same as well.
++	 */
++	if (info->flag_kcore_contains_vmcoreinfo &&
++	    (NUMBER(VA_BITS) != NOT_FOUND_NUMBER)) {
++		va_bits = NUMBER(VA_BITS);
+ 	} else {
+-		ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
+-		return FALSE;
++		_stext = get_stext_symbol();
++		if (!_stext) {
++			ERRMSG("Can't get the symbol of _stext.\n");
++			return FALSE;
++		}
++
++		/* Derive va_bits as per arch/arm64/Kconfig */
++		if ((_stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
++			va_bits = 36;
++		} else if ((_stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
++			va_bits = 39;
++		} else if ((_stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
++			va_bits = 42;
++		} else if ((_stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
++			va_bits = 47;
++		} else if ((_stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
++			va_bits = 48;
++		} else {
++			ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
++			return FALSE;
++		}
++	}
++
++	/* Calculate 'info->page_offset'. */
++
++	/* Since kernel version 4.19, '/proc/kcore' contains a new
++	 * PT_NOTE which carries the VMCOREINFO information.
++	 *
++	 * If the same is available, use it as it already contains the
++	 * value of 'kimage_voffset' on the machine.
++	 */
++	if (info->flag_kcore_contains_vmcoreinfo &&
++	    (NUMBER(kimage_voffset) != NOT_FOUND_NUMBER)) {
++		kimage_voffset = NUMBER(kimage_voffset);
+ 	}
+ 
++	/* First, lets try and calculate the 'info->page_offset' value
++	 * from PT_LOAD segments, if they are available.
++	 */
+ 	if (get_num_pt_loads()) {
+ 		for (i = 0;
+ 		    get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
+ 		    i++) {
+-			if (virt_start != NOT_KV_ADDR
+-			    && virt_start < __START_KERNEL_map
+-			    && phys_start != NOT_PADDR
+-			    && phys_start != NOT_PADDR_ARM64) {
+-				info->page_offset = virt_start - phys_start;
+-				DEBUG_MSG("info->page_offset: %lx, VA_BITS: %d\n",
+-						info->page_offset, va_bits);
+-				return TRUE;
++			/* On systems where we have a valid 'kimage_voffset'
++			 * available by now, we should give preference to the same
++			 * while calculating 'info->page_offset'.
++			 *
++			 * Otherwise, we can ensure that we consider
++			 * only those PT_LOAD segments whose 'virt_start'
++			 * is greater than the PAGE_OFFSET value (as defined
++			 * in 'arch/arm64/include/asm/memory.h').
++			 */
++			if (!kimage_voffset) {
++				if (virt_start != NOT_KV_ADDR &&
++				   virt_start > __PAGE_OFFSET(va_bits) &&
++				   phys_start != NOT_PADDR) {
++					info->page_offset = virt_start - phys_start;
++					DEBUG_MSG("info->page_offset: %lx, VA_BITS: %d\n",
++							info->page_offset, va_bits);
++					return TRUE;
++				}
++			} else {
++				if (virt_start != NOT_KV_ADDR &&
++				   phys_start != NOT_PADDR &&
++				   (virt_start - phys_start) != kimage_voffset) {
++					info->page_offset = virt_start - phys_start;
++					DEBUG_MSG("info->page_offset: %lx, VA_BITS: %d\n",
++							info->page_offset, va_bits);
++					return TRUE;
++				}
+ 			}
+ 		}
+ 	}
+ 
+-	info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
++	/* Fallback to hard-coded value (equal to PAGE_OFFSET macro
++	 * defined in 'arch/arm64/include/asm/memory.h'), as the last
++	 * resort.
++	 *
++	 * Note that this will not be a valid value on KASLR enabled
++	 * kernels as the start address of linear range is also
++	 * randomized for KASLR boot cases.
++	 */
++	info->page_offset = __PAGE_OFFSET(va_bits);
+ 	DEBUG_MSG("page_offset=%lx, va_bits=%d\n", info->page_offset,
+ 			va_bits);
+ 
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 3ccdaaeda0c5..59967f95e0d3 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1302,6 +1302,20 @@ error:
+ 	return FALSE;
+ }
+ 
++static int
++check_kcore_contains_vmcoreinfo(int fd, char *name)
++{
++	if (!get_elf_info(fd, name))
++		return FALSE;
++
++	if (!has_vmcoreinfo())
++		return FALSE;
++
++	DEBUG_MSG("VMCOREINFO PT_NOTE found in %s\n", name);
++
++	return TRUE;
++}
++
+ int
+ open_dump_memory(void)
+ {
+@@ -1314,6 +1328,23 @@ open_dump_memory(void)
+ 	}
+ 	info->fd_memory = fd;
+ 
++	/* Since kernel version 4.19, '/proc/kcore' contains a new
++	 * PT_NOTE which carries the VMCOREINFO information.
++	 *
++	 * If the same is available, use it for makedumpfile
++	 * show_mem_usage() cases.
++	 */
++	if (info->flag_mem_usage &&
++	    !(strcmp(info->name_memory, "/proc/kcore")) &&
++	    (info->kernel_version >= KERNEL_VERSION(4, 19, 0))){
++		status = check_kcore_contains_vmcoreinfo(fd,
++						info->name_memory);
++		if (status == TRUE) {
++			info->flag_kcore_contains_vmcoreinfo = TRUE;
++			return TRUE;
++		}
++	}
++
+ 	status = check_kdump_compressed(info->name_memory);
+ 	if (status == TRUE) {
+ 		info->flag_refiltering = TRUE;
+@@ -11195,6 +11226,8 @@ static int get_sys_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
+ 
+ int show_mem_usage(void)
+ {
++	off_t offset;
++	unsigned long size;
+ 	uint64_t vmcoreinfo_addr, vmcoreinfo_len;
+ 	struct cycle cycle = {0};
+ 
+@@ -11208,17 +11241,39 @@ int show_mem_usage(void)
+ 	if (!open_files_for_creating_dumpfile())
+ 		return FALSE;
+ 
+-	if (!get_elf_loads(info->fd_memory, info->name_memory))
+-		return FALSE;
++	/* Since kernel version 4.19, '/proc/kcore' contains a new
++	 * PT_NOTE which carries the VMCOREINFO information.
++	 *
++	 * If the same is available, use it for makedumpfile
++	 * show_mem_usage(). This is especially useful for architectures
++	 * like arm64 as we can get symbols like 'VA_BITS' and
++	 * 'kimage_voffset' before we call get_page_offset().
++	 */
++
++	if (!info->flag_kcore_contains_vmcoreinfo) {
++		if (!get_elf_loads(info->fd_memory, info->name_memory))
++			return FALSE;
++	} else {
++		if (has_vmcoreinfo()) {
++			get_vmcoreinfo(&offset, &size);
++			if (!read_vmcoreinfo_from_vmcore(offset, size, FALSE))
++				return FALSE;
++		}
++	}
+ 
+ 	if (!get_page_offset())
+ 		return FALSE;
+ 
+-	if (!get_sys_kernel_vmcoreinfo(&vmcoreinfo_addr, &vmcoreinfo_len))
+-		return FALSE;
++	/* If flag_kcore_contains_vmcoreinfo is TRUE when we are here,
++	 * we don't need to read the vmcoreinfo again.
++	 */
++	if (!info->flag_kcore_contains_vmcoreinfo)
++		if (!get_sys_kernel_vmcoreinfo(&vmcoreinfo_addr, &vmcoreinfo_len))
++			return FALSE;
+ 
+-	if (!set_kcore_vmcoreinfo(vmcoreinfo_addr, vmcoreinfo_len))
+-		return FALSE;
++	if (!info->flag_kcore_contains_vmcoreinfo)
++		if (!set_kcore_vmcoreinfo(vmcoreinfo_addr, vmcoreinfo_len))
++			return FALSE;
+ 
+ 	if (!initial())
+ 		return FALSE;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index d1fcd87e85f5..3ae683774fe5 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -544,7 +544,6 @@ unsigned long get_kvbase_arm64(void);
+ #define KVBASE			get_kvbase_arm64()
+ 
+ #define __START_KERNEL_map	(0xffffffff80000000UL)
+-#define NOT_PADDR_ARM64		(0x0000000010a80000UL)
+ 
+ #endif /* aarch64 */
+ 
+@@ -1307,6 +1306,7 @@ struct DumpInfo {
+ 	int		flag_vmemmap;        /* kernel supports vmemmap address space */
+ 	int		flag_excludevm;      /* -e - excluding unused vmemmap pages */
+ 	int		flag_use_count;      /* _refcount is named _count in struct page */
++	int		flag_kcore_contains_vmcoreinfo;    /* '/proc/kcore' contains a VMCOREINFO PT_NOTE */
+ 	unsigned long	vaddr_for_vtop;      /* virtual address for debugging */
+ 	long		page_size;           /* size of page */
+ 	long		page_shift;
+-- 
+2.7.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
