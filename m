@@ -1,16 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 5 Oct 2018 15:09:59 +1000
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling
- properties
-Message-ID: <20181005050959.GP7004@umbus.fritz.box>
-References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
- <20180928064841.14117-7-takahiro.akashi@linaro.org>
- <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
- <6a8d3ddb-c3bc-c044-4d6c-55e110d89e72@gmail.com>
- <20181005050627.GL32578@linaro.org>
-MIME-Version: 1.0
-In-Reply-To: <20181005050627.GL32578@linaro.org>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1g9Tas-0008T3-EI
+ for kexec@lists.infradead.org; Mon, 08 Oct 2018 11:21:00 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ w98BKHf8142337
+ for <kexec@lists.infradead.org>; Mon, 8 Oct 2018 07:20:44 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2n03bnrcsh-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 08 Oct 2018 07:20:43 -0400
+Received: from localhost
+ by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Mon, 8 Oct 2018 12:20:41 +0100
+Subject: Re: [PATCH v5 0/6] Add support for architecture specific IMA policies
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Mon, 08 Oct 2018 07:20:25 -0400
+In-Reply-To: <20181005174015.21939-1-nayna@linux.vnet.ibm.com>
+References: <20181005174015.21939-1-nayna@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Message-Id: <1538997625.15382.87.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,86 +32,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============6939294516545129151=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Nayna Jain <nayna@linux.vnet.ibm.com>, linux-integrity@vger.kernel.org
+Cc: linux-efi@vger.kernel.org, Nayna Jain <nayna@linux.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, jforbes@redhat.com
 
+On Fri, 2018-10-05 at 23:10 +0530, Nayna Jain wrote:
+> From: Nayna Jain <nayna@linux.ibm.com>
+> 
+> The architecture specific policy, introduced in this patch set, permits
+> different architectures to define IMA policy rules based on kernel
+> configuration and system runtime information.
+> 
+> For example, on x86, there are two methods of verifying the kexec'ed kernel
+> image signature - CONFIG_KEXEC_VERIFY_SIG and IMA appraisal policy
+> KEXEC_KERNEL_CHECK. CONFIG_KEXEC_VERIFY_SIG enforces the kexec_file_load
+> syscall to verify file signatures, but does not prevent the kexec_load
+> syscall. The IMA KEXEC_KERNEL_CHECK policy rule verifies the kexec'ed
+> kernel image, loaded via the kexec_file_load syscall, is validly signed and
+> prevents loading a kernel image via the kexec_load syscall. When secure
+> boot is enabled, the kexec'ed kernel image needs to be signed and the
+> signature verified. In this environment, either method of verifying the
+> kexec'ed kernel image is acceptable, as long as the kexec_load syscall is
+> disabled.
+> 
+> The previous version of this patchset introduced a new IMA policy rule to
+> disable the kexec_load syscall, when CONFIG_KEXEC_VERIFY_SIG was enabled,
+> however that is removed from this version by introducing a different
+> mechanism, as described below.
+> 
+> The patchset defines an arch_ima_get_secureboot() function to retrieve the
+> secureboot state of the system. If secureboot is enabled and
+> CONFIG_KEXEC_VERIFY_SIG is configured, it denies permission to kexec_load
+> syscall.
+> 
+> To support architecture specific policies, a new function
+> arch_get_ima_policy() is defined. This patch set defines IMA
+> KERNEL_KEXEC_POLICY rules for x86 *only* if CONFIG_KEXEC_VERIFY_SIG is
+> disabled and secure boot is enabled.
+> 
+> This patch set includes a patch, which refactors ima_init_policy() to
+> remove code duplication.
 
---===============6939294516545129151==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="movZSYdJ761vCHaE"
-Content-Disposition: inline
+Other than a couple of #ifdef's in .c files, which should be converted
+to use IS_ENABLED(<config-option>), the patch set is looking really
+good.
 
+thanks!
 
---movZSYdJ761vCHaE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Mimi
 
-On Fri, Oct 05, 2018 at 02:06:29PM +0900, AKASHI, Takahiro wrote:
-[snip]
-> > >> +{
-> > >> +       return (strlen(prop_name) + 1) +
-> > >> +               sizeof(struct fdt_property) +
-> > >> +               FDT_TAGALIGN(len);
-> > >=20
-> > > Looks like you are using this to calculate how much space you need to
-> > > allocate in addition to the current DTB for a couple of new or
-> > > replaced properties. I'm not sure that this calculation is completely
-> > > accurate. And it is strange there doesn't seem to be any libfdt
-> > > function for this already. It would be simpler to just add some fixed
-> > > additional amount.
-> > >=20
-> > > Maybe David G has comments on this?
->=20
-> I'm not quit sure why it's not that accurate, but as I said in a reply to
-> David's comment, I will take your suggestion.
-
-I think it is accurate, but it is not robust.  It might not be
-accurate if we ever make further tweaks to the libfdt format.  libfdt
-is supposed to abstract those changes away, but if you make
-assumptions like this, you break that abstraction.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---movZSYdJ761vCHaE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlu28iUACgkQbDjKyiDZ
-s5LH/xAAh/vDxj2xanbrQLZ61bxAfKiW22OR2z7VIuRvPfYqjJaXsEal1uX1BNYW
-qYhYO6/VqBHvI56fs0EDNQT5PSc5NWK4v2xHgm+SfJACkNhMvHHLaWxFPw3pTSHT
-+X4HjyiFV4FLw3lgP8AyuL/1ZHUkEEJyLvfUtwEcZLQ7gyO7KXJYk8tvZaZTbnNy
-U3vbrwlrJ8FDXtuV1udW4nMAOV5uWC3QjjERbz/tIllajFNV4JwUAsIpIN79VDRn
-eSMoKFQwzlLUjQ0sqSEb0fLu8EDz06hS2jJ6E33qIiUsZmvK3tJuriKbRAXaKZ4C
-ZZ7o1x8g0Sgwjzv1Thm4fVB/eG/b4aMzpNzcEPoiT8n3cMUEsA/2Ukxfl1DtcJC/
-+H1X/hnQcJlltualZ5AjRlslJ4BA15w2GGTOlVCk9V9EYsp49f8oItATVoR+EUOj
-pau5CqQyT6CwRDqvAajsRNOr9+zIAfNS8WZo75Twhj7iqBGxodFqaCNayvJtX93U
-oASIp61DcVaSohRqOaaBoQUS0ye+xMEbDGr1gOLZGDoQI9sS0mElWOHsN967Ua/q
-xAxyB3jrNbQPp/qFqRWcq6F+Dsnbp11wONiao1wDEQCx4z1EKnRZdIPyari72B65
-vUKObiGBU+XRUE6tkzN/YWTGbtzVIbjdKKc5P53oM4lVh0PnZzU=
-=MPmg
------END PGP SIGNATURE-----
-
---movZSYdJ761vCHaE--
-
-
---===============6939294516545129151==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============6939294516545129151==--
-
