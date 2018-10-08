@@ -1,29 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g9Tas-0008T3-EI
- for kexec@lists.infradead.org; Mon, 08 Oct 2018 11:21:00 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- w98BKHf8142337
- for <kexec@lists.infradead.org>; Mon, 8 Oct 2018 07:20:44 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2n03bnrcsh-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 08 Oct 2018 07:20:43 -0400
-Received: from localhost
- by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Mon, 8 Oct 2018 12:20:41 +0100
-Subject: Re: [PATCH v5 0/6] Add support for architecture specific IMA policies
-From: Mimi Zohar <zohar@linux.ibm.com>
-Date: Mon, 08 Oct 2018 07:20:25 -0400
-In-Reply-To: <20181005174015.21939-1-nayna@linux.vnet.ibm.com>
-References: <20181005174015.21939-1-nayna@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Message-Id: <1538997625.15382.87.camel@linux.ibm.com>
+Received: from mail.kernel.org ([198.145.29.99])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1g9XQW-0002IM-CV
+ for kexec@lists.infradead.org; Mon, 08 Oct 2018 15:26:34 +0000
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.18 58/58] x86/boot: Fix kexec booting failure in the
+ SEV bit detection code
+Date: Mon,  8 Oct 2018 11:25:23 -0400
+Message-Id: <20181008152523.70705-58-sashal@kernel.org>
+In-Reply-To: <20181008152523.70705-1-sashal@kernel.org>
+References: <20181008152523.70705-1-sashal@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,57 +18,112 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nayna Jain <nayna@linux.vnet.ibm.com>, linux-integrity@vger.kernel.org
-Cc: linux-efi@vger.kernel.org, Nayna Jain <nayna@linux.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, jforbes@redhat.com
+To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: ghook@redhat.com, brijesh.singh@amd.com, Kairui Song <kasong@redhat.com>, bhe@redhat.com, kexec@lists.infradead.org, Sasha Levin <alexander.levin@microsoft.com>, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, Borislav Petkov <bp@suse.de>, dyoung@redhat.com
 
-On Fri, 2018-10-05 at 23:10 +0530, Nayna Jain wrote:
-> From: Nayna Jain <nayna@linux.ibm.com>
-> 
-> The architecture specific policy, introduced in this patch set, permits
-> different architectures to define IMA policy rules based on kernel
-> configuration and system runtime information.
-> 
-> For example, on x86, there are two methods of verifying the kexec'ed kernel
-> image signature - CONFIG_KEXEC_VERIFY_SIG and IMA appraisal policy
-> KEXEC_KERNEL_CHECK. CONFIG_KEXEC_VERIFY_SIG enforces the kexec_file_load
-> syscall to verify file signatures, but does not prevent the kexec_load
-> syscall. The IMA KEXEC_KERNEL_CHECK policy rule verifies the kexec'ed
-> kernel image, loaded via the kexec_file_load syscall, is validly signed and
-> prevents loading a kernel image via the kexec_load syscall. When secure
-> boot is enabled, the kexec'ed kernel image needs to be signed and the
-> signature verified. In this environment, either method of verifying the
-> kexec'ed kernel image is acceptable, as long as the kexec_load syscall is
-> disabled.
-> 
-> The previous version of this patchset introduced a new IMA policy rule to
-> disable the kexec_load syscall, when CONFIG_KEXEC_VERIFY_SIG was enabled,
-> however that is removed from this version by introducing a different
-> mechanism, as described below.
-> 
-> The patchset defines an arch_ima_get_secureboot() function to retrieve the
-> secureboot state of the system. If secureboot is enabled and
-> CONFIG_KEXEC_VERIFY_SIG is configured, it denies permission to kexec_load
-> syscall.
-> 
-> To support architecture specific policies, a new function
-> arch_get_ima_policy() is defined. This patch set defines IMA
-> KERNEL_KEXEC_POLICY rules for x86 *only* if CONFIG_KEXEC_VERIFY_SIG is
-> disabled and secure boot is enabled.
-> 
-> This patch set includes a patch, which refactors ima_init_policy() to
-> remove code duplication.
+From: Kairui Song <kasong@redhat.com>
 
-Other than a couple of #ifdef's in .c files, which should be converted
-to use IS_ENABLED(<config-option>), the patch set is looking really
-good.
+[ Upstream commit bdec8d7fa55e6f5314ed72e5a0b435d90ff90548 ]
 
-thanks!
+Commit
 
-Mimi
+  1958b5fc4010 ("x86/boot: Add early boot support when running with SEV active")
+
+can occasionally cause system resets when kexec-ing a second kernel even
+if SEV is not active.
+
+That's because get_sev_encryption_bit() uses 32-bit rIP-relative
+addressing to read the value of enc_bit - a variable which caches a
+previously detected encryption bit position - but kexec may allocate
+the early boot code to a higher location, beyond the 32-bit addressing
+limit.
+
+In this case, garbage will be read and get_sev_encryption_bit() will
+return the wrong value, leading to accessing memory with the wrong
+encryption setting.
+
+Therefore, remove enc_bit, and thus get rid of the need to do 32-bit
+rIP-relative addressing in the first place.
+
+ [ bp: massage commit message heavily. ]
+
+Fixes: 1958b5fc4010 ("x86/boot: Add early boot support when running with SEV active")
+Suggested-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Kairui Song <kasong@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: tglx@linutronix.de
+Cc: mingo@redhat.com
+Cc: hpa@zytor.com
+Cc: brijesh.singh@amd.com
+Cc: kexec@lists.infradead.org
+Cc: dyoung@redhat.com
+Cc: bhe@redhat.com
+Cc: ghook@redhat.com
+Link: https://lkml.kernel.org/r/20180927123845.32052-1-kasong@redhat.com
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+---
+ arch/x86/boot/compressed/mem_encrypt.S | 19 -------------------
+ 1 file changed, 19 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/mem_encrypt.S b/arch/x86/boot/compressed/mem_encrypt.S
+index eaa843a52907..a480356e0ed8 100644
+--- a/arch/x86/boot/compressed/mem_encrypt.S
++++ b/arch/x86/boot/compressed/mem_encrypt.S
+@@ -25,20 +25,6 @@ ENTRY(get_sev_encryption_bit)
+ 	push	%ebx
+ 	push	%ecx
+ 	push	%edx
+-	push	%edi
+-
+-	/*
+-	 * RIP-relative addressing is needed to access the encryption bit
+-	 * variable. Since we are running in 32-bit mode we need this call/pop
+-	 * sequence to get the proper relative addressing.
+-	 */
+-	call	1f
+-1:	popl	%edi
+-	subl	$1b, %edi
+-
+-	movl	enc_bit(%edi), %eax
+-	cmpl	$0, %eax
+-	jge	.Lsev_exit
+ 
+ 	/* Check if running under a hypervisor */
+ 	movl	$1, %eax
+@@ -69,15 +55,12 @@ ENTRY(get_sev_encryption_bit)
+ 
+ 	movl	%ebx, %eax
+ 	andl	$0x3f, %eax		/* Return the encryption bit location */
+-	movl	%eax, enc_bit(%edi)
+ 	jmp	.Lsev_exit
+ 
+ .Lno_sev:
+ 	xor	%eax, %eax
+-	movl	%eax, enc_bit(%edi)
+ 
+ .Lsev_exit:
+-	pop	%edi
+ 	pop	%edx
+ 	pop	%ecx
+ 	pop	%ebx
+@@ -113,8 +96,6 @@ ENTRY(set_sev_encryption_mask)
+ ENDPROC(set_sev_encryption_mask)
+ 
+ 	.data
+-enc_bit:
+-	.int	0xffffffff
+ 
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ 	.balign	8
+-- 
+2.17.1
 
 
 _______________________________________________
