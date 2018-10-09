@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1g9vv1-0002SX-39
- for kexec@lists.infradead.org; Tue, 09 Oct 2018 17:35:40 +0000
-Date: Tue, 9 Oct 2018 19:35:26 +0200
-From: Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH 3/3] resource: Fix find_next_iomem_res() iteration issue
-Message-ID: <20181009173526.GD17073@zn.tnic>
-References: <153805773703.1157.14773321497580233478.stgit@bhelgaas-glaptop.roam.corp.google.com>
- <153805812916.1157.177580438135143788.stgit@bhelgaas-glaptop.roam.corp.google.com>
- <20180928164108.GE21895@zn.tnic>
- <CAErSpo7fO-bNCzxRXtREfs82OKjd0h3Yu8y+Ova7bhe3NyMd=w@mail.gmail.com>
+Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling
+ properties
+References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
+ <20180928064841.14117-7-takahiro.akashi@linaro.org>
+ <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
+ <20181005030849.GK32578@linaro.org>
+ <CAL_Jsq+wXU8PCyJhaTKE7ezZhiD0KARUFXVzQBk0ZptEEK7ubQ@mail.gmail.com>
+ <20181009003733.GN32578@linaro.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Message-ID: <c65e42ce-1a98-7680-3a09-1f737eb26763@gmail.com>
+Date: Tue, 9 Oct 2018 10:47:15 -0700
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAErSpo7fO-bNCzxRXtREfs82OKjd0h3Yu8y+Ova7bhe3NyMd=w@mail.gmail.com>
+In-Reply-To: <20181009003733.GN32578@linaro.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,33 +21,146 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, brijesh.singh@amd.com, lijiang@redhat.com, Baoquan He <bhe@redhat.com>, thomas.lendacky@amd.com, Takashi Iwai <tiwai@suse.de>, x86@kernel.org, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>, baiyaowei@cmss.chinamobile.com, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, dyoung@redhat.com, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, Rob Herring <robh+dt@kernel.org>, David Gibson <david@gibson.dropbear.id.au>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
 
-T24gVHVlLCBPY3QgMDksIDIwMTggYXQgMTI6MzA6MzNQTSAtMDUwMCwgQmpvcm4gSGVsZ2FhcyB3
-cm90ZToKPiBTb3JyeSwgSSBkb24ndCBrbm93IHdoYXQgaGFwcGVuZWQgaGVyZSBiZWNhdXNlIEkg
-ZGlkbid0IHNlZSB0aGVzZQo+IGNvbW1lbnRzIHVudGlsIHRvZGF5LiAgSSBzdXNwZWN0IHdoYXQg
-aGFwcGVuZWQgd2FzIHRoYXQgbXkgR21haWwKPiBmaWx0ZXIgYXV0by1maWxlZCB0aGVtIGluIG15
-IGxpbnV4LWtlcm5lbCBmb2xkZXIsIHdoaWNoIEkgZG9uJ3QgcmVhZC4KPiBPbiBteSBAZ29vZ2xl
-LmNvbSBhY2NvdW50LCBJIGhhdmUgYW5vdGhlciBmaWx0ZXIgdGhhdCBwdWxsIG91dCB0aGluZ3MK
-PiBhZGRyZXNzZWQgZGlyZWN0bHkgdG8gbWUsIHdoaWNoIEkgKmRvKiByZWFkLiAgQnV0IHRoaXMg
-dGhyZWFkIGRpZG4ndAo+IGNjIHRoYXQgYWNjb3VudCB1bnRpbCB0aGUgdGlwLWJvdCBtZXNzYWdl
-LCB3aGljaCAqZGlkKiBjYyBteSBAZ29vZ2xlCj4gYWNjb3VudCBiZWNhdXNlIHRoYXQncyBob3cg
-SSBzaWduZWQgb2ZmIHRoZSBwYXRjaGVzLiAgU2lnaC4KCk5vIHdvcnJpZXMsIGl0IGFsbCBzaG91
-bGQgYmUgdGFrZW4gY2FyZSBvZiBub3chIDotKQoKPiBBbnl3YXksIGl0IGxvb2tzIGxpa2UgdGhp
-cyBzdHVmZiBpcyBvbiBpdHMgd2F5OyBsZXQgbWUga25vdwo+IChiaGVsZ2Fhc0Bnb29nbGUuY29t
-KSBpZiBJIHNob3VsZCBkbyBhbnl0aGluZyBlbHNlLiAgSSB3b3VsZCBhZGRyZXNzCj4geW91ciBj
-b21tZW50cyBhYm92ZSwgYnV0IHNpbmNlIHRoaXMgc2VlbXMgdG8gYmUgYXBwbGllZCBhbmQgSSBz
-YXcgYQo+IGNsZWFudXAgcGF0Y2ggZnJvbSB5b3UsIEkgYXNzdW1lIHlvdSBhbHJlYWR5IHRvb2sg
-Y2FyZSBvZiB0aGVtLgoKWWVhaCwgSSB0aGluayBJJ3ZlIGNvdmVyZWQgdGhlbSBhbGwgYnV0IGlm
-IHlvdSBzZWUgc29tZXRoaW5nIG91dCBvZiB0aGUKb3JkaW5hcnksIGxldCBtZSBrbm93IHNvIHRo
-YXQgSSBjYW4gZml4IGl0LgoKVGhhbmtzIQoKLS0gClJlZ2FyZHMvR3J1c3MsCiAgICBCb3Jpcy4K
-ClNVU0UgTGludXggR21iSCwgR0Y6IEZlbGl4IEltZW5kw7ZyZmZlciwgSmFuZSBTbWl0aGFyZCwg
-R3JhaGFtIE5vcnRvbiwgSFJCIDIxMjg0IChBRyBOw7xybmJlcmcpCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2tleGVjCg==
+On 10/08/18 17:37, AKASHI, Takahiro wrote:
+> On Fri, Oct 05, 2018 at 08:23:57AM -0500, Rob Herring wrote:
+>> On Thu, Oct 4, 2018 at 10:07 PM AKASHI, Takahiro
+>> <takahiro.akashi@linaro.org> wrote:
+>>>
+>>> Rob,
+>>>
+>>> # I haven't replied to this comment yet.
+>>>
+>>> On Fri, Sep 28, 2018 at 08:44:42AM -0500, Rob Herring wrote:
+>>>> +David Gibson
+>>>>
+>>>> On Fri, Sep 28, 2018 at 1:48 AM AKASHI Takahiro
+>>>> <takahiro.akashi@linaro.org> wrote:
+>>>>>
+>>>>> These functions will be used later to handle kexec-specific properties
+>>>>> in arm64's kexec_file implementation.
+>>>>>
+>>>>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>>> Cc: Frank Rowand <frowand.list@gmail.com>
+>>>>> Cc: devicetree@vger.kernel.org
+>>>>> ---
+>>>>>  drivers/of/fdt.c       | 56 ++++++++++++++++++++++++++++++++++++++++++
+>>>>>  include/linux/of_fdt.h |  4 +++
+>>>>>  2 files changed, 60 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>>>>> index 800ad252cf9c..c65c31562ccb 100644
+>>>>> --- a/drivers/of/fdt.c
+>>>>> +++ b/drivers/of/fdt.c
+>>>>> @@ -25,6 +25,7 @@
+>>>>>  #include <linux/debugfs.h>
+>>>>>  #include <linux/serial_core.h>
+>>>>>  #include <linux/sysfs.h>
+>>>>> +#include <linux/types.h>
+>>>>>
+>>>>>  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+>>>>>  #include <asm/page.h>
+>>>>> @@ -1323,3 +1324,58 @@ late_initcall(of_fdt_raw_init);
+>>>>>  #endif
+>>>>>
+>>>>>  #endif /* CONFIG_OF_EARLY_FLATTREE */
+>>>>> +
+>>>>> +#define FDT_ALIGN(x, a)        (((x) + (a) - 1) & ~((a) - 1))
+>>>>> +#define FDT_TAGALIGN(x)        (FDT_ALIGN((x), FDT_TAGSIZE))
+>>>>> +
+>>>>> +int fdt_prop_len(const char *prop_name, int len)
+>>>>> +{
+>>>>> +       return (strlen(prop_name) + 1) +
+>>>>> +               sizeof(struct fdt_property) +
+>>>>> +               FDT_TAGALIGN(len);
+>>>>
+>>>> Looks like you are using this to calculate how much space you need to
+>>>> allocate in addition to the current DTB for a couple of new or
+>>>> replaced properties. I'm not sure that this calculation is completely
+>>>> accurate. And it is strange there doesn't seem to be any libfdt
+>>>> function for this already. It would be simpler to just add some fixed
+>>>> additional amount.
+>>>>
+>>>> Maybe David G has comments on this?
+>>>>
+>>>>> +}
+>>>>> +
+>>>>
+>>>> The rest of this should go in drivers/of/fdt_address.c. Ultimately, it
+>>>> should go into libfdt, but I'm fine with having it in the kernel for
+>>>> now.
+>>>
+>>> I'd like to have this function in the kernel for now.
+>>>
+>>>>> +static void fill_property(void *buf, u64 val64, int cells)
+>>>>> +{
+>>>>> +       __be32 val32;
+>>>>> +
+>>>>> +       while (cells) {
+>>>>> +               val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
+>>>>> +               memcpy(buf, &val32, sizeof(val32));
+>>>>> +               buf += sizeof(val32);
+>>>>
+>>>> This is kind of hard to read. I would copy u-boot's fdt_pack_reg function.
+>>>
+>>> Are you sure?
+>>> I originally implemented this function in a similar way that fdt_pack_reg()
+>>> was, but, you suggested, in your past comment[1], that we'd be better to
+>>> have of_read_number()-like implementation.
+>>>
+>>> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-May/579118.html
+>>
+>> Yeah, you're right. Plus, I'm not sure the u-boot one would work for
+>> unaligned accesses with armv5 and earlier h/w.
+>>
+>> My only comment then is I think you can drop the U32_MAX masking.
+> 
+> Okay, then I will leave this function, yet renaming it to
+> cpu64_to_fdt_cells() after Frank's comment.
+
+I have second guessed myself and do not like the name I suggested
+because what the function really does is either cpu32 to be32 or
+cpu64 to be64.
+
+I agree with Rob that readability is important here.  Instead of
+having a fill_property() function, how about having inline code,
+something like (untested even for thinkos):
+
+	prop = buf;
+
+	if (addr_cells == 1) {
+		*(__be32 *)prop = cpu32_to_be32(addr);
+		prop += 4;
+	} else {
+		*(__be64 *)prop = cpu64_to_be64(addr);
+		prop += 8;
+	}
+
+	if (size_cells == 1)
+		*(__be32 *)prop = cpu32_to_be32(size);
+	else
+		*(__be64 *)prop = cpu64_to_be64(size);
+
+You might want to also give Rob a chance to bike shed on this
+suggestion.
+
+-Frank
+
+> 
+> Thanks,
+> -Takahiro Akashi
+>>
+>> Rob
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
