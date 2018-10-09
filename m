@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 9 Oct 2018 16:28:00 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v15 11/16] arm64: kexec_file: allow for loading
- Image-format kernel
-Message-ID: <20181009152759.x24xuiwb3zsg4jx7@lakrids.cambridge.arm.com>
-References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
- <20180928064841.14117-12-takahiro.akashi@linaro.org>
+Received: from mail-wr1-x441.google.com ([2a00:1450:4864:20::441])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1g9vqV-0000Hl-Dv
+ for kexec@lists.infradead.org; Tue, 09 Oct 2018 17:31:01 +0000
+Received: by mail-wr1-x441.google.com with SMTP id y11-v6so2722000wrd.4
+ for <kexec@lists.infradead.org>; Tue, 09 Oct 2018 10:30:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180928064841.14117-12-takahiro.akashi@linaro.org>
+References: <153805773703.1157.14773321497580233478.stgit@bhelgaas-glaptop.roam.corp.google.com>
+ <153805812916.1157.177580438135143788.stgit@bhelgaas-glaptop.roam.corp.google.com>
+ <20180928164108.GE21895@zn.tnic>
+In-Reply-To: <20180928164108.GE21895@zn.tnic>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Date: Tue, 9 Oct 2018 12:30:33 -0500
+Message-ID: <CAErSpo7fO-bNCzxRXtREfs82OKjd0h3Yu8y+Ova7bhe3NyMd=w@mail.gmail.com>
+Subject: Re: [PATCH 3/3] resource: Fix find_next_iomem_res() iteration issue
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,246 +26,252 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: prudo@linux.ibm.com, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james.morse@arm.com, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: Borislav Petkov <bp@suse.de>
+Cc: Dan Williams <dan.j.williams@intel.com>, brijesh.singh@amd.com, lijiang@redhat.com, Baoquan He <bhe@redhat.com>, thomas.lendacky@amd.com, Takashi Iwai <tiwai@suse.de>, x86@kernel.org, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>, baiyaowei@cmss.chinamobile.com, "H. Peter Anvin" <hpa@zytor.com>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, dyoung@redhat.com, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, Sep 28, 2018 at 03:48:36PM +0900, AKASHI Takahiro wrote:
-> This patch provides kexec_file_ops for "Image"-format kernel. In this
-> implementation, a binary is always loaded with a fixed offset identified
-> in text_offset field of its header.
-> 
-> Regarding signature verification for trusted boot, this patch doesn't
-> contains CONFIG_KEXEC_VERIFY_SIG support, which is to be added later
-> in this series, but file-attribute-based verification is still a viable
-> option by enabling IMA security subsystem.
-> 
-> You can sign(label) a to-be-kexec'ed kernel image on target file system
-> with:
->     $ evmctl ima_sign --key /path/to/private_key.pem Image
-> 
-> On live system, you must have IMA enforced with, at least, the following
-> security policy:
->     "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig"
-> 
-> See more details about IMA here:
->     https://sourceforge.net/p/linux-ima/wiki/Home/
-> 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Reviewed-by: James Morse <james.morse@arm.com>
-> ---
->  arch/arm64/include/asm/kexec.h         |  28 +++++++
->  arch/arm64/kernel/Makefile             |   2 +-
->  arch/arm64/kernel/kexec_image.c        | 108 +++++++++++++++++++++++++
->  arch/arm64/kernel/machine_kexec_file.c |   1 +
->  4 files changed, 138 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/kernel/kexec_image.c
-> 
-> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> index 157b2897d911..5e673481b3a3 100644
-> --- a/arch/arm64/include/asm/kexec.h
-> +++ b/arch/arm64/include/asm/kexec.h
-> @@ -101,6 +101,34 @@ struct kimage_arch {
->  	unsigned long dtb_mem;
->  };
->  
-> +/**
-> + * struct arm64_image_header - arm64 kernel image header
-> + * See Documentation/arm64/booting.txt for details
-> + *
-> + * @mz_magic: DOS header magic number ('MZ', optional)
+On Fri, Sep 28, 2018 at 11:42 AM Borislav Petkov <bp@suse.de> wrote:
+>
+> On Thu, Sep 27, 2018 at 09:22:09AM -0500, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> >
+> > Previously find_next_iomem_res() used "*res" as both an input parameter for
+> > the range to search and the type of resource to search for, and an output
+> > parameter for the resource we found, which makes the interface confusing.
+> >
+> > The current callers use find_next_iomem_res() incorrectly because they
+> > allocate a single struct resource and use it for repeated calls to
+> > find_next_iomem_res().  When find_next_iomem_res() returns a resource, it
+> > overwrites the start, end, flags, and desc members of the struct.  If we
+> > call find_next_iomem_res() again, we must update or restore these fields.
+> > The previous code restored res.start and res.end, but not res.flags or
+> > res.desc.
+>
+> ... which is a sure sign that the design of this thing is not the best one.
+>
+> >
+> > Since the callers did not restore res.flags, if they searched for flags
+> > IORESOURCE_MEM | IORESOURCE_BUSY and found a resource with flags
+> > IORESOURCE_MEM | IORESOURCE_BUSY | IORESOURCE_SYSRAM, the next search would
+> > incorrectly skip resources unless they were also marked as
+> > IORESOURCE_SYSRAM.
+>
+> Nice example!
+>
+> > Fix this by restructuring the interface so it takes explicit "start, end,
+> > flags" parameters and uses "*res" only as an output parameter.
+> >
+> > Original-patch: http://lore.kernel.org/lkml/20180921073211.20097-2-lijiang@redhat.com
+> > Based-on-patch-by: Lianbo Jiang <lijiang@redhat.com>
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> >  kernel/resource.c |   94 +++++++++++++++++++++++------------------------------
+> >  1 file changed, 41 insertions(+), 53 deletions(-)
+> >
+> > diff --git a/kernel/resource.c b/kernel/resource.c
+> > index 155ec873ea4d..9891ea90cc8f 100644
+> > --- a/kernel/resource.c
+> > +++ b/kernel/resource.c
+> > @@ -319,23 +319,26 @@ int release_resource(struct resource *old)
+> >  EXPORT_SYMBOL(release_resource);
+> >
+> >  /*
+>
+> I guess this could be made kernel-doc, since you're touching it...
+>
+> > - * Finds the lowest iomem resource existing within [res->start..res->end].
+> > - * The caller must specify res->start, res->end, res->flags, and optionally
+> > - * desc.  If found, returns 0, res is overwritten, if not found, returns -1.
+> > - * This function walks the whole tree and not just first level children until
+> > - * and unless first_level_children_only is true.
+> > + * Finds the lowest iomem resource that covers part of [start..end].  The
+> > + * caller must specify start, end, flags, and desc (which may be
+> > + * IORES_DESC_NONE).
+> > + *
+> > + * If a resource is found, returns 0 and *res is overwritten with the part
+> > + * of the resource that's within [start..end]; if none is found, returns
+> > + * -1.
+> > + *
+> > + * This function walks the whole tree and not just first level children
+> > + * unless first_level_children_only is true.
+>
+> ... and then prepend that with '@' - @first_level_children_only to refer
+> to the function parameter.
+>
+> >   */
+> > -static int find_next_iomem_res(struct resource *res, unsigned long desc,
+> > -                            bool first_level_children_only)
+> > +static int find_next_iomem_res(resource_size_t start, resource_size_t end,
+> > +                            unsigned long flags, unsigned long desc,
+> > +                            bool first_level_children_only,
+> > +                            struct resource *res)
+> >  {
+> > -     resource_size_t start, end;
+> >       struct resource *p;
+> >       bool sibling_only = false;
+> >
+> >       BUG_ON(!res);
+> > -
+> > -     start = res->start;
+> > -     end = res->end;
+> >       BUG_ON(start >= end);
+>
+> And since we're touching this, maybe replace that BUG_ON() fun with
+> simply return -EINVAL or some error code...
+>
+> >
+> >       if (first_level_children_only)
+>
+>         if (first_level_children_only)
+>                 sibling_only = true;
+>
+> So this is just silly - replacing a bool function param with a local bool
+> var.
+>
+> You could kill that, shorten first_level_children_only's name and use it
+> directly.
+>
+> Depending on how much cleanup it amounts to, you could make that a
+> separate cleanup patch ontop, to keep the changes from the cleanup
+> separate.
+>
+> > @@ -344,7 +347,7 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
+> >       read_lock(&resource_lock);
+> >
+> >       for (p = iomem_resource.child; p; p = next_resource(p, sibling_only)) {
+> > -             if ((p->flags & res->flags) != res->flags)
+> > +             if ((p->flags & flags) != flags)
+> >                       continue;
+> >               if ((desc != IORES_DESC_NONE) && (desc != p->desc))
+> >                       continue;
+> > @@ -359,32 +362,31 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
+> >       read_unlock(&resource_lock);
+> >       if (!p)
+> >               return -1;
+> > +
+> >       /* copy data */
+> > -     if (res->start < p->start)
+> > -             res->start = p->start;
+> > -     if (res->end > p->end)
+> > -             res->end = p->end;
+> > +     res->start = max(start, p->start);
+> > +     res->end = min(end, p->end);
+>
+> Should we use the min_t and max_t versions here for typechecking?
+>
+> >       res->flags = p->flags;
+> >       res->desc = p->desc;
+> >       return 0;
+> >  }
+> >
+> > -static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
+> > -                              bool first_level_children_only,
+> > -                              void *arg,
+> > +static int __walk_iomem_res_desc(resource_size_t start, resource_size_t end,
+> > +                              unsigned long flags, unsigned long desc,
+> > +                              bool first_level_children_only, void *arg,
+> >                                int (*func)(struct resource *, void *))
+> >  {
+> > -     u64 orig_end = res->end;
+> > +     struct resource res;
+> >       int ret = -1;
+> >
+> > -     while ((res->start < res->end) &&
+> > -            !find_next_iomem_res(res, desc, first_level_children_only)) {
+> > -             ret = (*func)(res, arg);
+> > +     while (start < end &&
+> > +            !find_next_iomem_res(start, end, flags, desc,
+> > +                                 first_level_children_only, &res)) {
+> > +             ret = (*func)(&res, arg);
+> >               if (ret)
+> >                       break;
+> >
+> > -             res->start = res->end + 1;
+> > -             res->end = orig_end;
+> > +             start = res.end + 1;
+> >       }
+> >
+> >       return ret;
+> > @@ -407,13 +409,7 @@ static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
+> >  int walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start,
+> >               u64 end, void *arg, int (*func)(struct resource *, void *))
+>
+> Align that function's parameters on the opening brace, pls, while you're
+> at it.
+>
+> >  {
+> > -     struct resource res;
+> > -
+> > -     res.start = start;
+> > -     res.end = end;
+> > -     res.flags = flags;
+> > -
+> > -     return __walk_iomem_res_desc(&res, desc, false, arg, func);
+> > +     return __walk_iomem_res_desc(start, end, flags, desc, false, arg, func);
+> >  }
+> >  EXPORT_SYMBOL_GPL(walk_iomem_res_desc);
+> >
+> > @@ -427,13 +423,9 @@ EXPORT_SYMBOL_GPL(walk_iomem_res_desc);
+> >  int walk_system_ram_res(u64 start, u64 end, void *arg,
+> >                               int (*func)(struct resource *, void *))
+>
+> Ditto.
+>
+> >  {
+> > -     struct resource res;
+> > -
+> > -     res.start = start;
+> > -     res.end = end;
+> > -     res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> > +     unsigned long flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> >
+> > -     return __walk_iomem_res_desc(&res, IORES_DESC_NONE, true,
+> > +     return __walk_iomem_res_desc(start, end, flags, IORES_DESC_NONE, true,
+> >                                    arg, func);
+> >  }
+> >
+> > @@ -444,13 +436,9 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
+> >  int walk_mem_res(u64 start, u64 end, void *arg,
+> >                int (*func)(struct resource *, void *))
+> >  {
+> > -     struct resource res;
+> > -
+> > -     res.start = start;
+> > -     res.end = end;
+> > -     res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+> > +     unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+> >
+> > -     return __walk_iomem_res_desc(&res, IORES_DESC_NONE, true,
+> > +     return __walk_iomem_res_desc(start, end, flags, IORES_DESC_NONE, true,
+> >                                    arg, func);
+> >  }
+> >
+> > @@ -464,25 +452,25 @@ int walk_mem_res(u64 start, u64 end, void *arg,
+> >  int walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
+> >               void *arg, int (*func)(unsigned long, unsigned long, void *))
+>
+> Ditto.
+>
+> With that addressed:
+>
+> Reviewed-by: Borislav Petkov <bp@suse.de>
+>
+> All good stuff and a charm to review, lemme know if I should take them
+> or you can carry them.
 
-Please just call this code0. If CONFIG_EFI is disabled, it is not 'MZ'.
+Sorry, I don't know what happened here because I didn't see these
+comments until today.  I suspect what happened was that my Gmail
+filter auto-filed them in my linux-kernel folder, which I don't read.
+On my @google.com account, I have another filter that pull out things
+addressed directly to me, which I *do* read.  But this thread didn't
+cc that account until the tip-bot message, which *did* cc my @google
+account because that's how I signed off the patches.  Sigh.
 
-> + * @code1: Instruction (branch to stext)
-> + * @text_offset: Image load offset
-> + * @image_size: Effective image size
-> + * @flags: Bit-field flags
-> + * @reserved: Reserved
-> + * @magic: Magic number
-> + * @pe_header: Offset to PE COFF header (optional)
-> + **/
-> +
-> +struct arm64_image_header {
-> +	__le16 mz_magic; /* also code0 */
-> +	__le16 pad;
+Anyway, it looks like this stuff is on its way; let me know
+(bhelgaas@google.com) if I should do anything else.  I would address
+your comments above, but since this seems to be applied and I saw a
+cleanup patch from you, I assume you already took care of them.
 
-Likewise, just have __le32 code0 here, please.
-
-> +	__le32 code1;
-> +	__le64 text_offset;
-> +	__le64 image_size;
-> +	__le64 flags;
-> +	__le64 reserved[3];
-> +	__le32 magic;
-> +	__le32 pe_header;
-> +};
-> +
-> +extern const struct kexec_file_ops kexec_image_ops;
-> +
->  struct kimage;
->  
->  extern int arch_kimage_file_post_load_cleanup(struct kimage *image);
-> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-> index 030a39bff117..48868255f09c 100644
-> --- a/arch/arm64/kernel/Makefile
-> +++ b/arch/arm64/kernel/Makefile
-> @@ -51,7 +51,7 @@ arm64-obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
->  arm64-obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
->  arm64-obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
->  					   cpu-reset.o
-> -arm64-obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o
-> +arm64-obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o kexec_image.o
->  arm64-obj-$(CONFIG_ARM64_RELOC_TEST)	+= arm64-reloc-test.o
->  arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
->  arm64-obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
-> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-> new file mode 100644
-> index 000000000000..d64f5e9f9d22
-> --- /dev/null
-> +++ b/arch/arm64/kernel/kexec_image.c
-> @@ -0,0 +1,108 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Kexec image loader
-> +
-> + * Copyright (C) 2018 Linaro Limited
-> + * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> + */
-> +
-> +#define pr_fmt(fmt)	"kexec_file(Image): " fmt
-> +
-> +#include <linux/err.h>
-> +#include <linux/errno.h>
-> +#include <linux/kernel.h>
-> +#include <linux/kexec.h>
-> +#include <linux/string.h>
-> +#include <asm/boot.h>
-> +#include <asm/byteorder.h>
-> +#include <asm/cpufeature.h>
-> +#include <asm/memory.h>
-> +
-> +static int image_probe(const char *kernel_buf, unsigned long kernel_len)
-> +{
-> +	const struct arm64_image_header *h;
-> +
-> +	h = (const struct arm64_image_header *)(kernel_buf);
-> +
-> +	if (!h || (kernel_len < sizeof(*h)) ||
-> +			memcmp(&h->magic, ARM64_MAGIC, sizeof(h->magic)))
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static void *image_load(struct kimage *image,
-> +				char *kernel, unsigned long kernel_len,
-> +				char *initrd, unsigned long initrd_len,
-> +				char *cmdline, unsigned long cmdline_len)
-> +{
-> +	struct arm64_image_header *h;
-> +	u64 flags, value;
-> +	struct kexec_buf kbuf;
-> +	unsigned long text_offset;
-> +	struct kexec_segment *kernel_segment;
-> +	int ret;
-> +
-> +	/* Don't support old kernel */
-> +	h = (struct arm64_image_header *)kernel;
-> +	if (!h->text_offset)
-> +		return ERR_PTR(-EINVAL);
-
-It's entirely valid for TEXT_OFFSET to be zero when
-RANDOMIZE_TEXT_OFFSET is selected.
-
-I think you meant to check image_size here.
-
-We could do with a better comment, too, e.g.
-
-	/*
-	 * We require a kernel with an unambiguous Image header. Per
-	 * Documentation/booting.txt, this is the case when image_size
-	 * is non-zero (practically speaking, since v3.17).
-	 */
-	if (!h->image_size)
-		return ERR_PTR(-EINVAL);
-
-> +
-> +	/* Check cpu features */
-> +	flags = le64_to_cpu(h->flags);
-> +	value = head_flag_field(flags, HEAD_FLAG_BE);
-> +	if (((value == HEAD_FLAG_BE) && !IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)) ||
-> +	    ((value != HEAD_FLAG_BE) && IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)))
-> +		if (!system_supports_mixed_endian())
-> +			return ERR_PTR(-EINVAL);
-
-I think this can be simplified:
-
-	bool be_image = head_flag_field(flags, HEAD_FLAG_BE);
-	bool be_kernel = IS_ENABLED(CONFIG_CPU_BIG_ENDIAN);
-
-	if ((be_image != be_kernel) && !system_supports_mixed_endian)
-	    		return ERR_PTR(-EINVAL);
-
-... though do we need to police this at all? It's arguably policy given
-the new image has to be signed anyway), and there are other fields that
-could fall into that category in future.
-
-> +
-> +	value = head_flag_field(flags, HEAD_FLAG_PAGE_SIZE);
-> +	if (((value == HEAD_FLAG_PAGE_SIZE_4K) &&
-> +			!system_supports_4kb_granule()) ||
-> +	    ((value == HEAD_FLAG_PAGE_SIZE_64K) &&
-> +			!system_supports_64kb_granule()) ||
-> +	    ((value == HEAD_FLAG_PAGE_SIZE_16K) &&
-> +			!system_supports_16kb_granule()))
-> +		return ERR_PTR(-EINVAL);
-
-... likewise here?
-
-> +
-> +	/* Load the kernel */
-> +	kbuf.image = image;
-> +	kbuf.buf_min = 0;
-> +	kbuf.buf_max = ULONG_MAX;
-> +	kbuf.top_down = false;
-> +
-> +	kbuf.buffer = kernel;
-> +	kbuf.bufsz = kernel_len;
-> +	kbuf.mem = 0;
-> +	kbuf.memsz = le64_to_cpu(h->image_size);
-> +	text_offset = le64_to_cpu(h->text_offset);
-> +	kbuf.buf_align = MIN_KIMG_ALIGN;
-> +
-> +	/* Adjust kernel segment with TEXT_OFFSET */
-> +	kbuf.memsz += text_offset;
-
-It's very surprising at first glance to add text_offset here, then undo
-that below. This should have a better comment explaining what we're
-doing.
-
-> +
-> +	ret = kexec_add_buffer(&kbuf);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	kernel_segment = &image->segment[image->nr_segments - 1];
-
-I'm confused here. When/how can the image have muliple segments?
-
-> +	kernel_segment->mem += text_offset;
-> +	kernel_segment->memsz -= text_offset;
-> +	image->start = kernel_segment->mem;
-
-As above, I don't like the fact that we're altering the result of
-kexec_add_buffer here. It feels fragile, even if it works today.
-
-Can we teach the core kexec buffer code that we need an offset from an
-aligned base?
-
-Thanks,
-Mark.
+Bjorn
 
 _______________________________________________
 kexec mailing list
