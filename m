@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 10 Oct 2018 11:30:16 +1100
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling
- properties
-Message-ID: <20181010003016.GH7004@umbus.fritz.box>
-References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
- <20180928064841.14117-7-takahiro.akashi@linaro.org>
- <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
- <6a8d3ddb-c3bc-c044-4d6c-55e110d89e72@gmail.com>
- <20181005050627.GL32578@linaro.org>
- <bd3d0472-1bd7-52ed-b9f6-b5edae8c8b6d@gmail.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gA9Od-00062T-Pm
+ for kexec@lists.infradead.org; Wed, 10 Oct 2018 07:59:15 +0000
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+ by kirsty.vergenet.net (Postfix) with ESMTPA id CA1E025B80D
+ for <kexec@lists.infradead.org>; Wed, 10 Oct 2018 18:58:52 +1100 (AEDT)
+Date: Wed, 10 Oct 2018 09:58:49 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: [ANNOUNCE] kexec-tools 2.0.18-rc1
+Message-ID: <20181010075848.hye7rtjdcabtu4bw@verge.net.au>
 MIME-Version: 1.0
-In-Reply-To: <bd3d0472-1bd7-52ed-b9f6-b5edae8c8b6d@gmail.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,84 +20,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============8543915897448392731=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: prudo@linux.ibm.com, Herbert Xu <herbert@gondor.apana.org.au>, Baoquan He <bhe@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, David Howells <dhowells@redhat.com>, "AKASHI,
- Takahiro" <takahiro.akashi@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, James Morse <james.morse@arm.com>, dyoung@redhat.com, David Miller <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
+
+Hi all,
+
+I am happy to announce the release of kexec-tools 2.0.18-rc1.
+
+This is an incremental feature pre-release.
+
+So long as no serious problems arise I intend to release kexec-tools 2.0.18
+in a weeks time. Testing of 2.0.18-rc1 would be greatly appreciated.
+
+I do not have any outstanding changes for 2.0.18 at this time.
+And I would like to only accept bug fixes at this time and take take
+features patches once 2.0.18 has been released.
+
+The pre-release can be downloaded from kernel.org:
+
+	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.18-rc1.tar.xz
+	https://kernel.org/pub/linux/utils/kernel/kexec/
+
+I have also tagged it in git:
+
+	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+
+Thanks to everyone who has contributed to kexec.
 
 
---===============8543915897448392731==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="d3slIU+tL1lDaIh/"
-Content-Disposition: inline
+For reference the changes since v2.0.17 are:
 
-
---d3slIU+tL1lDaIh/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Oct 09, 2018 at 11:02:29AM -0700, Frank Rowand wrote:
-> On 10/04/18 22:06, AKASHI, Takahiro wrote:
-[snip]
-> >>>> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
-> >>>> +                                               u64 addr, u64 size)
-> >>>> +{
-> >>>> +       int addr_cells, size_cells;
-> >>
-> >> unsigned
-> >=20
-> > fdt_[address|size]_cell() returns an int.
->=20
-> I stand corrected.  They take advantage of the fact that valid values
-> are in the range 0..4 and return a negative value for error.
-
-I'm not sure if the spec formally defines that these values will fit
-in a positive 'int'.  But if addresses are 8GiB each, you're going to
-have much bigger problems putting it in a device tree than this
-function.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---d3slIU+tL1lDaIh/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlu9SBgACgkQbDjKyiDZ
-s5Joog/+Mp4GTHh8MV62ufe3LUp5dlUtwKaKypnCp0sN4DKEcqwzn/GHlv/FxZ1f
-4FWaF/NOJQ3tvqHrX/uS9S2YNe0EILpEz4dllcVBi31MRwwP3XRsPriKSD1JLFFu
-MJSiNVztKYw91UwbOo6e2etdRlNytAfNz6BMiBCtZUlwxqlsB4svjNLifTeazhEk
-UuzPeekac6W4sSRqExSR/vX8jR8yl9S0VhftH83nDZrHyjwZYeLgW0o8iINHkUGJ
-YxvtyL6kEX7uMn1JtqPxHfBxZlKOLrxSasbziqJVvUwzAV9DU40Rp761YbjUlrkV
-zGAOswcB351l58jf3EQOVnmszeXK0ZeeyOABr0WD8z0VHt67sBL6gFkNcS8OLOjm
-KMTwAyRz99tmUW044RAJREY907NJGiO69MJyJzWn9JMyk+E/rWto8Q4AkrmNpzrz
-KsYuwymXIjFFKMdDdnfamf3YLjx86pa7Q5Tu8xmh1HEjrUaYwFqptaFpjDBAFRAR
-C5EY14p/ftKrl4O1LhqRDj2Xe0/+ZWeXPlCLlHYejNFqWBPlyE6ukrRLAg1TF0Sv
-cbyylJams/EaC2VIv6ztpyVf5T/fgPf49mXof67scxnmiMzgN9WhH6V8wKHCFZ4V
-7ElFrHb4WK+YB6CY7U61SuVvpBJuwH8a0XBJoh1h+e9EdSm2UMM=
-=lNt5
------END PGP SIGNATURE-----
-
---d3slIU+tL1lDaIh/--
-
-
---===============8543915897448392731==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+94159bc3c264 kexec-tools 2.0.18-rc1
+1ac3e4a57000 kdump: fix an error that can not parse the e820 reserved region
+b9de21ef51a7 kexec: fix for "Unhandled rela relocation: R_X86_64_PLT32" error
+ca4823aa2fc2 arm64: error out if kernel command line is too long
+7198e899ddab arm64: increase command line size to 2048
+c3f043241a86 arm64: Add support to supply 'kaslr-seed' to secondary kernel
+7acd257ae67b Remove obsolete kdump tool
+674b9b45876c Makefile.in: Add uninstall rule
+e277fa9ec702 vmcore-dmesg: fix infinite loop if log buffer wraps around
+d4a948c26827 kexec/s390: Add support for kexec_file_load
+0481e9ed61ef kexec: Add --no-checks option
+72c146c20588 purgatory/ppc64: Fix uninitialized warning
+3f276f71f14d kexec-elf-rel-ppc64: Fix cast from pointer warning
+7be89276db19 crashdump-ppc64: Fix integer truncation warning
+798317c134b2 kexec: Fix printf warning
+b43960c20dd2 kexec-tools 2.0.17.git
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============8543915897448392731==--
-
