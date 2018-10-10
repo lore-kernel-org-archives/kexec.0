@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gA9Od-00062T-Pm
- for kexec@lists.infradead.org; Wed, 10 Oct 2018 07:59:15 +0000
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
- by kirsty.vergenet.net (Postfix) with ESMTPA id CA1E025B80D
- for <kexec@lists.infradead.org>; Wed, 10 Oct 2018 18:58:52 +1100 (AEDT)
-Date: Wed, 10 Oct 2018 09:58:49 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools 2.0.18-rc1
-Message-ID: <20181010075848.hye7rtjdcabtu4bw@verge.net.au>
+Date: Wed, 10 Oct 2018 10:47:51 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v15 11/16] arm64: kexec_file: allow for loading
+ Image-format kernel
+Message-ID: <20181010094750.sy5byeaykatvvup6@lakrids.cambridge.arm.com>
+References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
+ <20180928064841.14117-12-takahiro.akashi@linaro.org>
+ <20181009152759.x24xuiwb3zsg4jx7@lakrids.cambridge.arm.com>
+ <20181010065235.GY32578@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20181010065235.GY32578@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,51 +23,164 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, prudo@linux.ibm.com, ard.biesheuvel@linaro.org, james.morse@arm.com, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hi all,
+On Wed, Oct 10, 2018 at 03:52:37PM +0900, AKASHI Takahiro wrote:
+> Mark,
+> 
+> On Tue, Oct 09, 2018 at 04:28:00PM +0100, Mark Rutland wrote:
+> > On Fri, Sep 28, 2018 at 03:48:36PM +0900, AKASHI Takahiro wrote:
+> > > This patch provides kexec_file_ops for "Image"-format kernel. In this
+> > > implementation, a binary is always loaded with a fixed offset identified
+> > > in text_offset field of its header.
+> > > 
+> > > Regarding signature verification for trusted boot, this patch doesn't
+> > > contains CONFIG_KEXEC_VERIFY_SIG support, which is to be added later
+> > > in this series, but file-attribute-based verification is still a viable
+> > > option by enabling IMA security subsystem.
+> > > 
+> > > You can sign(label) a to-be-kexec'ed kernel image on target file system
+> > > with:
+> > >     $ evmctl ima_sign --key /path/to/private_key.pem Image
+> > > 
+> > > On live system, you must have IMA enforced with, at least, the following
+> > > security policy:
+> > >     "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig"
+> > > 
+> > > See more details about IMA here:
+> > >     https://sourceforge.net/p/linux-ima/wiki/Home/
+> > > 
+> > > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > > Cc: Will Deacon <will.deacon@arm.com>
+> > > Reviewed-by: James Morse <james.morse@arm.com>
+> > > ---
+> > >  arch/arm64/include/asm/kexec.h         |  28 +++++++
+> > >  arch/arm64/kernel/Makefile             |   2 +-
+> > >  arch/arm64/kernel/kexec_image.c        | 108 +++++++++++++++++++++++++
+> > >  arch/arm64/kernel/machine_kexec_file.c |   1 +
+> > >  4 files changed, 138 insertions(+), 1 deletion(-)
+> > >  create mode 100644 arch/arm64/kernel/kexec_image.c
+> > > 
+> > > diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> > > index 157b2897d911..5e673481b3a3 100644
+> > > --- a/arch/arm64/include/asm/kexec.h
+> > > +++ b/arch/arm64/include/asm/kexec.h
+> > > @@ -101,6 +101,34 @@ struct kimage_arch {
+> > >  	unsigned long dtb_mem;
+> > >  };
+> > >  
+> > > +/**
+> > > + * struct arm64_image_header - arm64 kernel image header
+> > > + * See Documentation/arm64/booting.txt for details
+> > > + *
+> > > + * @mz_magic: DOS header magic number ('MZ', optional)
+> > 
+> > Please just call this code0. If CONFIG_EFI is disabled, it is not 'MZ'.
+> 
+> How about this?
+> (This definition will go into a new header, asm/image.h.)
+> 
+> ---8<---
+> /*
+>  * struct arm64_image_header - arm64 kernel image header
+>  * See Documentation/arm64/booting.txt for details
+>  *
+>  * @code0:		Executable code, or
+>  *   @mz_header		  alternatively used for part of MZ header
+>  * @code1:		Executable code
+>  * @text_offset:	Image load offset
+>  * @image_size:		Effective Image size
+>  * @flags:		kernel flags
+>  * @reserved:		reserved
+>  * @magic:		Magic number
+>  * @reserved5:		reserved, or
+>  *   @pe_header:	  alternatively used for PE COFF offset
+>  */
+> 
+> struct arm64_image_header {
+> 	union {
+> 		__le32 code0;
+> 		struct {
+> 			__le16 magic;
+> 			__le16 pad;
+> 		} mz_header;
+> 	};
+> 	__le32 code1;
+> 	__le64 text_offset;
+> 	__le64 image_size;
+> 	__le64 flags;
+> 	__le64 reserved[3];
+> 	__le32 magic;
+> 	union {
+> 		__le32 reserved5;
+> 		__le32 pe_header;
+> 	};
+> };
 
-I am happy to announce the release of kexec-tools 2.0.18-rc1.
+Do we care about the MZ header?
 
-This is an incremental feature pre-release.
+The definition of the Image header in Documentation/arm64/booting.txt is:
 
-So long as no serious problems arise I intend to release kexec-tools 2.0.18
-in a weeks time. Testing of 2.0.18-rc1 would be greatly appreciated.
+  u32 code0;                    /* Executable code */
+  u32 code1;                    /* Executable code */
+  u64 text_offset;              /* Image load offset, little endian */
+  u64 image_size;               /* Effective Image size, little endian */
+  u64 flags;                    /* kernel flags, little endian */
+  u64 res2      = 0;            /* reserved */
+  u64 res3      = 0;            /* reserved */
+  u64 res4      = 0;            /* reserved */
+  u32 magic     = 0x644d5241;   /* Magic number, little endian, "ARM\x64" */
+  u32 res5;                     /* reserved (used for PE COFF offset) */
 
-I do not have any outstanding changes for 2.0.18 at this time.
-And I would like to only accept bug fixes at this time and take take
-features patches once 2.0.18 has been released.
+I'd prefer that we aligned our header definition with that, rather than
+diverging from it.
 
-The pre-release can be downloaded from kernel.org:
+If we need to look at the MZ magic to determine if the Image is a valid PE
+binary, can't we just cast to the existing struct mz_hdr from <linux/pe.h> to
+do that?
 
-	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.18-rc1.tar.xz
-	https://kernel.org/pub/linux/utils/kernel/kexec/
+[...]
 
-I have also tagged it in git:
+> > > +	/* Check cpu features */
+> > > +	flags = le64_to_cpu(h->flags);
+> > > +	value = head_flag_field(flags, HEAD_FLAG_BE);
+> > > +	if (((value == HEAD_FLAG_BE) && !IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)) ||
+> > > +	    ((value != HEAD_FLAG_BE) && IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)))
+> > > +		if (!system_supports_mixed_endian())
+> > > +			return ERR_PTR(-EINVAL);
+> > 
+> > I think this can be simplified:
+> > 
+> > 	bool be_image = head_flag_field(flags, HEAD_FLAG_BE);
+> > 	bool be_kernel = IS_ENABLED(CONFIG_CPU_BIG_ENDIAN);
+> > 
+> > 	if ((be_image != be_kernel) && !system_supports_mixed_endian)
+> > 	    		return ERR_PTR(-EINVAL);
+> 
+> Okay.
+> 
+> > ... though do we need to police this at all? It's arguably policy given
+> > the new image has to be signed anyway), and there are other fields that
+> > could fall into that category in future.
+> 
+> The aim here is to prevent any images from being loaded
+> when there is no question that a new image will never be successfully
+> kexec'ed since the core on a given SoC obviously doesn't support cpu
+> features that are assumed and required by a image.
+> 
+> I believe that this check is a good and easy practice to avoid possible
+> failures before execution.
 
-	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+My only concern is that this is arguably placing some policy in the
+kernel, and I don't want to set the expectation that we'll do this for
+other things in future, as that becomes a maintenance nightmare.
 
-Thanks to everyone who has contributed to kexec.
+I'm not necessarily opposed to these specific checks, given they're
+simple. Just wanted to make sure that we've thought about it.
 
-
-For reference the changes since v2.0.17 are:
-
-94159bc3c264 kexec-tools 2.0.18-rc1
-1ac3e4a57000 kdump: fix an error that can not parse the e820 reserved region
-b9de21ef51a7 kexec: fix for "Unhandled rela relocation: R_X86_64_PLT32" error
-ca4823aa2fc2 arm64: error out if kernel command line is too long
-7198e899ddab arm64: increase command line size to 2048
-c3f043241a86 arm64: Add support to supply 'kaslr-seed' to secondary kernel
-7acd257ae67b Remove obsolete kdump tool
-674b9b45876c Makefile.in: Add uninstall rule
-e277fa9ec702 vmcore-dmesg: fix infinite loop if log buffer wraps around
-d4a948c26827 kexec/s390: Add support for kexec_file_load
-0481e9ed61ef kexec: Add --no-checks option
-72c146c20588 purgatory/ppc64: Fix uninitialized warning
-3f276f71f14d kexec-elf-rel-ppc64: Fix cast from pointer warning
-7be89276db19 crashdump-ppc64: Fix integer truncation warning
-798317c134b2 kexec: Fix printf warning
-b43960c20dd2 kexec-tools 2.0.17.git
+Thanks,
+Mark.
 
 _______________________________________________
 kexec mailing list
