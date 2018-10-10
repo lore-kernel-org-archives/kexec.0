@@ -1,22 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-x643.google.com ([2607:f8b0:4864:20::643])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gA3ko-00034C-6E
- for kexec@lists.infradead.org; Wed, 10 Oct 2018 01:57:40 +0000
-Received: by mail-pl1-x643.google.com with SMTP id 1-v6so1713927plv.7
- for <kexec@lists.infradead.org>; Tue, 09 Oct 2018 18:57:27 -0700 (PDT)
-Date: Wed, 10 Oct 2018 10:59:09 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v15 07/16] arm64: add image head flag definitions
-Message-ID: <20181010015908.GX32578@linaro.org>
+Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling
+ properties
 References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
- <20180928064841.14117-8-takahiro.akashi@linaro.org>
- <20181001125225.7tlfzt5n25sckhyy@lakrids.cambridge.arm.com>
- <20181002075939.GG32578@linaro.org>
- <20181009150404.cqpkmi2wumututwa@lakrids.cambridge.arm.com>
+ <20180928064841.14117-7-takahiro.akashi@linaro.org>
+ <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
+ <20181005030849.GK32578@linaro.org>
+ <CAL_Jsq+wXU8PCyJhaTKE7ezZhiD0KARUFXVzQBk0ZptEEK7ubQ@mail.gmail.com>
+ <20181009003733.GN32578@linaro.org>
+ <c65e42ce-1a98-7680-3a09-1f737eb26763@gmail.com>
+ <20181010011426.GV32578@linaro.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Message-ID: <1280f007-6164-dd31-b5a7-3d34f4eb2e9b@gmail.com>
+Date: Tue, 9 Oct 2018 19:44:17 -0700
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20181009150404.cqpkmi2wumututwa@lakrids.cambridge.arm.com>
+In-Reply-To: <20181010011426.GV32578@linaro.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,229 +27,166 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: prudo@linux.ibm.com, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james.morse@arm.com, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, Rob Herring <robh+dt@kernel.org>, David Gibson <david@gibson.dropbear.id.au>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 
-Mark,
-
-On Tue, Oct 09, 2018 at 04:04:05PM +0100, Mark Rutland wrote:
-> On Tue, Oct 02, 2018 at 04:59:40PM +0900, AKASHI Takahiro wrote:
-> > Hi Mark,
-> > 
-> > On Mon, Oct 01, 2018 at 01:52:26PM +0100, Mark Rutland wrote:
-> > > On Fri, Sep 28, 2018 at 03:48:32PM +0900, AKASHI Takahiro wrote:
-> > > > Those image head's flags will be used later by kexec_file loader.
-> > > > 
-> > > > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > > > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > > > Cc: Will Deacon <will.deacon@arm.com>
-> > > > Acked-by: James Morse <james.morse@arm.com>
-> > > > ---
-> > > >  arch/arm64/include/asm/boot.h | 15 +++++++++++++++
-> > > >  arch/arm64/kernel/head.S      |  2 +-
-> > > >  2 files changed, 16 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/arch/arm64/include/asm/boot.h b/arch/arm64/include/asm/boot.h
-> > > > index 355e552a9175..0bab7eed3012 100644
-> > > > --- a/arch/arm64/include/asm/boot.h
-> > > > +++ b/arch/arm64/include/asm/boot.h
-> > > > @@ -5,6 +5,21 @@
-> > > >  
-> > > >  #include <asm/sizes.h>
-> > > >  
-> > > > +#define ARM64_MAGIC		"ARM\x64"
-> > > > +
-> > > > +#define HEAD_FLAG_BE_SHIFT		0
-> > > > +#define HEAD_FLAG_PAGE_SIZE_SHIFT	1
-> > > > +#define HEAD_FLAG_BE_MASK		0x1
-> > > > +#define HEAD_FLAG_PAGE_SIZE_MASK	0x3
-> > > > +
-> > > > +#define HEAD_FLAG_BE			1
-> > > 
-> > > These already exist in some form in arch/arm64/kernel/image.h; can we
-> > > please factor those out rather than duplicating them?
-> > 
-> > Sure.
-> > 
-> > > I'd be happy if you'd update image.h to use the new HEAD_FLAG_* names,
-> > > and removed the old definitions.
-> > 
-> > I want to make sure two things;
-> > 
-> > 1. Do you assume all the existing __HEAD_FLAG_xyz's NOT be renamed
-> >    (say, to HEAD_FLAG_xyz)?
+On 10/09/18 18:14, AKASHI, Takahiro wrote:
+> Frank, Rob,
 > 
-> I'm perfectly happy for them to be renamed, I just don't want duplicate
-> definitions.
-
-IMO, it's not duplication.
-HEAD_FLAG_xyz is a definition of a specific field. On the other hand,
-__HEAD_FLAG_xyz is a value to be put in a kernel header.
-To be clear, please look at my current code attached below.
-
-> Let's rename them to ARM64_IMAGE_FLAG_<foo>, and place them in a new
-> header, arch/arm64/include/asm/image.h, which arch/arm64/kernel/image.h
-> can include and make use of.
-
-Okay.
-
-> > 2. Do you mind removing this check in image.h?
-> >    (we also need to manage 'CONFIG_EFI' part of image.h.)
+> On Tue, Oct 09, 2018 at 10:47:15AM -0700, Frank Rowand wrote:
+>> On 10/08/18 17:37, AKASHI, Takahiro wrote:
+>>> On Fri, Oct 05, 2018 at 08:23:57AM -0500, Rob Herring wrote:
+>>>> On Thu, Oct 4, 2018 at 10:07 PM AKASHI, Takahiro
+>>>> <takahiro.akashi@linaro.org> wrote:
+>>>>>
+>>>>> Rob,
+>>>>>
+>>>>> # I haven't replied to this comment yet.
+>>>>>
+>>>>> On Fri, Sep 28, 2018 at 08:44:42AM -0500, Rob Herring wrote:
+>>>>>> +David Gibson
+>>>>>>
+>>>>>> On Fri, Sep 28, 2018 at 1:48 AM AKASHI Takahiro
+>>>>>> <takahiro.akashi@linaro.org> wrote:
+>>>>>>>
+>>>>>>> These functions will be used later to handle kexec-specific properties
+>>>>>>> in arm64's kexec_file implementation.
+>>>>>>>
+>>>>>>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>>>>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>>>>> Cc: Frank Rowand <frowand.list@gmail.com>
+>>>>>>> Cc: devicetree@vger.kernel.org
+>>>>>>> ---
+>>>>>>>  drivers/of/fdt.c       | 56 ++++++++++++++++++++++++++++++++++++++++++
+>>>>>>>  include/linux/of_fdt.h |  4 +++
+>>>>>>>  2 files changed, 60 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>>>>>>> index 800ad252cf9c..c65c31562ccb 100644
+>>>>>>> --- a/drivers/of/fdt.c
+>>>>>>> +++ b/drivers/of/fdt.c
+>>>>>>> @@ -25,6 +25,7 @@
+>>>>>>>  #include <linux/debugfs.h>
+>>>>>>>  #include <linux/serial_core.h>
+>>>>>>>  #include <linux/sysfs.h>
+>>>>>>> +#include <linux/types.h>
+>>>>>>>
+>>>>>>>  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+>>>>>>>  #include <asm/page.h>
+>>>>>>> @@ -1323,3 +1324,58 @@ late_initcall(of_fdt_raw_init);
+>>>>>>>  #endif
+>>>>>>>
+>>>>>>>  #endif /* CONFIG_OF_EARLY_FLATTREE */
+>>>>>>> +
+>>>>>>> +#define FDT_ALIGN(x, a)        (((x) + (a) - 1) & ~((a) - 1))
+>>>>>>> +#define FDT_TAGALIGN(x)        (FDT_ALIGN((x), FDT_TAGSIZE))
+>>>>>>> +
+>>>>>>> +int fdt_prop_len(const char *prop_name, int len)
+>>>>>>> +{
+>>>>>>> +       return (strlen(prop_name) + 1) +
+>>>>>>> +               sizeof(struct fdt_property) +
+>>>>>>> +               FDT_TAGALIGN(len);
+>>>>>>
+>>>>>> Looks like you are using this to calculate how much space you need to
+>>>>>> allocate in addition to the current DTB for a couple of new or
+>>>>>> replaced properties. I'm not sure that this calculation is completely
+>>>>>> accurate. And it is strange there doesn't seem to be any libfdt
+>>>>>> function for this already. It would be simpler to just add some fixed
+>>>>>> additional amount.
+>>>>>>
+>>>>>> Maybe David G has comments on this?
+>>>>>>
+>>>>>>> +}
+>>>>>>> +
+>>>>>>
+>>>>>> The rest of this should go in drivers/of/fdt_address.c. Ultimately, it
+>>>>>> should go into libfdt, but I'm fine with having it in the kernel for
+>>>>>> now.
+>>>>>
+>>>>> I'd like to have this function in the kernel for now.
+>>>>>
+>>>>>>> +static void fill_property(void *buf, u64 val64, int cells)
+>>>>>>> +{
+>>>>>>> +       __be32 val32;
+>>>>>>> +
+>>>>>>> +       while (cells) {
+>>>>>>> +               val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
+>>>>>>> +               memcpy(buf, &val32, sizeof(val32));
+>>>>>>> +               buf += sizeof(val32);
+>>>>>>
+>>>>>> This is kind of hard to read. I would copy u-boot's fdt_pack_reg function.
+>>>>>
+>>>>> Are you sure?
+>>>>> I originally implemented this function in a similar way that fdt_pack_reg()
+>>>>> was, but, you suggested, in your past comment[1], that we'd be better to
+>>>>> have of_read_number()-like implementation.
+>>>>>
+>>>>> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-May/579118.html
+>>>>
+>>>> Yeah, you're right. Plus, I'm not sure the u-boot one would work for
+>>>> unaligned accesses with armv5 and earlier h/w.
+>>>>
+>>>> My only comment then is I think you can drop the U32_MAX masking.
+>>>
+>>> Okay, then I will leave this function, yet renaming it to
+>>> cpu64_to_fdt_cells() after Frank's comment.
+>>
+>> I have second guessed myself and do not like the name I suggested
+>> because what the function really does is either cpu32 to be32 or
+>> cpu64 to be64.
 > 
-> What exactly do we need from that? AFAICT that's all linker script
-> stuff that shouldn't matter for kexec.
+> Okay.
+> 
+>> I agree with Rob that readability is important here.  Instead of
+>> having a fill_property() function, how about having inline code,
+>> something like (untested even for thinkos):
+>>
+>> 	prop = buf;
+>>
+>> 	if (addr_cells == 1) {
+>> 		*(__be32 *)prop = cpu32_to_be32(addr);
+>> 		prop += 4;
+>> 	} else {
+>> 		*(__be64 *)prop = cpu64_to_be64(addr);
+>> 		prop += 8;
+>> 	}
+>>
+>> 	if (size_cells == 1)
+>> 		*(__be32 *)prop = cpu32_to_be32(size);
+>> 	else
+>> 		*(__be64 *)prop = cpu64_to_be64(size);
+>>
+>> You might want to also give Rob a chance to bike shed on this
+>> suggestion.
+> 
+> Basically, I don't care either way, but what Rob suggested
+> is that some architecture(s) might not handle correctly
+> unaligned memory access here.
 
-You're right if all the definitions, as you suggested above,
-are moved to a new header, asm/image.h.
+Good point about unaligned memory access.  That rules out my
+suggestion above.  But if using the fill_property() implementation,
+either come up with a name that better describes what the function
+does or add a function header comment that gives the reader a
+clue as to what the function accomplishes.
 
--Takahiro Akashi
+-Frank
 
+
+> I just want to stay tuned with Rob.
+> 
 > Thanks,
-> Mark.
+> -Takahiro Akashi
+> 
+>> -Frank
+>>
+>>>
+>>> Thanks,
+>>> -Takahiro Akashi
+>>>>
+>>>> Rob
+>>>
+>>
+> 
 
-arch/arm64/kernel/image.h
----8<---
-/*
- * Linker script macros to generate Image header fields.
- *
- * Copyright (C) 2014 ARM Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#ifndef __ASM_IMAGE_H
-#define __ASM_IMAGE_H
-
-#define HEAD_FLAG_BE_SHIFT		0
-#define HEAD_FLAG_PAGE_SIZE_SHIFT	(HEAD_FLAG_BE_SHIFT + 1)
-#define HEAD_FLAG_PHYS_BASE_SHIFT	(HEAD_FLAG_PAGE_SIZE_SHIFT + 2)
-#define HEAD_FLAG_BE_MASK		0x1
-#define HEAD_FLAG_PAGE_SIZE_MASK	0x3
-#define HEAD_FLAG_PHYS_BASE_MASK	0x1
-
-#define HEAD_FLAG_LE			0
-#define HEAD_FLAG_BE			1
-#define HEAD_FLAG_PAGE_SIZE_4K		1
-#define HEAD_FLAG_PAGE_SIZE_16K		2
-#define HEAD_FLAG_PAGE_SIZE_64K		3
-#define HEAD_FLAG_PHYS_BASE		1
-
-#define head_flag_field(flags, field) \
-				(((flags) >> field##_SHIFT) & field##_MASK)
-
-#ifdef LINKER_SCRIPT
-/*
- * There aren't any ELF relocations we can use to endian-swap values known only
- * at link time (e.g. the subtraction of two symbol addresses), so we must get
- * the linker to endian-swap certain values before emitting them.
- *
- * Note that, in order for this to work when building the ELF64 PIE executable
- * (for KASLR), these values should not be referenced via R_AARCH64_ABS64
- * relocations, since these are fixed up at runtime rather than at build time
- * when PIE is in effect. So we need to split them up in 32-bit high and low
- * words.
- */
-#ifdef CONFIG_CPU_BIG_ENDIAN
-#define DATA_LE32(data)				\
-	((((data) & 0x000000ff) << 24) |	\
-	 (((data) & 0x0000ff00) << 8)  |	\
-	 (((data) & 0x00ff0000) >> 8)  |	\
-	 (((data) & 0xff000000) >> 24))
-#else
-#define DATA_LE32(data) ((data) & 0xffffffff)
-#endif
-
-#define DEFINE_IMAGE_LE64(sym, data)				\
-	sym##_lo32 = DATA_LE32((data) & 0xffffffff);		\
-	sym##_hi32 = DATA_LE32((data) >> 32)
-
-#define __HEAD_FLAG(field)	(__HEAD_FLAG_##field << \
-					HEAD_FLAG_##field##_SHIFT)
-
-#ifdef CONFIG_CPU_BIG_ENDIAN
-#define __HEAD_FLAG_BE		HEAD_FLAG_BE
-#else
-#define __HEAD_FLAG_BE		HEAD_FLAG_LE
-#endif
-
-#define __HEAD_FLAG_PAGE_SIZE	((PAGE_SHIFT - 10) / 2)
-
-#define __HEAD_FLAG_PHYS_BASE	HEAD_FLAG_PHYS_BASE
-
-#define __HEAD_FLAGS		(__HEAD_FLAG(BE) 	| \
-				 __HEAD_FLAG(PAGE_SIZE) | \
-				 __HEAD_FLAG(PHYS_BASE))
-
-/*
- * These will output as part of the Image header, which should be little-endian
- * regardless of the endianness of the kernel. While constant values could be
- * endian swapped in head.S, all are done here for consistency.
- */
-#define HEAD_SYMBOLS						\
-	DEFINE_IMAGE_LE64(_kernel_size_le, _end - _text);	\
-	DEFINE_IMAGE_LE64(_kernel_offset_le, TEXT_OFFSET);	\
-	DEFINE_IMAGE_LE64(_kernel_flags_le, __HEAD_FLAGS);
-
-#ifdef CONFIG_EFI
-
-__efistub_stext_offset = stext - _text;
-
-/*
- * Prevent the symbol aliases below from being emitted into the kallsyms
- * table, by forcing them to be absolute symbols (which are conveniently
- * ignored by scripts/kallsyms) rather than section relative symbols.
- * The distinction is only relevant for partial linking, and only for symbols
- * that are defined within a section declaration (which is not the case for
- * the definitions below) so the resulting values will be identical.
- */
-#define KALLSYMS_HIDE(sym)	ABSOLUTE(sym)
-
-/*
- * The EFI stub has its own symbol namespace prefixed by __efistub_, to
- * isolate it from the kernel proper. The following symbols are legally
- * accessed by the stub, so provide some aliases to make them accessible.
- * Only include data symbols here, or text symbols of functions that are
- * guaranteed to be safe when executed at another offset than they were
- * linked at. The routines below are all implemented in assembler in a
- * position independent manner
- */
-__efistub_memcmp		= KALLSYMS_HIDE(__pi_memcmp);
-__efistub_memchr		= KALLSYMS_HIDE(__pi_memchr);
-__efistub_memcpy		= KALLSYMS_HIDE(__pi_memcpy);
-__efistub_memmove		= KALLSYMS_HIDE(__pi_memmove);
-__efistub_memset		= KALLSYMS_HIDE(__pi_memset);
-__efistub_strlen		= KALLSYMS_HIDE(__pi_strlen);
-__efistub_strnlen		= KALLSYMS_HIDE(__pi_strnlen);
-__efistub_strcmp		= KALLSYMS_HIDE(__pi_strcmp);
-__efistub_strncmp		= KALLSYMS_HIDE(__pi_strncmp);
-__efistub_strrchr		= KALLSYMS_HIDE(__pi_strrchr);
-__efistub___flush_dcache_area	= KALLSYMS_HIDE(__pi___flush_dcache_area);
-
-#ifdef CONFIG_KASAN
-__efistub___memcpy		= KALLSYMS_HIDE(__pi_memcpy);
-__efistub___memmove		= KALLSYMS_HIDE(__pi_memmove);
-__efistub___memset		= KALLSYMS_HIDE(__pi_memset);
-#endif
-
-__efistub__text			= KALLSYMS_HIDE(_text);
-__efistub__end			= KALLSYMS_HIDE(_end);
-__efistub__edata		= KALLSYMS_HIDE(_edata);
-__efistub_screen_info		= KALLSYMS_HIDE(screen_info);
-
-#endif /* CONFIG_EFI */
-
-#endif /* LINKER_SCRIPT */
-
-#endif /* __ASM_IMAGE_H */
 
 _______________________________________________
 kexec mailing list
