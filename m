@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gCFXp-0006LF-8S
- for kexec@lists.infradead.org; Tue, 16 Oct 2018 02:57:18 +0000
-Date: Tue, 16 Oct 2018 10:56:57 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1gCGIa-0001bN-Tt
+ for kexec@lists.infradead.org; Tue, 16 Oct 2018 03:45:38 +0000
 Subject: Re: [PATCH 0/3 v3] add reserved e820 ranges to the kdump kernel e820
  table
-Message-ID: <20181016025657.GB13006@dhcp-128-65.nay.redhat.com>
 References: <20180921073211.20097-1-lijiang@redhat.com>
+ <20181016025657.GB13006@dhcp-128-65.nay.redhat.com>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <53b582bd-e30a-848a-dfcd-e79e51296598@redhat.com>
+Date: Tue, 16 Oct 2018 11:45:06 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180921073211.20097-1-lijiang@redhat.com>
+In-Reply-To: <20181016025657.GB13006@dhcp-128-65.nay.redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,68 +21,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>
+To: Dave Young <dyoung@redhat.com>
 Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, bp@suse.de, akpm@linux-foundation.org, dan.j.williams@intel.com
 
-On 09/21/18 at 03:32pm, Lianbo Jiang wrote:
-> E820 reserved ranges is useful in kdump kernel, we have added this in
-> kexec-tools code.
-> 
-> One reason is PCI mmconf (extended mode) requires reserved region otherwise
-> it falls back to legacy mode.
-> 
-> Furthermore, when AMD SME kdump support, it needs to map dmi table area as
-> unencrypted. For normal boot, these ranges sit in e820 reserved ranges,
-> thus the early ioremap code naturally map them as unencrypted. If we also
-> have same e820 reserve setup in kdump kernel then it will just work like
-> normal kernel.
-> 
-> Kdump uses walk_iomem_res_desc to iterate resources, then adds matched desc
-> to e820 table for the kdump kernel.
-> 
-> But IORES_DESC_NONE resource type includes several different e820 types, we
-> need add exact e820 type to the kdump kernel e820 table, thus it also needs
-> an extra checking in memmap_entry_callback() to match the e820 type and
-> resource name.
-> 
-> By the way, we also fix an error which walks through iomem resources, the
-> values of the function parameter may be modified in the while loop of
-> __walk_iomem_res_desc(), which will cause us to not get the desired result
-> in some cases.
-> 
-> Changes since v2:
-> 1. Modified the value of flags to "0", when walking through the whole
-> tree for e820 reserved ranges.
-> 2. Modified the invalid SOB chain issue.
-> 
-> Lianbo Jiang (3):
->   resource: fix an error which walks through iomem resources
->   x86/kexec_file: add e820 entry in case e820 type string matches to io
->     resource name
->   x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
-
-Lianbo, since Bjorn has fixed the resource issue in another patchset,
-can you rebase your patch 2 and 3 on top of his patches and resend?
-
-> 
->  arch/x86/include/asm/e820/api.h |  2 ++
->  arch/x86/kernel/crash.c         | 11 ++++++++++-
->  arch/x86/kernel/e820.c          |  2 +-
->  kernel/resource.c               |  3 +++
->  4 files changed, 16 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
-
-Thanks
-Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMOaciDE25pelIDEwOjU2LCBEYXZlIFlvdW5nIOWGmemBkzoKPiBPbiAwOS8y
+MS8xOCBhdCAwMzozMnBtLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4+IEU4MjAgcmVzZXJ2ZWQgcmFu
+Z2VzIGlzIHVzZWZ1bCBpbiBrZHVtcCBrZXJuZWwsIHdlIGhhdmUgYWRkZWQgdGhpcyBpbgo+PiBr
+ZXhlYy10b29scyBjb2RlLgo+Pgo+PiBPbmUgcmVhc29uIGlzIFBDSSBtbWNvbmYgKGV4dGVuZGVk
+IG1vZGUpIHJlcXVpcmVzIHJlc2VydmVkIHJlZ2lvbiBvdGhlcndpc2UKPj4gaXQgZmFsbHMgYmFj
+ayB0byBsZWdhY3kgbW9kZS4KPj4KPj4gRnVydGhlcm1vcmUsIHdoZW4gQU1EIFNNRSBrZHVtcCBz
+dXBwb3J0LCBpdCBuZWVkcyB0byBtYXAgZG1pIHRhYmxlIGFyZWEgYXMKPj4gdW5lbmNyeXB0ZWQu
+IEZvciBub3JtYWwgYm9vdCwgdGhlc2UgcmFuZ2VzIHNpdCBpbiBlODIwIHJlc2VydmVkIHJhbmdl
+cywKPj4gdGh1cyB0aGUgZWFybHkgaW9yZW1hcCBjb2RlIG5hdHVyYWxseSBtYXAgdGhlbSBhcyB1
+bmVuY3J5cHRlZC4gSWYgd2UgYWxzbwo+PiBoYXZlIHNhbWUgZTgyMCByZXNlcnZlIHNldHVwIGlu
+IGtkdW1wIGtlcm5lbCB0aGVuIGl0IHdpbGwganVzdCB3b3JrIGxpa2UKPj4gbm9ybWFsIGtlcm5l
+bC4KPj4KPj4gS2R1bXAgdXNlcyB3YWxrX2lvbWVtX3Jlc19kZXNjIHRvIGl0ZXJhdGUgcmVzb3Vy
+Y2VzLCB0aGVuIGFkZHMgbWF0Y2hlZCBkZXNjCj4+IHRvIGU4MjAgdGFibGUgZm9yIHRoZSBrZHVt
+cCBrZXJuZWwuCj4+Cj4+IEJ1dCBJT1JFU19ERVNDX05PTkUgcmVzb3VyY2UgdHlwZSBpbmNsdWRl
+cyBzZXZlcmFsIGRpZmZlcmVudCBlODIwIHR5cGVzLCB3ZQo+PiBuZWVkIGFkZCBleGFjdCBlODIw
+IHR5cGUgdG8gdGhlIGtkdW1wIGtlcm5lbCBlODIwIHRhYmxlLCB0aHVzIGl0IGFsc28gbmVlZHMK
+Pj4gYW4gZXh0cmEgY2hlY2tpbmcgaW4gbWVtbWFwX2VudHJ5X2NhbGxiYWNrKCkgdG8gbWF0Y2gg
+dGhlIGU4MjAgdHlwZSBhbmQKPj4gcmVzb3VyY2UgbmFtZS4KPj4KPj4gQnkgdGhlIHdheSwgd2Ug
+YWxzbyBmaXggYW4gZXJyb3Igd2hpY2ggd2Fsa3MgdGhyb3VnaCBpb21lbSByZXNvdXJjZXMsIHRo
+ZQo+PiB2YWx1ZXMgb2YgdGhlIGZ1bmN0aW9uIHBhcmFtZXRlciBtYXkgYmUgbW9kaWZpZWQgaW4g
+dGhlIHdoaWxlIGxvb3Agb2YKPj4gX193YWxrX2lvbWVtX3Jlc19kZXNjKCksIHdoaWNoIHdpbGwg
+Y2F1c2UgdXMgdG8gbm90IGdldCB0aGUgZGVzaXJlZCByZXN1bHQKPj4gaW4gc29tZSBjYXNlcy4K
+Pj4KPj4gQ2hhbmdlcyBzaW5jZSB2MjoKPj4gMS4gTW9kaWZpZWQgdGhlIHZhbHVlIG9mIGZsYWdz
+IHRvICIwIiwgd2hlbiB3YWxraW5nIHRocm91Z2ggdGhlIHdob2xlCj4+IHRyZWUgZm9yIGU4MjAg
+cmVzZXJ2ZWQgcmFuZ2VzLgo+PiAyLiBNb2RpZmllZCB0aGUgaW52YWxpZCBTT0IgY2hhaW4gaXNz
+dWUuCj4+Cj4+IExpYW5ibyBKaWFuZyAoMyk6Cj4+ICAgcmVzb3VyY2U6IGZpeCBhbiBlcnJvciB3
+aGljaCB3YWxrcyB0aHJvdWdoIGlvbWVtIHJlc291cmNlcwo+PiAgIHg4Ni9rZXhlY19maWxlOiBh
+ZGQgZTgyMCBlbnRyeSBpbiBjYXNlIGU4MjAgdHlwZSBzdHJpbmcgbWF0Y2hlcyB0byBpbwo+PiAg
+ICAgcmVzb3VyY2UgbmFtZQo+PiAgIHg4Ni9rZXhlY19maWxlOiBhZGQgcmVzZXJ2ZWQgZTgyMCBy
+YW5nZXMgdG8ga2R1bXAga2VybmVsIGU4MjAgdGFibGUKPiAKPiBMaWFuYm8sIHNpbmNlIEJqb3Ju
+IGhhcyBmaXhlZCB0aGUgcmVzb3VyY2UgaXNzdWUgaW4gYW5vdGhlciBwYXRjaHNldCwKPiBjYW4g
+eW91IHJlYmFzZSB5b3VyIHBhdGNoIDIgYW5kIDMgb24gdG9wIG9mIGhpcyBwYXRjaGVzIGFuZCBy
+ZXNlbmQ/Cj4gCk9rLCBUaGFua3MgZm9yIHlvdXIgcmVtaW5kZXIuCkkgd2lsbCBhZGp1c3QgdGhl
+c2UgcGF0Y2hlcyBhbmQgcG9zdCBhZ2Fpbi4KClRoYW5rcy4KTGlhbmJvCj4+Cj4+ICBhcmNoL3g4
+Ni9pbmNsdWRlL2FzbS9lODIwL2FwaS5oIHwgIDIgKysKPj4gIGFyY2gveDg2L2tlcm5lbC9jcmFz
+aC5jICAgICAgICAgfCAxMSArKysrKysrKysrLQo+PiAgYXJjaC94ODYva2VybmVsL2U4MjAuYyAg
+ICAgICAgICB8ICAyICstCj4+ICBrZXJuZWwvcmVzb3VyY2UuYyAgICAgICAgICAgICAgIHwgIDMg
+KysrCj4+ICA0IGZpbGVzIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
+Cj4+Cj4+IC0tIAo+PiAyLjE3LjEKPj4KPiAKPiBUaGFua3MKPiBEYXZlCj4gCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
+a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2tleGVjCg==
