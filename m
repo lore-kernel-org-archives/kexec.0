@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-it1-x149.google.com ([2607:f8b0:4864:20::149])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gCGIa-0001bN-Tt
- for kexec@lists.infradead.org; Tue, 16 Oct 2018 03:45:38 +0000
-Subject: Re: [PATCH 0/3 v3] add reserved e820 ranges to the kdump kernel e820
- table
-References: <20180921073211.20097-1-lijiang@redhat.com>
- <20181016025657.GB13006@dhcp-128-65.nay.redhat.com>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <53b582bd-e30a-848a-dfcd-e79e51296598@redhat.com>
-Date: Tue, 16 Oct 2018 11:45:06 +0800
-MIME-Version: 1.0
-In-Reply-To: <20181016025657.GB13006@dhcp-128-65.nay.redhat.com>
-Content-Language: en-US
+ id 1gCvRx-0001QU-8F
+ for kexec@lists.infradead.org; Wed, 17 Oct 2018 23:42:02 +0000
+Received: by mail-it1-x149.google.com with SMTP id f79-v6so3838898ita.3
+ for <kexec@lists.infradead.org>; Wed, 17 Oct 2018 16:41:49 -0700 (PDT)
+Date: Wed, 17 Oct 2018 16:41:39 -0700
+Message-Id: <20181017234139.241414-1-chrisko@google.com>
+Mime-Version: 1.0
+Subject: [PATCH] kexec: don't act as EFI chainloader if noefi.
+From: Chris Koch <chrisko@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,52 +18,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, tiwai@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, bp@suse.de, akpm@linux-foundation.org, dan.j.williams@intel.com
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Eric Biederman <ebiederm@xmission.com>
+Cc: x86@kernel.org, kexec@lists.infradead.org, Christopher Koch <chrisko@google.com>
 
-5ZyoIDIwMTjlubQxMOaciDE25pelIDEwOjU2LCBEYXZlIFlvdW5nIOWGmemBkzoKPiBPbiAwOS8y
-MS8xOCBhdCAwMzozMnBtLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4+IEU4MjAgcmVzZXJ2ZWQgcmFu
-Z2VzIGlzIHVzZWZ1bCBpbiBrZHVtcCBrZXJuZWwsIHdlIGhhdmUgYWRkZWQgdGhpcyBpbgo+PiBr
-ZXhlYy10b29scyBjb2RlLgo+Pgo+PiBPbmUgcmVhc29uIGlzIFBDSSBtbWNvbmYgKGV4dGVuZGVk
-IG1vZGUpIHJlcXVpcmVzIHJlc2VydmVkIHJlZ2lvbiBvdGhlcndpc2UKPj4gaXQgZmFsbHMgYmFj
-ayB0byBsZWdhY3kgbW9kZS4KPj4KPj4gRnVydGhlcm1vcmUsIHdoZW4gQU1EIFNNRSBrZHVtcCBz
-dXBwb3J0LCBpdCBuZWVkcyB0byBtYXAgZG1pIHRhYmxlIGFyZWEgYXMKPj4gdW5lbmNyeXB0ZWQu
-IEZvciBub3JtYWwgYm9vdCwgdGhlc2UgcmFuZ2VzIHNpdCBpbiBlODIwIHJlc2VydmVkIHJhbmdl
-cywKPj4gdGh1cyB0aGUgZWFybHkgaW9yZW1hcCBjb2RlIG5hdHVyYWxseSBtYXAgdGhlbSBhcyB1
-bmVuY3J5cHRlZC4gSWYgd2UgYWxzbwo+PiBoYXZlIHNhbWUgZTgyMCByZXNlcnZlIHNldHVwIGlu
-IGtkdW1wIGtlcm5lbCB0aGVuIGl0IHdpbGwganVzdCB3b3JrIGxpa2UKPj4gbm9ybWFsIGtlcm5l
-bC4KPj4KPj4gS2R1bXAgdXNlcyB3YWxrX2lvbWVtX3Jlc19kZXNjIHRvIGl0ZXJhdGUgcmVzb3Vy
-Y2VzLCB0aGVuIGFkZHMgbWF0Y2hlZCBkZXNjCj4+IHRvIGU4MjAgdGFibGUgZm9yIHRoZSBrZHVt
-cCBrZXJuZWwuCj4+Cj4+IEJ1dCBJT1JFU19ERVNDX05PTkUgcmVzb3VyY2UgdHlwZSBpbmNsdWRl
-cyBzZXZlcmFsIGRpZmZlcmVudCBlODIwIHR5cGVzLCB3ZQo+PiBuZWVkIGFkZCBleGFjdCBlODIw
-IHR5cGUgdG8gdGhlIGtkdW1wIGtlcm5lbCBlODIwIHRhYmxlLCB0aHVzIGl0IGFsc28gbmVlZHMK
-Pj4gYW4gZXh0cmEgY2hlY2tpbmcgaW4gbWVtbWFwX2VudHJ5X2NhbGxiYWNrKCkgdG8gbWF0Y2gg
-dGhlIGU4MjAgdHlwZSBhbmQKPj4gcmVzb3VyY2UgbmFtZS4KPj4KPj4gQnkgdGhlIHdheSwgd2Ug
-YWxzbyBmaXggYW4gZXJyb3Igd2hpY2ggd2Fsa3MgdGhyb3VnaCBpb21lbSByZXNvdXJjZXMsIHRo
-ZQo+PiB2YWx1ZXMgb2YgdGhlIGZ1bmN0aW9uIHBhcmFtZXRlciBtYXkgYmUgbW9kaWZpZWQgaW4g
-dGhlIHdoaWxlIGxvb3Agb2YKPj4gX193YWxrX2lvbWVtX3Jlc19kZXNjKCksIHdoaWNoIHdpbGwg
-Y2F1c2UgdXMgdG8gbm90IGdldCB0aGUgZGVzaXJlZCByZXN1bHQKPj4gaW4gc29tZSBjYXNlcy4K
-Pj4KPj4gQ2hhbmdlcyBzaW5jZSB2MjoKPj4gMS4gTW9kaWZpZWQgdGhlIHZhbHVlIG9mIGZsYWdz
-IHRvICIwIiwgd2hlbiB3YWxraW5nIHRocm91Z2ggdGhlIHdob2xlCj4+IHRyZWUgZm9yIGU4MjAg
-cmVzZXJ2ZWQgcmFuZ2VzLgo+PiAyLiBNb2RpZmllZCB0aGUgaW52YWxpZCBTT0IgY2hhaW4gaXNz
-dWUuCj4+Cj4+IExpYW5ibyBKaWFuZyAoMyk6Cj4+ICAgcmVzb3VyY2U6IGZpeCBhbiBlcnJvciB3
-aGljaCB3YWxrcyB0aHJvdWdoIGlvbWVtIHJlc291cmNlcwo+PiAgIHg4Ni9rZXhlY19maWxlOiBh
-ZGQgZTgyMCBlbnRyeSBpbiBjYXNlIGU4MjAgdHlwZSBzdHJpbmcgbWF0Y2hlcyB0byBpbwo+PiAg
-ICAgcmVzb3VyY2UgbmFtZQo+PiAgIHg4Ni9rZXhlY19maWxlOiBhZGQgcmVzZXJ2ZWQgZTgyMCBy
-YW5nZXMgdG8ga2R1bXAga2VybmVsIGU4MjAgdGFibGUKPiAKPiBMaWFuYm8sIHNpbmNlIEJqb3Ju
-IGhhcyBmaXhlZCB0aGUgcmVzb3VyY2UgaXNzdWUgaW4gYW5vdGhlciBwYXRjaHNldCwKPiBjYW4g
-eW91IHJlYmFzZSB5b3VyIHBhdGNoIDIgYW5kIDMgb24gdG9wIG9mIGhpcyBwYXRjaGVzIGFuZCBy
-ZXNlbmQ/Cj4gCk9rLCBUaGFua3MgZm9yIHlvdXIgcmVtaW5kZXIuCkkgd2lsbCBhZGp1c3QgdGhl
-c2UgcGF0Y2hlcyBhbmQgcG9zdCBhZ2Fpbi4KClRoYW5rcy4KTGlhbmJvCj4+Cj4+ICBhcmNoL3g4
-Ni9pbmNsdWRlL2FzbS9lODIwL2FwaS5oIHwgIDIgKysKPj4gIGFyY2gveDg2L2tlcm5lbC9jcmFz
-aC5jICAgICAgICAgfCAxMSArKysrKysrKysrLQo+PiAgYXJjaC94ODYva2VybmVsL2U4MjAuYyAg
-ICAgICAgICB8ICAyICstCj4+ICBrZXJuZWwvcmVzb3VyY2UuYyAgICAgICAgICAgICAgIHwgIDMg
-KysrCj4+ICA0IGZpbGVzIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
-Cj4+Cj4+IC0tIAo+PiAyLjE3LjEKPj4KPiAKPiBUaGFua3MKPiBEYXZlCj4gCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
-a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2tleGVjCg==
+From: Christopher Koch <chrisko@google.com>
+
+An EFI-booted Linux kernel will commit a virtual memory map in
+efi_enter_virtual_mode, which is only done if
+efi_enabled(EFI_RUNTIME_SERVICES). This can be disabled by adding noefi
+to the command line.
+
+kexec's setup_efi_state will then pass a memmap_size of 0 to the next
+kernel.
+
+A Linux kernel cannot handle a memmap_size of 0 given by its bootloader:
+efi_memblock_x86_reserve_range divides by the memmap_size and hits a
+divide by 0 error.
+
+When the 1st kernel is booted with noefi, it should not even attempt to
+pass EFI information to any kexec'd kernel.
+
+Signed-off-by: Christopher Koch <chrisko@google.com>
+---
+ arch/x86/kernel/kexec-bzimage64.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 278cd07228dd..8ab4ffb901ce 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -179,6 +179,14 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
+ 	if (efi_enabled(EFI_OLD_MEMMAP))
+ 		return 0;
+ 
++	/*
++	 * If we booted with noefi on the command line, we never committed a
++	 * virtual memory map. It makes no sense to act as an EFI chainloader in
++	 * that case.
++	 */
++	if (!efi_enabled(EFI_RUNTIME_SERVICES))
++		return 0;
++
+ 	ei->efi_loader_signature = current_ei->efi_loader_signature;
+ 	ei->efi_systab = current_ei->efi_systab;
+ 	ei->efi_systab_hi = current_ei->efi_systab_hi;
+-- 
+2.19.1.331.ge82ca0e54c-goog
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
