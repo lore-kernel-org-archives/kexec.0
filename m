@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gDEwH-0005rx-F3
- for kexec@lists.infradead.org; Thu, 18 Oct 2018 20:30:39 +0000
-Subject: Re: [PATCH 3/3] x86/quirks: Add parameter to clear MSIs early on boot
+ id 1gDGa8-0008Rt-Ms
+ for kexec@lists.infradead.org; Thu, 18 Oct 2018 22:15:54 +0000
+Date: Thu, 18 Oct 2018 17:15:39 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 1/3] x86/quirks: Scan all busses for early PCI quirks
+Message-ID: <20181018221538.GN5906@bhelgaas-glaptop.roam.corp.google.com>
 References: <20181018183721.27467-1-gpiccoli@canonical.com>
- <20181018183721.27467-3-gpiccoli@canonical.com>
- <6fd4e2d2-c0ac-b26d-9a14-0379b4421679@kernel.org>
- <12d6175b-7f09-872a-61c4-700e905579c7@canonical.com>
-From: Sinan Kaya <okaya@kernel.org>
-Message-ID: <50d84d48-eebf-ed91-8148-be727f76883f@kernel.org>
-Date: Thu, 18 Oct 2018 16:30:22 -0400
 MIME-Version: 1.0
-In-Reply-To: <12d6175b-7f09-872a-61c4-700e905579c7@canonical.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181018183721.27467-1-gpiccoli@canonical.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,89 +19,117 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Guilherme G. Piccoli" <gpiccoli@canonical.com>, linux-pci@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org
-Cc: cascardo@canonical.com, andi@firstfloor.org, bhe@redhat.com, lukas@wunner.de, shan.gavin@linux.alibaba.com, kernel@gpiccoli.net, linux-kernel@vger.kernel.org, gavin.guo@canonical.com, ddstreet@canonical.com, mingo@redhat.com, bp@alien8.de, billy.olsen@canonical.com, mfo@canonical.com, hpa@zytor.com, bhelgaas@google.com, jay.vosburgh@canonical.com, tglx@linutronix.de, dyoung@redhat.com, fabiomirmar@canonical.com, vgoyal@redhat.com
+To: "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Cc: cascardo@canonical.com, linux-pci@vger.kernel.org, andi@firstfloor.org, mfo@canonical.com, hpa@zytor.com, bhe@redhat.com, x86@kernel.org, mingo@redhat.com, jay.vosburgh@canonical.com, dyoung@redhat.com, fabiomirmar@canonical.com, gavin.guo@canonical.com, bp@alien8.de, bhelgaas@google.com, tglx@linutronix.de, shan.gavin@linux.alibaba.com, kernel@gpiccoli.net, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, ddstreet@canonical.com, lukas@wunner.de, billy.olsen@canonical.com
 
-On 10/18/2018 4:13 PM, Guilherme G. Piccoli wrote:
->> These kind of issues are usually fixed by fixing the network driver's
->> shutdown routine to ensure that MSI interrupts are cleared there.
+On Thu, Oct 18, 2018 at 03:37:19PM -0300, Guilherme G. Piccoli wrote:
+> Recently was noticed in an HP GEN9 system that kdump couldn't succeed
+> due to an irq storm coming from an Intel NIC, narrowed down to be lack
+> of clearing the MSI/MSI-X enable bits during the kdump kernel boot.
+> For that, we need an early quirk to manually turn off MSI/MSI-X for
+> PCI devices - this was worked as an optional boot parameter in a
+> subsequent patch.
 > 
-> Sinan, I'm not sure shutdown handlers for drivers are called in panic
-> kexec (I remember of an old experiment I did, loading a kernel
-> with "kexec -p" didn't trigger the handlers).
-
-AFAIK, all shutdown (not remove) routines are called before launching the next
-kernel even in crash scenario. It is not safe to start the new kernel while
-hardware is doing a DMA to the system memory and triggering interrupts.
-
-Shutdown routine in PCI core used to disable MSI/MSI-x on behalf of all
-endpoints but it was later decided that this is the responsibility of the
-endpoint driver.
-
-commit fda78d7a0ead144f4b2cdb582dcba47911f4952c
-Author: Prarit Bhargava <prarit@redhat.com>
-Date:   Thu Jan 26 14:07:47 2017 -0500
-
-     PCI/MSI: Stop disabling MSI/MSI-X in pci_device_shutdown()
-
-     The pci_bus_type .shutdown method, pci_device_shutdown(), is called from
-     device_shutdown() in the kernel restart and shutdown paths.
-
-     Previously, pci_device_shutdown() called pci_msi_shutdown() and
-     pci_msix_shutdown().  This disables MSI and MSI-X, which causes the device
-     to fall back to raising interrupts via INTx.  But the driver is still bound
-     to the device, it doesn't know about this change, and it likely doesn't
-     have an INTx handler, so these INTx interrupts cause "nobody cared"
-     warnings like this:
-
-       irq 16: nobody cared (try booting with the "irqpoll" option)
-       CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.8.2-1.el7_UNSUPPORTED.x86_64 #1
-       Hardware name: Hewlett-Packard HP Z820 Workstation/158B, BIOS J63 v03.90 06/
-       ...
-
-     The MSI disabling code was added by d52877c7b1af ("pci/irq: let
-     pci_device_shutdown to call pci_msi_shutdown v2") because a driver left MSI
-     enabled and kdump failed because the kexeced kernel wasn't prepared to
-     receive the MSI interrupts.
-
-    Subsequent commits 1851617cd2da ("PCI/MSI: Disable MSI at enumeration even
-     if kernel doesn't support MSI") and  e80e7edc55ba ("PCI/MSI: Initialize MSI
-     capability for all architectures") changed the kexeced kernel to disable
-     all MSIs itself so it no longer depends on the crashed kernel to clean up
-     after itself.
-
-     Stop disabling MSI/MSI-X in pci_device_shutdown().  This resolves the
-     "nobody cared" unhandled IRQ issue above.  It also allows PCI serial
-     devices, which may rely on the MSI interrupts, to continue outputting
-     messages during reboot/shutdown.
-
-     [bhelgaas: changelog, drop pci_msi_shutdown() and pci_msix_shutdown() calls
-     altogether]
-     Fixes: https://bugzilla.kernel.org/show_bug.cgi?id=187351
-     Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-     CC: Alex Williamson <alex.williamson@redhat.com>
-     CC: David Arcari <darcari@redhat.com>
-     CC: Myron Stowe <mstowe@redhat.com>
-     CC: Lukas Wunner <lukas@wunner.de>
-     CC: Keith Busch <keith.busch@intel.com>
-     CC: Mika Westerberg <mika.westerberg@linux.intel.com>
-
-
-
+> Problem is that in our test system, the Intel NICs were not present in
+> any secondary bus under the first PCIe root complex, so they couldn't
+> be reached by the recursion in check_dev_quirk(). Modern systems,
+> specially with multi-processors and multiple NUMA nodes expose multiple
+> root complexes, describing more than one PCI hierarchy domain. Currently
+> the simple recursion present in the early-quirks code from x86 starts a
+> descending recursion from bus 0000:00, and reach many other busses by
+> navigating this hierarchy walking through the bridges. This is not
+> enough in systems with more than one root complex/host bridge, since
+> the recursion won't "traverse" to other root complexes by starting
+> statically in 0000:00 (for more details, see [0]).
 > 
-> But this case is even worse, because the NICs were in PCI passthrough
-> mode, using vfio. So, they were completely unaware of what happened
-> in the host kernel.
-> 
-> Also, this is spec compliant - system reset events should guarantee the
-> bits are cleared (although kexec is not exactly a system reset, it's
-> similar)
+> This patch hence implements the full bus/device/function scan in
+> early_quirks(), by checking all possible busses instead of using a
+> recursion based on the first root bus or limiting the search scope to
+> the first 32 busses (like it was done in the beginning [1]).
 
+I don't want to expand the early quirk infrastructure unless there is
+absolutely no other way to solve this.  The early quirk stuff is
+x86-specific, and it's not obvious that this problem is x86-only.
+
+This patch scans buses 0-255, but still only in domain 0, so it won't
+help with even more complicated systems that use other domains.
+
+I'm not an IRQ expert, but it seems wrong to me that we are enabling
+this interrupt before we're ready for it.  The MSI should target an
+IOAPIC.  Can't that IOAPIC entry be masked until later?  I guess the
+kdump kernel doesn't know what MSI address the device might be using.
+
+Could the IRQ core be more tolerant of this somehow, e.g., if it
+notices incoming interrupts with no handler, could it disable the
+IOAPIC entry and fall back to polling periodically until a handler is
+added?
+
+> [0] https://bugs.launchpad.net/bugs/1797990
+> 
+> [1] From historical perspective, early PCI scan dates back
+> to BitKeeper, added by Andi Kleen's "[PATCH] APIC fixes for x86-64",
+> on October/2003. It initially restricted the search to the first
+> 32 busses and slots.
+> 
+> Due to a potential bug found in Nvidia chipsets, the scan
+> was changed to run only in the first root bus: see
+> commit 8659c406ade3 ("x86: only scan the root bus in early PCI quirks")
+> 
+> Finally, secondary busses reachable from the 1st bus were re-added back by:
+> commit 850c321027c2 ("x86/quirks: Reintroduce scanning of secondary buses")
+> 
+> Reported-by: Dan Streetman <ddstreet@canonical.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+> ---
+>  arch/x86/kernel/early-quirks.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+> index 50d5848bf22e..fd50f9e21623 100644
+> --- a/arch/x86/kernel/early-quirks.c
+> +++ b/arch/x86/kernel/early-quirks.c
+> @@ -731,7 +731,6 @@ static int __init check_dev_quirk(int num, int slot, int func)
+>  	u16 vendor;
+>  	u16 device;
+>  	u8 type;
+> -	u8 sec;
+>  	int i;
+>  
+>  	class = read_pci_config_16(num, slot, func, PCI_CLASS_DEVICE);
+> @@ -760,11 +759,8 @@ static int __init check_dev_quirk(int num, int slot, int func)
+>  	type = read_pci_config_byte(num, slot, func,
+>  				    PCI_HEADER_TYPE);
+>  
+> -	if ((type & 0x7f) == PCI_HEADER_TYPE_BRIDGE) {
+> -		sec = read_pci_config_byte(num, slot, func, PCI_SECONDARY_BUS);
+> -		if (sec > num)
+> -			early_pci_scan_bus(sec);
+> -	}
+> +	if ((type & 0x7f) == PCI_HEADER_TYPE_BRIDGE)
+> +		return -1;
+>  
+>  	if (!(type & 0x80))
+>  		return -1;
+> @@ -787,8 +783,11 @@ static void __init early_pci_scan_bus(int bus)
+>  
+>  void __init early_quirks(void)
+>  {
+> +	int bus;
+> +
+>  	if (!early_pci_allowed())
+>  		return;
+>  
+> -	early_pci_scan_bus(0);
+> +	for (bus = 0; bus < 256; bus++)
+> +		early_pci_scan_bus(bus);
+>  }
+> -- 
+> 2.19.0
+> 
 
 _______________________________________________
 kexec mailing list
