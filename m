@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gD50o-0003TB-No
- for kexec@lists.infradead.org; Thu, 18 Oct 2018 09:54:40 +0000
-Subject: Patch "x86/boot: Fix kexec booting failure in the SEV bit detection
- code" has been added to the 4.18-stable tree
-From: <gregkh@linuxfoundation.org>
-Date: Thu, 18 Oct 2018 11:50:52 +0200
-Message-ID: <153985625228102@kroah.com>
+ id 1gDCa9-0003kk-1l
+ for kexec@lists.infradead.org; Thu, 18 Oct 2018 17:59:39 +0000
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.18 49/53] x86/boot: Fix kexec booting failure in the SEV bit
+ detection code
+Date: Thu, 18 Oct 2018 19:54:42 +0200
+Message-Id: <20181018175425.011990285@linuxfoundation.org>
+In-Reply-To: <20181018175416.561567978@linuxfoundation.org>
+References: <20181018175416.561567978@linuxfoundation.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,29 +23,12 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 20180927123845.32052-1-kasong@redhat.com, alexander.levin@microsoft.com, bhe@redhat.com, bp@suse.de, brijesh.singh@amd.com, dyoung@redhat.com, ghook@redhat.com, gregkh@linuxfoundation.org, hpa@zytor.com, kasong@redhat.com, kexec@lists.infradead.org, mingo@redhat.com, tglx@linutronix.de, thomas.lendacky@amd.com
-Cc: stable-commits@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Tom Lendacky <thomas.lendacky@amd.com>, ghook@redhat.com, brijesh.singh@amd.com, Kairui Song <kasong@redhat.com>, bhe@redhat.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, stable@vger.kernel.org, Sasha Levin <alexander.levin@microsoft.com>, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, Borislav Petkov <bp@suse.de>, dyoung@redhat.com
 
+4.18-stable review patch.  If anyone has any objections, please let me know.
 
-This is a note to let you know that I've just added the patch titled
-
-    x86/boot: Fix kexec booting failure in the SEV bit detection code
-
-to the 4.18-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     x86-boot-fix-kexec-booting-failure-in-the-sev-bit-detection-code.patch
-and it can be found in the queue-4.18 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From foo@baz Thu Oct 18 11:08:35 CEST 2018
-From: Kairui Song <kasong@redhat.com>
-Date: Thu, 27 Sep 2018 20:38:45 +0800
-Subject: x86/boot: Fix kexec booting failure in the SEV bit detection code
+------------------
 
 From: Kairui Song <kasong@redhat.com>
 
@@ -142,9 +127,6 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	.balign	8
 
 
-Patches currently in stable-queue which might be from kasong@redhat.com are
-
-queue-4.18/x86-boot-fix-kexec-booting-failure-in-the-sev-bit-detection-code.patch
 
 _______________________________________________
 kexec mailing list
