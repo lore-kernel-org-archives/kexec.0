@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gDGa8-0008Rt-Ms
- for kexec@lists.infradead.org; Thu, 18 Oct 2018 22:15:54 +0000
-Date: Thu, 18 Oct 2018 17:15:39 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 1/3] x86/quirks: Scan all busses for early PCI quirks
-Message-ID: <20181018221538.GN5906@bhelgaas-glaptop.roam.corp.google.com>
-References: <20181018183721.27467-1-gpiccoli@canonical.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20181018183721.27467-1-gpiccoli@canonical.com>
+ id 1gEUw0-0006Si-Vo
+ for kexec@lists.infradead.org; Mon, 22 Oct 2018 07:47:36 +0000
+From: Lianbo Jiang <lijiang@redhat.com>
+Subject: [PATCH 0/2 v4] add reserved e820 ranges to the kdump kernel e820 table
+Date: Mon, 22 Oct 2018 15:47:05 +0800
+Message-Id: <20181022074707.13901-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,117 +15,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Cc: cascardo@canonical.com, linux-pci@vger.kernel.org, andi@firstfloor.org, mfo@canonical.com, hpa@zytor.com, bhe@redhat.com, x86@kernel.org, mingo@redhat.com, jay.vosburgh@canonical.com, dyoung@redhat.com, fabiomirmar@canonical.com, gavin.guo@canonical.com, bp@alien8.de, bhelgaas@google.com, tglx@linutronix.de, shan.gavin@linux.alibaba.com, kernel@gpiccoli.net, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, ddstreet@canonical.com, lukas@wunner.de, billy.olsen@canonical.com
+To: linux-kernel@vger.kernel.org
+Cc: thomas.lendacky@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, tglx@linutronix.de, dyoung@redhat.com
 
-On Thu, Oct 18, 2018 at 03:37:19PM -0300, Guilherme G. Piccoli wrote:
-> Recently was noticed in an HP GEN9 system that kdump couldn't succeed
-> due to an irq storm coming from an Intel NIC, narrowed down to be lack
-> of clearing the MSI/MSI-X enable bits during the kdump kernel boot.
-> For that, we need an early quirk to manually turn off MSI/MSI-X for
-> PCI devices - this was worked as an optional boot parameter in a
-> subsequent patch.
-> 
-> Problem is that in our test system, the Intel NICs were not present in
-> any secondary bus under the first PCIe root complex, so they couldn't
-> be reached by the recursion in check_dev_quirk(). Modern systems,
-> specially with multi-processors and multiple NUMA nodes expose multiple
-> root complexes, describing more than one PCI hierarchy domain. Currently
-> the simple recursion present in the early-quirks code from x86 starts a
-> descending recursion from bus 0000:00, and reach many other busses by
-> navigating this hierarchy walking through the bridges. This is not
-> enough in systems with more than one root complex/host bridge, since
-> the recursion won't "traverse" to other root complexes by starting
-> statically in 0000:00 (for more details, see [0]).
-> 
-> This patch hence implements the full bus/device/function scan in
-> early_quirks(), by checking all possible busses instead of using a
-> recursion based on the first root bus or limiting the search scope to
-> the first 32 busses (like it was done in the beginning [1]).
+E820 reserved ranges is useful in kdump kernel, it has been added in
+kexec-tools code.
 
-I don't want to expand the early quirk infrastructure unless there is
-absolutely no other way to solve this.  The early quirk stuff is
-x86-specific, and it's not obvious that this problem is x86-only.
+One reason is PCI mmconf (extended mode) requires reserved region otherwise
+it falls back to legacy mode.
 
-This patch scans buses 0-255, but still only in domain 0, so it won't
-help with even more complicated systems that use other domains.
+Furthermore, when AMD SME kdump support, it needs to map dmi table area as
+decrypted. For normal boot, these ranges sit in e820 reserved ranges, thus
+the early ioremap code naturally map them as decrypted. If it also has same
+e820 reserve setup in kdump kernel then it will just work like normal
+kernel.
 
-I'm not an IRQ expert, but it seems wrong to me that we are enabling
-this interrupt before we're ready for it.  The MSI should target an
-IOAPIC.  Can't that IOAPIC entry be masked until later?  I guess the
-kdump kernel doesn't know what MSI address the device might be using.
+Kdump uses walk_iomem_res_desc to iterate resources, then adds matched desc
+to e820 table for the kdump kernel.
 
-Could the IRQ core be more tolerant of this somehow, e.g., if it
-notices incoming interrupts with no handler, could it disable the
-IOAPIC entry and fall back to polling periodically until a handler is
-added?
+But IORES_DESC_NONE resource type includes several different e820 types, we
+need add exact e820 type to the kdump kernel e820 table, thus it also needs
+an extra checking in memmap_entry_callback() to match the e820 type and
+resource name.
 
-> [0] https://bugs.launchpad.net/bugs/1797990
-> 
-> [1] From historical perspective, early PCI scan dates back
-> to BitKeeper, added by Andi Kleen's "[PATCH] APIC fixes for x86-64",
-> on October/2003. It initially restricted the search to the first
-> 32 busses and slots.
-> 
-> Due to a potential bug found in Nvidia chipsets, the scan
-> was changed to run only in the first root bus: see
-> commit 8659c406ade3 ("x86: only scan the root bus in early PCI quirks")
-> 
-> Finally, secondary busses reachable from the 1st bus were re-added back by:
-> commit 850c321027c2 ("x86/quirks: Reintroduce scanning of secondary buses")
-> 
-> Reported-by: Dan Streetman <ddstreet@canonical.com>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
-> ---
->  arch/x86/kernel/early-quirks.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-> index 50d5848bf22e..fd50f9e21623 100644
-> --- a/arch/x86/kernel/early-quirks.c
-> +++ b/arch/x86/kernel/early-quirks.c
-> @@ -731,7 +731,6 @@ static int __init check_dev_quirk(int num, int slot, int func)
->  	u16 vendor;
->  	u16 device;
->  	u8 type;
-> -	u8 sec;
->  	int i;
->  
->  	class = read_pci_config_16(num, slot, func, PCI_CLASS_DEVICE);
-> @@ -760,11 +759,8 @@ static int __init check_dev_quirk(int num, int slot, int func)
->  	type = read_pci_config_byte(num, slot, func,
->  				    PCI_HEADER_TYPE);
->  
-> -	if ((type & 0x7f) == PCI_HEADER_TYPE_BRIDGE) {
-> -		sec = read_pci_config_byte(num, slot, func, PCI_SECONDARY_BUS);
-> -		if (sec > num)
-> -			early_pci_scan_bus(sec);
-> -	}
-> +	if ((type & 0x7f) == PCI_HEADER_TYPE_BRIDGE)
-> +		return -1;
->  
->  	if (!(type & 0x80))
->  		return -1;
-> @@ -787,8 +783,11 @@ static void __init early_pci_scan_bus(int bus)
->  
->  void __init early_quirks(void)
->  {
-> +	int bus;
-> +
->  	if (!early_pci_allowed())
->  		return;
->  
-> -	early_pci_scan_bus(0);
-> +	for (bus = 0; bus < 256; bus++)
-> +		early_pci_scan_bus(bus);
->  }
-> -- 
-> 2.19.0
-> 
+Changes since v1:
+1. Modified the value of flags to "0", when walking through the whole
+tree for e820 reserved ranges.
+
+Changes since v2:
+1. Modified the value of flags to "0", when walking through the whole
+tree for e820 reserved ranges.
+2. Modified the invalid SOB chain issue.
+
+Changes since v3:
+1. Dropped [PATCH 1/3 v3] resource: fix an error which walks through iomem
+   resources. Please refer to this commit <010a93bf97c7> "resource: Fix
+   find_next_iomem_res() iteration issue"
+
+Note:
+1. The patches are made based on this branch:
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+
+2. And you need to apply the follow patch before test kdump file_load,
+   otherwise these patches won't work.
+   commit <010a93bf97c7> "resource: Fix find_next_iomem_res() iteration
+   issue"
+
+Lianbo Jiang (2):
+  x86/kexec_file: add e820 entry in case e820 type string matches to io
+    resource name
+  x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
+
+ arch/x86/include/asm/e820/api.h |  2 ++
+ arch/x86/kernel/crash.c         | 10 +++++++++-
+ arch/x86/kernel/e820.c          |  2 +-
+ kernel/resource.c               |  1 +
+ 4 files changed, 13 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+
 
 _______________________________________________
 kexec mailing list
