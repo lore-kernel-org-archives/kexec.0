@@ -1,21 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from youngberry.canonical.com ([91.189.89.112])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gEV2j-0008To-H3
- for kexec@lists.infradead.org; Mon, 22 Oct 2018 07:54:34 +0000
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com
- [10.5.11.15])
- (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
- (No client certificate requested)
- by mx1.redhat.com (Postfix) with ESMTPS id 82F143082125
- for <kexec@lists.infradead.org>; Mon, 22 Oct 2018 07:54:18 +0000 (UTC)
-Received: from mylaptop.nay.redhat.com (unknown [10.66.128.156])
- by smtp.corp.redhat.com (Postfix) with ESMTP id A3E885D778
- for <kexec@lists.infradead.org>; Mon, 22 Oct 2018 07:54:17 +0000 (UTC)
-From: Pingfan Liu <piliu@redhat.com>
-Subject: [PATCH] x86: fix BAD_FREE in get_efi_runtime_map()
-Date: Mon, 22 Oct 2018 15:54:16 +0800
-Message-Id: <1540194856-22759-1-git-send-email-piliu@redhat.com>
+ id 1gEg7p-0006pp-9i
+ for kexec@lists.infradead.org; Mon, 22 Oct 2018 19:44:30 +0000
+Received: from mail-qt1-f197.google.com ([209.85.160.197])
+ by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+ (Exim 4.76) (envelope-from <gpiccoli@canonical.com>)
+ id 1gEg7Z-0005hn-Ep
+ for kexec@lists.infradead.org; Mon, 22 Oct 2018 19:44:13 +0000
+Received: by mail-qt1-f197.google.com with SMTP id u2-v6so9574460qtg.14
+ for <kexec@lists.infradead.org>; Mon, 22 Oct 2018 12:44:13 -0700 (PDT)
+Subject: Re: [PATCH 3/3] x86/quirks: Add parameter to clear MSIs early on boot
+References: <20181018183721.27467-1-gpiccoli@canonical.com>
+ <20181018183721.27467-3-gpiccoli@canonical.com>
+ <6fd4e2d2-c0ac-b26d-9a14-0379b4421679@kernel.org>
+ <12d6175b-7f09-872a-61c4-700e905579c7@canonical.com>
+ <50d84d48-eebf-ed91-8148-be727f76883f@kernel.org>
+From: "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Message-ID: <92dc24c9-0963-e894-66fe-ad74bdbc0ac3@canonical.com>
+Date: Mon, 22 Oct 2018 16:44:04 -0300
+MIME-Version: 1.0
+In-Reply-To: <50d84d48-eebf-ed91-8148-be727f76883f@kernel.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,39 +30,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org
+Cc: cascardo@canonical.com, andi@firstfloor.org, bhe@redhat.com, lukas@wunner.de, shan.gavin@linux.alibaba.com, kernel@gpiccoli.net, linux-kernel@vger.kernel.org, gavin.guo@canonical.com, ddstreet@canonical.com, mingo@redhat.com, bp@alien8.de, billy.olsen@canonical.com, mfo@canonical.com, hpa@zytor.com, bhelgaas@google.com, jay.vosburgh@canonical.com, tglx@linutronix.de, dyoung@redhat.com, fabiomirmar@canonical.com, vgoyal@redhat.com
 
-If the err_out label is reached, address of a stack variable is passed to
-free(). Fix it.
+On 18/10/2018 17:30, Sinan Kaya wrote:
+> 
+> AFAIK, all shutdown (not remove) routines are called before launching
+> the next
+> kernel even in crash scenario. It is not safe to start the new kernel while
+> hardware is doing a DMA to the system memory and triggering interrupts.
 
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
----
- kexec/arch/i386/x86-linux-setup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi Sinan,
 
-diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index 6c7d260..6cda12c 100644
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -595,8 +595,8 @@ static int get_efi_runtime_map(struct efi_mem_descriptor **map)
- 	closedir(dirp);
- 	return nr_maps;
- err_out:
--	if (map)
--		free(map);
-+	if (*map)
-+		free(*map);
- 	closedir(dirp);
- 	return 0;
- }
--- 
-2.7.4
+I agree with you, it's definitely not safe to start a new kernel with
+in-flight DMA transactions, but in the crash scenario I think the
+rationale was that running kernel is broken so it's even more unreliable
+to try gracefully shutdown the devices than hope-for-the-best and start
+the kdump kernel right away heheh
 
+Fact is that the shutdown handlers are not called in the crash scenario.
+They come from device_shutdown(), the code paths are as follow:
+
+Regular kexec flow:
+
+syscall_reboot()
+  kernel_kexec()
+    kernel_restart_prepare()
+	  device_shutdown()
+	machine_kexec()
+	
+Although if CONFIG_KEXEC_JUMP is set, it doesn't call device_shutdown()
+either.
+
+
+Crash kexec flow:
+  __crash_kexec()
+      machine_kexec()
+
+There are some entry points to __crash_kexec(), like panic() or die() in
+x86, for example.
+To validate this, one can load a kernel with "initcall_debug" parameter,
+and performs a kexec - if the shutdown handlers are called, there's a
+dev_info() call that shows a message per device.
+
+
+> Shutdown routine in PCI core used to disable MSI/MSI-x on behalf of all
+> endpoints but it was later decided that this is the responsibility of the
+> endpoint driver.
+> 
+
+This may be a good idea, using the pci layer to disable MSIs in the
+quiesce path of the broken kernel. I'll follow-up this discussion in
+Bjorn's reply.
+
+Thanks,
+
+
+Guilherme
 
 _______________________________________________
 kexec mailing list
