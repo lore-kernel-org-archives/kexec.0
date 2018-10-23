@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-f196.google.com ([209.85.208.196])
+Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gEow3-0003yD-KH
- for kexec@lists.infradead.org; Tue, 23 Oct 2018 05:08:58 +0000
-Received: by mail-lj1-f196.google.com with SMTP id s15-v6so91726lji.3
- for <kexec@lists.infradead.org>; Mon, 22 Oct 2018 22:08:45 -0700 (PDT)
+ id 1gF060-0001yR-Mn
+ for kexec@lists.infradead.org; Tue, 23 Oct 2018 17:04:06 +0000
+Date: Tue, 23 Oct 2018 12:03:43 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 1/3] x86/quirks: Scan all busses for early PCI quirks
+Message-ID: <20181023170343.GA4587@bhelgaas-glaptop.roam.corp.google.com>
+References: <20181018183721.27467-1-gpiccoli@canonical.com>
+ <20181018221538.GN5906@bhelgaas-glaptop.roam.corp.google.com>
+ <d4e10c8d-aa39-7577-fbc8-0430ac44ba54@canonical.com>
 MIME-Version: 1.0
-References: <1540239620-29321-1-git-send-email-bhsharma@redhat.com>
- <20181023013145.GA10791@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20181023013145.GA10791@dhcp-128-65.nay.redhat.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 23 Oct 2018 10:38:30 +0530
-Message-ID: <CACi5LpPxqqc93YT9_444g0J+WwiO1sy1a_rKYq8wtV=zKr+wwA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: If 'getrandom' syscall fails, don't error out -
- just warn and proceed.
+Content-Disposition: inline
+In-Reply-To: <d4e10c8d-aa39-7577-fbc8-0430ac44ba54@canonical.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,109 +25,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec mailing list <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>
+To: "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Cc: cascardo@canonical.com, linux-pci@vger.kernel.org, andi@firstfloor.org, mfo@canonical.com, hpa@zytor.com, bhe@redhat.com, x86@kernel.org, mingo@redhat.com, jay.vosburgh@canonical.com, dyoung@redhat.com, fabiomirmar@canonical.com, gavin.guo@canonical.com, bp@alien8.de, bhelgaas@google.com, tglx@linutronix.de, shan.gavin@linux.alibaba.com, kernel@gpiccoli.net, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, ddstreet@canonical.com, lukas@wunner.de, billy.olsen@canonical.com
 
-Hi Dave,
-On Tue, Oct 23, 2018 at 7:01 AM Dave Young <dyoung@redhat.com> wrote:
->
-> Hi Bhupesh,
->
-> On 10/23/18 at 01:50am, Bhupesh Sharma wrote:
-> > For calculating the random 'kaslr-seed' value to be passed to the
-> > secondary kernel (kexec or kdump), we invoke the 'getrandom' syscall
-> > inside 'setup_2nd_dtb()' function.
-> >
-> > Normally on most arm64 systems this syscall doesn't fail when the
-> > initrd scriptware (which arms kdump service) invokes the same.
-> > However, recently I noticed that on the 'hp-moonshot' arm64 boards,
-> > we have an issue with the newer kernels which causes the same
-> > to fail. As a result, the kdump service fails and we are not able
-> > to use the kdump infrastructure just after boot. As expected, once the
-> > random pool is sufficiently populated and we launch the kdump service
-> > arming scripts again (manually), then the kdump service is properly
-> > enabled.
-> >
-> > Lets handle the same, by not error'ing out if 'getrandom' syscall fails.
-> > Rather lets warn the user and proceed further by setting the
-> > 'kaslr-seed' value as 0 for the secondary kernel - which implies that it
-> > boots in a 'nokaslr' mode.
->
-> kaslr is meaningless for kdump, so it would be good to print the message
-> only for kexec reboot or just do not try to setup the seed for kdump
-> loading.
+On Mon, Oct 22, 2018 at 05:35:06PM -0300, Guilherme G. Piccoli wrote:
+> On 18/10/2018 19:15, Bjorn Helgaas wrote:
+> > On Thu, Oct 18, 2018 at 03:37:19PM -0300, Guilherme G. Piccoli wrote:
+> > [...] 
+> I understand your point, but I think this is inherently an architecture
+> problem. No matter what solution we decide for, it'll need to be applied
+> in early boot time, like before the PCI layer gets initialized.
 
-Thanks for your comments.
+This is the part I want to know more about.  Apparently there's some
+event X between early_quirks() and the PCI device enumeration, and we
+must disable MSIs before X:
 
-We discussed some background about this during the review of patch
-"arm64: Add support to supply 'kaslr-seed' to secondary kernel", which
-is now commit c3f043241a866a7af9117396634dfcb20f0fd9cb.
+  setup_arch()
+      early_quirks()                     # arch/x86/kernel/early-quirks.c
+      early_pci_clear_msi()
+  ...
+  X
+  ...
+  pci_scan_root_bus_bridge()
+    ...
+    DECLARE_PCI_FIXUP_EARLY              # drivers/pci/quirks.c
 
-Ideally, one would want to keep the secondary kernel behaviour similar
-from a p-o-v of how the DTB is being populated by 'kexec-tools' for
-the secondary kernel, irrespective of whether we are doing a kexec
-warm boot or kdump arming.
+I want to know specifically what X is.  If we don't know what X is and
+all we know is "we have to disable MSIs earlier than PCI init", then
+we're likely to break things again in the future by changing the order
+of disabling MSIs and whatever X is.
 
-In addition, some users on Freescale/NXP arm64 boards requested the
-same as they use KASLR feature in the 'kexec -p' (kdump) use cases on
-their boards. So, I would suggest that we don't break such use-cases
-on arm64 boards via booting kdump kernel in 'nokaslr' mode - if one
-needs to do the same they can pass 'nokaslr' explicitly in the
-bootrags being passed to the kdump kernel.
-
-Hope this clarify the intent behind this patch.
-
-Regards,
-Bhupesh
-
-> >
-> > Tested on my 'hp-moonshot' and 'qualcomm-amberwing' arm64 boards.
-> >
-> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> > ---
-> >  kexec/arch/arm64/kexec-arm64.c | 17 ++++++++++++++---
-> >  1 file changed, 14 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> > index 7a124795f3d0..b143e861f7d9 100644
-> > --- a/kexec/arch/arm64/kexec-arm64.c
-> > +++ b/kexec/arch/arm64/kexec-arm64.c
-> > @@ -492,10 +492,21 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
-> >                               GRND_NONBLOCK);
-> >
-> >               if(result == -1) {
-> > -                     dbgprintf("%s: Reading random bytes failed.\n",
-> > +                     fprintf(stderr, "%s: Reading random bytes failed.\n",
-> > +                                     __func__);
-> > +
-> > +                     /* Currently on some arm64 platforms this
-> > +                      * 'getrandom' system call fails while booting
-> > +                      * the platform.
-> > +                      *
-> > +                      * In case, this happens at best we can set
-> > +                      * the 'kaslr_seed' as 0, indicating that the
-> > +                      * 2nd kernel will be booted with a 'nokaslr'
-> > +                      * like behaviour.
-> > +                      */
-> > +                     fdt_val64 = 0UL;
-> > +                     dbgprintf("%s: Disabling KASLR in secondary kernel.\n",
-> >                                       __func__);
-> > -                     result = -EINVAL;
-> > -                     goto on_error;
-> >               }
-> >
-> >               nodeoffset = fdt_path_offset(new_buf, "/chosen");
-> > --
-> > 2.7.4
-> >
-> >
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
->
-> Thanks
-> Dave
+Bjorn
 
 _______________________________________________
 kexec mailing list
