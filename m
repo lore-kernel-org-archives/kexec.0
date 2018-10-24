@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mail-pl1-f193.google.com ([209.85.214.193])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gFPCM-0007lb-Hy
- for kexec@lists.infradead.org; Wed, 24 Oct 2018 19:52:12 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile: Fix failure of detection of SPARSEMEM
- EXTREME in case of -x VMLINUX
-Date: Wed, 24 Oct 2018 19:50:48 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC0355E3EA@BPXM09GP.gisp.nec.co.jp>
-References: <33710E6CAA200E4583255F4FB666C4E21B99CA54@G01JPEXMBYT03>
-In-Reply-To: <33710E6CAA200E4583255F4FB666C4E21B99CA54@G01JPEXMBYT03>
-Content-Language: en-US
-MIME-Version: 1.0
+ id 1gFQeT-0000YR-5X
+ for kexec@lists.infradead.org; Wed, 24 Oct 2018 21:25:22 +0000
+Received: by mail-pl1-f193.google.com with SMTP id bh10-v6so2833165plb.4
+ for <kexec@lists.infradead.org>; Wed, 24 Oct 2018 14:25:06 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH 0/2] kexec-tools/arm64: Add support to read PHYS_OFFSET from
+ vmcoreinfo inside '/proc/kcore'
+Date: Thu, 25 Oct 2018 02:54:52 +0530
+Message-Id: <1540416294-10526-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,93 +18,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Cc: "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: Vadim.Lomovtsev@cavium.com, yanjiang.jin@hxt-semitech.com, bhsharma@redhat.com, takahiro.akashi@linaro.org, horms@verge.net.au, bhupesh.linux@gmail.com
 
-Hi Hatayama-san,
+Since kernel version 4.19-rc5 (Commit 23c85094fe1895caefdd
+["proc/kcore: add vmcoreinfo note to /proc/kcore"]), '/proc/kcore'
+contains a new PT_NOTE which carries the VMCOREINFO information.
 
-Thank you for the patch.
-I merged it into the devel branch.
+If the same is available, one should prefer the same to
+retrieve 'PHYS_OFFSET' value exported by the kernel as this
+is now the standard interface exposed by kernel for sharing
+machine specific details with the user-land as per
+the arm64 kernel maintainers (see [0]).
 
-Kazu
+Also on certain arm64 platforms, it has been noticed that due
+to a hole at the start of physical ram exposed to kernel
+(i.e. it doesn't start from address 0), the kernel still
+calculates the 'memstart_addr' kernel variable as 0.
 
-On 10/24/2018 3:51 AM, Hatayama, Daisuke wrote:
-> This issue was introduced by commit
-> f3c87e0ab1f62b118e738d046c3d676325770418.
-> 
-> Currently, is_sparsemem_extreme() compares ARRAY_LENGTH(mem_section)
-> with NOT_FOUND_SYMBOL but correct initial value for array table is
-> NOT_FOUND_STRUCTURE.
-> 
-> As a result, makedumpfile fails to detect SPARSEMEM EXTREME and so
-> fails to convert vmcore captured by sadump as follows:
-> 
->     # LANG=C makedumpfile --message-level 31 -f -l -d 31 -x ./vmlinux /dev/sdc vmcore-ld31
->     sadump: read dump device as single partition
->     sadump: single partition configuration
->     page_size    : 4096
->     sadump: timezone information is missing
->     sadump: idtr=fffffe0000000000
->     sadump: cr3=ba4e0a000
->     sadump: idtr(phys)=ba55cc000
->     sadump: devide_error(vmlinux)=ffffffff81a00c50
->     sadump: devide_error(vmcore)=ffffffff83c00c50
->     sadump: cmdline vaddr: ffffffff84bcf008
->     sadump: cmdline paddr: ba55cf008
->     sadump: cmdline buf vaddr: ffff8fa39ffceec0
->     sadump: cmdline buf paddr: 109ffceec0
->     sadump: kaslr_offset=2200000
->     sadump: phys_base=ba0a00000
->     sadump: online cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
-> 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59
->     sadump: nr_cpus: 60
->     The kernel version is not supported.
->     The makedumpfile operation may be incomplete.
->     sadump: SRC_START: 0x00000000001000 SRC_SIZE: 0x0000000009f000 SRC_OFFSET: 0x00000025f61000
->     sadump: kdump backup region unused
-> 
->     num of NODEs : 2
-> 
->     Memory type  : SPARSEMEM
-> 
->     get_mm_sparsemem: Can't get the address of mem_section.
-> 
->     makedumpfile Failed.
-> 
-> This issue doesn't occur for vmcore captured by kdump because in that
-> case, the length of mem_section is provided via VMCOREINFO and
-> is_sparsemem_extreme() returns TRUE via the other path.
-> 
-> This issue occurs also for other mechanisms where we need to use
-> -x VMLINUX such as virsh dump.
-> 
-> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-> ---
->  makedumpfile.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 1ed3d61..18b4364 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -2084,7 +2084,7 @@ is_sparsemem_extreme(void)
->  {
->  	if ((ARRAY_LENGTH(mem_section)
->  	     == divideup(NR_MEM_SECTIONS(), _SECTIONS_PER_ROOT_EXTREME()))
-> -	    || (ARRAY_LENGTH(mem_section) == NOT_FOUND_SYMBOL))
-> +	    || (ARRAY_LENGTH(mem_section) == NOT_FOUND_STRUCTURE))
->  		return TRUE;
->  	else
->  		return FALSE;
-> --
-> 2.18.0
-> 
-> 
+Whereas the SYSTEM_RAM or IOMEM_RESERVED range in '/proc/iomem'
+would carry a first entry whose start address is non-zero
+(as the physical ram exposed to the kernel starts from a
+non-zero address).
 
+In such cases, if we rely on '/proc/iomem' entries to
+calculate the phys_offset, then we will have mismatch
+between the user-space and kernel space 'PHYS_OFFSET'
+value. The present 'kexec-tools' code does the same
+in 'get_memory_ranges_iomem_cb()' function when it makes
+a call to 'set_phys_offset()'. This can cause the vmcore
+generated via 'kexec-tools' to miss the last few bytes as
+the first '/proc/iomem' starts from a non-zero address.
+
+Details about the patches in this series:
+----------------------------------------
+PATCH 1/2 ->
+
+- Tries to move the elf read functionality from 'vmcore-dmesg.c' to
+  a new utility library named 'elf_info.c', so that subsequent patches
+  can use the same.
+- See the patch log for more details.
+
+PATCH 2/2 ->
+- Implements the actual functionality of reading the PHYS_OFFSET for arm64
+  platforms from the vmcoreinfo inside '/proc/kcore' (if available).
+- See the patch log for more details.
+
+Testing:
+--------
+I tested this patchset on qualcomm-amberwing and huawei-taishan arm64
+boards for non-KALSR boot mode. Both display the same PHYS_OFFSET in
+user-space as the value used by kernel after this patch.
+
+I will send a separate followup patch to fix the KASLR boot cases
+(as the discussion on the same is in progress with the arm64
+kernel maintainers).
+
+[0] https://www.mail-archive.com/kexec@lists.infradead.org/msg20300.html
+
+Bhupesh Sharma (2):
+  util_lib: Add functionality to read elf notes
+  arm64: Add support to read PHYS_OFFSET from '/proc/kcore' (if
+    available)
+
+ kexec/arch/arm64/kexec-arm64.c                     |  73 ++
+ util_lib/Makefile                                  |   4 +-
+ vmcore-dmesg/vmcore-dmesg.c => util_lib/elf_info.c | 157 +++--
+ util_lib/include/elf_info.h                        |  30 +
+ vmcore-dmesg/Makefile                              |   4 +-
+ vmcore-dmesg/vmcore-dmesg.c                        | 742 +--------------------
+ 6 files changed, 219 insertions(+), 791 deletions(-)
+ copy vmcore-dmesg/vmcore-dmesg.c => util_lib/elf_info.c (88%)
+ create mode 100644 util_lib/include/elf_info.h
+
+-- 
+2.7.4
 
 
 _______________________________________________
