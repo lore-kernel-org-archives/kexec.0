@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwym04.jp.fujitsu.com ([211.128.242.43])
+Received: from mail-lf1-f68.google.com ([209.85.167.68])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gFDxW-0001hu-Ry
- for kexec@lists.infradead.org; Wed, 24 Oct 2018 07:52:08 +0000
-Received: from g01jpfmpwyt01.exch.g01.fujitsu.local
- (g01jpfmpwyt01.exch.g01.fujitsu.local [10.128.193.38])
- by yt-mxoi1.gw.nic.fujitsu.com (Postfix) with ESMTP id 01228AC0232
- for <kexec@lists.infradead.org>; Wed, 24 Oct 2018 16:51:43 +0900 (JST)
-From: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH] makedumpfile: Fix failure of detection of SPARSEMEM EXTREME
- in case of -x VMLINUX
-Date: Wed, 24 Oct 2018 07:51:41 +0000
-Message-ID: <33710E6CAA200E4583255F4FB666C4E21B99CA54@G01JPEXMBYT03>
-Content-Language: ja-JP
+ id 1gFEaR-0002Um-IB
+ for kexec@lists.infradead.org; Wed, 24 Oct 2018 08:32:22 +0000
+Received: by mail-lf1-f68.google.com with SMTP id c16so3281252lfj.8
+ for <kexec@lists.infradead.org>; Wed, 24 Oct 2018 01:32:07 -0700 (PDT)
 MIME-Version: 1.0
+References: <1540239620-29321-1-git-send-email-bhsharma@redhat.com>
+ <20181023013145.GA10791@dhcp-128-65.nay.redhat.com>
+ <CACi5LpPxqqc93YT9_444g0J+WwiO1sy1a_rKYq8wtV=zKr+wwA@mail.gmail.com>
+ <20181024070439.GC3094@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20181024070439.GC3094@dhcp-128-65.nay.redhat.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Wed, 24 Oct 2018 14:01:51 +0530
+Message-ID: <CACi5LpNpuwoXAM6cAGnjin-a6r906d4O+sZw7c6NXw4ziQq-rg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: If 'getrandom' syscall fails, don't error out -
+ just warn and proceed.
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,79 +28,171 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "'k-hagio@ab.jp.nec.com'" <k-hagio@ab.jp.nec.com>
-Cc: "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec mailing list <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>
 
-This issue was introduced by commit
-f3c87e0ab1f62b118e738d046c3d676325770418.
+Hi Dave,
 
-Currently, is_sparsemem_extreme() compares ARRAY_LENGTH(mem_section)
-with NOT_FOUND_SYMBOL but correct initial value for array table is
-NOT_FOUND_STRUCTURE.
+On Wed, Oct 24, 2018 at 12:34 PM Dave Young <dyoung@redhat.com> wrote:
+>
+> On 10/23/18 at 10:38am, Bhupesh Sharma wrote:
+> > Hi Dave,
+> > On Tue, Oct 23, 2018 at 7:01 AM Dave Young <dyoung@redhat.com> wrote:
+> > >
+> > > Hi Bhupesh,
+> > >
+> > > On 10/23/18 at 01:50am, Bhupesh Sharma wrote:
+> > > > For calculating the random 'kaslr-seed' value to be passed to the
+> > > > secondary kernel (kexec or kdump), we invoke the 'getrandom' syscall
+> > > > inside 'setup_2nd_dtb()' function.
+> > > >
+> > > > Normally on most arm64 systems this syscall doesn't fail when the
+> > > > initrd scriptware (which arms kdump service) invokes the same.
+> > > > However, recently I noticed that on the 'hp-moonshot' arm64 boards,
+> > > > we have an issue with the newer kernels which causes the same
+> > > > to fail. As a result, the kdump service fails and we are not able
+> > > > to use the kdump infrastructure just after boot. As expected, once the
+> > > > random pool is sufficiently populated and we launch the kdump service
+> > > > arming scripts again (manually), then the kdump service is properly
+> > > > enabled.
+> > > >
+> > > > Lets handle the same, by not error'ing out if 'getrandom' syscall fails.
+> > > > Rather lets warn the user and proceed further by setting the
+> > > > 'kaslr-seed' value as 0 for the secondary kernel - which implies that it
+> > > > boots in a 'nokaslr' mode.
+> > >
+> > > kaslr is meaningless for kdump, so it would be good to print the message
+> > > only for kexec reboot or just do not try to setup the seed for kdump
+> > > loading.
+> >
+> > Thanks for your comments.
+> >
+> > We discussed some background about this during the review of patch
+> > "arm64: Add support to supply 'kaslr-seed' to secondary kernel", which
+> > is now commit c3f043241a866a7af9117396634dfcb20f0fd9cb.
+> >
+> > Ideally, one would want to keep the secondary kernel behaviour similar
+> > from a p-o-v of how the DTB is being populated by 'kexec-tools' for
+> > the secondary kernel, irrespective of whether we are doing a kexec
+> > warm boot or kdump arming.
+>
+> It is somehow reasonable though I'm no keen to have this for kdump.
+> Since both Baoquan and you agree to have this I will not insist.
 
-As a result, makedumpfile fails to detect SPARSEMEM EXTREME and so
-fails to convert vmcore captured by sadump as follows:
+Yes, and as I mentioned earlier that there are some users already of
+the KASLR enabled kdump feature on arm64 boards (mostly on
+NXP/Freescale boards), so IMHO, we should keep supporting KASLR
+support in kdump kernels.
 
-    # LANG=C makedumpfile --message-level 31 -f -l -d 31 -x ./vmlinux /dev/sdc vmcore-ld31
-    sadump: read dump device as single partition
-    sadump: single partition configuration
-    page_size    : 4096
-    sadump: timezone information is missing
-    sadump: idtr=fffffe0000000000
-    sadump: cr3=ba4e0a000
-    sadump: idtr(phys)=ba55cc000
-    sadump: devide_error(vmlinux)=ffffffff81a00c50
-    sadump: devide_error(vmcore)=ffffffff83c00c50
-    sadump: cmdline vaddr: ffffffff84bcf008
-    sadump: cmdline paddr: ba55cf008
-    sadump: cmdline buf vaddr: ffff8fa39ffceec0
-    sadump: cmdline buf paddr: 109ffceec0
-    sadump: kaslr_offset=2200000
-    sadump: phys_base=ba0a00000
-    sadump: online cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59
-    sadump: nr_cpus: 60
-    The kernel version is not supported.
-    The makedumpfile operation may be incomplete.
-    sadump: SRC_START: 0x00000000001000 SRC_SIZE: 0x0000000009f000 SRC_OFFSET: 0x00000025f61000
-    sadump: kdump backup region unused
+> But if one specify "nokaslr" in 2nd kernel cmdlind eg. in some kdump
+> config files, but kexec-tools still give a warning message, this is not
+> good.
 
-    num of NODEs : 2
+Just to present some background, the 2nd dtb is actually created by
+kexec-tools and is to be supplied to 2nd kernel. While creating the
+same, kexec-tools expects that the kernel random seed pool is
+sufficiently seeded vy now (in case the primary kernel was boot'ed
+with KASLR enabled). See
+<http://man7.org/linux/man-pages/man2/getrandom.2.html> for details
+for getrandom() syscall.
 
-    Memory type  : SPARSEMEM
+Originally, in case the pool is not seeded by the time kexec-tools is
+launched in user-land, we used to error'ed out and failed kexec/kdump
+loading, as logically this is a randomness failure on the platform
+(can be hardware rng failure or a software rng issue).
 
-    get_mm_sparsemem: Can't get the address of mem_section.
+This patch changes the behaviour to just printing a message when the
+getrandom() syscall fails and still proceed with booting the secondary
+kernel (kexec/kdump) in "nokaslr" mode.
 
-    makedumpfile Failed.
+Now, passing "nokaslr" explicitly in bootargs (whether of a primary or
+secondary kernel itself), is a different case altogether from the
+above error. If the primary kernel is boot'ed with "nokaslr" the
+'kexec-tools' will not prepare the 'kaslr-seed' property for the
+secondary kernel. Also if "nokaslr" is being passed in secondary
+kernel's booatrags, the above error will be printed only if
+getrandom() syscall failed in NON_BLOCK mode.
 
-This issue doesn't occur for vmcore captured by kdump because in that
-case, the length of mem_section is provided via VMCOREINFO and
-is_sparsemem_extreme() returns TRUE via the other path.
+Infact having a helpful message on getrandom() syscall failure is
+useful in all cases, as such a failure needs to be debugged for
+hardware or software rng failures and later down the road, it might
+cause security certification failure for a product as well, as it may
+imply that the seed we received from boot firmware or generated during
+early boot is either invalid or not large enough to fill the kernel
+entropy pool.
 
-This issue occurs also for other mechanisms where we need to use
--x VMLINUX such as virsh dump.
+So, the "nokaslr" in bootargs and getrandom() syscall failure are two
+separate issues.
 
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
----
- makedumpfile.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hope this helps.
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 1ed3d61..18b4364 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -2084,7 +2084,7 @@ is_sparsemem_extreme(void)
- {
- 	if ((ARRAY_LENGTH(mem_section)
- 	     == divideup(NR_MEM_SECTIONS(), _SECTIONS_PER_ROOT_EXTREME()))
--	    || (ARRAY_LENGTH(mem_section) == NOT_FOUND_SYMBOL))
-+	    || (ARRAY_LENGTH(mem_section) == NOT_FOUND_STRUCTURE))
- 		return TRUE;
- 	else
- 		return FALSE;
--- 
-2.18.0
+Regards,
+Bhupesh
 
-
+> >
+> > In addition, some users on Freescale/NXP arm64 boards requested the
+> > same as they use KASLR feature in the 'kexec -p' (kdump) use cases on
+> > their boards. So, I would suggest that we don't break such use-cases
+> > on arm64 boards via booting kdump kernel in 'nokaslr' mode - if one
+> > needs to do the same they can pass 'nokaslr' explicitly in the
+> > bootrags being passed to the kdump kernel.
+> >
+> > Hope this clarify the intent behind this patch.
+> >
+> > Regards,
+> > Bhupesh
+> >
+> > > >
+> > > > Tested on my 'hp-moonshot' and 'qualcomm-amberwing' arm64 boards.
+> > > >
+> > > > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> > > > ---
+> > > >  kexec/arch/arm64/kexec-arm64.c | 17 ++++++++++++++---
+> > > >  1 file changed, 14 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> > > > index 7a124795f3d0..b143e861f7d9 100644
+> > > > --- a/kexec/arch/arm64/kexec-arm64.c
+> > > > +++ b/kexec/arch/arm64/kexec-arm64.c
+> > > > @@ -492,10 +492,21 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+> > > >                               GRND_NONBLOCK);
+> > > >
+> > > >               if(result == -1) {
+> > > > -                     dbgprintf("%s: Reading random bytes failed.\n",
+> > > > +                     fprintf(stderr, "%s: Reading random bytes failed.\n",
+> > > > +                                     __func__);
+> > > > +
+> > > > +                     /* Currently on some arm64 platforms this
+> > > > +                      * 'getrandom' system call fails while booting
+> > > > +                      * the platform.
+> > > > +                      *
+> > > > +                      * In case, this happens at best we can set
+> > > > +                      * the 'kaslr_seed' as 0, indicating that the
+> > > > +                      * 2nd kernel will be booted with a 'nokaslr'
+> > > > +                      * like behaviour.
+> > > > +                      */
+> > > > +                     fdt_val64 = 0UL;
+> > > > +                     dbgprintf("%s: Disabling KASLR in secondary kernel.\n",
+> > > >                                       __func__);
+> > > > -                     result = -EINVAL;
+> > > > -                     goto on_error;
+> > > >               }
+> > > >
+> > > >               nodeoffset = fdt_path_offset(new_buf, "/chosen");
+> > > > --
+> > > > 2.7.4
+> > > >
+> > > >
+> > > > _______________________________________________
+> > > > kexec mailing list
+> > > > kexec@lists.infradead.org
+> > > > http://lists.infradead.org/mailman/listinfo/kexec
+> > >
+> > > Thanks
+> > > Dave
+>
+> Thanks
+> Dave
 
 _______________________________________________
 kexec mailing list
