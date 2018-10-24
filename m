@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-dm3nam05on0601.outbound.protection.outlook.com
- ([2a01:111:f400:fe51::601]
- helo=NAM05-DM3-obe.outbound.protection.outlook.com)
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gFIen-00029O-On
- for kexec@lists.infradead.org; Wed, 24 Oct 2018 12:53:07 +0000
-From: "Lomovtsev, Vadim" <Vadim.Lomovtsev@cavium.com>
-Subject: [BUG] vmcore-dmesg cant' read dmesg log from /proc/vmcore if log_buf
- is reallocated due to large number of CPUs
-Date: Wed, 24 Oct 2018 12:52:49 +0000
-Message-ID: <MWHPR07MB3007D9D79825933D958943EC8AF60@MWHPR07MB3007.namprd07.prod.outlook.com>
+ id 1gFPCM-0007lb-Hy
+ for kexec@lists.infradead.org; Wed, 24 Oct 2018 19:52:12 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile: Fix failure of detection of SPARSEMEM
+ EXTREME in case of -x VMLINUX
+Date: Wed, 24 Oct 2018 19:50:48 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC0355E3EA@BPXM09GP.gisp.nec.co.jp>
+References: <33710E6CAA200E4583255F4FB666C4E21B99CA54@G01JPEXMBYT03>
+In-Reply-To: <33710E6CAA200E4583255F4FB666C4E21B99CA54@G01JPEXMBYT03>
 Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -24,27 +24,91 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: "Lomovtsev, Vadim" <Vadim.Lomovtsev@cavium.com>
+To: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
+Cc: "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>
 
-Hi all,
+Hi Hatayama-san,
 
-Following issue has been found for vmcore-dmesg app with latest release (94159bc3c264fa26395e56302072276a139d18af 2.0.18-rc1) of kexec-tools at CentOS 7.5 distro:
+Thank you for the patch.
+I merged it into the devel branch.
 
-While having systems with large number of CPUs (e.g. Cavium ThunderX2 has 224) the log_buf gets reallocated by memblock_virt_alloc() at the setup_log_buf routine (https://elixir.bootlin.com/linux/v4.16.18/source/kernel/printk/printk.c#L1108).
+Kazu
 
-Then while dumping vmcore the vmcore-dmesg can't find dmesg log at /proc/vmcore file and exits with following message:
-  Failed to read log text of size 0 bytes: Bad address
+On 10/24/2018 3:51 AM, Hatayama, Daisuke wrote:
+> This issue was introduced by commit
+> f3c87e0ab1f62b118e738d046c3d676325770418.
+> 
+> Currently, is_sparsemem_extreme() compares ARRAY_LENGTH(mem_section)
+> with NOT_FOUND_SYMBOL but correct initial value for array table is
+> NOT_FOUND_STRUCTURE.
+> 
+> As a result, makedumpfile fails to detect SPARSEMEM EXTREME and so
+> fails to convert vmcore captured by sadump as follows:
+> 
+>     # LANG=C makedumpfile --message-level 31 -f -l -d 31 -x ./vmlinux /dev/sdc vmcore-ld31
+>     sadump: read dump device as single partition
+>     sadump: single partition configuration
+>     page_size    : 4096
+>     sadump: timezone information is missing
+>     sadump: idtr=fffffe0000000000
+>     sadump: cr3=ba4e0a000
+>     sadump: idtr(phys)=ba55cc000
+>     sadump: devide_error(vmlinux)=ffffffff81a00c50
+>     sadump: devide_error(vmcore)=ffffffff83c00c50
+>     sadump: cmdline vaddr: ffffffff84bcf008
+>     sadump: cmdline paddr: ba55cf008
+>     sadump: cmdline buf vaddr: ffff8fa39ffceec0
+>     sadump: cmdline buf paddr: 109ffceec0
+>     sadump: kaslr_offset=2200000
+>     sadump: phys_base=ba0a00000
+>     sadump: online cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
+> 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59
+>     sadump: nr_cpus: 60
+>     The kernel version is not supported.
+>     The makedumpfile operation may be incomplete.
+>     sadump: SRC_START: 0x00000000001000 SRC_SIZE: 0x0000000009f000 SRC_OFFSET: 0x00000025f61000
+>     sadump: kdump backup region unused
+> 
+>     num of NODEs : 2
+> 
+>     Memory type  : SPARSEMEM
+> 
+>     get_mm_sparsemem: Can't get the address of mem_section.
+> 
+>     makedumpfile Failed.
+> 
+> This issue doesn't occur for vmcore captured by kdump because in that
+> case, the length of mem_section is provided via VMCOREINFO and
+> is_sparsemem_extreme() returns TRUE via the other path.
+> 
+> This issue occurs also for other mechanisms where we need to use
+> -x VMLINUX such as virsh dump.
+> 
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> ---
+>  makedumpfile.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 1ed3d61..18b4364 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -2084,7 +2084,7 @@ is_sparsemem_extreme(void)
+>  {
+>  	if ((ARRAY_LENGTH(mem_section)
+>  	     == divideup(NR_MEM_SECTIONS(), _SECTIONS_PER_ROOT_EXTREME()))
+> -	    || (ARRAY_LENGTH(mem_section) == NOT_FOUND_SYMBOL))
+> +	    || (ARRAY_LENGTH(mem_section) == NOT_FOUND_STRUCTURE))
+>  		return TRUE;
+>  	else
+>  		return FALSE;
+> --
+> 2.18.0
+> 
+> 
 
-However it (vmcore-dmesg app) reads properly the log_buf symbol, it's address and eventually it's value from /proc/vmcore but fails to find dmesg data then.
 
-In the same time the makedumpfile is able to find and extract dmesg buffer from /proc/vmcore.
-The makedumpfile comes with kexec-tools-2.0.15-13.el7_5.2.aarch64 package.
 
-The issue is not reproduced for systems with small number of CPUs and log_buf not reallocated to memblock section.
-
-WBR,
-Vadim
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
