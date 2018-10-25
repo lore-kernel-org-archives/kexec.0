@@ -1,21 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pf1-f194.google.com ([209.85.210.194])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gFYDa-0000Jj-DN
- for kexec@lists.infradead.org; Thu, 25 Oct 2018 05:30:23 +0000
-Date: Thu, 25 Oct 2018 13:29:43 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] arm64: If 'getrandom' syscall fails, don't error out -
- just warn and proceed.
-Message-ID: <20181025052943.GA11755@dhcp-128-65.nay.redhat.com>
-References: <1540239620-29321-1-git-send-email-bhsharma@redhat.com>
- <20181023013145.GA10791@dhcp-128-65.nay.redhat.com>
- <CACi5LpPxqqc93YT9_444g0J+WwiO1sy1a_rKYq8wtV=zKr+wwA@mail.gmail.com>
- <20181024070439.GC3094@dhcp-128-65.nay.redhat.com>
- <CACi5LpNpuwoXAM6cAGnjin-a6r906d4O+sZw7c6NXw4ziQq-rg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CACi5LpNpuwoXAM6cAGnjin-a6r906d4O+sZw7c6NXw4ziQq-rg@mail.gmail.com>
+ id 1gFYys-0002pD-I6
+ for kexec@lists.infradead.org; Thu, 25 Oct 2018 06:18:57 +0000
+Received: by mail-pf1-f194.google.com with SMTP id c25-v6so3666969pfe.6
+ for <kexec@lists.infradead.org>; Wed, 24 Oct 2018 23:18:42 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH] makedumpfile: Update help text to indicate --mem-usage is
+ supported on archs other than x86_64
+Date: Thu, 25 Oct 2018 11:48:27 +0530
+Message-Id: <1540448307-15300-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,32 +18,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec mailing list <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>
+To: kexec@lists.infradead.org
+Cc: bhsharma@redhat.com, bhupesh.linux@gmail.com, k-hagio@ab.jp.nec.com
 
-Hi Bhupesh,
+Commit 8449bda73ab14516d4bf81d29503c1ea203bb865 ["Documentation:
+Update documentation regarding --mem-usage' option"]), updated the
+makedumpfile man page to indicate that this option is now
+supported on x86_64, arm64, ppc64 and s390x.
 
-On 10/24/18 at 02:01pm, Bhupesh Sharma wrote:
-[snip]
-> Now, passing "nokaslr" explicitly in bootargs (whether of a primary or
-> secondary kernel itself), is a different case altogether from the
-> above error. If the primary kernel is boot'ed with "nokaslr" the
-> 'kexec-tools' will not prepare the 'kaslr-seed' property for the
-> secondary kernel. Also if "nokaslr" is being passed in secondary
-> kernel's booatrags, the above error will be printed only if
-> getrandom() syscall failed in NON_BLOCK mode.
+However, the help text for makedumpfile (which one can see
+by running 'makedumpfile --help'), still reflects the old
+support status, i.e. this option is only supported on x86_64.
 
-I understand your point about kexec-tools and 2nd kernel are different
-cases, but from user point of view, these two cases are combined.
-If one does not want kaslr then kexec-tools can just skip getting the
-seeds at all. 
+This patch changes the help text to be in sync with the man
+page text.
 
-Thanks
-Dave
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+---
+ print_info.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/print_info.c b/print_info.c
+index 732d5b806c24..0be12ea8803c 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -300,7 +300,7 @@ print_usage(void)
+ 	MSG("      necessary to specify [-x VMLINUX] or [-i VMCOREINFO].\n");
+ 	MSG("\n");
+ 	MSG("  [--mem-usage]:\n");
+-	MSG("      This option is only for x86_64.\n");
++	MSG("      This option is currently supported on x86_64, arm64, ppc64 and s390x.\n");
+ 	MSG("      This option is used to show the page numbers of current system in different\n");
+ 	MSG("      use. It should be executed in 1st kernel. By the help of this, user can know\n");
+ 	MSG("      how many pages is dumpable when different dump_level is specified. It analyzes\n");
+-- 
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
