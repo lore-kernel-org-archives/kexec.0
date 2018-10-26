@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-it1-x129.google.com ([2607:f8b0:4864:20::129])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gG1I6-0007Gi-5C
- for kexec@lists.infradead.org; Fri, 26 Oct 2018 12:32:39 +0000
-Subject: Re: [PATCH] kdump, vmcoreinfo: Export sme_me_mask value to vmcoreinfo
-References: <20181026093630.8520-1-lijiang@redhat.com>
- <053CC83A-9A95-4C12-9627-AABD1427DA9C@alien8.de>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <1263471c-a27d-a698-15f0-b5947f13ea93@redhat.com>
-Date: Fri, 26 Oct 2018 20:32:11 +0800
+ id 1gG1uo-0005Af-Hb
+ for kexec@lists.infradead.org; Fri, 26 Oct 2018 13:12:40 +0000
+Received: by mail-it1-x129.google.com with SMTP id l191-v6so1454091ita.4
+ for <kexec@lists.infradead.org>; Fri, 26 Oct 2018 06:12:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <053CC83A-9A95-4C12-9627-AABD1427DA9C@alien8.de>
-Content-Language: en-US
+From: Vicente Bergas <vicencb@gmail.com>
+Date: Fri, 26 Oct 2018 15:12:14 +0200
+Message-ID: <CAAMcf8BU+ifd5JEC11maz=uxR+iU4myP_J3Oyy6MfWUo2AqTwA@mail.gmail.com>
+Subject: [BUG] Set device tree bootargs failed when DTB does not contain a
+ chosen node.
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,46 +23,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Boris Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com
+To: horms@verge.net.au, kexec@lists.infradead.org
 
-5ZyoIDIwMTjlubQxMOaciDI25pelIDE3OjQzLCBCb3JpcyBQZXRrb3Yg5YaZ6YGTOgo+IE9uIE9j
-dG9iZXIgMjYsIDIwMTggMTA6MzY6MzAgQU0gR01UKzAxOjAwLCBMaWFuYm8gSmlhbmcgPGxpamlh
-bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4+IEZvciBBTUQgbWFjaGluZSB3aXRoIFNNRSBmZWF0dXJl
-LCBtYWtlZHVtcGZpbGUgdG9vbHMgbmVlZCB0byBrbm93Cj4+IHdoZXRoZXIgdGhlIGNyYXNoIGtl
-cm5lbCB3YXMgZW5jcnlwdGVkIG9yIG5vdC4gCj4gCj4gV2h5Pwo+IAoKSWYgU01FIGlzIGVuYWJs
-ZWQgaW4gdGhlIGZpcnN0IGtlcm5lbCwgdGhlIGNyYXNoIGtlcm5lbCdzIHBhZ2UgdGFibGUocGdk
-L3B1ZC9wbWQvcHRlKQpjb250YWlucyB0aGUgbWVtb3J5IGVuY3J5cHRpb24gbWFzaywgc28gaSBo
-YXZlIHRvIHJlbW92ZSB0aGUgc21lIG1hc2sgdG8gb2J0YWluIHRoZQp0cnVlIHBoeXNpY2FsIGFk
-ZHJlc3Mgd2hlbiBkdW1wIHZtY29yZS4gCgo+PiBTbyBpdCBpcyBuZWNlc3NhcnkKPj4gdG8gd3Jp
-dGUgdGhlIHNtZV9tZV9tYXNrIHRvIHZtY29yZWluZm8uCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IExp
-YW5ibyBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+PiAtLS0KPj4gYXJjaC94ODYva2VybmVs
-L21hY2hpbmVfa2V4ZWNfNjQuYyB8IDIgKysKPj4gMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9u
-cygrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQu
-Ywo+PiBiL2FyY2gveDg2L2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0LmMKPj4gaW5kZXggNGM4YWNk
-ZmRjNWE3Li5kY2ZkYjY0ZDEwOTcgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9tYWNo
-aW5lX2tleGVjXzY0LmMKPj4gKysrIGIvYXJjaC94ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQu
-Ywo+PiBAQCAtMzU3LDYgKzM1Nyw4IEBAIHZvaWQgYXJjaF9jcmFzaF9zYXZlX3ZtY29yZWluZm8o
-dm9pZCkKPj4gCXZtY29yZWluZm9fYXBwZW5kX3N0cigiTlVNQkVSKHBndGFibGVfbDVfZW5hYmxl
-ZCk9JWRcbiIsCj4+IAkJCXBndGFibGVfbDVfZW5hYmxlZCgpKTsKPj4KPj4gKwlWTUNPUkVJTkZP
-X05VTUJFUihzbWVfbWVfbWFzayk7Cj4gCj4gTm8gd2UncmUgbm90IGdvaW5nIHRvIGV4cG9zZSBh
-IGtlcm5lbC1pbnRlcm5hbCBtYXNrIHRvIHVzZXJzcGFjZS4gCj4gCgpJZiBzbywgY2FuIGkgc2V0
-IGEgdmFyaWFibGUgZmxhZyBmb3IgdGhlICdzbWVfbWVfbWFzaycgYW5kIGV4cG9ydCB0aGUKdmFy
-aWFibGUgZmxhZz8gRm9yIGV4YW1wbGU6Cgp2b2lkIGFyY2hfY3Jhc2hfc2F2ZV92bWNvcmVpbmZv
-KHZvaWQpIHsKCiAgICAuLi4uCgogICAgaWYgKHNtZV9hY3RpdmUoKSkKICAgICAgICBzbWVfZW5h
-YmxlZCA9IDE7CgogICAgVk1DT1JFSU5GT19OVU1CRVIoc21lX2VuYWJsZWQpOwouLi4uCn0KCj4g
-SWYgYXQgYWxsIG5lZWRlZCwgYWRkIGZ1bmN0aW9ucyB0byBrZXhlYyB3aGljaCBmaWd1cmUgb3V0
-IHdoZXRoZXIgd2UgYXJlIGVuY3J5cHRlZCBvciBub3QgYW5kIGV4cG9ydCB0aGF0IHJlc3VsdCBh
-cyBhIGtleGVjIHZhcmlhYmxlLgo+IAo+IAoKRm9yIEFNRCBtYWNoaW5lIHdpdGggdGhlIFNNRSBm
-ZWF0dXJlLCB0aGUgbXNyICdNU1JfSzhfU1lTQ0ZHJyBjYW4gZXhhbWluZQp3aGV0aGVyIFNNRSBp
-cyBlbmFibGVkIGluIGtlcm5lbCwgYnV0IHRoZSBrZXhlYyBpcyBhbHNvIHVzZXJzcGFjZSB0b29s
-LAppdCBoYXMgbm8gcGVybWlzc2lvbiB0byBhY2Nlc3MgdGhlIG1zci4KCkZ1cnRoZXJtb3JlLCBp
-IGFsc28gdHJpZWQgdG8gcmVhZCB0aGUgIi9kZXYvY3B1L2NwdVtudW1iZXJdL21zciIsIGJ1dAp0
-aGUgdmFsdWUgZGVwZW5kcyBvbiBCSU9TJ3MgY29uZmlndXJhdGlvbi4gVGhhdCBpcyB0byBzYXks
-IGlmIFNNRSBpcwpzZXQgaW4gQklPUywgdGhlIHZhbHVlIG9mIG1zciBpcyBhbHdheXMgMHhGNDAw
-MDAgd2hhdGV2ZXIgdGhlIGtlcm5lbApjb21tYW5kbGluZSBwYXJhbWV0ZXIgaXMgIm1lbV9lbmNy
-eXB0PW9uIiBvciAibWVtX2VuY3J5cHQ9b2ZmIi4KCklmIGkgbWFkZSBhIG1pc3Rha2UsIHBsZWFz
-ZSBoZWxwIHRvIHBvaW50IGl0IG91dC4KClRoYW5rcy4KTGlhbmJvCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2tleGVjCg==
+SGVsbG8sCndoZW4gZXhlY3V0aW5nCiAga2V4ZWMgLWQgLS1kdGIgZHRiX3dpdGhvdXRfY2hvc2Vu
+X25vZGUuZHRiIC0tYXBwZW5kICdjbWRsaW5lJyAtLWxvYWQgSW1hZ2UKaXQgcmVwb3J0cwogIGR0
+Yl9zZXRfcHJvcGVydHk6IGZkdF9hZGRfc3Vibm9kZSBmYWlsZWQ6IDx2YWxpZCBvZmZzZXQvbGVu
+Z3RoPgogIGtleGVjOiBTZXQgZGV2aWNlIHRyZWUgYm9vdGFyZ3MgZmFpbGVkLgoKSXQgaGFzIGJl
+ZW4gdGVzdGVkIG9uIHRoZSBhcm02NCBhcmNoaXRlY3R1cmUgd2l0aCB2ZXJzaW9uIHYyLjAuMTcg
+YW5kCnYyLjAuMTgtcmMxCgpSZWdhcmRzLAogIFZpY2Vuw6cuCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2tleGVjCg==
