@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-f66.google.com ([209.85.167.66])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gFzDM-0003Um-Bc
- for kexec@lists.infradead.org; Fri, 26 Oct 2018 10:19:39 +0000
-Received: by mail-lf1-f66.google.com with SMTP id n3-v6so506175lfe.7
- for <kexec@lists.infradead.org>; Fri, 26 Oct 2018 03:19:25 -0700 (PDT)
+ id 1gG1I6-0007Gi-5C
+ for kexec@lists.infradead.org; Fri, 26 Oct 2018 12:32:39 +0000
+Subject: Re: [PATCH] kdump, vmcoreinfo: Export sme_me_mask value to vmcoreinfo
+References: <20181026093630.8520-1-lijiang@redhat.com>
+ <053CC83A-9A95-4C12-9627-AABD1427DA9C@alien8.de>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <1263471c-a27d-a698-15f0-b5947f13ea93@redhat.com>
+Date: Fri, 26 Oct 2018 20:32:11 +0800
 MIME-Version: 1.0
-References: <MWHPR07MB3007D9D79825933D958943EC8AF60@MWHPR07MB3007.namprd07.prod.outlook.com>
- <CACi5LpO6JH=Fepu97GVa-oZK7v4kj0+RL9WqYZuMp=KRJ2=diQ@mail.gmail.com>
- <20181025104017.GA29339@localhost.localdomain>
- <CACi5LpO56hq4jC76d7B5vLoG-wVoe-rGQoqeWYhYhjOEWG0sqA@mail.gmail.com>
- <20181026101133.GA31868@localhost.localdomain>
-In-Reply-To: <20181026101133.GA31868@localhost.localdomain>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Fri, 26 Oct 2018 15:49:11 +0530
-Message-ID: <CACi5LpO_3PWBuNZPse_CppkyE5UMym_wgChkuy12TLGztzMdBQ@mail.gmail.com>
-Subject: Re: [BUG] vmcore-dmesg cant' read dmesg log from /proc/vmcore if
- log_buf is reallocated due to large number of CPUs
+In-Reply-To: <053CC83A-9A95-4C12-9627-AABD1427DA9C@alien8.de>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,128 +20,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vadim.Lomovtsev@caviumnetworks.com
-Cc: Vadim.Lomovtsev@cavium.com, kexec mailing list <kexec@lists.infradead.org>
+To: Boris Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com
 
-Hi Vadim,
-On Fri, Oct 26, 2018 at 3:41 PM Vadim Lomovtsev
-<Vadim.Lomovtsev@caviumnetworks.com> wrote:
->
-> Hi Bhupesh,
->
-> On Fri, Oct 26, 2018 at 12:25:17PM +0530, Bhupesh Sharma wrote:
-> >
-> > ease p
-> > before seiHi Vadim,
-> >
-> > On Thu, Oct 25, 2018 at 4:10 PM Vadim Lomovtsev
-> > <Vadim.Lomovtsev@caviumnetworks.com> wrote:
-> > >
-> > > Hello Bhupesh,
-> > >
-> > > On Thu, Oct 25, 2018 at 03:00:08AM +0530, Bhupesh Sharma wrote:
-> > > > External Email
-> > > >
-> > > > Hello Vadim,
-> > > >
-> > > > On Wed, Oct 24, 2018 at 6:23 PM Lomovtsev, Vadim
-> > > > <Vadim.Lomovtsev@cavium.com> wrote:
-> > > > >
-> > > > > Hi all,
-> > > > >
-> > > > > Following issue has been found for vmcore-dmesg app with latest release (94159bc3c264fa26395e56302072276a139d18af 2.0.18-rc1) of kexec-tools at CentOS 7.5 distro:
-> > > > >
-> > > > > While having systems with large number of CPUs (e.g. Cavium ThunderX2 has 224) the log_buf gets reallocated by memblock_virt_alloc() at the setup_log_buf routine (https://elixir.bootlin.com/linux/v4.16.18/source/kernel/printk/printk.c#L1108).
-> > > > >
-> > > > > Then while dumping vmcore the vmcore-dmesg can't find dmesg log at /proc/vmcore file and exits with following message:
-> > > > >   Failed to read log text of size 0 bytes: Bad address
-> > > > >
-> > > > > However it (vmcore-dmesg app) reads properly the log_buf symbol, it's address and eventually it's value from /proc/vmcore but fails to find dmesg data then.
-> > > > >
-> > > > > In the same time the makedumpfile is able to find and extract dmesg buffer from /proc/vmcore.
-> > > > > The makedumpfile comes with kexec-tools-2.0.15-13.el7_5.2.aarch64 package.
-> > > > >
-> > > > > The issue is not reproduced for systems with small number of CPUs and log_buf not reallocated to memblock section.
-> > > >
-> > > > Seems like you are hitting a known issue we saw on qualcomm amberwing
-> > > > platforms as well.
-> > > > I have sent a patch-series titled 'kexec-tools/arm64: Add support to
-> > > > read PHYS_OFFSET from vmcoreinfo inside '/proc/kcore' to this list
-> > > > just a few minutes back.
-> > > >
-> > > > I have Cc'ed you to the patchset as I think it might fix the issue for
-> > > > you.
-> > >
-> > > Got them, thank you.
-> > >
-> > > > Kindly try the patchset on your platform (cavium?) and let me
-> > > > know if this fixes the issue for you.
-> > >
-> > > Sure, I'd like to check them at my side, but..
-> > > I fall into merge conflicts while trying to apply them onto
-> > > https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/
-> > > master, kexec-tools 2.0.18-rc1 94159bc3c264fa26395e56302072276a139d18af
-> >
-> > Hmm.. that's strange as I rebased them on kexec-tools 2.0.18-rc1
-> > (94159bc3c264fa26395e56302072276a139d18af)
-> > before sending out the patchset.
-> >
-> > > Are there any specific branch/revision for them to be applied ?
-> > > (or it might be my mail server issues with formatting emails).
-> > >
-> >
-> > Can you please try picking them up from my public github tree instead?
-> > Here you can find the same:
-> > https://github.com/bhupesh-sharma/kexec-tools/tree/read-phys-offset-from-kcore-upstream-v1
-> >
-> > Please pick the top 2 commit from here.
->
-> Applied them onto commit '94159bc kexec-tools 2.0.18-rc1'.
->
-> Still having following error while saving dmesg by vmcore-dmesg:
->
-> kdump: saving vmcore-dmesg.txt
-> Failed to read log text of size 0 bytes: Bad address
-> kdump: saving vmcore-dmesg.txt failed
->
-> So far tried kernels 4.14.78, 4.16.18.
-
-You would need kernel 4.19-rc5 or above as the same exposes VMCOREINFO
-as '/proc/kcore'.
-If you are having issues while switching to newer kernel, please share
-the output(s) of following on your platform:
-
-# kexec -p /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname
--r`.img --reuse-cmdline -d
-
-and,
-
-# readelf -l vmcore
-
-and,
-
-# cat /proc/iomem
-
-And then I can suggest a hack, which you can try and test on your
-platform and then we can take it forward from there.
-
-Thanks,
-Bhupesh
-
-> >
-> > Thanks,
-> > Bhupesh
-> >
-> > >
-> > > >
-> > > > Thanks,
-> > > > Bhupesh
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMOaciDI25pelIDE3OjQzLCBCb3JpcyBQZXRrb3Yg5YaZ6YGTOgo+IE9uIE9j
+dG9iZXIgMjYsIDIwMTggMTA6MzY6MzAgQU0gR01UKzAxOjAwLCBMaWFuYm8gSmlhbmcgPGxpamlh
+bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4+IEZvciBBTUQgbWFjaGluZSB3aXRoIFNNRSBmZWF0dXJl
+LCBtYWtlZHVtcGZpbGUgdG9vbHMgbmVlZCB0byBrbm93Cj4+IHdoZXRoZXIgdGhlIGNyYXNoIGtl
+cm5lbCB3YXMgZW5jcnlwdGVkIG9yIG5vdC4gCj4gCj4gV2h5Pwo+IAoKSWYgU01FIGlzIGVuYWJs
+ZWQgaW4gdGhlIGZpcnN0IGtlcm5lbCwgdGhlIGNyYXNoIGtlcm5lbCdzIHBhZ2UgdGFibGUocGdk
+L3B1ZC9wbWQvcHRlKQpjb250YWlucyB0aGUgbWVtb3J5IGVuY3J5cHRpb24gbWFzaywgc28gaSBo
+YXZlIHRvIHJlbW92ZSB0aGUgc21lIG1hc2sgdG8gb2J0YWluIHRoZQp0cnVlIHBoeXNpY2FsIGFk
+ZHJlc3Mgd2hlbiBkdW1wIHZtY29yZS4gCgo+PiBTbyBpdCBpcyBuZWNlc3NhcnkKPj4gdG8gd3Jp
+dGUgdGhlIHNtZV9tZV9tYXNrIHRvIHZtY29yZWluZm8uCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IExp
+YW5ibyBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+PiAtLS0KPj4gYXJjaC94ODYva2VybmVs
+L21hY2hpbmVfa2V4ZWNfNjQuYyB8IDIgKysKPj4gMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9u
+cygrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQu
+Ywo+PiBiL2FyY2gveDg2L2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0LmMKPj4gaW5kZXggNGM4YWNk
+ZmRjNWE3Li5kY2ZkYjY0ZDEwOTcgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9tYWNo
+aW5lX2tleGVjXzY0LmMKPj4gKysrIGIvYXJjaC94ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQu
+Ywo+PiBAQCAtMzU3LDYgKzM1Nyw4IEBAIHZvaWQgYXJjaF9jcmFzaF9zYXZlX3ZtY29yZWluZm8o
+dm9pZCkKPj4gCXZtY29yZWluZm9fYXBwZW5kX3N0cigiTlVNQkVSKHBndGFibGVfbDVfZW5hYmxl
+ZCk9JWRcbiIsCj4+IAkJCXBndGFibGVfbDVfZW5hYmxlZCgpKTsKPj4KPj4gKwlWTUNPUkVJTkZP
+X05VTUJFUihzbWVfbWVfbWFzayk7Cj4gCj4gTm8gd2UncmUgbm90IGdvaW5nIHRvIGV4cG9zZSBh
+IGtlcm5lbC1pbnRlcm5hbCBtYXNrIHRvIHVzZXJzcGFjZS4gCj4gCgpJZiBzbywgY2FuIGkgc2V0
+IGEgdmFyaWFibGUgZmxhZyBmb3IgdGhlICdzbWVfbWVfbWFzaycgYW5kIGV4cG9ydCB0aGUKdmFy
+aWFibGUgZmxhZz8gRm9yIGV4YW1wbGU6Cgp2b2lkIGFyY2hfY3Jhc2hfc2F2ZV92bWNvcmVpbmZv
+KHZvaWQpIHsKCiAgICAuLi4uCgogICAgaWYgKHNtZV9hY3RpdmUoKSkKICAgICAgICBzbWVfZW5h
+YmxlZCA9IDE7CgogICAgVk1DT1JFSU5GT19OVU1CRVIoc21lX2VuYWJsZWQpOwouLi4uCn0KCj4g
+SWYgYXQgYWxsIG5lZWRlZCwgYWRkIGZ1bmN0aW9ucyB0byBrZXhlYyB3aGljaCBmaWd1cmUgb3V0
+IHdoZXRoZXIgd2UgYXJlIGVuY3J5cHRlZCBvciBub3QgYW5kIGV4cG9ydCB0aGF0IHJlc3VsdCBh
+cyBhIGtleGVjIHZhcmlhYmxlLgo+IAo+IAoKRm9yIEFNRCBtYWNoaW5lIHdpdGggdGhlIFNNRSBm
+ZWF0dXJlLCB0aGUgbXNyICdNU1JfSzhfU1lTQ0ZHJyBjYW4gZXhhbWluZQp3aGV0aGVyIFNNRSBp
+cyBlbmFibGVkIGluIGtlcm5lbCwgYnV0IHRoZSBrZXhlYyBpcyBhbHNvIHVzZXJzcGFjZSB0b29s
+LAppdCBoYXMgbm8gcGVybWlzc2lvbiB0byBhY2Nlc3MgdGhlIG1zci4KCkZ1cnRoZXJtb3JlLCBp
+IGFsc28gdHJpZWQgdG8gcmVhZCB0aGUgIi9kZXYvY3B1L2NwdVtudW1iZXJdL21zciIsIGJ1dAp0
+aGUgdmFsdWUgZGVwZW5kcyBvbiBCSU9TJ3MgY29uZmlndXJhdGlvbi4gVGhhdCBpcyB0byBzYXks
+IGlmIFNNRSBpcwpzZXQgaW4gQklPUywgdGhlIHZhbHVlIG9mIG1zciBpcyBhbHdheXMgMHhGNDAw
+MDAgd2hhdGV2ZXIgdGhlIGtlcm5lbApjb21tYW5kbGluZSBwYXJhbWV0ZXIgaXMgIm1lbV9lbmNy
+eXB0PW9uIiBvciAibWVtX2VuY3J5cHQ9b2ZmIi4KCklmIGkgbWFkZSBhIG1pc3Rha2UsIHBsZWFz
+ZSBoZWxwIHRvIHBvaW50IGl0IG91dC4KClRoYW5rcy4KTGlhbmJvCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2tleGVjCg==
