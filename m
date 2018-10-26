@@ -1,18 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-f193.google.com ([209.85.208.193])
+Received: from mail-lf1-f66.google.com ([209.85.167.66])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gGB1U-0002Ha-T4
- for kexec@lists.infradead.org; Fri, 26 Oct 2018 22:56:10 +0000
-Received: by mail-lj1-f193.google.com with SMTP id z21-v6so2606945ljz.0
- for <kexec@lists.infradead.org>; Fri, 26 Oct 2018 15:55:57 -0700 (PDT)
+ id 1gGBHA-00081a-W6
+ for kexec@lists.infradead.org; Fri, 26 Oct 2018 23:12:22 +0000
+Received: by mail-lf1-f66.google.com with SMTP id a82-v6so2096288lfa.4
+ for <kexec@lists.infradead.org>; Fri, 26 Oct 2018 16:12:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAAMcf8BU+ifd5JEC11maz=uxR+iU4myP_J3Oyy6MfWUo2AqTwA@mail.gmail.com>
-In-Reply-To: <CAAMcf8BU+ifd5JEC11maz=uxR+iU4myP_J3Oyy6MfWUo2AqTwA@mail.gmail.com>
+References: <MWHPR07MB3007D9D79825933D958943EC8AF60@MWHPR07MB3007.namprd07.prod.outlook.com>
+ <CACi5LpO6JH=Fepu97GVa-oZK7v4kj0+RL9WqYZuMp=KRJ2=diQ@mail.gmail.com>
+ <20181025104017.GA29339@localhost.localdomain>
+ <CACi5LpO56hq4jC76d7B5vLoG-wVoe-rGQoqeWYhYhjOEWG0sqA@mail.gmail.com>
+ <20181026101133.GA31868@localhost.localdomain>
+ <CACi5LpO_3PWBuNZPse_CppkyE5UMym_wgChkuy12TLGztzMdBQ@mail.gmail.com>
+ <20181026131856.GA32207@localhost.localdomain>
+In-Reply-To: <20181026131856.GA32207@localhost.localdomain>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Sat, 27 Oct 2018 04:25:43 +0530
-Message-ID: <CACi5LpNWhdfh4sLgv_7p9rrmJYfr-3tkBrLZj6AOt2Yp4EcVhQ@mail.gmail.com>
-Subject: Re: [BUG] Set device tree bootargs failed when DTB does not contain a
- chosen node.
+Date: Sat, 27 Oct 2018 04:41:55 +0530
+Message-ID: <CACi5LpPEt+pdOPwFyhB=SB+PB7+kLTinj+bn_ne+ojiXa4A8sg@mail.gmail.com>
+Subject: Re: [BUG] vmcore-dmesg cant' read dmesg log from /proc/vmcore if
+ log_buf is reallocated due to large number of CPUs
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,33 +27,174 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vicencb@gmail.com
-Cc: Simon Horman <horms@verge.net.au>, kexec mailing list <kexec@lists.infradead.org>
+To: Vadim.Lomovtsev@caviumnetworks.com
+Cc: Vadim.Lomovtsev@cavium.com, kexec mailing list <kexec@lists.infradead.org>
 
-SGkgVmljZW7DpywKCk9uIEZyaSwgT2N0IDI2LCAyMDE4IGF0IDY6NDIgUE0gVmljZW50ZSBCZXJn
-YXMgPHZpY2VuY2JAZ21haWwuY29tPiB3cm90ZToKPgo+IEhlbGxvLAo+IHdoZW4gZXhlY3V0aW5n
-Cj4gICBrZXhlYyAtZCAtLWR0YiBkdGJfd2l0aG91dF9jaG9zZW5fbm9kZS5kdGIgLS1hcHBlbmQg
-J2NtZGxpbmUnIC0tbG9hZCBJbWFnZQo+IGl0IHJlcG9ydHMKPiAgIGR0Yl9zZXRfcHJvcGVydHk6
-IGZkdF9hZGRfc3Vibm9kZSBmYWlsZWQ6IDx2YWxpZCBvZmZzZXQvbGVuZ3RoPgo+ICAga2V4ZWM6
-IFNldCBkZXZpY2UgdHJlZSBib290YXJncyBmYWlsZWQuCj4KPiBJdCBoYXMgYmVlbiB0ZXN0ZWQg
-b24gdGhlIGFybTY0IGFyY2hpdGVjdHVyZSB3aXRoIHZlcnNpb24gdjIuMC4xNyBhbmQKPiB2Mi4w
-LjE4LXJjMQoKQ2FuIHlvdSBzaGFyZSBzb21lIGRldGFpbHMgb24gdGhlIHVuZGVybHlpbmcgcGxh
-dGZvcm0gYW5kIGtlcm5lbAp2ZXJzaW9uIHlvdSBhcmUgdXNpbmc/CgpMb29raW5nIGF0IHRoZSBs
-b2dzLCBJIGFtIGFzc3VtaW5nIHlvdSBhcmUgcnVubmluZyAna2V4ZWMnIG9uIGEgYXJtNjQKcGxh
-dGZvcm0gKGFzIGl0IGRlcGVuZHMgb24gY3JlYXRpbmcgYSBkdGIgdG8gYmUgcGFzc2VkIHRvIHRo
-ZSAybmQKa2VybmVsKS4KCk15IGdlbmVyYWwgYWR2aWNlIGlzIHRvIGF2b2lkIHRoZSAtLWR0YiBv
-cHRpb24gYXMgaXQgaXMga25vd24gdG8gY2F1c2UKaXNzdWVzIHdpdGgga2V4ZWMgaW4gdGhlIHBh
-c3QgKHNlZSBbMF0gZm9yIGRldGFpbHMpCklkZWFsbHksIGlmIHlvdSBkb24ndCB1c2UgdGhlIC0t
-ZHRiIG9wdGlvbiwgdGhlbiBrZXhlYyB3aWxsIHJlYWQgdGhlIGV4aXN0aW5nCmtlcm5lbCdzIGR0
-YiBmcm9tIC9wcm9jL2RldmljZS10cmVlLCBhbmQgdGhhdCBkZXZpY2UgdHJlZSB3aWxsIGluY2x1
-ZGUKYWxsIHRoZSBjaGFuZ2VzIHRoYXQgdGhlIGJvb3QgbG9hZGVyIGhhcyBkb25lLCBpbmNsdWRp
-bmcgYWRkaW5nIGRldGFpbHMKb2YgdGhlIGF2YWlsYWJsZSBtZW1vcnkgaW4gdGhlIHN5c3RlbS4K
-ClswXS4gaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5lbC9tc2c2MTgyMzYu
-aHRtbAoKSG9wZSB0aGlzIGhlbHBzLgoKUmVnYXJkcywKQmh1cGVzaAoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9rZXhlYwo=
+Hi Vadim,
+
+On Fri, Oct 26, 2018 at 6:49 PM Vadim Lomovtsev
+<Vadim.Lomovtsev@caviumnetworks.com> wrote:
+>
+> Hi Bhupesh,
+>
+> On Fri, Oct 26, 2018 at 03:49:11PM +0530, Bhupesh Sharma wrote:
+> >
+> > Hi Vadim,
+> > On Fri, Oct 26, 2018 at 3:41 PM Vadim Lomovtsev
+> > <Vadim.Lomovtsev@caviumnetworks.com> wrote:
+> > >
+> > > Hi Bhupesh,
+> > >
+> > > On Fri, Oct 26, 2018 at 12:25:17PM +0530, Bhupesh Sharma wrote:
+> > > >
+> > > > ease p
+> > > > before seiHi Vadim,
+> > > >
+> > > > On Thu, Oct 25, 2018 at 4:10 PM Vadim Lomovtsev
+> > > > <Vadim.Lomovtsev@caviumnetworks.com> wrote:
+> > > > >
+> > > > > Hello Bhupesh,
+> > > > >
+> > > > > On Thu, Oct 25, 2018 at 03:00:08AM +0530, Bhupesh Sharma wrote:
+> > > > > > External Email
+> > > > > >
+> > > > > > Hello Vadim,
+> > > > > >
+> > > > > > On Wed, Oct 24, 2018 at 6:23 PM Lomovtsev, Vadim
+> > > > > > <Vadim.Lomovtsev@cavium.com> wrote:
+> > > > > > >
+> > > > > > > Hi all,
+> > > > > > >
+> > > > > > > Following issue has been found for vmcore-dmesg app with latest release (94159bc3c264fa26395e56302072276a139d18af 2.0.18-rc1) of kexec-tools at CentOS 7.5 distro:
+> > > > > > >
+> > > > > > > While having systems with large number of CPUs (e.g. Cavium ThunderX2 has 224) the log_buf gets reallocated by memblock_virt_alloc() at the setup_log_buf routine (https://elixir.bootlin.com/linux/v4.16.18/source/kernel/printk/printk.c#L1108).
+> > > > > > >
+> > > > > > > Then while dumping vmcore the vmcore-dmesg can't find dmesg log at /proc/vmcore file and exits with following message:
+> > > > > > >   Failed to read log text of size 0 bytes: Bad address
+> > > > > > >
+> > > > > > > However it (vmcore-dmesg app) reads properly the log_buf symbol, it's address and eventually it's value from /proc/vmcore but fails to find dmesg data then.
+> > > > > > >
+> > > > > > > In the same time the makedumpfile is able to find and extract dmesg buffer from /proc/vmcore.
+> > > > > > > The makedumpfile comes with kexec-tools-2.0.15-13.el7_5.2.aarch64 package.
+> > > > > > >
+> > > > > > > The issue is not reproduced for systems with small number of CPUs and log_buf not reallocated to memblock section.
+> > > > > >
+> > > > > > Seems like you are hitting a known issue we saw on qualcomm amberwing
+> > > > > > platforms as well.
+> > > > > > I have sent a patch-series titled 'kexec-tools/arm64: Add support to
+> > > > > > read PHYS_OFFSET from vmcoreinfo inside '/proc/kcore' to this list
+> > > > > > just a few minutes back.
+> > > > > >
+> > > > > > I have Cc'ed you to the patchset as I think it might fix the issue for
+> > > > > > you.
+> > > > >
+> > > > > Got them, thank you.
+> > > > >
+> > > > > > Kindly try the patchset on your platform (cavium?) and let me
+> > > > > > know if this fixes the issue for you.
+> > > > >
+> > > > > Sure, I'd like to check them at my side, but..
+> > > > > I fall into merge conflicts while trying to apply them onto
+> > > > > https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/
+> > > > > master, kexec-tools 2.0.18-rc1 94159bc3c264fa26395e56302072276a139d18af
+> > > >
+> > > > Hmm.. that's strange as I rebased them on kexec-tools 2.0.18-rc1
+> > > > (94159bc3c264fa26395e56302072276a139d18af)
+> > > > before sending out the patchset.
+> > > >
+> > > > > Are there any specific branch/revision for them to be applied ?
+> > > > > (or it might be my mail server issues with formatting emails).
+> > > > >
+> > > >
+> > > > Can you please try picking them up from my public github tree instead?
+> > > > Here you can find the same:
+> > > > https://github.com/bhupesh-sharma/kexec-tools/tree/read-phys-offset-from-kcore-upstream-v1
+> > > >
+> > > > Please pick the top 2 commit from here.
+> > >
+> > > Applied them onto commit '94159bc kexec-tools 2.0.18-rc1'.
+> > >
+> > > Still having following error while saving dmesg by vmcore-dmesg:
+> > >
+> > > kdump: saving vmcore-dmesg.txt
+> > > Failed to read log text of size 0 bytes: Bad address
+> > > kdump: saving vmcore-dmesg.txt failed
+> > >
+> > > So far tried kernels 4.14.78, 4.16.18.
+> >
+> > You would need kernel 4.19-rc5 or above as the same exposes VMCOREINFO
+> > as '/proc/kcore'.
+>
+> So far with 4.19-rc6 (and updated kexec, vmcore-dmesg but having kdump scripts from CentOS)
+> the crashkernel can't found sysroot and thus it can't dump anything, so it timeouts and reboot system.
+>
+> > If you are having issues while switching to newer kernel, please share
+> > the output(s) of following on your platform:
+> >
+> > # kexec -p /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname
+> > -r`.img --reuse-cmdline -d
+> >
+>
+> attached as kexec-start.log.xz
+>
+> > and,
+> >
+> > # readelf -l vmcore
+>
+> [root@2sgbt-53 vlomovts]# readelf -l vmcore
+> readelf: vmcore: Error: No such file
+> [root@2sgbt-53 vlomovts]# uname -r
+> 4.19.0-rc6+
+>
+> >
+> > and,
+> >
+> > # cat /proc/iomem
+>
+> attached as cat-proc-iomem.log.xz
+
+Just to confirm: these logs are after your apply my kexec-tools patches, right?
+It looks likely that we are seeing differences in the value of
+'phys_offset' on your platforms:
+
+From, '/proc/iomem', we can see that phys_offset is 0x01400000:
+01400000-ffedffff : System RAM
+
+while the 'kexec -p -d' logs indicate that it is 0:
+image_arm64_load: phys_offset:    0000000000000000
+
+This tells me that the phys_offset value is not correctly calculated
+in kexec-tools which should be fixed after my patches.
+
+BTW , by '# readelf -l vmcore', I meant the 'vmcore' dump file you
+have obtained via 'kexec'. It might be that you are saving it on some
+different location (something /var/crash?). Can you please try sharing
+the output of the same as well?
+
+Regards,
+Bhupesh
+
+> >
+> > And then I can suggest a hack, which you can try and test on your
+> > platform and then we can take it forward from there.
+> >
+> > Thanks,
+> > Bhupesh
+> >
+> > > >
+> > > > Thanks,
+> > > > Bhupesh
+> > > >
+> > > > >
+> > > > > >
+> > > > > > Thanks,
+> > > > > > Bhupesh
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
