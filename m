@@ -1,19 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-xd42.google.com ([2607:f8b0:4864:20::d42])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gGLnr-0005xn-KQ
- for kexec@lists.infradead.org; Sat, 27 Oct 2018 10:26:49 +0000
-Received: by mail-io1-xd42.google.com with SMTP id y10-v6so2234288ioa.10
- for <kexec@lists.infradead.org>; Sat, 27 Oct 2018 03:26:33 -0700 (PDT)
+ id 1gGMSz-0001wx-1N
+ for kexec@lists.infradead.org; Sat, 27 Oct 2018 11:09:18 +0000
+Date: Sat, 27 Oct 2018 19:08:58 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] kdump, vmcoreinfo: Export sme_me_mask value to vmcoreinfo
+Message-ID: <20181027110858.GB14493@MiWiFi-R3L-srv>
+References: <20181026093630.8520-1-lijiang@redhat.com>
+ <053CC83A-9A95-4C12-9627-AABD1427DA9C@alien8.de>
+ <1263471c-a27d-a698-15f0-b5947f13ea93@redhat.com>
+ <20181026182440.20a4b107@ezekiel.suse.cz>
+ <20181026222517.GB26927@nazgul.tnic>
+ <20181027081343.GA1884@MiWiFi-R3L-srv>
+ <20181027091007.GB1046@nazgul.tnic>
+ <20181027093917.GA14493@MiWiFi-R3L-srv>
+ <20181027101221.GC1046@nazgul.tnic>
 MIME-Version: 1.0
-References: <CAAMcf8BU+ifd5JEC11maz=uxR+iU4myP_J3Oyy6MfWUo2AqTwA@mail.gmail.com>
- <CACi5LpNWhdfh4sLgv_7p9rrmJYfr-3tkBrLZj6AOt2Yp4EcVhQ@mail.gmail.com>
-In-Reply-To: <CACi5LpNWhdfh4sLgv_7p9rrmJYfr-3tkBrLZj6AOt2Yp4EcVhQ@mail.gmail.com>
-From: Vicente Bergas <vicencb@gmail.com>
-Date: Sat, 27 Oct 2018 12:26:17 +0200
-Message-ID: <CAAMcf8Bb9E-4BQnFe9PF7LC+=OPjgpauFXGFvyf4VcM65oZbXw@mail.gmail.com>
-Subject: Re: [BUG] Set device tree bootargs failed when DTB does not contain a
- chosen node.
+Content-Disposition: inline
+In-Reply-To: <20181027101221.GC1046@nazgul.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,67 +27,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: bhsharma@redhat.com
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: lijiang <lijiang@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com
 
-T24gU2F0LCBPY3QgMjcsIDIwMTggYXQgMTI6NTUgQU0gQmh1cGVzaCBTaGFybWEgPGJoc2hhcm1h
-QHJlZGhhdC5jb20+IHdyb3RlOgo+Cj4gSGkgVmljZW7DpywKPgo+IE9uIEZyaSwgT2N0IDI2LCAy
-MDE4IGF0IDY6NDIgUE0gVmljZW50ZSBCZXJnYXMgPHZpY2VuY2JAZ21haWwuY29tPiB3cm90ZToK
-PiA+Cj4gPiBIZWxsbywKPiA+IHdoZW4gZXhlY3V0aW5nCj4gPiAgIGtleGVjIC1kIC0tZHRiIGR0
-Yl93aXRob3V0X2Nob3Nlbl9ub2RlLmR0YiAtLWFwcGVuZCAnY21kbGluZScgLS1sb2FkIEltYWdl
-Cj4gPiBpdCByZXBvcnRzCj4gPiAgIGR0Yl9zZXRfcHJvcGVydHk6IGZkdF9hZGRfc3Vibm9kZSBm
-YWlsZWQ6IDx2YWxpZCBvZmZzZXQvbGVuZ3RoPgo+ID4gICBrZXhlYzogU2V0IGRldmljZSB0cmVl
-IGJvb3RhcmdzIGZhaWxlZC4KPiA+Cj4gPiBJdCBoYXMgYmVlbiB0ZXN0ZWQgb24gdGhlIGFybTY0
-IGFyY2hpdGVjdHVyZSB3aXRoIHZlcnNpb24gdjIuMC4xNyBhbmQKPiA+IHYyLjAuMTgtcmMxCj4K
-PiBDYW4geW91IHNoYXJlIHNvbWUgZGV0YWlscyBvbiB0aGUgdW5kZXJseWluZyBwbGF0Zm9ybSBh
-bmQga2VybmVsCj4gdmVyc2lvbiB5b3UgYXJlIHVzaW5nPwo+Cj4gTG9va2luZyBhdCB0aGUgbG9n
-cywgSSBhbSBhc3N1bWluZyB5b3UgYXJlIHJ1bm5pbmcgJ2tleGVjJyBvbiBhIGFybTY0Cj4gcGxh
-dGZvcm0gKGFzIGl0IGRlcGVuZHMgb24gY3JlYXRpbmcgYSBkdGIgdG8gYmUgcGFzc2VkIHRvIHRo
-ZSAybmQKPiBrZXJuZWwpLgo+Cj4gTXkgZ2VuZXJhbCBhZHZpY2UgaXMgdG8gYXZvaWQgdGhlIC0t
-ZHRiIG9wdGlvbiBhcyBpdCBpcyBrbm93biB0byBjYXVzZQo+IGlzc3VlcyB3aXRoIGtleGVjIGlu
-IHRoZSBwYXN0IChzZWUgWzBdIGZvciBkZXRhaWxzKQo+IElkZWFsbHksIGlmIHlvdSBkb24ndCB1
-c2UgdGhlIC0tZHRiIG9wdGlvbiwgdGhlbiBrZXhlYyB3aWxsIHJlYWQgdGhlIGV4aXN0aW5nCj4g
-a2VybmVsJ3MgZHRiIGZyb20gL3Byb2MvZGV2aWNlLXRyZWUsIGFuZCB0aGF0IGRldmljZSB0cmVl
-IHdpbGwgaW5jbHVkZQo+IGFsbCB0aGUgY2hhbmdlcyB0aGF0IHRoZSBib290IGxvYWRlciBoYXMg
-ZG9uZSwgaW5jbHVkaW5nIGFkZGluZyBkZXRhaWxzCj4gb2YgdGhlIGF2YWlsYWJsZSBtZW1vcnkg
-aW4gdGhlIHN5c3RlbS4KPgo+IFswXS4gaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJt
-LWtlcm5lbC9tc2c2MTgyMzYuaHRtbAo+Cj4gSG9wZSB0aGlzIGhlbHBzLgo+Cj4gUmVnYXJkcywK
-PiBCaHVwZXNoCgpIaSBCaHVwZXNoLCB0aGFua3MgZm9yIGFuc3dlcmluZyBhbmQgeWVzLCB0aGlz
-IGhlbHBzIQoKQXMgeW91IHNheSwgd2hlbiBub3QgdXNpbmcgdGhlIC0tZHRiIG9wdGlvbiBpdCB3
-b3JrcyBmaW5lLiBCdXQgdGhpcwp3YXkgaXMgbm90IGFwcGxpY2FibGUgaW4gbXkgdXNlIGNhc2Uu
-CgpJIGFtIHRyeWluZyB0byB1c2UgTGludXggYXMgYSBib290bG9hZGVyLiBUaGlzIGJvb3Rsb2Fk
-ZXIgd2lsbCByZXNpZGUKaW4gYSBkaWZmaWN1bHQtdG8td3JpdGUgbWVtb3J5IChTUEktTk9SIEZs
-YXNoKSBhbmQsIGJlY2F1c2Ugb2YgdGhhdCwKd2lsbCByYXJlbHkgYmUgdXBkYXRlZC4KT3ZlciB0
-aW1lLCBuZXcga2VybmVsIHZlcnNpb25zIHdpbGwgcHJvdmlkZSB1cGRhdGVkIERUQiBmaWxlcywg
-c28sCnRoZSBEVCBmcm9tIGJvdGgga2VybmVscyB3aWxsIGRpdmVyZ2Ugb3ZlciB0aW1lLgpUaGlz
-IGlzIHRoZSByZWFzb24gdG8gdXNlIHRoZSAtLWR0YiBvcHRpb24uCgpUaGFua3MgZm9yIHRoZSBp
-bmZvcm1hdGlvbiB5b3UgcHJvdmlkZWQsIG5vdyBJIHNlZSBhIGJ1ZyBhbmQgYWxzbyBhCm1pc3Np
-bmcgZmVhdHVyZS4KCgpGb2N1c2luZyBvbiB0aGUgYnVnLCBJIGhhdmUgdHJhY2VkIGl0IGRvd24g
-dG8gaGVyZToKaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL3V0aWxzL2tlcm5lbC9rZXhl
-Yy9rZXhlYy10b29scy5naXQvdHJlZS9rZXhlYy9kdC1vcHMuYyNuODcKdGhlIHJlc3VsdCBpcyB0
-ZXN0ZWQgZm9yIG5vbi16ZXJvIGFzIGVycm9yIGNvbmRpdGlvbiwgYnV0LCBhcyBzZWVuIGhlcmUK
-aHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL3V0aWxzL2tlcm5lbC9rZXhlYy9rZXhlYy10
-b29scy5naXQvdHJlZS9rZXhlYy9saWJmZHQvZmR0X3J3LmMjbjM0NQppdCBsb29rcyBsaWtlIHBv
-c2l0aXZlIHZhbHVlcyBhcmUgbm90IGVycm9ycy4KCgpOb3csIGZvY3VzaW5nIG9uIHRoZSBtaXNz
-aW5nIGZlYXR1cmUuCmtleGVjLXRvb2xzIGFscmVhZHkgaGFzIHRoZSAoYnVnZ3kpIGFiaWxpdHkg
-dG8gYWRkIHRoZSAiL2Nob3Nlbi9ib290YXJncyIgbm9kZS4KSSBhc3N1bWUgdGhhdCBpdCBhbHNv
-IGFkZHMgb3IgdXBkYXRlcyB0aGUgIi9jaG9zZW4vbGludXgsaW5pdHJkLXN0YXJ0IgphbmQgIi9j
-aG9zZW4vbGludXgsaW5pdHJkLWVuZCIgbm9kZXMgYmVjYXVzZSBpdCBoYXMgdGhlIC0taW5pdHJk
-IG9wdGlvbi4KQWdhaW4sIEkgYXNzdW1lIGl0IGFsc28gYWRkcy91cGRhdGVzIGFsbCAiL21lbXJl
-c2VydmUiIG5vZGVzIHdpdGgKdGhlIGxvY2F0aW9uIHdoZXJlIHRoZSBEVEIgYW5kIGluaXRyZCBy
-ZXNpZGUgaW4gbWVtb3J5LgoKU28sIGp1c3QgYWRkaW5nIHRoZSAiL21lbW9yeSIgbm9kZSB3aWxs
-IG1ha2UgaXQgZmVhdHVyZSBjb21wbGV0ZS4KVGhpcyBub2RlIGNhbiBiZSBwb3B1bGF0ZWQgd2l0
-aCBkYXRhIHByb3ZpZGVkIGZyb20gdGhlIGNvbW1hbmQgbGluZSBhcwpwYXJhbWV0ZXJzIG9yIHdp
-dGggZGF0YSBleHRyYWN0ZWQgZnJvbSAvcHJvYy9kZXZpY2UtdHJlZS4KCkFkZGluZyAiL2V0aGVy
-bmV0WC9sb2NhbC1tYWMtYWRkcmVzcyIgd291bGQgYmUgYSBib251cy4KCgpBcyBhIHNpZGUgbm9k
-ZSwgY2FuIEkgc3VnZ2VzdCB1cGRhdGluZyBsaWJmZHQgd2l0aCBsYXRlc3QgdXBzdHJlYW0/CmZy
-b206Cmh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS91dGlscy9rZXJuZWwva2V4ZWMva2V4
-ZWMtdG9vbHMuZ2l0L3RyZWUva2V4ZWMvbGliZmR0CnRvOgpodHRwczovL2dpdC5rZXJuZWwub3Jn
-L3B1Yi9zY20vdXRpbHMvZHRjL2R0Yy5naXQvdHJlZS9saWJmZHQKClJlZ2FyZHMsCiAgVmljZW7D
-pwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMg
-bWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On 10/27/18 at 12:12pm, Borislav Petkov wrote:
+> On Sat, Oct 27, 2018 at 05:39:17PM +0800, Baoquan He wrote:
+> > Not very sure about this, we have arch_crash_save_vmcoreinfo() in
+> > arch/x86/kernel/machine_kexec_64.c to export arch-specific stuffs
+> > outside. Is there any special reason about a mask in one architecture
+> > when expose it out?
+> 
+> Yes, we don't export random arch-specific details to the outside which
+> we then cannot change later. So vmcoreinfo needs to define its own.
+
+OK, then it's fine to get the bit number, e.g calling
+find_first_bit(sme_me_mask, BITS_PER_LONG), and export it to
+vmcoreinfo. Thanks.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
