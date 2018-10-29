@@ -1,17 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-f194.google.com ([209.85.210.194])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gH2KL-0005kw-EP
- for kexec@lists.infradead.org; Mon, 29 Oct 2018 07:51:11 +0000
-Received: by mail-pf1-f194.google.com with SMTP id e22-v6so554413pfn.8
- for <kexec@lists.infradead.org>; Mon, 29 Oct 2018 00:50:59 -0700 (PDT)
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH v2 2/2] makedumpfile/x86_64: Add 'page_offset_base' reading
- capability from VMCOREINFO
-Date: Mon, 29 Oct 2018 13:20:31 +0530
-Message-Id: <1540799431-11064-3-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1540799431-11064-1-git-send-email-bhsharma@redhat.com>
-References: <1540799431-11064-1-git-send-email-bhsharma@redhat.com>
+ id 1gH2TB-0000LG-4q
+ for kexec@lists.infradead.org; Mon, 29 Oct 2018 08:00:23 +0000
+Subject: Re: [PATCH] kdump, vmcoreinfo: Export sme_me_mask value to vmcoreinfo
+References: <1263471c-a27d-a698-15f0-b5947f13ea93@redhat.com>
+ <20181026182440.20a4b107@ezekiel.suse.cz>
+ <20181026222517.GB26927@nazgul.tnic> <20181027081343.GA1884@MiWiFi-R3L-srv>
+ <20181027091007.GB1046@nazgul.tnic> <20181027093917.GA14493@MiWiFi-R3L-srv>
+ <20181027101221.GC1046@nazgul.tnic> <20181027110858.GB14493@MiWiFi-R3L-srv>
+ <C5F8ED8E-F361-4C6C-B9E2-E3C8BCD8E050@alien8.de>
+ <c55bef2a-b972-7e6e-b698-6ac1bc736046@redhat.com>
+ <20181027145151.GA7338@nazgul.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <390b16ba-05d7-3590-c3b2-4b69aa3ae051@redhat.com>
+Date: Mon, 29 Oct 2018 15:59:48 +0800
+MIME-Version: 1.0
+In-Reply-To: <20181027145151.GA7338@nazgul.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,153 +26,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: bhsharma@redhat.com, bhupesh.linux@gmail.com, Baoquan He <bhe@redhat.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Baoquan He <bhe@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com
 
-makedumpfile '--mem-usage' use-case is currently broken on x86_64 with
-latest kernels (see a sample log below with 4.19 kernel):
-
-[root@hp-dl380pgen8-02-vm-15 ~]# makedumpfile -f --mem-usage /proc/kcore
-   The kernel version is not supported.
-   The makedumpfile operation may be incomplete.
-   <snip..>
-   set_kcore_vmcoreinfo: Can't get the offset of VMCOREINFO(/proc/kcore).
-   Success
-
-   makedumpfile Failed.
-
-It seems that the issue is seen because KCORE_REMAP which was added
-to recent kernels and appears as a PT_LOAD in '/proc/kcore'.
-
-I have recently proposed a kernel patch which allows appending
-'page_offset_base' for x86_64 platforms to vmcoreinfo, so that
-user-space tools can use the same as a standard interface to determine
-the start of direct mapping of all physical memory (see [0]).
-
-This in in-line with the philosophy being proposed by kernel
-maintainers where one can use the vmcoreinfo note in user-land (from
-'/proc/kcore') to retrieve machine specific symbols or strings being
-appended to the vmcoreinfo even for live-debugging of the
-primary kernel as a standard interface exposed by kernel for
-sharing machine specific details with the user-land.
-
-With this fix, the '--mem-usage' use case works fine on the x86_64
-machines even with newer kernels:
-
-[root@ibm-x3650m4-01-vm-16 makedumpfile]# makedumpfile -f --mem-usage /proc/kcore -D
-   The kernel version is not supported.
-   The makedumpfile operation may be incomplete.
-   <..snip..>
-   Linux kdump
-   VMCOREINFO PT_NOTE found in /proc/kcore
-   page_size    : 4096
-   info->page_offset : ffff880000000000
-   <..snip..>The kernel doesn't support mmap(),read() will be used instead.
-
-   TYPE		PAGES			EXCLUDABLE	DESCRIPTION
-   ----------------------------------------------------------------------
-   ZERO		20846           	yes		Pages filled with zero
-   NON_PRI_CACHE	57371           	yes		Cache pages without private flag
-   PRI_CACHE	1               	yes		Cache pages with private flag
-   USER		13841           	yes		User process pages
-   FREE		777956          	yes		Free pages
-   KERN_DATA	55625           	no		Dumpable kernel data
-
-   page size:		4096
-   Total pages on system:	925640
-   Total size on system:	3791421440       Byte
-
-[0]. https://lkml.org/lkml/2018/10/27/86
-
-I will send a follow-up patch to read 'kaslr_offset' for x86_64 cases
-from vmcoreinfo inside '/proc/kcore' after this patchset is applied.
-
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- arch/x86_64.c  | 17 +++++++++++++++++
- makedumpfile.c |  2 ++
- makedumpfile.h |  1 +
- 3 files changed, 20 insertions(+)
-
-diff --git a/arch/x86_64.c b/arch/x86_64.c
-index 2b3c0bb356a1..a5fbdf26b8e7 100644
---- a/arch/x86_64.c
-+++ b/arch/x86_64.c
-@@ -98,6 +98,22 @@ get_page_offset_x86_64(void)
- 		return TRUE;
- 	}
- 
-+	/* Calculate 'info->page_offset'. */
-+
-+	/* Since kernel version 4.19, '/proc/kcore' contains a new
-+	 * PT_NOTE which carries the VMCOREINFO information.
-+	 *
-+	 * If the same is available, use it as it already contains the
-+	 * value of 'page_offset_base' on the machine.
-+	 */
-+	if (info->flag_kcore_contains_vmcoreinfo &&
-+	    (NUMBER(page_offset_base) != NOT_FOUND_NUMBER)) {
-+		page_offset_base = NUMBER(page_offset_base);
-+		info->page_offset = page_offset_base;
-+		DEBUG_MSG("info->page_offset : %lx\n", info->page_offset);
-+		return TRUE;
-+	}
-+
- 	if (get_num_pt_loads()) {
- 		for (i = 0;
- 			get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
-@@ -106,6 +122,7 @@ get_page_offset_x86_64(void)
- 					&& virt_start < __START_KERNEL_map
- 					&& phys_start != NOT_PADDR) {
- 				info->page_offset = virt_start - phys_start;
-+				DEBUG_MSG("info->page_offset : %lx\n", info->page_offset);
- 				return TRUE;
- 			}
- 		}
-diff --git a/makedumpfile.c b/makedumpfile.c
-index a1b8d8ff5a84..668e3ec3956c 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -2319,6 +2319,7 @@ write_vmcoreinfo_data(void)
- 
- 	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
- 	WRITE_NUMBER("phys_base", phys_base);
-+	WRITE_NUMBER("page_offset_base", page_offset_base);
- 
- 	WRITE_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
- #ifdef __aarch64__
-@@ -2719,6 +2720,7 @@ read_vmcoreinfo(void)
- 
- 	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
- 	READ_NUMBER("phys_base", phys_base);
-+	READ_NUMBER("page_offset_base", page_offset_base);
- #ifdef __aarch64__
- 	READ_NUMBER("VA_BITS", VA_BITS);
- 	READ_NUMBER_UNSIGNED("PHYS_OFFSET", PHYS_OFFSET);
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 77f7ec8e3867..09e14f0ef86c 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1920,6 +1920,7 @@ struct number_table {
- 	long	MAX_PHYSMEM_BITS;
- 	long    HUGETLB_PAGE_DTOR;
- 	long	phys_base;
-+	unsigned long	page_offset_base;
- #ifdef __aarch64__
- 	long 	VA_BITS;
- 	unsigned long	PHYS_OFFSET;
--- 
-2.7.4
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMOaciDI35pelIDIyOjUxLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IFNhdCwgT2N0IDI3LCAyMDE4IGF0IDEwOjQxOjU2UE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
+IEFjdHVhbGx5LCB0aGUgdmFsdWUgb2YgJ3NtZV9tZV9tYXNrJyBpcyAweDgwMDAwMDAwMDAwMCB3
+aGVuIFNNRSBpcwo+PiBlbmFibGVkLCBvdGhlcndpc2UgaXQgaXMgMC4gVGhhdCBpcyB0byBzYXks
+IGlmIHRoZSBiaXQgNDcgaXMgc2V0LCB0aGUKPj4gYml0IG51bWJlciBpcyBhbHNvIDB4ODAwMDAw
+MDAwMDAwICgxIDw8IDQ3VUwpOwo+IAo+IFllcywgYW5kIHlvdSBjYW4gc2ltcGx5IGNvcHkgdGhl
+IG1hc2sgaW50byB5b3VyIHZhcmlhYmxlIGFuZCBleHBvcnQKPiB0aGF0LiAKCk9rLCBpZiB5b3Ug
+YWdyZWUgd2l0aCB0aGUgZm9sbG93aW5nIHBhdGNoLCBpIHdpbGwgcG9zdCBpdCBhZ2Fpbi4KCmRp
+ZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jIGIvYXJjaC94ODYv
+a2VybmVsL21hY2hpbmVfa2V4ZWNfNjQuYwppbmRleCA0YzhhY2RmZGM1YTcuLmRlMzYzNzk2ZWQy
+MCAxMDA2NDQKLS0tIGEvYXJjaC94ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQuYworKysgYi9h
+cmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jCkBAIC0yOSw2ICsyOSw5IEBACiAjaW5j
+bHVkZSA8YXNtL3NldHVwLmg+CiAjaW5jbHVkZSA8YXNtL3NldF9tZW1vcnkuaD4KCit1NjQgc21l
+X21hc2s7CitFWFBPUlRfU1lNQk9MKHNtZV9tYXNrKTsKKwogI2lmZGVmIENPTkZJR19LRVhFQ19G
+SUxFCiBjb25zdCBzdHJ1Y3Qga2V4ZWNfZmlsZV9vcHMgKiBjb25zdCBrZXhlY19maWxlX2xvYWRl
+cnNbXSA9IHsKICAgICAgICAgICAgICAgICZrZXhlY19iekltYWdlNjRfb3BzLApAQCAtMzU3LDYg
+KzM2MCw5IEBAIHZvaWQgYXJjaF9jcmFzaF9zYXZlX3ZtY29yZWluZm8odm9pZCkKICAgICAgICB2
+bWNvcmVpbmZvX2FwcGVuZF9zdHIoIk5VTUJFUihwZ3RhYmxlX2w1X2VuYWJsZWQpPSVkXG4iLAog
+ICAgICAgICAgICAgICAgICAgICAgICBwZ3RhYmxlX2w1X2VuYWJsZWQoKSk7CgorICAgICAgIHNt
+ZV9tYXNrID0gc21lX21lX21hc2s7CisgICAgICAgVk1DT1JFSU5GT19OVU1CRVIoc21lX21hc2sp
+OworCiAjaWZkZWYgQ09ORklHX05VTUEKICAgICAgICBWTUNPUkVJTkZPX1NZTUJPTChub2RlX2Rh
+dGEpOwogICAgICAgIFZNQ09SRUlORk9fTEVOR1RIKG5vZGVfZGF0YSwgTUFYX05VTU5PREVTKTsK
+LS0gCgo+IFRoaW5raW5nIGFib3V0IGl0IG1vcmUsIHRob3VnaCwgaXQgbWlnaHQgYmUgYmV0dGVy
+IGlmIHlvdSBpbnN0ZWFkCj4gZXhwb3J0IGEgc21hbGxlciB2YWx1ZSAtIG5vdCBhbiB1NjQgLSBh
+bmQgY29uc3RydWN0IHRoZSBtYXNrIGluCj4gdXNlcnNwYWNlLiBJLmUuLCBhIHU4IHdoaWNoIHNo
+b3VsZCBiZSBlbm91Z2ggZm9yIHlvdXIgY3VycmVudCBwdXJwb3Nlcy4KPiAKPiBJIHNheSBjdXJy
+ZW50IGJlY2F1c2UgaWYgaXQgdHVybnMgb3V0IHdlIG5lZWQgdG8gZXhwb3J0IG1vcmUgU01FLXJl
+bGF0ZWQKPiBpbmZvIHRvIHVzZXJzcGFjZSwgZXhwb3J0aW5nIGFuIHU2NCBhbmQgdGhlbiBPUi1p
+bmcgaW4gbW9yZSBpbmZvcm1hdGlvbgo+IGluIGl0IHdvdWxkIGFsbG93IHRoYXQuIHU4IG5vdCBz
+byBtdWNoLiBTbyBkb2luZyBzb21ldGhpbmcgbGlrZToKPiAKPiBbIG1pc2MJICAgXVsgZW5jIGJp
+dCAgXVsgb3RoZXIgbWlzYyBTTUUgaW5mbyAJCQkJICAgICAgXQo+IDAwMDBfMDAwMF8wMDAwXzAw
+MDBfMTAwMF8wMDAwXzAwMDBfMDAwMF8wMDAwXzAwMDBfMDAwMF8wMDAwXzAwMDBfMDAwMF8wMDAw
+XzAwMDAKPiA2MyAgIDU5ICAgNTUgICA1MSAgIDQ3ICAgNDMgICAzOSAgIDM1ICAgMzEgICAyNyAg
+IDIzICAgMTkgICAxNSAgIDExICAgNyAgICAzCj4gCj4gd291bGQgYWxsb3cgZm9yIGV4cG9ydGlu
+ZyB0aGF0IGFkZGl0aW9uYWwgaW5mby4KPiAKPiBFc3BlY2lhbGx5IGlmIHdlIHdhbnQgdG8gdXNl
+IFZNQ09SRUlORk8gZm9yIG1vcmUgdGhhbiBrZXhlYyB0aGluZ3MuCj4gCgpBcyB5b3UgbWVudGlv
+bmVkLCBpZiBuZWVkLCB0aGUgZGVmaW5pdGlvbiBvZiB0aGlzIHZhcmlhYmxlKHU2NCBzbWVfbWFz
+aykgY2FuIGJlIGV4dGVuZGVkCmNvbnZlbmllbnRseSBpbiB0aGUgZnV0dXJlKFRoZSBiaXQgbWln
+aHQgYmUgcmVkZWZpbmVkKS4KClRoYW5rcy4KTGlhbmJvCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
