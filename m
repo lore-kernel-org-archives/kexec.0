@@ -1,25 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mail-pl1-f196.google.com ([209.85.214.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gGPwU-0006tY-Se
- for kexec@lists.infradead.org; Sat, 27 Oct 2018 14:52:00 +0000
-Date: Sat, 27 Oct 2018 16:51:51 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH] kdump, vmcoreinfo: Export sme_me_mask value to vmcoreinfo
-Message-ID: <20181027145151.GA7338@nazgul.tnic>
-References: <1263471c-a27d-a698-15f0-b5947f13ea93@redhat.com>
- <20181026182440.20a4b107@ezekiel.suse.cz>
- <20181026222517.GB26927@nazgul.tnic>
- <20181027081343.GA1884@MiWiFi-R3L-srv>
- <20181027091007.GB1046@nazgul.tnic>
- <20181027093917.GA14493@MiWiFi-R3L-srv>
- <20181027101221.GC1046@nazgul.tnic>
- <20181027110858.GB14493@MiWiFi-R3L-srv>
- <C5F8ED8E-F361-4C6C-B9E2-E3C8BCD8E050@alien8.de>
- <c55bef2a-b972-7e6e-b698-6ac1bc736046@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <c55bef2a-b972-7e6e-b698-6ac1bc736046@redhat.com>
+ id 1gH2KG-0005ka-Qh
+ for kexec@lists.infradead.org; Mon, 29 Oct 2018 07:51:06 +0000
+Received: by mail-pl1-f196.google.com with SMTP id y11-v6so3400300plt.3
+ for <kexec@lists.infradead.org>; Mon, 29 Oct 2018 00:50:54 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH v2 1/2] makedumpfile/arm64: Use VMCOREINFO inside
+ '/proc/kcore' (if available)
+Date: Mon, 29 Oct 2018 13:20:30 +0530
+Message-Id: <1540799431-11064-2-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1540799431-11064-1-git-send-email-bhsharma@redhat.com>
+References: <1540799431-11064-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,41 +20,361 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com
+To: kexec@lists.infradead.org
+Cc: bhsharma@redhat.com, bhupesh.linux@gmail.com, Baoquan He <bhe@redhat.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>
 
-On Sat, Oct 27, 2018 at 10:41:56PM +0800, lijiang wrote:
-> Actually, the value of 'sme_me_mask' is 0x800000000000 when SME is
-> enabled, otherwise it is 0. That is to say, if the bit 47 is set, the
-> bit number is also 0x800000000000 (1 << 47UL);
+makedumpfile commit 94c97db3fe859ca14d7b38b0ae9ee0ffb83689d2 (arm64: Get
+'info->page_offset' from PT_LOAD segments to support KASLR boot cases)
+added a method to determine 'info->page_offset' from PT_LOAD segments
+for arm64 platforms.
 
-Yes, and you can simply copy the mask into your variable and export
-that. Thinking about it more, though, it might be better if you instead
-export a smaller value - not an u64 - and construct the mask in
-userspace. I.e., a u8 which should be enough for your current purposes.
+In this commit, I hardcoded the 'NOT_PADDR_ARM64' macro as
+0x0000000010a80000UL which was a valid value on qualcomm-amberwing
+boards (which was the arm64 board available with me at the time).
 
-I say current because if it turns out we need to export more SME-related
-info to userspace, exporting an u64 and then OR-ing in more information
-in it would allow that. u8 not so much. So doing something like:
+However, I was testing this change on several other arm64 boards
+like apm-mustang, huawei-taishan and hp-moonshot (now that I have
+access to them) and saw that this value can vary on the basis of
+the "Kernel code" memory range placement.
 
-[ misc	   ][ enc bit  ][ other misc SME info 				      ]
-0000_0000_0000_0000_1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000
-63   59   55   51   47   43   39   35   31   27   23   19   15   11   7    3
+To fix the same, this patchset uses a new approach. Since kernel
+version 4.19-rc5 (commit
+23c85094fe1895caefdd19ef624ee687ec5f4507 ["proc/kcore: add vmcoreinfo
+note to /proc/kcore"]), '/proc/kcore' contains a new
+PT_NOTE which carries the VMCOREINFO information.
 
-would allow for exporting that additional info.
+If the same is available, we can use it for makedumpfile
+'show_mem_usage()' functionality. This is especially useful
+for architectures like arm64 as we can get kernel symbols like
+'VA_BITS' and 'kimage_voffset' from the '/proc/kcore' itself and use it
+to calculate 'info->page_offset' when we make a call to
+'get_page_offset()'.
 
-Especially if we want to use VMCOREINFO for more than kexec things.
+This VMCOREINFO note provides us a standard interface which can be
+leveraged while debugging live (or primary) kernel with makedumpfile
+(and other user-space tools), especially to derive the machine specific
+details (for e.g. VA_BITS, PHYS_OFFSET and kimage_voffset for arm64
+arch). The same has been suggested by the arm64 kernel maintainers (see
+[0]) as the standard interface exposed by kernel for sharing
+machine specific details with the user-land via vmcoreinfo.
 
+[0]. https://www.mail-archive.com/kexec@lists.infradead.org/msg20300.html
+
+I will send a follow-up patch to read 'kaslr_offset' for arm64 cases
+from vmcoreinfo inside '/proc/kcore' after this patchset is applied.
+
+Here are some details of the tests I ran:
+
+Testing:
+--------
+1. arm64 boards tested:
+   huawei-taishan, apm-mustang and qualcomm-amberwing boards.
+
+2. Use-cases tested:
+   a) Primary kernel ->
+      [] --mem-usage:
+         # makedumpfile -f --mem-usage /proc/kcore
+
+      [] filtering use-case:
+         # makedumpfile --split -d 31 -x vmlinux --config scrub.conf vmcore dumpfile_{1,2,3}
+
+      [] dumpfile creation:
+         # makedumpfile -d 31 -x vmlinux vmcore dumpfile
+
+   b) Crash kernel ->
+      [] dumpfile creation:
+         # makedumpfile -l --message-level 31 -d 31 /proc/vmcore dump
+
+3. Kernel versions tested:
+   a) Kernel version 4.19-rc5 and above.
+   b) Kernel version 4.14.
+
+Fixes: 94c97db3fe859ca14d7b38b0ae9ee0ffb83689d2 "arm64: Get 'info->page_offset' from PT_LOAD segments to support KASLR boot cases"
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+---
+ arch/arm64.c   | 114 +++++++++++++++++++++++++++++++++++++++++++--------------
+ makedumpfile.c |  67 ++++++++++++++++++++++++++++++---
+ makedumpfile.h |   2 +-
+ 3 files changed, 149 insertions(+), 34 deletions(-)
+
+diff --git a/arch/arm64.c b/arch/arm64.c
+index 362609668ea2..d695eff628f0 100644
+--- a/arch/arm64.c
++++ b/arch/arm64.c
+@@ -53,6 +53,7 @@ static unsigned long kimage_voffset;
+ #define PAGE_OFFSET_42 ((0xffffffffffffffffUL) << 42)
+ #define PAGE_OFFSET_47 ((0xffffffffffffffffUL) << 47)
+ #define PAGE_OFFSET_48 ((0xffffffffffffffffUL) << 48)
++#define __PAGE_OFFSET(x) ((0xffffffffffffffffUL) << (x - 1))
+ 
+ #define pgd_val(x)		((x).pgd)
+ #define pud_val(x)		(pgd_val((x).pgd))
+@@ -311,45 +312,104 @@ get_versiondep_info_arm64(void)
+ 	unsigned long long virt_start;
+ 	ulong _stext;
+ 
+-	_stext = get_stext_symbol();
+-	if (!_stext) {
+-		ERRMSG("Can't get the symbol of _stext.\n");
+-		return FALSE;
+-	}
++	/* Calculate 'VA_BITS'. */
+ 
+-	/* Derive va_bits as per arch/arm64/Kconfig */
+-	if ((_stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
+-		va_bits = 36;
+-	} else if ((_stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
+-		va_bits = 39;
+-	} else if ((_stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
+-		va_bits = 42;
+-	} else if ((_stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
+-		va_bits = 47;
+-	} else if ((_stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
+-		va_bits = 48;
++	/* Since kernel version 4.19, '/proc/kcore' contains a new
++	 * PT_NOTE which carries the VMCOREINFO information.
++	 *
++	 * If the same is available, use it as it already contains the
++	 * value of 'VA_BITS' on the machine.
++	 *
++	 * Otherwise, we can read the '_stext' symbol and determine the
++	 * 'VA_BITS' value from the same as well.
++	 */
++	if (info->flag_kcore_contains_vmcoreinfo &&
++	    (NUMBER(VA_BITS) != NOT_FOUND_NUMBER)) {
++		va_bits = NUMBER(VA_BITS);
+ 	} else {
+-		ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
+-		return FALSE;
++		_stext = get_stext_symbol();
++		if (!_stext) {
++			ERRMSG("Can't get the symbol of _stext.\n");
++			return FALSE;
++		}
++
++		/* Derive va_bits as per arch/arm64/Kconfig */
++		if ((_stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
++			va_bits = 36;
++		} else if ((_stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
++			va_bits = 39;
++		} else if ((_stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
++			va_bits = 42;
++		} else if ((_stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
++			va_bits = 47;
++		} else if ((_stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
++			va_bits = 48;
++		} else {
++			ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
++			return FALSE;
++		}
++	}
++
++	/* Calculate 'info->page_offset'. */
++
++	/* Since kernel version 4.19, '/proc/kcore' contains a new
++	 * PT_NOTE which carries the VMCOREINFO information.
++	 *
++	 * If the same is available, use it as it already contains the
++	 * value of 'kimage_voffset' on the machine.
++	 */
++	if (info->flag_kcore_contains_vmcoreinfo &&
++	    (NUMBER(kimage_voffset) != NOT_FOUND_NUMBER)) {
++		kimage_voffset = NUMBER(kimage_voffset);
+ 	}
+ 
++	/* First, lets try and calculate the 'info->page_offset' value
++	 * from PT_LOAD segments, if they are available.
++	 */
+ 	if (get_num_pt_loads()) {
+ 		for (i = 0;
+ 		    get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
+ 		    i++) {
+-			if (virt_start != NOT_KV_ADDR
+-			    && virt_start < __START_KERNEL_map
+-			    && phys_start != NOT_PADDR
+-			    && phys_start != NOT_PADDR_ARM64) {
+-				info->page_offset = virt_start - phys_start;
+-				DEBUG_MSG("info->page_offset: %lx, VA_BITS: %d\n",
+-						info->page_offset, va_bits);
+-				return TRUE;
++			/* On systems where we have a valid 'kimage_voffset'
++			 * available by now, we should give preference to the same
++			 * while calculating 'info->page_offset'.
++			 *
++			 * Otherwise, we can ensure that we consider
++			 * only those PT_LOAD segments whose 'virt_start'
++			 * is greater than the PAGE_OFFSET value (as defined
++			 * in 'arch/arm64/include/asm/memory.h').
++			 */
++			if (!kimage_voffset) {
++				if (virt_start != NOT_KV_ADDR &&
++				   virt_start > __PAGE_OFFSET(va_bits) &&
++				   phys_start != NOT_PADDR) {
++					info->page_offset = virt_start - phys_start;
++					DEBUG_MSG("info->page_offset: %lx, VA_BITS: %d\n",
++							info->page_offset, va_bits);
++					return TRUE;
++				}
++			} else {
++				if (virt_start != NOT_KV_ADDR &&
++				   phys_start != NOT_PADDR &&
++				   (virt_start - phys_start) != kimage_voffset) {
++					info->page_offset = virt_start - phys_start;
++					DEBUG_MSG("info->page_offset: %lx, VA_BITS: %d\n",
++							info->page_offset, va_bits);
++					return TRUE;
++				}
+ 			}
+ 		}
+ 	}
+ 
+-	info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
++	/* Fallback to hard-coded value (equal to PAGE_OFFSET macro
++	 * defined in 'arch/arm64/include/asm/memory.h'), as the last
++	 * resort.
++	 *
++	 * Note that this will not be a valid value on KASLR enabled
++	 * kernels as the start address of linear range is also
++	 * randomized for KASLR boot cases.
++	 */
++	info->page_offset = __PAGE_OFFSET(va_bits);
+ 	DEBUG_MSG("page_offset=%lx, va_bits=%d\n", info->page_offset,
+ 			va_bits);
+ 
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 91c1ab47fca4..a1b8d8ff5a84 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1302,6 +1302,20 @@ error:
+ 	return FALSE;
+ }
+ 
++static int
++check_kcore_contains_vmcoreinfo(int fd, char *name)
++{
++	if (!get_elf_info(fd, name))
++		return FALSE;
++
++	if (!has_vmcoreinfo())
++		return FALSE;
++
++	DEBUG_MSG("VMCOREINFO PT_NOTE found in %s\n", name);
++
++	return TRUE;
++}
++
+ int
+ open_dump_memory(void)
+ {
+@@ -1314,6 +1328,23 @@ open_dump_memory(void)
+ 	}
+ 	info->fd_memory = fd;
+ 
++	/* Since kernel version 4.19, '/proc/kcore' contains a new
++	 * PT_NOTE which carries the VMCOREINFO information.
++	 *
++	 * If the same is available, use it for makedumpfile
++	 * show_mem_usage() cases.
++	 */
++	if (info->flag_mem_usage &&
++	    !(strcmp(info->name_memory, "/proc/kcore")) &&
++	    (info->kernel_version >= KERNEL_VERSION(4, 19, 0))){
++		status = check_kcore_contains_vmcoreinfo(fd,
++						info->name_memory);
++		if (status == TRUE) {
++			info->flag_kcore_contains_vmcoreinfo = TRUE;
++			return TRUE;
++		}
++	}
++
+ 	status = check_kdump_compressed(info->name_memory);
+ 	if (status == TRUE) {
+ 		info->flag_refiltering = TRUE;
+@@ -11195,6 +11226,8 @@ static int get_sys_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
+ 
+ int show_mem_usage(void)
+ {
++	off_t offset;
++	unsigned long size;
+ 	uint64_t vmcoreinfo_addr, vmcoreinfo_len;
+ 	struct cycle cycle = {0};
+ 
+@@ -11208,17 +11241,39 @@ int show_mem_usage(void)
+ 	if (!open_files_for_creating_dumpfile())
+ 		return FALSE;
+ 
+-	if (!get_elf_loads(info->fd_memory, info->name_memory))
+-		return FALSE;
++	/* Since kernel version 4.19, '/proc/kcore' contains a new
++	 * PT_NOTE which carries the VMCOREINFO information.
++	 *
++	 * If the same is available, use it for makedumpfile
++	 * show_mem_usage(). This is especially useful for architectures
++	 * like arm64 as we can get symbols like 'VA_BITS' and
++	 * 'kimage_voffset' before we call get_page_offset().
++	 */
++
++	if (!info->flag_kcore_contains_vmcoreinfo) {
++		if (!get_elf_loads(info->fd_memory, info->name_memory))
++			return FALSE;
++	} else {
++		if (has_vmcoreinfo()) {
++			get_vmcoreinfo(&offset, &size);
++			if (!read_vmcoreinfo_from_vmcore(offset, size, FALSE))
++				return FALSE;
++		}
++	}
+ 
+ 	if (!get_page_offset())
+ 		return FALSE;
+ 
+-	if (!get_sys_kernel_vmcoreinfo(&vmcoreinfo_addr, &vmcoreinfo_len))
+-		return FALSE;
++	/* If flag_kcore_contains_vmcoreinfo is TRUE when we are here,
++	 * we don't need to read the vmcoreinfo again.
++	 */
++	if (!info->flag_kcore_contains_vmcoreinfo)
++		if (!get_sys_kernel_vmcoreinfo(&vmcoreinfo_addr, &vmcoreinfo_len))
++			return FALSE;
+ 
+-	if (!set_kcore_vmcoreinfo(vmcoreinfo_addr, vmcoreinfo_len))
+-		return FALSE;
++	if (!info->flag_kcore_contains_vmcoreinfo)
++		if (!set_kcore_vmcoreinfo(vmcoreinfo_addr, vmcoreinfo_len))
++			return FALSE;
+ 
+ 	if (!initial())
+ 		return FALSE;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 46ebe2ee5a1f..77f7ec8e3867 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -544,7 +544,6 @@ unsigned long get_kvbase_arm64(void);
+ #define KVBASE			get_kvbase_arm64()
+ 
+ #define __START_KERNEL_map	(0xffffffff80000000UL)
+-#define NOT_PADDR_ARM64		(0x0000000010a80000UL)
+ 
+ #endif /* aarch64 */
+ 
+@@ -1308,6 +1307,7 @@ struct DumpInfo {
+ 	int		flag_vmemmap;        /* kernel supports vmemmap address space */
+ 	int		flag_excludevm;      /* -e - excluding unused vmemmap pages */
+ 	int		flag_use_count;      /* _refcount is named _count in struct page */
++	int		flag_kcore_contains_vmcoreinfo;    /* '/proc/kcore' contains a VMCOREINFO PT_NOTE */
+ 	unsigned long	vaddr_for_vtop;      /* virtual address for debugging */
+ 	long		page_size;           /* size of page */
+ 	long		page_shift;
 -- 
-Regards/Gruss,
-    Boris.
+2.7.4
 
-ECO tip #101: Trim your mails when you reply.
---
 
 _______________________________________________
 kexec mailing list
