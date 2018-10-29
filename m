@@ -1,19 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-f68.google.com ([209.85.167.68])
+Received: from mail-eopbgr710086.outbound.protection.outlook.com
+ ([40.107.71.86] helo=NAM05-BY2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gH4w9-000733-7F
- for kexec@lists.infradead.org; Mon, 29 Oct 2018 10:38:24 +0000
-Received: by mail-lf1-f68.google.com with SMTP id p11-v6so5595367lfc.6
- for <kexec@lists.infradead.org>; Mon, 29 Oct 2018 03:38:11 -0700 (PDT)
+ id 1gH5bk-0002IV-J1
+ for kexec@lists.infradead.org; Mon, 29 Oct 2018 11:21:33 +0000
+From: Vadim Lomovtsev <Vadim.Lomovtsev@caviumnetworks.com>
+Subject: Re: [BUG] vmcore-dmesg cant' read dmesg log from /proc/vmcore if
+ log_buf is reallocated due to large number of CPUs
+Date: Mon, 29 Oct 2018 11:21:05 +0000
+Message-ID: <20181029112059.GA7899@localhost.localdomain>
+References: <MWHPR07MB3007D9D79825933D958943EC8AF60@MWHPR07MB3007.namprd07.prod.outlook.com>
+ <CACi5LpO6JH=Fepu97GVa-oZK7v4kj0+RL9WqYZuMp=KRJ2=diQ@mail.gmail.com>
+ <20181025104017.GA29339@localhost.localdomain>
+ <CACi5LpO56hq4jC76d7B5vLoG-wVoe-rGQoqeWYhYhjOEWG0sqA@mail.gmail.com>
+ <20181026101133.GA31868@localhost.localdomain>
+ <CACi5LpO_3PWBuNZPse_CppkyE5UMym_wgChkuy12TLGztzMdBQ@mail.gmail.com>
+ <20181026131856.GA32207@localhost.localdomain>
+ <CACi5LpPEt+pdOPwFyhB=SB+PB7+kLTinj+bn_ne+ojiXa4A8sg@mail.gmail.com>
+In-Reply-To: <CACi5LpPEt+pdOPwFyhB=SB+PB7+kLTinj+bn_ne+ojiXa4A8sg@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <6B3BDA71D4325F46B7DEC16173BAA1CF@namprd07.prod.outlook.com>
 MIME-Version: 1.0
-References: <1540593788-28181-1-git-send-email-bhsharma@redhat.com>
- <20181027100241.GB1884@MiWiFi-R3L-srv>
-In-Reply-To: <20181027100241.GB1884@MiWiFi-R3L-srv>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Mon, 29 Oct 2018 16:07:53 +0530
-Message-ID: <CACi5LpPf9Zr1beowRNGmLZY7DtS3JDt8D=FONjqas9yo7TyCjg@mail.gmail.com>
-Subject: Re: [PATCH] x86_64,
- vmcoreinfo: Append 'page_offset_base' to vmcoreinfo
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,235 +33,225 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, James Morse <james.morse@arm.com>, x86@kernel.org, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Omar Sandoval <osandov@fb.com>, Borislav Petkov <bp@alien8.de>, Dave Anderson <anderson@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: "Lomovtsev, Vadim" <Vadim.Lomovtsev@cavium.com>, kexec mailing list <kexec@lists.infradead.org>
 
-Hi Baoquan,
+Hi Bhupesh,
 
-Thanks a lot for your review.
-Please see my comments in-line:
-
-On Sat, Oct 27, 2018 at 3:32 PM Baoquan He <bhe@redhat.com> wrote:
->
-> Hi Bhupesh,
->
-> Sorry for top posting. Because I don't know which line at below I should
-> add comment into.
->
-> So could you plese tell what problem you have met in user space tools?
-> Which user space tool is broken so that we need export 'page_offset_base'
-> to vmcoreinfo?
-
-I am sorry, I understand that the commit log is a bit long and
-probably this part
-is not easy to infer. Currently, I see that the 'makedumpfile' utility
-is broken with newer kernels
-(I tested on 4.19-rc8+) as we KCORE_REMAP  was added to recent kernels
-thus leading to an additional section in kcore.
-[see <http://lists.infradead.org/pipermail/kexec/2018-October/021769.html>
-for details].
-
-The details of the makedumpfile utility can be seen via the man page
-[MAKEDUMPFILE(8)],
-but in short it tries to make a small DUMPFILE by compressing dump
-data or by excluding
-unnecessary pages for analysis, or both.
-
-However the bigger problem is how we export machine specific details
-from kernel-space
-to user-land in a standardized way. As I mentioned in brief in the git
-log, I was seeing
-issues when I upgrade kernels or try to bring up user-space utilities
-on newer hardware,
-as currently we use different (and often flaky approaches) to
-calculate machine specific details in
-user-space code as there used to be lack of a clear ABI between the
-kernel and user-space on how
-machine specific details would be shared.
-
-Later on, kernel commit 23c85094fe1895caefdd came, which adds
-vmcoreinfo to 'kcore',
-as an arch agnostic approach to unify the differences existing in
-exporting kernel space information
-to the user-space code and James suggested that I use the same for
-user-space purposes to fix
-the issues I was observing.
-
-> Sorry I didn't get what problem this patch is trying to fix from the
-> patch log.
-
-So, here since the 'page_offset_base' variable (which holds the start
-of direct mapping of all physical
-memory) is not exported by the x86_64 kernel to the user-space via a
-standard interface, we resort
-to calculating the same via reading PT_LOADs in user-space (as an
-example from the makedumpfile
-implementation ). Now this implementation is usually different across
-user-space utilities.
-
-Also, if the PT_LOAD ordering changes (as we saw with the newer
-kernels), this approach will need
-fixing to calculate the addresses. In addition, we normally need
-'page_offset_base' value in user-space (and retrieve it via
-vmlinux file in another user case from the same makedumpfile code) for
-calculating the start of direct mapping of all physical
-memory specifically for KASLR boot cases.
-
-Instead, if we can export 'page_offset_base' via vmcoreinfo, we can
-easily use the same
-for live-debugging a running kernel via user-space utilities, which
-can benefit by reading this value
-from the vmcoreinfo note inside kcore directly without relying on other methods.
-
-The x86_64 kernel code ('arch/x86/kernel/head64.c'), already sets the same as:
-unsigned long page_offset_base __ro_after_init = __PAGE_OFFSET_BASE_L4;
-
-and also uses the same to indicate the base of KASLR regions on x86_64:
-static __initdata struct kaslr_memory_region {
-    unsigned long *base;
-    unsigned long size_tb;
-} kaslr_regions[] = {
-    { &page_offset_base, 0 },
-
-so it can be used for both the above purposes across user-space utilities.
-
-Hope this explains the intention behind this patch.
-
-Thanks,
-Bhupesh
-
-> About this, I have replied to you in
-> lkml.kernel.org/r/20181025063446.GD2120@MiWiFi-R3L-srv
-> You might miss it.
->
-> About this exporting, I ever posted patch to upstream and we have had
-> discussion, please check
-> https://lore.kernel.org/patchwork/patch/723472/
->
-> In makedumpfile and crash, we have had a clear method to analyze and
-> deduce it from kcore or vmcore.
->
-> Thanks
-> Baoquan
->
-> On 10/27/18 at 04:13am, Bhupesh Sharma wrote:
-> > Since commit 23c85094fe1895caefdd
-> > ["proc/kcore: add vmcoreinfo note to /proc/kcore"]), '/proc/kcore'
-> > contains a new PT_NOTE which carries the VMCOREINFO information.
+On Sat, Oct 27, 2018 at 04:41:55AM +0530, Bhupesh Sharma wrote:
+> 
+> Hi Vadim,
+> 
+> On Fri, Oct 26, 2018 at 6:49 PM Vadim Lomovtsev
+> <Vadim.Lomovtsev@caviumnetworks.com> wrote:
 > >
-> > If the same is available, one can use it in user-land to
-> > retrieve machine specific symbols or strings being appended to the
-> > vmcoreinfo even for live-debugging of the primary kernel as a
-> > standard interface exposed by kernel for sharing machine specific
-> > details with the user-land.
+> > Hi Bhupesh,
 > >
-> > In the past I had a discussion with James, where he suggested this
-> > approach (please see [0]) and I really liked the idea. Since then I
-> > have been working on unifying the implementations of
-> > (atleast) the commonly used user-space utilities that provide
-> > live-debugging capabilities (tools like 'makedumpfile' and
-> > 'crash-utility', see [1] for details of these tools).
+> > On Fri, Oct 26, 2018 at 03:49:11PM +0530, Bhupesh Sharma wrote:
+> > >
+> > > Hi Vadim,
+> > > On Fri, Oct 26, 2018 at 3:41 PM Vadim Lomovtsev
+> > > <Vadim.Lomovtsev@caviumnetworks.com> wrote:
+> > > >
+> > > > Hi Bhupesh,
+> > > >
+> > > > On Fri, Oct 26, 2018 at 12:25:17PM +0530, Bhupesh Sharma wrote:
+> > > > >
+> > > > > ease p
+> > > > > before seiHi Vadim,
+> > > > >
+> > > > > On Thu, Oct 25, 2018 at 4:10 PM Vadim Lomovtsev
+> > > > > <Vadim.Lomovtsev@caviumnetworks.com> wrote:
+> > > > > >
+> > > > > > Hello Bhupesh,
+> > > > > >
+> > > > > > On Thu, Oct 25, 2018 at 03:00:08AM +0530, Bhupesh Sharma wrote:
+> > > > > > > External Email
+> > > > > > >
+> > > > > > > Hello Vadim,
+> > > > > > >
+> > > > > > > On Wed, Oct 24, 2018 at 6:23 PM Lomovtsev, Vadim
+> > > > > > > <Vadim.Lomovtsev@cavium.com> wrote:
+> > > > > > > >
+> > > > > > > > Hi all,
+> > > > > > > >
+> > > > > > > > Following issue has been found for vmcore-dmesg app with latest release (94159bc3c264fa26395e56302072276a139d18af 2.0.18-rc1) of kexec-tools at CentOS 7.5 distro:
+> > > > > > > >
+> > > > > > > > While having systems with large number of CPUs (e.g. Cavium ThunderX2 has 224) the log_buf gets reallocated by memblock_virt_alloc() at the setup_log_buf routine (https://elixir.bootlin.com/linux/v4.16.18/source/kernel/printk/printk.c#L1108).
+> > > > > > > >
+> > > > > > > > Then while dumping vmcore the vmcore-dmesg can't find dmesg log at /proc/vmcore file and exits with following message:
+> > > > > > > >   Failed to read log text of size 0 bytes: Bad address
+> > > > > > > >
+> > > > > > > > However it (vmcore-dmesg app) reads properly the log_buf symbol, it's address and eventually it's value from /proc/vmcore but fails to find dmesg data then.
+> > > > > > > >
+> > > > > > > > In the same time the makedumpfile is able to find and extract dmesg buffer from /proc/vmcore.
+> > > > > > > > The makedumpfile comes with kexec-tools-2.0.15-13.el7_5.2.aarch64 package.
+> > > > > > > >
+> > > > > > > > The issue is not reproduced for systems with small number of CPUs and log_buf not reallocated to memblock section.
+> > > > > > >
+> > > > > > > Seems like you are hitting a known issue we saw on qualcomm amberwing
+> > > > > > > platforms as well.
+> > > > > > > I have sent a patch-series titled 'kexec-tools/arm64: Add support to
+> > > > > > > read PHYS_OFFSET from vmcoreinfo inside '/proc/kcore' to this list
+> > > > > > > just a few minutes back.
+> > > > > > >
+> > > > > > > I have Cc'ed you to the patchset as I think it might fix the issue for
+> > > > > > > you.
+> > > > > >
+> > > > > > Got them, thank you.
+> > > > > >
+> > > > > > > Kindly try the patchset on your platform (cavium?) and let me
+> > > > > > > know if this fixes the issue for you.
+> > > > > >
+> > > > > > Sure, I'd like to check them at my side, but..
+> > > > > > I fall into merge conflicts while trying to apply them onto
+> > > > > > https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/
+> > > > > > master, kexec-tools 2.0.18-rc1 94159bc3c264fa26395e56302072276a139d18af
+> > > > >
+> > > > > Hmm.. that's strange as I rebased them on kexec-tools 2.0.18-rc1
+> > > > > (94159bc3c264fa26395e56302072276a139d18af)
+> > > > > before sending out the patchset.
+> > > > >
+> > > > > > Are there any specific branch/revision for them to be applied ?
+> > > > > > (or it might be my mail server issues with formatting emails).
+> > > > > >
+> > > > >
+> > > > > Can you please try picking them up from my public github tree instead?
+> > > > > Here you can find the same:
+> > > > > https://github.com/bhupesh-sharma/kexec-tools/tree/read-phys-offset-from-kcore-upstream-v1
+> > > > >
+> > > > > Please pick the top 2 commit from here.
+> > > >
+> > > > Applied them onto commit '94159bc kexec-tools 2.0.18-rc1'.
+> > > >
+> > > > Still having following error while saving dmesg by vmcore-dmesg:
+> > > >
+> > > > kdump: saving vmcore-dmesg.txt
+> > > > Failed to read log text of size 0 bytes: Bad address
+> > > > kdump: saving vmcore-dmesg.txt failed
+> > > >
+> > > > So far tried kernels 4.14.78, 4.16.18.
+> > >
+> > > You would need kernel 4.19-rc5 or above as the same exposes VMCOREINFO
+> > > as '/proc/kcore'.
 > >
-> > For the same, when live debugging on x86_64 machines, user-space
-> > tools currently rely on different mechanisms to determine
-> > the 'page_offset_base' value (i.e. start of direct mapping of all
-> > physical memory). One of the approach used by 'makedumpfile'
-> > user-space tool for e.g. is to calculate the same from the last
-> > PT_LOAD available in '/proc/kcore', which can be flaky as and when
-> > new sections (for e.g. KCORE_REMAP which was added
-> > to recent kernels) are added to kcore.
+> > So far with 4.19-rc6 (and updated kexec, vmcore-dmesg but having kdump scripts from CentOS)
+> > the crashkernel can't found sysroot and thus it can't dump anything, so it timeouts and reboot system.
 > >
-> > For other architectures like arm64, I have already proposed using
-> > the vmcoreinfo note (in '/proc/kcore') in the user-space utilities to
-> > determine machine specific details like VA_BITS, PAGE_OFFSET,
-> > kasrl_offset() (see [2] for details), for which different user-space
-> > tools earlier used different (and at times flaky) approaches like:
+> > > If you are having issues while switching to newer kernel, please share
+> > > the output(s) of following on your platform:
+> > >
+> > > # kexec -p /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname
+> > > -r`.img --reuse-cmdline -d
+> > >
 > >
-> > - Reading kernel CONFIGs from user-space and determining CONFIG values
-> >    like VA_BITS from there.
-> >  - Reading symbols from '/proc/kallsyms' and determining their values
-> >    via '/dev/mem' interface.
-> >  - Reading symbols from 'vmlinux' and determing their values from
-> >    reading memory.
+> > attached as kexec-start.log.xz
 > >
-> > This patch allows appending 'page_offset_base' for x86_64 platforms
-> > to vmcoreinfo, so that user-space tools can use the same as a standard
-> > interface to determine the start of direct mapping of all physical
-> > memory.
+> > > and,
+> > >
+> > > # readelf -l vmcore
 > >
-> > Testing:
-> > -------
-> >  - I tested this patch (rebased on 'linux-next') on a x86_64 machine
-> >    using the modified 'makedumpfile' user-space code (see [3] for my
-> >    github tree which contains the same) for determining how many pages
-> >    are dumpable when different dump_level is specified (which is
-> >    one use-case of live-debugging via 'makedumpfile').
-> >  - I tested both the KASLR and non-KASLR boot cases with this patch.
-> >  - Here is one sample log (for KASLR boot case) on my x86_64 machine:
+> > [root@2sgbt-53 vlomovts]# readelf -l vmcore
+> > readelf: vmcore: Error: No such file
+> > [root@2sgbt-53 vlomovts]# uname -r
+> > 4.19.0-rc6+
 > >
-> >    < snip..>
-> >    The kernel doesn't support mmap(),read() will be used instead.
+> > >
+> > > and,
+> > >
+> > > # cat /proc/iomem
 > >
-> >    TYPE               PAGES                   EXCLUDABLE      DESCRIPTION
-> >    ----------------------------------------------------------------------
-> >    ZERO               21299                   yes             Pages filled
-> >    with zero
-> >    NON_PRI_CACHE      91785                   yes             Cache
-> >    pages without private flag
-> >    PRI_CACHE  1                       yes             Cache pages with
-> >    private flag
-> >    USER               14057                   yes             User process
-> >    pages
-> >    FREE               740346                  yes             Free pages
-> >    KERN_DATA  58152                   no              Dumpable kernel
-> >    data
-> >
-> >    page size:         4096
-> >    Total pages on system:     925640
-> >    Total size on system:      3791421440       Byte
-> >
-> > I understand that there might be some reservations about exporting
-> > such machine-specific details in the vmcoreinfo, but to unify
-> > the implementations across user-land and archs, perhaps this would be
-> > good starting point to start a discussion.
-> >
-> > [0]. https://www.mail-archive.com/kexec@lists.infradead.org/msg20300.html
-> > [1]. MAN pages -> MAKEDUMPFILE(8) and CRASH(8)
-> > [2]. https://www.spinics.net/lists/kexec/msg21608.html
-> >      http://lists.infradead.org/pipermail/kexec/2018-October/021725.html
-> > [3]. https://github.com/bhupesh-sharma/makedumpfile/tree/add-page-offset-base-to-vmcore-v1
-> >
-> > Cc: Boris Petkov <bp@alien8.de>
-> > Cc: Baoquan He <bhe@redhat.com>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> > Cc: Dave Anderson <anderson@redhat.com>
-> > Cc: James Morse <james.morse@arm.com>
-> > Cc: Omar Sandoval <osandov@fb.com>
-> > Cc: x86@kernel.org
-> > Cc: kexec@lists.infradead.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> > ---
-> >  arch/x86/kernel/machine_kexec_64.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> > index 4c8acdfdc5a7..834ccefef867 100644
-> > --- a/arch/x86/kernel/machine_kexec_64.c
-> > +++ b/arch/x86/kernel/machine_kexec_64.c
-> > @@ -356,6 +356,7 @@ void arch_crash_save_vmcoreinfo(void)
-> >       VMCOREINFO_SYMBOL(init_top_pgt);
-> >       vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
-> >                       pgtable_l5_enabled());
-> > +     VMCOREINFO_NUMBER(page_offset_base);
-> >
-> >  #ifdef CONFIG_NUMA
-> >       VMCOREINFO_SYMBOL(node_data);
-> > --
-> > 2.7.4
-> >
+> > attached as cat-proc-iomem.log.xz
+> 
+> Just to confirm: these logs are after your apply my kexec-tools patches, right?
+
+Yes, applied, rebuild kexec and start kernel as you suggest.
+
+> It looks likely that we are seeing differences in the value of
+> 'phys_offset' on your platforms:
+> 
+> From, '/proc/iomem', we can see that phys_offset is 0x01400000:
+> 01400000-ffedffff : System RAM
+
+I've found start of dmesg manually at vmcore elf and found that
+the offset at file and offset found by vmcore-dmesg is differs for 0x140000,
+which is the PHYS_OFFSET, and it is set to 0 at my vmcore for some reason
+(part of my vmcore-debug printous):
+[...]
+NUMBER(kimage_voffset)=0xffff000006c00000
+NUMBER(PHYS_OFFSET)=0x0
+[...]
+
+> 
+> while the 'kexec -p -d' logs indicate that it is 0:
+> image_arm64_load: phys_offset:    0000000000000000
+
+Yes, it is. Double-check it for 4.19-rc6 and it is still 0x0.
+
+> 
+> This tells me that the phys_offset value is not correctly calculated
+> in kexec-tools which should be fixed after my patches.
+> 
+> BTW , by '# readelf -l vmcore', I meant the 'vmcore' dump file you
+> have obtained via 'kexec'. It might be that you are saving it on some
+> different location (something /var/crash?). Can you please try sharing
+> the output of the same as well?
+
+Sorry, my bad here. but the problem is that I can't get kexec wortking with
+4.19-rc6 kernel and I have vmcore dump for 4.14.69+ based kernel so far.
+So the output looks like following:
+
+[vlomovts@2sgbt-53 ~]$ readelf -l ~/vmcore-full 
+
+Elf file type is CORE (Core file)
+Entry point 0x0
+There are 10 program headers, starting at offset 64
+
+Program Headers:
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  NOTE           0x0000000000010000 0x0000000000000000 0x0000000000000000
+                 0x000000000000a1a0 0x000000000000a1a0         0
+  LOAD           0x0000000000020000 0xffff000008080000 0x0000000001480000
+                 0x0000000001bc0000 0x0000000001bc0000  RWE    0
+  LOAD           0x0000000001be0000 0xffff800000000000 0x0000000001400000
+                 0x00000000dea00000 0x00000000dea00000  RWE    0
+  LOAD           0x00000000e05e0000 0xffff8000fea00000 0x00000000ffe00000
+                 0x00000000000e0000 0x00000000000e0000  RWE    0
+  LOAD           0x00000000e06c0000 0xffff8000feb00000 0x00000000fff00000
+                 0x0000000000090000 0x0000000000090000  RWE    0
+  LOAD           0x00000000e0750000 0xffff8000feba0000 0x00000000fffa0000
+                 0x0000001f00060000 0x0000001f00060000  RWE    0
+  LOAD           0x0000001fe07b0000 0xffff80ffff000000 0x0000010000400000
+                 0x0000001ffaae0000 0x0000001ffaae0000  RWE    0
+  LOAD           0x0000003fdb290000 0xffff811ff9bc0000 0x0000011ffafc0000
+                 0x0000000004fd0000 0x0000000004fd0000  RWE    0
+  LOAD           0x0000003fe0260000 0xffff811ffeba0000 0x0000011ffffa0000
+                 0x0000000000010000 0x0000000000010000  RWE    0
+  LOAD           0x0000003fe0270000 0xffff811ffebe0000 0x0000011ffffe0000
+                 0x0000000000020000 0x0000000000020000  RWE    0
+
+WBR,
+Vadim
+> 
+> Regards,
+> Bhupesh
+> 
+> > >
+> > > And then I can suggest a hack, which you can try and test on your
+> > > platform and then we can take it forward from there.
+> > >
+> > > Thanks,
+> > > Bhupesh
+> > >
+> > > > >
+> > > > > Thanks,
+> > > > > Bhupesh
+> > > > >
+> > > > > >
+> > > > > > >
+> > > > > > > Thanks,
+> > > > > > > Bhupesh
 
 _______________________________________________
 kexec mailing list
