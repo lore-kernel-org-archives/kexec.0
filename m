@@ -1,23 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gH2TB-0000LG-4q
- for kexec@lists.infradead.org; Mon, 29 Oct 2018 08:00:23 +0000
+ id 1gH2xQ-0005PF-TO
+ for kexec@lists.infradead.org; Mon, 29 Oct 2018 08:31:35 +0000
+Date: Mon, 29 Oct 2018 16:31:18 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH] kdump, vmcoreinfo: Export sme_me_mask value to vmcoreinfo
-References: <1263471c-a27d-a698-15f0-b5947f13ea93@redhat.com>
- <20181026182440.20a4b107@ezekiel.suse.cz>
- <20181026222517.GB26927@nazgul.tnic> <20181027081343.GA1884@MiWiFi-R3L-srv>
- <20181027091007.GB1046@nazgul.tnic> <20181027093917.GA14493@MiWiFi-R3L-srv>
- <20181027101221.GC1046@nazgul.tnic> <20181027110858.GB14493@MiWiFi-R3L-srv>
+Message-ID: <20181029083118.GC1884@MiWiFi-R3L-srv>
+References: <20181026222517.GB26927@nazgul.tnic>
+ <20181027081343.GA1884@MiWiFi-R3L-srv>
+ <20181027091007.GB1046@nazgul.tnic>
+ <20181027093917.GA14493@MiWiFi-R3L-srv>
+ <20181027101221.GC1046@nazgul.tnic>
+ <20181027110858.GB14493@MiWiFi-R3L-srv>
  <C5F8ED8E-F361-4C6C-B9E2-E3C8BCD8E050@alien8.de>
  <c55bef2a-b972-7e6e-b698-6ac1bc736046@redhat.com>
  <20181027145151.GA7338@nazgul.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <390b16ba-05d7-3590-c3b2-4b69aa3ae051@redhat.com>
-Date: Mon, 29 Oct 2018 15:59:48 +0800
+ <390b16ba-05d7-3590-c3b2-4b69aa3ae051@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20181027145151.GA7338@nazgul.tnic>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <390b16ba-05d7-3590-c3b2-4b69aa3ae051@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,52 +28,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Baoquan He <bhe@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com
+To: lijiang <lijiang@redhat.com>
+Cc: kexec@lists.infradead.org, x86@kernel.org, Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org, mingo@redhat.com, Borislav Petkov <bp@alien8.de>, tglx@linutronix.de, dyoung@redhat.com
 
-5ZyoIDIwMTjlubQxMOaciDI35pelIDIyOjUxLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IFNhdCwgT2N0IDI3LCAyMDE4IGF0IDEwOjQxOjU2UE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
-IEFjdHVhbGx5LCB0aGUgdmFsdWUgb2YgJ3NtZV9tZV9tYXNrJyBpcyAweDgwMDAwMDAwMDAwMCB3
-aGVuIFNNRSBpcwo+PiBlbmFibGVkLCBvdGhlcndpc2UgaXQgaXMgMC4gVGhhdCBpcyB0byBzYXks
-IGlmIHRoZSBiaXQgNDcgaXMgc2V0LCB0aGUKPj4gYml0IG51bWJlciBpcyBhbHNvIDB4ODAwMDAw
-MDAwMDAwICgxIDw8IDQ3VUwpOwo+IAo+IFllcywgYW5kIHlvdSBjYW4gc2ltcGx5IGNvcHkgdGhl
-IG1hc2sgaW50byB5b3VyIHZhcmlhYmxlIGFuZCBleHBvcnQKPiB0aGF0LiAKCk9rLCBpZiB5b3Ug
-YWdyZWUgd2l0aCB0aGUgZm9sbG93aW5nIHBhdGNoLCBpIHdpbGwgcG9zdCBpdCBhZ2Fpbi4KCmRp
-ZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jIGIvYXJjaC94ODYv
-a2VybmVsL21hY2hpbmVfa2V4ZWNfNjQuYwppbmRleCA0YzhhY2RmZGM1YTcuLmRlMzYzNzk2ZWQy
-MCAxMDA2NDQKLS0tIGEvYXJjaC94ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQuYworKysgYi9h
-cmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jCkBAIC0yOSw2ICsyOSw5IEBACiAjaW5j
-bHVkZSA8YXNtL3NldHVwLmg+CiAjaW5jbHVkZSA8YXNtL3NldF9tZW1vcnkuaD4KCit1NjQgc21l
-X21hc2s7CitFWFBPUlRfU1lNQk9MKHNtZV9tYXNrKTsKKwogI2lmZGVmIENPTkZJR19LRVhFQ19G
-SUxFCiBjb25zdCBzdHJ1Y3Qga2V4ZWNfZmlsZV9vcHMgKiBjb25zdCBrZXhlY19maWxlX2xvYWRl
-cnNbXSA9IHsKICAgICAgICAgICAgICAgICZrZXhlY19iekltYWdlNjRfb3BzLApAQCAtMzU3LDYg
-KzM2MCw5IEBAIHZvaWQgYXJjaF9jcmFzaF9zYXZlX3ZtY29yZWluZm8odm9pZCkKICAgICAgICB2
-bWNvcmVpbmZvX2FwcGVuZF9zdHIoIk5VTUJFUihwZ3RhYmxlX2w1X2VuYWJsZWQpPSVkXG4iLAog
-ICAgICAgICAgICAgICAgICAgICAgICBwZ3RhYmxlX2w1X2VuYWJsZWQoKSk7CgorICAgICAgIHNt
-ZV9tYXNrID0gc21lX21lX21hc2s7CisgICAgICAgVk1DT1JFSU5GT19OVU1CRVIoc21lX21hc2sp
-OworCiAjaWZkZWYgQ09ORklHX05VTUEKICAgICAgICBWTUNPUkVJTkZPX1NZTUJPTChub2RlX2Rh
-dGEpOwogICAgICAgIFZNQ09SRUlORk9fTEVOR1RIKG5vZGVfZGF0YSwgTUFYX05VTU5PREVTKTsK
-LS0gCgo+IFRoaW5raW5nIGFib3V0IGl0IG1vcmUsIHRob3VnaCwgaXQgbWlnaHQgYmUgYmV0dGVy
-IGlmIHlvdSBpbnN0ZWFkCj4gZXhwb3J0IGEgc21hbGxlciB2YWx1ZSAtIG5vdCBhbiB1NjQgLSBh
-bmQgY29uc3RydWN0IHRoZSBtYXNrIGluCj4gdXNlcnNwYWNlLiBJLmUuLCBhIHU4IHdoaWNoIHNo
-b3VsZCBiZSBlbm91Z2ggZm9yIHlvdXIgY3VycmVudCBwdXJwb3Nlcy4KPiAKPiBJIHNheSBjdXJy
-ZW50IGJlY2F1c2UgaWYgaXQgdHVybnMgb3V0IHdlIG5lZWQgdG8gZXhwb3J0IG1vcmUgU01FLXJl
-bGF0ZWQKPiBpbmZvIHRvIHVzZXJzcGFjZSwgZXhwb3J0aW5nIGFuIHU2NCBhbmQgdGhlbiBPUi1p
-bmcgaW4gbW9yZSBpbmZvcm1hdGlvbgo+IGluIGl0IHdvdWxkIGFsbG93IHRoYXQuIHU4IG5vdCBz
-byBtdWNoLiBTbyBkb2luZyBzb21ldGhpbmcgbGlrZToKPiAKPiBbIG1pc2MJICAgXVsgZW5jIGJp
-dCAgXVsgb3RoZXIgbWlzYyBTTUUgaW5mbyAJCQkJICAgICAgXQo+IDAwMDBfMDAwMF8wMDAwXzAw
-MDBfMTAwMF8wMDAwXzAwMDBfMDAwMF8wMDAwXzAwMDBfMDAwMF8wMDAwXzAwMDBfMDAwMF8wMDAw
-XzAwMDAKPiA2MyAgIDU5ICAgNTUgICA1MSAgIDQ3ICAgNDMgICAzOSAgIDM1ICAgMzEgICAyNyAg
-IDIzICAgMTkgICAxNSAgIDExICAgNyAgICAzCj4gCj4gd291bGQgYWxsb3cgZm9yIGV4cG9ydGlu
-ZyB0aGF0IGFkZGl0aW9uYWwgaW5mby4KPiAKPiBFc3BlY2lhbGx5IGlmIHdlIHdhbnQgdG8gdXNl
-IFZNQ09SRUlORk8gZm9yIG1vcmUgdGhhbiBrZXhlYyB0aGluZ3MuCj4gCgpBcyB5b3UgbWVudGlv
-bmVkLCBpZiBuZWVkLCB0aGUgZGVmaW5pdGlvbiBvZiB0aGlzIHZhcmlhYmxlKHU2NCBzbWVfbWFz
-aykgY2FuIGJlIGV4dGVuZGVkCmNvbnZlbmllbnRseSBpbiB0aGUgZnV0dXJlKFRoZSBiaXQgbWln
-aHQgYmUgcmVkZWZpbmVkKS4KClRoYW5rcy4KTGlhbmJvCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2tleGVjCg==
+On 10/29/18 at 03:59pm, lijiang wrote:
+> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> index 4c8acdfdc5a7..de363796ed20 100644
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+> @@ -29,6 +29,9 @@
+>  #include <asm/setup.h>
+>  #include <asm/set_memory.h>
+> 
+> +u64 sme_mask;
+> +EXPORT_SYMBOL(sme_mask);
+
+Wondering why it is global. Who else will use it?
+
+> +
+>  #ifdef CONFIG_KEXEC_FILE
+>  const struct kexec_file_ops * const kexec_file_loaders[] = {
+>                 &kexec_bzImage64_ops,
+> @@ -357,6 +360,9 @@ void arch_crash_save_vmcoreinfo(void)
+>         vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
+>                         pgtable_l5_enabled());
+> 
+> +       sme_mask = sme_me_mask;
+> +       VMCOREINFO_NUMBER(sme_mask);
+> +
+>  #ifdef CONFIG_NUMA
+>         VMCOREINFO_SYMBOL(node_data);
+>         VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
