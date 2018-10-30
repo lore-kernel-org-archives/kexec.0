@@ -1,17 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gHRwU-0002Fu-2O
- for kexec@lists.infradead.org; Tue, 30 Oct 2018 11:12:15 +0000
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
- by kirsty.vergenet.net (Postfix) with ESMTPA id 86AFF25B7C3
- for <kexec@lists.infradead.org>; Tue, 30 Oct 2018 22:11:26 +1100 (AEDT)
-Date: Tue, 30 Oct 2018 12:11:23 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools 2.0.18
-Message-ID: <20181030111123.7okzbw6baai3r3em@verge.net.au>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gHQGB-0001VU-OF
+ for kexec@lists.infradead.org; Tue, 30 Oct 2018 09:24:28 +0000
+Date: Tue, 30 Oct 2018 17:23:14 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] kdump, vmcoreinfo: Export sme_me_mask value to vmcoreinfo
+Message-ID: <20181030092314.GC14493@MiWiFi-R3L-srv>
+References: <20181029083118.GC1884@MiWiFi-R3L-srv>
+ <d6f93848-c750-f29c-4ca7-9661596cad62@redhat.com>
+ <20181029095738.GB20101@zn.tnic>
+ <15897206-c1a6-ced6-3a1b-f71da8fc9c83@redhat.com>
+ <20181029114414.GA11408@MiWiFi-R3L-srv>
+ <90385882-7fd1-a674-ec5a-19bd42471a5e@redhat.com>
+ <20181029134918.GB32150@zn.tnic>
+ <699ab34e-1373-582d-4e58-e76bd57ec34f@redhat.com>
+ <20181030050900.GA25987@dhcp-128-65.nay.redhat.com>
+ <20181030091542.GD32102@zn.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20181030091542.GD32102@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,47 +32,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>, lijiang <lijiang@redhat.com>
+Cc: Petr Tesarik <ptesarik@suse.cz>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de
 
-Hi all,
 
-I am happy to announce the release of kexec-tools 2.0.18.
+Hi Boris, DaveY and Lianbo,
 
-This is a feature release coinciding with the release of v4.19 of the Linux
-Kernel.
+On 10/30/18 at 10:15am, Borislav Petkov wrote:
+> On Tue, Oct 30, 2018 at 01:09:00PM +0800, Dave Young wrote:
+> > It is not the content, I think it is a good catch from Boris, it would
+> > be good to document the exported things in somewhere eg.
+> > Documentation/kdump/vmcoreinfo.txt
 
-This release can be downloaded from kernel.org:
+For the vmcoreinfo variables document, I personally think it might be
+not necessary. The reason is that all the old varialbles are exported
+with the name of themselves. We know what they are or what they
+represent since they are all kernel symbols or macro. Only this me_mask,
+it's a local variable and store the value of sme_me_mask for now, may
+store more info later like Petr mentioned, and also will store the memory
+encryption information of TME (which is intel's transparent memory encryption).
+We can add code comment around to tell these.
 
-	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.18.tar.xz
-	http://kernel.org/pub/linux/utils/kernel/kexec/
+Personal opinion.
 
-It is also tagged it in git:
-
-	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-Thanks to everyone who has contributed to kexec.
-
-Commits since v2.0.17
-
-5750980cdbbc kexec-tools 2.0.18
-04c43b4e421f arm64: If 'getrandom' syscall fails, don't error out - just warn and proceed.
-8db8b6613a00 x86: fix BAD_FREE in get_efi_runtime_map()
-94159bc3c264 kexec-tools 2.0.18-rc1
-1ac3e4a57000 kdump: fix an error that can not parse the e820 reserved region
-b9de21ef51a7 kexec: fix for "Unhandled rela relocation: R_X86_64_PLT32" error
-ca4823aa2fc2 arm64: error out if kernel command line is too long
-7198e899ddab arm64: increase command line size to 2048
-c3f043241a86 arm64: Add support to supply 'kaslr-seed' to secondary kernel
-7acd257ae67b Remove obsolete kdump tool
-674b9b45876c Makefile.in: Add uninstall rule
-e277fa9ec702 vmcore-dmesg: fix infinite loop if log buffer wraps around
-d4a948c26827 kexec/s390: Add support for kexec_file_load
-0481e9ed61ef kexec: Add --no-checks option
-72c146c20588 purgatory/ppc64: Fix uninitialized warning
-3f276f71f14d kexec-elf-rel-ppc64: Fix cast from pointer warning
-7be89276db19 crashdump-ppc64: Fix integer truncation warning
-798317c134b2 kexec: Fix printf warning
-b43960c20dd2 kexec-tools 2.0.17.git
+Thanks
+Baoquan
 
 _______________________________________________
 kexec mailing list
