@@ -1,17 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 30 Oct 2018 16:59:17 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] x86_64, vmcoreinfo: Append 'page_offset_base' to
- vmcoreinfo
-Message-ID: <20181030085917.GC11408@MiWiFi-R3L-srv>
-References: <1540593788-28181-1-git-send-email-bhsharma@redhat.com>
- <20181027100241.GB1884@MiWiFi-R3L-srv>
- <CACi5LpPf9Zr1beowRNGmLZY7DtS3JDt8D=FONjqas9yo7TyCjg@mail.gmail.com>
- <20181030020752.GB11408@MiWiFi-R3L-srv>
- <CACi5LpP0_s9zAF+QfKpU+kG6BKqqkiwQhcW-WFZ0=SnBeX7ZXA@mail.gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gHLwd-00007a-4v
+ for kexec@lists.infradead.org; Tue, 30 Oct 2018 04:48:00 +0000
+Subject: Re: [PATCH] kdump, vmcoreinfo: Export sme_me_mask value to vmcoreinfo
+References: <C5F8ED8E-F361-4C6C-B9E2-E3C8BCD8E050@alien8.de>
+ <c55bef2a-b972-7e6e-b698-6ac1bc736046@redhat.com>
+ <20181027145151.GA7338@nazgul.tnic>
+ <390b16ba-05d7-3590-c3b2-4b69aa3ae051@redhat.com>
+ <20181029083118.GC1884@MiWiFi-R3L-srv>
+ <d6f93848-c750-f29c-4ca7-9661596cad62@redhat.com>
+ <20181029095738.GB20101@zn.tnic>
+ <15897206-c1a6-ced6-3a1b-f71da8fc9c83@redhat.com>
+ <20181029114414.GA11408@MiWiFi-R3L-srv>
+ <90385882-7fd1-a674-ec5a-19bd42471a5e@redhat.com>
+ <20181029134918.GB32150@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <699ab34e-1373-582d-4e58-e76bd57ec34f@redhat.com>
+Date: Tue, 30 Oct 2018 12:46:52 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CACi5LpP0_s9zAF+QfKpU+kG6BKqqkiwQhcW-WFZ0=SnBeX7ZXA@mail.gmail.com>
+In-Reply-To: <20181029134918.GB32150@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,69 +29,24 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, James Morse <james.morse@arm.com>, x86@kernel.org, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Omar Sandoval <osandov@fb.com>, Borislav Petkov <bp@alien8.de>, Dave Anderson <anderson@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Baoquan He <bhe@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com
 
-Hi Bhupesh,
-
-On 10/30/18 at 12:33pm, Bhupesh Sharma wrote:
-> > Why it's broken? Have you investigated and figured out why it's broken?
-> > If fix, what patch will it look like? Does the patch prove it's not
-> > worth using the current way?
-> >
-> > Have you thought about this in advance? Or still like before, you said
-> > on arm64 you found different boards have different behaviour, then
-> > makedumpfile maintainer Kazu said he investigated and found it may be
-> > caused by KALSR. This time, for this KCORE_REMAP adding, can you help to
-> > investigate further and give an answer to the issue you found and
-> > raised?
-> 
-> Ofcourse, the patchset which added vmcoreinfo into kcore was discussed
-> and it was agreed that this was a better approach to move forward and hence
-> accepted in mainline.
-
-Currently I am wondering why x86_64 need add page_offset_base to
-vmcoreinfo. Is it because any feature or userspace tool is broken if
-page_offset_base is not added into vmcoreinfo? 
-
-Why KCORE_REMAP adding broke makedumpfile, do you find out the root
-cause and what it looks like if you fix it in the current way?
-
-Can you list the reasons one by one as below with short sentence?
-1)
-2)
-3)
-
-> 
-> Regarding the makedumpfile issue, I have already provided a detailed
-> reply to Kazu (you are Cc'ed on the thread) and also proposed a
-> makedumpfile approach which
-> reads the 'page_offset_base' value from kcore (using the kernel
-> interface provided by this patch),
-> [on which you are Cc'ed as well]:
-
-This is your replying mail link:
-https://www.spinics.net/lists/kexec/msg21616.html
-
-Then what on earth do you want to fix in this patch?
-
-So Kazu's patch which decuding page_offset_base like x86 64 have done works.
-Yes, and your way using vmcoreinfo in kcore also works, but this is not
-the reason which supports you to discard the old way Kazu suggested. Now
-we are talking about why you want to discard the old way, and adding
-page_offset_base to vmcoreinfo.
-
-Please elaborate and reply with simple and clear logic.
-
-Thanks
-Baoquan
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMOaciDI55pelIDIxOjQ5LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IE1vbiwgT2N0IDI5LCAyMDE4IGF0IDA5OjQxOjI2UE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
+PiAgICAgICAgIFZNQ09SRUlORk9fTlVNQkVSKHBoeXNfYmFzZSk7Cj4+PiAgICAgICAgIFZNQ09S
+RUlORk9fU1lNQk9MKGluaXRfdG9wX3BndCk7Cj4+PiAgICAgICAgIHZtY29yZWluZm9fYXBwZW5k
+X3N0cigiTlVNQkVSKHBndGFibGVfbDVfZW5hYmxlZCk9JWRcbiIsCj4+PiAgICAgICAgICAgICAg
+ICAgICAgICAgICBwZ3RhYmxlX2w1X2VuYWJsZWQoKSk7Cj4+Pgo+Pj4gKyAgICAgICBWTUNPUkVJ
+TkZPX05VTUJFUihzbWVfbWFzayk7Cj4gCj4gV2hhdCBJJ20gc3RpbGwgbWlzc2luZyBmcm9tIHRo
+ZSB3aG9sZSBmdW4gaXMgd2hlcmUgYXJlIHdlIGRvY3VtZW50aW5nCj4gdGhlIGNvbnRlbnRzIG9m
+IHRoYXQgdm1jb3JlaW5mbyB0aGluZz8KPiAKCkknbSBub3Qgc3VyZSB3aGV0aGVyIHRoZSBmb2xs
+b3dpbmcgZG9jdW1lbnQgaXMgd2hhdCB5b3UgbmVlZC4KRG9jdW1lbnRhdGlvbi9BQkkvdGVzdGlu
+Zy9zeXNmcy1rZXJuZWwtdm1jb3JlaW5mbwoKVGhhbmtzLgpMaWFuYm8KPiBJZiBub3QsIHdlIG5l
+ZWQgaXQgZG9jdW1lbnRlZC4KPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
