@@ -1,20 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x544.google.com ([2a00:1450:4864:20::544])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gHjoZ-0003cJ-Os
- for kexec@lists.infradead.org; Wed, 31 Oct 2018 06:17:17 +0000
-Received: by mail-ed1-x544.google.com with SMTP id t10-v6so12586897eds.12
- for <kexec@lists.infradead.org>; Tue, 30 Oct 2018 23:17:03 -0700 (PDT)
+ id 1gHlAD-0007Sn-5l
+ for kexec@lists.infradead.org; Wed, 31 Oct 2018 07:43:42 +0000
+Subject: Re: [PATCH] kdump, vmcoreinfo: Export sme_me_mask value to vmcoreinfo
+References: <20181029095738.GB20101@zn.tnic>
+ <15897206-c1a6-ced6-3a1b-f71da8fc9c83@redhat.com>
+ <20181029114414.GA11408@MiWiFi-R3L-srv>
+ <90385882-7fd1-a674-ec5a-19bd42471a5e@redhat.com>
+ <20181029134918.GB32150@zn.tnic>
+ <699ab34e-1373-582d-4e58-e76bd57ec34f@redhat.com>
+ <20181030050900.GA25987@dhcp-128-65.nay.redhat.com>
+ <20181030091542.GD32102@zn.tnic> <20181030092314.GC14493@MiWiFi-R3L-srv>
+ <dcbc925f-6935-6a34-fde1-7aa1ea378891@redhat.com>
+ <20181031024748.GA2058@dhcp-128-65.nay.redhat.com>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <e735e1d8-ec07-4de7-858e-7fc4ae711db7@redhat.com>
+Date: Wed, 31 Oct 2018 15:43:02 +0800
 MIME-Version: 1.0
-References: <20180427090045.532014306@redhat.com>
- <20180427091410.GA25338@dhcp-128-65.nay.redhat.com>
- <20180507024833.GA3895@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20180507024833.GA3895@dhcp-128-65.nay.redhat.com>
-From: Pingfan Liu <kernelfans@gmail.com>
-Date: Wed, 31 Oct 2018 14:16:50 +0800
-Message-ID: <CAFgQCTvqVX8pNGiWFjv2xfMMHXtrca0-Hgmgy123n=KVOeipkg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kdump/x86: crashkernel=X try to reserve below 896M
- first then below 4G and MAXMEM
+In-Reply-To: <20181031024748.GA2058@dhcp-128-65.nay.redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,48 +28,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, x86@kernel.org, Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org, Kazuhito Hagio <khagio@redhat.com>, mingo@redhat.com, Borislav Petkov <bp@alien8.de>, tglx@linutronix.de
 
-Hi, I encounter a case where crashkernel=384M, and kaslr is enabled.
-During the test, sometimes, the system may fail to reserve region for
-crash kernel, although there is much free space above 896MB. It is
-caused by the truncation of the candidate region by kaslr kernel. It
-raises confusion to the end user that sometimes crashkernel=X works
-while sometimes fails.
-So can we have this patch to fix the issue?
-
-Thanks,
-Pingfan
-On Mon, May 7, 2018 at 10:49 AM Dave Young <dyoung@redhat.com> wrote:
->
-> On 04/27/18 at 05:14pm, Dave Young wrote:
-> > Hi,
-> >
-> > This is a resend of below patches:
-> > http://lists.infradead.org/pipermail/kexec/2017-October/019569.html
-> >
-> > I dropped the original patch 1 since Baoquan is not happy with it.
-> > For patch 2 (the 1st patch in this series), there is some improvement
-> > comment from Baoquan to create some generic memblock iteration function.
-> > But nobody has time to work on it for the time being.  According to
-> > offline discussion with him.  That can be done in the future if someone
-> > is interested.  We can go with the current kdump only fixes.
-> >
-> > Other than above,  the patches are just same.
->
-> Hi Andrew, do you have concerns about the patches?  It has been used for
-> long time in Red Hat kernel, since people do not object them, could you
-> pick them if no other concerns?
->
-> Thanks
-> Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMOaciDMx5pelIDEwOjQ3LCBEYXZlIFlvdW5nIOWGmemBkzoKPiBBZGQgS2F6
+dSwgdGhlIG1ha2VkdW1wZmlsZSBtYWludGFpbmVyIGluIGNjLgo+IAo+IE9uIDEwLzMxLzE4IGF0
+IDEwOjI2YW0sIGxpamlhbmcgd3JvdGU6Cj4+IOWcqCAyMDE45bm0MTDmnIgzMOaXpSAxNzoyMywg
+QmFvcXVhbiBIZSDlhpnpgZM6Cj4+Pgo+Pj4gSGkgQm9yaXMsIERhdmVZIGFuZCBMaWFuYm8sCj4+
+Pgo+Pj4gT24gMTAvMzAvMTggYXQgMTA6MTVhbSwgQm9yaXNsYXYgUGV0a292IHdyb3RlOgo+Pj4+
+IE9uIFR1ZSwgT2N0IDMwLCAyMDE4IGF0IDAxOjA5OjAwUE0gKzA4MDAsIERhdmUgWW91bmcgd3Jv
+dGU6Cj4+Pj4+IEl0IGlzIG5vdCB0aGUgY29udGVudCwgSSB0aGluayBpdCBpcyBhIGdvb2QgY2F0
+Y2ggZnJvbSBCb3JpcywgaXQgd291bGQKPj4+Pj4gYmUgZ29vZCB0byBkb2N1bWVudCB0aGUgZXhw
+b3J0ZWQgdGhpbmdzIGluIHNvbWV3aGVyZSBlZy4KPj4+Pj4gRG9jdW1lbnRhdGlvbi9rZHVtcC92
+bWNvcmVpbmZvLnR4dAo+Pj4KPj4+IEZvciB0aGUgdm1jb3JlaW5mbyB2YXJpYWJsZXMgZG9jdW1l
+bnQsIEkgcGVyc29uYWxseSB0aGluayBpdCBtaWdodCBiZQo+Pj4gbm90IG5lY2Vzc2FyeS4gVGhl
+IHJlYXNvbiBpcyB0aGF0IGFsbCB0aGUgb2xkIHZhcmlhbGJsZXMgYXJlIGV4cG9ydGVkCj4+PiB3
+aXRoIHRoZSBuYW1lIG9mIHRoZW1zZWx2ZXMuIFdlIGtub3cgd2hhdCB0aGV5IGFyZSBvciB3aGF0
+IHRoZXkKPj4+IHJlcHJlc2VudCBzaW5jZSB0aGV5IGFyZSBhbGwga2VybmVsIHN5bWJvbHMgb3Ig
+bWFjcm8uIE9ubHkgdGhpcyBtZV9tYXNrLAo+Pj4gaXQncyBhIGxvY2FsIHZhcmlhYmxlIGFuZCBz
+dG9yZSB0aGUgdmFsdWUgb2Ygc21lX21lX21hc2sgZm9yIG5vdywgbWF5Cj4+PiBzdG9yZSBtb3Jl
+IGluZm8gbGF0ZXIgbGlrZSBQZXRyIG1lbnRpb25lZCwgYW5kIGFsc28gd2lsbCBzdG9yZSB0aGUg
+bWVtb3J5Cj4+PiBlbmNyeXB0aW9uIGluZm9ybWF0aW9uIG9mIFRNRSAod2hpY2ggaXMgaW50ZWwn
+cyB0cmFuc3BhcmVudCBtZW1vcnkgZW5jcnlwdGlvbikuCj4+PiBXZSBjYW4gYWRkIGNvZGUgY29t
+bWVudCBhcm91bmQgdG8gdGVsbCB0aGVzZS4KPj4+Cj4+IFRoYW5rIHlvdSwgZXZlcnlvbmUuCj4+
+Cj4+IEkgcGVyc29uYWxseSBhZ3JlZSB3aXRoIEJhb3F1YW4ncyBvcGluaW9uLiBXaGF0IGRvIHlv
+dSB0aGluayBhYm91dD8gQm9yaXMgYW5kIG90aGVyIHJldmlld2VyPwo+Pgo+PiBJZiB0aGUgdm1j
+b3JlaW5mbyBkb2N1bWVudCBpcyBuZWNlc3NhcnksIHdvdWxkIHlvdSBsaWtlIHRvIGhlbHAgbWUg
+dG8gcHJvdmlkZSBhbiBvdXRsaW5lPwo+PiBJIGNhbiB0cnkgbXkgYmVzdCB0byB3cml0ZSB0aGUg
+ZG9jdW1lbnQuCj4gCj4gSXQgaXMgdHJ1ZSBsaWtlIHdoYXQgQmFvcXVhbiBzYWlkLCB0aGVzZSBp
+bmZvcm1hdGlvbiBhcmUgbWFpbmx5IHVzZWQgYnkKPiBtYWtlZHVtcGZpbGUgdG9vbCBmb3IgY3Jl
+YXRpbmcgYSBmaWx0ZXJlZCB2bWNvcmUuICBCdXQgdGhlc2Ugdm1jb3JlaW5mbwo+IGhpZGUgaW4g
+YSBsb3Qgb2YgZGlmZmVyZW50IGNvZGUgcGF0aHM6Cj4ga2VybmVsL2NyYXNoX2NvcmUuYywgIHBy
+aW50ayBjb2RlLCBhcmNoIGNvZGUgZXRjLiAKPiAKPiBJdCBpcyBhIG1pc3Qgb25seSBhIGZldyBr
+ZHVtcCBwZW9wbGUga25vdyB0aGVtLCBkb2N1bWVudGluZyB0aGVtIHdpbGwgaGVscAo+IHBlb3Bs
+ZSB0byB1bmRlcnN0YW5kIGFuZCByZXZpZXcuIEl0IHdpbGwgYWxzbyBiZSBjbGVhcmVyIGluc3Rl
+YWQgb2YKPiBkaWdnaW5nIGludG8gY29kZT8KPiAKPiBUaGUgZG9jdW1lbnQgY2FuIGJyaWVmbHkg
+ZXhwbGFpbiB3aGF0IGlzIHZtY29yZWluZm8sIHdoeSB3ZSBuZWVkIGl0LCBhbmQKPiBzb21lIGJh
+Y2tncm91bmQgaW5mby4gIFRoZW4gbGlzdCB0aGUgZXhwb3J0ZWQgdmFsdWVzIHdpdGggc29tZQo+
+IGNsYXNzaWZ5aW5nIGJ5IGNvcmUga2VybmVsLCBhcmNoIHJlbGF0ZWQsICBzdHJpbmcgb3IgbnVt
+YmVyIGV0Yy4gIEZvcgo+IG1vc3Qgb2YgdGhlbSBsaWtlIEJhb3F1YW4gc2FpZCBubyBuZWVkIG1v
+cmUgZXhwbGFuYXRpb24sIGJ1dCBhZGQKPiBleHBsYW5hdGlvbnMgZm9yIHNvbWV0aGluZyBpZiBu
+ZWVkZWQgbGlrZSB0aGlzIHNtZSBtYXNrLgo+IAo+IEJ1dCBJIHRoaW5rIHRoaXMgY2FuIGJlIGRv
+bmUgc2VwYXJhdGVseSBpbnN0ZWFkIG9mIGJsb2NraW5nIHRoaXMgcGF0Y2guCkZvciB0aGlzIHBh
+dGNoLCBpIHRoaW5rIHRoYXQgaXQgaGFkIGJlZW4gcmVhY2hlZCBhbiBhZ3JlZW1lbnQuIFNvIGkg
+d2lsbAp1cGRhdGUgbXkgcGF0Y2ggbG9nIGFuZCBwb3N0IHYyIGlmIHRoZXJlIGlzIG5vIG9iamVj
+dGlvbi4KCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jIGIv
+YXJjaC94ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQuYwppbmRleCA0YzhhY2RmZGM1YTcuLmNh
+OWJkZjQ2YjhlNyAxMDA2NDQKLS0tIGEvYXJjaC94ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQu
+YworKysgYi9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jCkBAIC0zNTIsMTAgKzM1
+MiwyMyBAQCB2b2lkIG1hY2hpbmVfa2V4ZWMoc3RydWN0IGtpbWFnZSAqaW1hZ2UpCiAKIHZvaWQg
+YXJjaF9jcmFzaF9zYXZlX3ZtY29yZWluZm8odm9pZCkKIHsKKyAgICAgICB1NjQgc21lX21hc2sg
+PSBzbWVfbWVfbWFzazsKKwogICAgICAgIFZNQ09SRUlORk9fTlVNQkVSKHBoeXNfYmFzZSk7CiAg
+ICAgICAgVk1DT1JFSU5GT19TWU1CT0woaW5pdF90b3BfcGd0KTsKICAgICAgICB2bWNvcmVpbmZv
+X2FwcGVuZF9zdHIoIk5VTUJFUihwZ3RhYmxlX2w1X2VuYWJsZWQpPSVkXG4iLAogICAgICAgICAg
+ICAgICAgICAgICAgICBwZ3RhYmxlX2w1X2VuYWJsZWQoKSk7CisgICAgICAgLyoKKyAgICAgICAg
+KiBDdXJyZW50bHksIHRoZSBsb2NhbCB2YXJpYWJsZSAnc21lX21hc2snIHN0b3JlcyB0aGUgdmFs
+dWUgb2YKKyAgICAgICAgKiBzbWVfbWVfbWFzayhiaXQgNDcpLCBhbmQgYWxzbyB3cml0ZSB0aGUg
+dmFsdWUgb2Ygc21lX21hc2sgdG8KKyAgICAgICAgKiB0aGUgdm1jb3JlaW5mby4KKyAgICAgICAg
+KiBJZiBuZWVkLCB0aGUgYml0KHNtZV9tYXNrKSBtaWdodCBiZSByZWRlZmluZWQgaW4gdGhlIGZ1
+dHVyZS4KKyAgICAgICAgKiBGb3IgZXhhbXBsZToKKyAgICAgICAgKiBbIG1pc2MgICAgICAgICAg
+XVsgZW5jIGJpdCAgXVsgb3RoZXIgbWlzYyBTTUUgaW5mbyAgICAgICBdCisgICAgICAgICogMDAw
+MF8wMDAwXzAwMDBfMDAwMF8xMDAwXzAwMDBfMDAwMF8wMDAwXzAwMDBfMDAwMF8uLi5fMDAwMAor
+ICAgICAgICAqIDYzICAgNTkgICA1NSAgIDUxICAgNDcgICA0MyAgIDM5ICAgMzUgICAzMSAgIDI3
+ICAgLi4uIDMKKyAgICAgICAgKi8KKyAgICAgICBWTUNPUkVJTkZPX05VTUJFUihzbWVfbWFzayk7
+CiAKICNpZmRlZiBDT05GSUdfTlVNQQogICAgICAgIFZNQ09SRUlORk9fU1lNQk9MKG5vZGVfZGF0
+YSk7Cgo+IE1heWJlIEthenUga25vd3MgbW9yZSBhYm91dCBpdCwgc28gSSB3b3VsZCBsaWtlIHRv
+IGFzayBLYXp1IGFib3V0IGhpcyBvcGluaW9uCj4gYW5kIGlmIGhlIHdhbnQgdG8gZG8gaXQuCj4g
+T2ssIHRoYW5rIHlvdSwgRGF2ZSBZb3VuZy4KCkFib3V0IHRoZSB2bWNvcmVpbmZvIGRvY3VtZW50
+IGlzc3VlLCBvbmNlIG1ha2UgYSBkZWNpc2lvbiwgaSB3aWxsIHRyeSBteSBiZXN0IHRvCmRvIHRo
+aXMgYmFzZWQgb24geW91ciBvdXRsaW5lLgoKUmVnYXJkcywKTGlhbmJvCgo+Pgo+PiBBbnl3YXks
+IHdlIHNob3VsZCBtYWtlIGEgY2hvaWNlLgo+Pgo+PiBSZWdhcmRzLAo+PiBMaWFuYm8KPj4KPj4+
+IFBlcnNvbmFsIG9waW5pb24uCj4+Pgo+Pj4gVGhhbmtzCj4+PiBCYW9xdWFuCj4+Pgo+IAo+IFRo
+YW5rcwo+IERhdmUKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
