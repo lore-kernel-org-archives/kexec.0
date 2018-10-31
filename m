@@ -1,25 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-ed1-x544.google.com ([2a00:1450:4864:20::544])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gHgYC-0006yY-HB
- for kexec@lists.infradead.org; Wed, 31 Oct 2018 02:48:09 +0000
-Date: Wed, 31 Oct 2018 10:47:48 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] kdump, vmcoreinfo: Export sme_me_mask value to vmcoreinfo
-Message-ID: <20181031024748.GA2058@dhcp-128-65.nay.redhat.com>
-References: <20181029095738.GB20101@zn.tnic>
- <15897206-c1a6-ced6-3a1b-f71da8fc9c83@redhat.com>
- <20181029114414.GA11408@MiWiFi-R3L-srv>
- <90385882-7fd1-a674-ec5a-19bd42471a5e@redhat.com>
- <20181029134918.GB32150@zn.tnic>
- <699ab34e-1373-582d-4e58-e76bd57ec34f@redhat.com>
- <20181030050900.GA25987@dhcp-128-65.nay.redhat.com>
- <20181030091542.GD32102@zn.tnic>
- <20181030092314.GC14493@MiWiFi-R3L-srv>
- <dcbc925f-6935-6a34-fde1-7aa1ea378891@redhat.com>
+ id 1gHjoZ-0003cJ-Os
+ for kexec@lists.infradead.org; Wed, 31 Oct 2018 06:17:17 +0000
+Received: by mail-ed1-x544.google.com with SMTP id t10-v6so12586897eds.12
+ for <kexec@lists.infradead.org>; Tue, 30 Oct 2018 23:17:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <dcbc925f-6935-6a34-fde1-7aa1ea378891@redhat.com>
+References: <20180427090045.532014306@redhat.com>
+ <20180427091410.GA25338@dhcp-128-65.nay.redhat.com>
+ <20180507024833.GA3895@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20180507024833.GA3895@dhcp-128-65.nay.redhat.com>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Wed, 31 Oct 2018 14:16:50 +0800
+Message-ID: <CAFgQCTvqVX8pNGiWFjv2xfMMHXtrca0-Hgmgy123n=KVOeipkg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] kdump/x86: crashkernel=X try to reserve below 896M
+ first then below 4G and MAXMEM
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,54 +23,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, x86@kernel.org, Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org, Kazuhito Hagio <khagio@redhat.com>, mingo@redhat.com, Borislav Petkov <bp@alien8.de>, tglx@linutronix.de
+To: Dave Young <dyoung@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
 
-QWRkIEthenUsIHRoZSBtYWtlZHVtcGZpbGUgbWFpbnRhaW5lciBpbiBjYy4KCk9uIDEwLzMxLzE4
-IGF0IDEwOjI2YW0sIGxpamlhbmcgd3JvdGU6Cj4g5ZyoIDIwMTjlubQxMOaciDMw5pelIDE3OjIz
-LCBCYW9xdWFuIEhlIOWGmemBkzoKPiA+IAo+ID4gSGkgQm9yaXMsIERhdmVZIGFuZCBMaWFuYm8s
-Cj4gPiAKPiA+IE9uIDEwLzMwLzE4IGF0IDEwOjE1YW0sIEJvcmlzbGF2IFBldGtvdiB3cm90ZToK
-PiA+PiBPbiBUdWUsIE9jdCAzMCwgMjAxOCBhdCAwMTowOTowMFBNICswODAwLCBEYXZlIFlvdW5n
-IHdyb3RlOgo+ID4+PiBJdCBpcyBub3QgdGhlIGNvbnRlbnQsIEkgdGhpbmsgaXQgaXMgYSBnb29k
-IGNhdGNoIGZyb20gQm9yaXMsIGl0IHdvdWxkCj4gPj4+IGJlIGdvb2QgdG8gZG9jdW1lbnQgdGhl
-IGV4cG9ydGVkIHRoaW5ncyBpbiBzb21ld2hlcmUgZWcuCj4gPj4+IERvY3VtZW50YXRpb24va2R1
-bXAvdm1jb3JlaW5mby50eHQKPiA+IAo+ID4gRm9yIHRoZSB2bWNvcmVpbmZvIHZhcmlhYmxlcyBk
-b2N1bWVudCwgSSBwZXJzb25hbGx5IHRoaW5rIGl0IG1pZ2h0IGJlCj4gPiBub3QgbmVjZXNzYXJ5
-LiBUaGUgcmVhc29uIGlzIHRoYXQgYWxsIHRoZSBvbGQgdmFyaWFsYmxlcyBhcmUgZXhwb3J0ZWQK
-PiA+IHdpdGggdGhlIG5hbWUgb2YgdGhlbXNlbHZlcy4gV2Uga25vdyB3aGF0IHRoZXkgYXJlIG9y
-IHdoYXQgdGhleQo+ID4gcmVwcmVzZW50IHNpbmNlIHRoZXkgYXJlIGFsbCBrZXJuZWwgc3ltYm9s
-cyBvciBtYWNyby4gT25seSB0aGlzIG1lX21hc2ssCj4gPiBpdCdzIGEgbG9jYWwgdmFyaWFibGUg
-YW5kIHN0b3JlIHRoZSB2YWx1ZSBvZiBzbWVfbWVfbWFzayBmb3Igbm93LCBtYXkKPiA+IHN0b3Jl
-IG1vcmUgaW5mbyBsYXRlciBsaWtlIFBldHIgbWVudGlvbmVkLCBhbmQgYWxzbyB3aWxsIHN0b3Jl
-IHRoZSBtZW1vcnkKPiA+IGVuY3J5cHRpb24gaW5mb3JtYXRpb24gb2YgVE1FICh3aGljaCBpcyBp
-bnRlbCdzIHRyYW5zcGFyZW50IG1lbW9yeSBlbmNyeXB0aW9uKS4KPiA+IFdlIGNhbiBhZGQgY29k
-ZSBjb21tZW50IGFyb3VuZCB0byB0ZWxsIHRoZXNlLgo+ID4gCj4gVGhhbmsgeW91LCBldmVyeW9u
-ZS4KPiAKPiBJIHBlcnNvbmFsbHkgYWdyZWUgd2l0aCBCYW9xdWFuJ3Mgb3Bpbmlvbi4gV2hhdCBk
-byB5b3UgdGhpbmsgYWJvdXQ/IEJvcmlzIGFuZCBvdGhlciByZXZpZXdlcj8KPiAKPiBJZiB0aGUg
-dm1jb3JlaW5mbyBkb2N1bWVudCBpcyBuZWNlc3NhcnksIHdvdWxkIHlvdSBsaWtlIHRvIGhlbHAg
-bWUgdG8gcHJvdmlkZSBhbiBvdXRsaW5lPwo+IEkgY2FuIHRyeSBteSBiZXN0IHRvIHdyaXRlIHRo
-ZSBkb2N1bWVudC4KCkl0IGlzIHRydWUgbGlrZSB3aGF0IEJhb3F1YW4gc2FpZCwgdGhlc2UgaW5m
-b3JtYXRpb24gYXJlIG1haW5seSB1c2VkIGJ5Cm1ha2VkdW1wZmlsZSB0b29sIGZvciBjcmVhdGlu
-ZyBhIGZpbHRlcmVkIHZtY29yZS4gIEJ1dCB0aGVzZSB2bWNvcmVpbmZvCmhpZGUgaW4gYSBsb3Qg
-b2YgZGlmZmVyZW50IGNvZGUgcGF0aHM6Cmtlcm5lbC9jcmFzaF9jb3JlLmMsICBwcmludGsgY29k
-ZSwgYXJjaCBjb2RlIGV0Yy4gCgpJdCBpcyBhIG1pc3Qgb25seSBhIGZldyBrZHVtcCBwZW9wbGUg
-a25vdyB0aGVtLCBkb2N1bWVudGluZyB0aGVtIHdpbGwgaGVscApwZW9wbGUgdG8gdW5kZXJzdGFu
-ZCBhbmQgcmV2aWV3LiBJdCB3aWxsIGFsc28gYmUgY2xlYXJlciBpbnN0ZWFkIG9mCmRpZ2dpbmcg
-aW50byBjb2RlPwoKVGhlIGRvY3VtZW50IGNhbiBicmllZmx5IGV4cGxhaW4gd2hhdCBpcyB2bWNv
-cmVpbmZvLCB3aHkgd2UgbmVlZCBpdCwgYW5kCnNvbWUgYmFja2dyb3VuZCBpbmZvLiAgVGhlbiBs
-aXN0IHRoZSBleHBvcnRlZCB2YWx1ZXMgd2l0aCBzb21lCmNsYXNzaWZ5aW5nIGJ5IGNvcmUga2Vy
-bmVsLCBhcmNoIHJlbGF0ZWQsICBzdHJpbmcgb3IgbnVtYmVyIGV0Yy4gIEZvcgptb3N0IG9mIHRo
-ZW0gbGlrZSBCYW9xdWFuIHNhaWQgbm8gbmVlZCBtb3JlIGV4cGxhbmF0aW9uLCBidXQgYWRkCmV4
-cGxhbmF0aW9ucyBmb3Igc29tZXRoaW5nIGlmIG5lZWRlZCBsaWtlIHRoaXMgc21lIG1hc2suCgpC
-dXQgSSB0aGluayB0aGlzIGNhbiBiZSBkb25lIHNlcGFyYXRlbHkgaW5zdGVhZCBvZiBibG9ja2lu
-ZyB0aGlzIHBhdGNoLgpNYXliZSBLYXp1IGtub3dzIG1vcmUgYWJvdXQgaXQsIHNvIEkgd291bGQg
-bGlrZSB0byBhc2sgS2F6dSBhYm91dCBoaXMgb3BpbmlvbgphbmQgaWYgaGUgd2FudCB0byBkbyBp
-dC4KCj4gCj4gQW55d2F5LCB3ZSBzaG91bGQgbWFrZSBhIGNob2ljZS4KPiAKPiBSZWdhcmRzLAo+
-IExpYW5ibwo+IAo+ID4gUGVyc29uYWwgb3Bpbmlvbi4KPiA+IAo+ID4gVGhhbmtzCj4gPiBCYW9x
-dWFuCj4gPiAKClRoYW5rcwpEYXZlCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hi, I encounter a case where crashkernel=384M, and kaslr is enabled.
+During the test, sometimes, the system may fail to reserve region for
+crash kernel, although there is much free space above 896MB. It is
+caused by the truncation of the candidate region by kaslr kernel. It
+raises confusion to the end user that sometimes crashkernel=X works
+while sometimes fails.
+So can we have this patch to fix the issue?
+
+Thanks,
+Pingfan
+On Mon, May 7, 2018 at 10:49 AM Dave Young <dyoung@redhat.com> wrote:
+>
+> On 04/27/18 at 05:14pm, Dave Young wrote:
+> > Hi,
+> >
+> > This is a resend of below patches:
+> > http://lists.infradead.org/pipermail/kexec/2017-October/019569.html
+> >
+> > I dropped the original patch 1 since Baoquan is not happy with it.
+> > For patch 2 (the 1st patch in this series), there is some improvement
+> > comment from Baoquan to create some generic memblock iteration function.
+> > But nobody has time to work on it for the time being.  According to
+> > offline discussion with him.  That can be done in the future if someone
+> > is interested.  We can go with the current kdump only fixes.
+> >
+> > Other than above,  the patches are just same.
+>
+> Hi Andrew, do you have concerns about the patches?  It has been used for
+> long time in Red Hat kernel, since people do not object them, could you
+> pick them if no other concerns?
+>
+> Thanks
+> Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
