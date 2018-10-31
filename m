@@ -1,21 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-f193.google.com ([209.85.208.193])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gHWz9-00051y-01
- for kexec@lists.infradead.org; Tue, 30 Oct 2018 16:35:22 +0000
-Received: by mail-lj1-f193.google.com with SMTP id s15-v6so12024270lji.3
- for <kexec@lists.infradead.org>; Tue, 30 Oct 2018 09:35:08 -0700 (PDT)
+ id 1gHgDY-0008TU-85
+ for kexec@lists.infradead.org; Wed, 31 Oct 2018 02:26:49 +0000
+Subject: Re: [PATCH] kdump, vmcoreinfo: Export sme_me_mask value to vmcoreinfo
+References: <20181029083118.GC1884@MiWiFi-R3L-srv>
+ <d6f93848-c750-f29c-4ca7-9661596cad62@redhat.com>
+ <20181029095738.GB20101@zn.tnic>
+ <15897206-c1a6-ced6-3a1b-f71da8fc9c83@redhat.com>
+ <20181029114414.GA11408@MiWiFi-R3L-srv>
+ <90385882-7fd1-a674-ec5a-19bd42471a5e@redhat.com>
+ <20181029134918.GB32150@zn.tnic>
+ <699ab34e-1373-582d-4e58-e76bd57ec34f@redhat.com>
+ <20181030050900.GA25987@dhcp-128-65.nay.redhat.com>
+ <20181030091542.GD32102@zn.tnic> <20181030092314.GC14493@MiWiFi-R3L-srv>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <dcbc925f-6935-6a34-fde1-7aa1ea378891@redhat.com>
+Date: Wed, 31 Oct 2018 10:26:23 +0800
 MIME-Version: 1.0
-References: <1540593788-28181-1-git-send-email-bhsharma@redhat.com>
- <20181027100241.GB1884@MiWiFi-R3L-srv>
- <CACi5LpPf9Zr1beowRNGmLZY7DtS3JDt8D=FONjqas9yo7TyCjg@mail.gmail.com>
- <20181030020752.GB11408@MiWiFi-R3L-srv>
-In-Reply-To: <20181030020752.GB11408@MiWiFi-R3L-srv>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 30 Oct 2018 12:33:39 +0530
-Message-ID: <CACi5LpP0_s9zAF+QfKpU+kG6BKqqkiwQhcW-WFZ0=SnBeX7ZXA@mail.gmail.com>
-Subject: Re: [PATCH] x86_64,
- vmcoreinfo: Append 'page_offset_base' to vmcoreinfo
+In-Reply-To: <20181030092314.GC14493@MiWiFi-R3L-srv>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,308 +28,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, James Morse <james.morse@arm.com>, x86@kernel.org, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Omar Sandoval <osandov@fb.com>, Borislav Petkov <bp@alien8.de>, Dave Anderson <anderson@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
+Cc: Petr Tesarik <ptesarik@suse.cz>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de
 
-Hi Baoquan,
-
-On Tue, Oct 30, 2018 at 7:37 AM Baoquan He <bhe@redhat.com> wrote:
->
-> On 10/29/18 at 04:07pm, Bhupesh Sharma wrote:
-> > I am sorry, I understand that the commit log is a bit long and
->
-> Yes, it's too long. Please summarize well so that it can save reviewers'
-> time.
-
-I have tried to include all the points in the log which might be
-relevant to folks (there
-are user-space utility maintainers in Cc as well) who might not be
-aware of complete
-background on this (especially the kernel side of the things), while I
-am discussing the
-user-space changes with them :)
-
-> > probably this part
-> > is not easy to infer. Currently, I see that the 'makedumpfile' utility
-> > is broken with newer kernels
-> > (I tested on 4.19-rc8+) as we KCORE_REMAP  was added to recent kernels
-> > thus leading to an additional section in kcore.
-> > [see <http://lists.infradead.org/pipermail/kexec/2018-October/021769.html>
-> > for details].
->
-> Why it's broken? Have you investigated and figured out why it's broken?
-> If fix, what patch will it look like? Does the patch prove it's not
-> worth using the current way?
->
-> Have you thought about this in advance? Or still like before, you said
-> on arm64 you found different boards have different behaviour, then
-> makedumpfile maintainer Kazu said he investigated and found it may be
-> caused by KALSR. This time, for this KCORE_REMAP adding, can you help to
-> investigate further and give an answer to the issue you found and
-> raised?
-
-Ofcourse, the patchset which added vmcoreinfo into kcore was discussed
-and it was agreed that this was a better approach to move forward and hence
-accepted in mainline.
-
-Regarding the makedumpfile issue, I have already provided a detailed
-reply to Kazu (you are Cc'ed on the thread) and also proposed a
-makedumpfile approach which
-reads the 'page_offset_base' value from kcore (using the kernel
-interface provided by this patch),
-[on which you are Cc'ed as well]:
-
-[1]. https://www.spinics.net/lists/kexec/msg21717.html
-[2]. https://www.spinics.net/lists/kexec/msg21722.html
-
-Again I think we are discussing on a wrong tangent here. The idea is
-not limited to only makedumpfile - it
-affects other user-space utilities (like crash) which are used for
-live debugging a running kernel.
-
-> > The details of the makedumpfile utility can be seen via the man page
-> > [MAKEDUMPFILE(8)],
-> > but in short it tries to make a small DUMPFILE by compressing dump
-> > data or by excluding
-> > unnecessary pages for analysis, or both.
-> >
-> > However the bigger problem is how we export machine specific details
-> > from kernel-space
-> > to user-land in a standardized way. As I mentioned in brief in the git
-> > log, I was seeing
-> > issues when I upgrade kernels or try to bring up user-space utilities
-> > on newer hardware,
-> > as currently we use different (and often flaky approaches) to
-> > calculate machine specific details in
-> > user-space code as there used to be lack of a clear ABI between the
-> > kernel and user-space on how
-> > machine specific details would be shared.
-> >
-> > Later on, kernel commit 23c85094fe1895caefdd came, which adds
-> > vmcoreinfo to 'kcore',
-> > as an arch agnostic approach to unify the differences existing in
-> > exporting kernel space information
-> > to the user-space code and James suggested that I use the same for
-> > user-space purposes to fix
-> > the issues I was observing.
-> >
-> > > Sorry I didn't get what problem this patch is trying to fix from the
-> > > patch log.
-> >
-> > So, here since the 'page_offset_base' variable (which holds the start
-> > of direct mapping of all physical
-> > memory) is not exported by the x86_64 kernel to the user-space via a
-> > standard interface, we resort
-> > to calculating the same via reading PT_LOADs in user-space (as an
-> > example from the makedumpfile
-> > implementation ). Now this implementation is usually different across
-> > user-space utilities.
-> >
-> > Also, if the PT_LOAD ordering changes (as we saw with the newer
-> > kernels), this approach will need
-> > fixing to calculate the addresses. In addition, we normally need
-> > 'page_offset_base' value in user-space (and retrieve it via
-> > vmlinux file in another user case from the same makedumpfile code) for
-> > calculating the start of direct mapping of all physical
-> > memory specifically for KASLR boot cases.
-> >
-> > Instead, if we can export 'page_offset_base' via vmcoreinfo, we can
-> > easily use the same
-> > for live-debugging a running kernel via user-space utilities, which
-> > can benefit by reading this value
-> > from the vmcoreinfo note inside kcore directly without relying on other methods.
->
-> We have got a method, what's wrong with that? Only KCORE_REMAP adding,
-> again? if fix, what is the defect? Where's patch, analysis, only one
-> sentence to say KCORE_REMAP caused that?
-
-Please see above, this is not limited to one use-case of makedumpfile
-tool. Also, it extends
-to other user-space utilities (like crash) as well.
-
-See, why would we want to have every user-space utility implement a
-different mechanism for solving the same problem, right? If a standard interface
-is available from the kernel side we better use the same across all user-land.
-
-Plus, if this interface (vmcoreinfo in kcore) is available from the
-kernel side for all archs (like it is currently), it solves
-another set of problem in the user-space tools, i.e. we don't need to
-keep different arch specific
-implementations across different user-space tool (see [1] above for
-e.g., both x86_64 and arm64 makedumpfile code
-bases use an almost similar approach now). I understand that such
-changes are always
-obstructive, but hopefully it saves us the effort to manage
-differences across user-land in the longer run.
-
-So, via this patch I propose that the kernel export 'page_offset_base'
-variable via vmcoreinfo
-and user-space uses its uniformly to determine the start of direct
-mapping of all physical
-memory.
-
-Hope this clarifies the background.
-
-Regads,
-Bhupesh
-
-
-> >
-> > The x86_64 kernel code ('arch/x86/kernel/head64.c'), already sets the same as:
-> > unsigned long page_offset_base __ro_after_init = __PAGE_OFFSET_BASE_L4;
-> >
-> > and also uses the same to indicate the base of KASLR regions on x86_64:
-> > static __initdata struct kaslr_memory_region {
-> >     unsigned long *base;
-> >     unsigned long size_tb;
-> > } kaslr_regions[] = {
-> >     { &page_offset_base, 0 },
-> >
-> > so it can be used for both the above purposes across user-space utilities.
-> >
-> > Hope this explains the intention behind this patch.
-> >
-> > Thanks,
-> > Bhupesh
-> >
-> > > About this, I have replied to you in
-> > > lkml.kernel.org/r/20181025063446.GD2120@MiWiFi-R3L-srv
-> > > You might miss it.
-> > >
-> > > About this exporting, I ever posted patch to upstream and we have had
-> > > discussion, please check
-> > > https://lore.kernel.org/patchwork/patch/723472/
-> > >
-> > > In makedumpfile and crash, we have had a clear method to analyze and
-> > > deduce it from kcore or vmcore.
-> > >
-> > > Thanks
-> > > Baoquan
-> > >
-> > > On 10/27/18 at 04:13am, Bhupesh Sharma wrote:
-> > > > Since commit 23c85094fe1895caefdd
-> > > > ["proc/kcore: add vmcoreinfo note to /proc/kcore"]), '/proc/kcore'
-> > > > contains a new PT_NOTE which carries the VMCOREINFO information.
-> > > >
-> > > > If the same is available, one can use it in user-land to
-> > > > retrieve machine specific symbols or strings being appended to the
-> > > > vmcoreinfo even for live-debugging of the primary kernel as a
-> > > > standard interface exposed by kernel for sharing machine specific
-> > > > details with the user-land.
-> > > >
-> > > > In the past I had a discussion with James, where he suggested this
-> > > > approach (please see [0]) and I really liked the idea. Since then I
-> > > > have been working on unifying the implementations of
-> > > > (atleast) the commonly used user-space utilities that provide
-> > > > live-debugging capabilities (tools like 'makedumpfile' and
-> > > > 'crash-utility', see [1] for details of these tools).
-> > > >
-> > > > For the same, when live debugging on x86_64 machines, user-space
-> > > > tools currently rely on different mechanisms to determine
-> > > > the 'page_offset_base' value (i.e. start of direct mapping of all
-> > > > physical memory). One of the approach used by 'makedumpfile'
-> > > > user-space tool for e.g. is to calculate the same from the last
-> > > > PT_LOAD available in '/proc/kcore', which can be flaky as and when
-> > > > new sections (for e.g. KCORE_REMAP which was added
-> > > > to recent kernels) are added to kcore.
-> > > >
-> > > > For other architectures like arm64, I have already proposed using
-> > > > the vmcoreinfo note (in '/proc/kcore') in the user-space utilities to
-> > > > determine machine specific details like VA_BITS, PAGE_OFFSET,
-> > > > kasrl_offset() (see [2] for details), for which different user-space
-> > > > tools earlier used different (and at times flaky) approaches like:
-> > > >
-> > > > - Reading kernel CONFIGs from user-space and determining CONFIG values
-> > > >    like VA_BITS from there.
-> > > >  - Reading symbols from '/proc/kallsyms' and determining their values
-> > > >    via '/dev/mem' interface.
-> > > >  - Reading symbols from 'vmlinux' and determing their values from
-> > > >    reading memory.
-> > > >
-> > > > This patch allows appending 'page_offset_base' for x86_64 platforms
-> > > > to vmcoreinfo, so that user-space tools can use the same as a standard
-> > > > interface to determine the start of direct mapping of all physical
-> > > > memory.
-> > > >
-> > > > Testing:
-> > > > -------
-> > > >  - I tested this patch (rebased on 'linux-next') on a x86_64 machine
-> > > >    using the modified 'makedumpfile' user-space code (see [3] for my
-> > > >    github tree which contains the same) for determining how many pages
-> > > >    are dumpable when different dump_level is specified (which is
-> > > >    one use-case of live-debugging via 'makedumpfile').
-> > > >  - I tested both the KASLR and non-KASLR boot cases with this patch.
-> > > >  - Here is one sample log (for KASLR boot case) on my x86_64 machine:
-> > > >
-> > > >    < snip..>
-> > > >    The kernel doesn't support mmap(),read() will be used instead.
-> > > >
-> > > >    TYPE               PAGES                   EXCLUDABLE      DESCRIPTION
-> > > >    ----------------------------------------------------------------------
-> > > >    ZERO               21299                   yes             Pages filled
-> > > >    with zero
-> > > >    NON_PRI_CACHE      91785                   yes             Cache
-> > > >    pages without private flag
-> > > >    PRI_CACHE  1                       yes             Cache pages with
-> > > >    private flag
-> > > >    USER               14057                   yes             User process
-> > > >    pages
-> > > >    FREE               740346                  yes             Free pages
-> > > >    KERN_DATA  58152                   no              Dumpable kernel
-> > > >    data
-> > > >
-> > > >    page size:         4096
-> > > >    Total pages on system:     925640
-> > > >    Total size on system:      3791421440       Byte
-> > > >
-> > > > I understand that there might be some reservations about exporting
-> > > > such machine-specific details in the vmcoreinfo, but to unify
-> > > > the implementations across user-land and archs, perhaps this would be
-> > > > good starting point to start a discussion.
-> > > >
-> > > > [0]. https://www.mail-archive.com/kexec@lists.infradead.org/msg20300.html
-> > > > [1]. MAN pages -> MAKEDUMPFILE(8) and CRASH(8)
-> > > > [2]. https://www.spinics.net/lists/kexec/msg21608.html
-> > > >      http://lists.infradead.org/pipermail/kexec/2018-October/021725.html
-> > > > [3]. https://github.com/bhupesh-sharma/makedumpfile/tree/add-page-offset-base-to-vmcore-v1
-> > > >
-> > > > Cc: Boris Petkov <bp@alien8.de>
-> > > > Cc: Baoquan He <bhe@redhat.com>
-> > > > Cc: Ingo Molnar <mingo@kernel.org>
-> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > > Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> > > > Cc: Dave Anderson <anderson@redhat.com>
-> > > > Cc: James Morse <james.morse@arm.com>
-> > > > Cc: Omar Sandoval <osandov@fb.com>
-> > > > Cc: x86@kernel.org
-> > > > Cc: kexec@lists.infradead.org
-> > > > Cc: linux-arm-kernel@lists.infradead.org
-> > > > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> > > > ---
-> > > >  arch/x86/kernel/machine_kexec_64.c | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> > > > index 4c8acdfdc5a7..834ccefef867 100644
-> > > > --- a/arch/x86/kernel/machine_kexec_64.c
-> > > > +++ b/arch/x86/kernel/machine_kexec_64.c
-> > > > @@ -356,6 +356,7 @@ void arch_crash_save_vmcoreinfo(void)
-> > > >       VMCOREINFO_SYMBOL(init_top_pgt);
-> > > >       vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
-> > > >                       pgtable_l5_enabled());
-> > > > +     VMCOREINFO_NUMBER(page_offset_base);
-> > > >
-> > > >  #ifdef CONFIG_NUMA
-> > > >       VMCOREINFO_SYMBOL(node_data);
-> > > > --
-> > > > 2.7.4
-> > > >
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMOaciDMw5pelIDE3OjIzLCBCYW9xdWFuIEhlIOWGmemBkzoKPiAKPiBIaSBC
+b3JpcywgRGF2ZVkgYW5kIExpYW5ibywKPiAKPiBPbiAxMC8zMC8xOCBhdCAxMDoxNWFtLCBCb3Jp
+c2xhdiBQZXRrb3Ygd3JvdGU6Cj4+IE9uIFR1ZSwgT2N0IDMwLCAyMDE4IGF0IDAxOjA5OjAwUE0g
+KzA4MDAsIERhdmUgWW91bmcgd3JvdGU6Cj4+PiBJdCBpcyBub3QgdGhlIGNvbnRlbnQsIEkgdGhp
+bmsgaXQgaXMgYSBnb29kIGNhdGNoIGZyb20gQm9yaXMsIGl0IHdvdWxkCj4+PiBiZSBnb29kIHRv
+IGRvY3VtZW50IHRoZSBleHBvcnRlZCB0aGluZ3MgaW4gc29tZXdoZXJlIGVnLgo+Pj4gRG9jdW1l
+bnRhdGlvbi9rZHVtcC92bWNvcmVpbmZvLnR4dAo+IAo+IEZvciB0aGUgdm1jb3JlaW5mbyB2YXJp
+YWJsZXMgZG9jdW1lbnQsIEkgcGVyc29uYWxseSB0aGluayBpdCBtaWdodCBiZQo+IG5vdCBuZWNl
+c3NhcnkuIFRoZSByZWFzb24gaXMgdGhhdCBhbGwgdGhlIG9sZCB2YXJpYWxibGVzIGFyZSBleHBv
+cnRlZAo+IHdpdGggdGhlIG5hbWUgb2YgdGhlbXNlbHZlcy4gV2Uga25vdyB3aGF0IHRoZXkgYXJl
+IG9yIHdoYXQgdGhleQo+IHJlcHJlc2VudCBzaW5jZSB0aGV5IGFyZSBhbGwga2VybmVsIHN5bWJv
+bHMgb3IgbWFjcm8uIE9ubHkgdGhpcyBtZV9tYXNrLAo+IGl0J3MgYSBsb2NhbCB2YXJpYWJsZSBh
+bmQgc3RvcmUgdGhlIHZhbHVlIG9mIHNtZV9tZV9tYXNrIGZvciBub3csIG1heQo+IHN0b3JlIG1v
+cmUgaW5mbyBsYXRlciBsaWtlIFBldHIgbWVudGlvbmVkLCBhbmQgYWxzbyB3aWxsIHN0b3JlIHRo
+ZSBtZW1vcnkKPiBlbmNyeXB0aW9uIGluZm9ybWF0aW9uIG9mIFRNRSAod2hpY2ggaXMgaW50ZWwn
+cyB0cmFuc3BhcmVudCBtZW1vcnkgZW5jcnlwdGlvbikuCj4gV2UgY2FuIGFkZCBjb2RlIGNvbW1l
+bnQgYXJvdW5kIHRvIHRlbGwgdGhlc2UuCj4gClRoYW5rIHlvdSwgZXZlcnlvbmUuCgpJIHBlcnNv
+bmFsbHkgYWdyZWUgd2l0aCBCYW9xdWFuJ3Mgb3Bpbmlvbi4gV2hhdCBkbyB5b3UgdGhpbmsgYWJv
+dXQ/IEJvcmlzIGFuZCBvdGhlciByZXZpZXdlcj8KCklmIHRoZSB2bWNvcmVpbmZvIGRvY3VtZW50
+IGlzIG5lY2Vzc2FyeSwgd291bGQgeW91IGxpa2UgdG8gaGVscCBtZSB0byBwcm92aWRlIGFuIG91
+dGxpbmU/CkkgY2FuIHRyeSBteSBiZXN0IHRvIHdyaXRlIHRoZSBkb2N1bWVudC4KCkFueXdheSwg
+d2Ugc2hvdWxkIG1ha2UgYSBjaG9pY2UuCgpSZWdhcmRzLApMaWFuYm8KCj4gUGVyc29uYWwgb3Bp
+bmlvbi4KPiAKPiBUaGFua3MKPiBCYW9xdWFuCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
+eGVjCg==
