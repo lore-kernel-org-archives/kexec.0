@@ -1,25 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from mail-lj1-f194.google.com ([209.85.208.194])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gIEWM-0003Tx-CX
- for kexec@lists.infradead.org; Thu, 01 Nov 2018 15:04:32 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH] kdump, vmcoreinfo: Export sme_me_mask value to vmcoreinfo
-Date: Thu, 1 Nov 2018 15:01:02 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC0355EDE8@BPXM09GP.gisp.nec.co.jp>
-References: <15897206-c1a6-ced6-3a1b-f71da8fc9c83@redhat.com>
- <20181029114414.GA11408@MiWiFi-R3L-srv>
- <90385882-7fd1-a674-ec5a-19bd42471a5e@redhat.com>
- <20181029134918.GB32150@zn.tnic>
- <699ab34e-1373-582d-4e58-e76bd57ec34f@redhat.com>
- <20181030050900.GA25987@dhcp-128-65.nay.redhat.com>
- <20181030091542.GD32102@zn.tnic> <20181030092314.GC14493@MiWiFi-R3L-srv>
- <dcbc925f-6935-6a34-fde1-7aa1ea378891@redhat.com>
- <20181031024748.GA2058@dhcp-128-65.nay.redhat.com>
- <20181031101054.GB15955@zn.tnic>
-In-Reply-To: <20181031101054.GB15955@zn.tnic>
-Content-Language: en-US
+ id 1gIFEZ-0007cc-Ic
+ for kexec@lists.infradead.org; Thu, 01 Nov 2018 15:50:17 +0000
+Received: by mail-lj1-f194.google.com with SMTP id z80-v6so12421748ljb.8
+ for <kexec@lists.infradead.org>; Thu, 01 Nov 2018 08:50:00 -0700 (PDT)
 MIME-Version: 1.0
+References: <1540593788-28181-1-git-send-email-bhsharma@redhat.com>
+ <201810301913.XPGMpz0a%fengguang.wu@intel.com>
+In-Reply-To: <201810301913.XPGMpz0a%fengguang.wu@intel.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Thu, 1 Nov 2018 21:19:46 +0530
+Message-ID: <CACi5LpP4+H-9X3AuAt3j=SA5Y4Qk6nA-7D4HdcRF8JGaqKx_fg@mail.gmail.com>
+Subject: Re: [PATCH] x86_64,
+ vmcoreinfo: Append 'page_offset_base' to vmcoreinfo
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,33 +26,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, lijiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kazuhito Hagio <khagio@redhat.com>, "mingo@redhat.com" <mingo@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>
+To: lkp@intel.com
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, James Morse <james.morse@arm.com>, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Omar Sandoval <osandov@fb.com>, Borislav Petkov <bp@alien8.de>, kbuild-all@01.org, Dave Anderson <anderson@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-On 10/31/2018 6:10 AM, Borislav Petkov wrote:
-> On Wed, Oct 31, 2018 at 10:47:48AM +0800, Dave Young wrote:
-> > It is a mist only a few kdump people know them, documenting them will help
-> > people to understand and review. It will also be clearer instead of
-> > digging into code?
-> 
-> Wholeheartedly agreed. Especially if people start using vmcoreinfo for
-> other stuff, like live debugging:
-> 
-> https://lkml.kernel.org/r/1540593788-28181-1-git-send-email-bhsharma@redhat.com
+Hi,
 
-I also agree. If it can help reviewers and other users to understand
-vmcoreinfo and can help itself to become more standard, it would be
-better to write it.
+On Tue, Oct 30, 2018 at 5:02 PM kbuild test robot <lkp@intel.com> wrote:
+>
+> Hi Bhupesh,
+>
+> Thank you for the patch! Yet something to improve:
+>
+> [auto build test ERROR on tip/x86/core]
+> [also build test ERROR on v4.19 next-20181030]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>
+> url:    https://github.com/0day-ci/linux/commits/Bhupesh-Sharma/x86_64-vmcoreinfo-Append-page_offset_base-to-vmcoreinfo/20181027-075816
+> config: x86_64-randconfig-s4-10301649 (attached as .config)
+> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64
+>
+> All errors (new ones prefixed by >>):
+>
+>    arch/x86/kernel/machine_kexec_64.o: In function `arch_crash_save_vmcoreinfo':
+> >> arch/x86/kernel/machine_kexec_64.c:359: undefined reference to `page_offset_base'
+> >> arch/x86/kernel/machine_kexec_64.c:359: undefined reference to `page_offset_base'
+>
+> vim +359 arch/x86/kernel/machine_kexec_64.c
+>
+>    352
+>    353  void arch_crash_save_vmcoreinfo(void)
+>    354  {
+>    355          VMCOREINFO_NUMBER(phys_base);
+>    356          VMCOREINFO_SYMBOL(init_top_pgt);
+>    357          vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
+>    358                          pgtable_l5_enabled());
+>  > 359          VMCOREINFO_NUMBER(page_offset_base);
+>    360
+>
 
-One small thing as a vmcoreinfo user (not about the documentation),
-I think it might be better to export each information to each variable
-separately, not OR-ing them into a variable, because of code simpleness
-of both kernel and tools, if there is no limitation in kernel.
+Thanks I can reproduce the issue, I will send a v2 shortly to fix the
+build issue.
 
-Thanks,
-Kazu
-
-
+Regards,
+Bhupesh
 
 _______________________________________________
 kexec mailing list
