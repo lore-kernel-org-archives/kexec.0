@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [Bug Report] kdump crashes after latest EFI memblock changes on
- arm64 machines with large number of CPUs
-References: <CACi5LpOyy0YkhEzWWqt8hAQfKku2Vzp5+da_dGS23JMyHReNew@mail.gmail.com>
- <CAKv+Gu_1PNiGbgRqd3_0k6CGzh-2P+iAmqk=oSSek69kBCnb8Q@mail.gmail.com>
-From: Marc Zyngier <marc.zyngier@arm.com>
-Message-ID: <f5c4c03a-e88f-ea42-b791-e50808e8247b@arm.com>
-Date: Mon, 5 Nov 2018 11:31:37 +0000
+Received: from youngberry.canonical.com ([91.189.89.112])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gJj6k-0000wY-FU
+ for kexec@lists.infradead.org; Mon, 05 Nov 2018 17:56:16 +0000
+From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Subject: [PATCH v2] lockdown: allow kexec_file of unsigned images when not
+ under lockdown
+Date: Mon,  5 Nov 2018 15:55:49 -0200
+Message-Id: <20181105175549.10506-1-cascardo@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKv+Gu_1PNiGbgRqd3_0k6CGzh-2P+iAmqk=oSSek69kBCnb8Q@mail.gmail.com>
-Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,33 +21,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-efi <linux-efi@vger.kernel.org>, kexec mailing list <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On 05/11/18 11:11, Ard Biesheuvel wrote:
-> (+ Marc)
-> 
-> On 1 November 2018 at 22:14, Bhupesh Sharma <bhsharma@redhat.com> wrote:
->> Hi,
->>
->> With the latest EFI changes for memblock reservation across kdump
->> kernel from Ard (Commit 71e0940d52e107748b270213a01d3b1546657d74
->> ["efi: honour memory reservations passed via a linux specific config
->> table"]), we hit a panic while trying to boot the kdump kernel on
->> machines which have large number of CPUs.
->>
-> 
-> Just for my understanding: why do you boot all 224 CPus when running
-> the crash kernel?
+If CONFIG_KEXEC_VERIFY_SIG is enabled, kexec -s with an unsigned image will
+fail requiring an image signed with a trusted key. However, that same
+kernel will allow kexec to load and boot a kernel, if kexec_file_load is
+not used.
 
-FWIW, I've used these patches to kexec a kernel on a 256 CPUs system,
-without any issue. Why am I not seeing this problem?
+Now, lockdown brings a solution to this inconsistency. However, as it is,
+it will still prevent an unsigned image to be loaded with kexec -s when the
+system is not under lockdown, while still allowing kexec to work.
 
-Thanks,
+At the same time, with lockdown, kexec_file_load would still work when
+CONFIG_KEXEC_VERIFY_SIG is disabled.
 
-	M.
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+---
+
+v2:
+fixed build failure, s/#elif/#else/
+
+---
+ kernel/kexec_file.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index e5bcd94c1efb..b1f0373014c1 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -140,10 +140,17 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 					   image->kernel_buf_len);
+ 	if (ret) {
+ 		pr_debug("kernel signature verification failed.\n");
+-		goto out;
++	} else {
++		pr_debug("kernel signature verification successful.\n");
+ 	}
+-	pr_debug("kernel signature verification successful.\n");
++#else
++	ret = -EPERM;
+ #endif
++	if (ret && kernel_is_locked_down("kexec of unsigned images"))
++		goto out;
++	else
++		ret = 0;
++
+ 	/* It is possible that there no initramfs is being loaded */
+ 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+ 		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
 -- 
-Jazz is not dead. It just smells funny...
+2.19.1
+
 
 _______________________________________________
 kexec mailing list
