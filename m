@@ -1,19 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it1-x141.google.com ([2607:f8b0:4864:20::141])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gJwyD-0002gP-VB
- for kexec@lists.infradead.org; Tue, 06 Nov 2018 08:44:35 +0000
-Received: by mail-it1-x141.google.com with SMTP id t190-v6so11027233itb.2
- for <kexec@lists.infradead.org>; Tue, 06 Nov 2018 00:44:11 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <20181106013022.GA27793@brain-police>
-References: <CACi5LpOyy0YkhEzWWqt8hAQfKku2Vzp5+da_dGS23JMyHReNew@mail.gmail.com>
- <20181106013022.GA27793@brain-police>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Tue, 6 Nov 2018 09:44:09 +0100
-Message-ID: <CAKv+Gu-4f0uYrrc-eSd1YjJygGHVpB7maJ_3xpuY4vP-LfT0-w@mail.gmail.com>
-Subject: Re: [Bug Report] kdump crashes after latest EFI memblock changes on
- arm64 machines with large number of CPUs
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gK2y9-0007fj-MJ
+ for kexec@lists.infradead.org; Tue, 06 Nov 2018 15:08:42 +0000
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ wA6F581D030112
+ for <kexec@lists.infradead.org>; Tue, 6 Nov 2018 10:08:27 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2nkcg32tbb-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Tue, 06 Nov 2018 10:08:27 -0500
+Received: from localhost
+ by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Tue, 6 Nov 2018 15:08:25 -0000
+Subject: Re: [PATCH v2 2/3] keys: export find_keyring_by_name()
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Tue, 06 Nov 2018 10:08:05 -0500
+In-Reply-To: <20180309153803.25859-2-nayna@linux.vnet.ibm.com>
+References: <20180309153803.25859-1-nayna@linux.vnet.ibm.com>
+ <20180309153803.25859-2-nayna@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Message-Id: <1541516885.8568.29.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,82 +32,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-efi <linux-efi@vger.kernel.org>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Nayna Jain <nayna@linux.vnet.ibm.com>, dhowells@redhat.com
+Cc: pjones@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, linux-integrity@vger.kernel.org, dyoung@redhat.com, vgoyal@redhat.com
 
-On 6 November 2018 at 02:30, Will Deacon <will.deacon@arm.com> wrote:
-> On Fri, Nov 02, 2018 at 02:44:10AM +0530, Bhupesh Sharma wrote:
->> With the latest EFI changes for memblock reservation across kdump
->> kernel from Ard (Commit 71e0940d52e107748b270213a01d3b1546657d74
->> ["efi: honour memory reservations passed via a linux specific config
->> table"]), we hit a panic while trying to boot the kdump kernel on
->> machines which have large number of CPUs.
->>
->> I have a arm64 board which has 224 CPUS:
->> # lscpu
->> <..snip..>
->> CPU(s):              224
->> On-line CPU(s) list: 0-223
->> <..snip..>
->>
->> Here are the crash logs in the kdump kernel on this machine:
->>
->> [    0.000000] Unable to handle kernel paging request at virtual
->> address ffff80003ffe0000
->> val____)nt EL), IL ata abort info:
->> [    0.or: Oops: 960000inted 4.18.0+ #3
->> [    0.000000] pstate: 20400089 (nzCv daIf +PAN -UAO)
->> [    0.000000] pc : __memcpy+0x110/0x180
->> [    0.000000] lr : memblock_double_array+0x240/0x348
->> [    0.000000] sp : ffff0000092efc80 x28: 00000000bffe0000
->> [    0.000000] x27: 0000000000001800 x26: ffff000009d59000
->> [    0.000000] x25: ffff80003ffe0000 x24: 0000000000000000
->> [    0.000000] x23: 0000000000010000 x22: ffff000009d594e8
->> [    0.000000] x21: ffff000009d594f4 x20: ffff0000093c7268
->> [    0.000000] x19: 0000000000000c00 x18: 0000000000000010
->> [    0.000000] x17: 0000000000000000 x16: 0000000000000000
->> [    0.000000] x15: ffffffffffffffff3: 0000000fc18d0000 x12: 0000000800000000
->> [    0.000000] x11: 0000000000000018 x10: 00000000ddab9e18
->> [    0.000000] x9 : 0000000800000000 x8 : 00000000000002c1
->> [    0.000000] x7 : 0000000091b90000 x6 : ffff80003ffe0000
->> [    0.000000] x5 : 0000000000000001 x4 : 0000000000000000
->> [    0.000000] x3 : 0000000000000000 x2 : 0000000000000b80
->> [    0.000000] x1 : ffff000009d59540 x0 : ffff80003ffe0000
->> [    0.000000] Process swapper)
->> [    0.000000] Call trace:
->> [    0.000000]  __memcpy+0x110/0x180
->> [    0.000000]  memblock_add_range+0x134/0x2e8
->> [    0.000000]  memblock_reserve+0x70/0xb8
->> [    0.000000]  memblock_alloc_base_nid+0x6c/0x88
->> [    0.000000]  __memblock_alloc_base+0x3c/0x4c
->> [    0.000000]  memblock_alloc_base+0x28/0x4c
->> [    0.000000]  memblock_alloc+0x2c/0x38
->> [    0.000000]  early_pgtable_alloc+0x20/0xb0
->
-> Hmm, so this seems to be the crux of the issue: early_pgtable_alloc() relies
-> on memblock to allocate page-table memory, but this can be called before the
-> linear mapping is up and running (or even as part of creating the linear
-> mapping itself!) so the use of __va in memblock_double_array() actually
-> returns an unmapped address.
->
-
-OK, so this means we are calling memblock_allow_resize() too early in any case
-
-> So I guess we either need to implement early_pgtable_alloc() some other way
-> (how?) or get memblock_double_array() to use a fixmap if it's called too
-> early (yuck). Alternatively, would it be possible to postpone processing of
-> the EFI mem_reserve entries until after we've created the linear mapping?
->
-
-We could move this until after paging_init(), I suppose. I'll cook something up.
-
-Bhupesh: any comments?
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgTmF5bmEsCgpPbiBGcmksIDIwMTgtMDMtMDkgYXQgMjE6MDggKzA1MzAsIE5heW5hIEphaW4g
+d3JvdGU6Cj4gVGhpcyBwYXRjaCBleHBvcnRzIHRoZSBmdW5jdGlvbiBmaW5kX2tleXJpbmdfYnlf
+bmFtZSgpIHRvIGJlIHVzZWQgYnkKPiBvdGhlciBzdWJzeXN0ZW1zLgoKTG9va2luZyB0aGlzIHBh
+dGNoIG92ZXIgYWdhaW4sIEkgcmVhbGl6ZSB0aGF0IGV4cG9ydGVkIGZ1bmN0aW9ucyBtdXN0CmJl
+IHByZWZpeGVkIHdpdGggdGhlIHN1YnN5c3RlbSBuYW1lLiDCoEknbSBhbHNvIGEgYml0IGNvbmNl
+cm5lZCB3aXRoCmV4cG9ydGluZyBmaW5kX2tleXJpbmdfYnlfbmFtZSgpLiDCoERhdmlkLCBhbnkg
+Y29tbWVudHM/CgpQZXJoYXBzIGl0IHdvdWxkIGJlIGJldHRlciBpZiBJTUEgY3JlYXRlcyB0aGUg
+LnBsYXRmb3JtIGtleXJpbmcgc28KdGhhdCBpdCBoYXMgYWNjZXNzIHRvIHRoZSBrZXlyaW5nIGlk
+IGluc3RlYWQuCgpNaW1pCsKgwqAKPiAKPiBTaWduZWQtb2ZmLWJ5OiBOYXluYSBKYWluIDxuYXlu
+YUBsaW51eC52bmV0LmlibS5jb20+Cj4gLS0tCj4gQ2hhbmdlbG9nOgo+IAo+IHYyOgo+ICogRml4
+IHRoZSBwYXRjaCBkZXNjcmlwdGlvbiBwZXIgbGluZSBsZW5ndGggYXMgc3VnZ2VzdGVkIGJ5IE1p
+bWkKPiAKPiAgaW5jbHVkZS9saW51eC9rZXkuaCAgICAgIHwgMiArKwo+ICBzZWN1cml0eS9rZXlz
+L2ludGVybmFsLmggfCAyIC0tCj4gIHNlY3VyaXR5L2tleXMva2V5cmluZy5jICB8IDEgKwo+ICAz
+IGZpbGVzIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiAKPiBkaWZm
+IC0tZ2l0IGEvaW5jbHVkZS9saW51eC9rZXkuaCBiL2luY2x1ZGUvbGludXgva2V5LmgKPiBpbmRl
+eCBlNThlZTEwZjZlNTguLmM4ZDMzMmQ0MTAzYyAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL2xpbnV4
+L2tleS5oCj4gKysrIGIvaW5jbHVkZS9saW51eC9rZXkuaAo+IEBAIC0zNDYsNiArMzQ2LDggQEAg
+c3RhdGljIGlubGluZSBrZXlfc2VyaWFsX3Qga2V5X3NlcmlhbChjb25zdCBzdHJ1Y3Qga2V5ICpr
+ZXkpCj4gCj4gIGV4dGVybiB2b2lkIGtleV9zZXRfdGltZW91dChzdHJ1Y3Qga2V5ICosIHVuc2ln
+bmVkKTsKPiAKPiArZXh0ZXJuIHN0cnVjdCBrZXkgKmZpbmRfa2V5cmluZ19ieV9uYW1lKGNvbnN0
+IGNoYXIgKm5hbWUsIGJvb2wgdWlkX2tleXJpbmcpOwo+ICsKPiAgLyoKPiAgICogVGhlIHBlcm1p
+c3Npb25zIHJlcXVpcmVkIG9uIGEga2V5IHRoYXQgd2UncmUgbG9va2luZyB1cC4KPiAgICovCj4g
+ZGlmZiAtLWdpdCBhL3NlY3VyaXR5L2tleXMvaW50ZXJuYWwuaCBiL3NlY3VyaXR5L2tleXMvaW50
+ZXJuYWwuaAo+IGluZGV4IDlmODIwOGRjMGU1NS4uOGFhOGQzNDdhMWFiIDEwMDY0NAo+IC0tLSBh
+L3NlY3VyaXR5L2tleXMvaW50ZXJuYWwuaAo+ICsrKyBiL3NlY3VyaXR5L2tleXMvaW50ZXJuYWwu
+aAo+IEBAIC0xNDEsOCArMTQxLDYgQEAgZXh0ZXJuIGtleV9yZWZfdCBrZXlyaW5nX3NlYXJjaF9h
+dXgoa2V5X3JlZl90IGtleXJpbmdfcmVmLAo+ICBleHRlcm4ga2V5X3JlZl90IHNlYXJjaF9teV9w
+cm9jZXNzX2tleXJpbmdzKHN0cnVjdCBrZXlyaW5nX3NlYXJjaF9jb250ZXh0ICpjdHgpOwo+ICBl
+eHRlcm4ga2V5X3JlZl90IHNlYXJjaF9wcm9jZXNzX2tleXJpbmdzKHN0cnVjdCBrZXlyaW5nX3Nl
+YXJjaF9jb250ZXh0ICpjdHgpOwo+IAo+IC1leHRlcm4gc3RydWN0IGtleSAqZmluZF9rZXlyaW5n
+X2J5X25hbWUoY29uc3QgY2hhciAqbmFtZSwgYm9vbCB1aWRfa2V5cmluZyk7Cj4gLQo+ICBleHRl
+cm4gaW50IGluc3RhbGxfdXNlcl9rZXlyaW5ncyh2b2lkKTsKPiAgZXh0ZXJuIGludCBpbnN0YWxs
+X3RocmVhZF9rZXlyaW5nX3RvX2NyZWQoc3RydWN0IGNyZWQgKik7Cj4gIGV4dGVybiBpbnQgaW5z
+dGFsbF9wcm9jZXNzX2tleXJpbmdfdG9fY3JlZChzdHJ1Y3QgY3JlZCAqKTsKPiBkaWZmIC0tZ2l0
+IGEvc2VjdXJpdHkva2V5cy9rZXlyaW5nLmMgYi9zZWN1cml0eS9rZXlzL2tleXJpbmcuYwo+IGlu
+ZGV4IDQxYmNmNTdlOTZmMi4uNGI5YzNmMTE2NmQxIDEwMDY0NAo+IC0tLSBhL3NlY3VyaXR5L2tl
+eXMva2V5cmluZy5jCj4gKysrIGIvc2VjdXJpdHkva2V5cy9rZXlyaW5nLmMKPiBAQCAtMTE1Miw2
+ICsxMTUyLDcgQEAgc3RydWN0IGtleSAqZmluZF9rZXlyaW5nX2J5X25hbWUoY29uc3QgY2hhciAq
+bmFtZSwgYm9vbCB1aWRfa2V5cmluZykKPiAgCXJlYWRfdW5sb2NrKCZrZXlyaW5nX25hbWVfbG9j
+ayk7Cj4gIAlyZXR1cm4ga2V5cmluZzsKPiAgfQo+ICtFWFBPUlRfU1lNQk9MKGZpbmRfa2V5cmlu
+Z19ieV9uYW1lKTsKPiAKPiAgc3RhdGljIGludCBrZXlyaW5nX2RldGVjdF9jeWNsZV9pdGVyYXRv
+cihjb25zdCB2b2lkICpvYmplY3QsCj4gIAkJCQkJIHZvaWQgKml0ZXJhdG9yX2RhdGEpCgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
+ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
