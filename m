@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from youngberry.canonical.com ([91.189.89.112])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gJj6k-0000wY-FU
- for kexec@lists.infradead.org; Mon, 05 Nov 2018 17:56:16 +0000
-From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Subject: [PATCH v2] lockdown: allow kexec_file of unsigned images when not
- under lockdown
-Date: Mon,  5 Nov 2018 15:55:49 -0200
-Message-Id: <20181105175549.10506-1-cascardo@canonical.com>
+Date: Tue, 6 Nov 2018 01:30:23 +0000
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [Bug Report] kdump crashes after latest EFI memblock changes on
+ arm64 machines with large number of CPUs
+Message-ID: <20181106013022.GA27793@brain-police>
+References: <CACi5LpOyy0YkhEzWWqt8hAQfKku2Vzp5+da_dGS23JMyHReNew@mail.gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CACi5LpOyy0YkhEzWWqt8hAQfKku2Vzp5+da_dGS23JMyHReNew@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,58 +20,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Howells <dhowells@redhat.com>
-Cc: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-efi@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec mailing list <kexec@lists.infradead.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-If CONFIG_KEXEC_VERIFY_SIG is enabled, kexec -s with an unsigned image will
-fail requiring an image signed with a trusted key. However, that same
-kernel will allow kexec to load and boot a kernel, if kexec_file_load is
-not used.
+On Fri, Nov 02, 2018 at 02:44:10AM +0530, Bhupesh Sharma wrote:
+> With the latest EFI changes for memblock reservation across kdump
+> kernel from Ard (Commit 71e0940d52e107748b270213a01d3b1546657d74
+> ["efi: honour memory reservations passed via a linux specific config
+> table"]), we hit a panic while trying to boot the kdump kernel on
+> machines which have large number of CPUs.
+> 
+> I have a arm64 board which has 224 CPUS:
+> # lscpu
+> <..snip..>
+> CPU(s):              224
+> On-line CPU(s) list: 0-223
+> <..snip..>
+> 
+> Here are the crash logs in the kdump kernel on this machine:
+> 
+> [    0.000000] Unable to handle kernel paging request at virtual
+> address ffff80003ffe0000
+> val____)nt EL), IL ata abort info:
+> [    0.or: Oops: 960000inted 4.18.0+ #3
+> [    0.000000] pstate: 20400089 (nzCv daIf +PAN -UAO)
+> [    0.000000] pc : __memcpy+0x110/0x180
+> [    0.000000] lr : memblock_double_array+0x240/0x348
+> [    0.000000] sp : ffff0000092efc80 x28: 00000000bffe0000
+> [    0.000000] x27: 0000000000001800 x26: ffff000009d59000
+> [    0.000000] x25: ffff80003ffe0000 x24: 0000000000000000
+> [    0.000000] x23: 0000000000010000 x22: ffff000009d594e8
+> [    0.000000] x21: ffff000009d594f4 x20: ffff0000093c7268
+> [    0.000000] x19: 0000000000000c00 x18: 0000000000000010
+> [    0.000000] x17: 0000000000000000 x16: 0000000000000000
+> [    0.000000] x15: ffffffffffffffff3: 0000000fc18d0000 x12: 0000000800000000
+> [    0.000000] x11: 0000000000000018 x10: 00000000ddab9e18
+> [    0.000000] x9 : 0000000800000000 x8 : 00000000000002c1
+> [    0.000000] x7 : 0000000091b90000 x6 : ffff80003ffe0000
+> [    0.000000] x5 : 0000000000000001 x4 : 0000000000000000
+> [    0.000000] x3 : 0000000000000000 x2 : 0000000000000b80
+> [    0.000000] x1 : ffff000009d59540 x0 : ffff80003ffe0000
+> [    0.000000] Process swapper)
+> [    0.000000] Call trace:
+> [    0.000000]  __memcpy+0x110/0x180
+> [    0.000000]  memblock_add_range+0x134/0x2e8
+> [    0.000000]  memblock_reserve+0x70/0xb8
+> [    0.000000]  memblock_alloc_base_nid+0x6c/0x88
+> [    0.000000]  __memblock_alloc_base+0x3c/0x4c
+> [    0.000000]  memblock_alloc_base+0x28/0x4c
+> [    0.000000]  memblock_alloc+0x2c/0x38
+> [    0.000000]  early_pgtable_alloc+0x20/0xb0
 
-Now, lockdown brings a solution to this inconsistency. However, as it is,
-it will still prevent an unsigned image to be loaded with kexec -s when the
-system is not under lockdown, while still allowing kexec to work.
+Hmm, so this seems to be the crux of the issue: early_pgtable_alloc() relies
+on memblock to allocate page-table memory, but this can be called before the
+linear mapping is up and running (or even as part of creating the linear
+mapping itself!) so the use of __va in memblock_double_array() actually
+returns an unmapped address.
 
-At the same time, with lockdown, kexec_file_load would still work when
-CONFIG_KEXEC_VERIFY_SIG is disabled.
+So I guess we either need to implement early_pgtable_alloc() some other way
+(how?) or get memblock_double_array() to use a fixmap if it's called too
+early (yuck). Alternatively, would it be possible to postpone processing of
+the EFI mem_reserve entries until after we've created the linear mapping?
 
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
----
-
-v2:
-fixed build failure, s/#elif/#else/
-
----
- kernel/kexec_file.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index e5bcd94c1efb..b1f0373014c1 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -140,10 +140,17 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 					   image->kernel_buf_len);
- 	if (ret) {
- 		pr_debug("kernel signature verification failed.\n");
--		goto out;
-+	} else {
-+		pr_debug("kernel signature verification successful.\n");
- 	}
--	pr_debug("kernel signature verification successful.\n");
-+#else
-+	ret = -EPERM;
- #endif
-+	if (ret && kernel_is_locked_down("kexec of unsigned images"))
-+		goto out;
-+	else
-+		ret = 0;
-+
- 	/* It is possible that there no initramfs is being loaded */
- 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
- 		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
--- 
-2.19.1
-
+Will
 
 _______________________________________________
 kexec mailing list
