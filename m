@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gKFy5-0002D1-QP
- for kexec@lists.infradead.org; Wed, 07 Nov 2018 05:01:30 +0000
+ id 1gKFxr-0002Ch-Js
+ for kexec@lists.infradead.org; Wed, 07 Nov 2018 05:01:16 +0000
 From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 2/2 v5] x86/kexec_file: add reserved e820 ranges to kdump
- kernel e820 table
-Date: Wed,  7 Nov 2018 13:00:19 +0800
-Message-Id: <20181107050019.6663-3-lijiang@redhat.com>
-In-Reply-To: <20181107050019.6663-1-lijiang@redhat.com>
-References: <20181107050019.6663-1-lijiang@redhat.com>
+Subject: [PATCH 0/2 v5] add reserved e820 ranges to the kdump kernel e820 table
+Date: Wed,  7 Nov 2018 13:00:17 +0800
+Message-Id: <20181107050019.6663-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -51,27 +48,42 @@ thus the early ioremap code naturally map them as decrypted. If it also
 has same e820 reserve setup in kdump kernel then it will just work like
 normal kernel.
 
-Suggested-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- arch/x86/kernel/crash.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Kdump uses walk_iomem_res_desc to iterate resources, then adds matched
+desc to e820 table for the kdump kernel.
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index ae724a6e0a5f..d3167125800e 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -384,6 +384,10 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
- 			memmap_entry_callback);
- 
-+	cmd.type = E820_TYPE_RESERVED;
-+	walk_iomem_res_desc(IORES_DESC_NONE, 0, 0, -1, &cmd,
-+			   memmap_entry_callback);
-+
- 	/* Add crashk_low_res region */
- 	if (crashk_low_res.end) {
- 		ei.addr = crashk_low_res.start;
+But IORES_DESC_NONE resource type includes several different e820 types,
+we need add exact e820 type to the kdump kernel e820 table, thus it also
+needs an extra checking in memmap_entry_callback() to match the e820 type
+and resource name.
+
+Changes since v1:
+1. Modified the value of flags to "0", when walking through the whole
+tree for e820 reserved ranges.
+
+Changes since v2:
+1. Modified the value of flags to "0", when walking through the whole
+tree for e820 reserved ranges.
+2. Modified the invalid SOB chain issue.
+
+Changes since v3:
+1. Dropped [PATCH 1/3 v3] resource: fix an error which walks through iomem
+   resources. Please refer to this commit <010a93bf97c7> "resource: Fix
+   find_next_iomem_res() iteration issue"
+
+Changes since v4:
+1. Improve the patch log, and add kernel log.
+
+Lianbo Jiang (2):
+  x86/kexec_file: add e820 entry in case e820 type string matches to io
+    resource name
+  x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
+
+ arch/x86/include/asm/e820/api.h |  2 ++
+ arch/x86/kernel/crash.c         | 10 +++++++++-
+ arch/x86/kernel/e820.c          |  2 +-
+ kernel/resource.c               |  1 +
+ 4 files changed, 13 insertions(+), 2 deletions(-)
+
 -- 
 2.17.1
 
