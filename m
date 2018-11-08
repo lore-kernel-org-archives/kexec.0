@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gKKGG-0003i5-Al
- for kexec@lists.infradead.org; Wed, 07 Nov 2018 09:36:32 +0000
-Date: Wed, 7 Nov 2018 17:35:40 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 2/2 v5] x86/kexec_file: add reserved e820 ranges to kdump
- kernel e820 table
-Message-ID: <20181107093540.GA8521@dhcp-128-65.nay.redhat.com>
-References: <20181107050019.6663-1-lijiang@redhat.com>
- <20181107050019.6663-3-lijiang@redhat.com>
- <20181107052345.GQ27491@MiWiFi-R3L-srv>
- <cc579d02-19e9-8749-ea48-3ff0fbf6461d@redhat.com>
+Received: from mail-lf1-f68.google.com ([209.85.167.68])
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gKdKw-0000fB-2f
+ for kexec@lists.infradead.org; Thu, 08 Nov 2018 05:58:41 +0000
+Received: by mail-lf1-f68.google.com with SMTP id n18so13278070lfh.6
+ for <kexec@lists.infradead.org>; Wed, 07 Nov 2018 21:58:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <cc579d02-19e9-8749-ea48-3ff0fbf6461d@redhat.com>
+References: <CACi5LpOyy0YkhEzWWqt8hAQfKku2Vzp5+da_dGS23JMyHReNew@mail.gmail.com>
+ <20181106013022.GA27793@brain-police>
+ <CAKv+Gu-4f0uYrrc-eSd1YjJygGHVpB7maJ_3xpuY4vP-LfT0-w@mail.gmail.com>
+In-Reply-To: <CAKv+Gu-4f0uYrrc-eSd1YjJygGHVpB7maJ_3xpuY4vP-LfT0-w@mail.gmail.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Thu, 8 Nov 2018 11:28:11 +0530
+Message-ID: <CACi5LpP3O2BeFaRku1uVgHwEN+JB9iL3Z7d1W5W+5QV8WmXM0w@mail.gmail.com>
+Subject: Re: [Bug Report] kdump crashes after latest EFI memblock changes on
+ arm64 machines with large number of CPUs
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,63 +23,99 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, bp@alien8.de, tglx@linutronix.de, akpm@linux-foundation.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-efi@vger.kernel.org, Will Deacon <will.deacon@arm.com>, kexec mailing list <kexec@lists.infradead.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-T24gMTEvMDcvMTggYXQgMDU6MTBwbSwgbGlqaWFuZyB3cm90ZToKPiDlnKggMjAxOOW5tDEx5pyI
-MDfml6UgMTM6MjMsIEJhb3F1YW4gSGUg5YaZ6YGTOgo+ID4gT24gMTEvMDcvMTggYXQgMDE6MDBw
-bSwgTGlhbmJvIEppYW5nIHdyb3RlOgo+ID4+IEU4MjAgcmVzZXJ2ZWQgcmFuZ2VzIGlzIHVzZWZ1
-bCBpbiBrZHVtcCBrZXJuZWwsIGl0IGhhcyBiZWVuIGFkZGVkIGluCj4gPj4ga2V4ZWMtdG9vbHMg
-Y29kZS4KPiA+Pgo+ID4+IE9uZSByZWFzb24gaXMgUENJIG1tY29uZiAoZXh0ZW5kZWQgbW9kZSkg
-cmVxdWlyZXMgcmVzZXJ2ZWQgcmVnaW9uIG90aGVyd2lzZQo+ID4+IGl0IGZhbGxzIGJhY2sgdG8g
-bGVnYWN5IG1vZGUsIGFuZCBhbHNvIG91dHB1dHMgdGhlIGZvbGxvd2luZyBrZXJuZWwgbG9nLgo+
-ID4gCj4gPiBPSywgaXQgZmFsbHMgYmFjayB0byBsZWdhY3kgbW9kZSwgYW5kIGFsc28gb3V0cHV0
-IGtlcm5lbCBsb2csIGV4Y2VwdCBvZgo+ID4gdGhlc2UsIGRvZXMgaXQgY3Jhc2gga2VybmVsPyBr
-ZHVtcCBrZXJuZWwgaGFuZz8gQ2FuIHdlIGxlYXZlIGl0IGlmIGl0Cj4gPiBvbmx5IG91cHR1dCBr
-ZXJuZWwgbG9nPwo+ID4gCj4gPj4KPiA+PiBFeGFtcGxlOgo+ID4+IC4uLi4uLgo+ID4+IFsgICAx
-OS43OTgzNTRdIFBDSTogTU1DT05GSUcgZm9yIGRvbWFpbiAwMDAwIFtidXMgMDAtZmZdIGF0IFtt
-ZW0gMHg4MDAwMDAwMC0weDhmZmZmZmZmXSAoYmFzZSAweDgwMDAwMDAwKQo+ID4+IFsgICAxOS44
-MDA2NTNdIFtGaXJtd2FyZSBJbmZvXTogUENJOiBNTUNPTkZJRyBhdCBbbWVtIDB4ODAwMDAwMDAt
-MHg4ZmZmZmZmZl0gbm90IHJlc2VydmVkIGluIEFDUEkgbW90aGVyYm9hcmQgcmVzb3VyY2VzCj4g
-Pj4gWyAgIDE5LjgwMDk5NV0gUENJOiBub3QgdXNpbmcgTU1DT05GSUcKPiA+PiAuLi4uLi4KPiA+
-Pgo+ID4+IFRoZSBjb3JyZWN0IGtlcm5lbCBsb2cgaXMgbGlrZSB0aGlzOgo+ID4+IC4uLi4uLgo+
-ID4+IFsgICAgMC4wODI2NDldIFBDSTogTU1DT05GSUcgZm9yIGRvbWFpbiAwMDAwIFtidXMgMDAt
-ZmZdIGF0IFttZW0gMHg4MDAwMDAwMC0weDhmZmZmZmZmXSAoYmFzZSAweDgwMDAwMDAwKQo+ID4+
-IFsgICAgMC4wODM2MTBdIFBDSTogTU1DT05GSUcgYXQgW21lbSAweDgwMDAwMDAwLTB4OGZmZmZm
-ZmZdIHJlc2VydmVkIGluIEU4MjAKPiA+PiAuLi4uLi4KPiA+Pgo+ID4+IEZ1cnRoZXJtb3JlLCB3
-aGVuIEFNRCBTTUUga2R1bXAgc3VwcG9ydCwgaXQgbmVlZHMgdG8gbWFwIGRtaSB0YWJsZSBhcmVh
-Cj4gPj4gYXMgZGVjcnlwdGVkLiBGb3Igbm9ybWFsIGJvb3QsIHRoZXNlIHJhbmdlcyBzaXQgaW4g
-ZTgyMCByZXNlcnZlZCByYW5nZXMsCj4gPj4gdGh1cyB0aGUgZWFybHkgaW9yZW1hcCBjb2RlIG5h
-dHVyYWxseSBtYXAgdGhlbSBhcyBkZWNyeXB0ZWQuIElmIGl0IGFsc28KPiA+PiBoYXMgc2FtZSBl
-ODIwIHJlc2VydmUgc2V0dXAgaW4ga2R1bXAga2VybmVsIHRoZW4gaXQgd2lsbCBqdXN0IHdvcmsg
-bGlrZQo+ID4+IG5vcm1hbCBrZXJuZWwuCj4gPiAKPiA+IFdoeSBkbyB3ZSBjYXJlPyBJZiBkb24n
-dCBmaXgsIHdoYXQncyBoYXBwZW5pbmc/Cj4gPiAKPiA+IExpYW5ibywgZm9yIGEgYnVnIGZpeCwg
-cGxlYXNlIGRlc2NyaWJlIHRoZSBwcm9ibGVtcy4gVGhlbiBnaXZlIG91dCB0aGUKPiA+IGFuYWx5
-c2lzIGFib3V0IHJvb3QgY2F1c2UuIAo+ID4gCj4gCj4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnQg
-aW4gZGV0YWlsLgo+IAo+IEluIGZhY3QsIHRoZXNlIHBhdGNoZXMgYXJlIHJlYWxseSBzaW1wbGUu
-IEFzIHRoZSBzdWJqZWN0IG1lbnRpb25lZCwgdGhpcyBwYXRjaAo+IFtQQVRDSCAyLzJdIGFkZHMg
-dGhlIHJlc2VydmVkIGU4MjAgcmFuZ2VzIHRvIGtkdW1wIGtlcm5lbCBlODIwIHRhYmxlLCBhbmQg
-dGhlCj4gZmlyc3QgcGF0Y2ggW1BBVENIIDEvMl0gaGVscHMgdG8gZXhhY3RseSBhZGQgdGhlIGU4
-MjAoRTgyMF9UWVBFX1JFU0VSVkVEKSB0eXBlCj4gdG8ga2R1bXAga2VybmVsIGU4MjAgdGFibGUs
-IHRoYXQgaXMgdG8gc2F5LCBpdCB3aWxsIGZpbHRlciBvdXQgc29tZSB1bm5lY2Vzc2FyeQo+IHR5
-cGUoRTgyMF9UWVBFX1JBTS9FODIwX1RZUEVfVU5VU0FCTEUvRTgyMF9UWVBFX1JFU0VSVkVEX0tF
-Uk4pLgo+IAo+IEF0IHByZXNlbnQsIHdoZW4gd2UgdXNlIHRoZSBrZXhlYyB0byBsb2FkIHRoZSBr
-ZXJuZWwgaW1hZ2UgYW5kIGluaXRyYW1mcyhmb3IKPiBleGFtcGxlOiBrZXhlYyAtcyAtcCB4eHh4
-KSwgdGhlIGxhdGVzdCBrZXJuZWwgZG9lcyBub3QgcGFzcyB0aGUgZTgyMCByZXNlcnZlZAo+IHJh
-bmdlcyB0byB0aGUgc2Vjb25kIGtlcm5lbCwgd2hpY2ggbWlnaHQgcHJvZHVjZSB0d28gcHJvYmxl
-bXM6Cj4gCj4gVGhlIGZpcnN0IG9uZSBpcyB0aGUgTU1DT05GSUcgaXNzdWUsIGFsdGhvdWdoIHdo
-aWNoIGRvZXMgbm90IG1ha2UgdGhlIHN5c3RlbQo+IGNyYXNoIG9yIGhhbmcsIHRoaXMgaXNzdWUg
-aXMgc3RpbGwgYSBwb3RlbnRpYWwgcmlzaywgYmVjYXVzZSBteSB0ZXN0IGNhbid0Cj4gY292ZXIg
-YWxsIGNhc2VzIGR1ZSB0byByZXNvdXJjZSBjb25zdHJhaW50cyhNYWNoaW5lKSwgYW5kIGknbSBu
-b3Qgc3VyZSB3aGF0Cj4gaXQgd2lsbCBoYXBwZW4gb24gb3RoZXIgbWFjaGluZS4KCklmIGEgZGV2
-aWNlIGlzIHBsdWdnZWQgaW4gcGNpIGRvbWFpbiAxIHRoZW4gdGhpcyBkZXZpY2UgY2FuIG5vdCBi
-ZQpyZWNvZ25pemVkIGluIGtkdW1wIGtlcm5lbCBpbiB5b3VyIGNhc2UuICBGb3IgZXhhbXBsZSBp
-ZiBvbmUgd2FudCB0bwpkdW1wIHRvIGEgbmV0d29yayB0YXJnZXQsIGJ1dCB0aGUgbmV0IGNhcmQg
-Y2FuIG5vdCBiZSByZWNvZ25pemVkIHRoZW4Kdm1jb3JlIGNhbiBub3QgYmUgc2F2ZWQgc3VjY2Vz
-c2Z1bGx5CgpUaGFua3MKRGF2ZQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi All,
+
+I am sorry for the delay. I was away for my Diwali holidays and came
+back to office today.
+
+On Tue, Nov 6, 2018 at 2:14 PM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+>
+> On 6 November 2018 at 02:30, Will Deacon <will.deacon@arm.com> wrote:
+> > On Fri, Nov 02, 2018 at 02:44:10AM +0530, Bhupesh Sharma wrote:
+> >> With the latest EFI changes for memblock reservation across kdump
+> >> kernel from Ard (Commit 71e0940d52e107748b270213a01d3b1546657d74
+> >> ["efi: honour memory reservations passed via a linux specific config
+> >> table"]), we hit a panic while trying to boot the kdump kernel on
+> >> machines which have large number of CPUs.
+> >>
+> >> I have a arm64 board which has 224 CPUS:
+> >> # lscpu
+> >> <..snip..>
+> >> CPU(s):              224
+> >> On-line CPU(s) list: 0-223
+> >> <..snip..>
+> >>
+> >> Here are the crash logs in the kdump kernel on this machine:
+> >>
+> >> [    0.000000] Unable to handle kernel paging request at virtual
+> >> address ffff80003ffe0000
+> >> val____)nt EL), IL ata abort info:
+> >> [    0.or: Oops: 960000inted 4.18.0+ #3
+> >> [    0.000000] pstate: 20400089 (nzCv daIf +PAN -UAO)
+> >> [    0.000000] pc : __memcpy+0x110/0x180
+> >> [    0.000000] lr : memblock_double_array+0x240/0x348
+> >> [    0.000000] sp : ffff0000092efc80 x28: 00000000bffe0000
+> >> [    0.000000] x27: 0000000000001800 x26: ffff000009d59000
+> >> [    0.000000] x25: ffff80003ffe0000 x24: 0000000000000000
+> >> [    0.000000] x23: 0000000000010000 x22: ffff000009d594e8
+> >> [    0.000000] x21: ffff000009d594f4 x20: ffff0000093c7268
+> >> [    0.000000] x19: 0000000000000c00 x18: 0000000000000010
+> >> [    0.000000] x17: 0000000000000000 x16: 0000000000000000
+> >> [    0.000000] x15: ffffffffffffffff3: 0000000fc18d0000 x12: 0000000800000000
+> >> [    0.000000] x11: 0000000000000018 x10: 00000000ddab9e18
+> >> [    0.000000] x9 : 0000000800000000 x8 : 00000000000002c1
+> >> [    0.000000] x7 : 0000000091b90000 x6 : ffff80003ffe0000
+> >> [    0.000000] x5 : 0000000000000001 x4 : 0000000000000000
+> >> [    0.000000] x3 : 0000000000000000 x2 : 0000000000000b80
+> >> [    0.000000] x1 : ffff000009d59540 x0 : ffff80003ffe0000
+> >> [    0.000000] Process swapper)
+> >> [    0.000000] Call trace:
+> >> [    0.000000]  __memcpy+0x110/0x180
+> >> [    0.000000]  memblock_add_range+0x134/0x2e8
+> >> [    0.000000]  memblock_reserve+0x70/0xb8
+> >> [    0.000000]  memblock_alloc_base_nid+0x6c/0x88
+> >> [    0.000000]  __memblock_alloc_base+0x3c/0x4c
+> >> [    0.000000]  memblock_alloc_base+0x28/0x4c
+> >> [    0.000000]  memblock_alloc+0x2c/0x38
+> >> [    0.000000]  early_pgtable_alloc+0x20/0xb0
+> >
+> > Hmm, so this seems to be the crux of the issue: early_pgtable_alloc() relies
+> > on memblock to allocate page-table memory, but this can be called before the
+> > linear mapping is up and running (or even as part of creating the linear
+> > mapping itself!) so the use of __va in memblock_double_array() actually
+> > returns an unmapped address.
+> >
+>
+> OK, so this means we are calling memblock_allow_resize() too early in any case
+>
+> > So I guess we either need to implement early_pgtable_alloc() some other way
+> > (how?) or get memblock_double_array() to use a fixmap if it's called too
+> > early (yuck). Alternatively, would it be possible to postpone processing of
+> > the EFI mem_reserve entries until after we've created the linear mapping?
+> >
+>
+> We could move this until after paging_init(), I suppose. I'll cook something up.
+>
+> Bhupesh: any comments?
+
+Since Ard has already shared a patchset which seems to fix this issue
+[Thanks Ard :)], and my approach is still hackish, I will try to
+verify his v2 patchset on the system I was having issues with and get
+back with my results.
+
+Thanks for all the help.
+
+Regards,
+Bhupesh
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
