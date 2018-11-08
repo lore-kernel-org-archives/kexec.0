@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-f68.google.com ([209.85.167.68])
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gKdKw-0000fB-2f
- for kexec@lists.infradead.org; Thu, 08 Nov 2018 05:58:41 +0000
-Received: by mail-lf1-f68.google.com with SMTP id n18so13278070lfh.6
- for <kexec@lists.infradead.org>; Wed, 07 Nov 2018 21:58:26 -0800 (PST)
+Received: from mail-lf1-f66.google.com ([209.85.167.66])
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gKsKN-00068H-6E
+ for kexec@lists.infradead.org; Thu, 08 Nov 2018 21:59:04 +0000
+Received: by mail-lf1-f66.google.com with SMTP id c16so15345041lfj.8
+ for <kexec@lists.infradead.org>; Thu, 08 Nov 2018 13:58:52 -0800 (PST)
 MIME-Version: 1.0
-References: <CACi5LpOyy0YkhEzWWqt8hAQfKku2Vzp5+da_dGS23JMyHReNew@mail.gmail.com>
- <20181106013022.GA27793@brain-police>
- <CAKv+Gu-4f0uYrrc-eSd1YjJygGHVpB7maJ_3xpuY4vP-LfT0-w@mail.gmail.com>
-In-Reply-To: <CAKv+Gu-4f0uYrrc-eSd1YjJygGHVpB7maJ_3xpuY4vP-LfT0-w@mail.gmail.com>
+References: <1540799431-11064-1-git-send-email-bhsharma@redhat.com>
+ <1540799431-11064-2-git-send-email-bhsharma@redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC0355EF59@BPXM09GP.gisp.nec.co.jp>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC0355F237@BPXM09GP.gisp.nec.co.jp>
+In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC0355F237@BPXM09GP.gisp.nec.co.jp>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Thu, 8 Nov 2018 11:28:11 +0530
-Message-ID: <CACi5LpP3O2BeFaRku1uVgHwEN+JB9iL3Z7d1W5W+5QV8WmXM0w@mail.gmail.com>
-Subject: Re: [Bug Report] kdump crashes after latest EFI memblock changes on
- arm64 machines with large number of CPUs
+Date: Fri, 9 Nov 2018 03:28:38 +0530
+Message-ID: <CACi5LpNB9HZFfqgRC=sZCoKJ6YMvZkaPwBM=AAT_o3_t-+e5eQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] makedumpfile/arm64: Use VMCOREINFO inside
+ '/proc/kcore' (if available)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,92 +28,117 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-efi@vger.kernel.org, Will Deacon <will.deacon@arm.com>, kexec mailing list <kexec@lists.infradead.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: kexec mailing list <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>
 
-Hi All,
+Hi Kazu,
 
-I am sorry for the delay. I was away for my Diwali holidays and came
-back to office today.
-
-On Tue, Nov 6, 2018 at 2:14 PM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+On Wed, Nov 7, 2018 at 1:53 AM Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
 >
-> On 6 November 2018 at 02:30, Will Deacon <will.deacon@arm.com> wrote:
-> > On Fri, Nov 02, 2018 at 02:44:10AM +0530, Bhupesh Sharma wrote:
-> >> With the latest EFI changes for memblock reservation across kdump
-> >> kernel from Ard (Commit 71e0940d52e107748b270213a01d3b1546657d74
-> >> ["efi: honour memory reservations passed via a linux specific config
-> >> table"]), we hit a panic while trying to boot the kdump kernel on
-> >> machines which have large number of CPUs.
-> >>
-> >> I have a arm64 board which has 224 CPUS:
-> >> # lscpu
-> >> <..snip..>
-> >> CPU(s):              224
-> >> On-line CPU(s) list: 0-223
-> >> <..snip..>
-> >>
-> >> Here are the crash logs in the kdump kernel on this machine:
-> >>
-> >> [    0.000000] Unable to handle kernel paging request at virtual
-> >> address ffff80003ffe0000
-> >> val____)nt EL), IL ata abort info:
-> >> [    0.or: Oops: 960000inted 4.18.0+ #3
-> >> [    0.000000] pstate: 20400089 (nzCv daIf +PAN -UAO)
-> >> [    0.000000] pc : __memcpy+0x110/0x180
-> >> [    0.000000] lr : memblock_double_array+0x240/0x348
-> >> [    0.000000] sp : ffff0000092efc80 x28: 00000000bffe0000
-> >> [    0.000000] x27: 0000000000001800 x26: ffff000009d59000
-> >> [    0.000000] x25: ffff80003ffe0000 x24: 0000000000000000
-> >> [    0.000000] x23: 0000000000010000 x22: ffff000009d594e8
-> >> [    0.000000] x21: ffff000009d594f4 x20: ffff0000093c7268
-> >> [    0.000000] x19: 0000000000000c00 x18: 0000000000000010
-> >> [    0.000000] x17: 0000000000000000 x16: 0000000000000000
-> >> [    0.000000] x15: ffffffffffffffff3: 0000000fc18d0000 x12: 0000000800000000
-> >> [    0.000000] x11: 0000000000000018 x10: 00000000ddab9e18
-> >> [    0.000000] x9 : 0000000800000000 x8 : 00000000000002c1
-> >> [    0.000000] x7 : 0000000091b90000 x6 : ffff80003ffe0000
-> >> [    0.000000] x5 : 0000000000000001 x4 : 0000000000000000
-> >> [    0.000000] x3 : 0000000000000000 x2 : 0000000000000b80
-> >> [    0.000000] x1 : ffff000009d59540 x0 : ffff80003ffe0000
-> >> [    0.000000] Process swapper)
-> >> [    0.000000] Call trace:
-> >> [    0.000000]  __memcpy+0x110/0x180
-> >> [    0.000000]  memblock_add_range+0x134/0x2e8
-> >> [    0.000000]  memblock_reserve+0x70/0xb8
-> >> [    0.000000]  memblock_alloc_base_nid+0x6c/0x88
-> >> [    0.000000]  __memblock_alloc_base+0x3c/0x4c
-> >> [    0.000000]  memblock_alloc_base+0x28/0x4c
-> >> [    0.000000]  memblock_alloc+0x2c/0x38
-> >> [    0.000000]  early_pgtable_alloc+0x20/0xb0
+> On 11/2/2018 5:00 PM, Kazuhito Hagio wrote:
+> > Originally, info->page_offset (PAGE_OFFSET) is used in the following
+> > parts on arm64.
 > >
-> > Hmm, so this seems to be the crux of the issue: early_pgtable_alloc() relies
-> > on memblock to allocate page-table memory, but this can be called before the
-> > linear mapping is up and running (or even as part of creating the linear
-> > mapping itself!) so the use of __va in memblock_double_array() actually
-> > returns an unmapped address.
+> > arch/arm64.c:
+> > __pa(unsigned long vaddr)
+> > {
+> >         if (kimage_voffset == NOT_FOUND_NUMBER ||
+> >                         (vaddr >= PAGE_OFFSET))
+> >                 return (vaddr - PAGE_OFFSET + info->phys_base);
+> >         else
+> >                 return (vaddr - kimage_voffset);
+> > }
 > >
->
-> OK, so this means we are calling memblock_allow_resize() too early in any case
->
-> > So I guess we either need to implement early_pgtable_alloc() some other way
-> > (how?) or get memblock_double_array() to use a fixmap if it's called too
-> > early (yuck). Alternatively, would it be possible to postpone processing of
-> > the EFI mem_reserve entries until after we've created the linear mapping?
+> > elf_info.c:
+> >         kvstart = (ulong)start + PAGE_OFFSET;
+> >         kvend = (ulong)end + PAGE_OFFSET;
+> > --
+> >         kvaddr = (ulong)vmcoreinfo_addr + PAGE_OFFSET;
 > >
+> > I'm wondering about its consistency.  Is it OK to set
+> > (virt_start - phys_start) to info->page_offset on arm64?
+> > In other words, on arm64 system with info->phys_base != 0, does it
+> > work correctly for both /proc/vmcore and --mem-usage /proc/kcore?
 >
-> We could move this until after paging_init(), I suppose. I'll cook something up.
+> I found an arm64 system available and (virt_start - phys_start)
+> tested OK for both /proc/vmcore and --mem-usage /proc/kcore,
+> because the __pa() function is used just only for swapper_pg_dir
+> and the "(vaddr - PAGE_OFFSET + info->phys_base)" line is not used.
 >
-> Bhupesh: any comments?
+> The definition of PAGE_OFFSET in kernel is:
+>
+>   #define PAGE_OFFSET             (UL(0xffffffffffffffff) - \
+>           (UL(1) << (VA_BITS - 1)) + 1)
+>
+> The one in crash is:
+>
+>   #define ARM64_PAGE_OFFSET    ((0xffffffffffffffffUL) \
+>                                         << (machdep->machspec->VA_BITS - 1))
+>
+> So I think it would be better to use the same definition also in
+> makedumpfile to avoid confusion. In other words, I think the following
+> does not support arm64 now, and ideally should be fixed by introducing
+> something like phys_to_virt()..
+>
+> elf_info.c:
+>         kvstart = (ulong)start + PAGE_OFFSET;
+>         kvend = (ulong)end + PAGE_OFFSET;
+>         --
+>         kvaddr = (ulong)vmcoreinfo_addr + PAGE_OFFSET;
+>
+> and then,
+>
+>   if (NUMBER(VA_BITS) != NOT_FOUND_NUMBER)
+>       va_bits = NUMBER(VA_BITS);
+>   else
+>       ... va_vits calculation ...
+>
+>   info->page_offset = 0xffffffffffffffffUL << (va_bits - 1);
+>
+> And also we will need to add get_phys_base() to show_mem_usage()
+> with some additional code for arm64 with old kernels.
+> I'm considering this approach.
 
-Since Ard has already shared a patchset which seems to fix this issue
-[Thanks Ard :)], and my approach is still hackish, I will try to
-verify his v2 patchset on the system I was having issues with and get
-back with my results.
+Note that PAGE_OFFSET is not constant on KASLR enabled arm64 kernels
+as the start of the linear range gets randomized as well (as per the
+KASLR seed) which means that PAGE_OFFSET is no longer equal to the
+macro:
+#define PAGE_OFFSET             (UL(0xffffffffffffffff) - \
+           (UL(1) << (VA_BITS - 1)) + 1)
 
-Thanks for all the help.
+Please have a look at my discussion with the arm64 maintainers which
+started the whole vmcoreinfo in kcore stuff rolling: ).
+It talks about PAGE_OFFSET and how it cannot be a constant macro for
+KASLR boot cases:
+[1]. https://www.spinics.net/lists/arm-kernel/msg655933.html
+[2]. https://www.spinics.net/lists/kexec/msg20842.html
 
-Regards,
+Also implementing __pa() or __phys_to_virt(x) in user-space is not
+easy as reported earlier for kexec-tools as well. A typical arm64
+__phys_to_virt(x) looks like this (simplified):
+
+| #define __phys_to_virt(x) \
+| ((unsigned long)((x) - memstart_addr) | PAGE_OFFSET)
+
+Please have a look at the discussion with the arm64 maintainers
+regarding their views on the same here:
+[3]. https://www.spinics.net/lists/kexec/msg20867.html
+
+As James, suggested in this thread, " If user-space needs this value
+to work with
+/proc/{kcore,vmcore} we should expose something like 'p2v_offset' as an elf-note
+on those files. (looks like they both have elf-headers).", something
+which I am working on already and plan to send upstream next week.
+
+My only concern is regarding whether we are heading in a direction in
+user-land, which has been NAK'ed by arm64 kernel maintainers, which
+means that if we need to avoid the nasty rewrite of a 'p2v'
+implementation in the user-space we should probably stick to using the
+standard interfaces exposed by kernel space and add the missing ones
+in kernel and push the kernel community to consider accepting the same
+as a standard ABI between kernel and user space.
+
+Thanks,
 Bhupesh
 
 _______________________________________________
