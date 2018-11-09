@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gL0eh-0003DW-Sk
- for kexec@lists.infradead.org; Fri, 09 Nov 2018 06:52:37 +0000
-Date: Fri, 9 Nov 2018 14:51:46 +0800
-From: Baoquan He <bhe@redhat.com>
+ id 1gL105-0003o2-Ry
+ for kexec@lists.infradead.org; Fri, 09 Nov 2018 07:14:43 +0000
 Subject: Re: [PATCH 2/2 v5] x86/kexec_file: add reserved e820 ranges to kdump
  kernel e820 table
-Message-ID: <20181109065146.GD31064@MiWiFi-R3L-srv>
 References: <20181107050019.6663-1-lijiang@redhat.com>
  <20181107050019.6663-3-lijiang@redhat.com>
  <20181107052345.GQ27491@MiWiFi-R3L-srv>
  <cc579d02-19e9-8749-ea48-3ff0fbf6461d@redhat.com>
+ <20181109065146.GD31064@MiWiFi-R3L-srv>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <9cac4b46-2b45-b107-0e69-679acda170c5@redhat.com>
+Date: Fri, 9 Nov 2018 15:13:47 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <cc579d02-19e9-8749-ea48-3ff0fbf6461d@redhat.com>
+In-Reply-To: <20181109065146.GD31064@MiWiFi-R3L-srv>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,73 +24,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
+To: Baoquan He <bhe@redhat.com>
 Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, bp@alien8.de, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On 11/07/18 at 05:10pm, lijiang wrote:
-> In fact, these patches are really simple. As the subject mentioned, this patch
-> [PATCH 2/2] adds the reserved e820 ranges to kdump kernel e820 table, and the
-> first patch [PATCH 1/2] helps to exactly add the e820(E820_TYPE_RESERVED) type
-> to kdump kernel e820 table, that is to say, it will filter out some unnecessary
-> type(E820_TYPE_RAM/E820_TYPE_UNUSABLE/E820_TYPE_RESERVED_KERN).
-> 
-> At present, when we use the kexec to load the kernel image and initramfs(for
-> example: kexec -s -p xxxx), the latest kernel does not pass the e820 reserved
-> ranges to the second kernel, which might produce two problems:
-> 
-> The first one is the MMCONFIG issue, although which does not make the system
-> crash or hang, this issue is still a potential risk, because my test can't
-> cover all cases due to resource constraints(Machine), and i'm not sure what
-> it will happen on other machine.
-> 
-> The second issue is that the e820 reserved ranges do not setup in kdump kernel,
-> which will cause some functions which are related to the e820 reserved ranges
-> to become invalid. For example:
-> 
-> early_memremap()->
-> early_memremap_pgprot_adjust()->
-> memremap_should_map_decrypted()->
-> e820__get_entry_type()
-> 
-> Please focus on these functions, early_memremap_pgprot_adjust() and memremap_should_map_decrypted().
-> 
-> In the first kernel, these ranges sit in e820 reserved ranges, so the memremap_should_map_decrypted()
-> will return true, that is to say, the reserved memory is decrypted, then the early_memremap_pgprot_adjust()
-> will call the pgprot_decrypted() to clear the memory encryption mask.
-> 
-> In the second kernel, because the e820 reserved ranges are not passed to the second kernel, these ranges
-> don't sit in the e820 reserved ranges, so the the memremap_should_map_decrypted() will return false, that
-> is to say, the reserved memory is encrypted, and then the early_memremap_pgprot_adjust() will also call the
-> pgprot_encrypted() to set the memory encryption mask.
-> 
-> Obviously, in the second kernel, the e820 reserved memory is still decrypted, it has gone wrong. So, if
-> don't fix, kdump won't work when we use the command(kexec -s -p xxx) to load the kernel image and initramfs.
-
-Yes, this looks better. In fact, I searched cover-letter and both patch
-lg, didn't find anything to tell what will happen without these
-patchset. We should at least tell the patch is for cleanup/improvement/fix/feature.
-This "if don't fix, kdump won't work ..." is the sentence I first saw
-telling the sequence or the problem.
-
-Please do not misunderstand those questions from me with unfriendly tone,
-words are cold and can't express emotions exactly, and appearance. Those
-questions are just meaning that people may get confusion from those
-places.
-
-What: describe the problem you met.
-Why:  tell the root cause
-How:  how you fix it
-
-This is what I usually use to write patch log. Just for your reference.
-
-Thanks
-Baoquan
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMeaciDA55pelIDE0OjUxLCBCYW9xdWFuIEhlIOWGmemBkzoKPiBPbiAxMS8w
+Ny8xOCBhdCAwNToxMHBtLCBsaWppYW5nIHdyb3RlOgo+PiBJbiBmYWN0LCB0aGVzZSBwYXRjaGVz
+IGFyZSByZWFsbHkgc2ltcGxlLiBBcyB0aGUgc3ViamVjdCBtZW50aW9uZWQsIHRoaXMgcGF0Y2gK
+Pj4gW1BBVENIIDIvMl0gYWRkcyB0aGUgcmVzZXJ2ZWQgZTgyMCByYW5nZXMgdG8ga2R1bXAga2Vy
+bmVsIGU4MjAgdGFibGUsIGFuZCB0aGUKPj4gZmlyc3QgcGF0Y2ggW1BBVENIIDEvMl0gaGVscHMg
+dG8gZXhhY3RseSBhZGQgdGhlIGU4MjAoRTgyMF9UWVBFX1JFU0VSVkVEKSB0eXBlCj4+IHRvIGtk
+dW1wIGtlcm5lbCBlODIwIHRhYmxlLCB0aGF0IGlzIHRvIHNheSwgaXQgd2lsbCBmaWx0ZXIgb3V0
+IHNvbWUgdW5uZWNlc3NhcnkKPj4gdHlwZShFODIwX1RZUEVfUkFNL0U4MjBfVFlQRV9VTlVTQUJM
+RS9FODIwX1RZUEVfUkVTRVJWRURfS0VSTikuCj4+Cj4+IEF0IHByZXNlbnQsIHdoZW4gd2UgdXNl
+IHRoZSBrZXhlYyB0byBsb2FkIHRoZSBrZXJuZWwgaW1hZ2UgYW5kIGluaXRyYW1mcyhmb3IKPj4g
+ZXhhbXBsZToga2V4ZWMgLXMgLXAgeHh4eCksIHRoZSBsYXRlc3Qga2VybmVsIGRvZXMgbm90IHBh
+c3MgdGhlIGU4MjAgcmVzZXJ2ZWQKPj4gcmFuZ2VzIHRvIHRoZSBzZWNvbmQga2VybmVsLCB3aGlj
+aCBtaWdodCBwcm9kdWNlIHR3byBwcm9ibGVtczoKPj4KPj4gVGhlIGZpcnN0IG9uZSBpcyB0aGUg
+TU1DT05GSUcgaXNzdWUsIGFsdGhvdWdoIHdoaWNoIGRvZXMgbm90IG1ha2UgdGhlIHN5c3RlbQo+
+PiBjcmFzaCBvciBoYW5nLCB0aGlzIGlzc3VlIGlzIHN0aWxsIGEgcG90ZW50aWFsIHJpc2ssIGJl
+Y2F1c2UgbXkgdGVzdCBjYW4ndAo+PiBjb3ZlciBhbGwgY2FzZXMgZHVlIHRvIHJlc291cmNlIGNv
+bnN0cmFpbnRzKE1hY2hpbmUpLCBhbmQgaSdtIG5vdCBzdXJlIHdoYXQKPj4gaXQgd2lsbCBoYXBw
+ZW4gb24gb3RoZXIgbWFjaGluZS4KPj4KPj4gVGhlIHNlY29uZCBpc3N1ZSBpcyB0aGF0IHRoZSBl
+ODIwIHJlc2VydmVkIHJhbmdlcyBkbyBub3Qgc2V0dXAgaW4ga2R1bXAga2VybmVsLAo+PiB3aGlj
+aCB3aWxsIGNhdXNlIHNvbWUgZnVuY3Rpb25zIHdoaWNoIGFyZSByZWxhdGVkIHRvIHRoZSBlODIw
+IHJlc2VydmVkIHJhbmdlcwo+PiB0byBiZWNvbWUgaW52YWxpZC4gRm9yIGV4YW1wbGU6Cj4+Cj4+
+IGVhcmx5X21lbXJlbWFwKCktPgo+PiBlYXJseV9tZW1yZW1hcF9wZ3Byb3RfYWRqdXN0KCktPgo+
+PiBtZW1yZW1hcF9zaG91bGRfbWFwX2RlY3J5cHRlZCgpLT4KPj4gZTgyMF9fZ2V0X2VudHJ5X3R5
+cGUoKQo+Pgo+PiBQbGVhc2UgZm9jdXMgb24gdGhlc2UgZnVuY3Rpb25zLCBlYXJseV9tZW1yZW1h
+cF9wZ3Byb3RfYWRqdXN0KCkgYW5kIG1lbXJlbWFwX3Nob3VsZF9tYXBfZGVjcnlwdGVkKCkuCj4+
+Cj4+IEluIHRoZSBmaXJzdCBrZXJuZWwsIHRoZXNlIHJhbmdlcyBzaXQgaW4gZTgyMCByZXNlcnZl
+ZCByYW5nZXMsIHNvIHRoZSBtZW1yZW1hcF9zaG91bGRfbWFwX2RlY3J5cHRlZCgpCj4+IHdpbGwg
+cmV0dXJuIHRydWUsIHRoYXQgaXMgdG8gc2F5LCB0aGUgcmVzZXJ2ZWQgbWVtb3J5IGlzIGRlY3J5
+cHRlZCwgdGhlbiB0aGUgZWFybHlfbWVtcmVtYXBfcGdwcm90X2FkanVzdCgpCj4+IHdpbGwgY2Fs
+bCB0aGUgcGdwcm90X2RlY3J5cHRlZCgpIHRvIGNsZWFyIHRoZSBtZW1vcnkgZW5jcnlwdGlvbiBt
+YXNrLgo+Pgo+PiBJbiB0aGUgc2Vjb25kIGtlcm5lbCwgYmVjYXVzZSB0aGUgZTgyMCByZXNlcnZl
+ZCByYW5nZXMgYXJlIG5vdCBwYXNzZWQgdG8gdGhlIHNlY29uZCBrZXJuZWwsIHRoZXNlIHJhbmdl
+cwo+PiBkb24ndCBzaXQgaW4gdGhlIGU4MjAgcmVzZXJ2ZWQgcmFuZ2VzLCBzbyB0aGUgdGhlIG1l
+bXJlbWFwX3Nob3VsZF9tYXBfZGVjcnlwdGVkKCkgd2lsbCByZXR1cm4gZmFsc2UsIHRoYXQKPj4g
+aXMgdG8gc2F5LCB0aGUgcmVzZXJ2ZWQgbWVtb3J5IGlzIGVuY3J5cHRlZCwgYW5kIHRoZW4gdGhl
+IGVhcmx5X21lbXJlbWFwX3BncHJvdF9hZGp1c3QoKSB3aWxsIGFsc28gY2FsbCB0aGUKPj4gcGdw
+cm90X2VuY3J5cHRlZCgpIHRvIHNldCB0aGUgbWVtb3J5IGVuY3J5cHRpb24gbWFzay4KPj4KPj4g
+T2J2aW91c2x5LCBpbiB0aGUgc2Vjb25kIGtlcm5lbCwgdGhlIGU4MjAgcmVzZXJ2ZWQgbWVtb3J5
+IGlzIHN0aWxsIGRlY3J5cHRlZCwgaXQgaGFzIGdvbmUgd3JvbmcuIFNvLCBpZgo+PiBkb24ndCBm
+aXgsIGtkdW1wIHdvbid0IHdvcmsgd2hlbiB3ZSB1c2UgdGhlIGNvbW1hbmQoa2V4ZWMgLXMgLXAg
+eHh4KSB0byBsb2FkIHRoZSBrZXJuZWwgaW1hZ2UgYW5kIGluaXRyYW1mcy4KPiAKPiBZZXMsIHRo
+aXMgbG9va3MgYmV0dGVyLiBJbiBmYWN0LCBJIHNlYXJjaGVkIGNvdmVyLWxldHRlciBhbmQgYm90
+aCBwYXRjaAo+IGxnLCBkaWRuJ3QgZmluZCBhbnl0aGluZyB0byB0ZWxsIHdoYXQgd2lsbCBoYXBw
+ZW4gd2l0aG91dCB0aGVzZQo+IHBhdGNoc2V0LiBXZSBzaG91bGQgYXQgbGVhc3QgdGVsbCB0aGUg
+cGF0Y2ggaXMgZm9yIGNsZWFudXAvaW1wcm92ZW1lbnQvZml4L2ZlYXR1cmUuCj4gVGhpcyAiaWYg
+ZG9uJ3QgZml4LCBrZHVtcCB3b24ndCB3b3JrIC4uLiIgaXMgdGhlIHNlbnRlbmNlIEkgZmlyc3Qg
+c2F3Cj4gdGVsbGluZyB0aGUgc2VxdWVuY2Ugb3IgdGhlIHByb2JsZW0uCj4gCj4gUGxlYXNlIGRv
+IG5vdCBtaXN1bmRlcnN0YW5kIHRob3NlIHF1ZXN0aW9ucyBmcm9tIG1lIHdpdGggdW5mcmllbmRs
+eSB0b25lLAo+IHdvcmRzIGFyZSBjb2xkIGFuZCBjYW4ndCBleHByZXNzIGVtb3Rpb25zIGV4YWN0
+bHksIGFuZCBhcHBlYXJhbmNlLiBUaG9zZQo+IHF1ZXN0aW9ucyBhcmUganVzdCBtZWFuaW5nIHRo
+YXQgcGVvcGxlIG1heSBnZXQgY29uZnVzaW9uIGZyb20gdGhvc2UKPiBwbGFjZXMuCj4gCgpEb24n
+dCB3b3JyeS4KIApJIHdvdWxkIGxpa2UgdG8gaW1wcm92ZSBwYXRjaCBsb2cgYmFzZWQgb24geW91
+ciBzdWdnZXN0aW9uLgoKUmVnYXJkcywKTGlhbmJvCj4gV2hhdDogZGVzY3JpYmUgdGhlIHByb2Js
+ZW0geW91IG1ldC4KPiBXaHk6ICB0ZWxsIHRoZSByb290IGNhdXNlCj4gSG93OiAgaG93IHlvdSBm
+aXggaXQKPiAKPiBUaGlzIGlzIHdoYXQgSSB1c3VhbGx5IHVzZSB0byB3cml0ZSBwYXRjaCBsb2cu
+IEp1c3QgZm9yIHlvdXIgcmVmZXJlbmNlLgo+IAoKT2ssIHRoYW5rcy4KCj4gVGhhbmtzCj4gQmFv
+cXVhbgo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
