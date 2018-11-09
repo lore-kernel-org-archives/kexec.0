@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-f66.google.com ([209.85.167.66])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gKsKN-00068H-6E
- for kexec@lists.infradead.org; Thu, 08 Nov 2018 21:59:04 +0000
-Received: by mail-lf1-f66.google.com with SMTP id c16so15345041lfj.8
- for <kexec@lists.infradead.org>; Thu, 08 Nov 2018 13:58:52 -0800 (PST)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gL0eh-0003DW-Sk
+ for kexec@lists.infradead.org; Fri, 09 Nov 2018 06:52:37 +0000
+Date: Fri, 9 Nov 2018 14:51:46 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 2/2 v5] x86/kexec_file: add reserved e820 ranges to kdump
+ kernel e820 table
+Message-ID: <20181109065146.GD31064@MiWiFi-R3L-srv>
+References: <20181107050019.6663-1-lijiang@redhat.com>
+ <20181107050019.6663-3-lijiang@redhat.com>
+ <20181107052345.GQ27491@MiWiFi-R3L-srv>
+ <cc579d02-19e9-8749-ea48-3ff0fbf6461d@redhat.com>
 MIME-Version: 1.0
-References: <1540799431-11064-1-git-send-email-bhsharma@redhat.com>
- <1540799431-11064-2-git-send-email-bhsharma@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC0355EF59@BPXM09GP.gisp.nec.co.jp>
- <4AE2DC15AC0B8543882A74EA0D43DBEC0355F237@BPXM09GP.gisp.nec.co.jp>
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC0355F237@BPXM09GP.gisp.nec.co.jp>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Fri, 9 Nov 2018 03:28:38 +0530
-Message-ID: <CACi5LpNB9HZFfqgRC=sZCoKJ6YMvZkaPwBM=AAT_o3_t-+e5eQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] makedumpfile/arm64: Use VMCOREINFO inside
- '/proc/kcore' (if available)
+Content-Disposition: inline
+In-Reply-To: <cc579d02-19e9-8749-ea48-3ff0fbf6461d@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,118 +27,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: kexec mailing list <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>
+To: lijiang <lijiang@redhat.com>
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, bp@alien8.de, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-Hi Kazu,
+On 11/07/18 at 05:10pm, lijiang wrote:
+> In fact, these patches are really simple. As the subject mentioned, this patch
+> [PATCH 2/2] adds the reserved e820 ranges to kdump kernel e820 table, and the
+> first patch [PATCH 1/2] helps to exactly add the e820(E820_TYPE_RESERVED) type
+> to kdump kernel e820 table, that is to say, it will filter out some unnecessary
+> type(E820_TYPE_RAM/E820_TYPE_UNUSABLE/E820_TYPE_RESERVED_KERN).
+> 
+> At present, when we use the kexec to load the kernel image and initramfs(for
+> example: kexec -s -p xxxx), the latest kernel does not pass the e820 reserved
+> ranges to the second kernel, which might produce two problems:
+> 
+> The first one is the MMCONFIG issue, although which does not make the system
+> crash or hang, this issue is still a potential risk, because my test can't
+> cover all cases due to resource constraints(Machine), and i'm not sure what
+> it will happen on other machine.
+> 
+> The second issue is that the e820 reserved ranges do not setup in kdump kernel,
+> which will cause some functions which are related to the e820 reserved ranges
+> to become invalid. For example:
+> 
+> early_memremap()->
+> early_memremap_pgprot_adjust()->
+> memremap_should_map_decrypted()->
+> e820__get_entry_type()
+> 
+> Please focus on these functions, early_memremap_pgprot_adjust() and memremap_should_map_decrypted().
+> 
+> In the first kernel, these ranges sit in e820 reserved ranges, so the memremap_should_map_decrypted()
+> will return true, that is to say, the reserved memory is decrypted, then the early_memremap_pgprot_adjust()
+> will call the pgprot_decrypted() to clear the memory encryption mask.
+> 
+> In the second kernel, because the e820 reserved ranges are not passed to the second kernel, these ranges
+> don't sit in the e820 reserved ranges, so the the memremap_should_map_decrypted() will return false, that
+> is to say, the reserved memory is encrypted, and then the early_memremap_pgprot_adjust() will also call the
+> pgprot_encrypted() to set the memory encryption mask.
+> 
+> Obviously, in the second kernel, the e820 reserved memory is still decrypted, it has gone wrong. So, if
+> don't fix, kdump won't work when we use the command(kexec -s -p xxx) to load the kernel image and initramfs.
 
-On Wed, Nov 7, 2018 at 1:53 AM Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
->
-> On 11/2/2018 5:00 PM, Kazuhito Hagio wrote:
-> > Originally, info->page_offset (PAGE_OFFSET) is used in the following
-> > parts on arm64.
-> >
-> > arch/arm64.c:
-> > __pa(unsigned long vaddr)
-> > {
-> >         if (kimage_voffset == NOT_FOUND_NUMBER ||
-> >                         (vaddr >= PAGE_OFFSET))
-> >                 return (vaddr - PAGE_OFFSET + info->phys_base);
-> >         else
-> >                 return (vaddr - kimage_voffset);
-> > }
-> >
-> > elf_info.c:
-> >         kvstart = (ulong)start + PAGE_OFFSET;
-> >         kvend = (ulong)end + PAGE_OFFSET;
-> > --
-> >         kvaddr = (ulong)vmcoreinfo_addr + PAGE_OFFSET;
-> >
-> > I'm wondering about its consistency.  Is it OK to set
-> > (virt_start - phys_start) to info->page_offset on arm64?
-> > In other words, on arm64 system with info->phys_base != 0, does it
-> > work correctly for both /proc/vmcore and --mem-usage /proc/kcore?
->
-> I found an arm64 system available and (virt_start - phys_start)
-> tested OK for both /proc/vmcore and --mem-usage /proc/kcore,
-> because the __pa() function is used just only for swapper_pg_dir
-> and the "(vaddr - PAGE_OFFSET + info->phys_base)" line is not used.
->
-> The definition of PAGE_OFFSET in kernel is:
->
->   #define PAGE_OFFSET             (UL(0xffffffffffffffff) - \
->           (UL(1) << (VA_BITS - 1)) + 1)
->
-> The one in crash is:
->
->   #define ARM64_PAGE_OFFSET    ((0xffffffffffffffffUL) \
->                                         << (machdep->machspec->VA_BITS - 1))
->
-> So I think it would be better to use the same definition also in
-> makedumpfile to avoid confusion. In other words, I think the following
-> does not support arm64 now, and ideally should be fixed by introducing
-> something like phys_to_virt()..
->
-> elf_info.c:
->         kvstart = (ulong)start + PAGE_OFFSET;
->         kvend = (ulong)end + PAGE_OFFSET;
->         --
->         kvaddr = (ulong)vmcoreinfo_addr + PAGE_OFFSET;
->
-> and then,
->
->   if (NUMBER(VA_BITS) != NOT_FOUND_NUMBER)
->       va_bits = NUMBER(VA_BITS);
->   else
->       ... va_vits calculation ...
->
->   info->page_offset = 0xffffffffffffffffUL << (va_bits - 1);
->
-> And also we will need to add get_phys_base() to show_mem_usage()
-> with some additional code for arm64 with old kernels.
-> I'm considering this approach.
+Yes, this looks better. In fact, I searched cover-letter and both patch
+lg, didn't find anything to tell what will happen without these
+patchset. We should at least tell the patch is for cleanup/improvement/fix/feature.
+This "if don't fix, kdump won't work ..." is the sentence I first saw
+telling the sequence or the problem.
 
-Note that PAGE_OFFSET is not constant on KASLR enabled arm64 kernels
-as the start of the linear range gets randomized as well (as per the
-KASLR seed) which means that PAGE_OFFSET is no longer equal to the
-macro:
-#define PAGE_OFFSET             (UL(0xffffffffffffffff) - \
-           (UL(1) << (VA_BITS - 1)) + 1)
+Please do not misunderstand those questions from me with unfriendly tone,
+words are cold and can't express emotions exactly, and appearance. Those
+questions are just meaning that people may get confusion from those
+places.
 
-Please have a look at my discussion with the arm64 maintainers which
-started the whole vmcoreinfo in kcore stuff rolling: ).
-It talks about PAGE_OFFSET and how it cannot be a constant macro for
-KASLR boot cases:
-[1]. https://www.spinics.net/lists/arm-kernel/msg655933.html
-[2]. https://www.spinics.net/lists/kexec/msg20842.html
+What: describe the problem you met.
+Why:  tell the root cause
+How:  how you fix it
 
-Also implementing __pa() or __phys_to_virt(x) in user-space is not
-easy as reported earlier for kexec-tools as well. A typical arm64
-__phys_to_virt(x) looks like this (simplified):
+This is what I usually use to write patch log. Just for your reference.
 
-| #define __phys_to_virt(x) \
-| ((unsigned long)((x) - memstart_addr) | PAGE_OFFSET)
-
-Please have a look at the discussion with the arm64 maintainers
-regarding their views on the same here:
-[3]. https://www.spinics.net/lists/kexec/msg20867.html
-
-As James, suggested in this thread, " If user-space needs this value
-to work with
-/proc/{kcore,vmcore} we should expose something like 'p2v_offset' as an elf-note
-on those files. (looks like they both have elf-headers).", something
-which I am working on already and plan to send upstream next week.
-
-My only concern is regarding whether we are heading in a direction in
-user-land, which has been NAK'ed by arm64 kernel maintainers, which
-means that if we need to avoid the nasty rewrite of a 'p2v'
-implementation in the user-space we should probably stick to using the
-standard interfaces exposed by kernel space and add the missing ones
-in kernel and push the kernel community to consider accepting the same
-as a standard ABI between kernel and user space.
-
-Thanks,
-Bhupesh
+Thanks
+Baoquan
 
 _______________________________________________
 kexec mailing list
