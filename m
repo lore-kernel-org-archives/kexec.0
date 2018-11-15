@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gNAgq-00073V-FX
- for kexec@lists.infradead.org; Thu, 15 Nov 2018 05:59:45 +0000
-Date: Thu, 15 Nov 2018 13:58:53 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 1/2 v6] x86/kexec_file: add e820 entry in case e820 type
- string matches to io resource name
-Message-ID: <20181115055853.GA4445@dhcp-128-65.nay.redhat.com>
-References: <20181114072926.13312-1-lijiang@redhat.com>
- <20181114072926.13312-2-lijiang@redhat.com>
- <20181114112600.GD13926@zn.tnic>
- <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
+ id 1gNENr-0001Av-Al
+ for kexec@lists.infradead.org; Thu, 15 Nov 2018 09:56:24 +0000
+From: Lianbo Jiang <lijiang@redhat.com>
+Subject: [PATCH 0/2 v7] add reserved e820 ranges to the kdump kernel e820 table
+Date: Thu, 15 Nov 2018 17:55:27 +0800
+Message-Id: <20181115095529.21220-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,55 +15,114 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, Borislav Petkov <bp@alien8.de>, tglx@linutronix.de, akpm@linux-foundation.org
+To: linux-kernel@vger.kernel.org
+Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-T24gMTEvMTUvMTggYXQgMDE6NDRwbSwgbGlqaWFuZyB3cm90ZToKPiDlnKggMjAxOOW5tDEx5pyI
-MTTml6UgMTk6MjYsIEJvcmlzbGF2IFBldGtvdiDlhpnpgZM6Cj4gPiBPbiBXZWQsIE5vdiAxNCwg
-MjAxOCBhdCAwMzoyOToyNVBNICswODAwLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4gPj4gV2hlbiBs
-b2FkIHRoZSBrZXJuZWwgaW1hZ2UgYW5kIGluaXRyYW1mcyBieSBrZXhlY19maWxlX2xvYWQgc3lz
-Y2FsbCwgaXQgY2FuCj4gPj4gbm90IGFkZCBleGFjdCBlODIwIHJlc2VydmVkIHR5cGUgdG8ga2R1
-bXAga2VybmVsIGU4MjAgdGFibGUuCj4gPj4KPiA+PiBLZHVtcCB1c2VzIHdhbGtfaW9tZW1fcmVz
-X2Rlc2MoKSB0byBpdGVyYXRlIGlvIHJlc291cmNlcywgdGhlbiBhZGRzIG1hdGNoZWQKPiA+PiBk
-ZXNjIHRvIGU4MjAgdGFibGUgZm9yIGtkdW1wIGtlcm5lbC4gQnV0LCB3aGVuIGNvbnZlcnQgdGhl
-IGU4MjAgdHlwZSBpbnRvCj4gPj4gdGhlIGlvcmVzIGRlc2NyaXB0b3JzLCBzZXZlcmFsIGU4MjAg
-dHlwZXMgYXJlIGNvbnZlcnRlZCB0byAnSU9SRVNfREVTX05PTkUnCj4gPj4gaW4gdGhpcyBmdW5j
-dGlvbiBlODIwX3R5cGVfdG9faW9yZXNfZGVzYygpLiBTbyB0aGUgd2Fsa19pb21lbV9yZXNfZGVz
-YygpCj4gPj4gd2lsbCBnZXQgdGhlc2UgdW5uZWNlc3NhcnkgdHlwZXMoRTgyMF9UWVBFX1JBTS9F
-ODIwX1RZUEVfVU5VU0FCTEUvRTgyMF9UWVBFCj4gPj4gX0tFUk4pIHdoZW4gaXRlcmF0ZSBpbyBy
-ZXNvdXJjZXMgYnkgdGhlICdJT1JFU19ERVNfTk9ORScuCj4gPj4KPiA+PiBJdCBuZWVkcyBmaWx0
-ZXIgb3V0IHRoZXNlIHJlZHVuZGFudCB0eXBlKHN1Y2ggYXMgRTgyMF9UWVBFX1JBTS9FODIwX1RZ
-UEVfCj4gPj4gVU5VU0FCTEUvRTgyMF9UWVBFX0tFUk4pIGluIG9yZGVyIHRvIGFkZCBleGFjdCBl
-ODIwIHJlc2VydmVkIHR5cGUgdG8ga2R1bXAKPiA+PiBrZXJuZWwgZTgyMCB0YWJsZS4gVGh1cyBp
-dCBhbHNvIG5lZWRzIGFuIGV4dHJhIGNoZWNraW5nIGluIG1lbW1hcF9lbnRyeV8KPiA+PiBjYWxs
-YmFjaygpIHRvIG1hdGNoIHRoZSBlODIwIHR5cGUgYW5kIHJlc291cmNlIG5hbWUuCj4gPiAKPiA+
-IE9rLCBpdCB0b29rIG1lIGEgd2hpbGUgdG8gcGFyc2Ugd2hhdCB0aGlzIGlzIHRyeWluZyB0byBz
-YXkgc28gbGV0J3MKPiA+IHN0YXJ0IGZyb20gdGhlIHRvcDoKPiA+IAo+ID4gKiBXaGF0IHJlc291
-cmNlIHR5cGUgZG8geW91IGRvIG5lZWQgaW4gdGhlIHNlY29uZCBrZXJuZWw/Cj4gPiAKPiAKPiBU
-aGFua3MgZm9yIHlvdXIgY29tbWVudC4KPiAKPiBUaGUgZTgyMCByZXNlcnZlZCByYW5nZXMgbmVl
-ZCB0byBiZSBwYXNzZWQgdG8gdGhlIHNlY29uZCBrZXJuZWwuCj4gCj4gPiAqIFRoZSBtb3N0IGlt
-cG9ydGFudCBxdWVzdGlvbjogd2h5Pwo+ID4gCj4gCj4gQXQgcHJlc2VudCwgdGhlIHVwc3RyZWFt
-IGtlcm5lbCBkb2VzIG5vdCBwYXNzIHRoZSBlODIwIHJlc2VydmVkIHJhbmdlcyB0byB0aGUKPiBz
-ZWNvbmQga2VybmVsLCB3aGljaCBtaWdodCBjYXVzZSB0d28gcHJvYmxlbXM6Cj4gCj4gVGhlIGZp
-cnN0IG9uZSBpcyB0aGUgTU1DT05GSUcgaXNzdWUsIHRoZSBQQ0kgTU1DT05GSUcoZXh0ZW5kZWQg
-bW9kZSkgcmVxdWlyZXMKPiB0aGUgcmVzZXJ2ZWQgcmVnaW9uIG90aGVyd2lzZSBpdCBmYWxscyBi
-YWNrIHRvIGxlZ2FjeSBtb2RlLCB3aGljaCBtaWdodCBsZWFkIHRvCj4gdGhlIGhvdC1wbHVnIGRl
-dmljZSBjb3VsZCBub3QgYmUgcmVjb2duaXplZCBpbiBrZHVtcCBrZXJuZWwuCj4gCj4gQW5vdGhl
-ciBvbmUgaXMgdGhhdCB0aGUgZTgyMCByZXNlcnZlZCByYW5nZXMgZG8gbm90IHNldHVwIGluIGtk
-dW1wIGtlcm5lbCwgd2hpY2gKPiBjb3VsZCBjYXVzZSBrZHVtcCBjYW4ndCB3b3JrIGluIHNvbWUg
-bWFjaGluZXMuIFRvIGtub3cgbW9yZSBpbmZvcm1hdGlvbiwgcGxlYXNlCj4gcmVmZXIgdG8gdGhl
-IFtQQVRDSCAyLzIgdjZdIHBhdGNoIGxvZy4KPiAKPiAKPiA+ICogSWYgaXQgaXMgdGhlIHJlc2Vy
-dmVkIHJlc291cmNlLCB3aHkgYXJlbid0IHlvdSBhZGRpbmcKPiA+IElPUkVTX0RFU0NfUkVTRVJW
-RUQgb3Igc28gd2hpY2ggdG8gbG9vayBmb3IgaW5zdGVhZCBvZiB0aGlzIGhhY2t5IHN0cmluZwo+
-ID4gY29tcGFyaXNvbj8KPiA+IAo+IAo+IEFkZGluZyB0aGUgbmV3IGRlc2NyaXB0b3IgJ0lPUkVT
-X0RFU0NfUkVTRVJWRUQnIGlzIGFsc28gYSBnb29kIHNvbHV0aW9uLiBJIHdpbGwKCkkgd2FzIG5v
-dCBzdXJlIGlmIHNvbWV0aGluZyBlbHNlIGRlcGVuZHMgb24gSU9SRVNfREVTQ19OT05FIGFuZCBp
-ZiBpdCBpcwplYXN5IHRvIHNwbGl0IGl0IGFuZCBhZGQgSU9SRVNfREVTQ19SRVNFUlZFRAoKQnV0
-IGlmIHlvdSBjYW4gcHJvdmUgaXQgaXMgc2FmZSB0aGVuIGl0IHdvdWxkIGJlIGEgYmV0dGVyIHdh
-eS4KClRoYW5rcwpEYXZlCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+These patches add the new I/O resource descriptor 'IORES_DESC_RESERVED'
+for the iomem resources search interfaces and also pass the e820 reserved
+ranges to kdump kernel.
+
+At present, when use the kexec_file_load syscall to load the kernel image
+and initramfs(for example: kexec -s -p xxx), the upstream kernel does not
+pass the e820 reserved ranges to the second kernel, which might cause two
+problems:
+
+The first one is the MMCONFIG issue, although which does not make the
+system crash or hang, this issue is still a potential risk, and also
+might lead to the hot-plug device could not be recognized in kdump kernel.
+Because the PCI MMCONFIG(extended mode) requires the reserved region
+otherwise it falls back to legacy mode. For example, the kdump kernel
+outputs the following log.
+
+Example:
+......
+[   19.798354] PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
+[   19.800653] [Firmware Info]: PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] not reserved in ACPI motherboard resources
+[   19.800995] PCI: not using MMCONFIG
+......
+
+The correct kernel log is like this:
+......
+[    0.082649] PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
+[    0.083610] PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] reserved in E820
+......
+
+The second issue is that the e820 reserved ranges do not setup in kdump
+kernel, which will cause some functions that related to the e820 reserved
+ranges to become invalid. For example:
+
+early_memremap()->
+early_memremap_pgprot_adjust()->
+memremap_should_map_decrypted()->
+e820__get_entry_type()
+
+Please focus on these functions, early_memremap_pgprot_adjust() and
+memremap_should_map_decrypted().
+
+In the first kernel, these ranges sit in e820 reserved ranges, so the
+memremap_should_map_decrypted() will return true, that is to say, the
+reserved memory is decrypted, then the early_memremap_pgprot_adjust()
+will call the pgprot_decrypted() to clear the memory encryption mask.
+
+In the second kernel, because the e820 reserved ranges are not passed
+to the second kernel, these ranges don't sit in the e820 reserved ranges,
+so the memremap_should_map_decrypted() will return false, that is to say,
+the reserved memory is encrypted, and then the early_memremap_pgprot_
+adjust() will also call the pgprot_encrypted() to set the memory encryption
+mask.
+
+In fact, in the second kernel, the e820 reserved memory is still decrypted.
+Obviously, it has gone wrong. So, this issue must be fixed, otherwise kdump
+won't work in this case.
+
+The e820 reserved range is useful in kdump kernel, so it is necessary to
+pass the e820 reserved ranges to kdump kernel.
+
+Changes since v1:
+1. Modified the value of flags to "0", when walking through the whole
+tree for e820 reserved ranges.
+
+Changes since v2:
+1. Modified the value of flags to "0", when walking through the whole
+tree for e820 reserved ranges.
+2. Modified the invalid SOB chain issue.
+
+Changes since v3:
+1. Dropped [PATCH 1/3 v3] resource: fix an error which walks through iomem
+   resources. Please refer to this commit <010a93bf97c7> "resource: Fix
+   find_next_iomem_res() iteration issue"
+
+Changes since v4:
+1. Improve the patch log, and add kernel log.
+
+Changes since v5:
+1. Rewrite these patches log.
+
+Changes since v6:
+1. Modify the [PATCH 1/2], and add the new I/O resource descriptor
+   'IORES_DESC_RESERVED' for the iomem resources search interfaces.
+2. Modify the [PATCH 2/2], and walk through io resource based on the
+   new descriptor 'IORES_DESC_RESERVED'.
+
+Lianbo Jiang (2):
+  resource: add the new I/O resource descriptor 'IORES_DESC_RESERVED'
+  x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
+
+ arch/x86/kernel/crash.c | 6 ++++++
+ arch/x86/kernel/e820.c  | 2 +-
+ include/linux/ioport.h  | 1 +
+ 3 files changed, 8 insertions(+), 1 deletion(-)
+
+-- 
+2.17.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
