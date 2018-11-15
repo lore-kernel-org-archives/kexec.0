@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yb1-xb43.google.com ([2607:f8b0:4864:20::b43])
+Received: from mail-yw1-xc41.google.com ([2607:f8b0:4864:20::c41])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gNAb8-0006ae-Ti
- for kexec@lists.infradead.org; Thu, 15 Nov 2018 05:53:53 +0000
-Received: by mail-yb1-xb43.google.com with SMTP id u103-v6so7919795ybi.5
- for <kexec@lists.infradead.org>; Wed, 14 Nov 2018 21:53:40 -0800 (PST)
+ id 1gNAb5-0006gB-Mz
+ for kexec@lists.infradead.org; Thu, 15 Nov 2018 05:53:50 +0000
+Received: by mail-yw1-xc41.google.com with SMTP id i20so880574ywc.5
+ for <kexec@lists.infradead.org>; Wed, 14 Nov 2018 21:53:47 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v16 14/16] include: pe.h: remove message[] from mz header
- definition
-Date: Thu, 15 Nov 2018 14:52:53 +0900
-Message-Id: <20181115055254.2812-15-takahiro.akashi@linaro.org>
+Subject: [PATCH v16 16/16] arm64: kexec_file: add kaslr support
+Date: Thu, 15 Nov 2018 14:52:55 +0900
+Message-Id: <20181115055254.2812-17-takahiro.akashi@linaro.org>
 In-Reply-To: <20181115055254.2812-1-takahiro.akashi@linaro.org>
 References: <20181115055254.2812-1-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
@@ -28,37 +27,108 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, prudo@linux.ibm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-message[] field won't be part of the definition of mz header.
+Adding "kaslr-seed" to dtb enables triggering kaslr, or kernel virtual
+address randomization, at secondary kernel boot. We always do this as
+it will have no harm on kaslr-incapable kernel.
 
-This change is crucial for enabling kexec_file_load on arm64 because
-arm64's "Image" binary, as in PE format, doesn't have any data for it and
-accordingly the following check in pefile_parse_binary() will fail:
-
-	chkaddr(cursor, mz->peaddr, sizeof(*pe));
+We don't have any "switch" to turn off this feature directly, but still
+can suppress it by passing "nokaslr" as a kernel boot argument.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: David S. Miller <davem@davemloft.net>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
 ---
- include/linux/pe.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/machine_kexec_file.c | 46 +++++++++++++++++++++++++-
+ 1 file changed, 45 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/pe.h b/include/linux/pe.h
-index 143ce75be5f0..3482b18a48b5 100644
---- a/include/linux/pe.h
-+++ b/include/linux/pe.h
-@@ -166,7 +166,7 @@ struct mz_hdr {
- 	uint16_t oem_info;	/* oem specific */
- 	uint16_t reserved1[10];	/* reserved */
- 	uint32_t peaddr;	/* address of pe header */
--	char     message[64];	/* message to print */
-+	char     message[];	/* message to print */
- };
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index ab296b98d633..a0a730bd9be6 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -16,6 +16,7 @@
+ #include <linux/libfdt.h>
+ #include <linux/memblock.h>
+ #include <linux/of_fdt.h>
++#include <linux/random.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
+ #include <linux/types.h>
+@@ -28,6 +29,7 @@
+ #define FDT_PSTR_INITRD_STA	"linux,initrd-start"
+ #define FDT_PSTR_INITRD_END	"linux,initrd-end"
+ #define FDT_PSTR_BOOTARGS	"bootargs"
++#define FDT_PSTR_KASLR_SEED	"kaslr-seed"
  
- struct mz_reloc {
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ 	&kexec_image_ops,
+@@ -46,11 +48,38 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+ 	return kexec_image_post_load_cleanup_default(image);
+ }
+ 
++/* crng needs to have been initialized for providing kaslr-seed */
++static int random_ready;
++
++static void random_ready_notified(struct random_ready_callback *unused)
++{
++	random_ready = 1;
++}
++
++static struct random_ready_callback random_ready_cb = {
++	.func = random_ready_notified,
++};
++
++static __init int init_random_ready_cb(void)
++{
++	int ret;
++
++	ret = add_random_ready_callback(&random_ready_cb);
++	if (ret == -EALREADY)
++		random_ready = 1;
++	else if (ret)
++		pr_warn("failed to add a callback for random_ready\n");
++
++	return 0;
++}
++late_initcall(init_random_ready_cb)
++
+ static int setup_dtb(struct kimage *image,
+ 		     unsigned long initrd_load_addr, unsigned long initrd_len,
+ 		     char *cmdline, void *dtb)
+ {
+ 	int nodeoffset;
++	u64 value;
+ 	int ret;
+ 
+ 	nodeoffset = fdt_path_offset(dtb, "/chosen");
+@@ -106,12 +135,27 @@ static int setup_dtb(struct kimage *image,
+ 			return -EINVAL;
+ 	}
+ 
++	/* add kaslr-seed */
++	ret = fdt_delprop(dtb, nodeoffset, FDT_PSTR_KASLR_SEED);
++	if (ret && (ret != -FDT_ERR_NOTFOUND))
++		return -EINVAL;
++
++	if (random_ready) {
++		get_random_bytes(&value, sizeof(value));
++		ret = fdt_setprop_u64(dtb, nodeoffset, FDT_PSTR_KASLR_SEED,
++							value);
++		if (ret)
++			return (ret == -FDT_ERR_NOSPACE ? -ENOMEM : -EINVAL);
++	} else {
++		pr_notice("kaslr-seed won't be fed\n");
++	}
++
+ 	return 0;
+ }
+ 
+ /*
+  * More space needed so that we can add initrd, bootargs,
+- * userable-memory-range and elfcorehdr.
++ * userable-memory-range, elfcorehdr and kaslr-seed.
+  */
+ #define DTB_EXTRA_SPACE 0x1000
+ 
 -- 
 2.19.0
 
