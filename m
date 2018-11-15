@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gNF4K-0001Hb-Mj
- for kexec@lists.infradead.org; Thu, 15 Nov 2018 10:40:18 +0000
-Date: Thu, 15 Nov 2018 11:39:59 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 1/2 v6] x86/kexec_file: add e820 entry in case e820 type
- string matches to io resource name
-Message-ID: <20181115103959.GB26448@zn.tnic>
-References: <20181114072926.13312-1-lijiang@redhat.com>
- <20181114072926.13312-2-lijiang@redhat.com>
- <20181114112600.GD13926@zn.tnic>
- <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gNIMC-0003Km-EA
+ for kexec@lists.infradead.org; Thu, 15 Nov 2018 14:10:57 +0000
+Date: Thu, 15 Nov 2018 06:10:36 -0800
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec/dt-ops.c: Fix check against 'fdt_add_subnode'
+ return value
+Message-ID: <20181115141036.gsva2tt2izcki72c@verge.net.au>
+References: <1541968216-31282-1-git-send-email-bhsharma@redhat.com>
+ <20181112022406.GZ11663@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
+In-Reply-To: <20181112022406.GZ11663@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,70 +21,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, bhupesh.linux@gmail.com
 
-+ Bjorn.
-
-On Thu, Nov 15, 2018 at 01:44:07PM +0800, lijiang wrote:
-> At present, the upstream kernel does not pass the e820 reserved ranges to the
-> second kernel, which might cause two problems:
-> 
-> The first one is the MMCONFIG issue, the PCI MMCONFIG(extended mode) requires
-> the reserved region otherwise it falls back to legacy mode, which might lead to
-> the hot-plug device could not be recognized in kdump kernel.
-
-Well, this still doesn't explain it fully. Let's look at a box:
-
-[    0.000000] e820: BIOS-provided physical RAM map:
-[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x00000000000997ff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000000099800-0x000000000009ffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000000e0000-0x00000000000fffff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x0000000065642fff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000065643000-0x0000000067fb8fff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000000067fb9000-0x00000000689e8fff] ACPI NVS
-[    0.000000] BIOS-e820: [mem 0x00000000689e9000-0x0000000068bf5fff] ACPI data
-[    0.000000] BIOS-e820: [mem 0x0000000068bf6000-0x000000006f7fffff] usable
-[    0.000000] BIOS-e820: [mem 0x000000006f800000-0x000000008fffffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000fd000000-0x00000000fe7fffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000fec00000-0x00000000fec00fff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000fec80000-0x00000000fed00fff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000ff800000-0x00000001007fffff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000000100800000-0x000000603fffffff] usable
-
-this one has 8 reserved regions. Does that mean that we need to pass
-them *all* 8 to the second kernel so that MMCONFIG works?
-
-Or is it only one reserved region which is needed for MMCONFIG?
-
-Bjorn, do you know what the detection logic should be to map the correct
-reserved region (or regions) for MMCONFIG?
-
-Now, even if we don't map that reserved region and MMCONFIG falls back
-to legacy mode, why is that a problem for the kdump kernel? Why does
-the kdump kernel need the hotplug device? What would be the use case?
-Hotplug a SATA drive to store the memory dump to it ... or?
-
-> Another one is that the e820 reserved ranges do not setup in kdump kernel, which
-> could cause kdump can't work in some machines. To know more information, please
-> refer to the [PATCH 2/2 v6] patch log.
-
-Yah, I still don't understand *why* we need the reserved ranges in the
-second kernel. Once we've figured out the *why* we can look at the *how*.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCBOb3YgMTIsIDIwMTggYXQgMTE6MjQ6MDdBTSArMDkwMCwgQUtBU0hJIFRha2FoaXJv
+IHdyb3RlOgo+IE9uIE1vbiwgTm92IDEyLCAyMDE4IGF0IDAyOjAwOjE2QU0gKzA1MzAsIEJodXBl
+c2ggU2hhcm1hIHdyb3RlOgo+ID4gVmljZW7DpyByZXBvcnRlZCAodmlhIFsxXSkgdGhhdCBjdXJy
+ZW50bHkgZXhlY3V0aW5nIGtleGVjIHdpdGgKPiA+ICctLWR0Yicgb3B0aW9uIGFuZCBwYXNzaW5n
+IGEgLmR0YiB3aGljaCBkb2Vzbid0IGhhdmUgYSAnL2Nob3Nlbicgbm9kZQo+ID4gbGVhZHMgdG8g
+dGhlIGZvbGxvd2luZyBlcnJvcjoKPiA+IAo+ID4gICAjIGtleGVjIC1kIC0tZHRiIGR0Yl93aXRo
+b3V0X2Nob3Nlbl9ub2RlLmR0YiAtLWFwcGVuZCAnY21kbGluZScgLS1sb2FkIEltYWdlCj4gPiAK
+PiA+ICAgICBkdGJfc2V0X3Byb3BlcnR5OiBmZHRfYWRkX3N1Ym5vZGUgZmFpbGVkOiA8dmFsaWQg
+b2Zmc2V0L2xlbmd0aD4KPiA+ICAgICBrZXhlYzogU2V0IGRldmljZSB0cmVlIGJvb3RhcmdzIGZh
+aWxlZC4KPiA+IAo+ID4gVGhpcyBoYXBwZW5zIGJlY2F1c2UgY3VycmVudGx5IHdlIGNoZWNrIHRo
+ZSByZXR1cm4gdmFsdWUgb2YKPiA+ICdmZHRfYWRkX3N1Ym5vZGUoKScgZnVuY3Rpb24gY2FsbCBp
+biAnZHQtb3BzLmMnIGluY29ycmVjdGx5Ogo+ID4gCj4gPiAgICByZXN1bHQgPSBmZHRfYWRkX3N1
+Ym5vZGUobmV3X2R0Yiwgbm9kZW9mZnNldCwgbm9kZSk7Cj4gPiAgICBpZiAocmVzdWx0KSB7Cj4g
+PiAgICAJZGJncHJpbnRmKCIlczogZmR0X2FkZF9zdWJub2RlIGZhaWxlZDogJXNcbiIsIF9mdW5j
+X18sCj4gPiAgICAJCWZkdF9zdHJlcnJvcihyZXN1bHQpKTsKPiA+ICAgIAlnb3RvIG9uX2Vycm9y
+Owo+ID4gICAgfQo+ID4gCj4gPiBBcyB3ZSBjYW4gc2VlIGluICdmZHRfcncuYycsIGEgcG9zaXRp
+dmUgcmV0dXJuIHZhbHVlIGZyb20KPiA+ICdmZHRfYWRkX3N1Ym5vZGUoKScgZnVuY3Rpb24gZG9l
+c24ndCBpbmRpY2F0ZSBhbiBlcnJvci4KPiA+IAo+ID4gV2UgY2FuIHNlZSB0aGF0IHRoZSBMaW51
+eCBrZXJuZWwgKHNlZSAnZHJpdmVycy9maXJtd2FyZS9lZmkvbGlic3R1Yi9mZHQuYycKPiA+IGZv
+ciBleGFtcGxlKSBhbHNvIGNoZWNrcyB0aGUgJ2ZkdF9hZGRfc3Vibm9kZSgpJyBmdW5jdGlvbiBh
+Z2FpbnN0IG5lZ2F0aXZlCj4gPiByZXR1cm4gdmFsdWVzIGZvciBlcnJvcnMuIFNlZSBhbiBleGFt
+cGxlIGJlbG93IGZyb20gJ3VwZGF0ZV9mZHQoKScgZnVuY3Rpb24gaW4KPiA+ICdkcml2ZXJzL2Zp
+cm13YXJlL2VmaS9saWJzdHViL2ZkdC5jJzoKPiA+IAo+ID4gICAgbm9kZSA9IGZkdF9hZGRfc3Vi
+bm9kZShmZHQsIDAsICJjaG9zZW4iKTsKPiA+ICAgIGlmIChub2RlIDwgMCkgewo+ID4gICAgCXN0
+YXR1cyA9IG5vZGU7Cj4gPiAgICAJPC4uc25pcC4uPgo+ID4gICAgCWdvdG8gZmR0X3NldF9mYWls
+Owo+ID4gICAgfQo+ID4gCj4gPiBUaGlzIHBhdGNoIGZpeGVzIHRoZSBzYW1lIGluICdrZXhlYy10
+b29scycuCj4gCj4gTG9va3MgZ29vZC4KPiBUaGFuayB5b3UuCj4gLVRha2FoaXJvIEFrYXNoaQoK
+VGhhbmtzLCBhcHBsaWVkLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
