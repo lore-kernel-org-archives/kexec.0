@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw1-xc44.google.com ([2607:f8b0:4864:20::c44])
+Received: from mail-yw1-xc42.google.com ([2607:f8b0:4864:20::c42])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gNAZp-0005DE-FT
- for kexec@lists.infradead.org; Thu, 15 Nov 2018 05:52:30 +0000
-Received: by mail-yw1-xc44.google.com with SMTP id l66-v6so8266008ywl.7
- for <kexec@lists.infradead.org>; Wed, 14 Nov 2018 21:52:19 -0800 (PST)
+ id 1gNAZt-0005Dq-7c
+ for kexec@lists.infradead.org; Thu, 15 Nov 2018 05:52:34 +0000
+Received: by mail-yw1-xc42.google.com with SMTP id h32so2180050ywk.2
+ for <kexec@lists.infradead.org>; Wed, 14 Nov 2018 21:52:22 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v16 01/16] asm-generic: add kexec_file_load system call to
- unistd.h
-Date: Thu, 15 Nov 2018 14:52:40 +0900
-Message-Id: <20181115055254.2812-2-takahiro.akashi@linaro.org>
+Subject: [PATCH v16 02/16] kexec_file: make
+ kexec_image_post_load_cleanup_default() global
+Date: Thu, 15 Nov 2018 14:52:41 +0900
+Message-Id: <20181115055254.2812-3-takahiro.akashi@linaro.org>
 In-Reply-To: <20181115055254.2812-1-takahiro.akashi@linaro.org>
 References: <20181115055254.2812-1-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
@@ -28,31 +28,44 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 Cc: ard.biesheuvel@linaro.org, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, prudo@linux.ibm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-The initial user of this system call number is arm64.
+Change this function from static to global so that arm64 can implement
+its own arch_kimage_file_post_load_cleanup() later using
+kexec_image_post_load_cleanup_default().
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Dave Young <dyoung@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
 ---
- include/uapi/asm-generic/unistd.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/linux/kexec.h | 1 +
+ kernel/kexec_file.c   | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index 538546edbfbd..3b7196295fa6 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -738,9 +738,11 @@ __SYSCALL(__NR_statx,     sys_statx)
- __SC_COMP(__NR_io_pgetevents, sys_io_pgetevents, compat_sys_io_pgetevents)
- #define __NR_rseq 293
- __SYSCALL(__NR_rseq, sys_rseq)
-+#define __NR_kexec_file_load 294
-+__SYSCALL(__NR_kexec_file_load,     sys_kexec_file_load)
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 9e4e638fb505..49ab758f4d91 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -143,6 +143,7 @@ extern const struct kexec_file_ops * const kexec_file_loaders[];
  
- #undef __NR_syscalls
--#define __NR_syscalls 294
-+#define __NR_syscalls 295
+ int kexec_image_probe_default(struct kimage *image, void *buf,
+ 			      unsigned long buf_len);
++int kexec_image_post_load_cleanup_default(struct kimage *image);
  
- /*
-  * 32 bit systems traditionally used different
+ /**
+  * struct kexec_buf - parameters for finding a place for a buffer in memory
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 35cf0ad29718..9ce6672f4fa3 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -76,7 +76,7 @@ void * __weak arch_kexec_kernel_image_load(struct kimage *image)
+ 	return kexec_image_load_default(image);
+ }
+ 
+-static int kexec_image_post_load_cleanup_default(struct kimage *image)
++int kexec_image_post_load_cleanup_default(struct kimage *image)
+ {
+ 	if (!image->fops || !image->fops->cleanup)
+ 		return 0;
 -- 
 2.19.0
 
