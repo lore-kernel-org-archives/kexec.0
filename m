@@ -1,23 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-f194.google.com ([209.85.208.194])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gNOFQ-000733-Ex
- for kexec@lists.infradead.org; Thu, 15 Nov 2018 20:28:22 +0000
-Received: by mail-lj1-f194.google.com with SMTP id l15-v6so10172510lja.9
- for <kexec@lists.infradead.org>; Thu, 15 Nov 2018 12:28:08 -0800 (PST)
-MIME-Version: 1.0
-References: <1540799431-11064-1-git-send-email-bhsharma@redhat.com>
- <1540799431-11064-2-git-send-email-bhsharma@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC0355EF59@BPXM09GP.gisp.nec.co.jp>
- <4AE2DC15AC0B8543882A74EA0D43DBEC0355F237@BPXM09GP.gisp.nec.co.jp>
- <CACi5LpNB9HZFfqgRC=sZCoKJ6YMvZkaPwBM=AAT_o3_t-+e5eQ@mail.gmail.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC0355F6E9@BPXM09GP.gisp.nec.co.jp>
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC0355F6E9@BPXM09GP.gisp.nec.co.jp>
+Received: from mail-pg1-f195.google.com ([209.85.215.195])
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gNPUm-00087s-Hx
+ for kexec@lists.infradead.org; Thu, 15 Nov 2018 21:48:18 +0000
+Received: by mail-pg1-f195.google.com with SMTP id 80so9602455pge.4
+ for <kexec@lists.infradead.org>; Thu, 15 Nov 2018 13:48:05 -0800 (PST)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Fri, 16 Nov 2018 01:57:52 +0530
-Message-ID: <CACi5LpOUoA4CcqOmtf98bRQ03OgukNf7cf=dW71F23+43_4VEw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] makedumpfile/arm64: Use VMCOREINFO inside
- '/proc/kcore' (if available)
+Subject: [PATCH v2] x86_64, vmcoreinfo: Append 'page_offset_base' to vmcoreinfo
+Date: Fri, 16 Nov 2018 03:17:49 +0530
+Message-Id: <1542318469-13699-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,608 +17,140 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: kexec mailing list <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, James Morse <james.morse@arm.com>, Baoquan He <bhe@redhat.com>, bhsharma@redhat.com, x86@kernel.org, kexec@lists.infradead.org, Omar Sandoval <osandov@fb.com>, Boris Petkov <bp@alien8.de>, Dave Anderson <anderson@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-Hi Kazu,
+x86_64 kernel uses 'page_offset_base' variable to point to the
+start of direct mapping of all physical memory. This variable
+is also updated for KASLR boot cases, so this can be exported
+via vmcoreinfo as a standard ABI between kernel and user-space,
+to allow user-space utilities to use the same for calculating
+the start of direct mapping of all physical memory.
 
-Thanks for the patches. Some comments inline:
+'arch/x86/kernel/head64.c' sets the same as:
+   unsigned long page_offset_base __ro_after_init = __PAGE_OFFSET_BASE_L4;
 
-On Tue, Nov 13, 2018 at 1:24 AM Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
->
-> Hi Bhupesh,
->
-> (I'm trying to send this again without the attached files
-> because the previous one looks being held by kexec list.
-> sorry for the duplication.)
->
-> Thank you for the information.
->
-> On 11/8/2018 4:58 PM, Bhupesh Sharma wrote:
-> > Hi Kazu,
-> >
-> > On Wed, Nov 7, 2018 at 1:53 AM Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
-> > >
-> > > On 11/2/2018 5:00 PM, Kazuhito Hagio wrote:
-> > > > Originally, info->page_offset (PAGE_OFFSET) is used in the following
-> > > > parts on arm64.
-> > > >
-> > > > arch/arm64.c:
-> > > > __pa(unsigned long vaddr)
-> > > > {
-> > > >         if (kimage_voffset == NOT_FOUND_NUMBER ||
-> > > >                         (vaddr >= PAGE_OFFSET))
-> > > >                 return (vaddr - PAGE_OFFSET + info->phys_base);
-> > > >         else
-> > > >                 return (vaddr - kimage_voffset);
-> > > > }
-> > > >
-> > > > elf_info.c:
-> > > >         kvstart = (ulong)start + PAGE_OFFSET;
-> > > >         kvend = (ulong)end + PAGE_OFFSET;
-> > > > --
-> > > >         kvaddr = (ulong)vmcoreinfo_addr + PAGE_OFFSET;
-> > > >
-> > > > I'm wondering about its consistency.  Is it OK to set
-> > > > (virt_start - phys_start) to info->page_offset on arm64?
-> > > > In other words, on arm64 system with info->phys_base != 0, does it
-> > > > work correctly for both /proc/vmcore and --mem-usage /proc/kcore?
-> > >
-> > > I found an arm64 system available and (virt_start - phys_start)
-> > > tested OK for both /proc/vmcore and --mem-usage /proc/kcore,
-> > > because the __pa() function is used just only for swapper_pg_dir
-> > > and the "(vaddr - PAGE_OFFSET + info->phys_base)" line is not used.
-> > >
-> > > The definition of PAGE_OFFSET in kernel is:
-> > >
-> > >   #define PAGE_OFFSET             (UL(0xffffffffffffffff) - \
-> > >           (UL(1) << (VA_BITS - 1)) + 1)
-> > >
-> > > The one in crash is:
-> > >
-> > >   #define ARM64_PAGE_OFFSET    ((0xffffffffffffffffUL) \
-> > >                                         << (machdep->machspec->VA_BITS - 1))
-> > >
-> > > So I think it would be better to use the same definition also in
-> > > makedumpfile to avoid confusion. In other words, I think the following
-> > > does not support arm64 now, and ideally should be fixed by introducing
-> > > something like phys_to_virt()..
-> > >
-> > > elf_info.c:
-> > >         kvstart = (ulong)start + PAGE_OFFSET;
-> > >         kvend = (ulong)end + PAGE_OFFSET;
-> > >         --
-> > >         kvaddr = (ulong)vmcoreinfo_addr + PAGE_OFFSET;
-> > >
-> > > and then,
-> > >
-> > >   if (NUMBER(VA_BITS) != NOT_FOUND_NUMBER)
-> > >       va_bits = NUMBER(VA_BITS);
-> > >   else
-> > >       ... va_vits calculation ...
-> > >
-> > >   info->page_offset = 0xffffffffffffffffUL << (va_bits - 1);
-> > >
-> > > And also we will need to add get_phys_base() to show_mem_usage()
-> > > with some additional code for arm64 with old kernels.
-> > > I'm considering this approach.
-> >
-> > Note that PAGE_OFFSET is not constant on KASLR enabled arm64 kernels
-> > as the start of the linear range gets randomized as well (as per the
-> > KASLR seed) which means that PAGE_OFFSET is no longer equal to the
-> > macro:
-> > #define PAGE_OFFSET             (UL(0xffffffffffffffff) - \
-> >            (UL(1) << (VA_BITS - 1)) + 1)
->
-> The PAGE_OFFSET macro itself is still constant in arm64 kernel and used by
-> p2v/v2p calculation, and also used by the test whether a virtual address is
-> in linear kernel range (as VA_BITS):
-> ---
-> extern s64                      memstart_addr;
-> /* PHYS_OFFSET - the physical address of the start of memory. */
-> #define PHYS_OFFSET             ({ VM_BUG_ON(memstart_addr & 1); memstart_addr; })
-> ...
-> /*
->  * The linear kernel range starts in the middle of the virtual adddress
->  * space. Testing the top bit for the start of the region is a
->  * sufficient check.
->  */
-> #define __is_lm_address(addr)   (!!((addr) & BIT(VA_BITS - 1)))
->
-> #define __lm_to_phys(addr)      (((addr) & ~PAGE_OFFSET) + PHYS_OFFSET)
-> #define __kimg_to_phys(addr)    ((addr) - kimage_voffset)
->
-> #define __virt_to_phys_nodebug(x) ({                                    \
->         phys_addr_t __x = (phys_addr_t)(x);                             \
->         __is_lm_address(__x) ? __lm_to_phys(__x) :                      \
->                                __kimg_to_phys(__x);                     \
-> })
-> ...
-> #define __phys_to_virt(x)       ((unsigned long)((x) - PHYS_OFFSET) | PAGE_OFFSET)
-> ---
+and also uses the same to indicate the base of KASLR regions on x86_64:
+   static __initdata struct kaslr_memory_region {
+	    unsigned long *base;
+	        unsigned long size_tb;
+   } kaslr_regions[] = {
+	    { &page_offset_base, 0 },
+   .. snip ..
 
-I understand, but for me (and as I understood from other arm64 users
-as well), the kernel
-virtual address layout and the comments we have in place are probably
-broken after KASLR
-was enabled on arm64. This is something I shared with arm64 maintainers as well:
-[1]. https://www.spinics.net/lists/arm-kernel/msg655933.html
+Adding 'page_offset_base' to the vmcoreinfo can be specially useful for
+live-debugging of a running kernel via user-space utilities
+like makedumpfile (see [1]).
 
-Lets go through some details first.
-Please note that the PAGE_OFFSET is defined as
-('arch/arm64/include/asm/memory.h'):
+Recently, I saw an issue with the 'makedumpfile' utility (see [2] for
+details), whose live debugging feature is broken with newer kernels
+(I tested the same with 4.19-rc8+ kernel), as KCORE_REMAP segments were
+added to kcore, thus leading to an additional sections in the same, and
+makedumpfile is not longer able to determine the start of direct
+mapping of all physical memory, as it relies on traversing the PT_LOAD
+segments inside kcore and using the last PT_LOAD segment
+to determine the start of direct mapping.
 
-/*
- * PAGE_OFFSET - the virtual address of the start of the linear map (top
- *         (VA_BITS - 1))
+Such user-space issues can be resolved if the user-space code instead
+uses a standard ABI to read the kernel exposed machine specific
+variables. With the kernel commit 23c85094fe1895caefdd
+["proc/kcore: add vmcoreinfo note to /proc/kcore"]), it is
+now possible to use the vmcoreinfo present inside kcore as the standard
+ABI which can be used by the user-space utilities for reading
+the machine specific information (and hence for debugging a
+live kernel).
 
-So, basically this points to the virtual address which indicates the
-start of linear mapping.
-Now, the linear region takes up exactly half of the kernel virtual
-address space.
+User-space utilities like makedumpfile, kexec-tools and crash
+are either already using this ABI or are discussing patches
+which look to add the same feature. This helps in simplifying the
+overall code and also in reducing code-rewrite across the
+user-space utilities for getting values of these kernel
+symbols/variables.
 
-So, with a normal non-KASLR boot (I am sharing the logs below on a
-system booted with 'nokaslr' in bootargs),
-the PAGE_OFFSET macro would normally point to the half mark of the
-kernel virtual address space.
-[I needed to revert the kernel commit
-"071929dbdd865f779a89ba3f1e06ba8d17dd3743: arm64: Stop printing the
-virtual memory layout" to get these logs]
+Accordingly this patch allows appending 'page_offset_base' for
+x86_64 platforms to vmcoreinfo, so that user-space tools can use the
+same as a standard interface to determine the start of direct mapping
+of all physical memory.
 
-[    0.000000] Virtual kernel memory layout:
-[    0.000000]     modules : 0xffff000000000000 - 0xffff000008000000
-(   128 MB)
-[    0.000000]     vmalloc : 0xffff000008000000 - 0xffff7bdfffff0000
-(126847 GB)
-[    0.000000]       .text : 0x(____ptrval____) - 0x(____ptrval____)
-(  8768 KB)
-[    0.000000]     .rodata : 0x(____ptrval____) - 0x(____ptrval____)
-(  5696 KB)
-[    0.000000]       .init : 0x(____ptrval____) - 0x(____ptrval____)
-(  4224 KB)
-[    0.000000]       .data : 0x(____ptrval____) - 0x(____ptrval____)
-(  1775 KB)
-[    0.000000]        .bss : 0x(____ptrval____) - 0x(____ptrval____)
-(  9193 KB)
-[    0.000000]     fixed   : 0xffff7fdffe790000 - 0xffff7fdffec00000
-(  4544 KB)
-[    0.000000]     PCI I/O : 0xffff7fdffee00000 - 0xffff7fdfffe00000
-(    16 MB)
-[    0.000000]     vmemmap : 0xffff7fe000000000 - 0xffff800000000000
-(   128 GB maximum)
-[    0.000000]               0xffff7fe000000000 - 0xffff7fe004000000
-(    64 MB actual)
-[    0.000000]     memory  : 0xffff800000000000 - 0xffff801000000000
-( 65536 MB)
+Testing:
+-------
+ - I tested this patch (rebased on 'linux-next') on a x86_64 machine
+   using the modified 'makedumpfile' user-space code (see [3] for my
+   github tree which contains the same) for determining how many pages
+   are dumpable when different dump_level is specified (which is
+   one use-case of live-debugging via 'makedumpfile').
+ - I tested both the KASLR and non-KASLR boot cases with this patch.
+ - Here is one sample log (for KASLR boot case) on my x86_64 machine:
 
-This is on a system with 64K page size and VA_BITS=48.
-For such a configuration, PAGE_OFFSET is also calculated as
-0xffff800000000000, which the
-same as the start address of the memory range (i.e memory  :
-0xffff800000000000 - 0xffff801000000000)
-which depicts the linear region from where 'kmalloc' allocations take place.
+   < snip..>
+   The kernel doesn't support mmap(),read() will be used instead.
 
-Now, lets look at the boot logs on the same system with 'nokaslr'
-removed from bootargs (i.e. a KASLR boot case):
+   TYPE		PAGES			EXCLUDABLE	DESCRIPTION
+   ----------------------------------------------------------------------
+   ZERO		21299           	yes		Pages filled
+   with zero
+   NON_PRI_CACHE	91785           	yes		Cache
+   pages without private flag
+   PRI_CACHE	1               	yes		Cache pages with
+   private flag
+   USER		14057           	yes		User process
+   pages
+   FREE		740346          	yes		Free pages
+   KERN_DATA	58152           	no		Dumpable kernel
+   data
 
-[    0.000000] Virtual kernel memory layout:
-[    0.000000]     modules : 0xffff000000000000 - 0xffff000008000000
-(   128 MB)
-[    0.000000]     vmalloc : 0xffff000008000000 - 0xffff7bdfffff0000
-(126847 GB)
-[    0.000000]       .text : 0x(____ptrval____) - 0x(____ptrval____)
-(  8768 KB)
-[    0.000000]     .rodata : 0x(____ptrval____) - 0x(____ptrval____)
-(  5696 KB)
-[    0.000000]       .init : 0x(____ptrval____) - 0x(____ptrval____)
-(  4224 KB)
-[    0.000000]       .data : 0x(____ptrval____) - 0x(____ptrval____)
-(  1775 KB)
-[    0.000000]        .bss : 0x(____ptrval____) - 0x(____ptrval____)
-(  9193 KB)
-[    0.000000]     fixed   : 0xffff7fdffe790000 - 0xffff7fdffec00000
-(  4544 KB)
-[    0.000000]     PCI I/O : 0xffff7fdffee00000 - 0xffff7fdfffe00000
-(    16 MB)
-[    0.000000]     vmemmap : 0xffff7fe000000000 - 0xffff800000000000
-(   128 GB maximum)
-[    0.000000]               0xffff7fea5b300000 - 0xffff7fea5f300000
-(    64 MB actual)
-[    0.000000]     memory  : 0xffffa96cc0000000 - 0xffffa97cc0000000
-( 65536 MB)
+   page size:		4096
+   Total pages on system:	925640
+   Total size on system:	3791421440       Byte
 
-As you will note here, the start of linear range as indicated by the
-'memory' node is 0xffffa96cc0000000
-(this would be a random value for each KASLR boot), however the
-PAGE_OFFSET macro is still stuck
-at 0xffff800000000000, which is confusing (and probably incorrect), as
-the 'kmalloc' calls return addresses in the range
-'0xffffa96cc0000000 - 0xffffa97cc0000000' and not in the
-'0xffff800000000000 - 0xffff801000000000'  range
-anymore as we saw in the non-KASLR boot case.
+[1]. MAN pages -> MAKEDUMPFILE(8) and CRASH(8)
+[2]. makedumpfile issue with latest kernels -> http://lists.infradead.org/pipermail/kexec/2018-October/021769.html
+[3]. https://github.com/bhupesh-sharma/makedumpfile/tree/add-page-offset-base-to-vmcore-v1
 
-> I meant that I just would like to imitate these definitions also in
-> makedumpfile first, for better maintenance and future changes.
+Cc: Boris Petkov <bp@alien8.de>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: Dave Anderson <anderson@redhat.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Omar Sandoval <osandov@fb.com>
+Cc: x86@kernel.org
+Cc: kexec@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+---
+Changes since v1:
+ - Fixed the build issue reported by build bot and tested this version
+   with 'make allmodconfig'.
+ - Reworded most of the commit log to explain the intent behind the
+   patch.
 
-Sure, I think the arm64 kernel ideally requires a standard ABI to
-expose the start of linear address region to the user-space
-as well for both KASLR and non-KASLR cases (something like a
-'page_offset_base' for x86_64), and I plan to submit a RFC patch for
-arm64 maintainers
-consideration once my x86_64 kernel patch is accepted.
+ arch/x86/kernel/machine_kexec_64.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> Of course, PAGE_OFFSET becomes constant (from VA_BITS only), but PHYS_OFFSET
-> (= memstart_addr) will be variable by some conditions including KASLR.
-> I think that this PAGE_OFFSET is a bit different from x86_64's one on its
-> meaning.
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 4c8acdfdc5a7..6161d77c5bfb 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -356,6 +356,9 @@ void arch_crash_save_vmcoreinfo(void)
+ 	VMCOREINFO_SYMBOL(init_top_pgt);
+ 	vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
+ 			pgtable_l5_enabled());
++#ifdef CONFIG_RANDOMIZE_BASE
++	VMCOREINFO_NUMBER(page_offset_base);
++#endif
+ 
+ #ifdef CONFIG_NUMA
+ 	VMCOREINFO_SYMBOL(node_data);
+-- 
+2.7.4
 
-See above, but the point I am trying to make is that if the 'kmalloc'
-return addresses are nowhere close to the
-PAGE_OFFSET macro value, it causes a lot of confusion while debugging
-kernel issues.
-(see [1] for details, specially the suggestions I made there to the
-maintainers, copied below for quick access:
-
-So, my question is to access the start of linear region (which was
-earlier determinable via PAGE_OFFSET macro), whether I should:
-
-- do some back-computation for the start of linear region from the
-'memstart_addr' in user-space, or
-- use a new global variable in kernel which is assigned the value of
-memblock_start_of_DRAM()' and assign it to '/proc/kallsyms', so that
-it can be read by user-space tools, or
-- whether we should rather look at removing the PAGE_OFFSET usage from
-the kernel and replace it with a global variable instead which is
-properly updated for KASLR case as well.)
-
-> > Please have a look at my discussion with the arm64 maintainers which
-> > started the whole vmcoreinfo in kcore stuff rolling: ).
-> > It talks about PAGE_OFFSET and how it cannot be a constant macro for
-> > KASLR boot cases:
-> > [1]. https://www.spinics.net/lists/arm-kernel/msg655933.html
-> > [2]. https://www.spinics.net/lists/kexec/msg20842.html
-> >
-> > Also implementing __pa() or __phys_to_virt(x) in user-space is not
-> > easy as reported earlier for kexec-tools as well. A typical arm64
-> > __phys_to_virt(x) looks like this (simplified):
-> >
-> > | #define __phys_to_virt(x) \
-> > | ((unsigned long)((x) - memstart_addr) | PAGE_OFFSET)
-> >
-> > Please have a look at the discussion with the arm64 maintainers
-> > regarding their views on the same here:
-> > [3]. https://www.spinics.net/lists/kexec/msg20867.html
-> >
-> > As James, suggested in this thread, " If user-space needs this value
-> > to work with
-> > /proc/{kcore,vmcore} we should expose something like 'p2v_offset' as an elf-note
-> > on those files. (looks like they both have elf-headers).", something
-> > which I am working on already and plan to send upstream next week.
-> >
-> > My only concern is regarding whether we are heading in a direction in
-> > user-land, which has been NAK'ed by arm64 kernel maintainers, which
-> > means that if we need to avoid the nasty rewrite of a 'p2v'
-> > implementation in the user-space we should probably stick to using the
-> > standard interfaces exposed by kernel space and add the missing ones
-> > in kernel and push the kernel community to consider accepting the same
-> > as a standard ABI between kernel and user space.
->
-> I agree to using standard interfaces and pushing it to kernel.
-> I'm thinking to add comments to your x86_64 'page_offset_base' patch.
-
-Thanks a lot. That would help.
-
-> Anyway, first I'd like to address the above definition change and the problem
-> on arm64 with kernels < 4.19 to simlify the situation.
->
-> I wrote the attached patches as the first step:
->
-> Patch 1 introduces paddr_to_vaddr() and replaces a few "paddr + PAGE_OFFSET"
-> lines, which is p2v calculation for x86_64, with it.  There is no behavior
-> change on all architectures, although some architectures may need a fix.
->
-> Patch 2 redefines PAGE_OFFSET on arm64 and implement paddr_to_vaddr_arm64().
-> The meaning of PAGE_OFFSET is changed, but the case that using (vaddr - paddr)
-> for p2v calculation is not changed.
->
-> I tested them on two arm64 systems (including KASLR enabled, because its
-> KERNELOFFSET=2eff90ae0000 in vmcoreinfo) and it tested OK,
-> but could you test them on your arm64 boards?
->
-> If it works correctly, then let's think about using vmcoreinfo in PT_NOTE in
-> /proc/kcore, which kernels >= 4.19 have.
-
-Yes, these patches work fine on my hp-moonshot machine both for KASLR
-and non-KASLR cases,
-and I agree with you that we need some kind of a solution for <4.19
-kernels as well and probably
-this is a good fix to have for now.
-
-So, please feel free to add:
-Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
-
-Thanks for your help.
-
-Regards,
-Bhupesh
-
-> Thanks,
-> Kazu
->
-> --
-> From 7888baf1386728c9c3132d3e24fc8fdf48f55f03 Mon Sep 17 00:00:00 2001
-> From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> Date: Thu, 8 Nov 2018 14:26:43 -0500
-> Subject: [PATCH 1/2] Prepare paddr_to_vaddr() for architectures other than
->  x86_64 to support --mem-usage option
->
-> Signed-off-by: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> ---
->  elf_info.c     |  7 ++++---
->  makedumpfile.h | 11 +++++++++++
->  2 files changed, 15 insertions(+), 3 deletions(-)
->
-> diff --git a/elf_info.c b/elf_info.c
-> index 711601a..1d33e96 100644
-> --- a/elf_info.c
-> +++ b/elf_info.c
-> @@ -372,7 +372,7 @@ int set_kcore_vmcoreinfo(uint64_t vmcoreinfo_addr, uint64_t vmcoreinfo_len)
->         off_t offset_desc;
->
->         offset = UNINITIALIZED;
-> -       kvaddr = (ulong)vmcoreinfo_addr + PAGE_OFFSET;
-> +       kvaddr = paddr_to_vaddr(vmcoreinfo_addr);
->
->         for (i = 0; i < num_pt_loads; ++i) {
->                 struct pt_load_segment *p = &pt_loads[i];
-> @@ -810,10 +810,11 @@ static int exclude_segment(struct pt_load_segment **pt_loads,
->         int i, j, tidx = -1;
->         unsigned long long      vstart, vend, kvstart, kvend;
->         struct pt_load_segment temp_seg = {0};
-> -       kvstart = (ulong)start + PAGE_OFFSET;
-> -       kvend = (ulong)end + PAGE_OFFSET;
->         unsigned long size;
->
-> +       kvstart = paddr_to_vaddr(start);
-> +       kvend = paddr_to_vaddr(end);
-> +
->         for (i = 0; i < (*num_pt_loads); i++) {
->                 vstart = (*pt_loads)[i].virt_start;
->                 vend = (*pt_loads)[i].virt_end;
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index 46ebe2e..574a335 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -965,6 +965,8 @@ typedef unsigned long pgd_t;
->  static inline int stub_true() { return TRUE; }
->  static inline int stub_true_ul(unsigned long x) { return TRUE; }
->  static inline int stub_false() { return FALSE; }
-> +#define paddr_to_vaddr_general(X) ((X) + PAGE_OFFSET)
-> +
->  #ifdef __aarch64__
->  int get_phys_base_arm64(void);
->  int get_machdep_info_arm64(void);
-> @@ -975,6 +977,7 @@ int get_xen_info_arm64(void);
->  unsigned long get_kaslr_offset_arm64(unsigned long vaddr);
->  #define find_vmemmap()         stub_false()
->  #define vaddr_to_paddr(X)      vaddr_to_paddr_arm64(X)
-> +#define paddr_to_vaddr(X)      paddr_to_vaddr_general(X)
->  #define get_phys_base()                get_phys_base_arm64()
->  #define get_machdep_info()     get_machdep_info_arm64()
->  #define get_versiondep_info()  get_versiondep_info_arm64()
-> @@ -995,6 +998,7 @@ unsigned long long vaddr_to_paddr_arm(unsigned long vaddr);
->  #define get_versiondep_info()  stub_true()
->  #define get_kaslr_offset(X)    stub_false()
->  #define vaddr_to_paddr(X)      vaddr_to_paddr_arm(X)
-> +#define paddr_to_vaddr(X)      paddr_to_vaddr_general(X)
->  #define is_phys_addr(X)                stub_true_ul(X)
->  #define arch_crashkernel_mem_size()    stub_false()
->  #endif /* arm */
-> @@ -1009,6 +1013,7 @@ unsigned long long vaddr_to_paddr_x86(unsigned long vaddr);
->  #define get_versiondep_info()  get_versiondep_info_x86()
->  #define get_kaslr_offset(X)    stub_false()
->  #define vaddr_to_paddr(X)      vaddr_to_paddr_x86(X)
-> +#define paddr_to_vaddr(X)      paddr_to_vaddr_general(X)
->  #define is_phys_addr(X)                stub_true_ul(X)
->  #define arch_crashkernel_mem_size()    stub_false()
->  #endif /* x86 */
-> @@ -1026,6 +1031,7 @@ unsigned long long vtop4_x86_64_pagetable(unsigned long vaddr, unsigned long pag
->  #define get_versiondep_info()  get_versiondep_info_x86_64()
->  #define get_kaslr_offset(X)    get_kaslr_offset_x86_64(X)
->  #define vaddr_to_paddr(X)      vtop4_x86_64(X)
-> +#define paddr_to_vaddr(X)      paddr_to_vaddr_general(X)
->  #define is_phys_addr(X)                stub_true_ul(X)
->  #define arch_crashkernel_mem_size()    stub_false()
->  #endif /* x86_64 */
-> @@ -1041,6 +1047,7 @@ int arch_crashkernel_mem_size_ppc64(void);
->  #define get_versiondep_info()  get_versiondep_info_ppc64()
->  #define get_kaslr_offset(X)    stub_false()
->  #define vaddr_to_paddr(X)      vaddr_to_paddr_ppc64(X)
-> +#define paddr_to_vaddr(X)      paddr_to_vaddr_general(X)
->  #define is_phys_addr(X)                stub_true_ul(X)
->  #define arch_crashkernel_mem_size()    arch_crashkernel_mem_size_ppc64()
->  #endif          /* powerpc64 */
-> @@ -1054,6 +1061,7 @@ unsigned long long vaddr_to_paddr_ppc(unsigned long vaddr);
->  #define get_versiondep_info()  stub_true()
->  #define get_kaslr_offset(X)    stub_false()
->  #define vaddr_to_paddr(X)      vaddr_to_paddr_ppc(X)
-> +#define paddr_to_vaddr(X)      paddr_to_vaddr_general(X)
->  #define is_phys_addr(X)                stub_true_ul(X)
->  #define arch_crashkernel_mem_size()    stub_false()
->  #endif          /* powerpc32 */
-> @@ -1068,6 +1076,7 @@ int is_iomem_phys_addr_s390x(unsigned long addr);
->  #define get_versiondep_info()  stub_true()
->  #define get_kaslr_offset(X)    stub_false()
->  #define vaddr_to_paddr(X)      vaddr_to_paddr_s390x(X)
-> +#define paddr_to_vaddr(X)      paddr_to_vaddr_general(X)
->  #define is_phys_addr(X)                is_iomem_phys_addr_s390x(X)
->  #define arch_crashkernel_mem_size()    stub_false()
->  #endif          /* s390x */
-> @@ -1082,6 +1091,7 @@ unsigned long long vaddr_to_paddr_ia64(unsigned long vaddr);
->  #define get_versiondep_info()  stub_true()
->  #define get_kaslr_offset(X)    stub_false()
->  #define vaddr_to_paddr(X)      vaddr_to_paddr_ia64(X)
-> +#define paddr_to_vaddr(X)      paddr_to_vaddr_general(X)
->  #define VADDR_REGION(X)                (((unsigned long)(X)) >> REGION_SHIFT)
->  #define is_phys_addr(X)                stub_true_ul(X)
->  #define arch_crashkernel_mem_size()    stub_false()
-> @@ -1096,6 +1106,7 @@ unsigned long long vaddr_to_paddr_sparc64(unsigned long vaddr);
->  #define get_phys_base()         get_phys_base_sparc64()
->  #define get_versiondep_info()   get_versiondep_info_sparc64()
->  #define vaddr_to_paddr(X)       vaddr_to_paddr_sparc64(X)
-> +#define paddr_to_vaddr(X)      paddr_to_vaddr_general(X)
->  #define is_phys_addr(X)                stub_true_ul(X)
->  #define arch_crashkernel_mem_size()    stub_false()
->  #endif         /* sparc64 */
-> --
-> 2.18.1
->
->
-> From 2ce3e43db15e882e8b2746dc3d55a274d364a2f7 Mon Sep 17 00:00:00 2001
-> From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> Date: Thu, 8 Nov 2018 15:18:45 -0500
-> Subject: [PATCH 2/2] arm64: implement paddr_to_vaddr_arm64() to support
->  --mem-usage option
->
-> Signed-off-by: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> ---
->  arch/arm64.c   | 54 ++++++++++++++++++++++++++++----------------------
->  makedumpfile.c |  4 ++++
->  makedumpfile.h |  6 +++---
->  3 files changed, 37 insertions(+), 27 deletions(-)
->
-> diff --git a/arch/arm64.c b/arch/arm64.c
-> index 3626096..43c6b83 100644
-> --- a/arch/arm64.c
-> +++ b/arch/arm64.c
-> @@ -174,11 +174,35 @@ get_kvbase_arm64(void)
->  int
->  get_phys_base_arm64(void)
->  {
-> -       info->phys_base = NUMBER(PHYS_OFFSET);
-> +       int i;
-> +       unsigned long long phys_start;
-> +       unsigned long long virt_start;
->
-> -       DEBUG_MSG("phys_base    : %lx\n", info->phys_base);
-> +       if (NUMBER(PHYS_OFFSET) != NOT_FOUND_NUMBER) {
-> +               info->phys_base = NUMBER(PHYS_OFFSET);
-> +               DEBUG_MSG("phys_base    : %lx (vmcoreinfo)\n",
-> +                               info->phys_base);
-> +               return TRUE;
-> +       }
->
-> -       return TRUE;
-> +       if (get_num_pt_loads() && PAGE_OFFSET) {
-> +               for (i = 0;
-> +                   get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
-> +                   i++) {
-> +                       if (virt_start != NOT_KV_ADDR
-> +                           && virt_start >= PAGE_OFFSET
-> +                           && phys_start != NOT_PADDR) {
-> +                               info->phys_base = phys_start -
-> +                                       (virt_start & ~PAGE_OFFSET);
-> +                               DEBUG_MSG("phys_base    : %lx (pt_load)\n",
-> +                                               info->phys_base);
-> +                               return TRUE;
-> +                       }
-> +               }
-> +       }
-> +
-> +       DEBUG_MSG("Cannot determine phys_base\n");
-> +       return FALSE;
->  }
->
->  unsigned long
-> @@ -306,9 +330,6 @@ get_xen_info_arm64(void)
->  int
->  get_versiondep_info_arm64(void)
->  {
-> -       int i;
-> -       unsigned long long phys_start;
-> -       unsigned long long virt_start;
->         ulong _stext;
->
->         _stext = get_stext_symbol();
-> @@ -333,25 +354,10 @@ get_versiondep_info_arm64(void)
->                 return FALSE;
->         }
->
-> -       if (get_num_pt_loads()) {
-> -               for (i = 0;
-> -                   get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
-> -                   i++) {
-> -                       if (virt_start != NOT_KV_ADDR
-> -                           && virt_start < __START_KERNEL_map
-> -                           && phys_start != NOT_PADDR
-> -                           && phys_start != NOT_PADDR_ARM64) {
-> -                               info->page_offset = virt_start - phys_start;
-> -                               DEBUG_MSG("info->page_offset: %lx, VA_BITS: %d\n",
-> -                                               info->page_offset, va_bits);
-> -                               return TRUE;
-> -                       }
-> -               }
-> -       }
-> -
->         info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
-> -       DEBUG_MSG("page_offset=%lx, va_bits=%d\n", info->page_offset,
-> -                       va_bits);
-> +
-> +       DEBUG_MSG("va_bits      : %d\n", va_bits);
-> +       DEBUG_MSG("page_offset  : %lx\n", info->page_offset);
->
->         return TRUE;
->  }
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 91c1ab4..8923538 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -11214,6 +11214,10 @@ int show_mem_usage(void)
->         if (!get_page_offset())
->                 return FALSE;
->
-> +       /* paddr_to_vaddr() on arm64 needs phys_base. */
-> +       if (!get_phys_base())
-> +               return FALSE;
-> +
->         if (!get_sys_kernel_vmcoreinfo(&vmcoreinfo_addr, &vmcoreinfo_len))
->                 return FALSE;
->
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index 574a335..a76b499 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -542,9 +542,7 @@ do { \
->  #ifdef __aarch64__
->  unsigned long get_kvbase_arm64(void);
->  #define KVBASE                 get_kvbase_arm64()
-> -
->  #define __START_KERNEL_map     (0xffffffff80000000UL)
-> -#define NOT_PADDR_ARM64                (0x0000000010a80000UL)
->
->  #endif /* aarch64 */
->
-> @@ -975,9 +973,11 @@ int get_versiondep_info_arm64(void);
->  int get_xen_basic_info_arm64(void);
->  int get_xen_info_arm64(void);
->  unsigned long get_kaslr_offset_arm64(unsigned long vaddr);
-> +#define paddr_to_vaddr_arm64(X)        (((X) - info->phys_base) | PAGE_OFFSET)
-> +
->  #define find_vmemmap()         stub_false()
->  #define vaddr_to_paddr(X)      vaddr_to_paddr_arm64(X)
-> -#define paddr_to_vaddr(X)      paddr_to_vaddr_general(X)
-> +#define paddr_to_vaddr(X)      paddr_to_vaddr_arm64(X)
->  #define get_phys_base()                get_phys_base_arm64()
->  #define get_machdep_info()     get_machdep_info_arm64()
->  #define get_versiondep_info()  get_versiondep_info_arm64()
-> --
-> 2.18.1
->
->
 
 _______________________________________________
 kexec mailing list
