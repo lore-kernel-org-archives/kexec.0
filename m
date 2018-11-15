@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gNENz-00061Q-SH
- for kexec@lists.infradead.org; Thu, 15 Nov 2018 09:56:34 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 2/2 v7] x86/kexec_file: add reserved e820 ranges to kdump
- kernel e820 table
-Date: Thu, 15 Nov 2018 17:55:29 +0800
-Message-Id: <20181115095529.21220-3-lijiang@redhat.com>
-In-Reply-To: <20181115095529.21220-1-lijiang@redhat.com>
-References: <20181115095529.21220-1-lijiang@redhat.com>
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gNF4K-0001Hb-Mj
+ for kexec@lists.infradead.org; Thu, 15 Nov 2018 10:40:18 +0000
+Date: Thu, 15 Nov 2018 11:39:59 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/2 v6] x86/kexec_file: add e820 entry in case e820 type
+ string matches to io resource name
+Message-ID: <20181115103959.GB26448@zn.tnic>
+References: <20181114072926.13312-1-lijiang@redhat.com>
+ <20181114072926.13312-2-lijiang@redhat.com>
+ <20181114112600.GD13926@zn.tnic>
+ <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,104 +23,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: lijiang <lijiang@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-At present, when use the kexec_file_load syscall to load the kernel image
-and initramfs(for example: kexec -s -p xxx), the upstream kernel does not
-pass the e820 reserved ranges to the second kernel, which might cause two
-problems:
++ Bjorn.
 
-The first one is the MMCONFIG issue, although which does not make the
-system crash or hang, this issue is still a potential risk, and also
-might lead to the hot-plug device could not be recognized in kdump kernel.
-Because the PCI MMCONFIG(extended mode) requires the reserved region
-otherwise it falls back to legacy mode. For example, the kdump kernel
-outputs the following log.
+On Thu, Nov 15, 2018 at 01:44:07PM +0800, lijiang wrote:
+> At present, the upstream kernel does not pass the e820 reserved ranges to the
+> second kernel, which might cause two problems:
+> 
+> The first one is the MMCONFIG issue, the PCI MMCONFIG(extended mode) requires
+> the reserved region otherwise it falls back to legacy mode, which might lead to
+> the hot-plug device could not be recognized in kdump kernel.
 
-Example:
-......
-[   19.798354] PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
-[   19.800653] [Firmware Info]: PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] not reserved in ACPI motherboard resources
-[   19.800995] PCI: not using MMCONFIG
-......
+Well, this still doesn't explain it fully. Let's look at a box:
 
-The correct kernel log is like this:
-......
-[    0.082649] PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
-[    0.083610] PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] reserved in E820
-......
+[    0.000000] e820: BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x00000000000997ff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000000099800-0x000000000009ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000000e0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x0000000065642fff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000065643000-0x0000000067fb8fff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000067fb9000-0x00000000689e8fff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x00000000689e9000-0x0000000068bf5fff] ACPI data
+[    0.000000] BIOS-e820: [mem 0x0000000068bf6000-0x000000006f7fffff] usable
+[    0.000000] BIOS-e820: [mem 0x000000006f800000-0x000000008fffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fd000000-0x00000000fe7fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fec00000-0x00000000fec00fff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fec80000-0x00000000fed00fff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000ff800000-0x00000001007fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000100800000-0x000000603fffffff] usable
 
-The second issue is that the e820 reserved ranges do not setup in kdump
-kernel, which will cause some functions that related to the e820 reserved
-ranges to become invalid. For example:
+this one has 8 reserved regions. Does that mean that we need to pass
+them *all* 8 to the second kernel so that MMCONFIG works?
 
-early_memremap()->
-early_memremap_pgprot_adjust()->
-memremap_should_map_decrypted()->
-e820__get_entry_type()
+Or is it only one reserved region which is needed for MMCONFIG?
 
-Please focus on these functions, early_memremap_pgprot_adjust() and
-memremap_should_map_decrypted().
+Bjorn, do you know what the detection logic should be to map the correct
+reserved region (or regions) for MMCONFIG?
 
-In the first kernel, these ranges sit in e820 reserved ranges, so the
-memremap_should_map_decrypted() will return true, that is to say, the
-reserved memory is decrypted, then the early_memremap_pgprot_adjust()
-will call the pgprot_decrypted() to clear the memory encryption mask.
+Now, even if we don't map that reserved region and MMCONFIG falls back
+to legacy mode, why is that a problem for the kdump kernel? Why does
+the kdump kernel need the hotplug device? What would be the use case?
+Hotplug a SATA drive to store the memory dump to it ... or?
 
-In the second kernel, because the e820 reserved ranges are not passed
-to the second kernel, these ranges don't sit in the e820 reserved ranges,
-so the memremap_should_map_decrypted() will return false, that is to say,
-the reserved memory is encrypted, and then the early_memremap_pgprot_
-adjust() will also call the pgprot_encrypted() to set the memory encryption
-mask.
+> Another one is that the e820 reserved ranges do not setup in kdump kernel, which
+> could cause kdump can't work in some machines. To know more information, please
+> refer to the [PATCH 2/2 v6] patch log.
 
-In fact, in the second kernel, the e820 reserved memory is still decrypted.
-Obviously, it has gone wrong. So, this issue must be fixed, otherwise kdump
-won't work in this case.
+Yah, I still don't understand *why* we need the reserved ranges in the
+second kernel. Once we've figured out the *why* we can look at the *how*.
 
-The e820 reserved range is useful in kdump kernel, so it is necessary to
-pass the e820 reserved ranges to kdump kernel.
+Thx.
 
-Suggested-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
-Changes since v5:
-1. Improve the patch log
-
-Changes since v6:
-1. Modify this patch, and walk through io resource based on the
-   new descriptor 'IORES_DESC_RESERVED'.
-2. Add comment in the code.
-
- arch/x86/kernel/crash.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index f631a3f15587..5354a84f1684 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -380,6 +380,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
- 			memmap_entry_callback);
- 
-+	/* Add e820 reserved ranges */
-+	cmd.type = E820_TYPE_RESERVED;
-+	flags = IORESOURCE_MEM;
-+	walk_iomem_res_desc(IORES_DESC_RESERVED, flags, 0, -1, &cmd,
-+			   memmap_entry_callback);
-+
- 	/* Add crashk_low_res region */
- 	if (crashk_low_res.end) {
- 		ei.addr = crashk_low_res.start;
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
