@@ -1,23 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-f65.google.com ([209.85.167.65])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gNPXe-0007bU-V5
- for kexec@lists.infradead.org; Thu, 15 Nov 2018 21:51:15 +0000
-Received: by mail-lf1-f65.google.com with SMTP id u18so15197188lff.10
- for <kexec@lists.infradead.org>; Thu, 15 Nov 2018 13:51:04 -0800 (PST)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gNT2m-0008IF-5w
+ for kexec@lists.infradead.org; Fri, 16 Nov 2018 01:35:37 +0000
+Subject: Re: [PATCH 1/2 v6] x86/kexec_file: add e820 entry in case e820 type
+ string matches to io resource name
+References: <20181114072926.13312-1-lijiang@redhat.com>
+ <20181114072926.13312-2-lijiang@redhat.com> <20181114112600.GD13926@zn.tnic>
+ <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
+ <20181115055853.GA4445@dhcp-128-65.nay.redhat.com>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <9a82f7c7-a1eb-5a3f-0b77-28080b390ec8@redhat.com>
+Date: Fri, 16 Nov 2018 09:34:42 +0800
 MIME-Version: 1.0
-References: <1540593788-28181-1-git-send-email-bhsharma@redhat.com>
- <20181027100241.GB1884@MiWiFi-R3L-srv>
- <CACi5LpPf9Zr1beowRNGmLZY7DtS3JDt8D=FONjqas9yo7TyCjg@mail.gmail.com>
- <20181030020752.GB11408@MiWiFi-R3L-srv>
- <CACi5LpP0_s9zAF+QfKpU+kG6BKqqkiwQhcW-WFZ0=SnBeX7ZXA@mail.gmail.com>
- <20181030085917.GC11408@MiWiFi-R3L-srv>
-In-Reply-To: <20181030085917.GC11408@MiWiFi-R3L-srv>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Fri, 16 Nov 2018 03:20:50 +0530
-Message-ID: <CACi5LpPrYgiy--FRgN4549cxLPMrtx6mY9_QRggKNo7gK3WxYw@mail.gmail.com>
-Subject: Re: [PATCH] x86_64,
- vmcoreinfo: Append 'page_offset_base' to vmcoreinfo
+In-Reply-To: <20181115055853.GA4445@dhcp-128-65.nay.redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,76 +23,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, James Morse <james.morse@arm.com>, x86@kernel.org, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Omar Sandoval <osandov@fb.com>, Borislav Petkov <bp@alien8.de>, Dave Anderson <anderson@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, Borislav Petkov <bp@alien8.de>, tglx@linutronix.de, akpm@linux-foundation.org
 
-Hi Baoquan,
-
-On Tue, Oct 30, 2018 at 2:29 PM Baoquan He <bhe@redhat.com> wrote:
->
-> Hi Bhupesh,
->
-> On 10/30/18 at 12:33pm, Bhupesh Sharma wrote:
-> > > Why it's broken? Have you investigated and figured out why it's broken?
-> > > If fix, what patch will it look like? Does the patch prove it's not
-> > > worth using the current way?
-> > >
-> > > Have you thought about this in advance? Or still like before, you said
-> > > on arm64 you found different boards have different behaviour, then
-> > > makedumpfile maintainer Kazu said he investigated and found it may be
-> > > caused by KALSR. This time, for this KCORE_REMAP adding, can you help to
-> > > investigate further and give an answer to the issue you found and
-> > > raised?
-> >
-> > Ofcourse, the patchset which added vmcoreinfo into kcore was discussed
-> > and it was agreed that this was a better approach to move forward and hence
-> > accepted in mainline.
->
-> Currently I am wondering why x86_64 need add page_offset_base to
-> vmcoreinfo. Is it because any feature or userspace tool is broken if
-> page_offset_base is not added into vmcoreinfo?
->
-> Why KCORE_REMAP adding broke makedumpfile, do you find out the root
-> cause and what it looks like if you fix it in the current way?
->
-> Can you list the reasons one by one as below with short sentence?
-> 1)
-> 2)
-> 3)
->
-> >
-> > Regarding the makedumpfile issue, I have already provided a detailed
-> > reply to Kazu (you are Cc'ed on the thread) and also proposed a
-> > makedumpfile approach which
-> > reads the 'page_offset_base' value from kcore (using the kernel
-> > interface provided by this patch),
-> > [on which you are Cc'ed as well]:
->
-> This is your replying mail link:
-> https://www.spinics.net/lists/kexec/msg21616.html
->
-> Then what on earth do you want to fix in this patch?
->
-> So Kazu's patch which decuding page_offset_base like x86 64 have done works.
-> Yes, and your way using vmcoreinfo in kcore also works, but this is not
-> the reason which supports you to discard the old way Kazu suggested. Now
-> we are talking about why you want to discard the old way, and adding
-> page_offset_base to vmcoreinfo.
->
-> Please elaborate and reply with simple and clear logic.
-
-I have sent a v2 patch with a much simpler git log message. Hopefully
-that should clarify the intent behind the patch.
-Also lets see what views the x86 maintainers have on the v2 patch.
-
-Regards,
-Bhupesh
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMeaciDE15pelIDEzOjU4LCBEYXZlIFlvdW5nIOWGmemBkzoKPiBPbiAxMS8x
+NS8xOCBhdCAwMTo0NHBtLCBsaWppYW5nIHdyb3RlOgo+PiDlnKggMjAxOOW5tDEx5pyIMTTml6Ug
+MTk6MjYsIEJvcmlzbGF2IFBldGtvdiDlhpnpgZM6Cj4+PiBPbiBXZWQsIE5vdiAxNCwgMjAxOCBh
+dCAwMzoyOToyNVBNICswODAwLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4+Pj4gV2hlbiBsb2FkIHRo
+ZSBrZXJuZWwgaW1hZ2UgYW5kIGluaXRyYW1mcyBieSBrZXhlY19maWxlX2xvYWQgc3lzY2FsbCwg
+aXQgY2FuCj4+Pj4gbm90IGFkZCBleGFjdCBlODIwIHJlc2VydmVkIHR5cGUgdG8ga2R1bXAga2Vy
+bmVsIGU4MjAgdGFibGUuCj4+Pj4KPj4+PiBLZHVtcCB1c2VzIHdhbGtfaW9tZW1fcmVzX2Rlc2Mo
+KSB0byBpdGVyYXRlIGlvIHJlc291cmNlcywgdGhlbiBhZGRzIG1hdGNoZWQKPj4+PiBkZXNjIHRv
+IGU4MjAgdGFibGUgZm9yIGtkdW1wIGtlcm5lbC4gQnV0LCB3aGVuIGNvbnZlcnQgdGhlIGU4MjAg
+dHlwZSBpbnRvCj4+Pj4gdGhlIGlvcmVzIGRlc2NyaXB0b3JzLCBzZXZlcmFsIGU4MjAgdHlwZXMg
+YXJlIGNvbnZlcnRlZCB0byAnSU9SRVNfREVTX05PTkUnCj4+Pj4gaW4gdGhpcyBmdW5jdGlvbiBl
+ODIwX3R5cGVfdG9faW9yZXNfZGVzYygpLiBTbyB0aGUgd2Fsa19pb21lbV9yZXNfZGVzYygpCj4+
+Pj4gd2lsbCBnZXQgdGhlc2UgdW5uZWNlc3NhcnkgdHlwZXMoRTgyMF9UWVBFX1JBTS9FODIwX1RZ
+UEVfVU5VU0FCTEUvRTgyMF9UWVBFCj4+Pj4gX0tFUk4pIHdoZW4gaXRlcmF0ZSBpbyByZXNvdXJj
+ZXMgYnkgdGhlICdJT1JFU19ERVNfTk9ORScuCj4+Pj4KPj4+PiBJdCBuZWVkcyBmaWx0ZXIgb3V0
+IHRoZXNlIHJlZHVuZGFudCB0eXBlKHN1Y2ggYXMgRTgyMF9UWVBFX1JBTS9FODIwX1RZUEVfCj4+
+Pj4gVU5VU0FCTEUvRTgyMF9UWVBFX0tFUk4pIGluIG9yZGVyIHRvIGFkZCBleGFjdCBlODIwIHJl
+c2VydmVkIHR5cGUgdG8ga2R1bXAKPj4+PiBrZXJuZWwgZTgyMCB0YWJsZS4gVGh1cyBpdCBhbHNv
+IG5lZWRzIGFuIGV4dHJhIGNoZWNraW5nIGluIG1lbW1hcF9lbnRyeV8KPj4+PiBjYWxsYmFjaygp
+IHRvIG1hdGNoIHRoZSBlODIwIHR5cGUgYW5kIHJlc291cmNlIG5hbWUuCj4+Pgo+Pj4gT2ssIGl0
+IHRvb2sgbWUgYSB3aGlsZSB0byBwYXJzZSB3aGF0IHRoaXMgaXMgdHJ5aW5nIHRvIHNheSBzbyBs
+ZXQncwo+Pj4gc3RhcnQgZnJvbSB0aGUgdG9wOgo+Pj4KPj4+ICogV2hhdCByZXNvdXJjZSB0eXBl
+IGRvIHlvdSBkbyBuZWVkIGluIHRoZSBzZWNvbmQga2VybmVsPwo+Pj4KPj4KPj4gVGhhbmtzIGZv
+ciB5b3VyIGNvbW1lbnQuCj4+Cj4+IFRoZSBlODIwIHJlc2VydmVkIHJhbmdlcyBuZWVkIHRvIGJl
+IHBhc3NlZCB0byB0aGUgc2Vjb25kIGtlcm5lbC4KPj4KPj4+ICogVGhlIG1vc3QgaW1wb3J0YW50
+IHF1ZXN0aW9uOiB3aHk/Cj4+Pgo+Pgo+PiBBdCBwcmVzZW50LCB0aGUgdXBzdHJlYW0ga2VybmVs
+IGRvZXMgbm90IHBhc3MgdGhlIGU4MjAgcmVzZXJ2ZWQgcmFuZ2VzIHRvIHRoZQo+PiBzZWNvbmQg
+a2VybmVsLCB3aGljaCBtaWdodCBjYXVzZSB0d28gcHJvYmxlbXM6Cj4+Cj4+IFRoZSBmaXJzdCBv
+bmUgaXMgdGhlIE1NQ09ORklHIGlzc3VlLCB0aGUgUENJIE1NQ09ORklHKGV4dGVuZGVkIG1vZGUp
+IHJlcXVpcmVzCj4+IHRoZSByZXNlcnZlZCByZWdpb24gb3RoZXJ3aXNlIGl0IGZhbGxzIGJhY2sg
+dG8gbGVnYWN5IG1vZGUsIHdoaWNoIG1pZ2h0IGxlYWQgdG8KPj4gdGhlIGhvdC1wbHVnIGRldmlj
+ZSBjb3VsZCBub3QgYmUgcmVjb2duaXplZCBpbiBrZHVtcCBrZXJuZWwuCj4+Cj4+IEFub3RoZXIg
+b25lIGlzIHRoYXQgdGhlIGU4MjAgcmVzZXJ2ZWQgcmFuZ2VzIGRvIG5vdCBzZXR1cCBpbiBrZHVt
+cCBrZXJuZWwsIHdoaWNoCj4+IGNvdWxkIGNhdXNlIGtkdW1wIGNhbid0IHdvcmsgaW4gc29tZSBt
+YWNoaW5lcy4gVG8ga25vdyBtb3JlIGluZm9ybWF0aW9uLCBwbGVhc2UKPj4gcmVmZXIgdG8gdGhl
+IFtQQVRDSCAyLzIgdjZdIHBhdGNoIGxvZy4KPj4KPj4KPj4+ICogSWYgaXQgaXMgdGhlIHJlc2Vy
+dmVkIHJlc291cmNlLCB3aHkgYXJlbid0IHlvdSBhZGRpbmcKPj4+IElPUkVTX0RFU0NfUkVTRVJW
+RUQgb3Igc28gd2hpY2ggdG8gbG9vayBmb3IgaW5zdGVhZCBvZiB0aGlzIGhhY2t5IHN0cmluZwo+
+Pj4gY29tcGFyaXNvbj8KPj4+Cj4+Cj4+IEFkZGluZyB0aGUgbmV3IGRlc2NyaXB0b3IgJ0lPUkVT
+X0RFU0NfUkVTRVJWRUQnIGlzIGFsc28gYSBnb29kIHNvbHV0aW9uLiBJIHdpbGwKPiAKPiBJIHdh
+cyBub3Qgc3VyZSBpZiBzb21ldGhpbmcgZWxzZSBkZXBlbmRzIG9uIElPUkVTX0RFU0NfTk9ORSBh
+bmQgaWYgaXQgaXMKPiBlYXN5IHRvIHNwbGl0IGl0IGFuZCBhZGQgSU9SRVNfREVTQ19SRVNFUlZF
+RAo+IAo+IEJ1dCBpZiB5b3UgY2FuIHByb3ZlIGl0IGlzIHNhZmUgdGhlbiBpdCB3b3VsZCBiZSBh
+IGJldHRlciB3YXkuCj4gClRoYW5rIHlvdSwgRGF2ZS4KClRoZXNlIHR3byBzb2x1dGlvbnMgc2hv
+dWxkIGJlIGZlYXNpYmxlLCB0aGV5IGNhbiB3b3JrIHZlcnkgd2VsbCBvbiBteSBtYWNoaW5lLgoK
+UmVnYXJkcywKTGlhbmJvCgo+IFRoYW5rcwo+IERhdmUKPiAKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8va2V4ZWMK
