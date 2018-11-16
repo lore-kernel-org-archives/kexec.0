@@ -1,23 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it1-x143.google.com ([2607:f8b0:4864:20::143])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gNg3k-0007yO-AD
- for kexec@lists.infradead.org; Fri, 16 Nov 2018 15:29:30 +0000
-Received: by mail-it1-x143.google.com with SMTP id r12-v6so35215497ita.3
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2018 07:29:16 -0800 (PST)
+Received: from tyo185.gate.nec.co.jp ([114.179.232.185])
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gNgSY-0001Tn-Ny
+ for kexec@lists.infradead.org; Fri, 16 Nov 2018 15:55:08 +0000
+Received: from tyo161.gate.nec.co.jp (tyo161.gate.nec.co.jp [114.179.232.161])
+ by tyo185.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id
+ wAGFrkmE013420
+ (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO)
+ for <kexec@lists.infradead.org>; Sat, 17 Nov 2018 00:53:46 +0900
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH v2 1/2] makedumpfile/arm64: Use VMCOREINFO inside
+ '/proc/kcore' (if available)
+Date: Fri, 16 Nov 2018 15:50:43 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03560D0D@BPXM09GP.gisp.nec.co.jp>
+References: <1540799431-11064-1-git-send-email-bhsharma@redhat.com>
+ <1540799431-11064-2-git-send-email-bhsharma@redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC0355EF59@BPXM09GP.gisp.nec.co.jp>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC0355F237@BPXM09GP.gisp.nec.co.jp>
+ <CACi5LpNB9HZFfqgRC=sZCoKJ6YMvZkaPwBM=AAT_o3_t-+e5eQ@mail.gmail.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC0355F6E9@BPXM09GP.gisp.nec.co.jp>
+ <CACi5LpOUoA4CcqOmtf98bRQ03OgukNf7cf=dW71F23+43_4VEw@mail.gmail.com>
+In-Reply-To: <CACi5LpOUoA4CcqOmtf98bRQ03OgukNf7cf=dW71F23+43_4VEw@mail.gmail.com>
+Content-Language: en-US
 MIME-Version: 1.0
-References: <1541968216-31282-1-git-send-email-bhsharma@redhat.com>
- <20181112022406.GZ11663@linaro.org>
- <20181115141036.gsva2tt2izcki72c@verge.net.au>
- <20181115141354.vkreh4spzgn3eq75@verge.net.au>
- <CAAMcf8DrF4aiQF36OGbwMD80Jgf6=pDTa9v4OdKjL7WDBdP5vA@mail.gmail.com>
- <CACi5LpOf6ey0iv2zABNO8bMMvXzbioJ6TededOUgMLP8RQWgrQ@mail.gmail.com>
-In-Reply-To: <CACi5LpOf6ey0iv2zABNO8bMMvXzbioJ6TededOUgMLP8RQWgrQ@mail.gmail.com>
-From: Vicente Bergas <vicencb@gmail.com>
-Date: Fri, 16 Nov 2018 16:29:00 +0100
-Message-ID: <CAAMcf8Bd98iBgAtRNBsUZi+3Tg9ZdRxrrXU1QM0boRL_BbmH_Q@mail.gmail.com>
-Subject: Re: [PATCH] kexec/dt-ops.c: Fix check against 'fdt_add_subnode'
- return value
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,110 +31,169 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: bhsharma@redhat.com
-Cc: Takahiro Akashi <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: kexec mailing list <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>
 
-T24gRnJpLCBOb3YgMTYsIDIwMTggYXQgMTowNCBQTSBCaHVwZXNoIFNoYXJtYSA8YmhzaGFybWFA
-cmVkaGF0LmNvbT4gd3JvdGU6Cj4KPiBIaSBWaWNlbsOnLAo+Cj4gSSB0cmllZCB0aGUgcGF0Y2gg
-YXQgbXkgZW5kIGFuZCBpdCB3b3JrcyBmaW5lIGFzIHBlciBteSBjaGVja3MuCj4gU28sIGNhbiBJ
-IHJlcXVlc3QgeW91IHRvIHByb3ZpZGUgc29tZSBhZGRpdGlvbmFsIGRhdGEgd2hpY2ggd2lsbCBo
-ZWxwCj4gbWUgdW5kZXJzdGFuZCB5b3VyIGVudmlyb25tZW50IGJldHRlci4gU2VlIGlubGluZToK
-Pgo+IE9uIEZyaSwgTm92IDE2LCAyMDE4IGF0IDEyOjA4IEFNIFZpY2VudGUgQmVyZ2FzIDx2aWNl
-bmNiQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPgo+ID4gT24gVGh1LCBOb3YgMTUsIDIwMTggYXQgMzox
-NCBQTSBTaW1vbiBIb3JtYW4gPGhvcm1zQHZlcmdlLm5ldC5hdT4gd3JvdGU6Cj4gPiA+Cj4gPiA+
-IE9uIFRodSwgTm92IDE1LCAyMDE4IGF0IDA2OjEwOjM2QU0gLTA4MDAsIFNpbW9uIEhvcm1hbiB3
-cm90ZToKPiA+ID4gPiBPbiBNb24sIE5vdiAxMiwgMjAxOCBhdCAxMToyNDowN0FNICswOTAwLCBB
-S0FTSEkgVGFrYWhpcm8gd3JvdGU6Cj4gPiA+ID4gPiBPbiBNb24sIE5vdiAxMiwgMjAxOCBhdCAw
-MjowMDoxNkFNICswNTMwLCBCaHVwZXNoIFNoYXJtYSB3cm90ZToKPiA+ID4gPiA+ID4gVmljZW7D
-pyByZXBvcnRlZCAodmlhIFsxXSkgdGhhdCBjdXJyZW50bHkgZXhlY3V0aW5nIGtleGVjIHdpdGgK
-PiA+ID4gPiA+ID4gJy0tZHRiJyBvcHRpb24gYW5kIHBhc3NpbmcgYSAuZHRiIHdoaWNoIGRvZXNu
-J3QgaGF2ZSBhICcvY2hvc2VuJyBub2RlCj4gPiA+ID4gPiA+IGxlYWRzIHRvIHRoZSBmb2xsb3dp
-bmcgZXJyb3I6Cj4gPiA+ID4gPiA+Cj4gPiA+ID4gPiA+ICAgIyBrZXhlYyAtZCAtLWR0YiBkdGJf
-d2l0aG91dF9jaG9zZW5fbm9kZS5kdGIgLS1hcHBlbmQgJ2NtZGxpbmUnIC0tbG9hZCBJbWFnZQo+
-ID4gPiA+ID4gPgo+ID4gPiA+ID4gPiAgICAgZHRiX3NldF9wcm9wZXJ0eTogZmR0X2FkZF9zdWJu
-b2RlIGZhaWxlZDogPHZhbGlkIG9mZnNldC9sZW5ndGg+Cj4gPiA+ID4gPiA+ICAgICBrZXhlYzog
-U2V0IGRldmljZSB0cmVlIGJvb3RhcmdzIGZhaWxlZC4KPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4g
-VGhpcyBoYXBwZW5zIGJlY2F1c2UgY3VycmVudGx5IHdlIGNoZWNrIHRoZSByZXR1cm4gdmFsdWUg
-b2YKPiA+ID4gPiA+ID4gJ2ZkdF9hZGRfc3Vibm9kZSgpJyBmdW5jdGlvbiBjYWxsIGluICdkdC1v
-cHMuYycgaW5jb3JyZWN0bHk6Cj4gPiA+ID4gPiA+Cj4gPiA+ID4gPiA+ICAgIHJlc3VsdCA9IGZk
-dF9hZGRfc3Vibm9kZShuZXdfZHRiLCBub2Rlb2Zmc2V0LCBub2RlKTsKPiA+ID4gPiA+ID4gICAg
-aWYgKHJlc3VsdCkgewo+ID4gPiA+ID4gPiAgICAgICAgICAgZGJncHJpbnRmKCIlczogZmR0X2Fk
-ZF9zdWJub2RlIGZhaWxlZDogJXNcbiIsIF9mdW5jX18sCj4gPiA+ID4gPiA+ICAgICAgICAgICAg
-ICAgICAgIGZkdF9zdHJlcnJvcihyZXN1bHQpKTsKPiA+ID4gPiA+ID4gICAgICAgICAgIGdvdG8g
-b25fZXJyb3I7Cj4gPiA+ID4gPiA+ICAgIH0KPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gQXMgd2Ug
-Y2FuIHNlZSBpbiAnZmR0X3J3LmMnLCBhIHBvc2l0aXZlIHJldHVybiB2YWx1ZSBmcm9tCj4gPiA+
-ID4gPiA+ICdmZHRfYWRkX3N1Ym5vZGUoKScgZnVuY3Rpb24gZG9lc24ndCBpbmRpY2F0ZSBhbiBl
-cnJvci4KPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gV2UgY2FuIHNlZSB0aGF0IHRoZSBMaW51eCBr
-ZXJuZWwgKHNlZSAnZHJpdmVycy9maXJtd2FyZS9lZmkvbGlic3R1Yi9mZHQuYycKPiA+ID4gPiA+
-ID4gZm9yIGV4YW1wbGUpIGFsc28gY2hlY2tzIHRoZSAnZmR0X2FkZF9zdWJub2RlKCknIGZ1bmN0
-aW9uIGFnYWluc3QgbmVnYXRpdmUKPiA+ID4gPiA+ID4gcmV0dXJuIHZhbHVlcyBmb3IgZXJyb3Jz
-LiBTZWUgYW4gZXhhbXBsZSBiZWxvdyBmcm9tICd1cGRhdGVfZmR0KCknIGZ1bmN0aW9uIGluCj4g
-PiA+ID4gPiA+ICdkcml2ZXJzL2Zpcm13YXJlL2VmaS9saWJzdHViL2ZkdC5jJzoKPiA+ID4gPiA+
-ID4KPiA+ID4gPiA+ID4gICAgbm9kZSA9IGZkdF9hZGRfc3Vibm9kZShmZHQsIDAsICJjaG9zZW4i
-KTsKPiA+ID4gPiA+ID4gICAgaWYgKG5vZGUgPCAwKSB7Cj4gPiA+ID4gPiA+ICAgICAgICAgICBz
-dGF0dXMgPSBub2RlOwo+ID4gPiA+ID4gPiAgICAgICAgICAgPC4uc25pcC4uPgo+ID4gPiA+ID4g
-PiAgICAgICAgICAgZ290byBmZHRfc2V0X2ZhaWw7Cj4gPiA+ID4gPiA+ICAgIH0KPiA+ID4gPiA+
-ID4KPiA+ID4gPiA+ID4gVGhpcyBwYXRjaCBmaXhlcyB0aGUgc2FtZSBpbiAna2V4ZWMtdG9vbHMn
-Lgo+ID4gPiA+ID4KPiA+ID4gPiA+IExvb2tzIGdvb2QuCj4gPiA+ID4gPiBUaGFuayB5b3UuCj4g
-PiA+ID4gPiAtVGFrYWhpcm8gQWthc2hpCj4gPiA+ID4KPiA+ID4gPiBUaGFua3MsIGFwcGxpZWQu
-Cj4gPiA+Cj4gPiA+IFBlcmhhcHMgSSB3YXMgYSBsaXR0bGUgdG9vIGhhc3R5IHRoZXJlLCBJIGhh
-dmUgZHJvcHBlZCB0aGUgcGF0Y2ggZm9yIG5vdy4KPiA+ID4KPiA+ID4gVmljZW50ZSwgZG9lcyB0
-aGlzIHBhdGNoIHdvcmsgZm9yIHlvdT8KPiA+Cj4gPiBUaGUgcGF0Y2ggbG9va3MgZmluZSwgYnV0
-IHRoZSBlbmQgcmVzdWx0IGlzIHN0aWxsIG5vbi13b3JraW5nOgo+ID4gICAjIGtleGVjIC1kIC0t
-bG9hZCBJbWFnZSAtLWFwcGVuZCAnZGVidWcnIC0tZHRiIG5vX2Nob3Nlbi5kdGIKPgo+IENhbiB5
-b3Ugc2hhcmUgdGhlIC5kdHMgd2l0aCB3aGljaCB5b3Ugc2VlIHRoaXMgaXNzdWUgYW5kIHN0ZXBz
-IHlvdSB1c2UKPiB0byBjcmVhdGUgdGhlIC5kdGIgZmlsZSBhdCB5b3VyIGVuZD8KPgo+IEkgbm9y
-bWFsbHkgdXNlIGF0IG15IGVuZCB0aGUgZm9sbG93aW5nIGNvbW1hbmQ6Cj4gZHRjIC1vIG5vLWNo
-b3Nlbi5kdGIgLUkgZHRzIC1PIGR0YiBuby1jaG9zZW4uZHRzCj4KPiBUaGFua3MsCj4gQmh1cGVz
-aAoKSGkgQmh1cGVzaCwKdGhlIGlzc3VlIGlzIG5vdCB3aXRoIGR0YywgaXQgaXMgd2l0aCBrZXhl
-Yy4gVGhlIGZvbGxvd2luZyBzY3JpcHQKcmVwcm9kdWNlcyB0aGUgaXNzdWU6CiMhL2Jpbi9zaCAt
-dmUKCnVuYW1lIC1tCiMgYWFyY2g2NAoKZ2l0IGNsb25lICdodHRwczovL2dpdC5rZXJuZWwub3Jn
-L3B1Yi9zY20vdXRpbHMva2VybmVsL2tleGVjL2tleGVjLXRvb2xzLmdpdCcKa2V4ZWMtdG9vbHMt
-b3JpZwpjcCAtYSBrZXhlYy10b29scy1vcmlnIGtleGVjLXRvb2xzLXRlc3QKZ2l0IC1DIGtleGVj
-LXRvb2xzLW9yaWcgY2hlY2tvdXQgLWIgb3JpZyAndjIuMC4xOCcKZ2l0IC1DIGtleGVjLXRvb2xz
-LXRlc3QgY2hlY2tvdXQgLWIgdGVzdCAndjIuMC4xOCcKCmNhdCBwYXRjaC5kaWZmCiMtLS0gYS9r
-ZXhlYy9kdC1vcHMuYwojKysrIGIva2V4ZWMvZHQtb3BzLmMKI0BAIC04NCw3ICs4NCw3IEBAIGlu
-dCBkdGJfc2V0X3Byb3BlcnR5KGNoYXIgKipkdGIsIG9mZl90ICpkdGJfc2l6ZSwKY29uc3QgY2hh
-ciAqbm9kZSwKIyAgICAgaWYgKG5vZGVvZmZzZXQgPT0gLUZEVF9FUlJfTk9URk9VTkQpIHsKIyAg
-ICAgICAgIHJlc3VsdCA9IGZkdF9hZGRfc3Vibm9kZShuZXdfZHRiLCBub2Rlb2Zmc2V0LCBub2Rl
-KTsKIwojLSAgICAgICAgaWYgKHJlc3VsdCkgewojKyAgICAgICAgaWYgKHJlc3VsdCA8IDApIHsK
-IyAgICAgICAgICAgICBkYmdwcmludGYoIiVzOiBmZHRfYWRkX3N1Ym5vZGUgZmFpbGVkOiAlc1xu
-IiwgX19mdW5jX18sCiMgICAgICAgICAgICAgICAgIGZkdF9zdHJlcnJvcihyZXN1bHQpKTsKIyAg
-ICAgICAgICAgICBnb3RvIG9uX2Vycm9yOwpwYXRjaCAtZCBrZXhlYy10b29scy10ZXN0IC1wMSA8
-IHBhdGNoLmRpZmYKCiggY2Qga2V4ZWMtdG9vbHMtb3JpZyA7IC4vYm9vdHN0cmFwICkKKCBjZCBr
-ZXhlYy10b29scy10ZXN0IDsgLi9ib290c3RyYXAgKQooIGNkIGtleGVjLXRvb2xzLW9yaWcgOyAu
-L2NvbmZpZ3VyZSApCiggY2Qga2V4ZWMtdG9vbHMtdGVzdCA7IC4vY29uZmlndXJlICkKbWFrZSAt
-QyBrZXhlYy10b29scy1vcmlnCm1ha2UgLUMga2V4ZWMtdG9vbHMtdGVzdAoKd2dldCAnaHR0cDov
-L21pcnJvci5hcmNobGludXhhcm0ub3JnL2FhcmNoNjQvY29yZS9saW51eC1hYXJjaDY0LTQuMTku
-Mi0xLWFhcmNoNjQucGtnLnRhci54eicKYnNkdGFyIHhmICdsaW51eC1hYXJjaDY0LTQuMTkuMi0x
-LWFhcmNoNjQucGtnLnRhci54eicKCnN1ZG8ga2V4ZWMtdG9vbHMtb3JpZy9idWlsZC9zYmluL2tl
-eGVjIC1kIC0tbG9hZCBib290L0ltYWdlIC0tYXBwZW5kCidkZWJ1ZycgLS1kdGIgYm9vdC9kdGJz
-L3JvY2tjaGlwL3JrMzM5OS1zYXBwaGlyZS5kdGIKIyBkdGJfc2V0X3Byb3BlcnR5OiBmZHRfYWRk
-X3N1Ym5vZGUgZmFpbGVkOiA8dmFsaWQgb2Zmc2V0L2xlbmd0aD4KIyBrZXhlYzogU2V0IGRldmlj
-ZSB0cmVlIGJvb3RhcmdzIGZhaWxlZC4KCnN1ZG8ga2V4ZWMtdG9vbHMtdGVzdC9idWlsZC9zYmlu
-L2tleGVjIC1kIC0tbG9hZCBib290L0ltYWdlIC0tYXBwZW5kCidkZWJ1ZycgLS1kdGIgYm9vdC9k
-dGJzL3JvY2tjaGlwL3JrMzM5OS1zYXBwaGlyZS5kdGIKIyBkdGJfc2V0X3Byb3BlcnR5OiBmZHRf
-c2V0cHJvcCBmYWlsZWQ6IEZEVF9FUlJfQkFET0ZGU0VUCiMga2V4ZWM6IFNldCBkZXZpY2UgdHJl
-ZSBib290YXJncyBmYWlsZWQuCgpSZWdhcmRzLAogIFZpY2Vuw6cuCgo+ID4gICAuLi4KPiA+ICAg
-ZHRiX3NldF9wcm9wZXJ0eTogZmR0X3NldHByb3AgZmFpbGVkOiBGRFRfRVJSX0JBRE9GRlNFVAo+
-ID4gICBrZXhlYzogU2V0IGRldmljZSB0cmVlIGJvb3RhcmdzIGZhaWxlZC4KPiA+Cj4gPiBBbHNv
-IHRlc3RlZCB0aGlzIHdpdGggdGhlIHNhbWUgcmVzdWx0Ogo+ID4gLS0tIGEva2V4ZWMvZHQtb3Bz
-LmMKPiA+ICsrKyBiL2tleGVjL2R0LW9wcy5jCj4gPiBAQCAtODQsMTEgKzg0LDEzIEBACj4gPiAg
-ICAgICAgIGlmIChub2Rlb2Zmc2V0ID09IC1GRFRfRVJSX05PVEZPVU5EKSB7Cj4gPiAgICAgICAg
-ICAgICAgICAgcmVzdWx0ID0gZmR0X2FkZF9zdWJub2RlKG5ld19kdGIsIG5vZGVvZmZzZXQsIG5v
-ZGUpOwo+ID4KPiA+IC0gICAgICAgICAgICAgICBpZiAocmVzdWx0KSB7Cj4gPiArICAgICAgICAg
-ICAgICAgaWYgKHJlc3VsdCA8IDApIHsKPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGRiZ3By
-aW50ZigiJXM6IGZkdF9hZGRfc3Vibm9kZSBmYWlsZWQ6ICVzXG4iLCBfX2Z1bmNfXywKPiA+ICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZmR0X3N0cmVycm9yKHJlc3VsdCkpOwo+ID4g
-ICAgICAgICAgICAgICAgICAgICAgICAgZ290byBvbl9lcnJvcjsKPiA+ICAgICAgICAgICAgICAg
-ICB9Cj4gPiArCj4gPiArICAgICAgICAgICAgICAgbm9kZW9mZnNldCA9IHJlc3VsdDsKPiA+ICAg
-ICAgICAgfSBlbHNlIGlmIChub2Rlb2Zmc2V0IDwgMCkgewo+ID4gICAgICAgICAgICAgICAgIGRi
-Z3ByaW50ZigiJXM6IGZkdF9wYXRoX29mZnNldCBmYWlsZWQ6ICVzXG4iLCBfX2Z1bmNfXywKPiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgIGZkdF9zdHJlcnJvcihub2Rlb2Zmc2V0KSk7Cj4gPgo+
-ID4gUmVnYXJkcywKPiA+ICAgVmljZW7Dpy4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hi Bhupesh,
+
+On 11/15/2018 3:27 PM, Bhupesh Sharma wrote:
+>>> Note that PAGE_OFFSET is not constant on KASLR enabled arm64 kernels
+>>> as the start of the linear range gets randomized as well (as per the
+>>> KASLR seed) which means that PAGE_OFFSET is no longer equal to the
+>>> macro:
+>>> #define PAGE_OFFSET             (UL(0xffffffffffffffff) - \
+>>>            (UL(1) << (VA_BITS - 1)) + 1)
+>>
+>> The PAGE_OFFSET macro itself is still constant in arm64 kernel and used by
+>> p2v/v2p calculation, and also used by the test whether a virtual address is
+>> in linear kernel range (as VA_BITS):
+
+> I understand, but for me (and as I understood from other arm64 users
+> as well), the kernel
+> virtual address layout and the comments we have in place are probably
+> broken after KASLR
+> was enabled on arm64. This is something I shared with arm64 maintainers as well:
+> [1]. https://www.spinics.net/lists/arm-kernel/msg655933.html
+> 
+> Lets go through some details first.
+> Please note that the PAGE_OFFSET is defined as
+> ('arch/arm64/include/asm/memory.h'):
+> 
+> /*
+>  * PAGE_OFFSET - the virtual address of the start of the linear map (top
+>  *         (VA_BITS - 1))
+> 
+> So, basically this points to the virtual address which indicates the
+> start of linear mapping.
+> Now, the linear region takes up exactly half of the kernel virtual
+> address space.
+> 
+> So, with a normal non-KASLR boot (I am sharing the logs below on a
+> system booted with 'nokaslr' in bootargs),
+> the PAGE_OFFSET macro would normally point to the half mark of the
+> kernel virtual address space.
+> [I needed to revert the kernel commit
+> "071929dbdd865f779a89ba3f1e06ba8d17dd3743: arm64: Stop printing the
+> virtual memory layout" to get these logs]
+> 
+> [    0.000000] Virtual kernel memory layout:
+> [    0.000000]     modules : 0xffff000000000000 - 0xffff000008000000
+> (   128 MB)
+> [    0.000000]     vmalloc : 0xffff000008000000 - 0xffff7bdfffff0000
+> (126847 GB)
+> [    0.000000]       .text : 0x(____ptrval____) - 0x(____ptrval____)
+> (  8768 KB)
+> [    0.000000]     .rodata : 0x(____ptrval____) - 0x(____ptrval____)
+> (  5696 KB)
+> [    0.000000]       .init : 0x(____ptrval____) - 0x(____ptrval____)
+> (  4224 KB)
+> [    0.000000]       .data : 0x(____ptrval____) - 0x(____ptrval____)
+> (  1775 KB)
+> [    0.000000]        .bss : 0x(____ptrval____) - 0x(____ptrval____)
+> (  9193 KB)
+> [    0.000000]     fixed   : 0xffff7fdffe790000 - 0xffff7fdffec00000
+> (  4544 KB)
+> [    0.000000]     PCI I/O : 0xffff7fdffee00000 - 0xffff7fdfffe00000
+> (    16 MB)
+> [    0.000000]     vmemmap : 0xffff7fe000000000 - 0xffff800000000000
+> (   128 GB maximum)
+> [    0.000000]               0xffff7fe000000000 - 0xffff7fe004000000
+> (    64 MB actual)
+> [    0.000000]     memory  : 0xffff800000000000 - 0xffff801000000000
+> ( 65536 MB)
+> 
+> This is on a system with 64K page size and VA_BITS=48.
+> For such a configuration, PAGE_OFFSET is also calculated as
+> 0xffff800000000000, which the
+> same as the start address of the memory range (i.e memory  :
+> 0xffff800000000000 - 0xffff801000000000)
+> which depicts the linear region from where 'kmalloc' allocations take place.
+> 
+> Now, lets look at the boot logs on the same system with 'nokaslr'
+> removed from bootargs (i.e. a KASLR boot case):
+> 
+> [    0.000000] Virtual kernel memory layout:
+> [    0.000000]     modules : 0xffff000000000000 - 0xffff000008000000
+> (   128 MB)
+> [    0.000000]     vmalloc : 0xffff000008000000 - 0xffff7bdfffff0000
+> (126847 GB)
+> [    0.000000]       .text : 0x(____ptrval____) - 0x(____ptrval____)
+> (  8768 KB)
+> [    0.000000]     .rodata : 0x(____ptrval____) - 0x(____ptrval____)
+> (  5696 KB)
+> [    0.000000]       .init : 0x(____ptrval____) - 0x(____ptrval____)
+> (  4224 KB)
+> [    0.000000]       .data : 0x(____ptrval____) - 0x(____ptrval____)
+> (  1775 KB)
+> [    0.000000]        .bss : 0x(____ptrval____) - 0x(____ptrval____)
+> (  9193 KB)
+> [    0.000000]     fixed   : 0xffff7fdffe790000 - 0xffff7fdffec00000
+> (  4544 KB)
+> [    0.000000]     PCI I/O : 0xffff7fdffee00000 - 0xffff7fdfffe00000
+> (    16 MB)
+> [    0.000000]     vmemmap : 0xffff7fe000000000 - 0xffff800000000000
+> (   128 GB maximum)
+> [    0.000000]               0xffff7fea5b300000 - 0xffff7fea5f300000
+> (    64 MB actual)
+> [    0.000000]     memory  : 0xffffa96cc0000000 - 0xffffa97cc0000000
+> ( 65536 MB)
+> 
+> As you will note here, the start of linear range as indicated by the
+> 'memory' node is 0xffffa96cc0000000
+> (this would be a random value for each KASLR boot), however the
+> PAGE_OFFSET macro is still stuck
+> at 0xffff800000000000, which is confusing (and probably incorrect), as
+> the 'kmalloc' calls return addresses in the range
+> '0xffffa96cc0000000 - 0xffffa97cc0000000' and not in the
+> '0xffff800000000000 - 0xffff801000000000'  range
+> anymore as we saw in the non-KASLR boot case.
+
+Thanks for the details.
+Its name may be confusing, but I think that whether it is correct or not is
+how it is used. If there is a misuse bug of it, it should be fixed, though.
+
+>> I meant that I just would like to imitate these definitions also in
+>> makedumpfile first, for better maintenance and future changes.
+> 
+> Sure, I think the arm64 kernel ideally requires a standard ABI to
+> expose the start of linear address region to the user-space
+> as well for both KASLR and non-KASLR cases (something like a
+> 'page_offset_base' for x86_64), and I plan to submit a RFC patch for
+> arm64 maintainers
+> consideration once my x86_64 kernel patch is accepted.
+
+So you might need a use case.
+As for makedumpfile, this time we found that we can manage with VA_BITS and
+PHYS_OFFSET also with KASLR (as far as we tested), and they are already in
+vmcoreinfo. If there is another use case, it would be helpful for the patch
+to be applied.	
+
+>> I tested them on two arm64 systems (including KASLR enabled, because its
+>> KERNELOFFSET=2eff90ae0000 in vmcoreinfo) and it tested OK,
+>> but could you test them on your arm64 boards?
+>>
+>> If it works correctly, then let's think about using vmcoreinfo in PT_NOTE in
+>> /proc/kcore, which kernels >= 4.19 have.
+> 
+> Yes, these patches work fine on my hp-moonshot machine both for KASLR
+> and non-KASLR cases,
+> and I agree with you that we need some kind of a solution for <4.19
+> kernels as well and probably
+> this is a good fix to have for now.
+> 
+> So, please feel free to add:
+> Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
+
+Thank you for testing them! I really appreciate it.
+I'll merge them with your tag.
+
+Kazu
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
