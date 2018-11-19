@@ -1,17 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gOm4u-0001IX-7U
- for kexec@lists.infradead.org; Mon, 19 Nov 2018 16:07:13 +0000
-Subject: Re: [PATCH v1 2/8] mm: convert PG_balloon to PG_offline
-References: <20181119101616.8901-1-david@redhat.com>
- <20181119101616.8901-3-david@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Message-ID: <94387ebe-9fb3-9471-9fb3-b66abf899a3f@redhat.com>
-Date: Mon, 19 Nov 2018 17:06:12 +0100
-MIME-Version: 1.0
-In-Reply-To: <20181119101616.8901-3-david@redhat.com>
-Content-Language: en-US
+ id 1gOpf0-0005DH-P8
+ for kexec@lists.infradead.org; Mon, 19 Nov 2018 19:56:43 +0000
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ wAJJsU5E107694
+ for <kexec@lists.infradead.org>; Mon, 19 Nov 2018 14:56:29 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2nv0kygh3g-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 19 Nov 2018 14:56:29 -0500
+Received: from localhost
+ by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Mon, 19 Nov 2018 19:56:27 -0000
+From: Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH 1/3] ima: add error mesage to kexec_load
+Date: Mon, 19 Nov 2018 14:56:09 -0500
+In-Reply-To: <1542657371-7019-1-git-send-email-zohar@linux.ibm.com>
+References: <1542657371-7019-1-git-send-email-zohar@linux.ibm.com>
+Message-Id: <1542657371-7019-2-git-send-email-zohar@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,45 +31,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-mm@kvack.org
-Cc: Michal Hocko <mhocko@suse.com>, linux-doc@vger.kernel.org, pv-drivers@vmware.com, Alexander Duyck <alexander.h.duyck@linux.intel.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Jonathan Corbet <corbet@lwn.net>, "Michael S. Tsirkin" <mst@redhat.com>, Pavel Tatashin <pasha.tatashin@oracle.com>, Matthew Wilcox <willy@infradead.org>, Konstantin Khlebnikov <koct9i@gmail.com>, David Rientjes <rientjes@google.com>, xen-devel@lists.xenproject.org, Alexey Dobriyan <adobriyan@gmail.com>, linux-pm@vger.kernel.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Christian Hansen <chansen3@cisco.com>, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: linux-integrity@vger.kernel.org
+Cc: linux-efi@vger.kernel.org, Nayna Jain <nayna@linux.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, jforbes@redhat.com
 
->  
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index 50ce1bddaf56..f91da3d0a67e 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -670,7 +670,7 @@ PAGEFLAG_FALSE(DoubleMap)
->  #define PAGE_TYPE_BASE	0xf0000000
->  /* Reserve		0x0000007f to catch underflows of page_mapcount */
->  #define PG_buddy	0x00000080
-> -#define PG_balloon	0x00000100
-> +#define PG_offline	0x00000100
->  #define PG_kmemcg	0x00000200
->  #define PG_table	0x00000400
->  
-> @@ -700,10 +700,13 @@ static __always_inline void __ClearPage##uname(struct page *page)	\
->  PAGE_TYPE_OPS(Buddy, buddy)
->  
->  /*
-> - * PageBalloon() is true for pages that are on the balloon page list
-> - * (see mm/balloon_compaction.c).
-> + * PageOffline() indicates that the pages is logically offline although the
+Reject the kexec_load syscall with some indication of the problem.
 
-s/pages/page/
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+---
+ security/integrity/ima/ima_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-:)
-
-
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 41e4771980d5..df0b2ee49fa2 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -513,8 +513,10 @@ int ima_load_data(enum kernel_load_data_id id)
+ 	switch (id) {
+ 	case LOADING_KEXEC_IMAGE:
+ 		if (IS_ENABLED(CONFIG_KEXEC_VERIFY_SIG)
+-		    && arch_ima_get_secureboot())
++		    && arch_ima_get_secureboot()) {
++			pr_err("impossible to appraise a kernel image without a file descriptor; try using kexec_file_load syscall.\n");
+ 			return -EACCES;
++		}
+ 
+ 		if (ima_enforce && (ima_appraise & IMA_APPRAISE_KEXEC)) {
+ 			pr_err("impossible to appraise a kernel image without a file descriptor; try using kexec_file_load syscall.\n");
 -- 
+2.7.5
 
-Thanks,
-
-David / dhildenb
 
 _______________________________________________
 kexec mailing list
