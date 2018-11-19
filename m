@@ -1,21 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gOgHm-0006Kk-Ck
- for kexec@lists.infradead.org; Mon, 19 Nov 2018 09:56:07 +0000
-Date: Mon, 19 Nov 2018 17:55:15 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 1/2 v6] x86/kexec_file: add e820 entry in case e820 type
- string matches to io resource name
-Message-ID: <20181119095515.GC14045@dhcp-128-65.nay.redhat.com>
-References: <20181114072926.13312-1-lijiang@redhat.com>
- <20181114072926.13312-2-lijiang@redhat.com>
- <20181114112600.GD13926@zn.tnic>
- <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
- <20181115103959.GB26448@zn.tnic>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20181115103959.GB26448@zn.tnic>
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gOgcJ-0001U1-Lu
+ for kexec@lists.infradead.org; Mon, 19 Nov 2018 10:17:21 +0000
+From: David Hildenbrand <david@redhat.com>
+Subject: [PATCH v1 2/8] mm: convert PG_balloon to PG_offline
+Date: Mon, 19 Nov 2018 11:16:10 +0100
+Message-Id: <20181119101616.8901-3-david@redhat.com>
+In-Reply-To: <20181119101616.8901-1-david@redhat.com>
+References: <20181119101616.8901-1-david@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,116 +17,214 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: lijiang <lijiang@redhat.com>, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, Bjorn Helgaas <helgaas@kernel.org>, tglx@linutronix.de, akpm@linux-foundation.org
+To: linux-mm@kvack.org
+Cc: Michal Hocko <mhocko@suse.com>, linux-doc@vger.kernel.org, pv-drivers@vmware.com, David Hildenbrand <david@redhat.com>, Alexander Duyck <alexander.h.duyck@linux.intel.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Jonathan Corbet <corbet@lwn.net>, "Michael S. Tsirkin" <mst@redhat.com>, Pavel Tatashin <pasha.tatashin@oracle.com>, Matthew Wilcox <willy@infradead.org>, Konstantin Khlebnikov <koct9i@gmail.com>, David Rientjes <rientjes@google.com>, xen-devel@lists.xenproject.org, Alexey Dobriyan <adobriyan@gmail.com>, linux-pm@vger.kernel.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Vlastimil Babka <vbabka@suse.cz>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Christian Hansen <chansen3@cisco.com>, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, Andrew Morton <akpm@linux-foundation.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 
-On 11/15/18 at 11:39am, Borislav Petkov wrote:
-> + Bjorn.
-> 
-> On Thu, Nov 15, 2018 at 01:44:07PM +0800, lijiang wrote:
-> > At present, the upstream kernel does not pass the e820 reserved ranges to the
-> > second kernel, which might cause two problems:
-> > 
-> > The first one is the MMCONFIG issue, the PCI MMCONFIG(extended mode) requires
-> > the reserved region otherwise it falls back to legacy mode, which might lead to
-> > the hot-plug device could not be recognized in kdump kernel.
-> 
-> Well, this still doesn't explain it fully. Let's look at a box:
-> 
-> [    0.000000] e820: BIOS-provided physical RAM map:
-> [    0.000000] BIOS-e820: [mem 0x0000000000000000-0x00000000000997ff] usable
-> [    0.000000] BIOS-e820: [mem 0x0000000000099800-0x000000000009ffff] reserved
-> [    0.000000] BIOS-e820: [mem 0x00000000000e0000-0x00000000000fffff] reserved
-> [    0.000000] BIOS-e820: [mem 0x0000000000100000-0x0000000065642fff] usable
-> [    0.000000] BIOS-e820: [mem 0x0000000065643000-0x0000000067fb8fff] reserved
-> [    0.000000] BIOS-e820: [mem 0x0000000067fb9000-0x00000000689e8fff] ACPI NVS
-> [    0.000000] BIOS-e820: [mem 0x00000000689e9000-0x0000000068bf5fff] ACPI data
-> [    0.000000] BIOS-e820: [mem 0x0000000068bf6000-0x000000006f7fffff] usable
-> [    0.000000] BIOS-e820: [mem 0x000000006f800000-0x000000008fffffff] reserved
-> [    0.000000] BIOS-e820: [mem 0x00000000fd000000-0x00000000fe7fffff] reserved
-> [    0.000000] BIOS-e820: [mem 0x00000000fec00000-0x00000000fec00fff] reserved
-> [    0.000000] BIOS-e820: [mem 0x00000000fec80000-0x00000000fed00fff] reserved
-> [    0.000000] BIOS-e820: [mem 0x00000000ff800000-0x00000001007fffff] reserved
-> [    0.000000] BIOS-e820: [mem 0x0000000100800000-0x000000603fffffff] usable
-> 
-> this one has 8 reserved regions. Does that mean that we need to pass
-> them *all* 8 to the second kernel so that MMCONFIG works?
+PG_balloon was introduced to implement page migration/compaction for pages
+inflated in virtio-balloon. Nowadays, it is only a marker that a page is
+part of virtio-balloon and therefore logically offline.
 
-We just copy 1st kernel memmap (/proc/iomem) to be used in 2nd kernel
-e820,  I'm not sure we can get the exact memory range and pass it.
-Because different io devices may have different ranges, it is hard to
-get all the use cases. And there seems no easy way to get them.
+We also want to make use of this flag in other balloon drivers - for
+inflated pages or when onlining a section but keeping some pages offline
+(e.g. used right now by XEN and Hyper-V via set_online_page_callback()).
 
-Another thing is it is not worth to get the exact info, the 1st kernel
-reserved part is just fine to be reserved as well in 2nd kernel, no 
-side effects.  Actually there might be some obscure use cases we
-do not find which rely those reserved memory ranges so it is better to
-have.
+We are going to expose this flag to dump tools like makedumpfile. But
+instead of exposing PG_balloon, let's generalize the concept of marking
+pages as logically offline, so it can be reused for other purposes
+later on.
 
-> 
-> Or is it only one reserved region which is needed for MMCONFIG?
-> 
-> Bjorn, do you know what the detection logic should be to map the correct
-> reserved region (or regions) for MMCONFIG?
-> 
-> Now, even if we don't map that reserved region and MMCONFIG falls back
-> to legacy mode, why is that a problem for the kdump kernel? Why does
-> the kdump kernel need the hotplug device? What would be the use case?
-> Hotplug a SATA drive to store the memory dump to it ... or?
+Rename PG_balloon to PG_offline. This is an indicator that the page is
+logically offline, the content stale and that it should not be touched
+(e.g. a hypervisor would have to allocate backing storage in order for the
+guest to dump an unused page).  We can then e.g. exclude such pages from
+dumps.
 
-According to an old bug report only devices on PCI segment 0 fall back
-to legacy mode, those devices on segment 1 do not fall back, they just
-do not work, and this seems not related to hotplug.
+We replace and reuse KPF_BALLOON (23), as this shouldn't really harm
+(and for now the semantics stay the same).  In following patches, we will
+make use of this bit also in other balloon drivers. While at it, document
+PGTABLE.
 
-I found the old bug report, copy something here:
-'''
-When doing a kdump, the kdump kernel failed to boot due to not finding /dev/root.  The root drive is on a LSI Megaraid disk.
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christian Hansen <chansen3@cisco.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Pavel Tatashin <pasha.tatashin@oracle.com>
+Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Miles Chen <miles.chen@mediatek.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Konstantin Khlebnikov <koct9i@gmail.com>
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ Documentation/admin-guide/mm/pagemap.rst |  9 ++++++---
+ fs/proc/page.c                           |  4 ++--
+ include/linux/balloon_compaction.h       |  8 ++++----
+ include/linux/page-flags.h               | 11 +++++++----
+ include/uapi/linux/kernel-page-flags.h   |  2 +-
+ tools/vm/page-types.c                    |  2 +-
+ 6 files changed, 21 insertions(+), 15 deletions(-)
 
-...
-[    6.869903] input: American Megatrends Inc. Virtual Keyboard and Mouse as /devices/pci0000:00/0000:00:1a.0/usb1/1-1/1-1.3/1-1.3.1/1-1.3.1:1.1/input/input1
-[    6.885358] generic-usb 0003:046B:FF10.0002: input,hidraw1: USB HID v1.10 Mouse [American Megatrends Inc. Virtual Keyboard and Mouse] on usb-0000:00:1a.0-1.3.1/input1
-[    6.901927] usbcore: registered new interface driver usbhid
-[    6.908145] usbhid: USB HID core driver
-......................Could not find /dev/root.
-Want me to fall back to /dev/disk/by-id/scsi-3600605b0049fac9018513918775bfc13-part4? (Y/n) 
-y
-Waiting for device /dev/disk/by-id/scsi-3600605b0049fac9018513918775bfc13-part4 to appear: ..............................not found -- exiting to /bin/sh
-$
+diff --git a/Documentation/admin-guide/mm/pagemap.rst b/Documentation/admin-guide/mm/pagemap.rst
+index 3f7bade2c231..340a5aee9b80 100644
+--- a/Documentation/admin-guide/mm/pagemap.rst
++++ b/Documentation/admin-guide/mm/pagemap.rst
+@@ -75,9 +75,10 @@ number of times a page is mapped.
+     20. NOPAGE
+     21. KSM
+     22. THP
+-    23. BALLOON
++    23. OFFLINE
+     24. ZERO_PAGE
+     25. IDLE
++    26. PGTABLE
+ 
+  * ``/proc/kpagecgroup``.  This file contains a 64-bit inode number of the
+    memory cgroup each page is charged to, indexed by PFN. Only available when
+@@ -118,8 +119,8 @@ Short descriptions to the page flags
+     identical memory pages dynamically shared between one or more processes
+ 22 - THP
+     contiguous pages which construct transparent hugepages
+-23 - BALLOON
+-    balloon compaction page
++23 - OFFLINE
++    page is logically offline
+ 24 - ZERO_PAGE
+     zero page for pfn_zero or huge_zero page
+ 25 - IDLE
+@@ -128,6 +129,8 @@ Short descriptions to the page flags
+     Note that this flag may be stale in case the page was accessed via
+     a PTE. To make sure the flag is up-to-date one has to read
+     ``/sys/kernel/mm/page_idle/bitmap`` first.
++26 - PGTABLE
++    page is in use as a page table
+ 
+ IO related page flags
+ ---------------------
+diff --git a/fs/proc/page.c b/fs/proc/page.c
+index 6c517b11acf8..378401af4d9d 100644
+--- a/fs/proc/page.c
++++ b/fs/proc/page.c
+@@ -152,8 +152,8 @@ u64 stable_page_flags(struct page *page)
+ 	else if (page_count(page) == 0 && is_free_buddy_page(page))
+ 		u |= 1 << KPF_BUDDY;
+ 
+-	if (PageBalloon(page))
+-		u |= 1 << KPF_BALLOON;
++	if (PageOffline(page))
++		u |= 1 << KPF_OFFLINE;
+ 	if (PageTable(page))
+ 		u |= 1 << KPF_PGTABLE;
+ 
+diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_compaction.h
+index cbe50da5a59d..f111c780ef1d 100644
+--- a/include/linux/balloon_compaction.h
++++ b/include/linux/balloon_compaction.h
+@@ -95,7 +95,7 @@ extern int balloon_page_migrate(struct address_space *mapping,
+ static inline void balloon_page_insert(struct balloon_dev_info *balloon,
+ 				       struct page *page)
+ {
+-	__SetPageBalloon(page);
++	__SetPageOffline(page);
+ 	__SetPageMovable(page, balloon->inode->i_mapping);
+ 	set_page_private(page, (unsigned long)balloon);
+ 	list_add(&page->lru, &balloon->pages);
+@@ -111,7 +111,7 @@ static inline void balloon_page_insert(struct balloon_dev_info *balloon,
+  */
+ static inline void balloon_page_delete(struct page *page)
+ {
+-	__ClearPageBalloon(page);
++	__ClearPageOffline(page);
+ 	__ClearPageMovable(page);
+ 	set_page_private(page, 0);
+ 	/*
+@@ -141,13 +141,13 @@ static inline gfp_t balloon_mapping_gfp_mask(void)
+ static inline void balloon_page_insert(struct balloon_dev_info *balloon,
+ 				       struct page *page)
+ {
+-	__SetPageBalloon(page);
++	__SetPageOffline(page);
+ 	list_add(&page->lru, &balloon->pages);
+ }
+ 
+ static inline void balloon_page_delete(struct page *page)
+ {
+-	__ClearPageBalloon(page);
++	__ClearPageOffline(page);
+ 	list_del(&page->lru);
+ }
+ 
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 50ce1bddaf56..f91da3d0a67e 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -670,7 +670,7 @@ PAGEFLAG_FALSE(DoubleMap)
+ #define PAGE_TYPE_BASE	0xf0000000
+ /* Reserve		0x0000007f to catch underflows of page_mapcount */
+ #define PG_buddy	0x00000080
+-#define PG_balloon	0x00000100
++#define PG_offline	0x00000100
+ #define PG_kmemcg	0x00000200
+ #define PG_table	0x00000400
+ 
+@@ -700,10 +700,13 @@ static __always_inline void __ClearPage##uname(struct page *page)	\
+ PAGE_TYPE_OPS(Buddy, buddy)
+ 
+ /*
+- * PageBalloon() is true for pages that are on the balloon page list
+- * (see mm/balloon_compaction.c).
++ * PageOffline() indicates that the pages is logically offline although the
++ * containing section is online. (e.g. inflated in a balloon driver or
++ * not onlined when onlining the section).
++ * The content of these pages is effectively stale. Such pages should not
++ * be touched (read/write/dump/save) except by their owner.
+  */
+-PAGE_TYPE_OPS(Balloon, balloon)
++PAGE_TYPE_OPS(Offline, offline)
+ 
+ /*
+  * If kmemcg is enabled, the buddy allocator will set PageKmemcg() on
+diff --git a/include/uapi/linux/kernel-page-flags.h b/include/uapi/linux/kernel-page-flags.h
+index 21b9113c69da..6f2f2720f3ac 100644
+--- a/include/uapi/linux/kernel-page-flags.h
++++ b/include/uapi/linux/kernel-page-flags.h
+@@ -32,7 +32,7 @@
+ 
+ #define KPF_KSM			21
+ #define KPF_THP			22
+-#define KPF_BALLOON		23
++#define KPF_OFFLINE		23
+ #define KPF_ZERO_PAGE		24
+ #define KPF_IDLE		25
+ #define KPF_PGTABLE		26
+diff --git a/tools/vm/page-types.c b/tools/vm/page-types.c
+index 37908a83ddc2..6c38d3b862e4 100644
+--- a/tools/vm/page-types.c
++++ b/tools/vm/page-types.c
+@@ -133,7 +133,7 @@ static const char * const page_flag_names[] = {
+ 	[KPF_NOPAGE]		= "n:nopage",
+ 	[KPF_KSM]		= "x:ksm",
+ 	[KPF_THP]		= "t:thp",
+-	[KPF_BALLOON]		= "o:balloon",
++	[KPF_OFFLINE]		= "o:offline",
+ 	[KPF_PGTABLE]		= "g:pgtable",
+ 	[KPF_ZERO_PAGE]		= "z:zero_page",
+ 	[KPF_IDLE]              = "i:idle_page",
+-- 
+2.17.2
 
-The basic problem is that this device is in PCI segment 1 and the kernel PCI probing cannot find it without all the e820 i/o reservations being present in the e820 table.  And the crash kernel does not have those reservations because the kexec command does not pass i/o reservation via the memmap= command line option. (This problem does not show up for other vendors, as SGI is apparently the only one using extended PCI. The lookup of devices in PCI segment 0 actually fails for everyone, but devices in segment 0 are then found by some legacy lookup method.)  The workaround for this is to fix kexec to pass i/o reserved areas to the crash kernel.  The patch will be attached.
-'''
-
-And here is some old patches in kexec-tools for fixing this:
-http://lists.infradead.org/pipermail/kexec/2013-February/007924.html
-(patch from SGI, later reverted)
-
-http://lists.infradead.org/pipermail/kexec/2014-April/011710.html
-(patch from Chaowang)
-
-But apparently we missed this issue in kexec_file code..
-
-> 
-> > Another one is that the e820 reserved ranges do not setup in kdump kernel, which
-> > could cause kdump can't work in some machines. To know more information, please
-> > refer to the [PATCH 2/2 v6] patch log.
-> 
-> Yah, I still don't understand *why* we need the reserved ranges in the
-> second kernel. Once we've figured out the *why* we can look at the *how*.
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> Good mailing practices for 400: avoid top-posting and trim the reply.
-
-Thanks
-Dave
 
 _______________________________________________
 kexec mailing list
