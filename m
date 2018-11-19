@@ -1,14 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gOgeF-0006Z3-OC
- for kexec@lists.infradead.org; Mon, 19 Nov 2018 10:19:20 +0000
-From: David Hildenbrand <david@redhat.com>
-Subject: [PATCH v1] makedumpfile: exclude pages that are logically offline
-Date: Mon, 19 Nov 2018 11:18:35 +0100
-Message-Id: <20181119101835.9140-1-david@redhat.com>
-In-Reply-To: <20181119101616.8901-1-david@redhat.com>
-References: <20181119101616.8901-1-david@redhat.com>
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gOgnG-0001Wo-VO
+ for kexec@lists.infradead.org; Mon, 19 Nov 2018 10:28:40 +0000
+Date: Mon, 19 Nov 2018 11:28:12 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/2 v6] x86/kexec_file: add e820 entry in case e820 type
+ string matches to io resource name
+Message-ID: <20181119102812.GA14688@zn.tnic>
+References: <20181114072926.13312-1-lijiang@redhat.com>
+ <20181114072926.13312-2-lijiang@redhat.com>
+ <20181114112600.GD13926@zn.tnic>
+ <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
+ <20181115103959.GB26448@zn.tnic>
+ <20181119095515.GC14045@dhcp-128-65.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20181119095515.GC14045@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,157 +25,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-mm@kvack.org
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, linux-pm@vger.kernel.org, pv-drivers@vmware.com, linux-doc@vger.kernel.org, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, David Hildenbrand <david@redhat.com>
+To: Dave Young <dyoung@redhat.com>, lijiang <lijiang@redhat.com>
+Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, Bjorn Helgaas <helgaas@kernel.org>, tglx@linutronix.de, akpm@linux-foundation.org
 
-Linux marks pages that are logically offline via a page flag (map count).
-Such pages e.g. include pages infated as part of a balloon driver or
-pages that were not actually onlined when onlining the whole section.
+On Mon, Nov 19, 2018 at 05:55:15PM +0800, Dave Young wrote:
+> Another thing is it is not worth to get the exact info, the 1st kernel
+> reserved part is just fine to be reserved as well in 2nd kernel, no 
+> side effects.  Actually there might be some obscure use cases we
+> do not find which rely those reserved memory ranges so it is better to
+> have.
 
-While the hypervisor usually allows to read such inflated memory, we
-basically read and dump data that is completely irrelevant. Also, this
-might result in quite some overhead in the hypervisor. In addition,
-we saw some problems under Hyper-V, whereby we can crash the kernel by
-dumping, when reading memory of a partially onlined memory segment
-(for memory added by the Hyper-V balloon driver).
+That makes sense as an argument. The cleaner thing would be to figure
+out only *which* ranges we're going to need but that is probably harder
+than simply exporting what the first kernel sees. But why we're doing
+it, needs to be in the commit message so that it is clear when bug
+hunting later.
 
-Therefore, don't read and dump pages that are marked as being logically
-offline.
+...
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- makedumpfile.c | 34 ++++++++++++++++++++++++++++++----
- makedumpfile.h |  1 +
- 2 files changed, 31 insertions(+), 4 deletions(-)
+> The basic problem is that this device is in PCI segment 1 and
+> the kernel PCI probing cannot find it without all the e820 i/o
+> reservations being present in the e820 table. And the crash kernel
+> does not have those reservations because the kexec command does not
+> pass i/o reservation via the memmap= command line option. (This
+> problem does not show up for other vendors, as SGI is apparently the
+> only one using extended PCI. The lookup of devices in PCI segment 0
+> actually fails for everyone, but devices in segment 0 are then found
+> by some legacy lookup method.) The workaround for this is to fix kexec
+> to pass i/o reserved areas to the crash kernel.
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 8923538..b8bfd4c 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -88,6 +88,7 @@ mdf_pfn_t pfn_cache_private;
- mdf_pfn_t pfn_user;
- mdf_pfn_t pfn_free;
- mdf_pfn_t pfn_hwpoison;
-+mdf_pfn_t pfn_offline;
- 
- mdf_pfn_t num_dumped;
- 
-@@ -249,6 +250,21 @@ isHugetlb(unsigned long dtor)
-                     && (SYMBOL(free_huge_page) == dtor));
- }
- 
-+static int
-+isOffline(unsigned long flags, unsigned int _mapcount)
-+{
-+	if (NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) == NOT_FOUND_NUMBER)
-+		return FALSE;
-+
-+	if (flags & (1UL << NUMBER(PG_slab)))
-+		return FALSE;
-+
-+	if (_mapcount == (int)NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE))
-+		return TRUE;
-+
-+	return FALSE;
-+}
-+
- static int
- is_cache_page(unsigned long flags)
- {
-@@ -2287,6 +2303,8 @@ write_vmcoreinfo_data(void)
- 	WRITE_NUMBER("PG_hwpoison", PG_hwpoison);
- 
- 	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
-+	WRITE_NUMBER("PAGE_OFFLINE_MAPCOUNT_VALUE",
-+		     PAGE_OFFLINE_MAPCOUNT_VALUE);
- 	WRITE_NUMBER("phys_base", phys_base);
- 
- 	WRITE_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
-@@ -2687,6 +2705,7 @@ read_vmcoreinfo(void)
- 	READ_SRCFILE("pud_t", pud_t);
- 
- 	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
-+	READ_NUMBER("PAGE_OFFLINE_MAPCOUNT_VALUE", PAGE_OFFLINE_MAPCOUNT_VALUE);
- 	READ_NUMBER("phys_base", phys_base);
- #ifdef __aarch64__
- 	READ_NUMBER("VA_BITS", VA_BITS);
-@@ -6041,6 +6060,12 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		else if (isHWPOISON(flags)) {
- 			pfn_counter = &pfn_hwpoison;
- 		}
-+		/*
-+		 * Exclude pages that are logically offline.
-+		 */
-+		else if (isOffline(flags, _mapcount)) {
-+			pfn_counter = &pfn_offline;
-+		}
- 		/*
- 		 * Unexcludable page
- 		 */
-@@ -7522,7 +7547,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 	 */
- 	if (info->flag_cyclic) {
- 		pfn_zero = pfn_cache = pfn_cache_private = 0;
--		pfn_user = pfn_free = pfn_hwpoison = 0;
-+		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = 0;
- 		pfn_memhole = info->max_mapnr;
- 	}
- 
-@@ -8804,7 +8829,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 		 * Reset counter for debug message.
- 		 */
- 		pfn_zero = pfn_cache = pfn_cache_private = 0;
--		pfn_user = pfn_free = pfn_hwpoison = 0;
-+		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = 0;
- 		pfn_memhole = info->max_mapnr;
- 
- 		/*
-@@ -9749,7 +9774,7 @@ print_report(void)
- 	pfn_original = info->max_mapnr - pfn_memhole;
- 
- 	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
--	    + pfn_user + pfn_free + pfn_hwpoison;
-+	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline;
- 	shrinking = (pfn_original - pfn_excluded) * 100;
- 	shrinking = shrinking / pfn_original;
- 
-@@ -9763,6 +9788,7 @@ print_report(void)
- 	REPORT_MSG("    User process data pages : 0x%016llx\n", pfn_user);
- 	REPORT_MSG("    Free pages              : 0x%016llx\n", pfn_free);
- 	REPORT_MSG("    Hwpoison pages          : 0x%016llx\n", pfn_hwpoison);
-+	REPORT_MSG("    Offline pages           : 0x%016llx\n", pfn_offline);
- 	REPORT_MSG("  Remaining pages  : 0x%016llx\n",
- 	    pfn_original - pfn_excluded);
- 	REPORT_MSG("  (The number of pages is reduced to %lld%%.)\n",
-@@ -9790,7 +9816,7 @@ print_mem_usage(void)
- 	pfn_original = info->max_mapnr - pfn_memhole;
- 
- 	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
--	    + pfn_user + pfn_free + pfn_hwpoison;
-+	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline;
- 	shrinking = (pfn_original - pfn_excluded) * 100;
- 	shrinking = shrinking / pfn_original;
- 	total_size = info->page_size * pfn_original;
-diff --git a/makedumpfile.h b/makedumpfile.h
-index f02f86d..e3a2b29 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1927,6 +1927,7 @@ struct number_table {
- 	long    PG_hwpoison;
- 
- 	long	PAGE_BUDDY_MAPCOUNT_VALUE;
-+	long	PAGE_OFFLINE_MAPCOUNT_VALUE;
- 	long	SECTION_SIZE_BITS;
- 	long	MAX_PHYSMEM_BITS;
- 	long    HUGETLB_PAGE_DTOR;
+Yap, this is the *why* I'm looking for. Lianbo, in your next submission,
+please add Dave's explanations to your commit messages.
+
+If it says "we need to do X" in the commit message, without a reason
+given *why* we need to, then there's no way for us to know *why* we did
+it, when looking at this months from now. And we absolutely need the
+*why* when staring at the code and fixing the next bug/issue.
+
+Thx.
+
 -- 
-2.17.2
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
