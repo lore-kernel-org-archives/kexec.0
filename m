@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gOgcY-0006W0-Lh
- for kexec@lists.infradead.org; Mon, 19 Nov 2018 10:17:35 +0000
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gOgcn-0001aH-Mg
+ for kexec@lists.infradead.org; Mon, 19 Nov 2018 10:17:54 +0000
 From: David Hildenbrand <david@redhat.com>
-Subject: [PATCH v1 3/8] kexec: export PG_offline to VMCOREINFO
-Date: Mon, 19 Nov 2018 11:16:11 +0100
-Message-Id: <20181119101616.8901-4-david@redhat.com>
+Subject: [PATCH v1 7/8] PM / Hibernate: use pfn_to_online_page()
+Date: Mon, 19 Nov 2018 11:16:15 +0100
+Message-Id: <20181119101616.8901-8-david@redhat.com>
 In-Reply-To: <20181119101616.8901-1-david@redhat.com>
 References: <20181119101616.8901-1-david@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -23,62 +23,50 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org
-Cc: Michal Hocko <mhocko@suse.com>, Arnd Bergmann <arnd@arndb.de>, Baoquan He <bhe@redhat.com>, linux-pm@vger.kernel.org, pv-drivers@vmware.com, Borislav Petkov <bp@alien8.de>, linux-doc@vger.kernel.org, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Omar Sandoval <osandov@fb.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, "Michael S. Tsirkin" <mst@redhat.com>, xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, David Hildenbrand <david@redhat.com>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Lianbo Jiang <lijiang@redhat.com>
+Cc: Len Brown <len.brown@intel.com>, Michal Hocko <mhocko@suse.com>, linux-pm@vger.kernel.org, pv-drivers@vmware.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-doc@vger.kernel.org, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, "Michael S. Tsirkin" <mst@redhat.com>, Pavel Machek <pavel@ucw.cz>, xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
 
-Right now, pages inflated as part of a balloon driver will be dumped
-by dump tools like makedumpfile. While XEN is able to check in the
-crash kernel whether a certain pfn is actuall backed by memory in the
-hypervisor (see xen_oldmem_pfn_is_ram) and optimize this case, dumps of
-other balloon inflated memory will essentially result in zero pages getting
-allocated by the hypervisor and the dump getting filled with this data.
+Let's use pfn_to_online_page() instead of pfn_to_page() when checking
+for saveable pages to not save/restore offline memory sections.
 
-The allocation and reading of zero pages can directly be avoided if a
-dumping tool could know which pages only contain stale information not to
-be dumped.
-
-We now have PG_offline which can be (and already is by virtio-balloon)
-used for marking pages as logically offline. Follow up patches will
-make use of this flag also in other balloon implementations.
-
-Let's export PG_offline via PAGE_OFFLINE_MAPCOUNT_VALUE, so
-makedumpfile can directly skip pages that are logically offline and the
-content therefore stale.
-
-Please note that this is also helpful for a problem we were seeing under
-Hyper-V: Dumping logically offline memory (pages kept fake offline while
-onlining a section via online_page_callback) would under some condicions
-result in a kernel panic when dumping them.
-
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Len Brown <len.brown@intel.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Omar Sandoval <osandov@fb.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Matthew Wilcox <willy@infradead.org>
 Cc: Michal Hocko <mhocko@suse.com>
 Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Lianbo Jiang <lijiang@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Suggested-by: Michal Hocko <mhocko@kernel.org>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- kernel/crash_core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/power/snapshot.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 933cb3e45b98..093c9f917ed0 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -464,6 +464,8 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
- #ifdef CONFIG_HUGETLB_PAGE
- 	VMCOREINFO_NUMBER(HUGETLB_PAGE_DTOR);
-+#define PAGE_OFFLINE_MAPCOUNT_VALUE	(~PG_offline)
-+	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
- #endif
+diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
+index 640b2034edd6..87e6dd57819f 100644
+--- a/kernel/power/snapshot.c
++++ b/kernel/power/snapshot.c
+@@ -1215,8 +1215,8 @@ static struct page *saveable_highmem_page(struct zone *zone, unsigned long pfn)
+ 	if (!pfn_valid(pfn))
+ 		return NULL;
  
- 	arch_crash_save_vmcoreinfo();
+-	page = pfn_to_page(pfn);
+-	if (page_zone(page) != zone)
++	page = pfn_to_online_page(pfn);
++	if (!page || page_zone(page) != zone)
+ 		return NULL;
+ 
+ 	BUG_ON(!PageHighMem(page));
+@@ -1277,8 +1277,8 @@ static struct page *saveable_page(struct zone *zone, unsigned long pfn)
+ 	if (!pfn_valid(pfn))
+ 		return NULL;
+ 
+-	page = pfn_to_page(pfn);
+-	if (page_zone(page) != zone)
++	page = pfn_to_online_page(pfn);
++	if (!page || page_zone(page) != zone)
+ 		return NULL;
+ 
+ 	BUG_ON(PageHighMem(page));
 -- 
 2.17.2
 
