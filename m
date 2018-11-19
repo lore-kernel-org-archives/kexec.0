@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gOgcY-0006WQ-Lr
- for kexec@lists.infradead.org; Mon, 19 Nov 2018 10:17:35 +0000
+ by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gOgcX-0001X3-Sy
+ for kexec@lists.infradead.org; Mon, 19 Nov 2018 10:17:37 +0000
 From: David Hildenbrand <david@redhat.com>
-Subject: [PATCH v1 5/8] hv_balloon: mark inflated pages PG_offline
-Date: Mon, 19 Nov 2018 11:16:13 +0100
-Message-Id: <20181119101616.8901-6-david@redhat.com>
+Subject: [PATCH v1 4/8] xen/balloon: mark inflated pages PG_offline
+Date: Mon, 19 Nov 2018 11:16:12 +0100
+Message-Id: <20181119101616.8901-5-david@redhat.com>
 In-Reply-To: <20181119101616.8901-1-david@redhat.com>
 References: <20181119101616.8901-1-david@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -23,72 +23,51 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org
-Cc: Michal Hocko <mhocko@suse.com>, Stephen Hemminger <sthemmin@microsoft.com>, Kairui Song <kasong@redhat.com>, linux-pm@vger.kernel.org, pv-drivers@vmware.com, Haiyang Zhang <haiyangz@microsoft.com>, linux-doc@vger.kernel.org, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, "Michael S. Tsirkin" <mst@redhat.com>, Matthew Wilcox <willy@infradead.org>, xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, David Hildenbrand <david@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@vger.kernel.org, pv-drivers@vmware.com, linux-doc@vger.kernel.org, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Michal Hocko <mhocko@suse.com>, "Michael S. Tsirkin" <mst@redhat.com>, xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, David Hildenbrand <david@redhat.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
 Mark inflated and never onlined pages PG_offline, to tell the world that
 the content is stale and should not be dumped.
 
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Kairui Song <kasong@redhat.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Matthew Wilcox <willy@infradead.org>
 Cc: Michal Hocko <mhocko@suse.com>
 Cc: "Michael S. Tsirkin" <mst@redhat.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/hv/hv_balloon.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/xen/balloon.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index 211f3fe3a038..47719862e57f 100644
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -681,8 +681,13 @@ static struct notifier_block hv_memory_nb = {
- /* Check if the particular page is backed and can be onlined and online it. */
- static void hv_page_online_one(struct hv_hotadd_state *has, struct page *pg)
- {
--	if (!has_pfn_is_backed(has, page_to_pfn(pg)))
-+	if (!has_pfn_is_backed(has, page_to_pfn(pg))) {
-+		if (!PageOffline(pg))
-+			__SetPageOffline(pg);
- 		return;
-+	}
-+	if (PageOffline(pg))
-+		__ClearPageOffline(pg);
- 
- 	/* This frame is currently backed; online the page. */
- 	__online_page_set_limits(pg);
-@@ -1201,6 +1206,7 @@ static void free_balloon_pages(struct hv_dynmem_device *dm,
- 
- 	for (i = 0; i < num_pages; i++) {
- 		pg = pfn_to_page(i + start_frame);
-+		__ClearPageOffline(pg);
- 		__free_page(pg);
- 		dm->num_pages_ballooned--;
+diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+index 12148289debd..14dd6b814db3 100644
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -425,6 +425,7 @@ static int xen_bring_pgs_online(struct page *pg, unsigned int order)
+ 	for (i = 0; i < size; i++) {
+ 		p = pfn_to_page(start_pfn + i);
+ 		__online_page_set_limits(p);
++		__SetPageOffline(p);
+ 		__balloon_append(p);
  	}
-@@ -1213,7 +1219,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
- 					struct dm_balloon_response *bl_resp,
- 					int alloc_unit)
- {
--	unsigned int i = 0;
-+	unsigned int i, j;
- 	struct page *pg;
+ 	mutex_unlock(&balloon_mutex);
+@@ -493,6 +494,7 @@ static enum bp_state increase_reservation(unsigned long nr_pages)
+ 		xenmem_reservation_va_mapping_update(1, &page, &frame_list[i]);
  
- 	if (num_pages < alloc_unit)
-@@ -1245,6 +1251,10 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
- 		if (alloc_unit != 1)
- 			split_page(pg, get_order(alloc_unit << PAGE_SHIFT));
+ 		/* Relinquish the page back to the allocator. */
++		__ClearPageOffline(page);
+ 		free_reserved_page(page);
+ 	}
  
-+		/* mark all pages offline */
-+		for (j = 0; j < (1 << get_order(alloc_unit << PAGE_SHIFT)); j++)
-+			__SetPageOffline(pg + j);
-+
- 		bl_resp->range_count++;
- 		bl_resp->range_array[i].finfo.start_page =
- 			page_to_pfn(pg);
+@@ -519,6 +521,7 @@ static enum bp_state decrease_reservation(unsigned long nr_pages, gfp_t gfp)
+ 			state = BP_EAGAIN;
+ 			break;
+ 		}
++		__SetPageOffline(page);
+ 		adjust_managed_page_count(page, -1);
+ 		xenmem_reservation_scrub_page(page);
+ 		list_add(&page->lru, &pages);
 -- 
 2.17.2
 
