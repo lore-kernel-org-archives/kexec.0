@@ -1,22 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gOgnG-0001Wo-VO
- for kexec@lists.infradead.org; Mon, 19 Nov 2018 10:28:40 +0000
-Date: Mon, 19 Nov 2018 11:28:12 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 1/2 v6] x86/kexec_file: add e820 entry in case e820 type
- string matches to io resource name
-Message-ID: <20181119102812.GA14688@zn.tnic>
-References: <20181114072926.13312-1-lijiang@redhat.com>
- <20181114072926.13312-2-lijiang@redhat.com>
- <20181114112600.GD13926@zn.tnic>
- <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
- <20181115103959.GB26448@zn.tnic>
- <20181119095515.GC14045@dhcp-128-65.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20181119095515.GC14045@dhcp-128-65.nay.redhat.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gOgcH-0006Uq-QZ
+ for kexec@lists.infradead.org; Mon, 19 Nov 2018 10:17:19 +0000
+From: David Hildenbrand <david@redhat.com>
+Subject: [PATCH v1 0/8] mm/kdump: allow to exclude pages that are logically
+ offline
+Date: Mon, 19 Nov 2018 11:16:08 +0100
+Message-Id: <20181119101616.8901-1-david@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,54 +16,92 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, lijiang <lijiang@redhat.com>
-Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, Bjorn Helgaas <helgaas@kernel.org>, tglx@linutronix.de, akpm@linux-foundation.org
+To: linux-mm@kvack.org
+Cc: Michal Hocko <mhocko@suse.com>, Lianbo Jiang <lijiang@redhat.com>, linux-doc@vger.kernel.org, pv-drivers@vmware.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Michal Hocko <mhocko@kernel.org>, Vitaly Kuznetsov <vkuznets@redhat.com>, Nadav Amit <namit@vmware.com>, Pavel Machek <pavel@ucw.cz>, Alexander Duyck <alexander.h.duyck@linux.intel.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Omar Sandoval <osandov@fb.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Stefano Stabellini <sstabellini@kernel.org>, Stephen Hemminger <sthemmin@microsoft.com>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, David Hildenbrand <david@redhat.com>, Pavel Tatashin <pasha.tatashin@oracle.com>, Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, David Rientjes <rientjes@google.com>, xen-devel@lists.xenproject.org, Dave Young <dyoung@redhat.com>, Alexey Dobriyan <adobriyan@gmail.com>, Len Brown <len.brown@intel.com>, Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org, Xavier Deguillard <xdeguillard@vmware.com>, Haiyang Zhang <haiyangz@microsoft.com>, Julien Freche <jfreche@vmware.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Borislav Petkov <bp@alien8.de>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Konstantin Khlebnikov <koct9i@gmail.com>, Juergen Gross <jgross@suse.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Kairui Song <kasong@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Hansen <chansen3@cisco.com>, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>, "Michael S. Tsirkin" <mst@redhat.com>, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, Andrew Morton <akpm@linux-foundation.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 
-On Mon, Nov 19, 2018 at 05:55:15PM +0800, Dave Young wrote:
-> Another thing is it is not worth to get the exact info, the 1st kernel
-> reserved part is just fine to be reserved as well in 2nd kernel, no 
-> side effects.  Actually there might be some obscure use cases we
-> do not find which rely those reserved memory ranges so it is better to
-> have.
+Right now, pages inflated as part of a balloon driver will be dumped
+by dump tools like makedumpfile. While XEN is able to check in the
+crash kernel whether a certain pfn is actuall backed by memory in the
+hypervisor (see xen_oldmem_pfn_is_ram) and optimize this case, dumps of
+virtio-balloon, hv-balloon and VMWare balloon inflated memory will
+essentially result in zero pages getting allocated by the hypervisor and
+the dump getting filled with this data.
 
-That makes sense as an argument. The cleaner thing would be to figure
-out only *which* ranges we're going to need but that is probably harder
-than simply exporting what the first kernel sees. But why we're doing
-it, needs to be in the commit message so that it is clear when bug
-hunting later.
+The allocation and reading of zero pages can directly be avoided if a
+dumping tool could know which pages only contain stale information not to
+be dumped.
 
-...
+Also for XEN, calling into the kernel and asking the hypervisor if a
+pfn is backed can be avoided if the duming tool would skip such pages
+right from the beginning.
 
-> The basic problem is that this device is in PCI segment 1 and
-> the kernel PCI probing cannot find it without all the e820 i/o
-> reservations being present in the e820 table. And the crash kernel
-> does not have those reservations because the kexec command does not
-> pass i/o reservation via the memmap= command line option. (This
-> problem does not show up for other vendors, as SGI is apparently the
-> only one using extended PCI. The lookup of devices in PCI segment 0
-> actually fails for everyone, but devices in segment 0 are then found
-> by some legacy lookup method.) The workaround for this is to fix kexec
-> to pass i/o reserved areas to the crash kernel.
+Dumping tools have no idea whether a given page is part of a balloon driver
+and shall not be dumped. Esp. PG_reserved cannot be used for that purpose
+as all memory allocated during early boot is also PG_reserved, see
+discussion at [1]. So some other way of indication is required and a new
+page flag is frowned upon.
 
-Yap, this is the *why* I'm looking for. Lianbo, in your next submission,
-please add Dave's explanations to your commit messages.
+We have PG_balloon (MAPCOUNT value), which is essentially unused now. I
+suggest renaming it to something more generic (PG_offline) to mark pages as
+logically offline. This flag can than e.g. also be used by virtio-mem in
+the future to mark subsections as offline. Or by other code that wants to
+put pages logically offline (e.g. later maybe poisoned pages that shall
+no longer be used).
 
-If it says "we need to do X" in the commit message, without a reason
-given *why* we need to, then there's no way for us to know *why* we did
-it, when looking at this months from now. And we absolutely need the
-*why* when staring at the code and fixing the next bug/issue.
+This series converts PG_balloon to PG_offline, allows dumping tools to
+query the value to detect such pages and marks pages in the hv-balloon
+and XEN balloon properly as PG_offline. Note that virtio-balloon already
+set pages to PG_balloon (and now PG_offline).
 
-Thx.
+Please note that this is also helpful for a problem we were seeing under
+Hyper-V: Dumping logically offline memory (pages kept fake offline while
+onlining a section via online_page_callback) would under some condicions
+result in a kernel panic when dumping them.
+
+As I don't have access to neither XEN nor Hyper-V nor VMWare installations,
+this was only tested with the virtio-balloon and pages were properly
+skipped when dumping. I'll also attach the makedumpfile patch to this
+series.
+
+[1] https://lkml.org/lkml/2018/7/20/566
+
+RFC -> v1:
+- Add "PM / Hibernate: use pfn_to_online_page()"
+- Add "vmw_balloon: mark inflated pages PG_offline"
+- "mm: convert PG_balloon to PG_offline"
+-- After discussions, also rename the UAPI bit name (KPF_BALLOON -> KPF_OFFLINE)
+
+David Hildenbrand (8):
+  mm: balloon: update comment about isolation/migration/compaction
+  mm: convert PG_balloon to PG_offline
+  kexec: export PG_offline to VMCOREINFO
+  xen/balloon: mark inflated pages PG_offline
+  hv_balloon: mark inflated pages PG_offline
+  vmw_balloon: mark inflated pages PG_offline
+  PM / Hibernate: use pfn_to_online_page()
+  PM / Hibernate: exclude all PageOffline() pages
+
+ Documentation/admin-guide/mm/pagemap.rst |  9 ++++---
+ drivers/hv/hv_balloon.c                  | 14 ++++++++--
+ drivers/misc/vmw_balloon.c               | 32 ++++++++++++++++++++++
+ drivers/xen/balloon.c                    |  3 +++
+ fs/proc/page.c                           |  4 +--
+ include/linux/balloon_compaction.h       | 34 +++++++++---------------
+ include/linux/page-flags.h               | 11 +++++---
+ include/uapi/linux/kernel-page-flags.h   |  2 +-
+ kernel/crash_core.c                      |  2 ++
+ kernel/power/snapshot.c                  | 13 +++++----
+ tools/vm/page-types.c                    |  2 +-
+ 11 files changed, 87 insertions(+), 39 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.17.2
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
