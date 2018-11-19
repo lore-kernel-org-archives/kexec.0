@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by casper.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gOgcn-0001Zv-Mg
- for kexec@lists.infradead.org; Mon, 19 Nov 2018 10:17:53 +0000
+ id 1gOgd1-0001c4-Tl
+ for kexec@lists.infradead.org; Mon, 19 Nov 2018 10:18:06 +0000
 From: David Hildenbrand <david@redhat.com>
-Subject: [PATCH v1 6/8] vmw_balloon: mark inflated pages PG_offline
-Date: Mon, 19 Nov 2018 11:16:14 +0100
-Message-Id: <20181119101616.8901-7-david@redhat.com>
+Subject: [PATCH v1 8/8] PM / Hibernate: exclude all PageOffline() pages
+Date: Mon, 19 Nov 2018 11:16:16 +0100
+Message-Id: <20181119101616.8901-9-david@redhat.com>
 In-Reply-To: <20181119101616.8901-1-david@redhat.com>
 References: <20181119101616.8901-1-david@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -23,82 +23,47 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org
-Cc: Michal Hocko <mhocko@suse.com>, "Michael S. Tsirkin" <mst@redhat.com>, Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org, pv-drivers@vmware.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-doc@vger.kernel.org, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Xavier Deguillard <xdeguillard@vmware.com>, Julien Freche <jfreche@vmware.com>, Nadav Amit <namit@vmware.com>, xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Len Brown <len.brown@intel.com>, Michal Hocko <mhocko@suse.com>, linux-pm@vger.kernel.org, pv-drivers@vmware.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-doc@vger.kernel.org, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, "Michael S. Tsirkin" <mst@redhat.com>, Pavel Machek <pavel@ucw.cz>, xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
 
-Mark inflated and never onlined pages PG_offline, to tell the world that
-the content is stale and should not be dumped.
+The content of pages that are marked PG_offline is not of interest
+(e.g. inflated by a balloon driver), let's skip these pages.
 
-Cc: Xavier Deguillard <xdeguillard@vmware.com>
-Cc: Nadav Amit <namit@vmware.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Julien Freche <jfreche@vmware.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Len Brown <len.brown@intel.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Matthew Wilcox <willy@infradead.org>
 Cc: Michal Hocko <mhocko@suse.com>
 Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/misc/vmw_balloon.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ kernel/power/snapshot.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/vmw_balloon.c b/drivers/misc/vmw_balloon.c
-index e6126a4b95d3..8cc8bd9a4e32 100644
---- a/drivers/misc/vmw_balloon.c
-+++ b/drivers/misc/vmw_balloon.c
-@@ -544,6 +544,36 @@ unsigned int vmballoon_page_order(enum vmballoon_page_size_type page_size)
- 	return page_size == VMW_BALLOON_2M_PAGE ? VMW_BALLOON_2M_ORDER : 0;
- }
+diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
+index 87e6dd57819f..8d7b4d458842 100644
+--- a/kernel/power/snapshot.c
++++ b/kernel/power/snapshot.c
+@@ -1222,7 +1222,7 @@ static struct page *saveable_highmem_page(struct zone *zone, unsigned long pfn)
+ 	BUG_ON(!PageHighMem(page));
  
-+/**
-+ * vmballoon_mark_page_offline() - mark a page as offline
-+ * @page: pointer for the page
-+ * @page_size: the size of the page.
-+ */
-+static void
-+vmballoon_mark_page_offline(struct page *page,
-+			    enum vmballoon_page_size_type page_size)
-+{
-+	int i;
-+
-+	for (i = 0; i < 1ULL << vmballoon_page_order(page_size); i++)
-+		__SetPageOffline(page + i);
-+}
-+
-+/**
-+ * vmballoon_mark_page_online() - mark a page as online
-+ * @page: pointer for the page
-+ * @page_size: the size of the page.
-+ */
-+static void
-+vmballoon_mark_page_online(struct page *page,
-+			   enum vmballoon_page_size_type page_size)
-+{
-+	int i;
-+
-+	for (i = 0; i < 1ULL << vmballoon_page_order(page_size); i++)
-+		__ClearPageOffline(page + i);
-+}
-+
- /**
-  * vmballoon_page_in_frames() - returns the number of frames in a page.
-  * @page_size: the size of the page.
-@@ -612,6 +642,7 @@ static int vmballoon_alloc_page_list(struct vmballoon *b,
- 					 ctl->page_size);
+ 	if (swsusp_page_is_forbidden(page) ||  swsusp_page_is_free(page) ||
+-	    PageReserved(page))
++	    PageReserved(page) || PageOffline(page))
+ 		return NULL;
  
- 		if (page) {
-+			vmballoon_mark_page_offline(page, ctl->page_size);
- 			/* Success. Add the page to the list and continue. */
- 			list_add(&page->lru, &ctl->pages);
- 			continue;
-@@ -850,6 +881,7 @@ static void vmballoon_release_page_list(struct list_head *page_list,
+ 	if (page_is_guard(page))
+@@ -1286,6 +1286,9 @@ static struct page *saveable_page(struct zone *zone, unsigned long pfn)
+ 	if (swsusp_page_is_forbidden(page) || swsusp_page_is_free(page))
+ 		return NULL;
  
- 	list_for_each_entry_safe(page, tmp, page_list, lru) {
- 		list_del(&page->lru);
-+		vmballoon_mark_page_online(page, page_size);
- 		__free_pages(page, vmballoon_page_order(page_size));
- 	}
- 
++	if (PageOffline(page))
++		return NULL;
++
+ 	if (PageReserved(page)
+ 	    && (!kernel_page_present(page) || pfn_is_nosave(pfn)))
+ 		return NULL;
 -- 
 2.17.2
 
