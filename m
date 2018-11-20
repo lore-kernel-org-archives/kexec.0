@@ -1,13 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH v2] x86_64, vmcoreinfo: Append 'page_offset_base' to
- vmcoreinfo
-Date: Mon, 19 Nov 2018 21:07:27 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03560F84@BPXM09GP.gisp.nec.co.jp>
-References: <1542318469-13699-1-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1542318469-13699-1-git-send-email-bhsharma@redhat.com>
-Content-Language: en-US
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gOwrp-0000pv-JM
+ for kexec@lists.infradead.org; Tue, 20 Nov 2018 03:38:26 +0000
+Subject: Re: [PATCH 1/2 v6] x86/kexec_file: add e820 entry in case e820 type
+ string matches to io resource name
+References: <20181114072926.13312-1-lijiang@redhat.com>
+ <20181114072926.13312-2-lijiang@redhat.com> <20181114112600.GD13926@zn.tnic>
+ <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
+ <20181115103959.GB26448@zn.tnic>
+ <20181119095515.GC14045@dhcp-128-65.nay.redhat.com>
+ <20181119102812.GA14688@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <a1c58bb8-390b-e249-599f-c973d575e1ca@redhat.com>
+Date: Tue, 20 Nov 2018 11:37:26 +0800
 MIME-Version: 1.0
+In-Reply-To: <20181119102812.GA14688@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,45 +25,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: James Morse <james.morse@arm.com>, Baoquan He <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Omar Sandoval <osandov@fb.com>, Dave Anderson <anderson@redhat.com>, Boris Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
+Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, Bjorn Helgaas <helgaas@kernel.org>, tglx@linutronix.de, akpm@linux-foundation.org
 
-On 11/15/2018 4:47 PM, Bhupesh Sharma wrote:
-> Adding 'page_offset_base' to the vmcoreinfo can be specially useful for
-> live-debugging of a running kernel via user-space utilities
-> like makedumpfile (see [1]).
-
-I agree.
-
-> Recently, I saw an issue with the 'makedumpfile' utility (see [2] for
-> details), whose live debugging feature is broken with newer kernels
-> (I tested the same with 4.19-rc8+ kernel), as KCORE_REMAP segments were
-> added to kcore, thus leading to an additional sections in the same, and
-> makedumpfile is not longer able to determine the start of direct
-> mapping of all physical memory, as it relies on traversing the PT_LOAD
-> segments inside kcore and using the last PT_LOAD segment
-> to determine the start of direct mapping.
-
-Actually, the KCORE_REMAP segments were already removed from kcore by
-commit bf904d2762ee ("x86/pti/64: Remove the SYSCALL64 entry trampoline")
-and kcore's program headers got back to the previous ones, but this
-fact shows that they are changeable.
-
-So I think that if we have this NUMBER(page_offset_base) in vmcoreinfo
-for x86_64, user-space tools (especially makedumpfile) would become
-more stable against changes in kcore and vmcore, rather than depending
-on their PT_LOAD values.
-
-Thanks,
-Kazu
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMeaciDE55pelIDE4OjI4LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IE1vbiwgTm92IDE5LCAyMDE4IGF0IDA1OjU1OjE1UE0gKzA4MDAsIERhdmUgWW91bmcgd3JvdGU6
+Cj4+IEFub3RoZXIgdGhpbmcgaXMgaXQgaXMgbm90IHdvcnRoIHRvIGdldCB0aGUgZXhhY3QgaW5m
+bywgdGhlIDFzdCBrZXJuZWwKPj4gcmVzZXJ2ZWQgcGFydCBpcyBqdXN0IGZpbmUgdG8gYmUgcmVz
+ZXJ2ZWQgYXMgd2VsbCBpbiAybmQga2VybmVsLCBubyAKPj4gc2lkZSBlZmZlY3RzLiAgQWN0dWFs
+bHkgdGhlcmUgbWlnaHQgYmUgc29tZSBvYnNjdXJlIHVzZSBjYXNlcyB3ZQo+PiBkbyBub3QgZmlu
+ZCB3aGljaCByZWx5IHRob3NlIHJlc2VydmVkIG1lbW9yeSByYW5nZXMgc28gaXQgaXMgYmV0dGVy
+IHRvCj4+IGhhdmUuCj4gCj4gVGhhdCBtYWtlcyBzZW5zZSBhcyBhbiBhcmd1bWVudC4gVGhlIGNs
+ZWFuZXIgdGhpbmcgd291bGQgYmUgdG8gZmlndXJlCj4gb3V0IG9ubHkgKndoaWNoKiByYW5nZXMg
+d2UncmUgZ29pbmcgdG8gbmVlZCBidXQgdGhhdCBpcyBwcm9iYWJseSBoYXJkZXIKPiB0aGFuIHNp
+bXBseSBleHBvcnRpbmcgd2hhdCB0aGUgZmlyc3Qga2VybmVsIHNlZXMuIEJ1dCB3aHkgd2UncmUg
+ZG9pbmcKPiBpdCwgbmVlZHMgdG8gYmUgaW4gdGhlIGNvbW1pdCBtZXNzYWdlIHNvIHRoYXQgaXQg
+aXMgY2xlYXIgd2hlbiBidWcKPiBodW50aW5nIGxhdGVyLgo+IAo+IC4uLgo+IAo+PiBUaGUgYmFz
+aWMgcHJvYmxlbSBpcyB0aGF0IHRoaXMgZGV2aWNlIGlzIGluIFBDSSBzZWdtZW50IDEgYW5kCj4+
+IHRoZSBrZXJuZWwgUENJIHByb2JpbmcgY2Fubm90IGZpbmQgaXQgd2l0aG91dCBhbGwgdGhlIGU4
+MjAgaS9vCj4+IHJlc2VydmF0aW9ucyBiZWluZyBwcmVzZW50IGluIHRoZSBlODIwIHRhYmxlLiBB
+bmQgdGhlIGNyYXNoIGtlcm5lbAo+PiBkb2VzIG5vdCBoYXZlIHRob3NlIHJlc2VydmF0aW9ucyBi
+ZWNhdXNlIHRoZSBrZXhlYyBjb21tYW5kIGRvZXMgbm90Cj4+IHBhc3MgaS9vIHJlc2VydmF0aW9u
+IHZpYSB0aGUgbWVtbWFwPSBjb21tYW5kIGxpbmUgb3B0aW9uLiAoVGhpcwo+PiBwcm9ibGVtIGRv
+ZXMgbm90IHNob3cgdXAgZm9yIG90aGVyIHZlbmRvcnMsIGFzIFNHSSBpcyBhcHBhcmVudGx5IHRo
+ZQo+PiBvbmx5IG9uZSB1c2luZyBleHRlbmRlZCBQQ0kuIFRoZSBsb29rdXAgb2YgZGV2aWNlcyBp
+biBQQ0kgc2VnbWVudCAwCj4+IGFjdHVhbGx5IGZhaWxzIGZvciBldmVyeW9uZSwgYnV0IGRldmlj
+ZXMgaW4gc2VnbWVudCAwIGFyZSB0aGVuIGZvdW5kCj4+IGJ5IHNvbWUgbGVnYWN5IGxvb2t1cCBt
+ZXRob2QuKSBUaGUgd29ya2Fyb3VuZCBmb3IgdGhpcyBpcyB0byBmaXgga2V4ZWMKPj4gdG8gcGFz
+cyBpL28gcmVzZXJ2ZWQgYXJlYXMgdG8gdGhlIGNyYXNoIGtlcm5lbC4KPiAKPiBZYXAsIHRoaXMg
+aXMgdGhlICp3aHkqIEknbSBsb29raW5nIGZvci4gTGlhbmJvLCBpbiB5b3VyIG5leHQgc3VibWlz
+c2lvbiwKPiBwbGVhc2UgYWRkIERhdmUncyBleHBsYW5hdGlvbnMgdG8geW91ciBjb21taXQgbWVz
+c2FnZXMuCj4gT2suIFRoYW5rIHlvdSwgRGF2ZSBhbmQgQm9yaXMuIEkgd2lsbCBhZGQgRGF2ZSdz
+IGV4cGxhbmF0aW9ucyB0byBwYXRjaCBsb2cuCgpCVFc6IEJvcmlzIGhhcyBtZW50aW9uZWQgdGhl
+IHNvbHV0aW9uIHdoaWNoIGFkZHMgdGhlIG5ldyBkZXNjcmlwdG9yICdJT1JFU19ERVNDX1JFU0VS
+VkVEJy4KCldoaWNoIHNvbHV0aW9uIGRvIHlvdSBwcmVmZXI/IEFkZCB0aGUgbmV3IEkvTyByZXNv
+dXJjZSBkZXNjcmlwdG9yICdJT1JFU19ERVNDX1JFU0VSVkVEJyhwYXRjaCB2NykKb3IgZXhhY3Rs
+eSBjb21wYXJpbmcgYSBzdHJpbmcocGF0Y2ggdjYpPwoKVGhlc2UgdHdvIHNvbHV0aW9ucyBhcmUg
+Z29vZCB0byBtZS4gCgpUaGFua3MuCkxpYW5ibwo+IElmIGl0IHNheXMgIndlIG5lZWQgdG8gZG8g
+WCIgaW4gdGhlIGNvbW1pdCBtZXNzYWdlLCB3aXRob3V0IGEgcmVhc29uCj4gZ2l2ZW4gKndoeSog
+d2UgbmVlZCB0bywgdGhlbiB0aGVyZSdzIG5vIHdheSBmb3IgdXMgdG8ga25vdyAqd2h5KiB3ZSBk
+aWQKPiBpdCwgd2hlbiBsb29raW5nIGF0IHRoaXMgbW9udGhzIGZyb20gbm93LiBBbmQgd2UgYWJz
+b2x1dGVseSBuZWVkIHRoZQo+ICp3aHkqIHdoZW4gc3RhcmluZyBhdCB0aGUgY29kZSBhbmQgZml4
+aW5nIHRoZSBuZXh0IGJ1Zy9pc3N1ZS4KPiAKPiBUaHguCj4gCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2tleGVjCg==
