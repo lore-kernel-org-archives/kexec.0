@@ -1,18 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gPRVx-0000Nm-4O
- for kexec@lists.infradead.org; Wed, 21 Nov 2018 12:21:54 +0000
-Subject: Re: [PATCH v1 8/8] PM / Hibernate: exclude all PageOffline() pages
-References: <20181119101616.8901-1-david@redhat.com>
- <20181119101616.8901-9-david@redhat.com>
- <11E3C0B0-AEED-42C6-A21C-1820F4B47A68@oracle.com>
-From: David Hildenbrand <david@redhat.com>
-Message-ID: <88f19102-9830-1ed0-1f46-56e11316ca09@redhat.com>
-Date: Wed, 21 Nov 2018 13:21:08 +0100
+ id 1gPSDX-0001RZ-OK
+ for kexec@lists.infradead.org; Wed, 21 Nov 2018 13:06:57 +0000
+Date: Wed, 21 Nov 2018 14:06:22 +0100
+In-Reply-To: <ddeff176-2517-4b58-73b6-3787e84b2a5e@redhat.com>
+References: <20181114072926.13312-1-lijiang@redhat.com>
+ <20181114072926.13312-2-lijiang@redhat.com> <20181114112600.GD13926@zn.tnic>
+ <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
+ <20181115103959.GB26448@zn.tnic>
+ <c3347d48-aa32-e8e4-c99b-baf2e6a21dc2@redhat.com>
+ <20181118115251.GB19380@zn.tnic>
+ <ddeff176-2517-4b58-73b6-3787e84b2a5e@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <11E3C0B0-AEED-42C6-A21C-1820F4B47A68@oracle.com>
-Content-Language: en-US
+Subject: Re: [PATCH 1/2 v6] x86/kexec_file: add e820 entry in case e820 type
+ string matches to io resource name
+From: Boris Petkov <bp@alien8.de>
+Message-ID: <49B3EB59-ABD2-4A5C-BE8A-B078283B8418@alien8.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,38 +29,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: William Kucharski <william.kucharski@oracle.com>
-Cc: Len Brown <len.brown@intel.com>, Michal Hocko <mhocko@suse.com>, linux-pm@vger.kernel.org, pv-drivers@vmware.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-doc@vger.kernel.org, kexec-ml <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Matthew Wilcox <willy@infradead.org>, Linux-MM <linux-mm@kvack.org>, "Michael S. Tsirkin" <mst@redhat.com>, Pavel Machek <pavel@ucw.cz>, xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, Andrew Morton <akpm@linux-foundation.org>
+To: lijiang <lijiang@redhat.com>
+Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, Bjorn Helgaas <helgaas@kernel.org>, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On 21.11.18 12:35, William Kucharski wrote:
-> If you are adding PageOffline(page) to the condition list of the already existing if in
-> saveable_highmem_page(), why explicitly add it as a separate statement in saveable_page()?
-> 
-> It would seem more consistent to make the second check:
-> 
-> -	if (swsusp_page_is_forbidden(page) || swsusp_page_is_free(page))
-> +	if (swsusp_page_is_forbidden(page) || swsusp_page_is_free(page) ||
-> +		PageOffline(page))
-> 
-> instead.
-> 
-> It's admittedly a nit but it just seems cleaner to either do that or, if your intention
-> was to separate the Page checks from the swsusp checks, to break the calls to
-> PageReserved() and PageOffline() into their own check in saveable_highmem_page().
+On November 21, 2018 11:54:09 AM GMT+01:00, lijiang <lijiang@redhat.com> wrote:
+>If you understood this issue, you might ignore it, please.
 
-I'll split PageReserved() and PageOffline() off from the swsusp checks,
-thanks for your comment!
+Yes,I got it. Simply figuring out which reserved regions to export and which not, is not worth the effort - we can do the simple thing of directly exporting them all.
 
-> 
-> Thanks!
->     -- Bill
-
+Thx.
 
 -- 
-
-Thanks,
-
-David / dhildenb
+Sent from a small device: formatting sux and brevity is inevitable. 
 
 _______________________________________________
 kexec mailing list
