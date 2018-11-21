@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cloudserver094114.home.pl ([79.96.170.134])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gPDUp-0006M0-FD
- for kexec@lists.infradead.org; Tue, 20 Nov 2018 21:23:48 +0000
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v1 7/8] PM / Hibernate: use pfn_to_online_page()
-Date: Tue, 20 Nov 2018 22:23:35 +0100
-Message-ID: <1709060.evyxFHMqmg@aspire.rjw.lan>
-In-Reply-To: <20181119101616.8901-8-david@redhat.com>
+ id 1gPGwy-0001Qf-A9
+ for kexec@lists.infradead.org; Wed, 21 Nov 2018 01:05:06 +0000
+Date: Tue, 20 Nov 2018 20:04:51 -0500 (EST)
+From: Pankaj Gupta <pagupta@redhat.com>
+Message-ID: <1155749039.35435813.1542762291980.JavaMail.zimbra@redhat.com>
+In-Reply-To: <1380154502.35259416.1542706636322.JavaMail.zimbra@redhat.com>
 References: <20181119101616.8901-1-david@redhat.com>
- <20181119101616.8901-8-david@redhat.com>
+ <20181119101616.8901-6-david@redhat.com>
+ <1747228.35250472.1542703532881.JavaMail.zimbra@redhat.com>
+ <6258a58b-28c7-c055-0752-e8bd085b835f@redhat.com>
+ <1380154502.35259416.1542706636322.JavaMail.zimbra@redhat.com>
+Subject: Re: [PATCH v1 5/8] hv_balloon: mark inflated pages PG_offline
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,56 +27,61 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: David Hildenbrand <david@redhat.com>
-Cc: Len Brown <len.brown@intel.com>, Michal Hocko <mhocko@suse.com>, linux-pm@vger.kernel.org, pv-drivers@vmware.com, linux-doc@vger.kernel.org, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, "Michael S. Tsirkin" <mst@redhat.com>, Pavel Machek <pavel@ucw.cz>, xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>, Stephen Hemminger <sthemmin@microsoft.com>, Kairui Song <kasong@redhat.com>, linux-pm@vger.kernel.org, pv-drivers@vmware.com, Haiyang Zhang <haiyangz@microsoft.com>, linux-doc@vger.kernel.org, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, "Michael S. Tsirkin" <mst@redhat.com>, xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, Vitaly Kuznetsov <vkuznets@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Andrew Morton <akpm@linux-foundation.org>
 
-On Monday, November 19, 2018 11:16:15 AM CET David Hildenbrand wrote:
-> Let's use pfn_to_online_page() instead of pfn_to_page() when checking
-> for saveable pages to not save/restore offline memory sections.
+
+> > >> ---
+> > >>  drivers/hv/hv_balloon.c | 14 ++++++++++++--
+> > >>  1 file changed, 12 insertions(+), 2 deletions(-)
+> > >>
+> > >> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> > >> index 211f3fe3a038..47719862e57f 100644
+> > >> --- a/drivers/hv/hv_balloon.c
+> > >> +++ b/drivers/hv/hv_balloon.c
+> > >> @@ -681,8 +681,13 @@ static struct notifier_block hv_memory_nb = {
+> > >>  /* Check if the particular page is backed and can be onlined and online
+> > >>  it.
+> > >>  */
+> > >>  static void hv_page_online_one(struct hv_hotadd_state *has, struct page
+> > >>  *pg)
+> > >>  {
+> > >> -	if (!has_pfn_is_backed(has, page_to_pfn(pg)))
+> > >> +	if (!has_pfn_is_backed(has, page_to_pfn(pg))) {
+> > >> +		if (!PageOffline(pg))
+> > >> +			__SetPageOffline(pg);
+> > >>  		return;
+> > >> +	}
+> > >> +	if (PageOffline(pg))
+> > >> +		__ClearPageOffline(pg);
+> > >>  
+> > >>  	/* This frame is currently backed; online the page. */
+> > >>  	__online_page_set_limits(pg);
+> > >> @@ -1201,6 +1206,7 @@ static void free_balloon_pages(struct
+> > >> hv_dynmem_device
+> > >> *dm,
+> > >>  
+> > >>  	for (i = 0; i < num_pages; i++) {
+> > >>  		pg = pfn_to_page(i + start_frame);
+> > >> +		__ClearPageOffline(pg);
+> > > 
+> > > Just thinking, do we need to care for clearing PageOffline flag before
+> > > freeing
+> > > a balloon'd page?
+> > 
+> > Yes we have to otherwise the code will crash when trying to set PageBuddy.
+> > 
+> > (only one page type at a time may be set right now, and it makes sense.
+> > A page that is offline cannot e.g. be a buddy page)
 > 
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> Suggested-by: Michal Hocko <mhocko@kernel.org>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-> ---
->  kernel/power/snapshot.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> o.k
+> > 
+> > So PageOffline is completely managed by the page owner.
 > 
-> diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
-> index 640b2034edd6..87e6dd57819f 100644
-> --- a/kernel/power/snapshot.c
-> +++ b/kernel/power/snapshot.c
-> @@ -1215,8 +1215,8 @@ static struct page *saveable_highmem_page(struct zone *zone, unsigned long pfn)
->  	if (!pfn_valid(pfn))
->  		return NULL;
->  
-> -	page = pfn_to_page(pfn);
-> -	if (page_zone(page) != zone)
-> +	page = pfn_to_online_page(pfn);
-> +	if (!page || page_zone(page) != zone)
->  		return NULL;
->  
->  	BUG_ON(!PageHighMem(page));
-> @@ -1277,8 +1277,8 @@ static struct page *saveable_page(struct zone *zone, unsigned long pfn)
->  	if (!pfn_valid(pfn))
->  		return NULL;
->  
-> -	page = pfn_to_page(pfn);
-> -	if (page_zone(page) != zone)
-> +	page = pfn_to_online_page(pfn);
-> +	if (!page || page_zone(page) != zone)
->  		return NULL;
->  
->  	BUG_ON(PageHighMem(page));
-> 
+> Makes sense. Thanks for explaining.
 
+Looks good to me.
+
+Acked-by: Pankaj gupta <pagupta@redhat.com>
 
 
 _______________________________________________
