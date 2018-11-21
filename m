@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from userp2130.oracle.com ([156.151.31.86])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gPQ9U-0000im-Oq
- for kexec@lists.infradead.org; Wed, 21 Nov 2018 10:54:38 +0000
-Subject: Re: [PATCH 1/2 v6] x86/kexec_file: add e820 entry in case e820 type
- string matches to io resource name
-References: <20181114072926.13312-1-lijiang@redhat.com>
- <20181114072926.13312-2-lijiang@redhat.com> <20181114112600.GD13926@zn.tnic>
- <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
- <20181115103959.GB26448@zn.tnic>
- <c3347d48-aa32-e8e4-c99b-baf2e6a21dc2@redhat.com>
- <20181118115251.GB19380@zn.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <ddeff176-2517-4b58-73b6-3787e84b2a5e@redhat.com>
-Date: Wed, 21 Nov 2018 18:54:09 +0800
-MIME-Version: 1.0
-In-Reply-To: <20181118115251.GB19380@zn.tnic>
-Content-Language: en-US
+ id 1gPQnu-0007V1-R5
+ for kexec@lists.infradead.org; Wed, 21 Nov 2018 11:36:24 +0000
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [PATCH v1 8/8] PM / Hibernate: exclude all PageOffline() pages
+From: William Kucharski <william.kucharski@oracle.com>
+In-Reply-To: <20181119101616.8901-9-david@redhat.com>
+Date: Wed, 21 Nov 2018 04:35:46 -0700
+Message-Id: <11E3C0B0-AEED-42C6-A21C-1820F4B47A68@oracle.com>
+References: <20181119101616.8901-1-david@redhat.com>
+ <20181119101616.8901-9-david@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,102 +19,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, Bjorn Helgaas <helgaas@kernel.org>, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: David Hildenbrand <david@redhat.com>
+Cc: Len Brown <len.brown@intel.com>, Michal Hocko <mhocko@suse.com>, linux-pm@vger.kernel.org, pv-drivers@vmware.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-doc@vger.kernel.org, kexec-ml <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Matthew Wilcox <willy@infradead.org>, Linux-MM <linux-mm@kvack.org>, "Michael S. Tsirkin" <mst@redhat.com>, Pavel Machek <pavel@ucw.cz>, xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, Andrew Morton <akpm@linux-foundation.org>
 
-5ZyoIDIwMTjlubQxMeaciDE45pelIDE5OjUyLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IEZyaSwgTm92IDE2LCAyMDE4IGF0IDExOjI1OjU1QU0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
-IEZvciB0aGUgcGNpIG1tY29uZmlnIGlzc3VlLCBpdCBzaG91bGQgYmUgZ29vZCBlbm91Z2ggdGhh
-dCB0aGUgZTgyMCByZXNlcnZlZCByZWdpb24KPj4gW21lbSAweDAwMDAwMDAwNzgwMDAwMDAtMHgw
-MDAwMDAwMDhmZmZmZmZmXSBpcyBvbmx5IHBhc3NlZCB0byB0aGUgc2Vjb25kIGtlcm5lbCwgYnV0
-Cj4+IHRoZSBwY2kgbW1jb25maWcgcmVnaW9uIGlzIG5vdCB0aGUgc2FtZSBpbiBhbm90aGVyIG1h
-Y2hpbmUuCj4gCj4gWWVzLiBBbmQgbm93IHRoZSBxdWVzdGlvbiBpcywgKndoaWNoKiByZXNlcnZl
-ZCByZWdpb25zIG5lZWQgdG8gYmUgbWFwcGVkCj4gZm9yIHRoZSBzZWNvbmQga2VybmVsIHRvIGZ1
-bmN0aW9uIHByb3Blcmx5PyBIb3cgZG8gd2UgZmlndXJlIHRoYXQgb3V0Pwo+IAo+PiBBIHNpbXBs
-ZSBjYXNlLCBob3RwbHVnIGEgcGNpIG5ldHdvcmsgY2FyZCBhbmQgdXNlIHRoZSBzc2gvbmZzIHRv
-IGR1bXAgdGhlIHZtY29yZS4KPj4gSWYgdGhlIHBjaSBtbWNvbmZpZyByZWdpb24gaXMgbm90IHJl
-c2VydmVkIGluIGtkdW1wIGtlcm5lbCwgdGhlIHBjaSBob3RwbHVnIGRldmljZQo+PiBjb3VsZCBu
-b3QgYmUgcmVjb2duaXplZC4gU28gdGhlIHBjaSBuZXR3b3JrIGNhcmQgd29uJ3Qgd29yay4KPiAK
-PiBZZXMgdGhhdCdzIGEgZ29vZCBleGFtcGxlOyBwdXQgKnRoYXQqIGV4YW1wbGUgaW4geW91ciBj
-b21taXQgbWVzc2FnZS4KPiAKPj4gSGVyZSwgdGhlcmUgaXMgYW4gZXhhbXBsZSBhYm91dCBTTUUg
-a2R1bXAuIE1heWJlIGl0IGNhbiBoZWxwIHRvIGJldHRlciB1bmRlcnN0YW5kLgo+IAo+IFlvdSBr
-ZWVwIHBhc3RpbmcgdGhhdCBhbmQgSSd2ZSByZWFkIGl0IGFscmVhZHkuIEFuZCB5b3Uga2VlcCBy
-ZXBlYXRpbmcKPiB0aGF0IHRoZSByZXNlcnZlZCByZWdpb25zIG5lZWQgdG8gYmUgbWFwcGVkIGlu
-IHRoZSBzZWNvbmQga2VybmVsIGFuZCBJJ20KPiBhc2tpbmcsIGhvdyBkbyB3ZSBkZXRlcm1pbmUg
-KndoaWNoKiByZWdpb25zIHNob3VsZCB3ZSBwYXNzIHRvIHRoZSBzZWNvbmQKPiBrZXJuZWw/Cj4g
-CgpGb3IgdGhlIHBjaSBtbWNvbmZpZyBpc3N1ZSwgaXQgaXMgY2xlYXIgYWNjb3JkaW5nIHRvIERh
-dmUgYW5kIEJqb3JuJ3MgY29tbWVudC4gU28gaSdkIGxpa2UKdG8gZXhwbGFpbiB0d28gdGhpbmdz
-OgoKMS4gd2h5IHRoZSBTTUUga2R1bXAga2VybmVsIGRvZXMgbm90IHdvcmsgd2l0aG91dCB0aGUg
-cmVzZXJ2ZWQgcmFuZ2VzLgoKVGhlIGZpcnN0IGtlcm5lbCBjYW4gZ2V0IGU4MjAgdGFibGUncyBp
-bmZvcm1hdGlvbiBmcm9tIEJJT1Mgb3IgYm9vdGxvYWRlciwgYnV0IGZvciBrZHVtcAprZXJuZWws
-IGl0IGNhbiBub3QgdXNlIHRoaXMgbWV0aG9kIHRvIGdldCBlODIwIHRhYmxlLiBNYXliZSB5b3Ug
-aGF2ZSBrbm93biB3aG8gc2hvdWxkIHBhc3MKdGhlIGU4MjAgcmFuZ2VzIHRvIHRoZSBzZWNvbmQg
-a2VybmVsLCBpdCBpcyBqdXN0IHRoZSBrZXhlYy10b29scy4KClVuZm9ydHVuYXRlbHksIGtlcm5l
-bCBkb2VzIG5vdCBwYXNzIHRoZSBlODIwIHJlc2VydmVkIHJhbmdlcyB0byB0aGUga2R1bXAga2Vy
-bmVsLCB3aGVuIHVzZQp0aGUga2V4ZWNfZmlsZV9sb2FkIHN5c2NhbGwgdG8gbG9hZCB0aGUga2Vy
-bmVsIGltYWdlIGFuZCBpbml0cmFtZnMuCgpBdCB0aGUgZWFybHkgYm9vdCBzdGFnZSwgdGhlIGNh
-bGxlciB3aWxsIHVzZSB0aGUgZWFybHlfbWVtcmVtYXAoKSB0byByZW1hcCB0aGUgYWRkcmVzcyBz
-cGFjZSwKc3VjaCBhcyBETUksIEFDUEkgYW5kIEZpcm13YXJlLCBldGMuCgpIZXJlLCBpIG9ubHkg
-dXNlIGFuIGV4YW1wbGUgdG8gaWxsdXN0cmF0ZSB0aGUgaXNzdWUgd2hhdCB0aGUgRE1JIGVuY291
-bnRlcmVkIGluIGtkdW1wIGtlcm5lbC4KCkF0IHRoZSBlYXJseSBib290IHN0YWdlLCB0aGUgRE1J
-IHdpbGwgdXNlIHRoZSBlYXJseV9tZW1yZW1hcCgpIHRvIHJlbWFwIHRoZSBhZGRyZXNzIHJhbmdl
-cwpbMHhGMDAwMC0weEZGRkZGXSwgYW5kIHRoZW4gY2hlY2sgZm9yIHRoZSBTTUJJT1MgZW50cnkg
-cG9pbnQgc2lnbmF0dXJlLgoKQW5kIHdoZW4gdGhlIGNhbGxlciBjaGVja3MgdGhlIFNNQklPUyBl
-bnRyeSBwb2ludCBzaWduYXR1cmUsIHRoZSBjYWxsZXIgd2lsbCB1c2UgdGhlIGVhcmx5X21lbXJl
-bWFwKCkKdG8gcmVtYXAgYW5vdGhlciByZXNlcnZlZCByYW5nZXMgWzB4MHg2Mjg2QjAwMC0weDYy
-ODZFRkZGXSBhZ2Fpbiwgd2hpY2ggaXMgcmVwb3J0ZWQgYnkgZmlybXdhcmUob3IKU01CSU9TKS4K
-ClBsZWFzZSByZWZlciB0byB0aGUgY29kZTogZHJpdmVycy9maXJtd2FyZS9kbWlfc2Nhbi5jCgpk
-bWlfc2Nhbl9tYWNoaW5lKCktPiAvIGRtaV9lYXJseV9yZW1hcCgpLT4gZWFybHlfbWVtcmVtYXAo
-KQogICAgICAgICAgICAgICAgICAgICBcIGRtaV9zbWJpb3MzX3ByZXNlbnQoKS0+ZG1pX3dhbGtf
-ZWFybHkoKS0+ZG1pX2Vhcmx5X3JlbWFwKCktPmVhcmx5X21lbXJlbWFwKCkKCk9idmlvdXNseSwg
-dGhlIERNSSByZW1hcHBlZCByYW5nZXMgWzB4RjAwMDAtMHhGRkZGRl0gYW5kIFsweDYyODZiMDAw
-LTB4NjI4NmVmZmZdIGFyZSBub3QgaW4gdGhlIGU4MjAKdGFibGUgZm9yIHRoZSBrZHVtcCBrZXJu
-ZWwuIFRoZXJlZm9yZSwgd2hlbiBTTUUgaXMgZW5hYmxlZCwgdGhlc2UgcmVnaW9ucyB3aWxsIGJl
-IGNvbnNpZGVyIHRvIGJlCmVuY3J5cHRlZCBhY2NvcmRpbmcgdG8gdGhlIGZvbGxvd2luZyBjb2Rl
-OiBhcmNoL3g4Ni9tbS9pb3JlbWFwLmMuIEFjdHVhbGx5LCB0aGVzZSByZWdpb25zIGFyZSBzdGls
-bApkZWNyeXB0ZWQgaW4ga2R1bXAga2VybmVsLiBJdCBoYXMgZ29uZSB3cm9uZy4KCk5vdGU6IApX
-aGVuIFNNRSBpcyBlbmFibGVkLCBpZiB0aGUgbWVtb3J5IHJlZ2lvbnMgYXJlIGRlY3J5cHRlZCwg
-YnV0IHRoZSBjYWxsZXIgbWFya3MgdGhlIG1lbW9yeSBwYWdlcyBhcwplbmNyeXB0ZWQsIHRoZSBj
-b250ZW50IG9mIHBhZ2VzIGlzIHVucHJlZGljdGFibGUgd2hlbiByZWFkIGZyb20gbWVtb3J5LgoK
-ZWFybHlfbWVtcmVtYXAoKS0+CmVhcmx5X21lbXJlbWFwX3BncHJvdF9hZGp1c3QoKS0+Cm1lbXJl
-bWFwX3Nob3VsZF9tYXBfZGVjcnlwdGVkKCktPgplODIwX19nZXRfZW50cnlfdHlwZSgpCgpzdGF0
-aWMgYm9vbCBtZW1yZW1hcF9zaG91bGRfbWFwX2RlY3J5cHRlZChyZXNvdXJjZV9zaXplX3QgcGh5
-c19hZGRyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25l
-ZCBsb25nIHNpemUpCnsKICAgICAgICBpbnQgaXNfcG1lbTsKCiAgICAgICAgLi4uLi4uCgogICAg
-ICAgIC8qIENoZWNrIGlmIHRoZSBhZGRyZXNzIGlzIG91dHNpZGUga2VybmVsIHVzYWJsZSBhcmVh
-ICovCiAgICAgICAgc3dpdGNoIChlODIwX19nZXRfZW50cnlfdHlwZShwaHlzX2FkZHIsIHBoeXNf
-YWRkciArIHNpemUgLSAxKSkgewogICAgICAgIGNhc2UgRTgyMF9UWVBFX1JFU0VSVkVEOgogICAg
-ICAgIGNhc2UgRTgyMF9UWVBFX0FDUEk6CiAgICAgICAgY2FzZSBFODIwX1RZUEVfTlZTOgogICAg
-ICAgIGNhc2UgRTgyMF9UWVBFX1VOVVNBQkxFOgogICAgICAgICAgICAgICAgLyogRm9yIFNFViwg
-dGhlc2UgYXJlYXMgYXJlIGVuY3J5cHRlZCAqLwogICAgICAgICAgICAgICAgaWYgKHNldl9hY3Rp
-dmUoKSkKICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7CiAgICAgICAgICAgICAgICAvKiBG
-YWxsdGhyb3VnaCAqLwoKICAgICAgICBjYXNlIEU4MjBfVFlQRV9QUkFNOgogICAgICAgICAgICAg
-ICAgcmV0dXJuIHRydWU7CiAgICAgICAgZGVmYXVsdDoKICAgICAgICAgICAgICAgIGJyZWFrOwog
-ICAgICAgIH0KCiAgICAgICAgcmV0dXJuIGZhbHNlOwp9CgpTaW1pbGFybHksIGZvciBBQ1BJLCBm
-aXJtd2FyZSwgZXRjLiBUaGV5IHdpbGwgYWxzbyBlbmNvdW50ZXIgdGhlIHNhbWUgcHJvYmxlbXMs
-IGV2ZW50dWFsbHksIHdoaWNoCmNhdXNlcyB0aGUgc3lzdGVtIGZhaWxzIHRvIHN0YXJ0LiBUaGF0
-IGlzIHRoZSByZWFzb24gd2h5IHRoZSBTTUUga2R1bXAga2VybmVsIGRvZXMgbm90IHdvcmsgd2l0
-aG91dAp0aGUgcmVzZXJ2ZWQgcmFuZ2VzLgoKMi4gd2h5IHRoZSBhbGwgcmVzZXJ2ZWQgcmFuZ2Vz
-IGFyZSBwYXNzZWQgdG8gdGhlIHNlY29uZCBrZXJuZWwob3Igd2hpY2ggcmVnaW9ucyBzaG91bGQg
-d2UgcGFzcyB0bwogICB0aGUgc2Vjb25kIGtlcm5lbD8pCgpBcyBwcmV2aW91c2x5IG1lbnRpb25l
-ZCwgZm9yIHRoZSBETUksIHRoZSByZXNlcnZlZCByZWdpb25zWzB4RjAwMDAtMHhGRkZGRl0gYW5k
-IFsweDB4NjI4NkIwMDAtMHg2Mjg2RUZGRl0KYXJlIGFjY3VyYXRlbHkgcGFzc2VkIHRvIHRoZSBz
-ZWNvbmQga2VybmVsLCB0aGUgRE1JIGNhbiB3b3JrIHdlbGwgb24gbXkgbWFjaGluZS4gQnV0IGZv
-ciB0aGUgQUNQSSwgZmlybXdhcmUsCmV0Yy4gSG93IHRvIGRlYWwgd2l0aCB0aGlzPwoKSSB0aGlu
-ayB0aGF0IHdlIGhhdmUgdG8gZmluZCBhbGwgcGxhY2VzIHdoZXJlIHRvIGNhbGwgdGhlIGVhcmx5
-X21lbXJlbWFwKCksIGFuZCBkZXRlcm1pbmUgd2hldGhlciB0aGVzZQpyZXNlcnZlZCByZWdpb25z
-IG5lZWQgYmUgcGFzc2VkIHRvIHRoZSBzZWNvbmQga2VybmVsLCBhbmQgdGhlbiBhZGQgdGhlIGNv
-ZGUgZm9yIGtkdW1wIGtlcm5lbCBpbiB0aGVzZSBjb2RlCnBhdGhzLiBJdCBpcyByZWFsbHkgdG9v
-IGV4cGVuc2l2ZSB0byBkbyB0aGlzLgoKRnVydGhlcm1vcmUsIGkgb25seSBkaWQgYSBzYW1lIHRo
-aW5nIGluIGtlcm5lbCwganVzdCBsaWtlIHRoZSBrZXhlYy10b29scyBwYXNzIHRoZSBhbGwgcmVz
-ZXJ2ZWQgcmFuZ2VzIHRvIHRoZQpzZWNvbmQga2VybmVsLgoKSWYgeW91IHVuZGVyc3Rvb2QgdGhp
-cyBpc3N1ZSwgeW91IG1pZ2h0IGlnbm9yZSBpdCwgcGxlYXNlLgoKVGhhbmtzLgpMaWFuYm8KCj4g
-SWYgd2Ugc2hvdWxkIHBhc3MgKmFsbCogcmVzZXJ2ZWQgcmVnaW9ucywgd2h5Pwo+IAo+IElPVywg
-SSdtIGxvb2tpbmcgZm9yIHRoZSAqd2h5KiBmaXJzdC4KPiAKPiBUaHguCj4gCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
-a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2tleGVjCg==
+If you are adding PageOffline(page) to the condition list of the already existing if in
+saveable_highmem_page(), why explicitly add it as a separate statement in saveable_page()?
+
+It would seem more consistent to make the second check:
+
+-	if (swsusp_page_is_forbidden(page) || swsusp_page_is_free(page))
++	if (swsusp_page_is_forbidden(page) || swsusp_page_is_free(page) ||
++		PageOffline(page))
+
+instead.
+
+It's admittedly a nit but it just seems cleaner to either do that or, if your intention
+was to separate the Page checks from the swsusp checks, to break the calls to
+PageReserved() and PageOffline() into their own check in saveable_highmem_page().
+
+Thanks!
+    -- Bill
+     
+
+> On Nov 19, 2018, at 3:16 AM, David Hildenbrand <david@redhat.com> wrote:
+> 
+> --- a/kernel/power/snapshot.c
+> +++ b/kernel/power/snapshot.c
+> @@ -1222,7 +1222,7 @@ static struct page *saveable_highmem_page(struct zone *zone, unsigned long pfn)
+> 	BUG_ON(!PageHighMem(page));
+> 
+> 	if (swsusp_page_is_forbidden(page) ||  swsusp_page_is_free(page) ||
+> -	    PageReserved(page))
+> +	    PageReserved(page) || PageOffline(page))
+> 		return NULL;
+> 
+> 	if (page_is_guard(page))
+> @@ -1286,6 +1286,9 @@ static struct page *saveable_page(struct zone *zone, unsigned long pfn)
+> 	if (swsusp_page_is_forbidden(page) || swsusp_page_is_free(page))
+> 		return NULL;
+> 
+> +	if (PageOffline(page))
+> +		return NULL;
+> +
+> 	if (PageReserved(page)
+> 	    && (!kernel_page_present(page) || pfn_is_nosave(pfn)))
+> 		return NULL;
+> -- 
+> 2.17.2
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
