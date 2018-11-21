@@ -1,18 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gPUXc-0005GW-5Z
- for kexec@lists.infradead.org; Wed, 21 Nov 2018 15:35:49 +0000
-Subject: Re: [PATCH v1] makedumpfile: exclude pages that are logically offline
-References: <20181119101616.8901-1-david@redhat.com>
- <20181119101835.9140-1-david@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03561222@BPXM09GP.gisp.nec.co.jp>
-From: David Hildenbrand <david@redhat.com>
-Message-ID: <e5ac1f79-cd69-2b8e-41ee-873fea48afdd@redhat.com>
-Date: Wed, 21 Nov 2018 16:35:31 +0100
+ id 1gPXSo-0000pJ-5n
+ for kexec@lists.infradead.org; Wed, 21 Nov 2018 18:43:03 +0000
+Date: Wed, 21 Nov 2018 19:42:32 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/2 v6] x86/kexec_file: add e820 entry in case e820 type
+ string matches to io resource name
+Message-ID: <20181121184232.GB27559@zn.tnic>
+References: <20181114072926.13312-1-lijiang@redhat.com>
+ <20181114072926.13312-2-lijiang@redhat.com>
+ <20181114112600.GD13926@zn.tnic>
+ <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
+ <20181115103959.GB26448@zn.tnic>
+ <CABhMZUUscS3jUZUSM5Y6EYJK6weo7Mjj5-EAKGvbw0qEe+38zw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03561222@BPXM09GP.gisp.nec.co.jp>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CABhMZUUscS3jUZUSM5Y6EYJK6weo7Mjj5-EAKGvbw0qEe+38zw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,74 +29,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "pv-drivers@vmware.com" <pv-drivers@vmware.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, kexec-ml <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>
+To: bjorn@helgaas.com
+Cc: lijiang@redhat.com, bhe@redhat.com, x86 <x86@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>, tglx@linutronix.de, dyoung@redhat.com, Andrew Morton <akpm@linux-foundation.org>
 
-On 21.11.18 15:58, Kazuhito Hagio wrote:
-> Hi David,
-> 
->> Linux marks pages that are logically offline via a page flag (map count).
->> Such pages e.g. include pages infated as part of a balloon driver or
->> pages that were not actually onlined when onlining the whole section.
->>
->> While the hypervisor usually allows to read such inflated memory, we
->> basically read and dump data that is completely irrelevant. Also, this
->> might result in quite some overhead in the hypervisor. In addition,
->> we saw some problems under Hyper-V, whereby we can crash the kernel by
->> dumping, when reading memory of a partially onlined memory segment
->> (for memory added by the Hyper-V balloon driver).
->>
->> Therefore, don't read and dump pages that are marked as being logically
->> offline.
->>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>  makedumpfile.c | 34 ++++++++++++++++++++++++++++++----
->>  makedumpfile.h |  1 +
->>  2 files changed, 31 insertions(+), 4 deletions(-)
->>
->> diff --git a/makedumpfile.c b/makedumpfile.c
->> index 8923538..b8bfd4c 100644
->> --- a/makedumpfile.c
->> +++ b/makedumpfile.c
->> @@ -88,6 +88,7 @@ mdf_pfn_t pfn_cache_private;
->>  mdf_pfn_t pfn_user;
->>  mdf_pfn_t pfn_free;
->>  mdf_pfn_t pfn_hwpoison;
->> +mdf_pfn_t pfn_offline;
->>
->>  mdf_pfn_t num_dumped;
->>
->> @@ -249,6 +250,21 @@ isHugetlb(unsigned long dtor)
->>                      && (SYMBOL(free_huge_page) == dtor));
->>  }
->>
->> +static int
->> +isOffline(unsigned long flags, unsigned int _mapcount)
->> +{
->> +	if (NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) == NOT_FOUND_NUMBER)
->> +		return FALSE;
-> 
-> This is NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE), isn't it?
-> If so, I will correct it when merging.
-> 
-> Otherwise, looks good to me.
-> 
-> Thanks!
-> Kazu
+On Tue, Nov 20, 2018 at 02:43:57PM -0600, Bjorn Helgaas wrote:
+> MMCONFIG (aka ECAM) space is described in the ACPI MCFG table.  The
+> generic code to read that is in drivers/acpi/pci_mcfg.c (ignore all
+> the quirks at the top) and the generic code to use it is
+> drivers/pci/ecam.c.
 
-Indeed,
+/me saves that for future reference.
 
-I will most probably resend either way along with a new mm series!
+> Unfortunately x86 doesn't use any of that generic path.  It uses the
+> same MCFG table, but it's parsed in arch/x86/pci/mmconfig-shared.c,
+> and the code there checks to ensure the ECAM regions are reserved
+> somehow by firmware, e.g., via the e820 table.
 
-Thanks a lot!
+As they are on my workstation here, for example:
 
+[    0.552607] PCI: MMCONFIG at [mem 0xf8000000-0xfbffffff] reserved in E820
+
+vs the "ACPI motherboard resources" reservation thing where it traverses
+some PNP devices.
+
+> There's a bunch of grungy device-dependent code there, too, possibly
+> to work around firmware defects, or (just as likely) to compensate for
+> Linux defects that were *attributed* to firmware.
+
+Nah, latter we simply fix. :-)
+
+> I think you should regard correct MCFG/ECAM usage in the kdump kernel
+> as a requirement.  If you don't have ECAM (a) PCI devices won't work
+> at all on non-x86 systems that use only ECAM for config access, (b)
+> you won't be able to access devices on non-0 segments (granted, there
+> aren't very many of these yet, but there will be more in the future),
+
+Ah. don't worry, someone will pop up from the woodwork with the need for
+this ;-\
+
+> and (c) you won't be able to access extended config space (addresses
+> 0x100-0xfff), which means none of the Extended Capabilities will be
+> available (AER, ACS, ATS, etc).
+
+Yap, and this answers my question:
+
+e820__mapped_all() is being called with E820_TYPE_RESERVED down the path
+in pci_mmcfg_check_reserved(). Which basically says that we need to
+provide all reserved regions in the second kernel so that MMCONFIG works
+there.
+
+Thanks a lot Bjorn!
 
 -- 
+Regards/Gruss,
+    Boris.
 
-Thanks,
-
-David / dhildenb
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
