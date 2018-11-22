@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gPXSo-0000pJ-5n
- for kexec@lists.infradead.org; Wed, 21 Nov 2018 18:43:03 +0000
-Date: Wed, 21 Nov 2018 19:42:32 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 1/2 v6] x86/kexec_file: add e820 entry in case e820 type
- string matches to io resource name
-Message-ID: <20181121184232.GB27559@zn.tnic>
-References: <20181114072926.13312-1-lijiang@redhat.com>
- <20181114072926.13312-2-lijiang@redhat.com>
- <20181114112600.GD13926@zn.tnic>
- <9eb61523-7a08-24c4-ac15-050537bd9203@redhat.com>
- <20181115103959.GB26448@zn.tnic>
- <CABhMZUUscS3jUZUSM5Y6EYJK6weo7Mjj5-EAKGvbw0qEe+38zw@mail.gmail.com>
+ id 1gPjcy-0003Ns-VT
+ for kexec@lists.infradead.org; Thu, 22 Nov 2018 07:42:22 +0000
+Date: Thu, 22 Nov 2018 15:42:02 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 1/2 v7] resource: add the new I/O resource descriptor
+ 'IORES_DESC_RESERVED'
+Message-ID: <20181122074202.GA8524@dhcp-128-65.nay.redhat.com>
+References: <20181115095529.21220-1-lijiang@redhat.com>
+ <20181115095529.21220-2-lijiang@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CABhMZUUscS3jUZUSM5Y6EYJK6weo7Mjj5-EAKGvbw0qEe+38zw@mail.gmail.com>
+In-Reply-To: <20181115095529.21220-2-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,62 +25,85 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: bjorn@helgaas.com
-Cc: lijiang@redhat.com, bhe@redhat.com, x86 <x86@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>, tglx@linutronix.de, dyoung@redhat.com, Andrew Morton <akpm@linux-foundation.org>
+To: Lianbo Jiang <lijiang@redhat.com>
+Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, bp@alien8.de, tglx@linutronix.de, akpm@linux-foundation.org
 
-On Tue, Nov 20, 2018 at 02:43:57PM -0600, Bjorn Helgaas wrote:
-> MMCONFIG (aka ECAM) space is described in the ACPI MCFG table.  The
-> generic code to read that is in drivers/acpi/pci_mcfg.c (ignore all
-> the quirks at the top) and the generic code to use it is
-> drivers/pci/ecam.c.
+On 11/15/18 at 05:55pm, Lianbo Jiang wrote:
+> The upstream kernel can not accurately add the e820 reserved type to
+> kdump krenel e820 table.
+> 
+> Kdump uses walk_iomem_res_desc() to iterate io resources, then adds
+> the matched resource ranges to the e820 table for kdump kernel. But,
+> when convert the e820 type into the iores descriptor, several e820
+> types are converted to 'IORES_DESC_NONE' in this function e820_type
+> _to_iores_desc(). So the walk_iomem_res_desc() will get unnecessary
+> types(such as E820_TYPE_RAM/E820_TYPE_UNUSABLE/E820_TYPE_KERN) when
+> walk through io resources by the descriptor 'IORES_DESC_NONE'.
+> 
+> This patch adds the new I/O resource descriptor 'IORES_DESC_RESERVED'
+> for the iomem resources search interfaces. It is helpful to exactly
+> match the reserved resource ranges when walking through iomem resources.
+> 
+> Suggested-by: Dave Young <dyoung@redhat.com>
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> ---
+> Changes since v5:
+> 1. Improve the patch log
+> 
+> Changes since v6:
+> 1. Modify this patch, and add the new I/O resource descriptor
+>    'IORES_DESC_RESERVED' for the iomem resources search interfaces.
+> 2. Improve patch log.
+> 
+>  arch/x86/kernel/e820.c | 2 +-
+>  include/linux/ioport.h | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> index 50895c2f937d..57fafdafb860 100644
+> --- a/arch/x86/kernel/e820.c
+> +++ b/arch/x86/kernel/e820.c
+> @@ -1048,10 +1048,10 @@ static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
+>  	case E820_TYPE_NVS:		return IORES_DESC_ACPI_NV_STORAGE;
+>  	case E820_TYPE_PMEM:		return IORES_DESC_PERSISTENT_MEMORY;
+>  	case E820_TYPE_PRAM:		return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
+> +	case E820_TYPE_RESERVED:	return IORES_DESC_RESERVED;
+>  	case E820_TYPE_RESERVED_KERN:	/* Fall-through: */
+>  	case E820_TYPE_RAM:		/* Fall-through: */
+>  	case E820_TYPE_UNUSABLE:	/* Fall-through: */
+> -	case E820_TYPE_RESERVED:	/* Fall-through: */
+>  	default:			return IORES_DESC_NONE;
+>  	}
+>  }
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index da0ebaec25f0..6ed59de48bd5 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -133,6 +133,7 @@ enum {
+>  	IORES_DESC_PERSISTENT_MEMORY_LEGACY	= 5,
+>  	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
+>  	IORES_DESC_DEVICE_PUBLIC_MEMORY		= 7,
+> +	IORES_DESC_RESERVED			= 8,
+>  };
 
-/me saves that for future reference.
+There more works for a new iores desc. Originally IORES_DESC_NONE
+is assumed to include reserved e820 type so all code path relates to
+IORES_DESC_NONE should be carefully checked and ensure they still work after
+your changes.
 
-> Unfortunately x86 doesn't use any of that generic path.  It uses the
-> same MCFG table, but it's parsed in arch/x86/pci/mmconfig-shared.c,
-> and the code there checks to ensure the ECAM regions are reserved
-> somehow by firmware, e.g., via the e820 table.
+>  
+>  /* helpers to define resources */
+> -- 
+> 2.17.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-As they are on my workstation here, for example:
-
-[    0.552607] PCI: MMCONFIG at [mem 0xf8000000-0xfbffffff] reserved in E820
-
-vs the "ACPI motherboard resources" reservation thing where it traverses
-some PNP devices.
-
-> There's a bunch of grungy device-dependent code there, too, possibly
-> to work around firmware defects, or (just as likely) to compensate for
-> Linux defects that were *attributed* to firmware.
-
-Nah, latter we simply fix. :-)
-
-> I think you should regard correct MCFG/ECAM usage in the kdump kernel
-> as a requirement.  If you don't have ECAM (a) PCI devices won't work
-> at all on non-x86 systems that use only ECAM for config access, (b)
-> you won't be able to access devices on non-0 segments (granted, there
-> aren't very many of these yet, but there will be more in the future),
-
-Ah. don't worry, someone will pop up from the woodwork with the need for
-this ;-\
-
-> and (c) you won't be able to access extended config space (addresses
-> 0x100-0xfff), which means none of the Extended Capabilities will be
-> available (AER, ACS, ATS, etc).
-
-Yap, and this answers my question:
-
-e820__mapped_all() is being called with E820_TYPE_RESERVED down the path
-in pci_mmcfg_check_reserved(). Which basically says that we need to
-provide all reserved regions in the second kernel so that MMCONFIG works
-there.
-
-Thanks a lot Bjorn!
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
