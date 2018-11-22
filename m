@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gPjcy-0003Ns-VT
- for kexec@lists.infradead.org; Thu, 22 Nov 2018 07:42:22 +0000
-Date: Thu, 22 Nov 2018 15:42:02 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1gPkFR-0001bI-N8
+ for kexec@lists.infradead.org; Thu, 22 Nov 2018 08:22:07 +0000
 Subject: Re: [PATCH 1/2 v7] resource: add the new I/O resource descriptor
  'IORES_DESC_RESERVED'
-Message-ID: <20181122074202.GA8524@dhcp-128-65.nay.redhat.com>
 References: <20181115095529.21220-1-lijiang@redhat.com>
  <20181115095529.21220-2-lijiang@redhat.com>
+ <20181122074202.GA8524@dhcp-128-65.nay.redhat.com>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <1f37d5c8-b919-8163-942a-660e7e7a964d@redhat.com>
+Date: Thu, 22 Nov 2018 16:21:44 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20181115095529.21220-2-lijiang@redhat.com>
+In-Reply-To: <20181122074202.GA8524@dhcp-128-65.nay.redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,91 +22,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>
+To: Dave Young <dyoung@redhat.com>
 Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, bp@alien8.de, tglx@linutronix.de, akpm@linux-foundation.org
 
-On 11/15/18 at 05:55pm, Lianbo Jiang wrote:
-> The upstream kernel can not accurately add the e820 reserved type to
-> kdump krenel e820 table.
-> 
-> Kdump uses walk_iomem_res_desc() to iterate io resources, then adds
-> the matched resource ranges to the e820 table for kdump kernel. But,
-> when convert the e820 type into the iores descriptor, several e820
-> types are converted to 'IORES_DESC_NONE' in this function e820_type
-> _to_iores_desc(). So the walk_iomem_res_desc() will get unnecessary
-> types(such as E820_TYPE_RAM/E820_TYPE_UNUSABLE/E820_TYPE_KERN) when
-> walk through io resources by the descriptor 'IORES_DESC_NONE'.
-> 
-> This patch adds the new I/O resource descriptor 'IORES_DESC_RESERVED'
-> for the iomem resources search interfaces. It is helpful to exactly
-> match the reserved resource ranges when walking through iomem resources.
-> 
-> Suggested-by: Dave Young <dyoung@redhat.com>
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> ---
-> Changes since v5:
-> 1. Improve the patch log
-> 
-> Changes since v6:
-> 1. Modify this patch, and add the new I/O resource descriptor
->    'IORES_DESC_RESERVED' for the iomem resources search interfaces.
-> 2. Improve patch log.
-> 
->  arch/x86/kernel/e820.c | 2 +-
->  include/linux/ioport.h | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> index 50895c2f937d..57fafdafb860 100644
-> --- a/arch/x86/kernel/e820.c
-> +++ b/arch/x86/kernel/e820.c
-> @@ -1048,10 +1048,10 @@ static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
->  	case E820_TYPE_NVS:		return IORES_DESC_ACPI_NV_STORAGE;
->  	case E820_TYPE_PMEM:		return IORES_DESC_PERSISTENT_MEMORY;
->  	case E820_TYPE_PRAM:		return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
-> +	case E820_TYPE_RESERVED:	return IORES_DESC_RESERVED;
->  	case E820_TYPE_RESERVED_KERN:	/* Fall-through: */
->  	case E820_TYPE_RAM:		/* Fall-through: */
->  	case E820_TYPE_UNUSABLE:	/* Fall-through: */
-> -	case E820_TYPE_RESERVED:	/* Fall-through: */
->  	default:			return IORES_DESC_NONE;
->  	}
->  }
-> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> index da0ebaec25f0..6ed59de48bd5 100644
-> --- a/include/linux/ioport.h
-> +++ b/include/linux/ioport.h
-> @@ -133,6 +133,7 @@ enum {
->  	IORES_DESC_PERSISTENT_MEMORY_LEGACY	= 5,
->  	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
->  	IORES_DESC_DEVICE_PUBLIC_MEMORY		= 7,
-> +	IORES_DESC_RESERVED			= 8,
->  };
-
-There more works for a new iores desc. Originally IORES_DESC_NONE
-is assumed to include reserved e820 type so all code path relates to
-IORES_DESC_NONE should be carefully checked and ensure they still work after
-your changes.
-
->  
->  /* helpers to define resources */
-> -- 
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-Thanks
-Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMeaciDIy5pelIDE1OjQyLCBEYXZlIFlvdW5nIOWGmemBkzoKPiBPbiAxMS8x
+NS8xOCBhdCAwNTo1NXBtLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4+IFRoZSB1cHN0cmVhbSBrZXJu
+ZWwgY2FuIG5vdCBhY2N1cmF0ZWx5IGFkZCB0aGUgZTgyMCByZXNlcnZlZCB0eXBlIHRvCj4+IGtk
+dW1wIGtyZW5lbCBlODIwIHRhYmxlLgo+Pgo+PiBLZHVtcCB1c2VzIHdhbGtfaW9tZW1fcmVzX2Rl
+c2MoKSB0byBpdGVyYXRlIGlvIHJlc291cmNlcywgdGhlbiBhZGRzCj4+IHRoZSBtYXRjaGVkIHJl
+c291cmNlIHJhbmdlcyB0byB0aGUgZTgyMCB0YWJsZSBmb3Iga2R1bXAga2VybmVsLiBCdXQsCj4+
+IHdoZW4gY29udmVydCB0aGUgZTgyMCB0eXBlIGludG8gdGhlIGlvcmVzIGRlc2NyaXB0b3IsIHNl
+dmVyYWwgZTgyMAo+PiB0eXBlcyBhcmUgY29udmVydGVkIHRvICdJT1JFU19ERVNDX05PTkUnIGlu
+IHRoaXMgZnVuY3Rpb24gZTgyMF90eXBlCj4+IF90b19pb3Jlc19kZXNjKCkuIFNvIHRoZSB3YWxr
+X2lvbWVtX3Jlc19kZXNjKCkgd2lsbCBnZXQgdW5uZWNlc3NhcnkKPj4gdHlwZXMoc3VjaCBhcyBF
+ODIwX1RZUEVfUkFNL0U4MjBfVFlQRV9VTlVTQUJMRS9FODIwX1RZUEVfS0VSTikgd2hlbgo+PiB3
+YWxrIHRocm91Z2ggaW8gcmVzb3VyY2VzIGJ5IHRoZSBkZXNjcmlwdG9yICdJT1JFU19ERVNDX05P
+TkUnLgo+Pgo+PiBUaGlzIHBhdGNoIGFkZHMgdGhlIG5ldyBJL08gcmVzb3VyY2UgZGVzY3JpcHRv
+ciAnSU9SRVNfREVTQ19SRVNFUlZFRCcKPj4gZm9yIHRoZSBpb21lbSByZXNvdXJjZXMgc2VhcmNo
+IGludGVyZmFjZXMuIEl0IGlzIGhlbHBmdWwgdG8gZXhhY3RseQo+PiBtYXRjaCB0aGUgcmVzZXJ2
+ZWQgcmVzb3VyY2UgcmFuZ2VzIHdoZW4gd2Fsa2luZyB0aHJvdWdoIGlvbWVtIHJlc291cmNlcy4K
+Pj4KPj4gU3VnZ2VzdGVkLWJ5OiBEYXZlIFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4KPj4gU2ln
+bmVkLW9mZi1ieTogTGlhbmJvIEppYW5nIDxsaWppYW5nQHJlZGhhdC5jb20+Cj4+IC0tLQo+PiBD
+aGFuZ2VzIHNpbmNlIHY1Ogo+PiAxLiBJbXByb3ZlIHRoZSBwYXRjaCBsb2cKPj4KPj4gQ2hhbmdl
+cyBzaW5jZSB2NjoKPj4gMS4gTW9kaWZ5IHRoaXMgcGF0Y2gsIGFuZCBhZGQgdGhlIG5ldyBJL08g
+cmVzb3VyY2UgZGVzY3JpcHRvcgo+PiAgICAnSU9SRVNfREVTQ19SRVNFUlZFRCcgZm9yIHRoZSBp
+b21lbSByZXNvdXJjZXMgc2VhcmNoIGludGVyZmFjZXMuCj4+IDIuIEltcHJvdmUgcGF0Y2ggbG9n
+Lgo+Pgo+PiAgYXJjaC94ODYva2VybmVsL2U4MjAuYyB8IDIgKy0KPj4gIGluY2x1ZGUvbGludXgv
+aW9wb3J0LmggfCAxICsKPj4gIDIgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRl
+bGV0aW9uKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwvZTgyMC5jIGIvYXJj
+aC94ODYva2VybmVsL2U4MjAuYwo+PiBpbmRleCA1MDg5NWMyZjkzN2QuLjU3ZmFmZGFmYjg2MCAx
+MDA2NDQKPj4gLS0tIGEvYXJjaC94ODYva2VybmVsL2U4MjAuYwo+PiArKysgYi9hcmNoL3g4Ni9r
+ZXJuZWwvZTgyMC5jCj4+IEBAIC0xMDQ4LDEwICsxMDQ4LDEwIEBAIHN0YXRpYyB1bnNpZ25lZCBs
+b25nIF9faW5pdCBlODIwX3R5cGVfdG9faW9yZXNfZGVzYyhzdHJ1Y3QgZTgyMF9lbnRyeSAqZW50
+cnkpCj4+ICAJY2FzZSBFODIwX1RZUEVfTlZTOgkJcmV0dXJuIElPUkVTX0RFU0NfQUNQSV9OVl9T
+VE9SQUdFOwo+PiAgCWNhc2UgRTgyMF9UWVBFX1BNRU06CQlyZXR1cm4gSU9SRVNfREVTQ19QRVJT
+SVNURU5UX01FTU9SWTsKPj4gIAljYXNlIEU4MjBfVFlQRV9QUkFNOgkJcmV0dXJuIElPUkVTX0RF
+U0NfUEVSU0lTVEVOVF9NRU1PUllfTEVHQUNZOwo+PiArCWNhc2UgRTgyMF9UWVBFX1JFU0VSVkVE
+OglyZXR1cm4gSU9SRVNfREVTQ19SRVNFUlZFRDsKPj4gIAljYXNlIEU4MjBfVFlQRV9SRVNFUlZF
+RF9LRVJOOgkvKiBGYWxsLXRocm91Z2g6ICovCj4+ICAJY2FzZSBFODIwX1RZUEVfUkFNOgkJLyog
+RmFsbC10aHJvdWdoOiAqLwo+PiAgCWNhc2UgRTgyMF9UWVBFX1VOVVNBQkxFOgkvKiBGYWxsLXRo
+cm91Z2g6ICovCj4+IC0JY2FzZSBFODIwX1RZUEVfUkVTRVJWRUQ6CS8qIEZhbGwtdGhyb3VnaDog
+Ki8KPj4gIAlkZWZhdWx0OgkJCXJldHVybiBJT1JFU19ERVNDX05PTkU7Cj4+ICAJfQo+PiAgfQo+
+PiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9pb3BvcnQuaCBiL2luY2x1ZGUvbGludXgvaW9w
+b3J0LmgKPj4gaW5kZXggZGEwZWJhZWMyNWYwLi42ZWQ1OWRlNDhiZDUgMTAwNjQ0Cj4+IC0tLSBh
+L2luY2x1ZGUvbGludXgvaW9wb3J0LmgKPj4gKysrIGIvaW5jbHVkZS9saW51eC9pb3BvcnQuaAo+
+PiBAQCAtMTMzLDYgKzEzMyw3IEBAIGVudW0gewo+PiAgCUlPUkVTX0RFU0NfUEVSU0lTVEVOVF9N
+RU1PUllfTEVHQUNZCT0gNSwKPj4gIAlJT1JFU19ERVNDX0RFVklDRV9QUklWQVRFX01FTU9SWQk9
+IDYsCj4+ICAJSU9SRVNfREVTQ19ERVZJQ0VfUFVCTElDX01FTU9SWQkJPSA3LAo+PiArCUlPUkVT
+X0RFU0NfUkVTRVJWRUQJCQk9IDgsCj4+ICB9Owo+IAo+IFRoZXJlIG1vcmUgd29ya3MgZm9yIGEg
+bmV3IGlvcmVzIGRlc2MuIE9yaWdpbmFsbHkgSU9SRVNfREVTQ19OT05FCj4gaXMgYXNzdW1lZCB0
+byBpbmNsdWRlIHJlc2VydmVkIGU4MjAgdHlwZSBzbyBhbGwgY29kZSBwYXRoIHJlbGF0ZXMgdG8K
+PiBJT1JFU19ERVNDX05PTkUgc2hvdWxkIGJlIGNhcmVmdWxseSBjaGVja2VkIGFuZCBlbnN1cmUg
+dGhleSBzdGlsbCB3b3JrIGFmdGVyCj4geW91ciBjaGFuZ2VzLgo+IAoKVGhhbmtzIGZvciB5b3Vy
+IHJlbWluZGVyLgoKSSdtIGNoZWNraW5nIGl0LCBhbmQgYWxzbyB3aWxsIHJlc2VuZCB2NyBsYXRl
+ci4gUGxlYXNlIGlnbm9yZSB0aGlzIHBhdGNoLgoKUmVnYXJkcywKTGlhbmJvCgo+PiAgCj4+ICAv
+KiBoZWxwZXJzIHRvIGRlZmluZSByZXNvdXJjZXMgKi8KPj4gLS0gCj4+IDIuMTcuMQo+Pgo+Pgo+
+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+PiBrZXhl
+YyBtYWlsaW5nIGxpc3QKPj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+PiBodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCj4gCj4gVGhhbmtzCj4gRGF2
+ZQo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
+ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
