@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-wm1-x343.google.com ([2a00:1450:4864:20::343])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gPlvj-0005Tk-RB
- for kexec@lists.infradead.org; Thu, 22 Nov 2018 10:09:53 +0000
-From: David Hildenbrand <david@redhat.com>
-Subject: [PATCH v2] makedumpfile: exclude pages that are logically offline
-Date: Thu, 22 Nov 2018 11:09:38 +0100
-Message-Id: <20181122100938.5567-1-david@redhat.com>
-In-Reply-To: <20181122100627.5189-1-david@redhat.com>
-References: <20181122100627.5189-1-david@redhat.com>
+ id 1gPmx0-00015g-TC
+ for kexec@lists.infradead.org; Thu, 22 Nov 2018 11:15:18 +0000
+Received: by mail-wm1-x343.google.com with SMTP id r11-v6so8535112wmb.2
+ for <kexec@lists.infradead.org>; Thu, 22 Nov 2018 03:15:04 -0800 (PST)
+Date: Thu, 22 Nov 2018 12:14:58 +0100
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] x86: fix -Wmissing-prototypes warning
+Message-ID: <20181122111458.GA107823@gmail.com>
+References: <20181122084815.GA84118@gmail.com>
+ <201811221904598072830@zte.com.cn>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <201811221904598072830@zte.com.cn>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,163 +22,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-mm@kvack.org
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, linux-pm@vger.kernel.org, pv-drivers@vmware.com, linux-doc@vger.kernel.org, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, David Hildenbrand <david@redhat.com>
+To: wang.yi59@zte.com.cn
+Cc: linux-efi@vger.kernel.org, anton@enomsg.org, kvm@vger.kernel.org, rkrcmar@redhat.com, peterz@infradead.org, jan.kiszka@siemens.com, virtualization@lists.linux-foundation.org, pravin.shedge4linux@gmail.com, namit@vmware.com, hpa@zytor.com, frowand.list@gmail.com, akataria@vmware.com, prarit@redhat.com, robh@kernel.org, zhong.weidong@zte.com.cn, bhe@redhat.com, devicetree@vger.kernel.org, x86@kernel.org, pasha.tatashin@oracle.com, takahiro.akashi@linaro.org, andy.shevchenko@gmail.com, mingo@redhat.com, linux-pci@vger.kernel.org, dyoung@redhat.com, m.mizuma@jp.fujitsu.com, jailhouse-dev@googlegroups.com, jroedel@suse.de, keescook@chromium.org, konrad.wilk@oracle.com, rostedt@goodmis.org, rajvi.jingar@intel.com, tony.luck@intel.com, bp@alien8.de, luto@kernel.org, oleg@redhat.com, bhelgaas@google.com, tglx@linutronix.de, frank.rowand@sony.com, jgross@suse.com, douly.fnst@cn.fujitsu.com, thomas.lendacky@amd.com, zhe.he@windriver.com, ard.biesheuvel@linaro.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, ebiederm@xmission.com, ccross@android.com, pbonzini@redhat.com, akpm@linux-foundation.org, up2wing@gmail.com, dwmw@amazon.co.uk, ivan.gorinov@intel.com
 
-Linux marks pages that are logically offline via a page flag (map count).
-Such pages e.g. include pages infated as part of a balloon driver or
-pages that were not actually onlined when onlining the whole section.
-
-While the hypervisor usually allows to read such inflated memory, we
-basically read and dump data that is completely irrelevant. Also, this
-might result in quite some overhead in the hypervisor. In addition,
-we saw some problems under Hyper-V, whereby we can crash the kernel by
-dumping, when reading memory of a partially onlined memory segment
-(for memory added by the Hyper-V balloon driver).
-
-Therefore, don't read and dump pages that are marked as being logically
-offline.
-
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
-
-v1 -> v2:
-- Fix PAGE_BUDDY_MAPCOUNT_VALUE vs. PAGE_OFFLINE_MAPCOUNT_VALUE
-
- makedumpfile.c | 34 ++++++++++++++++++++++++++++++----
- makedumpfile.h |  1 +
- 2 files changed, 31 insertions(+), 4 deletions(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 8923538..a5f2ea9 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -88,6 +88,7 @@ mdf_pfn_t pfn_cache_private;
- mdf_pfn_t pfn_user;
- mdf_pfn_t pfn_free;
- mdf_pfn_t pfn_hwpoison;
-+mdf_pfn_t pfn_offline;
- 
- mdf_pfn_t num_dumped;
- 
-@@ -249,6 +250,21 @@ isHugetlb(unsigned long dtor)
-                     && (SYMBOL(free_huge_page) == dtor));
- }
- 
-+static int
-+isOffline(unsigned long flags, unsigned int _mapcount)
-+{
-+	if (NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE) == NOT_FOUND_NUMBER)
-+		return FALSE;
-+
-+	if (flags & (1UL << NUMBER(PG_slab)))
-+		return FALSE;
-+
-+	if (_mapcount == (int)NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE))
-+		return TRUE;
-+
-+	return FALSE;
-+}
-+
- static int
- is_cache_page(unsigned long flags)
- {
-@@ -2287,6 +2303,8 @@ write_vmcoreinfo_data(void)
- 	WRITE_NUMBER("PG_hwpoison", PG_hwpoison);
- 
- 	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
-+	WRITE_NUMBER("PAGE_OFFLINE_MAPCOUNT_VALUE",
-+		     PAGE_OFFLINE_MAPCOUNT_VALUE);
- 	WRITE_NUMBER("phys_base", phys_base);
- 
- 	WRITE_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
-@@ -2687,6 +2705,7 @@ read_vmcoreinfo(void)
- 	READ_SRCFILE("pud_t", pud_t);
- 
- 	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
-+	READ_NUMBER("PAGE_OFFLINE_MAPCOUNT_VALUE", PAGE_OFFLINE_MAPCOUNT_VALUE);
- 	READ_NUMBER("phys_base", phys_base);
- #ifdef __aarch64__
- 	READ_NUMBER("VA_BITS", VA_BITS);
-@@ -6041,6 +6060,12 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		else if (isHWPOISON(flags)) {
- 			pfn_counter = &pfn_hwpoison;
- 		}
-+		/*
-+		 * Exclude pages that are logically offline.
-+		 */
-+		else if (isOffline(flags, _mapcount)) {
-+			pfn_counter = &pfn_offline;
-+		}
- 		/*
- 		 * Unexcludable page
- 		 */
-@@ -7522,7 +7547,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 	 */
- 	if (info->flag_cyclic) {
- 		pfn_zero = pfn_cache = pfn_cache_private = 0;
--		pfn_user = pfn_free = pfn_hwpoison = 0;
-+		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = 0;
- 		pfn_memhole = info->max_mapnr;
- 	}
- 
-@@ -8804,7 +8829,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 		 * Reset counter for debug message.
- 		 */
- 		pfn_zero = pfn_cache = pfn_cache_private = 0;
--		pfn_user = pfn_free = pfn_hwpoison = 0;
-+		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = 0;
- 		pfn_memhole = info->max_mapnr;
- 
- 		/*
-@@ -9749,7 +9774,7 @@ print_report(void)
- 	pfn_original = info->max_mapnr - pfn_memhole;
- 
- 	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
--	    + pfn_user + pfn_free + pfn_hwpoison;
-+	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline;
- 	shrinking = (pfn_original - pfn_excluded) * 100;
- 	shrinking = shrinking / pfn_original;
- 
-@@ -9763,6 +9788,7 @@ print_report(void)
- 	REPORT_MSG("    User process data pages : 0x%016llx\n", pfn_user);
- 	REPORT_MSG("    Free pages              : 0x%016llx\n", pfn_free);
- 	REPORT_MSG("    Hwpoison pages          : 0x%016llx\n", pfn_hwpoison);
-+	REPORT_MSG("    Offline pages           : 0x%016llx\n", pfn_offline);
- 	REPORT_MSG("  Remaining pages  : 0x%016llx\n",
- 	    pfn_original - pfn_excluded);
- 	REPORT_MSG("  (The number of pages is reduced to %lld%%.)\n",
-@@ -9790,7 +9816,7 @@ print_mem_usage(void)
- 	pfn_original = info->max_mapnr - pfn_memhole;
- 
- 	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
--	    + pfn_user + pfn_free + pfn_hwpoison;
-+	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline;
- 	shrinking = (pfn_original - pfn_excluded) * 100;
- 	shrinking = shrinking / pfn_original;
- 	total_size = info->page_size * pfn_original;
-diff --git a/makedumpfile.h b/makedumpfile.h
-index f02f86d..e3a2b29 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1927,6 +1927,7 @@ struct number_table {
- 	long    PG_hwpoison;
- 
- 	long	PAGE_BUDDY_MAPCOUNT_VALUE;
-+	long	PAGE_OFFLINE_MAPCOUNT_VALUE;
- 	long	SECTION_SIZE_BITS;
- 	long	MAX_PHYSMEM_BITS;
- 	long    HUGETLB_PAGE_DTOR;
--- 
-2.17.2
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Ciogd2FuZy55aTU5QHp0ZS5jb20uY24gPHdhbmcueWk1OUB6dGUuY29tLmNuPiB3cm90ZToKCj4g
+SGkgSW5nbywKPiAKPiA+ICogWWkgV2FuZyA8d2FuZy55aTU5QHp0ZS5jb20uY24+IHdyb3RlOgo+
+ID4KPiA+ID4gV2UgbWF5IGdldCAtV21pc3NpbmctcHJvdG90eXBlcyB3YXJuaW5ncyB3aGVuIGJ1
+aWxkaW5nCj4gPiA+IGtlcm5lbCB3aXRoIFc9MSwgaXQncyBiZXR0ZXIgdG8gZml4IHRoZW0gYXMg
+Z2xvYmFsIGZ1bmN0aW9uCj4gPiA+IHNpZ25hdHVyZSBjYW4gYmUgY2hhbmdlZCBhbmQgY2FsbGVy
+IHdobyB1c2UgdGhlIG9sZCB1bmNoYW5nZWQKPiA+ID4gcHJvdG90eXBlcyB3aWxsIGJlIGhvc2Vk
+Lgo+ID4gPgo+ID4gPiBUaGlzIHBhdGNoIGZpeGVzIG1vc3Qgb2YgLVdtaXNzaW5nLXByb3RvdHlw
+ZXMgd2FybmluZ3Mgd2hpY2gKPiA+ID4gYXJlIGluIHRoZSByb290IGRpcmVjdG9yeSBvZiBhcmNo
+L3g4Ni9rZXJuZWwsIG5vdCBpbmNsdWRpbmcKPiA+ID4gdGhlIHN1YmRpcmVjdG9yaWVzLgo+ID4g
+Pgo+ID4gPiBUaGVzZSBhcmUgdGhlIHdhcm5pbmdzIGZpeGVkIGluIHRoaXMgcGF0Y2g6Cj4gPiA+
+IGFyY2gveDg2L2tlcm5lbC9zaWduYWwuYzo4NjU6MTc6IHdhcm5pbmc6IG5vIHByZXZpb3VzIHBy
+b3RvdHlwZSBmb3Ig4oCYc3lzMzJfeDMyX3J0X3NpZ3JldHVybuKAmSBbLVdtaXNzaW5nLXByb3Rv
+dHlwZXNdCj4gCj4gLi4uLi4uCj4gCj4gPiA+ICBpbmNsdWRlL2xpbnV4L2Z0cmFjZS5oICAgICAg
+ICAgICAgIHwgMyArKysKPiA+ID4gIGluY2x1ZGUvbGludXgva2V4ZWMuaCAgICAgICAgICAgICAg
+fCAxICsKPiA+ID4gIGluY2x1ZGUvbGludXgvb2ZfZmR0LmggICAgICAgICAgICAgfCAxICsKPiA+
+ID4gIGluY2x1ZGUvbGludXgvcHRyYWNlLmggICAgICAgICAgICAgfCAxICsKPiA+ID4gIDI0IGZp
+bGVzIGNoYW5nZWQsIDU1IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4gPgo+ID4gQnJl
+YWtzIDMyLWJpdCBjb21waWxhdGlvbjoKPiA+Cj4gPiAuLi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9z
+ZXR1cC5oOiBBc3NlbWJsZXIgbWVzc2FnZXM6Cj4gPiAuLi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9z
+ZXR1cC5oOjMwOiBFcnJvcjogbm8gc3VjaCBpbnN0cnVjdGlvbjogYHVuc2lnbmVkIGxvbmcgX19z
+dGFydHVwXzY0KHVuc2lnbmVkIGxvbmcgcGh5c2FkZHIsc3RydWN0IGJvb3RfcGFyYW1zICpicCkn
+Cj4gPgo+ID4gSSdsbCBza2lwIHRoZSBzZXR1cC5oIGJpdHMgLSBsZXQncyBob3BlIHRoYXQncyB0
+aGUgb25seSBidWcuCj4gCj4gU29ycnkgZm9yIHRoZSBpbmNvbnZlbmllbmNlLCB0aG91Z2ggSSBo
+YXZlIGNoZWNrZWQgY2FyZWZ1bGx5IDotKQo+IAo+IEhvdyBkbyB5b3UgcHJvZHVjZSB0aGlzIGVy
+cm9yPyBJIHRlc3RlZCB0aGlzIHdheSBidXQgZGlkIG5vdCByZXByb2R1Y2UKPiB0aGF0IGVycm9y
+Ogo+ICMgbWFrZSBhbGxtb2Rjb25maWcKPiAjIG1ha2UgLWo4Cj4gCj4gVGhhbmtzIGZvciB5b3Vy
+IHRpbWUgYWdhaW4hCgpJIGRvbid0IHJlbWVtYmVyIHRoZSBleGFjdCBjb25maWcsIGJ1dCB5b3Ug
+Y291bGQgdHJ5IHRoZSAzMi1iaXQgCmFsbG5vY29uZmlnIGFuZCBkZWZjb25maWcuCgpOb3RlIHRo
+YXQgdGhlIGNvbW1hbmRzIHlvdSB1c2VkIGFib3ZlIHdpbGwgdXNlIHRoZSA2NC1iaXQga2VybmVs
+LCBub3QgdGhlIAozMi1iaXQga2VybmVsLgoKVGhhbmtzLAoKCUluZ28KCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
+Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8va2V4ZWMK
