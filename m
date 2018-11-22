@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wr1-x442.google.com ([2a00:1450:4864:20::442])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gPkf2-0007tl-MN
- for kexec@lists.infradead.org; Thu, 22 Nov 2018 08:48:36 +0000
-Received: by mail-wr1-x442.google.com with SMTP id j2so8393038wrw.1
- for <kexec@lists.infradead.org>; Thu, 22 Nov 2018 00:48:21 -0800 (PST)
-Date: Thu, 22 Nov 2018 09:48:15 +0100
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH] x86: fix -Wmissing-prototypes warning
-Message-ID: <20181122084815.GA84118@gmail.com>
-References: <1542852249-19820-1-git-send-email-wang.yi59@zte.com.cn>
+Date: Thu, 22 Nov 2018 09:33:10 +0800
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH] mm: convert totalram_pages, totalhigh_pages and
+ managed_pages to atomic.
+Message-ID: <20181122013310.GA20480@guoren-Inspiron-7460>
+References: <1540229092-25207-1-git-send-email-arunks@codeaurora.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1542852249-19820-1-git-send-email-wang.yi59@zte.com.cn>
+In-Reply-To: <1540229092-25207-1-git-send-email-arunks@codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,144 +16,114 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yi Wang <wang.yi59@zte.com.cn>
-Cc: linux-efi@vger.kernel.org, anton@enomsg.org, kvm@vger.kernel.org, rkrcmar@redhat.com, peterz@infradead.org, jan.kiszka@siemens.com, virtualization@lists.linux-foundation.org, pravin.shedge4linux@gmail.com, namit@vmware.com, hpa@zytor.com, frowand.list@gmail.com, akataria@vmware.com, prarit@redhat.com, robh@kernel.org, zhong.weidong@zte.com.cn, bhe@redhat.com, devicetree@vger.kernel.org, x86@kernel.org, pasha.tatashin@oracle.com, takahiro.akashi@linaro.org, andy.shevchenko@gmail.com, mingo@redhat.com, linux-pci@vger.kernel.org, dyoung@redhat.com, m.mizuma@jp.fujitsu.com, jailhouse-dev@googlegroups.com, jroedel@suse.de, keescook@chromium.org, konrad.wilk@oracle.com, rostedt@goodmis.org, rajvi.jingar@intel.com, tony.luck@intel.com, bp@alien8.de, luto@kernel.org, oleg@redhat.com, bhelgaas@google.com, tglx@linutronix.de, frank.rowand@sony.com, jgross@suse.com, douly.fnst@cn.fujitsu.com, thomas.lendacky@amd.com, zhe.he@windriver.com, ard.biesheuvel@linaro.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, ebiederm@xmission.com, ccross@android.com, pbonzini@redhat.com, akpm@linux-foundation.org, up2wing@gmail.com, dwmw@amazon.co.uk, ivan.gorinov@intel.com
+To: Arun KS <arunks@codeaurora.org>
+Cc: Mike Snitzer <snitzer@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Kemi Wang <kemi.wang@intel.com>, dri-devel@lists.freedesktop.org, "J. Bruce Fields" <bfields@fieldses.org>, linux-sctp@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Pavel Machek <pavel@ucw.cz>, Christoph Lameter <cl@linux.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Sumit Semwal <sumit.semwal@linaro.org>, "David (ChunMing) Zhou" <David1.Zhou@amd.com>, Petr Tesarik <ptesarik@suse.com>, Michael Ellerman <mpe@ellerman.id.au>, ceph-devel@vger.kernel.org, James Morris <jmorris@namei.org>, kasan-dev@googlegroups.com, Marcos Paulo de Souza <marcos.souza.org@gmail.com>, "Steven J. Hill" <steven.hill@cavium.com>, David Rientjes <rientjes@google.com>, Anthony Yznaga <anthony.yznaga@oracle.com>, Daniel Vacek <neelx@redhat.com>, Roman Gushchin <guro@fb.com>, Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>, linux-um@lists.infradead.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Trond Myklebust <trond.myklebust@hammerspace.com>, Anton Altaparmakov <anton@tuxera.com>, linux-parisc@vger.kernel.org, Mathieu Malaterre <malat@debian.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Cyril Bur <cyrilbur@gmail.com>, Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>, netfilter-devel@vger.kernel.org, Souptick Joarder <jrdr.linux@gmail.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Alex Deucher <alexander.deucher@amd.com>, Andrew Morton <akpm@linux-foundation.org>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, David Airlie <airlied@linux.ie>, dm-devel@redhat.com, Nadav Amit <namit@vmware.com>, Omar Sandoval <osandov@fb.com>, Alasdair Kergon <agk@redhat.com>, linux-s390@vger.kernel.org, Stephen Hemminger <sthemmin@microsoft.com>, intel-gfx@lists.freedesktop.org, Helge Deller <deller@gmx.de>, Hugh Dickins <hughd@google.com>, "Luis R. Rodriguez" <mcgrof@kernel.org>, coreteam@netfilter.org, Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>, Andrey Ryabinin <aryabinin@virtuozzo.com>, linux-media@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>, Todd Kjos <tkjos@android.com>, Philippe Ombredanne <pombredanne@nexb.com>, Jani Nikula <jani.nikula@linux.intel.com>, Jia He <jia.he@hxt-semitech.com>, Tejun Heo <tj@kernel.org>, Shakeel Butt <shakeelb@google.com>, Houlong Wei <houlong.wei@mediatek.com>, devel@linuxdriverproject.org, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Martijn Coenen <maco@android.com>, linux-arm-kernel@lists.infradead.org, Khalid Aziz <khalid@gonehiking.org>, Oded Gabbay <oded.gabbay@gmail.com>, linaro-mm-sig@lists.linaro.org, linux-ntfs-dev@lists.sourceforge.net, Jonathan Corbet <corbet@lwn.net>, Florian Westphal <fw@strlen.de>, Anna Schumaker <anna.schumaker@netapp.com>, Pekka Enberg <penberg@kernel.org>, Minchan Kim <minchan@kernel.org>, Eric Biederman <ebiederm@xmission.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Kate Stewart <kstewart@linuxfoundation.org>, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, linux-fsdevel@vger.kernel.org, Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Stefan Agner <stefan@agner.ch>, "James E.J. Bottomley" <jejb@parisc-linux.org>, netdev@vger.kernel.org, amd-gfx@lists.freedesktop.org, Jan Kara <jack@suse.cz>, Alexander Duyck <alexander.h.duyck@linux.intel.com>, Gerrit Renker <gerrit@erg.abdn.ac.uk>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Miklos Szeredi <miklos@szeredi.hu>, David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, Matthew Auld <matthew.auld@intel.com>, Huang Ying <ying.huang@intel.com>, Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>, Ilya Dryomov <idryomov@gmail.com>, Alexey Dobriyan <adobriyan@gmail.com>, Pablo Neira Ayuso <pablo@netfilter.org>, "Serge E. Hallyn" <serge@hallyn.com>, Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>, Haiyang Zhang <haiyangz@microsoft.com>, Mark Brown <broonie@kernel.org>, Borislav Petkov <bp@alien8.de>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Dan Williams <dan.j.williams@intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Dan Streetman <ddstreet@ieee.org>, Oscar Salvador <osalvador@suse.de>, linux-nfs@vger.kernel.org, Neil Horman <nhorman@tuxdriver.com>, Tvrtko Ursulin <tvrtko.ursulin@intel.com>, Jeff Layton <jlayton@kernel.org>, Eric Dumazet <edumazet@google.com>, Jessica Yu <jeyu@kernel.org>, Joe Perches <joe@perches.com>, "David S. Miller" <davem@davemloft.net>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Michal Hocko <mhocko@suse.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, "VMware,
+ Inc." <pv-drivers@vmware.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Russell Currey <ruscur@russell.cc>, Chris Wilson <chris@chris-wilson.co.uk>, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, getarunks@gmail.com, Chintan Pandya <cpandya@codeaurora.org>, devel@driverdev.osuosl.org, "Yan,
+ Zheng" <zyan@redhat.com>, xen-devel@lists.xenproject.org, Sage Weil <sage@redhat.com>, dccp@vger.kernel.org, Richard Weinberger <richard@nod.at>, Seth Jennings <sjenning@redhat.com>, x86@kernel.org, Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Jeff Dike <jdike@addtoit.com>, Pavel Tatashin <pavel.tatashin@microsoft.com>, Jann Horn <jannh@google.com>, Xavier Deguillard <xdeguillard@vmware.com>, Johannes Weiner <hannes@cmpxchg.org>, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>, Kirill Tkhai <ktkhai@virtuozzo.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Tiffany Lin <tiffany.lin@mediatek.com>, linux-integrity@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, Yang Shi <yang.shi@linux.alibaba.com>, Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>, linuxppc-dev@lists.ozlabs.org, Vlad Yasevich <vyasevich@gmail.com>, linux-decnet-user@lists.sourceforge.net, kexec@lists.infradead.org, linux-security-module@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>, Mika Kuoppala <mika.kuoppala@linux.intel.com>, Mel Gorman <mgorman@techsingularity.net>
 
-CiogWWkgV2FuZyA8d2FuZy55aTU5QHp0ZS5jb20uY24+IHdyb3RlOgoKPiBXZSBtYXkgZ2V0IC1X
-bWlzc2luZy1wcm90b3R5cGVzIHdhcm5pbmdzIHdoZW4gYnVpbGRpbmcKPiBrZXJuZWwgd2l0aCBX
-PTEsIGl0J3MgYmV0dGVyIHRvIGZpeCB0aGVtIGFzIGdsb2JhbCBmdW5jdGlvbgo+IHNpZ25hdHVy
-ZSBjYW4gYmUgY2hhbmdlZCBhbmQgY2FsbGVyIHdobyB1c2UgdGhlIG9sZCB1bmNoYW5nZWQKPiBw
-cm90b3R5cGVzIHdpbGwgYmUgaG9zZWQuCj4gCj4gVGhpcyBwYXRjaCBmaXhlcyBtb3N0IG9mIC1X
-bWlzc2luZy1wcm90b3R5cGVzIHdhcm5pbmdzIHdoaWNoCj4gYXJlIGluIHRoZSByb290IGRpcmVj
-dG9yeSBvZiBhcmNoL3g4Ni9rZXJuZWwsIG5vdCBpbmNsdWRpbmcKPiB0aGUgc3ViZGlyZWN0b3Jp
-ZXMuCj4gCj4gVGhlc2UgYXJlIHRoZSB3YXJuaW5ncyBmaXhlZCBpbiB0aGlzIHBhdGNoOgo+IGFy
-Y2gveDg2L2tlcm5lbC9zaWduYWwuYzo4NjU6MTc6IHdhcm5pbmc6IG5vIHByZXZpb3VzIHByb3Rv
-dHlwZSBmb3Ig4oCYc3lzMzJfeDMyX3J0X3NpZ3JldHVybuKAmSBbLVdtaXNzaW5nLXByb3RvdHlw
-ZXNdCj4gYXJjaC94ODYva2VybmVsL3NpZ25hbF9jb21wYXQuYzoxNjQ6Njogd2FybmluZzogbm8g
-cHJldmlvdXMgcHJvdG90eXBlIGZvciDigJhzaWdhY3Rpb25fY29tcGF0X2FiaeKAmSBbLVdtaXNz
-aW5nLXByb3RvdHlwZXNdCj4gYXJjaC94ODYva2VybmVsL3RyYXBzLmM6NjI1OjQ2OiB3YXJuaW5n
-OiBubyBwcmV2aW91cyBwcm90b3R5cGUgZm9yIOKAmHN5bmNfcmVnc+KAmSBbLVdtaXNzaW5nLXBy
-b3RvdHlwZXNdCj4gYXJjaC94ODYva2VybmVsL3RyYXBzLmM6NjQwOjI0OiB3YXJuaW5nOiBubyBw
-cmV2aW91cyBwcm90b3R5cGUgZm9yIOKAmGZpeHVwX2JhZF9pcmV04oCZIFstV21pc3NpbmctcHJv
-dG90eXBlc10KPiBhcmNoL3g4Ni9rZXJuZWwvdHJhcHMuYzo5Mjk6MTM6IHdhcm5pbmc6IG5vIHBy
-ZXZpb3VzIHByb3RvdHlwZSBmb3Ig4oCYdHJhcF9pbml04oCZIFstV21pc3NpbmctcHJvdG90eXBl
-c10KPiBhcmNoL3g4Ni9rZXJuZWwvaXJxLmM6MjcwOjI4OiB3YXJuaW5nOiBubyBwcmV2aW91cyBw
-cm90b3R5cGUgZm9yIOKAmHNtcF94ODZfcGxhdGZvcm1faXBp4oCZIFstV21pc3NpbmctcHJvdG90
-eXBlc10KPiBhcmNoL3g4Ni9rZXJuZWwvaXJxLmM6MzAxOjE2OiB3YXJuaW5nOiBubyBwcmV2aW91
-cyBwcm90b3R5cGUgZm9yIOKAmHNtcF9rdm1fcG9zdGVkX2ludHJfaXBp4oCZIFstV21pc3Npbmct
-cHJvdG90eXBlc10KPiBhcmNoL3g4Ni9rZXJuZWwvaXJxLmM6MzE0OjE2OiB3YXJuaW5nOiBubyBw
-cmV2aW91cyBwcm90b3R5cGUgZm9yIOKAmHNtcF9rdm1fcG9zdGVkX2ludHJfd2FrZXVwX2lwaeKA
-mSBbLVdtaXNzaW5nLXByb3RvdHlwZXNdCj4gYXJjaC94ODYva2VybmVsL2lycS5jOjMyODoxNjog
-d2FybmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDigJhzbXBfa3ZtX3Bvc3RlZF9pbnRy
-X25lc3RlZF9pcGnigJkgWy1XbWlzc2luZy1wcm90b3R5cGVzXQo+IGFyY2gveDg2L2tlcm5lbC9p
-cnFfd29yay5jOjE2OjI4OiB3YXJuaW5nOiBubyBwcmV2aW91cyBwcm90b3R5cGUgZm9yIOKAmHNt
-cF9pcnFfd29ya19pbnRlcnJ1cHTigJkgWy1XbWlzc2luZy1wcm90b3R5cGVzXQo+IGFyY2gveDg2
-L2tlcm5lbC9pcnFpbml0LmM6Nzk6MTM6IHdhcm5pbmc6IG5vIHByZXZpb3VzIHByb3RvdHlwZSBm
-b3Ig4oCYaW5pdF9JUlHigJkgWy1XbWlzc2luZy1wcm90b3R5cGVzXQo+IGFyY2gveDg2L2tlcm5l
-bC9xdWlya3MuYzo2NzI6MTM6IHdhcm5pbmc6IG5vIHByZXZpb3VzIHByb3RvdHlwZSBmb3Ig4oCY
-ZWFybHlfcGxhdGZvcm1fcXVpcmtz4oCZIFstV21pc3NpbmctcHJvdG90eXBlc10KPiBhcmNoL3g4
-Ni9rZXJuZWwvdHNjLmM6MTQ5OToxNTogd2FybmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZv
-ciDigJhjYWxpYnJhdGVfZGVsYXlfaXNfa25vd27igJkgWy1XbWlzc2luZy1wcm90b3R5cGVzXQo+
-IGFyY2gveDg2L2tlcm5lbC9wcm9jZXNzLmM6NjUzOjEzOiB3YXJuaW5nOiBubyBwcmV2aW91cyBw
-cm90b3R5cGUgZm9yIOKAmGFyY2hfcG9zdF9hY3BpX3N1YnN5c19pbml04oCZIFstV21pc3Npbmct
-cHJvdG90eXBlc10KPiBhcmNoL3g4Ni9rZXJuZWwvcHJvY2Vzcy5jOjcxNzoxNTogd2FybmluZzog
-bm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDigJhhcmNoX3JhbmRvbWl6ZV9icmvigJkgWy1XbWlz
-c2luZy1wcm90b3R5cGVzXQo+IGFyY2gveDg2L2tlcm5lbC9wcm9jZXNzLmM6Nzg0OjY6IHdhcm5p
-bmc6IG5vIHByZXZpb3VzIHByb3RvdHlwZSBmb3Ig4oCYZG9fYXJjaF9wcmN0bF9jb21tb27igJkg
-Wy1XbWlzc2luZy1wcm90b3R5cGVzXQo+IGFyY2gveDg2L2tlcm5lbC9yZWJvb3QuYzo4Njk6Njog
-d2FybmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDigJhubWlfcGFuaWNfc2VsZl9zdG9w
-4oCZIFstV21pc3NpbmctcHJvdG90eXBlc10KPiBhcmNoL3g4Ni9rZXJuZWwvc21wLmM6MTc2OjI3
-OiB3YXJuaW5nOiBubyBwcmV2aW91cyBwcm90b3R5cGUgZm9yIOKAmHNtcF9yZWJvb3RfaW50ZXJy
-dXB04oCZIFstV21pc3NpbmctcHJvdG90eXBlc10KPiBhcmNoL3g4Ni9rZXJuZWwvc21wLmM6MjYw
-OjI4OiB3YXJuaW5nOiBubyBwcmV2aW91cyBwcm90b3R5cGUgZm9yIOKAmHNtcF9yZXNjaGVkdWxl
-X2ludGVycnVwdOKAmSBbLVdtaXNzaW5nLXByb3RvdHlwZXNdCj4gYXJjaC94ODYva2VybmVsL3Nt
-cC5jOjI4MToyODogd2FybmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDigJhzbXBfY2Fs
-bF9mdW5jdGlvbl9pbnRlcnJ1cHTigJkgWy1XbWlzc2luZy1wcm90b3R5cGVzXQo+IGFyY2gveDg2
-L2tlcm5lbC9zbXAuYzoyOTE6Mjg6IHdhcm5pbmc6IG5vIHByZXZpb3VzIHByb3RvdHlwZSBmb3Ig
-4oCYc21wX2NhbGxfZnVuY3Rpb25fc2luZ2xlX2ludGVycnVwdOKAmSBbLVdtaXNzaW5nLXByb3Rv
-dHlwZXNdCj4gYXJjaC94ODYva2VybmVsL2Z0cmFjZS5jOjg0MDo2OiB3YXJuaW5nOiBubyBwcmV2
-aW91cyBwcm90b3R5cGUgZm9yIOKAmGFyY2hfZnRyYWNlX3VwZGF0ZV90cmFtcG9saW5l4oCZIFst
-V21pc3NpbmctcHJvdG90eXBlc10KPiBhcmNoL3g4Ni9rZXJuZWwvZnRyYWNlLmM6OTM0Ojc6IHdh
-cm5pbmc6IG5vIHByZXZpb3VzIHByb3RvdHlwZSBmb3Ig4oCYYXJjaF9mdHJhY2VfdHJhbXBvbGlu
-ZV9mdW5j4oCZIFstV21pc3NpbmctcHJvdG90eXBlc10KPiBhcmNoL3g4Ni9rZXJuZWwvZnRyYWNl
-LmM6OTQ2OjY6IHdhcm5pbmc6IG5vIHByZXZpb3VzIHByb3RvdHlwZSBmb3Ig4oCYYXJjaF9mdHJh
-Y2VfdHJhbXBvbGluZV9mcmVl4oCZIFstV21pc3NpbmctcHJvdG90eXBlc10KPiBhcmNoL3g4Ni9r
-ZXJuZWwvY3Jhc2guYzoxMTQ6Njogd2FybmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDi
-gJhjcmFzaF9zbXBfc2VuZF9zdG9w4oCZIFstV21pc3NpbmctcHJvdG90eXBlc10KPiBhcmNoL3g4
-Ni9rZXJuZWwvY3Jhc2guYzozNTE6NTogd2FybmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZv
-ciDigJhjcmFzaF9zZXR1cF9tZW1tYXBfZW50cmllc+KAmSBbLVdtaXNzaW5nLXByb3RvdHlwZXNd
-Cj4gYXJjaC94ODYva2VybmVsL2NyYXNoLmM6NDI0OjU6IHdhcm5pbmc6IG5vIHByZXZpb3VzIHBy
-b3RvdHlwZSBmb3Ig4oCYY3Jhc2hfbG9hZF9zZWdtZW50c+KAmSBbLVdtaXNzaW5nLXByb3RvdHlw
-ZXNdCj4gYXJjaC94ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQuYzozNzI6Nzogd2FybmluZzog
-bm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDigJhhcmNoX2tleGVjX2tlcm5lbF9pbWFnZV9sb2Fk
-4oCZIFstV21pc3NpbmctcHJvdG90eXBlc10KPiBhcmNoL3g4Ni9rZXJuZWwvcGFyYXZpcnQtc3Bp
-bmxvY2tzLmM6MTI6MTY6IHdhcm5pbmc6IG5vIHByZXZpb3VzIHByb3RvdHlwZSBmb3Ig4oCYX19u
-YXRpdmVfcXVldWVkX3NwaW5fdW5sb2Nr4oCZIFstV21pc3NpbmctcHJvdG90eXBlc10KPiBhcmNo
-L3g4Ni9rZXJuZWwvcGFyYXZpcnQtc3BpbmxvY2tzLmM6MTg6Njogd2FybmluZzogbm8gcHJldmlv
-dXMgcHJvdG90eXBlIGZvciDigJhwdl9pc19uYXRpdmVfc3Bpbl91bmxvY2vigJkgWy1XbWlzc2lu
-Zy1wcm90b3R5cGVzXQo+IGFyY2gveDg2L2tlcm5lbC9wYXJhdmlydC1zcGlubG9ja3MuYzoyNDox
-Njogd2FybmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDigJhfX25hdGl2ZV92Y3B1X2lz
-X3ByZWVtcHRlZOKAmSBbLVdtaXNzaW5nLXByb3RvdHlwZXNdCj4gYXJjaC94ODYva2VybmVsL3Bh
-cmF2aXJ0LXNwaW5sb2Nrcy5jOjMwOjY6IHdhcm5pbmc6IG5vIHByZXZpb3VzIHByb3RvdHlwZSBm
-b3Ig4oCYcHZfaXNfbmF0aXZlX3ZjcHVfaXNfcHJlZW1wdGVk4oCZIFstV21pc3NpbmctcHJvdG90
-eXBlc10KPiBhcmNoL3g4Ni9rZXJuZWwva3ZtLmM6MjU4OjE6IHdhcm5pbmc6IG5vIHByZXZpb3Vz
-IHByb3RvdHlwZSBmb3Ig4oCYZG9fYXN5bmNfcGFnZV9mYXVsdOKAmSBbLVdtaXNzaW5nLXByb3Rv
-dHlwZXNdCj4gYXJjaC94ODYva2VybmVsL2phaWxob3VzZS5jOjIwMDo2OiB3YXJuaW5nOiBubyBw
-cmV2aW91cyBwcm90b3R5cGUgZm9yIOKAmGphaWxob3VzZV9wYXJhdmlydOKAmSBbLVdtaXNzaW5n
-LXByb3RvdHlwZXNdCj4gYXJjaC94ODYva2VybmVsL2NoZWNrLmM6OTE6MTM6IHdhcm5pbmc6IG5v
-IHByZXZpb3VzIHByb3RvdHlwZSBmb3Ig4oCYc2V0dXBfYmlvc19jb3JydXB0aW9uX2NoZWNr4oCZ
-IFstV21pc3NpbmctcHJvdG90eXBlc10KPiBhcmNoL3g4Ni9rZXJuZWwvY2hlY2suYzoxMzk6Njog
-d2FybmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDigJhjaGVja19mb3JfYmlvc19jb3Jy
-dXB0aW9u4oCZIFstV21pc3NpbmctcHJvdG90eXBlc10KPiBhcmNoL3g4Ni9rZXJuZWwvZGV2aWNl
-dHJlZS5jOjMyOjEzOiB3YXJuaW5nOiBubyBwcmV2aW91cyBwcm90b3R5cGUgZm9yIOKAmGVhcmx5
-X2luaXRfZHRfc2Nhbl9jaG9zZW5fYXJjaOKAmSBbLVdtaXNzaW5nLXByb3RvdHlwZXNdCj4gYXJj
-aC94ODYva2VybmVsL2RldmljZXRyZWUuYzo0MjoxMzogd2FybmluZzogbm8gcHJldmlvdXMgcHJv
-dG90eXBlIGZvciDigJhhZGRfZHRi4oCZIFstV21pc3NpbmctcHJvdG90eXBlc10KPiBhcmNoL3g4
-Ni9rZXJuZWwvZGV2aWNldHJlZS5jOjEwODo2OiB3YXJuaW5nOiBubyBwcmV2aW91cyBwcm90b3R5
-cGUgZm9yIOKAmHg4Nl9vZl9wY2lfaW5pdOKAmSBbLVdtaXNzaW5nLXByb3RvdHlwZXNdCj4gYXJj
-aC94ODYva2VybmVsL2RldmljZXRyZWUuYzozMTQ6MTM6IHdhcm5pbmc6IG5vIHByZXZpb3VzIHBy
-b3RvdHlwZSBmb3Ig4oCYeDg2X2R0Yl9pbml04oCZIFstV21pc3NpbmctcHJvdG90eXBlc10KPiBh
-cmNoL3g4Ni9rZXJuZWwvdHJhY2Vwb2ludC5jOjE2OjU6IHdhcm5pbmc6IG5vIHByZXZpb3VzIHBy
-b3RvdHlwZSBmb3Ig4oCYdHJhY2VfcGFnZWZhdWx0X3JlZ+KAmSBbLVdtaXNzaW5nLXByb3RvdHlw
-ZXNdCj4gYXJjaC94ODYva2VybmVsL3RyYWNlcG9pbnQuYzoyMjo2OiB3YXJuaW5nOiBubyBwcmV2
-aW91cyBwcm90b3R5cGUgZm9yIOKAmHRyYWNlX3BhZ2VmYXVsdF91bnJlZ+KAmSBbLVdtaXNzaW5n
-LXByb3RvdHlwZXNdCj4gYXJjaC94ODYva2VybmVsL2hlYWQ2NC5jOjExMzoyMjogd2FybmluZzog
-bm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDigJhfX3N0YXJ0dXBfNjTigJkgWy1XbWlzc2luZy1w
-cm90b3R5cGVzXQo+IGFyY2gveDg2L2tlcm5lbC9oZWFkNjQuYzoyNjI6MTU6IHdhcm5pbmc6IG5v
-IHByZXZpb3VzIHByb3RvdHlwZSBmb3Ig4oCYX19zdGFydHVwX3NlY29uZGFyeV82NOKAmSBbLVdt
-aXNzaW5nLXByb3RvdHlwZXNdCj4gYXJjaC94ODYva2VybmVsL2hlYWQ2NC5jOjM1MDoxMjogd2Fy
-bmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDigJhlYXJseV9tYWtlX3BndGFibGXigJkg
-Wy1XbWlzc2luZy1wcm90b3R5cGVzXQo+IAo+IFNpZ25lZC1vZmYtYnk6IFlpIFdhbmcgPHdhbmcu
-eWk1OUB6dGUuY29tLmNuPgo+IC0tLQo+ICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9jcmFzaC5oICAg
-ICAgIHwgMSArCj4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL2VmaS5oICAgICAgICAgfCAyIC0tCj4g
-IGFyY2gveDg2L2luY2x1ZGUvYXNtL2lycS5oICAgICAgICAgfCA3ICsrKysrKysKPiAgYXJjaC94
-ODYvaW5jbHVkZS9hc20vaXJxX3dvcmsuaCAgICB8IDEgKwo+ICBhcmNoL3g4Ni9pbmNsdWRlL2Fz
-bS9rdm1fcGFyYS5oICAgIHwgMSArCj4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL3BhcmF2aXJ0Lmgg
-ICAgfCA1ICsrKysrCj4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL3JlYm9vdC5oICAgICAgfCAxICsK
-PiAgYXJjaC94ODYvaW5jbHVkZS9hc20vc2V0dXAuaCAgICAgICB8IDUgKysrKysKPiAgYXJjaC94
-ODYvaW5jbHVkZS9hc20vc2lnaGFuZGxpbmcuaCB8IDUgKysrKysKPiAgYXJjaC94ODYvaW5jbHVk
-ZS9hc20vc21wLmggICAgICAgICB8IDYgKysrKysrCj4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL3Ry
-YXBzLmggICAgICAgfCA0ICsrKysKPiAgYXJjaC94ODYvaW5jbHVkZS9hc20vdHNjLmggICAgICAg
-ICB8IDEgKwo+ICBhcmNoL3g4Ni9rZXJuZWwvY2hlY2suYyAgICAgICAgICAgIHwgMyArKy0KPiAg
-YXJjaC94ODYva2VybmVsL2NyYXNoLmMgICAgICAgICAgICB8IDEgKwo+ICBhcmNoL3g4Ni9rZXJu
-ZWwvZGV2aWNldHJlZS5jICAgICAgIHwgMSArCj4gIGFyY2gveDg2L2tlcm5lbC9qYWlsaG91c2Uu
-YyAgICAgICAgfCAxICsKPiAgYXJjaC94ODYva2VybmVsL3Byb2Nlc3MuYyAgICAgICAgICB8IDMg
-KysrCj4gIGFyY2gveDg2L2tlcm5lbC9xdWlya3MuYyAgICAgICAgICAgfCAxICsKPiAgYXJjaC94
-ODYva2VybmVsL3RyYWNlcG9pbnQuYyAgICAgICB8IDEgKwo+ICBpbmNsdWRlL2xpbnV4L2VmaS5o
-ICAgICAgICAgICAgICAgIHwgMiArKwo+ICBpbmNsdWRlL2xpbnV4L2Z0cmFjZS5oICAgICAgICAg
-ICAgIHwgMyArKysKPiAgaW5jbHVkZS9saW51eC9rZXhlYy5oICAgICAgICAgICAgICB8IDEgKwo+
-ICBpbmNsdWRlL2xpbnV4L29mX2ZkdC5oICAgICAgICAgICAgIHwgMSArCj4gIGluY2x1ZGUvbGlu
-dXgvcHRyYWNlLmggICAgICAgICAgICAgfCAxICsKPiAgMjQgZmlsZXMgY2hhbmdlZCwgNTUgaW5z
-ZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKCkJyZWFrcyAzMi1iaXQgY29tcGlsYXRpb246Cgou
-L2FyY2gveDg2L2luY2x1ZGUvYXNtL3NldHVwLmg6IEFzc2VtYmxlciBtZXNzYWdlczoKLi9hcmNo
-L3g4Ni9pbmNsdWRlL2FzbS9zZXR1cC5oOjMwOiBFcnJvcjogbm8gc3VjaCBpbnN0cnVjdGlvbjog
-YHVuc2lnbmVkIGxvbmcgX19zdGFydHVwXzY0KHVuc2lnbmVkIGxvbmcgcGh5c2FkZHIsc3RydWN0
-IGJvb3RfcGFyYW1zICpicCknCgpJJ2xsIHNraXAgdGhlIHNldHVwLmggYml0cyAtIGxldCdzIGhv
-cGUgdGhhdCdzIHRoZSBvbmx5IGJ1Zy4KClRoYW5rcywKCglJbmdvCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2tleGVjCg==
+On Mon, Oct 22, 2018 at 10:53:22PM +0530, Arun KS wrote:
+> Remove managed_page_count_lock spinlock and instead use atomic
+> variables.
+> 
+> Suggested-by: Michal Hocko <mhocko@suse.com>
+> Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: Arun KS <arunks@codeaurora.org>
+> 
+> ---
+> As discussed here,
+> https://patchwork.kernel.org/patch/10627521/#22261253
+> ---
+> ---
+>  arch/csky/mm/init.c                           |  4 +-
+>  arch/powerpc/platforms/pseries/cmm.c          | 11 ++--
+>  arch/s390/mm/init.c                           |  2 +-
+>  arch/um/kernel/mem.c                          |  4 +-
+>  arch/x86/kernel/cpu/microcode/core.c          |  5 +-
+>  drivers/char/agp/backend.c                    |  4 +-
+>  drivers/gpu/drm/amd/amdkfd/kfd_crat.c         |  2 +-
+>  drivers/gpu/drm/i915/i915_gem.c               |  2 +-
+>  drivers/gpu/drm/i915/selftests/i915_gem_gtt.c |  4 +-
+>  drivers/hv/hv_balloon.c                       | 19 +++----
+>  drivers/md/dm-bufio.c                         |  5 +-
+>  drivers/md/dm-crypt.c                         |  4 +-
+>  drivers/md/dm-integrity.c                     |  4 +-
+>  drivers/md/dm-stats.c                         |  3 +-
+>  drivers/media/platform/mtk-vpu/mtk_vpu.c      |  3 +-
+>  drivers/misc/vmw_balloon.c                    |  2 +-
+>  drivers/parisc/ccio-dma.c                     |  5 +-
+>  drivers/parisc/sba_iommu.c                    |  5 +-
+>  drivers/staging/android/ion/ion_system_heap.c |  2 +-
+>  drivers/xen/xen-selfballoon.c                 |  7 +--
+>  fs/ceph/super.h                               |  3 +-
+>  fs/file_table.c                               |  9 ++--
+>  fs/fuse/inode.c                               |  4 +-
+>  fs/nfs/write.c                                |  3 +-
+>  fs/nfsd/nfscache.c                            |  3 +-
+>  fs/ntfs/malloc.h                              |  2 +-
+>  fs/proc/base.c                                |  3 +-
+>  include/linux/highmem.h                       |  2 +-
+>  include/linux/mm.h                            |  2 +-
+>  include/linux/mmzone.h                        | 10 +---
+>  include/linux/swap.h                          |  2 +-
+>  kernel/fork.c                                 |  6 +--
+>  kernel/kexec_core.c                           |  5 +-
+>  kernel/power/snapshot.c                       |  2 +-
+>  lib/show_mem.c                                |  3 +-
+>  mm/highmem.c                                  |  2 +-
+>  mm/huge_memory.c                              |  2 +-
+>  mm/kasan/quarantine.c                         |  4 +-
+>  mm/memblock.c                                 |  6 +--
+>  mm/memory_hotplug.c                           |  4 +-
+>  mm/mm_init.c                                  |  3 +-
+>  mm/oom_kill.c                                 |  2 +-
+>  mm/page_alloc.c                               | 75 ++++++++++++++-------------
+>  mm/shmem.c                                    | 12 +++--
+>  mm/slab.c                                     |  3 +-
+>  mm/swap.c                                     |  3 +-
+>  mm/util.c                                     |  2 +-
+>  mm/vmalloc.c                                  |  4 +-
+>  mm/vmstat.c                                   |  4 +-
+>  mm/workingset.c                               |  2 +-
+>  mm/zswap.c                                    |  2 +-
+>  net/dccp/proto.c                              |  6 +--
+>  net/decnet/dn_route.c                         |  2 +-
+>  net/ipv4/tcp_metrics.c                        |  2 +-
+>  net/netfilter/nf_conntrack_core.c             |  6 +--
+>  net/netfilter/xt_hashlimit.c                  |  4 +-
+>  net/sctp/protocol.c                           |  6 +--
+>  security/integrity/ima/ima_kexec.c            |  2 +-
+>  58 files changed, 171 insertions(+), 143 deletions(-)
+> 
+> diff --git a/arch/csky/mm/init.c b/arch/csky/mm/init.c
+> index dc07c07..3f4d35e 100644
+> --- a/arch/csky/mm/init.c
+> +++ b/arch/csky/mm/init.c
+> @@ -71,7 +71,7 @@ void free_initrd_mem(unsigned long start, unsigned long end)
+>  		ClearPageReserved(virt_to_page(start));
+>  		init_page_count(virt_to_page(start));
+>  		free_page(start);
+> -		totalram_pages++;
+> +		atomic_long_inc(&totalram_pages);
+>  	}
+>  }
+>  #endif
+> @@ -88,7 +88,7 @@ void free_initmem(void)
+>  		ClearPageReserved(virt_to_page(addr));
+>  		init_page_count(virt_to_page(addr));
+>  		free_page(addr);
+> -		totalram_pages++;
+> +		atomic_long_inc(&totalram_pages);
+>  		addr += PAGE_SIZE;
+>  	}
+For csky part, it's OK.
+
+ Guo Ren
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
