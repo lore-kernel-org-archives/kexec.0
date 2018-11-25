@@ -2,27 +2,27 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gQwBr-0007ZJ-2I
- for kexec@lists.infradead.org; Sun, 25 Nov 2018 15:19:21 +0000
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- wAPFEVHQ092551
- for <kexec@lists.infradead.org>; Sun, 25 Nov 2018 10:19:14 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2nymsjxhp5-1
+ id 1gQwBr-0007VS-2H
+ for kexec@lists.infradead.org; Sun, 25 Nov 2018 15:19:22 +0000
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ wAPFEU1U094695
+ for <kexec@lists.infradead.org>; Sun, 25 Nov 2018 10:19:08 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2nymueemgj-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Sun, 25 Nov 2018 10:19:14 -0500
+ for <kexec@lists.infradead.org>; Sun, 25 Nov 2018 10:19:08 -0500
 Received: from localhost
- by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <nayna@linux.ibm.com>;
- Sun, 25 Nov 2018 15:19:12 -0000
+ Sun, 25 Nov 2018 15:19:06 -0000
 From: Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH 7/7] ima: Support platform keyring for kernel appraisal
-Date: Sun, 25 Nov 2018 20:45:00 +0530
+Subject: [PATCH 6/7] efi: Allow the "db" UEFI variable to be suppressed
+Date: Sun, 25 Nov 2018 20:44:59 +0530
 In-Reply-To: <20181125151500.8298-1-nayna@linux.ibm.com>
 References: <20181125151500.8298-1-nayna@linux.ibm.com>
-Message-Id: <20181125151500.8298-8-nayna@linux.ibm.com>
+Message-Id: <20181125151500.8298-7-nayna@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,46 +37,96 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-integrity@vger.kernel.org
-Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, Nayna Jain <nayna@linux.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, vgoyal@redhat.com
+Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, Josh Boyer <jwboyer@fedoraproject.org>, vgoyal@redhat.com
 
-On secure boot enabled systems, the bootloader verifies the kernel
-image and possibly the initramfs signatures based on a set of keys. A
-soft reboot(kexec) of the system, with the same kernel image and
-initramfs, requires access to the original keys to verify the
-signatures.
+From: Josh Boyer <jwboyer@fedoraproject.org>
 
-This patch allows IMA-appraisal access to those original keys, now
-loaded on the platform keyring, needed for verifying the kernel image
-and initramfs signatures.
+If a user tells shim to not use the certs/hashes in the UEFI db variable
+for verification purposes, shim will set a UEFI variable called
+MokIgnoreDB. Have the uefi import code look for this and ignore the db
+variable if it is found.
 
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: Nayna Jain <nayna@linux.ibm.com>
 ---
- security/integrity/ima/ima_appraise.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Changelog:
 
-diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-index deec1804a00a..9c13585e7d3e 100644
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -294,7 +294,16 @@ int ima_appraise_measurement(enum ima_hooks func,
- 					     iint->ima_hash->length);
- 		if (rc == -EOPNOTSUPP) {
- 			status = INTEGRITY_UNKNOWN;
--		} else if (rc) {
-+			break;
+v0:
+- No changes
+
+ security/integrity/platform_certs/load_uefi.c | 44 +++++++++++++++++++++------
+ 1 file changed, 34 insertions(+), 10 deletions(-)
+
+diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
+index dbccb45147ef..978c8d0dc151 100644
+--- a/security/integrity/platform_certs/load_uefi.c
++++ b/security/integrity/platform_certs/load_uefi.c
+@@ -13,6 +13,26 @@ static __initdata efi_guid_t efi_cert_x509_sha256_guid = EFI_CERT_X509_SHA256_GU
+ static __initdata efi_guid_t efi_cert_sha256_guid = EFI_CERT_SHA256_GUID;
+ 
+ /*
++ * Look to see if a UEFI variable called MokIgnoreDB exists and return true if
++ * it does.
++ *
++ * This UEFI variable is set by the shim if a user tells the shim to not use
++ * the certs/hashes in the UEFI db variable for verification purposes.  If it
++ * is set, we should ignore the db variable also and the true return indicates
++ * this.
++ */
++static __init bool uefi_check_ignore_db(void)
++{
++	efi_status_t status;
++	unsigned int db = 0;
++	unsigned long size = sizeof(db);
++	efi_guid_t guid = EFI_SHIM_LOCK_GUID;
++
++	status = efi.get_variable(L"MokIgnoreDB", &guid, NULL, &size, &db);
++	return status == EFI_SUCCESS;
++}
++
++/*
+  * Get a certificate list blob from the named EFI variable.
+  */
+ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
+@@ -113,7 +133,9 @@ static __init efi_element_handler_t get_handler_for_dbx(const efi_guid_t *sig_ty
+ }
+ 
+ /*
+- * Load the certs contained in the UEFI databases
++ * Load the certs contained in the UEFI databases into the secondary trusted
++ * keyring and the UEFI blacklisted X.509 cert SHA256 hashes into the blacklist
++ * keyring.
+  */
+ static int __init load_uefi_certs(void)
+ {
+@@ -129,15 +151,17 @@ static int __init load_uefi_certs(void)
+ 	/* Get db, MokListRT, and dbx.  They might not exist, so it isn't
+ 	 * an error if we can't get them.
+ 	 */
+-	db = get_cert_list(L"db", &secure_var, &dbsize);
+-	if (!db) {
+-		pr_err("Couldn't get UEFI db list\n");
+-	} else {
+-		rc = parse_efi_signature_list("UEFI:db",
+-					      db, dbsize, get_handler_for_db);
+-		if (rc)
+-			pr_err("Couldn't parse db signatures: %d\n", rc);
+-		kfree(db);
++	if (!uefi_check_ignore_db()) {
++		db = get_cert_list(L"db", &secure_var, &dbsize);
++		if (!db) {
++			pr_err("MODSIGN: Couldn't get UEFI db list\n");
++		} else {
++			rc = parse_efi_signature_list("UEFI:db",
++					db, dbsize, get_handler_for_db);
++			if (rc)
++				pr_err("Couldn't parse db signatures: %d\n", rc);
++			kfree(db);
 +		}
-+		if (rc && func == KEXEC_KERNEL_CHECK)
-+			rc = integrity_digsig_verify(
-+					INTEGRITY_KEYRING_PLATFORM,
-+					(const char *)xattr_value,
-+					xattr_len,
-+					iint->ima_hash->digest,
-+					iint->ima_hash->length);
-+		if (rc) {
- 			cause = "invalid-signature";
- 			status = INTEGRITY_FAIL;
- 		} else {
+ 	}
+ 
+ 	mok = get_cert_list(L"MokListRT", &mok_var, &moksize);
 -- 
 2.13.6
 
