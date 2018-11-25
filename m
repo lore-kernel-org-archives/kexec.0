@@ -1,15 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Sun, 25 Nov 2018 18:19:30 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2] x86_64, vmcoreinfo: Append 'page_offset_base' to
- vmcoreinfo
-Message-ID: <20181125101930.GA1824@MiWiFi-R3L-srv>
-References: <1542318469-13699-1-git-send-email-bhsharma@redhat.com>
- <20181121113944.GD27797@zn.tnic>
- <CACi5LpPx1bmH6duAbWFNMVStg-2GR=dSVuKrEfVCko8HzmqF_A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CACi5LpPx1bmH6duAbWFNMVStg-2GR=dSVuKrEfVCko8HzmqF_A@mail.gmail.com>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gQwBX-0007FS-OA
+ for kexec@lists.infradead.org; Sun, 25 Nov 2018 15:19:01 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ wAPFEWjM123032
+ for <kexec@lists.infradead.org>; Sun, 25 Nov 2018 10:18:49 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2nymt4ekeu-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Sun, 25 Nov 2018 10:18:48 -0500
+Received: from localhost
+ by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <nayna@linux.ibm.com>;
+ Sun, 25 Nov 2018 15:18:47 -0000
+From: Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH 3/7] efi: Add EFI signature data types
+Date: Sun, 25 Nov 2018 20:44:56 +0530
+In-Reply-To: <20181125151500.8298-1-nayna@linux.ibm.com>
+References: <20181125151500.8298-1-nayna@linux.ibm.com>
+Message-Id: <20181125151500.8298-4-nayna@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,92 +31,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, James Morse <james.morse@arm.com>, x86@kernel.org, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Omar Sandoval <osandov@fb.com>, Borislav Petkov <bp@alien8.de>, Dave Anderson <anderson@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kees Cook <keescook@chromium.org>
+To: linux-integrity@vger.kernel.org
+Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, vgoyal@redhat.com
 
-On 11/25/18 at 01:36am, Bhupesh Sharma wrote:
-> Hi Boris,
-> 
-> Thanks for your review. Please see my replies inline:
-> 
-> On Wed, Nov 21, 2018 at 5:10 PM Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > + Kees.
-> >
-> > On Fri, Nov 16, 2018 at 03:17:49AM +0530, Bhupesh Sharma wrote:
-> > > x86_64 kernel uses 'page_offset_base' variable to point to the
-> > > start of direct mapping of all physical memory. This variable
-> > > is also updated for KASLR boot cases, so this can be exported
-> > > via vmcoreinfo as a standard ABI between kernel and user-space,
-> > > to allow user-space utilities to use the same for calculating
-> > > the start of direct mapping of all physical memory.
-> > >
-> > > 'arch/x86/kernel/head64.c' sets the same as:
-> > >    unsigned long page_offset_base __ro_after_init = __PAGE_OFFSET_BASE_L4;
-> > >
-> > > and also uses the same to indicate the base of KASLR regions on x86_64:
-> > >    static __initdata struct kaslr_memory_region {
-> > >           unsigned long *base;
-> > >               unsigned long size_tb;
-> > >    } kaslr_regions[] = {
-> > >           { &page_offset_base, 0 },
-> > >    .. snip ..
-> >
-> > Why is that detail needed in the commit message?
-> 
-> This (and similar) details were requested by Baoquan during the v1
-> review, that is why I added them to the v2 commit log.
+From: Dave Howells <dhowells@redhat.com>
 
-Hmm, Bhupesh, this is what I requested in your v1:
-lkml.kernel.org/r/20181030020752.GB11408@MiWiFi-R3L-srv
+Add the data types that are used for containing hashes, keys and
+certificates for cryptographic verification along with their corresponding
+type GUIDs.
 
-You said x86 makedumpfile is broken because KCORE_REMAP is added. I
-wanted to know why it's broken. Now I think I don't need to request it
-in this thread, becasue Kazu has made it clear and fixed it:
-4AE2DC15AC0B8543882A74EA0D43DBEC0355DFC9@BPXM09GP.gisp.nec.co.jp
+Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: Nayna Jain <nayna@linux.ibm.com>
+---
+Changelog:
 
-Or could you abstract the sentences in which I requested you to add
-above information into patch log so that I can notice my expression
-and can improve on future reviewing and communicating?
+v0: 
+- No changes
 
-And for problem solving and describing, if things are simple, just
-tell it direclty; If things are complex, try to simplify it and make it
-be simply told. For this page_offset_base exporting, we can save time on
-'what' and 'how' since it's very simple and very easy to see what it is
-and how it's done. You just need tell WHY it's needed. BUT I saw so many
-words and not easy to get why. If simplifying problems is one kind of
-ability, I don't know what to say about complicating one simple problem,
-another kind of ability?
+ include/linux/efi.h | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-I have read your patch log when you sent out v2, honestly I don't like it.
-I tried to not touch this patch, hope other people can review and give
-comments. This can make you know I didn't intentionally embarrass you on
-patch reviewing.
-
-Honestly, if this patch is merged, no matter v2 or your old v1,
-a small record will be made. On my x1 laptop, I need scroll down FOUR
-full screens till the real patch content is seen. Are those really
-needed? You can check other vmcoreinfo exporting patch.
-
-I really don't want to review people's patch if they don't welcome my
-words, just I was asked to do. Hope you know I had no any offence when
-I started to read your patch, just I felt not good when my head was 
-scratched to bleed when read. My english is not good, I don't know how to
-express euphemistically sometime, so if I say so about one thing, that is
-how I think so to the thing, without any personal prejudice or attack to
-person. Please forgive me if any offence felt.
-
-Thanks
-Baoquan
-
-> Although personally I also think that such details are probably not
-> needed in a commit log (may be better suited for a cover letter, which
-> is maybe a overkill for this single patch).
-> Will drop this from v3.
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 401e4b254e30..99cba6fe1234 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -663,6 +663,10 @@ void efi_native_runtime_setup(void);
+ #define EFI_IMAGE_SECURITY_DATABASE_GUID	EFI_GUID(0xd719b2cb, 0x3d3a, 0x4596,  0xa3, 0xbc, 0xda, 0xd0, 0x0e, 0x67, 0x65, 0x6f)
+ #define EFI_SHIM_LOCK_GUID			EFI_GUID(0x605dab50, 0xe046, 0x4300,  0xab, 0xb6, 0x3d, 0xd8, 0x10, 0xdd, 0x8b, 0x23)
+ 
++#define EFI_CERT_SHA256_GUID			EFI_GUID(0xc1c41626, 0x504c, 0x4092, 0xac, 0xa9, 0x41, 0xf9, 0x36, 0x93, 0x43, 0x28)
++#define EFI_CERT_X509_GUID			EFI_GUID(0xa5c059a1, 0x94e4, 0x4aa7, 0x87, 0xb5, 0xab, 0x15, 0x5c, 0x2b, 0xf0, 0x72)
++#define EFI_CERT_X509_SHA256_GUID		EFI_GUID(0x3bd2a492, 0x96c0, 0x4079, 0xb4, 0x20, 0xfc, 0xf9, 0x8e, 0xf1, 0x03, 0xed)
++
+ /*
+  * This GUID is used to pass to the kernel proper the struct screen_info
+  * structure that was populated by the stub based on the GOP protocol instance
+@@ -933,6 +937,27 @@ typedef struct {
+ 	efi_memory_desc_t entry[0];
+ } efi_memory_attributes_table_t;
+ 
++typedef struct  {
++	efi_guid_t signature_owner;
++	u8 signature_data[];
++} efi_signature_data_t;
++
++typedef struct {
++	efi_guid_t signature_type;
++	u32 signature_list_size;
++	u32 signature_header_size;
++	u32 signature_size;
++	u8 signature_header[];
++	/* efi_signature_data_t signatures[][] */
++} efi_signature_list_t;
++
++typedef u8 efi_sha256_hash_t[32];
++
++typedef struct {
++	efi_sha256_hash_t to_be_signed_hash;
++	efi_time_t time_of_revocation;
++} efi_cert_x509_sha256_t;
++
+ /*
+  * All runtime access to EFI goes through this structure:
+  */
+-- 
+2.13.6
 
 
 _______________________________________________
