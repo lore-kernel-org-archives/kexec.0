@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-f194.google.com ([209.85.208.194])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gQeCm-00020V-1z
- for kexec@lists.infradead.org; Sat, 24 Nov 2018 20:07:06 +0000
-Received: by mail-lj1-f194.google.com with SMTP id s5-v6so13216300ljd.12
- for <kexec@lists.infradead.org>; Sat, 24 Nov 2018 12:06:53 -0800 (PST)
-MIME-Version: 1.0
+Date: Sun, 25 Nov 2018 18:19:30 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v2] x86_64, vmcoreinfo: Append 'page_offset_base' to
+ vmcoreinfo
+Message-ID: <20181125101930.GA1824@MiWiFi-R3L-srv>
 References: <1542318469-13699-1-git-send-email-bhsharma@redhat.com>
  <20181121113944.GD27797@zn.tnic>
-In-Reply-To: <20181121113944.GD27797@zn.tnic>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Sun, 25 Nov 2018 01:36:37 +0530
-Message-ID: <CACi5LpPx1bmH6duAbWFNMVStg-2GR=dSVuKrEfVCko8HzmqF_A@mail.gmail.com>
-Subject: Re: [PATCH v2] x86_64,
- vmcoreinfo: Append 'page_offset_base' to vmcoreinfo
+ <CACi5LpPx1bmH6duAbWFNMVStg-2GR=dSVuKrEfVCko8HzmqF_A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CACi5LpPx1bmH6duAbWFNMVStg-2GR=dSVuKrEfVCko8HzmqF_A@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,200 +22,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Kees Cook <keescook@chromium.org>, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Omar Sandoval <osandov@fb.com>, Dave Anderson <anderson@redhat.com>, James Morse <james.morse@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, James Morse <james.morse@arm.com>, x86@kernel.org, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Omar Sandoval <osandov@fb.com>, Borislav Petkov <bp@alien8.de>, Dave Anderson <anderson@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kees Cook <keescook@chromium.org>
 
-Hi Boris,
-
-Thanks for your review. Please see my replies inline:
-
-On Wed, Nov 21, 2018 at 5:10 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> + Kees.
->
-> On Fri, Nov 16, 2018 at 03:17:49AM +0530, Bhupesh Sharma wrote:
-> > x86_64 kernel uses 'page_offset_base' variable to point to the
-> > start of direct mapping of all physical memory. This variable
-> > is also updated for KASLR boot cases, so this can be exported
-> > via vmcoreinfo as a standard ABI between kernel and user-space,
-> > to allow user-space utilities to use the same for calculating
-> > the start of direct mapping of all physical memory.
+On 11/25/18 at 01:36am, Bhupesh Sharma wrote:
+> Hi Boris,
+> 
+> Thanks for your review. Please see my replies inline:
+> 
+> On Wed, Nov 21, 2018 at 5:10 PM Borislav Petkov <bp@alien8.de> wrote:
 > >
-> > 'arch/x86/kernel/head64.c' sets the same as:
-> >    unsigned long page_offset_base __ro_after_init = __PAGE_OFFSET_BASE_L4;
+> > + Kees.
 > >
-> > and also uses the same to indicate the base of KASLR regions on x86_64:
-> >    static __initdata struct kaslr_memory_region {
-> >           unsigned long *base;
-> >               unsigned long size_tb;
-> >    } kaslr_regions[] = {
-> >           { &page_offset_base, 0 },
-> >    .. snip ..
->
-> Why is that detail needed in the commit message?
-
-This (and similar) details were requested by Baoquan during the v1
-review, that is why I added them to the v2 commit log.
-Although personally I also think that such details are probably not
-needed in a commit log (may be better suited for a cover letter, which
-is maybe a overkill for this single patch).
-Will drop this from v3.
-
-> > Adding 'page_offset_base' to the vmcoreinfo can be specially useful for
-> > live-debugging of a running kernel via user-space utilities
-> > like makedumpfile (see [1]).
+> > On Fri, Nov 16, 2018 at 03:17:49AM +0530, Bhupesh Sharma wrote:
+> > > x86_64 kernel uses 'page_offset_base' variable to point to the
+> > > start of direct mapping of all physical memory. This variable
+> > > is also updated for KASLR boot cases, so this can be exported
+> > > via vmcoreinfo as a standard ABI between kernel and user-space,
+> > > to allow user-space utilities to use the same for calculating
+> > > the start of direct mapping of all physical memory.
+> > >
+> > > 'arch/x86/kernel/head64.c' sets the same as:
+> > >    unsigned long page_offset_base __ro_after_init = __PAGE_OFFSET_BASE_L4;
+> > >
+> > > and also uses the same to indicate the base of KASLR regions on x86_64:
+> > >    static __initdata struct kaslr_memory_region {
+> > >           unsigned long *base;
+> > >               unsigned long size_tb;
+> > >    } kaslr_regions[] = {
+> > >           { &page_offset_base, 0 },
+> > >    .. snip ..
 > >
-> > Recently, I saw an issue with the 'makedumpfile' utility (see [2] for
->
-> Use passive tone in your commit message: no "we" or "I", etc.
+> > Why is that detail needed in the commit message?
+> 
+> This (and similar) details were requested by Baoquan during the v1
+> review, that is why I added them to the v2 commit log.
 
-Ok.
+Hmm, Bhupesh, this is what I requested in your v1:
+lkml.kernel.org/r/20181030020752.GB11408@MiWiFi-R3L-srv
 
-> Also, pls read section "2) Describe your changes" in
-> Documentation/process/submitting-patches.rst.
+You said x86 makedumpfile is broken because KCORE_REMAP is added. I
+wanted to know why it's broken. Now I think I don't need to request it
+in this thread, becasue Kazu has made it clear and fixed it:
+4AE2DC15AC0B8543882A74EA0D43DBEC0355DFC9@BPXM09GP.gisp.nec.co.jp
 
-Ok.
+Or could you abstract the sentences in which I requested you to add
+above information into patch log so that I can notice my expression
+and can improve on future reviewing and communicating?
 
-> > details), whose live debugging feature is broken with newer kernels
-> > (I tested the same with 4.19-rc8+ kernel), as KCORE_REMAP segments were
-> > added to kcore, thus leading to an additional sections in the same, and
-> > makedumpfile is not longer able to determine the start of direct
-> > mapping of all physical memory, as it relies on traversing the PT_LOAD
-> > segments inside kcore and using the last PT_LOAD segment
-> > to determine the start of direct mapping.
-> >
-> > Such user-space issues can be resolved if the user-space code instead
-> > uses a standard ABI to read the kernel exposed machine specific
-> > variables. With the kernel commit 23c85094fe1895caefdd
-> > ["proc/kcore: add vmcoreinfo note to /proc/kcore"]), it is
->
-> ERROR: Please use git commit description style 'commit <12+ chars of sha1> ("<title line>")' - ie: 'commit 23c85094fe18 ("proc/kcore: add vmcoreinfo note to /proc/kcore")'
-> #54:
-> variables. With the kernel commit 23c85094fe1895caefdd
+And for problem solving and describing, if things are simple, just
+tell it direclty; If things are complex, try to simplify it and make it
+be simply told. For this page_offset_base exporting, we can save time on
+'what' and 'how' since it's very simple and very easy to see what it is
+and how it's done. You just need tell WHY it's needed. BUT I saw so many
+words and not easy to get why. If simplifying problems is one kind of
+ability, I don't know what to say about complicating one simple problem,
+another kind of ability?
 
-Ok.
+I have read your patch log when you sent out v2, honestly I don't like it.
+I tried to not touch this patch, hope other people can review and give
+comments. This can make you know I didn't intentionally embarrass you on
+patch reviewing.
 
-> > now possible to use the vmcoreinfo present inside kcore as the standard
-> > ABI which can be used by the user-space utilities for reading
-> > the machine specific information (and hence for debugging a
-> > live kernel).
-> >
-> > User-space utilities like makedumpfile, kexec-tools and crash
-> > are either already using this ABI or are discussing patches
-> > which look to add the same feature. This helps in simplifying the
-> > overall code and also in reducing code-rewrite across the
-> > user-space utilities for getting values of these kernel
-> > symbols/variables.
->
-> > Accordingly this patch allows appending 'page_offset_base' for
-> > x86_64 platforms to vmcoreinfo, so that user-space tools can use the
-> > same as a standard interface to determine the start of direct mapping
-> > of all physical memory.
-> >
-> > Testing:
-> > -------
-> >  - I tested this patch (rebased on 'linux-next') on a x86_64 machine
-> >    using the modified 'makedumpfile' user-space code (see [3] for my
-> >    github tree which contains the same) for determining how many pages
-> >    are dumpable when different dump_level is specified (which is
-> >    one use-case of live-debugging via 'makedumpfile').
-> >  - I tested both the KASLR and non-KASLR boot cases with this patch.
-> >  - Here is one sample log (for KASLR boot case) on my x86_64 machine:
-> >
-> >    < snip..>
-> >    The kernel doesn't support mmap(),read() will be used instead.
-> >
-> >    TYPE               PAGES                   EXCLUDABLE      DESCRIPTION
-> >    ----------------------------------------------------------------------
-> >    ZERO               21299                   yes             Pages filled
-> >    with zero
-> >    NON_PRI_CACHE      91785                   yes             Cache
-> >    pages without private flag
-> >    PRI_CACHE  1                       yes             Cache pages with
-> >    private flag
-> >    USER               14057                   yes             User process
-> >    pages
-> >    FREE               740346                  yes             Free pages
-> >    KERN_DATA  58152                   no              Dumpable kernel
-> >    data
-> >
-> >    page size:         4096
-> >    Total pages on system:     925640
-> >    Total size on system:      3791421440       Byte
-> >
-> > [1]. MAN pages -> MAKEDUMPFILE(8) and CRASH(8)
-> > [2]. makedumpfile issue with latest kernels -> http://lists.infradead.org/pipermail/kexec/2018-October/021769.html
-> > [3]. https://github.com/bhupesh-sharma/makedumpfile/tree/add-page-offset-base-to-vmcore-v1
-> >
-> > Cc: Boris Petkov <bp@alien8.de>
-> > Cc: Baoquan He <bhe@redhat.com>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> > Cc: Dave Anderson <anderson@redhat.com>
-> > Cc: James Morse <james.morse@arm.com>
-> > Cc: Omar Sandoval <osandov@fb.com>
-> > Cc: x86@kernel.org
-> > Cc: kexec@lists.infradead.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> > ---
-> > Changes since v1:
-> >  - Fixed the build issue reported by build bot and tested this version
-> >    with 'make allmodconfig'.
-> >  - Reworded most of the commit log to explain the intent behind the
-> >    patch.
-> >
-> >  arch/x86/kernel/machine_kexec_64.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> > index 4c8acdfdc5a7..6161d77c5bfb 100644
-> > --- a/arch/x86/kernel/machine_kexec_64.c
-> > +++ b/arch/x86/kernel/machine_kexec_64.c
-> > @@ -356,6 +356,9 @@ void arch_crash_save_vmcoreinfo(void)
-> >       VMCOREINFO_SYMBOL(init_top_pgt);
-> >       vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
-> >                       pgtable_l5_enabled());
-> > +#ifdef CONFIG_RANDOMIZE_BASE
-> > +     VMCOREINFO_NUMBER(page_offset_base);
-> > +#endif
-> >
-> >  #ifdef CONFIG_NUMA
-> >       VMCOREINFO_SYMBOL(node_data);
-> > --
->
-> All above are only nitpicks though.
+Honestly, if this patch is merged, no matter v2 or your old v1,
+a small record will be made. On my x1 laptop, I need scroll down FOUR
+full screens till the real patch content is seen. Are those really
+needed? You can check other vmcoreinfo exporting patch.
 
-Right the above are mostly nitpicks, but useful ones, so I will
-address these in the v3.
+I really don't want to review people's patch if they don't welcome my
+words, just I was asked to do. Hope you know I had no any offence when
+I started to read your patch, just I felt not good when my head was 
+scratched to bleed when read. My english is not good, I don't know how to
+express euphemistically sometime, so if I say so about one thing, that is
+how I think so to the thing, without any personal prejudice or attack to
+person. Please forgive me if any offence felt.
 
-> My opinion is this: people are exporting all kinds of kernel-internal
-> stuff in vmcoreinfo and frankly, I'm not crazy about this idea.
->
-> And AFAICT, this thing basically bypasses KASLR completely but you need
-> root for it so it probably doesn't really matter.
->
-> Now, on another thread we agreed more or less that what gets exported in
-> vmcoreinfo is so tightly coupled to the running kernel so that it is not
-> even considered an ABI. I guess that is debatable but whatever.
+Thanks
+Baoquan
 
-I understand.
+> Although personally I also think that such details are probably not
+> needed in a commit log (may be better suited for a cover letter, which
+> is maybe a overkill for this single patch).
+> Will drop this from v3.
 
-> So my only request right now would be to have all those things being
-> exported, documented somewhere and I believe Lianbo is working on that.
-
-I will work with Lianbo to get this added to his documentation patch as well.
-
-> But I'm sure others will have more to say about it.
-
-Sure, I will wait for a couple of days more and then send out a v3 and
-also make sure that
-this variable being export'ed also gets added to the overall documentation patch
-which Lianbo is creating.
-
-Regards,
-Bhupesh
 
 _______________________________________________
 kexec mailing list
