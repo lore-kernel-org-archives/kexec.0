@@ -2,26 +2,27 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gQwBM-0007E6-7c
- for kexec@lists.infradead.org; Sun, 25 Nov 2018 15:18:52 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- wAPFEU5W122965
- for <kexec@lists.infradead.org>; Sun, 25 Nov 2018 10:18:34 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2nymt4eka8-1
+ id 1gQwBX-0007I1-O3
+ for kexec@lists.infradead.org; Sun, 25 Nov 2018 15:19:01 +0000
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ wAPFEUnF039504
+ for <kexec@lists.infradead.org>; Sun, 25 Nov 2018 10:18:56 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2nymy96kfa-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Sun, 25 Nov 2018 10:18:33 -0500
+ for <kexec@lists.infradead.org>; Sun, 25 Nov 2018 10:18:55 -0500
 Received: from localhost
- by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <nayna@linux.ibm.com>;
- Sun, 25 Nov 2018 15:18:32 -0000
+ Sun, 25 Nov 2018 15:18:54 -0000
 From: Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH 0/7] add platform/firmware keys support for kernel
- verification by IMA 
-Date: Sun, 25 Nov 2018 20:44:53 +0530
-Message-Id: <20181125151500.8298-1-nayna@linux.ibm.com>
+Subject: [PATCH 4/7] efi: Add an EFI signature blob parser
+Date: Sun, 25 Nov 2018 20:44:57 +0530
+In-Reply-To: <20181125151500.8298-1-nayna@linux.ibm.com>
+References: <20181125151500.8298-1-nayna@linux.ibm.com>
+Message-Id: <20181125151500.8298-5-nayna@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,65 +39,189 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-integrity@vger.kernel.org
 Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, Nayna Jain <nayna@linux.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, vgoyal@redhat.com
 
-On secure boot enabled systems, a verified kernel may need to kexec
-additional kernels. For example, it may be used as a bootloader needing
-to kexec a target kernel or it may need to kexec a crashdump kernel.
-In such cases, it may want to verify the signature of the next kernel
-image.
+From: Dave Howells <dhowells@redhat.com>
 
-It is possible that the new kernel image is signed with third party keys
-which are stored as platform or firmware keys in the 'db' variable. The
-kernel, however, can not directly verify these platform keys, and an
-administrator may therefore not want to trust them for arbitrary usage.
-In order to differentiate platform keys from other keys and provide the
-necessary separation of trust the kernel needs an additional keyring to
-store platform/firmware keys.
+Add a function to parse an EFI signature blob looking for elements of
+interest. A list is made up of a series of sublists, where all the
+elements in a sublist are of the same type, but sublists can be of
+different types.
 
-The secure boot key database is expected to store the keys as EFI
-Signature List(ESL). The patch set uses David Howells and Josh Boyer's
-patch to access and parse the ESL to extract the certificates and load
-them onto the platform keyring.
+For each sublist encountered, the function pointed to by the
+get_handler_for_guid argument is called with the type specifier GUID and
+returns either a pointer to a function to handle elements of that type or
+NULL if the type is not of interest.
 
-The last patch in this patch set adds support for IMA-appraisal to
-verify the kexec'ed kernel image based on keys stored in the platform
-keyring.
+If the sublist is of interest, each element is passed to the handler
+function in turn.
 
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+---
 Changelog:
 
 v0:
-- The original patches loaded the certificates onto the secondary
-  trusted keyring. This patch set defines a new keyring named
-  ".platform" and adds the certificates to this new keyring  
-- removed CONFIG EFI_SIGNATURE_LIST_PARSER and LOAD_UEFI_KEYS
-- moved files from certs/ to security/integrity/platform_certs/
+- removed the CONFIG EFI_SIGNATURE_LIST_PARSER
+- moved efi_parser.c from certs to security/integrity/platform_certs
+  directory
 
-Dave Howells (2):
-  efi: Add EFI signature data types
-  efi: Add an EFI signature blob parser
-
-Josh Boyer (2):
-  efi: Import certificates from UEFI Secure Boot
-  efi: Allow the "db" UEFI variable to be suppressed
-
-Nayna Jain (3):
-  integrity: define a trusted platform keyring
-  integrity: load certs to the platform keyring
-  ima: support platform keyring for kernel appraisal
-
- include/linux/efi.h                                |  34 ++++
- security/integrity/Kconfig                         |  11 ++
- security/integrity/Makefile                        |   5 +
- security/integrity/digsig.c                        | 115 ++++++++----
- security/integrity/ima/ima_appraise.c              |  11 +-
- security/integrity/integrity.h                     |  23 ++-
- security/integrity/platform_certs/efi_parser.c     | 112 ++++++++++++
- security/integrity/platform_certs/load_uefi.c      | 192 +++++++++++++++++++++
- .../integrity/platform_certs/platform_keyring.c    |  62 +++++++
- 9 files changed, 527 insertions(+), 38 deletions(-)
+ include/linux/efi.h                            |   9 ++
+ security/integrity/Makefile                    |   3 +-
+ security/integrity/platform_certs/efi_parser.c | 112 +++++++++++++++++++++++++
+ 3 files changed, 123 insertions(+), 1 deletion(-)
  create mode 100644 security/integrity/platform_certs/efi_parser.c
- create mode 100644 security/integrity/platform_certs/load_uefi.c
- create mode 100644 security/integrity/platform_certs/platform_keyring.c
 
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 99cba6fe1234..2016145e2d6d 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1138,6 +1138,15 @@ extern int efi_memattr_apply_permissions(struct mm_struct *mm,
+ char * __init efi_md_typeattr_format(char *buf, size_t size,
+ 				     const efi_memory_desc_t *md);
+ 
++
++typedef void (*efi_element_handler_t)(const char *source,
++				      const void *element_data,
++				      size_t element_size);
++extern int __init parse_efi_signature_list(
++	const char *source,
++	const void *data, size_t size,
++	efi_element_handler_t (*get_handler_for_guid)(const efi_guid_t *));
++
+ /**
+  * efi_range_is_wc - check the WC bit on an address range
+  * @start: starting kvirt address
+diff --git a/security/integrity/Makefile b/security/integrity/Makefile
+index 046ffc1bb42d..6ee9058866cd 100644
+--- a/security/integrity/Makefile
++++ b/security/integrity/Makefile
+@@ -9,7 +9,8 @@ integrity-y := iint.o
+ integrity-$(CONFIG_INTEGRITY_AUDIT) += integrity_audit.o
+ integrity-$(CONFIG_INTEGRITY_SIGNATURE) += digsig.o
+ integrity-$(CONFIG_INTEGRITY_ASYMMETRIC_KEYS) += digsig_asymmetric.o
+-integrity-$(CONFIG_INTEGRITY_PLATFORM_KEYRING) += platform_certs/platform_keyring.o
++integrity-$(CONFIG_INTEGRITY_PLATFORM_KEYRING) += platform_certs/platform_keyring.o \
++						  platform_certs/efi_parser.o
+ 
+ subdir-$(CONFIG_IMA)			+= ima
+ obj-$(CONFIG_IMA)			+= ima/
+diff --git a/security/integrity/platform_certs/efi_parser.c b/security/integrity/platform_certs/efi_parser.c
+new file mode 100644
+index 000000000000..4e396f98f5c7
+--- /dev/null
++++ b/security/integrity/platform_certs/efi_parser.c
+@@ -0,0 +1,112 @@
++/* EFI signature/key/certificate list parser
++ *
++ * Copyright (C) 2012, 2016 Red Hat, Inc. All Rights Reserved.
++ * Written by David Howells (dhowells@redhat.com)
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public Licence
++ * as published by the Free Software Foundation; either version
++ * 2 of the Licence, or (at your option) any later version.
++ */
++
++#define pr_fmt(fmt) "EFI: "fmt
++#include <linux/module.h>
++#include <linux/printk.h>
++#include <linux/err.h>
++#include <linux/efi.h>
++
++/**
++ * parse_efi_signature_list - Parse an EFI signature list for certificates
++ * @source: The source of the key
++ * @data: The data blob to parse
++ * @size: The size of the data blob
++ * @get_handler_for_guid: Get the handler func for the sig type (or NULL)
++ *
++ * Parse an EFI signature list looking for elements of interest.  A list is
++ * made up of a series of sublists, where all the elements in a sublist are of
++ * the same type, but sublists can be of different types.
++ *
++ * For each sublist encountered, the @get_handler_for_guid function is called
++ * with the type specifier GUID and returns either a pointer to a function to
++ * handle elements of that type or NULL if the type is not of interest.
++ *
++ * If the sublist is of interest, each element is passed to the handler
++ * function in turn.
++ *
++ * Error EBADMSG is returned if the list doesn't parse correctly and 0 is
++ * returned if the list was parsed correctly.  No error can be returned from
++ * the @get_handler_for_guid function or the element handler function it
++ * returns.
++ */
++int __init parse_efi_signature_list(
++	const char *source,
++	const void *data, size_t size,
++	efi_element_handler_t (*get_handler_for_guid)(const efi_guid_t *))
++{
++	efi_element_handler_t handler;
++	unsigned offs = 0;
++
++	pr_devel("-->%s(,%zu)\n", __func__, size);
++
++	while (size > 0) {
++		const efi_signature_data_t *elem;
++		efi_signature_list_t list;
++		size_t lsize, esize, hsize, elsize;
++
++		if (size < sizeof(list))
++			return -EBADMSG;
++
++		memcpy(&list, data, sizeof(list));
++		pr_devel("LIST[%04x] guid=%pUl ls=%x hs=%x ss=%x\n",
++			 offs,
++			 list.signature_type.b, list.signature_list_size,
++			 list.signature_header_size, list.signature_size);
++
++		lsize = list.signature_list_size;
++		hsize = list.signature_header_size;
++		esize = list.signature_size;
++		elsize = lsize - sizeof(list) - hsize;
++
++		if (lsize > size) {
++			pr_devel("<--%s() = -EBADMSG [overrun @%x]\n",
++				 __func__, offs);
++			return -EBADMSG;
++		}
++
++		if (lsize < sizeof(list) ||
++		    lsize - sizeof(list) < hsize ||
++		    esize < sizeof(*elem) ||
++		    elsize < esize ||
++		    elsize % esize != 0) {
++			pr_devel("- bad size combo @%x\n", offs);
++			return -EBADMSG;
++		}
++
++		handler = get_handler_for_guid(&list.signature_type);
++		if (!handler) {
++			data += lsize;
++			size -= lsize;
++			offs += lsize;
++			continue;
++		}
++
++		data += sizeof(list) + hsize;
++		size -= sizeof(list) + hsize;
++		offs += sizeof(list) + hsize;
++
++		for (; elsize > 0; elsize -= esize) {
++			elem = data;
++
++			pr_devel("ELEM[%04x]\n", offs);
++			handler(source,
++				&elem->signature_data,
++				esize - sizeof(*elem));
++
++			data += esize;
++			size -= esize;
++			offs += esize;
++		}
++	}
++
++	return 0;
++}
 -- 
 2.13.6
 
