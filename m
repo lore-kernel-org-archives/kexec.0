@@ -1,27 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gQwBm-0007QD-75
- for kexec@lists.infradead.org; Sun, 25 Nov 2018 15:19:17 +0000
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- wAPFEWXV106541
- for <kexec@lists.infradead.org>; Sun, 25 Nov 2018 10:19:03 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2nymnc6nxd-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Sun, 25 Nov 2018 10:19:02 -0500
-Received: from localhost
- by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <nayna@linux.ibm.com>;
- Sun, 25 Nov 2018 15:19:00 -0000
-From: Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH 5/7] efi: Import certificates from UEFI Secure Boot
-Date: Sun, 25 Nov 2018 20:44:58 +0530
-In-Reply-To: <20181125151500.8298-1-nayna@linux.ibm.com>
-References: <20181125151500.8298-1-nayna@linux.ibm.com>
-Message-Id: <20181125151500.8298-6-nayna@linux.ibm.com>
+Date: Mon, 26 Nov 2018 09:28:24 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v2] x86_64, vmcoreinfo: Append 'page_offset_base' to
+ vmcoreinfo
+Message-ID: <20181126012824.GB1824@MiWiFi-R3L-srv>
+References: <1542318469-13699-1-git-send-email-bhsharma@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1542318469-13699-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,257 +16,118 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-integrity@vger.kernel.org
-Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, Nayna Jain <nayna@linux.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, Josh Boyer <jwboyer@fedoraproject.org>, vgoyal@redhat.com
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, James Morse <james.morse@arm.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>, Boris Petkov <bp@alien8.de>, Dave Anderson <anderson@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-From: Josh Boyer <jwboyer@fedoraproject.org>
+On 11/16/18 at 03:17am, Bhupesh Sharma wrote:
+> Adding 'page_offset_base' to the vmcoreinfo can be specially useful for
+> live-debugging of a running kernel via user-space utilities
+> like makedumpfile (see [1]).
+> 
+> Recently, I saw an issue with the 'makedumpfile' utility (see [2] for
+> details), whose live debugging feature is broken with newer kernels
 
-New Patch Description:
-======================
+I think this paragraph explained why KCORE_REMAP adding caused the
+mistake of page_offset calculation in makedumpfile. It can prove the
+advantage of appending 'page_offset_base' to vmcoreinfo. The old way I
+took in makedumpfile could be impacted by kernel code change, adding it
+to vmcoreinfo can make it stable. The example is KCORE_REMAP adding, and
+later it's removed.
 
-Secure Boot stores a list of allowed certificates in the 'db' variable.
-This patch imports those certificates into the platform keyring. The shim
-UEFI bootloader has a similar certificate list stored in the 'MokListRT'
-variable. We import those as well.
+But it's not live debugging feature of makedumpfile. Makedumpfile can't be
+used to live debug. The feature is called '--mem-usage' in makedumpfile,
+in fact it's used to estimate how big the vmcore could be so that customer
+can deply an appropriate size of storage space to store it. Because both
+kcore and vmcore are all elf files which the 1st kernel's memory is
+mapped to, even though they are different, kcore is dynamically changing.
+This is more likely a precision in order of of magnitude. This is a feature
+required by redhat customer.
 
-Secure Boot also maintains a list of disallowed certificates in the 'dbx'
-variable. We load those certificates into the system blacklist keyring
-and forbid any kernel signed with those from loading.
+I thought you are talking about using DaveA's crash utility to live
+debug the running kernel, like we usually do with gdb.
 
-Original Patch Description:
-============================
+	gdb vmlinux /proc/kcore
 
-Secure Boot stores a list of allowed certificates in the 'db' variable.
-This imports those certificates into the system trusted keyring.  This
-allows for a third party signing certificate to be used in conjunction
-with signed modules. By importing the public certificate into the 'db'
-variable, a user can allow a module signed with that certificate to
-load. The shim UEFI bootloader has a similar certificate list stored
-in the 'MokListRT' variable. We import those as well.
+Yes, this gdb live debugging is broken because of KASLR. We have bug about
+this, while it has not been fixed. Using Crash utility to replace gdb is
+one way if Crash code is adjusted.
 
-Secure Boot also maintains a list of disallowed certificates in the 'dbx'
-variable. We load those certificates into the newly introduced system
-blacklist keyring and forbid any module signed with those from loading and
-forbid the use within the kernel of any key with a matching hash.
+> (I tested the same with 4.19-rc8+ kernel), as KCORE_REMAP segments were
+> added to kcore, thus leading to an additional sections in the same, and
+> makedumpfile is not longer able to determine the start of direct
+> mapping of all physical memory, as it relies on traversing the PT_LOAD
+> segments inside kcore and using the last PT_LOAD segment
+> to determine the start of direct mapping.
+...
+> Testing:
+> -------
 
-This facility is enabled by setting CONFIG_LOAD_UEFI_KEYS.
+This one vmcoreinfo entry adding won't impact kernel performance. And
+page_offset_base need be got during makedumpfile initialization, it
+won't impact makedumpfile efficiency either, especially compared with
+the later page filterring and writting out to storage space. I don't
+think there's any need to provide a detailed test result here. If
+possible, just mention it works in this way, maybe it's better in some
+aspects, such as code simplicity, etc.
 
-Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
----
-Changelog:
+>  - I tested this patch (rebased on 'linux-next') on a x86_64 machine
+>    using the modified 'makedumpfile' user-space code (see [3] for my
+>    github tree which contains the same) for determining how many pages
+>    are dumpable when different dump_level is specified (which is
+>    one use-case of live-debugging via 'makedumpfile').
+>  - I tested both the KASLR and non-KASLR boot cases with this patch.
+>  - Here is one sample log (for KASLR boot case) on my x86_64 machine:
+> 
+>    < snip..>
+>    The kernel doesn't support mmap(),read() will be used instead.
+> 
+>    TYPE		PAGES			EXCLUDABLE	DESCRIPTION
+>    ----------------------------------------------------------------------
+>    ZERO		21299           	yes		Pages filled
+>    with zero
+>    NON_PRI_CACHE	91785           	yes		Cache
+>    pages without private flag
+>    PRI_CACHE	1               	yes		Cache pages with
+>    private flag
+>    USER		14057           	yes		User process
+>    pages
+>    FREE		740346          	yes		Free pages
+>    KERN_DATA	58152           	no		Dumpable kernel
+>    data
+> 
+>    page size:		4096
+>    Total pages on system:	925640
+>    Total size on system:	3791421440       Byte
+> 
+...
 
-v0:
-- This patch replaces the loading of certificates onto the secondary
-  keyring with platform keyring
-- removed the CONFIG LOAD_UEFI_KEYS
-- moved the file load_uefi.o from certs to
-  security/integrity/platform_certs
+> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> index 4c8acdfdc5a7..6161d77c5bfb 100644
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+> @@ -356,6 +356,9 @@ void arch_crash_save_vmcoreinfo(void)
+>  	VMCOREINFO_SYMBOL(init_top_pgt);
+>  	vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
+>  			pgtable_l5_enabled());
+> +#ifdef CONFIG_RANDOMIZE_BASE
 
- security/integrity/Makefile                   |   5 +-
- security/integrity/platform_certs/load_uefi.c | 168 ++++++++++++++++++++++++++
- 2 files changed, 172 insertions(+), 1 deletion(-)
- create mode 100644 security/integrity/platform_certs/load_uefi.c
+Finally, embracing it into CONFIG_RANDOMIZE_BASE ifdefery seems not
+right. The latest kernel is using page_offset_base to do the dynamic
+memory layout between level4 and level5 changing. This may not work in
+5-level system with CONFIG_RANDOMIZE_BASE=n.
 
-diff --git a/security/integrity/Makefile b/security/integrity/Makefile
-index 6ee9058866cd..86df9aba8c0f 100644
---- a/security/integrity/Makefile
-+++ b/security/integrity/Makefile
-@@ -10,7 +10,10 @@ integrity-$(CONFIG_INTEGRITY_AUDIT) += integrity_audit.o
- integrity-$(CONFIG_INTEGRITY_SIGNATURE) += digsig.o
- integrity-$(CONFIG_INTEGRITY_ASYMMETRIC_KEYS) += digsig_asymmetric.o
- integrity-$(CONFIG_INTEGRITY_PLATFORM_KEYRING) += platform_certs/platform_keyring.o \
--						  platform_certs/efi_parser.o
-+						  platform_certs/efi_parser.o \
-+						  platform_certs/load_uefi.o
-+obj-$(CONFIG_LOAD_UEFI_KEYS) += platform_certs/load_uefi.o
-+$(obj)/load_uefi.o: KBUILD_CFLAGS += -fshort-wchar
- 
- subdir-$(CONFIG_IMA)			+= ima
- obj-$(CONFIG_IMA)			+= ima/
-diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-new file mode 100644
-index 000000000000..dbccb45147ef
---- /dev/null
-+++ b/security/integrity/platform_certs/load_uefi.c
-@@ -0,0 +1,168 @@
-+#include <linux/kernel.h>
-+#include <linux/sched.h>
-+#include <linux/cred.h>
-+#include <linux/err.h>
-+#include <linux/efi.h>
-+#include <linux/slab.h>
-+#include <keys/asymmetric-type.h>
-+#include <keys/system_keyring.h>
-+#include "../integrity.h"
-+
-+static __initdata efi_guid_t efi_cert_x509_guid = EFI_CERT_X509_GUID;
-+static __initdata efi_guid_t efi_cert_x509_sha256_guid = EFI_CERT_X509_SHA256_GUID;
-+static __initdata efi_guid_t efi_cert_sha256_guid = EFI_CERT_SHA256_GUID;
-+
-+/*
-+ * Get a certificate list blob from the named EFI variable.
-+ */
-+static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
-+				  unsigned long *size)
-+{
-+	efi_status_t status;
-+	unsigned long lsize = 4;
-+	unsigned long tmpdb[4];
-+	void *db;
-+
-+	status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
-+	if (status != EFI_BUFFER_TOO_SMALL) {
-+		pr_err("Couldn't get size: 0x%lx\n", status);
-+		return NULL;
-+	}
-+
-+	db = kmalloc(lsize, GFP_KERNEL);
-+	if (!db) {
-+		pr_err("Couldn't allocate memory for uefi cert list\n");
-+		return NULL;
-+	}
-+
-+	status = efi.get_variable(name, guid, NULL, &lsize, db);
-+	if (status != EFI_SUCCESS) {
-+		kfree(db);
-+		pr_err("Error reading db var: 0x%lx\n", status);
-+		return NULL;
-+	}
-+
-+	*size = lsize;
-+	return db;
-+}
-+
-+/*
-+ * Blacklist an X509 TBS hash.
-+ */
-+static __init void uefi_blacklist_x509_tbs(const char *source,
-+					   const void *data, size_t len)
-+{
-+	char *hash, *p;
-+
-+	hash = kmalloc(4 + len * 2 + 1, GFP_KERNEL);
-+	if (!hash)
-+		return;
-+	p = memcpy(hash, "tbs:", 4);
-+	p += 4;
-+	bin2hex(p, data, len);
-+	p += len * 2;
-+	*p = 0;
-+
-+	mark_hash_blacklisted(hash);
-+	kfree(hash);
-+}
-+
-+/*
-+ * Blacklist the hash of an executable.
-+ */
-+static __init void uefi_blacklist_binary(const char *source,
-+					 const void *data, size_t len)
-+{
-+	char *hash, *p;
-+
-+	hash = kmalloc(4 + len * 2 + 1, GFP_KERNEL);
-+	if (!hash)
-+		return;
-+	p = memcpy(hash, "bin:", 4);
-+	p += 4;
-+	bin2hex(p, data, len);
-+	p += len * 2;
-+	*p = 0;
-+
-+	mark_hash_blacklisted(hash);
-+	kfree(hash);
-+}
-+
-+/*
-+ * Return the appropriate handler for particular signature list types found in
-+ * the UEFI db and MokListRT tables.
-+ */
-+static __init efi_element_handler_t get_handler_for_db(const efi_guid_t *sig_type)
-+{
-+	if (efi_guidcmp(*sig_type, efi_cert_x509_guid) == 0)
-+		return add_to_platform_keyring;
-+	return 0;
-+}
-+
-+/*
-+ * Return the appropriate handler for particular signature list types found in
-+ * the UEFI dbx and MokListXRT tables.
-+ */
-+static __init efi_element_handler_t get_handler_for_dbx(const efi_guid_t *sig_type)
-+{
-+	if (efi_guidcmp(*sig_type, efi_cert_x509_sha256_guid) == 0)
-+		return uefi_blacklist_x509_tbs;
-+	if (efi_guidcmp(*sig_type, efi_cert_sha256_guid) == 0)
-+		return uefi_blacklist_binary;
-+	return 0;
-+}
-+
-+/*
-+ * Load the certs contained in the UEFI databases
-+ */
-+static int __init load_uefi_certs(void)
-+{
-+	efi_guid_t secure_var = EFI_IMAGE_SECURITY_DATABASE_GUID;
-+	efi_guid_t mok_var = EFI_SHIM_LOCK_GUID;
-+	void *db = NULL, *dbx = NULL, *mok = NULL;
-+	unsigned long dbsize = 0, dbxsize = 0, moksize = 0;
-+	int rc = 0;
-+
-+	if (!efi.get_variable)
-+		return false;
-+
-+	/* Get db, MokListRT, and dbx.  They might not exist, so it isn't
-+	 * an error if we can't get them.
-+	 */
-+	db = get_cert_list(L"db", &secure_var, &dbsize);
-+	if (!db) {
-+		pr_err("Couldn't get UEFI db list\n");
-+	} else {
-+		rc = parse_efi_signature_list("UEFI:db",
-+					      db, dbsize, get_handler_for_db);
-+		if (rc)
-+			pr_err("Couldn't parse db signatures: %d\n", rc);
-+		kfree(db);
-+	}
-+
-+	mok = get_cert_list(L"MokListRT", &mok_var, &moksize);
-+	if (!mok) {
-+		pr_info("Couldn't get UEFI MokListRT\n");
-+	} else {
-+		rc = parse_efi_signature_list("UEFI:MokListRT",
-+					      mok, moksize, get_handler_for_db);
-+		if (rc)
-+			pr_err("Couldn't parse MokListRT signatures: %d\n", rc);
-+		kfree(mok);
-+	}
-+
-+	dbx = get_cert_list(L"dbx", &secure_var, &dbxsize);
-+	if (!dbx) {
-+		pr_info("Couldn't get UEFI dbx list\n");
-+	} else {
-+		rc = parse_efi_signature_list("UEFI:dbx",
-+					      dbx, dbxsize,
-+					      get_handler_for_dbx);
-+		if (rc)
-+			pr_err("Couldn't parse dbx signatures: %d\n", rc);
-+		kfree(dbx);
-+	}
-+
-+	return rc;
-+}
-+late_initcall(load_uefi_certs);
--- 
-2.13.6
-
+> +	VMCOREINFO_NUMBER(page_offset_base);
+> +#endif
+>  
+>  #ifdef CONFIG_NUMA
+>  	VMCOREINFO_SYMBOL(node_data);
+> -- 
+> 2.7.4
+> 
 
 _______________________________________________
 kexec mailing list
