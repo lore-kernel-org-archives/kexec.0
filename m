@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-f68.google.com ([209.85.167.68])
+Received: from mga11.intel.com ([192.55.52.93])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gRMcA-00018B-JS
- for kexec@lists.infradead.org; Mon, 26 Nov 2018 19:32:27 +0000
-Received: by mail-lf1-f68.google.com with SMTP id p17so14493024lfh.4
- for <kexec@lists.infradead.org>; Mon, 26 Nov 2018 11:32:03 -0800 (PST)
+ id 1gRNs6-0005Uq-BL
+ for kexec@lists.infradead.org; Mon, 26 Nov 2018 20:52:47 +0000
+Subject: Re: [PATCH 1/2 RESEND v7] resource: add the new I/O resource
+ descriptor 'IORES_DESC_RESERVED'
+References: <20181124051223.19994-1-lijiang@redhat.com>
+ <20181124051223.19994-2-lijiang@redhat.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Message-ID: <ae405fe9-94fd-3fb7-decd-c7821cf95b7d@intel.com>
+Date: Mon, 26 Nov 2018 12:52:33 -0800
 MIME-Version: 1.0
-References: <1542318469-13699-1-git-send-email-bhsharma@redhat.com>
- <20181126012824.GB1824@MiWiFi-R3L-srv>
-In-Reply-To: <20181126012824.GB1824@MiWiFi-R3L-srv>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 27 Nov 2018 01:01:49 +0530
-Message-ID: <CACi5LpPqdzNxi4=UQqVgT6aCyn9nx+sjM-ds0Xx6qBji_xgP1g@mail.gmail.com>
-Subject: Re: [PATCH v2] x86_64,
- vmcoreinfo: Append 'page_offset_base' to vmcoreinfo
+In-Reply-To: <20181124051223.19994-2-lijiang@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,150 +25,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: bhe@redhat.com
-Cc: k-hagio@ab.jp.nec.com, james.morse@arm.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, osandov@fb.com, bp@alien8.de, anderson@redhat.com, tglx@linutronix.de, bhupesh.linux@gmail.com, mingo@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Lianbo Jiang <lijiang@redhat.com>, linux-kernel@vger.kernel.org
+Cc: fenghua.yu@intel.com, linux-efi@vger.kernel.org, linux-ia64@vger.kernel.org, bhe@redhat.com, ard.biesheuvel@linaro.org, peterz@infradead.org, x86@kernel.org, kexec@lists.infradead.org, tony.luck@intel.com, dave.hansen@linux.intel.com, mingo@redhat.com, bp@alien8.de, luto@kernel.org, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On Mon, Nov 26, 2018 at 6:58 AM Baoquan He <bhe@redhat.com> wrote:
->
-> On 11/16/18 at 03:17am, Bhupesh Sharma wrote:
-> > Adding 'page_offset_base' to the vmcoreinfo can be specially useful for
-> > live-debugging of a running kernel via user-space utilities
-> > like makedumpfile (see [1]).
-> >
-> > Recently, I saw an issue with the 'makedumpfile' utility (see [2] for
-> > details), whose live debugging feature is broken with newer kernels
->
-> I think this paragraph explained why KCORE_REMAP adding caused the
-> mistake of page_offset calculation in makedumpfile. It can prove the
-> advantage of appending 'page_offset_base' to vmcoreinfo. The old way I
-> took in makedumpfile could be impacted by kernel code change, adding it
-> to vmcoreinfo can make it stable. The example is KCORE_REMAP adding, and
-> later it's removed.
->
-> But it's not live debugging feature of makedumpfile. Makedumpfile can't be
-> used to live debug. The feature is called '--mem-usage' in makedumpfile,
-> in fact it's used to estimate how big the vmcore could be so that customer
-> can deply an appropriate size of storage space to store it. Because both
-> kcore and vmcore are all elf files which the 1st kernel's memory is
-> mapped to, even though they are different, kcore is dynamically changing.
-> This is more likely a precision in order of of magnitude. This is a feature
-> required by redhat customer.
+On 11/23/18 9:12 PM, Lianbo Jiang wrote:
+> The upstream kernel can not accurately add the e820 reserved type to> kdump krenel e820 table.
 
-Indeed this is a live debugging feature - see we are running this in
-the primary kernel
-context, not in kdump context. We are trying to debug a kernel we are
-presently running (in this case determining the page mapping)
-hence the term live debugging.
+	^ kernel
 
-Also, this feature is not limited to redhat - we are talking in
-upstream makedumpfile context here - it is used by other projects as
-well which can have even a simple busybox rootfs configuration (e.g.
-qemu).
+> Kdump uses walk_iomem_res_desc() to iterate io resources, then adds
+> the matched resource ranges to the e820 table for kdump kernel. But,
+> when convert the e820 type to the iores descriptor, several e820
+> types are converted to 'IORES_DESC_NONE' in this function e820_type
+> _to_iores_desc(). So the walk_iomem_res_desc() will get the redundant
+> types(such as E820_TYPE_RAM/E820_TYPE_UNUSABLE/E820_TYPE_KERN) when
+> walk through io resources with the descriptor 'IORES_DESC_NONE'.
 
-> I thought you are talking about using DaveA's crash utility to live
-> debug the running kernel, like we usually do with gdb.
->
->         gdb vmlinux /proc/kcore
->
-> Yes, this gdb live debugging is broken because of KASLR. We have bug about
-> this, while it has not been fixed. Using Crash utility to replace gdb is
-> one way if Crash code is adjusted.
->
-> > (I tested the same with 4.19-rc8+ kernel), as KCORE_REMAP segments were
-> > added to kcore, thus leading to an additional sections in the same, and
-> > makedumpfile is not longer able to determine the start of direct
-> > mapping of all physical memory, as it relies on traversing the PT_LOAD
-> > segments inside kcore and using the last PT_LOAD segment
-> > to determine the start of direct mapping.
-> ...
-> > Testing:
-> > -------
->
-> This one vmcoreinfo entry adding won't impact kernel performance. And
-> page_offset_base need be got during makedumpfile initialization, it
-> won't impact makedumpfile efficiency either, especially compared with
-> the later page filterring and writting out to storage space. I don't
-> think there's any need to provide a detailed test result here. If
-> possible, just mention it works in this way, maybe it's better in some
-> aspects, such as code simplicity, etc.
->
-> >  - I tested this patch (rebased on 'linux-next') on a x86_64 machine
-> >    using the modified 'makedumpfile' user-space code (see [3] for my
-> >    github tree which contains the same) for determining how many pages
-> >    are dumpable when different dump_level is specified (which is
-> >    one use-case of live-debugging via 'makedumpfile').
-> >  - I tested both the KASLR and non-KASLR boot cases with this patch.
-> >  - Here is one sample log (for KASLR boot case) on my x86_64 machine:
-> >
-> >    < snip..>
-> >    The kernel doesn't support mmap(),read() will be used instead.
-> >
-> >    TYPE               PAGES                   EXCLUDABLE      DESCRIPTION
-> >    ----------------------------------------------------------------------
-> >    ZERO               21299                   yes             Pages filled
-> >    with zero
-> >    NON_PRI_CACHE      91785                   yes             Cache
-> >    pages without private flag
-> >    PRI_CACHE  1                       yes             Cache pages with
-> >    private flag
-> >    USER               14057                   yes             User process
-> >    pages
-> >    FREE               740346                  yes             Free pages
-> >    KERN_DATA  58152                   no              Dumpable kernel
-> >    data
-> >
-> >    page size:         4096
-> >    Total pages on system:     925640
-> >    Total size on system:      3791421440       Byte
-> >
-> ...
->
-> > diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> > index 4c8acdfdc5a7..6161d77c5bfb 100644
-> > --- a/arch/x86/kernel/machine_kexec_64.c
-> > +++ b/arch/x86/kernel/machine_kexec_64.c
-> > @@ -356,6 +356,9 @@ void arch_crash_save_vmcoreinfo(void)
-> >       VMCOREINFO_SYMBOL(init_top_pgt);
-> >       vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
-> >                       pgtable_l5_enabled());
-> > +#ifdef CONFIG_RANDOMIZE_BASE
->
-> Finally, embracing it into CONFIG_RANDOMIZE_BASE ifdefery seems not
-> right. The latest kernel is using page_offset_base to do the dynamic
-> memory layout between level4 and level5 changing. This may not work in
-> 5-level system with CONFIG_RANDOMIZE_BASE=n.
+Let me see if I understand.
 
-I think you missed the v2 change log and the build-bot error on v1
-(see here: <https://patchwork.kernel.org/patch/10657933/#22291691>).
-With .config files which have CONFIG_RANDOMIZE_BASE=n, we get the
-following compilation error
-without the #ifdef jugglery:
+When doing kexec, the old kernel makes a new e820 table for the new
+kernel.  The old kernel constructs the new e820 table from
+'iomem_resource'.  But, when creating the 'iomem_resource' tree,
+reserved areas like E820_TYPE_RESERVED are not properly passed through.
+ This causes problems like described in the next patch.
 
- arch/x86/kernel/machine_kexec_64.o: In function `arch_crash_save_vmcoreinfo':
- arch/x86/kernel/machine_kexec_64.c:359: undefined reference to
-`page_offset_base'
- arch/x86/kernel/machine_kexec_64.c:359: undefined reference to
-`page_offset_base'
+> This patch adds the new I/O resource descriptor 'IORES_DESC_RESERVED'
+> for the iomem resources search interfaces. It is helpful to exactly
+> match the reserved resource ranges when walking through iomem resources.
 
-Anyways, with Kazu's and Boris's comments on the v2, I understand that
-adding 'page_offset_base' variable to vmcoreinfo is useful for x86
-kernel.
-I will now work on the v3 to take into account review comments and
-also work with Lianbo to get the same added to the overall vmcoreinfo
-documentation he is preparing for x86.
+It's more than that, though.  You're specifically storing the reserved
+area(s) when we see them come through the firmware.
 
-Thanks,
-Bhupesh
+> Furthermore, in order to make it still work after the new descriptor
+> is added, these codes originally related to 'IORES_DESC_NONE' have
+> been updated.
+
+It would be nice to explain why they needed to be updated and what
+breaks if they are not.
+
+> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+> index 5378d10f1d31..91b6112e7489 100644
+> --- a/arch/x86/mm/ioremap.c
+> +++ b/arch/x86/mm/ioremap.c
+> @@ -83,7 +83,14 @@ static bool __ioremap_check_ram(struct resource *res)
+>  
+>  static int __ioremap_check_desc_other(struct resource *res)
+>  {
+> -	return (res->desc != IORES_DESC_NONE);
+> +	/*
+> +	 * The E820_TYPE_RESERVED was converted to the IORES_DESC_NONE
+> +	 * before the new IORES_DESC_RESERVED is added, so it contained
+> +	 * the e820 reserved type. In order to make it still work for
+> +	 * SEV, here keep it the same as before.
+> +	 */
+> +	return ((res->desc != IORES_DESC_NONE) ||
+> +		(res->desc != IORES_DESC_RESERVED));
+>  }
+
+After reading the changelog and the comment, I still have no idea why
+this hunk is here.  Could you try to explain a bit more?
 
 
-> > +     VMCOREINFO_NUMBER(page_offset_base);
-> > +#endif
-> >
-> >  #ifdef CONFIG_NUMA
-> >       VMCOREINFO_SYMBOL(node_data);
-> > --
-> > 2.7.4
-> >
 
 _______________________________________________
 kexec mailing list
