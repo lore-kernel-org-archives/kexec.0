@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mga17.intel.com ([192.55.52.151])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gRaEN-00065q-9f
- for kexec@lists.infradead.org; Tue, 27 Nov 2018 10:04:37 +0000
+ id 1gRfNi-0001xV-17
+ for kexec@lists.infradead.org; Tue, 27 Nov 2018 15:34:36 +0000
 Subject: Re: [PATCH 1/2 RESEND v7] resource: add the new I/O resource
  descriptor 'IORES_DESC_RESERVED'
 References: <20181124051223.19994-1-lijiang@redhat.com>
  <20181124051223.19994-2-lijiang@redhat.com>
  <ae405fe9-94fd-3fb7-decd-c7821cf95b7d@intel.com>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <460c5552-a48e-3523-275a-7f94d0f08f9b@redhat.com>
-Date: Tue, 27 Nov 2018 18:04:02 +0800
+ <460c5552-a48e-3523-275a-7f94d0f08f9b@redhat.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Message-ID: <703ce20d-be09-9b8d-d457-5b002a50dff7@intel.com>
+Date: Tue, 27 Nov 2018 07:34:16 -0800
 MIME-Version: 1.0
-In-Reply-To: <ae405fe9-94fd-3fb7-decd-c7821cf95b7d@intel.com>
+In-Reply-To: <460c5552-a48e-3523-275a-7f94d0f08f9b@redhat.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,85 +23,26 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org
+To: lijiang <lijiang@redhat.com>, linux-kernel@vger.kernel.org
 Cc: fenghua.yu@intel.com, linux-efi@vger.kernel.org, linux-ia64@vger.kernel.org, bhe@redhat.com, ard.biesheuvel@linaro.org, peterz@infradead.org, x86@kernel.org, kexec@lists.infradead.org, tony.luck@intel.com, dave.hansen@linux.intel.com, mingo@redhat.com, bp@alien8.de, luto@kernel.org, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-5ZyoIDIwMTjlubQxMeaciDI35pelIDA0OjUyLCBEYXZlIEhhbnNlbiDlhpnpgZM6Cj4gT24gMTEv
-MjMvMTggOToxMiBQTSwgTGlhbmJvIEppYW5nIHdyb3RlOgo+PiBUaGUgdXBzdHJlYW0ga2VybmVs
-IGNhbiBub3QgYWNjdXJhdGVseSBhZGQgdGhlIGU4MjAgcmVzZXJ2ZWQgdHlwZSB0bz4ga2R1bXAg
-a3JlbmVsIGU4MjAgdGFibGUuCj4gCj4gCV4ga2VybmVsCj4gCj4+IEtkdW1wIHVzZXMgd2Fsa19p
-b21lbV9yZXNfZGVzYygpIHRvIGl0ZXJhdGUgaW8gcmVzb3VyY2VzLCB0aGVuIGFkZHMKPj4gdGhl
-IG1hdGNoZWQgcmVzb3VyY2UgcmFuZ2VzIHRvIHRoZSBlODIwIHRhYmxlIGZvciBrZHVtcCBrZXJu
-ZWwuIEJ1dCwKPj4gd2hlbiBjb252ZXJ0IHRoZSBlODIwIHR5cGUgdG8gdGhlIGlvcmVzIGRlc2Ny
-aXB0b3IsIHNldmVyYWwgZTgyMAo+PiB0eXBlcyBhcmUgY29udmVydGVkIHRvICdJT1JFU19ERVND
-X05PTkUnIGluIHRoaXMgZnVuY3Rpb24gZTgyMF90eXBlCj4+IF90b19pb3Jlc19kZXNjKCkuIFNv
-IHRoZSB3YWxrX2lvbWVtX3Jlc19kZXNjKCkgd2lsbCBnZXQgdGhlIHJlZHVuZGFudAo+PiB0eXBl
-cyhzdWNoIGFzIEU4MjBfVFlQRV9SQU0vRTgyMF9UWVBFX1VOVVNBQkxFL0U4MjBfVFlQRV9LRVJO
-KSB3aGVuCj4+IHdhbGsgdGhyb3VnaCBpbyByZXNvdXJjZXMgd2l0aCB0aGUgZGVzY3JpcHRvciAn
-SU9SRVNfREVTQ19OT05FJy4KPiAKPiBMZXQgbWUgc2VlIGlmIEkgdW5kZXJzdGFuZC4KPiAKPiBX
-aGVuIGRvaW5nIGtleGVjLCB0aGUgb2xkIGtlcm5lbCBtYWtlcyBhIG5ldyBlODIwIHRhYmxlIGZv
-ciB0aGUgbmV3Cj4ga2VybmVsLiAgVGhlIG9sZCBrZXJuZWwgY29uc3RydWN0cyB0aGUgbmV3IGU4
-MjAgdGFibGUgZnJvbQo+ICdpb21lbV9yZXNvdXJjZScuICBCdXQsIHdoZW4gY3JlYXRpbmcgdGhl
-ICdpb21lbV9yZXNvdXJjZScgdHJlZSwKPiByZXNlcnZlZCBhcmVhcyBsaWtlIEU4MjBfVFlQRV9S
-RVNFUlZFRCBhcmUgbm90IHByb3Blcmx5IHBhc3NlZCB0aHJvdWdoLgo+ICBUaGlzIGNhdXNlcyBw
-cm9ibGVtcyBsaWtlIGRlc2NyaWJlZCBpbiB0aGUgbmV4dCBwYXRjaC4KPiAKCldoZW4gZG9pbmcg
-a2V4ZWNfZmlsZV9sb2FkLCB0aGUgb2xkIGtlcm5lbCBuZWVkIHRvIHBhc3MgdGhlIGU4MjAgcmVz
-ZXJ2ZWQgcmFuZ2VzCnRvIHRoZSBrZHVtcCBrZXJuZWwuIEJ1dCBrZXJuZWwgY2FuIG5vdCBleGFj
-dGx5IG1hdGNoIHRoZSBlODIwIHJlc2VydmVkIHJhbmdlcyB3aGVuCndhbGtpbmcgdGhyb3VnaCB0
-aGUgaW9tZW0gcmVzb3VyY2VzIHdpdGggdGhlIGRlc2NyaXB0b3IgJ0lPUkVTX0RFU0NfTk9ORScs
-IGJlY2F1c2UKdGhlIGRlc2NyaXB0b3IgJ0lPUkVTX0RFU0NfTk9ORScgY29udGFpbnMgZm91ciBl
-ODIwIHR5cGVzLCBzdWNoIGFzICdFODIwX1RZUEVfUkFNJywKJ0U4MjBfVFlQRV9VTlVTQUJMRScs
-ICdFODIwX1RZUEVfUkVTRVJWRURfS0VSTicsICdFODIwX1RZUEVfUkVTRVJWRUQnLiBJdCBtYXkg
-cGFzcwp0aGVzZSBmb3VyIHR5cGVzIHRvIHRoZSBrZHVtcCBrZXJuZWwsIHRoaXMgaXMgbm90IGRl
-c2lyZWQgcmVzdWx0LgoKUGxlYXNlIHJlZmVyIHRvIHRoaXMgZnVuY3Rpb24gZTgyMF90eXBlX3Rv
-X2lvcmVzX2Rlc2MoKS4gKGFyY2gveDg2L2tlcm5lbC9lODIwLmMpCgo+PiBUaGlzIHBhdGNoIGFk
-ZHMgdGhlIG5ldyBJL08gcmVzb3VyY2UgZGVzY3JpcHRvciAnSU9SRVNfREVTQ19SRVNFUlZFRCcK
-Pj4gZm9yIHRoZSBpb21lbSByZXNvdXJjZXMgc2VhcmNoIGludGVyZmFjZXMuIEl0IGlzIGhlbHBm
-dWwgdG8gZXhhY3RseQo+PiBtYXRjaCB0aGUgcmVzZXJ2ZWQgcmVzb3VyY2UgcmFuZ2VzIHdoZW4g
-d2Fsa2luZyB0aHJvdWdoIGlvbWVtIHJlc291cmNlcy4KPiAKPiBJdCdzIG1vcmUgdGhhbiB0aGF0
-LCB0aG91Z2guICBZb3UncmUgc3BlY2lmaWNhbGx5IHN0b3JpbmcgdGhlIHJlc2VydmVkCj4gYXJl
-YShzKSB3aGVuIHdlIHNlZSB0aGVtIGNvbWUgdGhyb3VnaCB0aGUgZmlybXdhcmUuCj4gCj4+IEZ1
-cnRoZXJtb3JlLCBpbiBvcmRlciB0byBtYWtlIGl0IHN0aWxsIHdvcmsgYWZ0ZXIgdGhlIG5ldyBk
-ZXNjcmlwdG9yCj4+IGlzIGFkZGVkLCB0aGVzZSBjb2RlcyBvcmlnaW5hbGx5IHJlbGF0ZWQgdG8g
-J0lPUkVTX0RFU0NfTk9ORScgaGF2ZQo+PiBiZWVuIHVwZGF0ZWQuCj4gCj4gSXQgd291bGQgYmUg
-bmljZSB0byBleHBsYWluIHdoeSB0aGV5IG5lZWRlZCB0byBiZSB1cGRhdGVkIGFuZCB3aGF0Cj4g
-YnJlYWtzIGlmIHRoZXkgYXJlIG5vdC4KPiAKCklmIHRoZXNlIGNvZGUgcGF0aHMgaGF2ZSBub3Qg
-YmVlbiB1cGRhdGVkLCB0aGUgcmVzZXJ2ZWQgcmVnaW9ucyBkZXNjcmlwdG9yIGlzIHN0aWxsIG1h
-cmtlZAphcyB0aGUgJ0lPUkVTX0RFU0NfTk9ORScgaW5zdGVhZCBvZiAnSU9SRVNfREVTQ19SRVNF
-UlZFRCcsIHRoaXMgaXMgbm90IGNvcnJlY3QgYW5kIGl0IGlzIAphbHNvIGVhc2lseSBjb25mdXNl
-ZC4KCkFuZCBhbHNvIGNhdXNlIHNvbWUgZXJyb3JzLCBzdWNoIGFzIHRoZSBmb2xsb3dpbmcgZnVu
-Y3Rpb24gX19pb3JlbWFwX2NoZWNrX2Rlc2Nfb3RoZXIoKS4KCj4+IGRpZmYgLS1naXQgYS9hcmNo
-L3g4Ni9tbS9pb3JlbWFwLmMgYi9hcmNoL3g4Ni9tbS9pb3JlbWFwLmMKPj4gaW5kZXggNTM3OGQx
-MGYxZDMxLi45MWI2MTEyZTc0ODkgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gveDg2L21tL2lvcmVtYXAu
-Ywo+PiArKysgYi9hcmNoL3g4Ni9tbS9pb3JlbWFwLmMKPj4gQEAgLTgzLDcgKzgzLDE0IEBAIHN0
-YXRpYyBib29sIF9faW9yZW1hcF9jaGVja19yYW0oc3RydWN0IHJlc291cmNlICpyZXMpCj4+ICAK
-Pj4gIHN0YXRpYyBpbnQgX19pb3JlbWFwX2NoZWNrX2Rlc2Nfb3RoZXIoc3RydWN0IHJlc291cmNl
-ICpyZXMpCj4+ICB7Cj4+IC0JcmV0dXJuIChyZXMtPmRlc2MgIT0gSU9SRVNfREVTQ19OT05FKTsK
-Pj4gKwkvKgo+PiArCSAqIFRoZSBFODIwX1RZUEVfUkVTRVJWRUQgd2FzIGNvbnZlcnRlZCB0byB0
-aGUgSU9SRVNfREVTQ19OT05FCj4+ICsJICogYmVmb3JlIHRoZSBuZXcgSU9SRVNfREVTQ19SRVNF
-UlZFRCBpcyBhZGRlZCwgc28gaXQgY29udGFpbmVkCj4+ICsJICogdGhlIGU4MjAgcmVzZXJ2ZWQg
-dHlwZS4gSW4gb3JkZXIgdG8gbWFrZSBpdCBzdGlsbCB3b3JrIGZvcgo+PiArCSAqIFNFViwgaGVy
-ZSBrZWVwIGl0IHRoZSBzYW1lIGFzIGJlZm9yZS4KPj4gKwkgKi8KPj4gKwlyZXR1cm4gKChyZXMt
-PmRlc2MgIT0gSU9SRVNfREVTQ19OT05FKSB8fAo+PiArCQkocmVzLT5kZXNjICE9IElPUkVTX0RF
-U0NfUkVTRVJWRUQpKTsKPj4gIH0KPiAKPiBBZnRlciByZWFkaW5nIHRoZSBjaGFuZ2Vsb2cgYW5k
-IHRoZSBjb21tZW50LCBJIHN0aWxsIGhhdmUgbm8gaWRlYSB3aHkKPiB0aGlzIGh1bmsgaXMgaGVy
-ZS4gIENvdWxkIHlvdSB0cnkgdG8gZXhwbGFpbiBhIGJpdCBtb3JlPwo+IAo+IAoKVGhhbmtzIGZv
-ciB5b3VyIGNvbW1lbnQuCgpXaGF0IGhhcHBlbnMgaWYgd2UgZG9uJ3QgbW9kaWZ5IHRoaXMgZnVu
-Y3Rpb25zIF9faW9yZW1hcF9jaGVja19kZXNjX290aGVyKCk/Ci1XaGVuIFNFViBpcyBhY3RpdmUs
-IGl0IG1pZ2h0IG1hcCB0aGVzZSByZXNlcnZlZCByZWdpb25zIHdpdGggdGhlIGVuY3J5cHRpb24g
-bWFzay4gVGhhdCBpcyBpbmNvcnJlY3QuClRoZXJlZm9yZSwga2VlcCBpdCB0aGUgc2FtZSBhcyBi
-ZWZvcmUgaW4gb3JkZXIgdG8gbWFrZSBpdCBzdGlsbCB3b3JrIGZvciB0aGUgU0VWIGNhc2UuCgoq
-KkJUVyoqOgpJbiB0aGlzIGZ1bmN0aW9uIF9faW9yZW1hcF9jaGVja19kZXNjX290aGVyKCksIGl0
-IHNob3VsZCB1c2UgdGhlICcmJicgb3BlcmF0b3IgaW5zdGVhZCBvZgp0aGUgJ3x8JyBvcGVyYXRv
-ci4gSSBtYWRlIGEgbWlzdGFrZSBpbiB0aGlzIGZ1bmN0aW9uKHNvcnJ5IGZvciB0aGlzKSwgaSB3
-aWxsIGltcHJvdmUgdGhpcwpmdW5jdGlvbiBpbiBwYXRjaCB2OCBhbmQgcG9zdCBhZ2FpbiBsaWtl
-IHRoaXM6CgpzdGF0aWMgaW50IF9faW9yZW1hcF9jaGVja19kZXNjX290aGVyKHN0cnVjdCByZXNv
-dXJjZSAqcmVzKQp7CiAgICByZXR1cm4gKChyZXMtPmRlc2MgIT0gSU9SRVNfREVTQ19OT05FKSAm
-JgogICAgICAgICAgICAocmVzLT5kZXNjICE9IElPUkVTX0RFU0NfUkVTRVJWRUQpKTsKfQoKClJl
-Z2FyZHMsCkxpYW5ibwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On 11/27/18 2:04 AM, lijiang wrote:
+> What happens if we don't modify this functions
+> __ioremap_check_desc_other()? -When SEV is active, it might map these
+> reserved regions with the encryption mask. That is incorrect. 
+
+This is missing another sentence or two to "connect the dots".
+
+SEV uses data that comes from the e820 table to tell whether or not the
+memory should be encrypted?  If we don't reflect these reserved areas in
+the e820 table, the SEV code will set up encrypted mappings for device
+memory, for instance?
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
