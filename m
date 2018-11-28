@@ -1,22 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga14.intel.com ([192.55.52.115])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gS2IQ-0002wI-Jd
- for kexec@lists.infradead.org; Wed, 28 Nov 2018 16:02:40 +0000
-Subject: Re: [PATCH 1/2 RESEND v7] resource: add the new I/O resource
- descriptor 'IORES_DESC_RESERVED'
-References: <20181124051223.19994-1-lijiang@redhat.com>
- <20181124051223.19994-2-lijiang@redhat.com>
- <ae405fe9-94fd-3fb7-decd-c7821cf95b7d@intel.com>
- <460c5552-a48e-3523-275a-7f94d0f08f9b@redhat.com>
- <703ce20d-be09-9b8d-d457-5b002a50dff7@intel.com>
- <d84fbefb-f856-c600-5207-c63f48b1b308@redhat.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Message-ID: <4ff951f6-c1bf-ff98-b70b-a138e54488af@intel.com>
-Date: Wed, 28 Nov 2018 08:02:26 -0800
-MIME-Version: 1.0
-In-Reply-To: <d84fbefb-f856-c600-5207-c63f48b1b308@redhat.com>
-Content-Language: en-US
+ id 1gS2yM-0003WH-MP
+ for kexec@lists.infradead.org; Wed, 28 Nov 2018 16:46:02 +0000
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ wASGeSCY055281
+ for <kexec@lists.infradead.org>; Wed, 28 Nov 2018 11:45:47 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2p1v29rs6g-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 28 Nov 2018 11:45:46 -0500
+Received: from localhost
+ by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Wed, 28 Nov 2018 16:45:44 -0000
+Subject: Re: [PATCH 0/7] add platform/firmware keys support for kernel
+ verification by IMA
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Wed, 28 Nov 2018 11:45:27 -0500
+In-Reply-To: <20181125151500.8298-1-nayna@linux.ibm.com>
+References: <20181125151500.8298-1-nayna@linux.ibm.com>
+Mime-Version: 1.0
+Message-Id: <1543423527.3902.239.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,24 +33,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>, linux-kernel@vger.kernel.org
-Cc: fenghua.yu@intel.com, linux-efi@vger.kernel.org, linux-ia64@vger.kernel.org, bhe@redhat.com, ard.biesheuvel@linaro.org, peterz@infradead.org, x86@kernel.org, kexec@lists.infradead.org, tony.luck@intel.com, dave.hansen@linux.intel.com, mingo@redhat.com, bp@alien8.de, luto@kernel.org, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org
+Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, vgoyal@redhat.com
 
-On 11/27/18 7:51 PM, lijiang wrote:
-> But now, the 'E820_TYPE_RESERVED' type is converted to the descriptor 'IORES_DESC_RESERVED'
-> instead of 'IORES_DESC_NONE', it has been changed and the value of 'mem_flags.desc_other'
-> is equal to 'true'. This is wrong.
-
-Thanks for the improved description of the problem.  Seems to all make
-sense now.
-
-Could you include this in the changelog for the next version?
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgTmF5bmEsCgpPbiBTdW4sIDIwMTgtMTEtMjUgYXQgMjA6NDQgKzA1MzAsIE5heW5hIEphaW4g
+d3JvdGU6Cj4gT24gc2VjdXJlIGJvb3QgZW5hYmxlZCBzeXN0ZW1zLCBhIHZlcmlmaWVkIGtlcm5l
+bCBtYXkgbmVlZCB0byBrZXhlYwo+IGFkZGl0aW9uYWwga2VybmVscy4gRm9yIGV4YW1wbGUsIGl0
+IG1heSBiZSB1c2VkIGFzIGEgYm9vdGxvYWRlciBuZWVkaW5nCj4gdG8ga2V4ZWMgYSB0YXJnZXQg
+a2VybmVsIG9yIGl0IG1heSBuZWVkIHRvIGtleGVjIGEgY3Jhc2hkdW1wIGtlcm5lbC4KPiBJbiBz
+dWNoIGNhc2VzLCBpdCBtYXkgd2FudCB0byB2ZXJpZnkgdGhlIHNpZ25hdHVyZSBvZiB0aGUgbmV4
+dCBrZXJuZWwKPiBpbWFnZS4KPiAKPiBJdCBpcyBwb3NzaWJsZSB0aGF0IHRoZSBuZXcga2VybmVs
+IGltYWdlIGlzIHNpZ25lZCB3aXRoIHRoaXJkIHBhcnR5IGtleXMKPiB3aGljaCBhcmUgc3RvcmVk
+IGFzIHBsYXRmb3JtIG9yIGZpcm13YXJlIGtleXMgaW4gdGhlICdkYicgdmFyaWFibGUuIFRoZQo+
+IGtlcm5lbCwgaG93ZXZlciwgY2FuIG5vdCBkaXJlY3RseSB2ZXJpZnkgdGhlc2UgcGxhdGZvcm0g
+a2V5cywgYW5kIGFuCj4gYWRtaW5pc3RyYXRvciBtYXkgdGhlcmVmb3JlIG5vdCB3YW50IHRvIHRy
+dXN0IHRoZW0gZm9yIGFyYml0cmFyeSB1c2FnZS4KPiBJbiBvcmRlciB0byBkaWZmZXJlbnRpYXRl
+IHBsYXRmb3JtIGtleXMgZnJvbSBvdGhlciBrZXlzIGFuZCBwcm92aWRlIHRoZQo+IG5lY2Vzc2Fy
+eSBzZXBhcmF0aW9uIG9mIHRydXN0IHRoZSBrZXJuZWwgbmVlZHMgYW4gYWRkaXRpb25hbCBrZXly
+aW5nIHRvCj4gc3RvcmUgcGxhdGZvcm0vZmlybXdhcmUga2V5cy4KPiAKPiBUaGUgc2VjdXJlIGJv
+b3Qga2V5IGRhdGFiYXNlIGlzIGV4cGVjdGVkIHRvIHN0b3JlIHRoZSBrZXlzIGFzIEVGSQo+IFNp
+Z25hdHVyZSBMaXN0KEVTTCkuIFRoZSBwYXRjaCBzZXQgdXNlcyBEYXZpZCBIb3dlbGxzIGFuZCBK
+b3NoIEJveWVyJ3MKPiBwYXRjaCB0byBhY2Nlc3MgYW5kIHBhcnNlIHRoZSBFU0wgdG8gZXh0cmFj
+dCB0aGUgY2VydGlmaWNhdGVzIGFuZCBsb2FkCj4gdGhlbSBvbnRvIHRoZSBwbGF0Zm9ybSBrZXly
+aW5nLgo+IAo+IFRoZSBsYXN0IHBhdGNoIGluIHRoaXMgcGF0Y2ggc2V0IGFkZHMgc3VwcG9ydCBm
+b3IgSU1BLWFwcHJhaXNhbCB0bwo+IHZlcmlmeSB0aGUga2V4ZWMnZWQga2VybmVsIGltYWdlIGJh
+c2VkIG9uIGtleXMgc3RvcmVkIGluIHRoZSBwbGF0Zm9ybQo+IGtleXJpbmcuCj4gCj4gQ2hhbmdl
+bG9nOgo+IAo+IHYwOgo+IC0gVGhlIG9yaWdpbmFsIHBhdGNoZXMgbG9hZGVkIHRoZSBjZXJ0aWZp
+Y2F0ZXMgb250byB0aGUgc2Vjb25kYXJ5Cj4gICB0cnVzdGVkIGtleXJpbmcuIFRoaXMgcGF0Y2gg
+c2V0IGRlZmluZXMgYSBuZXcga2V5cmluZyBuYW1lZAo+ICAgIi5wbGF0Zm9ybSIgYW5kIGFkZHMg
+dGhlIGNlcnRpZmljYXRlcyB0byB0aGlzIG5ldyBrZXlyaW5nICAKPiAtIHJlbW92ZWQgQ09ORklH
+IEVGSV9TSUdOQVRVUkVfTElTVF9QQVJTRVIgYW5kIExPQURfVUVGSV9LRVlTCj4gLSBtb3ZlZCBm
+aWxlcyBmcm9tIGNlcnRzLyB0byBzZWN1cml0eS9pbnRlZ3JpdHkvcGxhdGZvcm1fY2VydHMvCgpU
+aGlzIHBhdGNoIHNldCBpcyBsb29raW5nIHJlYWxseSBnb29kISDCoFRoZXJlIGFyZSBhIGNvdXBs
+ZSBvZgpjaGVja3BhdGNoLnBsIHdhcm5pbmdzIHRoYXQgbmVlZCB0byBiZSBhZGRyZXNzZWQgYmVm
+b3JlIHRoZXNlIHBhdGNoZXMKY2FuIGJlIHVwc3RyZWFtZWQuIMKgSSdkIGFsc28gbGlrZSB0byBz
+ZWUgc29tZSBSZXZpZXdzL0Fja3MgZm9yIHRoZW0gYXMKd2VsbC4KCkZvciB0aGUgdGltZSBiZWlu
+ZyB0aGVzZSBwYXRjaGVzIGFyZSBxdWV1ZWQgaW4gdGhlICNuZXh0LWludGVncml0eS0KcXVldWVk
+IGJyYW5jaC4KCmh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0
+L3pvaGFyL2xpbnV4LWludGVncml0eS4KZ2l0LwoKdGhhbmtzIQoKTWltaQoKPiAKPiBEYXZlIEhv
+d2VsbHMgKDIpOgo+ICAgZWZpOiBBZGQgRUZJIHNpZ25hdHVyZSBkYXRhIHR5cGVzCj4gICBlZmk6
+IEFkZCBhbiBFRkkgc2lnbmF0dXJlIGJsb2IgcGFyc2VyCj4gCj4gSm9zaCBCb3llciAoMik6Cj4g
+ICBlZmk6IEltcG9ydCBjZXJ0aWZpY2F0ZXMgZnJvbSBVRUZJIFNlY3VyZSBCb290Cj4gICBlZmk6
+IEFsbG93IHRoZSAiZGIiIFVFRkkgdmFyaWFibGUgdG8gYmUgc3VwcHJlc3NlZAo+IAo+IE5heW5h
+IEphaW4gKDMpOgo+ICAgaW50ZWdyaXR5OiBkZWZpbmUgYSB0cnVzdGVkIHBsYXRmb3JtIGtleXJp
+bmcKPiAgIGludGVncml0eTogbG9hZCBjZXJ0cyB0byB0aGUgcGxhdGZvcm0ga2V5cmluZwo+ICAg
+aW1hOiBzdXBwb3J0IHBsYXRmb3JtIGtleXJpbmcgZm9yIGtlcm5lbCBhcHByYWlzYWwKPiAKPiAg
+aW5jbHVkZS9saW51eC9lZmkuaCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMzQg
+KysrKwo+ICBzZWN1cml0eS9pbnRlZ3JpdHkvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAg
+ICB8ICAxMSArKwo+ICBzZWN1cml0eS9pbnRlZ3JpdHkvTWFrZWZpbGUgICAgICAgICAgICAgICAg
+ICAgICAgICB8ICAgNSArCj4gIHNlY3VyaXR5L2ludGVncml0eS9kaWdzaWcuYyAgICAgICAgICAg
+ICAgICAgICAgICAgIHwgMTE1ICsrKysrKysrLS0tLQo+ICBzZWN1cml0eS9pbnRlZ3JpdHkvaW1h
+L2ltYV9hcHByYWlzZS5jICAgICAgICAgICAgICB8ICAxMSArLQo+ICBzZWN1cml0eS9pbnRlZ3Jp
+dHkvaW50ZWdyaXR5LmggICAgICAgICAgICAgICAgICAgICB8ICAyMyArKy0KPiAgc2VjdXJpdHkv
+aW50ZWdyaXR5L3BsYXRmb3JtX2NlcnRzL2VmaV9wYXJzZXIuYyAgICAgfCAxMTIgKysrKysrKysr
+KysrCj4gIHNlY3VyaXR5L2ludGVncml0eS9wbGF0Zm9ybV9jZXJ0cy9sb2FkX3VlZmkuYyAgICAg
+IHwgMTkyICsrKysrKysrKysrKysrKysrKysrKwo+ICAuLi4vaW50ZWdyaXR5L3BsYXRmb3JtX2Nl
+cnRzL3BsYXRmb3JtX2tleXJpbmcuYyAgICB8ICA2MiArKysrKysrCj4gIDkgZmlsZXMgY2hhbmdl
+ZCwgNTI3IGluc2VydGlvbnMoKyksIDM4IGRlbGV0aW9ucygtKQo+ICBjcmVhdGUgbW9kZSAxMDA2
+NDQgc2VjdXJpdHkvaW50ZWdyaXR5L3BsYXRmb3JtX2NlcnRzL2VmaV9wYXJzZXIuYwo+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgc2VjdXJpdHkvaW50ZWdyaXR5L3BsYXRmb3JtX2NlcnRzL2xvYWRfdWVm
+aS5jCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBzZWN1cml0eS9pbnRlZ3JpdHkvcGxhdGZvcm1fY2Vy
+dHMvcGxhdGZvcm1fa2V5cmluZy5jCj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
