@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 28 Nov 2018 09:57:54 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2] x86_64, vmcoreinfo: Append 'page_offset_base' to
- vmcoreinfo
-Message-ID: <20181128015754.GI1824@MiWiFi-R3L-srv>
-References: <1542318469-13699-1-git-send-email-bhsharma@redhat.com>
- <20181121113944.GD27797@zn.tnic>
- <CAGXu5jKYxgLPD4YonGSXjECJS=c18rxWmuFC1eeUJK9fLeTxcg@mail.gmail.com>
- <20181127232916.GG1824@MiWiFi-R3L-srv>
- <CAGXu5jJzVMmqJ9JvFqDhDx=QShiWisWO0bY49cD5r-7By5dxFg@mail.gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gRqsz-0004HZ-3X
+ for kexec@lists.infradead.org; Wed, 28 Nov 2018 03:51:38 +0000
+Subject: Re: [PATCH 1/2 RESEND v7] resource: add the new I/O resource
+ descriptor 'IORES_DESC_RESERVED'
+References: <20181124051223.19994-1-lijiang@redhat.com>
+ <20181124051223.19994-2-lijiang@redhat.com>
+ <ae405fe9-94fd-3fb7-decd-c7821cf95b7d@intel.com>
+ <460c5552-a48e-3523-275a-7f94d0f08f9b@redhat.com>
+ <703ce20d-be09-9b8d-d457-5b002a50dff7@intel.com>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <d84fbefb-f856-c600-5207-c63f48b1b308@redhat.com>
+Date: Wed, 28 Nov 2018 11:51:03 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAGXu5jJzVMmqJ9JvFqDhDx=QShiWisWO0bY49cD5r-7By5dxFg@mail.gmail.com>
+In-Reply-To: <703ce20d-be09-9b8d-d457-5b002a50dff7@intel.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,31 +24,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kees Cook <keescook@chromium.org>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, James Morse <james.morse@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, X86 ML <x86@kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave Anderson <anderson@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Omar Sandoval <osandov@fb.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org
+Cc: fenghua.yu@intel.com, linux-efi@vger.kernel.org, linux-ia64@vger.kernel.org, bhe@redhat.com, ard.biesheuvel@linaro.org, peterz@infradead.org, x86@kernel.org, kexec@lists.infradead.org, tony.luck@intel.com, dave.hansen@linux.intel.com, mingo@redhat.com, bp@alien8.de, luto@kernel.org, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On 11/27/18 at 04:39pm, Kees Cook wrote:
-> >> >> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> >> >> index 4c8acdfdc5a7..6161d77c5bfb 100644
-> >> >> --- a/arch/x86/kernel/machine_kexec_64.c
-> >> >> +++ b/arch/x86/kernel/machine_kexec_64.c
-> >> >> @@ -356,6 +356,9 @@ void arch_crash_save_vmcoreinfo(void)
-> >> >>       VMCOREINFO_SYMBOL(init_top_pgt);
-> >> >>       vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
-> >> >>                       pgtable_l5_enabled());
-> >> >> +#ifdef CONFIG_RANDOMIZE_BASE
-> 
-> Okay, gotcha. In that case, shouldn't this be CONFIG_RANDOMIZE_MEMORY?
-
-And yes, if we only care about KASLR, it should be
-CONFIG_RANDOMIZE_MEMORY, but not CONFIG_RANDOMIZE_BASE.
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMeaciDI35pelIDIzOjM0LCBEYXZlIEhhbnNlbiDlhpnpgZM6Cj4gT24gMTEv
+MjcvMTggMjowNCBBTSwgbGlqaWFuZyB3cm90ZToKPj4gV2hhdCBoYXBwZW5zIGlmIHdlIGRvbid0
+IG1vZGlmeSB0aGlzIGZ1bmN0aW9ucwo+PiBfX2lvcmVtYXBfY2hlY2tfZGVzY19vdGhlcigpPyAt
+V2hlbiBTRVYgaXMgYWN0aXZlLCBpdCBtaWdodCBtYXAgdGhlc2UKPj4gcmVzZXJ2ZWQgcmVnaW9u
+cyB3aXRoIHRoZSBlbmNyeXB0aW9uIG1hc2suIFRoYXQgaXMgaW5jb3JyZWN0LiAKPiAKPiBUaGlz
+IGlzIG1pc3NpbmcgYW5vdGhlciBzZW50ZW5jZSBvciB0d28gdG8gImNvbm5lY3QgdGhlIGRvdHMi
+Lgo+IAo+IFNFViB1c2VzIGRhdGEgdGhhdCBjb21lcyBmcm9tIHRoZSBlODIwIHRhYmxlIHRvIHRl
+bGwgd2hldGhlciBvciBub3QgdGhlCj4gbWVtb3J5IHNob3VsZCBiZSBlbmNyeXB0ZWQ/ICBJZiB3
+ZSBkb24ndCByZWZsZWN0IHRoZXNlIHJlc2VydmVkIGFyZWFzIGluCj4gdGhlIGU4MjAgdGFibGUs
+IHRoZSBTRVYgY29kZSB3aWxsIHNldCB1cCBlbmNyeXB0ZWQgbWFwcGluZ3MgZm9yIGRldmljZQo+
+IG1lbW9yeSwgZm9yIGluc3RhbmNlPwo+IAoKRm9yIHRoZSBjb252ZW5pZW5jZSBvZiBkZXNjcmlw
+dGlvbiwgaGVyZSBjb3B5IHNvbWUgY29kZSBmcmFnbWVudHMgYW5kIHB1dCB0aGVtIGF0IHRoZSBl
+bmQuClBsZWFzZSByZWZlciB0byB0aGVzZSBjb2Rlcy4KCldoZW4gdGhlIFNFViBpcyBhY3RpdmUs
+IHRoZSBwYWdlIGJlaW5nIG1hcHBlZCB3aWxsIGRldGVybWluZSB3aGV0aGVyIHRvIHVzZSB0aGUg
+bWVtb3J5CmVuY3J5cHRpb24gYXR0cmlidXRlIGZvciBtYXBwaW5nIGJhc2VkIG9uIHRoZSAnbWVt
+X2ZsYWdzLmRlc2Nfb3RoZXInLgoKQnV0IHRoZSB2YWx1ZSBvZiAnbWVtX2ZsYWdzLmRlc2Nfb3Ro
+ZXInIGlzIHNldCBhY2NvcmRpbmcgdG8gdGhlIHJldHVybmVkIHJlc3VsdCBvZiB0aGlzCmZ1bmN0
+aW9uIF9faW9yZW1hcF9jaGVja19kZXNjX290aGVyKCkuCgpPcmlnaW5hbGx5LCB0aGUgJ0U4MjBf
+VFlQRV9SRVNFUlZFRCcgdHlwZSBpcyBjb252ZXJ0ZWQgdG8gdGhlIGRlc2NyaXB0b3IgJ0lPUkVT
+X0RFU0NfTk9ORScsCnRoZXJlZm9yZSwgZm9yIHRoZSBlODIwIHJlc2VydmVkIHR5cGUsIHRoZSB2
+YWx1ZSBvZiAnbWVtX2ZsYWdzLmRlc2Nfb3RoZXInIGlzIGVxdWFsIHRvCidmYWxzZScuCgpCdXQg
+bm93LCB0aGUgJ0U4MjBfVFlQRV9SRVNFUlZFRCcgdHlwZSBpcyBjb252ZXJ0ZWQgdG8gdGhlIGRl
+c2NyaXB0b3IgJ0lPUkVTX0RFU0NfUkVTRVJWRUQnCmluc3RlYWQgb2YgJ0lPUkVTX0RFU0NfTk9O
+RScsIGl0IGhhcyBiZWVuIGNoYW5nZWQgYW5kIHRoZSB2YWx1ZSBvZiAnbWVtX2ZsYWdzLmRlc2Nf
+b3RoZXInCmlzIGVxdWFsIHRvICd0cnVlJy4gVGhpcyBpcyB3cm9uZy4KClNvIHRoYXQgd291bGQg
+YmUgbmljZSB0byBrZWVwIGl0IHRoZSBzYW1lIGFzIGJlZm9yZSwgdGhhdCBpcyB0byBzYXksIHRo
+aXMgZnVuY3Rpb24gaGFzIHRvCmJlIGltcHJvdmVkIGxpa2UgdGhpcy4Kc3RhdGljIGludCBfX2lv
+cmVtYXBfY2hlY2tfZGVzY19vdGhlcihzdHJ1Y3QgcmVzb3VyY2UgKnJlcykKewogICAgcmV0dXJu
+ICgocmVzLT5kZXNjICE9IElPUkVTX0RFU0NfTk9ORSkgJiYKICAgICAgICAgICAgKHJlcy0+ZGVz
+YyAhPSBJT1JFU19ERVNDX1JFU0VSVkVEKSk7Cn0KCgpQbGVhc2UgbG9vayBhdCB0aGUgZm9sbG93
+aW5nIGZ1bmN0aW9uIF9faW9yZW1hcF9jYWxsZXIoKSwgYW5kIGFsc28gbGlzdCB0aGUgY2FsbCB0
+cmFjZSBwYXRoLgoKQ2FsbCB0cmFjZSBwYXRoOgogICBfX2lvcmVtYXBfY2FsbGVyKCktPgpfX2lv
+cmVtYXBfY2hlY2tfbWVtKCktPgogICAgICAgd2Fsa19tZW1fcmVzKCktPgpfX2lvcmVtYXBfcmVz
+X2NoZWNrKCktPiAKX19pb3JlbWFwX2NoZWNrX2Rlc2Nfb3RoZXIoKQoKc3RhdGljIHZvaWQgX19p
+b21lbSAqX19pb3JlbWFwX2NhbGxlcihyZXNvdXJjZV9zaXplX3QgcGh5c19hZGRyLAogICAgICAg
+ICAgICAgICAgdW5zaWduZWQgbG9uZyBzaXplLCBlbnVtIHBhZ2VfY2FjaGVfbW9kZSBwY20sCiAg
+ICAgICAgICAgICAgICB2b2lkICpjYWxsZXIsIGJvb2wgZW5jcnlwdGVkKQp7CiAgICAgICAgdW5z
+aWduZWQgbG9uZyBvZmZzZXQsIHZhZGRyOwogICAgICAgIHJlc291cmNlX3NpemVfdCBsYXN0X2Fk
+ZHI7CiAgICAgICAgY29uc3QgcmVzb3VyY2Vfc2l6ZV90IHVuYWxpZ25lZF9waHlzX2FkZHIgPSBw
+aHlzX2FkZHI7CiAgICAgICAgY29uc3QgdW5zaWduZWQgbG9uZyB1bmFsaWduZWRfc2l6ZSA9IHNp
+emU7CiAgICAgICAgc3RydWN0IGlvcmVtYXBfbWVtX2ZsYWdzIG1lbV9mbGFnczsKCgkvKiBza2lw
+IHNvbWUgY29kZXMuLi4qLwoKICAgICAgICBfX2lvcmVtYXBfY2hlY2tfbWVtKHBoeXNfYWRkciwg
+c2l6ZSwgJm1lbV9mbGFncyk7CgoJLyogc2tpcCBzb21lIGNvZGVzLi4uKi8KCgkvKgogICAgICAg
+ICAqIElmIHRoZSBwYWdlIGJlaW5nIG1hcHBlZCBpcyBpbiBtZW1vcnkgYW5kIFNFViBpcyBhY3Rp
+dmUgdGhlbgogICAgICAgICAqIG1ha2Ugc3VyZSB0aGUgbWVtb3J5IGVuY3J5cHRpb24gYXR0cmli
+dXRlIGlzIGVuYWJsZWQgaW4gdGhlCiAgICAgICAgICogcmVzdWx0aW5nIG1hcHBpbmcuCiAgICAg
+ICAgICovCiAgICAgICAgcHJvdCA9IFBBR0VfS0VSTkVMX0lPOwogICAgICAgIGlmICgoc2V2X2Fj
+dGl2ZSgpICYmIG1lbV9mbGFncy5kZXNjX290aGVyKSB8fCBlbmNyeXB0ZWQpCiAgICAgICAgICAg
+ICAgICBwcm90ID0gcGdwcm90X2VuY3J5cHRlZChwcm90KTsKCgkvKiBza2lwIHNvbWUgY29kZXMu
+Li4qLwp9CgpUaGFua3MuCkxpYW5ibwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
