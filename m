@@ -1,15 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 28 Nov 2018 07:29:16 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2] x86_64, vmcoreinfo: Append 'page_offset_base' to
- vmcoreinfo
-Message-ID: <20181127232916.GG1824@MiWiFi-R3L-srv>
+Received: from mail-yb1-xb43.google.com ([2607:f8b0:4864:20::b43])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gRntd-0008G1-Lx
+ for kexec@lists.infradead.org; Wed, 28 Nov 2018 00:40:07 +0000
+Received: by mail-yb1-xb43.google.com with SMTP id p144-v6so9894512yba.11
+ for <kexec@lists.infradead.org>; Tue, 27 Nov 2018 16:39:56 -0800 (PST)
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com.
+ [209.85.219.173])
+ by smtp.gmail.com with ESMTPSA id l9sm2096341ywc.81.2018.11.27.16.39.52
+ for <kexec@lists.infradead.org>
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Tue, 27 Nov 2018 16:39:52 -0800 (PST)
+Received: by mail-yb1-f173.google.com with SMTP id u103-v6so9914040ybi.5
+ for <kexec@lists.infradead.org>; Tue, 27 Nov 2018 16:39:52 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <20181127232916.GG1824@MiWiFi-R3L-srv>
 References: <1542318469-13699-1-git-send-email-bhsharma@redhat.com>
  <20181121113944.GD27797@zn.tnic>
  <CAGXu5jKYxgLPD4YonGSXjECJS=c18rxWmuFC1eeUJK9fLeTxcg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAGXu5jKYxgLPD4YonGSXjECJS=c18rxWmuFC1eeUJK9fLeTxcg@mail.gmail.com>
+ <20181127232916.GG1824@MiWiFi-R3L-srv>
+From: Kees Cook <keescook@chromium.org>
+Date: Tue, 27 Nov 2018 16:39:50 -0800
+Message-ID: <CAGXu5jJzVMmqJ9JvFqDhDx=QShiWisWO0bY49cD5r-7By5dxFg@mail.gmail.com>
+Subject: Re: [PATCH v2] x86_64,
+ vmcoreinfo: Append 'page_offset_base' to vmcoreinfo
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,65 +36,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kees Cook <keescook@chromium.org>
+To: Baoquan He <bhe@redhat.com>
 Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, James Morse <james.morse@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, X86 ML <x86@kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave Anderson <anderson@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Omar Sandoval <osandov@fb.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-On 11/27/18 at 02:16pm, Kees Cook wrote:
-> Why is KERNELOFFSET= not sufficient?
-> 
-> See commit b6085a865762 ("x86, kaslr: export offset in VMCOREINFO ELF notes")
-> 
-> +       vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
-> +                             (unsigned long)&_text - __START_KERNEL);
+On Tue, Nov 27, 2018 at 3:29 PM, Baoquan He <bhe@redhat.com> wrote:
+> On 11/27/18 at 02:16pm, Kees Cook wrote:
+>> Why is KERNELOFFSET= not sufficient?
+>>
+>> See commit b6085a865762 ("x86, kaslr: export offset in VMCOREINFO ELF notes")
+>>
+>> +       vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
+>> +                             (unsigned long)&_text - __START_KERNEL);
+>
+> KERNELOFFSET is virtual address delta after kernel text KASLR, namely
+> the offset from the original default kernel text virtual address,
+> 0xffffffff88000000.
+>
+> While after memory region KASLR in kernel_randomize_memory(), the
+> starting address of the direct mapping of physical memory, PAGE_OFFSET,
+> is changed too. We need get it to analyze memory in makedumpfile/crash.
+> Currently we deduce it from elf program segment of kcore:
+> Program Headers:
+>   Type           Offset             VirtAddr           PhysAddr
+>                  FileSiz            MemSiz              Flags  Align
+> ......
+>
+>   LOAD           0x00000a62c0004000 0xffff8a62c0001000 0x0000000000001000
+>                  0x000000000009c000 0x000000000009c000  RWE    1000
+>
+> page_offset = 0xffff8a62c0001000 - 0x0000000000001000;
+> Since we put the direct mapping segments at the bottom part of kcore, we
+> can always get page_offset right.
+>
+> Thanks
+> Baoquan
+>
+>>
+>> -Kees
+>>
+>> >> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+>> >> index 4c8acdfdc5a7..6161d77c5bfb 100644
+>> >> --- a/arch/x86/kernel/machine_kexec_64.c
+>> >> +++ b/arch/x86/kernel/machine_kexec_64.c
+>> >> @@ -356,6 +356,9 @@ void arch_crash_save_vmcoreinfo(void)
+>> >>       VMCOREINFO_SYMBOL(init_top_pgt);
+>> >>       vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
+>> >>                       pgtable_l5_enabled());
+>> >> +#ifdef CONFIG_RANDOMIZE_BASE
 
-KERNELOFFSET is virtual address delta after kernel text KASLR, namely
-the offset from the original default kernel text virtual address,
-0xffffffff88000000.
+Okay, gotcha. In that case, shouldn't this be CONFIG_RANDOMIZE_MEMORY?
 
-While after memory region KASLR in kernel_randomize_memory(), the
-starting address of the direct mapping of physical memory, PAGE_OFFSET,
-is changed too. We need get it to analyze memory in makedumpfile/crash.
-Currently we deduce it from elf program segment of kcore:
-Program Headers:
-  Type           Offset             VirtAddr           PhysAddr
-                 FileSiz            MemSiz              Flags  Align
-......
+-Kees
 
-  LOAD           0x00000a62c0004000 0xffff8a62c0001000 0x0000000000001000
-                 0x000000000009c000 0x000000000009c000  RWE    1000
+>> >> +     VMCOREINFO_NUMBER(page_offset_base);
+>> >> +#endif
+>> >>
+>> >>  #ifdef CONFIG_NUMA
+>> >>       VMCOREINFO_SYMBOL(node_data);
+>>
+>> --
+>> Kees Cook
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
 
-page_offset = 0xffff8a62c0001000 - 0x0000000000001000;
-Since we put the direct mapping segments at the bottom part of kcore, we
-can always get page_offset right.
 
-Thanks
-Baoquan
 
-> 
-> -Kees
-> 
-> >> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> >> index 4c8acdfdc5a7..6161d77c5bfb 100644
-> >> --- a/arch/x86/kernel/machine_kexec_64.c
-> >> +++ b/arch/x86/kernel/machine_kexec_64.c
-> >> @@ -356,6 +356,9 @@ void arch_crash_save_vmcoreinfo(void)
-> >>       VMCOREINFO_SYMBOL(init_top_pgt);
-> >>       vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
-> >>                       pgtable_l5_enabled());
-> >> +#ifdef CONFIG_RANDOMIZE_BASE
-> >> +     VMCOREINFO_NUMBER(page_offset_base);
-> >> +#endif
-> >>
-> >>  #ifdef CONFIG_NUMA
-> >>       VMCOREINFO_SYMBOL(node_data);
-> 
-> -- 
-> Kees Cook
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+-- 
+Kees Cook
 
 _______________________________________________
 kexec mailing list
