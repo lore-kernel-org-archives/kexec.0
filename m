@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gSHP5-0001bh-T5
- for kexec@lists.infradead.org; Thu, 29 Nov 2018 08:10:33 +0000
+ id 1gSHPi-0001qB-Qd
+ for kexec@lists.infradead.org; Thu, 29 Nov 2018 08:11:12 +0000
 From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 0/2 v8] add reserved e820 ranges to the kdump kernel e820 table
-Date: Thu, 29 Nov 2018 16:09:54 +0800
-Message-Id: <20181129080956.20776-1-lijiang@redhat.com>
+Subject: [PATCH 2/2 v8] x86/kexec_file: add reserved e820 ranges to kdump
+ kernel e820 table
+Date: Thu, 29 Nov 2018 16:09:56 +0800
+Message-Id: <20181129080956.20776-3-lijiang@redhat.com>
+In-Reply-To: <20181129080956.20776-1-lijiang@redhat.com>
+References: <20181129080956.20776-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,30 +25,6 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: fenghua.yu@intel.com, linux-efi@vger.kernel.org, linux-ia64@vger.kernel.org, bhe@redhat.com, ard.biesheuvel@linaro.org, peterz@infradead.org, x86@kernel.org, kexec@lists.infradead.org, tony.luck@intel.com, dave.hansen@linux.intel.com, mingo@redhat.com, bp@alien8.de, luto@kernel.org, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
-
-This patchset did two things:
-a). add a new I/O resource descriptor 'IORES_DESC_RESERVED'
-
-When doing kexec_file_load, the first kernel needs to pass the e820
-reserved ranges to the second kernel. But kernel can not exactly
-match the e820 reserved ranges when walking through the iomem resources
-with the descriptor 'IORES_DESC_NONE', because several e820 types(
-e.g. E820_TYPE_RESERVED_KERN/E820_TYPE_RAM/E820_TYPE_UNUSABLE/E820
-_TYPE_RESERVED) are converted to the descriptor 'IORES_DESC_NONE'. It
-may pass these four types to the kdump kernel, that is not desired result.
-
-So, this patch adds a new I/O resource descriptor 'IORES_DESC_RESERVED'
-for the iomem resources search interfaces. It is helpful to exactly
-match the reserved resource ranges when walking through iomem resources.
-
-In addition, since the new descriptor 'IORES_DESC_RESERVED' is introduced,
-these code originally related to the descriptor 'IORES_DESC_NONE' need to
-be updated. Otherwise, it will be easily confused and also cause some
-errors. Because the 'E820_TYPE_RESERVED' type is converted to the new
-descriptor 'IORES_DESC_RESERVED' instead of 'IORES_DESC_NONE', it has been
-changed.
-
-b). add the e820 reserved ranges to kdump kernel e820 table
 
 At present, when use the kexec_file_load syscall to load the kernel image
 and initramfs(for example: kexec -s -p xxx), kernel does not pass the e820
@@ -77,52 +56,29 @@ considered as encrypted, it goes wrong.
 The e820 reserved range is useful in kdump kernel, so it is necessary to
 pass the e820 reserved ranges to kdump kernel.
 
-Changes since v1:
-1. Modified the value of flags to "0", when walking through the whole
-tree for e820 reserved ranges.
+Suggested-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+---
+ arch/x86/kernel/crash.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Changes since v2:
-1. Modified the value of flags to "0", when walking through the whole
-tree for e820 reserved ranges.
-2. Modified the invalid SOB chain issue.
-
-Changes since v3:
-1. Dropped [PATCH 1/3 v3] resource: fix an error which walks through iomem
-   resources. Please refer to this commit <010a93bf97c7> "resource: Fix
-   find_next_iomem_res() iteration issue"
-
-Changes since v4:
-1. Improve the patch log, and add kernel log.
-
-Changes since v5:
-1. Rewrite these patches log.
-
-Changes since v6:
-1. Modify the [PATCH 1/2], and add the new I/O resource descriptor
-   'IORES_DESC_RESERVED' for the iomem resources search interfaces,
-   and also updates these codes relates to 'IORES_DESC_NONE'.
-2. Modify the [PATCH 2/2], and walk through io resource based on the
-   new descriptor 'IORES_DESC_RESERVED'.
-3. Update patch log.
-
-Changes since v7:
-1. Improve patch log.
-2. Improve this function __ioremap_check_desc_other().
-3. Modify code comment in the __ioremap_check_desc_other()
-
-
-Lianbo Jiang (2):
-  resource: add the new I/O resource descriptor 'IORES_DESC_RESERVED'
-  x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
-
- arch/ia64/kernel/efi.c  |  4 ++++
- arch/x86/kernel/crash.c |  6 ++++++
- arch/x86/kernel/e820.c  |  2 +-
- arch/x86/mm/ioremap.c   | 13 ++++++++++++-
- include/linux/ioport.h  |  1 +
- kernel/resource.c       |  6 +++---
- 6 files changed, 27 insertions(+), 5 deletions(-)
-
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index f631a3f15587..5354a84f1684 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -380,6 +380,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
+ 			memmap_entry_callback);
+ 
++	/* Add e820 reserved ranges */
++	cmd.type = E820_TYPE_RESERVED;
++	flags = IORESOURCE_MEM;
++	walk_iomem_res_desc(IORES_DESC_RESERVED, flags, 0, -1, &cmd,
++			   memmap_entry_callback);
++
+ 	/* Add crashk_low_res region */
+ 	if (crashk_low_res.end) {
+ 		ei.addr = crashk_low_res.start;
 -- 
 2.17.1
 
