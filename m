@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gTI82-0001MB-DJ
- for kexec@lists.infradead.org; Sun, 02 Dec 2018 03:09:08 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 1/2 v2] kdump: add the vmcoreinfo documentation
-Date: Sun,  2 Dec 2018 11:08:38 +0800
-Message-Id: <20181202030839.29945-2-lijiang@redhat.com>
-In-Reply-To: <20181202030839.29945-1-lijiang@redhat.com>
+ id 1gTppq-0005Bn-I1
+ for kexec@lists.infradead.org; Mon, 03 Dec 2018 15:08:36 +0000
+Date: Mon, 3 Dec 2018 16:08:09 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/2 v2] kdump: add the vmcoreinfo documentation
+Message-ID: <20181203150809.GA4794@zn.tnic>
 References: <20181202030839.29945-1-lijiang@redhat.com>
+ <20181202030839.29945-2-lijiang@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20181202030839.29945-2-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,435 +20,225 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: Lianbo Jiang <lijiang@redhat.com>
+Cc: linux-doc@vger.kernel.org, bhe@redhat.com, Jonathan Corbet <corbet@lwn.net>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-This document lists some variables that export to vmcoreinfo, and briefly
-describles what these variables indicate. It should be instructive for
-many people who do not know the vmcoreinfo, and it also normalizes the
-exported variable as a standard ABI between kernel and use-space.
+Add some more Ccs.
 
-Suggested-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- Documentation/kdump/vmcoreinfo.txt | 400 +++++++++++++++++++++++++++++
- 1 file changed, 400 insertions(+)
- create mode 100644 Documentation/kdump/vmcoreinfo.txt
+On Sun, Dec 02, 2018 at 11:08:38AM +0800, Lianbo Jiang wrote:
+> This document lists some variables that export to vmcoreinfo, and briefly
+> describles what these variables indicate. It should be instructive for
+> many people who do not know the vmcoreinfo, and it also normalizes the
+> exported variable as a standard ABI between kernel and use-space.
 
-diff --git a/Documentation/kdump/vmcoreinfo.txt b/Documentation/kdump/vmcoreinfo.txt
-new file mode 100644
-index 000000000000..c6759be14af7
---- /dev/null
-+++ b/Documentation/kdump/vmcoreinfo.txt
-@@ -0,0 +1,400 @@
-+================================================================
-+		Documentation for Vmcoreinfo
-+================================================================
-+
-+=======================
-+What is the vmcoreinfo?
-+=======================
-+The vmcoreinfo contains the first kernel's various information, for
-+example, structure size, page size, symbol values and field offset,
-+etc. These data are encapsulated into an elf format, and these data
-+will also help user-space tools(e.g. makedumpfile, crash) analyze the
-+first kernel's memory usage.
-+
-+================
-+Common variables
-+================
-+
-+init_uts_ns.name.release
-+========================
-+The number of OS release.
-+
-+PAGE_SIZE
-+=========
-+The size of a page. It is usually 4k bytes.
-+
-+init_uts_ns
-+===========
-+This is the UTS namespace, which is used to isolate two specific elements
-+of the system that relate to the uname system call. The UTS namespace is
-+named after the data structure used to store information returned by the
-+uname system call.
-+
-+node_online_map
-+===============
-+It is a macro definition, actually it is an arrary node_states[N_ONLINE],
-+and it represents the set of online node in a system, one bit position
-+per node number.
-+
-+swapper_pg_dir
-+=============
-+It is always an array, it gerenally stands for the pgd for the kernel.
-+When mmu is enabled in config file, the 'swapper_pg_dir' is valid.
-+
-+_stext
-+======
-+It is an assemble directive that defines the beginning of the text section.
-+In gerenal, the '_stext' indicates the kernel start address.
-+
-+vmap_area_list
-+==============
-+It stores the virtual area list, makedumpfile can get the vmalloc start
-+value according to this variable.
-+
-+mem_map
-+=======
-+Physical addresses are translated to struct pages by treating them as an
-+index into the mem_map array. Shifting a physical address PAGE_SHIFT bits
-+to the right will treat it as a PFN from physical address 0, which is also
-+an index within the mem_map array.
-+
-+In a word, it can map the address to struct page.
-+
-+contig_page_data
-+================
-+Makedumpfile can get the pglist_data structure according to this symbol
-+'contig_page_data'. The pglist_data structure is used to describe the
-+memory layout.
-+
-+mem_section|(mem_section, NR_SECTION_ROOTS)|(mem_section, section_mem_map)
-+==========================================================================
-+Export the address of 'mem_section' array, and it's length, structure size,
-+and the 'section_mem_map' offset.
-+
-+It exists in the sparse memory mapping model, and it is also somewhat
-+similar to the mem_map variable, both of them will help to translate
-+the address.
-+
-+page
-+====
-+The size of a 'page' structure.
-+
-+pglist_data
-+===========
-+The size of a 'pglist_data' structure.
-+
-+zone
-+====
-+The size of a 'zone' structure.
-+
-+free_area
-+=========
-+The size of a 'free_area' structure.
-+
-+list_head
-+=========
-+The size of a 'list_head' structure.
-+
-+nodemask_t
-+==========
-+The size of a 'nodemask_t' type.
-+
-+(page, flags|_refcount|mapping|lru|_mapcount|private|compound_dtor|
-+       compound_order|compound_head)
-+===================================================================
-+The page structure is a familiar concept for most of linuxer, there is no
-+need to explain too much. To know more information, please refer to the
-+definition of the page struct(include/linux/mm_types.h).
-+
-+(pglist_data, node_zones|nr_zones|node_mem_map|node_start_pfn|node_
-+              spanned_pages|node_id)
-+===================================================================
-+On NUMA machines, each NUMA node would have a pg_data_t to describe
-+it's memory layout. On UMA machines there is a single pglist_data which
-+describes the whole memory.
-+
-+The pglist_data structure contains these varibales, here export their
-+offset in the pglist_data structure, which is defined in this file
-+"include/linux/mmzone.h".
-+
-+(zone, free_area|vm_stat|spanned_pages)
-+=======================================
-+The offset of these variables in the structure zone.
-+
-+Each node is divided up into a number of blocks called zones which
-+represent ranges within memory. A zone is described by a structure zone.
-+Each zone type is suitable for a different type of usage.
-+
-+(free_area, free_list)
-+======================
-+The offset of 'free_list' in the structure free_area.
-+
-+Each zone has a free_area structure array called free_area[MAX_ORDER].
-+The fields in this structure are simple, the free_list repsents a linked
-+list of free page blocks.
-+
-+(list_head, next|prev)
-+======================
-+The offset of 'next' and 'prev' in structure list_head.
-+
-+In general, this structure list_head is used to define a circular linked
-+list.
-+
-+(vmap_area, va_start|list)
-+==========================
-+The offset of 'va_start' and 'list' in the structure 'vmap_area'. They
-+stand for the vmalloc layer information. Makedumpfile can get the start
-+address of vmalloc region.
-+
-+(zone.free_area, MAX_ORDER)
-+===========================
-+The length of a free_area structure array, this macro is defined in the
-+file 'include/linux/mmzone.h'.
-+
-+log_buf
-+=======
-+In general, console output is written to the ring buffer 'log_buf' at
-+index 'log_first_idx'.
-+
-+log_buf_len
-+===========
-+Length of a 'log_buf'.
-+
-+log_first_idx
-+=============
-+Index of the first record stored in the buffer 'log_buf'.
-+
-+clear_idx
-+=========
-+The index that the next printk record to read after the last 'clear'
-+command.
-+
-+log_next_idx
-+============
-+The index of the next record to store in the buffer 'log_buf'.
-+
-+printk_log
-+==========
-+The size of a structure 'printk_log'.
-+
-+(printk_log, ts_nsec|len|text_len|dict_len)
-+===========================================
-+It represents these field offsets in the structure 'printk_log'. User
-+space tools can parse it and detect any changes to structure down the
-+line.
-+
-+(free_area.free_list, MIGRATE_TYPES)
-+====================================
-+The number of migrate types for pages.
-+
-+NR_FREE_PAGES
-+=============
-+On linux-2.6.21 or later, the number of free_pages is in
-+vm_stat[NR_FREE_PAGES].
-+
-+PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|
-+PG_hwpoision|PG_head_mask
-+=====================================================
-+It stands for the attribute of a page, which is defined in this file
-+'include/linux/page-flags.h'.
-+
-+PAGE_BUDDY_MAPCOUNT_VALUE or ~PG_buddy
-+======================================
-+The 'PG_buddy' flag indicates that the page is free and in the buddy
-+system. Makedumpfile can exclude the free pages managed by a buddy.
-+
-+HUGETLB_PAGE_DTOR
-+=================
-+The 'HUGETLB_PAGE_DTOR' flag indicates the hugetlbfs pages. Makedumpfile
-+will exclude these pages.
-+
-+================
-+x86_64 variables
-+================
-+
-+phys_base
-+=========
-+In x86_64, it is necessary to convert virtual address of exported kernel
-+symbol to physical address.
-+
-+init_top_pgt
-+============
-+The 'init_top_pgt' used to walk through the whole page table and convert
-+vitrual address to physical address.
-+
-+pgtable_l5_enabled
-+==================
-+User-space tools need to know whether the crash kernel was in 5-level
-+paging mode or not.
-+
-+node_data
-+=========
-+This is a struct 'pglist_data' array, it stores all numa nodes
-+information.
-+
-+(node_data, MAX_NUMNODES)
-+=========================
-+The number of this 'node_data' array.
-+
-+KERNELOFFSET
-+============
-+Randomize the address of the kernel image. This is the offset of KASLR in
-+VMCOREINFO ELF notes. It is used to compute the page offset in x86_64. If
-+KASLE is disabled, this value is zero.
-+
-+KERNEL_IMAGE_SIZE
-+=================
-+The size of 'KERNEL_IMAGE_SIZE', currently unused.
-+
-+The old MODULES_VADDR need be decided by KERNEL_IMAGE_SIZE when kaslr
-+enabled. Now MODULES_VADDR is not needed any more since Pratyush makes
-+all VA to PA converting done by page table lookup.
-+
-+PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
-+========================================
-+The value of 'PG_offline' flag can be used for marking pages as logically
-+offline. Makedumpfile can directly skip pages that are logically offline.
-+
-+sme_mask
-+========
-+For AMD machine with SME feature, it stands for the secure memory
-+encryption mask. Makedumpfile tools need to know whether the crash kernel
-+was encrypted or not. If SME is enabled in the first kernel, the crash
-+kernel's page table(pgd/pud/pmd/pte) contains the memory encryption mask,
-+so need to remove the sme mask to obtain the true physical address.
-+
-+=============
-+x86 variables
-+=============
-+
-+X86_PAE
-+=======
-+It means the physical address extension. It has the cost of more
-+pagetable lookup overhead, and also consumes more pagetable space
-+per process.
-+
-+==============
-+ia64 variables
-+==============
-+
-+pgdat_list|(pgdat_list, MAX_NUMNODES)
-+=====================================
-+This is a struct 'pg_data_t' array, it stores all numa nodes information.
-+And the 'MAX_NUMNODES' indicates the number of array 'pgdat_list'.
-+
-+node_memblk|(node_memblk, NR_NODE_MEMBLKS)
-+==========================================
-+List of node memory chunks. Filled when parsing SRAT table to obtain
-+information about memory nodes. The 'NR_NODE_MEMBLKS' indicates the number
-+of node memory chunks.
-+
-+node_memblk_s|(node_memblk_s, start_paddr)|(node_memblk_s, size)
-+================================================================
-+The size of a struct 'node_memblk_s', and the offset of 'start_paddr' and
-+'size'.
-+
-+PGTABLE_3|PGTABLE_4
-+===================
-+User-space tools need to know whether the crash kernel was in 3-level or
-+4-level paging mode.
-+
-+===============
-+arm64 variables
-+===============
-+
-+VA_BITS
-+=======
-+The maximum number of bits for virtual addresses.
-+
-+kimage_voffset
-+==============
-+The offset between the kernel virtual and physical mappings.
-+
-+PHYS_OFFSET
-+===========
-+The physical address of the start of memory.
-+
-+KERNELOFFSET
-+============
-+It is similar to x86_64.
-+
-+=============
-+arm variables
-+=============
-+
-+ARM_LPAE
-+========
-+It indicates whether the crash kernel support the large physical address
-+extension.
-+
-+==============
-+s390 variables
-+==============
-+
-+lowcore_ptr
-+==========
-+An array with a pointer to the lowcore of every CPU.
-+
-+high_memory
-+===========
-+It indicates the vmalloc_start address.
-+
-+(lowcore_ptr, NR_CPUS)
-+======================
-+The maximum number of cpus.
-+
-+S390_lowcore.vmcore_info
-+========================
-+It is the physical address of 'vmcoreinfo_note'.
-+
-+powerpc variables
-+=================
-+
-+node_data|(node_data, MAX_NUMNODES)
-+===================================
-+Please refer to common variables.
-+
-+contig_page_data
-+================
-+Please refer to common variables.
-+
-+vmemmap_list
-+============
-+The 'vmemmap_list' maintains the entire vmemmap physical mapping.
-+
-+mmu_vmemmap_psize
-+=================
-+The size of a page. It will try to use this page sizes for vmemmap if
-+support.
-+
-+mmu_psize_defs
-+==============
-+It stores a variety of pages, such as ths page size is 4k, 64k, or 16M.
-+
-+vmemmap_backing|(vmemmap_backing, list)|(vmemmap_backing, phys)|
-+(vmemmap_backing, virt_addr)
-+================================================================
-+The vmemmap virtual address space management does not have a traditonal
-+page table to track which virtual struct pages are backed by physical
-+mapping. The virtual to physical mappings are tracked in a simple linked
-+list format.
-+
-+And user-space tools need to know the offset of 'list', 'phys' and
-+'virt_addr'.
-+
-+mmu_psize_def|(mmu_psize_def, shift)
-+====================================
-+The size of a struct 'mmu_psize_def', and the offset of 'shift' in this
-+structure.
-+
-+============
-+sh variables
-+============
-+
-+node_data|(node_data, MAX_NUMNODES)
-+===================================
-+It is similar to X86_64, please refer to above description.
-+
-+X2TLB
-+=====
-+It indicated whether the crash kernel enables the extended mode of the SH.
+Yeah, I'm not sure about it being an ABI. Apparently, it is considered
+too tightly coupled to the kernel for it to be an ABI.
+
+Regardless, thanks for doing that.
+
+> Suggested-by: Borislav Petkov <bp@suse.de>
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> ---
+>  Documentation/kdump/vmcoreinfo.txt | 400 +++++++++++++++++++++++++++++
+>  1 file changed, 400 insertions(+)
+>  create mode 100644 Documentation/kdump/vmcoreinfo.txt
+> 
+> diff --git a/Documentation/kdump/vmcoreinfo.txt b/Documentation/kdump/vmcoreinfo.txt
+
+Aren't we adding new docs in rst format only or what is the logic there?
+
+Jon?
+
+> new file mode 100644
+> index 000000000000..c6759be14af7
+> --- /dev/null
+> +++ b/Documentation/kdump/vmcoreinfo.txt
+> @@ -0,0 +1,400 @@
+> +================================================================
+> +		Documentation for Vmcoreinfo
+> +================================================================
+> +
+> +=======================
+> +What is the vmcoreinfo?
+> +=======================
+> +The vmcoreinfo contains the first kernel's various information, for
+
+The first sentence here should be explaining what VMCOREINFO is: it is
+an ELF PT_NOTE section. So that people can go, oh ok, it is a special
+ELF section, when reading.
+
+Then, MAKEDUMPFILE(8) spells VMCOREINFO in all caps and I think we
+should do that too here, for ease of recognition.
+
+Btw, do we have a makedumpfile switch or a tool/script which dumps
+VMCOREINFO contents in human-readable form?
+
+Maybe something nicer than:
+
+$ hexdump -C /proc/kcore
+
+> +example, structure size, page size, symbol values and field offset,
+> +etc. These data are encapsulated into an elf format, and these data
+> +will also help user-space tools(e.g. makedumpfile, crash) analyze the
+> +first kernel's memory usage.
+> +
+> +================
+> +Common variables
+> +================
+> +
+> +init_uts_ns.name.release
+> +========================
+> +The number of OS release.
+> +
+> +PAGE_SIZE
+> +=========
+> +The size of a page. It is usually 4k bytes.
+> +
+> +init_uts_ns
+> +===========
+> +This is the UTS namespace, which is used to isolate two specific elements
+> +of the system that relate to the uname system call. The UTS namespace is
+> +named after the data structure used to store information returned by the
+> +uname system call.
+
+Those non-obvious exports should also have a short explanation why
+they're part of VMCOREINFO.
+
+> +
+> +node_online_map
+> +===============
+> +It is a macro definition, actually it is an arrary node_states[N_ONLINE],
+> +and it represents the set of online node in a system, one bit position
+> +per node number.
+
+Ditto.
+
+So yeah, people can find out what those things are but I think it is
+more important to state here *why* they're part of VMCOREINFO and how
+they're used and why they're exported.
+
+Who knows, some might turn out to be not needed anymore. :)
+
+> +
+> +swapper_pg_dir
+> +=============
+> +It is always an array, it gerenally stands for the pgd for the kernel.
+> +When mmu is enabled in config file, the 'swapper_pg_dir' is valid.
+> +
+> +_stext
+> +======
+> +It is an assemble directive that defines the beginning of the text section.
+
+That's an assembly symbol.
+
+> +In gerenal, the '_stext' indicates the kernel start address.
+> +
+> +vmap_area_list
+> +==============
+> +It stores the virtual area list, makedumpfile can get the vmalloc start
+> +value according to this variable.
+
+"... from this variable."
+
+> +
+> +mem_map
+> +=======
+> +Physical addresses are translated to struct pages by treating them as an
+> +index into the mem_map array. Shifting a physical address PAGE_SHIFT bits
+> +to the right will treat it as a PFN from physical address 0, which is also
+> +an index within the mem_map array.
+> +
+> +In a word, it can map the address to struct page.
+
+"In short, ... "
+
+> +
+> +contig_page_data
+> +================
+> +Makedumpfile can get the pglist_data structure according to this symbol
+
+Please look up in the dictionary what "according" means. Using it in
+this context is at least weird.
+
+> +'contig_page_data'. The pglist_data structure is used to describe the
+> +memory layout.
+> +
+> +mem_section|(mem_section, NR_SECTION_ROOTS)|(mem_section, section_mem_map)
+> +==========================================================================
+> +Export the address of 'mem_section' array, and it's length, structure size,
+> +and the 'section_mem_map' offset.
+> +
+> +It exists in the sparse memory mapping model, and it is also somewhat
+> +similar to the mem_map variable, both of them will help to translate
+> +the address.
+> +
+> +page
+> +====
+> +The size of a 'page' structure.
+> +
+> +pglist_data
+> +===========
+> +The size of a 'pglist_data' structure.
+> +
+> +zone
+> +====
+> +The size of a 'zone' structure.
+> +
+> +free_area
+> +=========
+> +The size of a 'free_area' structure.
+> +
+> +list_head
+> +=========
+> +The size of a 'list_head' structure.
+> +
+> +nodemask_t
+> +==========
+> +The size of a 'nodemask_t' type.
+> +
+> +(page, flags|_refcount|mapping|lru|_mapcount|private|compound_dtor|
+> +       compound_order|compound_head)
+> +===================================================================
+> +The page structure is a familiar concept for most of linuxer, there is no
+> +need to explain too much.
+
+Just delete that sentence.
+
+> To know more information, please refer to the
+> +definition of the page struct(include/linux/mm_types.h).
+> +
+> +(pglist_data, node_zones|nr_zones|node_mem_map|node_start_pfn|node_
+> +              spanned_pages|node_id)
+> +===================================================================
+> +On NUMA machines, each NUMA node would have a pg_data_t to describe
+
+s/would have/has/
+
+> +it's memory layout. On UMA machines there is a single pglist_data which
+> +describes the whole memory.
+> +
+> +The pglist_data structure contains these varibales, here export their
+					    ^^^^^^^^^
+
+Before you send next time, run the *whole* text through a spellchecker.
+
+> +offset in the pglist_data structure, which is defined in this file
+> +"include/linux/mmzone.h".
+
+You don't have to state where stuff is defined - I hope everyone
+should be able to grep.
+
+...
+
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
