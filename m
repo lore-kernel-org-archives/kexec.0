@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x441.google.com ([2607:f8b0:4864:20::441])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gU15u-0005xG-4o
- for kexec@lists.infradead.org; Tue, 04 Dec 2018 03:09:55 +0000
-Received: by mail-pf1-x441.google.com with SMTP id z9so7452999pfi.2
- for <kexec@lists.infradead.org>; Mon, 03 Dec 2018 19:09:40 -0800 (PST)
-Date: Tue, 4 Dec 2018 12:12:37 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH 4/4] kexec/kexec-arm64.c: Add missing error handling paths
-Message-ID: <20181204031236.GA21466@linaro.org>
-References: <1543555965-14399-1-git-send-email-bhsharma@redhat.com>
- <1543555965-14399-5-git-send-email-bhsharma@redhat.com>
+ id 1gU77D-0006H8-AC
+ for kexec@lists.infradead.org; Tue, 04 Dec 2018 09:35:41 +0000
+Subject: Re: [PATCH 1/2 v2] kdump: add the vmcoreinfo documentation
+References: <20181202030839.29945-1-lijiang@redhat.com>
+ <20181202030839.29945-2-lijiang@redhat.com> <20181203150809.GA4794@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <779dbae7-f6e2-e9e4-bdd0-0a9e6ec62487@redhat.com>
+Date: Tue, 4 Dec 2018 17:35:09 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1543555965-14399-5-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <20181203150809.GA4794@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,129 +20,152 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: bhupesh.linux@gmail.com, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-doc@vger.kernel.org, bhe@redhat.com, Jonathan Corbet <corbet@lwn.net>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-Bhupesh,
-
-Thank you for submitting a patch. One comment:
-
-On Fri, Nov 30, 2018 at 11:02:45AM +0530, Bhupesh Sharma wrote:
-> While creating the 2nd dtb to be passed to the secondary kernel
-> for arm64, we need to handle the return values from helper fdt
-> functions properly, to make sure that we can handle various command-line
-> options being passed to 'kexec' both for kexec load and kdump
-> purposes.
-> 
-> This will provide proper error reporting to the calling
-> function in case something goes wrong.
-> 
-> Without this patch, we get misleading error FDT_ERR_BADOFFSET reported
-> when we pass a .dtb to 'kexec -p' using '--dtb' option, which doesn't
-> contain the '/chosen' node (for e.g. the rockchip sapphire board
-> dtb -> rk3399-sapphire.dtb).
-> 
->    # kexec -d -p Image --reuse-cmdline --dtb rk3399-sapphire.dtb
->    <..snip..>
->    load_crashdump_segments: elfcorehdr 0xbfff0000-0xbfff33ff
->    get_cells_size: #address-cells:2 #size-cells:2
->    cells_size_fitted: bfff0000-bfff33ff
->    cells_size_fitted: 8ee00000-bfffffff
->    setup_2nd_dtb: no kaslr-seed found
->    setup_2nd_dtb: fdt_setprop failed: FDT_ERR_BADOFFSET
->    kexec: setup_2nd_dtb failed.
->    kexec: load failed.
-> 
-> Now after the fix, we get the correct error FDT_ERR_NOTFOUND reported
-> to the calling function:
-> 
->    # kexec -d -l Image --append 'debug' --dtb rk3399-sapphire.dtb
->    <..snip..>
->    load_crashdump_segments: elfcorehdr 0xbfff0000-0xbfff33ff
->    get_cells_size: #address-cells:2 #size-cells:2
->    cells_size_fitted: bfff0000-bfff33ff
->    cells_size_fitted: 8ee00000-bfffffff
->    setup_2nd_dtb: /chosen node not found - can't create dtb for dump kernel: FDT_ERR_NOTFOUND
->    kexec: setup_2nd_dtb failed.
->    kexec: load failed.
-> 
-> 
-> Cc: Simon Horman <horms@verge.net.au>
-> Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> ---
->  kexec/arch/arm64/kexec-arm64.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> index f4913b2e9480..560d83455f95 100644
-> --- a/kexec/arch/arm64/kexec-arm64.c
-> +++ b/kexec/arch/arm64/kexec-arm64.c
-> @@ -515,6 +515,11 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
->  		}
->  
->  		nodeoffset = fdt_path_offset(new_buf, "/chosen");
-> +		if (nodeoffset < 0) {
-> +			result = nodeoffset;
-> +			goto on_error;
-> +		}
-> +
-
-I think that the issue should be fixed much earlier:
-
-|       /* fixup 'kaslr-seed' with a random value, if supported */
-|       nodeoffset = fdt_path_offset(new_buf, "/chosen");
-|       prop = fdt_getprop_w(new_buf, nodeoffset,
-|                       "kaslr-seed", &len);
-
-When we fail to locate "/chosen" here, we'd be better off to create it
-(if necessary). So, *logically*, we won't have to worry about it later on.
-
--Takahiro Akashi
-
-
->  		result = fdt_setprop_inplace(new_buf,
->  				nodeoffset, "kaslr-seed",
->  				&fdt_val64, sizeof(fdt_val64));
-> @@ -529,6 +534,14 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
->  	if (on_crash) {
->  		/* add linux,elfcorehdr */
->  		nodeoffset = fdt_path_offset(new_buf, "/chosen");
-> +		if (nodeoffset < 0) {
-> +			result = nodeoffset;
-> +			dbgprintf("%s: /chosen node not found - can't create "
-> +				"dtb for dump kernel: %s\n", __func__,
-> +				fdt_strerror(result));
-> +			goto on_error;
-> +		}
-> +
->  		result = fdt_setprop_range(new_buf, nodeoffset,
->  				PROP_ELFCOREHDR, &elfcorehdr_mem,
->  				address_cells, size_cells);
-> @@ -541,6 +554,14 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
->  
->  		/* add linux,usable-memory-range */
->  		nodeoffset = fdt_path_offset(new_buf, "/chosen");
-> +		if (nodeoffset < 0) {
-> +			result = nodeoffset;
-> +			dbgprintf("%s: /chosen node not found - can't create "
-> +				"dtb for dump kernel: %s\n", __func__,
-> +				fdt_strerror(result));
-> +			goto on_error;
-> +		}
-> +
->  		result = fdt_setprop_range(new_buf, nodeoffset,
->  				PROP_USABLE_MEM_RANGE, &crash_reserved_mem,
->  				address_cells, size_cells);
-> -- 
-> 2.7.4
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMuaciDAz5pelIDIzOjA4LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IEFk
+ZCBzb21lIG1vcmUgQ2NzLgo+IAoKVGhhbmtzIGEgbG90LgoKVGhlcmUgYXJlIG1vcmUgcGVvcGxl
+IHRvIHJldmlldyBhbmQgaW1wcm92ZSB0aGlzIGRvY3VtZW50IHRvZ2V0aGVyLCB0aGF0IHdvdWxk
+CmJlIGZpbmUuCgo+IE9uIFN1biwgRGVjIDAyLCAyMDE4IGF0IDExOjA4OjM4QU0gKzA4MDAsIExp
+YW5ibyBKaWFuZyB3cm90ZToKPj4gVGhpcyBkb2N1bWVudCBsaXN0cyBzb21lIHZhcmlhYmxlcyB0
+aGF0IGV4cG9ydCB0byB2bWNvcmVpbmZvLCBhbmQgYnJpZWZseQo+PiBkZXNjcmlibGVzIHdoYXQg
+dGhlc2UgdmFyaWFibGVzIGluZGljYXRlLiBJdCBzaG91bGQgYmUgaW5zdHJ1Y3RpdmUgZm9yCj4+
+IG1hbnkgcGVvcGxlIHdobyBkbyBub3Qga25vdyB0aGUgdm1jb3JlaW5mbywgYW5kIGl0IGFsc28g
+bm9ybWFsaXplcyB0aGUKPj4gZXhwb3J0ZWQgdmFyaWFibGUgYXMgYSBzdGFuZGFyZCBBQkkgYmV0
+d2VlbiBrZXJuZWwgYW5kIHVzZS1zcGFjZS4KPiAKPiBZZWFoLCBJJ20gbm90IHN1cmUgYWJvdXQg
+aXQgYmVpbmcgYW4gQUJJLiBBcHBhcmVudGx5LCBpdCBpcyBjb25zaWRlcmVkCj4gdG9vIHRpZ2h0
+bHkgY291cGxlZCB0byB0aGUga2VybmVsIGZvciBpdCB0byBiZSBhbiBBQkkuCj4gCj4gUmVnYXJk
+bGVzcywgdGhhbmtzIGZvciBkb2luZyB0aGF0Lgo+IAoKSXQncyBteSBwbGVhc3VyZSB0byBkbyB0
+aGF0LgoKPj4gU3VnZ2VzdGVkLWJ5OiBCb3Jpc2xhdiBQZXRrb3YgPGJwQHN1c2UuZGU+Cj4+IFNp
+Z25lZC1vZmYtYnk6IExpYW5ibyBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+PiAtLS0KPj4g
+IERvY3VtZW50YXRpb24va2R1bXAvdm1jb3JlaW5mby50eHQgfCA0MDAgKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCA0MDAgaW5zZXJ0aW9ucygrKQo+PiAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24va2R1bXAvdm1jb3JlaW5mby50eHQKPj4K
+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24va2R1bXAvdm1jb3JlaW5mby50eHQgYi9Eb2N1
+bWVudGF0aW9uL2tkdW1wL3ZtY29yZWluZm8udHh0Cj4gCj4gQXJlbid0IHdlIGFkZGluZyBuZXcg
+ZG9jcyBpbiByc3QgZm9ybWF0IG9ubHkgb3Igd2hhdCBpcyB0aGUgbG9naWMgdGhlcmU/Cj4gCj4g
+Sm9uPwo+IAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLmM2
+NzU5YmUxNGFmNwo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24va2R1bXAv
+dm1jb3JlaW5mby50eHQKPj4gQEAgLTAsMCArMSw0MDAgQEAKPj4gKz09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPj4gKwkJRG9j
+dW1lbnRhdGlvbiBmb3IgVm1jb3JlaW5mbwo+PiArPT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+PiArCj4+ICs9PT09PT09PT09
+PT09PT09PT09PT09PQo+PiArV2hhdCBpcyB0aGUgdm1jb3JlaW5mbz8KPj4gKz09PT09PT09PT09
+PT09PT09PT09PT09Cj4+ICtUaGUgdm1jb3JlaW5mbyBjb250YWlucyB0aGUgZmlyc3Qga2VybmVs
+J3MgdmFyaW91cyBpbmZvcm1hdGlvbiwgZm9yCj4gCj4gVGhlIGZpcnN0IHNlbnRlbmNlIGhlcmUg
+c2hvdWxkIGJlIGV4cGxhaW5pbmcgd2hhdCBWTUNPUkVJTkZPIGlzOiBpdCBpcwo+IGFuIEVMRiBQ
+VF9OT1RFIHNlY3Rpb24uIFNvIHRoYXQgcGVvcGxlIGNhbiBnbywgb2ggb2ssIGl0IGlzIGEgc3Bl
+Y2lhbAo+IEVMRiBzZWN0aW9uLCB3aGVuIHJlYWRpbmcuCj4gCj4gVGhlbiwgTUFLRURVTVBGSUxF
+KDgpIHNwZWxscyBWTUNPUkVJTkZPIGluIGFsbCBjYXBzIGFuZCBJIHRoaW5rIHdlCj4gc2hvdWxk
+IGRvIHRoYXQgdG9vIGhlcmUsIGZvciBlYXNlIG9mIHJlY29nbml0aW9uLgo+IAoKVGhpcyBpcyBn
+b29kIGFkdmljZS4KCj4gQnR3LCBkbyB3ZSBoYXZlIGEgbWFrZWR1bXBmaWxlIHN3aXRjaCBvciBh
+IHRvb2wvc2NyaXB0IHdoaWNoIGR1bXBzCj4gVk1DT1JFSU5GTyBjb250ZW50cyBpbiBodW1hbi1y
+ZWFkYWJsZSBmb3JtPwo+IAoKR2VuZXJhdGluZyBWTUNPUkVJTkZPIGlzIGVhc3kgaW4gdGhlIGZp
+cnN0IGtlcm5lbCwgZm9yIGV4YW1wbGU6CiMgbWFrZWR1bXBmaWxlIC1nIFZNQ09SRUlORk8gLXgg
+dm1saW51eAoKIyBmaWxlIFZNQ09SRUlORk8KVk1DT1JFSU5GTzogQVNDSUkgdGV4dAoKPiBNYXli
+ZSBzb21ldGhpbmcgbmljZXIgdGhhbjoKPiAKPiAkIGhleGR1bXAgLUMgL3Byb2Mva2NvcmUKPiAK
+Pj4gK2V4YW1wbGUsIHN0cnVjdHVyZSBzaXplLCBwYWdlIHNpemUsIHN5bWJvbCB2YWx1ZXMgYW5k
+IGZpZWxkIG9mZnNldCwKPj4gK2V0Yy4gVGhlc2UgZGF0YSBhcmUgZW5jYXBzdWxhdGVkIGludG8g
+YW4gZWxmIGZvcm1hdCwgYW5kIHRoZXNlIGRhdGEKPj4gK3dpbGwgYWxzbyBoZWxwIHVzZXItc3Bh
+Y2UgdG9vbHMoZS5nLiBtYWtlZHVtcGZpbGUsIGNyYXNoKSBhbmFseXplIHRoZQo+PiArZmlyc3Qg
+a2VybmVsJ3MgbWVtb3J5IHVzYWdlLgo+PiArCj4+ICs9PT09PT09PT09PT09PT09Cj4+ICtDb21t
+b24gdmFyaWFibGVzCj4+ICs9PT09PT09PT09PT09PT09Cj4+ICsKPj4gK2luaXRfdXRzX25zLm5h
+bWUucmVsZWFzZQo+PiArPT09PT09PT09PT09PT09PT09PT09PT09Cj4+ICtUaGUgbnVtYmVyIG9m
+IE9TIHJlbGVhc2UuCj4+ICsKPj4gK1BBR0VfU0laRQo+PiArPT09PT09PT09Cj4+ICtUaGUgc2l6
+ZSBvZiBhIHBhZ2UuIEl0IGlzIHVzdWFsbHkgNGsgYnl0ZXMuCj4+ICsKPj4gK2luaXRfdXRzX25z
+Cj4+ICs9PT09PT09PT09PQo+PiArVGhpcyBpcyB0aGUgVVRTIG5hbWVzcGFjZSwgd2hpY2ggaXMg
+dXNlZCB0byBpc29sYXRlIHR3byBzcGVjaWZpYyBlbGVtZW50cwo+PiArb2YgdGhlIHN5c3RlbSB0
+aGF0IHJlbGF0ZSB0byB0aGUgdW5hbWUgc3lzdGVtIGNhbGwuIFRoZSBVVFMgbmFtZXNwYWNlIGlz
+Cj4+ICtuYW1lZCBhZnRlciB0aGUgZGF0YSBzdHJ1Y3R1cmUgdXNlZCB0byBzdG9yZSBpbmZvcm1h
+dGlvbiByZXR1cm5lZCBieSB0aGUKPj4gK3VuYW1lIHN5c3RlbSBjYWxsLgo+IAo+IFRob3NlIG5v
+bi1vYnZpb3VzIGV4cG9ydHMgc2hvdWxkIGFsc28gaGF2ZSBhIHNob3J0IGV4cGxhbmF0aW9uIHdo
+eQo+IHRoZXkncmUgcGFydCBvZiBWTUNPUkVJTkZPLgo+IAo+PiArCj4+ICtub2RlX29ubGluZV9t
+YXAKPj4gKz09PT09PT09PT09PT09PQo+PiArSXQgaXMgYSBtYWNybyBkZWZpbml0aW9uLCBhY3R1
+YWxseSBpdCBpcyBhbiBhcnJhcnkgbm9kZV9zdGF0ZXNbTl9PTkxJTkVdLAo+PiArYW5kIGl0IHJl
+cHJlc2VudHMgdGhlIHNldCBvZiBvbmxpbmUgbm9kZSBpbiBhIHN5c3RlbSwgb25lIGJpdCBwb3Np
+dGlvbgo+PiArcGVyIG5vZGUgbnVtYmVyLgo+IAo+IERpdHRvLgo+IAo+IFNvIHllYWgsIHBlb3Bs
+ZSBjYW4gZmluZCBvdXQgd2hhdCB0aG9zZSB0aGluZ3MgYXJlIGJ1dCBJIHRoaW5rIGl0IGlzCj4g
+bW9yZSBpbXBvcnRhbnQgdG8gc3RhdGUgaGVyZSAqd2h5KiB0aGV5J3JlIHBhcnQgb2YgVk1DT1JF
+SU5GTyBhbmQgaG93Cj4gdGhleSdyZSB1c2VkIGFuZCB3aHkgdGhleSdyZSBleHBvcnRlZC4KPiAK
+ClRoaXMgaXMgYSBnb29kIHF1ZXN0aW9uLgoKRm9yIHRoZXNlIHR3byAqd2h5KiwgaXQgc2hvdWxk
+IGJlIGVhc3kgdG8gdW5kZXJzdGFuZC4gQmVjYXVzZSB1c2VyLXNwYWNlIHRvb2xzCm5lZWQgdG8g
+a25vdyBiYXNpYyBpbmZvcm1hdGlvbiwgc3VjaCBhcyB0aGUgc3ltYm9sIHZhbHVlcywgZmllbGQg
+b2Zmc2V0LCBzdHJ1Y3R1cmUKc2l6ZSwgZXRjLiBPdGhlcndpc2UsIHRoZXNlIHRvb2xzIHdvbid0
+IGtub3cgaG93IHRvIGFuYWx5emUgdGhlIG1lbW9yeSBvZiB0aGUgY3Jhc2gKa2VybmVsLgoKRm9y
+IHRoZSBzZWNvbmQgcXVlc3Rpb24gJ2hvdyB0aGV5IGFyZSB1c2VkJywgd2UgY2FuIGdldCB0aGUg
+YW5zd2VyIGZyb20gdXNlci1zcGFjZQp0b29scywgc3VjaCBhcyBtYWtlZHVtcGZpbGUsIGNyYXNo
+IHRvb2xzLiBUaGVyZWZvcmUsIGl0IG1heSBub3QgbmVlZCB0byBleHBsYWluIGFueQptb3JlIGlu
+IGtlcm5lbCBkb2N1bWVudC4gT24gdGhlIG90aGVyIGhhbmQsIGlmIHdlIG11c3QgcHV0IHRoZXNl
+IGNvbnRlbnRzIGludG8ga2VybmVsCmRvY3VtZW50LCBpIGhhdmUgdG8gc2F5LCB0aGF0IHdvdWxk
+IGJlIGEgaGFyZCB0YXNrLgoKCj4gV2hvIGtub3dzLCBzb21lIG1pZ2h0IHR1cm4gb3V0IHRvIGJl
+IG5vdCBuZWVkZWQgYW55bW9yZS4gOikKPiAKPj4gKwo+PiArc3dhcHBlcl9wZ19kaXIKPj4gKz09
+PT09PT09PT09PT0KPj4gK0l0IGlzIGFsd2F5cyBhbiBhcnJheSwgaXQgZ2VyZW5hbGx5IHN0YW5k
+cyBmb3IgdGhlIHBnZCBmb3IgdGhlIGtlcm5lbC4KPj4gK1doZW4gbW11IGlzIGVuYWJsZWQgaW4g
+Y29uZmlnIGZpbGUsIHRoZSAnc3dhcHBlcl9wZ19kaXInIGlzIHZhbGlkLgo+PiArCj4+ICtfc3Rl
+eHQKPj4gKz09PT09PQo+PiArSXQgaXMgYW4gYXNzZW1ibGUgZGlyZWN0aXZlIHRoYXQgZGVmaW5l
+cyB0aGUgYmVnaW5uaW5nIG9mIHRoZSB0ZXh0IHNlY3Rpb24uCj4gCj4gVGhhdCdzIGFuIGFzc2Vt
+Ymx5IHN5bWJvbC4KPiAKPj4gK0luIGdlcmVuYWwsIHRoZSAnX3N0ZXh0JyBpbmRpY2F0ZXMgdGhl
+IGtlcm5lbCBzdGFydCBhZGRyZXNzLgo+PiArCj4+ICt2bWFwX2FyZWFfbGlzdAo+PiArPT09PT09
+PT09PT09PT0KPj4gK0l0IHN0b3JlcyB0aGUgdmlydHVhbCBhcmVhIGxpc3QsIG1ha2VkdW1wZmls
+ZSBjYW4gZ2V0IHRoZSB2bWFsbG9jIHN0YXJ0Cj4+ICt2YWx1ZSBhY2NvcmRpbmcgdG8gdGhpcyB2
+YXJpYWJsZS4KPiAKPiAiLi4uIGZyb20gdGhpcyB2YXJpYWJsZS4iCj4gCj4+ICsKPj4gK21lbV9t
+YXAKPj4gKz09PT09PT0KPj4gK1BoeXNpY2FsIGFkZHJlc3NlcyBhcmUgdHJhbnNsYXRlZCB0byBz
+dHJ1Y3QgcGFnZXMgYnkgdHJlYXRpbmcgdGhlbSBhcyBhbgo+PiAraW5kZXggaW50byB0aGUgbWVt
+X21hcCBhcnJheS4gU2hpZnRpbmcgYSBwaHlzaWNhbCBhZGRyZXNzIFBBR0VfU0hJRlQgYml0cwo+
+PiArdG8gdGhlIHJpZ2h0IHdpbGwgdHJlYXQgaXQgYXMgYSBQRk4gZnJvbSBwaHlzaWNhbCBhZGRy
+ZXNzIDAsIHdoaWNoIGlzIGFsc28KPj4gK2FuIGluZGV4IHdpdGhpbiB0aGUgbWVtX21hcCBhcnJh
+eS4KPj4gKwo+PiArSW4gYSB3b3JkLCBpdCBjYW4gbWFwIHRoZSBhZGRyZXNzIHRvIHN0cnVjdCBw
+YWdlLgo+IAo+ICJJbiBzaG9ydCwgLi4uICIKPiAKPj4gKwo+PiArY29udGlnX3BhZ2VfZGF0YQo+
+PiArPT09PT09PT09PT09PT09PQo+PiArTWFrZWR1bXBmaWxlIGNhbiBnZXQgdGhlIHBnbGlzdF9k
+YXRhIHN0cnVjdHVyZSBhY2NvcmRpbmcgdG8gdGhpcyBzeW1ib2wKPiAKPiBQbGVhc2UgbG9vayB1
+cCBpbiB0aGUgZGljdGlvbmFyeSB3aGF0ICJhY2NvcmRpbmciIG1lYW5zLiBVc2luZyBpdCBpbgo+
+IHRoaXMgY29udGV4dCBpcyBhdCBsZWFzdCB3ZWlyZC4KPiAKClRoYW5rIHlvdSBmb3IgcG9pbnRp
+bmcgb3V0IG15IG1pc3Rha2UuCgpJJ20gZ29pbmcgdG8gbG9vayB1cCBpbiB0aGUgQ29sbGlucyBk
+aWN0aW9uYXJ5IGFuZCByZWNvcmQgdGhpcyB3b3JkIG9uIG15Cm5vdGVib29rIHVzaW5nIGEgcGVu
+LgoKPj4gKydjb250aWdfcGFnZV9kYXRhJy4gVGhlIHBnbGlzdF9kYXRhIHN0cnVjdHVyZSBpcyB1
+c2VkIHRvIGRlc2NyaWJlIHRoZQo+PiArbWVtb3J5IGxheW91dC4KPj4gKwo+PiArbWVtX3NlY3Rp
+b258KG1lbV9zZWN0aW9uLCBOUl9TRUNUSU9OX1JPT1RTKXwobWVtX3NlY3Rpb24sIHNlY3Rpb25f
+bWVtX21hcCkKPj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4+ICtFeHBvcnQgdGhlIGFkZHJlc3Mgb2Yg
+J21lbV9zZWN0aW9uJyBhcnJheSwgYW5kIGl0J3MgbGVuZ3RoLCBzdHJ1Y3R1cmUgc2l6ZSwKPj4g
+K2FuZCB0aGUgJ3NlY3Rpb25fbWVtX21hcCcgb2Zmc2V0Lgo+PiArCj4+ICtJdCBleGlzdHMgaW4g
+dGhlIHNwYXJzZSBtZW1vcnkgbWFwcGluZyBtb2RlbCwgYW5kIGl0IGlzIGFsc28gc29tZXdoYXQK
+Pj4gK3NpbWlsYXIgdG8gdGhlIG1lbV9tYXAgdmFyaWFibGUsIGJvdGggb2YgdGhlbSB3aWxsIGhl
+bHAgdG8gdHJhbnNsYXRlCj4+ICt0aGUgYWRkcmVzcy4KPj4gKwo+PiArcGFnZQo+PiArPT09PQo+
+PiArVGhlIHNpemUgb2YgYSAncGFnZScgc3RydWN0dXJlLgo+PiArCj4+ICtwZ2xpc3RfZGF0YQo+
+PiArPT09PT09PT09PT0KPj4gK1RoZSBzaXplIG9mIGEgJ3BnbGlzdF9kYXRhJyBzdHJ1Y3R1cmUu
+Cj4+ICsKPj4gK3pvbmUKPj4gKz09PT0KPj4gK1RoZSBzaXplIG9mIGEgJ3pvbmUnIHN0cnVjdHVy
+ZS4KPj4gKwo+PiArZnJlZV9hcmVhCj4+ICs9PT09PT09PT0KPj4gK1RoZSBzaXplIG9mIGEgJ2Zy
+ZWVfYXJlYScgc3RydWN0dXJlLgo+PiArCj4+ICtsaXN0X2hlYWQKPj4gKz09PT09PT09PQo+PiAr
+VGhlIHNpemUgb2YgYSAnbGlzdF9oZWFkJyBzdHJ1Y3R1cmUuCj4+ICsKPj4gK25vZGVtYXNrX3QK
+Pj4gKz09PT09PT09PT0KPj4gK1RoZSBzaXplIG9mIGEgJ25vZGVtYXNrX3QnIHR5cGUuCj4+ICsK
+Pj4gKyhwYWdlLCBmbGFnc3xfcmVmY291bnR8bWFwcGluZ3xscnV8X21hcGNvdW50fHByaXZhdGV8
+Y29tcG91bmRfZHRvcnwKPj4gKyAgICAgICBjb21wb3VuZF9vcmRlcnxjb21wb3VuZF9oZWFkKQo+
+PiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PQo+PiArVGhlIHBhZ2Ugc3RydWN0dXJlIGlzIGEgZmFtaWxpYXIgY29uY2Vw
+dCBmb3IgbW9zdCBvZiBsaW51eGVyLCB0aGVyZSBpcyBubwo+PiArbmVlZCB0byBleHBsYWluIHRv
+byBtdWNoLgo+IAo+IEp1c3QgZGVsZXRlIHRoYXQgc2VudGVuY2UuCj4gCj4+IFRvIGtub3cgbW9y
+ZSBpbmZvcm1hdGlvbiwgcGxlYXNlIHJlZmVyIHRvIHRoZQo+PiArZGVmaW5pdGlvbiBvZiB0aGUg
+cGFnZSBzdHJ1Y3QoaW5jbHVkZS9saW51eC9tbV90eXBlcy5oKS4KPj4gKwo+PiArKHBnbGlzdF9k
+YXRhLCBub2RlX3pvbmVzfG5yX3pvbmVzfG5vZGVfbWVtX21hcHxub2RlX3N0YXJ0X3Bmbnxub2Rl
+Xwo+PiArICAgICAgICAgICAgICBzcGFubmVkX3BhZ2VzfG5vZGVfaWQpCj4+ICs9PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+Cj4+ICtPbiBOVU1BIG1hY2hpbmVzLCBlYWNoIE5VTUEgbm9kZSB3b3VsZCBoYXZlIGEgcGdfZGF0
+YV90IHRvIGRlc2NyaWJlCj4gCj4gcy93b3VsZCBoYXZlL2hhcy8KPiAKPj4gK2l0J3MgbWVtb3J5
+IGxheW91dC4gT24gVU1BIG1hY2hpbmVzIHRoZXJlIGlzIGEgc2luZ2xlIHBnbGlzdF9kYXRhIHdo
+aWNoCj4+ICtkZXNjcmliZXMgdGhlIHdob2xlIG1lbW9yeS4KPj4gKwo+PiArVGhlIHBnbGlzdF9k
+YXRhIHN0cnVjdHVyZSBjb250YWlucyB0aGVzZSB2YXJpYmFsZXMsIGhlcmUgZXhwb3J0IHRoZWly
+Cj4gCQkJCQkgICAgXl5eXl5eXl5eCj4gCj4gQmVmb3JlIHlvdSBzZW5kIG5leHQgdGltZSwgcnVu
+IHRoZSAqd2hvbGUqIHRleHQgdGhyb3VnaCBhIHNwZWxsY2hlY2tlci4KPiAKPj4gK29mZnNldCBp
+biB0aGUgcGdsaXN0X2RhdGEgc3RydWN0dXJlLCB3aGljaCBpcyBkZWZpbmVkIGluIHRoaXMgZmls
+ZQo+PiArImluY2x1ZGUvbGludXgvbW16b25lLmgiLgo+IAo+IFlvdSBkb24ndCBoYXZlIHRvIHN0
+YXRlIHdoZXJlIHN0dWZmIGlzIGRlZmluZWQgLSBJIGhvcGUgZXZlcnlvbmUKPiBzaG91bGQgYmUg
+YWJsZSB0byBncmVwLgo+IAoKVGhhbmtzIGZvciB5b3VyIGNvbW1lbnQgaW4gZGV0YWlsLgpJIHdp
+bGwgaW1wcm92ZSB0aGVtIGluIHBhdGNoIHYzLgoKUmVnYXJkcywKTGlhbmJvCgo+IC4uLgo+IAoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
+bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
