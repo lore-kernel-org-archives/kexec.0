@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gU9XF-0000XG-QB
- for kexec@lists.infradead.org; Tue, 04 Dec 2018 12:10:44 +0000
-Date: Tue, 4 Dec 2018 20:10:24 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] x86: Clear isVGA flag if current fb driver is mimicking
- VGA
-Message-ID: <20181204121024.GA2168@dhcp-128-65.nay.redhat.com>
-References: <20181123092801.16411-1-kasong@redhat.com>
+ id 1gUHSa-0006sr-VQ
+ for kexec@lists.infradead.org; Tue, 04 Dec 2018 20:38:27 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile/ppc64: increase MAX_PHYSMEM_BITS to 2PB
+Date: Tue, 4 Dec 2018 20:37:18 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC035640EB@BPXM09GP.gisp.nec.co.jp>
+References: <154392057860.8770.14995516431234212273.stgit@hbathini.in.ibm.com>
+In-Reply-To: <154392057860.8770.14995516431234212273.stgit@hbathini.in.ibm.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20181123092801.16411-1-kasong@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,66 +23,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Dave Young <dyoung@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Kexec-ml <kexec@lists.infradead.org>
 
-On 11/23/18 at 05:28pm, Kairui Song wrote:
-> Some device (eg. hyperv_fb) will mimic EFI (or VESA) VGA on first boot
-> up, but after the real driver is loaded, it will switch to new mode
-> and no longer compatible with EFI/VESA VGA. Keep setting
-> orig_video_isVGA to EFI/VESA VGA flag will get wrong driver loaded and
-> try to manipulate the framebuffer in a wrong way.
+> -----Original Message-----
+> * Required for kernel 4.20
 > 
-> As we have already take care of "VESA VGA" and "EFI VGA", just set the
-> orig_video_isVGA to 0 for any other driver reports as EFI/VESA VGA but
-> is not EFI/VESA VGA.
+> With kernel commit 4ffe713b7587 ("powerpc/mm: Increase the max addressable
+> memory to 2PB"), MAX_PHYSMEM_BITS is bumped up to 51 for SPARSEMEM_VMEMMAP
+> and SPARSEMEM_EXTREME case. Make the appropriate update here.
 > 
-> Signed-off-by: Kairui Song <kasong@redhat.com>
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+
+Hi Hari,
+
+Thank you for your patch, as always.
+
+I'm planning to release makedumpfile v1.6.5 tomorrow, which supports
+up to 4.19 kernel, so this patch will be merged into v1.6.6.
+
+Thanks,
+Kazu
+
 > ---
->  kexec/arch/i386/x86-linux-setup.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  arch/ppc64.c   |    5 +++++
+>  makedumpfile.h |    1 +
+>  2 files changed, 6 insertions(+)
 > 
-> diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-> index dc785a2..a129812 100644
-> --- a/kexec/arch/i386/x86-linux-setup.c
-> +++ b/kexec/arch/i386/x86-linux-setup.c
-> @@ -152,6 +152,11 @@ static int setup_linux_vesafb(struct x86_linux_param_header *real_mode)
->  		err = get_bootparam(&real_mode->orig_video_isVGA, offset, 1);
->  		if (err)
->  			goto out;
+> diff --git a/arch/ppc64.c b/arch/ppc64.c
+> index 947a125..5b8231e 100644
+> --- a/arch/ppc64.c
+> +++ b/arch/ppc64.c
+> @@ -486,6 +486,11 @@ set_ppc64_max_physmem_bits(void)
+>  		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+>  		return TRUE;
+> 
+> +	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_20;
+> +	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> +		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> +		return TRUE;
 > +
-> +		if (real_mode->orig_video_isVGA == 0x70 || real_mode->orig_video_isVGA == 0x23) {
-> +			/* Clear isVGA flag for fb drivers that mimic EFI/VESA VGA */
-> +			real_mode->orig_video_isVGA = 0;
-> +		}
-
-The blindly reuse original isVGA might be a problem like you said, but
-it does work for me for i915 laptop even if later drm driver loaded.
-With your patch it does not work anymore.
-
-kexec reboot with earlyprintk=efi without initramfs looks just hang, but
-previously I can see all the kernel console logs.
-
-Probably you can make real_mode->orig_video_isVGA = 0 as default in the
-else {} section, and introduce an extra x86 only argument for people to
-reuse isVGA blindly. eg.
-
-kexec --reuse-vga-type
-
->  	}
->  	close(fd);
->  
-> -- 
-> 2.19.1
+>  	return FALSE;
+>  }
+> 
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 73813ed..d49f1f1 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -672,6 +672,7 @@ unsigned long get_kvbase_arm64(void);
+>  #define _MAX_PHYSMEM_BITS_ORIG  (44)
+>  #define _MAX_PHYSMEM_BITS_3_7   (46)
+>  #define _MAX_PHYSMEM_BITS_4_19  (47)
+> +#define _MAX_PHYSMEM_BITS_4_20  (51)
+>  #define REGION_SHIFT            (60UL)
+>  #define VMEMMAP_REGION_ID       (0xfUL)
 > 
 > 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-Thanks
-Dave
 
 _______________________________________________
 kexec mailing list
