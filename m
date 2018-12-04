@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from mail-pf1-x441.google.com ([2607:f8b0:4864:20::441])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gTppq-0005Bn-I1
- for kexec@lists.infradead.org; Mon, 03 Dec 2018 15:08:36 +0000
-Date: Mon, 3 Dec 2018 16:08:09 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 1/2 v2] kdump: add the vmcoreinfo documentation
-Message-ID: <20181203150809.GA4794@zn.tnic>
-References: <20181202030839.29945-1-lijiang@redhat.com>
- <20181202030839.29945-2-lijiang@redhat.com>
+ id 1gU15u-0005xG-4o
+ for kexec@lists.infradead.org; Tue, 04 Dec 2018 03:09:55 +0000
+Received: by mail-pf1-x441.google.com with SMTP id z9so7452999pfi.2
+ for <kexec@lists.infradead.org>; Mon, 03 Dec 2018 19:09:40 -0800 (PST)
+Date: Tue, 4 Dec 2018 12:12:37 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH 4/4] kexec/kexec-arm64.c: Add missing error handling paths
+Message-ID: <20181204031236.GA21466@linaro.org>
+References: <1543555965-14399-1-git-send-email-bhsharma@redhat.com>
+ <1543555965-14399-5-git-send-email-bhsharma@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20181202030839.29945-2-lijiang@redhat.com>
+In-Reply-To: <1543555965-14399-5-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,221 +26,123 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>
-Cc: linux-doc@vger.kernel.org, bhe@redhat.com, Jonathan Corbet <corbet@lwn.net>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: bhupesh.linux@gmail.com, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
 
-Add some more Ccs.
+Bhupesh,
 
-On Sun, Dec 02, 2018 at 11:08:38AM +0800, Lianbo Jiang wrote:
-> This document lists some variables that export to vmcoreinfo, and briefly
-> describles what these variables indicate. It should be instructive for
-> many people who do not know the vmcoreinfo, and it also normalizes the
-> exported variable as a standard ABI between kernel and use-space.
+Thank you for submitting a patch. One comment:
 
-Yeah, I'm not sure about it being an ABI. Apparently, it is considered
-too tightly coupled to the kernel for it to be an ABI.
-
-Regardless, thanks for doing that.
-
-> Suggested-by: Borislav Petkov <bp@suse.de>
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> ---
->  Documentation/kdump/vmcoreinfo.txt | 400 +++++++++++++++++++++++++++++
->  1 file changed, 400 insertions(+)
->  create mode 100644 Documentation/kdump/vmcoreinfo.txt
+On Fri, Nov 30, 2018 at 11:02:45AM +0530, Bhupesh Sharma wrote:
+> While creating the 2nd dtb to be passed to the secondary kernel
+> for arm64, we need to handle the return values from helper fdt
+> functions properly, to make sure that we can handle various command-line
+> options being passed to 'kexec' both for kexec load and kdump
+> purposes.
 > 
-> diff --git a/Documentation/kdump/vmcoreinfo.txt b/Documentation/kdump/vmcoreinfo.txt
-
-Aren't we adding new docs in rst format only or what is the logic there?
-
-Jon?
-
-> new file mode 100644
-> index 000000000000..c6759be14af7
-> --- /dev/null
-> +++ b/Documentation/kdump/vmcoreinfo.txt
-> @@ -0,0 +1,400 @@
-> +================================================================
-> +		Documentation for Vmcoreinfo
-> +================================================================
+> This will provide proper error reporting to the calling
+> function in case something goes wrong.
+> 
+> Without this patch, we get misleading error FDT_ERR_BADOFFSET reported
+> when we pass a .dtb to 'kexec -p' using '--dtb' option, which doesn't
+> contain the '/chosen' node (for e.g. the rockchip sapphire board
+> dtb -> rk3399-sapphire.dtb).
+> 
+>    # kexec -d -p Image --reuse-cmdline --dtb rk3399-sapphire.dtb
+>    <..snip..>
+>    load_crashdump_segments: elfcorehdr 0xbfff0000-0xbfff33ff
+>    get_cells_size: #address-cells:2 #size-cells:2
+>    cells_size_fitted: bfff0000-bfff33ff
+>    cells_size_fitted: 8ee00000-bfffffff
+>    setup_2nd_dtb: no kaslr-seed found
+>    setup_2nd_dtb: fdt_setprop failed: FDT_ERR_BADOFFSET
+>    kexec: setup_2nd_dtb failed.
+>    kexec: load failed.
+> 
+> Now after the fix, we get the correct error FDT_ERR_NOTFOUND reported
+> to the calling function:
+> 
+>    # kexec -d -l Image --append 'debug' --dtb rk3399-sapphire.dtb
+>    <..snip..>
+>    load_crashdump_segments: elfcorehdr 0xbfff0000-0xbfff33ff
+>    get_cells_size: #address-cells:2 #size-cells:2
+>    cells_size_fitted: bfff0000-bfff33ff
+>    cells_size_fitted: 8ee00000-bfffffff
+>    setup_2nd_dtb: /chosen node not found - can't create dtb for dump kernel: FDT_ERR_NOTFOUND
+>    kexec: setup_2nd_dtb failed.
+>    kexec: load failed.
+> 
+> 
+> Cc: Simon Horman <horms@verge.net.au>
+> Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> ---
+>  kexec/arch/arm64/kexec-arm64.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> index f4913b2e9480..560d83455f95 100644
+> --- a/kexec/arch/arm64/kexec-arm64.c
+> +++ b/kexec/arch/arm64/kexec-arm64.c
+> @@ -515,6 +515,11 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+>  		}
+>  
+>  		nodeoffset = fdt_path_offset(new_buf, "/chosen");
+> +		if (nodeoffset < 0) {
+> +			result = nodeoffset;
+> +			goto on_error;
+> +		}
 > +
-> +=======================
-> +What is the vmcoreinfo?
-> +=======================
-> +The vmcoreinfo contains the first kernel's various information, for
 
-The first sentence here should be explaining what VMCOREINFO is: it is
-an ELF PT_NOTE section. So that people can go, oh ok, it is a special
-ELF section, when reading.
+I think that the issue should be fixed much earlier:
 
-Then, MAKEDUMPFILE(8) spells VMCOREINFO in all caps and I think we
-should do that too here, for ease of recognition.
+|       /* fixup 'kaslr-seed' with a random value, if supported */
+|       nodeoffset = fdt_path_offset(new_buf, "/chosen");
+|       prop = fdt_getprop_w(new_buf, nodeoffset,
+|                       "kaslr-seed", &len);
 
-Btw, do we have a makedumpfile switch or a tool/script which dumps
-VMCOREINFO contents in human-readable form?
+When we fail to locate "/chosen" here, we'd be better off to create it
+(if necessary). So, *logically*, we won't have to worry about it later on.
 
-Maybe something nicer than:
+-Takahiro Akashi
 
-$ hexdump -C /proc/kcore
 
-> +example, structure size, page size, symbol values and field offset,
-> +etc. These data are encapsulated into an elf format, and these data
-> +will also help user-space tools(e.g. makedumpfile, crash) analyze the
-> +first kernel's memory usage.
+>  		result = fdt_setprop_inplace(new_buf,
+>  				nodeoffset, "kaslr-seed",
+>  				&fdt_val64, sizeof(fdt_val64));
+> @@ -529,6 +534,14 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+>  	if (on_crash) {
+>  		/* add linux,elfcorehdr */
+>  		nodeoffset = fdt_path_offset(new_buf, "/chosen");
+> +		if (nodeoffset < 0) {
+> +			result = nodeoffset;
+> +			dbgprintf("%s: /chosen node not found - can't create "
+> +				"dtb for dump kernel: %s\n", __func__,
+> +				fdt_strerror(result));
+> +			goto on_error;
+> +		}
 > +
-> +================
-> +Common variables
-> +================
+>  		result = fdt_setprop_range(new_buf, nodeoffset,
+>  				PROP_ELFCOREHDR, &elfcorehdr_mem,
+>  				address_cells, size_cells);
+> @@ -541,6 +554,14 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+>  
+>  		/* add linux,usable-memory-range */
+>  		nodeoffset = fdt_path_offset(new_buf, "/chosen");
+> +		if (nodeoffset < 0) {
+> +			result = nodeoffset;
+> +			dbgprintf("%s: /chosen node not found - can't create "
+> +				"dtb for dump kernel: %s\n", __func__,
+> +				fdt_strerror(result));
+> +			goto on_error;
+> +		}
 > +
-> +init_uts_ns.name.release
-> +========================
-> +The number of OS release.
-> +
-> +PAGE_SIZE
-> +=========
-> +The size of a page. It is usually 4k bytes.
-> +
-> +init_uts_ns
-> +===========
-> +This is the UTS namespace, which is used to isolate two specific elements
-> +of the system that relate to the uname system call. The UTS namespace is
-> +named after the data structure used to store information returned by the
-> +uname system call.
-
-Those non-obvious exports should also have a short explanation why
-they're part of VMCOREINFO.
-
-> +
-> +node_online_map
-> +===============
-> +It is a macro definition, actually it is an arrary node_states[N_ONLINE],
-> +and it represents the set of online node in a system, one bit position
-> +per node number.
-
-Ditto.
-
-So yeah, people can find out what those things are but I think it is
-more important to state here *why* they're part of VMCOREINFO and how
-they're used and why they're exported.
-
-Who knows, some might turn out to be not needed anymore. :)
-
-> +
-> +swapper_pg_dir
-> +=============
-> +It is always an array, it gerenally stands for the pgd for the kernel.
-> +When mmu is enabled in config file, the 'swapper_pg_dir' is valid.
-> +
-> +_stext
-> +======
-> +It is an assemble directive that defines the beginning of the text section.
-
-That's an assembly symbol.
-
-> +In gerenal, the '_stext' indicates the kernel start address.
-> +
-> +vmap_area_list
-> +==============
-> +It stores the virtual area list, makedumpfile can get the vmalloc start
-> +value according to this variable.
-
-"... from this variable."
-
-> +
-> +mem_map
-> +=======
-> +Physical addresses are translated to struct pages by treating them as an
-> +index into the mem_map array. Shifting a physical address PAGE_SHIFT bits
-> +to the right will treat it as a PFN from physical address 0, which is also
-> +an index within the mem_map array.
-> +
-> +In a word, it can map the address to struct page.
-
-"In short, ... "
-
-> +
-> +contig_page_data
-> +================
-> +Makedumpfile can get the pglist_data structure according to this symbol
-
-Please look up in the dictionary what "according" means. Using it in
-this context is at least weird.
-
-> +'contig_page_data'. The pglist_data structure is used to describe the
-> +memory layout.
-> +
-> +mem_section|(mem_section, NR_SECTION_ROOTS)|(mem_section, section_mem_map)
-> +==========================================================================
-> +Export the address of 'mem_section' array, and it's length, structure size,
-> +and the 'section_mem_map' offset.
-> +
-> +It exists in the sparse memory mapping model, and it is also somewhat
-> +similar to the mem_map variable, both of them will help to translate
-> +the address.
-> +
-> +page
-> +====
-> +The size of a 'page' structure.
-> +
-> +pglist_data
-> +===========
-> +The size of a 'pglist_data' structure.
-> +
-> +zone
-> +====
-> +The size of a 'zone' structure.
-> +
-> +free_area
-> +=========
-> +The size of a 'free_area' structure.
-> +
-> +list_head
-> +=========
-> +The size of a 'list_head' structure.
-> +
-> +nodemask_t
-> +==========
-> +The size of a 'nodemask_t' type.
-> +
-> +(page, flags|_refcount|mapping|lru|_mapcount|private|compound_dtor|
-> +       compound_order|compound_head)
-> +===================================================================
-> +The page structure is a familiar concept for most of linuxer, there is no
-> +need to explain too much.
-
-Just delete that sentence.
-
-> To know more information, please refer to the
-> +definition of the page struct(include/linux/mm_types.h).
-> +
-> +(pglist_data, node_zones|nr_zones|node_mem_map|node_start_pfn|node_
-> +              spanned_pages|node_id)
-> +===================================================================
-> +On NUMA machines, each NUMA node would have a pg_data_t to describe
-
-s/would have/has/
-
-> +it's memory layout. On UMA machines there is a single pglist_data which
-> +describes the whole memory.
-> +
-> +The pglist_data structure contains these varibales, here export their
-					    ^^^^^^^^^
-
-Before you send next time, run the *whole* text through a spellchecker.
-
-> +offset in the pglist_data structure, which is defined in this file
-> +"include/linux/mmzone.h".
-
-You don't have to state where stuff is defined - I hope everyone
-should be able to grep.
-
-...
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+>  		result = fdt_setprop_range(new_buf, nodeoffset,
+>  				PROP_USABLE_MEM_RANGE, &crash_reserved_mem,
+>  				address_cells, size_cells);
+> -- 
+> 2.7.4
+> 
 
 _______________________________________________
 kexec mailing list
