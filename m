@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gUVOM-0003Y6-Pc
- for kexec@lists.infradead.org; Wed, 05 Dec 2018 11:31:05 +0000
-Date: Wed, 5 Dec 2018 12:30:32 +0100
-From: Borislav Petkov <bp@alien8.de>
+ id 1gUY3c-0004Li-Ex
+ for kexec@lists.infradead.org; Wed, 05 Dec 2018 14:21:45 +0000
 Subject: Re: [PATCH 1/2 v2] kdump: add the vmcoreinfo documentation
-Message-ID: <20181205113032.GF29510@zn.tnic>
 References: <20181202030839.29945-1-lijiang@redhat.com>
- <20181202030839.29945-2-lijiang@redhat.com>
- <20181203150809.GA4794@zn.tnic>
+ <20181202030839.29945-2-lijiang@redhat.com> <20181203150809.GA4794@zn.tnic>
  <779dbae7-f6e2-e9e4-bdd0-0a9e6ec62487@redhat.com>
+ <20181205113032.GF29510@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <3d1a7e68-34c5-d118-fe09-7c9bc14cce84@redhat.com>
+Date: Wed, 5 Dec 2018 22:21:12 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <779dbae7-f6e2-e9e4-bdd0-0a9e6ec62487@redhat.com>
+In-Reply-To: <20181205113032.GF29510@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,64 +22,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
 Cc: linux-doc@vger.kernel.org, bhe@redhat.com, Jonathan Corbet <corbet@lwn.net>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On Tue, Dec 04, 2018 at 05:35:09PM +0800, lijiang wrote:
-> There are more people to review and improve this document together, that would
-> be fine.
-
-That's basically kernel development :)
-
-> Generating VMCOREINFO is easy in the first kernel, for example:
-> # makedumpfile -g VMCOREINFO -x vmlinux
-
-I get:
-
-$ makedumpfile -g VMCOREINFO -x vmlinux
-The kernel version is not supported.
-The makedumpfile operation may be incomplete.
-
-The vmcoreinfo is saved to VMCOREINFO.
-
-makedumpfile Completed.
-
-But the text file looks ok AFAICT. Please add that command to the
-documentation file.
-
-> For these two *why*, it should be easy to understand. Because user-space tools
-> need to know basic information, such as the symbol values, field offset, structure
-> size, etc. Otherwise, these tools won't know how to analyze the memory of the crash
-> kernel.
-
-That's clear. The question is *why* *exactly* is every piece of export
-needed.
-
-> For the second question 'how they are used', we can get the answer
-> from user-space tools, such as makedumpfile, crash tools. Therefore,
-> it may not need to explain any more in kernel document. On the other
-> hand, if we must put these contents into kernel document, i have to
-> say, that would be a hard task.
-
-You can put one or two sentences for each, stating what they're used
-for. This way, people can go and look up makedumpfile source code for
-further info and people trying to add new items to VMCOREINFO can look
-in this documentation here first to figure out whether maybe the info
-they need has been exported already.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTjlubQxMuaciDA15pelIDE5OjMwLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IFR1ZSwgRGVjIDA0LCAyMDE4IGF0IDA1OjM1OjA5UE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
+IFRoZXJlIGFyZSBtb3JlIHBlb3BsZSB0byByZXZpZXcgYW5kIGltcHJvdmUgdGhpcyBkb2N1bWVu
+dCB0b2dldGhlciwgdGhhdCB3b3VsZAo+PiBiZSBmaW5lLgo+IAo+IFRoYXQncyBiYXNpY2FsbHkg
+a2VybmVsIGRldmVsb3BtZW50IDopCj4gCj4+IEdlbmVyYXRpbmcgVk1DT1JFSU5GTyBpcyBlYXN5
+IGluIHRoZSBmaXJzdCBrZXJuZWwsIGZvciBleGFtcGxlOgo+PiAjIG1ha2VkdW1wZmlsZSAtZyBW
+TUNPUkVJTkZPIC14IHZtbGludXgKPiAKPiBJIGdldDoKPiAKPiAkIG1ha2VkdW1wZmlsZSAtZyBW
+TUNPUkVJTkZPIC14IHZtbGludXgKPiBUaGUga2VybmVsIHZlcnNpb24gaXMgbm90IHN1cHBvcnRl
+ZC4KPiBUaGUgbWFrZWR1bXBmaWxlIG9wZXJhdGlvbiBtYXkgYmUgaW5jb21wbGV0ZS4KPiAKPiBU
+aGUgdm1jb3JlaW5mbyBpcyBzYXZlZCB0byBWTUNPUkVJTkZPLgo+IAo+IG1ha2VkdW1wZmlsZSBD
+b21wbGV0ZWQuCj4gCj4gQnV0IHRoZSB0ZXh0IGZpbGUgbG9va3Mgb2sgQUZBSUNULiBQbGVhc2Ug
+YWRkIHRoYXQgY29tbWFuZCB0byB0aGUKPiBkb2N1bWVudGF0aW9uIGZpbGUuCj4gCgpPaywgbm8g
+cHJvYmxlbS4KCj4+IEZvciB0aGVzZSB0d28gKndoeSosIGl0IHNob3VsZCBiZSBlYXN5IHRvIHVu
+ZGVyc3RhbmQuIEJlY2F1c2UgdXNlci1zcGFjZSB0b29scwo+PiBuZWVkIHRvIGtub3cgYmFzaWMg
+aW5mb3JtYXRpb24sIHN1Y2ggYXMgdGhlIHN5bWJvbCB2YWx1ZXMsIGZpZWxkIG9mZnNldCwgc3Ry
+dWN0dXJlCj4+IHNpemUsIGV0Yy4gT3RoZXJ3aXNlLCB0aGVzZSB0b29scyB3b24ndCBrbm93IGhv
+dyB0byBhbmFseXplIHRoZSBtZW1vcnkgb2YgdGhlIGNyYXNoCj4+IGtlcm5lbC4KPiAKPiBUaGF0
+J3MgY2xlYXIuIFRoZSBxdWVzdGlvbiBpcyAqd2h5KiAqZXhhY3RseSogaXMgZXZlcnkgcGllY2Ug
+b2YgZXhwb3J0Cj4gbmVlZGVkLgo+IAo+PiBGb3IgdGhlIHNlY29uZCBxdWVzdGlvbiAnaG93IHRo
+ZXkgYXJlIHVzZWQnLCB3ZSBjYW4gZ2V0IHRoZSBhbnN3ZXIKPj4gZnJvbSB1c2VyLXNwYWNlIHRv
+b2xzLCBzdWNoIGFzIG1ha2VkdW1wZmlsZSwgY3Jhc2ggdG9vbHMuIFRoZXJlZm9yZSwKPj4gaXQg
+bWF5IG5vdCBuZWVkIHRvIGV4cGxhaW4gYW55IG1vcmUgaW4ga2VybmVsIGRvY3VtZW50LiBPbiB0
+aGUgb3RoZXIKPj4gaGFuZCwgaWYgd2UgbXVzdCBwdXQgdGhlc2UgY29udGVudHMgaW50byBrZXJu
+ZWwgZG9jdW1lbnQsIGkgaGF2ZSB0bwo+PiBzYXksIHRoYXQgd291bGQgYmUgYSBoYXJkIHRhc2su
+Cj4gCj4gWW91IGNhbiBwdXQgb25lIG9yIHR3byBzZW50ZW5jZXMgZm9yIGVhY2gsIHN0YXRpbmcg
+d2hhdCB0aGV5J3JlIHVzZWQKPiBmb3IuIFRoaXMgd2F5LCBwZW9wbGUgY2FuIGdvIGFuZCBsb29r
+IHVwIG1ha2VkdW1wZmlsZSBzb3VyY2UgY29kZSBmb3IKPiBmdXJ0aGVyIGluZm8gYW5kIHBlb3Bs
+ZSB0cnlpbmcgdG8gYWRkIG5ldyBpdGVtcyB0byBWTUNPUkVJTkZPIGNhbiBsb29rCj4gaW4gdGhp
+cyBkb2N1bWVudGF0aW9uIGhlcmUgZmlyc3QgdG8gZmlndXJlIG91dCB3aGV0aGVyIG1heWJlIHRo
+ZSBpbmZvCj4gdGhleSBuZWVkIGhhcyBiZWVuIGV4cG9ydGVkIGFscmVhZHkuCj4gCgpUaGlzIGlz
+IGEgY29uc2lkZXJhdGUgc3VnZ2VzdGlvbi4KCkkgd2lsbCB0cnkgbXkgYmVzdCB0byBkbyB0aGF0
+LgoKVGhhbmtzLgoKTGlhbmJvLgoKPiBUaHguCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
+eGVjCg==
