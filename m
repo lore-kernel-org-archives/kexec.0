@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gUTOS-0004tV-BX
- for kexec@lists.infradead.org; Wed, 05 Dec 2018 09:22:57 +0000
-From: Kairui Song <kasong@redhat.com>
-Subject: [PATCH v2] x86: Handle 64bit framebuffer memory address properly
-Date: Wed,  5 Dec 2018 17:21:01 +0800
-Message-Id: <20181205092101.22205-1-kasong@redhat.com>
+ id 1gUUEy-0002Ht-FT
+ for kexec@lists.infradead.org; Wed, 05 Dec 2018 10:17:13 +0000
+Date: Wed, 5 Dec 2018 18:16:53 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 1/2 v2] kdump: add the vmcoreinfo documentation
+Message-ID: <20181205101653.GA6940@dhcp-128-65.nay.redhat.com>
+References: <20181202030839.29945-1-lijiang@redhat.com>
+ <20181202030839.29945-2-lijiang@redhat.com>
+ <20181203150809.GA4794@zn.tnic>
+ <779dbae7-f6e2-e9e4-bdd0-0a9e6ec62487@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <779dbae7-f6e2-e9e4-bdd0-0a9e6ec62487@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,83 +26,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au, dyoung@redhat.com, Kairui Song <kasong@redhat.com>
+To: lijiang <lijiang@redhat.com>
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, linux-doc@vger.kernel.org, bhe@redhat.com, Jonathan Corbet <corbet@lwn.net>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, Borislav Petkov <bp@alien8.de>, tglx@linutronix.de, akpm@linux-foundation.org
 
-In a EFI system, the frame buffer address is 64bit, so currently
-if the address is beyound 4G, kexec will set wrong address due to
-truncate.
+> >> +init_uts_ns
+> >> +===========
+> >> +This is the UTS namespace, which is used to isolate two specific elements
+> >> +of the system that relate to the uname system call. The UTS namespace is
+> >> +named after the data structure used to store information returned by the
+> >> +uname system call.
+> > 
+> > Those non-obvious exports should also have a short explanation why
+> > they're part of VMCOREINFO.
+> > 
+> >> +
+> >> +node_online_map
+> >> +===============
+> >> +It is a macro definition, actually it is an arrary node_states[N_ONLINE],
+> >> +and it represents the set of online node in a system, one bit position
+> >> +per node number.
+> > 
+> > Ditto.
+> > 
+> > So yeah, people can find out what those things are but I think it is
+> > more important to state here *why* they're part of VMCOREINFO and how
+> > they're used and why they're exported.
+> > 
+> 
+> This is a good question.
+> 
+> For these two *why*, it should be easy to understand. Because user-space tools
+> need to know basic information, such as the symbol values, field offset, structure
+> size, etc. Otherwise, these tools won't know how to analyze the memory of the crash
+> kernel.
+> 
+> For the second question 'how they are used', we can get the answer from user-space
+> tools, such as makedumpfile, crash tools. Therefore, it may not need to explain any
+> more in kernel document. On the other hand, if we must put these contents into kernel
+> document, i have to say, that would be a hard task.
 
-Linux kernel commit ae2ee627dc87 ('efifb: Add support for 64-bit
-frame buffer addresses') added support for 64bit frame buffer
-address, an 'ext_lfb_base' field is added as the upper 32-bits of
-the frame buffer, and introduced a new capability flag
-'VIDEO_TYPE_CAPABILITY_64BIT_BASE' to indicate if the extend field is
-used.
+It should be a good chance to learn how makedumpfile works :),  Maybe it is
+hard to get *all* of them, but it would be good to dig and find the
+thing you can find then explain it.  And leave those *unknown* part as
+FIXME or TODO, people can add description later. 
 
-This patch adopts this change, set proper extent address and capability
-flag when the address is beyound 4G.
+Added Kazu in cc as well..
 
-Signed-off-by: Kairui Song <kasong@redhat.com>
----
-Update from V1:
-- Use 0xffffffffUL instead of 0xffffffff for comparing and bit operation
-  with smem_start to make it cleaner and safer, as smem_start is an
-  unsigned long.
-
- include/x86/x86-linux.h           | 7 +++++--
- kexec/arch/i386/x86-linux-setup.c | 7 ++++++-
- 2 files changed, 11 insertions(+), 3 deletions(-)
-
-diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
-index 7834751..352ea02 100644
---- a/include/x86/x86-linux.h
-+++ b/include/x86/x86-linux.h
-@@ -107,7 +107,10 @@ struct x86_linux_param_header {
- 	uint16_t vesapm_seg;			/* 0x2e */
- 	uint16_t vesapm_off;			/* 0x30 */
- 	uint16_t pages;				/* 0x32 */
--	uint8_t  reserved4[12];			/* 0x34 -- 0x3f reserved for future expansion */
-+	uint16_t vesa_attributes;		/* 0x34 */
-+	uint32_t capabilities;			/* 0x36 */
-+	uint32_t ext_lfb_base;			/* 0x3a */
-+	uint8_t  reserved4[2];			/* 0x3e -- 0x3f reserved for future expansion */
- 
- 	struct apm_bios_info apm_bios_info;	/* 0x40 */
- 	struct drive_info_struct drive_info;	/* 0x80 */
-@@ -199,7 +202,7 @@ struct x86_linux_param_header {
- 	struct 	edd_info eddbuf[EDDMAXNR];	/* 0xd00 */
- 						/* 0xeec */
- #define COMMAND_LINE_SIZE 2048
--};
-+} __attribute__((packed));
- 
- struct x86_linux_faked_param_header {
- 	struct x86_linux_param_header hdr;	/* 0x00 */
-diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index 6cda12c..1bd408b 100644
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -158,10 +158,15 @@ static int setup_linux_vesafb(struct x86_linux_param_header *real_mode)
- 	real_mode->lfb_width      = var.xres;
- 	real_mode->lfb_height     = var.yres;
- 	real_mode->lfb_depth      = var.bits_per_pixel;
--	real_mode->lfb_base       = fix.smem_start;
-+	real_mode->lfb_base       = fix.smem_start & 0xffffffffUL;
- 	real_mode->lfb_linelength = fix.line_length;
- 	real_mode->vesapm_seg     = 0;
- 
-+	if (fix.smem_start > 0xffffffffUL) {
-+		real_mode->ext_lfb_base = fix.smem_start >> 32;
-+		real_mode->capabilities |= VIDEO_CAPABILITY_64BIT_BASE;
-+	}
-+
- 	/* FIXME: better get size from the file returned by proc_iomem() */
- 	real_mode->lfb_size       = (fix.smem_len + 65535) / 65536;
- 	real_mode->pages          = (fix.smem_len + 4095) / 4096;
--- 
-2.19.1
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
