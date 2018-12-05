@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-f66.google.com ([209.85.166.66])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gUS5a-0006Li-B3
- for kexec@lists.infradead.org; Wed, 05 Dec 2018 07:59:24 +0000
-Received: by mail-io1-f66.google.com with SMTP id n9so7887362ioo.2
- for <kexec@lists.infradead.org>; Tue, 04 Dec 2018 23:59:11 -0800 (PST)
-MIME-Version: 1.0
-References: <20181123092801.16411-1-kasong@redhat.com>
- <20181204121024.GA2168@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20181204121024.GA2168@dhcp-128-65.nay.redhat.com>
+ id 1gUTOS-0004tV-BX
+ for kexec@lists.infradead.org; Wed, 05 Dec 2018 09:22:57 +0000
 From: Kairui Song <kasong@redhat.com>
-Date: Wed, 5 Dec 2018 15:58:59 +0800
-Message-ID: <CACPcB9fWrFmeOiMiNfXkr_FXcDRnk-AgJ=-kwrmnFjuN_tfi2A@mail.gmail.com>
-Subject: Re: [PATCH] x86: Clear isVGA flag if current fb driver is mimicking
- VGA
+Subject: [PATCH v2] x86: Handle 64bit framebuffer memory address properly
+Date: Wed,  5 Dec 2018 17:21:01 +0800
+Message-Id: <20181205092101.22205-1-kasong@redhat.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,80 +20,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au, dyoung@redhat.com, Kairui Song <kasong@redhat.com>
 
-Thanks for the feedback!
-This didn't happen with my laptop with i915, blindly using previous vga type
-is not working for it, so didn't expect it would break some i915 devices.
-I tried with my home laptop (also use i915) again and this patch did
-break the previous working vga.
-Will adopt your suggestion and update the patch.
-On Tue, Dec 4, 2018 at 8:10 PM Dave Young <dyoung@redhat.com> wrote:
->
-> On 11/23/18 at 05:28pm, Kairui Song wrote:
-> > Some device (eg. hyperv_fb) will mimic EFI (or VESA) VGA on first boot
-> > up, but after the real driver is loaded, it will switch to new mode
-> > and no longer compatible with EFI/VESA VGA. Keep setting
-> > orig_video_isVGA to EFI/VESA VGA flag will get wrong driver loaded and
-> > try to manipulate the framebuffer in a wrong way.
-> >
-> > As we have already take care of "VESA VGA" and "EFI VGA", just set the
-> > orig_video_isVGA to 0 for any other driver reports as EFI/VESA VGA but
-> > is not EFI/VESA VGA.
-> >
-> > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > ---
-> >  kexec/arch/i386/x86-linux-setup.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-> > index dc785a2..a129812 100644
-> > --- a/kexec/arch/i386/x86-linux-setup.c
-> > +++ b/kexec/arch/i386/x86-linux-setup.c
-> > @@ -152,6 +152,11 @@ static int setup_linux_vesafb(struct x86_linux_param_header *real_mode)
-> >               err = get_bootparam(&real_mode->orig_video_isVGA, offset, 1);
-> >               if (err)
-> >                       goto out;
-> > +
-> > +             if (real_mode->orig_video_isVGA == 0x70 || real_mode->orig_video_isVGA == 0x23) {
-> > +                     /* Clear isVGA flag for fb drivers that mimic EFI/VESA VGA */
-> > +                     real_mode->orig_video_isVGA = 0;
-> > +             }
->
-> The blindly reuse original isVGA might be a problem like you said, but
-> it does work for me for i915 laptop even if later drm driver loaded.
-> With your patch it does not work anymore.
->
-> kexec reboot with earlyprintk=efi without initramfs looks just hang, but
-> previously I can see all the kernel console logs.
->
-> Probably you can make real_mode->orig_video_isVGA = 0 as default in the
-> else {} section, and introduce an extra x86 only argument for people to
-> reuse isVGA blindly. eg.
->
-> kexec --reuse-vga-type
->
-> >       }
-> >       close(fd);
-> >
-> > --
-> > 2.19.1
-> >
-> >
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
->
-> Thanks
-> Dave
+In a EFI system, the frame buffer address is 64bit, so currently
+if the address is beyound 4G, kexec will set wrong address due to
+truncate.
 
+Linux kernel commit ae2ee627dc87 ('efifb: Add support for 64-bit
+frame buffer addresses') added support for 64bit frame buffer
+address, an 'ext_lfb_base' field is added as the upper 32-bits of
+the frame buffer, and introduced a new capability flag
+'VIDEO_TYPE_CAPABILITY_64BIT_BASE' to indicate if the extend field is
+used.
 
+This patch adopts this change, set proper extent address and capability
+flag when the address is beyound 4G.
 
---
-Best Regards,
-Kairui Song
+Signed-off-by: Kairui Song <kasong@redhat.com>
+---
+Update from V1:
+- Use 0xffffffffUL instead of 0xffffffff for comparing and bit operation
+  with smem_start to make it cleaner and safer, as smem_start is an
+  unsigned long.
+
+ include/x86/x86-linux.h           | 7 +++++--
+ kexec/arch/i386/x86-linux-setup.c | 7 ++++++-
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
+index 7834751..352ea02 100644
+--- a/include/x86/x86-linux.h
++++ b/include/x86/x86-linux.h
+@@ -107,7 +107,10 @@ struct x86_linux_param_header {
+ 	uint16_t vesapm_seg;			/* 0x2e */
+ 	uint16_t vesapm_off;			/* 0x30 */
+ 	uint16_t pages;				/* 0x32 */
+-	uint8_t  reserved4[12];			/* 0x34 -- 0x3f reserved for future expansion */
++	uint16_t vesa_attributes;		/* 0x34 */
++	uint32_t capabilities;			/* 0x36 */
++	uint32_t ext_lfb_base;			/* 0x3a */
++	uint8_t  reserved4[2];			/* 0x3e -- 0x3f reserved for future expansion */
+ 
+ 	struct apm_bios_info apm_bios_info;	/* 0x40 */
+ 	struct drive_info_struct drive_info;	/* 0x80 */
+@@ -199,7 +202,7 @@ struct x86_linux_param_header {
+ 	struct 	edd_info eddbuf[EDDMAXNR];	/* 0xd00 */
+ 						/* 0xeec */
+ #define COMMAND_LINE_SIZE 2048
+-};
++} __attribute__((packed));
+ 
+ struct x86_linux_faked_param_header {
+ 	struct x86_linux_param_header hdr;	/* 0x00 */
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+index 6cda12c..1bd408b 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -158,10 +158,15 @@ static int setup_linux_vesafb(struct x86_linux_param_header *real_mode)
+ 	real_mode->lfb_width      = var.xres;
+ 	real_mode->lfb_height     = var.yres;
+ 	real_mode->lfb_depth      = var.bits_per_pixel;
+-	real_mode->lfb_base       = fix.smem_start;
++	real_mode->lfb_base       = fix.smem_start & 0xffffffffUL;
+ 	real_mode->lfb_linelength = fix.line_length;
+ 	real_mode->vesapm_seg     = 0;
+ 
++	if (fix.smem_start > 0xffffffffUL) {
++		real_mode->ext_lfb_base = fix.smem_start >> 32;
++		real_mode->capabilities |= VIDEO_CAPABILITY_64BIT_BASE;
++	}
++
+ 	/* FIXME: better get size from the file returned by proc_iomem() */
+ 	real_mode->lfb_size       = (fix.smem_len + 65535) / 65536;
+ 	real_mode->pages          = (fix.smem_len + 4095) / 4096;
+-- 
+2.19.1
+
 
 _______________________________________________
 kexec mailing list
