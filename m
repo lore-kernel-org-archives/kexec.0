@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gUUEy-0002Ht-FT
- for kexec@lists.infradead.org; Wed, 05 Dec 2018 10:17:13 +0000
-Date: Wed, 5 Dec 2018 18:16:53 +0800
+ id 1gUULx-0004CT-P2
+ for kexec@lists.infradead.org; Wed, 05 Dec 2018 10:24:27 +0000
+Date: Wed, 5 Dec 2018 18:24:07 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 1/2 v2] kdump: add the vmcoreinfo documentation
-Message-ID: <20181205101653.GA6940@dhcp-128-65.nay.redhat.com>
+Subject: Re: [PATCH 2/2 v2] kdump, vmcoreinfo: Export the value of sme mask to
+ vmcoreinfo
+Message-ID: <20181205102407.GB6940@dhcp-128-65.nay.redhat.com>
 References: <20181202030839.29945-1-lijiang@redhat.com>
- <20181202030839.29945-2-lijiang@redhat.com>
- <20181203150809.GA4794@zn.tnic>
- <779dbae7-f6e2-e9e4-bdd0-0a9e6ec62487@redhat.com>
+ <20181202030839.29945-3-lijiang@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <779dbae7-f6e2-e9e4-bdd0-0a9e6ec62487@redhat.com>
+In-Reply-To: <20181202030839.29945-3-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,51 +25,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, linux-doc@vger.kernel.org, bhe@redhat.com, Jonathan Corbet <corbet@lwn.net>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, Borislav Petkov <bp@alien8.de>, tglx@linutronix.de, akpm@linux-foundation.org
+To: Lianbo Jiang <lijiang@redhat.com>
+Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, bp@alien8.de, tglx@linutronix.de, akpm@linux-foundation.org
 
-> >> +init_uts_ns
-> >> +===========
-> >> +This is the UTS namespace, which is used to isolate two specific elements
-> >> +of the system that relate to the uname system call. The UTS namespace is
-> >> +named after the data structure used to store information returned by the
-> >> +uname system call.
-> > 
-> > Those non-obvious exports should also have a short explanation why
-> > they're part of VMCOREINFO.
-> > 
-> >> +
-> >> +node_online_map
-> >> +===============
-> >> +It is a macro definition, actually it is an arrary node_states[N_ONLINE],
-> >> +and it represents the set of online node in a system, one bit position
-> >> +per node number.
-> > 
-> > Ditto.
-> > 
-> > So yeah, people can find out what those things are but I think it is
-> > more important to state here *why* they're part of VMCOREINFO and how
-> > they're used and why they're exported.
-> > 
+On 12/02/18 at 11:08am, Lianbo Jiang wrote:
+> For AMD machine with SME feature, makedumpfile tools need to know
+> whether the crash kernel was encrypted or not. If SME is enabled
+> in the first kernel, the crash kernel's page table(pgd/pud/pmd/pte)
+> contains the memory encryption mask, so need to remove the sme mask
+> to obtain the true physical address.
 > 
-> This is a good question.
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> ---
+>  arch/x86/kernel/machine_kexec_64.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> For these two *why*, it should be easy to understand. Because user-space tools
-> need to know basic information, such as the symbol values, field offset, structure
-> size, etc. Otherwise, these tools won't know how to analyze the memory of the crash
-> kernel.
-> 
-> For the second question 'how they are used', we can get the answer from user-space
-> tools, such as makedumpfile, crash tools. Therefore, it may not need to explain any
-> more in kernel document. On the other hand, if we must put these contents into kernel
-> document, i have to say, that would be a hard task.
+> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> index 4c8acdfdc5a7..1860fe24117d 100644
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+> @@ -352,10 +352,24 @@ void machine_kexec(struct kimage *image)
+>  
+>  void arch_crash_save_vmcoreinfo(void)
+>  {
+> +	u64 sme_mask = sme_me_mask;
+> +
+>  	VMCOREINFO_NUMBER(phys_base);
+>  	VMCOREINFO_SYMBOL(init_top_pgt);
+>  	vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
+>  			pgtable_l5_enabled());
+> +	/*
+> +	 * Currently, the local variable 'sme_mask' stores the value of
+> +	 * sme_me_mask(bit 47), and also write the value of sme_mask to
+> +	 * the vmcoreinfo.
+> +	 * If need, the bit(sme_mask) might be redefined in the future,
+> +	 * but the 'bit63' will be reserved.
+> +	 * For example:
+> +	 * [ misc	   ][ enc bit  ][ other misc SME info       ]
+> +	 * 0000_0000_0000_0000_1000_0000_0000_0000_0000_0000_..._0000
+> +	 * 63   59   55   51   47   43   39   35   31   27   ... 3
+> +	 */
+> +	VMCOREINFO_NUMBER(sme_mask);
 
-It should be a good chance to learn how makedumpfile works :),  Maybe it is
-hard to get *all* of them, but it would be good to dig and find the
-thing you can find then explain it.  And leave those *unknown* part as
-FIXME or TODO, people can add description later. 
+#define VMCOREINFO_NUMBER(name) \
+        vmcoreinfo_append_str("NUMBER(%s)=%ld\n", #name, (long)name)
 
-Added Kazu in cc as well..
+VMCOREINFO_NUMBER is defined as above, so it looks questionable to add
+more users of that for different data types although it may work in real
+world.
+
+A new macro like below may be better, may need to choose a better name
+though:
+_VMCOREINFO_NUMBER(name, format, type)
+so you can pass the format specifier and data types explictly
+
+
+>  
+>  #ifdef CONFIG_NUMA
+>  	VMCOREINFO_SYMBOL(node_data);
+> -- 
+> 2.17.1
+> 
 
 Thanks
 Dave
