@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gUwEG-00018t-KJ
- for kexec@lists.infradead.org; Thu, 06 Dec 2018 16:10:24 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile/ppc64: increase MAX_PHYSMEM_BITS to 2PB
-Date: Thu, 6 Dec 2018 16:09:15 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC035643AE@BPXM09GP.gisp.nec.co.jp>
-References: <154392057860.8770.14995516431234212273.stgit@hbathini.in.ibm.com>
-In-Reply-To: <154392057860.8770.14995516431234212273.stgit@hbathini.in.ibm.com>
-Content-Language: en-US
+ id 1gV00H-0007tn-0Y
+ for kexec@lists.infradead.org; Thu, 06 Dec 2018 20:12:11 +0000
+Date: Thu, 6 Dec 2018 21:11:47 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/2 v8] resource: add the new I/O resource descriptor
+ 'IORES_DESC_RESERVED'
+Message-ID: <20181206201147.GG3986@zn.tnic>
+References: <20181129080956.20776-1-lijiang@redhat.com>
+ <20181129080956.20776-2-lijiang@redhat.com>
+ <20181130033703.GA23624@dhcp-128-65.nay.redhat.com>
+ <bbf6352b-b060-4cb8-dfd2-99166b0149a7@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <bbf6352b-b060-4cb8-dfd2-99166b0149a7@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,57 +27,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Dave Young <dyoung@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Kexec-ml <kexec@lists.infradead.org>
+To: lijiang <lijiang@redhat.com>
+Cc: tony.luck@intel.com, fenghua.yu@intel.com, linux-efi@vger.kernel.org, linux-ia64@vger.kernel.org, bhe@redhat.com, ard.biesheuvel@linaro.org, peterz@infradead.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, dave.hansen@linux.intel.com, Tom Lendacky <thomas.lendacky@amd.com>, luto@kernel.org, Toshi Kani <toshi.kani@hp.com>, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>
 
-> -----Original Message-----
-> * Required for kernel 4.20
+On Fri, Nov 30, 2018 at 03:04:44PM +0800, lijiang wrote:
+> I have noticed the changes on x86, but for IA64, i'm not sure whether it should do the same
+> thing, so keep it as before.
 > 
-> With kernel commit 4ffe713b7587 ("powerpc/mm: Increase the max addressable
-> memory to 2PB"), MAX_PHYSMEM_BITS is bumped up to 51 for SPARSEMEM_VMEMMAP
-> and SPARSEMEM_EXTREME case. Make the appropriate update here.
-> 
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> If IA64 people would like to give any comment, that will be appreciated.
 
-Applied to the devel branch.
+I think you should not touch ia64 and not make Tony unnecessarily power
+up the old rust.
 
-Thanks,
-Kazu
+:-)
 
-> ---
->  arch/ppc64.c   |    5 +++++
->  makedumpfile.h |    1 +
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/arch/ppc64.c b/arch/ppc64.c
-> index 947a125..5b8231e 100644
-> --- a/arch/ppc64.c
-> +++ b/arch/ppc64.c
-> @@ -486,6 +486,11 @@ set_ppc64_max_physmem_bits(void)
->  		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
->  		return TRUE;
-> 
-> +	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_20;
-> +	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> +		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> +		return TRUE;
-> +
->  	return FALSE;
->  }
-> 
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index 73813ed..d49f1f1 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -672,6 +672,7 @@ unsigned long get_kvbase_arm64(void);
->  #define _MAX_PHYSMEM_BITS_ORIG  (44)
->  #define _MAX_PHYSMEM_BITS_3_7   (46)
->  #define _MAX_PHYSMEM_BITS_4_19  (47)
-> +#define _MAX_PHYSMEM_BITS_4_20  (51)
->  #define REGION_SHIFT            (60UL)
->  #define VMEMMAP_REGION_ID       (0xfUL)
-> 
-> 
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
