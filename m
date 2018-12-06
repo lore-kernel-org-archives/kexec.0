@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 6 Dec 2018 15:54:24 +0000
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v16 06/16] lib: fdt: add a helper function for handling
- memory range property
-Message-ID: <20181206155424.GA4422@arm.com>
-References: <20181115055254.2812-1-takahiro.akashi@linaro.org>
- <20181115055254.2812-7-takahiro.akashi@linaro.org>
- <CAL_JsqL4_Z5pVfoB3opjL7eTzZvhBJW7_aQS443quAAR0gGH1w@mail.gmail.com>
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gUwEG-00018t-KJ
+ for kexec@lists.infradead.org; Thu, 06 Dec 2018 16:10:24 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile/ppc64: increase MAX_PHYSMEM_BITS to 2PB
+Date: Thu, 6 Dec 2018 16:09:15 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC035643AE@BPXM09GP.gisp.nec.co.jp>
+References: <154392057860.8770.14995516431234212273.stgit@hbathini.in.ibm.com>
+In-Reply-To: <154392057860.8770.14995516431234212273.stgit@hbathini.in.ibm.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqL4_Z5pVfoB3opjL7eTzZvhBJW7_aQS443quAAR0gGH1w@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,47 +23,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: prudo@linux.ibm.com, Herbert Xu <herbert@gondor.apana.org.au>, Baoquan He <bhe@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, Frank Rowand <frowand.list@gmail.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, "AKASHI,
- Takahiro" <takahiro.akashi@linaro.org>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, James Morse <james.morse@arm.com>, dyoung@redhat.com, David Miller <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Dave Young <dyoung@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Kexec-ml <kexec@lists.infradead.org>
 
-Hi Rob,
-
-Thanks for reviewing this.
-
-On Thu, Dec 06, 2018 at 08:47:04AM -0600, Rob Herring wrote:
-> On Wed, Nov 14, 2018 at 11:52 PM AKASHI Takahiro
-> <takahiro.akashi@linaro.org> wrote:
-> >
-> > Added function, fdt_setprop_reg(), will be used later to handle
-> > kexec-specific property in arm64's kexec_file implementation.
-> > It will possibly be merged into libfdt in the future.
+> -----Original Message-----
+> * Required for kernel 4.20
 > 
-> You generally can't modify libfdt files. Any changes will be blown
-> away with the next dtc sync (there's one in -next now). Though here
-> you are creating a new location with fdt code. lib/ is just a shim to
-> the actual libfdt code. Don't put any implementation there. You can
-> add this to drivers/of/fdt_address.c for the short term, but it still
-> needs to go upstream.
+> With kernel commit 4ffe713b7587 ("powerpc/mm: Increase the max addressable
+> memory to 2PB"), MAX_PHYSMEM_BITS is bumped up to 51 for SPARSEMEM_VMEMMAP
+> and SPARSEMEM_EXTREME case. Make the appropriate update here.
 > 
-> Otherwise, the implementation looks fine to me.
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
 
-I agree, but I don't think there's a real need for us to hack
-drivers/of/fdt_address.c in the meantime -- let's just target upstream
-and not carry this in the kernel.
-
-Akashi -- for now, I'll drop the kdump parts of this series which rely
-on this helper. The majority of the series is actually independent and
-can go in as-is.
-
-I've pushed out a kexec branch to the arm64 tree for you to take a look
-at:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=kexec
+Applied to the devel branch.
 
 Thanks,
+Kazu
 
-Will
+> ---
+>  arch/ppc64.c   |    5 +++++
+>  makedumpfile.h |    1 +
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/arch/ppc64.c b/arch/ppc64.c
+> index 947a125..5b8231e 100644
+> --- a/arch/ppc64.c
+> +++ b/arch/ppc64.c
+> @@ -486,6 +486,11 @@ set_ppc64_max_physmem_bits(void)
+>  		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+>  		return TRUE;
+> 
+> +	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_20;
+> +	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> +		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> +		return TRUE;
+> +
+>  	return FALSE;
+>  }
+> 
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 73813ed..d49f1f1 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -672,6 +672,7 @@ unsigned long get_kvbase_arm64(void);
+>  #define _MAX_PHYSMEM_BITS_ORIG  (44)
+>  #define _MAX_PHYSMEM_BITS_3_7   (46)
+>  #define _MAX_PHYSMEM_BITS_4_19  (47)
+> +#define _MAX_PHYSMEM_BITS_4_20  (51)
+>  #define REGION_SHIFT            (60UL)
+>  #define VMEMMAP_REGION_ID       (0xfUL)
+> 
+> 
 
 _______________________________________________
 kexec mailing list
