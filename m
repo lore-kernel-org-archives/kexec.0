@@ -1,20 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gUdpT-0001yf-MW
- for kexec@lists.infradead.org; Wed, 05 Dec 2018 20:31:33 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH 1/2 v2] kdump: add the vmcoreinfo documentation
-Date: Wed, 5 Dec 2018 20:29:14 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC0356426E@BPXM09GP.gisp.nec.co.jp>
-References: <20181202030839.29945-1-lijiang@redhat.com>
- <20181202030839.29945-2-lijiang@redhat.com> <20181203150809.GA4794@zn.tnic>
- <779dbae7-f6e2-e9e4-bdd0-0a9e6ec62487@redhat.com>
- <20181205113032.GF29510@zn.tnic>
- <3d1a7e68-34c5-d118-fe09-7c9bc14cce84@redhat.com>
-In-Reply-To: <3d1a7e68-34c5-d118-fe09-7c9bc14cce84@redhat.com>
-Content-Language: en-US
 MIME-Version: 1.0
+References: <20181115055254.2812-1-takahiro.akashi@linaro.org>
+ <20181115055254.2812-7-takahiro.akashi@linaro.org>
+In-Reply-To: <20181115055254.2812-7-takahiro.akashi@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Date: Thu, 6 Dec 2018 08:47:04 -0600
+Message-ID: <CAL_JsqL4_Z5pVfoB3opjL7eTzZvhBJW7_aQS443quAAR0gGH1w@mail.gmail.com>
+Subject: Re: [PATCH v16 06/16] lib: fdt: add a helper function for handling
+ memory range property
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,41 +20,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "bhe@redhat.com" <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "dyoung@redhat.com" <dyoung@redhat.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
+Cc: prudo@linux.ibm.com, Herbert Xu <herbert@gondor.apana.org.au>, Baoquan He <bhe@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, Frank Rowand <frowand.list@gmail.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, David Howells <dhowells@redhat.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, James Morse <james.morse@arm.com>, dyoung@redhat.com, David Miller <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
 
-> >> Generating VMCOREINFO is easy in the first kernel, for example:
-> >> # makedumpfile -g VMCOREINFO -x vmlinux
-> >
-> > I get:
-> >
-> > $ makedumpfile -g VMCOREINFO -x vmlinux
-> > The kernel version is not supported.
-> > The makedumpfile operation may be incomplete.
-> >
-> > The vmcoreinfo is saved to VMCOREINFO.
-> >
-> > makedumpfile Completed.
-> >
-> > But the text file looks ok AFAICT. Please add that command to the
-> > documentation file.
-> >
+On Wed, Nov 14, 2018 at 11:52 PM AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
+>
+> Added function, fdt_setprop_reg(), will be used later to handle
+> kexec-specific property in arm64's kexec_file implementation.
+> It will possibly be merged into libfdt in the future.
 
-Please note that this VMCOREINFO is generated from the information in
-the vmlinux only, not from the running kernel and /proc/kcore. So if
-we add a command to dump it from running kernel, it's not suitable.
+You generally can't modify libfdt files. Any changes will be blown
+away with the next dtc sync (there's one in -next now). Though here
+you are creating a new location with fdt code. lib/ is just a shim to
+the actual libfdt code. Don't put any implementation there. You can
+add this to drivers/of/fdt_address.c for the short term, but it still
+needs to go upstream.
 
-(This switch is intended to make a data that is used instead of vmlinux
- when vmcore didn't have VMCOREINFO and makedumpfile is in a situation
- that we don't have vmlinux. Please see the explanation of the -i and
- -g options in makefumpfile(8).)
+Otherwise, the implementation looks fine to me.
 
-makedumpfile doesn't have any switch which dumps VMCOREINFO from kcore
-for now. (I'm thinking to have makedumpfile dump it as debug message,
-though.)
-
-Thanks,
-Kazu
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  include/linux/libfdt.h | 26 ++++++++++++++++++++
+>  lib/Makefile           |  2 +-
+>  lib/fdt_addresses.c    | 56 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 83 insertions(+), 1 deletion(-)
+>  create mode 100644 lib/fdt_addresses.c
 
 _______________________________________________
 kexec mailing list
