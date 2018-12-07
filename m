@@ -1,16 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v16 06/16] lib: fdt: add a helper function for handling
- memory range property
-References: <20181115055254.2812-1-takahiro.akashi@linaro.org>
- <20181115055254.2812-7-takahiro.akashi@linaro.org>
- <CAL_JsqL4_Z5pVfoB3opjL7eTzZvhBJW7_aQS443quAAR0gGH1w@mail.gmail.com>
- <20181206155424.GA4422@arm.com>
 From: James Morse <james.morse@arm.com>
-Message-ID: <681e1265-2f0c-2a62-3778-09911b2be7fc@arm.com>
-Date: Fri, 7 Dec 2018 10:12:47 +0000
+Subject: [PATCH arm64/kexec] arm64: kexec_file: forbid kdump via
+ kexec_file_load()
+Date: Fri,  7 Dec 2018 10:14:39 +0000
+Message-Id: <20181207101439.190918-1-james.morse@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20181206155424.GA4422@arm.com>
-Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,53 +17,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>, "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
-Cc: prudo@linux.ibm.com, Herbert Xu <herbert@gondor.apana.org.au>, Baoquan He <bhe@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, Frank Rowand <frowand.list@gmail.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, dyoung@redhat.com, David Miller <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, Baoquan He <bhe@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, bhsharma@redhat.com, Frank Rowand <frowand.list@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, David Howells <dhowells@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, James Morse <james.morse@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, prudo@linux.ibm.com, dyoung@redhat.com, David Miller <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Akashi, Will,
+Now that kexec_walk_memblock() can do the crash-kernel placement itself
+architectures that don't support kdump via kexe_file_load() need to
+explicitly forbid it.
 
-On 06/12/2018 15:54, Will Deacon wrote:
-> On Thu, Dec 06, 2018 at 08:47:04AM -0600, Rob Herring wrote:
->> On Wed, Nov 14, 2018 at 11:52 PM AKASHI Takahiro
->> <takahiro.akashi@linaro.org> wrote:
->>>
->>> Added function, fdt_setprop_reg(), will be used later to handle
->>> kexec-specific property in arm64's kexec_file implementation.
->>> It will possibly be merged into libfdt in the future.
->>
->> You generally can't modify libfdt files. Any changes will be blown
->> away with the next dtc sync (there's one in -next now). Though here
->> you are creating a new location with fdt code. lib/ is just a shim to
->> the actual libfdt code. Don't put any implementation there. You can
->> add this to drivers/of/fdt_address.c for the short term, but it still
->> needs to go upstream.
->>
->> Otherwise, the implementation looks fine to me.
-> 
-> I agree, but I don't think there's a real need for us to hack
-> drivers/of/fdt_address.c in the meantime -- let's just target upstream
-> and not carry this in the kernel.
-> 
-> Akashi -- for now, I'll drop the kdump parts of this series which rely
-> on this helper. The majority of the series is actually independent and
-> can go in as-is.
-> 
-> I've pushed out a kexec branch to the arm64 tree for you to take a look
-> at:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=kexec
+We don't support this on arm64 until the kernel can add the elfcorehdr
+and usable-memory-range fields to the DT. Without these the crash-kernel
+overwrites the previous kernel's memory during startup.
 
-I gave this a quick spin. Without the elfcorehdr/usable-memory-range arm64 needs
-to explicitly forbid kdump via kexec_file_load. (like powerpc does already).
-Without this kdump works, but the second kernel overwrites the first as those DT
-properties are missing.
+Add a check to refuse crash image loading.
 
-I'll post a patch momentarily,
+Signed-off-by: James Morse <james.morse@arm.com>
+---
 
+Context: http://lore.kernel.org/r/20181206155424.GA4422@arm.com
 
-Thanks,
+ arch/arm64/kernel/kexec_image.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-James
+diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
+index 1ad1d5f8f024..07bf740bea91 100644
+--- a/arch/arm64/kernel/kexec_image.c
++++ b/arch/arm64/kernel/kexec_image.c
+@@ -47,6 +47,10 @@ static void *image_load(struct kimage *image,
+ 	struct kexec_segment *kernel_segment;
+ 	int ret;
+ 
++	/* We don't support crash kernels yet. */
++	if (image->type == KEXEC_TYPE_CRASH)
++		return ERR_PTR(-EOPNOTSUPP);
++
+ 	/*
+ 	 * We require a kernel with an unambiguous Image header. Per
+ 	 * Documentation/booting.txt, this is the case when image_size
+-- 
+2.19.2
 
 
 _______________________________________________
