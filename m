@@ -1,27 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gVjFi-0002Ak-OH
- for kexec@lists.infradead.org; Sat, 08 Dec 2018 20:31:08 +0000
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+ id 1gVjFX-000299-CK
+ for kexec@lists.infradead.org; Sat, 08 Dec 2018 20:30:58 +0000
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- wB8KT1xb025654
- for <kexec@lists.infradead.org>; Sat, 8 Dec 2018 15:31:01 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2p8bck08wu-1
+ wB8KT0h9036486
+ for <kexec@lists.infradead.org>; Sat, 8 Dec 2018 15:30:52 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2p8ax58na8-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Sat, 08 Dec 2018 15:31:01 -0500
+ for <kexec@lists.infradead.org>; Sat, 08 Dec 2018 15:30:52 -0500
 Received: from localhost
- by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <nayna@linux.ibm.com>;
- Sat, 8 Dec 2018 20:30:59 -0000
+ Sat, 8 Dec 2018 20:30:49 -0000
 From: Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH v2 4/7] efi: Add an EFI signature blob parser
-Date: Sun,  9 Dec 2018 01:57:02 +0530
+Subject: [PATCH v2 2/7] integrity: Load certs to the platform keyring
+Date: Sun,  9 Dec 2018 01:57:00 +0530
 In-Reply-To: <20181208202705.18673-1-nayna@linux.ibm.com>
 References: <20181208202705.18673-1-nayna@linux.ibm.com>
-Message-Id: <20181208202705.18673-5-nayna@linux.ibm.com>
+Message-Id: <20181208202705.18673-3-nayna@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,189 +38,196 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-integrity@vger.kernel.org
 Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, Nayna Jain <nayna@linux.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, vgoyal@redhat.com
 
-From: Dave Howells <dhowells@redhat.com>
+The patch refactors integrity_load_x509(), making it a wrapper for a new
+function named integrity_add_key(). This patch also defines a new
+function named integrity_load_cert() for loading the platform keys.
 
-Add a function to parse an EFI signature blob looking for elements of
-interest. A list is made up of a series of sublists, where all the
-elements in a sublist are of the same type, but sublists can be of
-different types.
-
-For each sublist encountered, the function pointed to by the
-get_handler_for_guid argument is called with the type specifier GUID and
-returns either a pointer to a function to handle elements of that type or
-NULL if the type is not of interest.
-
-If the sublist is of interest, each element is passed to the handler
-function in turn.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 Acked-by: Serge Hallyn <serge@hallyn.com>
 ---
-Changelog:
+ security/integrity/digsig.c                        | 71 ++++++++++++++--------
+ security/integrity/integrity.h                     | 20 ++++++
+ .../integrity/platform_certs/platform_keyring.c    | 23 +++++++
+ 3 files changed, 90 insertions(+), 24 deletions(-)
 
-v0:
-- removed the CONFIG EFI_SIGNATURE_LIST_PARSER
-- moved efi_parser.c from certs to security/integrity/platform_certs
-  directory
-
-v2:
-- Fixed the checkpatch.pl warnings
-
- include/linux/efi.h                            |   9 +++
- security/integrity/Makefile                    |   3 +-
- security/integrity/platform_certs/efi_parser.c | 108 +++++++++++++++++++++++++
- 3 files changed, 119 insertions(+), 1 deletion(-)
- create mode 100644 security/integrity/platform_certs/efi_parser.c
-
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 214516b29b36..c3206b134137 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1141,6 +1141,15 @@ extern int efi_memattr_apply_permissions(struct mm_struct *mm,
- char * __init efi_md_typeattr_format(char *buf, size_t size,
- 				     const efi_memory_desc_t *md);
+diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
+index b5b180ff1434..4ba167255225 100644
+--- a/security/integrity/digsig.c
++++ b/security/integrity/digsig.c
+@@ -82,8 +82,7 @@ static int __integrity_init_keyring(const unsigned int id, key_perm_t perm,
  
-+
-+typedef void (*efi_element_handler_t)(const char *source,
-+				      const void *element_data,
-+				      size_t element_size);
-+extern int __init parse_efi_signature_list(
-+	const char *source,
-+	const void *data, size_t size,
-+	efi_element_handler_t (*get_handler_for_guid)(const efi_guid_t *));
-+
- /**
-  * efi_range_is_wc - check the WC bit on an address range
-  * @start: starting kvirt address
-diff --git a/security/integrity/Makefile b/security/integrity/Makefile
-index 046ffc1bb42d..6ee9058866cd 100644
---- a/security/integrity/Makefile
-+++ b/security/integrity/Makefile
-@@ -9,7 +9,8 @@ integrity-y := iint.o
- integrity-$(CONFIG_INTEGRITY_AUDIT) += integrity_audit.o
- integrity-$(CONFIG_INTEGRITY_SIGNATURE) += digsig.o
- integrity-$(CONFIG_INTEGRITY_ASYMMETRIC_KEYS) += digsig_asymmetric.o
--integrity-$(CONFIG_INTEGRITY_PLATFORM_KEYRING) += platform_certs/platform_keyring.o
-+integrity-$(CONFIG_INTEGRITY_PLATFORM_KEYRING) += platform_certs/platform_keyring.o \
-+						  platform_certs/efi_parser.o
+ 	keyring[id] = keyring_alloc(keyring_name[id], KUIDT_INIT(0),
+ 				    KGIDT_INIT(0), cred, perm,
+-				    KEY_ALLOC_NOT_IN_QUOTA,
+-				    restriction, NULL);
++				    KEY_ALLOC_NOT_IN_QUOTA, restriction, NULL);
+ 	if (IS_ERR(keyring[id])) {
+ 		err = PTR_ERR(keyring[id]);
+ 		pr_info("Can't allocate %s keyring (%d)\n",
+@@ -124,16 +123,38 @@ int __init integrity_init_keyring(const unsigned int id)
+ 	return err;
+ }
  
- subdir-$(CONFIG_IMA)			+= ima
- obj-$(CONFIG_IMA)			+= ima/
-diff --git a/security/integrity/platform_certs/efi_parser.c b/security/integrity/platform_certs/efi_parser.c
-new file mode 100644
-index 000000000000..18f01f36fe6a
---- /dev/null
-+++ b/security/integrity/platform_certs/efi_parser.c
-@@ -0,0 +1,108 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/* EFI signature/key/certificate list parser
-+ *
-+ * Copyright (C) 2012, 2016 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ */
-+
-+#define pr_fmt(fmt) "EFI: "fmt
-+#include <linux/module.h>
-+#include <linux/printk.h>
-+#include <linux/err.h>
-+#include <linux/efi.h>
-+
-+/**
-+ * parse_efi_signature_list - Parse an EFI signature list for certificates
-+ * @source: The source of the key
-+ * @data: The data blob to parse
-+ * @size: The size of the data blob
-+ * @get_handler_for_guid: Get the handler func for the sig type (or NULL)
-+ *
-+ * Parse an EFI signature list looking for elements of interest.  A list is
-+ * made up of a series of sublists, where all the elements in a sublist are of
-+ * the same type, but sublists can be of different types.
-+ *
-+ * For each sublist encountered, the @get_handler_for_guid function is called
-+ * with the type specifier GUID and returns either a pointer to a function to
-+ * handle elements of that type or NULL if the type is not of interest.
-+ *
-+ * If the sublist is of interest, each element is passed to the handler
-+ * function in turn.
-+ *
-+ * Error EBADMSG is returned if the list doesn't parse correctly and 0 is
-+ * returned if the list was parsed correctly.  No error can be returned from
-+ * the @get_handler_for_guid function or the element handler function it
-+ * returns.
-+ */
-+int __init parse_efi_signature_list(
-+	const char *source,
-+	const void *data, size_t size,
-+	efi_element_handler_t (*get_handler_for_guid)(const efi_guid_t *))
-+{
-+	efi_element_handler_t handler;
-+	unsigned int offs = 0;
-+
-+	pr_devel("-->%s(,%zu)\n", __func__, size);
-+
-+	while (size > 0) {
-+		const efi_signature_data_t *elem;
-+		efi_signature_list_t list;
-+		size_t lsize, esize, hsize, elsize;
-+
-+		if (size < sizeof(list))
-+			return -EBADMSG;
-+
-+		memcpy(&list, data, sizeof(list));
-+		pr_devel("LIST[%04x] guid=%pUl ls=%x hs=%x ss=%x\n",
-+			 offs,
-+			 list.signature_type.b, list.signature_list_size,
-+			 list.signature_header_size, list.signature_size);
-+
-+		lsize = list.signature_list_size;
-+		hsize = list.signature_header_size;
-+		esize = list.signature_size;
-+		elsize = lsize - sizeof(list) - hsize;
-+
-+		if (lsize > size) {
-+			pr_devel("<--%s() = -EBADMSG [overrun @%x]\n",
-+				 __func__, offs);
-+			return -EBADMSG;
-+		}
-+
-+		if (lsize < sizeof(list) ||
-+		    lsize - sizeof(list) < hsize ||
-+		    esize < sizeof(*elem) ||
-+		    elsize < esize ||
-+		    elsize % esize != 0) {
-+			pr_devel("- bad size combo @%x\n", offs);
-+			return -EBADMSG;
-+		}
-+
-+		handler = get_handler_for_guid(&list.signature_type);
-+		if (!handler) {
-+			data += lsize;
-+			size -= lsize;
-+			offs += lsize;
-+			continue;
-+		}
-+
-+		data += sizeof(list) + hsize;
-+		size -= sizeof(list) + hsize;
-+		offs += sizeof(list) + hsize;
-+
-+		for (; elsize > 0; elsize -= esize) {
-+			elem = data;
-+
-+			pr_devel("ELEM[%04x]\n", offs);
-+			handler(source,
-+				&elem->signature_data,
-+				esize - sizeof(*elem));
-+
-+			data += esize;
-+			size -= esize;
-+			offs += esize;
-+		}
+-int __init integrity_load_x509(const unsigned int id, const char *path)
++int __init integrity_add_key(const unsigned int id, const void *data,
++			     off_t size, key_perm_t perm)
+ {
+ 	key_ref_t key;
+-	void *data;
+-	loff_t size;
+-	int rc;
++	int rc = 0;
+ 
+ 	if (!keyring[id])
+ 		return -EINVAL;
+ 
++	key = key_create_or_update(make_key_ref(keyring[id], 1), "asymmetric",
++				   NULL, data, size, perm,
++				   KEY_ALLOC_NOT_IN_QUOTA);
++	if (IS_ERR(key)) {
++		rc = PTR_ERR(key);
++		pr_err("Problem loading X.509 certificate %d\n", rc);
++	} else {
++		pr_notice("Loaded X.509 cert '%s'\n",
++			  key_ref_to_ptr(key)->description);
++		key_ref_put(key);
 +	}
 +
++	return rc;
++
++}
++
++int __init integrity_load_x509(const unsigned int id, const char *path)
++{
++	void *data;
++	loff_t size;
++	int rc;
++	key_perm_t perm;
++
+ 	rc = kernel_read_file_from_path(path, &data, &size, 0,
+ 					READING_X509_CERTIFICATE);
+ 	if (rc < 0) {
+@@ -141,23 +162,25 @@ int __init integrity_load_x509(const unsigned int id, const char *path)
+ 		return rc;
+ 	}
+ 
+-	key = key_create_or_update(make_key_ref(keyring[id], 1),
+-				   "asymmetric",
+-				   NULL,
+-				   data,
+-				   size,
+-				   ((KEY_POS_ALL & ~KEY_POS_SETATTR) |
+-				    KEY_USR_VIEW | KEY_USR_READ),
+-				   KEY_ALLOC_NOT_IN_QUOTA);
+-	if (IS_ERR(key)) {
+-		rc = PTR_ERR(key);
+-		pr_err("Problem loading X.509 certificate (%d): %s\n",
+-		       rc, path);
+-	} else {
+-		pr_notice("Loaded X.509 cert '%s': %s\n",
+-			  key_ref_to_ptr(key)->description, path);
+-		key_ref_put(key);
+-	}
++	perm = (KEY_POS_ALL & ~KEY_POS_SETATTR) | KEY_USR_VIEW | KEY_USR_READ;
++
++	pr_info("Loading X.509 certificate: %s\n", path);
++	rc = integrity_add_key(id, (const void *)data, size, perm);
++
+ 	vfree(data);
+-	return 0;
++	return rc;
++}
++
++int __init integrity_load_cert(const unsigned int id, const char *source,
++			       const void *data, size_t len, key_perm_t perm)
++{
++	int rc;
++
++	if (!data)
++		return -EINVAL;
++
++	pr_info("Loading X.509 certificate: %s\n", source);
++	rc = integrity_add_key(id, data, len, perm);
++
++	return rc;
+ }
+diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
+index c2332a44799e..3517d2852a07 100644
+--- a/security/integrity/integrity.h
++++ b/security/integrity/integrity.h
+@@ -154,6 +154,8 @@ int integrity_digsig_verify(const unsigned int id, const char *sig, int siglen,
+ 
+ int __init integrity_init_keyring(const unsigned int id);
+ int __init integrity_load_x509(const unsigned int id, const char *path);
++int __init integrity_load_cert(const unsigned int id, const char *source,
++			       const void *data, size_t len, key_perm_t perm);
+ #else
+ 
+ static inline int integrity_digsig_verify(const unsigned int id,
+@@ -167,6 +169,14 @@ static inline int integrity_init_keyring(const unsigned int id)
+ {
+ 	return 0;
+ }
++
++static inline int __init integrity_load_cert(const unsigned int id,
++					     const char *source,
++					     const void *data, size_t len,
++					     key_perm_t perm)
++{
 +	return 0;
 +}
+ #endif /* CONFIG_INTEGRITY_SIGNATURE */
+ 
+ #ifdef CONFIG_INTEGRITY_ASYMMETRIC_KEYS
+@@ -223,3 +233,13 @@ integrity_audit_log_start(struct audit_context *ctx, gfp_t gfp_mask, int type)
+ }
+ 
+ #endif
++
++#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
++void __init add_to_platform_keyring(const char *source, const void *data,
++				    size_t len);
++#else
++static inline void __init add_to_platform_keyring(const char *source,
++						  const void *data, size_t len)
++{
++}
++#endif
+diff --git a/security/integrity/platform_certs/platform_keyring.c b/security/integrity/platform_certs/platform_keyring.c
+index dfc206bbe2ff..dc49b3b02697 100644
+--- a/security/integrity/platform_certs/platform_keyring.c
++++ b/security/integrity/platform_certs/platform_keyring.c
+@@ -18,6 +18,29 @@
+ #include <linux/slab.h>
+ #include "../integrity.h"
+ 
++/**
++ * add_to_platform_keyring - Add to platform keyring without validation.
++ * @source: Source of key
++ * @data: The blob holding the key
++ * @len: The length of the data blob
++ *
++ * Add a key to the platform keyring without checking its trust chain.  This
++ * is available only during kernel initialisation.
++ */
++void __init add_to_platform_keyring(const char *source, const void *data,
++				    size_t len)
++{
++	key_perm_t perm;
++	int rc;
++
++	perm = (KEY_POS_ALL & ~KEY_POS_SETATTR) | KEY_USR_VIEW;
++
++	rc = integrity_load_cert(INTEGRITY_KEYRING_PLATFORM, source, data, len,
++				 perm);
++	if (rc)
++		pr_info("Error adding keys to platform keyring %s\n", source);
++}
++
+ /*
+  * Create the trusted keyrings.
+  */
 -- 
 2.13.6
 
