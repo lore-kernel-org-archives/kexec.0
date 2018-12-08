@@ -1,27 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gVjFX-000299-CK
- for kexec@lists.infradead.org; Sat, 08 Dec 2018 20:30:58 +0000
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- wB8KT0h9036486
- for <kexec@lists.infradead.org>; Sat, 8 Dec 2018 15:30:52 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2p8ax58na8-1
+ id 1gVjG1-0002Ic-9m
+ for kexec@lists.infradead.org; Sat, 08 Dec 2018 20:31:28 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ wB8KT7m3156292
+ for <kexec@lists.infradead.org>; Sat, 8 Dec 2018 15:31:19 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2p8b1d0kmt-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Sat, 08 Dec 2018 15:30:52 -0500
+ for <kexec@lists.infradead.org>; Sat, 08 Dec 2018 15:31:19 -0500
 Received: from localhost
- by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <nayna@linux.ibm.com>;
- Sat, 8 Dec 2018 20:30:49 -0000
+ Sat, 8 Dec 2018 20:31:17 -0000
 From: Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH v2 2/7] integrity: Load certs to the platform keyring
-Date: Sun,  9 Dec 2018 01:57:00 +0530
+Subject: [PATCH v2 7/7] ima: Support platform keyring for kernel appraisal
+Date: Sun,  9 Dec 2018 01:57:05 +0530
 In-Reply-To: <20181208202705.18673-1-nayna@linux.ibm.com>
 References: <20181208202705.18673-1-nayna@linux.ibm.com>
-Message-Id: <20181208202705.18673-3-nayna@linux.ibm.com>
+Message-Id: <20181208202705.18673-8-nayna@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,196 +39,60 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-integrity@vger.kernel.org
 Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, Nayna Jain <nayna@linux.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, vgoyal@redhat.com
 
-The patch refactors integrity_load_x509(), making it a wrapper for a new
-function named integrity_add_key(). This patch also defines a new
-function named integrity_load_cert() for loading the platform keys.
+On secure boot enabled systems, the bootloader verifies the kernel
+image and possibly the initramfs signatures based on a set of keys. A
+soft reboot(kexec) of the system, with the same kernel image and
+initramfs, requires access to the original keys to verify the
+signatures.
+
+This patch allows IMA-appraisal access to those original keys, now
+loaded on the platform keyring, needed for verifying the kernel image
+and initramfs signatures.
 
 Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
 Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 Acked-by: Serge Hallyn <serge@hallyn.com>
+- replace 'rc' with 'xattr_len' when calling integrity_digsig_verify()
+with INTEGRITY_KEYRING_IMA for readability
+Suggested-by: Serge Hallyn <serge@hallyn.com>
 ---
- security/integrity/digsig.c                        | 71 ++++++++++++++--------
- security/integrity/integrity.h                     | 20 ++++++
- .../integrity/platform_certs/platform_keyring.c    | 23 +++++++
- 3 files changed, 90 insertions(+), 24 deletions(-)
+Changelog:
 
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index b5b180ff1434..4ba167255225 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -82,8 +82,7 @@ static int __integrity_init_keyring(const unsigned int id, key_perm_t perm,
- 
- 	keyring[id] = keyring_alloc(keyring_name[id], KUIDT_INIT(0),
- 				    KGIDT_INIT(0), cred, perm,
--				    KEY_ALLOC_NOT_IN_QUOTA,
--				    restriction, NULL);
-+				    KEY_ALLOC_NOT_IN_QUOTA, restriction, NULL);
- 	if (IS_ERR(keyring[id])) {
- 		err = PTR_ERR(keyring[id]);
- 		pr_info("Can't allocate %s keyring (%d)\n",
-@@ -124,16 +123,38 @@ int __init integrity_init_keyring(const unsigned int id)
- 	return err;
- }
- 
--int __init integrity_load_x509(const unsigned int id, const char *path)
-+int __init integrity_add_key(const unsigned int id, const void *data,
-+			     off_t size, key_perm_t perm)
- {
- 	key_ref_t key;
--	void *data;
--	loff_t size;
--	int rc;
-+	int rc = 0;
- 
- 	if (!keyring[id])
- 		return -EINVAL;
- 
-+	key = key_create_or_update(make_key_ref(keyring[id], 1), "asymmetric",
-+				   NULL, data, size, perm,
-+				   KEY_ALLOC_NOT_IN_QUOTA);
-+	if (IS_ERR(key)) {
-+		rc = PTR_ERR(key);
-+		pr_err("Problem loading X.509 certificate %d\n", rc);
-+	} else {
-+		pr_notice("Loaded X.509 cert '%s'\n",
-+			  key_ref_to_ptr(key)->description);
-+		key_ref_put(key);
-+	}
-+
-+	return rc;
-+
-+}
-+
-+int __init integrity_load_x509(const unsigned int id, const char *path)
-+{
-+	void *data;
-+	loff_t size;
-+	int rc;
-+	key_perm_t perm;
-+
- 	rc = kernel_read_file_from_path(path, &data, &size, 0,
- 					READING_X509_CERTIFICATE);
- 	if (rc < 0) {
-@@ -141,23 +162,25 @@ int __init integrity_load_x509(const unsigned int id, const char *path)
- 		return rc;
- 	}
- 
--	key = key_create_or_update(make_key_ref(keyring[id], 1),
--				   "asymmetric",
--				   NULL,
--				   data,
--				   size,
--				   ((KEY_POS_ALL & ~KEY_POS_SETATTR) |
--				    KEY_USR_VIEW | KEY_USR_READ),
--				   KEY_ALLOC_NOT_IN_QUOTA);
--	if (IS_ERR(key)) {
--		rc = PTR_ERR(key);
--		pr_err("Problem loading X.509 certificate (%d): %s\n",
--		       rc, path);
--	} else {
--		pr_notice("Loaded X.509 cert '%s': %s\n",
--			  key_ref_to_ptr(key)->description, path);
--		key_ref_put(key);
--	}
-+	perm = (KEY_POS_ALL & ~KEY_POS_SETATTR) | KEY_USR_VIEW | KEY_USR_READ;
-+
-+	pr_info("Loading X.509 certificate: %s\n", path);
-+	rc = integrity_add_key(id, (const void *)data, size, perm);
-+
- 	vfree(data);
--	return 0;
-+	return rc;
-+}
-+
-+int __init integrity_load_cert(const unsigned int id, const char *source,
-+			       const void *data, size_t len, key_perm_t perm)
-+{
-+	int rc;
-+
-+	if (!data)
-+		return -EINVAL;
-+
-+	pr_info("Loading X.509 certificate: %s\n", source);
-+	rc = integrity_add_key(id, data, len, perm);
-+
-+	return rc;
- }
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index c2332a44799e..3517d2852a07 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -154,6 +154,8 @@ int integrity_digsig_verify(const unsigned int id, const char *sig, int siglen,
- 
- int __init integrity_init_keyring(const unsigned int id);
- int __init integrity_load_x509(const unsigned int id, const char *path);
-+int __init integrity_load_cert(const unsigned int id, const char *source,
-+			       const void *data, size_t len, key_perm_t perm);
- #else
- 
- static inline int integrity_digsig_verify(const unsigned int id,
-@@ -167,6 +169,14 @@ static inline int integrity_init_keyring(const unsigned int id)
- {
- 	return 0;
- }
-+
-+static inline int __init integrity_load_cert(const unsigned int id,
-+					     const char *source,
-+					     const void *data, size_t len,
-+					     key_perm_t perm)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_INTEGRITY_SIGNATURE */
- 
- #ifdef CONFIG_INTEGRITY_ASYMMETRIC_KEYS
-@@ -223,3 +233,13 @@ integrity_audit_log_start(struct audit_context *ctx, gfp_t gfp_mask, int type)
- }
- 
- #endif
-+
-+#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
-+void __init add_to_platform_keyring(const char *source, const void *data,
-+				    size_t len);
-+#else
-+static inline void __init add_to_platform_keyring(const char *source,
-+						  const void *data, size_t len)
-+{
-+}
-+#endif
-diff --git a/security/integrity/platform_certs/platform_keyring.c b/security/integrity/platform_certs/platform_keyring.c
-index dfc206bbe2ff..dc49b3b02697 100644
---- a/security/integrity/platform_certs/platform_keyring.c
-+++ b/security/integrity/platform_certs/platform_keyring.c
-@@ -18,6 +18,29 @@
- #include <linux/slab.h>
- #include "../integrity.h"
- 
-+/**
-+ * add_to_platform_keyring - Add to platform keyring without validation.
-+ * @source: Source of key
-+ * @data: The blob holding the key
-+ * @len: The length of the data blob
-+ *
-+ * Add a key to the platform keyring without checking its trust chain.  This
-+ * is available only during kernel initialisation.
-+ */
-+void __init add_to_platform_keyring(const char *source, const void *data,
-+				    size_t len)
-+{
-+	key_perm_t perm;
-+	int rc;
-+
-+	perm = (KEY_POS_ALL & ~KEY_POS_SETATTR) | KEY_USR_VIEW;
-+
-+	rc = integrity_load_cert(INTEGRITY_KEYRING_PLATFORM, source, data, len,
-+				 perm);
-+	if (rc)
-+		pr_info("Error adding keys to platform keyring %s\n", source);
-+}
-+
- /*
-  * Create the trusted keyrings.
-  */
+v2:
+- replace 'rc' with 'xattr_len' when calling integrity_digsig_verify()
+with INTEGRITY_KEYRING_IMA for readability
+
+ security/integrity/ima/ima_appraise.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
+index deec1804a00a..e8f520450895 100644
+--- a/security/integrity/ima/ima_appraise.c
++++ b/security/integrity/ima/ima_appraise.c
+@@ -289,12 +289,21 @@ int ima_appraise_measurement(enum ima_hooks func,
+ 	case EVM_IMA_XATTR_DIGSIG:
+ 		set_bit(IMA_DIGSIG, &iint->atomic_flags);
+ 		rc = integrity_digsig_verify(INTEGRITY_KEYRING_IMA,
+-					     (const char *)xattr_value, rc,
++					     (const char *)xattr_value,
++					     xattr_len,
+ 					     iint->ima_hash->digest,
+ 					     iint->ima_hash->length);
+ 		if (rc == -EOPNOTSUPP) {
+ 			status = INTEGRITY_UNKNOWN;
+-		} else if (rc) {
++			break;
++		}
++		if (rc && func == KEXEC_KERNEL_CHECK)
++			rc = integrity_digsig_verify(INTEGRITY_KEYRING_PLATFORM,
++						     (const char *)xattr_value,
++						     xattr_len,
++						     iint->ima_hash->digest,
++						     iint->ima_hash->length);
++		if (rc) {
+ 			cause = "invalid-signature";
+ 			status = INTEGRITY_FAIL;
+ 		} else {
 -- 
 2.13.6
 
