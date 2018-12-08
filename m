@@ -1,18 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-f195.google.com ([209.85.208.195])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gVI2A-0004IL-SX
- for kexec@lists.infradead.org; Fri, 07 Dec 2018 15:27:21 +0000
-Received: by mail-lj1-f195.google.com with SMTP id t9-v6so3888636ljh.6
- for <kexec@lists.infradead.org>; Fri, 07 Dec 2018 07:27:08 -0800 (PST)
-MIME-Version: 1.0
-References: <20181207101439.190918-1-james.morse@arm.com>
-In-Reply-To: <20181207101439.190918-1-james.morse@arm.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Fri, 7 Dec 2018 20:56:53 +0530
-Message-ID: <CACi5LpM9_bQnx+YqBcFqFbMWAmZoYtDwopuSq+NpOaX8tjak=g@mail.gmail.com>
-Subject: Re: [PATCH arm64/kexec] arm64: kexec_file: forbid kdump via
- kexec_file_load()
+ id 1gVjFi-00029y-OF
+ for kexec@lists.infradead.org; Sat, 08 Dec 2018 20:31:08 +0000
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ wB8KSxhj130769
+ for <kexec@lists.infradead.org>; Sat, 8 Dec 2018 15:30:56 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2p8m73s96w-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Sat, 08 Dec 2018 15:30:55 -0500
+Received: from localhost
+ by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <nayna@linux.ibm.com>;
+ Sat, 8 Dec 2018 20:30:53 -0000
+From: Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH v2 3/7] efi: Add EFI signature data types
+Date: Sun,  9 Dec 2018 01:57:01 +0530
+In-Reply-To: <20181208202705.18673-1-nayna@linux.ibm.com>
+References: <20181208202705.18673-1-nayna@linux.ibm.com>
+Message-Id: <20181208202705.18673-4-nayna@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,64 +30,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: devicetree@vger.kernel.org, herbert@gondor.apana.org.au, Baoquan He <bhe@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec mailing list <kexec@lists.infradead.org>, frowand.list@gmail.com, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, heiko.carstens@de.ibm.com, dhowells@redhat.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, robh+dt@kernel.org, arnd@arndb.de, Vivek Goyal <vgoyal@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>, schwidefsky@de.ibm.com, prudo@linux.ibm.com, Dave Young <dyoung@redhat.com>, davem@davemloft.net, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: linux-integrity@vger.kernel.org
+Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, vgoyal@redhat.com
 
-Hi James,
+From: Dave Howells <dhowells@redhat.com>
 
-On Fri, Dec 7, 2018 at 3:44 PM James Morse <james.morse@arm.com> wrote:
->
-> Now that kexec_walk_memblock() can do the crash-kernel placement itself
-> architectures that don't support kdump via kexe_file_load() need to
-> explicitly forbid it.
->
-> We don't support this on arm64 until the kernel can add the elfcorehdr
-> and usable-memory-range fields to the DT. Without these the crash-kernel
-> overwrites the previous kernel's memory during startup.
->
-> Add a check to refuse crash image loading.
->
-> Signed-off-by: James Morse <james.morse@arm.com>
-> ---
->
-> Context: http://lore.kernel.org/r/20181206155424.GA4422@arm.com
->
->  arch/arm64/kernel/kexec_image.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-> index 1ad1d5f8f024..07bf740bea91 100644
-> --- a/arch/arm64/kernel/kexec_image.c
-> +++ b/arch/arm64/kernel/kexec_image.c
-> @@ -47,6 +47,10 @@ static void *image_load(struct kimage *image,
->         struct kexec_segment *kernel_segment;
->         int ret;
->
-> +       /* We don't support crash kernels yet. */
-> +       if (image->type == KEXEC_TYPE_CRASH)
-> +               return ERR_PTR(-EOPNOTSUPP);
-> +
->         /*
->          * We require a kernel with an unambiguous Image header. Per
->          * Documentation/booting.txt, this is the case when image_size
-> --
-> 2.19.2
->
+Add the data types that are used for containing hashes, keys and
+certificates for cryptographic verification along with their corresponding
+type GUIDs.
 
-TBH, I would have loved the complete 'kexec_file_load' support to have
-made way upstream for arm64 as well, but I understand that it is stuck
-till we have an agreement on the DT side of things. So, refusing a
-crash image loading in such a case makes sense for now.
+Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: Nayna Jain <nayna@linux.ibm.com>
+Acked-by: Serge Hallyn <serge@hallyn.com>
+---
+Changelog:
 
-So, please feel free to add:
-Reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
+v0:
+- No changes
 
-Thanks,
-Bhupesh
+ include/linux/efi.h | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 845174e113ce..214516b29b36 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -663,6 +663,10 @@ void efi_native_runtime_setup(void);
+ #define EFI_IMAGE_SECURITY_DATABASE_GUID	EFI_GUID(0xd719b2cb, 0x3d3a, 0x4596,  0xa3, 0xbc, 0xda, 0xd0, 0x0e, 0x67, 0x65, 0x6f)
+ #define EFI_SHIM_LOCK_GUID			EFI_GUID(0x605dab50, 0xe046, 0x4300,  0xab, 0xb6, 0x3d, 0xd8, 0x10, 0xdd, 0x8b, 0x23)
+ 
++#define EFI_CERT_SHA256_GUID			EFI_GUID(0xc1c41626, 0x504c, 0x4092, 0xac, 0xa9, 0x41, 0xf9, 0x36, 0x93, 0x43, 0x28)
++#define EFI_CERT_X509_GUID			EFI_GUID(0xa5c059a1, 0x94e4, 0x4aa7, 0x87, 0xb5, 0xab, 0x15, 0x5c, 0x2b, 0xf0, 0x72)
++#define EFI_CERT_X509_SHA256_GUID		EFI_GUID(0x3bd2a492, 0x96c0, 0x4079, 0xb4, 0x20, 0xfc, 0xf9, 0x8e, 0xf1, 0x03, 0xed)
++
+ /*
+  * This GUID is used to pass to the kernel proper the struct screen_info
+  * structure that was populated by the stub based on the GOP protocol instance
+@@ -934,6 +938,27 @@ typedef struct {
+ 	efi_memory_desc_t entry[0];
+ } efi_memory_attributes_table_t;
+ 
++typedef struct  {
++	efi_guid_t signature_owner;
++	u8 signature_data[];
++} efi_signature_data_t;
++
++typedef struct {
++	efi_guid_t signature_type;
++	u32 signature_list_size;
++	u32 signature_header_size;
++	u32 signature_size;
++	u8 signature_header[];
++	/* efi_signature_data_t signatures[][] */
++} efi_signature_list_t;
++
++typedef u8 efi_sha256_hash_t[32];
++
++typedef struct {
++	efi_sha256_hash_t to_be_signed_hash;
++	efi_time_t time_of_revocation;
++} efi_cert_x509_sha256_t;
++
+ /*
+  * All runtime access to EFI goes through this structure:
+  */
+-- 
+2.13.6
+
 
 _______________________________________________
 kexec mailing list
