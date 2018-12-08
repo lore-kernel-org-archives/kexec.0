@@ -1,27 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gVjFX-00028J-C1
+ id 1gVjFX-000284-C0
  for kexec@lists.infradead.org; Sat, 08 Dec 2018 20:30:57 +0000
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- wB8KT0Ik036428
- for <kexec@lists.infradead.org>; Sat, 8 Dec 2018 15:30:46 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2p8ax58n8d-1
+ wB8KT3uq130911
+ for <kexec@lists.infradead.org>; Sat, 8 Dec 2018 15:30:40 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2p8m73s932-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Sat, 08 Dec 2018 15:30:46 -0500
+ for <kexec@lists.infradead.org>; Sat, 08 Dec 2018 15:30:40 -0500
 Received: from localhost
- by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <nayna@linux.ibm.com>;
- Sat, 8 Dec 2018 20:30:44 -0000
+ Sat, 8 Dec 2018 20:30:38 -0000
 From: Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH v2 1/7] integrity: Define a trusted platform keyring
-Date: Sun,  9 Dec 2018 01:56:59 +0530
-In-Reply-To: <20181208202705.18673-1-nayna@linux.ibm.com>
-References: <20181208202705.18673-1-nayna@linux.ibm.com>
-Message-Id: <20181208202705.18673-2-nayna@linux.ibm.com>
+Subject: [PATCH v2 0/7] add platform/firmware keys support for kernel
+ verification by IMA 
+Date: Sun,  9 Dec 2018 01:56:58 +0530
+Message-Id: <20181208202705.18673-1-nayna@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,210 +39,69 @@ Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, Nayna Jain <nayna@linux.ibm.c
 
 On secure boot enabled systems, a verified kernel may need to kexec
 additional kernels. For example, it may be used as a bootloader needing
-to kexec a target kernel or it may need to kexec a crashdump kernel. In
-such cases, it may want to verify the signature of the next kernel
+to kexec a target kernel or it may need to kexec a crashdump kernel.
+In such cases, it may want to verify the signature of the next kernel
 image.
 
-It is further possible that the kernel image is signed with third party
-keys which are stored as platform or firmware keys in the 'db' variable.
-The kernel, however, can not directly verify these platform keys, and an
+It is possible that the new kernel image is signed with third party keys
+which are stored as platform or firmware keys in the 'db' variable. The
+kernel, however, can not directly verify these platform keys, and an
 administrator may therefore not want to trust them for arbitrary usage.
 In order to differentiate platform keys from other keys and provide the
-necessary separation of trust, the kernel needs an additional keyring to
-store platform keys.
+necessary separation of trust the kernel needs an additional keyring to
+store platform/firmware keys.
 
-This patch creates the new keyring called ".platform" to isolate keys
-provided by platform from keys by kernel. These keys are used to
-facilitate signature verification during kexec. Since the scope of this
-keyring is only the platform/firmware keys, it cannot be updated from
-userspace.
+The secure boot key database is expected to store the keys as EFI
+Signature List(ESL). The patch set uses David Howells and Josh Boyer's
+patch to access and parse the ESL to extract the certificates and load
+them onto the platform keyring.
 
-This keyring can be enabled by setting CONFIG_INTEGRITY_PLATFORM_KEYRING.
+The last patch in this patch set adds support for IMA-appraisal to
+verify the kexec'ed kernel image based on keys stored in the platform
+keyring.
 
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-Acked-by: Serge Hallyn <serge@hallyn.com>
----
- security/integrity/Kconfig                         | 11 +++++
- security/integrity/Makefile                        |  1 +
- security/integrity/digsig.c                        | 48 +++++++++++++++-------
- security/integrity/integrity.h                     |  3 +-
- .../integrity/platform_certs/platform_keyring.c    | 39 ++++++++++++++++++
- 5 files changed, 87 insertions(+), 15 deletions(-)
+Changelog:
+
+v0:
+- The original patches loaded the certificates onto the secondary
+  trusted keyring. This patch set defines a new keyring named
+  ".platform" and adds the certificates to this new keyring  
+- removed CONFIG EFI_SIGNATURE_LIST_PARSER and LOAD_UEFI_KEYS
+- moved files from certs/ to security/integrity/platform_certs/
+
+v2:
+- fixed the checkpatch warnings and other formatting as suggested by
+  Mimi Zohar 
+- fixed coding style as suggested by Serge Hallyn in Patch "ima: Support
+  platform keyring for kernel appraisal"
+
+Dave Howells (2):
+  efi: Add EFI signature data types
+  efi: Add an EFI signature blob parser
+
+Josh Boyer (2):
+  efi: Import certificates from UEFI Secure Boot
+  efi: Allow the "db" UEFI variable to be suppressed
+
+Nayna Jain (3):
+  integrity: Define a trusted platform keyring
+  integrity: Load certs to the platform keyring
+  ima: Support platform keyring for kernel appraisal
+
+ include/linux/efi.h                                |  34 ++++
+ security/integrity/Kconfig                         |  11 ++
+ security/integrity/Makefile                        |   5 +
+ security/integrity/digsig.c                        | 115 ++++++++----
+ security/integrity/ima/ima_appraise.c              |  13 +-
+ security/integrity/integrity.h                     |  23 ++-
+ security/integrity/platform_certs/efi_parser.c     | 108 ++++++++++++
+ security/integrity/platform_certs/load_uefi.c      | 196 +++++++++++++++++++++
+ .../integrity/platform_certs/platform_keyring.c    |  62 +++++++
+ 9 files changed, 528 insertions(+), 39 deletions(-)
+ create mode 100644 security/integrity/platform_certs/efi_parser.c
+ create mode 100644 security/integrity/platform_certs/load_uefi.c
  create mode 100644 security/integrity/platform_certs/platform_keyring.c
 
-diff --git a/security/integrity/Kconfig b/security/integrity/Kconfig
-index da9565891738..4b4d2aeef539 100644
---- a/security/integrity/Kconfig
-+++ b/security/integrity/Kconfig
-@@ -51,6 +51,17 @@ config INTEGRITY_TRUSTED_KEYRING
- 	   .evm keyrings be signed by a key on the system trusted
- 	   keyring.
- 
-+config INTEGRITY_PLATFORM_KEYRING
-+        bool "Provide keyring for platform/firmware trusted keys"
-+        depends on INTEGRITY_ASYMMETRIC_KEYS
-+        depends on SYSTEM_BLACKLIST_KEYRING
-+        depends on EFI
-+        help
-+         Provide a separate, distinct keyring for platform trusted keys, which
-+         the kernel automatically populates during initialization from values
-+         provided by the platform for verifying the kexec'ed kerned image
-+         and, possibly, the initramfs signature.
-+
- config INTEGRITY_AUDIT
- 	bool "Enables integrity auditing support "
- 	depends on AUDIT
-diff --git a/security/integrity/Makefile b/security/integrity/Makefile
-index 04d6e462b079..046ffc1bb42d 100644
---- a/security/integrity/Makefile
-+++ b/security/integrity/Makefile
-@@ -9,6 +9,7 @@ integrity-y := iint.o
- integrity-$(CONFIG_INTEGRITY_AUDIT) += integrity_audit.o
- integrity-$(CONFIG_INTEGRITY_SIGNATURE) += digsig.o
- integrity-$(CONFIG_INTEGRITY_ASYMMETRIC_KEYS) += digsig_asymmetric.o
-+integrity-$(CONFIG_INTEGRITY_PLATFORM_KEYRING) += platform_certs/platform_keyring.o
- 
- subdir-$(CONFIG_IMA)			+= ima
- obj-$(CONFIG_IMA)			+= ima/
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index 5eacba858e4b..b5b180ff1434 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -35,6 +35,7 @@ static const char * const keyring_name[INTEGRITY_KEYRING_MAX] = {
- 	".ima",
- #endif
- 	"_module",
-+	".platform",
- };
- 
- #ifdef CONFIG_IMA_KEYRINGS_PERMIT_SIGNED_BY_BUILTIN_OR_SECONDARY
-@@ -73,12 +74,40 @@ int integrity_digsig_verify(const unsigned int id, const char *sig, int siglen,
- 	return -EOPNOTSUPP;
- }
- 
--int __init integrity_init_keyring(const unsigned int id)
-+static int __integrity_init_keyring(const unsigned int id, key_perm_t perm,
-+				    struct key_restriction *restriction)
- {
- 	const struct cred *cred = current_cred();
-+	int err = 0;
-+
-+	keyring[id] = keyring_alloc(keyring_name[id], KUIDT_INIT(0),
-+				    KGIDT_INIT(0), cred, perm,
-+				    KEY_ALLOC_NOT_IN_QUOTA,
-+				    restriction, NULL);
-+	if (IS_ERR(keyring[id])) {
-+		err = PTR_ERR(keyring[id]);
-+		pr_info("Can't allocate %s keyring (%d)\n",
-+			keyring_name[id], err);
-+		keyring[id] = NULL;
-+	}
-+
-+	return err;
-+}
-+
-+int __init integrity_init_keyring(const unsigned int id)
-+{
- 	struct key_restriction *restriction;
-+	key_perm_t perm;
- 	int err = 0;
- 
-+	perm = (KEY_POS_ALL & ~KEY_POS_SETATTR) | KEY_USR_VIEW
-+		| KEY_USR_READ | KEY_USR_SEARCH;
-+
-+	if (id == INTEGRITY_KEYRING_PLATFORM) {
-+		restriction = NULL;
-+		goto out;
-+	}
-+
- 	if (!IS_ENABLED(CONFIG_INTEGRITY_TRUSTED_KEYRING))
- 		return 0;
- 
-@@ -87,20 +116,11 @@ int __init integrity_init_keyring(const unsigned int id)
- 		return -ENOMEM;
- 
- 	restriction->check = restrict_link_to_ima;
-+	perm |= KEY_USR_WRITE;
-+
-+out:
-+	err = __integrity_init_keyring(id, perm, restriction);
- 
--	keyring[id] = keyring_alloc(keyring_name[id], KUIDT_INIT(0),
--				    KGIDT_INIT(0), cred,
--				    ((KEY_POS_ALL & ~KEY_POS_SETATTR) |
--				     KEY_USR_VIEW | KEY_USR_READ |
--				     KEY_USR_WRITE | KEY_USR_SEARCH),
--				    KEY_ALLOC_NOT_IN_QUOTA,
--				    restriction, NULL);
--	if (IS_ERR(keyring[id])) {
--		err = PTR_ERR(keyring[id]);
--		pr_info("Can't allocate %s keyring (%d)\n",
--			keyring_name[id], err);
--		keyring[id] = NULL;
--	}
- 	return err;
- }
- 
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index e60473b13a8d..c2332a44799e 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -142,7 +142,8 @@ int integrity_kernel_read(struct file *file, loff_t offset,
- #define INTEGRITY_KEYRING_EVM		0
- #define INTEGRITY_KEYRING_IMA		1
- #define INTEGRITY_KEYRING_MODULE	2
--#define INTEGRITY_KEYRING_MAX		3
-+#define INTEGRITY_KEYRING_PLATFORM	3
-+#define INTEGRITY_KEYRING_MAX		4
- 
- extern struct dentry *integrity_dir;
- 
-diff --git a/security/integrity/platform_certs/platform_keyring.c b/security/integrity/platform_certs/platform_keyring.c
-new file mode 100644
-index 000000000000..dfc206bbe2ff
---- /dev/null
-+++ b/security/integrity/platform_certs/platform_keyring.c
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Platform keyring for firmware/platform keys
-+ *
-+ * Copyright (C) 2012 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public Licence
-+ * as published by the Free Software Foundation; either version
-+ * 2 of the Licence, or (at your option) any later version.
-+ */
-+
-+#include <linux/export.h>
-+#include <linux/kernel.h>
-+#include <linux/sched.h>
-+#include <linux/cred.h>
-+#include <linux/err.h>
-+#include <linux/slab.h>
-+#include "../integrity.h"
-+
-+/*
-+ * Create the trusted keyrings.
-+ */
-+static __init int platform_keyring_init(void)
-+{
-+	int rc;
-+
-+	rc = integrity_init_keyring(INTEGRITY_KEYRING_PLATFORM);
-+	if (rc)
-+		return rc;
-+
-+	pr_notice("Platform Keyring initialized\n");
-+	return 0;
-+}
-+
-+/*
-+ * Must be initialised before we try and load the keys into the keyring.
-+ */
-+device_initcall(platform_keyring_init);
 -- 
 2.13.6
 
