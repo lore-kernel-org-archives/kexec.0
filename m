@@ -1,29 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail-lf1-f67.google.com ([209.85.167.67])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gW40D-00086X-Tb
- for kexec@lists.infradead.org; Sun, 09 Dec 2018 18:40:31 +0000
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- wB9Id9qa039554
- for <kexec@lists.infradead.org>; Sun, 9 Dec 2018 13:40:17 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2p8v24mg11-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Sun, 09 Dec 2018 13:40:17 -0500
-Received: from localhost
- by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Sun, 9 Dec 2018 18:40:15 -0000
-Subject: Re: [PATCH v2 0/7] add platform/firmware keys support for kernel
- verification by IMA
-From: Mimi Zohar <zohar@linux.ibm.com>
-Date: Sun, 09 Dec 2018 13:39:56 -0500
-In-Reply-To: <20181208202705.18673-1-nayna@linux.ibm.com>
-References: <20181208202705.18673-1-nayna@linux.ibm.com>
-Mime-Version: 1.0
-Message-Id: <1544380796.3794.6.camel@linux.ibm.com>
+ id 1gW6t4-0001s1-U9
+ for kexec@lists.infradead.org; Sun, 09 Dec 2018 21:45:21 +0000
+Received: by mail-lf1-f67.google.com with SMTP id i26so6591132lfc.0
+ for <kexec@lists.infradead.org>; Sun, 09 Dec 2018 13:45:05 -0800 (PST)
+MIME-Version: 1.0
+References: <1543555965-14399-1-git-send-email-bhsharma@redhat.com>
+ <1543555965-14399-5-git-send-email-bhsharma@redhat.com>
+ <20181204031236.GA21466@linaro.org>
+In-Reply-To: <20181204031236.GA21466@linaro.org>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Mon, 10 Dec 2018 03:14:50 +0530
+Message-ID: <CACi5LpODgNN0tFJfTH7bkWKdFJ4HuN6X=oFyZ1tKey4gBxix4Q@mail.gmail.com>
+Subject: Re: [PATCH 4/4] kexec/kexec-arm64.c: Add missing error handling paths
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,37 +22,249 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org
-Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, vgoyal@redhat.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec mailing list <kexec@lists.infradead.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Simon Horman <horms@verge.net.au>, Vicente Bergas <vicencb@gmail.com>
 
-SGkgTmF5bmEsCgpPbiBTdW4sIDIwMTgtMTItMDkgYXQgMDE6NTYgKzA1MzAsIE5heW5hIEphaW4g
-d3JvdGU6Cj4gT24gc2VjdXJlIGJvb3QgZW5hYmxlZCBzeXN0ZW1zLCBhIHZlcmlmaWVkIGtlcm5l
-bCBtYXkgbmVlZCB0byBrZXhlYwo+IGFkZGl0aW9uYWwga2VybmVscy4gRm9yIGV4YW1wbGUsIGl0
-IG1heSBiZSB1c2VkIGFzIGEgYm9vdGxvYWRlciBuZWVkaW5nCj4gdG8ga2V4ZWMgYSB0YXJnZXQg
-a2VybmVsIG9yIGl0IG1heSBuZWVkIHRvIGtleGVjIGEgY3Jhc2hkdW1wIGtlcm5lbC4KPiBJbiBz
-dWNoIGNhc2VzLCBpdCBtYXkgd2FudCB0byB2ZXJpZnkgdGhlIHNpZ25hdHVyZSBvZiB0aGUgbmV4
-dCBrZXJuZWwKPiBpbWFnZS4KPiAKPiBJdCBpcyBwb3NzaWJsZSB0aGF0IHRoZSBuZXcga2VybmVs
-IGltYWdlIGlzIHNpZ25lZCB3aXRoIHRoaXJkIHBhcnR5IGtleXMKPiB3aGljaCBhcmUgc3RvcmVk
-IGFzIHBsYXRmb3JtIG9yIGZpcm13YXJlIGtleXMgaW4gdGhlICdkYicgdmFyaWFibGUuIFRoZQo+
-IGtlcm5lbCwgaG93ZXZlciwgY2FuIG5vdCBkaXJlY3RseSB2ZXJpZnkgdGhlc2UgcGxhdGZvcm0g
-a2V5cywgYW5kIGFuCj4gYWRtaW5pc3RyYXRvciBtYXkgdGhlcmVmb3JlIG5vdCB3YW50IHRvIHRy
-dXN0IHRoZW0gZm9yIGFyYml0cmFyeSB1c2FnZS4KPiBJbiBvcmRlciB0byBkaWZmZXJlbnRpYXRl
-IHBsYXRmb3JtIGtleXMgZnJvbSBvdGhlciBrZXlzIGFuZCBwcm92aWRlIHRoZQo+IG5lY2Vzc2Fy
-eSBzZXBhcmF0aW9uIG9mIHRydXN0IHRoZSBrZXJuZWwgbmVlZHMgYW4gYWRkaXRpb25hbCBrZXly
-aW5nIHRvCj4gc3RvcmUgcGxhdGZvcm0vZmlybXdhcmUga2V5cy4KPiAKPiBUaGUgc2VjdXJlIGJv
-b3Qga2V5IGRhdGFiYXNlIGlzIGV4cGVjdGVkIHRvIHN0b3JlIHRoZSBrZXlzIGFzIEVGSQo+IFNp
-Z25hdHVyZSBMaXN0KEVTTCkuIFRoZSBwYXRjaCBzZXQgdXNlcyBEYXZpZCBIb3dlbGxzIGFuZCBK
-b3NoIEJveWVyJ3MKPiBwYXRjaCB0byBhY2Nlc3MgYW5kIHBhcnNlIHRoZSBFU0wgdG8gZXh0cmFj
-dCB0aGUgY2VydGlmaWNhdGVzIGFuZCBsb2FkCj4gdGhlbSBvbnRvIHRoZSBwbGF0Zm9ybSBrZXly
-aW5nLgo+IAo+IFRoZSBsYXN0IHBhdGNoIGluIHRoaXMgcGF0Y2ggc2V0IGFkZHMgc3VwcG9ydCBm
-b3IgSU1BLWFwcHJhaXNhbCB0bwo+IHZlcmlmeSB0aGUga2V4ZWMnZWQga2VybmVsIGltYWdlIGJh
-c2VkIG9uIGtleXMgc3RvcmVkIGluIHRoZSBwbGF0Zm9ybQo+IGtleXJpbmcuCgpUaGFua3MhIMKg
-VGhpcyBwYXRjaCBzZXQgaXMgbm93IGluIHRoZSAjbmV4dC1pbnRlZ3JpdHkgYnJhbmNoLgoKaHR0
-cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvem9oYXIvbGludXgt
-aW50ZWdyaXR5LmdpdC8KCk1pbWkKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hello Akashi,
+
+Thanks for your review and sorry for my late reply.
+It seems I found the root cause of the issue and it is quite different
+from what I was thinking before.
+
+The issue happens because we pass '/chosen' string to
+'fdt_add_subnode()' in 'kexec/dt-ops.c' instead of 'chosen' string.
+
+The different strings being passed to 'fdt_add_subnode()' and
+'fdt_path_offset()' are 'chosen' and '/chosen' respectively for
+adding/finding offset of the '/chosen' node in the kernel, see
+'drivers/firmware/efi/libstub/fdt.c' for details of such use-cases.
+
+When I fix the 'kexec-tools' to pass the same strings according to the
+function being called, it fixes all the 'kexec -l' and 'kexec -p'
+use-cases I could try on my boards, including the '--dtb' use cases.
+So, I think this should be a workable solution.
+
+@Vicente: Can you please drop the earlier approaches I shared and just
+try the hack'ish patch below. If this works for all the use-cases at
+your side, I can try and send a formal version of this one out.
+
+Thanks,
+Bhupesh
+
+/----------------------/
+From 7fb5e848cef268f6c3c61e001050cfd9202f5790 Mon Sep 17 00:00:00 2001
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Sun, 2 Dec 2018 02:07:56 +0530
+Subject: [PATCH] arm64: Fix fdt handling
+
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+---
+ kexec/dt-ops.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
+
+diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
+index 915dbf55afd2..33d9b14900a9 100644
+--- a/kexec/dt-ops.c
++++ b/kexec/dt-ops.c
+@@ -9,6 +9,7 @@
+ #include "dt-ops.h"
+
+ static const char n_chosen[] = "/chosen";
++static const char chosen[] = "chosen";
+
+ static const char p_bootargs[] = "bootargs";
+ static const char p_initrd_start[] = "linux,initrd-start";
+@@ -26,7 +27,7 @@ int dtb_set_initrd(char **dtb, off_t *dtb_size,
+off_t start, off_t end)
+
+     value = cpu_to_fdt64(start);
+
+-    result = dtb_set_property(dtb, dtb_size, n_chosen, p_initrd_start,
++    result = dtb_set_property(dtb, dtb_size, chosen, p_initrd_start,
+         &value, sizeof(value));
+
+     if (result)
+@@ -34,11 +35,11 @@ int dtb_set_initrd(char **dtb, off_t *dtb_size,
+off_t start, off_t end)
+
+     value = cpu_to_fdt64(end);
+
+-    result = dtb_set_property(dtb, dtb_size, n_chosen, p_initrd_end,
++    result = dtb_set_property(dtb, dtb_size, chosen, p_initrd_end,
+         &value, sizeof(value));
+
+     if (result) {
+-        dtb_delete_property(*dtb, n_chosen, p_initrd_start);
++        dtb_delete_property(*dtb, chosen, p_initrd_start);
+         return result;
+     }
+
+@@ -47,7 +48,7 @@ int dtb_set_initrd(char **dtb, off_t *dtb_size,
+off_t start, off_t end)
+
+ int dtb_set_bootargs(char **dtb, off_t *dtb_size, const char *command_line)
+ {
+-    return dtb_set_property(dtb, dtb_size, n_chosen, p_bootargs,
++    return dtb_set_property(dtb, dtb_size, chosen, p_bootargs,
+         command_line, strlen(command_line) + 1);
+ }
+
+@@ -79,16 +80,17 @@ int dtb_set_property(char **dtb, off_t *dtb_size,
+const char *node,
+         goto on_error;
+     }
+
+-    nodeoffset = fdt_path_offset(new_dtb, node);
+-
++    nodeoffset = fdt_path_offset(new_dtb, n_chosen);
++
+     if (nodeoffset == -FDT_ERR_NOTFOUND) {
+-        result = fdt_add_subnode(new_dtb, nodeoffset, node);
++        result = fdt_add_subnode(new_dtb, 0, node);
+
+-        if (result) {
++        if (result < 0) {
+             dbgprintf("%s: fdt_add_subnode failed: %s\n", __func__,
+                 fdt_strerror(result));
+             goto on_error;
+         }
++        nodeoffset = result;
+     } else if (nodeoffset < 0) {
+         dbgprintf("%s: fdt_path_offset failed: %s\n", __func__,
+             fdt_strerror(nodeoffset));
+@@ -127,7 +129,7 @@ on_error:
+ int dtb_delete_property(char *dtb, const char *node, const char *prop)
+ {
+     int result;
+-    int nodeoffset = fdt_path_offset(dtb, node);
++    int nodeoffset = fdt_path_offset(dtb, n_chosen);
+
+     if (nodeoffset < 0) {
+         dbgprintf("%s: fdt_path_offset failed: %s\n", __func__,
+-- 
+2.7.4
+On Tue, Dec 4, 2018 at 8:39 AM AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
+>
+> Bhupesh,
+>
+> Thank you for submitting a patch. One comment:
+>
+> On Fri, Nov 30, 2018 at 11:02:45AM +0530, Bhupesh Sharma wrote:
+> > While creating the 2nd dtb to be passed to the secondary kernel
+> > for arm64, we need to handle the return values from helper fdt
+> > functions properly, to make sure that we can handle various command-line
+> > options being passed to 'kexec' both for kexec load and kdump
+> > purposes.
+> >
+> > This will provide proper error reporting to the calling
+> > function in case something goes wrong.
+> >
+> > Without this patch, we get misleading error FDT_ERR_BADOFFSET reported
+> > when we pass a .dtb to 'kexec -p' using '--dtb' option, which doesn't
+> > contain the '/chosen' node (for e.g. the rockchip sapphire board
+> > dtb -> rk3399-sapphire.dtb).
+> >
+> >    # kexec -d -p Image --reuse-cmdline --dtb rk3399-sapphire.dtb
+> >    <..snip..>
+> >    load_crashdump_segments: elfcorehdr 0xbfff0000-0xbfff33ff
+> >    get_cells_size: #address-cells:2 #size-cells:2
+> >    cells_size_fitted: bfff0000-bfff33ff
+> >    cells_size_fitted: 8ee00000-bfffffff
+> >    setup_2nd_dtb: no kaslr-seed found
+> >    setup_2nd_dtb: fdt_setprop failed: FDT_ERR_BADOFFSET
+> >    kexec: setup_2nd_dtb failed.
+> >    kexec: load failed.
+> >
+> > Now after the fix, we get the correct error FDT_ERR_NOTFOUND reported
+> > to the calling function:
+> >
+> >    # kexec -d -l Image --append 'debug' --dtb rk3399-sapphire.dtb
+> >    <..snip..>
+> >    load_crashdump_segments: elfcorehdr 0xbfff0000-0xbfff33ff
+> >    get_cells_size: #address-cells:2 #size-cells:2
+> >    cells_size_fitted: bfff0000-bfff33ff
+> >    cells_size_fitted: 8ee00000-bfffffff
+> >    setup_2nd_dtb: /chosen node not found - can't create dtb for dump kernel: FDT_ERR_NOTFOUND
+> >    kexec: setup_2nd_dtb failed.
+> >    kexec: load failed.
+> >
+> >
+> > Cc: Simon Horman <horms@verge.net.au>
+> > Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> > ---
+> >  kexec/arch/arm64/kexec-arm64.c | 21 +++++++++++++++++++++
+> >  1 file changed, 21 insertions(+)
+> >
+> > diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> > index f4913b2e9480..560d83455f95 100644
+> > --- a/kexec/arch/arm64/kexec-arm64.c
+> > +++ b/kexec/arch/arm64/kexec-arm64.c
+> > @@ -515,6 +515,11 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+> >               }
+> >
+> >               nodeoffset = fdt_path_offset(new_buf, "/chosen");
+> > +             if (nodeoffset < 0) {
+> > +                     result = nodeoffset;
+> > +                     goto on_error;
+> > +             }
+> > +
+>
+> I think that the issue should be fixed much earlier:
+>
+> |       /* fixup 'kaslr-seed' with a random value, if supported */
+> |       nodeoffset = fdt_path_offset(new_buf, "/chosen");
+> |       prop = fdt_getprop_w(new_buf, nodeoffset,
+> |                       "kaslr-seed", &len);
+>
+> When we fail to locate "/chosen" here, we'd be better off to create it
+> (if necessary). So, *logically*, we won't have to worry about it later on.
+>
+> -Takahiro Akashi
+>
+>
+> >               result = fdt_setprop_inplace(new_buf,
+> >                               nodeoffset, "kaslr-seed",
+> >                               &fdt_val64, sizeof(fdt_val64));
+> > @@ -529,6 +534,14 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+> >       if (on_crash) {
+> >               /* add linux,elfcorehdr */
+> >               nodeoffset = fdt_path_offset(new_buf, "/chosen");
+> > +             if (nodeoffset < 0) {
+> > +                     result = nodeoffset;
+> > +                     dbgprintf("%s: /chosen node not found - can't create "
+> > +                             "dtb for dump kernel: %s\n", __func__,
+> > +                             fdt_strerror(result));
+> > +                     goto on_error;
+> > +             }
+> > +
+> >               result = fdt_setprop_range(new_buf, nodeoffset,
+> >                               PROP_ELFCOREHDR, &elfcorehdr_mem,
+> >                               address_cells, size_cells);
+> > @@ -541,6 +554,14 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+> >
+> >               /* add linux,usable-memory-range */
+> >               nodeoffset = fdt_path_offset(new_buf, "/chosen");
+> > +             if (nodeoffset < 0) {
+> > +                     result = nodeoffset;
+> > +                     dbgprintf("%s: /chosen node not found - can't create "
+> > +                             "dtb for dump kernel: %s\n", __func__,
+> > +                             fdt_strerror(result));
+> > +                     goto on_error;
+> > +             }
+> > +
+> >               result = fdt_setprop_range(new_buf, nodeoffset,
+> >                               PROP_USABLE_MEM_RANGE, &crash_reserved_mem,
+> >                               address_cells, size_cells);
+> > --
+> > 2.7.4
+> >
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
