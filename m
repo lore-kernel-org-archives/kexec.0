@@ -1,27 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gVr58-0006H3-EO
- for kexec@lists.infradead.org; Sun, 09 Dec 2018 04:52:44 +0000
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+ id 1gW40D-00086X-Tb
+ for kexec@lists.infradead.org; Sun, 09 Dec 2018 18:40:31 +0000
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- wB94clp6024794
- for <kexec@lists.infradead.org>; Sat, 8 Dec 2018 23:52:27 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2p8uu50ukw-1
+ wB9Id9qa039554
+ for <kexec@lists.infradead.org>; Sun, 9 Dec 2018 13:40:17 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2p8v24mg11-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Sat, 08 Dec 2018 23:52:27 -0500
+ for <kexec@lists.infradead.org>; Sun, 09 Dec 2018 13:40:17 -0500
 Received: from localhost
- by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
- for <kexec@lists.infradead.org> from <nayna@linux.ibm.com>;
- Sun, 9 Dec 2018 04:52:24 -0000
-From: Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH v2 1/7] integrity: Define a trusted platform keyring
-Date: Sun,  9 Dec 2018 10:18:49 +0530
-In-Reply-To: <20181208202705.18673-2-nayna@linux.ibm.com>
-References: <20181208202705.18673-2-nayna@linux.ibm.com>
-Message-Id: <20181209044849.825-1-nayna@linux.ibm.com>
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Sun, 9 Dec 2018 18:40:15 -0000
+Subject: Re: [PATCH v2 0/7] add platform/firmware keys support for kernel
+ verification by IMA
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Sun, 09 Dec 2018 13:39:56 -0500
+In-Reply-To: <20181208202705.18673-1-nayna@linux.ibm.com>
+References: <20181208202705.18673-1-nayna@linux.ibm.com>
+Mime-Version: 1.0
+Message-Id: <1544380796.3794.6.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,221 +32,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-integrity@vger.kernel.org
-Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, Nayna Jain <nayna@linux.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, vgoyal@redhat.com
+To: Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org
+Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, vgoyal@redhat.com
 
-On secure boot enabled systems, a verified kernel may need to kexec
-additional kernels. For example, it may be used as a bootloader needing
-to kexec a target kernel or it may need to kexec a crashdump kernel. In
-such cases, it may want to verify the signature of the next kernel
-image.
-
-It is further possible that the kernel image is signed with third party
-keys which are stored as platform or firmware keys in the 'db' variable.
-The kernel, however, can not directly verify these platform keys, and an
-administrator may therefore not want to trust them for arbitrary usage.
-In order to differentiate platform keys from other keys and provide the
-necessary separation of trust, the kernel needs an additional keyring to
-store platform keys.
-
-This patch creates the new keyring called ".platform" to isolate keys
-provided by platform from keys by kernel. These keys are used to
-facilitate signature verification during kexec. Since the scope of this
-keyring is only the platform/firmware keys, it cannot be updated from
-userspace.
-
-This keyring can be enabled by setting CONFIG_INTEGRITY_PLATFORM_KEYRING.
-
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-Acked-by: Serge Hallyn <serge@hallyn.com>
----
- security/integrity/Kconfig                         | 11 +++++
- security/integrity/Makefile                        |  1 +
- security/integrity/digsig.c                        | 48 +++++++++++++++-------
- security/integrity/integrity.h                     |  3 +-
- .../integrity/platform_certs/platform_keyring.c    | 35 ++++++++++++++++
- 5 files changed, 83 insertions(+), 15 deletions(-)
- create mode 100644 security/integrity/platform_certs/platform_keyring.c
-
-diff --git a/security/integrity/Kconfig b/security/integrity/Kconfig
-index da9565891738..4b4d2aeef539 100644
---- a/security/integrity/Kconfig
-+++ b/security/integrity/Kconfig
-@@ -51,6 +51,17 @@ config INTEGRITY_TRUSTED_KEYRING
- 	   .evm keyrings be signed by a key on the system trusted
- 	   keyring.
- 
-+config INTEGRITY_PLATFORM_KEYRING
-+        bool "Provide keyring for platform/firmware trusted keys"
-+        depends on INTEGRITY_ASYMMETRIC_KEYS
-+        depends on SYSTEM_BLACKLIST_KEYRING
-+        depends on EFI
-+        help
-+         Provide a separate, distinct keyring for platform trusted keys, which
-+         the kernel automatically populates during initialization from values
-+         provided by the platform for verifying the kexec'ed kerned image
-+         and, possibly, the initramfs signature.
-+
- config INTEGRITY_AUDIT
- 	bool "Enables integrity auditing support "
- 	depends on AUDIT
-diff --git a/security/integrity/Makefile b/security/integrity/Makefile
-index 04d6e462b079..046ffc1bb42d 100644
---- a/security/integrity/Makefile
-+++ b/security/integrity/Makefile
-@@ -9,6 +9,7 @@ integrity-y := iint.o
- integrity-$(CONFIG_INTEGRITY_AUDIT) += integrity_audit.o
- integrity-$(CONFIG_INTEGRITY_SIGNATURE) += digsig.o
- integrity-$(CONFIG_INTEGRITY_ASYMMETRIC_KEYS) += digsig_asymmetric.o
-+integrity-$(CONFIG_INTEGRITY_PLATFORM_KEYRING) += platform_certs/platform_keyring.o
- 
- subdir-$(CONFIG_IMA)			+= ima
- obj-$(CONFIG_IMA)			+= ima/
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index 5eacba858e4b..fef2a858300c 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -35,6 +35,7 @@ static const char * const keyring_name[INTEGRITY_KEYRING_MAX] = {
- 	".ima",
- #endif
- 	"_module",
-+	".platform",
- };
- 
- #ifdef CONFIG_IMA_KEYRINGS_PERMIT_SIGNED_BY_BUILTIN_OR_SECONDARY
-@@ -73,12 +74,39 @@ int integrity_digsig_verify(const unsigned int id, const char *sig, int siglen,
- 	return -EOPNOTSUPP;
- }
- 
--int __init integrity_init_keyring(const unsigned int id)
-+static int __integrity_init_keyring(const unsigned int id, key_perm_t perm,
-+				    struct key_restriction *restriction)
- {
- 	const struct cred *cred = current_cred();
-+	int err = 0;
-+
-+	keyring[id] = keyring_alloc(keyring_name[id], KUIDT_INIT(0),
-+				    KGIDT_INIT(0), cred, perm,
-+				    KEY_ALLOC_NOT_IN_QUOTA,
-+				    restriction, NULL);
-+	if (IS_ERR(keyring[id])) {
-+		err = PTR_ERR(keyring[id]);
-+		pr_info("Can't allocate %s keyring (%d)\n",
-+			keyring_name[id], err);
-+		keyring[id] = NULL;
-+	}
-+
-+	return err;
-+}
-+
-+int __init integrity_init_keyring(const unsigned int id)
-+{
- 	struct key_restriction *restriction;
-+	key_perm_t perm;
- 	int err = 0;
- 
-+	if (id == INTEGRITY_KEYRING_PLATFORM) {
-+		restriction = NULL;
-+		perm = (KEY_POS_ALL & ~KEY_POS_SETATTR) | KEY_USR_VIEW
-+			| KEY_USR_READ | KEY_USR_SEARCH;
-+		goto out;
-+	}
-+
- 	if (!IS_ENABLED(CONFIG_INTEGRITY_TRUSTED_KEYRING))
- 		return 0;
- 
-@@ -87,20 +115,12 @@ int __init integrity_init_keyring(const unsigned int id)
- 		return -ENOMEM;
- 
- 	restriction->check = restrict_link_to_ima;
-+	perm = (KEY_POS_ALL & ~KEY_POS_SETATTR) | KEY_USR_VIEW | KEY_USR_READ
-+		| KEY_USR_WRITE | KEY_USR_SEARCH;
-+
-+out:
-+	err = __integrity_init_keyring(id, perm, restriction);
- 
--	keyring[id] = keyring_alloc(keyring_name[id], KUIDT_INIT(0),
--				    KGIDT_INIT(0), cred,
--				    ((KEY_POS_ALL & ~KEY_POS_SETATTR) |
--				     KEY_USR_VIEW | KEY_USR_READ |
--				     KEY_USR_WRITE | KEY_USR_SEARCH),
--				    KEY_ALLOC_NOT_IN_QUOTA,
--				    restriction, NULL);
--	if (IS_ERR(keyring[id])) {
--		err = PTR_ERR(keyring[id]);
--		pr_info("Can't allocate %s keyring (%d)\n",
--			keyring_name[id], err);
--		keyring[id] = NULL;
--	}
- 	return err;
- }
- 
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index e60473b13a8d..c2332a44799e 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -142,7 +142,8 @@ int integrity_kernel_read(struct file *file, loff_t offset,
- #define INTEGRITY_KEYRING_EVM		0
- #define INTEGRITY_KEYRING_IMA		1
- #define INTEGRITY_KEYRING_MODULE	2
--#define INTEGRITY_KEYRING_MAX		3
-+#define INTEGRITY_KEYRING_PLATFORM	3
-+#define INTEGRITY_KEYRING_MAX		4
- 
- extern struct dentry *integrity_dir;
- 
-diff --git a/security/integrity/platform_certs/platform_keyring.c b/security/integrity/platform_certs/platform_keyring.c
-new file mode 100644
-index 000000000000..79f80af5b470
---- /dev/null
-+++ b/security/integrity/platform_certs/platform_keyring.c
-@@ -0,0 +1,35 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Platform keyring for firmware/platform keys
-+ *
-+ * Copyright IBM Corporation, 2018
-+ * Author(s): Nayna Jain <nayna@linux.ibm.com>
-+ */
-+
-+#include <linux/export.h>
-+#include <linux/kernel.h>
-+#include <linux/sched.h>
-+#include <linux/cred.h>
-+#include <linux/err.h>
-+#include <linux/slab.h>
-+#include "../integrity.h"
-+
-+/*
-+ * Create the trusted keyrings.
-+ */
-+static __init int platform_keyring_init(void)
-+{
-+	int rc;
-+
-+	rc = integrity_init_keyring(INTEGRITY_KEYRING_PLATFORM);
-+	if (rc)
-+		return rc;
-+
-+	pr_notice("Platform Keyring initialized\n");
-+	return 0;
-+}
-+
-+/*
-+ * Must be initialised before we try and load the keys into the keyring.
-+ */
-+device_initcall(platform_keyring_init);
--- 
-2.13.6
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgTmF5bmEsCgpPbiBTdW4sIDIwMTgtMTItMDkgYXQgMDE6NTYgKzA1MzAsIE5heW5hIEphaW4g
+d3JvdGU6Cj4gT24gc2VjdXJlIGJvb3QgZW5hYmxlZCBzeXN0ZW1zLCBhIHZlcmlmaWVkIGtlcm5l
+bCBtYXkgbmVlZCB0byBrZXhlYwo+IGFkZGl0aW9uYWwga2VybmVscy4gRm9yIGV4YW1wbGUsIGl0
+IG1heSBiZSB1c2VkIGFzIGEgYm9vdGxvYWRlciBuZWVkaW5nCj4gdG8ga2V4ZWMgYSB0YXJnZXQg
+a2VybmVsIG9yIGl0IG1heSBuZWVkIHRvIGtleGVjIGEgY3Jhc2hkdW1wIGtlcm5lbC4KPiBJbiBz
+dWNoIGNhc2VzLCBpdCBtYXkgd2FudCB0byB2ZXJpZnkgdGhlIHNpZ25hdHVyZSBvZiB0aGUgbmV4
+dCBrZXJuZWwKPiBpbWFnZS4KPiAKPiBJdCBpcyBwb3NzaWJsZSB0aGF0IHRoZSBuZXcga2VybmVs
+IGltYWdlIGlzIHNpZ25lZCB3aXRoIHRoaXJkIHBhcnR5IGtleXMKPiB3aGljaCBhcmUgc3RvcmVk
+IGFzIHBsYXRmb3JtIG9yIGZpcm13YXJlIGtleXMgaW4gdGhlICdkYicgdmFyaWFibGUuIFRoZQo+
+IGtlcm5lbCwgaG93ZXZlciwgY2FuIG5vdCBkaXJlY3RseSB2ZXJpZnkgdGhlc2UgcGxhdGZvcm0g
+a2V5cywgYW5kIGFuCj4gYWRtaW5pc3RyYXRvciBtYXkgdGhlcmVmb3JlIG5vdCB3YW50IHRvIHRy
+dXN0IHRoZW0gZm9yIGFyYml0cmFyeSB1c2FnZS4KPiBJbiBvcmRlciB0byBkaWZmZXJlbnRpYXRl
+IHBsYXRmb3JtIGtleXMgZnJvbSBvdGhlciBrZXlzIGFuZCBwcm92aWRlIHRoZQo+IG5lY2Vzc2Fy
+eSBzZXBhcmF0aW9uIG9mIHRydXN0IHRoZSBrZXJuZWwgbmVlZHMgYW4gYWRkaXRpb25hbCBrZXly
+aW5nIHRvCj4gc3RvcmUgcGxhdGZvcm0vZmlybXdhcmUga2V5cy4KPiAKPiBUaGUgc2VjdXJlIGJv
+b3Qga2V5IGRhdGFiYXNlIGlzIGV4cGVjdGVkIHRvIHN0b3JlIHRoZSBrZXlzIGFzIEVGSQo+IFNp
+Z25hdHVyZSBMaXN0KEVTTCkuIFRoZSBwYXRjaCBzZXQgdXNlcyBEYXZpZCBIb3dlbGxzIGFuZCBK
+b3NoIEJveWVyJ3MKPiBwYXRjaCB0byBhY2Nlc3MgYW5kIHBhcnNlIHRoZSBFU0wgdG8gZXh0cmFj
+dCB0aGUgY2VydGlmaWNhdGVzIGFuZCBsb2FkCj4gdGhlbSBvbnRvIHRoZSBwbGF0Zm9ybSBrZXly
+aW5nLgo+IAo+IFRoZSBsYXN0IHBhdGNoIGluIHRoaXMgcGF0Y2ggc2V0IGFkZHMgc3VwcG9ydCBm
+b3IgSU1BLWFwcHJhaXNhbCB0bwo+IHZlcmlmeSB0aGUga2V4ZWMnZWQga2VybmVsIGltYWdlIGJh
+c2VkIG9uIGtleXMgc3RvcmVkIGluIHRoZSBwbGF0Zm9ybQo+IGtleXJpbmcuCgpUaGFua3MhIMKg
+VGhpcyBwYXRjaCBzZXQgaXMgbm93IGluIHRoZSAjbmV4dC1pbnRlZ3JpdHkgYnJhbmNoLgoKaHR0
+cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvem9oYXIvbGludXgt
+aW50ZWdyaXR5LmdpdC8KCk1pbWkKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
