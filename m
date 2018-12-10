@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gWC16-0007QJ-Pz
- for kexec@lists.infradead.org; Mon, 10 Dec 2018 03:13:58 +0000
-Subject: Re: [PATCH 2/2 v2] kdump, vmcoreinfo: Export the value of sme mask to
- vmcoreinfo
-References: <20181202030839.29945-1-lijiang@redhat.com>
- <20181202030839.29945-3-lijiang@redhat.com>
- <20181205102407.GB6940@dhcp-128-65.nay.redhat.com>
+ id 1gWD4K-0005FM-Hv
+ for kexec@lists.infradead.org; Mon, 10 Dec 2018 04:21:22 +0000
+Subject: Re: [PATCH 1/2 v8] resource: add the new I/O resource descriptor
+ 'IORES_DESC_RESERVED'
+References: <20181129080956.20776-1-lijiang@redhat.com>
+ <20181129080956.20776-2-lijiang@redhat.com>
+ <20181130033703.GA23624@dhcp-128-65.nay.redhat.com>
+ <bbf6352b-b060-4cb8-dfd2-99166b0149a7@redhat.com>
+ <20181206201147.GG3986@zn.tnic>
 From: lijiang <lijiang@redhat.com>
-Message-ID: <685758a5-9d52-9270-e907-b4bda49a0102@redhat.com>
-Date: Mon, 10 Dec 2018 11:13:35 +0800
+Message-ID: <4e3ec0fd-f26a-2684-23e5-b2a068326248@redhat.com>
+Date: Mon, 10 Dec 2018 12:20:55 +0800
 MIME-Version: 1.0
-In-Reply-To: <20181205102407.GB6940@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20181206201147.GG3986@zn.tnic>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,53 +28,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, bp@alien8.de, tglx@linutronix.de, akpm@linux-foundation.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: tony.luck@intel.com, fenghua.yu@intel.com, linux-efi@vger.kernel.org, linux-ia64@vger.kernel.org, bhe@redhat.com, ard.biesheuvel@linaro.org, peterz@infradead.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, dave.hansen@linux.intel.com, Tom Lendacky <thomas.lendacky@amd.com>, luto@kernel.org, Toshi Kani <toshi.kani@hp.com>, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>
 
-5ZyoIDIwMTjlubQxMuaciDA15pelIDE4OjI0LCBEYXZlIFlvdW5nIOWGmemBkzoKPiBPbiAxMi8w
-Mi8xOCBhdCAxMTowOGFtLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4+IEZvciBBTUQgbWFjaGluZSB3
-aXRoIFNNRSBmZWF0dXJlLCBtYWtlZHVtcGZpbGUgdG9vbHMgbmVlZCB0byBrbm93Cj4+IHdoZXRo
-ZXIgdGhlIGNyYXNoIGtlcm5lbCB3YXMgZW5jcnlwdGVkIG9yIG5vdC4gSWYgU01FIGlzIGVuYWJs
-ZWQKPj4gaW4gdGhlIGZpcnN0IGtlcm5lbCwgdGhlIGNyYXNoIGtlcm5lbCdzIHBhZ2UgdGFibGUo
-cGdkL3B1ZC9wbWQvcHRlKQo+PiBjb250YWlucyB0aGUgbWVtb3J5IGVuY3J5cHRpb24gbWFzaywg
-c28gbmVlZCB0byByZW1vdmUgdGhlIHNtZSBtYXNrCj4+IHRvIG9idGFpbiB0aGUgdHJ1ZSBwaHlz
-aWNhbCBhZGRyZXNzLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBMaWFuYm8gSmlhbmcgPGxpamlhbmdA
-cmVkaGF0LmNvbT4KPj4gLS0tCj4+ICBhcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5j
-IHwgMTQgKysrKysrKysrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCsp
-Cj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jIGIv
-YXJjaC94ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQuYwo+PiBpbmRleCA0YzhhY2RmZGM1YTcu
-LjE4NjBmZTI0MTE3ZCAxMDA2NDQKPj4gLS0tIGEvYXJjaC94ODYva2VybmVsL21hY2hpbmVfa2V4
-ZWNfNjQuYwo+PiArKysgYi9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jCj4+IEBA
-IC0zNTIsMTAgKzM1MiwyNCBAQCB2b2lkIG1hY2hpbmVfa2V4ZWMoc3RydWN0IGtpbWFnZSAqaW1h
-Z2UpCj4+ICAKPj4gIHZvaWQgYXJjaF9jcmFzaF9zYXZlX3ZtY29yZWluZm8odm9pZCkKPj4gIHsK
-Pj4gKwl1NjQgc21lX21hc2sgPSBzbWVfbWVfbWFzazsKPj4gKwo+PiAgCVZNQ09SRUlORk9fTlVN
-QkVSKHBoeXNfYmFzZSk7Cj4+ICAJVk1DT1JFSU5GT19TWU1CT0woaW5pdF90b3BfcGd0KTsKPj4g
-IAl2bWNvcmVpbmZvX2FwcGVuZF9zdHIoIk5VTUJFUihwZ3RhYmxlX2w1X2VuYWJsZWQpPSVkXG4i
-LAo+PiAgCQkJcGd0YWJsZV9sNV9lbmFibGVkKCkpOwo+PiArCS8qCj4+ICsJICogQ3VycmVudGx5
-LCB0aGUgbG9jYWwgdmFyaWFibGUgJ3NtZV9tYXNrJyBzdG9yZXMgdGhlIHZhbHVlIG9mCj4+ICsJ
-ICogc21lX21lX21hc2soYml0IDQ3KSwgYW5kIGFsc28gd3JpdGUgdGhlIHZhbHVlIG9mIHNtZV9t
-YXNrIHRvCj4+ICsJICogdGhlIHZtY29yZWluZm8uCj4+ICsJICogSWYgbmVlZCwgdGhlIGJpdChz
-bWVfbWFzaykgbWlnaHQgYmUgcmVkZWZpbmVkIGluIHRoZSBmdXR1cmUsCj4+ICsJICogYnV0IHRo
-ZSAnYml0NjMnIHdpbGwgYmUgcmVzZXJ2ZWQuCj4+ICsJICogRm9yIGV4YW1wbGU6Cj4+ICsJICog
-WyBtaXNjCSAgIF1bIGVuYyBiaXQgIF1bIG90aGVyIG1pc2MgU01FIGluZm8gICAgICAgXQo+PiAr
-CSAqIDAwMDBfMDAwMF8wMDAwXzAwMDBfMTAwMF8wMDAwXzAwMDBfMDAwMF8wMDAwXzAwMDBfLi4u
-XzAwMDAKPj4gKwkgKiA2MyAgIDU5ICAgNTUgICA1MSAgIDQ3ICAgNDMgICAzOSAgIDM1ICAgMzEg
-ICAyNyAgIC4uLiAzCj4+ICsJICovCj4+ICsJVk1DT1JFSU5GT19OVU1CRVIoc21lX21hc2spOwo+
-IAo+ICNkZWZpbmUgVk1DT1JFSU5GT19OVU1CRVIobmFtZSkgXAo+ICAgICAgICAgdm1jb3JlaW5m
-b19hcHBlbmRfc3RyKCJOVU1CRVIoJXMpPSVsZFxuIiwgI25hbWUsIChsb25nKW5hbWUpCj4gCj4g
-Vk1DT1JFSU5GT19OVU1CRVIgaXMgZGVmaW5lZCBhcyBhYm92ZSwgc28gaXQgbG9va3MgcXVlc3Rp
-b25hYmxlIHRvIGFkZAo+IG1vcmUgdXNlcnMgb2YgdGhhdCBmb3IgZGlmZmVyZW50IGRhdGEgdHlw
-ZXMgYWx0aG91Z2ggaXQgbWF5IHdvcmsgaW4gcmVhbAo+IHdvcmxkLgo+IAoKVGhhbmsgeW91LCBE
-YXZlLgpGb3IgdGhlIHNtZV9tYXNrLCB0aGUgYml0NDcgaXMgc2V0ICcxJywgYW5kIHRoZSBWTUNP
-UkVJTkZPX05VTUJFUiBpcyBhIHNpZ25lZAo2NCBiaXQgbnVtYmVyKHg4Nl82NCksIGl0IGlzIGJp
-ZyBlbm91Z2ggdG8gdGhlIHNtZV9tYXNrLgoKCj4gQSBuZXcgbWFjcm8gbGlrZSBiZWxvdyBtYXkg
-YmUgYmV0dGVyLCBtYXkgbmVlZCB0byBjaG9vc2UgYSBiZXR0ZXIgbmFtZQo+IHRob3VnaDoKPiBf
-Vk1DT1JFSU5GT19OVU1CRVIobmFtZSwgZm9ybWF0LCB0eXBlKQo+IHNvIHlvdSBjYW4gcGFzcyB0
-aGUgZm9ybWF0IHNwZWNpZmllciBhbmQgZGF0YSB0eXBlcyBleHBsaWN0bHkKPiAKClRoYXQgc2hv
-dWxkIGJlIGEgZ29vZCBzdWdnZXN0aW9uLiBCdXQgZm9yIG5vdywgbWF5YmUgaXQgaXMgbm90IHRp
-bWUgZm9yIGltcHJvdmluZyBpdC4KQmVjYXVzZSBpdCBpcyBzdGlsbCBiaWcgZW5vdWdoLgoKVGhh
-bmtzLgpMaWFuYm8KCj4gCj4+ICAKPj4gICNpZmRlZiBDT05GSUdfTlVNQQo+PiAgCVZNQ09SRUlO
-Rk9fU1lNQk9MKG5vZGVfZGF0YSk7Cj4+IC0tIAo+PiAyLjE3LjEKPj4KPiAKPiBUaGFua3MKPiBE
-YXZlCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
-ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+5ZyoIDIwMTjlubQxMuaciDA35pelIDA0OjExLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IEZyaSwgTm92IDMwLCAyMDE4IGF0IDAzOjA0OjQ0UE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
+IEkgaGF2ZSBub3RpY2VkIHRoZSBjaGFuZ2VzIG9uIHg4NiwgYnV0IGZvciBJQTY0LCBpJ20gbm90
+IHN1cmUgd2hldGhlciBpdCBzaG91bGQgZG8gdGhlIHNhbWUKPj4gdGhpbmcsIHNvIGtlZXAgaXQg
+YXMgYmVmb3JlLgo+Pgo+PiBJZiBJQTY0IHBlb3BsZSB3b3VsZCBsaWtlIHRvIGdpdmUgYW55IGNv
+bW1lbnQsIHRoYXQgd2lsbCBiZSBhcHByZWNpYXRlZC4KPiAKPiBJIHRoaW5rIHlvdSBzaG91bGQg
+bm90IHRvdWNoIGlhNjQgYW5kIG5vdCBtYWtlIFRvbnkgdW5uZWNlc3NhcmlseSBwb3dlcgo+IHVw
+IHRoZSBvbGQgcnVzdC4KPiAKPiA6LSkKPiAKT2ssIGl0J3MgZ29vZCB0byBtZS4gQW5kIGkgd2ls
+bCBnZXQgcmlkIG9mIHRoZXNlIGNoYW5nZXMgZm9yIGlhNjQgaW4gcGF0Y2ggdjkuCgpUaGFua3Mu
+CkxpYW5ibwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
