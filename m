@@ -1,20 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-x642.google.com ([2607:f8b0:4864:20::642])
+Received: from mail-it1-x144.google.com ([2607:f8b0:4864:20::144])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gWasn-0003Sx-Dx
- for kexec@lists.infradead.org; Tue, 11 Dec 2018 05:47:03 +0000
-Received: by mail-pl1-x642.google.com with SMTP id y1so6399534plp.9
- for <kexec@lists.infradead.org>; Mon, 10 Dec 2018 21:46:50 -0800 (PST)
-Date: Tue, 11 Dec 2018 14:50:02 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v16 16/16] arm64: kexec_file: add kaslr support
-Message-ID: <20181211055001.GE21466@linaro.org>
+ id 1gWbJE-0003EM-Rl
+ for kexec@lists.infradead.org; Tue, 11 Dec 2018 06:14:22 +0000
+Received: by mail-it1-x144.google.com with SMTP id g76so1874541itg.2
+ for <kexec@lists.infradead.org>; Mon, 10 Dec 2018 22:14:06 -0800 (PST)
+Date: Tue, 11 Dec 2018 15:17:16 +0900
+From: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v16 06/16] lib: fdt: add a helper function for handling
+ memory range property
+Message-ID: <20181211061715.GF21466@linaro.org>
 References: <20181115055254.2812-1-takahiro.akashi@linaro.org>
- <20181115055254.2812-17-takahiro.akashi@linaro.org>
- <20181130131944.GA9000@arm.com>
+ <20181115055254.2812-7-takahiro.akashi@linaro.org>
+ <CAL_JsqL4_Z5pVfoB3opjL7eTzZvhBJW7_aQS443quAAR0gGH1w@mail.gmail.com>
+ <20181206155424.GA4422@arm.com>
+ <681e1265-2f0c-2a62-3778-09911b2be7fc@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20181130131944.GA9000@arm.com>
+In-Reply-To: <681e1265-2f0c-2a62-3778-09911b2be7fc@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,131 +30,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: prudo@linux.ibm.com, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james.morse@arm.com, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
+To: James Morse <james.morse@arm.com>
+Cc: prudo@linux.ibm.com, Herbert Xu <herbert@gondor.apana.org.au>, Baoquan He <bhe@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, Frank Rowand <frowand.list@gmail.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, David Howells <dhowells@redhat.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, dyoung@redhat.com, David Miller <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, Nov 30, 2018 at 01:19:44PM +0000, Will Deacon wrote:
-> On Thu, Nov 15, 2018 at 02:52:55PM +0900, AKASHI Takahiro wrote:
-> > Adding "kaslr-seed" to dtb enables triggering kaslr, or kernel virtual
-> > address randomization, at secondary kernel boot. We always do this as
-> > it will have no harm on kaslr-incapable kernel.
+James,
+
+On Fri, Dec 07, 2018 at 10:12:47AM +0000, James Morse wrote:
+> Hi Akashi, Will,
+> 
+> On 06/12/2018 15:54, Will Deacon wrote:
+> > On Thu, Dec 06, 2018 at 08:47:04AM -0600, Rob Herring wrote:
+> >> On Wed, Nov 14, 2018 at 11:52 PM AKASHI Takahiro
+> >> <takahiro.akashi@linaro.org> wrote:
+> >>>
+> >>> Added function, fdt_setprop_reg(), will be used later to handle
+> >>> kexec-specific property in arm64's kexec_file implementation.
+> >>> It will possibly be merged into libfdt in the future.
+> >>
+> >> You generally can't modify libfdt files. Any changes will be blown
+> >> away with the next dtc sync (there's one in -next now). Though here
+> >> you are creating a new location with fdt code. lib/ is just a shim to
+> >> the actual libfdt code. Don't put any implementation there. You can
+> >> add this to drivers/of/fdt_address.c for the short term, but it still
+> >> needs to go upstream.
+> >>
+> >> Otherwise, the implementation looks fine to me.
 > > 
-> > We don't have any "switch" to turn off this feature directly, but still
-> > can suppress it by passing "nokaslr" as a kernel boot argument.
+> > I agree, but I don't think there's a real need for us to hack
+> > drivers/of/fdt_address.c in the meantime -- let's just target upstream
+> > and not carry this in the kernel.
 > > 
-> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > ---
-> >  arch/arm64/kernel/machine_kexec_file.c | 46 +++++++++++++++++++++++++-
-> >  1 file changed, 45 insertions(+), 1 deletion(-)
+> > Akashi -- for now, I'll drop the kdump parts of this series which rely
+> > on this helper. The majority of the series is actually independent and
+> > can go in as-is.
 > > 
-> > diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> > index ab296b98d633..a0a730bd9be6 100644
-> > --- a/arch/arm64/kernel/machine_kexec_file.c
-> > +++ b/arch/arm64/kernel/machine_kexec_file.c
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/libfdt.h>
-> >  #include <linux/memblock.h>
-> >  #include <linux/of_fdt.h>
-> > +#include <linux/random.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/string.h>
-> >  #include <linux/types.h>
-> > @@ -28,6 +29,7 @@
-> >  #define FDT_PSTR_INITRD_STA	"linux,initrd-start"
-> >  #define FDT_PSTR_INITRD_END	"linux,initrd-end"
-> >  #define FDT_PSTR_BOOTARGS	"bootargs"
-> > +#define FDT_PSTR_KASLR_SEED	"kaslr-seed"
-> >  
-> >  const struct kexec_file_ops * const kexec_file_loaders[] = {
-> >  	&kexec_image_ops,
-> > @@ -46,11 +48,38 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
-> >  	return kexec_image_post_load_cleanup_default(image);
-> >  }
-> >  
-> > +/* crng needs to have been initialized for providing kaslr-seed */
-> > +static int random_ready;
-> > +
-> > +static void random_ready_notified(struct random_ready_callback *unused)
-> > +{
-> > +	random_ready = 1;
-> > +}
-> > +
-> > +static struct random_ready_callback random_ready_cb = {
-> > +	.func = random_ready_notified,
-> > +};
-> > +
-> > +static __init int init_random_ready_cb(void)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = add_random_ready_callback(&random_ready_cb);
-> > +	if (ret == -EALREADY)
-> > +		random_ready = 1;
-> > +	else if (ret)
-> > +		pr_warn("failed to add a callback for random_ready\n");
-> > +
-> > +	return 0;
-> > +}
-> > +late_initcall(init_random_ready_cb)
+> > I've pushed out a kexec branch to the arm64 tree for you to take a look
+> > at:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=kexec
 > 
-> Why can't we just call crng_ready()?
+> I gave this a quick spin. Without the elfcorehdr/usable-memory-range arm64 needs
+> to explicitly forbid kdump via kexec_file_load. (like powerpc does already).
 
-because crng_ready() is locally defined in drivers/char/random.c.
-Instead, I'd like to use
-        wait_for_random_bytes();
-        value = get_random_u64();
+Thank you for pointing this out.
 
-> > +
-> >  static int setup_dtb(struct kimage *image,
-> >  		     unsigned long initrd_load_addr, unsigned long initrd_len,
-> >  		     char *cmdline, void *dtb)
-> >  {
-> >  	int nodeoffset;
-> > +	u64 value;
-> >  	int ret;
-> >  
-> >  	nodeoffset = fdt_path_offset(dtb, "/chosen");
-> > @@ -106,12 +135,27 @@ static int setup_dtb(struct kimage *image,
-> >  			return -EINVAL;
-> >  	}
-> >  
-> > +	/* add kaslr-seed */
-> > +	ret = fdt_delprop(dtb, nodeoffset, FDT_PSTR_KASLR_SEED);
-> > +	if (ret && (ret != -FDT_ERR_NOTFOUND))
-> > +		return -EINVAL;
-> > +
-> > +	if (random_ready) {
-> > +		get_random_bytes(&value, sizeof(value));
+> Without this kdump works, but the second kernel overwrites the first as those DT
+> properties are missing.
 > 
-> get_random_u64() ?
+> I'll post a patch momentarily,
 
-OK.
-
-> > +		ret = fdt_setprop_u64(dtb, nodeoffset, FDT_PSTR_KASLR_SEED,
-> > +							value);
-> > +		if (ret)
-> > +			return (ret == -FDT_ERR_NOSPACE ? -ENOMEM : -EINVAL);
-> > +	} else {
-> 
-> Wouldn't we be better off preserving the previous seed here, if it was
-> present?
-
-While there's no guarantee that dtb won't be (partially) broken
-on failure, I will let this function return successfully
-by deleting succeeding fdt_delprop().
-
-
-> > +		pr_notice("kaslr-seed won't be fed\n");
-> 
-> "fed" is probably not the right word here.
-
-=> won't be *provided* on kexec?
+Fine, but anyhow I'm going to submit a new version (*without* kdump),
+I will fix the issue along with others.
 
 -Takahiro Akashi
 
-> Will
+
+> 
+> Thanks,
+> 
+> James
+> 
 
 _______________________________________________
 kexec mailing list
