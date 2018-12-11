@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v16 06/16] lib: fdt: add a helper function for handling
- memory range property
-References: <20181115055254.2812-1-takahiro.akashi@linaro.org>
- <20181115055254.2812-7-takahiro.akashi@linaro.org>
- <CAL_JsqL4_Z5pVfoB3opjL7eTzZvhBJW7_aQS443quAAR0gGH1w@mail.gmail.com>
- <20181206155424.GA4422@arm.com>
- <681e1265-2f0c-2a62-3778-09911b2be7fc@arm.com>
- <20181211061715.GF21466@linaro.org>
-From: James Morse <james.morse@arm.com>
-Message-ID: <654bffae-7edb-bda4-d01d-99a8b455b186@arm.com>
-Date: Tue, 11 Dec 2018 10:09:07 +0000
+Received: from namei.org ([65.99.196.166])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gWmlJ-0008LG-Q3
+ for kexec@lists.infradead.org; Tue, 11 Dec 2018 18:28:07 +0000
+Date: Wed, 12 Dec 2018 05:27:44 +1100 (AEDT)
+From: James Morris <jmorris@namei.org>
+Subject: Re: [PATCH v2 1/7] integrity: Define a trusted platform keyring
+In-Reply-To: <20181208202705.18673-2-nayna@linux.ibm.com>
+Message-ID: <alpine.LRH.2.21.1812120527150.11653@namei.org>
+References: <20181208202705.18673-1-nayna@linux.ibm.com>
+ <20181208202705.18673-2-nayna@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20181211061715.GF21466@linaro.org>
-Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,66 +23,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, Will Deacon <will.deacon@arm.com>
-Cc: prudo@linux.ibm.com, Herbert Xu <herbert@gondor.apana.org.au>, Baoquan He <bhe@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, Frank Rowand <frowand.list@gmail.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, dyoung@redhat.com, David Miller <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
+To: Nayna Jain <nayna@linux.ibm.com>
+Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, linux-integrity@vger.kernel.org, vgoyal@redhat.com
 
-Hi Akashi,
+On Sun, 9 Dec 2018, Nayna Jain wrote:
 
-On 11/12/2018 06:17, AKASHI, Takahiro wrote:
-> On Fri, Dec 07, 2018 at 10:12:47AM +0000, James Morse wrote:
->> On 06/12/2018 15:54, Will Deacon wrote:
->>> On Thu, Dec 06, 2018 at 08:47:04AM -0600, Rob Herring wrote:
->>>> On Wed, Nov 14, 2018 at 11:52 PM AKASHI Takahiro
->>>> <takahiro.akashi@linaro.org> wrote:
->>>>>
->>>>> Added function, fdt_setprop_reg(), will be used later to handle
->>>>> kexec-specific property in arm64's kexec_file implementation.
->>>>> It will possibly be merged into libfdt in the future.
->>>>
->>>> You generally can't modify libfdt files. Any changes will be blown
->>>> away with the next dtc sync (there's one in -next now). Though here
->>>> you are creating a new location with fdt code. lib/ is just a shim to
->>>> the actual libfdt code. Don't put any implementation there. You can
->>>> add this to drivers/of/fdt_address.c for the short term, but it still
->>>> needs to go upstream.
->>>>
->>>> Otherwise, the implementation looks fine to me.
->>>
->>> I agree, but I don't think there's a real need for us to hack
->>> drivers/of/fdt_address.c in the meantime -- let's just target upstream
->>> and not carry this in the kernel.
->>>
->>> Akashi -- for now, I'll drop the kdump parts of this series which rely
->>> on this helper. The majority of the series is actually independent and
->>> can go in as-is.
->>>
->>> I've pushed out a kexec branch to the arm64 tree for you to take a look
->>> at:
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=kexec
->>
->> I gave this a quick spin. Without the elfcorehdr/usable-memory-range arm64 needs
->> to explicitly forbid kdump via kexec_file_load. (like powerpc does already).
+> On secure boot enabled systems, a verified kernel may need to kexec
+> additional kernels. For example, it may be used as a bootloader needing
+> to kexec a target kernel or it may need to kexec a crashdump kernel. In
+> such cases, it may want to verify the signature of the next kernel
+> image.
 > 
-> Thank you for pointing this out.
+> It is further possible that the kernel image is signed with third party
+> keys which are stored as platform or firmware keys in the 'db' variable.
+> The kernel, however, can not directly verify these platform keys, and an
+> administrator may therefore not want to trust them for arbitrary usage.
+> In order to differentiate platform keys from other keys and provide the
+> necessary separation of trust, the kernel needs an additional keyring to
+> store platform keys.
 > 
->> Without this kdump works, but the second kernel overwrites the first as those DT
->> properties are missing.
->>
->> I'll post a patch momentarily,
+> This patch creates the new keyring called ".platform" to isolate keys
+> provided by platform from keys by kernel. These keys are used to
+> facilitate signature verification during kexec. Since the scope of this
+> keyring is only the platform/firmware keys, it cannot be updated from
+> userspace.
 > 
-> Fine, but anyhow I'm going to submit a new version (*without* kdump),
-> I will fix the issue along with others.
-
-I had a quick look at the arm64 for-next/core branch. Will has queued the
-non-kdump parts of this series.
-
-If you have changes, they need to be against the arm64 tree.
+> This keyring can be enabled by setting CONFIG_INTEGRITY_PLATFORM_KEYRING.
+> 
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Acked-by: Serge Hallyn <serge@hallyn.com>
 
 
-Thanks,
+Reviewed-by: James Morris <james.morris@microsoft.com>
 
-James
+
+-- 
+James Morris
+<jmorris@namei.org>
+
 
 _______________________________________________
 kexec mailing list
