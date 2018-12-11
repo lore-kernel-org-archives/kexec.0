@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from namei.org ([65.99.196.166])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gWn4q-00079J-HD
- for kexec@lists.infradead.org; Tue, 11 Dec 2018 18:48:17 +0000
-Date: Wed, 12 Dec 2018 05:47:58 +1100 (AEDT)
+ id 1gWn5s-0007Wg-2U
+ for kexec@lists.infradead.org; Tue, 11 Dec 2018 18:49:21 +0000
+Date: Wed, 12 Dec 2018 05:49:00 +1100 (AEDT)
 From: James Morris <jmorris@namei.org>
-Subject: Re: [PATCH v2 5/7] efi: Import certificates from UEFI Secure Boot
-In-Reply-To: <20181208202705.18673-6-nayna@linux.ibm.com>
-Message-ID: <alpine.LRH.2.21.1812120547110.11653@namei.org>
+Subject: Re: [PATCH v2 6/7] efi: Allow the "db" UEFI variable to be suppressed
+In-Reply-To: <20181208202705.18673-7-nayna@linux.ibm.com>
+Message-ID: <alpine.LRH.2.21.1812120548480.11653@namei.org>
 References: <20181208202705.18673-1-nayna@linux.ibm.com>
- <20181208202705.18673-6-nayna@linux.ibm.com>
+ <20181208202705.18673-7-nayna@linux.ibm.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -28,50 +28,20 @@ Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, kexec@lists.infradead.org, li
 
 On Sun, 9 Dec 2018, Nayna Jain wrote:
 
-> +/*
-> + * Blacklist an X509 TBS hash.
-> + */
-> +static __init void uefi_blacklist_x509_tbs(const char *source,
-> +					   const void *data, size_t len)
-> +{
-> +	char *hash, *p;
-> +
-> +	hash = kmalloc(4 + len * 2 + 1, GFP_KERNEL);
-> +	if (!hash)
-> +		return;
-> +	p = memcpy(hash, "tbs:", 4);
-> +	p += 4;
-> +	bin2hex(p, data, len);
-> +	p += len * 2;
-> +	*p = 0;
-> +
-> +	mark_hash_blacklisted(hash);
-> +	kfree(hash);
-> +}
-> +
-> +/*
-> + * Blacklist the hash of an executable.
-> + */
-> +static __init void uefi_blacklist_binary(const char *source,
-> +					 const void *data, size_t len)
-> +{
-> +	char *hash, *p;
-> +
-> +	hash = kmalloc(4 + len * 2 + 1, GFP_KERNEL);
-> +	if (!hash)
-> +		return;
-> +	p = memcpy(hash, "bin:", 4);
-> +	p += 4;
-> +	bin2hex(p, data, len);
-> +	p += len * 2;
-> +	*p = 0;
-> +
-> +	mark_hash_blacklisted(hash);
-> +	kfree(hash);
-> +}
+> From: Josh Boyer <jwboyer@fedoraproject.org>
 > 
+> If a user tells shim to not use the certs/hashes in the UEFI db variable
+> for verification purposes, shim will set a UEFI variable called
+> MokIgnoreDB. Have the uefi import code look for this and ignore the db
+> variable if it is found.
+> 
+> Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> Acked-by: Nayna Jain <nayna@linux.ibm.com>
+> Acked-by: Serge Hallyn <serge@hallyn.com>
 
-These could be refactored into one function.
+
+Reviewed-by: James Morris <james.morris@microsoft.com>
 
 
 -- 
