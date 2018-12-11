@@ -1,22 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from mail-pg1-x543.google.com ([2607:f8b0:4864:20::543])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gWSsb-0005SD-GU
- for kexec@lists.infradead.org; Mon, 10 Dec 2018 21:14:20 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH 1/2 v2] kdump: add the vmcoreinfo documentation
-Date: Mon, 10 Dec 2018 21:10:41 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03564659@BPXM09GP.gisp.nec.co.jp>
-References: <20181202030839.29945-1-lijiang@redhat.com>
- <20181202030839.29945-2-lijiang@redhat.com> <20181203150809.GA4794@zn.tnic>
- <779dbae7-f6e2-e9e4-bdd0-0a9e6ec62487@redhat.com>
- <20181205113032.GF29510@zn.tnic>
- <3d1a7e68-34c5-d118-fe09-7c9bc14cce84@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC0356426E@BPXM09GP.gisp.nec.co.jp>
- <20181210183221.GA5482@zn.tnic>
-In-Reply-To: <20181210183221.GA5482@zn.tnic>
-Content-Language: en-US
+ id 1gWalY-0000Hb-7b
+ for kexec@lists.infradead.org; Tue, 11 Dec 2018 05:39:37 +0000
+Received: by mail-pg1-x543.google.com with SMTP id w6so6111801pgl.6
+ for <kexec@lists.infradead.org>; Mon, 10 Dec 2018 21:39:21 -0800 (PST)
+Date: Tue, 11 Dec 2018 14:42:33 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v16 15/16] arm64: kexec_file: add kernel signature
+ verification support
+Message-ID: <20181211054231.GD21466@linaro.org>
+References: <20181115055254.2812-1-takahiro.akashi@linaro.org>
+ <20181115055254.2812-16-takahiro.akashi@linaro.org>
+ <20181130132113.GE9000@arm.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20181130132113.GE9000@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,48 +28,99 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>, lijiang <lijiang@redhat.com>
-Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "bhe@redhat.com" <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "dyoung@redhat.com" <dyoung@redhat.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+To: Will Deacon <will.deacon@arm.com>
+Cc: prudo@linux.ibm.com, herbert@gondor.apana.org.au, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, bhsharma@redhat.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, schwidefsky@de.ibm.com, james.morse@arm.com, dyoung@redhat.com, davem@davemloft.net, vgoyal@redhat.com
 
------Original Message-----
-> > makedumpfile doesn't have any switch which dumps VMCOREINFO from kcore
-> > for now. (I'm thinking to have makedumpfile dump it as debug message,
-> > though.)
+On Fri, Nov 30, 2018 at 01:21:14PM +0000, Will Deacon wrote:
+> On Thu, Nov 15, 2018 at 02:52:54PM +0900, AKASHI Takahiro wrote:
+> > With this patch, kernel verification can be done without IMA security
+> > subsystem enabled. Turn on CONFIG_KEXEC_VERIFY_SIG instead.
+> > 
+> > On x86, a signature is embedded into a PE file (Microsoft's format) header
+> > of binary. Since arm64's "Image" can also be seen as a PE file as far as
+> > CONFIG_EFI is enabled, we adopt this format for kernel signing.
+> > 
+> > You can create a signed kernel image with:
+> >     $ sbsign --key ${KEY} --cert ${CERT} Image
+> > 
+> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Reviewed-by: James Morse <james.morse@arm.com>
+> > ---
+> >  arch/arm64/Kconfig              | 24 ++++++++++++++++++++++++
+> >  arch/arm64/kernel/kexec_image.c | 17 +++++++++++++++++
+> >  2 files changed, 41 insertions(+)
+> > 
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index 93dc4d36d6db..11f3e1a00588 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -867,6 +867,30 @@ config KEXEC_FILE
+> >  	  for kernel and initramfs as opposed to list of segments as
+> >  	  accepted by previous system call.
+> >  
+> > +config KEXEC_VERIFY_SIG
+> > +	bool "Verify kernel signature during kexec_file_load() syscall"
+> > +	depends on KEXEC_FILE
+> > +	help
+> > +	  Select this option to verify a signature with loaded kernel
+> > +	  image. If configured, any attempt of loading a image without
+> > +	  valid signature will fail.
+> > +
+> > +	  In addition to that option, you need to enable signature
+> > +	  verification for the corresponding kernel image type being
+> > +	  loaded in order for this to work.
+> > +
+> > +config KEXEC_IMAGE_VERIFY_SIG
+> > +	bool "Enable Image signature verification support"
+> > +	default y
+> > +	depends on KEXEC_VERIFY_SIG
+> > +	depends on EFI && SIGNED_PE_FILE_VERIFICATION
+> > +	help
+> > +	  Enable Image signature verification support.
+> > +
+> > +comment "Support for PE file signature verification disabled"
+> > +	depends on KEXEC_VERIFY_SIG
+> > +	depends on !EFI || !SIGNED_PE_FILE_VERIFICATION
+> > +
+> >  config CRASH_DUMP
+> >  	bool "Build kdump crash kernel"
+> >  	help
+> > diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
+> > index 9f0d8b5d62d3..d1c6c54c22e3 100644
+> > --- a/arch/arm64/kernel/kexec_image.c
+> > +++ b/arch/arm64/kernel/kexec_image.c
+> > @@ -12,7 +12,9 @@
+> >  #include <linux/errno.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/kexec.h>
+> > +#include <linux/pe.h>
+> >  #include <linux/string.h>
+> > +#include <linux/verification.h>
+> >  #include <asm/byteorder.h>
+> >  #include <asm/cpufeature.h>
+> >  #include <asm/image.h>
+> > @@ -29,6 +31,10 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
+> >  				sizeof(h->magic)))
+> >  		return -EINVAL;
+> >  
+> > +	pr_debug("PE format: %s\n",
+> > +			memcmp(&((struct mz_hdr *)h)->magic, "MZ", 2) ?
+> > +							"no" : "yes");
+> > 
 > 
-> Might be useful as people are looking into using VMCOREINFO when
-> debugging a live kernel...
+> Is this hunk really necessary? I'd prefer not to commit pr_debug()
+> invocations.
 
-Now makedumpfile in 'devel' branch can print VMCOREINFO in /proc/kcore
-as debug message with the following command:
+This line comes from kexec-tools' code, but I don't mind removing it.
+(as lots of lines diverge now from kexec-tools.)
 
-# ./makedumpfile --mem-usage /proc/kcore -D
-...
-VMCOREINFO   :
-  OSRELEASE=4.20.0-0.rc2.git0.1.fc30.x86_64
-  PAGESIZE=4096
-page_size    : 4096
-  SYMBOL(init_uts_ns)=ffffffff84213540
-  ...
+-Takahiro Akashi
 
-Also, it seems that recent crash utility in git repo with kernel 4.19
-or newer can dump it with 'help -n' command:
 
-# ./crash vmlinux /proc/kcore
-...
-crash> help -n
-...
-  Elf64_Nhdr:
-      n_namesz: 11 ("VMCOREINFO")
-      n_descsz: 1955
-        n_type: 0 (unknown)
+> Will
 
-      OSRELEASE=4.20.0-0.rc2.git0.1.fc30.x86_64
-      PAGESIZE=4096
-      SYMBOL(init_uts_ns)=ffffffff84213540
-      ...
-
-Thanks,
-Kazu
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
