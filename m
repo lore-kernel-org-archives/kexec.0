@@ -1,28 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-qt1-x82c.google.com ([2607:f8b0:4864:20::82c])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gXCAf-00012o-Ev
- for kexec@lists.infradead.org; Wed, 12 Dec 2018 21:35:59 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- wBCLYlVZ162672
- for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 16:35:46 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2pb7wce2b2-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 16:35:45 -0500
-Received: from localhost
- by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <nayna@linux.ibm.com>;
- Wed, 12 Dec 2018 21:35:43 -0000
-From: Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH v2a 5/7] efi: Import certificates from UEFI Secure Boot
-Date: Thu, 13 Dec 2018 03:02:07 +0530
-In-Reply-To: <20181208202705.18673-6-nayna@linux.ibm.com>
-References: <20181208202705.18673-6-nayna@linux.ibm.com>
-Message-Id: <20181212213207.12746-1-nayna@linux.ibm.com>
+ id 1gXD82-0005kx-IV
+ for kexec@lists.infradead.org; Wed, 12 Dec 2018 22:37:21 +0000
+Received: by mail-qt1-x82c.google.com with SMTP id y20so22007qtm.13
+ for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 14:37:07 -0800 (PST)
+Message-ID: <1544654224.18411.11.camel@lca.pw>
+Subject: Re: arm64: kdump broken on a large CPU system
+From: Qian Cai <cai@lca.pw>
+Date: Wed, 12 Dec 2018 17:37:04 -0500
+In-Reply-To: <e4a3456b-6a75-4564-a49f-0532d0b35726@lca.pw>
+References: <113776f1-5633-e397-96eb-c533ea79671d@lca.pw>
+ <29f74c6d-dd21-dcee-6c62-914f018c4e4e@arm.com>
+ <7f467952-342b-71e2-c553-ff53ecc1812e@arm.com>
+ <20181212025131.GL21466@linaro.org>
+ <e4a3456b-6a75-4564-a49f-0532d0b35726@lca.pw>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,247 +24,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-integrity@vger.kernel.org
-Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, Nayna Jain <nayna@linux.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, Josh Boyer <jwboyer@fedoraproject.org>, vgoyal@redhat.com
+To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-From: Josh Boyer <jwboyer@fedoraproject.org>
-
-Secure Boot stores a list of allowed certificates in the 'db' variable.
-This patch imports those certificates into the platform keyring. The shim
-UEFI bootloader has a similar certificate list stored in the 'MokListRT'
-variable. We import those as well.
-
-Secure Boot also maintains a list of disallowed certificates in the 'dbx'
-variable. We load those certificates into the system blacklist keyring
-and forbid any kernel signed with those from loading.
-
-[zohar@linux.ibm.com: dropped Josh's original patch description]
-Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-Acked-by: Serge Hallyn <serge@hallyn.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
----
-Changelog:
-
-v2a:
-- refactored uefi_blacklist_x509_tbs() and  uefi_blacklist_binary()
-
-v2:
-- Fixed the checkpatch.pl warnings
-
-v0:
-- This patch replaces the loading of certificates onto the secondary
-  keyring with platform keyring
-- removed the CONFIG LOAD_UEFI_KEYS
-- moved the file load_uefi.o from certs to security/integrity/platform_certs
-
- security/integrity/Makefile                   |   5 +-
- security/integrity/platform_certs/load_uefi.c | 169 ++++++++++++++++++++++++++
- 2 files changed, 173 insertions(+), 1 deletion(-)
- create mode 100644 security/integrity/platform_certs/load_uefi.c
-
-diff --git a/security/integrity/Makefile b/security/integrity/Makefile
-index 6ee9058866cd..86df9aba8c0f 100644
---- a/security/integrity/Makefile
-+++ b/security/integrity/Makefile
-@@ -10,7 +10,10 @@ integrity-$(CONFIG_INTEGRITY_AUDIT) += integrity_audit.o
- integrity-$(CONFIG_INTEGRITY_SIGNATURE) += digsig.o
- integrity-$(CONFIG_INTEGRITY_ASYMMETRIC_KEYS) += digsig_asymmetric.o
- integrity-$(CONFIG_INTEGRITY_PLATFORM_KEYRING) += platform_certs/platform_keyring.o \
--						  platform_certs/efi_parser.o
-+						  platform_certs/efi_parser.o \
-+						  platform_certs/load_uefi.o
-+obj-$(CONFIG_LOAD_UEFI_KEYS) += platform_certs/load_uefi.o
-+$(obj)/load_uefi.o: KBUILD_CFLAGS += -fshort-wchar
- 
- subdir-$(CONFIG_IMA)			+= ima
- obj-$(CONFIG_IMA)			+= ima/
-diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-new file mode 100644
-index 000000000000..8ceafa58d98c
---- /dev/null
-+++ b/security/integrity/platform_certs/load_uefi.c
-@@ -0,0 +1,169 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/kernel.h>
-+#include <linux/sched.h>
-+#include <linux/cred.h>
-+#include <linux/err.h>
-+#include <linux/efi.h>
-+#include <linux/slab.h>
-+#include <keys/asymmetric-type.h>
-+#include <keys/system_keyring.h>
-+#include "../integrity.h"
-+
-+static efi_guid_t efi_cert_x509_guid __initdata = EFI_CERT_X509_GUID;
-+static efi_guid_t efi_cert_x509_sha256_guid __initdata =
-+	EFI_CERT_X509_SHA256_GUID;
-+static efi_guid_t efi_cert_sha256_guid __initdata = EFI_CERT_SHA256_GUID;
-+
-+/*
-+ * Get a certificate list blob from the named EFI variable.
-+ */
-+static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
-+				  unsigned long *size)
-+{
-+	efi_status_t status;
-+	unsigned long lsize = 4;
-+	unsigned long tmpdb[4];
-+	void *db;
-+
-+	status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
-+	if (status != EFI_BUFFER_TOO_SMALL) {
-+		pr_err("Couldn't get size: 0x%lx\n", status);
-+		return NULL;
-+	}
-+
-+	db = kmalloc(lsize, GFP_KERNEL);
-+	if (!db)
-+		return NULL;
-+
-+	status = efi.get_variable(name, guid, NULL, &lsize, db);
-+	if (status != EFI_SUCCESS) {
-+		kfree(db);
-+		pr_err("Error reading db var: 0x%lx\n", status);
-+		return NULL;
-+	}
-+
-+	*size = lsize;
-+	return db;
-+}
-+
-+/*
-+ * Blacklist a hash.
-+ */
-+static __init void uefi_blacklist_hash(const char *source, const void *data,
-+				       size_t len, const char *type,
-+				       size_t type_len)
-+{
-+	char *hash, *p;
-+
-+	hash = kmalloc(type_len + len * 2 + 1, GFP_KERNEL);
-+	if (!hash)
-+		return;
-+	p = memcpy(hash, type, type_len);
-+	p += type_len;
-+	bin2hex(p, data, len);
-+	p += len * 2;
-+	*p = 0;
-+
-+	mark_hash_blacklisted(hash);
-+	kfree(hash);
-+}
-+
-+/*
-+ * Blacklist an X509 TBS hash.
-+ */
-+static __init void uefi_blacklist_x509_tbs(const char *source,
-+					   const void *data, size_t len)
-+{
-+	uefi_blacklist_hash(source, data, len, "tbs:", 4);
-+}
-+
-+/*
-+ * Blacklist the hash of an executable.
-+ */
-+static __init void uefi_blacklist_binary(const char *source,
-+					 const void *data, size_t len)
-+{
-+	uefi_blacklist_hash(source, data, len, "bin:", 4);
-+}
-+
-+/*
-+ * Return the appropriate handler for particular signature list types found in
-+ * the UEFI db and MokListRT tables.
-+ */
-+static __init efi_element_handler_t get_handler_for_db(const efi_guid_t *
-+						       sig_type)
-+{
-+	if (efi_guidcmp(*sig_type, efi_cert_x509_guid) == 0)
-+		return add_to_platform_keyring;
-+	return 0;
-+}
-+
-+/*
-+ * Return the appropriate handler for particular signature list types found in
-+ * the UEFI dbx and MokListXRT tables.
-+ */
-+static __init efi_element_handler_t get_handler_for_dbx(const efi_guid_t *
-+							sig_type)
-+{
-+	if (efi_guidcmp(*sig_type, efi_cert_x509_sha256_guid) == 0)
-+		return uefi_blacklist_x509_tbs;
-+	if (efi_guidcmp(*sig_type, efi_cert_sha256_guid) == 0)
-+		return uefi_blacklist_binary;
-+	return 0;
-+}
-+
-+/*
-+ * Load the certs contained in the UEFI databases
-+ */
-+static int __init load_uefi_certs(void)
-+{
-+	efi_guid_t secure_var = EFI_IMAGE_SECURITY_DATABASE_GUID;
-+	efi_guid_t mok_var = EFI_SHIM_LOCK_GUID;
-+	void *db = NULL, *dbx = NULL, *mok = NULL;
-+	unsigned long dbsize = 0, dbxsize = 0, moksize = 0;
-+	int rc = 0;
-+
-+	if (!efi.get_variable)
-+		return false;
-+
-+	/* Get db, MokListRT, and dbx.  They might not exist, so it isn't
-+	 * an error if we can't get them.
-+	 */
-+	db = get_cert_list(L"db", &secure_var, &dbsize);
-+	if (!db) {
-+		pr_err("Couldn't get UEFI db list\n");
-+	} else {
-+		rc = parse_efi_signature_list("UEFI:db",
-+					      db, dbsize, get_handler_for_db);
-+		if (rc)
-+			pr_err("Couldn't parse db signatures: %d\n", rc);
-+		kfree(db);
-+	}
-+
-+	mok = get_cert_list(L"MokListRT", &mok_var, &moksize);
-+	if (!mok) {
-+		pr_info("Couldn't get UEFI MokListRT\n");
-+	} else {
-+		rc = parse_efi_signature_list("UEFI:MokListRT",
-+					      mok, moksize, get_handler_for_db);
-+		if (rc)
-+			pr_err("Couldn't parse MokListRT signatures: %d\n", rc);
-+		kfree(mok);
-+	}
-+
-+	dbx = get_cert_list(L"dbx", &secure_var, &dbxsize);
-+	if (!dbx) {
-+		pr_info("Couldn't get UEFI dbx list\n");
-+	} else {
-+		rc = parse_efi_signature_list("UEFI:dbx",
-+					      dbx, dbxsize,
-+					      get_handler_for_dbx);
-+		if (rc)
-+			pr_err("Couldn't parse dbx signatures: %d\n", rc);
-+		kfree(dbx);
-+	}
-+
-+	return rc;
-+}
-+late_initcall(load_uefi_certs);
--- 
-2.13.6
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCAyMDE4LTEyLTExIGF0IDIzOjM5IC0wNTAwLCBRaWFuIENhaSB3cm90ZToKPiBbKyBr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnXQo+IAo+IFRoZSBkZWJ1Z2dpbmcgcHJvZ3Jlc3Mgc28g
+ZmFyLi4uCj4gCj4gV2FpdCB1cCB0byA1IG1pbnV0ZXMgZm9yIG90aGVyIENQVXMgdG8gc3RvcCBp
+biBjcmFzaF9zbXBfc2VuZF9zdG9wKCkgbWFkZSBubwo+IGRpZmZlcmVuY2UuCj4gCj4gV2l0aCAi
+ZGV2IiBicmFuY2ggb2YgdGhpcyB0cmVlIFsxXSwgaXQgaXMgcG9zc2libGUgdG8gcHJpbnQgb3V0
+IG1lc3NhZ2VzIGZyb20KPiBwdXJnYXRvcnkgd2hlbiBwYXNzaW5nIHNvbWV0aGluZyBsaWtlICIt
+LXBvcnQ9MHg2MDJCMDAwMAo+IC0tcG9ydC1sc3I9MHg2MDJCMDAwMCwweDgwIiB0byBrZXhlYy4g
+SG93ZXZlciwgZXZlbiBlbmFibGVfZGNhY2hlKCkgaW4KPiBzZXR1cF9hcmNoKCkgd2lsbCBodW5n
+IGxpa2UgZm9yZXZlciBvbiB0aGlzIG1hY2hpbmUgKHdvcmtpbmcgZmluZSBvbiBhbm90aGVyCj4g
+YXJtNjQgc2VydmVyIC0gQ29ydGV4LUE3MikuIEFmdGVyIHJlbW92ZWQgb25seSBlbmFibGVfZGNh
+Y2hlKCkgLwo+IGRpc2FibGVfZGNhY2hlKCkgZnJvbSBzZXR1cF9hcmNoKCkgZXRjIHdpdGhvdXQg
+cmVtb3ZpbmcgcHJpbnRmKCkgbGluZXMsIGl0IGRpZAo+IHByaW50IG91dCwKPiAKPiBJJ20gaW4g
+cHVyZ2F0b3J5Cj4gcHVyZ2F0b3J5OiBlbnRyeT0wMDAwMDAwMDkwMDgwMDAwCj4gcHVyZ2F0b3J5
+OiBkdGI9MDAwMDAwMDA5MmQ1MDAwMAo+IHB1cmdhdG9yeTogRC1jYWNoZSBFbmFibGVkIGJlZm9y
+ZSBTSEEgdmVyaWZpY2F0aW9uCj4gcHVyZ2F0b3J5OiBELWNhY2hlIERpc2FibGVkIGFmdGVyIFNI
+QSB2ZXJpZmljYXRpb24KPiAKPiBTbywgaXQgY29uZmlybWVkIHRoYXQgaXQgbXVzdCBodW5nIHNv
+bWV3aGVyZSBpbiBhcm02NC9rZXJuZWwvaGVhZC5TICguc3RleHQpCj4gb3IKPiB0aGUgZWFybHkg
+cGFydCBvZiBzdGFydF9rZXJuZWwoKSBiZWZvcmUgZWFybHljb24gd2FzIGluaXRpYWxpemVkLgo+
+IAo+IEFsc28gY29uZmlybWVkIHRoYXQgcGFzc2luZyBucl9jcHVzPTY0IGluIHRoZSBmaXJzdCBr
+ZXJuZWwgd291bGQgYWdhaW4gbWFrZQo+IGV2ZXJ5dGhpbmcgd29yayBmaW5lIHdpdGggdGhpcyBu
+ZXcga2V4ZWMuCj4gCj4gU2luY2UgZW5hYmxlX2RjYWNoZSgpIHdvdWxkIGh1bmcgYXMgd2VsbCwg
+SSBzdXNwZWN0IHRoaXMgaGFzIHNvbWV0aGluZyB0byBkbwo+IHdpdGggZW5hYmxpbmcgTU1VIChp
+LmUsIC5zdGV4dCAtPiBfX3ByaW1hcnlfc3dpdGNoIC0+IF9fZW5hYmxlX21tdSkgY291cGxpbmcK
+PiB3aXRoIHNvbWUgc29ydCBvZiBwZXItQ1BVIGRhdGEgd2hlcmUgdGhlIG51bWJlciBvZiBDUFVz
+IG1hdHRlcnMuCgpTdGlsbCBkZWJ1Z2dpbmcgYSBodW5nIHRvIGVuYWJsZSBNTVUgKGVuYWJsZV9k
+Y2FjaGUpIGluIHB1cmdhdG9yeSBbMV0gd2hpY2ggbWF5CnByb3ZpZGUgc29tZSBjbHVlcyBmb3Ig
+dGhlIGh1bmcgbGF0ZXIgaW4gdGhlIDJuZCBrZXJuZWwuCgpkc2IJbnNoc3QKdGxiaQlhbGxlMgpk
+c2IJbnNoCmlzYgpibAlnZXRfaXBzX2JpdHMKbHNsCXgxLCB4MCwgI1RDUl9JUFNfRUwyX1NISUZU
+Cm9ycgl4MSwgeDEsIHg3Cm1vdgl4MCwgeDYKbGRyCXgyLCA9TUVNT1JZX0FUVFJJQlVURVMKbXNy
+CW1haXJfZWwyLCB4Mgptc3IJdGNyX2VsMiwgeDEKbXNyCXR0YnIwX2VsMiwgeDAKaXNiCm1ycwl4
+MCwgc2N0bHJfZWwyCmxkcgl4MywgPVNDVExSX0VMeF9GTEFHUwpvcnIJeDAsIHgwLCB4Mwptc3IJ
+c2N0bHJfZWwyLCB4MCAgICAgPC0tLSBodW5nIHJpZ2h0IG9uIHRoaXMgaW5zdHJ1Y3Rpb24uCgpX
+aXRob3V0IENPTkZJR19BUk02NF9WSEXCoChpLmUuLCBydW5uaW5nIGluIEVMMSksIGl0IGlzIGFi
+bGUgdG8gcnVuCmVuYWJsZV9kY2FjaGUoKSBidXQgaXQgc3RpbGwgaHVuZyBsYXRlciBpbiB0aGUg
+Mm5kIGtlcm5lbCBzb21ld2hlcmUuCgpkc2IJbnNoc3QKdGxiaQl2bWFsbGUxCmRzYgluc2gKaXNi
+CmJsCWdldF9pcHNfYml0cwpsc2wJeDEsIHgwLCAjVENSX0lQU19FTDFfU0hJRlQKb3JyCXgxLCB4
+MSwgeDcKbW92CXgwLCB4NgpsZHIJeDIsID1NRU1PUllfQVRUUklCVVRFUwptc3IJbWFpcl9lbDEs
+IHgyCm1zcgl0Y3JfZWwxLCB4MQptc3IJdHRicjBfZWwxLCB4MAppc2IKbXJzCXgwLCBzY3Rscl9l
+bDEKbGRyCXgzLCA9U0NUTFJfRUx4X0ZMQUdTCm9ycgl4MCwgeDAsIHgzCm1zcglzY3Rscl9lbDEs
+IHgwCmlzYgoKT25lIGRhdGEgcG9pbnQgb2YgdGhpcyBzeXN0ZW0gaXMgdGhhdCBpdCBoYXMgNCB0
+aHJlYWRzIG9uIGVhY2ggY29yZS4gRWFjaCAyLWNvcmUgCnNoYXJlIGEgc2FtZSBMMSBhbmQgTDIg
+Y2FjaGVzLCBzbyB0aGF0IGlzIDggQ1BVcyBzaGFyZXMgdGhlbSBlYWNoLiBBbGwgQ1BVcwpzaGFy
+ZSBhIHNhbWUgTDMgY2FjaGUuCgpIZW5jZSwgSSB3b25kZXIgaWYgdGhpcyBpcyBiZWNhdXNlIG9m
+IGluY29tcGxldGUgY2FjaGUvVExCIGludmFsaWRhdGlvbiB0aGF0IGhhZApzdGFsZSBlbnRyaWVz
+IChvciB1bmluaXRpYWxpc2VkIGp1bmsgd2hpY2gganVzdCBoYXBwZW5zIHRvIGxvb2sgdmFsaWQp
+IHByZXNlbnQKYmVmb3JlIHR1cm5pbmcgdGhlIE1NVSBvbi4KClsxXSBodHRwczovL2dpdGh1Yi5j
+b20vcHJhdHl1c2hhbmFuZC9rZXhlYy10b29scy9ibG9iL2RldmVsL3B1cmdhdG9yeS9hcmNoL1wK
+YXJtNjQvY2FjaGUuUwoKPiAKPiBSaWdodCBub3csIEkgdGhpbmsgSSBuZWVkIHRvIGZpbmQgYSB3
+YXkgdG8gcHJpbnQgZGlyZWN0bHkgdG8gcGwwMTEgc2VyaWFsCj4gY29uc29sZSB3aGlsZSBkZWJ1
+Z2dpbmcgdGhvc2UgYXNzZW1ibHkgY29kZSBsaWtlIENPTkZJR19ERUJVR19MTCBmb3IgYXJtNjQs
+IHNvCj4gaXQgY2FuIGJlIHVzZWQgdG8gbG9jYXRlIHdoZXJlIGV4YWN0bHkgaXQgaHVuZy4gT3Ro
+ZXJ3aXNlLCBJIGFtIHNob290aW5nIGluCj4gdGhlCj4gZGFyay4KPiAKPiBbMV0gaHR0cHM6Ly9n
+aXRodWIuY29tL3ByYXR5dXNoYW5hbmQva2V4ZWMtdG9vbHMKPiAKPiA9PT0gb3JpZ2luYWwgZW1h
+aWwgPT09Cj4gCj4gT24gdGhpcyBIUEUgQXBvbGxvIDcwIGFybTY0IHNlcnZlciB3aXRoIDI1NiBD
+UFVzLCB0cmlnZ2VyaW5nIGEgY3Jhc2ggZHVtcCBqdXN0Cj4gaHVuZyAoNC4yMC1yYzYgYXMgd2Vs
+bCBhcyA0LjE4KS4gSXQgd2FzIGNvbmZpcm1lZCB0aGF0IHRoZSBleGVjdXRpbmcgd2VudCBhcwo+
+IGZhcgo+IGFzIGVudGVyaW5nIF9fY3B1X3NvZnRfcmVzdGFydCgpLAo+IAo+IF9fY3Jhc2hfa2V4
+ZWMKPiDCoCBtYWNoaW5lX2tleGVjCj4gwqDCoMKgwqBjcHVfc29mdF9yZXN0YXJ0Cj4gwqDCoMKg
+wqDCoMKgcmVzdGFydAo+IMKgwqDCoMKgwqDCoMKgwqBfX2NwdV9zb2Z0X3Jlc3RhcnQKPiAKPiBU
+aGUgZWFybHljb24gd2FzIGVuYWJsZWQgYnV0IGhhZCBubyBvdXRwdXQgZnJvbSB0aGUgMm5kIGtl
+cm5lbCwgc28gaXQgd2FzCj4gcHJldHR5Cj4gbXVjaCBzdHVjayBpbiBhbGwgdGhvc2UgYXNzZW1i
+bHkgY29kZSBpbiBhcm02NC9rZXJuZWwvaGVhZC5TIG9yIHRoZSBlYXJseSBwYXJ0Cj4gb2Ygc3Rh
+cnRfa2VybmVsKCkgYmVmb3JlIGVhcmx5Y29uIHdhcyBpbml0aWFsaXplZC4KPiAKPiBJdCB0dXJu
+ZWQgb3V0IHRoaXMgaGFzIHNvbWV0aGluZyB0byBkbyB3aXRoIG5yX2NwdXMgaW4gdGhlIDFzdCBr
+ZXJuZWwsCj4gYWx0aG91Z2gKPiB0aGUgMm5kIGtlcm5lbCBhbHdheXMgaGFzIG5yX2NwdXM9MSBb
+MV0uIEl0IHdhcyB0ZXN0ZWQgd2l0aCBib3RoCj4gY3Jhc2hrZXJuZWw9NTEyTSBvciA3NjhNLgo+
+IAo+IG5yX2NwdXMgPD0gOTbCoMKgR09PRCAoMm5kIGtlcm5lbCB3YXMgdXAgaW4gMi0zIG1pbnMu
+KQo+IG5yX2NwdXM9MjU2wqDCoMKgwqBCQUTCoMKgKDJuZCBrZXJuZWwgd2FzIE5PVCB1cCBhZnRl
+ciAxIGhvdXIuKQo+IG5yX2NwdXM9MTI3wqDCoMKgwqBCQUTCoMKgKDJuZCBrZXJuZWwgd2FzIE5P
+VCB1cCBhZnRlciAxMCBtaW5zLikKPiAKPiBJIGRpZCBhbHNvIHRlc3Qgd2l0aCBhbmQgd2l0aG91
+dCBDT05GSUdfQVJNNjRfVkhFIChpLmUuLCBlbDJfc3dpdGNoKSBtYWRlIG5vCj4gZGlmZmVyZW5j
+ZS4KPiAKPiBbMV0gS0RVTVBfQ09NTUFORExJTkVfQVBQRU5EPSJpcnFwb2xsIG5yX2NwdXM9MSBz
+d2lvdGxiPW5vZm9yY2UgcmVzZXRfZGV2aWNlcyIKPiAKPiBJIGFtIHN0aWxsIGZpZ3VyaW5nIG91
+dCBhIHdheSB0byBkZWJ1ZyB0aG9zZSBhc3NlbWJseSBjb2RlIHRvIHdoZXJlIGl0Cj4gYWN0dWFs
+bHkKPiBodW5nLCBidXQgdGhlIHNlcnZlciB3YXMgaG9va2VkIHVwIHdpdGggYSBjb25zZXJ2ZXIg
+dGhhdCB3YXMgbm90IGFibGUgdG8KPiBnZW5lcmF0ZSBhbnkgc3lzcnEgYW5kIEkgaGF2ZSBubyBz
+aGVsbCBhY2Nlc3MgdG8gdGhlIGNvbnNlcnZlciwgc28gc2VlbXMgYSBiaXQKPiBkaWZmaWN1bHQg
+dG8gdXNlIGtnZGIgb3Iga2RiIGluIHRoaXMgY2FzZS4KPiAKPiBDUFUgaW5mb3JtYXRpb24sCj4g
+Cj4gIyBsc2NwdQo+IEFyY2hpdGVjdHVyZTrCoMKgwqDCoMKgwqDCoMKgYWFyY2g2NAo+IEJ5dGUg
+T3JkZXI6wqDCoMKgwqDCoMKgwqDCoMKgwqBMaXR0bGUgRW5kaWFuCj4gQ1BVKHMpOsKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAyNTYKPiBPbi1saW5lIENQVShzKSBsaXN0OiAwLTI1NQo+IFRo
+cmVhZChzKSBwZXIgY29yZTrCoMKgNAo+IENvcmUocykgcGVyIHNvY2tldDrCoMKgMzIKPiBTb2Nr
+ZXQocyk6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoDIKPiBOVU1BIG5vZGUocyk6wqDCoMKgwqDCoMKg
+wqDCoDIKPiBWZW5kb3IgSUQ6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoENhdml1bQo+IE1vZGVsOsKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDEKPiBNb2RlbCBuYW1lOsKgwqDCoMKgwqDCoMKg
+wqDCoMKgVGh1bmRlclgyIDk5eHgKPiBTdGVwcGluZzrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAw
+eDEKPiBCb2dvTUlQUzrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA0MDAuMDAKPiBMMWQgY2FjaGU6
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoDMySwo+IEwxaSBjYWNoZTrCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgMzJLCj4gTDIgY2FjaGU6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgMjU2Swo+IEwzIGNhY2hl
+OsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDMyNzY4Swo+IE5VTUEgbm9kZTAgQ1BVKHMpOsKgwqDC
+oDAtMTI3Cj4gTlVNQSBub2RlMSBDUFUocyk6wqDCoMKgMTI4LTI1NQo+IEZsYWdzOsKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoGZwIGFzaW1kIGV2dHN0cm0gYWVzIHBtdWxsIHNoYTEgc2hh
+MiBjcmMzMiBhdG9taWNzIGNwdWlkCj4gYXNpbWRyZG0KCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+a2V4ZWMK
