@@ -1,21 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x843.google.com ([2607:f8b0:4864:20::843])
+Received: from mail-pl1-x644.google.com ([2607:f8b0:4864:20::644])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gWwJU-0002hv-Td
- for kexec@lists.infradead.org; Wed, 12 Dec 2018 04:40:02 +0000
-Received: by mail-qt1-x843.google.com with SMTP id v11so19164774qtc.2
- for <kexec@lists.infradead.org>; Tue, 11 Dec 2018 20:39:50 -0800 (PST)
-Subject: Re: arm64: kdump broken on a large CPU system
-References: <113776f1-5633-e397-96eb-c533ea79671d@lca.pw>
- <29f74c6d-dd21-dcee-6c62-914f018c4e4e@arm.com>
- <7f467952-342b-71e2-c553-ff53ecc1812e@arm.com>
- <20181212025131.GL21466@linaro.org>
-From: Qian Cai <cai@lca.pw>
-Message-ID: <e4a3456b-6a75-4564-a49f-0532d0b35726@lca.pw>
-Date: Tue, 11 Dec 2018 23:39:47 -0500
-MIME-Version: 1.0
-In-Reply-To: <20181212025131.GL21466@linaro.org>
-Content-Language: en-US
+ id 1gWzkG-0003QY-0a
+ for kexec@lists.infradead.org; Wed, 12 Dec 2018 08:19:54 +0000
+Received: by mail-pl1-x644.google.com with SMTP id z23so8268166plo.0
+ for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 00:19:41 -0800 (PST)
+From: Pingfan Liu <kernelfans@gmail.com>
+Subject: [PATCH] x86/kdump: directly find a candidate region when crashkernel=X
+Date: Wed, 12 Dec 2018 16:19:16 +0800
+Message-Id: <1544602756-17449-1-git-send-email-kernelfans@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,109 +17,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+To: linux-kernel@vger.kernel.org
+Cc: Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
 
-[+ kexec@lists.infradead.org]
+I encounter a case where crashkernel=384M, and kaslr is enabled. During the
+test, sometimes, the system may fail to reserve region for crash kernel,
+although there is much free space above 896MB. It is caused by the
+truncation of the candidate region by kaslr kernel. It raises confusion to
+the end user that sometimes crashkernel=X works while sometimes fails.
+Since on x86, kaslr is a default option, and this corner case is
+unavoidable.
+This patch simplifies the method suggested in the mail [1]. It just goes
+bottom-up to find a candidate region for crashkernel.
+There is one trivial thing about the compatibility with old kexec-tools:
+if the reserved region is above 896M, then old tool will fail to load
+bzImage. But without this patch, the old tool also fail since there is no
+memory below 896M can be reserved for crashkernel.
 
-The debugging progress so far...
+[1]: http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: yinghai@kernel.org,
+Cc: vgoyal@redhat.com
+Cc: kexec@lists.infradead.org
 
-Wait up to 5 minutes for other CPUs to stop in crash_smp_send_stop() made no
-difference.
+---
+ arch/x86/kernel/setup.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-With "dev" branch of this tree [1], it is possible to print out messages from
-purgatory when passing something like "--port=0x602B0000
---port-lsr=0x602B0000,0x80" to kexec. However, even enable_dcache() in
-setup_arch() will hung like forever on this machine (working fine on another
-arm64 server - Cortex-A72). After removed only enable_dcache() /
-disable_dcache() from setup_arch() etc without removing printf() lines, it did
-print out,
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index d494b9b..60f12c4 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -541,15 +541,18 @@ static void __init reserve_crashkernel(void)
+ 
+ 	/* 0 means: find the address automatically */
+ 	if (crash_base <= 0) {
++		if (!memblock_bottom_up())
++			memblock_set_bottom_up(true);
+ 		/*
+ 		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
+ 		 * as old kexec-tools loads bzImage below that, unless
+ 		 * "crashkernel=size[KMG],high" is specified.
+ 		 */
+ 		crash_base = memblock_find_in_range(CRASH_ALIGN,
+-						    high ? CRASH_ADDR_HIGH_MAX
+-							 : CRASH_ADDR_LOW_MAX,
+-						    crash_size, CRASH_ALIGN);
++			(max_pfn * PAGE_SIZE), crash_size, CRASH_ALIGN);
++		if (!memblock_bottom_up())
++			memblock_set_bottom_up(false);
++
+ 		if (!crash_base) {
+ 			pr_info("crashkernel reservation failed - No suitable area found.\n");
+ 			return;
+-- 
+2.7.4
 
-I'm in purgatory
-purgatory: entry=0000000090080000
-purgatory: dtb=0000000092d50000
-purgatory: D-cache Enabled before SHA verification
-purgatory: D-cache Disabled after SHA verification
-
-So, it confirmed that it must hung somewhere in arm64/kernel/head.S (.stext) or
-the early part of start_kernel() before earlycon was initialized.
-
-Also confirmed that passing nr_cpus=64 in the first kernel would again make
-everything work fine with this new kexec.
-
-Since enable_dcache() would hung as well, I suspect this has something to do
-with enabling MMU (i.e, .stext -> __primary_switch -> __enable_mmu) coupling
-with some sort of per-CPU data where the number of CPUs matters.
-
-Right now, I think I need to find a way to print directly to pl011 serial
-console while debugging those assembly code like CONFIG_DEBUG_LL for arm64, so
-it can be used to locate where exactly it hung. Otherwise, I am shooting in the
-dark.
-
-[1] https://github.com/pratyushanand/kexec-tools
-
-=== original email ===
-
-On this HPE Apollo 70 arm64 server with 256 CPUs, triggering a crash dump just
-hung (4.20-rc6 as well as 4.18). It was confirmed that the executing went as far
-as entering __cpu_soft_restart(),
-
-__crash_kexec
-  machine_kexec
-    cpu_soft_restart
-      restart
-        __cpu_soft_restart
-
-The earlycon was enabled but had no output from the 2nd kernel, so it was pretty
-much stuck in all those assembly code in arm64/kernel/head.S or the early part
-of start_kernel() before earlycon was initialized.
-
-It turned out this has something to do with nr_cpus in the 1st kernel, although
-the 2nd kernel always has nr_cpus=1 [1]. It was tested with both
-crashkernel=512M or 768M.
-
-nr_cpus <= 96  GOOD (2nd kernel was up in 2-3 mins.)
-nr_cpus=256    BAD  (2nd kernel was NOT up after 1 hour.)
-nr_cpus=127    BAD  (2nd kernel was NOT up after 10 mins.)
-
-I did also test with and without CONFIG_ARM64_VHE (i.e., el2_switch) made no
-difference.
-
-[1] KDUMP_COMMANDLINE_APPEND="irqpoll nr_cpus=1 swiotlb=noforce reset_devices"
-
-I am still figuring out a way to debug those assembly code to where it actually
-hung, but the server was hooked up with a conserver that was not able to
-generate any sysrq and I have no shell access to the conserver, so seems a bit
-difficult to use kgdb or kdb in this case.
-
-CPU information,
-
-# lscpu
-Architecture:        aarch64
-Byte Order:          Little Endian
-CPU(s):              256
-On-line CPU(s) list: 0-255
-Thread(s) per core:  4
-Core(s) per socket:  32
-Socket(s):           2
-NUMA node(s):        2
-Vendor ID:           Cavium
-Model:               1
-Model name:          ThunderX2 99xx
-Stepping:            0x1
-BogoMIPS:            400.00
-L1d cache:           32K
-L1i cache:           32K
-L2 cache:            256K
-L3 cache:            32768K
-NUMA node0 CPU(s):   0-127
-NUMA node1 CPU(s):   128-255
-Flags:               fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics cpuid
-asimdrdm
 
 _______________________________________________
 kexec mailing list
