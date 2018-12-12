@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-qt1-x843.google.com ([2607:f8b0:4864:20::843])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gWtl5-0001GK-Vt
- for kexec@lists.infradead.org; Wed, 12 Dec 2018 01:56:21 +0000
-Subject: Re: [PATCH 1/2 v8] resource: add the new I/O resource descriptor
- 'IORES_DESC_RESERVED'
-References: <20181129080956.20776-1-lijiang@redhat.com>
- <20181129080956.20776-2-lijiang@redhat.com>
- <20181130033703.GA23624@dhcp-128-65.nay.redhat.com>
- <b8936194-01ef-8b8f-254e-039fc951855d@amd.com>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <ddc4aae4-72ee-8ceb-d52d-db9f7b9fcab6@redhat.com>
-Date: Wed, 12 Dec 2018 09:55:52 +0800
+ id 1gWwJU-0002hv-Td
+ for kexec@lists.infradead.org; Wed, 12 Dec 2018 04:40:02 +0000
+Received: by mail-qt1-x843.google.com with SMTP id v11so19164774qtc.2
+ for <kexec@lists.infradead.org>; Tue, 11 Dec 2018 20:39:50 -0800 (PST)
+Subject: Re: arm64: kdump broken on a large CPU system
+References: <113776f1-5633-e397-96eb-c533ea79671d@lca.pw>
+ <29f74c6d-dd21-dcee-6c62-914f018c4e4e@arm.com>
+ <7f467952-342b-71e2-c553-ff53ecc1812e@arm.com>
+ <20181212025131.GL21466@linaro.org>
+From: Qian Cai <cai@lca.pw>
+Message-ID: <e4a3456b-6a75-4564-a49f-0532d0b35726@lca.pw>
+Date: Tue, 11 Dec 2018 23:39:47 -0500
 MIME-Version: 1.0
-In-Reply-To: <b8936194-01ef-8b8f-254e-039fc951855d@amd.com>
+In-Reply-To: <20181212025131.GL21466@linaro.org>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,135 +24,111 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>, Dave Young <dyoung@redhat.com>
-Cc: "tony.luck@intel.com" <tony.luck@intel.com>, "fenghua.yu@intel.com" <fenghua.yu@intel.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "bhe@redhat.com" <bhe@redhat.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "peterz@infradead.org" <peterz@infradead.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, "luto@kernel.org" <luto@kernel.org>, Toshi Kani <toshi.kani@hp.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>
+To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-5ZyoIDIwMTjlubQxMuaciDA15pelIDA1OjMzLCBMZW5kYWNreSwgVGhvbWFzIOWGmemBkzoKPiBP
-biAxMS8yOS8yMDE4IDA5OjM3IFBNLCBEYXZlIFlvdW5nIHdyb3RlOgo+PiArIG1vcmUgcGVvcGxl
-Cj4+Cj4+IE9uIDExLzI5LzE4IGF0IDA0OjA5cG0sIExpYW5ibyBKaWFuZyB3cm90ZToKPj4+IFdo
-ZW4gZG9pbmcga2V4ZWNfZmlsZV9sb2FkLCB0aGUgZmlyc3Qga2VybmVsIG5lZWRzIHRvIHBhc3Mg
-dGhlIGU4MjAKPj4+IHJlc2VydmVkIHJhbmdlcyB0byB0aGUgc2Vjb25kIGtlcm5lbC4gQnV0IGtl
-cm5lbCBjYW4gbm90IGV4YWN0bHkKPj4+IG1hdGNoIHRoZSBlODIwIHJlc2VydmVkIHJhbmdlcyB3
-aGVuIHdhbGtpbmcgdGhyb3VnaCB0aGUgaW9tZW0gcmVzb3VyY2VzCj4+PiB3aXRoIHRoZSBkZXNj
-cmlwdG9yICdJT1JFU19ERVNDX05PTkUnLCBiZWNhdXNlIHNldmVyYWwgZTgyMCB0eXBlcygKPj4+
-IGUuZy4gRTgyMF9UWVBFX1JFU0VSVkVEX0tFUk4vRTgyMF9UWVBFX1JBTS9FODIwX1RZUEVfVU5V
-U0FCTEUvRTgyMAo+Pj4gX1RZUEVfUkVTRVJWRUQpIGFyZSBjb252ZXJ0ZWQgdG8gdGhlIGRlc2Ny
-aXB0b3IgJ0lPUkVTX0RFU0NfTk9ORScuIEl0Cj4+PiBtYXkgcGFzcyB0aGVzZSBmb3VyIHR5cGVz
-IHRvIHRoZSBrZHVtcCBrZXJuZWwsIHRoYXQgaXMgbm90IGRlc2lyZWQgcmVzdWx0Lgo+Pj4KPj4+
-IFNvLCB0aGlzIHBhdGNoIGFkZHMgYSBuZXcgSS9PIHJlc291cmNlIGRlc2NyaXB0b3IgJ0lPUkVT
-X0RFU0NfUkVTRVJWRUQnCj4+PiBmb3IgdGhlIGlvbWVtIHJlc291cmNlcyBzZWFyY2ggaW50ZXJm
-YWNlcy4gSXQgaXMgaGVscGZ1bCB0byBleGFjdGx5Cj4+PiBtYXRjaCB0aGUgcmVzZXJ2ZWQgcmVz
-b3VyY2UgcmFuZ2VzIHdoZW4gd2Fsa2luZyB0aHJvdWdoIGlvbWVtIHJlc291cmNlcy4KPj4+Cj4+
-PiBJbiBhZGRpdGlvbiwgc2luY2UgdGhlIG5ldyBkZXNjcmlwdG9yICdJT1JFU19ERVNDX1JFU0VS
-VkVEJyBpcyBpbnRyb2R1Y2VkLAo+Pj4gdGhlc2UgY29kZSBvcmlnaW5hbGx5IHJlbGF0ZWQgdG8g
-dGhlIGRlc2NyaXB0b3IgJ0lPUkVTX0RFU0NfTk9ORScgbmVlZCB0bwo+Pj4gYmUgdXBkYXRlZC4g
-T3RoZXJ3aXNlLCBpdCB3aWxsIGJlIGVhc2lseSBjb25mdXNlZCBhbmQgYWxzbyBjYXVzZSBzb21l
-Cj4+PiBlcnJvcnMuIEJlY2F1c2UgdGhlICdFODIwX1RZUEVfUkVTRVJWRUQnIHR5cGUgaXMgY29u
-dmVydGVkIHRvIHRoZSBuZXcKPj4+IGRlc2NyaXB0b3IgJ0lPUkVTX0RFU0NfUkVTRVJWRUQnIGlu
-c3RlYWQgb2YgJ0lPUkVTX0RFU0NfTk9ORScsIGl0IGhhcyBiZWVuCj4+PiBjaGFuZ2VkLgo+Pj4K
-Pj4+IFN1Z2dlc3RlZC1ieTogRGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhhdC5jb20+Cj4+PiBTaWdu
-ZWQtb2ZmLWJ5OiBMaWFuYm8gSmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4KPj4+IC0tLQo+Pj4g
-IGFyY2gvaWE2NC9rZXJuZWwvZWZpLmMgfCAgNCArKysrCj4+PiAgYXJjaC94ODYva2VybmVsL2U4
-MjAuYyB8ICAyICstCj4+PiAgYXJjaC94ODYvbW0vaW9yZW1hcC5jICB8IDEzICsrKysrKysrKysr
-Ky0KPj4+ICBpbmNsdWRlL2xpbnV4L2lvcG9ydC5oIHwgIDEgKwo+Pj4gIGtlcm5lbC9yZXNvdXJj
-ZS5jICAgICAgfCAgNiArKystLS0KPj4+ICA1IGZpbGVzIGNoYW5nZWQsIDIxIGluc2VydGlvbnMo
-KyksIDUgZGVsZXRpb25zKC0pCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvaWE2NC9rZXJuZWwv
-ZWZpLmMgYi9hcmNoL2lhNjQva2VybmVsL2VmaS5jCj4+PiBpbmRleCA4ZjEwNjYzODkxM2MuLjE4
-NDFlOWI0ZGIzMCAxMDA2NDQKPj4+IC0tLSBhL2FyY2gvaWE2NC9rZXJuZWwvZWZpLmMKPj4+ICsr
-KyBiL2FyY2gvaWE2NC9rZXJuZWwvZWZpLmMKPj4+IEBAIC0xMjMxLDYgKzEyMzEsMTAgQEAgZWZp
-X2luaXRpYWxpemVfaW9tZW1fcmVzb3VyY2VzKHN0cnVjdCByZXNvdXJjZSAqY29kZV9yZXNvdXJj
-ZSwKPj4+ICAJCQkJYnJlYWs7Cj4+PiAgCj4+PiAgCQkJY2FzZSBFRklfUkVTRVJWRURfVFlQRToK
-Pj4+ICsJCQkJbmFtZSA9ICJyZXNlcnZlZCI7Cj4+Cj4+IEluZ28gdXBkYXRlZCBYODYgY29kZSB0
-byB1c2UgIlJlc2VydmVkIiwgIEkgdGhpbmsgaXQgd291bGQgYmUgZ29vZCB0byBkbwo+PiBzYW1l
-IGZvciB0aGlzIGNhc2UgYXMgd2VsbAo+Pgo+Pj4gKwkJCQlkZXNjID0gSU9SRVNfREVTQ19SRVNF
-UlZFRDsKPj4+ICsJCQkJYnJlYWs7Cj4+PiArCj4+PiAgCQkJY2FzZSBFRklfUlVOVElNRV9TRVJW
-SUNFU19DT0RFOgo+Pj4gIAkJCWNhc2UgRUZJX1JVTlRJTUVfU0VSVklDRVNfREFUQToKPj4+ICAJ
-CQljYXNlIEVGSV9BQ1BJX1JFQ0xBSU1fTUVNT1JZOgo+Pgo+PiBPcmlnaW5hbGx5LCBhYm92ZSAz
-IGFyZSBhbGwgInJlc2VydmVkIiwgc28gcHJvYmFibHkgdGhleSBhbGwgc2hvdWxkIGJlCj4+IElP
-UkVTX0RFU0NfUkVTRVJWRUQuCj4+Cj4+IENhbiBhbnkgSUE2NCBwZW9wbGUgdG8gcmV2aWV3IHRo
-aXM/Cj4+Cj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2U4MjAuYyBiL2FyY2gveDg2
-L2tlcm5lbC9lODIwLmMKPj4+IGluZGV4IDUwODk1YzJmOTM3ZC4uNTdmYWZkYWZiODYwIDEwMDY0
-NAo+Pj4gLS0tIGEvYXJjaC94ODYva2VybmVsL2U4MjAuYwo+Pj4gKysrIGIvYXJjaC94ODYva2Vy
-bmVsL2U4MjAuYwo+Pj4gQEAgLTEwNDgsMTAgKzEwNDgsMTAgQEAgc3RhdGljIHVuc2lnbmVkIGxv
-bmcgX19pbml0IGU4MjBfdHlwZV90b19pb3Jlc19kZXNjKHN0cnVjdCBlODIwX2VudHJ5ICplbnRy
-eSkKPj4+ICAJY2FzZSBFODIwX1RZUEVfTlZTOgkJcmV0dXJuIElPUkVTX0RFU0NfQUNQSV9OVl9T
-VE9SQUdFOwo+Pj4gIAljYXNlIEU4MjBfVFlQRV9QTUVNOgkJcmV0dXJuIElPUkVTX0RFU0NfUEVS
-U0lTVEVOVF9NRU1PUlk7Cj4+PiAgCWNhc2UgRTgyMF9UWVBFX1BSQU06CQlyZXR1cm4gSU9SRVNf
-REVTQ19QRVJTSVNURU5UX01FTU9SWV9MRUdBQ1k7Cj4+PiArCWNhc2UgRTgyMF9UWVBFX1JFU0VS
-VkVEOglyZXR1cm4gSU9SRVNfREVTQ19SRVNFUlZFRDsKPj4+ICAJY2FzZSBFODIwX1RZUEVfUkVT
-RVJWRURfS0VSTjoJLyogRmFsbC10aHJvdWdoOiAqLwo+Pj4gIAljYXNlIEU4MjBfVFlQRV9SQU06
-CQkvKiBGYWxsLXRocm91Z2g6ICovCj4+PiAgCWNhc2UgRTgyMF9UWVBFX1VOVVNBQkxFOgkvKiBG
-YWxsLXRocm91Z2g6ICovCj4+PiAtCWNhc2UgRTgyMF9UWVBFX1JFU0VSVkVEOgkvKiBGYWxsLXRo
-cm91Z2g6ICovCj4+PiAgCWRlZmF1bHQ6CQkJcmV0dXJuIElPUkVTX0RFU0NfTk9ORTsKPj4+ICAJ
-fQo+Pj4gIH0KPj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9tbS9pb3JlbWFwLmMgYi9hcmNoL3g4
-Ni9tbS9pb3JlbWFwLmMKPj4+IGluZGV4IDUzNzhkMTBmMWQzMS4uZmVhMmVmOTk0MTVkIDEwMDY0
-NAo+Pj4gLS0tIGEvYXJjaC94ODYvbW0vaW9yZW1hcC5jCj4+PiArKysgYi9hcmNoL3g4Ni9tbS9p
-b3JlbWFwLmMKPj4+IEBAIC04Myw3ICs4MywxOCBAQCBzdGF0aWMgYm9vbCBfX2lvcmVtYXBfY2hl
-Y2tfcmFtKHN0cnVjdCByZXNvdXJjZSAqcmVzKQo+Pj4gIAo+Pj4gIHN0YXRpYyBpbnQgX19pb3Jl
-bWFwX2NoZWNrX2Rlc2Nfb3RoZXIoc3RydWN0IHJlc291cmNlICpyZXMpCj4+PiAgewo+Pj4gLQly
-ZXR1cm4gKHJlcy0+ZGVzYyAhPSBJT1JFU19ERVNDX05PTkUpOwo+Pj4gKwkvKgo+Pj4gKwkgKiBC
-dXQgbm93LCB0aGUgJ0U4MjBfVFlQRV9SRVNFUlZFRCcgdHlwZSBpcyBjb252ZXJ0ZWQgdG8gdGhl
-IG5ldwo+Pj4gKwkgKiBkZXNjcmlwdG9yICdJT1JFU19ERVNDX1JFU0VSVkVEJyBpbnN0ZWFkIG9m
-ICdJT1JFU19ERVNDX05PTkUnLAo+Pj4gKwkgKiBpdCBoYXMgYmVlbiBjaGFuZ2VkLiBBbmQgdGhl
-IHZhbHVlIG9mICdtZW1fZmxhZ3MuZGVzY19vdGhlcicKPj4+ICsJICogaXMgZXF1YWwgdG8gJ3Ry
-dWUnIGlmIHdlIGRvbid0IHN0cmVuZ3RoZW4gdGhlIGNvbmRpdGlvbiBpbiB0aGlzCj4+PiArCSAq
-IGZ1bmN0aW9uLCB0aGF0IGlzIHdyb25nLiBCZWNhdXNlIG9yaWdpbmFsbHkgaXQgaXMgZXF1YWwg
-dG8KPj4+ICsJICogJ2ZhbHNlJyBmb3IgdGhlIHNhbWUgcmVzZXJ2ZWQgdHlwZS4KPj4+ICsJICoK
-Pj4+ICsJICogU28sIHRoYXQgd291bGQgYmUgbmljZSB0byBrZWVwIGl0IHRoZSBzYW1lIGFzIGJl
-Zm9yZS4KPj4+ICsJICovCj4+PiArCXJldHVybiAoKHJlcy0+ZGVzYyAhPSBJT1JFU19ERVNDX05P
-TkUpICYmCj4+PiArCQkocmVzLT5kZXNjICE9IElPUkVTX0RFU0NfUkVTRVJWRUQpKTsKPj4+ICB9
-Cj4+Cj4+IEFkZGVkIFRvbSBzaW5jZSBoZSBhZGRlZCB0aGUgY2hlY2sgZnVuY3Rpb24uICBJcyBp
-dCBwb3NzaWJsZSB0byBvbmx5Cj4+IGNoZWNrIGV4cGxpY3QgdmFsaWQgZGVzYyB0eXBlcyBpbnN0
-ZWFkIG9mIGV4Y2x1ZGUgSU9SRVNfREVTQ19OT05FPwo+IAo+IFNvcnJ5IGZvciB0aGUgZGVsYXku
-Li4KPiAKPiBUaGUgb3JpZ2luYWwgaW50ZW50IG9mIHRoZSBjaGVjayB3YXMgdG8gbWFwIG1vc3Qg
-bWVtb3J5IGFzIGVuY3J5cHRlZCB1bmRlcgo+IFNFViBpZiBpdCB3YXMgbWFya2VkIHdpdGggYSBz
-cGVjaWZpYyBkZXNjcmlwdG9yLCBzaW5jZSBpdCB3YXMgbGlrZWx5IHRvCj4gbm90IGJlIE1NSU8u
-IEkgdHJpZWQgY29udmVydGluZyBtb3N0IHRoaW5ncyB0aGF0IG1hcHBlZCBtZW1vcnkgdG8gbWVt
-cmVtYXAKPiB2cyBpb3JlbWFwLCBidXQgQUNQSSB3YXMgb25lIGFyZWEgdGhhdCBJIGxlZnQgYWxv
-bmUgYW5kIHRoaXMgY2hlY2sgY2F0Y2hlcwo+IHRoZSBtYXBwaW5nIG9mIHRoZSBBQ1BJIHRhYmxl
-cy4gSSBzdXBwb3NlIGl0J3MgcG9zc2libGUgdG8gY2hhbmdlIHRoaXMgdG8KPiBjaGVjayBqdXN0
-IGZvciBJT1JFU19ERVNDX0FDUElfKiB2YWx1ZXMsIGJ1dCBJIHdvdWxkIGhhdmUgdG8gZG8gc29t
-ZQo+IHRlc3RpbmcuCj4gCiAKSSdtIGxvb2tpbmcgZm9yd2FyZCB0byB0aGUgcmVzdWx0IG9mIHlv
-dXIgdGVzdCBhYm91dCB0aGlzIGNoYW5nZS4KT25jZSBjaGFuZ2VkLCB0aGlzIHBhdGNoIGFsc28g
-bmVlZHMgdG8gYmUgY2hhbmdlZCBhY2NvcmRpbmdseS4KClRoYW5rIHlvdSwgVG9tLgoKTGlhbmJv
-Cj4gVGhhbmtzLAo+IFRvbQo+IAo+Pgo+Pj4gIAo+Pj4gIHN0YXRpYyBpbnQgX19pb3JlbWFwX3Jl
-c19jaGVjayhzdHJ1Y3QgcmVzb3VyY2UgKnJlcywgdm9pZCAqYXJnKQo+Pj4gZGlmZiAtLWdpdCBh
-L2luY2x1ZGUvbGludXgvaW9wb3J0LmggYi9pbmNsdWRlL2xpbnV4L2lvcG9ydC5oCj4+PiBpbmRl
-eCBkYTBlYmFlYzI1ZjAuLjZlZDU5ZGU0OGJkNSAxMDA2NDQKPj4+IC0tLSBhL2luY2x1ZGUvbGlu
-dXgvaW9wb3J0LmgKPj4+ICsrKyBiL2luY2x1ZGUvbGludXgvaW9wb3J0LmgKPj4+IEBAIC0xMzMs
-NiArMTMzLDcgQEAgZW51bSB7Cj4+PiAgCUlPUkVTX0RFU0NfUEVSU0lTVEVOVF9NRU1PUllfTEVH
-QUNZCT0gNSwKPj4+ICAJSU9SRVNfREVTQ19ERVZJQ0VfUFJJVkFURV9NRU1PUlkJPSA2LAo+Pj4g
-IAlJT1JFU19ERVNDX0RFVklDRV9QVUJMSUNfTUVNT1JZCQk9IDcsCj4+PiArCUlPUkVTX0RFU0Nf
-UkVTRVJWRUQJCQk9IDgsCj4+PiAgfTsKPj4+ICAKPj4+ICAvKiBoZWxwZXJzIHRvIGRlZmluZSBy
-ZXNvdXJjZXMgKi8KPj4+IGRpZmYgLS1naXQgYS9rZXJuZWwvcmVzb3VyY2UuYyBiL2tlcm5lbC9y
-ZXNvdXJjZS5jCj4+PiBpbmRleCBiMGZiZjY4NWM3N2EuLmYzNGE2MzJjNDE2OSAxMDA2NDQKPj4+
-IC0tLSBhL2tlcm5lbC9yZXNvdXJjZS5jCj4+PiArKysgYi9rZXJuZWwvcmVzb3VyY2UuYwo+Pj4g
-QEAgLTk5NCw3ICs5OTQsNyBAQCBfX3Jlc2VydmVfcmVnaW9uX3dpdGhfc3BsaXQoc3RydWN0IHJl
-c291cmNlICpyb290LCByZXNvdXJjZV9zaXplX3Qgc3RhcnQsCj4+PiAgCXJlcy0+c3RhcnQgPSBz
-dGFydDsKPj4+ICAJcmVzLT5lbmQgPSBlbmQ7Cj4+PiAgCXJlcy0+ZmxhZ3MgPSB0eXBlIHwgSU9S
-RVNPVVJDRV9CVVNZOwo+Pj4gLQlyZXMtPmRlc2MgPSBJT1JFU19ERVNDX05PTkU7Cj4+PiArCXJl
-cy0+ZGVzYyA9IElPUkVTX0RFU0NfUkVTRVJWRUQ7Cj4+PiAgCj4+PiAgCXdoaWxlICgxKSB7Cj4+
-PiAgCj4+PiBAQCAtMTAyOSw3ICsxMDI5LDcgQEAgX19yZXNlcnZlX3JlZ2lvbl93aXRoX3NwbGl0
-KHN0cnVjdCByZXNvdXJjZSAqcm9vdCwgcmVzb3VyY2Vfc2l6ZV90IHN0YXJ0LAo+Pj4gIAkJCQlu
-ZXh0X3Jlcy0+c3RhcnQgPSBjb25mbGljdC0+ZW5kICsgMTsKPj4+ICAJCQkJbmV4dF9yZXMtPmVu
-ZCA9IGVuZDsKPj4+ICAJCQkJbmV4dF9yZXMtPmZsYWdzID0gdHlwZSB8IElPUkVTT1VSQ0VfQlVT
-WTsKPj4+IC0JCQkJbmV4dF9yZXMtPmRlc2MgPSBJT1JFU19ERVNDX05PTkU7Cj4+PiArCQkJCW5l
-eHRfcmVzLT5kZXNjID0gSU9SRVNfREVTQ19SRVNFUlZFRDsKPj4+ICAJCQl9Cj4+PiAgCQl9IGVs
-c2Ugewo+Pj4gIAkJCXJlcy0+c3RhcnQgPSBjb25mbGljdC0+ZW5kICsgMTsKPj4+IEBAIC0xNDc3
-LDcgKzE0NzcsNyBAQCBzdGF0aWMgaW50IF9faW5pdCByZXNlcnZlX3NldHVwKGNoYXIgKnN0cikK
-Pj4+ICAJCQlyZXMtPnN0YXJ0ID0gaW9fc3RhcnQ7Cj4+PiAgCQkJcmVzLT5lbmQgPSBpb19zdGFy
-dCArIGlvX251bSAtIDE7Cj4+PiAgCQkJcmVzLT5mbGFncyB8PSBJT1JFU09VUkNFX0JVU1k7Cj4+
-PiAtCQkJcmVzLT5kZXNjID0gSU9SRVNfREVTQ19OT05FOwo+Pj4gKwkJCXJlcy0+ZGVzYyA9IElP
-UkVTX0RFU0NfUkVTRVJWRUQ7Cj4+PiAgCQkJcmVzLT5jaGlsZCA9IE5VTEw7Cj4+PiAgCQkJaWYg
-KHJlcXVlc3RfcmVzb3VyY2UocGFyZW50LCByZXMpID09IDApCj4+PiAgCQkJCXJlc2VydmVkID0g
-eCsxOwo+Pj4gLS0gCj4+PiAyLjE3LjEKPj4+Cj4+Cj4+Cj4+IFRoZXJlIGFyZSBhIGxvdCBvZiBw
-bGFjZXMgY2FsbCByZWdpb25faW50ZXJzZWN0cyB3aGljaCB1c2UgREVTQ19OT05FLAo+PiBJJ20g
-bm90IHN1cmUgaWYgbmVlZGVkIGNoYW5nZXMgYWNjb3JkaW5nbHkuICBDY2VkIERhbiBhbmQgVG9z
-aGkuCj4+Cj4+Cj4+IFRoYW5rcwo+PiBEYXZlCj4+CgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
-eGVjCg==
+[+ kexec@lists.infradead.org]
+
+The debugging progress so far...
+
+Wait up to 5 minutes for other CPUs to stop in crash_smp_send_stop() made no
+difference.
+
+With "dev" branch of this tree [1], it is possible to print out messages from
+purgatory when passing something like "--port=0x602B0000
+--port-lsr=0x602B0000,0x80" to kexec. However, even enable_dcache() in
+setup_arch() will hung like forever on this machine (working fine on another
+arm64 server - Cortex-A72). After removed only enable_dcache() /
+disable_dcache() from setup_arch() etc without removing printf() lines, it did
+print out,
+
+I'm in purgatory
+purgatory: entry=0000000090080000
+purgatory: dtb=0000000092d50000
+purgatory: D-cache Enabled before SHA verification
+purgatory: D-cache Disabled after SHA verification
+
+So, it confirmed that it must hung somewhere in arm64/kernel/head.S (.stext) or
+the early part of start_kernel() before earlycon was initialized.
+
+Also confirmed that passing nr_cpus=64 in the first kernel would again make
+everything work fine with this new kexec.
+
+Since enable_dcache() would hung as well, I suspect this has something to do
+with enabling MMU (i.e, .stext -> __primary_switch -> __enable_mmu) coupling
+with some sort of per-CPU data where the number of CPUs matters.
+
+Right now, I think I need to find a way to print directly to pl011 serial
+console while debugging those assembly code like CONFIG_DEBUG_LL for arm64, so
+it can be used to locate where exactly it hung. Otherwise, I am shooting in the
+dark.
+
+[1] https://github.com/pratyushanand/kexec-tools
+
+=== original email ===
+
+On this HPE Apollo 70 arm64 server with 256 CPUs, triggering a crash dump just
+hung (4.20-rc6 as well as 4.18). It was confirmed that the executing went as far
+as entering __cpu_soft_restart(),
+
+__crash_kexec
+  machine_kexec
+    cpu_soft_restart
+      restart
+        __cpu_soft_restart
+
+The earlycon was enabled but had no output from the 2nd kernel, so it was pretty
+much stuck in all those assembly code in arm64/kernel/head.S or the early part
+of start_kernel() before earlycon was initialized.
+
+It turned out this has something to do with nr_cpus in the 1st kernel, although
+the 2nd kernel always has nr_cpus=1 [1]. It was tested with both
+crashkernel=512M or 768M.
+
+nr_cpus <= 96  GOOD (2nd kernel was up in 2-3 mins.)
+nr_cpus=256    BAD  (2nd kernel was NOT up after 1 hour.)
+nr_cpus=127    BAD  (2nd kernel was NOT up after 10 mins.)
+
+I did also test with and without CONFIG_ARM64_VHE (i.e., el2_switch) made no
+difference.
+
+[1] KDUMP_COMMANDLINE_APPEND="irqpoll nr_cpus=1 swiotlb=noforce reset_devices"
+
+I am still figuring out a way to debug those assembly code to where it actually
+hung, but the server was hooked up with a conserver that was not able to
+generate any sysrq and I have no shell access to the conserver, so seems a bit
+difficult to use kgdb or kdb in this case.
+
+CPU information,
+
+# lscpu
+Architecture:        aarch64
+Byte Order:          Little Endian
+CPU(s):              256
+On-line CPU(s) list: 0-255
+Thread(s) per core:  4
+Core(s) per socket:  32
+Socket(s):           2
+NUMA node(s):        2
+Vendor ID:           Cavium
+Model:               1
+Model name:          ThunderX2 99xx
+Stepping:            0x1
+BogoMIPS:            400.00
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            32768K
+NUMA node0 CPU(s):   0-127
+NUMA node1 CPU(s):   128-255
+Flags:               fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics cpuid
+asimdrdm
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
