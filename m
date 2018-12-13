@@ -1,30 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-qt1-x843.google.com ([2607:f8b0:4864:20::843])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gXEji-0002ua-1Z
- for kexec@lists.infradead.org; Thu, 13 Dec 2018 00:20:19 +0000
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- wBD0Iapq093721
- for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 19:20:07 -0500
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2pbacvdy87-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 19:20:07 -0500
-Received: from localhost
- by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.ibm.com>;
- Thu, 13 Dec 2018 00:20:06 -0000
-References: <20181208202705.18673-1-nayna@linux.ibm.com>
- <20181208202705.18673-8-nayna@linux.ibm.com>
-From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH v2 7/7] ima: Support platform keyring for kernel appraisal
-In-reply-to: <20181208202705.18673-8-nayna@linux.ibm.com>
-Date: Wed, 12 Dec 2018 22:19:56 -0200
-MIME-Version: 1.0
-Message-Id: <87y38ue0r7.fsf@morokweng.localdomain>
+ id 1gXJT8-0005fk-Ej
+ for kexec@lists.infradead.org; Thu, 13 Dec 2018 05:23:32 +0000
+Received: by mail-qt1-x843.google.com with SMTP id d19so845584qtq.9
+ for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 21:23:19 -0800 (PST)
+From: Qian Cai <cai@lca.pw>
+Subject: [PATCH] arm64: invalidate TLB before turning MMU on
+Date: Thu, 13 Dec 2018 00:22:59 -0500
+Message-Id: <20181213052259.56352-1-cai@lca.pw>
+In-Reply-To: <1544654224.18411.11.camel@lca.pw>
+References: <1544654224.18411.11.camel@lca.pw>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,49 +19,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nayna Jain <nayna@linux.ibm.com>
-Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, linux-integrity@vger.kernel.org, vgoyal@redhat.com
+To: catalin.marinas@arm.com, will.deacon@arm.com
+Cc: ard.biesheuvel@linaro.org, marc.zyngier@arm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, james.morse@arm.com, Qian Cai <cai@lca.pw>, linux-arm-kernel@lists.infradead.org
 
+On this HPE Apollo 70 arm64 server with 256 CPUs, triggering a crash
+dump just hung. It has 4 threads on each core. Each 2-core share a same
+L1 and L2 caches, so that is 8 CPUs shares those. All CPUs share a same
+L3 cache.
 
-Nayna Jain <nayna@linux.ibm.com> writes:
+It turned out that this was due to the TLB contained stale entries (or
+uninitialized junk which just happened to look valid) from the first
+kernel before turning the MMU on in the second kernel which caused this
+instruction hung,
 
-> On secure boot enabled systems, the bootloader verifies the kernel
-> image and possibly the initramfs signatures based on a set of keys. A
-> soft reboot(kexec) of the system, with the same kernel image and
-> initramfs, requires access to the original keys to verify the
-> signatures.
->
-> This patch allows IMA-appraisal access to those original keys, now
-> loaded on the platform keyring, needed for verifying the kernel image
-> and initramfs signatures.
->
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> Acked-by: Serge Hallyn <serge@hallyn.com>
-> - replace 'rc' with 'xattr_len' when calling integrity_digsig_verify()
-> with INTEGRITY_KEYRING_IMA for readability
-> Suggested-by: Serge Hallyn <serge@hallyn.com>
-> ---
-> Changelog:
->
-> v2:
-> - replace 'rc' with 'xattr_len' when calling integrity_digsig_verify()
-> with INTEGRITY_KEYRING_IMA for readability
->
->  security/integrity/ima/ima_appraise.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
+msr	sctlr_el1, x0
 
-With the change to only access the platform keyring when it is enabled:
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/arm64/kernel/head.S | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index 4471f570a295..5196f3d729de 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -771,6 +771,10 @@ ENTRY(__enable_mmu)
+ 	msr	ttbr0_el1, x2			// load TTBR0
+ 	msr	ttbr1_el1, x1			// load TTBR1
+ 	isb
++	dsb	nshst
++	tlbi	vmalle1				// invalidate TLB
++	dsb	nsh
++	isb
+ 	msr	sctlr_el1, x0
+ 	isb
+ 	/*
+-- 
+2.17.2 (Apple Git-113)
 
 
 _______________________________________________
