@@ -1,29 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gXEg8-0000wf-Lk
- for kexec@lists.infradead.org; Thu, 13 Dec 2018 00:16:38 +0000
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+ id 1gXEh2-0001CJ-Oi
+ for kexec@lists.infradead.org; Thu, 13 Dec 2018 00:17:34 +0000
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- wBD0EHAS053941
- for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 19:16:21 -0500
-Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2pbasqn0wx-1
+ wBD0EDfJ039928
+ for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 19:17:22 -0500
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2pbbktat7x-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 19:16:20 -0500
+ for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 19:17:21 -0500
 Received: from localhost
- by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.ibm.com>;
- Thu, 13 Dec 2018 00:16:20 -0000
-References: <20181208202705.18673-2-nayna@linux.ibm.com>
- <20181209044849.825-1-nayna@linux.ibm.com>
+ Thu, 13 Dec 2018 00:17:20 -0000
+References: <20181208202705.18673-1-nayna@linux.ibm.com>
+ <20181208202705.18673-3-nayna@linux.ibm.com>
 From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH v2 1/7] integrity: Define a trusted platform keyring
-In-reply-to: <20181209044849.825-1-nayna@linux.ibm.com>
-Date: Wed, 12 Dec 2018 22:15:56 -0200
+Subject: Re: [PATCH v2 2/7] integrity: Load certs to the platform keyring
+In-reply-to: <20181208202705.18673-3-nayna@linux.ibm.com>
+Date: Wed, 12 Dec 2018 22:17:08 -0200
 MIME-Version: 1.0
-Message-Id: <871s6mffib.fsf@morokweng.localdomain>
+Message-Id: <87zhtae0vv.fsf@morokweng.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -42,39 +42,18 @@ Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, kexec@lists.infradead.org, li
 
 Nayna Jain <nayna@linux.ibm.com> writes:
 
-> On secure boot enabled systems, a verified kernel may need to kexec
-> additional kernels. For example, it may be used as a bootloader needing
-> to kexec a target kernel or it may need to kexec a crashdump kernel. In
-> such cases, it may want to verify the signature of the next kernel
-> image.
->
-> It is further possible that the kernel image is signed with third party
-> keys which are stored as platform or firmware keys in the 'db' variable.
-> The kernel, however, can not directly verify these platform keys, and an
-> administrator may therefore not want to trust them for arbitrary usage.
-> In order to differentiate platform keys from other keys and provide the
-> necessary separation of trust, the kernel needs an additional keyring to
-> store platform keys.
->
-> This patch creates the new keyring called ".platform" to isolate keys
-> provided by platform from keys by kernel. These keys are used to
-> facilitate signature verification during kexec. Since the scope of this
-> keyring is only the platform/firmware keys, it cannot be updated from
-> userspace.
->
-> This keyring can be enabled by setting CONFIG_INTEGRITY_PLATFORM_KEYRING.
+> The patch refactors integrity_load_x509(), making it a wrapper for a new
+> function named integrity_add_key(). This patch also defines a new
+> function named integrity_load_cert() for loading the platform keys.
 >
 > Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
 > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 > Acked-by: Serge Hallyn <serge@hallyn.com>
 > ---
->  security/integrity/Kconfig                         | 11 +++++
->  security/integrity/Makefile                        |  1 +
->  security/integrity/digsig.c                        | 48 +++++++++++++++-------
->  security/integrity/integrity.h                     |  3 +-
->  .../integrity/platform_certs/platform_keyring.c    | 35 ++++++++++++++++
->  5 files changed, 83 insertions(+), 15 deletions(-)
->  create mode 100644 security/integrity/platform_certs/platform_keyring.c
+>  security/integrity/digsig.c                        | 71 ++++++++++++++--------
+>  security/integrity/integrity.h                     | 20 ++++++
+>  .../integrity/platform_certs/platform_keyring.c    | 23 +++++++
+>  3 files changed, 90 insertions(+), 24 deletions(-)
 
 Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
