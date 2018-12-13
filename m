@@ -1,29 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gXEh2-0001CJ-Oi
- for kexec@lists.infradead.org; Thu, 13 Dec 2018 00:17:34 +0000
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- wBD0EDfJ039928
- for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 19:17:22 -0500
-Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2pbbktat7x-1
+ id 1gXEiV-0001lx-Cn
+ for kexec@lists.infradead.org; Thu, 13 Dec 2018 00:19:04 +0000
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ wBD0Ip6X147009
+ for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 19:18:51 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2pbbt7a362-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 19:17:21 -0500
+ for <kexec@lists.infradead.org>; Wed, 12 Dec 2018 19:18:30 -0500
 Received: from localhost
- by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.ibm.com>;
- Thu, 13 Dec 2018 00:17:20 -0000
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Thu, 13 Dec 2018 00:18:29 -0000
+Subject: Re: [PATCH v2 7/7] ima: Support platform keyring for kernel appraisal
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Wed, 12 Dec 2018 19:18:21 -0500
+In-Reply-To: <8736r2fw88.fsf@morokweng.localdomain>
 References: <20181208202705.18673-1-nayna@linux.ibm.com>
- <20181208202705.18673-3-nayna@linux.ibm.com>
-From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH v2 2/7] integrity: Load certs to the platform keyring
-In-reply-to: <20181208202705.18673-3-nayna@linux.ibm.com>
-Date: Wed, 12 Dec 2018 22:17:08 -0200
-MIME-Version: 1.0
-Message-Id: <87zhtae0vv.fsf@morokweng.localdomain>
+ <20181208202705.18673-8-nayna@linux.ibm.com>
+ <8736r2fw88.fsf@morokweng.localdomain>
+Mime-Version: 1.0
+Message-Id: <1544660301.3956.3.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,37 +34,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nayna Jain <nayna@linux.ibm.com>
-Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, linux-integrity@vger.kernel.org, vgoyal@redhat.com
+To: Thiago Jung Bauermann <bauerman@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>
+Cc: linux-efi@vger.kernel.org, mpe@ellerman.id.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, seth.forshee@canonical.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, ebiederm@xmission.com, jforbes@redhat.com, linux-integrity@vger.kernel.org, vgoyal@redhat.com
 
-
-Nayna Jain <nayna@linux.ibm.com> writes:
-
-> The patch refactors integrity_load_x509(), making it a wrapper for a new
-> function named integrity_add_key(). This patch also defines a new
-> function named integrity_load_cert() for loading the platform keys.
->
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> Acked-by: Serge Hallyn <serge@hallyn.com>
-> ---
->  security/integrity/digsig.c                        | 71 ++++++++++++++--------
->  security/integrity/integrity.h                     | 20 ++++++
->  .../integrity/platform_certs/platform_keyring.c    | 23 +++++++
->  3 files changed, 90 insertions(+), 24 deletions(-)
-
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCAyMDE4LTEyLTEyIGF0IDE2OjE0IC0wMjAwLCBUaGlhZ28gSnVuZyBCYXVlcm1hbm4g
+d3JvdGU6CltzbmlwXQoKPiBTdWJqZWN0OiBbUEFUQ0hdIGltYTogT25seSB1c2UgdGhlIHBsYXRm
+b3JtIGtleXJpbmcgaWYgaXQncyBlbmFibGVkCj4gCj4gU2lnbmVkLW9mZi1ieTogVGhpYWdvIEp1
+bmcgQmF1ZXJtYW5uIDxiYXVlcm1hbkBsaW51eC5pYm0uY29tPgoKR29vZCBjYXRjaCEgwqBUaGFu
+a3MuCgpNaW1pCgo+IC0tLQo+ICBzZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9hcHByYWlzZS5j
+IHwgMyArKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
+KQo+IAo+IGRpZmYgLS1naXQgYS9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9hcHByYWlzZS5j
+IGIvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfYXBwcmFpc2UuYwo+IGluZGV4IGU4ZjUyMDQ1
+MDg5NS4uZjZhYzQwNWRhYWJiIDEwMDY0NAo+IC0tLSBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEv
+aW1hX2FwcHJhaXNlLmMKPiArKysgYi9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9hcHByYWlz
+ZS5jCj4gQEAgLTI5Nyw3ICsyOTcsOCBAQCBpbnQgaW1hX2FwcHJhaXNlX21lYXN1cmVtZW50KGVu
+dW0gaW1hX2hvb2tzIGZ1bmMsCj4gIAkJCXN0YXR1cyA9IElOVEVHUklUWV9VTktOT1dOOwo+ICAJ
+CQlicmVhazsKPiAgCQl9Cj4gLQkJaWYgKHJjICYmIGZ1bmMgPT0gS0VYRUNfS0VSTkVMX0NIRUNL
+KQo+ICsJCWlmIChJU19FTkFCTEVEKENPTkZJR19JTlRFR1JJVFlfUExBVEZPUk1fS0VZUklORykg
+JiYgcmMgJiYKPiArCQkgICAgZnVuYyA9PSBLRVhFQ19LRVJORUxfQ0hFQ0spCj4gIAkJCXJjID0g
+aW50ZWdyaXR5X2RpZ3NpZ192ZXJpZnkoSU5URUdSSVRZX0tFWVJJTkdfUExBVEZPUk0sCj4gIAkJ
+CQkJCSAgICAgKGNvbnN0IGNoYXIgKil4YXR0cl92YWx1ZSwKPiAgCQkJCQkJICAgICB4YXR0cl9s
+ZW4sCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
+ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
