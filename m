@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from mail-qk1-x744.google.com ([2607:f8b0:4864:20::744])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gXRDb-0000FE-Mq
+ for kexec@lists.infradead.org; Thu, 13 Dec 2018 13:40:01 +0000
+Received: by mail-qk1-x744.google.com with SMTP id a1so1061943qkc.5
+ for <kexec@lists.infradead.org>; Thu, 13 Dec 2018 05:39:49 -0800 (PST)
+Message-ID: <1544708386.18411.13.camel@lca.pw>
 Subject: Re: [PATCH] arm64: invalidate TLB before turning MMU on
+From: Qian Cai <cai@lca.pw>
+Date: Thu, 13 Dec 2018 08:39:46 -0500
+In-Reply-To: <CACi5LpP+NHa1WQg78xm1y1YM0KXnFJ72pw+YrizxR5y7yt4AiQ@mail.gmail.com>
 References: <1544654224.18411.11.camel@lca.pw>
  <20181213052259.56352-1-cai@lca.pw>
-From: James Morse <james.morse@arm.com>
-Message-ID: <1b150a95-2b80-2be3-0b77-599404f882dc@arm.com>
-Date: Thu, 13 Dec 2018 10:44:02 +0000
-MIME-Version: 1.0
-In-Reply-To: <20181213052259.56352-1-cai@lca.pw>
-Content-Language: en-GB
+ <CACi5LpP+NHa1WQg78xm1y1YM0KXnFJ72pw+YrizxR5y7yt4AiQ@mail.gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,107 +22,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Qian Cai <cai@lca.pw>
-Cc: ard.biesheuvel@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec mailing list <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-Hi Qian,
-
-On 13/12/2018 05:22, Qian Cai wrote:
-> On this HPE Apollo 70 arm64 server with 256 CPUs, triggering a crash
-> dump just hung. It has 4 threads on each core. Each 2-core share a same
-> L1 and L2 caches, so that is 8 CPUs shares those. All CPUs share a same
-> L3 cache.
-> 
-> It turned out that this was due to the TLB contained stale entries (or
-> uninitialized junk which just happened to look valid) from the first
-> kernel before turning the MMU on in the second kernel which caused this
-> instruction hung,
-
-This is a great find, thanks for debugging this!
-
-The kernel should already handle this, as we don't trust the bootloader to clean
-up either.
-
-In arch/arm64/mm/proc.S::__cpu_setup()
-|/*
-| *	__cpu_setup
-| *
-| *	Initialise the processor for turning the MMU on.  Return in x0 the
-| *	value of the SCTLR_EL1 register.
-| */
-| 	.pushsection ".idmap.text", "awx"
-| ENTRY(__cpu_setup)
-| 	tlbi	vmalle1				// Invalidate local TLB
-| 	dsb	nsh
-
-This is called from stext, which then branches to __primary_switch(), which
-calls __enable_mmu() where you see this problem. It shouldn't not be possible to
-allocate new tlb entries between these points...
-
-Do you have CONFIG_RANDOMIZE_BASE disabled? This causes enable_mmu() to be
-called twice, the extra tlb maintenance is in __primary_switch.
-(if it works with this turned off, it points to the extra off/tlbi/on sequence).
-
-
-> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-> index 4471f570a295..5196f3d729de 100644
-> --- a/arch/arm64/kernel/head.S
-> +++ b/arch/arm64/kernel/head.S
-> @@ -771,6 +771,10 @@ ENTRY(__enable_mmu)
->  	msr	ttbr0_el1, x2			// load TTBR0
->  	msr	ttbr1_el1, x1			// load TTBR1
->  	isb
-> +	dsb	nshst
-> +	tlbi	vmalle1				// invalidate TLB
-> +	dsb	nsh
-> +	isb
->  	msr	sctlr_el1, x0
->  	isb
-
-The overall change here is that we do extra maintenance later.
-
-Can move this around to bisect where the TLB entries are either coming from, or
-failing-to-be invalidated?
-Do your first and kdump kernels have the same VA_BITS/PAGE_SIZE?
-As a stab in the dark, (totally untested):
-------------------------------%<------------------------------
-diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-index 2c75b0b903ae..a5f3b7314bda 100644
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -406,9 +406,6 @@ ENDPROC(idmap_kpti_install_ng_mappings)
-  */
-        .pushsection ".idmap.text", "awx"
- ENTRY(__cpu_setup)
--       tlbi    vmalle1                         // Invalidate local TLB
--       dsb     nsh
--
-        mov     x0, #3 << 20
-        msr     cpacr_el1, x0                   // Enable FP/ASIMD
-        mov     x0, #1 << 12                    // Reset mdscr_el1 and disable
-@@ -465,5 +462,10 @@ ENTRY(__cpu_setup)
- 1:
- #endif /* CONFIG_ARM64_HW_AFDBM */
-        msr     tcr_el1, x10
-+       isb
-+
-+       tlbi    vmalle1                         // Invalidate local TLB
-+       dsb     nsh
-+
-        ret                                     // return to head.S
- ENDPROC(__cpu_setup)
-------------------------------%<------------------------------
-
-
-Thanks,
-
-James
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCAyMDE4LTEyLTEzIGF0IDExOjEwICswNTMwLCBCaHVwZXNoIFNoYXJtYSB3cm90ZToK
+PiBIaSBRaWFuIENhaSwKPiAKPiBPbiBUaHUsIERlYyAxMywgMjAxOCBhdCAxMDo1MyBBTSBRaWFu
+IENhaSA8Y2FpQGxjYS5wdz4gd3JvdGU6Cj4gPiAKPiA+IE9uIHRoaXMgSFBFIEFwb2xsbyA3MCBh
+cm02NCBzZXJ2ZXIgd2l0aCAyNTYgQ1BVcywgdHJpZ2dlcmluZyBhIGNyYXNoCj4gPiBkdW1wIGp1
+c3QgaHVuZy4gSXQgaGFzIDQgdGhyZWFkcyBvbiBlYWNoIGNvcmUuIEVhY2ggMi1jb3JlIHNoYXJl
+IGEgc2FtZQo+ID4gTDEgYW5kIEwyIGNhY2hlcywgc28gdGhhdCBpcyA4IENQVXMgc2hhcmVzIHRo
+b3NlLiBBbGwgQ1BVcyBzaGFyZSBhIHNhbWUKPiA+IEwzIGNhY2hlLgo+ID4gCj4gPiBJdCB0dXJu
+ZWQgb3V0IHRoYXQgdGhpcyB3YXMgZHVlIHRvIHRoZSBUTEIgY29udGFpbmVkIHN0YWxlIGVudHJp
+ZXMgKG9yCj4gPiB1bmluaXRpYWxpemVkIGp1bmsgd2hpY2gganVzdCBoYXBwZW5lZCB0byBsb29r
+IHZhbGlkKSBmcm9tIHRoZSBmaXJzdAo+ID4ga2VybmVsIGJlZm9yZSB0dXJuaW5nIHRoZSBNTVUg
+b24gaW4gdGhlIHNlY29uZCBrZXJuZWwgd2hpY2ggY2F1c2VkIHRoaXMKPiA+IGluc3RydWN0aW9u
+IGh1bmcsCj4gPiAKPiA+IG1zcsKgwqDCoMKgwqBzY3Rscl9lbDEsIHgwCj4gPiAKPiA+IFNpZ25l
+ZC1vZmYtYnk6IFFpYW4gQ2FpIDxjYWlAbGNhLnB3Pgo+ID4gLS0tCj4gPiDCoGFyY2gvYXJtNjQv
+a2VybmVsL2hlYWQuUyB8IDQgKysrKwo+ID4gwqAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25z
+KCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2tlcm5lbC9oZWFkLlMgYi9hcmNo
+L2FybTY0L2tlcm5lbC9oZWFkLlMKPiA+IGluZGV4IDQ0NzFmNTcwYTI5NS4uNTE5NmYzZDcyOWRl
+IDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9hcm02NC9rZXJuZWwvaGVhZC5TCj4gPiArKysgYi9hcmNo
+L2FybTY0L2tlcm5lbC9oZWFkLlMKPiA+IEBAIC03NzEsNiArNzcxLDEwIEBAIEVOVFJZKF9fZW5h
+YmxlX21tdSkKPiA+IMKgwqDCoMKgwqDCoMKgwqBtc3LCoMKgwqDCoMKgdHRicjBfZWwxLCB4MsKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgLy8gbG9hZCBUVEJSMAo+ID4gwqDC
+oMKgwqDCoMKgwqDCoG1zcsKgwqDCoMKgwqB0dGJyMV9lbDEsIHgxwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAvLyBsb2FkIFRUQlIxCj4gPiDCoMKgwqDCoMKgwqDCoMKgaXNi
+Cj4gPiArwqDCoMKgwqDCoMKgwqBkc2LCoMKgwqDCoMKgbnNoc3QKPiA+ICvCoMKgwqDCoMKgwqDC
+oHRsYmnCoMKgwqDCoHZtYWxsZTHCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoC8vIGludmFsaWRhdGUgVExCCj4gPiArwqDCoMKgwqDCoMKgwqBkc2LCoMKg
+wqDCoMKgbnNoCj4gPiArwqDCoMKgwqDCoMKgwqBpc2IKPiAKPiBUaGlzIHdpbGwgYmUgZXhlY3V0
+ZWQgYm90aCBmb3IgdGhlIHByaW1hcnkgYW5kIGtkdW1wIGtlcm5lbCwgcmlnaHQ/IEkKPiBkb24n
+dCB0aGluayB3ZSByZWFsbHkgd2FudCB0byBpbnZhbGlkYXRlIHRoZSBUTEIgd2hlbiBib290aW5n
+IHRoZQo+IHByaW1hcnkga2VybmVsLgo+IEl0IHdvdWxkIGJlIHRvbyBzbG93IGFuZCBjb25zaWRl
+cmluZyB0aGF0IHdlIG5lZWQgdG8gbWluaW1pemUgYm9vdAo+IHRpbWluZ3Mgb24gZW1iZWRkZWQg
+YXJtNjQgZGV2aWNlcywgSSB0aGluayBpdCB3b3VsZCBub3QgYmUgYSBnb29kCj4gaWRlYS4KClll
+cywgaXQgd2lsbCBiZSBleGVjdXRlZCBmb3IgdGhlIGZpcnN0IGtlcm5lbCBhcyB3ZWxsLiBBcyBK
+YW1lcyBtZW50aW9uZWQsIGl0Cm5lZWRzIHRvIGJlIGRvbmUgdG8gaW52YWxpZGF0ZSBUTEIgdGhh
+dCBtaWdodCBiZSB1c2VkIGJ5IGJvb3Rsb2FkZXIgYW55d2F5LgoKPiAKPiA+IMKgwqDCoMKgwqDC
+oMKgwqBtc3LCoMKgwqDCoMKgc2N0bHJfZWwxLCB4MAo+ID4gwqDCoMKgwqDCoMKgwqDCoGlzYgo+
+ID4gwqDCoMKgwqDCoMKgwqDCoC8qCj4gPiAtLQo+ID4gMi4xNy4yIChBcHBsZSBHaXQtMTEzKQo+
+ID4gCj4gCj4gQWxzbyBkaWQgeW91IGNoZWNrIHRoaXMgaXNzdWUgSSByZXBvcnRlZCBvbiB0aGUg
+SFBFIGFwb2xsbyBtYWNoaW5lcwo+IHNvbWUgZGF5cyBiYWNrIHdpdGggdGhlIGtkdW1wIGtlcm5l
+bCBib290Cj4gPGh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2tleGVjL21zZzIxNzUwLmh0
+bWw+Lgo+IENhbiB5b3UgcGxlYXNlIGNvbmZpcm0gdGhhdCB5b3UgYXJlIG5vdCBmYWNpbmcgdGhl
+IHNhbWUgaXNzdWUgKGFzIEkKPiBzdXNwZWN0IGZyb20gcmVhZGluZyB5b3VyIGVhcmxpZXIgQnVn
+IFJlcG9ydCkgb24gdGhlIEhQRSBhcG9sbG8KPiBtYWNoaW5lLiBBbHNvIGFkZGluZyAnZWFybHlj
+b24nIHRvIHRoZSBib290YXJncyBiZWluZyBwYXNzZWQgdG8gdGhlCj4ga2R1bXAga2VybmVsIHlv
+dSBjYW4gc2VlIGlmIHlvdSBhcmUgYWJsZSB0byBhdGxlYXN0IGdldCBzb21lIGNvbnNvbGUKPiBv
+dXRwdXQgZnJvbSB0aGUga2R1bXAga2VybmVsLgoKTm8sIGhlcmUgZGlkIG5vdCBlbmNvdW50ZXIg
+dGhlIHByb2JsZW0geW91IG1lbnRpb25lZC4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
