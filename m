@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x443.google.com ([2607:f8b0:4864:20::443])
+Received: from mail-qk1-x743.google.com ([2607:f8b0:4864:20::743])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gXelW-00085j-Sv
- for kexec@lists.infradead.org; Fri, 14 Dec 2018 04:07:56 +0000
-Received: by mail-pf1-x443.google.com with SMTP id u6so2153841pfh.11
- for <kexec@lists.infradead.org>; Thu, 13 Dec 2018 20:07:44 -0800 (PST)
-From: Pingfan Liu <kernelfans@gmail.com>
-Subject: [PATCHv2] x86/kdump: bugfix,
- make the behavior of crashkernel=X consistent with kaslr
-Date: Fri, 14 Dec 2018 12:07:26 +0800
-Message-Id: <1544760446-506-1-git-send-email-kernelfans@gmail.com>
+ id 1gXemN-000893-Ay
+ for kexec@lists.infradead.org; Fri, 14 Dec 2018 04:08:48 +0000
+Received: by mail-qk1-x743.google.com with SMTP id y16so2535880qki.7
+ for <kexec@lists.infradead.org>; Thu, 13 Dec 2018 20:08:36 -0800 (PST)
+From: Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] arm64: invalidate TLB just before turning MMU on
+Date: Thu, 13 Dec 2018 23:08:19 -0500
+Message-Id: <20181214040819.58625-1-cai@lca.pw>
+In-Reply-To: <20181213052259.56352-1-cai@lca.pw>
+References: <20181213052259.56352-1-cai@lca.pw>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,78 +24,88 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
+To: catalin.marinas@arm.com, will.deacon@arm.com
+Cc: ard.biesheuvel@linaro.org, marc.zyngier@arm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, james.morse@arm.com, Qian Cai <cai@lca.pw>, linux-arm-kernel@lists.infradead.org
 
-Customer reported a bug on a high end server with many pcie devices, where
-kernel bootup with crashkernel=384M, and kaslr is enabled. Even
-though we still see much memory under 896 MB, the finding still failed
-intermittently. Because currently we can only find region under 896 MB,
-if w/0 ',high' specified. Then KASLR breaks 896 MB into several parts
-randomly, and crashkernel reservation need be aligned to 128 MB, that's
-why failure is found. It raises confusion to the end user that sometimes
-crashkernel=X works while sometimes fails.
-If want to make it succeed, customer can change kernel option to
-"crashkernel=384M, high". Just this give "crashkernel=xx@yy" a very
-limited space to behave even though its grammer looks more generic.
-And we can't answer questions raised from customer that confidently:
-1) why it doesn't succeed to reserve 896 MB;
-2) what's wrong with memory region under 4G;
-3) why I have to add ',high', I only require 384 MB, not 3840 MB.
+On this HPE Apollo 70 arm64 server with 256 CPUs, triggering a crash
+dump just hung. It has 4 threads on each core. Each 2-core share a same
+L1 and L2 caches, so that is 8 CPUs shares those. All CPUs share a same
+L3 cache.
 
-This patch simplifies the method suggested in the mail [1]. It just goes
-bottom-up to find a candidate region for crashkernel. The bottom-up may be
-better compatible with the old reservation style, i.e. still want to get
-memory region from 896 MB firstly, then [896 MB, 4G], finally above 4G.
+It turned out that this was due to the TLB contained stale entries (or
+uninitialized junk which just happened to look valid) before turning the
+MMU on in the second kernel which caused this instruction hung,
 
-There is one trivial thing about the compatibility with old kexec-tools:
-if the reserved region is above 896M, then old tool will fail to load
-bzImage. But without this patch, the old tool also fail since there is no
-memory below 896M can be reserved for crashkernel.
+msr	sctlr_el1, x0
 
-[1]: http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: yinghai@kernel.org,
-Cc: vgoyal@redhat.com
-Cc: kexec@lists.infradead.org
+Although there is a local TLB flush in the second kernel in
+__cpu_setup(), it is called too early. When the time to turn the MMU on
+later, the TLB is dirty again from some reasons.
 
+Also tried to move the local TLB flush part around a bit inside
+__cpu_setup(), although it did complete kdump some times, it did trigger
+"Synchronous Exception" in EFI after a cold-reboot fairly often that
+seems no way to recover remotely without reinstalling the OS. For
+example, in those places,
+
+ENTRY(__cpu_setup)
++	isb
+	tlbi	vmalle1
+	dsb	nsh
+
+or
+
+	mov	x0, #3 << 20
+	msr	cpacr_el1, x0
++	tlbi    vmalle1
++	dsb     nsh
+
+Since it is only necessary to flush local TLB right before turning the
+MMU on, just re-arrage the part a bit like the one in __primary_switch()
+within CONFIG_RANDOMIZE_BASE path, so it does not depends on other
+instructions in between that could pollute the TLB, and it no longer
+trigger "Synchronous Exception" as well.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
-v1->v2:
-  improve commit log
- arch/x86/kernel/setup.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index d494b9b..60f12c4 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -541,15 +541,18 @@ static void __init reserve_crashkernel(void)
- 
- 	/* 0 means: find the address automatically */
- 	if (crash_base <= 0) {
-+		if (!memblock_bottom_up())
-+			memblock_set_bottom_up(true);
- 		/*
- 		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
- 		 * as old kexec-tools loads bzImage below that, unless
- 		 * "crashkernel=size[KMG],high" is specified.
- 		 */
- 		crash_base = memblock_find_in_range(CRASH_ALIGN,
--						    high ? CRASH_ADDR_HIGH_MAX
--							 : CRASH_ADDR_LOW_MAX,
--						    crash_size, CRASH_ALIGN);
-+			(max_pfn * PAGE_SIZE), crash_size, CRASH_ALIGN);
-+		if (!memblock_bottom_up())
-+			memblock_set_bottom_up(false);
+v2: merge the similar part from __cpu_setup() pointed out by James.
+
+ arch/arm64/kernel/head.S | 4 ++++
+ arch/arm64/mm/proc.S     | 3 ---
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index 4471f570a295..7f555dd4577e 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -771,6 +771,10 @@ ENTRY(__enable_mmu)
+ 	msr	ttbr0_el1, x2			// load TTBR0
+ 	msr	ttbr1_el1, x1			// load TTBR1
+ 	isb
 +
- 		if (!crash_base) {
- 			pr_info("crashkernel reservation failed - No suitable area found.\n");
- 			return;
++	tlbi	vmalle1				// invalidate TLB
++	dsb	nsh
++
+ 	msr	sctlr_el1, x0
+ 	isb
+ 	/*
+diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+index 2c75b0b903ae..14f68afdd57f 100644
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -406,9 +406,6 @@ ENDPROC(idmap_kpti_install_ng_mappings)
+  */
+ 	.pushsection ".idmap.text", "awx"
+ ENTRY(__cpu_setup)
+-	tlbi	vmalle1				// Invalidate local TLB
+-	dsb	nsh
+-
+ 	mov	x0, #3 << 20
+ 	msr	cpacr_el1, x0			// Enable FP/ASIMD
+ 	mov	x0, #1 << 12			// Reset mdscr_el1 and disable
 -- 
-2.7.4
+2.17.2 (Apple Git-113)
 
 
 _______________________________________________
