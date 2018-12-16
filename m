@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pl1-f193.google.com ([209.85.214.193])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gYWHt-0005up-2t
- for kexec@lists.infradead.org; Sun, 16 Dec 2018 13:16:54 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 2/2 v3] kdump,
- vmcoreinfo: Export the value of sme mask to vmcoreinfo
-Date: Sun, 16 Dec 2018 21:16:17 +0800
-Message-Id: <20181216131617.2612-3-lijiang@redhat.com>
-In-Reply-To: <20181216131617.2612-1-lijiang@redhat.com>
-References: <20181216131617.2612-1-lijiang@redhat.com>
+ id 1gYbuk-00082I-GC
+ for kexec@lists.infradead.org; Sun, 16 Dec 2018 19:17:24 +0000
+Received: by mail-pl1-f193.google.com with SMTP id u6so5050037plm.8
+ for <kexec@lists.infradead.org>; Sun, 16 Dec 2018 11:17:12 -0800 (PST)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH v3 1/4] kexec/dt-ops.c: Fix check against 'fdt_add_subnode'
+ return value
+Date: Mon, 17 Dec 2018 00:46:52 +0530
+Message-Id: <1544987815-19527-2-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1544987815-19527-1-git-send-email-bhsharma@redhat.com>
+References: <1544987815-19527-1-git-send-email-bhsharma@redhat.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,59 +21,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: bhe@redhat.com, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: kexec@lists.infradead.org
+Cc: takahiro.akashi@linaro.org, bhsharma@redhat.com, bhupesh.linux@gmail.com, vicencb@gmail.com, horms@verge.net.au
 
-For AMD machine with SME feature, makedumpfile tools need to know
-whether the crash kernel was encrypted or not. If SME is enabled
-in the first kernel, the crash kernel's page table(pgd/pud/pmd/pte)
-contains the memory encryption mask, so need to remove the sme mask
-to obtain the true physical address.
-
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- arch/x86/kernel/machine_kexec_64.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 4c8acdfdc5a7..1860fe24117d 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -352,10 +352,24 @@ void machine_kexec(struct kimage *image)
- 
- void arch_crash_save_vmcoreinfo(void)
- {
-+	u64 sme_mask = sme_me_mask;
-+
- 	VMCOREINFO_NUMBER(phys_base);
- 	VMCOREINFO_SYMBOL(init_top_pgt);
- 	vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
- 			pgtable_l5_enabled());
-+	/*
-+	 * Currently, the local variable 'sme_mask' stores the value of
-+	 * sme_me_mask(bit 47), and also write the value of sme_mask to
-+	 * the vmcoreinfo.
-+	 * If need, the bit(sme_mask) might be redefined in the future,
-+	 * but the 'bit63' will be reserved.
-+	 * For example:
-+	 * [ misc	   ][ enc bit  ][ other misc SME info       ]
-+	 * 0000_0000_0000_0000_1000_0000_0000_0000_0000_0000_..._0000
-+	 * 63   59   55   51   47   43   39   35   31   27   ... 3
-+	 */
-+	VMCOREINFO_NUMBER(sme_mask);
- 
- #ifdef CONFIG_NUMA
- 	VMCOREINFO_SYMBOL(node_data);
--- 
-2.17.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+VmljZW7DpyByZXBvcnRlZCAodmlhIFsxXSkgdGhhdCBjdXJyZW50bHkgZXhlY3V0aW5nIGtleGVj
+IHdpdGgKJy0tZHRiJyBvcHRpb24gYW5kIHBhc3NpbmcgYSAuZHRiIHdoaWNoIGRvZXNuJ3QgaGF2
+ZSBhICcvY2hvc2VuJyBub2RlCmxlYWRzIHRvIHRoZSBmb2xsb3dpbmcgZXJyb3I6CgogICMga2V4
+ZWMgLWQgLS1kdGIgZHRiX3dpdGhvdXRfY2hvc2VuX25vZGUuZHRiIC0tYXBwZW5kICdjbWRsaW5l
+JyAtLWxvYWQgSW1hZ2UKCiAgICBkdGJfc2V0X3Byb3BlcnR5OiBmZHRfYWRkX3N1Ym5vZGUgZmFp
+bGVkOiA8dmFsaWQgb2Zmc2V0L2xlbmd0aD4KICAgIGtleGVjOiBTZXQgZGV2aWNlIHRyZWUgYm9v
+dGFyZ3MgZmFpbGVkLgoKVGhpcyBoYXBwZW5zIGJlY2F1c2UgY3VycmVudGx5IHdlIGNoZWNrIHRo
+ZSByZXR1cm4gdmFsdWUgb2YKJ2ZkdF9hZGRfc3Vibm9kZSgpJyBmdW5jdGlvbiBjYWxsIGluICdk
+dC1vcHMuYycgaW5jb3JyZWN0bHk6CgogICByZXN1bHQgPSBmZHRfYWRkX3N1Ym5vZGUobmV3X2R0
+Yiwgbm9kZW9mZnNldCwgbm9kZSk7CiAgIGlmIChyZXN1bHQpIHsKICAgCWRiZ3ByaW50ZigiJXM6
+IGZkdF9hZGRfc3Vibm9kZSBmYWlsZWQ6ICVzXG4iLCBfZnVuY19fLAogICAJCWZkdF9zdHJlcnJv
+cihyZXN1bHQpKTsKICAgCWdvdG8gb25fZXJyb3I7CiAgIH0KCkFzIHdlIGNhbiBzZWUgaW4gJ2Zk
+dF9ydy5jJywgYSBwb3NpdGl2ZSByZXR1cm4gdmFsdWUgZnJvbQonZmR0X2FkZF9zdWJub2RlKCkn
+IGZ1bmN0aW9uIGRvZXNuJ3QgaW5kaWNhdGUgYW4gZXJyb3IuCgpXZSBjYW4gc2VlIHRoYXQgdGhl
+IExpbnV4IGtlcm5lbCAoc2VlICdkcml2ZXJzL2Zpcm13YXJlL2VmaS9saWJzdHViL2ZkdC5jJwpm
+b3IgZXhhbXBsZSkgYWxzbyBjaGVja3MgdGhlICdmZHRfYWRkX3N1Ym5vZGUoKScgZnVuY3Rpb24g
+YWdhaW5zdCBuZWdhdGl2ZQpyZXR1cm4gdmFsdWVzIGZvciBlcnJvcnMuIFNlZSBhbiBleGFtcGxl
+IGJlbG93IGZyb20gJ3VwZGF0ZV9mZHQoKScgZnVuY3Rpb24gaW4KJ2RyaXZlcnMvZmlybXdhcmUv
+ZWZpL2xpYnN0dWIvZmR0LmMnOgoKICAgbm9kZSA9IGZkdF9hZGRfc3Vibm9kZShmZHQsIDAsICJj
+aG9zZW4iKTsKICAgaWYgKG5vZGUgPCAwKSB7CiAgIAlzdGF0dXMgPSBub2RlOwogICAJPC4uc25p
+cC4uPgogICAJZ290byBmZHRfc2V0X2ZhaWw7CiAgIH0KClRoaXMgcGF0Y2ggZml4ZXMgdGhlIHNh
+bWUgaW4gJ2tleGVjLXRvb2xzJy4KClsxXS4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlw
+ZXJtYWlsL2tleGVjLzIwMTgtT2N0b2Jlci8wMjE3NDYuaHRtbAoKQ2M6IFNpbW9uIEhvcm1hbiA8
+aG9ybXNAdmVyZ2UubmV0LmF1PgpDYzogQUtBU0hJIFRha2FoaXJvIDx0YWthaGlyby5ha2FzaGlA
+bGluYXJvLm9yZz4KUmVwb3J0ZWQtYnk6IFZpY2VudGUgQmVyZ2FzIDx2aWNlbmNiQGdtYWlsLmNv
+bT4KU2lnbmVkLW9mZi1ieTogQmh1cGVzaCBTaGFybWEgPGJoc2hhcm1hQHJlZGhhdC5jb20+Ci0t
+LQoga2V4ZWMvZHQtb3BzLmMgfCAyICstCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyks
+IDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9rZXhlYy9kdC1vcHMuYyBiL2tleGVjL2R0LW9w
+cy5jCmluZGV4IDkxNWRiZjU1YWZkMi4uZjE1MTc0YzNjNzRlIDEwMDY0NAotLS0gYS9rZXhlYy9k
+dC1vcHMuYworKysgYi9rZXhlYy9kdC1vcHMuYwpAQCAtODQsNyArODQsNyBAQCBpbnQgZHRiX3Nl
+dF9wcm9wZXJ0eShjaGFyICoqZHRiLCBvZmZfdCAqZHRiX3NpemUsIGNvbnN0IGNoYXIgKm5vZGUs
+CiAJaWYgKG5vZGVvZmZzZXQgPT0gLUZEVF9FUlJfTk9URk9VTkQpIHsKIAkJcmVzdWx0ID0gZmR0
+X2FkZF9zdWJub2RlKG5ld19kdGIsIG5vZGVvZmZzZXQsIG5vZGUpOwogCi0JCWlmIChyZXN1bHQp
+IHsKKwkJaWYgKHJlc3VsdCA8IDApIHsKIAkJCWRiZ3ByaW50ZigiJXM6IGZkdF9hZGRfc3Vibm9k
+ZSBmYWlsZWQ6ICVzXG4iLCBfX2Z1bmNfXywKIAkJCQlmZHRfc3RyZXJyb3IocmVzdWx0KSk7CiAJ
+CQlnb3RvIG9uX2Vycm9yOwotLSAKMi43LjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
+Cg==
