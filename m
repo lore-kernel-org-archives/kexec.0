@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-f193.google.com ([209.85.214.193])
+Received: from mail-pf1-f194.google.com ([209.85.210.194])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gYbuk-00082I-GC
- for kexec@lists.infradead.org; Sun, 16 Dec 2018 19:17:24 +0000
-Received: by mail-pl1-f193.google.com with SMTP id u6so5050037plm.8
- for <kexec@lists.infradead.org>; Sun, 16 Dec 2018 11:17:12 -0800 (PST)
+ id 1gYbuf-00082O-NM
+ for kexec@lists.infradead.org; Sun, 16 Dec 2018 19:17:19 +0000
+Received: by mail-pf1-f194.google.com with SMTP id z9so5258183pfi.2
+ for <kexec@lists.infradead.org>; Sun, 16 Dec 2018 11:17:15 -0800 (PST)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH v3 1/4] kexec/dt-ops.c: Fix check against 'fdt_add_subnode'
- return value
-Date: Mon, 17 Dec 2018 00:46:52 +0530
-Message-Id: <1544987815-19527-2-git-send-email-bhsharma@redhat.com>
+Subject: [PATCH v3 2/4] kexec/kexec-arm64.c: Add error handling check against
+ return value of 'set_bootargs()'
+Date: Mon, 17 Dec 2018 00:46:53 +0530
+Message-Id: <1544987815-19527-3-git-send-email-bhsharma@redhat.com>
 In-Reply-To: <1544987815-19527-1-git-send-email-bhsharma@redhat.com>
 References: <1544987815-19527-1-git-send-email-bhsharma@redhat.com>
-MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,49 +20,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: takahiro.akashi@linaro.org, bhsharma@redhat.com, bhupesh.linux@gmail.com, vicencb@gmail.com, horms@verge.net.au
 
-VmljZW7DpyByZXBvcnRlZCAodmlhIFsxXSkgdGhhdCBjdXJyZW50bHkgZXhlY3V0aW5nIGtleGVj
-IHdpdGgKJy0tZHRiJyBvcHRpb24gYW5kIHBhc3NpbmcgYSAuZHRiIHdoaWNoIGRvZXNuJ3QgaGF2
-ZSBhICcvY2hvc2VuJyBub2RlCmxlYWRzIHRvIHRoZSBmb2xsb3dpbmcgZXJyb3I6CgogICMga2V4
-ZWMgLWQgLS1kdGIgZHRiX3dpdGhvdXRfY2hvc2VuX25vZGUuZHRiIC0tYXBwZW5kICdjbWRsaW5l
-JyAtLWxvYWQgSW1hZ2UKCiAgICBkdGJfc2V0X3Byb3BlcnR5OiBmZHRfYWRkX3N1Ym5vZGUgZmFp
-bGVkOiA8dmFsaWQgb2Zmc2V0L2xlbmd0aD4KICAgIGtleGVjOiBTZXQgZGV2aWNlIHRyZWUgYm9v
-dGFyZ3MgZmFpbGVkLgoKVGhpcyBoYXBwZW5zIGJlY2F1c2UgY3VycmVudGx5IHdlIGNoZWNrIHRo
-ZSByZXR1cm4gdmFsdWUgb2YKJ2ZkdF9hZGRfc3Vibm9kZSgpJyBmdW5jdGlvbiBjYWxsIGluICdk
-dC1vcHMuYycgaW5jb3JyZWN0bHk6CgogICByZXN1bHQgPSBmZHRfYWRkX3N1Ym5vZGUobmV3X2R0
-Yiwgbm9kZW9mZnNldCwgbm9kZSk7CiAgIGlmIChyZXN1bHQpIHsKICAgCWRiZ3ByaW50ZigiJXM6
-IGZkdF9hZGRfc3Vibm9kZSBmYWlsZWQ6ICVzXG4iLCBfZnVuY19fLAogICAJCWZkdF9zdHJlcnJv
-cihyZXN1bHQpKTsKICAgCWdvdG8gb25fZXJyb3I7CiAgIH0KCkFzIHdlIGNhbiBzZWUgaW4gJ2Zk
-dF9ydy5jJywgYSBwb3NpdGl2ZSByZXR1cm4gdmFsdWUgZnJvbQonZmR0X2FkZF9zdWJub2RlKCkn
-IGZ1bmN0aW9uIGRvZXNuJ3QgaW5kaWNhdGUgYW4gZXJyb3IuCgpXZSBjYW4gc2VlIHRoYXQgdGhl
-IExpbnV4IGtlcm5lbCAoc2VlICdkcml2ZXJzL2Zpcm13YXJlL2VmaS9saWJzdHViL2ZkdC5jJwpm
-b3IgZXhhbXBsZSkgYWxzbyBjaGVja3MgdGhlICdmZHRfYWRkX3N1Ym5vZGUoKScgZnVuY3Rpb24g
-YWdhaW5zdCBuZWdhdGl2ZQpyZXR1cm4gdmFsdWVzIGZvciBlcnJvcnMuIFNlZSBhbiBleGFtcGxl
-IGJlbG93IGZyb20gJ3VwZGF0ZV9mZHQoKScgZnVuY3Rpb24gaW4KJ2RyaXZlcnMvZmlybXdhcmUv
-ZWZpL2xpYnN0dWIvZmR0LmMnOgoKICAgbm9kZSA9IGZkdF9hZGRfc3Vibm9kZShmZHQsIDAsICJj
-aG9zZW4iKTsKICAgaWYgKG5vZGUgPCAwKSB7CiAgIAlzdGF0dXMgPSBub2RlOwogICAJPC4uc25p
-cC4uPgogICAJZ290byBmZHRfc2V0X2ZhaWw7CiAgIH0KClRoaXMgcGF0Y2ggZml4ZXMgdGhlIHNh
-bWUgaW4gJ2tleGVjLXRvb2xzJy4KClsxXS4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlw
-ZXJtYWlsL2tleGVjLzIwMTgtT2N0b2Jlci8wMjE3NDYuaHRtbAoKQ2M6IFNpbW9uIEhvcm1hbiA8
-aG9ybXNAdmVyZ2UubmV0LmF1PgpDYzogQUtBU0hJIFRha2FoaXJvIDx0YWthaGlyby5ha2FzaGlA
-bGluYXJvLm9yZz4KUmVwb3J0ZWQtYnk6IFZpY2VudGUgQmVyZ2FzIDx2aWNlbmNiQGdtYWlsLmNv
-bT4KU2lnbmVkLW9mZi1ieTogQmh1cGVzaCBTaGFybWEgPGJoc2hhcm1hQHJlZGhhdC5jb20+Ci0t
-LQoga2V4ZWMvZHQtb3BzLmMgfCAyICstCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyks
-IDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9rZXhlYy9kdC1vcHMuYyBiL2tleGVjL2R0LW9w
-cy5jCmluZGV4IDkxNWRiZjU1YWZkMi4uZjE1MTc0YzNjNzRlIDEwMDY0NAotLS0gYS9rZXhlYy9k
-dC1vcHMuYworKysgYi9rZXhlYy9kdC1vcHMuYwpAQCAtODQsNyArODQsNyBAQCBpbnQgZHRiX3Nl
-dF9wcm9wZXJ0eShjaGFyICoqZHRiLCBvZmZfdCAqZHRiX3NpemUsIGNvbnN0IGNoYXIgKm5vZGUs
-CiAJaWYgKG5vZGVvZmZzZXQgPT0gLUZEVF9FUlJfTk9URk9VTkQpIHsKIAkJcmVzdWx0ID0gZmR0
-X2FkZF9zdWJub2RlKG5ld19kdGIsIG5vZGVvZmZzZXQsIG5vZGUpOwogCi0JCWlmIChyZXN1bHQp
-IHsKKwkJaWYgKHJlc3VsdCA8IDApIHsKIAkJCWRiZ3ByaW50ZigiJXM6IGZkdF9hZGRfc3Vibm9k
-ZSBmYWlsZWQ6ICVzXG4iLCBfX2Z1bmNfXywKIAkJCQlmZHRfc3RyZXJyb3IocmVzdWx0KSk7CiAJ
-CQlnb3RvIG9uX2Vycm9yOwotLSAKMi43LjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
-Cg==
+This patch adds missing error handling check against the return value of
+'set_bootargs()' in 'kexec-arm64.c'
+
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+---
+ kexec/arch/arm64/kexec-arm64.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index b143e861f7d9..f4913b2e9480 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -413,6 +413,11 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 	}
+ 
+ 	result = set_bootargs(dtb, command_line);
++	if (result) {
++		fprintf(stderr, "kexec: cannot set bootargs.\n");
++		result = -EINVAL;
++		goto on_error;
++	}
+ 
+ 	/* determine #address-cells and #size-cells */
+ 	result = get_cells_size(dtb->buf, &address_cells, &size_cells);
+-- 
+2.7.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
