@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-f195.google.com ([209.85.215.195])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gYbus-000834-ES
- for kexec@lists.infradead.org; Sun, 16 Dec 2018 19:17:31 +0000
-Received: by mail-pg1-f195.google.com with SMTP id d72so5024785pga.9
- for <kexec@lists.infradead.org>; Sun, 16 Dec 2018 11:17:20 -0800 (PST)
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH v3 3/4] kexec/dt-ops.c: Fix adding '/chosen' node for cases
- where it is not available in dtb passed via --dtb option
-Date: Mon, 17 Dec 2018 00:46:54 +0530
-Message-Id: <1544987815-19527-4-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1544987815-19527-1-git-send-email-bhsharma@redhat.com>
-References: <1544987815-19527-1-git-send-email-bhsharma@redhat.com>
+ id 1gYrSP-0007sz-9S
+ for kexec@lists.infradead.org; Mon, 17 Dec 2018 11:53:11 +0000
+Date: Mon, 17 Dec 2018 12:52:45 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/2 v3] kdump: add the vmcoreinfo documentation
+Message-ID: <20181217115245.GA12165@zn.tnic>
+References: <20181216131617.2612-1-lijiang@redhat.com>
+ <20181216131617.2612-2-lijiang@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20181216131617.2612-2-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,74 +20,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: takahiro.akashi@linaro.org, bhsharma@redhat.com, bhupesh.linux@gmail.com, vicencb@gmail.com, horms@verge.net.au
+To: Lianbo Jiang <lijiang@redhat.com>
+Cc: bhe@redhat.com, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-While calling 'kexec -l', in case we are passed a .dtb using --dtb
-option which doesn't contain a '/chosen' node, we try to create the
-'/chosen' node and add bootargs to this node.
+On Sun, Dec 16, 2018 at 09:16:16PM +0800, Lianbo Jiang wrote:
+> +================
+> +Common variables
+> +================
+> +
+> +init_uts_ns.name.release
+> +========================
+> +The number of OS release. Based on this version number, people can find
+> +the source code for the corresponding version. When analyzing the vmcore,
+> +people must read the source code to find the reason why the kernel crashed.
+> +
 
-Currently the 'dt-ops.c' code is buggy as it passes '-FDT_ERR_NOTFOUND'
-to 'fdt_add_subnode()', which leads to the following error:
+> +
+> +init_uts_ns
+> +===========
+> +This is the UTS namespace, which is used to isolate two specific elements
+> +of the system that relate to the uname system call. The UTS namespace is
+> +named after the data structure used to store information returned by the
+> +uname system call.
+> +
+> +User-space tools can get the kernel name, host name, kernel release number,
+> +kernel version, architecture name and OS type from the 'init_uts_ns'.
 
-  # kexec -d --load Image --append 'debug' --dtb rk3399-sapphire.dtb
+And this document already fulfills its purpose - those two vmcoreinfo
+exports are redundant and the first one can be removed.
 
-  <..snip..>
-  dtb_set_property: fdt_add_subnode failed: FDT_ERR_NOTFOUND
-  kexec: Set device tree bootargs failed.
-  get_cells_size: #address-cells:2 #size-cells:2
-  cells_size_fitted: 0-0
-  cells_size_fitted: 0-0
-  setup_2nd_dtb: no kaslr-seed found
+And now that we agreed that VMCOREINFO is not an ABI and is very tightly
+coupled to the kernel version, init_uts_ns.name.release can be removed,
+yes?
 
-This patch passes the correct nodeoffset value to 'fdt_add_subnode()',
-which fixes this issue:
+Or is there anything speaking against that?
 
-  # kexec -d -l Image --append 'debug' --dtb rk3399-sapphire.dtb
+Thx.
 
-  <..snip..>
-  get_cells_size: #address-cells:2 #size-cells:2
-  cells_size_fitted: 0-0
-  cells_size_fitted: 0-0
-  setup_2nd_dtb: no kaslr-seed found
-
-Reported-by: Vicente Bergas <vicencb@gmail.com>
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- kexec/dt-ops.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
-index f15174c3c74e..bdc16dc87642 100644
---- a/kexec/dt-ops.c
-+++ b/kexec/dt-ops.c
-@@ -80,15 +80,16 @@ int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
- 	}
- 
- 	nodeoffset = fdt_path_offset(new_dtb, node);
--	
-+
- 	if (nodeoffset == -FDT_ERR_NOTFOUND) {
--		result = fdt_add_subnode(new_dtb, nodeoffset, node);
-+		result = fdt_add_subnode(new_dtb, 0, node);
- 
- 		if (result < 0) {
- 			dbgprintf("%s: fdt_add_subnode failed: %s\n", __func__,
- 				fdt_strerror(result));
- 			goto on_error;
- 		}
-+		nodeoffset = result;
- 	} else if (nodeoffset < 0) {
- 		dbgprintf("%s: fdt_path_offset failed: %s\n", __func__,
- 			fdt_strerror(nodeoffset));
 -- 
-2.7.4
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
