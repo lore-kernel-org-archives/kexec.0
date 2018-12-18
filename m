@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gZ9uC-0001CP-OR
- for kexec@lists.infradead.org; Tue, 18 Dec 2018 07:35:06 +0000
-Subject: Re: [PATCH 2/2 v3] kdump, vmcoreinfo: Export the value of sme mask to
- vmcoreinfo
+ id 1gZDkh-0007S0-Ln
+ for kexec@lists.infradead.org; Tue, 18 Dec 2018 11:41:33 +0000
+Date: Tue, 18 Dec 2018 12:41:18 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/2 v3] kdump: add the vmcoreinfo documentation
+Message-ID: <20181218114118.GE7485@zn.tnic>
 References: <20181216131617.2612-1-lijiang@redhat.com>
- <20181216131617.2612-3-lijiang@redhat.com> <20181217130129.GE12165@zn.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <da8c3af8-40c4-f912-7e27-2f17ea6a58a9@redhat.com>
-Date: Tue, 18 Dec 2018 15:34:43 +0800
+ <20181216131617.2612-2-lijiang@redhat.com>
+ <20181217130024.GD12165@zn.tnic>
+ <826c1a6b-41da-bc1a-f9c2-0d52e774b572@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20181217130129.GE12165@zn.tnic>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <826c1a6b-41da-bc1a-f9c2-0d52e774b572@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,44 +22,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
+To: lijiang <lijiang@redhat.com>
 Cc: bhe@redhat.com, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-5ZyoIDIwMTjlubQxMuaciDE35pelIDIxOjAxLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IFN1biwgRGVjIDE2LCAyMDE4IGF0IDA5OjE2OjE3UE0gKzA4MDAsIExpYW5ibyBKaWFuZyB3cm90
-ZToKPj4gRm9yIEFNRCBtYWNoaW5lIHdpdGggU01FIGZlYXR1cmUsIG1ha2VkdW1wZmlsZSB0b29s
-cyBuZWVkIHRvIGtub3cKPj4gd2hldGhlciB0aGUgY3Jhc2gga2VybmVsIHdhcyBlbmNyeXB0ZWQg
-b3Igbm90LiBJZiBTTUUgaXMgZW5hYmxlZAo+PiBpbiB0aGUgZmlyc3Qga2VybmVsLCB0aGUgY3Jh
-c2gga2VybmVsJ3MgcGFnZSB0YWJsZShwZ2QvcHVkL3BtZC9wdGUpCj4+IGNvbnRhaW5zIHRoZSBt
-ZW1vcnkgZW5jcnlwdGlvbiBtYXNrLCBzbyBuZWVkIHRvIHJlbW92ZSB0aGUgc21lIG1hc2sKPj4g
-dG8gb2J0YWluIHRoZSB0cnVlIHBoeXNpY2FsIGFkZHJlc3MuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6
-IExpYW5ibyBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+PiAtLS0KPj4gIGFyY2gveDg2L2tl
-cm5lbC9tYWNoaW5lX2tleGVjXzY0LmMgfCAxNCArKysrKysrKysrKysrKwo+PiAgMSBmaWxlIGNo
-YW5nZWQsIDE0IGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5l
-bC9tYWNoaW5lX2tleGVjXzY0LmMgYi9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5j
-Cj4+IGluZGV4IDRjOGFjZGZkYzVhNy4uMTg2MGZlMjQxMTdkIDEwMDY0NAo+PiAtLS0gYS9hcmNo
-L3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jCj4+ICsrKyBiL2FyY2gveDg2L2tlcm5lbC9t
-YWNoaW5lX2tleGVjXzY0LmMKPj4gQEAgLTM1MiwxMCArMzUyLDI0IEBAIHZvaWQgbWFjaGluZV9r
-ZXhlYyhzdHJ1Y3Qga2ltYWdlICppbWFnZSkKPj4gIAo+PiAgdm9pZCBhcmNoX2NyYXNoX3NhdmVf
-dm1jb3JlaW5mbyh2b2lkKQo+PiAgewo+PiArCXU2NCBzbWVfbWFzayA9IHNtZV9tZV9tYXNrOwo+
-PiArCj4+ICAJVk1DT1JFSU5GT19OVU1CRVIocGh5c19iYXNlKTsKPj4gIAlWTUNPUkVJTkZPX1NZ
-TUJPTChpbml0X3RvcF9wZ3QpOwo+PiAgCXZtY29yZWluZm9fYXBwZW5kX3N0cigiTlVNQkVSKHBn
-dGFibGVfbDVfZW5hYmxlZCk9JWRcbiIsCj4+ICAJCQlwZ3RhYmxlX2w1X2VuYWJsZWQoKSk7Cj4+
-ICsJLyoKPj4gKwkgKiBDdXJyZW50bHksIHRoZSBsb2NhbCB2YXJpYWJsZSAnc21lX21hc2snIHN0
-b3JlcyB0aGUgdmFsdWUgb2YKPj4gKwkgKiBzbWVfbWVfbWFzayhiaXQgNDcpLCBhbmQgYWxzbyB3
-cml0ZSB0aGUgdmFsdWUgb2Ygc21lX21hc2sgdG8KPj4gKwkgKiB0aGUgdm1jb3JlaW5mby4KPj4g
-KwkgKiBJZiBuZWVkLCB0aGUgYml0KHNtZV9tYXNrKSBtaWdodCBiZSByZWRlZmluZWQgaW4gdGhl
-IGZ1dHVyZSwKPj4gKwkgKiBidXQgdGhlICdiaXQ2Mycgd2lsbCBiZSByZXNlcnZlZC4KPj4gKwkg
-KiBGb3IgZXhhbXBsZToKPj4gKwkgKiBbIG1pc2MJICAgXVsgZW5jIGJpdCAgXVsgb3RoZXIgbWlz
-YyBTTUUgaW5mbyAgICAgICBdCj4+ICsJICogMDAwMF8wMDAwXzAwMDBfMDAwMF8xMDAwXzAwMDBf
-MDAwMF8wMDAwXzAwMDBfMDAwMF8uLi5fMDAwMAo+PiArCSAqIDYzICAgNTkgICA1NSAgIDUxICAg
-NDcgICA0MyAgIDM5ICAgMzUgICAzMSAgIDI3ICAgLi4uIDMKPj4gKwkgKi8KPiAKPiBUaGlzIHRl
-eHQgYmVsb25ncyBpbnRvIHRoZSBkb2N1bWVudC4KPiAKT2ssIGkgd2lsbCBtb3ZlIGl0IGludG8g
-Vk1DT1JFSU5GTyBkb2N1bWVudC4KClRoYW5rcy4KCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4
-ZWMK
+On Tue, Dec 18, 2018 at 03:31:32PM +0800, lijiang wrote:
+> The printk_log is used to output human readable text, it will encapsulate header
+> information for log_buf, such as timestamp, syslog level, etc.
+
+Me asking those questions is supposed to hint that the explanations need
+improvement. But you get the idea...
+
+> >> +PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|
+> >> +PG_hwpoision|PG_head_mask
+> >> +=====================================================
+> >> +It means the attribute of a page. These flags will be used to filter
+> >> +the free pages.
+> >> +
+> >> +PAGE_BUDDY_MAPCOUNT_VALUE or ~PG_buddy
+> >> +======================================
+> >> +The 'PG_buddy' flag indicates that the page is free and in the buddy
+> >> +system. Makedumpfile can exclude the free pages managed by a buddy.
+> > 
+> > That text belongs with the one above?
+> > 
+> It exported the value of (~PG_buddy), so it is placed here independently.
+
+Then make that obvious in the description. The one above talks about the
+PG flags and this one should talk about PAGE_BUDDY_MAPCOUNT_VALUE and
+what it is used for. The fact that it is computed by negating PG_buddy
+is an implementation detail.
+
+> These two variables are somewhat similar, but they are used in
+> different scenarios.
+
+Those different scenarious need to be part of the description.
+
+> >> +KERNEL_IMAGE_SIZE
+> >> +=================
+> >> +The size of 'KERNEL_IMAGE_SIZE', currently unused.
+> > 
+> > So remove?
+> > 
+> 
+> I'm not sure whether it should be removed, so i keep it.
+
+If it is unused, it should be removed as an VMCOREINFO export and from
+the docs. But that can be done later, as a separate patch.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
