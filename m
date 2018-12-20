@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gZDkh-0007S0-Ln
- for kexec@lists.infradead.org; Tue, 18 Dec 2018 11:41:33 +0000
-Date: Tue, 18 Dec 2018 12:41:18 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 1/2 v3] kdump: add the vmcoreinfo documentation
-Message-ID: <20181218114118.GE7485@zn.tnic>
-References: <20181216131617.2612-1-lijiang@redhat.com>
- <20181216131617.2612-2-lijiang@redhat.com>
- <20181217130024.GD12165@zn.tnic>
- <826c1a6b-41da-bc1a-f9c2-0d52e774b572@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <826c1a6b-41da-bc1a-f9c2-0d52e774b572@redhat.com>
+ id 1gZr4z-0000Sm-S8
+ for kexec@lists.infradead.org; Thu, 20 Dec 2018 05:41:08 +0000
+From: Lianbo Jiang <lijiang@redhat.com>
+Subject: [PATCH 0/2 v4] kdump,
+ vmcoreinfo: Export the value of sme mask to vmcoreinfo
+Date: Thu, 20 Dec 2018 13:40:42 +0800
+Message-Id: <20181220054044.30738-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,62 +16,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: bhe@redhat.com, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: linux-kernel@vger.kernel.org
+Cc: bhe@redhat.com, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On Tue, Dec 18, 2018 at 03:31:32PM +0800, lijiang wrote:
-> The printk_log is used to output human readable text, it will encapsulate header
-> information for log_buf, such as timestamp, syslog level, etc.
+This patchset did two things:
+a. add a new document for vmcoreinfo
 
-Me asking those questions is supposed to hint that the explanations need
-improvement. But you get the idea...
+This document lists some variables that export to vmcoreinfo, and briefly
+describles what these variables indicate. It should be instructive for
+many people who do not know the vmcoreinfo, and it also normalizes the
+exported variable as a convention between kernel and use-space.
 
-> >> +PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|
-> >> +PG_hwpoision|PG_head_mask
-> >> +=====================================================
-> >> +It means the attribute of a page. These flags will be used to filter
-> >> +the free pages.
-> >> +
-> >> +PAGE_BUDDY_MAPCOUNT_VALUE or ~PG_buddy
-> >> +======================================
-> >> +The 'PG_buddy' flag indicates that the page is free and in the buddy
-> >> +system. Makedumpfile can exclude the free pages managed by a buddy.
-> > 
-> > That text belongs with the one above?
-> > 
-> It exported the value of (~PG_buddy), so it is placed here independently.
+b. export the value of sme mask to vmcoreinfo
 
-Then make that obvious in the description. The one above talks about the
-PG flags and this one should talk about PAGE_BUDDY_MAPCOUNT_VALUE and
-what it is used for. The fact that it is computed by negating PG_buddy
-is an implementation detail.
+For AMD machine with SME feature, makedumpfile tools need to know whether
+the crash kernel was encrypted or not. If SME is enabled in the first
+kernel, the crash kernel's page table(pgd/pud/pmd/pte) contains the
+memory encryption mask, so need to remove the sme mask to obtain the true
+physical address.
 
-> These two variables are somewhat similar, but they are used in
-> different scenarios.
+Changes since v1:
+1. No need to export a kernel-internal mask to userspace, so copy the
+value of sme_me_mask to a local variable 'sme_mask' and write the value
+of sme_mask to vmcoreinfo.
+2. Add comment for the code.
+3. Improve the patch log.
+4. Add the vmcoreinfo documentation.
 
-Those different scenarious need to be part of the description.
+Changes since v2:
+1. Improve the vmcoreinfo document, add more descripts for these
+variables exported.
+2. Fix spelling errors in the document.
 
-> >> +KERNEL_IMAGE_SIZE
-> >> +=================
-> >> +The size of 'KERNEL_IMAGE_SIZE', currently unused.
-> > 
-> > So remove?
-> > 
-> 
-> I'm not sure whether it should be removed, so i keep it.
+Changes since v3:
+1. Still improve the vmcoreinfo document, and make it become more
+clear and easy to read.
+2. Move sme_mask comments in the code to the vmcoreinfo document.
+3. Improve patch log.
 
-If it is unused, it should be removed as an VMCOREINFO export and from
-the docs. But that can be done later, as a separate patch.
+Lianbo Jiang (2):
+  kdump: add the vmcoreinfo documentation
+  kdump,vmcoreinfo: Export the value of sme mask to vmcoreinfo
+
+ Documentation/kdump/vmcoreinfo.txt | 513 +++++++++++++++++++++++++++++
+ arch/x86/kernel/machine_kexec_64.c |   3 +
+ 2 files changed, 516 insertions(+)
+ create mode 100644 Documentation/kdump/vmcoreinfo.txt
 
 -- 
-Regards/Gruss,
-    Boris.
+2.17.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
