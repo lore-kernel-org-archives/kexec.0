@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-f195.google.com ([209.85.215.195])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gZwQ3-0006im-GV
- for kexec@lists.infradead.org; Thu, 20 Dec 2018 11:23:13 +0000
-Received: by mail-pg1-f195.google.com with SMTP id z10so740199pgp.7
- for <kexec@lists.infradead.org>; Thu, 20 Dec 2018 03:22:59 -0800 (PST)
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH v2 0/2] kexec-tools/arm64: Add support to read PHYS_OFFSET
- from kcore
-Date: Thu, 20 Dec 2018 16:52:50 +0530
-Message-Id: <1545304972-32333-1-git-send-email-bhsharma@redhat.com>
+ id 1gaF4z-0006qS-OS
+ for kexec@lists.infradead.org; Fri, 21 Dec 2018 07:18:43 +0000
+Date: Fri, 21 Dec 2018 15:18:23 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCHv2] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
+Message-ID: <20181221071823.GA2526@MiWiFi-R3L-srv>
+References: <1544760446-506-1-git-send-email-kernelfans@gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1544760446-506-1-git-send-email-kernelfans@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,79 +20,97 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Vadim.Lomovtsev@cavium.com, yanjiang.jin@hxt-semitech.com, bhsharma@redhat.com, takahiro.akashi@linaro.org, horms@verge.net.au, bhupesh.linux@gmail.com
+To: Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: yinghai@kernel.org, Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, vgoyal@redhat.com, kexec@lists.infradead.org
 
-Changes from v1:
----------------
- - Added the support for older kernels, where we determine the
-   PHYS_OFFSET value from PT_LOAD segments inside 'kcore'.
- - Improved commit logs since v1.
+On 12/14/18 at 12:07pm, Pingfan Liu wrote:
+> Customer reported a bug on a high end server with many pcie devices, where
+> kernel bootup with crashkernel=384M, and kaslr is enabled. Even
+> though we still see much memory under 896 MB, the finding still failed
+> intermittently. Because currently we can only find region under 896 MB,
+> if w/0 ',high' specified. Then KASLR breaks 896 MB into several parts
+> randomly, and crashkernel reservation need be aligned to 128 MB, that's
+> why failure is found. It raises confusion to the end user that sometimes
+> crashkernel=X works while sometimes fails.
+> If want to make it succeed, customer can change kernel option to
+> "crashkernel=384M, high". Just this give "crashkernel=xx@yy" a very
+> limited space to behave even though its grammer looks more generic.
+> And we can't answer questions raised from customer that confidently:
+> 1) why it doesn't succeed to reserve 896 MB;
+> 2) what's wrong with memory region under 4G;
+> 3) why I have to add ',high', I only require 384 MB, not 3840 MB.
+> 
+> This patch simplifies the method suggested in the mail [1]. It just goes
+> bottom-up to find a candidate region for crashkernel. The bottom-up may be
+> better compatible with the old reservation style, i.e. still want to get
+> memory region from 896 MB firstly, then [896 MB, 4G], finally above 4G.
+> 
+> There is one trivial thing about the compatibility with old kexec-tools:
+> if the reserved region is above 896M, then old tool will fail to load
+> bzImage. But without this patch, the old tool also fail since there is no
+> memory below 896M can be reserved for crashkernel.
+> 
+> [1]: http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: yinghai@kernel.org,
+> Cc: vgoyal@redhat.com
+> Cc: kexec@lists.infradead.org
+> 
+> ---
+> v1->v2:
+>   improve commit log
+>  arch/x86/kernel/setup.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 
-On certain arm64 platforms, it has been noticed that due
-to a hole at the start of physical ram exposed to kernel
-(i.e. it doesn't start from address 0), the kernel still
-calculates the 'memstart_addr' kernel variable as 0.
+This is a bug fix and urged by our customer.
 
-Whereas the SYSTEM_RAM or IOMEM_RESERVED range in '/proc/iomem'
-would carry a first entry whose start address is non-zero
-(as the physical ram exposed to the kernel starts from a
-non-zero address).
+I personally think crashkernel=xx@ is a generic synctax, the current
+code making it search only under 896 MB seems not so reasonable.
 
-In such cases, if we rely on '/proc/iomem' entries to
-calculate the phys_offset, then we will have mismatch
-between the user-space and kernel space 'PHYS_OFFSET'
-value. The present 'kexec-tools' code does the same
-in 'get_memory_ranges_iomem_cb()' function when it makes
-a call to 'set_phys_offset()'. This can cause the vmcore
-generated via 'kexec-tools' to miss the last few bytes as
-the first '/proc/iomem' starts from a non-zero address.
+Ack this patch.
 
-Please see [0] for the original bug-report from Yanjiang Jin.
+Acked-by: Baoquan He <bhe@redhat.com>
 
-This patchset tries to fix the same.
+Thanks
+Baoquan
 
-Details about the patches in this series:
-----------------------------------------
-PATCH 1/2 ->
-
-- Tries to move the elf read functionality from 'vmcore-dmesg.c' to
-  a new utility library named 'elf_info.c', so that subsequent patches
-  can use the same.
-- See the patch log for more details.
-
-PATCH 2/2 ->
-- Implements the actual functionality of reading the PHYS_OFFSET for arm64
-  platforms from the kcore (either VMCOREINFO PT_NOTE inside 'kcore'
-  or from the PT_LOAD segments inside 'kcore').
-- See the patch log for more details.
-
-[0] https://www.spinics.net/lists/kexec/msg20618.html
-
-Bhupesh Sharma (2):
-  util_lib: Add functionality to read elf notes
-  arm64: Add support to read PHYS_OFFSET from 'kcore' - pt_note or
-    pt_load (if available)
-
- kexec/arch/arm64/kexec-arm64.c                     | 194 +++++-
- kexec/arch/arm64/kexec-arm64.h                     |  15 +-
- util_lib/Makefile                                  |   4 +-
- vmcore-dmesg/vmcore-dmesg.c => util_lib/elf_info.c | 193 ++++--
- util_lib/include/elf_info.h                        |  35 +
- vmcore-dmesg/Makefile                              |   4 +-
- vmcore-dmesg/vmcore-dmesg.c                        | 742 +--------------------
- 7 files changed, 386 insertions(+), 801 deletions(-)
- copy vmcore-dmesg/vmcore-dmesg.c => util_lib/elf_info.c (86%)
- create mode 100644 util_lib/include/elf_info.h
-
--- 
-2.7.4
-
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index d494b9b..60f12c4 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -541,15 +541,18 @@ static void __init reserve_crashkernel(void)
+>  
+>  	/* 0 means: find the address automatically */
+>  	if (crash_base <= 0) {
+> +		if (!memblock_bottom_up())
+> +			memblock_set_bottom_up(true);
+>  		/*
+>  		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
+>  		 * as old kexec-tools loads bzImage below that, unless
+>  		 * "crashkernel=size[KMG],high" is specified.
+>  		 */
+>  		crash_base = memblock_find_in_range(CRASH_ALIGN,
+> -						    high ? CRASH_ADDR_HIGH_MAX
+> -							 : CRASH_ADDR_LOW_MAX,
+> -						    crash_size, CRASH_ALIGN);
+> +			(max_pfn * PAGE_SIZE), crash_size, CRASH_ALIGN);
+> +		if (!memblock_bottom_up())
+> +			memblock_set_bottom_up(false);
+> +
+>  		if (!crash_base) {
+>  			pr_info("crashkernel reservation failed - No suitable area found.\n");
+>  			return;
+> -- 
+> 2.7.4
+> 
 
 _______________________________________________
 kexec mailing list
