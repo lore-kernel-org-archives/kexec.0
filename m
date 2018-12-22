@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from sender-of-o52.zoho.com ([135.84.80.217])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gaFDt-0001eB-6M
- for kexec@lists.infradead.org; Fri, 21 Dec 2018 07:27:55 +0000
-Date: Fri, 21 Dec 2018 15:27:36 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCHv2] x86/kdump: bugfix, make the behavior of crashkernel=X
- consistent with kaslr
-Message-ID: <20181221072736.GB2526@MiWiFi-R3L-srv>
-References: <1544760446-506-1-git-send-email-kernelfans@gmail.com>
- <20181221071823.GA2526@MiWiFi-R3L-srv>
+ id 1gaoxV-0000B2-NM
+ for kexec@lists.infradead.org; Sat, 22 Dec 2018 21:37:23 +0000
+Date: Sat, 22 Dec 2018 22:37:04 +0100
+From: =?UTF-8?Q?Marcel_Kr=C3=BCger?= <linux@2krueger.de>
+Message-ID: <167d7d9a7a0.11e500f4e120196.4787543063153295929@2krueger.de>
+In-Reply-To: 
+Subject: [PATCH] Disable GCC stack protector for purgatory
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20181221071823.GA2526@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,101 +17,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: yinghai@kernel.org, Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, vgoyal@redhat.com, kexec@lists.infradead.org
+To: kexec <kexec@lists.infradead.org>
 
-On 12/21/18 at 03:18pm, Baoquan He wrote:
-> On 12/14/18 at 12:07pm, Pingfan Liu wrote:
-> > Customer reported a bug on a high end server with many pcie devices, where
-> > kernel bootup with crashkernel=384M, and kaslr is enabled. Even
-> > though we still see much memory under 896 MB, the finding still failed
-> > intermittently. Because currently we can only find region under 896 MB,
-> > if w/0 ',high' specified. Then KASLR breaks 896 MB into several parts
-> > randomly, and crashkernel reservation need be aligned to 128 MB, that's
-> > why failure is found. It raises confusion to the end user that sometimes
-> > crashkernel=X works while sometimes fails.
-> > If want to make it succeed, customer can change kernel option to
-> > "crashkernel=384M, high". Just this give "crashkernel=xx@yy" a very
-> > limited space to behave even though its grammer looks more generic.
-> > And we can't answer questions raised from customer that confidently:
-> > 1) why it doesn't succeed to reserve 896 MB;
-> > 2) what's wrong with memory region under 4G;
-> > 3) why I have to add ',high', I only require 384 MB, not 3840 MB.
-> > 
-> > This patch simplifies the method suggested in the mail [1]. It just goes
-> > bottom-up to find a candidate region for crashkernel. The bottom-up may be
-> > better compatible with the old reservation style, i.e. still want to get
-> > memory region from 896 MB firstly, then [896 MB, 4G], finally above 4G.
-> > 
-> > There is one trivial thing about the compatibility with old kexec-tools:
-> > if the reserved region is above 896M, then old tool will fail to load
-> > bzImage. But without this patch, the old tool also fail since there is no
-> > memory below 896M can be reserved for crashkernel.
-> > 
-> > [1]: http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
-> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> > Cc: Dave Young <dyoung@redhat.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Baoquan He <bhe@redhat.com>
-> > Cc: yinghai@kernel.org,
-> > Cc: vgoyal@redhat.com
-> > Cc: kexec@lists.infradead.org
-> > 
-> > ---
-> > v1->v2:
-> >   improve commit log
-> >  arch/x86/kernel/setup.c | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> This is a bug fix and urged by our customer.
-> 
-> I personally think crashkernel=xx@ is a generic synctax, the current
-                                 ~~ s/@/M
-> code making it search only under 896 MB seems not so reasonable.
-> 
-> Ack this patch.
-> 
-> Acked-by: Baoquan He <bhe@redhat.com>
-> 
-> Thanks
-> Baoquan
-> 
-> > 
-> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > index d494b9b..60f12c4 100644
-> > --- a/arch/x86/kernel/setup.c
-> > +++ b/arch/x86/kernel/setup.c
-> > @@ -541,15 +541,18 @@ static void __init reserve_crashkernel(void)
-> >  
-> >  	/* 0 means: find the address automatically */
-> >  	if (crash_base <= 0) {
-> > +		if (!memblock_bottom_up())
-> > +			memblock_set_bottom_up(true);
-> >  		/*
-> >  		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
-> >  		 * as old kexec-tools loads bzImage below that, unless
-> >  		 * "crashkernel=size[KMG],high" is specified.
-> >  		 */
-> >  		crash_base = memblock_find_in_range(CRASH_ALIGN,
-> > -						    high ? CRASH_ADDR_HIGH_MAX
-> > -							 : CRASH_ADDR_LOW_MAX,
-> > -						    crash_size, CRASH_ALIGN);
-> > +			(max_pfn * PAGE_SIZE), crash_size, CRASH_ALIGN);
-> > +		if (!memblock_bottom_up())
-> > +			memblock_set_bottom_up(false);
-> > +
-> >  		if (!crash_base) {
-> >  			pr_info("crashkernel reservation failed - No suitable area found.\n");
-> >  			return;
-> > -- 
-> > 2.7.4
-> > 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+TW9kZXJuIHZlcnNpb25zIG9mIEdDQyBlbmFibGUgdGhlIHN0YWNrIHByb3RlY3RvciBieSBkZWZh
+dWx0LiBUaGlzIGNhdXNlcwpMaW51eCBrZXJuZWxzIGJ1aWxkIHVzaW5nIHN1Y2ggR0NDIHZlcnNp
+b25zIHRvIGNvbXBsYWluIGFib3V0IHVuZGVmaW5lZApyZWZlcmVuY2VzIHRvIGBfX3N0YWNrX2No
+a19mYWlsYCBpbiBwdXJnYXRvcnkgd2hlbmV2ZXIgYGtleGVjX2ZpbGVfbG9hZGAKaXMgdXNlZC4K
+CkZpeCB0aGlzIGJ5IGJ1aWxkaW5nIHB1cmdhdG9yeSB3aXRoIGAtZm5vLXN0YWNrLXByb3RlY3Rv
+cmAuCgpTaWduZWQtb2ZmLWJ5OiBNYXJjZWwgS3LDvGdlciA8bGludXhAMmtydWVnZXIuZGU+Ci0t
+LQogYXJjaC9zMzkwL3B1cmdhdG9yeS9NYWtlZmlsZSB8IDEgKwogYXJjaC94ODYvcHVyZ2F0b3J5
+L01ha2VmaWxlICB8IDEgKwogMiBmaWxlcyBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKCmRpZmYg
+LS1naXQgYS9hcmNoL3MzOTAvcHVyZ2F0b3J5L01ha2VmaWxlIGIvYXJjaC9zMzkwL3B1cmdhdG9y
+eS9NYWtlZmlsZQppbmRleCBjZTZhM2Y3NTA2NWIuLjYxODIwYWY4NTkwMyAxMDA2NDQKLS0tIGEv
+YXJjaC9zMzkwL3B1cmdhdG9yeS9NYWtlZmlsZQorKysgYi9hcmNoL3MzOTAvcHVyZ2F0b3J5L01h
+a2VmaWxlCkBAIC0yMyw2ICsyMyw3IEBAIEtCVUlMRF9DRkxBR1MgKz0gLVduby1wb2ludGVyLXNp
+Z24gLVduby1zaWduLWNvbXBhcmUKIEtCVUlMRF9DRkxBR1MgKz0gLWZuby16ZXJvLWluaXRpYWxp
+emVkLWluLWJzcyAtZm5vLWJ1aWx0aW4gLWZmcmVlc3RhbmRpbmcKIEtCVUlMRF9DRkxBR1MgKz0g
+LWMgLU1EIC1PcyAtbTY0IC1tc29mdC1mbG9hdCAtZm5vLWNvbW1vbgogS0JVSUxEX0NGTEFHUyAr
+PSAkKGNhbGwgY2Mtb3B0aW9uLC1mbm8tUElFKQorS0JVSUxEX0NGTEFHUyArPSAkKGNhbGwgY2Mt
+b3B0aW9uLC1mbm8tc3RhY2stcHJvdGVjdG9yKQogS0JVSUxEX0FGTEFHUyA6PSAkKGZpbHRlci1v
+dXQgLURDQ19VU0lOR19FWFBPTElORSwkKEtCVUlMRF9BRkxBR1MpKQoKICQob2JqKS9wdXJnYXRv
+cnkucm86ICQoUFVSR0FUT1JZX09CSlMpIEZPUkNFCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9wdXJn
+YXRvcnkvTWFrZWZpbGUgYi9hcmNoL3g4Ni9wdXJnYXRvcnkvTWFrZWZpbGUKaW5kZXggM2NmMzAy
+YjI2MzMyLi5mODUxOTk1OWE0N2UgMTAwNjQ0Ci0tLSBhL2FyY2gveDg2L3B1cmdhdG9yeS9NYWtl
+ZmlsZQorKysgYi9hcmNoL3g4Ni9wdXJnYXRvcnkvTWFrZWZpbGUKQEAgLTIyLDYgKzIyLDcgQEAg
+S0NPVl9JTlNUUlVNRU5UIDo9IG4KIEtCVUlMRF9DRkxBR1MgOj0gLWZuby1zdHJpY3QtYWxpYXNp
+bmcgLVdhbGwgLVdzdHJpY3QtcHJvdG90eXBlcyAtZm5vLXplcm8taW5pdGlhbGl6ZWQtaW4tYnNz
+IC1mbm8tYnVpbHRpbiAtZmZyZWVzdGFuZGluZyAtYyAtT3MgLW1jbW9kZWw9bGFyZ2UKIEtCVUlM
+RF9DRkxBR1MgKz0gLW0kKEJJVFMpCiBLQlVJTERfQ0ZMQUdTICs9ICQoY2FsbCBjYy1vcHRpb24s
+LWZuby1QSUUpCitLQlVJTERfQ0ZMQUdTICs9ICQoY2FsbCBjYy1vcHRpb24sLWZuby1zdGFjay1w
+cm90ZWN0b3IpCgogJChvYmopL3B1cmdhdG9yeS5ybzogJChQVVJHQVRPUllfT0JKUykgRk9SQ0UK
+ICAgICAgICAgICAgICAgICQoY2FsbCBpZl9jaGFuZ2VkLGxkKQotLQoyLjIwLjEKCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
+aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
