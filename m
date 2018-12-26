@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-lj1-f196.google.com ([209.85.208.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gc00T-0001rJ-Gi
- for kexec@lists.infradead.org; Wed, 26 Dec 2018 03:37:18 +0000
-Date: Wed, 26 Dec 2018 11:36:58 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 1/2 v3] kdump: add the vmcoreinfo documentation
-Message-ID: <20181226033658.GB13822@dhcp-128-65.nay.redhat.com>
-References: <20181216131617.2612-1-lijiang@redhat.com>
- <20181216131617.2612-2-lijiang@redhat.com>
- <20181217130024.GD12165@zn.tnic>
- <826c1a6b-41da-bc1a-f9c2-0d52e774b572@redhat.com>
- <20181226032433.GB13556@dhcp-128-65.nay.redhat.com>
+ id 1gc1C7-00072f-8z
+ for kexec@lists.infradead.org; Wed, 26 Dec 2018 04:53:27 +0000
+Received: by mail-lj1-f196.google.com with SMTP id v1-v6so13047814ljd.0
+ for <kexec@lists.infradead.org>; Tue, 25 Dec 2018 20:53:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20181226032433.GB13556@dhcp-128-65.nay.redhat.com>
+References: <1544987815-19527-1-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1544987815-19527-1-git-send-email-bhsharma@redhat.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Wed, 26 Dec 2018 10:22:56 +0530
+Message-ID: <CACi5LpOsT1UcXjB4NFV9n62nZWy=HJ6Qt_hFWT5UktCjtLToZg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] kexec/arm64: Fix issue with 'kexec load' and
+ 'kdump' when --dtb option is used
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,49 +21,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: bhe@redhat.com, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Kazuhito Hagio <khagio@redhat.com>, mingo@redhat.com, Borislav Petkov <bp@alien8.de>, anderson@redhat.com, tglx@linutronix.de, akpm@linux-foundation.org
+To: kexec mailing list <kexec@lists.infradead.org>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Vicente Bergas <vicencb@gmail.com>, Simon Horman <horms@verge.net.au>
 
-On 12/26/18 at 11:24am, Dave Young wrote:
-> > >> +
-> > >> +KERNEL_IMAGE_SIZE
-> > >> +=================
-> > >> +The size of 'KERNEL_IMAGE_SIZE', currently unused.
-> > > 
-> > > So remove?
-> > > 
-> > 
-> > I'm not sure whether it should be removed, so i keep it.
-> 
-> Just remove it.  It was added by Baoquan for KASLR issues, later
-> makedumpfile reverted the userspace part and added other implementation.
-> 
-> In case old makedumpfile does not support new kernel, it has some kernel
-> versions support list in code, thus no worry about the compatibility
-> issue.
-
-Ah, it is not unused actually, clone crash tool git:
-$ git grep KERNEL_IMAGE_SIZE
-x86_64.c:               if ((string = pc->read_vmcoreinfo("NUMBER(KERNEL_IMAGE_SIZE)"))) {
-
-So in the documentation, the use cases of crash tool should also be
-covered.
-
-Lianbo, it would be good to cc Dave and Kazu for these patches, could
-you cc them in your next post?
-
-> 
-> Thanks
-> Dave
-
-Thanks
-Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gVmljZW7DpywKCk9uIE1vbiwgRGVjIDE3LCAyMDE4IGF0IDEyOjQ3IEFNIEJodXBlc2gg
+U2hhcm1hIDxiaHNoYXJtYUByZWRoYXQuY29tPiB3cm90ZToKPgo+IENoYW5nZXMgc2luY2UgdjI6
+Cj4gLS0tLS0tLS0tLS0tLS0tLS0KPiAgLSBEcm9wcGVkIDQvNCBmcm9tIHYyIGFzIEkgbm90aWNl
+ZCB0aGF0IHdlIHBhc3Mgd3Jvbmcgbm9kZSBuYW1lIHRvIGZkdAo+ICAgIGhlbHBlciBmdW5jdGlv
+bnMgaW4gJ2tleGVjL2R0LW9wcy5jJwo+Cj4gVGhpcyBwYXRjaHNldCBmaXhlcyBzb21lIGlzc3Vl
+cyB3aGVuIHdlIGNhbGwga2V4ZWMgZm9yIGFybTY0IHdpdGggLS1kdGIKPiBvcHRpb24gKGJvdGgg
+Zm9yICdrZXhlYyBsb2FkJyBhbmQgJ2tkdW1wJyB1c2UgY2FzZXMpLgo+Cj4gQSBjb3VwbGUgb2Yg
+dGhlc2UgaXNzdWVzIHdlcmUgcmVwb3J0ZWQgZm9yICdrZXhlYyBsb2FkJyB1c2UgY2FzZSBieQo+
+IFZpY2Vuw6cgYW5kIEkgZm91bmQgdGhlIG90aGVyIHR3byB3aGlsZSBleHBlcmltZW50IHdpdGgg
+J2tkdW1wJyB1c2UKPiBjYXNlcy4KPgo+IEkgaGF2ZSB0ZXN0ZWQgdGhlIHBhdGNoc2V0IG9uIG15
+IHF1YWxjb21tLWFtYmVyd2luZyBhbmQgaHAtbW9vbnNob3QKPiBhcm02NCBib2FyZHMuCj4KPiBD
+YzogU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+Cj4gQ2M6IEFLQVNISSBUYWthaGly
+byA8dGFrYWhpcm8uYWthc2hpQGxpbmFyby5vcmc+Cj4gQ2M6IFZpY2VudGUgQmVyZ2FzIDx2aWNl
+bmNiQGdtYWlsLmNvbT4KPgo+IEJodXBlc2ggU2hhcm1hICg0KToKPiAgIGtleGVjL2R0LW9wcy5j
+OiBGaXggY2hlY2sgYWdhaW5zdCAnZmR0X2FkZF9zdWJub2RlJyByZXR1cm4gdmFsdWUKPiAgIGtl
+eGVjL2tleGVjLWFybTY0LmM6IEFkZCBlcnJvciBoYW5kbGluZyBjaGVjayBhZ2FpbnN0IHJldHVy
+biB2YWx1ZSBvZgo+ICAgICAnc2V0X2Jvb3RhcmdzKCknCj4gICBrZXhlYy9kdC1vcHMuYzogRml4
+IGFkZGluZyAnL2Nob3Nlbicgbm9kZSBmb3IgY2FzZXMgd2hlcmUgaXQgaXMgbm90Cj4gICAgIGF2
+YWlsYWJsZSBpbiBkdGIgcGFzc2VkIHZpYSAtLWR0YiBvcHRpb24KPiAgIGtleGVjL2R0LW9wcy5j
+OiBGaXggJy9jaG9zZW4nIHYvcyAnY2hvc2VuJyBub2RlIGJlaW5nIHBhc3NlZCB0byBmZHQKPiAg
+ICAgaGVscGVyIGZ1bmN0aW9ucwo+Cj4gIGtleGVjL2FyY2gvYXJtNjQva2V4ZWMtYXJtNjQuYyB8
+ICA1ICsrKysrCj4gIGtleGVjL2R0LW9wcy5jICAgICAgICAgICAgICAgICB8IDM2ICsrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKy0tLS0tLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDM1IGluc2Vy
+dGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4KPiAtLQo+IDIuNy40Cj4KCkNhbiB5b3UgcGxlYXNl
+IGdpdmUgdGhpcyBwYXRjaHNldCBhIHRyeSBhdCB5b3VyIGVuZCBhbmQgc2VlIGlmIGl0CmZpeGVz
+IHRoZSBpc3N1ZXMgeW91IGhhZCByZXBvcnRlZCB3aXRoIHRoZSAtLWR0YiBvcHRpb24uCgpUaGFu
+a3MsCkJodXBlc2gKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
