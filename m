@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-f196.google.com ([209.85.208.196])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gc1C7-00072f-8z
- for kexec@lists.infradead.org; Wed, 26 Dec 2018 04:53:27 +0000
-Received: by mail-lj1-f196.google.com with SMTP id v1-v6so13047814ljd.0
- for <kexec@lists.infradead.org>; Tue, 25 Dec 2018 20:53:11 -0800 (PST)
+ id 1gc2TD-0003YB-B5
+ for kexec@lists.infradead.org; Wed, 26 Dec 2018 06:15:08 +0000
+Subject: Re: [PATCH 1/2 v3] kdump: add the vmcoreinfo documentation
+References: <20181216131617.2612-1-lijiang@redhat.com>
+ <20181216131617.2612-2-lijiang@redhat.com> <20181217130024.GD12165@zn.tnic>
+ <826c1a6b-41da-bc1a-f9c2-0d52e774b572@redhat.com>
+ <20181226032433.GB13556@dhcp-128-65.nay.redhat.com>
+ <20181226033658.GB13822@dhcp-128-65.nay.redhat.com>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <c64a0459-e715-0e10-c674-c50570f32f08@redhat.com>
+Date: Wed, 26 Dec 2018 14:14:40 +0800
 MIME-Version: 1.0
-References: <1544987815-19527-1-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1544987815-19527-1-git-send-email-bhsharma@redhat.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Wed, 26 Dec 2018 10:22:56 +0530
-Message-ID: <CACi5LpOsT1UcXjB4NFV9n62nZWy=HJ6Qt_hFWT5UktCjtLToZg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] kexec/arm64: Fix issue with 'kexec load' and
- 'kdump' when --dtb option is used
+In-Reply-To: <20181226033658.GB13822@dhcp-128-65.nay.redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,35 +27,30 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec mailing list <kexec@lists.infradead.org>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Vicente Bergas <vicencb@gmail.com>, Simon Horman <horms@verge.net.au>
+To: Dave Young <dyoung@redhat.com>
+Cc: bhe@redhat.com, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Kazuhito Hagio <khagio@redhat.com>, mingo@redhat.com, Borislav Petkov <bp@alien8.de>, anderson@redhat.com, tglx@linutronix.de, akpm@linux-foundation.org
 
-SGVsbG8gVmljZW7DpywKCk9uIE1vbiwgRGVjIDE3LCAyMDE4IGF0IDEyOjQ3IEFNIEJodXBlc2gg
-U2hhcm1hIDxiaHNoYXJtYUByZWRoYXQuY29tPiB3cm90ZToKPgo+IENoYW5nZXMgc2luY2UgdjI6
-Cj4gLS0tLS0tLS0tLS0tLS0tLS0KPiAgLSBEcm9wcGVkIDQvNCBmcm9tIHYyIGFzIEkgbm90aWNl
-ZCB0aGF0IHdlIHBhc3Mgd3Jvbmcgbm9kZSBuYW1lIHRvIGZkdAo+ICAgIGhlbHBlciBmdW5jdGlv
-bnMgaW4gJ2tleGVjL2R0LW9wcy5jJwo+Cj4gVGhpcyBwYXRjaHNldCBmaXhlcyBzb21lIGlzc3Vl
-cyB3aGVuIHdlIGNhbGwga2V4ZWMgZm9yIGFybTY0IHdpdGggLS1kdGIKPiBvcHRpb24gKGJvdGgg
-Zm9yICdrZXhlYyBsb2FkJyBhbmQgJ2tkdW1wJyB1c2UgY2FzZXMpLgo+Cj4gQSBjb3VwbGUgb2Yg
-dGhlc2UgaXNzdWVzIHdlcmUgcmVwb3J0ZWQgZm9yICdrZXhlYyBsb2FkJyB1c2UgY2FzZSBieQo+
-IFZpY2Vuw6cgYW5kIEkgZm91bmQgdGhlIG90aGVyIHR3byB3aGlsZSBleHBlcmltZW50IHdpdGgg
-J2tkdW1wJyB1c2UKPiBjYXNlcy4KPgo+IEkgaGF2ZSB0ZXN0ZWQgdGhlIHBhdGNoc2V0IG9uIG15
-IHF1YWxjb21tLWFtYmVyd2luZyBhbmQgaHAtbW9vbnNob3QKPiBhcm02NCBib2FyZHMuCj4KPiBD
-YzogU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+Cj4gQ2M6IEFLQVNISSBUYWthaGly
-byA8dGFrYWhpcm8uYWthc2hpQGxpbmFyby5vcmc+Cj4gQ2M6IFZpY2VudGUgQmVyZ2FzIDx2aWNl
-bmNiQGdtYWlsLmNvbT4KPgo+IEJodXBlc2ggU2hhcm1hICg0KToKPiAgIGtleGVjL2R0LW9wcy5j
-OiBGaXggY2hlY2sgYWdhaW5zdCAnZmR0X2FkZF9zdWJub2RlJyByZXR1cm4gdmFsdWUKPiAgIGtl
-eGVjL2tleGVjLWFybTY0LmM6IEFkZCBlcnJvciBoYW5kbGluZyBjaGVjayBhZ2FpbnN0IHJldHVy
-biB2YWx1ZSBvZgo+ICAgICAnc2V0X2Jvb3RhcmdzKCknCj4gICBrZXhlYy9kdC1vcHMuYzogRml4
-IGFkZGluZyAnL2Nob3Nlbicgbm9kZSBmb3IgY2FzZXMgd2hlcmUgaXQgaXMgbm90Cj4gICAgIGF2
-YWlsYWJsZSBpbiBkdGIgcGFzc2VkIHZpYSAtLWR0YiBvcHRpb24KPiAgIGtleGVjL2R0LW9wcy5j
-OiBGaXggJy9jaG9zZW4nIHYvcyAnY2hvc2VuJyBub2RlIGJlaW5nIHBhc3NlZCB0byBmZHQKPiAg
-ICAgaGVscGVyIGZ1bmN0aW9ucwo+Cj4gIGtleGVjL2FyY2gvYXJtNjQva2V4ZWMtYXJtNjQuYyB8
-ICA1ICsrKysrCj4gIGtleGVjL2R0LW9wcy5jICAgICAgICAgICAgICAgICB8IDM2ICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKy0tLS0tLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDM1IGluc2Vy
-dGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4KPiAtLQo+IDIuNy40Cj4KCkNhbiB5b3UgcGxlYXNl
-IGdpdmUgdGhpcyBwYXRjaHNldCBhIHRyeSBhdCB5b3VyIGVuZCBhbmQgc2VlIGlmIGl0CmZpeGVz
-IHRoZSBpc3N1ZXMgeW91IGhhZCByZXBvcnRlZCB3aXRoIHRoZSAtLWR0YiBvcHRpb24uCgpUaGFu
-a3MsCkJodXBlc2gKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+5ZyoIDIwMTjlubQxMuaciDI25pelIDExOjM2LCBEYXZlIFlvdW5nIOWGmemBkzoKPiBPbiAxMi8y
+Ni8xOCBhdCAxMToyNGFtLCBEYXZlIFlvdW5nIHdyb3RlOgo+Pj4+PiArCj4+Pj4+ICtLRVJORUxf
+SU1BR0VfU0laRQo+Pj4+PiArPT09PT09PT09PT09PT09PT0KPj4+Pj4gK1RoZSBzaXplIG9mICdL
+RVJORUxfSU1BR0VfU0laRScsIGN1cnJlbnRseSB1bnVzZWQuCj4+Pj4KPj4+PiBTbyByZW1vdmU/
+Cj4+Pj4KPj4+Cj4+PiBJJ20gbm90IHN1cmUgd2hldGhlciBpdCBzaG91bGQgYmUgcmVtb3ZlZCwg
+c28gaSBrZWVwIGl0Lgo+Pgo+PiBKdXN0IHJlbW92ZSBpdC4gIEl0IHdhcyBhZGRlZCBieSBCYW9x
+dWFuIGZvciBLQVNMUiBpc3N1ZXMsIGxhdGVyCj4+IG1ha2VkdW1wZmlsZSByZXZlcnRlZCB0aGUg
+dXNlcnNwYWNlIHBhcnQgYW5kIGFkZGVkIG90aGVyIGltcGxlbWVudGF0aW9uLgo+Pgo+PiBJbiBj
+YXNlIG9sZCBtYWtlZHVtcGZpbGUgZG9lcyBub3Qgc3VwcG9ydCBuZXcga2VybmVsLCBpdCBoYXMg
+c29tZSBrZXJuZWwKPj4gdmVyc2lvbnMgc3VwcG9ydCBsaXN0IGluIGNvZGUsIHRodXMgbm8gd29y
+cnkgYWJvdXQgdGhlIGNvbXBhdGliaWxpdHkKPj4gaXNzdWUuCj4gCj4gQWgsIGl0IGlzIG5vdCB1
+bnVzZWQgYWN0dWFsbHksIGNsb25lIGNyYXNoIHRvb2wgZ2l0Ogo+ICQgZ2l0IGdyZXAgS0VSTkVM
+X0lNQUdFX1NJWkUKPiB4ODZfNjQuYzogICAgICAgICAgICAgICBpZiAoKHN0cmluZyA9IHBjLT5y
+ZWFkX3ZtY29yZWluZm8oIk5VTUJFUihLRVJORUxfSU1BR0VfU0laRSkiKSkpIHsKPiAKPiBTbyBp
+biB0aGUgZG9jdW1lbnRhdGlvbiwgdGhlIHVzZSBjYXNlcyBvZiBjcmFzaCB0b29sIHNob3VsZCBh
+bHNvIGJlCj4gY292ZXJlZC4KPiAKClN1cmUsIG1heWJlIG9ubHkgdGhpcyBvbmUgd2FzIGlnbm9y
+ZWQuCgpJIHdpbGwgaW1wcm92ZSB0aGlzIHZhcmlhYmxlIGluIHRoZSBkb2N1bWVudGF0aW9uLgoK
+PiBMaWFuYm8sIGl0IHdvdWxkIGJlIGdvb2QgdG8gY2MgRGF2ZSBhbmQgS2F6dSBmb3IgdGhlc2Ug
+cGF0Y2hlcywgY291bGQKPiB5b3UgY2MgdGhlbSBpbiB5b3VyIG5leHQgcG9zdD8KPiAKClllcywg
+aSB3aWxsIGFkZCBEYXZlIGFuZCBLYXp1LCBhbmQgYWxzbyByZXNlbmQgcGF0Y2ggdjQuCgpUaGFu
+a3MuCgo+Pgo+PiBUaGFua3MKPj4gRGF2ZQo+IAo+IFRoYW5rcwo+IERhdmUKPiAKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
+dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8va2V4ZWMK
