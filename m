@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gbyI5-0007VO-QW
- for kexec@lists.infradead.org; Wed, 26 Dec 2018 01:47:26 +0000
-Date: Wed, 26 Dec 2018 09:47:01 +0800
+ id 1gbySi-0002uX-8W
+ for kexec@lists.infradead.org; Wed, 26 Dec 2018 01:58:24 +0000
+Date: Wed, 26 Dec 2018 09:57:57 +0800
 From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCHv2] x86/kdump: bugfix, make the behavior of crashkernel=X
  consistent with kaslr
-Message-ID: <20181226014701.GD11472@dhcp-128-65.nay.redhat.com>
+Message-ID: <20181226015757.GA12717@dhcp-128-65.nay.redhat.com>
 References: <1544760446-506-1-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -79,6 +79,17 @@ On 12/14/18 at 12:07pm, Pingfan Liu wrote:
 >  	if (crash_base <= 0) {
 > +		if (!memblock_bottom_up())
 > +			memblock_set_bottom_up(true);
+
+Looking at the memblock_find_in_range_node code, it is allocating
+bottom up in case bottom_up is true, but it will try to allocate above
+kernel_end:
+
+bottom_up_start = max(start, kernel_end);
+
+If kernel lives very high eg. KASLR case, then this bottom up way does
+not help.  So probably previous old version to try 896M first then 4G
+then maxmem is better.
+
 >  		/*
 >  		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
 >  		 * as old kexec-tools loads bzImage below that, unless
@@ -91,15 +102,6 @@ On 12/14/18 at 12:07pm, Pingfan Liu wrote:
 > +			(max_pfn * PAGE_SIZE), crash_size, CRASH_ALIGN);
 > +		if (!memblock_bottom_up())
 > +			memblock_set_bottom_up(false);
-
-The previous memblock_set_bottom_up(true) set it as true, so
-"!memblock_bottom_up()" is impossible, not sure what is the point of
-this condition check.
-
-Do you want to restore the original memblock direction? If so a variable
-to save the old direction is needed.  But is this really necessary?
-Do you know any side effects of setting the bottom up as true?
-
 > +
 >  		if (!crash_base) {
 >  			pr_info("crashkernel reservation failed - No suitable area found.\n");
@@ -107,14 +109,6 @@ Do you know any side effects of setting the bottom up as true?
 > -- 
 > 2.7.4
 > 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-Thanks
-Dave
 
 _______________________________________________
 kexec mailing list
