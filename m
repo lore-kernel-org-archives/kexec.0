@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-ed1-x544.google.com ([2a00:1450:4864:20::544])
+Received: from mail-ed1-x542.google.com ([2a00:1450:4864:20::542])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gcLrp-0000pM-9N
- for kexec@lists.infradead.org; Thu, 27 Dec 2018 02:57:53 +0000
-Received: by mail-ed1-x544.google.com with SMTP id h50so14306949ede.5
- for <kexec@lists.infradead.org>; Wed, 26 Dec 2018 18:57:38 -0800 (PST)
+ id 1gcLpt-0000Lz-DF
+ for kexec@lists.infradead.org; Thu, 27 Dec 2018 02:55:53 +0000
+Received: by mail-ed1-x542.google.com with SMTP id g22so14290405edr.7
+ for <kexec@lists.infradead.org>; Wed, 26 Dec 2018 18:55:36 -0800 (PST)
 MIME-Version: 1.0
 References: <1544760446-506-1-git-send-email-kernelfans@gmail.com>
- <20181226014701.GD11472@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20181226014701.GD11472@dhcp-128-65.nay.redhat.com>
+ <20181226015757.GA12717@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20181226015757.GA12717@dhcp-128-65.nay.redhat.com>
 From: Pingfan Liu <kernelfans@gmail.com>
-Date: Thu, 27 Dec 2018 10:57:26 +0800
-Message-ID: <CAFgQCTtEMw9f9H-nMAEntwLkNLTP9s9zpoNLvx+cK_hquXTA4A@mail.gmail.com>
+Date: Thu, 27 Dec 2018 10:55:23 +0800
+Message-ID: <CAFgQCTv9COU776G+157KaLRj_0y30u1eRZ2SKcruu-6xvsJ_sg@mail.gmail.com>
 Subject: Re: [PATCHv2] x86/kdump: bugfix, make the behavior of crashkernel=X
  consistent with kaslr
 List-Id: <kexec.lists.infradead.org>
@@ -29,7 +29,7 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
 Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
 
-On Wed, Dec 26, 2018 at 9:47 AM Dave Young <dyoung@redhat.com> wrote:
+On Wed, Dec 26, 2018 at 9:58 AM Dave Young <dyoung@redhat.com> wrote:
 >
 > On 12/14/18 at 12:07pm, Pingfan Liu wrote:
 > > Customer reported a bug on a high end server with many pcie devices, where
@@ -83,6 +83,22 @@ On Wed, Dec 26, 2018 at 9:47 AM Dave Young <dyoung@redhat.com> wrote:
 > >       if (crash_base <= 0) {
 > > +             if (!memblock_bottom_up())
 > > +                     memblock_set_bottom_up(true);
+>
+> Looking at the memblock_find_in_range_node code, it is allocating
+> bottom up in case bottom_up is true, but it will try to allocate above
+> kernel_end:
+>
+> bottom_up_start = max(start, kernel_end);
+>
+> If kernel lives very high eg. KASLR case, then this bottom up way does
+> not help.  So probably previous old version to try 896M first then 4G
+> then maxmem is better.
+>
+Yes, you are right. I will try to see whether it can be resolved or not.
+
+Thanks,
+Pingfan
+
 > >               /*
 > >                * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
 > >                * as old kexec-tools loads bzImage below that, unless
@@ -95,18 +111,6 @@ On Wed, Dec 26, 2018 at 9:47 AM Dave Young <dyoung@redhat.com> wrote:
 > > +                     (max_pfn * PAGE_SIZE), crash_size, CRASH_ALIGN);
 > > +             if (!memblock_bottom_up())
 > > +                     memblock_set_bottom_up(false);
->
-> The previous memblock_set_bottom_up(true) set it as true, so
-> "!memblock_bottom_up()" is impossible, not sure what is the point of
-> this condition check.
->
-> Do you want to restore the original memblock direction? If so a variable
-> to save the old direction is needed.  But is this really necessary?
-> Do you know any side effects of setting the bottom up as true?
->
-Yes, will fix it.
-
-Thanks
 > > +
 > >               if (!crash_base) {
 > >                       pr_info("crashkernel reservation failed - No suitable area found.\n");
@@ -114,14 +118,6 @@ Thanks
 > > --
 > > 2.7.4
 > >
-> >
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
->
-> Thanks
-> Dave
 
 _______________________________________________
 kexec mailing list
