@@ -1,19 +1,16 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-ed1-x542.google.com ([2a00:1450:4864:20::542])
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gcLpt-0000Lz-DF
- for kexec@lists.infradead.org; Thu, 27 Dec 2018 02:55:53 +0000
-Received: by mail-ed1-x542.google.com with SMTP id g22so14290405edr.7
- for <kexec@lists.infradead.org>; Wed, 26 Dec 2018 18:55:36 -0800 (PST)
+ id 1gcgcN-0008OD-Aq
+ for kexec@lists.infradead.org; Fri, 28 Dec 2018 01:07:17 +0000
+Date: Fri, 28 Dec 2018 09:06:56 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] x86/kexec: fix a kexec_file_load failure
+Message-ID: <20181228010656.GA9904@dhcp-128-65.nay.redhat.com>
+References: <20181227050652.GA2960@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-References: <1544760446-506-1-git-send-email-kernelfans@gmail.com>
- <20181226015757.GA12717@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20181226015757.GA12717@dhcp-128-65.nay.redhat.com>
-From: Pingfan Liu <kernelfans@gmail.com>
-Date: Thu, 27 Dec 2018 10:55:23 +0800
-Message-ID: <CAFgQCTv9COU776G+157KaLRj_0y30u1eRZ2SKcruu-6xvsJ_sg@mail.gmail.com>
-Subject: Re: [PATCHv2] x86/kdump: bugfix, make the behavior of crashkernel=X
- consistent with kaslr
+Content-Disposition: inline
+In-Reply-To: <20181227050652.GA2960@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,99 +22,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Baoquan He <bhe@redhat.com>, x86@kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, Dec 26, 2018 at 9:58 AM Dave Young <dyoung@redhat.com> wrote:
->
-> On 12/14/18 at 12:07pm, Pingfan Liu wrote:
-> > Customer reported a bug on a high end server with many pcie devices, where
-> > kernel bootup with crashkernel=384M, and kaslr is enabled. Even
-> > though we still see much memory under 896 MB, the finding still failed
-> > intermittently. Because currently we can only find region under 896 MB,
-> > if w/0 ',high' specified. Then KASLR breaks 896 MB into several parts
-> > randomly, and crashkernel reservation need be aligned to 128 MB, that's
-> > why failure is found. It raises confusion to the end user that sometimes
-> > crashkernel=X works while sometimes fails.
-> > If want to make it succeed, customer can change kernel option to
-> > "crashkernel=384M, high". Just this give "crashkernel=xx@yy" a very
-> > limited space to behave even though its grammer looks more generic.
-> > And we can't answer questions raised from customer that confidently:
-> > 1) why it doesn't succeed to reserve 896 MB;
-> > 2) what's wrong with memory region under 4G;
-> > 3) why I have to add ',high', I only require 384 MB, not 3840 MB.
-> >
-> > This patch simplifies the method suggested in the mail [1]. It just goes
-> > bottom-up to find a candidate region for crashkernel. The bottom-up may be
-> > better compatible with the old reservation style, i.e. still want to get
-> > memory region from 896 MB firstly, then [896 MB, 4G], finally above 4G.
-> >
-> > There is one trivial thing about the compatibility with old kexec-tools:
-> > if the reserved region is above 896M, then old tool will fail to load
-> > bzImage. But without this patch, the old tool also fail since there is no
-> > memory below 896M can be reserved for crashkernel.
-> >
-> > [1]: http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
-> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> > Cc: Dave Young <dyoung@redhat.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Baoquan He <bhe@redhat.com>
-> > Cc: yinghai@kernel.org,
-> > Cc: vgoyal@redhat.com
-> > Cc: kexec@lists.infradead.org
-> >
-> > ---
-> > v1->v2:
-> >   improve commit log
-> >  arch/x86/kernel/setup.c | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > index d494b9b..60f12c4 100644
-> > --- a/arch/x86/kernel/setup.c
-> > +++ b/arch/x86/kernel/setup.c
-> > @@ -541,15 +541,18 @@ static void __init reserve_crashkernel(void)
-> >
-> >       /* 0 means: find the address automatically */
-> >       if (crash_base <= 0) {
-> > +             if (!memblock_bottom_up())
-> > +                     memblock_set_bottom_up(true);
->
-> Looking at the memblock_find_in_range_node code, it is allocating
-> bottom up in case bottom_up is true, but it will try to allocate above
-> kernel_end:
->
-> bottom_up_start = max(start, kernel_end);
->
-> If kernel lives very high eg. KASLR case, then this bottom up way does
-> not help.  So probably previous old version to try 896M first then 4G
-> then maxmem is better.
->
-Yes, you are right. I will try to see whether it can be resolved or not.
+On 12/27/18 at 01:06pm, Dave Young wrote:
+> The code cleanup mentioned in Fixes tag changed the behavior of
+> kexec_locate_mem_hole.  The kexec_locate_mem_hole will try to
+> allocate free memory only when kbuf.mem is initialized as zero.
+> 
+> But in x86 kexec_file_load implementation there are a few places
+> the kbuf.mem is reused like below:
+>   /* kbuf initialized, kbuf.mem = 0 */
+>   ...
+>   kexec_add_buffer()
+>   ...
+>   kexec_add_buffer()
+> 
+>   The second kexec_add_buffer will reuse previous kbuf but not
+>   reinitialize the kbuf.mem.
+> 
+> Thus kexec_file_load failed because the sanity check failed.
+> 
+> So explictily reset mem = 0 to fix the issue.
+> 
+> Fixes: b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
+> Signed-off-by: Dave Young <dyoung@redhat.com>
+> Cc: <stable@vger.kernel.org>
+> ---
+>  arch/x86/kernel/crash.c           | 1 +
+>  arch/x86/kernel/kexec-bzimage64.c | 2 ++
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index f631a3f15587..37147509d2c8 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -469,6 +469,7 @@ int crash_load_segments(struct kimage *image)
+>  
+>  	kbuf.memsz = kbuf.bufsz;
+>  	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
+> +	kbuf.mem = 0;
 
-Thanks,
-Pingfan
+Self NAK, will resend with KEXEC_BUF_MEM_UNKNOWN instead of "0"
 
-> >               /*
-> >                * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
-> >                * as old kexec-tools loads bzImage below that, unless
-> >                * "crashkernel=size[KMG],high" is specified.
-> >                */
-> >               crash_base = memblock_find_in_range(CRASH_ALIGN,
-> > -                                                 high ? CRASH_ADDR_HIGH_MAX
-> > -                                                      : CRASH_ADDR_LOW_MAX,
-> > -                                                 crash_size, CRASH_ALIGN);
-> > +                     (max_pfn * PAGE_SIZE), crash_size, CRASH_ALIGN);
-> > +             if (!memblock_bottom_up())
-> > +                     memblock_set_bottom_up(false);
-> > +
-> >               if (!crash_base) {
-> >                       pr_info("crashkernel reservation failed - No suitable area found.\n");
-> >                       return;
-> > --
-> > 2.7.4
-> >
+>  	ret = kexec_add_buffer(&kbuf);
+>  	if (ret) {
+>  		vfree((void *)image->arch.elf_headers);
+> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+> index 278cd07228dd..558204bdf412 100644
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -434,6 +434,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+>  	kbuf.memsz = PAGE_ALIGN(header->init_size);
+>  	kbuf.buf_align = header->kernel_alignment;
+>  	kbuf.buf_min = MIN_KERNEL_LOAD_ADDR;
+> +	kbuf.mem = 0;
+>  	ret = kexec_add_buffer(&kbuf);
+>  	if (ret)
+>  		goto out_free_params;
+> @@ -448,6 +449,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+>  		kbuf.bufsz = kbuf.memsz = initrd_len;
+>  		kbuf.buf_align = PAGE_SIZE;
+>  		kbuf.buf_min = MIN_INITRD_LOAD_ADDR;
+> +		kbuf.mem = 0;
+>  		ret = kexec_add_buffer(&kbuf);
+>  		if (ret)
+>  			goto out_free_params;
+> -- 
+> 2.17.0
+> 
 
 _______________________________________________
 kexec mailing list
