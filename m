@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from mail-lj1-f195.google.com ([209.85.208.195])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gf8j9-0002Id-N6
- for kexec@lists.infradead.org; Thu, 03 Jan 2019 19:32:30 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH 1/2 v4] kdump: add the vmcoreinfo documentation
-Date: Thu, 3 Jan 2019 19:28:14 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC035656E1@BPXM09GP.gisp.nec.co.jp>
-References: <20181220054044.30738-1-lijiang@redhat.com>
- <20181220054044.30738-2-lijiang@redhat.com>
-In-Reply-To: <20181220054044.30738-2-lijiang@redhat.com>
-Content-Language: en-US
+ id 1gf8od-0004OL-IA
+ for kexec@lists.infradead.org; Thu, 03 Jan 2019 19:38:06 +0000
+Received: by mail-lj1-f195.google.com with SMTP id k15-v6so30630138ljc.8
+ for <kexec@lists.infradead.org>; Thu, 03 Jan 2019 11:38:02 -0800 (PST)
 MIME-Version: 1.0
+References: <1544987815-19527-1-git-send-email-bhsharma@redhat.com>
+ <CACi5LpOsT1UcXjB4NFV9n62nZWy=HJ6Qt_hFWT5UktCjtLToZg@mail.gmail.com>
+ <CAAMcf8BJBTdME4boQJsj2fkZaJU8GtoePgbGzJLgR_Xu8LKhHw@mail.gmail.com>
+In-Reply-To: <CAAMcf8BJBTdME4boQJsj2fkZaJU8GtoePgbGzJLgR_Xu8LKhHw@mail.gmail.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Fri, 4 Jan 2019 01:07:47 +0530
+Message-ID: <CACi5LpN25soPeA+bMkkE=4==-8wrU2DQfZZwssSGcAUfV6t+kw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] kexec/arm64: Fix issue with 'kexec load' and
+ 'kdump' when --dtb option is used
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,65 +23,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>
-Cc: "bhe@redhat.com" <bhe@redhat.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "dyoung@redhat.com" <dyoung@redhat.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+To: Vicente Bergas <vicencb@gmail.com>, Simon Horman <horms@verge.net.au>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec mailing list <kexec@lists.infradead.org>
 
-Hi Lianbo,
-
------Original Message-----
-> +=======================
-> +What is the VMCOREINFO?
-> +=======================
-> +
-> +VMCOREINFO is a special ELF note section. It contains various
-> +information from the kernel like structure size, page size, symbol
-> +values, field offsets, etc. These data are packed into an ELF note
-> +section and used by user-space tools like crash and makedumpfile to
-> +analyze a kernel's memory layout.
-> +
-> +To dump the VMCOREINFO contents, one can do:
-> +
-> +# makedumpfile -g VMCOREINFO -x vmlinux
-
-again, this command does not dump the VMCOREINFO in ELF note section.
-It converts the vmlinux's debug infomation into a VMCOREINFO-like data.
-So I don't think this command is suitable to introduce here.
-
-> +PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|
-> +PG_hwpoision|PG_head_mask
-> +-----------------------------------------------------
-> +
-> +Page attributes. These flags are used to filter free pages.
-
-Some of these are not used to filter *free* pages, so
-
-... used to filter various unnecessary pages.
-
-> +PAGE_BUDDY_MAPCOUNT_VALUE or ~PG_buddy
-> +--------------------------------------
-
-then, this can be merged into the one above?
-
-> +======
-> +x86_64
-> +======
-...
-> +PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
-> +----------------------------------------
-
-This looks not only for x86_64, and also can be merged into
-the PG_* flags?
-
-Thank you for your effort!
-Kazu
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgVmljZW7DpywKCkhhcHB5IE5ldyBZZWFyIHRvIHlvdSB0b28gYW5kIHRoYW5rcyBhIGxvdCBm
+b3IgeW91ciB0ZXN0IHJlc3VsdHMuCgpPbiBUaHUsIEphbiAzLCAyMDE5IGF0IDEwOjIzIFBNIFZp
+Y2VudGUgQmVyZ2FzIDx2aWNlbmNiQGdtYWlsLmNvbT4gd3JvdGU6Cj4KPiBPbiBXZWQsIERlYyAy
+NiwgMjAxOCBhdCA1OjUzIEFNIEJodXBlc2ggU2hhcm1hIDxiaHNoYXJtYUByZWRoYXQuY29tPiB3
+cm90ZToKPiA+Cj4gPiBIZWxsbyBWaWNlbsOnLAo+ID4KPiA+IE9uIE1vbiwgRGVjIDE3LCAyMDE4
+IGF0IDEyOjQ3IEFNIEJodXBlc2ggU2hhcm1hIDxiaHNoYXJtYUByZWRoYXQuY29tPiB3cm90ZToK
+PiA+ID4KPiA+ID4gQ2hhbmdlcyBzaW5jZSB2MjoKPiA+ID4gLS0tLS0tLS0tLS0tLS0tLS0KPiA+
+ID4gIC0gRHJvcHBlZCA0LzQgZnJvbSB2MiBhcyBJIG5vdGljZWQgdGhhdCB3ZSBwYXNzIHdyb25n
+IG5vZGUgbmFtZSB0byBmZHQKPiA+ID4gICAgaGVscGVyIGZ1bmN0aW9ucyBpbiAna2V4ZWMvZHQt
+b3BzLmMnCj4gPiA+Cj4gPiA+IFRoaXMgcGF0Y2hzZXQgZml4ZXMgc29tZSBpc3N1ZXMgd2hlbiB3
+ZSBjYWxsIGtleGVjIGZvciBhcm02NCB3aXRoIC0tZHRiCj4gPiA+IG9wdGlvbiAoYm90aCBmb3Ig
+J2tleGVjIGxvYWQnIGFuZCAna2R1bXAnIHVzZSBjYXNlcykuCj4gPiA+Cj4gPiA+IEEgY291cGxl
+IG9mIHRoZXNlIGlzc3VlcyB3ZXJlIHJlcG9ydGVkIGZvciAna2V4ZWMgbG9hZCcgdXNlIGNhc2Ug
+YnkKPiA+ID4gVmljZW7DpyBhbmQgSSBmb3VuZCB0aGUgb3RoZXIgdHdvIHdoaWxlIGV4cGVyaW1l
+bnQgd2l0aCAna2R1bXAnIHVzZQo+ID4gPiBjYXNlcy4KPiA+ID4KPiA+ID4gSSBoYXZlIHRlc3Rl
+ZCB0aGUgcGF0Y2hzZXQgb24gbXkgcXVhbGNvbW0tYW1iZXJ3aW5nIGFuZCBocC1tb29uc2hvdAo+
+ID4gPiBhcm02NCBib2FyZHMuCj4gPiA+Cj4gPiA+IENjOiBTaW1vbiBIb3JtYW4gPGhvcm1zQHZl
+cmdlLm5ldC5hdT4KPiA+ID4gQ2M6IEFLQVNISSBUYWthaGlybyA8dGFrYWhpcm8uYWthc2hpQGxp
+bmFyby5vcmc+Cj4gPiA+IENjOiBWaWNlbnRlIEJlcmdhcyA8dmljZW5jYkBnbWFpbC5jb20+Cj4g
+PiA+Cj4gPiA+IEJodXBlc2ggU2hhcm1hICg0KToKPiA+ID4gICBrZXhlYy9kdC1vcHMuYzogRml4
+IGNoZWNrIGFnYWluc3QgJ2ZkdF9hZGRfc3Vibm9kZScgcmV0dXJuIHZhbHVlCj4gPiA+ICAga2V4
+ZWMva2V4ZWMtYXJtNjQuYzogQWRkIGVycm9yIGhhbmRsaW5nIGNoZWNrIGFnYWluc3QgcmV0dXJu
+IHZhbHVlIG9mCj4gPiA+ICAgICAnc2V0X2Jvb3RhcmdzKCknCj4gPiA+ICAga2V4ZWMvZHQtb3Bz
+LmM6IEZpeCBhZGRpbmcgJy9jaG9zZW4nIG5vZGUgZm9yIGNhc2VzIHdoZXJlIGl0IGlzIG5vdAo+
+ID4gPiAgICAgYXZhaWxhYmxlIGluIGR0YiBwYXNzZWQgdmlhIC0tZHRiIG9wdGlvbgo+ID4gPiAg
+IGtleGVjL2R0LW9wcy5jOiBGaXggJy9jaG9zZW4nIHYvcyAnY2hvc2VuJyBub2RlIGJlaW5nIHBh
+c3NlZCB0byBmZHQKPiA+ID4gICAgIGhlbHBlciBmdW5jdGlvbnMKPiA+ID4KPiA+ID4gIGtleGVj
+L2FyY2gvYXJtNjQva2V4ZWMtYXJtNjQuYyB8ICA1ICsrKysrCj4gPiA+ICBrZXhlYy9kdC1vcHMu
+YyAgICAgICAgICAgICAgICAgfCAzNiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0t
+LS0KPiA+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMo
+LSkKPiA+ID4KPiA+ID4gLS0KPiA+ID4gMi43LjQKPiA+ID4KPiA+Cj4gPiBDYW4geW91IHBsZWFz
+ZSBnaXZlIHRoaXMgcGF0Y2hzZXQgYSB0cnkgYXQgeW91ciBlbmQgYW5kIHNlZSBpZiBpdAo+ID4g
+Zml4ZXMgdGhlIGlzc3VlcyB5b3UgaGFkIHJlcG9ydGVkIHdpdGggdGhlIC0tZHRiIG9wdGlvbi4K
+Pgo+IEhpIEJodXBlc2gsCj4gc29ycnkgZm9yIHRoZSBkZWxheS4KPiBUaGlzIGlzIHdoYXQgSSBo
+YXZlIHRlc3RlZDoKPiBrZXhlYyAtLWFwcGVuZCAnZGVidWcnCj4gICAgICAgICAgLS1sb2FkIElt
+YWdlCj4ga2V4ZWMgLS1yZXVzZS1jbWRsaW5lCj4gICAgICAgICAgLS1sb2FkIEltYWdlCj4ga2V4
+ZWMgLS1hcHBlbmQgJ2RlYnVnJyAtLWR0YiByazMzOTktc2FwcGhpcmUuZHRiCj4gICAgICAgICAg
+LS1sb2FkIEltYWdlCj4ga2V4ZWMgLS1yZXVzZS1jbWRsaW5lICAtLWR0YiByazMzOTktc2FwcGhp
+cmUuZHRiCj4gICAgICAgICAgLS1sb2FkIEltYWdlCj4ga2V4ZWMgLS1hcHBlbmQgJ2RlYnVnJyAt
+LWR0YiByazMzOTktZ3J1LWtldmluLmR0Ygo+ICAgICAgICAgIC0tbG9hZCBJbWFnZQo+IGtleGVj
+IC0tcmV1c2UtY21kbGluZSAgLS1kdGIgcmszMzk5LWdydS1rZXZpbi5kdGIKPiAgICAgICAgICAt
+LWxvYWQgSW1hZ2UKPiBrZXhlYyAtLWFwcGVuZCAnZGVidWcnICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIC0tcmFtZGlzawo+IGluaXRyYW1mcy1saW51eC5pbWcgLS1sb2FkIEltYWdlCj4ga2V4
+ZWMgLS1yZXVzZS1jbWRsaW5lICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLXJhbWRpc2sK
+PiBpbml0cmFtZnMtbGludXguaW1nIC0tbG9hZCBJbWFnZQo+IGtleGVjIC0tYXBwZW5kICdkZWJ1
+ZycgLS1kdGIgcmszMzk5LXNhcHBoaXJlLmR0YiAgLS1yYW1kaXNrCj4gaW5pdHJhbWZzLWxpbnV4
+LmltZyAtLWxvYWQgSW1hZ2UKPiBrZXhlYyAtLXJldXNlLWNtZGxpbmUgIC0tZHRiIHJrMzM5OS1z
+YXBwaGlyZS5kdGIgIC0tcmFtZGlzawo+IGluaXRyYW1mcy1saW51eC5pbWcgLS1sb2FkIEltYWdl
+Cj4ga2V4ZWMgLS1hcHBlbmQgJ2RlYnVnJyAtLWR0YiByazMzOTktZ3J1LWtldmluLmR0YiAtLXJh
+bWRpc2sKPiBpbml0cmFtZnMtbGludXguaW1nIC0tbG9hZCBJbWFnZQo+IGtleGVjIC0tcmV1c2Ut
+Y21kbGluZSAgLS1kdGIgcmszMzk5LWdydS1rZXZpbi5kdGIgLS1yYW1kaXNrCj4gaW5pdHJhbWZz
+LWxpbnV4LmltZyAtLWxvYWQgSW1hZ2UKPgo+IHdoZXJlIHRoZSBzYXBwaGlyZSBkdGIgaGFzIG5v
+IGNob3NlbiBub2RlIGFuZCB0aGUgZ3J1IGhhcy4KPiBFdmVyeXRoaW5nIHdvcmtlZCBPSy4KPgoK
+QFNpbW9uOiBIaSwgU2luY2UgdGhpcyB3b3JrcyBmaW5lIGF0IFZpY2Vuw6cncyBlbmQgYXMgd2Vs
+bCwgY2FuIHlvdQpwbGVhc2UgY29uc2lkZXIgYXBwbHlpbmcgdGhpcyB0byBrZXhlYy10b29scyBh
+cyB0aGlzIGlzc3VlIGhhcyBiZWVuCnJlcG9ydGVkIGJ5IGFub3RoZXIgYXJtNjQgdXNlciBhcyB3
+ZWxsLiBUaGFua3MgZm9yIHlvdXIgaGVscC4KClJlZ2FyZHMsCkJodXBlc2gKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8va2V4ZWMK
