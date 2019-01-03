@@ -1,19 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it1-x143.google.com ([2607:f8b0:4864:20::143])
+Received: from mail-yw1-xc43.google.com ([2607:f8b0:4864:20::c43])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gf6FB-0001Qn-Rv
- for kexec@lists.infradead.org; Thu, 03 Jan 2019 16:53:19 +0000
-Received: by mail-it1-x143.google.com with SMTP id z7so46102955iti.0
- for <kexec@lists.infradead.org>; Thu, 03 Jan 2019 08:53:17 -0800 (PST)
+ id 1gf81P-0000AB-R8
+ for kexec@lists.infradead.org; Thu, 03 Jan 2019 18:47:13 +0000
+Received: by mail-yw1-xc43.google.com with SMTP id i73so13620960ywg.3
+ for <kexec@lists.infradead.org>; Thu, 03 Jan 2019 10:47:11 -0800 (PST)
+Date: Thu, 3 Jan 2019 10:47:06 -0800
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCHv3 1/2] mm/memblock: extend the limit inferior of
+ bottom-up after parsing hotplug attr
+Message-ID: <20190103184706.GU2509588@devbig004.ftw2.facebook.com>
+References: <1545966002-3075-1-git-send-email-kernelfans@gmail.com>
+ <1545966002-3075-2-git-send-email-kernelfans@gmail.com>
+ <20181231084018.GA28478@rapoport-lnx>
+ <CAFgQCTvQnj7zReFvH_gmfVJdPXE325o+z4Xx76fupvsLR_7H2A@mail.gmail.com>
+ <20190102092749.GA22664@rapoport-lnx>
+ <20190102101804.GD1990@MiWiFi-R3L-srv>
+ <20190102170537.GA3591@rapoport-lnx>
 MIME-Version: 1.0
-References: <1544987815-19527-1-git-send-email-bhsharma@redhat.com>
- <CACi5LpOsT1UcXjB4NFV9n62nZWy=HJ6Qt_hFWT5UktCjtLToZg@mail.gmail.com>
-In-Reply-To: <CACi5LpOsT1UcXjB4NFV9n62nZWy=HJ6Qt_hFWT5UktCjtLToZg@mail.gmail.com>
-From: Vicente Bergas <vicencb@gmail.com>
-Date: Thu, 3 Jan 2019 17:53:03 +0100
-Message-ID: <CAAMcf8BJBTdME4boQJsj2fkZaJU8GtoePgbGzJLgR_Xu8LKhHw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] kexec/arm64: Fix issue with 'kexec load' and
- 'kdump' when --dtb option is used
+Content-Disposition: inline
+In-Reply-To: <20190102170537.GA3591@rapoport-lnx>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,62 +28,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec mailing list <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Michal Hocko <mhocko@suse.com>, kexec@lists.infradead.org, Stefan Agner <stefan@agner.ch>, Tang Chen <tangchen@cn.fujitsu.com>, linux-mm@kvack.org, Yaowei Bai <baiyaowei@cmss.chinamobile.com>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Pavel Tatashin <pasha.tatashin@oracle.com>, linux-acpi@vger.kernel.org, Dave Young <dyoung@redhat.com>, Daniel Vacek <neelx@redhat.com>, vgoyal@redhat.com, Len Brown <lenb@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Pingfan Liu <kernelfans@gmail.com>, yinghai@kernel.org, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Mathieu Malaterre <malat@debian.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
 
-T24gV2VkLCBEZWMgMjYsIDIwMTggYXQgNTo1MyBBTSBCaHVwZXNoIFNoYXJtYSA8YmhzaGFybWFA
-cmVkaGF0LmNvbT4gd3JvdGU6Cj4KPiBIZWxsbyBWaWNlbsOnLAo+Cj4gT24gTW9uLCBEZWMgMTcs
-IDIwMTggYXQgMTI6NDcgQU0gQmh1cGVzaCBTaGFybWEgPGJoc2hhcm1hQHJlZGhhdC5jb20+IHdy
-b3RlOgo+ID4KPiA+IENoYW5nZXMgc2luY2UgdjI6Cj4gPiAtLS0tLS0tLS0tLS0tLS0tLQo+ID4g
-IC0gRHJvcHBlZCA0LzQgZnJvbSB2MiBhcyBJIG5vdGljZWQgdGhhdCB3ZSBwYXNzIHdyb25nIG5v
-ZGUgbmFtZSB0byBmZHQKPiA+ICAgIGhlbHBlciBmdW5jdGlvbnMgaW4gJ2tleGVjL2R0LW9wcy5j
-Jwo+ID4KPiA+IFRoaXMgcGF0Y2hzZXQgZml4ZXMgc29tZSBpc3N1ZXMgd2hlbiB3ZSBjYWxsIGtl
-eGVjIGZvciBhcm02NCB3aXRoIC0tZHRiCj4gPiBvcHRpb24gKGJvdGggZm9yICdrZXhlYyBsb2Fk
-JyBhbmQgJ2tkdW1wJyB1c2UgY2FzZXMpLgo+ID4KPiA+IEEgY291cGxlIG9mIHRoZXNlIGlzc3Vl
-cyB3ZXJlIHJlcG9ydGVkIGZvciAna2V4ZWMgbG9hZCcgdXNlIGNhc2UgYnkKPiA+IFZpY2Vuw6cg
-YW5kIEkgZm91bmQgdGhlIG90aGVyIHR3byB3aGlsZSBleHBlcmltZW50IHdpdGggJ2tkdW1wJyB1
-c2UKPiA+IGNhc2VzLgo+ID4KPiA+IEkgaGF2ZSB0ZXN0ZWQgdGhlIHBhdGNoc2V0IG9uIG15IHF1
-YWxjb21tLWFtYmVyd2luZyBhbmQgaHAtbW9vbnNob3QKPiA+IGFybTY0IGJvYXJkcy4KPiA+Cj4g
-PiBDYzogU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+Cj4gPiBDYzogQUtBU0hJIFRh
-a2FoaXJvIDx0YWthaGlyby5ha2FzaGlAbGluYXJvLm9yZz4KPiA+IENjOiBWaWNlbnRlIEJlcmdh
-cyA8dmljZW5jYkBnbWFpbC5jb20+Cj4gPgo+ID4gQmh1cGVzaCBTaGFybWEgKDQpOgo+ID4gICBr
-ZXhlYy9kdC1vcHMuYzogRml4IGNoZWNrIGFnYWluc3QgJ2ZkdF9hZGRfc3Vibm9kZScgcmV0dXJu
-IHZhbHVlCj4gPiAgIGtleGVjL2tleGVjLWFybTY0LmM6IEFkZCBlcnJvciBoYW5kbGluZyBjaGVj
-ayBhZ2FpbnN0IHJldHVybiB2YWx1ZSBvZgo+ID4gICAgICdzZXRfYm9vdGFyZ3MoKScKPiA+ICAg
-a2V4ZWMvZHQtb3BzLmM6IEZpeCBhZGRpbmcgJy9jaG9zZW4nIG5vZGUgZm9yIGNhc2VzIHdoZXJl
-IGl0IGlzIG5vdAo+ID4gICAgIGF2YWlsYWJsZSBpbiBkdGIgcGFzc2VkIHZpYSAtLWR0YiBvcHRp
-b24KPiA+ICAga2V4ZWMvZHQtb3BzLmM6IEZpeCAnL2Nob3Nlbicgdi9zICdjaG9zZW4nIG5vZGUg
-YmVpbmcgcGFzc2VkIHRvIGZkdAo+ID4gICAgIGhlbHBlciBmdW5jdGlvbnMKPiA+Cj4gPiAga2V4
-ZWMvYXJjaC9hcm02NC9rZXhlYy1hcm02NC5jIHwgIDUgKysrKysKPiA+ICBrZXhlYy9kdC1vcHMu
-YyAgICAgICAgICAgICAgICAgfCAzNiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0t
-LS0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDM1IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0p
-Cj4gPgo+ID4gLS0KPiA+IDIuNy40Cj4gPgo+Cj4gQ2FuIHlvdSBwbGVhc2UgZ2l2ZSB0aGlzIHBh
-dGNoc2V0IGEgdHJ5IGF0IHlvdXIgZW5kIGFuZCBzZWUgaWYgaXQKPiBmaXhlcyB0aGUgaXNzdWVz
-IHlvdSBoYWQgcmVwb3J0ZWQgd2l0aCB0aGUgLS1kdGIgb3B0aW9uLgoKSGkgQmh1cGVzaCwKc29y
-cnkgZm9yIHRoZSBkZWxheS4KVGhpcyBpcyB3aGF0IEkgaGF2ZSB0ZXN0ZWQ6CmtleGVjIC0tYXBw
-ZW5kICdkZWJ1ZycKICAgICAgICAgLS1sb2FkIEltYWdlCmtleGVjIC0tcmV1c2UtY21kbGluZQog
-ICAgICAgICAtLWxvYWQgSW1hZ2UKa2V4ZWMgLS1hcHBlbmQgJ2RlYnVnJyAtLWR0YiByazMzOTkt
-c2FwcGhpcmUuZHRiCiAgICAgICAgIC0tbG9hZCBJbWFnZQprZXhlYyAtLXJldXNlLWNtZGxpbmUg
-IC0tZHRiIHJrMzM5OS1zYXBwaGlyZS5kdGIKICAgICAgICAgLS1sb2FkIEltYWdlCmtleGVjIC0t
-YXBwZW5kICdkZWJ1ZycgLS1kdGIgcmszMzk5LWdydS1rZXZpbi5kdGIKICAgICAgICAgLS1sb2Fk
-IEltYWdlCmtleGVjIC0tcmV1c2UtY21kbGluZSAgLS1kdGIgcmszMzk5LWdydS1rZXZpbi5kdGIK
-ICAgICAgICAgLS1sb2FkIEltYWdlCmtleGVjIC0tYXBwZW5kICdkZWJ1ZycgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgLS1yYW1kaXNrCmluaXRyYW1mcy1saW51eC5pbWcgLS1sb2FkIEltYWdl
-CmtleGVjIC0tcmV1c2UtY21kbGluZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS1yYW1k
-aXNrCmluaXRyYW1mcy1saW51eC5pbWcgLS1sb2FkIEltYWdlCmtleGVjIC0tYXBwZW5kICdkZWJ1
-ZycgLS1kdGIgcmszMzk5LXNhcHBoaXJlLmR0YiAgLS1yYW1kaXNrCmluaXRyYW1mcy1saW51eC5p
-bWcgLS1sb2FkIEltYWdlCmtleGVjIC0tcmV1c2UtY21kbGluZSAgLS1kdGIgcmszMzk5LXNhcHBo
-aXJlLmR0YiAgLS1yYW1kaXNrCmluaXRyYW1mcy1saW51eC5pbWcgLS1sb2FkIEltYWdlCmtleGVj
-IC0tYXBwZW5kICdkZWJ1ZycgLS1kdGIgcmszMzk5LWdydS1rZXZpbi5kdGIgLS1yYW1kaXNrCmlu
-aXRyYW1mcy1saW51eC5pbWcgLS1sb2FkIEltYWdlCmtleGVjIC0tcmV1c2UtY21kbGluZSAgLS1k
-dGIgcmszMzk5LWdydS1rZXZpbi5kdGIgLS1yYW1kaXNrCmluaXRyYW1mcy1saW51eC5pbWcgLS1s
-b2FkIEltYWdlCgp3aGVyZSB0aGUgc2FwcGhpcmUgZHRiIGhhcyBubyBjaG9zZW4gbm9kZSBhbmQg
-dGhlIGdydSBoYXMuCkV2ZXJ5dGhpbmcgd29ya2VkIE9LLgoKVGhhbmtzIGFuZCBoYXBweSBuZXcg
-eWVhciEKUmVnYXJkcywKICBWaWNlbsOnLgoKPgo+IFRoYW5rcywKPiBCaHVwZXNoCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxp
-c3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hello,
+
+On Wed, Jan 02, 2019 at 07:05:38PM +0200, Mike Rapoport wrote:
+> I agree that currently the bottom-up allocation after the kernel text has
+> issues with KASLR. But this issues are not necessarily related to the
+> memory hotplug. Even with a single memory node, a bottom-up allocation will
+> fail if KASLR would put the kernel near the end of node0.
+> 
+> What I am trying to understand is whether there is a fundamental reason to
+> prevent allocations from [0, kernel_start)?
+> 
+> Maybe Tejun can recall why he suggested to start bottom-up allocations from
+> kernel_end.
+
+That's from 79442ed189ac ("mm/memblock.c: introduce bottom-up
+allocation mode").  I wasn't involved in that patch, so no idea why
+the restrictions were added, but FWIW it doesn't seem necessary to me.
+
+Thanks.
+
+-- 
+tejun
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
