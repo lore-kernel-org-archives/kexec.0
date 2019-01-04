@@ -1,37 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gfR6Z-0001zx-T0
- for kexec@lists.infradead.org; Fri, 04 Jan 2019 15:09:49 +0000
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- x04F9BF1142753
- for <kexec@lists.infradead.org>; Fri, 4 Jan 2019 10:09:45 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2pt6yerwtt-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 04 Jan 2019 10:09:44 -0500
-Received: from localhost
- by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <rppt@linux.ibm.com>;
- Fri, 4 Jan 2019 15:09:41 -0000
-Date: Fri, 4 Jan 2019 17:09:29 +0200
-From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCHv3 1/2] mm/memblock: extend the limit inferior of
- bottom-up after parsing hotplug attr
-References: <1545966002-3075-1-git-send-email-kernelfans@gmail.com>
- <1545966002-3075-2-git-send-email-kernelfans@gmail.com>
- <20181231084018.GA28478@rapoport-lnx>
- <CAFgQCTvQnj7zReFvH_gmfVJdPXE325o+z4Xx76fupvsLR_7H2A@mail.gmail.com>
- <20190102092749.GA22664@rapoport-lnx>
- <20190102101804.GD1990@MiWiFi-R3L-srv>
- <20190102170537.GA3591@rapoport-lnx>
- <20190103184706.GU2509588@devbig004.ftw2.facebook.com>
+ id 1gfRTY-00029V-7G
+ for kexec@lists.infradead.org; Fri, 04 Jan 2019 15:33:38 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH 1/2 v4] kdump: add the vmcoreinfo documentation
+Date: Fri, 4 Jan 2019 15:31:28 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC035657CA@BPXM09GP.gisp.nec.co.jp>
+References: <20181220054044.30738-1-lijiang@redhat.com>
+ <20181220054044.30738-2-lijiang@redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC035656E1@BPXM09GP.gisp.nec.co.jp>
+ <bf26e868-9dfd-5344-df56-df8ff0442df0@redhat.com>
+In-Reply-To: <bf26e868-9dfd-5344-df56-df8ff0442df0@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190103184706.GU2509588@devbig004.ftw2.facebook.com>
-Message-Id: <20190104150929.GA32252@rapoport-lnx>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -44,42 +26,97 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tejun Heo <tj@kernel.org>
-Cc: Michal Hocko <mhocko@suse.com>, kexec@lists.infradead.org, Stefan Agner <stefan@agner.ch>, Tang Chen <tangchen@cn.fujitsu.com>, linux-mm@kvack.org, Yaowei Bai <baiyaowei@cmss.chinamobile.com>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Pavel Tatashin <pasha.tatashin@oracle.com>, linux-acpi@vger.kernel.org, Dave Young <dyoung@redhat.com>, Daniel Vacek <neelx@redhat.com>, vgoyal@redhat.com, Len Brown <lenb@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Pingfan Liu <kernelfans@gmail.com>, yinghai@kernel.org, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Mathieu Malaterre <malat@debian.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+To: lijiang <lijiang@redhat.com>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "dyoung@redhat.com" <dyoung@redhat.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>
 
-On Thu, Jan 03, 2019 at 10:47:06AM -0800, Tejun Heo wrote:
-> Hello,
+-----Original Message-----
+> >> +=======================
+> >> +What is the VMCOREINFO?
+> >> +=======================
+> >> +
+> >> +VMCOREINFO is a special ELF note section. It contains various
+> >> +information from the kernel like structure size, page size, symbol
+> >> +values, field offsets, etc. These data are packed into an ELF note
+> >> +section and used by user-space tools like crash and makedumpfile to
+> >> +analyze a kernel's memory layout.
+> >> +
+> >> +To dump the VMCOREINFO contents, one can do:
+> >> +
+> >> +# makedumpfile -g VMCOREINFO -x vmlinux
+> >
+> > again, this command does not dump the VMCOREINFO in ELF note section.
+> > It converts the vmlinux's debug infomation into a VMCOREINFO-like data.
+> > So I don't think this command is suitable to introduce here.
+> >
 > 
-> On Wed, Jan 02, 2019 at 07:05:38PM +0200, Mike Rapoport wrote:
-> > I agree that currently the bottom-up allocation after the kernel text has
-> > issues with KASLR. But this issues are not necessarily related to the
-> > memory hotplug. Even with a single memory node, a bottom-up allocation will
-> > fail if KASLR would put the kernel near the end of node0.
-> > 
-> > What I am trying to understand is whether there is a fundamental reason to
-> > prevent allocations from [0, kernel_start)?
-> > 
-> > Maybe Tejun can recall why he suggested to start bottom-up allocations from
-> > kernel_end.
+> Thank you, Kazu.
 > 
-> That's from 79442ed189ac ("mm/memblock.c: introduce bottom-up
-> allocation mode").  I wasn't involved in that patch, so no idea why
-> the restrictions were added, but FWIW it doesn't seem necessary to me.
+> As you mentioned, makedumpfile in 'devel' branch can print VMCOREINFO in /proc/kcore,
+> can i add the following command to this document?
+> 
+> #makedumpfile --mem-usage /proc/kcore -D
 
-I should have added the reference [1] at the first place :)
-Thanks!
+I don't know whether we can add unreleased softwares to the document.
+Any comments on this?
 
-[1] https://lore.kernel.org/lkml/20130904192215.GG26609@mtj.dyndns.org/
- 
-> Thanks.
-> 
-> -- 
-> tejun
-> 
+If it's OK, crash also can dump it, so
+---
+To dump the VMCOREINFO contents, one can do:
 
--- 
-Sincerely yours,
-Mike.
+  # crash vmlinux /proc/kcore
+  ...
+  > help -n
+or
+  # makedumpfile -D --mem-usage /proc/kcore
+---
+
+or remove that for now and update later?
+
+> 
+> >> +PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|
+> >> +PG_hwpoision|PG_head_mask
+> >> +-----------------------------------------------------
+> >> +
+> >> +Page attributes. These flags are used to filter free pages.
+> >
+> > Some of these are not used to filter *free* pages, so
+> >
+> > ... used to filter various unnecessary pages.
+> >
+> 
+> Great. I will modify it in next post.
+> 
+> And also merge the 'PG_buddy' and 'PG_offline'  into the PG_* flag here.
+
+Thanks, I think your "PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)" style is good.
+
+Kazu
+
+> 
+> Many thanks.
+> 
+> Lianbo
+> 
+> >> +PAGE_BUDDY_MAPCOUNT_VALUE or ~PG_buddy
+> >> +--------------------------------------
+> >
+> > then, this can be merged into the one above?
+> >
+> >> +======
+> >> +x86_64
+> >> +======
+> > ...
+> >> +PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
+> >> +----------------------------------------
+> >
+> > This looks not only for x86_64, and also can be merged into
+> > the PG_* flags?
+> >
+> > Thank you for your effort!
+> > Kazu
+> >
+> >
+
 
 
 _______________________________________________
