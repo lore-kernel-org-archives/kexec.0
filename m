@@ -1,40 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gg1ua-0001ZK-3p
- for kexec@lists.infradead.org; Sun, 06 Jan 2019 06:27:54 +0000
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- x066OIOl119621
- for <kexec@lists.infradead.org>; Sun, 6 Jan 2019 01:27:48 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2puakrk443-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Sun, 06 Jan 2019 01:27:47 -0500
-Received: from localhost
- by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <rppt@linux.ibm.com>;
- Sun, 6 Jan 2019 06:27:46 -0000
-Date: Sun, 6 Jan 2019 08:27:34 +0200
-From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCHv3 1/2] mm/memblock: extend the limit inferior of
- bottom-up after parsing hotplug attr
-References: <1545966002-3075-1-git-send-email-kernelfans@gmail.com>
- <1545966002-3075-2-git-send-email-kernelfans@gmail.com>
- <20181231084018.GA28478@rapoport-lnx>
- <CAFgQCTvQnj7zReFvH_gmfVJdPXE325o+z4Xx76fupvsLR_7H2A@mail.gmail.com>
- <20190102092749.GA22664@rapoport-lnx>
- <20190102101804.GD1990@MiWiFi-R3L-srv>
- <20190102170537.GA3591@rapoport-lnx>
- <20190103184706.GU2509588@devbig004.ftw2.facebook.com>
- <20190104150929.GA32252@rapoport-lnx>
- <20190105034450.GE30750@MiWiFi-R3L-srv>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190105034450.GE30750@MiWiFi-R3L-srv>
-Message-Id: <20190106062733.GA3728@rapoport-lnx>
+ id 1ggK1A-0000bQ-GA
+ for kexec@lists.infradead.org; Mon, 07 Jan 2019 01:47:53 +0000
+From: Lianbo Jiang <lijiang@redhat.com>
+Subject: [PATCH 0/2 v5] kdump,
+ vmcoreinfo: Export the value of sme mask to vmcoreinfo
+Date: Mon,  7 Jan 2019 09:47:32 +0800
+Message-Id: <20190107014734.9730-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,112 +16,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>, kexec@lists.infradead.org, Stefan Agner <stefan@agner.ch>, Tang Chen <tangchen@cn.fujitsu.com>, linux-mm@kvack.org, Yaowei Bai <baiyaowei@cmss.chinamobile.com>, Jonathan Corbet <corbet@lwn.net>, Pavel Tatashin <pasha.tatashin@oracle.com>, linux-acpi@vger.kernel.org, Dave Young <dyoung@redhat.com>, Daniel Vacek <neelx@redhat.com>, vgoyal@redhat.com, Len Brown <lenb@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Pingfan Liu <kernelfans@gmail.com>, yinghai@kernel.org, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Mathieu Malaterre <malat@debian.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+To: linux-kernel@vger.kernel.org
+Cc: k-hagio@ab.jp.nec.com, bhe@redhat.com, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, anderson@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On Sat, Jan 05, 2019 at 11:44:50AM +0800, Baoquan He wrote:
-> On 01/04/19 at 05:09pm, Mike Rapoport wrote:
-> > On Thu, Jan 03, 2019 at 10:47:06AM -0800, Tejun Heo wrote:
-> > > Hello,
-> > > 
-> > > On Wed, Jan 02, 2019 at 07:05:38PM +0200, Mike Rapoport wrote:
-> > > > I agree that currently the bottom-up allocation after the kernel text has
-> > > > issues with KASLR. But this issues are not necessarily related to the
-> > > > memory hotplug. Even with a single memory node, a bottom-up allocation will
-> > > > fail if KASLR would put the kernel near the end of node0.
-> > > > 
-> > > > What I am trying to understand is whether there is a fundamental reason to
-> > > > prevent allocations from [0, kernel_start)?
-> > > > 
-> > > > Maybe Tejun can recall why he suggested to start bottom-up allocations from
-> > > > kernel_end.
-> > > 
-> > > That's from 79442ed189ac ("mm/memblock.c: introduce bottom-up
-> > > allocation mode").  I wasn't involved in that patch, so no idea why
-> > > the restrictions were added, but FWIW it doesn't seem necessary to me.
-> > 
-> > I should have added the reference [1] at the first place :)
-> > Thanks!
-> > 
-> > [1] https://lore.kernel.org/lkml/20130904192215.GG26609@mtj.dyndns.org/
-> 
-> With my understanding, we may not be able to discard the bottom-up
-> method for the current kernel. It's related to hotplug feature when
-> 'movable_node' kernel parameter is specified. With 'movable_node',
-> system relies on reading hotplug information from firmware, on x86 it's
-> acpi SRAT table. In the current system, we allocate memblock region
-> top-down by default. However, before that hotplug information retrieving,
-> there are several places of memblock allocating, top-down memblock
-> allocation must break hotplug feature since it will allocate kernel data
-> in movable zone which is usually at the end node on bare metal system.
+This patchset did two things:
+a. add a new document for vmcoreinfo
 
-I do not suggest to discard the bottom-up method, I merely suggest to allow
-it to use [0, kernel_start).
- 
-> This bottom-up way is taken on many ARCHes, it works well on system if
-> KASLR is not enabled. Below is the searching result in the current linux
-> kernel, we can see that all ARCHes have this mechanism, except of
-> arm/arm64. But now only arm64/mips/x86 have KASLR.
-> 
-> W/o KASLR, allocating memblock region above kernle end when hotplug info
-> is not parsed, looks very reasonable. Since kernel is usually put at
-> lower address, e.g on x86, it's 16M. My thought is that we need do
-> memblock allocation around kernel before hotplug info parsed. That is
-> for system w/o KASLR, we will keep the current bottom-up way; for system
-> with KASLR, we should allocate memblock region top-down just below
-> kernel start.
+This document lists some variables that export to vmcoreinfo, and briefly
+describles what these variables indicate. It should be instructive for
+many people who do not know the vmcoreinfo, and it also normalizes the
+exported variable as a convention between kernel and use-space.
 
-I completely agree. I was thinking about making
-memblock_find_in_range_node() to do something like
+b. export the value of sme mask to vmcoreinfo
 
-if (memblock_bottom_up()) {
-	bottom_up_start = max(start, kernel_end);
+For AMD machine with SME feature, makedumpfile tools need to know whether
+the crash kernel was encrypted or not. If SME is enabled in the first
+kernel, the crash kernel's page table(pgd/pud/pmd/pte) contains the
+memory encryption mask, so need to remove the sme mask to obtain the true
+physical address.
 
-	ret = __memblock_find_range_bottom_up(bottom_up_start, end,
-					      size, align, nid, flags);
-	if (ret)
-		return ret;
+Changes since v1:
+1. No need to export a kernel-internal mask to userspace, so copy the
+value of sme_me_mask to a local variable 'sme_mask' and write the value
+of sme_mask to vmcoreinfo.
+2. Add comment for the code.
+3. Improve the patch log.
+4. Add the vmcoreinfo documentation.
 
-	bottom_up_start = max(start, 0);
-	end = kernel_start;
+Changes since v2:
+1. Improve the vmcoreinfo document, add more descripts for these
+variables exported.
+2. Fix spelling errors in the document.
 
-	ret = __memblock_find_range_top_down(bottom_up_start, end,
-					     size, align, nid, flags);
-	if (ret)
-		return ret;
-}
+Changes since v3:
+1. Still improve the vmcoreinfo document, and make it become more
+clear and easy to read.
+2. Move sme_mask comments in the code to the vmcoreinfo document.
+3. Improve patch log.
 
- 
-> This issue must break hotplug, just because currently bare metal system
-> need add 'nokaslr' to disable KASLR since another bug fix is under
-> discussion as below, so this issue is covered up.
-> 
->  [PATCH v14 0/5] x86/boot/KASLR: Parse ACPI table and limit KASLR to choosing immovable memory
-> lkml.kernel.org/r/20181214093013.13370-1-fanc.fnst@cn.fujitsu.com
-> 
-> [~ ]$ git grep memblock_set_bottom_up
-> arch/alpha/kernel/setup.c:      memblock_set_bottom_up(true);
-> arch/m68k/mm/motorola.c:        memblock_set_bottom_up(true);
-> arch/mips/kernel/setup.c:       memblock_set_bottom_up(true);
-> arch/mips/kernel/traps.c:       memblock_set_bottom_up(false);
-> arch/nds32/kernel/setup.c:      memblock_set_bottom_up(true);
-> arch/powerpc/kernel/paca.c:             memblock_set_bottom_up(true);
-> arch/powerpc/kernel/paca.c:             memblock_set_bottom_up(false);
-> arch/s390/kernel/setup.c:       memblock_set_bottom_up(true);
-> arch/s390/kernel/setup.c:       memblock_set_bottom_up(false);
-> arch/sparc/mm/init_32.c:        memblock_set_bottom_up(true);
-> arch/x86/kernel/setup.c:                memblock_set_bottom_up(true);
-> arch/x86/mm/numa.c:     memblock_set_bottom_up(false);
-> include/linux/memblock.h:static inline void __init memblock_set_bottom_up(bool enable)
-> 
+Changes since v4:
+1. Remove a command that dumping the VMCOREINFO contents from this
+   document.
+2. Merge the 'PG_buddy' and 'PG_offline' into the PG_* flag in this
+   document.
+3. Correct some of the mistakes in this document.
+
+*** BLURB HERE ***
+
+Lianbo Jiang (2):
+  kdump: add the vmcoreinfo documentation
+  kdump,vmcoreinfo: Export the value of sme mask to vmcoreinfo
+
+ Documentation/kdump/vmcoreinfo.txt | 500 +++++++++++++++++++++++++++++
+ arch/x86/kernel/machine_kexec_64.c |   3 +
+ 2 files changed, 503 insertions(+)
+ create mode 100644 Documentation/kdump/vmcoreinfo.txt
 
 -- 
-Sincerely yours,
-Mike.
+2.17.1
 
 
 _______________________________________________
