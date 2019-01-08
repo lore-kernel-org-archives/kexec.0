@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-f196.google.com ([209.85.208.196])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ggSWv-0005rc-91
- for kexec@lists.infradead.org; Mon, 07 Jan 2019 10:53:15 +0000
-Received: by mail-lj1-f196.google.com with SMTP id s5-v6so37666272ljd.12
- for <kexec@lists.infradead.org>; Mon, 07 Jan 2019 02:53:09 -0800 (PST)
+ id 1gghyo-0002mb-Ko
+ for kexec@lists.infradead.org; Tue, 08 Jan 2019 03:23:04 +0000
+Date: Tue, 8 Jan 2019 11:22:51 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH V2] x86/kexec: fix a kexec_file_load failure
+Message-ID: <20190108032251.GA30348@dhcp-128-65.nay.redhat.com>
+References: <20181228011247.GA9999@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-References: <1545304972-32333-1-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1545304972-32333-1-git-send-email-bhsharma@redhat.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Mon, 7 Jan 2019 16:22:49 +0530
-Message-ID: <CACi5LpMQirN+QwWWxxvWq3eFhzy-C3TT+gS3v=r_Hbba4Lsitw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] kexec-tools/arm64: Add support to read PHYS_OFFSET
- from kcore
+Content-Disposition: inline
+In-Reply-To: <20181228011247.GA9999@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,84 +23,79 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec mailing list <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>
-Cc: Yanjiang Jin <yanjiang.jin@hxt-semitech.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Vadim.Lomovtsev@cavium.com, Bhupesh SHARMA <bhupesh.linux@gmail.com>
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Baoquan He <bhe@redhat.com>, x86@kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Simon,
+On 12/28/18 at 09:12am, Dave Young wrote:
+> The code cleanup mentioned in Fixes tag changed the behavior of
+> kexec_locate_mem_hole.  The kexec_locate_mem_hole will try to
+> allocate free memory only when kbuf.mem is initialized as zero.
+> 
+> But in x86 kexec_file_load implementation there are a few places
+> the kbuf.mem is reused like below:
+>   /* kbuf initialized, kbuf.mem = 0 */
+>   ...
+>   kexec_add_buffer()
+>   ...
+>   kexec_add_buffer()
+> 
+>   The second kexec_add_buffer will reuse previous kbuf but not
+>   reinitialize the kbuf.mem.
+> 
+> Thus kexec_file_load failed because the sanity check failed.
+> 
+> So explictily reset kbuf.mem to fix the issue.
+> 
+> Fixes: b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
+> Signed-off-by: Dave Young <dyoung@redhat.com>
+> Cc: <stable@vger.kernel.org>
+> ---
+> V1 -> V2: use KEXEC_BUF_MEM_UNKNOWN in code.
+>  arch/x86/kernel/crash.c           | 1 +
+>  arch/x86/kernel/kexec-bzimage64.c | 2 ++
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index f631a3f15587..6b7890c7889b 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -469,6 +469,7 @@ int crash_load_segments(struct kimage *image)
+>  
+>  	kbuf.memsz = kbuf.bufsz;
+>  	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
+> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>  	ret = kexec_add_buffer(&kbuf);
+>  	if (ret) {
+>  		vfree((void *)image->arch.elf_headers);
+> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+> index 278cd07228dd..0d5efa34f359 100644
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -434,6 +434,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+>  	kbuf.memsz = PAGE_ALIGN(header->init_size);
+>  	kbuf.buf_align = header->kernel_alignment;
+>  	kbuf.buf_min = MIN_KERNEL_LOAD_ADDR;
+> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>  	ret = kexec_add_buffer(&kbuf);
+>  	if (ret)
+>  		goto out_free_params;
+> @@ -448,6 +449,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+>  		kbuf.bufsz = kbuf.memsz = initrd_len;
+>  		kbuf.buf_align = PAGE_SIZE;
+>  		kbuf.buf_min = MIN_INITRD_LOAD_ADDR;
+> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>  		ret = kexec_add_buffer(&kbuf);
+>  		if (ret)
+>  			goto out_free_params;
+> -- 
+> 2.17.0
+> 
 
-On Thu, Dec 20, 2018 at 4:52 PM Bhupesh Sharma <bhsharma@redhat.com> wrote:
->
-> Changes from v1:
-> ---------------
->  - Added the support for older kernels, where we determine the
->    PHYS_OFFSET value from PT_LOAD segments inside 'kcore'.
->  - Improved commit logs since v1.
->
-> On certain arm64 platforms, it has been noticed that due
-> to a hole at the start of physical ram exposed to kernel
-> (i.e. it doesn't start from address 0), the kernel still
-> calculates the 'memstart_addr' kernel variable as 0.
->
-> Whereas the SYSTEM_RAM or IOMEM_RESERVED range in '/proc/iomem'
-> would carry a first entry whose start address is non-zero
-> (as the physical ram exposed to the kernel starts from a
-> non-zero address).
->
-> In such cases, if we rely on '/proc/iomem' entries to
-> calculate the phys_offset, then we will have mismatch
-> between the user-space and kernel space 'PHYS_OFFSET'
-> value. The present 'kexec-tools' code does the same
-> in 'get_memory_ranges_iomem_cb()' function when it makes
-> a call to 'set_phys_offset()'. This can cause the vmcore
-> generated via 'kexec-tools' to miss the last few bytes as
-> the first '/proc/iomem' starts from a non-zero address.
->
-> Please see [0] for the original bug-report from Yanjiang Jin.
->
-> This patchset tries to fix the same.
->
-> Details about the patches in this series:
-> ----------------------------------------
-> PATCH 1/2 ->
->
-> - Tries to move the elf read functionality from 'vmcore-dmesg.c' to
->   a new utility library named 'elf_info.c', so that subsequent patches
->   can use the same.
-> - See the patch log for more details.
->
-> PATCH 2/2 ->
-> - Implements the actual functionality of reading the PHYS_OFFSET for arm64
->   platforms from the kcore (either VMCOREINFO PT_NOTE inside 'kcore'
->   or from the PT_LOAD segments inside 'kcore').
-> - See the patch log for more details.
->
-> [0] https://www.spinics.net/lists/kexec/msg20618.html
->
-> Bhupesh Sharma (2):
->   util_lib: Add functionality to read elf notes
->   arm64: Add support to read PHYS_OFFSET from 'kcore' - pt_note or
->     pt_load (if available)
->
->  kexec/arch/arm64/kexec-arm64.c                     | 194 +++++-
->  kexec/arch/arm64/kexec-arm64.h                     |  15 +-
->  util_lib/Makefile                                  |   4 +-
->  vmcore-dmesg/vmcore-dmesg.c => util_lib/elf_info.c | 193 ++++--
->  util_lib/include/elf_info.h                        |  35 +
->  vmcore-dmesg/Makefile                              |   4 +-
->  vmcore-dmesg/vmcore-dmesg.c                        | 742 +--------------------
->  7 files changed, 386 insertions(+), 801 deletions(-)
->  copy vmcore-dmesg/vmcore-dmesg.c => util_lib/elf_info.c (86%)
->  create mode 100644 util_lib/include/elf_info.h
->
-> --
-> 2.7.4
 
-Ping. Since this fixes a pending known issue on arm64 boards (both for
-KASLR and non-KASLR boot cases) can we please pick this patch-set for
-upstream kexec-tools.
+Ping, this is a regression issue, can we get this fixed?
 
-Thanks,
-Bhupesh
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
