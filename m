@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ghCuY-0001Ls-S2
- for kexec@lists.infradead.org; Wed, 09 Jan 2019 12:24:45 +0000
-Date: Wed, 9 Jan 2019 13:24:34 +0100
+ id 1ghCyu-0003DJ-Gc
+ for kexec@lists.infradead.org; Wed, 09 Jan 2019 12:29:14 +0000
+Date: Wed, 9 Jan 2019 13:29:09 +0100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/4] kexec/arm64: Fix issue with 'kexec load' and
- 'kdump' when --dtb option is used
-Message-ID: <20190109122429.zyorkxtpcaxunkwm@verge.net.au>
-References: <1544987815-19527-1-git-send-email-bhsharma@redhat.com>
- <CACi5LpOsT1UcXjB4NFV9n62nZWy=HJ6Qt_hFWT5UktCjtLToZg@mail.gmail.com>
- <CAAMcf8BJBTdME4boQJsj2fkZaJU8GtoePgbGzJLgR_Xu8LKhHw@mail.gmail.com>
- <CACi5LpN25soPeA+bMkkE=4==-8wrU2DQfZZwssSGcAUfV6t+kw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] kexec-tools/arm64: Add support to read
+ PHYS_OFFSET from kcore
+Message-ID: <20190109122909.2ev4skeyrbre433m@verge.net.au>
+References: <1545304972-32333-1-git-send-email-bhsharma@redhat.com>
+ <CACi5LpMQirN+QwWWxxvWq3eFhzy-C3TT+gS3v=r_Hbba4Lsitw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CACi5LpN25soPeA+bMkkE=4==-8wrU2DQfZZwssSGcAUfV6t+kw@mail.gmail.com>
+In-Reply-To: <CACi5LpMQirN+QwWWxxvWq3eFhzy-C3TT+gS3v=r_Hbba4Lsitw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,74 +21,92 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec mailing list <kexec@lists.infradead.org>, Vicente Bergas <vicencb@gmail.com>
+Cc: Yanjiang Jin <yanjiang.jin@hxt-semitech.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Vadim.Lomovtsev@cavium.com, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec mailing list <kexec@lists.infradead.org>
 
-T24gRnJpLCBKYW4gMDQsIDIwMTkgYXQgMDE6MDc6NDdBTSArMDUzMCwgQmh1cGVzaCBTaGFybWEg
-d3JvdGU6Cj4gSGkgVmljZW7DpywKPiAKPiBIYXBweSBOZXcgWWVhciB0byB5b3UgdG9vIGFuZCB0
-aGFua3MgYSBsb3QgZm9yIHlvdXIgdGVzdCByZXN1bHRzLgo+IAo+IE9uIFRodSwgSmFuIDMsIDIw
-MTkgYXQgMTA6MjMgUE0gVmljZW50ZSBCZXJnYXMgPHZpY2VuY2JAZ21haWwuY29tPiB3cm90ZToK
-PiA+Cj4gPiBPbiBXZWQsIERlYyAyNiwgMjAxOCBhdCA1OjUzIEFNIEJodXBlc2ggU2hhcm1hIDxi
-aHNoYXJtYUByZWRoYXQuY29tPiB3cm90ZToKPiA+ID4KPiA+ID4gSGVsbG8gVmljZW7DpywKPiA+
-ID4KPiA+ID4gT24gTW9uLCBEZWMgMTcsIDIwMTggYXQgMTI6NDcgQU0gQmh1cGVzaCBTaGFybWEg
-PGJoc2hhcm1hQHJlZGhhdC5jb20+IHdyb3RlOgo+ID4gPiA+Cj4gPiA+ID4gQ2hhbmdlcyBzaW5j
-ZSB2MjoKPiA+ID4gPiAtLS0tLS0tLS0tLS0tLS0tLQo+ID4gPiA+ICAtIERyb3BwZWQgNC80IGZy
-b20gdjIgYXMgSSBub3RpY2VkIHRoYXQgd2UgcGFzcyB3cm9uZyBub2RlIG5hbWUgdG8gZmR0Cj4g
-PiA+ID4gICAgaGVscGVyIGZ1bmN0aW9ucyBpbiAna2V4ZWMvZHQtb3BzLmMnCj4gPiA+ID4KPiA+
-ID4gPiBUaGlzIHBhdGNoc2V0IGZpeGVzIHNvbWUgaXNzdWVzIHdoZW4gd2UgY2FsbCBrZXhlYyBm
-b3IgYXJtNjQgd2l0aCAtLWR0Ygo+ID4gPiA+IG9wdGlvbiAoYm90aCBmb3IgJ2tleGVjIGxvYWQn
-IGFuZCAna2R1bXAnIHVzZSBjYXNlcykuCj4gPiA+ID4KPiA+ID4gPiBBIGNvdXBsZSBvZiB0aGVz
-ZSBpc3N1ZXMgd2VyZSByZXBvcnRlZCBmb3IgJ2tleGVjIGxvYWQnIHVzZSBjYXNlIGJ5Cj4gPiA+
-ID4gVmljZW7DpyBhbmQgSSBmb3VuZCB0aGUgb3RoZXIgdHdvIHdoaWxlIGV4cGVyaW1lbnQgd2l0
-aCAna2R1bXAnIHVzZQo+ID4gPiA+IGNhc2VzLgo+ID4gPiA+Cj4gPiA+ID4gSSBoYXZlIHRlc3Rl
-ZCB0aGUgcGF0Y2hzZXQgb24gbXkgcXVhbGNvbW0tYW1iZXJ3aW5nIGFuZCBocC1tb29uc2hvdAo+
-ID4gPiA+IGFybTY0IGJvYXJkcy4KPiA+ID4gPgo+ID4gPiA+IENjOiBTaW1vbiBIb3JtYW4gPGhv
-cm1zQHZlcmdlLm5ldC5hdT4KPiA+ID4gPiBDYzogQUtBU0hJIFRha2FoaXJvIDx0YWthaGlyby5h
-a2FzaGlAbGluYXJvLm9yZz4KPiA+ID4gPiBDYzogVmljZW50ZSBCZXJnYXMgPHZpY2VuY2JAZ21h
-aWwuY29tPgo+ID4gPiA+Cj4gPiA+ID4gQmh1cGVzaCBTaGFybWEgKDQpOgo+ID4gPiA+ICAga2V4
-ZWMvZHQtb3BzLmM6IEZpeCBjaGVjayBhZ2FpbnN0ICdmZHRfYWRkX3N1Ym5vZGUnIHJldHVybiB2
-YWx1ZQo+ID4gPiA+ICAga2V4ZWMva2V4ZWMtYXJtNjQuYzogQWRkIGVycm9yIGhhbmRsaW5nIGNo
-ZWNrIGFnYWluc3QgcmV0dXJuIHZhbHVlIG9mCj4gPiA+ID4gICAgICdzZXRfYm9vdGFyZ3MoKScK
-PiA+ID4gPiAgIGtleGVjL2R0LW9wcy5jOiBGaXggYWRkaW5nICcvY2hvc2VuJyBub2RlIGZvciBj
-YXNlcyB3aGVyZSBpdCBpcyBub3QKPiA+ID4gPiAgICAgYXZhaWxhYmxlIGluIGR0YiBwYXNzZWQg
-dmlhIC0tZHRiIG9wdGlvbgo+ID4gPiA+ICAga2V4ZWMvZHQtb3BzLmM6IEZpeCAnL2Nob3Nlbicg
-di9zICdjaG9zZW4nIG5vZGUgYmVpbmcgcGFzc2VkIHRvIGZkdAo+ID4gPiA+ICAgICBoZWxwZXIg
-ZnVuY3Rpb25zCj4gPiA+ID4KPiA+ID4gPiAga2V4ZWMvYXJjaC9hcm02NC9rZXhlYy1hcm02NC5j
-IHwgIDUgKysrKysKPiA+ID4gPiAga2V4ZWMvZHQtb3BzLmMgICAgICAgICAgICAgICAgIHwgMzYg
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tCj4gPiA+ID4gIDIgZmlsZXMgY2hh
-bmdlZCwgMzUgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKPiA+ID4gPgo+ID4gPiA+IC0t
-Cj4gPiA+ID4gMi43LjQKPiA+ID4gPgo+ID4gPgo+ID4gPiBDYW4geW91IHBsZWFzZSBnaXZlIHRo
-aXMgcGF0Y2hzZXQgYSB0cnkgYXQgeW91ciBlbmQgYW5kIHNlZSBpZiBpdAo+ID4gPiBmaXhlcyB0
-aGUgaXNzdWVzIHlvdSBoYWQgcmVwb3J0ZWQgd2l0aCB0aGUgLS1kdGIgb3B0aW9uLgo+ID4KPiA+
-IEhpIEJodXBlc2gsCj4gPiBzb3JyeSBmb3IgdGhlIGRlbGF5Lgo+ID4gVGhpcyBpcyB3aGF0IEkg
-aGF2ZSB0ZXN0ZWQ6Cj4gPiBrZXhlYyAtLWFwcGVuZCAnZGVidWcnCj4gPiAgICAgICAgICAtLWxv
-YWQgSW1hZ2UKPiA+IGtleGVjIC0tcmV1c2UtY21kbGluZQo+ID4gICAgICAgICAgLS1sb2FkIElt
-YWdlCj4gPiBrZXhlYyAtLWFwcGVuZCAnZGVidWcnIC0tZHRiIHJrMzM5OS1zYXBwaGlyZS5kdGIK
-PiA+ICAgICAgICAgIC0tbG9hZCBJbWFnZQo+ID4ga2V4ZWMgLS1yZXVzZS1jbWRsaW5lICAtLWR0
-YiByazMzOTktc2FwcGhpcmUuZHRiCj4gPiAgICAgICAgICAtLWxvYWQgSW1hZ2UKPiA+IGtleGVj
-IC0tYXBwZW5kICdkZWJ1ZycgLS1kdGIgcmszMzk5LWdydS1rZXZpbi5kdGIKPiA+ICAgICAgICAg
-IC0tbG9hZCBJbWFnZQo+ID4ga2V4ZWMgLS1yZXVzZS1jbWRsaW5lICAtLWR0YiByazMzOTktZ3J1
-LWtldmluLmR0Ygo+ID4gICAgICAgICAgLS1sb2FkIEltYWdlCj4gPiBrZXhlYyAtLWFwcGVuZCAn
-ZGVidWcnICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tcmFtZGlzawo+ID4gaW5pdHJhbWZz
-LWxpbnV4LmltZyAtLWxvYWQgSW1hZ2UKPiA+IGtleGVjIC0tcmV1c2UtY21kbGluZSAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgLS1yYW1kaXNrCj4gPiBpbml0cmFtZnMtbGludXguaW1nIC0t
-bG9hZCBJbWFnZQo+ID4ga2V4ZWMgLS1hcHBlbmQgJ2RlYnVnJyAtLWR0YiByazMzOTktc2FwcGhp
-cmUuZHRiICAtLXJhbWRpc2sKPiA+IGluaXRyYW1mcy1saW51eC5pbWcgLS1sb2FkIEltYWdlCj4g
-PiBrZXhlYyAtLXJldXNlLWNtZGxpbmUgIC0tZHRiIHJrMzM5OS1zYXBwaGlyZS5kdGIgIC0tcmFt
-ZGlzawo+ID4gaW5pdHJhbWZzLWxpbnV4LmltZyAtLWxvYWQgSW1hZ2UKPiA+IGtleGVjIC0tYXBw
-ZW5kICdkZWJ1ZycgLS1kdGIgcmszMzk5LWdydS1rZXZpbi5kdGIgLS1yYW1kaXNrCj4gPiBpbml0
-cmFtZnMtbGludXguaW1nIC0tbG9hZCBJbWFnZQo+ID4ga2V4ZWMgLS1yZXVzZS1jbWRsaW5lICAt
-LWR0YiByazMzOTktZ3J1LWtldmluLmR0YiAtLXJhbWRpc2sKPiA+IGluaXRyYW1mcy1saW51eC5p
-bWcgLS1sb2FkIEltYWdlCj4gPgo+ID4gd2hlcmUgdGhlIHNhcHBoaXJlIGR0YiBoYXMgbm8gY2hv
-c2VuIG5vZGUgYW5kIHRoZSBncnUgaGFzLgo+ID4gRXZlcnl0aGluZyB3b3JrZWQgT0suCj4gPgo+
-IAo+IEBTaW1vbjogSGksIFNpbmNlIHRoaXMgd29ya3MgZmluZSBhdCBWaWNlbsOnJ3MgZW5kIGFz
-IHdlbGwsIGNhbiB5b3UKPiBwbGVhc2UgY29uc2lkZXIgYXBwbHlpbmcgdGhpcyB0byBrZXhlYy10
-b29scyBhcyB0aGlzIGlzc3VlIGhhcyBiZWVuCj4gcmVwb3J0ZWQgYnkgYW5vdGhlciBhcm02NCB1
-c2VyIGFzIHdlbGwuIFRoYW5rcyBmb3IgeW91ciBoZWxwLgoKVGhhbmtzLCBhcHBsaWVkLgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
-ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Mon, Jan 07, 2019 at 04:22:49PM +0530, Bhupesh Sharma wrote:
+> Hi Simon,
+> 
+> On Thu, Dec 20, 2018 at 4:52 PM Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> >
+> > Changes from v1:
+> > ---------------
+> >  - Added the support for older kernels, where we determine the
+> >    PHYS_OFFSET value from PT_LOAD segments inside 'kcore'.
+> >  - Improved commit logs since v1.
+> >
+> > On certain arm64 platforms, it has been noticed that due
+> > to a hole at the start of physical ram exposed to kernel
+> > (i.e. it doesn't start from address 0), the kernel still
+> > calculates the 'memstart_addr' kernel variable as 0.
+> >
+> > Whereas the SYSTEM_RAM or IOMEM_RESERVED range in '/proc/iomem'
+> > would carry a first entry whose start address is non-zero
+> > (as the physical ram exposed to the kernel starts from a
+> > non-zero address).
+> >
+> > In such cases, if we rely on '/proc/iomem' entries to
+> > calculate the phys_offset, then we will have mismatch
+> > between the user-space and kernel space 'PHYS_OFFSET'
+> > value. The present 'kexec-tools' code does the same
+> > in 'get_memory_ranges_iomem_cb()' function when it makes
+> > a call to 'set_phys_offset()'. This can cause the vmcore
+> > generated via 'kexec-tools' to miss the last few bytes as
+> > the first '/proc/iomem' starts from a non-zero address.
+> >
+> > Please see [0] for the original bug-report from Yanjiang Jin.
+> >
+> > This patchset tries to fix the same.
+> >
+> > Details about the patches in this series:
+> > ----------------------------------------
+> > PATCH 1/2 ->
+> >
+> > - Tries to move the elf read functionality from 'vmcore-dmesg.c' to
+> >   a new utility library named 'elf_info.c', so that subsequent patches
+> >   can use the same.
+> > - See the patch log for more details.
+> >
+> > PATCH 2/2 ->
+> > - Implements the actual functionality of reading the PHYS_OFFSET for arm64
+> >   platforms from the kcore (either VMCOREINFO PT_NOTE inside 'kcore'
+> >   or from the PT_LOAD segments inside 'kcore').
+> > - See the patch log for more details.
+> >
+> > [0] https://www.spinics.net/lists/kexec/msg20618.html
+> >
+> > Bhupesh Sharma (2):
+> >   util_lib: Add functionality to read elf notes
+> >   arm64: Add support to read PHYS_OFFSET from 'kcore' - pt_note or
+> >     pt_load (if available)
+> >
+> >  kexec/arch/arm64/kexec-arm64.c                     | 194 +++++-
+> >  kexec/arch/arm64/kexec-arm64.h                     |  15 +-
+> >  util_lib/Makefile                                  |   4 +-
+> >  vmcore-dmesg/vmcore-dmesg.c => util_lib/elf_info.c | 193 ++++--
+> >  util_lib/include/elf_info.h                        |  35 +
+> >  vmcore-dmesg/Makefile                              |   4 +-
+> >  vmcore-dmesg/vmcore-dmesg.c                        | 742 +--------------------
+> >  7 files changed, 386 insertions(+), 801 deletions(-)
+> >  copy vmcore-dmesg/vmcore-dmesg.c => util_lib/elf_info.c (86%)
+> >  create mode 100644 util_lib/include/elf_info.h
+> >
+> > --
+> > 2.7.4
+> 
+> Ping. Since this fixes a pending known issue on arm64 boards (both for
+> KASLR and non-KASLR boot cases) can we please pick this patch-set for
+> upstream kexec-tools.
+
+Thanks, and sorry for the delay.
+
+I have applied this series.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
