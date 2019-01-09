@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ghEnR-0002Ys-UE
- for kexec@lists.infradead.org; Wed, 09 Jan 2019 14:25:31 +0000
-Date: Wed, 9 Jan 2019 22:25:16 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCHv5] x86/kdump: bugfix, make the behavior of crashkernel=X
- consistent with kaslr
-Message-ID: <20190109142516.GA14211@MiWiFi-R3L-srv>
-References: <1546848299-23628-1-git-send-email-kernelfans@gmail.com>
- <20190108080538.GB4396@rapoport-lnx>
- <20190108090138.GB18718@MiWiFi-R3L-srv>
- <20190108154852.GC14063@rapoport-lnx>
+ id 1ghH2L-00022I-Rm
+ for kexec@lists.infradead.org; Wed, 09 Jan 2019 16:49:03 +0000
+From: Kairui Song <kasong@redhat.com>
+Subject: [RFC PATCH 0/2] let kexec_file_load use platform keyring to verify
+ the kernel image
+Date: Thu, 10 Jan 2019 00:48:22 +0800
+Message-Id: <20190109164824.19708-1-kasong@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190108154852.GC14063@rapoport-lnx>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,63 +21,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Stefan Agner <stefan@agner.ch>, Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, kexec@lists.infradead.org, Daniel Vacek <neelx@redhat.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Tatashin <pasha.tatashin@oracle.com>, Pingfan Liu <kernelfans@gmail.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-mm@kvack.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, yinghai@kernel.org, Nicholas Piggin <npiggin@gmail.com>, Yaowei Bai <baiyaowei@cmss.chinamobile.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, vgoyal@redhat.com, Len Brown <lenb@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: jwboyer@fedoraproject.org, Kairui Song <kasong@redhat.com>, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, jmorris@namei.org, zohar@linux.ibm.com, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-On 01/08/19 at 05:48pm, Mike Rapoport wrote:
-> On Tue, Jan 08, 2019 at 05:01:38PM +0800, Baoquan He wrote:
-> > Hi Mike,
-> > 
-> > On 01/08/19 at 10:05am, Mike Rapoport wrote:
-> > > I'm not thrilled by duplicating this code (yet again).
-> > > I liked the v3 of this patch [1] more, assuming we allow bottom-up mode to
-> > > allocate [0, kernel_start) unconditionally. 
-> > > I'd just replace you first patch in v3 [2] with something like:
-> > 
-> > In initmem_init(), we will restore the top-down allocation style anyway.
-> > While reserve_crashkernel() is called after initmem_init(), it's not
-> > appropriate to adjust memblock_find_in_range_node(), and we really want
-> > to find region bottom up for crashkernel reservation, no matter where
-> > kernel is loaded, better call __memblock_find_range_bottom_up().
-> > 
-> > Create a wrapper to do the necessary handling, then call
-> > __memblock_find_range_bottom_up() directly, looks better.
-> 
-> What bothers me is 'the necessary handling' which is already done in
-> several places in memblock in a similar, but yet slightly different way.
+Hi,
 
-The page aligning for start and the mirror flag setting, I suppose.
-> 
-> memblock_find_in_range() and memblock_phys_alloc_nid() retry with different
-> MEMBLOCK_MIRROR, but memblock_phys_alloc_try_nid() does that only when
-> allocating from the specified node and does not retry when it falls back to
-> any node. And memblock_alloc_internal() has yet another set of fallbacks. 
+This is a different approach for the previous patch:
+[RFC PATCH 0/1] KEYS, integrity: Link .platform keyring to .secondary_trusted_keys
+make kexec_file_load be able to verify the kernel image against keys
+provided by platform or firmware.
 
-Get what you mean, seems they are trying to allocate within mirrorred
-memory region, if fail, try the non-mirrorred region. If kernel data
-allocation failed, no need to care about if it's movable or not, it need
-to live firstly. For the bottom-up allocation wrapper, maybe we need do
-like this too?
+This patch adds a .platform_trusted_keys in system_keyring as the reference
+to .platform keyring in integrity subsystem, when platform keyring is
+being initialized it will be updated.
 
-> 
-> So what should be the necessary handling in the wrapper for
-> __memblock_find_range_bottom_up() ?
-> 
-> BTW, even without any memblock modifications, retrying allocation in
-> reserve_crashkerenel() for different ranges, like the proposal at [1] would
-> also work, wouldn't it?
+Another thing on my mind is that now kexec_file_load will still relay on
+CONFIG_INTEGRITY_PLATFORM_KEYRING and all its dependencies to be enabled
+to be able to verify the image against firmware keys. I'm thinking about
+to have something like CONFIG_PLATFORM_KEYRING and make the .platform
+keyring could be enabled for a more wider usage. Not sure if it's a good
+idea though.
 
-Yes, it also looks good. This patch only calls once, seems a simpler
-line adding. 
+Tested in a VM with locally signed kernel with pesign and imported the
+cert to EFI's MokList variable.
 
-In fact, below one and this patch, both is fine to me, as long as it
-fixes the problem customers are complaining about.
+Kairui Song (2):
+  integrity, KEYS: add a reference to platform keyring
+  kexec, KEYS: Make use of platform keyring for signature verify
 
-> 
-> [1] http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
+ arch/x86/kernel/kexec-bzimage64.c | 13 ++++++++++---
+ certs/system_keyring.c            | 10 +++++++++-
+ include/keys/system_keyring.h     |  5 +++++
+ include/linux/verification.h      |  1 +
+ security/integrity/digsig.c       |  4 ++++
+ 5 files changed, 29 insertions(+), 4 deletions(-)
 
-Thanks
-Baoquan
+-- 
+2.20.1
+
 
 _______________________________________________
 kexec mailing list
