@@ -1,20 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it1-x141.google.com ([2607:f8b0:4864:20::141])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ghDVY-0000MD-1g
- for kexec@lists.infradead.org; Wed, 09 Jan 2019 13:02:57 +0000
-Received: by mail-it1-x141.google.com with SMTP id m8so12695459itk.0
- for <kexec@lists.infradead.org>; Wed, 09 Jan 2019 05:02:53 -0800 (PST)
-MIME-Version: 1.0
-References: <1546848299-23628-1-git-send-email-kernelfans@gmail.com>
- <20190108080538.GB4396@rapoport-lnx> <20190108090138.GB18718@MiWiFi-R3L-srv>
- <20190108154852.GC14063@rapoport-lnx>
-In-Reply-To: <20190108154852.GC14063@rapoport-lnx>
-From: Pingfan Liu <kernelfans@gmail.com>
-Date: Wed, 9 Jan 2019 21:02:41 +0800
-Message-ID: <CAFgQCTtVjwJ_Rfp8DcmzPx6uYPnOx7E_x=YjC+MQ=mx7W38HEw@mail.gmail.com>
-Subject: Re: [PATCHv5] x86/kdump: bugfix, make the behavior of crashkernel=X
- consistent with kaslr
+ id 1ghEWa-0002pD-CF
+ for kexec@lists.infradead.org; Wed, 09 Jan 2019 14:08:07 +0000
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ x09E4O83045198
+ for <kexec@lists.infradead.org>; Wed, 9 Jan 2019 09:07:58 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2pwj7u0r9f-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 09 Jan 2019 09:07:57 -0500
+Received: from localhost
+ by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Wed, 9 Jan 2019 14:07:55 -0000
+Subject: Re: [RFC PATCH 1/1] KEYS, integrity: Link .platform keyring to
+ .secondary_trusted_keys
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Wed, 09 Jan 2019 09:07:36 -0500
+In-Reply-To: <20190109013356.GA2610@dhcp-128-65.nay.redhat.com>
+References: <20190108081247.2266-1-kasong@redhat.com>
+ <20190108081247.2266-2-kasong@redhat.com>
+ <1546960680.19931.114.camel@linux.ibm.com>
+ <20190109013356.GA2610@dhcp-128-65.nay.redhat.com>
+Mime-Version: 1.0
+Message-Id: <1547042856.19931.229.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,118 +35,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, kexec@lists.infradead.org, Daniel Vacek <neelx@redhat.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Tatashin <pasha.tatashin@oracle.com>, Nicholas Piggin <npiggin@gmail.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-mm@kvack.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, yinghai@kernel.org, Stefan Agner <stefan@agner.ch>, Yaowei Bai <baiyaowei@cmss.chinamobile.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, vgoyal@redhat.com, Len Brown <lenb@kernel.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: jwboyer@fedoraproject.org, Kairui Song <kasong@redhat.com>, ebiggers@google.com, nayna@linux.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, jmorris@namei.org, dhowells@redhat.com, linux-security-module <linux-security-module@vger.kernel.org>, keyrings@vger.kernel.org, linux-integrity <linux-integrity@vger.kernel.org>, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-On Tue, Jan 8, 2019 at 11:49 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
->
-> On Tue, Jan 08, 2019 at 05:01:38PM +0800, Baoquan He wrote:
-> > Hi Mike,
-> >
-> > On 01/08/19 at 10:05am, Mike Rapoport wrote:
-> > > I'm not thrilled by duplicating this code (yet again).
-> > > I liked the v3 of this patch [1] more, assuming we allow bottom-up mode to
-> > > allocate [0, kernel_start) unconditionally.
-> > > I'd just replace you first patch in v3 [2] with something like:
-> >
-> > In initmem_init(), we will restore the top-down allocation style anyway.
-> > While reserve_crashkernel() is called after initmem_init(), it's not
-> > appropriate to adjust memblock_find_in_range_node(), and we really want
-> > to find region bottom up for crashkernel reservation, no matter where
-> > kernel is loaded, better call __memblock_find_range_bottom_up().
-> >
-> > Create a wrapper to do the necessary handling, then call
-> > __memblock_find_range_bottom_up() directly, looks better.
->
-> What bothers me is 'the necessary handling' which is already done in
-> several places in memblock in a similar, but yet slightly different way.
->
-> memblock_find_in_range() and memblock_phys_alloc_nid() retry with different
-> MEMBLOCK_MIRROR, but memblock_phys_alloc_try_nid() does that only when
-> allocating from the specified node and does not retry when it falls back to
-> any node. And memblock_alloc_internal() has yet another set of fallbacks.
->
-> So what should be the necessary handling in the wrapper for
-> __memblock_find_range_bottom_up() ?
->
-Well, it is a hard choice.
-> BTW, even without any memblock modifications, retrying allocation in
-> reserve_crashkerenel() for different ranges, like the proposal at [1] would
-> also work, wouldn't it?
->
-Yes, it can work. Then is it worth to expose the bottom-up allocation
-style beside for hotmovable purpose?
-
-Thanks,
-Pingfan
-> [1] http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
->
-> > Thanks
-> > Baoquan
-> >
-> > >
-> > > diff --git a/mm/memblock.c b/mm/memblock.c
-> > > index 7df468c..d1b30b9 100644
-> > > --- a/mm/memblock.c
-> > > +++ b/mm/memblock.c
-> > > @@ -274,24 +274,14 @@ phys_addr_t __init_memblock memblock_find_in_range_node(phys_addr_t size,
-> > >      * try bottom-up allocation only when bottom-up mode
-> > >      * is set and @end is above the kernel image.
-> > >      */
-> > > -   if (memblock_bottom_up() && end > kernel_end) {
-> > > -           phys_addr_t bottom_up_start;
-> > > -
-> > > -           /* make sure we will allocate above the kernel */
-> > > -           bottom_up_start = max(start, kernel_end);
-> > > -
-> > > +   if (memblock_bottom_up()) {
-> > >             /* ok, try bottom-up allocation first */
-> > > -           ret = __memblock_find_range_bottom_up(bottom_up_start, end,
-> > > +           ret = __memblock_find_range_bottom_up(start, end,
-> > >                                                   size, align, nid, flags);
-> > >             if (ret)
-> > >                     return ret;
-> > >
-> > >             /*
-> > > -            * we always limit bottom-up allocation above the kernel,
-> > > -            * but top-down allocation doesn't have the limit, so
-> > > -            * retrying top-down allocation may succeed when bottom-up
-> > > -            * allocation failed.
-> > > -            *
-> > >              * bottom-up allocation is expected to be fail very rarely,
-> > >              * so we use WARN_ONCE() here to see the stack trace if
-> > >              * fail happens.
-> > >
-> > > [1] https://lore.kernel.org/lkml/1545966002-3075-3-git-send-email-kernelfans@gmail.com/
-> > > [2] https://lore.kernel.org/lkml/1545966002-3075-2-git-send-email-kernelfans@gmail.com/
-> > >
-> > > > +
-> > > > + return ret;
-> > > > +}
-> > > > +
-> > > >  /**
-> > > >   * __memblock_find_range_top_down - find free area utility, in top-down
-> > > >   * @start: start of candidate range
-> > > > --
-> > > > 2.7.4
-> > > >
-> > >
-> > > --
-> > > Sincerely yours,
-> > > Mike.
-> > >
-> >
->
-> --
-> Sincerely yours,
-> Mike.
->
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCAyMDE5LTAxLTA5IGF0IDA5OjMzICswODAwLCBEYXZlIFlvdW5nIHdyb3RlOgo+IEND
+IGtleGVjIGxpc3QKPiBPbiAwMS8wOC8xOSBhdCAxMDoxOGFtLCBNaW1pIFpvaGFyIHdyb3RlOgo+
+ID4gW0NjJ2luZyB0aGUgTFNNIGFuZCBpbnRlZ3JpdHkgbWFpbGluZyBsaXN0c10KPiA+IAo+ID4g
+UmVwZWF0aW5nIG15IGNvbW1lbnQgb24gUEFUQ0ggMC8xIGhlcmUgd2l0aCB0aGUgZXhwYW5kZWQg
+c2V0IG9mCj4gPiBtYWlsaW5nIGxpc3RzLgo+ID4gCj4gPiBUaGUgYnVpbHRpbiBhbmQgc2Vjb25k
+YXJ5IGtleXJpbmdzIGhhdmUgYSBzaWduYXR1cmUgY2hhbmdlIG9mIHRydXN0Cj4gPiByb290ZWQg
+aW4gdGhlIHNpZ25lZCBrZXJuZWwgaW1hZ2UuwqDCoEFkZGluZyB0aGUgcHJlLWJvb3Qga2V5cyB0
+byB0aGUKPiA+IHNlY29uZGFyeSBrZXlyaW5nIGJyZWFrcyB0aGF0IHNpZ25hdHVyZSBjaGFpbiBv
+ZiB0cnVzdC4KPiA+IAo+ID4gUGxlYXNlIGRvIE5PVCBhZGQgdGhlIHByZS1ib290ICJwbGF0Zm9y
+bSIga2V5cyB0byB0aGUgc2Vjb25kYXJ5Cj4gPiBrZXlyaW5nLgo+IAo+IElmIHdlIHJlZ2FyZCBr
+ZXhlYyBhcyBhIGJvb3Rsb2FkZXIsIGl0IHNvdW5kcyBuYXR1cmFsIHRvIHVzZSB0aGUKPiBwbGF0
+Zm9ybSBrZXkgdG8gdmVyaWZ5IHRoZSBzaWduYXR1cmUgd2l0aCBrZXhlY19maWxlX2xvYWQgc3lz
+Y2FsbC4KPiAKPiBJdCB3aWxsIGJlIGhhcmQgZm9yIHVzZXIgdG8gbWFudWFsbHkgc2lnbiBhIGtl
+cm5lbCBhbmQgaW1wb3J0IHRoZSBrZXkKPiB0aGVuIHRvIHJldXNlIGtleGVjX2ZpbGVfbG9hZC4K
+ClRoaXMgaXMgcmVhbGx5IGEgZ2VuZXJpYyB0b3BpYywgbm90IGxpbWl0ZWQgdG8ga2V4ZWMsIHdo
+aWNoIHNob3VsZCBiZQpkaXNjdXNzZWQuIMKgTGV0J3MgZGVmZXIgdGhpcyBkaXNjdXNzaW9uIGZv
+ciBub3cuCgo+IAo+IEkgdGhpbmsgd2UgZG8gbm90IGNhcmUgaWYgcGxhdGZvcm0ga2V5IGNhbiBi
+ZSBhZGRlZCB0byBzZWNvbmRhcnkgb3Igbm90LAo+IGFueSBzdWdnZXN0aW9ucyBob3cgY2FuIGtl
+eGVjX2ZpbGUgdG8gdXNlIHRoZSBwbGF0Zm9ybSBrZXk/CgpJIGFzc3VtZSB0aGUgcHJvYmxlbSBp
+cyBhY2Nlc3NpbmcgdGhlIGtleXJpbmcgaWQuCgpJbnN0ZWFkIG9mIGRlZmluaW5nIGEgZnVuY3Rp
+b24gdG8gcmV0dXJuIHRoZSBrZXlyaW5nIGlkLCBhcyBiZWxvdywKZGVmaW5lIGEgZnVuY3Rpb24g
+dGhhdCBzZXRzIGEgdmFyaWFibGUgd2l0aCB0aGUga2V5cmluZyBpZC4KwqBwbGF0Zm9ybV9rZXly
+aW5nX2luaXQoKSB3b3VsZCBjYWxsIHRoYXQgZnVuY3Rpb24gdG8gc2V0IHRoZSB2YXJpYWJsZS4K
+ClNpbWlsYXIgdG8gYnVpbHRpbl90cnVzdGVkX2tleXMgYW5kIHNlY29uZGFyeV90cnVzdGVkX2tl
+eXMsIGRlZmluZSBhCnZhcmlhYmxlIG5hbWVkIHBsYXRmb3JtX3RydXN0ZWRfa2V5cy4KCltzbmlw
+XQoKPiA+ID4gZGlmZiAtLWdpdCBhL3NlY3VyaXR5L2ludGVncml0eS9kaWdzaWcuYyBiL3NlY3Vy
+aXR5L2ludGVncml0eS9kaWdzaWcuYwo+ID4gPiBpbmRleCBmNDVkNmVkZWNmOTkuLjM5Nzc1OGQ0
+ZjEyZCAxMDA2NDQKPiA+ID4gLS0tIGEvc2VjdXJpdHkvaW50ZWdyaXR5L2RpZ3NpZy5jCj4gPiA+
+ICsrKyBiL3NlY3VyaXR5L2ludGVncml0eS9kaWdzaWcuYwo+ID4gPiBAQCAtMTc2LDMgKzE3Niwx
+MCBAQCBpbnQgX19pbml0IGludGVncml0eV9sb2FkX2NlcnQoY29uc3QgdW5zaWduZWQgaW50IGlk
+LCBjb25zdCBjaGFyICpzb3VyY2UsCj4gPiA+ICAJcHJfaW5mbygiTG9hZGluZyBYLjUwOSBjZXJ0
+aWZpY2F0ZTogJXNcbiIsIHNvdXJjZSk7Cj4gPiA+ICAJcmV0dXJuIGludGVncml0eV9hZGRfa2V5
+KGlkLCBkYXRhLCBsZW4sIHBlcm0pOwo+ID4gPiAgfQo+ID4gPiArCj4gPiA+ICsjaWZkZWYgQ09O
+RklHX0lOVEVHUklUWV9QTEFURk9STV9LRVlSSU5HCj4gPiA+ICtzdHJ1Y3Qga2V5KiBfX2luaXQg
+aW50ZWdyaXR5X2dldF9wbGF0Zm9ybV9rZXlyaW5nKHZvaWQpCj4gPiA+ICt7Cj4gPiA+ICsJcmV0
+dXJuIGtleXJpbmdbSU5URUdSSVRZX0tFWVJJTkdfUExBVEZPUk1dOwo+ID4gPiArfQo+ID4gPiAr
+I2VuZGlmCgpNaW1pCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
