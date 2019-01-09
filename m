@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-f66.google.com ([209.85.166.66])
+Received: from mail-it1-f195.google.com ([209.85.166.195])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gh3Cn-00052h-SZ
- for kexec@lists.infradead.org; Wed, 09 Jan 2019 02:02:56 +0000
-Received: by mail-io1-f66.google.com with SMTP id f4so4835420ion.2
- for <kexec@lists.infradead.org>; Tue, 08 Jan 2019 18:02:53 -0800 (PST)
+ id 1gh7mT-0006k3-O8
+ for kexec@lists.infradead.org; Wed, 09 Jan 2019 06:56:03 +0000
+Received: by mail-it1-f195.google.com with SMTP id x124so11948906itd.1
+ for <kexec@lists.infradead.org>; Tue, 08 Jan 2019 22:56:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20190108081247.2266-1-kasong@redhat.com>
- <20190108081247.2266-2-kasong@redhat.com>
- <1546960680.19931.114.camel@linux.ibm.com>
- <20190109013356.GA2610@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190109013356.GA2610@dhcp-128-65.nay.redhat.com>
+References: <20190109064727.27936-1-kasong@redhat.com>
+In-Reply-To: <20190109064727.27936-1-kasong@redhat.com>
 From: Kairui Song <kasong@redhat.com>
-Date: Wed, 9 Jan 2019 10:02:41 +0800
-Message-ID: <CACPcB9e_1aom8hb2Xqd6u-QUmh=y+cni3YxrM09Mro2q_A5-gw@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/1] KEYS,
- integrity: Link .platform keyring to .secondary_trusted_keys
+Date: Wed, 9 Jan 2019 14:55:49 +0800
+Message-ID: <CACPcB9eaWRZ5y3xq23cOxJ0oUnVYK=7yRK7C-m1OP4YzMMbohw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86, kexec_file_load: make it work with efi=noruntime
+ or efi=oldmap
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,174 +25,110 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: jwboyer@fedoraproject.org, ebiggers@google.com, nayna@linux.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>, jmorris@namei.org, David Howells <dhowells@redhat.com>, linux-security-module <linux-security-module@vger.kernel.org>, keyrings@vger.kernel.org, linux-integrity <linux-integrity@vger.kernel.org>, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
+To: linux-kernel@vger.kernel.org
+Cc: rafael.j.wysocki@intel.com, Baoquan He <bhe@redhat.com>, erik.schmauss@intel.com, x86@kernel.org, kexec@lists.infradead.org, robert.moore@intel.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, lenb@kernel.org
 
-Thanks for the explanation Dave, my second thought is to let kexec use
-the platform keyring directly, that is let kexec verify the image with
-secondary/builtin keyring first then try platform keyring. And better
-to make platform keyring independent of integrity subsystem, so kexec
-could verify the image and don't depend on integrity. Any thought?
+CCing more people
 
-On Wed, Jan 9, 2019 at 9:34 AM Dave Young <dyoung@redhat.com> wrote:
+On Wed, Jan 9, 2019 at 2:47 PM Kairui Song <kasong@redhat.com> wrote:
 >
-> CC kexec list
-> On 01/08/19 at 10:18am, Mimi Zohar wrote:
-> > [Cc'ing the LSM and integrity mailing lists]
-> >
-> > Repeating my comment on PATCH 0/1 here with the expanded set of
-> > mailing lists.
-> >
-> > The builtin and secondary keyrings have a signature change of trust
-> > rooted in the signed kernel image.  Adding the pre-boot keys to the
-> > secondary keyring breaks that signature chain of trust.
-> >
-> > Please do NOT add the pre-boot "platform" keys to the secondary
-> > keyring.
+> When efi=noruntime or efi=oldmap is used, EFI services won't be available
+> in the second kernel, therefore the second kernel will not be able to get
+> the ACPI RSDP address from firmware by calling EFI services and won't
+> boot. Previously we are expecting the user to set the acpi_rsdp=<addr>
+> on kernel command line for second kernel as there was no way to pass RSDP
+> address to second kernel.
 >
-> If we regard kexec as a bootloader, it sounds natural to use the
-> platform key to verify the signature with kexec_file_load syscall.
+> After commit e6e094e053af ('x86/acpi, x86/boot: Take RSDP address from
+> boot params if available'), now it's possible to set a acpi_rsdp_addr
+> parameter in the boot_params passed to second kernel, this commit make
+> use of it, detect and set the RSDP address when it's required for second
+> kernel to boot.
 >
-> It will be hard for user to manually sign a kernel and import the key
-> then to reuse kexec_file_load.
+> Tested with an EFI enabled KVM VM with efi=noruntime.
 >
-> I think we do not care if platform key can be added to secondary or not,
-> any suggestions how can kexec_file to use the platform key?
+> Suggested-by: Dave Young <dyoung@redhat.com>
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> ---
+>  arch/x86/kernel/kexec-bzimage64.c | 21 +++++++++++++++++++++
+>  drivers/acpi/acpica/tbxfroot.c    |  3 +--
+>  include/acpi/acpixf.h             |  2 +-
+>  3 files changed, 23 insertions(+), 3 deletions(-)
 >
-> >
-> > Mimi
-> >
-> >
-> > On Tue, 2019-01-08 at 16:12 +0800, Kairui Song wrote:
-> > > Currently kexec may need to verify the kerne image, and the kernel image
-> > > could be signed with third part keys which are provided by paltform or
-> > > firmware (eg. stored in MokListRT EFI variable). And the same time,
-> > > kexec_file_load will only verify the image agains .builtin_trusted_keys
-> > > or .secondary_trusted_keys according to configuration, but there is no
-> > > way for kexec_file_load to verify the image against any third part keys
-> > > mentioned above.
-> > >
-> > > In ea93102f3224 ('integrity: Define a trusted platform keyring') a
-> > > .platform keyring is introduced to store the keys provided by platform
-> > > or firmware. And with a few following commits including 15ea0e1e3e185
-> > > ('efi: Import certificates from UEFI Secure Boot'), now keys required to
-> > > verify the image is being imported to .paltform keyring, and later
-> > > IMA-appraisal could access the keyring and verify the image.
-> > >
-> > > This patch links the .platform keyring to .secondary_trusted_keys so
-> > > kexec_file_load could also leverage the .platform keyring to verify the
-> > > kernel image.
-> > >
-> > > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > > ---
-> > >  certs/system_keyring.c          | 30 ++++++++++++++++++++++++++++++
-> > >  include/keys/platform_keyring.h | 12 ++++++++++++
-> > >  security/integrity/digsig.c     |  7 +++++++
-> > >  3 files changed, 49 insertions(+)
-> > >  create mode 100644 include/keys/platform_keyring.h
-> > >
-> > > diff --git a/certs/system_keyring.c b/certs/system_keyring.c
-> > > index 81728717523d..dcef0259e149 100644
-> > > --- a/certs/system_keyring.c
-> > > +++ b/certs/system_keyring.c
-> > > @@ -18,12 +18,14 @@
-> > >  #include <linux/verification.h>
-> > >  #include <keys/asymmetric-type.h>
-> > >  #include <keys/system_keyring.h>
-> > > +#include <keys/platform_keyring.h>
-> > >  #include <crypto/pkcs7.h>
-> > >
-> > >  static struct key *builtin_trusted_keys;
-> > >  #ifdef CONFIG_SECONDARY_TRUSTED_KEYRING
-> > >  static struct key *secondary_trusted_keys;
-> > >  #endif
-> > > +static struct key *platform_keys = NULL;
-> > >
-> > >  extern __initconst const u8 system_certificate_list[];
-> > >  extern __initconst const unsigned long system_certificate_list_size;
-> > > @@ -67,6 +69,12 @@ int restrict_link_by_builtin_and_secondary_trusted(
-> > >             /* Allow the builtin keyring to be added to the secondary */
-> > >             return 0;
-> > >
-> > > +   if (type == &key_type_keyring &&
-> > > +       dest_keyring == secondary_trusted_keys &&
-> > > +       payload == &platform_keys->payload)
-> > > +           /* Allow the platform keyring to be added to the secondary */
-> > > +           return 0;
-> > > +
-> > >     return restrict_link_by_signature(dest_keyring, type, payload,
-> > >                                       secondary_trusted_keys);
-> > >  }
-> > > @@ -188,6 +196,28 @@ static __init int load_system_certificate_list(void)
-> > >  }
-> > >  late_initcall(load_system_certificate_list);
-> > >
-> > > +#if defined(CONFIG_INTEGRITY_PLATFORM_KEYRING) && defined(CONFIG_SECONDARY_TRUSTED_KEYRING)
-> > > +
-> > > +/*
-> > > + * Link .platform keyring to .secondary_trusted_key keyring
-> > > + */
-> > > +static __init int load_platform_certificate_list(void)
-> > > +{
-> > > +   int ret = 0;
-> > > +   platform_keys = integrity_get_platform_keyring();
-> > > +   if (!platform_keys) {
-> > > +           return 0;
-> > > +   }
-> > > +   ret = key_link(secondary_trusted_keys, platform_keys);
-> > > +   if (ret < 0) {
-> > > +           pr_err("Failed to link platform keyring: %d", ret);
-> > > +   }
-> > > +   return 0;
-> > > +}
-> > > +late_initcall(load_platform_certificate_list);
-> > > +
-> > > +#endif
-> > > +
-> > >  #ifdef CONFIG_SYSTEM_DATA_VERIFICATION
-> > >
-> > >  /**
-> > > diff --git a/include/keys/platform_keyring.h b/include/keys/platform_keyring.h
-> > > new file mode 100644
-> > > index 000000000000..4f92ed6c0b42
-> > > --- /dev/null
-> > > +++ b/include/keys/platform_keyring.h
-> > > @@ -0,0 +1,12 @@
-> > > +#ifndef _KEYS_PLATFORM_KEYRING_H
-> > > +#define _KEYS_PLATFORM_KEYRING_H
-> > > +
-> > > +#include <linux/key.h>
-> > > +
-> > > +#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
-> > > +
-> > > +extern const struct key* __init integrity_get_platform_keyring(void);
-> > > +
-> > > +#endif /* CONFIG_INTEGRITY_PLATFORM_KEYRING */
-> > > +
-> > > +#endif /* _KEYS_SYSTEM_KEYRING_H */
-> > > diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-> > > index f45d6edecf99..397758d4f12d 100644
-> > > --- a/security/integrity/digsig.c
-> > > +++ b/security/integrity/digsig.c
-> > > @@ -176,3 +176,10 @@ int __init integrity_load_cert(const unsigned int id, const char *source,
-> > >     pr_info("Loading X.509 certificate: %s\n", source);
-> > >     return integrity_add_key(id, data, len, perm);
-> > >  }
-> > > +
-> > > +#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
-> > > +struct key* __init integrity_get_platform_keyring(void)
-> > > +{
-> > > +   return keyring[INTEGRITY_KEYRING_PLATFORM];
-> > > +}
-> > > +#endif
-> >
+> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+> index 53917a3ebf94..0a90dcbd041f 100644
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/efi.h>
+>  #include <linux/verification.h>
+> +#include <linux/acpi.h>
 >
-> Thanks
-> Dave
+>  #include <asm/bootparam.h>
+>  #include <asm/setup.h>
+> @@ -255,8 +256,28 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+>         /* Setup EFI state */
+>         setup_efi_state(params, params_load_addr, efi_map_offset, efi_map_sz,
+>                         efi_setup_data_offset);
+> +
+> +#ifdef CONFIG_ACPI
+> +       /* Setup ACPI RSDP pointer in case EFI is not available in second kernel */
+> +       if (!acpi_disabled && (!efi_enabled(EFI_RUNTIME_SERVICES) || efi_enabled(EFI_OLD_MEMMAP))) {
+> +               /* Copied from acpi_os_get_root_pointer accordingly */
+> +               params->acpi_rsdp_addr = boot_params.acpi_rsdp_addr;
+> +               if (!params->acpi_rsdp_addr) {
+> +                       if (efi_enabled(EFI_CONFIG_TABLES)) {
+> +                               if (efi.acpi20 != EFI_INVALID_TABLE_ADDR)
+> +                                       params->acpi_rsdp_addr = efi.acpi20;
+> +                               else if (efi.acpi != EFI_INVALID_TABLE_ADDR)
+> +                                       params->acpi_rsdp_addr = efi.acpi;
+> +                       } else if (IS_ENABLED(CONFIG_ACPI_LEGACY_TABLES_LOOKUP)) {
+> +                               acpi_find_root_pointer(&params->acpi_rsdp_addr);
+> +                       }
+> +               }
+> +               if (!params->acpi_rsdp_addr)
+> +                       pr_warn("RSDP is not available for second kernel\n");
+> +       }
+>  #endif
+>
+> +#endif
+>         /* Setup EDD info */
+>         memcpy(params->eddbuf, boot_params.eddbuf,
+>                                 EDDMAXNR * sizeof(struct edd_info));
+> diff --git a/drivers/acpi/acpica/tbxfroot.c b/drivers/acpi/acpica/tbxfroot.c
+> index 483d0ce5180a..dac1e34a931c 100644
+> --- a/drivers/acpi/acpica/tbxfroot.c
+> +++ b/drivers/acpi/acpica/tbxfroot.c
+> @@ -108,8 +108,7 @@ acpi_status acpi_tb_validate_rsdp(struct acpi_table_rsdp *rsdp)
+>   *
+>   ******************************************************************************/
+>
+> -acpi_status ACPI_INIT_FUNCTION
+> -acpi_find_root_pointer(acpi_physical_address *table_address)
+> +acpi_status acpi_find_root_pointer(acpi_physical_address *table_address)
+>  {
+>         u8 *table_ptr;
+>         u8 *mem_rover;
+> diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h
+> index 7aa38b648564..869d75ecaf7d 100644
+> --- a/include/acpi/acpixf.h
+> +++ b/include/acpi/acpixf.h
+> @@ -474,7 +474,7 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status ACPI_INIT_FUNCTION
+>  ACPI_EXTERNAL_RETURN_STATUS(acpi_status ACPI_INIT_FUNCTION
+>                             acpi_reallocate_root_table(void))
+>
+> -ACPI_EXTERNAL_RETURN_STATUS(acpi_status ACPI_INIT_FUNCTION
+> +ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+>                             acpi_find_root_pointer(acpi_physical_address
+>                                                    *rsdp_address))
+>  ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+> --
+> 2.20.1
+>
 
 
-
--- 
+--
 Best Regards,
 Kairui Song
 
