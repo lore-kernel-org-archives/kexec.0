@@ -1,30 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ghJQu-0007Dm-A5
- for kexec@lists.infradead.org; Wed, 09 Jan 2019 19:22:33 +0000
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+ id 1ghVDC-0005Ol-0G
+ for kexec@lists.infradead.org; Thu, 10 Jan 2019 07:57:11 +0000
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
- x09J8U0V128082
- for <kexec@lists.infradead.org>; Wed, 9 Jan 2019 14:22:31 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2pwkbfb6vj-1
+ x0A7s0Ou124118
+ for <kexec@lists.infradead.org>; Thu, 10 Jan 2019 02:57:07 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2px0q0begc-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 09 Jan 2019 14:22:30 -0500
+ for <kexec@lists.infradead.org>; Thu, 10 Jan 2019 02:57:07 -0500
 Received: from localhost
- by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Wed, 9 Jan 2019 19:22:28 -0000
-Subject: Re: [RFC PATCH 1/2] integrity, KEYS: add a reference to platform
- keyring
-From: Mimi Zohar <zohar@linux.ibm.com>
-Date: Wed, 09 Jan 2019 14:21:11 -0500
-In-Reply-To: <20190109164824.19708-2-kasong@redhat.com>
-References: <20190109164824.19708-1-kasong@redhat.com>
- <20190109164824.19708-2-kasong@redhat.com>
-Mime-Version: 1.0
-Message-Id: <1547061671.19931.239.camel@linux.ibm.com>
+ for <kexec@lists.infradead.org> from <rppt@linux.ibm.com>;
+ Thu, 10 Jan 2019 07:57:04 -0000
+Date: Thu, 10 Jan 2019 09:56:53 +0200
+From: Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCHv5] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
+References: <1546848299-23628-1-git-send-email-kernelfans@gmail.com>
+ <20190108080538.GB4396@rapoport-lnx>
+ <20190108090138.GB18718@MiWiFi-R3L-srv>
+ <20190108154852.GC14063@rapoport-lnx>
+ <CAFgQCTtVjwJ_Rfp8DcmzPx6uYPnOx7E_x=YjC+MQ=mx7W38HEw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAFgQCTtVjwJ_Rfp8DcmzPx6uYPnOx7E_x=YjC+MQ=mx7W38HEw@mail.gmail.com>
+Message-Id: <20190110075652.GB32036@rapoport-lnx>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,44 +37,131 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>, linux-kernel@vger.kernel.org
-Cc: jwboyer@fedoraproject.org, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, jmorris@namei.org, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
+To: Pingfan Liu <kernelfans@gmail.com>
+Cc: Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, kexec@lists.infradead.org, Daniel Vacek <neelx@redhat.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Tatashin <pasha.tatashin@oracle.com>, Nicholas Piggin <npiggin@gmail.com>, Tang Chen <tangchen@cn.fujitsu.com>, linux-mm@kvack.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, yinghai@kernel.org, Stefan Agner <stefan@agner.ch>, Yaowei Bai <baiyaowei@cmss.chinamobile.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, vgoyal@redhat.com, Len Brown <lenb@kernel.org>
 
-T24gVGh1LCAyMDE5LTAxLTEwIGF0IDAwOjQ4ICswODAwLCBLYWlydWkgU29uZyB3cm90ZToKPiBD
-dXJyZW50bHkga2V4ZWNfZmlsZV9sb2FkIHdpbGwgdmVyaWZ5IHRoZSBrZXJuZWwgaW1hZ2UgYmVp
-bmcgbG9hZGVkCj4gYWdhaW5zdCAuYnVpbHRpbl90cnVzdGVkX2tleXMgb3IgLnNlY29uZGFyeV90
-cnVzdGVkX2tleXMsIGJ1dCB0aGUKPiBpbWFnZSBjb3VsZCBiZSBzaWduZWQgd2l0aCB0aGlyZCBw
-YXJ0IGtleXMgd2hpY2ggd2lsbCBiZSBwcm92aWRlZCBieQo+IHBsYXRmb3JtIG9yIGZpcm13YXJl
-IGFuZCB0aGUga2V5cyB3b24ndCBiZSBhdmFpbGFibGUgaW4ga2V5cmluZ3MgbWVudGlvbmVkCj4g
-YWJvdmUuCj4gCj4gQWZ0ZXIgY29tbWl0IGVhOTMxMDJmMzIyNCAoJ2ludGVncml0eTogRGVmaW5l
-IGEgdHJ1c3RlZCBwbGF0Zm9ybSBrZXlyaW5nJykKPiBhIC5wbGF0Zm9ybSBrZXlyaW5nIGlzIGlu
-dHJvZHVjZWQgdG8gc3RvcmUgdGhlIGtleXMgcHJvdmlkZWQgYnkgcGxhdGZvcm0KPiBvciBmaXJt
-d2FyZS4gQW5kIHdpdGggYSBmZXcgZm9sbG93aW5nIGNvbW1pdHMsIG5vdyBrZXlzIHJlcXVpcmVk
-IHRvIHZlcmlmeQo+IHRoZSBpbWFnZSBpcyBiZWluZyBpbXBvcnRlZCB0byAucGxhdGZvcm0ga2V5
-cmluZywgYnV0IGN1cnJlbnRseSwgb25seQo+IElNQS1hcHByYWlzYWwgY291bGQgdXNlIHRoZSBr
-ZXlyaW5nIGFuZCB2ZXJpZnkgdGhlIGltYWdlLgo+IAo+IFRoaXMgcGF0Y2ggZXhwb3NlcyB0aGUg
-LnBsYXRmb3JtIGFuZCBtYWtlcyBvdGhlciBjb21wb25lbnRzLCBsaWtlCj4ga2V4ZWNfZmlsZV9s
-b2FkLCBjb3VsZCB1c2UgdGhpcyAucGxhdGZvcm0ga2V5cmluZyB0byB2ZXJpZnkgdGhlCj4ga2Vy
-bmVsIGltYWdlLgoKVGhlICJwbGF0Zm9ybSIga2V5cmluZyB3YXMgdXBzdHJlYW1lZCBpbiBvcmRl
-ciB0byB2ZXJpZnkgdGhlIGtlcm5lbAppbWFnZSBiZWluZyBsb2FkZWQgYnkgdGhlIGtleGVjX2Zp
-bGVfbG9hZCBzeXNjYWxsLiDCoFRoZSBpbnRlbnRpb25zIG9mCnRoaXMgcGF0Y2ggZGVzY3JpcHRp
-b24gbmVlZHMgdG8gYmUgY2xlYXJlci4KCj4gCj4gU3VnZ2VzdGVkLWJ5OiBNaW1pIFpvaGFyIDx6
-b2hhckBsaW51eC5pYm0uY29tPgo+IFNpZ25lZC1vZmYtYnk6IEthaXJ1aSBTb25nIDxrYXNvbmdA
-cmVkaGF0LmNvbT4KPiAtLS0KPiAgY2VydHMvc3lzdGVtX2tleXJpbmcuYyAgICAgICAgfCAzICsr
-Kwo+ICBpbmNsdWRlL2tleXMvc3lzdGVtX2tleXJpbmcuaCB8IDUgKysrKysKPiAgc2VjdXJpdHkv
-aW50ZWdyaXR5L2RpZ3NpZy5jICAgfCA0ICsrKysKPiAgMyBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNl
-cnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2NlcnRzL3N5c3RlbV9rZXlyaW5nLmMgYi9jZXJ0
-cy9zeXN0ZW1fa2V5cmluZy5jCj4gaW5kZXggODE3Mjg3MTc1MjNkLi5hNjFiOTUzOTBiODAgMTAw
-NjQ0Cj4gLS0tIGEvY2VydHMvc3lzdGVtX2tleXJpbmcuYwo+ICsrKyBiL2NlcnRzL3N5c3RlbV9r
-ZXlyaW5nLmMKPiBAQCAtMjQsNiArMjQsOSBAQCBzdGF0aWMgc3RydWN0IGtleSAqYnVpbHRpbl90
-cnVzdGVkX2tleXM7Cj4gICNpZmRlZiBDT05GSUdfU0VDT05EQVJZX1RSVVNURURfS0VZUklORwo+
-ICBzdGF0aWMgc3RydWN0IGtleSAqc2Vjb25kYXJ5X3RydXN0ZWRfa2V5czsKPiAgI2VuZGlmCj4g
-KyNpZmRlZiBDT05GSUdfSU5URUdSSVRZX1BMQVRGT1JNX0tFWVJJTkcKPiArc3RydWN0IGtleSAq
-cGxhdGZvcm1fdHJ1c3RlZF9rZXlzOwoKUGxlYXNlIG1ha2UgaXQgc3RhdGljLgoKTWltaQoKPiAr
-I2VuZGlmCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Pingfan,
+
+On Wed, Jan 09, 2019 at 09:02:41PM +0800, Pingfan Liu wrote:
+> On Tue, Jan 8, 2019 at 11:49 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> >
+> > On Tue, Jan 08, 2019 at 05:01:38PM +0800, Baoquan He wrote:
+> > > Hi Mike,
+> > >
+> > > On 01/08/19 at 10:05am, Mike Rapoport wrote:
+> > > > I'm not thrilled by duplicating this code (yet again).
+> > > > I liked the v3 of this patch [1] more, assuming we allow bottom-up mode to
+> > > > allocate [0, kernel_start) unconditionally.
+> > > > I'd just replace you first patch in v3 [2] with something like:
+> > >
+> > > In initmem_init(), we will restore the top-down allocation style anyway.
+> > > While reserve_crashkernel() is called after initmem_init(), it's not
+> > > appropriate to adjust memblock_find_in_range_node(), and we really want
+> > > to find region bottom up for crashkernel reservation, no matter where
+> > > kernel is loaded, better call __memblock_find_range_bottom_up().
+> > >
+> > > Create a wrapper to do the necessary handling, then call
+> > > __memblock_find_range_bottom_up() directly, looks better.
+> >
+> > What bothers me is 'the necessary handling' which is already done in
+> > several places in memblock in a similar, but yet slightly different way.
+> >
+> > memblock_find_in_range() and memblock_phys_alloc_nid() retry with different
+> > MEMBLOCK_MIRROR, but memblock_phys_alloc_try_nid() does that only when
+> > allocating from the specified node and does not retry when it falls back to
+> > any node. And memblock_alloc_internal() has yet another set of fallbacks.
+> >
+> > So what should be the necessary handling in the wrapper for
+> > __memblock_find_range_bottom_up() ?
+> >
+> Well, it is a hard choice.
+> > BTW, even without any memblock modifications, retrying allocation in
+> > reserve_crashkerenel() for different ranges, like the proposal at [1] would
+> > also work, wouldn't it?
+> >
+> Yes, it can work. Then is it worth to expose the bottom-up allocation
+> style beside for hotmovable purpose?
+
+Some architectures use bottom-up as a "compatability" mode with bootmem.
+And, I believe, powerpc and s390 use bottom-up to make some of the
+allocations close to the kernel.
+ 
+> Thanks,
+> Pingfan
+> > [1] http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
+> >
+> > > Thanks
+> > > Baoquan
+> > >
+> > > >
+> > > > diff --git a/mm/memblock.c b/mm/memblock.c
+> > > > index 7df468c..d1b30b9 100644
+> > > > --- a/mm/memblock.c
+> > > > +++ b/mm/memblock.c
+> > > > @@ -274,24 +274,14 @@ phys_addr_t __init_memblock memblock_find_in_range_node(phys_addr_t size,
+> > > >      * try bottom-up allocation only when bottom-up mode
+> > > >      * is set and @end is above the kernel image.
+> > > >      */
+> > > > -   if (memblock_bottom_up() && end > kernel_end) {
+> > > > -           phys_addr_t bottom_up_start;
+> > > > -
+> > > > -           /* make sure we will allocate above the kernel */
+> > > > -           bottom_up_start = max(start, kernel_end);
+> > > > -
+> > > > +   if (memblock_bottom_up()) {
+> > > >             /* ok, try bottom-up allocation first */
+> > > > -           ret = __memblock_find_range_bottom_up(bottom_up_start, end,
+> > > > +           ret = __memblock_find_range_bottom_up(start, end,
+> > > >                                                   size, align, nid, flags);
+> > > >             if (ret)
+> > > >                     return ret;
+> > > >
+> > > >             /*
+> > > > -            * we always limit bottom-up allocation above the kernel,
+> > > > -            * but top-down allocation doesn't have the limit, so
+> > > > -            * retrying top-down allocation may succeed when bottom-up
+> > > > -            * allocation failed.
+> > > > -            *
+> > > >              * bottom-up allocation is expected to be fail very rarely,
+> > > >              * so we use WARN_ONCE() here to see the stack trace if
+> > > >              * fail happens.
+> > > >
+> > > > [1] https://lore.kernel.org/lkml/1545966002-3075-3-git-send-email-kernelfans@gmail.com/
+> > > > [2] https://lore.kernel.org/lkml/1545966002-3075-2-git-send-email-kernelfans@gmail.com/
+> > > >
+> > > > > +
+> > > > > + return ret;
+> > > > > +}
+> > > > > +
+> > > > >  /**
+> > > > >   * __memblock_find_range_top_down - find free area utility, in top-down
+> > > > >   * @start: start of candidate range
+> > > > > --
+> > > > > 2.7.4
+> > > > >
+> > > >
+> > > > --
+> > > > Sincerely yours,
+> > > > Mike.
+> > > >
+> > >
+> >
+> > --
+> > Sincerely yours,
+> > Mike.
+> >
+> 
+
+-- 
+Sincerely yours,
+Mike.
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
