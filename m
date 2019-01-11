@@ -1,13 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH] arm64: kexec_file: return successfully even if kaslr-seed
- doesn't exist
-References: <20190111074021.23639-1-takahiro.akashi@linaro.org>
-From: James Morse <james.morse@arm.com>
-Message-ID: <3565a2f8-c4f2-1ff3-9b04-1db87b1f72bf@arm.com>
-Date: Fri, 11 Jan 2019 15:33:04 +0000
-MIME-Version: 1.0
-In-Reply-To: <20190111074021.23639-1-takahiro.akashi@linaro.org>
-Content-Language: en-GB
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1ghzRe-00007Y-RE
+ for kexec@lists.infradead.org; Fri, 11 Jan 2019 16:14:08 +0000
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ x0BGDuaC137068
+ for <kexec@lists.infradead.org>; Fri, 11 Jan 2019 11:14:03 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2pxuy8rm7a-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 11 Jan 2019 11:14:03 -0500
+Received: from localhost
+ by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Fri, 11 Jan 2019 16:14:00 -0000
+Subject: Re: [RFC PATCH 2/2] kexec, KEYS: Make use of platform keyring for
+ signature verify
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Fri, 11 Jan 2019 11:13:40 -0500
+In-Reply-To: <20190111134303.GA12760@dhcp-128-65.nay.redhat.com>
+References: <20190109164824.19708-1-kasong@redhat.com>
+ <20190109164824.19708-3-kasong@redhat.com>
+ <20190111134303.GA12760@dhcp-128-65.nay.redhat.com>
+Mime-Version: 1.0
+Message-Id: <1547223220.19931.471.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,37 +34,23 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>, Kairui Song <kasong@redhat.com>
+Cc: jwboyer@fedoraproject.org, ebiggers@google.com, nayna@linux.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, jmorris@namei.org, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-Hi Akashi,
-
-On 11/01/2019 07:40, AKASHI Takahiro wrote:
-> In kexec_file_load, kaslr-seed property of the current dtb will be deleted
-> any way before setting a new value if possible. It doesn't matter whether
-> it exists in the current dtb.
-
-Could you describe what goes wrong without this patch?
-
-If the rng isn't ready yet, this stale error causes us to return an error,
-causing kexec_file_load() to fail unnecessarily.
-
-> So "ret" should be reset to 0 here.
-> 
-> Fixes: commit 884143f60c89 ("arm64: kexec_file: add kaslr support")
-
-Reviewed-by: James Morse <james.morse@arm.com>
-
-
-Thanks!
-
-James
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCAyMDE5LTAxLTExIGF0IDIxOjQzICswODAwLCBEYXZlIFlvdW5nIHdyb3RlOgpbc25p
+cF0KCj4gUGVyc29uYWxseSBJIHdvdWxkIGxpa2UgdG8gc2VlIHBsYXRmb3JtIGtleSBzZXBhcmF0
+ZWQgZnJvbSBpbnRlZ3JpdHkuCj4gQnV0IGZvciB0aGUga2V4ZWNfZmlsZSBwYXJ0IEkgdGhpbmsg
+aXQgaXMgZ29vZCBhdCBsZWFzdCBpdCB3b3JrcyB3aXRoCj4gdGhpcyBmaXguCj4gCj4gQWNrZWQt
+Ynk6IERhdmUgWW91bmcgPGR5b3VuZ0ByZWRoYXQuY29tPgoKVGhlIG9yaWdpbmFsICJwbGF0Zm9y
+bSIga2V5cmluZyBwYXRjaGVzIHRoYXQgTmF5bmEgcG9zdGVkIG11bHRpcGxlCnRpbWVzIHdlcmUg
+aW4gdGhlIGNlcnRzIGRpcmVjdG9yeSwgYnV0IG5vYm9keSBjb21tZW50ZWQvcmVzcG9uZGVkLiDC
+oFNvCnNoZSByZXdvcmtlZCB0aGUgcGF0Y2hlcywgbW92aW5nIHRoZW0gdG8gdGhlIGludGVncml0
+eSBkaXJlY3RvcnkgYW5kCnBvc3RlZCB0aGVtIChjYydpbmcgdGhlIGtleGVjIG1haWxpbmcgbGlz
+dCkuIMKgSXQncyBhIGJpdCBsYXRlIHRvIGJlCmFza2luZyB0byBtb3ZlIGl0LCBpc24ndCBpdD8K
+Ck1pbWkKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
+ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
