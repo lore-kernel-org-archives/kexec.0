@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw1-xc44.google.com ([2607:f8b0:4864:20::c44])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ghtbj-0004DO-Lh
- for kexec@lists.infradead.org; Fri, 11 Jan 2019 10:00:14 +0000
-Received: by mail-yw1-xc44.google.com with SMTP id d190so5576102ywb.5
- for <kexec@lists.infradead.org>; Fri, 11 Jan 2019 02:00:07 -0800 (PST)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v2 3/3] arm64: kdump: deal with a lot of resource entries in
- /proc/iomem
-Date: Fri, 11 Jan 2019 18:59:46 +0900
-Message-Id: <20190111095946.28070-4-takahiro.akashi@linaro.org>
-In-Reply-To: <20190111095946.28070-1-takahiro.akashi@linaro.org>
-References: <20190111095946.28070-1-takahiro.akashi@linaro.org>
+ id 1ghvzt-0004Gh-LX
+ for kexec@lists.infradead.org; Fri, 11 Jan 2019 12:33:15 +0000
+Date: Fri, 11 Jan 2019 13:33:00 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/2 v6] kdump: add the vmcoreinfo documentation
+Message-ID: <20190111123300.GE4729@zn.tnic>
+References: <20190110121944.6050-1-lijiang@redhat.com>
+ <20190110121944.6050-2-lijiang@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20190110121944.6050-2-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,82 +24,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au, james.morse@arm.com, bhsharma@redhat.com
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org
+To: Lianbo Jiang <lijiang@redhat.com>
+Cc: k-hagio@ab.jp.nec.com, bhe@redhat.com, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, anderson@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-As described in the commit ("arm64: kexec: allocate memory space avoiding
-reserved regions"), /proc/iomem now has a lot of "reserved" entries, and
-it's not just enough to have a fixed size of memory range array.
+On Thu, Jan 10, 2019 at 08:19:43PM +0800, Lianbo Jiang wrote:
+> +init_uts_ns.name.release
+> +------------------------
+> +
+> +The version of the Linux kernel. Used to find the corresponding source
+> +code from which the kernel has been built.
+> +
 
-With this patch, kdump is allowed to handle arbitrary number of memory
-ranges, using mem_regions_alloc_and_xxx() functions.
+...
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
----
- kexec/arch/arm64/crashdump-arm64.c | 25 ++++++++++---------------
- 1 file changed, 10 insertions(+), 15 deletions(-)
+> +
+> +init_uts_ns
+> +-----------
+> +
+> +This is the UTS namespace, which is used to isolate two specific
+> +elements of the system that relate to the uname(2) system call. The UTS
+> +namespace is named after the data structure used to store information
+> +returned by the uname(2) system call.
+> +
+> +User-space tools can get the kernel name, host name, kernel release
+> +number, kernel version, architecture name and OS type from it.
 
-diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
-index 4fd7aa8fd43c..38d1a0f3000d 100644
---- a/kexec/arch/arm64/crashdump-arm64.c
-+++ b/kexec/arch/arm64/crashdump-arm64.c
-@@ -23,13 +23,8 @@
- #include "kexec-elf.h"
- #include "mem_regions.h"
- 
--/* memory ranges on crashed kernel */
--static struct memory_range system_memory_ranges[CRASH_MAX_MEMORY_RANGES];
--static struct memory_ranges system_memory_rgns = {
--	.size = 0,
--	.max_size = CRASH_MAX_MEMORY_RANGES,
--	.ranges = system_memory_ranges,
--};
-+/* memory ranges of crashed kernel */
-+static struct memory_ranges system_memory_rgns;
- 
- /* memory range reserved for crashkernel */
- struct memory_range crash_reserved_mem;
-@@ -82,7 +77,7 @@ static uint64_t get_kernel_page_offset(void)
-  *
-  * This function is called once for each memory region found in /proc/iomem.
-  * It locates system RAM and crashkernel reserved memory and places these to
-- * variables, respectively, system_memory_ranges and crash_reserved_mem.
-+ * variables, respectively, system_memory_rgns and usablemem_rgns.
-  */
- 
- static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
-@@ -90,11 +85,11 @@ static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
- 				unsigned long long length)
- {
- 	if (strncmp(str, CRASH_KERNEL, strlen(CRASH_KERNEL)) == 0)
--		return mem_regions_add(&usablemem_rgns,
--				       base, length, RANGE_RAM);
-+		return mem_regions_alloc_and_add(&usablemem_rgns,
-+						base, length, RANGE_RAM);
- 	else if (strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) == 0)
--		return mem_regions_add(&system_memory_rgns,
--				       base, length, RANGE_RAM);
-+		return mem_regions_alloc_and_add(&system_memory_rgns,
-+						base, length, RANGE_RAM);
- 	else if (strncmp(str, KERNEL_CODE, strlen(KERNEL_CODE)) == 0)
- 		elf_info.kern_paddr_start = base;
- 	else if (strncmp(str, KERNEL_DATA, strlen(KERNEL_DATA)) == 0)
-@@ -135,9 +130,9 @@ static int crash_get_memory_ranges(void)
- 
- 	dbgprint_mem_range("Reserved memory range", &crash_reserved_mem, 1);
- 
--	if (mem_regions_exclude(&system_memory_rgns, &crash_reserved_mem)) {
--		fprintf(stderr,
--			"Error: Number of crash memory ranges excedeed the max limit\n");
-+	if (mem_regions_alloc_and_exclude(&system_memory_rgns,
-+						&crash_reserved_mem)) {
-+		fprintf(stderr, "Cannot allocate memory for ranges\n");
- 		return -ENOMEM;
- 	}
- 
+Already asked this but no reply so lemme paste my question again:
+
+"And this document already fulfills its purpose - those two vmcoreinfo
+exports are redundant and the first one can be removed.
+
+And now that we agreed that VMCOREINFO is not an ABI and is very tightly
+coupled to the kernel version, init_uts_ns.name.release can be removed,
+yes?
+
+Or is there anything speaking against that?"
+
 -- 
-2.19.1
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
