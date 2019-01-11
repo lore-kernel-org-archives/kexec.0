@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw1-xc41.google.com ([2607:f8b0:4864:20::c41])
+Received: from mail-yw1-xc44.google.com ([2607:f8b0:4864:20::c44])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1ghtbg-0003tl-EK
- for kexec@lists.infradead.org; Fri, 11 Jan 2019 10:00:07 +0000
-Received: by mail-yw1-xc41.google.com with SMTP id x2so5567357ywc.9
- for <kexec@lists.infradead.org>; Fri, 11 Jan 2019 02:00:04 -0800 (PST)
+ id 1ghtbj-0004DO-Lh
+ for kexec@lists.infradead.org; Fri, 11 Jan 2019 10:00:14 +0000
+Received: by mail-yw1-xc44.google.com with SMTP id d190so5576102ywb.5
+ for <kexec@lists.infradead.org>; Fri, 11 Jan 2019 02:00:07 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v2 2/3] arm64: kexec: allocate memory space avoiding reserved
- regions
-Date: Fri, 11 Jan 2019 18:59:45 +0900
-Message-Id: <20190111095946.28070-3-takahiro.akashi@linaro.org>
+Subject: [PATCH v2 3/3] arm64: kdump: deal with a lot of resource entries in
+ /proc/iomem
+Date: Fri, 11 Jan 2019 18:59:46 +0900
+Message-Id: <20190111095946.28070-4-takahiro.akashi@linaro.org>
 In-Reply-To: <20190111095946.28070-1-takahiro.akashi@linaro.org>
 References: <20190111095946.28070-1-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
@@ -28,246 +28,76 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au, james.morse@arm.com, bhsharma@redhat.com
 Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org
 
-On UEFI/ACPI-only system, some memory regions, including but not limited
-to UEFI memory map and ACPI tables, must be preserved across kexec'ing.
-Otherwise, they can be corrupted and result in early failure in booting
-a new kernel.
+As described in the commit ("arm64: kexec: allocate memory space avoiding
+reserved regions"), /proc/iomem now has a lot of "reserved" entries, and
+it's not just enough to have a fixed size of memory range array.
 
-In recent kernels, /proc/iomem now has an extended file format like:
-	40000000-5871ffff : System RAM
-	  41800000-426affff : Kernel code
-	  426b0000-42aaffff : reserved
-	  42ab0000-42c64fff : Kernel data
-	  54400000-583fffff : Crash kernel
-	  58590000-585effff : reserved
-	  58700000-5871ffff : reserved
-	58720000-58b5ffff : reserved
-	58b60000-5be3ffff : System RAM
-	  58b61000-58b61fff : reserved
-	  59a77000-59a77fff : reserved
-	5be40000-5becffff : reserved
-	5bed0000-5bedffff : System RAM
-	5bee0000-5bffffff : reserved
-	5c000000-5fffffff : System RAM
-	  5da00000-5e9fffff : reserved
-	  5ec00000-5edfffff : reserved
-	  5ef6a000-5ef6afff : reserved
-	  5ef6b000-5efcafff : reserved
-	  5efcd000-5efcffff : reserved
-	  5efd0000-5effffff : reserved
-	  5f000000-5fffffff : reserved
-
-where the "reserved" entries at the top level or under System RAM (and
-its descendant resources) are ones of such kind and should not be regarded
-as usable memory ranges where several free spaces for loading kexec data
-will be allocated.
-
-With this patch, get_memory_ranges() will handle this format of file
-correctly. Note that, for safety, unknown regions, in addition to
-"reserved" ones, will also be excluded.
+With this patch, kdump is allowed to handle arbitrary number of memory
+ranges, using mem_regions_alloc_and_xxx() functions.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 ---
- kexec/arch/arm64/kexec-arm64.c | 146 ++++++++++++++++++++-------------
- 1 file changed, 87 insertions(+), 59 deletions(-)
+ kexec/arch/arm64/crashdump-arm64.c | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 1cde75d1a771..2e923b54f5b1 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -10,7 +10,9 @@
- #include <inttypes.h>
- #include <libfdt.h>
- #include <limits.h>
-+#include <stdio.h>
- #include <stdlib.h>
-+#include <string.h>
- #include <sys/stat.h>
- #include <linux/elf-em.h>
- #include <elf.h>
-@@ -29,6 +31,7 @@
- #include "fs2dt.h"
- #include "iomem.h"
- #include "kexec-syscall.h"
-+#include "mem_regions.h"
- #include "arch/options.h"
+diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+index 4fd7aa8fd43c..38d1a0f3000d 100644
+--- a/kexec/arch/arm64/crashdump-arm64.c
++++ b/kexec/arch/arm64/crashdump-arm64.c
+@@ -23,13 +23,8 @@
+ #include "kexec-elf.h"
+ #include "mem_regions.h"
  
- #define ROOT_NODE_ADDR_CELLS_DEFAULT 1
-@@ -899,19 +902,33 @@ int get_phys_base_from_pt_load(unsigned long *phys_offset)
- 	return 0;
- }
+-/* memory ranges on crashed kernel */
+-static struct memory_range system_memory_ranges[CRASH_MAX_MEMORY_RANGES];
+-static struct memory_ranges system_memory_rgns = {
+-	.size = 0,
+-	.max_size = CRASH_MAX_MEMORY_RANGES,
+-	.ranges = system_memory_ranges,
+-};
++/* memory ranges of crashed kernel */
++static struct memory_ranges system_memory_rgns;
  
-+static bool to_be_excluded(char *str)
-+{
-+	if (!strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) ||
-+	    !strncmp(str, KERNEL_CODE, strlen(KERNEL_CODE)) ||
-+	    !strncmp(str, KERNEL_DATA, strlen(KERNEL_DATA)) ||
-+	    !strncmp(str, CRASH_KERNEL, strlen(CRASH_KERNEL)))
-+		return false;
-+	else
-+		return true;
-+}
-+
- /**
-- * get_memory_ranges_iomem_cb - Helper for get_memory_ranges_iomem.
-+ * get_memory_ranges - Try to get the memory ranges from
-+ * /proc/iomem.
+ /* memory range reserved for crashkernel */
+ struct memory_range crash_reserved_mem;
+@@ -82,7 +77,7 @@ static uint64_t get_kernel_page_offset(void)
+  *
+  * This function is called once for each memory region found in /proc/iomem.
+  * It locates system RAM and crashkernel reserved memory and places these to
+- * variables, respectively, system_memory_ranges and crash_reserved_mem.
++ * variables, respectively, system_memory_rgns and usablemem_rgns.
   */
--
--static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
--	unsigned long long base, unsigned long long length)
-+int get_memory_ranges(struct memory_range **range, int *ranges,
-+	unsigned long kexec_flags)
- {
--	int ret;
- 	unsigned long phys_offset = UINT64_MAX;
--	struct memory_range *r;
--
--	if (nr >= KEXEC_SEGMENT_MAX)
--		return -1;
-+	FILE *fp;
-+	const char *iomem = proc_iomem();
-+	char line[MAX_LINE], *str;
-+	unsigned long long start, end;
-+	int n, consumed;
-+	struct memory_ranges memranges;
-+	struct memory_range *last, excl_range;
-+	int ret;
  
- 	if (!try_read_phys_offset_from_kcore) {
- 		/* Since kernel version 4.19, 'kcore' contains
-@@ -945,17 +962,65 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
- 		try_read_phys_offset_from_kcore = true;
+ static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
+@@ -90,11 +85,11 @@ static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
+ 				unsigned long long length)
+ {
+ 	if (strncmp(str, CRASH_KERNEL, strlen(CRASH_KERNEL)) == 0)
+-		return mem_regions_add(&usablemem_rgns,
+-				       base, length, RANGE_RAM);
++		return mem_regions_alloc_and_add(&usablemem_rgns,
++						base, length, RANGE_RAM);
+ 	else if (strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) == 0)
+-		return mem_regions_add(&system_memory_rgns,
+-				       base, length, RANGE_RAM);
++		return mem_regions_alloc_and_add(&system_memory_rgns,
++						base, length, RANGE_RAM);
+ 	else if (strncmp(str, KERNEL_CODE, strlen(KERNEL_CODE)) == 0)
+ 		elf_info.kern_paddr_start = base;
+ 	else if (strncmp(str, KERNEL_DATA, strlen(KERNEL_DATA)) == 0)
+@@ -135,9 +130,9 @@ static int crash_get_memory_ranges(void)
+ 
+ 	dbgprint_mem_range("Reserved memory range", &crash_reserved_mem, 1);
+ 
+-	if (mem_regions_exclude(&system_memory_rgns, &crash_reserved_mem)) {
+-		fprintf(stderr,
+-			"Error: Number of crash memory ranges excedeed the max limit\n");
++	if (mem_regions_alloc_and_exclude(&system_memory_rgns,
++						&crash_reserved_mem)) {
++		fprintf(stderr, "Cannot allocate memory for ranges\n");
+ 		return -ENOMEM;
  	}
  
--	r = (struct memory_range *)data + nr;
-+	fp = fopen(iomem, "r");
-+	if (!fp)
-+		die("Cannot open %s\n", iomem);
-+
-+	memranges.ranges = NULL;
-+	memranges.size = memranges.max_size  = 0;
-+
-+	while (fgets(line, sizeof(line), fp) != 0) {
-+		n = sscanf(line, "%llx-%llx : %n", &start, &end, &consumed);
-+		if (n != 2)
-+			continue;
-+		str = line + consumed;
-+
-+		if (!strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM))) {
-+			ret = mem_regions_alloc_and_add(&memranges,
-+					start, end - start + 1, RANGE_RAM);
-+			if (ret) {
-+				fprintf(stderr,
-+					"Cannot allocate memory for ranges\n");
-+				return -ENOMEM;
-+			}
- 
--	if (!strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)))
--		r->type = RANGE_RAM;
--	else if (!strncmp(str, IOMEM_RESERVED, strlen(IOMEM_RESERVED)))
--		r->type = RANGE_RESERVED;
--	else
--		return 1;
-+			dbgprintf("%s:+[%d] %016llx - %016llx\n", __func__,
-+				memranges.size - 1,
-+				memranges.ranges[memranges.size - 1].start,
-+				memranges.ranges[memranges.size - 1].end);
-+		} else if (to_be_excluded(str)) {
-+			if (!memranges.size)
-+				continue;
-+
-+			/*
-+			 * Note: mem_regions_exclude() doesn't guarantee
-+			 * that the ranges are sorted out, but as long as
-+			 * we cope with /proc/iomem, we only operate on
-+			 * the last entry and so it is safe.
-+			 */
- 
--	r->start = base;
--	r->end = base + length - 1;
-+			/* The last System RAM range */
-+			last = &memranges.ranges[memranges.size - 1];
-+
-+			if (last->end < start)
-+				/* New resource outside of System RAM */
-+				continue;
-+			if (end < last->start)
-+				/* Already excluded by parent resource */
-+				continue;
-+
-+			excl_range.start = start;
-+			excl_range.end = end;
-+			mem_regions_alloc_and_exclude(&memranges, &excl_range);
-+			dbgprintf("%s:-      %016llx - %016llx\n",
-+					__func__, start, end);
-+		}
-+	}
-+
-+	fclose(fp);
-+
-+	*range = memranges.ranges;
-+	*ranges = memranges.size;
- 
- 	/* As a fallback option, we can try determining the PHYS_OFFSET
- 	 * value from the '/proc/iomem' entries as well.
-@@ -976,52 +1041,15 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
- 	 * between the user-space and kernel space 'PHYS_OFFSET'
- 	 * value.
- 	 */
--	set_phys_offset(r->start, "iomem");
-+	if (memranges.size)
-+		set_phys_offset(memranges.ranges[0].start, "iomem");
- 
--	dbgprintf("%s: %016llx - %016llx : %s", __func__, r->start,
--		r->end, str);
-+	dbgprint_mem_range("System RAM ranges;",
-+				memranges.ranges, memranges.size);
- 
- 	return 0;
- }
- 
--/**
-- * get_memory_ranges_iomem - Try to get the memory ranges from
-- * /proc/iomem.
-- */
--
--static int get_memory_ranges_iomem(struct memory_range *array,
--	unsigned int *count)
--{
--	*count = kexec_iomem_for_each_line(NULL,
--		get_memory_ranges_iomem_cb, array);
--
--	if (!*count) {
--		dbgprintf("%s: failed: No RAM found.\n", __func__);
--		return EFAILED;
--	}
--
--	return 0;
--}
--
--/**
-- * get_memory_ranges - Try to get the memory ranges some how.
-- */
--
--int get_memory_ranges(struct memory_range **range, int *ranges,
--	unsigned long kexec_flags)
--{
--	static struct memory_range array[KEXEC_SEGMENT_MAX];
--	unsigned int count;
--	int result;
--
--	result = get_memory_ranges_iomem(array, &count);
--
--	*range = result ? NULL : array;
--	*ranges = result ? 0 : count;
--
--	return result;
--}
--
- int arch_compat_trampoline(struct kexec_info *info)
- {
- 	return 0;
 -- 
 2.19.1
 
