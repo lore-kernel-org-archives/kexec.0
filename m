@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from userp2130.oracle.com ([156.151.31.86])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gj82R-00034e-V8
- for kexec@lists.infradead.org; Mon, 14 Jan 2019 19:36:49 +0000
-Date: Mon, 14 Jan 2019 14:36:47 -0500 (EST)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <134663991.69764038.1547494607008.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190114192144.GQ2773@zn.tnic>
-References: <20190110121944.6050-1-lijiang@redhat.com>
- <20190110121944.6050-2-lijiang@redhat.com> <20190111123300.GE4729@zn.tnic>
- <4AE2DC15AC0B8543882A74EA0D43DBEC035661E8@BPXM09GP.gisp.nec.co.jp>
- <20190114180142.GO2773@zn.tnic>
- <2126185079.69727846.1547492312033.JavaMail.zimbra@redhat.com>
- <20190114192144.GQ2773@zn.tnic>
-Subject: Re: [PATCH 1/2 v6] kdump: add the vmcoreinfo documentation
-MIME-Version: 1.0
+ id 1gj8DV-0000GC-Iw
+ for kexec@lists.infradead.org; Mon, 14 Jan 2019 19:48:15 +0000
+From: Eric DeVolder <eric.devolder@oracle.com>
+Subject: [RFC v1 0/8] Prototype for kexec signature verification within Xen
+Date: Mon, 14 Jan 2019 13:47:57 -0600
+Message-Id: <1547495285-28907-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,64 +15,181 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Lianbo Jiang <lijiang@redhat.com>, bhe@redhat.com, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: xen-devel@lists.xen.org
+Cc: daniel.kiper@oracle.com, eric.devolder@oracle.com, kexec@lists.infradead.org, boris.ostrovsky@oracle.com
+
+On April 20, 2018, I posted to xen-devel an RFC inquiring about
+support for signature verification of kexec within Xen:
+
+https://lists.xenproject.org/archives/html/xen-devel/2018-04/msg01655.html
+
+Since then, I've worked towards a solution. For the purposes of
+understanding signature verification, I built a standalone utility to
+parse the xen.mb.efi PECOFF file, hash it contents, and extract its
+digitial certificate and perform the Authenticode signature
+verification. Once this was all working, I integrated the files into
+Xen.
+
+I have a working prototype, which integrates [enough] OpenSSL into
+Xen to enable kexec signature verification. Alas I now have different
+priorities, but my employer did ask that I post this set of changes.
+You may do with them as you wish. I would be available for consultation
+should somebody wish to pursue this further.
+
+Being a prototype, it has the following known-to-me shortcomings:
+
+1: Does not following Xen coding standard. There may be areas where I
+do not use the most appropriate Xen style, call or macro, or error
+checking.
+
+2: The adaptation of OpenSSL into Xen is incomplete. There are a number
+of stub routines that have not been implemented (but currently do not
+seem to interfere with the signature verification operation). Some
+possible ways to address this are:
+ - Properly implement these routines
+ - Investigate further the OpenSSL configury to see if these can be
+   configured away (Note that I chose OpenSSL-1.1.0i specifically
+   because that is what EDK2 uses, and EDK2 is as close to Xen
+   embedded/kernel environment (Otherwise OpenSSL is primarily a
+   userland package)).
+ - All 150+ OpenSSL files are compiled-in, could look at eliminating
+   files manually.
+ - Maybe look at newer OpenSSL versions, which might have additional
+   configurability?
+ - Perhaps instead utilize libgcrypt + libksba instead of OpenSSL.
+
+3: A configure option is needed for the signature verification. This
+option should simultaneously disable kexec_load while enabling
+kexec_file_load.
+
+4: Linux has infrastructure to support multiple file types as well as
+multiple signature verification techniques. By contrast, this prototype
+is hardwired for PECOFF+Authenticode (EFI) format.
+
+5: Linux has keyring infrastructure to support multiple certificates.
+Currently the appropriate root certificate to satisfy Oracle-signed
+Xen kernel is compiled-in. This area alone would need significant
+attention if any hope in upstreaming is to occur.
+
+5: There is probably a better PECOFF decoder than the one currently in
+use.
+
+6: Convert the usage of DLCL macros to Xen standard list operations.
+
+7: For the include2/ xenossl.h header file hack to facilitate
+compiling OpenSSL within Xen; that needs to be revisited. I did
+this to deal with the standard header files the (userland) OpenSSL
+expects present; rather than changing nearly every OpenSSL source
+file.
+
+8: Analysis to understand the compiled-size increase, as well
+as the run-time size increase?
+
+9: A true security audit on these changes? For example, this prototype
+still relies upon the kexec userland tool to provide the purgatory
+executable. For obvious security reasons, this needs to be migrated
+within Xen, as Linux does (note that involves some level of ELF
+parsing and relocation support).
+
+10: Licensing of the various pieces may be problematic.
+
+Note that there is a corresponding change to kexec-tools to
+allow/enable the Xen kexec_file_load() hypercall. Those changes
+are not part of this change set, but will be posted separately.
+
+Anyway, this does work, for me.
+eric
 
 
 
+Eric DeVolder (8):
+  kexec: add kexec_file_load to libxenctrl
+  kexec: implement kexec_file_load() for PECOFF+Authenticode files
+  kexec: new file openssl-1.1.0i.patch
+  kexec: xen/common/Makefile: include building of OpenSSL
+  kexec: changes to facilitate compiling OpenSSL within Xen
+  kexec: support files for PECOFF Authenticode signature verification
+  kexec: Xen compatible makefile for OpenSSL
+  kexec: include OpenSSL build in xen.spec
 
------ Original Message -----
-> On Mon, Jan 14, 2019 at 01:58:32PM -0500, Dave Anderson wrote:
-> > Preferably it would be left as-is.  The crash utility has a "crash
-> > --osrelease vmcore"
-> > option that only looks at the dumpfile header, and just dump the string.
-> > With respect
-> > to compressed kdumps, crash could alternatively look at the utsname data
-> > that is stored
-> > in the diskdump_header.utsname field, but with ELF vmcores, there is no
-> > such back-up.
-> 
-> Well, there is:
-> 
-> 00000000  4f 53 52 45 4c 45 41 53  45 3d 35 2e 30 2e 30 2d |OSRELEASE=5.0.0-|
-> 00000010  72 63 32 2b 0a 50 41 47  45 53 49 5a 45 3d 34 30 |rc2+.PAGESIZE=40|
-> 00000020  39 36 0a 53 59 4d 42 4f  4c 28 6d 65 6d 5f 73 65 |96.SYMBOL(mem_se|
-> 00000030  63 74 69 6f 6e 29 3d 66  66 66 66 66 66 66 66 38 |ction)=ffffffff8|
-> 00000040  34 35 31 61 31 61 38 0a  53 59 4d 42 4f 4c 28 69 |451a1a8.SYMBOL(i|
-> 00000050  6e 69 74 5f 75 74 73 5f  6e 73 29 3d 66 66 66 66 |nit_uts_ns)=ffff|
->                                                                          ^^^^
-> 00000060  66 66 66 66 38 32 30 31  33 35 34 30 0a 53 59 4d  |ffff82013540
->                                                              ^^^^^^^^^^^^
-> 
-> This address has it.
+ Makefile.openssl-1.1.0i         |  480 ++++++++++++++
+ openssl-1.1.0i.patch            |  378 +++++++++++
+ tools/libxc/xc_kexec.c          |   41 ++
+ tools/libxc/xenctrl.h           |    4 +
+ xen.spec                        |   78 +++
+ xen/arch/x86/Rules.mk           |    2 +
+ xen/common/Makefile             |    4 +
+ xen/common/TrustedCert.h        |  113 ++++
+ xen/common/dlcl.h               |  323 ++++++++++
+ xen/common/kexec.c              |  131 +++-
+ xen/common/pecoff.h             |  283 ++++++++
+ xen/common/ped.c                |  579 +++++++++++++++++
+ xen/common/ped.h                |  128 ++++
+ xen/common/v_openssl.c          | 1348 +++++++++++++++++++++++++++++++++++++++
+ xen/common/xmalloc_tlsf.c       |   25 +
+ xen/include/asm-x86/types.h     |    2 +
+ xen/include/public/kexec.h      |    4 +-
+ xen/include/xen/types.h         |    3 +
+ xen/include/xen/xmalloc.h       |    1 +
+ xen/include2/assert.h           |    1 +
+ xen/include2/bits/syslog-path.h |    1 +
+ xen/include2/ctype.h            |    1 +
+ xen/include2/errno.h            |    1 +
+ xen/include2/features.h         |    1 +
+ xen/include2/inttypes.h         |    1 +
+ xen/include2/limits.h           |    1 +
+ xen/include2/memory.h           |    1 +
+ xen/include2/stdarg.h           |    1 +
+ xen/include2/stddef.h           |    1 +
+ xen/include2/stdint.h           |    1 +
+ xen/include2/stdio.h            |    1 +
+ xen/include2/stdlib.h           |    1 +
+ xen/include2/string.h           |    1 +
+ xen/include2/strings.h          |    1 +
+ xen/include2/sys/time.h         |    1 +
+ xen/include2/sys/types.h        |    1 +
+ xen/include2/syslog.h           |    1 +
+ xen/include2/time.h             |    1 +
+ xen/include2/unistd.h           |    1 +
+ xen/include2/xenossl.h          |  130 ++++
+ 40 files changed, 4074 insertions(+), 3 deletions(-)
+ create mode 100644 Makefile.openssl-1.1.0i
+ create mode 100644 openssl-1.1.0i.patch
+ create mode 100644 xen/common/TrustedCert.h
+ create mode 100755 xen/common/dlcl.h
+ create mode 100644 xen/common/pecoff.h
+ create mode 100644 xen/common/ped.c
+ create mode 100644 xen/common/ped.h
+ create mode 100644 xen/common/v_openssl.c
+ create mode 100644 xen/include2/assert.h
+ create mode 100644 xen/include2/bits/syslog-path.h
+ create mode 100644 xen/include2/ctype.h
+ create mode 100644 xen/include2/errno.h
+ create mode 100644 xen/include2/features.h
+ create mode 100644 xen/include2/inttypes.h
+ create mode 100644 xen/include2/limits.h
+ create mode 100644 xen/include2/memory.h
+ create mode 100644 xen/include2/stdarg.h
+ create mode 100644 xen/include2/stddef.h
+ create mode 100644 xen/include2/stdint.h
+ create mode 100644 xen/include2/stdio.h
+ create mode 100644 xen/include2/stdlib.h
+ create mode 100644 xen/include2/string.h
+ create mode 100644 xen/include2/strings.h
+ create mode 100644 xen/include2/sys/time.h
+ create mode 100644 xen/include2/sys/types.h
+ create mode 100644 xen/include2/syslog.h
+ create mode 100644 xen/include2/time.h
+ create mode 100644 xen/include2/unistd.h
+ create mode 100644 xen/include2/xenossl.h
 
-There's no reading of the dumpfile's memory involved, and that being the case,
-the vmlinux file is not utilized.  That's the whole point of the crash option, i.e.,
-taking a vmcore file, and trying to determine what kernel should be used with it:
-
-  $ man crash
-  ...
-       --osrelease dumpfile
-              Display the OSRELEASE vmcoreinfo string from a kdump dumpfile header.
-  ...
-
-
-> 
-> > What's the problem with leaving it alone?
-> 
-> The problem is that I'd like to get all those vmcoreinfo exports under
-> control and to not have people frivolously export whatever they feel
-> like, for obvious reasons, and to get rid of the duplicate/unused pieces
-> being part of vmcoreinfo.
-
-Well, I just don't agree that the OSRELEASE item is "frivolous".  It's been in place,
-and depended upon, for many years.
-
-Dave
+-- 
+2.7.4
 
 
 _______________________________________________
