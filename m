@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-f66.google.com ([209.85.167.66])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gie4f-000335-62
- for kexec@lists.infradead.org; Sun, 13 Jan 2019 11:37:07 +0000
-Received: by mail-lf1-f66.google.com with SMTP id a8so13723917lfk.5
- for <kexec@lists.infradead.org>; Sun, 13 Jan 2019 03:37:03 -0800 (PST)
+ id 1girQR-0005f7-OJ
+ for kexec@lists.infradead.org; Mon, 14 Jan 2019 01:52:29 +0000
+Subject: Re: [PATCH 1/2 v6] kdump: add the vmcoreinfo documentation
+References: <20190110121944.6050-1-lijiang@redhat.com>
+ <20190110121944.6050-2-lijiang@redhat.com> <20190111123300.GE4729@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <93c1969f-dcc7-4e34-75ff-b14f2ec15269@redhat.com>
+Date: Mon, 14 Jan 2019 09:52:14 +0800
 MIME-Version: 1.0
-References: <20190111095946.28070-1-takahiro.akashi@linaro.org>
-In-Reply-To: <20190111095946.28070-1-takahiro.akashi@linaro.org>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Sun, 13 Jan 2019 17:06:48 +0530
-Message-ID: <CACi5LpPGRi47HtPdRz3rj+xhEW-CDC7BfMs68nmx4EQOXpLjJA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] arm64: handle "reserved" entries in /proc/iomem
+In-Reply-To: <20190111123300.GE4729@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,75 +20,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: kexec mailing list <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>, James Morse <james.morse@arm.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: k-hagio@ab.jp.nec.com, bhe@redhat.com, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, anderson@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-Hi Akashi,
-
-On Fri, Jan 11, 2019 at 3:29 PM AKASHI Takahiro
-<takahiro.akashi@linaro.org> wrote:
->
-> # @James, @Bhupesh
-> # Could you kindly test this patch, please?
-> # I'm not quite confident that I correctly merged my patch with,
-> # particularly, Bhupesh's recent change.
-
-I will give this a go at my end and come back with results/comments in
-a day or two.
-
-> In recent arm64 kernels, /proc/iomem has an extended file format like:
->         40000000-5871ffff : System RAM
->           41800000-426affff : Kernel code
->           426b0000-42aaffff : reserved
->           42ab0000-42c64fff : Kernel data
->           54400000-583fffff : Crash kernel
->           58590000-585effff : reserved
->           58700000-5871ffff : reserved
->         58720000-58b5ffff : reserved
->         58b60000-5be3ffff : System RAM
->           58b61000-58b61fff : reserved
->           59a77000-59a77fff : reserved
->         5be40000-5becffff : reserved
->         5bed0000-5bedffff : System RAM
->         5bee0000-5bffffff : reserved
->         5c000000-5fffffff : System RAM
->           5da00000-5e9fffff : reserved
->           5ec00000-5edfffff : reserved
->           5ef6a000-5ef6afff : reserved
->           5ef6b000-5efcafff : reserved
->           5efcd000-5efcffff : reserved
->           5efd0000-5effffff : reserved
->           5f000000-5fffffff : reserved
->
-> where "reserved" entries can be an APCI table, UEFI related code or data,
-> and they are expected to be preserved across kexec'ing.
-> With this patch[1], kexec/kdump will be allowed to handle them properly.
->
-> [1] https://git.linaro.org/people/takahiro.akashi/kexec-tools.git arm64/resv_mem
->
-> AKASHI Takahiro (3):
->   kexec: add variant helper functions for handling memory regions
->   arm64: kexec: allocate memory space avoiding reserved regions
->   arm64: kdump: deal with a lot of resource entries in /proc/iomem
->
->  kexec/arch/arm64/crashdump-arm64.c |  25 ++---
->  kexec/arch/arm64/kexec-arm64.c     | 146 +++++++++++++++++------------
->  kexec/mem_regions.c                |  42 +++++++++
->  kexec/mem_regions.h                |   7 ++
->  4 files changed, 146 insertions(+), 74 deletions(-)
->
-> --
-> 2.19.1
->
-
-Thanks,
-Bhupesh
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTnlubQwMeaciDEx5pelIDIwOjMzLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IFRodSwgSmFuIDEwLCAyMDE5IGF0IDA4OjE5OjQzUE0gKzA4MDAsIExpYW5ibyBKaWFuZyB3cm90
+ZToKPj4gK2luaXRfdXRzX25zLm5hbWUucmVsZWFzZQo+PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tCj4+ICsKPj4gK1RoZSB2ZXJzaW9uIG9mIHRoZSBMaW51eCBrZXJuZWwuIFVzZWQgdG8gZmlu
+ZCB0aGUgY29ycmVzcG9uZGluZyBzb3VyY2UKPj4gK2NvZGUgZnJvbSB3aGljaCB0aGUga2VybmVs
+IGhhcyBiZWVuIGJ1aWx0Lgo+PiArCj4gCj4gLi4uCj4gCj4+ICsKPj4gK2luaXRfdXRzX25zCj4+
+ICstLS0tLS0tLS0tLQo+PiArCj4+ICtUaGlzIGlzIHRoZSBVVFMgbmFtZXNwYWNlLCB3aGljaCBp
+cyB1c2VkIHRvIGlzb2xhdGUgdHdvIHNwZWNpZmljCj4+ICtlbGVtZW50cyBvZiB0aGUgc3lzdGVt
+IHRoYXQgcmVsYXRlIHRvIHRoZSB1bmFtZSgyKSBzeXN0ZW0gY2FsbC4gVGhlIFVUUwo+PiArbmFt
+ZXNwYWNlIGlzIG5hbWVkIGFmdGVyIHRoZSBkYXRhIHN0cnVjdHVyZSB1c2VkIHRvIHN0b3JlIGlu
+Zm9ybWF0aW9uCj4+ICtyZXR1cm5lZCBieSB0aGUgdW5hbWUoMikgc3lzdGVtIGNhbGwuCj4+ICsK
+Pj4gK1VzZXItc3BhY2UgdG9vbHMgY2FuIGdldCB0aGUga2VybmVsIG5hbWUsIGhvc3QgbmFtZSwg
+a2VybmVsIHJlbGVhc2UKPj4gK251bWJlciwga2VybmVsIHZlcnNpb24sIGFyY2hpdGVjdHVyZSBu
+YW1lIGFuZCBPUyB0eXBlIGZyb20gaXQuCj4gCj4gQWxyZWFkeSBhc2tlZCB0aGlzIGJ1dCBubyBy
+ZXBseSBzbyBsZW1tZSBwYXN0ZSBteSBxdWVzdGlvbiBhZ2FpbjoKPiAKPiAiQW5kIHRoaXMgZG9j
+dW1lbnQgYWxyZWFkeSBmdWxmaWxscyBpdHMgcHVycG9zZSAtIHRob3NlIHR3byB2bWNvcmVpbmZv
+Cj4gZXhwb3J0cyBhcmUgcmVkdW5kYW50IGFuZCB0aGUgZmlyc3Qgb25lIGNhbiBiZSByZW1vdmVk
+Lgo+IAo+IEFuZCBub3cgdGhhdCB3ZSBhZ3JlZWQgdGhhdCBWTUNPUkVJTkZPIGlzIG5vdCBhbiBB
+QkkgYW5kIGlzIHZlcnkgdGlnaHRseQo+IGNvdXBsZWQgdG8gdGhlIGtlcm5lbCB2ZXJzaW9uLCBp
+bml0X3V0c19ucy5uYW1lLnJlbGVhc2UgY2FuIGJlIHJlbW92ZWQsCj4geWVzPwo+IAo+IE9yIGlz
+IHRoZXJlIGFueXRoaW5nIHNwZWFraW5nIGFnYWluc3QgdGhhdD8iCj4gCgpTb3JyeSBmb3IgdGhp
+cywgdGhhdCBpcyBteSBtaXN0YWtlLiBUaGFua3MgZm9yIHlvdXIgcmVtaW5kZXIuCgpJIGFncmVl
+IG9uIHlvdXIgcG9pbnQgb2Ygdmlldy4gQnV0IGkgZm9yZ290IHRoYXQgaSBzaG91bGQgcmVtb3Zl
+IHRoaXMgdmFyaWFibGUKaW4gdGhpcyBwb3N0LgoKSSB3b3VsZCBsaWtlIHRvIHJlbW92ZSB0aGlz
+IHZhcmlhYmxlIGFuZCBwb3N0IGFnYWluLiAKClRoYW5rcy4KTGlhbmJvCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
+ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2tleGVjCg==
