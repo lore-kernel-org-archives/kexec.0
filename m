@@ -1,22 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-f67.google.com ([209.85.166.67])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gisvH-00010T-AI
- for kexec@lists.infradead.org; Mon, 14 Jan 2019 03:28:25 +0000
-Received: by mail-io1-f67.google.com with SMTP id s22so16573323ioc.8
- for <kexec@lists.infradead.org>; Sun, 13 Jan 2019 19:28:22 -0800 (PST)
+Subject: Re: [PATCHv6] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
+References: <1547435711-5786-1-git-send-email-kernelfans@gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8206281c-c4e6-278a-899b-27cf9affd0da@infradead.org>
+Date: Sun, 13 Jan 2019 20:23:50 -0800
 MIME-Version: 1.0
-References: <20190109164824.19708-1-kasong@redhat.com>
- <20190109164824.19708-3-kasong@redhat.com>
- <20190111134303.GA12760@dhcp-128-65.nay.redhat.com>
- <1547223220.19931.471.camel@linux.ibm.com>
- <20190113013958.GA14019@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190113013958.GA14019@dhcp-128-65.nay.redhat.com>
-From: Kairui Song <kasong@redhat.com>
-Date: Mon, 14 Jan 2019 11:28:10 +0800
-Message-ID: <CACPcB9caE8Go+MuayBe_Pzz+iHSRi0rr1-Yo1Qtbks=h5+fN1A@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] kexec, KEYS: Make use of platform keyring for
- signature verify
+In-Reply-To: <1547435711-5786-1-git-send-email-kernelfans@gmail.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,60 +20,95 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: jwboyer@fedoraproject.org, Eric Biggers <ebiggers@google.com>, Dave Young <dyoung@redhat.com>, nayna@linux.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, jmorris@namei.org, David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org, linux-integrity <linux-integrity@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, bauerman@linux.ibm.com, serge@hallyn.com
+To: Pingfan Liu <kernelfans@gmail.com>, kexec@lists.infradead.org
+Cc: Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
 
-Hi, Mimi, Dave
+Hi,
 
-I checked the previous patches:
-https://www.spinics.net/lists/keyrings/msg03518.html
-https://www.spinics.net/lists/keyrings/msg03517.html
-https://www.spinics.net/lists/keyrings/msg03516.html
+Just fix a few of the commit log comments...
 
-That the latest patched I could found that placed the platform keyring in certs/
-However it didn't cc kexec list, and so I think Dave didn't receive them.
+On 1/13/19 7:15 PM, Pingfan Liu wrote:
+> People reported a bug on a high end server with many pcie devices, where
+> kernel bootup with crashkernel=384M, and kaslr is enabled. Even
+> though we still see much memory under 896 MB, the finding still failed
+> intermittently. Because currently we can only find region under 896 MB,
+> if w/0 ',high' specified. Then KASLR breaks 896 MB into several parts
 
-I could compose a patch to use the previous design, how do you think?
+  if w/o
+or preferably:
+  if without
 
+> randomly, and crashkernel reservation need be aligned to 128 MB, that's
+> why failure is found. It raises confusion to the end user that sometimes
+> crashkernel=X works while sometimes fails.
+> If want to make it succeed, customer can change kernel option to
+> "crashkernel=384M, high". Just this give "crashkernel=xx@yy" a very
 
-On Sun, Jan 13, 2019 at 9:40 AM Dave Young <dyoung@redhat.com> wrote:
->
-> Hi,
->
-> On 01/11/19 at 11:13am, Mimi Zohar wrote:
-> > On Fri, 2019-01-11 at 21:43 +0800, Dave Young wrote:
-> > [snip]
-> >
-> > > Personally I would like to see platform key separated from integrity.
-> > > But for the kexec_file part I think it is good at least it works with
-> > > this fix.
-> > >
-> > > Acked-by: Dave Young <dyoung@redhat.com>
-> >
-> > The original "platform" keyring patches that Nayna posted multiple
-> > times were in the certs directory, but nobody commented/responded.  So
-> > she reworked the patches, moving them to the integrity directory and
-> > posted them (cc'ing the kexec mailing list).  It's a bit late to be
-> > asking to move it, isn't it?
->
-> Hmm, apologize for being late,  I did not get chance to have a look the
-> old series.  Since we have the needs now, it should be still fine
->
-> Maybe Kairui can check Nayna's old series, see if he can do something
-> again?
->
-> >
-> > Mimi
-> >
->
-> Thanks
-> Dave
+no space?  just
+  "crashkernel=384M,high"
 
+> limited space to behave even though its grammer looks more generic.
 
+                                          grammar
 
---
-Best Regards,
-Kairui Song
+> And we can't answer questions raised from customer that confidently:
+> 1) why it doesn't succeed to reserve 896 MB;
+> 2) what's wrong with memory region under 4G;
+> 3) why I have to add ',high', I only require 384 MB, not 3840 MB.
+> This patch tries to get memory region from 896 MB firstly, then [896MB,4G],
+> finally above 4G.
+> Dave Young sent the original post, and I just re-post it with commit log
+> improvement as his requirement.
+> http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
+> There was an old discussion below (previously posted by Chao Wang):
+> https://lkml.org/lkml/2013/10/15/601
+> 
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+> Cc: yinghai@kernel.org,
+> Cc: vgoyal@redhat.com
+> ---
+> v5 -> v6
+>   discard bottom-up allocation, just repost dyoung's original patch with commit log improved
+> ---
+>  arch/x86/kernel/setup.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 3d872a5..fa62c81 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -551,6 +551,22 @@ static void __init reserve_crashkernel(void)
+>  						    high ? CRASH_ADDR_HIGH_MAX
+>  							 : CRASH_ADDR_LOW_MAX,
+>  						    crash_size, CRASH_ALIGN);
+> +#ifdef CONFIG_X86_64
+> +		/*
+> +		 * crashkernel=X reserve below 896M fails? Try below 4G
+> +		 */
+> +		if (!high && !crash_base)
+> +			crash_base = memblock_find_in_range(CRASH_ALIGN,
+> +						(1ULL << 32),
+> +						crash_size, CRASH_ALIGN);
+> +		/*
+> +		 * crashkernel=X reserve below 4G fails? Try MAXMEM
+> +		 */
+> +		if (!high && !crash_base)
+> +			crash_base = memblock_find_in_range(CRASH_ALIGN,
+> +						CRASH_ADDR_HIGH_MAX,
+> +						crash_size, CRASH_ALIGN);
+> +#endif
+>  		if (!crash_base) {
+>  			pr_info("crashkernel reservation failed - No suitable area found.\n");
+>  			return;
+> 
+
+ciao.
+-- 
+~Randy
 
 _______________________________________________
 kexec mailing list
