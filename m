@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pl1-x643.google.com ([2607:f8b0:4864:20::643])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1girQR-0005f7-OJ
- for kexec@lists.infradead.org; Mon, 14 Jan 2019 01:52:29 +0000
-Subject: Re: [PATCH 1/2 v6] kdump: add the vmcoreinfo documentation
-References: <20190110121944.6050-1-lijiang@redhat.com>
- <20190110121944.6050-2-lijiang@redhat.com> <20190111123300.GE4729@zn.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <93c1969f-dcc7-4e34-75ff-b14f2ec15269@redhat.com>
-Date: Mon, 14 Jan 2019 09:52:14 +0800
-MIME-Version: 1.0
-In-Reply-To: <20190111123300.GE4729@zn.tnic>
-Content-Language: en-US
+ id 1gisiv-0005S1-C4
+ for kexec@lists.infradead.org; Mon, 14 Jan 2019 03:15:39 +0000
+Received: by mail-pl1-x643.google.com with SMTP id y1so9447155plp.9
+ for <kexec@lists.infradead.org>; Sun, 13 Jan 2019 19:15:33 -0800 (PST)
+From: Pingfan Liu <kernelfans@gmail.com>
+Subject: [PATCHv6] x86/kdump: bugfix,
+ make the behavior of crashkernel=X consistent with kaslr
+Date: Mon, 14 Jan 2019 11:15:11 +0800
+Message-Id: <1547435711-5786-1-git-send-email-kernelfans@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,38 +18,83 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: k-hagio@ab.jp.nec.com, bhe@redhat.com, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, anderson@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: kexec@lists.infradead.org
+Cc: Baoquan He <bhe@redhat.com>, yinghai@kernel.org, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-5ZyoIDIwMTnlubQwMeaciDEx5pelIDIwOjMzLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IFRodSwgSmFuIDEwLCAyMDE5IGF0IDA4OjE5OjQzUE0gKzA4MDAsIExpYW5ibyBKaWFuZyB3cm90
-ZToKPj4gK2luaXRfdXRzX25zLm5hbWUucmVsZWFzZQo+PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tCj4+ICsKPj4gK1RoZSB2ZXJzaW9uIG9mIHRoZSBMaW51eCBrZXJuZWwuIFVzZWQgdG8gZmlu
-ZCB0aGUgY29ycmVzcG9uZGluZyBzb3VyY2UKPj4gK2NvZGUgZnJvbSB3aGljaCB0aGUga2VybmVs
-IGhhcyBiZWVuIGJ1aWx0Lgo+PiArCj4gCj4gLi4uCj4gCj4+ICsKPj4gK2luaXRfdXRzX25zCj4+
-ICstLS0tLS0tLS0tLQo+PiArCj4+ICtUaGlzIGlzIHRoZSBVVFMgbmFtZXNwYWNlLCB3aGljaCBp
-cyB1c2VkIHRvIGlzb2xhdGUgdHdvIHNwZWNpZmljCj4+ICtlbGVtZW50cyBvZiB0aGUgc3lzdGVt
-IHRoYXQgcmVsYXRlIHRvIHRoZSB1bmFtZSgyKSBzeXN0ZW0gY2FsbC4gVGhlIFVUUwo+PiArbmFt
-ZXNwYWNlIGlzIG5hbWVkIGFmdGVyIHRoZSBkYXRhIHN0cnVjdHVyZSB1c2VkIHRvIHN0b3JlIGlu
-Zm9ybWF0aW9uCj4+ICtyZXR1cm5lZCBieSB0aGUgdW5hbWUoMikgc3lzdGVtIGNhbGwuCj4+ICsK
-Pj4gK1VzZXItc3BhY2UgdG9vbHMgY2FuIGdldCB0aGUga2VybmVsIG5hbWUsIGhvc3QgbmFtZSwg
-a2VybmVsIHJlbGVhc2UKPj4gK251bWJlciwga2VybmVsIHZlcnNpb24sIGFyY2hpdGVjdHVyZSBu
-YW1lIGFuZCBPUyB0eXBlIGZyb20gaXQuCj4gCj4gQWxyZWFkeSBhc2tlZCB0aGlzIGJ1dCBubyBy
-ZXBseSBzbyBsZW1tZSBwYXN0ZSBteSBxdWVzdGlvbiBhZ2FpbjoKPiAKPiAiQW5kIHRoaXMgZG9j
-dW1lbnQgYWxyZWFkeSBmdWxmaWxscyBpdHMgcHVycG9zZSAtIHRob3NlIHR3byB2bWNvcmVpbmZv
-Cj4gZXhwb3J0cyBhcmUgcmVkdW5kYW50IGFuZCB0aGUgZmlyc3Qgb25lIGNhbiBiZSByZW1vdmVk
-Lgo+IAo+IEFuZCBub3cgdGhhdCB3ZSBhZ3JlZWQgdGhhdCBWTUNPUkVJTkZPIGlzIG5vdCBhbiBB
-QkkgYW5kIGlzIHZlcnkgdGlnaHRseQo+IGNvdXBsZWQgdG8gdGhlIGtlcm5lbCB2ZXJzaW9uLCBp
-bml0X3V0c19ucy5uYW1lLnJlbGVhc2UgY2FuIGJlIHJlbW92ZWQsCj4geWVzPwo+IAo+IE9yIGlz
-IHRoZXJlIGFueXRoaW5nIHNwZWFraW5nIGFnYWluc3QgdGhhdD8iCj4gCgpTb3JyeSBmb3IgdGhp
-cywgdGhhdCBpcyBteSBtaXN0YWtlLiBUaGFua3MgZm9yIHlvdXIgcmVtaW5kZXIuCgpJIGFncmVl
-IG9uIHlvdXIgcG9pbnQgb2Ygdmlldy4gQnV0IGkgZm9yZ290IHRoYXQgaSBzaG91bGQgcmVtb3Zl
-IHRoaXMgdmFyaWFibGUKaW4gdGhpcyBwb3N0LgoKSSB3b3VsZCBsaWtlIHRvIHJlbW92ZSB0aGlz
-IHZhcmlhYmxlIGFuZCBwb3N0IGFnYWluLiAKClRoYW5rcy4KTGlhbmJvCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
-ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2tleGVjCg==
+People reported a bug on a high end server with many pcie devices, where
+kernel bootup with crashkernel=384M, and kaslr is enabled. Even
+though we still see much memory under 896 MB, the finding still failed
+intermittently. Because currently we can only find region under 896 MB,
+if w/0 ',high' specified. Then KASLR breaks 896 MB into several parts
+randomly, and crashkernel reservation need be aligned to 128 MB, that's
+why failure is found. It raises confusion to the end user that sometimes
+crashkernel=X works while sometimes fails.
+If want to make it succeed, customer can change kernel option to
+"crashkernel=384M, high". Just this give "crashkernel=xx@yy" a very
+limited space to behave even though its grammer looks more generic.
+And we can't answer questions raised from customer that confidently:
+1) why it doesn't succeed to reserve 896 MB;
+2) what's wrong with memory region under 4G;
+3) why I have to add ',high', I only require 384 MB, not 3840 MB.
+This patch tries to get memory region from 896 MB firstly, then [896MB,4G],
+finally above 4G.
+Dave Young sent the original post, and I just re-post it with commit log
+improvement as his requirement.
+http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
+There was an old discussion below (previously posted by Chao Wang):
+https://lkml.org/lkml/2013/10/15/601
+
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: yinghai@kernel.org,
+Cc: vgoyal@redhat.com
+---
+v5 -> v6
+  discard bottom-up allocation, just repost dyoung's original patch with commit log improved
+---
+ arch/x86/kernel/setup.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 3d872a5..fa62c81 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -551,6 +551,22 @@ static void __init reserve_crashkernel(void)
+ 						    high ? CRASH_ADDR_HIGH_MAX
+ 							 : CRASH_ADDR_LOW_MAX,
+ 						    crash_size, CRASH_ALIGN);
++#ifdef CONFIG_X86_64
++		/*
++		 * crashkernel=X reserve below 896M fails? Try below 4G
++		 */
++		if (!high && !crash_base)
++			crash_base = memblock_find_in_range(CRASH_ALIGN,
++						(1ULL << 32),
++						crash_size, CRASH_ALIGN);
++		/*
++		 * crashkernel=X reserve below 4G fails? Try MAXMEM
++		 */
++		if (!high && !crash_base)
++			crash_base = memblock_find_in_range(CRASH_ALIGN,
++						CRASH_ADDR_HIGH_MAX,
++						crash_size, CRASH_ALIGN);
++#endif
+ 		if (!crash_base) {
+ 			pr_info("crashkernel reservation failed - No suitable area found.\n");
+ 			return;
+-- 
+2.7.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
