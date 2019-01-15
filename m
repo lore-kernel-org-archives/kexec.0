@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x443.google.com ([2607:f8b0:4864:20::443])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gjJks-0000MS-GU
- for kexec@lists.infradead.org; Tue, 15 Jan 2019 08:07:28 +0000
-Received: by mail-pf1-x443.google.com with SMTP id g62so926476pfd.12
- for <kexec@lists.infradead.org>; Tue, 15 Jan 2019 00:07:26 -0800 (PST)
-From: Pingfan Liu <kernelfans@gmail.com>
-Subject: [PATCHv7] x86/kdump: bugfix,
- make the behavior of crashkernel=X consistent with kaslr
-Date: Tue, 15 Jan 2019 16:07:03 +0800
-Message-Id: <1547539623-18201-1-git-send-email-kernelfans@gmail.com>
+ id 1gjLDw-0000vo-Nj
+ for kexec@lists.infradead.org; Tue, 15 Jan 2019 09:41:34 +0000
+Subject: Re: [PATCH 1/2 v6] kdump: add the vmcoreinfo documentation
+References: <20190110121944.6050-1-lijiang@redhat.com>
+ <20190110121944.6050-2-lijiang@redhat.com> <20190111145650.GG4729@zn.tnic>
+ <be8fbb64-7748-c7da-55f7-99fe69796a94@redhat.com>
+ <20190114091509.GC2773@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <718e6763-8606-1778-de41-c6bc9f9e8c92@redhat.com>
+Date: Tue, 15 Jan 2019 17:41:16 +0800
+MIME-Version: 1.0
+In-Reply-To: <20190114091509.GC2773@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,82 +22,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Baoquan He <bhe@redhat.com>, yinghai@kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+To: Borislav Petkov <bp@alien8.de>
+Cc: k-hagio@ab.jp.nec.com, bhe@redhat.com, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, anderson@redhat.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-People reported a bug on a high end server with many pcie devices, where
-kernel bootup with crashkernel=384M, and kaslr is enabled. Even
-though we still see much memory under 896 MB, the finding still failed
-intermittently. Because currently we can only find region under 896 MB,
-if without ',high' specified. Then KASLR breaks 896 MB into several parts
-randomly, and crashkernel reservation need be aligned to 128 MB, that's
-why failure is found. It raises confusion to the end user that sometimes
-crashkernel=X works while sometimes fails.
-If want to make it succeed, customer can change kernel option to
-"crashkernel=384M,high". Just this give "crashkernel=xx@yy" a very
-limited space to behave even though its grammar looks more generic.
-And we can't answer questions raised from customer that confidently:
-1) why it doesn't succeed to reserve 896 MB;
-2) what's wrong with memory region under 4G;
-3) why I have to add ',high', I only require 384 MB, not 3840 MB.
-This patch tries to get memory region from 896 MB firstly, then [896MB,4G],
-finally above 4G.
-Dave Young sent the original post, and I just re-post it with commit log
-improvement as his requirement.
-http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
-There was an old discussion below (previously posted by Chao Wang):
-https://lkml.org/lkml/2013/10/15/601
-
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: yinghai@kernel.org,
-Cc: vgoyal@redhat.com
-Cc: Randy Dunlap <rdunlap@infradead.org>
----
-v6 -> v7: fix spelling mistake pointed out by Randy
- arch/x86/kernel/setup.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 3d872a5..fa62c81 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -551,6 +551,22 @@ static void __init reserve_crashkernel(void)
- 						    high ? CRASH_ADDR_HIGH_MAX
- 							 : CRASH_ADDR_LOW_MAX,
- 						    crash_size, CRASH_ALIGN);
-+#ifdef CONFIG_X86_64
-+		/*
-+		 * crashkernel=X reserve below 896M fails? Try below 4G
-+		 */
-+		if (!high && !crash_base)
-+			crash_base = memblock_find_in_range(CRASH_ALIGN,
-+						(1ULL << 32),
-+						crash_size, CRASH_ALIGN);
-+		/*
-+		 * crashkernel=X reserve below 4G fails? Try MAXMEM
-+		 */
-+		if (!high && !crash_base)
-+			crash_base = memblock_find_in_range(CRASH_ALIGN,
-+						CRASH_ADDR_HIGH_MAX,
-+						crash_size, CRASH_ALIGN);
-+#endif
- 		if (!crash_base) {
- 			pr_info("crashkernel reservation failed - No suitable area found.\n");
- 			return;
--- 
-2.7.4
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTnlubQwMeaciDE05pelIDE3OjE1LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IE1vbiwgSmFuIDE0LCAyMDE5IGF0IDAxOjMwOjMwUE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
+IEkgbm90aWNlZCB0aGF0IHRoZSBjaGVja3BhdGNoIHdhcyBjb2RlZCBpbiBQZXJsLiBCdXQgaSBh
+bSBub3QgZmFtaWxpYXIgd2l0aAo+PiB0aGUgUGVybCBwcm9ncmFtIGxhbmd1YWdlLCB0aGF0IHdv
+dWxkIGJlIGJleW9uZCBteSBhYmlsaXR5IHRvIGRvIHRoaXMsIGkgaGF2ZQo+PiB0byBsZWFybiB0
+aGUgUGVybCBwcm9ncmFtIGxhbmd1YWdlIHN0ZXAgYnkgc3RlcC4gOi0pCj4gCj4gWW91IGNvdWxk
+IGdpdmUgaXQgYSB0cnkgLSBpdCBpcyBub3QgaGFyZCA6LSkKPiAKClRoYW5rIHlvdSBmb3IgZW5j
+b3VyYWdpbmcgbWUgdG8gZG8gdGhlIHRoaW5ncy4KCj4gQW5kIHRoZXJlJ3Mgbm8gaHVycnkgZm9y
+IHRoaXMsIHRha2UgeW91ciB0aW1lLgo+IApPSy4gSSB3b3VsZCBsaWtlIHRvIHB1dCB0aGlzIHRh
+c2sgaW4gbXkgcXVldWUuIE9uY2UgaSBoYXZlIGZyZWUgdGltZSwgaSB3aWxsIHdvcmsKb24gdGhp
+cyBpc3N1ZS4gCgo+PiBEbyB5b3UgbWVhbiB0aGlzIG9uZSAnS0VSTkVMX0lNQUdFX1NJWkUnPwo+
+IAo+IEkgbWVhbiwgYWxsIHRob3NlIHdoaWNoIGFyZSB1bnVzZWQuIE9wdGltYWxseSwgeW91IHNo
+b3VsZCBsb29rIGF0IHRoZQo+IHRvb2xzIGFuZCBzZWUgd2hldGhlciB0aGV5J3JlIHVzaW5nIHRo
+b3NlIGV4cG9ydHMgYW5kIGlmIG5vdCwgcmVtb3ZlCj4gdGhlbS4gQnV0IG5vIGh1cnJ5IGhlcmUg
+dG9vLCB0YWtlIHlvdXIgdGltZS4KPiAKT0suIEkgd2lsbCBjaGVjayBpdCBhZ2FpbiwgQnV0LCBi
+YXNpY2FsbHkgdGhleSBhcmUgdXNlZCBieSBNYWtlZHVtcGZpbGUgb3IgQ3Jhc2ggdG9vbHMuCgoK
+PiBNeSBmaW5hbCBnb2FsIGlzIHRvIGhhdmUgdGhpcyB1cC10by1kYXRlIGRvY3VtZW50YXRpb24g
+b2Ygd2hhdCBpcwo+IGV4cG9ydGVkIGFuZCB3aGF0IGlzIHVzZWQgYnkgdXNlciB0b29scyBzbyB0
+aGF0IHBlb3BsZSBjYW4gbG9vayBhdCBpdAo+IGZpcnN0IGJlZm9yZSBjYXJlbGVzc2x5IGV4cG9y
+dGluZyB5ZXQgYW5vdGhlciB0aGluZy4KPiAKQWdyZWUuCgpUaGFua3MsCkxpYW5ibwo+IFRoeC4K
+PiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
+IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
