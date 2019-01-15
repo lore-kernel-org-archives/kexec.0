@@ -1,17 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp2130.oracle.com ([141.146.126.79])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gjQqL-0007O3-KT
- for kexec@lists.infradead.org; Tue, 15 Jan 2019 15:41:35 +0000
-Date: Tue, 15 Jan 2019 16:41:19 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [RFC v1] kexec: Prototype for signature verification within Xen
-Message-ID: <20190115154119.4b3uyns4mitic6u6@tomti.i.net-space.pl>
-References: <1547495527-30191-1-git-send-email-eric.devolder@oracle.com>
- <20190115141528.jxjvnihe6p5rmvvs@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190115141528.jxjvnihe6p5rmvvs@verge.net.au>
+ id 1gjQvx-0001Sv-4Z
+ for kexec@lists.infradead.org; Tue, 15 Jan 2019 15:47:22 +0000
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ x0FFifaD126630
+ for <kexec@lists.infradead.org>; Tue, 15 Jan 2019 10:47:19 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2q1ewfk0ej-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Tue, 15 Jan 2019 10:47:19 -0500
+Received: from localhost
+ by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Tue, 15 Jan 2019 15:47:17 -0000
+Subject: Re: [RFC PATCH v2 2/2] kexec, KEYS: Make use of platform keyring
+ for signature verify
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Tue, 15 Jan 2019 10:46:58 -0500
+In-Reply-To: <20190115094542.17129-3-kasong@redhat.com>
+References: <20190115094542.17129-1-kasong@redhat.com>
+ <20190115094542.17129-3-kasong@redhat.com>
+Mime-Version: 1.0
+Message-Id: <1547567218.4156.289.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,96 +38,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: boris.ostrovsky@oracle.com, Eric DeVolder <eric.devolder@oracle.com>, kexec@lists.infradead.org, xen-devel@lists.xen.org
+To: Kairui Song <kasong@redhat.com>, linux-kernel@vger.kernel.org
+Cc: jwboyer@fedoraproject.org, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, jmorris@namei.org, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-On Tue, Jan 15, 2019 at 03:15:28PM +0100, Simon Horman wrote:
-> On Mon, Jan 14, 2019 at 01:52:07PM -0600, Eric DeVolder wrote:
-> > These changes work in conjunction with the signature
-> > verification support for Xen I published recently.
-> >
-> > Prior to this change, kexec supported the following
-> > three modes of operation:
-> >
-> > kexec_load:
-> > - unverified loading of kernel into Linux (original mode)
-> > - unverified loading of kernel into Xen
-> > kexec_file_load (the -s option to kexec):
-> > - verified loading of kernel into Linux
-> >
-> > With the verified loading of a kernel into Linux, the scope
-> > of kexec changed drastically as the kernel performs most of
-> > the work that kexec previously did; the kernel does so so as
-> > to reduce the risk of compromise.
-> >
-> > For example, the unverified loading of a kernel into Linux
-> > involves locating memory within the system to load the
-> > various pieces of data (kernel, initramdisk, command line)
-> > as well as reserving additional memory such as the first 1MB
-> > on x86 for legacy reasons as well as something known as
-> > 'purgatory', a trampoline that checks the integrity of the
-> > contents of loaded pieces of data, before invoking that
-> > loaded kernel. The management of purgatory involves
-> > manipulating an embedded ELF purgatory object file to insert
-> > a memory hash value, and rewrite a few run-time switches
-> > based on kexec command line parameters.
-> >
-> > By contrast, the verified loading essentially just passes
-> > file handles for the kernel, initramdisk, and command line
-> > pointer, and the kernel takes care of the rest, by
-> > performing all the work that the unverified kexec load would
-> > do, but inside the kernel using trusted kernel code.
-> >
-> > This changeset adds a fourth mode to kexec:
-> >
-> > - verified loading of kernel into Xen
-> >
-> > In general, Xen performs the signature verification on the
-> > loaded kernel, much as Linux does, but that is where the
-> > similarities end.  In the current Xen implementation, no
-> > infrastructure is present to support reading from [Linux
-> > dom0] file handles, or for manipulating ELF objects. As
-> > such, without Xen support for these actions, Xen relies upon
-> > kexec to provide these services, which is what this mode
-> > does.
-> >
-> > To achieve this, this mode of operation essentially vectors
-> > the verified load for Xen through the non-verified path,
-> > which performs all the needed actions for kexec to work, but
-> > then makes an adjustment to pass the entire kernel file, not
-> > just the loadable portion of the kernel file, to Xen in
-> > order to provide the proper image for signature
-> > verification.
-> >
-> > The loading of kexec images for signature verification for
-> > Xen is indicated with the -s switch, just like for Linux.
-> >
-> > Changes to configure.ac are for detecting whether or not the
-> > Xen version supports this kexec_file_load hypercall op.
-> >
-> > Changes to kexec-bzImage64.c are for recording what the
-> > change to the kernel image entry needs to be (the entire
-> > kernel file, not just the loadable portion), as well as
-> > vectoring kexec_file_load through kexec_load for Xen.
-> >
-> > Changes to kexec-xen.c are to invoke the new Xen
-> > kexec_file_load hypercall op, from kexec_load.
-> >
-> > Changes to kexec.c are to vector kexec_file_load for Xen
-> > throgh kexec_load for Xen, as well as make the correction
-> > for passing the complete kernel file to Xen.
-> >
-> > Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
->
-> Thanks Eric,
->
-> this looks good to me, aside from one nit below.
+On Tue, 2019-01-15 at 17:45 +0800, Kairui Song wrote:
 
-Please do not apply this patch. This is an RFC.
+> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+> index 7d97e432cbbc..a06b04065bb1 100644
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -534,9 +534,18 @@ static int bzImage64_cleanup(void *loader_data)
+>  #ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
+>  static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
+>  {
+> -	return verify_pefile_signature(kernel, kernel_len,
+> -				       VERIFY_USE_SECONDARY_KEYRING,
+> -				       VERIFYING_KEXEC_PE_SIGNATURE);
+> +	int ret;
+> +	ret = verify_pefile_signature(kernel, kernel_len,
+> +			VERIFY_USE_SECONDARY_KEYRING,
+> +			VERIFYING_KEXEC_PE_SIGNATURE);
+> +#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
 
-Eric, thank you for doing this work.
+Consider using IS_ENABLED() or IS_BUILTIN().
 
-Daniel
+Mimi
+
+> +	if (ret == -ENOKEY) {
+> +		ret = verify_pefile_signature(kernel, kernel_len,
+> +				VERIFY_USE_PLATFORM_KEYRING,
+> +				VERIFYING_KEXEC_PE_SIGNATURE);
+> +	}
+> +#endif
+> +	return ret;
+>  }
+>  #endif
+
 
 _______________________________________________
 kexec mailing list
