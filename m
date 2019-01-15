@@ -1,17 +1,35 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gjPXv-0003JB-6b
- for kexec@lists.infradead.org; Tue, 15 Jan 2019 14:18:28 +0000
-Date: Tue, 15 Jan 2019 15:18:24 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: add kexec_file_load support
-Message-ID: <20190115141823.reuldlydgymt4pt3@verge.net.au>
-References: <20190111095727.27935-1-takahiro.akashi@linaro.org>
- <a3e1923a-1528-b4ff-f9a7-4b51c6a5463b@redhat.com>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gjQNa-0000gv-Sg
+ for kexec@lists.infradead.org; Tue, 15 Jan 2019 15:11:52 +0000
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ x0FF3uHf141598
+ for <kexec@lists.infradead.org>; Tue, 15 Jan 2019 10:11:46 -0500
+Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2q1g50eq5b-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Tue, 15 Jan 2019 10:11:46 -0500
+Received: from localhost
+ by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <nayna@linux.vnet.ibm.com>;
+ Tue, 15 Jan 2019 15:11:45 -0000
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <a3e1923a-1528-b4ff-f9a7-4b51c6a5463b@redhat.com>
+Date: Tue, 15 Jan 2019 10:17:13 -0500
+From: nayna <nayna@linux.vnet.ibm.com>
+Subject: Re: [RFC PATCH 2/2] kexec, KEYS: Make use of platform keyring for
+ signature verify
+In-Reply-To: <20190115024243.GA9199@dhcp-128-65.nay.redhat.com>
+References: <20190109164824.19708-1-kasong@redhat.com>
+ <20190109164824.19708-3-kasong@redhat.com>
+ <20190111134303.GA12760@dhcp-128-65.nay.redhat.com>
+ <1547223220.19931.471.camel@linux.ibm.com>
+ <20190113013958.GA14019@dhcp-128-65.nay.redhat.com>
+ <1547482251.4156.127.camel@linux.ibm.com>
+ <20190115024243.GA9199@dhcp-128-65.nay.redhat.com>
+Message-Id: <3c80c88c90ead96cea9a4f13af41fc5b@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,175 +38,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: jwboyer@fedoraproject.org, Kairui Song <kasong@redhat.com>, ebiggers@google.com, nayna@linux.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>, jmorris@namei.org, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-On Tue, Jan 15, 2019 at 12:26:04AM +0530, Bhupesh Sharma wrote:
-> Hi Akashi,
-> 
-> Thanks for the patch.
-> 
-> On 01/11/2019 03:27 PM, AKASHI Takahiro wrote:
-> > # My kexec_file patch for arm64 is now merged in v5.0-rc1.
-> > 
-> > With this patch, kexec_file_load() system call is supported.
-> > 
-> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > ---
-> >   kexec/arch/arm64/kexec-arm64.c        | 10 +++++++++-
-> >   kexec/arch/arm64/kexec-elf-arm64.c    |  9 +++++++++
-> >   kexec/arch/arm64/kexec-image-arm64.c  | 28 ++++++++++++++++++++++++++-
-> >   kexec/arch/arm64/kexec-uImage-arm64.c |  7 +++++++
-> >   kexec/kexec-syscall.h                 |  3 +++
-> >   5 files changed, 55 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> > index 536c64b06384..1cde75d1a771 100644
-> > --- a/kexec/arch/arm64/kexec-arm64.c
-> > +++ b/kexec/arch/arm64/kexec-arm64.c
-> > @@ -141,6 +141,7 @@ int arch_process_options(int argc, char **argv)
-> >   	int opt;
-> >   	char *cmdline = NULL;
-> >   	const char *append = NULL;
-> > +	int do_kexec_file_syscall = 0;
-> >   	for (opt = 0; opt != -1; ) {
-> >   		opt = getopt_long(argc, argv, short_options, options, 0);
-> > @@ -158,6 +159,9 @@ int arch_process_options(int argc, char **argv)
-> >   		case OPT_INITRD:
-> >   			arm64_opts.initrd = optarg;
-> >   			break;
-> > +		case OPT_KEXEC_FILE_SYSCALL:
-> > +			do_kexec_file_syscall = 1;
-> > +			break;
-> >   		default:
-> >   			break; /* Ignore core and unknown options. */
-> >   		}
-> > @@ -169,7 +173,11 @@ int arch_process_options(int argc, char **argv)
-> >   		arm64_opts.command_line);
-> >   	dbgprintf("%s:%d: initrd: %s\n", __func__, __LINE__,
-> >   		arm64_opts.initrd);
-> > -	dbgprintf("%s:%d: dtb: %s\n", __func__, __LINE__, arm64_opts.dtb);
-> > +	dbgprintf("%s:%d: dtb: %s\n", __func__, __LINE__,
-> > +		(do_kexec_file_syscall && arm64_opts.dtb ? "(ignored)" :
-> > +							arm64_opts.dtb));
-> > +	if (do_kexec_file_syscall)
-> > +		arm64_opts.dtb = NULL;
-> >   	return 0;
-> >   }
-> > diff --git a/kexec/arch/arm64/kexec-elf-arm64.c b/kexec/arch/arm64/kexec-elf-arm64.c
-> > index fc83b42c9d2b..e14f8e92004b 100644
-> > --- a/kexec/arch/arm64/kexec-elf-arm64.c
-> > +++ b/kexec/arch/arm64/kexec-elf-arm64.c
-> > @@ -5,10 +5,12 @@
-> >   #define _GNU_SOURCE
-> >   #include <errno.h>
-> > +#include <fcntl.h>
-> >   #include <limits.h>
-> >   #include <stdlib.h>
-> >   #include <linux/elf.h>
-> > +#include "arch/options.h"
-> >   #include "crashdump-arm64.h"
-> >   #include "kexec-arm64.h"
-> >   #include "kexec-elf.h"
-> > @@ -47,6 +49,13 @@ int elf_arm64_load(int argc, char **argv, const char *kernel_buf,
-> >   	int result;
-> >   	int i;
-> > +	if (info->file_mode) {
-> > +		fprintf(stderr,
-> > +			"ELF executable is not supported in kexec_file\n");
-> > +
-> > +		return EFAILED;
-> > +	}
-> > +
-> >   	result = build_elf_exec_info(kernel_buf, kernel_size, &ehdr, 0);
-> >   	if (result < 0) {
-> > diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
-> > index e1b1e54b149f..685a99352e39 100644
-> > --- a/kexec/arch/arm64/kexec-image-arm64.c
-> > +++ b/kexec/arch/arm64/kexec-image-arm64.c
-> > @@ -4,10 +4,15 @@
-> >   #define _GNU_SOURCE
-> > +#include <errno.h>
-> > +#include <fcntl.h>
-> > +#include <limits.h>
-> >   #include "crashdump-arm64.h"
-> > +#include "image-header.h"
-> > +#include "kexec.h"
-> >   #include "kexec-arm64.h"
-> >   #include "kexec-syscall.h"
-> > -#include <limits.h>
-> > +#include "arch/options.h"
-> >   int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
-> >   {
-> > @@ -35,6 +40,27 @@ int image_arm64_load(int argc, char **argv, const char *kernel_buf,
-> >   	unsigned long kernel_segment;
-> >   	int result;
-> > +	if (info->file_mode) {
-> > +		if (arm64_opts.initrd) {
-> > +			info->initrd_fd = open(arm64_opts.initrd, O_RDONLY);
-> > +			if (info->initrd_fd == -1) {
-> > +				fprintf(stderr,
-> > +					"Could not open initrd file %s:%s\n",
-> > +					arm64_opts.initrd, strerror(errno));
-> > +				result = EFAILED;
-> > +				goto exit;
-> > +			}
-> > +		}
-> > +
-> > +		if (arm64_opts.command_line) {
-> > +			info->command_line = (char *)arm64_opts.command_line;
-> > +			info->command_line_len =
-> > +					strlen(arm64_opts.command_line) + 1;
-> > +		}
-> > +
-> > +		return 0;
-> > +	}
-> > +
-> >   	header = (const struct arm64_image_header *)(kernel_buf);
-> >   	if (arm64_process_image_header(header))
-> > diff --git a/kexec/arch/arm64/kexec-uImage-arm64.c b/kexec/arch/arm64/kexec-uImage-arm64.c
-> > index 022d7ee4693a..126ea9c2555b 100644
-> > --- a/kexec/arch/arm64/kexec-uImage-arm64.c
-> > +++ b/kexec/arch/arm64/kexec-uImage-arm64.c
-> > @@ -20,6 +20,13 @@ int uImage_arm64_load(int argc, char **argv, const char *buf, off_t len,
-> >   	struct Image_info img;
-> >   	int ret;
-> > +	if (info->file_mode) {
-> > +		fprintf(stderr,
-> > +			"uImage is not supported in kexec_file\n");
-> > +
-> > +		return EFAILED;
-> > +	}
-> > +
-> >   	ret = uImage_load(buf, len, &img);
-> >   	if (ret)
-> >   		return ret;
-> > diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
-> > index b96e02aaae13..dac1c1f7564e 100644
-> > --- a/kexec/kexec-syscall.h
-> > +++ b/kexec/kexec-syscall.h
-> > @@ -67,6 +67,9 @@
-> >   #ifdef __s390x__
-> >   #define __NR_kexec_file_load	381
-> >   #endif
-> > +#ifdef __aarch64__
-> > +#define __NR_kexec_file_load	294
-> > +#endif
-> >   #ifndef __NR_kexec_file_load
-> >   /* system call not available for the arch */
-> > 
-> 
-> Reviewed and Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
-> 
-> Thanks.
-
-Thanks, applied.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMjAxOS0wMS0xNCAyMTo0MiwgRGF2ZSBZb3VuZyB3cm90ZToKPiBPbiAwMS8xNC8xOSBhdCAx
+MToxMGFtLCBNaW1pIFpvaGFyIHdyb3RlOgo+PiBPbiBTdW4sIDIwMTktMDEtMTMgYXQgMDk6Mzkg
+KzA4MDAsIERhdmUgWW91bmcgd3JvdGU6Cj4+ID4gSGksCj4+ID4KPj4gPiBPbiAwMS8xMS8xOSBh
+dCAxMToxM2FtLCBNaW1pIFpvaGFyIHdyb3RlOgo+PiA+ID4gT24gRnJpLCAyMDE5LTAxLTExIGF0
+IDIxOjQzICswODAwLCBEYXZlIFlvdW5nIHdyb3RlOgo+PiA+ID4gW3NuaXBdCj4+ID4gPgo+PiA+
+ID4gPiBQZXJzb25hbGx5IEkgd291bGQgbGlrZSB0byBzZWUgcGxhdGZvcm0ga2V5IHNlcGFyYXRl
+ZCBmcm9tIGludGVncml0eS4KPj4gPiA+ID4gQnV0IGZvciB0aGUga2V4ZWNfZmlsZSBwYXJ0IEkg
+dGhpbmsgaXQgaXMgZ29vZCBhdCBsZWFzdCBpdCB3b3JrcyB3aXRoCj4+ID4gPiA+IHRoaXMgZml4
+Lgo+PiA+ID4gPgo+PiA+ID4gPiBBY2tlZC1ieTogRGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhhdC5j
+b20+Cj4+ID4gPgo+PiA+ID4gVGhlIG9yaWdpbmFsICJwbGF0Zm9ybSIga2V5cmluZyBwYXRjaGVz
+IHRoYXQgTmF5bmEgcG9zdGVkIG11bHRpcGxlCj4+ID4gPiB0aW1lcyB3ZXJlIGluIHRoZSBjZXJ0
+cyBkaXJlY3RvcnksIGJ1dCBub2JvZHkgY29tbWVudGVkL3Jlc3BvbmRlZC4gwqBTbwo+PiA+ID4g
+c2hlIHJld29ya2VkIHRoZSBwYXRjaGVzLCBtb3ZpbmcgdGhlbSB0byB0aGUgaW50ZWdyaXR5IGRp
+cmVjdG9yeSBhbmQKPj4gPiA+IHBvc3RlZCB0aGVtIChjYydpbmcgdGhlIGtleGVjIG1haWxpbmcg
+bGlzdCkuIMKgSXQncyBhIGJpdCBsYXRlIHRvIGJlCj4+ID4gPiBhc2tpbmcgdG8gbW92ZSBpdCwg
+aXNuJ3QgaXQ/Cj4+ID4KPj4gPiBIbW0sIGFwb2xvZ2l6ZSBmb3IgYmVpbmcgbGF0ZSwgIEkgZGlk
+IG5vdCBnZXQgY2hhbmNlIHRvIGhhdmUgYSBsb29rIHRoZQo+PiA+IG9sZCBzZXJpZXMuICBTaW5j
+ZSB3ZSBoYXZlIHRoZSBuZWVkcyBub3csIGl0IHNob3VsZCBiZSBzdGlsbCBmaW5lCj4+ID4KPj4g
+PiBNYXliZSBLYWlydWkgY2FuIGNoZWNrIE5heW5hJ3Mgb2xkIHNlcmllcywgc2VlIGlmIGhlIGNh
+biBkbyBzb21ldGhpbmcKPj4gPiBhZ2Fpbj8KPj4gCj4+IFdoZXRoZXIgdGhlIHBsYXRmb3JtIGtl
+eXJpbmcgaXMgZGVmaW5lZCBpbiBjZXJ0cy8gb3IgaW4gaW50ZWdyaXR5LyB0aGUKPj4ga2V5cmlu
+ZyBpZCBuZWVkcyB0byBiZSBhY2Nlc3NpYmxlIHRvIHRoZSBvdGhlciwgd2l0aG91dCBtYWtpbmcg
+dGhlCj4+IGtleXJpbmcgaWQgZ2xvYmFsLiDCoE1vdmluZyB3aGVyZSB0aGUgcGxhdGZvcm0ga2V5
+cmluZyBpcyBkZWZpbmVkIGlzCj4+IG5vdCB0aGUgcHJvYmxlbS4KPiAKPiBBZ3JlZWQsIGJ1dCBq
+dXN0IGZlZWwga2V4ZWMgZGVwZW5kcyBvbiBJTUEgc291bmRzIG5vdCBnb29kLgoKVGhlIHBsYXRm
+b3JtIGtleXJpbmcgaXMgbm90IGRlcGVuZGVudCBvbiBJTUEsIGl0IGlzIGRlcGVuZGVudCBvbiAK
+ImludGVncml0eSIgLSBDT05GSUdfSU5URUdSSVRZX0FTWU1NRVRSSUNfS0VZUy4KT3RoZXIgQ09O
+RklHUyB3aGljaCBpdCBuZWVkcyBhcmUgQ09ORklHX1NZU1RFTV9CTEFDS0xJU1RfS0VZUklORywg
+CkNPTkZJR19FRkkuCgpUaGFua3MgJiBSZWdhcmRzLAogICAgLSBOYXluYQoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8va2V4ZWMK
