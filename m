@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-it1-x142.google.com ([2607:f8b0:4864:20::142])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gjH4K-0007cj-6t
- for kexec@lists.infradead.org; Tue, 15 Jan 2019 05:15:21 +0000
-Date: Tue, 15 Jan 2019 13:15:07 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH V2] x86/kexec: fix a kexec_file_load failure
-Message-ID: <20190115051507.GA9893@dhcp-128-65.nay.redhat.com>
-References: <20181228011247.GA9999@dhcp-128-65.nay.redhat.com>
+ id 1gjJhG-0007CP-FK
+ for kexec@lists.infradead.org; Tue, 15 Jan 2019 08:03:44 +0000
+Received: by mail-it1-x142.google.com with SMTP id g76so3728063itg.2
+ for <kexec@lists.infradead.org>; Tue, 15 Jan 2019 00:03:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20181228011247.GA9999@dhcp-128-65.nay.redhat.com>
+References: <1547435711-5786-1-git-send-email-kernelfans@gmail.com>
+ <8206281c-c4e6-278a-899b-27cf9affd0da@infradead.org>
+In-Reply-To: <8206281c-c4e6-278a-899b-27cf9affd0da@infradead.org>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Tue, 15 Jan 2019 16:03:28 +0800
+Message-ID: <CAFgQCTv2P7vPDweK=yj3M2o-vV8x_CMdzASKHV60uioz9A-mKg@mail.gmail.com>
+Subject: Re: [PATCHv6] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,78 +26,101 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@alien8.de>
-Cc: Baoquan He <bhe@redhat.com>, x86@kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Baoquan He <bhe@redhat.com>, Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-On 12/28/18 at 09:12am, Dave Young wrote:
-> The code cleanup mentioned in Fixes tag changed the behavior of
-> kexec_locate_mem_hole.  The kexec_locate_mem_hole will try to
-> allocate free memory only when kbuf.mem is initialized as zero.
-> 
-> But in x86 kexec_file_load implementation there are a few places
-> the kbuf.mem is reused like below:
->   /* kbuf initialized, kbuf.mem = 0 */
->   ...
->   kexec_add_buffer()
->   ...
->   kexec_add_buffer()
-> 
->   The second kexec_add_buffer will reuse previous kbuf but not
->   reinitialize the kbuf.mem.
-> 
-> Thus kexec_file_load failed because the sanity check failed.
-> 
-> So explictily reset kbuf.mem to fix the issue.
-> 
-> Fixes: b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-> Cc: <stable@vger.kernel.org>
-> ---
-> V1 -> V2: use KEXEC_BUF_MEM_UNKNOWN in code.
->  arch/x86/kernel/crash.c           | 1 +
->  arch/x86/kernel/kexec-bzimage64.c | 2 ++
->  2 files changed, 3 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index f631a3f15587..6b7890c7889b 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -469,6 +469,7 @@ int crash_load_segments(struct kimage *image)
->  
->  	kbuf.memsz = kbuf.bufsz;
->  	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
-> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->  	ret = kexec_add_buffer(&kbuf);
->  	if (ret) {
->  		vfree((void *)image->arch.elf_headers);
-> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-> index 278cd07228dd..0d5efa34f359 100644
-> --- a/arch/x86/kernel/kexec-bzimage64.c
-> +++ b/arch/x86/kernel/kexec-bzimage64.c
-> @@ -434,6 +434,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
->  	kbuf.memsz = PAGE_ALIGN(header->init_size);
->  	kbuf.buf_align = header->kernel_alignment;
->  	kbuf.buf_min = MIN_KERNEL_LOAD_ADDR;
-> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->  	ret = kexec_add_buffer(&kbuf);
->  	if (ret)
->  		goto out_free_params;
-> @@ -448,6 +449,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
->  		kbuf.bufsz = kbuf.memsz = initrd_len;
->  		kbuf.buf_align = PAGE_SIZE;
->  		kbuf.buf_min = MIN_INITRD_LOAD_ADDR;
-> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->  		ret = kexec_add_buffer(&kbuf);
->  		if (ret)
->  			goto out_free_params;
-> -- 
-> 2.17.0
-> 
+On Mon, Jan 14, 2019 at 12:24 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> Hi,
+>
+> Just fix a few of the commit log comments...
+>
+> On 1/13/19 7:15 PM, Pingfan Liu wrote:
+> > People reported a bug on a high end server with many pcie devices, where
+> > kernel bootup with crashkernel=384M, and kaslr is enabled. Even
+> > though we still see much memory under 896 MB, the finding still failed
+> > intermittently. Because currently we can only find region under 896 MB,
+> > if w/0 ',high' specified. Then KASLR breaks 896 MB into several parts
+>
+>   if w/o
+> or preferably:
+>   if without
+>
+> > randomly, and crashkernel reservation need be aligned to 128 MB, that's
+> > why failure is found. It raises confusion to the end user that sometimes
+> > crashkernel=X works while sometimes fails.
+> > If want to make it succeed, customer can change kernel option to
+> > "crashkernel=384M, high". Just this give "crashkernel=xx@yy" a very
+>
+> no space?  just
+>   "crashkernel=384M,high"
+>
+> > limited space to behave even though its grammer looks more generic.
+>
+>                                           grammar
+>
+Thanks for your review, will cc you in next version.
 
-Andrew, Boris,  can any of you take this patch? Without this fix we have a regression.
-
-Thanks
-Dave
+Regards,
+Pingfan
+> > And we can't answer questions raised from customer that confidently:
+> > 1) why it doesn't succeed to reserve 896 MB;
+> > 2) what's wrong with memory region under 4G;
+> > 3) why I have to add ',high', I only require 384 MB, not 3840 MB.
+> > This patch tries to get memory region from 896 MB firstly, then [896MB,4G],
+> > finally above 4G.
+> > Dave Young sent the original post, and I just re-post it with commit log
+> > improvement as his requirement.
+> > http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
+> > There was an old discussion below (previously posted by Chao Wang):
+> > https://lkml.org/lkml/2013/10/15/601
+> >
+> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > Cc: Dave Young <dyoung@redhat.com>
+> > Cc: Baoquan He <bhe@redhat.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+> > Cc: yinghai@kernel.org,
+> > Cc: vgoyal@redhat.com
+> > ---
+> > v5 -> v6
+> >   discard bottom-up allocation, just repost dyoung's original patch with commit log improved
+> > ---
+> >  arch/x86/kernel/setup.c | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >
+> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> > index 3d872a5..fa62c81 100644
+> > --- a/arch/x86/kernel/setup.c
+> > +++ b/arch/x86/kernel/setup.c
+> > @@ -551,6 +551,22 @@ static void __init reserve_crashkernel(void)
+> >                                                   high ? CRASH_ADDR_HIGH_MAX
+> >                                                        : CRASH_ADDR_LOW_MAX,
+> >                                                   crash_size, CRASH_ALIGN);
+> > +#ifdef CONFIG_X86_64
+> > +             /*
+> > +              * crashkernel=X reserve below 896M fails? Try below 4G
+> > +              */
+> > +             if (!high && !crash_base)
+> > +                     crash_base = memblock_find_in_range(CRASH_ALIGN,
+> > +                                             (1ULL << 32),
+> > +                                             crash_size, CRASH_ALIGN);
+> > +             /*
+> > +              * crashkernel=X reserve below 4G fails? Try MAXMEM
+> > +              */
+> > +             if (!high && !crash_base)
+> > +                     crash_base = memblock_find_in_range(CRASH_ALIGN,
+> > +                                             CRASH_ADDR_HIGH_MAX,
+> > +                                             crash_size, CRASH_ALIGN);
+> > +#endif
+> >               if (!crash_base) {
+> >                       pr_info("crashkernel reservation failed - No suitable area found.\n");
+> >                       return;
+> >
+>
+> ciao.
+> --
+> ~Randy
 
 _______________________________________________
 kexec mailing list
