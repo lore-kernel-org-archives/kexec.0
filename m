@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gjiGL-0007IS-9R
- for kexec@lists.infradead.org; Wed, 16 Jan 2019 10:17:35 +0000
+ id 1gjiGP-0007JS-2W
+ for kexec@lists.infradead.org; Wed, 16 Jan 2019 10:17:39 +0000
 From: Kairui Song <kasong@redhat.com>
-Subject: [PATCH v3 0/2] let kexec_file_load use platform keyring to verify the
- kernel image
-Date: Wed, 16 Jan 2019 18:16:52 +0800
-Message-Id: <20190116101654.7288-1-kasong@redhat.com>
+Subject: [PATCH v3 1/2] integrity, KEYS: add a reference to platform keyring
+Date: Wed, 16 Jan 2019 18:16:53 +0800
+Message-Id: <20190116101654.7288-2-kasong@redhat.com>
+In-Reply-To: <20190116101654.7288-1-kasong@redhat.com>
+References: <20190116101654.7288-1-kasong@redhat.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,48 +25,93 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: jwboyer@fedoraproject.org, Kairui Song <kasong@redhat.com>, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, jmorris@namei.org, zohar@linux.ibm.com, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-This patch series adds a .platform_trusted_keys in system_keyring as the
-reference to .platform keyring in integrity subsystem, when platform
-keyring is being initialized it will be updated. So other component could
-use this keyring as well.
+Currently when loading new kernel via kexec_file_load syscall, it is able
+to verify the signed PE bzimage against .builtin_trusted_keys or
+.secondary_trusted_keys. But the image could be signed with third part
+keys which will be provided by platform or firmware as EFI variable (eg.
+stored in MokListRT EFI variable), and the keys won't be available in
+keyrings mentioned above.
 
-This patch series also let kexec_file_load use platform keyring as fall
-back if it failed to verify the image against secondary keyring, make it
-possible to load kernel signed by third part key if third party key is
-imported in the firmware.
+After commit 9dc92c45177a ('integrity: Define a trusted platform keyring')
+a .platform keyring is introduced to store the keys provided by platform
+or firmware, this keyring is intended to be used for verifying kernel
+images being loaded by kexec_file_load syscall. And with a few following
+up commits, keys provided by firmware is being loaded into this keyring,
+and IMA-appraisal is able to use the keyring to verify kernel images.
+IMA is the currently the only user of that keyring.
 
-After this patch kexec_file_load will be able to verify a signed PE
-bzImage using keys in platform keyring.
+This patch exposes the .platform, and makes it useable for other
+components. For example, kexec_file_load could use this .platform
+keyring to verify the kernel image's image.
 
-Tested in a VM with locally signed kernel with pesign and imported the
-cert to EFI's MokList variable.
+Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Kairui Song <kasong@redhat.com>
+---
+ certs/system_keyring.c        | 9 +++++++++
+ include/keys/system_keyring.h | 5 +++++
+ security/integrity/digsig.c   | 6 ++++++
+ 3 files changed, 20 insertions(+)
 
-Kairui Song (2):
-  integrity, KEYS: add a reference to platform keyring
-  kexec, KEYS: Make use of platform keyring for signature verify
-
-Update from V2:
-  - Use IS_ENABLED in kexec_file_load to judge if platform_trusted_keys
-    should be used for verifying image as suggested by Mimi Zohar
-
-Update from V1:
-  - Make platform_trusted_keys static, and update commit message as suggested
-    by Mimi Zohar
-  - Always check if platform keyring is initialized before use it
-
-Kairui Song (2):
-  integrity, KEYS: add a reference to platform keyring
-  kexec, KEYS: Make use of platform keyring for signature verify
-
- arch/x86/kernel/kexec-bzimage64.c | 13 ++++++++++---
- certs/system_keyring.c            | 22 +++++++++++++++++++++-
- include/keys/system_keyring.h     |  5 +++++
- include/linux/verification.h      |  1 +
- security/integrity/digsig.c       |  6 ++++++
- 5 files changed, 43 insertions(+), 4 deletions(-)
-
+diff --git a/certs/system_keyring.c b/certs/system_keyring.c
+index 81728717523d..4690ef9cda8a 100644
+--- a/certs/system_keyring.c
++++ b/certs/system_keyring.c
+@@ -24,6 +24,9 @@ static struct key *builtin_trusted_keys;
+ #ifdef CONFIG_SECONDARY_TRUSTED_KEYRING
+ static struct key *secondary_trusted_keys;
+ #endif
++#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
++static struct key *platform_trusted_keys;
++#endif
+ 
+ extern __initconst const u8 system_certificate_list[];
+ extern __initconst const unsigned long system_certificate_list_size;
+@@ -265,4 +268,10 @@ int verify_pkcs7_signature(const void *data, size_t len,
+ }
+ EXPORT_SYMBOL_GPL(verify_pkcs7_signature);
+ 
++#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
++void __init set_platform_trusted_keys(struct key *keyring) {
++	platform_trusted_keys = keyring;
++}
++#endif
++
+ #endif /* CONFIG_SYSTEM_DATA_VERIFICATION */
+diff --git a/include/keys/system_keyring.h b/include/keys/system_keyring.h
+index 359c2f936004..9e1b7849b6aa 100644
+--- a/include/keys/system_keyring.h
++++ b/include/keys/system_keyring.h
+@@ -61,5 +61,10 @@ static inline struct key *get_ima_blacklist_keyring(void)
+ }
+ #endif /* CONFIG_IMA_BLACKLIST_KEYRING */
+ 
++#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
++
++extern void __init set_platform_trusted_keys(struct key* keyring);
++
++#endif /* CONFIG_INTEGRITY_PLATFORM_KEYRING */
+ 
+ #endif /* _KEYS_SYSTEM_KEYRING_H */
+diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
+index f45d6edecf99..bfabc2a8111d 100644
+--- a/security/integrity/digsig.c
++++ b/security/integrity/digsig.c
+@@ -89,6 +89,12 @@ static int __integrity_init_keyring(const unsigned int id, key_perm_t perm,
+ 		keyring[id] = NULL;
+ 	}
+ 
++#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
++	if (id == INTEGRITY_KEYRING_PLATFORM) {
++		set_platform_trusted_keys(keyring[id]);
++	}
++#endif
++
+ 	return err;
+ }
+ 
 -- 
 2.20.1
+
 
 _______________________________________________
 kexec mailing list
