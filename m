@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gjhmK-0001B4-Ij
- for kexec@lists.infradead.org; Wed, 16 Jan 2019 09:46:35 +0000
-Date: Wed, 16 Jan 2019 10:46:19 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2 2/2] x86, kexec_file_load: make it work with
- efi=noruntime or efi=old_map
-Message-ID: <20190116094619.GB15409@zn.tnic>
-References: <20190115095834.22617-1-kasong@redhat.com>
- <20190115095834.22617-3-kasong@redhat.com>
- <20190115231005.GF6596@zn.tnic>
- <CACPcB9dYD2zR7ssXFibkefo3EZuvVnLegovwTMA8MaaLP1UsYQ@mail.gmail.com>
+ id 1gjiGL-0007IS-9R
+ for kexec@lists.infradead.org; Wed, 16 Jan 2019 10:17:35 +0000
+From: Kairui Song <kasong@redhat.com>
+Subject: [PATCH v3 0/2] let kexec_file_load use platform keyring to verify the
+ kernel image
+Date: Wed, 16 Jan 2019 18:16:52 +0800
+Message-Id: <20190116101654.7288-1-kasong@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CACPcB9dYD2zR7ssXFibkefo3EZuvVnLegovwTMA8MaaLP1UsYQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,26 +21,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>
-Cc: rafael.j.wysocki@intel.com, Baoquan He <bhe@redhat.com>, erik.schmauss@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robert.moore@intel.com, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, Chao Fan <fanc.fnst@cn.fujitsu.com>, Len Brown <lenb@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: jwboyer@fedoraproject.org, Kairui Song <kasong@redhat.com>, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, jmorris@namei.org, zohar@linux.ibm.com, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-On Wed, Jan 16, 2019 at 03:08:42PM +0800, Kairui Song wrote:
-> I didn't see a way to reuse things in that patch series, situation is
-> different, in that patch it needs to get RSDP in very early boot stage
-> so it did everything from scratch, in this patch kexec_file_load need
-> to get RSDP too, but everything is well setup so things are a lot
-> easier, just read from current boot_prams, efi and fallback to
-> acpi_find_root_pointer should be good.
+This patch series adds a .platform_trusted_keys in system_keyring as the
+reference to .platform keyring in integrity subsystem, when platform
+keyring is being initialized it will be updated. So other component could
+use this keyring as well.
 
-No no. Early code should find out that venerable RSDP thing once and
-will save it somewhere for further use. No gazillion parsings of it.
-Just once and share it with the rest of the code that needs it.
+This patch series also let kexec_file_load use platform keyring as fall
+back if it failed to verify the image against secondary keyring, make it
+possible to load kernel signed by third part key if third party key is
+imported in the firmware.
+
+After this patch kexec_file_load will be able to verify a signed PE
+bzImage using keys in platform keyring.
+
+Tested in a VM with locally signed kernel with pesign and imported the
+cert to EFI's MokList variable.
+
+Kairui Song (2):
+  integrity, KEYS: add a reference to platform keyring
+  kexec, KEYS: Make use of platform keyring for signature verify
+
+Update from V2:
+  - Use IS_ENABLED in kexec_file_load to judge if platform_trusted_keys
+    should be used for verifying image as suggested by Mimi Zohar
+
+Update from V1:
+  - Make platform_trusted_keys static, and update commit message as suggested
+    by Mimi Zohar
+  - Always check if platform keyring is initialized before use it
+
+Kairui Song (2):
+  integrity, KEYS: add a reference to platform keyring
+  kexec, KEYS: Make use of platform keyring for signature verify
+
+ arch/x86/kernel/kexec-bzimage64.c | 13 ++++++++++---
+ certs/system_keyring.c            | 22 +++++++++++++++++++++-
+ include/keys/system_keyring.h     |  5 +++++
+ include/linux/verification.h      |  1 +
+ security/integrity/digsig.c       |  6 ++++++
+ 5 files changed, 43 insertions(+), 4 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+2.20.1
 
 _______________________________________________
 kexec mailing list
