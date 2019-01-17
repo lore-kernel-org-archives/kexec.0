@@ -1,18 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gk4Pn-00035I-1v
- for kexec@lists.infradead.org; Thu, 17 Jan 2019 09:56:50 +0000
-Date: Thu, 17 Jan 2019 10:56:40 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [RFC v1] kexec: Prototype for signature verification within Xen
-Message-ID: <20190117095640.z7vvon2db3bdqtlh@verge.net.au>
-References: <1547495527-30191-1-git-send-email-eric.devolder@oracle.com>
- <20190115141528.jxjvnihe6p5rmvvs@verge.net.au>
- <20190115154119.4b3uyns4mitic6u6@tomti.i.net-space.pl>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190115154119.4b3uyns4mitic6u6@tomti.i.net-space.pl>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gkGyE-0005Ra-H3
+ for kexec@lists.infradead.org; Thu, 17 Jan 2019 23:21:12 +0000
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
+ x0HNJJYe002435
+ for <kexec@lists.infradead.org>; Thu, 17 Jan 2019 18:21:06 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2q2xchu4bk-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 17 Jan 2019 18:21:06 -0500
+Received: from localhost
+ by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Thu, 17 Jan 2019 23:21:03 -0000
+Subject: Re: [PATCH v3 1/2] integrity, KEYS: add a reference to platform
+ keyring
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Thu, 17 Jan 2019 18:20:45 -0500
+In-Reply-To: <20190116101654.7288-2-kasong@redhat.com>
+References: <20190116101654.7288-1-kasong@redhat.com>
+ <20190116101654.7288-2-kasong@redhat.com>
+Mime-Version: 1.0
+Message-Id: <1547767245.3931.56.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,103 +33,79 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: boris.ostrovsky@oracle.com, Eric DeVolder <eric.devolder@oracle.com>, kexec@lists.infradead.org, xen-devel@lists.xen.org
+To: Kairui Song <kasong@redhat.com>, linux-kernel@vger.kernel.org
+Cc: jwboyer@fedoraproject.org, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, jmorris@namei.org, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-On Tue, Jan 15, 2019 at 04:41:19PM +0100, Daniel Kiper wrote:
-> On Tue, Jan 15, 2019 at 03:15:28PM +0100, Simon Horman wrote:
-> > On Mon, Jan 14, 2019 at 01:52:07PM -0600, Eric DeVolder wrote:
-> > > These changes work in conjunction with the signature
-> > > verification support for Xen I published recently.
-> > >
-> > > Prior to this change, kexec supported the following
-> > > three modes of operation:
-> > >
-> > > kexec_load:
-> > > - unverified loading of kernel into Linux (original mode)
-> > > - unverified loading of kernel into Xen
-> > > kexec_file_load (the -s option to kexec):
-> > > - verified loading of kernel into Linux
-> > >
-> > > With the verified loading of a kernel into Linux, the scope
-> > > of kexec changed drastically as the kernel performs most of
-> > > the work that kexec previously did; the kernel does so so as
-> > > to reduce the risk of compromise.
-> > >
-> > > For example, the unverified loading of a kernel into Linux
-> > > involves locating memory within the system to load the
-> > > various pieces of data (kernel, initramdisk, command line)
-> > > as well as reserving additional memory such as the first 1MB
-> > > on x86 for legacy reasons as well as something known as
-> > > 'purgatory', a trampoline that checks the integrity of the
-> > > contents of loaded pieces of data, before invoking that
-> > > loaded kernel. The management of purgatory involves
-> > > manipulating an embedded ELF purgatory object file to insert
-> > > a memory hash value, and rewrite a few run-time switches
-> > > based on kexec command line parameters.
-> > >
-> > > By contrast, the verified loading essentially just passes
-> > > file handles for the kernel, initramdisk, and command line
-> > > pointer, and the kernel takes care of the rest, by
-> > > performing all the work that the unverified kexec load would
-> > > do, but inside the kernel using trusted kernel code.
-> > >
-> > > This changeset adds a fourth mode to kexec:
-> > >
-> > > - verified loading of kernel into Xen
-> > >
-> > > In general, Xen performs the signature verification on the
-> > > loaded kernel, much as Linux does, but that is where the
-> > > similarities end.  In the current Xen implementation, no
-> > > infrastructure is present to support reading from [Linux
-> > > dom0] file handles, or for manipulating ELF objects. As
-> > > such, without Xen support for these actions, Xen relies upon
-> > > kexec to provide these services, which is what this mode
-> > > does.
-> > >
-> > > To achieve this, this mode of operation essentially vectors
-> > > the verified load for Xen through the non-verified path,
-> > > which performs all the needed actions for kexec to work, but
-> > > then makes an adjustment to pass the entire kernel file, not
-> > > just the loadable portion of the kernel file, to Xen in
-> > > order to provide the proper image for signature
-> > > verification.
-> > >
-> > > The loading of kexec images for signature verification for
-> > > Xen is indicated with the -s switch, just like for Linux.
-> > >
-> > > Changes to configure.ac are for detecting whether or not the
-> > > Xen version supports this kexec_file_load hypercall op.
-> > >
-> > > Changes to kexec-bzImage64.c are for recording what the
-> > > change to the kernel image entry needs to be (the entire
-> > > kernel file, not just the loadable portion), as well as
-> > > vectoring kexec_file_load through kexec_load for Xen.
-> > >
-> > > Changes to kexec-xen.c are to invoke the new Xen
-> > > kexec_file_load hypercall op, from kexec_load.
-> > >
-> > > Changes to kexec.c are to vector kexec_file_load for Xen
-> > > throgh kexec_load for Xen, as well as make the correction
-> > > for passing the complete kernel file to Xen.
-> > >
-> > > Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-> >
-> > Thanks Eric,
-> >
-> > this looks good to me, aside from one nit below.
-> 
-> Please do not apply this patch. This is an RFC.
-> 
-> Eric, thank you for doing this work.
-
-Thanks Daniel, noted.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCAyMDE5LTAxLTE2IGF0IDE4OjE2ICswODAwLCBLYWlydWkgU29uZyB3cm90ZToKPiBD
+dXJyZW50bHkgd2hlbiBsb2FkaW5nIG5ldyBrZXJuZWwgdmlhIGtleGVjX2ZpbGVfbG9hZCBzeXNj
+YWxsLCBpdCBpcyBhYmxlCj4gdG8gdmVyaWZ5IHRoZSBzaWduZWQgUEUgYnppbWFnZSBhZ2FpbnN0
+IC5idWlsdGluX3RydXN0ZWRfa2V5cyBvcgo+IC5zZWNvbmRhcnlfdHJ1c3RlZF9rZXlzLiBCdXQg
+dGhlIGltYWdlIGNvdWxkIGJlIHNpZ25lZCB3aXRoIHRoaXJkIHBhcnQKPiBrZXlzIHdoaWNoIHdp
+bGwgYmUgcHJvdmlkZWQgYnkgcGxhdGZvcm0gb3IgZmlybXdhcmUgYXMgRUZJIHZhcmlhYmxlIChl
+Zy4KPiBzdG9yZWQgaW4gTW9rTGlzdFJUIEVGSSB2YXJpYWJsZSksIGFuZCB0aGUga2V5cyB3b24n
+dCBiZSBhdmFpbGFibGUgaW4KPiBrZXlyaW5ncyBtZW50aW9uZWQgYWJvdmUuCj4gCj4gQWZ0ZXIg
+Y29tbWl0IDlkYzkyYzQ1MTc3YSAoJ2ludGVncml0eTogRGVmaW5lIGEgdHJ1c3RlZCBwbGF0Zm9y
+bSBrZXlyaW5nJykKPiBhIC5wbGF0Zm9ybSBrZXlyaW5nIGlzIGludHJvZHVjZWQgdG8gc3RvcmUg
+dGhlIGtleXMgcHJvdmlkZWQgYnkgcGxhdGZvcm0KPiBvciBmaXJtd2FyZSwgdGhpcyBrZXlyaW5n
+IGlzIGludGVuZGVkIHRvIGJlIHVzZWQgZm9yIHZlcmlmeWluZyBrZXJuZWwKPiBpbWFnZXMgYmVp
+bmcgbG9hZGVkIGJ5IGtleGVjX2ZpbGVfbG9hZCBzeXNjYWxsLiBBbmQgd2l0aCBhIGZldyBmb2xs
+b3dpbmcKPiB1cCBjb21taXRzLCBrZXlzIHByb3ZpZGVkIGJ5IGZpcm13YXJlIGlzIGJlaW5nIGxv
+YWRlZCBpbnRvIHRoaXMga2V5cmluZywKPiBhbmQgSU1BLWFwcHJhaXNhbCBpcyBhYmxlIHRvIHVz
+ZSB0aGUga2V5cmluZyB0byB2ZXJpZnkga2VybmVsIGltYWdlcy4KPiBJTUEgaXMgdGhlIGN1cnJl
+bnRseSB0aGUgb25seSB1c2VyIG9mIHRoYXQga2V5cmluZy4KCkhvdyBhYm91dCBzaW1wbHkgc2F5
+aW5nLCBDb21taXQgIi4uLi4iIGludHJvZHVjZWQgYSBwbGF0Zm9ybSBrZXlyaW5nCmZvciBzdG9y
+aW5nIHByZWJvb3Qga2V5cywgdXNlZCBmb3IgdmVyaWZ5aW5nIHRoZSBrZXhlYyBrZXJuZWwgaW1h
+Z2UncwpzaWduYXR1cmUuCgo+IFRoaXMgcGF0Y2ggZXhwb3NlcyB0aGUgLnBsYXRmb3JtLCBhbmQg
+bWFrZXMgaXQgdXNlYWJsZSBmb3Igb3RoZXIKPiBjb21wb25lbnRzLiBGb3IgZXhhbXBsZSwga2V4
+ZWNfZmlsZV9sb2FkIGNvdWxkIHVzZSB0aGlzIC5wbGF0Zm9ybQo+IGtleXJpbmcgdG8gdmVyaWZ5
+IHRoZSBrZXJuZWwgaW1hZ2UncyBpbWFnZS4KClRoZSBhYm92ZSBzdGF0ZW1lbnQgaXMgdG9vIGdl
+bmVyaWMuIMKgUGxlYXNlIHJlcGxhY2UgImFuZCBtYWtlcyBpdCAKdXNlYWJsZSBmb3Igb3RoZXIg
+Y29tcG9uZW50cyIgd2l0aCAiIGtleXJpbmcsIG1ha2luZyBpdCBhY2Nlc3NpYmxlIGZvcgp2ZXJp
+ZnlpbmcgYSBQRSBzaWduZWQga2VybmVsIGltYWdlIi4KCj4gCj4gU3VnZ2VzdGVkLWJ5OiBNaW1p
+IFpvaGFyIDx6b2hhckBsaW51eC5pYm0uY29tPgo+IFNpZ25lZC1vZmYtYnk6IEthaXJ1aSBTb25n
+IDxrYXNvbmdAcmVkaGF0LmNvbT4KClJldmlld2VkL1Rlc3RlZC1ieTogTWltaSBab2hhciA8em9o
+YXJAbGludXguaWJtLmNvbT4KPiAtLS0KPiAgY2VydHMvc3lzdGVtX2tleXJpbmcuYyAgICAgICAg
+fCA5ICsrKysrKysrKwo+ICBpbmNsdWRlL2tleXMvc3lzdGVtX2tleXJpbmcuaCB8IDUgKysrKysK
+PiAgc2VjdXJpdHkvaW50ZWdyaXR5L2RpZ3NpZy5jICAgfCA2ICsrKysrKwo+ICAzIGZpbGVzIGNo
+YW5nZWQsIDIwIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvY2VydHMvc3lzdGVtX2tl
+eXJpbmcuYyBiL2NlcnRzL3N5c3RlbV9rZXlyaW5nLmMKPiBpbmRleCA4MTcyODcxNzUyM2QuLjQ2
+OTBlZjljZGE4YSAxMDA2NDQKPiAtLS0gYS9jZXJ0cy9zeXN0ZW1fa2V5cmluZy5jCj4gKysrIGIv
+Y2VydHMvc3lzdGVtX2tleXJpbmcuYwo+IEBAIC0yNCw2ICsyNCw5IEBAIHN0YXRpYyBzdHJ1Y3Qg
+a2V5ICpidWlsdGluX3RydXN0ZWRfa2V5czsKPiAgI2lmZGVmIENPTkZJR19TRUNPTkRBUllfVFJV
+U1RFRF9LRVlSSU5HCj4gIHN0YXRpYyBzdHJ1Y3Qga2V5ICpzZWNvbmRhcnlfdHJ1c3RlZF9rZXlz
+Owo+ICAjZW5kaWYKPiArI2lmZGVmIENPTkZJR19JTlRFR1JJVFlfUExBVEZPUk1fS0VZUklORwo+
+ICtzdGF0aWMgc3RydWN0IGtleSAqcGxhdGZvcm1fdHJ1c3RlZF9rZXlzOwo+ICsjZW5kaWYKPiAg
+Cj4gIGV4dGVybiBfX2luaXRjb25zdCBjb25zdCB1OCBzeXN0ZW1fY2VydGlmaWNhdGVfbGlzdFtd
+Owo+ICBleHRlcm4gX19pbml0Y29uc3QgY29uc3QgdW5zaWduZWQgbG9uZyBzeXN0ZW1fY2VydGlm
+aWNhdGVfbGlzdF9zaXplOwo+IEBAIC0yNjUsNCArMjY4LDEwIEBAIGludCB2ZXJpZnlfcGtjczdf
+c2lnbmF0dXJlKGNvbnN0IHZvaWQgKmRhdGEsIHNpemVfdCBsZW4sCj4gIH0KPiAgRVhQT1JUX1NZ
+TUJPTF9HUEwodmVyaWZ5X3BrY3M3X3NpZ25hdHVyZSk7Cj4gIAo+ICsjaWZkZWYgQ09ORklHX0lO
+VEVHUklUWV9QTEFURk9STV9LRVlSSU5HCj4gK3ZvaWQgX19pbml0IHNldF9wbGF0Zm9ybV90cnVz
+dGVkX2tleXMoc3RydWN0IGtleSAqa2V5cmluZykgewo+ICsJcGxhdGZvcm1fdHJ1c3RlZF9rZXlz
+ID0ga2V5cmluZzsKPiArfQo+ICsjZW5kaWYKPiArCj4gICNlbmRpZiAvKiBDT05GSUdfU1lTVEVN
+X0RBVEFfVkVSSUZJQ0FUSU9OICovCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUva2V5cy9zeXN0ZW1f
+a2V5cmluZy5oIGIvaW5jbHVkZS9rZXlzL3N5c3RlbV9rZXlyaW5nLmgKPiBpbmRleCAzNTljMmY5
+MzYwMDQuLjllMWI3ODQ5YjZhYSAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL2tleXMvc3lzdGVtX2tl
+eXJpbmcuaAo+ICsrKyBiL2luY2x1ZGUva2V5cy9zeXN0ZW1fa2V5cmluZy5oCj4gQEAgLTYxLDUg
+KzYxLDEwIEBAIHN0YXRpYyBpbmxpbmUgc3RydWN0IGtleSAqZ2V0X2ltYV9ibGFja2xpc3Rfa2V5
+cmluZyh2b2lkKQo+ICB9Cj4gICNlbmRpZiAvKiBDT05GSUdfSU1BX0JMQUNLTElTVF9LRVlSSU5H
+ICovCj4gIAo+ICsjaWZkZWYgQ09ORklHX0lOVEVHUklUWV9QTEFURk9STV9LRVlSSU5HCj4gKwo+
+ICtleHRlcm4gdm9pZCBfX2luaXQgc2V0X3BsYXRmb3JtX3RydXN0ZWRfa2V5cyhzdHJ1Y3Qga2V5
+KiBrZXlyaW5nKTsKPiArCj4gKyNlbmRpZiAvKiBDT05GSUdfSU5URUdSSVRZX1BMQVRGT1JNX0tF
+WVJJTkcgKi8KPiAgCj4gICNlbmRpZiAvKiBfS0VZU19TWVNURU1fS0VZUklOR19IICovCj4gZGlm
+ZiAtLWdpdCBhL3NlY3VyaXR5L2ludGVncml0eS9kaWdzaWcuYyBiL3NlY3VyaXR5L2ludGVncml0
+eS9kaWdzaWcuYwo+IGluZGV4IGY0NWQ2ZWRlY2Y5OS4uYmZhYmMyYTgxMTFkIDEwMDY0NAo+IC0t
+LSBhL3NlY3VyaXR5L2ludGVncml0eS9kaWdzaWcuYwo+ICsrKyBiL3NlY3VyaXR5L2ludGVncml0
+eS9kaWdzaWcuYwo+IEBAIC04OSw2ICs4OSwxMiBAQCBzdGF0aWMgaW50IF9faW50ZWdyaXR5X2lu
+aXRfa2V5cmluZyhjb25zdCB1bnNpZ25lZCBpbnQgaWQsIGtleV9wZXJtX3QgcGVybSwKPiAgCQlr
+ZXlyaW5nW2lkXSA9IE5VTEw7Cj4gIAl9Cj4gIAo+ICsjaWZkZWYgQ09ORklHX0lOVEVHUklUWV9Q
+TEFURk9STV9LRVlSSU5HCj4gKwlpZiAoaWQgPT0gSU5URUdSSVRZX0tFWVJJTkdfUExBVEZPUk0p
+IHsKPiArCQlzZXRfcGxhdGZvcm1fdHJ1c3RlZF9rZXlzKGtleXJpbmdbaWRdKTsKPiArCX0KPiAr
+I2VuZGlmCj4gKwo+ICAJcmV0dXJuIGVycjsKPiAgfQo+ICAKCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2tleGVjCg==
