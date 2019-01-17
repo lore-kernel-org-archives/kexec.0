@@ -1,21 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga12.intel.com ([192.55.52.136])
+Received: from mail-it1-f195.google.com ([209.85.166.195])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gjtbh-0005L5-5M
- for kexec@lists.infradead.org; Wed, 16 Jan 2019 22:24:23 +0000
+ id 1gk2In-0003aQ-Rd
+ for kexec@lists.infradead.org; Thu, 17 Jan 2019 07:41:28 +0000
+Received: by mail-it1-f195.google.com with SMTP id z7so7360086iti.0
+ for <kexec@lists.infradead.org>; Wed, 16 Jan 2019 23:41:25 -0800 (PST)
+MIME-Version: 1.0
+References: <20190115095834.22617-1-kasong@redhat.com>
+ <20190115095834.22617-3-kasong@redhat.com>
+ <20190115231005.GF6596@zn.tnic>
+ <CACPcB9dYD2zR7ssXFibkefo3EZuvVnLegovwTMA8MaaLP1UsYQ@mail.gmail.com>
+ <20190116094619.GB15409@zn.tnic>
+In-Reply-To: <20190116094619.GB15409@zn.tnic>
+From: Kairui Song <kasong@redhat.com>
+Date: Thu, 17 Jan 2019 15:41:13 +0800
+Message-ID: <CACPcB9d0dKLPmZ=b++m5LYRjFUCFyLL3deDBcS4m3N-UWZ_Hyw@mail.gmail.com>
 Subject: Re: [PATCH v2 2/2] x86, kexec_file_load: make it work with
  efi=noruntime or efi=old_map
-References: <20190115095834.22617-1-kasong@redhat.com>
- <20190115095834.22617-3-kasong@redhat.com> <20190115231005.GF6596@zn.tnic>
- <20190116033243.GB9649@dhcp-128-65.nay.redhat.com>
- <CACPcB9fWoV=b3DwhmBAAgqDHc0x=PfSyEuqnZcAQjM=LLLkAQw@mail.gmail.com>
- <20190116065126.GC6468@dhcp-128-65.nay.redhat.com>
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Message-ID: <a3413e70-f96d-703e-38ed-d6fd4f904210@intel.com>
-Date: Wed, 16 Jan 2019 23:24:13 +0100
-MIME-Version: 1.0
-In-Reply-To: <20190116065126.GC6468@dhcp-128-65.nay.redhat.com>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,114 +25,105 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Kairui Song <kasong@redhat.com>
-Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robert.moore@intel.com, mingo@redhat.com, Borislav Petkov <bp@alien8.de>, hpa@zytor.com, tglx@linutronix.de, erik.schmauss@intel.com, akpm@linux-foundation.org, Len Brown <lenb@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: rafael.j.wysocki@intel.com, Baoquan He <bhe@redhat.com>, erik.schmauss@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robert.moore@intel.com, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, Chao Fan <fanc.fnst@cn.fujitsu.com>, Len Brown <lenb@kernel.org>
 
-On 1/16/2019 7:51 AM, Dave Young wrote:
-> On 01/16/19 at 01:09pm, Kairui Song wrote:
->> On Wed, Jan 16, 2019 at 11:32 AM Dave Young <dyoung@redhat.com> wrote:
->>> On 01/16/19 at 12:10am, Borislav Petkov wrote:
->>>> On Tue, Jan 15, 2019 at 05:58:34PM +0800, Kairui Song wrote:
->>>>> When efi=noruntime or efi=oldmap is used, EFI services won't be available
->>>>> in the second kernel, therefore the second kernel will not be able to get
->>>>> the ACPI RSDP address from firmware by calling EFI services and won't
->>>>> boot. Previously we are expecting the user to set the acpi_rsdp=<addr>
->>>>> on kernel command line for second kernel as there was no way to pass RSDP
->>>>> address to second kernel.
->>>>>
->>>>> After commit e6e094e053af ('x86/acpi, x86/boot: Take RSDP address from
->>>>> boot params if available'), now it's possible to set an acpi_rsdp_addr
->>>>> parameter in the boot_params passed to second kernel, this commit make
->>>>> use of it, detect and set the RSDP address when it's required for second
->>>>> kernel to boot.
->>>>>
->>>>> Tested with an EFI enabled KVM VM with efi=noruntime.
->>>>>
->>>>> Suggested-by: Dave Young <dyoung@redhat.com>
->>>>> Signed-off-by: Kairui Song <kasong@redhat.com>
->>>>> ---
->>>>>   arch/x86/kernel/kexec-bzimage64.c | 21 +++++++++++++++++++++
->>>>>   drivers/acpi/acpica/tbxfroot.c    |  3 +--
->>>>>   include/acpi/acpixf.h             |  2 +-
->>>>>   3 files changed, 23 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
->>>>> index 53917a3ebf94..0a90dcbd041f 100644
->>>>> --- a/arch/x86/kernel/kexec-bzimage64.c
->>>>> +++ b/arch/x86/kernel/kexec-bzimage64.c
->>>>> @@ -20,6 +20,7 @@
->>>>>   #include <linux/mm.h>
->>>>>   #include <linux/efi.h>
->>>>>   #include <linux/verification.h>
->>>>> +#include <linux/acpi.h>
->>>>>
->>>>>   #include <asm/bootparam.h>
->>>>>   #include <asm/setup.h>
->>>>> @@ -255,8 +256,28 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
->>>>>      /* Setup EFI state */
->>>>>      setup_efi_state(params, params_load_addr, efi_map_offset, efi_map_sz,
->>>>>                      efi_setup_data_offset);
->>>>> +
->>>>> +#ifdef CONFIG_ACPI
->>>>> +   /* Setup ACPI RSDP pointer in case EFI is not available in second kernel */
->>>>> +   if (!acpi_disabled && (!efi_enabled(EFI_RUNTIME_SERVICES) || efi_enabled(EFI_OLD_MEMMAP))) {
->>>>> +           /* Copied from acpi_os_get_root_pointer accordingly */
->>>>> +           params->acpi_rsdp_addr = boot_params.acpi_rsdp_addr;
->>>>> +           if (!params->acpi_rsdp_addr) {
->>>>> +                   if (efi_enabled(EFI_CONFIG_TABLES)) {
->>>>> +                           if (efi.acpi20 != EFI_INVALID_TABLE_ADDR)
->>>>> +                                   params->acpi_rsdp_addr = efi.acpi20;
->>>>> +                           else if (efi.acpi != EFI_INVALID_TABLE_ADDR)
->>>>> +                                   params->acpi_rsdp_addr = efi.acpi;
->>>>> +                   } else if (IS_ENABLED(CONFIG_ACPI_LEGACY_TABLES_LOOKUP)) {
->>>>> +                           acpi_find_root_pointer(&params->acpi_rsdp_addr);
->>>>> +                   }
->>>>> +           }
->>>>> +           if (!params->acpi_rsdp_addr)
->>>>> +                   pr_warn("RSDP is not available for second kernel\n");
->>>>> +   }
->>>>>   #endif
->>>> Amazing the amount of ACPI RDSP parsing and fiddling patches flying
->>>> around these days...
->>>>
->>>> In any case, this needs to be synchronized with:
->>>>
->>>> https://lkml.kernel.org/r/20190107032243.25324-1-fanc.fnst@cn.fujitsu.com
->>>>
->>>> and checked whether the above can be used instead of sprinkling of ACPI
->>>> parsing code left and right.
->>> Both Baoquan and Chao are cced for comments.
->>> The above KASLR patches seems some early code to parsing acpi, but I think in this
->>> patch just call acpi function to get the root pointer no need to add the
->>> duplicate logic of if/else/else if.
->>>
->>> Kairui,  do you have any reason for the checking?  Is there some simple
->>> acpi function to just return the root pointer?
->> Hi, I'm afraid that would require moving multiple structure and
->> function out of .init,
->> acpi_os_get_root_pointer is an ideal function to do the job, but it's
->> in .init and (on x86) it will call x86_init.acpi.get_root_pointer (by
->> calling acpi_arch_get_root_pointer) which will also be freed after
->> init, unless I change the x86_init, move they out of .init which is
->> not a good idea.
->>
->> Maybe I could split acpi_os_get_root_pointer into two, one gets freed
->> after init, one for later use. But the "acpi_rsdp_addr" trick only
->> works for x86, and this would change more common acpi driver code so
->> not sure if a good idea.
-> Can the acpi root pointer be saved after initialized? If that is good
-> then a new function to get it would be easier. But need opinion from
-> acpi people.
+On Wed, Jan 16, 2019 at 5:46 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Wed, Jan 16, 2019 at 03:08:42PM +0800, Kairui Song wrote:
+> > I didn't see a way to reuse things in that patch series, situation is
+> > different, in that patch it needs to get RSDP in very early boot stage
+> > so it did everything from scratch, in this patch kexec_file_load need
+> > to get RSDP too, but everything is well setup so things are a lot
+> > easier, just read from current boot_prams, efi and fallback to
+> > acpi_find_root_pointer should be good.
+>
+> No no. Early code should find out that venerable RSDP thing once and
+> will save it somewhere for further use. No gazillion parsings of it.
+> Just once and share it with the rest of the code that needs it.
+>
 
-For that, please repost the series with a CC to linux-acpi@vger.kernel.org.
+How about we refill the boot_params.acpi_rsdp_addr if it is not valid
+in early code, so it could be used as a reliable RSDP address source?
+That should make things easier.
 
-Thanks!
+But if early code should parse it and store it should be done in
+Chao's patch, or I can post another patch to do it if Chao's patch is
+merged.
 
+For now I think good to have something like this in this patch series
+to always keep storing acpi_rsdp in late code,
+acpi_os_get_root_pointer_late (maybe comeup with a better name later)
+could be used anytime to get RSDP and no extra parsing:
 
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -180,8 +180,8 @@ void acpi_os_vprintf(const char *fmt, va_list args)
+ #endif
+ }
+
+-#ifdef CONFIG_KEXEC
+ static unsigned long acpi_rsdp;
++#ifdef CONFIG_KEXEC
+ static int __init setup_acpi_rsdp(char *arg)
+ {
+        return kstrtoul(arg, 16, &acpi_rsdp);
+@@ -189,28 +189,38 @@ static int __init setup_acpi_rsdp(char *arg)
+ early_param("acpi_rsdp", setup_acpi_rsdp);
+ #endif
+
++acpi_physical_address acpi_os_get_root_pointer_late(void) {
++       return acpi_rsdp;
++}
++
+ acpi_physical_address __init acpi_os_get_root_pointer(void)
+ {
+        acpi_physical_address pa;
+
+-#ifdef CONFIG_KEXEC
+        if (acpi_rsdp)
+                return acpi_rsdp;
+-#endif
++
+        pa = acpi_arch_get_root_pointer();
+-       if (pa)
++       if (pa) {
++               acpi_rsdp = pa;
+                return pa;
++       }
+
+        if (efi_enabled(EFI_CONFIG_TABLES)) {
+-               if (efi.acpi20 != EFI_INVALID_TABLE_ADDR)
++               if (efi.acpi20 != EFI_INVALID_TABLE_ADDR) {
++                       acpi_rsdp = efi.acpi20;
+                        return efi.acpi20;
+-               if (efi.acpi != EFI_INVALID_TABLE_ADDR)
++               }
++               if (efi.acpi != EFI_INVALID_TABLE_ADDR) {
++                       acpi_rsdp = efi.acpi;
+                        return efi.acpi;
++               }
+                pr_err(PREFIX "System description tables not found\n");
+        } else if (IS_ENABLED(CONFIG_ACPI_LEGACY_TABLES_LOOKUP)) {
+                acpi_find_root_pointer(&pa);
+        }
+
+ +       acpi_rsdp = pa;
+        return pa;
+ }
+
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> Good mailing practices for 400: avoid top-posting and trim the reply.
+--
+Best Regards,
+Kairui Song
 
 _______________________________________________
 kexec mailing list
