@@ -1,17 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-io1-f66.google.com ([209.85.166.66])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gkL4B-0000x8-Es
- for kexec@lists.infradead.org; Fri, 18 Jan 2019 03:43:37 +0000
-Date: Fri, 18 Jan 2019 11:43:24 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
- consistent with kaslr
-Message-ID: <20190118034324.GA3512@dhcp-128-65.nay.redhat.com>
-References: <1547539623-18201-1-git-send-email-kernelfans@gmail.com>
+ id 1gkM4E-0003k5-4J
+ for kexec@lists.infradead.org; Fri, 18 Jan 2019 04:47:43 +0000
+Received: by mail-io1-f66.google.com with SMTP id l14so9719234ioj.5
+ for <kexec@lists.infradead.org>; Thu, 17 Jan 2019 20:47:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1547539623-18201-1-git-send-email-kernelfans@gmail.com>
+References: <20190115095834.22617-1-kasong@redhat.com>
+ <20190115095834.22617-3-kasong@redhat.com>
+ <20190115231005.GF6596@zn.tnic>
+ <CACPcB9dYD2zR7ssXFibkefo3EZuvVnLegovwTMA8MaaLP1UsYQ@mail.gmail.com>
+ <20190116094619.GB15409@zn.tnic>
+ <CACPcB9d0dKLPmZ=b++m5LYRjFUCFyLL3deDBcS4m3N-UWZ_Hyw@mail.gmail.com>
+ <20190117085316.GA17940@dhcp-128-65.nay.redhat.com>
+ <CAJZ5v0hb6Lz0knzNFTZKNb863bvDx2a1EFjTjOG2NdvyyyhniQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hb6Lz0knzNFTZKNb863bvDx2a1EFjTjOG2NdvyyyhniQ@mail.gmail.com>
+From: Kairui Song <kasong@redhat.com>
+Date: Fri, 18 Jan 2019 12:47:29 +0800
+Message-ID: <CACPcB9eomuBPmxCEWEutt1gxO3=nrFFuYtKeANd0+h8DsN7M3A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] x86, kexec_file_load: make it work with
+ efi=noruntime or efi=old_map
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,113 +32,122 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <kernelfans@gmail.com>
-Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Rafael Wysocki <rafael.j.wysocki@intel.com>, Baoquan He <bhe@redhat.com>, "Schmauss, Erik" <erik.schmauss@intel.com>, the arch/x86 maintainers <x86@kernel.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Robert Moore <robert.moore@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Chao Fan <fanc.fnst@cn.fujitsu.com>, Len Brown <lenb@kernel.org>
 
-Pingfan, thanks for the post.
+On Thu, Jan 17, 2019 at 5:40 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Thu, Jan 17, 2019 at 9:53 AM Dave Young <dyoung@redhat.com> wrote:
+> >
+> > Add linux-acpi list
+>
+> Well, thanks, but please resend the patches with a CC to linux-acpi.
+>
 
-On 01/15/19 at 04:07pm, Pingfan Liu wrote:
-> People reported a bug on a high end server with many pcie devices, where
-> kernel bootup with crashkernel=384M, and kaslr is enabled. Even
-> though we still see much memory under 896 MB, the finding still failed
-> intermittently. Because currently we can only find region under 896 MB,
-> if without ',high' specified. Then KASLR breaks 896 MB into several parts
-> randomly, and crashkernel reservation need be aligned to 128 MB, that's
-> why failure is found. It raises confusion to the end user that sometimes
-> crashkernel=X works while sometimes fails.
-> If want to make it succeed, customer can change kernel option to
-> "crashkernel=384M,high". Just this give "crashkernel=xx@yy" a very
-> limited space to behave even though its grammar looks more generic.
-> And we can't answer questions raised from customer that confidently:
-> 1) why it doesn't succeed to reserve 896 MB;
-> 2) what's wrong with memory region under 4G;
-> 3) why I have to add ',high', I only require 384 MB, not 3840 MB.
-> This patch tries to get memory region from 896 MB firstly, then [896MB,4G],
-> finally above 4G.
+Hi, sure will do.
+Any thought on adding an acpi_os_get_root_pointer_late and store rsdp
+pointer as mentioned? Will updat the patch and post V2, and cc
+linux-acpi as well later.
 
-The patch log still looks not very good.  It needs some cleanup like
-paragraph line breaks to make it more readable.
+> > On 01/17/19 at 03:41pm, Kairui Song wrote:
+> > > On Wed, Jan 16, 2019 at 5:46 PM Borislav Petkov <bp@alien8.de> wrote:
+> > > >
+> > > > On Wed, Jan 16, 2019 at 03:08:42PM +0800, Kairui Song wrote:
+> > > > > I didn't see a way to reuse things in that patch series, situation is
+> > > > > different, in that patch it needs to get RSDP in very early boot stage
+> > > > > so it did everything from scratch, in this patch kexec_file_load need
+> > > > > to get RSDP too, but everything is well setup so things are a lot
+> > > > > easier, just read from current boot_prams, efi and fallback to
+> > > > > acpi_find_root_pointer should be good.
+> > > >
+> > > > No no. Early code should find out that venerable RSDP thing once and
+> > > > will save it somewhere for further use. No gazillion parsings of it.
+> > > > Just once and share it with the rest of the code that needs it.
+> > > >
+> > >
+> > > How about we refill the boot_params.acpi_rsdp_addr if it is not valid
+> > > in early code, so it could be used as a reliable RSDP address source?
+> > > That should make things easier.
+> > >
+> > > But if early code should parse it and store it should be done in
+> > > Chao's patch, or I can post another patch to do it if Chao's patch is
+> > > merged.
+> > >
+> > > For now I think good to have something like this in this patch series
+> > > to always keep storing acpi_rsdp in late code,
+> > > acpi_os_get_root_pointer_late (maybe comeup with a better name later)
+> > > could be used anytime to get RSDP and no extra parsing:
+> > >
+> > > --- a/drivers/acpi/osl.c
+> > > +++ b/drivers/acpi/osl.c
+> > > @@ -180,8 +180,8 @@ void acpi_os_vprintf(const char *fmt, va_list args)
+> > >  #endif
+> > >  }
+> > >
+> > > -#ifdef CONFIG_KEXEC
+> > >  static unsigned long acpi_rsdp;
+> > > +#ifdef CONFIG_KEXEC
+> > >  static int __init setup_acpi_rsdp(char *arg)
+> > >  {
+> > >         return kstrtoul(arg, 16, &acpi_rsdp);
+> > > @@ -189,28 +189,38 @@ static int __init setup_acpi_rsdp(char *arg)
+> > >  early_param("acpi_rsdp", setup_acpi_rsdp);
+> > >  #endif
+> > >
+> > > +acpi_physical_address acpi_os_get_root_pointer_late(void) {
+> > > +       return acpi_rsdp;
+> > > +}
+> > > +
+> > >  acpi_physical_address __init acpi_os_get_root_pointer(void)
+> > >  {
+> > >         acpi_physical_address pa;
+> > >
+> > > -#ifdef CONFIG_KEXEC
+> > >         if (acpi_rsdp)
+> > >                 return acpi_rsdp;
+> > > -#endif
+> > > +
+> > >         pa = acpi_arch_get_root_pointer();
+> > > -       if (pa)
+> > > +       if (pa) {
+> > > +               acpi_rsdp = pa;
+> > >                 return pa;
+> > > +       }
+> > >
+> > >         if (efi_enabled(EFI_CONFIG_TABLES)) {
+> > > -               if (efi.acpi20 != EFI_INVALID_TABLE_ADDR)
+> > > +               if (efi.acpi20 != EFI_INVALID_TABLE_ADDR) {
+> > > +                       acpi_rsdp = efi.acpi20;
+> > >                         return efi.acpi20;
+> > > -               if (efi.acpi != EFI_INVALID_TABLE_ADDR)
+> > > +               }
+> > > +               if (efi.acpi != EFI_INVALID_TABLE_ADDR) {
+> > > +                       acpi_rsdp = efi.acpi;
+> > >                         return efi.acpi;
+> > > +               }
+> > >                 pr_err(PREFIX "System description tables not found\n");
+> > >         } else if (IS_ENABLED(CONFIG_ACPI_LEGACY_TABLES_LOOKUP)) {
+> > >                 acpi_find_root_pointer(&pa);
+> > >         }
+> > >
+> > >  +       acpi_rsdp = pa;
+> > >         return pa;
+> > >  }
+> > >
+> > > > --
+> > > > Regards/Gruss,
+> > > >     Boris.
+> > > >
+> > > > Good mailing practices for 400: avoid top-posting and trim the reply.
+> > > --
+> > > Best Regards,
+> > > Kairui Song
 
-For example you can take like below:
---
-People reported crashkernel=384M reservation failed on a high end server
-with KASLR enabled.  In that case there is enough free memory under 896M
-but crashkernel reservation still fails intermittently.
 
-The situation is crashkernel reservation code only finds free region under
-896 MB with 128M aligned in case no ',high' being used.  And KASLR could
-break the first 896M into several parts randomly thus the failure happens.
-User has no way to predict and make sure crashkernel=xM working unless
-he/she use 'crashkernel=xM,high'.  Since 'crashkernel=xM' is the most
-common use case this issue is a serious bug.
 
-And we can't answer questions raised from customer:
-1) why it doesn't succeed to reserve 896 MB;
-2) what's wrong with memory region under 4G;
-3) why I have to add ',high', I only require 384 MB, not 3840 MB.
-
-This patch tries to get memory region from 896 MB firstly, then [896MB,4G],
-finally above 4G.
-
-> Dave Young sent the original post, and I just re-post it with commit log
-> improvement as his requirement.
-> http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
-> There was an old discussion below (previously posted by Chao Wang):
-> https://lkml.org/lkml/2013/10/15/601
-
-I hope someone else can provide review because I posted it previously.
-
-But I think previously when I posted it is a good to have improvement,
-but now it is a real serious bug which need to be fixed.  I can review
-and ack if you can repost with a better log.
-
-> 
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> Cc: yinghai@kernel.org,
-> Cc: vgoyal@redhat.com
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> ---
-> v6 -> v7: fix spelling mistake pointed out by Randy
->  arch/x86/kernel/setup.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index 3d872a5..fa62c81 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -551,6 +551,22 @@ static void __init reserve_crashkernel(void)
->  						    high ? CRASH_ADDR_HIGH_MAX
->  							 : CRASH_ADDR_LOW_MAX,
->  						    crash_size, CRASH_ALIGN);
-> +#ifdef CONFIG_X86_64
-> +		/*
-> +		 * crashkernel=X reserve below 896M fails? Try below 4G
-> +		 */
-> +		if (!high && !crash_base)
-> +			crash_base = memblock_find_in_range(CRASH_ALIGN,
-> +						(1ULL << 32),
-> +						crash_size, CRASH_ALIGN);
-> +		/*
-> +		 * crashkernel=X reserve below 4G fails? Try MAXMEM
-> +		 */
-> +		if (!high && !crash_base)
-> +			crash_base = memblock_find_in_range(CRASH_ALIGN,
-> +						CRASH_ADDR_HIGH_MAX,
-> +						crash_size, CRASH_ALIGN);
-> +#endif
->  		if (!crash_base) {
->  			pr_info("crashkernel reservation failed - No suitable area found.\n");
->  			return;
-> -- 
-> 2.7.4
-> 
-
-Thanks
-Dave
+-- 
+Best Regards,
+Kairui Song
 
 _______________________________________________
 kexec mailing list
