@@ -1,26 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi1-f196.google.com ([209.85.167.196])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gkQif-0005dW-7T
- for kexec@lists.infradead.org; Fri, 18 Jan 2019 09:45:46 +0000
-Received: by mail-oi1-f196.google.com with SMTP id m6so8490747oig.11
- for <kexec@lists.infradead.org>; Fri, 18 Jan 2019 01:45:44 -0800 (PST)
-MIME-Version: 1.0
+ id 1gkRMH-0005xw-Uj
+ for kexec@lists.infradead.org; Fri, 18 Jan 2019 10:26:44 +0000
+Date: Fri, 18 Jan 2019 11:26:36 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2 2/2] x86, kexec_file_load: make it work with
+ efi=noruntime or efi=old_map
+Message-ID: <20190118102636.GB622@zn.tnic>
 References: <20190115095834.22617-1-kasong@redhat.com>
  <20190115095834.22617-3-kasong@redhat.com>
  <20190115231005.GF6596@zn.tnic>
  <CACPcB9dYD2zR7ssXFibkefo3EZuvVnLegovwTMA8MaaLP1UsYQ@mail.gmail.com>
  <20190116094619.GB15409@zn.tnic>
  <CACPcB9d0dKLPmZ=b++m5LYRjFUCFyLL3deDBcS4m3N-UWZ_Hyw@mail.gmail.com>
- <20190117085316.GA17940@dhcp-128-65.nay.redhat.com>
- <CAJZ5v0hb6Lz0knzNFTZKNb863bvDx2a1EFjTjOG2NdvyyyhniQ@mail.gmail.com>
- <CACPcB9eomuBPmxCEWEutt1gxO3=nrFFuYtKeANd0+h8DsN7M3A@mail.gmail.com>
-In-Reply-To: <CACPcB9eomuBPmxCEWEutt1gxO3=nrFFuYtKeANd0+h8DsN7M3A@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 18 Jan 2019 10:45:31 +0100
-Message-ID: <CAJZ5v0jzTz9MK1krWgfHXNhqNCY_ftotbCpupJHOtPMysbNPwQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] x86, kexec_file_load: make it work with
- efi=noruntime or efi=old_map
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CACPcB9d0dKLPmZ=b++m5LYRjFUCFyLL3deDBcS4m3N-UWZ_Hyw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,30 +30,26 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Kairui Song <kasong@redhat.com>
-Cc: Rafael Wysocki <rafael.j.wysocki@intel.com>, Baoquan He <bhe@redhat.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Schmauss,
- Erik" <erik.schmauss@intel.com>, the arch/x86 maintainers <x86@kernel.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Robert Moore <robert.moore@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Chao Fan <fanc.fnst@cn.fujitsu.com>, Len Brown <lenb@kernel.org>
+Cc: rafael.j.wysocki@intel.com, Baoquan He <bhe@redhat.com>, erik.schmauss@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robert.moore@intel.com, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, Chao Fan <fanc.fnst@cn.fujitsu.com>, Len Brown <lenb@kernel.org>
 
-On Fri, Jan 18, 2019 at 5:47 AM Kairui Song <kasong@redhat.com> wrote:
->
-> On Thu, Jan 17, 2019 at 5:40 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Thu, Jan 17, 2019 at 9:53 AM Dave Young <dyoung@redhat.com> wrote:
-> > >
-> > > Add linux-acpi list
-> >
-> > Well, thanks, but please resend the patches with a CC to linux-acpi.
-> >
->
-> Hi, sure will do.
-> Any thought on adding an acpi_os_get_root_pointer_late and store rsdp
-> pointer as mentioned?
+On Thu, Jan 17, 2019 at 03:41:13PM +0800, Kairui Song wrote:
+> How about we refill the boot_params.acpi_rsdp_addr if it is not valid
+> in early code, so it could be used as a reliable RSDP address source?
+> That should make things easier.
+> 
+> But if early code should parse it and store it should be done in
+> Chao's patch, or I can post another patch to do it if Chao's patch is
+> merged.
 
-It is a good idea in general IMO, but all depends on how the code
-changes will look like.
+Chao's stuff does the as early as possible parsing of RDSP. Then, it
+should be saved into boot_params and everything else should read it from
+there. Simple.
 
-> Will updat the patch and post V2, and cc linux-acpi as well later.
+-- 
+Regards/Gruss,
+    Boris.
 
-Thanks!
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
