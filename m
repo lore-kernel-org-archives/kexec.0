@@ -1,19 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-f65.google.com ([209.85.166.65])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gkSYe-0008L0-Dc
- for kexec@lists.infradead.org; Fri, 18 Jan 2019 11:43:33 +0000
-Received: by mail-io1-f65.google.com with SMTP id b23so10431584ios.10
- for <kexec@lists.infradead.org>; Fri, 18 Jan 2019 03:43:32 -0800 (PST)
-MIME-Version: 1.0
-References: <20190118111310.29589-1-kasong@redhat.com>
- <20190118111310.29589-3-kasong@redhat.com>
- <20190118112628.GC622@zn.tnic>
-In-Reply-To: <20190118112628.GC622@zn.tnic>
-From: Kairui Song <kasong@redhat.com>
-Date: Fri, 18 Jan 2019 19:43:20 +0800
-Message-ID: <CACPcB9dTm_2UCRord01oW+mmoPYY7dFTHj7qFrMxOnhPx3Ov3w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] acpi: store acpi_rsdp address for later kexec usage
+ id 1gkSj2-0004QW-3Y
+ for kexec@lists.infradead.org; Fri, 18 Jan 2019 11:54:18 +0000
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x0IBgd59053203
+ for <kexec@lists.infradead.org>; Fri, 18 Jan 2019 06:54:14 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2q3e5krbny-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 18 Jan 2019 06:54:14 -0500
+Received: from localhost
+ by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Fri, 18 Jan 2019 11:54:10 -0000
+Subject: Re: [PATCH v4 0/2] let kexec_file_load use platform keyring to
+ verify the kernel image
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Fri, 18 Jan 2019 06:53:52 -0500
+In-Reply-To: <20190118091733.29940-1-kasong@redhat.com>
+References: <20190118091733.29940-1-kasong@redhat.com>
+Mime-Version: 1.0
+Message-Id: <1547812432.3982.55.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,43 +33,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Rafael Wysocki <rafael.j.wysocki@intel.com>, Baoquan He <bhe@redhat.com>, "Schmauss, Erik" <erik.schmauss@intel.com>, the arch/x86 maintainers <x86@kernel.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Robert Moore <robert.moore@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Chao Fan <fanc.fnst@cn.fujitsu.com>, Len Brown <lenb@kernel.org>
+To: Kairui Song <kasong@redhat.com>, linux-kernel@vger.kernel.org
+Cc: jwboyer@fedoraproject.org, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, jmorris@namei.org, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-On Fri, Jan 18, 2019 at 7:26 PM Borislav Petkov <bp@alien8.de> wrote:
-
-> No, this is getting completely nuts: there's a bunch of functions which
-> all end up returning boot_params's field except pvh_get_root_pointer().
->
-> And now you're adding a late variant. And the cmdline paramater
-> acpi_rsdp is in a CONFIG_KEXEC wrapper, and and...
->
-> Wait until Chao Fan's stuff is applied, then do your changes ontop
-> an drop all that ifdeffery. We will make this RDSP thing enabled
-> unconditionally so that there's no need for ifdeffery and function
-> wrappers.
->
-> Also, after Chao's stuff, you won't need to call
-> acpi_os_get_root_pointer() because the early code would've done that.
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> Good mailing practices for 400: avoid top-posting and trim the reply.
-
-Good suggestion, will wait for Chao's update then.
-
-
---
-Best Regards,
-Kairui Song
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCAyMDE5LTAxLTE4IGF0IDE3OjE3ICswODAwLCBLYWlydWkgU29uZyB3cm90ZToKPiBU
+aGlzIHBhdGNoIHNlcmllcyBhZGRzIGEgLnBsYXRmb3JtX3RydXN0ZWRfa2V5cyBpbiBzeXN0ZW1f
+a2V5cmluZyBhcyB0aGUKPiByZWZlcmVuY2UgdG8gLnBsYXRmb3JtIGtleXJpbmcgaW4gaW50ZWdy
+aXR5IHN1YnN5c3RlbSwgd2hlbiBwbGF0Zm9ybQo+IGtleXJpbmcgaXMgYmVpbmcgaW5pdGlhbGl6
+ZWQgaXQgd2lsbCBiZSB1cGRhdGVkLiBTbyBvdGhlciBjb21wb25lbnQgY291bGQKPiB1c2UgdGhp
+cyBrZXlyaW5nIGFzIHdlbGwuCgpLYWlydWksIHdoZW4gcGVvcGxlIHJldmlldyBwYXRjaGVzLCB0
+aGUgY29tbWVudHMgY291bGQgYmUgc3BlY2lmaWMsCmJ1dCBhcmUgbm9ybWFsbHkgZ2VuZXJpYy4g
+wqBNeSByZXZpZXcgaW5jbHVkZWQgYSBjb3VwbGUgb2YgZ2VuZXJpYwpzdWdnZXN0aW9ucyAtIG5v
+dCB0byB1c2UgIiNpZmRlZiIgaW4gQyBjb2RlIChlZy4gaXNfZW5hYmxlZCksIHVzZSB0aGUKdGVy
+bSAicHJlYm9vdCIga2V5cywgYW5kIHJlbW92ZSBhbnkgcmVmZXJlbmNlcyB0byAib3RoZXIgY29t
+cG9uZW50cyIuCgpBZnRlciBhbGwgdGhlIHdvcmRpbmcgc3VnZ2VzdGlvbnMgSSd2ZSBtYWRlLCB5
+b3UgYXJlIHN0aWxsIHNheWluZywgIlNvCm90aGVyIGNvbXBvbmVudHMgY291bGQgdXNlIHRoaXMg
+a2V5cmluZyBhcyB3ZWxsIi7CoMKgUmVhbGx5PyEgwqBIb3cgdGhlCnBsYXRmb3JtIGtleXJpbmcg
+d2lsbCBiZSB1c2VkIGluIHRoZSBmdXR1cmUsIGlzIHVwIHRvIHlvdSBhbmQgb3RoZXJzCnRvIGNv
+bnZpbmNlIExpbnVzLiDCoEF0IGxlYXN0IGZvciBub3csIHBsZWFzZSBsaW1pdCBpdHMgdXNhZ2Ug
+dG8KdmVyaWZ5aW5nIHRoZSBQRSBzaWduZWQga2VybmVsIGltYWdlLiDCoElmIHRoaXMgcGF0Y2gg
+c2V0IG5lZWRzIHRvIGJlCnJlcG9zdGVkLCBwbGVhc2UgcmVtb3ZlIGFsbCByZWZlcmVuY2VzIHRv
+ICJvdGhlciBjb21wb25lbnRzIi4KCkRhdmUvRGF2aWQsIGFyZSB5b3Ugb2sgd2l0aCBLYWlydWkn
+cyB1c2FnZSBvZiAiI2lmZGVmJ3MiPyDCoERhdmUsIHlvdQpBY2tlZCB0aGUgb3JpZ2luYWwgcG9z
+dC4gwqBDYW4gSSBpbmNsdWRlIGl0PyDCoENhbiB3ZSBnZXQgc29tZQphZGRpdGlvbmFsIEFjaydz
+IG9uIHRoZXNlIHBhdGNoZXM/Cgp0aGFua3MhCgpNaW1pCgoKPiAKPiBUaGlzIHBhdGNoIHNlcmll
+cyBhbHNvIGxldCBrZXhlY19maWxlX2xvYWQgdXNlIHBsYXRmb3JtIGtleXJpbmcgYXMgZmFsbAo+
+IGJhY2sgaWYgaXQgZmFpbGVkIHRvIHZlcmlmeSB0aGUgaW1hZ2UgYWdhaW5zdCBzZWNvbmRhcnkg
+a2V5cmluZywgbWFrZSBpdAo+IHBvc3NpYmxlIHRvIGxvYWQga2VybmVsIHNpZ25lZCBieSBrZXlz
+IHByb3ZpZGVzIGJ5IGZpcm13YXJlLgo+IAo+IEFmdGVyIHRoaXMgcGF0Y2gga2V4ZWNfZmlsZV9s
+b2FkIHdpbGwgYmUgYWJsZSB0byB2ZXJpZnkgYSBzaWduZWQgUEUKPiBiekltYWdlIHVzaW5nIGtl
+eXMgaW4gcGxhdGZvcm0ga2V5cmluZy4KPiAKPiBUZXN0ZWQgaW4gYSBWTSB3aXRoIGxvY2FsbHkg
+c2lnbmVkIGtlcm5lbCB3aXRoIHBlc2lnbiBhbmQgaW1wb3J0ZWQgdGhlCj4gY2VydCB0byBFRkkn
+cyBNb2tMaXN0IHZhcmlhYmxlLgo+IAo+IFRvIHRlc3QgdGhpcyBwYXRjaCBzZXJpZXMgb24gbGF0
+ZXN0IGtlcm5lbCwgeW91IG5lZWQgdG8gZW5zdXJlIHRoaXMgY29tbWl0Cj4gaXMgYXBwbGllZCBh
+cyB0aGVyZSBpcyBhbiByZWdyZXNzaW9uIGJ1ZyBpbiBzYW5pdHlfY2hlY2tfc2VnbWVudF9saXN0
+KCk6Cj4gCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQv
+dGlwL3RpcC5naXQvY29tbWl0Lz9pZD05OTNhMTEwMzE5YTRhNjBhYWRiZDAyZjZkZWZkZWJlMDQ4
+Zjc3NzNiCj4gCj4gVXBkYXRlIGZyb20gVjM6Cj4gICAtIFR3ZWFrIGFuZCBzaW1wbGlmeSBjb21t
+aXQgbWVzc2FnZSBhcyBzdWdnZXN0ZWQgYnkgTWltaSBab2hhcgo+IAo+IFVwZGF0ZSBmcm9tIFYy
+Ogo+ICAgLSBVc2UgSVNfRU5BQkxFRCBpbiBrZXhlY19maWxlX2xvYWQgdG8ganVkZ2UgaWYgcGxh
+dGZvcm1fdHJ1c3RlZF9rZXlzCj4gICAgIHNob3VsZCBiZSB1c2VkIGZvciB2ZXJpZnlpbmcgaW1h
+Z2UgYXMgc3VnZ2VzdGVkIGJ5IE1pbWkgWm9oYXIKPiAKPiBVcGRhdGUgZnJvbSBWMToKPiAgIC0g
+TWFrZSBwbGF0Zm9ybV90cnVzdGVkX2tleXMgc3RhdGljLCBhbmQgdXBkYXRlIGNvbW1pdCBtZXNz
+YWdlIGFzIHN1Z2dlc3RlZAo+ICAgICBieSBNaW1pIFpvaGFyCj4gICAtIEFsd2F5cyBjaGVjayBp
+ZiBwbGF0Zm9ybSBrZXlyaW5nIGlzIGluaXRpYWxpemVkIGJlZm9yZSB1c2UgaXQKPiAKPiBLYWly
+dWkgU29uZyAoMik6Cj4gICBpbnRlZ3JpdHksIEtFWVM6IGFkZCBhIHJlZmVyZW5jZSB0byBwbGF0
+Zm9ybSBrZXlyaW5nCj4gICBrZXhlYywgS0VZUzogTWFrZSB1c2Ugb2YgcGxhdGZvcm0ga2V5cmlu
+ZyBmb3Igc2lnbmF0dXJlIHZlcmlmeQo+IAo+ICBhcmNoL3g4Ni9rZXJuZWwva2V4ZWMtYnppbWFn
+ZTY0LmMgfCAxMyArKysrKysrKysrLS0tCj4gIGNlcnRzL3N5c3RlbV9rZXlyaW5nLmMgICAgICAg
+ICAgICB8IDIyICsrKysrKysrKysrKysrKysrKysrKy0KPiAgaW5jbHVkZS9rZXlzL3N5c3RlbV9r
+ZXlyaW5nLmggICAgIHwgIDUgKysrKysKPiAgaW5jbHVkZS9saW51eC92ZXJpZmljYXRpb24uaCAg
+ICAgIHwgIDEgKwo+ICBzZWN1cml0eS9pbnRlZ3JpdHkvZGlnc2lnLmMgICAgICAgfCAgNiArKysr
+KysKPiAgNSBmaWxlcyBjaGFuZ2VkLCA0MyBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+
+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
+IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
