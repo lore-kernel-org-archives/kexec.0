@@ -1,32 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-it1-f194.google.com ([209.85.166.194])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gkVFR-0003fF-GL
- for kexec@lists.infradead.org; Fri, 18 Jan 2019 14:35:59 +0000
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x0IEZmFQ108215
- for <kexec@lists.infradead.org>; Fri, 18 Jan 2019 09:35:50 -0500
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2q3fn8307k-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 18 Jan 2019 09:35:49 -0500
-Received: from localhost
- by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <nayna@linux.vnet.ibm.com>;
- Fri, 18 Jan 2019 14:35:36 -0000
-Subject: Re: [PATCH v4 1/2] integrity, KEYS: add a reference to platform
- keyring
+ id 1gkVen-0007dl-Dw
+ for kexec@lists.infradead.org; Fri, 18 Jan 2019 15:02:29 +0000
+Received: by mail-it1-f194.google.com with SMTP id m8so1230693itk.0
+ for <kexec@lists.infradead.org>; Fri, 18 Jan 2019 07:02:05 -0800 (PST)
+MIME-Version: 1.0
 References: <20190118091733.29940-1-kasong@redhat.com>
  <20190118091733.29940-2-kasong@redhat.com>
-From: Nayna <nayna@linux.vnet.ibm.com>
-Date: Fri, 18 Jan 2019 09:35:27 -0500
-MIME-Version: 1.0
-In-Reply-To: <20190118091733.29940-2-kasong@redhat.com>
-Content-Language: en-US
-Message-Id: <3c7fa625-e77c-d6b4-35a4-8f8e9af60864@linux.vnet.ibm.com>
+ <3c7fa625-e77c-d6b4-35a4-8f8e9af60864@linux.vnet.ibm.com>
+In-Reply-To: <3c7fa625-e77c-d6b4-35a4-8f8e9af60864@linux.vnet.ibm.com>
+From: Kairui Song <kasong@redhat.com>
+Date: Fri, 18 Jan 2019 23:01:52 +0800
+Message-ID: <CACPcB9dJ2L8k=jmT23Q72YHjsjzK79ywgU+ASLSe3tkQnosOCQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] integrity,
+ KEYS: add a reference to platform keyring
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,64 +23,118 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>
-Cc: jwboyer@fedoraproject.org, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, jmorris@namei.org, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
+To: Nayna <nayna@linux.vnet.ibm.com>
+Cc: jwboyer@fedoraproject.org, Eric Biggers <ebiggers@google.com>, David Woodhouse <dwmw2@infradead.org>, nayna@linux.ibm.com, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mimi Zohar <zohar@linux.ibm.com>, jmorris@namei.org, David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org, linux-integrity <linux-integrity@vger.kernel.org>, Dave Young <dyoung@redhat.com>, bauerman@linux.ibm.com, serge@hallyn.com
 
-CgpPbiAwMS8xOC8yMDE5IDA0OjE3IEFNLCBLYWlydWkgU29uZyB3cm90ZToKPiBjb21taXQgOWRj
-OTJjNDUxNzdhICgnaW50ZWdyaXR5OiBEZWZpbmUgYSB0cnVzdGVkIHBsYXRmb3JtIGtleXJpbmcn
-KQo+IGludHJvZHVjZWQgYSAucGxhdGZvcm0ga2V5cmluZyBmb3Igc3RvcmluZyBwcmVib290IGtl
-eXMsIHVzZWQgZm9yCj4gdmVyaWZ5aW5nIGtlcm5lbCBpbWFnZXMnIHNpZ25hdHVyZS4gQ3VycmVu
-dGx5IG9ubHkgSU1BLWFwcHJhaXNhbCBpcyBhYmxlCj4gdG8gdXNlIHRoZSBrZXlyaW5nIHRvIHZl
-cmlmeSBrZXJuZWwgaW1hZ2VzIHRoYXQgaGF2ZSB0aGVpciBzaWduYXR1cmUKPiBzdG9yZWQgaW4g
-eGF0dHIuCj4KPiBUaGlzIHBhdGNoIGV4cG9zZXMgdGhlIC5wbGF0Zm9ybSBrZXlyaW5nLCBtYWtp
-bmcgaXQgYWNjZXNzaWJsZSBmb3IKPiB2ZXJpZnlpbmcgUEUgc2lnbmVkIGtlcm5lbCBpbWFnZXMg
-YXMgd2VsbC4KPgo+IFN1Z2dlc3RlZC1ieTogTWltaSBab2hhciA8em9oYXJAbGludXguaWJtLmNv
-bT4KPiBTaWduZWQtb2ZmLWJ5OiBLYWlydWkgU29uZyA8a2Fzb25nQHJlZGhhdC5jb20+Cj4gUmV2
-aWV3ZWQtYnk6IE1pbWkgWm9oYXIgPHpvaGFyQGxpbnV4LmlibS5jb20+Cj4gVGVzdGVkLWJ5OiBN
-aW1pIFpvaGFyIDx6b2hhckBsaW51eC5pYm0uY29tPgo+IC0tLQo+ICAgY2VydHMvc3lzdGVtX2tl
-eXJpbmcuYyAgICAgICAgfCA5ICsrKysrKysrKwo+ICAgaW5jbHVkZS9rZXlzL3N5c3RlbV9rZXly
-aW5nLmggfCA1ICsrKysrCj4gICBzZWN1cml0eS9pbnRlZ3JpdHkvZGlnc2lnLmMgICB8IDYgKysr
-KysrCj4gICAzIGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQg
-YS9jZXJ0cy9zeXN0ZW1fa2V5cmluZy5jIGIvY2VydHMvc3lzdGVtX2tleXJpbmcuYwo+IGluZGV4
-IDgxNzI4NzE3NTIzZC4uNDY5MGVmOWNkYThhIDEwMDY0NAo+IC0tLSBhL2NlcnRzL3N5c3RlbV9r
-ZXlyaW5nLmMKPiArKysgYi9jZXJ0cy9zeXN0ZW1fa2V5cmluZy5jCj4gQEAgLTI0LDYgKzI0LDkg
-QEAgc3RhdGljIHN0cnVjdCBrZXkgKmJ1aWx0aW5fdHJ1c3RlZF9rZXlzOwo+ICAgI2lmZGVmIENP
-TkZJR19TRUNPTkRBUllfVFJVU1RFRF9LRVlSSU5HCj4gICBzdGF0aWMgc3RydWN0IGtleSAqc2Vj
-b25kYXJ5X3RydXN0ZWRfa2V5czsKPiAgICNlbmRpZgo+ICsjaWZkZWYgQ09ORklHX0lOVEVHUklU
-WV9QTEFURk9STV9LRVlSSU5HCj4gK3N0YXRpYyBzdHJ1Y3Qga2V5ICpwbGF0Zm9ybV90cnVzdGVk
-X2tleXM7Cj4gKyNlbmRpZgo+ICAgCj4gICBleHRlcm4gX19pbml0Y29uc3QgY29uc3QgdTggc3lz
-dGVtX2NlcnRpZmljYXRlX2xpc3RbXTsKPiAgIGV4dGVybiBfX2luaXRjb25zdCBjb25zdCB1bnNp
-Z25lZCBsb25nIHN5c3RlbV9jZXJ0aWZpY2F0ZV9saXN0X3NpemU7Cj4gQEAgLTI2NSw0ICsyNjgs
-MTAgQEAgaW50IHZlcmlmeV9wa2NzN19zaWduYXR1cmUoY29uc3Qgdm9pZCAqZGF0YSwgc2l6ZV90
-IGxlbiwKPiAgIH0KPiAgIEVYUE9SVF9TWU1CT0xfR1BMKHZlcmlmeV9wa2NzN19zaWduYXR1cmUp
-Owo+ICAgCj4gKyNpZmRlZiBDT05GSUdfSU5URUdSSVRZX1BMQVRGT1JNX0tFWVJJTkcKPiArdm9p
-ZCBfX2luaXQgc2V0X3BsYXRmb3JtX3RydXN0ZWRfa2V5cyhzdHJ1Y3Qga2V5ICprZXlyaW5nKSB7
-Cj4gKwlwbGF0Zm9ybV90cnVzdGVkX2tleXMgPSBrZXlyaW5nOwo+ICt9Cj4gKyNlbmRpZgo+ICsK
-PiAgICNlbmRpZiAvKiBDT05GSUdfU1lTVEVNX0RBVEFfVkVSSUZJQ0FUSU9OICovCj4gZGlmZiAt
-LWdpdCBhL2luY2x1ZGUva2V5cy9zeXN0ZW1fa2V5cmluZy5oIGIvaW5jbHVkZS9rZXlzL3N5c3Rl
-bV9rZXlyaW5nLmgKPiBpbmRleCAzNTljMmY5MzYwMDQuLjllMWI3ODQ5YjZhYSAxMDA2NDQKPiAt
-LS0gYS9pbmNsdWRlL2tleXMvc3lzdGVtX2tleXJpbmcuaAo+ICsrKyBiL2luY2x1ZGUva2V5cy9z
-eXN0ZW1fa2V5cmluZy5oCj4gQEAgLTYxLDUgKzYxLDEwIEBAIHN0YXRpYyBpbmxpbmUgc3RydWN0
-IGtleSAqZ2V0X2ltYV9ibGFja2xpc3Rfa2V5cmluZyh2b2lkKQo+ICAgfQo+ICAgI2VuZGlmIC8q
-IENPTkZJR19JTUFfQkxBQ0tMSVNUX0tFWVJJTkcgKi8KPiAgIAo+ICsjaWZkZWYgQ09ORklHX0lO
-VEVHUklUWV9QTEFURk9STV9LRVlSSU5HCj4gKwo+ICtleHRlcm4gdm9pZCBfX2luaXQgc2V0X3Bs
-YXRmb3JtX3RydXN0ZWRfa2V5cyhzdHJ1Y3Qga2V5KiBrZXlyaW5nKTsKPiArCj4gKyNlbmRpZiAv
-KiBDT05GSUdfSU5URUdSSVRZX1BMQVRGT1JNX0tFWVJJTkcgKi8KPiAgIAo+ICAgI2VuZGlmIC8q
-IF9LRVlTX1NZU1RFTV9LRVlSSU5HX0ggKi8KPiBkaWZmIC0tZ2l0IGEvc2VjdXJpdHkvaW50ZWdy
-aXR5L2RpZ3NpZy5jIGIvc2VjdXJpdHkvaW50ZWdyaXR5L2RpZ3NpZy5jCj4gaW5kZXggZjQ1ZDZl
-ZGVjZjk5Li5iZmFiYzJhODExMWQgMTAwNjQ0Cj4gLS0tIGEvc2VjdXJpdHkvaW50ZWdyaXR5L2Rp
-Z3NpZy5jCj4gKysrIGIvc2VjdXJpdHkvaW50ZWdyaXR5L2RpZ3NpZy5jCj4gQEAgLTg5LDYgKzg5
-LDEyIEBAIHN0YXRpYyBpbnQgX19pbnRlZ3JpdHlfaW5pdF9rZXlyaW5nKGNvbnN0IHVuc2lnbmVk
-IGludCBpZCwga2V5X3Blcm1fdCBwZXJtLAo+ICAgCQlrZXlyaW5nW2lkXSA9IE5VTEw7Cj4gICAJ
-fQo+ICAgCj4gKyNpZmRlZiBDT05GSUdfSU5URUdSSVRZX1BMQVRGT1JNX0tFWVJJTkcKPiArCWlm
-IChpZCA9PSBJTlRFR1JJVFlfS0VZUklOR19QTEFURk9STSkgewoKU2hvdWxkbid0IGl0IGFsc28g
-Y2hlY2sgdGhhdCBrZXlyaW5nW2lkXSBpcyBub3QgTlVMTCA/CgpUaGFua3MgJiBSZWdhcmRzLAog
-wqDCoMKgIC0gTmF5bmEKCj4gKwkJc2V0X3BsYXRmb3JtX3RydXN0ZWRfa2V5cyhrZXlyaW5nW2lk
-XSk7Cj4gKwl9Cj4gKyNlbmRpZgo+ICsKPiAgIAlyZXR1cm4gZXJyOwo+ICAgfQo+ICAgCgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
-ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Fri, Jan 18, 2019 at 10:36 PM Nayna <nayna@linux.vnet.ibm.com> wrote:
+> On 01/18/2019 04:17 AM, Kairui Song wrote:
+> > commit 9dc92c45177a ('integrity: Define a trusted platform keyring')
+> > introduced a .platform keyring for storing preboot keys, used for
+> > verifying kernel images' signature. Currently only IMA-appraisal is able
+> > to use the keyring to verify kernel images that have their signature
+> > stored in xattr.
+> >
+> > This patch exposes the .platform keyring, making it accessible for
+> > verifying PE signed kernel images as well.
+> >
+> > Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+> > Signed-off-by: Kairui Song <kasong@redhat.com>
+> > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> > Tested-by: Mimi Zohar <zohar@linux.ibm.com>
+> > ---
+> >   certs/system_keyring.c        | 9 +++++++++
+> >   include/keys/system_keyring.h | 5 +++++
+> >   security/integrity/digsig.c   | 6 ++++++
+> >   3 files changed, 20 insertions(+)
+> >
+> > diff --git a/certs/system_keyring.c b/certs/system_keyring.c
+> > index 81728717523d..4690ef9cda8a 100644
+> > --- a/certs/system_keyring.c
+> > +++ b/certs/system_keyring.c
+> > @@ -24,6 +24,9 @@ static struct key *builtin_trusted_keys;
+> >   #ifdef CONFIG_SECONDARY_TRUSTED_KEYRING
+> >   static struct key *secondary_trusted_keys;
+> >   #endif
+> > +#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
+> > +static struct key *platform_trusted_keys;
+> > +#endif
+> >
+> >   extern __initconst const u8 system_certificate_list[];
+> >   extern __initconst const unsigned long system_certificate_list_size;
+> > @@ -265,4 +268,10 @@ int verify_pkcs7_signature(const void *data, size_t len,
+> >   }
+> >   EXPORT_SYMBOL_GPL(verify_pkcs7_signature);
+> >
+> > +#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
+> > +void __init set_platform_trusted_keys(struct key *keyring) {
+> > +     platform_trusted_keys = keyring;
+> > +}
+> > +#endif
+> > +
+> >   #endif /* CONFIG_SYSTEM_DATA_VERIFICATION */
+> > diff --git a/include/keys/system_keyring.h b/include/keys/system_keyring.h
+> > index 359c2f936004..9e1b7849b6aa 100644
+> > --- a/include/keys/system_keyring.h
+> > +++ b/include/keys/system_keyring.h
+> > @@ -61,5 +61,10 @@ static inline struct key *get_ima_blacklist_keyring(void)
+> >   }
+> >   #endif /* CONFIG_IMA_BLACKLIST_KEYRING */
+> >
+> > +#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
+> > +
+> > +extern void __init set_platform_trusted_keys(struct key* keyring);
+> > +
+> > +#endif /* CONFIG_INTEGRITY_PLATFORM_KEYRING */
+> >
+> >   #endif /* _KEYS_SYSTEM_KEYRING_H */
+> > diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
+> > index f45d6edecf99..bfabc2a8111d 100644
+> > --- a/security/integrity/digsig.c
+> > +++ b/security/integrity/digsig.c
+> > @@ -89,6 +89,12 @@ static int __integrity_init_keyring(const unsigned int id, key_perm_t perm,
+> >               keyring[id] = NULL;
+> >       }
+> >
+> > +#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
+> > +     if (id == INTEGRITY_KEYRING_PLATFORM) {
+>
+> Shouldn't it also check that keyring[id] is not NULL ?
+
+Good catch, if it's NULL then platform_trusted_keyring will be set to
+NULL as well, which will work just fine as in this case
+platform_trusted_keyring is still considered not initialized. I'll add
+a sanity check here to check err value just in case.
+Thanks for your suggestion!
+
+>
+> Thanks & Regards,
+>      - Nayna
+>
+> > +             set_platform_trusted_keys(keyring[id]);
+> > +     }
+> > +#endif
+> > +
+> >       return err;
+> >   }
+> >
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+
+
+-- 
+Best Regards,
+Kairui Song
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
