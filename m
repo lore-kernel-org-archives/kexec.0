@@ -1,22 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it1-f195.google.com ([209.85.166.195])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gkV8l-0008Uc-U7
- for kexec@lists.infradead.org; Fri, 18 Jan 2019 14:29:02 +0000
-Received: by mail-it1-f195.google.com with SMTP id a6so5990797itl.4
- for <kexec@lists.infradead.org>; Fri, 18 Jan 2019 06:28:59 -0800 (PST)
-MIME-Version: 1.0
+ id 1gkVFR-0003fF-GL
+ for kexec@lists.infradead.org; Fri, 18 Jan 2019 14:35:59 +0000
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x0IEZmFQ108215
+ for <kexec@lists.infradead.org>; Fri, 18 Jan 2019 09:35:50 -0500
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2q3fn8307k-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 18 Jan 2019 09:35:49 -0500
+Received: from localhost
+ by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <nayna@linux.vnet.ibm.com>;
+ Fri, 18 Jan 2019 14:35:36 -0000
+Subject: Re: [PATCH v4 1/2] integrity, KEYS: add a reference to platform
+ keyring
 References: <20190118091733.29940-1-kasong@redhat.com>
- <1547812432.3982.55.camel@linux.ibm.com>
- <20190118123437.GA30929@dhcp-128-65.nay.redhat.com>
- <20190118123745.GA31072@dhcp-128-65.nay.redhat.com>
- <CACPcB9fiVUCfSBe05FOkKuMbzYnMjjKj50L3ydotSFSp5iL+kg@mail.gmail.com>
-In-Reply-To: <CACPcB9fiVUCfSBe05FOkKuMbzYnMjjKj50L3ydotSFSp5iL+kg@mail.gmail.com>
-From: Kairui Song <kasong@redhat.com>
-Date: Fri, 18 Jan 2019 22:28:47 +0800
-Message-ID: <CACPcB9egBRmP82-NKCRFyJ6b8=CNkn9fuCjCFw0m-VU_vk3z8A@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] let kexec_file_load use platform keyring to verify
- the kernel image
+ <20190118091733.29940-2-kasong@redhat.com>
+From: Nayna <nayna@linux.vnet.ibm.com>
+Date: Fri, 18 Jan 2019 09:35:27 -0500
+MIME-Version: 1.0
+In-Reply-To: <20190118091733.29940-2-kasong@redhat.com>
+Content-Language: en-US
+Message-Id: <3c7fa625-e77c-d6b4-35a4-8f8e9af60864@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,75 +35,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>
-Cc: jwboyer@fedoraproject.org, Eric Biggers <ebiggers@google.com>, nayna@linux.ibm.com, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, jmorris@namei.org, keyrings@vger.kernel.org, linux-integrity <linux-integrity@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, bauerman@linux.ibm.com, serge@hallyn.com
+To: Kairui Song <kasong@redhat.com>
+Cc: jwboyer@fedoraproject.org, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, jmorris@namei.org, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-On Fri, Jan 18, 2019 at 9:42 PM Kairui Song <kasong@redhat.com> wrote:
->
-> On Fri, Jan 18, 2019 at 8:37 PM Dave Young <dyoung@redhat.com> wrote:
-> >
-> > On 01/18/19 at 08:34pm, Dave Young wrote:
-> > > On 01/18/19 at 06:53am, Mimi Zohar wrote:
-> > > > On Fri, 2019-01-18 at 17:17 +0800, Kairui Song wrote:
-> > > > > This patch series adds a .platform_trusted_keys in system_keyring as the
-> > > > > reference to .platform keyring in integrity subsystem, when platform
-> > > > > keyring is being initialized it will be updated. So other component could
-> > > > > use this keyring as well.
-> > > >
-> > > > Kairui, when people review patches, the comments could be specific,
-> > > > but are normally generic.  My review included a couple of generic
-> > > > suggestions - not to use "#ifdef" in C code (eg. is_enabled), use the
-> > > > term "preboot" keys, and remove any references to "other components".
-> > > >
-> > > > After all the wording suggestions I've made, you are still saying, "So
-> > > > other components could use this keyring as well".  Really?!  How the
-> > > > platform keyring will be used in the future, is up to you and others
-> > > > to convince Linus.  At least for now, please limit its usage to
-> > > > verifying the PE signed kernel image.  If this patch set needs to be
-> > > > reposted, please remove all references to "other components".
-> > > >
-> > > > Dave/David, are you ok with Kairui's usage of "#ifdef's"?  Dave, you
-> > > > Acked the original post.  Can I include it?  Can we get some
-> > > > additional Ack's on these patches?
-> > >
-> > > It is better to update patch to use IS_ENABLED in patch 1/2 as well.
-> >
-> > Hmm, not only for patch 1/2, patch 2/2 also need an update
-> >
-> > > Other than that, for kexec part I'm fine with an ack.
-> > >
-> > > Thanks
-> > > Dave
->
-> Thanks for the review again, will update the patch using IS_ENABLED
-> along with update the cover letter shortly.
->
-> --
-> Best Regards,
-> Kairui Song
-
-Hi, before I update it again, most part of the new
-platform_trusted_keyring related code is following how
-secondary_trusted_keyring is implemented (surrounded by ifdefs). I
-thought this could reduce unused code when the keyring is not enabled.
-Else, all ifdef could be simply removed, when platform_keyring is not
-enabled, the platform_trusted_keys will always be NULL, and
-verify_pkcs7_signature will simply return NOKEY if anyone try to use
-platform keyring.
-
-Any suggestions? Or I can just remove the ifdef in
-security/integrity/digsig.c and make set_platform_trusted_keys a
-inline empty function in system_keyring.h.
-
--- 
-Best Regards,
-Kairui Song
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgpPbiAwMS8xOC8yMDE5IDA0OjE3IEFNLCBLYWlydWkgU29uZyB3cm90ZToKPiBjb21taXQgOWRj
+OTJjNDUxNzdhICgnaW50ZWdyaXR5OiBEZWZpbmUgYSB0cnVzdGVkIHBsYXRmb3JtIGtleXJpbmcn
+KQo+IGludHJvZHVjZWQgYSAucGxhdGZvcm0ga2V5cmluZyBmb3Igc3RvcmluZyBwcmVib290IGtl
+eXMsIHVzZWQgZm9yCj4gdmVyaWZ5aW5nIGtlcm5lbCBpbWFnZXMnIHNpZ25hdHVyZS4gQ3VycmVu
+dGx5IG9ubHkgSU1BLWFwcHJhaXNhbCBpcyBhYmxlCj4gdG8gdXNlIHRoZSBrZXlyaW5nIHRvIHZl
+cmlmeSBrZXJuZWwgaW1hZ2VzIHRoYXQgaGF2ZSB0aGVpciBzaWduYXR1cmUKPiBzdG9yZWQgaW4g
+eGF0dHIuCj4KPiBUaGlzIHBhdGNoIGV4cG9zZXMgdGhlIC5wbGF0Zm9ybSBrZXlyaW5nLCBtYWtp
+bmcgaXQgYWNjZXNzaWJsZSBmb3IKPiB2ZXJpZnlpbmcgUEUgc2lnbmVkIGtlcm5lbCBpbWFnZXMg
+YXMgd2VsbC4KPgo+IFN1Z2dlc3RlZC1ieTogTWltaSBab2hhciA8em9oYXJAbGludXguaWJtLmNv
+bT4KPiBTaWduZWQtb2ZmLWJ5OiBLYWlydWkgU29uZyA8a2Fzb25nQHJlZGhhdC5jb20+Cj4gUmV2
+aWV3ZWQtYnk6IE1pbWkgWm9oYXIgPHpvaGFyQGxpbnV4LmlibS5jb20+Cj4gVGVzdGVkLWJ5OiBN
+aW1pIFpvaGFyIDx6b2hhckBsaW51eC5pYm0uY29tPgo+IC0tLQo+ICAgY2VydHMvc3lzdGVtX2tl
+eXJpbmcuYyAgICAgICAgfCA5ICsrKysrKysrKwo+ICAgaW5jbHVkZS9rZXlzL3N5c3RlbV9rZXly
+aW5nLmggfCA1ICsrKysrCj4gICBzZWN1cml0eS9pbnRlZ3JpdHkvZGlnc2lnLmMgICB8IDYgKysr
+KysrCj4gICAzIGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQg
+YS9jZXJ0cy9zeXN0ZW1fa2V5cmluZy5jIGIvY2VydHMvc3lzdGVtX2tleXJpbmcuYwo+IGluZGV4
+IDgxNzI4NzE3NTIzZC4uNDY5MGVmOWNkYThhIDEwMDY0NAo+IC0tLSBhL2NlcnRzL3N5c3RlbV9r
+ZXlyaW5nLmMKPiArKysgYi9jZXJ0cy9zeXN0ZW1fa2V5cmluZy5jCj4gQEAgLTI0LDYgKzI0LDkg
+QEAgc3RhdGljIHN0cnVjdCBrZXkgKmJ1aWx0aW5fdHJ1c3RlZF9rZXlzOwo+ICAgI2lmZGVmIENP
+TkZJR19TRUNPTkRBUllfVFJVU1RFRF9LRVlSSU5HCj4gICBzdGF0aWMgc3RydWN0IGtleSAqc2Vj
+b25kYXJ5X3RydXN0ZWRfa2V5czsKPiAgICNlbmRpZgo+ICsjaWZkZWYgQ09ORklHX0lOVEVHUklU
+WV9QTEFURk9STV9LRVlSSU5HCj4gK3N0YXRpYyBzdHJ1Y3Qga2V5ICpwbGF0Zm9ybV90cnVzdGVk
+X2tleXM7Cj4gKyNlbmRpZgo+ICAgCj4gICBleHRlcm4gX19pbml0Y29uc3QgY29uc3QgdTggc3lz
+dGVtX2NlcnRpZmljYXRlX2xpc3RbXTsKPiAgIGV4dGVybiBfX2luaXRjb25zdCBjb25zdCB1bnNp
+Z25lZCBsb25nIHN5c3RlbV9jZXJ0aWZpY2F0ZV9saXN0X3NpemU7Cj4gQEAgLTI2NSw0ICsyNjgs
+MTAgQEAgaW50IHZlcmlmeV9wa2NzN19zaWduYXR1cmUoY29uc3Qgdm9pZCAqZGF0YSwgc2l6ZV90
+IGxlbiwKPiAgIH0KPiAgIEVYUE9SVF9TWU1CT0xfR1BMKHZlcmlmeV9wa2NzN19zaWduYXR1cmUp
+Owo+ICAgCj4gKyNpZmRlZiBDT05GSUdfSU5URUdSSVRZX1BMQVRGT1JNX0tFWVJJTkcKPiArdm9p
+ZCBfX2luaXQgc2V0X3BsYXRmb3JtX3RydXN0ZWRfa2V5cyhzdHJ1Y3Qga2V5ICprZXlyaW5nKSB7
+Cj4gKwlwbGF0Zm9ybV90cnVzdGVkX2tleXMgPSBrZXlyaW5nOwo+ICt9Cj4gKyNlbmRpZgo+ICsK
+PiAgICNlbmRpZiAvKiBDT05GSUdfU1lTVEVNX0RBVEFfVkVSSUZJQ0FUSU9OICovCj4gZGlmZiAt
+LWdpdCBhL2luY2x1ZGUva2V5cy9zeXN0ZW1fa2V5cmluZy5oIGIvaW5jbHVkZS9rZXlzL3N5c3Rl
+bV9rZXlyaW5nLmgKPiBpbmRleCAzNTljMmY5MzYwMDQuLjllMWI3ODQ5YjZhYSAxMDA2NDQKPiAt
+LS0gYS9pbmNsdWRlL2tleXMvc3lzdGVtX2tleXJpbmcuaAo+ICsrKyBiL2luY2x1ZGUva2V5cy9z
+eXN0ZW1fa2V5cmluZy5oCj4gQEAgLTYxLDUgKzYxLDEwIEBAIHN0YXRpYyBpbmxpbmUgc3RydWN0
+IGtleSAqZ2V0X2ltYV9ibGFja2xpc3Rfa2V5cmluZyh2b2lkKQo+ICAgfQo+ICAgI2VuZGlmIC8q
+IENPTkZJR19JTUFfQkxBQ0tMSVNUX0tFWVJJTkcgKi8KPiAgIAo+ICsjaWZkZWYgQ09ORklHX0lO
+VEVHUklUWV9QTEFURk9STV9LRVlSSU5HCj4gKwo+ICtleHRlcm4gdm9pZCBfX2luaXQgc2V0X3Bs
+YXRmb3JtX3RydXN0ZWRfa2V5cyhzdHJ1Y3Qga2V5KiBrZXlyaW5nKTsKPiArCj4gKyNlbmRpZiAv
+KiBDT05GSUdfSU5URUdSSVRZX1BMQVRGT1JNX0tFWVJJTkcgKi8KPiAgIAo+ICAgI2VuZGlmIC8q
+IF9LRVlTX1NZU1RFTV9LRVlSSU5HX0ggKi8KPiBkaWZmIC0tZ2l0IGEvc2VjdXJpdHkvaW50ZWdy
+aXR5L2RpZ3NpZy5jIGIvc2VjdXJpdHkvaW50ZWdyaXR5L2RpZ3NpZy5jCj4gaW5kZXggZjQ1ZDZl
+ZGVjZjk5Li5iZmFiYzJhODExMWQgMTAwNjQ0Cj4gLS0tIGEvc2VjdXJpdHkvaW50ZWdyaXR5L2Rp
+Z3NpZy5jCj4gKysrIGIvc2VjdXJpdHkvaW50ZWdyaXR5L2RpZ3NpZy5jCj4gQEAgLTg5LDYgKzg5
+LDEyIEBAIHN0YXRpYyBpbnQgX19pbnRlZ3JpdHlfaW5pdF9rZXlyaW5nKGNvbnN0IHVuc2lnbmVk
+IGludCBpZCwga2V5X3Blcm1fdCBwZXJtLAo+ICAgCQlrZXlyaW5nW2lkXSA9IE5VTEw7Cj4gICAJ
+fQo+ICAgCj4gKyNpZmRlZiBDT05GSUdfSU5URUdSSVRZX1BMQVRGT1JNX0tFWVJJTkcKPiArCWlm
+IChpZCA9PSBJTlRFR1JJVFlfS0VZUklOR19QTEFURk9STSkgewoKU2hvdWxkbid0IGl0IGFsc28g
+Y2hlY2sgdGhhdCBrZXlyaW5nW2lkXSBpcyBub3QgTlVMTCA/CgpUaGFua3MgJiBSZWdhcmRzLAog
+wqDCoMKgIC0gTmF5bmEKCj4gKwkJc2V0X3BsYXRmb3JtX3RydXN0ZWRfa2V5cyhrZXlyaW5nW2lk
+XSk7Cj4gKwl9Cj4gKyNlbmRpZgo+ICsKPiAgIAlyZXR1cm4gZXJyOwo+ICAgfQo+ICAgCgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
+ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
