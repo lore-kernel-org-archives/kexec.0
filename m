@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it1-f194.google.com ([209.85.166.194])
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gkVen-0007dl-Dw
- for kexec@lists.infradead.org; Fri, 18 Jan 2019 15:02:29 +0000
-Received: by mail-it1-f194.google.com with SMTP id m8so1230693itk.0
- for <kexec@lists.infradead.org>; Fri, 18 Jan 2019 07:02:05 -0800 (PST)
+ id 1gkfO4-0004MZ-Hw
+ for kexec@lists.infradead.org; Sat, 19 Jan 2019 01:25:30 +0000
+Date: Fri, 18 Jan 2019 18:25:05 -0700
+From: Jerry Hoemann <jerry.hoemann@hpe.com>
+Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
+Message-ID: <20190119012505.GA21653@anatevka>
+References: <1547539623-18201-1-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
-References: <20190118091733.29940-1-kasong@redhat.com>
- <20190118091733.29940-2-kasong@redhat.com>
- <3c7fa625-e77c-d6b4-35a4-8f8e9af60864@linux.vnet.ibm.com>
-In-Reply-To: <3c7fa625-e77c-d6b4-35a4-8f8e9af60864@linux.vnet.ibm.com>
-From: Kairui Song <kasong@redhat.com>
-Date: Fri, 18 Jan 2019 23:01:52 +0800
-Message-ID: <CACPcB9dJ2L8k=jmT23Q72YHjsjzK79ywgU+ASLSe3tkQnosOCQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] integrity,
- KEYS: add a reference to platform keyring
+Content-Disposition: inline
+In-Reply-To: <1547539623-18201-1-git-send-email-kernelfans@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,116 +20,99 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: Jerry.Hoemann@hpe.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nayna <nayna@linux.vnet.ibm.com>
-Cc: jwboyer@fedoraproject.org, Eric Biggers <ebiggers@google.com>, David Woodhouse <dwmw2@infradead.org>, nayna@linux.ibm.com, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mimi Zohar <zohar@linux.ibm.com>, jmorris@namei.org, David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org, linux-integrity <linux-integrity@vger.kernel.org>, Dave Young <dyoung@redhat.com>, bauerman@linux.ibm.com, serge@hallyn.com
+To: Pingfan Liu <kernelfans@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
 
-On Fri, Jan 18, 2019 at 10:36 PM Nayna <nayna@linux.vnet.ibm.com> wrote:
-> On 01/18/2019 04:17 AM, Kairui Song wrote:
-> > commit 9dc92c45177a ('integrity: Define a trusted platform keyring')
-> > introduced a .platform keyring for storing preboot keys, used for
-> > verifying kernel images' signature. Currently only IMA-appraisal is able
-> > to use the keyring to verify kernel images that have their signature
-> > stored in xattr.
-> >
-> > This patch exposes the .platform keyring, making it accessible for
-> > verifying PE signed kernel images as well.
-> >
-> > Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
-> > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> > Tested-by: Mimi Zohar <zohar@linux.ibm.com>
-> > ---
-> >   certs/system_keyring.c        | 9 +++++++++
-> >   include/keys/system_keyring.h | 5 +++++
-> >   security/integrity/digsig.c   | 6 ++++++
-> >   3 files changed, 20 insertions(+)
-> >
-> > diff --git a/certs/system_keyring.c b/certs/system_keyring.c
-> > index 81728717523d..4690ef9cda8a 100644
-> > --- a/certs/system_keyring.c
-> > +++ b/certs/system_keyring.c
-> > @@ -24,6 +24,9 @@ static struct key *builtin_trusted_keys;
-> >   #ifdef CONFIG_SECONDARY_TRUSTED_KEYRING
-> >   static struct key *secondary_trusted_keys;
-> >   #endif
-> > +#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
-> > +static struct key *platform_trusted_keys;
-> > +#endif
-> >
-> >   extern __initconst const u8 system_certificate_list[];
-> >   extern __initconst const unsigned long system_certificate_list_size;
-> > @@ -265,4 +268,10 @@ int verify_pkcs7_signature(const void *data, size_t len,
-> >   }
-> >   EXPORT_SYMBOL_GPL(verify_pkcs7_signature);
-> >
-> > +#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
-> > +void __init set_platform_trusted_keys(struct key *keyring) {
-> > +     platform_trusted_keys = keyring;
-> > +}
-> > +#endif
-> > +
-> >   #endif /* CONFIG_SYSTEM_DATA_VERIFICATION */
-> > diff --git a/include/keys/system_keyring.h b/include/keys/system_keyring.h
-> > index 359c2f936004..9e1b7849b6aa 100644
-> > --- a/include/keys/system_keyring.h
-> > +++ b/include/keys/system_keyring.h
-> > @@ -61,5 +61,10 @@ static inline struct key *get_ima_blacklist_keyring(void)
-> >   }
-> >   #endif /* CONFIG_IMA_BLACKLIST_KEYRING */
-> >
-> > +#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
-> > +
-> > +extern void __init set_platform_trusted_keys(struct key* keyring);
-> > +
-> > +#endif /* CONFIG_INTEGRITY_PLATFORM_KEYRING */
-> >
-> >   #endif /* _KEYS_SYSTEM_KEYRING_H */
-> > diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-> > index f45d6edecf99..bfabc2a8111d 100644
-> > --- a/security/integrity/digsig.c
-> > +++ b/security/integrity/digsig.c
-> > @@ -89,6 +89,12 @@ static int __integrity_init_keyring(const unsigned int id, key_perm_t perm,
-> >               keyring[id] = NULL;
-> >       }
-> >
-> > +#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
-> > +     if (id == INTEGRITY_KEYRING_PLATFORM) {
->
-> Shouldn't it also check that keyring[id] is not NULL ?
+On Tue, Jan 15, 2019 at 04:07:03PM +0800, Pingfan Liu wrote:
+> People reported a bug on a high end server with many pcie devices, where
+> kernel bootup with crashkernel=384M, and kaslr is enabled. Even
+> though we still see much memory under 896 MB, the finding still failed
+> intermittently. Because currently we can only find region under 896 MB,
+> if without ',high' specified. Then KASLR breaks 896 MB into several parts
+> randomly, and crashkernel reservation need be aligned to 128 MB, that's
+> why failure is found. It raises confusion to the end user that sometimes
+> crashkernel=X works while sometimes fails.
+> If want to make it succeed, customer can change kernel option to
+> "crashkernel=384M,high". Just this give "crashkernel=xx@yy" a very
+> limited space to behave even though its grammar looks more generic.
+> And we can't answer questions raised from customer that confidently:
+> 1) why it doesn't succeed to reserve 896 MB;
+> 2) what's wrong with memory region under 4G;
+> 3) why I have to add ',high', I only require 384 MB, not 3840 MB.
+> This patch tries to get memory region from 896 MB firstly, then [896MB,4G],
+> finally above 4G.
 
-Good catch, if it's NULL then platform_trusted_keyring will be set to
-NULL as well, which will work just fine as in this case
-platform_trusted_keyring is still considered not initialized. I'll add
-a sanity check here to check err value just in case.
-Thanks for your suggestion!
+While allocating crashkernel from below 4G seems fine, won't we have
+problems if the crash kernel gets allocated above 4G because of the SWIOTLB?
 
->
-> Thanks & Regards,
->      - Nayna
->
-> > +             set_platform_trusted_keys(keyring[id]);
-> > +     }
-> > +#endif
-> > +
-> >       return err;
-> >   }
-> >
->
->
+thanks
+
+
+> Dave Young sent the original post, and I just re-post it with commit log
+> improvement as his requirement.
+> http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
+> There was an old discussion below (previously posted by Chao Wang):
+> https://lkml.org/lkml/2013/10/15/601
+> 
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+> Cc: yinghai@kernel.org,
+> Cc: vgoyal@redhat.com
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> ---
+> v6 -> v7: fix spelling mistake pointed out by Randy
+>  arch/x86/kernel/setup.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 3d872a5..fa62c81 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -551,6 +551,22 @@ static void __init reserve_crashkernel(void)
+>  						    high ? CRASH_ADDR_HIGH_MAX
+>  							 : CRASH_ADDR_LOW_MAX,
+>  						    crash_size, CRASH_ALIGN);
+> +#ifdef CONFIG_X86_64
+> +		/*
+> +		 * crashkernel=X reserve below 896M fails? Try below 4G
+> +		 */
+> +		if (!high && !crash_base)
+> +			crash_base = memblock_find_in_range(CRASH_ALIGN,
+> +						(1ULL << 32),
+> +						crash_size, CRASH_ALIGN);
+> +		/*
+> +		 * crashkernel=X reserve below 4G fails? Try MAXMEM
+> +		 */
+> +		if (!high && !crash_base)
+> +			crash_base = memblock_find_in_range(CRASH_ALIGN,
+> +						CRASH_ADDR_HIGH_MAX,
+> +						crash_size, CRASH_ALIGN);
+> +#endif
+>  		if (!crash_base) {
+>  			pr_info("crashkernel reservation failed - No suitable area found.\n");
+>  			return;
+> -- 
+> 2.7.4
+> 
+> 
 > _______________________________________________
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
 
-
-
 -- 
-Best Regards,
-Kairui Song
+
+-----------------------------------------------------------------------------
+Jerry Hoemann                  Software Engineer   Hewlett Packard Enterprise
+-----------------------------------------------------------------------------
 
 _______________________________________________
 kexec mailing list
