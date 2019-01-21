@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1glWND-0004wx-QA
- for kexec@lists.infradead.org; Mon, 21 Jan 2019 10:00:13 +0000
+ id 1glWNK-000595-1F
+ for kexec@lists.infradead.org; Mon, 21 Jan 2019 10:00:15 +0000
 From: Kairui Song <kasong@redhat.com>
-Subject: [PATCH v5 0/2] let kexec_file_load use platform keyring to verify the
- kernel image
-Date: Mon, 21 Jan 2019 17:59:27 +0800
-Message-Id: <20190121095929.26915-1-kasong@redhat.com>
+Subject: [PATCH v5 1/2] integrity, KEYS: add a reference to platform keyring
+Date: Mon, 21 Jan 2019 17:59:28 +0800
+Message-Id: <20190121095929.26915-2-kasong@redhat.com>
+In-Reply-To: <20190121095929.26915-1-kasong@redhat.com>
+References: <20190121095929.26915-1-kasong@redhat.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,55 +25,81 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: jwboyer@fedoraproject.org, Kairui Song <kasong@redhat.com>, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, jmorris@namei.org, zohar@linux.ibm.com, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-This patch series adds a .platform_trusted_keys in system_keyring as the
-reference to .platform keyring in integrity subsystem, when platform
-keyring is being initialized it will be updated, so it will be
-accessable for verifying PE signed kernel image.
+commit 9dc92c45177a ('integrity: Define a trusted platform keyring')
+introduced a .platform keyring for storing preboot keys, used for
+verifying kernel images' signature. Currently only IMA-appraisal is able
+to use the keyring to verify kernel images that have their signature
+stored in xattr.
 
-This patch series let kexec_file_load use platform keyring as fall
-back if it failed to verify the image against secondary keyring,
-so the actually PE signature verify process will use keys provides
-by firmware.
+This patch exposes the .platform keyring, making it
+accessible for verifying PE signed kernel images as well.
 
-After this patch kexec_file_load will be able to verify a signed PE
-bzImage using keys in platform keyring.
+Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Kairui Song <kasong@redhat.com>
+---
+ certs/system_keyring.c        | 9 +++++++++
+ include/keys/system_keyring.h | 9 +++++++++
+ security/integrity/digsig.c   | 3 +++
+ 3 files changed, 21 insertions(+)
 
-Tested in a VM with locally signed kernel with pesign and imported the
-cert to EFI's MokList variable.
-
-To test this patch series on latest kernel, you need to ensure this commit
-is applied as there is an regression bug in sanity_check_segment_list():
-
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=993a110319a4a60aadbd02f6defdebe048f7773b
-
-Update from V4:
-  - Drop ifdef in security/integrity/digsig.c to make code clearer
-  - Fix a potential issue, set_platform_trusted_keys should not be
-    called when keyring initialization failed
-
-Update from V3:
-  - Tweak and simplify commit message as suggested by Mimi Zohar
-
-Update from V2:
-  - Use IS_ENABLED in kexec_file_load to judge if platform_trusted_keys
-    should be used for verifying image as suggested by Mimi Zohar
-
-Update from V1:
-  - Make platform_trusted_keys static, and update commit message as suggested
-    by Mimi Zohar
-  - Always check if platform keyring is initialized before use it
-
-Kairui Song (2):
-  integrity, KEYS: add a reference to platform keyring
-  kexec, KEYS: Make use of platform keyring for signature verify
-
- arch/x86/kernel/kexec-bzimage64.c | 13 ++++++++++---
- certs/system_keyring.c            | 22 +++++++++++++++++++++-
- include/keys/system_keyring.h     |  9 +++++++++
- include/linux/verification.h      |  1 +
- security/integrity/digsig.c       |  3 +++
- 5 files changed, 44 insertions(+), 4 deletions(-)
-
+diff --git a/certs/system_keyring.c b/certs/system_keyring.c
+index 81728717523d..4690ef9cda8a 100644
+--- a/certs/system_keyring.c
++++ b/certs/system_keyring.c
+@@ -24,6 +24,9 @@ static struct key *builtin_trusted_keys;
+ #ifdef CONFIG_SECONDARY_TRUSTED_KEYRING
+ static struct key *secondary_trusted_keys;
+ #endif
++#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
++static struct key *platform_trusted_keys;
++#endif
+ 
+ extern __initconst const u8 system_certificate_list[];
+ extern __initconst const unsigned long system_certificate_list_size;
+@@ -265,4 +268,10 @@ int verify_pkcs7_signature(const void *data, size_t len,
+ }
+ EXPORT_SYMBOL_GPL(verify_pkcs7_signature);
+ 
++#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
++void __init set_platform_trusted_keys(struct key *keyring) {
++	platform_trusted_keys = keyring;
++}
++#endif
++
+ #endif /* CONFIG_SYSTEM_DATA_VERIFICATION */
+diff --git a/include/keys/system_keyring.h b/include/keys/system_keyring.h
+index 359c2f936004..df766ef8f03c 100644
+--- a/include/keys/system_keyring.h
++++ b/include/keys/system_keyring.h
+@@ -61,5 +61,14 @@ static inline struct key *get_ima_blacklist_keyring(void)
+ }
+ #endif /* CONFIG_IMA_BLACKLIST_KEYRING */
+ 
++#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
++
++extern void __init set_platform_trusted_keys(struct key* keyring);
++
++#else
++
++static inline void set_platform_trusted_keys(struct key* keyring) { };
++
++#endif /* CONFIG_INTEGRITY_PLATFORM_KEYRING */
+ 
+ #endif /* _KEYS_SYSTEM_KEYRING_H */
+diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
+index f45d6edecf99..e19c2eb72c51 100644
+--- a/security/integrity/digsig.c
++++ b/security/integrity/digsig.c
+@@ -87,6 +87,9 @@ static int __integrity_init_keyring(const unsigned int id, key_perm_t perm,
+ 		pr_info("Can't allocate %s keyring (%d)\n",
+ 			keyring_name[id], err);
+ 		keyring[id] = NULL;
++	} else {
++		if (id == INTEGRITY_KEYRING_PLATFORM)
++			set_platform_trusted_keys(keyring[id]);
+ 	}
+ 
+ 	return err;
 -- 
 2.20.1
 
