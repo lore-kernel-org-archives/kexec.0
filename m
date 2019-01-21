@@ -1,23 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it1-f195.google.com ([209.85.166.195])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1glVZv-0001qY-FV
- for kexec@lists.infradead.org; Mon, 21 Jan 2019 09:09:14 +0000
-Received: by mail-it1-f195.google.com with SMTP id i145so15483681ita.4
- for <kexec@lists.infradead.org>; Mon, 21 Jan 2019 01:09:10 -0800 (PST)
+ id 1glVkJ-0008Vt-O0
+ for kexec@lists.infradead.org; Mon, 21 Jan 2019 09:19:57 +0000
+Date: Mon, 21 Jan 2019 10:19:50 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2 2/2] x86, kexec_file_load: make it work with
+ efi=noruntime or efi=old_map
+Message-ID: <20190121091939.GC29166@zn.tnic>
+References: <20190115095834.22617-1-kasong@redhat.com>
+ <20190115095834.22617-3-kasong@redhat.com>
+ <20190115231005.GF6596@zn.tnic>
+ <CACPcB9dYD2zR7ssXFibkefo3EZuvVnLegovwTMA8MaaLP1UsYQ@mail.gmail.com>
+ <20190116094619.GB15409@zn.tnic>
+ <CACPcB9d0dKLPmZ=b++m5LYRjFUCFyLL3deDBcS4m3N-UWZ_Hyw@mail.gmail.com>
+ <20190118102636.GB622@zn.tnic>
+ <20190121011830.GA1554@localhost.localdomain>
+ <20190121082932.GA29166@zn.tnic>
+ <20190121084352.GA15754@localhost.localdomain>
 MIME-Version: 1.0
-References: <20190118091733.29940-1-kasong@redhat.com>
- <1547812432.3982.55.camel@linux.ibm.com>
- <20190118123437.GA30929@dhcp-128-65.nay.redhat.com>
- <20190118123745.GA31072@dhcp-128-65.nay.redhat.com>
- <CACPcB9fiVUCfSBe05FOkKuMbzYnMjjKj50L3ydotSFSp5iL+kg@mail.gmail.com>
- <CACPcB9egBRmP82-NKCRFyJ6b8=CNkn9fuCjCFw0m-VU_vk3z8A@mail.gmail.com>
-In-Reply-To: <CACPcB9egBRmP82-NKCRFyJ6b8=CNkn9fuCjCFw0m-VU_vk3z8A@mail.gmail.com>
-From: Kairui Song <kasong@redhat.com>
-Date: Mon, 21 Jan 2019 17:08:59 +0800
-Message-ID: <CACPcB9eLmUyaivmq5Ma3wXqzTk6RiqR8PE2=u69L=zjp682_kg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] let kexec_file_load use platform keyring to verify
- the kernel image
+Content-Disposition: inline
+In-Reply-To: <20190121084352.GA15754@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,89 +33,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>
-Cc: jwboyer@fedoraproject.org, Eric Biggers <ebiggers@google.com>, nayna@linux.ibm.com, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, jmorris@namei.org, keyrings@vger.kernel.org, linux-integrity <linux-integrity@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, bauerman@linux.ibm.com, serge@hallyn.com
+To: Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc: rafael.j.wysocki@intel.com, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, erik.schmauss@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robert.moore@intel.com, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, Len Brown <lenb@kernel.org>
 
-On Fri, Jan 18, 2019 at 10:28 PM Kairui Song <kasong@redhat.com> wrote:
->
-> On Fri, Jan 18, 2019 at 9:42 PM Kairui Song <kasong@redhat.com> wrote:
-> >
-> > On Fri, Jan 18, 2019 at 8:37 PM Dave Young <dyoung@redhat.com> wrote:
-> > >
-> > > On 01/18/19 at 08:34pm, Dave Young wrote:
-> > > > On 01/18/19 at 06:53am, Mimi Zohar wrote:
-> > > > > On Fri, 2019-01-18 at 17:17 +0800, Kairui Song wrote:
-> > > > > > This patch series adds a .platform_trusted_keys in system_keyring as the
-> > > > > > reference to .platform keyring in integrity subsystem, when platform
-> > > > > > keyring is being initialized it will be updated. So other component could
-> > > > > > use this keyring as well.
-> > > > >
-> > > > > Kairui, when people review patches, the comments could be specific,
-> > > > > but are normally generic.  My review included a couple of generic
-> > > > > suggestions - not to use "#ifdef" in C code (eg. is_enabled), use the
-> > > > > term "preboot" keys, and remove any references to "other components".
-> > > > >
-> > > > > After all the wording suggestions I've made, you are still saying, "So
-> > > > > other components could use this keyring as well".  Really?!  How the
-> > > > > platform keyring will be used in the future, is up to you and others
-> > > > > to convince Linus.  At least for now, please limit its usage to
-> > > > > verifying the PE signed kernel image.  If this patch set needs to be
-> > > > > reposted, please remove all references to "other components".
-> > > > >
-> > > > > Dave/David, are you ok with Kairui's usage of "#ifdef's"?  Dave, you
-> > > > > Acked the original post.  Can I include it?  Can we get some
-> > > > > additional Ack's on these patches?
-> > > >
-> > > > It is better to update patch to use IS_ENABLED in patch 1/2 as well.
-> > >
-> > > Hmm, not only for patch 1/2, patch 2/2 also need an update
-> > >
-> > > > Other than that, for kexec part I'm fine with an ack.
-> > > >
-> > > > Thanks
-> > > > Dave
-> >
-> > Thanks for the review again, will update the patch using IS_ENABLED
-> > along with update the cover letter shortly.
-> >
-> > --
-> > Best Regards,
-> > Kairui Song
->
-> Hi, before I update it again, most part of the new
-> platform_trusted_keyring related code is following how
-> secondary_trusted_keyring is implemented (surrounded by ifdefs). I
-> thought this could reduce unused code when the keyring is not enabled.
-> Else, all ifdef could be simply removed, when platform_keyring is not
-> enabled, the platform_trusted_keys will always be NULL, and
-> verify_pkcs7_signature will simply return NOKEY if anyone try to use
-> platform keyring.
->
-> Any suggestions? Or I can just remove the ifdef in
-> security/integrity/digsig.c and make set_platform_trusted_keys a
-> inline empty function in system_keyring.h.
->
-> --
-> Best Regards,
-> Kairui Song
+On Mon, Jan 21, 2019 at 04:43:52PM +0800, Chao Fan wrote:
+> Since I didn't see where Xen to fill the value, if
+> boot_params->acpi_rsdp_addr is filled before my code, I just need to
+> read it. If when I try to read it but not found, then parse RSDP and
+> fill the RSDP address to boot_params->acpi_rsdp_addr.
 
-Hi, after a second thought I'll drop the #ifdef in
-security/integrity/digsig.c in PATCH 1/2, and make the
-set_platform_trusted_keys function a empty inline function when
-CONFIG_INTEGRITY_PLATFORM_KEYRING is undefined.
-But for other ifdefs in certs/system_keyring.c I think maybe just keep
-then untouched. They were used to strip out the
-platform_trusted_keyring variable and related function when
-CONFIG_INTEGRITY_PLATFORM_KEYRING is not used, this should help reduce
-unused code and prevent compile error, also make code style aligns
-with existing code in system_keyring.c.
+And you can't simply do:
 
-Will sent v5 with above updates and fix a potential problem found by Nayna.
+	if (boot_params.acpi_rsdp_addr)
+		return;
 
+at the beginning of that function?
 
---
-Best Regards,
-Kairui Song
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
