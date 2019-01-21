@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1glWNK-000595-1F
- for kexec@lists.infradead.org; Mon, 21 Jan 2019 10:00:15 +0000
+ id 1glWNP-0005Cs-7c
+ for kexec@lists.infradead.org; Mon, 21 Jan 2019 10:00:24 +0000
 From: Kairui Song <kasong@redhat.com>
-Subject: [PATCH v5 1/2] integrity, KEYS: add a reference to platform keyring
-Date: Mon, 21 Jan 2019 17:59:28 +0800
-Message-Id: <20190121095929.26915-2-kasong@redhat.com>
+Subject: [PATCH v5 2/2] kexec,
+ KEYS: Make use of platform keyring for signature verify
+Date: Mon, 21 Jan 2019 17:59:29 +0800
+Message-Id: <20190121095929.26915-3-kasong@redhat.com>
 In-Reply-To: <20190121095929.26915-1-kasong@redhat.com>
 References: <20190121095929.26915-1-kasong@redhat.com>
 MIME-Version: 1.0
@@ -25,81 +26,89 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: jwboyer@fedoraproject.org, Kairui Song <kasong@redhat.com>, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, jmorris@namei.org, zohar@linux.ibm.com, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-commit 9dc92c45177a ('integrity: Define a trusted platform keyring')
-introduced a .platform keyring for storing preboot keys, used for
-verifying kernel images' signature. Currently only IMA-appraisal is able
-to use the keyring to verify kernel images that have their signature
-stored in xattr.
+This patch let kexec_file_load makes use of .platform keyring as fall
+back if it failed to verify a PE signed image against secondary or
+builtin key ring, make it possible to verify kernel image signed with
+preboot keys as well.
 
-This patch exposes the .platform keyring, making it
-accessible for verifying PE signed kernel images as well.
+This commit adds a VERIFY_USE_PLATFORM_KEYRING similar to previous
+VERIFY_USE_SECONDARY_KEYRING indicating that verify_pkcs7_signature
+should verify the signature using platform keyring. Also, decrease
+the error message log level when verification failed with -ENOKEY,
+so that if called tried multiple time with different keyring it
+won't generate extra noises.
 
-Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Kairui Song <kasong@redhat.com>
 ---
- certs/system_keyring.c        | 9 +++++++++
- include/keys/system_keyring.h | 9 +++++++++
- security/integrity/digsig.c   | 3 +++
- 3 files changed, 21 insertions(+)
+ arch/x86/kernel/kexec-bzimage64.c | 13 ++++++++++---
+ certs/system_keyring.c            | 13 ++++++++++++-
+ include/linux/verification.h      |  1 +
+ 3 files changed, 23 insertions(+), 4 deletions(-)
 
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 7d97e432cbbc..2c007abd3d40 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -534,9 +534,16 @@ static int bzImage64_cleanup(void *loader_data)
+ #ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
+ static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
+ {
+-	return verify_pefile_signature(kernel, kernel_len,
+-				       VERIFY_USE_SECONDARY_KEYRING,
+-				       VERIFYING_KEXEC_PE_SIGNATURE);
++	int ret;
++	ret = verify_pefile_signature(kernel, kernel_len,
++				      VERIFY_USE_SECONDARY_KEYRING,
++				      VERIFYING_KEXEC_PE_SIGNATURE);
++	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
++		ret = verify_pefile_signature(kernel, kernel_len,
++					      VERIFY_USE_PLATFORM_KEYRING,
++					      VERIFYING_KEXEC_PE_SIGNATURE);
++	}
++	return ret;
+ }
+ #endif
+ 
 diff --git a/certs/system_keyring.c b/certs/system_keyring.c
-index 81728717523d..4690ef9cda8a 100644
+index 4690ef9cda8a..7085c286f4bd 100644
 --- a/certs/system_keyring.c
 +++ b/certs/system_keyring.c
-@@ -24,6 +24,9 @@ static struct key *builtin_trusted_keys;
- #ifdef CONFIG_SECONDARY_TRUSTED_KEYRING
- static struct key *secondary_trusted_keys;
+@@ -240,11 +240,22 @@ int verify_pkcs7_signature(const void *data, size_t len,
+ #else
+ 		trusted_keys = builtin_trusted_keys;
  #endif
++	} else if (trusted_keys == VERIFY_USE_PLATFORM_KEYRING) {
 +#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
-+static struct key *platform_trusted_keys;
-+#endif
- 
- extern __initconst const u8 system_certificate_list[];
- extern __initconst const unsigned long system_certificate_list_size;
-@@ -265,4 +268,10 @@ int verify_pkcs7_signature(const void *data, size_t len,
- }
- EXPORT_SYMBOL_GPL(verify_pkcs7_signature);
- 
-+#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
-+void __init set_platform_trusted_keys(struct key *keyring) {
-+	platform_trusted_keys = keyring;
-+}
-+#endif
-+
- #endif /* CONFIG_SYSTEM_DATA_VERIFICATION */
-diff --git a/include/keys/system_keyring.h b/include/keys/system_keyring.h
-index 359c2f936004..df766ef8f03c 100644
---- a/include/keys/system_keyring.h
-+++ b/include/keys/system_keyring.h
-@@ -61,5 +61,14 @@ static inline struct key *get_ima_blacklist_keyring(void)
- }
- #endif /* CONFIG_IMA_BLACKLIST_KEYRING */
- 
-+#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
-+
-+extern void __init set_platform_trusted_keys(struct key* keyring);
-+
++		trusted_keys = platform_trusted_keys;
 +#else
-+
-+static inline void set_platform_trusted_keys(struct key* keyring) { };
-+
-+#endif /* CONFIG_INTEGRITY_PLATFORM_KEYRING */
- 
- #endif /* _KEYS_SYSTEM_KEYRING_H */
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index f45d6edecf99..e19c2eb72c51 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -87,6 +87,9 @@ static int __integrity_init_keyring(const unsigned int id, key_perm_t perm,
- 		pr_info("Can't allocate %s keyring (%d)\n",
- 			keyring_name[id], err);
- 		keyring[id] = NULL;
-+	} else {
-+		if (id == INTEGRITY_KEYRING_PLATFORM)
-+			set_platform_trusted_keys(keyring[id]);
++		trusted_keys = NULL;
++#endif
++		if (!trusted_keys) {
++			ret = -ENOKEY;
++			pr_devel("PKCS#7 platform keyring is not available\n");
++			goto error;
++		}
+ 	}
+ 	ret = pkcs7_validate_trust(pkcs7, trusted_keys);
+ 	if (ret < 0) {
+ 		if (ret == -ENOKEY)
+-			pr_err("PKCS#7 signature not signed with a trusted key\n");
++			pr_devel("PKCS#7 signature not signed with a trusted key\n");
+ 		goto error;
  	}
  
- 	return err;
+diff --git a/include/linux/verification.h b/include/linux/verification.h
+index cfa4730d607a..018fb5f13d44 100644
+--- a/include/linux/verification.h
++++ b/include/linux/verification.h
+@@ -17,6 +17,7 @@
+  * should be used.
+  */
+ #define VERIFY_USE_SECONDARY_KEYRING ((struct key *)1UL)
++#define VERIFY_USE_PLATFORM_KEYRING  ((struct key *)2UL)
+ 
+ /*
+  * The use to which an asymmetric key is being put.
 -- 
 2.20.1
 
