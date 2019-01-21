@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-it1-f195.google.com ([209.85.166.195])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1glWNP-0005Cs-7c
- for kexec@lists.infradead.org; Mon, 21 Jan 2019 10:00:24 +0000
-From: Kairui Song <kasong@redhat.com>
-Subject: [PATCH v5 2/2] kexec,
- KEYS: Make use of platform keyring for signature verify
-Date: Mon, 21 Jan 2019 17:59:29 +0800
-Message-Id: <20190121095929.26915-3-kasong@redhat.com>
-In-Reply-To: <20190121095929.26915-1-kasong@redhat.com>
-References: <20190121095929.26915-1-kasong@redhat.com>
+ id 1glWQt-0005zJ-GR
+ for kexec@lists.infradead.org; Mon, 21 Jan 2019 10:04:12 +0000
+Received: by mail-it1-f195.google.com with SMTP id g76so15662637itg.2
+ for <kexec@lists.infradead.org>; Mon, 21 Jan 2019 02:03:55 -0800 (PST)
 MIME-Version: 1.0
+References: <20190121095929.26915-1-kasong@redhat.com>
+In-Reply-To: <20190121095929.26915-1-kasong@redhat.com>
+From: Kairui Song <kasong@redhat.com>
+Date: Mon, 21 Jan 2019 18:03:43 +0800
+Message-ID: <CACPcB9c2eJ=Wm8Tb6afgyoAQ5TWuGbuqGXq1i9cN8pRFCwXGrw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] let kexec_file_load use platform keyring to verify
+ the kernel image
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,95 +25,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: jwboyer@fedoraproject.org, Kairui Song <kasong@redhat.com>, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, jmorris@namei.org, zohar@linux.ibm.com, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: jwboyer@fedoraproject.org, Eric Biggers <ebiggers@google.com>, Dave Young <dyoung@redhat.com>, nayna@linux.ibm.com, kexec@lists.infradead.org, jmorris@namei.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org, linux-integrity <linux-integrity@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, bauerman@linux.ibm.com, serge@hallyn.com
 
-This patch let kexec_file_load makes use of .platform keyring as fall
-back if it failed to verify a PE signed image against secondary or
-builtin key ring, make it possible to verify kernel image signed with
-preboot keys as well.
+On Mon, Jan 21, 2019 at 6:00 PM Kairui Song <kasong@redhat.com> wrote:
+>
+> This patch series adds a .platform_trusted_keys in system_keyring as the
+> reference to .platform keyring in integrity subsystem, when platform
+> keyring is being initialized it will be updated, so it will be
+> accessable for verifying PE signed kernel image.
+>
+> This patch series let kexec_file_load use platform keyring as fall
+> back if it failed to verify the image against secondary keyring,
+> so the actually PE signature verify process will use keys provides
+> by firmware.
+>
+> After this patch kexec_file_load will be able to verify a signed PE
+> bzImage using keys in platform keyring.
+>
+> Tested in a VM with locally signed kernel with pesign and imported the
+> cert to EFI's MokList variable.
+>
+> To test this patch series on latest kernel, you need to ensure this commit
+> is applied as there is an regression bug in sanity_check_segment_list():
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=993a110319a4a60aadbd02f6defdebe048f7773b
+>
+> Update from V4:
+>   - Drop ifdef in security/integrity/digsig.c to make code clearer
+>   - Fix a potential issue, set_platform_trusted_keys should not be
+>     called when keyring initialization failed
+>
+> Update from V3:
+>   - Tweak and simplify commit message as suggested by Mimi Zohar
+>
+> Update from V2:
+>   - Use IS_ENABLED in kexec_file_load to judge if platform_trusted_keys
+>     should be used for verifying image as suggested by Mimi Zohar
+>
+> Update from V1:
+>   - Make platform_trusted_keys static, and update commit message as suggested
+>     by Mimi Zohar
+>   - Always check if platform keyring is initialized before use it
+>
+> Kairui Song (2):
+>   integrity, KEYS: add a reference to platform keyring
+>   kexec, KEYS: Make use of platform keyring for signature verify
+>
+>  arch/x86/kernel/kexec-bzimage64.c | 13 ++++++++++---
+>  certs/system_keyring.c            | 22 +++++++++++++++++++++-
+>  include/keys/system_keyring.h     |  9 +++++++++
+>  include/linux/verification.h      |  1 +
+>  security/integrity/digsig.c       |  3 +++
+>  5 files changed, 44 insertions(+), 4 deletions(-)
+>
+> --
+> 2.20.1
+>
 
-This commit adds a VERIFY_USE_PLATFORM_KEYRING similar to previous
-VERIFY_USE_SECONDARY_KEYRING indicating that verify_pkcs7_signature
-should verify the signature using platform keyring. Also, decrease
-the error message log level when verification failed with -ENOKEY,
-so that if called tried multiple time with different keyring it
-won't generate extra noises.
+Hi Mimi,
 
-Signed-off-by: Kairui Song <kasong@redhat.com>
----
- arch/x86/kernel/kexec-bzimage64.c | 13 ++++++++++---
- certs/system_keyring.c            | 13 ++++++++++++-
- include/linux/verification.h      |  1 +
- 3 files changed, 23 insertions(+), 4 deletions(-)
+I've updated the patch series again and as the code changed a bit I
+didn't include previous Reviewd-by / Tested-by, it worked with no
+problem, could you help have a review again? Thank you.
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 7d97e432cbbc..2c007abd3d40 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -534,9 +534,16 @@ static int bzImage64_cleanup(void *loader_data)
- #ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
- static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
- {
--	return verify_pefile_signature(kernel, kernel_len,
--				       VERIFY_USE_SECONDARY_KEYRING,
--				       VERIFYING_KEXEC_PE_SIGNATURE);
-+	int ret;
-+	ret = verify_pefile_signature(kernel, kernel_len,
-+				      VERIFY_USE_SECONDARY_KEYRING,
-+				      VERIFYING_KEXEC_PE_SIGNATURE);
-+	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
-+		ret = verify_pefile_signature(kernel, kernel_len,
-+					      VERIFY_USE_PLATFORM_KEYRING,
-+					      VERIFYING_KEXEC_PE_SIGNATURE);
-+	}
-+	return ret;
- }
- #endif
- 
-diff --git a/certs/system_keyring.c b/certs/system_keyring.c
-index 4690ef9cda8a..7085c286f4bd 100644
---- a/certs/system_keyring.c
-+++ b/certs/system_keyring.c
-@@ -240,11 +240,22 @@ int verify_pkcs7_signature(const void *data, size_t len,
- #else
- 		trusted_keys = builtin_trusted_keys;
- #endif
-+	} else if (trusted_keys == VERIFY_USE_PLATFORM_KEYRING) {
-+#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
-+		trusted_keys = platform_trusted_keys;
-+#else
-+		trusted_keys = NULL;
-+#endif
-+		if (!trusted_keys) {
-+			ret = -ENOKEY;
-+			pr_devel("PKCS#7 platform keyring is not available\n");
-+			goto error;
-+		}
- 	}
- 	ret = pkcs7_validate_trust(pkcs7, trusted_keys);
- 	if (ret < 0) {
- 		if (ret == -ENOKEY)
--			pr_err("PKCS#7 signature not signed with a trusted key\n");
-+			pr_devel("PKCS#7 signature not signed with a trusted key\n");
- 		goto error;
- 	}
- 
-diff --git a/include/linux/verification.h b/include/linux/verification.h
-index cfa4730d607a..018fb5f13d44 100644
---- a/include/linux/verification.h
-+++ b/include/linux/verification.h
-@@ -17,6 +17,7 @@
-  * should be used.
-  */
- #define VERIFY_USE_SECONDARY_KEYRING ((struct key *)1UL)
-+#define VERIFY_USE_PLATFORM_KEYRING  ((struct key *)2UL)
- 
- /*
-  * The use to which an asymmetric key is being put.
 -- 
-2.20.1
-
+Best Regards,
+Kairui Song
 
 _______________________________________________
 kexec mailing list
