@@ -1,23 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.cn.fujitsu.com ([183.91.158.132] helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1glOG9-0001t9-Se
- for kexec@lists.infradead.org; Mon, 21 Jan 2019 01:20:19 +0000
-Date: Mon, 21 Jan 2019 09:18:30 +0800
-From: Chao Fan <fanc.fnst@cn.fujitsu.com>
-Subject: Re: [PATCH v2 2/2] x86, kexec_file_load: make it work with
- efi=noruntime or efi=old_map
-Message-ID: <20190121011830.GA1554@localhost.localdomain>
-References: <20190115095834.22617-1-kasong@redhat.com>
- <20190115095834.22617-3-kasong@redhat.com>
- <20190115231005.GF6596@zn.tnic>
- <CACPcB9dYD2zR7ssXFibkefo3EZuvVnLegovwTMA8MaaLP1UsYQ@mail.gmail.com>
- <20190116094619.GB15409@zn.tnic>
- <CACPcB9d0dKLPmZ=b++m5LYRjFUCFyLL3deDBcS4m3N-UWZ_Hyw@mail.gmail.com>
- <20190118102636.GB622@zn.tnic>
+Received: from mail-it1-x141.google.com ([2607:f8b0:4864:20::141])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1glRsM-00040P-AS
+ for kexec@lists.infradead.org; Mon, 21 Jan 2019 05:12:00 +0000
+Received: by mail-it1-x141.google.com with SMTP id p197so13596427itp.0
+ for <kexec@lists.infradead.org>; Sun, 20 Jan 2019 21:11:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190118102636.GB622@zn.tnic>
+References: <1547539623-18201-1-git-send-email-kernelfans@gmail.com>
+ <20190119012505.GA21653@anatevka>
+In-Reply-To: <20190119012505.GA21653@anatevka>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Mon, 21 Jan 2019 13:11:41 +0800
+Message-ID: <CAFgQCTuwG6ByuRvBH844bd=KQC-uF-uea_Z--evhU2k_oE8tOw@mail.gmail.com>
+Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,87 +26,106 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: rafael.j.wysocki@intel.com, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, erik.schmauss@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robert.moore@intel.com, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, Len Brown <lenb@kernel.org>
+To: Jerry.Hoemann@hpe.com
+Cc: Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Yinghai Lu <yinghai@kernel.org>, vgoyal@redhat.com
 
-On Fri, Jan 18, 2019 at 11:26:36AM +0100, Borislav Petkov wrote:
->On Thu, Jan 17, 2019 at 03:41:13PM +0800, Kairui Song wrote:
->> How about we refill the boot_params.acpi_rsdp_addr if it is not valid
->> in early code, so it could be used as a reliable RSDP address source?
->> That should make things easier.
->> 
->> But if early code should parse it and store it should be done in
->> Chao's patch, or I can post another patch to do it if Chao's patch is
->> merged.
+On Sat, Jan 19, 2019 at 9:25 AM Jerry Hoemann <jerry.hoemann@hpe.com> wrote:
 >
->Chao's stuff does the as early as possible parsing of RDSP. Then, it
->should be saved into boot_params and everything else should read it from
->there. Simple.
-
-Hi Boris,
-
-So I have changed as this method and put in my mail thread, you may not
-notice, so I put here for my function if I need to fill the
-boot_parameters:
-
-static inline acpi_physical_address get_boot_params_rsdp(void)
-{
-        return boot_params->acpi_rsdp_addr;
-}
-
-static acpi_physical_address get_rsdp_addr(void)
-{
-        bool boot_params_rsdp_exist;
-        acpi_physical_address pa;
-
-        pa = get_acpi_rsdp();
-
-        if (!pa)
-                pa = get_boot_params_rsdp();
-
-        if (!pa) {
-                pa = efi_get_rsdp_addr();
-                boot_params_rsdp_exist = false;
-        }
-        else
-                boot_params_rsdp_exist = true;
-
-        if (!pa)
-                pa = bios_get_rsdp_addr();
-
-        if (pa && !boot_params_rsdp_exist)
-                boot_params.acpi_rsdp_addr = pa;
-
-        return pa;
-}
-
-At the same time, I notice kernel only parses it when
-"#ifdef CONFIG_ACPI", we should keep sync with kernel, but I think
-we are parsing SRAT, CONFIG_ACPI is needed sure, so I am going to
-update the define of EARLY_SRAT_PARSE:
-
-config EARLY_SRAT_PARSE
-        bool "EARLY SRAT parsing"
-        def_bool y
-        depends on RANDOMIZE_BASE && MEMORY_HOTREMOVE && ACPI
-
-If I miss something, please let me know.
-Or in my PATCHSET, I don't need to fill boot_parameters, just
-leave the job another PATCH?
+> On Tue, Jan 15, 2019 at 04:07:03PM +0800, Pingfan Liu wrote:
+> > People reported a bug on a high end server with many pcie devices, where
+> > kernel bootup with crashkernel=384M, and kaslr is enabled. Even
+> > though we still see much memory under 896 MB, the finding still failed
+> > intermittently. Because currently we can only find region under 896 MB,
+> > if without ',high' specified. Then KASLR breaks 896 MB into several parts
+> > randomly, and crashkernel reservation need be aligned to 128 MB, that's
+> > why failure is found. It raises confusion to the end user that sometimes
+> > crashkernel=X works while sometimes fails.
+> > If want to make it succeed, customer can change kernel option to
+> > "crashkernel=384M,high". Just this give "crashkernel=xx@yy" a very
+> > limited space to behave even though its grammar looks more generic.
+> > And we can't answer questions raised from customer that confidently:
+> > 1) why it doesn't succeed to reserve 896 MB;
+> > 2) what's wrong with memory region under 4G;
+> > 3) why I have to add ',high', I only require 384 MB, not 3840 MB.
+> > This patch tries to get memory region from 896 MB firstly, then [896MB,4G],
+> > finally above 4G.
+>
+> While allocating crashkernel from below 4G seems fine, won't we have
+> problems if the crash kernel gets allocated above 4G because of the SWIOTLB?
+>
+It will reserve extra memory below 4G for the swiotlb purpose. You can
+find the logic in reserve_crashkernel_low()
+And testing with crashkernel=512M@4G, we will get:
+cat /proc/iomem  | grep Crash
+  aa000000-b9ffffff : Crash kernel
+  100000000-11fffffff : Crash kernel
 
 Thanks,
-Chao Fan
+Pingfan
 
->
->-- 
->Regards/Gruss,
->    Boris.
->
->Good mailing practices for 400: avoid top-posting and trim the reply.
+> thanks
 >
 >
-
-
+> > Dave Young sent the original post, and I just re-post it with commit log
+> > improvement as his requirement.
+> > http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
+> > There was an old discussion below (previously posted by Chao Wang):
+> > https://lkml.org/lkml/2013/10/15/601
+> >
+> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > Cc: Dave Young <dyoung@redhat.com>
+> > Cc: Baoquan He <bhe@redhat.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+> > Cc: yinghai@kernel.org,
+> > Cc: vgoyal@redhat.com
+> > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > ---
+> > v6 -> v7: fix spelling mistake pointed out by Randy
+> >  arch/x86/kernel/setup.c | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >
+> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> > index 3d872a5..fa62c81 100644
+> > --- a/arch/x86/kernel/setup.c
+> > +++ b/arch/x86/kernel/setup.c
+> > @@ -551,6 +551,22 @@ static void __init reserve_crashkernel(void)
+> >                                                   high ? CRASH_ADDR_HIGH_MAX
+> >                                                        : CRASH_ADDR_LOW_MAX,
+> >                                                   crash_size, CRASH_ALIGN);
+> > +#ifdef CONFIG_X86_64
+> > +             /*
+> > +              * crashkernel=X reserve below 896M fails? Try below 4G
+> > +              */
+> > +             if (!high && !crash_base)
+> > +                     crash_base = memblock_find_in_range(CRASH_ALIGN,
+> > +                                             (1ULL << 32),
+> > +                                             crash_size, CRASH_ALIGN);
+> > +             /*
+> > +              * crashkernel=X reserve below 4G fails? Try MAXMEM
+> > +              */
+> > +             if (!high && !crash_base)
+> > +                     crash_base = memblock_find_in_range(CRASH_ALIGN,
+> > +                                             CRASH_ADDR_HIGH_MAX,
+> > +                                             crash_size, CRASH_ALIGN);
+> > +#endif
+> >               if (!crash_base) {
+> >                       pr_info("crashkernel reservation failed - No suitable area found.\n");
+> >                       return;
+> > --
+> > 2.7.4
+> >
+> >
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+>
+> --
+>
+> -----------------------------------------------------------------------------
+> Jerry Hoemann                  Software Engineer   Hewlett Packard Enterprise
+> -----------------------------------------------------------------------------
 
 _______________________________________________
 kexec mailing list
