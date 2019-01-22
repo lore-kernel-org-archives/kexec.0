@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1glr2X-0003hF-8I
- for kexec@lists.infradead.org; Tue, 22 Jan 2019 08:04:15 +0000
+ id 1glr2a-0003lh-IE
+ for kexec@lists.infradead.org; Tue, 22 Jan 2019 08:04:19 +0000
 From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 0/2] makedumpfile needs to remove the memory encryption
-Date: Tue, 22 Jan 2019 16:03:55 +0800
-Message-Id: <20190122080357.23381-1-lijiang@redhat.com>
+Subject: [PATCH 1/2] Makedumpfile: add a new variable 'sme_mask' to
+ number_table
+Date: Tue, 22 Jan 2019 16:03:56 +0800
+Message-Id: <20190122080357.23381-2-lijiang@redhat.com>
+In-Reply-To: <20190122080357.23381-1-lijiang@redhat.com>
+References: <20190122080357.23381-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,35 +26,55 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: dyoung@redhat.com, k-hagio@ab.jp.nec.com, anderson@redhat.com, bhe@redhat.com
 
-The patchset did two things:
-[1] add a new variable 'sme_mask' to number_table
+It will be used to store the sme mask for crashed kernel, the
+sme_mask denotes whether the old memory is encrypted or not.
 
-The variable will be used to store the sme mask for crashed kernel,
-the sme_mask denotes whether the old memory is encrypted or not.
-
-[2] remove the memory encryption mask to obtain the true physical
-address
-
-For AMD machine with SME feature, if SME is enabled in the first
-kernel, the crashed kernel's page table(pgd/pud/pmd/pte) contains
-the memory encryption mask, so makedumpfile needs to remove the
-memory encryption mask to obtain the true physical address.
-
-References:
-
-x86/kdump: Export the SME mask to vmcoreinfo
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=65f750e5457aef9a8085a99d613fea0430303e93
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=f263245a0ce2c4e23b89a58fa5f7dfc048e11929
-
-Lianbo Jiang (2):
-  Makedumpfile: add a new variable 'sme_mask' to number_table
-  Remove the memory encryption mask to obtain the true physical address
-
- arch/x86_64.c  | 3 +++
- makedumpfile.c | 4 ++++
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+---
+ makedumpfile.c | 3 +++
  makedumpfile.h | 1 +
- 3 files changed, 8 insertions(+)
+ 2 files changed, 4 insertions(+)
 
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 8923538..a03aaa1 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1743,6 +1743,7 @@ get_structure_info(void)
+ 	ENUM_NUMBER_INIT(NR_FREE_PAGES, "NR_FREE_PAGES");
+ 	ENUM_NUMBER_INIT(N_ONLINE, "N_ONLINE");
+ 	ENUM_NUMBER_INIT(pgtable_l5_enabled, "pgtable_l5_enabled");
++	ENUM_NUMBER_INIT(sme_mask, "sme_mask");
+ 
+ 	ENUM_NUMBER_INIT(PG_lru, "PG_lru");
+ 	ENUM_NUMBER_INIT(PG_private, "PG_private");
+@@ -2276,6 +2277,7 @@ write_vmcoreinfo_data(void)
+ 	WRITE_NUMBER("NR_FREE_PAGES", NR_FREE_PAGES);
+ 	WRITE_NUMBER("N_ONLINE", N_ONLINE);
+ 	WRITE_NUMBER("pgtable_l5_enabled", pgtable_l5_enabled);
++	WRITE_NUMBER("sme_mask", sme_mask);
+ 
+ 	WRITE_NUMBER("PG_lru", PG_lru);
+ 	WRITE_NUMBER("PG_private", PG_private);
+@@ -2672,6 +2674,7 @@ read_vmcoreinfo(void)
+ 	READ_NUMBER("NR_FREE_PAGES", NR_FREE_PAGES);
+ 	READ_NUMBER("N_ONLINE", N_ONLINE);
+ 	READ_NUMBER("pgtable_l5_enabled", pgtable_l5_enabled);
++	READ_NUMBER("sme_mask", sme_mask);
+ 
+ 	READ_NUMBER("PG_lru", PG_lru);
+ 	READ_NUMBER("PG_private", PG_private);
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 73813ed..e97b2e7 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1912,6 +1912,7 @@ struct number_table {
+ 	long	NR_FREE_PAGES;
+ 	long	N_ONLINE;
+ 	long	pgtable_l5_enabled;
++	long	sme_mask;
+ 
+ 	/*
+  	* Page flags
 -- 
 2.17.1
 
