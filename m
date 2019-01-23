@@ -1,30 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gly7k-0004XB-LV
- for kexec@lists.infradead.org; Tue, 22 Jan 2019 15:38:02 +0000
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x0MFVY6w120948
- for <kexec@lists.infradead.org>; Tue, 22 Jan 2019 10:38:00 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2q63g8745f-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 22 Jan 2019 10:37:59 -0500
-Received: from localhost
- by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Tue, 22 Jan 2019 15:37:57 -0000
+ id 1gm8ON-0006jh-7g
+ for kexec@lists.infradead.org; Wed, 23 Jan 2019 02:35:53 +0000
+Date: Wed, 23 Jan 2019 10:35:37 +0800
+From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH v5 2/2] kexec, KEYS: Make use of platform keyring for
  signature verify
-From: Mimi Zohar <zohar@linux.ibm.com>
-Date: Tue, 22 Jan 2019 10:37:38 -0500
-In-Reply-To: <20190121095929.26915-3-kasong@redhat.com>
+Message-ID: <20190123023537.GA5591@dhcp-128-65.nay.redhat.com>
 References: <20190121095929.26915-1-kasong@redhat.com>
  <20190121095929.26915-3-kasong@redhat.com>
-Mime-Version: 1.0
-Message-Id: <1548171458.4038.3.camel@linux.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20190121095929.26915-3-kasong@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,10 +25,10 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>, linux-kernel@vger.kernel.org
-Cc: jwboyer@fedoraproject.org, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, jmorris@namei.org, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
+To: Kairui Song <kasong@redhat.com>
+Cc: jwboyer@fedoraproject.org, ebiggers@google.com, nayna@linux.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, jmorris@namei.org, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-On Mon, 2019-01-21 at 17:59 +0800, Kairui Song wrote:
+On 01/21/19 at 05:59pm, Kairui Song wrote:
 > This patch let kexec_file_load makes use of .platform keyring as fall
 > back if it failed to verify a PE signed image against secondary or
 > builtin key ring, make it possible to verify kernel image signed with
@@ -54,9 +42,6 @@ On Mon, 2019-01-21 at 17:59 +0800, Kairui Song wrote:
 > won't generate extra noises.
 > 
 > Signed-off-by: Kairui Song <kasong@redhat.com>
-
-Reviewed/Tested-by: Mimi Zohar <zohar@linux.ibm.com>
-
 > ---
 >  arch/x86/kernel/kexec-bzimage64.c | 13 ++++++++++---
 >  certs/system_keyring.c            | 13 ++++++++++++-
@@ -127,7 +112,16 @@ Reviewed/Tested-by: Mimi Zohar <zohar@linux.ibm.com>
 >  
 >  /*
 >   * The use to which an asymmetric key is being put.
+> -- 
+> 2.20.1
+> 
 
+For kexec_file part
+
+Acked-by: Dave Young <dyoung@redhat.com>
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
