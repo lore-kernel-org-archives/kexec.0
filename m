@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gmbEs-00043F-5A
- for kexec@lists.infradead.org; Thu, 24 Jan 2019 09:24:01 +0000
-Subject: Re: [PATCH 1/2] Makedumpfile: add a new variable 'sme_mask' to
- number_table
+ id 1gmkm4-0003fQ-OT
+ for kexec@lists.infradead.org; Thu, 24 Jan 2019 19:34:55 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH 2/2] Remove the memory encryption mask to obtain the
+ true physical address
+Date: Thu, 24 Jan 2019 19:33:47 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03566F74@BPXM09GP.gisp.nec.co.jp>
 References: <20190122080357.23381-1-lijiang@redhat.com>
- <20190122080357.23381-2-lijiang@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03566D77@BPXM09GP.gisp.nec.co.jp>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <c41a8c7d-eb48-4f6e-208e-a3df8b40cde9@redhat.com>
-Date: Thu, 24 Jan 2019 17:23:48 +0800
-MIME-Version: 1.0
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03566D77@BPXM09GP.gisp.nec.co.jp>
+ <20190122080357.23381-3-lijiang@redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03566DC7@BPXM09GP.gisp.nec.co.jp>
+In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03566DC7@BPXM09GP.gisp.nec.co.jp>
 Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,87 +22,115 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: "anderson@redhat.com" <anderson@redhat.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
+To: Lianbo Jiang <lijiang@redhat.com>
+Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "anderson@redhat.com" <anderson@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
 
-在 2019年01月24日 05:51, Kazuhito Hagio 写道:
-> Hi Lianbo,
-> 
+On 1/23/2019 5:16 PM, Kazuhito Hagio wrote:
 > On 1/22/2019 3:03 AM, Lianbo Jiang wrote:
->> It will be used to store the sme mask for crashed kernel, the
->> sme_mask denotes whether the old memory is encrypted or not.
->>
->> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
->> ---
->>  makedumpfile.c | 3 +++
->>  makedumpfile.h | 1 +
->>  2 files changed, 4 insertions(+)
->>
->> diff --git a/makedumpfile.c b/makedumpfile.c
->> index 8923538..a03aaa1 100644
->> --- a/makedumpfile.c
->> +++ b/makedumpfile.c
->> @@ -1743,6 +1743,7 @@ get_structure_info(void)
->>  	ENUM_NUMBER_INIT(NR_FREE_PAGES, "NR_FREE_PAGES");
->>  	ENUM_NUMBER_INIT(N_ONLINE, "N_ONLINE");
->>  	ENUM_NUMBER_INIT(pgtable_l5_enabled, "pgtable_l5_enabled");
->> +	ENUM_NUMBER_INIT(sme_mask, "sme_mask");
+> > For AMD machine with SME feature, if SME is enabled in the first
+> > kernel, the crashed kernel's page table(pgd/pud/pmd/pte) contains
+> > the memory encryption mask, so makedumpfile needs to remove the
+> > memory encryption mask to obtain the true physical address.
+> >
+> > Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> > ---
+> >  arch/x86_64.c  | 3 +++
+> >  makedumpfile.c | 1 +
+> >  2 files changed, 4 insertions(+)
+> >
+> > diff --git a/arch/x86_64.c b/arch/x86_64.c
+> > index 537fb78..7651d36 100644
+> > --- a/arch/x86_64.c
+> > +++ b/arch/x86_64.c
+> > @@ -346,6 +346,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+> >  			return NOT_PADDR;
+> >  		}
+> >  		pud_paddr  = pgd & ENTRY_MASK;
+> > +		pud_paddr = pud_paddr & ~(NUMBER(sme_mask));
+> >  	}
+> >
+> >  	/*
+> > @@ -371,6 +372,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+> >  	 * Get PMD.
+> >  	 */
+> >  	pmd_paddr  = pud_pte & ENTRY_MASK;
+> > +	pmd_paddr = pmd_paddr & ~(NUMBER(sme_mask));
+> >  	pmd_paddr += pmd_index(vaddr) * sizeof(unsigned long);
+> >  	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof pmd_pte)) {
+> >  		ERRMSG("Can't get pmd_pte (pmd_paddr:%lx).\n", pmd_paddr);
+> > @@ -391,6 +393,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+> >  	 * Get PTE.
+> >  	 */
+> >  	pte_paddr  = pmd_pte & ENTRY_MASK;
+> > +	pte_paddr = pte_paddr & ~(NUMBER(sme_mask));
+> >  	pte_paddr += pte_index(vaddr) * sizeof(unsigned long);
+> >  	if (!readmem(PADDR, pte_paddr, &pte, sizeof pte)) {
+> >  		ERRMSG("Can't get pte (pte_paddr:%lx).\n", pte_paddr);
+> > diff --git a/makedumpfile.c b/makedumpfile.c
+> > index a03aaa1..81c7bb4 100644
+> > --- a/makedumpfile.c
+> > +++ b/makedumpfile.c
+> > @@ -977,6 +977,7 @@ next_page:
+> >  	read_size = MIN(info->page_size - PAGEOFFSET(paddr), size);
+> >
+> >  	pgaddr = PAGEBASE(paddr);
+> > +	pgaddr = pgaddr & ~(NUMBER(sme_mask));
 > 
-> This is useless because the sme_mask is not enum number.
-> Please remove it.
-> Ok. Thanks for your comment.
-
-> And, dividing this patchset into the two patches doesn't make sense
-> to me in this case. Could you merge them into a patch?
+> Since NUMBER(sme_mask) is initialized with -1 (NOT_FOUND_NUMBER),
+> if the sme_mask is not in vmcoreinfo, ~(NUMBER(sme_mask)) will be 0.
+> So the four lines added above need
 > 
-Sure, they will be merged into a patch in next post.
+>   if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
+>     ...
 
-Regards,
-Lianbo
+Considering hugepage and the code, it might be better to add
+a local variable for the mask value to __vtop4_x86_64() function
+and mask it without condition, for example
 
+  unsigned long sme_mask = ~0UL;
+
+  if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
+      sme_mask = ~(NUMBER(sme_mask));
+  ...
+  pud_paddr = pgd & ENTRY_MASK & sme_mask;
+
+to avoid adding lots of 'if' statements.
+
+Thanks,
+Kazu
+
+> 
+> and, what I'm wondering is whether it doesn't need to take hugepages
+> into account such as this
+> 
+> 392         if (pmd_pte & _PAGE_PSE)        /* 2MB pages */
+> 393                 return (pmd_pte & ENTRY_MASK & PMD_MASK) +
+> 394                         (vaddr & ~PMD_MASK);
+> "arch/x86_64.c"
+> 
 > Thanks,
 > Kazu
 > 
->>
->>  	ENUM_NUMBER_INIT(PG_lru, "PG_lru");
->>  	ENUM_NUMBER_INIT(PG_private, "PG_private");
->> @@ -2276,6 +2277,7 @@ write_vmcoreinfo_data(void)
->>  	WRITE_NUMBER("NR_FREE_PAGES", NR_FREE_PAGES);
->>  	WRITE_NUMBER("N_ONLINE", N_ONLINE);
->>  	WRITE_NUMBER("pgtable_l5_enabled", pgtable_l5_enabled);
->> +	WRITE_NUMBER("sme_mask", sme_mask);
->>
->>  	WRITE_NUMBER("PG_lru", PG_lru);
->>  	WRITE_NUMBER("PG_private", PG_private);
->> @@ -2672,6 +2674,7 @@ read_vmcoreinfo(void)
->>  	READ_NUMBER("NR_FREE_PAGES", NR_FREE_PAGES);
->>  	READ_NUMBER("N_ONLINE", N_ONLINE);
->>  	READ_NUMBER("pgtable_l5_enabled", pgtable_l5_enabled);
->> +	READ_NUMBER("sme_mask", sme_mask);
->>
->>  	READ_NUMBER("PG_lru", PG_lru);
->>  	READ_NUMBER("PG_private", PG_private);
->> diff --git a/makedumpfile.h b/makedumpfile.h
->> index 73813ed..e97b2e7 100644
->> --- a/makedumpfile.h
->> +++ b/makedumpfile.h
->> @@ -1912,6 +1912,7 @@ struct number_table {
->>  	long	NR_FREE_PAGES;
->>  	long	N_ONLINE;
->>  	long	pgtable_l5_enabled;
->> +	long	sme_mask;
->>
->>  	/*
->>   	* Page flags
->> --
->> 2.17.1
->>
+> 
+> >  	pgbuf = cache_search(pgaddr, read_size);
+> >  	if (!pgbuf) {
+> >  		++cache_miss;
+> > --
+> > 2.17.1
+> >
 > 
 > 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+
 
 _______________________________________________
 kexec mailing list
