@@ -1,19 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mail-eopbgr730059.outbound.protection.outlook.com
+ ([40.107.73.59] helo=NAM05-DM3-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gn29r-0007xB-Nz
- for kexec@lists.infradead.org; Fri, 25 Jan 2019 14:08:38 +0000
-Date: Fri, 25 Jan 2019 15:08:23 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
- consistent with kaslr
-Message-ID: <20190125140823.GC27998@zn.tnic>
-References: <1548047768-7656-1-git-send-email-kernelfans@gmail.com>
- <20190125103924.GB27998@zn.tnic>
- <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
+ id 1gn2XE-00014W-6O
+ for kexec@lists.infradead.org; Fri, 25 Jan 2019 14:32:46 +0000
+From: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH 2/2] Remove the memory encryption mask to obtain the true
+ physical address
+Date: Fri, 25 Jan 2019 14:32:37 +0000
+Message-ID: <58954568-76c4-67c3-12c6-09ab1107f63a@amd.com>
+References: <20190122080357.23381-1-lijiang@redhat.com>
+ <20190122080357.23381-3-lijiang@redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03566DC7@BPXM09GP.gisp.nec.co.jp>
+ <967a7a30-cead-e016-bd96-47d63181103d@redhat.com>
+ <20190125035531.GA19842@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190125035531.GA19842@dhcp-128-65.nay.redhat.com>
+Content-Language: en-US
+Content-ID: <A658FFB45A8A3246AF0698CFF4E23C6C@namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,44 +26,85 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
+To: "dyoung@redhat.com" <dyoung@redhat.com>, lijiang <lijiang@redhat.com>
+Cc: "anderson@redhat.com" <anderson@redhat.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
 
-On Fri, Jan 25, 2019 at 09:45:18PM +0800, Dave Young wrote:
-> AFAIK, some people prefer to explictly reserve crash memory at high
-> region even if it is possible to reserve at low area.  May because
-> <4G memory is limited on large server, they want to leave this for other
-> use. 
-> 
-> Yinghai or Vivek should know more about the history, probably they can
-> recall some initial reason.
-
-Yes, just "prefer" is not good enough. There should be a technical
-reason why that's there.
-
-Also, if the user doesn't care, then the code should be free to force
-"high" and thus probe a different range for allocation.
-
-> Good question, still it may be some historical reason, but it is good to
-> make them clear and rethink about it after long time.
-> 
-> I also want to understand, need dig the log more.
-
-Good idea. That would be a very nice cleanup. :-)
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMS8yNC8xOSA5OjU1IFBNLCBkeW91bmdAcmVkaGF0LmNvbSB3cm90ZToNCj4gKyBUb20NCj4g
+T24gMDEvMjUvMTkgYXQgMTE6MDZhbSwgbGlqaWFuZyB3cm90ZToNCj4+IOWcqCAyMDE55bm0MDHm
+nIgyNOaXpSAwNjoxNiwgS2F6dWhpdG8gSGFnaW8g5YaZ6YGTOg0KPj4+IE9uIDEvMjIvMjAxOSAz
+OjAzIEFNLCBMaWFuYm8gSmlhbmcgd3JvdGU6DQo+Pj4+IEZvciBBTUQgbWFjaGluZSB3aXRoIFNN
+RSBmZWF0dXJlLCBpZiBTTUUgaXMgZW5hYmxlZCBpbiB0aGUgZmlyc3QNCj4+Pj4ga2VybmVsLCB0
+aGUgY3Jhc2hlZCBrZXJuZWwncyBwYWdlIHRhYmxlKHBnZC9wdWQvcG1kL3B0ZSkgY29udGFpbnMN
+Cj4+Pj4gdGhlIG1lbW9yeSBlbmNyeXB0aW9uIG1hc2ssIHNvIG1ha2VkdW1wZmlsZSBuZWVkcyB0
+byByZW1vdmUgdGhlDQo+Pj4+IG1lbW9yeSBlbmNyeXB0aW9uIG1hc2sgdG8gb2J0YWluIHRoZSB0
+cnVlIHBoeXNpY2FsIGFkZHJlc3MuDQo+Pj4+DQo+Pj4+IFNpZ25lZC1vZmYtYnk6IExpYW5ibyBK
+aWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPg0KPj4+PiAtLS0NCj4+Pj4gIGFyY2gveDg2XzY0LmMg
+IHwgMyArKysNCj4+Pj4gIG1ha2VkdW1wZmlsZS5jIHwgMSArDQo+Pj4+ICAyIGZpbGVzIGNoYW5n
+ZWQsIDQgaW5zZXJ0aW9ucygrKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODZfNjQu
+YyBiL2FyY2gveDg2XzY0LmMNCj4+Pj4gaW5kZXggNTM3ZmI3OC4uNzY1MWQzNiAxMDA2NDQNCj4+
+Pj4gLS0tIGEvYXJjaC94ODZfNjQuYw0KPj4+PiArKysgYi9hcmNoL3g4Nl82NC5jDQo+Pj4+IEBA
+IC0zNDYsNiArMzQ2LDcgQEAgX192dG9wNF94ODZfNjQodW5zaWduZWQgbG9uZyB2YWRkciwgdW5z
+aWduZWQgbG9uZyBwYWdldGFibGUpDQo+Pj4+ICAJCQlyZXR1cm4gTk9UX1BBRERSOw0KPj4+PiAg
+CQl9DQo+Pj4+ICAJCXB1ZF9wYWRkciAgPSBwZ2QgJiBFTlRSWV9NQVNLOw0KPj4+PiArCQlwdWRf
+cGFkZHIgPSBwdWRfcGFkZHIgJiB+KE5VTUJFUihzbWVfbWFzaykpOw0KPj4+PiAgCX0NCj4+Pj4N
+Cj4+Pj4gIAkvKg0KPj4+PiBAQCAtMzcxLDYgKzM3Miw3IEBAIF9fdnRvcDRfeDg2XzY0KHVuc2ln
+bmVkIGxvbmcgdmFkZHIsIHVuc2lnbmVkIGxvbmcgcGFnZXRhYmxlKQ0KPj4+PiAgCSAqIEdldCBQ
+TUQuDQo+Pj4+ICAJICovDQo+Pj4+ICAJcG1kX3BhZGRyICA9IHB1ZF9wdGUgJiBFTlRSWV9NQVNL
+Ow0KPj4+PiArCXBtZF9wYWRkciA9IHBtZF9wYWRkciAmIH4oTlVNQkVSKHNtZV9tYXNrKSk7DQo+
+Pj4+ICAJcG1kX3BhZGRyICs9IHBtZF9pbmRleCh2YWRkcikgKiBzaXplb2YodW5zaWduZWQgbG9u
+Zyk7DQo+Pj4+ICAJaWYgKCFyZWFkbWVtKFBBRERSLCBwbWRfcGFkZHIsICZwbWRfcHRlLCBzaXpl
+b2YgcG1kX3B0ZSkpIHsNCj4+Pj4gIAkJRVJSTVNHKCJDYW4ndCBnZXQgcG1kX3B0ZSAocG1kX3Bh
+ZGRyOiVseCkuXG4iLCBwbWRfcGFkZHIpOw0KPj4+PiBAQCAtMzkxLDYgKzM5Myw3IEBAIF9fdnRv
+cDRfeDg2XzY0KHVuc2lnbmVkIGxvbmcgdmFkZHIsIHVuc2lnbmVkIGxvbmcgcGFnZXRhYmxlKQ0K
+Pj4+PiAgCSAqIEdldCBQVEUuDQo+Pj4+ICAJICovDQo+Pj4+ICAJcHRlX3BhZGRyICA9IHBtZF9w
+dGUgJiBFTlRSWV9NQVNLOw0KPj4+PiArCXB0ZV9wYWRkciA9IHB0ZV9wYWRkciAmIH4oTlVNQkVS
+KHNtZV9tYXNrKSk7DQo+Pj4+ICAJcHRlX3BhZGRyICs9IHB0ZV9pbmRleCh2YWRkcikgKiBzaXpl
+b2YodW5zaWduZWQgbG9uZyk7DQo+Pj4+ICAJaWYgKCFyZWFkbWVtKFBBRERSLCBwdGVfcGFkZHIs
+ICZwdGUsIHNpemVvZiBwdGUpKSB7DQo+Pj4+ICAJCUVSUk1TRygiQ2FuJ3QgZ2V0IHB0ZSAocHRl
+X3BhZGRyOiVseCkuXG4iLCBwdGVfcGFkZHIpOw0KPj4+PiBkaWZmIC0tZ2l0IGEvbWFrZWR1bXBm
+aWxlLmMgYi9tYWtlZHVtcGZpbGUuYw0KPj4+PiBpbmRleCBhMDNhYWExLi44MWM3YmI0IDEwMDY0
+NA0KPj4+PiAtLS0gYS9tYWtlZHVtcGZpbGUuYw0KPj4+PiArKysgYi9tYWtlZHVtcGZpbGUuYw0K
+Pj4+PiBAQCAtOTc3LDYgKzk3Nyw3IEBAIG5leHRfcGFnZToNCj4+Pj4gIAlyZWFkX3NpemUgPSBN
+SU4oaW5mby0+cGFnZV9zaXplIC0gUEFHRU9GRlNFVChwYWRkciksIHNpemUpOw0KPj4+Pg0KPj4+
+PiAgCXBnYWRkciA9IFBBR0VCQVNFKHBhZGRyKTsNCj4+Pj4gKwlwZ2FkZHIgPSBwZ2FkZHIgJiB+
+KE5VTUJFUihzbWVfbWFzaykpOw0KPj4+DQo+Pj4gU2luY2UgTlVNQkVSKHNtZV9tYXNrKSBpcyBp
+bml0aWFsaXplZCB3aXRoIC0xIChOT1RfRk9VTkRfTlVNQkVSKSwNCj4+PiBpZiB0aGUgc21lX21h
+c2sgaXMgbm90IGluIHZtY29yZWluZm8sIH4oTlVNQkVSKHNtZV9tYXNrKSkgd2lsbCBiZSAwLg0K
+Pj4+IFNvIHRoZSBmb3VyIGxpbmVzIGFkZGVkIGFib3ZlIG5lZWQNCj4+Pg0KPj4+ICAgaWYgKE5V
+TUJFUihzbWVfbWFzaykgIT0gTk9UX0ZPVU5EX05VTUJFUikNCj4+PiAgICAgLi4uDQo+Pj4NCj4+
+DQo+PiBUaGFuayB5b3UgdmVyeSBtdWNoIGZvciBwb2ludGluZyBvdXQgbXkgbWlzdGFrZS4NCj4+
+DQo+PiBJIHdpbGwgaW1wcm92ZSBpdCBhbmQgcG9zdCBhZ2Fpbi4NCg0KTWlnaHQgYmUgd29ydGgg
+Y3JlYXRpbmcgYSBsb2NhbCB2YXJpYWJsZSB0aGF0IGluY2x1ZGVzIEVOVFJZX01BU0sgYW5kDQpO
+VU1CRVIoc21lX21hc2spIHNvIHRoYXQgeW91IG1ha2UgdGhlIGNoZWNrIGp1c3Qgb25jZS4gVGhl
+biB1c2UgdGhhdA0KdmFyaWFibGUgaW4gcGxhY2Ugb2YgRU5UUllfTUFTSyBpbiB0aGUgcmVtYWlu
+ZGVyIG9mIHRoZSBmdW5jdGlvbiBzbw0KdGhhdCB0aGUgY29ycmVjdCB2YWx1ZSBpcyB1c2VkIHRo
+cm91Z2hvdXQuDQoNClRoaXMgd291bGQgYWxzbyBjb3ZlciB0aGUgNS1sZXZlbCBwYXRoIHdoaWNo
+IHdvdWxkIG1ha2UgdGhpcyBmdXR1cmUNCnByb29mIHNob3VsZCBBTUQgc29tZWRheSBzdXBwb3J0
+IDUtbGV2ZWwgcGFnaW5nLg0KDQo+Pg0KPj4+IGFuZCwgd2hhdCBJJ20gd29uZGVyaW5nIGlzIHdo
+ZXRoZXIgaXQgZG9lc24ndCBuZWVkIHRvIHRha2UgaHVnZXBhZ2VzDQo+Pj4gaW50byBhY2NvdW50
+IHN1Y2ggYXMgdGhpcw0KPj4+DQo+Pj4gMzkyICAgICAgICAgaWYgKHBtZF9wdGUgJiBfUEFHRV9Q
+U0UpICAgICAgICAvKiAyTUIgcGFnZXMgKi8NCj4+PiAzOTMgICAgICAgICAgICAgICAgIHJldHVy
+biAocG1kX3B0ZSAmIEVOVFJZX01BU0sgJiBQTURfTUFTSykgKw0KPj4+IDM5NCAgICAgICAgICAg
+ICAgICAgICAgICAgICAodmFkZHIgJiB+UE1EX01BU0spOw0KPj4+ICJhcmNoL3g4Nl82NC5jIg0K
+Pj4+DQo+Pg0KPj4gVGhpcyBpcyBhIGdvb2QgcXVlc3Rpb24uIFRoZW9yZXRpY2FsbHksIGl0IHNo
+b3VsZCBiZSBtb2RpZmllZCBhY2NvcmRpbmdseSBmb3INCj4+IGh1Z2UgcGFnZXMgY2FzZS4NCg0K
+WWVzLCB0aGlzIHNob3VsZCBhbHNvIGhhdmUgdGhlIH4oTlVNQkVSKHNtZV9tYXNrKSkgYXBwbGll
+ZCB0byBpdC4gWW91DQpjYW4gcHJvYmFibHkgYWRkIHNvbWUgZGVidWdnaW5nIHRvIHNlZSBpZiB5
+b3UncmUgaGl0dGluZyB0aGlzIGNhc2UgYW5kDQp3aGV0aGVyIHRoZSBlbmNyeXB0aW9uIGJpdCAo
+c21lX21hc2spIGlzIHNldCBqdXN0IHRvIGhlbHAgdW5kZXJzdGFuZCB3aGF0DQppcyBvY2N1cnJp
+bmcuIFRoaXMgYWxzbyBnb2VzIGZvciB0aGUgMUdCIHBhZ2UgY2hlY2sgYWJvdmUuICBIb3dldmVy
+LCBpZg0KeW91IHVzZSBteSBzdWdnZXN0aW9uIG9mIGEgbG9jYWwgdmFyaWFibGUgdGhlbiB5b3Ug
+c2hvdWxkIGJlIGNvdmVyZWQuDQoNClRoYW5rcywNClRvbQ0KDQo+Pg0KPj4gQnV0IG1ha2VkdW1w
+ZmlsZSBzdGlsbCB3b3JrcyB3ZWxsIHdpdGhvdXQgdGhpcyBjaGFuZ2UuIEFuZCBpJ20gc3VyZSB0
+aGF0IHRoZQ0KPj4gaHVnZSBwYWdlcyBhcmUgZW5hYmxlZCBpbiBjcmFzaGVkIGtlcm5lbC4gVGhp
+cyBpcyB2ZXJ5IHN0cmFuZ2UuDQo+Pg0KPj4gVGhhbmtzLg0KPj4gTGlhbmJvDQo+Pg0KPj4+IFRo
+YW5rcywNCj4+PiBLYXp1DQo+Pj4NCj4+Pg0KPj4+PiAgCXBnYnVmID0gY2FjaGVfc2VhcmNoKHBn
+YWRkciwgcmVhZF9zaXplKTsNCj4+Pj4gIAlpZiAoIXBnYnVmKSB7DQo+Pj4+ICAJCSsrY2FjaGVf
+bWlzczsNCj4+Pj4gLS0NCj4+Pj4gMi4xNy4xDQo+Pj4+DQo+Pj4NCj4+Pg0KX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
+eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9rZXhlYwo=
