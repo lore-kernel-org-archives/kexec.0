@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gmrd1-0004EW-BX
- for kexec@lists.infradead.org; Fri, 25 Jan 2019 02:54:00 +0000
-Date: Fri, 25 Jan 2019 10:53:46 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v3 1/3] x86, kexec_file_load: Don't setup EFI info if EFI
- runtime is not enabled
-Message-ID: <20190125025346.GA19241@dhcp-128-65.nay.redhat.com>
-References: <20190118111310.29589-1-kasong@redhat.com>
- <20190118111310.29589-2-kasong@redhat.com>
+ id 1gmrpP-0001zV-3s
+ for kexec@lists.infradead.org; Fri, 25 Jan 2019 03:06:48 +0000
+Subject: Re: [PATCH 2/2] Remove the memory encryption mask to obtain the true
+ physical address
+References: <20190122080357.23381-1-lijiang@redhat.com>
+ <20190122080357.23381-3-lijiang@redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03566DC7@BPXM09GP.gisp.nec.co.jp>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <967a7a30-cead-e016-bd96-47d63181103d@redhat.com>
+Date: Fri, 25 Jan 2019 11:06:36 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190118111310.29589-2-kasong@redhat.com>
+In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03566DC7@BPXM09GP.gisp.nec.co.jp>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,63 +22,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>
-Cc: rafael.j.wysocki@intel.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robert.moore@intel.com, linux-acpi@vger.kernel.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, erik.schmauss@intel.com, akpm@linux-foundation.org, fanc.fnst@cn.fujitsu.com, lenb@kernel.org
+To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: "anderson@redhat.com" <anderson@redhat.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
 
-On 01/18/19 at 07:13pm, Kairui Song wrote:
-> Currently with "efi=noruntime" in kernel command line, calling
-> kexec_file_load will raise below problem:
+在 2019年01月24日 06:16, Kazuhito Hagio 写道:
+> On 1/22/2019 3:03 AM, Lianbo Jiang wrote:
+>> For AMD machine with SME feature, if SME is enabled in the first
+>> kernel, the crashed kernel's page table(pgd/pud/pmd/pte) contains
+>> the memory encryption mask, so makedumpfile needs to remove the
+>> memory encryption mask to obtain the true physical address.
+>>
+>> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+>> ---
+>>  arch/x86_64.c  | 3 +++
+>>  makedumpfile.c | 1 +
+>>  2 files changed, 4 insertions(+)
+>>
+>> diff --git a/arch/x86_64.c b/arch/x86_64.c
+>> index 537fb78..7651d36 100644
+>> --- a/arch/x86_64.c
+>> +++ b/arch/x86_64.c
+>> @@ -346,6 +346,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>>  			return NOT_PADDR;
+>>  		}
+>>  		pud_paddr  = pgd & ENTRY_MASK;
+>> +		pud_paddr = pud_paddr & ~(NUMBER(sme_mask));
+>>  	}
+>>
+>>  	/*
+>> @@ -371,6 +372,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>>  	 * Get PMD.
+>>  	 */
+>>  	pmd_paddr  = pud_pte & ENTRY_MASK;
+>> +	pmd_paddr = pmd_paddr & ~(NUMBER(sme_mask));
+>>  	pmd_paddr += pmd_index(vaddr) * sizeof(unsigned long);
+>>  	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof pmd_pte)) {
+>>  		ERRMSG("Can't get pmd_pte (pmd_paddr:%lx).\n", pmd_paddr);
+>> @@ -391,6 +393,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>>  	 * Get PTE.
+>>  	 */
+>>  	pte_paddr  = pmd_pte & ENTRY_MASK;
+>> +	pte_paddr = pte_paddr & ~(NUMBER(sme_mask));
+>>  	pte_paddr += pte_index(vaddr) * sizeof(unsigned long);
+>>  	if (!readmem(PADDR, pte_paddr, &pte, sizeof pte)) {
+>>  		ERRMSG("Can't get pte (pte_paddr:%lx).\n", pte_paddr);
+>> diff --git a/makedumpfile.c b/makedumpfile.c
+>> index a03aaa1..81c7bb4 100644
+>> --- a/makedumpfile.c
+>> +++ b/makedumpfile.c
+>> @@ -977,6 +977,7 @@ next_page:
+>>  	read_size = MIN(info->page_size - PAGEOFFSET(paddr), size);
+>>
+>>  	pgaddr = PAGEBASE(paddr);
+>> +	pgaddr = pgaddr & ~(NUMBER(sme_mask));
 > 
-> [   97.967067] BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-> [   97.967894] #PF error: [normal kernel read fault]
-> ...
-> [   97.980456] Call Trace:
-> [   97.980724]  efi_runtime_map_copy+0x28/0x30
-> [   97.981267]  bzImage64_load+0x688/0x872
-> [   97.981794]  arch_kexec_kernel_image_load+0x6d/0x70
-> [   97.982441]  kimage_file_alloc_init+0x13e/0x220
-> [   97.983035]  __x64_sys_kexec_file_load+0x144/0x290
-> [   97.983586]  do_syscall_64+0x55/0x1a0
-> [   97.983962]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> Since NUMBER(sme_mask) is initialized with -1 (NOT_FOUND_NUMBER),
+> if the sme_mask is not in vmcoreinfo, ~(NUMBER(sme_mask)) will be 0.
+> So the four lines added above need
 > 
-> When efi runtime is not enabled, efi memmap is not mapped, so just skip
-> EFI info setup.
-> 
-> Suggested-by: Dave Young <dyoung@redhat.com>
-> Signed-off-by: Kairui Song <kasong@redhat.com>
-> ---
->  arch/x86/kernel/kexec-bzimage64.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-> index 2c007abd3d40..097f52fb02e3 100644
-> --- a/arch/x86/kernel/kexec-bzimage64.c
-> +++ b/arch/x86/kernel/kexec-bzimage64.c
-> @@ -167,6 +167,9 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
->  	struct efi_info *current_ei = &boot_params.efi_info;
->  	struct efi_info *ei = &params->efi_info;
->  
-> +	if (!efi_enabled(EFI_RUNTIME_SERVICES))
-> +		return 0;
-> +
->  	if (!current_ei->efi_memmap_size)
->  		return 0;
->  
-> -- 
-> 2.20.1
+>   if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
+>     ...
 > 
 
-Patch 1/3 looks good to me, 2-3 should depend on Chao's early rsdp parsing according
-to Boris.
+Thank you very much for pointing out my mistake.
 
-Acked-by: Dave Young <dyoung@redhat.com>
+I will improve it and post again.
 
-Thanks
-Dave
+> and, what I'm wondering is whether it doesn't need to take hugepages
+> into account such as this
+> 
+> 392         if (pmd_pte & _PAGE_PSE)        /* 2MB pages */
+> 393                 return (pmd_pte & ENTRY_MASK & PMD_MASK) +
+> 394                         (vaddr & ~PMD_MASK);
+> "arch/x86_64.c"
+> 
+
+This is a good question. Theoretically, it should be modified accordingly for
+huge pages case.
+
+But makedumpfile still works well without this change. And i'm sure that the
+huge pages are enabled in crashed kernel. This is very strange.
+
+Thanks.
+Lianbo
+
+> Thanks,
+> Kazu
+> 
+> 
+>>  	pgbuf = cache_search(pgaddr, read_size);
+>>  	if (!pgbuf) {
+>>  		++cache_miss;
+>> --
+>> 2.17.1
+>>
+> 
+> 
 
 _______________________________________________
 kexec mailing list
