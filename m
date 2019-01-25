@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gmkm4-0003fQ-OT
- for kexec@lists.infradead.org; Thu, 24 Jan 2019 19:34:55 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH 2/2] Remove the memory encryption mask to obtain the
- true physical address
-Date: Thu, 24 Jan 2019 19:33:47 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03566F74@BPXM09GP.gisp.nec.co.jp>
-References: <20190122080357.23381-1-lijiang@redhat.com>
- <20190122080357.23381-3-lijiang@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03566DC7@BPXM09GP.gisp.nec.co.jp>
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03566DC7@BPXM09GP.gisp.nec.co.jp>
-Content-Language: en-US
-MIME-Version: 1.0
+ id 1gmrER-0003hY-GZ
+ for kexec@lists.infradead.org; Fri, 25 Jan 2019 02:28:37 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH RESEND 0/3] Add restrictions for kexec/kdump jumping between
+ 5-level and 4-level kernel
+Date: Fri, 25 Jan 2019 10:28:14 +0800
+Message-Id: <20190125022817.29506-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,114 +16,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>
-Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "anderson@redhat.com" <anderson@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, mingo@kernel.org, kirill.shutemov@linux.intel.com
 
-On 1/23/2019 5:16 PM, Kazuhito Hagio wrote:
-> On 1/22/2019 3:03 AM, Lianbo Jiang wrote:
-> > For AMD machine with SME feature, if SME is enabled in the first
-> > kernel, the crashed kernel's page table(pgd/pud/pmd/pte) contains
-> > the memory encryption mask, so makedumpfile needs to remove the
-> > memory encryption mask to obtain the true physical address.
-> >
-> > Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> > ---
-> >  arch/x86_64.c  | 3 +++
-> >  makedumpfile.c | 1 +
-> >  2 files changed, 4 insertions(+)
-> >
-> > diff --git a/arch/x86_64.c b/arch/x86_64.c
-> > index 537fb78..7651d36 100644
-> > --- a/arch/x86_64.c
-> > +++ b/arch/x86_64.c
-> > @@ -346,6 +346,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
-> >  			return NOT_PADDR;
-> >  		}
-> >  		pud_paddr  = pgd & ENTRY_MASK;
-> > +		pud_paddr = pud_paddr & ~(NUMBER(sme_mask));
-> >  	}
-> >
-> >  	/*
-> > @@ -371,6 +372,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
-> >  	 * Get PMD.
-> >  	 */
-> >  	pmd_paddr  = pud_pte & ENTRY_MASK;
-> > +	pmd_paddr = pmd_paddr & ~(NUMBER(sme_mask));
-> >  	pmd_paddr += pmd_index(vaddr) * sizeof(unsigned long);
-> >  	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof pmd_pte)) {
-> >  		ERRMSG("Can't get pmd_pte (pmd_paddr:%lx).\n", pmd_paddr);
-> > @@ -391,6 +393,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
-> >  	 * Get PTE.
-> >  	 */
-> >  	pte_paddr  = pmd_pte & ENTRY_MASK;
-> > +	pte_paddr = pte_paddr & ~(NUMBER(sme_mask));
-> >  	pte_paddr += pte_index(vaddr) * sizeof(unsigned long);
-> >  	if (!readmem(PADDR, pte_paddr, &pte, sizeof pte)) {
-> >  		ERRMSG("Can't get pte (pte_paddr:%lx).\n", pte_paddr);
-> > diff --git a/makedumpfile.c b/makedumpfile.c
-> > index a03aaa1..81c7bb4 100644
-> > --- a/makedumpfile.c
-> > +++ b/makedumpfile.c
-> > @@ -977,6 +977,7 @@ next_page:
-> >  	read_size = MIN(info->page_size - PAGEOFFSET(paddr), size);
-> >
-> >  	pgaddr = PAGEBASE(paddr);
-> > +	pgaddr = pgaddr & ~(NUMBER(sme_mask));
-> 
-> Since NUMBER(sme_mask) is initialized with -1 (NOT_FOUND_NUMBER),
-> if the sme_mask is not in vmcoreinfo, ~(NUMBER(sme_mask)) will be 0.
-> So the four lines added above need
-> 
->   if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
->     ...
+This is a RESEND post.
 
-Considering hugepage and the code, it might be better to add
-a local variable for the mask value to __vtop4_x86_64() function
-and mask it without condition, for example
+The original v1 post can be found here:
+http://lkml.kernel.org/r/20180829141624.13985-1-bhe@redhat.com
 
-  unsigned long sme_mask = ~0UL;
+It's trying to fix several corner case issues for kexec/kdump when
+dynamic switching of paging mode is enabled in x86_64. Please click 
+above link to check the details.
 
-  if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
-      sme_mask = ~(NUMBER(sme_mask));
-  ...
-  pud_paddr = pgd & ENTRY_MASK & sme_mask;
+In v1, hpa raised concern that why the paging mode checking is not done
+before kexec jumping, the discussion can be found here:
 
-to avoid adding lots of 'if' statements.
+http://lkml.kernel.org/r/alpine.DEB.2.21.1809051002020.1416@nanos.tec.linutronix.de
 
-Thanks,
-Kazu
+As tglx said, it might be not doable for kdump since kdump kernel's
+reserved crashkernel region only owns a portion of memory, may
+be above 4G; and might be not safer to do paging mode checking and
+switching thing after crash.
 
-> 
-> and, what I'm wondering is whether it doesn't need to take hugepages
-> into account such as this
-> 
-> 392         if (pmd_pte & _PAGE_PSE)        /* 2MB pages */
-> 393                 return (pmd_pte & ENTRY_MASK & PMD_MASK) +
-> 394                         (vaddr & ~PMD_MASK);
-> "arch/x86_64.c"
-> 
-> Thanks,
-> Kazu
-> 
-> 
-> >  	pgbuf = cache_search(pgaddr, read_size);
-> >  	if (!pgbuf) {
-> >  		++cache_miss;
-> > --
-> > 2.17.1
-> >
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+So resend this patchset.
 
+Baoquan He (3):
+  x86/boot: Add bit fields into xloadflags for 5-level kernel checking
+  x86/kexec/64: Error out if try to jump to old 4-level kernel from
+    5-level kernel
+  x86/kdump/64: Change the upper limit of crashkernel reservation
+
+ arch/x86/boot/header.S                | 12 +++++++++++-
+ arch/x86/include/uapi/asm/bootparam.h |  2 ++
+ arch/x86/kernel/kexec-bzimage64.c     |  5 +++++
+ arch/x86/kernel/setup.c               | 18 ++++++++++++++----
+ 4 files changed, 32 insertions(+), 5 deletions(-)
+
+-- 
+2.13.6
 
 
 _______________________________________________
