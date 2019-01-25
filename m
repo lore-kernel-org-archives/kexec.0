@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gn1ng-0000ME-Sv
- for kexec@lists.infradead.org; Fri, 25 Jan 2019 13:45:42 +0000
-Date: Fri, 25 Jan 2019 21:45:18 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1gn29r-0007xB-Nz
+ for kexec@lists.infradead.org; Fri, 25 Jan 2019 14:08:38 +0000
+Date: Fri, 25 Jan 2019 15:08:23 +0100
+From: Borislav Petkov <bp@alien8.de>
 Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
  consistent with kaslr
-Message-ID: <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
+Message-ID: <20190125140823.GC27998@zn.tnic>
 References: <1548047768-7656-1-git-send-email-kernelfans@gmail.com>
  <20190125103924.GB27998@zn.tnic>
+ <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190125103924.GB27998@zn.tnic>
+In-Reply-To: <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,125 +26,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
+To: Dave Young <dyoung@redhat.com>
 Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
 
-> > 
-> > Dave Young sent the original post, and I just re-post it with commit log
+On Fri, Jan 25, 2019 at 09:45:18PM +0800, Dave Young wrote:
+> AFAIK, some people prefer to explictly reserve crash memory at high
+> region even if it is possible to reserve at low area.  May because
+> <4G memory is limited on large server, they want to leave this for other
+> use. 
 > 
-> If he sent it, he should be the author I guess.
+> Yinghai or Vivek should know more about the history, probably they can
+> recall some initial reason.
 
-Just drop the line, but can change the credit to Chao Wang since he did
-it initially.
+Yes, just "prefer" is not good enough. There should be a technical
+reason why that's there.
 
-But Chao does not work on kexec/kdump any more, and the email address is
-outdated as well.
+Also, if the user doesn't care, then the code should be free to force
+"high" and thus probe a different range for allocation.
 
+> Good question, still it may be some historical reason, but it is good to
+> make them clear and rethink about it after long time.
 > 
-> > improvement as his requirement.
-> > http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
-> > There was an old discussion below (previously posted by Chao Wang):
-> > https://lkml.org/lkml/2013/10/15/601
-> 
-> All that changelog info doesn't belong in the commit message ...
-> 
-> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> > Cc: Dave Young <dyoung@redhat.com>
-> > Cc: Baoquan He <bhe@redhat.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> > Cc: yinghai@kernel.org,
-> > Cc: vgoyal@redhat.com
-> > Cc: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Cc: x86@kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> 
-> .... but here.
-> 
-> > v6 -> v7: commit log improvement
-> >  arch/x86/kernel/setup.c | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > index 3d872a5..fa62c81 100644
-> > --- a/arch/x86/kernel/setup.c
-> > +++ b/arch/x86/kernel/setup.c
-> > @@ -551,6 +551,22 @@ static void __init reserve_crashkernel(void)
-> >  						    high ? CRASH_ADDR_HIGH_MAX
-> >  							 : CRASH_ADDR_LOW_MAX,
-> >  						    crash_size, CRASH_ALIGN);
-> > +#ifdef CONFIG_X86_64
-> > +		/*
-> > +		 * crashkernel=X reserve below 896M fails? Try below 4G
-> > +		 */
-> > +		if (!high && !crash_base)
-> > +			crash_base = memblock_find_in_range(CRASH_ALIGN,
-> > +						(1ULL << 32),
-> > +						crash_size, CRASH_ALIGN);
-> > +		/*
-> > +		 * crashkernel=X reserve below 4G fails? Try MAXMEM
-> > +		 */
-> > +		if (!high && !crash_base)
-> > +			crash_base = memblock_find_in_range(CRASH_ALIGN,
-> > +						CRASH_ADDR_HIGH_MAX,
-> > +						crash_size, CRASH_ALIGN);
-> > +#endif
-> 
-> Ok, so this is silly: we know at which physical address KASLR allocated
-> the kernel so why aren't we querying that and seeing if there's enough
-> room before it or after it to call memblock_find_in_range() on the
-> bigger range?
+> I also want to understand, need dig the log more.
 
-Baoquan may have comments?
+Good idea. That would be a very nice cleanup. :-)
 
-> 
-> Also, why is "high" dealt with separately and why isn't the code
-> enforcing "high" if the normal reservation fails?
-> 
+Thx.
 
-AFAIK, some people prefer to explictly reserve crash memory at high
-region even if it is possible to reserve at low area.  May because
-<4G memory is limited on large server, they want to leave this for other
-use. 
+-- 
+Regards/Gruss,
+    Boris.
 
-Yinghai or Vivek should know more about the history, probably they can
-recall some initial reason.
-
-> The presence of high is requiring from our users to pay attention what
-> to use when the kernel can do all that automatically. Looks like a UI
-> fail to me.
-> 
-> And look at all the flavors of crashkernel= :
-> 
->         crashkernel=size[KMG][@offset[KMG]]
->         crashkernel=range1:size1[,range2:size2,...][@offset]
->         crashkernel=size[KMG],high
->         crashkernel=size[KMG],low
-> 
-> We couldn't do one so we made 4?!?!
-> 
-> What for?
-> 
-> Nowhere in that help text does it explain why a user would care about
-> high or low or range or offset or the planets alignment...
-> 
-> So what's up?
-
-Good question, still it may be some historical reason, but it is good to
-make them clear and rethink about it after long time.
-
-I also want to understand, need dig the log more.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> Good mailing practices for 400: avoid top-posting and trim the reply.
-
-Thanks
-Dave
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
