@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gmsah-00051Q-Dj
- for kexec@lists.infradead.org; Fri, 25 Jan 2019 03:55:41 +0000
-Date: Fri, 25 Jan 2019 11:55:31 +0800
-From: "dyoung@redhat.com" <dyoung@redhat.com>
-Subject: Re: [PATCH 2/2] Remove the memory encryption mask to obtain the true
- physical address
-Message-ID: <20190125035531.GA19842@dhcp-128-65.nay.redhat.com>
-References: <20190122080357.23381-1-lijiang@redhat.com>
- <20190122080357.23381-3-lijiang@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03566DC7@BPXM09GP.gisp.nec.co.jp>
- <967a7a30-cead-e016-bd96-47d63181103d@redhat.com>
+ id 1gmyti-0004Jf-QK
+ for kexec@lists.infradead.org; Fri, 25 Jan 2019 10:39:56 +0000
+Date: Fri, 25 Jan 2019 11:39:24 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
+Message-ID: <20190125103924.GB27998@zn.tnic>
+References: <1548047768-7656-1-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <967a7a30-cead-e016-bd96-47d63181103d@redhat.com>
+In-Reply-To: <1548047768-7656-1-git-send-email-kernelfans@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,69 +20,148 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: "anderson@redhat.com" <anderson@redhat.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>, Tom Lendacky <thomas.lendacky@amd.com>
+To: Pingfan Liu <kernelfans@gmail.com>
+Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
 
-KyBUb20KT24gMDEvMjUvMTkgYXQgMTE6MDZhbSwgbGlqaWFuZyB3cm90ZToKPiDlnKggMjAxOeW5
-tDAx5pyIMjTml6UgMDY6MTYsIEthenVoaXRvIEhhZ2lvIOWGmemBkzoKPiA+IE9uIDEvMjIvMjAx
-OSAzOjAzIEFNLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4gPj4gRm9yIEFNRCBtYWNoaW5lIHdpdGgg
-U01FIGZlYXR1cmUsIGlmIFNNRSBpcyBlbmFibGVkIGluIHRoZSBmaXJzdAo+ID4+IGtlcm5lbCwg
-dGhlIGNyYXNoZWQga2VybmVsJ3MgcGFnZSB0YWJsZShwZ2QvcHVkL3BtZC9wdGUpIGNvbnRhaW5z
-Cj4gPj4gdGhlIG1lbW9yeSBlbmNyeXB0aW9uIG1hc2ssIHNvIG1ha2VkdW1wZmlsZSBuZWVkcyB0
-byByZW1vdmUgdGhlCj4gPj4gbWVtb3J5IGVuY3J5cHRpb24gbWFzayB0byBvYnRhaW4gdGhlIHRy
-dWUgcGh5c2ljYWwgYWRkcmVzcy4KPiA+Pgo+ID4+IFNpZ25lZC1vZmYtYnk6IExpYW5ibyBKaWFu
-ZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+ID4+IC0tLQo+ID4+ICBhcmNoL3g4Nl82NC5jICB8IDMg
-KysrCj4gPj4gIG1ha2VkdW1wZmlsZS5jIHwgMSArCj4gPj4gIDIgZmlsZXMgY2hhbmdlZCwgNCBp
-bnNlcnRpb25zKCspCj4gPj4KPiA+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODZfNjQuYyBiL2FyY2gv
-eDg2XzY0LmMKPiA+PiBpbmRleCA1MzdmYjc4Li43NjUxZDM2IDEwMDY0NAo+ID4+IC0tLSBhL2Fy
-Y2gveDg2XzY0LmMKPiA+PiArKysgYi9hcmNoL3g4Nl82NC5jCj4gPj4gQEAgLTM0Niw2ICszNDYs
-NyBAQCBfX3Z0b3A0X3g4Nl82NCh1bnNpZ25lZCBsb25nIHZhZGRyLCB1bnNpZ25lZCBsb25nIHBh
-Z2V0YWJsZSkKPiA+PiAgCQkJcmV0dXJuIE5PVF9QQUREUjsKPiA+PiAgCQl9Cj4gPj4gIAkJcHVk
-X3BhZGRyICA9IHBnZCAmIEVOVFJZX01BU0s7Cj4gPj4gKwkJcHVkX3BhZGRyID0gcHVkX3BhZGRy
-ICYgfihOVU1CRVIoc21lX21hc2spKTsKPiA+PiAgCX0KPiA+Pgo+ID4+ICAJLyoKPiA+PiBAQCAt
-MzcxLDYgKzM3Miw3IEBAIF9fdnRvcDRfeDg2XzY0KHVuc2lnbmVkIGxvbmcgdmFkZHIsIHVuc2ln
-bmVkIGxvbmcgcGFnZXRhYmxlKQo+ID4+ICAJICogR2V0IFBNRC4KPiA+PiAgCSAqLwo+ID4+ICAJ
-cG1kX3BhZGRyICA9IHB1ZF9wdGUgJiBFTlRSWV9NQVNLOwo+ID4+ICsJcG1kX3BhZGRyID0gcG1k
-X3BhZGRyICYgfihOVU1CRVIoc21lX21hc2spKTsKPiA+PiAgCXBtZF9wYWRkciArPSBwbWRfaW5k
-ZXgodmFkZHIpICogc2l6ZW9mKHVuc2lnbmVkIGxvbmcpOwo+ID4+ICAJaWYgKCFyZWFkbWVtKFBB
-RERSLCBwbWRfcGFkZHIsICZwbWRfcHRlLCBzaXplb2YgcG1kX3B0ZSkpIHsKPiA+PiAgCQlFUlJN
-U0coIkNhbid0IGdldCBwbWRfcHRlIChwbWRfcGFkZHI6JWx4KS5cbiIsIHBtZF9wYWRkcik7Cj4g
-Pj4gQEAgLTM5MSw2ICszOTMsNyBAQCBfX3Z0b3A0X3g4Nl82NCh1bnNpZ25lZCBsb25nIHZhZGRy
-LCB1bnNpZ25lZCBsb25nIHBhZ2V0YWJsZSkKPiA+PiAgCSAqIEdldCBQVEUuCj4gPj4gIAkgKi8K
-PiA+PiAgCXB0ZV9wYWRkciAgPSBwbWRfcHRlICYgRU5UUllfTUFTSzsKPiA+PiArCXB0ZV9wYWRk
-ciA9IHB0ZV9wYWRkciAmIH4oTlVNQkVSKHNtZV9tYXNrKSk7Cj4gPj4gIAlwdGVfcGFkZHIgKz0g
-cHRlX2luZGV4KHZhZGRyKSAqIHNpemVvZih1bnNpZ25lZCBsb25nKTsKPiA+PiAgCWlmICghcmVh
-ZG1lbShQQUREUiwgcHRlX3BhZGRyLCAmcHRlLCBzaXplb2YgcHRlKSkgewo+ID4+ICAJCUVSUk1T
-RygiQ2FuJ3QgZ2V0IHB0ZSAocHRlX3BhZGRyOiVseCkuXG4iLCBwdGVfcGFkZHIpOwo+ID4+IGRp
-ZmYgLS1naXQgYS9tYWtlZHVtcGZpbGUuYyBiL21ha2VkdW1wZmlsZS5jCj4gPj4gaW5kZXggYTAz
-YWFhMS4uODFjN2JiNCAxMDA2NDQKPiA+PiAtLS0gYS9tYWtlZHVtcGZpbGUuYwo+ID4+ICsrKyBi
-L21ha2VkdW1wZmlsZS5jCj4gPj4gQEAgLTk3Nyw2ICs5NzcsNyBAQCBuZXh0X3BhZ2U6Cj4gPj4g
-IAlyZWFkX3NpemUgPSBNSU4oaW5mby0+cGFnZV9zaXplIC0gUEFHRU9GRlNFVChwYWRkciksIHNp
-emUpOwo+ID4+Cj4gPj4gIAlwZ2FkZHIgPSBQQUdFQkFTRShwYWRkcik7Cj4gPj4gKwlwZ2FkZHIg
-PSBwZ2FkZHIgJiB+KE5VTUJFUihzbWVfbWFzaykpOwo+ID4gCj4gPiBTaW5jZSBOVU1CRVIoc21l
-X21hc2spIGlzIGluaXRpYWxpemVkIHdpdGggLTEgKE5PVF9GT1VORF9OVU1CRVIpLAo+ID4gaWYg
-dGhlIHNtZV9tYXNrIGlzIG5vdCBpbiB2bWNvcmVpbmZvLCB+KE5VTUJFUihzbWVfbWFzaykpIHdp
-bGwgYmUgMC4KPiA+IFNvIHRoZSBmb3VyIGxpbmVzIGFkZGVkIGFib3ZlIG5lZWQKPiA+IAo+ID4g
-ICBpZiAoTlVNQkVSKHNtZV9tYXNrKSAhPSBOT1RfRk9VTkRfTlVNQkVSKQo+ID4gICAgIC4uLgo+
-ID4gCj4gCj4gVGhhbmsgeW91IHZlcnkgbXVjaCBmb3IgcG9pbnRpbmcgb3V0IG15IG1pc3Rha2Uu
-Cj4gCj4gSSB3aWxsIGltcHJvdmUgaXQgYW5kIHBvc3QgYWdhaW4uCj4gCj4gPiBhbmQsIHdoYXQg
-SSdtIHdvbmRlcmluZyBpcyB3aGV0aGVyIGl0IGRvZXNuJ3QgbmVlZCB0byB0YWtlIGh1Z2VwYWdl
-cwo+ID4gaW50byBhY2NvdW50IHN1Y2ggYXMgdGhpcwo+ID4gCj4gPiAzOTIgICAgICAgICBpZiAo
-cG1kX3B0ZSAmIF9QQUdFX1BTRSkgICAgICAgIC8qIDJNQiBwYWdlcyAqLwo+ID4gMzkzICAgICAg
-ICAgICAgICAgICByZXR1cm4gKHBtZF9wdGUgJiBFTlRSWV9NQVNLICYgUE1EX01BU0spICsKPiA+
-IDM5NCAgICAgICAgICAgICAgICAgICAgICAgICAodmFkZHIgJiB+UE1EX01BU0spOwo+ID4gImFy
-Y2gveDg2XzY0LmMiCj4gPiAKPiAKPiBUaGlzIGlzIGEgZ29vZCBxdWVzdGlvbi4gVGhlb3JldGlj
-YWxseSwgaXQgc2hvdWxkIGJlIG1vZGlmaWVkIGFjY29yZGluZ2x5IGZvcgo+IGh1Z2UgcGFnZXMg
-Y2FzZS4KPiAKPiBCdXQgbWFrZWR1bXBmaWxlIHN0aWxsIHdvcmtzIHdlbGwgd2l0aG91dCB0aGlz
-IGNoYW5nZS4gQW5kIGknbSBzdXJlIHRoYXQgdGhlCj4gaHVnZSBwYWdlcyBhcmUgZW5hYmxlZCBp
-biBjcmFzaGVkIGtlcm5lbC4gVGhpcyBpcyB2ZXJ5IHN0cmFuZ2UuCj4gCj4gVGhhbmtzLgo+IExp
-YW5ibwo+IAo+ID4gVGhhbmtzLAo+ID4gS2F6dQo+ID4gCj4gPiAKPiA+PiAgCXBnYnVmID0gY2Fj
-aGVfc2VhcmNoKHBnYWRkciwgcmVhZF9zaXplKTsKPiA+PiAgCWlmICghcGdidWYpIHsKPiA+PiAg
-CQkrK2NhY2hlX21pc3M7Cj4gPj4gLS0KPiA+PiAyLjE3LjEKPiA+Pgo+ID4gCj4gPiAKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
-bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+
+>  Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
+
+s/bugfix, //
+
+On Mon, Jan 21, 2019 at 01:16:08PM +0800, Pingfan Liu wrote:
+> People reported crashkernel=384M reservation failed on a high end server
+> with KASLR enabled.  In that case there is enough free memory under 896M
+> but crashkernel reservation still fails intermittently.
+> 
+> The situation is crashkernel reservation code only finds free region under
+> 896 MB with 128M aligned in case no ',high' being used.  And KASLR could
+> break the first 896M into several parts randomly thus the failure happens.
+
+This reads very strange.
+
+> User has no way to predict and make sure crashkernel=xM working unless
+> he/she use 'crashkernel=xM,high'.  Since 'crashkernel=xM' is the most
+> common use case this issue is a serious bug.
+> 
+> And we can't answer questions raised from customer:
+> 1) why it doesn't succeed to reserve 896 MB;
+> 2) what's wrong with memory region under 4G;
+> 3) why I have to add ',high', I only require 384 MB, not 3840 MB.
+
+Errr, this looks like communication issue. Sounds to me like the text
+around crashkernel= in
+
+Documentation/admin-guide/kernel-parameters.txt
+
+needs improving?
+
+> This patch tries to get memory region from 896 MB firstly, then [896MB,4G],
+
+Avoid having "This patch" or "This commit" in the commit message. It is
+tautologically useless.
+
+Also, do
+
+$ git grep 'This patch' Documentation/process
+
+for more details.
+
+> finally above 4G.
+> 
+> Dave Young sent the original post, and I just re-post it with commit log
+
+If he sent it, he should be the author I guess.
+
+> improvement as his requirement.
+> http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
+> There was an old discussion below (previously posted by Chao Wang):
+> https://lkml.org/lkml/2013/10/15/601
+
+All that changelog info doesn't belong in the commit message ...
+
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+> Cc: yinghai@kernel.org,
+> Cc: vgoyal@redhat.com
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: x86@kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+
+.... but here.
+
+> v6 -> v7: commit log improvement
+>  arch/x86/kernel/setup.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 3d872a5..fa62c81 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -551,6 +551,22 @@ static void __init reserve_crashkernel(void)
+>  						    high ? CRASH_ADDR_HIGH_MAX
+>  							 : CRASH_ADDR_LOW_MAX,
+>  						    crash_size, CRASH_ALIGN);
+> +#ifdef CONFIG_X86_64
+> +		/*
+> +		 * crashkernel=X reserve below 896M fails? Try below 4G
+> +		 */
+> +		if (!high && !crash_base)
+> +			crash_base = memblock_find_in_range(CRASH_ALIGN,
+> +						(1ULL << 32),
+> +						crash_size, CRASH_ALIGN);
+> +		/*
+> +		 * crashkernel=X reserve below 4G fails? Try MAXMEM
+> +		 */
+> +		if (!high && !crash_base)
+> +			crash_base = memblock_find_in_range(CRASH_ALIGN,
+> +						CRASH_ADDR_HIGH_MAX,
+> +						crash_size, CRASH_ALIGN);
+> +#endif
+
+Ok, so this is silly: we know at which physical address KASLR allocated
+the kernel so why aren't we querying that and seeing if there's enough
+room before it or after it to call memblock_find_in_range() on the
+bigger range?
+
+Also, why is "high" dealt with separately and why isn't the code
+enforcing "high" if the normal reservation fails?
+
+The presence of high is requiring from our users to pay attention what
+to use when the kernel can do all that automatically. Looks like a UI
+fail to me.
+
+And look at all the flavors of crashkernel= :
+
+        crashkernel=size[KMG][@offset[KMG]]
+        crashkernel=range1:size1[,range2:size2,...][@offset]
+        crashkernel=size[KMG],high
+        crashkernel=size[KMG],low
+
+We couldn't do one so we made 4?!?!
+
+What for?
+
+Nowhere in that help text does it explain why a user would care about
+high or low or range or offset or the planets alignment...
+
+So what's up?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
