@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-x641.google.com ([2607:f8b0:4864:20::641])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gn0Eo-0000EG-Az
- for kexec@lists.infradead.org; Fri, 25 Jan 2019 12:05:35 +0000
-Received: by mail-pl1-x641.google.com with SMTP id b5so4489170plr.4
- for <kexec@lists.infradead.org>; Fri, 25 Jan 2019 04:05:33 -0800 (PST)
-Date: Fri, 25 Jan 2019 15:05:27 +0300
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
-Subject: Re: [PATCH RESEND 0/3] Add restrictions for kexec/kdump jumping
- between 5-level and 4-level kernel
-Message-ID: <20190125120527.3n6pqt5zzvczkct6@kshutemo-mobl1>
-References: <20190125022817.29506-1-bhe@redhat.com>
+ id 1gn1ng-0000ME-Sv
+ for kexec@lists.infradead.org; Fri, 25 Jan 2019 13:45:42 +0000
+Date: Fri, 25 Jan 2019 21:45:18 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
+Message-ID: <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
+References: <1548047768-7656-1-git-send-email-kernelfans@gmail.com>
+ <20190125103924.GB27998@zn.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190125022817.29506-1-bhe@redhat.com>
+In-Reply-To: <20190125103924.GB27998@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,37 +25,125 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, mingo@kernel.org, kirill.shutemov@linux.intel.com
+To: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
 
-On Fri, Jan 25, 2019 at 10:28:14AM +0800, Baoquan He wrote:
-> This is a RESEND post.
+> > 
+> > Dave Young sent the original post, and I just re-post it with commit log
 > 
-> The original v1 post can be found here:
-> http://lkml.kernel.org/r/20180829141624.13985-1-bhe@redhat.com
-> 
-> It's trying to fix several corner case issues for kexec/kdump when
-> dynamic switching of paging mode is enabled in x86_64. Please click 
-> above link to check the details.
-> 
-> In v1, hpa raised concern that why the paging mode checking is not done
-> before kexec jumping, the discussion can be found here:
-> 
-> http://lkml.kernel.org/r/alpine.DEB.2.21.1809051002020.1416@nanos.tec.linutronix.de
-> 
-> As tglx said, it might be not doable for kdump since kdump kernel's
-> reserved crashkernel region only owns a portion of memory, may
-> be above 4G; and might be not safer to do paging mode checking and
-> switching thing after crash.
-> 
-> So resend this patchset.
+> If he sent it, he should be the author I guess.
 
-Changes look good to me:
+Just drop the line, but can change the credit to Chao Wang since he did
+it initially.
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+But Chao does not work on kexec/kdump any more, and the email address is
+outdated as well.
 
--- 
- Kirill A. Shutemov
+> 
+> > improvement as his requirement.
+> > http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
+> > There was an old discussion below (previously posted by Chao Wang):
+> > https://lkml.org/lkml/2013/10/15/601
+> 
+> All that changelog info doesn't belong in the commit message ...
+> 
+> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > Cc: Dave Young <dyoung@redhat.com>
+> > Cc: Baoquan He <bhe@redhat.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+> > Cc: yinghai@kernel.org,
+> > Cc: vgoyal@redhat.com
+> > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: x86@kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> 
+> .... but here.
+> 
+> > v6 -> v7: commit log improvement
+> >  arch/x86/kernel/setup.c | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> > index 3d872a5..fa62c81 100644
+> > --- a/arch/x86/kernel/setup.c
+> > +++ b/arch/x86/kernel/setup.c
+> > @@ -551,6 +551,22 @@ static void __init reserve_crashkernel(void)
+> >  						    high ? CRASH_ADDR_HIGH_MAX
+> >  							 : CRASH_ADDR_LOW_MAX,
+> >  						    crash_size, CRASH_ALIGN);
+> > +#ifdef CONFIG_X86_64
+> > +		/*
+> > +		 * crashkernel=X reserve below 896M fails? Try below 4G
+> > +		 */
+> > +		if (!high && !crash_base)
+> > +			crash_base = memblock_find_in_range(CRASH_ALIGN,
+> > +						(1ULL << 32),
+> > +						crash_size, CRASH_ALIGN);
+> > +		/*
+> > +		 * crashkernel=X reserve below 4G fails? Try MAXMEM
+> > +		 */
+> > +		if (!high && !crash_base)
+> > +			crash_base = memblock_find_in_range(CRASH_ALIGN,
+> > +						CRASH_ADDR_HIGH_MAX,
+> > +						crash_size, CRASH_ALIGN);
+> > +#endif
+> 
+> Ok, so this is silly: we know at which physical address KASLR allocated
+> the kernel so why aren't we querying that and seeing if there's enough
+> room before it or after it to call memblock_find_in_range() on the
+> bigger range?
+
+Baoquan may have comments?
+
+> 
+> Also, why is "high" dealt with separately and why isn't the code
+> enforcing "high" if the normal reservation fails?
+> 
+
+AFAIK, some people prefer to explictly reserve crash memory at high
+region even if it is possible to reserve at low area.  May because
+<4G memory is limited on large server, they want to leave this for other
+use. 
+
+Yinghai or Vivek should know more about the history, probably they can
+recall some initial reason.
+
+> The presence of high is requiring from our users to pay attention what
+> to use when the kernel can do all that automatically. Looks like a UI
+> fail to me.
+> 
+> And look at all the flavors of crashkernel= :
+> 
+>         crashkernel=size[KMG][@offset[KMG]]
+>         crashkernel=range1:size1[,range2:size2,...][@offset]
+>         crashkernel=size[KMG],high
+>         crashkernel=size[KMG],low
+> 
+> We couldn't do one so we made 4?!?!
+> 
+> What for?
+> 
+> Nowhere in that help text does it explain why a user would care about
+> high or low or range or offset or the planets alignment...
+> 
+> So what's up?
+
+Good question, still it may be some historical reason, but it is good to
+make them clear and rethink about it after long time.
+
+I also want to understand, need dig the log more.
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> Good mailing practices for 400: avoid top-posting and trim the reply.
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
