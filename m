@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gmrze-00050d-Cd
- for kexec@lists.infradead.org; Fri, 25 Jan 2019 03:17:24 +0000
+ id 1gmsah-00051Q-Dj
+ for kexec@lists.infradead.org; Fri, 25 Jan 2019 03:55:41 +0000
+Date: Fri, 25 Jan 2019 11:55:31 +0800
+From: "dyoung@redhat.com" <dyoung@redhat.com>
 Subject: Re: [PATCH 2/2] Remove the memory encryption mask to obtain the true
  physical address
+Message-ID: <20190125035531.GA19842@dhcp-128-65.nay.redhat.com>
 References: <20190122080357.23381-1-lijiang@redhat.com>
  <20190122080357.23381-3-lijiang@redhat.com>
  <4AE2DC15AC0B8543882A74EA0D43DBEC03566DC7@BPXM09GP.gisp.nec.co.jp>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03566F74@BPXM09GP.gisp.nec.co.jp>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <26f5aa4b-cb5f-ba17-85d3-591cc4cc6e70@redhat.com>
-Date: Fri, 25 Jan 2019 11:17:13 +0800
+ <967a7a30-cead-e016-bd96-47d63181103d@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03566F74@BPXM09GP.gisp.nec.co.jp>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <967a7a30-cead-e016-bd96-47d63181103d@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,121 +23,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "anderson@redhat.com" <anderson@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
+To: lijiang <lijiang@redhat.com>
+Cc: "anderson@redhat.com" <anderson@redhat.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>, Tom Lendacky <thomas.lendacky@amd.com>
 
-在 2019年01月25日 03:33, Kazuhito Hagio 写道:
-> On 1/23/2019 5:16 PM, Kazuhito Hagio wrote:
->> On 1/22/2019 3:03 AM, Lianbo Jiang wrote:
->>> For AMD machine with SME feature, if SME is enabled in the first
->>> kernel, the crashed kernel's page table(pgd/pud/pmd/pte) contains
->>> the memory encryption mask, so makedumpfile needs to remove the
->>> memory encryption mask to obtain the true physical address.
->>>
->>> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
->>> ---
->>>  arch/x86_64.c  | 3 +++
->>>  makedumpfile.c | 1 +
->>>  2 files changed, 4 insertions(+)
->>>
->>> diff --git a/arch/x86_64.c b/arch/x86_64.c
->>> index 537fb78..7651d36 100644
->>> --- a/arch/x86_64.c
->>> +++ b/arch/x86_64.c
->>> @@ -346,6 +346,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
->>>  			return NOT_PADDR;
->>>  		}
->>>  		pud_paddr  = pgd & ENTRY_MASK;
->>> +		pud_paddr = pud_paddr & ~(NUMBER(sme_mask));
->>>  	}
->>>
->>>  	/*
->>> @@ -371,6 +372,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
->>>  	 * Get PMD.
->>>  	 */
->>>  	pmd_paddr  = pud_pte & ENTRY_MASK;
->>> +	pmd_paddr = pmd_paddr & ~(NUMBER(sme_mask));
->>>  	pmd_paddr += pmd_index(vaddr) * sizeof(unsigned long);
->>>  	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof pmd_pte)) {
->>>  		ERRMSG("Can't get pmd_pte (pmd_paddr:%lx).\n", pmd_paddr);
->>> @@ -391,6 +393,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
->>>  	 * Get PTE.
->>>  	 */
->>>  	pte_paddr  = pmd_pte & ENTRY_MASK;
->>> +	pte_paddr = pte_paddr & ~(NUMBER(sme_mask));
->>>  	pte_paddr += pte_index(vaddr) * sizeof(unsigned long);
->>>  	if (!readmem(PADDR, pte_paddr, &pte, sizeof pte)) {
->>>  		ERRMSG("Can't get pte (pte_paddr:%lx).\n", pte_paddr);
->>> diff --git a/makedumpfile.c b/makedumpfile.c
->>> index a03aaa1..81c7bb4 100644
->>> --- a/makedumpfile.c
->>> +++ b/makedumpfile.c
->>> @@ -977,6 +977,7 @@ next_page:
->>>  	read_size = MIN(info->page_size - PAGEOFFSET(paddr), size);
->>>
->>>  	pgaddr = PAGEBASE(paddr);
->>> +	pgaddr = pgaddr & ~(NUMBER(sme_mask));
->>
->> Since NUMBER(sme_mask) is initialized with -1 (NOT_FOUND_NUMBER),
->> if the sme_mask is not in vmcoreinfo, ~(NUMBER(sme_mask)) will be 0.
->> So the four lines added above need
->>
->>   if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
->>     ...
-> 
-> Considering hugepage and the code, it might be better to add
-> a local variable for the mask value to __vtop4_x86_64() function
-> and mask it without condition, for example
-> 
->   unsigned long sme_mask = ~0UL;
-> 
->   if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
->       sme_mask = ~(NUMBER(sme_mask));
->   ...
->   pud_paddr = pgd & ENTRY_MASK & sme_mask;
-> 
-> to avoid adding lots of 'if' statements.
-> 
-
-Good idea. Thank you, Kazu.
-
-> Thanks,
-> Kazu
-> 
->>
->> and, what I'm wondering is whether it doesn't need to take hugepages
->> into account such as this
->>
->> 392         if (pmd_pte & _PAGE_PSE)        /* 2MB pages */
->> 393                 return (pmd_pte & ENTRY_MASK & PMD_MASK) +
->> 394                         (vaddr & ~PMD_MASK);
->> "arch/x86_64.c"
->>
->> Thanks,
->> Kazu
->>
->>
->>>  	pgbuf = cache_search(pgaddr, read_size);
->>>  	if (!pgbuf) {
->>>  		++cache_miss;
->>> --
->>> 2.17.1
->>>
->>
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+KyBUb20KT24gMDEvMjUvMTkgYXQgMTE6MDZhbSwgbGlqaWFuZyB3cm90ZToKPiDlnKggMjAxOeW5
+tDAx5pyIMjTml6UgMDY6MTYsIEthenVoaXRvIEhhZ2lvIOWGmemBkzoKPiA+IE9uIDEvMjIvMjAx
+OSAzOjAzIEFNLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4gPj4gRm9yIEFNRCBtYWNoaW5lIHdpdGgg
+U01FIGZlYXR1cmUsIGlmIFNNRSBpcyBlbmFibGVkIGluIHRoZSBmaXJzdAo+ID4+IGtlcm5lbCwg
+dGhlIGNyYXNoZWQga2VybmVsJ3MgcGFnZSB0YWJsZShwZ2QvcHVkL3BtZC9wdGUpIGNvbnRhaW5z
+Cj4gPj4gdGhlIG1lbW9yeSBlbmNyeXB0aW9uIG1hc2ssIHNvIG1ha2VkdW1wZmlsZSBuZWVkcyB0
+byByZW1vdmUgdGhlCj4gPj4gbWVtb3J5IGVuY3J5cHRpb24gbWFzayB0byBvYnRhaW4gdGhlIHRy
+dWUgcGh5c2ljYWwgYWRkcmVzcy4KPiA+Pgo+ID4+IFNpZ25lZC1vZmYtYnk6IExpYW5ibyBKaWFu
+ZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+ID4+IC0tLQo+ID4+ICBhcmNoL3g4Nl82NC5jICB8IDMg
+KysrCj4gPj4gIG1ha2VkdW1wZmlsZS5jIHwgMSArCj4gPj4gIDIgZmlsZXMgY2hhbmdlZCwgNCBp
+bnNlcnRpb25zKCspCj4gPj4KPiA+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODZfNjQuYyBiL2FyY2gv
+eDg2XzY0LmMKPiA+PiBpbmRleCA1MzdmYjc4Li43NjUxZDM2IDEwMDY0NAo+ID4+IC0tLSBhL2Fy
+Y2gveDg2XzY0LmMKPiA+PiArKysgYi9hcmNoL3g4Nl82NC5jCj4gPj4gQEAgLTM0Niw2ICszNDYs
+NyBAQCBfX3Z0b3A0X3g4Nl82NCh1bnNpZ25lZCBsb25nIHZhZGRyLCB1bnNpZ25lZCBsb25nIHBh
+Z2V0YWJsZSkKPiA+PiAgCQkJcmV0dXJuIE5PVF9QQUREUjsKPiA+PiAgCQl9Cj4gPj4gIAkJcHVk
+X3BhZGRyICA9IHBnZCAmIEVOVFJZX01BU0s7Cj4gPj4gKwkJcHVkX3BhZGRyID0gcHVkX3BhZGRy
+ICYgfihOVU1CRVIoc21lX21hc2spKTsKPiA+PiAgCX0KPiA+Pgo+ID4+ICAJLyoKPiA+PiBAQCAt
+MzcxLDYgKzM3Miw3IEBAIF9fdnRvcDRfeDg2XzY0KHVuc2lnbmVkIGxvbmcgdmFkZHIsIHVuc2ln
+bmVkIGxvbmcgcGFnZXRhYmxlKQo+ID4+ICAJICogR2V0IFBNRC4KPiA+PiAgCSAqLwo+ID4+ICAJ
+cG1kX3BhZGRyICA9IHB1ZF9wdGUgJiBFTlRSWV9NQVNLOwo+ID4+ICsJcG1kX3BhZGRyID0gcG1k
+X3BhZGRyICYgfihOVU1CRVIoc21lX21hc2spKTsKPiA+PiAgCXBtZF9wYWRkciArPSBwbWRfaW5k
+ZXgodmFkZHIpICogc2l6ZW9mKHVuc2lnbmVkIGxvbmcpOwo+ID4+ICAJaWYgKCFyZWFkbWVtKFBB
+RERSLCBwbWRfcGFkZHIsICZwbWRfcHRlLCBzaXplb2YgcG1kX3B0ZSkpIHsKPiA+PiAgCQlFUlJN
+U0coIkNhbid0IGdldCBwbWRfcHRlIChwbWRfcGFkZHI6JWx4KS5cbiIsIHBtZF9wYWRkcik7Cj4g
+Pj4gQEAgLTM5MSw2ICszOTMsNyBAQCBfX3Z0b3A0X3g4Nl82NCh1bnNpZ25lZCBsb25nIHZhZGRy
+LCB1bnNpZ25lZCBsb25nIHBhZ2V0YWJsZSkKPiA+PiAgCSAqIEdldCBQVEUuCj4gPj4gIAkgKi8K
+PiA+PiAgCXB0ZV9wYWRkciAgPSBwbWRfcHRlICYgRU5UUllfTUFTSzsKPiA+PiArCXB0ZV9wYWRk
+ciA9IHB0ZV9wYWRkciAmIH4oTlVNQkVSKHNtZV9tYXNrKSk7Cj4gPj4gIAlwdGVfcGFkZHIgKz0g
+cHRlX2luZGV4KHZhZGRyKSAqIHNpemVvZih1bnNpZ25lZCBsb25nKTsKPiA+PiAgCWlmICghcmVh
+ZG1lbShQQUREUiwgcHRlX3BhZGRyLCAmcHRlLCBzaXplb2YgcHRlKSkgewo+ID4+ICAJCUVSUk1T
+RygiQ2FuJ3QgZ2V0IHB0ZSAocHRlX3BhZGRyOiVseCkuXG4iLCBwdGVfcGFkZHIpOwo+ID4+IGRp
+ZmYgLS1naXQgYS9tYWtlZHVtcGZpbGUuYyBiL21ha2VkdW1wZmlsZS5jCj4gPj4gaW5kZXggYTAz
+YWFhMS4uODFjN2JiNCAxMDA2NDQKPiA+PiAtLS0gYS9tYWtlZHVtcGZpbGUuYwo+ID4+ICsrKyBi
+L21ha2VkdW1wZmlsZS5jCj4gPj4gQEAgLTk3Nyw2ICs5NzcsNyBAQCBuZXh0X3BhZ2U6Cj4gPj4g
+IAlyZWFkX3NpemUgPSBNSU4oaW5mby0+cGFnZV9zaXplIC0gUEFHRU9GRlNFVChwYWRkciksIHNp
+emUpOwo+ID4+Cj4gPj4gIAlwZ2FkZHIgPSBQQUdFQkFTRShwYWRkcik7Cj4gPj4gKwlwZ2FkZHIg
+PSBwZ2FkZHIgJiB+KE5VTUJFUihzbWVfbWFzaykpOwo+ID4gCj4gPiBTaW5jZSBOVU1CRVIoc21l
+X21hc2spIGlzIGluaXRpYWxpemVkIHdpdGggLTEgKE5PVF9GT1VORF9OVU1CRVIpLAo+ID4gaWYg
+dGhlIHNtZV9tYXNrIGlzIG5vdCBpbiB2bWNvcmVpbmZvLCB+KE5VTUJFUihzbWVfbWFzaykpIHdp
+bGwgYmUgMC4KPiA+IFNvIHRoZSBmb3VyIGxpbmVzIGFkZGVkIGFib3ZlIG5lZWQKPiA+IAo+ID4g
+ICBpZiAoTlVNQkVSKHNtZV9tYXNrKSAhPSBOT1RfRk9VTkRfTlVNQkVSKQo+ID4gICAgIC4uLgo+
+ID4gCj4gCj4gVGhhbmsgeW91IHZlcnkgbXVjaCBmb3IgcG9pbnRpbmcgb3V0IG15IG1pc3Rha2Uu
+Cj4gCj4gSSB3aWxsIGltcHJvdmUgaXQgYW5kIHBvc3QgYWdhaW4uCj4gCj4gPiBhbmQsIHdoYXQg
+SSdtIHdvbmRlcmluZyBpcyB3aGV0aGVyIGl0IGRvZXNuJ3QgbmVlZCB0byB0YWtlIGh1Z2VwYWdl
+cwo+ID4gaW50byBhY2NvdW50IHN1Y2ggYXMgdGhpcwo+ID4gCj4gPiAzOTIgICAgICAgICBpZiAo
+cG1kX3B0ZSAmIF9QQUdFX1BTRSkgICAgICAgIC8qIDJNQiBwYWdlcyAqLwo+ID4gMzkzICAgICAg
+ICAgICAgICAgICByZXR1cm4gKHBtZF9wdGUgJiBFTlRSWV9NQVNLICYgUE1EX01BU0spICsKPiA+
+IDM5NCAgICAgICAgICAgICAgICAgICAgICAgICAodmFkZHIgJiB+UE1EX01BU0spOwo+ID4gImFy
+Y2gveDg2XzY0LmMiCj4gPiAKPiAKPiBUaGlzIGlzIGEgZ29vZCBxdWVzdGlvbi4gVGhlb3JldGlj
+YWxseSwgaXQgc2hvdWxkIGJlIG1vZGlmaWVkIGFjY29yZGluZ2x5IGZvcgo+IGh1Z2UgcGFnZXMg
+Y2FzZS4KPiAKPiBCdXQgbWFrZWR1bXBmaWxlIHN0aWxsIHdvcmtzIHdlbGwgd2l0aG91dCB0aGlz
+IGNoYW5nZS4gQW5kIGknbSBzdXJlIHRoYXQgdGhlCj4gaHVnZSBwYWdlcyBhcmUgZW5hYmxlZCBp
+biBjcmFzaGVkIGtlcm5lbC4gVGhpcyBpcyB2ZXJ5IHN0cmFuZ2UuCj4gCj4gVGhhbmtzLgo+IExp
+YW5ibwo+IAo+ID4gVGhhbmtzLAo+ID4gS2F6dQo+ID4gCj4gPiAKPiA+PiAgCXBnYnVmID0gY2Fj
+aGVfc2VhcmNoKHBnYWRkciwgcmVhZF9zaXplKTsKPiA+PiAgCWlmICghcGdidWYpIHsKPiA+PiAg
+CQkrK2NhY2hlX21pc3M7Cj4gPj4gLS0KPiA+PiAyLjE3LjEKPiA+Pgo+ID4gCj4gPiAKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
+bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
