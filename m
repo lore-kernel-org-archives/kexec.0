@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-f195.google.com ([209.85.215.195])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1goDyt-00026o-0u
- for kexec@lists.infradead.org; Mon, 28 Jan 2019 20:58:14 +0000
-Received: by mail-pg1-f195.google.com with SMTP id z10so7730813pgp.7
- for <kexec@lists.infradead.org>; Mon, 28 Jan 2019 12:58:10 -0800 (PST)
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH 2/2] arm64: Expose PARange via ID_AA64MMFR0_EL1 and VARange
- via ID_AA64MMFR2_EL1
-Date: Tue, 29 Jan 2019 02:27:56 +0530
-Message-Id: <1548709076-22317-3-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1548709076-22317-1-git-send-email-bhsharma@redhat.com>
-References: <1548709076-22317-1-git-send-email-bhsharma@redhat.com>
+ id 1goEpU-0003M9-Bz
+ for kexec@lists.infradead.org; Mon, 28 Jan 2019 21:52:34 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile: honor the CFLAGS from environment variables
+Date: Mon, 28 Jan 2019 21:51:06 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03567378@BPXM09GP.gisp.nec.co.jp>
+References: <20190128105045.30565-1-kasong@redhat.com>
+ <20190128105944.fwm57pnbyvkap5fo@verge.net.au>
+In-Reply-To: <20190128105944.fwm57pnbyvkap5fo@verge.net.au>
+Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,61 +20,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, steve.capper@arm.com, catalin.marinas@arm.com, bhsharma@redhat.com, ard.biesheuvel@linaro.org, will.deacon@arm.com, bhupesh.linux@gmail.com, kexec@lists.infradead.org, suzuki.poulose@arm.com
+To: Kairui Song <kasong@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, Simon Horman <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>
 
-ARMv8.2 architecture hardware extensions can support
-upto 52-bit physical addresses (ARMv8.2-LPA) and 52-bit virtual
-addresses (ARMv8.2-LVA).
+On 1/28/2019 5:59 AM, Simon Horman wrote:
+> On Mon, Jan 28, 2019 at 06:50:45PM +0800, Kairui Song wrote:
+> > This make it easier for passing extra cflags, for example hardening
+> > flags could be passed in with enviroment variable.
+> >
+> > Signed-off-by: Kairui Song <kasong@redhat.com>
+> 
+> Thanks, I like this a lot.
+> 
+> I would like to wake a little to see if there is review from
+> others before applying this.
 
-User-space utilities like 'makedumpfile' can try and use the getauxval()
-function to retrieve the underlying PARange and VARange values
-supported.
+I like this, too, and sorry to steal this... :-)
 
-An example implementation can be via the 'Appendix I: Example' shown
-in 'Documentation/arm64/cpu-feature-registers.txt'. A reference
-'makedumpfile' implementation which uses a similar approach is
-available in [0].
+> 
+> > ---
+> >  Makefile | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index 612b9d0..b511a78 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -8,11 +8,11 @@ ifeq ($(strip $CC),)
+> >  CC	= gcc
+> >  endif
+> >
+> > -CFLAGS = -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+> > -	  -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE \
+> > -	  -DVERSION='"$(VERSION)"' -DRELEASE_DATE='"$(DATE)"'
+> > -CFLAGS_ARCH	= -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+> > -		    -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+> > +CFLAGS_ARCH = $(CFLAGS) -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+> > +	      -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
 
-So, we expose these properties via 'FTR_NONSTRICT' and 'FTR_VISIBLE'
-settings for 'ID_AA64MMFR0_PARANGE_SHIFT' and 'ID_AA64MMFR2_LVA_SHIFT'.
+This expands the whole CFLAGS in advance and duplicates some flags,
+so we can use ":=" instead of "=" for CFLAGS_ARCH ?
+If this is fine, I'll fix it when merging.
 
-[0]. https://github.com/bhupesh-sharma/makedumpfile/blob/9d7da4aad3efe79b448f48cc3454fcae46a316d6/arch/arm64.c#L499
+Thanks,
+Kazu
 
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- arch/arm64/kernel/cpufeature.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > +CFLAGS += -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+> > +	 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE \
+> > +	 -DVERSION='"$(VERSION)"' -DRELEASE_DATE='"$(DATE)"'
+> >  # LDFLAGS = -L/usr/local/lib -I/usr/local/include
+> >
+> >  HOST_ARCH := $(shell uname -m)
+> > --
+> > 2.20.1
+> >
+> >
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> >
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index f6d84e2c92fe..5cfc08cbf147 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -194,7 +194,7 @@ static const struct arm64_ftr_bits ftr_id_aa64mmfr0[] = {
- 	 * Differing PARange is fine as long as all peripherals and memory are mapped
- 	 * within the minimum PARange of all CPUs
- 	 */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_PARANGE_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_PARANGE_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
- 
-@@ -211,7 +211,7 @@ static const struct arm64_ftr_bits ftr_id_aa64mmfr1[] = {
- static const struct arm64_ftr_bits ftr_id_aa64mmfr2[] = {
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_FWB_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_AT_SHIFT, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_LVA_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_LVA_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_IESB_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_LSM_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_UAO_SHIFT, 4, 0),
--- 
-2.7.4
 
 
 _______________________________________________
