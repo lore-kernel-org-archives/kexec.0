@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1go408-0002s3-NI
- for kexec@lists.infradead.org; Mon, 28 Jan 2019 10:18:50 +0000
-Date: Mon, 28 Jan 2019 11:18:31 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
- consistent with kaslr
-Message-ID: <20190128101831.GA27154@zn.tnic>
-References: <1548047768-7656-1-git-send-email-kernelfans@gmail.com>
- <20190125103924.GB27998@zn.tnic>
- <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
- <20190125140823.GC27998@zn.tnic>
- <20190128095809.GC3732@dhcp-128-65.nay.redhat.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1go4Rf-0005Tk-SA
+ for kexec@lists.infradead.org; Mon, 28 Jan 2019 10:47:17 +0000
+Date: Mon, 28 Jan 2019 11:47:09 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: multiboot patches from august 2018
+Message-ID: <20190128104709.5hxxnefc7qyds37g@verge.net.au>
+References: <CB55040D1319D7C211643E10251F5C69@felloff.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190128095809.GC3732@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <CB55040D1319D7C211643E10251F5C69@felloff.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,28 +23,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
+To: cinap_lenrek@felloff.net
+Cc: kexec@lists.infradead.org
 
-On Mon, Jan 28, 2019 at 05:58:09PM +0800, Dave Young wrote:
-> Another reason is in case ,high we will need automatically reserve a
-> region in low area for swiotlb.  So for example one use
-> crashkernel=256M,high,  actual reserved memory is 256M above 4G and
-> another 256M under 4G for swiotlb.  Normally it is not necessary for
-> most people.  Thus we can not make ,high as default.
+On Mon, Jan 21, 2019 at 08:07:32PM +0100, cinap_lenrek@felloff.net wrote:
+> i'm unsubscribing from this list as i did not get any
+> response about these patches from anyone but horms so far
+> and that was a long time ago.
+> 
+> http://lists.infradead.org/pipermail/kexec/2018-August/021357.html
+> http://lists.infradead.org/pipermail/kexec/2018-August/021358.html
+> http://lists.infradead.org/pipermail/kexec/2018-August/021359.html
+> 
+> if there is any questions please email me directly.
 
-And how is the poor user to figure out that we decided for her/him that
-swiotlb reservation is something not necessary for most people and thus
-we fail the crashkernel= reservation?
+Thanks, and sorry for the long delay.
 
-IOW, that "logic" above doesn't make a whole lot of sense to me from
-user friendliness perspective.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+I have applied these patches for inclusion in the next release of
+kexec-tools.
 
 _______________________________________________
 kexec mailing list
