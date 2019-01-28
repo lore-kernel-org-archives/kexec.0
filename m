@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it1-f196.google.com ([209.85.166.196])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1go5bG-0002i1-UR
- for kexec@lists.infradead.org; Mon, 28 Jan 2019 12:01:16 +0000
-Received: by mail-it1-f196.google.com with SMTP id h193so18912648ita.5
- for <kexec@lists.infradead.org>; Mon, 28 Jan 2019 04:01:13 -0800 (PST)
+Received: from mail-sn1nam02on0622.outbound.protection.outlook.com
+ ([2a01:111:f400:fe44::622]
+ helo=NAM02-SN1-obe.outbound.protection.outlook.com)
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1go7pw-0007cZ-QH
+ for kexec@lists.infradead.org; Mon, 28 Jan 2019 14:24:34 +0000
+From: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH v2] Remove the memory encryption mask to obtain the true
+ physical address
+Date: Mon, 28 Jan 2019 14:24:26 +0000
+Message-ID: <e05d77ac-e12d-b06d-7564-9e0e9991ed1b@amd.com>
+References: <20190128054643.31572-1-lijiang@redhat.com>
+In-Reply-To: <20190128054643.31572-1-lijiang@redhat.com>
+Content-Language: en-US
+Content-ID: <A77C91794BA6DE46AB0249514C82D6C2@namprd12.prod.outlook.com>
 MIME-Version: 1.0
-References: <20181205092101.22205-1-kasong@redhat.com>
- <CACPcB9fOA6Adkeg6jCG_ue1qC2v1cVdmcgEO3AmBno-TyhSLUg@mail.gmail.com>
- <20190128105326.ijcksy6mjrbkeb6r@verge.net.au>
-In-Reply-To: <20190128105326.ijcksy6mjrbkeb6r@verge.net.au>
-From: Kairui Song <kasong@redhat.com>
-Date: Mon, 28 Jan 2019 20:01:01 +0800
-Message-ID: <CACPcB9dT-5aVX-RNLr8o-EPdQHGeGQtLVSVy15e6kHtfZdGajQ@mail.gmail.com>
-Subject: Re: [PATCH v2] x86: Handle 64bit framebuffer memory address properly
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,105 +27,219 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
+To: Lianbo Jiang <lijiang@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "k-hagio@ab.jp.nec.com" <k-hagio@ab.jp.nec.com>, "anderson@redhat.com" <anderson@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>
 
-On Mon, Jan 28, 2019 at 6:53 PM Simon Horman <horms@verge.net.au> wrote:
->
-> On Tue, Jan 22, 2019 at 10:25:42AM +0800, Kairui Song wrote:
-> > On Wed, Dec 5, 2018 at 5:22 PM Kairui Song <kasong@redhat.com> wrote:
-> > >
-> > > In a EFI system, the frame buffer address is 64bit, so currently
-> > > if the address is beyound 4G, kexec will set wrong address due to
-> > > truncate.
-> > >
-> > > Linux kernel commit ae2ee627dc87 ('efifb: Add support for 64-bit
-> > > frame buffer addresses') added support for 64bit frame buffer
-> > > address, an 'ext_lfb_base' field is added as the upper 32-bits of
-> > > the frame buffer, and introduced a new capability flag
-> > > 'VIDEO_TYPE_CAPABILITY_64BIT_BASE' to indicate if the extend field is
-> > > used.
-> > >
-> > > This patch adopts this change, set proper extent address and capability
-> > > flag when the address is beyound 4G.
-> > >
-> > > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > > ---
-> > > Update from V1:
-> > > - Use 0xffffffffUL instead of 0xffffffff for comparing and bit operation
-> > >   with smem_start to make it cleaner and safer, as smem_start is an
-> > >   unsigned long.
-> > >
-> > >  include/x86/x86-linux.h           | 7 +++++--
-> > >  kexec/arch/i386/x86-linux-setup.c | 7 ++++++-
-> > >  2 files changed, 11 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
-> > > index 7834751..352ea02 100644
-> > > --- a/include/x86/x86-linux.h
-> > > +++ b/include/x86/x86-linux.h
-> > > @@ -107,7 +107,10 @@ struct x86_linux_param_header {
-> > >         uint16_t vesapm_seg;                    /* 0x2e */
-> > >         uint16_t vesapm_off;                    /* 0x30 */
-> > >         uint16_t pages;                         /* 0x32 */
-> > > -       uint8_t  reserved4[12];                 /* 0x34 -- 0x3f reserved for future expansion */
-> > > +       uint16_t vesa_attributes;               /* 0x34 */
-> > > +       uint32_t capabilities;                  /* 0x36 */
-> > > +       uint32_t ext_lfb_base;                  /* 0x3a */
-> > > +       uint8_t  reserved4[2];                  /* 0x3e -- 0x3f reserved for future expansion */
-> > >
-> > >         struct apm_bios_info apm_bios_info;     /* 0x40 */
-> > >         struct drive_info_struct drive_info;    /* 0x80 */
-> > > @@ -199,7 +202,7 @@ struct x86_linux_param_header {
-> > >         struct  edd_info eddbuf[EDDMAXNR];      /* 0xd00 */
-> > >                                                 /* 0xeec */
-> > >  #define COMMAND_LINE_SIZE 2048
-> > > -};
-> > > +} __attribute__((packed));
-> > >
-> > >  struct x86_linux_faked_param_header {
-> > >         struct x86_linux_param_header hdr;      /* 0x00 */
-> > > diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-> > > index 6cda12c..1bd408b 100644
-> > > --- a/kexec/arch/i386/x86-linux-setup.c
-> > > +++ b/kexec/arch/i386/x86-linux-setup.c
-> > > @@ -158,10 +158,15 @@ static int setup_linux_vesafb(struct x86_linux_param_header *real_mode)
-> > >         real_mode->lfb_width      = var.xres;
-> > >         real_mode->lfb_height     = var.yres;
-> > >         real_mode->lfb_depth      = var.bits_per_pixel;
-> > > -       real_mode->lfb_base       = fix.smem_start;
-> > > +       real_mode->lfb_base       = fix.smem_start & 0xffffffffUL;
-> > >         real_mode->lfb_linelength = fix.line_length;
-> > >         real_mode->vesapm_seg     = 0;
-> > >
-> > > +       if (fix.smem_start > 0xffffffffUL) {
-> > > +               real_mode->ext_lfb_base = fix.smem_start >> 32;
-> > > +               real_mode->capabilities |= VIDEO_CAPABILITY_64BIT_BASE;
-> > > +       }
-> > > +
-> > >         /* FIXME: better get size from the file returned by proc_iomem() */
-> > >         real_mode->lfb_size       = (fix.smem_len + 65535) / 65536;
-> > >         real_mode->pages          = (fix.smem_len + 4095) / 4096;
-> > > --
-> > > 2.19.1
-> > >
-> >
-> > Hi Simon,
-> >
-> > Could you please have a look of this patch? Thanks
->
-> Sorry, for the delay.
-> This got stuck in my TODO list for way to long.
->
-> This patch looks good to me and I have applied it for
-> inclusion in the next release of kexec-tools.
+On 1/27/19 11:46 PM, Lianbo Jiang wrote:
+> For AMD machine with SME feature, if SME is enabled in the first
+> kernel, the crashed kernel's page table(pgd/pud/pmd/pte) contains
+> the memory encryption mask, so makedumpfile needs to remove the
+> memory encryption mask to obtain the true physical address.
+> 
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> ---
+> Changes since v1:
+> 1. Merge them into a patch.
+> 2. The sme_mask is not an enum number, remove it.
+> 3. Sanity check whether the sme_mask is in vmcoreinfo.
+> 4. Deal with the huge pages case.
+> 5. Cover the 5-level path.
+> 
+>  arch/x86_64.c  | 30 +++++++++++++++++-------------
+>  makedumpfile.c |  4 ++++
+>  makedumpfile.h |  1 +
+>  3 files changed, 22 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/x86_64.c b/arch/x86_64.c
+> index 537fb78..7b3ed10 100644
+> --- a/arch/x86_64.c
+> +++ b/arch/x86_64.c
+> @@ -291,6 +291,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  	unsigned long page_dir, pgd, pud_paddr, pud_pte, pmd_paddr, pmd_pte;
+>  	unsigned long pte_paddr, pte;
+>  	unsigned long p4d_paddr, p4d_pte;
+> +	unsigned long sme_me_mask = ~0UL;
+>  
+>  	/*
+>  	 * Get PGD.
+> @@ -302,6 +303,9 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  			return NOT_PADDR;
+>  	}
+>  
+> +	if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
+> +		sme_me_mask = ~(NUMBER(sme_mask));
 
-No worry, thanks for the merge.
+This is a bit confusing since this isn't the sme_me_mask any more, but the
+complement. Might want to somehow rename this so that it doesn't cause any
+confusion.
 
---
-Best Regards,
-Kairui Song
+> +
+>  	if (check_5level_paging()) {
+>  		page_dir += pgd5_index(vaddr) * sizeof(unsigned long);
+>  		if (!readmem(PADDR, page_dir, &pgd, sizeof pgd)) {
+> @@ -309,7 +313,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  			return NOT_PADDR;
+>  		}
+>  		if (info->vaddr_for_vtop == vaddr)
+> -			MSG("  PGD : %16lx => %16lx\n", page_dir, pgd);
+> +			MSG("  PGD : %16lx => %16lx\n", page_dir, (pgd & sme_me_mask));
 
+No need to remove the mask here.  You're just printing out the value of
+the entry. It might be nice to know whether the encryption bit is set or
+not - after all, ENTRY_MASK is still part of this value.
+
+>  
+>  		if (!(pgd & _PAGE_PRESENT)) {
+>  			ERRMSG("Can't get a valid pgd.\n");
+> @@ -318,20 +322,20 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  		/*
+>  		 * Get P4D.
+>  		 */
+> -		p4d_paddr  = pgd & ENTRY_MASK;
+> +		p4d_paddr  = pgd & ENTRY_MASK & sme_me_mask;
+
+This goes back to my original comment that you should just make a local
+variable that is "ENTRY_MASK & ~(NUMBER(sme_mask))" since you are
+performing this ANDing everywhere ENTRY_MASK is used - except then you
+miss the one at the very end of this routine on the return statement.
+
+>  		p4d_paddr += p4d_index(vaddr) * sizeof(unsigned long);
+>  		if (!readmem(PADDR, p4d_paddr, &p4d_pte, sizeof p4d_pte)) {
+>  			ERRMSG("Can't get p4d_pte (p4d_paddr:%lx).\n", p4d_paddr);
+>  			return NOT_PADDR;
+>  		}
+>  		if (info->vaddr_for_vtop == vaddr)
+> -			MSG("  P4D : %16lx => %16lx\n", p4d_paddr, p4d_pte);
+> +			MSG("  P4D : %16lx => %16lx\n", p4d_paddr, (p4d_pte & sme_me_mask));
+>  
+>  		if (!(p4d_pte & _PAGE_PRESENT)) {
+>  			ERRMSG("Can't get a valid p4d_pte.\n");
+>  			return NOT_PADDR;
+>  		}
+> -		pud_paddr  = p4d_pte & ENTRY_MASK;
+> +		pud_paddr  = p4d_pte & ENTRY_MASK & sme_me_mask;
+>  	}else {
+>  		page_dir += pgd_index(vaddr) * sizeof(unsigned long);
+>  		if (!readmem(PADDR, page_dir, &pgd, sizeof pgd)) {
+> @@ -339,13 +343,13 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  			return NOT_PADDR;
+>  		}
+>  		if (info->vaddr_for_vtop == vaddr)
+> -			MSG("  PGD : %16lx => %16lx\n", page_dir, pgd);
+> +			MSG("  PGD : %16lx => %16lx\n", page_dir, (pgd & sme_me_mask));
+>  
+>  		if (!(pgd & _PAGE_PRESENT)) {
+>  			ERRMSG("Can't get a valid pgd.\n");
+>  			return NOT_PADDR;
+>  		}
+> -		pud_paddr  = pgd & ENTRY_MASK;
+> +		pud_paddr  = pgd & ENTRY_MASK & sme_me_mask;
+>  	}
+>  
+>  	/*
+> @@ -357,47 +361,47 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  		return NOT_PADDR;
+>  	}
+>  	if (info->vaddr_for_vtop == vaddr)
+> -		MSG("  PUD : %16lx => %16lx\n", pud_paddr, pud_pte);
+> +		MSG("  PUD : %16lx => %16lx\n", pud_paddr, (pud_pte & sme_me_mask));
+>  
+>  	if (!(pud_pte & _PAGE_PRESENT)) {
+>  		ERRMSG("Can't get a valid pud_pte.\n");
+>  		return NOT_PADDR;
+>  	}
+>  	if (pud_pte & _PAGE_PSE)	/* 1GB pages */
+> -		return (pud_pte & ENTRY_MASK & PUD_MASK) +
+> +		return (pud_pte & ENTRY_MASK & PUD_MASK & sme_me_mask) +
+>  			(vaddr & ~PUD_MASK);
+>  
+>  	/*
+>  	 * Get PMD.
+>  	 */
+> -	pmd_paddr  = pud_pte & ENTRY_MASK;
+> +	pmd_paddr  = pud_pte & ENTRY_MASK & sme_me_mask;
+>  	pmd_paddr += pmd_index(vaddr) * sizeof(unsigned long);
+>  	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof pmd_pte)) {
+>  		ERRMSG("Can't get pmd_pte (pmd_paddr:%lx).\n", pmd_paddr);
+>  		return NOT_PADDR;
+>  	}
+>  	if (info->vaddr_for_vtop == vaddr)
+> -		MSG("  PMD : %16lx => %16lx\n", pmd_paddr, pmd_pte);
+> +		MSG("  PMD : %16lx => %16lx\n", pmd_paddr, (pmd_pte & sme_me_mask));
+>  
+>  	if (!(pmd_pte & _PAGE_PRESENT)) {
+>  		ERRMSG("Can't get a valid pmd_pte.\n");
+>  		return NOT_PADDR;
+>  	}
+>  	if (pmd_pte & _PAGE_PSE)	/* 2MB pages */
+> -		return (pmd_pte & ENTRY_MASK & PMD_MASK) +
+> +		return (pmd_pte & ENTRY_MASK & PMD_MASK & sme_me_mask) +
+>  			(vaddr & ~PMD_MASK);
+>  
+>  	/*
+>  	 * Get PTE.
+>  	 */
+> -	pte_paddr  = pmd_pte & ENTRY_MASK;
+> +	pte_paddr  = pmd_pte & ENTRY_MASK & sme_me_mask;
+>  	pte_paddr += pte_index(vaddr) * sizeof(unsigned long);
+>  	if (!readmem(PADDR, pte_paddr, &pte, sizeof pte)) {
+>  		ERRMSG("Can't get pte (pte_paddr:%lx).\n", pte_paddr);
+>  		return NOT_PADDR;
+>  	}
+>  	if (info->vaddr_for_vtop == vaddr)
+> -		MSG("  PTE : %16lx => %16lx\n", pte_paddr, pte);
+> +		MSG("  PTE : %16lx => %16lx\n", pte_paddr, (pte & sme_me_mask));
+>  
+>  	if (!(pte & _PAGE_PRESENT)) {
+>  		ERRMSG("Can't get a valid pte.\n");
+
+Just after here is where I think an "& sme_me_mask" is missing...
+
+Thanks,
+Tom
+
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 8923538..2237eb8 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -977,6 +977,8 @@ next_page:
+>  	read_size = MIN(info->page_size - PAGEOFFSET(paddr), size);
+>  
+>  	pgaddr = PAGEBASE(paddr);
+> +	if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
+> +		pgaddr = pgaddr & ~(NUMBER(sme_mask));
+>  	pgbuf = cache_search(pgaddr, read_size);
+>  	if (!pgbuf) {
+>  		++cache_miss;
+> @@ -2276,6 +2278,7 @@ write_vmcoreinfo_data(void)
+>  	WRITE_NUMBER("NR_FREE_PAGES", NR_FREE_PAGES);
+>  	WRITE_NUMBER("N_ONLINE", N_ONLINE);
+>  	WRITE_NUMBER("pgtable_l5_enabled", pgtable_l5_enabled);
+> +	WRITE_NUMBER("sme_mask", sme_mask);
+>  
+>  	WRITE_NUMBER("PG_lru", PG_lru);
+>  	WRITE_NUMBER("PG_private", PG_private);
+> @@ -2672,6 +2675,7 @@ read_vmcoreinfo(void)
+>  	READ_NUMBER("NR_FREE_PAGES", NR_FREE_PAGES);
+>  	READ_NUMBER("N_ONLINE", N_ONLINE);
+>  	READ_NUMBER("pgtable_l5_enabled", pgtable_l5_enabled);
+> +	READ_NUMBER("sme_mask", sme_mask);
+>  
+>  	READ_NUMBER("PG_lru", PG_lru);
+>  	READ_NUMBER("PG_private", PG_private);
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 73813ed..e97b2e7 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -1912,6 +1912,7 @@ struct number_table {
+>  	long	NR_FREE_PAGES;
+>  	long	N_ONLINE;
+>  	long	pgtable_l5_enabled;
+> +	long	sme_mask;
+>  
+>  	/*
+>   	* Page flags
+> 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
