@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1go4Rf-0005Tk-SA
- for kexec@lists.infradead.org; Mon, 28 Jan 2019 10:47:17 +0000
-Date: Mon, 28 Jan 2019 11:47:09 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: multiboot patches from august 2018
-Message-ID: <20190128104709.5hxxnefc7qyds37g@verge.net.au>
-References: <CB55040D1319D7C211643E10251F5C69@felloff.net>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1go4VN-000701-Bo
+ for kexec@lists.infradead.org; Mon, 28 Jan 2019 10:51:06 +0000
+From: Kairui Song <kasong@redhat.com>
+Subject: [PATCH] makedumpfile: honor the CFLAGS from environment variables
+Date: Mon, 28 Jan 2019 18:50:45 +0800
+Message-Id: <20190128105045.30565-1-kasong@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CB55040D1319D7C211643E10251F5C69@felloff.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,24 +20,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: cinap_lenrek@felloff.net
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Dave Young <dyoung@redhat.com>, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>
 
-On Mon, Jan 21, 2019 at 08:07:32PM +0100, cinap_lenrek@felloff.net wrote:
-> i'm unsubscribing from this list as i did not get any
-> response about these patches from anyone but horms so far
-> and that was a long time ago.
-> 
-> http://lists.infradead.org/pipermail/kexec/2018-August/021357.html
-> http://lists.infradead.org/pipermail/kexec/2018-August/021358.html
-> http://lists.infradead.org/pipermail/kexec/2018-August/021359.html
-> 
-> if there is any questions please email me directly.
+This make it easier for passing extra cflags, for example hardening
+flags could be passed in with enviroment variable.
 
-Thanks, and sorry for the long delay.
+Signed-off-by: Kairui Song <kasong@redhat.com>
+---
+ Makefile | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-I have applied these patches for inclusion in the next release of
-kexec-tools.
+diff --git a/Makefile b/Makefile
+index 612b9d0..b511a78 100644
+--- a/Makefile
++++ b/Makefile
+@@ -8,11 +8,11 @@ ifeq ($(strip $CC),)
+ CC	= gcc
+ endif
+ 
+-CFLAGS = -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+-	  -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE \
+-	  -DVERSION='"$(VERSION)"' -DRELEASE_DATE='"$(DATE)"'
+-CFLAGS_ARCH	= -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+-		    -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
++CFLAGS_ARCH = $(CFLAGS) -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
++	      -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
++CFLAGS += -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
++	 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE \
++	 -DVERSION='"$(VERSION)"' -DRELEASE_DATE='"$(DATE)"'
+ # LDFLAGS = -L/usr/local/lib -I/usr/local/include
+ 
+ HOST_ARCH := $(shell uname -m)
+-- 
+2.20.1
+
 
 _______________________________________________
 kexec mailing list
