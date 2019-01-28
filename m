@@ -1,23 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gnxOa-0000U8-9a
- for kexec@lists.infradead.org; Mon, 28 Jan 2019 03:15:37 +0000
-Subject: Re: [PATCH 2/2] Remove the memory encryption mask to obtain the true
+ id 1gnzl1-0003OQ-0b
+ for kexec@lists.infradead.org; Mon, 28 Jan 2019 05:46:56 +0000
+From: Lianbo Jiang <lijiang@redhat.com>
+Subject: [PATCH v2] Remove the memory encryption mask to obtain the true
  physical address
-From: lijiang <lijiang@redhat.com>
-References: <20190122080357.23381-1-lijiang@redhat.com>
- <20190122080357.23381-3-lijiang@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03566DC7@BPXM09GP.gisp.nec.co.jp>
- <967a7a30-cead-e016-bd96-47d63181103d@redhat.com>
- <20190125035531.GA19842@dhcp-128-65.nay.redhat.com>
- <58954568-76c4-67c3-12c6-09ab1107f63a@amd.com>
- <5bc7a403-3961-05f4-c796-67870f6ef6e6@redhat.com>
-Message-ID: <5cd1bd3d-2738-cf1c-1f66-955e922663f7@redhat.com>
-Date: Mon, 28 Jan 2019 11:15:26 +0800
-MIME-Version: 1.0
-In-Reply-To: <5bc7a403-3961-05f4-c796-67870f6ef6e6@redhat.com>
-Content-Language: en-US
+Date: Mon, 28 Jan 2019 13:46:43 +0800
+Message-Id: <20190128054643.31572-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,95 +16,205 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>, "dyoung@redhat.com" <dyoung@redhat.com>
-Cc: "anderson@redhat.com" <anderson@redhat.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
+To: kexec@lists.infradead.org
+Cc: dyoung@redhat.com, k-hagio@ab.jp.nec.com, anderson@redhat.com, bhe@redhat.com, Thomas.Lendacky@amd.com
 
-5ZyoIDIwMTnlubQwMeaciDI45pelIDA5OjU1LCBsaWppYW5nIOWGmemBkzoKPiDlnKggMjAxOeW5
-tDAx5pyIMjXml6UgMjI6MzIsIExlbmRhY2t5LCBUaG9tYXMg5YaZ6YGTOgo+PiBPbiAxLzI0LzE5
-IDk6NTUgUE0sIGR5b3VuZ0ByZWRoYXQuY29tIHdyb3RlOgo+Pj4gKyBUb20KPj4+IE9uIDAxLzI1
-LzE5IGF0IDExOjA2YW0sIGxpamlhbmcgd3JvdGU6Cj4+Pj4g5ZyoIDIwMTnlubQwMeaciDI05pel
-IDA2OjE2LCBLYXp1aGl0byBIYWdpbyDlhpnpgZM6Cj4+Pj4+IE9uIDEvMjIvMjAxOSAzOjAzIEFN
-LCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4+Pj4+PiBGb3IgQU1EIG1hY2hpbmUgd2l0aCBTTUUgZmVh
-dHVyZSwgaWYgU01FIGlzIGVuYWJsZWQgaW4gdGhlIGZpcnN0Cj4+Pj4+PiBrZXJuZWwsIHRoZSBj
-cmFzaGVkIGtlcm5lbCdzIHBhZ2UgdGFibGUocGdkL3B1ZC9wbWQvcHRlKSBjb250YWlucwo+Pj4+
-Pj4gdGhlIG1lbW9yeSBlbmNyeXB0aW9uIG1hc2ssIHNvIG1ha2VkdW1wZmlsZSBuZWVkcyB0byBy
-ZW1vdmUgdGhlCj4+Pj4+PiBtZW1vcnkgZW5jcnlwdGlvbiBtYXNrIHRvIG9idGFpbiB0aGUgdHJ1
-ZSBwaHlzaWNhbCBhZGRyZXNzLgo+Pj4+Pj4KPj4+Pj4+IFNpZ25lZC1vZmYtYnk6IExpYW5ibyBK
-aWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+Pj4+Pj4gLS0tCj4+Pj4+PiAgYXJjaC94ODZfNjQu
-YyAgfCAzICsrKwo+Pj4+Pj4gIG1ha2VkdW1wZmlsZS5jIHwgMSArCj4+Pj4+PiAgMiBmaWxlcyBj
-aGFuZ2VkLCA0IGluc2VydGlvbnMoKykKPj4+Pj4+Cj4+Pj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC94
-ODZfNjQuYyBiL2FyY2gveDg2XzY0LmMKPj4+Pj4+IGluZGV4IDUzN2ZiNzguLjc2NTFkMzYgMTAw
-NjQ0Cj4+Pj4+PiAtLS0gYS9hcmNoL3g4Nl82NC5jCj4+Pj4+PiArKysgYi9hcmNoL3g4Nl82NC5j
-Cj4+Pj4+PiBAQCAtMzQ2LDYgKzM0Niw3IEBAIF9fdnRvcDRfeDg2XzY0KHVuc2lnbmVkIGxvbmcg
-dmFkZHIsIHVuc2lnbmVkIGxvbmcgcGFnZXRhYmxlKQo+Pj4+Pj4gIAkJCXJldHVybiBOT1RfUEFE
-RFI7Cj4+Pj4+PiAgCQl9Cj4+Pj4+PiAgCQlwdWRfcGFkZHIgID0gcGdkICYgRU5UUllfTUFTSzsK
-Pj4+Pj4+ICsJCXB1ZF9wYWRkciA9IHB1ZF9wYWRkciAmIH4oTlVNQkVSKHNtZV9tYXNrKSk7Cj4+
-Pj4+PiAgCX0KPj4+Pj4+Cj4+Pj4+PiAgCS8qCj4+Pj4+PiBAQCAtMzcxLDYgKzM3Miw3IEBAIF9f
-dnRvcDRfeDg2XzY0KHVuc2lnbmVkIGxvbmcgdmFkZHIsIHVuc2lnbmVkIGxvbmcgcGFnZXRhYmxl
-KQo+Pj4+Pj4gIAkgKiBHZXQgUE1ELgo+Pj4+Pj4gIAkgKi8KPj4+Pj4+ICAJcG1kX3BhZGRyICA9
-IHB1ZF9wdGUgJiBFTlRSWV9NQVNLOwo+Pj4+Pj4gKwlwbWRfcGFkZHIgPSBwbWRfcGFkZHIgJiB+
-KE5VTUJFUihzbWVfbWFzaykpOwo+Pj4+Pj4gIAlwbWRfcGFkZHIgKz0gcG1kX2luZGV4KHZhZGRy
-KSAqIHNpemVvZih1bnNpZ25lZCBsb25nKTsKPj4+Pj4+ICAJaWYgKCFyZWFkbWVtKFBBRERSLCBw
-bWRfcGFkZHIsICZwbWRfcHRlLCBzaXplb2YgcG1kX3B0ZSkpIHsKPj4+Pj4+ICAJCUVSUk1TRygi
-Q2FuJ3QgZ2V0IHBtZF9wdGUgKHBtZF9wYWRkcjolbHgpLlxuIiwgcG1kX3BhZGRyKTsKPj4+Pj4+
-IEBAIC0zOTEsNiArMzkzLDcgQEAgX192dG9wNF94ODZfNjQodW5zaWduZWQgbG9uZyB2YWRkciwg
-dW5zaWduZWQgbG9uZyBwYWdldGFibGUpCj4+Pj4+PiAgCSAqIEdldCBQVEUuCj4+Pj4+PiAgCSAq
-Lwo+Pj4+Pj4gIAlwdGVfcGFkZHIgID0gcG1kX3B0ZSAmIEVOVFJZX01BU0s7Cj4+Pj4+PiArCXB0
-ZV9wYWRkciA9IHB0ZV9wYWRkciAmIH4oTlVNQkVSKHNtZV9tYXNrKSk7Cj4+Pj4+PiAgCXB0ZV9w
-YWRkciArPSBwdGVfaW5kZXgodmFkZHIpICogc2l6ZW9mKHVuc2lnbmVkIGxvbmcpOwo+Pj4+Pj4g
-IAlpZiAoIXJlYWRtZW0oUEFERFIsIHB0ZV9wYWRkciwgJnB0ZSwgc2l6ZW9mIHB0ZSkpIHsKPj4+
-Pj4+ICAJCUVSUk1TRygiQ2FuJ3QgZ2V0IHB0ZSAocHRlX3BhZGRyOiVseCkuXG4iLCBwdGVfcGFk
-ZHIpOwo+Pj4+Pj4gZGlmZiAtLWdpdCBhL21ha2VkdW1wZmlsZS5jIGIvbWFrZWR1bXBmaWxlLmMK
-Pj4+Pj4+IGluZGV4IGEwM2FhYTEuLjgxYzdiYjQgMTAwNjQ0Cj4+Pj4+PiAtLS0gYS9tYWtlZHVt
-cGZpbGUuYwo+Pj4+Pj4gKysrIGIvbWFrZWR1bXBmaWxlLmMKPj4+Pj4+IEBAIC05NzcsNiArOTc3
-LDcgQEAgbmV4dF9wYWdlOgo+Pj4+Pj4gIAlyZWFkX3NpemUgPSBNSU4oaW5mby0+cGFnZV9zaXpl
-IC0gUEFHRU9GRlNFVChwYWRkciksIHNpemUpOwo+Pj4+Pj4KPj4+Pj4+ICAJcGdhZGRyID0gUEFH
-RUJBU0UocGFkZHIpOwo+Pj4+Pj4gKwlwZ2FkZHIgPSBwZ2FkZHIgJiB+KE5VTUJFUihzbWVfbWFz
-aykpOwo+Pj4+Pgo+Pj4+PiBTaW5jZSBOVU1CRVIoc21lX21hc2spIGlzIGluaXRpYWxpemVkIHdp
-dGggLTEgKE5PVF9GT1VORF9OVU1CRVIpLAo+Pj4+PiBpZiB0aGUgc21lX21hc2sgaXMgbm90IGlu
-IHZtY29yZWluZm8sIH4oTlVNQkVSKHNtZV9tYXNrKSkgd2lsbCBiZSAwLgo+Pj4+PiBTbyB0aGUg
-Zm91ciBsaW5lcyBhZGRlZCBhYm92ZSBuZWVkCj4+Pj4+Cj4+Pj4+ICAgaWYgKE5VTUJFUihzbWVf
-bWFzaykgIT0gTk9UX0ZPVU5EX05VTUJFUikKPj4+Pj4gICAgIC4uLgo+Pj4+Pgo+Pj4+Cj4+Pj4g
-VGhhbmsgeW91IHZlcnkgbXVjaCBmb3IgcG9pbnRpbmcgb3V0IG15IG1pc3Rha2UuCj4+Pj4KPj4+
-PiBJIHdpbGwgaW1wcm92ZSBpdCBhbmQgcG9zdCBhZ2Fpbi4KPj4KPj4gTWlnaHQgYmUgd29ydGgg
-Y3JlYXRpbmcgYSBsb2NhbCB2YXJpYWJsZSB0aGF0IGluY2x1ZGVzIEVOVFJZX01BU0sgYW5kCj4+
-IE5VTUJFUihzbWVfbWFzaykgc28gdGhhdCB5b3UgbWFrZSB0aGUgY2hlY2sganVzdCBvbmNlLiBU
-aGVuIHVzZSB0aGF0Cj4+IHZhcmlhYmxlIGluIHBsYWNlIG9mIEVOVFJZX01BU0sgaW4gdGhlIHJl
-bWFpbmRlciBvZiB0aGUgZnVuY3Rpb24gc28KPj4gdGhhdCB0aGUgY29ycmVjdCB2YWx1ZSBpcyB1
-c2VkIHRocm91Z2hvdXQuCj4+CgpPay4KCj4+IFRoaXMgd291bGQgYWxzbyBjb3ZlciB0aGUgNS1s
-ZXZlbCBwYXRoIHdoaWNoIHdvdWxkIG1ha2UgdGhpcyBmdXR1cmUKPj4gcHJvb2Ygc2hvdWxkIEFN
-RCBzb21lZGF5IHN1cHBvcnQgNS1sZXZlbCBwYWdpbmcuCj4+Cj4gCj4gVGhhbmsgeW91LCBUb20u
-IE1ha2VkdW1wZmlsZSB3aWxsIGNvdmVyIHRoZSA1LWxldmVsIHBhdGggaW4gbmV4dCBwb3N0LAo+
-IHRob3VnaCBBTUQgZG9lcyBub3Qgc3VwcG9ydCA1LWxldmVsIHBhZ2luZyB5ZXQuCj4gCgpJIG1l
-YW4gdGhhdCBpIHdpbGwgaW1wcm92ZSB0aGlzIHBhdGNoIGFuZCBjb3ZlciB0aGUgNS1sZXZlbCBw
-YXRoIGluIHBhdGNoIHYyLgoKVGhhbmtzLgoKPiBUaGFua3MuCj4gTGlhbmJvCj4gCj4+Pj4KPj4+
-Pj4gYW5kLCB3aGF0IEknbSB3b25kZXJpbmcgaXMgd2hldGhlciBpdCBkb2Vzbid0IG5lZWQgdG8g
-dGFrZSBodWdlcGFnZXMKPj4+Pj4gaW50byBhY2NvdW50IHN1Y2ggYXMgdGhpcwo+Pj4+Pgo+Pj4+
-PiAzOTIgICAgICAgICBpZiAocG1kX3B0ZSAmIF9QQUdFX1BTRSkgICAgICAgIC8qIDJNQiBwYWdl
-cyAqLwo+Pj4+PiAzOTMgICAgICAgICAgICAgICAgIHJldHVybiAocG1kX3B0ZSAmIEVOVFJZX01B
-U0sgJiBQTURfTUFTSykgKwo+Pj4+PiAzOTQgICAgICAgICAgICAgICAgICAgICAgICAgKHZhZGRy
-ICYgflBNRF9NQVNLKTsKPj4+Pj4gImFyY2gveDg2XzY0LmMiCj4+Pj4+Cj4+Pj4KPj4+PiBUaGlz
-IGlzIGEgZ29vZCBxdWVzdGlvbi4gVGhlb3JldGljYWxseSwgaXQgc2hvdWxkIGJlIG1vZGlmaWVk
-IGFjY29yZGluZ2x5IGZvcgo+Pj4+IGh1Z2UgcGFnZXMgY2FzZS4KPj4KPj4gWWVzLCB0aGlzIHNo
-b3VsZCBhbHNvIGhhdmUgdGhlIH4oTlVNQkVSKHNtZV9tYXNrKSkgYXBwbGllZCB0byBpdC4gWW91
-Cj4+IGNhbiBwcm9iYWJseSBhZGQgc29tZSBkZWJ1Z2dpbmcgdG8gc2VlIGlmIHlvdSdyZSBoaXR0
-aW5nIHRoaXMgY2FzZSBhbmQKPj4gd2hldGhlciB0aGUgZW5jcnlwdGlvbiBiaXQgKHNtZV9tYXNr
-KSBpcyBzZXQganVzdCB0byBoZWxwIHVuZGVyc3RhbmQgd2hhdAo+PiBpcyBvY2N1cnJpbmcuIFRo
-aXMgYWxzbyBnb2VzIGZvciB0aGUgMUdCIHBhZ2UgY2hlY2sgYWJvdmUuICBIb3dldmVyLCBpZgo+
-PiB5b3UgdXNlIG15IHN1Z2dlc3Rpb24gb2YgYSBsb2NhbCB2YXJpYWJsZSB0aGVuIHlvdSBzaG91
-bGQgYmUgY292ZXJlZC4KPj4KClRoYW5rIHlvdSwgVG9tLgoKSSB3aWxsIG1vZGlmeSB0aGlzIHBh
-dGNoIGFuZCBjb3ZlciB0aGUgaHVnZSBwYWdlcyBjYXNlIGluIHBhdGNoIHYyLiAKClRoYW5rcy4K
-TGlhbmJvCgo+PiBUaGFua3MsCj4+IFRvbQo+Pgo+Pj4+Cj4+Pj4gQnV0IG1ha2VkdW1wZmlsZSBz
-dGlsbCB3b3JrcyB3ZWxsIHdpdGhvdXQgdGhpcyBjaGFuZ2UuIEFuZCBpJ20gc3VyZSB0aGF0IHRo
-ZQo+Pj4+IGh1Z2UgcGFnZXMgYXJlIGVuYWJsZWQgaW4gY3Jhc2hlZCBrZXJuZWwuIFRoaXMgaXMg
-dmVyeSBzdHJhbmdlLgo+Pj4+Cj4+Pj4gVGhhbmtzLgo+Pj4+IExpYW5ibwo+Pj4+Cj4+Pj4+IFRo
-YW5rcywKPj4+Pj4gS2F6dQo+Pj4+Pgo+Pj4+Pgo+Pj4+Pj4gIAlwZ2J1ZiA9IGNhY2hlX3NlYXJj
-aChwZ2FkZHIsIHJlYWRfc2l6ZSk7Cj4+Pj4+PiAgCWlmICghcGdidWYpIHsKPj4+Pj4+ICAJCSsr
-Y2FjaGVfbWlzczsKPj4+Pj4+IC0tCj4+Pj4+PiAyLjE3LjEKPj4+Pj4+Cj4+Pj4+Cj4+Pj4+Cgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
-aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+For AMD machine with SME feature, if SME is enabled in the first
+kernel, the crashed kernel's page table(pgd/pud/pmd/pte) contains
+the memory encryption mask, so makedumpfile needs to remove the
+memory encryption mask to obtain the true physical address.
+
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+---
+Changes since v1:
+1. Merge them into a patch.
+2. The sme_mask is not an enum number, remove it.
+3. Sanity check whether the sme_mask is in vmcoreinfo.
+4. Deal with the huge pages case.
+5. Cover the 5-level path.
+
+ arch/x86_64.c  | 30 +++++++++++++++++-------------
+ makedumpfile.c |  4 ++++
+ makedumpfile.h |  1 +
+ 3 files changed, 22 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86_64.c b/arch/x86_64.c
+index 537fb78..7b3ed10 100644
+--- a/arch/x86_64.c
++++ b/arch/x86_64.c
+@@ -291,6 +291,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+ 	unsigned long page_dir, pgd, pud_paddr, pud_pte, pmd_paddr, pmd_pte;
+ 	unsigned long pte_paddr, pte;
+ 	unsigned long p4d_paddr, p4d_pte;
++	unsigned long sme_me_mask = ~0UL;
+ 
+ 	/*
+ 	 * Get PGD.
+@@ -302,6 +303,9 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+ 			return NOT_PADDR;
+ 	}
+ 
++	if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
++		sme_me_mask = ~(NUMBER(sme_mask));
++
+ 	if (check_5level_paging()) {
+ 		page_dir += pgd5_index(vaddr) * sizeof(unsigned long);
+ 		if (!readmem(PADDR, page_dir, &pgd, sizeof pgd)) {
+@@ -309,7 +313,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+ 			return NOT_PADDR;
+ 		}
+ 		if (info->vaddr_for_vtop == vaddr)
+-			MSG("  PGD : %16lx => %16lx\n", page_dir, pgd);
++			MSG("  PGD : %16lx => %16lx\n", page_dir, (pgd & sme_me_mask));
+ 
+ 		if (!(pgd & _PAGE_PRESENT)) {
+ 			ERRMSG("Can't get a valid pgd.\n");
+@@ -318,20 +322,20 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+ 		/*
+ 		 * Get P4D.
+ 		 */
+-		p4d_paddr  = pgd & ENTRY_MASK;
++		p4d_paddr  = pgd & ENTRY_MASK & sme_me_mask;
+ 		p4d_paddr += p4d_index(vaddr) * sizeof(unsigned long);
+ 		if (!readmem(PADDR, p4d_paddr, &p4d_pte, sizeof p4d_pte)) {
+ 			ERRMSG("Can't get p4d_pte (p4d_paddr:%lx).\n", p4d_paddr);
+ 			return NOT_PADDR;
+ 		}
+ 		if (info->vaddr_for_vtop == vaddr)
+-			MSG("  P4D : %16lx => %16lx\n", p4d_paddr, p4d_pte);
++			MSG("  P4D : %16lx => %16lx\n", p4d_paddr, (p4d_pte & sme_me_mask));
+ 
+ 		if (!(p4d_pte & _PAGE_PRESENT)) {
+ 			ERRMSG("Can't get a valid p4d_pte.\n");
+ 			return NOT_PADDR;
+ 		}
+-		pud_paddr  = p4d_pte & ENTRY_MASK;
++		pud_paddr  = p4d_pte & ENTRY_MASK & sme_me_mask;
+ 	}else {
+ 		page_dir += pgd_index(vaddr) * sizeof(unsigned long);
+ 		if (!readmem(PADDR, page_dir, &pgd, sizeof pgd)) {
+@@ -339,13 +343,13 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+ 			return NOT_PADDR;
+ 		}
+ 		if (info->vaddr_for_vtop == vaddr)
+-			MSG("  PGD : %16lx => %16lx\n", page_dir, pgd);
++			MSG("  PGD : %16lx => %16lx\n", page_dir, (pgd & sme_me_mask));
+ 
+ 		if (!(pgd & _PAGE_PRESENT)) {
+ 			ERRMSG("Can't get a valid pgd.\n");
+ 			return NOT_PADDR;
+ 		}
+-		pud_paddr  = pgd & ENTRY_MASK;
++		pud_paddr  = pgd & ENTRY_MASK & sme_me_mask;
+ 	}
+ 
+ 	/*
+@@ -357,47 +361,47 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+ 		return NOT_PADDR;
+ 	}
+ 	if (info->vaddr_for_vtop == vaddr)
+-		MSG("  PUD : %16lx => %16lx\n", pud_paddr, pud_pte);
++		MSG("  PUD : %16lx => %16lx\n", pud_paddr, (pud_pte & sme_me_mask));
+ 
+ 	if (!(pud_pte & _PAGE_PRESENT)) {
+ 		ERRMSG("Can't get a valid pud_pte.\n");
+ 		return NOT_PADDR;
+ 	}
+ 	if (pud_pte & _PAGE_PSE)	/* 1GB pages */
+-		return (pud_pte & ENTRY_MASK & PUD_MASK) +
++		return (pud_pte & ENTRY_MASK & PUD_MASK & sme_me_mask) +
+ 			(vaddr & ~PUD_MASK);
+ 
+ 	/*
+ 	 * Get PMD.
+ 	 */
+-	pmd_paddr  = pud_pte & ENTRY_MASK;
++	pmd_paddr  = pud_pte & ENTRY_MASK & sme_me_mask;
+ 	pmd_paddr += pmd_index(vaddr) * sizeof(unsigned long);
+ 	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof pmd_pte)) {
+ 		ERRMSG("Can't get pmd_pte (pmd_paddr:%lx).\n", pmd_paddr);
+ 		return NOT_PADDR;
+ 	}
+ 	if (info->vaddr_for_vtop == vaddr)
+-		MSG("  PMD : %16lx => %16lx\n", pmd_paddr, pmd_pte);
++		MSG("  PMD : %16lx => %16lx\n", pmd_paddr, (pmd_pte & sme_me_mask));
+ 
+ 	if (!(pmd_pte & _PAGE_PRESENT)) {
+ 		ERRMSG("Can't get a valid pmd_pte.\n");
+ 		return NOT_PADDR;
+ 	}
+ 	if (pmd_pte & _PAGE_PSE)	/* 2MB pages */
+-		return (pmd_pte & ENTRY_MASK & PMD_MASK) +
++		return (pmd_pte & ENTRY_MASK & PMD_MASK & sme_me_mask) +
+ 			(vaddr & ~PMD_MASK);
+ 
+ 	/*
+ 	 * Get PTE.
+ 	 */
+-	pte_paddr  = pmd_pte & ENTRY_MASK;
++	pte_paddr  = pmd_pte & ENTRY_MASK & sme_me_mask;
+ 	pte_paddr += pte_index(vaddr) * sizeof(unsigned long);
+ 	if (!readmem(PADDR, pte_paddr, &pte, sizeof pte)) {
+ 		ERRMSG("Can't get pte (pte_paddr:%lx).\n", pte_paddr);
+ 		return NOT_PADDR;
+ 	}
+ 	if (info->vaddr_for_vtop == vaddr)
+-		MSG("  PTE : %16lx => %16lx\n", pte_paddr, pte);
++		MSG("  PTE : %16lx => %16lx\n", pte_paddr, (pte & sme_me_mask));
+ 
+ 	if (!(pte & _PAGE_PRESENT)) {
+ 		ERRMSG("Can't get a valid pte.\n");
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 8923538..2237eb8 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -977,6 +977,8 @@ next_page:
+ 	read_size = MIN(info->page_size - PAGEOFFSET(paddr), size);
+ 
+ 	pgaddr = PAGEBASE(paddr);
++	if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
++		pgaddr = pgaddr & ~(NUMBER(sme_mask));
+ 	pgbuf = cache_search(pgaddr, read_size);
+ 	if (!pgbuf) {
+ 		++cache_miss;
+@@ -2276,6 +2278,7 @@ write_vmcoreinfo_data(void)
+ 	WRITE_NUMBER("NR_FREE_PAGES", NR_FREE_PAGES);
+ 	WRITE_NUMBER("N_ONLINE", N_ONLINE);
+ 	WRITE_NUMBER("pgtable_l5_enabled", pgtable_l5_enabled);
++	WRITE_NUMBER("sme_mask", sme_mask);
+ 
+ 	WRITE_NUMBER("PG_lru", PG_lru);
+ 	WRITE_NUMBER("PG_private", PG_private);
+@@ -2672,6 +2675,7 @@ read_vmcoreinfo(void)
+ 	READ_NUMBER("NR_FREE_PAGES", NR_FREE_PAGES);
+ 	READ_NUMBER("N_ONLINE", N_ONLINE);
+ 	READ_NUMBER("pgtable_l5_enabled", pgtable_l5_enabled);
++	READ_NUMBER("sme_mask", sme_mask);
+ 
+ 	READ_NUMBER("PG_lru", PG_lru);
+ 	READ_NUMBER("PG_private", PG_private);
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 73813ed..e97b2e7 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1912,6 +1912,7 @@ struct number_table {
+ 	long	NR_FREE_PAGES;
+ 	long	N_ONLINE;
+ 	long	pgtable_l5_enabled;
++	long	sme_mask;
+ 
+ 	/*
+  	* Page flags
+-- 
+2.17.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
