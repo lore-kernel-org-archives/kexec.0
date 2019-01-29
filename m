@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from prv1-mh.provo.novell.com ([137.65.248.33])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1goRBz-0002yr-Pd
- for kexec@lists.infradead.org; Tue, 29 Jan 2019 11:04:37 +0000
-Message-Id: <5C50333F020000780014B85A@prv1-mh.provo.novell.com>
-Date: Tue, 29 Jan 2019 04:04:31 -0700
-From: "Jan Beulich" <jbeulich@suse.com>
-Subject: Re: [Xen-devel] [RFC v1 0/8] Prototype for kexec signature
- verification within Xen
-References: <1547495285-28907-1-git-send-email-eric.devolder@oracle.com>
-In-Reply-To: <1547495285-28907-1-git-send-email-eric.devolder@oracle.com>
-Mime-Version: 1.0
-Content-Disposition: inline
+ id 1goUob-0000rN-Aq
+ for kexec@lists.infradead.org; Tue, 29 Jan 2019 14:56:45 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH v2] makedumpfile: honor the CFLAGS from environment
+ variables
+Date: Tue, 29 Jan 2019 14:56:08 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03567572@BPXM09GP.gisp.nec.co.jp>
+References: <20190129031415.11205-1-kasong@redhat.com>
+In-Reply-To: <20190129031415.11205-1-kasong@redhat.com>
+Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,27 +24,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: eric.devolder@oracle.com
-Cc: boris.ostrovsky@oracle.com, kexec@lists.infradead.org, daniel.kiper@oracle.com, xen-devel@lists.xen.org
+To: Kairui Song <kasong@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, Simon Horman <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>
 
->>> Eric DeVolder <eric.devolder@oracle.com> 01/14/19 8:48 PM >>>
->On April 20, 2018, I posted to xen-devel an RFC inquiring about
->support for signature verification of kexec within Xen:
->
->https://lists.xenproject.org/archives/html/xen-devel/2018-04/msg01655.html
->
->Since then, I've worked towards a solution. For the purposes of
->understanding signature verification, I built a standalone utility to
->parse the xen.mb.efi PECOFF file, hash it contents, and extract its
->digitial certificate and perform the Authenticode signature
->verification. Once this was all working, I integrated the files into
->Xen.
+On 1/28/2019 10:14 PM, Kairui Song wrote:
+> This makes it possible to pass in extra cflags, for example, hardening
+> flags could be passed in with environment variable when building a
+> hardened package.
+> 
+> Also introduce a CFLAGS_BASE to hold common CFLAGS, which simplify the
+> CFLAGS definition.
+> 
+> Suggested-by: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> ---
+> Update from V1:
+>   - Use a CFLAGS_BASE to simplify CFLAGS definition
+>   - Use immediate set rather than lazy set to avoid unexpected
+>     flag duplication
+> 
+>  Makefile | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index 612b9d0..bca9984 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -8,11 +8,10 @@ ifeq ($(strip $CC),)
+>  CC	= gcc
+>  endif
+> 
+> -CFLAGS = -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+> -	  -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE \
+> -	  -DVERSION='"$(VERSION)"' -DRELEASE_DATE='"$(DATE)"'
+> -CFLAGS_ARCH	= -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+> -		    -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+> +CFLAGS_BASE := $(CFLAGS) -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+> +                -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+> +CFLAGS      := $(CFLAGS_BASE) -DVERSION='"$(VERSION)"' -DRELEASE_DATE='"$(DATE)"'
+> +CFLAGS_ARCH := $(CFLAGS_BASE)
+>  # LDFLAGS = -L/usr/local/lib -I/usr/local/include
+> 
+>  HOST_ARCH := $(shell uname -m)
+> --
+> 2.20.1
+> 
 
-Perhaps I'm just lacking some context, but neither the mail referenced
-above nor my looking at the Linux code reveal any connection to PE-COFF.
-How's that file format becoming of interest here all of the sudden?
+Thank you Kairui, applied.
 
-Jan
+Kazu
 
 
 
