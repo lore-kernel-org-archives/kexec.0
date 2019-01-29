@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it1-x144.google.com ([2607:f8b0:4864:20::144])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1goMJS-0006a5-8L
- for kexec@lists.infradead.org; Tue, 29 Jan 2019 05:52:09 +0000
-Received: by mail-it1-x144.google.com with SMTP id a6so2285550itl.4
- for <kexec@lists.infradead.org>; Mon, 28 Jan 2019 21:51:57 -0800 (PST)
+ id 1goOcn-0006JP-Np
+ for kexec@lists.infradead.org; Tue, 29 Jan 2019 08:20:07 +0000
+Subject: Re: [PATCH v2] Remove the memory encryption mask to obtain the true
+ physical address
+References: <20190128054643.31572-1-lijiang@redhat.com>
+ <e05d77ac-e12d-b06d-7564-9e0e9991ed1b@amd.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC0356730A@BPXM09GP.gisp.nec.co.jp>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <978e2f8b-4607-50ce-e6ba-4f24b8da94c1@redhat.com>
+Date: Tue, 29 Jan 2019 16:19:52 +0800
 MIME-Version: 1.0
-References: <1548047768-7656-1-git-send-email-kernelfans@gmail.com>
- <20190125103924.GB27998@zn.tnic>
-In-Reply-To: <20190125103924.GB27998@zn.tnic>
-From: Pingfan Liu <kernelfans@gmail.com>
-Date: Tue, 29 Jan 2019 13:51:45 +0800
-Message-ID: <CAFgQCTtrBrt9CEY=3YiVm7ADD+8oh8bYmatu=3vU92K2_C45ww@mail.gmail.com>
-Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
- consistent with kaslr
+In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC0356730A@BPXM09GP.gisp.nec.co.jp>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,174 +22,165 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Yinghai Lu <yinghai@kernel.org>, vgoyal@redhat.com
+To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc: "anderson@redhat.com" <anderson@redhat.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
 
-On Fri, Jan 25, 2019 at 6:39 PM Borislav Petkov <bp@alien8.de> wrote:
->
->
-> >  Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
->
-> s/bugfix, //
->
-OK.
-
-> On Mon, Jan 21, 2019 at 01:16:08PM +0800, Pingfan Liu wrote:
-> > People reported crashkernel=384M reservation failed on a high end server
-> > with KASLR enabled.  In that case there is enough free memory under 896M
-> > but crashkernel reservation still fails intermittently.
-> >
-> > The situation is crashkernel reservation code only finds free region under
-> > 896 MB with 128M aligned in case no ',high' being used.  And KASLR could
-> > break the first 896M into several parts randomly thus the failure happens.
->
-> This reads very strange.
->
-What about   "  It turns out that crashkernel reservation code only
-tries to find a region under 896 MB, aligned on 128M. But KASLR
-randomly breaks big region inside [0,896M] into smaller pieces, not
-big enough as demanded in the "crashkernel=X" parameter."
-
-> > User has no way to predict and make sure crashkernel=xM working unless
-> > he/she use 'crashkernel=xM,high'.  Since 'crashkernel=xM' is the most
-> > common use case this issue is a serious bug.
-> >
-> > And we can't answer questions raised from customer:
-> > 1) why it doesn't succeed to reserve 896 MB;
-> > 2) what's wrong with memory region under 4G;
-> > 3) why I have to add ',high', I only require 384 MB, not 3840 MB.
->
-> Errr, this looks like communication issue. Sounds to me like the text
-> around crashkernel= in
->
-What about dropping this section in commit log and another patch to
-fix the document?
-
-> Documentation/admin-guide/kernel-parameters.txt
->
-> needs improving?
->
-> > This patch tries to get memory region from 896 MB firstly, then [896MB,4G],
->
-> Avoid having "This patch" or "This commit" in the commit message. It is
-> tautologically useless.
->
-OK
-
-> Also, do
->
-> $ git grep 'This patch' Documentation/process
->
-> for more details.
->
-> > finally above 4G.
-> >
-> > Dave Young sent the original post, and I just re-post it with commit log
->
-> If he sent it, he should be the author I guess.
->
-> > improvement as his requirement.
-> > http://lists.infradead.org/pipermail/kexec/2017-October/019571.html
-> > There was an old discussion below (previously posted by Chao Wang):
-> > https://lkml.org/lkml/2013/10/15/601
->
-> All that changelog info doesn't belong in the commit message ...
->
-> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> > Cc: Dave Young <dyoung@redhat.com>
-> > Cc: Baoquan He <bhe@redhat.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> > Cc: yinghai@kernel.org,
-> > Cc: vgoyal@redhat.com
-> > Cc: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Cc: x86@kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
->
-> .... but here.
->
-> > v6 -> v7: commit log improvement
-> >  arch/x86/kernel/setup.c | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> >
-> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > index 3d872a5..fa62c81 100644
-> > --- a/arch/x86/kernel/setup.c
-> > +++ b/arch/x86/kernel/setup.c
-> > @@ -551,6 +551,22 @@ static void __init reserve_crashkernel(void)
-> >                                                   high ? CRASH_ADDR_HIGH_MAX
-> >                                                        : CRASH_ADDR_LOW_MAX,
-> >                                                   crash_size, CRASH_ALIGN);
-> > +#ifdef CONFIG_X86_64
-> > +             /*
-> > +              * crashkernel=X reserve below 896M fails? Try below 4G
-> > +              */
-> > +             if (!high && !crash_base)
-> > +                     crash_base = memblock_find_in_range(CRASH_ALIGN,
-> > +                                             (1ULL << 32),
-> > +                                             crash_size, CRASH_ALIGN);
-> > +             /*
-> > +              * crashkernel=X reserve below 4G fails? Try MAXMEM
-> > +              */
-> > +             if (!high && !crash_base)
-> > +                     crash_base = memblock_find_in_range(CRASH_ALIGN,
-> > +                                             CRASH_ADDR_HIGH_MAX,
-> > +                                             crash_size, CRASH_ALIGN);
-> > +#endif
->
-> Ok, so this is silly: we know at which physical address KASLR allocated
-> the kernel so why aren't we querying that and seeing if there's enough
-> room before it or after it to call memblock_find_in_range() on the
-> bigger range?
->
-Sorry, can not catch up with you. Do you suggestion
-memblock_find_in_range(0, kernel_start) and
-memblock_find_in_range(kernel_end, mem_end)? But the memory is
-truncated into fraction by many component which call
-memblock_reserve(), besides kernel.
-
-For the left question, Dave has follow the discussion in another
-email, will follow there.
-
-Thanks and regards,
-Pingfan
-
-> Also, why is "high" dealt with separately and why isn't the code
-> enforcing "high" if the normal reservation fails?
->
-> The presence of high is requiring from our users to pay attention what
-> to use when the kernel can do all that automatically. Looks like a UI
-> fail to me.
->
-> And look at all the flavors of crashkernel= :
->
->         crashkernel=size[KMG][@offset[KMG]]
->         crashkernel=range1:size1[,range2:size2,...][@offset]
->         crashkernel=size[KMG],high
->         crashkernel=size[KMG],low
->
-> We couldn't do one so we made 4?!?!
->
-> What for?
->
-> Nowhere in that help text does it explain why a user would care about
-> high or low or range or offset or the planets alignment...
->
-> So what's up?
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> Good mailing practices for 400: avoid top-posting and trim the reply.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTnlubQwMeaciDI55pelIDAzOjQ1LCBLYXp1aGl0byBIYWdpbyDlhpnpgZM6Cj4gT24g
+MS8yOC8yMDE5IDk6MjQgQU0sIExlbmRhY2t5LCBUaG9tYXMgd3JvdGU6Cj4+IE9uIDEvMjcvMTkg
+MTE6NDYgUE0sIExpYW5ibyBKaWFuZyB3cm90ZToKPj4+IEZvciBBTUQgbWFjaGluZSB3aXRoIFNN
+RSBmZWF0dXJlLCBpZiBTTUUgaXMgZW5hYmxlZCBpbiB0aGUgZmlyc3QKPj4+IGtlcm5lbCwgdGhl
+IGNyYXNoZWQga2VybmVsJ3MgcGFnZSB0YWJsZShwZ2QvcHVkL3BtZC9wdGUpIGNvbnRhaW5zCj4+
+PiB0aGUgbWVtb3J5IGVuY3J5cHRpb24gbWFzaywgc28gbWFrZWR1bXBmaWxlIG5lZWRzIHRvIHJl
+bW92ZSB0aGUKPj4+IG1lbW9yeSBlbmNyeXB0aW9uIG1hc2sgdG8gb2J0YWluIHRoZSB0cnVlIHBo
+eXNpY2FsIGFkZHJlc3MuCj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogTGlhbmJvIEppYW5nIDxsaWpp
+YW5nQHJlZGhhdC5jb20+Cj4+PiAtLS0KPj4+IENoYW5nZXMgc2luY2UgdjE6Cj4+PiAxLiBNZXJn
+ZSB0aGVtIGludG8gYSBwYXRjaC4KPj4+IDIuIFRoZSBzbWVfbWFzayBpcyBub3QgYW4gZW51bSBu
+dW1iZXIsIHJlbW92ZSBpdC4KPj4+IDMuIFNhbml0eSBjaGVjayB3aGV0aGVyIHRoZSBzbWVfbWFz
+ayBpcyBpbiB2bWNvcmVpbmZvLgo+Pj4gNC4gRGVhbCB3aXRoIHRoZSBodWdlIHBhZ2VzIGNhc2Uu
+Cj4+PiA1LiBDb3ZlciB0aGUgNS1sZXZlbCBwYXRoLgo+Pj4KPj4+ICBhcmNoL3g4Nl82NC5jICB8
+IDMwICsrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLQo+Pj4gIG1ha2VkdW1wZmlsZS5jIHwg
+IDQgKysrKwo+Pj4gIG1ha2VkdW1wZmlsZS5oIHwgIDEgKwo+Pj4gIDMgZmlsZXMgY2hhbmdlZCwg
+MjIgaW5zZXJ0aW9ucygrKSwgMTMgZGVsZXRpb25zKC0pCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2Fy
+Y2gveDg2XzY0LmMgYi9hcmNoL3g4Nl82NC5jCj4+PiBpbmRleCA1MzdmYjc4Li43YjNlZDEwIDEw
+MDY0NAo+Pj4gLS0tIGEvYXJjaC94ODZfNjQuYwo+Pj4gKysrIGIvYXJjaC94ODZfNjQuYwo+Pj4g
+QEAgLTI5MSw2ICsyOTEsNyBAQCBfX3Z0b3A0X3g4Nl82NCh1bnNpZ25lZCBsb25nIHZhZGRyLCB1
+bnNpZ25lZCBsb25nIHBhZ2V0YWJsZSkKPj4+ICAJdW5zaWduZWQgbG9uZyBwYWdlX2RpciwgcGdk
+LCBwdWRfcGFkZHIsIHB1ZF9wdGUsIHBtZF9wYWRkciwgcG1kX3B0ZTsKPj4+ICAJdW5zaWduZWQg
+bG9uZyBwdGVfcGFkZHIsIHB0ZTsKPj4+ICAJdW5zaWduZWQgbG9uZyBwNGRfcGFkZHIsIHA0ZF9w
+dGU7Cj4+PiArCXVuc2lnbmVkIGxvbmcgc21lX21lX21hc2sgPSB+MFVMOwo+Pj4KPj4+ICAJLyoK
+Pj4+ICAJICogR2V0IFBHRC4KPj4+IEBAIC0zMDIsNiArMzAzLDkgQEAgX192dG9wNF94ODZfNjQo
+dW5zaWduZWQgbG9uZyB2YWRkciwgdW5zaWduZWQgbG9uZyBwYWdldGFibGUpCj4+PiAgCQkJcmV0
+dXJuIE5PVF9QQUREUjsKPj4+ICAJfQo+Pj4KPj4+ICsJaWYgKE5VTUJFUihzbWVfbWFzaykgIT0g
+Tk9UX0ZPVU5EX05VTUJFUikKPj4+ICsJCXNtZV9tZV9tYXNrID0gfihOVU1CRVIoc21lX21hc2sp
+KTsKPj4KPj4gVGhpcyBpcyBhIGJpdCBjb25mdXNpbmcgc2luY2UgdGhpcyBpc24ndCB0aGUgc21l
+X21lX21hc2sgYW55IG1vcmUsIGJ1dCB0aGUKPj4gY29tcGxlbWVudC4gTWlnaHQgd2FudCB0byBz
+b21laG93IHJlbmFtZSB0aGlzIHNvIHRoYXQgaXQgZG9lc24ndCBjYXVzZSBhbnkKPj4gY29uZnVz
+aW9uLgo+Pgo+Pj4gKwo+Pj4gIAlpZiAoY2hlY2tfNWxldmVsX3BhZ2luZygpKSB7Cj4+PiAgCQlw
+YWdlX2RpciArPSBwZ2Q1X2luZGV4KHZhZGRyKSAqIHNpemVvZih1bnNpZ25lZCBsb25nKTsKPj4+
+ICAJCWlmICghcmVhZG1lbShQQUREUiwgcGFnZV9kaXIsICZwZ2QsIHNpemVvZiBwZ2QpKSB7Cj4+
+PiBAQCAtMzA5LDcgKzMxMyw3IEBAIF9fdnRvcDRfeDg2XzY0KHVuc2lnbmVkIGxvbmcgdmFkZHIs
+IHVuc2lnbmVkIGxvbmcgcGFnZXRhYmxlKQo+Pj4gIAkJCXJldHVybiBOT1RfUEFERFI7Cj4+PiAg
+CQl9Cj4+PiAgCQlpZiAoaW5mby0+dmFkZHJfZm9yX3Z0b3AgPT0gdmFkZHIpCj4+PiAtCQkJTVNH
+KCIgIFBHRCA6ICUxNmx4ID0+ICUxNmx4XG4iLCBwYWdlX2RpciwgcGdkKTsKPj4+ICsJCQlNU0co
+IiAgUEdEIDogJTE2bHggPT4gJTE2bHhcbiIsIHBhZ2VfZGlyLCAocGdkICYgc21lX21lX21hc2sp
+KTsKPj4KPj4gTm8gbmVlZCB0byByZW1vdmUgdGhlIG1hc2sgaGVyZS4gIFlvdSdyZSBqdXN0IHBy
+aW50aW5nIG91dCB0aGUgdmFsdWUgb2YKPj4gdGhlIGVudHJ5LiBJdCBtaWdodCBiZSBuaWNlIHRv
+IGtub3cgd2hldGhlciB0aGUgZW5jcnlwdGlvbiBiaXQgaXMgc2V0IG9yCj4+IG5vdCAtIGFmdGVy
+IGFsbCwgRU5UUllfTUFTSyBpcyBzdGlsbCBwYXJ0IG9mIHRoaXMgdmFsdWUuCj4gCj4gQWdyZWVk
+Lgo+IAo+Pgo+Pj4KPj4+ICAJCWlmICghKHBnZCAmIF9QQUdFX1BSRVNFTlQpKSB7Cj4+PiAgCQkJ
+RVJSTVNHKCJDYW4ndCBnZXQgYSB2YWxpZCBwZ2QuXG4iKTsKPj4+IEBAIC0zMTgsMjAgKzMyMiwy
+MCBAQCBfX3Z0b3A0X3g4Nl82NCh1bnNpZ25lZCBsb25nIHZhZGRyLCB1bnNpZ25lZCBsb25nIHBh
+Z2V0YWJsZSkKPj4+ICAJCS8qCj4+PiAgCQkgKiBHZXQgUDRELgo+Pj4gIAkJICovCj4+PiAtCQlw
+NGRfcGFkZHIgID0gcGdkICYgRU5UUllfTUFTSzsKPj4+ICsJCXA0ZF9wYWRkciAgPSBwZ2QgJiBF
+TlRSWV9NQVNLICYgc21lX21lX21hc2s7Cj4+Cj4+IFRoaXMgZ29lcyBiYWNrIHRvIG15IG9yaWdp
+bmFsIGNvbW1lbnQgdGhhdCB5b3Ugc2hvdWxkIGp1c3QgbWFrZSBhIGxvY2FsCj4+IHZhcmlhYmxl
+IHRoYXQgaXMgIkVOVFJZX01BU0sgJiB+KE5VTUJFUihzbWVfbWFzaykpIiBzaW5jZSB5b3UgYXJl
+Cj4+IHBlcmZvcm1pbmcgdGhpcyBBTkRpbmcgZXZlcnl3aGVyZSBFTlRSWV9NQVNLIGlzIHVzZWQg
+LSBleGNlcHQgdGhlbiB5b3UKPj4gbWlzcyB0aGUgb25lIGF0IHRoZSB2ZXJ5IGVuZCBvZiB0aGlz
+IHJvdXRpbmUgb24gdGhlIHJldHVybiBzdGF0ZW1lbnQuCj4gCj4gVGhpcyB3YXMgbXkgaWRlYSBJ
+IHNhaWQgdG8gTGlhbmJvIGJlZm9yZSBzZWVpbmcgeW91ciBjb21tZW50LCBidXQKPiB5ZXMsIGlu
+Y2x1ZGluZyBFTlRSWV9NQVNLIGluIGEgbG9jYWwgdmFyaWFibGUgaXMgYmV0dGVyIHRoYW4gdGhh
+dC4KPiBUaGFua3MgZm9yIHlvdXIgZ29vZCBzdWdnZXN0aW9uLgo+IAo+IEFzIGZvciB0aGUgdmFy
+aWFibGUncyBuYW1lLCBJIHRoaW5rIHRoYXQgImVudHJ5X21hc2siIGlzIGdvb2QgZW5vdWdoLAo+
+IGJ1dCBhbnkgYmV0dGVyIG5hbWU/Cj4gCj4gICB1bnNpZ25lZCBsb25nIGVudHJ5X21hc2sgPSBF
+TlRSWV9NQVNLOwo+IAo+ICAgaWYgKE5VTUJFUihzbWVfbWFzaykgIT0gTk9UX0ZPVU5EX05VTUJF
+UikKPiAgICAgICBlbnRyeV9tYXNrICY9IH4oTlVNQkVSKHNtZV9tYXNrKSk7Cj4gICAuLi4KPiAg
+IHA0ZF9wYWRkciA9IHBnZCAmIGVudHJ5X21hc2s7Cj4gCk9rLiBUaGFua3MuCgo+IEFuZCwgSSBm
+b3VuZCB0aGF0IHRoZSBmaW5kX3ZtZW1tYXBfeDg2XzY0KCkgZnVuY3Rpb24gYWxzbyB1c2VzIHRo
+ZQo+IHBhZ2UgdGFibGUgZm9yIHRoZSAtZSBvcHRpb24gYW5kIGxvb2tzIHRvIGJlIGFmZmVjdGVk
+IGJ5IFNNRS4KPiBMaWFuYm8sIHdvdWxkIHlvdSBmaXggdGhlIGZ1bmN0aW9uLCB0b28/Cj4gCgpZ
+ZXMsIGl0J3MgbXkgcGxlYXN1cmUuIFRoYW5rIHlvdSwgS2F6dS4KCkkgd2lsbCBmaXggdGhpcyBm
+dW5jdGlvbiBpbiBwYXRjaCB2My4KClJlZ2FyZHMsCkxpYW5ibwoKPiBUaGFua3MsCj4gS2F6dQo+
+IAo+Pgo+Pj4gIAkJcDRkX3BhZGRyICs9IHA0ZF9pbmRleCh2YWRkcikgKiBzaXplb2YodW5zaWdu
+ZWQgbG9uZyk7Cj4+PiAgCQlpZiAoIXJlYWRtZW0oUEFERFIsIHA0ZF9wYWRkciwgJnA0ZF9wdGUs
+IHNpemVvZiBwNGRfcHRlKSkgewo+Pj4gIAkJCUVSUk1TRygiQ2FuJ3QgZ2V0IHA0ZF9wdGUgKHA0
+ZF9wYWRkcjolbHgpLlxuIiwgcDRkX3BhZGRyKTsKPj4+ICAJCQlyZXR1cm4gTk9UX1BBRERSOwo+
+Pj4gIAkJfQo+Pj4gIAkJaWYgKGluZm8tPnZhZGRyX2Zvcl92dG9wID09IHZhZGRyKQo+Pj4gLQkJ
+CU1TRygiICBQNEQgOiAlMTZseCA9PiAlMTZseFxuIiwgcDRkX3BhZGRyLCBwNGRfcHRlKTsKPj4+
+ICsJCQlNU0coIiAgUDREIDogJTE2bHggPT4gJTE2bHhcbiIsIHA0ZF9wYWRkciwgKHA0ZF9wdGUg
+JiBzbWVfbWVfbWFzaykpOwo+Pj4KPj4+ICAJCWlmICghKHA0ZF9wdGUgJiBfUEFHRV9QUkVTRU5U
+KSkgewo+Pj4gIAkJCUVSUk1TRygiQ2FuJ3QgZ2V0IGEgdmFsaWQgcDRkX3B0ZS5cbiIpOwo+Pj4g
+IAkJCXJldHVybiBOT1RfUEFERFI7Cj4+PiAgCQl9Cj4+PiAtCQlwdWRfcGFkZHIgID0gcDRkX3B0
+ZSAmIEVOVFJZX01BU0s7Cj4+PiArCQlwdWRfcGFkZHIgID0gcDRkX3B0ZSAmIEVOVFJZX01BU0sg
+JiBzbWVfbWVfbWFzazsKPj4+ICAJfWVsc2Ugewo+Pj4gIAkJcGFnZV9kaXIgKz0gcGdkX2luZGV4
+KHZhZGRyKSAqIHNpemVvZih1bnNpZ25lZCBsb25nKTsKPj4+ICAJCWlmICghcmVhZG1lbShQQURE
+UiwgcGFnZV9kaXIsICZwZ2QsIHNpemVvZiBwZ2QpKSB7Cj4+PiBAQCAtMzM5LDEzICszNDMsMTMg
+QEAgX192dG9wNF94ODZfNjQodW5zaWduZWQgbG9uZyB2YWRkciwgdW5zaWduZWQgbG9uZyBwYWdl
+dGFibGUpCj4+PiAgCQkJcmV0dXJuIE5PVF9QQUREUjsKPj4+ICAJCX0KPj4+ICAJCWlmIChpbmZv
+LT52YWRkcl9mb3JfdnRvcCA9PSB2YWRkcikKPj4+IC0JCQlNU0coIiAgUEdEIDogJTE2bHggPT4g
+JTE2bHhcbiIsIHBhZ2VfZGlyLCBwZ2QpOwo+Pj4gKwkJCU1TRygiICBQR0QgOiAlMTZseCA9PiAl
+MTZseFxuIiwgcGFnZV9kaXIsIChwZ2QgJiBzbWVfbWVfbWFzaykpOwo+Pj4KPj4+ICAJCWlmICgh
+KHBnZCAmIF9QQUdFX1BSRVNFTlQpKSB7Cj4+PiAgCQkJRVJSTVNHKCJDYW4ndCBnZXQgYSB2YWxp
+ZCBwZ2QuXG4iKTsKPj4+ICAJCQlyZXR1cm4gTk9UX1BBRERSOwo+Pj4gIAkJfQo+Pj4gLQkJcHVk
+X3BhZGRyICA9IHBnZCAmIEVOVFJZX01BU0s7Cj4+PiArCQlwdWRfcGFkZHIgID0gcGdkICYgRU5U
+UllfTUFTSyAmIHNtZV9tZV9tYXNrOwo+Pj4gIAl9Cj4+Pgo+Pj4gIAkvKgo+Pj4gQEAgLTM1Nyw0
+NyArMzYxLDQ3IEBAIF9fdnRvcDRfeDg2XzY0KHVuc2lnbmVkIGxvbmcgdmFkZHIsIHVuc2lnbmVk
+IGxvbmcgcGFnZXRhYmxlKQo+Pj4gIAkJcmV0dXJuIE5PVF9QQUREUjsKPj4+ICAJfQo+Pj4gIAlp
+ZiAoaW5mby0+dmFkZHJfZm9yX3Z0b3AgPT0gdmFkZHIpCj4+PiAtCQlNU0coIiAgUFVEIDogJTE2
+bHggPT4gJTE2bHhcbiIsIHB1ZF9wYWRkciwgcHVkX3B0ZSk7Cj4+PiArCQlNU0coIiAgUFVEIDog
+JTE2bHggPT4gJTE2bHhcbiIsIHB1ZF9wYWRkciwgKHB1ZF9wdGUgJiBzbWVfbWVfbWFzaykpOwo+
+Pj4KPj4+ICAJaWYgKCEocHVkX3B0ZSAmIF9QQUdFX1BSRVNFTlQpKSB7Cj4+PiAgCQlFUlJNU0co
+IkNhbid0IGdldCBhIHZhbGlkIHB1ZF9wdGUuXG4iKTsKPj4+ICAJCXJldHVybiBOT1RfUEFERFI7
+Cj4+PiAgCX0KPj4+ICAJaWYgKHB1ZF9wdGUgJiBfUEFHRV9QU0UpCS8qIDFHQiBwYWdlcyAqLwo+
+Pj4gLQkJcmV0dXJuIChwdWRfcHRlICYgRU5UUllfTUFTSyAmIFBVRF9NQVNLKSArCj4+PiArCQly
+ZXR1cm4gKHB1ZF9wdGUgJiBFTlRSWV9NQVNLICYgUFVEX01BU0sgJiBzbWVfbWVfbWFzaykgKwo+
+Pj4gIAkJCSh2YWRkciAmIH5QVURfTUFTSyk7Cj4+Pgo+Pj4gIAkvKgo+Pj4gIAkgKiBHZXQgUE1E
+Lgo+Pj4gIAkgKi8KPj4+IC0JcG1kX3BhZGRyICA9IHB1ZF9wdGUgJiBFTlRSWV9NQVNLOwo+Pj4g
+KwlwbWRfcGFkZHIgID0gcHVkX3B0ZSAmIEVOVFJZX01BU0sgJiBzbWVfbWVfbWFzazsKPj4+ICAJ
+cG1kX3BhZGRyICs9IHBtZF9pbmRleCh2YWRkcikgKiBzaXplb2YodW5zaWduZWQgbG9uZyk7Cj4+
+PiAgCWlmICghcmVhZG1lbShQQUREUiwgcG1kX3BhZGRyLCAmcG1kX3B0ZSwgc2l6ZW9mIHBtZF9w
+dGUpKSB7Cj4+PiAgCQlFUlJNU0coIkNhbid0IGdldCBwbWRfcHRlIChwbWRfcGFkZHI6JWx4KS5c
+biIsIHBtZF9wYWRkcik7Cj4+PiAgCQlyZXR1cm4gTk9UX1BBRERSOwo+Pj4gIAl9Cj4+PiAgCWlm
+IChpbmZvLT52YWRkcl9mb3JfdnRvcCA9PSB2YWRkcikKPj4+IC0JCU1TRygiICBQTUQgOiAlMTZs
+eCA9PiAlMTZseFxuIiwgcG1kX3BhZGRyLCBwbWRfcHRlKTsKPj4+ICsJCU1TRygiICBQTUQgOiAl
+MTZseCA9PiAlMTZseFxuIiwgcG1kX3BhZGRyLCAocG1kX3B0ZSAmIHNtZV9tZV9tYXNrKSk7Cj4+
+Pgo+Pj4gIAlpZiAoIShwbWRfcHRlICYgX1BBR0VfUFJFU0VOVCkpIHsKPj4+ICAJCUVSUk1TRygi
+Q2FuJ3QgZ2V0IGEgdmFsaWQgcG1kX3B0ZS5cbiIpOwo+Pj4gIAkJcmV0dXJuIE5PVF9QQUREUjsK
+Pj4+ICAJfQo+Pj4gIAlpZiAocG1kX3B0ZSAmIF9QQUdFX1BTRSkJLyogMk1CIHBhZ2VzICovCj4+
+PiAtCQlyZXR1cm4gKHBtZF9wdGUgJiBFTlRSWV9NQVNLICYgUE1EX01BU0spICsKPj4+ICsJCXJl
+dHVybiAocG1kX3B0ZSAmIEVOVFJZX01BU0sgJiBQTURfTUFTSyAmIHNtZV9tZV9tYXNrKSArCj4+
+PiAgCQkJKHZhZGRyICYgflBNRF9NQVNLKTsKPj4+Cj4+PiAgCS8qCj4+PiAgCSAqIEdldCBQVEUu
+Cj4+PiAgCSAqLwo+Pj4gLQlwdGVfcGFkZHIgID0gcG1kX3B0ZSAmIEVOVFJZX01BU0s7Cj4+PiAr
+CXB0ZV9wYWRkciAgPSBwbWRfcHRlICYgRU5UUllfTUFTSyAmIHNtZV9tZV9tYXNrOwo+Pj4gIAlw
+dGVfcGFkZHIgKz0gcHRlX2luZGV4KHZhZGRyKSAqIHNpemVvZih1bnNpZ25lZCBsb25nKTsKPj4+
+ICAJaWYgKCFyZWFkbWVtKFBBRERSLCBwdGVfcGFkZHIsICZwdGUsIHNpemVvZiBwdGUpKSB7Cj4+
+PiAgCQlFUlJNU0coIkNhbid0IGdldCBwdGUgKHB0ZV9wYWRkcjolbHgpLlxuIiwgcHRlX3BhZGRy
+KTsKPj4+ICAJCXJldHVybiBOT1RfUEFERFI7Cj4+PiAgCX0KPj4+ICAJaWYgKGluZm8tPnZhZGRy
+X2Zvcl92dG9wID09IHZhZGRyKQo+Pj4gLQkJTVNHKCIgIFBURSA6ICUxNmx4ID0+ICUxNmx4XG4i
+LCBwdGVfcGFkZHIsIHB0ZSk7Cj4+PiArCQlNU0coIiAgUFRFIDogJTE2bHggPT4gJTE2bHhcbiIs
+IHB0ZV9wYWRkciwgKHB0ZSAmIHNtZV9tZV9tYXNrKSk7Cj4+Pgo+Pj4gIAlpZiAoIShwdGUgJiBf
+UEFHRV9QUkVTRU5UKSkgewo+Pj4gIAkJRVJSTVNHKCJDYW4ndCBnZXQgYSB2YWxpZCBwdGUuXG4i
+KTsKPj4KPj4gSnVzdCBhZnRlciBoZXJlIGlzIHdoZXJlIEkgdGhpbmsgYW4gIiYgc21lX21lX21h
+c2siIGlzIG1pc3NpbmcuLi4KPj4KPj4gVGhhbmtzLAo+PiBUb20KPj4KPj4+IGRpZmYgLS1naXQg
+YS9tYWtlZHVtcGZpbGUuYyBiL21ha2VkdW1wZmlsZS5jCj4+PiBpbmRleCA4OTIzNTM4Li4yMjM3
+ZWI4IDEwMDY0NAo+Pj4gLS0tIGEvbWFrZWR1bXBmaWxlLmMKPj4+ICsrKyBiL21ha2VkdW1wZmls
+ZS5jCj4+PiBAQCAtOTc3LDYgKzk3Nyw4IEBAIG5leHRfcGFnZToKPj4+ICAJcmVhZF9zaXplID0g
+TUlOKGluZm8tPnBhZ2Vfc2l6ZSAtIFBBR0VPRkZTRVQocGFkZHIpLCBzaXplKTsKPj4+Cj4+PiAg
+CXBnYWRkciA9IFBBR0VCQVNFKHBhZGRyKTsKPj4+ICsJaWYgKE5VTUJFUihzbWVfbWFzaykgIT0g
+Tk9UX0ZPVU5EX05VTUJFUikKPj4+ICsJCXBnYWRkciA9IHBnYWRkciAmIH4oTlVNQkVSKHNtZV9t
+YXNrKSk7Cj4+PiAgCXBnYnVmID0gY2FjaGVfc2VhcmNoKHBnYWRkciwgcmVhZF9zaXplKTsKPj4+
+ICAJaWYgKCFwZ2J1Zikgewo+Pj4gIAkJKytjYWNoZV9taXNzOwo+Pj4gQEAgLTIyNzYsNiArMjI3
+OCw3IEBAIHdyaXRlX3ZtY29yZWluZm9fZGF0YSh2b2lkKQo+Pj4gIAlXUklURV9OVU1CRVIoIk5S
+X0ZSRUVfUEFHRVMiLCBOUl9GUkVFX1BBR0VTKTsKPj4+ICAJV1JJVEVfTlVNQkVSKCJOX09OTElO
+RSIsIE5fT05MSU5FKTsKPj4+ICAJV1JJVEVfTlVNQkVSKCJwZ3RhYmxlX2w1X2VuYWJsZWQiLCBw
+Z3RhYmxlX2w1X2VuYWJsZWQpOwo+Pj4gKwlXUklURV9OVU1CRVIoInNtZV9tYXNrIiwgc21lX21h
+c2spOwo+Pj4KPj4+ICAJV1JJVEVfTlVNQkVSKCJQR19scnUiLCBQR19scnUpOwo+Pj4gIAlXUklU
+RV9OVU1CRVIoIlBHX3ByaXZhdGUiLCBQR19wcml2YXRlKTsKPj4+IEBAIC0yNjcyLDYgKzI2NzUs
+NyBAQCByZWFkX3ZtY29yZWluZm8odm9pZCkKPj4+ICAJUkVBRF9OVU1CRVIoIk5SX0ZSRUVfUEFH
+RVMiLCBOUl9GUkVFX1BBR0VTKTsKPj4+ICAJUkVBRF9OVU1CRVIoIk5fT05MSU5FIiwgTl9PTkxJ
+TkUpOwo+Pj4gIAlSRUFEX05VTUJFUigicGd0YWJsZV9sNV9lbmFibGVkIiwgcGd0YWJsZV9sNV9l
+bmFibGVkKTsKPj4+ICsJUkVBRF9OVU1CRVIoInNtZV9tYXNrIiwgc21lX21hc2spOwo+Pj4KPj4+
+ICAJUkVBRF9OVU1CRVIoIlBHX2xydSIsIFBHX2xydSk7Cj4+PiAgCVJFQURfTlVNQkVSKCJQR19w
+cml2YXRlIiwgUEdfcHJpdmF0ZSk7Cj4+PiBkaWZmIC0tZ2l0IGEvbWFrZWR1bXBmaWxlLmggYi9t
+YWtlZHVtcGZpbGUuaAo+Pj4gaW5kZXggNzM4MTNlZC4uZTk3YjJlNyAxMDA2NDQKPj4+IC0tLSBh
+L21ha2VkdW1wZmlsZS5oCj4+PiArKysgYi9tYWtlZHVtcGZpbGUuaAo+Pj4gQEAgLTE5MTIsNiAr
+MTkxMiw3IEBAIHN0cnVjdCBudW1iZXJfdGFibGUgewo+Pj4gIAlsb25nCU5SX0ZSRUVfUEFHRVM7
+Cj4+PiAgCWxvbmcJTl9PTkxJTkU7Cj4+PiAgCWxvbmcJcGd0YWJsZV9sNV9lbmFibGVkOwo+Pj4g
+Kwlsb25nCXNtZV9tYXNrOwo+Pj4KPj4+ICAJLyoKPj4+ICAgCSogUGFnZSBmbGFncwo+Pj4KCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
+bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
