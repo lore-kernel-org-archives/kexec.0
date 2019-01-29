@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 1/2] arm64: Expose address bits (physical/virtual) via
- cpuinfo
+Subject: Re: [PATCH 2/2] arm64: Expose PARange via ID_AA64MMFR0_EL1 and
+ VARange via ID_AA64MMFR2_EL1
 References: <1548709076-22317-1-git-send-email-bhsharma@redhat.com>
- <1548709076-22317-2-git-send-email-bhsharma@redhat.com>
+ <1548709076-22317-3-git-send-email-bhsharma@redhat.com>
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <afa2417a-10d0-21f6-007f-e8eb7055f3d7@arm.com>
-Date: Tue, 29 Jan 2019 10:09:31 +0000
+Message-ID: <cff44754-7fe4-efea-bc8e-4dde2277c821@arm.com>
+Date: Tue, 29 Jan 2019 10:14:47 +0000
 MIME-Version: 1.0
-In-Reply-To: <1548709076-22317-2-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1548709076-22317-3-git-send-email-bhsharma@redhat.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,30 +24,39 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: bhsharma@redhat.com, linux-arm-kernel@lists.infradead.org
 Cc: mark.rutland@arm.com, Steve.Capper@arm.com, catalin.marinas@arm.com, ard.biesheuvel@linaro.org, will.deacon@arm.com, bhupesh.linux@gmail.com, kexec@lists.infradead.org
 
-Hi Bupesh
+Hi,
 
 On 28/01/2019 20:57, Bhupesh Sharma wrote:
-> With ARMv8.2-LVA and LPA architecture extensions, arm64 hardware which
-> supports these extensions can support upto 52-bit virtual and 52-bit
-> physical addresses respectively.
+> ARMv8.2 architecture hardware extensions can support
+> upto 52-bit physical addresses (ARMv8.2-LPA) and 52-bit virtual
+> addresses (ARMv8.2-LVA).
 > 
-> Since at the moment we enable the support of these extensions via CONFIG
-> flags, e.g.
->   - LPA via CONFIG_ARM64_PA_BITS_52, and
->   - LVA via CONFIG_ARM64_FORCE_52BIT
+> User-space utilities like 'makedumpfile' can try and use the getauxval()
+> function to retrieve the underlying PARange and VARange values
+> supported.
+
+Why do we need VARange here ? This value could be different from the
+kernel VA. As for decoding the PTE, you could safely do the flip
+of the upper byte by checking the page size of 64K.
+
+What is the usecase for exposing the PARange ?
+
 > 
-> The easiest way a user can determine the physical/virtual
-> addresses supported on the hardware, is via the '/proc/cpuinfo'
-> interface.
+> An example implementation can be via the 'Appendix I: Example' shown
+> in 'Documentation/arm64/cpu-feature-registers.txt'. A reference
+> 'makedumpfile' implementation which uses a similar approach is
+> available in [0].
+> 
+> So, we expose these properties via 'FTR_NONSTRICT' and 'FTR_VISIBLE'
+> settings for 'ID_AA64MMFR0_PARANGE_SHIFT' and 'ID_AA64MMFR2_LVA_SHIFT'.
 
-Why do we need this information ?
+What is the rationale behind changing the feature to NONSTRICT ?
 
-Btw, this keeps coming up all the time and the answer to this approach is
-always no. We cannot break the "unwritten" ABI of /proc/cpuinfo, again.
-See :
+> 
+> [0]. https://github.com/bhupesh-sharma/makedumpfile/blob/9d7da4aad3efe79b448f48cc3454fcae46a316d6/arch/arm64.c#L499
 
-https://patchwork.kernel.org/patch/8669301/
-
+Btw, if you are not using a 64K page size, the usage of the lva support
+feature could corrupt your PTE-> PHYS conversion, unless I am missing something.
 
 Suzuki
 
