@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-f193.google.com ([209.85.214.193])
+Received: from mail-pg1-f194.google.com ([209.85.215.194])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1govqJ-0006Ir-JY
- for kexec@lists.infradead.org; Wed, 30 Jan 2019 19:48:19 +0000
-Received: by mail-pl1-f193.google.com with SMTP id a14so281091plm.12
- for <kexec@lists.infradead.org>; Wed, 30 Jan 2019 11:48:13 -0800 (PST)
-Subject: Re: [PATCH 1/2] arm64: Expose address bits (physical/virtual) via
- cpuinfo
+ id 1gowSh-0004Pr-IU
+ for kexec@lists.infradead.org; Wed, 30 Jan 2019 20:27:57 +0000
+Received: by mail-pg1-f194.google.com with SMTP id c25so322469pgb.4
+ for <kexec@lists.infradead.org>; Wed, 30 Jan 2019 12:27:52 -0800 (PST)
+Subject: Re: [PATCH 2/2] arm64: Expose PARange via ID_AA64MMFR0_EL1 and
+ VARange via ID_AA64MMFR2_EL1
 References: <1548709076-22317-1-git-send-email-bhsharma@redhat.com>
- <1548709076-22317-2-git-send-email-bhsharma@redhat.com>
- <afa2417a-10d0-21f6-007f-e8eb7055f3d7@arm.com>
+ <1548709076-22317-3-git-send-email-bhsharma@redhat.com>
+ <cff44754-7fe4-efea-bc8e-4dde2277c821@arm.com>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Message-ID: <8659c949-a588-387b-3cb6-1dd8ea86723e@redhat.com>
-Date: Thu, 31 Jan 2019 01:18:05 +0530
+Message-ID: <e27040aa-4317-5406-e57e-d6eabed8f307@redhat.com>
+Date: Thu, 31 Jan 2019 01:57:43 +0530
 MIME-Version: 1.0
-In-Reply-To: <afa2417a-10d0-21f6-007f-e8eb7055f3d7@arm.com>
+In-Reply-To: <cff44754-7fe4-efea-bc8e-4dde2277c821@arm.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -33,131 +33,88 @@ Cc: mark.rutland@arm.com, Steve.Capper@arm.com, catalin.marinas@arm.com, ard.bie
 
 Hi Suzuki,
 
-Thanks for your review.
+Thanks for the review.
 
-On 01/29/2019 03:39 PM, Suzuki K Poulose wrote:
-> Hi Bupesh
+On 01/29/2019 03:44 PM, Suzuki K Poulose wrote:
+> Hi,
 > 
 > On 28/01/2019 20:57, Bhupesh Sharma wrote:
->> With ARMv8.2-LVA and LPA architecture extensions, arm64 hardware which
->> supports these extensions can support upto 52-bit virtual and 52-bit
->> physical addresses respectively.
+>> ARMv8.2 architecture hardware extensions can support
+>> upto 52-bit physical addresses (ARMv8.2-LPA) and 52-bit virtual
+>> addresses (ARMv8.2-LVA).
 >>
->> Since at the moment we enable the support of these extensions via CONFIG
->> flags, e.g.
->>   - LPA via CONFIG_ARM64_PA_BITS_52, and
->>   - LVA via CONFIG_ARM64_FORCE_52BIT
->>
->> The easiest way a user can determine the physical/virtual
->> addresses supported on the hardware, is via the '/proc/cpuinfo'
->> interface.
+>> User-space utilities like 'makedumpfile' can try and use the getauxval()
+>> function to retrieve the underlying PARange and VARange values
+>> supported.
 > 
-> Why do we need this information ?
+> Why do we need VARange here ? This value could be different from the
+> kernel VA. As for decoding the PTE, you could safely do the flip
+> of the upper byte by checking the page size of 64K.
 
-Sorry for the delay in reply, but I wanted to collect as much 
-information from our test teams as possible before replying to this thread.
-
-So here is brief list of reasons, as to why we need this information in 
-user-space:
-
-1. This information is useful for a non-expert user, using Linux 
-distributions (like Fedora) on different arm64 platforms. The default 
-configuration (.config) will be the same for a distribution flavor and 
-is supposed to work fine on all underlying arm64 platforms.
-
-a). Now some of these underlying platforms may support ARMv8-8.2 
-extension while others don't.
-
-b). Users performing performance bench-marking on these platforms run 
-benchmarks with different page-sizes and address ranges.
-
-c). Right now they have no way to know, about the underlying VARange and 
-PARange values other than reading the config file and search for the flags.
-
-For e.g. lets consider the 'pg-table_tests' (See - 
-<https://github.com/sanskriti-s/pg-table_tests>), which is used to test 
-and verify 5-level page table behavior on x86_64 Linux. It requires 
-determining if 5-level page tables are fully supported, for which it 
-uses either 'Intel 'la57' cpu flag' in:
-
-$ cat /proc/cpuinfo', or
-
-$ grep CONFIG_X86_5LEVEL /boot/config-$(uname -r)
-CONFIG_X86_5LEVEL=y
-
-This test suite is easily modifiable for verifying 52-bit ARMv8.2-LVA 
-support.
-
-d). Now when running the above suite and sharing results, it might be 
-that the .config file is not available or even in the case it is 
-available the CONFIG flag settings in .config file are not intuitive to 
-a non-expert user for arm64 (the example below is of 64K page size, 
-48-bit kernel VA, 52-bit User space VA and 52-bit PA):
-
-   CONFIG_ARM64_64K_PAGES=y
-   CONFIG_ARM64_USER_VA_BITS_52=y
-   CONFIG_ARM64_VA_BITS=48
-   CONFIG_ARM64_PA_BITS_52=y
-   CONFIG_ARM64_PA_BITS=52
-
-Compare it with a single CONFIG_X86_5LEVEL=y config item for x86_64.
-
-Also the cpu flag in '/proc/cpuinfo' may not hold any descriptive value 
-for ARMv8.2 hardware.
-
-2. So, its much easier in above cases to see and quote the output of '$ 
-cat /proc/cpuinfo' instead, for example:
-
-$ cat /proc/cpuinfo
-
-<..snip..>
-processor	: 31
-<..snip..>
-CPU architecture: 8
-<..snip..>
-address sizes	: 52 bits physical, 48 bits virtual
-
-> Btw, this keeps coming up all the time and the answer to this approach is
-> always no. We cannot break the "unwritten" ABI of /proc/cpuinfo, again.
-> See :
-> 
-> https://patchwork.kernel.org/patch/8669301/
-
-I understand your point, but from a user-space/command-line p-o-v we 
-would ideally want an arm64 server to support most features that are 
-already available on a x86_64 server (I guess that was the whole point 
-of the SBSA server specifications - we want all arm64 servers to look 
-and feel the same way in terms of user-experience).
-
-Also right now there is an absence of a standard ABI between the 
-user-space and kernel for exporting this information to the user-space, 
-with two exceptions:
-
-1. For vmcoreinfo specific user-space utilities (like makedumpfile and 
-crash) I have proposed a couple of CONFIG flags to be added to the 
-vmcoreinfo, so that user-space utilities can use the same (See 
-<http://lists.infradead.org/pipermail/kexec/2019-January/022387.html> 
+I shared the makedumpfile implementation (for decoding the PTE) just as 
+an example, however there can be other user-space applications, for e.g 
+a user-space application running with 48-bit kernel VA and 52-bit user 
+space VA and requesting allocation in 'high' address via a 'hint' to 
+mmap (See 
+<http://lists.infradead.org/pipermail/kexec/2019-January/022389.html> 
 for details).
 
-2. For other user-space utilities (especially those which make a 'mmap' 
-call and pass an address hint to the get the kernel to provide a high 
-address), I can see only two methods to determine the underlying kernel 
-support:
+As I mentioned in the reply to the 1/2 PATCH review, I can see only two 
+methods to determine the underlying kernel support in such cases:
 
-a). Read the CONFIG flags from .config (as I captured some paragraphs 
-above), or
+a). Read the CONFIG flags from .config, or
 
-b). In absence of .config file on the system, read the system ID 
-registers like 'ID_AA64MMFR0_EL1' and 'ID_AA64MMFR2_EL1' (which PATCH 
-2/2 of this series tries to enable from kernel side) and then make a 
+b). In absence of .config file on the system, read the system ID
+registers like 'ID_AA64MMFR0_EL1' and 'ID_AA64MMFR2_EL1' and then make a
 decision on whether to pass a hint to 'mmap'.
 
-It might be that I am missing other standard ABI mechanisms. If so, 
-please point me to the same.
+> What is the usecase for exposing the PARange ?
+
+Again it's perfectly possible to use a 48-bit VA in kernel/user-space 
+and 52-bit PA overall. This means that the user-space applications need 
+to again depend on reading CONFIG file changes for reading the PARange 
+and VARange values to determine the actual values set on the hardware 
+before they can make a 'mmap' call.
+
+Also one can use the VARange and PARange values (printed or returned as 
+part of the user-space application code) to inform the overall calling 
+benchmarkingtest-suite about the address space configuration for which 
+the test-suite was executed.
+
+>>
+>> An example implementation can be via the 'Appendix I: Example' shown
+>> in 'Documentation/arm64/cpu-feature-registers.txt'. A reference
+>> 'makedumpfile' implementation which uses a similar approach is
+>> available in [0].
+>>
+>> So, we expose these properties via 'FTR_NONSTRICT' and 'FTR_VISIBLE'
+>> settings for 'ID_AA64MMFR0_PARANGE_SHIFT' and 'ID_AA64MMFR2_LVA_SHIFT'.
+> 
+> What is the rationale behind changing the feature to NONSTRICT ?
+
+Yes, this seems like a left-over. Will fix in v2.
+
+>>
+>> [0]. 
+>> https://github.com/bhupesh-sharma/makedumpfile/blob/9d7da4aad3efe79b448f48cc3454fcae46a316d6/arch/arm64.c#L499 
+>>
+> 
+> Btw, if you are not using a 64K page size, the usage of the lva support
+> feature could corrupt your PTE-> PHYS conversion, unless I am missing 
+> something.
+
+Fedora arm64 servers use 64K page size by default.
+
+Also as a side note, perhaps the ABI example for the system id register 
+access 
+<https://www.kernel.org/doc/Documentation/arm64/cpu-feature-registers.txt> 
+needs to be updated for ARMv8.2 (as it doesn't support ID_AA64MMFR2_EL1 
+via get_cpu_ftr(). May be I can send a separate patch to address the same.
+
+Please let me know your thoughts on the same.
 
 Thanks,
 Bhupesh
-
 
 
 _______________________________________________
