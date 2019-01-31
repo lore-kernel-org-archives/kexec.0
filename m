@@ -1,13 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 31 Jan 2019 09:03:40 -0500 (EST)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <132532178.73826890.1548943420033.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190131014800.GB15785@dhcp-128-65.nay.redhat.com>
-References: <1548850991-11879-1-git-send-email-bhsharma@redhat.com>
- <20190131014800.GB15785@dhcp-128-65.nay.redhat.com>
-Subject: Re: [PATCH] arm64, vmcoreinfo : Append 'MAX_USER_VA_BITS' and
- 'MAX_PHYSMEM_BITS' to vmcoreinfo
-MIME-Version: 1.0
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gpHVd-0000IF-P8
+ for kexec@lists.infradead.org; Thu, 31 Jan 2019 18:56:24 +0000
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x0VIs79H037184
+ for <kexec@lists.infradead.org>; Thu, 31 Jan 2019 13:56:19 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2qc67c9k1n-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 31 Jan 2019 13:56:18 -0500
+Received: from localhost
+ by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Thu, 31 Jan 2019 18:56:16 -0000
+From: Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH 0/3] selftest/ima: add kexec_file_load test
+Date: Thu, 31 Jan 2019 13:55:33 -0500
+Message-Id: <1548960936-7800-1-git-send-email-zohar@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,112 +28,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, lijiang@redhat.com, bhe@redhat.com, ard biesheuvel <ard.biesheuvel@linaro.org>, catalin marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Borislav Petkov <bp@alien8.de>, bhupesh linux <bhupesh.linux@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: linux-integrity@vger.kernel.org
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>
 
+The kernel can be configured to verify PE signed kernel images, IMA
+kernel image signatures, both types of signatures, or none.  Verify
+only properly signed kernel images are loaded into memory, based on
+the kernel configuration and runtime policies.
 
+Mimi Zohar (3):
+  selftest/ima: cleanup the kexec selftest
+  scripts/ima: define a set of common functions
+  selftests/ima: kexec_file_load syscall test
 
------ Original Message -----
-> + more people
-> On 01/30/19 at 05:53pm, Bhupesh Sharma wrote:
-> > With ARMv8.2-LVA and LPA architecture extensions, arm64 hardware which
-> > supports these extensions can support upto 52-bit virtual and 52-bit
-> > physical addresses respectively.
-> > 
-> > Since at the moment we enable the support of these extensions via CONFIG
-> > flags, e.g.
-> >  - LPA via CONFIG_ARM64_PA_BITS_52
-> > 
-> > there are no clear mechanisms in user-space right now to
-> > deteremine these CONFIG flag values and also determine the PARange and
-> > VARange address values.
-> > 
-> > User-space tools like 'makedumpfile' and 'crash-utility' can instead
-> > use the 'MAX_USER_VA_BITS' and 'MAX_PHYSMEM_BITS' values to determine
-> > the maximum virtual address and physical address (respectively)
-> > supported by underlying kernel.
-> > 
-> > A reference 'makedumpfile' implementation which uses this approach to
-> > determining the maximum physical address is available in [0].
-> > 
-> > [0].
-> > https://github.com/bhupesh-sharma/makedumpfile/blob/52-bit-pa-support-via-vmcore-v1/arch/arm64.c#L490
-> 
-> I'm not objecting the patch, just want to make sure to make clear about
-> things and make sure these issues are aware by people, and leave arm
-> people to review the arm bits.
-> 
-> 1. MAX_PHYSMEM_BITS
-> As we previously found, back to 2014 makedumpfile took a patch to read the
-> value from vmcore but the kernel patch was not accepted.
-> So we should first make clear if this is really needed, why other arches
-> do not need this in makedumpfile.
-> 
-> If we really need it then should it be arm64 only?
-> 
-> If it is arm64 only then the makedumpfile code should read this number
-> only for arm64.
+ tools/testing/selftests/ima/Makefile               |   2 +-
+ tools/testing/selftests/ima/common_lib.sh          |  20 ++
+ .../testing/selftests/ima/test_kexec_file_load.sh  | 250 +++++++++++++++++++++
+ tools/testing/selftests/ima/test_kexec_load.sh     |  31 +--
+ 4 files changed, 281 insertions(+), 22 deletions(-)
+ create mode 100755 tools/testing/selftests/ima/common_lib.sh
+ create mode 100755 tools/testing/selftests/ima/test_kexec_file_load.sh
 
-With respect to the crash utility, this is the first time/architecture where the
-determination of MAX_PHYSMEM_BITS cannot be determined.  
+-- 
+2.7.5
 
-> 
-> Also Lianbo added the vmcoreinfo documents, I believe it stays in -tip
-> tree,  need to make sure to document this as well.
-> 
-> 2. MAX_USER_VA_BITS
-> Does makedumpfile care about userspace VA bits?  I do not see other code
-> doing this,  Kazu and Dave A should be able to comment.
-> 
-> I tend to doubt about this.
-
-With respect to the crash utility, this won't be required because there is
-the exported "vabits_user" variable.
-
-Dave Anderson
-
-
-> 
-> >  
-> > Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > Cc: James Morse <james.morse@arm.com>
-> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> > ---
-> >  arch/arm64/kernel/crash_core.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/arch/arm64/kernel/crash_core.c
-> > b/arch/arm64/kernel/crash_core.c
-> > index ca4c3e12d8c5..ad231be5c0d8 100644
-> > --- a/arch/arm64/kernel/crash_core.c
-> > +++ b/arch/arm64/kernel/crash_core.c
-> > @@ -10,6 +10,8 @@
-> >  void arch_crash_save_vmcoreinfo(void)
-> >  {
-> >  	VMCOREINFO_NUMBER(VA_BITS);
-> > +	VMCOREINFO_NUMBER(MAX_USER_VA_BITS);
-> > +	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
-> >  	/* Please note VMCOREINFO_NUMBER() uses "%d", not "%x" */
-> >  	vmcoreinfo_append_str("NUMBER(kimage_voffset)=0x%llx\n",
-> >  						kimage_voffset);
-> > --
-> > 2.7.4
-> > 
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> Thanks
-> Dave
-> 
 
 _______________________________________________
 kexec mailing list
