@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pl1-f196.google.com ([209.85.214.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gp7Fj-0002hO-Sl
- for kexec@lists.infradead.org; Thu, 31 Jan 2019 07:59:17 +0000
-Date: Thu, 31 Jan 2019 15:59:07 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
- consistent with kaslr
-Message-ID: <20190131075907.GB19091@dhcp-128-65.nay.redhat.com>
-References: <1548047768-7656-1-git-send-email-kernelfans@gmail.com>
- <20190125103924.GB27998@zn.tnic>
- <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
- <20190125140823.GC27998@zn.tnic>
+ id 1gp999-00086Y-Pc
+ for kexec@lists.infradead.org; Thu, 31 Jan 2019 10:00:47 +0000
+Received: by mail-pl1-f196.google.com with SMTP id p8so1262597plo.2
+ for <kexec@lists.infradead.org>; Thu, 31 Jan 2019 02:00:33 -0800 (PST)
+Subject: Re: [PATCH] arm64, vmcoreinfo : Append 'MAX_USER_VA_BITS' and
+ 'MAX_PHYSMEM_BITS' to vmcoreinfo
+References: <1548850991-11879-1-git-send-email-bhsharma@redhat.com>
+ <20190131014800.GB15785@dhcp-128-65.nay.redhat.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Message-ID: <fea7823d-60ab-2765-031f-6e8c312d7672@redhat.com>
+Date: Thu, 31 Jan 2019 15:30:23 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190125140823.GC27998@zn.tnic>
+In-Reply-To: <20190131014800.GB15785@dhcp-128-65.nay.redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,84 +23,190 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, lijiang@redhat.com, bhe@redhat.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Borislav Petkov <bp@alien8.de>, anderson@redhat.com, bhupesh.linux@gmail.com, linux-arm-kernel@lists.infradead.org
 
-On 01/25/19 at 03:08pm, Borislav Petkov wrote:
-> On Fri, Jan 25, 2019 at 09:45:18PM +0800, Dave Young wrote:
-> > AFAIK, some people prefer to explictly reserve crash memory at high
-> > region even if it is possible to reserve at low area.  May because
-> > <4G memory is limited on large server, they want to leave this for other
-> > use. 
-> > 
-> > Yinghai or Vivek should know more about the history, probably they can
-> > recall some initial reason.
+On 01/31/2019 07:18 AM, Dave Young wrote:
+> + more people
+> On 01/30/19 at 05:53pm, Bhupesh Sharma wrote:
+>> With ARMv8.2-LVA and LPA architecture extensions, arm64 hardware which
+>> supports these extensions can support upto 52-bit virtual and 52-bit
+>> physical addresses respectively.
+>>
+>> Since at the moment we enable the support of these extensions via CONFIG
+>> flags, e.g.
+>>   - LPA via CONFIG_ARM64_PA_BITS_52
+>>
+>> there are no clear mechanisms in user-space right now to
+>> deteremine these CONFIG flag values and also determine the PARange and
+>> VARange address values.
+>>
+>> User-space tools like 'makedumpfile' and 'crash-utility' can instead
+>> use the 'MAX_USER_VA_BITS' and 'MAX_PHYSMEM_BITS' values to determine
+>> the maximum virtual address and physical address (respectively)
+>> supported by underlying kernel.
+>>
+>> A reference 'makedumpfile' implementation which uses this approach to
+>> determining the maximum physical address is available in [0].
+>>
+>> [0]. https://github.com/bhupesh-sharma/makedumpfile/blob/52-bit-pa-support-via-vmcore-v1/arch/arm64.c#L490
 > 
-> Yes, just "prefer" is not good enough. There should be a technical
-> reason why that's there.
+> I'm not objecting the patch, just want to make sure to make clear about
+> things and make sure these issues are aware by people, and leave arm
+> people to review the arm bits.
+> 
+> 1. MAX_PHYSMEM_BITS
+> As we previously found, back to 2014 makedumpfile took a patch to read the
+> value from vmcore but the kernel patch was not accepted.
+> So we should first make clear if this is really needed, why other arches
+> do not need this in makedumpfile.
 
-Got more about this, actually the thing is for large server with very
-huge memory and also possible a lot of io devices.  The UEFI IO drivers
-could allocate a lot memory under 896M,  so it will leave small room for
-crashkernel=X
+I explained this a bit in my reply to Suzuki's and James's review 
+comments yesterday, but let me summarize the same again for better clarity:
 
-Also if the memory is huge, then copying the vmcore will be very slow,
-people want to use big makedumpfile bitmap buffer, and multithread, then
-kdump kernel needs more memory, they can choose ,high to get more
-memory.
+Let's take the example of x86. We have CONFIG_X86_5LEVEL config flag to 
+indicate 5 level page-table support. We export the same in vmcoreinfo 
+for x86_64 using:
 
-But for common use cases, if one does not need so much kdump memory
-reserved he/she can just use crashkernel=X.
+void arch_crash_save_vmcoreinfo(void)
+{
+     <.. snip..>
+     vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
+             pgtable_l5_enabled());
+}
 
+Also a simple grep in makedumpfile and crash for the same indicates that 
+the user-space code determines the MAX_PHYSMEM_BITS value using the 
+'pgtable_l5_enabled' value available in vmcoreinfo:
+
+Example from makedumpfile:
+-------------------------
+int
+get_versiondep_info_x86_64(void)
+{
+	/*
+	 * On linux-2.6.26, MAX_PHYSMEM_BITS is changed to 44 from 40.
+	 */
+	if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
+		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG;
+	else if (info->kernel_version < KERNEL_VERSION(2, 6, 31))
+		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_26;
+	else if(check_5level_paging())
+		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_5LEVEL;
+	else
+		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_31;
+
+	...
+}
+
+As we can see above, we use several if-else cases to determine the 
+'MAX_PHYSMEM_BITS', one of which is setting it to 52-bit, if the 
+'pgtable_l5_enabled' value is available and TRUE in vmcoreinfo.
+
+So, we determine 'MAX_PHYSMEM_BITS' value in makedumpfile via a 
+vmcoreinfo export'ed variable (rather than using  named 
+'MAX_PHYSMEM_BITS' its 'pgtable_l5_enabled' that is being used).
+
+Since for arm64, we don't have a single CONFIG flag for 52-bit addresses 
+spaces (kernel VA, user-space VA and PA), so its better to export the 
+respective CONFIG flags in the vmcoreinfo directly.
+
+> If we really need it then should it be arm64 only?
+
+See above, since archs like x86 use a single flag: CONFIG_X86_5LEVEL, 
+whereas arm64 can use the combination of following flags to indicate 
+combinations of various address spaces:
+
+- 48-bit kernel VA + 48-bit user-space VA + 52-bit PA
+- 48-bit kernel VA + 52-bit user-space VA + 52-bit PA
+- 52-bit kernel VA + 52-bit user-space VA + 52-bit PA
+
+
+CONFIG_ARM64_64K_PAGES
+CONFIG_ARM64_USER_VA_BITS_52
+CONFIG_ARM64_VA_BITS
+CONFIG_ARM64_PA_BITS_52
+CONFIG_ARM64_PA_BITS
+CONFIG_EXPERT, and
+CONFIG_ARM64_FORCE_52BIT
+
+so probably its not correct to compare the two cases one-to-one (its 
+more like an apple and an orange comparison).
+
+> If it is arm64 only then the makedumpfile code should read this number
+> only for arm64.
+> 
+> Also Lianbo added the vmcoreinfo documents, I believe it stays in -tip
+> tree,  need to make sure to document this as well.
+
+Sure, I will send a separate patch to fix the same, once this gets in.
 
 > 
-> Also, if the user doesn't care, then the code should be free to force
-> "high" and thus probe a different range for allocation.
+> 2. MAX_USER_VA_BITS
+> Does makedumpfile care about userspace VA bits? 
 
-As Pingfan/me mentioned in another reply, there are two reasons:
-1. old kexec-tools can not load kernel to high memory
-2. ,high will not work on some systems without some amounts of low
-memory so it nees reserve extra low memory, it is bad for people who do
-not want it. 
+Yes. Consider the case 48-bit kernel VA and 52-bit user-space VA, which 
+is a perfectly valid case on arm64. In such cases VA_BITS is set to 48, 
+whereas  MAX_USER_VA_BITS is set to 52, which allows user-space 
+applications which use 52-bit virtual address to pass a hint to 'mmap' 
+to get high addresses.
+
+  I do not see other code
+> doing this,  Kazu and Dave A should be able to comment.
+
+I talked to Dave A. yesterday off-list, I think he mentioned that these 
+changes are useful for crash-utility as well and he was hoping it gets 
+accepted soon so that kernel-debugging tools can handle increased 
+address spaces on arm64.
+
+But it will be great to have reviews/ACKs from Dave A and others as well.
+
+Thanks,
+Bhupesh
 
 > 
-> > Good question, still it may be some historical reason, but it is good to
-> > make them clear and rethink about it after long time.
-> > 
-> > I also want to understand, need dig the log more.
+> I tend to doubt about this.
 > 
-> Good idea. That would be a very nice cleanup. :-)
+>>
+>> Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Cc: James Morse <james.morse@arm.com>
+>> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+>> ---
+>>   arch/arm64/kernel/crash_core.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
+>> index ca4c3e12d8c5..ad231be5c0d8 100644
+>> --- a/arch/arm64/kernel/crash_core.c
+>> +++ b/arch/arm64/kernel/crash_core.c
+>> @@ -10,6 +10,8 @@
+>>   void arch_crash_save_vmcoreinfo(void)
+>>   {
+>>   	VMCOREINFO_NUMBER(VA_BITS);
+>> +	VMCOREINFO_NUMBER(MAX_USER_VA_BITS);
+>> +	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
+>>   	/* Please note VMCOREINFO_NUMBER() uses "%d", not "%x" */
+>>   	vmcoreinfo_append_str("NUMBER(kimage_voffset)=0x%llx\n",
+>>   						kimage_voffset);
+>> -- 
+>> 2.7.4
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> Thanks
+> Dave
+> 
 
-Let's review these different parameters:
->         crashkernel=size[KMG][@offset[KMG]]
-
-Did not get the initial commit for this, it should be the very old
-format, and kernel did not find the base address automatically for the
-size
-
-Other arches still use this, for example mips code seems needs explict
-@offset, see the function mips_parse_crashkernel in
-arch/mips/kernel/setup.c
-
-Probably there are other arches as well which only support this format.
-
->         crashkernel=range1:size1[,range2:size2,...][@offset]
-
-This is nice param which can help to dynamically reserve different size
-depends on system memory.
-
->         crashkernel=size[KMG],high
->         crashkernel=size[KMG],low
-
-We have talked about these two.  It is not graceful, but seems no way to
-improve it due to the swiotlb issue.
-
-Thanks
-Dave
 
 _______________________________________________
 kexec mailing list
