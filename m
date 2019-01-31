@@ -1,21 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gpA2M-00087q-9G
- for kexec@lists.infradead.org; Thu, 31 Jan 2019 10:57:39 +0000
-Date: Thu, 31 Jan 2019 11:57:32 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
- consistent with kaslr
-Message-ID: <20190131105732.GC6749@zn.tnic>
-References: <1548047768-7656-1-git-send-email-kernelfans@gmail.com>
- <20190125103924.GB27998@zn.tnic>
- <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
- <20190125140823.GC27998@zn.tnic>
- <20190131075907.GB19091@dhcp-128-65.nay.redhat.com>
+Date: Thu, 31 Jan 2019 09:03:40 -0500 (EST)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <132532178.73826890.1548943420033.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190131014800.GB15785@dhcp-128-65.nay.redhat.com>
+References: <1548850991-11879-1-git-send-email-bhsharma@redhat.com>
+ <20190131014800.GB15785@dhcp-128-65.nay.redhat.com>
+Subject: Re: [PATCH] arm64, vmcoreinfo : Append 'MAX_USER_VA_BITS' and
+ 'MAX_PHYSMEM_BITS' to vmcoreinfo
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190131075907.GB19091@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,28 +21,107 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
+Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, lijiang@redhat.com, bhe@redhat.com, ard biesheuvel <ard.biesheuvel@linaro.org>, catalin marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Borislav Petkov <bp@alien8.de>, bhupesh linux <bhupesh.linux@gmail.com>, linux-arm-kernel@lists.infradead.org
 
-On Thu, Jan 31, 2019 at 03:59:07PM +0800, Dave Young wrote:
-> As Pingfan/me mentioned in another reply, there are two reasons:
-> 1. old kexec-tools can not load kernel to high memory
-> 2. ,high will not work on some systems without some amounts of low
-> memory so it nees reserve extra low memory, it is bad for people who do
-> not want it.
 
-Let's see: we don't enable high by default because of old kexec-tools
-and some systems which do some funky reservations.
 
-But this patch kinda enables high by trying a couple more regions.
+----- Original Message -----
+> + more people
+> On 01/30/19 at 05:53pm, Bhupesh Sharma wrote:
+> > With ARMv8.2-LVA and LPA architecture extensions, arm64 hardware which
+> > supports these extensions can support upto 52-bit virtual and 52-bit
+> > physical addresses respectively.
+> > 
+> > Since at the moment we enable the support of these extensions via CONFIG
+> > flags, e.g.
+> >  - LPA via CONFIG_ARM64_PA_BITS_52
+> > 
+> > there are no clear mechanisms in user-space right now to
+> > deteremine these CONFIG flag values and also determine the PARange and
+> > VARange address values.
+> > 
+> > User-space tools like 'makedumpfile' and 'crash-utility' can instead
+> > use the 'MAX_USER_VA_BITS' and 'MAX_PHYSMEM_BITS' values to determine
+> > the maximum virtual address and physical address (respectively)
+> > supported by underlying kernel.
+> > 
+> > A reference 'makedumpfile' implementation which uses this approach to
+> > determining the maximum physical address is available in [0].
+> > 
+> > [0].
+> > https://github.com/bhupesh-sharma/makedumpfile/blob/52-bit-pa-support-via-vmcore-v1/arch/arm64.c#L490
+> 
+> I'm not objecting the patch, just want to make sure to make clear about
+> things and make sure these issues are aware by people, and leave arm
+> people to review the arm bits.
+> 
+> 1. MAX_PHYSMEM_BITS
+> As we previously found, back to 2014 makedumpfile took a patch to read the
+> value from vmcore but the kernel patch was not accepted.
+> So we should first make clear if this is really needed, why other arches
+> do not need this in makedumpfile.
+> 
+> If we really need it then should it be arm64 only?
+> 
+> If it is arm64 only then the makedumpfile code should read this number
+> only for arm64.
 
-So we don't really need this - we simply need to tell people to use high
-if it fails with KASLR, AFAICT.
+With respect to the crash utility, this is the first time/architecture where the
+determination of MAX_PHYSMEM_BITS cannot be determined.  
 
--- 
-Regards/Gruss,
-    Boris.
+> 
+> Also Lianbo added the vmcoreinfo documents, I believe it stays in -tip
+> tree,  need to make sure to document this as well.
+> 
+> 2. MAX_USER_VA_BITS
+> Does makedumpfile care about userspace VA bits?  I do not see other code
+> doing this,  Kazu and Dave A should be able to comment.
+> 
+> I tend to doubt about this.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+With respect to the crash utility, this won't be required because there is
+the exported "vabits_user" variable.
+
+Dave Anderson
+
+
+> 
+> >  
+> > Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Cc: James Morse <james.morse@arm.com>
+> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> > ---
+> >  arch/arm64/kernel/crash_core.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/arch/arm64/kernel/crash_core.c
+> > b/arch/arm64/kernel/crash_core.c
+> > index ca4c3e12d8c5..ad231be5c0d8 100644
+> > --- a/arch/arm64/kernel/crash_core.c
+> > +++ b/arch/arm64/kernel/crash_core.c
+> > @@ -10,6 +10,8 @@
+> >  void arch_crash_save_vmcoreinfo(void)
+> >  {
+> >  	VMCOREINFO_NUMBER(VA_BITS);
+> > +	VMCOREINFO_NUMBER(MAX_USER_VA_BITS);
+> > +	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
+> >  	/* Please note VMCOREINFO_NUMBER() uses "%d", not "%x" */
+> >  	vmcoreinfo_append_str("NUMBER(kimage_voffset)=0x%llx\n",
+> >  						kimage_voffset);
+> > --
+> > 2.7.4
+> > 
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> Thanks
+> Dave
+> 
 
 _______________________________________________
 kexec mailing list
