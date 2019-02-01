@@ -1,22 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gpM3o-00016m-DM
- for kexec@lists.infradead.org; Thu, 31 Jan 2019 23:47:58 +0000
-Date: Fri, 1 Feb 2019 00:47:40 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
- consistent with kaslr
-Message-ID: <20190131234740.GO6749@zn.tnic>
-References: <1548047768-7656-1-git-send-email-kernelfans@gmail.com>
- <20190125103924.GB27998@zn.tnic>
- <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
- <20190125140823.GC27998@zn.tnic>
- <20190131075907.GB19091@dhcp-128-65.nay.redhat.com>
- <20190131105732.GC6749@zn.tnic> <20190131222732.GA946@anatevka>
+Received: from foss.arm.com ([217.140.101.70])
+ by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gpb5j-0003jh-Ol
+ for kexec@lists.infradead.org; Fri, 01 Feb 2019 15:51:18 +0000
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: [PATCH] arm64: wipe old initrd addresses when patching the DTB
+Date: Fri,  1 Feb 2019 15:50:28 +0000
+Message-Id: <20190201155028.43562-1-jean-philippe.brucker@arm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190131222732.GA946@anatevka>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,55 +20,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jerry Hoemann <jerry.hoemann@hpe.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Baoquan He <bhe@redhat.com>, yinghai@kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au
 
-On Thu, Jan 31, 2019 at 03:27:32PM -0700, Jerry Hoemann wrote:
-> So even if a system administrator is diligent and tests
-> that a chosen kdump configuration works, that configuration
-> might not work on some random reboot 7 months in the future.
+When copying the DTB from the current kernel, if the user didn't pass an
+initrd on the command-line, make sure that the new DTB doesn't contain
+initrd properties with stale addresses. Otherwise the next kernel will
+try to unpack the initramfs from a location that contains junk, since
+the initial initrd is long gone:
 
-Jerry, did you read the rest of the thread where I'm *actually*
-suggesting to make the allocation code more robust against such
-failures?
+[   49.370026] Initramfs unpacking failed: junk in compressed archive
 
-Doesn't look like it...
+This issue used to be hidden by a successful recovery, but since commit
+ff1522bb7d98 ("initramfs: cleanup incomplete rootfs") in Linux, the
+kernel removes the default /root mountpoint after failing to load an
+initramfs, and cannot mount the rootfs passed on the command-line
+anymore.
 
-Now let's look at the code:
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+---
+ kexec/arch/arm64/kexec-arm64.c | 5 +++++
+ kexec/dt-ops.c                 | 6 ++++++
+ kexec/dt-ops.h                 | 1 +
+ 3 files changed, 12 insertions(+)
 
-The "high" allocation does:
-
-                crash_base = memblock_find_in_range(CRASH_ALIGN,
-                                                    high ? CRASH_ADDR_HIGH_MAX
-                                                         : CRASH_ADDR_LOW_MAX,
-                                                    crash_size, CRASH_ALIGN);
-
-where high=true and CRASH_ADDR_HIGH_MAX on 64-bit is MAXMEM:
-
-# define CRASH_ADDR_HIGH_MAX    MAXMEM
-
-The second fallback in the suggested patch does the same:
-
-+               /*
-+                * crashkernel=X reserve below 4G fails? Try MAXMEM
-+                */
-+               if (!high && !crash_base)
-+                       crash_base = memblock_find_in_range(CRASH_ALIGN,
-+                                               CRASH_ADDR_HIGH_MAX,
-+                                               crash_size, CRASH_ALIGN);
-
-and yet I get back that falling back to "high" if the first allocation
-doesn't succeed is not something we should do by default because of
-reasons. But this patch *practically* *does* it.
-
-So no, until this hasn't been done cleanly and properly explained, we'll
-be in a holding pattern.
-
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index 1cde75d..2992bce 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -713,6 +713,11 @@ int arm64_load_other_segments(struct kexec_info *info,
+ 		}
+ 	}
+ 
++	if (!initrd_buf) {
++		/* Don't reuse the initrd addresses from 1st DTB */
++		dtb_clear_initrd((char **)&dtb.buf, &dtb.size);
++	}
++
+ 	/* Check size limit as specified in booting.txt. */
+ 
+ 	if (dtb.size > MiB(2)) {
+diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
+index 5626c47..dd2feaa 100644
+--- a/kexec/dt-ops.c
++++ b/kexec/dt-ops.c
+@@ -45,6 +45,12 @@ int dtb_set_initrd(char **dtb, off_t *dtb_size, off_t start, off_t end)
+ 	return 0;
+ }
+ 
++void dtb_clear_initrd(char **dtb, off_t *dtb_size)
++{
++	dtb_delete_property(*dtb, n_chosen, p_initrd_start);
++	dtb_delete_property(*dtb, n_chosen, p_initrd_end);
++}
++
+ int dtb_set_bootargs(char **dtb, off_t *dtb_size, const char *command_line)
+ {
+ 	return dtb_set_property(dtb, dtb_size, n_chosen, p_bootargs,
+diff --git a/kexec/dt-ops.h b/kexec/dt-ops.h
+index e70d15d..03659ce 100644
+--- a/kexec/dt-ops.h
++++ b/kexec/dt-ops.h
+@@ -4,6 +4,7 @@
+ #include <sys/types.h>
+ 
+ int dtb_set_initrd(char **dtb, off_t *dtb_size, off_t start, off_t end);
++void dtb_clear_initrd(char **dtb, off_t *dtb_size);
+ int dtb_set_bootargs(char **dtb, off_t *dtb_size, const char *command_line);
+ int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
+ 	const char *prop, const void *value, int value_len);
 -- 
-Regards/Gruss,
-    Boris.
+2.20.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
