@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from foss.arm.com ([217.140.101.70])
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gpb5j-0003jh-Ol
- for kexec@lists.infradead.org; Fri, 01 Feb 2019 15:51:18 +0000
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: [PATCH] arm64: wipe old initrd addresses when patching the DTB
-Date: Fri,  1 Feb 2019 15:50:28 +0000
-Message-Id: <20190201155028.43562-1-jean-philippe.brucker@arm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gqKCq-0003rS-V5
+ for kexec@lists.infradead.org; Sun, 03 Feb 2019 16:01:18 +0000
+From: Kairui Song <kasong@redhat.com>
+Subject: [PATCH] integrity,
+ KEYS: Fix build break with set_platform_trusted_keys
+Date: Sun,  3 Feb 2019 23:59:27 +0800
+Message-Id: <20190203155927.24390-1-kasong@redhat.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,75 +21,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au
+To: linux-kernel@vger.kernel.org
+Cc: jwboyer@fedoraproject.org, Kairui Song <kasong@redhat.com>, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, jmorris@namei.org, zohar@linux.ibm.com, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-When copying the DTB from the current kernel, if the user didn't pass an
-initrd on the command-line, make sure that the new DTB doesn't contain
-initrd properties with stale addresses. Otherwise the next kernel will
-try to unpack the initramfs from a location that contains junk, since
-the initial initrd is long gone:
+Commit 15ebb2eb0705 ("integrity, KEYS: add a reference to platform
+keyring") introduced a function set_platform_trusted_keys
+and calls the function in __integrity_init_keyring.
 
-[   49.370026] Initramfs unpacking failed: junk in compressed archive
+It only checks if CONFIG_INTEGRITY_PLATFORM_KEYRING is enabled when
+enabling this function, but actually this function also depends on
+CONFIG_SYSTEM_TRUSTED_KEYRING.
 
-This issue used to be hidden by a successful recovery, but since commit
-ff1522bb7d98 ("initramfs: cleanup incomplete rootfs") in Linux, the
-kernel removes the default /root mountpoint after failing to load an
-initramfs, and cannot mount the rootfs passed on the command-line
-anymore.
+So when built with CONFIG_INTEGRITY_PLATFORM_KEYRING &&
+!CONFIG_SYSTEM_TRUSTED_KEYRING. we will get following error:
 
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+digsig.c:92: undefined reference to `set_platform_trusted_keys'
+
+And it also mistakenly wrapped the function code in the ifdef block of
+CONFIG_SYSTEM_DATA_VERIFICATION.
+
+This commit fixes the issue by adding the missing check of
+CONFIG_SYSTEM_TRUSTED_KEYRING and move the function code out of
+CONFIG_SYSTEM_DATA_VERIFICATION's ifdef block.
+
+Fixes: 15ebb2eb0705 ("integrity, KEYS: add a reference to platform keyring")
+Signed-off-by: Kairui Song <kasong@redhat.com>
 ---
- kexec/arch/arm64/kexec-arm64.c | 5 +++++
- kexec/dt-ops.c                 | 6 ++++++
- kexec/dt-ops.h                 | 1 +
- 3 files changed, 12 insertions(+)
+ certs/system_keyring.c        | 4 ++--
+ include/keys/system_keyring.h | 9 +++------
+ 2 files changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 1cde75d..2992bce 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -713,6 +713,11 @@ int arm64_load_other_segments(struct kexec_info *info,
- 		}
- 	}
- 
-+	if (!initrd_buf) {
-+		/* Don't reuse the initrd addresses from 1st DTB */
-+		dtb_clear_initrd((char **)&dtb.buf, &dtb.size);
-+	}
-+
- 	/* Check size limit as specified in booting.txt. */
- 
- 	if (dtb.size > MiB(2)) {
-diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
-index 5626c47..dd2feaa 100644
---- a/kexec/dt-ops.c
-+++ b/kexec/dt-ops.c
-@@ -45,6 +45,12 @@ int dtb_set_initrd(char **dtb, off_t *dtb_size, off_t start, off_t end)
- 	return 0;
+diff --git a/certs/system_keyring.c b/certs/system_keyring.c
+index 19bd0504bbcb..c05c29ae4d5d 100644
+--- a/certs/system_keyring.c
++++ b/certs/system_keyring.c
+@@ -279,11 +279,11 @@ int verify_pkcs7_signature(const void *data, size_t len,
  }
+ EXPORT_SYMBOL_GPL(verify_pkcs7_signature);
  
-+void dtb_clear_initrd(char **dtb, off_t *dtb_size)
-+{
-+	dtb_delete_property(*dtb, n_chosen, p_initrd_start);
-+	dtb_delete_property(*dtb, n_chosen, p_initrd_end);
-+}
++#endif /* CONFIG_SYSTEM_DATA_VERIFICATION */
 +
- int dtb_set_bootargs(char **dtb, off_t *dtb_size, const char *command_line)
+ #ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
+ void __init set_platform_trusted_keys(struct key *keyring)
  {
- 	return dtb_set_property(dtb, dtb_size, n_chosen, p_bootargs,
-diff --git a/kexec/dt-ops.h b/kexec/dt-ops.h
-index e70d15d..03659ce 100644
---- a/kexec/dt-ops.h
-+++ b/kexec/dt-ops.h
-@@ -4,6 +4,7 @@
- #include <sys/types.h>
+ 	platform_trusted_keys = keyring;
+ }
+ #endif
+-
+-#endif /* CONFIG_SYSTEM_DATA_VERIFICATION */
+diff --git a/include/keys/system_keyring.h b/include/keys/system_keyring.h
+index c7f899ee974e..42a93eda331c 100644
+--- a/include/keys/system_keyring.h
++++ b/include/keys/system_keyring.h
+@@ -61,16 +61,13 @@ static inline struct key *get_ima_blacklist_keyring(void)
+ }
+ #endif /* CONFIG_IMA_BLACKLIST_KEYRING */
  
- int dtb_set_initrd(char **dtb, off_t *dtb_size, off_t start, off_t end);
-+void dtb_clear_initrd(char **dtb, off_t *dtb_size);
- int dtb_set_bootargs(char **dtb, off_t *dtb_size, const char *command_line);
- int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
- 	const char *prop, const void *value, int value_len);
+-#ifdef CONFIG_INTEGRITY_PLATFORM_KEYRING
+-
++#if defined(CONFIG_INTEGRITY_PLATFORM_KEYRING) && \
++	defined(CONFIG_SYSTEM_TRUSTED_KEYRING)
+ extern void __init set_platform_trusted_keys(struct key *keyring);
+-
+ #else
+-
+ static inline void set_platform_trusted_keys(struct key *keyring)
+ {
+ }
+-
+-#endif /* CONFIG_INTEGRITY_PLATFORM_KEYRING */
++#endif
+ 
+ #endif /* _KEYS_SYSTEM_KEYRING_H */
 -- 
 2.20.1
 
