@@ -1,14 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gqiDE-0004FK-5o
- for kexec@lists.infradead.org; Mon, 04 Feb 2019 17:39:18 +0000
-From: Kairui Song <kasong@redhat.com>
-Subject: [PATCH] x86,
- kexec_file_load: fill in acpi_rsdp_addr boot param unconditionally
-Date: Tue,  5 Feb 2019 01:38:52 +0800
-Message-Id: <20190204173852.4863-1-kasong@redhat.com>
-MIME-Version: 1.0
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gqmbD-0003j6-Dm
+ for kexec@lists.infradead.org; Mon, 04 Feb 2019 22:20:21 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x14MJG4G048604
+ for <kexec@lists.infradead.org>; Mon, 4 Feb 2019 17:20:17 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2qewmn91ca-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 04 Feb 2019 17:20:16 -0500
+Received: from localhost
+ by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Mon, 4 Feb 2019 22:20:14 -0000
+Subject: Re: [PATCH] integrity, KEYS: Fix build break with
+ set_platform_trusted_keys
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Mon, 04 Feb 2019 17:20:08 -0500
+In-Reply-To: <20190203155927.24390-1-kasong@redhat.com>
+References: <20190203155927.24390-1-kasong@redhat.com>
+Mime-Version: 1.0
+Message-Id: <1549318808.4146.127.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,75 +33,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
+To: Kairui Song <kasong@redhat.com>, linux-kernel@vger.kernel.org
+Cc: jwboyer@fedoraproject.org, ebiggers@google.com, dyoung@redhat.com, nayna@linux.ibm.com, kexec@lists.infradead.org, jmorris@namei.org, dhowells@redhat.com, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, dwmw2@infradead.org, bauerman@linux.ibm.com, serge@hallyn.com
 
-When efi=noruntime or efi=oldmap is used, EFI services won't be available
-in the second kernel, therefore the second kernel will not be able to get
-the ACPI RSDP address from firmware by calling EFI services so it won't
-boot. Previously we are expecting the user to set the acpi_rsdp=<addr>
-on kernel command line for second kernel as there was no other way to
-pass RSDP address to second kernel.
-
-After commit e6e094e053af ("x86/acpi, x86/boot: Take RSDP address from
-boot params if available"), now it's possible to set an acpi_rsdp_addr
-parameter in the boot_params passed to second kernel, and kernel will
-prefer using this value for the RSDP address when it's set.
-
-And with commit 3a63f70bf4c3 ("x86/boot: Early parse RSDP and save it in
-boot_params"), now the acpi_rsdp_addr will always be filled with valid
-RSDP address. So we just fill in that value for second kernel's
-boot_params unconditionally, this ensure second kernel always use the
-same RSDP value as the first kernel.
-
-Tested with an EFI enabled KVM VM with efi=noruntime.
-
-Signed-off-by: Kairui Song <kasong@redhat.com>
----
-
-This is update of part of patch series: "[PATCH v3 0/3] make kexec work
-with efi=noruntime or efi=old_map."
-
-But "[PATCH v3 1/3] x86, kexec_file_load: Don't setup EFI info if EFI
-runtime is not enabled" is already in [tip:x86/urgent], and with Chao's
-commit 3a63f70bf4c3 in [tip:x86/boot], we can just fill in acpi_rsdp_addr
-boot param unconditionally to fix the problem, so only I update and resend
-this patch.
-
- arch/x86/kernel/kexec-bzimage64.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 53917a3ebf94..3611946dc7ea 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -218,6 +218,9 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
- 	params->screen_info.ext_mem_k = 0;
- 	params->alt_mem_k = 0;
- 
-+	/* Always fill in RSDP, it's either 0 or a valid value */
-+	params->acpi_rsdp_addr = boot_params.acpi_rsdp_addr;
-+
- 	/* Default APM info */
- 	memset(&params->apm_bios_info, 0, sizeof(params->apm_bios_info));
- 
-@@ -256,7 +259,6 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
- 	setup_efi_state(params, params_load_addr, efi_map_offset, efi_map_sz,
- 			efi_setup_data_offset);
- #endif
--
- 	/* Setup EDD info */
- 	memcpy(params->eddbuf, boot_params.eddbuf,
- 				EDDMAXNR * sizeof(struct edd_info));
--- 
-2.20.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU3VuLCAyMDE5LTAyLTAzIGF0IDIzOjU5ICswODAwLCBLYWlydWkgU29uZyB3cm90ZToKPiBD
+b21taXQgMTVlYmIyZWIwNzA1ICgiaW50ZWdyaXR5LCBLRVlTOiBhZGQgYSByZWZlcmVuY2UgdG8g
+cGxhdGZvcm0KPiBrZXlyaW5nIikgaW50cm9kdWNlZCBhIGZ1bmN0aW9uIHNldF9wbGF0Zm9ybV90
+cnVzdGVkX2tleXMKPiBhbmQgY2FsbHMgdGhlIGZ1bmN0aW9uIGluIF9faW50ZWdyaXR5X2luaXRf
+a2V5cmluZy4KPiAKPiBJdCBvbmx5IGNoZWNrcyBpZiBDT05GSUdfSU5URUdSSVRZX1BMQVRGT1JN
+X0tFWVJJTkcgaXMgZW5hYmxlZCB3aGVuCj4gZW5hYmxpbmcgdGhpcyBmdW5jdGlvbiwgYnV0IGFj
+dHVhbGx5IHRoaXMgZnVuY3Rpb24gYWxzbyBkZXBlbmRzIG9uCj4gQ09ORklHX1NZU1RFTV9UUlVT
+VEVEX0tFWVJJTkcuCj4gCj4gU28gd2hlbiBidWlsdCB3aXRoIENPTkZJR19JTlRFR1JJVFlfUExB
+VEZPUk1fS0VZUklORyAmJgo+ICFDT05GSUdfU1lTVEVNX1RSVVNURURfS0VZUklORy4gd2Ugd2ls
+bCBnZXQgZm9sbG93aW5nIGVycm9yOgo+IAo+IGRpZ3NpZy5jOjkyOiB1bmRlZmluZWQgcmVmZXJl
+bmNlIHRvIGBzZXRfcGxhdGZvcm1fdHJ1c3RlZF9rZXlzJwo+IAo+IEFuZCBpdCBhbHNvIG1pc3Rh
+a2VubHkgd3JhcHBlZCB0aGUgZnVuY3Rpb24gY29kZSBpbiB0aGUgaWZkZWYgYmxvY2sgb2YKPiBD
+T05GSUdfU1lTVEVNX0RBVEFfVkVSSUZJQ0FUSU9OLgo+IAo+IFRoaXMgY29tbWl0IGZpeGVzIHRo
+ZSBpc3N1ZSBieSBhZGRpbmcgdGhlIG1pc3NpbmcgY2hlY2sgb2YKPiBDT05GSUdfU1lTVEVNX1RS
+VVNURURfS0VZUklORyBhbmQgbW92ZSB0aGUgZnVuY3Rpb24gY29kZSBvdXQgb2YKPiBDT05GSUdf
+U1lTVEVNX0RBVEFfVkVSSUZJQ0FUSU9OJ3MgaWZkZWYgYmxvY2suCj4gCj4gRml4ZXM6IDE1ZWJi
+MmViMDcwNSAoImludGVncml0eSwgS0VZUzogYWRkIGEgcmVmZXJlbmNlIHRvIHBsYXRmb3JtIGtl
+eXJpbmciKQo+IFNpZ25lZC1vZmYtYnk6IEthaXJ1aSBTb25nIDxrYXNvbmdAcmVkaGF0LmNvbT4K
+ClRoYW5rIHlvdS4gwqBBcyB0aGUgb3JpZ2luYWwgcGF0Y2ggaGFzbid0IHlldCBiZWVuIHVwc3Ry
+ZWFtZWQgLCBJIHBsYW4Kb24gc3F1YXNoaW5nIHRoZW0uCgpNaW1pCgoKPiAtLS0KPiAgY2VydHMv
+c3lzdGVtX2tleXJpbmcuYyAgICAgICAgfCA0ICsrLS0KPiAgaW5jbHVkZS9rZXlzL3N5c3RlbV9r
+ZXlyaW5nLmggfCA5ICsrKy0tLS0tLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygr
+KSwgOCBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvY2VydHMvc3lzdGVtX2tleXJpbmcu
+YyBiL2NlcnRzL3N5c3RlbV9rZXlyaW5nLmMKPiBpbmRleCAxOWJkMDUwNGJiY2IuLmMwNWMyOWFl
+NGQ1ZCAxMDA2NDQKPiAtLS0gYS9jZXJ0cy9zeXN0ZW1fa2V5cmluZy5jCj4gKysrIGIvY2VydHMv
+c3lzdGVtX2tleXJpbmcuYwo+IEBAIC0yNzksMTEgKzI3OSwxMSBAQCBpbnQgdmVyaWZ5X3BrY3M3
+X3NpZ25hdHVyZShjb25zdCB2b2lkICpkYXRhLCBzaXplX3QgbGVuLAo+ICB9Cj4gIEVYUE9SVF9T
+WU1CT0xfR1BMKHZlcmlmeV9wa2NzN19zaWduYXR1cmUpOwo+ICAKPiArI2VuZGlmIC8qIENPTkZJ
+R19TWVNURU1fREFUQV9WRVJJRklDQVRJT04gKi8KPiArCj4gICNpZmRlZiBDT05GSUdfSU5URUdS
+SVRZX1BMQVRGT1JNX0tFWVJJTkcKPiAgdm9pZCBfX2luaXQgc2V0X3BsYXRmb3JtX3RydXN0ZWRf
+a2V5cyhzdHJ1Y3Qga2V5ICprZXlyaW5nKQo+ICB7Cj4gIAlwbGF0Zm9ybV90cnVzdGVkX2tleXMg
+PSBrZXlyaW5nOwo+ICB9Cj4gICNlbmRpZgo+IC0KPiAtI2VuZGlmIC8qIENPTkZJR19TWVNURU1f
+REFUQV9WRVJJRklDQVRJT04gKi8KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9rZXlzL3N5c3RlbV9r
+ZXlyaW5nLmggYi9pbmNsdWRlL2tleXMvc3lzdGVtX2tleXJpbmcuaAo+IGluZGV4IGM3Zjg5OWVl
+OTc0ZS4uNDJhOTNlZGEzMzFjIDEwMDY0NAo+IC0tLSBhL2luY2x1ZGUva2V5cy9zeXN0ZW1fa2V5
+cmluZy5oCj4gKysrIGIvaW5jbHVkZS9rZXlzL3N5c3RlbV9rZXlyaW5nLmgKPiBAQCAtNjEsMTYg
+KzYxLDEzIEBAIHN0YXRpYyBpbmxpbmUgc3RydWN0IGtleSAqZ2V0X2ltYV9ibGFja2xpc3Rfa2V5
+cmluZyh2b2lkKQo+ICB9Cj4gICNlbmRpZiAvKiBDT05GSUdfSU1BX0JMQUNLTElTVF9LRVlSSU5H
+ICovCj4gIAo+IC0jaWZkZWYgQ09ORklHX0lOVEVHUklUWV9QTEFURk9STV9LRVlSSU5HCj4gLQo+
+ICsjaWYgZGVmaW5lZChDT05GSUdfSU5URUdSSVRZX1BMQVRGT1JNX0tFWVJJTkcpICYmIFwKPiAr
+CWRlZmluZWQoQ09ORklHX1NZU1RFTV9UUlVTVEVEX0tFWVJJTkcpCj4gIGV4dGVybiB2b2lkIF9f
+aW5pdCBzZXRfcGxhdGZvcm1fdHJ1c3RlZF9rZXlzKHN0cnVjdCBrZXkgKmtleXJpbmcpOwo+IC0K
+PiAgI2Vsc2UKPiAtCj4gIHN0YXRpYyBpbmxpbmUgdm9pZCBzZXRfcGxhdGZvcm1fdHJ1c3RlZF9r
+ZXlzKHN0cnVjdCBrZXkgKmtleXJpbmcpCj4gIHsKPiAgfQo+IC0KPiAtI2VuZGlmIC8qIENPTkZJ
+R19JTlRFR1JJVFlfUExBVEZPUk1fS0VZUklORyAqLwo+ICsjZW5kaWYKPiAgCj4gICNlbmRpZiAv
+KiBfS0VZU19TWVNURU1fS0VZUklOR19IICovCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhl
+Ywo=
