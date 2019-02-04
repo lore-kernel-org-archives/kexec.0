@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH] arm64, vmcoreinfo : Append 'MAX_USER_VA_BITS' and
- 'MAX_PHYSMEM_BITS' to vmcoreinfo
-Date: Mon, 4 Feb 2019 16:04:33 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03567AA3@BPXM09GP.gisp.nec.co.jp>
-References: <1548850991-11879-1-git-send-email-bhsharma@redhat.com>
- <20190131014800.GB15785@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190131014800.GB15785@dhcp-128-65.nay.redhat.com>
-Content-Language: en-US
+Subject: Re: [PATCH 1/2] arm64: Expose address bits (physical/virtual) via
+ cpuinfo
+References: <1548709076-22317-1-git-send-email-bhsharma@redhat.com>
+ <1548709076-22317-2-git-send-email-bhsharma@redhat.com>
+ <afa2417a-10d0-21f6-007f-e8eb7055f3d7@arm.com>
+ <8659c949-a588-387b-3cb6-1dd8ea86723e@redhat.com>
+From: James Morse <james.morse@arm.com>
+Message-ID: <be9ad470-6f24-36cc-aeb8-a7cea3ec984a@arm.com>
+Date: Mon, 4 Feb 2019 16:54:51 +0000
 MIME-Version: 1.0
+In-Reply-To: <8659c949-a588-387b-3cb6-1dd8ea86723e@redhat.com>
+Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,117 +19,110 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "lijiang@redhat.com" <lijiang@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Borislav Petkov <bp@alien8.de>, "anderson@redhat.com" <anderson@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: mark.rutland@arm.com, Steve.Capper@arm.com, catalin.marinas@arm.com, ard.biesheuvel@linaro.org, will.deacon@arm.com, bhupesh.linux@gmail.com, Suzuki K Poulose <suzuki.poulose@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 1/30/2019 8:48 PM, Dave Young wrote:
-> + more people
-> On 01/30/19 at 05:53pm, Bhupesh Sharma wrote:
-> > With ARMv8.2-LVA and LPA architecture extensions, arm64 hardware which
-> > supports these extensions can support upto 52-bit virtual and 52-bit
-> > physical addresses respectively.
-> >
-> > Since at the moment we enable the support of these extensions via CONFIG
-> > flags, e.g.
-> >  - LPA via CONFIG_ARM64_PA_BITS_52
-> >
-> > there are no clear mechanisms in user-space right now to
-> > deteremine these CONFIG flag values and also determine the PARange and
-> > VARange address values.
-> >
-> > User-space tools like 'makedumpfile' and 'crash-utility' can instead
-> > use the 'MAX_USER_VA_BITS' and 'MAX_PHYSMEM_BITS' values to determine
-> > the maximum virtual address and physical address (respectively)
-> > supported by underlying kernel.
-> >
-> > A reference 'makedumpfile' implementation which uses this approach to
-> > determining the maximum physical address is available in [0].
-> >
-> > [0].
-> https://github.com/bhupesh-sharma/makedumpfile/blob/52-bit-pa-support-via-vmcore-v1/arch/arm64.c#L490
-> 
-> I'm not objecting the patch, just want to make sure to make clear about
-> things and make sure these issues are aware by people, and leave arm
-> people to review the arm bits.
-> 
-> 1. MAX_PHYSMEM_BITS
-> As we previously found, back to 2014 makedumpfile took a patch to read the
-> value from vmcore but the kernel patch was not accepted.
-> So we should first make clear if this is really needed, why other arches
-> do not need this in makedumpfile.
-> 
-> If we really need it then should it be arm64 only?
-> 
-> If it is arm64 only then the makedumpfile code should read this number
-> only for arm64.
-
-Sorry for the delay.
-
-According to the kernel patch, some of arm32 platforms may need it
-http://lists.infradead.org/pipermail/kexec/2014-May/011909.html
-but except for them (and arm64), makedumpfile can manage with kernel
-version and some switches to determine this value so far.
-
-> 
-> Also Lianbo added the vmcoreinfo documents, I believe it stays in -tip
-> tree,  need to make sure to document this as well.
-> 
-> 2. MAX_USER_VA_BITS
-> Does makedumpfile care about userspace VA bits?  I do not see other code
-> doing this,  Kazu and Dave A should be able to comment.
-
-The mapping makedumpfile uses on arm64 is swapper_pg_dir only, so
-unless the config affects its structure or something, makedumpfile
-will not need this value.
-
-Thanks,
-Kazu
-
-> 
-> I tend to doubt about this.
-> 
-> >
-> > Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > Cc: James Morse <james.morse@arm.com>
-> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> > ---
-> >  arch/arm64/kernel/crash_core.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
-> > index ca4c3e12d8c5..ad231be5c0d8 100644
-> > --- a/arch/arm64/kernel/crash_core.c
-> > +++ b/arch/arm64/kernel/crash_core.c
-> > @@ -10,6 +10,8 @@
-> >  void arch_crash_save_vmcoreinfo(void)
-> >  {
-> >  	VMCOREINFO_NUMBER(VA_BITS);
-> > +	VMCOREINFO_NUMBER(MAX_USER_VA_BITS);
-> > +	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
-> >  	/* Please note VMCOREINFO_NUMBER() uses "%d", not "%x" */
-> >  	vmcoreinfo_append_str("NUMBER(kimage_voffset)=0x%llx\n",
-> >  						kimage_voffset);
-> > --
-> > 2.7.4
-> >
-> >
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> Thanks
-> Dave
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgQmh1cGVzaCwKCk9uIDMwLzAxLzIwMTkgMTk6NDgsIEJodXBlc2ggU2hhcm1hIHdyb3RlOgo+
+IE9uIDAxLzI5LzIwMTkgMDM6MzkgUE0sIFN1enVraSBLIFBvdWxvc2Ugd3JvdGU6Cj4+IE9uIDI4
+LzAxLzIwMTkgMjA6NTcsIEJodXBlc2ggU2hhcm1hIHdyb3RlOgo+Pj4gV2l0aCBBUk12OC4yLUxW
+QSBhbmQgTFBBIGFyY2hpdGVjdHVyZSBleHRlbnNpb25zLCBhcm02NCBoYXJkd2FyZSB3aGljaAo+
+Pj4gc3VwcG9ydHMgdGhlc2UgZXh0ZW5zaW9ucyBjYW4gc3VwcG9ydCB1cHRvIDUyLWJpdCB2aXJ0
+dWFsIGFuZCA1Mi1iaXQKPj4+IHBoeXNpY2FsIGFkZHJlc3NlcyByZXNwZWN0aXZlbHkuCj4+Pgo+
+Pj4gU2luY2UgYXQgdGhlIG1vbWVudCB3ZSBlbmFibGUgdGhlIHN1cHBvcnQgb2YgdGhlc2UgZXh0
+ZW5zaW9ucyB2aWEgQ09ORklHCj4+PiBmbGFncywgZS5nLgo+Pj4gwqAgLSBMUEEgdmlhIENPTkZJ
+R19BUk02NF9QQV9CSVRTXzUyLCBhbmQKPj4+IMKgIC0gTFZBIHZpYSBDT05GSUdfQVJNNjRfRk9S
+Q0VfNTJCSVQKPj4+Cj4+PiBUaGUgZWFzaWVzdCB3YXkgYSB1c2VyIGNhbiBkZXRlcm1pbmUgdGhl
+IHBoeXNpY2FsL3ZpcnR1YWwKPj4+IGFkZHJlc3NlcyBzdXBwb3J0ZWQgb24gdGhlIGhhcmR3YXJl
+LCBpcyB2aWEgdGhlICcvcHJvYy9jcHVpbmZvJwo+Pj4gaW50ZXJmYWNlLgo+Pgo+PiBXaHkgZG8g
+d2UgbmVlZCB0aGlzIGluZm9ybWF0aW9uID8KPiAKPiBTb3JyeSBmb3IgdGhlIGRlbGF5IGluIHJl
+cGx5LCBidXQgSSB3YW50ZWQgdG8gY29sbGVjdCBhcyBtdWNoIGluZm9ybWF0aW9uIGZyb20KPiBv
+dXIgdGVzdCB0ZWFtcyBhcyBwb3NzaWJsZSBiZWZvcmUgcmVwbHlpbmcgdG8gdGhpcyB0aHJlYWQu
+Cj4gCj4gU28gaGVyZSBpcyBicmllZiBsaXN0IG9mIHJlYXNvbnMsIGFzIHRvIHdoeSB3ZSBuZWVk
+IHRoaXMgaW5mb3JtYXRpb24gaW4gdXNlci1zcGFjZToKPiAKPiAxLiBUaGlzIGluZm9ybWF0aW9u
+IGlzIHVzZWZ1bCBmb3IgYSBub24tZXhwZXJ0IHVzZXIsIHVzaW5nIExpbnV4IGRpc3RyaWJ1dGlv
+bnMKPiAobGlrZSBGZWRvcmEpIG9uIGRpZmZlcmVudCBhcm02NCBwbGF0Zm9ybXMuIFRoZSBkZWZh
+dWx0IGNvbmZpZ3VyYXRpb24gKC5jb25maWcpCj4gd2lsbCBiZSB0aGUgc2FtZSBmb3IgYSBkaXN0
+cmlidXRpb24gZmxhdm9yIGFuZCBpcyBzdXBwb3NlZCB0byB3b3JrIGZpbmUgb24gYWxsCj4gdW5k
+ZXJseWluZyBhcm02NCBwbGF0Zm9ybXMuCj4gCj4gYSkuIE5vdyBzb21lIG9mIHRoZXNlIHVuZGVy
+bHlpbmcgcGxhdGZvcm1zIG1heSBzdXBwb3J0IEFSTXY4LTguMiBleHRlbnNpb24gd2hpbGUKPiBv
+dGhlcnMgZG9uJ3QuCj4gCj4gYikuIFVzZXJzIHBlcmZvcm1pbmcgcGVyZm9ybWFuY2UgYmVuY2gt
+bWFya2luZyBvbiB0aGVzZSBwbGF0Zm9ybXMgcnVuIGJlbmNobWFya3MKPiB3aXRoIGRpZmZlcmVu
+dCBwYWdlLXNpemVzIGFuZCBhZGRyZXNzIHJhbmdlcy4KCj4gYykuIFJpZ2h0IG5vdyB0aGV5IGhh
+dmUgbm8gd2F5IHRvIGtub3csIGFib3V0IHRoZSB1bmRlcmx5aW5nIFZBUmFuZ2UgYW5kIFBBUmFu
+Z2UKPiB2YWx1ZXMgb3RoZXIgdGhhbiByZWFkaW5nIHRoZSBjb25maWcgZmlsZSBhbmQgc2VhcmNo
+IGZvciB0aGUgZmxhZ3MuCgpXaHkgZG8gdGhleSBuZWVkIHRvIGtub3c/IFdoYXQgZGVjaXNpb24g
+Y2FuIHlvdSBtYWtlIHdpdGggdGhpcyBpbmZvcm1hdGlvbiB0aGF0CnlvdSBjYW4ndCBtYWtlIHdp
+dGhvdXQgaXQ/CgoKPiBGb3IgZS5nLiBsZXRzIGNvbnNpZGVyIHRoZSAncGctdGFibGVfdGVzdHMn
+IChTZWUgLQo+IDxodHRwczovL2dpdGh1Yi5jb20vc2Fuc2tyaXRpLXMvcGctdGFibGVfdGVzdHM+
+KSwgd2hpY2ggaXMgdXNlZCB0byB0ZXN0IGFuZAo+IHZlcmlmeSA1LWxldmVsIHBhZ2UgdGFibGUg
+YmVoYXZpb3Igb24geDg2XzY0IExpbnV4LiBJdCByZXF1aXJlcyBkZXRlcm1pbmluZyBpZgo+IDUt
+bGV2ZWwgcGFnZSB0YWJsZXMgYXJlIGZ1bGx5IHN1cHBvcnRlZCwgCgouLi4gYnV0IHdlIGRvbid0
+IGhhdmUgNS1sZXZlbCBwYWdlcyB0YWJsZXMgLi4uCgoKPiBmb3Igd2hpY2ggaXQgdXNlcyBlaXRo
+ZXIgJ0ludGVsICdsYTU3Jwo+IGNwdSBmbGFnJyBpbjoKPiAKPiAkIGNhdCAvcHJvYy9jcHVpbmZv
+Jywgb3IKPiAKPiAkIGdyZXAgQ09ORklHX1g4Nl81TEVWRUwgL2Jvb3QvY29uZmlnLSQodW5hbWUg
+LXIpCj4gQ09ORklHX1g4Nl81TEVWRUw9eQo+IAo+IFRoaXMgdGVzdCBzdWl0ZSBpcyBlYXNpbHkg
+bW9kaWZpYWJsZSBmb3IgdmVyaWZ5aW5nIDUyLWJpdCBBUk12OC4yLUxWQSBzdXBwb3J0LgoKVGhp
+cyBsb29rcyBsaWtlIGEgdGVzdCB0byBjaGVjayBhbGwga2VybmVsIHBhZ2UtdGFibGUgd2Fsa2Vy
+cyBoYXZlIGJlZW4gdXBkYXRlZApmb3IgYSBmaWZ0aCBsZXZlbC4gV2UgZG9uJ3QgbmVlZCB0byB3
+b3JyeSBhYm91dCB0aGlzLgoKWW91IHNob3VsZCBqdXN0IG5lZWQgdG8gcmVtb3ZlIHRoZSBhcmNo
+LXNwZWNpZmljIHRlc3QuIElmIHlvdSBwcm92aWRlIHRoZSBoaW50Cm9uIHBsYXRmb3JtcyB0aGF0
+IHN1cHBvcnQgaXQsIHRoZSBtYXBwaW5nIHNob3VsZCBzdWNjZWVkLiBPbiBwbGF0Zm9ybXMgdGhh
+dApkb24ndCwgaXQgd29uJ3QuCgpXaHkgZG9lcyB1c2VyIHNwYWNlIG5lZWQgdG8ga25vdyBpbiBh
+ZHZhbmNlIG9mIG1ha2luZyB0aGUgaGludD8KCgo+IGQpLiBOb3cgd2hlbiBydW5uaW5nIHRoZSBh
+Ym92ZSBzdWl0ZSBhbmQgc2hhcmluZyByZXN1bHRzLCBpdCBtaWdodCBiZSB0aGF0IHRoZQo+IC5j
+b25maWcgZmlsZSBpcyBub3QgYXZhaWxhYmxlIG9yIGV2ZW4gaW4gdGhlIGNhc2UgaXQgaXMgYXZh
+aWxhYmxlIHRoZSBDT05GSUcKPiBmbGFnIHNldHRpbmdzIGluIC5jb25maWcgZmlsZSBhcmUgbm90
+IGludHVpdGl2ZSB0byBhIG5vbi1leHBlcnQgdXNlciBmb3IgYXJtNjQKPiAodGhlIGV4YW1wbGUg
+YmVsb3cgaXMgb2YgNjRLIHBhZ2Ugc2l6ZSwgNDgtYml0IGtlcm5lbCBWQSwgNTItYml0IFVzZXIg
+c3BhY2UgVkEKPiBhbmQgNTItYml0IFBBKToKCkkgYWdyZWUgaW5zcGVjdGluZyB0aGUgS2NvbmZp
+ZyBpcyBhbiBpbmFwcHJvcHJpYXRlIHdheSBmb3IgdXNlci1zcGFjZSAndG8ga25vdycKd2hhdCB0
+aGUga2VybmVsIHN1cHBvcnRzLgoKSSBjYW4gb25seSBzZWUgYSAnc3VwcG9ydHMgNTJiaXQgdmEn
+IGZsYWcgYXMgYmVpbmcgdXNlZnVsIHRvIGEgcHJvZ3JhbSB0aGF0CmRvZXNuJ3QgYWN0dWFsbHkg
+d2FudCB0byB1c2UgaXQsIGJ1dCBmb3Igc29tZSBiaXphcnJlIHJlYXNvbiB3YW50cyB0byBrbm93
+LgoKRm9yIGNvcmVkdW1wcyB0aGUgcXVlc3Rpb24gaXNuJ3QgIndhcyBpdCBzdXBwb3J0ZWQiLCBi
+dXQgIndhcyBpdCBpbiB1c2UiLCB3aGljaAp5b3UgY2FuIHRlbGwgZnJvbSB0aGUgcGFnZXRhYmxl
+cy4KCgo+IEFsc28gcmlnaHQgbm93IHRoZXJlIGlzIGFuIGFic2VuY2Ugb2YgYSBzdGFuZGFyZCBB
+QkkgYmV0d2VlbiB0aGUgdXNlci1zcGFjZSBhbmQKPiBrZXJuZWwgZm9yIGV4cG9ydGluZyB0aGlz
+IGluZm9ybWF0aW9uIHRvIHRoZSB1c2VyLXNwYWNlLCB3aXRoIHR3byBleGNlcHRpb25zOgo+IAo+
+IDEuIEZvciB2bWNvcmVpbmZvIHNwZWNpZmljIHVzZXItc3BhY2UgdXRpbGl0aWVzIChsaWtlIG1h
+a2VkdW1wZmlsZSBhbmQgY3Jhc2gpIEkKPiBoYXZlIHByb3Bvc2VkIGEgY291cGxlIG9mIENPTkZJ
+RyBmbGFncyB0byBiZSBhZGRlZCB0byB0aGUgdm1jb3JlaW5mbywgc28gdGhhdAo+IHVzZXItc3Bh
+Y2UgdXRpbGl0aWVzIGNhbiB1c2UgdGhlIHNhbWUgKFNlZQo+IDxodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9waXBlcm1haWwva2V4ZWMvMjAxOS1KYW51YXJ5LzAyMjM4Ny5odG1sPiBmb3IgZGV0
+YWlscykuCgp2bWNvcmVpbmZvIGlzIGZvciB0aGluZ3MgbGlrZSBjcmFzaC9nZGIvbWFrZWR1bXBm
+aWxlIHRvIHByb3ZpZGUga2VybmVsLXNwZWNpZmljCmluZm9ybWF0aW9uIHRoYXQgdGhleSBjb3Vs
+ZG4ndCBwb3NzaWJseSB3b3JrIHdpdGhvdXQuIExpa2UgdGhlIHBhZ2Ugc2l6ZS4gNTJiaXQKc3Vw
+cG9ydCBkb2Vzbid0IGZpdCBoZXJlIGFzIGEgNTJiaXQtYXdhcmUgd2Fsa2VyIHdvcmtzIHJlZ2Fy
+ZGxlc3Mgb2Ygd2hldGhlcgo1MmJpdCB3YXMgaW4gdXNlLgoKCj4gMi4gRm9yIG90aGVyIHVzZXIt
+c3BhY2UgdXRpbGl0aWVzIChlc3BlY2lhbGx5IHRob3NlIHdoaWNoIG1ha2UgYSAnbW1hcCcgY2Fs
+bCBhbmQKPiBwYXNzIGFuIGFkZHJlc3MgaGludCB0byB0aGUgZ2V0IHRoZSBrZXJuZWwgdG8gcHJv
+dmlkZSBhIGhpZ2ggYWRkcmVzcyksIAoKPiBJIGNhbiBzZWUgb25seSB0d28gbWV0aG9kcyB0byBk
+ZXRlcm1pbmUgdGhlIHVuZGVybHlpbmcga2VybmVsIHN1cHBvcnQ6Cj4gCj4gYSkuIFJlYWQgdGhl
+IENPTkZJRyBmbGFncyBmcm9tIC5jb25maWcgKGFzIEkgY2FwdHVyZWQgc29tZSBwYXJhZ3JhcGhz
+IGFib3ZlKSwgb3IKPiAKPiBiKS4gSW4gYWJzZW5jZSBvZiAuY29uZmlnIGZpbGUgb24gdGhlIHN5
+c3RlbSwgcmVhZCB0aGUgc3lzdGVtIElEIHJlZ2lzdGVycyBsaWtlCj4gJ0lEX0FBNjRNTUZSMF9F
+TDEnIGFuZCAnSURfQUE2NE1NRlIyX0VMMScgKHdoaWNoIFBBVENIIDIvMiBvZiB0aGlzIHNlcmll
+cyB0cmllcwo+IHRvIGVuYWJsZSBmcm9tIGtlcm5lbCBzaWRlKSBhbmQgdGhlbiBtYWtlIGEgZGVj
+aXNpb24gb24gd2hldGhlciB0byBwYXNzIGEgaGludAo+IHRvICdtbWFwJy4KCkl0IHNlZW1zIHlv
+dSdyZSBleHBlY3RpbmcgdG8ga25vdyB3aGV0aGVyIDUyYml0LVZBIGlzIHN1cHBvcnRlZCB3aXRo
+b3V0IGFjdHVhbGx5CnVzaW5nIGl0LiBXaGF0IGlzIHRoaXMgdXNlZnVsIGZvcj8KClRoZSBwb2lu
+dCBvZiB0aGUgaGludCBpcyB5b3Ugd2FudCB0byBhbGxvY2F0ZSBtZW1vcnksIGFuZCBjYW4gd29y
+ayB3aXRoIDUyYml0LVZBCmlmIHRoZSBwbGF0Zm9ybSBzdXBwb3J0cyBpdC4gSWYgaXQgZG9lc24n
+dCwgeW91IHN0aWxsIHdhbnQgdG8gYWxsb2NhdGUgdGhlCm1lbW9yeS4gV2Ugc2hvdWxkbid0IG5l
+ZWQgYSBoaW50IHRoYXQgdGhlIDUyYml0LXZhIGhpbnQgaXMgc3VwcG9ydGVkLgoKCj4gSXQgbWln
+aHQgYmUgdGhhdCBJIGFtIG1pc3Npbmcgb3RoZXIgc3RhbmRhcmQgQUJJIG1lY2hhbmlzbXMuIElm
+IHNvLCBwbGVhc2UgcG9pbnQKPiBtZSB0byB0aGUgc2FtZS4KV2UgYWxzbyBoYXZlIEhXQ0FQOiBE
+b2N1bWVudGF0aW9uL2FybTY0L2VsZl9od2NhcHMudHh0CgpUaGVzZSBhcmUgdXNlZCBmb3IgdGhp
+bmdzIHRoZSBwcm9ncmFtIG1heSBuZWVkIHRvIHJ1bjogbGlrZSBmbG9hdGluZyBwb2ludCwgb3IK
+dGhlIHByZXNlbmNlIG9mIHBhcnRpY3VsYXIgaW5zdHJ1Y3Rpb25zLiBVc2VyLXNwYWNlIGFic29s
+dXRlbHkgaGFzIHRvIGtub3cgYWJvdXQKdGhlc2UgaW4gYWR2YW5jZSwgYXMgaXQgd2lsbCBnZXQg
+YSBTSUdJTEwgaWYgc3VwcG9ydCBpcyBub3QgcHJlc2VudC4KCjUyYml0IFZBIGRvZXNuJ3QgZml0
+IGhlcmU6IG1lbW9yeSBpcyBtZW1vcnkuIE5lZWRpbmcgdG8ga25vdyBpbXBsaWVzIHVzZXItc3Bh
+Y2UKaXMgdW53aWxsaW5nIHRvIHVzZSBtZW1vcnkgaWYgdGhlIGJpdHMgYWJvdmUgNDhiaXRzIGFy
+ZW4ndCBzZXQuCgoKVGhhbmtzLAoKSmFtZXMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
