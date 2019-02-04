@@ -1,17 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gqPqx-0003lC-Hz
- for kexec@lists.infradead.org; Sun, 03 Feb 2019 22:03:05 +0000
-Date: Sun, 3 Feb 2019 23:02:58 +0100
-From: Petr Vorel <pvorel@suse.cz>
+ id 1gqedA-0002JU-1N
+ for kexec@lists.infradead.org; Mon, 04 Feb 2019 13:49:49 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x14DmglG128564
+ for <kexec@lists.infradead.org>; Mon, 4 Feb 2019 08:49:45 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2qem7s6sg4-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 04 Feb 2019 08:49:44 -0500
+Received: from localhost
+ by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Mon, 4 Feb 2019 13:49:42 -0000
 Subject: Re: [PATCH 3/3] selftests/ima: kexec_file_load syscall test
-Message-ID: <20190203220258.GC4022@x230>
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Mon, 04 Feb 2019 08:49:26 -0500
+In-Reply-To: <20190203220258.GC4022@x230>
 References: <1548960936-7800-1-git-send-email-zohar@linux.ibm.com>
  <1548960936-7800-4-git-send-email-zohar@linux.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1548960936-7800-4-git-send-email-zohar@linux.ibm.com>
+ <20190203220258.GC4022@x230>
+Mime-Version: 1.0
+Message-Id: <1549288166.4146.80.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,184 +34,100 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.ibm.com>
+To: Petr Vorel <pvorel@suse.cz>
 Cc: Shuah Khan <shuah@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, Dave Young <dyoung@redhat.com>
 
-Hi Mimi,
-
-> The kernel can be configured to verify PE signed kernel images, IMA
-> kernel image signatures, both types of signatures, or none.  This test
-> verifies only properly signed kernel images are loaded into memory,
-> based on the kernel configuration and runtime policies.
-
-> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-Reviewed-by: Petr Vorel <pvorel@suse.cz>
-
-...
-> +++ b/tools/testing/selftests/ima/test_kexec_file_load.sh
-> @@ -0,0 +1,250 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0+
-# SPDX-License-Identifier: GPL-2.0-or-later
-> +#
-> +# Loading a kernel image via the kexec_file_load syscall can verify either
-> +# the IMA signature stored in the security.ima xattr or the PE signature,
-> +# both signatures depending on the IMA policy, or none.
-> +#
-> +# To determine whether the kernel image is signed, this test depends
-> +# on pesign and getfattr.  This test also requires the kernel to be
-> +# built with CONFIG_IKCONFIG enabled and either CONFIG_IKCONFIG_PROC
-> +# enabled or access to the extract-ikconfig script.
-> +
-> +VERBOSE=1
-Maybe allow to disable verbose without source change?
-VERBOSE="${VERBOSE:-1}"
-
-> +EXTRACT_IKCONFIG=$(ls /lib/modules/`uname -r`/source/scripts/extract-ikconfig)
-> +IKCONFIG=/tmp/config-`uname -r`
-> +PROC_CONFIG="/proc/config.gz"
-> +KERNEL_IMAGE="/boot/vmlinuz-`uname -r`"
-> +PESIGN=/usr/bin/pesign
-> +GETFATTR=/usr/bin/getfattr
-> +
-> +TEST="$0"
-> +. ./common_lib.sh
-> +
-> +# Kselftest framework requirement - SKIP code is 4.
-> +ksft_skip=4
-> +
-> +kconfig_enabled()
-> +{
-> +	RC=0
-> +	egrep -q $1 $IKCONFIG
-> +	if [ $? -eq 0 ]; then
-> +		RC=1
-> +	fi
-> +	return $RC
-> +}
-This would be enough (grep with -e returns only 0 or 1):
-kconfig_enabled()
-{
-	grep -E -q $1 $IKCONFIG
-}
-> +
-> +# policy rule format: action func=<keyword> [appraise_type=<type>]
-> +check_ima_policy()
-> +{
-> +	IMA_POLICY=/sys/kernel/security/ima/policy
-> +
-> +	RC=0
-> +	if [ $# -eq 3 ]; then
-> +		grep -e $2 $IMA_POLICY | grep -e "^$1.*$3" 2>&1 >/dev/null
-> +	else
-> +		grep -e $2 $IMA_POLICY | grep -e "^$1" 2>&1 >/dev/null
-> +	fi
-> +	if [ $? -eq 0 ]; then
-> +		RC=1
-> +	fi
-> +	return $RC
-> +}
-This would be enough and more descriptive:
-check_ima_policy()
-{
-	local action="$1"
-	local keyword="$2"
-	local type="$3"
-
-	[ -n "$type" ] && type="appraise_type=$type"
-	grep -q "^$action.*func=$keyword.*$type" /sys/kernel/security/ima/policy
-}
-
-> +
-> +check_kconfig_options()
-> +{
-> +	# Attempt to get the kernel config first via proc, and then by
-> +	# extracting it from the kernel image using scripts/extract-ikconfig.
-> +	if [ ! -f $PROC_CONFIG ]; then
-> +		modprobe configs 2>/dev/null
-> +	fi
-> +	if [ -f $PROC_CONFIG ]; then
-> +		cat $PROC_CONFIG > $IKCONFIG
-> +	fi
-> +
-> +	if [ ! -f $IKCONFIG ]; then
-> +		if [ ! -f $EXTRACT_IKCONFIG ]; then
-> +			echo "$TEST: requires access to extract-ikconfig" >&2
-> +			exit $ksft_skip
-> +		fi
-> +
-> +		$EXTRACT_IKCONFIG $KERNEL_IMAGE > $IKCONFIG
-> +		kconfig_enabled "CONFIG_IKCONFIG=y"
-> +		if [ $? -eq 0 ]; then
-> +			echo "$TEST: requires the kernel to be built with CONFIG_IKCONFIG" >&2
-> +			exit $ksft_skip
-> +		fi
-> +	fi
-> +
-> +	kconfig_enabled "CONFIG_KEXEC_BZIMAGE_VERIFY_SIG=y"
-> +	pe_sig_required=$?
-> +	if [ $VERBOSE -ne 0 ] && [ $pe_sig_required -eq 1 ]; then
-> +		echo "$TEST: [INFO] PE signed kernel image required"
-> +	fi
-Checks for $VERBOSE here and in other kconfig_enabled usages bellow are a bit
-redundant. And you check for assigned variable now and then later on,
-you use these variables as global (and reset $ima_sig_required in
-check_runtime().
-
-How about using functions instead:
-log_info()
-{
-	echo "$TEST: [INFO] $1"
-}
-(Reducing some duplicity, IMHO helper functions in shell library used in all
-selftest tests would be useful)
-
-kconfig_enabled()
-{
-	local config="$1"
-	local msg="$2"
-	local ret
-
-	grep -E -q $config $IKCONFIG
-	ret=$?
-	[ $VERBOSE -ne 0 ] && [ $ret -eq 1 ] && log_info "$msg"
-	return $ret
-}
-
-ima_sig_enabled()
-{
-	kconfig_enabled "CONFIG_KEXEC_BZIMAGE_VERIFY_SIG=y" \
-		"PE signed kernel image required"
-}
-
-ima_sig_enabled()
-{
-	kconfig_enabled "CONFIG_IMA_APPRAISE_REQUIRE_KEXEC_SIGS=y" \
-		"IMA kernel image signature required"
-}
-Warning is printed each time, but that's deliberate.
-If it's not wanted, it can be moved into setup.
-
-...
-> +check_kconfig_options
-> +check_for_apps
-> +check_runtime
-> +check_for_sigs
-> +kexec_file_load_test
-
-> +rc=$?
-> +exit $rc
-These two are redundant.
-
-Kind regards,
-Petr
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU3VuLCAyMDE5LTAyLTAzIGF0IDIzOjAyICswMTAwLCBQZXRyIFZvcmVsIHdyb3RlOgo+IEhp
+IE1pbWksCj4gCj4gPiBUaGUga2VybmVsIGNhbiBiZSBjb25maWd1cmVkIHRvIHZlcmlmeSBQRSBz
+aWduZWQga2VybmVsIGltYWdlcywgSU1BCj4gPiBrZXJuZWwgaW1hZ2Ugc2lnbmF0dXJlcywgYm90
+aCB0eXBlcyBvZiBzaWduYXR1cmVzLCBvciBub25lLiAgVGhpcyB0ZXN0Cj4gPiB2ZXJpZmllcyBv
+bmx5IHByb3Blcmx5IHNpZ25lZCBrZXJuZWwgaW1hZ2VzIGFyZSBsb2FkZWQgaW50byBtZW1vcnks
+Cj4gPiBiYXNlZCBvbiB0aGUga2VybmVsIGNvbmZpZ3VyYXRpb24gYW5kIHJ1bnRpbWUgcG9saWNp
+ZXMuCj4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC5pYm0uY29t
+Pgo+IFJldmlld2VkLWJ5OiBQZXRyIFZvcmVsIDxwdm9yZWxAc3VzZS5jej4KClRoYW5rIHlvdSBm
+b3IgdGhlIHNwZWNpZmljIGFuZCBnZW5lcmljIHN1Z2dlc3Rpb25zIHRvIHNpbXBsaWZ5L2NsZWFu
+CnVwIHRoZSB0ZXN0cyEgwqBUaGUgc3VnZ2VzdGlvbnMsIGJlbG93LCBhbmQgdGhlICJwcmludCIg
+aGVscGVycyB3aWxsCnJlYWxseSBtYWtlIGEgZGlmZmVyZW5jZS4KCk1pbWkKCj4gCj4gLi4uCj4g
+PiArKysgYi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9pbWEvdGVzdF9rZXhlY19maWxlX2xvYWQu
+c2gKPiA+IEBAIC0wLDAgKzEsMjUwIEBACj4gPiArIyEvYmluL3NoCj4gPiArIyBTUERYLUxpY2Vu
+c2UtSWRlbnRpZmllcjogR1BMLTIuMCsKPiAjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwt
+Mi4wLW9yLWxhdGVyCj4gPiArIwo+ID4gKyMgTG9hZGluZyBhIGtlcm5lbCBpbWFnZSB2aWEgdGhl
+IGtleGVjX2ZpbGVfbG9hZCBzeXNjYWxsIGNhbiB2ZXJpZnkgZWl0aGVyCj4gPiArIyB0aGUgSU1B
+IHNpZ25hdHVyZSBzdG9yZWQgaW4gdGhlIHNlY3VyaXR5LmltYSB4YXR0ciBvciB0aGUgUEUgc2ln
+bmF0dXJlLAo+ID4gKyMgYm90aCBzaWduYXR1cmVzIGRlcGVuZGluZyBvbiB0aGUgSU1BIHBvbGlj
+eSwgb3Igbm9uZS4KPiA+ICsjCj4gPiArIyBUbyBkZXRlcm1pbmUgd2hldGhlciB0aGUga2VybmVs
+IGltYWdlIGlzIHNpZ25lZCwgdGhpcyB0ZXN0IGRlcGVuZHMKPiA+ICsjIG9uIHBlc2lnbiBhbmQg
+Z2V0ZmF0dHIuICBUaGlzIHRlc3QgYWxzbyByZXF1aXJlcyB0aGUga2VybmVsIHRvIGJlCj4gPiAr
+IyBidWlsdCB3aXRoIENPTkZJR19JS0NPTkZJRyBlbmFibGVkIGFuZCBlaXRoZXIgQ09ORklHX0lL
+Q09ORklHX1BST0MKPiA+ICsjIGVuYWJsZWQgb3IgYWNjZXNzIHRvIHRoZSBleHRyYWN0LWlrY29u
+ZmlnIHNjcmlwdC4KPiA+ICsKPiA+ICtWRVJCT1NFPTEKPiBNYXliZSBhbGxvdyB0byBkaXNhYmxl
+IHZlcmJvc2Ugd2l0aG91dCBzb3VyY2UgY2hhbmdlPwo+IFZFUkJPU0U9IiR7VkVSQk9TRTotMX0i
+Cj4gCj4gPiArRVhUUkFDVF9JS0NPTkZJRz0kKGxzIC9saWIvbW9kdWxlcy9gdW5hbWUgLXJgL3Nv
+dXJjZS9zY3JpcHRzL2V4dHJhY3QtaWtjb25maWcpCj4gPiArSUtDT05GSUc9L3RtcC9jb25maWct
+YHVuYW1lIC1yYAo+ID4gK1BST0NfQ09ORklHPSIvcHJvYy9jb25maWcuZ3oiCj4gPiArS0VSTkVM
+X0lNQUdFPSIvYm9vdC92bWxpbnV6LWB1bmFtZSAtcmAiCj4gPiArUEVTSUdOPS91c3IvYmluL3Bl
+c2lnbgo+ID4gK0dFVEZBVFRSPS91c3IvYmluL2dldGZhdHRyCj4gPiArCj4gPiArVEVTVD0iJDAi
+Cj4gPiArLiAuL2NvbW1vbl9saWIuc2gKPiA+ICsKPiA+ICsjIEtzZWxmdGVzdCBmcmFtZXdvcmsg
+cmVxdWlyZW1lbnQgLSBTS0lQIGNvZGUgaXMgNC4KPiA+ICtrc2Z0X3NraXA9NAo+ID4gKwo+ID4g
+K2tjb25maWdfZW5hYmxlZCgpCj4gPiArewo+ID4gKwlSQz0wCj4gPiArCWVncmVwIC1xICQxICRJ
+S0NPTkZJRwo+ID4gKwlpZiBbICQ/IC1lcSAwIF07IHRoZW4KPiA+ICsJCVJDPTEKPiA+ICsJZmkK
+PiA+ICsJcmV0dXJuICRSQwo+ID4gK30KPiBUaGlzIHdvdWxkIGJlIGVub3VnaCAoZ3JlcCB3aXRo
+IC1lIHJldHVybnMgb25seSAwIG9yIDEpOgo+IGtjb25maWdfZW5hYmxlZCgpCj4gewo+IAlncmVw
+IC1FIC1xICQxICRJS0NPTkZJRwo+IH0KPiA+ICsKPiA+ICsjIHBvbGljeSBydWxlIGZvcm1hdDog
+YWN0aW9uIGZ1bmM9PGtleXdvcmQ+IFthcHByYWlzZV90eXBlPTx0eXBlPl0KPiA+ICtjaGVja19p
+bWFfcG9saWN5KCkKPiA+ICt7Cj4gPiArCUlNQV9QT0xJQ1k9L3N5cy9rZXJuZWwvc2VjdXJpdHkv
+aW1hL3BvbGljeQo+ID4gKwo+ID4gKwlSQz0wCj4gPiArCWlmIFsgJCMgLWVxIDMgXTsgdGhlbgo+
+ID4gKwkJZ3JlcCAtZSAkMiAkSU1BX1BPTElDWSB8IGdyZXAgLWUgIl4kMS4qJDMiIDI+JjEgPi9k
+ZXYvbnVsbAo+ID4gKwllbHNlCj4gPiArCQlncmVwIC1lICQyICRJTUFfUE9MSUNZIHwgZ3JlcCAt
+ZSAiXiQxIiAyPiYxID4vZGV2L251bGwKPiA+ICsJZmkKPiA+ICsJaWYgWyAkPyAtZXEgMCBdOyB0
+aGVuCj4gPiArCQlSQz0xCj4gPiArCWZpCj4gPiArCXJldHVybiAkUkMKPiA+ICt9Cj4gVGhpcyB3
+b3VsZCBiZSBlbm91Z2ggYW5kIG1vcmUgZGVzY3JpcHRpdmU6Cj4gY2hlY2tfaW1hX3BvbGljeSgp
+Cj4gewo+IAlsb2NhbCBhY3Rpb249IiQxIgo+IAlsb2NhbCBrZXl3b3JkPSIkMiIKPiAJbG9jYWwg
+dHlwZT0iJDMiCj4gCj4gCVsgLW4gIiR0eXBlIiBdICYmIHR5cGU9ImFwcHJhaXNlX3R5cGU9JHR5
+cGUiCj4gCWdyZXAgLXEgIl4kYWN0aW9uLipmdW5jPSRrZXl3b3JkLiokdHlwZSIgL3N5cy9rZXJu
+ZWwvc2VjdXJpdHkvaW1hL3BvbGljeQo+IH0KPiAKPiA+ICsKPiA+ICtjaGVja19rY29uZmlnX29w
+dGlvbnMoKQo+ID4gK3sKPiA+ICsJIyBBdHRlbXB0IHRvIGdldCB0aGUga2VybmVsIGNvbmZpZyBm
+aXJzdCB2aWEgcHJvYywgYW5kIHRoZW4gYnkKPiA+ICsJIyBleHRyYWN0aW5nIGl0IGZyb20gdGhl
+IGtlcm5lbCBpbWFnZSB1c2luZyBzY3JpcHRzL2V4dHJhY3QtaWtjb25maWcuCj4gPiArCWlmIFsg
+ISAtZiAkUFJPQ19DT05GSUcgXTsgdGhlbgo+ID4gKwkJbW9kcHJvYmUgY29uZmlncyAyPi9kZXYv
+bnVsbAo+ID4gKwlmaQo+ID4gKwlpZiBbIC1mICRQUk9DX0NPTkZJRyBdOyB0aGVuCj4gPiArCQlj
+YXQgJFBST0NfQ09ORklHID4gJElLQ09ORklHCj4gPiArCWZpCj4gPiArCj4gPiArCWlmIFsgISAt
+ZiAkSUtDT05GSUcgXTsgdGhlbgo+ID4gKwkJaWYgWyAhIC1mICRFWFRSQUNUX0lLQ09ORklHIF07
+IHRoZW4KPiA+ICsJCQllY2hvICIkVEVTVDogcmVxdWlyZXMgYWNjZXNzIHRvIGV4dHJhY3QtaWtj
+b25maWciID4mMgo+ID4gKwkJCWV4aXQgJGtzZnRfc2tpcAo+ID4gKwkJZmkKPiA+ICsKPiA+ICsJ
+CSRFWFRSQUNUX0lLQ09ORklHICRLRVJORUxfSU1BR0UgPiAkSUtDT05GSUcKPiA+ICsJCWtjb25m
+aWdfZW5hYmxlZCAiQ09ORklHX0lLQ09ORklHPXkiCj4gPiArCQlpZiBbICQ/IC1lcSAwIF07IHRo
+ZW4KPiA+ICsJCQllY2hvICIkVEVTVDogcmVxdWlyZXMgdGhlIGtlcm5lbCB0byBiZSBidWlsdCB3
+aXRoIENPTkZJR19JS0NPTkZJRyIgPiYyCj4gPiArCQkJZXhpdCAka3NmdF9za2lwCj4gPiArCQlm
+aQo+ID4gKwlmaQo+ID4gKwo+ID4gKwlrY29uZmlnX2VuYWJsZWQgIkNPTkZJR19LRVhFQ19CWklN
+QUdFX1ZFUklGWV9TSUc9eSIKPiA+ICsJcGVfc2lnX3JlcXVpcmVkPSQ/Cj4gPiArCWlmIFsgJFZF
+UkJPU0UgLW5lIDAgXSAmJiBbICRwZV9zaWdfcmVxdWlyZWQgLWVxIDEgXTsgdGhlbgo+ID4gKwkJ
+ZWNobyAiJFRFU1Q6IFtJTkZPXSBQRSBzaWduZWQga2VybmVsIGltYWdlIHJlcXVpcmVkIgo+ID4g
+KwlmaQo+IENoZWNrcyBmb3IgJFZFUkJPU0UgaGVyZSBhbmQgaW4gb3RoZXIga2NvbmZpZ19lbmFi
+bGVkIHVzYWdlcyBiZWxsb3cgYXJlIGEgYml0Cj4gcmVkdW5kYW50LiBBbmQgeW91IGNoZWNrIGZv
+ciBhc3NpZ25lZCB2YXJpYWJsZSBub3cgYW5kIHRoZW4gbGF0ZXIgb24sCj4geW91IHVzZSB0aGVz
+ZSB2YXJpYWJsZXMgYXMgZ2xvYmFsIChhbmQgcmVzZXQgJGltYV9zaWdfcmVxdWlyZWQgaW4KPiBj
+aGVja19ydW50aW1lKCkuCj4gCj4gSG93IGFib3V0IHVzaW5nIGZ1bmN0aW9ucyBpbnN0ZWFkOgo+
+IGxvZ19pbmZvKCkKPiB7Cj4gCWVjaG8gIiRURVNUOiBbSU5GT10gJDEiCj4gfQo+IChSZWR1Y2lu
+ZyBzb21lIGR1cGxpY2l0eSwgSU1ITyBoZWxwZXIgZnVuY3Rpb25zIGluIHNoZWxsIGxpYnJhcnkg
+dXNlZCBpbiBhbGwKPiBzZWxmdGVzdCB0ZXN0cyB3b3VsZCBiZSB1c2VmdWwpCj4gCj4ga2NvbmZp
+Z19lbmFibGVkKCkKPiB7Cj4gCWxvY2FsIGNvbmZpZz0iJDEiCj4gCWxvY2FsIG1zZz0iJDIiCj4g
+CWxvY2FsIHJldAo+IAo+IAlncmVwIC1FIC1xICRjb25maWcgJElLQ09ORklHCj4gCXJldD0kPwo+
+IAlbICRWRVJCT1NFIC1uZSAwIF0gJiYgWyAkcmV0IC1lcSAxIF0gJiYgbG9nX2luZm8gIiRtc2ci
+Cj4gCXJldHVybiAkcmV0Cj4gfQo+IAo+IGltYV9zaWdfZW5hYmxlZCgpCj4gewo+IAlrY29uZmln
+X2VuYWJsZWQgIkNPTkZJR19LRVhFQ19CWklNQUdFX1ZFUklGWV9TSUc9eSIgXAo+IAkJIlBFIHNp
+Z25lZCBrZXJuZWwgaW1hZ2UgcmVxdWlyZWQiCj4gfQo+IAo+IGltYV9zaWdfZW5hYmxlZCgpCj4g
+ewo+IAlrY29uZmlnX2VuYWJsZWQgIkNPTkZJR19JTUFfQVBQUkFJU0VfUkVRVUlSRV9LRVhFQ19T
+SUdTPXkiIFwKPiAJCSJJTUEga2VybmVsIGltYWdlIHNpZ25hdHVyZSByZXF1aXJlZCIKPiB9Cj4g
+V2FybmluZyBpcyBwcmludGVkIGVhY2ggdGltZSwgYnV0IHRoYXQncyBkZWxpYmVyYXRlLgo+IElm
+IGl0J3Mgbm90IHdhbnRlZCwgaXQgY2FuIGJlIG1vdmVkIGludG8gc2V0dXAuCj4gCj4gLi4uCj4g
+PiArY2hlY2tfa2NvbmZpZ19vcHRpb25zCj4gPiArY2hlY2tfZm9yX2FwcHMKPiA+ICtjaGVja19y
+dW50aW1lCj4gPiArY2hlY2tfZm9yX3NpZ3MKPiA+ICtrZXhlY19maWxlX2xvYWRfdGVzdAo+IAo+
+ID4gK3JjPSQ/Cj4gPiArZXhpdCAkcmMKPiBUaGVzZSB0d28gYXJlIHJlZHVuZGFudC4KPiAKPiBL
+aW5kIHJlZ2FyZHMsCj4gUGV0cgo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
