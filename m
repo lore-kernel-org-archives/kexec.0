@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH] arm64, vmcoreinfo : Append 'MAX_USER_VA_BITS' and
- 'MAX_PHYSMEM_BITS' to vmcoreinfo
-References: <1548850991-11879-1-git-send-email-bhsharma@redhat.com>
- <239cdca4-1c7d-f236-f4a9-a0a3fe98f966@arm.com>
- <86c0dd9f-a55b-8ce8-69ca-893f63087d1a@redhat.com>
- <a646e38d-9351-e187-1571-c49d3558b164@redhat.com>
-From: James Morse <james.morse@arm.com>
-Message-ID: <d2f193ef-0fb9-f76b-073d-746304cffc44@arm.com>
-Date: Mon, 4 Feb 2019 16:56:35 +0000
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gqho6-0006S7-F9
+ for kexec@lists.infradead.org; Mon, 04 Feb 2019 17:13:20 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH v3] Remove the memory encryption mask to obtain the true
+ physical address
+Date: Mon, 4 Feb 2019 17:12:02 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03567B03@BPXM09GP.gisp.nec.co.jp>
+References: <20190130024853.28586-1-lijiang@redhat.com>
+In-Reply-To: <20190130024853.28586-1-lijiang@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
-In-Reply-To: <a646e38d-9351-e187-1571-c49d3558b164@redhat.com>
-Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,76 +20,251 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, bhupesh.linux@gmail.com, linux-arm-kernel@lists.infradead.org
+To: Lianbo Jiang <lijiang@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "anderson@redhat.com" <anderson@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "Thomas.Lendacky@amd.com" <Thomas.Lendacky@amd.com>
 
-SGkgQmh1cGVzaCwKCk9uIDA0LzAyLzIwMTkgMTQ6MzUsIEJodXBlc2ggU2hhcm1hIHdyb3RlOgo+
-IE9uIDAxLzMxLzIwMTkgMDM6MDkgQU0sIEJodXBlc2ggU2hhcm1hIHdyb3RlOgo+PiBPbiAwMS8z
-MC8yMDE5IDA4OjUxIFBNLCBKYW1lcyBNb3JzZSB3cm90ZToKPj4+IE9uIDAxLzMwLzIwMTkgMTI6
-MjMgUE0sIEJodXBlc2ggU2hhcm1hIHdyb3RlOgo+Pj4+IFdpdGggQVJNdjguMi1MVkEgYW5kIExQ
-QSBhcmNoaXRlY3R1cmUgZXh0ZW5zaW9ucywgYXJtNjQgaGFyZHdhcmUgd2hpY2gKPj4+PiBzdXBw
-b3J0cyB0aGVzZSBleHRlbnNpb25zIGNhbiBzdXBwb3J0IHVwdG8gNTItYml0IHZpcnR1YWwgYW5k
-IDUyLWJpdAo+Pj4+IHBoeXNpY2FsIGFkZHJlc3NlcyByZXNwZWN0aXZlbHkuCj4+Pj4KPj4+PiBT
-aW5jZSBhdCB0aGUgbW9tZW50IHdlIGVuYWJsZSB0aGUgc3VwcG9ydCBvZiB0aGVzZSBleHRlbnNp
-b25zIHZpYSBDT05GSUcKPj4+PiBmbGFncywgZS5nLgo+Pj4+IMKgIC0gTFBBIHZpYSBDT05GSUdf
-QVJNNjRfUEFfQklUU181Mgo+Pj4+Cj4+Pj4gdGhlcmUgYXJlIG5vIGNsZWFyIG1lY2hhbmlzbXMg
-aW4gdXNlci1zcGFjZSByaWdodCBub3cgdG8KPj4+PiBkZXRlcmVtaW5lIHRoZXNlIENPTkZJRyBm
-bGFnIHZhbHVlcyBhbmQgYWxzbyBkZXRlcm1pbmUgdGhlIFBBUmFuZ2UgYW5kCj4+Pj4gVkFSYW5n
-ZSBhZGRyZXNzIHZhbHVlcy4KPj4+PiBVc2VyLXNwYWNlIHRvb2xzIGxpa2UgJ21ha2VkdW1wZmls
-ZScgYW5kICdjcmFzaC11dGlsaXR5JyBjYW4gaW5zdGVhZAo+Pj4+IHVzZSB0aGUgJ01BWF9VU0VS
-X1ZBX0JJVFMnIGFuZCAnTUFYX1BIWVNNRU1fQklUUycgdmFsdWVzIHRvIGRldGVybWluZQo+Pj4+
-IHRoZSBtYXhpbXVtIHZpcnR1YWwgYWRkcmVzcyBhbmQgcGh5c2ljYWwgYWRkcmVzcyAocmVzcGVj
-dGl2ZWx5KQo+Pj4+IHN1cHBvcnRlZCBieSB1bmRlcmx5aW5nIGtlcm5lbC4KPj4+Pgo+Pj4+IEEg
-cmVmZXJlbmNlICdtYWtlZHVtcGZpbGUnIGltcGxlbWVudGF0aW9uIHdoaWNoIHVzZXMgdGhpcyBh
-cHByb2FjaCB0bwo+Pj4+IGRldGVybWluaW5nIHRoZSBtYXhpbXVtIHBoeXNpY2FsIGFkZHJlc3Mg
-aXMgYXZhaWxhYmxlIGluIFswXS4KPj4+Cj4+PiBXaHkgZG9lcyBpdCBuZWVkIHRvIGtub3c/Cj4+
-Pgo+Pj4gKFN1enVraSBhc2tlZCB0aGUgc2FtZSBxdWVzdGlvbiBvbiB5b3VyIGVhcmxpZXIgdmVy
-c2lvbikKPj4+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LWFybS1rZXJuZWwvY2ZmNDQ3
-NTQtN2ZlNC1lZmVhLWJjOGUtNGRkZTIyNzdjODIxQGFybS5jb20vCgoKPj4gSSBoYXZlIHNoYXJl
-ZCBzb21lIGRldGFpbHMgKGFmdGVyIGRpc2N1c3Npb24gd2l0aCBvdXIgdGVzdCB0ZWFtcykgaW4g
-cmVwbHkgdG8KPj4gdGhlIHJldmlldyBjb21tZW50cyBmcm9tIFN1enVraSBoZXJlOgo+PiBodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwva2V4ZWMvMjAxOS1KYW51YXJ5LzAyMjM4
-OS5odG1sLCBhbmQKPj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2tleGVj
-LzIwMTktSmFudWFyeS8wMjIzOTAuaHRtbAo+Pgo+PiBKdXN0IHRvIHN1bW1hcml6ZSwgSSBtZW50
-aW9uZWQgaW4gbXkgcmVwbGllcyB0byB0aGUgcmV2aWV3IGNvbW1lbnRzIHRoYSB0aGUKPj4gbWFr
-ZWR1bXBmaWxlIGltcGxlbWVudGF0aW9uIChmb3IgZGVjb2RpbmcgdGhlIFBURSkgd2FzIGp1c3Qg
-YXMgYW4gZXhhbXBsZSwKPj4gaG93ZXZlciB0aGVyZSBjYW4gYmUgb3RoZXIgdXNlci1zcGFjZSBh
-cHBsaWNhdGlvbnMsIGZvciBlLmcgYSB1c2VyLXNwYWNlCj4+IGFwcGxpY2F0aW9uIHJ1bm5pbmcg
-d2l0aCA0OC1iaXQga2VybmVsIFZBIGFuZCA1Mi1iaXQgdXNlciBzcGFjZSBWQSBhbmQKPj4gcmVx
-dWVzdGluZyBhbGxvY2F0aW9uIGluICdoaWdoJyBhZGRyZXNzIHZpYSBhICdoaW50JyB0byBtbWFw
-LgoKQnV0IHZtY29yZWluZm8gaXMgdGhlIHdyb25nIHBsYWNlIHRvIGV4cG9zZSB0aGlzIGluZm9y
-bWF0aW9uLiAoaXQgY2FuIGJlCmNvbmZpZ3VyZWQgb2ZmLCBhbmQgaXMgb25seSBhY2Nlc3NpYmxl
-IHRvIHJvb3QpCgoKPj4+IMKgRnJvbSB5b3VyIGdpdGh1YiBsaW5rIGl0IGxvb2tzIGxpa2UgeW91
-IHVzZSB0aGlzIHRvIHJlLWFzc2VtYmxlIHRoZSB0d28gYml0cwo+Pj4gb2YgdGhlIFBGTiBmcm9t
-IHRoZSBwdGUuIENhbid0IHlvdSBhbHdheXMgZG8gdGhpcyBmb3IgNjRLIHBhZ2VzPyBDUFVzIHdp
-dGgKPj4+IHRoZSBmZWF0dXJlIGFsd2F5cyBkbyB0aGlzIHRvbywgaXRzIG5vdCBzb21ldGhpbmcg
-dGhlIGtlcm5lbCB0dXJucyBvbi4KPj4KPj4gT2ssIGxldCBtZSB0cnkgdG8gZ2l2ZSBzb21lIHBl
-cnNwZWN0aXZlIG9mIGEgY29tbW9uIG1ha2VkdW1wZmlsZSB1c2UtY2FzZQo+PiBiZWZvcmUgSSBq
-dW1wIGludG8gdGhlIGRldGFpbHM6CgoKPj4gQWxzbyBoYXJkY29kaW5nIHRoZSBQVEUgY2FsY3Vs
-YXRpb24gdG8gdXNlIHRoZSBoaWdoIGFkZHJlc3MgYml0IG1hc2sgYWx3YXlzCj4+IHdpbGwgYnJl
-YWsgdGhlIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgd2l0aCBvbGRlciBrZXJuZWxzICh3aGljaCBk
-b24ndCBzdXBwb3J0Cj4+IDUyLWJpdCBhZGRyZXNzIHNwYWNlIGV4dGVuc2lvbnMpLgoKV2hhdCB3
-b3VsZCBnbyB3cm9uZz8KClRoZSBoYXJkd2FyZSBpZ25vcmVzIHRob3NlIGJpdHMgYW5kIHN1cHBs
-aWVzIHplcm8uIEFzIGZhciBhcyBJIGNhbiBzZWUgdGhlCmtlcm5lbCBoYXMgYWx3YXlzIGdlbmVy
-YXRlZCB6ZXJvIHRoZXJlLgoKCj4+IChiKS4gQWxzbyB4ODZfNjQgYWxyZWFkeSBoYXMgYSB2bWNv
-cmVpbmZvIGV4cG9ydCBmb3IgJ3BndGFibGVfbDVfZW5hYmxlZCc6CgpTbz8gNS1sZXZlbCBwYWdl
-IHRhYmxlcyBpcyBhIGRpZmZlcmVudCBmZWF0dXJlLiBJIGFncmVlIHlvdSBuZWVkIHRvIGtub3cg
-dGhlCm51bWJlciBvZiBsZXZlbHMgdG8gd2FsayB0aGUgcGFnZS10YWJsZXMsIGJ1dCB0aGF0IGlz
-bid0IGhvdyBhcm02NCdzIDUyYml0IHN0dWZmCndvcmtzLgoKCj4gUGluZy4gU2luY2UgdGhpcyBw
-YXRjaCBmaXhlcyBhIHJlZ3Jlc3Npb24gd2l0aCB1c2VyLXNwYWNlIHRvb2xzIGxpa2UKPiBtYWtl
-ZHVtcGZpbGUgYW5kIGNyYXNoLXV0aWxpdHkgd2hpY2ggYXJlIGJyb2tlbiBzaW5jZSBhcm02NCBr
-ZXJuZWxzIHdpdGggNTItYml0Cj4gVkEgYW5kIFBBIHN1cHBvcnQgYXJlIGF2YWlsYWJsZSAoYW5k
-IGRpc3RyaWJ1dGlvbnMgd2hpY2ggZW5hYmxlIHRoZW0pLCB3b3VsZAo+IHJlcXVlc3QgcmV2aWV3
-IGNvbW1lbnRzL2FjayBvbiB0aGlzIHNpbXBsZSBjaGFuZ2UuCgpCcm9rZW4gaG93PyBXaGF0IGdv
-ZXMgd3Jvbmc/CgpJIGNhbiBzZWUgaG93IGEgbm90LTUyYml0LWF3YXJlIGNyYXNoL2dkYi93aGF0
-ZXZlciB3b3VsZCBiZSBjb25mdXNlZCBieSBoaWdoCmJpdHMgYmVpbmcgc2V0IGluIHRoZSBwaHlz
-aWNhbCBhZGRyZXNzLCBhbmQgcG9zc2libHkgdGhyb3cgdGhlbSBhd2F5LgpCdXQgb25jZSBpdCBz
-dXBwb3J0cyB0aGlzIGZvciA2NEsgcGFnZXMsIEkgZG9uJ3Qgc2VlIHdoYXQgY2FuIGdvIHdyb25n
-IGlmIHRob3NlCmJpdHMgYXJlbid0IHNldC4gV2h5IGRvZXMgaXQgbmVlZCB0byBrbm93PwoKClRo
-YW5rcywKCkphbWVzCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+> [PATCH v3] Remove the memory encryption mask to obtain the true physical address
+
+I forgot to comment on the subject and the commit log..
+I'll change this to
+
+  x86_64: Add support for AMD Secure Memory Encryption
+
+On 1/29/2019 9:48 PM, Lianbo Jiang wrote:
+> For AMD machine with SME feature, if SME is enabled in the first
+> kernel, the crashed kernel's page table(pgd/pud/pmd/pte) contains
+> the memory encryption mask, so makedumpfile needs to remove the
+> memory encryption mask to obtain the true physical address.
+
+I added a few official words from some documents:
+---
+On AMD machine with Secure Memory Encryption (SME) feature, if SME is
+enabled, page tables contain a specific attribute bit (C-bit) in their
+entries to indicate whether a page is encrypted or unencrypted.
+
+So get NUMBER(sme_mask) from vmcoreinfo, which stores the value of
+the C-bit position, and drop it to obtain the true physical address.
+---
+
+If these are OK, I'll modify them when merging, so you don't need
+to repost.
+
+And, I'm thinking to merge this after the kernel patch gets merged
+into the mainline.
+
+Thanks for your work.
+Kazu
+
+> 
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> ---
+> Changes since v1:
+> 1. Merge them into a patch.
+> 2. The sme_mask is not an enum number, remove it.
+> 3. Sanity check whether the sme_mask is in vmcoreinfo.
+> 4. Deal with the huge pages case.
+> 5. Cover the 5-level path.
+> 
+> Changes since v2:
+> 1. Change the sme_me_mask to entry_mask.
+> 2. No need to remove the mask when makedumpfile prints out the
+>    value of the entry.
+> 3. Remove the sme mask from the pte at the end of the __vtop4_x86_64().
+> 4. Also need to remove the sme mask from page table entry in
+>    find_vmemmap_x86_64()
+> 
+>  arch/x86_64.c  | 30 +++++++++++++++++++-----------
+>  makedumpfile.c |  4 ++++
+>  makedumpfile.h |  1 +
+>  3 files changed, 24 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/x86_64.c b/arch/x86_64.c
+> index 537fb78..9977466 100644
+> --- a/arch/x86_64.c
+> +++ b/arch/x86_64.c
+> @@ -291,6 +291,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  	unsigned long page_dir, pgd, pud_paddr, pud_pte, pmd_paddr, pmd_pte;
+>  	unsigned long pte_paddr, pte;
+>  	unsigned long p4d_paddr, p4d_pte;
+> +	unsigned long entry_mask = ENTRY_MASK;
+> 
+>  	/*
+>  	 * Get PGD.
+> @@ -302,6 +303,9 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  			return NOT_PADDR;
+>  	}
+> 
+> +	if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
+> +		entry_mask &= ~(NUMBER(sme_mask));
+> +
+>  	if (check_5level_paging()) {
+>  		page_dir += pgd5_index(vaddr) * sizeof(unsigned long);
+>  		if (!readmem(PADDR, page_dir, &pgd, sizeof pgd)) {
+> @@ -318,7 +322,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  		/*
+>  		 * Get P4D.
+>  		 */
+> -		p4d_paddr  = pgd & ENTRY_MASK;
+> +		p4d_paddr  = pgd & entry_mask;
+>  		p4d_paddr += p4d_index(vaddr) * sizeof(unsigned long);
+>  		if (!readmem(PADDR, p4d_paddr, &p4d_pte, sizeof p4d_pte)) {
+>  			ERRMSG("Can't get p4d_pte (p4d_paddr:%lx).\n", p4d_paddr);
+> @@ -331,7 +335,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  			ERRMSG("Can't get a valid p4d_pte.\n");
+>  			return NOT_PADDR;
+>  		}
+> -		pud_paddr  = p4d_pte & ENTRY_MASK;
+> +		pud_paddr  = p4d_pte & entry_mask;
+>  	}else {
+>  		page_dir += pgd_index(vaddr) * sizeof(unsigned long);
+>  		if (!readmem(PADDR, page_dir, &pgd, sizeof pgd)) {
+> @@ -345,7 +349,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  			ERRMSG("Can't get a valid pgd.\n");
+>  			return NOT_PADDR;
+>  		}
+> -		pud_paddr  = pgd & ENTRY_MASK;
+> +		pud_paddr  = pgd & entry_mask;
+>  	}
+> 
+>  	/*
+> @@ -364,13 +368,13 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  		return NOT_PADDR;
+>  	}
+>  	if (pud_pte & _PAGE_PSE)	/* 1GB pages */
+> -		return (pud_pte & ENTRY_MASK & PUD_MASK) +
+> +		return (pud_pte & entry_mask & PUD_MASK) +
+>  			(vaddr & ~PUD_MASK);
+> 
+>  	/*
+>  	 * Get PMD.
+>  	 */
+> -	pmd_paddr  = pud_pte & ENTRY_MASK;
+> +	pmd_paddr  = pud_pte & entry_mask;
+>  	pmd_paddr += pmd_index(vaddr) * sizeof(unsigned long);
+>  	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof pmd_pte)) {
+>  		ERRMSG("Can't get pmd_pte (pmd_paddr:%lx).\n", pmd_paddr);
+> @@ -384,13 +388,13 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  		return NOT_PADDR;
+>  	}
+>  	if (pmd_pte & _PAGE_PSE)	/* 2MB pages */
+> -		return (pmd_pte & ENTRY_MASK & PMD_MASK) +
+> +		return (pmd_pte & entry_mask & PMD_MASK) +
+>  			(vaddr & ~PMD_MASK);
+> 
+>  	/*
+>  	 * Get PTE.
+>  	 */
+> -	pte_paddr  = pmd_pte & ENTRY_MASK;
+> +	pte_paddr  = pmd_pte & entry_mask;
+>  	pte_paddr += pte_index(vaddr) * sizeof(unsigned long);
+>  	if (!readmem(PADDR, pte_paddr, &pte, sizeof pte)) {
+>  		ERRMSG("Can't get pte (pte_paddr:%lx).\n", pte_paddr);
+> @@ -403,7 +407,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
+>  		ERRMSG("Can't get a valid pte.\n");
+>  		return NOT_PADDR;
+>  	}
+> -	return (pte & ENTRY_MASK) + PAGEOFFSET(vaddr);
+> +	return (pte & entry_mask) + PAGEOFFSET(vaddr);
+>  }
+> 
+>  unsigned long long
+> @@ -636,6 +640,7 @@ find_vmemmap_x86_64()
+>  	unsigned long pmd, tpfn;
+>  	unsigned long pvaddr = 0;
+>  	unsigned long data_addr = 0, last_data_addr = 0, start_data_addr = 0;
+> +	unsigned long pmask = PMASK;
+>  	/*
+>  	 * data_addr is the paddr of the page holding the page structs.
+>  	 * We keep lists of contiguous pages and the pfn's that their
+> @@ -656,6 +661,9 @@ find_vmemmap_x86_64()
+>  		return FAILED;
+>  	}
+> 
+> +	if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
+> +		pmask &= ~(NUMBER(sme_mask));
+> +
+>  	pagestructsize = size_table.page;
+>  	hugepagesize = PTRS_PER_PMD * info->page_size;
+>  	vaddr_base = info->vmemmap_start;
+> @@ -686,7 +694,7 @@ find_vmemmap_x86_64()
+>  		}
+> 
+>  		/* mask the pgd entry for the address of the pud page */
+> -		pud_addr &= PMASK;
+> +		pud_addr &= pmask;
+>  		if (pud_addr == 0)
+>  			  continue;
+>  		/* read the entire pud page */
+> @@ -699,7 +707,7 @@ find_vmemmap_x86_64()
+>  		/* pudp points to an entry in the pud page */
+>  		for (pudp = (unsigned long *)pud_page, pudindex = 0;
+>  					pudindex < PTRS_PER_PUD; pudindex++, pudp++) {
+> -			pmd_addr = *pudp & PMASK;
+> +			pmd_addr = *pudp & pmask;
+>  			/* read the entire pmd page */
+>  			if (pmd_addr == 0)
+>  				continue;
+> @@ -741,7 +749,7 @@ find_vmemmap_x86_64()
+>  				 * - we discontiguous page is a string of valids
+>  				 */
+>  				if (pmd) {
+> -					data_addr = (pmd & PMASK);
+> +					data_addr = (pmd & pmask);
+>  					if (start_range) {
+>  						/* first-time kludge */
+>  						start_data_addr = data_addr;
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 8923538..2237eb8 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -977,6 +977,8 @@ next_page:
+>  	read_size = MIN(info->page_size - PAGEOFFSET(paddr), size);
+> 
+>  	pgaddr = PAGEBASE(paddr);
+> +	if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
+> +		pgaddr = pgaddr & ~(NUMBER(sme_mask));
+>  	pgbuf = cache_search(pgaddr, read_size);
+>  	if (!pgbuf) {
+>  		++cache_miss;
+> @@ -2276,6 +2278,7 @@ write_vmcoreinfo_data(void)
+>  	WRITE_NUMBER("NR_FREE_PAGES", NR_FREE_PAGES);
+>  	WRITE_NUMBER("N_ONLINE", N_ONLINE);
+>  	WRITE_NUMBER("pgtable_l5_enabled", pgtable_l5_enabled);
+> +	WRITE_NUMBER("sme_mask", sme_mask);
+> 
+>  	WRITE_NUMBER("PG_lru", PG_lru);
+>  	WRITE_NUMBER("PG_private", PG_private);
+> @@ -2672,6 +2675,7 @@ read_vmcoreinfo(void)
+>  	READ_NUMBER("NR_FREE_PAGES", NR_FREE_PAGES);
+>  	READ_NUMBER("N_ONLINE", N_ONLINE);
+>  	READ_NUMBER("pgtable_l5_enabled", pgtable_l5_enabled);
+> +	READ_NUMBER("sme_mask", sme_mask);
+> 
+>  	READ_NUMBER("PG_lru", PG_lru);
+>  	READ_NUMBER("PG_private", PG_private);
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 73813ed..e97b2e7 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -1912,6 +1912,7 @@ struct number_table {
+>  	long	NR_FREE_PAGES;
+>  	long	N_ONLINE;
+>  	long	pgtable_l5_enabled;
+> +	long	sme_mask;
+> 
+>  	/*
+>   	* Page flags
+> --
+> 2.17.1
+> 
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
