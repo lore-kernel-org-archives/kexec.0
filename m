@@ -1,23 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gqmlE-00072S-O1
- for kexec@lists.infradead.org; Mon, 04 Feb 2019 22:30:42 +0000
-Date: Mon, 4 Feb 2019 15:30:16 -0700
-From: Jerry Hoemann <jerry.hoemann@hpe.com>
+ id 1gqvtj-0000lM-Jk
+ for kexec@lists.infradead.org; Tue, 05 Feb 2019 08:16:06 +0000
+Date: Tue, 5 Feb 2019 09:15:52 +0100
+From: Borislav Petkov <bp@alien8.de>
 Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
  consistent with kaslr
-Message-ID: <20190204223016.GB11986@anatevka>
+Message-ID: <20190205081552.GG21801@zn.tnic>
 References: <1548047768-7656-1-git-send-email-kernelfans@gmail.com>
  <20190125103924.GB27998@zn.tnic>
  <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
  <20190125140823.GC27998@zn.tnic>
  <20190131075907.GB19091@dhcp-128-65.nay.redhat.com>
  <20190131105732.GC6749@zn.tnic> <20190131222732.GA946@anatevka>
- <20190131234740.GO6749@zn.tnic>
+ <20190131234740.GO6749@zn.tnic> <20190204223016.GB11986@anatevka>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190131234740.GO6749@zn.tnic>
+In-Reply-To: <20190204223016.GB11986@anatevka>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,78 +26,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: Jerry.Hoemann@hpe.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
+To: Jerry Hoemann <jerry.hoemann@hpe.com>
 Cc: Randy Dunlap <rdunlap@infradead.org>, Baoquan He <bhe@redhat.com>, yinghai@kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-On Fri, Feb 01, 2019 at 12:47:40AM +0100, Borislav Petkov wrote:
-> On Thu, Jan 31, 2019 at 03:27:32PM -0700, Jerry Hoemann wrote:
-> > So even if a system administrator is diligent and tests
-> > that a chosen kdump configuration works, that configuration
-> > might not work on some random reboot 7 months in the future.
-> 
-> Jerry, did you read the rest of the thread where I'm *actually*
-> suggesting to make the allocation code more robust against such
-> failures?
+On Mon, Feb 04, 2019 at 03:30:16PM -0700, Jerry Hoemann wrote:
+> Is your objection only to the second fallback of allocating
+> memory above >= 4GB?   Or are you objecting to allocating from
+> (896 .. 4GB) as well?
 
+My problem is why should the user need to specify high or low allocation
+explicitly when we can handle all that in the kernel automatically.
 
-Boris,
+The presence of crashkernel= on the cmdline sure means that the user
+wants to allocate memory for a second kernel.
 
-I may have misunderstood your earlier comment:
+Now, if the requested allocation fails, we say:
 
-  So we don't really need this - we simply need to tell people to use high
-  if it fails with KASLR, AFAICT
+  Error reserving crashkernel
 
-To imply an iterative approach to crashkernel size discovery.  Whereas you
-may simply have ment:  Always use ,high as the old way is broken.
+So, instead of saying that, we can *try* *again* and say
 
+  Error reserving requested crashkernel at @..., attempting a high range.
 
-> Now let's look at the code:
-> 
-> The "high" allocation does:
-> 
->                 crash_base = memblock_find_in_range(CRASH_ALIGN,
->                                                     high ? CRASH_ADDR_HIGH_MAX
->                                                          : CRASH_ADDR_LOW_MAX,
->                                                     crash_size, CRASH_ALIGN);
-> 
-> where high=true and CRASH_ADDR_HIGH_MAX on 64-bit is MAXMEM:
-> 
-> # define CRASH_ADDR_HIGH_MAX    MAXMEM
-> 
-> The second fallback in the suggested patch does the same:
-> 
-> +               /*
-> +                * crashkernel=X reserve below 4G fails? Try MAXMEM
-> +                */
-> +               if (!high && !crash_base)
-> +                       crash_base = memblock_find_in_range(CRASH_ALIGN,
-> +                                               CRASH_ADDR_HIGH_MAX,
-> +                                               crash_size, CRASH_ALIGN);
-> 
-> and yet I get back that falling back to "high" if the first allocation
-> doesn't succeed is not something we should do by default because of
-> reasons. But this patch *practically* *does* it.
+and run memblock_find_in_range() on the other regions which we deemed
+are ok to allocate from.
 
+Why aren't we doing that by default instead of placing all those
+different options in front of the user and expecting her/him to know
+something about all those magic ranges?
 
-Is your objection only to the second fallback of allocating
-memory above >= 4GB?   Or are you objecting to allocating from
-(896 .. 4GB) as well?
+I don't think most of the users care about where the kernel gets
+allocated - all they want is a working kdump setup.
 
-Falling back to allocating < 4GB probably satisfes most of the cases
-where the original allocation fails.
+> Falling back to allocating < 4GB probably satisfes most of the cases
+> where the original allocation fails.
 
-thanks
+Yes. Now make that automatic.
 
 -- 
+Regards/Gruss,
+    Boris.
 
------------------------------------------------------------------------------
-Jerry Hoemann                  Software Engineer   Hewlett Packard Enterprise
------------------------------------------------------------------------------
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
