@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gr1bu-0006S6-Ch
- for kexec@lists.infradead.org; Tue, 05 Feb 2019 14:22:07 +0000
-Date: Tue, 5 Feb 2019 15:21:57 +0100
+ id 1gr1ez-00085U-MR
+ for kexec@lists.infradead.org; Tue, 05 Feb 2019 14:25:15 +0000
+Date: Tue, 5 Feb 2019 15:25:10 +0100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] purgatory: Use standalond CFLAGS
-Message-ID: <20190205142147.naqs2gw5en77x5nu@verge.net.au>
-References: <20190128105040.30520-1-kasong@redhat.com>
- <20190128105844.zx4bmpkovlzs2wsx@verge.net.au>
+Subject: Re: [PATCH] arm64: wipe old initrd addresses when patching the DTB
+Message-ID: <20190205142510.65in5bqmyzsacsbq@verge.net.au>
+References: <20190201155028.43562-1-jean-philippe.brucker@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190128105844.zx4bmpkovlzs2wsx@verge.net.au>
+In-Reply-To: <20190201155028.43562-1-jean-philippe.brucker@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,23 +23,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>
-Cc: kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: kexec@lists.infradead.org
 
-On Mon, Jan 28, 2019 at 11:58:44AM +0100, Simon Horman wrote:
-> On Mon, Jan 28, 2019 at 06:50:40PM +0800, Kairui Song wrote:
-> > There has been a lot of workarounds for purgatory disabling many
-> > specified CFLAGS that will break purgatory. It will be better to not
-> > let the CFLAGS used to compile purgatory honor the CFLAGS from
-> > environment variables. So we will have stable CFLAGS for purgatory.
-> > 
-> > If anyone still wants to change purgatory CFLAGS, PURGATORY_EXTRA_CFLAGS
-> > is still honored.
+On Fri, Feb 01, 2019 at 03:50:28PM +0000, Jean-Philippe Brucker wrote:
+> When copying the DTB from the current kernel, if the user didn't pass an
+> initrd on the command-line, make sure that the new DTB doesn't contain
+> initrd properties with stale addresses. Otherwise the next kernel will
+> try to unpack the initramfs from a location that contains junk, since
+> the initial initrd is long gone:
 > 
-> Thanks, this seems reasonable to me.
-> But I'd like to wait to see if there is feedback from others before applying.
+> [   49.370026] Initramfs unpacking failed: junk in compressed archive
+> 
+> This issue used to be hidden by a successful recovery, but since commit
+> ff1522bb7d98 ("initramfs: cleanup incomplete rootfs") in Linux, the
+> kernel removes the default /root mountpoint after failing to load an
+> initramfs, and cannot mount the rootfs passed on the command-line
+> anymore.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-Thanks again, applied.
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
