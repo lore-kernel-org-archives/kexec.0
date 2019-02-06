@@ -1,16 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gr1ez-00085U-MR
- for kexec@lists.infradead.org; Tue, 05 Feb 2019 14:25:15 +0000
-Date: Tue, 5 Feb 2019 15:25:10 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: wipe old initrd addresses when patching the DTB
-Message-ID: <20190205142510.65in5bqmyzsacsbq@verge.net.au>
-References: <20190201155028.43562-1-jean-philippe.brucker@arm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1grM04-0004QN-M3
+ for kexec@lists.infradead.org; Wed, 06 Feb 2019 12:08:22 +0000
+Date: Wed, 6 Feb 2019 20:08:04 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
+Message-ID: <20190206120804.GC10062@dhcp-128-65.nay.redhat.com>
+References: <1548047768-7656-1-git-send-email-kernelfans@gmail.com>
+ <20190125103924.GB27998@zn.tnic>
+ <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
+ <20190125140823.GC27998@zn.tnic>
+ <20190131075907.GB19091@dhcp-128-65.nay.redhat.com>
+ <20190131105732.GC6749@zn.tnic> <20190131222732.GA946@anatevka>
+ <20190131234740.GO6749@zn.tnic> <20190204223016.GB11986@anatevka>
+ <20190205081552.GG21801@zn.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190201155028.43562-1-jean-philippe.brucker@arm.com>
+In-Reply-To: <20190205081552.GG21801@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,27 +31,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: kexec@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, Jerry Hoemann <jerry.hoemann@hpe.com>, Pingfan Liu <kernelfans@gmail.com>, linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
 
-On Fri, Feb 01, 2019 at 03:50:28PM +0000, Jean-Philippe Brucker wrote:
-> When copying the DTB from the current kernel, if the user didn't pass an
-> initrd on the command-line, make sure that the new DTB doesn't contain
-> initrd properties with stale addresses. Otherwise the next kernel will
-> try to unpack the initramfs from a location that contains junk, since
-> the initial initrd is long gone:
+On 02/05/19 at 09:15am, Borislav Petkov wrote:
+> On Mon, Feb 04, 2019 at 03:30:16PM -0700, Jerry Hoemann wrote:
+> > Is your objection only to the second fallback of allocating
+> > memory above >= 4GB?   Or are you objecting to allocating from
+> > (896 .. 4GB) as well?
 > 
-> [   49.370026] Initramfs unpacking failed: junk in compressed archive
+> My problem is why should the user need to specify high or low allocation
+> explicitly when we can handle all that in the kernel automatically.
 > 
-> This issue used to be hidden by a successful recovery, but since commit
-> ff1522bb7d98 ("initramfs: cleanup incomplete rootfs") in Linux, the
-> kernel removes the default /root mountpoint after failing to load an
-> initramfs, and cannot mount the rootfs passed on the command-line
-> anymore.
+> The presence of crashkernel= on the cmdline sure means that the user
+> wants to allocate memory for a second kernel.
 > 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> Now, if the requested allocation fails, we say:
+> 
+>   Error reserving crashkernel
+> 
+> So, instead of saying that, we can *try* *again* and say
+> 
+>   Error reserving requested crashkernel at @..., attempting a high range.
+> 
+> and run memblock_find_in_range() on the other regions which we deemed
+> are ok to allocate from.
+> 
+> Why aren't we doing that by default instead of placing all those
+> different options in front of the user and expecting her/him to know
+> something about all those magic ranges?
 
-Thanks, applied.
+As we talked in another reply, for the >4G allocation we can not avoid
+the swiotlb issue,  but if one request for 256M in high region and we
+allocate the low part automatically, it will eat more memory eg. 512M.
+
+But probably in case allacation failed in low region ,high is a must for kdump
+reservation, since no other choices perhaps we can make that as you said
+
+> 
+> I don't think most of the users care about where the kernel gets
+> allocated - all they want is a working kdump setup.
+> 
+> > Falling back to allocating < 4GB probably satisfes most of the cases
+> > where the original allocation fails.
+> 
+> Yes. Now make that automatic.
+
+For the time being, this should be good enough.
+
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> Good mailing practices for 400: avoid top-posting and trim the reply.
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
