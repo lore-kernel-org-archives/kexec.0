@@ -1,23 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-f195.google.com ([209.85.210.195])
+Received: from mail-lf1-f68.google.com ([209.85.167.68])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gtde1-0004d5-Gw
- for kexec@lists.infradead.org; Tue, 12 Feb 2019 19:23:03 +0000
-Received: by mail-pf1-f195.google.com with SMTP id q1so1756822pfi.5
- for <kexec@lists.infradead.org>; Tue, 12 Feb 2019 11:23:01 -0800 (PST)
-Subject: Re: [PATCH] makedumpfile/arm64: Add support for ARMv8.2-LPA (52-bit
- PA support)
-References: <1549484034-17027-1-git-send-email-bhsharma@redhat.com>
- <CACi5LpNYCY0_0zOCd=7fQ=cLZdinM8Z9xPtmKr5WMmvJruE-6A@mail.gmail.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03567FF6@BPXM09GP.gisp.nec.co.jp>
- <887cb122-0c2e-5fdd-ea54-ecf8adf3cd79@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC035682A9@BPXM09GP.gisp.nec.co.jp>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Message-ID: <0b95bba3-11ab-0bb7-df0a-67ddc0150548@redhat.com>
-Date: Wed, 13 Feb 2019 00:52:55 +0530
+ id 1gteD5-0002qF-8I
+ for kexec@lists.infradead.org; Tue, 12 Feb 2019 19:59:18 +0000
+Received: by mail-lf1-f68.google.com with SMTP id t14so2994045lfk.7
+ for <kexec@lists.infradead.org>; Tue, 12 Feb 2019 11:59:14 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC035682A9@BPXM09GP.gisp.nec.co.jp>
-Content-Language: en-US
+References: <1548850991-11879-1-git-send-email-bhsharma@redhat.com>
+ <20190131014800.GB15785@dhcp-128-65.nay.redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03567AA3@BPXM09GP.gisp.nec.co.jp>
+ <d7d50b5a-3577-448e-d928-7898016a38fb@redhat.com>
+ <20190212104407.GA17022@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190212104407.GA17022@dhcp-128-65.nay.redhat.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Wed, 13 Feb 2019 01:29:00 +0530
+Message-ID: <CACi5LpOAADU8s+3e6=fO7FT+VtAmWYNeZN9COF+4Gt6twLWYaA@mail.gmail.com>
+Subject: Re: [PATCH] arm64, vmcoreinfo : Append 'MAX_USER_VA_BITS' and
+ 'MAX_PHYSMEM_BITS' to vmcoreinfo
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,227 +25,153 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: kexec mailing list <kexec@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, "lijiang@redhat.com" <lijiang@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Borislav Petkov <bp@alien8.de>, "anderson@redhat.com" <anderson@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Hi Kazu,
+On Tue, Feb 12, 2019 at 4:14 PM Dave Young <dyoung@redhat.com> wrote:
+>
+> On 02/12/19 at 10:37am, Bhupesh Sharma wrote:
+> > Hi Kazu,
+> >
+> > On 02/04/2019 09:34 PM, Kazuhito Hagio wrote:
+> > > On 1/30/2019 8:48 PM, Dave Young wrote:
+> > > > + more people
+> > > > On 01/30/19 at 05:53pm, Bhupesh Sharma wrote:
+> > > > > With ARMv8.2-LVA and LPA architecture extensions, arm64 hardware which
+> > > > > supports these extensions can support upto 52-bit virtual and 52-bit
+> > > > > physical addresses respectively.
+> > > > >
+> > > > > Since at the moment we enable the support of these extensions via CONFIG
+> > > > > flags, e.g.
+> > > > >   - LPA via CONFIG_ARM64_PA_BITS_52
+> > > > >
+> > > > > there are no clear mechanisms in user-space right now to
+> > > > > deteremine these CONFIG flag values and also determine the PARange and
+> > > > > VARange address values.
+> > > > >
+> > > > > User-space tools like 'makedumpfile' and 'crash-utility' can instead
+> > > > > use the 'MAX_USER_VA_BITS' and 'MAX_PHYSMEM_BITS' values to determine
+> > > > > the maximum virtual address and physical address (respectively)
+> > > > > supported by underlying kernel.
+> > > > >
+> > > > > A reference 'makedumpfile' implementation which uses this approach to
+> > > > > determining the maximum physical address is available in [0].
+> > > > >
+> > > > > [0].
+> > > > https://github.com/bhupesh-sharma/makedumpfile/blob/52-bit-pa-support-via-vmcore-v1/arch/arm64.c#L490
+> > > >
+> > > > I'm not objecting the patch, just want to make sure to make clear about
+> > > > things and make sure these issues are aware by people, and leave arm
+> > > > people to review the arm bits.
+> > > >
+> > > > 1. MAX_PHYSMEM_BITS
+> > > > As we previously found, back to 2014 makedumpfile took a patch to read the
+> > > > value from vmcore but the kernel patch was not accepted.
+> > > > So we should first make clear if this is really needed, why other arches
+> > > > do not need this in makedumpfile.
+> > > >
+> > > > If we really need it then should it be arm64 only?
+> > > >
+> > > > If it is arm64 only then the makedumpfile code should read this number
+> > > > only for arm64.
+> > >
+> > > Sorry for the delay.
+> > >
+> > > According to the kernel patch, some of arm32 platforms may need it
+> > > http://lists.infradead.org/pipermail/kexec/2014-May/011909.html
+> > > but except for them (and arm64), makedumpfile can manage with kernel
+> > > version and some switches to determine this value so far.
+> > >
+> > > >
+> > > > Also Lianbo added the vmcoreinfo documents, I believe it stays in -tip
+> > > > tree,  need to make sure to document this as well.
+> > > >
+> > > > 2. MAX_USER_VA_BITS
+> > > > Does makedumpfile care about userspace VA bits?  I do not see other code
+> > > > doing this,  Kazu and Dave A should be able to comment.
+> > >
+> > > The mapping makedumpfile uses on arm64 is swapper_pg_dir only, so
+> > > unless the config affects its structure or something, makedumpfile
+> > > will not need this value.
+> >
+> > I captured this case in more details while sending out the makedumpfile
+> > enablement patch for ARMv8.2-LVA (see [0]), but here is a brief summary on
+> > the same:
+> >
+> > Since at the moment we enable the support of the ARMv8.2-LVA extension for
+> > 52-bit user-space VA in the kernel via a CONFIG flags
+> > (CONFIG_ARM64_USER_VA_BITS_52), so there are no clear mechanisms in
+> > user-space to determine this CONFIG
+> > flag value and use it to determine the address range values.
+> >
+> > Since 'VA_BITS' are already exported via vmcoreinfo, if we export
+> > 'MAX_USER_VA_BITS' as well, we can use the same in user-space to check if
+> > the 'MAX_USER_VA_BITS' value is greater than 'VA_BITS'. If yes, then we are
+> > running a use-case where user-space is 52-bit while the underlying kernel is
+> > still 48-bit.
+>
+> Problem is why this is needed, it sounds like you are talking about some
+> non-exist use case.
 
-On 02/12/2019 10:45 PM, Kazuhito Hagio wrote:
-> Hi Bhupesh,
-> 
-> On 2/12/2019 3:44 AM, Bhupesh Sharma wrote:
->>>>> +/* See 'arch/arm64/include/asm/pgtable-hwdef.h' for definitions below */
->>>>> +
->>>>> +/*
->>>>> + * Number of page-table levels required to address 'va_bits' wide
->>>>> + * address, without section mapping. We resolve the top (va_bits - PAGE_SHIFT)
->>>>> + * bits with (PAGE_SHIFT - 3) bits at each page table level. Hence:
->>>>> + *
->>>>> + *  levels = DIV_ROUND_UP((va_bits - PAGE_SHIFT), (PAGE_SHIFT - 3))
->>>>> + *
->>>>> + * where DIV_ROUND_UP(n, d) => (((n) + (d) - 1) / (d))
->>>>> + *
->>>>> + * We cannot include linux/kernel.h which defines DIV_ROUND_UP here
->>>>> + * due to build issues. So we open code DIV_ROUND_UP here:
->>>>> + *
->>>>> + *     ((((va_bits) - PAGE_SHIFT) + (PAGE_SHIFT - 3) - 1) / (PAGE_SHIFT - 3))
->>>>> + *
->>>>> + * which gets simplified as :
->>>>> + */
->>>>> +#define ARM64_HW_PGTABLE_LEVELS(va_bits) (((va_bits) - 4) / (PAGE_SHIFT - 3))
->>>
->>> Is this needed?
->>
->> Yes, it is needed for both the LPA and LVA patches (the LVA patch was sent out separately), since we need to calculate values like PMD_SHIFT on basis of the page-table levels.
->>
->> Also this makes the makedumpfile code confirm more to the recent kernel definitions as otherwise one needs to read the makedumpfile code and dig kernel change history to understand the calculation of these macros.
->>
->> In future also, I plan to keep these values in sync with the kernel and send patches accordingly.
-> 
-> I agree to sync these macros with the kernel, but currently this one
-> is not used in your patches, and you wrote the path of the source file
-> (pgtable-hwdef.h) above for reference, so we don't need to import this
-> one for now. I'd like to import it when it is needed.
+I already explained this in an earlier reply to your initial comments
+(see <http://lists.infradead.org/pipermail/kexec/2019-January/022395.html>).
+Perhaps you missed reading it, so here are the architecturally
+possible and kernel supported uses cases with ARMv8.2 extensions
+(depending on the combination of CONFIG flags and kernel version):
 
-Ok, now I understand. You mean 'ARM64_HW_PGTABLE_LEVELS' macro here only 
-and not 'ARM64_HW_PGTABLE_LEVEL_SHIFT' macro also, right? If yes, I 
-agree to removing the former. Will fix this in v2.
+- 48-bit kernel VA + 48-bit user-space VA + 52-bit PA
+- 48-bit kernel VA + 52-bit user-space VA + 52-bit PA
+- 52-bit kernel VA + 52-bit user-space VA + 52-bit PA
 
->>>>> +/* Highest possible physical address supported */
->>>>> +static inline int
->>>>> +get_phy_mask_shift_arm64(void)
->>>>> +{
->>>>> +       int pa_bits = 48 /* default: 48-bit PA */;
->>>>> +
->>>>> +       if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
->>>>> +               pa_bits = NUMBER(MAX_PHYSMEM_BITS);
->>>>> +
->>>>> +       return pa_bits;
->>>>> +}
->>>
->>> Is this needed to be an inline function?
->>
->> IMO, its better to keep this as inline.
-> 
-> Once you modify the part of setting info->max_physmem_bits below,
-> we can remove this function, because we don't use PHYS_MASK_SHIFT
-> anymore.
+Please see 'config ARM64_USER_VA_BITS_52'  help text inside
+'arch/arm64/Kconfig' for more details:
+config ARM64_USER_VA_BITS_52
+    bool "52-bit (user)"
+    depends on ARM64_64K_PAGES && (ARM64_PAN || !ARM64_SW_TTBR0_PAN)
+    help
+      Enable 52-bit virtual addressing for userspace when explicitly
+      requested via a hint to mmap(). The kernel will continue to
+      use 48-bit virtual addresses for its own mappings.
 
-Ok.
+BTW, in the makedumpfile enablement patch thread for ARMv8.2 LVA
+(which I sent out for 52-bit User space VA enablement) (see [0]), Kazu
+mentioned that the changes look necessary.
 
->>>>> -#define PMD_TYPE_MASK          3
->>>>> -#define PMD_TYPE_SECT          1
->>>>> -#define PMD_TYPE_TABLE         3
->>>>> +#define PHYS_MASK_SHIFT                get_phy_mask_shift_arm64()
->>>>>
->>>>> -#define PUD_TYPE_MASK          3
->>>>> -#define PUD_TYPE_SECT          1
->>>>> -#define PUD_TYPE_TABLE         3
->>>>> +/* Helper API to convert between a physical address and its placement
->>>>> + * in a page table entry, taking care of 52-bit addresses.
->>>>> + */
->>>>> +static inline unsigned long
->>>>> +__pte_to_phys(pte_t pte)
->>>>> +{
->>>>> +       if (lpa_52_bit_support_available)
->>>
->>> OK.
->>>
->>> According to the related emails, it looks like "PAGESIZE() == SZ_64K"
->>> is also usable here, but this is the same condition as kernel's one
->>> and easy to understand.
->>
->> No, like I clarified to the upstream maintainers, distributions like Fedora already support a default page size of 64K, but the PA address space can be 48 or 52, depending on the kernel version and kernel CONFIG flags used.
-> 
-> My understanding is that with 64k page, we can convert a page table
-> entry to a physicall address without awareness of 52-bit.
-> 
-> According to this patch, the top 4 bits of a 52-bit physical address
-> are positioned at bits 12..15 of a page table entry.
-> 
-> commit 75387b92635e7dca410c1ef92cfe510019248f76
-> Author: Kristina Martsenko <kristina.martsenko@arm.com>
-> Date:   Wed Dec 13 17:07:21 2017 +0000
-> 
->      arm64: handle 52-bit physical addresses in page table entries
->      
->      The top 4 bits of a 52-bit physical address are positioned at bits
->      12..15 of a page table entry. Introduce macros to convert between a
->      physical address and its placement in a table entry, and change all
->      macros/functions that access PTEs to use them.
-> 
-> With 64k page and non-52-bit kernel, it looks like the bits 12..15
-> are zero, so we can move the zeros to bits 49..51 because the zeros
-> don't affect the PA, for example:
-> 
->        52-bit              non-52-bit (48-bit)
->    PTE 0x0000123456789000  0x0000123456780000
->             v--------^          v--------^   __pte_to_phys() w/52-bit support
->    PA  0x0009123456780000  0x0000123456780000
-> 
-> I think that this was what the upstream maintainers said..
-> But "if (lpa_52_bit_support_available)" is also fine for me.
-
-Well from my experience on arm32 and arm64 hardware enablement, assuming 
-values of implementation defined fields for arm hardware can be risky :)
-
-Lets see what the ARMv8 architecture reference manual says about the 
-Bits [15:12] for a 64KB page size:
-
-"Bits[15:12] of each valid translation table descriptor hold bits[51:48] 
-of the output address, or of the address of the translation table to be 
-used for the initial lookup at the next level of translation. If the 
-implementation does not support 52-bit physical addresses, then it is 
-IMPLEMENTATION DEFINED whether non-zero values for these bits generate 
-an Address size fault."
-
-So, it is unsafe to assume that for a 48-bit physical address 
-implementation the Bits[15:12] cannot have non-zero values on certain 
-hardware implementations. So assuming that these bits are always 0 and 
-can be easily moved to Bits[51:48] for a 64K page and non-52bit kernel, 
-can lead to IMPLEMENTATION DEFINED behavior.
-
-Its better instead to have a predictable behavior in such cases and by 
-explicitly calculating the paddress values using the right PTE High and 
-Low masks in these cases we can minimize any hardware IMPLEMENTATION 
-specific details (just like the handling done in kernel space).
-
->>>>> @@ -287,6 +481,15 @@ get_stext_symbol(void)
->>>>>    int
->>>>>    get_machdep_info_arm64(void)
->>>>>    {
->>>>> +       int pa_bits;
->>>>> +
->>>>> +       /* Determine if the PA address range is 52-bits: ARMv8.2-LPA */
->>>>> +       pa_bits = get_phy_mask_shift_arm64();
->>>>> +       DEBUG_MSG("pa_bits    : %d\n", pa_bits);
->>>>> +
->>>>> +       if (pa_bits == 52)
->>>>> +               lpa_52_bit_support_available = 1;
->>>>> +
->>>
->>> This looks a bit redundant, so for example
->>>
->>>     if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
->>>       info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
->>>       if (info->max_physmem_bits == 52)
->>>         lpa_52_bit_support_available = 1;
->>>     } else
->>>       info->max_physmem_bits = 48;
->>
->> Ok.
->>
-> 
->>>>> @@ -425,14 +628,13 @@ vaddr_to_paddr_arm64(unsigned long vaddr)
->>>>>                           ERRMSG("Can't get a valid pte.\n");
->>>>>                           return NOT_PADDR;
->>>>>                   } else {
->>>>> -
->>>>> -                       paddr = (PAGEBASE(pte_val(ptev)) & PHYS_MASK)
->>>>> +                       paddr = (PAGEBASE(pte_val(ptev)) & PTE_ADDR_MASK)
->>>>>                                           + (vaddr & (PAGESIZE() - 1));
->>>
->>> I think __pte_to_phys() is needed also here, not PTE_ADDR_MASK.
->>
->> I had some issues with the same on ARMv8 simulator, so lets stick with the tested 'PTE_ADDR_MASK' usage for now.
-> 
-> Did you test this PTE_ADDR_MASK line on a system actually using
-> 52-bit PA? If a 52-bit physical address is actually used, this will
-> return a wrong address, for example:
-> 
->    PTE_ADDR_MASK  0x0000fffffffff000
->    PTE            0x0000123456789000
->    PAGEBASE'd     0x0000123456780000
->     v
->    paddr          0x0000123456780000 + 64k offset // incorrect
-> 
-> With 52-bit PA, the PTE_ADDR_MASK is used for __phys_to_pte_val(),
-> not __pte_to_phys().
-> 
-> If I understand correctly, we should need __pte_to_phys() also here.
-> 
->    paddr = __pte_to_phys(ptev)
->                    + (vaddr & (PAGESIZE() - 1));
-> 
-> Could you try this?
-
-Yes, the ARMv8 simulator can support both ARMv8.2 LPA and LVA features 
-and I tested the above suggestion earlier also on the same and landed 
-into incorrect paddress calculation issues.
-
-Since the simulator is slow and its time taking to insert rebuilt 
-user-space components in the Linaro initramfs being used on the same, I 
-would suggest that we go ahead with the above code for now and later 
-when I have more results from the simulator/real hardware, I will send 
-out a follow-up patch (if needed) to fix the paddress calculation.
+[0]. http://lists.infradead.org/pipermail/kexec/2019-February/022431.html
 
 Thanks,
 Bhupesh
 
+> >
+> > The increased 'PTRS_PER_PGD' value for such cases needs to be then
+> > calculated as is done by the underlying kernel (see
+> > 'arch/arm64/include/asm/pgtable-hwdef.h' for details):
+> >
+> > #define PTRS_PER_PGD          (1 << (MAX_USER_VA_BITS - PGDIR_SHIFT))
+> >
+> > Also, note that 'arch/arm64/include/asm/memory.h' defines 'MAX_USER_VA_BITS'
+> > as 'VA_BITS' in case 'CONFIG_ARM64_USER_VA_BITS_52' is set to 'n':
+> >
+> > #ifdef CONFIG_ARM64_USER_VA_BITS_52
+> > #define MAX_USER_VA_BITS      52
+> > #else
+> > #define MAX_USER_VA_BITS      VA_BITS
+> > #endif
+> >
+> > So, makedumpfile will need this symbol exported in vmcore to make the above
+> > determination.
+> >
+> > [0]. http://lists.infradead.org/pipermail/kexec/2019-February/022425.html
+> >
+> > Thanks,
+> > Bhupesh
+>
+> Thanks
+> Dave
 
 _______________________________________________
 kexec mailing list
