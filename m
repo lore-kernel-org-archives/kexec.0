@@ -1,21 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-f194.google.com ([209.85.210.194])
+Received: from mail-it1-x142.google.com ([2607:f8b0:4864:20::142])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gtQI4-0007je-3w
- for kexec@lists.infradead.org; Tue, 12 Feb 2019 05:07:29 +0000
-Received: by mail-pf1-f194.google.com with SMTP id j3so689529pfi.12
- for <kexec@lists.infradead.org>; Mon, 11 Feb 2019 21:07:27 -0800 (PST)
-Subject: Re: [PATCH] arm64, vmcoreinfo : Append 'MAX_USER_VA_BITS' and
- 'MAX_PHYSMEM_BITS' to vmcoreinfo
-References: <1548850991-11879-1-git-send-email-bhsharma@redhat.com>
- <20190131014800.GB15785@dhcp-128-65.nay.redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03567AA3@BPXM09GP.gisp.nec.co.jp>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Message-ID: <d7d50b5a-3577-448e-d928-7898016a38fb@redhat.com>
-Date: Tue, 12 Feb 2019 10:37:19 +0530
+ id 1gtQj6-0002PL-Au
+ for kexec@lists.infradead.org; Tue, 12 Feb 2019 05:35:25 +0000
+Received: by mail-it1-x142.google.com with SMTP id i145so4308314ita.4
+ for <kexec@lists.infradead.org>; Mon, 11 Feb 2019 21:35:23 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03567AA3@BPXM09GP.gisp.nec.co.jp>
-Content-Language: en-US
+References: <20190125103924.GB27998@zn.tnic>
+ <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
+ <20190125140823.GC27998@zn.tnic>
+ <20190131075907.GB19091@dhcp-128-65.nay.redhat.com>
+ <20190131105732.GC6749@zn.tnic> <20190131222732.GA946@anatevka>
+ <20190131234740.GO6749@zn.tnic> <20190204223016.GB11986@anatevka>
+ <20190205081552.GG21801@zn.tnic>
+ <20190206120804.GC10062@dhcp-128-65.nay.redhat.com>
+ <20190211204816.GB21473@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190211204816.GB21473@dhcp-128-65.nay.redhat.com>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Tue, 12 Feb 2019 13:35:11 +0800
+Message-ID: <CAFgQCTv0gkXpvJ6U+RztfVe+eL=5nL+=_TVaNV0VozX_dKtrWQ@mail.gmail.com>
+Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,115 +29,79 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Dave Young <dyoung@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "lijiang@redhat.com" <lijiang@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Borislav Petkov <bp@alien8.de>, "anderson@redhat.com" <anderson@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, Jerry Hoemann <jerry.hoemann@hpe.com>, LKML <linux-kernel@vger.kernel.org>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>, Yinghai Lu <yinghai@kernel.org>, vgoyal@redhat.com
 
-Hi Kazu,
-
-On 02/04/2019 09:34 PM, Kazuhito Hagio wrote:
-> On 1/30/2019 8:48 PM, Dave Young wrote:
->> + more people
->> On 01/30/19 at 05:53pm, Bhupesh Sharma wrote:
->>> With ARMv8.2-LVA and LPA architecture extensions, arm64 hardware which
->>> supports these extensions can support upto 52-bit virtual and 52-bit
->>> physical addresses respectively.
->>>
->>> Since at the moment we enable the support of these extensions via CONFIG
->>> flags, e.g.
->>>   - LPA via CONFIG_ARM64_PA_BITS_52
->>>
->>> there are no clear mechanisms in user-space right now to
->>> deteremine these CONFIG flag values and also determine the PARange and
->>> VARange address values.
->>>
->>> User-space tools like 'makedumpfile' and 'crash-utility' can instead
->>> use the 'MAX_USER_VA_BITS' and 'MAX_PHYSMEM_BITS' values to determine
->>> the maximum virtual address and physical address (respectively)
->>> supported by underlying kernel.
->>>
->>> A reference 'makedumpfile' implementation which uses this approach to
->>> determining the maximum physical address is available in [0].
->>>
->>> [0].
->> https://github.com/bhupesh-sharma/makedumpfile/blob/52-bit-pa-support-via-vmcore-v1/arch/arm64.c#L490
->>
->> I'm not objecting the patch, just want to make sure to make clear about
->> things and make sure these issues are aware by people, and leave arm
->> people to review the arm bits.
->>
->> 1. MAX_PHYSMEM_BITS
->> As we previously found, back to 2014 makedumpfile took a patch to read the
->> value from vmcore but the kernel patch was not accepted.
->> So we should first make clear if this is really needed, why other arches
->> do not need this in makedumpfile.
->>
->> If we really need it then should it be arm64 only?
->>
->> If it is arm64 only then the makedumpfile code should read this number
->> only for arm64.
-> 
-> Sorry for the delay.
-> 
-> According to the kernel patch, some of arm32 platforms may need it
-> http://lists.infradead.org/pipermail/kexec/2014-May/011909.html
-> but except for them (and arm64), makedumpfile can manage with kernel
-> version and some switches to determine this value so far.
-> 
->>
->> Also Lianbo added the vmcoreinfo documents, I believe it stays in -tip
->> tree,  need to make sure to document this as well.
->>
->> 2. MAX_USER_VA_BITS
->> Does makedumpfile care about userspace VA bits?  I do not see other code
->> doing this,  Kazu and Dave A should be able to comment.
-> 
-> The mapping makedumpfile uses on arm64 is swapper_pg_dir only, so
-> unless the config affects its structure or something, makedumpfile
-> will not need this value.
-
-I captured this case in more details while sending out the makedumpfile  
-enablement patch for ARMv8.2-LVA (see [0]), but here is a brief summary  
-on the same:
-
-Since at the moment we enable the support of the ARMv8.2-LVA extension  
-for 52-bit user-space VA in the kernel via a CONFIG flags  
-(CONFIG_ARM64_USER_VA_BITS_52), so there are no clear mechanisms in  
-user-space to determine this CONFIG
-flag value and use it to determine the address range values.
-
-Since 'VA_BITS' are already exported via vmcoreinfo, if we export  
-'MAX_USER_VA_BITS' as well, we can use the same in user-space to check  
-if the 'MAX_USER_VA_BITS' value is greater than 'VA_BITS'. If yes, then  
-we are running a use-case where user-space is 52-bit while the  
-underlying kernel is still 48-bit.
-
-The increased 'PTRS_PER_PGD' value for such cases needs to be then  
-calculated as is done by the underlying kernel (see  
-'arch/arm64/include/asm/pgtable-hwdef.h' for details):
-
-#define PTRS_PER_PGD		(1 << (MAX_USER_VA_BITS - PGDIR_SHIFT))
-
-Also, note that 'arch/arm64/include/asm/memory.h' defines  
-'MAX_USER_VA_BITS' as 'VA_BITS' in case 'CONFIG_ARM64_USER_VA_BITS_52'  
-is set to 'n':
-
-#ifdef CONFIG_ARM64_USER_VA_BITS_52
-#define MAX_USER_VA_BITS	52
-#else
-#define MAX_USER_VA_BITS	VA_BITS
-#endif
-
-So, makedumpfile will need this symbol exported in vmcore to make the  
-above determination.
-
-[0]. http://lists.infradead.org/pipermail/kexec/2019-February/022425.html
+On Tue, Feb 12, 2019 at 4:48 AM Dave Young <dyoung@redhat.com> wrote:
+>
+> On 02/06/19 at 08:08pm, Dave Young wrote:
+> > On 02/05/19 at 09:15am, Borislav Petkov wrote:
+> > > On Mon, Feb 04, 2019 at 03:30:16PM -0700, Jerry Hoemann wrote:
+> > > > Is your objection only to the second fallback of allocating
+> > > > memory above >= 4GB?   Or are you objecting to allocating from
+> > > > (896 .. 4GB) as well?
+> > >
+> > > My problem is why should the user need to specify high or low allocation
+> > > explicitly when we can handle all that in the kernel automatically.
+> > >
+> > > The presence of crashkernel= on the cmdline sure means that the user
+> > > wants to allocate memory for a second kernel.
+> > >
+> > > Now, if the requested allocation fails, we say:
+> > >
+> > >   Error reserving crashkernel
+> > >
+> > > So, instead of saying that, we can *try* *again* and say
+> > >
+> > >   Error reserving requested crashkernel at @..., attempting a high range.
+> > >
+> > > and run memblock_find_in_range() on the other regions which we deemed
+> > > are ok to allocate from.
+> > >
+> > > Why aren't we doing that by default instead of placing all those
+> > > different options in front of the user and expecting her/him to know
+> > > something about all those magic ranges?
+> >
+> > As we talked in another reply, for the >4G allocation we can not avoid
+> > the swiotlb issue,  but if one request for 256M in high region and we
+> > allocate the low part automatically, it will eat more memory eg. 512M.
+> >
+> > But probably in case allacation failed in low region ,high is a must for kdump
+> > reservation, since no other choices perhaps we can make that as you said
+>
+> That is exactly what Pingfan is doing in this patch.
+>
+> Even we make it automatic in kernel, but we have to have some default
+> value for swiotlb in case crashkernel can not find a free region under 4G.
+> So this default value can not work for every use cases, people need
+> manually use crashkernel=,low and crashkernel=,high in case
+> crashkernel=X does not work.  One can tune it for their use:
+>
+> 1) crashkernel=X reservation fails, likely the ,low default value is
+> still too big, one can shrink the value and manually try other value
+> 2) crashkernel=X reserve successfully on high memory and along with some
+> default low memory region. But the low region is not enough.  In this
+> case one can increase the
+>
+> This should answer the question why ,high and ,low is still needed.
+>
+> But for above consumption 1),  KASLR can still cause default ,low memory
+> failed to reserve.  So I wonder if KASLR can skip the 0-896M if the
+> system memory is big enough.
+>
+A little fix about the comment. Refer to reserve_crashkernel_low(),
+low_base = memblock_find_in_range(0, 1ULL << 32, low_size,
+CRASH_ALIGN); So it should try 0~4G for ",low". And the default size
+for low is 256M. Given the limited memory region reserved by other
+component before crashkernel, we always can find a continuous chunk of
+256M inside the fragmented [0,4G], which is split by initrd, KASLR.
 
 Thanks,
-Bhupesh
+Pingfan
 
 _______________________________________________
 kexec mailing list
