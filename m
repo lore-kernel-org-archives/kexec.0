@@ -1,17 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1guODM-0005aZ-32
- for kexec@lists.infradead.org; Thu, 14 Feb 2019 21:06:37 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile: fix a typo for checking the file pointer
- for null.
-Date: Thu, 14 Feb 2019 21:05:39 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC0356872C@BPXM09GP.gisp.nec.co.jp>
-References: <4AE2DC15AC0B8543882A74EA0D43DBEC0356869A@BPXM09GP.gisp.nec.co.jp>
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC0356869A@BPXM09GP.gisp.nec.co.jp>
-Content-Language: en-US
+ id 1guagB-0003ze-DT
+ for kexec@lists.infradead.org; Fri, 15 Feb 2019 10:25:13 +0000
+Date: Fri, 15 Feb 2019 11:24:58 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
+Message-ID: <20190215102458.GD10433@zn.tnic>
+References: <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
+ <20190125140823.GC27998@zn.tnic>
+ <20190131075907.GB19091@dhcp-128-65.nay.redhat.com>
+ <20190131105732.GC6749@zn.tnic> <20190131222732.GA946@anatevka>
+ <20190131234740.GO6749@zn.tnic> <20190204223016.GB11986@anatevka>
+ <20190205081552.GG21801@zn.tnic>
+ <20190206120804.GC10062@dhcp-128-65.nay.redhat.com>
+ <20190211204816.GB21473@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20190211204816.GB21473@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,41 +31,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Nisha.Parrakat@kpit.com" <Nisha.Parrakat@kpit.com>
-Cc: kexec mailing list <kexec@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, Jerry Hoemann <jerry.hoemann@hpe.com>, Pingfan Liu <kernelfans@gmail.com>, linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
 
------Original Message-----
-> From: Nisha Parrakat <nisha.parrakat@kpit.com>
-> 
-> Description:
-> Static code analysis of makedumpfile code shows a mistake in checking
-> the validity of a file descripter just attempted to open.
-> 
-> arch/ppc64.c: fixed the typo that missed checking fpb that was last attempted to open.
-> 
-> Found during cppcheck on the code.
-> 
-> Signed-off-by: Nisha Parrakat <Nisha.Parrakat@kpit.com>
-> 
-> --- a/arch/ppc64.c	2019-01-29 23:08:27.099027763 +0100
-> +++ b/arch/ppc64.c	2019-01-29 23:08:58.567379337 +0100
-> @@ -623,7 +623,7 @@
->  		return FALSE;
->  	}
->  	fpb = fopen(f_crashbase, "r");
-> -	if (!fp) {
-> +	if (!fpb) {
->  		ERRMSG("Cannot open %s\n", f_crashbase);
->  		fclose(fp);
->  		return FALSE;
-> 
+On Tue, Feb 12, 2019 at 04:48:16AM +0800, Dave Young wrote:
+> Even we make it automatic in kernel, but we have to have some default
+> value for swiotlb in case crashkernel can not find a free region under 4G.
+> So this default value can not work for every use cases, people need 
+> manually use crashkernel=,low and crashkernel=,high in case
+> crashkernel=X does not work.
 
-Thanks, applied to the devel branch.
+Why would the user need to find swiotlb range? The kernel has all the
+information it requires at its finger tips in order to decide properly.
 
-Kazu
+The user wants a crashkernel range, the kernel tries the low range =>
+no workie, then it tries the next range => workie but needs to allocate
+swiotlb range so that DMA can happen too. Doh, then the kernel does
+allocate that too.
 
+Why would the user need to do anything here?!
 
+-- 
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
