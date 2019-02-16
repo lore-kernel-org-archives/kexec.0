@@ -1,28 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-f68.google.com ([209.85.167.68])
+Received: from mail-pl1-f196.google.com ([209.85.214.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1guhoR-0006oy-PG
- for kexec@lists.infradead.org; Fri, 15 Feb 2019 18:02:13 +0000
-Received: by mail-lf1-f68.google.com with SMTP id m11so7829574lfc.6
- for <kexec@lists.infradead.org>; Fri, 15 Feb 2019 10:02:11 -0800 (PST)
-MIME-Version: 1.0
-References: <1548850991-11879-1-git-send-email-bhsharma@redhat.com>
- <20190131014800.GB15785@dhcp-128-65.nay.redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03567AA3@BPXM09GP.gisp.nec.co.jp>
- <d7d50b5a-3577-448e-d928-7898016a38fb@redhat.com>
- <20190212104407.GA17022@dhcp-128-65.nay.redhat.com>
- <CACi5LpOAADU8s+3e6=fO7FT+VtAmWYNeZN9COF+4Gt6twLWYaA@mail.gmail.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC035683DB@BPXM09GP.gisp.nec.co.jp>
- <20190213111552.GA8265@dhcp-128-65.nay.redhat.com>
- <bed51e6e-3dcb-8e07-1d31-9d81bfca20e5@arm.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03568504@BPXM09GP.gisp.nec.co.jp>
- <37ed4c14-e4b9-49c0-4816-c289ce65fd76@arm.com>
-In-Reply-To: <37ed4c14-e4b9-49c0-4816-c289ce65fd76@arm.com>
+ id 1gv6Vj-0008Ew-T4
+ for kexec@lists.infradead.org; Sat, 16 Feb 2019 20:24:34 +0000
+Received: by mail-pl1-f196.google.com with SMTP id o6so6687283pls.13
+ for <kexec@lists.infradead.org>; Sat, 16 Feb 2019 12:24:29 -0800 (PST)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Fri, 15 Feb 2019 23:31:56 +0530
-Message-ID: <CACi5LpN6gVy4gCTYLGRiWW1VNGrVc-+Ykn919LKsO2bP-v1NHw@mail.gmail.com>
-Subject: Re: [PATCH] arm64, vmcoreinfo : Append 'MAX_USER_VA_BITS' and
- 'MAX_PHYSMEM_BITS' to vmcoreinfo
+Subject: [PATCH v2 0/2] makedumpfile/arm64: Add support for ARMv8.2 extensions
+Date: Sun, 17 Feb 2019 01:54:16 +0530
+Message-Id: <1550348658-15300-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,144 +17,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, "lijiang@redhat.com" <lijiang@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Steve Capper <Steve.Capper@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "anderson@redhat.com" <anderson@redhat.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: bhsharma@redhat.com, bhupesh.linux@gmail.com, k-hagio@ab.jp.nec.com
 
-Hi James,
+Changes since v1:
+----------------
+- v1 was sent as two separate patches:
+  http://lists.infradead.org/pipermail/kexec/2019-February/022424.html
+  (ARMv8.2-LPA)
+  http://lists.infradead.org/pipermail/kexec/2019-February/022425.html
+  (ARMv8.2-LVA)
+- v2 combined the two in a single patchset and also addresses Kazu's
+  review comments.
 
-On Fri, Feb 15, 2019 at 11:04 PM James Morse <james.morse@arm.com> wrote:
->
-> Hi guys,
->
-> (CC: +Steve, +Kristina) "What's the best way of letting user-space know the MMU
-> config when 52-bit VA and pointer-auth may be in use?"
->
-> On 13/02/2019 19:52, Kazuhito Hagio wrote:
-> > On 2/13/2019 1:22 PM, James Morse wrote:
-> >> On 13/02/2019 11:15, Dave Young wrote:
-> >>> On 02/12/19 at 11:03pm, Kazuhito Hagio wrote:
-> >>>> On 2/12/2019 2:59 PM, Bhupesh Sharma wrote:
-> >>>>> BTW, in the makedumpfile enablement patch thread for ARMv8.2 LVA
-> >>>>> (which I sent out for 52-bit User space VA enablement) (see [0]), Kazu
-> >>>>> mentioned that the changes look necessary.
-> >>>>>
-> >>>>> [0]. http://lists.infradead.org/pipermail/kexec/2019-February/022431.html
-> >>>>
-> >>>>>>> The increased 'PTRS_PER_PGD' value for such cases needs to be then
-> >>>>>>> calculated as is done by the underlying kernel
-> >>
-> >> Aha! Nothing to do with which-bits-are-pfn in the tables...
-> >>
-> >> You need to know if the top level PGD is 512bytes or bigger. As we use a
-> >> kmem-cache the adjacent data could be some else's page tables.
-> >>
-> >> Is this really a problem though? You can't pull the user-space pgd pointers out
-> >> of no-where, you must have walked some task_struct and struct_mm's to find them.
-> >> In which case you would have the VMAs on hand to tell you if its in the mapped
-> >> user range.
-> >>
-> >> It would be good to avoid putting something arch-specific in here if we can at
-> >> all help it.
->
-> >>>>>>> (see
-> >>>>>>> 'arch/arm64/include/asm/pgtable-hwdef.h' for details):
-> >>>>>>>
-> >>>>>>> #define PTRS_PER_PGD          (1 << (MAX_USER_VA_BITS - PGDIR_SHIFT))
-> >>>>
-> >>>> Yes, this is the reason why makedumpfile needs the MAX_USER_VA_BITS.
-> >>>> It is used for pgd_index() also in makedumpfile to walk page tables.
-> >>>>
-> >>>> /* to find an entry in a page-table-directory */
-> >>>> #define pgd_index(addr)         (((addr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
-> >>>
-> >>> Since Dave mentioned crash tool does not need it, but crash should also
-> >>> travel the pg tables.
-> >
-> > The crash utility is always invoked with vmlinux, so it can read the
-> > vabits_user variable directly from vmcore, but makedumpfile can not.
->
-> (This sounds fragile. That symbol's name may change, it may disappear
-> completely! ... but I guess crash changes with every kernel release anyway)
->
->
-> >>> If this is really necessary it would be good to describe what will
-> >>> happen without the patch, eg. some user visible error from an actual test etc.
-> >>
-> >> Yes please, it would really help if there was a specific example we could discuss.
-> >
-> > With 52-bit user space and 48-bit kernel space configuration,
-> > makedumpfile will not be able to convert a virtual kernel address
-> > to a physical address, and fail to capture a dumpfile, because the
-> > pgd_index() will return a wrong index.
->
-> Got it, thanks!
-> (all this user stuff had me thinking it was user-space you were trying to walk).
->
-> Yes, this is because of commit e842dfb5a2d3 ("arm64: mm: Offset TTBR1 to allow
-> 52-bit PTRS_PER_PGD"). The kernel has offset the ttbr1 value, if you try and
-> walk it without knowing the offset you get junk.
->
-> Ideally we tell you the offset with some 'ttbr1_offset=' in vmcoreinfo, but if
-> the offsetting code disappears, the kernel would still have to provide
-> 'ttbr1_offset=0' for user-space to keep working.
->
-> I'd like to find something future-proof that always has an unambiguous meaning,
-> and isn't a problem if the kernel variable/symbol/kconfig names change.
->
-> With pointer-auth in use too you can't guess which bits are address and which
-> bits are data.
->
-> Taking arch-specific to its extreme, we could expose TCR_EL1, but this is a
-> problem if we ever switch that per task (some new bits may turn up with a new
-> feature). Some of those bits vary per cpu too, so we'd have to mask them out in
-> case user-space tries to conclude something from them.
->
->
-> My current best suggestion is to export:
-> from core code:
-> * USER_MMAP_END, the maximum value a user-space can try and mmap().
-> This would normally be TASK_SIZE, but x86 and powerpc also have support for
-> larger VA space, and its plumbed into mm slightly differently. We should have
-> one arch-independent property that covers all these. On arm64 this would be the
-> runtime va bits for user-space's TTBR. (This assumes the value isn't per-task)
->
-> arch specific:
-> * ARM64_TCR.T1SZ, the va bits mapped by the kernel's TTBR. (We can assume we'll
-> never flip user/kernel space). This has to be arch specific, it will always have
-> a value and its meaning comes from the ARM-ARM (so linux can't change it in the
-> future). It should be the same on every CPU.
-> * ARM64_TTBR1.BADDR, the pa of the kernel page tables, which implicitly has the
-> offset. Again this always has a value, and its meaning comes from the ARM-ARM.
-> If we ever get clever with different page-tables/TCR values on different CPUs,
-> these two should come from the same CPU.
->
->
-> I think this gives you what you need if user/kernel may both be using
-> pointer-auth and both may be using 52-bit va. I'm pretty sure the 48:52 bits can
-> be picked at boot time depending on the kernel kconfig and the hardware support.
->
-> Does anyone have a better idea? (or a corner where this won't work?)
+This patchset adds support for ARMv8.2 extensions in makedumpfile code.
+I cover the following two cases with this patchset:
+ - 48-bit VA + 52-bit PA (LPA)
+ - 48-bit kernel VA + 52-bit virtual VA (LVA)
 
-I am not sure you got a chance to look at the two regression cases I
-reported here:
-<http://lists.infradead.org/pipermail/kexec/2019-February/022449.html>
+This has been tested for the following user-cases:
+1. Calculating --mem-usage on the primary kernel,
+2. Creating a dumpfile using /proc/vmcore, and
+3. Post-processing a vmcore.
 
-Unfortunately the above suggestion doesn't provide any fix for
-ARMv8.2-LPA regression (see text under heading '
-(1). Regression Case 1 (ARMv8.2-LPA enabled kernel)')
+I have tested this patchset on the following platforms, with kernels
+which support/do-not-support ARMv8.2 features:
+1. CPUs which don't support ARMv8.2 features, e.g. qualcomm-amberwing,
+   ampere-osprey.
+2. ARMv8 FVP model, which supports ARMv8.2 extensions.
 
-After going through the regression reports, I think exporting
-'MAX_USER_VA_BITS' and 'MAX_PHYSMEM_BITS' to vmcoreinfo is sufficient
-for the above regressions (without over-complicating the stuff) as
-ARM64_TCR.T1SZ and friends seem to arch specific as compared to
-VA_BITS + 'MAX_USER_VA_BITS' .
+Bhupesh Sharma (2):
+  makedumpfile/arm64: Add support for ARMv8.2-LPA (52-bit PA support)
+  makedumpfile/arm64: Add support for ARMv8.2-LVA (52-bit user-space VA
+    support)
 
-Thanks,
-Bhupesh
+ arch/arm64.c   | 411 +++++++++++++++++++++++++++++++++++++++++----------------
+ makedumpfile.c |   2 +
+ makedumpfile.h |   1 +
+ 3 files changed, 298 insertions(+), 116 deletions(-)
+
+-- 
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
