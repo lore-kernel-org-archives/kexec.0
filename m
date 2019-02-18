@@ -1,24 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gvY2y-00068M-Nm
- for kexec@lists.infradead.org; Mon, 18 Feb 2019 01:48:42 +0000
-Date: Mon, 18 Feb 2019 09:48:20 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
- consistent with kaslr
-Message-ID: <20190218014820.GA10711@dhcp-128-65.nay.redhat.com>
-References: <20190125140823.GC27998@zn.tnic>
- <20190131075907.GB19091@dhcp-128-65.nay.redhat.com>
- <20190131105732.GC6749@zn.tnic> <20190131222732.GA946@anatevka>
- <20190131234740.GO6749@zn.tnic> <20190204223016.GB11986@anatevka>
- <20190205081552.GG21801@zn.tnic>
- <20190206120804.GC10062@dhcp-128-65.nay.redhat.com>
- <20190211204816.GB21473@dhcp-128-65.nay.redhat.com>
- <20190215102458.GD10433@zn.tnic>
+From: Steve Capper <Steve.Capper@arm.com>
+Subject: Re: [PATCH] arm64, vmcoreinfo : Append 'MAX_USER_VA_BITS' and
+ 'MAX_PHYSMEM_BITS' to vmcoreinfo
+Date: Mon, 18 Feb 2019 15:27:03 +0000
+Message-ID: <20190218152651.GA14091@capper-debian.cambridge.arm.com>
+References: <4AE2DC15AC0B8543882A74EA0D43DBEC03567AA3@BPXM09GP.gisp.nec.co.jp>
+ <d7d50b5a-3577-448e-d928-7898016a38fb@redhat.com>
+ <20190212104407.GA17022@dhcp-128-65.nay.redhat.com>
+ <CACi5LpOAADU8s+3e6=fO7FT+VtAmWYNeZN9COF+4Gt6twLWYaA@mail.gmail.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC035683DB@BPXM09GP.gisp.nec.co.jp>
+ <20190213111552.GA8265@dhcp-128-65.nay.redhat.com>
+ <bed51e6e-3dcb-8e07-1d31-9d81bfca20e5@arm.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03568504@BPXM09GP.gisp.nec.co.jp>
+ <37ed4c14-e4b9-49c0-4816-c289ce65fd76@arm.com>
+ <CACi5LpN6gVy4gCTYLGRiWW1VNGrVc-+Ykn919LKsO2bP-v1NHw@mail.gmail.com>
+In-Reply-To: <CACi5LpN6gVy4gCTYLGRiWW1VNGrVc-+Ykn919LKsO2bP-v1NHw@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <FDAF38E61CCFD64599C4C56FFB25E15D@eurprd08.prod.outlook.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190215102458.GD10433@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,38 +30,154 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Randy Dunlap <rdunlap@infradead.org>, bhe@redhat.com, konrad.wilk@oracle.com, x86@kernel.org, kexec@lists.infradead.org, Jerry Hoemann <jerry.hoemann@hpe.com>, Pingfan Liu <kernelfans@gmail.com>, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, "lijiang@redhat.com" <lijiang@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <James.Morse@arm.com>, Kristina Martsenko <Kristina.Martsenko@arm.com>, Borislav Petkov <bp@alien8.de>, "anderson@redhat.com" <anderson@redhat.com>, nd <nd@arm.com>, Dave Young <dyoung@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On 02/15/19 at 11:24am, Borislav Petkov wrote:
-> On Tue, Feb 12, 2019 at 04:48:16AM +0800, Dave Young wrote:
-> > Even we make it automatic in kernel, but we have to have some default
-> > value for swiotlb in case crashkernel can not find a free region under 4G.
-> > So this default value can not work for every use cases, people need 
-> > manually use crashkernel=,low and crashkernel=,high in case
-> > crashkernel=X does not work.
-> 
-> Why would the user need to find swiotlb range? The kernel has all the
-> information it requires at its finger tips in order to decide properly.
-> 
-> The user wants a crashkernel range, the kernel tries the low range =>
-> no workie, then it tries the next range => workie but needs to allocate
-> swiotlb range so that DMA can happen too. Doh, then the kernel does
-> allocate that too.
+Hi Bhupesh,
 
-It is ideal if kernel can do it automatically, but I'm not sure if
-kernel can predict the swiotlb reserved size automatically.
+Sorry for joining this thread late...
 
-Let's add more people to seek for comments. 
+On Fri, Feb 15, 2019 at 11:31:56PM +0530, Bhupesh Sharma wrote:
+> Hi James,
+> 
+> On Fri, Feb 15, 2019 at 11:04 PM James Morse <james.morse@arm.com> wrote:
+> >
+> > Hi guys,
+> >
+> > (CC: +Steve, +Kristina) "What's the best way of letting user-space know the MMU
+> > config when 52-bit VA and pointer-auth may be in use?"
+> >
+> > On 13/02/2019 19:52, Kazuhito Hagio wrote:
+> > > On 2/13/2019 1:22 PM, James Morse wrote:
+> > >> On 13/02/2019 11:15, Dave Young wrote:
+> > >>> On 02/12/19 at 11:03pm, Kazuhito Hagio wrote:
+> > >>>> On 2/12/2019 2:59 PM, Bhupesh Sharma wrote:
+> > >>>>> BTW, in the makedumpfile enablement patch thread for ARMv8.2 LVA
+> > >>>>> (which I sent out for 52-bit User space VA enablement) (see [0]), Kazu
+> > >>>>> mentioned that the changes look necessary.
+> > >>>>>
+> > >>>>> [0]. http://lists.infradead.org/pipermail/kexec/2019-February/022431.html
+> > >>>>
+> > >>>>>>> The increased 'PTRS_PER_PGD' value for such cases needs to be then
+> > >>>>>>> calculated as is done by the underlying kernel
+> > >>
+> > >> Aha! Nothing to do with which-bits-are-pfn in the tables...
+> > >>
+> > >> You need to know if the top level PGD is 512bytes or bigger. As we use a
+> > >> kmem-cache the adjacent data could be some else's page tables.
+> > >>
+> > >> Is this really a problem though? You can't pull the user-space pgd pointers out
+> > >> of no-where, you must have walked some task_struct and struct_mm's to find them.
+> > >> In which case you would have the VMAs on hand to tell you if its in the mapped
+> > >> user range.
+> > >>
+> > >> It would be good to avoid putting something arch-specific in here if we can at
+> > >> all help it.
+> >
+> > >>>>>>> (see
+> > >>>>>>> 'arch/arm64/include/asm/pgtable-hwdef.h' for details):
+> > >>>>>>>
+> > >>>>>>> #define PTRS_PER_PGD          (1 << (MAX_USER_VA_BITS - PGDIR_SHIFT))
+> > >>>>
+> > >>>> Yes, this is the reason why makedumpfile needs the MAX_USER_VA_BITS.
+> > >>>> It is used for pgd_index() also in makedumpfile to walk page tables.
+> > >>>>
+> > >>>> /* to find an entry in a page-table-directory */
+> > >>>> #define pgd_index(addr)         (((addr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
+> > >>>
+> > >>> Since Dave mentioned crash tool does not need it, but crash should also
+> > >>> travel the pg tables.
+> > >
+> > > The crash utility is always invoked with vmlinux, so it can read the
+> > > vabits_user variable directly from vmcore, but makedumpfile can not.
+> >
+> > (This sounds fragile. That symbol's name may change, it may disappear
+> > completely! ... but I guess crash changes with every kernel release anyway)
+> >
+> >
+> > >>> If this is really necessary it would be good to describe what will
+> > >>> happen without the patch, eg. some user visible error from an actual test etc.
+> > >>
+> > >> Yes please, it would really help if there was a specific example we could discuss.
+> > >
+> > > With 52-bit user space and 48-bit kernel space configuration,
+> > > makedumpfile will not be able to convert a virtual kernel address
+> > > to a physical address, and fail to capture a dumpfile, because the
+> > > pgd_index() will return a wrong index.
+> >
+> > Got it, thanks!
+> > (all this user stuff had me thinking it was user-space you were trying to walk).
+> >
+> > Yes, this is because of commit e842dfb5a2d3 ("arm64: mm: Offset TTBR1 to allow
+> > 52-bit PTRS_PER_PGD"). The kernel has offset the ttbr1 value, if you try and
+> > walk it without knowing the offset you get junk.
+> >
+> > Ideally we tell you the offset with some 'ttbr1_offset=' in vmcoreinfo, but if
+> > the offsetting code disappears, the kernel would still have to provide
+> > 'ttbr1_offset=0' for user-space to keep working.
+> >
+> > I'd like to find something future-proof that always has an unambiguous meaning,
+> > and isn't a problem if the kernel variable/symbol/kconfig names change.
+> >
+> > With pointer-auth in use too you can't guess which bits are address and which
+> > bits are data.
+> >
+> > Taking arch-specific to its extreme, we could expose TCR_EL1, but this is a
+> > problem if we ever switch that per task (some new bits may turn up with a new
+> > feature). Some of those bits vary per cpu too, so we'd have to mask them out in
+> > case user-space tries to conclude something from them.
+> >
+> >
+> > My current best suggestion is to export:
+> > from core code:
+> > * USER_MMAP_END, the maximum value a user-space can try and mmap().
+> > This would normally be TASK_SIZE, but x86 and powerpc also have support for
+> > larger VA space, and its plumbed into mm slightly differently. We should have
+> > one arch-independent property that covers all these. On arm64 this would be the
+> > runtime va bits for user-space's TTBR. (This assumes the value isn't per-task)
+> >
+> > arch specific:
+> > * ARM64_TCR.T1SZ, the va bits mapped by the kernel's TTBR. (We can assume we'll
+> > never flip user/kernel space). This has to be arch specific, it will always have
+> > a value and its meaning comes from the ARM-ARM (so linux can't change it in the
+> > future). It should be the same on every CPU.
+> > * ARM64_TTBR1.BADDR, the pa of the kernel page tables, which implicitly has the
+> > offset. Again this always has a value, and its meaning comes from the ARM-ARM.
+> > If we ever get clever with different page-tables/TCR values on different CPUs,
+> > these two should come from the same CPU.
+> >
+> >
+> > I think this gives you what you need if user/kernel may both be using
+> > pointer-auth and both may be using 52-bit va. I'm pretty sure the 48:52 bits can
+> > be picked at boot time depending on the kernel kconfig and the hardware support.
+> >
+> > Does anyone have a better idea? (or a corner where this won't work?)
+> 
+> I am not sure you got a chance to look at the two regression cases I
+> reported here:
+> <http://lists.infradead.org/pipermail/kexec/2019-February/022449.html>
+> 
+> Unfortunately the above suggestion doesn't provide any fix for
+> ARMv8.2-LPA regression (see text under heading '
+> (1). Regression Case 1 (ARMv8.2-LPA enabled kernel)')
+> 
+> After going through the regression reports, I think exporting
+> 'MAX_USER_VA_BITS' and 'MAX_PHYSMEM_BITS' to vmcoreinfo is sufficient
+> for the above regressions (without over-complicating the stuff) as
+> ARM64_TCR.T1SZ and friends seem to arch specific as compared to
+> VA_BITS + 'MAX_USER_VA_BITS' .
+> 
 
-> 
-> Why would the user need to do anything here?!
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> Good mailing practices for 400: avoid top-posting and trim the reply.
+For MAX_USER_VA_BITS, IIUC you are just after a value of PTRS_PER_PGD?
+Why not just add PTRS_PER_PGD to the vmcoreinfo?
+
+FWIW it is possible in vaddr_to_paddr_arm64 to detect a zero pgd entry
+then try again with another ptrs_per_pgd value (granted this is a little
+hacky).
+
+Cheers,
+-- 
+Steve
 
 _______________________________________________
 kexec mailing list
