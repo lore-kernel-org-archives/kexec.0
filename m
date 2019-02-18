@@ -1,27 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-f193.google.com ([209.85.215.193])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gv6a9-0001zt-D1
- for kexec@lists.infradead.org; Sat, 16 Feb 2019 20:29:07 +0000
-Received: by mail-pg1-f193.google.com with SMTP id r124so6471979pgr.3
- for <kexec@lists.infradead.org>; Sat, 16 Feb 2019 12:29:05 -0800 (PST)
-Subject: Re: [PATCH] makedumpfile/arm64: Add support for ARMv8.2-LPA (52-bit
- PA support)
-References: <1549484034-17027-1-git-send-email-bhsharma@redhat.com>
- <CACi5LpNYCY0_0zOCd=7fQ=cLZdinM8Z9xPtmKr5WMmvJruE-6A@mail.gmail.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03567FF6@BPXM09GP.gisp.nec.co.jp>
- <887cb122-0c2e-5fdd-ea54-ecf8adf3cd79@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC035682A9@BPXM09GP.gisp.nec.co.jp>
- <0b95bba3-11ab-0bb7-df0a-67ddc0150548@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03568377@BPXM09GP.gisp.nec.co.jp>
- <4a1c4de9-004f-98b2-ca51-b6d60928ddbc@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC035685CE@BPXM09GP.gisp.nec.co.jp>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Message-ID: <2618e46c-4406-e322-8d7d-4f11a8fa02ad@redhat.com>
-Date: Sun, 17 Feb 2019 01:58:59 +0530
+ id 1gvY2y-00068M-Nm
+ for kexec@lists.infradead.org; Mon, 18 Feb 2019 01:48:42 +0000
+Date: Mon, 18 Feb 2019 09:48:20 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
+Message-ID: <20190218014820.GA10711@dhcp-128-65.nay.redhat.com>
+References: <20190125140823.GC27998@zn.tnic>
+ <20190131075907.GB19091@dhcp-128-65.nay.redhat.com>
+ <20190131105732.GC6749@zn.tnic> <20190131222732.GA946@anatevka>
+ <20190131234740.GO6749@zn.tnic> <20190204223016.GB11986@anatevka>
+ <20190205081552.GG21801@zn.tnic>
+ <20190206120804.GC10062@dhcp-128-65.nay.redhat.com>
+ <20190211204816.GB21473@dhcp-128-65.nay.redhat.com>
+ <20190215102458.GD10433@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC035685CE@BPXM09GP.gisp.nec.co.jp>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190215102458.GD10433@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,62 +27,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: kexec mailing list <kexec@lists.infradead.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Randy Dunlap <rdunlap@infradead.org>, bhe@redhat.com, konrad.wilk@oracle.com, x86@kernel.org, kexec@lists.infradead.org, Jerry Hoemann <jerry.hoemann@hpe.com>, Pingfan Liu <kernelfans@gmail.com>, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
 
-Hi Kazu,
-
-On 02/14/2019 10:33 PM, Kazuhito Hagio wrote:
-> Hi Bhupesh,
+On 02/15/19 at 11:24am, Borislav Petkov wrote:
+> On Tue, Feb 12, 2019 at 04:48:16AM +0800, Dave Young wrote:
+> > Even we make it automatic in kernel, but we have to have some default
+> > value for swiotlb in case crashkernel can not find a free region under 4G.
+> > So this default value can not work for every use cases, people need 
+> > manually use crashkernel=,low and crashkernel=,high in case
+> > crashkernel=X does not work.
 > 
-> -----Original Message-----
->>>> Yes, the ARMv8 simulator can support both ARMv8.2 LPA and LVA features
->>>> and I tested the above suggestion earlier also on the same and landed
->>>> into incorrect paddress calculation issues.
->>>>
->>>> Since the simulator is slow and its time taking to insert rebuilt
->>>> user-space components in the Linaro initramfs being used on the same, I
->>>> would suggest that we go ahead with the above code for now and later
->>>> when I have more results from the simulator/real hardware, I will send
->>>> out a follow-up patch (if needed) to fix the paddress calculation.
->>>
->>> Hmm, it theoretically needs __pte_to_phys(), right?
->>> So if you have an issue with it, there may be a bug somewhere
->>> and need to debug it. Do you have the detailed information?
->>
->> Its not very easy to get the detailed UART console logs from the
->> simulator, so it is hard to get all the debug logs from makedumpfile, so
->> I am trying debugging the issue via 'gdb' by adding it to the initramfs.
+> Why would the user need to find swiotlb range? The kernel has all the
+> information it requires at its finger tips in order to decide properly.
 > 
-> I don't know what environment the simulater is, but you cannot
-> capture a vmcore with cp or something? then debug makedumpfile
-> with it on a real arm64 machine. I usually do like this.
+> The user wants a crashkernel range, the kernel tries the low range =>
+> no workie, then it tries the next range => workie but needs to allocate
+> swiotlb range so that DMA can happen too. Doh, then the kernel does
+> allocate that too.
+
+It is ideal if kernel can do it automatically, but I'm not sure if
+kernel can predict the swiotlb reserved size automatically.
+
+Let's add more people to seek for comments. 
+
 > 
->    # cp --sparse=always /proc/vmcore vmcore
+> Why would the user need to do anything here?!
 > 
-> I'm willing to debug it if you would send me the vmcore and vmlinux.
-
-Yes, unfortunately its a very restrictive environment and I cannot get 
-network to work on it at my end :(, so its not easy to test new kenrel + 
-user-space changes and also to export vmcore or dump logs outside the 
-simulator.
-
-However, I was able to create a new simulator vm-image today with the 
-required changes and test your suggestions.
-
-Thanks for sharing your  inputs. Accordingly I have incorporated your 
-suggestions and have sent a v2 patchset today, merging the LPA and LVA 
-makedumpfile changes into a single patchset for easier review.
-
-Please see the same here: 
-<http://lists.infradead.org/pipermail/kexec/2019-February/022456.html>
-
-Thanks,
-Bhupesh
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
