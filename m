@@ -1,24 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH] arm64, vmcoreinfo : Append 'MAX_USER_VA_BITS' and
- 'MAX_PHYSMEM_BITS' to vmcoreinfo
-Date: Tue, 19 Feb 2019 20:47:17 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03568A9F@BPXM09GP.gisp.nec.co.jp>
-References: <1548850991-11879-1-git-send-email-bhsharma@redhat.com>
- <20190131014800.GB15785@dhcp-128-65.nay.redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03567AA3@BPXM09GP.gisp.nec.co.jp>
- <d7d50b5a-3577-448e-d928-7898016a38fb@redhat.com>
- <20190212104407.GA17022@dhcp-128-65.nay.redhat.com>
- <CACi5LpOAADU8s+3e6=fO7FT+VtAmWYNeZN9COF+4Gt6twLWYaA@mail.gmail.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC035683DB@BPXM09GP.gisp.nec.co.jp>
- <20190213111552.GA8265@dhcp-128-65.nay.redhat.com>
- <bed51e6e-3dcb-8e07-1d31-9d81bfca20e5@arm.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03568504@BPXM09GP.gisp.nec.co.jp>
- <37ed4c14-e4b9-49c0-4816-c289ce65fd76@arm.com>
- <CACi5LpN6gVy4gCTYLGRiWW1VNGrVc-+Ykn919LKsO2bP-v1NHw@mail.gmail.com>
-In-Reply-To: <CACi5LpN6gVy4gCTYLGRiWW1VNGrVc-+Ykn919LKsO2bP-v1NHw@mail.gmail.com>
-Content-Language: en-US
+Received: from mail-it1-x143.google.com ([2607:f8b0:4864:20::143])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1gwMT2-00089N-GH
+ for kexec@lists.infradead.org; Wed, 20 Feb 2019 07:38:57 +0000
+Received: by mail-it1-x143.google.com with SMTP id z124so13324778itc.2
+ for <kexec@lists.infradead.org>; Tue, 19 Feb 2019 23:38:55 -0800 (PST)
 MIME-Version: 1.0
+References: <20190125140823.GC27998@zn.tnic>
+ <20190131075907.GB19091@dhcp-128-65.nay.redhat.com>
+ <20190131105732.GC6749@zn.tnic> <20190131222732.GA946@anatevka>
+ <20190131234740.GO6749@zn.tnic> <20190204223016.GB11986@anatevka>
+ <20190205081552.GG21801@zn.tnic>
+ <20190206120804.GC10062@dhcp-128-65.nay.redhat.com>
+ <20190211204816.GB21473@dhcp-128-65.nay.redhat.com>
+ <20190215102458.GD10433@zn.tnic>
+ <20190218014820.GA10711@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190218014820.GA10711@dhcp-128-65.nay.redhat.com>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Wed, 20 Feb 2019 15:38:43 +0800
+Message-ID: <CAFgQCTu7pS=f2NgNvUgWaSt0hQ=KOZJXjBxktLi4PBkuXwvDFA@mail.gmail.com>
+Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,38 +33,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "lijiang@redhat.com" <lijiang@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Steve Capper <Steve.Capper@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Borislav Petkov <bp@alien8.de>, "anderson@redhat.com" <anderson@redhat.com>, Dave Young <dyoung@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Baoquan He <bhe@redhat.com>, konrad.wilk@oracle.com, x86@kernel.org, kexec@lists.infradead.org, Jerry Hoemann <jerry.hoemann@hpe.com>, LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux-foundation.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>, Yinghai Lu <yinghai@kernel.org>, vgoyal@redhat.com
 
-Hi Bhupesh,
+On Mon, Feb 18, 2019 at 9:48 AM Dave Young <dyoung@redhat.com> wrote:
+>
+> On 02/15/19 at 11:24am, Borislav Petkov wrote:
+> > On Tue, Feb 12, 2019 at 04:48:16AM +0800, Dave Young wrote:
+> > > Even we make it automatic in kernel, but we have to have some default
+> > > value for swiotlb in case crashkernel can not find a free region under 4G.
+> > > So this default value can not work for every use cases, people need
+> > > manually use crashkernel=,low and crashkernel=,high in case
+> > > crashkernel=X does not work.
+> >
+> > Why would the user need to find swiotlb range? The kernel has all the
+> > information it requires at its finger tips in order to decide properly.
+> >
+> > The user wants a crashkernel range, the kernel tries the low range =>
+> > no workie, then it tries the next range => workie but needs to allocate
+> > swiotlb range so that DMA can happen too. Doh, then the kernel does
+> > allocate that too.
+>
+> It is ideal if kernel can do it automatically, but I'm not sure if
+> kernel can predict the swiotlb reserved size automatically.
+>
+Agreed, I think it is hard to decide the reserved size automatically.
+We do not know the requirement for memory of ZONE_DMA32 at boot time.
+The requirement depends on how many DMA32 devices, and the dynamic
+payload of them.
 
------Original Message-----
-> I am not sure you got a chance to look at the two regression cases I
-> reported here:
-> <http://lists.infradead.org/pipermail/kexec/2019-February/022449.html>
-> 
-> Unfortunately the above suggestion doesn't provide any fix for
-> ARMv8.2-LPA regression (see text under heading '
-> (1). Regression Case 1 (ARMv8.2-LPA enabled kernel)')
+> Let's add more people to seek for comments.
+>
+> >
+> > Why would the user need to do anything here?!
+> >
+> > --
+> > Regards/Gruss,
+> >     Boris.
+> >
+> > Good mailing practices for 400: avoid top-posting and trim the reply.
 
-As for MAX_PHYSMEM_BITS, I realized that ppc64 makedumpfile can detect
-it because there is only one SECTION_SIZE_BITS for ppc64. I think we
-can use the same way as set_ppc64_max_physmem_bits() does also for
-arm64 for now. I'm going to write it for kernels not having
-NUMBER(MAX_PHYSMEM_BITS) in vmcoreinfo.
-
-Thanks,
-Kazu
-
-> 
-> After going through the regression reports, I think exporting
-> 'MAX_USER_VA_BITS' and 'MAX_PHYSMEM_BITS' to vmcoreinfo is sufficient
-> for the above regressions (without over-complicating the stuff) as
-> ARM64_TCR.T1SZ and friends seem to arch specific as compared to
-> VA_BITS + 'MAX_USER_VA_BITS' .
-> 
-> Thanks,
-> Bhupesh
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
