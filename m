@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-f194.google.com ([209.85.214.194])
+Received: from mail-pf1-f195.google.com ([209.85.210.195])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gx2n2-0006Lk-M1
- for kexec@lists.infradead.org; Fri, 22 Feb 2019 04:50:27 +0000
-Received: by mail-pl1-f194.google.com with SMTP id y10so531199plp.0
- for <kexec@lists.infradead.org>; Thu, 21 Feb 2019 20:50:24 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] makedumpfile/arm64: Add support for ARMv8.2-LPA
- (52-bit PA support)
-References: <1550348658-15300-1-git-send-email-bhsharma@redhat.com>
- <1550348658-15300-2-git-send-email-bhsharma@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03568BED@BPXM09GP.gisp.nec.co.jp>
+ id 1gx4D3-0000wN-0H
+ for kexec@lists.infradead.org; Fri, 22 Feb 2019 06:21:23 +0000
+Received: by mail-pf1-f195.google.com with SMTP id h1so626865pfo.7
+ for <kexec@lists.infradead.org>; Thu, 21 Feb 2019 22:21:19 -0800 (PST)
+Subject: Re: [PATCH] makedumpfile/arm64: Add support for ARMv8.2-LVA (52-bit
+ user-space VA support)
+References: <1549569177-7116-1-git-send-email-bhsharma@redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03568114@BPXM09GP.gisp.nec.co.jp>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Message-ID: <e4c3d54a-057c-c611-6ab1-c0870b30275f@redhat.com>
-Date: Fri, 22 Feb 2019 10:20:18 +0530
+Message-ID: <442e36d2-d7ef-6e42-7f9c-99cb1e6ff1be@redhat.com>
+Date: Fri, 22 Feb 2019 11:51:12 +0530
 MIME-Version: 1.0
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03568BED@BPXM09GP.gisp.nec.co.jp>
+In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03568114@BPXM09GP.gisp.nec.co.jp>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,167 +24,212 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org, Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: Bhupesh SHARMA <bhupesh.linux@gmail.com>
 
 Hi Kazu,
 
-Thanks for the review.
-
-On 02/21/2019 09:05 PM, Kazuhito Hagio wrote:
+On 02/12/2019 03:33 AM, Kazuhito Hagio wrote:
 > Hi Bhupesh,
 > 
-> -----Original Message-----
->> ARMv8.2-LPA architecture extension (if available on underlying hardware)
->> can support 52-bit physical addresses, while the kernel virtual
->> addresses remain 48-bit.
+> On 2/7/2019 2:52 PM, Bhupesh Sharma wrote:
+>> With ARMv8.2-LVA architecture extension availability, arm64 hardware
+>> which supports this extension can support upto 52-bit virtual
+>> addresses. It is specially useful for having a 52-bit user-space virtual
+>> address space while the kernel can still retain 48-bit virtual
+>> addresses.
+>>
+>> Since at the moment we enable the support of this extensions in the
+>> kernel via a CONFIG flags (CONFIG_ARM64_USER_VA_BITS_52), so there are
+>> no clear mechanisms in user-space to determine this CONFIG
+>> flag value and use it to determine the PA address range values.
+>>
+>> 'makedumpfile' can instead use 'MAX_USER_VA_BITS' value to
+>> determine the maximum virtual physical address supported by user-space.
+>> If 'MAX_USER_VA_BITS' value is greater than 'VA_BITS' than we might be
+>> running a use-case where user-space is 52-bit and underlying kernel is
+>> still 48-bit. The increased 'PTRS_PER_PGD' value for such cases can then
+>> be calculated as is done by the underlying kernel (see kernel file
+>> 'arch/arm64/include/asm/pgtable-hwdef.h' for details):
+> 
+> Thank you for the patch.
+> I can't test the config yet, but this looks necessary.
+
+I am sorry, this review email somehow did not show up in my inbox.
+
+>>
+>> I have sent a kernel patch upstream to add 'MAX_USER_VA_BITS' to
+>> vmcoreinfo for arm64 (see [0]).
 >>
 >> This patch is in accordance with ARMv8 Architecture Reference Manual
 >> version D.a
 >>
->> Make sure that we read the 52-bit PA address capability from
->> 'MAX_PHYSMEM_BITS' variable (if available in vmcoreinfo) and
->> accordingly change the pte_to_phy() mask values and also traverse
->> the page-table walk accordingly.
->>
->> Also make sure that it works well for the existing 48-bit PA address
->> platforms and also on environments which use newer kernels with 52-bit
->> PA support but hardware which is not ARM8.2-LPA compliant.
->>
->> I have sent a kernel patch upstream to add 'MAX_PHYSMEM_BITS' to
->> vmcoreinfo for arm64 (see [0]).
->>
->> [0]. http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
+>> [0].
+>> http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
 >>
 >> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+>> ---
+>>   arch/arm64.c   | 105 +++++++++++++++++++++++++++++++++++++++++----------------
+>>   makedumpfile.c |   2 ++
+>>   makedumpfile.h |   1 +
+>>   3 files changed, 79 insertions(+), 29 deletions(-)
+>>
+>> diff --git a/arch/arm64.c b/arch/arm64.c
+>> index a1db7dc63107..b522e93f4e80 100644
+>> --- a/arch/arm64.c
+>> +++ b/arch/arm64.c
+>> @@ -47,6 +47,7 @@ typedef struct {
+>>   static int lpa_52_bit_support_available;
+>>   static int pgtable_level;
+>>   static int va_bits;
+>> +static int max_user_va_bits;
+>>   static unsigned long kimage_voffset;
+>>
+>>   #define SZ_4K			4096
+>> @@ -145,7 +146,7 @@ get_page_table_level_arm64(void)
+>>   #define PGDIR_SHIFT		ARM64_HW_PGTABLE_LEVEL_SHIFT(4 - (get_page_table_level_arm64()))
+>>   #define PGDIR_SIZE		(_AC(1, UL) << PGDIR_SHIFT)
+>>   #define PGDIR_MASK		(~(PGDIR_SIZE-1))
+>> -#define PTRS_PER_PGD		(1 << ((va_bits) - PGDIR_SHIFT))
+>> +#define PTRS_PER_PGD		(1 << ((max_user_va_bits) - PGDIR_SHIFT))
+>>
+>>   /*
+>>    * Section address mask and size definitions.
+>> @@ -478,6 +479,46 @@ get_stext_symbol(void)
+>>   	return(found ? kallsym : FALSE);
+>>   }
+>>
+>> +static int
+>> +get_va_bits_from_stext_arm64(void)
+>> +{
+>> +	ulong _stext;
+>> +
+>> +	_stext = get_stext_symbol();
+>> +	if (!_stext) {
+>> +		ERRMSG("Can't get the symbol of _stext.\n");
+>> +		return FALSE;
+>> +	}
+>> +
+>> +	/* Derive va_bits as per arch/arm64/Kconfig */
+>> +	if ((_stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
+>> +		va_bits = 36;
+>> +	} else if ((_stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
+>> +		va_bits = 39;
+>> +	} else if ((_stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
+>> +		va_bits = 42;
+>> +	} else if ((_stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
+>> +		va_bits = 47;
+>> +	} else if ((_stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
+>> +		va_bits = 48;
+>> +	} else {
+>> +		ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
+>> +		return FALSE;
+>> +	}
+>> +
+>> +	DEBUG_MSG("va_bits      : %d\n", va_bits);
 > 
-> This patch looks good to me.
-> For two slight things below, I will remove them when merging.
+> Please add "(_stext)" to the end of line for debugging.
+
+Ok, will address in v3.
+
+>> +
+>> +	return TRUE;
+>> +}
+>> +
+>> +static void
+>> +get_page_offset_arm64(void)
+>> +{
+>> +	info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
+>> +
+>> +	DEBUG_MSG("page_offset  : %lx\n", info->page_offset);
+>> +}
+>> +
+>>   int
+>>   get_machdep_info_arm64(void)
+>>   {
+>> @@ -493,8 +534,37 @@ get_machdep_info_arm64(void)
+>>   	/* Check if va_bits is still not initialized. If still 0, call
+>>   	 * get_versiondep_info() to initialize the same.
+>>   	 */
+>> +	if (NUMBER(VA_BITS) != NOT_FOUND_NUMBER) {
+>> +		va_bits = NUMBER(VA_BITS);
+>> +		DEBUG_MSG("va_bits    : %d (vmcoreinfo)\n",
+>> +				va_bits);
+>> +	}
+>> +
+>> +	/* Check if va_bits is still not initialized. If still 0, call
+>> +	 * get_versiondep_info() to initialize the same from _stext
+>> +	 * symbol.
+>> +	 */
+>>   	if (!va_bits)
+>> -		get_versiondep_info_arm64();
+>> +		if (get_va_bits_from_stext_arm64() == ERROR)
+>> +			return ERROR;
 > 
->> +/*
->> + * Size mapped by an entry at level n ( 0 <= n <= 3)
->> + * We map (PAGE_SHIFT - 3) at all translation levels and PAGE_SHIFT bits
->> + * in the final page. The maximum number of translation levels supported by
->> + * the architecture is 4. Hence, starting at at level n, we have further
->> + * ((4 - n) - 1) levels of translation excluding the offset within the page.
->> + * So, the total number of bits mapped by an entry at level n is :
->> + *
->> + *  ((4 - n) - 1) * (PAGE_SHIFT - 3) + PAGE_SHIFT
->> + *
->> + * Rearranging it a bit we get :
->> + *   (4 - n) * (PAGE_SHIFT - 3) + 3
->> + */
+> These ERRORs should be FALSE.
+
+Ok, will address in v3.
+
+>> +
+>> +	get_page_offset_arm64();
+>> +
+>> +	if (NUMBER(MAX_USER_VA_BITS) != NOT_FOUND_NUMBER) {
+>> +		max_user_va_bits = NUMBER(MAX_USER_VA_BITS);
+>> +		DEBUG_MSG("max_user_va_bits : %d (vmcoreinfo)\n",
+>> +				max_user_va_bits);
+>> +	}
+>> +
+>> +	/* Check if max_user_va_bits is still not initialized.
+>> +	 * If still 0, its not available in vmcoreinfo and its
+>> +	 * safe to initialize it with va_bits.
+>> +	 */
+>> +	if (!max_user_va_bits) {
+>> +		max_user_va_bits = va_bits;
+>> +		DEBUG_MSG("max_user_va_bits : %d (default = va_bits)\n",
+>> +				max_user_va_bits);
+>> +	}
+>>
+>>   	if (!calculate_plat_config()) {
+>>   		ERRMSG("Can't determine platform config values\n");
+>> @@ -533,34 +603,11 @@ get_xen_info_arm64(void)
+>>   int
+>>   get_versiondep_info_arm64(void)
+>>   {
+>> -	ulong _stext;
+>> -
+>> -	_stext = get_stext_symbol();
+>> -	if (!_stext) {
+>> -		ERRMSG("Can't get the symbol of _stext.\n");
+>> -		return FALSE;
+>> -	}
+>> -
+>> -	/* Derive va_bits as per arch/arm64/Kconfig */
+>> -	if ((_stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
+>> -		va_bits = 36;
+>> -	} else if ((_stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
+>> -		va_bits = 39;
+>> -	} else if ((_stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
+>> -		va_bits = 42;
+>> -	} else if ((_stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
+>> -		va_bits = 47;
+>> -	} else if ((_stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
+>> -		va_bits = 48;
+>> -	} else {
+>> -		ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
+>> -		return FALSE;
+>> -	}
+>> -
+>> -	info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
+>> +	if (!va_bits)
+>> +		if (get_va_bits_from_stext_arm64() == ERROR)
+>> +			return ERROR;
 > 
-> Will remove this comment.
+> Same as above.
 
-Ok.
-
->> +#define pmd_offset_pgtbl_lvl_2(dir, vaddr) ((pmd_t *)dir)
->> +#define pmd_offset_pgtbl_lvl_3(dir, vaddr) (pud_page_paddr((*(dir))) + pmd_index(vaddr) * sizeof(pmd_t))
-> 
-> Will remove these two macros not in use.
-
-Ok.
-
-> 
-> And, as I said on another thread, I'm thinking to merge the following
-> patch after your patch 1/2, it tested OK with 48-bit and 52-bit PA
-> without NUMBER(MAX_PHYSMEM_BITS) in vmcoreinfo.
-> Do you think of any case that this will not work well?
-> 
-> diff --git a/arch/arm64.c b/arch/arm64.c
-> index 29247a7..c7e60e0 100644
-> --- a/arch/arm64.c
-> +++ b/arch/arm64.c
-> @@ -127,6 +127,9 @@ typedef unsigned long pgdval_t;
->    */
->   #define SECTIONS_SIZE_BITS	30
->   
-> +#define _MAX_PHYSMEM_BITS_48	48
-> +#define _MAX_PHYSMEM_BITS_52	52
-> +
->   /*
->    * Hardware page table definitions.
->    *
-> @@ -402,17 +405,27 @@ get_stext_symbol(void)
->   	return(found ? kallsym : FALSE);
->   }
->   
-> +static int
-> +set_max_physmem_bits_arm64(void)
-> +{
-> +	long array_len = ARRAY_LENGTH(mem_section);
-> +
-> +	info->max_physmem_bits = _MAX_PHYSMEM_BITS_48;
-> +	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> +		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> +		return TRUE;
-> +
-> +	info->max_physmem_bits = _MAX_PHYSMEM_BITS_52;
-> +	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> +		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> +		return TRUE;
-> +
-> +	return FALSE;
-> +}
-> +
->   int
->   get_machdep_info_arm64(void)
->   {
-> -	/* Determine if the PA address range is 52-bits: ARMv8.2-LPA */
-> -	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
-> -		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-> -		if (info->max_physmem_bits == 52)
-> -			lpa_52_bit_support_available = 1;
-> -	} else
-> -		info->max_physmem_bits = 48;
-> -
->   	/* Check if va_bits is still not initialized. If still 0, call
->   	 * get_versiondep_info() to initialize the same.
->   	 */
-> @@ -428,9 +441,24 @@ get_machdep_info_arm64(void)
->   	info->section_size_bits = SECTIONS_SIZE_BITS;
->   
->   	DEBUG_MSG("kimage_voffset   : %lx\n", kimage_voffset);
-> -	DEBUG_MSG("max_physmem_bits : %ld\n", info->max_physmem_bits);
->   	DEBUG_MSG("section_size_bits: %ld\n", info->section_size_bits);
->   
-> +	/* Determine if the PA address range is 52-bits: ARMv8.2-LPA */
-> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
-> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-> +		DEBUG_MSG("max_physmem_bits : %ld (vmcoreinfo)\n",
-> +				info->max_physmem_bits);
-> +	} else if (set_max_physmem_bits_arm64()) {
-> +		DEBUG_MSG("max_physmem_bits : %ld (detected)\n",
-> +				info->max_physmem_bits);
-> +	} else {
-> +		ERRMSG("Can't determine max_physmem_bits value\n");
-> +		return FALSE;
-> +	}
-> +
-> +	if (info->max_physmem_bits == 52)
-> +		lpa_52_bit_support_available = 1;
-> +
->   	return TRUE;
->   }
-
-I have not tested the above suggestion on a real hardware or emulation  
-model yet, but as we were discussing in the kernel patch review thread  
-(see [0]), IMO, we don't need to carry the above hoops for  
-'MAX_PHYSMEM_BITS' calculation in makedumpfile code as it makes the code  
-less portable for a newer kernel version and also since other user-space  
-utilities (like crash) also need a mechanism to determine the PA_BITS  
-supported by the underlying kernel, so we can use the same uniform  
-method of using an exported 'MAX_PHYSMEM_BITS' value in the vmcoreinfo  
-so that all user-land applications can use the same.
-
-I think Dave A. (crash utility maintainer) also pointed to a similar  
-concern in the above thread.
-
-[0]. http://lists.infradead.org/pipermail/kexec/2019-February/022472.html
+Ok, will address in v3.
 
 Thanks,
 Bhupesh
