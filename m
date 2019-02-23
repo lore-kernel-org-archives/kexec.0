@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gxeZ8-0001gF-4R
- for kexec@lists.infradead.org; Sat, 23 Feb 2019 21:10:37 +0000
+ id 1gxeZt-0001oK-M4
+ for kexec@lists.infradead.org; Sat, 23 Feb 2019 21:11:23 +0000
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 26/32] x86/kexec: Don't setup EFI info if EFI
+Subject: [PATCH AUTOSEL 4.4 20/26] x86/kexec: Don't setup EFI info if EFI
  runtime is not enabled
-Date: Sat, 23 Feb 2019 16:09:45 -0500
-Message-Id: <20190223210951.202268-26-sashal@kernel.org>
-In-Reply-To: <20190223210951.202268-1-sashal@kernel.org>
-References: <20190223210951.202268-1-sashal@kernel.org>
+Date: Sat, 23 Feb 2019 16:10:41 -0500
+Message-Id: <20190223211047.202725-20-sashal@kernel.org>
+In-Reply-To: <20190223211047.202725-1-sashal@kernel.org>
+References: <20190223211047.202725-1-sashal@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -77,10 +77,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+)
 
 diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 490f9be3fda21..167ecc270ca55 100644
+index 0f8a6bbaaa443..0bf17576dd2af 100644
 --- a/arch/x86/kernel/kexec-bzimage64.c
 +++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -167,6 +167,9 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
+@@ -168,6 +168,9 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
  	struct efi_info *current_ei = &boot_params.efi_info;
  	struct efi_info *ei = &params->efi_info;
  
