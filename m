@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gxeUu-0008Dc-Fe
- for kexec@lists.infradead.org; Sat, 23 Feb 2019 21:06:14 +0000
+ id 1gxeWr-00006i-CX
+ for kexec@lists.infradead.org; Sat, 23 Feb 2019 21:08:15 +0000
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 63/72] x86/kexec: Don't setup EFI info if EFI
+Subject: [PATCH AUTOSEL 4.19 57/65] x86/kexec: Don't setup EFI info if EFI
  runtime is not enabled
-Date: Sat, 23 Feb 2019 16:04:13 -0500
-Message-Id: <20190223210422.199966-63-sashal@kernel.org>
-In-Reply-To: <20190223210422.199966-1-sashal@kernel.org>
-References: <20190223210422.199966-1-sashal@kernel.org>
+Date: Sat, 23 Feb 2019 16:06:32 -0500
+Message-Id: <20190223210640.200911-57-sashal@kernel.org>
+In-Reply-To: <20190223210640.200911-1-sashal@kernel.org>
+References: <20190223210640.200911-1-sashal@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
