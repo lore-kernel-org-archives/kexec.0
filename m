@@ -1,16 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
+Received: from mail-it1-f194.google.com ([209.85.166.194])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gxeaX-0001wP-65
- for kexec@lists.infradead.org; Sat, 23 Feb 2019 21:12:02 +0000
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 15/18] x86/kexec: Don't setup EFI info if EFI
- runtime is not enabled
-Date: Sat, 23 Feb 2019 16:11:32 -0500
-Message-Id: <20190223211135.203082-15-sashal@kernel.org>
-In-Reply-To: <20190223211135.203082-1-sashal@kernel.org>
-References: <20190223211135.203082-1-sashal@kernel.org>
+ id 1gxtpm-0004Yi-B4
+ for kexec@lists.infradead.org; Sun, 24 Feb 2019 13:28:48 +0000
+Received: by mail-it1-f194.google.com with SMTP id z124so9709615itc.2
+ for <kexec@lists.infradead.org>; Sun, 24 Feb 2019 05:26:30 -0800 (PST)
 MIME-Version: 1.0
+References: <20190205081552.GG21801@zn.tnic>
+ <20190206120804.GC10062@dhcp-128-65.nay.redhat.com>
+ <20190211204816.GB21473@dhcp-128-65.nay.redhat.com>
+ <20190215102458.GD10433@zn.tnic>
+ <20190218014820.GA10711@dhcp-128-65.nay.redhat.com>
+ <20190220083241.GA3447@zn.tnic>
+ <20190220094146.GA8597@dhcp-128-65.nay.redhat.com>
+ <20190221171321.GD12997@zn.tnic>
+ <20190222021101.GA11654@dhcp-128-65.nay.redhat.com>
+ <20190222084241.GC8380@suse.de> <20190222130026.GA30766@zn.tnic>
+In-Reply-To: <20190222130026.GA30766@zn.tnic>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Sun, 24 Feb 2019 21:25:18 +0800
+Message-ID: <CAFgQCTtYJOU=rdpzMaxXxRFAHGkOWYXFD+XiHSHMhGdRFmK+9Q@mail.gmail.com>
+Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,76 +34,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>, x86-ml <x86@kernel.org>, Philipp Rudo <prudo@linux.vnet.ibm.com>, rafael.j.wysocki@intel.com, Kairui Song <kasong@redhat.com>, bhe@redhat.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, fanc.fnst@cn.fujitsu.com, kexec@lists.infradead.org, linux-acpi@vger.kernel.org, robert.moore@intel.com, David Howells <dhowells@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Yannik Sembritzki <yannik@sembritzki.me>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, erik.schmauss@intel.com, Thomas Gleixner <tglx@linutronix.de>, lenb@kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Joerg Roedel <jroedel@suse.de>, Baoquan He <bhe@redhat.com>, konrad.wilk@oracle.com, Yinghai Lu <yinghai@kernel.org>, x86@kernel.org, kexec@lists.infradead.org, Jerry Hoemann <jerry.hoemann@hpe.com>, LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux-foundation.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Randy Dunlap <rdunlap@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-From: Kairui Song <kasong@redhat.com>
+On Fri, Feb 22, 2019 at 9:00 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Fri, Feb 22, 2019 at 09:42:41AM +0100, Joerg Roedel wrote:
+> > The current default of 256MB was found by experiments on a bigger
+> > number of machines, to create a reasonable default that is at least
+> > likely to be sufficient of an average machine.
+>
+> Exactly, and this is what makes sense.
+>
+> The code should try the requested reservation and if it fails, it should
+> try high allocation with default swiotlb size because we need to reserve
+> *some* range.
+>
+> If that reservation succeeds, we should say something along the lines of
+>
+> "... requested range failed, reserved <X> range instead."
+>
+Maybe I misunderstood you, but does "requested range failed" mean that
+user specify the range? If yes, then it should be the duty of user as
+you said later, not the duty of kernel"
 
-[ Upstream commit 2aa958c99c7fd3162b089a1a56a34a0cdb778de1 ]
+> And then in Documentation/admin-guide/kernel-parameters.txt above the
+> crashkernel= explanations, the allocation strategy of best effort should
+> be explained in short. That the kernel will try to allocate high if the
+> requested allocation didn't succeed and that the user can tweak the
+> allocation with the below options.
+>
+Yes, it should be improved.
 
-Kexec-ing a kernel with "efi=noruntime" on the first kernel's command
-line causes the following null pointer dereference:
+> Bottom line is: the kernel should assist the user and try harder to
+> allocate *some* range for a crash kernel when there's no detailed
+> specification what that range should be.
+>
+> *If* the user adds ,low, high, then the kernel should try only that
+> specified range because the assumption is that the user knows what she's
+> doing.
+>
+> But if the user simply wants a range for a crash kernel without stating
+> where that range should be in particular and it's placement is a don't
+> care - as long as there is a range - then the kernel should simply try
+> high, etc.
+>
+We do not know the memory layout of a system, maybe a system with
+memory less than 4GB. So it is better to try all the range of system
+memory
 
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-  #PF error: [normal kernel read fault]
-  Call Trace:
-   efi_runtime_map_copy+0x28/0x30
-   bzImage64_load+0x688/0x872
-   arch_kexec_kernel_image_load+0x6d/0x70
-   kimage_file_alloc_init+0x13e/0x220
-   __x64_sys_kexec_file_load+0x144/0x290
-   do_syscall_64+0x55/0x1a0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Thanks,
+Pingfan
 
-Just skip the EFI info setup if EFI runtime services are not enabled.
-
- [ bp: Massage commit message. ]
-
-Suggested-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Kairui Song <kasong@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Dave Young <dyoung@redhat.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: bhe@redhat.com
-Cc: David Howells <dhowells@redhat.com>
-Cc: erik.schmauss@intel.com
-Cc: fanc.fnst@cn.fujitsu.com
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: kexec@lists.infradead.org
-Cc: lenb@kernel.org
-Cc: linux-acpi@vger.kernel.org
-Cc: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Cc: rafael.j.wysocki@intel.com
-Cc: robert.moore@intel.com
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: Yannik Sembritzki <yannik@sembritzki.me>
-Link: https://lkml.kernel.org/r/20190118111310.29589-2-kasong@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/kexec-bzimage64.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index ca05f86481aac..3e22751382c38 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -167,6 +167,9 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
- 	struct efi_info *current_ei = &boot_params.efi_info;
- 	struct efi_info *ei = &params->efi_info;
- 
-+	if (!efi_enabled(EFI_RUNTIME_SERVICES))
-+		return 0;
-+
- 	if (!current_ei->efi_memmap_size)
- 		return 0;
- 
--- 
-2.19.1
-
+> Makes sense?
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
