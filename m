@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gy5Sw-0006gO-Q4
- for kexec@lists.infradead.org; Mon, 25 Feb 2019 01:54:01 +0000
-Date: Mon, 25 Feb 2019 09:53:46 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1gyCju-0003Yx-Hw
+ for kexec@lists.infradead.org; Mon, 25 Feb 2019 09:40:02 +0000
+Date: Mon, 25 Feb 2019 10:39:51 +0100
+From: Borislav Petkov <bp@alien8.de>
 Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
  consistent with kaslr
-Message-ID: <20190225015346.GC1941@dhcp-128-65.nay.redhat.com>
+Message-ID: <20190225093950.GB26145@zn.tnic>
 References: <20190211204816.GB21473@dhcp-128-65.nay.redhat.com>
  <20190215102458.GD10433@zn.tnic>
  <20190218014820.GA10711@dhcp-128-65.nay.redhat.com>
@@ -33,41 +33,29 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Pingfan Liu <kernelfans@gmail.com>
-Cc: Joerg Roedel <jroedel@suse.de>, Baoquan He <bhe@redhat.com>, konrad.wilk@oracle.com, x86@kernel.org, kexec@lists.infradead.org, Jerry Hoemann <jerry.hoemann@hpe.com>, LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux-foundation.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Borislav Petkov <bp@alien8.de>, Randy Dunlap <rdunlap@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Yinghai Lu <yinghai@kernel.org>, vgoyal@redhat.com
+Cc: Joerg Roedel <jroedel@suse.de>, Baoquan He <bhe@redhat.com>, konrad.wilk@oracle.com, Yinghai Lu <yinghai@kernel.org>, x86@kernel.org, kexec@lists.infradead.org, Jerry Hoemann <jerry.hoemann@hpe.com>, LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux-foundation.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Randy Dunlap <rdunlap@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-On 02/24/19 at 09:25pm, Pingfan Liu wrote:
-> On Fri, Feb 22, 2019 at 9:00 PM Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > On Fri, Feb 22, 2019 at 09:42:41AM +0100, Joerg Roedel wrote:
-> > > The current default of 256MB was found by experiments on a bigger
-> > > number of machines, to create a reasonable default that is at least
-> > > likely to be sufficient of an average machine.
-> >
-> > Exactly, and this is what makes sense.
-> >
-> > The code should try the requested reservation and if it fails, it should
-> > try high allocation with default swiotlb size because we need to reserve
-> > *some* range.
-> >
-> > If that reservation succeeds, we should say something along the lines of
-> >
-> > "... requested range failed, reserved <X> range instead."
-> >
+On Sun, Feb 24, 2019 at 09:25:18PM +0800, Pingfan Liu wrote:
 > Maybe I misunderstood you, but does "requested range failed" mean that
 > user specify the range? If yes, then it should be the duty of user as
 > you said later, not the duty of kernel"
 
-If you go with the changes in your current patch it is needed to say
-something like:
-"crashkernel: can not find free memory under 4G, reserve XM@.. instead" 
+No, it should say that it selected a different range only when the user
+didn't specify it. Which would mean that the user didn't care about the
+range - she/he only wanted to have *any* crashkernel range reserved.
+I.e., crashkernel=X invocation.
 
-Also need to print the reserved low memory area in case ,high being used.
+> We do not know the memory layout of a system, maybe a system with
+> memory less than 4GB. So it is better to try all the range of system
+> memory.
 
-But for 896M -> 4G, the 896M faulure is not necessary to show in dmesg,
-it is some in kernel logic.
+Ok. If 4G fails, you set high and then try again.
 
-Thanks
-Dave
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
