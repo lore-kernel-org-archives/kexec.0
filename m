@@ -1,23 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-f194.google.com ([209.85.215.194])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gyVKx-0002OD-9r
- for kexec@lists.infradead.org; Tue, 26 Feb 2019 05:31:29 +0000
-Received: by mail-pg1-f194.google.com with SMTP id m2so5644667pgl.5
- for <kexec@lists.infradead.org>; Mon, 25 Feb 2019 21:31:26 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] makedumpfile/arm64: Add support for ARMv8.2-LPA
- (52-bit PA support)
-References: <1550348658-15300-1-git-send-email-bhsharma@redhat.com>
- <1550348658-15300-2-git-send-email-bhsharma@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03568BED@BPXM09GP.gisp.nec.co.jp>
- <e4c3d54a-057c-c611-6ab1-c0870b30275f@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03568E41@BPXM09GP.gisp.nec.co.jp>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Message-ID: <d3dee972-8549-d525-e62c-e4828d8c4813@redhat.com>
-Date: Tue, 26 Feb 2019 11:01:21 +0530
+ id 1gyrpk-0000aE-Dt
+ for kexec@lists.infradead.org; Wed, 27 Feb 2019 05:32:46 +0000
+Date: Wed, 27 Feb 2019 13:32:14 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2 0/8] mm/kdump: allow to exclude pages that are
+ logically offline
+Message-ID: <20190227053214.GA12302@dhcp-128-65.nay.redhat.com>
+References: <20181122100627.5189-1-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03568E41@BPXM09GP.gisp.nec.co.jp>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181122100627.5189-1-david@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,193 +20,104 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Pankaj gupta <pagupta@redhat.com>, Michal Hocko <mhocko@suse.com>, Lianbo Jiang <lijiang@redhat.com>, linux-doc@vger.kernel.org, pv-drivers@vmware.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org, Nadav Amit <namit@vmware.com>, Pavel Machek <pavel@ucw.cz>, Alexander Duyck <alexander.h.duyck@linux.intel.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Omar Sandoval <osandov@fb.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Stefano Stabellini <sstabellini@kernel.org>, Stephen Hemminger <sthemmin@microsoft.com>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, "Michael S. Tsirkin" <mst@redhat.com>, Pavel Tatashin <pasha.tatashin@oracle.com>, Matthew Wilcox <willy@infradead.org>, Vitaly Kuznetsov <vkuznets@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, David Rientjes <rientjes@google.com>, xen-devel@lists.xenproject.org, Alexey Dobriyan <adobriyan@gmail.com>, Len Brown <len.brown@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org, Xavier Deguillard <xdeguillard@vmware.com>, Haiyang Zhang <haiyangz@microsoft.com>, Julien Freche <jfreche@vmware.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Borislav Petkov <bp@alien8.de>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Konstantin Khlebnikov <koct9i@gmail.com>, Juergen Gross <jgross@suse.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Kairui Song <kasong@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Hansen <chansen3@cisco.com>, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, Andrew Morton <akpm@linux-foundation.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 
-Hi Kazu,
-
-On 02/22/2019 09:54 PM, Kazuhito Hagio wrote:
-> Hi Bhupesh,
+On 11/22/18 at 11:06am, David Hildenbrand wrote:
+> Right now, pages inflated as part of a balloon driver will be dumped
+> by dump tools like makedumpfile. While XEN is able to check in the
+> crash kernel whether a certain pfn is actually backed by memory in the
+> hypervisor (see xen_oldmem_pfn_is_ram) and optimize this case, dumps of
+> virtio-balloon, hv-balloon and VMWare balloon inflated memory will
+> essentially result in zero pages getting allocated by the hypervisor and
+> the dump getting filled with this data.
 > 
-> -----Original Message-----
->> Hi Kazu,
->>
->> Thanks for the review.
->>
->> On 02/21/2019 09:05 PM, Kazuhito Hagio wrote:
->>> Hi Bhupesh,
->>>
->>> -----Original Message-----
->>>> ARMv8.2-LPA architecture extension (if available on underlying hardware)
->>>> can support 52-bit physical addresses, while the kernel virtual
->>>> addresses remain 48-bit.
->>>>
->>>> This patch is in accordance with ARMv8 Architecture Reference Manual
->>>> version D.a
->>>>
->>>> Make sure that we read the 52-bit PA address capability from
->>>> 'MAX_PHYSMEM_BITS' variable (if available in vmcoreinfo) and
->>>> accordingly change the pte_to_phy() mask values and also traverse
->>>> the page-table walk accordingly.
->>>>
->>>> Also make sure that it works well for the existing 48-bit PA address
->>>> platforms and also on environments which use newer kernels with 52-bit
->>>> PA support but hardware which is not ARM8.2-LPA compliant.
->>>>
->>>> I have sent a kernel patch upstream to add 'MAX_PHYSMEM_BITS' to
->>>> vmcoreinfo for arm64 (see [0]).
->>>>
->>>> [0]. http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
->>>>
->>>> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
->>>
->>> This patch looks good to me.
->>> For two slight things below, I will remove them when merging.
->>>
->>>> +/*
->>>> + * Size mapped by an entry at level n ( 0 <= n <= 3)
->>>> + * We map (PAGE_SHIFT - 3) at all translation levels and PAGE_SHIFT bits
->>>> + * in the final page. The maximum number of translation levels supported by
->>>> + * the architecture is 4. Hence, starting at at level n, we have further
->>>> + * ((4 - n) - 1) levels of translation excluding the offset within the page.
->>>> + * So, the total number of bits mapped by an entry at level n is :
->>>> + *
->>>> + *  ((4 - n) - 1) * (PAGE_SHIFT - 3) + PAGE_SHIFT
->>>> + *
->>>> + * Rearranging it a bit we get :
->>>> + *   (4 - n) * (PAGE_SHIFT - 3) + 3
->>>> + */
->>>
->>> Will remove this comment.
->>
->> Ok.
->>
->>>> +#define pmd_offset_pgtbl_lvl_2(dir, vaddr) ((pmd_t *)dir)
->>>> +#define pmd_offset_pgtbl_lvl_3(dir, vaddr) (pud_page_paddr((*(dir))) + pmd_index(vaddr) *
->> sizeof(pmd_t))
->>>
->>> Will remove these two macros not in use.
->>
->> Ok.
->>
->>>
->>> And, as I said on another thread, I'm thinking to merge the following
->>> patch after your patch 1/2, it tested OK with 48-bit and 52-bit PA
->>> without NUMBER(MAX_PHYSMEM_BITS) in vmcoreinfo.
->>> Do you think of any case that this will not work well?
->>>
->>> diff --git a/arch/arm64.c b/arch/arm64.c
->>> index 29247a7..c7e60e0 100644
->>> --- a/arch/arm64.c
->>> +++ b/arch/arm64.c
->>> @@ -127,6 +127,9 @@ typedef unsigned long pgdval_t;
->>>     */
->>>    #define SECTIONS_SIZE_BITS	30
->>>
->>> +#define _MAX_PHYSMEM_BITS_48	48
->>> +#define _MAX_PHYSMEM_BITS_52	52
->>> +
->>>    /*
->>>     * Hardware page table definitions.
->>>     *
->>> @@ -402,17 +405,27 @@ get_stext_symbol(void)
->>>    	return(found ? kallsym : FALSE);
->>>    }
->>>
->>> +static int
->>> +set_max_physmem_bits_arm64(void)
->>> +{
->>> +	long array_len = ARRAY_LENGTH(mem_section);
->>> +
->>> +	info->max_physmem_bits = _MAX_PHYSMEM_BITS_48;
->>> +	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
->>> +		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
->>> +		return TRUE;
->>> +
->>> +	info->max_physmem_bits = _MAX_PHYSMEM_BITS_52;
->>> +	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
->>> +		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
->>> +		return TRUE;
->>> +
->>> +	return FALSE;
->>> +}
->>> +
->>>    int
->>>    get_machdep_info_arm64(void)
->>>    {
->>> -	/* Determine if the PA address range is 52-bits: ARMv8.2-LPA */
->>> -	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
->>> -		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
->>> -		if (info->max_physmem_bits == 52)
->>> -			lpa_52_bit_support_available = 1;
->>> -	} else
->>> -		info->max_physmem_bits = 48;
->>> -
->>>    	/* Check if va_bits is still not initialized. If still 0, call
->>>    	 * get_versiondep_info() to initialize the same.
->>>    	 */
->>> @@ -428,9 +441,24 @@ get_machdep_info_arm64(void)
->>>    	info->section_size_bits = SECTIONS_SIZE_BITS;
->>>
->>>    	DEBUG_MSG("kimage_voffset   : %lx\n", kimage_voffset);
->>> -	DEBUG_MSG("max_physmem_bits : %ld\n", info->max_physmem_bits);
->>>    	DEBUG_MSG("section_size_bits: %ld\n", info->section_size_bits);
->>>
->>> +	/* Determine if the PA address range is 52-bits: ARMv8.2-LPA */
->>> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
->>> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
->>> +		DEBUG_MSG("max_physmem_bits : %ld (vmcoreinfo)\n",
->>> +				info->max_physmem_bits);
->>> +	} else if (set_max_physmem_bits_arm64()) {
->>> +		DEBUG_MSG("max_physmem_bits : %ld (detected)\n",
->>> +				info->max_physmem_bits);
->>> +	} else {
->>> +		ERRMSG("Can't determine max_physmem_bits value\n");
->>> +		return FALSE;
->>> +	}
->>> +
->>> +	if (info->max_physmem_bits == 52)
->>> +		lpa_52_bit_support_available = 1;
->>> +
->>>    	return TRUE;
->>>    }
->>
->> I have not tested the above suggestion on a real hardware or emulation
->> model yet, but as we were discussing in the kernel patch review thread
->> (see [0]), IMO, we don't need to carry the above hoops for
->> 'MAX_PHYSMEM_BITS' calculation in makedumpfile code as it makes the code
->> less portable for a newer kernel version and also since other user-space
->> utilities (like crash) also need a mechanism to determine the PA_BITS
->> supported by the underlying kernel, so we can use the same uniform
->> method of using an exported 'MAX_PHYSMEM_BITS' value in the vmcoreinfo
->> so that all user-land applications can use the same.
->>
->> I think Dave A. (crash utility maintainer) also pointed to a similar
->> concern in the above thread.
+> The allocation and reading of zero pages can directly be avoided if a
+> dumping tool could know which pages only contain stale information not to
+> be dumped.
 > 
-> I see. As I replied [1], I also think ideally we should export it.
-> [1] http://lists.infradead.org/pipermail/kexec/2019-February/022474.html
+> Also for XEN, calling into the kernel and asking the hypervisor if a
+> pfn is backed can be avoided if the duming tool would skip such pages
+> right from the beginning.
 > 
-> Can we export it from kernel/crash_core.c?
-> I'd like to avoid repeating such a discussion every time we need it
-> for each architecture..
+> Dumping tools have no idea whether a given page is part of a balloon driver
+> and shall not be dumped. Esp. PG_reserved cannot be used for that purpose
+> as all memory allocated during early boot is also PG_reserved, see
+> discussion at [1]. So some other way of indication is required and a new
+> page flag is frowned upon.
+> 
+> We have PG_balloon (MAPCOUNT value), which is essentially unused now. I
+> suggest renaming it to something more generic (PG_offline) to mark pages as
+> logically offline. This flag can than e.g. also be used by virtio-mem in
+> the future to mark subsections as offline. Or by other code that wants to
+> put pages logically offline (e.g. later maybe poisoned pages that shall
+> no longer be used).
+> 
+> This series converts PG_balloon to PG_offline, allows dumping tools to
+> query the value to detect such pages and marks pages in the hv-balloon
+> and XEN balloon properly as PG_offline. Note that virtio-balloon already
+> set pages to PG_balloon (and now PG_offline).
+> 
+> Please note that this is also helpful for a problem we were seeing under
+> Hyper-V: Dumping logically offline memory (pages kept fake offline while
+> onlining a section via online_page_callback) would under some condicions
+> result in a kernel panic when dumping them.
+> 
+> As I don't have access to neither XEN nor Hyper-V nor VMWare installations,
+> this was only tested with the virtio-balloon and pages were properly
+> skipped when dumping. I'll also attach the makedumpfile patch to this
+> series.
+> 
+> [1] https://lkml.org/lkml/2018/7/20/566
+> 
+> v1 -> v2:
+> - "kexec: export PG_offline to VMCOREINFO"
+> -- Add description why it is exported as a macro
+> - "vmw_balloon: mark inflated pages PG_offline"
+> -- Use helper function + adapt comments
+> - "PM / Hibernate: exclude all PageOffline() pages"
+> -- Perform the check separate from swsusp checks.
+> - Added RBs/ACKs
+> 
+> 
+> David Hildenbrand (8):
+>   mm: balloon: update comment about isolation/migration/compaction
+>   mm: convert PG_balloon to PG_offline
+>   kexec: export PG_offline to VMCOREINFO
+>   xen/balloon: mark inflated pages PG_offline
+>   hv_balloon: mark inflated pages PG_offline
+>   vmw_balloon: mark inflated pages PG_offline
+>   PM / Hibernate: use pfn_to_online_page()
+>   PM / Hibernate: exclude all PageOffline() pages
+> 
+>  Documentation/admin-guide/mm/pagemap.rst |  9 ++++---
+>  drivers/hv/hv_balloon.c                  | 14 ++++++++--
+>  drivers/misc/vmw_balloon.c               | 32 ++++++++++++++++++++++
+>  drivers/xen/balloon.c                    |  3 +++
+>  fs/proc/page.c                           |  4 +--
+>  include/linux/balloon_compaction.h       | 34 +++++++++---------------
+>  include/linux/page-flags.h               | 11 +++++---
+>  include/uapi/linux/kernel-page-flags.h   |  2 +-
+>  kernel/crash_core.c                      |  2 ++
+>  kernel/power/snapshot.c                  | 17 +++++++-----
+>  tools/vm/page-types.c                    |  2 +-
+>  11 files changed, 90 insertions(+), 40 deletions(-)
+> 
+> -- 
+> 2.17.2
+> 
 
-Sure. I will try and convince the maintainers of other archs (x86 and  
-ppc) for a common export via 'kernel/crash_core.c'. I will continue this  
-discussion with the other maintainers on the kernel thread.
+This series have been in -next for some days, could we get this in
+mainline? 
 
-In the meanwhile, from makedumpfile p-o-v, I will send a v3 to address  
-your concerns on the LVA patch (v1), which I seem to have missed while  
-sending out the v2.
+Andrew, do you have plan about them, maybe next release?
 
-Thanks,
-Bhupesh
-
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
