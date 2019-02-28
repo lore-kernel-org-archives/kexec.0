@@ -1,30 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gzNG9-0002PZ-I5
- for kexec@lists.infradead.org; Thu, 28 Feb 2019 15:06:11 +0000
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x1SExeRt140497
- for <kexec@lists.infradead.org>; Thu, 28 Feb 2019 10:06:02 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2qxfs4xyx7-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 28 Feb 2019 10:06:01 -0500
-Received: from localhost
- by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Thu, 28 Feb 2019 15:05:59 -0000
-Subject: Re: [PATCH 2/3] scripts/ima: define a set of common functions
-From: Mimi Zohar <zohar@linux.ibm.com>
-Date: Thu, 28 Feb 2019 10:05:43 -0500
-In-Reply-To: <20190228134146.GA7528@dhcp-128-65.nay.redhat.com>
-References: <1548960936-7800-1-git-send-email-zohar@linux.ibm.com>
- <1548960936-7800-3-git-send-email-zohar@linux.ibm.com>
- <20190228134146.GA7528@dhcp-128-65.nay.redhat.com>
+ id 1gzRci-0004Cf-F2
+ for kexec@lists.infradead.org; Thu, 28 Feb 2019 19:45:43 +0000
+Date: Thu, 28 Feb 2019 11:45:35 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 0/8] mm/kdump: allow to exclude pages that are
+ logically offline
+Message-Id: <20190228114535.150dfaebbe4d00ae48716bf0@linux-foundation.org>
+In-Reply-To: <20190227053214.GA12302@dhcp-128-65.nay.redhat.com>
+References: <20181122100627.5189-1-david@redhat.com>
+ <20190227053214.GA12302@dhcp-128-65.nay.redhat.com>
 Mime-Version: 1.0
-Message-Id: <1551366343.10911.173.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,29 +20,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org
+Cc: Pankaj gupta <pagupta@redhat.com>, Michal Hocko <mhocko@suse.com>, Lianbo Jiang <lijiang@redhat.com>, linux-doc@vger.kernel.org, pv-drivers@vmware.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org, Nadav Amit <namit@vmware.com>, Pavel Machek <pavel@ucw.cz>, Alexander Duyck <alexander.h.duyck@linux.intel.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Omar Sandoval <osandov@fb.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Stefano Stabellini <sstabellini@kernel.org>, Stephen Hemminger <sthemmin@microsoft.com>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, David Hildenbrand <david@redhat.com>, Pavel Tatashin <pasha.tatashin@oracle.com>, Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, David Rientjes <rientjes@google.com>, xen-devel@lists.xenproject.org, Alexey Dobriyan <adobriyan@gmail.com>, Len Brown <len.brown@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org, Xavier Deguillard <xdeguillard@vmware.com>, Haiyang Zhang <haiyangz@microsoft.com>, Julien Freche <jfreche@vmware.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Borislav Petkov <bp@alien8.de>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, Konstantin Khlebnikov <koct9i@gmail.com>, Juergen Gross <jgross@suse.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Kairui Song <kasong@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Hansen <chansen3@cisco.com>, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>, "Michael S. Tsirkin" <mst@redhat.com>, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 
-SGkgRGF2ZSwKCk9uIFRodSwgMjAxOS0wMi0yOCBhdCAyMTo0MSArMDgwMCwgRGF2ZSBZb3VuZyB3
-cm90ZToKPiBIaSBNaW1pLAo+ICAKPiBTb3JyeSBmb3IganVtcGluZyBpbiBsYXRlLCBqdXN0IG5v
-dGljZWQgdGhpcyBrZXhlYyBzZWxmdGVzdHMsIEkgdGhpbmsgd2UKPiBhbHNvIG5lZWQgYSBrZXhl
-YyBsb2FkIHRlc3Qgbm90IG9ubHkgZm9yIGltYSwgYnV0IGZvciBnZW5lcmFsIGtleGVjCgpUaGUg
-SU1BIGtzZWxmdGVzdCB0ZXN0cyBhcmUgZm9yIHRoZSBjb29yZGluYXRpb24gYmV0d2VlbiB0aGUg
-ZGlmZmVyZW50Cm1ldGhvZHMgb2YgdmVyaWZ5aW5nIGZpbGUgc2lnbmF0dXJlcy4gwqBJbiBwYXJ0
-aWN1bGFyLCBmb3IgdGhlIGtleGVjCmtlcm5lbCBpbWFnZSBhbmQga2VybmVsIG1vZHVsZSBzaWdu
-YXR1cmVzLgoKVGhlIGluaXRpYWwgSU1BIGtzZWxmdGVzdCBqdXN0IHZlcmlmaWVzIHRoYXQgaW4g
-YW4gZW52aXJvbm1lbnQKcmVxdWlyaW5nIHNpZ25lZCBrZXhlYyBrZXJuZWwgaW1hZ2VzLCB0aGUg
-a2V4ZWNfbG9hZCBzeXNjYWxsIGZhaWxzLsKgCgpUaGlzIHdlZWsgSSBwb3N0ZWQgYWRkaXRpb25h
-bCBJTUEga3NlbGZ0ZXN0c1sxXVsyXSwgaW5jbHVkaW5nIG9uZSBmb3IKdGhlIGtleGVjX2ZpbGVf
-bG9hZCBzeXNjYWxsLiDCoEkgd291bGQgcmVhbGx5IGFwcHJlY2lhdGUgdGhlc2UKa3NlbGZ0ZXN0
-cyBiZWluZyByZXZpZXdlZC9hY2tlZC4KCk1pbWkKClsxXSBTdWJqZWN0OiBbUEFUQ0ggdjIgMC81
-XSBzZWxmdGVzdHMvaW1hOiBhZGQga2V4ZWMgYW5kIGtlcm5lbCBtb2R1bGUgdGVzdHMKWzJdIFBh
-dGNoZXMgYXZhaWxhYmxlIGZyb20gdGhlICJuZXh0LXF1ZXVlZC10ZXN0aW5nIiBicmFuY2gKaHR0
-cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvem9oYXIvbGludXgt
-aW50ZWdyaXR5LmdpdC8KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Wed, 27 Feb 2019 13:32:14 +0800 Dave Young <dyoung@redhat.com> wrote:
+
+> This series have been in -next for some days, could we get this in
+> mainline? 
+
+It's been in -next for two months?
+
+> Andrew, do you have plan about them, maybe next release?
+
+They're all reviewed except for "xen/balloon: mark inflated pages
+PG_offline". 
+(https://ozlabs.org/~akpm/mmotm/broken-out/xen-balloon-mark-inflated-pages-pg_offline.patch).
+Yes, I plan on sending these to Linus during the merge window for 5.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
