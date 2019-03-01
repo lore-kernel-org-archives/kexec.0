@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it1-x144.google.com ([2607:f8b0:4864:20::144])
+Received: from mail-it1-x142.google.com ([2607:f8b0:4864:20::142])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1gzYTS-0001Ia-Vj
- for kexec@lists.infradead.org; Fri, 01 Mar 2019 03:04:37 +0000
-Received: by mail-it1-x144.google.com with SMTP id z131so18046509itf.5
- for <kexec@lists.infradead.org>; Thu, 28 Feb 2019 19:04:31 -0800 (PST)
+ id 1gzYhs-0005ZF-B5
+ for kexec@lists.infradead.org; Fri, 01 Mar 2019 03:19:29 +0000
+Received: by mail-it1-x142.google.com with SMTP id l66so19267987itg.3
+ for <kexec@lists.infradead.org>; Thu, 28 Feb 2019 19:19:27 -0800 (PST)
 MIME-Version: 1.0
 References: <20190215102458.GD10433@zn.tnic>
  <20190218014820.GA10711@dhcp-128-65.nay.redhat.com>
@@ -16,10 +16,11 @@ References: <20190215102458.GD10433@zn.tnic>
  <20190225110043.GA5884@suse.de>
  <20190225111216.GA9276@dhcp-128-65.nay.redhat.com>
  <20190225113003.GE26145@zn.tnic>
-In-Reply-To: <20190225113003.GE26145@zn.tnic>
+ <CAFgQCTvP-YDUEcHTgupr+ar+qeoj5rw1y8k+6kzrzHPzTqBkaw@mail.gmail.com>
+In-Reply-To: <CAFgQCTvP-YDUEcHTgupr+ar+qeoj5rw1y8k+6kzrzHPzTqBkaw@mail.gmail.com>
 From: Pingfan Liu <kernelfans@gmail.com>
-Date: Fri, 1 Mar 2019 11:04:19 +0800
-Message-ID: <CAFgQCTvP-YDUEcHTgupr+ar+qeoj5rw1y8k+6kzrzHPzTqBkaw@mail.gmail.com>
+Date: Fri, 1 Mar 2019 11:19:15 +0800
+Message-ID: <CAFgQCTs9pJ=3Jt1YLv6RmBWeViH8cmuMcKG+2Aj-Vo2Kh-Wcog@mail.gmail.com>
 Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
  consistent with kaslr
 List-Id: <kexec.lists.infradead.org>
@@ -37,14 +38,31 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Borislav Petkov <bp@alien8.de>
 Cc: Joerg Roedel <jroedel@suse.de>, Baoquan He <bhe@redhat.com>, konrad.wilk@oracle.com, Yinghai Lu <yinghai@kernel.org>, x86@kernel.org, kexec@lists.infradead.org, Jerry Hoemann <jerry.hoemann@hpe.com>, LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux-foundation.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Randy Dunlap <rdunlap@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-Hi Borislav,
-
-Do you think the following patch is good at present?
+On Fri, Mar 1, 2019 at 11:04 AM Pingfan Liu <kernelfans@gmail.com> wrote:
+>
+> Hi Borislav,
+>
+> Do you think the following patch is good at present?
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 81f9d23..9213073 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -460,7 +460,7 @@ static void __init
+> memblock_x86_reserve_range_setup_data(void)
+>  # define CRASH_ADDR_LOW_MAX    (512 << 20)
+>  # define CRASH_ADDR_HIGH_MAX   (512 << 20)
+>  #else
+> -# define CRASH_ADDR_LOW_MAX    (896UL << 20)
+> +# define CRASH_ADDR_LOW_MAX    (1 << 32)
+>  # define CRASH_ADDR_HIGH_MAX   MAXMEM
+>  #endif
+>
+Or patch lools like:
 diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 81f9d23..9213073 100644
+index 3d872a5..ed0def5 100644
 --- a/arch/x86/kernel/setup.c
 +++ b/arch/x86/kernel/setup.c
-@@ -460,7 +460,7 @@ static void __init
+@@ -459,7 +459,7 @@ static void __init
 memblock_x86_reserve_range_setup_data(void)
  # define CRASH_ADDR_LOW_MAX    (512 << 20)
  # define CRASH_ADDR_HIGH_MAX   (512 << 20)
@@ -54,29 +72,45 @@ memblock_x86_reserve_range_setup_data(void)
  # define CRASH_ADDR_HIGH_MAX   MAXMEM
  #endif
 
-For documentation, I will send another patch to improve the description.
+@@ -551,6 +551,15 @@ static void __init reserve_crashkernel(void)
+                                                    high ? CRASH_ADDR_HIGH_MAX
+                                                         : CRASH_ADDR_LOW_MAX,
+                                                    crash_size, CRASH_ALIGN);
++#ifdef CONFIG_X86_64
++               /*
++                * crashkernel=X reserve below 4G fails? Try MAXMEM
++                */
++               if (!high && !crash_base)
++                       crash_base = memblock_find_in_range(CRASH_ALIGN,
++                                               CRASH_ADDR_HIGH_MAX,
++                                               crash_size, CRASH_ALIGN);
++#endif
 
-Thanks,
-Pingfan
+which tries 0-4G, the fall back to 4G above
 
-On Mon, Feb 25, 2019 at 7:30 PM Borislav Petkov <bp@alien8.de> wrote:
+> For documentation, I will send another patch to improve the description.
 >
-> On Mon, Feb 25, 2019 at 07:12:16PM +0800, Dave Young wrote:
-> > If we move to high as default, it will allocate 160M high + 256M low. It
+> Thanks,
+> Pingfan
 >
-> We won't move to high by default - we will *fall* back to high if the
-> default allocation fails.
->
-> > To make the process less fragile maybe we can remove the 896M limitation
-> > and only try <4G then go to high.
->
-> Sure, the more robust for the user, the better.
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> Good mailing practices for 400: avoid top-posting and trim the reply.
+> On Mon, Feb 25, 2019 at 7:30 PM Borislav Petkov <bp@alien8.de> wrote:
+> >
+> > On Mon, Feb 25, 2019 at 07:12:16PM +0800, Dave Young wrote:
+> > > If we move to high as default, it will allocate 160M high + 256M low. It
+> >
+> > We won't move to high by default - we will *fall* back to high if the
+> > default allocation fails.
+> >
+> > > To make the process less fragile maybe we can remove the 896M limitation
+> > > and only try <4G then go to high.
+> >
+> > Sure, the more robust for the user, the better.
+> >
+> > --
+> > Regards/Gruss,
+> >     Boris.
+> >
+> > Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
