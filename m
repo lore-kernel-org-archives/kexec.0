@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h0gyy-00086s-98
- for kexec@lists.infradead.org; Mon, 04 Mar 2019 06:21:49 +0000
-Date: Mon, 4 Mar 2019 14:21:18 +0800
+ id 1h0h7E-0002gd-P8
+ for kexec@lists.infradead.org; Mon, 04 Mar 2019 06:30:22 +0000
+Date: Mon, 4 Mar 2019 14:30:13 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v2 0/8] mm/kdump: allow to exclude pages that are
- logically offline
-Message-ID: <20190304062118.GA31037@dhcp-128-65.nay.redhat.com>
-References: <20181122100627.5189-1-david@redhat.com>
- <20190227053214.GA12302@dhcp-128-65.nay.redhat.com>
- <20190228114535.150dfaebbe4d00ae48716bf0@linux-foundation.org>
+Subject: Re: [PATCH] x86: Introdudce a new option --force-vga
+Message-ID: <20190304063013.GB31037@dhcp-128-65.nay.redhat.com>
+References: <20190228100723.13780-1-kasong@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190228114535.150dfaebbe4d00ae48716bf0@linux-foundation.org>
+In-Reply-To: <20190228100723.13780-1-kasong@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,29 +23,141 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Pankaj gupta <pagupta@redhat.com>, Michal Hocko <mhocko@suse.com>, Lianbo Jiang <lijiang@redhat.com>, linux-doc@vger.kernel.org, pv-drivers@vmware.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org, Nadav Amit <namit@vmware.com>, Pavel Machek <pavel@ucw.cz>, Alexander Duyck <alexander.h.duyck@linux.intel.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Omar Sandoval <osandov@fb.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Stefano Stabellini <sstabellini@kernel.org>, Stephen Hemminger <sthemmin@microsoft.com>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, David Hildenbrand <david@redhat.com>, Pavel Tatashin <pasha.tatashin@oracle.com>, Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, David Rientjes <rientjes@google.com>, xen-devel@lists.xenproject.org, Alexey Dobriyan <adobriyan@gmail.com>, Len Brown <len.brown@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org, Xavier Deguillard <xdeguillard@vmware.com>, Haiyang Zhang <haiyangz@microsoft.com>, Julien Freche <jfreche@vmware.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Borislav Petkov <bp@alien8.de>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, Konstantin Khlebnikov <koct9i@gmail.com>, Juergen Gross <jgross@suse.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Kairui Song <kasong@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Hansen <chansen3@cisco.com>, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>, "Michael S. Tsirkin" <mst@redhat.com>, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Kairui Song <kasong@redhat.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-On 02/28/19 at 11:45am, Andrew Morton wrote:
-> On Wed, 27 Feb 2019 13:32:14 +0800 Dave Young <dyoung@redhat.com> wrote:
+On 02/28/19 at 06:07pm, Kairui Song wrote:
+> After commit 060eee58 "x86: use old screen_info if needed", kexec-tools
+> will force use old screen_info and vga type if failed to determine
+> current vga type. But it is not always a good idea.
 > 
-> > This series have been in -next for some days, could we get this in
-> > mainline? 
+> Currently kernel hanging is inspected on some hyper-v VMs after this
+> commit, because hyperv_fb will mimic EFI (or VESA) VGA on first boot
+> up, but after the real driver is loaded, it will switch to new mode
+> and no longer compatible with EFI/VESA VGA. Keep setting
+> orig_video_isVGA to EFI/VESA VGA flag will get wrong driver loaded and
+> try to manipulate the framebuffer in a wrong way.
 > 
-> It's been in -next for two months?
+> We can't ensure this won't happen on other framebuffer drivers, But
+> it's a helpful feature if the framebuffer drivers just work. So this
+> patch introduce a --force-vga options to let user decide if the
+> old screen_info should be used unconditional or not.
 
-Should be around 3 months
+It looks good to me except the option name, because vga usually means
+the specific vga video type.  But here you are enforcing to reuse the first
+kernel original video type.
+
+It would be better to use --reuse-video-type or --force-orig-video, etc..
 
 > 
-> > Andrew, do you have plan about them, maybe next release?
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> ---
+>  kexec/arch/i386/include/arch/options.h | 2 ++
+>  kexec/arch/i386/kexec-x86.h            | 1 +
+>  kexec/arch/i386/x86-linux-setup.c      | 7 +++++--
+>  kexec/arch/x86_64/kexec-x86_64.c       | 5 +++++
+>  4 files changed, 13 insertions(+), 2 deletions(-)
 > 
-> They're all reviewed except for "xen/balloon: mark inflated pages
-> PG_offline". 
-> (https://ozlabs.org/~akpm/mmotm/broken-out/xen-balloon-mark-inflated-pages-pg_offline.patch).
-> Yes, I plan on sending these to Linus during the merge window for 5.1
+> diff --git a/kexec/arch/i386/include/arch/options.h b/kexec/arch/i386/include/arch/options.h
+> index c113a83..7667cf4 100644
+> --- a/kexec/arch/i386/include/arch/options.h
+> +++ b/kexec/arch/i386/include/arch/options.h
+> @@ -32,6 +32,7 @@
+>  #define OPT_ENTRY_32BIT		(OPT_ARCH_MAX+10)
+>  #define OPT_PASS_MEMMAP_CMDLINE	(OPT_ARCH_MAX+11)
+>  #define OPT_NOEFI		(OPT_ARCH_MAX+12)
+> +#define OPT_FORCE_VGA		(OPT_ARCH_MAX+13)
+>  
+>  /* Options relevant to the architecture (excluding loader-specific ones): */
+>  #define KEXEC_ARCH_OPTIONS \
+> @@ -45,6 +46,7 @@
+>  	{ "elf64-core-headers", 0, 0, OPT_ELF64_CORE }, \
+>  	{ "pass-memmap-cmdline", 0, 0, OPT_PASS_MEMMAP_CMDLINE }, \
+>  	{ "noefi", 0, 0, OPT_NOEFI}, \
+> +	{ "force-vga",		0, 0, OPT_FORCE_VGA },	\
+>  
+>  #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
+>  
+> diff --git a/kexec/arch/i386/kexec-x86.h b/kexec/arch/i386/kexec-x86.h
+> index 51855f8..d16679f 100644
+> --- a/kexec/arch/i386/kexec-x86.h
+> +++ b/kexec/arch/i386/kexec-x86.h
+> @@ -52,6 +52,7 @@ struct arch_options_t {
+>  	enum coretype	core_header_type;
+>  	uint8_t  	pass_memmap_cmdline;
+>  	uint8_t		noefi;
+> +	uint8_t		force_vga;
+>  };
+>  
+>  int multiboot_x86_probe(const char *buf, off_t len);
+> diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+> index 1bd408b..0e92d26 100644
+> --- a/kexec/arch/i386/x86-linux-setup.c
+> +++ b/kexec/arch/i386/x86-linux-setup.c
+> @@ -144,7 +144,7 @@ static int setup_linux_vesafb(struct x86_linux_param_header *real_mode)
+>  	} else if (0 == strcmp(fix.id, "EFI VGA")) {
+>  		/* VIDEO_TYPE_EFI */
+>  		real_mode->orig_video_isVGA = 0x70;
+> -	} else {
+> +	} else if (arch_options.force_vga) {
+>  		int err;
+>  		off_t offset = offsetof(typeof(*real_mode), orig_video_isVGA);
+>  
+> @@ -152,6 +152,9 @@ static int setup_linux_vesafb(struct x86_linux_param_header *real_mode)
+>  		err = get_bootparam(&real_mode->orig_video_isVGA, offset, 1);
+>  		if (err)
+>  			goto out;
+> +	} else {
+> +		real_mode->orig_video_isVGA = 0;
+> +		return 0;
+>  	}
+>  	close(fd);
+>  
+> @@ -844,7 +847,7 @@ void setup_linux_system_parameters(struct kexec_info *info,
+>  	setup_subarch(real_mode);
+>  	if (bzImage_support_efi_boot && !arch_options.noefi)
+>  		setup_efi_info(info, real_mode);
+> -	
+> +
+>  	/* Default screen size */
+>  	real_mode->orig_x = 0;
+>  	real_mode->orig_y = 0;
+> diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
+> index 041b007..2e54381 100644
+> --- a/kexec/arch/x86_64/kexec-x86_64.c
+> +++ b/kexec/arch/x86_64/kexec-x86_64.c
+> @@ -55,6 +55,7 @@ void arch_usage(void)
+>  		"     --console-serial          Enable the serial console\n"
+>  		"     --pass-memmap-cmdline     Pass memory map via command line in kexec on panic case\n"
+>  		"     --noefi                   Disable efi support\n"
+> +		"     --force-vga               Enabled vga blindly whenever possible \n"
+>  		);
+>  }
+>  
+> @@ -67,6 +68,7 @@ struct arch_options_t arch_options = {
+>  	.core_header_type = CORE_TYPE_ELF64,
+>  	.pass_memmap_cmdline = 0,
+>  	.noefi = 0,
+> +	.force_vga = 0,
+>  };
+>  
+>  int arch_process_options(int argc, char **argv)
+> @@ -136,6 +138,9 @@ int arch_process_options(int argc, char **argv)
+>  		case OPT_NOEFI:
+>  			arch_options.noefi = 1;
+>  			break;
+> +		case OPT_FORCE_VGA:
+> +			arch_options.force_vga = 1;
+> +			break;
+>  		}
+>  	}
+>  	/* Reset getopt for the next pass; called in other source modules */
+> -- 
+> 2.20.1
 > 
 
-Thanks!
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
