@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h0hoa-0000YP-SH
- for kexec@lists.infradead.org; Mon, 04 Mar 2019 07:15:10 +0000
-Subject: Re: [PATCH v2 0/8] mm/kdump: allow to exclude pages that are
- logically offline
-References: <20181122100627.5189-1-david@redhat.com>
- <20190227053214.GA12302@dhcp-128-65.nay.redhat.com>
- <20190228114535.150dfaebbe4d00ae48716bf0@linux-foundation.org>
- <20190304062118.GA31037@dhcp-128-65.nay.redhat.com>
-From: Juergen Gross <jgross@suse.com>
-Message-ID: <2fb07c46-79c8-a49e-1b05-ffb33ad6c7da@suse.com>
-Date: Mon, 4 Mar 2019 08:14:52 +0100
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1h0nsV-0003Sc-Ta
+ for kexec@lists.infradead.org; Mon, 04 Mar 2019 13:43:37 +0000
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+ by kirsty.vergenet.net (Postfix) with ESMTPA id D2F0825B84A
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2019 00:43:32 +1100 (AEDT)
+Date: Mon, 4 Mar 2019 14:43:30 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: [ANNOUNCE] kexec-tools 2.0.19
+Message-ID: <20190304134330.y26v2s7lyqx6cgx7@verge.net.au>
 MIME-Version: 1.0
-In-Reply-To: <20190304062118.GA31037@dhcp-128-65.nay.redhat.com>
-Content-Language: de-DE
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,33 +24,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Pankaj gupta <pagupta@redhat.com>, Michal Hocko <mhocko@suse.com>, Lianbo Jiang <lijiang@redhat.com>, linux-doc@vger.kernel.org, pv-drivers@vmware.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org, Nadav Amit <namit@vmware.com>, Pavel Machek <pavel@ucw.cz>, Alexander Duyck <alexander.h.duyck@linux.intel.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Omar Sandoval <osandov@fb.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Stefano Stabellini <sstabellini@kernel.org>, Stephen Hemminger <sthemmin@microsoft.com>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, David Hildenbrand <david@redhat.com>, Pavel Tatashin <pasha.tatashin@oracle.com>, Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, David Rientjes <rientjes@google.com>, xen-devel@lists.xenproject.org, Alexey Dobriyan <adobriyan@gmail.com>, Len Brown <len.brown@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org, Xavier Deguillard <xdeguillard@vmware.com>, Haiyang Zhang <haiyangz@microsoft.com>, Julien Freche <jfreche@vmware.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>, Borislav Petkov <bp@alien8.de>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, Konstantin Khlebnikov <koct9i@gmail.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Kairui Song <kasong@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Hansen <chansen3@cisco.com>, kexec-ml <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>, "Michael S. Tsirkin" <mst@redhat.com>, linux-fsdevel@vger.kernel.org, devel@linuxdriverproject.org, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: kexec@lists.infradead.org
 
-On 04/03/2019 07:21, Dave Young wrote:
-> On 02/28/19 at 11:45am, Andrew Morton wrote:
->> On Wed, 27 Feb 2019 13:32:14 +0800 Dave Young <dyoung@redhat.com> wrote:
->>
->>> This series have been in -next for some days, could we get this in
->>> mainline? 
->>
->> It's been in -next for two months?
-> 
-> Should be around 3 months
-> 
->>
->>> Andrew, do you have plan about them, maybe next release?
->>
->> They're all reviewed except for "xen/balloon: mark inflated pages
->> PG_offline". 
->> (https://ozlabs.org/~akpm/mmotm/broken-out/xen-balloon-mark-inflated-pages-pg_offline.patch).
+Hi all,
 
-I did review that one:
+I am happy to announce the release of kexec-tools 2.0.19.
 
-https://lore.kernel.org/lkml/3d5250b7-870e-e702-a6e4-937d2362fea4@suse.com/
+This is a feature release coinciding with the release of v5.0
+of the Linux Kernel.
 
+This release can be downloaded from kernel.org:
 
-Juergen
+	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.19.tar.xz
+	http://kernel.org/pub/linux/utils/kernel/kexec/
+
+It is also tagged it in git:
+
+	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+
+Thanks to everyone who has contributed to kexec.
+
+Commits since v2.0.18:
+
+72c1e1e591cf kexec-tools 2.0.19
+0f9e081cf2d0 kexec-tools 2.0.19-rc1
+f1f2f9edf8d4 arm64: wipe old initrd addresses when patching the DTB
+c493af72ac79 purgatory: Use standalond CFLAGS
+a98b4da4fd4f x86: Handle 64bit framebuffer memory address properly
+002b608f3669 multiboot-x86: pass framebuffer information when requested
+2880a35f38cd multiboot-x86: pass ACPI reserved memory information in memory map
+8776bf88e50d multiboot-x86: support for non-elf kernels
+b23d0f8cf049 arm64: add kexec_file_load support
+64c49f27d880 arm64: Add support to read PHYS_OFFSET from 'kcore' - pt_note or pt_load (if available)
+f4ce0706d957 util_lib: Add functionality to read elf notes
+f56cbcf4c276 kexec/dt-ops.c: Fix '/chosen' v/s 'chosen' node being passed to fdt helper functions
+5570b4244466 kexec/dt-ops.c: Fix adding '/chosen' node for cases where it is not available in dtb passed via --dtb option
+9dcf363f509a kexec/kexec-arm64.c: Add error handling check against return value of 'set_bootargs()'
+583dbd57f997 kexec/dt-ops.c: Fix check against 'fdt_add_subnode' return value
+e5dfb3540219 kexec-tools 2.0.18.git
 
 _______________________________________________
 kexec mailing list
