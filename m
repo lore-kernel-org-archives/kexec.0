@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h0nsV-0003Sc-Ta
- for kexec@lists.infradead.org; Mon, 04 Mar 2019 13:43:37 +0000
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
- by kirsty.vergenet.net (Postfix) with ESMTPA id D2F0825B84A
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2019 00:43:32 +1100 (AEDT)
-Date: Mon, 4 Mar 2019 14:43:30 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools 2.0.19
-Message-ID: <20190304134330.y26v2s7lyqx6cgx7@verge.net.au>
+Received: from mail-io1-f65.google.com ([209.85.166.65])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1h15NL-0003Uh-J9
+ for kexec@lists.infradead.org; Tue, 05 Mar 2019 08:24:37 +0000
+Received: by mail-io1-f65.google.com with SMTP id k21so6300335ior.13
+ for <kexec@lists.infradead.org>; Tue, 05 Mar 2019 00:24:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
+References: <20190228100723.13780-1-kasong@redhat.com>
+ <20190304063013.GB31037@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190304063013.GB31037@dhcp-128-65.nay.redhat.com>
+From: Kairui Song <kasong@redhat.com>
+Date: Tue, 5 Mar 2019 16:24:23 +0800
+Message-ID: <CACPcB9dqSH9DKJTCzJOW6asX0k5LsMCph27DD0hZFanppygZ0A@mail.gmail.com>
+Subject: Re: [PATCH] x86: Introdudce a new option --force-vga
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,44 +25,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-Hi all,
+On Mon, Mar 4, 2019 at 2:30 PM Dave Young <dyoung@redhat.com> wrote:
+>
+> On 02/28/19 at 06:07pm, Kairui Song wrote:
+> > After commit 060eee58 "x86: use old screen_info if needed", kexec-tools
+> > will force use old screen_info and vga type if failed to determine
+> > current vga type. But it is not always a good idea.
+> >
+> > Currently kernel hanging is inspected on some hyper-v VMs after this
+> > commit, because hyperv_fb will mimic EFI (or VESA) VGA on first boot
+> > up, but after the real driver is loaded, it will switch to new mode
+> > and no longer compatible with EFI/VESA VGA. Keep setting
+> > orig_video_isVGA to EFI/VESA VGA flag will get wrong driver loaded and
+> > try to manipulate the framebuffer in a wrong way.
+> >
+> > We can't ensure this won't happen on other framebuffer drivers, But
+> > it's a helpful feature if the framebuffer drivers just work. So this
+> > patch introduce a --force-vga options to let user decide if the
+> > old screen_info should be used unconditional or not.
+>
+> It looks good to me except the option name, because vga usually means
+> the specific vga video type.  But here you are enforcing to reuse the first
+> kernel original video type.
+>
+> It would be better to use --reuse-video-type or --force-orig-video, etc..
+>
 
-I am happy to announce the release of kexec-tools 2.0.19.
+Thanks for the review, the naming is not very good indeed, will update
+the patch. How about just --reuse-video? This should be general enough
+and clear.
 
-This is a feature release coinciding with the release of v5.0
-of the Linux Kernel.
-
-This release can be downloaded from kernel.org:
-
-	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.19.tar.xz
-	http://kernel.org/pub/linux/utils/kernel/kexec/
-
-It is also tagged it in git:
-
-	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-Thanks to everyone who has contributed to kexec.
-
-Commits since v2.0.18:
-
-72c1e1e591cf kexec-tools 2.0.19
-0f9e081cf2d0 kexec-tools 2.0.19-rc1
-f1f2f9edf8d4 arm64: wipe old initrd addresses when patching the DTB
-c493af72ac79 purgatory: Use standalond CFLAGS
-a98b4da4fd4f x86: Handle 64bit framebuffer memory address properly
-002b608f3669 multiboot-x86: pass framebuffer information when requested
-2880a35f38cd multiboot-x86: pass ACPI reserved memory information in memory map
-8776bf88e50d multiboot-x86: support for non-elf kernels
-b23d0f8cf049 arm64: add kexec_file_load support
-64c49f27d880 arm64: Add support to read PHYS_OFFSET from 'kcore' - pt_note or pt_load (if available)
-f4ce0706d957 util_lib: Add functionality to read elf notes
-f56cbcf4c276 kexec/dt-ops.c: Fix '/chosen' v/s 'chosen' node being passed to fdt helper functions
-5570b4244466 kexec/dt-ops.c: Fix adding '/chosen' node for cases where it is not available in dtb passed via --dtb option
-9dcf363f509a kexec/kexec-arm64.c: Add error handling check against return value of 'set_bootargs()'
-583dbd57f997 kexec/dt-ops.c: Fix check against 'fdt_add_subnode' return value
-e5dfb3540219 kexec-tools 2.0.18.git
+-- 
+Best Regards,
+Kairui Song
 
 _______________________________________________
 kexec mailing list
