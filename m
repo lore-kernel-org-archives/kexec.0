@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pg1-x535.google.com ([2607:f8b0:4864:20::535])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h1oai-0002qC-D4
- for kexec@lists.infradead.org; Thu, 07 Mar 2019 08:41:28 +0000
-Subject: Re: [PATCH v2] makedumpfile: exclude pages that are logically offline
-References: <20181122100627.5189-1-david@redhat.com>
- <20181122100938.5567-1-david@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03561800@BPXM09GP.gisp.nec.co.jp>
-From: David Hildenbrand <david@redhat.com>
-Message-ID: <7c9d6d5c-d6cf-00a7-7f23-bf28cbb382af@redhat.com>
-Date: Thu, 7 Mar 2019 09:41:15 +0100
+ id 1h1pMx-00011R-9x
+ for kexec@lists.infradead.org; Thu, 07 Mar 2019 09:31:17 +0000
+Received: by mail-pg1-x535.google.com with SMTP id e17so10813972pgd.2
+ for <kexec@lists.infradead.org>; Thu, 07 Mar 2019 01:31:13 -0800 (PST)
+Received: from [10.142.108.139] ([72.163.220.12])
+ by smtp.gmail.com with ESMTPSA id h64sm6920974pfj.40.2019.03.07.01.31.11
+ for <kexec@lists.infradead.org>
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Thu, 07 Mar 2019 01:31:12 -0800 (PST)
+From: Subin P T <ptsubin@gmail.com>
+Subject: machine_kexec() stuck at load_segments() in
+ arch/x86/kernel/machine_kexec_64.c
+Message-ID: <5032ee4d-b493-f588-2f50-6c16c7a0699c@gmail.com>
+Date: Thu, 7 Mar 2019 15:01:10 +0530
 MIME-Version: 1.0
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03561800@BPXM09GP.gisp.nec.co.jp>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,47 +25,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "pv-drivers@vmware.com" <pv-drivers@vmware.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, kexec-ml <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>
+To: kexec@lists.infradead.org
 
-On 27.11.18 17:32, Kazuhito Hagio wrote:
->> Linux marks pages that are logically offline via a page flag (map count).
->> Such pages e.g. include pages infated as part of a balloon driver or
->> pages that were not actually onlined when onlining the whole section.
->>
->> While the hypervisor usually allows to read such inflated memory, we
->> basically read and dump data that is completely irrelevant. Also, this
->> might result in quite some overhead in the hypervisor. In addition,
->> we saw some problems under Hyper-V, whereby we can crash the kernel by
->> dumping, when reading memory of a partially onlined memory segment
->> (for memory added by the Hyper-V balloon driver).
->>
->> Therefore, don't read and dump pages that are marked as being logically
->> offline.
->>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
-> 
-> Thanks for the v2 update.
-> I'm going to merge this patch after the kernel patches are merged
-> and it tests fine with the kernel.
-> 
-> Kazu
-
-Hi Kazu,
-
-the patches are now upstream. Thanks!
-
--- 
-
-Thanks,
-
-David / dhildenb
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8sCgpJIGFtIHRyeWluZyB0byBnZXQga2R1bXAgdG8gd29yayBvbiBteSBwbGF0Zm9ybSB3
+aXRoIEludGVsIERlbnZlcnRvbiwgCkludGVsKFIpIEF0b20oVE0pIENQVSBDMzc1OC4gU0luY2Ug
+SSBjb3VsZG4ndCBzZWUgdGhlIG5ldyBrZXJuZWwgYmVpbmcgCmxvYWRlZCwgSSBoYXZlIHRyaWVk
+IGFkZGluZyBwcmludGsgcyBhbmQgZmlndXJlZCBvdXQgdGhpcyBpcyBiZWluZyBzdHVjayAKaW4g
+bG9hZF9zZWdtZW50cygpLiBUaGlzIGlzIHdpbmRyaXZlciBMaW51eCA3IGRpc3RyaWJ1dGlvbiBh
+bmQga2VybmVsIAp2ZXJzaW9uIGlzIDMuMTQgd2l0aCBjcml0aWNhbCBmaXhlcyBmcm9tIHVwc3Ry
+ZWFtLiBJIGNvdWxkbid0IGZpbmQgYW55IAptYWpvciBjaGFuZ2VzIGluIGtleGVjIHJlbGF0ZWQg
+ZmlsZXMgY29tcGFyZWQgdG8gd2hhdCBpcyB0aGVyZSBpbiAKY3VycmVudCBXUkw3LiBPbiBhbm90
+aGVyIGRldmljZSB3aXRoIEludGVsKFIpIEF0b20oVE0pIENQVSDCoEMyNzE4LCB0aGlzIAppcyB3
+b3JraW5nIGZpbmUgd2l0aG91dCBhbnkgcHJvYmxlbS4gQmVsb3cgaXMgdGhlIG91dHB1dCBvZiBr
+ZXhlYyBsb2FkIApjb21tYW5kLiBXaXRoIGtleGVjIC1lLCBhbGwgSSBzZWUgaXMgWyA2MzMyLjUw
+Nzk2MF0gU3RhcnRpbmcgbmV3IGtlcm5lbC4KCkNhbiB5b3UgcGxlYXNlIGhlbHAgbWUgaWRlbnRp
+ZnkgdGhlIHByb2JsZW0gd2l0aCBzb21lIHBvaW50ZXJzIG9uIGhvdyB0byAKcHJvY2VlZCB3aXRo
+IHRoZSBkZWJ1ZyBvciB3aGF0IHBsYWNlcyBkbyBJIG5lZWQgdG8gc3RhcnQgbG9va2luZz8KClRo
+ZSBvdXRwdXQgb2Yga2V4ZWMgLWw6IGh0dHBzOi8vcGFzdGViaW4uY29tLzR6Z0FyZkt3CgpJIGhh
+dmUgdGhpcyBpbiBkbWVzZwpbIMKgIMKgMC4wMDAwMDBdIFJlc2VydmluZyAyNTZNQiBvZiBtZW1v
+cnkgYXQgNjQwTUIgZm9yIGNyYXNoa2VybmVsIAooU3lzdGVtIFJBTTogMTYzNTBNQikKClRoYW5r
+cyBhbmQgUmVnYXJkcywKU3ViaW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
