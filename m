@@ -1,33 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-it1-x143.google.com ([2607:f8b0:4864:20::143])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h2Fp5-0006jk-4u
- for kexec@lists.infradead.org; Fri, 08 Mar 2019 13:46:04 +0000
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x28DiKDO046060
- for <kexec@lists.infradead.org>; Fri, 8 Mar 2019 08:46:01 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2r3p6n9csv-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 08 Mar 2019 08:46:01 -0500
-Received: from localhost
- by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Fri, 8 Mar 2019 13:46:00 -0000
-Subject: Re: [PATCH 2/3] scripts/ima: define a set of common functions
-From: Mimi Zohar <zohar@linux.ibm.com>
-Date: Fri, 08 Mar 2019 08:45:44 -0500
-In-Reply-To: <20190308024450.GC7223@dhcp-128-65.nay.redhat.com>
-References: <1548960936-7800-1-git-send-email-zohar@linux.ibm.com>
- <1548960936-7800-3-git-send-email-zohar@linux.ibm.com>
- <20190228134146.GA7528@dhcp-128-65.nay.redhat.com>
- <1551366343.10911.173.camel@linux.ibm.com>
- <20190308024450.GC7223@dhcp-128-65.nay.redhat.com>
-Mime-Version: 1.0
-Message-Id: <1552052744.4134.26.camel@linux.ibm.com>
+ id 1h2JfH-0002CQ-35
+ for kexec@lists.infradead.org; Fri, 08 Mar 2019 17:52:12 +0000
+Received: by mail-it1-x143.google.com with SMTP id 188so22576127itb.0
+ for <kexec@lists.infradead.org>; Fri, 08 Mar 2019 09:52:10 -0800 (PST)
+MIME-Version: 1.0
+References: <1542657371-7019-1-git-send-email-zohar@linux.ibm.com>
+ <1542657371-7019-4-git-send-email-zohar@linux.ibm.com>
+ <CACdnJusqHZ1OLJD1baN=fXK9KE+bSqzB4OUbmLXH5-qZNrQXJg@mail.gmail.com>
+ <CAFbkSA39RwB+E4SaG_ueu-_B=y7JytEYKw1+eXNQ_eCuMfnv=g@mail.gmail.com>
+ <CACdnJuuHmK0qKjMxxonRYDUCatxqs930QGNQmREhRjimpNKzYw@mail.gmail.com>
+ <1551998897.31706.461.camel@linux.ibm.com>
+ <CACdnJusiLSCyqx7NX5bkpFr2N5YjBt_h3miOgkbey-Zndc3+Kg@mail.gmail.com>
+ <1552052377.4134.23.camel@linux.ibm.com>
+In-Reply-To: <1552052377.4134.23.camel@linux.ibm.com>
+From: Matthew Garrett <mjg59@google.com>
+Date: Fri, 8 Mar 2019 09:51:57 -0800
+Message-ID: <CACdnJut3Y7CogvgtNsEcrEtA1WOxSb9OWP_wZ=3xNgCft2oeDw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] x86/ima: retry detecting secure boot mode
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,30 +31,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: linux-efi <linux-efi@vger.kernel.org>, Nayna Jain <nayna@linux.ibm.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, Seth Forshee <seth.forshee@canonical.com>, LSM List <linux-security-module@vger.kernel.org>, Justin Forbes <jforbes@redhat.com>, linux-integrity <linux-integrity@vger.kernel.org>
 
-On Fri, 2019-03-08 at 10:44 +0800, Dave Young wrote:
-> Hi Mimi,
-> 
-> Still did not get change to have a look at V2,  but seems you missed the
-> last chunk of comments about the secure boot mode in previous reply?
-> 
-> I just copy it hear:
-> '''
-> Do you want to get the Secureboot status here?
-> I got some advice from Peter Jones previously, thus we have below
-> in our kdump scripts:
-> https://src.fedoraproject.org/cgit/rpms/kexec-tools.git/tree/kdump-lib.sh
-> 
-> See the function is_secure_boot_enforced(), probably you can refer to
-> that function and check setup mode as well.
-> '''
+On Fri, Mar 8, 2019 at 5:40 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
+>
+> On Thu, 2019-03-07 at 14:50 -0800, Matthew Garrett wrote:
+> > Is the issue that it gives incorrect results on the first read, or is
+> > the issue that it gives incorrect results before ExitBootServices() is
+> > called? If the former then we should read twice in the boot stub, if
+> > the latter then we should figure out a way to do this immediately
+> > after ExitBootServices() instead.
+>
+> Detecting the secure boot mode isn't the problem.  On boot, I am
+> seeing "EFI stub: UEFI Secure Boot is enabled", but setup_arch() emits
+> "Secure boot could not be determined".
+>
+> In efi_main() the secure_boot mode is initially unset, so
+> efi_get_secureboot() is called.  efi_get_secureboot() returns the
+> secure_boot mode correctly as enabled.  The problem seems to be in
+> saving the secure_boot mode for later use.
 
-Thank you for the pointer to the kdump scripts and reminder.
-
-Mimi
-
+Hm. And this only happens on certain firmware versions? If something's
+stepping on boot_params then we have bigger problems.
 
 _______________________________________________
 kexec mailing list
