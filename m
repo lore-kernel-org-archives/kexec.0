@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-f196.google.com ([209.85.215.196])
+Received: from mail-pf1-f195.google.com ([209.85.210.195])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h2vK9-0007My-JT
- for kexec@lists.infradead.org; Sun, 10 Mar 2019 10:04:55 +0000
-Received: by mail-pg1-f196.google.com with SMTP id b2so1700628pgl.9
- for <kexec@lists.infradead.org>; Sun, 10 Mar 2019 03:04:53 -0700 (PDT)
+ id 1h2vKD-0007Nu-VS
+ for kexec@lists.infradead.org; Sun, 10 Mar 2019 10:05:00 +0000
+Received: by mail-pf1-f195.google.com with SMTP id g6so1470201pfh.13
+ for <kexec@lists.infradead.org>; Sun, 10 Mar 2019 03:04:57 -0700 (PDT)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH v2 0/2] Append new variables to vmcoreinfo (PTRS_PER_PGD for
- arm64 and MAX_PHYSMEM_BITS for all archs)
-Date: Sun, 10 Mar 2019 15:34:00 +0530
-Message-Id: <1552212242-9479-1-git-send-email-bhsharma@redhat.com>
+Subject: [PATCH v2 1/2] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to vmcoreinfo
+Date: Sun, 10 Mar 2019 15:34:01 +0530
+Message-Id: <1552212242-9479-2-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1552212242-9479-1-git-send-email-bhsharma@redhat.com>
+References: <1552212242-9479-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,64 +25,61 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Michael Ellerman <mpe@ellerman.id.au>, bhsharma@redhat.com, x86@kernel.org, Will Deacon <will.deacon@arm.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Boris Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, Dave Anderson <anderson@redhat.com>, Ingo Molnar <mingo@kernel.org>, Paul Mackerras <paulus@samba.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, kexec@lists.infradead.org, bhsharma@redhat.com, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, bhupesh.linux@gmail.com, linux-arm-kernel@lists.infradead.org
 
-Changes since v1:
-----------------
-- v1 was sent out as a single patch which can be seen here:
-  http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
+With ARMv8.2-LVA architecture extension availability, arm64 hardware
+which supports this extension can support a virtual address-space upto
+52-bits.
 
-- v2 breaks the single patch into two independent patches:
-  [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, whereas
-  [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel code (all archs)
+Since at the moment we enable the support of this extension in kernel
+via CONFIG flags, e.g.
+ - User-space 52-bit LVA via CONFIG_ARM64_USER_VA_BITS_52
 
-This patchset primarily fixes the regression reported in user-space
-utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
-with the availability of 52-bit address space feature in underlying
-kernel. These regressions have been reported both on CPUs which don't
-support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernels
-and also on prototype platforms (like ARMv8 FVP simulator model) which
-support ARMv8.2 extensions and are running newer kernels.
+so, there is no clear mechanism in the user-space right now to
+determine these CONFIG flag values and hence determine the maximum
+virtual address space supported by the underlying kernel.
 
-The reason for these regressions is that right now user-space tools
-have no direct access to these values (since these are not exported
-from the kernel) and hence need to rely on a best-guess method of
-determining value of 'PTRS_PER_PGD' and 'MAX_PHYSMEM_BITS' supported
-by underlying kernel.
+User-space tools like 'makedumpfile' therefore are broken currently
+as they have no proper method to calculate the 'PTRS_PER_PGD' value
+which is required to perform a page table walk to determine the
+physical address of a corresponding virtual address found in
+kcore/vmcoreinfo.
 
-Exporting these values via vmcoreinfo will help user-land in such cases.
-In addition, as per suggestion from makedumpfile maintainer (Kazu)
-during v1 review, it makes more sense to append 'MAX_PHYSMEM_BITS' to
-vmcoreinfo in the core code itself rather than in arm64 arch-specific
-code, so that the user-space code for other archs can also benefit from
-this addition to the vmcoreinfo and use it as a standard way of
-determining 'SECTIONS_SHIFT' value in user-land.
+If one appends 'PTRS_PER_PGD' number to vmcoreinfo for arm64,
+it can be used in user-space to determine the maximum virtual address
+supported by underlying kernel.
+
+A reference 'makedumpfile' implementation which uses this approach to
+determining the maximum physical address is available in [0].
+
+[0]. https://github.com/bhupesh-sharma/makedumpfile/blob/52-bit-va-support-via-vmcore-upstream-v3/arch/arm64.c#L459
 
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: James Morse <james.morse@arm.com>
 Cc: Will Deacon <will.deacon@arm.com>
-Cc: Boris Petkov <bp@alien8.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: James Morse <james.morse@arm.com>
 Cc: Dave Anderson <anderson@redhat.com>
 Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: x86@kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 Cc: kexec@lists.infradead.org
-
-Bhupesh Sharma (2):
-  arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to vmcoreinfo
-  crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
-
+Cc: linux-arm-kernel@lists.infradead.org
+Suggested-by: Steve Capper <Steve.Capper@arm.com>
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+---
  arch/arm64/kernel/crash_core.c | 1 +
- kernel/crash_core.c            | 1 +
- 2 files changed, 2 insertions(+)
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
+index ca4c3e12d8c5..123a42c56b8e 100644
+--- a/arch/arm64/kernel/crash_core.c
++++ b/arch/arm64/kernel/crash_core.c
+@@ -10,6 +10,7 @@
+ void arch_crash_save_vmcoreinfo(void)
+ {
+ 	VMCOREINFO_NUMBER(VA_BITS);
++	VMCOREINFO_NUMBER(PTRS_PER_PGD);
+ 	/* Please note VMCOREINFO_NUMBER() uses "%d", not "%x" */
+ 	vmcoreinfo_append_str("NUMBER(kimage_voffset)=0x%llx\n",
+ 						kimage_voffset);
 -- 
 2.7.4
 
