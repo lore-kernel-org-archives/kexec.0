@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-f194.google.com ([209.85.215.194])
+Received: from mail-pg1-f195.google.com ([209.85.215.195])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h2vKJ-0007Un-5g
- for kexec@lists.infradead.org; Sun, 10 Mar 2019 10:05:12 +0000
-Received: by mail-pg1-f194.google.com with SMTP id m2so1711133pgl.5
- for <kexec@lists.infradead.org>; Sun, 10 Mar 2019 03:05:02 -0700 (PDT)
+ id 1h2w9K-0008AN-58
+ for kexec@lists.infradead.org; Sun, 10 Mar 2019 10:57:47 +0000
+Received: by mail-pg1-f195.google.com with SMTP id a22so1748044pgg.13
+ for <kexec@lists.infradead.org>; Sun, 10 Mar 2019 03:57:45 -0700 (PDT)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH v2 2/2] crash_core,
- vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
-Date: Sun, 10 Mar 2019 15:34:02 +0530
-Message-Id: <1552212242-9479-3-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1552212242-9479-1-git-send-email-bhsharma@redhat.com>
-References: <1552212242-9479-1-git-send-email-bhsharma@redhat.com>
+Subject: [PATCH v3 0/3] makedumpfile/arm64: Add support for ARMv8.2 extensions
+Date: Sun, 10 Mar 2019 16:27:32 +0530
+Message-Id: <1552215455-12696-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,69 +22,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Michael Ellerman <mpe@ellerman.id.au>, bhsharma@redhat.com, x86@kernel.org, Will Deacon <will.deacon@arm.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Boris Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, Dave Anderson <anderson@redhat.com>, Ingo Molnar <mingo@kernel.org>, Paul Mackerras <paulus@samba.org>
+To: kexec@lists.infradead.org
+Cc: bhupesh.linux@gmail.com, bhsharma@redhat.com, k-hagio@ab.jp.nec.com
 
-Right now user-space tools like 'makedumpfile' and 'crash' need to rely
-on a best-guess method of determining value of 'MAX_PHYSMEM_BITS'
-supported by underlying kernel.
+Changes since v2:
+----------------
+- v2 can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-February/022456.html
+- I missed some comments from Kazu sent on the LVA v1 patch when I sent
+  out the v2. So, addressing them now in v3.
+- Also added a patch that adds a tree-wide feature to read
+  'MAX_PHYSMEM_BITS' from vmcoreinfo (if available).
 
-This value is used in user-space code to calculate the bit-space
-required to store a section for SPARESMEM (similar to the existing
-calculation method used in the kernel implementation):
+Changes since v1:
+----------------
+- v1 was sent as two separate patches:
+  http://lists.infradead.org/pipermail/kexec/2019-February/022424.html
+  (ARMv8.2-LPA)
+  http://lists.infradead.org/pipermail/kexec/2019-February/022425.html
+  (ARMv8.2-LVA)
+- v2 combined the two in a single patchset and also addresses Kazu's
+  review comments.
 
-  #define SECTIONS_SHIFT    (MAX_PHYSMEM_BITS - SECTION_SIZE_BITS)
+This patchset adds support for ARMv8.2 extensions in makedumpfile code.
+I cover the following two cases with this patchset:
+ - 48-bit VA + 52-bit PA (LPA)
+ - 48-bit kernel VA + 52-bit virtual VA (LVA)
 
-Now, regressions have been reported in user-space utilities
-like 'makedumpfile' and 'crash' on arm64, with the recently added
-kernel support for 52-bit physical address space, as there is
-no clear method of determining this value in user-space
-(other than reading kernel CONFIG flags).
+This has been tested for the following user-cases:
+1. Calculating --mem-usage on the primary kernel,
+2. Creating a dumpfile using /proc/vmcore, and
+3. Post-processing a vmcore.
 
-As per suggestion from makedumpfile maintainer (Kazu), it makes more
-sense to append 'MAX_PHYSMEM_BITS' to vmcoreinfo in the core code itself
-rather than in arch-specific code, so that the user-space code for other
-archs can also benefit from this addition to the vmcoreinfo and use it
-as a standard way of determining 'SECTIONS_SHIFT' value in user-land.
+I have tested this patchset on the following platforms, with kernels
+which support/do-not-support ARMv8.2 features:
+1. CPUs which don't support ARMv8.2 features, e.g. qualcomm-amberwing,
+   ampere-osprey.
+2. Prototype models which support ARMv8.2 extensions (e.g. ARMv8 FVP
+   simulation model).
 
-A reference 'makedumpfile' implementation which reads the
-'MAX_PHYSMEM_BITS' value from vmcoreinfo in a arch-independent fashion
-is available here:
+Also a preparation patch has been added in this patchset which adds a
+common feature for archs (except arm64, for which similar support is
+added via subsequent patch) to retrieve 'MAX_PHYSMEM_BITS' from
+vmcoreinfo (if available).
 
-[0]. https://github.com/bhupesh-sharma/makedumpfile/blob/remove-max-phys-mem-bit-v1/arch/ppc64.c#L471
+I recently posted two kernel patches (see [0] and [1]) which append
+'PTRS_PER_PGD' and 'MAX_PHYSMEM_BITS' to vmcoreinfo in the kernel
+code, so that user-space code can benefit from the same.
 
-Cc: Boris Petkov <bp@alien8.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: James Morse <james.morse@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Dave Anderson <anderson@redhat.com>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: x86@kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- kernel/crash_core.c | 1 +
- 1 file changed, 1 insertion(+)
+This patchset ensures backward compatibility for kernel versions in
+which 'PTRS_PER_PGD' and 'MAX_PHYSMEM_BITS' are not available in
+vmcoreinfo.
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 093c9f917ed0..44b90368e183 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -467,6 +467,7 @@ static int __init crash_save_vmcoreinfo_init(void)
- #define PAGE_OFFLINE_MAPCOUNT_VALUE	(~PG_offline)
- 	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
- #endif
-+	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
- 
- 	arch_crash_save_vmcoreinfo();
- 	update_vmcoreinfo_note();
+[0]. http://lists.infradead.org/pipermail/kexec/2019-March/022532.html
+[1]. http://lists.infradead.org/pipermail/kexec/2019-March/022533.html
+
+Bhupesh Sharma (3):
+  tree-wide: Retrieve 'MAX_PHYSMEM_BITS' from vmcoreinfo (if available)
+  makedumpfile/arm64: Add support for ARMv8.2-LPA (52-bit PA support)
+  makedumpfile/arm64: Add support for ARMv8.2-LVA (52-bit user-space VA
+    support)
+
+ arch/arm.c     |   8 +-
+ arch/arm64.c   | 394 ++++++++++++++++++++++++++++++++++++++++-----------------
+ arch/ia64.c    |   7 +-
+ arch/ppc.c     |   8 +-
+ arch/ppc64.c   |  49 ++++---
+ arch/s390x.c   |  29 +++--
+ arch/sparc64.c |   9 +-
+ arch/x86.c     |  34 +++--
+ arch/x86_64.c  |  27 ++--
+ makedumpfile.c |   2 +
+ makedumpfile.h |   1 +
+ 11 files changed, 390 insertions(+), 178 deletions(-)
+
 -- 
 2.7.4
 
