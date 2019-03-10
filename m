@@ -1,26 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-xd2f.google.com ([2607:f8b0:4864:20::d2f])
+Received: from mail-pg1-f196.google.com ([209.85.215.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h2M1D-0004Z9-GU
- for kexec@lists.infradead.org; Fri, 08 Mar 2019 20:23:00 +0000
-Received: by mail-io1-xd2f.google.com with SMTP id y6so17769884ioq.10
- for <kexec@lists.infradead.org>; Fri, 08 Mar 2019 12:22:59 -0800 (PST)
-MIME-Version: 1.0
-References: <1542657371-7019-1-git-send-email-zohar@linux.ibm.com>
- <1542657371-7019-4-git-send-email-zohar@linux.ibm.com>
- <CACdnJusqHZ1OLJD1baN=fXK9KE+bSqzB4OUbmLXH5-qZNrQXJg@mail.gmail.com>
- <CAFbkSA39RwB+E4SaG_ueu-_B=y7JytEYKw1+eXNQ_eCuMfnv=g@mail.gmail.com>
- <CACdnJuuHmK0qKjMxxonRYDUCatxqs930QGNQmREhRjimpNKzYw@mail.gmail.com>
- <1551998897.31706.461.camel@linux.ibm.com>
- <CACdnJusiLSCyqx7NX5bkpFr2N5YjBt_h3miOgkbey-Zndc3+Kg@mail.gmail.com>
- <1552052377.4134.23.camel@linux.ibm.com>
- <CACdnJut3Y7CogvgtNsEcrEtA1WOxSb9OWP_wZ=3xNgCft2oeDw@mail.gmail.com>
- <1552070598.4134.51.camel@linux.ibm.com>
-In-Reply-To: <1552070598.4134.51.camel@linux.ibm.com>
-From: Matthew Garrett <mjg59@google.com>
-Date: Fri, 8 Mar 2019 12:22:46 -0800
-Message-ID: <CACdnJuso1o=fib+fUuY_f2ibJKD5N=kr_BrAtgu_srHCcRLKig@mail.gmail.com>
-Subject: Re: [PATCH 3/3] x86/ima: retry detecting secure boot mode
+ id 1h2vK9-0007My-JT
+ for kexec@lists.infradead.org; Sun, 10 Mar 2019 10:04:55 +0000
+Received: by mail-pg1-f196.google.com with SMTP id b2so1700628pgl.9
+ for <kexec@lists.infradead.org>; Sun, 10 Mar 2019 03:04:53 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH v2 0/2] Append new variables to vmcoreinfo (PTRS_PER_PGD for
+ arm64 and MAX_PHYSMEM_BITS for all archs)
+Date: Sun, 10 Mar 2019 15:34:00 +0530
+Message-Id: <1552212242-9479-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,18 +18,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: linux-efi <linux-efi@vger.kernel.org>, Nayna Jain <nayna@linux.ibm.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, Seth Forshee <seth.forshee@canonical.com>, LSM List <linux-security-module@vger.kernel.org>, Justin Forbes <jforbes@redhat.com>, linux-integrity <linux-integrity@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Michael Ellerman <mpe@ellerman.id.au>, bhsharma@redhat.com, x86@kernel.org, Will Deacon <will.deacon@arm.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Boris Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, Dave Anderson <anderson@redhat.com>, Ingo Molnar <mingo@kernel.org>, Paul Mackerras <paulus@samba.org>
 
-T24gRnJpLCBNYXIgOCwgMjAxOSBhdCAxMDo0MyBBTSBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC5p
-Ym0uY29tPiB3cm90ZToKPiBGWUksIGVmaV9wcmludGsoKSB3b3JrcyBiZWZvcmUgZXhpdF9ib290
-KCksIGJ1dCBub3QgYWZ0ZXJ3YXJkcy4gIFRoZQo+IHN5c3RlbSBoYW5ncy4KCmVmaV9wcmludGso
-KSB1c2VzIGJvb3Qgc2VydmljZXMgdG8gcHJpbnQsIHNvIHRoYXQncyBub3QgdW5leHBlY3RlZCA6
-KQpJdCB3b3VsZCBwcm9iYWJseSBiZSBzZW5zaWJsZSB0byByZXR1cm4gYW4gZXJyb3IgcmF0aGVy
-IHRoYW4gY3Jhc2gsCnRob3VnaOKApgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Changes since v1:
+----------------
+- v1 was sent out as a single patch which can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
+
+- v2 breaks the single patch into two independent patches:
+  [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, whereas
+  [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel code (all archs)
+
+This patchset primarily fixes the regression reported in user-space
+utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
+with the availability of 52-bit address space feature in underlying
+kernel. These regressions have been reported both on CPUs which don't
+support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernels
+and also on prototype platforms (like ARMv8 FVP simulator model) which
+support ARMv8.2 extensions and are running newer kernels.
+
+The reason for these regressions is that right now user-space tools
+have no direct access to these values (since these are not exported
+from the kernel) and hence need to rely on a best-guess method of
+determining value of 'PTRS_PER_PGD' and 'MAX_PHYSMEM_BITS' supported
+by underlying kernel.
+
+Exporting these values via vmcoreinfo will help user-land in such cases.
+In addition, as per suggestion from makedumpfile maintainer (Kazu)
+during v1 review, it makes more sense to append 'MAX_PHYSMEM_BITS' to
+vmcoreinfo in the core code itself rather than in arm64 arch-specific
+code, so that the user-space code for other archs can also benefit from
+this addition to the vmcoreinfo and use it as a standard way of
+determining 'SECTIONS_SHIFT' value in user-land.
+
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Boris Petkov <bp@alien8.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Dave Anderson <anderson@redhat.com>
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: x86@kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org
+
+Bhupesh Sharma (2):
+  arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to vmcoreinfo
+  crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
+
+ arch/arm64/kernel/crash_core.c | 1 +
+ kernel/crash_core.c            | 1 +
+ 2 files changed, 2 insertions(+)
+
+-- 
+2.7.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
