@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h3Sdz-0000qB-GX
- for kexec@lists.infradead.org; Mon, 11 Mar 2019 21:39:37 +0000
-Date: Mon, 11 Mar 2019 22:39:29 +0100
+ id 1h3SpK-0005hv-Rr
+ for kexec@lists.infradead.org; Mon, 11 Mar 2019 21:51:20 +0000
+Date: Mon, 11 Mar 2019 22:51:15 +0100
 From: Petr Vorel <pvorel@suse.cz>
-Subject: Re: [PATCH v3 2/7] selftests/ima: define a set of common functions
-Message-ID: <20190311213929.GA13024@x230>
+Subject: Re: [PATCH v3 0/7] selftests/ima: add kexec and kernel module tests
+Message-ID: <20190311215115.GB13024@x230>
 References: <1552304473-3966-1-git-send-email-zohar@linux.ibm.com>
- <1552304473-3966-3-git-send-email-zohar@linux.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1552304473-3966-3-git-send-email-zohar@linux.ibm.com>
+In-Reply-To: <1552304473-3966-1-git-send-email-zohar@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,57 +29,29 @@ Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mj
 
 Hi Mimi,
 
-> Define, update and move get_secureboot_mode() to a common file for use
-> by other tests.
+> Mimi Zohar (6):
+>   selftests/ima: cleanup the kexec selftest
+>   selftests/ima: define a set of common functions
+>   selftests/ima: define common logging functions
+>   kselftest/ima: define "require_root_privileges"
+>   selftests/ima: kexec_file_load syscall test
+>   selftests/ima: loading kernel modules
+Whole patchset LGTM.
+Reviewed-by: Petr Vorel <pvorel@suse.cz>
 
-> Updated to check both the efivar SecureBoot-$(UUID) and
-> SetupMode-$(UUID), based on Dave Young's review.
+> Petr Vorel (1):
+>   selftests/ima: Add missing '=y' to config options
 
-> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-> Reviewed-by: Petr Vorel <pvorel@suse.cz>
-> Cc: Dave Young <dyoung@redhat.com>
-
-Minor comment below.
-
-...
-> +++ b/tools/testing/selftests/ima/ima_common_lib.sh
-> @@ -0,0 +1,36 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +# Check efivar SecureBoot-$(the UUID) and SetupMode-$(the UUID).
-> +# The secure boot mode can be accessed either as the last integer
-> +# of "od -An -t u1 /sys/firmware/efi/efivars/SecureBoot-*" or from
-> +# "od -An -t u1 /sys/firmware/efi/vars/SecureBoot-*/data".  The efi
-> +# SetupMode can be similarly accessed.
-> +# Return 1 for SecureBoot mode enabled and SetupMode mode disabled.
-> +get_secureboot_mode()
-> +{
-> +	local efivarfs="/sys/firmware/efi/efivars"
-> +	local secure_boot_file=$efivarfs/../vars/SecureBoot-*/data
-> +	local setup_mode_file=$efivarfs/../vars/SetupMode-*/data
-Sorry for nitpicking, but also quote variables these two variables
-containing string:
-	local secure_boot_file="$efivarfs/../vars/SecureBoot-*/data"
-	local setup_mode_file="$efivarfs/../vars/SetupMode-*/data"
-
-> +	local secureboot_mode=0
-> +	local setup_mode=0
-> +
-> +	# Make sure that efivars is mounted in the normal location
-> +	if ! grep -q "^\S\+ $efivarfs efivarfs" /proc/mounts; then
-> +		log_skip "efivars is not mounted on $efivarfs"
-> +	fi
-> +
-> +	if [ ! -e $secure_boot_file ] || [ ! -e $setup_mode_file ]; then
-I prefer to quote every variable in [ ] (at least for -f -e -z -n,
-to prevent shell behavior on empty (I know it's not necessary here):
-
-f=; [ -e $f ]; echo $?
-0
-vs.
-f=; [ -e "$f" ]; echo $?
-1
+>  tools/testing/selftests/ima/Makefile               |   3 +-
+>  tools/testing/selftests/ima/config                 |   7 +-
+>  tools/testing/selftests/ima/ima_common_lib.sh      | 173 +++++++++++++++++++
+>  tools/testing/selftests/ima/test_kernel_module.sh  |  93 ++++++++++
+>  .../testing/selftests/ima/test_kexec_file_load.sh  | 190 +++++++++++++++++++++
+>  tools/testing/selftests/ima/test_kexec_load.sh     |  53 ++----
+>  6 files changed, 476 insertions(+), 43 deletions(-)
+>  create mode 100755 tools/testing/selftests/ima/ima_common_lib.sh
+>  create mode 100755 tools/testing/selftests/ima/test_kernel_module.sh
+>  create mode 100755 tools/testing/selftests/ima/test_kexec_file_load.sh
 
 
 Kind regards,
