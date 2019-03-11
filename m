@@ -1,28 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h3JJr-0004GB-4J
- for kexec@lists.infradead.org; Mon, 11 Mar 2019 11:42:13 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x2BBdhmd041670
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2019 07:42:10 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2r5pneguku-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2019 07:42:10 -0400
-Received: from localhost
- by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Mon, 11 Mar 2019 11:42:08 -0000
-From: Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH v3 7/7] selftests/ima: Add missing '=y' to config options
-Date: Mon, 11 Mar 2019 07:41:13 -0400
-In-Reply-To: <1552304473-3966-1-git-send-email-zohar@linux.ibm.com>
-References: <1552304473-3966-1-git-send-email-zohar@linux.ibm.com>
-Message-Id: <1552304473-3966-8-git-send-email-zohar@linux.ibm.com>
+ id 1h3Nzr-0003zA-Sv
+ for kexec@lists.infradead.org; Mon, 11 Mar 2019 16:41:53 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH v2] makedumpfile: exclude pages that are logically offline
+Date: Mon, 11 Mar 2019 16:40:30 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03569C9C@BPXM09GP.gisp.nec.co.jp>
+References: <20181122100627.5189-1-david@redhat.com>
+ <20181122100938.5567-1-david@redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03561800@BPXM09GP.gisp.nec.co.jp>
+ <7c9d6d5c-d6cf-00a7-7f23-bf28cbb382af@redhat.com>
+In-Reply-To: <7c9d6d5c-d6cf-00a7-7f23-bf28cbb382af@redhat.com>
+Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,40 +22,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-integrity@vger.kernel.org
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, Petr Vorel <pvorel@suse.cz>, Mimi Zohar <zohar@linux.ibm.com>, linux-kselftest@vger.kernel.org, Dave Young <dyoung@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "pv-drivers@vmware.com" <pv-drivers@vmware.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, kexec-ml <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>
 
-From: Petr Vorel <pvorel@suse.cz>
+-----Original Message-----
+> On 27.11.18 17:32, Kazuhito Hagio wrote:
+> >> Linux marks pages that are logically offline via a page flag (map count).
+> >> Such pages e.g. include pages infated as part of a balloon driver or
+> >> pages that were not actually onlined when onlining the whole section.
+> >>
+> >> While the hypervisor usually allows to read such inflated memory, we
+> >> basically read and dump data that is completely irrelevant. Also, this
+> >> might result in quite some overhead in the hypervisor. In addition,
+> >> we saw some problems under Hyper-V, whereby we can crash the kernel by
+> >> dumping, when reading memory of a partially onlined memory segment
+> >> (for memory added by the Hyper-V balloon driver).
+> >>
+> >> Therefore, don't read and dump pages that are marked as being logically
+> >> offline.
+> >>
+> >> Signed-off-by: David Hildenbrand <david@redhat.com>
+> >
+> > Thanks for the v2 update.
+> > I'm going to merge this patch after the kernel patches are merged
+> > and it tests fine with the kernel.
+> >
+> > Kazu
+> 
+> Hi Kazu,
+> 
+> the patches are now upstream. Thanks!
 
-so the file can be used as kernel config snippet.
+Tested OK at my end, too. Applied to the devel branch.
 
-Signed-off-by: Petr Vorel <pvorel@suse.cz>
-[zohar@linux.ibm.com: remove CONFIG_KEXEC_VERIFY_SIG from config]
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
----
- tools/testing/selftests/ima/config | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+    Offline pages           : 0x0000000000002400
 
-diff --git a/tools/testing/selftests/ima/config b/tools/testing/selftests/ima/config
-index 6bc86d4d9bb4..8962e862b2b8 100644
---- a/tools/testing/selftests/ima/config
-+++ b/tools/testing/selftests/ima/config
-@@ -1,4 +1,3 @@
--CONFIG_IMA_APPRAISE
--CONFIG_IMA_ARCH_POLICY
--CONFIG_SECURITYFS
--CONFIG_KEXEC_VERIFY_SIG
-+CONFIG_IMA_APPRAISE=y
-+CONFIG_IMA_ARCH_POLICY=y
-+CONFIG_SECURITYFS=y
--- 
-2.7.5
+Thank you!
+Kazu
 
+> 
+> --
+> 
+> Thanks,
+> 
+> David / dhildenb
 
 _______________________________________________
 kexec mailing list
