@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h3VzG-0001CH-Rg
- for kexec@lists.infradead.org; Tue, 12 Mar 2019 01:13:48 +0000
-Subject: Re: [PATCH v3] Remove the memory encryption mask to obtain the true
- physical address
-References: <20190130024853.28586-1-lijiang@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03567B03@BPXM09GP.gisp.nec.co.jp>
- <a2066b83-5d36-d07b-160f-5774d8c11ba4@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03569CF6@BPXM09GP.gisp.nec.co.jp>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <27c45bcf-8d01-2e5d-590e-4977afd08271@redhat.com>
-Date: Tue, 12 Mar 2019 09:13:33 +0800
+ id 1h3gEV-0007dj-H9
+ for kexec@lists.infradead.org; Tue, 12 Mar 2019 12:10:20 +0000
+Date: Tue, 12 Mar 2019 20:10:01 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v3 5/7] selftests/ima: kexec_file_load syscall test
+Message-ID: <20190312121001.GA18510@dhcp-128-65.nay.redhat.com>
+References: <1552304473-3966-1-git-send-email-zohar@linux.ibm.com>
+ <1552304473-3966-6-git-send-email-zohar@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03569CF6@BPXM09GP.gisp.nec.co.jp>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1552304473-3966-6-git-send-email-zohar@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,274 +20,394 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: "anderson@redhat.com" <anderson@redhat.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>, "Thomas.Lendacky@amd.com" <Thomas.Lendacky@amd.com>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, Petr Vorel <pvorel@suse.cz>, linux-kselftest@vger.kernel.org, linux-integrity@vger.kernel.org
 
-在 2019年03月12日 03:43, Kazuhito Hagio 写道:
-> -----Original Message-----
->>>> [PATCH v3] Remove the memory encryption mask to obtain the true physical address
->>>
->>> I forgot to comment on the subject and the commit log..
->>> I'll change this to
->>>
->>>   x86_64: Add support for AMD Secure Memory Encryption
->>>
->>> On 1/29/2019 9:48 PM, Lianbo Jiang wrote:
->>>> For AMD machine with SME feature, if SME is enabled in the first
->>>> kernel, the crashed kernel's page table(pgd/pud/pmd/pte) contains
->>>> the memory encryption mask, so makedumpfile needs to remove the
->>>> memory encryption mask to obtain the true physical address.
->>>
->>> I added a few official words from some documents:
->>> ---
->>> On AMD machine with Secure Memory Encryption (SME) feature, if SME is
->>> enabled, page tables contain a specific attribute bit (C-bit) in their
->>> entries to indicate whether a page is encrypted or unencrypted.
->>>
->>> So get NUMBER(sme_mask) from vmcoreinfo, which stores the value of
->>> the C-bit position, and drop it to obtain the true physical address.
->>> ---
->>>
->>> If these are OK, I'll modify them when merging, so you don't need
->>> to repost.
->>>
->>
->> It's fine to me. Thank you, Kazu.
->>
->> Regards,
->> Lianbo
->>
->>> And, I'm thinking to merge this after the kernel patch gets merged
->>> into the mainline.
+Hi Mimi,
+On 03/11/19 at 07:41am, Mimi Zohar wrote:
+> The kernel can be configured to verify PE signed kernel images, IMA
+> kernel image signatures, both types of signatures, or none.  This test
+> verifies only properly signed kernel images are loaded into memory,
+> based on the kernel configuration and runtime policies.
+
+I understand this is for IMA testing only, but I still wonder if this
+can be expanded to common kexec tests, like
+tools/testing/selftests/kexec/kexec_load.sh
+tools/testing/selftests/kexec/kexec_file_load.sh
+
+Is it possible for ima/test_kexec_load.sh to call the
+../kexec/kexec_load.sh, probably add extra argument eg "ima"?
+
+Frankly I did not read and followup much about the testing code changes,
+not sure if it is doable or not.  The code sharing under testing folder
+seems not very good.  For example the basic check_root is needed by
+different parts, but all have its own implementation.  Anyway this is
+not the duty of this patch set.
+Also the selftests/lib/ is not a folder for sharing code for different
+tests, it looks a standalone test instead.
+
+So if split kexec tests to another folder is not doable please just
+ignore the comment.
+
+BTW, does CONFIG_KEXEC* is checked?  in case a kernel without KEXEC or
+KEXEC_FILE compiled in then the tests can just return directly.
+
 > 
-> Hi Lianbo,
+> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> Reviewed-by: Petr Vorel <pvorel@suse.cz>
+> ---
+>  tools/testing/selftests/ima/Makefile               |   2 +-
+>  tools/testing/selftests/ima/ima_common_lib.sh      |  99 +++++++++++
+>  .../testing/selftests/ima/test_kexec_file_load.sh  | 190 +++++++++++++++++++++
+>  tools/testing/selftests/ima/test_kexec_load.sh     |   1 -
+>  4 files changed, 290 insertions(+), 2 deletions(-)
+>  create mode 100755 tools/testing/selftests/ima/test_kexec_file_load.sh
 > 
-> I found your patch upstream. Applied to the devel branch.
+> diff --git a/tools/testing/selftests/ima/Makefile b/tools/testing/selftests/ima/Makefile
+> index 04501516831b..00270de0b637 100644
+> --- a/tools/testing/selftests/ima/Makefile
+> +++ b/tools/testing/selftests/ima/Makefile
+> @@ -4,7 +4,7 @@ uname_M := $(shell uname -m 2>/dev/null || echo not)
+>  ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
+>  
+>  ifeq ($(ARCH),x86)
+> -TEST_PROGS := test_kexec_load.sh
+> +TEST_PROGS := test_kexec_load.sh test_kexec_file_load.sh
+>  TEST_FILES := ima_common_lib.sh
+>  
+>  include ../lib.mk
+> diff --git a/tools/testing/selftests/ima/ima_common_lib.sh b/tools/testing/selftests/ima/ima_common_lib.sh
+> index 8ab7fcc0b221..d5ed28f9170c 100755
+> --- a/tools/testing/selftests/ima/ima_common_lib.sh
+> +++ b/tools/testing/selftests/ima/ima_common_lib.sh
+> @@ -4,6 +4,9 @@
+>  # Kselftest framework defines: ksft_pass=0, ksft_fail=1, ksft_skip=4
+>  
+>  VERBOSE="${VERBOSE:-1}"
+> +IKCONFIG="/tmp/config-`uname -r`"
+> +KERNEL_IMAGE="/boot/vmlinuz-`uname -r`"
+> +SECURITYFS=$(grep "securityfs" /proc/mounts | awk '{print $2}')
+>  
+>  log_info()
+>  {
+> @@ -72,3 +75,99 @@ require_root_privileges()
+>  		log_skip "requires root privileges"
+>  	fi
+>  }
+> +
+> +# Look for config option in Kconfig file.
+> +# Return 1 for found and 0 for not found.
+> +kconfig_enabled()
+> +{
+> +	local config="$1"
+> +	local msg="$2"
+> +
+> +	grep -E -q $config $IKCONFIG
+> +	if [ $? -eq 0 ]; then
+> +		log_info "$msg"
+> +		return 1
+> +	fi
+> +	return 0
+> +}
+> +
+> +# Attempt to get the kernel config first via proc, and then by
+> +# extracting it from the kernel image or the configs.ko using
+> +# scripts/extract-ikconfig.
+> +# Return 1 for found.
+> +get_kconfig()
+> +{
+> +	local proc_config="/proc/config.gz"
+> +	local module_dir="/lib/modules/`uname -r`"
+> +	local configs_module="$module_dir/kernel/kernel/configs.ko"
+> +
+> +	if [ ! -f $proc_config ]; then
+> +		modprobe configs > /dev/null 2>&1
+> +	fi
+> +	if [ -f $proc_config ]; then
+> +		cat $proc_config | gunzip > $IKCONFIG 2>/dev/null
+> +		if [ $? -eq 0 ]; then
+> +			return 1
+> +		fi
+> +	fi
+> +
+> +	local extract_ikconfig="$module_dir/source/scripts/extract-ikconfig"
+> +	if [ ! -f $extract_ikconfig ]; then
+> +		log_skip "extract-ikconfig not found"
+> +	fi
+> +
+> +	$extract_ikconfig $KERNEL_IMAGE > $IKCONFIG 2>/dev/null
+> +	if [ $? -eq 1 ]; then
+> +		if [ ! -f $configs_module ]; then
+> +			log_skip "CONFIG_IKCONFIG not enabled"
+> +		fi
+> +		$extract_ikconfig $configs_module > $IKCONFIG
+> +		if [ $? -eq 1 ]; then
+> +			log_skip "CONFIG_IKCONFIG not enabled"
+> +		fi
+> +	fi
+> +	return 1
+> +}
+> +
+> +# Make sure that securityfs is mounted
+> +mount_securityfs()
+> +{
+> +	if [ -z $SECURITYFS ]; then
+> +		SECURITYFS=/sys/kernel/security
+> +		mount -t securityfs security $SECURITYFS
+> +	fi
+> +
+> +	if [ ! -d "$SECURITYFS" ]; then
+> +		log_fail "$SECURITYFS :securityfs is not mounted"
+> +	fi
+> +}
+> +
+> +# The policy rule format is an "action" followed by key-value pairs.  This
+> +# function supports up to two key-value pairs, in any order.
+> +# For example: action func=<keyword> [appraise_type=<type>]
+> +# Return 1 for found and 0 for not found.
+> +check_ima_policy()
+> +{
+> +	local action="$1"
+> +	local keypair1="$2"
+> +	local keypair2="$3"
+> +	local ret=0
+> +
+> +	mount_securityfs
+> +
+> +	local ima_policy=$SECURITYFS/ima/policy
+> +	if [ ! -e $ima_policy ]; then
+> +		log_fail "$ima_policy not found"
+> +	fi
+> +
+> +	if [ -n $keypair2 ]; then
+> +		grep -e "^$action.*$keypair1" "$ima_policy" | \
+> +			grep -q -e "$keypair2"
+> +	else
+> +		grep -q -e "^$action.*$keypair1" "$ima_policy"
+> +	fi
+> +
+> +	# invert "grep -q" result, returning 1 for found.
+> +	[ $? -eq 0 ] && ret=1
+> +	return $ret
+> +}
+> diff --git a/tools/testing/selftests/ima/test_kexec_file_load.sh b/tools/testing/selftests/ima/test_kexec_file_load.sh
+> new file mode 100755
+> index 000000000000..dbccfb109c68
+> --- /dev/null
+> +++ b/tools/testing/selftests/ima/test_kexec_file_load.sh
+> @@ -0,0 +1,190 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Loading a kernel image via the kexec_file_load syscall can verify either
+> +# the IMA signature stored in the security.ima xattr or the PE signature,
+> +# both signatures depending on the IMA policy, or none.
+> +#
+> +# To determine whether the kernel image is signed, this test depends
+> +# on pesign and getfattr.  This test also requires the kernel to be
+> +# built with CONFIG_IKCONFIG enabled and either CONFIG_IKCONFIG_PROC
+> +# enabled or access to the extract-ikconfig script.
+> +
+> +TEST="KEXEC_FILE_LOAD"
+> +. ./ima_common_lib.sh
+> +
+> +trap "{ rm -f $IKCONFIG ; }" EXIT
+> +
+> +# Some of the IMA builtin policies may require the kexec kernel image to
+> +# be signed, but these policy rules may be replaced with a custom
+> +# policy.  Only CONFIG_IMA_APPRAISE_REQUIRE_KEXEC_SIGS persists after
+> +# loading a custom policy.  Check if it is enabled, before reading the
+> +# IMA runtime sysfs policy file.
+> +# Return 1 for IMA signature required and 0 for not required.
+> +is_ima_sig_required()
+> +{
+> +	local ret=0
+> +
+> +	kconfig_enabled "CONFIG_IMA_APPRAISE_REQUIRE_KEXEC_SIGS=y" \
+> +		"IMA kernel image signature required"
+> +	if [ $? -eq 1 ]; then
+> +		log_info "IMA signature required"
+> +		return 1
+> +	fi
+> +
+> +	# The architecture specific or a custom policy may require the
+> +	# kexec kernel image be signed.  Policy rules are walked
+> +	# sequentially.  As a result, a policy rule may be defined, but
+> +	# might not necessarily be used.  This test assumes if a policy
+> +	# rule is specified, that is the intent.
+> +	if [ $ima_read_policy -eq 1 ]; then
+> +		check_ima_policy "appraise" "func=KEXEC_KERNEL_CHECK" \
+> +			"appraise_type=imasig"
+> +		ret=$?
+> +		[ $ret -eq 1 ] && log_info "IMA signature required";
+> +	fi
+> +	return $ret
+> +}
+> +
+> +# The kexec_file_load_test() is complicated enough, require pesign.
+> +# Return 1 for PE signature found and 0 for not found.
+> +check_for_pesig()
+> +{
+> +	which pesign > /dev/null 2>&1 || log_skip "pesign not found"
+> +
+> +	pesign -i $KERNEL_IMAGE --show-signature | grep -q "No signatures"
+> +	local ret=$?
+> +	if [ $ret -eq 1 ]; then
+> +		log_info "kexec kernel image PE signed"
+> +	else
+> +		log_info "kexec kernel image not PE signed"
+> +	fi
+> +	return $ret
+> +}
+> +
+> +# The kexec_file_load_test() is complicated enough, require getfattr.
+> +# Return 1 for IMA signature found and 0 for not found.
+> +check_for_imasig()
+> +{
+> +	local ret=0
+> +
+> +	which getfattr > /dev/null 2>&1
+> +	if [ $?	-eq 1 ]; then
+> +		log_skip "getfattr not found"
+> +	fi
+> +
+> +	line=$(getfattr -n security.ima -e hex --absolute-names $KERNEL_IMAGE 2>&1)
+> +	echo $line | grep -q "security.ima=0x03"
+> +	if [ $? -eq 0 ]; then
+> +		ret=1
+> +		log_info "kexec kernel image IMA signed"
+> +	else
+> +		log_info "kexec kernel image not IMA signed"
+> +	fi
+> +	return $ret
+> +}
+> +
+> +kexec_file_load_test()
+> +{
+> +	local succeed_msg="kexec_file_load succeeded"
+> +	local failed_msg="kexec_file_load failed"
+> +	local key_msg="try enabling the CONFIG_INTEGRITY_PLATFORM_KEYRING"
+> +
+> +	line=$(kexec --load --kexec-file-syscall $KERNEL_IMAGE 2>&1)
+> +
+> +	if [ $? -eq 0 ]; then
+> +		kexec --unload --kexec-file-syscall
+> +
+> +		# In secureboot mode with an architecture  specific
+> +		# policy, make sure either an IMA or PE signature exists.
+> +		if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ] && \
+> +			[ $ima_signed -eq 0 ] && [ $pe_signed -eq 0 ]; then
+> +			log_fail "$succeed_msg (missing sig)"
+> +		fi
+> +
+> +		if [ $pe_sig_required -eq 1 ] && [ $pe_signed -eq 0 ]; then
+> +			log_fail "$succeed_msg (missing PE sig)"
+> +		fi
+> +
+> +		if [ $ima_sig_required -eq 1 ] && [ $ima_signed -eq 0 ]; then
+> +			log_fail "$succeed_msg (missing IMA sig)"
+> +		fi
+> +
+> +		if [ $pe_sig_required -eq 0 ] && [ $ima_sig_required -eq 0 ] \
+> +		    && [ $ima_read_policy -eq 0 ] && [ $ima_signed -eq 0 ]; then
+> +			log_fail "$succeed_msg (possibly missing IMA sig)"
+> +		fi
+> +
+> +		log_pass "$succeed_msg"
+> +	fi
+> +
+> +	# Check the reason for the kexec_file_load failure
+> +	echo $line | grep -q "Required key not available"
+> +	if [ $? -eq 0 ]; then
+> +		if [ $platform_keyring -eq 0 ]; then
+> +			log_pass "$failed_msg (-ENOKEY), $key_msg"
+> +		else
+> +			log_pass "$failed_msg (-ENOKEY)"
+> +		fi
+> +	fi
+> +
+> +	if [ $pe_sig_required -eq 1 ] && [ $pe_signed -eq 0 ]; then
+> +		log_pass "$failed_msg (missing PE sig)"
+> +	fi
+> +
+> +	if [ $ima_sig_required -eq 1 ] && [ $ima_signed -eq 0 ]; then
+> +		log_pass "$failed_msg (missing IMA sig)"
+> +	fi
+> +
+> +	if [ $pe_sig_required -eq 0 ] && [ $ima_sig_required -eq 0 ] \
+> +	    && [ $ima_read_policy -eq 0 ] && [ $ima_signed -eq 0 ]; then
+> +		log_pass "$failed_msg (possibly missing IMA sig)"
+> +	fi
+> +
+> +	log_pass "$failed_msg"
+> +	return 0
+> +}
+> +
+> +# kexec requires root privileges
+> +require_root_privileges
+> +
+> +# get the kernel config
+> +get_kconfig
+> +
+> +# Determine which kernel config options are enabled
+> +kconfig_enabled "CONFIG_IMA_ARCH_POLICY=y" \
+> +	"architecture specific policy enabled"
+> +arch_policy=$?
+> +
+> +kconfig_enabled "CONFIG_INTEGRITY_PLATFORM_KEYRING=y" \
+> +	"platform keyring enabled"
+> +platform_keyring=$?
+> +
+> +kconfig_enabled "CONFIG_IMA_READ_POLICY=y" "reading IMA policy permitted"
+> +ima_read_policy=$?
+> +
+> +kconfig_enabled "CONFIG_KEXEC_BZIMAGE_VERIFY_SIG=y" \
+> +	"PE signed kernel image required"
+> +pe_sig_required=$?
+> +
+> +is_ima_sig_required
+> +ima_sig_required=$?
+> +
+> +get_secureboot_mode
+> +secureboot=$?
+> +
+> +if [ $secureboot -eq 0 ] && [ $arch_policy -eq 0 ] && \
+> +   [ $pe_sig_required -eq 0 ] && [ $ima_sig_required -eq 0 ] && \
+> +   [ $ima_read_policy -eq 1 ]; then
+> +	log_skip "No signature verification required"
+> +fi
+> +
+> +# Are there pe and ima signatures
+> +check_for_pesig
+> +pe_signed=$?
+> +
+> +check_for_imasig
+> +ima_signed=$?
+> +
+> +# Test loading the kernel image via kexec_file_load syscall
+> +kexec_file_load_test
+> diff --git a/tools/testing/selftests/ima/test_kexec_load.sh b/tools/testing/selftests/ima/test_kexec_load.sh
+> index b2ecd196b382..c6f7e0957c58 100755
+> --- a/tools/testing/selftests/ima/test_kexec_load.sh
+> +++ b/tools/testing/selftests/ima/test_kexec_load.sh
+> @@ -14,7 +14,6 @@ get_secureboot_mode
+>  secureboot=$?
+>  
+>  # kexec_load should fail in secure boot mode
+> -KERNEL_IMAGE="/boot/vmlinuz-`uname -r`"
+>  kexec --load $KERNEL_IMAGE 2>&1 > /dev/null
+>  if [ $? -eq 0 ]; then
+>  	kexec --unload
+> -- 
+> 2.7.5
 > 
 
-Thank you, Kazu.
-
-Regards,
-Lianbo
-
-> Thank you!
-> Kazu
-> 
-> 
->>>
->>> Thanks for your work.
->>> Kazu
->>>
->>>>
->>>> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
->>>> ---
->>>> Changes since v1:
->>>> 1. Merge them into a patch.
->>>> 2. The sme_mask is not an enum number, remove it.
->>>> 3. Sanity check whether the sme_mask is in vmcoreinfo.
->>>> 4. Deal with the huge pages case.
->>>> 5. Cover the 5-level path.
->>>>
->>>> Changes since v2:
->>>> 1. Change the sme_me_mask to entry_mask.
->>>> 2. No need to remove the mask when makedumpfile prints out the
->>>>    value of the entry.
->>>> 3. Remove the sme mask from the pte at the end of the __vtop4_x86_64().
->>>> 4. Also need to remove the sme mask from page table entry in
->>>>    find_vmemmap_x86_64()
->>>>
->>>>  arch/x86_64.c  | 30 +++++++++++++++++++-----------
->>>>  makedumpfile.c |  4 ++++
->>>>  makedumpfile.h |  1 +
->>>>  3 files changed, 24 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/arch/x86_64.c b/arch/x86_64.c
->>>> index 537fb78..9977466 100644
->>>> --- a/arch/x86_64.c
->>>> +++ b/arch/x86_64.c
->>>> @@ -291,6 +291,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
->>>>  	unsigned long page_dir, pgd, pud_paddr, pud_pte, pmd_paddr, pmd_pte;
->>>>  	unsigned long pte_paddr, pte;
->>>>  	unsigned long p4d_paddr, p4d_pte;
->>>> +	unsigned long entry_mask = ENTRY_MASK;
->>>>
->>>>  	/*
->>>>  	 * Get PGD.
->>>> @@ -302,6 +303,9 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
->>>>  			return NOT_PADDR;
->>>>  	}
->>>>
->>>> +	if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
->>>> +		entry_mask &= ~(NUMBER(sme_mask));
->>>> +
->>>>  	if (check_5level_paging()) {
->>>>  		page_dir += pgd5_index(vaddr) * sizeof(unsigned long);
->>>>  		if (!readmem(PADDR, page_dir, &pgd, sizeof pgd)) {
->>>> @@ -318,7 +322,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
->>>>  		/*
->>>>  		 * Get P4D.
->>>>  		 */
->>>> -		p4d_paddr  = pgd & ENTRY_MASK;
->>>> +		p4d_paddr  = pgd & entry_mask;
->>>>  		p4d_paddr += p4d_index(vaddr) * sizeof(unsigned long);
->>>>  		if (!readmem(PADDR, p4d_paddr, &p4d_pte, sizeof p4d_pte)) {
->>>>  			ERRMSG("Can't get p4d_pte (p4d_paddr:%lx).\n", p4d_paddr);
->>>> @@ -331,7 +335,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
->>>>  			ERRMSG("Can't get a valid p4d_pte.\n");
->>>>  			return NOT_PADDR;
->>>>  		}
->>>> -		pud_paddr  = p4d_pte & ENTRY_MASK;
->>>> +		pud_paddr  = p4d_pte & entry_mask;
->>>>  	}else {
->>>>  		page_dir += pgd_index(vaddr) * sizeof(unsigned long);
->>>>  		if (!readmem(PADDR, page_dir, &pgd, sizeof pgd)) {
->>>> @@ -345,7 +349,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
->>>>  			ERRMSG("Can't get a valid pgd.\n");
->>>>  			return NOT_PADDR;
->>>>  		}
->>>> -		pud_paddr  = pgd & ENTRY_MASK;
->>>> +		pud_paddr  = pgd & entry_mask;
->>>>  	}
->>>>
->>>>  	/*
->>>> @@ -364,13 +368,13 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
->>>>  		return NOT_PADDR;
->>>>  	}
->>>>  	if (pud_pte & _PAGE_PSE)	/* 1GB pages */
->>>> -		return (pud_pte & ENTRY_MASK & PUD_MASK) +
->>>> +		return (pud_pte & entry_mask & PUD_MASK) +
->>>>  			(vaddr & ~PUD_MASK);
->>>>
->>>>  	/*
->>>>  	 * Get PMD.
->>>>  	 */
->>>> -	pmd_paddr  = pud_pte & ENTRY_MASK;
->>>> +	pmd_paddr  = pud_pte & entry_mask;
->>>>  	pmd_paddr += pmd_index(vaddr) * sizeof(unsigned long);
->>>>  	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof pmd_pte)) {
->>>>  		ERRMSG("Can't get pmd_pte (pmd_paddr:%lx).\n", pmd_paddr);
->>>> @@ -384,13 +388,13 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
->>>>  		return NOT_PADDR;
->>>>  	}
->>>>  	if (pmd_pte & _PAGE_PSE)	/* 2MB pages */
->>>> -		return (pmd_pte & ENTRY_MASK & PMD_MASK) +
->>>> +		return (pmd_pte & entry_mask & PMD_MASK) +
->>>>  			(vaddr & ~PMD_MASK);
->>>>
->>>>  	/*
->>>>  	 * Get PTE.
->>>>  	 */
->>>> -	pte_paddr  = pmd_pte & ENTRY_MASK;
->>>> +	pte_paddr  = pmd_pte & entry_mask;
->>>>  	pte_paddr += pte_index(vaddr) * sizeof(unsigned long);
->>>>  	if (!readmem(PADDR, pte_paddr, &pte, sizeof pte)) {
->>>>  		ERRMSG("Can't get pte (pte_paddr:%lx).\n", pte_paddr);
->>>> @@ -403,7 +407,7 @@ __vtop4_x86_64(unsigned long vaddr, unsigned long pagetable)
->>>>  		ERRMSG("Can't get a valid pte.\n");
->>>>  		return NOT_PADDR;
->>>>  	}
->>>> -	return (pte & ENTRY_MASK) + PAGEOFFSET(vaddr);
->>>> +	return (pte & entry_mask) + PAGEOFFSET(vaddr);
->>>>  }
->>>>
->>>>  unsigned long long
->>>> @@ -636,6 +640,7 @@ find_vmemmap_x86_64()
->>>>  	unsigned long pmd, tpfn;
->>>>  	unsigned long pvaddr = 0;
->>>>  	unsigned long data_addr = 0, last_data_addr = 0, start_data_addr = 0;
->>>> +	unsigned long pmask = PMASK;
->>>>  	/*
->>>>  	 * data_addr is the paddr of the page holding the page structs.
->>>>  	 * We keep lists of contiguous pages and the pfn's that their
->>>> @@ -656,6 +661,9 @@ find_vmemmap_x86_64()
->>>>  		return FAILED;
->>>>  	}
->>>>
->>>> +	if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
->>>> +		pmask &= ~(NUMBER(sme_mask));
->>>> +
->>>>  	pagestructsize = size_table.page;
->>>>  	hugepagesize = PTRS_PER_PMD * info->page_size;
->>>>  	vaddr_base = info->vmemmap_start;
->>>> @@ -686,7 +694,7 @@ find_vmemmap_x86_64()
->>>>  		}
->>>>
->>>>  		/* mask the pgd entry for the address of the pud page */
->>>> -		pud_addr &= PMASK;
->>>> +		pud_addr &= pmask;
->>>>  		if (pud_addr == 0)
->>>>  			  continue;
->>>>  		/* read the entire pud page */
->>>> @@ -699,7 +707,7 @@ find_vmemmap_x86_64()
->>>>  		/* pudp points to an entry in the pud page */
->>>>  		for (pudp = (unsigned long *)pud_page, pudindex = 0;
->>>>  					pudindex < PTRS_PER_PUD; pudindex++, pudp++) {
->>>> -			pmd_addr = *pudp & PMASK;
->>>> +			pmd_addr = *pudp & pmask;
->>>>  			/* read the entire pmd page */
->>>>  			if (pmd_addr == 0)
->>>>  				continue;
->>>> @@ -741,7 +749,7 @@ find_vmemmap_x86_64()
->>>>  				 * - we discontiguous page is a string of valids
->>>>  				 */
->>>>  				if (pmd) {
->>>> -					data_addr = (pmd & PMASK);
->>>> +					data_addr = (pmd & pmask);
->>>>  					if (start_range) {
->>>>  						/* first-time kludge */
->>>>  						start_data_addr = data_addr;
->>>> diff --git a/makedumpfile.c b/makedumpfile.c
->>>> index 8923538..2237eb8 100644
->>>> --- a/makedumpfile.c
->>>> +++ b/makedumpfile.c
->>>> @@ -977,6 +977,8 @@ next_page:
->>>>  	read_size = MIN(info->page_size - PAGEOFFSET(paddr), size);
->>>>
->>>>  	pgaddr = PAGEBASE(paddr);
->>>> +	if (NUMBER(sme_mask) != NOT_FOUND_NUMBER)
->>>> +		pgaddr = pgaddr & ~(NUMBER(sme_mask));
->>>>  	pgbuf = cache_search(pgaddr, read_size);
->>>>  	if (!pgbuf) {
->>>>  		++cache_miss;
->>>> @@ -2276,6 +2278,7 @@ write_vmcoreinfo_data(void)
->>>>  	WRITE_NUMBER("NR_FREE_PAGES", NR_FREE_PAGES);
->>>>  	WRITE_NUMBER("N_ONLINE", N_ONLINE);
->>>>  	WRITE_NUMBER("pgtable_l5_enabled", pgtable_l5_enabled);
->>>> +	WRITE_NUMBER("sme_mask", sme_mask);
->>>>
->>>>  	WRITE_NUMBER("PG_lru", PG_lru);
->>>>  	WRITE_NUMBER("PG_private", PG_private);
->>>> @@ -2672,6 +2675,7 @@ read_vmcoreinfo(void)
->>>>  	READ_NUMBER("NR_FREE_PAGES", NR_FREE_PAGES);
->>>>  	READ_NUMBER("N_ONLINE", N_ONLINE);
->>>>  	READ_NUMBER("pgtable_l5_enabled", pgtable_l5_enabled);
->>>> +	READ_NUMBER("sme_mask", sme_mask);
->>>>
->>>>  	READ_NUMBER("PG_lru", PG_lru);
->>>>  	READ_NUMBER("PG_private", PG_private);
->>>> diff --git a/makedumpfile.h b/makedumpfile.h
->>>> index 73813ed..e97b2e7 100644
->>>> --- a/makedumpfile.h
->>>> +++ b/makedumpfile.h
->>>> @@ -1912,6 +1912,7 @@ struct number_table {
->>>>  	long	NR_FREE_PAGES;
->>>>  	long	N_ONLINE;
->>>>  	long	pgtable_l5_enabled;
->>>> +	long	sme_mask;
->>>>
->>>>  	/*
->>>>   	* Page flags
->>>> --
->>>> 2.17.1
->>>>
->>>
->>>
-> 
-> 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
