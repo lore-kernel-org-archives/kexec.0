@@ -1,20 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-f196.google.com ([209.85.210.196])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h3iKz-00023d-4o
- for kexec@lists.infradead.org; Tue, 12 Mar 2019 14:25:07 +0000
-Received: by mail-pf1-f196.google.com with SMTP id y124so958034pfy.7
- for <kexec@lists.infradead.org>; Tue, 12 Mar 2019 07:25:00 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] Append new variables to vmcoreinfo (PTRS_PER_PGD
- for arm64 and MAX_PHYSMEM_BITS for all archs)
-References: <1552212242-9479-1-git-send-email-bhsharma@redhat.com>
- <20190311090553.GA12130@dhcp-128-65.nay.redhat.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Message-ID: <409a4754-0d01-6eab-2524-94d88bbc609b@redhat.com>
-Date: Tue, 12 Mar 2019 19:54:49 +0530
-MIME-Version: 1.0
-In-Reply-To: <20190311090553.GA12130@dhcp-128-65.nay.redhat.com>
-Content-Language: en-US
+ id 1h3kcq-000114-IG
+ for kexec@lists.infradead.org; Tue, 12 Mar 2019 16:51:38 +0000
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x2CGbC38069108
+ for <kexec@lists.infradead.org>; Tue, 12 Mar 2019 12:51:33 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2r6f3m6akk-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Tue, 12 Mar 2019 12:51:33 -0400
+Received: from localhost
+ by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Tue, 12 Mar 2019 16:51:31 -0000
+Subject: Re: [PATCH v3 5/7] selftests/ima: kexec_file_load syscall test
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Tue, 12 Mar 2019 12:51:14 -0400
+In-Reply-To: <20190312121001.GA18510@dhcp-128-65.nay.redhat.com>
+References: <1552304473-3966-1-git-send-email-zohar@linux.ibm.com>
+ <1552304473-3966-6-git-send-email-zohar@linux.ibm.com>
+ <20190312121001.GA18510@dhcp-128-65.nay.redhat.com>
+Mime-Version: 1.0
+Message-Id: <1552409474.24794.63.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,86 +33,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Paul Mackerras <paulus@samba.org>, James Morse <james.morse@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Boris Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Dave Anderson <anderson@redhat.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, Petr Vorel <pvorel@suse.cz>, linux-kselftest@vger.kernel.org, linux-integrity@vger.kernel.org
 
-Hi Dave,
-
-On 03/11/2019 02:35 PM, Dave Young wrote:
-> Hi Bhupesh,
-> On 03/10/19 at 03:34pm, Bhupesh Sharma wrote:
->> Changes since v1:
->> ----------------
->> - v1 was sent out as a single patch which can be seen here:
->>    http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
->>
->> - v2 breaks the single patch into two independent patches:
->>    [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, whereas
->>    [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel code (all archs)
->>
->> This patchset primarily fixes the regression reported in user-space
->> utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
->> with the availability of 52-bit address space feature in underlying
->> kernel. These regressions have been reported both on CPUs which don't
->> support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernels
->> and also on prototype platforms (like ARMv8 FVP simulator model) which
->> support ARMv8.2 extensions and are running newer kernels.
->>
->> The reason for these regressions is that right now user-space tools
->> have no direct access to these values (since these are not exported
->> from the kernel) and hence need to rely on a best-guess method of
->> determining value of 'PTRS_PER_PGD' and 'MAX_PHYSMEM_BITS' supported
->> by underlying kernel.
->>
->> Exporting these values via vmcoreinfo will help user-land in such cases.
->> In addition, as per suggestion from makedumpfile maintainer (Kazu)
->> during v1 review, it makes more sense to append 'MAX_PHYSMEM_BITS' to
->> vmcoreinfo in the core code itself rather than in arm64 arch-specific
->> code, so that the user-space code for other archs can also benefit from
->> this addition to the vmcoreinfo and use it as a standard way of
->> determining 'SECTIONS_SHIFT' value in user-land.
->>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: James Morse <james.morse@arm.com>
->> Cc: Will Deacon <will.deacon@arm.com>
->> Cc: Boris Petkov <bp@alien8.de>
->> Cc: Ingo Molnar <mingo@kernel.org>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Paul Mackerras <paulus@samba.org>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Dave Anderson <anderson@redhat.com>
->> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
->> Cc: x86@kernel.org
->> Cc: linuxppc-dev@lists.ozlabs.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Cc: kexec@lists.infradead.org
->>
->> Bhupesh Sharma (2):
->>    arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to vmcoreinfo
->>    crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
->>
->>   arch/arm64/kernel/crash_core.c | 1 +
->>   kernel/crash_core.c            | 1 +
->>   2 files changed, 2 insertions(+)
->>
-> 
-> Lianbo's document patch has been merged, would you mind to add vmcoreinfo doc
-> patch as well in your series?
-
-Thanks for the inputs. Will add it to the v3.
-Let's wait for other comments/reviews, before I spin a version 3.
-
-Regards,
-Bhupesh
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCAyMDE5LTAzLTEyIGF0IDIwOjEwICswODAwLCBEYXZlIFlvdW5nIHdyb3RlOgo+IEhp
+IE1pbWksCj4gT24gMDMvMTEvMTkgYXQgMDc6NDFhbSwgTWltaSBab2hhciB3cm90ZToKPiA+IFRo
+ZSBrZXJuZWwgY2FuIGJlIGNvbmZpZ3VyZWQgdG8gdmVyaWZ5IFBFIHNpZ25lZCBrZXJuZWwgaW1h
+Z2VzLCBJTUEKPiA+IGtlcm5lbCBpbWFnZSBzaWduYXR1cmVzLCBib3RoIHR5cGVzIG9mIHNpZ25h
+dHVyZXMsIG9yIG5vbmUuICBUaGlzIHRlc3QKPiA+IHZlcmlmaWVzIG9ubHkgcHJvcGVybHkgc2ln
+bmVkIGtlcm5lbCBpbWFnZXMgYXJlIGxvYWRlZCBpbnRvIG1lbW9yeSwKPiA+IGJhc2VkIG9uIHRo
+ZSBrZXJuZWwgY29uZmlndXJhdGlvbiBhbmQgcnVudGltZSBwb2xpY2llcy4KPiAKPiBJIHVuZGVy
+c3RhbmQgdGhpcyBpcyBmb3IgSU1BIHRlc3Rpbmcgb25seSwgYnV0IEkgc3RpbGwgd29uZGVyIGlm
+IHRoaXMKPiBjYW4gYmUgZXhwYW5kZWQgdG8gY29tbW9uIGtleGVjIHRlc3RzLCBsaWtlCj4gdG9v
+bHMvdGVzdGluZy9zZWxmdGVzdHMva2V4ZWMva2V4ZWNfbG9hZC5zaAo+IHRvb2xzL3Rlc3Rpbmcv
+c2VsZnRlc3RzL2tleGVjL2tleGVjX2ZpbGVfbG9hZC5zaAo+IAo+IElzIGl0IHBvc3NpYmxlIGZv
+ciBpbWEvdGVzdF9rZXhlY19sb2FkLnNoIHRvIGNhbGwgdGhlCj4gLi4va2V4ZWMva2V4ZWNfbG9h
+ZC5zaCwgcHJvYmFibHkgYWRkIGV4dHJhIGFyZ3VtZW50IGVnICJpbWEiPwoKVGhlc2Uga2V4ZWMg
+dGVzdHMgYXJlIG1lYW50IHRvIGNvb3JkaW5hdGUgYmV0d2VlbiB0aGUgZGlmZmVyZW50Cm1ldGhv
+ZHMgb2YgdmVyaWZ5aW5nIHRoZSBrZXhlYyBrZXJuZWwgaW1hZ2Ugc2lnbmF0dXJlcy4gwqBOb3Ro
+aW5nIGFib3V0CnRoZW0gaXMgSU1BIHNwZWNpZmljLiDCoE1vdmluZyB0aGVzZSB0ZXN0cyB0bwp0
+b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9rZXhlYyBtYWtlcyBzZW5zZS4KCj4gCj4gRnJhbmtseSBJ
+IGRpZCBub3QgcmVhZCBhbmQgZm9sbG93dXAgbXVjaCBhYm91dCB0aGUgdGVzdGluZyBjb2RlIGNo
+YW5nZXMsCj4gbm90IHN1cmUgaWYgaXQgaXMgZG9hYmxlIG9yIG5vdC4gIFRoZSBjb2RlIHNoYXJp
+bmcgdW5kZXIgdGVzdGluZyBmb2xkZXIKPiBzZWVtcyBub3QgdmVyeSBnb29kLiAgRm9yIGV4YW1w
+bGUgdGhlIGJhc2ljIGNoZWNrX3Jvb3QgaXMgbmVlZGVkIGJ5Cj4gZGlmZmVyZW50IHBhcnRzLCBi
+dXQgYWxsIGhhdmUgaXRzIG93biBpbXBsZW1lbnRhdGlvbi4gIEFueXdheSB0aGlzIGlzCj4gbm90
+IHRoZSBkdXR5IG9mIHRoaXMgcGF0Y2ggc2V0Lgo+IEFsc28gdGhlIHNlbGZ0ZXN0cy9saWIvIGlz
+IG5vdCBhIGZvbGRlciBmb3Igc2hhcmluZyBjb2RlIGZvciBkaWZmZXJlbnQKPiB0ZXN0cywgaXQg
+bG9va3MgYSBzdGFuZGFsb25lIHRlc3QgaW5zdGVhZC4KClNodWFoIHN1Z2dlc3RlZCB1cHN0cmVh
+bWluZyB0aGVzZSB0ZXN0cyBmaXJzdCBhbmQgZGVmZXIgaW50cm9kdWNpbmcgYQpjb21tb24gc2V0
+IG9mIGZ1bmN0aW9ucyB0byBsYXRlci4KCj4gU28gaWYgc3BsaXQga2V4ZWMgdGVzdHMgdG8gYW5v
+dGhlciBmb2xkZXIgaXMgbm90IGRvYWJsZSBwbGVhc2UganVzdAo+IGlnbm9yZSB0aGUgY29tbWVu
+dC4KCkxlZnQgaW4gdGhlIHNlbGZ0ZXN0cy9pbWEgaXMgYSBzaW1pbGFyIHRlc3QgZm9yIGtlcm5l
+bCBtb2R1bGVzLCB3aGljaAp1c2VzIHRoZSAiY29tbW9uIiBmdW5jdGlvbnMuIMKgU28gZWl0aGVy
+IHdlIHdhaXQgdG8gbW92ZSB0aGUga2V4ZWMKdGVzdHMgb3IgYWxsb3cgdGhlbSB0byByZWFjaCBp
+bnRvIHRoZSBpbWEgZGlyZWN0b3J5IGFuZCB1c2UgdGhlCmltYV9jb21tb25fbGliIGZ1bmN0aW9u
+cy4KCj4gCj4gQlRXLCBkb2VzIENPTkZJR19LRVhFQyogaXMgY2hlY2tlZD8gIGluIGNhc2UgYSBr
+ZXJuZWwgd2l0aG91dCBLRVhFQyBvcgo+IEtFWEVDX0ZJTEUgY29tcGlsZWQgaW4gdGhlbiB0aGUg
+dGVzdHMgY2FuIGp1c3QgcmV0dXJuIGRpcmVjdGx5LgoKR29vZCBwb2ludC4gwqBOb3cgdGhhdCB0
+aGVyZSBpcyBhIGNvbW1vbiBmdW5jdGlvbiBmb3IgcmVhZGluZyB0aGUKS2NvbmZpZywgSSdsbCBh
+ZGQgdGhhdCBjaGVjayB0byBib3RoIHRoZSB0ZXN0X2tleGVjX2xvYWQuc2ggYW5kCnRlc3Rfa2V4
+ZWNfZmlsZV9sb2FkLnNoIHRlc3RzIHJlc3BlY3RpdmVseS4KCk1pbWkKCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
+ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2tleGVjCg==
