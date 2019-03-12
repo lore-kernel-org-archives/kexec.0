@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h3l2C-0004aJ-1W
- for kexec@lists.infradead.org; Tue, 12 Mar 2019 17:17:49 +0000
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 58/96] x86/kexec: Dont setup EFI info if EFI runtime is
- not enabled
-Date: Tue, 12 Mar 2019 10:10:16 -0700
-Message-Id: <20190312171038.895781665@linuxfoundation.org>
-In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
-References: <20190312171034.530434962@linuxfoundation.org>
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH v2 2/2] crash_core, vmcoreinfo: Append
+ 'MAX_PHYSMEM_BITS' to vmcoreinfo
+Date: Tue, 12 Mar 2019 19:47:37 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03569E6D@BPXM09GP.gisp.nec.co.jp>
+References: <1552212242-9479-1-git-send-email-bhsharma@redhat.com>
+ <1552212242-9479-3-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1552212242-9479-3-git-send-email-bhsharma@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,78 +21,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: rafael.j.wysocki@intel.com, David Howells <dhowells@redhat.com>, Yannik Sembritzki <yannik@sembritzki.me>, "H. Peter Anvin" <hpa@zytor.com>, Sasha Levin <sashal@kernel.org>, Philipp Rudo <prudo@linux.vnet.ibm.com>, bhe@redhat.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, x86-ml <x86@kernel.org>, robert.moore@intel.com, linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>, erik.schmauss@intel.com, lenb@kernel.org, fanc.fnst@cn.fujitsu.com, Thomas Gleixner <tglx@linutronix.de>, Kairui Song <kasong@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Michael Ellerman <mpe@ellerman.id.au>, "x86@kernel.org" <x86@kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, James Morse <james.morse@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Boris Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Dave Anderson <anderson@redhat.com>, Ingo Molnar <mingo@kernel.org>, Paul Mackerras <paulus@samba.org>
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+Hi Bhupesh,
 
-------------------
+-----Original Message-----
+> Right now user-space tools like 'makedumpfile' and 'crash' need to rely
+> on a best-guess method of determining value of 'MAX_PHYSMEM_BITS'
+> supported by underlying kernel.
+> 
+> This value is used in user-space code to calculate the bit-space
+> required to store a section for SPARESMEM (similar to the existing
+> calculation method used in the kernel implementation):
+> 
+>   #define SECTIONS_SHIFT    (MAX_PHYSMEM_BITS - SECTION_SIZE_BITS)
+> 
+> Now, regressions have been reported in user-space utilities
+> like 'makedumpfile' and 'crash' on arm64, with the recently added
+> kernel support for 52-bit physical address space, as there is
+> no clear method of determining this value in user-space
+> (other than reading kernel CONFIG flags).
+> 
+> As per suggestion from makedumpfile maintainer (Kazu), it makes more
+> sense to append 'MAX_PHYSMEM_BITS' to vmcoreinfo in the core code itself
+> rather than in arch-specific code, so that the user-space code for other
+> archs can also benefit from this addition to the vmcoreinfo and use it
+> as a standard way of determining 'SECTIONS_SHIFT' value in user-land.
+> 
+> A reference 'makedumpfile' implementation which reads the
+> 'MAX_PHYSMEM_BITS' value from vmcoreinfo in a arch-independent fashion
+> is available here:
+> 
+> [0]. https://github.com/bhupesh-sharma/makedumpfile/blob/remove-max-phys-mem-bit-v1/arch/ppc64.c#L471
+> 
+> Cc: Boris Petkov <bp@alien8.de>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Dave Anderson <anderson@redhat.com>
+> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> Cc: x86@kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kexec@lists.infradead.org
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> ---
+>  kernel/crash_core.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 093c9f917ed0..44b90368e183 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -467,6 +467,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+>  #define PAGE_OFFLINE_MAPCOUNT_VALUE	(~PG_offline)
+>  	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
+>  #endif
+> +	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
 
-[ Upstream commit 2aa958c99c7fd3162b089a1a56a34a0cdb778de1 ]
+Some architectures define MAX_PHYSMEM_BITS only with CONFIG_SPARSEMEM,
+so we need to move this to the #ifdef section that exports some
+mem_section things.
 
-Kexec-ing a kernel with "efi=noruntime" on the first kernel's command
-line causes the following null pointer dereference:
+Thanks!
+Kazu
 
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-  #PF error: [normal kernel read fault]
-  Call Trace:
-   efi_runtime_map_copy+0x28/0x30
-   bzImage64_load+0x688/0x872
-   arch_kexec_kernel_image_load+0x6d/0x70
-   kimage_file_alloc_init+0x13e/0x220
-   __x64_sys_kexec_file_load+0x144/0x290
-   do_syscall_64+0x55/0x1a0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Just skip the EFI info setup if EFI runtime services are not enabled.
-
- [ bp: Massage commit message. ]
-
-Suggested-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Kairui Song <kasong@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Dave Young <dyoung@redhat.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: bhe@redhat.com
-Cc: David Howells <dhowells@redhat.com>
-Cc: erik.schmauss@intel.com
-Cc: fanc.fnst@cn.fujitsu.com
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: kexec@lists.infradead.org
-Cc: lenb@kernel.org
-Cc: linux-acpi@vger.kernel.org
-Cc: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Cc: rafael.j.wysocki@intel.com
-Cc: robert.moore@intel.com
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: Yannik Sembritzki <yannik@sembritzki.me>
-Link: https://lkml.kernel.org/r/20190118111310.29589-2-kasong@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/kexec-bzimage64.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 490f9be3fda2..167ecc270ca5 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -167,6 +167,9 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
- 	struct efi_info *current_ei = &boot_params.efi_info;
- 	struct efi_info *ei = &params->efi_info;
- 
-+	if (!efi_enabled(EFI_RUNTIME_SERVICES))
-+		return 0;
-+
- 	if (!current_ei->efi_memmap_size)
- 		return 0;
- 
--- 
-2.19.1
-
+> 
+>  	arch_crash_save_vmcoreinfo();
+>  	update_vmcoreinfo_note();
+> --
+> 2.7.4
+> 
 
 
 
