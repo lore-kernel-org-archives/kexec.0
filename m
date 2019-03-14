@@ -1,28 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h4VIr-0008Dv-BL
- for kexec@lists.infradead.org; Thu, 14 Mar 2019 18:42:06 +0000
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+ id 1h4VIr-0008FG-MA
+ for kexec@lists.infradead.org; Thu, 14 Mar 2019 18:42:07 +0000
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x2EIfQ4d110711
- for <kexec@lists.infradead.org>; Thu, 14 Mar 2019 14:42:03 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2r7stgyu1p-1
+ x2EIer5o054006
+ for <kexec@lists.infradead.org>; Thu, 14 Mar 2019 14:42:05 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2r7up4ja36-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 14 Mar 2019 14:42:03 -0400
+ for <kexec@lists.infradead.org>; Thu, 14 Mar 2019 14:42:04 -0400
 Received: from localhost
- by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Thu, 14 Mar 2019 18:42:00 -0000
+ Thu, 14 Mar 2019 18:42:02 -0000
 From: Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH v4 2/8] selftests/kexec: cleanup the kexec selftest
-Date: Thu, 14 Mar 2019 14:41:10 -0400
+Subject: [PATCH v4 3/8] selftests/kexec: define a set of common functions
+Date: Thu, 14 Mar 2019 14:41:11 -0400
 In-Reply-To: <1552588876-28481-1-git-send-email-zohar@linux.ibm.com>
 References: <1552588876-28481-1-git-send-email-zohar@linux.ibm.com>
-Message-Id: <1552588876-28481-3-git-send-email-zohar@linux.ibm.com>
+Message-Id: <1552588876-28481-4-git-send-email-zohar@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,62 +38,113 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-integrity@vger.kernel.org
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, Petr Vorel <pvorel@suse.cz>, Mimi Zohar <zohar@linux.ibm.com>, linux-kselftest@vger.kernel.org, Dave Young <dyoung@redhat.com>
 
-Remove the few bashisms and use the complete option name for clarity.
+Define, update and move get_secureboot_mode() to a common file for use
+by other tests.
+
+Updated to check both the efivar SecureBoot-$(UUID) and
+SetupMode-$(UUID), based on Dave Young's review.
 
 Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Reviewed-by: Petr Vorel <pvorel@suse.cz>
+Cc: Dave Young <dyoung@redhat.com>
 ---
- tools/testing/selftests/kexec/test_kexec_load.sh | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ tools/testing/selftests/kexec/Makefile            |  1 +
+ tools/testing/selftests/kexec/kexec_common_lib.sh | 38 +++++++++++++++++++++++
+ tools/testing/selftests/kexec/test_kexec_load.sh  | 17 ++--------
+ 3 files changed, 42 insertions(+), 14 deletions(-)
+ create mode 100755 tools/testing/selftests/kexec/kexec_common_lib.sh
 
+diff --git a/tools/testing/selftests/kexec/Makefile b/tools/testing/selftests/kexec/Makefile
+index 0b3adf5444b6..1a795861040b 100644
+--- a/tools/testing/selftests/kexec/Makefile
++++ b/tools/testing/selftests/kexec/Makefile
+@@ -5,6 +5,7 @@ ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
+ 
+ ifeq ($(ARCH),x86)
+ TEST_PROGS := test_kexec_load.sh
++TEST_FILES := kexec_common_lib.sh
+ 
+ include ../lib.mk
+ 
+diff --git a/tools/testing/selftests/kexec/kexec_common_lib.sh b/tools/testing/selftests/kexec/kexec_common_lib.sh
+new file mode 100755
+index 000000000000..05376be6a6f7
+--- /dev/null
++++ b/tools/testing/selftests/kexec/kexec_common_lib.sh
+@@ -0,0 +1,38 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++
++# Check efivar SecureBoot-$(the UUID) and SetupMode-$(the UUID).
++# The secure boot mode can be accessed either as the last integer
++# of "od -An -t u1 /sys/firmware/efi/efivars/SecureBoot-*" or from
++# "od -An -t u1 /sys/firmware/efi/vars/SecureBoot-*/data".  The efi
++# SetupMode can be similarly accessed.
++# Return 1 for SecureBoot mode enabled and SetupMode mode disabled.
++get_secureboot_mode()
++{
++	local efivarfs="/sys/firmware/efi/efivars"
++	local secure_boot_file="$efivarfs/../vars/SecureBoot-*/data"
++	local setup_mode_file="$efivarfs/../vars/SetupMode-*/data"
++	local secureboot_mode=0
++	local setup_mode=0
++
++	# Make sure that efivars is mounted in the normal location
++	if ! grep -q "^\S\+ $efivarfs efivarfs" /proc/mounts; then
++		log_skip "efivars is not mounted on $efivarfs"
++	fi
++
++	# Due to globbing, quoting "secure_boot_file" and "setup_mode_file"
++	# is not possible.  (Todo: initialize variables using find or ls.)
++	if [ ! -e $secure_boot_file ] || [ ! -e $setup_mode_file ]; then
++		log_skip "unknown secureboot/setup mode"
++	fi
++
++	secureboot_mode=`od -An -t u1 $secure_boot_file`
++	setup_mode=`od -An -t u1 $setup_mode_file`
++
++	if [ $secureboot_mode -eq 1 ] && [ $setup_mode -eq 0 ]; then
++		log_info "secure boot mode enabled"
++		return 1;
++	fi
++	log_info "secure boot mode not enabled"
++	return 0;
++}
 diff --git a/tools/testing/selftests/kexec/test_kexec_load.sh b/tools/testing/selftests/kexec/test_kexec_load.sh
-index 1c10093fb526..82a01a4d5c8d 100755
+index 82a01a4d5c8d..86625c3f1e5d 100755
 --- a/tools/testing/selftests/kexec/test_kexec_load.sh
 +++ b/tools/testing/selftests/kexec/test_kexec_load.sh
-@@ -1,7 +1,7 @@
- #!/bin/sh
--# SPDX-License-Identifier: GPL-2.0+
-+# SPDX-License-Identifier: GPL-2.0
- # Loading a kernel image via the kexec_load syscall should fail
--# when the kerne is CONFIG_KEXEC_VERIFY_SIG enabled and the system
-+# when the kernel is CONFIG_KEXEC_VERIFY_SIG enabled and the system
+@@ -5,7 +5,7 @@
  # is booted in secureboot mode.
  
  TEST="$0"
-@@ -12,8 +12,8 @@ rc=0
- ksft_skip=4
+-EFIVARFS="/sys/firmware/efi/efivars"
++. ./kexec_common_lib.sh
+ rc=0
  
- # kexec requires root privileges
--if [ $UID != 0 ]; then
--	echo "$TEST: must be run as root" >&2
-+if [ $(id -ru) -ne 0 ]; then
-+	echo "$TEST: requires root privileges" >&2
+ # Kselftest framework requirement - SKIP code is 4.
+@@ -17,19 +17,8 @@ if [ $(id -ru) -ne 0 ]; then
  	exit $ksft_skip
  fi
  
-@@ -33,17 +33,17 @@ secureboot=`hexdump $file | awk '{print substr($4,length($4),1)}'`
+-# Make sure that efivars is mounted in the normal location
+-if ! grep -q "^\S\+ $EFIVARFS efivarfs" /proc/mounts; then
+-	echo "$TEST: efivars is not mounted on $EFIVARFS" >&2
+-	exit $ksft_skip
+-fi
+-
+-# Get secureboot mode
+-file="$EFIVARFS/SecureBoot-*"
+-if [ ! -e $file ]; then
+-	echo "$TEST: unknown secureboot mode" >&2
+-	exit $ksft_skip
+-fi
+-secureboot=`hexdump $file | awk '{print substr($4,length($4),1)}'`
++get_secureboot_mode
++secureboot=$?
  
  # kexec_load should fail in secure boot mode
  KERNEL_IMAGE="/boot/vmlinuz-`uname -r`"
--kexec -l $KERNEL_IMAGE &>> /dev/null
--if [ $? == 0 ]; then
--	kexec -u
--	if [ "$secureboot" == "1" ]; then
-+kexec --load $KERNEL_IMAGE > /dev/null 2>&1
-+if [ $? -eq 0 ]; then
-+	kexec --unload
-+	if [ $secureboot -eq 1 ]; then
- 		echo "$TEST: kexec_load succeeded [FAIL]"
- 		rc=1
- 	else
- 		echo "$TEST: kexec_load succeeded [PASS]"
- 	fi
- else
--	if [ "$secureboot" == "1" ]; then
-+	if [ $secureboot -eq 1 ]; then
- 		echo "$TEST: kexec_load failed [PASS]"
- 	else
- 		echo "$TEST: kexec_load failed [FAIL]"
 -- 
 2.7.5
 
