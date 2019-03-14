@@ -1,27 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h4VJ2-0008Rl-16
- for kexec@lists.infradead.org; Thu, 14 Mar 2019 18:42:16 +0000
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+ id 1h4VJ3-0008U1-UF
+ for kexec@lists.infradead.org; Thu, 14 Mar 2019 18:42:20 +0000
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x2EIf2ig099508
- for <kexec@lists.infradead.org>; Thu, 14 Mar 2019 14:42:15 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2r7up62cht-1
+ x2EIfCgn073750
+ for <kexec@lists.infradead.org>; Thu, 14 Mar 2019 14:42:17 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2r7set952u-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 14 Mar 2019 14:42:15 -0400
+ for <kexec@lists.infradead.org>; Thu, 14 Mar 2019 14:42:16 -0400
 Received: from localhost
- by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Thu, 14 Mar 2019 18:42:13 -0000
+ Thu, 14 Mar 2019 18:42:15 -0000
 From: Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH v4 7/8] selftests/kexec: Add missing '=y' to config options
-Date: Thu, 14 Mar 2019 14:41:15 -0400
+Subject: [PATCH v4 8/8] selftests/kexec: check kexec_load and kexec_file_load
+ are enabled
+Date: Thu, 14 Mar 2019 14:41:16 -0400
 In-Reply-To: <1552588876-28481-1-git-send-email-zohar@linux.ibm.com>
 References: <1552588876-28481-1-git-send-email-zohar@linux.ibm.com>
-Message-Id: <1552588876-28481-8-git-send-email-zohar@linux.ibm.com>
+Message-Id: <1552588876-28481-9-git-send-email-zohar@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,29 +40,52 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-integrity@vger.kernel.org
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, Petr Vorel <pvorel@suse.cz>, Mimi Zohar <zohar@linux.ibm.com>, linux-kselftest@vger.kernel.org, Dave Young <dyoung@redhat.com>
 
-From: Petr Vorel <pvorel@suse.cz>
+Skip the kexec_load and kexec_file_load tests, if they aren't configured
+in the kernel.  This change adds a new requirement that ikconfig is
+configured in the kexec_load test.
 
-so the file can be used as kernel config snippet.
-
-Signed-off-by: Petr Vorel <pvorel@suse.cz>
-[zohar@linux.ibm.com: remove CONFIG_KEXEC_VERIFY_SIG from config]
+Suggested-by: Dave Young <dyoung@redhat.com>
 Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 ---
- tools/testing/selftests/kexec/config | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ tools/testing/selftests/kexec/test_kexec_file_load.sh | 5 +++++
+ tools/testing/selftests/kexec/test_kexec_load.sh      | 8 ++++++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/tools/testing/selftests/kexec/config b/tools/testing/selftests/kexec/config
-index 6bc86d4d9bb4..8962e862b2b8 100644
---- a/tools/testing/selftests/kexec/config
-+++ b/tools/testing/selftests/kexec/config
-@@ -1,4 +1,3 @@
--CONFIG_IMA_APPRAISE
--CONFIG_IMA_ARCH_POLICY
--CONFIG_SECURITYFS
--CONFIG_KEXEC_VERIFY_SIG
-+CONFIG_IMA_APPRAISE=y
-+CONFIG_IMA_ARCH_POLICY=y
-+CONFIG_SECURITYFS=y
+diff --git a/tools/testing/selftests/kexec/test_kexec_file_load.sh b/tools/testing/selftests/kexec/test_kexec_file_load.sh
+index 6cf6a99f6a64..1d2e5e799523 100755
+--- a/tools/testing/selftests/kexec/test_kexec_file_load.sh
++++ b/tools/testing/selftests/kexec/test_kexec_file_load.sh
+@@ -151,6 +151,11 @@ require_root_privileges
+ # get the kernel config
+ get_kconfig
+ 
++kconfig_enabled "CONFIG_KEXEC_FILE=y" "kexec_file_load is enabled"
++if [ $? -eq 0 ]; then
++	log_skip "kexec_file_load is not enabled"
++fi
++
+ # Determine which kernel config options are enabled
+ kconfig_enabled "CONFIG_IMA_ARCH_POLICY=y" \
+ 	"architecture specific policy enabled"
+diff --git a/tools/testing/selftests/kexec/test_kexec_load.sh b/tools/testing/selftests/kexec/test_kexec_load.sh
+index afd440ee23cb..2a66c8897f55 100755
+--- a/tools/testing/selftests/kexec/test_kexec_load.sh
++++ b/tools/testing/selftests/kexec/test_kexec_load.sh
+@@ -10,6 +10,14 @@ TEST="$0"
+ # kexec requires root privileges
+ require_root_privileges
+ 
++# get the kernel config
++get_kconfig
++
++kconfig_enabled "CONFIG_KEXEC=y" "kexec_load is enabled"
++if [ $? -eq 0 ]; then
++	log_skip "kexec_load is not enabled"
++fi
++
+ get_secureboot_mode
+ secureboot=$?
+ 
 -- 
 2.7.5
 
