@@ -1,27 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h4VIr-0008FG-MA
- for kexec@lists.infradead.org; Thu, 14 Mar 2019 18:42:07 +0000
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x2EIer5o054006
- for <kexec@lists.infradead.org>; Thu, 14 Mar 2019 14:42:05 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2r7up4ja36-1
+ id 1h4VIu-0008HS-0q
+ for kexec@lists.infradead.org; Thu, 14 Mar 2019 18:42:09 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x2EIdwP4091985
+ for <kexec@lists.infradead.org>; Thu, 14 Mar 2019 14:42:07 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2r7v9h0gjh-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 14 Mar 2019 14:42:04 -0400
+ for <kexec@lists.infradead.org>; Thu, 14 Mar 2019 14:42:07 -0400
 Received: from localhost
- by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Thu, 14 Mar 2019 18:42:02 -0000
+ Thu, 14 Mar 2019 18:42:05 -0000
 From: Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH v4 3/8] selftests/kexec: define a set of common functions
-Date: Thu, 14 Mar 2019 14:41:11 -0400
+Subject: [PATCH v4 4/8] selftests/kexec: define common logging functions
+Date: Thu, 14 Mar 2019 14:41:12 -0400
 In-Reply-To: <1552588876-28481-1-git-send-email-zohar@linux.ibm.com>
 References: <1552588876-28481-1-git-send-email-zohar@linux.ibm.com>
-Message-Id: <1552588876-28481-4-git-send-email-zohar@linux.ibm.com>
+Message-Id: <1552588876-28481-5-git-send-email-zohar@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,113 +39,101 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-integrity@vger.kernel.org
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, Petr Vorel <pvorel@suse.cz>, Mimi Zohar <zohar@linux.ibm.com>, linux-kselftest@vger.kernel.org, Dave Young <dyoung@redhat.com>
 
-Define, update and move get_secureboot_mode() to a common file for use
-by other tests.
+Define log_info, log_pass, log_fail, and log_skip functions.
 
-Updated to check both the efivar SecureBoot-$(UUID) and
-SetupMode-$(UUID), based on Dave Young's review.
-
+Suggested-by: Petr Vorel <pvorel@suse.cz>
 Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Reviewed-by: Petr Vorel <pvorel@suse.cz>
-Cc: Dave Young <dyoung@redhat.com>
 ---
- tools/testing/selftests/kexec/Makefile            |  1 +
- tools/testing/selftests/kexec/kexec_common_lib.sh | 38 +++++++++++++++++++++++
- tools/testing/selftests/kexec/test_kexec_load.sh  | 17 ++--------
- 3 files changed, 42 insertions(+), 14 deletions(-)
- create mode 100755 tools/testing/selftests/kexec/kexec_common_lib.sh
+ tools/testing/selftests/kexec/kexec_common_lib.sh | 31 +++++++++++++++++++++++
+ tools/testing/selftests/kexec/test_kexec_load.sh  | 19 ++++----------
+ 2 files changed, 36 insertions(+), 14 deletions(-)
 
-diff --git a/tools/testing/selftests/kexec/Makefile b/tools/testing/selftests/kexec/Makefile
-index 0b3adf5444b6..1a795861040b 100644
---- a/tools/testing/selftests/kexec/Makefile
-+++ b/tools/testing/selftests/kexec/Makefile
-@@ -5,6 +5,7 @@ ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
- 
- ifeq ($(ARCH),x86)
- TEST_PROGS := test_kexec_load.sh
-+TEST_FILES := kexec_common_lib.sh
- 
- include ../lib.mk
- 
 diff --git a/tools/testing/selftests/kexec/kexec_common_lib.sh b/tools/testing/selftests/kexec/kexec_common_lib.sh
-new file mode 100755
-index 000000000000..05376be6a6f7
---- /dev/null
+index 05376be6a6f7..d108ac538f14 100755
+--- a/tools/testing/selftests/kexec/kexec_common_lib.sh
 +++ b/tools/testing/selftests/kexec/kexec_common_lib.sh
-@@ -0,0 +1,38 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
+@@ -1,5 +1,36 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
++#
++# Kselftest framework defines: ksft_pass=0, ksft_fail=1, ksft_skip=4
 +
-+# Check efivar SecureBoot-$(the UUID) and SetupMode-$(the UUID).
-+# The secure boot mode can be accessed either as the last integer
-+# of "od -An -t u1 /sys/firmware/efi/efivars/SecureBoot-*" or from
-+# "od -An -t u1 /sys/firmware/efi/vars/SecureBoot-*/data".  The efi
-+# SetupMode can be similarly accessed.
-+# Return 1 for SecureBoot mode enabled and SetupMode mode disabled.
-+get_secureboot_mode()
++VERBOSE="${VERBOSE:-1}"
++
++log_info()
 +{
-+	local efivarfs="/sys/firmware/efi/efivars"
-+	local secure_boot_file="$efivarfs/../vars/SecureBoot-*/data"
-+	local setup_mode_file="$efivarfs/../vars/SetupMode-*/data"
-+	local secureboot_mode=0
-+	local setup_mode=0
-+
-+	# Make sure that efivars is mounted in the normal location
-+	if ! grep -q "^\S\+ $efivarfs efivarfs" /proc/mounts; then
-+		log_skip "efivars is not mounted on $efivarfs"
-+	fi
-+
-+	# Due to globbing, quoting "secure_boot_file" and "setup_mode_file"
-+	# is not possible.  (Todo: initialize variables using find or ls.)
-+	if [ ! -e $secure_boot_file ] || [ ! -e $setup_mode_file ]; then
-+		log_skip "unknown secureboot/setup mode"
-+	fi
-+
-+	secureboot_mode=`od -An -t u1 $secure_boot_file`
-+	setup_mode=`od -An -t u1 $setup_mode_file`
-+
-+	if [ $secureboot_mode -eq 1 ] && [ $setup_mode -eq 0 ]; then
-+		log_info "secure boot mode enabled"
-+		return 1;
-+	fi
-+	log_info "secure boot mode not enabled"
-+	return 0;
++	[ $VERBOSE -ne 0 ] && echo "[INFO] $1"
 +}
++
++# The ksefltest framework requirement returns 0 for PASS.
++log_pass()
++{
++
++	[ $VERBOSE -ne 0 ] && echo "$1 [PASS]"
++	exit 0
++}
++
++# The ksefltest framework requirement returns 1 for FAIL.
++log_fail()
++{
++	[ $VERBOSE -ne 0 ] && echo "$1 [FAIL]"
++	exit 1
++}
++
++# The ksefltest framework requirement returns 4 for SKIP.
++log_skip()
++{
++	[ $VERBOSE -ne 0 ] && echo "$1"
++	exit 4
++}
+ 
+ # Check efivar SecureBoot-$(the UUID) and SetupMode-$(the UUID).
+ # The secure boot mode can be accessed either as the last integer
 diff --git a/tools/testing/selftests/kexec/test_kexec_load.sh b/tools/testing/selftests/kexec/test_kexec_load.sh
-index 82a01a4d5c8d..86625c3f1e5d 100755
+index 86625c3f1e5d..cbf598a380d2 100755
 --- a/tools/testing/selftests/kexec/test_kexec_load.sh
 +++ b/tools/testing/selftests/kexec/test_kexec_load.sh
-@@ -5,7 +5,7 @@
- # is booted in secureboot mode.
+@@ -6,15 +6,10 @@
  
  TEST="$0"
--EFIVARFS="/sys/firmware/efi/efivars"
-+. ./kexec_common_lib.sh
- rc=0
+ . ./kexec_common_lib.sh
+-rc=0
+-
+-# Kselftest framework requirement - SKIP code is 4.
+-ksft_skip=4
  
- # Kselftest framework requirement - SKIP code is 4.
-@@ -17,19 +17,8 @@ if [ $(id -ru) -ne 0 ]; then
- 	exit $ksft_skip
+ # kexec requires root privileges
+ if [ $(id -ru) -ne 0 ]; then
+-	echo "$TEST: requires root privileges" >&2
+-	exit $ksft_skip
++	log_skip "requires root privileges"
  fi
  
--# Make sure that efivars is mounted in the normal location
--if ! grep -q "^\S\+ $EFIVARFS efivarfs" /proc/mounts; then
--	echo "$TEST: efivars is not mounted on $EFIVARFS" >&2
--	exit $ksft_skip
--fi
+ get_secureboot_mode
+@@ -26,18 +21,14 @@ kexec --load $KERNEL_IMAGE > /dev/null 2>&1
+ if [ $? -eq 0 ]; then
+ 	kexec --unload
+ 	if [ $secureboot -eq 1 ]; then
+-		echo "$TEST: kexec_load succeeded [FAIL]"
+-		rc=1
++		log_fail "kexec_load succeeded"
+ 	else
+-		echo "$TEST: kexec_load succeeded [PASS]"
++		log_pass "kexec_load succeeded"
+ 	fi
+ else
+ 	if [ $secureboot -eq 1 ]; then
+-		echo "$TEST: kexec_load failed [PASS]"
++		log_pass "kexec_load failed"
+ 	else
+-		echo "$TEST: kexec_load failed [FAIL]"
+-		rc=1
++		log_fail "kexec_load failed"
+ 	fi
+ fi
 -
--# Get secureboot mode
--file="$EFIVARFS/SecureBoot-*"
--if [ ! -e $file ]; then
--	echo "$TEST: unknown secureboot mode" >&2
--	exit $ksft_skip
--fi
--secureboot=`hexdump $file | awk '{print substr($4,length($4),1)}'`
-+get_secureboot_mode
-+secureboot=$?
- 
- # kexec_load should fail in secure boot mode
- KERNEL_IMAGE="/boot/vmlinuz-`uname -r`"
+-exit $rc
 -- 
 2.7.5
 
