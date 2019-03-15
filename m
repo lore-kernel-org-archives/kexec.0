@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h4k8g-0005YF-5Q
- for kexec@lists.infradead.org; Fri, 15 Mar 2019 10:32:35 +0000
+ id 1h4k8s-0005bU-4w
+ for kexec@lists.infradead.org; Fri, 15 Mar 2019 10:32:47 +0000
 From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 1/3] kexec: Do not map the kexec area as decrypted when SEV is
- active
-Date: Fri, 15 Mar 2019 18:32:01 +0800
-Message-Id: <20190315103203.13128-2-lijiang@redhat.com>
+Subject: [PATCH 2/3] kexec: Set the C-bit in the identity map page table when
+ SEV is active
+Date: Fri, 15 Mar 2019 18:32:02 +0800
+Message-Id: <20190315103203.13128-3-lijiang@redhat.com>
 In-Reply-To: <20190315103203.13128-1-lijiang@redhat.com>
 References: <20190315103203.13128-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,49 +26,54 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-Currently, the arch_kexec_post_{alloc,free}_pages unconditionally
-maps the kexec area as decrypted. This works fine when SME is active.
-Because in SME, the first kernel is loaded in decrypted area by the
-BIOS, so the second kernel must be also loaded into the decrypted
-memory.
-
-When SEV is active, the first kernel is loaded into the encrypted
-area, so the second kernel must be also loaded into the encrypted
-memory. Lets make sure that arch_kexec_post_{alloc,free}_pages does
-not clear the memory encryption mask from the kexec area when SEV
-is active.
+When SEV is active, the second kernel image is loaded into the
+encrypted memory. Lets make sure that when kexec builds the
+identity mapping page table it adds the memory encryption mask(C-bit).
 
 Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
 Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
 ---
- arch/x86/kernel/machine_kexec_64.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/kernel/machine_kexec_64.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index ceba408ea982..bcebf4993da4 100644
+index bcebf4993da4..8c58d1864500 100644
 --- a/arch/x86/kernel/machine_kexec_64.c
 +++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -566,7 +566,10 @@ int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, gfp_t gfp)
- 	 * not encrypted because when we boot to the new kernel the
- 	 * pages won't be accessed encrypted (initially).
- 	 */
--	return set_memory_decrypted((unsigned long)vaddr, pages);
-+	if (sme_active())
-+		return set_memory_decrypted((unsigned long)vaddr, pages);
-+
-+	return 0;
- }
+@@ -56,6 +56,7 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
+ 	pte_t *pte;
+ 	unsigned long vaddr, paddr;
+ 	int result = -ENOMEM;
++	pgprot_t prot = PAGE_KERNEL_EXEC_NOENC;
  
- void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages)
-@@ -575,5 +578,6 @@ void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages)
- 	 * If SME is active we need to reset the pages back to being
- 	 * an encrypted mapping before freeing them.
- 	 */
--	set_memory_encrypted((unsigned long)vaddr, pages);
-+	if (sme_active())
-+		set_memory_encrypted((unsigned long)vaddr, pages);
- }
+ 	vaddr = (unsigned long)relocate_kernel;
+ 	paddr = __pa(page_address(image->control_code_page)+PAGE_SIZE);
+@@ -92,7 +93,11 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
+ 		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
+ 	}
+ 	pte = pte_offset_kernel(pmd, vaddr);
+-	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, PAGE_KERNEL_EXEC_NOENC));
++
++	if (sev_active())
++		prot = PAGE_KERNEL_EXEC;
++
++	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
+ 	return 0;
+ err:
+ 	return result;
+@@ -129,6 +134,11 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+ 	level4p = (pgd_t *)__va(start_pgtable);
+ 	clear_page(level4p);
+ 
++	if (sev_active()) {
++		info.page_flag |= _PAGE_ENC;
++		info.kernpg_flag = _KERNPG_TABLE;
++	}
++
+ 	if (direct_gbpages)
+ 		info.direct_gbpages = true;
+ 
 -- 
 2.17.1
 
