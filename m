@@ -1,30 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail-pg1-x54a.google.com ([2607:f8b0:4864:20::54a])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h5U9z-0000Nb-70
- for kexec@lists.infradead.org; Sun, 17 Mar 2019 11:41:00 +0000
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x2HBerXV023824
- for <kexec@lists.infradead.org>; Sun, 17 Mar 2019 07:40:55 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2r9cvxnken-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Sun, 17 Mar 2019 07:40:54 -0400
-Received: from localhost
- by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Sun, 17 Mar 2019 11:39:38 -0000
-Subject: Re: [RFC] kexec: Allow kexec_file() with appropriate IMA policy
- when locked down
-From: Mimi Zohar <zohar@linux.ibm.com>
-Date: Sun, 17 Mar 2019 07:39:21 -0400
-In-Reply-To: <20190315220336.220554-1-matthewgarrett@google.com>
-References: <1552607929.8658.54.camel@linux.ibm.com>
- <20190315220336.220554-1-matthewgarrett@google.com>
+ id 1h5yIc-000302-Hf
+ for kexec@lists.infradead.org; Mon, 18 Mar 2019 19:51:57 +0000
+Received: by mail-pg1-x54a.google.com with SMTP id e5so19693367pgc.16
+ for <kexec@lists.infradead.org>; Mon, 18 Mar 2019 12:51:53 -0700 (PDT)
+Date: Mon, 18 Mar 2019 12:51:39 -0700
+In-Reply-To: <1552822761.8658.158.camel@linux.ibm.com>
+Message-Id: <20190318195139.111959-1-matthewgarrett@google.com>
 Mime-Version: 1.0
-Message-Id: <1552822761.8658.158.camel@linux.ibm.com>
+References: <1552822761.8658.158.camel@linux.ibm.com>
+Subject: [RFC] kexec: Allow kexec_file() with appropriate IMA policy when
+ locked down
+From: Matthew Garrett <matthewgarrett@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,162 +21,187 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew Garrett <matthewgarrett@google.com>, linux-integrity@vger.kernel.org
-Cc: dmitry.kasatkin@gmail.com, kexec <kexec@lists.infradead.org>, Matthew Garrett <mjg59@google.com>, dhowells@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>
+To: linux-integrity@vger.kernel.org
+Cc: Matthew Garrett <matthewgarrett@google.com>, dmitry.kasatkin@gmail.com, kexec@lists.infradead.org, zohar@linux.ibm.com, dhowells@redhat.com, Matthew Garrett <mjg59@google.com>, ebiederm@xmission.com, dyoung@redhat.com
 
-T24gRnJpLCAyMDE5LTAzLTE1IGF0IDE1OjAzIC0wNzAwLCBNYXR0aGV3IEdhcnJldHQgd3JvdGU6
-Cj4gU3lzdGVtcyBpbiBsb2NrZG93biBtb2RlIHNob3VsZCBibG9jayB0aGUga2V4ZWMgb2YgdW50
-cnVzdGVkIGtlcm5lbHMuCj4gRm9yIHg4NiBhbmQgQVJNIHdlIGNhbiBlbnN1cmUgdGhhdCBhIGtl
-cm5lbCBpcyB0cnVzdHdvcnRoeSBieSB2YWxpZGF0aW5nCj4gYSBQRSBzaWduYXR1cmUsIGJ1dCB0
-aGlzIGlzbid0IHBvc3NpYmxlIG9uIG90aGVyIGFyY2hpdGVjdHVyZXMuIE9uIHRob3NlCj4gcGxh
-dGZvcm1zIHdlIGNhbiB1c2UgSU1BIGRpZ2l0YWwgc2lnbmF0dXJlcyBpbnN0ZWFkLiBBZGQgYSBm
-dW5jdGlvbiB0bwo+IGRldGVybWluZSB3aGV0aGVyIElNQSB3aWxsIHZlcmlmeSBzaWduYXR1cmVz
-IGZvciBhIGdpdmVuIGV2ZW50IHR5cGUsCgpJbiBib3RoIHRoZSBrZXhlYyBhbmQga2VybmVsIG1v
-ZHVsZXMgY2FzZXMsIHRoaXMgc2hvdWxkIGJlIGluIHRoZSBwYXN0CnRlbnNlLiDCoFBlcmhhcHMg
-Y2hhbmdlIGl0IHRvIHNvbWV0aGluZyBsaWtlLCAid2hldGhlciBJTUEgaGFzIGFscmVhZHkKb3Ig
-d2lsbCB2ZXJpZnkgc2lnbmF0dXJlcyAuLi4iLgoKPiAgYW5kCj4gaWYgc28gcGVybWl0IGtleGVj
-X2ZpbGUoKSBldmVuIGlmIHRoZSBrZXJuZWwgaXMgb3RoZXJ3aXNlIGxvY2tlZCBkb3duLgo+IFRo
-aXMgaXMgcmVzdHJpY3RlZCB0byBjYXNlcyB3aGVyZSBDT05GSUdfSU5URUdSSVRZX1RSVVNURURf
-S0VZUklORyBpcyBzZXQKPiBpbiBvcmRlciB0byBwcmV2ZW50IGFuIGF0dGFja2VyIGZyb20gbG9h
-ZGluZyBhZGRpdGlvbmFsIGtleXMgYXQgcnVudGltZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBNYXR0
-aGV3IEdhcnJldHQgPG1qZzU5QGdvb2dsZS5jb20+Cj4gLS0tCj4gIGluY2x1ZGUvbGludXgvZXZt
-LmggICAgICAgICAgICAgICAgIHwgIDYgKysrKwo+ICBpbmNsdWRlL2xpbnV4L2ltYS5oICAgICAg
-ICAgICAgICAgICB8IDI4ICsrKysrKysrKysrKysrKysrKysKPiAga2VybmVsL2tleGVjX2ZpbGUu
-YyAgICAgICAgICAgICAgICAgfCAgOSArKysrLS0KPiAgc2VjdXJpdHkvaW50ZWdyaXR5L2V2bS9l
-dm1fbWFpbi5jICAgfCAgMiArLQo+ICBzZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYS5oICAgICAg
-ICB8IDIwICstLS0tLS0tLS0tLS0tCj4gIHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX3BvbGlj
-eS5jIHwgNDMgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgNiBmaWxlcyBjaGFuZ2Vk
-LCA4NiBpbnNlcnRpb25zKCspLCAyMiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvaW5j
-bHVkZS9saW51eC9ldm0uaCBiL2luY2x1ZGUvbGludXgvZXZtLmgKPiBpbmRleCA4MzAyYmMyOWJi
-MzUuLjZlODlkMDQ2YjcxNiAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL2xpbnV4L2V2bS5oCj4gKysr
-IGIvaW5jbHVkZS9saW51eC9ldm0uaAo+IEBAIC0xNSw2ICsxNSw3IEBACj4gIHN0cnVjdCBpbnRl
-Z3JpdHlfaWludF9jYWNoZTsKPiAgCj4gICNpZmRlZiBDT05GSUdfRVZNCj4gK2V4dGVybiBib29s
-IGV2bV9rZXlfbG9hZGVkKHZvaWQpOwo+ICBleHRlcm4gaW50IGV2bV9zZXRfa2V5KHZvaWQgKmtl
-eSwgc2l6ZV90IGtleWxlbik7Cj4gIGV4dGVybiBlbnVtIGludGVncml0eV9zdGF0dXMgZXZtX3Zl
-cmlmeXhhdHRyKHN0cnVjdCBkZW50cnkgKmRlbnRyeSwKPiAgCQkJCQkgICAgIGNvbnN0IGNoYXIg
-KnhhdHRyX25hbWUsCj4gQEAgLTQ1LDYgKzQ2LDExIEBAIHN0YXRpYyBpbmxpbmUgaW50IHBvc2l4
-X3hhdHRyX2FjbChjb25zdCBjaGFyICp4YXR0cm5hbWUpCj4gICNlbmRpZgo+ICAjZWxzZQo+ICAK
-PiArc3RhdGljIGlubGluZSBib29sIGV2bV9rZXlfbG9hZGVkKHZvaWQpCj4gK3sKPiArCXJldHVy
-biBmYWxzZTsKPiArfQo+ICsKClJlbW92ZSByZW1haW5pbmcgRVZNIGZyYWdtZW50LgoKPiAgc3Rh
-dGljIGlubGluZSBpbnQgZXZtX3NldF9rZXkodm9pZCAqa2V5LCBzaXplX3Qga2V5bGVuKQo+ICB7
-Cj4gIAlyZXR1cm4gLUVPUE5PVFNVUFA7Cj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvaW1h
-LmggYi9pbmNsdWRlL2xpbnV4L2ltYS5oCj4gaW5kZXggZGMxMmZiY2Y0ODRjLi5hNDJlMmE5YTA4
-YjcgMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9saW51eC9pbWEuaAo+ICsrKyBiL2luY2x1ZGUvbGlu
-dXgvaW1hLmgKPiBAQCAtMjcsNiArMjcsMjUgQEAgZXh0ZXJuIGludCBpbWFfcG9zdF9yZWFkX2Zp
-bGUoc3RydWN0IGZpbGUgKmZpbGUsIHZvaWQgKmJ1ZiwgbG9mZl90IHNpemUsCj4gIAkJCSAgICAg
-IGVudW0ga2VybmVsX3JlYWRfZmlsZV9pZCBpZCk7Cj4gIGV4dGVybiB2b2lkIGltYV9wb3N0X3Bh
-dGhfbWtub2Qoc3RydWN0IGRlbnRyeSAqZGVudHJ5KTsKPiAgCj4gKyNkZWZpbmUgX19pbWFfaG9v
-a3MoaG9vaykJCVwKPiArCWhvb2soTk9ORSkJCQlcCj4gKwlob29rKEZJTEVfQ0hFQ0spCQlcCj4g
-Kwlob29rKE1NQVBfQ0hFQ0spCQlcCj4gKwlob29rKEJQUk1fQ0hFQ0spCQlcCj4gKwlob29rKENS
-RURTX0NIRUNLKQkJXAo+ICsJaG9vayhQT1NUX1NFVEFUVFIpCQlcCj4gKwlob29rKE1PRFVMRV9D
-SEVDSykJCVwKPiArCWhvb2soRklSTVdBUkVfQ0hFQ0spCQlcCj4gKwlob29rKEtFWEVDX0tFUk5F
-TF9DSEVDSykJXAo+ICsJaG9vayhLRVhFQ19JTklUUkFNRlNfQ0hFQ0spCVwKPiArCWhvb2soUE9M
-SUNZX0NIRUNLKQkJXAo+ICsJaG9vayhNQVhfQ0hFQ0spCj4gKyNkZWZpbmUgX19pbWFfaG9va19l
-bnVtaWZ5KEVOVU0pCUVOVU0sCj4gKwo+ICtlbnVtIGltYV9ob29rcyB7Cj4gKwlfX2ltYV9ob29r
-cyhfX2ltYV9ob29rX2VudW1pZnkpCj4gK307Cj4gKwo+ICAjaWZkZWYgQ09ORklHX0lNQV9LRVhF
-Qwo+ICBleHRlcm4gdm9pZCBpbWFfYWRkX2tleGVjX2J1ZmZlcihzdHJ1Y3Qga2ltYWdlICppbWFn
-ZSk7Cj4gICNlbmRpZgo+IEBAIC0xMzIsNCArMTUxLDEzIEBAIHN0YXRpYyBpbmxpbmUgaW50IGlt
-YV9pbm9kZV9yZW1vdmV4YXR0cihzdHJ1Y3QgZGVudHJ5ICpkZW50cnksCj4gIAlyZXR1cm4gMDsK
-PiAgfQo+ICAjZW5kaWYgLyogQ09ORklHX0lNQV9BUFBSQUlTRSAqLwo+ICsKPiArI2lmIGRlZmlu
-ZWQoQ09ORklHX0lNQV9BUFBSQUlTRSkgJiYgZGVmaW5lZChDT05GSUdfSU5URUdSSVRZX1RSVVNU
-RURfS0VZUklORykKPiArZXh0ZXJuIGJvb2wgaW1hX2FwcHJhaXNlX3NpZ25hdHVyZShlbnVtIGlt
-YV9ob29rcyBmdW5jKTsKPiArI2Vsc2UKPiArc3RhdGljIGlubGluZSBib29sIGltYV9hcHByYWlz
-ZV9rZXhlY19zaWduYXR1cmUoZW51bSBpbWFfaG9va3MgZnVuYykKPiArewo+ICsJcmV0dXJuIGZh
-bHNlOwo+ICt9Cj4gKyNlbmRpZiAvKiBDT05GSUdfSU1BX0FQUFJBSVNFICYmIENPTkZJR19JTlRF
-R1JJVFlfVFJVU1RFRF9LRVlSSU5HICovCj4gICNlbmRpZiAvKiBfTElOVVhfSU1BX0ggKi8KPiBk
-aWZmIC0tZ2l0IGEva2VybmVsL2tleGVjX2ZpbGUuYyBiL2tlcm5lbC9rZXhlY19maWxlLmMKPiBp
-bmRleCAwY2ZlNGY2ZjdmODUuLjNlMDQ1MDZhMDBhMiAxMDA2NDQKPiAtLS0gYS9rZXJuZWwva2V4
-ZWNfZmlsZS5jCj4gKysrIGIva2VybmVsL2tleGVjX2ZpbGUuYwo+IEBAIC0yMCwxMSArMjAsMTEg
-QEAKPiAgI2luY2x1ZGUgPGxpbnV4L211dGV4Lmg+Cj4gICNpbmNsdWRlIDxsaW51eC9saXN0Lmg+
-Cj4gICNpbmNsdWRlIDxsaW51eC9mcy5oPgo+IC0jaW5jbHVkZSA8bGludXgvaW1hLmg+Cj4gICNp
-bmNsdWRlIDxjcnlwdG8vaGFzaC5oPgo+ICAjaW5jbHVkZSA8Y3J5cHRvL3NoYS5oPgo+ICAjaW5j
-bHVkZSA8bGludXgvZWxmLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9lbGZjb3JlLmg+Cj4gKyNpbmNs
-dWRlIDxsaW51eC9pbWEuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPgo+ICAjaW5jbHVk
-ZSA8bGludXgvc3lzY2FsbHMuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L3ZtYWxsb2MuaD4KPiBAQCAt
-MjQwLDcgKzI0MCwxMiBAQCBraW1hZ2VfZmlsZV9wcmVwYXJlX3NlZ21lbnRzKHN0cnVjdCBraW1h
-Z2UgKmltYWdlLCBpbnQga2VybmVsX2ZkLCBpbnQgaW5pdHJkX2ZkLAo+ICAKPiAgCQlyZXQgPSAw
-Owo+ICAKPiAtCQlpZiAoa2VybmVsX2lzX2xvY2tlZF9kb3duKHJlYXNvbikpIHsKPiArCQkvKiBJ
-ZiBJTUEgaXMgZ3VhcmFudGVlZCB0byBhcHByYWlzZSBhIHNpZ25hdHVyZSBvbiB0aGUga2V4ZWMK
-PiArCQkgKiBpbWFnZSwgcGVybWl0IGl0IGV2ZW4gaWYgdGhlIGtlcm5lbCBpcyBvdGhlcndpc2Ug
-bG9ja2VkCj4gKwkJICogZG93bi4KPiArCQkgKi8KPiArCQlpZiAoIWltYV9hcHByYWlzZV9zaWdu
-YXR1cmUoS0VYRUNfS0VSTkVMX0NIRUNLKSAmJgo+ICsJCSAgICBrZXJuZWxfaXNfbG9ja2VkX2Rv
-d24ocmVhc29uKSkgewo+ICAJCQlyZXQgPSAtRVBFUk07Cj4gIAkJCWdvdG8gb3V0OwoKW0NjJ2lu
-ZyBEYXZlIFlvdW5nLCBFcmljIEJpZWRlcm1hbiwga2V4ZWMgbWFpbGluZyBsaXN0XQoKVGhlcmUg
-d2FzIGEgZGlzY3Vzc2lvbiBhYm91dCB1c2luZyBLRVhFQ19LRVJORUxfQ0hFQ0sgYXMgYW4gYXJn
-dW1lbnQKd2hlbiByZXBsYWNpbmcgY29weV9maWxlX2Zyb21fZmQoKSB3aXRoIGtlcm5lbF9yZWFk
-X2ZpbGVfZnJvbV9mZCgpLgpUaGVyZSB3YXMgYSBzdWJzZXF1ZW50IGRpc2N1c3Npb24gd2hlbiBh
-ZGRpbmcgYSBzZWN1cml0eSBjYWxsIGluCmtleGVjX2xvYWRfY2hlY2suwqDCoFRoZSBlbmQgcmVz
-dWx0IHdhcyBkZWZpbmluZyB0d28gZW51bWVyYXRpb25zIG5hbWVkCmtlcm5lbF9yZWFkX2ZpbGVf
-aWQgYW5kIGtlcm5lbF9sb2FkX2RhdGFfaWQgd2l0aCBSRUFESU5HX0tFWEVDX0lNQUdFCmFuZCBM
-T0FESU5HX0tFQ0VDX0lNQUdFIHJlc3BlY3RpdmVseS4KCkluc3RlYWQgb2YgbWFraW5nIHRoZSBp
-bWFfaG9va3MgZW51bWVyYXRpb24gZ2xvYmFsLCBhcyB3ZSdyZSBhbHJlYWR5CnJlbHlpbmcgb24g
-UkVBRElOR19LRVhFQ19JTUFHRSwgdXNlIGl0LgoKPiAgCQl9Cj4gZGlmZiAtLWdpdCBhL3NlY3Vy
-aXR5L2ludGVncml0eS9ldm0vZXZtX21haW4uYyBiL3NlY3VyaXR5L2ludGVncml0eS9ldm0vZXZt
-X21haW4uYwo+IGluZGV4IGI2ZDlmMTRiYzIzNC4uYWFkNjFiYzBmNzc0IDEwMDY0NAo+IC0tLSBh
-L3NlY3VyaXR5L2ludGVncml0eS9ldm0vZXZtX21haW4uYwo+ICsrKyBiL3NlY3VyaXR5L2ludGVn
-cml0eS9ldm0vZXZtX21haW4uYwo+IEBAIC04Nyw3ICs4Nyw3IEBAIHN0YXRpYyB2b2lkIF9faW5p
-dCBldm1faW5pdF9jb25maWcodm9pZCkKPiAgCXByX2luZm8oIkhNQUMgYXR0cnM6IDB4JXhcbiIs
-IGV2bV9obWFjX2F0dHJzKTsKPiAgfQo+ICAKPiAtc3RhdGljIGJvb2wgZXZtX2tleV9sb2FkZWQo
-dm9pZCkKPiArYm9vbCBldm1fa2V5X2xvYWRlZCh2b2lkKQo+ICB7Cj4gIAlyZXR1cm4gKGJvb2wp
-KGV2bV9pbml0aWFsaXplZCAmIEVWTV9LRVlfTUFTSyk7Cj4gIH0KClJlbW92ZSByZW1haW5pbmcg
-RVZNIGZyYWdtZW50LgoKPiBkaWZmIC0tZ2l0IGEvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWEu
-aCBiL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hLmgKPiBpbmRleCBjYzEyZjM0NDlhNzIuLjcx
-NjE0YThlZDJhYSAxMDA2NDQKPiAtLS0gYS9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYS5oCj4g
-KysrIGIvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWEuaAo+IEBAIC0yMCw2ICsyMCw3IEBACj4g
-ICNpbmNsdWRlIDxsaW51eC90eXBlcy5oPgo+ICAjaW5jbHVkZSA8bGludXgvY3J5cHRvLmg+Cj4g
-ICNpbmNsdWRlIDxsaW51eC9mcy5oPgo+ICsjaW5jbHVkZSA8bGludXgvaW1hLmg+Cj4gICNpbmNs
-dWRlIDxsaW51eC9zZWN1cml0eS5oPgo+ICAjaW5jbHVkZSA8bGludXgvaGFzaC5oPgo+ICAjaW5j
-bHVkZSA8bGludXgvdHBtLmg+Cj4gQEAgLTE3MSwyNSArMTcyLDYgQEAgc3RhdGljIGlubGluZSB1
-bnNpZ25lZCBsb25nIGltYV9oYXNoX2tleSh1OCAqZGlnZXN0KQo+ICAJcmV0dXJuIGhhc2hfbG9u
-ZygqZGlnZXN0LCBJTUFfSEFTSF9CSVRTKTsKPiAgfQo+ICAKPiAtI2RlZmluZSBfX2ltYV9ob29r
-cyhob29rKQkJXAo+IC0JaG9vayhOT05FKQkJCVwKPiAtCWhvb2soRklMRV9DSEVDSykJCVwKPiAt
-CWhvb2soTU1BUF9DSEVDSykJCVwKPiAtCWhvb2soQlBSTV9DSEVDSykJCVwKPiAtCWhvb2soQ1JF
-RFNfQ0hFQ0spCQlcCj4gLQlob29rKFBPU1RfU0VUQVRUUikJCVwKPiAtCWhvb2soTU9EVUxFX0NI
-RUNLKQkJXAo+IC0JaG9vayhGSVJNV0FSRV9DSEVDSykJCVwKPiAtCWhvb2soS0VYRUNfS0VSTkVM
-X0NIRUNLKQlcCj4gLQlob29rKEtFWEVDX0lOSVRSQU1GU19DSEVDSykJXAo+IC0JaG9vayhQT0xJ
-Q1lfQ0hFQ0spCQlcCj4gLQlob29rKE1BWF9DSEVDSykKPiAtI2RlZmluZSBfX2ltYV9ob29rX2Vu
-dW1pZnkoRU5VTSkJRU5VTSwKPiAtCj4gLWVudW0gaW1hX2hvb2tzIHsKPiAtCV9faW1hX2hvb2tz
-KF9faW1hX2hvb2tfZW51bWlmeSkKPiAtfTsKPiAtCj4gIC8qIExJTSBBUEkgZnVuY3Rpb24gZGVm
-aW5pdGlvbnMgKi8KPiAgaW50IGltYV9nZXRfYWN0aW9uKHN0cnVjdCBpbm9kZSAqaW5vZGUsIGNv
-bnN0IHN0cnVjdCBjcmVkICpjcmVkLCB1MzIgc2VjaWQsCj4gIAkJICAgaW50IG1hc2ssIGVudW0g
-aW1hX2hvb2tzIGZ1bmMsIGludCAqcGNyKTsKPiBkaWZmIC0tZ2l0IGEvc2VjdXJpdHkvaW50ZWdy
-aXR5L2ltYS9pbWFfcG9saWN5LmMgYi9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9wb2xpY3ku
-Ywo+IGluZGV4IDhiYzhhMWM4Y2IzZi4uYWRlYWUxYWI5ZWU5IDEwMDY0NAo+IC0tLSBhL3NlY3Vy
-aXR5L2ludGVncml0eS9pbWEvaW1hX3BvbGljeS5jCj4gKysrIGIvc2VjdXJpdHkvaW50ZWdyaXR5
-L2ltYS9pbWFfcG9saWN5LmMKPiBAQCAtMjEsNiArMjEsNyBAQAo+ICAjaW5jbHVkZSA8bGludXgv
-Z2VuaGQuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L3NlcV9maWxlLmg+Cj4gICNpbmNsdWRlIDxsaW51
-eC9pbWEuaD4KPiArI2luY2x1ZGUgPGxpbnV4L2V2bS5oPgo+ICAKPiAgI2luY2x1ZGUgImltYS5o
-Igo+ICAKPiBAQCAtMTMzNiw0ICsxMzM3LDQ2IEBAIGludCBpbWFfcG9saWN5X3Nob3coc3RydWN0
-IHNlcV9maWxlICptLCB2b2lkICp2KQo+ICAJc2VxX3B1dHMobSwgIlxuIik7Cj4gIAlyZXR1cm4g
-MDsKPiAgfQo+ICsKPiAgI2VuZGlmCS8qIENPTkZJR19JTUFfUkVBRF9QT0xJQ1kgKi8KPiArCj4g
-KyNpZiBkZWZpbmVkKENPTkZJR19JTUFfQVBQUkFJU0UpICYmIGRlZmluZWQoQ09ORklHX0lOVEVH
-UklUWV9UUlVTVEVEX0tFWVJJTkcpCj4gKy8qCj4gKyAqIGltYV9hcHByYWlzZV9zaWduYXR1cmU6
-IHdoZXRoZXIgSU1BIHdpbGwgYXBwcmFpc2UgYSBnaXZlbiBmdW5jdGlvbiB1c2luZwo+ICsgKiBh
-biBJTUEgZGlnaXRhbCBzaWduYXR1cmUuIFRoaXMgaXMgcmVzdHJpY3RlZCB0byBjYXNlcyB3aGVy
-ZSB0aGUga2VybmVsCj4gKyAqIGhhcyBhIHNldCBvZiBidWlsdC1pbiB0cnVzdGVkIGtleXMgaW4g
-b3JkZXIgdG8gYXZvaWQgYW4gYXR0YWNrZXIgc2ltcGx5Cj4gKyAqIGxvYWRpbmcgYWRkaXRpb25h
-bCBrZXlzLgo+ICsgKi8KPiArYm9vbCBpbWFfYXBwcmFpc2Vfc2lnbmF0dXJlKGVudW0gaW1hX2hv
-b2tzIGZ1bmMpCj4gK3sKPiArCXN0cnVjdCBpbWFfcnVsZV9lbnRyeSAqZW50cnk7Cj4gKwlib29s
-IGZvdW5kID0gZmFsc2U7Cj4gKwo+ICsJcmN1X3JlYWRfbG9jaygpOwo+ICsJbGlzdF9mb3JfZWFj
-aF9lbnRyeV9yY3UoZW50cnksIGltYV9ydWxlcywgbGlzdCkgewo+ICsJCWlmIChlbnRyeS0+YWN0
-aW9uICE9IEFQUFJBSVNFKQo+ICsJCQljb250aW51ZTsKPiArCj4gKwkJLyogQSBnZW5lcmljIGVu
-dHJ5IHdpbGwgbWF0Y2gsIGJ1dCBvdGhlcndpc2UgcmVxdWlyZSB0aGF0IGl0Cj4gKwkJICogbWF0
-Y2ggdGhlIGZ1bmMgd2UncmUgbG9va2luZyBmb3IKPiArCQkgKi8KPiArCQlpZiAoZW50cnktPmZ1
-bmMgJiYgZW50cnktPmZ1bmMgIT0gZnVuYykKPiArCQkJY29udGludWU7Cj4gKwo+ICsJCS8qIFdl
-IHJlcXVpcmUgdGhpcyB0byBiZSBhIGRpZ2l0YWwgc2lnbmF0dXJlLCBub3QgYSByYXcgSU1BCj4g
-KwkJICogaGFzaC4KPiArCQkgKi8KCkNvbW1lbnRzIHNob3VsZCBlaXRoZXIgYmUgYSBzaW5nbGUg
-bGluZSBvciAiLyoiIG9uIGEgc2VwYXJhdGUgbGluZS4KCj4gKwkJaWYgKGVudHJ5LT5mbGFncyAm
-IElNQV9ESUdTSUdfUkVRVUlSRUQpCj4gKwkJCWZvdW5kID0gdHJ1ZTsKPiArCj4gKwkJLyogV2Un
-dmUgZm91bmQgYSBydWxlIHRoYXQgbWF0Y2hlcywgc28gYnJlYWsgbm93IGV2ZW4gaWYgaXQKPiAr
-CQkgKiBkaWRuJ3QgcmVxdWlyZSBhIGRpZ2l0YWwgc2lnbmF0dXJlIC0gYSBsYXRlciBydWxlIHRo
-YXQgZG9lcwo+ICsJCSAqIHdvbid0IG92ZXJyaWRlIGl0LCBzbyB3b3VsZCBiZSBhIGZhbHNlIHBv
-c2l0aXZlLgo+ICsJCSAqLwo+ICsJCWJyZWFrOwo+ICsJfQo+ICsKCk11Y2ggYmV0dGVyLgoKdGhh
-bmtzLAoKTWltaQoKPiArCXJjdV9yZWFkX3VubG9jaygpOwo+ICsJcmV0dXJuIGZvdW5kOwo+ICt9
-Cj4gKyNlbmRpZiAvKiBDT05GSUdfSU1BX0FQUFJBSVNFICYmIENPTkZJR19JTlRFR1JJVFlfVFJV
-U1RFRF9LRVlSSU5HICovCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Systems in lockdown mode should block the kexec of untrusted kernels.
+For x86 and ARM we can ensure that a kernel is trustworthy by validating
+a PE signature, but this isn't possible on other architectures. On those
+platforms we can use IMA digital signatures instead. Add a function to
+determine whether IMA has or will verify signatures for a given event type,
+and if so permit kexec_file() even if the kernel is otherwise locked down.
+This is restricted to cases where CONFIG_INTEGRITY_TRUSTED_KEYRING is set
+in order to prevent an attacker from loading additional keys at runtime.
+
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+---
+ include/linux/ima.h                 |  9 +++++
+ kernel/kexec_file.c                 |  9 +++--
+ security/integrity/ima/ima.h        |  3 ++
+ security/integrity/ima/ima_main.c   |  2 +-
+ security/integrity/ima/ima_policy.c | 52 +++++++++++++++++++++++++++++
+ 5 files changed, 72 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index dc12fbcf484c..a78c04580a3c 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -132,4 +132,13 @@ static inline int ima_inode_removexattr(struct dentry *dentry,
+ 	return 0;
+ }
+ #endif /* CONFIG_IMA_APPRAISE */
++
++#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
++extern bool ima_appraise_signature(enum kernel_read_file_id func);
++#else
++static inline bool ima_appraise_kexec_signature(enum kernel_read_file_id func)
++{
++	return false;
++}
++#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
+ #endif /* _LINUX_IMA_H */
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 0cfe4f6f7f85..3598f93a731a 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -20,11 +20,11 @@
+ #include <linux/mutex.h>
+ #include <linux/list.h>
+ #include <linux/fs.h>
+-#include <linux/ima.h>
+ #include <crypto/hash.h>
+ #include <crypto/sha.h>
+ #include <linux/elf.h>
+ #include <linux/elfcore.h>
++#include <linux/ima.h>
+ #include <linux/kernel.h>
+ #include <linux/syscalls.h>
+ #include <linux/vmalloc.h>
+@@ -240,7 +240,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 
+ 		ret = 0;
+ 
+-		if (kernel_is_locked_down(reason)) {
++		/* If IMA is guaranteed to appraise a signature on the kexec
++		 * image, permit it even if the kernel is otherwise locked
++		 * down.
++		 */
++		if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
++		    kernel_is_locked_down(reason)) {
+ 			ret = -EPERM;
+ 			goto out;
+ 		}
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index cc12f3449a72..93a6825bfcaf 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -20,6 +20,7 @@
+ #include <linux/types.h>
+ #include <linux/crypto.h>
+ #include <linux/fs.h>
++#include <linux/ima.h>
+ #include <linux/security.h>
+ #include <linux/hash.h>
+ #include <linux/tpm.h>
+@@ -115,6 +116,8 @@ struct ima_kexec_hdr {
+ 	u64 count;
+ };
+ 
++extern const int read_idmap[];
++
+ #ifdef CONFIG_HAVE_IMA_KEXEC
+ void ima_load_kexec_buffer(void);
+ #else
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 357edd140c09..927fe889201a 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -473,7 +473,7 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
+ 	return 0;
+ }
+ 
+-static const int read_idmap[READING_MAX_ID] = {
++const int read_idmap[READING_MAX_ID] = {
+ 	[READING_FIRMWARE] = FIRMWARE_CHECK,
+ 	[READING_FIRMWARE_PREALLOC_BUFFER] = FIRMWARE_CHECK,
+ 	[READING_MODULE] = MODULE_CHECK,
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 8bc8a1c8cb3f..bbd1d5b3d45a 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -21,6 +21,7 @@
+ #include <linux/genhd.h>
+ #include <linux/seq_file.h>
+ #include <linux/ima.h>
++#include <linux/evm.h>
+ 
+ #include "ima.h"
+ 
+@@ -1336,4 +1337,55 @@ int ima_policy_show(struct seq_file *m, void *v)
+ 	seq_puts(m, "\n");
+ 	return 0;
+ }
++
+ #endif	/* CONFIG_IMA_READ_POLICY */
++
++#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
++/*
++ * ima_appraise_signature: whether IMA will appraise a given function using
++ * an IMA digital signature. This is restricted to cases where the kernel
++ * has a set of built-in trusted keys in order to avoid an attacker simply
++ * loading additional keys.
++ */
++bool ima_appraise_signature(enum kernel_read_file_id id)
++{
++	struct ima_rule_entry *entry;
++	bool found = false;
++	enum ima_hooks func;
++
++	if (id >= READING_MAX_ID)
++		return false;
++
++	func = read_idmap[id] ?: FILE_CHECK;
++
++	rcu_read_lock();
++	list_for_each_entry_rcu(entry, ima_rules, list) {
++		if (entry->action != APPRAISE)
++			continue;
++
++		/*
++		 * A generic entry will match, but otherwise require that it
++		 * match the func we're looking for
++		 */
++		if (entry->func && entry->func != func)
++			continue;
++
++		/*
++		 * We require this to be a digital signature, not a raw IMA
++		 * hash.
++		 */
++		if (entry->flags & IMA_DIGSIG_REQUIRED)
++			found = true;
++
++		/*
++		 * We've found a rule that matches, so break now even if it
++		 * didn't require a digital signature - a later rule that does
++		 * won't override it, so would be a false positive.
++		 */
++		break;
++	}
++
++	rcu_read_unlock();
++	return found;
++}
++#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
+-- 
+2.21.0.225.g810b269d1ac-goog
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
