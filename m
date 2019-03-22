@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h7IGK-0004TG-4V
- for kexec@lists.infradead.org; Fri, 22 Mar 2019 11:23:02 +0000
+ id 1h7IPP-0008Hm-Sj
+ for kexec@lists.infradead.org; Fri, 22 Mar 2019 11:32:25 +0000
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 3.18 068/134] x86/kexec: Dont setup EFI info if EFI runtime is
+Subject: [PATCH 4.4 098/230] x86/kexec: Dont setup EFI info if EFI runtime is
  not enabled
-Date: Fri, 22 Mar 2019 12:14:41 +0100
-Message-Id: <20190322111214.990612455@linuxfoundation.org>
-In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
-References: <20190322111210.465931067@linuxfoundation.org>
+Date: Fri, 22 Mar 2019 12:13:56 +0100
+Message-Id: <20190322111243.491677243@linuxfoundation.org>
+In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
+References: <20190322111236.796964179@linuxfoundation.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,7 +26,7 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: rafael.j.wysocki@intel.com, David Howells <dhowells@redhat.com>, Yannik Sembritzki <yannik@sembritzki.me>, "H. Peter Anvin" <hpa@zytor.com>, Sasha Levin <sashal@kernel.org>, Philipp Rudo <prudo@linux.vnet.ibm.com>, bhe@redhat.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, x86-ml <x86@kernel.org>, robert.moore@intel.com, linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>, erik.schmauss@intel.com, lenb@kernel.org, fanc.fnst@cn.fujitsu.com, Thomas Gleixner <tglx@linutronix.de>, Kairui Song <kasong@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
 
-3.18-stable review patch.  If anyone has any objections, please let me know.
+4.4-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -79,10 +79,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+)
 
 diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index ca05f86481aa..3e22751382c3 100644
+index 0f8a6bbaaa44..0bf17576dd2a 100644
 --- a/arch/x86/kernel/kexec-bzimage64.c
 +++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -167,6 +167,9 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
+@@ -168,6 +168,9 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
  	struct efi_info *current_ei = &boot_params.efi_info;
  	struct efi_info *ei = &params->efi_info;
  
