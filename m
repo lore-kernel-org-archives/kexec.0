@@ -1,18 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h7Ppk-0005oc-UX
- for kexec@lists.infradead.org; Fri, 22 Mar 2019 19:28:06 +0000
-Date: Fri, 22 Mar 2019 20:28:00 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 2/3 v9] resource: add the new I/O resource descriptor
- 'IORES_DESC_RESERVED'
-Message-ID: <20190322192800.GM12472@zn.tnic>
-References: <20190321103309.27883-1-lijiang@redhat.com>
- <20190321103309.27883-3-lijiang@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190321103309.27883-3-lijiang@redhat.com>
+ id 1h7Py4-0001YH-7M
+ for kexec@lists.infradead.org; Fri, 22 Mar 2019 19:36:42 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x2MJYsfR029190
+ for <kexec@lists.infradead.org>; Fri, 22 Mar 2019 15:36:36 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2rd4tbu501-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 22 Mar 2019 15:36:35 -0400
+Received: from localhost
+ by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Fri, 22 Mar 2019 19:36:25 -0000
+From: Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH v4a 1/2] selftests/kexec: make tests independent of IMA being
+ enabled
+Date: Fri, 22 Mar 2019 15:35:50 -0400
+Message-Id: <1553283351-6310-1-git-send-email-zohar@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,146 +30,143 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>
-Cc: Thomas.Lendacky@amd.com, x86@kernel.org, bhe@redhat.com, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: linux-integrity@vger.kernel.org
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, Petr Vorel <pvorel@suse.cz>, Mimi Zohar <zohar@linux.ibm.com>, linux-kselftest@vger.kernel.org, Dave Young <dyoung@redhat.com>
 
-On Thu, Mar 21, 2019 at 06:33:08PM +0800, Lianbo Jiang wrote:
-> When doing kexec_file_load, the first kernel needs to pass the e820
+Verify IMA is enabled before failing tests or emitting irrelevant
+messages.  Also, don't skip the test if signatures are not required.
 
-Please end function names with parentheses.
+Suggested-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+---
+Dave, if this patch resolves the outstanding issues, I can fold these
+changes into the original patches. (Reminder, these patches will need to
+be updated to support the "lockdown" patch set.)
 
-> reserved ranges to the second kernel.
+ .../selftests/kexec/test_kexec_file_load.sh        | 27 ++++++++++++++--------
+ tools/testing/selftests/kexec/test_kexec_load.sh   | 24 ++++++++++++-------
+ 2 files changed, 33 insertions(+), 18 deletions(-)
 
-... because... ?
-
-> But kernel can not exactly match the e820 reserved ranges
-     ^
-     the
-
-> when walking through the iomem resources with the descriptor
-> 'IORES_DESC_NONE', because several e820 types( e.g.
-> E820_TYPE_RESERVED_KERN/E820_TYPE_RAM/E820_TYPE_UNUSABLE/E820
-> _TYPE_RESERVED) are converted to the descriptor 'IORES_DESC_NONE'.
-> It may pass these four types to the kdump kernel, that is not desired result.
-
-Rewrite that sentence.
-
-> So, this patch adds a new I/O resource descriptor 'IORES_DESC_RESERVED'
-
-Avoid having "This patch" or "This commit" in the commit message. It is
-tautologically useless.
-
-Also, do
-
-$ git grep 'This patch' Documentation/process
-
-for more details.
-
-> for the iomem resources search interfaces. It is helpful to exactly
-> match the reserved resource ranges when walking through iomem resources.
-> 
-> In addition, since the new descriptor 'IORES_DESC_RESERVED' is introduced,
-> these code originally related to the descriptor 'IORES_DESC_NONE' need to
-
-"the code"
-
-> be updated.
-
-> Otherwise, it will be easily confused and also cause some errors.
-
-What errors?
-
-> Because the 'E820_TYPE_RESERVED' type is converted to the new
-> descriptor 'IORES_DESC_RESERVED' instead of 'IORES_DESC_NONE', it has been
-> changed.
-
-That sentence I cannot parse.
-
-> Suggested-by: Borislav Petkov <bp@suse.de>
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> ---
->  arch/x86/kernel/e820.c | 2 +-
->  include/linux/ioport.h | 1 +
->  kernel/resource.c      | 6 +++---
->  3 files changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> index 2879e234e193..16fcde196243 100644
-> --- a/arch/x86/kernel/e820.c
-> +++ b/arch/x86/kernel/e820.c
-> @@ -1050,10 +1050,10 @@ static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
->  	case E820_TYPE_NVS:		return IORES_DESC_ACPI_NV_STORAGE;
->  	case E820_TYPE_PMEM:		return IORES_DESC_PERSISTENT_MEMORY;
->  	case E820_TYPE_PRAM:		return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
-> +	case E820_TYPE_RESERVED:	return IORES_DESC_RESERVED;
->  	case E820_TYPE_RESERVED_KERN:	/* Fall-through: */
->  	case E820_TYPE_RAM:		/* Fall-through: */
->  	case E820_TYPE_UNUSABLE:	/* Fall-through: */
-> -	case E820_TYPE_RESERVED:	/* Fall-through: */
->  	default:			return IORES_DESC_NONE;
->  	}
->  }
-> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> index da0ebaec25f0..6ed59de48bd5 100644
-> --- a/include/linux/ioport.h
-> +++ b/include/linux/ioport.h
-> @@ -133,6 +133,7 @@ enum {
->  	IORES_DESC_PERSISTENT_MEMORY_LEGACY	= 5,
->  	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
->  	IORES_DESC_DEVICE_PUBLIC_MEMORY		= 7,
-> +	IORES_DESC_RESERVED			= 8,
->  };
->  
->  /* helpers to define resources */
-
-IORES_DESC_RESERVED is supposed to represent E820_TYPE_RESERVED. And if
-that is the case, then all three hunks below look wrong to me. If you
-want to pass E820_TYPE_RESERVED ranges, then do that explicitly.
-
-> diff --git a/kernel/resource.c b/kernel/resource.c
-> index e81b17b53fa5..ee7348761858 100644
-> --- a/kernel/resource.c
-> +++ b/kernel/resource.c
-> @@ -990,7 +990,7 @@ __reserve_region_with_split(struct resource *root, resource_size_t start,
->  	res->start = start;
->  	res->end = end;
->  	res->flags = type | IORESOURCE_BUSY;
-> -	res->desc = IORES_DESC_NONE;
-> +	res->desc = IORES_DESC_RESERVED;
->  
->  	while (1) {
->  
-> @@ -1025,7 +1025,7 @@ __reserve_region_with_split(struct resource *root, resource_size_t start,
->  				next_res->start = conflict->end + 1;
->  				next_res->end = end;
->  				next_res->flags = type | IORESOURCE_BUSY;
-> -				next_res->desc = IORES_DESC_NONE;
-> +				next_res->desc = IORES_DESC_RESERVED;
->  			}
->  		} else {
->  			res->start = conflict->end + 1;
-> @@ -1488,7 +1488,7 @@ static int __init reserve_setup(char *str)
->  			res->start = io_start;
->  			res->end = io_start + io_num - 1;
->  			res->flags |= IORESOURCE_BUSY;
-> -			res->desc = IORES_DESC_NONE;
-> +			res->desc = IORES_DESC_RESERVED;
->  			res->child = NULL;
->  			if (request_resource(parent, res) == 0)
->  				reserved = x+1;
-> -- 
-> 2.17.1
-> 
-
+diff --git a/tools/testing/selftests/kexec/test_kexec_file_load.sh b/tools/testing/selftests/kexec/test_kexec_file_load.sh
+index 1d2e5e799523..57b636792086 100755
+--- a/tools/testing/selftests/kexec/test_kexec_file_load.sh
++++ b/tools/testing/selftests/kexec/test_kexec_file_load.sh
+@@ -110,11 +110,20 @@ kexec_file_load_test()
+ 			log_fail "$succeed_msg (missing IMA sig)"
+ 		fi
+ 
+-		if [ $pe_sig_required -eq 0 ] && [ $ima_sig_required -eq 0 ] \
+-		    && [ $ima_read_policy -eq 0 ] && [ $ima_signed -eq 0 ]; then
++		if [ $pe_sig_required -eq 0 ] && [ $ima_appraise -eq 1 ] \
++		    && [ $ima_sig_required -eq 0 ] && [ $ima_signed -eq 0 ] \
++	            && [ $ima_read_policy -eq 0 ]; then
+ 			log_fail "$succeed_msg (possibly missing IMA sig)"
+ 		fi
+ 
++		if [ $pe_sig_required -eq 0 ] && [ $ima_appraise -eq 0 ]; then
++			log_info "No signature verification required"
++		elif [ $pe_sig_required -eq 0 ] && [ $ima_appraise -eq 1 ] \
++		    && [ $ima_sig_required -eq 0 ] && [ $ima_signed -eq 0 ] \
++	            && [ $ima_read_policy -eq 1 ]; then
++			log_info "No signature verification required"
++		fi
++
+ 		log_pass "$succeed_msg"
+ 	fi
+ 
+@@ -136,8 +145,9 @@ kexec_file_load_test()
+ 		log_pass "$failed_msg (missing IMA sig)"
+ 	fi
+ 
+-	if [ $pe_sig_required -eq 0 ] && [ $ima_sig_required -eq 0 ] \
+-	    && [ $ima_read_policy -eq 0 ] && [ $ima_signed -eq 0 ]; then
++	if [ $pe_sig_required -eq 0 ] && [ $ima_appraise -eq 1 ] \
++	    && [ $ima_sig_required -eq 0 ] && [ $ima_read_policy -eq 0 ] \
++	    && [ $ima_signed -eq 0 ]; then
+ 		log_pass "$failed_msg (possibly missing IMA sig)"
+ 	fi
+ 
+@@ -157,6 +167,9 @@ if [ $? -eq 0 ]; then
+ fi
+ 
+ # Determine which kernel config options are enabled
++kconfig_enabled "CONFIG_IMA_APPRAISE=y" "IMA enabled"
++ima_appraise=$?
++
+ kconfig_enabled "CONFIG_IMA_ARCH_POLICY=y" \
+ 	"architecture specific policy enabled"
+ arch_policy=$?
+@@ -178,12 +191,6 @@ ima_sig_required=$?
+ get_secureboot_mode
+ secureboot=$?
+ 
+-if [ $secureboot -eq 0 ] && [ $arch_policy -eq 0 ] && \
+-   [ $pe_sig_required -eq 0 ] && [ $ima_sig_required -eq 0 ] && \
+-   [ $ima_read_policy -eq 1 ]; then
+-	log_skip "No signature verification required"
+-fi
+-
+ # Are there pe and ima signatures
+ check_for_pesig
+ pe_signed=$?
+diff --git a/tools/testing/selftests/kexec/test_kexec_load.sh b/tools/testing/selftests/kexec/test_kexec_load.sh
+index 2a66c8897f55..49c6aa929137 100755
+--- a/tools/testing/selftests/kexec/test_kexec_load.sh
++++ b/tools/testing/selftests/kexec/test_kexec_load.sh
+@@ -1,8 +1,8 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+-# Loading a kernel image via the kexec_load syscall should fail
+-# when the kernel is CONFIG_KEXEC_VERIFY_SIG enabled and the system
+-# is booted in secureboot mode.
++#
++# Prevent loading a kernel image via the kexec_load syscall when
++# signatures are required.  (Dependent on CONFIG_IMA_ARCH_POLICY.)
+ 
+ TEST="$0"
+ . ./kexec_common_lib.sh
+@@ -18,20 +18,28 @@ if [ $? -eq 0 ]; then
+ 	log_skip "kexec_load is not enabled"
+ fi
+ 
++kconfig_enabled "CONFIG_IMA_APPRAISE=y" "IMA enabled"
++ima_appraise=$?
++
++kconfig_enabled "CONFIG_IMA_ARCH_POLICY=y" \
++	"IMA architecture specific policy enabled"
++arch_policy=$?
++
+ get_secureboot_mode
+ secureboot=$?
+ 
+-# kexec_load should fail in secure boot mode
++# kexec_load should fail in secure boot mode and CONFIG_IMA_ARCH_POLICY enabled
+ kexec --load $KERNEL_IMAGE > /dev/null 2>&1
+ if [ $? -eq 0 ]; then
+ 	kexec --unload
+-	if [ $secureboot -eq 1 ]; then
++	if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ]; then
+ 		log_fail "kexec_load succeeded"
+-	else
+-		log_pass "kexec_load succeeded"
++	elif [ $ima_appraise -eq 0 -o $arch_policy -eq 0 ]; then
++		log_info "Either IMA or the IMA arch policy is not enabled"
+ 	fi
++	log_pass "kexec_load succeeded"
+ else
+-	if [ $secureboot -eq 1 ]; then
++	if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ] ; then
+ 		log_pass "kexec_load failed"
+ 	else
+ 		log_fail "kexec_load failed"
 -- 
-Regards/Gruss,
-    Boris.
+2.7.5
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
