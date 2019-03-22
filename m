@@ -1,25 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h7FRb-0005bp-Td
- for kexec@lists.infradead.org; Fri, 22 Mar 2019 08:22:29 +0000
-Date: Fri, 22 Mar 2019 16:22:16 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
- consistent with kaslr
-Message-ID: <20190322082216.GA23356@dhcp-128-65.nay.redhat.com>
-References: <20190220094146.GA8597@dhcp-128-65.nay.redhat.com>
- <20190221171321.GD12997@zn.tnic>
- <20190222021101.GA11654@dhcp-128-65.nay.redhat.com>
- <20190222084241.GC8380@suse.de> <20190222130026.GA30766@zn.tnic>
- <20190225110043.GA5884@suse.de>
- <20190225111216.GA9276@dhcp-128-65.nay.redhat.com>
- <20190225113003.GE26145@zn.tnic>
- <CAFgQCTvP-YDUEcHTgupr+ar+qeoj5rw1y8k+6kzrzHPzTqBkaw@mail.gmail.com>
- <CAFgQCTs9pJ=3Jt1YLv6RmBWeViH8cmuMcKG+2Aj-Vo2Kh-Wcog@mail.gmail.com>
+ id 1h7IGK-0004TG-4V
+ for kexec@lists.infradead.org; Fri, 22 Mar 2019 11:23:02 +0000
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 3.18 068/134] x86/kexec: Dont setup EFI info if EFI runtime is
+ not enabled
+Date: Fri, 22 Mar 2019 12:14:41 +0100
+Message-Id: <20190322111214.990612455@linuxfoundation.org>
+In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
+References: <20190322111210.465931067@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAFgQCTs9pJ=3Jt1YLv6RmBWeViH8cmuMcKG+2Aj-Vo2Kh-Wcog@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,70 +23,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <kernelfans@gmail.com>
-Cc: Joerg Roedel <jroedel@suse.de>, Baoquan He <bhe@redhat.com>, konrad.wilk@oracle.com, x86@kernel.org, kexec@lists.infradead.org, Jerry Hoemann <jerry.hoemann@hpe.com>, LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux-foundation.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Borislav Petkov <bp@alien8.de>, Randy Dunlap <rdunlap@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Yinghai Lu <yinghai@kernel.org>, vgoyal@redhat.com
+To: linux-kernel@vger.kernel.org
+Cc: rafael.j.wysocki@intel.com, David Howells <dhowells@redhat.com>, Yannik Sembritzki <yannik@sembritzki.me>, "H. Peter Anvin" <hpa@zytor.com>, Sasha Levin <sashal@kernel.org>, Philipp Rudo <prudo@linux.vnet.ibm.com>, bhe@redhat.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, x86-ml <x86@kernel.org>, robert.moore@intel.com, linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>, erik.schmauss@intel.com, lenb@kernel.org, fanc.fnst@cn.fujitsu.com, Thomas Gleixner <tglx@linutronix.de>, Kairui Song <kasong@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
 
-Hi Pingfan, 
+3.18-stable review patch.  If anyone has any objections, please let me know.
 
-Thanks for the effort,
-On 03/01/19 at 11:19am, Pingfan Liu wrote:
-> On Fri, Mar 1, 2019 at 11:04 AM Pingfan Liu <kernelfans@gmail.com> wrote:
-> >
-> > Hi Borislav,
-> >
-> > Do you think the following patch is good at present?
-> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > index 81f9d23..9213073 100644
-> > --- a/arch/x86/kernel/setup.c
-> > +++ b/arch/x86/kernel/setup.c
-> > @@ -460,7 +460,7 @@ static void __init
-> > memblock_x86_reserve_range_setup_data(void)
-> >  # define CRASH_ADDR_LOW_MAX    (512 << 20)
-> >  # define CRASH_ADDR_HIGH_MAX   (512 << 20)
-> >  #else
-> > -# define CRASH_ADDR_LOW_MAX    (896UL << 20)
-> > +# define CRASH_ADDR_LOW_MAX    (1 << 32)
-> >  # define CRASH_ADDR_HIGH_MAX   MAXMEM
-> >  #endif
-> >
-> Or patch lools like:
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index 3d872a5..ed0def5 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -459,7 +459,7 @@ static void __init
-> memblock_x86_reserve_range_setup_data(void)
->  # define CRASH_ADDR_LOW_MAX    (512 << 20)
->  # define CRASH_ADDR_HIGH_MAX   (512 << 20)
->  #else
-> -# define CRASH_ADDR_LOW_MAX    (896UL << 20)
-> +# define CRASH_ADDR_LOW_MAX    (1 << 32)
->  # define CRASH_ADDR_HIGH_MAX   MAXMEM
->  #endif
-> 
-> @@ -551,6 +551,15 @@ static void __init reserve_crashkernel(void)
->                                                     high ? CRASH_ADDR_HIGH_MAX
->                                                          : CRASH_ADDR_LOW_MAX,
->                                                     crash_size, CRASH_ALIGN);
-> +#ifdef CONFIG_X86_64
-> +               /*
-> +                * crashkernel=X reserve below 4G fails? Try MAXMEM
-> +                */
-> +               if (!high && !crash_base)
-> +                       crash_base = memblock_find_in_range(CRASH_ALIGN,
-> +                                               CRASH_ADDR_HIGH_MAX,
-> +                                               crash_size, CRASH_ALIGN);
-> +#endif
-> 
-> which tries 0-4G, the fall back to 4G above
+------------------
 
-This way looks good to me, I will do some testing with old kexec-tools,
-Once testing done I can take up this again and repost later with some documentation
-update.  Also will split to 2 patches  one to drop the old limitation,
-another for the fallback.
+[ Upstream commit 2aa958c99c7fd3162b089a1a56a34a0cdb778de1 ]
 
-Thanks
-Dave
+Kexec-ing a kernel with "efi=noruntime" on the first kernel's command
+line causes the following null pointer dereference:
+
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+  #PF error: [normal kernel read fault]
+  Call Trace:
+   efi_runtime_map_copy+0x28/0x30
+   bzImage64_load+0x688/0x872
+   arch_kexec_kernel_image_load+0x6d/0x70
+   kimage_file_alloc_init+0x13e/0x220
+   __x64_sys_kexec_file_load+0x144/0x290
+   do_syscall_64+0x55/0x1a0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Just skip the EFI info setup if EFI runtime services are not enabled.
+
+ [ bp: Massage commit message. ]
+
+Suggested-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Kairui Song <kasong@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Dave Young <dyoung@redhat.com>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: bhe@redhat.com
+Cc: David Howells <dhowells@redhat.com>
+Cc: erik.schmauss@intel.com
+Cc: fanc.fnst@cn.fujitsu.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: kexec@lists.infradead.org
+Cc: lenb@kernel.org
+Cc: linux-acpi@vger.kernel.org
+Cc: Philipp Rudo <prudo@linux.vnet.ibm.com>
+Cc: rafael.j.wysocki@intel.com
+Cc: robert.moore@intel.com
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Cc: Yannik Sembritzki <yannik@sembritzki.me>
+Link: https://lkml.kernel.org/r/20190118111310.29589-2-kasong@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/kexec-bzimage64.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index ca05f86481aa..3e22751382c3 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -167,6 +167,9 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
+ 	struct efi_info *current_ei = &boot_params.efi_info;
+ 	struct efi_info *ei = &params->efi_info;
+ 
++	if (!efi_enabled(EFI_RUNTIME_SERVICES))
++		return 0;
++
+ 	if (!current_ei->efi_memmap_size)
+ 		return 0;
+ 
+-- 
+2.19.1
+
+
+
 
 _______________________________________________
 kexec mailing list
