@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [209.132.183.28] (helo=mx1.redhat.com)
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h8NbJ-0008Uv-MF
- for kexec@lists.infradead.org; Mon, 25 Mar 2019 11:17:15 +0000
-Date: Mon, 25 Mar 2019 19:16:44 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1h8OIY-0001Ge-0E
+ for kexec@lists.infradead.org; Mon, 25 Mar 2019 12:01:52 +0000
+Date: Mon, 25 Mar 2019 13:01:49 +0100
+From: Borislav Petkov <bp@alien8.de>
 Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
-Message-ID: <20190325111644.GB13160@dhcp-128-65.nay.redhat.com>
+Message-ID: <20190325120149.GI12016@zn.tnic>
 References: <20190322152328.GD12472@zn.tnic>
  <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp>
  <20190325060128.GB9385@dhcp-128-65.nay.redhat.com>
@@ -33,55 +33,31 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc: "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "kasong@redhat.com" <kasong@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Boris Petkov <bp@alien8.de>, "bp@suse.de" <bp@suse.de>
+Cc: "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "kasong@redhat.com" <kasong@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Young <dyoung@redhat.com>
 
-On 03/25/19 at 10:36am, Junichi Nomura wrote:
-> On 3/25/19 7:15 PM, Dave Young wrote:
-> > On 03/25/19 at 09:54am, Boris Petkov wrote:
-> >> On March 25, 2019 9:27:21 AM GMT+01:00, Junichi Nomura <j-nomura@ce.jp.nec.com> wrote:
-> >>> On 3/25/19 3:59 PM, Dave Young wrote:
-> >>>> On 03/25/19 at 06:47am, Junichi Nomura wrote:
-> >>>>> On 3/25/19 3:19 PM, Dave Young wrote:
-> >>>>>> On 03/25/19 at 02:01pm, Dave Young wrote:
-> >>>>>> I think normally people do not see this bug, because kernel will
-> >>> set the
-> >>>>>> rsdp in boot_params->acpi_rsdp_addr.  Maybe you are testing with
-> >>>>>
-> >>>>> I think it's only done for file-based kexec interface.
-> >>>>
-> >>>> Saw Kairui's another reply, yes, kexec-tools need a patch to fill the
-> >>>> value as well then.
-> >>>>
-> >>>> I would vote for a repost of your old patch with some #ifdef
-> >>>
-> >>> Thanks for comments, Dave, Kairui and Baoquan.
-> >>>
-> >>> The problem for me is it's a regression in v5.1-rc1, that breaks
-> >>> existing setup. If early parsing of RSDP is required only for newly
-> >>> supported configuration, I'm fine such configuration requires
-> >>> new tools or new options.
-> >>>
-> >>> This is the 1st version plus #ifdef around the EFI code.
-> >>
-> >> I'm going to repeat that again until you get it:
-> >>
-> >> If the kexec kernel should continue to use efi_systab_init() then you
-> >> should make efi_get_rsdp_addr() exit early in the kexec-ed kernel.
-> > 
-> > In that way, early parsing will fail in kexeced kernel, am I missing
-> > something?  The early code become complicated but since we have already
-> > the early acpi parsing why not to make it consistent in kexeced kernel?
-> 
+On Mon, Mar 25, 2019 at 10:36:33AM +0000, Junichi Nomura wrote:
 > AFAIU, early parsing is new code in v5.1-rc1 to support kexec on systems
 > with hotpluggable memory with KASLR enabled. For systems that requires the
 > new feature, it may be ok to say "you need to use another kexec interface"
 > and/or "you need new kexec-tools".
 
-Ok, it makes some sense, Kairui mentioned he will work on a kexec-tools
-patch then this becomes a must.
+No, this exactly should *not* happen. kexec is already full of duct tape
+- don't need any more of that.
 
-Thanks
-Dave
+So I suggested that efi_get_rsdp_addr() should exit early on in the
+kexeced kernel but making this all play nice with the kexec-ed kernel,
+as Dave suggests, is better.
+
+Now, my next question is: why does the RDSP address need to come from
+kexec(1) (by way of efi_setup_data) and why can't the kexec'ed kernel
+figure it out itself by parsing the EFI tables in a similar way to
+efi_get_rsdp_addr ?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
