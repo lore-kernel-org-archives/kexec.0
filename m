@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h8G1w-0002yj-EC
- for kexec@lists.infradead.org; Mon, 25 Mar 2019 03:12:13 +0000
-Subject: Re: [PATCH 1/3 v9] x86/mm: Change the examination condition to avoid
- confusion
-References: <20190321103309.27883-1-lijiang@redhat.com>
- <20190321103309.27883-2-lijiang@redhat.com> <20190322175114.GL12472@zn.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <aa4af285-0aa2-3477-76a8-87f93d4db599@redhat.com>
-Date: Mon, 25 Mar 2019 11:11:45 +0800
+ id 1h8Ig6-0002f9-9G
+ for kexec@lists.infradead.org; Mon, 25 Mar 2019 06:01:53 +0000
+Date: Mon, 25 Mar 2019 14:01:28 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] x86/boot: Use EFI setup data if provided
+Message-ID: <20190325060128.GB9385@dhcp-128-65.nay.redhat.com>
+References: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp>
+ <20190322152328.GD12472@zn.tnic>
+ <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp>
 MIME-Version: 1.0
-In-Reply-To: <20190322175114.GL12472@zn.tnic>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,35 +21,105 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas.Lendacky@amd.com, x86@kernel.org, bhe@redhat.com, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc: "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "bp@suse.de" <bp@suse.de>
 
-5ZyoIDIwMTnlubQwM+aciDIz5pelIDAxOjUxLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IFRodSwgTWFyIDIxLCAyMDE5IGF0IDA2OjMzOjA3UE0gKzA4MDAsIExpYW5ibyBKaWFuZyB3cm90
-ZToKPj4gRm9sbG93aW5nIHRoZSBjb21taXQgPDBlNGMxMmI0NWFhOD4gKCJ4ODYvbW0sIHJlc291
-cmNlOiBVc2UKPj4gUEFHRV9LRVJORUwgcHJvdGVjdGlvbiBmb3IgaW9yZW1hcCBvZiBtZW1vcnkg
-cGFnZXMiKSwKPiAKPiBUaGUgcHJvcGVyIGNvbW1pdCBxdW90YXRpb24gZm9ybWF0IGlzIGRvbmUg
-YnkgYWRkaW5nIHRoaXMgdG8geW91cgo+IC5naXRjb25maWc6Cj4gCj4gW2NvcmVdCj4gICAgICAg
-ICBhYmJyZXYgPSAxMgo+IFthbGlhc10KPiAgICAgICAgIG9uZSA9IHNob3cgLXMgLS1wcmV0dHk9
-J2Zvcm1hdDolaCAoXCIlc1wiKScKPiAKPiBhbmQgdGhlbiBkb2luZzoKPiAKPiAkIGdpdCBvbmUg
-PGNvbW1pdCBpZD4KPiAKPiB3aGljaCB3aWxsIGdpdmUgeW91Cj4gCj4gMGU0YzEyYjQ1YWE4ICgi
-eDg2L21tLCByZXNvdXJjZTogVXNlIFBBR0VfS0VSTkVMIHByb3RlY3Rpb24gZm9yIGlvcmVtYXAg
-b2YgbWVtb3J5IHBhZ2VzIikKCk5pY2UuIEkgYWRkZWQgdGhlbSB0byBteSAuZ2l0Y29uZmlnLiBJ
-dCB3b3Jrcy4gVGhhbmsgeW91IHZlcnkgbXVjaC4KCj4gCj4+IGhlcmUgaXQgaXMgcmVhbGx5IGNo
-ZWNraW5nIGZvciB0aGUgJ0lPUkVTX0RFU0NfQUNQSV8qJyB2YWx1ZXMuCj4gCj4gV2VsbCwgaXQg
-aXMgbm90IHJlYWxseSBjaGVja2luZyB0aGF0LgoKSSBtZWFuIGl0IG5lZWRzIHRvIGZpbmQgYWxs
-IHRoZSB2YWx1ZSBvZiB0aGUgJ0lPUkVTX0RFU0NfQUNQSV8qJyB0eXBlLgoKPiAKPj4gVGhlcmVm
-b3JlLCBpdCBpcyBuZWNlc3NhcnkgdG8gY2hhbmdlIHRoZSBleGFtaW5hdGlvbiBjb25kaXRpb24K
-Pj4gdG8gYXZvaWQgY29uZnVzaW9uLgo+IAo+IFdoYXQgY29uZnVzaW9uPwoKQXMgYWJvdmUgbWVu
-dGlvbmVkLCBpdCBuZWVkcyB0byBmaW5kIGFsbCB0aGUgdmFsdWUgb2YgdGhlICdJT1JFU19ERVND
-X0FDUElfKicKdHlwZSwgc28gd2Ugc2hvdWxkIGV4cGxpY2l0bHkgdXNlIHRoZSAnSU9SRVNfREVT
-Q19BQ1BJXyonIHR5cGUgYXMgdGhlIGNoZWNrCmNvbmRpdGlvbiBpbnN0ZWFkIG9mIHRoZSAnSU9S
-RVNfREVTQ19OT05FJy4KClRoYW5rcy4KTGlhbmJvCgo+IAo+IFRoZSBqdXN0aWZpY2F0aW9uIGZv
-ciB0aGF0IGNoYW5nZSBzb3VuZHMgcmVhbGx5IGZpc2h5Lgo+IAoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9rZXhlYwo=
+On 03/25/19 at 12:27am, Junichi Nomura wrote:
+> On Fri, Mar 22, 2019 at 04:23:28PM +0100, Borislav Petkov wrote:
+> > On Fri, Mar 22, 2019 at 11:03:43AM +0000, Junichi Nomura wrote:
+> > > Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+> > > boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+> > > in the early parsing code tries to search RSDP from EFI table but
+> > > whose address is virtual.
+> > > 
+> > > Since kexec(1) provides physical address of config_table via boot_params,
+> > > efi_get_rsdp_addr() should look for setup_data in the same way as
+> > > efi_systab_init() in arch/x86/platform/efi/efi.c does.
+> > 
+> > If the kexec kernel should continue to use efi_systab_init() then you
+> > should make efi_get_rsdp_addr() exit early in the kexec-ed kernel.
+> 
+> I'm not sure which way kexec devel is going. Added kexec list.
+> Here is the version that exits early in efi_get_rsdp_addr().
+> 
+> [PATCH] x86/boot: Don't try to search RSDP from EFI when kexec-booted
+> 
+> Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+> boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+> in the early parsing code tries to search RSDP from EFI table but
+> whose address is virtual.
+> 
+> Normally kexec(1) provides physical address of config_table via boot_params
+> and EFI code uses that during initialization.
+> For the early boot code, we just exit efi_get_rsdp_addr() early if the kernel
+> is booted by kexec.
+> 
+> Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+> Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+> Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+> Cc: Borislav Petkov <bp@suse.de>
+> 
+> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+> index 0ef4ad5..1cefc43 100644
+> --- a/arch/x86/boot/compressed/acpi.c
+> +++ b/arch/x86/boot/compressed/acpi.c
+> @@ -44,6 +44,24 @@ static acpi_physical_address get_acpi_rsdp(void)
+>  	return addr;
+>  }
+>  
+> +static bool is_kexec_booted(void)
+> +{
+> +	struct setup_data *data;
+> +
+> +	/*
+> +	 * kexec-tools provides EFI setup data so that kexec-ed kernel
+> +	 * can find proper tables.
+> +	 */
+> +	data = (struct setup_data *) boot_params->hdr.setup_data;
+> +	while (data) {
+> +		if (data->type == SETUP_EFI)
+> +			return true;
+> +		data = (struct setup_data *) data->next;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  /* Search EFI system tables for RSDP. */
+>  static acpi_physical_address efi_get_rsdp_addr(void)
+>  {
+> @@ -57,6 +75,10 @@ static acpi_physical_address efi_get_rsdp_addr(void)
+>  	int size, i;
+>  	char *sig;
+>  
+> +	/* If the system is kexec-booted, poking EFI systab may not work. */
+> +	if (is_kexec_booted())
+> +		return 0;
+> +
+>  	ei = &boot_params->efi_info;
+>  	sig = (char *)&ei->efi_loader_signature;
+>  
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+Good catch, this way looks good to me.  But the function
+is_kexec_booted can be compiled when #ifdef CONFIG_EFI
+
+Otherwise:
+
+Acked-by: Dave Young <dyoung@redhat.com>
+
+Thanks
+Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
