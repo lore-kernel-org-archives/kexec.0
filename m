@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h8JU6-0002vA-Al
- for kexec@lists.infradead.org; Mon, 25 Mar 2019 06:53:29 +0000
-Subject: Re: [PATCH 2/3 v9] resource: add the new I/O resource descriptor
- 'IORES_DESC_RESERVED'
-References: <20190321103309.27883-1-lijiang@redhat.com>
- <20190321103309.27883-3-lijiang@redhat.com> <20190322192800.GM12472@zn.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <47bfcbe2-1631-9733-74c2-fb3e56540052@redhat.com>
-Date: Mon, 25 Mar 2019 14:53:02 +0800
+ id 1h8JZy-0005Gl-KH
+ for kexec@lists.infradead.org; Mon, 25 Mar 2019 06:59:33 +0000
+Date: Mon, 25 Mar 2019 14:59:21 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] x86/boot: Use EFI setup data if provided
+Message-ID: <20190325065921.GA11096@dhcp-128-65.nay.redhat.com>
+References: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp>
+ <20190322152328.GD12472@zn.tnic>
+ <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp>
+ <20190325060128.GB9385@dhcp-128-65.nay.redhat.com>
+ <20190325061929.GC9385@dhcp-128-65.nay.redhat.com>
+ <bcb5bd29-a3b8-e42d-8da7-a8501f695c21@ce.jp.nec.com>
 MIME-Version: 1.0
-In-Reply-To: <20190322192800.GM12472@zn.tnic>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <bcb5bd29-a3b8-e42d-8da7-a8501f695c21@ce.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,102 +24,134 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas.Lendacky@amd.com, x86@kernel.org, bhe@redhat.com, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "bp@suse.de" <bp@suse.de>
 
-5ZyoIDIwMTnlubQwM+aciDIz5pelIDAzOjI4LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IFRodSwgTWFyIDIxLCAyMDE5IGF0IDA2OjMzOjA4UE0gKzA4MDAsIExpYW5ibyBKaWFuZyB3cm90
-ZToKPj4gV2hlbiBkb2luZyBrZXhlY19maWxlX2xvYWQsIHRoZSBmaXJzdCBrZXJuZWwgbmVlZHMg
-dG8gcGFzcyB0aGUgZTgyMAo+IAo+IFBsZWFzZSBlbmQgZnVuY3Rpb24gbmFtZXMgd2l0aCBwYXJl
-bnRoZXNlcy4KPiAKPj4gcmVzZXJ2ZWQgcmFuZ2VzIHRvIHRoZSBzZWNvbmQga2VybmVsLgo+IAo+
-IC4uLiBiZWNhdXNlLi4uID8KPiAKPj4gQnV0IGtlcm5lbCBjYW4gbm90IGV4YWN0bHkgbWF0Y2gg
-dGhlIGU4MjAgcmVzZXJ2ZWQgcmFuZ2VzCj4gICAgICBeCj4gICAgICB0aGUKPiAKPj4gd2hlbiB3
-YWxraW5nIHRocm91Z2ggdGhlIGlvbWVtIHJlc291cmNlcyB3aXRoIHRoZSBkZXNjcmlwdG9yCj4+
-ICdJT1JFU19ERVNDX05PTkUnLCBiZWNhdXNlIHNldmVyYWwgZTgyMCB0eXBlcyggZS5nLgo+PiBF
-ODIwX1RZUEVfUkVTRVJWRURfS0VSTi9FODIwX1RZUEVfUkFNL0U4MjBfVFlQRV9VTlVTQUJMRS9F
-ODIwCj4+IF9UWVBFX1JFU0VSVkVEKSBhcmUgY29udmVydGVkIHRvIHRoZSBkZXNjcmlwdG9yICdJ
-T1JFU19ERVNDX05PTkUnLgo+PiBJdCBtYXkgcGFzcyB0aGVzZSBmb3VyIHR5cGVzIHRvIHRoZSBr
-ZHVtcCBrZXJuZWwsIHRoYXQgaXMgbm90IGRlc2lyZWQgcmVzdWx0Lgo+IAo+IFJld3JpdGUgdGhh
-dCBzZW50ZW5jZS4KPiAKPj4gU28sIHRoaXMgcGF0Y2ggYWRkcyBhIG5ldyBJL08gcmVzb3VyY2Ug
-ZGVzY3JpcHRvciAnSU9SRVNfREVTQ19SRVNFUlZFRCcKPiAKPiBBdm9pZCBoYXZpbmcgIlRoaXMg
-cGF0Y2giIG9yICJUaGlzIGNvbW1pdCIgaW4gdGhlIGNvbW1pdCBtZXNzYWdlLiBJdCBpcwo+IHRh
-dXRvbG9naWNhbGx5IHVzZWxlc3MuCj4gCj4gQWxzbywgZG8KPiAKPiAkIGdpdCBncmVwICdUaGlz
-IHBhdGNoJyBEb2N1bWVudGF0aW9uL3Byb2Nlc3MKPiAKPiBmb3IgbW9yZSBkZXRhaWxzLgo+IAo+
-PiBmb3IgdGhlIGlvbWVtIHJlc291cmNlcyBzZWFyY2ggaW50ZXJmYWNlcy4gSXQgaXMgaGVscGZ1
-bCB0byBleGFjdGx5Cj4+IG1hdGNoIHRoZSByZXNlcnZlZCByZXNvdXJjZSByYW5nZXMgd2hlbiB3
-YWxraW5nIHRocm91Z2ggaW9tZW0gcmVzb3VyY2VzLgo+Pgo+PiBJbiBhZGRpdGlvbiwgc2luY2Ug
-dGhlIG5ldyBkZXNjcmlwdG9yICdJT1JFU19ERVNDX1JFU0VSVkVEJyBpcyBpbnRyb2R1Y2VkLAo+
-PiB0aGVzZSBjb2RlIG9yaWdpbmFsbHkgcmVsYXRlZCB0byB0aGUgZGVzY3JpcHRvciAnSU9SRVNf
-REVTQ19OT05FJyBuZWVkIHRvCj4gCj4gInRoZSBjb2RlIgo+IAo+PiBiZSB1cGRhdGVkLgo+IAo+
-PiBPdGhlcndpc2UsIGl0IHdpbGwgYmUgZWFzaWx5IGNvbmZ1c2VkIGFuZCBhbHNvIGNhdXNlIHNv
-bWUgZXJyb3JzLgo+IAo+IFdoYXQgZXJyb3JzPwo+IAo+PiBCZWNhdXNlIHRoZSAnRTgyMF9UWVBF
-X1JFU0VSVkVEJyB0eXBlIGlzIGNvbnZlcnRlZCB0byB0aGUgbmV3Cj4+IGRlc2NyaXB0b3IgJ0lP
-UkVTX0RFU0NfUkVTRVJWRUQnIGluc3RlYWQgb2YgJ0lPUkVTX0RFU0NfTk9ORScsIGl0IGhhcyBi
-ZWVuCj4+IGNoYW5nZWQuCj4gCj4gVGhhdCBzZW50ZW5jZSBJIGNhbm5vdCBwYXJzZS4KClRoYW5r
-cyBmb3IgeW91ciBjb21tZW50LiBJIHdpbGwgaW1wcm92ZSB0aGUgcGF0Y2ggbG9nIG5leHQgcG9z
-dC4KCj4gCj4+IFN1Z2dlc3RlZC1ieTogQm9yaXNsYXYgUGV0a292IDxicEBzdXNlLmRlPgo+PiBT
-aWduZWQtb2ZmLWJ5OiBMaWFuYm8gSmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4KPj4gLS0tCj4+
-ICBhcmNoL3g4Ni9rZXJuZWwvZTgyMC5jIHwgMiArLQo+PiAgaW5jbHVkZS9saW51eC9pb3BvcnQu
-aCB8IDEgKwo+PiAga2VybmVsL3Jlc291cmNlLmMgICAgICB8IDYgKysrLS0tCj4+ICAzIGZpbGVz
-IGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdp
-dCBhL2FyY2gveDg2L2tlcm5lbC9lODIwLmMgYi9hcmNoL3g4Ni9rZXJuZWwvZTgyMC5jCj4+IGlu
-ZGV4IDI4NzllMjM0ZTE5My4uMTZmY2RlMTk2MjQzIDEwMDY0NAo+PiAtLS0gYS9hcmNoL3g4Ni9r
-ZXJuZWwvZTgyMC5jCj4+ICsrKyBiL2FyY2gveDg2L2tlcm5lbC9lODIwLmMKPj4gQEAgLTEwNTAs
-MTAgKzEwNTAsMTAgQEAgc3RhdGljIHVuc2lnbmVkIGxvbmcgX19pbml0IGU4MjBfdHlwZV90b19p
-b3Jlc19kZXNjKHN0cnVjdCBlODIwX2VudHJ5ICplbnRyeSkKPj4gIAljYXNlIEU4MjBfVFlQRV9O
-VlM6CQlyZXR1cm4gSU9SRVNfREVTQ19BQ1BJX05WX1NUT1JBR0U7Cj4+ICAJY2FzZSBFODIwX1RZ
-UEVfUE1FTToJCXJldHVybiBJT1JFU19ERVNDX1BFUlNJU1RFTlRfTUVNT1JZOwo+PiAgCWNhc2Ug
-RTgyMF9UWVBFX1BSQU06CQlyZXR1cm4gSU9SRVNfREVTQ19QRVJTSVNURU5UX01FTU9SWV9MRUdB
-Q1k7Cj4+ICsJY2FzZSBFODIwX1RZUEVfUkVTRVJWRUQ6CXJldHVybiBJT1JFU19ERVNDX1JFU0VS
-VkVEOwo+PiAgCWNhc2UgRTgyMF9UWVBFX1JFU0VSVkVEX0tFUk46CS8qIEZhbGwtdGhyb3VnaDog
-Ki8KPj4gIAljYXNlIEU4MjBfVFlQRV9SQU06CQkvKiBGYWxsLXRocm91Z2g6ICovCj4+ICAJY2Fz
-ZSBFODIwX1RZUEVfVU5VU0FCTEU6CS8qIEZhbGwtdGhyb3VnaDogKi8KPj4gLQljYXNlIEU4MjBf
-VFlQRV9SRVNFUlZFRDoJLyogRmFsbC10aHJvdWdoOiAqLwo+PiAgCWRlZmF1bHQ6CQkJcmV0dXJu
-IElPUkVTX0RFU0NfTk9ORTsKPj4gIAl9Cj4+ICB9Cj4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xp
-bnV4L2lvcG9ydC5oIGIvaW5jbHVkZS9saW51eC9pb3BvcnQuaAo+PiBpbmRleCBkYTBlYmFlYzI1
-ZjAuLjZlZDU5ZGU0OGJkNSAxMDA2NDQKPj4gLS0tIGEvaW5jbHVkZS9saW51eC9pb3BvcnQuaAo+
-PiArKysgYi9pbmNsdWRlL2xpbnV4L2lvcG9ydC5oCj4+IEBAIC0xMzMsNiArMTMzLDcgQEAgZW51
-bSB7Cj4+ICAJSU9SRVNfREVTQ19QRVJTSVNURU5UX01FTU9SWV9MRUdBQ1kJPSA1LAo+PiAgCUlP
-UkVTX0RFU0NfREVWSUNFX1BSSVZBVEVfTUVNT1JZCT0gNiwKPj4gIAlJT1JFU19ERVNDX0RFVklD
-RV9QVUJMSUNfTUVNT1JZCQk9IDcsCj4+ICsJSU9SRVNfREVTQ19SRVNFUlZFRAkJCT0gOCwKPj4g
-IH07Cj4+ICAKPj4gIC8qIGhlbHBlcnMgdG8gZGVmaW5lIHJlc291cmNlcyAqLwo+IAo+IElPUkVT
-X0RFU0NfUkVTRVJWRUQgaXMgc3VwcG9zZWQgdG8gcmVwcmVzZW50IEU4MjBfVFlQRV9SRVNFUlZF
-RC4gQW5kIGlmPiB0aGF0IGlzIHRoZSBjYXNlLCB0aGVuIGFsbCB0aHJlZSBodW5rcyBiZWxvdyBs
-b29rIHdyb25nIHRvIG1lLiBJZiB5b3UKPiB3YW50IHRvIHBhc3MgRTgyMF9UWVBFX1JFU0VSVkVE
-IHJhbmdlcywgdGhlbiBkbyB0aGF0IGV4cGxpY2l0bHkuCgpJbiB0aGlzIGZ1bmN0aW9uLCBpIHBy
-aW50ZWQgaXRzIHZhbHVlcywgYW5kIG9ubHkgZ290IHRoZSB2YWx1ZSBvZiByZXNlcnZlZAp0eXBl
-LCBzbyBpIGNoYW5nZWQgdGhlIElPUkVTX0RFU0NfTk9ORSB0byB0aGUgSU9SRVNfREVTQ19SRVNF
-UlZFRC4KCkluIGFkZGl0aW9uLCBhZnRlciB0aGUgbmV3IGRlc2NyaXB0b3IgJ0lPUkVTX0RFU0Nf
-UkVTRVJWRUQnIGlzIGludHJvZHVjZWQsCnRoZSBJT1JFU19ERVNDX05PTkUgZG9lcyBub3QgaW5j
-bHVkZSB0aGUgSU9SRVNfREVTQ19SRVNFUlZFRCBhbnkgbW9yZSwgaXQKY291bGQgbWlzcyB0byBo
-YW5kbGUgdGhlIHZhbHVlIG9mIHRoZSByZXNlcnZlZCB0eXBlLgoKRG8geW91IG1lYW4gaSBzaG91
-bGQgbmV2ZXIgdG91Y2ggdGhlIHRocmVlIGNodW5rcz8gSWYgaSBtYWRlIGEgbWlzdGFrZSwgaQp3
-aWxsIHJlbW92ZSB0aGlzIGNoYW5nZXMgbmV4dCBwb3N0LgoKVGhhbmtzLgpMaWFuYm8KCj4gCj4+
-IGRpZmYgLS1naXQgYS9rZXJuZWwvcmVzb3VyY2UuYyBiL2tlcm5lbC9yZXNvdXJjZS5jCj4+IGlu
-ZGV4IGU4MWIxN2I1M2ZhNS4uZWU3MzQ4NzYxODU4IDEwMDY0NAo+PiAtLS0gYS9rZXJuZWwvcmVz
-b3VyY2UuYwo+PiArKysgYi9rZXJuZWwvcmVzb3VyY2UuYwo+PiBAQCAtOTkwLDcgKzk5MCw3IEBA
-IF9fcmVzZXJ2ZV9yZWdpb25fd2l0aF9zcGxpdChzdHJ1Y3QgcmVzb3VyY2UgKnJvb3QsIHJlc291
-cmNlX3NpemVfdCBzdGFydCwKPj4gIAlyZXMtPnN0YXJ0ID0gc3RhcnQ7Cj4+ICAJcmVzLT5lbmQg
-PSBlbmQ7Cj4+ICAJcmVzLT5mbGFncyA9IHR5cGUgfCBJT1JFU09VUkNFX0JVU1k7Cj4+IC0JcmVz
-LT5kZXNjID0gSU9SRVNfREVTQ19OT05FOwo+PiArCXJlcy0+ZGVzYyA9IElPUkVTX0RFU0NfUkVT
-RVJWRUQ7Cj4+ICAKPj4gIAl3aGlsZSAoMSkgewo+PiAgCj4+IEBAIC0xMDI1LDcgKzEwMjUsNyBA
-QCBfX3Jlc2VydmVfcmVnaW9uX3dpdGhfc3BsaXQoc3RydWN0IHJlc291cmNlICpyb290LCByZXNv
-dXJjZV9zaXplX3Qgc3RhcnQsCj4+ICAJCQkJbmV4dF9yZXMtPnN0YXJ0ID0gY29uZmxpY3QtPmVu
-ZCArIDE7Cj4+ICAJCQkJbmV4dF9yZXMtPmVuZCA9IGVuZDsKPj4gIAkJCQluZXh0X3Jlcy0+Zmxh
-Z3MgPSB0eXBlIHwgSU9SRVNPVVJDRV9CVVNZOwo+PiAtCQkJCW5leHRfcmVzLT5kZXNjID0gSU9S
-RVNfREVTQ19OT05FOwo+PiArCQkJCW5leHRfcmVzLT5kZXNjID0gSU9SRVNfREVTQ19SRVNFUlZF
-RDsKPj4gIAkJCX0KPj4gIAkJfSBlbHNlIHsKPj4gIAkJCXJlcy0+c3RhcnQgPSBjb25mbGljdC0+
-ZW5kICsgMTsKPj4gQEAgLTE0ODgsNyArMTQ4OCw3IEBAIHN0YXRpYyBpbnQgX19pbml0IHJlc2Vy
-dmVfc2V0dXAoY2hhciAqc3RyKQo+PiAgCQkJcmVzLT5zdGFydCA9IGlvX3N0YXJ0Owo+PiAgCQkJ
-cmVzLT5lbmQgPSBpb19zdGFydCArIGlvX251bSAtIDE7Cj4+ICAJCQlyZXMtPmZsYWdzIHw9IElP
-UkVTT1VSQ0VfQlVTWTsKPj4gLQkJCXJlcy0+ZGVzYyA9IElPUkVTX0RFU0NfTk9ORTsKPj4gKwkJ
-CXJlcy0+ZGVzYyA9IElPUkVTX0RFU0NfUkVTRVJWRUQ7Cj4+ICAJCQlyZXMtPmNoaWxkID0gTlVM
-TDsKPj4gIAkJCWlmIChyZXF1ZXN0X3Jlc291cmNlKHBhcmVudCwgcmVzKSA9PSAwKQo+PiAgCQkJ
-CXJlc2VydmVkID0geCsxOwo+PiAtLSAKPj4gMi4xNy4xCj4+Cj4gCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2tleGVjCg==
+On 03/25/19 at 06:47am, Junichi Nomura wrote:
+> On 3/25/19 3:19 PM, Dave Young wrote:
+> > On 03/25/19 at 02:01pm, Dave Young wrote:
+> >> On 03/25/19 at 12:27am, Junichi Nomura wrote:
+> >>> On Fri, Mar 22, 2019 at 04:23:28PM +0100, Borislav Petkov wrote:
+> >>>> On Fri, Mar 22, 2019 at 11:03:43AM +0000, Junichi Nomura wrote:
+> >>>>> Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+> >>>>> boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+> >>>>> in the early parsing code tries to search RSDP from EFI table but
+> >>>>> whose address is virtual.
+> >>>>>
+> >>>>> Since kexec(1) provides physical address of config_table via boot_params,
+> >>>>> efi_get_rsdp_addr() should look for setup_data in the same way as
+> >>>>> efi_systab_init() in arch/x86/platform/efi/efi.c does.
+> >>>>
+> >>>> If the kexec kernel should continue to use efi_systab_init() then you
+> >>>> should make efi_get_rsdp_addr() exit early in the kexec-ed kernel.
+> >>>
+> >>> I'm not sure which way kexec devel is going. Added kexec list.
+> >>> Here is the version that exits early in efi_get_rsdp_addr().
+> >>>
+> >>> [PATCH] x86/boot: Don't try to search RSDP from EFI when kexec-booted
+> >>>
+> >>> Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+> >>> boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+> >>> in the early parsing code tries to search RSDP from EFI table but
+> >>> whose address is virtual.
+> >>>
+> >>> Normally kexec(1) provides physical address of config_table via boot_params
+> >>> and EFI code uses that during initialization.
+> >>> For the early boot code, we just exit efi_get_rsdp_addr() early if the kernel
+> >>> is booted by kexec.
+> >>>
+> >>> Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+> >>> Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+> >>> Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+> >>> Cc: Borislav Petkov <bp@suse.de>
+> >>>
+> >>> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+> >>> index 0ef4ad5..1cefc43 100644
+> >>> --- a/arch/x86/boot/compressed/acpi.c
+> >>> +++ b/arch/x86/boot/compressed/acpi.c
+> >>> @@ -44,6 +44,24 @@ static acpi_physical_address get_acpi_rsdp(void)
+> >>>  	return addr;
+> >>>  }
+> >>>  
+> >>> +static bool is_kexec_booted(void)
+> >>> +{
+> >>> +	struct setup_data *data;
+> >>> +
+> >>> +	/*
+> >>> +	 * kexec-tools provides EFI setup data so that kexec-ed kernel
+> >>> +	 * can find proper tables.
+> >>> +	 */
+> >>> +	data = (struct setup_data *) boot_params->hdr.setup_data;
+> >>> +	while (data) {
+> >>> +		if (data->type == SETUP_EFI)
+> >>> +			return true;
+> >>> +		data = (struct setup_data *) data->next;
+> >>> +	}
+> >>> +
+> >>> +	return false;
+> >>> +}
+> >>> +
+> >>>  /* Search EFI system tables for RSDP. */
+> >>>  static acpi_physical_address efi_get_rsdp_addr(void)
+> >>>  {
+> >>> @@ -57,6 +75,10 @@ static acpi_physical_address efi_get_rsdp_addr(void)
+> >>>  	int size, i;
+> >>>  	char *sig;
+> >>>  
+> >>> +	/* If the system is kexec-booted, poking EFI systab may not work. */
+> >>> +	if (is_kexec_booted())
+> >>> +		return 0;
+> >>> +
+> >>>  	ei = &boot_params->efi_info;
+> >>>  	sig = (char *)&ei->efi_loader_signature;
+> >>>  
+> >>>
+> >>> _______________________________________________
+> >>> kexec mailing list
+> >>> kexec@lists.infradead.org
+> >>> http://lists.infradead.org/mailman/listinfo/kexec
+> >>
+> >> Good catch, this way looks good to me.  But the function
+> >> is_kexec_booted can be compiled when #ifdef CONFIG_EFI
+> >>
+> >> Otherwise:
+> >>
+> >> Acked-by: Dave Young <dyoung@redhat.com>
+> >>
+> > 
+> > Hold on, I replied too quick.  One question is does the above patch
+> > passed your test?   It can workaround and skip the wrong phys addr
+> > issue, but the acpi early parsing still fails because efi_get_rsdp_addr
+> > return 0? 
+> 
+> The patch works for me.
+> Early parsing fails with the 2nd patch but it boots fine.
+> EFI initialization is done later without boot_params->acpi_rsdp_addr.
+> I think that's how v5.0 and earlier kernels work.
+
+Ok, thanks 
+
+> 
+> > If this is the case you may need go with your old patch.
+> > 
+> > I think normally people do not see this bug, because kernel will set the
+> > rsdp in boot_params->acpi_rsdp_addr.  Maybe you are testing with
+> 
+> I think it's only done for file-based kexec interface.
+
+Saw Kairui's another reply, yes, kexec-tools need a patch to fill the
+value as well then.
+
+I would vote for a repost of your old patch with some #ifdef
+
+Thanks
+Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
