@@ -1,23 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-dm3nam05on060a.outbound.protection.outlook.com
- ([2a01:111:f400:fe51::60a]
- helo=NAM05-DM3-obe.outbound.protection.outlook.com)
+Received: from mail-eopbgr680067.outbound.protection.outlook.com
+ ([40.107.68.67] helo=NAM04-BN3-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h8VMe-0000tY-EV
- for kexec@lists.infradead.org; Mon, 25 Mar 2019 19:34:36 +0000
+ id 1h8Vkt-0001rX-4U
+ for kexec@lists.infradead.org; Mon, 25 Mar 2019 19:59:38 +0000
 From: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Subject: Re: [PATCH 1/2 v8] resource: add the new I/O resource descriptor
- 'IORES_DESC_RESERVED'
-Date: Mon, 25 Mar 2019 19:34:25 +0000
-Message-ID: <b1556461-fe83-2ba0-00a3-e8ecf3e286fe@amd.com>
-References: <20181129080956.20776-1-lijiang@redhat.com>
- <20181129080956.20776-2-lijiang@redhat.com>
- <20181130033703.GA23624@dhcp-128-65.nay.redhat.com>
- <b8936194-01ef-8b8f-254e-039fc951855d@amd.com>
- <95661569-d9c9-af13-11c4-c0d752710a1f@redhat.com>
-In-Reply-To: <95661569-d9c9-af13-11c4-c0d752710a1f@redhat.com>
+Subject: Re: [PATCH 1/3] kexec: Do not map the kexec area as decrypted when
+ SEV is active
+Date: Mon, 25 Mar 2019 19:59:28 +0000
+Message-ID: <be457f42-40b0-6d21-0f0c-2a5e3860d4d5@amd.com>
+References: <20190315103203.13128-1-lijiang@redhat.com>
+ <20190315103203.13128-2-lijiang@redhat.com> <20190324150034.GH23289@zn.tnic>
+ <7b115829-40d9-e55e-dee3-ec8e4766971f@redhat.com>
+ <20190325063742.GA12016@zn.tnic>
+ <652b9166-f06e-c210-3c3f-c9e80a97db18@amd.com>
+ <20190325173239.GO12016@zn.tnic>
+ <11013ad2-2eab-5a7a-d4e2-a9da4920cfab@amd.com>
+In-Reply-To: <11013ad2-2eab-5a7a-d4e2-a9da4920cfab@amd.com>
 Content-Language: en-US
-Content-ID: <70854FCF16E9814599C1A02D27926501@namprd12.prod.outlook.com>
+Content-ID: <55B1418933BAD443B6014793C219213B@namprd12.prod.outlook.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,162 +28,111 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: "tony.luck@intel.com" <tony.luck@intel.com>, "fenghua.yu@intel.com" <fenghua.yu@intel.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "bhe@redhat.com" <bhe@redhat.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "peterz@infradead.org" <peterz@infradead.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, "luto@kernel.org" <luto@kernel.org>, Toshi Kani <toshi.kani@hp.com>, "tglx@linutronix.de" <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>
+To: "Singh, Brijesh" <brijesh.singh@amd.com>, Borislav Petkov <bp@alien8.de>
+Cc: lijiang <lijiang@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "dyoung@redhat.com" <dyoung@redhat.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>
 
-T24gMy8xNi8xOSAyOjMxIEFNLCBsaWppYW5nIHdyb3RlOg0KPiANCj4gDQo+IOWcqCAyMDE45bm0
-MTLmnIgwNeaXpSAwNTozMywgTGVuZGFja3ksIFRob21hcyDlhpnpgZM6DQo+PiBPbiAxMS8yOS8y
-MDE4IDA5OjM3IFBNLCBEYXZlIFlvdW5nIHdyb3RlOg0KPj4+ICsgbW9yZSBwZW9wbGUNCj4+Pg0K
-Pj4+IE9uIDExLzI5LzE4IGF0IDA0OjA5cG0sIExpYW5ibyBKaWFuZyB3cm90ZToNCj4+Pj4gV2hl
-biBkb2luZyBrZXhlY19maWxlX2xvYWQsIHRoZSBmaXJzdCBrZXJuZWwgbmVlZHMgdG8gcGFzcyB0
-aGUgZTgyMA0KPj4+PiByZXNlcnZlZCByYW5nZXMgdG8gdGhlIHNlY29uZCBrZXJuZWwuIEJ1dCBr
-ZXJuZWwgY2FuIG5vdCBleGFjdGx5DQo+Pj4+IG1hdGNoIHRoZSBlODIwIHJlc2VydmVkIHJhbmdl
-cyB3aGVuIHdhbGtpbmcgdGhyb3VnaCB0aGUgaW9tZW0gcmVzb3VyY2VzDQo+Pj4+IHdpdGggdGhl
-IGRlc2NyaXB0b3IgJ0lPUkVTX0RFU0NfTk9ORScsIGJlY2F1c2Ugc2V2ZXJhbCBlODIwIHR5cGVz
-KA0KPj4+PiBlLmcuIEU4MjBfVFlQRV9SRVNFUlZFRF9LRVJOL0U4MjBfVFlQRV9SQU0vRTgyMF9U
-WVBFX1VOVVNBQkxFL0U4MjANCj4+Pj4gX1RZUEVfUkVTRVJWRUQpIGFyZSBjb252ZXJ0ZWQgdG8g
-dGhlIGRlc2NyaXB0b3IgJ0lPUkVTX0RFU0NfTk9ORScuIEl0DQo+Pj4+IG1heSBwYXNzIHRoZXNl
-IGZvdXIgdHlwZXMgdG8gdGhlIGtkdW1wIGtlcm5lbCwgdGhhdCBpcyBub3QgZGVzaXJlZCByZXN1
-bHQuDQo+Pj4+DQo+Pj4+IFNvLCB0aGlzIHBhdGNoIGFkZHMgYSBuZXcgSS9PIHJlc291cmNlIGRl
-c2NyaXB0b3IgJ0lPUkVTX0RFU0NfUkVTRVJWRUQnDQo+Pj4+IGZvciB0aGUgaW9tZW0gcmVzb3Vy
-Y2VzIHNlYXJjaCBpbnRlcmZhY2VzLiBJdCBpcyBoZWxwZnVsIHRvIGV4YWN0bHkNCj4+Pj4gbWF0
-Y2ggdGhlIHJlc2VydmVkIHJlc291cmNlIHJhbmdlcyB3aGVuIHdhbGtpbmcgdGhyb3VnaCBpb21l
-bSByZXNvdXJjZXMuDQo+Pj4+DQo+Pj4+IEluIGFkZGl0aW9uLCBzaW5jZSB0aGUgbmV3IGRlc2Ny
-aXB0b3IgJ0lPUkVTX0RFU0NfUkVTRVJWRUQnIGlzIGludHJvZHVjZWQsDQo+Pj4+IHRoZXNlIGNv
-ZGUgb3JpZ2luYWxseSByZWxhdGVkIHRvIHRoZSBkZXNjcmlwdG9yICdJT1JFU19ERVNDX05PTkUn
-IG5lZWQgdG8NCj4+Pj4gYmUgdXBkYXRlZC4gT3RoZXJ3aXNlLCBpdCB3aWxsIGJlIGVhc2lseSBj
-b25mdXNlZCBhbmQgYWxzbyBjYXVzZSBzb21lDQo+Pj4+IGVycm9ycy4gQmVjYXVzZSB0aGUgJ0U4
-MjBfVFlQRV9SRVNFUlZFRCcgdHlwZSBpcyBjb252ZXJ0ZWQgdG8gdGhlIG5ldw0KPj4+PiBkZXNj
-cmlwdG9yICdJT1JFU19ERVNDX1JFU0VSVkVEJyBpbnN0ZWFkIG9mICdJT1JFU19ERVNDX05PTkUn
-LCBpdCBoYXMgYmVlbg0KPj4+PiBjaGFuZ2VkLg0KPj4+Pg0KPj4+PiBTdWdnZXN0ZWQtYnk6IERh
-dmUgWW91bmcgPGR5b3VuZ0ByZWRoYXQuY29tPg0KPj4+PiBTaWduZWQtb2ZmLWJ5OiBMaWFuYm8g
-SmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4NCj4+Pj4gLS0tDQo+Pj4+ICBhcmNoL2lhNjQva2Vy
-bmVsL2VmaS5jIHwgIDQgKysrKw0KPj4+PiAgYXJjaC94ODYva2VybmVsL2U4MjAuYyB8ICAyICst
-DQo+Pj4+ICBhcmNoL3g4Ni9tbS9pb3JlbWFwLmMgIHwgMTMgKysrKysrKysrKysrLQ0KPj4+PiAg
-aW5jbHVkZS9saW51eC9pb3BvcnQuaCB8ICAxICsNCj4+Pj4gIGtlcm5lbC9yZXNvdXJjZS5jICAg
-ICAgfCAgNiArKystLS0NCj4+Pj4gIDUgZmlsZXMgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwg
-NSBkZWxldGlvbnMoLSkNCj4+Pj4NCj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvaWE2NC9rZXJuZWwv
-ZWZpLmMgYi9hcmNoL2lhNjQva2VybmVsL2VmaS5jDQo+Pj4+IGluZGV4IDhmMTA2NjM4OTEzYy4u
-MTg0MWU5YjRkYjMwIDEwMDY0NA0KPj4+PiAtLS0gYS9hcmNoL2lhNjQva2VybmVsL2VmaS5jDQo+
-Pj4+ICsrKyBiL2FyY2gvaWE2NC9rZXJuZWwvZWZpLmMNCj4+Pj4gQEAgLTEyMzEsNiArMTIzMSwx
-MCBAQCBlZmlfaW5pdGlhbGl6ZV9pb21lbV9yZXNvdXJjZXMoc3RydWN0IHJlc291cmNlICpjb2Rl
-X3Jlc291cmNlLA0KPj4+PiAgCQkJCWJyZWFrOw0KPj4+PiAgDQo+Pj4+ICAJCQljYXNlIEVGSV9S
-RVNFUlZFRF9UWVBFOg0KPj4+PiArCQkJCW5hbWUgPSAicmVzZXJ2ZWQiOw0KPj4+DQo+Pj4gSW5n
-byB1cGRhdGVkIFg4NiBjb2RlIHRvIHVzZSAiUmVzZXJ2ZWQiLCAgSSB0aGluayBpdCB3b3VsZCBi
-ZSBnb29kIHRvIGRvDQo+Pj4gc2FtZSBmb3IgdGhpcyBjYXNlIGFzIHdlbGwNCj4+Pg0KPj4+PiAr
-CQkJCWRlc2MgPSBJT1JFU19ERVNDX1JFU0VSVkVEOw0KPj4+PiArCQkJCWJyZWFrOw0KPj4+PiAr
-DQo+Pj4+ICAJCQljYXNlIEVGSV9SVU5USU1FX1NFUlZJQ0VTX0NPREU6DQo+Pj4+ICAJCQljYXNl
-IEVGSV9SVU5USU1FX1NFUlZJQ0VTX0RBVEE6DQo+Pj4+ICAJCQljYXNlIEVGSV9BQ1BJX1JFQ0xB
-SU1fTUVNT1JZOg0KPj4+DQo+Pj4gT3JpZ2luYWxseSwgYWJvdmUgMyBhcmUgYWxsICJyZXNlcnZl
-ZCIsIHNvIHByb2JhYmx5IHRoZXkgYWxsIHNob3VsZCBiZQ0KPj4+IElPUkVTX0RFU0NfUkVTRVJW
-RUQuDQo+Pj4NCj4+PiBDYW4gYW55IElBNjQgcGVvcGxlIHRvIHJldmlldyB0aGlzPw0KPj4+DQo+
-Pj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwvZTgyMC5jIGIvYXJjaC94ODYva2VybmVs
-L2U4MjAuYw0KPj4+PiBpbmRleCA1MDg5NWMyZjkzN2QuLjU3ZmFmZGFmYjg2MCAxMDA2NDQNCj4+
-Pj4gLS0tIGEvYXJjaC94ODYva2VybmVsL2U4MjAuYw0KPj4+PiArKysgYi9hcmNoL3g4Ni9rZXJu
-ZWwvZTgyMC5jDQo+Pj4+IEBAIC0xMDQ4LDEwICsxMDQ4LDEwIEBAIHN0YXRpYyB1bnNpZ25lZCBs
-b25nIF9faW5pdCBlODIwX3R5cGVfdG9faW9yZXNfZGVzYyhzdHJ1Y3QgZTgyMF9lbnRyeSAqZW50
-cnkpDQo+Pj4+ICAJY2FzZSBFODIwX1RZUEVfTlZTOgkJcmV0dXJuIElPUkVTX0RFU0NfQUNQSV9O
-Vl9TVE9SQUdFOw0KPj4+PiAgCWNhc2UgRTgyMF9UWVBFX1BNRU06CQlyZXR1cm4gSU9SRVNfREVT
-Q19QRVJTSVNURU5UX01FTU9SWTsNCj4+Pj4gIAljYXNlIEU4MjBfVFlQRV9QUkFNOgkJcmV0dXJu
-IElPUkVTX0RFU0NfUEVSU0lTVEVOVF9NRU1PUllfTEVHQUNZOw0KPj4+PiArCWNhc2UgRTgyMF9U
-WVBFX1JFU0VSVkVEOglyZXR1cm4gSU9SRVNfREVTQ19SRVNFUlZFRDsNCj4+Pj4gIAljYXNlIEU4
-MjBfVFlQRV9SRVNFUlZFRF9LRVJOOgkvKiBGYWxsLXRocm91Z2g6ICovDQo+Pj4+ICAJY2FzZSBF
-ODIwX1RZUEVfUkFNOgkJLyogRmFsbC10aHJvdWdoOiAqLw0KPj4+PiAgCWNhc2UgRTgyMF9UWVBF
-X1VOVVNBQkxFOgkvKiBGYWxsLXRocm91Z2g6ICovDQo+Pj4+IC0JY2FzZSBFODIwX1RZUEVfUkVT
-RVJWRUQ6CS8qIEZhbGwtdGhyb3VnaDogKi8NCj4+Pj4gIAlkZWZhdWx0OgkJCXJldHVybiBJT1JF
-U19ERVNDX05PTkU7DQo+Pj4+ICAJfQ0KPj4+PiAgfQ0KPj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC94
-ODYvbW0vaW9yZW1hcC5jIGIvYXJjaC94ODYvbW0vaW9yZW1hcC5jDQo+Pj4+IGluZGV4IDUzNzhk
-MTBmMWQzMS4uZmVhMmVmOTk0MTVkIDEwMDY0NA0KPj4+PiAtLS0gYS9hcmNoL3g4Ni9tbS9pb3Jl
-bWFwLmMNCj4+Pj4gKysrIGIvYXJjaC94ODYvbW0vaW9yZW1hcC5jDQo+Pj4+IEBAIC04Myw3ICs4
-MywxOCBAQCBzdGF0aWMgYm9vbCBfX2lvcmVtYXBfY2hlY2tfcmFtKHN0cnVjdCByZXNvdXJjZSAq
-cmVzKQ0KPj4+PiAgDQo+Pj4+ICBzdGF0aWMgaW50IF9faW9yZW1hcF9jaGVja19kZXNjX290aGVy
-KHN0cnVjdCByZXNvdXJjZSAqcmVzKQ0KPj4+PiAgew0KPj4+PiAtCXJldHVybiAocmVzLT5kZXNj
-ICE9IElPUkVTX0RFU0NfTk9ORSk7DQo+Pj4+ICsJLyoNCj4+Pj4gKwkgKiBCdXQgbm93LCB0aGUg
-J0U4MjBfVFlQRV9SRVNFUlZFRCcgdHlwZSBpcyBjb252ZXJ0ZWQgdG8gdGhlIG5ldw0KPj4+PiAr
-CSAqIGRlc2NyaXB0b3IgJ0lPUkVTX0RFU0NfUkVTRVJWRUQnIGluc3RlYWQgb2YgJ0lPUkVTX0RF
-U0NfTk9ORScsDQo+Pj4+ICsJICogaXQgaGFzIGJlZW4gY2hhbmdlZC4gQW5kIHRoZSB2YWx1ZSBv
-ZiAnbWVtX2ZsYWdzLmRlc2Nfb3RoZXInDQo+Pj4+ICsJICogaXMgZXF1YWwgdG8gJ3RydWUnIGlm
-IHdlIGRvbid0IHN0cmVuZ3RoZW4gdGhlIGNvbmRpdGlvbiBpbiB0aGlzDQo+Pj4+ICsJICogZnVu
-Y3Rpb24sIHRoYXQgaXMgd3JvbmcuIEJlY2F1c2Ugb3JpZ2luYWxseSBpdCBpcyBlcXVhbCB0bw0K
-Pj4+PiArCSAqICdmYWxzZScgZm9yIHRoZSBzYW1lIHJlc2VydmVkIHR5cGUuDQo+Pj4+ICsJICoN
-Cj4+Pj4gKwkgKiBTbywgdGhhdCB3b3VsZCBiZSBuaWNlIHRvIGtlZXAgaXQgdGhlIHNhbWUgYXMg
-YmVmb3JlLg0KPj4+PiArCSAqLw0KPj4+PiArCXJldHVybiAoKHJlcy0+ZGVzYyAhPSBJT1JFU19E
-RVNDX05PTkUpICYmDQo+Pj4+ICsJCShyZXMtPmRlc2MgIT0gSU9SRVNfREVTQ19SRVNFUlZFRCkp
-Ow0KPj4+PiAgfQ0KPj4+DQo+Pj4gQWRkZWQgVG9tIHNpbmNlIGhlIGFkZGVkIHRoZSBjaGVjayBm
-dW5jdGlvbi4gIElzIGl0IHBvc3NpYmxlIHRvIG9ubHkNCj4+PiBjaGVjayBleHBsaWN0IHZhbGlk
-IGRlc2MgdHlwZXMgaW5zdGVhZCBvZiBleGNsdWRlIElPUkVTX0RFU0NfTk9ORT8NCj4+DQo+PiBT
-b3JyeSBmb3IgdGhlIGRlbGF5Li4uDQo+Pg0KPj4gVGhlIG9yaWdpbmFsIGludGVudCBvZiB0aGUg
-Y2hlY2sgd2FzIHRvIG1hcCBtb3N0IG1lbW9yeSBhcyBlbmNyeXB0ZWQgdW5kZXINCj4+IFNFViBp
-ZiBpdCB3YXMgbWFya2VkIHdpdGggYSBzcGVjaWZpYyBkZXNjcmlwdG9yLCBzaW5jZSBpdCB3YXMg
-bGlrZWx5IHRvDQo+PiBub3QgYmUgTU1JTy4gSSB0cmllZCBjb252ZXJ0aW5nIG1vc3QgdGhpbmdz
-IHRoYXQgbWFwcGVkIG1lbW9yeSB0byBtZW1yZW1hcA0KPj4gdnMgaW9yZW1hcCwgYnV0IEFDUEkg
-d2FzIG9uZSBhcmVhIHRoYXQgSSBsZWZ0IGFsb25lIGFuZCB0aGlzIGNoZWNrIGNhdGNoZXMNCj4+
-IHRoZSBtYXBwaW5nIG9mIHRoZSBBQ1BJIHRhYmxlcy4gSSBzdXBwb3NlIGl0J3MgcG9zc2libGUg
-dG8gY2hhbmdlIHRoaXMgdG8NCj4+IGNoZWNrIGp1c3QgZm9yIElPUkVTX0RFU0NfQUNQSV8qIHZh
-bHVlcywgYnV0IEkgd291bGQgaGF2ZSB0byBkbyBzb21lDQo+PiB0ZXN0aW5nLg0KPiANCj4gUmVj
-ZW50bHksIGkgdGVzdGVkIGl0IGFjY29yZGluZyB0byB5b3VyIGFkdmljZSwgaGVyZSBpdCBpcyBy
-ZWFsbHkgY2hlY2tpbmcgZm9yIHRoZQ0KPiAnSU9SRVNfREVTQ19BQ1BJXyonIHZhbHVlcy4gIElm
-IHlvdSBhZ3JlZSB0byB0aGlzIGNoYW5nZSwgaSB3b3VsZCBhZGQgdGhlIGZvbGxvd2luZw0KPiBw
-YXRjaCBpbnRvIHRoaXMgcGF0Y2ggc2V0IGFuZCBwb3N0IHRoZW0gYWdhaW4uDQo+IA0KPiBbcm9v
-dEBsb2NhbGhvc3QgbGludXhdIyBnaXQgZGlmZiBhcmNoL3g4Ni9tbS9pb3JlbWFwLmMNCj4gZGlm
-ZiAtLWdpdCBhL2FyY2gveDg2L21tL2lvcmVtYXAuYyBiL2FyY2gveDg2L21tL2lvcmVtYXAuYw0K
-PiBpbmRleCAwMDI5NjA0YWY4YTQuLjBlM2JhNjIwNjEyZCAxMDA2NDQNCj4gLS0tIGEvYXJjaC94
-ODYvbW0vaW9yZW1hcC5jDQo+ICsrKyBiL2FyY2gveDg2L21tL2lvcmVtYXAuYw0KPiBAQCAtODMs
-NyArODMsOCBAQCBzdGF0aWMgYm9vbCBfX2lvcmVtYXBfY2hlY2tfcmFtKHN0cnVjdCByZXNvdXJj
-ZSAqcmVzKQ0KPiAgDQo+ICBzdGF0aWMgaW50IF9faW9yZW1hcF9jaGVja19kZXNjX290aGVyKHN0
-cnVjdCByZXNvdXJjZSAqcmVzKQ0KPiAgew0KPiAtICAgICAgIHJldHVybiAocmVzLT5kZXNjICE9
-IElPUkVTX0RFU0NfTk9ORSk7DQo+ICsgICAgICAgcmV0dXJuICgocmVzLT5kZXNjID09IElPUkVT
-X0RFU0NfQUNQSV9UQUJMRVMpIHx8DQo+ICsgICAgICAgICAgICAgICAocmVzLT5kZXNjID09IElP
-UkVTX0RFU0NfQUNQSV9OVl9TVE9SQUdFKSk7DQoNCkknbSBub3QgYSBiaWcgZmFuIG9mIHRoaXMu
-IEkgdGhpbmsgeW91IHNob3VsZCBsZWF2ZSBpdCBhcyB0aGUgcHJldmlvdXMNCmNoZWNrIHlvdSBo
-YWQgZm9yIElPUkVTX0RFU0NfTk9ORSBhbmQgSU9SRVNfREVTQ19SRVNFUlZFRC4gVGhlcmUncyBu
-bw0KdGVsbGluZyB3aGF0IHR5cGUgb2YgcmVzb3VyY2VzIG1heSBiZSBtYXBwZWQgaW4gdGhlIGZ1
-dHVyZSB3aGVyZSB0aGlzDQp3aWxsIGJyZWFrLg0KDQpBZGRpbmcgYSBuaWNlIGNvbW1lbnQgaGVy
-ZSBhYm91dCBob3cgSU9SRVNfREVTQ19OT05FIG9yaWdpbmFsbHkgd2FzIHRvDQppZGVudGlmeSBN
-TUlPIGFuZCByZXNlcnZlZCBhcmVhcy4gTm93IElPUkVTX0RFU0NfUkVTRVJWRUQgaGFzIGJlZW4g
-Y3JlYXRlZA0KZm9yIHRoZSByZXNlcnZlZCBhcmVhcyBzbyB0aGUgY2hlY2sgbmVlZHMgdG8gYmUg
-ZXhwYW5kZWQgc28gdGhhdCB0aGVzZQ0KYXJlYXMgYXJlbid0IG1hcHBlZCBlbmNyeXB0ZWQgd2hl
-biB1c2luZyBpb3JlbWFwLg0KDQpUaGFua3MsDQpUb20NCg0KPiAgfQ0KPiANCj4gDQo+IFRoYW5r
-cy4NCj4gTGlhbmJvDQo+IA0KPj4NCj4+IFRoYW5rcywNCj4+IFRvbQ0KPj4NCj4+Pg0KPj4+PiAg
-DQo+Pj4+ICBzdGF0aWMgaW50IF9faW9yZW1hcF9yZXNfY2hlY2soc3RydWN0IHJlc291cmNlICpy
-ZXMsIHZvaWQgKmFyZykNCj4+Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvaW9wb3J0Lmgg
-Yi9pbmNsdWRlL2xpbnV4L2lvcG9ydC5oDQo+Pj4+IGluZGV4IGRhMGViYWVjMjVmMC4uNmVkNTlk
-ZTQ4YmQ1IDEwMDY0NA0KPj4+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L2lvcG9ydC5oDQo+Pj4+ICsr
-KyBiL2luY2x1ZGUvbGludXgvaW9wb3J0LmgNCj4+Pj4gQEAgLTEzMyw2ICsxMzMsNyBAQCBlbnVt
-IHsNCj4+Pj4gIAlJT1JFU19ERVNDX1BFUlNJU1RFTlRfTUVNT1JZX0xFR0FDWQk9IDUsDQo+Pj4+
-ICAJSU9SRVNfREVTQ19ERVZJQ0VfUFJJVkFURV9NRU1PUlkJPSA2LA0KPj4+PiAgCUlPUkVTX0RF
-U0NfREVWSUNFX1BVQkxJQ19NRU1PUlkJCT0gNywNCj4+Pj4gKwlJT1JFU19ERVNDX1JFU0VSVkVE
-CQkJPSA4LA0KPj4+PiAgfTsNCj4+Pj4gIA0KPj4+PiAgLyogaGVscGVycyB0byBkZWZpbmUgcmVz
-b3VyY2VzICovDQo+Pj4+IGRpZmYgLS1naXQgYS9rZXJuZWwvcmVzb3VyY2UuYyBiL2tlcm5lbC9y
-ZXNvdXJjZS5jDQo+Pj4+IGluZGV4IGIwZmJmNjg1Yzc3YS4uZjM0YTYzMmM0MTY5IDEwMDY0NA0K
-Pj4+PiAtLS0gYS9rZXJuZWwvcmVzb3VyY2UuYw0KPj4+PiArKysgYi9rZXJuZWwvcmVzb3VyY2Uu
-Yw0KPj4+PiBAQCAtOTk0LDcgKzk5NCw3IEBAIF9fcmVzZXJ2ZV9yZWdpb25fd2l0aF9zcGxpdChz
-dHJ1Y3QgcmVzb3VyY2UgKnJvb3QsIHJlc291cmNlX3NpemVfdCBzdGFydCwNCj4+Pj4gIAlyZXMt
-PnN0YXJ0ID0gc3RhcnQ7DQo+Pj4+ICAJcmVzLT5lbmQgPSBlbmQ7DQo+Pj4+ICAJcmVzLT5mbGFn
-cyA9IHR5cGUgfCBJT1JFU09VUkNFX0JVU1k7DQo+Pj4+IC0JcmVzLT5kZXNjID0gSU9SRVNfREVT
-Q19OT05FOw0KPj4+PiArCXJlcy0+ZGVzYyA9IElPUkVTX0RFU0NfUkVTRVJWRUQ7DQo+Pj4+ICAN
-Cj4+Pj4gIAl3aGlsZSAoMSkgew0KPj4+PiAgDQo+Pj4+IEBAIC0xMDI5LDcgKzEwMjksNyBAQCBf
-X3Jlc2VydmVfcmVnaW9uX3dpdGhfc3BsaXQoc3RydWN0IHJlc291cmNlICpyb290LCByZXNvdXJj
-ZV9zaXplX3Qgc3RhcnQsDQo+Pj4+ICAJCQkJbmV4dF9yZXMtPnN0YXJ0ID0gY29uZmxpY3QtPmVu
-ZCArIDE7DQo+Pj4+ICAJCQkJbmV4dF9yZXMtPmVuZCA9IGVuZDsNCj4+Pj4gIAkJCQluZXh0X3Jl
-cy0+ZmxhZ3MgPSB0eXBlIHwgSU9SRVNPVVJDRV9CVVNZOw0KPj4+PiAtCQkJCW5leHRfcmVzLT5k
-ZXNjID0gSU9SRVNfREVTQ19OT05FOw0KPj4+PiArCQkJCW5leHRfcmVzLT5kZXNjID0gSU9SRVNf
-REVTQ19SRVNFUlZFRDsNCj4+Pj4gIAkJCX0NCj4+Pj4gIAkJfSBlbHNlIHsNCj4+Pj4gIAkJCXJl
-cy0+c3RhcnQgPSBjb25mbGljdC0+ZW5kICsgMTsNCj4+Pj4gQEAgLTE0NzcsNyArMTQ3Nyw3IEBA
-IHN0YXRpYyBpbnQgX19pbml0IHJlc2VydmVfc2V0dXAoY2hhciAqc3RyKQ0KPj4+PiAgCQkJcmVz
-LT5zdGFydCA9IGlvX3N0YXJ0Ow0KPj4+PiAgCQkJcmVzLT5lbmQgPSBpb19zdGFydCArIGlvX251
-bSAtIDE7DQo+Pj4+ICAJCQlyZXMtPmZsYWdzIHw9IElPUkVTT1VSQ0VfQlVTWTsNCj4+Pj4gLQkJ
-CXJlcy0+ZGVzYyA9IElPUkVTX0RFU0NfTk9ORTsNCj4+Pj4gKwkJCXJlcy0+ZGVzYyA9IElPUkVT
-X0RFU0NfUkVTRVJWRUQ7DQo+Pj4+ICAJCQlyZXMtPmNoaWxkID0gTlVMTDsNCj4+Pj4gIAkJCWlm
-IChyZXF1ZXN0X3Jlc291cmNlKHBhcmVudCwgcmVzKSA9PSAwKQ0KPj4+PiAgCQkJCXJlc2VydmVk
-ID0geCsxOw0KPj4+PiAtLSANCj4+Pj4gMi4xNy4xDQo+Pj4+DQo+Pj4NCj4+Pg0KPj4+IFRoZXJl
-IGFyZSBhIGxvdCBvZiBwbGFjZXMgY2FsbCByZWdpb25faW50ZXJzZWN0cyB3aGljaCB1c2UgREVT
-Q19OT05FLA0KPj4+IEknbSBub3Qgc3VyZSBpZiBuZWVkZWQgY2hhbmdlcyBhY2NvcmRpbmdseS4g
-IENjZWQgRGFuIGFuZCBUb3NoaS4NCj4+Pg0KPj4+DQo+Pj4gVGhhbmtzDQo+Pj4gRGF2ZQ0KPj4+
-DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBt
-YWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 3/25/19 1:17 PM, Singh, Brijesh wrote:
+> 
+> 
+> On 3/25/19 12:32 PM, Borislav Petkov wrote:
+>> On Mon, Mar 25, 2019 at 05:17:55PM +0000, Singh, Brijesh wrote:
+>>> By default all the memory regions are mapped encrypted. The
+>>> set_memory_{encrypt,decrypt}() is a generic function which can be
+>>> called explicitly to clear/set the encryption mask from the existing
+>>> memory mapping. The mem_encrypt_active() returns true if either SEV or
+>>> SME is active. So the __set_memory_enc_dec() uses the
+>>> memory_encrypt_active() check to ensure that the function is no-op when
+>>> SME/SEV are not active.
+>>>
+>>> Currently, the arch_kexec_post_alloc_pages() unconditionally clear the
+>>> encryption mask from the kexec area. In case of SEV, we should not clear
+>>> the encryption mask.
+>>
+>> Brijesh, I know all that.
+>>
+>> Please read what I said here at the end:
+>>
+>> https://lkml.kernel.org/r/20190324150034.GH23289@zn.tnic
+>>
+>> With this change, the code looks like this:
+>>
+>> +       if (sme_active())
+>> +               return set_memory_decrypted((unsigned long)vaddr, pages);
+>>
+>> now in __set_memory_enc_dec via set_memory_decrypted():
+>>
+>>          /* Nothing to do if memory encryption is not active */
+>>          if (!mem_encrypt_active())
+>>                  return 0;
+>>
+>>
+>> so you have:
+>>
+>> 	if (sme_active())
+>>
+>> 		...
+>>
+>> 		if (!mem_encrypt_active())
+>>
+>>
+>> now maybe this is all clear to you and Tom but I betcha others will get
+>> confused. Probably something like "well, what should be active now, SME,
+>> SEV or memory encryption in general"?
+>>
+>> I hope you're catching my drift.
+>>
+>> So if you want to *not* decrypt memory in the SEV case, then doing something
+>> like this should make it a bit more clear:
+>>
+>>
+>> 	if (sev_active())
+>> 		return;
+>>
+>> 	return set_memory_decrypted((unsigned long)vaddr, pages);
+>>
+> 
+> 
+> I see your point. I agree it can get confusing.
+> 
+> 
+>> along with a comment *why* we're checking here.
+>>
+>> But actually, I'd prefer if you had separate wrappers which are called
+>> for SME and for SEV.
+> 
+> 
+> Just a thought, maybe we can move the above if(sev_active()) check up in
+> kernel/kexec_core.c because we don't need to set/clear the encryption
+> masks when SEV is active so there is no need to call the wrapper.
+
+IIRC, the wrapper was created to avoid checking in the main kexec support
+and move the check down to the arch specific support. So I don't think we
+should move it.
+
+I'm not sure about the separate wrappers, I like the above code where the
+arch callback returns if sev_active() is true.
+
+Maybe what would help is to describe why there is a difference between SME
+and SEV in regards to kexec. During a traditional boot under SME, SME will
+encrypt the kernel, so the SME kexec kernel also needs to be un-encrypted
+in order to replicate a normal SME boot. During a traditional boot under
+SEV, the kernel has already been loaded encrypted, so the SEV kexec kernel
+needs to be encrypted in order to replicate a normal SEV boot.
+
+Thanks,
+Tom
+
+> 
+> 
+>>
+>> I'll let Tom chime in too.
+>>
+> 
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
