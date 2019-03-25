@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h8IxO-0003tL-EF
- for kexec@lists.infradead.org; Mon, 25 Mar 2019 06:19:41 +0000
-Date: Mon, 25 Mar 2019 14:19:29 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] x86/boot: Use EFI setup data if provided
-Message-ID: <20190325061929.GC9385@dhcp-128-65.nay.redhat.com>
-References: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp>
- <20190322152328.GD12472@zn.tnic>
- <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp>
- <20190325060128.GB9385@dhcp-128-65.nay.redhat.com>
+ id 1h8JF1-0004sg-0j
+ for kexec@lists.infradead.org; Mon, 25 Mar 2019 06:37:56 +0000
+Date: Mon, 25 Mar 2019 07:37:42 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/3] kexec: Do not map the kexec area as decrypted when
+ SEV is active
+Message-ID: <20190325063742.GA12016@zn.tnic>
+References: <20190315103203.13128-1-lijiang@redhat.com>
+ <20190315103203.13128-2-lijiang@redhat.com>
+ <20190324150034.GH23289@zn.tnic>
+ <7b115829-40d9-e55e-dee3-ec8e4766971f@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190325060128.GB9385@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <7b115829-40d9-e55e-dee3-ec8e4766971f@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,118 +27,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "bp@suse.de" <bp@suse.de>
+To: lijiang <lijiang@redhat.com>
+Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On 03/25/19 at 02:01pm, Dave Young wrote:
-> On 03/25/19 at 12:27am, Junichi Nomura wrote:
-> > On Fri, Mar 22, 2019 at 04:23:28PM +0100, Borislav Petkov wrote:
-> > > On Fri, Mar 22, 2019 at 11:03:43AM +0000, Junichi Nomura wrote:
-> > > > Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
-> > > > boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
-> > > > in the early parsing code tries to search RSDP from EFI table but
-> > > > whose address is virtual.
-> > > > 
-> > > > Since kexec(1) provides physical address of config_table via boot_params,
-> > > > efi_get_rsdp_addr() should look for setup_data in the same way as
-> > > > efi_systab_init() in arch/x86/platform/efi/efi.c does.
-> > > 
-> > > If the kexec kernel should continue to use efi_systab_init() then you
-> > > should make efi_get_rsdp_addr() exit early in the kexec-ed kernel.
+On Mon, Mar 25, 2019 at 09:58:07AM +0800, lijiang wrote:
+> For the SEV virtual machine, it maps the kexec memroy area as
+> encrypted, so, no need to invoke this function to change anything.
+
+Look at the code:
+
+set_memory_decrypted->__set_memory_enc_dec
+
+It already *does* invoke this function.
+
+> > 	if (!mem_encrypt_active())
 > > 
-> > I'm not sure which way kexec devel is going. Added kexec list.
-> > Here is the version that exits early in efi_get_rsdp_addr().
+> > and heads will spin from all the checking of memory encryption aspects.
 > > 
-> > [PATCH] x86/boot: Don't try to search RSDP from EFI when kexec-booted
-> > 
-> > Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
-> > boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
-> > in the early parsing code tries to search RSDP from EFI table but
-> > whose address is virtual.
-> > 
-> > Normally kexec(1) provides physical address of config_table via boot_params
-> > and EFI code uses that during initialization.
-> > For the early boot code, we just exit efi_get_rsdp_addr() early if the kernel
-> > is booted by kexec.
-> > 
-> > Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
-> > Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
-> > Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
-> > Cc: Borislav Petkov <bp@suse.de>
-> > 
-> > diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-> > index 0ef4ad5..1cefc43 100644
-> > --- a/arch/x86/boot/compressed/acpi.c
-> > +++ b/arch/x86/boot/compressed/acpi.c
-> > @@ -44,6 +44,24 @@ static acpi_physical_address get_acpi_rsdp(void)
-> >  	return addr;
-> >  }
-> >  
-> > +static bool is_kexec_booted(void)
-> > +{
-> > +	struct setup_data *data;
-> > +
-> > +	/*
-> > +	 * kexec-tools provides EFI setup data so that kexec-ed kernel
-> > +	 * can find proper tables.
-> > +	 */
-> > +	data = (struct setup_data *) boot_params->hdr.setup_data;
-> > +	while (data) {
-> > +		if (data->type == SETUP_EFI)
-> > +			return true;
-> > +		data = (struct setup_data *) data->next;
-> > +	}
-> > +
-> > +	return false;
-> > +}
-> > +
-> >  /* Search EFI system tables for RSDP. */
-> >  static acpi_physical_address efi_get_rsdp_addr(void)
-> >  {
-> > @@ -57,6 +75,10 @@ static acpi_physical_address efi_get_rsdp_addr(void)
-> >  	int size, i;
-> >  	char *sig;
-> >  
-> > +	/* If the system is kexec-booted, poking EFI systab may not work. */
-> > +	if (is_kexec_booted())
-> > +		return 0;
-> > +
-> >  	ei = &boot_params->efi_info;
-> >  	sig = (char *)&ei->efi_loader_signature;
-> >  
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
+> > So this would need a rework so that there are no multiple confusing
+> > checks.
 > 
-> Good catch, this way looks good to me.  But the function
-> is_kexec_booted can be compiled when #ifdef CONFIG_EFI
-> 
-> Otherwise:
-> 
-> Acked-by: Dave Young <dyoung@redhat.com>
-> 
+> About the three functions, here i copied their comment from the arch/x86/mm/mem_encrypt.c
+> Please refer to it.
 
-Hold on, I replied too quick.  One question is does the above patch
-passed your test?   It can workaround and skip the wrong phys addr
-issue, but the acpi early parsing still fails because efi_get_rsdp_addr
-return 0? 
+I know that comment - I have asked for it. Now you go and look at the
+code again with your patch applied.
 
-If this is the case you may need go with your old patch.
+-- 
+Regards/Gruss,
+    Boris.
 
-I think normally people do not see this bug, because kernel will set the
-rsdp in boot_params->acpi_rsdp_addr.  Maybe you are testing with
-different kernel versions, eg.
-
-old kernel kexec to new kernel.
-
-And the old kernel does not set boot_params->acpi_rsdp_addr
-
-Is this correct?
-
-Thanks
-Dave
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
