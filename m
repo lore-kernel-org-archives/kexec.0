@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h8DTv-0000Z2-CV
- for kexec@lists.infradead.org; Mon, 25 Mar 2019 00:28:53 +0000
-From: Junichi Nomura <j-nomura@ce.jp.nec.com>
-Subject: Re: [PATCH] x86/boot: Use EFI setup data if provided
-Date: Mon, 25 Mar 2019 00:27:41 +0000
-Message-ID: <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp>
-References: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp>
- <20190322152328.GD12472@zn.tnic>
-In-Reply-To: <20190322152328.GD12472@zn.tnic>
-Content-Language: ja-JP
-Content-ID: <A42CEB7B089EDC4AACF327A66B35C369@gisp.nec.co.jp>
+ id 1h8Esi-0006pD-38
+ for kexec@lists.infradead.org; Mon, 25 Mar 2019 01:58:33 +0000
+Subject: Re: [PATCH 1/3] kexec: Do not map the kexec area as decrypted when
+ SEV is active
+References: <20190315103203.13128-1-lijiang@redhat.com>
+ <20190315103203.13128-2-lijiang@redhat.com> <20190324150034.GH23289@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <7b115829-40d9-e55e-dee3-ec8e4766971f@redhat.com>
+Date: Mon, 25 Mar 2019 09:58:07 +0800
 MIME-Version: 1.0
+In-Reply-To: <20190324150034.GH23289@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,89 +21,79 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Borislav Petkov <bp@alien8.de>
-Cc: "x86@kernel.org" <x86@kernel.org>, "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bp@suse.de" <bp@suse.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On Fri, Mar 22, 2019 at 04:23:28PM +0100, Borislav Petkov wrote:
-> On Fri, Mar 22, 2019 at 11:03:43AM +0000, Junichi Nomura wrote:
-> > Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
-> > boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
-> > in the early parsing code tries to search RSDP from EFI table but
-> > whose address is virtual.
-> > 
-> > Since kexec(1) provides physical address of config_table via boot_params,
-> > efi_get_rsdp_addr() should look for setup_data in the same way as
-> > efi_systab_init() in arch/x86/platform/efi/efi.c does.
-> 
-> If the kexec kernel should continue to use efi_systab_init() then you
-> should make efi_get_rsdp_addr() exit early in the kexec-ed kernel.
-
-I'm not sure which way kexec devel is going. Added kexec list.
-Here is the version that exits early in efi_get_rsdp_addr().
-
-[PATCH] x86/boot: Don't try to search RSDP from EFI when kexec-booted
-
-Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
-boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
-in the early parsing code tries to search RSDP from EFI table but
-whose address is virtual.
-
-Normally kexec(1) provides physical address of config_table via boot_params
-and EFI code uses that during initialization.
-For the early boot code, we just exit efi_get_rsdp_addr() early if the kernel
-is booted by kexec.
-
-Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
-Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
-Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
-Cc: Borislav Petkov <bp@suse.de>
-
-diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-index 0ef4ad5..1cefc43 100644
---- a/arch/x86/boot/compressed/acpi.c
-+++ b/arch/x86/boot/compressed/acpi.c
-@@ -44,6 +44,24 @@ static acpi_physical_address get_acpi_rsdp(void)
- 	return addr;
- }
- 
-+static bool is_kexec_booted(void)
-+{
-+	struct setup_data *data;
-+
-+	/*
-+	 * kexec-tools provides EFI setup data so that kexec-ed kernel
-+	 * can find proper tables.
-+	 */
-+	data = (struct setup_data *) boot_params->hdr.setup_data;
-+	while (data) {
-+		if (data->type == SETUP_EFI)
-+			return true;
-+		data = (struct setup_data *) data->next;
-+	}
-+
-+	return false;
-+}
-+
- /* Search EFI system tables for RSDP. */
- static acpi_physical_address efi_get_rsdp_addr(void)
- {
-@@ -57,6 +75,10 @@ static acpi_physical_address efi_get_rsdp_addr(void)
- 	int size, i;
- 	char *sig;
- 
-+	/* If the system is kexec-booted, poking EFI systab may not work. */
-+	if (is_kexec_booted())
-+		return 0;
-+
- 	ei = &boot_params->efi_info;
- 	sig = (char *)&ei->efi_loader_signature;
- 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTnlubQwM+aciDI05pelIDIzOjAwLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+PiBT
+dWJqZWN0OiBSZTogW1BBVENIIDEvM10ga2V4ZWM6IERvIG5vdCBtYXAgdGhlIGtleGVjIGFyZWEg
+YXMgZGVjcnlwdGVkIHdoZW4gU0VWIGlzIGFjdGl2ZQo+IAo+IFRoZSB0aXAgdHJlZSBwcmVmZXJy
+ZWQgZm9ybWF0IGZvciBwYXRjaCBzdWJqZWN0IHByZWZpeGVzIGlzCj4gJ3N1YnN5cy9jb21wb25l
+bnQ6JywgZS5nLiAneDg2L2FwaWM6JywgJ3g4Ni9tbS9mYXVsdDonLCAnc2NoZWQvZmFpcjonLAo+
+ICdnZW5pcnEvY29yZTonLiBQbGVhc2UgZG8gbm90IHVzZSBmaWxlIG5hbWVzIG9yIGNvbXBsZXRl
+IGZpbGUgcGF0aHMgYXMKPiBwcmVmaXguICdnaXQgbG9nIHBhdGgvdG8vZmlsZScgc2hvdWxkIGdp
+dmUgeW91IGEgcmVhc29uYWJsZSBoaW50IGluIG1vc3QKPiBjYXNlcy4KCkZpbmUsIHRoYW5rcyBm
+b3IgeW91ciBhZHZpY2UuCgo+IAo+IE9uIEZyaSwgTWFyIDE1LCAyMDE5IGF0IDA2OjMyOjAxUE0g
+KzA4MDAsIExpYW5ibyBKaWFuZyB3cm90ZToKPj4gQ3VycmVudGx5LCB0aGUgYXJjaF9rZXhlY19w
+b3N0X3thbGxvYyxmcmVlfV9wYWdlcyB1bmNvbmRpdGlvbmFsbHkKPiAKPiBQbGVhc2UgZW5kIGZ1
+bmN0aW9uIG5hbWVzIHdpdGggcGFyZW50aGVzZXMuCgpPaywgaSB3aWxsIGltcHJvdmUgdGhlbSBu
+ZXh0IHBvc3QuCgo+IAo+PiBtYXBzIHRoZSBrZXhlYyBhcmVhIGFzIGRlY3J5cHRlZC4gVGhpcyB3
+b3JrcyBmaW5lIHdoZW4gU01FIGlzIGFjdGl2ZS4KPj4gQmVjYXVzZSBpbiBTTUUsIHRoZSBmaXJz
+dCBrZXJuZWwgaXMgbG9hZGVkIGluIGRlY3J5cHRlZCBhcmVhIGJ5IHRoZQo+PiBCSU9TLCBzbyB0
+aGUgc2Vjb25kIGtlcm5lbCBtdXN0IGJlIGFsc28gbG9hZGVkIGludG8gdGhlIGRlY3J5cHRlZAo+
+PiBtZW1vcnkuCj4+Cj4+IFdoZW4gU0VWIGlzIGFjdGl2ZSwgdGhlIGZpcnN0IGtlcm5lbCBpcyBs
+b2FkZWQgaW50byB0aGUgZW5jcnlwdGVkCj4+IGFyZWEsIHNvIHRoZSBzZWNvbmQga2VybmVsIG11
+c3QgYmUgYWxzbyBsb2FkZWQgaW50byB0aGUgZW5jcnlwdGVkCj4+IG1lbW9yeS4gTGV0cyBtYWtl
+IHN1cmUgdGhhdCBhcmNoX2tleGVjX3Bvc3Rfe2FsbG9jLGZyZWV9X3BhZ2VzIGRvZXMKPj4gbm90
+IGNsZWFyIHRoZSBtZW1vcnkgZW5jcnlwdGlvbiBtYXNrIGZyb20gdGhlIGtleGVjIGFyZWEgd2hl
+biBTRVYKPj4gaXMgYWN0aXZlLgo+IAo+IEhvbGQgb24sIHdhaXQgYSBtaW51dGUhCj4gCj4gV2h5
+IGRvIHdlIGV2ZW4gbmVlZCB0aGlzPyBBcyB1c3VhbCwgeW91IGd1eXMgbmV2ZXIgZXhwbGFpbiB3
+aGF0IHRoZSBiaWcKPiBwaWN0dXJlIGlzLiBTbyB5b3UgbWVudGlvbiBTRVYsIHdoaWNoIHNvdW5k
+cyB0byBtZSBsaWtlIHlvdSB3YW50IHRvIGJlCj4gYWJsZSB0byBrZXhlYyB0aGUgU0VWICpndWVz
+dCouIFllcz8KClllcy4gSnVzdCBsaWtlIHRoZSBwaHlzaWNhbCBtYWNoaW5lcyBzdXBwb3J0IGtk
+dW1wLCB0aGUgdmlydHVhbCBtYWNoaW5lcyBhbHNvCm5lZWQga2R1bXAuIFdoZW4gYSB2aXJ0dWFs
+IG1hY2hpbmUgcGFuaWMsIHdlIGFsc28gbmVlZCB0byBkdW1wIGl0cyBtZW1vcnkgZm9yCmFuYWx5
+c2lzLgoKPiAKPiBGaXJzdCBvZiBhbGwsIHdoeT8KCkZvciB0aGUgU0VWIHZpcnR1YWwgbWFjaGlu
+ZSwgdGhlIG1lbW9yeSBpcyBhbHNvIGVuY3J5cHRlZC4gV2hlbiBTRVYgaXMgZW5hYmxlZCwKdGhl
+IGZpcnN0IGtlcm5lbCBpcyBsb2FkZWQgaW50byB0aGUgZW5jcnlwdGVkIGFyZWEuIFVubGlrZSB0
+aGUgU01FLCB0aGUgZmlyc3QKa2VybmVsIGlzIGxvYWRlZCBpbnRvIHRoZSBkZWNyeXB0ZWQgYXJl
+YS4KCkJlY2F1c2Ugb2YgdGhpcyBkaWZmZXJlbmNlIGJldHdlZW4gU01FIGFuZCBTRVYsIHdlIG5l
+ZWQgdG8gcHJvcGVybHkgbWFwIHRoZSBrZXhlYwptZW1vcnkgYXJlYSBpbiBvcmRlciB0byBjb3Jy
+ZWN0bHkgYWNjZXNzIGl0LgoKPiAKPiBUaGVuLCBpZiBzby4uLgo+IAo+PiBDby1kZXZlbG9wZWQt
+Ynk6IEJyaWplc2ggU2luZ2ggPGJyaWplc2guc2luZ2hAYW1kLmNvbT4KPj4gU2lnbmVkLW9mZi1i
+eTogQnJpamVzaCBTaW5naCA8YnJpamVzaC5zaW5naEBhbWQuY29tPgo+PiBTaWduZWQtb2ZmLWJ5
+OiBMaWFuYm8gSmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4KPj4gLS0tCj4+ICBhcmNoL3g4Ni9r
+ZXJuZWwvbWFjaGluZV9rZXhlY182NC5jIHwgOCArKysrKystLQo+PiAgMSBmaWxlIGNoYW5nZWQs
+IDYgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gv
+eDg2L2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0LmMgYi9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9r
+ZXhlY182NC5jCj4+IGluZGV4IGNlYmE0MDhlYTk4Mi4uYmNlYmY0OTkzZGE0IDEwMDY0NAo+PiAt
+LS0gYS9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jCj4+ICsrKyBiL2FyY2gveDg2
+L2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0LmMKPj4gQEAgLTU2Niw3ICs1NjYsMTAgQEAgaW50IGFy
+Y2hfa2V4ZWNfcG9zdF9hbGxvY19wYWdlcyh2b2lkICp2YWRkciwgdW5zaWduZWQgaW50IHBhZ2Vz
+LCBnZnBfdCBnZnApCj4+ICAJICogbm90IGVuY3J5cHRlZCBiZWNhdXNlIHdoZW4gd2UgYm9vdCB0
+byB0aGUgbmV3IGtlcm5lbCB0aGUKPj4gIAkgKiBwYWdlcyB3b24ndCBiZSBhY2Nlc3NlZCBlbmNy
+eXB0ZWQgKGluaXRpYWxseSkuCj4+ICAJICovCj4+IC0JcmV0dXJuIHNldF9tZW1vcnlfZGVjcnlw
+dGVkKCh1bnNpZ25lZCBsb25nKXZhZGRyLCBwYWdlcyk7Cj4+ICsJaWYgKHNtZV9hY3RpdmUoKSkK
+Pj4gKwkJcmV0dXJuIHNldF9tZW1vcnlfZGVjcnlwdGVkKCh1bnNpZ25lZCBsb25nKXZhZGRyLCBw
+YWdlcyk7Cj4gCj4gLi4uIHRoZW4gdGhpcyBsb29rcyB5dWNreS4gQmVjYXVzZSwgeW91J3JlIGFk
+ZGluZyBhbiBzbWVfYWN0aXZlKCkgY2hlY2sgaGVyZQo+IGJ1dCB0aGVuIF9fc2V0X21lbW9yeV9l
+bmNfZGVjKCkgY2hlY2tzCgpGb3IgdGhlIFNFViB2aXJ0dWFsIG1hY2hpbmUsIGl0IG1hcHMgdGhl
+IGtleGVjIG1lbXJveSBhcmVhIGFzIGVuY3J5cHRlZCwgc28sIG5vIG5lZWQgdG8gaW52b2tlCnRo
+aXMgZnVuY3Rpb24gdG8gY2hhbmdlIGFueXRoaW5nLgoKCj4gCj4gCWlmICghbWVtX2VuY3J5cHRf
+YWN0aXZlKCkpCj4gCj4gYW5kIGhlYWRzIHdpbGwgc3BpbiBmcm9tIGFsbCB0aGUgY2hlY2tpbmcg
+b2YgbWVtb3J5IGVuY3J5cHRpb24gYXNwZWN0cy4KPiAKPiBTbyB0aGlzIHdvdWxkIG5lZWQgYSBy
+ZXdvcmsgc28gdGhhdCB0aGVyZSBhcmUgbm8gbXVsdGlwbGUgY29uZnVzaW5nCj4gY2hlY2tzLgoK
+QWJvdXQgdGhlIHRocmVlIGZ1bmN0aW9ucywgaGVyZSBpIGNvcGllZCB0aGVpciBjb21tZW50IGZy
+b20gdGhlIGFyY2gveDg2L21tL21lbV9lbmNyeXB0LmMKUGxlYXNlIHJlZmVyIHRvIGl0LgoKLyoK
+ICogU01FIGFuZCBTRVYgYXJlIHZlcnkgc2ltaWxhciBidXQgdGhleSBhcmUgbm90IHRoZSBzYW1l
+LCBzbyB0aGVyZSBhcmUKICogdGltZXMgdGhhdCB0aGUga2VybmVsIHdpbGwgbmVlZCB0byBkaXN0
+aW5ndWlzaCBiZXR3ZWVuIFNNRSBhbmQgU0VWLiBUaGUKICogc21lX2FjdGl2ZSgpIGFuZCBzZXZf
+YWN0aXZlKCkgZnVuY3Rpb25zIGFyZSB1c2VkIGZvciB0aGlzLiAgV2hlbiBhCiAqIGRpc3RpbmN0
+aW9uIGlzbid0IG5lZWRlZCwgdGhlIG1lbV9lbmNyeXB0X2FjdGl2ZSgpIGZ1bmN0aW9uIGNhbiBi
+ZSB1c2VkLgogKgoKClRoYW5rcy4KTGlhbmJvCgo+IAo+IFRoeC4KPiAKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
+Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8va2V4ZWMK
