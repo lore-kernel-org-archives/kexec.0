@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ot1-x34a.google.com ([2607:f8b0:4864:20::34a])
+Received: from mail-qt1-x849.google.com ([2607:f8b0:4864:20::849])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h8XnI-0004cl-Kt
- for kexec@lists.infradead.org; Mon, 25 Mar 2019 22:10:14 +0000
-Received: by mail-ot1-x34a.google.com with SMTP id 7so2322708otj.1
- for <kexec@lists.infradead.org>; Mon, 25 Mar 2019 15:10:11 -0700 (PDT)
-Date: Mon, 25 Mar 2019 15:09:32 -0700
+ id 1h8XnJ-0004ci-97
+ for kexec@lists.infradead.org; Mon, 25 Mar 2019 22:10:15 +0000
+Received: by mail-qt1-x849.google.com with SMTP id b3so11682743qtr.21
+ for <kexec@lists.infradead.org>; Mon, 25 Mar 2019 15:10:09 -0700 (PDT)
+Date: Mon, 25 Mar 2019 15:09:31 -0700
 In-Reply-To: <20190325220954.29054-1-matthewgarrett@google.com>
-Message-Id: <20190325220954.29054-6-matthewgarrett@google.com>
+Message-Id: <20190325220954.29054-5-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190325220954.29054-1-matthewgarrett@google.com>
-Subject: [PATCH 05/27] Copy secure_boot flag in boot params across kexec reboot
+Subject: [PATCH 04/27] kexec_load: Disable at runtime if the kernel is locked
+ down
 From: Matthew Garrett <matthewgarrett@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,41 +26,44 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: jmorris@namei.org
-Cc: Matthew Garrett <matthewgarrett@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-security-module@vger.kernel.org, Dave Young <dyoung@redhat.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Matthew Garrett <matthewgarrett@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-security-module@vger.kernel.org, Dave Young <dyoung@redhat.com>
 
-From: Dave Young <dyoung@redhat.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
 
-Kexec reboot in case secure boot being enabled does not keep the secure
-boot mode in new kernel, so later one can load unsigned kernel via legacy
-kexec_load.  In this state, the system is missing the protections provided
-by secure boot.
+The kexec_load() syscall permits the loading and execution of arbitrary
+code in ring 0, which is something that lock-down is meant to prevent. It
+makes sense to disable kexec_load() in this situation.
 
-Adding a patch to fix this by retain the secure_boot flag in original
-kernel.
+This does not affect kexec_file_load() syscall which can check for a
+signature on the image to be booted.
 
-secure_boot flag in boot_params is set in EFI stub, but kexec bypasses the
-stub.  Fixing this issue by copying secure_boot flag across kexec reboot.
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Matthew Garrett <mjg59@srcf.ucam.org>
 Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: Dave Young <dyoung@redhat.com>
 cc: kexec@lists.infradead.org
 Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
 ---
- arch/x86/kernel/kexec-bzimage64.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/kexec.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 278cd07228dd..d49554b948fd 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -179,6 +179,7 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
- 	if (efi_enabled(EFI_OLD_MEMMAP))
- 		return 0;
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 68559808fdfa..8ea0ce31271f 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -207,6 +207,13 @@ static inline int kexec_load_check(unsigned long nr_segments,
+ 	if (result < 0)
+ 		return result;
  
-+	params->secure_boot = boot_params.secure_boot;
- 	ei->efi_loader_signature = current_ei->efi_loader_signature;
- 	ei->efi_systab = current_ei->efi_systab;
- 	ei->efi_systab_hi = current_ei->efi_systab_hi;
++	/*
++	 * kexec can be used to circumvent module loading restrictions, so
++	 * prevent loading in that case
++	 */
++	if (kernel_is_locked_down("kexec of unsigned images"))
++		return -EPERM;
++
+ 	/*
+ 	 * Verify we have a legal set of flags
+ 	 * This leaves us room for future extensions.
 -- 
 2.21.0.392.gf8f6787159e-goog
 
