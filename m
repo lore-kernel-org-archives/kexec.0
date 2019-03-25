@@ -1,17 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h8Kg2-0000PG-V6
- for kexec@lists.infradead.org; Mon, 25 Mar 2019 08:09:57 +0000
-Date: Mon, 25 Mar 2019 16:09:35 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v4a 1/2] selftests/kexec: make tests independent of IMA
- being enabled
-Message-ID: <20190325080935.GA12497@dhcp-128-65.nay.redhat.com>
-References: <1553283351-6310-1-git-send-email-zohar@linux.ibm.com>
+ id 1h8KyH-0007UZ-Dn
+ for kexec@lists.infradead.org; Mon, 25 Mar 2019 08:28:44 +0000
+From: Junichi Nomura <j-nomura@ce.jp.nec.com>
+Subject: [PATCH v2] x86/boot: Use EFI setup data if provided
+Date: Mon, 25 Mar 2019 08:27:21 +0000
+Message-ID: <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
+References: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp>
+ <20190322152328.GD12472@zn.tnic>
+ <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp>
+ <20190325060128.GB9385@dhcp-128-65.nay.redhat.com>
+ <20190325061929.GC9385@dhcp-128-65.nay.redhat.com>
+ <bcb5bd29-a3b8-e42d-8da7-a8501f695c21@ce.jp.nec.com>
+ <20190325065921.GA11096@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190325065921.GA11096@dhcp-128-65.nay.redhat.com>
+Content-Language: ja-JP
+Content-ID: <F02F80C1669F7B48867BB2279D1EBD80@gisp.nec.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1553283351-6310-1-git-send-email-zohar@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,149 +30,107 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, Petr Vorel <pvorel@suse.cz>, linux-kselftest@vger.kernel.org, linux-integrity@vger.kernel.org
+To: Dave Young <dyoung@redhat.com>, "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "bp@suse.de" <bp@suse.de>, "bhe@redhat.com" <bhe@redhat.com>, "kasong@redhat.com" <kasong@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Hi Mimi
-On 03/22/19 at 03:35pm, Mimi Zohar wrote:
-> Verify IMA is enabled before failing tests or emitting irrelevant
-> messages.  Also, don't skip the test if signatures are not required.
+On 3/25/19 3:59 PM, Dave Young wrote:
+> On 03/25/19 at 06:47am, Junichi Nomura wrote:
+>> On 3/25/19 3:19 PM, Dave Young wrote:
+>>> On 03/25/19 at 02:01pm, Dave Young wrote:
+>>> I think normally people do not see this bug, because kernel will set the
+>>> rsdp in boot_params->acpi_rsdp_addr.  Maybe you are testing with
+>>
+>> I think it's only done for file-based kexec interface.
 > 
-> Suggested-by: Dave Young <dyoung@redhat.com>
-> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-> ---
-> Dave, if this patch resolves the outstanding issues, I can fold these
-> changes into the original patches. (Reminder, these patches will need to
-> be updated to support the "lockdown" patch set.)
-
-They looks good to me, thanks for the update
-
-Feel free to add my reviewed-by, I did some tests although not cover all
-ima cases.
-
-Thanks
-Dave
-
+> Saw Kairui's another reply, yes, kexec-tools need a patch to fill the
+> value as well then.
 > 
->  .../selftests/kexec/test_kexec_file_load.sh        | 27 ++++++++++++++--------
->  tools/testing/selftests/kexec/test_kexec_load.sh   | 24 ++++++++++++-------
->  2 files changed, 33 insertions(+), 18 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/kexec/test_kexec_file_load.sh b/tools/testing/selftests/kexec/test_kexec_file_load.sh
-> index 1d2e5e799523..57b636792086 100755
-> --- a/tools/testing/selftests/kexec/test_kexec_file_load.sh
-> +++ b/tools/testing/selftests/kexec/test_kexec_file_load.sh
-> @@ -110,11 +110,20 @@ kexec_file_load_test()
->  			log_fail "$succeed_msg (missing IMA sig)"
->  		fi
->  
-> -		if [ $pe_sig_required -eq 0 ] && [ $ima_sig_required -eq 0 ] \
-> -		    && [ $ima_read_policy -eq 0 ] && [ $ima_signed -eq 0 ]; then
-> +		if [ $pe_sig_required -eq 0 ] && [ $ima_appraise -eq 1 ] \
-> +		    && [ $ima_sig_required -eq 0 ] && [ $ima_signed -eq 0 ] \
-> +	            && [ $ima_read_policy -eq 0 ]; then
->  			log_fail "$succeed_msg (possibly missing IMA sig)"
->  		fi
->  
-> +		if [ $pe_sig_required -eq 0 ] && [ $ima_appraise -eq 0 ]; then
-> +			log_info "No signature verification required"
-> +		elif [ $pe_sig_required -eq 0 ] && [ $ima_appraise -eq 1 ] \
-> +		    && [ $ima_sig_required -eq 0 ] && [ $ima_signed -eq 0 ] \
-> +	            && [ $ima_read_policy -eq 1 ]; then
-> +			log_info "No signature verification required"
-> +		fi
-> +
->  		log_pass "$succeed_msg"
->  	fi
->  
-> @@ -136,8 +145,9 @@ kexec_file_load_test()
->  		log_pass "$failed_msg (missing IMA sig)"
->  	fi
->  
-> -	if [ $pe_sig_required -eq 0 ] && [ $ima_sig_required -eq 0 ] \
-> -	    && [ $ima_read_policy -eq 0 ] && [ $ima_signed -eq 0 ]; then
-> +	if [ $pe_sig_required -eq 0 ] && [ $ima_appraise -eq 1 ] \
-> +	    && [ $ima_sig_required -eq 0 ] && [ $ima_read_policy -eq 0 ] \
-> +	    && [ $ima_signed -eq 0 ]; then
->  		log_pass "$failed_msg (possibly missing IMA sig)"
->  	fi
->  
-> @@ -157,6 +167,9 @@ if [ $? -eq 0 ]; then
->  fi
->  
->  # Determine which kernel config options are enabled
-> +kconfig_enabled "CONFIG_IMA_APPRAISE=y" "IMA enabled"
-> +ima_appraise=$?
-> +
->  kconfig_enabled "CONFIG_IMA_ARCH_POLICY=y" \
->  	"architecture specific policy enabled"
->  arch_policy=$?
-> @@ -178,12 +191,6 @@ ima_sig_required=$?
->  get_secureboot_mode
->  secureboot=$?
->  
-> -if [ $secureboot -eq 0 ] && [ $arch_policy -eq 0 ] && \
-> -   [ $pe_sig_required -eq 0 ] && [ $ima_sig_required -eq 0 ] && \
-> -   [ $ima_read_policy -eq 1 ]; then
-> -	log_skip "No signature verification required"
-> -fi
-> -
->  # Are there pe and ima signatures
->  check_for_pesig
->  pe_signed=$?
-> diff --git a/tools/testing/selftests/kexec/test_kexec_load.sh b/tools/testing/selftests/kexec/test_kexec_load.sh
-> index 2a66c8897f55..49c6aa929137 100755
-> --- a/tools/testing/selftests/kexec/test_kexec_load.sh
-> +++ b/tools/testing/selftests/kexec/test_kexec_load.sh
-> @@ -1,8 +1,8 @@
->  #!/bin/sh
->  # SPDX-License-Identifier: GPL-2.0
-> -# Loading a kernel image via the kexec_load syscall should fail
-> -# when the kernel is CONFIG_KEXEC_VERIFY_SIG enabled and the system
-> -# is booted in secureboot mode.
-> +#
-> +# Prevent loading a kernel image via the kexec_load syscall when
-> +# signatures are required.  (Dependent on CONFIG_IMA_ARCH_POLICY.)
->  
->  TEST="$0"
->  . ./kexec_common_lib.sh
-> @@ -18,20 +18,28 @@ if [ $? -eq 0 ]; then
->  	log_skip "kexec_load is not enabled"
->  fi
->  
-> +kconfig_enabled "CONFIG_IMA_APPRAISE=y" "IMA enabled"
-> +ima_appraise=$?
-> +
-> +kconfig_enabled "CONFIG_IMA_ARCH_POLICY=y" \
-> +	"IMA architecture specific policy enabled"
-> +arch_policy=$?
-> +
->  get_secureboot_mode
->  secureboot=$?
->  
-> -# kexec_load should fail in secure boot mode
-> +# kexec_load should fail in secure boot mode and CONFIG_IMA_ARCH_POLICY enabled
->  kexec --load $KERNEL_IMAGE > /dev/null 2>&1
->  if [ $? -eq 0 ]; then
->  	kexec --unload
-> -	if [ $secureboot -eq 1 ]; then
-> +	if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ]; then
->  		log_fail "kexec_load succeeded"
-> -	else
-> -		log_pass "kexec_load succeeded"
-> +	elif [ $ima_appraise -eq 0 -o $arch_policy -eq 0 ]; then
-> +		log_info "Either IMA or the IMA arch policy is not enabled"
->  	fi
-> +	log_pass "kexec_load succeeded"
->  else
-> -	if [ $secureboot -eq 1 ]; then
-> +	if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ] ; then
->  		log_pass "kexec_load failed"
->  	else
->  		log_fail "kexec_load failed"
-> -- 
-> 2.7.5
-> 
+> I would vote for a repost of your old patch with some #ifdef
+
+Thanks for comments, Dave, Kairui and Baoquan.
+
+The problem for me is it's a regression in v5.1-rc1, that breaks
+existing setup. If early parsing of RSDP is required only for newly
+supported configuration, I'm fine such configuration requires
+new tools or new options.
+
+This is the 1st version plus #ifdef around the EFI code.
+Build tested both with and without CONFIG_EFI to see no warnings.
+
+[PATCH v2] x86/boot: Use EFI setup data if provided
+
+Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+in the early parsing code tries to search RSDP from EFI table but
+whose address is virtual.
+
+Since kexec(1) provides physical address of config_table via boot_params,
+efi_get_rsdp_addr() should look for setup_data in the same way as
+efi_systab_init() in arch/x86/platform/efi/efi.c does.
+
+Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+Acked-by: Dave Young <dyoung@redhat.com>
+Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc: Borislav Petkov <bp@suse.de>
+
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -44,6 +44,24 @@ static acpi_physical_address get_acpi_rsdp(void)
+ 	return addr;
+ }
+ 
++#ifdef CONFIG_EFI
++static unsigned long efi_get_setup_data_addr(void)
++{
++	struct setup_data *data;
++	u64 pa_data;
++
++	pa_data = boot_params->hdr.setup_data;
++	while (pa_data) {
++		data = (struct setup_data *) pa_data;
++		if (data->type == SETUP_EFI)
++			return pa_data + sizeof(struct setup_data);
++		pa_data = data->next;
++	}
++
++	return 0;
++}
++#endif
++
+ /* Search EFI system tables for RSDP. */
+ static acpi_physical_address efi_get_rsdp_addr(void)
+ {
+@@ -53,10 +71,12 @@ static acpi_physical_address efi_get_rsdp_addr(void)
+ 	unsigned long systab, systab_tables, config_tables;
+ 	unsigned int nr_tables;
+ 	struct efi_info *ei;
++	struct efi_setup_data *esd;
+ 	bool efi_64;
+ 	int size, i;
+ 	char *sig;
+ 
++	esd = (struct efi_setup_data *) efi_get_setup_data_addr();
+ 	ei = &boot_params->efi_info;
+ 	sig = (char *)&ei->efi_loader_signature;
+ 
+@@ -86,13 +106,13 @@ static acpi_physical_address efi_get_rsdp_addr(void)
+ 	if (efi_64) {
+ 		efi_system_table_64_t *stbl = (efi_system_table_64_t *)systab;
+ 
+-		config_tables	= stbl->tables;
++		config_tables	= esd ? esd->tables : stbl->tables;
+ 		nr_tables	= stbl->nr_tables;
+ 		size		= sizeof(efi_config_table_64_t);
+ 	} else {
+ 		efi_system_table_32_t *stbl = (efi_system_table_32_t *)systab;
+ 
+-		config_tables	= stbl->tables;
++		config_tables	= esd ? esd->tables : stbl->tables;
+ 		nr_tables	= stbl->nr_tables;
+ 		size		= sizeof(efi_config_table_32_t);
+ 	}
 
 _______________________________________________
 kexec mailing list
