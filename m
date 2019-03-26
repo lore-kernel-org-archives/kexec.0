@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-f194.google.com ([209.85.214.194])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h8fvA-0002UX-MI
- for kexec@lists.infradead.org; Tue, 26 Mar 2019 06:50:55 +0000
-Received: by mail-pl1-f194.google.com with SMTP id y6so1183295pll.13
- for <kexec@lists.infradead.org>; Mon, 25 Mar 2019 23:50:48 -0700 (PDT)
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH] include/kcore: Remove left-over instances of
- 'kclist_add_remap()'
-Date: Tue, 26 Mar 2019 12:20:28 +0530
-Message-Id: <1553583028-17804-1-git-send-email-bhsharma@redhat.com>
+ id 1h8gqJ-0000hE-BN
+ for kexec@lists.infradead.org; Tue, 26 Mar 2019 07:50:02 +0000
+Date: Tue, 26 Mar 2019 15:49:42 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v4a 1/2] selftests/kexec: make tests independent of IMA
+ being enabled
+Message-ID: <20190326074942.GA19708@dhcp-128-65.nay.redhat.com>
+References: <1553283351-6310-1-git-send-email-zohar@linux.ibm.com>
+ <20190325080935.GA12497@dhcp-128-65.nay.redhat.com>
+ <1553546236.5561.7.camel@linux.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1553546236.5561.7.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,70 +22,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, Michael Ellerman <mpe@ellerman.id.au>, bhsharma@redhat.com, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Boris Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, Dave Anderson <anderson@redhat.com>, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, Petr Vorel <pvorel@suse.cz>, linux-kselftest@vger.kernel.org, linux-integrity@vger.kernel.org
 
-Commit bf904d2762ee ("x86/pti/64: Remove the SYSCALL64 entry trampoline")
-removed the sole usage of 'kclist_add_remap()' from
-'arch/x86/mm/cpu_entry_area.c', but it did not remove the left-over
-definition from the include file.
+On 03/25/19 at 04:37pm, Mimi Zohar wrote:
+> On Mon, 2019-03-25 at 16:09 +0800, Dave Young wrote:
+> > Hi Mimi
+> > On 03/22/19 at 03:35pm, Mimi Zohar wrote:
+> > > Verify IMA is enabled before failing tests or emitting irrelevant
+> > > messages.  Also, don't skip the test if signatures are not required.
+> > > =
 
-Fix the same.
+> > > Suggested-by: Dave Young <dyoung@redhat.com>
+> > > Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> > > ---
+> > > Dave, if this patch resolves the outstanding issues, I can fold these
+> > > changes into the original patches. (Reminder, these patches will need=
+ to
+> > > be updated to support the "lockdown" patch set.)
+> > =
 
-Cc: James Morse <james.morse@arm.com>
-Cc: Boris Petkov <bp@alien8.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Dave Anderson <anderson@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: x86@kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- include/linux/kcore.h | 11 -----------
- 1 file changed, 11 deletions(-)
+> > They looks good to me, thanks for the update
+> =
 
-diff --git a/include/linux/kcore.h b/include/linux/kcore.h
-index c843f4a9c512..da676cdbd727 100644
---- a/include/linux/kcore.h
-+++ b/include/linux/kcore.h
-@@ -38,12 +38,6 @@ struct vmcoredd_node {
- 
- #ifdef CONFIG_PROC_KCORE
- void __init kclist_add(struct kcore_list *, void *, size_t, int type);
--static inline
--void kclist_add_remap(struct kcore_list *m, void *addr, void *vaddr, size_t sz)
--{
--	m->vaddr = (unsigned long)vaddr;
--	kclist_add(m, addr, sz, KCORE_REMAP);
--}
- 
- extern int __init register_mem_pfn_is_ram(int (*fn)(unsigned long pfn));
- #else
-@@ -51,11 +45,6 @@ static inline
- void kclist_add(struct kcore_list *new, void *addr, size_t size, int type)
- {
- }
--
--static inline
--void kclist_add_remap(struct kcore_list *m, void *addr, void *vaddr, size_t sz)
--{
--}
- #endif
- 
- #endif /* _LINUX_KCORE_H */
--- 
-2.7.4
+> I've folded the kexec_file_load changes into the kexec_file_load test.
+> =A0The remaining kexec_load change is left as a separate patch, since it
+> is dependent on the ikconfig change.
+> =
 
+> > Feel free to add my reviewed-by, I did some tests although not cover all
+> > ima cases.
+> =
+
+> Thanks! =A0Is this meant as a general "reviewed-by" for all of the
+> patches or just this specific one?
+
+Thank you for taking this as a separate kexec tests, I think it can be used=
+ for these delta fixes
+
+I read all the patches and reviewed the kexec stuff, but I do not
+understand all the IMA logic yet although I did some simple ima
+tests.
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
