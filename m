@@ -1,33 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h8mZi-0004D2-6R
- for kexec@lists.infradead.org; Tue, 26 Mar 2019 13:57:11 +0000
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x2QDsIQc108459
- for <kexec@lists.infradead.org>; Tue, 26 Mar 2019 09:57:08 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2rfmc83gvc-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 26 Mar 2019 09:57:07 -0400
-Received: from localhost
- by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Tue, 26 Mar 2019 13:57:05 -0000
-Subject: Re: [PATCH v4a 1/2] selftests/kexec: make tests independent of IMA
- being enabled
-From: Mimi Zohar <zohar@linux.ibm.com>
-Date: Tue, 26 Mar 2019 09:56:50 -0400
-In-Reply-To: <20190326074942.GA19708@dhcp-128-65.nay.redhat.com>
-References: <1553283351-6310-1-git-send-email-zohar@linux.ibm.com>
- <20190325080935.GA12497@dhcp-128-65.nay.redhat.com>
- <1553546236.5561.7.camel@linux.ibm.com>
- <20190326074942.GA19708@dhcp-128-65.nay.redhat.com>
-Mime-Version: 1.0
-Message-Id: <1553608610.3960.37.camel@linux.ibm.com>
+ id 1h8mZp-0004EM-Fc
+ for kexec@lists.infradead.org; Tue, 26 Mar 2019 13:57:20 +0000
+Date: Tue, 26 Mar 2019 14:57:14 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
+Message-ID: <20190326135714.GG1867@zn.tnic>
+References: <bcb5bd29-a3b8-e42d-8da7-a8501f695c21@ce.jp.nec.com>
+ <20190325065921.GA11096@dhcp-128-65.nay.redhat.com>
+ <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
+ <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
+ <20190325101509.GA13160@dhcp-128-65.nay.redhat.com>
+ <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
+ <20190325120149.GI12016@zn.tnic>
+ <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
+ <20190325123229.GL12016@zn.tnic>
+ <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,43 +28,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, Petr Vorel <pvorel@suse.cz>, linux-kselftest@vger.kernel.org, linux-integrity@vger.kernel.org
+To: Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc: "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "kasong@redhat.com" <kasong@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Young <dyoung@redhat.com>
 
-T24gVHVlLCAyMDE5LTAzLTI2IGF0IDE1OjQ5ICswODAwLCBEYXZlIFlvdW5nIHdyb3RlOgo+IE9u
-IDAzLzI1LzE5IGF0IDA0OjM3cG0sIE1pbWkgWm9oYXIgd3JvdGU6Cj4gPiBPbiBNb24sIDIwMTkt
-MDMtMjUgYXQgMTY6MDkgKzA4MDAsIERhdmUgWW91bmcgd3JvdGU6Cj4gPiA+IEhpIE1pbWkKPiA+
-ID4gT24gMDMvMjIvMTkgYXQgMDM6MzVwbSwgTWltaSBab2hhciB3cm90ZToKPiA+ID4gPiBWZXJp
-ZnkgSU1BIGlzIGVuYWJsZWQgYmVmb3JlIGZhaWxpbmcgdGVzdHMgb3IgZW1pdHRpbmcgaXJyZWxl
-dmFudAo+ID4gPiA+IG1lc3NhZ2VzLiAgQWxzbywgZG9uJ3Qgc2tpcCB0aGUgdGVzdCBpZiBzaWdu
-YXR1cmVzIGFyZSBub3QgcmVxdWlyZWQuCj4gPiA+ID4gCj4gPiA+ID4gU3VnZ2VzdGVkLWJ5OiBE
-YXZlIFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNaW1p
-IFpvaGFyIDx6b2hhckBsaW51eC5pYm0uY29tPgo+ID4gPiA+IC0tLQo+ID4gPiA+IERhdmUsIGlm
-IHRoaXMgcGF0Y2ggcmVzb2x2ZXMgdGhlIG91dHN0YW5kaW5nIGlzc3VlcywgSSBjYW4gZm9sZCB0
-aGVzZQo+ID4gPiA+IGNoYW5nZXMgaW50byB0aGUgb3JpZ2luYWwgcGF0Y2hlcy4gKFJlbWluZGVy
-LCB0aGVzZSBwYXRjaGVzIHdpbGwgbmVlZCB0bwo+ID4gPiA+IGJlIHVwZGF0ZWQgdG8gc3VwcG9y
-dCB0aGUgImxvY2tkb3duIiBwYXRjaCBzZXQuKQo+ID4gPiAKPiA+ID4gVGhleSBsb29rcyBnb29k
-IHRvIG1lLCB0aGFua3MgZm9yIHRoZSB1cGRhdGUKPiA+IAo+ID4gSSd2ZSBmb2xkZWQgdGhlIGtl
-eGVjX2ZpbGVfbG9hZCBjaGFuZ2VzIGludG8gdGhlIGtleGVjX2ZpbGVfbG9hZCB0ZXN0Lgo+ID4g
-wqBUaGUgcmVtYWluaW5nIGtleGVjX2xvYWQgY2hhbmdlIGlzIGxlZnQgYXMgYSBzZXBhcmF0ZSBw
-YXRjaCwgc2luY2UgaXQKPiA+IGlzIGRlcGVuZGVudCBvbiB0aGUgaWtjb25maWcgY2hhbmdlLgo+
-ID4gCj4gPiA+IEZlZWwgZnJlZSB0byBhZGQgbXkgcmV2aWV3ZWQtYnksIEkgZGlkIHNvbWUgdGVz
-dHMgYWx0aG91Z2ggbm90IGNvdmVyIGFsbAo+ID4gPiBpbWEgY2FzZXMuCj4gPiAKPiA+IFRoYW5r
-cyEgwqBJcyB0aGlzIG1lYW50IGFzIGEgZ2VuZXJhbCAicmV2aWV3ZWQtYnkiIGZvciBhbGwgb2Yg
-dGhlCj4gPiBwYXRjaGVzIG9yIGp1c3QgdGhpcyBzcGVjaWZpYyBvbmU/Cj4gCj4gVGhhbmsgeW91
-IGZvciB0YWtpbmcgdGhpcyBhcyBhIHNlcGFyYXRlIGtleGVjIHRlc3RzLCBJIHRoaW5rIGl0IGNh
-bgo+IGJlIHVzZWQgZm9yIHRoZXNlIGRlbHRhIGZpeGVzCgpPaywgSSBqdXN0IHJlLXBvc3RlZCB0
-aGUgcGF0Y2hlcywgZm9sZGluZyBwYXJ0IG9mIHRoaXMgcGF0Y2ggaW50byB0aGUKa2V4ZWNfZmls
-ZV9sb2FkIHRlc3QuIMKgSSd2ZSBhZGRlZCB5b3VyIFJldmlld2VkLWJ5IG9uIHRoZSByZW1haW5p
-bmcKcGF0Y2guCgo+IAo+IEkgcmVhZCBhbGwgdGhlIHBhdGNoZXMgYW5kIHJldmlld2VkIHRoZSBr
-ZXhlYyBzdHVmZiwgYnV0IEkgZG8gbm90Cj4gdW5kZXJzdGFuZCBhbGwgdGhlIElNQSBsb2dpYyB5
-ZXQgYWx0aG91Z2ggSSBkaWQgc29tZSBzaW1wbGUgaW1hCj4gdGVzdHMuCgpJIHVuZGVyc3RhbmQu
-IMKgVGhlcmUgYXJlIG1hbnkgZGlmZmVyZW50IGFzcGVjdHMgdG8gdGhlIGludGVncml0eQpzdWJz
-eXN0ZW0uIMKgSSdtIGhhcHB5IHRvIGFuc3dlciBhbnkgcXVlc3Rpb25zIHlvdSBoYXZlLgoKTWlt
-aQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
-IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Mon, Mar 25, 2019 at 11:10:01PM +0000, Junichi Nomura wrote:
+> efi_get_rsdp_addr() and kexec_get_rsdp_addr() could be implemented
+> like this (sorry about the pseudo code):
+
+This doesn't look like what I suggested:
+
+> So efi_get_rsdp_addr() needs to be refactored in such a way so that at
+> least the loop towards the end gets carved out into a separate function
+> - __efi_get_rsdp_addr() or so - which gets config_tables, nr_tables and
+> size as arguments and finds the RSDP address in the kexec-ed kernel.
+
+You need to carve out the loop at the end and make it into a separate
+__efi_get_rsdp_addr() function which gets the physical or the virtual
+address.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
