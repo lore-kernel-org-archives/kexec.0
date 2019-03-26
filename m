@@ -1,21 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h8iqw-0000TO-Jh
- for kexec@lists.infradead.org; Tue, 26 Mar 2019 09:58:46 +0000
-Date: Tue, 26 Mar 2019 10:58:31 +0100
-In-Reply-To: <b1556461-fe83-2ba0-00a3-e8ecf3e286fe@amd.com>
-References: <20181129080956.20776-1-lijiang@redhat.com>
- <20181129080956.20776-2-lijiang@redhat.com>
- <20181130033703.GA23624@dhcp-128-65.nay.redhat.com>
- <b8936194-01ef-8b8f-254e-039fc951855d@amd.com>
- <95661569-d9c9-af13-11c4-c0d752710a1f@redhat.com>
- <b1556461-fe83-2ba0-00a3-e8ecf3e286fe@amd.com>
+ id 1h8iyJ-0003V9-9Z
+ for kexec@lists.infradead.org; Tue, 26 Mar 2019 10:06:21 +0000
+Date: Tue, 26 Mar 2019 11:06:13 +0100
+In-Reply-To: <be457f42-40b0-6d21-0f0c-2a5e3860d4d5@amd.com>
+References: <20190315103203.13128-1-lijiang@redhat.com>
+ <20190315103203.13128-2-lijiang@redhat.com> <20190324150034.GH23289@zn.tnic>
+ <7b115829-40d9-e55e-dee3-ec8e4766971f@redhat.com>
+ <20190325063742.GA12016@zn.tnic>
+ <652b9166-f06e-c210-3c3f-c9e80a97db18@amd.com>
+ <20190325173239.GO12016@zn.tnic>
+ <11013ad2-2eab-5a7a-d4e2-a9da4920cfab@amd.com>
+ <be457f42-40b0-6d21-0f0c-2a5e3860d4d5@amd.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/2 v8] resource: add the new I/O resource descriptor
- 'IORES_DESC_RESERVED'
+Subject: Re: [PATCH 1/3] kexec: Do not map the kexec area as decrypted when
+ SEV is active
 From: Boris Petkov <bp@alien8.de>
-Message-ID: <5B077919-37B4-4434-86BC-6F29DD73C195@alien8.de>
+Message-ID: <24AEA0F0-8BDA-4C96-9AC2-F12A7A06C76D@alien8.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,17 +30,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>, lijiang <lijiang@redhat.com>
-Cc: "tony.luck@intel.com" <tony.luck@intel.com>, "fenghua.yu@intel.com" <fenghua.yu@intel.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "bhe@redhat.com" <bhe@redhat.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "peterz@infradead.org" <peterz@infradead.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "luto@kernel.org" <luto@kernel.org>, Toshi Kani <toshi.kani@hp.com>, "tglx@linutronix.de" <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>
+To: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>, "Singh,
+ Brijesh" <brijesh.singh@amd.com>
+Cc: lijiang <lijiang@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "dyoung@redhat.com" <dyoung@redhat.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>
 
-On March 25, 2019 8:34:25 PM GMT+01:00, "Lendacky, Thomas" <Thomas.Lendacky@amd.com> wrote:
->On 3/16/19 2:31 AM, lijiang 
->Adding a nice comment here about how IORES_DESC_NONE originally was to
->identify MMIO and reserved areas. Now IORES_DESC_RESERVED has been
->created
->for the reserved areas so the check needs to be expanded
+On March 25, 2019 8:59:28 PM GMT+01:00, "Lendacky, Thomas" <Thomas.Lendacky@amd.com> wrote:
+>Maybe what would help is to describe why there is a difference between
+>SME
+>and SEV in regards to kexec. During a traditional boot under SME, SME
+>will
+>encrypt the kernel, so the SME kexec kernel also needs to be
+>un-encrypted
+>in order to replicate a normal SME boot. During a traditional boot
+>under
+>SEV, the kernel has already been loaded encrypted, so the SEV kexec
+>kernel
+>needs to be encrypted in order to replicate a normal SEV boot.
 
-Expanded and made explicit *which* areas should not be mapped encrypted and then the function name corrected. 
+
+Yah, that should be in a comment above that function.
 
 Thx.
 
