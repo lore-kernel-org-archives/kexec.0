@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v3 1/3] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to
- vmcoreinfo
-References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
- <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
-From: James Morse <james.morse@arm.com>
-Message-ID: <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
-Date: Tue, 26 Mar 2019 16:36:59 +0000
-MIME-Version: 1.0
-In-Reply-To: <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
-Content-Language: en-GB
+Received: from mail-ua1-x949.google.com ([2607:f8b0:4864:20::949])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1h8qo0-0001Z1-1r
+ for kexec@lists.infradead.org; Tue, 26 Mar 2019 18:28:13 +0000
+Received: by mail-ua1-x949.google.com with SMTP id a10so1684670uan.7
+ for <kexec@lists.infradead.org>; Tue, 26 Mar 2019 11:28:08 -0700 (PDT)
+Date: Tue, 26 Mar 2019 11:27:20 -0700
+In-Reply-To: <20190326182742.16950-1-matthewgarrett@google.com>
+Message-Id: <20190326182742.16950-5-matthewgarrett@google.com>
+Mime-Version: 1.0
+References: <20190326182742.16950-1-matthewgarrett@google.com>
+Subject: [PATCH V31 04/25] kexec_load: Disable at runtime if the kernel is
+ locked down
+From: Matthew Garrett <matthewgarrett@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,66 +25,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Steve Capper <Steve.Capper@arm.com>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Dave Anderson <anderson@redhat.com>, bhupesh.linux@gmail.com, linux-arm-kernel@lists.infradead.org
+To: jmorris@namei.org
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-api@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, dhowells@redhat.com, linux-security-module@vger.kernel.org, luto@kernel.org, Dave Young <dyoung@redhat.com>
 
-Hi Bhupesh,
+From: Matthew Garrett <mjg59@srcf.ucam.org>
 
-On 20/03/2019 05:09, Bhupesh Sharma wrote:
-> With ARMv8.2-LVA architecture extension availability, arm64 hardware
-> which supports this extension can support a virtual address-space upto
-> 52-bits.
-> 
-> Since at the moment we enable the support of this extension in kernel
-> via CONFIG flags, e.g.
->  - User-space 52-bit LVA via CONFIG_ARM64_USER_VA_BITS_52
-> 
-> so, there is no clear mechanism in the user-space right now to
-> determine these CONFIG flag values and hence determine the maximum
-> virtual address space supported by the underlying kernel.
-> 
-> User-space tools like 'makedumpfile' therefore are broken currently
-> as they have no proper method to calculate the 'PTRS_PER_PGD' value
-> which is required to perform a page table walk to determine the
-> physical address of a corresponding virtual address found in
-> kcore/vmcoreinfo.
-> 
-> If one appends 'PTRS_PER_PGD' number to vmcoreinfo for arm64,
-> it can be used in user-space to determine the maximum virtual address
-> supported by underlying kernel.
+The kexec_load() syscall permits the loading and execution of arbitrary
+code in ring 0, which is something that lock-down is meant to prevent. It
+makes sense to disable kexec_load() in this situation.
 
-I don't think this really solves the problem, it feels fragile.
+This does not affect kexec_file_load() syscall which can check for a
+signature on the image to be booted.
 
-I can see how vmcoreinfo tells you VA_BITS==48, PAGE_SIZE==64K and PTRS_PER_PGD=1024.
-You can use this to work out that the top level page table size isn't consistent with a
-48bit VA, so 52bit VA must be in use...
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Acked-by: Dave Young <dyoung@redhat.com>
+cc: kexec@lists.infradead.org
+---
+ kernel/kexec.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-But wasn't your problem walking the kernel page tables? In particular the offset that we
-apply because the tables were based on a 48bit VA shifted up in swapper_pg_dir.
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 68559808fdfa..57047acc9a36 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -207,6 +207,14 @@ static inline int kexec_load_check(unsigned long nr_segments,
+ 	if (result < 0)
+ 		return result;
+ 
++	/*
++	 * kexec can be used to circumvent module loading restrictions, so
++	 * prevent loading in that case
++	 */
++	if (kernel_is_locked_down("kexec of unsigned images",
++				  LOCKDOWN_INTEGRITY))
++		return -EPERM;
++
+ 	/*
+ 	 * Verify we have a legal set of flags
+ 	 * This leaves us room for future extensions.
+-- 
+2.21.0.392.gf8f6787159e-goog
 
-Where does the TTBR1_EL1 offset come from with this property? I assume makedumpfile
-hard-codes it when it sees 52bit is in use ... somewhere.
-We haven't solved the problem!
-
-Today __cpu_setup() sets T0SZ and T1SZ differently for 52bit VA, but in the future it
-could set them the same, or different the other-way-round.
-
-Will makedumpfile using this value keep working once T1SZ is 52bit VA too? In this case
-there would be no ttbr offset.
-
-If you need another vmcoreinfo flag once that happens, we've done something wrong here.
-
-(Not to mention what happens if the TTBR1_EL1 uses 52bit va, but TTBR0_EL1 doesn't)
-
-
-> Suggested-by: Steve Capper <Steve.Capper@arm.com>
-
-(CC: +Steve)
-
-
-Thanks,
-
-James
 
 _______________________________________________
 kexec mailing list
