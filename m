@@ -1,25 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h97SS-0000Pk-JY
- for kexec@lists.infradead.org; Wed, 27 Mar 2019 12:15:06 +0000
-Date: Wed, 27 Mar 2019 13:14:49 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
-Message-ID: <20190327121449.GE32571@zn.tnic>
-References: <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
- <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
- <20190325101509.GA13160@dhcp-128-65.nay.redhat.com>
- <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
- <20190325120149.GI12016@zn.tnic>
- <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
- <20190325123229.GL12016@zn.tnic>
- <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
- <20190326135714.GG1867@zn.tnic>
- <20190327014852.GA3659@MiWiFi-R3L-srv>
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH v3 1/3] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to
+ vmcoreinfo
+Date: Wed, 27 Mar 2019 16:07:22 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC035710C4@BPXM09GP.gisp.nec.co.jp>
+References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
+ <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
+ <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
+In-Reply-To: <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190327014852.GA3659@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,22 +22,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "bhe@redhat.com" <bhe@redhat.com>
-Cc: "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "kasong@redhat.com" <kasong@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Dave Young <dyoung@redhat.com>
+To: James Morse <james.morse@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Steve Capper <Steve.Capper@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Anderson <anderson@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Wed, Mar 27, 2019 at 09:48:52AM +0800, bhe@redhat.com wrote:
-> I guess Boris is suggesting code like below. Please correct me if I am
-> wrong.
+On 3/26/2019 12:36 PM, James Morse wrote:
+> Hi Bhupesh,
+> 
+> On 20/03/2019 05:09, Bhupesh Sharma wrote:
+> > With ARMv8.2-LVA architecture extension availability, arm64 hardware
+> > which supports this extension can support a virtual address-space upto
+> > 52-bits.
+> >
+> > Since at the moment we enable the support of this extension in kernel
+> > via CONFIG flags, e.g.
+> >  - User-space 52-bit LVA via CONFIG_ARM64_USER_VA_BITS_52
+> >
+> > so, there is no clear mechanism in the user-space right now to
+> > determine these CONFIG flag values and hence determine the maximum
+> > virtual address space supported by the underlying kernel.
+> >
+> > User-space tools like 'makedumpfile' therefore are broken currently
+> > as they have no proper method to calculate the 'PTRS_PER_PGD' value
+> > which is required to perform a page table walk to determine the
+> > physical address of a corresponding virtual address found in
+> > kcore/vmcoreinfo.
+> >
+> > If one appends 'PTRS_PER_PGD' number to vmcoreinfo for arm64,
+> > it can be used in user-space to determine the maximum virtual address
+> > supported by underlying kernel.
+> 
+> I don't think this really solves the problem, it feels fragile.
+> 
+> I can see how vmcoreinfo tells you VA_BITS==48, PAGE_SIZE==64K and PTRS_PER_PGD=1024.
+> You can use this to work out that the top level page table size isn't consistent with a
+> 48bit VA, so 52bit VA must be in use...
+> 
+> But wasn't your problem walking the kernel page tables? In particular the offset that we
+> apply because the tables were based on a 48bit VA shifted up in swapper_pg_dir.
+> 
+> Where does the TTBR1_EL1 offset come from with this property? I assume makedumpfile
+> hard-codes it when it sees 52bit is in use ... somewhere.
 
-Yap, exactly.
+My understanding is that the TTBR1_EL1 offset comes from a kernel
+virtual address with the exported PTRS_PER_PGD.
 
-Thx.
+With T1SZ is 48bit and T0SZ is 52bit,
 
--- 
-Regards/Gruss,
-    Boris.
+kva = 0xffff000000000000    <--- start of kernel virtual address
+pgd_index(kva) = (kva >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1)
+               = (0xffff000000000000 >> 42) & (1024 - 1)
+               = 0x00000000003fffc0 & 0x3ff
+               = 0x3c0      <--- the offset (0x3c0) is included
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+This is what kernel does now, so makedumpfile also wants to do.
+
+> We haven't solved the problem!
+> 
+> Today __cpu_setup() sets T0SZ and T1SZ differently for 52bit VA, but in the future it
+> could set them the same, or different the other-way-round.
+> 
+> Will makedumpfile using this value keep working once T1SZ is 52bit VA too? In this case
+> there would be no ttbr offset.
+
+If T1SZ is 52bit, probably kernel virtual address starts from 0xfff0000000000000,
+then the offset becomes 0 with the pgd_index() above.
+I think makedumpfile will keep working with that.
+
+Thanks,
+Kazu
+
+> 
+> If you need another vmcoreinfo flag once that happens, we've done something wrong here.
+> 
+> (Not to mention what happens if the TTBR1_EL1 uses 52bit va, but TTBR0_EL1 doesn't)
+> 
+> 
+> > Suggested-by: Steve Capper <Steve.Capper@arm.com>
+> 
+> (CC: +Steve)
+> 
+> 
+> Thanks,
+> 
+> James
 
 _______________________________________________
 kexec mailing list
