@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h91Fa-0003HV-I4
- for kexec@lists.infradead.org; Wed, 27 Mar 2019 05:37:24 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 3/3 v2] kdump,
- proc/vmcore: Enable kdumping encrypted memory when SEV was active
-Date: Wed, 27 Mar 2019 13:36:29 +0800
-Message-Id: <20190327053629.17935-4-lijiang@redhat.com>
-In-Reply-To: <20190327053629.17935-1-lijiang@redhat.com>
-References: <20190327053629.17935-1-lijiang@redhat.com>
+ id 1h977d-0000v0-5t
+ for kexec@lists.infradead.org; Wed, 27 Mar 2019 11:53:34 +0000
+Date: Wed, 27 Mar 2019 12:53:27 +0100
+From: Petr Vorel <pvorel@suse.cz>
+Subject: Re: [PATCH v5 8/9] selftests/kexec: check kexec_load and
+ kexec_file_load are enabled
+Message-ID: <20190327115327.GB13687@dell5510>
+References: <1553607257-18906-1-git-send-email-zohar@linux.ibm.com>
+ <1553607257-18906-9-git-send-email-zohar@linux.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1553607257-18906-9-git-send-email-zohar@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,70 +21,27 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
+Reply-To: Petr Vorel <pvorel@suse.cz>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Thomas.Lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, linux-kselftest@vger.kernel.org, linux-integrity@vger.kernel.org, Dave Young <dyoung@redhat.com>
 
-In the kdump kernel, the memory of first kernel needs to be dumped
-into the vmcore file.
+Hi Mimi, Dave,
 
-It is similar to the SME, if SEV is enabled in the first kernel, the
-old memory has to be remapped with memory encryption mask in order to
-access it properly. Following commit 992b649a3f01 ("kdump, proc/vmcore:
-Enable kdumping encrypted memory with SME enabled") took care of the
-SME case but it uses sme_active() which checks for SME only. Lets use
-the mem_encrypt_active() which returns true when either of them are
-active.
+> Skip the kexec_load and kexec_file_load tests, if they aren't configured
+> in the kernel.  This change adds a new requirement that ikconfig is
+> configured in the kexec_load test.
 
-Unlike the SME, the first kernel is loaded into the encrypted memory
-when SEV was enabled, hence the kernel elf header must be remapped as
-encrypted in order to access it properly.
+> Suggested-by: Dave Young <dyoung@redhat.com>
+> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Reviewed-by: Petr Vorel <pvorel@suse.cz>
 
-Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- fs/proc/vmcore.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 3fe90443c1bb..cda6c1922e4f 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -165,7 +165,7 @@ void __weak elfcorehdr_free(unsigned long long addr)
-  */
- ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, false);
-+	return read_from_oldmem(buf, count, ppos, 0, sev_active());
- }
- 
- /*
-@@ -173,7 +173,7 @@ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-  */
- ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, sme_active());
-+	return read_from_oldmem(buf, count, ppos, 0, mem_encrypt_active());
- }
- 
- /*
-@@ -373,7 +373,7 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
- 					    buflen);
- 			start = m->paddr + *fpos - m->offset;
- 			tmp = read_from_oldmem(buffer, tsz, &start,
--					       userbuf, sme_active());
-+					       userbuf, mem_encrypt_active());
- 			if (tmp < 0)
- 				return tmp;
- 			buflen -= tsz;
--- 
-2.17.1
-
+Kind regards,
+Petr
 
 _______________________________________________
 kexec mailing list
