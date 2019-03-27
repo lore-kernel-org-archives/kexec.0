@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h91F9-00038j-Lb
- for kexec@lists.infradead.org; Wed, 27 Mar 2019 05:36:58 +0000
+ id 1h91FO-0003DF-7Q
+ for kexec@lists.infradead.org; Wed, 27 Mar 2019 05:37:11 +0000
 From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 1/3 v2] x86/kexec: Do not map the kexec area as decrypted when
- SEV is active
-Date: Wed, 27 Mar 2019 13:36:27 +0800
-Message-Id: <20190327053629.17935-2-lijiang@redhat.com>
+Subject: [PATCH 2/3 v2] x86/kexec: Set the C-bit in the identity map page
+ table when SEV is active
+Date: Wed, 27 Mar 2019 13:36:28 +0800
+Message-Id: <20190327053629.17935-3-lijiang@redhat.com>
 In-Reply-To: <20190327053629.17935-1-lijiang@redhat.com>
 References: <20190327053629.17935-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,63 +26,54 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: Thomas.Lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-Currently, the arch_kexec_post_{alloc,free}_pages() unconditionally
-maps the kexec area as decrypted. This works fine when SME is active.
-Because in SME, the first kernel is loaded in decrypted area by the
-BIOS, so the second kernel must be also loaded into the decrypted
-memory.
-
-When SEV is active, the first kernel is loaded into the encrypted
-area, so the second kernel must be also loaded into the encrypted
-memory. Lets make sure that arch_kexec_post_{alloc,free}_pages()
-does not clear the memory encryption mask from the kexec area when
-SEV is active.
+When SEV is active, the second kernel image is loaded into the
+encrypted memory. Lets make sure that when kexec builds the
+identity mapping page table it adds the memory encryption mask(C-bit).
 
 Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
 Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
 ---
- arch/x86/kernel/machine_kexec_64.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/x86/kernel/machine_kexec_64.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index ceba408ea982..f60611531d17 100644
+index f60611531d17..11fe352f7344 100644
 --- a/arch/x86/kernel/machine_kexec_64.c
 +++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -559,18 +559,33 @@ void arch_kexec_unprotect_crashkres(void)
- 	kexec_mark_crashkres(false);
- }
+@@ -56,6 +56,7 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
+ 	pte_t *pte;
+ 	unsigned long vaddr, paddr;
+ 	int result = -ENOMEM;
++	pgprot_t prot = PAGE_KERNEL_EXEC_NOENC;
  
-+/*
-+ * During a traditional boot under SME, SME will encrypt the kernel,
-+ * so the SME kexec kernel also needs to be un-encrypted in order to
-+ * replicate a normal SME boot.
-+ * During a traditional boot under SEV, the kernel has already been
-+ * loaded encrypted, so the SEV kexec kernel needs to be encrypted in
-+ * order to replicate a normal SEV boot.
-+ */
- int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, gfp_t gfp)
- {
+ 	vaddr = (unsigned long)relocate_kernel;
+ 	paddr = __pa(page_address(image->control_code_page)+PAGE_SIZE);
+@@ -92,7 +93,11 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
+ 		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
+ 	}
+ 	pte = pte_offset_kernel(pmd, vaddr);
+-	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, PAGE_KERNEL_EXEC_NOENC));
++
 +	if (sev_active())
-+		return 0;
++		prot = PAGE_KERNEL_EXEC;
 +
- 	/*
- 	 * If SME is active we need to be sure that kexec pages are
- 	 * not encrypted because when we boot to the new kernel the
- 	 * pages won't be accessed encrypted (initially).
- 	 */
- 	return set_memory_decrypted((unsigned long)vaddr, pages);
-+
- }
++	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
+ 	return 0;
+ err:
+ 	return result;
+@@ -129,6 +134,11 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+ 	level4p = (pgd_t *)__va(start_pgtable);
+ 	clear_page(level4p);
  
- void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages)
- {
-+	if (sev_active())
-+		return;
++	if (sev_active()) {
++		info.page_flag |= _PAGE_ENC;
++		info.kernpg_flag = _KERNPG_TABLE;
++	}
 +
- 	/*
- 	 * If SME is active we need to reset the pages back to being
- 	 * an encrypted mapping before freeing them.
+ 	if (direct_gbpages)
+ 		info.direct_gbpages = true;
+ 
 -- 
 2.17.1
 
