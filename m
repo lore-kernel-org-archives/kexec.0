@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH v3 1/3] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to
- vmcoreinfo
-Date: Wed, 27 Mar 2019 16:07:22 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC035710C4@BPXM09GP.gisp.nec.co.jp>
-References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
- <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
- <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
-In-Reply-To: <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
-Content-Language: en-US
+Received: from mail.kernel.org ([198.145.29.99])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1h9CxV-0006ck-Mx
+ for kexec@lists.infradead.org; Wed, 27 Mar 2019 18:07:31 +0000
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 173/262] x86/kexec: Fill in acpi_rsdp_addr from
+ the first kernel
+Date: Wed, 27 Mar 2019 14:00:28 -0400
+Message-Id: <20190327180158.10245-173-sashal@kernel.org>
+In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
+References: <20190327180158.10245-1-sashal@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,89 +23,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Steve Capper <Steve.Capper@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Anderson <anderson@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Sasha Levin <sashal@kernel.org>, Philipp Rudo <prudo@linux.vnet.ibm.com>, x86-ml <x86@kernel.org>, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Yannik Sembritzki <yannik@sembritzki.me>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
 
-On 3/26/2019 12:36 PM, James Morse wrote:
-> Hi Bhupesh,
-> 
-> On 20/03/2019 05:09, Bhupesh Sharma wrote:
-> > With ARMv8.2-LVA architecture extension availability, arm64 hardware
-> > which supports this extension can support a virtual address-space upto
-> > 52-bits.
-> >
-> > Since at the moment we enable the support of this extension in kernel
-> > via CONFIG flags, e.g.
-> >  - User-space 52-bit LVA via CONFIG_ARM64_USER_VA_BITS_52
-> >
-> > so, there is no clear mechanism in the user-space right now to
-> > determine these CONFIG flag values and hence determine the maximum
-> > virtual address space supported by the underlying kernel.
-> >
-> > User-space tools like 'makedumpfile' therefore are broken currently
-> > as they have no proper method to calculate the 'PTRS_PER_PGD' value
-> > which is required to perform a page table walk to determine the
-> > physical address of a corresponding virtual address found in
-> > kcore/vmcoreinfo.
-> >
-> > If one appends 'PTRS_PER_PGD' number to vmcoreinfo for arm64,
-> > it can be used in user-space to determine the maximum virtual address
-> > supported by underlying kernel.
-> 
-> I don't think this really solves the problem, it feels fragile.
-> 
-> I can see how vmcoreinfo tells you VA_BITS==48, PAGE_SIZE==64K and PTRS_PER_PGD=1024.
-> You can use this to work out that the top level page table size isn't consistent with a
-> 48bit VA, so 52bit VA must be in use...
-> 
-> But wasn't your problem walking the kernel page tables? In particular the offset that we
-> apply because the tables were based on a 48bit VA shifted up in swapper_pg_dir.
-> 
-> Where does the TTBR1_EL1 offset come from with this property? I assume makedumpfile
-> hard-codes it when it sees 52bit is in use ... somewhere.
+From: Kairui Song <kasong@redhat.com>
 
-My understanding is that the TTBR1_EL1 offset comes from a kernel
-virtual address with the exported PTRS_PER_PGD.
+[ Upstream commit ccec81e4251f5a5421e02874e394338a897056ca ]
 
-With T1SZ is 48bit and T0SZ is 52bit,
+When efi=noruntime or efi=oldmap is used on the kernel command line, EFI
+services won't be available in the second kernel, therefore the second
+kernel will not be able to get the ACPI RSDP address from firmware by
+calling EFI services and so it won't boot.
 
-kva = 0xffff000000000000    <--- start of kernel virtual address
-pgd_index(kva) = (kva >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1)
-               = (0xffff000000000000 >> 42) & (1024 - 1)
-               = 0x00000000003fffc0 & 0x3ff
-               = 0x3c0      <--- the offset (0x3c0) is included
+Commit
 
-This is what kernel does now, so makedumpfile also wants to do.
+  e6e094e053af ("x86/acpi, x86/boot: Take RSDP address from boot params if available")
 
-> We haven't solved the problem!
-> 
-> Today __cpu_setup() sets T0SZ and T1SZ differently for 52bit VA, but in the future it
-> could set them the same, or different the other-way-round.
-> 
-> Will makedumpfile using this value keep working once T1SZ is 52bit VA too? In this case
-> there would be no ttbr offset.
+added an acpi_rsdp_addr field to boot_params which stores the RSDP
+address for other kernel users.
 
-If T1SZ is 52bit, probably kernel virtual address starts from 0xfff0000000000000,
-then the offset becomes 0 with the pgd_index() above.
-I think makedumpfile will keep working with that.
+Recently, after
 
-Thanks,
-Kazu
+  3a63f70bf4c3 ("x86/boot: Early parse RSDP and save it in boot_params")
 
-> 
-> If you need another vmcoreinfo flag once that happens, we've done something wrong here.
-> 
-> (Not to mention what happens if the TTBR1_EL1 uses 52bit va, but TTBR0_EL1 doesn't)
-> 
-> 
-> > Suggested-by: Steve Capper <Steve.Capper@arm.com>
-> 
-> (CC: +Steve)
-> 
-> 
-> Thanks,
-> 
-> James
+the acpi_rsdp_addr will always be filled with a valid RSDP address.
+
+So fill in that value into the second kernel's boot_params thus ensuring
+that the second kernel receives the RSDP value from the first kernel.
+
+ [ bp: massage commit message. ]
+
+Signed-off-by: Kairui Song <kasong@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: kexec@lists.infradead.org
+Cc: Philipp Rudo <prudo@linux.vnet.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Cc: Yannik Sembritzki <yannik@sembritzki.me>
+Link: https://lkml.kernel.org/r/20190204173852.4863-1-kasong@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/kexec-bzimage64.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 53917a3ebf94..1f3b77367948 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -218,6 +218,9 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ 	params->screen_info.ext_mem_k = 0;
+ 	params->alt_mem_k = 0;
+ 
++	/* Always fill in RSDP: it is either 0 or a valid value */
++	params->acpi_rsdp_addr = boot_params.acpi_rsdp_addr;
++
+ 	/* Default APM info */
+ 	memset(&params->apm_bios_info, 0, sizeof(params->apm_bios_info));
+ 
+@@ -256,7 +259,6 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ 	setup_efi_state(params, params_load_addr, efi_map_offset, efi_map_sz,
+ 			efi_setup_data_offset);
+ #endif
+-
+ 	/* Setup EDD info */
+ 	memcpy(params->eddbuf, boot_params.eddbuf,
+ 				EDDMAXNR * sizeof(struct edd_info));
+-- 
+2.19.1
+
 
 _______________________________________________
 kexec mailing list
