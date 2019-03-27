@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h978Y-00011E-QC
- for kexec@lists.infradead.org; Wed, 27 Mar 2019 11:54:32 +0000
-Date: Wed, 27 Mar 2019 12:54:28 +0100
+ id 1h97Aa-0002ek-05
+ for kexec@lists.infradead.org; Wed, 27 Mar 2019 11:56:37 +0000
+Date: Wed, 27 Mar 2019 12:56:33 +0100
 From: Petr Vorel <pvorel@suse.cz>
-Subject: Re: [PATCH v5 1/9] selftests/kexec: move the IMA kexec_load selftest
- to selftests/kexec
-Message-ID: <20190327115427.GC13687@dell5510>
+Subject: Re: [PATCH v5 9/9] selftests/kexec: make kexec_load test independent
+ of IMA being enabled
+Message-ID: <20190327115632.GA15385@dell5510>
 References: <1553607257-18906-1-git-send-email-zohar@linux.ibm.com>
- <1553607257-18906-2-git-send-email-zohar@linux.ibm.com>
+ <1553607257-18906-10-git-send-email-zohar@linux.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1553607257-18906-2-git-send-email-zohar@linux.ibm.com>
+In-Reply-To: <1553607257-18906-10-git-send-email-zohar@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,13 +31,13 @@ Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mj
 
 Hi Mimi, Dave,
 
-> As requested move the existing kexec_load selftest and subsequent kexec
-> tests to the selftests/kexec directory.
+> Verify IMA is enabled before failing tests or emitting irrelevant
+> messages.
 
 > Suggested-by: Dave Young <dyoung@redhat.com>
 > Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> Reviewed-by: Dave Young <dyoung@redhat.com>
 Reviewed-by: Petr Vorel <pvorel@suse.cz>
-
 
 Kind regards,
 Petr
