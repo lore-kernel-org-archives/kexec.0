@@ -1,25 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h8xgX-0001tS-Vk
- for kexec@lists.infradead.org; Wed, 27 Mar 2019 01:48:59 +0000
-Date: Wed, 27 Mar 2019 09:48:52 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
-Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
-Message-ID: <20190327014852.GA3659@MiWiFi-R3L-srv>
-References: <20190325065921.GA11096@dhcp-128-65.nay.redhat.com>
- <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
- <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
- <20190325101509.GA13160@dhcp-128-65.nay.redhat.com>
- <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
- <20190325120149.GI12016@zn.tnic>
- <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
- <20190325123229.GL12016@zn.tnic>
- <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
- <20190326135714.GG1867@zn.tnic>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190326135714.GG1867@zn.tnic>
+ id 1h91F3-00036f-3Y
+ for kexec@lists.infradead.org; Wed, 27 Mar 2019 05:36:51 +0000
+From: Lianbo Jiang <lijiang@redhat.com>
+Subject: [PATCH 0/3 v2] Add kdump support for the SEV enabled guest
+Date: Wed, 27 Mar 2019 13:36:26 +0800
+Message-Id: <20190327053629.17935-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,91 +15,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Junichi Nomura <j-nomura@ce.jp.nec.com>, Borislav Petkov <bp@alien8.de>
-Cc: "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "kasong@redhat.com" <kasong@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Young <dyoung@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Thomas.Lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-Hi Junichi,
+Just like the physical machines support kdump, the virtual machines
+also need kdump. When a virtual machine panic, we also need to dump
+its memory for analysis.
 
-On 03/26/19 at 02:57pm, Borislav Petkov wrote:
-> On Mon, Mar 25, 2019 at 11:10:01PM +0000, Junichi Nomura wrote:
-> > efi_get_rsdp_addr() and kexec_get_rsdp_addr() could be implemented
-> > like this (sorry about the pseudo code):
-> 
-> This doesn't look like what I suggested:
-> 
-> > So efi_get_rsdp_addr() needs to be refactored in such a way so that at
-> > least the loop towards the end gets carved out into a separate function
-> > - __efi_get_rsdp_addr() or so - which gets config_tables, nr_tables and
-> > size as arguments and finds the RSDP address in the kexec-ed kernel.
-> 
-> You need to carve out the loop at the end and make it into a separate
-> __efi_get_rsdp_addr() function which gets the physical or the virtual
-> address.
+For the SEV virtual machine, the memory is also encrypted. When SEV
+is enabled, the first kernel is loaded into the encrypted area.
+Unlike the SME, the first kernel is loaded into the decrypted area.
 
-I guess Boris is suggesting code like below. Please correct me if I am
-wrong.
+Because of this difference between SME and SEV, we need to properly
+map the kexec memory area in order to correctly access it.
 
-static acpi_physical_address _efi_get_rsdp_addr(efi_config_table tbl, ...)
-{
-	/* Get EFI tables from systab. */
-	for (i = 0; i < nr_tables; i++) {
-		...
-	}
-	return rsdp_addr;
-}
+Test tools:
+makedumpfile[v1.6.5]:
+git://git.code.sf.net/p/makedumpfile/code
+commit <d222b01e516b> ("Add support for AMD Secure Memory Encryption")
+Note: This patch was merged into the devel branch.
 
-static acpi_physical_address efi_get_rsdp_addr(void)
-{
-	...
-	/* Get systab from boot params. */		
-	...
-	/* Handle EFI bitness properly */
-	...
-	return _efi_get_rsdp_addr();
-}
+crash-7.2.5: https://github.com/crash-utility/crash.git
+commit <942d813cda35> ("Fix for the "kmem -i" option on Linux 5.0")
 
+kexec-tools-2.0.19:
+git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+commit <942d813cda35> ("Fix for the kmem '-i' option on Linux 5.0")
+http://lists.infradead.org/pipermail/kexec/2019-March/022576.html
+Note: The second kernel cann't boot without this patch.
 
-static acpi_physical_address kexec_get_rsdp_addr(void)
-{
-	if (!is_kexec_booted)
-		return 0;
+kernel:
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+commit <f261c4e529da> ("Merge branch 'akpm' (patches from Andrew)")
 
-	efi_get_setup_data_addr();
-	...
-	/* Handle EFI bitness properly */
-	...
-	return _efi_get_rsdp_addr();
-}
+Test steps:
+[1] load the vmlinux and initrd for kdump
+# kexec -p /boot/vmlinuz-5.0.0+ --initrd=/boot/initramfs-5.0.0+kdump.img --command-line="BOOT_IMAGE=(hd0,gpt2)/vmlinuz-5.0.0+ ro resume=UUID=126c5e95-fc8b-48d6-a23b-28409198a52e console=ttyS0,115200 earlyprintk=serial irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never disable_cpu_apicid=0"
 
-acpi_physical_address get_rsdp_addr(void)
-{
-        acpi_physical_address pa;
+[2] trigger panic
+# echo 1 > /proc/sys/kernel/sysrq
+# echo c > /proc/sysrq-trigger
 
-        pa = get_acpi_rsdp();
+[3] check and parse the vmcore
+# crash vmlinux /var/crash/127.0.0.1-2019-03-15-05\:03\:42/vmcore
 
-        if (!pa)
-                pa = boot_params->acpi_rsdp_addr;
+Changes since v1:
+1. Modify the patch subject prefixes.
+2. Improve patch log: add parentheses at the end of the function names.
+3. Fix the multiple confusing checks.
+4. Add comment in the arch_kexec_post_alloc_pages().
 
+Lianbo Jiang (3):
+  x86/kexec: Do not map the kexec area as decrypted when SEV is active
+  x86/kexec: Set the C-bit in the identity map page table when SEV is
+    active
+  kdump,proc/vmcore: Enable kdumping encrypted memory when SEV was
+    active
 
-	/**
-	/*I think here we should check if it's kexec booted firstly.
-	 * Skip it if not kexec. this can avoid the wrong kexec virt
-	 * addr parsing./
-        if (!pa)
-                pa = kexec_get_rdsp_addr();             <--- new function
+ arch/x86/kernel/machine_kexec_64.c | 27 ++++++++++++++++++++++++++-
+ fs/proc/vmcore.c                   |  6 +++---
+ 2 files changed, 29 insertions(+), 4 deletions(-)
 
-        if (!pa)
-                pa = efi_get_rsdp_addr();
+-- 
+2.17.1
 
-        if (!pa)
-                pa = bios_get_rsdp_addr();
-
-        return pa;
-}
 
 _______________________________________________
 kexec mailing list
