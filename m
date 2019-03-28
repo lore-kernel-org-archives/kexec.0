@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h9XKy-0007j9-OD
- for kexec@lists.infradead.org; Thu, 28 Mar 2019 15:53:06 +0000
-Date: Thu, 28 Mar 2019 16:52:56 +0100
-From: Borislav Petkov <bp@alien8.de>
+ id 1h9eAt-0000sp-4P
+ for kexec@lists.infradead.org; Thu, 28 Mar 2019 23:11:09 +0000
+Date: Fri, 29 Mar 2019 07:11:00 +0800
+From: "bhe@redhat.com" <bhe@redhat.com>
 Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
-Message-ID: <20190328155256.GP22720@zn.tnic>
+Message-ID: <20190328231100.GC1877@MiWiFi-R3L-srv>
 References: <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
  <20190325120149.GI12016@zn.tnic>
  <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
@@ -33,26 +33,82 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc: "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "kasong@redhat.com" <kasong@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Young <dyoung@redhat.com>
+Cc: "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "kasong@redhat.com" <kasong@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
 
-On Thu, Mar 28, 2019 at 07:43:38AM +0000, Junichi Nomura wrote:
+On 03/28/19 at 07:43am, Junichi Nomura wrote:
+> On 2019/03/28 15:43, bhe@redhat.com wrote:
+> > On 03/28/19 at 04:17am, Junichi Nomura wrote:
+> >> I still don't get it... We still need systab for kexec case as well
+> >> to get nr_tables. Don't we?
+> > 
+> > Yes, simpler.
+> > 
+> > As Dave replied in another mail, efi/kexec is only added for x86_64. See
+> > how it does in setup_linux_system_parameters() of kexec_tools utility,
+> > and we only have bzImage64 handling in kernel for kexec_file loading,
+> > see prepare_add_efi_setup_data().
+> > 
+> > You may only need to get kexec ei_info to use directly.
+> 
+> OK, let me try. How does this look?
+
+Yes, it looks great. Thanks.
+
+Some tiny concenrns added in inline comments, please check.
+
+> 
+> Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+> boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+> in the early parsing code tries to search RSDP from EFI table but
+> that will crash because the table address is virtual when the kernel
+> was booted by kexec.
+> 
+> Since kexec(1) provides physical address of the table via efi_setup_data,
+> early boot code of kexec-ed kernel should look for setup_data in the same
+> way as efi_systab_init() in arch/x86/platform/efi/efi.c does.
+> 
+> Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+> Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+> Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> 
+> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+> --- a/arch/x86/boot/compressed/acpi.c
+> +++ b/arch/x86/boot/compressed/acpi.c
+> @@ -44,17 +44,106 @@ static acpi_physical_address get_acpi_rsdp(void)
+>  	return addr;
+>  }
+>  
+> +static unsigned long efi_get_kexec_setup_data_addr(void)
+> +{
+> +#ifdef CONFIG_EFI
+> +	struct setup_data *data;
+> +	u64 pa_data;
+> +
+> +	pa_data = boot_params->hdr.setup_data;
+> +	while (pa_data) {
+> +		data = (struct setup_data *) pa_data;
+> +		if (data->type == SETUP_EFI)
+> +			return pa_data + sizeof(struct setup_data);
+> +		pa_data = data->next;
+> +	}
+> +#endif
+> +	return 0;
+> +}
+> +
 >  /* Search EFI system tables for RSDP. */
 > -static acpi_physical_address efi_get_rsdp_addr(void)
 > +static acpi_physical_address __efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables, int size, bool efi_64)
 
-Break this line like this:
-
-static acpi_physical_address
-__efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
-                    int size, bool efi_64)
-
+Here parameter 'size' and 'efi_64' seems a little duplicated on
+functionality. Only passing efi_64 can deduce the size? Personal
+opinion.
 
 >  {
 >  	acpi_physical_address rsdp_addr = 0;
-
-You don't need that variable and can return "table" or 0 after the endif
-below.
-
+>  
 >  #ifdef CONFIG_EFI
 > -	unsigned long systab, systab_tables, config_tables;
 > +	int i;
@@ -90,6 +146,10 @@ below.
 > +	return rsdp_addr;
 > +}
 > +
+
+It might be worth adding code comments here to tell why we only care
+about 64bit kexec booting?
+
 > +static acpi_physical_address kexec_get_rsdp_addr(void)
 > +{
 > +#ifdef CONFIG_EFI
@@ -97,22 +157,10 @@ below.
 > +	efi_system_table_64_t *systab;
 > +	struct efi_info *ei;
 > +	char *sig;
-
-Please sort function local variables declaration in a reverse christmas
-tree order:
-
-	<type A> longest_variable_name;
-	<type B> shorter_var_name;
-	<type C> even_shorter;
-	<type D> i;
-
 > +
 > +	esd = (struct efi_setup_data *) efi_get_kexec_setup_data_addr();
 > +	if (!esd)
 > +		return 0;
-
-<---- newline here.
-
 > +	if (!esd->tables) {
 > +		debug_putstr("Wrong kexec SETUP_EFI data.\n");
 > +		return 0;
@@ -122,12 +170,6 @@ tree order:
 > +	sig = (char *)&ei->efi_loader_signature;
 > +	if (strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
 > +		debug_putstr("Wrong EFI loader signature.\n");
-
-  "Wrong kexec EFI loader signature."
-
-so that it differs from the other error message and we can know where we
-are when debugging.
-
 > +		return 0;
 > +	}
 > +
@@ -135,29 +177,76 @@ are when debugging.
 > +	systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
 > +	if (!systab)
 > +		error("EFI system table not found.");
-
-Ditto.
-
 > +
 > +	return __efi_get_rsdp_addr((unsigned long) esd->tables, systab->nr_tables, sizeof(efi_config_table_64_t), true);
-
-You can easily break that line - no need to let it stick out.
-
 > +#else
 > +	return 0;
 > +#endif
 > +}
-
-Other than those nitpicks, yes, it looks ok to me. Please send a proper
-patch.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+> +
+> +static acpi_physical_address efi_get_rsdp_addr(void)
+> +{
+> +#ifdef CONFIG_EFI
+> +	unsigned long systab, config_tables;
+>  	unsigned int nr_tables;
+>  	struct efi_info *ei;
+>  	bool efi_64;
+> -	int size, i;
+> +	int size;
+>  	char *sig;
+>  
+>  	ei = &boot_params->efi_info;
+> @@ -100,37 +189,10 @@ static acpi_physical_address efi_get_rsdp_addr(void)
+>  	if (!config_tables)
+>  		error("EFI config tables not found.");
+>  
+> -	/* Get EFI tables from systab. */
+> -	for (i = 0; i < nr_tables; i++) {
+> -		acpi_physical_address table;
+> -		efi_guid_t guid;
+> -
+> -		config_tables += size;
+> -
+> -		if (efi_64) {
+> -			efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables;
+> -
+> -			guid  = tbl->guid;
+> -			table = tbl->table;
+> -
+> -			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
+> -				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
+> -				return 0;
+> -			}
+> -		} else {
+> -			efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables;
+> -
+> -			guid  = tbl->guid;
+> -			table = tbl->table;
+> -		}
+> -
+> -		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
+> -			rsdp_addr = table;
+> -		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
+> -			return table;
+> -	}
+> +	return __efi_get_rsdp_addr(config_tables, nr_tables, size, efi_64);
+> +#else
+> +	return 0;
+>  #endif
+> -	return rsdp_addr;
+>  }
+>  
+>  static u8 compute_checksum(u8 *buffer, u32 length)
+> @@ -221,6 +283,9 @@ acpi_physical_address get_rsdp_addr(void)
+>  		pa = boot_params->acpi_rsdp_addr;
+>  
+>  	if (!pa)
+> +		pa = kexec_get_rsdp_addr();
+> +
+> +	if (!pa)
+>  		pa = efi_get_rsdp_addr();
+>  
+>  	if (!pa)
 
 _______________________________________________
 kexec mailing list
