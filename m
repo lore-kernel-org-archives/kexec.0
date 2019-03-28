@@ -1,20 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h9Va8-0004eZ-Ip
- for kexec@lists.infradead.org; Thu, 28 Mar 2019 14:00:39 +0000
-Subject: Re: [PATCH 2/3 v9] resource: add the new I/O resource descriptor
- 'IORES_DESC_RESERVED'
-References: <20190321103309.27883-1-lijiang@redhat.com>
- <20190321103309.27883-3-lijiang@redhat.com> <20190322192800.GM12472@zn.tnic>
- <47bfcbe2-1631-9733-74c2-fb3e56540052@redhat.com>
- <20190325122426.GK12016@zn.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <86919dfe-ab72-efef-8304-b2608078d320@redhat.com>
-Date: Thu, 28 Mar 2019 22:00:01 +0800
+ id 1h9XKy-0007j9-OD
+ for kexec@lists.infradead.org; Thu, 28 Mar 2019 15:53:06 +0000
+Date: Thu, 28 Mar 2019 16:52:56 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
+Message-ID: <20190328155256.GP22720@zn.tnic>
+References: <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
+ <20190325120149.GI12016@zn.tnic>
+ <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
+ <20190325123229.GL12016@zn.tnic>
+ <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+ <20190326135714.GG1867@zn.tnic>
+ <20190327014852.GA3659@MiWiFi-R3L-srv>
+ <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+ <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
 MIME-Version: 1.0
-In-Reply-To: <20190325122426.GK12016@zn.tnic>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,43 +28,138 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas.Lendacky@amd.com, x86@kernel.org, bhe@redhat.com, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc: "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "kasong@redhat.com" <kasong@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Young <dyoung@redhat.com>
 
-5ZyoIDIwMTnlubQwM+aciDI15pelIDIwOjI0LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IE1vbiwgTWFyIDI1LCAyMDE5IGF0IDAyOjUzOjAyUE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
-IEluIHRoaXMgZnVuY3Rpb24sIGkgcHJpbnRlZCBpdHMgdmFsdWVzLCBhbmQgb25seSBnb3QgdGhl
-IHZhbHVlIG9mIHJlc2VydmVkCj4+IHR5cGUsIHNvIGkgY2hhbmdlZCB0aGUgSU9SRVNfREVTQ19O
-T05FIHRvIHRoZSBJT1JFU19ERVNDX1JFU0VSVkVELgo+Pgo+PiBJbiBhZGRpdGlvbiwgYWZ0ZXIg
-dGhlIG5ldyBkZXNjcmlwdG9yICdJT1JFU19ERVNDX1JFU0VSVkVEJyBpcyBpbnRyb2R1Y2VkLAo+
-PiB0aGUgSU9SRVNfREVTQ19OT05FIGRvZXMgbm90IGluY2x1ZGUgdGhlIElPUkVTX0RFU0NfUkVT
-RVJWRUQgYW55IG1vcmUsIGl0Cj4+IGNvdWxkIG1pc3MgdG8gaGFuZGxlIHRoZSB2YWx1ZSBvZiB0
-aGUgcmVzZXJ2ZWQgdHlwZS4KPiAKPiBZZXMsIElPUkVTX0RFU0NfUkVTRVJWRUQgaXMgc3VwcG9z
-ZWQgdG8gZGVub3RlIHRoZSBlODIwIHJlc2VydmVkIHR5cGUuCj4gV2h5IHNob3VsZCBJT1JFU19E
-RVNDX05PTkUgaW5jbHVkZSBpdCA/IT8hCj4gCj4gSU9SRVNfREVTQ19OT05FIGlzLCB3ZWxsLCBh
-biBpbnZhbGlkLCBpLmUuLCAibm9uZSIgdHlwZToKClllcywgaSBzZWUuIFRoYXQgaW5kaWNhdGVz
-IGFuIGVtcHR5IGFyZWEsIG9yICJ2b2lkIiB0eXBlLgoKPiAKPiAvKgo+ICAqIEkvTyBSZXNvdXJj
-ZSBEZXNjcmlwdG9ycwo+ICAqCj4gICogRGVzY3JpcHRvcnMgYXJlIHVzZWQgYnkgd2Fsa19pb21l
-bV9yZXNfZGVzYygpIGFuZCByZWdpb25faW50ZXJzZWN0cygpCj4gICogZm9yIHNlYXJjaGluZyBh
-IHNwZWNpZmljIHJlc291cmNlIHJhbmdlIGluIHRoZSBpb21lbSB0YWJsZS4gIEFzc2lnbgo+ICAq
-IGEgbmV3IGRlc2NyaXB0b3Igd2hlbiBhIHJlc291cmNlIHJhbmdlIHN1cHBvcnRzIHRoZSBzZWFy
-Y2ggaW50ZXJmYWNlcy4KPiAgKiBPdGhlcndpc2UsIHJlc291cmNlLmRlc2MgbXVzdCBiZSBzZXQg
-dG8gSU9SRVNfREVTQ19OT05FICgwKS4KPiAgKi8KPiAKPj4gRG8geW91IG1lYW4gaSBzaG91bGQg
-bmV2ZXIgdG91Y2ggdGhlIHRocmVlIGNodW5rcz8gSWYgaSBtYWRlIGEgbWlzdGFrZSwgaQo+PiB3
-aWxsIHJlbW92ZSB0aGlzIGNoYW5nZXMgbmV4dCBwb3N0Lgo+IAo+IEknbSBsb29raW5nIGF0IHRo
-ZSBodW5rcyBiZWxvdyBhbmQgeW91J3JlIGNoYW5naW5nIC0+ZGVzYyBhc3NpZ25tZW50cyBpbgo+
-IHNvbWUgcmFuZG9tIGZ1bmN0aW9uIHdoaWNoIGRvZXNuJ3QgbG9vayBsaWtlIHlvdSBrbm93IHdo
-YXQgeW91J3JlIGRvaW5nLgo+IE1heWJlIGl0IGdldHMgeW91IHdoYXQgeW91IHdhbnQgYnV0IGl0
-IHN1cmUgYXMgaGVsbCBkb2Vzbid0IGxvb2sgcmlnaHQKPiB0byBtZS4KPiAKSSBoYXZlIHJlYWxp
-emVkIHRoYXQgdGhlcmUgY291bGQgYmUgYSBwcm9ibGVtIHdpdGggdGhpcyBjaGFuZ2VzLiBJbmRl
-ZWQsIGhlcmUKaXQgZGVub3RlcyBhbiBlbXB0eSBhcmVhIGluc3RlYWQgb2YgYSByZXNlcnZlZCBh
-cmVhLgoKQlRXOiBMb29rcyBsaWtlIHRoZSBuYW1lIG9mIHRoaXMgZnVuY3Rpb24oX19yZXNlcnZl
-X3JlZ2lvbl93aXRoX3NwbGl0KSBpcyBhIGJpdAptaXNsZWFkaW5nLgoKVGhhbmsgeW91IGZvciBw
-b2ludGluZyBvdXQgdGhpcyBwcm9ibGVtLCBpIHdpbGwgY29ycmVjdCB0aGVtIG5leHQgcG9zdC4K
-CkxpYW5ibwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Thu, Mar 28, 2019 at 07:43:38AM +0000, Junichi Nomura wrote:
+>  /* Search EFI system tables for RSDP. */
+> -static acpi_physical_address efi_get_rsdp_addr(void)
+> +static acpi_physical_address __efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables, int size, bool efi_64)
+
+Break this line like this:
+
+static acpi_physical_address
+__efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
+                    int size, bool efi_64)
+
+
+>  {
+>  	acpi_physical_address rsdp_addr = 0;
+
+You don't need that variable and can return "table" or 0 after the endif
+below.
+
+>  #ifdef CONFIG_EFI
+> -	unsigned long systab, systab_tables, config_tables;
+> +	int i;
+> +
+> +	/* Get EFI tables from systab. */
+> +	for (i = 0; i < nr_tables; i++) {
+> +		acpi_physical_address table;
+> +		efi_guid_t guid;
+> +
+> +		config_tables += size;
+> +
+> +		if (efi_64) {
+> +			efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables;
+> +
+> +			guid  = tbl->guid;
+> +			table = tbl->table;
+> +
+> +			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
+> +				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
+> +				return 0;
+> +			}
+> +		} else {
+> +			efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables;
+> +
+> +			guid  = tbl->guid;
+> +			table = tbl->table;
+> +		}
+> +
+> +		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
+> +			rsdp_addr = table;
+> +		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
+> +			return table;
+> +	}
+> +#endif
+> +	return rsdp_addr;
+> +}
+> +
+> +static acpi_physical_address kexec_get_rsdp_addr(void)
+> +{
+> +#ifdef CONFIG_EFI
+> +	struct efi_setup_data *esd;
+> +	efi_system_table_64_t *systab;
+> +	struct efi_info *ei;
+> +	char *sig;
+
+Please sort function local variables declaration in a reverse christmas
+tree order:
+
+	<type A> longest_variable_name;
+	<type B> shorter_var_name;
+	<type C> even_shorter;
+	<type D> i;
+
+> +
+> +	esd = (struct efi_setup_data *) efi_get_kexec_setup_data_addr();
+> +	if (!esd)
+> +		return 0;
+
+<---- newline here.
+
+> +	if (!esd->tables) {
+> +		debug_putstr("Wrong kexec SETUP_EFI data.\n");
+> +		return 0;
+> +	}
+> +
+> +	ei = &boot_params->efi_info;
+> +	sig = (char *)&ei->efi_loader_signature;
+> +	if (strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
+> +		debug_putstr("Wrong EFI loader signature.\n");
+
+  "Wrong kexec EFI loader signature."
+
+so that it differs from the other error message and we can know where we
+are when debugging.
+
+> +		return 0;
+> +	}
+> +
+> +	/* Get systab from boot params. */
+> +	systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
+> +	if (!systab)
+> +		error("EFI system table not found.");
+
+Ditto.
+
+> +
+> +	return __efi_get_rsdp_addr((unsigned long) esd->tables, systab->nr_tables, sizeof(efi_config_table_64_t), true);
+
+You can easily break that line - no need to let it stick out.
+
+> +#else
+> +	return 0;
+> +#endif
+> +}
+
+Other than those nitpicks, yes, it looks ok to me. Please send a proper
+patch.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
