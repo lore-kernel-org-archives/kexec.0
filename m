@@ -1,15 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h9CxV-0006ck-Mx
- for kexec@lists.infradead.org; Wed, 27 Mar 2019 18:07:31 +0000
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 173/262] x86/kexec: Fill in acpi_rsdp_addr from
- the first kernel
-Date: Wed, 27 Mar 2019 14:00:28 -0400
-Message-Id: <20190327180158.10245-173-sashal@kernel.org>
-In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
-References: <20190327180158.10245-1-sashal@kernel.org>
+ id 1h9MXc-0005Si-BI
+ for kexec@lists.infradead.org; Thu, 28 Mar 2019 04:21:26 +0000
+From: Junichi Nomura <j-nomura@ce.jp.nec.com>
+Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
+Date: Thu, 28 Mar 2019 04:17:16 +0000
+Message-ID: <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+References: <20190325065921.GA11096@dhcp-128-65.nay.redhat.com>
+ <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
+ <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
+ <20190325101509.GA13160@dhcp-128-65.nay.redhat.com>
+ <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
+ <20190325120149.GI12016@zn.tnic>
+ <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
+ <20190325123229.GL12016@zn.tnic>
+ <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+ <20190326135714.GG1867@zn.tnic> <20190327014852.GA3659@MiWiFi-R3L-srv>
+In-Reply-To: <20190327014852.GA3659@MiWiFi-R3L-srv>
+Content-Language: ja-JP
+Content-ID: <02CEF9EDAA658F4DAC8380FFA1A6906F@gisp.nec.co.jp>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,83 +33,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>, Philipp Rudo <prudo@linux.vnet.ibm.com>, x86-ml <x86@kernel.org>, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Yannik Sembritzki <yannik@sembritzki.me>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
+To: "bhe@redhat.com" <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "kasong@redhat.com" <kasong@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-From: Kairui Song <kasong@redhat.com>
+On 2019/03/27 10:48, bhe@redhat.com wrote:
+>>> So efi_get_rsdp_addr() needs to be refactored in such a way so that at
+>>> least the loop towards the end gets carved out into a separate function
+>>> - __efi_get_rsdp_addr() or so - which gets config_tables, nr_tables and
+>>> size as arguments and finds the RSDP address in the kexec-ed kernel.
+>>
+>> You need to carve out the loop at the end and make it into a separate
+>> __efi_get_rsdp_addr() function which gets the physical or the virtual
+>> address.
+> 
+> I guess Boris is suggesting code like below. Please correct me if I am
+> wrong.
+> 
+> static acpi_physical_address _efi_get_rsdp_addr(efi_config_table tbl, ...)
+> {
+> 	/* Get EFI tables from systab. */
+> 	for (i = 0; i < nr_tables; i++) {
+> 		...
+> 	}
+> 	return rsdp_addr;
+> }
+> 
+> static acpi_physical_address efi_get_rsdp_addr(void)
+> {
+> 	...
+> 	/* Get systab from boot params. */		
+> 	...
+> 	/* Handle EFI bitness properly */
+> 	...
+> 	return _efi_get_rsdp_addr();
+> }
+> 
+> 
+> static acpi_physical_address kexec_get_rsdp_addr(void)
+> {
+> 	if (!is_kexec_booted)
+> 		return 0;
+> 
+> 	efi_get_setup_data_addr();
+> 	...
+> 	/* Handle EFI bitness properly */
+> 	...
+> 	return _efi_get_rsdp_addr();
+> }
 
-[ Upstream commit ccec81e4251f5a5421e02874e394338a897056ca ]
+I still don't get it... We still need systab for kexec case as well
+to get nr_tables. Don't we?
 
-When efi=noruntime or efi=oldmap is used on the kernel command line, EFI
-services won't be available in the second kernel, therefore the second
-kernel will not be able to get the ACPI RSDP address from firmware by
-calling EFI services and so it won't boot.
+> acpi_physical_address get_rsdp_addr(void)
+> {
+>          acpi_physical_address pa;
+> 
+>          pa = get_acpi_rsdp();
+> 
+>          if (!pa)
+>                  pa = boot_params->acpi_rsdp_addr;
+> 
+> 
+> 	/**
+> 	/*I think here we should check if it's kexec booted firstly.
+> 	 * Skip it if not kexec. this can avoid the wrong kexec virt
+> 	 * addr parsing./
+>          if (!pa)
+>                  pa = kexec_get_rdsp_addr();             <--- new function
+> 
+>          if (!pa)
+>                  pa = efi_get_rsdp_addr();
+> 
 
-Commit
+Shouldn't t efi_get_rsdp_addr() check "is_kexec_booted" and exit
+early so that it never tries to use virtual config_tables pointer
+if for some unknown resason kexec_get_rsdp_addr() failed.
 
-  e6e094e053af ("x86/acpi, x86/boot: Take RSDP address from boot params if available")
+Currently I check "is_kexec_booted" by subset of efi_get_setup_data_addr().
+Do you know a simpler way to check "is_kexec_booted"?
 
-added an acpi_rsdp_addr field to boot_params which stores the RSDP
-address for other kernel users.
+>          if (!pa)
+>                  pa = bios_get_rsdp_addr();
+> 
+>          return pa;
+> }
 
-Recently, after
-
-  3a63f70bf4c3 ("x86/boot: Early parse RSDP and save it in boot_params")
-
-the acpi_rsdp_addr will always be filled with a valid RSDP address.
-
-So fill in that value into the second kernel's boot_params thus ensuring
-that the second kernel receives the RSDP value from the first kernel.
-
- [ bp: massage commit message. ]
-
-Signed-off-by: Kairui Song <kasong@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: kexec@lists.infradead.org
-Cc: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: Yannik Sembritzki <yannik@sembritzki.me>
-Link: https://lkml.kernel.org/r/20190204173852.4863-1-kasong@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/kexec-bzimage64.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 53917a3ebf94..1f3b77367948 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -218,6 +218,9 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
- 	params->screen_info.ext_mem_k = 0;
- 	params->alt_mem_k = 0;
- 
-+	/* Always fill in RSDP: it is either 0 or a valid value */
-+	params->acpi_rsdp_addr = boot_params.acpi_rsdp_addr;
-+
- 	/* Default APM info */
- 	memset(&params->apm_bios_info, 0, sizeof(params->apm_bios_info));
- 
-@@ -256,7 +259,6 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
- 	setup_efi_state(params, params_load_addr, efi_map_offset, efi_map_sz,
- 			efi_setup_data_offset);
- #endif
--
- 	/* Setup EDD info */
- 	memcpy(params->eddbuf, boot_params.eddbuf,
- 				EDDMAXNR * sizeof(struct edd_info));
 -- 
-2.19.1
-
-
+Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
