@@ -1,26 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.cn.fujitsu.com ([183.91.158.132] helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h9nh6-0006z2-Qi
- for kexec@lists.infradead.org; Fri, 29 Mar 2019 09:21:02 +0000
-Date: Fri, 29 Mar 2019 17:20:01 +0800
-From: Chao Fan <fanc.fnst@cn.fujitsu.com>
-Subject: Re: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Message-ID: <20190329092001.GK4234@localhost.localdomain>
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1h9nx5-0004ly-1U
+ for kexec@lists.infradead.org; Fri, 29 Mar 2019 09:37:32 +0000
+From: Junichi Nomura <j-nomura@ce.jp.nec.com>
+Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
+Date: Fri, 29 Mar 2019 09:37:00 +0000
+Message-ID: <ee8045cf-5100-6bd6-1ccc-e9654da922b6@ce.jp.nec.com>
 References: <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
- <20190326135714.GG1867@zn.tnic>
- <20190327014852.GA3659@MiWiFi-R3L-srv>
+ <20190326135714.GG1867@zn.tnic> <20190327014852.GA3659@MiWiFi-R3L-srv>
  <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
  <20190328064343.GA1877@MiWiFi-R3L-srv>
  <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
  <20190328155256.GP22720@zn.tnic>
- <20190329072037.GA5840@jeru.linux.bs1.fc.nec.co.jp>
- <20190329082929.GH4234@localhost.localdomain>
- <20190329091655.GE7627@MiWiFi-R3L-srv>
+ <0263068e-f2d0-1101-0438-0f570f0b38e7@ce.jp.nec.com>
+ <20190329083920.GA21152@zn.tnic>
+ <20190329090550.GI4234@localhost.localdomain>
+ <20190329091605.GB21152@zn.tnic>
+In-Reply-To: <20190329091605.GB21152@zn.tnic>
+Content-Language: ja-JP
+Content-ID: <B78E28343064C543B7A0311C886FAE38@gisp.nec.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190329091655.GE7627@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,76 +33,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "bhe@redhat.com" <bhe@redhat.com>
-Cc: "kasong@redhat.com" <kasong@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Dave Young <dyoung@redhat.com>
+To: Borislav Petkov <bp@alien8.de>, Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc: "kasong@redhat.com" <kasong@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Young <dyoung@redhat.com>
 
-On Fri, Mar 29, 2019 at 05:16:55PM +0800, bhe@redhat.com wrote:
->On 03/29/19 at 04:29pm, Chao Fan wrote:
->> On Fri, Mar 29, 2019 at 07:20:38AM +0000, Junichi Nomura wrote:
->> >Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
->> >boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
->> >in the early parsing code tries to search RSDP from EFI table but
->> >that will crash because the table address is virtual when the kernel
->> >was booted by kexec.
->> [...]
->> >-			guid  = tbl->guid;
->> >-			table = tbl->table;
->> >-		}
->> >-
->> >-		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
->> >-			rsdp_addr = table;
->> >-		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
->> >-			return table;
->> >-	}
->> >+	return __efi_get_rsdp_addr(config_tables, nr_tables, efi_64);
->> >+#else
->> >+	return 0;
->> > #endif
->> >-	return rsdp_addr;
->> 
->> I remeber the rsdp_addr is defined before #ifdef CONFIG_EFI
->> If so, you don't need
->> #else
->> 	return 0;
->
->it doesn't change the old logic. Junichi moved rsdp_addr definition inside
->the CONFIG_EFI iedeffery block.
+On 3/29/19 6:16 PM, Borislav Petkov wrote:
+> On Fri, Mar 29, 2019 at 05:05:50PM +0800, Chao Fan wrote:
+>> But in my code, I am not sure which version will be found firstly, so I
+>> write this logical, if ACPI20 found, return directly, then consider ACPI 1.0.
+> 
+> Thanks.
+> 
+> Junichi, please add a shorter version of that as a comment to the code,
+> above the function name so that it is clear why we're preferring the 2.0
+> version.
 
-Yes, got it. Thanks for your explain.
+Sure, I'll add this above __efi_get_rsdp_addr().
 
-Thanks,
-Chao Fan
->> 
->> BY the way, what's your patch based on? I like add patch on my local
->> branch and then review code, but failed.
->> I try to use 'patch -p1 <' your patch to the latest tip master branch,
->> but failed.
->> 
->> Thanks,
->> Chao Fan
->> 
->> > }
->> > 
->> > static u8 compute_checksum(u8 *buffer, u32 length)
->> >@@ -221,6 +284,9 @@ acpi_physical_address get_rsdp_addr(void)
->> > 		pa = boot_params->acpi_rsdp_addr;
->> > 
->> > 	if (!pa)
->> >+		pa = kexec_get_rsdp_addr();
->> >+
->> >+	if (!pa)
->> > 		pa = efi_get_rsdp_addr();
->> > 
->> > 	if (!pa)
->> >
->> >
->> 
->> 
->
->
+/*
+ * Search EFI system tables for RSDP.  If both ACPI_20_TABLE_GUID and
+ * ACPI_TABLE_GUID are found, take the former, which has more features.
+ */
 
-
-
+-- 
+Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
