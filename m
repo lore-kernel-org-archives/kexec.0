@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h9ova-0002CN-6n
- for kexec@lists.infradead.org; Fri, 29 Mar 2019 10:40:04 +0000
-Date: Fri, 29 Mar 2019 11:39:58 +0100
-From: Borislav Petkov <bp@alien8.de>
+ id 1h9psq-00019n-Pk
+ for kexec@lists.infradead.org; Fri, 29 Mar 2019 11:41:18 +0000
 Subject: Re: [PATCH 1/2 v10] x86/mm, resource: add a new I/O resource
  descriptor 'IORES_DESC_RESERVED'
-Message-ID: <20190329103958.GC21152@zn.tnic>
 References: <20190329065649.12468-1-lijiang@redhat.com>
- <20190329065649.12468-2-lijiang@redhat.com>
+ <20190329065649.12468-2-lijiang@redhat.com> <20190329103958.GC21152@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <16545118-2658-43b5-d43c-cb029c85d2b9@redhat.com>
+Date: Fri, 29 Mar 2019 19:41:00 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190329065649.12468-2-lijiang@redhat.com>
+In-Reply-To: <20190329103958.GC21152@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,77 +21,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
 Cc: Thomas.Lendacky@amd.com, x86@kernel.org, bhe@redhat.com, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On Fri, Mar 29, 2019 at 02:56:48PM +0800, Lianbo Jiang wrote:
-> When doing kexec_file_load(), the first kernel needs to pass the e820
-> reserved ranges to the second kernel, because some devices may use it
-> in kdump kernel, such as PCI devices.
-> 
-> But, the kernel can not exactly match the e820 reserved ranges when
-> walking through the iomem resources via the 'IORES_DESC_NONE', because
-> there are several types of e820 that are described as the 'IORES_DESC_NONE'
-> type. Please refer to the e820_type_to_iores_desc().
-> 
-> Therefore, add a new I/O resource descriptor 'IORES_DESC_RESERVED' for
-> the iomem resources search interfaces. It is helpful to exactly match
-> the reserved resource ranges when walking through iomem resources.
-> 
-> In addition, since the new descriptor 'IORES_DESC_RESERVED' has been
-> created for the reserved areas, the code originally related to the
-> descriptor 'IORES_DESC_NONE' also need to be updated.
-> 
-> Suggested-by: Borislav Petkov <bp@suse.de>
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> ---
->  arch/x86/kernel/e820.c |  2 +-
->  arch/x86/mm/ioremap.c  | 16 ++++++++++++++--
->  include/linux/ioport.h |  1 +
->  3 files changed, 16 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> index 2879e234e193..16fcde196243 100644
-> --- a/arch/x86/kernel/e820.c
-> +++ b/arch/x86/kernel/e820.c
-> @@ -1050,10 +1050,10 @@ static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
->  	case E820_TYPE_NVS:		return IORES_DESC_ACPI_NV_STORAGE;
->  	case E820_TYPE_PMEM:		return IORES_DESC_PERSISTENT_MEMORY;
->  	case E820_TYPE_PRAM:		return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
-> +	case E820_TYPE_RESERVED:	return IORES_DESC_RESERVED;
->  	case E820_TYPE_RESERVED_KERN:	/* Fall-through: */
->  	case E820_TYPE_RAM:		/* Fall-through: */
->  	case E820_TYPE_UNUSABLE:	/* Fall-through: */
-> -	case E820_TYPE_RESERVED:	/* Fall-through: */
->  	default:			return IORES_DESC_NONE;
->  	}
->  }
-> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-> index 0029604af8a4..5671ec24df49 100644
-> --- a/arch/x86/mm/ioremap.c
-> +++ b/arch/x86/mm/ioremap.c
-> @@ -81,9 +81,21 @@ static bool __ioremap_check_ram(struct resource *res)
->  	return false;
->  }
->  
-> -static int __ioremap_check_desc_other(struct resource *res)
-
-I can see this patch doesn't build even without applying and building
-it.
-
-How about you build-test your stuff before submitting?
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTnlubQwM+aciDI55pelIDE4OjM5LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IEZyaSwgTWFyIDI5LCAyMDE5IGF0IDAyOjU2OjQ4UE0gKzA4MDAsIExpYW5ibyBKaWFuZyB3cm90
+ZToKPj4gV2hlbiBkb2luZyBrZXhlY19maWxlX2xvYWQoKSwgdGhlIGZpcnN0IGtlcm5lbCBuZWVk
+cyB0byBwYXNzIHRoZSBlODIwCj4+IHJlc2VydmVkIHJhbmdlcyB0byB0aGUgc2Vjb25kIGtlcm5l
+bCwgYmVjYXVzZSBzb21lIGRldmljZXMgbWF5IHVzZSBpdAo+PiBpbiBrZHVtcCBrZXJuZWwsIHN1
+Y2ggYXMgUENJIGRldmljZXMuCj4+Cj4+IEJ1dCwgdGhlIGtlcm5lbCBjYW4gbm90IGV4YWN0bHkg
+bWF0Y2ggdGhlIGU4MjAgcmVzZXJ2ZWQgcmFuZ2VzIHdoZW4KPj4gd2Fsa2luZyB0aHJvdWdoIHRo
+ZSBpb21lbSByZXNvdXJjZXMgdmlhIHRoZSAnSU9SRVNfREVTQ19OT05FJywgYmVjYXVzZQo+PiB0
+aGVyZSBhcmUgc2V2ZXJhbCB0eXBlcyBvZiBlODIwIHRoYXQgYXJlIGRlc2NyaWJlZCBhcyB0aGUg
+J0lPUkVTX0RFU0NfTk9ORScKPj4gdHlwZS4gUGxlYXNlIHJlZmVyIHRvIHRoZSBlODIwX3R5cGVf
+dG9faW9yZXNfZGVzYygpLgo+Pgo+PiBUaGVyZWZvcmUsIGFkZCBhIG5ldyBJL08gcmVzb3VyY2Ug
+ZGVzY3JpcHRvciAnSU9SRVNfREVTQ19SRVNFUlZFRCcgZm9yCj4+IHRoZSBpb21lbSByZXNvdXJj
+ZXMgc2VhcmNoIGludGVyZmFjZXMuIEl0IGlzIGhlbHBmdWwgdG8gZXhhY3RseSBtYXRjaAo+PiB0
+aGUgcmVzZXJ2ZWQgcmVzb3VyY2UgcmFuZ2VzIHdoZW4gd2Fsa2luZyB0aHJvdWdoIGlvbWVtIHJl
+c291cmNlcy4KPj4KPj4gSW4gYWRkaXRpb24sIHNpbmNlIHRoZSBuZXcgZGVzY3JpcHRvciAnSU9S
+RVNfREVTQ19SRVNFUlZFRCcgaGFzIGJlZW4KPj4gY3JlYXRlZCBmb3IgdGhlIHJlc2VydmVkIGFy
+ZWFzLCB0aGUgY29kZSBvcmlnaW5hbGx5IHJlbGF0ZWQgdG8gdGhlCj4+IGRlc2NyaXB0b3IgJ0lP
+UkVTX0RFU0NfTk9ORScgYWxzbyBuZWVkIHRvIGJlIHVwZGF0ZWQuCj4+Cj4+IFN1Z2dlc3RlZC1i
+eTogQm9yaXNsYXYgUGV0a292IDxicEBzdXNlLmRlPgo+PiBTaWduZWQtb2ZmLWJ5OiBMaWFuYm8g
+SmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4KPj4gLS0tCj4+ICBhcmNoL3g4Ni9rZXJuZWwvZTgy
+MC5jIHwgIDIgKy0KPj4gIGFyY2gveDg2L21tL2lvcmVtYXAuYyAgfCAxNiArKysrKysrKysrKysr
+Ky0tCj4+ICBpbmNsdWRlL2xpbnV4L2lvcG9ydC5oIHwgIDEgKwo+PiAgMyBmaWxlcyBjaGFuZ2Vk
+LCAxNiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJj
+aC94ODYva2VybmVsL2U4MjAuYyBiL2FyY2gveDg2L2tlcm5lbC9lODIwLmMKPj4gaW5kZXggMjg3
+OWUyMzRlMTkzLi4xNmZjZGUxOTYyNDMgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9l
+ODIwLmMKPj4gKysrIGIvYXJjaC94ODYva2VybmVsL2U4MjAuYwo+PiBAQCAtMTA1MCwxMCArMTA1
+MCwxMCBAQCBzdGF0aWMgdW5zaWduZWQgbG9uZyBfX2luaXQgZTgyMF90eXBlX3RvX2lvcmVzX2Rl
+c2Moc3RydWN0IGU4MjBfZW50cnkgKmVudHJ5KQo+PiAgCWNhc2UgRTgyMF9UWVBFX05WUzoJCXJl
+dHVybiBJT1JFU19ERVNDX0FDUElfTlZfU1RPUkFHRTsKPj4gIAljYXNlIEU4MjBfVFlQRV9QTUVN
+OgkJcmV0dXJuIElPUkVTX0RFU0NfUEVSU0lTVEVOVF9NRU1PUlk7Cj4+ICAJY2FzZSBFODIwX1RZ
+UEVfUFJBTToJCXJldHVybiBJT1JFU19ERVNDX1BFUlNJU1RFTlRfTUVNT1JZX0xFR0FDWTsKPj4g
+KwljYXNlIEU4MjBfVFlQRV9SRVNFUlZFRDoJcmV0dXJuIElPUkVTX0RFU0NfUkVTRVJWRUQ7Cj4+
+ICAJY2FzZSBFODIwX1RZUEVfUkVTRVJWRURfS0VSTjoJLyogRmFsbC10aHJvdWdoOiAqLwo+PiAg
+CWNhc2UgRTgyMF9UWVBFX1JBTToJCS8qIEZhbGwtdGhyb3VnaDogKi8KPj4gIAljYXNlIEU4MjBf
+VFlQRV9VTlVTQUJMRToJLyogRmFsbC10aHJvdWdoOiAqLwo+PiAtCWNhc2UgRTgyMF9UWVBFX1JF
+U0VSVkVEOgkvKiBGYWxsLXRocm91Z2g6ICovCj4+ICAJZGVmYXVsdDoJCQlyZXR1cm4gSU9SRVNf
+REVTQ19OT05FOwo+PiAgCX0KPj4gIH0KPj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L21tL2lvcmVt
+YXAuYyBiL2FyY2gveDg2L21tL2lvcmVtYXAuYwo+PiBpbmRleCAwMDI5NjA0YWY4YTQuLjU2NzFl
+YzI0ZGY0OSAxMDA2NDQKPj4gLS0tIGEvYXJjaC94ODYvbW0vaW9yZW1hcC5jCj4+ICsrKyBiL2Fy
+Y2gveDg2L21tL2lvcmVtYXAuYwo+PiBAQCAtODEsOSArODEsMjEgQEAgc3RhdGljIGJvb2wgX19p
+b3JlbWFwX2NoZWNrX3JhbShzdHJ1Y3QgcmVzb3VyY2UgKnJlcykKPj4gIAlyZXR1cm4gZmFsc2U7
+Cj4+ICB9Cj4+ICAKPj4gLXN0YXRpYyBpbnQgX19pb3JlbWFwX2NoZWNrX2Rlc2Nfb3RoZXIoc3Ry
+dWN0IHJlc291cmNlICpyZXMpCj4gCj4gSSBjYW4gc2VlIHRoaXMgcGF0Y2ggZG9lc24ndCBidWls
+ZCBldmVuIHdpdGhvdXQgYXBwbHlpbmcgYW5kIGJ1aWxkaW5nCj4gaXQuCj4gCj4gSG93IGFib3V0
+IHlvdSBidWlsZC10ZXN0IHlvdXIgc3R1ZmYgYmVmb3JlIHN1Ym1pdHRpbmc/Cj4gCk9oLCBteSBH
+b2QuIEkgbWFkZSBhIG1pc3Rha2Ugd2hlbiBpIGNvcGllZCB0aGUgY29kZSBmcm9tIGFub3RoZXIg
+bWFjaGluZS4KSSB3aWxsIGNvcnJlY3QgdGhpcyBpc3N1ZSBhbmQgcmVzZW5kIHRoZSBwYXRjaCB2
+MTAuCgpUaGFua3MuCkxpYW5ibwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
