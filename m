@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.cn.fujitsu.com ([183.91.158.132] helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h9mu8-00050e-Ai
- for kexec@lists.infradead.org; Fri, 29 Mar 2019 08:30:25 +0000
-Date: Fri, 29 Mar 2019 16:29:29 +0800
-From: Chao Fan <fanc.fnst@cn.fujitsu.com>
-Subject: Re: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Message-ID: <20190329082929.GH4234@localhost.localdomain>
+Received: from mail.skyhub.de ([5.9.137.197])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1h9n2r-0007J4-1J
+ for kexec@lists.infradead.org; Fri, 29 Mar 2019 08:39:26 +0000
+Date: Fri, 29 Mar 2019 09:39:20 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
+Message-ID: <20190329083920.GA21152@zn.tnic>
 References: <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
  <20190325123229.GL12016@zn.tnic>
  <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
@@ -17,10 +16,10 @@ References: <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
  <20190328064343.GA1877@MiWiFi-R3L-srv>
  <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
  <20190328155256.GP22720@zn.tnic>
- <20190329072037.GA5840@jeru.linux.bs1.fc.nec.co.jp>
+ <0263068e-f2d0-1101-0438-0f570f0b38e7@ce.jp.nec.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190329072037.GA5840@jeru.linux.bs1.fc.nec.co.jp>
+In-Reply-To: <0263068e-f2d0-1101-0438-0f570f0b38e7@ce.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,61 +32,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc: "kasong@redhat.com" <kasong@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
+To: Junichi Nomura <j-nomura@ce.jp.nec.com>, "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>
+Cc: "kasong@redhat.com" <kasong@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Young <dyoung@redhat.com>
 
-On Fri, Mar 29, 2019 at 07:20:38AM +0000, Junichi Nomura wrote:
->Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
->boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
->in the early parsing code tries to search RSDP from EFI table but
->that will crash because the table address is virtual when the kernel
->was booted by kexec.
-[...]
->-			guid  = tbl->guid;
->-			table = tbl->table;
->-		}
->-
->-		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
->-			rsdp_addr = table;
->-		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
->-			return table;
->-	}
->+	return __efi_get_rsdp_addr(config_tables, nr_tables, efi_64);
->+#else
->+	return 0;
-> #endif
->-	return rsdp_addr;
-
-I remeber the rsdp_addr is defined before #ifdef CONFIG_EFI
-If so, you don't need
-#else
-	return 0;
-
-BY the way, what's your patch based on? I like add patch on my local
-branch and then review code, but failed.
-I try to use 'patch -p1 <' your patch to the latest tip master branch,
-but failed.
-
-Thanks,
-Chao Fan
-
-> }
+On Fri, Mar 29, 2019 at 03:05:52AM +0000, Junichi Nomura wrote:
+> > You don't need that variable and can return "table" or 0 after the endif
+> > below.
 > 
-> static u8 compute_checksum(u8 *buffer, u32 length)
->@@ -221,6 +284,9 @@ acpi_physical_address get_rsdp_addr(void)
-> 		pa = boot_params->acpi_rsdp_addr;
+> I could do that but it will slightly change the current logic.
 > 
-> 	if (!pa)
->+		pa = kexec_get_rsdp_addr();
->+
->+	if (!pa)
-> 		pa = efi_get_rsdp_addr();
+> Existing code does this:
 > 
-> 	if (!pa)
->
->
+>                 if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
+>                         rsdp_addr = table;
+>                 else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
+>                         return table;
+> 
+> I thought it was to return the table for ACPI_20_TABLE_GUID
+> if both tables exist.  If we remove rsdp_addr, the code will be:
+> 
+>                 if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
+>                         return table;
+>                 else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
+>                         return table;
+> 
+> So if there are 2 tables, we return the one that comes first.
+> Is it ok?
 
+That's a good question.
 
+Chao, what was the intention there, ACPI_20_TABLE_GUID is the preferred
+table to return? If so, why?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
