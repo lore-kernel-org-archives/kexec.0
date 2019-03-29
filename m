@@ -1,15 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h9lSE-0001VE-QL
- for kexec@lists.infradead.org; Fri, 29 Mar 2019 06:57:32 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 2/2 v10] x86/kexec_file: add reserved e820 ranges to kdump
- kernel e820 table
-Date: Fri, 29 Mar 2019 14:56:49 +0800
-Message-Id: <20190329065649.12468-3-lijiang@redhat.com>
-In-Reply-To: <20190329065649.12468-1-lijiang@redhat.com>
-References: <20190329065649.12468-1-lijiang@redhat.com>
+ id 1h9lrX-0002Ia-2t
+ for kexec@lists.infradead.org; Fri, 29 Mar 2019 07:23:40 +0000
+From: Junichi Nomura <j-nomura@ce.jp.nec.com>
+Subject: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on kexec-ed
+ kernel
+Date: Fri, 29 Mar 2019 07:20:38 +0000
+Message-ID: <20190329072037.GA5840@jeru.linux.bs1.fc.nec.co.jp>
+References: <20190325120149.GI12016@zn.tnic>
+ <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
+ <20190325123229.GL12016@zn.tnic>
+ <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+ <20190326135714.GG1867@zn.tnic> <20190327014852.GA3659@MiWiFi-R3L-srv>
+ <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+ <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+In-Reply-To: <20190328155256.GP22720@zn.tnic>
+Content-Language: ja-JP
+Content-ID: <717D56458AFA0548A857AD1D618F5F85@gisp.nec.co.jp>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,71 +29,211 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Thomas.Lendacky@amd.com, x86@kernel.org, bhe@redhat.com, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: Borislav Petkov <bp@alien8.de>, "bhe@redhat.com" <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "kasong@redhat.com" <kasong@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-At present, when using the kexec_file_load() syscall to load the kernel
-image and initramfs(for example: kexec -s -p xxx), the kernel does not
-pass the e820 reserved ranges to the second kernel, which might cause
-two problems:
+Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+in the early parsing code tries to search RSDP from EFI table but
+that will crash because the table address is virtual when the kernel
+was booted by kexec.
 
-The first one is the MMCONFIG issue. The basic problem is that this
-device is in PCI segment 1 and the kernel PCI probing can not find it
-without all the e820 I/O reservations being present in the e820 table.
-And the kdump kernel does not have those reservations because the kexec
-command does not pass the I/O reservation via the "memmap=xxx" command
-line option. (This problem does not show up for other vendors, as SGI
-is apparently the actually fails for everyone, but devices in segment 0
-are then found by some legacy lookup method.) The workaround for this
-is to pass the I/O reserved regions to the kdump kernel.
+In the case of kexec, physical address of EFI tables is provided
+via efi_setup_data in boot_params, which is set up by kexec(1).
 
-MMCONFIG(aka ECAM) space is described in the ACPI MCFG table. If you don't
-have ECAM: (a) PCI devices won't work at all on non-x86 systems that use
-only ECAM for config access, (b) you won't be albe to access devices on
-non-0 segments, (c) you won't be able to access extended config space(
-address 0x100-0xffff), which means none of the Extended Capabilities will
-be available(AER, ACS, ATS, etc). [Bjorn's comment]
+Factor out the table parsing code and use different pointers depending
+on whether the kernel is booted by kexec or not.
 
-The second issue is that the SME kdump kernel doesn't work without the
-e820 reserved ranges. When SME is active in kdump kernel, actually, those
-reserved regions are still decrypted, but because those reserved ranges are
-not present at all in kdump kernel e820 table, those reserved regions are
-considered as encrypted, it goes wrong.
+Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
 
-The e820 reserved range is useful in kdump kernel, so it is necessary to
-pass the e820 reserved ranges to the kdump kernel.
-
-Suggested-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- arch/x86/kernel/crash.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 17ffc869cab8..1db2754df9e9 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -381,6 +381,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
- 			memmap_entry_callback);
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -44,17 +44,109 @@ static acpi_physical_address get_acpi_rsdp(void)
+ 	return addr;
+ }
  
-+	/* Add e820 reserved ranges */
-+	cmd.type = E820_TYPE_RESERVED;
-+	flags = IORESOURCE_MEM;
-+	walk_iomem_res_desc(IORES_DESC_RESERVED, flags, 0, -1, &cmd,
-+			   memmap_entry_callback);
++#ifdef CONFIG_EFI
++static unsigned long efi_get_kexec_setup_data_addr(void)
++{
++	struct setup_data *data;
++	u64 pa_data;
 +
- 	/* Add crashk_low_res region */
- 	if (crashk_low_res.end) {
- 		ei.addr = crashk_low_res.start;
--- 
-2.17.1
-
++	pa_data = boot_params->hdr.setup_data;
++	while (pa_data) {
++		data = (struct setup_data *) pa_data;
++		if (data->type == SETUP_EFI)
++			return pa_data + sizeof(struct setup_data);
++		pa_data = data->next;
++	}
++	return 0;
++}
++
+ /* Search EFI system tables for RSDP. */
+-static acpi_physical_address efi_get_rsdp_addr(void)
++static acpi_physical_address
++__efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
++		    bool efi_64)
+ {
+ 	acpi_physical_address rsdp_addr = 0;
++	int i;
++
++	/* Get EFI tables from systab. */
++	for (i = 0; i < nr_tables; i++) {
++		acpi_physical_address table;
++		efi_guid_t guid;
++
++		if (efi_64) {
++			efi_config_table_64_t *tbl = (efi_config_table_64_t *) config_tables + i;
++
++			guid  = tbl->guid;
++			table = tbl->table;
++
++			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
++				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
++				return 0;
++			}
++		} else {
++			efi_config_table_32_t *tbl = (efi_config_table_32_t *) config_tables + i;
++
++			guid  = tbl->guid;
++			table = tbl->table;
++		}
++
++		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
++			rsdp_addr = table;
++		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
++			return table;
++	}
++
++	return rsdp_addr;
++}
++#endif
+ 
++static acpi_physical_address kexec_get_rsdp_addr(void)
++{
+ #ifdef CONFIG_EFI
+-	unsigned long systab, systab_tables, config_tables;
++	efi_system_table_64_t *systab;
++	struct efi_setup_data *esd;
++	struct efi_info *ei;
++	char *sig;
++
++	esd = (struct efi_setup_data *) efi_get_kexec_setup_data_addr();
++	if (!esd)
++		return 0;
++
++	if (!esd->tables) {
++		debug_putstr("Wrong kexec SETUP_EFI data.\n");
++		return 0;
++	}
++
++	ei = &boot_params->efi_info;
++	sig = (char *)&ei->efi_loader_signature;
++	/*
++	 * EFI/kexec support is only added for 64bit. So we don't have to
++	 * care 32bit case.
++	 */
++	if (strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
++		debug_putstr("Wrong kexec EFI loader signature.\n");
++		return 0;
++	}
++
++	/* Get systab from boot params. */
++	systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
++	if (!systab)
++		error("EFI system table not found in kexec boot_params.");
++
++	return __efi_get_rsdp_addr((unsigned long) esd->tables,
++				   systab->nr_tables, true);
++#else
++	return 0;
++#endif
++}
++
++static acpi_physical_address efi_get_rsdp_addr(void)
++{
++#ifdef CONFIG_EFI
++	unsigned long systab, config_tables;
+ 	unsigned int nr_tables;
+ 	struct efi_info *ei;
+ 	bool efi_64;
+-	int size, i;
+ 	char *sig;
+ 
+ 	ei = &boot_params->efi_info;
+@@ -88,49 +180,20 @@ static acpi_physical_address efi_get_rsdp_addr(void)
+ 
+ 		config_tables	= stbl->tables;
+ 		nr_tables	= stbl->nr_tables;
+-		size		= sizeof(efi_config_table_64_t);
+ 	} else {
+ 		efi_system_table_32_t *stbl = (efi_system_table_32_t *)systab;
+ 
+ 		config_tables	= stbl->tables;
+ 		nr_tables	= stbl->nr_tables;
+-		size		= sizeof(efi_config_table_32_t);
+ 	}
+ 
+ 	if (!config_tables)
+ 		error("EFI config tables not found.");
+ 
+-	/* Get EFI tables from systab. */
+-	for (i = 0; i < nr_tables; i++) {
+-		acpi_physical_address table;
+-		efi_guid_t guid;
+-
+-		config_tables += size;
+-
+-		if (efi_64) {
+-			efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables;
+-
+-			guid  = tbl->guid;
+-			table = tbl->table;
+-
+-			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
+-				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
+-				return 0;
+-			}
+-		} else {
+-			efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables;
+-
+-			guid  = tbl->guid;
+-			table = tbl->table;
+-		}
+-
+-		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
+-			rsdp_addr = table;
+-		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
+-			return table;
+-	}
++	return __efi_get_rsdp_addr(config_tables, nr_tables, efi_64);
++#else
++	return 0;
+ #endif
+-	return rsdp_addr;
+ }
+ 
+ static u8 compute_checksum(u8 *buffer, u32 length)
+@@ -221,6 +284,9 @@ acpi_physical_address get_rsdp_addr(void)
+ 		pa = boot_params->acpi_rsdp_addr;
+ 
+ 	if (!pa)
++		pa = kexec_get_rsdp_addr();
++
++	if (!pa)
+ 		pa = efi_get_rsdp_addr();
+ 
+ 	if (!pa)
 
 _______________________________________________
 kexec mailing list
