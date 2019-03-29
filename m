@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1h9psq-00019n-Pk
- for kexec@lists.infradead.org; Fri, 29 Mar 2019 11:41:18 +0000
-Subject: Re: [PATCH 1/2 v10] x86/mm, resource: add a new I/O resource
- descriptor 'IORES_DESC_RESERVED'
-References: <20190329065649.12468-1-lijiang@redhat.com>
- <20190329065649.12468-2-lijiang@redhat.com> <20190329103958.GC21152@zn.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <16545118-2658-43b5-d43c-cb029c85d2b9@redhat.com>
-Date: Fri, 29 Mar 2019 19:41:00 +0800
-MIME-Version: 1.0
-In-Reply-To: <20190329103958.GC21152@zn.tnic>
-Content-Language: en-US
+ id 1h9qnC-0000mF-DY
+ for kexec@lists.infradead.org; Fri, 29 Mar 2019 12:39:32 +0000
+From: Lianbo Jiang <lijiang@redhat.com>
+Subject: [PATCH 0/2 RESEND v10] add reserved e820 ranges to the kdump kernel
+ e820 table
+Date: Fri, 29 Mar 2019 20:39:12 +0800
+Message-Id: <20190329123914.20939-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,60 +16,128 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas.Lendacky@amd.com, x86@kernel.org, bhe@redhat.com, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: linux-kernel@vger.kernel.org
+Cc: Thomas.Lendacky@amd.com, x86@kernel.org, bhe@redhat.com, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-5ZyoIDIwMTnlubQwM+aciDI55pelIDE4OjM5LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IEZyaSwgTWFyIDI5LCAyMDE5IGF0IDAyOjU2OjQ4UE0gKzA4MDAsIExpYW5ibyBKaWFuZyB3cm90
-ZToKPj4gV2hlbiBkb2luZyBrZXhlY19maWxlX2xvYWQoKSwgdGhlIGZpcnN0IGtlcm5lbCBuZWVk
-cyB0byBwYXNzIHRoZSBlODIwCj4+IHJlc2VydmVkIHJhbmdlcyB0byB0aGUgc2Vjb25kIGtlcm5l
-bCwgYmVjYXVzZSBzb21lIGRldmljZXMgbWF5IHVzZSBpdAo+PiBpbiBrZHVtcCBrZXJuZWwsIHN1
-Y2ggYXMgUENJIGRldmljZXMuCj4+Cj4+IEJ1dCwgdGhlIGtlcm5lbCBjYW4gbm90IGV4YWN0bHkg
-bWF0Y2ggdGhlIGU4MjAgcmVzZXJ2ZWQgcmFuZ2VzIHdoZW4KPj4gd2Fsa2luZyB0aHJvdWdoIHRo
-ZSBpb21lbSByZXNvdXJjZXMgdmlhIHRoZSAnSU9SRVNfREVTQ19OT05FJywgYmVjYXVzZQo+PiB0
-aGVyZSBhcmUgc2V2ZXJhbCB0eXBlcyBvZiBlODIwIHRoYXQgYXJlIGRlc2NyaWJlZCBhcyB0aGUg
-J0lPUkVTX0RFU0NfTk9ORScKPj4gdHlwZS4gUGxlYXNlIHJlZmVyIHRvIHRoZSBlODIwX3R5cGVf
-dG9faW9yZXNfZGVzYygpLgo+Pgo+PiBUaGVyZWZvcmUsIGFkZCBhIG5ldyBJL08gcmVzb3VyY2Ug
-ZGVzY3JpcHRvciAnSU9SRVNfREVTQ19SRVNFUlZFRCcgZm9yCj4+IHRoZSBpb21lbSByZXNvdXJj
-ZXMgc2VhcmNoIGludGVyZmFjZXMuIEl0IGlzIGhlbHBmdWwgdG8gZXhhY3RseSBtYXRjaAo+PiB0
-aGUgcmVzZXJ2ZWQgcmVzb3VyY2UgcmFuZ2VzIHdoZW4gd2Fsa2luZyB0aHJvdWdoIGlvbWVtIHJl
-c291cmNlcy4KPj4KPj4gSW4gYWRkaXRpb24sIHNpbmNlIHRoZSBuZXcgZGVzY3JpcHRvciAnSU9S
-RVNfREVTQ19SRVNFUlZFRCcgaGFzIGJlZW4KPj4gY3JlYXRlZCBmb3IgdGhlIHJlc2VydmVkIGFy
-ZWFzLCB0aGUgY29kZSBvcmlnaW5hbGx5IHJlbGF0ZWQgdG8gdGhlCj4+IGRlc2NyaXB0b3IgJ0lP
-UkVTX0RFU0NfTk9ORScgYWxzbyBuZWVkIHRvIGJlIHVwZGF0ZWQuCj4+Cj4+IFN1Z2dlc3RlZC1i
-eTogQm9yaXNsYXYgUGV0a292IDxicEBzdXNlLmRlPgo+PiBTaWduZWQtb2ZmLWJ5OiBMaWFuYm8g
-SmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4KPj4gLS0tCj4+ICBhcmNoL3g4Ni9rZXJuZWwvZTgy
-MC5jIHwgIDIgKy0KPj4gIGFyY2gveDg2L21tL2lvcmVtYXAuYyAgfCAxNiArKysrKysrKysrKysr
-Ky0tCj4+ICBpbmNsdWRlL2xpbnV4L2lvcG9ydC5oIHwgIDEgKwo+PiAgMyBmaWxlcyBjaGFuZ2Vk
-LCAxNiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJj
-aC94ODYva2VybmVsL2U4MjAuYyBiL2FyY2gveDg2L2tlcm5lbC9lODIwLmMKPj4gaW5kZXggMjg3
-OWUyMzRlMTkzLi4xNmZjZGUxOTYyNDMgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9l
-ODIwLmMKPj4gKysrIGIvYXJjaC94ODYva2VybmVsL2U4MjAuYwo+PiBAQCAtMTA1MCwxMCArMTA1
-MCwxMCBAQCBzdGF0aWMgdW5zaWduZWQgbG9uZyBfX2luaXQgZTgyMF90eXBlX3RvX2lvcmVzX2Rl
-c2Moc3RydWN0IGU4MjBfZW50cnkgKmVudHJ5KQo+PiAgCWNhc2UgRTgyMF9UWVBFX05WUzoJCXJl
-dHVybiBJT1JFU19ERVNDX0FDUElfTlZfU1RPUkFHRTsKPj4gIAljYXNlIEU4MjBfVFlQRV9QTUVN
-OgkJcmV0dXJuIElPUkVTX0RFU0NfUEVSU0lTVEVOVF9NRU1PUlk7Cj4+ICAJY2FzZSBFODIwX1RZ
-UEVfUFJBTToJCXJldHVybiBJT1JFU19ERVNDX1BFUlNJU1RFTlRfTUVNT1JZX0xFR0FDWTsKPj4g
-KwljYXNlIEU4MjBfVFlQRV9SRVNFUlZFRDoJcmV0dXJuIElPUkVTX0RFU0NfUkVTRVJWRUQ7Cj4+
-ICAJY2FzZSBFODIwX1RZUEVfUkVTRVJWRURfS0VSTjoJLyogRmFsbC10aHJvdWdoOiAqLwo+PiAg
-CWNhc2UgRTgyMF9UWVBFX1JBTToJCS8qIEZhbGwtdGhyb3VnaDogKi8KPj4gIAljYXNlIEU4MjBf
-VFlQRV9VTlVTQUJMRToJLyogRmFsbC10aHJvdWdoOiAqLwo+PiAtCWNhc2UgRTgyMF9UWVBFX1JF
-U0VSVkVEOgkvKiBGYWxsLXRocm91Z2g6ICovCj4+ICAJZGVmYXVsdDoJCQlyZXR1cm4gSU9SRVNf
-REVTQ19OT05FOwo+PiAgCX0KPj4gIH0KPj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L21tL2lvcmVt
-YXAuYyBiL2FyY2gveDg2L21tL2lvcmVtYXAuYwo+PiBpbmRleCAwMDI5NjA0YWY4YTQuLjU2NzFl
-YzI0ZGY0OSAxMDA2NDQKPj4gLS0tIGEvYXJjaC94ODYvbW0vaW9yZW1hcC5jCj4+ICsrKyBiL2Fy
-Y2gveDg2L21tL2lvcmVtYXAuYwo+PiBAQCAtODEsOSArODEsMjEgQEAgc3RhdGljIGJvb2wgX19p
-b3JlbWFwX2NoZWNrX3JhbShzdHJ1Y3QgcmVzb3VyY2UgKnJlcykKPj4gIAlyZXR1cm4gZmFsc2U7
-Cj4+ICB9Cj4+ICAKPj4gLXN0YXRpYyBpbnQgX19pb3JlbWFwX2NoZWNrX2Rlc2Nfb3RoZXIoc3Ry
-dWN0IHJlc291cmNlICpyZXMpCj4gCj4gSSBjYW4gc2VlIHRoaXMgcGF0Y2ggZG9lc24ndCBidWls
-ZCBldmVuIHdpdGhvdXQgYXBwbHlpbmcgYW5kIGJ1aWxkaW5nCj4gaXQuCj4gCj4gSG93IGFib3V0
-IHlvdSBidWlsZC10ZXN0IHlvdXIgc3R1ZmYgYmVmb3JlIHN1Ym1pdHRpbmc/Cj4gCk9oLCBteSBH
-b2QuIEkgbWFkZSBhIG1pc3Rha2Ugd2hlbiBpIGNvcGllZCB0aGUgY29kZSBmcm9tIGFub3RoZXIg
-bWFjaGluZS4KSSB3aWxsIGNvcnJlY3QgdGhpcyBpc3N1ZSBhbmQgcmVzZW5kIHRoZSBwYXRjaCB2
-MTAuCgpUaGFua3MuCkxpYW5ibwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+This patchset did two things:
+
+a). add a new I/O resource descriptor 'IORES_DESC_RESERVED'
+When doing kexec_file_load(), the first kernel needs to pass the e820
+reserved ranges to the second kernel, because some devices may use it
+in kdump kernel, such as PCI devices.
+
+But, the kernel can not exactly match the e820 reserved ranges when
+walking through the iomem resources via the 'IORES_DESC_NONE', because
+there are several types of e820 that are described as the 'IORES_DESC_NONE'
+type. Please refer to the e820_type_to_iores_desc().
+
+Therefore, add a new I/O resource descriptor 'IORES_DESC_RESERVED' for
+the iomem resources search interfaces. It is helpful to exactly match
+the reserved resource ranges when walking through iomem resources.
+
+In addition, since the new descriptor 'IORES_DESC_RESERVED' has been
+created for the reserved areas, the code originally related to the
+descriptor 'IORES_DESC_NONE' also need to be updated.
+
+b). add the e820 reserved ranges to kdump kernel e820 table
+At present, when using the kexec_file_load() syscall to load the kernel
+image and initramfs(for example: kexec -s -p xxx), the kernel does not
+pass the e820 reserved ranges to the second kernel, which might cause
+two problems:
+
+The first one is the MMCONFIG issue. The basic problem is that this
+device is in PCI segment 1 and the kernel PCI probing can not find it
+without all the e820 I/O reservations being present in the e820 table.
+And the kdump kernel does not have those reservations because the kexec
+command does not pass the I/O reservation via the "memmap=xxx" command
+line option. (This problem does not show up for other vendors, as SGI
+is apparently the actually fails for everyone, but devices in segment 0
+are then found by some legacy lookup method.) The workaround for this
+is to pass the I/O reserved regions to the kdump kernel.
+
+MMCONFIG(aka ECAM) space is described in the ACPI MCFG table. If you don't
+have ECAM: (a) PCI devices won't work at all on non-x86 systems that use
+only ECAM for config access, (b) you won't be albe to access devices on
+non-0 segments, (c) you won't be able to access extended config space(
+address 0x100-0xffff), which means none of the Extended Capabilities will
+be available(AER, ACS, ATS, etc). [Bjorn's comment]
+
+The second issue is that the SME kdump kernel doesn't work without the
+e820 reserved ranges. When SME is active in kdump kernel, actually, those
+reserved regions are still decrypted, but because those reserved ranges are
+not present at all in kdump kernel e820 table, those reserved regions are
+considered as encrypted, it goes wrong.
+
+The e820 reserved range is useful in kdump kernel, so it is necessary to
+pass the e820 reserved ranges to the kdump kernel.
+
+Changes since v1:
+1. Modified the value of flags to "0", when walking through the whole
+tree for e820 reserved ranges.
+
+Changes since v2:
+1. Modified the value of flags to "0", when walking through the whole
+tree for e820 reserved ranges.
+2. Modified the invalid SOB chain issue.
+
+Changes since v3:
+1. Dropped [PATCH 1/3 v3] resource: fix an error which walks through iomem
+   resources. Please refer to this commit <010a93bf97c7> "resource: Fix
+   find_next_iomem_res() iteration issue"
+
+Changes since v4:
+1. Improve the patch log, and add kernel log.
+
+Changes since v5:
+1. Rewrite these patches log.
+
+Changes since v6:
+1. Modify the [PATCH 1/2], and add the new I/O resource descriptor
+   'IORES_DESC_RESERVED' for the iomem resources search interfaces,
+   and also updates these codes relates to 'IORES_DESC_NONE'.
+2. Modify the [PATCH 2/2], and walk through io resource based on the
+   new descriptor 'IORES_DESC_RESERVED'.
+3. Update patch log.
+
+Changes since v7:
+1. Improve patch log.
+2. Improve this function __ioremap_check_desc_other().
+3. Modify code comment in the __ioremap_check_desc_other()
+
+Changes since v8:
+1. Get rid of all changes about ia64.(Borislav's suggestion)
+2. Change the examination condition to the 'IORES_DESC_ACPI_*'.
+3. Modify the signature. This patch(add the new I/O resource
+   descriptor 'IORES_DESC_RESERVED') was suggested by Boris.
+
+Changes since v9:
+1. Improve patch log.
+2. No need to modify the kernel/resource.c, so correct them.
+3. Change the name of the __ioremap_check_desc_other() to
+   __ioremap_check_desc_none_and_reserved(), and modify the
+   check condition, add comment above it.
+
+Lianbo Jiang (2):
+  x86/mm, resource: add a new I/O resource descriptor
+    'IORES_DESC_RESERVED'
+  x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
+
+ arch/x86/kernel/crash.c |  6 ++++++
+ arch/x86/kernel/e820.c  |  2 +-
+ arch/x86/mm/ioremap.c   | 18 +++++++++++++++---
+ include/linux/ioport.h  |  1 +
+ 4 files changed, 23 insertions(+), 4 deletions(-)
+
+-- 
+2.17.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
