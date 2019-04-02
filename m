@@ -1,18 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hBI7z-0005o1-H8
- for kexec@lists.infradead.org; Tue, 02 Apr 2019 12:02:58 +0000
-Subject: Re: [PATCH 1/2 RESEND v10] x86/mm, resource: add a new I/O resource
- descriptor 'IORES_DESC_RESERVED'
-References: <20190329123914.20939-1-lijiang@redhat.com>
- <20190329123914.20939-2-lijiang@redhat.com> <20190402090652.GD6826@zn.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <c94f887e-2ac8-49c6-e02c-92453e1ad894@redhat.com>
-Date: Tue, 2 Apr 2019 20:02:04 +0800
+ id 1hBI8V-0005sh-Uu
+ for kexec@lists.infradead.org; Tue, 02 Apr 2019 12:03:29 +0000
+Date: Tue, 2 Apr 2019 20:03:19 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190402120319.GA7605@dhcp-128-65.nay.redhat.com>
+References: <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
+ <20190325123229.GL12016@zn.tnic>
+ <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+ <20190326135714.GG1867@zn.tnic>
+ <20190327014852.GA3659@MiWiFi-R3L-srv>
+ <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+ <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+ <20190401000837.GA5170@jeru.linux.bs1.fc.nec.co.jp>
 MIME-Version: 1.0
-In-Reply-To: <20190402090652.GD6826@zn.tnic>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190401000837.GA5170@jeru.linux.bs1.fc.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,51 +29,233 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas.Lendacky@amd.com, x86@kernel.org, bhe@redhat.com, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc: "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "kasong@redhat.com" <kasong@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>
 
-5ZyoIDIwMTnlubQwNOaciDAy5pelIDE3OjA2LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IEZyaSwgTWFyIDI5LCAyMDE5IGF0IDA4OjM5OjEzUE0gKzA4MDAsIExpYW5ibyBKaWFuZyB3cm90
-ZToKPj4gLXN0YXRpYyBpbnQgX19pb3JlbWFwX2NoZWNrX2Rlc2Nfb3RoZXIoc3RydWN0IHJlc291
-cmNlICpyZXMpCj4+ICsvKgo+PiArICogT3JpZ2luYWxseSwgdGhlc2UgYXJlYXMgZGVzY3JpYmVk
-IGFzIElPUkVTX0RFU0NfTk9ORSBhcmUgbm90IG1hcHBlZAo+PiArICogYXMgZW5jcnlwdGVkIHdo
-ZW4gdXNpbmcgaW9yZW1hcCgpLCBmb3IgZXhhbXBsZSwgRTgyMF9UWVBFX3tSRVNFUlZFRCwKPj4g
-KyAqIFJFU0VSVkVEX0tFUk4sUkFNLFVOVVNBQkxFfSwgZXRjLiBJdCBjaGVja3MgZm9yIGEgcmVz
-b3VyY2UgdGhhdCBpcwo+PiArICogbm90IGRlc2NyaWJlZCBhcyBJT1JFU19ERVNDX05PTkUsIHdo
-aWNoIGNhbiBtYWtlIHN1cmUgdGhlIHJlc2VydmVkCj4+ICsgKiBhcmVhcyBhcmUgbm90IG1hcHBl
-ZCBhcyBlbmNyeXB0ZWQgd2hlbiB1c2luZyBpb3JlbWFwKCkuCj4+ICsgKgo+PiArICogTm93IElP
-UkVTX0RFU0NfUkVTRVJWRUQgaGFzIGJlZW4gY3JlYXRlZCBmb3IgdGhlIHJlc2VydmVkIGFyZWFz
-IHNvCj4+ICsgKiB0aGUgY2hlY2sgbmVlZHMgdG8gYmUgZXhwYW5kZWQgc28gdGhhdCB0aGVzZSBh
-cmVhcyBhcmUgbm90IG1hcHBlZAo+PiArICogZW5jcnlwdGVkIHdoZW4gdXNpbmcgaW9yZW1hcCgp
-Lgo+PiArICovCj4+ICtzdGF0aWMgaW50IF9faW9yZW1hcF9jaGVja19kZXNjX25vbmVfYW5kX3Jl
-c2VydmVkKHN0cnVjdCByZXNvdXJjZSAqcmVzKQo+PiAgewo+PiAtCXJldHVybiAocmVzLT5kZXNj
-ICE9IElPUkVTX0RFU0NfTk9ORSk7Cj4+ICsJcmV0dXJuICgocmVzLT5kZXNjICE9IElPUkVTX0RF
-U0NfTk9ORSkgJiYKPiAKPiBXaHkgaXMgdGhpcyBzdGlsbCBjaGVja2luZyBJT1JFU19ERVNDX05P
-TkUgd2hlbiB0aGUgaWRlYSBpcyB0byBoYXZlIHRoaXMKPiBzcGVjaWZpYyBJT1JFU19ERVNDX1JF
-U0VSVkVEIGZvciBhbGwgbWFya2VkIGFzICpyZXNlcnZlZCogcmVnaW9ucyBpbgo+IGU4MjAgd2hp
-Y2ggc2hvdWxkIG5vdCBiZSBtYXBwZWQgZW5jcnlwdGVkPwo+IAo+IElPVywgd2hpY2ggcmVnaW9u
-cyBhcmUgc3RpbGwgbWFya2VkIGFzIElPUkVTX0RFU0NfTk9ORSBhbmQgc2hvdWxkIG5vdCBiZQo+
-IG1hcHBlZCBlbmNyeXB0ZWQ/Cj4gClRoYW5rcyBmb3IgeW91ciBjb21tZW50LgoKVGhlc2UgcmVn
-aW9ucyhFODIwX1RZUEVfe1JFU0VSVkVEX0tFUk4sUkFNLFVOVVNBQkxFfSkgYXJlIHN0aWxsIG1h
-cmtlZCBhcwpJT1JFU19ERVNDX05PTkUgYW5kIHNob3VsZCBub3QgYmUgbWFwcGVkIGVuY3J5cHRl
-ZCB3aGVuIHVzaW5nIGlvcmVtYXAoKS4KUGxlYXNlIHJlZmVyIHRvIHRoZSBmb2xsb3dpbmcgZnVu
-Y3Rpb24uCgpzdGF0aWMgdW5zaWduZWQgbG9uZyBfX2luaXQgZTgyMF90eXBlX3RvX2lvcmVzX2Rl
-c2Moc3RydWN0IGU4MjBfZW50cnkgKmVudHJ5KQp7CiAgICAgICAgc3dpdGNoIChlbnRyeS0+dHlw
-ZSkgewogICAgICAgIGNhc2UgRTgyMF9UWVBFX0FDUEk6ICAgICAgICAgICAgcmV0dXJuIElPUkVT
-X0RFU0NfQUNQSV9UQUJMRVM7CiAgICAgICAgY2FzZSBFODIwX1RZUEVfTlZTOiAgICAgICAgICAg
-ICByZXR1cm4gSU9SRVNfREVTQ19BQ1BJX05WX1NUT1JBR0U7CiAgICAgICAgY2FzZSBFODIwX1RZ
-UEVfUE1FTTogICAgICAgICAgICByZXR1cm4gSU9SRVNfREVTQ19QRVJTSVNURU5UX01FTU9SWTsK
-ICAgICAgICBjYXNlIEU4MjBfVFlQRV9QUkFNOiAgICAgICAgICAgIHJldHVybiBJT1JFU19ERVND
-X1BFUlNJU1RFTlRfTUVNT1JZX0xFR0FDWTsKCWNhc2UgRTgyMF9UWVBFX1JFU0VSVkVEOiAgICAg
-ICAgcmV0dXJuIElPUkVTX0RFU0NfUkVTRVJWRUQ7CiAgICAgICAgY2FzZSBFODIwX1RZUEVfUkVT
-RVJWRURfS0VSTjogICAvKiBGYWxsLXRocm91Z2g6ICovCiAgICAgICAgY2FzZSBFODIwX1RZUEVf
-UkFNOiAgICAgICAgICAgICAvKiBGYWxsLXRocm91Z2g6ICovCiAgICAgICAgY2FzZSBFODIwX1RZ
-UEVfVU5VU0FCTEU6ICAgICAgICAvKiBGYWxsLXRocm91Z2g6ICovCiAgICAgICAgZGVmYXVsdDog
-ICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gSU9SRVNfREVTQ19OT05FOwogICAgICAgIH0K
-fQoKClRoYW5rcy4KTGlhbmJvCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 04/01/19 at 12:08am, Junichi Nomura wrote:
+> Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+> boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+> in the early parsing code tries to search RSDP from EFI table but
+> that will crash because the table address is virtual when the kernel
+> was booted by kexec.
+> 
+> In the case of kexec, physical address of EFI tables is provided
+> via efi_setup_data in boot_params, which is set up by kexec(1).
+> 
+> Factor out the table parsing code and use different pointers depending
+> on whether the kernel is booted by kexec or not.
+> 
+> Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+> Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Dave Young <dyoung@redhat.com>
+> 
+> --
+> v2: Added comments above __efi_get_rsdp_addr() and kexec_get_rsdp_addr() 
+> 
+> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+> --- a/arch/x86/boot/compressed/acpi.c
+> +++ b/arch/x86/boot/compressed/acpi.c
+> @@ -44,17 +44,112 @@ static acpi_physical_address get_acpi_rsdp(void)
+>  	return addr;
+>  }
+>  
+> -/* Search EFI system tables for RSDP. */
+> -static acpi_physical_address efi_get_rsdp_addr(void)
+> +#ifdef CONFIG_EFI
+> +static unsigned long efi_get_kexec_setup_data_addr(void)
+> +{
+> +	struct setup_data *data;
+> +	u64 pa_data;
+> +
+> +	pa_data = boot_params->hdr.setup_data;
+> +	while (pa_data) {
+> +		data = (struct setup_data *) pa_data;
+> +		if (data->type == SETUP_EFI)
+> +			return pa_data + sizeof(struct setup_data);
+> +		pa_data = data->next;
+> +	}
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Search EFI system tables for RSDP.  If both ACPI_20_TABLE_GUID and
+> + * ACPI_TABLE_GUID are found, take the former, which has more features.
+> + */
+> +static acpi_physical_address
+> +__efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
+> +		    bool efi_64)
+>  {
+>  	acpi_physical_address rsdp_addr = 0;
+> +	int i;
+> +
+> +	/* Get EFI tables from systab. */
+> +	for (i = 0; i < nr_tables; i++) {
+> +		acpi_physical_address table;
+> +		efi_guid_t guid;
+> +
+> +		if (efi_64) {
+> +			efi_config_table_64_t *tbl = (efi_config_table_64_t *) config_tables + i;
+> +
+> +			guid  = tbl->guid;
+> +			table = tbl->table;
+> +
+> +			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
+> +				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
+> +				return 0;
+> +			}
+> +		} else {
+> +			efi_config_table_32_t *tbl = (efi_config_table_32_t *) config_tables + i;
+>  
+> +			guid  = tbl->guid;
+> +			table = tbl->table;
+> +		}
+> +
+> +		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
+> +			rsdp_addr = table;
+> +		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
+> +			return table;
+> +	}
+> +
+> +	return rsdp_addr;
+> +}
+> +#endif
+> +
+> +/*
+> + * EFI/kexec support is only added for 64bit. So we don't have to
+> + * care 32bit case.
+> + */
+> +static acpi_physical_address kexec_get_rsdp_addr(void)
+> +{
+>  #ifdef CONFIG_EFI
+> -	unsigned long systab, systab_tables, config_tables;
+> +	efi_system_table_64_t *systab;
+> +	struct efi_setup_data *esd;
+> +	struct efi_info *ei;
+> +	char *sig;
+> +
+> +	esd = (struct efi_setup_data *) efi_get_kexec_setup_data_addr();
+> +	if (!esd)
+> +		return 0;
+> +
+> +	if (!esd->tables) {
+> +		debug_putstr("Wrong kexec SETUP_EFI data.\n");
+> +		return 0;
+> +	}
+> +
+> +	ei = &boot_params->efi_info;
+> +	sig = (char *)&ei->efi_loader_signature;
+> +	if (strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
+> +		debug_putstr("Wrong kexec EFI loader signature.\n");
+> +		return 0;
+> +	}
+> +
+> +	/* Get systab from boot params. */
+> +	systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
+> +	if (!systab)
+> +		error("EFI system table not found in kexec boot_params.");
+> +
+> +	return __efi_get_rsdp_addr((unsigned long) esd->tables,
+> +				   systab->nr_tables, true);
+> +#else
+> +	return 0;
+> +#endif
+> +}
+> +
+> +static acpi_physical_address efi_get_rsdp_addr(void)
+> +{
+> +#ifdef CONFIG_EFI
+> +	unsigned long systab, config_tables;
+>  	unsigned int nr_tables;
+>  	struct efi_info *ei;
+>  	bool efi_64;
+> -	int size, i;
+>  	char *sig;
+>  
+>  	ei = &boot_params->efi_info;
+> @@ -88,49 +183,20 @@ static acpi_physical_address efi_get_rsdp_addr(void)
+>  
+>  		config_tables	= stbl->tables;
+>  		nr_tables	= stbl->nr_tables;
+> -		size		= sizeof(efi_config_table_64_t);
+>  	} else {
+>  		efi_system_table_32_t *stbl = (efi_system_table_32_t *)systab;
+>  
+>  		config_tables	= stbl->tables;
+>  		nr_tables	= stbl->nr_tables;
+> -		size		= sizeof(efi_config_table_32_t);
+>  	}
+>  
+>  	if (!config_tables)
+>  		error("EFI config tables not found.");
+>  
+> -	/* Get EFI tables from systab. */
+> -	for (i = 0; i < nr_tables; i++) {
+> -		acpi_physical_address table;
+> -		efi_guid_t guid;
+> -
+> -		config_tables += size;
+> -
+> -		if (efi_64) {
+> -			efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables;
+> -
+> -			guid  = tbl->guid;
+> -			table = tbl->table;
+> -
+> -			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
+> -				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
+> -				return 0;
+> -			}
+> -		} else {
+> -			efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables;
+> -
+> -			guid  = tbl->guid;
+> -			table = tbl->table;
+> -		}
+> -
+> -		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
+> -			rsdp_addr = table;
+> -		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
+> -			return table;
+> -	}
+> +	return __efi_get_rsdp_addr(config_tables, nr_tables, efi_64);
+> +#else
+> +	return 0;
+>  #endif
+> -	return rsdp_addr;
+>  }
+>  
+>  static u8 compute_checksum(u8 *buffer, u32 length)
+> @@ -221,6 +287,9 @@ acpi_physical_address get_rsdp_addr(void)
+>  		pa = boot_params->acpi_rsdp_addr;
+>  
+>  	if (!pa)
+> +		pa = kexec_get_rsdp_addr();
+> +
+> +	if (!pa)
+>  		pa = efi_get_rsdp_addr();
+>  
+>  	if (!pa)
+
+I failed to kexec reboot on my laptop, kernel panics too quick,  I'm not sure this is
+caused by your patch though.
+
+Actually there are something probably i915 changes break kexec,  the
+above test is with "nomodeset" which should work.
+
+Let me do more testing and update here tomorrow.
+
+Thanks
+Dave
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
