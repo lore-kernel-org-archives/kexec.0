@@ -4,12 +4,12 @@ Subject: Re: [PATCH v3 1/3] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to
 References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
  <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
  <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
- <58c6cda9-9fd4-3b3e-740a-7b9b80b1f634@redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC035710C4@BPXM09GP.gisp.nec.co.jp>
 From: James Morse <james.morse@arm.com>
-Message-ID: <a48bb02c-8f93-4e3b-085d-a6f0e5a1f3a0@arm.com>
-Date: Tue, 2 Apr 2019 18:26:47 +0100
+Message-ID: <54efc2e4-6b3a-792a-16a6-8503c866ea2a@arm.com>
+Date: Tue, 2 Apr 2019 18:27:50 +0100
 MIME-Version: 1.0
-In-Reply-To: <58c6cda9-9fd4-3b3e-740a-7b9b80b1f634@redhat.com>
+In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC035710C4@BPXM09GP.gisp.nec.co.jp>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,117 +19,115 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Steve Capper <Steve.Capper@arm.com>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Dave Anderson <anderson@redhat.com>, bhupesh.linux@gmail.com, linux-arm-kernel@lists.infradead.org
+To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Steve Capper <Steve.Capper@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Anderson <anderson@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-SGkgQmh1cGVzaCwKCk9uIDI4LzAzLzIwMTkgMTE6NDIsIEJodXBlc2ggU2hhcm1hIHdyb3RlOgo+
-IE9uIDAzLzI2LzIwMTkgMTA6MDYgUE0sIEphbWVzIE1vcnNlIHdyb3RlOgo+PiBPbiAyMC8wMy8y
-MDE5IDA1OjA5LCBCaHVwZXNoIFNoYXJtYSB3cm90ZToKPj4+IFdpdGggQVJNdjguMi1MVkEgYXJj
-aGl0ZWN0dXJlIGV4dGVuc2lvbiBhdmFpbGFiaWxpdHksIGFybTY0IGhhcmR3YXJlCj4+PiB3aGlj
-aCBzdXBwb3J0cyB0aGlzIGV4dGVuc2lvbiBjYW4gc3VwcG9ydCBhIHZpcnR1YWwgYWRkcmVzcy1z
-cGFjZSB1cHRvCj4+PiA1Mi1iaXRzLgo+Pj4KPj4+IFNpbmNlIGF0IHRoZSBtb21lbnQgd2UgZW5h
-YmxlIHRoZSBzdXBwb3J0IG9mIHRoaXMgZXh0ZW5zaW9uIGluIGtlcm5lbAo+Pj4gdmlhIENPTkZJ
-RyBmbGFncywgZS5nLgo+Pj4gwqAgLSBVc2VyLXNwYWNlIDUyLWJpdCBMVkEgdmlhIENPTkZJR19B
-Uk02NF9VU0VSX1ZBX0JJVFNfNTIKPj4+Cj4+PiBzbywgdGhlcmUgaXMgbm8gY2xlYXIgbWVjaGFu
-aXNtIGluIHRoZSB1c2VyLXNwYWNlIHJpZ2h0IG5vdyB0bwo+Pj4gZGV0ZXJtaW5lIHRoZXNlIENP
-TkZJRyBmbGFnIHZhbHVlcyBhbmQgaGVuY2UgZGV0ZXJtaW5lIHRoZSBtYXhpbXVtCj4+PiB2aXJ0
-dWFsIGFkZHJlc3Mgc3BhY2Ugc3VwcG9ydGVkIGJ5IHRoZSB1bmRlcmx5aW5nIGtlcm5lbC4KPj4+
-Cj4+PiBVc2VyLXNwYWNlIHRvb2xzIGxpa2UgJ21ha2VkdW1wZmlsZScgdGhlcmVmb3JlIGFyZSBi
-cm9rZW4gY3VycmVudGx5Cj4+PiBhcyB0aGV5IGhhdmUgbm8gcHJvcGVyIG1ldGhvZCB0byBjYWxj
-dWxhdGUgdGhlICdQVFJTX1BFUl9QR0QnIHZhbHVlCj4+PiB3aGljaCBpcyByZXF1aXJlZCB0byBw
-ZXJmb3JtIGEgcGFnZSB0YWJsZSB3YWxrIHRvIGRldGVybWluZSB0aGUKPj4+IHBoeXNpY2FsIGFk
-ZHJlc3Mgb2YgYSBjb3JyZXNwb25kaW5nIHZpcnR1YWwgYWRkcmVzcyBmb3VuZCBpbgo+Pj4ga2Nv
-cmUvdm1jb3JlaW5mby4KPj4+Cj4+PiBJZiBvbmUgYXBwZW5kcyAnUFRSU19QRVJfUEdEJyBudW1i
-ZXIgdG8gdm1jb3JlaW5mbyBmb3IgYXJtNjQsCj4+PiBpdCBjYW4gYmUgdXNlZCBpbiB1c2VyLXNw
-YWNlIHRvIGRldGVybWluZSB0aGUgbWF4aW11bSB2aXJ0dWFsIGFkZHJlc3MKPj4+IHN1cHBvcnRl
-ZCBieSB1bmRlcmx5aW5nIGtlcm5lbC4KPj4KPj4gSSBkb24ndCB0aGluayB0aGlzIHJlYWxseSBz
-b2x2ZXMgdGhlIHByb2JsZW0sIGl0IGZlZWxzIGZyYWdpbGUuCj4+Cj4+IEkgY2FuIHNlZSBob3cg
-dm1jb3JlaW5mbyB0ZWxscyB5b3UgVkFfQklUUz09NDgsIFBBR0VfU0laRT09NjRLIGFuZCBQVFJT
-X1BFUl9QR0Q9MTAyNC4KPj4gWW91IGNhbiB1c2UgdGhpcyB0byB3b3JrIG91dCB0aGF0IHRoZSB0
-b3AgbGV2ZWwgcGFnZSB0YWJsZSBzaXplIGlzbid0IGNvbnNpc3RlbnQgd2l0aCBhCj4+IDQ4Yml0
-IFZBLCBzbyA1MmJpdCBWQSBtdXN0IGJlIGluIHVzZS4uLgo+Pgo+PiBCdXQgd2Fzbid0IHlvdXIg
-cHJvYmxlbSB3YWxraW5nIHRoZSBrZXJuZWwgcGFnZSB0YWJsZXM/IEluIHBhcnRpY3VsYXIgdGhl
-IG9mZnNldCB0aGF0IHdlCj4+IGFwcGx5IGJlY2F1c2UgdGhlIHRhYmxlcyB3ZXJlIGJhc2VkIG9u
-IGEgNDhiaXQgVkEgc2hpZnRlZCB1cCBpbiBzd2FwcGVyX3BnX2Rpci4KPj4KPj4gV2hlcmUgZG9l
-cyB0aGUgVFRCUjFfRUwxIG9mZnNldCBjb21lIGZyb20gd2l0aCB0aGlzIHByb3BlcnR5PyBJIGFz
-c3VtZSBtYWtlZHVtcGZpbGUKPj4gaGFyZC1jb2RlcyBpdCB3aGVuIGl0IHNlZXMgNTJiaXQgaXMg
-aW4gdXNlIC4uLiBzb21ld2hlcmUuCj4+IFdlIGhhdmVuJ3Qgc29sdmVkIHRoZSBwcm9ibGVtIQoK
-PiBCdXQgaXNuJ3QgdGhlIFRUQlIxX0VMMSBvZmZzZXQgYWxyZWFkeSBhcHBlbmRlZCBieSB0aGUg
-a2VybmVsIHZpYSBlODQyZGZiNWEyZDMgKCJhcm02NDoKPiBtbTogT2Zmc2V0IFRUQlIxIHRvIGFs
-bG93IDUyLWJpdCBQVFJTX1BFUl9QR0QiKQo+IGluIGNhc2Ugb2Yga2VybmVsIGNvbmZpZ3VyYXRp
-b24gd2hlcmUgNTItYml0IHVzZXJzcGFjZSBWQXMgYXJlIHBvc3NpYmxlLgoKPiBBY2NvcmRpbmds
-eSB3ZSBoYXZlIHRoZSBmb2xsb3dpbmcgYXNzZW1ibGVyIGhlbHBlciBpbiAnYXJjaC9hcm02NC9p
-bmNsdWRlL2FzbS9hc3NlbWJsZXIuaCc6Cj4gCj4gwqDCoMKgwqDCoMKgIC5tYWNyb8KgIG9mZnNl
-dF90dGJyMSwgdHRicgo+ICNpZmRlZiBDT05GSUdfQVJNNjRfNTJCSVRfVkEKPiDCoMKgwqDCoMKg
-wqAgb3JywqDCoMKgwqAgXHR0YnIsIFx0dGJyLCAjVFRCUjFfQkFERFJfNDg1Ml9PRkZTRVQKPiAj
-ZW5kaWYKPiDCoMKgwqDCoMKgwqAgLmVuZG0KPiAKPiB3aGVyZToKPiAjaWZkZWYgQ09ORklHX0FS
-TTY0XzUyQklUX1ZBCj4gLyogTXVzdCBiZSBhdCBsZWFzdCA2NC1ieXRlIGFsaWduZWQgdG8gcHJl
-dmVudCBjb3JydXB0aW9uIG9mIHRoZSBUVEJSICovCj4gI2RlZmluZSBUVEJSMV9CQUREUl80ODUy
-X09GRlNFVMKgwqDCoMKgwqDCoMKgICgoKFVMKDEpIDw8ICg1MiAtIFBHRElSX1NISUZUKSkgLSBc
-Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgKFVMKDEpIDw8ICg0OCAtIFBHRElSX1NISUZUKSkpICogOCkKPiAjZW5kaWYKClN1
-cmUsIGFuZCBhbGwgdGhpcyB3b3VsZCB3b3JrIHRvZGF5LCBiZWNhdXNlIHRoZXJlIGlzIG9ubHkg
-b25lIHdlaXJkIGNvbWJpbmF0aW9uLiBCdXQgb25jZQp3ZSBzdXBwb3J0IGFub3RoZXIgY29tYmlu
-YXRpb24gb2YgNTJiaXQtdmEsIHlvdSdkIGVpdGhlciBuZWVkIGFub3RoZXIgdmFsdWUsIG9yIHRv
-IHN0YXJ0CnVzaW5nIFBUUlNfUEVSX1BHRCBhcyBhIGZsYWcgZm9yIHY1LjFfRlVOTllfQkVIQVZJ
-T1VSX09ORS4KCgpbLi4uXQoKPiBOb3RlIHRoYXQgdGhlIGFib3ZlIGNvbXB1dGF0aW9uIGhvbGRz
-IHRydWUgYm90aCBmb3IgUFRSU19QRVJfUEdEID0gNjQgKDQ4LWJpdCBrZXJuZWwgd2l0aAo+IDQ4
-LWJpdCBVc2VyIFZBKSBhbmQgMTAyNCAoNDgtYml0IHdpdGggNTItYml0IFVzZXIgVkEpIGNhc2Vz
-LiBBbmQgdGhlc2UgYXJlIHRoZQo+IGNvbmZpZ3VyYXRpb25zIGZvciB3aGljaCB3ZSBhcmUgdHJ5
-aW5nIHRvIGZpeCB0aGUgdXNlci1zcGFjZSByZWdyZXNzaW9ucyByZXBvcnRlZCAob24KPiBhcm02
-NCkgcmVjZW50bHkuCgouLi4gYW5kIHJldmlzaXQgaXQgd2hlbiB0aGVyZSBpcyBhbm90aGVyIGNv
-bWJpbmF0aW9uPwoKCj4+IFRvZGF5IF9fY3B1X3NldHVwKCkgc2V0cyBUMFNaIGFuZCBUMVNaIGRp
-ZmZlcmVudGx5IGZvciA1MmJpdCBWQSwgYnV0IGluIHRoZSBmdXR1cmUgaXQKPj4gY291bGQgc2V0
-IHRoZW0gdGhlIHNhbWUsIG9yIGRpZmZlcmVudCB0aGUgb3RoZXItd2F5LXJvdW5kLgo+Pgo+PiBX
-aWxsIG1ha2VkdW1wZmlsZSB1c2luZyB0aGlzIHZhbHVlIGtlZXAgd29ya2luZyBvbmNlIFQxU1og
-aXMgNTJiaXQgVkEgdG9vPyBJbiB0aGlzIGNhc2UKPj4gdGhlcmUgd291bGQgYmUgbm8gdHRiciBv
-ZmZzZXQuCj4+Cj4+IElmIHlvdSBuZWVkIGFub3RoZXIgdm1jb3JlaW5mbyBmbGFnIG9uY2UgdGhh
-dCBoYXBwZW5zLCB3ZSd2ZSBkb25lIHNvbWV0aGluZyB3cm9uZyBoZXJlLgo+IAo+IEkgYW0gY3Vy
-cmVudGx5IGV4cGVyaW1lbnRpbmcgd2l0aCBTdGV2ZSdzIHBhdGNoZXMgZm9yIDUyLWJpdCBrZXJu
-ZWwgVkEKPiAoPGh0dHBzOi8vbHduLm5ldC9BcnRpY2xlcy83ODAwOTMvPikgYW5kIHdpbGwgY29t
-bWVudCBtb3JlIG9uIHRoZSBzYW1lIHdoZW4gSSBhbSBhYmxlIHRvCj4gZ2V0IHRoZSB1c2VyLXNw
-YWNlIHV0aWxpdGllcyBsaWtlIG1ha2VkdW1wZmlsZSBhbmQga2V4ZWMtdG9vbHMgdG8gd29yayB3
-aXRoIHRoZSBzYW1lIG9uCj4gYm90aCBBUk12OCBGYXN0IFNpbXVsYXRvciBtb2RlbCBhbmQgb2xk
-ZXIgQ1BVcyB3aGljaCBkb24ndCBzdXBwb3J0IEFSTXY4LjIgZXh0ZW5zaW9ucy4KCgo+IEhvd2V2
-ZXIsIEkgdGhpbmsgd2Ugc2hvdWxkIG5vdCBob2xkIHVwIGZpeGVzIGZvciByZWdyZXNzaW9ucyBh
-bHJlYWR5IHJlcG9ydGVkLCBiZWNhdXNlIHRoZQo+IDUyLWJpdCBrZXJuZWwgVkEgY2hhbmdlcyBw
-cm9iYWJseSBzdGlsbCBuZWVkIHNvbWUgbW9yZSByZXdvcmsuCgpDaHVja2luZyB0aGluZ3MgaW50
-byB2bWNvcmVpbmZvIGlzbid0IGZyZWU6IHdlIG5lZWQgdG8ga2VlcCB0aGVtIHRoZXJlIGZvcmV2
-ZXIsIG90aGVyd2lzZQp5ZXN0ZXJkYXlzIHZlcnNpb24gb2YgdGhlIHRvb2xzIGJyZWFrcy4gQ2Fu
-IHdlIHRha2UgdGhlIHRpbWUgdG8gZ2V0IHRoaXMgcmlnaHQgZm9yIHRoZQpjYXNlcyB3ZSBrbm93
-IGFib3V0PwoKWWVzIHRoZSBrZXJuZWwgY29kZSBpcyBnb2luZyB0byBtb3ZlIGFyb3VuZCwgdGhp
-cyBpcyB3aHkgdGhlIGluZm9ybWF0aW9uIHdlIGV4cG9zZSB2aWEKdm1jb3JlaW5mbyBuZWVkcyB0
-byBiZSB0aG91Z2h0IHRocm91Z2g6IHNvbWV0aGluZyB3ZSB3b3VsZCBhbHdheXMgbmVlZCwgcmVn
-YXJkbGVzcyBvZiBob3cKdGhlIGtlcm5lbCBpbXBsZW1lbnRzIGl0LgoKCj4+IChOb3QgdG8gbWVu
-dGlvbiB3aGF0IGhhcHBlbnMgaWYgdGhlIFRUQlIxX0VMMSB1c2VzIDUyYml0IHZhLCBidXQgVFRC
-UjBfRUwxIGRvZXNuJ3QpCj4gCj4gSSBhbSB3b25kZXJpbmcgaWYgdGhlcmUgYXJlIGFueSByZWFs
-IHVzZXJzIG9mIHRoZSBhYm92ZSBjb21iaW5hdGlvbi4KCkhlaCEgSXMgdGhlcmUgYW55IGhhcmR3
-YXJlIHRoYXQgc3VwcG9ydHMgdGhpcz8KClBvaW50ZXItYXV0aCBjaGFuZ2VzIGFsbCB0aGlzIGFn
-YWluLCBhcyB3ZSBtYXkgcHJlZmVyIHRvIHVzZSB0aGUgYml0cyBmb3IgcG9pbnRlci1hdXRoIGlu
-Cm9uZSBUVEIgb3IgdGhlIG90aGVyLiBQVFJTX1BFUl9QR0QgbWF5IHNob3cgdGhlIDUyYml0IHZh
-bHVlIGluIHRoaXMgY2FzZSwgYnV0IG5laXRoZXIgVFRCUgppcyBtYXBwaW5nIDUyYml0cyBvZiBW
-QS4KCgo+IFNvIGZhciwgSSBoYXZlIGdlbmVyYWxseSBjb21lIGFjcm9zcyBkaXNjdXNzaW9ucyB3
-aGVyZSB0aGUgZm9sbG93aW5nIHZhcmlhdGlvbnMgb2YgdGhlCj4gYWRkcmVzcyBzcGFjZXMgaGF2
-ZSBiZWVuIHByb3Bvc2VkL3JlcXVlc3RlZDoKPiAtIDQ4Yml0IGtlcm5lbCBWQSArIDQ4LWJpdCBV
-c2VyIFZBLAo+IC0gNDgtYml0IGtlcm5lbCBWQSArIDUyLWJpdCBVc2VyIFZBLAoKKyA1MmJpdCBr
-ZXJuZWwsIGJlY2F1c2UgdGhlcmUgaXMgZXhjZXNzaXZlIHF1YW50aXRpZXMgb2YgbWVtb3J5LCBh
-bmQgdGhlIGtlcm5lbCBtYXBzIGl0CmFsbCwgYnV0IDQ4LWJpdCB1c2VyLCBiZWNhdXNlIGl0IG5l
-dmVyIG1hcHMgYWxsIHRoZSBtZW1vcnksIGFuZCB3ZSBwcmVmZXIgdGhlIGJpdHMgZm9yCnBvaW50
-ZXItYXV0aC4KCj4gLSA1Mi1iaXQga2VybmVsIFZBICsgNTItYml0IFVzZXIgVkEuCgpBbmQuLi4g
-IGFsbCBmb3VyIG1heSBoYXBwZW4gd2l0aCB0aGUgc2FtZSBidWlsdCBpbWFnZS4gSSBkb24ndCBz
-ZWUgaG93IHlvdSBjYW4gdGVsbCB0aGVzZQpjYXNlcyBhcGFydCB3aXRoIHRoZSBvbmUgKGJ1aWxk
-LXRpbWUtY29uc3RhbnQhKSBQVFJTX1BFUl9QR0QgdmFsdWUuCgpJJ20gc3VyZSBzb21lIG9mIHRo
-ZXNlIGNhc2VzIGFyZSBoeXBvdGhldGljYWwsIGJ1dCBieSBjb25zaWRlcmluZyBpdCBhbGwgbm93
-LCB3ZSBjYW4gYXZvaWQKdGhyZWUgbW9yZSBrZXJuZWw6dm1jb3JlaW5mbyB1cGRhdGVzLCBhbmQg
-dGhyZWUgbW9yZSBmaXgtdXNlci1zcGFjZS10by11c2UtdGhlLW5ldy12YWx1ZS4KCgpJIHRoaW5r
-IHlvdSBwcm9iYWJseSBkbyBuZWVkIFBUUlNfUEVSX1BHRCwgYXMgdGhpcyBpcyB0aGUgb25lIHZh
-bHVlIHRoZSBtbSBpcyB1c2luZyB0bwpnZW5lcmF0ZSBwYWdlIHRhYmxlcy4gSSdtIHByZXR0eSBz
-dXJlIHlvdSBhbHNvIG5lZWQgVDBTWiBhbmQgVDFTWiB0byBrbm93IGlmIHRoYXQncwphY3R1YWxs
-eSBpbiB1c2UsIG9yIHRoZSBrZXJuZWwgaXMgYm9kZ2luZyByb3VuZCBpdCB3aXRoIGFuIG9mZnNl
-dC4KCgpUaGFua3MsCgpKYW1lcwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Kazu,
+
+On 27/03/2019 16:07, Kazuhito Hagio wrote:
+> On 3/26/2019 12:36 PM, James Morse wrote:
+>> On 20/03/2019 05:09, Bhupesh Sharma wrote:
+>>> With ARMv8.2-LVA architecture extension availability, arm64 hardware
+>>> which supports this extension can support a virtual address-space upto
+>>> 52-bits.
+>>>
+>>> Since at the moment we enable the support of this extension in kernel
+>>> via CONFIG flags, e.g.
+>>>  - User-space 52-bit LVA via CONFIG_ARM64_USER_VA_BITS_52
+>>>
+>>> so, there is no clear mechanism in the user-space right now to
+>>> determine these CONFIG flag values and hence determine the maximum
+>>> virtual address space supported by the underlying kernel.
+>>>
+>>> User-space tools like 'makedumpfile' therefore are broken currently
+>>> as they have no proper method to calculate the 'PTRS_PER_PGD' value
+>>> which is required to perform a page table walk to determine the
+>>> physical address of a corresponding virtual address found in
+>>> kcore/vmcoreinfo.
+>>>
+>>> If one appends 'PTRS_PER_PGD' number to vmcoreinfo for arm64,
+>>> it can be used in user-space to determine the maximum virtual address
+>>> supported by underlying kernel.
+>>
+>> I don't think this really solves the problem, it feels fragile.
+>>
+>> I can see how vmcoreinfo tells you VA_BITS==48, PAGE_SIZE==64K and PTRS_PER_PGD=1024.
+>> You can use this to work out that the top level page table size isn't consistent with a
+>> 48bit VA, so 52bit VA must be in use...
+>>
+>> But wasn't your problem walking the kernel page tables? In particular the offset that we
+>> apply because the tables were based on a 48bit VA shifted up in swapper_pg_dir.
+>>
+>> Where does the TTBR1_EL1 offset come from with this property? I assume makedumpfile
+>> hard-codes it when it sees 52bit is in use ... somewhere.
+
+> My understanding is that the TTBR1_EL1 offset comes from a kernel
+> virtual address with the exported PTRS_PER_PGD.
+> 
+> With T1SZ is 48bit and T0SZ is 52bit,
+
+(PTRS_PER_PGD doesn't tell you this, PTRS_PER_PGD lets you spot something odd is
+happening, and this just happens to be the only odd combination today.)
+
+
+> kva = 0xffff000000000000    <--- start of kernel virtual address
+
+Does makedumpfile have this value? If the kernel were using 52bit VA for TTBR1 this value
+would be different.
+
+
+> pgd_index(kva) = (kva >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1)
+>                = (0xffff000000000000 >> 42) & (1024 - 1)
+>                = 0x00000000003fffc0 & 0x3ff
+>                = 0x3c0      <--- the offset (0x3c0) is included
+> 
+> This is what kernel does now, so makedumpfile also wants to do.
+
+Sure, and it would work today. I'm worried about tomorrow, where we support something new,
+and need to bundle new information out through vmcoreinfo. This ends up being used to
+fingerprint the kernel support, instead of as the value it was intended to be.
+
+
+>> We haven't solved the problem!
+>>
+>> Today __cpu_setup() sets T0SZ and T1SZ differently for 52bit VA, but in the future it
+>> could set them the same, or different the other-way-round.
+>>
+>> Will makedumpfile using this value keep working once T1SZ is 52bit VA too? In this case
+>> there would be no ttbr offset.
+> 
+> If T1SZ is 52bit, probably kernel virtual address starts from 0xfff0000000000000,
+
+I didn't think this 'bottom of the ttbr1 mapping range' value was exposed anywhere.
+Where can user-space get this from? (I can't see it in the vmcoreinfo list)
+
+
+> then the offset becomes 0 with the pgd_index() above.
+> I think makedumpfile will keep working with that.
+
+
+Steve mentions a 52/48 combination in his kernel series:
+https://lore.kernel.org/linux-arm-kernel/20190218170245.14915-1-steve.capper@arm.com/
+
+
+I think vmcoreinfo-users will eventually need to spot 52bit used in TTBR1 and/or TTBR0,
+and possibly: configured, but not enabled in either. (this is because the bits are also
+used for pointer-auth, the kernel may be built for both pointer-auth and 52-bit VA, and
+chose which to enabled at boot based on some policy)
+
+I don't see how you can do this with one value.
+I'd like to get this right now, so we user-space doesn't need updating again!
+
+
+Thanks,
+
+James
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
