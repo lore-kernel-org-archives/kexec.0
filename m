@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hBGiC-0002Oz-1Q
- for kexec@lists.infradead.org; Tue, 02 Apr 2019 10:32:13 +0000
-Date: Tue, 2 Apr 2019 12:32:01 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 1/3 v2] x86/kexec: Do not map the kexec area as decrypted
- when SEV is active
-Message-ID: <20190402103201.GF6826@zn.tnic>
-References: <20190327053629.17935-1-lijiang@redhat.com>
- <20190327053629.17935-2-lijiang@redhat.com>
+ id 1hBI7z-0005o1-H8
+ for kexec@lists.infradead.org; Tue, 02 Apr 2019 12:02:58 +0000
+Subject: Re: [PATCH 1/2 RESEND v10] x86/mm, resource: add a new I/O resource
+ descriptor 'IORES_DESC_RESERVED'
+References: <20190329123914.20939-1-lijiang@redhat.com>
+ <20190329123914.20939-2-lijiang@redhat.com> <20190402090652.GD6826@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <c94f887e-2ac8-49c6-e02c-92453e1ad894@redhat.com>
+Date: Tue, 2 Apr 2019 20:02:04 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190327053629.17935-2-lijiang@redhat.com>
+In-Reply-To: <20190402090652.GD6826@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,53 +21,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>
-Cc: Thomas.Lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas.Lendacky@amd.com, x86@kernel.org, bhe@redhat.com, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On Wed, Mar 27, 2019 at 01:36:27PM +0800, Lianbo Jiang wrote:
-> Currently, the arch_kexec_post_{alloc,free}_pages() unconditionally
-> maps the kexec area as decrypted. This works fine when SME is active.
-> Because in SME, the first kernel is loaded in decrypted area by the
-> BIOS, so the second kernel must be also loaded into the decrypted
-> memory.
-> 
-> When SEV is active, the first kernel is loaded into the encrypted
-> area, so the second kernel must be also loaded into the encrypted
-> memory. Lets make sure that arch_kexec_post_{alloc,free}_pages()
-> does not clear the memory encryption mask from the kexec area when
-> SEV is active.
-
-This commit message still doesn't explain the big picture why you want
-this change.
-
-And it must explain it because it might be all clear in your head now
-but months from now, you, we, all would've forgotten why this change was
-needed.
-
-So pls add blurb that this whole effort is being done so that SEV VMs
-can kdump too. I.e., the 10000ft picture.
-
-Anyone must be able to figure out *why* a change has been done just by
-doing git archeology. So make sure you explain it properly.
-
-If unsure, try to put yourself in the shoes of some future kernel
-developer who is trying to find out why this change has been done. Now
-read the commit message you've written. Does it make any sense to him? I
-think not.
-
-Do you catch my drift?
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTnlubQwNOaciDAy5pelIDE3OjA2LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IEZyaSwgTWFyIDI5LCAyMDE5IGF0IDA4OjM5OjEzUE0gKzA4MDAsIExpYW5ibyBKaWFuZyB3cm90
+ZToKPj4gLXN0YXRpYyBpbnQgX19pb3JlbWFwX2NoZWNrX2Rlc2Nfb3RoZXIoc3RydWN0IHJlc291
+cmNlICpyZXMpCj4+ICsvKgo+PiArICogT3JpZ2luYWxseSwgdGhlc2UgYXJlYXMgZGVzY3JpYmVk
+IGFzIElPUkVTX0RFU0NfTk9ORSBhcmUgbm90IG1hcHBlZAo+PiArICogYXMgZW5jcnlwdGVkIHdo
+ZW4gdXNpbmcgaW9yZW1hcCgpLCBmb3IgZXhhbXBsZSwgRTgyMF9UWVBFX3tSRVNFUlZFRCwKPj4g
+KyAqIFJFU0VSVkVEX0tFUk4sUkFNLFVOVVNBQkxFfSwgZXRjLiBJdCBjaGVja3MgZm9yIGEgcmVz
+b3VyY2UgdGhhdCBpcwo+PiArICogbm90IGRlc2NyaWJlZCBhcyBJT1JFU19ERVNDX05PTkUsIHdo
+aWNoIGNhbiBtYWtlIHN1cmUgdGhlIHJlc2VydmVkCj4+ICsgKiBhcmVhcyBhcmUgbm90IG1hcHBl
+ZCBhcyBlbmNyeXB0ZWQgd2hlbiB1c2luZyBpb3JlbWFwKCkuCj4+ICsgKgo+PiArICogTm93IElP
+UkVTX0RFU0NfUkVTRVJWRUQgaGFzIGJlZW4gY3JlYXRlZCBmb3IgdGhlIHJlc2VydmVkIGFyZWFz
+IHNvCj4+ICsgKiB0aGUgY2hlY2sgbmVlZHMgdG8gYmUgZXhwYW5kZWQgc28gdGhhdCB0aGVzZSBh
+cmVhcyBhcmUgbm90IG1hcHBlZAo+PiArICogZW5jcnlwdGVkIHdoZW4gdXNpbmcgaW9yZW1hcCgp
+Lgo+PiArICovCj4+ICtzdGF0aWMgaW50IF9faW9yZW1hcF9jaGVja19kZXNjX25vbmVfYW5kX3Jl
+c2VydmVkKHN0cnVjdCByZXNvdXJjZSAqcmVzKQo+PiAgewo+PiAtCXJldHVybiAocmVzLT5kZXNj
+ICE9IElPUkVTX0RFU0NfTk9ORSk7Cj4+ICsJcmV0dXJuICgocmVzLT5kZXNjICE9IElPUkVTX0RF
+U0NfTk9ORSkgJiYKPiAKPiBXaHkgaXMgdGhpcyBzdGlsbCBjaGVja2luZyBJT1JFU19ERVNDX05P
+TkUgd2hlbiB0aGUgaWRlYSBpcyB0byBoYXZlIHRoaXMKPiBzcGVjaWZpYyBJT1JFU19ERVNDX1JF
+U0VSVkVEIGZvciBhbGwgbWFya2VkIGFzICpyZXNlcnZlZCogcmVnaW9ucyBpbgo+IGU4MjAgd2hp
+Y2ggc2hvdWxkIG5vdCBiZSBtYXBwZWQgZW5jcnlwdGVkPwo+IAo+IElPVywgd2hpY2ggcmVnaW9u
+cyBhcmUgc3RpbGwgbWFya2VkIGFzIElPUkVTX0RFU0NfTk9ORSBhbmQgc2hvdWxkIG5vdCBiZQo+
+IG1hcHBlZCBlbmNyeXB0ZWQ/Cj4gClRoYW5rcyBmb3IgeW91ciBjb21tZW50LgoKVGhlc2UgcmVn
+aW9ucyhFODIwX1RZUEVfe1JFU0VSVkVEX0tFUk4sUkFNLFVOVVNBQkxFfSkgYXJlIHN0aWxsIG1h
+cmtlZCBhcwpJT1JFU19ERVNDX05PTkUgYW5kIHNob3VsZCBub3QgYmUgbWFwcGVkIGVuY3J5cHRl
+ZCB3aGVuIHVzaW5nIGlvcmVtYXAoKS4KUGxlYXNlIHJlZmVyIHRvIHRoZSBmb2xsb3dpbmcgZnVu
+Y3Rpb24uCgpzdGF0aWMgdW5zaWduZWQgbG9uZyBfX2luaXQgZTgyMF90eXBlX3RvX2lvcmVzX2Rl
+c2Moc3RydWN0IGU4MjBfZW50cnkgKmVudHJ5KQp7CiAgICAgICAgc3dpdGNoIChlbnRyeS0+dHlw
+ZSkgewogICAgICAgIGNhc2UgRTgyMF9UWVBFX0FDUEk6ICAgICAgICAgICAgcmV0dXJuIElPUkVT
+X0RFU0NfQUNQSV9UQUJMRVM7CiAgICAgICAgY2FzZSBFODIwX1RZUEVfTlZTOiAgICAgICAgICAg
+ICByZXR1cm4gSU9SRVNfREVTQ19BQ1BJX05WX1NUT1JBR0U7CiAgICAgICAgY2FzZSBFODIwX1RZ
+UEVfUE1FTTogICAgICAgICAgICByZXR1cm4gSU9SRVNfREVTQ19QRVJTSVNURU5UX01FTU9SWTsK
+ICAgICAgICBjYXNlIEU4MjBfVFlQRV9QUkFNOiAgICAgICAgICAgIHJldHVybiBJT1JFU19ERVND
+X1BFUlNJU1RFTlRfTUVNT1JZX0xFR0FDWTsKCWNhc2UgRTgyMF9UWVBFX1JFU0VSVkVEOiAgICAg
+ICAgcmV0dXJuIElPUkVTX0RFU0NfUkVTRVJWRUQ7CiAgICAgICAgY2FzZSBFODIwX1RZUEVfUkVT
+RVJWRURfS0VSTjogICAvKiBGYWxsLXRocm91Z2g6ICovCiAgICAgICAgY2FzZSBFODIwX1RZUEVf
+UkFNOiAgICAgICAgICAgICAvKiBGYWxsLXRocm91Z2g6ICovCiAgICAgICAgY2FzZSBFODIwX1RZ
+UEVfVU5VU0FCTEU6ICAgICAgICAvKiBGYWxsLXRocm91Z2g6ICovCiAgICAgICAgZGVmYXVsdDog
+ICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gSU9SRVNfREVTQ19OT05FOwogICAgICAgIH0K
+fQoKClRoYW5rcy4KTGlhbmJvCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
