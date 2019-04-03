@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v3 1/3] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to
- vmcoreinfo
-References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
- <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
- <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC035710C4@BPXM09GP.gisp.nec.co.jp>
-From: James Morse <james.morse@arm.com>
-Message-ID: <54efc2e4-6b3a-792a-16a6-8503c866ea2a@arm.com>
-Date: Tue, 2 Apr 2019 18:27:50 +0100
+Received: from szxga07-in.huawei.com ([45.249.212.35] helo=huawei.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1hBVsk-0006tI-Ly
+ for kexec@lists.infradead.org; Wed, 03 Apr 2019 02:44:08 +0000
+From: Chen Zhou <chenzhou10@huawei.com>
+Subject: [PATCH] arm64: support more than one crash kernel regions
+Date: Wed, 3 Apr 2019 10:55:04 +0800
+Message-ID: <20190403025504.30480-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC035710C4@BPXM09GP.gisp.nec.co.jp>
-Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,109 +20,276 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Steve Capper <Steve.Capper@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Anderson <anderson@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: takahiro.akashi@linaro.org, kexec@lists.infradead.org
+Cc: Chen Zhou <chenzhou10@huawei.com>, wangkefeng.wang@huawei.com
 
-Hi Kazu,
+When crashkernel is reserved above 4G in memory, kernel should
+reserve some amount of low memory for swiotlb and some DMA buffers.
+So there may be two crash kernel regions, one is below 4G, the other
+is above 4G.
 
-On 27/03/2019 16:07, Kazuhito Hagio wrote:
-> On 3/26/2019 12:36 PM, James Morse wrote:
->> On 20/03/2019 05:09, Bhupesh Sharma wrote:
->>> With ARMv8.2-LVA architecture extension availability, arm64 hardware
->>> which supports this extension can support a virtual address-space upto
->>> 52-bits.
->>>
->>> Since at the moment we enable the support of this extension in kernel
->>> via CONFIG flags, e.g.
->>>  - User-space 52-bit LVA via CONFIG_ARM64_USER_VA_BITS_52
->>>
->>> so, there is no clear mechanism in the user-space right now to
->>> determine these CONFIG flag values and hence determine the maximum
->>> virtual address space supported by the underlying kernel.
->>>
->>> User-space tools like 'makedumpfile' therefore are broken currently
->>> as they have no proper method to calculate the 'PTRS_PER_PGD' value
->>> which is required to perform a page table walk to determine the
->>> physical address of a corresponding virtual address found in
->>> kcore/vmcoreinfo.
->>>
->>> If one appends 'PTRS_PER_PGD' number to vmcoreinfo for arm64,
->>> it can be used in user-space to determine the maximum virtual address
->>> supported by underlying kernel.
->>
->> I don't think this really solves the problem, it feels fragile.
->>
->> I can see how vmcoreinfo tells you VA_BITS==48, PAGE_SIZE==64K and PTRS_PER_PGD=1024.
->> You can use this to work out that the top level page table size isn't consistent with a
->> 48bit VA, so 52bit VA must be in use...
->>
->> But wasn't your problem walking the kernel page tables? In particular the offset that we
->> apply because the tables were based on a 48bit VA shifted up in swapper_pg_dir.
->>
->> Where does the TTBR1_EL1 offset come from with this property? I assume makedumpfile
->> hard-codes it when it sees 52bit is in use ... somewhere.
+Currently, there is only one crash kernel region on arm64, and pass
+"linux,usable-memory-range = <BASE SIZE>" property to crash dump
+kernel. Now, we pass
+"linux,usable-memory-range = <BASE1 SIZE1 BASE2 SIZE2>" to crash
+dump kernel to support two crash kernel regions and load crash
+kernel high.
 
-> My understanding is that the TTBR1_EL1 offset comes from a kernel
-> virtual address with the exported PTRS_PER_PGD.
-> 
-> With T1SZ is 48bit and T0SZ is 52bit,
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ kexec/arch/arm64/crashdump-arm64.c | 44 +++++++++++++++++------------
+ kexec/arch/arm64/crashdump-arm64.h |  3 +-
+ kexec/arch/arm64/kexec-arm64.c     | 57 +++++++++++++++++++++++++++++---------
+ 3 files changed, 72 insertions(+), 32 deletions(-)
 
-(PTRS_PER_PGD doesn't tell you this, PTRS_PER_PGD lets you spot something odd is
-happening, and this just happens to be the only odd combination today.)
+diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+index 4fd7aa8..158e778 100644
+--- a/kexec/arch/arm64/crashdump-arm64.c
++++ b/kexec/arch/arm64/crashdump-arm64.c
+@@ -32,11 +32,11 @@ static struct memory_ranges system_memory_rgns = {
+ };
+ 
+ /* memory range reserved for crashkernel */
+-struct memory_range crash_reserved_mem;
++struct memory_range crash_reserved_mem[CRASH_MAX_RESERVED_RANGES];
+ struct memory_ranges usablemem_rgns = {
+ 	.size = 0,
+-	.max_size = 1,
+-	.ranges = &crash_reserved_mem,
++	.max_size = CRASH_MAX_RESERVED_RANGES,
++	.ranges = crash_reserved_mem,
+ };
+ 
+ struct memory_range elfcorehdr_mem;
+@@ -108,7 +108,7 @@ int is_crashkernel_mem_reserved(void)
+ 	if (!usablemem_rgns.size)
+ 		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
+ 
+-	return crash_reserved_mem.start != crash_reserved_mem.end;
++	return usablemem_rgns.size;
+ }
+ 
+ /*
+@@ -122,6 +122,8 @@ int is_crashkernel_mem_reserved(void)
+  */
+ static int crash_get_memory_ranges(void)
+ {
++	int i;
++
+ 	/*
+ 	 * First read all memory regions that can be considered as
+ 	 * system memory including the crash area.
+@@ -129,16 +131,19 @@ static int crash_get_memory_ranges(void)
+ 	if (!usablemem_rgns.size)
+ 		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
+ 
+-	/* allow only a single region for crash dump kernel */
+-	if (usablemem_rgns.size != 1)
++	/* allow one or two region for crash dump kernel */
++	if (!usablemem_rgns.size)
+ 		return -EINVAL;
+ 
+-	dbgprint_mem_range("Reserved memory range", &crash_reserved_mem, 1);
++	dbgprint_mem_range("Reserved memory range",
++			usablemem_rgns.ranges, usablemem_rgns.size);
+ 
+-	if (mem_regions_exclude(&system_memory_rgns, &crash_reserved_mem)) {
+-		fprintf(stderr,
+-			"Error: Number of crash memory ranges excedeed the max limit\n");
+-		return -ENOMEM;
++	for (i = 0; i < usablemem_rgns.size; i++) {
++		if (mem_regions_exclude(&system_memory_rgns, &crash_reserved_mem[i])) {
++			fprintf(stderr,
++					"Error: Number of crash memory ranges excedeed the max limit\n");
++			return -ENOMEM;
++		}
+ 	}
+ 
+ 	/*
+@@ -199,7 +204,8 @@ int load_crashdump_segments(struct kexec_info *info)
+ 		return EFAILED;
+ 
+ 	elfcorehdr = add_buffer_phys_virt(info, buf, bufsz, bufsz, 0,
+-		crash_reserved_mem.start, crash_reserved_mem.end,
++		crash_reserved_mem[usablemem_rgns.size - 1].start,
++		crash_reserved_mem[usablemem_rgns.size - 1].end,
+ 		-1, 0);
+ 
+ 	elfcorehdr_mem.start = elfcorehdr;
+@@ -217,21 +223,23 @@ int load_crashdump_segments(struct kexec_info *info)
+  * virt_to_phys() in add_segment().
+  * So let's fix up those values for later use so the memory base
+  * (arm64_mm.phys_offset) will be correctly replaced with
+- * crash_reserved_mem.start.
++ * crash_reserved_mem[usablemem_rgns.size - 1].start.
+  */
+ void fixup_elf_addrs(struct mem_ehdr *ehdr)
+ {
+ 	struct mem_phdr *phdr;
+ 	int i;
+ 
+-	ehdr->e_entry += - arm64_mem.phys_offset + crash_reserved_mem.start;
++	ehdr->e_entry += -arm64_mem.phys_offset +
++		crash_reserved_mem[usablemem_rgns.size - 1].start;
+ 
+ 	for (i = 0; i < ehdr->e_phnum; i++) {
+ 		phdr = &ehdr->e_phdr[i];
+ 		if (phdr->p_type != PT_LOAD)
+ 			continue;
+ 		phdr->p_paddr +=
+-			(-arm64_mem.phys_offset + crash_reserved_mem.start);
++			(-arm64_mem.phys_offset +
++			 crash_reserved_mem[usablemem_rgns.size - 1].start);
+ 	}
+ }
+ 
+@@ -240,11 +248,11 @@ int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
+ 	if (!usablemem_rgns.size)
+ 		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
+ 
+-	if (!crash_reserved_mem.end)
++	if (!usablemem_rgns.size)
+ 		return -1;
+ 
+-	*start = crash_reserved_mem.start;
+-	*end = crash_reserved_mem.end;
++	*start = crash_reserved_mem[usablemem_rgns.size - 1].start;
++	*end = crash_reserved_mem[usablemem_rgns.size - 1].end;
+ 
+ 	return 0;
+ }
+diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
+index 880b83a..c07233f 100644
+--- a/kexec/arch/arm64/crashdump-arm64.h
++++ b/kexec/arch/arm64/crashdump-arm64.h
+@@ -15,9 +15,10 @@
+ #include "kexec.h"
+ 
+ #define CRASH_MAX_MEMORY_RANGES	32
++#define CRASH_MAX_RESERVED_RANGES	8
+ 
+ extern struct memory_ranges usablemem_rgns;
+-extern struct memory_range crash_reserved_mem;
++extern struct memory_range crash_reserved_mem[];
+ extern struct memory_range elfcorehdr_mem;
+ 
+ extern int load_crashdump_segments(struct kexec_info *info);
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index 2992bce..2bf8b66 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -414,6 +414,34 @@ static int fdt_setprop_range(void *fdt, int nodeoffset,
+ 	return result;
+ }
+ 
++static int fdt_setprop_ranges(void *fdt, int nodeoffset,
++				const char *name, struct memory_ranges *ranges,
++				uint32_t address_cells, uint32_t size_cells)
++{
++	void *buf, *prop;
++	size_t buf_size;
++	int i, result;
++
++	buf_size = (address_cells + size_cells) * sizeof(uint32_t) *
++		ranges->size;
++	prop = buf = xmalloc(buf_size);
++
++	for (i = 0; i < ranges->size; i++) {
++		fill_property(prop, ranges->ranges[i].start, address_cells);
++		prop += address_cells * sizeof(uint32_t);
++
++		fill_property(prop, ranges->ranges[i].end -
++				ranges->ranges[i].start + 1, size_cells);
++		prop += size_cells * sizeof(uint32_t);
++	}
++
++	result = fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
++
++	free(buf);
++
++	return result;
++}
++
+ /**
+  * setup_2nd_dtb - Setup the 2nd stage kernel's dtb.
+  */
+@@ -427,7 +455,7 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 	int len, range_len;
+ 	int nodeoffset;
+ 	int new_size;
+-	int result, kaslr_seed;
++	int i, result, kaslr_seed;
+ 
+ 	result = fdt_check_header(dtb->buf);
+ 
+@@ -458,18 +486,21 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 		goto on_error;
+ 	}
+ 
+-	if (!cells_size_fitted(address_cells, size_cells,
+-				&crash_reserved_mem)) {
+-		fprintf(stderr, "kexec: usable memory range doesn't fit cells-size.\n");
+-		result = -EINVAL;
+-		goto on_error;
++	for (i = 0; i < usablemem_rgns.size; i++) {
++		if (!cells_size_fitted(address_cells, size_cells,
++					&crash_reserved_mem[i])) {
++			fprintf(stderr,
++					"kexec: usable memory range doesn't fit cells-size.\n");
++			result = -EINVAL;
++			goto on_error;
++		}
+ 	}
+ 
+ 	/* duplicate dt blob */
+ 	range_len = sizeof(uint32_t) * (address_cells + size_cells);
+ 	new_size = fdt_totalsize(dtb->buf)
+ 		+ fdt_prop_len(PROP_ELFCOREHDR, range_len)
+-		+ fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len);
++		+ fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len * usablemem_rgns.size);
+ 
+ 	new_buf = xmalloc(new_size);
+ 	result = fdt_open_into(dtb->buf, new_buf, new_size);
+@@ -565,8 +596,8 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 
+ 		/* add linux,usable-memory-range */
+ 		nodeoffset = fdt_path_offset(new_buf, "/chosen");
+-		result = fdt_setprop_range(new_buf, nodeoffset,
+-				PROP_USABLE_MEM_RANGE, &crash_reserved_mem,
++		result = fdt_setprop_ranges(new_buf, nodeoffset,
++				PROP_USABLE_MEM_RANGE, &usablemem_rgns,
+ 				address_cells, size_cells);
+ 		if (result) {
+ 			dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
+@@ -599,13 +630,13 @@ unsigned long arm64_locate_kernel_segment(struct kexec_info *info)
+ 	if (info->kexec_flags & KEXEC_ON_CRASH) {
+ 		unsigned long hole_end;
+ 
+-		hole = (crash_reserved_mem.start < mem_min ?
+-				mem_min : crash_reserved_mem.start);
++		hole = (crash_reserved_mem[usablemem_rgns.size - 1].start < mem_min ?
++				mem_min : crash_reserved_mem[usablemem_rgns.size - 1].start);
+ 		hole = _ALIGN_UP(hole, MiB(2));
+ 		hole_end = hole + arm64_mem.text_offset + arm64_mem.image_size;
+ 
+ 		if ((hole_end > mem_max) ||
+-		    (hole_end > crash_reserved_mem.end)) {
++		    (hole_end > crash_reserved_mem[usablemem_rgns.size - 1].end)) {
+ 			dbgprintf("%s: Crash kernel out of range\n", __func__);
+ 			hole = ULONG_MAX;
+ 		}
+@@ -673,7 +704,7 @@ int arm64_load_other_segments(struct kexec_info *info,
+ 
+ 	hole_min = image_base + arm64_mem.image_size;
+ 	if (info->kexec_flags & KEXEC_ON_CRASH)
+-		hole_max = crash_reserved_mem.end;
++		hole_max = crash_reserved_mem[usablemem_rgns.size - 1].end;
+ 	else
+ 		hole_max = ULONG_MAX;
+ 
+-- 
+2.7.4
 
-
-> kva = 0xffff000000000000    <--- start of kernel virtual address
-
-Does makedumpfile have this value? If the kernel were using 52bit VA for TTBR1 this value
-would be different.
-
-
-> pgd_index(kva) = (kva >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1)
->                = (0xffff000000000000 >> 42) & (1024 - 1)
->                = 0x00000000003fffc0 & 0x3ff
->                = 0x3c0      <--- the offset (0x3c0) is included
-> 
-> This is what kernel does now, so makedumpfile also wants to do.
-
-Sure, and it would work today. I'm worried about tomorrow, where we support something new,
-and need to bundle new information out through vmcoreinfo. This ends up being used to
-fingerprint the kernel support, instead of as the value it was intended to be.
-
-
->> We haven't solved the problem!
->>
->> Today __cpu_setup() sets T0SZ and T1SZ differently for 52bit VA, but in the future it
->> could set them the same, or different the other-way-round.
->>
->> Will makedumpfile using this value keep working once T1SZ is 52bit VA too? In this case
->> there would be no ttbr offset.
-> 
-> If T1SZ is 52bit, probably kernel virtual address starts from 0xfff0000000000000,
-
-I didn't think this 'bottom of the ttbr1 mapping range' value was exposed anywhere.
-Where can user-space get this from? (I can't see it in the vmcoreinfo list)
-
-
-> then the offset becomes 0 with the pgd_index() above.
-> I think makedumpfile will keep working with that.
-
-
-Steve mentions a 52/48 combination in his kernel series:
-https://lore.kernel.org/linux-arm-kernel/20190218170245.14915-1-steve.capper@arm.com/
-
-
-I think vmcoreinfo-users will eventually need to spot 52bit used in TTBR1 and/or TTBR0,
-and possibly: configured, but not enabled in either. (this is because the bits are also
-used for pointer-auth, the kernel may be built for both pointer-auth and 52-bit VA, and
-chose which to enabled at boot based on some policy)
-
-I don't see how you can do this with one value.
-I'd like to get this right now, so we user-space doesn't need updating again!
-
-
-Thanks,
-
-James
 
 _______________________________________________
 kexec mailing list
