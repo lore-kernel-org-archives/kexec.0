@@ -1,14 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 2/3] arm64: kdump: support more than one crash kernel
- regions
-References: <20190403030546.23718-1-chenzhou10@huawei.com>
- <20190403030546.23718-3-chenzhou10@huawei.com>
- <20190403112929.GA7715@rapoport-lnx>
-From: Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <f98a5559-3659-fb35-3765-15861e70a796@huawei.com>
-Date: Wed, 3 Apr 2019 21:51:27 +0800
-MIME-Version: 1.0
-In-Reply-To: <20190403112929.GA7715@rapoport-lnx>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1hBgX9-0005JD-Pf
+ for kexec@lists.infradead.org; Wed, 03 Apr 2019 14:06:33 +0000
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x33Dvx9j065776
+ for <kexec@lists.infradead.org>; Wed, 3 Apr 2019 10:06:29 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2rmvh85xa3-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 03 Apr 2019 10:06:28 -0400
+Received: from localhost
+ by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Wed, 3 Apr 2019 15:06:25 +0100
+Subject: [PATCH] selftests/kexec: update get_secureboot_mode
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Wed, 03 Apr 2019 10:06:09 -0400
+In-Reply-To: <1553607257-18906-1-git-send-email-zohar@linux.ibm.com>
+References: <1553607257-18906-1-git-send-email-zohar@linux.ibm.com>
+Mime-Version: 1.0
+Message-Id: <1554300369.7309.59.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,174 +35,138 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: wangkefeng.wang@huawei.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, takahiro.akashi@linaro.org, akpm@linux-foundation.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: linux-integrity@vger.kernel.org
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, Petr Vorel <pvorel@suse.cz>, linux-kselftest@vger.kernel.org, Dave Young <dyoung@redhat.com>
 
-Hi Mike,
+The get_secureboot_mode() function unnecessarily requires both
+CONFIG_EFIVAR_FS and CONFIG_EFI_VARS to be enabled to determine if the
+system is booted in secure boot mode.  On some systems the old EFI
+variable support is not enabled or, possibly, even implemented.
 
-On 2019/4/3 19:29, Mike Rapoport wrote:
-> On Wed, Apr 03, 2019 at 11:05:45AM +0800, Chen Zhou wrote:
->> After commit (arm64: kdump: support reserving crashkernel above 4G),
->> there may be two crash kernel regions, one is below 4G, the other is
->> above 4G.
->>
->> Crash dump kernel reads more than one crash kernel regions via a dtb
->> property under node /chosen,
->> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
->>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> ---
->>  arch/arm64/mm/init.c     | 37 +++++++++++++++++++++++++------------
->>  include/linux/memblock.h |  1 +
->>  mm/memblock.c            | 40 ++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 66 insertions(+), 12 deletions(-)
->>
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index ceb2a25..769c77a 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -64,6 +64,8 @@ EXPORT_SYMBOL(memstart_addr);
->>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
->>  
->>  #ifdef CONFIG_KEXEC_CORE
->> +# define CRASH_MAX_USABLE_RANGES        2
->> +
->>  static int __init reserve_crashkernel_low(void)
->>  {
->>  	unsigned long long base, low_base = 0, low_size = 0;
->> @@ -346,8 +348,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
->>  		const char *uname, int depth, void *data)
->>  {
->>  	struct memblock_region *usablemem = data;
->> -	const __be32 *reg;
->> -	int len;
->> +	const __be32 *reg, *endp;
->> +	int len, nr = 0;
->>  
->>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
->>  		return 0;
->> @@ -356,22 +358,33 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
->>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
->>  		return 1;
->>  
->> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
->> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
->> +	endp = reg + (len / sizeof(__be32));
->> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
->> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
->> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
->> +
->> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
->> +			break;
->> +	}
->>  
->>  	return 1;
->>  }
->>  
->>  static void __init fdt_enforce_memory_region(void)
->>  {
->> -	struct memblock_region reg = {
->> -		.size = 0,
->> -	};
->> -
->> -	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
->> -
->> -	if (reg.size)
->> -		memblock_cap_memory_range(reg.base, reg.size);
->> +	int i, cnt = 0;
->> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
->> +
->> +	memset(regs, 0, sizeof(regs));
->> +	of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
->> +
->> +	for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
->> +		if (regs[i].size)
->> +			cnt++;
->> +		else
->> +			break;
->> +	if (cnt)
->> +		memblock_cap_memory_ranges(regs, cnt);
-> 
-> Why not simply call memblock_cap_memory_range() for each region?
+This patch first checks the efivars filesystem for the SecureBoot and
+SetupMode flags, but falls back to using the old EFI variable support.
 
-Function memblock_cap_memory_range() removes all memory type ranges except specified range.
-So if we call memblock_cap_memory_range() for each region simply, there will be no usable-memory
-on kdump capture kernel.
+The "secure_boot_file" and "setup_mode_file" couldn't be quoted due to
+globbing.  This patch also removes the globbing.
 
-Thanks,
-Chen Zhou
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+---
+ tools/testing/selftests/kexec/kexec_common_lib.sh | 87 +++++++++++++++++------
+ 1 file changed, 67 insertions(+), 20 deletions(-)
 
-> 
->>  }
->>  
->>  void __init arm64_memblock_init(void)
->> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
->> index 47e3c06..aeade34 100644
->> --- a/include/linux/memblock.h
->> +++ b/include/linux/memblock.h
->> @@ -446,6 +446,7 @@ phys_addr_t memblock_start_of_DRAM(void);
->>  phys_addr_t memblock_end_of_DRAM(void);
->>  void memblock_enforce_memory_limit(phys_addr_t memory_limit);
->>  void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
->> +void memblock_cap_memory_ranges(struct memblock_region *regs, int cnt);
->>  void memblock_mem_limit_remove_map(phys_addr_t limit);
->>  bool memblock_is_memory(phys_addr_t addr);
->>  bool memblock_is_map_memory(phys_addr_t addr);
->> diff --git a/mm/memblock.c b/mm/memblock.c
->> index 28fa8926..1a7f4ee7c 100644
->> --- a/mm/memblock.c
->> +++ b/mm/memblock.c
->> @@ -1697,6 +1697,46 @@ void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
->>  			base + size, PHYS_ADDR_MAX);
->>  }
->>  
->> +void __init memblock_cap_memory_ranges(struct memblock_region *regs, int cnt)
->> +{
->> +	int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
->> +	int i, j, ret, nr = 0;
->> +
->> +	for (i = 0; i < cnt; i++) {
->> +		ret = memblock_isolate_range(&memblock.memory, regs[i].base,
->> +				regs[i].size, &start_rgn[i], &end_rgn[i]);
->> +		if (ret)
->> +			break;
->> +		nr++;
->> +	}
->> +	if (!nr)
->> +		return;
->> +
->> +	/* remove all the MAP regions */
->> +	for (i = memblock.memory.cnt - 1; i >= end_rgn[nr - 1]; i--)
->> +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
->> +			memblock_remove_region(&memblock.memory, i);
->> +
->> +	for (i = nr - 1; i > 0; i--)
->> +		for (j = start_rgn[i] - 1; j >= end_rgn[i - 1]; j--)
->> +			if (!memblock_is_nomap(&memblock.memory.regions[j]))
->> +				memblock_remove_region(&memblock.memory, j);
->> +
->> +	for (i = start_rgn[0] - 1; i >= 0; i--)
->> +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
->> +			memblock_remove_region(&memblock.memory, i);
->> +
->> +	/* truncate the reserved regions */
->> +	memblock_remove_range(&memblock.reserved, 0, regs[0].base);
->> +
->> +	for (i = nr - 1; i > 0; i--)
->> +		memblock_remove_range(&memblock.reserved,
->> +				regs[i].base, regs[i - 1].base + regs[i - 1].size);
->> +
->> +	memblock_remove_range(&memblock.reserved,
->> +			regs[nr - 1].base + regs[nr - 1].size, PHYS_ADDR_MAX);
->> +}
->> +
->>  void __init memblock_mem_limit_remove_map(phys_addr_t limit)
->>  {
->>  	phys_addr_t max_addr;
->> -- 
->> 2.7.4
->>
-> 
+diff --git a/tools/testing/selftests/kexec/kexec_common_lib.sh b/tools/testing/selftests/kexec/kexec_common_lib.sh
+index b7ac8f3fa025..4d3ff08bdb81 100755
+--- a/tools/testing/selftests/kexec/kexec_common_lib.sh
++++ b/tools/testing/selftests/kexec/kexec_common_lib.sh
+@@ -35,6 +35,64 @@ log_skip()
+ }
+ 
+ # Check efivar SecureBoot-$(the UUID) and SetupMode-$(the UUID).
++# (Based on kdump-lib.sh)
++get_efivarfs_secureboot_mode()
++{
++	local efivarfs="/sys/firmware/efi/efivars"
++	local secure_boot_file=""
++	local setup_mode_file=""
++	local secureboot_mode=0
++	local setup_mode=0
++
++	# Make sure that efivar_fs is mounted in the normal location
++	if ! grep -q "^\S\+ $efivarfs efivarfs" /proc/mounts; then
++		log_info "efivars is not mounted on $efivarfs"
++		return 0;
++	fi
++	secure_boot_file=$(find "$efivarfs" -name SecureBoot-* 2>/dev/null)
++	setup_mode_file=$(find "$efivarfs" -name SetupMode-* 2>/dev/null)
++	if [ -f "$secure_boot_file" ] && [ -f "$setup_mode_file" ]; then
++		secureboot_mode=$(hexdump -v -e '/1 "%d\ "' \
++			"$secure_boot_file"|cut -d' ' -f 5)
++		setup_mode=$(hexdump -v -e '/1 "%d\ "' \
++			"$setup_mode_file"|cut -d' ' -f 5)
++
++		if [ $secureboot_mode -eq 1 ] && [ $setup_mode -eq 0 ]; then
++			log_info "secure boot mode enabled (efivar_fs)"
++			return 1;
++		fi
++	fi
++	return 0;
++}
++
++get_efi_var_secureboot_mode()
++{
++	local efi_vars="/sys/firmware/efi/vars"
++	local secure_boot_file=""
++	local setup_mode_file=""
++	local secureboot_mode=0
++	local setup_mode=0
++
++	if [ ! -d "$efi_vars" ]; then
++		log_skip "efi_vars is not enabled\n"
++		return 0;
++	fi
++	secure_boot_file=$(find "$efi_vars" -name SecureBoot-* 2>/dev/null)
++	setup_mode_file=$(find "$efi_vars" -name SetupMode-* 2>/dev/null)
++	if [ -f "$secure_boot_file/data" ] && \
++	   [ -f "$setup_mode_file/data" ]; then
++		secureboot_mode=`od -An -t u1 "$secure_boot_file/data"`
++		setup_mode=`od -An -t u1 "$setup_mode_file/data"`
++
++		if [ $secureboot_mode -eq 1 ] && [ $setup_mode -eq 0 ]; then
++			log_info "secure boot mode enabled (efi_var)"
++			return 1;
++		fi
++	fi
++	return 0;
++}
++
++# Check efivar SecureBoot-$(the UUID) and SetupMode-$(the UUID).
+ # The secure boot mode can be accessed either as the last integer
+ # of "od -An -t u1 /sys/firmware/efi/efivars/SecureBoot-*" or from
+ # "od -An -t u1 /sys/firmware/efi/vars/SecureBoot-*/data".  The efi
+@@ -42,32 +100,21 @@ log_skip()
+ # Return 1 for SecureBoot mode enabled and SetupMode mode disabled.
+ get_secureboot_mode()
+ {
+-	local efivarfs="/sys/firmware/efi/efivars"
+-	local secure_boot_file="$efivarfs/../vars/SecureBoot-*/data"
+-	local setup_mode_file="$efivarfs/../vars/SetupMode-*/data"
+ 	local secureboot_mode=0
+-	local setup_mode=0
+ 
+-	# Make sure that efivars is mounted in the normal location
+-	if ! grep -q "^\S\+ $efivarfs efivarfs" /proc/mounts; then
+-		log_skip "efivars is not mounted on $efivarfs"
+-	fi
++	get_efivarfs_secureboot_mode
++	secureboot_mode=$?
+ 
+-	# Due to globbing, quoting "secure_boot_file" and "setup_mode_file"
+-	# is not possible.  (Todo: initialize variables using find or ls.)
+-	if [ ! -e $secure_boot_file ] || [ ! -e $setup_mode_file ]; then
+-		log_skip "unknown secureboot/setup mode"
++	# fallback to using the efi_var files
++	if [ $secureboot_mode -eq 0 ]; then
++		get_efi_var_secureboot_mode
++		secureboot_mode=$?
+ 	fi
+ 
+-	secureboot_mode=`od -An -t u1 $secure_boot_file`
+-	setup_mode=`od -An -t u1 $setup_mode_file`
+-
+-	if [ $secureboot_mode -eq 1 ] && [ $setup_mode -eq 0 ]; then
+-		log_info "secure boot mode enabled"
+-		return 1;
++	if [ $secureboot_mode -eq 0 ]; then
++		log_info "secure boot mode not enabled"
+ 	fi
+-	log_info "secure boot mode not enabled"
+-	return 0;
++	return $secureboot_mode;
+ }
+ 
+ require_root_privileges()
+-- 
+2.7.5
 
 
 _______________________________________________
