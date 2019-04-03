@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hBb6v-0007qs-U8
- for kexec@lists.infradead.org; Wed, 03 Apr 2019 08:19:07 +0000
-Date: Wed, 3 Apr 2019 16:18:57 +0800
-From: Dave Young <dyoung@redhat.com>
+Received: from mail.cn.fujitsu.com ([183.91.158.132] helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1hBbAv-0001tV-Kw
+ for kexec@lists.infradead.org; Wed, 03 Apr 2019 08:23:17 +0000
+Date: Wed, 3 Apr 2019 16:23:06 +0800
+From: Chao Fan <fanc.fnst@cn.fujitsu.com>
 Subject: Re: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
  kexec-ed kernel
-Message-ID: <20190403081857.GA14819@dhcp-128-65.nay.redhat.com>
-References: <20190327014852.GA3659@MiWiFi-R3L-srv>
- <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+Message-ID: <20190403082305.GG1555@localhost.localdomain>
+References: <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
  <20190328064343.GA1877@MiWiFi-R3L-srv>
  <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
  <20190328155256.GP22720@zn.tnic>
@@ -18,9 +17,10 @@ References: <20190327014852.GA3659@MiWiFi-R3L-srv>
  <20190403053459.GD1555@localhost.localdomain>
  <20190403055340.GA11976@dhcp-128-65.nay.redhat.com>
  <20190403072141.GE1555@localhost.localdomain>
+ <20190403080846.GB2579@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190403072141.GE1555@localhost.localdomain>
+In-Reply-To: <20190403080846.GB2579@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,20 +33,152 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chao Fan <fanc.fnst@cn.fujitsu.com>
+To: Dave Young <dyoung@redhat.com>
 Cc: "kasong@redhat.com" <kasong@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, Junichi Nomura <j-nomura@ce.jp.nec.com>
 
-> >
-> >Today, test again, kexec reboot hangs (with or without your patch), but
-> >kdump works always (with or without the patch)
-> 
-> That's so strange, I'm puzzled by your test.
-> Withour ant changes, just test again, the result of yesterday and today
-> are different?
-> 
+On Wed, Apr 03, 2019 at 04:09:16PM +0800, Dave Young wrote:
+>On 04/03/19 at 03:21pm, Chao Fan wrote:
+>> On Wed, Apr 03, 2019 at 01:53:40PM +0800, Dave Young wrote:
+>> >On 04/03/19 at 01:35pm, Chao Fan wrote:
+>> >> On Tue, Apr 02, 2019 at 08:03:19PM +0800, Dave Young wrote:
+>> >> >On 04/01/19 at 12:08am, Junichi Nomura wrote:
+>> >> >> Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+>> >> >> boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+>> >> >> in the early parsing code tries to search RSDP from EFI table but
+>> >> >> that will crash because the table address is virtual when the kernel
+>> >> >> was booted by kexec.
+>> >> >> 
+>> >> >> In the case of kexec, physical address of EFI tables is provided
+>> >> >> via efi_setup_data in boot_params, which is set up by kexec(1).
+>> >> >> 
+>> >> >> Factor out the table parsing code and use different pointers depending
+>> >> >> on whether the kernel is booted by kexec or not.
+>> >> >> 
+>> >> >> Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+>> >> >> Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+>> >> >> Acked-by: Baoquan He <bhe@redhat.com>
+>> >> >> Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+>> >> >> Cc: Borislav Petkov <bp@suse.de>
+>> >> >> Cc: Dave Young <dyoung@redhat.com>
+>> >> [...]
+>> >> >
+>> >> >I failed to kexec reboot on my laptop, kernel panics too quick,  I'm not sure this is
+>> >> >caused by your patch though.
+>> >> >
+>> >> >Actually there are something probably i915 changes break kexec,  the
+>> >> >above test is with "nomodeset" which should work.
+>> >> >
+>> >> >Let me do more testing and update here tomorrow.
+>> >> >
+>> >> 
+>> >> Hi Dave,
+>> >> 
+>> >> Last day I was testing the normal kexec, today I have tested the kdump
+>> >> issue. Since the kdump has set "nokaslr" to cmdline, so I drop from
+>> >> KDUMP_COMMANDLINE_APPEND
+>> >> And it booted OK, so the PATCH works in both normal kexec and kdump.
+>> >> 
+>> >
+>> >Actually I got some different kexec test results.
+>> >
+>> >Yesterday, with my installed kernel (based on git head several weeks
+>> >ago), kexec kernel panics.
+>> >
+>> >Then I tried latest mainline with git pull, everything works, (with or
+>> >without the patch, and can not reproduce the bug this patch is fixing)
+>> >
+>> >Today, test again, kexec reboot hangs (with or without your patch), but
+>> >kdump works always (with or without the patch)
+>> 
+>> That's so strange, I'm puzzled by your test.
+>> Withour ant changes, just test again, the result of yesterday and today
+>> are different?
+>> 
+>> >
+>> >It is weird to me. Probably I need find out why I can not reproduce the
+>> >bug this patch is addressing first.
+>> 
+>> Hmm, is your laptop booted from EFI or legacy BIOS?
+>
+>EFI booted.
+>
+>> >
+>> >earlyprintk seems not working for me anymore, it is not easy to debug on
+>> >laptop now.
+>> 
+>> Another computer can help print the console message.
+>> I remeber you are good at debug on two computers.
+>
+>I used to use earlyprintk, but seems earlyprintk can not work so early.
+>So I only can try to comment out code manually.
 
-Yes, I'm also puzzled, not 100% sure if I have some wrong test steps or
-something, can only say for today's test results now :(
+Ah, I got it. If you want to use earlyprintk to print message of
+get_rsdp_addr(), you should change some code.
+Because get_rsdp_addr() is called before earlyprintk initialed.
+
+I am still testing, but in my debug stage, I change like this:
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index c0d6c560df69..dbbe8d9a5792 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -352,7 +352,6 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+        boot_params->hdr.loadflags &= ~KASLR_FLAG;
+
+        /* Save RSDP address for later use. */
+-       boot_params->acpi_rsdp_addr = get_rsdp_addr();
+
+        sanitize_boot_params(boot_params);
+
+@@ -368,6 +367,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+        cols = boot_params->screen_info.orig_video_cols;
+
+        console_init();
++       boot_params->acpi_rsdp_addr = get_rsdp_addr();
+        debug_putstr("early console in extract_kernel\n");
+
+        free_mem_ptr     = heap;        /* Heap */
+
+Call this function after console_init().
+That will make earlyprintk works.
+
+>
+>It seems to be still some bug in early acpi code because if I 
+>return 0 in get rsdp function it just works.
+>
+>This guess make sense to me for now:
+>1. nokaslr does not work because it may only avoid randomization, but it
+>does not avoid running the early acpi parsing code.
+>
+>2. kexec does not work without the patch we talked about, because I just
+>reproduced Junichi reported bug, sometimes hang, or reset, it is
+>understandable.
+>
+>3. kexec does not work with the patch, so there is still bugs in the
+>code. 
+>
+>So several things to do is:
+>
+>Fix 1. (separate issue),  Baoquan or either of you may want to fix it :)
+
+For 1, I think it's not needed to fix. Since not only KASLR needs RSDP.
+So nokaslr should not stop the acpi parsing code.
+>
+>Fix 3.  need more debugging, have you or Junichi run tests on more real
+>hardware, maybe it is easier to reproduce on real hardware, I'm glad to
+>help to try test patch or provide any help. 
+
+I am still testing in real hardware.
+
+Thanks,
+Chao Fan
+
+>
+>Thanks
+>Dave
+>
+>
+
+
 
 _______________________________________________
 kexec mailing list
