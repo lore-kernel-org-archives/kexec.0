@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw1-xc4a.google.com ([2607:f8b0:4864:20::c4a])
+Received: from mail-vk1-xa4a.google.com ([2607:f8b0:4864:20::a4a])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hBqJb-0007hl-Bj
- for kexec@lists.infradead.org; Thu, 04 Apr 2019 00:33:13 +0000
-Received: by mail-yw1-xc4a.google.com with SMTP id b131so724917ywe.21
- for <kexec@lists.infradead.org>; Wed, 03 Apr 2019 17:33:05 -0700 (PDT)
-Date: Wed,  3 Apr 2019 17:32:26 -0700
+ id 1hBqJd-0007jh-UC
+ for kexec@lists.infradead.org; Thu, 04 Apr 2019 00:33:15 +0000
+Received: by mail-vk1-xa4a.google.com with SMTP id f3so430779vkb.11
+ for <kexec@lists.infradead.org>; Wed, 03 Apr 2019 17:33:13 -0700 (PDT)
+Date: Wed,  3 Apr 2019 17:32:29 -0700
 In-Reply-To: <20190404003249.14356-1-matthewgarrett@google.com>
-Message-Id: <20190404003249.14356-5-matthewgarrett@google.com>
+Message-Id: <20190404003249.14356-8-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190404003249.14356-1-matthewgarrett@google.com>
-Subject: [PATCH V32 04/27] kexec_load: Disable at runtime if the kernel is
+Subject: [PATCH V32 07/27] kexec_file: Restrict at runtime if the kernel is
  locked down
 From: Matthew Garrett <matthewgarrett@google.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,44 +26,45 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: jmorris@namei.org
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-api@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, dhowells@redhat.com, linux-security-module@vger.kernel.org, luto@kernel.org, Dave Young <dyoung@redhat.com>
+Cc: Jiri Bohac <jbohac@suse.cz>, linux-api@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, dhowells@redhat.com, linux-security-module@vger.kernel.org, luto@kernel.org
 
-From: Matthew Garrett <mjg59@srcf.ucam.org>
+From: Jiri Bohac <jbohac@suse.cz>
 
-The kexec_load() syscall permits the loading and execution of arbitrary
-code in ring 0, which is something that lock-down is meant to prevent. It
-makes sense to disable kexec_load() in this situation.
+When KEXEC_SIG is not enabled, kernel should not load images through
+kexec_file systemcall if the kernel is locked down.
 
-This does not affect kexec_file_load() syscall which can check for a
-signature on the image to be booted.
+[Modified by David Howells to fit with modifications to the previous patch
+ and to return -EPERM if the kernel is locked down for consistency with
+ other lockdowns. Modified by Matthew Garrett to remove the IMA
+ integration, which will be replaced by integrating with the IMA
+ architecture policy patches.]
 
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Matthew Garrett <mjg59@google.com>
-Acked-by: Dave Young <dyoung@redhat.com>
+Reviewed-by: Jiri Bohac <jbohac@suse.cz>
 cc: kexec@lists.infradead.org
 ---
- kernel/kexec.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ kernel/kexec_file.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 68559808fdfa..57047acc9a36 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -207,6 +207,14 @@ static inline int kexec_load_check(unsigned long nr_segments,
- 	if (result < 0)
- 		return result;
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 67f3a866eabe..a1cc37c8b43b 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -239,6 +239,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 		}
  
-+	/*
-+	 * kexec can be used to circumvent module loading restrictions, so
-+	 * prevent loading in that case
-+	 */
-+	if (kernel_is_locked_down("kexec of unsigned images",
-+				  LOCKDOWN_INTEGRITY))
-+		return -EPERM;
+ 		ret = 0;
 +
- 	/*
- 	 * Verify we have a legal set of flags
- 	 * This leaves us room for future extensions.
++		if (kernel_is_locked_down(reason, LOCKDOWN_INTEGRITY)) {
++			ret = -EPERM;
++			goto out;
++		}
++
+ 		break;
+ 
+ 		/* All other errors are fatal, including nomem, unparseable
 -- 
 2.21.0.392.gf8f6787159e-goog
 
