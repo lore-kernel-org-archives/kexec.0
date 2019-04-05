@@ -1,17 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hCOGC-0001re-5W
- for kexec@lists.infradead.org; Fri, 05 Apr 2019 12:48:04 +0000
-Date: Fri, 5 Apr 2019 14:47:51 +0200
-From: Petr Vorel <pvorel@suse.cz>
+ id 1hCTgn-0006Iu-RZ
+ for kexec@lists.infradead.org; Fri, 05 Apr 2019 18:35:47 +0000
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x35IT1cK077298
+ for <kexec@lists.infradead.org>; Fri, 5 Apr 2019 14:35:43 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2rpakkcxqw-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 05 Apr 2019 14:35:42 -0400
+Received: from localhost
+ by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Fri, 5 Apr 2019 19:35:40 +0100
 Subject: Re: [PATCH] selftests/kexec: update get_secureboot_mode
-Message-ID: <20190405124751.GA26595@dell5510>
+From: Mimi Zohar <zohar@linux.ibm.com>
+In-Reply-To: <20190405124751.GA26595@dell5510>
 References: <1553607257-18906-1-git-send-email-zohar@linux.ibm.com>
- <1554300369.7309.59.camel@linux.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1554300369.7309.59.camel@linux.ibm.com>
+ <1554300369.7309.59.camel@linux.ibm.com> <20190405124751.GA26595@dell5510>
+Date: Fri, 05 Apr 2019 14:35:09 -0400
+Mime-Version: 1.0
+Message-Id: <1554489309.4312.3.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,87 +33,18 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, linux-kselftest@vger.kernel.org, linux-integrity@vger.kernel.org, Dave Young <dyoung@redhat.com>
+To: Petr Vorel <pvorel@suse.cz>
+Cc: Shuah Khan <shuah@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, linux-kselftest@vger.kernel.org, linux-integrity@vger.kernel.org, Dave Young <dyoung@redhat.com>
 
-Hi Mimi,
-
-Reviewed-by: Petr Vorel <pvorel@suse.cz>
-
-Some minor comments below.
-
-...
-> diff --git a/tools/testing/selftests/kexec/kexec_common_lib.sh b/tools/testing/selftests/kexec/kexec_common_lib.sh
-...
->  # Check efivar SecureBoot-$(the UUID) and SetupMode-$(the UUID).
-> +# (Based on kdump-lib.sh)
-> +get_efivarfs_secureboot_mode()
-> +{
-> +	local efivarfs="/sys/firmware/efi/efivars"
-> +	local secure_boot_file=""
-> +	local setup_mode_file=""
-> +	local secureboot_mode=0
-> +	local setup_mode=0
-NOTE: variables does not need to be initialized (in both functions).
-> +
-> +	# Make sure that efivar_fs is mounted in the normal location
-> +	if ! grep -q "^\S\+ $efivarfs efivarfs" /proc/mounts; then
-> +		log_info "efivars is not mounted on $efivarfs"
-> +		return 0;
-> +	fi
-> +	secure_boot_file=$(find "$efivarfs" -name SecureBoot-* 2>/dev/null)
-> +	setup_mode_file=$(find "$efivarfs" -name SetupMode-* 2>/dev/null)
-> +	if [ -f "$secure_boot_file" ] && [ -f "$setup_mode_file" ]; then
-> +		secureboot_mode=$(hexdump -v -e '/1 "%d\ "' \
-> +			"$secure_boot_file"|cut -d' ' -f 5)
-> +		setup_mode=$(hexdump -v -e '/1 "%d\ "' \
-> +			"$setup_mode_file"|cut -d' ' -f 5)
-> +
-> +		if [ $secureboot_mode -eq 1 ] && [ $setup_mode -eq 0 ]; then
-> +			log_info "secure boot mode enabled (efivar_fs)"
-Instead of efivar_fs maybe CONFIG_EFIVAR_FS or EFIVAR_FS?
-
-> +			return 1;
-> +		fi
-> +	fi
-> +	return 0;
-> +}
-> +
-> +get_efi_var_secureboot_mode()
-> +{
-> +	local efi_vars="/sys/firmware/efi/vars"
-> +	local secure_boot_file=""
-> +	local setup_mode_file=""
-> +	local secureboot_mode=0
-> +	local setup_mode=0
-> +
-> +	if [ ! -d "$efi_vars" ]; then
-> +		log_skip "efi_vars is not enabled\n"
-> +		return 0;
-Return is not needed (log_skip exits).
-> +	fi
-> +	secure_boot_file=$(find "$efi_vars" -name SecureBoot-* 2>/dev/null)
-> +	setup_mode_file=$(find "$efi_vars" -name SetupMode-* 2>/dev/null)
-> +	if [ -f "$secure_boot_file/data" ] && \
-> +	   [ -f "$setup_mode_file/data" ]; then
-> +		secureboot_mode=`od -An -t u1 "$secure_boot_file/data"`
-> +		setup_mode=`od -An -t u1 "$setup_mode_file/data"`
-> +
-> +		if [ $secureboot_mode -eq 1 ] && [ $setup_mode -eq 0 ]; then
-> +			log_info "secure boot mode enabled (efi_var)"
-Instead of efi_var maybe CONFIG_EFI_VARS or EFI_VARS?
-
-...
-
-Kind regards,
-Petr
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCAyMDE5LTA0LTA1IGF0IDE0OjQ3ICswMjAwLCBQZXRyIFZvcmVsIHdyb3RlOgo+IEhp
+IE1pbWksCj4gCj4gUmV2aWV3ZWQtYnk6IFBldHIgVm9yZWwgPHB2b3JlbEBzdXNlLmN6Pgo+IAo+
+IFNvbWUgbWlub3IgY29tbWVudHMgYmVsb3cuCgpUaGFua3MhIMKgIk1pbm9yIiBjaGFuZ2VzIG1h
+ZGUuIMKgVGhpcyBhbmQgdGhlIHJlc3Qgb2YgdGhlIHBhdGNoIHNldCBjYW4KYmUgc2VlbiBpbiB0
+aGUgI25leHQtaW50ZWdyaXR5IGJyYW5jaC4KCk1pbWkKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
