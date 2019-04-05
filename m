@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 1/3] arm64: kdump: support reserving crashkernel above 4G
+Subject: Re: [PATCH 2/3] arm64: kdump: support more than one crash kernel
+ regions
 References: <20190403030546.23718-1-chenzhou10@huawei.com>
- <20190403030546.23718-2-chenzhou10@huawei.com>
- <20190404144618.GB6433@rapoport-lnx>
+ <20190403030546.23718-3-chenzhou10@huawei.com>
+ <20190403112929.GA7715@rapoport-lnx>
+ <f98a5559-3659-fb35-3765-15861e70a796@huawei.com>
+ <20190404144408.GA6433@rapoport-lnx>
+ <783b8712-ddb1-a52b-81ee-0c6a216e5b7d@huawei.com>
 From: Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <59ef4532-2402-3887-2794-b503827fac5a@huawei.com>
-Date: Fri, 5 Apr 2019 11:03:39 +0800
+Message-ID: <4b188535-c12d-e05b-9154-2c2d580f903b@huawei.com>
+Date: Fri, 5 Apr 2019 11:47:27 +0800
 MIME-Version: 1.0
-In-Reply-To: <20190404144618.GB6433@rapoport-lnx>
+In-Reply-To: <783b8712-ddb1-a52b-81ee-0c6a216e5b7d@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,179 +27,218 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mike Rapoport <rppt@linux.ibm.com>
 Cc: wangkefeng.wang@huawei.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, takahiro.akashi@linaro.org, akpm@linux-foundation.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-
 Hi Mike,
 
-On 2019/4/4 22:46, Mike Rapoport wrote:
-> Hi,
+On 2019/4/5 10:17, Chen Zhou wrote:
+> Hi Mike,
 > 
-> On Wed, Apr 03, 2019 at 11:05:44AM +0800, Chen Zhou wrote:
->> When crashkernel is reserved above 4G in memory, kernel should
->> reserve some amount of low memory for swiotlb and some DMA buffers.
+> On 2019/4/4 22:44, Mike Rapoport wrote:
+>> Hi,
 >>
->> Kernel would try to allocate at least 256M below 4G automatically
->> as x86_64 if crashkernel is above 4G. Meanwhile, support
->> crashkernel=X,[high,low] in arm64.
+>> On Wed, Apr 03, 2019 at 09:51:27PM +0800, Chen Zhou wrote:
+>>> Hi Mike,
+>>>
+>>> On 2019/4/3 19:29, Mike Rapoport wrote:
+>>>> On Wed, Apr 03, 2019 at 11:05:45AM +0800, Chen Zhou wrote:
+>>>>> After commit (arm64: kdump: support reserving crashkernel above 4G),
+>>>>> there may be two crash kernel regions, one is below 4G, the other is
+>>>>> above 4G.
+>>>>>
+>>>>> Crash dump kernel reads more than one crash kernel regions via a dtb
+>>>>> property under node /chosen,
+>>>>> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+>>>>>
+>>>>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>>>>> ---
+>>>>>  arch/arm64/mm/init.c     | 37 +++++++++++++++++++++++++------------
+>>>>>  include/linux/memblock.h |  1 +
+>>>>>  mm/memblock.c            | 40 ++++++++++++++++++++++++++++++++++++++++
+>>>>>  3 files changed, 66 insertions(+), 12 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>>>>> index ceb2a25..769c77a 100644
+>>>>> --- a/arch/arm64/mm/init.c
+>>>>> +++ b/arch/arm64/mm/init.c
+>>>>> @@ -64,6 +64,8 @@ EXPORT_SYMBOL(memstart_addr);
+>>>>>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
+>>>>>  
+>>>>>  #ifdef CONFIG_KEXEC_CORE
+>>>>> +# define CRASH_MAX_USABLE_RANGES        2
+>>>>> +
+>>>>>  static int __init reserve_crashkernel_low(void)
+>>>>>  {
+>>>>>  	unsigned long long base, low_base = 0, low_size = 0;
+>>>>> @@ -346,8 +348,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+>>>>>  		const char *uname, int depth, void *data)
+>>>>>  {
+>>>>>  	struct memblock_region *usablemem = data;
+>>>>> -	const __be32 *reg;
+>>>>> -	int len;
+>>>>> +	const __be32 *reg, *endp;
+>>>>> +	int len, nr = 0;
+>>>>>  
+>>>>>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
+>>>>>  		return 0;
+>>>>> @@ -356,22 +358,33 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+>>>>>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+>>>>>  		return 1;
+>>>>>  
+>>>>> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+>>>>> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+>>>>> +	endp = reg + (len / sizeof(__be32));
+>>>>> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
+>>>>> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+>>>>> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
+>>>>> +
+>>>>> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
+>>>>> +			break;
+>>>>> +	}
+>>>>>  
+>>>>>  	return 1;
+>>>>>  }
+>>>>>  
+>>>>>  static void __init fdt_enforce_memory_region(void)
+>>>>>  {
+>>>>> -	struct memblock_region reg = {
+>>>>> -		.size = 0,
+>>>>> -	};
+>>>>> -
+>>>>> -	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
+>>>>> -
+>>>>> -	if (reg.size)
+>>>>> -		memblock_cap_memory_range(reg.base, reg.size);
+>>>>> +	int i, cnt = 0;
+>>>>> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
+>>>>> +
+>>>>> +	memset(regs, 0, sizeof(regs));
+>>>>> +	of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
+>>>>> +
+>>>>> +	for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
+>>>>> +		if (regs[i].size)
+>>>>> +			cnt++;
+>>>>> +		else
+>>>>> +			break;
+>>>>> +	if (cnt)
+>>>>> +		memblock_cap_memory_ranges(regs, cnt);
+>>>>
+>>>> Why not simply call memblock_cap_memory_range() for each region?
+>>>
+>>> Function memblock_cap_memory_range() removes all memory type ranges except specified range.
+>>> So if we call memblock_cap_memory_range() for each region simply, there will be no usable-memory
+>>> on kdump capture kernel.
 >>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> ---
->>  arch/arm64/kernel/setup.c |  3 ++
->>  arch/arm64/mm/init.c      | 71 +++++++++++++++++++++++++++++++++++++++++++++--
->>  2 files changed, 71 insertions(+), 3 deletions(-)
+>> Thanks for the clarification.
+>> I still think that memblock_cap_memory_ranges() is overly complex. 
 >>
->> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
->> index 413d566..82cd9a0 100644
->> --- a/arch/arm64/kernel/setup.c
->> +++ b/arch/arm64/kernel/setup.c
->> @@ -243,6 +243,9 @@ static void __init request_standard_resources(void)
->>  			request_resource(res, &kernel_data);
->>  #ifdef CONFIG_KEXEC_CORE
->>  		/* Userspace will find "Crash kernel" region in /proc/iomem. */
->> +		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
->> +		    crashk_low_res.end <= res->end)
->> +			request_resource(res, &crashk_low_res);
->>  		if (crashk_res.end && crashk_res.start >= res->start &&
->>  		    crashk_res.end <= res->end)
->>  			request_resource(res, &crashk_res);
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index 6bc1350..ceb2a25 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -64,6 +64,57 @@ EXPORT_SYMBOL(memstart_addr);
->>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
->>  
->>  #ifdef CONFIG_KEXEC_CORE
->> +static int __init reserve_crashkernel_low(void)
->> +{
->> +	unsigned long long base, low_base = 0, low_size = 0;
->> +	unsigned long total_low_mem;
->> +	int ret;
->> +
->> +	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
->> +
->> +	/* crashkernel=Y,low */
->> +	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
->> +	if (ret) {
->> +		/*
->> +		 * two parts from lib/swiotlb.c:
->> +		 * -swiotlb size: user-specified with swiotlb= or default.
->> +		 *
->> +		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
->> +		 * to 8M for other buffers that may need to stay low too. Also
->> +		 * make sure we allocate enough extra low memory so that we
->> +		 * don't run out of DMA buffers for 32-bit devices.
->> +		 */
->> +		low_size = max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
->> +	} else {
->> +		/* passed with crashkernel=0,low ? */
->> +		if (!low_size)
->> +			return 0;
->> +	}
->> +
->> +	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, SZ_2M);
->> +	if (!low_base) {
->> +		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
->> +				(unsigned long)(low_size >> 20));
->> +		return -ENOMEM;
->> +	}
->> +
->> +	ret = memblock_reserve(low_base, low_size);
->> +	if (ret) {
->> +		pr_err("%s: Error reserving crashkernel low memblock.\n", __func__);
->> +		return ret;
->> +	}
->> +
->> +	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
->> +			(unsigned long)(low_size >> 20),
->> +			(unsigned long)(low_base >> 20),
->> +			(unsigned long)(total_low_mem >> 20));
->> +
->> +	crashk_low_res.start = low_base;
->> +	crashk_low_res.end   = low_base + low_size - 1;
->> +
->> +	return 0;
->> +}
->> +
->>  /*
->>   * reserve_crashkernel() - reserves memory for crash kernel
->>   *
->> @@ -74,19 +125,28 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
->>  static void __init reserve_crashkernel(void)
->>  {
->>  	unsigned long long crash_base, crash_size;
->> +	bool high = false;
->>  	int ret;
->>  
->>  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
->>  				&crash_size, &crash_base);
->>  	/* no crashkernel= or invalid value specified */
->> -	if (ret || !crash_size)
->> -		return;
->> +	if (ret || !crash_size) {
->> +		/* crashkernel=X,high */
->> +		ret = parse_crashkernel_high(boot_command_line, memblock_phys_mem_size(),
->> +				&crash_size, &crash_base);
->> +		if (ret || !crash_size)
->> +			return;
->> +		high = true;
->> +	}
->>  
->>  	crash_size = PAGE_ALIGN(crash_size);
->>  
->>  	if (crash_base == 0) {
->>  		/* Current arm64 boot protocol requires 2MB alignment */
->> -		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
->> +		crash_base = memblock_find_in_range(0,
->> +				high ? memblock_end_of_DRAM()
->> +				: ARCH_LOW_ADDRESS_LIMIT,
->>  				crash_size, SZ_2M);
->>  		if (crash_base == 0) {
->>  			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
->> @@ -112,6 +172,11 @@ static void __init reserve_crashkernel(void)
->>  	}
->>  	memblock_reserve(crash_base, crash_size);
->>  
->> +	if (crash_base >= SZ_4G && reserve_crashkernel_low()) {
->> +		memblock_free(crash_base, crash_size);
->> +		return;
->> +	}
->> +
+>> How about doing something like this:
+>>
+>> Cap the memory range for [min(regs[*].start, max(regs[*].end)] and then
+>> removing the range in the middle?
 > 
-> This very reminds what x86 does. Any chance some of the code can be reused
-> rather than duplicated?
+> Yes, that would be ok. But that would do one more memblock_cap_memory_range operation.
+> That is, if there are n regions, we need to do (n + 1) operations, which doesn't seem to
+> matter.
+> 
+> I agree with you, your idea is better.
+> 
+> Thanks,
+> Chen Zhou
 
-As i said in the comment, i transport reserve_crashkernel_low() from x86_64. There are minor
-differences. In arm64, we don't need to do insert_resource(), we do request_resource()
-in request_standard_resources() later.
+Sorry, just ignore my previous reply, I got that wrong.
 
-How about doing like this:
+I think it carefully, we can cap the memory range for [min(regs[*].start, max(regs[*].end)]
+firstly. But how to remove the middle ranges, we still can't use memblock_cap_memory_range()
+directly and the extra remove operation may be complex.
 
-move common reserve_crashkernel_low() code into kernel/kexec_core.c.
-and do in x86 like this:
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -573,9 +573,12 @@ static void __init reserve_crashkernel(void)
-                return;
-        }
+For more than one regions, i think add a new memblock_cap_memory_ranges() may be better.
+Besides, memblock_cap_memory_ranges() is also applicable for one region.
 
--       if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
--               memblock_free(crash_base, crash_size);
--               return;
-+       if (crash_base >= (1ULL << 32)) {
-+               if (reserve_crashkernel_low()) {
-+                       memblock_free(crash_base, crash_size);
-+                       return;
-+               } else
-+                       insert_resource(&iomem_resource, &crashk_low_res);
-        }
+How about replace memblock_cap_memory_range() with memblock_cap_memory_ranges()?
+
+Thanks,
+Chen Zhou
 
 > 
->>  	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
->>  		crash_base, crash_base + crash_size, crash_size >> 20);
 >>  
->> -- 
->> 2.7.4
+>>> Thanks,
+>>> Chen Zhou
+>>>
+>>>>
+>>>>>  }
+>>>>>  
+>>>>>  void __init arm64_memblock_init(void)
+>>>>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>>>>> index 47e3c06..aeade34 100644
+>>>>> --- a/include/linux/memblock.h
+>>>>> +++ b/include/linux/memblock.h
+>>>>> @@ -446,6 +446,7 @@ phys_addr_t memblock_start_of_DRAM(void);
+>>>>>  phys_addr_t memblock_end_of_DRAM(void);
+>>>>>  void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+>>>>>  void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
+>>>>> +void memblock_cap_memory_ranges(struct memblock_region *regs, int cnt);
+>>>>>  void memblock_mem_limit_remove_map(phys_addr_t limit);
+>>>>>  bool memblock_is_memory(phys_addr_t addr);
+>>>>>  bool memblock_is_map_memory(phys_addr_t addr);
+>>>>> diff --git a/mm/memblock.c b/mm/memblock.c
+>>>>> index 28fa8926..1a7f4ee7c 100644
+>>>>> --- a/mm/memblock.c
+>>>>> +++ b/mm/memblock.c
+>>>>> @@ -1697,6 +1697,46 @@ void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
+>>>>>  			base + size, PHYS_ADDR_MAX);
+>>>>>  }
+>>>>>  
+>>>>> +void __init memblock_cap_memory_ranges(struct memblock_region *regs, int cnt)
+>>>>> +{
+>>>>> +	int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
+>>>>> +	int i, j, ret, nr = 0;
+>>>>> +
+>>>>> +	for (i = 0; i < cnt; i++) {
+>>>>> +		ret = memblock_isolate_range(&memblock.memory, regs[i].base,
+>>>>> +				regs[i].size, &start_rgn[i], &end_rgn[i]);
+>>>>> +		if (ret)
+>>>>> +			break;
+>>>>> +		nr++;
+>>>>> +	}
+>>>>> +	if (!nr)
+>>>>> +		return;
+>>>>> +
+>>>>> +	/* remove all the MAP regions */
+>>>>> +	for (i = memblock.memory.cnt - 1; i >= end_rgn[nr - 1]; i--)
+>>>>> +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+>>>>> +			memblock_remove_region(&memblock.memory, i);
+>>>>> +
+>>>>> +	for (i = nr - 1; i > 0; i--)
+>>>>> +		for (j = start_rgn[i] - 1; j >= end_rgn[i - 1]; j--)
+>>>>> +			if (!memblock_is_nomap(&memblock.memory.regions[j]))
+>>>>> +				memblock_remove_region(&memblock.memory, j);
+>>>>> +
+>>>>> +	for (i = start_rgn[0] - 1; i >= 0; i--)
+>>>>> +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+>>>>> +			memblock_remove_region(&memblock.memory, i);
+>>>>> +
+>>>>> +	/* truncate the reserved regions */
+>>>>> +	memblock_remove_range(&memblock.reserved, 0, regs[0].base);
+>>>>> +
+>>>>> +	for (i = nr - 1; i > 0; i--)
+>>>>> +		memblock_remove_range(&memblock.reserved,
+>>>>> +				regs[i].base, regs[i - 1].base + regs[i - 1].size);
+>>>>> +
+>>>>> +	memblock_remove_range(&memblock.reserved,
+>>>>> +			regs[nr - 1].base + regs[nr - 1].size, PHYS_ADDR_MAX);
+>>>>> +}
+>>>>> +
+>>>>>  void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+>>>>>  {
+>>>>>  	phys_addr_t max_addr;
+>>>>> -- 
+>>>>> 2.7.4
+>>>>>
+>>>>
+>>>
 >>
+> 
+> 
+> .
 > 
 
 
