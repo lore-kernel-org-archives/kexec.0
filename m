@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 2/3] arm64: kdump: support more than one crash kernel
- regions
-References: <20190403030546.23718-1-chenzhou10@huawei.com>
- <20190403030546.23718-3-chenzhou10@huawei.com>
- <20190403112929.GA7715@rapoport-lnx>
- <f98a5559-3659-fb35-3765-15861e70a796@huawei.com>
- <20190404144408.GA6433@rapoport-lnx>
- <783b8712-ddb1-a52b-81ee-0c6a216e5b7d@huawei.com>
- <4b188535-c12d-e05b-9154-2c2d580f903b@huawei.com>
- <20190408065711.GA8403@rapoport-lnx>
+Received: from szxga05-in.huawei.com ([45.249.212.191] helo=huawei.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1hDQJi-0002Qh-UP
+ for kexec@lists.infradead.org; Mon, 08 Apr 2019 09:11:53 +0000
 From: Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <3fc772a2-292b-9c2a-465f-eabe86961dfd@huawei.com>
-Date: Mon, 8 Apr 2019 16:39:59 +0800
+Subject: [RESEND PATCH] arm64: support more than one crash kernel regions
+Date: Mon, 8 Apr 2019 17:22:39 +0800
+Message-ID: <20190408092239.18012-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190408065711.GA8403@rapoport-lnx>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,160 +20,279 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: wangkefeng.wang@huawei.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, takahiro.akashi@linaro.org, akpm@linux-foundation.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: horms@verge.net.au, takahiro.akashi@linaro.org, kexec@lists.infradead.org
+Cc: Chen Zhou <chenzhou10@huawei.com>, wangkefeng.wang@huawei.com
 
-Hi Mike,
+When crashkernel is reserved above 4G in memory, kernel should
+reserve some amount of low memory for swiotlb and some DMA buffers.
+So there may be two crash kernel regions, one is below 4G, the other
+is above 4G.
 
-On 2019/4/8 14:57, Mike Rapoport wrote:
-> Hi,
-> 
-> On Fri, Apr 05, 2019 at 11:47:27AM +0800, Chen Zhou wrote:
->> Hi Mike,
->>
->> On 2019/4/5 10:17, Chen Zhou wrote:
->>> Hi Mike,
->>>
->>> On 2019/4/4 22:44, Mike Rapoport wrote:
->>>> Hi,
->>>>
->>>> On Wed, Apr 03, 2019 at 09:51:27PM +0800, Chen Zhou wrote:
->>>>> Hi Mike,
->>>>>
->>>>> On 2019/4/3 19:29, Mike Rapoport wrote:
->>>>>> On Wed, Apr 03, 2019 at 11:05:45AM +0800, Chen Zhou wrote:
->>>>>>> After commit (arm64: kdump: support reserving crashkernel above 4G),
->>>>>>> there may be two crash kernel regions, one is below 4G, the other is
->>>>>>> above 4G.
->>>>>>>
->>>>>>> Crash dump kernel reads more than one crash kernel regions via a dtb
->>>>>>> property under node /chosen,
->>>>>>> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
->>>>>>>
->>>>>>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->>>>>>> ---
->>>>>>>  arch/arm64/mm/init.c     | 37 +++++++++++++++++++++++++------------
->>>>>>>  include/linux/memblock.h |  1 +
->>>>>>>  mm/memblock.c            | 40 ++++++++++++++++++++++++++++++++++++++++
->>>>>>>  3 files changed, 66 insertions(+), 12 deletions(-)
->>>>>>>
->>>>>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->>>>>>> index ceb2a25..769c77a 100644
->>>>>>> --- a/arch/arm64/mm/init.c
->>>>>>> +++ b/arch/arm64/mm/init.c
->>>>>>> @@ -64,6 +64,8 @@ EXPORT_SYMBOL(memstart_addr);
->>>>>>>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
->>>>>>>  
->>>>>>>  #ifdef CONFIG_KEXEC_CORE
->>>>>>> +# define CRASH_MAX_USABLE_RANGES        2
->>>>>>> +
->>>>>>>  static int __init reserve_crashkernel_low(void)
->>>>>>>  {
->>>>>>>  	unsigned long long base, low_base = 0, low_size = 0;
->>>>>>> @@ -346,8 +348,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
->>>>>>>  		const char *uname, int depth, void *data)
->>>>>>>  {
->>>>>>>  	struct memblock_region *usablemem = data;
->>>>>>> -	const __be32 *reg;
->>>>>>> -	int len;
->>>>>>> +	const __be32 *reg, *endp;
->>>>>>> +	int len, nr = 0;
->>>>>>>  
->>>>>>>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
->>>>>>>  		return 0;
->>>>>>> @@ -356,22 +358,33 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
->>>>>>>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
->>>>>>>  		return 1;
->>>>>>>  
->>>>>>> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
->>>>>>> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
->>>>>>> +	endp = reg + (len / sizeof(__be32));
->>>>>>> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
->>>>>>> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
->>>>>>> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
->>>>>>> +
->>>>>>> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
->>>>>>> +			break;
->>>>>>> +	}
->>>>>>>  
->>>>>>>  	return 1;
->>>>>>>  }
->>>>>>>  
->>>>>>>  static void __init fdt_enforce_memory_region(void)
->>>>>>>  {
->>>>>>> -	struct memblock_region reg = {
->>>>>>> -		.size = 0,
->>>>>>> -	};
->>>>>>> -
->>>>>>> -	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
->>>>>>> -
->>>>>>> -	if (reg.size)
->>>>>>> -		memblock_cap_memory_range(reg.base, reg.size);
->>>>>>> +	int i, cnt = 0;
->>>>>>> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
->>>>>>> +
->>>>>>> +	memset(regs, 0, sizeof(regs));
->>>>>>> +	of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
->>>>>>> +
->>>>>>> +	for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
->>>>>>> +		if (regs[i].size)
->>>>>>> +			cnt++;
->>>>>>> +		else
->>>>>>> +			break;
->>>>>>> +	if (cnt)
->>>>>>> +		memblock_cap_memory_ranges(regs, cnt);
->>>>>>
->>>>>> Why not simply call memblock_cap_memory_range() for each region?
->>>>>
->>>>> Function memblock_cap_memory_range() removes all memory type ranges except specified range.
->>>>> So if we call memblock_cap_memory_range() for each region simply, there will be no usable-memory
->>>>> on kdump capture kernel.
->>>>
->>>> Thanks for the clarification.
->>>> I still think that memblock_cap_memory_ranges() is overly complex. 
->>>>
->>>> How about doing something like this:
->>>>
->>>> Cap the memory range for [min(regs[*].start, max(regs[*].end)] and then
->>>> removing the range in the middle?
->>>
->>> Yes, that would be ok. But that would do one more memblock_cap_memory_range operation.
->>> That is, if there are n regions, we need to do (n + 1) operations, which doesn't seem to
->>> matter.
->>>
->>> I agree with you, your idea is better.
->>>
->>> Thanks,
->>> Chen Zhou
->>
->> Sorry, just ignore my previous reply, I got that wrong.
->>
->> I think it carefully, we can cap the memory range for [min(regs[*].start, max(regs[*].end)]
->> firstly. But how to remove the middle ranges, we still can't use memblock_cap_memory_range()
->> directly and the extra remove operation may be complex.
->>
->> For more than one regions, i think add a new memblock_cap_memory_ranges() may be better.
->> Besides, memblock_cap_memory_ranges() is also applicable for one region.
->>
->> How about replace memblock_cap_memory_range() with memblock_cap_memory_ranges()?
-> 
-> arm64 is the only user of both MEMBLOCK_NOMAP and memblock_cap_memory_range()
-> and I don't expect other architectures will use these interfaces.
-> It seems that capping the memory for arm64 crash kernel the way I've
-> suggested can be implemented in fdt_enforce_memory_region(). If we'd ever
-> need such functionality elsewhere or CRASH_MAX_USABLE_RANGES will need to
-> grow we'll rethink the solution.
+Currently, there is only one crash kernel region on arm64, and pass
+"linux,usable-memory-range = <BASE SIZE>" property to crash dump
+kernel. Now, we pass
+"linux,usable-memory-range = <BASE1 SIZE1 BASE2 SIZE2>" to crash
+dump kernel to support two crash kernel regions and load crash
+kernel high.
 
-Ok, i will implement that in fdt_enforce_memory_region() in next version.
-And we will support at most two crash kernel regions now.
+This patch paves the way for the use of arm64 reserving crashkernel
+above 4G. The details are as below:
+Link: https://lore.kernel.org/linux-arm-kernel/20190403030546.23718-1-chenzhou10@huawei.com/T/#t 
 
-Thanks,
-Chen Zhou
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ kexec/arch/arm64/crashdump-arm64.c | 44 +++++++++++++++++------------
+ kexec/arch/arm64/crashdump-arm64.h |  3 +-
+ kexec/arch/arm64/kexec-arm64.c     | 57 +++++++++++++++++++++++++++++---------
+ 3 files changed, 72 insertions(+), 32 deletions(-)
 
->  
->> Thanks,
->> Chen Zhou
-> 
+diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+index 4fd7aa8..158e778 100644
+--- a/kexec/arch/arm64/crashdump-arm64.c
++++ b/kexec/arch/arm64/crashdump-arm64.c
+@@ -32,11 +32,11 @@ static struct memory_ranges system_memory_rgns = {
+ };
+ 
+ /* memory range reserved for crashkernel */
+-struct memory_range crash_reserved_mem;
++struct memory_range crash_reserved_mem[CRASH_MAX_RESERVED_RANGES];
+ struct memory_ranges usablemem_rgns = {
+ 	.size = 0,
+-	.max_size = 1,
+-	.ranges = &crash_reserved_mem,
++	.max_size = CRASH_MAX_RESERVED_RANGES,
++	.ranges = crash_reserved_mem,
+ };
+ 
+ struct memory_range elfcorehdr_mem;
+@@ -108,7 +108,7 @@ int is_crashkernel_mem_reserved(void)
+ 	if (!usablemem_rgns.size)
+ 		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
+ 
+-	return crash_reserved_mem.start != crash_reserved_mem.end;
++	return usablemem_rgns.size;
+ }
+ 
+ /*
+@@ -122,6 +122,8 @@ int is_crashkernel_mem_reserved(void)
+  */
+ static int crash_get_memory_ranges(void)
+ {
++	int i;
++
+ 	/*
+ 	 * First read all memory regions that can be considered as
+ 	 * system memory including the crash area.
+@@ -129,16 +131,19 @@ static int crash_get_memory_ranges(void)
+ 	if (!usablemem_rgns.size)
+ 		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
+ 
+-	/* allow only a single region for crash dump kernel */
+-	if (usablemem_rgns.size != 1)
++	/* allow one or two region for crash dump kernel */
++	if (!usablemem_rgns.size)
+ 		return -EINVAL;
+ 
+-	dbgprint_mem_range("Reserved memory range", &crash_reserved_mem, 1);
++	dbgprint_mem_range("Reserved memory range",
++			usablemem_rgns.ranges, usablemem_rgns.size);
+ 
+-	if (mem_regions_exclude(&system_memory_rgns, &crash_reserved_mem)) {
+-		fprintf(stderr,
+-			"Error: Number of crash memory ranges excedeed the max limit\n");
+-		return -ENOMEM;
++	for (i = 0; i < usablemem_rgns.size; i++) {
++		if (mem_regions_exclude(&system_memory_rgns, &crash_reserved_mem[i])) {
++			fprintf(stderr,
++					"Error: Number of crash memory ranges excedeed the max limit\n");
++			return -ENOMEM;
++		}
+ 	}
+ 
+ 	/*
+@@ -199,7 +204,8 @@ int load_crashdump_segments(struct kexec_info *info)
+ 		return EFAILED;
+ 
+ 	elfcorehdr = add_buffer_phys_virt(info, buf, bufsz, bufsz, 0,
+-		crash_reserved_mem.start, crash_reserved_mem.end,
++		crash_reserved_mem[usablemem_rgns.size - 1].start,
++		crash_reserved_mem[usablemem_rgns.size - 1].end,
+ 		-1, 0);
+ 
+ 	elfcorehdr_mem.start = elfcorehdr;
+@@ -217,21 +223,23 @@ int load_crashdump_segments(struct kexec_info *info)
+  * virt_to_phys() in add_segment().
+  * So let's fix up those values for later use so the memory base
+  * (arm64_mm.phys_offset) will be correctly replaced with
+- * crash_reserved_mem.start.
++ * crash_reserved_mem[usablemem_rgns.size - 1].start.
+  */
+ void fixup_elf_addrs(struct mem_ehdr *ehdr)
+ {
+ 	struct mem_phdr *phdr;
+ 	int i;
+ 
+-	ehdr->e_entry += - arm64_mem.phys_offset + crash_reserved_mem.start;
++	ehdr->e_entry += -arm64_mem.phys_offset +
++		crash_reserved_mem[usablemem_rgns.size - 1].start;
+ 
+ 	for (i = 0; i < ehdr->e_phnum; i++) {
+ 		phdr = &ehdr->e_phdr[i];
+ 		if (phdr->p_type != PT_LOAD)
+ 			continue;
+ 		phdr->p_paddr +=
+-			(-arm64_mem.phys_offset + crash_reserved_mem.start);
++			(-arm64_mem.phys_offset +
++			 crash_reserved_mem[usablemem_rgns.size - 1].start);
+ 	}
+ }
+ 
+@@ -240,11 +248,11 @@ int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
+ 	if (!usablemem_rgns.size)
+ 		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
+ 
+-	if (!crash_reserved_mem.end)
++	if (!usablemem_rgns.size)
+ 		return -1;
+ 
+-	*start = crash_reserved_mem.start;
+-	*end = crash_reserved_mem.end;
++	*start = crash_reserved_mem[usablemem_rgns.size - 1].start;
++	*end = crash_reserved_mem[usablemem_rgns.size - 1].end;
+ 
+ 	return 0;
+ }
+diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
+index 880b83a..c07233f 100644
+--- a/kexec/arch/arm64/crashdump-arm64.h
++++ b/kexec/arch/arm64/crashdump-arm64.h
+@@ -15,9 +15,10 @@
+ #include "kexec.h"
+ 
+ #define CRASH_MAX_MEMORY_RANGES	32
++#define CRASH_MAX_RESERVED_RANGES	8
+ 
+ extern struct memory_ranges usablemem_rgns;
+-extern struct memory_range crash_reserved_mem;
++extern struct memory_range crash_reserved_mem[];
+ extern struct memory_range elfcorehdr_mem;
+ 
+ extern int load_crashdump_segments(struct kexec_info *info);
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index 2992bce..2bf8b66 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -414,6 +414,34 @@ static int fdt_setprop_range(void *fdt, int nodeoffset,
+ 	return result;
+ }
+ 
++static int fdt_setprop_ranges(void *fdt, int nodeoffset,
++				const char *name, struct memory_ranges *ranges,
++				uint32_t address_cells, uint32_t size_cells)
++{
++	void *buf, *prop;
++	size_t buf_size;
++	int i, result;
++
++	buf_size = (address_cells + size_cells) * sizeof(uint32_t) *
++		ranges->size;
++	prop = buf = xmalloc(buf_size);
++
++	for (i = 0; i < ranges->size; i++) {
++		fill_property(prop, ranges->ranges[i].start, address_cells);
++		prop += address_cells * sizeof(uint32_t);
++
++		fill_property(prop, ranges->ranges[i].end -
++				ranges->ranges[i].start + 1, size_cells);
++		prop += size_cells * sizeof(uint32_t);
++	}
++
++	result = fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
++
++	free(buf);
++
++	return result;
++}
++
+ /**
+  * setup_2nd_dtb - Setup the 2nd stage kernel's dtb.
+  */
+@@ -427,7 +455,7 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 	int len, range_len;
+ 	int nodeoffset;
+ 	int new_size;
+-	int result, kaslr_seed;
++	int i, result, kaslr_seed;
+ 
+ 	result = fdt_check_header(dtb->buf);
+ 
+@@ -458,18 +486,21 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 		goto on_error;
+ 	}
+ 
+-	if (!cells_size_fitted(address_cells, size_cells,
+-				&crash_reserved_mem)) {
+-		fprintf(stderr, "kexec: usable memory range doesn't fit cells-size.\n");
+-		result = -EINVAL;
+-		goto on_error;
++	for (i = 0; i < usablemem_rgns.size; i++) {
++		if (!cells_size_fitted(address_cells, size_cells,
++					&crash_reserved_mem[i])) {
++			fprintf(stderr,
++					"kexec: usable memory range doesn't fit cells-size.\n");
++			result = -EINVAL;
++			goto on_error;
++		}
+ 	}
+ 
+ 	/* duplicate dt blob */
+ 	range_len = sizeof(uint32_t) * (address_cells + size_cells);
+ 	new_size = fdt_totalsize(dtb->buf)
+ 		+ fdt_prop_len(PROP_ELFCOREHDR, range_len)
+-		+ fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len);
++		+ fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len * usablemem_rgns.size);
+ 
+ 	new_buf = xmalloc(new_size);
+ 	result = fdt_open_into(dtb->buf, new_buf, new_size);
+@@ -565,8 +596,8 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 
+ 		/* add linux,usable-memory-range */
+ 		nodeoffset = fdt_path_offset(new_buf, "/chosen");
+-		result = fdt_setprop_range(new_buf, nodeoffset,
+-				PROP_USABLE_MEM_RANGE, &crash_reserved_mem,
++		result = fdt_setprop_ranges(new_buf, nodeoffset,
++				PROP_USABLE_MEM_RANGE, &usablemem_rgns,
+ 				address_cells, size_cells);
+ 		if (result) {
+ 			dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
+@@ -599,13 +630,13 @@ unsigned long arm64_locate_kernel_segment(struct kexec_info *info)
+ 	if (info->kexec_flags & KEXEC_ON_CRASH) {
+ 		unsigned long hole_end;
+ 
+-		hole = (crash_reserved_mem.start < mem_min ?
+-				mem_min : crash_reserved_mem.start);
++		hole = (crash_reserved_mem[usablemem_rgns.size - 1].start < mem_min ?
++				mem_min : crash_reserved_mem[usablemem_rgns.size - 1].start);
+ 		hole = _ALIGN_UP(hole, MiB(2));
+ 		hole_end = hole + arm64_mem.text_offset + arm64_mem.image_size;
+ 
+ 		if ((hole_end > mem_max) ||
+-		    (hole_end > crash_reserved_mem.end)) {
++		    (hole_end > crash_reserved_mem[usablemem_rgns.size - 1].end)) {
+ 			dbgprintf("%s: Crash kernel out of range\n", __func__);
+ 			hole = ULONG_MAX;
+ 		}
+@@ -673,7 +704,7 @@ int arm64_load_other_segments(struct kexec_info *info,
+ 
+ 	hole_min = image_base + arm64_mem.image_size;
+ 	if (info->kexec_flags & KEXEC_ON_CRASH)
+-		hole_max = crash_reserved_mem.end;
++		hole_max = crash_reserved_mem[usablemem_rgns.size - 1].end;
+ 	else
+ 		hole_max = ULONG_MAX;
+ 
+-- 
+2.7.4
 
 
 _______________________________________________
