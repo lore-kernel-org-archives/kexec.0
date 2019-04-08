@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 2/3] arm64: kdump: support more than one crash kernel
- regions
-References: <20190403030546.23718-1-chenzhou10@huawei.com>
- <20190403030546.23718-3-chenzhou10@huawei.com>
- <20190403112929.GA7715@rapoport-lnx>
- <f98a5559-3659-fb35-3765-15861e70a796@huawei.com>
- <20190404144408.GA6433@rapoport-lnx>
- <783b8712-ddb1-a52b-81ee-0c6a216e5b7d@huawei.com>
- <4b188535-c12d-e05b-9154-2c2d580f903b@huawei.com>
- <20190408065711.GA8403@rapoport-lnx>
- <3fc772a2-292b-9c2a-465f-eabe86961dfd@huawei.com>
-From: Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <2aadfb89-4ac0-a9a9-e157-a23d686cb374@huawei.com>
-Date: Mon, 8 Apr 2019 23:38:41 +0800
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1hDdRc-0005Px-6C
+ for kexec@lists.infradead.org; Mon, 08 Apr 2019 23:12:54 +0000
+From: Junichi Nomura <j-nomura@ce.jp.nec.com>
+Subject: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Date: Mon, 8 Apr 2019 23:10:17 +0000
+Message-ID: <20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp>
+Content-Language: ja-JP
+Content-ID: <0BB3151BDA572D4F935FEB1953FCEFFC@gisp.nec.co.jp>
 MIME-Version: 1.0
-In-Reply-To: <3fc772a2-292b-9c2a-465f-eabe86961dfd@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,206 +23,278 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: wangkefeng.wang@huawei.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, takahiro.akashi@linaro.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, Baoquan He <bhe@redhat.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Kairui Song <kasong@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Hi Mike,
+Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+in the early parsing code tries to search RSDP from EFI table but
+that will crash because the table address is virtual when the kernel
+was booted by kexec.
 
-On 2019/4/8 16:39, Chen Zhou wrote:
+In the case of kexec, physical address of EFI tables is provided
+via efi_setup_data in boot_params, which is set up by kexec(1).
 
->>>
->>> Sorry, just ignore my previous reply, I got that wrong.
->>>
->>> I think it carefully, we can cap the memory range for [min(regs[*].start, max(regs[*].end)]
->>> firstly. But how to remove the middle ranges, we still can't use memblock_cap_memory_range()
->>> directly and the extra remove operation may be complex.
->>>
->>> For more than one regions, i think add a new memblock_cap_memory_ranges() may be better.
->>> Besides, memblock_cap_memory_ranges() is also applicable for one region.
->>>
->>> How about replace memblock_cap_memory_range() with memblock_cap_memory_ranges()?
->>
->> arm64 is the only user of both MEMBLOCK_NOMAP and memblock_cap_memory_range()
->> and I don't expect other architectures will use these interfaces.
->> It seems that capping the memory for arm64 crash kernel the way I've
->> suggested can be implemented in fdt_enforce_memory_region(). If we'd ever
->> need such functionality elsewhere or CRASH_MAX_USABLE_RANGES will need to
->> grow we'll rethink the solution.
-> 
-> Ok, i will implement that in fdt_enforce_memory_region() in next version.
-> And we will support at most two crash kernel regions now.
-> 
-> Thanks,
-> Chen Zhou
-> 
+Factor out the table parsing code and use different pointers depending
+on whether the kernel is booted by kexec or not.
 
-I implement that in fdt_enforce_memory_region() simply as below.
-You have a look at if it is the way you suggested.
+Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+Tested-by: Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Dave Young <dyoung@redhat.com>
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index f9fa5f8..52bd69db 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -65,6 +65,11 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+--
+Original post:
+  https://lore.kernel.org/lkml/20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp/
 
- #ifdef CONFIG_KEXEC_CORE
+v2: Added comments above __efi_get_rsdp_addr() and kexec_get_rsdp_addr() 
 
-+/* at most two crash kernel regions, low_region and high_region */
-+#define CRASH_MAX_USABLE_RANGES        2
-+#define LOW_REGION_IDX                 0
-+#define HIGH_REGION_IDX                        1
-+
- /*
-  * reserve_crashkernel() - reserves memory for crash kernel
-  *
-@@ -296,8 +301,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
-                const char *uname, int depth, void *data)
- {
-        struct memblock_region *usablemem = data;
--       const __be32 *reg;
--       int len;
-+       const __be32 *reg, *endp;
-+       int len, nr = 0;
+v3: Properly ifdef out 64bit-only kexec code to avoid 32bit build warnings
 
-        if (depth != 1 || strcmp(uname, "chosen") != 0)
-                return 0;
-@@ -306,22 +311,62 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
-        if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
-                return 1;
+v4:
+ - Make sure to avoid efi_get_rsdp_addr() when kexec setup_data exists
+   even if the data is invalid.
+ - Return instead of hang if systab is 0 in kexec_get_rsdp_addr().
+ - Check 32bit EFI loader signature in the case of kexec as well.
+ - Factor out EFI-related boot_params handling into efi_read_boot_params() to
+   avoid duplication between efi_get_rsdp_addr() and kexec_get_rsdp_addr().
 
--       usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
--       usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+       endp = reg + (len / sizeof(__be32));
-+       while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
-+               usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-+               usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+
-+               if (++nr >= CRASH_MAX_USABLE_RANGES)
-+                       break;
-+       }
+The patch was tested on 3 different models of EFI-booted physical machines
+for both normal kexec and panic kexec.
 
-        return 1;
+There is a report, that similar problem still happens even with this patch:
+  https://lore.kernel.org/lkml/20190404140809.GA7789@dhcp-128-65.nay.redhat.com/
+
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+index 0ef4ad5..2bc8dca 100644
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -44,71 +44,80 @@ static acpi_physical_address get_acpi_rsdp(void)
+ 	return addr;
  }
-
- static void __init fdt_enforce_memory_region(void)
+ 
+-/* Search EFI system tables for RSDP. */
+-static acpi_physical_address efi_get_rsdp_addr(void)
++#ifdef CONFIG_EFI
++static unsigned long kexec_efi_setup_data;
++static unsigned long efi_systab;
++static bool efi_booted;
++static bool efi_64;
++
++static unsigned long efi_get_kexec_setup_data_addr(void)
  {
--       struct memblock_region reg = {
--               .size = 0,
--       };
-+       int i, cnt = 0;
-+       struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
+-	acpi_physical_address rsdp_addr = 0;
++#if defined(CONFIG_X86_64)
++	struct setup_data *data;
++	u64 pa_data;
 +
-+       memset(regs, 0, sizeof(regs));
-+       of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
++	pa_data = boot_params->hdr.setup_data;
++	while (pa_data) {
++		data = (struct setup_data *) pa_data;
++		if (data->type == SETUP_EFI)
++			return pa_data + sizeof(struct setup_data);
++		pa_data = data->next;
++	}
++#endif
++	return 0;
++}
+ 
+-#ifdef CONFIG_EFI
+-	unsigned long systab, systab_tables, config_tables;
+-	unsigned int nr_tables;
++static void efi_read_boot_params(void)
++{
++	struct efi_setup_data *esd;
+ 	struct efi_info *ei;
+-	bool efi_64;
+-	int size, i;
+ 	char *sig;
+ 
++	kexec_efi_setup_data = efi_get_kexec_setup_data_addr();
 +
-+       for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
-+               if (regs[i].size)
-+                       cnt++;
-+               else
-+                       break;
+ 	ei = &boot_params->efi_info;
+ 	sig = (char *)&ei->efi_loader_signature;
+ 
+ 	if (!strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
+ 		efi_64 = true;
++		efi_booted = true;
+ 	} else if (!strncmp(sig, EFI32_LOADER_SIGNATURE, 4)) {
+ 		efi_64 = false;
++		efi_booted = true;
+ 	} else {
+ 		debug_putstr("Wrong EFI loader signature.\n");
+-		return 0;
++		return;
+ 	}
+ 
+ 	/* Get systab from boot params. */
+ #ifdef CONFIG_X86_64
+-	systab = ei->efi_systab | ((__u64)ei->efi_systab_hi << 32);
++	efi_systab = ei->efi_systab | ((__u64)ei->efi_systab_hi << 32);
+ #else
+ 	if (ei->efi_systab_hi || ei->efi_memmap_hi) {
+ 		debug_putstr("Error getting RSDP address: EFI system table located above 4GB.\n");
+-		return 0;
++		return;
+ 	}
+-	systab = ei->efi_systab;
++	efi_systab = ei->efi_systab;
+ #endif
+-	if (!systab)
+-		error("EFI system table not found.");
+-
+-	/* Handle EFI bitness properly */
+-	if (efi_64) {
+-		efi_system_table_64_t *stbl = (efi_system_table_64_t *)systab;
+-
+-		config_tables	= stbl->tables;
+-		nr_tables	= stbl->nr_tables;
+-		size		= sizeof(efi_config_table_64_t);
+-	} else {
+-		efi_system_table_32_t *stbl = (efi_system_table_32_t *)systab;
+-
+-		config_tables	= stbl->tables;
+-		nr_tables	= stbl->nr_tables;
+-		size		= sizeof(efi_config_table_32_t);
+-	}
++}
+ 
+-	if (!config_tables)
+-		error("EFI config tables not found.");
++/*
++ * Search EFI system tables for RSDP.  If both ACPI_20_TABLE_GUID and
++ * ACPI_TABLE_GUID are found, take the former, which has more features.
++ */
++static acpi_physical_address
++__efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables)
++{
++	acpi_physical_address rsdp_addr = 0;
++	int i;
+ 
+ 	/* Get EFI tables from systab. */
+ 	for (i = 0; i < nr_tables; i++) {
+ 		acpi_physical_address table;
+ 		efi_guid_t guid;
+ 
+-		config_tables += size;
+-
+ 		if (efi_64) {
+-			efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables;
++			efi_config_table_64_t *tbl = (efi_config_table_64_t *) config_tables + i;
+ 
+ 			guid  = tbl->guid;
+ 			table = tbl->table;
+@@ -118,7 +127,7 @@ static acpi_physical_address efi_get_rsdp_addr(void)
+ 				return 0;
+ 			}
+ 		} else {
+-			efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables;
++			efi_config_table_32_t *tbl = (efi_config_table_32_t *) config_tables + i;
+ 
+ 			guid  = tbl->guid;
+ 			table = tbl->table;
+@@ -129,9 +138,88 @@ static acpi_physical_address efi_get_rsdp_addr(void)
+ 		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
+ 			return table;
+ 	}
+-#endif
 +
-+       if (cnt - 1 == LOW_REGION_IDX)
-+               memblock_cap_memory_range(regs[LOW_REGION_IDX].base,
-+                               regs[LOW_REGION_IDX].size);
-+       else if (cnt - 1 == HIGH_REGION_IDX) {
-+               /*
-+                * Two crash kernel regions, cap the memory range
-+                * [regs[LOW_REGION_IDX].base, regs[HIGH_REGION_IDX].end]
-+                * and then remove the memory range in the middle.
-+                */
-+               int start_rgn, end_rgn, i, ret;
-+               phys_addr_t mid_base, mid_size;
-+
-+               mid_base = regs[LOW_REGION_IDX].base + regs[LOW_REGION_IDX].size;
-+               mid_size = regs[HIGH_REGION_IDX].base - mid_base;
-+               ret = memblock_isolate_range(&memblock.memory, mid_base, mid_size,
-+                               &start_rgn, &end_rgn);
-
--       of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
-+               if (ret)
-+                       return;
-
--       if (reg.size)
--               memblock_cap_memory_range(reg.base, reg.size);
-+               memblock_cap_memory_range(regs[LOW_REGION_IDX].base,
-+                               regs[HIGH_REGION_IDX].base - regs[LOW_REGION_IDX].base +
-+                               regs[HIGH_REGION_IDX].size);
-+               for (i = end_rgn - 1; i >= start_rgn; i--) {
-+                       if (!memblock_is_nomap(&memblock.memory.regions[i]))
-+                               memblock_remove_region(&memblock.memory, i);
-+               }
-+               memblock_remove_range(&memblock.reserved, mid_base,
-+                               mid_base + mid_size);
-+       }
+ 	return rsdp_addr;
  }
-
- void __init arm64_memblock_init(void)
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 294d5d8..787d252 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -110,9 +110,15 @@ void memblock_discard(void);
-
- phys_addr_t memblock_find_in_range(phys_addr_t start, phys_addr_t end,
-                                   phys_addr_t size, phys_addr_t align);
-+void memblock_remove_region(struct memblock_type *type, unsigned long r);
- void memblock_allow_resize(void);
- int memblock_add_node(phys_addr_t base, phys_addr_t size, int nid);
- int memblock_add(phys_addr_t base, phys_addr_t size);
-+int memblock_isolate_range(struct memblock_type *type,
-+                                       phys_addr_t base, phys_addr_t size,
-+                                       int *start_rgn, int *end_rgn);
-+int memblock_remove_range(struct memblock_type *type,
-+                                       phys_addr_t base, phys_addr_t size);
- int memblock_remove(phys_addr_t base, phys_addr_t size);
- int memblock_free(phys_addr_t base, phys_addr_t size);
- int memblock_reserve(phys_addr_t base, phys_addr_t size);
-diff --git a/mm/memblock.c b/mm/memblock.c
-index e7665cf..7130c3a 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -357,7 +357,7 @@ phys_addr_t __init_memblock memblock_find_in_range(phys_addr_t start,
-        return ret;
- }
-
--static void __init_memblock memblock_remove_region(struct memblock_type *type, unsigned long r)
-+void __init_memblock memblock_remove_region(struct memblock_type *type, unsigned long r)
++#endif
++
++/*
++ * EFI/kexec support is only added for 64bit. So we don't have to
++ * care 32bit case.
++ */
++static acpi_physical_address kexec_get_rsdp_addr(void)
++{
++#if defined(CONFIG_EFI) && defined(CONFIG_X86_64)
++	struct efi_setup_data *esd;
++	unsigned int nr_tables;
++
++	if (!efi_booted || !kexec_efi_setup_data)
++		return 0;
++
++	esd = (struct efi_setup_data *) kexec_efi_setup_data;
++
++	if (!esd->tables) {
++		debug_putstr("Wrong kexec SETUP_EFI data.\n");
++		return 0;
++	}
++
++	if (!efi_systab) {
++		debug_putstr("EFI system table not found in kexec boot_params.");
++		return 0;
++	}
++
++	/* Handle EFI bitness properly */
++	if (efi_64) {
++		efi_system_table_64_t *stbl = (efi_system_table_64_t *)efi_systab;
++
++		nr_tables	= stbl->nr_tables;
++	} else {
++		efi_system_table_32_t *stbl = (efi_system_table_32_t *)efi_systab;
++
++		nr_tables	= stbl->nr_tables;
++	}
++
++	return __efi_get_rsdp_addr((unsigned long) esd->tables, nr_tables);
++#else
++	return 0;
++#endif
++}
++
++static acpi_physical_address efi_get_rsdp_addr(void)
++{
++#ifdef CONFIG_EFI
++	unsigned long config_tables;
++	unsigned int nr_tables;
++
++	efi_read_boot_params();
++
++	if (!efi_booted || kexec_efi_setup_data)
++		return 0;
++
++	if (!efi_systab)
++		error("EFI system table not found.");
++
++	/* Handle EFI bitness properly */
++	if (efi_64) {
++		efi_system_table_64_t *stbl = (efi_system_table_64_t *)efi_systab;
++
++		config_tables	= stbl->tables;
++		nr_tables	= stbl->nr_tables;
++	} else {
++		efi_system_table_32_t *stbl = (efi_system_table_32_t *)efi_systab;
++
++		config_tables	= stbl->tables;
++		nr_tables	= stbl->nr_tables;
++	}
++
++	if (!config_tables)
++		error("EFI config tables not found.");
++
++	return __efi_get_rsdp_addr(config_tables, nr_tables);
++#else
++	return 0;
++#endif
++}
+ 
+ static u8 compute_checksum(u8 *buffer, u32 length)
  {
-        type->total_size -= type->regions[r].size;
-        memmove(&type->regions[r], &type->regions[r + 1],
-@@ -724,7 +724,7 @@ int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
-  * Return:
-  * 0 on success, -errno on failure.
-  */
--static int __init_memblock memblock_isolate_range(struct memblock_type *type,
-+int __init_memblock memblock_isolate_range(struct memblock_type *type,
-                                        phys_addr_t base, phys_addr_t size,
-                                        int *start_rgn, int *end_rgn)
- {
-@@ -784,7 +784,7 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
-        return 0;
- }
-
--static int __init_memblock memblock_remove_range(struct memblock_type *type,
-+int __init_memblock memblock_remove_range(struct memblock_type *type,
-                                          phys_addr_t base, phys_addr_t size)
- {
-        int start_rgn, end_rgn;
-
-
-Thanks,
-Chen Zhou
-
-
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> .
-> 
-
+@@ -224,6 +312,9 @@ acpi_physical_address get_rsdp_addr(void)
+ 		pa = efi_get_rsdp_addr();
+ 
+ 	if (!pa)
++		pa = kexec_get_rsdp_addr();
++
++	if (!pa)
+ 		pa = bios_get_rsdp_addr();
+ 
+ 	return pa;
 
 _______________________________________________
 kexec mailing list
