@@ -1,12 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 0/3] support reserving crashkernel above 4G on arm64 kdump
-References: <20190403030546.23718-1-chenzhou10@huawei.com>
- <49012d55-2020-e2ac-1102-59a5f3911a29@redhat.com>
 From: Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <573f2b4b-9a55-d9b2-6de5-0b60eba0b211@huawei.com>
-Date: Tue, 9 Apr 2019 17:07:59 +0800
+Subject: [PATCH v3 2/4] arm64: kdump: support reserving crashkernel above 4G
+Date: Tue, 9 Apr 2019 18:28:17 +0800
+Message-ID: <20190409102819.121335-3-chenzhou10@huawei.com>
+In-Reply-To: <20190409102819.121335-1-chenzhou10@huawei.com>
+References: <20190409102819.121335-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <49012d55-2020-e2ac-1102-59a5f3911a29@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,67 +18,120 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>, catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, rppt@linux.ibm.com, ard.biesheuvel@linaro.org, takahiro.akashi@linaro.org
-Cc: linux-mm@kvack.org, wangkefeng.wang@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, rppt@linux.ibm.com, catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, ard.biesheuvel@linaro.org
+Cc: wangkefeng.wang@huawei.com, linux-mm@kvack.org, Chen Zhou <chenzhou10@huawei.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, horms@verge.net.au, linux-arm-kernel@lists.infradead.org
 
-Hi Bhupesh,
+When crashkernel is reserved above 4G in memory, kernel should
+reserve some amount of low memory for swiotlb and some DMA buffers.
 
-On 2019/4/9 13:20, Bhupesh Sharma wrote:
-> Hi Chen,
-> 
-> Thanks for the patchset.
-> 
-> Before I review the patches in detail, I have a couple of generic queries. Please see them in-line:
-> 
-> On 04/03/2019 11:05 AM, Chen Zhou wrote:
->> When crashkernel is reserved above 4G in memory, kernel should reserve
->> some amount of low memory for swiotlb and some DMA buffers. So there may
->> be two crash kernel regions, one is below 4G, the other is above 4G.
->>
->> Crash dump kernel reads more than one crash kernel regions via a dtb
->> property under node /chosen,
->> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
->>
->> Besides, we need to modify kexec-tools:
->>    arm64: support more than one crash kernel regions
->>
->> Chen Zhou (3):
->>    arm64: kdump: support reserving crashkernel above 4G
->>    arm64: kdump: support more than one crash kernel regions
->>    kdump: update Documentation about crashkernel on arm64
->>
->>   Documentation/admin-guide/kernel-parameters.txt |   4 +-
->>   arch/arm64/kernel/setup.c                       |   3 +
->>   arch/arm64/mm/init.c                            | 108 ++++++++++++++++++++----
->>   include/linux/memblock.h                        |   1 +
->>   mm/memblock.c                                   |  40 +++++++++
->>   5 files changed, 139 insertions(+), 17 deletions(-)
-> 
-> I am wondering about the use-case for the same. I remember normally fedora-based arm64 systems can do well with a maximum crashkernel size of <=512MB reserved below the 4G boundary.
-> 
-> So, do you mean that for your use-case (may be a huawei board based setup?), you need:
-> 
-> - more than 512MB of crashkernel size, or
-> - you want to split the crashkernel reservation across the 4GB boundary irrespective of the crashkernel size value.
-> 
-> Thanks,
-> Bhupesh
-> 
-> 
-> .
-> 
+Kernel would try to allocate at least 256M below 4G automatically
+as x86_64 if crashkernel is above 4G. Meanwhile, support
+crashkernel=X,[high,low] in arm64.
 
-I do this based on below reasons.
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ arch/arm64/include/asm/kexec.h |  3 +++
+ arch/arm64/kernel/setup.c      |  3 +++
+ arch/arm64/mm/init.c           | 26 +++++++++++++++++++++-----
+ 3 files changed, 27 insertions(+), 5 deletions(-)
 
-1. ARM64 kdump support crashkernel=Y[@X], but now it seems unusable if X is specified above 4GB.
-2. There are some cases we couldn't reserve 512MB crashkernel below 4G successfully if there is
-no continous 512MB system RAM below 4GB. In this case, we need to reserve crashkernel above 4GB.
-3. As the memory increases, the bitmap_size in makedumpfile may also increases, we need more memory
-in kdump capture kernel for kernel dump.
-
-Thanks,
-Chen Zhou
-
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 67e4cb7..32949bf 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -28,6 +28,9 @@
+ 
+ #define KEXEC_ARCH KEXEC_ARCH_AARCH64
+ 
++/* 2M alignment for crash kernel regions */
++#define CRASH_ALIGN	SZ_2M
++
+ #ifndef __ASSEMBLY__
+ 
+ /**
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 413d566..82cd9a0 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -243,6 +243,9 @@ static void __init request_standard_resources(void)
+ 			request_resource(res, &kernel_data);
+ #ifdef CONFIG_KEXEC_CORE
+ 		/* Userspace will find "Crash kernel" region in /proc/iomem. */
++		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
++		    crashk_low_res.end <= res->end)
++			request_resource(res, &crashk_low_res);
+ 		if (crashk_res.end && crashk_res.start >= res->start &&
+ 		    crashk_res.end <= res->end)
+ 			request_resource(res, &crashk_res);
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 972bf43..3bebddf 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -64,6 +64,7 @@ EXPORT_SYMBOL(memstart_addr);
+ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+ 
+ #ifdef CONFIG_KEXEC_CORE
++
+ /*
+  * reserve_crashkernel() - reserves memory for crash kernel
+  *
+@@ -74,20 +75,30 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+ static void __init reserve_crashkernel(void)
+ {
+ 	unsigned long long crash_base, crash_size;
++	bool high = false;
+ 	int ret;
+ 
+ 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base);
+ 	/* no crashkernel= or invalid value specified */
+-	if (ret || !crash_size)
+-		return;
++	if (ret || !crash_size) {
++		/* crashkernel=X,high */
++		ret = parse_crashkernel_high(boot_command_line,
++				memblock_phys_mem_size(),
++				&crash_size, &crash_base);
++		if (ret || !crash_size)
++			return;
++		high = true;
++	}
+ 
+ 	crash_size = PAGE_ALIGN(crash_size);
+ 
+ 	if (crash_base == 0) {
+ 		/* Current arm64 boot protocol requires 2MB alignment */
+-		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
+-				crash_size, SZ_2M);
++		crash_base = memblock_find_in_range(0,
++				high ? memblock_end_of_DRAM()
++				: ARCH_LOW_ADDRESS_LIMIT,
++				crash_size, CRASH_ALIGN);
+ 		if (crash_base == 0) {
+ 			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+ 				crash_size);
+@@ -105,13 +116,18 @@ static void __init reserve_crashkernel(void)
+ 			return;
+ 		}
+ 
+-		if (!IS_ALIGNED(crash_base, SZ_2M)) {
++		if (!IS_ALIGNED(crash_base, CRASH_ALIGN)) {
+ 			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
+ 			return;
+ 		}
+ 	}
+ 	memblock_reserve(crash_base, crash_size);
+ 
++	if (crash_base >= SZ_4G && reserve_crashkernel_low()) {
++		memblock_free(crash_base, crash_size);
++		return;
++	}
++
+ 	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
+ 		crash_base, crash_base + crash_size, crash_size >> 20);
+ 
+-- 
+2.7.4
 
 
 _______________________________________________
