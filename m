@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-f67.google.com ([209.85.167.67])
+Received: from mail-pl1-f194.google.com ([209.85.214.194])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hDhv6-0001t8-4l
- for kexec@lists.infradead.org; Tue, 09 Apr 2019 03:59:38 +0000
-Received: by mail-lf1-f67.google.com with SMTP id 10so11130673lfr.8
- for <kexec@lists.infradead.org>; Mon, 08 Apr 2019 20:59:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190408092239.18012-1-chenzhou10@huawei.com>
- <20190408093626.dlv7u44o355xfwus@verge.net.au>
-In-Reply-To: <20190408093626.dlv7u44o355xfwus@verge.net.au>
+ id 1hDjBJ-0004qK-L3
+ for kexec@lists.infradead.org; Tue, 09 Apr 2019 05:20:28 +0000
+Received: by mail-pl1-f194.google.com with SMTP id n8so4105363plp.10
+ for <kexec@lists.infradead.org>; Mon, 08 Apr 2019 22:20:25 -0700 (PDT)
+Subject: Re: [PATCH 0/3] support reserving crashkernel above 4G on arm64 kdump
+References: <20190403030546.23718-1-chenzhou10@huawei.com>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 9 Apr 2019 11:59:21 +0800
-Message-ID: <CACi5LpMQGPYfF=5cRJNv3vu-41Qf_4bewD544=z0R0tADn43oA@mail.gmail.com>
-Subject: Re: [RESEND PATCH] arm64: support more than one crash kernel regions
+Message-ID: <49012d55-2020-e2ac-1102-59a5f3911a29@redhat.com>
+Date: Tue, 9 Apr 2019 13:20:16 +0800
+MIME-Version: 1.0
+In-Reply-To: <20190403030546.23718-1-chenzhou10@huawei.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,49 +21,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Chen Zhou <chenzhou10@huawei.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, wangkefeng.wang@huawei.com, kexec mailing list <kexec@lists.infradead.org>
+To: Chen Zhou <chenzhou10@huawei.com>, catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, rppt@linux.ibm.com, ard.biesheuvel@linaro.org, takahiro.akashi@linaro.org
+Cc: linux-mm@kvack.org, wangkefeng.wang@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-Hi Simon, Chen,
+Hi Chen,
 
-On Mon, Apr 8, 2019 at 5:36 PM Simon Horman <horms@verge.net.au> wrote:
->
-> On Mon, Apr 08, 2019 at 05:22:39PM +0800, Chen Zhou wrote:
-> > When crashkernel is reserved above 4G in memory, kernel should
-> > reserve some amount of low memory for swiotlb and some DMA buffers.
-> > So there may be two crash kernel regions, one is below 4G, the other
-> > is above 4G.
-> >
-> > Currently, there is only one crash kernel region on arm64, and pass
-> > "linux,usable-memory-range = <BASE SIZE>" property to crash dump
-> > kernel. Now, we pass
-> > "linux,usable-memory-range = <BASE1 SIZE1 BASE2 SIZE2>" to crash
-> > dump kernel to support two crash kernel regions and load crash
-> > kernel high.
-> >
-> > This patch paves the way for the use of arm64 reserving crashkernel
-> > above 4G. The details are as below:
-> > Link: https://lore.kernel.org/linux-arm-kernel/20190403030546.23718-1-chenzhou10@huawei.com/T/#t
-> >
-> > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->
-> Thanks, applied.
+Thanks for the patchset.
 
-Sorry, but I think the kernel patch which adds this functionality is
-still under discussion and review (see [1]).
-May be we can wait for the kernel change to be first discussed and
-absorbed and then integrate this patch in kexec-tools.
+Before I review the patches in detail, I have a couple of generic 
+queries. Please see them in-line:
 
-What do you think?
+On 04/03/2019 11:05 AM, Chen Zhou wrote:
+> When crashkernel is reserved above 4G in memory, kernel should reserve
+> some amount of low memory for swiotlb and some DMA buffers. So there may
+> be two crash kernel regions, one is below 4G, the other is above 4G.
+> 
+> Crash dump kernel reads more than one crash kernel regions via a dtb
+> property under node /chosen,
+> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
+> 
+> Besides, we need to modify kexec-tools:
+>    arm64: support more than one crash kernel regions
+> 
+> Chen Zhou (3):
+>    arm64: kdump: support reserving crashkernel above 4G
+>    arm64: kdump: support more than one crash kernel regions
+>    kdump: update Documentation about crashkernel on arm64
+> 
+>   Documentation/admin-guide/kernel-parameters.txt |   4 +-
+>   arch/arm64/kernel/setup.c                       |   3 +
+>   arch/arm64/mm/init.c                            | 108 ++++++++++++++++++++----
+>   include/linux/memblock.h                        |   1 +
+>   mm/memblock.c                                   |  40 +++++++++
+>   5 files changed, 139 insertions(+), 17 deletions(-)
 
-[1]. https://lkml.org/lkml/2019/4/2/1173
+I am wondering about the use-case for the same. I remember normally 
+fedora-based arm64 systems can do well with a maximum crashkernel size 
+of <=512MB reserved below the 4G boundary.
+
+So, do you mean that for your use-case (may be a huawei board based 
+setup?), you need:
+
+- more than 512MB of crashkernel size, or
+- you want to split the crashkernel reservation across the 4GB boundary 
+irrespective of the crashkernel size value.
 
 Thanks,
 Bhupesh
+
 
 _______________________________________________
 kexec mailing list
