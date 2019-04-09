@@ -1,10 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH v3 4/4] kdump: update Documentation about crashkernel on arm64
-Date: Tue, 9 Apr 2019 18:28:19 +0800
-Message-ID: <20190409102819.121335-5-chenzhou10@huawei.com>
-In-Reply-To: <20190409102819.121335-1-chenzhou10@huawei.com>
-References: <20190409102819.121335-1-chenzhou10@huawei.com>
+Subject: [PATCH v3 0/4] support reserving crashkernel above 4G on arm64 kdump
+Date: Tue, 9 Apr 2019 18:28:15 +0800
+Message-ID: <20190409102819.121335-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,35 +19,52 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, rppt@linux.ibm.com, catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, ard.biesheuvel@linaro.org
 Cc: wangkefeng.wang@huawei.com, linux-mm@kvack.org, Chen Zhou <chenzhou10@huawei.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, horms@verge.net.au, linux-arm-kernel@lists.infradead.org
 
-Now we support crashkernel=X,[high,low] on arm64, update the
-Documentation.
+When crashkernel is reserved above 4G in memory, kernel should reserve
+some amount of low memory for swiotlb and some DMA buffers. So there may
+be two crash kernel regions, one is below 4G, the other is above 4G.
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- Documentation/admin-guide/kernel-parameters.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Crash dump kernel reads more than one crash kernel regions via a dtb
+property under node /chosen,
+linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 060482d..d5c65e1 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -715,14 +715,14 @@
- 			Documentation/kdump/kdump.txt for an example.
- 
- 	crashkernel=size[KMG],high
--			[KNL, x86_64] range could be above 4G. Allow kernel
-+			[KNL, x86_64, arm64] range could be above 4G. Allow kernel
- 			to allocate physical memory region from top, so could
- 			be above 4G if system have more than 4G ram installed.
- 			Otherwise memory region will be allocated below 4G, if
- 			available.
- 			It will be ignored if crashkernel=X is specified.
- 	crashkernel=size[KMG],low
--			[KNL, x86_64] range under 4G. When crashkernel=X,high
-+			[KNL, x86_64, arm64] range under 4G. When crashkernel=X,high
- 			is passed, kernel could allocate physical memory region
- 			above 4G, that cause second kernel crash on system
- 			that require some amount of low memory, e.g. swiotlb
+Besides, we need to modify kexec-tools:
+  arm64: support more than one crash kernel regions(see [1])
+
+Changes since [v2]
+- Split patch "arm64: kdump: support reserving crashkernel above 4G" as
+  two. Put "move reserve_crashkernel_low() into kexec_core.c" in a seperate
+  patch.
+
+Changes since [v1]:
+- Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
+- Remove memblock_cap_memory_ranges() i added in v1 and implement that
+  in fdt_enforce_memory_region().
+  There are at most two crash kernel regions, for two crash kernel regions
+  case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
+  and then remove the memory range in the middle.
+
+[1]: http://lists.infradead.org/pipermail/kexec/2019-April/022792.html
+[v1]: https://lkml.org/lkml/2019/4/8/628
+[v2]: https://lkml.org/lkml/2019/4/9/86
+
+Chen Zhou (4):
+  x86: kdump: move reserve_crashkernel_low() into kexec_core.c
+  arm64: kdump: support reserving crashkernel above 4G
+  arm64: kdump: support more than one crash kernel regions
+  kdump: update Documentation about crashkernel on arm64
+
+ Documentation/admin-guide/kernel-parameters.txt |  4 +-
+ arch/arm64/include/asm/kexec.h                  |  3 +
+ arch/arm64/kernel/setup.c                       |  3 +
+ arch/arm64/mm/init.c                            | 92 +++++++++++++++++++++----
+ arch/x86/include/asm/kexec.h                    |  3 +
+ arch/x86/kernel/setup.c                         | 66 ++----------------
+ include/linux/kexec.h                           |  1 +
+ include/linux/memblock.h                        |  6 ++
+ kernel/kexec_core.c                             | 53 ++++++++++++++
+ mm/memblock.c                                   |  7 +-
+ 10 files changed, 159 insertions(+), 79 deletions(-)
+
 -- 
 2.7.4
 
