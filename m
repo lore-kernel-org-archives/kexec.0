@@ -1,18 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hE9KB-0004Za-Sr
- for kexec@lists.infradead.org; Wed, 10 Apr 2019 09:15:22 +0000
-Date: Wed, 10 Apr 2019 11:15:15 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [RESEND PATCH] arm64: support more than one crash kernel regions
-Message-ID: <20190410091515.ix7wftdwqa65t2ke@verge.net.au>
-References: <20190408092239.18012-1-chenzhou10@huawei.com>
- <20190408093626.dlv7u44o355xfwus@verge.net.au>
- <CACi5LpMQGPYfF=5cRJNv3vu-41Qf_4bewD544=z0R0tADn43oA@mail.gmail.com>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1hECyr-0004ES-QQ
+ for kexec@lists.infradead.org; Wed, 10 Apr 2019 13:09:35 +0000
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x3AD4ero051190
+ for <kexec@lists.infradead.org>; Wed, 10 Apr 2019 09:09:30 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2rsf9rwjwg-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 10 Apr 2019 09:09:30 -0400
+Received: from localhost
+ by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <rppt@linux.ibm.com>;
+ Wed, 10 Apr 2019 14:09:28 +0100
+Date: Wed, 10 Apr 2019 16:09:18 +0300
+From: Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v3 3/4] arm64: kdump: support more than one crash kernel
+ regions
+References: <20190409102819.121335-1-chenzhou10@huawei.com>
+ <20190409102819.121335-4-chenzhou10@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CACi5LpMQGPYfF=5cRJNv3vu-41Qf_4bewD544=z0R0tADn43oA@mail.gmail.com>
+In-Reply-To: <20190409102819.121335-4-chenzhou10@huawei.com>
+Message-Id: <20190410130917.GC17196@rapoport-lnx>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,46 +39,266 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Chen Zhou <chenzhou10@huawei.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, wangkefeng.wang@huawei.com, kexec mailing list <kexec@lists.infradead.org>
+To: Chen Zhou <chenzhou10@huawei.com>
+Cc: wangkefeng.wang@huawei.com, horms@verge.net.au, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, takahiro.akashi@linaro.org, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, kexec@lists.infradead.org, tglx@linutronix.de, akpm@linux-foundation.org, linux-arm-kernel@lists.infradead.org
 
-On Tue, Apr 09, 2019 at 11:59:21AM +0800, Bhupesh Sharma wrote:
-> Hi Simon, Chen,
-> 
-> On Mon, Apr 8, 2019 at 5:36 PM Simon Horman <horms@verge.net.au> wrote:
-> >
-> > On Mon, Apr 08, 2019 at 05:22:39PM +0800, Chen Zhou wrote:
-> > > When crashkernel is reserved above 4G in memory, kernel should
-> > > reserve some amount of low memory for swiotlb and some DMA buffers.
-> > > So there may be two crash kernel regions, one is below 4G, the other
-> > > is above 4G.
-> > >
-> > > Currently, there is only one crash kernel region on arm64, and pass
-> > > "linux,usable-memory-range = <BASE SIZE>" property to crash dump
-> > > kernel. Now, we pass
-> > > "linux,usable-memory-range = <BASE1 SIZE1 BASE2 SIZE2>" to crash
-> > > dump kernel to support two crash kernel regions and load crash
-> > > kernel high.
-> > >
-> > > This patch paves the way for the use of arm64 reserving crashkernel
-> > > above 4G. The details are as below:
-> > > Link: https://lore.kernel.org/linux-arm-kernel/20190403030546.23718-1-chenzhou10@huawei.com/T/#t
-> > >
-> > > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> >
-> > Thanks, applied.
-> 
-> Sorry, but I think the kernel patch which adds this functionality is
-> still under discussion and review (see [1]).
-> May be we can wait for the kernel change to be first discussed and
-> absorbed and then integrate this patch in kexec-tools.
-> 
-> What do you think?
-> 
-> [1]. https://lkml.org/lkml/2019/4/2/1173
+Hi,
 
-Sure, sorry for being a bit too hasty.
-I will drop this patch for now.
+On Tue, Apr 09, 2019 at 06:28:18PM +0800, Chen Zhou wrote:
+> After commit (arm64: kdump: support reserving crashkernel above 4G),
+> there may be two crash kernel regions, one is below 4G, the other is
+> above 4G.
+> 
+> Crash dump kernel reads more than one crash kernel regions via a dtb
+> property under node /chosen,
+> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+> 
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  arch/arm64/mm/init.c     | 66 ++++++++++++++++++++++++++++++++++++++++--------
+>  include/linux/memblock.h |  6 +++++
+>  mm/memblock.c            |  7 ++---
+>  3 files changed, 66 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 3bebddf..0f18665 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -65,6 +65,11 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+>  
+>  #ifdef CONFIG_KEXEC_CORE
+>  
+> +/* at most two crash kernel regions, low_region and high_region */
+> +#define CRASH_MAX_USABLE_RANGES	2
+> +#define LOW_REGION_IDX			0
+> +#define HIGH_REGION_IDX			1
+> +
+>  /*
+>   * reserve_crashkernel() - reserves memory for crash kernel
+>   *
+> @@ -297,8 +302,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+>  		const char *uname, int depth, void *data)
+>  {
+>  	struct memblock_region *usablemem = data;
+> -	const __be32 *reg;
+> -	int len;
+> +	const __be32 *reg, *endp;
+> +	int len, nr = 0;
+>  
+>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
+>  		return 0;
+> @@ -307,22 +312,63 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+>  		return 1;
+>  
+> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> +	endp = reg + (len / sizeof(__be32));
+> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
+> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> +
+> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
+> +			break;
+> +	}
+>  
+>  	return 1;
+>  }
+>  
+>  static void __init fdt_enforce_memory_region(void)
+>  {
+> -	struct memblock_region reg = {
+> -		.size = 0,
+> -	};
+> +	int i, cnt = 0;
+> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
+
+I only now noticed that fdt_enforce_memory_region() uses memblock_region to
+pass the ranges around. If we'd switch to memblock_type instead, the
+implementation of memblock_cap_memory_ranges() would be really
+straightforward. Can you check if the below patch works for you? 
+
+From e476d584098e31273af573e1a78e308880c5cf28 Mon Sep 17 00:00:00 2001
+From: Mike Rapoport <rppt@linux.ibm.com>
+Date: Wed, 10 Apr 2019 16:02:32 +0300
+Subject: [PATCH] memblock: extend memblock_cap_memory_range to multiple ranges
+
+The memblock_cap_memory_range() removes all the memory except the range
+passed to it. Extend this function to recieve memblock_type with the
+regions that should be kept. This allows switching to simple iteration over
+memblock arrays with 'for_each_mem_range' to remove the unneeded memory.
+
+Enable use of this function in arm64 for reservation of multile regions for
+the crash kernel.
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ arch/arm64/mm/init.c     | 34 ++++++++++++++++++++++++----------
+ include/linux/memblock.h |  2 +-
+ mm/memblock.c            | 45 ++++++++++++++++++++++-----------------------
+ 3 files changed, 47 insertions(+), 34 deletions(-)
+
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 6bc1350..30a496f 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -64,6 +64,10 @@ EXPORT_SYMBOL(memstart_addr);
+ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+ 
+ #ifdef CONFIG_KEXEC_CORE
++
++/* at most two crash kernel regions, low_region and high_region */
++#define CRASH_MAX_USABLE_RANGES	2
++
+ /*
+  * reserve_crashkernel() - reserves memory for crash kernel
+  *
+@@ -280,9 +284,9 @@ early_param("mem", early_mem);
+ static int __init early_init_dt_scan_usablemem(unsigned long node,
+ 		const char *uname, int depth, void *data)
+ {
+-	struct memblock_region *usablemem = data;
+-	const __be32 *reg;
+-	int len;
++	struct memblock_type *usablemem = data;
++	const __be32 *reg, *endp;
++	int len, nr = 0;
+ 
+ 	if (depth != 1 || strcmp(uname, "chosen") != 0)
+ 		return 0;
+@@ -291,22 +295,32 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+ 	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+ 		return 1;
+ 
+-	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+-	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
++	endp = reg + (len / sizeof(__be32));
++	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
++		unsigned long base = dt_mem_next_cell(dt_root_addr_cells, &reg);
++		unsigned long size = dt_mem_next_cell(dt_root_size_cells, &reg);
+ 
++		if (memblock_add_range(usablemem, base, size, NUMA_NO_NODE,
++				       MEMBLOCK_NONE))
++			return 0;
++		if (++nr >= CRASH_MAX_USABLE_RANGES)
++			break;
++	}
+ 	return 1;
+ }
+ 
+ static void __init fdt_enforce_memory_region(void)
+ {
+-	struct memblock_region reg = {
+-		.size = 0,
++	struct memblock_region usable_regions[CRASH_MAX_USABLE_RANGES];
++	struct memblock_type usablemem = {
++		.max = CRASH_MAX_USABLE_RANGES,
++		.regions = usable_regions,
+ 	};
+ 
+-	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
++	of_scan_flat_dt(early_init_dt_scan_usablemem, &usablemem);
+ 
+-	if (reg.size)
+-		memblock_cap_memory_range(reg.base, reg.size);
++	if (usablemem.cnt)
++		memblock_cap_memory_ranges(&usablemem);
+ }
+ 
+ void __init arm64_memblock_init(void)
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 294d5d8..a803ae9 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -404,7 +404,7 @@ phys_addr_t memblock_mem_size(unsigned long limit_pfn);
+ phys_addr_t memblock_start_of_DRAM(void);
+ phys_addr_t memblock_end_of_DRAM(void);
+ void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+-void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
++void memblock_cap_memory_ranges(struct memblock_type *regions_to_keep);
+ void memblock_mem_limit_remove_map(phys_addr_t limit);
+ bool memblock_is_memory(phys_addr_t addr);
+ bool memblock_is_map_memory(phys_addr_t addr);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index e7665cf..83d84d4 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1605,36 +1605,34 @@ void __init memblock_enforce_memory_limit(phys_addr_t limit)
+ 			      PHYS_ADDR_MAX);
+ }
+ 
+-void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
++void __init memblock_cap_memory_ranges(struct memblock_type *regions_to_keep)
+ {
+-	int start_rgn, end_rgn;
+-	int i, ret;
+-
+-	if (!size)
+-		return;
+-
+-	ret = memblock_isolate_range(&memblock.memory, base, size,
+-						&start_rgn, &end_rgn);
+-	if (ret)
+-		return;
+-
+-	/* remove all the MAP regions */
+-	for (i = memblock.memory.cnt - 1; i >= end_rgn; i--)
+-		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+-			memblock_remove_region(&memblock.memory, i);
++	phys_addr_t start, end;
++	u64 i;
+ 
+-	for (i = start_rgn - 1; i >= 0; i--)
+-		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+-			memblock_remove_region(&memblock.memory, i);
++	/* truncate memory while skipping NOMAP regions */
++	for_each_mem_range(i, &memblock.memory, regions_to_keep, NUMA_NO_NODE,
++			   MEMBLOCK_NONE, &start, &end, NULL)
++		memblock_remove(start, end);
+ 
+ 	/* truncate the reserved regions */
+-	memblock_remove_range(&memblock.reserved, 0, base);
+-	memblock_remove_range(&memblock.reserved,
+-			base + size, PHYS_ADDR_MAX);
++	for_each_mem_range(i, &memblock.reserved, regions_to_keep, NUMA_NO_NODE,
++			   MEMBLOCK_NONE, &start, &end, NULL)
++		memblock_remove_range(&memblock.reserved, start, end);
+ }
+ 
+ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+ {
++	struct memblock_region rgn = {
++		.base = 0,
++	};
++
++	struct memblock_type region_to_keep = {
++		.cnt = 1,
++		.max = 1,
++		.regions = &rgn,
++	};
++
+ 	phys_addr_t max_addr;
+ 
+ 	if (!limit)
+@@ -1646,7 +1644,8 @@ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+ 	if (max_addr == PHYS_ADDR_MAX)
+ 		return;
+ 
+-	memblock_cap_memory_range(0, max_addr);
++	region_to_keep.regions[0].size = max_addr;
++	memblock_cap_memory_ranges(&region_to_keep);
+ }
+ 
+ static int __init_memblock memblock_search(struct memblock_type *type, phys_addr_t addr)
+-- 
+2.7.4
+
+
+
+-- 
+Sincerely yours,
+Mike.
+
 
 _______________________________________________
 kexec mailing list
