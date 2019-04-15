@@ -1,36 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hFtnJ-0003Iq-Cn
- for kexec@lists.infradead.org; Mon, 15 Apr 2019 05:04:38 +0000
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x3F53IQ1122905
- for <kexec@lists.infradead.org>; Mon, 15 Apr 2019 01:04:36 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2rvhgfvug2-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 15 Apr 2019 01:04:36 -0400
-Received: from localhost
- by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <rppt@linux.ibm.com>;
- Mon, 15 Apr 2019 06:04:34 +0100
-Date: Mon, 15 Apr 2019 08:04:18 +0300
-From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v3 3/4] arm64: kdump: support more than one crash kernel
- regions
-References: <20190409102819.121335-1-chenzhou10@huawei.com>
- <20190409102819.121335-4-chenzhou10@huawei.com>
- <20190410130917.GC17196@rapoport-lnx>
- <137bef2e-8726-fd8f-1cb0-7592074f7870@huawei.com>
- <20190414121058.GC20947@rapoport-lnx>
- <b5206f0c-d711-427e-256a-98b2e30c1ab0@huawei.com>
+ id 1hFvdd-0003gD-Fn
+ for kexec@lists.infradead.org; Mon, 15 Apr 2019 07:02:47 +0000
+From: Junichi Nomura <j-nomura@ce.jp.nec.com>
+Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Date: Mon, 15 Apr 2019 07:01:54 +0000
+Message-ID: <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
+References: <20190411080927.GA30080@zn.tnic>
+ <e4de0520-ade8-2834-dadf-7af68701356b@ce.jp.nec.com>
+ <20190411083738.GC30080@zn.tnic>
+ <2946b5e3-90bf-d617-16a4-d2225b490b5d@ce.jp.nec.com>
+ <DFC5B552-9B44-422B-8EAE-A32C24BB7A88@alien8.de>
+ <e88fda9c-bd5a-d263-cd8a-380828dd6a93@ce.jp.nec.com>
+ <C54C5A30-62D9-45C4-8036-88D255FD92A1@alien8.de>
+ <20190411125822.GE30080@zn.tnic>
+ <20190412025416.GA11070@jeru.linux.bs1.fc.nec.co.jp>
+ <20190412084956.GC19808@zn.tnic> <20190412133528.GD19808@zn.tnic>
+In-Reply-To: <20190412133528.GD19808@zn.tnic>
+Content-Language: ja-JP
+Content-ID: <94E790B68FB193469C00239E878FC0EC@gisp.nec.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <b5206f0c-d711-427e-256a-98b2e30c1ab0@huawei.com>
-Message-Id: <20190415050417.GB6167@rapoport-lnx>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,53 +34,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chen Zhou <chenzhou10@huawei.com>
-Cc: wangkefeng.wang@huawei.com, horms@verge.net.au, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, takahiro.akashi@linaro.org, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, kexec@lists.infradead.org, tglx@linutronix.de, akpm@linux-foundation.org, linux-arm-kernel@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Young <dyoung@redhat.com>
 
-Hi,
-
-On Mon, Apr 15, 2019 at 10:05:18AM +0800, Chen Zhou wrote:
-> Hi Mike,
+On 4/12/19 10:35 PM, Borislav Petkov wrote:
+> On Fri, Apr 12, 2019 at 10:49:56AM +0200, Borislav Petkov wrote:
+>> Now I need to go figure out whether there's a reliable way to know in
+>> the kexec kernel that it *is* a kexec kernel.
 > 
-> On 2019/4/14 20:10, Mike Rapoport wrote:
-> >>
-> >> solution A: 	phys_addr_t start[INIT_MEMBLOCK_RESERVED_REGIONS * 2];
-> >> 		phys_addr_t end[INIT_MEMBLOCK_RESERVED_REGIONS * 2];
-> >> start, end is physical addr
-> >>
-> >> solution B: 	int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
-> >> start_rgn, end_rgn is rgn index		
-> >>
-> >> Solution B do less remove operations and with no warning comparing to solution A.
-> >> I think solution B is better, could you give some suggestions?
-> >  
-> > Solution B is indeed better that solution A, but I'm still worried by
-> > relatively large arrays on stack and the amount of loops :(
-> > 
-> > The very least we could do is to call memblock_cap_memory_range() to drop
-> > the memory before and after the ranges we'd like to keep.
+> Actually, thinking about this more, we don't need to know whether the
+> kernel was kexeced or not. Why?
 > 
-> 1. relatively large arrays
-> As my said above, the start_rgn, end_rgn is rgn index, we could use unsigned char type.
-
-Let's stick to int for now
-
-> 2. loops
-> Loops always exist, and the solution with fewer loops may be just encapsulated well.
-
-Of course the loops are there, I just hoped we could get rid of the nested
-loop and get away with single passes in all the cases.
-Apparently it's not the case :(
-
-> Thanks,
-> Chen Zhou
+> Because if it is kexec'ed, kexec(1) passes the required info in
+> setup_data. Now, if for whatever reason the kexec'ed kernel fails to
+> parse that EFI info and get the systab to figure out the RDSP, then it
+> doesn't have any other choice but fail booting.
 > 
+> Because there's no way it can figure out where the EFI runtime has been
+> mapped and recover by finding the RDSP from there.
+> 
+> So I think we're perfectly fine with the old approach:
+> 
+>         if (!pa)
+>                 pa = kexec_get_rsdp_addr();
+> 
+>         if (!pa)
+>                 pa = efi_get_rsdp_addr();
+
+OK. Then I'll go back to v3 and make sure to hang when
+something is wrong during kexec boot on EFI system.
 
 -- 
-Sincerely yours,
-Mike.
-
-
+Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
