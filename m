@@ -1,8 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH v4 5/5] kdump: update Documentation about crashkernel on arm64
-Date: Mon, 15 Apr 2019 18:57:25 +0800
-Message-ID: <20190415105725.22088-6-chenzhou10@huawei.com>
+Subject: [PATCH v4 4/5] arm64: kdump: support more than one crash kernel
+ regions
+Date: Mon, 15 Apr 2019 18:57:24 +0800
+Message-ID: <20190415105725.22088-5-chenzhou10@huawei.com>
 In-Reply-To: <20190415105725.22088-1-chenzhou10@huawei.com>
 References: <20190415105725.22088-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
@@ -21,35 +22,172 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, rppt@linux.ibm.com, catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, ard.biesheuvel@linaro.org
 Cc: wangkefeng.wang@huawei.com, linux-mm@kvack.org, Chen Zhou <chenzhou10@huawei.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, horms@verge.net.au, linux-arm-kernel@lists.infradead.org
 
-Now we support crashkernel=X,[high,low] on arm64, update the
-Documentation.
+After commit (arm64: kdump: support reserving crashkernel above 4G),
+there may be two crash kernel regions, one is below 4G, the other is
+above 4G. Use memblock_cap_memory_ranges() to support multiple crash
+kernel regions.
+
+Crash dump kernel reads more than one crash kernel regions via a dtb
+property under node /chosen,
+linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
+
+Besides, replace memblock_cap_memory_range() with
+memblock_cap_memory_ranges().
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/mm/init.c     | 34 ++++++++++++++++++++++++----------
+ include/linux/memblock.h |  1 -
+ mm/memblock.c            | 41 ++++++++++++-----------------------------
+ 3 files changed, 36 insertions(+), 40 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 308af3b..a055983 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -715,14 +715,14 @@
- 			Documentation/kdump/kdump.txt for an example.
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index f5dde73..921953d 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -52,6 +52,9 @@
+ #include <asm/tlb.h>
+ #include <asm/alternative.h>
  
- 	crashkernel=size[KMG],high
--			[KNL, x86_64] range could be above 4G. Allow kernel
-+			[KNL, x86_64, arm64] range could be above 4G. Allow kernel
- 			to allocate physical memory region from top, so could
- 			be above 4G if system have more than 4G ram installed.
- 			Otherwise memory region will be allocated below 4G, if
- 			available.
- 			It will be ignored if crashkernel=X is specified.
- 	crashkernel=size[KMG],low
--			[KNL, x86_64] range under 4G. When crashkernel=X,high
-+			[KNL, x86_64, arm64] range under 4G. When crashkernel=X,high
- 			is passed, kernel could allocate physical memory region
- 			above 4G, that cause second kernel crash on system
- 			that require some amount of low memory, e.g. swiotlb
++/* at most two crash kernel regions, low_region and high_region */
++#define CRASH_MAX_USABLE_RANGES	2
++
+ /*
+  * We need to be able to catch inadvertent references to memstart_addr
+  * that occur (potentially in generic code) before arm64_memblock_init()
+@@ -295,9 +298,9 @@ early_param("mem", early_mem);
+ static int __init early_init_dt_scan_usablemem(unsigned long node,
+ 		const char *uname, int depth, void *data)
+ {
+-	struct memblock_region *usablemem = data;
+-	const __be32 *reg;
+-	int len;
++	struct memblock_type *usablemem = data;
++	const __be32 *reg, *endp;
++	int len, nr = 0;
+ 
+ 	if (depth != 1 || strcmp(uname, "chosen") != 0)
+ 		return 0;
+@@ -306,22 +309,33 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+ 	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+ 		return 1;
+ 
+-	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+-	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
++	endp = reg + (len / sizeof(__be32));
++	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
++		unsigned long base = dt_mem_next_cell(dt_root_addr_cells, &reg);
++		unsigned long size = dt_mem_next_cell(dt_root_size_cells, &reg);
++
++		if (memblock_add_range(usablemem, base, size, NUMA_NO_NODE,
++				       MEMBLOCK_NONE))
++			return 0;
++		if (++nr >= CRASH_MAX_USABLE_RANGES)
++			break;
++	}
+ 
+ 	return 1;
+ }
+ 
+ static void __init fdt_enforce_memory_region(void)
+ {
+-	struct memblock_region reg = {
+-		.size = 0,
++	struct memblock_region usable_regions[CRASH_MAX_USABLE_RANGES];
++	struct memblock_type usablemem = {
++		.max = CRASH_MAX_USABLE_RANGES,
++		.regions = usable_regions,
+ 	};
+ 
+-	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
++	of_scan_flat_dt(early_init_dt_scan_usablemem, &usablemem);
+ 
+-	if (reg.size)
+-		memblock_cap_memory_range(reg.base, reg.size);
++	if (usablemem.cnt)
++		memblock_cap_memory_ranges(&usablemem);
+ }
+ 
+ void __init arm64_memblock_init(void)
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 180877c..f04dfc1 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -445,7 +445,6 @@ phys_addr_t memblock_mem_size(unsigned long limit_pfn);
+ phys_addr_t memblock_start_of_DRAM(void);
+ phys_addr_t memblock_end_of_DRAM(void);
+ void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+-void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
+ void memblock_cap_memory_ranges(struct memblock_type *regions_to_keep);
+ void memblock_mem_limit_remove_map(phys_addr_t limit);
+ bool memblock_is_memory(phys_addr_t addr);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 9661807..9b5cef4 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1669,34 +1669,6 @@ void __init memblock_enforce_memory_limit(phys_addr_t limit)
+ 			      PHYS_ADDR_MAX);
+ }
+ 
+-void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
+-{
+-	int start_rgn, end_rgn;
+-	int i, ret;
+-
+-	if (!size)
+-		return;
+-
+-	ret = memblock_isolate_range(&memblock.memory, base, size,
+-						&start_rgn, &end_rgn);
+-	if (ret)
+-		return;
+-
+-	/* remove all the MAP regions */
+-	for (i = memblock.memory.cnt - 1; i >= end_rgn; i--)
+-		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+-			memblock_remove_region(&memblock.memory, i);
+-
+-	for (i = start_rgn - 1; i >= 0; i--)
+-		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+-			memblock_remove_region(&memblock.memory, i);
+-
+-	/* truncate the reserved regions */
+-	memblock_remove_range(&memblock.reserved, 0, base);
+-	memblock_remove_range(&memblock.reserved,
+-			base + size, PHYS_ADDR_MAX);
+-}
+-
+ void __init memblock_cap_memory_ranges(struct memblock_type *regions_to_keep)
+ {
+ 	int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
+@@ -1744,6 +1716,16 @@ void __init memblock_cap_memory_ranges(struct memblock_type *regions_to_keep)
+ 
+ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+ {
++	struct memblock_region rgn = {
++		.base = 0,
++	};
++
++	struct memblock_type region_to_keep = {
++		.cnt = 1,
++		.max = 1,
++		.regions = &rgn,
++	};
++
+ 	phys_addr_t max_addr;
+ 
+ 	if (!limit)
+@@ -1755,7 +1737,8 @@ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+ 	if (max_addr == PHYS_ADDR_MAX)
+ 		return;
+ 
+-	memblock_cap_memory_range(0, max_addr);
++	region_to_keep.regions[0].size = max_addr;
++	memblock_cap_memory_ranges(&region_to_keep);
+ }
+ 
+ static int __init_memblock memblock_search(struct memblock_type *type, phys_addr_t addr)
 -- 
 2.7.4
 
