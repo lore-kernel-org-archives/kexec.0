@@ -1,24 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hFwJy-0003Gp-4Y
- for kexec@lists.infradead.org; Mon, 15 Apr 2019 07:46:32 +0000
-Date: Mon, 15 Apr 2019 15:46:20 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1hFxcN-0002vG-Vy
+ for kexec@lists.infradead.org; Mon, 15 Apr 2019 09:09:37 +0000
+Date: Mon, 15 Apr 2019 11:07:17 +0200
+From: Borislav Petkov <bp@alien8.de>
 Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
  kexec-ed kernel
-Message-ID: <20190415074620.GA15224@dhcp-128-65.nay.redhat.com>
-References: <20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp>
- <20190410171431.GE26580@zn.tnic>
- <7cbc096d-0548-18b1-a335-8ba114f234a7@ce.jp.nec.com>
- <20190411080927.GA30080@zn.tnic>
- <e4de0520-ade8-2834-dadf-7af68701356b@ce.jp.nec.com>
- <20190411084235.GJ3805@localhost.localdomain>
- <1bb7bccb-0270-d073-fa2f-43e1a1c73fbe@ce.jp.nec.com>
- <20190412002345.GA6356@MiWiFi-R3L-srv>
+Message-ID: <20190415090717.GA29317@zn.tnic>
+References: <20190411083738.GC30080@zn.tnic>
+ <2946b5e3-90bf-d617-16a4-d2225b490b5d@ce.jp.nec.com>
+ <DFC5B552-9B44-422B-8EAE-A32C24BB7A88@alien8.de>
+ <e88fda9c-bd5a-d263-cd8a-380828dd6a93@ce.jp.nec.com>
+ <C54C5A30-62D9-45C4-8036-88D255FD92A1@alien8.de>
+ <20190411125822.GE30080@zn.tnic>
+ <20190412025416.GA11070@jeru.linux.bs1.fc.nec.co.jp>
+ <20190412084956.GC19808@zn.tnic> <20190412133528.GD19808@zn.tnic>
+ <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190412002345.GA6356@MiWiFi-R3L-srv>
+In-Reply-To: <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,68 +32,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>, Kairui Song <kasong@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, Junichi Nomura <j-nomura@ce.jp.nec.com>
+To: Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Young <dyoung@redhat.com>
 
-On 04/12/19 at 08:23am, Baoquan He wrote:
-> On 04/11/19 at 09:14am, Junichi Nomura wrote:
-> > On 4/11/19 5:42 PM, Baoquan He wrote:
-> > > On 04/11/19 at 08:16am, Junichi Nomura wrote:
-> > >> kexec_get_rsdp_addr() might fail on kexec-booted kernel, e.g. if the
-> > >> setup_data was invalid. In such a case, falling back to efi_get_rsdp_addr()
-> > >> will hit the problem of accessing invalid table pointer again.
-> > > 
-> > > Seems you are trying to address Dave Young's comment in 
-> > > http://lkml.kernel.org/r/20190404073233.GC5708@dhcp-128-65.nay.redhat.com
-> > 
-> > Right. His "In case kexec_get_rsdp_addr failed.." comment.
-> > 
-> > > We may need discuss and make clear if those are doable. E.g the first
-> > > comment, if not hang by below line of code, returning 0 for what? Can
-> > > kexec still be saved, or just reset to firmware?
-> > > 
-> > > 	error("EFI system table not found in kexec boot_params.")
-> > 
-> > If we return 0 and also don't hang in the rest of get_rsdp_addr(),
-> > it just work as the same way as v5.0 and earlier kernel do.
-> > 
-> > Failure cases in kexec_get_rsdp_addr() are followings:
-> > 1. efi_setup_data is invalid
-> > 2. loader signature is invalid
-> > 3. EFI systab is not found in boot_params
-> > 4. RSDP is not found by parsing tables pointed to by efi_setup_data
-> > 
-> > I think all of them are critical for EFI boot, so one option could be
-> > we never return failure in kexec_get_rsdp_addr() and just hang.
-> > But hanging in this very early stage of boot may make the problem
-> > harder to investigate once happens. Even earlyprintk is not working yet.
-> > So the other option is returning 0 to defer the crash for later stage.
-> 
-> OK, I got the point, thanks. So it is deferred to the late stage, KASLR
-> may not avoid those memory region which is marked as hotpluggable in
-> SRAT. Kernel can boot up, but doesn't function well on hotplug stuff.
-> In this case, people don't know why it happened. We are still blind.
-> 
-> Seems early console in efi is the problem, but not kexec or hotplug. I
-> am fine to hang, or make it continue booting for now.
-> 
-> Hi Dave, 
-> 
-> Is it possible to fix the efi early console issue? I mean the
-> feasibility, I believe it won't be easy. Ask this because not only this
-> issue encountered, any other issue could be triggered during boot
-> decompressing stage. If efi has this problem, we can't debug them
-> either.
+On Mon, Apr 15, 2019 at 07:01:54AM +0000, Junichi Nomura wrote:
+> OK. Then I'll go back to v3 and make sure to hang when
+> something is wrong during kexec boot on EFI system.
 
-For normal boot, it maybe doable to use some boot services eg. some
-graphic protocols efi firmware provided.
+No need - I have it here locally. I'll clean it up and post it for
+review.
 
-But for kexec, it is different because it become virtual mode, boot
-services are not available, and kernel takes over the mode setting etc.
-the early framebuffer maybe usable, maybe not, it is not reliable.
+-- 
+Regards/Gruss,
+    Boris.
 
-Thanks
-Dave
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
