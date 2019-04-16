@@ -1,10 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 19/57] docs: kdump: convert it to ReST
-Date: Mon, 15 Apr 2019 23:55:44 -0300
-Message-Id: <01d5bff1774b8352e2a50bb13b9debbc236f6767.1555382110.git.mchehab+samsung@kernel.org>
-In-Reply-To: <cover.1555382110.git.mchehab+samsung@kernel.org>
-References: <cover.1555382110.git.mchehab+samsung@kernel.org>
+From: Chen Zhou <chenzhou10@huawei.com>
+Subject: [PATCH v5 0/4] support reserving crashkernel above 4G on arm64 kdump 
+Date: Tue, 16 Apr 2019 15:43:25 +0800
+Message-ID: <20190416074329.44928-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -18,516 +16,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@infradead.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, rppt@linux.ibm.com, catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, ard.biesheuvel@linaro.org
+Cc: wangkefeng.wang@huawei.com, linux-mm@kvack.org, Chen Zhou <chenzhou10@huawei.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, horms@verge.net.au, linux-arm-kernel@lists.infradead.org
 
-Convert kdump documentation to ReST and add it to the
-user faced manual, as the documents are mainly focused on
-sysadmins that would be enabling kdump.
+When crashkernel is reserved above 4G in memory, kernel should reserve
+some amount of low memory for swiotlb and some DMA buffers. So there may
+be two crash kernel regions, one is below 4G, the other is above 4G.
 
-Note: the vmcoreinfo.rst has one very long title for
-sub-sections. I opted to break this one, in order to make it
-easier to display in html.
+Crash dump kernel reads more than one crash kernel regions via a dtb
+property under node /chosen,
+linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/kdump/kdump.txt      | 131 +++++++++++++++++------------
- Documentation/kdump/vmcoreinfo.txt |  59 ++++++-------
- 2 files changed, 104 insertions(+), 86 deletions(-)
+Besides, we need to modify kexec-tools:
+  arm64: support more than one crash kernel regions(see [1])
 
-diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-index 51814450a7f8..1da2d7b765f6 100644
---- a/Documentation/kdump/kdump.txt
-+++ b/Documentation/kdump/kdump.txt
-@@ -71,9 +71,8 @@ This is a symlink to the latest version.
- 
- The latest kexec-tools git tree is available at:
- 
--git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
--and
--http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-+- git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-+- http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
- 
- There is also a gitweb interface available at
- http://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
-@@ -81,25 +80,25 @@ http://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
- More information about kexec-tools can be found at
- http://horms.net/projects/kexec/
- 
--3) Unpack the tarball with the tar command, as follows:
-+3) Unpack the tarball with the tar command, as follows::
- 
--   tar xvpzf kexec-tools.tar.gz
-+	tar xvpzf kexec-tools.tar.gz
- 
--4) Change to the kexec-tools directory, as follows:
-+4) Change to the kexec-tools directory, as follows::
- 
--   cd kexec-tools-VERSION
-+	cd kexec-tools-VERSION
- 
--5) Configure the package, as follows:
-+5) Configure the package, as follows::
- 
--   ./configure
-+	./configure
- 
--6) Compile the package, as follows:
-+6) Compile the package, as follows::
- 
--   make
-+	make
- 
--7) Install the package, as follows:
-+7) Install the package, as follows::
- 
--   make install
-+	make install
- 
- 
- Build the system and dump-capture kernels
-@@ -126,25 +125,25 @@ dump-capture kernels for enabling kdump support.
- System kernel config options
- ----------------------------
- 
--1) Enable "kexec system call" in "Processor type and features."
-+1) Enable "kexec system call" in "Processor type and features."::
- 
--   CONFIG_KEXEC=y
-+	CONFIG_KEXEC=y
- 
- 2) Enable "sysfs file system support" in "Filesystem" -> "Pseudo
--   filesystems." This is usually enabled by default.
-+   filesystems." This is usually enabled by default::
- 
--   CONFIG_SYSFS=y
-+	CONFIG_SYSFS=y
- 
-    Note that "sysfs file system support" might not appear in the "Pseudo
-    filesystems" menu if "Configure standard kernel features (for small
-    systems)" is not enabled in "General Setup." In this case, check the
--   .config file itself to ensure that sysfs is turned on, as follows:
-+   .config file itself to ensure that sysfs is turned on, as follows::
- 
--   grep 'CONFIG_SYSFS' .config
-+	grep 'CONFIG_SYSFS' .config
- 
--3) Enable "Compile the kernel with debug info" in "Kernel hacking."
-+3) Enable "Compile the kernel with debug info" in "Kernel hacking."::
- 
--   CONFIG_DEBUG_INFO=Y
-+	CONFIG_DEBUG_INFO=Y
- 
-    This causes the kernel to be built with debug symbols. The dump
-    analysis tools require a vmlinux with debug symbols in order to read
-@@ -154,29 +153,32 @@ Dump-capture kernel config options (Arch Independent)
- -----------------------------------------------------
- 
- 1) Enable "kernel crash dumps" support under "Processor type and
--   features":
-+   features"::
- 
--   CONFIG_CRASH_DUMP=y
-+	CONFIG_CRASH_DUMP=y
- 
--2) Enable "/proc/vmcore support" under "Filesystems" -> "Pseudo filesystems".
-+2) Enable "/proc/vmcore support" under "Filesystems" -> "Pseudo filesystems"::
-+
-+	CONFIG_PROC_VMCORE=y
- 
--   CONFIG_PROC_VMCORE=y
-    (CONFIG_PROC_VMCORE is set by default when CONFIG_CRASH_DUMP is selected.)
- 
- Dump-capture kernel config options (Arch Dependent, i386 and x86_64)
- --------------------------------------------------------------------
- 
- 1) On i386, enable high memory support under "Processor type and
--   features":
-+   features"::
- 
--   CONFIG_HIGHMEM64G=y
--   or
--   CONFIG_HIGHMEM4G
-+	CONFIG_HIGHMEM64G=y
-+
-+   or::
-+
-+	CONFIG_HIGHMEM4G
- 
- 2) On i386 and x86_64, disable symmetric multi-processing support
--   under "Processor type and features":
-+   under "Processor type and features"::
- 
--   CONFIG_SMP=n
-+	CONFIG_SMP=n
- 
-    (If CONFIG_SMP=y, then specify maxcpus=1 on the kernel command line
-    when loading the dump-capture kernel, see section "Load the Dump-capture
-@@ -184,9 +186,9 @@ Dump-capture kernel config options (Arch Dependent, i386 and x86_64)
- 
- 3) If one wants to build and use a relocatable kernel,
-    Enable "Build a relocatable kernel" support under "Processor type and
--   features"
-+   features"::
- 
--   CONFIG_RELOCATABLE=y
-+	CONFIG_RELOCATABLE=y
- 
- 4) Use a suitable value for "Physical address where the kernel is
-    loaded" (under "Processor type and features"). This only appears when
-@@ -211,13 +213,13 @@ Dump-capture kernel config options (Arch Dependent, i386 and x86_64)
- Dump-capture kernel config options (Arch Dependent, ppc64)
- ----------------------------------------------------------
- 
--1) Enable "Build a kdump crash kernel" support under "Kernel" options:
-+1) Enable "Build a kdump crash kernel" support under "Kernel" options::
- 
--   CONFIG_CRASH_DUMP=y
-+	CONFIG_CRASH_DUMP=y
- 
--2)   Enable "Build a relocatable kernel" support
-+2)   Enable "Build a relocatable kernel" support::
- 
--   CONFIG_RELOCATABLE=y
-+	CONFIG_RELOCATABLE=y
- 
-    Make and install the kernel and its modules.
- 
-@@ -231,11 +233,13 @@ Dump-capture kernel config options (Arch Dependent, ia64)
- 
-   The crashkernel region can be automatically placed by the system
-   kernel at run time. This is done by specifying the base address as 0,
--  or omitting it all together.
-+  or omitting it all together::
- 
--  crashkernel=256M@0
--  or
--  crashkernel=256M
-+	crashkernel=256M@0
-+
-+  or::
-+
-+	crashkernel=256M
- 
-   If the start address is specified, note that the start address of the
-   kernel will be aligned to 64Mb, so if the start address is not then
-@@ -245,9 +249,9 @@ Dump-capture kernel config options (Arch Dependent, arm)
- ----------------------------------------------------------
- 
- -   To use a relocatable kernel,
--    Enable "AUTO_ZRELADDR" support under "Boot" options:
-+    Enable "AUTO_ZRELADDR" support under "Boot" options::
- 
--    AUTO_ZRELADDR=y
-+	AUTO_ZRELADDR=y
- 
- Dump-capture kernel config options (Arch Dependent, arm64)
- ----------------------------------------------------------
-@@ -265,12 +269,12 @@ on the value of System RAM -- that's mostly for distributors that pre-setup
- the kernel command line to avoid a unbootable system after some memory has
- been removed from the machine.
- 
--The syntax is:
-+The syntax is::
- 
-     crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
-     range=start-[end]
- 
--For example:
-+For example::
- 
-     crashkernel=512M-2G:64M,2G-:128M
- 
-@@ -326,35 +330,46 @@ can choose to load the uncompressed vmlinux or compressed bzImage/vmlinuz
- of dump-capture kernel. Following is the summary.
- 
- For i386 and x86_64:
-+
- 	- Use vmlinux if kernel is not relocatable.
- 	- Use bzImage/vmlinuz if kernel is relocatable.
-+
- For ppc64:
-+
- 	- Use vmlinux
-+
- For ia64:
-+
- 	- Use vmlinux or vmlinuz.gz
-+
- For s390x:
-+
- 	- Use image or bzImage
-+
- For arm:
-+
- 	- Use zImage
-+
- For arm64:
-+
- 	- Use vmlinux or Image
- 
- If you are using an uncompressed vmlinux image then use following command
--to load dump-capture kernel.
-+to load dump-capture kernel::
- 
-    kexec -p <dump-capture-kernel-vmlinux-image> \
-    --initrd=<initrd-for-dump-capture-kernel> --args-linux \
-    --append="root=<root-dev> <arch-specific-options>"
- 
- If you are using a compressed bzImage/vmlinuz, then use following command
--to load dump-capture kernel.
-+to load dump-capture kernel::
- 
-    kexec -p <dump-capture-kernel-bzImage> \
-    --initrd=<initrd-for-dump-capture-kernel> \
-    --append="root=<root-dev> <arch-specific-options>"
- 
- If you are using a compressed zImage, then use following command
--to load dump-capture kernel.
-+to load dump-capture kernel::
- 
-    kexec --type zImage -p <dump-capture-kernel-bzImage> \
-    --initrd=<initrd-for-dump-capture-kernel> \
-@@ -362,7 +377,7 @@ to load dump-capture kernel.
-    --append="root=<root-dev> <arch-specific-options>"
- 
- If you are using an uncompressed Image, then use following command
--to load dump-capture kernel.
-+to load dump-capture kernel::
- 
-    kexec -p <dump-capture-kernel-Image> \
-    --initrd=<initrd-for-dump-capture-kernel> \
-@@ -376,18 +391,23 @@ Following are the arch specific command line options to be used while
- loading dump-capture kernel.
- 
- For i386, x86_64 and ia64:
-+
- 	"1 irqpoll maxcpus=1 reset_devices"
- 
- For ppc64:
-+
- 	"1 maxcpus=1 noirqdistrib reset_devices"
- 
- For s390x:
-+
- 	"1 maxcpus=1 cgroup_disable=memory"
- 
- For arm:
-+
- 	"1 maxcpus=1 reset_devices"
- 
- For arm64:
-+
- 	"1 maxcpus=1 reset_devices"
- 
- Notes on loading the dump-capture kernel:
-@@ -464,7 +484,7 @@ Write Out the Dump File
- =======================
- 
- After the dump-capture kernel is booted, write out the dump file with
--the following command:
-+the following command::
- 
-    cp /proc/vmcore <dump-file>
- 
-@@ -476,7 +496,7 @@ Before analyzing the dump image, you should reboot into a stable kernel.
- 
- You can do limited analysis using GDB on the dump file copied out of
- /proc/vmcore. Use the debug vmlinux built with -g and run the following
--command:
-+command::
- 
-    gdb vmlinux <dump-file>
- 
-@@ -504,6 +524,11 @@ to achieve the same behaviour.
- Contact
- =======
- 
--Vivek Goyal (vgoyal@redhat.com)
--Maneesh Soni (maneesh@in.ibm.com)
-+- Vivek Goyal (vgoyal@redhat.com)
-+- Maneesh Soni (maneesh@in.ibm.com)
- 
-+GDB macros
-+==========
-+
-+.. include:: gdbmacros.txt
-+   :literal:
-diff --git a/Documentation/kdump/vmcoreinfo.txt b/Documentation/kdump/vmcoreinfo.txt
-index bb94a4bd597a..007a6b86e0ee 100644
---- a/Documentation/kdump/vmcoreinfo.txt
-+++ b/Documentation/kdump/vmcoreinfo.txt
-@@ -1,8 +1,7 @@
--================================================================
--			VMCOREINFO
--================================================================
-+==========
-+VMCOREINFO
-+==========
- 
--===========
- What is it?
- ===========
- 
-@@ -12,7 +11,6 @@ values, field offsets, etc. These data are packed into an ELF note
- section and used by user-space tools like crash and makedumpfile to
- analyze a kernel's memory layout.
- 
--================
- Common variables
- ================
- 
-@@ -49,7 +47,7 @@ in a system, one bit position per node number. Used to keep track of
- which nodes are in the system and online.
- 
- swapper_pg_dir
---------------
-+--------------
- 
- The global page directory pointer of the kernel. Used to translate
- virtual to physical addresses.
-@@ -132,16 +130,14 @@ nodemask_t
- The size of a nodemask_t type. Used to compute the number of online
- nodes.
- 
--(page, flags|_refcount|mapping|lru|_mapcount|private|compound_dtor|
--       compound_order|compound_head)
---------------------------------------------------------------------
-+(page, flags|_refcount|mapping|lru|_mapcount|private|compound_dtor|compound_order|compound_head)
-+-------------------------------------------------------------------------------------------------
- 
- User-space tools compute their values based on the offset of these
- variables. The variables are used when excluding unnecessary pages.
- 
--(pglist_data, node_zones|nr_zones|node_mem_map|node_start_pfn|node_
--              spanned_pages|node_id)
---------------------------------------------------------------------
-+(pglist_data, node_zones|nr_zones|node_mem_map|node_start_pfn|node_spanned_pages|node_id)
-+-----------------------------------------------------------------------------------------
- 
- On NUMA machines, each NUMA node has a pg_data_t to describe its memory
- layout. On UMA machines there is a single pglist_data which describes the
-@@ -245,21 +241,25 @@ NR_FREE_PAGES
- On linux-2.6.21 or later, the number of free pages is in
- vm_stat[NR_FREE_PAGES]. Used to get the number of free pages.
- 
--PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision
--|PG_head_mask|PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)
--|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
-------------------------------------------------------------------
-+PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision|PG_head_mask
-+------------------------------------------------------------------------------
- 
- Page attributes. These flags are used to filter various unnecessary for
- dumping pages.
- 
-+PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
-+-----------------------------------------------------------------------------
-+
-+More page attributes. These flags are used to filter various unnecessary for
-+dumping pages.
-+
-+
- HUGETLB_PAGE_DTOR
- -----------------
- 
- The HUGETLB_PAGE_DTOR flag denotes hugetlbfs pages. Makedumpfile
- excludes these pages.
- 
--======
- x86_64
- ======
- 
-@@ -318,12 +318,12 @@ address.
- Currently, sme_mask stores the value of the C-bit position. If needed,
- additional SME-relevant info can be placed in that variable.
- 
--For example:
--[ misc	        ][ enc bit  ][ other misc SME info       ]
--0000_0000_0000_0000_1000_0000_0000_0000_0000_0000_..._0000
--63   59   55   51   47   43   39   35   31   27   ... 3
-+For example::
-+
-+  [ misc	        ][ enc bit  ][ other misc SME info       ]
-+  0000_0000_0000_0000_1000_0000_0000_0000_0000_0000_..._0000
-+  63   59   55   51   47   43   39   35   31   27   ... 3
- 
--======
- x86_32
- ======
- 
-@@ -335,7 +335,6 @@ of a higher page table lookup overhead, and also consumes more page
- table space per process. Used to check whether PAE was enabled in the
- crash kernel when converting virtual addresses to physical addresses.
- 
--====
- ia64
- ====
- 
-@@ -366,7 +365,6 @@ PGTABLE_3|PGTABLE_4
- User-space tools need to know whether the crash kernel was in 3-level or
- 4-level paging mode. Used to distinguish the page table.
- 
--=====
- ARM64
- =====
- 
-@@ -395,9 +393,8 @@ KERNELOFFSET
- The kernel randomization offset. Used to compute the page offset. If
- KASLR is disabled, this value is zero.
- 
--====
- arm
--====
-+===
- 
- ARM_LPAE
- --------
-@@ -405,12 +402,11 @@ ARM_LPAE
- It indicates whether the crash kernel supports large physical address
- extensions. Used to translate virtual to physical addresses.
- 
--====
- s390
- ====
- 
- lowcore_ptr
------------
-+-----------
- 
- An array with a pointer to the lowcore of every CPU. Used to print the
- psw and all registers information.
-@@ -425,7 +421,6 @@ Used to get the vmalloc_start address from the high_memory symbol.
- 
- The maximum number of CPUs.
- 
--=======
- powerpc
- =======
- 
-@@ -460,9 +455,8 @@ Page size definitions, i.e. 4k, 64k, or 16M.
- 
- Used to make vtop translations.
- 
--vmemmap_backing|(vmemmap_backing, list)|(vmemmap_backing, phys)|
--(vmemmap_backing, virt_addr)
------------------------------------------------------------------
-+vmemmap_backing|(vmemmap_backing, list)|(vmemmap_backing, phys)|(vmemmap_backing, virt_addr)
-+--------------------------------------------------------------------------------------------
- 
- The vmemmap virtual address space management does not have a traditional
- page table to track which virtual struct pages are backed by a physical
-@@ -480,7 +474,6 @@ member.
- 
- Used in vtop translations.
- 
--==
- sh
- ==
- 
+Changes since [v4]
+- reimplement memblock_cap_memory_ranges for multiple ranges.
+
+Changes since [v3]
+- Add memblock_cap_memory_ranges for multiple ranges.
+- Split patch "arm64: kdump: support more than one crash kernel regions"
+as two. One is above "Add memblock_cap_memory_ranges", the other is using
+memblock_cap_memory_ranges to support multiple crash kernel regions.
+- Fix some compiling warnings.
+
+Changes since [v2]
+- Split patch "arm64: kdump: support reserving crashkernel above 4G" as
+  two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
+  patch.
+
+Changes since [v1]:
+- Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
+- Remove memblock_cap_memory_ranges() i added in v1 and implement that
+  in fdt_enforce_memory_region().
+  There are at most two crash kernel regions, for two crash kernel regions
+  case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
+  and then remove the memory range in the middle.
+
+[1]: http://lists.infradead.org/pipermail/kexec/2019-April/022792.html
+[v1]: https://lkml.org/lkml/2019/4/8/628
+[v2]: https://lkml.org/lkml/2019/4/9/86
+[v3]: https://lkml.org/lkml/2019/4/15/6
+[v4]: https://lkml.org/lkml/2019/4/15/273
+
+Chen Zhou (4):
+  x86: kdump: move reserve_crashkernel_low() into kexec_core.c
+  arm64: kdump: support reserving crashkernel above 4G
+  memblock: extend memblock_cap_memory_range to multiple ranges
+  kdump: update Documentation about crashkernel on arm64
+
+ Documentation/admin-guide/kernel-parameters.txt |  4 +-
+ arch/arm64/include/asm/kexec.h                  |  3 ++
+ arch/arm64/kernel/setup.c                       |  3 ++
+ arch/arm64/mm/init.c                            | 59 ++++++++++++++++------
+ arch/x86/include/asm/kexec.h                    |  3 ++
+ arch/x86/kernel/setup.c                         | 66 +++----------------------
+ include/linux/kexec.h                           |  5 ++
+ include/linux/memblock.h                        |  2 +-
+ kernel/kexec_core.c                             | 56 +++++++++++++++++++++
+ mm/memblock.c                                   | 44 ++++++++---------
+ 10 files changed, 144 insertions(+), 101 deletions(-)
+
 -- 
-2.20.1
+2.7.4
 
 
 _______________________________________________
