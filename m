@@ -1,25 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm1-x341.google.com ([2a00:1450:4864:20::341])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hGKvA-0005GJ-Gk
- for kexec@lists.infradead.org; Tue, 16 Apr 2019 10:02:33 +0000
-Received: by mail-wm1-x341.google.com with SMTP id z11so24690752wmi.0
- for <kexec@lists.infradead.org>; Tue, 16 Apr 2019 03:02:31 -0700 (PDT)
-Date: Tue, 16 Apr 2019 12:02:26 +0200
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernels
-Message-ID: <20190416100226.GA117053@gmail.com>
-References: <20190411125822.GE30080@zn.tnic>
+Received: from mail.skyhub.de ([5.9.137.197])
+ by merlin.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1hGKf9-0001X2-LB
+ for kexec@lists.infradead.org; Tue, 16 Apr 2019 09:46:00 +0000
+Date: Tue, 16 Apr 2019 11:45:54 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190416094554.GF27892@zn.tnic>
+References: <C54C5A30-62D9-45C4-8036-88D255FD92A1@alien8.de>
+ <20190411125822.GE30080@zn.tnic>
  <20190412025416.GA11070@jeru.linux.bs1.fc.nec.co.jp>
  <20190412084956.GC19808@zn.tnic> <20190412133528.GD19808@zn.tnic>
  <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
  <20190415090717.GA29317@zn.tnic> <20190415102525.GB29317@zn.tnic>
  <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
- <20190416094024.GE27892@zn.tnic> <20190416095209.GG27892@zn.tnic>
+ <4dbbbb4b-7af9-bd98-b567-890407a15cd1@ce.jp.nec.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190416095209.GG27892@zn.tnic>
+In-Reply-To: <4dbbbb4b-7af9-bd98-b567-890407a15cd1@ce.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,29 +31,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Dave Young <dyoung@redhat.com>
+To: Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Young <dyoung@redhat.com>
 
+On Mon, Apr 15, 2019 at 11:14:34PM +0000, Junichi Nomura wrote:
+> I see kexec is only supported on 64bit kernel. But are we sure
+> we don't need to support kexec on EFI32 + 64bit kernel?
+> 
+> I don't have such an environment and as far as I tried with OVMF i386
+> and KVM guest, that combination doesn't work reliably even with v5.0.
 
-* Borislav Petkov <bp@alien8.de> wrote:
+What does that mean exactly?
 
-> I'll queue the below in the next days if there are no more complaints:
+If it can be fixed, we can try to.
 
-Just a minor style nit, this was inherited from existing code:
+> So I suppose people don't care.
 
-> +			efi_config_table_64_t *tbl = (efi_config_table_64_t *) config_tables + i;
-> +			efi_config_table_32_t *tbl = (efi_config_table_32_t *) config_tables + i;
+There's that.
 
-You might want to update that to the canonical form of:
+-- 
+Regards/Gruss,
+    Boris.
 
-> +			efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables + i;
-> +			efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables + i;
-
-Looks good otherwise.
-
-Thanks,
-
-	Ingo
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
