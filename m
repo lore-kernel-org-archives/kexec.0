@@ -1,26 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-f65.google.com ([209.85.166.65])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hGdcr-0001X4-S3
- for kexec@lists.infradead.org; Wed, 17 Apr 2019 06:00:56 +0000
-Received: by mail-io1-f65.google.com with SMTP id x3so19597991iol.10
- for <kexec@lists.infradead.org>; Tue, 16 Apr 2019 23:00:53 -0700 (PDT)
+ id 1hGeF9-0004Rn-GT
+ for kexec@lists.infradead.org; Wed, 17 Apr 2019 06:40:29 +0000
+Subject: Re: [PATCH 1/2 RESEND v10] x86/mm, resource: add a new I/O resource
+ descriptor 'IORES_DESC_RESERVED'
+References: <20190329123914.20939-1-lijiang@redhat.com>
+ <20190329123914.20939-2-lijiang@redhat.com> <20190402090652.GD6826@zn.tnic>
+ <c94f887e-2ac8-49c6-e02c-92453e1ad894@redhat.com>
+ <20190402124328.GG6826@zn.tnic>
+ <384ba880-1b53-8013-8be8-66f294c27100@redhat.com>
+ <20190415154155.GH29317@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <60d67667-c9c4-29bd-0a8a-d3ae13022d87@redhat.com>
+Date: Wed, 17 Apr 2019 14:40:09 +0800
 MIME-Version: 1.0
-References: <20190412133528.GD19808@zn.tnic>
- <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
- <20190415090717.GA29317@zn.tnic> <20190415102525.GB29317@zn.tnic>
- <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
- <20190416094024.GE27892@zn.tnic> <20190416095209.GG27892@zn.tnic>
- <20190416114133.GA7541@dhcp-128-65.nay.redhat.com>
- <20190416132253.GE31772@zn.tnic>
- <20190417013838.GA8411@dhcp-128-65.nay.redhat.com>
- <20190417045447.GB8411@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190417045447.GB8411@dhcp-128-65.nay.redhat.com>
-From: Kairui Song <kasong@redhat.com>
-Date: Wed, 17 Apr 2019 14:00:41 +0800
-Message-ID: <CACPcB9cf0dtXFF+kpzBYXm3nvvG3uPDf81P1fa19+D37H9BaEg@mail.gmail.com>
-Subject: Re: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernels
+In-Reply-To: <20190415154155.GH29317@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,95 +25,139 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, Baoquan He <bhe@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, Junichi Nomura <j-nomura@ce.jp.nec.com>
+To: Borislav Petkov <bp@alien8.de>, Thomas.Lendacky@amd.com
+Cc: x86@kernel.org, bhe@redhat.com, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On Wed, Apr 17, 2019 at 12:57 PM Dave Young <dyoung@redhat.com> wrote:
->
-> On 04/17/19 at 09:38am, Dave Young wrote:
-> > On 04/16/19 at 03:22pm, Borislav Petkov wrote:
-> > > On Tue, Apr 16, 2019 at 07:41:33PM +0800, Dave Young wrote:
-> > > > On 04/16/19 at 11:52am, Borislav Petkov wrote:
-> > > > > I'll queue the below in the next days if there are no more complaints:
-> > > >
-> > > > As for the kexec breakage, even with the V3 patch, kexec still hangs on
-> > > > a Lenovo T420 laptop.  Kairui also reproduced the problem. So can we
-> > > > wait a few days see if we can make some progress to find the cause?
-> > >
-> > > How is applying this patch going to change anything?
-> > >
-> > > I was told that the breakage is there even without it...
-> >
-> > Without this patch, the bug happens in the efi_get_rsdp.. function, this
-> > patch tries to fix that by adding kexec_get.. but the new introduced
-> > kexec_* function does not work on some laptops, so it is not a 100% good
-> > fix, I hoped we can get it working for all known issues.  But if we can
-> > not do it eg. within one week we can go with this version and leave the
-> > laptop issue as a known issue.
-> >
->
-> Latest debugging status:
->
-> Kexec boot works with commenting out some code like below, so the guid
-> cmp (memcmp) caused a system reset), still need to find out why:
->
-> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-> index d9f9abd63c68..13e7a23ae94c 100644
-> --- a/arch/x86/boot/compressed/acpi.c
-> +++ b/arch/x86/boot/compressed/acpi.c
-> @@ -95,10 +95,12 @@ __efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
->                         table = tbl->table;
->                 }
->
-> +/*
->                 if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
->                         rsdp_addr = table;
->                 else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
->                         return table;
-> +*/
->         }
->
->         return rsdp_addr;
-> @@ -291,9 +293,10 @@ acpi_physical_address get_rsdp_addr(void)
->         if (!pa)
->                 pa = kexec_get_rsdp_addr();
->
-> +/*
->         if (!pa)
->                 pa = efi_get_rsdp_addr();
-> -
-> +*/
->         if (!pa)
->                 pa = bios_get_rsdp_addr();
->
->
-
-Hi Dave, for this case I think it's just because GCC will found the
-loop does nothing, and optimize out the whole loop in
-__efi_get_rsdp_addr and will no longer read the actual nr_table value.
-
-I can fix the boot error on T420 with your patch, but if I add
-anything, like a hardcode value assignment with the right value for
-acpi_rsdp in the loop, it will reset the machine. But set acpi_rsdp
-with a right initial value out side the loop works fine.
-If the loop condition is false, then there should be no difference
-between just comment out the line you mentioned and add an assignment.
-Else it just assign the value multiple times, not very reasonable but
-shouldn't fail.
-
-And, I inspected the generated ASM code also suggest the same thing.
-So still, access the systab memory is the cause of the system reset on
-certain machines.
-
--- 
-Best Regards,
-Kairui Song
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTnlubQwNOaciDE15pelIDIzOjQxLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IE1vbiwgQXByIDE1LCAyMDE5IGF0IDA4OjIyOjIyUE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
+IFRoZXkgYXJlIGRpZmZlcmVudCBwcm9ibGVtcy4KPiAKPiBBaGEsIHNvIHdlJ3JlIGdldHRpbmcg
+Y2xvc2VyLiBZb3Ugc2hvdWxkJ3ZlIGxlYWQgd2l0aCB0aGF0IQo+IAo+PiBUaGUgZmlyc3QgcHJv
+YmxlbSBpcyB0aGF0IHBhc3NlcyB0aGUgZTgyMCByZXNlcnZlZCByYW5nZXMgdG8gdGhlIHNlY29u
+ZCBrZXJuZWwsCj4gCj4gUGFzc2VzIG9yICpkb2Vzbid0KiBwYXNzPwo+IAo+IEJlY2F1c2UgZnJv
+bSBhbGwgdGhlIHN0YXJpbmcsIGl0IHdhbnRzIHRvIHBhc3MgdGhlIHJlc2VydmVkIHJhbmdlcy4K
+PiAKPj4gZm9yIHRoaXMgY2FzZSwgaXQgaXMgZ29vZCBlbm91Z2ggdG8gdXNlIHRoZSBJT1JFU19E
+RVNDX1JFU0VSVkVELCB3aGljaAo+PiBjYW4gZW5zdXJlIHRoYXQgZXhhY3RseSBtYXRjaGVzIHRo
+ZSByZXNlcnZlZCByZXNvdXJjZSByYW5nZXMgd2hlbgo+PiB3YWxraW5nIHRocm91Z2ggaW9tZW0g
+cmVzb3VyY2VzLgo+IAo+IE9rLgo+IAo+PiBUaGUgc2Vjb25kIHByb2JsZW0gaXMgYWJvdXQgdGhl
+IFNFViBjYXNlLiBOb3csIHRoZSBJT1JFU19ERVNDX1JFU0VSVkVEIGhhcyBiZWVuCj4+IGNyZWF0
+ZWQgZm9yIHRoZSByZXNlcnZlZCBhcmVhcywgdGhlcmVmb3JlIHRoZSBjaGVjayBuZWVkcyB0byBi
+ZSBleHBhbmRlZCBzbyB0aGF0Cj4+IHRoZXNlIGFyZWFzIGFyZSBub3QgbWFwcGVkIGVuY3J5cHRl
+ZCB3aGVuIHVzaW5nIGlvcmVtYXAoKS4KPj4KPj4gK3N0YXRpYyBpbnQgX19pb3JlbWFwX2NoZWNr
+X2Rlc2Nfbm9uZV9hbmRfcmVzZXJ2ZWQoc3RydWN0IHJlc291cmNlICpyZXMpCj4gCj4gVGhhdCBu
+YW1lIGlzIGNyYXAuIElmIHlvdSBuZWVkIHRvIGFkZCBhbm90aGVyIGRlc2MgdHlwZSwgaXQgYmVj
+b21lcwo+IHdyb25nIGFnYWluLiBBbmQgdGhhdCB3aG9sZSBjb2RlIGFyb3VuZCBmbGFncy0+ZGVz
+Y19vdGhlciBpcyBqdXN0IHNpbGx5Ogo+IAo+IE1ha2UgdGhhdCBtYWNoaW5lcnkgYXJvdW5kIGl0
+IHNvbWV0aGluZyBsaWtlIHRoaXM6Cj4gCj4gc3RydWN0IGlvcmVtYXBfZGVzYyB7Cj4gICAgICAg
+ICB1NjQgZmxhZ3M7Cj4gfTsKPiAKPiBpbnN0ZWFkIG9mICJzdHJ1Y3QgaW9yZW1hcF9tZW1fZmxh
+Z3MiIGFuZCB0aGF0IHN0cnVjdCBpb3JlbWFwX2Rlc2MgaXMgYW4KPiBpb3JlbWFwIGRlc2NyaXB0
+b3Igd2hpY2ggd2lsbCBjYXJyeSBhbGwga2luZHMgb2Ygc2V0dGluZ3MuIHN5c3RlbV9yYW0KPiBj
+YW4gdGhlbiBiZSBhIHNpbXBsZSBmbGFnIHRvby4KPiAKPiBfX2lvcmVtYXBfY2FsbGVyKCkgd2ls
+bCBoYW5kIGl0IGRvd24gdG8gX19pb3JlbWFwX2NoZWNrX21lbSgpIGV0Ywo+IGFuZCB0aGVyZSBp
+dCB3aWxsIHNldCBmbGFncyBsaWtlIElPUkVNQVBfREVTQ19NQVBfRU5DUllQVEVEIG9yCj4gSU9S
+RU1BUF9ERVNDX01BUF9ERUNSWVBURUQgYW5kIHRoaXMgd2F5IHlvdSdsbCBoYXZlIGl0IGV4cGxp
+Y2l0IGFuZAo+IGNsZWFyIGluIF9faW9yZW1hcF9jYWxsZXIoKToKPiAKPiAgICAgICAgIGlmICgo
+c2V2X2FjdGl2ZSgpICYmCj4gCSAgICAoaW9fZGVzYy5mbGFncyAmIElPUkVNQVBfREVTQ19NQVBf
+RU5DUllQVEVEKSkgfHwKPiAJICAgIGVuY3J5cHRlZCkKPiAgICAgICAgICAgICAgICAgcHJvdCA9
+IHBncHJvdF9lbmNyeXB0ZWQocHJvdCk7Cj4gCj4gQnV0IHRoYXQgd291bGQgbmVlZCBhIHByZS1w
+YXRjaCB3aGljaCBkb2VzIHRoYXQgY29udmVyc2lvbi4KPiAKVGhhbmtzIGZvciB5b3VyIGNvbW1l
+bnQuCgpCYXNlZCBvbiB0aGUgYWJvdmUgZGVzY3JpcHRpb24sIGkgbWFkZSBhIGRyYWZ0IHBhdGNo
+LCBwbGVhc2UgcmVmZXIgdG8gaXQuIEJ1dCBpdApzZWVtcyB0aGF0IHRoZSBjb2RlIGhhcyBiZWVu
+IGNoYW5nZWQgYSBsb3QuCgpkaWZmIC0tZ2l0IGEvYXJjaC94ODYvbW0vaW9yZW1hcC5jIGIvYXJj
+aC94ODYvbW0vaW9yZW1hcC5jCmluZGV4IDAwMjk2MDRhZjhhNC4uMDQyMTdiNjE2MzVlIDEwMDY0
+NAotLS0gYS9hcmNoL3g4Ni9tbS9pb3JlbWFwLmMKKysrIGIvYXJjaC94ODYvbW0vaW9yZW1hcC5j
+CkBAIC0yNyw5ICsyNyw4IEBACiAKICNpbmNsdWRlICJwaHlzYWRkci5oIgogCi1zdHJ1Y3QgaW9y
+ZW1hcF9tZW1fZmxhZ3MgewotCWJvb2wgc3lzdGVtX3JhbTsKLQlib29sIGRlc2Nfb3RoZXI7Citz
+dHJ1Y3QgaW9yZW1hcF9kZXNjIHsKKwl1NjQgZmxhZ3M7CiB9OwogCiAvKgpAQCAtNjEsMTMgKzYw
+LDEzIEBAIGludCBpb3JlbWFwX2NoYW5nZV9hdHRyKHVuc2lnbmVkIGxvbmcgdmFkZHIsIHVuc2ln
+bmVkIGxvbmcgc2l6ZSwKIAlyZXR1cm4gZXJyOwogfQogCi1zdGF0aWMgYm9vbCBfX2lvcmVtYXBf
+Y2hlY2tfcmFtKHN0cnVjdCByZXNvdXJjZSAqcmVzKQorc3RhdGljIHVuc2lnbmVkIGxvbmcgX19p
+b3JlbWFwX2NoZWNrX3JhbShzdHJ1Y3QgcmVzb3VyY2UgKnJlcykKIHsKIAl1bnNpZ25lZCBsb25n
+IHN0YXJ0X3Bmbiwgc3RvcF9wZm47CiAJdW5zaWduZWQgbG9uZyBpOwogCiAJaWYgKChyZXMtPmZs
+YWdzICYgSU9SRVNPVVJDRV9TWVNURU1fUkFNKSAhPSBJT1JFU09VUkNFX1NZU1RFTV9SQU0pCi0J
+CXJldHVybiBmYWxzZTsKKwkJcmV0dXJuIElPUkVNQVBfREVTQ19NQVBfTk9ORTsKIAogCXN0YXJ0
+X3BmbiA9IChyZXMtPnN0YXJ0ICsgUEFHRV9TSVpFIC0gMSkgPj4gUEFHRV9TSElGVDsKIAlzdG9w
+X3BmbiA9IChyZXMtPmVuZCArIDEpID4+IFBBR0VfU0hJRlQ7CkBAIC03NSwyOCArNzQsNDQgQEAg
+c3RhdGljIGJvb2wgX19pb3JlbWFwX2NoZWNrX3JhbShzdHJ1Y3QgcmVzb3VyY2UgKnJlcykKIAkJ
+Zm9yIChpID0gMDsgaSA8IChzdG9wX3BmbiAtIHN0YXJ0X3Bmbik7ICsraSkKIAkJCWlmIChwZm5f
+dmFsaWQoc3RhcnRfcGZuICsgaSkgJiYKIAkJCSAgICAhUGFnZVJlc2VydmVkKHBmbl90b19wYWdl
+KHN0YXJ0X3BmbiArIGkpKSkKLQkJCQlyZXR1cm4gdHJ1ZTsKKwkJCQlyZXR1cm4gSU9SRU1BUF9E
+RVNDX01BUF9TWVNURU1fUkFNX1VTSU5HOwogCX0KIAotCXJldHVybiBmYWxzZTsKKwlyZXR1cm4g
+SU9SRU1BUF9ERVNDX01BUF9OT05FOwogfQogCi1zdGF0aWMgaW50IF9faW9yZW1hcF9jaGVja19k
+ZXNjX290aGVyKHN0cnVjdCByZXNvdXJjZSAqcmVzKQorLyoKKyAqIE9yaWdpbmFsbHksIHRoZXNl
+IGFyZWFzIGRlc2NyaWJlZCBhcyBJT1JFU19ERVNDX05PTkUgYXJlIG5vdCBtYXBwZWQKKyAqIGFz
+IGVuY3J5cHRlZCB3aGVuIHVzaW5nIGlvcmVtYXAoKSwgZm9yIGV4YW1wbGUsIEU4MjBfVFlQRV97
+UkVTRVJWRUQsCisgKiBSRVNFUlZFRF9LRVJOLFJBTSxVTlVTQUJMRX0sIGV0Yy4gSXQgY2hlY2tz
+IGZvciBhIHJlc291cmNlIHRoYXQgaXMKKyAqIG5vdCBkZXNjcmliZWQgYXMgSU9SRVNfREVTQ19O
+T05FLCB3aGljaCBjYW4gbWFrZSBzdXJlIHRoZSByZXNlcnZlZAorICogYXJlYXMgYXJlIG5vdCBt
+YXBwZWQgYXMgZW5jcnlwdGVkIHdoZW4gdXNpbmcgaW9yZW1hcCgpLgorICoKKyAqIE5vdyBJT1JF
+U19ERVNDX1JFU0VSVkVEIGhhcyBiZWVuIGNyZWF0ZWQgZm9yIHRoZSByZXNlcnZlZCBhcmVhcyBz
+bworICogdGhlIGNoZWNrIG5lZWRzIHRvIGJlIGV4cGFuZGVkIHNvIHRoYXQgdGhlc2UgYXJlYXMg
+YXJlIG5vdCBtYXBwZWQKKyAqIGVuY3J5cHRlZCB3aGVuIHVzaW5nIGlvcmVtYXAoKS4KKyAqLwor
+c3RhdGljIHVuc2lnbmVkIGxvbmcgX19pb3JlbWFwX2NoZWNrX2Rlc2Moc3RydWN0IHJlc291cmNl
+ICpyZXMpCiB7Ci0JcmV0dXJuIChyZXMtPmRlc2MgIT0gSU9SRVNfREVTQ19OT05FKTsKKwlpZiAo
+KHJlcy0+ZGVzYyAhPSBJT1JFU19ERVNDX05PTkUpICYmCisJICAgIChyZXMtPmRlc2MgIT0gSU9S
+RVNfREVTQ19SRVNFUlZFRCkpCisJCXJldHVybiBJT1JFTUFQX0RFU0NfTUFQX0VOQ1JZUFRFRDsK
+KworCXJldHVybiBJT1JFTUFQX0RFU0NfTUFQX05PTkU7CiB9CiAKIHN0YXRpYyBpbnQgX19pb3Jl
+bWFwX3Jlc19jaGVjayhzdHJ1Y3QgcmVzb3VyY2UgKnJlcywgdm9pZCAqYXJnKQogewotCXN0cnVj
+dCBpb3JlbWFwX21lbV9mbGFncyAqZmxhZ3MgPSBhcmc7CisJc3RydWN0IGlvcmVtYXBfZGVzYyAq
+ZGVzYyA9IGFyZzsKIAotCWlmICghZmxhZ3MtPnN5c3RlbV9yYW0pCi0JCWZsYWdzLT5zeXN0ZW1f
+cmFtID0gX19pb3JlbWFwX2NoZWNrX3JhbShyZXMpOworCWlmICghKGRlc2MtPmZsYWdzICYgSU9S
+RU1BUF9ERVNDX01BUF9TWVNURU1fUkFNX1VTSU5HKSkKKwkJZGVzYy0+ZmxhZ3MgfD0gX19pb3Jl
+bWFwX2NoZWNrX3JhbShyZXMpOwogCi0JaWYgKCFmbGFncy0+ZGVzY19vdGhlcikKLQkJZmxhZ3Mt
+PmRlc2Nfb3RoZXIgPSBfX2lvcmVtYXBfY2hlY2tfZGVzY19vdGhlcihyZXMpOworCWlmICghKGRl
+c2MtPmZsYWdzICYgSU9SRU1BUF9ERVNDX01BUF9FTkNSWVBURUQpKQorCQlkZXNjLT5mbGFncyB8
+PSBfX2lvcmVtYXBfY2hlY2tfZGVzYyhyZXMpOwogCi0JcmV0dXJuIGZsYWdzLT5zeXN0ZW1fcmFt
+ICYmIGZsYWdzLT5kZXNjX290aGVyOworCXJldHVybiAoKGRlc2MtPmZsYWdzICYgSU9SRU1BUF9E
+RVNDX01BUF9TWVNURU1fUkFNX1VTSU5HKSAmJgorCQkoZGVzYy0+ZmxhZ3MgJiBJT1JFTUFQX0RF
+U0NfTUFQX0VOQ1JZUFRFRCkpCiB9CiAKIC8qCkBAIC0xMDUsMTMgKzEyMCwxMyBAQCBzdGF0aWMg
+aW50IF9faW9yZW1hcF9yZXNfY2hlY2soc3RydWN0IHJlc291cmNlICpyZXMsIHZvaWQgKmFyZykK
+ICAqIHJlc291cmNlIGRlc2NyaWJlZCBub3QgYXMgSU9SRVNfREVTQ19OT05FIChlLmcuIElPUkVT
+X0RFU0NfQUNQSV9UQUJMRVMpLgogICovCiBzdGF0aWMgdm9pZCBfX2lvcmVtYXBfY2hlY2tfbWVt
+KHJlc291cmNlX3NpemVfdCBhZGRyLCB1bnNpZ25lZCBsb25nIHNpemUsCi0JCQkJc3RydWN0IGlv
+cmVtYXBfbWVtX2ZsYWdzICpmbGFncykKKwkJCQlzdHJ1Y3QgaW9yZW1hcF9kZXNjICpkZXNjKQog
+ewogCXU2NCBzdGFydCwgZW5kOwogCiAJc3RhcnQgPSAodTY0KWFkZHI7CiAJZW5kID0gc3RhcnQg
+KyBzaXplIC0gMTsKLQltZW1zZXQoZmxhZ3MsIDAsIHNpemVvZigqZmxhZ3MpKTsKKwltZW1zZXQo
+ZGVzYywgMCwgc2l6ZW9mKCpkZXNjKSk7CiAKIAl3YWxrX21lbV9yZXMoc3RhcnQsIGVuZCwgZmxh
+Z3MsIF9faW9yZW1hcF9yZXNfY2hlY2spOwogfQpAQCAtMTM4LDcgKzE1Myw3IEBAIHN0YXRpYyB2
+b2lkIF9faW9tZW0gKl9faW9yZW1hcF9jYWxsZXIocmVzb3VyY2Vfc2l6ZV90IHBoeXNfYWRkciwK
+IAlyZXNvdXJjZV9zaXplX3QgbGFzdF9hZGRyOwogCWNvbnN0IHJlc291cmNlX3NpemVfdCB1bmFs
+aWduZWRfcGh5c19hZGRyID0gcGh5c19hZGRyOwogCWNvbnN0IHVuc2lnbmVkIGxvbmcgdW5hbGln
+bmVkX3NpemUgPSBzaXplOwotCXN0cnVjdCBpb3JlbWFwX21lbV9mbGFncyBtZW1fZmxhZ3M7CisJ
+c3RydWN0IGlvcmVtYXBfZGVzYyBpb19kZXNjOwogCXN0cnVjdCB2bV9zdHJ1Y3QgKmFyZWE7CiAJ
+ZW51bSBwYWdlX2NhY2hlX21vZGUgbmV3X3BjbTsKIAlwZ3Byb3RfdCBwcm90OwpAQCAtMTU3LDEy
+ICsxNzIsMTIgQEAgc3RhdGljIHZvaWQgX19pb21lbSAqX19pb3JlbWFwX2NhbGxlcihyZXNvdXJj
+ZV9zaXplX3QgcGh5c19hZGRyLAogCQlyZXR1cm4gTlVMTDsKIAl9CiAKLQlfX2lvcmVtYXBfY2hl
+Y2tfbWVtKHBoeXNfYWRkciwgc2l6ZSwgJm1lbV9mbGFncyk7CisJX19pb3JlbWFwX2NoZWNrX21l
+bShwaHlzX2FkZHIsIHNpemUsICZpb19kZXNjKTsKIAogCS8qCiAJICogRG9uJ3QgYWxsb3cgYW55
+Ym9keSB0byByZW1hcCBub3JtYWwgUkFNIHRoYXQgd2UncmUgdXNpbmcuLgogCSAqLwotCWlmICht
+ZW1fZmxhZ3Muc3lzdGVtX3JhbSkgeworCWlmIChpb19kZXNjLmZsYWdzICYgSU9SRU1BUF9ERVND
+X01BUF9TWVNURU1fUkFNX1VTSU5HKSB7CiAJCVdBUk5fT05DRSgxLCAiaW9yZW1hcCBvbiBSQU0g
+YXQgJXBhIC0gJXBhXG4iLAogCQkJICAmcGh5c19hZGRyLCAmbGFzdF9hZGRyKTsKIAkJcmV0dXJu
+IE5VTEw7CkBAIC0yMDAsNyArMjE1LDkgQEAgc3RhdGljIHZvaWQgX19pb21lbSAqX19pb3JlbWFw
+X2NhbGxlcihyZXNvdXJjZV9zaXplX3QgcGh5c19hZGRyLAogCSAqIHJlc3VsdGluZyBtYXBwaW5n
+LgogCSAqLwogCXByb3QgPSBQQUdFX0tFUk5FTF9JTzsKLQlpZiAoKHNldl9hY3RpdmUoKSAmJiBt
+ZW1fZmxhZ3MuZGVzY19vdGhlcikgfHwgZW5jcnlwdGVkKQorCWlmICgoc2V2X2FjdGl2ZSgpICYm
+CisJICAgIChpb19kZXNjLmZsYWdzICYgSU9SRU1BUF9ERVNDX01BUF9FTkNSWVBURUQpKSB8fAor
+CSAgICBlbmNyeXB0ZWQpCiAJCXByb3QgPSBwZ3Byb3RfZW5jcnlwdGVkKHByb3QpOwogCiAJc3dp
+dGNoIChwY20pIHsKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvaW9wb3J0LmggYi9pbmNsdWRl
+L2xpbnV4L2lvcG9ydC5oCmluZGV4IDZlZDU5ZGU0OGJkNS4uNDhiMmQyMWFkOWU1IDEwMDY0NAot
+LS0gYS9pbmNsdWRlL2xpbnV4L2lvcG9ydC5oCisrKyBiL2luY2x1ZGUvbGludXgvaW9wb3J0LmgK
+QEAgLTEzNiw2ICsxMzYsMTUgQEAgZW51bSB7CiAJSU9SRVNfREVTQ19SRVNFUlZFRAkJCT0gOCwK
+IH07CiAKKy8qCisgKiBJT1JlbWFwIERlc2NyaXB0b3JzIEhlbHBlcgorICovCitlbnVtIHsKKwlJ
+T1JFTUFQX0RFU0NfTUFQX05PTkUJCQkJPSAwLAorCUlPUkVNQVBfREVTQ19NQVBfU1lTVEVNX1JB
+TV9VU0lORwkJPSAxLAorCUlPUkVNQVBfREVTQ19NQVBfRU5DUllQVEVECQkJPSAyLAorfTsKKwog
+LyogaGVscGVycyB0byBkZWZpbmUgcmVzb3VyY2VzICovCiAjZGVmaW5lIERFRklORV9SRVNfTkFN
+RUQoX3N0YXJ0LCBfc2l6ZSwgX25hbWUsIF9mbGFncykJCQlcCiAJewkJCQkJCQkJXAoKQXJlIHlv
+dSBzdXJlIGFib3V0IHRoaXMgY2hhbmdlcz8gT3IgRG8gb3RoZXIgcmV2aWV3ZXJzIGhhdmUgYW55
+IHN1Z2dlc3Rpb25zPwoKVGhhbmtzLgoKPj4gTWF5YmUgaSBzaG91bGQgc3BsaXQgaXQgaW50byB0
+d28gcGF0Y2hlcy4gVGhlIGNoYW5nZSBvZgo+PiBfX2lvcmVtYXBfY2hlY2tfZGVzY19ub25lX2Fu
+ZF9yZXNlcnZlZCgpIHNob3VsZCBiZSBhIHNlcGFyYXRlIHBhdGNoLgo+PiBBbnkgaWRlYT8KPiAK
+PiBTZWUgYWJvdmUgYW5kIHllcywgZGVmaW5pdGVseSBzZXBhcmF0ZSBwYXRjaGVzLgo+IApPSy4g
+VGhhbmsgeW91IHZlcnkgbXVjaC4KCkxpYW5ibwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhl
+Ywo=
