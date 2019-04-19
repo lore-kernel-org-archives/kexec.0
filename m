@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hHRod-0000oQ-Io
- for kexec@lists.infradead.org; Fri, 19 Apr 2019 11:36:24 +0000
-Date: Fri, 19 Apr 2019 13:36:21 +0200
-From: Borislav Petkov <bp@alien8.de>
+ id 1hHRwR-0003SM-Pp
+ for kexec@lists.infradead.org; Fri, 19 Apr 2019 11:44:29 +0000
+Date: Fri, 19 Apr 2019 19:44:21 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [RFC PATCH] kexec, x86/boot: map systab region in identity
  mapping before accessing it
-Message-ID: <20190419113621.GD10324@zn.tnic>
+Message-ID: <20190419114421.GH11060@MiWiFi-R3L-srv>
 References: <20190419101733.GA10324@zn.tnic>
  <20190419105014.GE11060@MiWiFi-R3L-srv>
  <20190419112801.GB10324@zn.tnic>
@@ -26,23 +26,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
 Cc: "x86@kernel.org" <x86@kernel.org>, Kairui Song <kasong@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Junichi Nomura <j-nomura@ce.jp.nec.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
 
-On Fri, Apr 19, 2019 at 01:28:01PM +0200, Borislav Petkov wrote:
+On 04/19/19 at 01:28pm, Borislav Petkov wrote:
+> Why does that "seem" so?
+> 
 > Read again what I said: "should all be passed through boot_params".
 > Which means, boot_params should be extended with a field of a flag to
 > say: "this is a kexec'ed kernel".
+> 
+> If it "seems" then it should be made to not "seem" but to work properly.
 
-And by that I mean similar to the XLF_EFI_KEXEC mechanism. The first
-kernel or kexec(1) should prepare the info needed by the kexec'ed
-kernel.
+No objection to extending with fields of a flag to mark kexec'ed kernel.
+Or kdump kernel either. We now check kdump kernel by /proc/vmcore.
 
--- 
-Regards/Gruss,
-    Boris.
+> 
+> > Yeah, adding the systab mapping looks good. Kairui put it in
+> > decompressing stage just because he wants to cover the case in which the
+> > old kernel kexec jumping to 2nd kernel. Now it seems not very
+> > reasonable, we also have the new kernel kexec jumping to old 2nd kernel.
+> 
+> I don't think we can guarantee kexec between old<->new kernel to always
+> work. Otherwise, we can forget all development and improvements of new
+> kernel.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+I personally agree with this. Very earlier, we tried to remove the
+896 MB limitation of crashkernel=xM, to extend it to 4G or the whole
+RAM, but rejcted by linus since he worried it could break the old kernel
+kdumping. I may not remember well.
 
 _______________________________________________
 kexec mailing list
