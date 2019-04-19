@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-io1-f67.google.com ([209.85.166.67])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hHRwR-0003SM-Pp
- for kexec@lists.infradead.org; Fri, 19 Apr 2019 11:44:29 +0000
-Date: Fri, 19 Apr 2019 19:44:21 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [RFC PATCH] kexec, x86/boot: map systab region in identity
- mapping before accessing it
-Message-ID: <20190419114421.GH11060@MiWiFi-R3L-srv>
+ id 1hHS2H-0006o3-PJ
+ for kexec@lists.infradead.org; Fri, 19 Apr 2019 11:50:32 +0000
+Received: by mail-io1-f67.google.com with SMTP id p23so4200906iol.13
+ for <kexec@lists.infradead.org>; Fri, 19 Apr 2019 04:50:29 -0700 (PDT)
+MIME-Version: 1.0
 References: <20190419101733.GA10324@zn.tnic>
  <20190419105014.GE11060@MiWiFi-R3L-srv>
- <20190419112801.GB10324@zn.tnic>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190419112801.GB10324@zn.tnic>
+ <CACPcB9fwvxmVcD4ttP8p9X0=J+Oev9RUrgNzuu6LZFQCZ7AS1w@mail.gmail.com>
+ <20190419113413.GC10324@zn.tnic>
+In-Reply-To: <20190419113413.GC10324@zn.tnic>
+From: Kairui Song <kasong@redhat.com>
+Date: Fri, 19 Apr 2019 19:50:17 +0800
+Message-ID: <CACPcB9emLPEWCvpdExGvD_S_b3RWrrgK2uCx07HZjj5yUh6Y_g@mail.gmail.com>
+Subject: Re: [RFC PATCH] kexec, x86/boot: map systab region in identity
+ mapping before accessing it
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,34 +29,48 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Borislav Petkov <bp@alien8.de>
-Cc: "x86@kernel.org" <x86@kernel.org>, Kairui Song <kasong@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Junichi Nomura <j-nomura@ce.jp.nec.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, Baoquan He <bhe@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
 
-On 04/19/19 at 01:28pm, Borislav Petkov wrote:
-> Why does that "seem" so?
-> 
-> Read again what I said: "should all be passed through boot_params".
-> Which means, boot_params should be extended with a field of a flag to
-> say: "this is a kexec'ed kernel".
-> 
-> If it "seems" then it should be made to not "seem" but to work properly.
+On Fri, Apr 19, 2019 at 7:34 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Fri, Apr 19, 2019 at 07:20:06PM +0800, Kairui Song wrote:
+> > Thanks for the declaration Bao, I can verify on the machine I have,
+> > the issue still exist without kaslr. Currently, we read rsdp in early
+> > code and fill in boot_params unconditional, so it will read from the
+> > systab anyway.
+>
+> Yes, and in the future, info required by the kexec'ed kernel - like the
+> EFI systab address or even whether the kernel has been kexec'ed or comes
+> from cold boot - should be passed in boot_params. So that we don't have
+> to do all that ugly dancing in early code.
+>
+> > Yes, kexec only cover RAM in the ident map it prepared for second
+> > kernel, but the systab could be in reserved region, so if it didn't
+> > fall into the 1G padding by accident it will fail when reading from
+> > it. Fix in early code could make sure 2nd kernel always work. Or
+> > should we treat it specially in kexec mapping prepare code?
+>
+> Yes, we should. As I said, this is not early boot code's problem but the
+> kexec setup code's problem.
+>
+> If the new kernel cannot get RSDP that early, then it should fail the
+> same way it failed before. That early RDSP parsing was added for the
+> movable regions thing working with KASLR.
+>
+> If it can't get a RDSP for whatever reason, then if KASLR selects
+> a region overlapping with the movable regions, then it is the old
+> behavior.
+>
+> Ok?
+>
 
-No objection to extending with fields of a flag to mark kexec'ed kernel.
-Or kdump kernel either. We now check kdump kernel by /proc/vmcore.
+OK. And then fix the mapping issue in 1st kernel is the right way,
+I'll skip the update for the early code mapping thing.
 
-> 
-> > Yeah, adding the systab mapping looks good. Kairui put it in
-> > decompressing stage just because he wants to cover the case in which the
-> > old kernel kexec jumping to 2nd kernel. Now it seems not very
-> > reasonable, we also have the new kernel kexec jumping to old 2nd kernel.
-> 
-> I don't think we can guarantee kexec between old<->new kernel to always
-> work. Otherwise, we can forget all development and improvements of new
-> kernel.
 
-I personally agree with this. Very earlier, we tried to remove the
-896 MB limitation of crashkernel=xM, to extend it to 4G or the whole
-RAM, but rejcted by linus since he worried it could break the old kernel
-kdumping. I may not remember well.
+--
+Best Regards,
+Kairui Song
 
 _______________________________________________
 kexec mailing list
