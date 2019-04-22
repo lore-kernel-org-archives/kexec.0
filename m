@@ -1,13 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pg1-f196.google.com ([209.85.215.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hIVGE-0005fu-DW
- for kexec@lists.infradead.org; Mon, 22 Apr 2019 09:29:15 +0000
-From: Kairui Song <kasong@redhat.com>
-Subject: [PATCH] x86/kexec: always ensure EFI systab region is mapped
-Date: Mon, 22 Apr 2019 17:28:04 +0800
-Message-Id: <20190422092804.15534-1-kasong@redhat.com>
+ id 1hIY8G-00022C-Ni
+ for kexec@lists.infradead.org; Mon, 22 Apr 2019 12:33:15 +0000
+Received: by mail-pg1-f196.google.com with SMTP id j26so5806046pgl.5
+ for <kexec@lists.infradead.org>; Mon, 22 Apr 2019 05:33:11 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] iommu/arm-smmu-v3: make sure the kdump kernel can
+ work well when smmu is enabled
+References: <20190318131243.20716-1-thunder.leizhen@huawei.com>
+ <20190404153031.GE27558@fuggles.cambridge.arm.com>
+ <5CAAB293.3080600@huawei.com>
+ <20190416091410.GC31579@fuggles.cambridge.arm.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Message-ID: <1846d5b7-bd57-e70e-4808-72c0172ed0ee@redhat.com>
+Date: Mon, 22 Apr 2019 18:03:02 +0530
 MIME-Version: 1.0
+In-Reply-To: <20190416091410.GC31579@fuggles.cambridge.arm.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,102 +25,123 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: "x86@kernel.org" <x86@kernel.org>, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Borislav Petkov <bp@alien8.de>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
+To: Will Deacon <will.deacon@arm.com>, "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, Joerg Roedel <joro@8bytes.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, iommu <iommu@lists.linux-foundation.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-This is a fix needed for: "x86/boot: Use efi_setup_data for searching
-RSDP on kexec-ed kernels", that patch cause kexec to reset the system
-on some machines.
+Hi Will,
 
-The reason is the systab region is not mapped by the identity mapping
-provided by kexec. Currently kexec only create identity mapping for
-mem regions, wihch won't cover the systab. So second kernel will be
-accessing a not mapped memory region and cause fault.
-But as kexec tend to pad the map region up to PUD size, the
-systab could be included in the map by accident, so it worked on
-some machines, but that will be broken easily and unstable.
+On 04/16/2019 02:44 PM, Will Deacon wrote:
+> On Mon, Apr 08, 2019 at 10:31:47AM +0800, Leizhen (ThunderTown) wrote:
+>> On 2019/4/4 23:30, Will Deacon wrote:
+>>> On Mon, Mar 18, 2019 at 09:12:41PM +0800, Zhen Lei wrote:
+>>>> v1 --> v2:
+>>>> 1. Drop part2. Now, we only use the SMMUv3 hardware feature STE.config=0b000
+>>>> (Report abort to device, no event recorded) to suppress the event messages
+>>>> caused by the unexpected devices.
+>>>> 2. rewrite the patch description.
+>>>
+>>> This issue came up a while back:
+>>>
+>>> https://lore.kernel.org/linux-pci/20180302103032.GB19323@arm.com/
+>>>
+>>> and I'd still prefer to solve it using the disable_bypass logic which we
+>>> already have. Something along the lines of the diff below?
+>>
+>> Yes, my patches also use disable_bypass=1(set ste.config=0b000). If
+>> SMMU_IDR0.ST_LEVEL=0(Linear Stream table supported), then all STE entries
+>> are allocated and initialized(set ste.config=0b000). But if SMMU_IDR0.ST_LEVEL=1
+>> (2-level Stream Table), we only allocated and initialized the first level tables,
+>> but leave level 2 tables dynamic allocated. That means, C_BAD_STREAMID(eventid=0x2)
+>> will be reported, if an unexpeted device access memory without reinitialized in
+>> kdump kernel.
+> 
+> So is your problem just that the C_BAD_STREAMID events are noisy? If so,
+> perhaps we should be disabling fault reporting entirely in the kdump kernel.
+> 
+> How about the update diff below? I'm keen to have this as simple as
+> possible, so we don't end up introducing rarely tested, complex code on
+> the crash path.
+> 
+> Will
+> 
+> --->8
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index d3880010c6cf..d8b73da6447d 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -2454,13 +2454,9 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
+>   	/* Clear CR0 and sync (disables SMMU and queue processing) */
+>   	reg = readl_relaxed(smmu->base + ARM_SMMU_CR0);
+>   	if (reg & CR0_SMMUEN) {
+> -		if (is_kdump_kernel()) {
+> -			arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
+> -			arm_smmu_device_disable(smmu);
+> -			return -EBUSY;
+> -		}
+> -
+>   		dev_warn(smmu->dev, "SMMU currently enabled! Resetting...\n");
+> +		WARN_ON(is_kdump_kernel() && !disable_bypass);
+> +		arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
+>   	}
+>   
+>   	ret = arm_smmu_device_disable(smmu);
+> @@ -2553,6 +2549,8 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
+>   		return ret;
+>   	}
+>   
+> +	if (is_kdump_kernel())
+> +		enables &= ~(CR0_EVTQEN | CR0_PRIQEN);
+>   
+>   	/* Enable the SMMU interface, or ensure bypass */
+>   	if (!bypass || disable_bypass) {
+> 
 
-To fix it just treat systab specially, always map the systab region
-unconditionally on EFI systems as long as there is a valid systab
-address.
+Thanks for the fix.
 
-Signed-off-by: Kairui Song <kasong@redhat.com>
----
- arch/x86/kernel/machine_kexec_64.c | 40 ++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+I can confirm that after this kdump kernel boots well for me on huawei 
+boards, so feel free to add:
 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index ceba408ea982..d5da54893f97 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -18,6 +18,7 @@
- #include <linux/io.h>
- #include <linux/suspend.h>
- #include <linux/vmalloc.h>
-+#include <linux/efi.h>
- 
- #include <asm/init.h>
- #include <asm/pgtable.h>
-@@ -113,6 +114,37 @@ static void *alloc_pgt_page(void *data)
- 	return p;
- }
- 
-+#ifdef CONFIG_EFI
-+static int init_efi_systab_pgtable(struct x86_mapping_info *info,
-+				   pgd_t *level4p)
-+{
-+	unsigned long mstart, mend;
-+
-+	if (!efi_enabled(EFI_BOOT))
-+		return 0;
-+
-+	mstart = (boot_params.efi_info.efi_systab |
-+			((u64)boot_params.efi_info.efi_systab_hi<<32));
-+
-+	if (efi_enabled(EFI_64BIT))
-+		mend = mstart + sizeof(efi_system_table_64_t);
-+	else
-+		mend = mstart + sizeof(efi_system_table_32_t);
-+
-+	if (mstart)
-+		return kernel_ident_mapping_init(info,
-+				level4p, mstart, mend);
-+
-+	return 0;
-+}
-+#else
-+static inline int init_efi_systab_pgtable(struct x86_mapping_info *info,
-+					  pgd_t *level4p)
-+{
-+	return 0;
-+}
-+#endif
-+
- static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
- {
- 	struct x86_mapping_info info = {
-@@ -159,6 +191,14 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
- 			return result;
- 	}
- 
-+	/*
-+	 * Prepare EFI systab mapping for kexec kernel, systab is not
-+	 * covered by pfn_mapped.
-+	 */
-+	result = init_efi_systab_pgtable(&info, level4p);
-+	if (result)
-+		return result;
-+
- 	return init_transition_pgtable(image, level4p);
- }
- 
--- 
-2.20.1
+Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
 
+Here are the kdump kernel logs without this fix:
+
+[    4.514181] arm-smmu-v3 arm-smmu-v3.1.auto: EVTQ overflow detected -- 
+events lost
+
+.. And then repeating messages like the following ..
+
+[    4.521654] arm-smmu-v3 arm-smmu-v3.1.auto: event 0x02 received:
+[    4.527654] arm-smmu-v3 arm-smmu-v3.1.auto:  0x00007d0200000002
+[    4.533567] arm-smmu-v3 arm-smmu-v3.1.auto:  0x000000010000017e
+[    4.539478] arm-smmu-v3 arm-smmu-v3.1.auto:  0x00000000ff6de000
+[    4.545390] arm-smmu-v3 arm-smmu-v3.1.auto:  0x000000000eee03e8
+
+And with the fix applied, kdump kernel logs can be seen below:
+
+[ 9136.361094] Starting crashdump kernel...
+[ 9136.365007] Bye!
+[    0.000000] Booting Linux on physical CPU 0x0000070002 [0x480fd010]
+[    0.000000] Linux version 5.1.0-rc6+
+
+<..snip..>
+
+[    3.424103] arm-smmu-v3 arm-smmu-v3.0.auto: option mask 0x0
+[    3.429674] arm-smmu-v3 arm-smmu-v3.0.auto: ias 48-bit, oas 48-bit 
+(features 0x00000fef)
+[    3.437780] arm-smmu-v3 arm-smmu-v3.0.auto: SMMU currently enabled! 
+Resetting...
+[    3.445431] arm-smmu-v3 arm-smmu-v3.1.auto: option mask 0x0
+
+
+<..snip..>
+
+Thanks,
+Bhupesh
 
 _______________________________________________
 kexec mailing list
