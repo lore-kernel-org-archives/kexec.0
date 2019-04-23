@@ -1,20 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hIahH-0002HD-AS
- for kexec@lists.infradead.org; Mon, 22 Apr 2019 15:17:32 +0000
-Date: Mon, 22 Apr 2019 17:17:23 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [RFC PATCH] kexec, x86/boot: map systab region in identity
- mapping before accessing it
-Message-ID: <20190422151723.GD21457@zn.tnic>
-References: <20190419101733.GA10324@zn.tnic>
- <20190419105014.GE11060@MiWiFi-R3L-srv>
- <20190419112801.GB10324@zn.tnic> <20190419113621.GD10324@zn.tnic>
- <20190422143346.GD3584@localhost.localdomain>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190422143346.GD3584@localhost.localdomain>
+ id 1hIkGN-0005Mc-Ut
+ for kexec@lists.infradead.org; Tue, 23 Apr 2019 01:30:25 +0000
+From: Lianbo Jiang <lijiang@redhat.com>
+Subject: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel e820
+ table
+Date: Tue, 23 Apr 2019 09:30:04 +0800
+Message-Id: <20190423013007.17838-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,65 +16,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, Kairui Song <kasong@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Junichi Nomura <j-nomura@ce.jp.nec.com>, Thomas Gleixner <tglx@linutronix.de>, dyoung@redhat.com
+To: linux-kernel@vger.kernel.org
+Cc: Thomas.Lendacky@amd.com, x86@kernel.org, bhe@redhat.com, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-+ hpa
+This patchset did three things:
 
-On Mon, Apr 22, 2019 at 10:33:46PM +0800, Baoquan He wrote:
-> On 04/19/19 at 01:36pm, Borislav Petkov wrote:
-> > On Fri, Apr 19, 2019 at 01:28:01PM +0200, Borislav Petkov wrote:
-> > > Read again what I said: "should all be passed through boot_params".
-> > > Which means, boot_params should be extended with a field of a flag to
-> > > say: "this is a kexec'ed kernel".
-> > 
-> > And by that I mean similar to the XLF_EFI_KEXEC mechanism. The first
-> > kernel or kexec(1) should prepare the info needed by the kexec'ed
-> > kernel.
-> 
-> We have set the loader type to '0x0D << 4' for kexec specifically, in both
-> kexec_load and kexec_file_load. We can check this to identify if it's
-> kexec-ed kernel or not.
-> 
-> Update patch with it?
-> 
-> static void *bzImage64_load(struct kimage *image, char *kernel,
->                             unsigned long kernel_len, char *initrd,
->                             unsigned long initrd_len, char *cmdline,
->                             unsigned long cmdline_len)
-> {
-> 
-> 	...
-> 	/* bootloader info. Do we need a separate ID for kexec kernel loader? */
->         params->hdr.type_of_loader = 0x0D << 4;
+a). x86/e820, resource: add a new I/O resource descriptor 'IORES_DESC_
+    RESERVED'
 
-That's already documented in Documentation/x86/boot.txt
+b). x86/mm: change the check condition in SEV because a new descriptor is
+    introduced
 
-Field name:     type_of_loader
-Type:           write (obligatory)
-Offset/size:    0x210/1
-Protocol:       2.00+
+c). x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
 
-	...
+Changes since v1:
+1. Modified the value of flags to "0", when walking through the whole
+tree for e820 reserved ranges.
 
-        D  kexec-tools
+Changes since v2:
+1. Modified the value of flags to "0", when walking through the whole
+tree for e820 reserved ranges.
+2. Modified the invalid SOB chain issue.
 
-And yes, the question in the code is still valid: do we need a separate ID.
+Changes since v3:
+1. Dropped [PATCH 1/3 v3] resource: fix an error which walks through iomem
+   resources. Please refer to this commit <010a93bf97c7> "resource: Fix
+   find_next_iomem_res() iteration issue"
 
-I'd say no and we'll simply call 0xD all kernels loaded using a
-kexec-type syscall.
+Changes since v4:
+1. Improve the patch log, and add kernel log.
 
-IMO.
+Changes since v5:
+1. Rewrite these patches log.
+
+Changes since v6:
+1. Modify the [PATCH 1/2], and add the new I/O resource descriptor
+   'IORES_DESC_RESERVED' for the iomem resources search interfaces,
+   and also updates these codes relates to 'IORES_DESC_NONE'.
+2. Modify the [PATCH 2/2], and walk through io resource based on the
+   new descriptor 'IORES_DESC_RESERVED'.
+3. Update patch log.
+
+Changes since v7:
+1. Improve patch log.
+2. Improve this function __ioremap_check_desc_other().
+3. Modify code comment in the __ioremap_check_desc_other()
+
+Changes since v8:
+1. Get rid of all changes about ia64.(Borislav's suggestion)
+2. Change the examination condition to the 'IORES_DESC_ACPI_*'.
+3. Modify the signature. This patch(add the new I/O resource
+   descriptor 'IORES_DESC_RESERVED') was suggested by Boris.
+
+Changes since v9:
+1. Improve patch log.
+2. No need to modify the kernel/resource.c, so correct them.
+3. Change the name of the __ioremap_check_desc_other() to
+   __ioremap_check_desc_none_and_reserved(), and modify the
+   check condition, add comment above it.
+
+Changes since v10:
+1. Split them into three patches, the second patch is currently added.
+2. Change struct ioremap_mem_flags to struct ioremap_desc and redefine
+it.
+3. Change the name of the __ioremap_check_desc_other() to
+__ioremap_check_desc().
+4. Change the check condition in SEV and also improve them.
+5. Modify the return value for some functions.
+
+Lianbo Jiang (3):
+  x86/e820, resource: add a new I/O resource descriptor
+    'IORES_DESC_RESERVED'
+  x86/mm: change the check condition in SEV because a new descriptor is
+    introduced
+  x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
+
+ arch/x86/kernel/crash.c |  6 +++++
+ arch/x86/kernel/e820.c  |  2 +-
+ arch/x86/mm/ioremap.c   | 59 ++++++++++++++++++++++++++---------------
+ include/linux/ioport.h  | 10 +++++++
+ 4 files changed, 54 insertions(+), 23 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.17.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
