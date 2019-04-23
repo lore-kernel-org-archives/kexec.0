@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it1-f196.google.com ([209.85.166.196])
+Received: from mail-qk1-x742.google.com ([2607:f8b0:4864:20::742])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hIz0r-0003VU-S5
- for kexec@lists.infradead.org; Tue, 23 Apr 2019 17:15:24 +0000
-Received: by mail-it1-f196.google.com with SMTP id y204so1438547itf.3
- for <kexec@lists.infradead.org>; Tue, 23 Apr 2019 10:15:21 -0700 (PDT)
+ id 1hJ2En-0002TA-6t
+ for kexec@lists.infradead.org; Tue, 23 Apr 2019 20:41:58 +0000
+Received: by mail-qk1-x742.google.com with SMTP id c190so5719689qke.9
+ for <kexec@lists.infradead.org>; Tue, 23 Apr 2019 13:41:56 -0700 (PDT)
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Subject: [PATCH] kexec: quiet down kexec reboot
+Date: Tue, 23 Apr 2019 16:41:54 -0400
+Message-Id: <20190423204154.3085-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-References: <20190422092804.15534-1-kasong@redhat.com>
- <965f770a-b103-72fb-eaef-cb337ebe8290@ce.jp.nec.com>
-In-Reply-To: <965f770a-b103-72fb-eaef-cb337ebe8290@ce.jp.nec.com>
-From: Kairui Song <kasong@redhat.com>
-Date: Tue, 23 Apr 2019 10:15:09 -0700
-Message-ID: <CACPcB9d-oNvp1Kag1J8X+QBdgqfU0ps1OztjOk8n=Pw2G6ONWA@mail.gmail.com>
-Subject: Re: [PATCH] x86/kexec: always ensure EFI systab region is mapped
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,32 +22,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, Baoquan He <bhe@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
+To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 11:21 PM Junichi Nomura <j-nomura@ce.jp.nec.com> wrote:
->
-> On 4/22/19 6:28 PM, Kairui Song wrote:
-> > The reason is the systab region is not mapped by the identity mapping
-> > provided by kexec. Currently kexec only create identity mapping for
-> > mem regions, wihch won't cover the systab. So second kernel will be
-> > accessing a not mapped memory region and cause fault.
-> > But as kexec tend to pad the map region up to PUD size, the
-> > systab could be included in the map by accident, so it worked on
-> > some machines, but that will be broken easily and unstable.
->
-> Is the mapping of ACPI tables just by luck, too?
->
+Here is a regular kexec command sequence and output:
+=====
+$ kexec --reuse-cmdline -i --load Image
+$ kexec -e
+[  161.342002] kexec_core: Starting new kernel
 
-Good question, they should have same issue with systab, I ignored this one.
-Then in first kernel when doing kexec it should ensure both ACPI
-tables and the EFI systab are mapped, that should cover everything and
-make it work.
-Is there anything else missing?
+Welcome to Buildroot
+buildroot login:
+=====
 
+Even when "quiet" kernel parameter is specified, "kexec_core: Starting
+new kernel" is printed.
+
+This message has  KERN_EMERG level, but there is no emergency, it is
+a normal kexec operation, so quiet it down to appropriate KERN_NOTICE.
+
+Machines that have slow console baud rate benefit from less output.
+
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+---
+ kernel/kexec_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index d7140447be75..fe13e86984ec 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1171,7 +1171,7 @@ int kernel_kexec(void)
+ 		 * CPU hotplug again; so re-enable it here.
+ 		 */
+ 		cpu_hotplug_enable();
+-		pr_emerg("Starting new kernel\n");
++		pr_notice("Starting new kernel\n");
+ 		machine_shutdown();
+ 	}
+ 
 -- 
-Best Regards,
-Kairui Song
+2.21.0
+
 
 _______________________________________________
 kexec mailing list
