@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hJEMm-0001LG-6C
- for kexec@lists.infradead.org; Wed, 24 Apr 2019 09:39:01 +0000
-Date: Wed, 24 Apr 2019 11:38:52 +0200
-From: Borislav Petkov <bp@alien8.de>
+ id 1hJEhG-0000rw-Kk
+ for kexec@lists.infradead.org; Wed, 24 Apr 2019 10:00:12 +0000
+Date: Wed, 24 Apr 2019 18:00:04 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH v5 0/2] x86/boot: Use efi_setup_data for searching RSDP
  on kexec-ed kernel
-Message-ID: <20190424093852.GB30142@zn.tnic>
+Message-ID: <20190424100004.GJ3584@localhost.localdomain>
 References: <20190424092944.30481-1-bhe@redhat.com>
+ <20190424093852.GB30142@zn.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190424092944.30481-1-bhe@redhat.com>
+In-Reply-To: <20190424093852.GB30142@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,37 +25,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
 Cc: x86@kernel.org, kasong@redhat.com, fanc.fnst@cn.fujitsu.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com, j-nomura@ce.jp.nec.com, tglx@linutronix.de, dyoung@redhat.com
 
-On Wed, Apr 24, 2019 at 05:29:42PM +0800, Baoquan He wrote:
-> In this series, patch 2/2 has dependency on patch 1/1, otherwise
-> it may cause system to reset to firmware on some machines.
+On 04/24/19 at 11:38am, Borislav Petkov wrote:
+> On Wed, Apr 24, 2019 at 05:29:42PM +0800, Baoquan He wrote:
+> > In this series, patch 2/2 has dependency on patch 1/1, otherwise
+> > it may cause system to reset to firmware on some machines.
+> > 
+> > The patch 2/2 is the version Boris organized:
+> > http://lkml.kernel.org/r/20190416095209.GG27892@zn.tnic
+> > 
+> > Patch 1/1 is based on Kairui's v1 patch, and add ACPI tables mapping:
+> > http://lkml.kernel.org/r/20190422092804.15534-1-kasong@redhat.com
+> > 
+> > Dave Young confirmed this patchset passed test on his t420 laptop, where
+> > the system resetting issue caused by patch 2/2 was found.
 > 
-> The patch 2/2 is the version Boris organized:
-> http://lkml.kernel.org/r/20190416095209.GG27892@zn.tnic
+> I guess but this does not give me the warm and fuzzy feeling one week
+> before the merge window.
 > 
-> Patch 1/1 is based on Kairui's v1 patch, and add ACPI tables mapping:
-> http://lkml.kernel.org/r/20190422092804.15534-1-kasong@redhat.com
+> So:
 > 
-> Dave Young confirmed this patchset passed test on his t420 laptop, where
-> the system resetting issue caused by patch 2/2 was found.
+> https://git.kernel.org/tip/36f0c423552dacaca152324b8e9bda42a6d88865
+> 
+> and we all can relax ourselves and take the next release cycle to test
+> the hell out of this before reenabling it again.
 
-I guess but this does not give me the warm and fuzzy feeling one week
-before the merge window.
-
-So:
-
-https://git.kernel.org/tip/36f0c423552dacaca152324b8e9bda42a6d88865
-
-and we all can relax ourselves and take the next release cycle to test
-the hell out of this before reenabling it again.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+OK, then let's hold till the next window opening.
 
 _______________________________________________
 kexec mailing list
