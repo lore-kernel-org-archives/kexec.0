@@ -1,23 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-f66.google.com ([209.85.166.66])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hJGD6-0004iv-4m
- for kexec@lists.infradead.org; Wed, 24 Apr 2019 11:37:10 +0000
-Received: by mail-io1-f66.google.com with SMTP id r10so11574742ioc.8
- for <kexec@lists.infradead.org>; Wed, 24 Apr 2019 04:37:07 -0700 (PDT)
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1hJaOf-0004X8-LR
+ for kexec@lists.infradead.org; Thu, 25 Apr 2019 09:10:29 +0000
+Date: Thu, 25 Apr 2019 11:10:19 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec: quiet down kexec reboot
+Message-ID: <20190425091019.4oqhaxfr6lug5zbo@verge.net.au>
+References: <20190423204154.3085-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-References: <20190422092804.15534-1-kasong@redhat.com>
- <965f770a-b103-72fb-eaef-cb337ebe8290@ce.jp.nec.com>
- <CACPcB9d-oNvp1Kag1J8X+QBdgqfU0ps1OztjOk8n=Pw2G6ONWA@mail.gmail.com>
- <24f1dc7c-1dea-79b0-d364-0dc7d605ce01@ce.jp.nec.com>
- <20190424054135.GG3584@localhost.localdomain>
- <20190424061831.GA9059@dhcp-128-65.nay.redhat.com>
- <20190424074553.GH3584@localhost.localdomain>
-In-Reply-To: <20190424074553.GH3584@localhost.localdomain>
-From: Kairui Song <kasong@redhat.com>
-Date: Wed, 24 Apr 2019 07:36:55 -0400
-Message-ID: <CACPcB9fuXcc7S2xzw7LrHsnCPjN0tuBt+ivuS5v5KukOWW+YcQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/kexec: always ensure EFI systab region is mapped
+Content-Disposition: inline
+In-Reply-To: <20190423204154.3085-1-pasha.tatashin@soleen.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,74 +23,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, Chao Fan <fanc.fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
+To: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: sashal@kernel.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, jmorris@namei.org, ebiederm@xmission.com
 
-On Wed, Apr 24, 2019, 03:46 Baoquan He <bhe@redhat.com> wrote:
->
-> On 04/24/19 at 02:18pm, Dave Young wrote:
-> > On 04/24/19 at 01:41pm, Baoquan He wrote:
-> > > On 04/24/19 at 02:47am, Junichi Nomura wrote:
-> > > > On 4/24/19 2:15 AM, Kairui Song wrote:
-> > > > > On Mon, Apr 22, 2019 at 11:21 PM Junichi Nomura <j-nomura@ce.jp.nec.com> wrote:
-> > > > >> Is the mapping of ACPI tables just by luck, too?
-> > > > >
-> > > > > Good question, they should have same issue with systab, I ignored this one.
-> > > > > Then in first kernel when doing kexec it should ensure both ACPI
-> > > > > tables and the EFI systab are mapped, that should cover everything and
-> > > > > make it work.
-> > > >
-> > > > Right.
-> > > >
-> > > > > Is there anything else missing?
-> > > > No, as far as I looked around get_rsdp_addr().
-> > >
-> > > Have made a draft patch to build ident mapping for ACPI tables too, it's
-> > > based on Kairui's patch. Dave has tested on his t400s laptop, and
-> > > passed. Please check if this adding is OK.
-> > >
-> > > Kairui, you can add this into your patch to make a new one and resend.
-> > > Or I can combine them and send for you today.
->
-> >
-> > Since I can not reproduce the acpi table accessing fault with Kairui's patch,
-> > the test is just sanity testing on same hardware. But the patch looks
-> > good.
->
-> Yes, usually vendor will put these efi systab, ACPI tables together. See
-> the regions you listed on your t420 laptop in another mail:
-> da99f000 - dae9efff Reserved (efi systab fall in this region)
-> daf9f000 - daffefff ACPI tables
->
-> We build 1:1 mapping for kexec kernel down to PMD level. Means for a
-> region, it will align starting address down to PMD size, and align end
-> address up to PMD size. So the end of efi systab, 0xdae9efff, will cause
-> mapping built for the 2MB area, 0xdae00000-0xdaf00000. Clearly ACPI
-> tables are covered by that PMD entry. That's why only efi systab
-> mapping is built, accessing ACPI tables doesn't cause error.
->
-> But we can't assume they will be put together always, so need map ACPI
-> tables too.
->
-> >
-> > With Kairui's fix+ this acpi fix and Junichi's patch everything works.
-> > Can anyone send them for example patch 1/2: kexec early mapping for
-> > efi/acpi,  patch 2/2: Junichi's previous patch.
->
-> Kairui is having a workshop in the US, I can make a patchset to
-> include these two patches.
->
-> For patch 1/2, I will combine the patch Kairui posted and my draft patch,
-> Kairui is the author certainly, since he debugged and found out the root
-> cause, and posted v1 when I was on vacation last week.
->
-> For patch 2/2, I think the version Boris organized is good.
-> http://lkml.kernel.org/r/20190416095209.GG27892@zn.tnic
->
+On Tue, Apr 23, 2019 at 04:41:54PM -0400, Pavel Tatashin wrote:
+> Here is a regular kexec command sequence and output:
+> =====
+> $ kexec --reuse-cmdline -i --load Image
+> $ kexec -e
+> [  161.342002] kexec_core: Starting new kernel
+> 
+> Welcome to Buildroot
+> buildroot login:
+> =====
+> 
+> Even when "quiet" kernel parameter is specified, "kexec_core: Starting
+> new kernel" is printed.
+> 
+> This message has  KERN_EMERG level, but there is no emergency, it is
+> a normal kexec operation, so quiet it down to appropriate KERN_NOTICE.
+> 
+> Machines that have slow console baud rate benefit from less output.
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 
-Thanks a lot Bao! I was offline for about 1 day due to timezone and
-flight, I have no problem with this and the ACPI mapping part looks
-good to me.
+Reviewed-by: Simon Horman <horms@verge.net.au>
+
+> ---
+>  kernel/kexec_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index d7140447be75..fe13e86984ec 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1171,7 +1171,7 @@ int kernel_kexec(void)
+>  		 * CPU hotplug again; so re-enable it here.
+>  		 */
+>  		cpu_hotplug_enable();
+> -		pr_emerg("Starting new kernel\n");
+> +		pr_notice("Starting new kernel\n");
+>  		machine_shutdown();
+>  	}
+>  
+> -- 
+> 2.21.0
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
