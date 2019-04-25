@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-ed1-x542.google.com ([2a00:1450:4864:20::542])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hJasc-0003aw-Ds
- for kexec@lists.infradead.org; Thu, 25 Apr 2019 09:41:23 +0000
-Date: Thu, 25 Apr 2019 17:41:15 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] kexec: quiet down kexec reboot
-Message-ID: <20190425094115.GN3584@localhost.localdomain>
+ id 1hJdEu-0003o7-7X
+ for kexec@lists.infradead.org; Thu, 25 Apr 2019 12:12:33 +0000
+Received: by mail-ed1-x542.google.com with SMTP id d55so18962219ede.0
+ for <kexec@lists.infradead.org>; Thu, 25 Apr 2019 05:12:31 -0700 (PDT)
+MIME-Version: 1.0
 References: <20190423204154.3085-1-pasha.tatashin@soleen.com>
  <20190425093200.GM3584@localhost.localdomain>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190425093200.GM3584@localhost.localdomain>
+ <20190425094115.GN3584@localhost.localdomain>
+In-Reply-To: <20190425094115.GN3584@localhost.localdomain>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Date: Thu, 25 Apr 2019 08:12:19 -0400
+Message-ID: <CA+CK2bD7crdQB3oJ97ATkYzGK3Bw_tA9zijoAgrLB9UeWO=1Gg@mail.gmail.com>
+Subject: Re: [PATCH] kexec: quiet down kexec reboot
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,79 +26,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: sashal@kernel.org, kexec@lists.infradead.org, jmorris@namei.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, dyoung@redhat.com
+To: Baoquan He <bhe@redhat.com>
+Cc: Sasha Levin <sashal@kernel.org>, kexec@lists.infradead.org, James Morris <jmorris@namei.org>, LKML <linux-kernel@vger.kernel.org>, ebiederm@xmission.com, dyoung@redhat.com
 
-On 04/25/19 at 05:32pm, Baoquan He wrote:
-> On 04/23/19 at 04:41pm, Pavel Tatashin wrote:
-> > Here is a regular kexec command sequence and output:
-> > =====
-> > $ kexec --reuse-cmdline -i --load Image
-> > $ kexec -e
-> > [  161.342002] kexec_core: Starting new kernel
-> > 
-> > Welcome to Buildroot
-> > buildroot login:
-> > =====
-> > 
-> > Even when "quiet" kernel parameter is specified, "kexec_core: Starting
-> > new kernel" is printed.
-> 
-> I personally don't like this change very much. 
-> 
-> kernel-parameters.txt tells that quiet disables most log messages, but
-> not to disable log messages.
-> 
-> 	quiet           [KNL] Disable most log messages 
-> 
-> And kexec doesn't print many messages. When 'kexec -e' is executed,
-> much critical work need be done in 1st kernel, and also in 2nd kernel
-> till printed messages are seen. Sometime it could hang there without a
-> notice, because we need shutdown all devices before it. Keeping it can
-> at least tell which stage it is?
-> 
-> No strong objection, just we may need enable it manually if silent
-> hang is met. Anyone has different opinion? 
+> > And kexec doesn't print many messages. When 'kexec -e' is executed,
+> > much critical work need be done in 1st kernel, and also in 2nd kernel
+> > till printed messages are seen. Sometime it could hang there without a
+> > notice, because we need shutdown all devices before it. Keeping it can
+> > at least tell which stage it is?
+> >
+> > No strong objection, just we may need enable it manually if silent
+> > hang is met. Anyone has different opinion?
+>
+> Please ignore this mail, I must be dizzy. pr_notice looks good to me.
+>
 
-Please ignore this mail, I must be dizzy. pr_notice looks good to me.
+Thank you for looking at this.
 
-> > 
-> > This message has  KERN_EMERG level, but there is no emergency, it is
-> > a normal kexec operation, so quiet it down to appropriate KERN_NOTICE.
-> > 
-> > Machines that have slow console baud rate benefit from less output.
-> > 
-> > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> > ---
-> >  kernel/kexec_core.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> > index d7140447be75..fe13e86984ec 100644
-> > --- a/kernel/kexec_core.c
-> > +++ b/kernel/kexec_core.c
-> > @@ -1171,7 +1171,7 @@ int kernel_kexec(void)
-> >  		 * CPU hotplug again; so re-enable it here.
-> >  		 */
-> >  		cpu_hotplug_enable();
-> > -		pr_emerg("Starting new kernel\n");
-> > +		pr_notice("Starting new kernel\n");
-> >  		machine_shutdown();
-> >  	}
-> >  
-> > -- 
-> > 2.21.0
-> > 
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Pasha
 
 _______________________________________________
 kexec mailing list
