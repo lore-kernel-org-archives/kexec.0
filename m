@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hJaOf-0004X8-LR
- for kexec@lists.infradead.org; Thu, 25 Apr 2019 09:10:29 +0000
-Date: Thu, 25 Apr 2019 11:10:19 +0200
-From: Simon Horman <horms@verge.net.au>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1hJajg-0008JZ-Ag
+ for kexec@lists.infradead.org; Thu, 25 Apr 2019 09:32:10 +0000
+Date: Thu, 25 Apr 2019 17:32:00 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH] kexec: quiet down kexec reboot
-Message-ID: <20190425091019.4oqhaxfr6lug5zbo@verge.net.au>
+Message-ID: <20190425093200.GM3584@localhost.localdomain>
 References: <20190423204154.3085-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -24,9 +24,9 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: sashal@kernel.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, jmorris@namei.org, ebiederm@xmission.com
+Cc: sashal@kernel.org, kexec@lists.infradead.org, jmorris@namei.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, dyoung@redhat.com
 
-On Tue, Apr 23, 2019 at 04:41:54PM -0400, Pavel Tatashin wrote:
+On 04/23/19 at 04:41pm, Pavel Tatashin wrote:
 > Here is a regular kexec command sequence and output:
 > =====
 > $ kexec --reuse-cmdline -i --load Image
@@ -39,6 +39,26 @@ On Tue, Apr 23, 2019 at 04:41:54PM -0400, Pavel Tatashin wrote:
 > 
 > Even when "quiet" kernel parameter is specified, "kexec_core: Starting
 > new kernel" is printed.
+
+I personally don't like this change very much. 
+
+kernel-parameters.txt tells that quiet disables most log messages, but
+not to disable log messages.
+
+	quiet           [KNL] Disable most log messages 
+
+And kexec doesn't print many messages. When 'kexec -e' is executed,
+much critical work need be done in 1st kernel, and also in 2nd kernel
+till printed messages are seen. Sometime it could hang there without a
+notice, because we need shutdown all devices before it. Keeping it can
+at least tell which stage it is?
+
+No strong objection, just we may need enable it manually if silent
+hang is met. Anyone has different opinion? 
+
+Thanks
+Baoquan
+
 > 
 > This message has  KERN_EMERG level, but there is no emergency, it is
 > a normal kexec operation, so quiet it down to appropriate KERN_NOTICE.
@@ -46,9 +66,6 @@ On Tue, Apr 23, 2019 at 04:41:54PM -0400, Pavel Tatashin wrote:
 > Machines that have slow console baud rate benefit from less output.
 > 
 > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-
-Reviewed-by: Simon Horman <horms@verge.net.au>
-
 > ---
 >  kernel/kexec_core.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
@@ -74,7 +91,6 @@ Reviewed-by: Simon Horman <horms@verge.net.au>
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
-> 
 
 _______________________________________________
 kexec mailing list
