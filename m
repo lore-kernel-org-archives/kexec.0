@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hJajg-0008JZ-Ag
- for kexec@lists.infradead.org; Thu, 25 Apr 2019 09:32:10 +0000
-Date: Thu, 25 Apr 2019 17:32:00 +0800
+ id 1hJasc-0003aw-Ds
+ for kexec@lists.infradead.org; Thu, 25 Apr 2019 09:41:23 +0000
+Date: Thu, 25 Apr 2019 17:41:15 +0800
 From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH] kexec: quiet down kexec reboot
-Message-ID: <20190425093200.GM3584@localhost.localdomain>
+Message-ID: <20190425094115.GN3584@localhost.localdomain>
 References: <20190423204154.3085-1-pasha.tatashin@soleen.com>
+ <20190425093200.GM3584@localhost.localdomain>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190423204154.3085-1-pasha.tatashin@soleen.com>
+In-Reply-To: <20190425093200.GM3584@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,66 +27,71 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Pavel Tatashin <pasha.tatashin@soleen.com>
 Cc: sashal@kernel.org, kexec@lists.infradead.org, jmorris@namei.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, dyoung@redhat.com
 
-On 04/23/19 at 04:41pm, Pavel Tatashin wrote:
-> Here is a regular kexec command sequence and output:
-> =====
-> $ kexec --reuse-cmdline -i --load Image
-> $ kexec -e
-> [  161.342002] kexec_core: Starting new kernel
+On 04/25/19 at 05:32pm, Baoquan He wrote:
+> On 04/23/19 at 04:41pm, Pavel Tatashin wrote:
+> > Here is a regular kexec command sequence and output:
+> > =====
+> > $ kexec --reuse-cmdline -i --load Image
+> > $ kexec -e
+> > [  161.342002] kexec_core: Starting new kernel
+> > 
+> > Welcome to Buildroot
+> > buildroot login:
+> > =====
+> > 
+> > Even when "quiet" kernel parameter is specified, "kexec_core: Starting
+> > new kernel" is printed.
 > 
-> Welcome to Buildroot
-> buildroot login:
-> =====
+> I personally don't like this change very much. 
 > 
-> Even when "quiet" kernel parameter is specified, "kexec_core: Starting
-> new kernel" is printed.
-
-I personally don't like this change very much. 
-
-kernel-parameters.txt tells that quiet disables most log messages, but
-not to disable log messages.
-
-	quiet           [KNL] Disable most log messages 
-
-And kexec doesn't print many messages. When 'kexec -e' is executed,
-much critical work need be done in 1st kernel, and also in 2nd kernel
-till printed messages are seen. Sometime it could hang there without a
-notice, because we need shutdown all devices before it. Keeping it can
-at least tell which stage it is?
-
-No strong objection, just we may need enable it manually if silent
-hang is met. Anyone has different opinion? 
-
-Thanks
-Baoquan
-
+> kernel-parameters.txt tells that quiet disables most log messages, but
+> not to disable log messages.
 > 
-> This message has  KERN_EMERG level, but there is no emergency, it is
-> a normal kexec operation, so quiet it down to appropriate KERN_NOTICE.
+> 	quiet           [KNL] Disable most log messages 
 > 
-> Machines that have slow console baud rate benefit from less output.
+> And kexec doesn't print many messages. When 'kexec -e' is executed,
+> much critical work need be done in 1st kernel, and also in 2nd kernel
+> till printed messages are seen. Sometime it could hang there without a
+> notice, because we need shutdown all devices before it. Keeping it can
+> at least tell which stage it is?
 > 
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> ---
->  kernel/kexec_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index d7140447be75..fe13e86984ec 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -1171,7 +1171,7 @@ int kernel_kexec(void)
->  		 * CPU hotplug again; so re-enable it here.
->  		 */
->  		cpu_hotplug_enable();
-> -		pr_emerg("Starting new kernel\n");
-> +		pr_notice("Starting new kernel\n");
->  		machine_shutdown();
->  	}
->  
-> -- 
-> 2.21.0
-> 
+> No strong objection, just we may need enable it manually if silent
+> hang is met. Anyone has different opinion? 
+
+Please ignore this mail, I must be dizzy. pr_notice looks good to me.
+
+> > 
+> > This message has  KERN_EMERG level, but there is no emergency, it is
+> > a normal kexec operation, so quiet it down to appropriate KERN_NOTICE.
+> > 
+> > Machines that have slow console baud rate benefit from less output.
+> > 
+> > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> > ---
+> >  kernel/kexec_core.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> > index d7140447be75..fe13e86984ec 100644
+> > --- a/kernel/kexec_core.c
+> > +++ b/kernel/kexec_core.c
+> > @@ -1171,7 +1171,7 @@ int kernel_kexec(void)
+> >  		 * CPU hotplug again; so re-enable it here.
+> >  		 */
+> >  		cpu_hotplug_enable();
+> > -		pr_emerg("Starting new kernel\n");
+> > +		pr_notice("Starting new kernel\n");
+> >  		machine_shutdown();
+> >  	}
+> >  
+> > -- 
+> > 2.21.0
+> > 
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
 > 
 > _______________________________________________
 > kexec mailing list
