@@ -1,23 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hJxuL-0001je-OO
- for kexec@lists.infradead.org; Fri, 26 Apr 2019 10:16:42 +0000
-Date: Fri, 26 Apr 2019 18:16:35 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [RFC PATCH] kexec, x86/boot: map systab region in identity
- mapping before accessing it
-Message-ID: <20190426101635.GQ3584@localhost.localdomain>
-References: <20190419101733.GA10324@zn.tnic>
- <20190419105014.GE11060@MiWiFi-R3L-srv>
- <20190419112801.GB10324@zn.tnic> <20190419113621.GD10324@zn.tnic>
- <20190422143346.GD3584@localhost.localdomain>
- <20190422151723.GD21457@zn.tnic>
- <20190426095134.GP3584@localhost.localdomain>
- <20190426095800.GB4608@zn.tnic>
+ id 1hK0Uv-0003mV-AM
+ for kexec@lists.infradead.org; Fri, 26 Apr 2019 13:02:38 +0000
+Date: Fri, 26 Apr 2019 15:02:26 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/3 v2] x86/kexec: Do not map the kexec area as decrypted
+ when SEV is active
+Message-ID: <20190426130226.GE4608@zn.tnic>
+References: <20190327053629.17935-1-lijiang@redhat.com>
+ <20190327053629.17935-2-lijiang@redhat.com>
+ <20190402103201.GF6826@zn.tnic>
+ <c25502b9-15bc-6ca3-f0d4-c0df5498e676@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190426095800.GB4608@zn.tnic>
+In-Reply-To: <c25502b9-15bc-6ca3-f0d4-c0df5498e676@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,30 +27,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: "x86@kernel.org" <x86@kernel.org>, Kairui Song <kasong@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Thomas Gleixner <tglx@linutronix.de>, dyoung@redhat.com
+To: lijiang <lijiang@redhat.com>
+Cc: Thomas.Lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On 04/26/19 at 11:58am, Borislav Petkov wrote:
-> On Fri, Apr 26, 2019 at 05:51:34PM +0800, Baoquan He wrote:
-> > I can make a patch to add a bit into xloadflags, to indicate that this
-> > is kexec-ed kernel. It can help to differentiate kexec-ed kernel from
-> > kdump kernel.
-> 
-> From the recent snafu, the only thing we needed is to differentiate
-> between the *first* kernel and the following kernel(s) which has been
-> started/loaded using a kexec syscall.
+On Fri, Apr 26, 2019 at 09:59:54AM +0800, lijiang wrote:
+> Hope this help. Thanks.
 
-OK. To make sure I got it, the loader type 0xD is enough for this, right? 
+It does help, yes. When this explanation above is part of the commit
+message, it helps immensely!
 
-It's fine to me, we can add it later if needed. I remember there's an
-issue in intel/amd iommu, in which we need differentiate between
-kexec/kdump kernel, but not very sure. I will check it when I have time
-to work on that.
+:-)
 
-Thanks
-Baoquan
+> So sorry for the delay, i am trying my best to explain it in detail.
 
+I don't care about the delay as long as the commit messages properly
+explain why the change is needed.
 
+So thanks for doing that.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
