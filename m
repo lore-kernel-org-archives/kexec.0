@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hJq9v-0005OW-K8
- for kexec@lists.infradead.org; Fri, 26 Apr 2019 02:00:18 +0000
-From: lijiang <lijiang@redhat.com>
-Subject: Re: [PATCH 1/3 v2] x86/kexec: Do not map the kexec area as decrypted
- when SEV is active
-References: <20190327053629.17935-1-lijiang@redhat.com>
- <20190327053629.17935-2-lijiang@redhat.com> <20190402103201.GF6826@zn.tnic>
-Message-ID: <c25502b9-15bc-6ca3-f0d4-c0df5498e676@redhat.com>
-Date: Fri, 26 Apr 2019 09:59:54 +0800
+ id 1hJxWA-0001Zg-G8
+ for kexec@lists.infradead.org; Fri, 26 Apr 2019 09:51:43 +0000
+Date: Fri, 26 Apr 2019 17:51:34 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [RFC PATCH] kexec, x86/boot: map systab region in identity
+ mapping before accessing it
+Message-ID: <20190426095134.GP3584@localhost.localdomain>
+References: <20190419101733.GA10324@zn.tnic>
+ <20190419105014.GE11060@MiWiFi-R3L-srv>
+ <20190419112801.GB10324@zn.tnic> <20190419113621.GD10324@zn.tnic>
+ <20190422143346.GD3584@localhost.localdomain>
+ <20190422151723.GD21457@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20190402103201.GF6826@zn.tnic>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190422151723.GD21457@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,86 +24,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas.Lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+Cc: "x86@kernel.org" <x86@kernel.org>, Kairui Song <kasong@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Thomas Gleixner <tglx@linutronix.de>, dyoung@redhat.com
 
-5ZyoIDIwMTnlubQwNOaciDAy5pelIDE4OjMyLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IFdlZCwgTWFyIDI3LCAyMDE5IGF0IDAxOjM2OjI3UE0gKzA4MDAsIExpYW5ibyBKaWFuZyB3cm90
-ZToKPj4gQ3VycmVudGx5LCB0aGUgYXJjaF9rZXhlY19wb3N0X3thbGxvYyxmcmVlfV9wYWdlcygp
-IHVuY29uZGl0aW9uYWxseQo+PiBtYXBzIHRoZSBrZXhlYyBhcmVhIGFzIGRlY3J5cHRlZC4gVGhp
-cyB3b3JrcyBmaW5lIHdoZW4gU01FIGlzIGFjdGl2ZS4KPj4gQmVjYXVzZSBpbiBTTUUsIHRoZSBm
-aXJzdCBrZXJuZWwgaXMgbG9hZGVkIGluIGRlY3J5cHRlZCBhcmVhIGJ5IHRoZQo+PiBCSU9TLCBz
-byB0aGUgc2Vjb25kIGtlcm5lbCBtdXN0IGJlIGFsc28gbG9hZGVkIGludG8gdGhlIGRlY3J5cHRl
-ZAo+PiBtZW1vcnkuCj4+Cj4+IFdoZW4gU0VWIGlzIGFjdGl2ZSwgdGhlIGZpcnN0IGtlcm5lbCBp
-cyBsb2FkZWQgaW50byB0aGUgZW5jcnlwdGVkCj4+IGFyZWEsIHNvIHRoZSBzZWNvbmQga2VybmVs
-IG11c3QgYmUgYWxzbyBsb2FkZWQgaW50byB0aGUgZW5jcnlwdGVkCj4+IG1lbW9yeS4gTGV0cyBt
-YWtlIHN1cmUgdGhhdCBhcmNoX2tleGVjX3Bvc3Rfe2FsbG9jLGZyZWV9X3BhZ2VzKCkKPj4gZG9l
-cyBub3QgY2xlYXIgdGhlIG1lbW9yeSBlbmNyeXB0aW9uIG1hc2sgZnJvbSB0aGUga2V4ZWMgYXJl
-YSB3aGVuCj4+IFNFViBpcyBhY3RpdmUuCj4gCj4gVGhpcyBjb21taXQgbWVzc2FnZSBzdGlsbCBk
-b2Vzbid0IGV4cGxhaW4gdGhlIGJpZyBwaWN0dXJlIHdoeSB5b3Ugd2FudAo+IHRoaXMgY2hhbmdl
-Lgo+IAoKV2hlbiBhIHZpcnR1YWwgbWFjaGluZSBwYW5pYywgd2UgYWxzbyBuZWVkIHRvIGR1bXAg
-aXRzIG1lbW9yeSBmb3IgYW5hbHlzaXMuCkJ1dCwgZm9yIHRoZSBTRVYgdmlydHVhbCBtYWNoaW5l
-LCB0aGUgbWVtb3J5IGlzIGVuY3J5cHRlZC4gVG8gc3VwcG9ydCB0aGUKU0VWIGtkdW1wLCB0aGVz
-ZSBjaGFuZ2VzIHdvdWxkIGJlIG5lY2Vzc2FyeSwgb3RoZXJ3aXNlLCBpdCB3aWxsIG5vdCB3b3Jr
-LgoKTGV0cyBjb25zaWRlciB0aGUgZm9sbG93aW5nIHNpdHVhdGlvbnM6CgpbMV0gSG93IHRvIGxv
-YWQgdGhlIGltYWdlcyhrZXJuZWwgYW5kIGluaXRyZCkgd2hlbiBTRVYgaXMgZW5hYmxlZCBpbiB0
-aGUKICAgIGZpcnN0IGtlcm5lbD8KCiAgICBCYXNlZCBvbiB0aGUgYW1kLW1lbW9yeS1lbmNyeXB0
-aW9uLnR4dCBhbmQgU0VWJ3MgcGF0Y2ggc2VyaWVzLCB0aGUgYm9vdAogICAgaW1hZ2VzIG11c3Qg
-YmUgZW5jcnlwdGVkIGJlZm9yZSBndWVzdChWTSkgY2FuIGJlIGJvb3RlZChQbGVhc2Ugc2VlIFNl
-Y3VyZQogICAgRW5jcnlwdGVkIFZpcnV0dWFsaXphdGlvbiBLZXkgTWFuYWdlbWVudCAnTGF1bmNo
-aW5nIGEgZ3Vlc3QodXNhZ2UgZmxvdyknKS4KICAgIE5hdHVyYWxseSB1c2UgdGhlIHNpbWlsYXIg
-d2F5IHRvIGxvYWQgdGhlIGltYWdlcyhrZXJuZWwgYW5kIGluaXRyZCkgdG8gdGhlCiAgICBjcmFz
-aCByZXNlcnZlZCBhcmVhcywgYW5kIHRoZXNlIGFyZWFzIGFyZSBlbmNyeXB0ZWQgd2hlbiBTRVYg
-aXMgYWN0aXZlLgoKICAgIFRoYXQgaXMgdG8gc2F5LCB3aGVuIFNFViBpcyBhY3RpdmUgaW4gdGhl
-IGZpcnN0IGtlcm5lbCwgbmVlZCB0byBsb2FkIHRoZQogICAga2VybmVsIGFuZCBpbml0cmQgdG8g
-dGhlIGVuY3J5cHRlZCBhcmVhcywgc28gaSBkaWQgdGhlIGZvbGxvd2luZyBjaGFuZ2VzOgoKICAg
-IFthXSBEbyBub3QgbWFwIHRoZSBrZXhlYyBhcmVhIGFzIGRlY3J5cHRlZCB3aGVuIFNFViBpcyBh
-Y3RpdmUuCiAgICAgICAgQ3VycmVudGx5LCB0aGUgYXJjaF9rZXhlY19wb3N0X3thbGxvYyxmcmVl
-fV9wYWdlcygpIHVuY29uZGl0aW9uYWxseQogICAgICAgIG1hcHMgdGhlIGtleGVjIGFyZWFzIGFz
-IGRlY3J5cHRlZC4gT2J2aW91c2x5LCBmb3IgdGhlIFNFViBjYXNlLCBpdCBjYW4KICAgICAgICBu
-b3Qgd29yayB3ZWxsLCBuZWVkIHRvIGltcHJvdmUgdGhlbS4gUGxlYXNlIHJlZmVyIHRvIHRoZSBm
-aXJzdCBwYXRjaAogICAgICAgIGluIHRoaXMgcGF0Y2ggc2VyaWVzLgoKICAgIFtiXSBTZXQgdGhl
-IEMtYml0IGluIHRoZSBpZGVudGl0eSBtYXAgcGFnZSB0YWJsZSB3aGVuIFNFViBpcyBhY3RpdmUu
-CiAgICAgICAgQmVjYXVzZSB0aGUgc2Vjb25kIGtlcm5lbCBpbWFnZXMoa2VybmVsIGFuZCBpbml0
-cmQpIGFyZSBsb2FkZWQgdG8gdGhlCiAgICAgICAgZW5jcnlwdGVkIGFyZWFzLCBpbiBvcmRlciB0
-byBjb3JyZWN0bHkgYWNjZXNzIHRoZXNlIGVuY3J5cHRlZCBtZW1vcnkoCiAgICAgICAgcGFnZXMp
-LCBuZWVkIHRvIHNldCB0aGUgQy1iaXQgaW4gdGhlIGlkZW50aXR5IG1hcHBpbmcgcGFnZSB0YWJs
-ZSB3aGVuCiAgICAgICAga2V4ZWMgYnVpbGRzIHRoZSBpZGVudGl0eSBtYXBwaW5nIHBhZ2UgdGFi
-bGUuCgpbMl0gSG93IHRvIGR1bXAgdGhlIG9sZCBtZW1vcnkgaW4gdGhlIHNlY29uZCBrZXJuZWw/
-CgogICAgSGVyZSwgaXQgaXMgc2ltaWxhciB0byB0aGUgU01FIGtkdW1wLCBpZiBTRVYgd2FzIGVu
-YWJsZWQgaW4gdGhlIGZpcnN0IGtlcm5lbCwKICAgIHRoZSBvbGQgbWVtb3J5IGlzIGFsc28gZW5j
-cnlwdGVkLCB0aGUgb2xkIG1lbW9yeSBoYXMgdG8gYmUgcmVtYXBwZWQgd2l0aAogICAgbWVtb3J5
-IGVuY3J5cHRpb24gbWFzayBpbiBvcmRlciB0byBhY2Nlc3MgaXQgcHJvcGVybHkuCgogICAgW2Fd
-IFRoZSBpb3JlbWFwX2VuY3J5cHRlZCgpIGlzIHN0aWxsIG5lY2Vzc2FyeS4KICAgICAgICBVc2Vk
-IHRvIHJlbWFwIHRoZSBvbGQgbWVtb3J5IHdpdGggbWVtb3J5IGVuY3J5cHRpb24gbWFzay4KCiAg
-ICBbYl0gRW5hYmxlIGR1bXBpbmcgZW5jcnlwdGVkIG1lbW9yeSB3aGVuIFNFViB3YXMgYWN0aXZl
-LgogICAgICAgIEJlY2F1c2UgdGhlIHdob2xlIG1lbW9yeSBpcyBlbmNyeXB0ZWQgaW4gdGhlIGZp
-cnN0IGtlcm5lbCB3aGVuIFNFViBpcwogICAgICAgIGVuYWJsZWQsIHRoYXQgaXMgdG8gc2F5LCB0
-aGUgbm90ZXMgYW5kIGVsZmNvcmVoZHIgYXJlIGFsc28gZW5jcnlwdGVkLAogICAgICAgIGFuZCB0
-aGV5IGFyZSBhbHNvIHNhdmVkIHRvIHRoZSBlbmNyeXB0ZWQgbWVtb3J5LiBGb2xsb3dpbmcgY29t
-bWl0CiAgICAgICAgOTkyYjY0OWEzZjAxICgia2R1bXAsIHByb2Mvdm1jb3JlOiBFbmFibGUga2R1
-bXBpbmcgZW5jcnlwdGVkIG1lbW9yeSB3aXRoCiAgICAgICAgU01FIGVuYWJsZWQiKSwgYm90aCBT
-TUUgYW5kIFNFViBjYXNlcyBuZWVkIHRvIGJlIGNvbnNpZGVyZWQgYW5kIG1vZGlmaWVkCiAgICAg
-ICAgY29ycmVjdGx5LiBQbGVhc2UgcmVmZXIgdG8gdGhlIHRoaXJkIHBhdGNoIGluIHRoaXMgcGF0
-Y2ggc2VyaWVzLgoKCkhvcGUgdGhpcyBoZWxwLiBUaGFua3MuCgo+IEFuZCBpdCBtdXN0IGV4cGxh
-aW4gaXQgYmVjYXVzZSBpdCBtaWdodCBiZSBhbGwgY2xlYXIgaW4geW91ciBoZWFkIG5vdwo+IGJ1
-dCBtb250aHMgZnJvbSBub3csIHlvdSwgd2UsIGFsbCB3b3VsZCd2ZSBmb3Jnb3R0ZW4gd2h5IHRo
-aXMgY2hhbmdlIHdhcwo+IG5lZWRlZC4KPiAKPiBTbyBwbHMgYWRkIGJsdXJiIHRoYXQgdGhpcyB3
-aG9sZSBlZmZvcnQgaXMgYmVpbmcgZG9uZSBzbyB0aGF0IFNFViBWTXMKPiBjYW4ga2R1bXAgdG9v
-LiBJLmUuLCB0aGUgMTAwMDBmdCBwaWN0dXJlLgo+IAo+IEFueW9uZSBtdXN0IGJlIGFibGUgdG8g
-ZmlndXJlIG91dCAqd2h5KiBhIGNoYW5nZSBoYXMgYmVlbiBkb25lIGp1c3QgYnkKPiBkb2luZyBn
-aXQgYXJjaGVvbG9neS4gU28gbWFrZSBzdXJlIHlvdSBleHBsYWluIGl0IHByb3Blcmx5Lgo+IAo+
-IElmIHVuc3VyZSwgdHJ5IHRvIHB1dCB5b3Vyc2VsZiBpbiB0aGUgc2hvZXMgb2Ygc29tZSBmdXR1
-cmUga2VybmVsCj4gZGV2ZWxvcGVyIHdobyBpcyB0cnlpbmcgdG8gZmluZCBvdXQgd2h5IHRoaXMg
-Y2hhbmdlIGhhcyBiZWVuIGRvbmUuIE5vdwo+IHJlYWQgdGhlIGNvbW1pdCBtZXNzYWdlIHlvdSd2
-ZSB3cml0dGVuLiBEb2VzIGl0IG1ha2UgYW55IHNlbnNlIHRvIGhpbT8gSQo+IHRoaW5rIG5vdC4K
-PiAKPiBEbyB5b3UgY2F0Y2ggbXkgZHJpZnQ/Cj4gCgpZZXMsIHVuZGVyc3Rvb2QsIHRoYW5rIHlv
-dS4KClNvIHNvcnJ5IGZvciB0aGUgZGVsYXksIGkgYW0gdHJ5aW5nIG15IGJlc3QgdG8gZXhwbGFp
-biBpdCBpbiBkZXRhaWwuCgpUaGFua3MuCkxpYW5ibwoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
-ZXhlYwo=
+On 04/22/19 at 05:17pm, Borislav Petkov wrote:
+> + hpa
+> 
+> On Mon, Apr 22, 2019 at 10:33:46PM +0800, Baoquan He wrote:
+> > On 04/19/19 at 01:36pm, Borislav Petkov wrote:
+> > > On Fri, Apr 19, 2019 at 01:28:01PM +0200, Borislav Petkov wrote:
+> > > > Read again what I said: "should all be passed through boot_params".
+> > > > Which means, boot_params should be extended with a field of a flag to
+> > > > say: "this is a kexec'ed kernel".
+> > > 
+> > > And by that I mean similar to the XLF_EFI_KEXEC mechanism. The first
+> > > kernel or kexec(1) should prepare the info needed by the kexec'ed
+> > > kernel.
+> > 
+> > We have set the loader type to '0x0D << 4' for kexec specifically, in both
+> > kexec_load and kexec_file_load. We can check this to identify if it's
+> > kexec-ed kernel or not.
+> > 
+> > Update patch with it?
+> > 
+> > static void *bzImage64_load(struct kimage *image, char *kernel,
+> >                             unsigned long kernel_len, char *initrd,
+> >                             unsigned long initrd_len, char *cmdline,
+> >                             unsigned long cmdline_len)
+> > {
+> > 
+> > 	...
+> > 	/* bootloader info. Do we need a separate ID for kexec kernel loader? */
+> >         params->hdr.type_of_loader = 0x0D << 4;
+> 
+> That's already documented in Documentation/x86/boot.txt
+> 
+> Field name:     type_of_loader
+> Type:           write (obligatory)
+> Offset/size:    0x210/1
+> Protocol:       2.00+
+> 
+> 	...
+> 
+>         D  kexec-tools
+> 
+> And yes, the question in the code is still valid: do we need a separate ID.
+> 
+> I'd say no and we'll simply call 0xD all kernels loaded using a
+> kexec-type syscall.
+
+Yes, agree. Time has proved we don't need a separate ID, just 0x0D is
+fine for both kexec/kdump. We can clear it away now.
+
+I can make a patch to add a bit into xloadflags, to indicate that this
+is kexec-ed kernel. It can help to differentiate kexec-ed kernel from
+kdump kernel. As we know, kdump kernel is recognized with /proc/vmcore
+existence. While during kernel initialization stage, or /proc/vmcore is
+not validated in some cases, the adding bit may help.
+
+Thoughts?
+
+Thanks
+Baoquan
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
