@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hKPvO-0000wL-4W
- for kexec@lists.infradead.org; Sat, 27 Apr 2019 16:11:40 +0000
-Date: Sat, 27 Apr 2019 18:11:21 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 1/2] x86/kexec: Build identity mapping for EFI systab
- and ACPI tables
-Message-ID: <20190427161121.GC12360@zn.tnic>
-References: <20190424092944.30481-1-bhe@redhat.com>
- <20190424092944.30481-2-bhe@redhat.com>
+Received: from smtp.ctxuk.citrix.com ([185.25.65.24] helo=SMTP.EU.CITRIX.COM)
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat
+ Linux)) id 1hKRLd-0004b2-MR
+ for kexec@lists.infradead.org; Sat, 27 Apr 2019 17:42:51 +0000
+Subject: Re: [Xen-devel] Xen kexec status
+References: <26c21cfb71e7b2857aa4f379be8a8e3e8c1af246.camel@infradead.org>
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <731fa645-5ba0-ad9f-f5af-ff0747a7ae9d@citrix.com>
+Date: Sat, 27 Apr 2019 18:42:42 +0100
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190424092944.30481-2-bhe@redhat.com>
+In-Reply-To: <26c21cfb71e7b2857aa4f379be8a8e3e8c1af246.camel@infradead.org>
+Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,218 +19,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: x86@kernel.org, kasong@redhat.com, fanc.fnst@cn.fujitsu.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com, j-nomura@ce.jp.nec.com, tglx@linutronix.de, dyoung@redhat.com
+To: David Woodhouse <dwmw2@infradead.org>, xen-devel@lists.xenproject.org, kexec <kexec@lists.infradead.org>
 
-On Wed, Apr 24, 2019 at 05:29:43PM +0800, Baoquan He wrote:
-> From: Kairui Song <kasong@redhat.com>
-> 
-> The current code only builds identity mapping for physical memory during
-> kexec-type loading. The regions reserved by firmware are not covered.
-> In the next patch, the boot decompressing code of kexec-ed kernel tries
-
-There's no guarantee that when this patch gets applied, the next patch
-will be the one you mean. So explain what you mean here instead.
-
-> to access EFI systab and ACPI tables, lacking identity mapping for them
-> will cause error and reset system to firmware.
-> 
-> This error doesn't happen on all systems. Because kexec enables gbpages
-> to build identity mapping, the EFI systab and ACPI tables could have been
-> covered if they share the same 1 GB area with physical memory. To make
-> sure, we should map them always.
-> 
-> So here add mapping for them.
-> 
-> Signed-off-by: Kairui Song <kasong@redhat.com>
-
-When you send someone else's patch, you need to add your SOB. Lemme
-point you to
-
-  Documentation/process/submitting-patches.rst
-
-again. Please have a deeper look.
-
-> ---
->  arch/x86/kernel/machine_kexec_64.c | 86 ++++++++++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> index ceba408ea982..77b40c3e28d7 100644
-> --- a/arch/x86/kernel/machine_kexec_64.c
-> +++ b/arch/x86/kernel/machine_kexec_64.c
-> @@ -18,6 +18,7 @@
->  #include <linux/io.h>
->  #include <linux/suspend.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/efi.h>
->  
->  #include <asm/init.h>
->  #include <asm/pgtable.h>
-> @@ -29,6 +30,48 @@
->  #include <asm/setup.h>
->  #include <asm/set_memory.h>
->  
-> +#ifdef CONFIG_ACPI
-> +/**
-
-Two stars '**' are kernel-doc style but this comment is implementation
-detail and is irrelevant for kernel-doc ouput.
-
-> + * Used while adding mapping for ACPI tables.
-> + * Can be reused when other iomem regions need be mapped
-> + */
-> +struct init_pgtable_data {
-> +	struct x86_mapping_info *info;
-> +	pgd_t *level4p;
-> +};
-> +
-> +static int mem_region_callback(struct resource *res, void *arg)
-> +{
-> +	struct init_pgtable_data *data = arg;
-> +	unsigned long mstart, mend;
-> +
-> +	mstart = res->start;
-> +	mend = mstart + resource_size(res) - 1;
-> +
-> +	return kernel_ident_mapping_init(data->info,
-> +			data->level4p, mstart, mend);
-
-Do not break that line.
-
-> +}
-> +
-> +static int init_acpi_pgtable(struct x86_mapping_info *info,
-> +				   pgd_t *level4p)
-
-static int
-map_acpi_tables(...)
-
-> +{
-> +	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-> +	struct init_pgtable_data data;
-> +
-> +	data.info = info;
-> +	data.level4p = level4p;
-> +	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-> +	return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
-> +				   &data, mem_region_callback);
-> +}
-> +#else
-> +static int init_acpi_pgtable(struct x86_mapping_info *info,
-> +				   pgd_t *level4p)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
->  #ifdef CONFIG_KEXEC_FILE
->  const struct kexec_file_ops * const kexec_file_loaders[] = {
->  		&kexec_bzImage64_ops,
-> @@ -36,6 +79,37 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
->  };
->  #endif
->  
-> +#ifdef CONFIG_EFI
-> +static int init_efi_systab_pgtable(struct x86_mapping_info *info,
-> +				   pgd_t *level4p)
-
-This function's name is wrong. Make it like this:
-
-static int
-map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
-{
-#ifdef CONFIG_EFI
-
-	...
-
-#endif
-
-	return 0;
-}
-
-and drop the #else ifdeffery.
-
-
-> +{
-> +	unsigned long mstart, mend;
-> +
-> +	if (!efi_enabled(EFI_BOOT))
-> +		return 0;
-> +
-> +	mstart = (boot_params.efi_info.efi_systab |
-> +			((u64)boot_params.efi_info.efi_systab_hi<<32));
-> +
-> +	if (efi_enabled(EFI_64BIT))
-> +		mend = mstart + sizeof(efi_system_table_64_t);
-> +	else
-> +		mend = mstart + sizeof(efi_system_table_32_t);
-> +
-> +	if (mstart)
-> +		return kernel_ident_mapping_init(info,
-> +				level4p, mstart, mend);
-
-Flip that logic:
-
-	if (!mstart)
-		return 0;
-
-	return kernel_ident_mapping_init(info, level4p, mstart, mend);
-
-and let the function stick out.
-
-> +
-> +	return 0;
-> +}
-> +#else
-> +static inline int init_efi_systab_pgtable(struct x86_mapping_info *info,
-> +					  pgd_t *level4p)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
->  static void free_transition_pgtable(struct kimage *image)
->  {
->  	free_page((unsigned long)image->arch.p4d);
-> @@ -159,6 +233,18 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
->  			return result;
->  	}
->  
-> +	/**
-
-Two stars '**' are kernel-doc style comments above function names but
-not here.
-
-> +	 * Prepare EFI systab and ACPI table mapping for kexec kernel,
-> +	 * since they are not covered by pfn_mapped.
-> +	 */
-> +	result = init_efi_systab_pgtable(&info, level4p);
-> +	if (result)
-> +		return result;
-> +
-> +	result = init_acpi_pgtable(&info, level4p);
-> +	if (result)
-> +		return result;
-> +
->  	return init_transition_pgtable(image, level4p);
->  }
->  
-> -- 
-> 2.17.2
-> 
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMjcvMDQvMjAxOSAwNzoxNSwgRGF2aWQgV29vZGhvdXNlIHdyb3RlOgo+IEkndmUgYmVlbiBs
+b29raW5nIGF0IGtleGVjIGludG8gWGVuLCBhbmQgZnJvbSBYZW4uCj4KPiBLZXhlYy10b29scyBk
+b2Vzbid0IHN1cHBvcnQgTXVsdGlib290IHYyLCBhbmQgZG9lc24ndCB0cmVhdCB0aGUgWGVuCj4g
+aW1hZ2UgYXMgcmVsb2NhdGFibGUuIFNvIGl0IGxvYWRzIGl0IGF0IGFkZHJlc3MgemVybywgd2hp
+Y2ggY2F1c2VzIGxvdHMKPiBvZiBhbXVzZW1lbnQ6CgpXaGljaCBiaW5hcnkgYXJlIHlvdSB0cnlp
+bmcgdG8gbG9hZD8KCnhlbi1zeW1zIGdldHMgY29udmVydGVkIGludG8gYW4gZWxmMzIgd2hpY2gg
+c2hvdWxkIGJlIGxpbmtlZCB0byBydW4gYQoyTS7CoCBTZWUgbWtlbGYzMiBhbmQgWEVOX0lNR19P
+RkZTRVQKCj4gRmlyc3RseSwgaGVhZC5TIHRydXN0cyB0aGUgbG93IG1lbW9yeSBsaW1pdCBmb3Vu
+ZCBpbiB0aGUgQkRBLCB3aGljaCBoYXMKPiBiZWVuIHNjcmliYmxlZCBvbi4gSGFja2luZyBhcm91
+bmQgdGhhdCBhbmQgc2V0dGluZyBuby1yZWFsLW1vZGUgZG9lcwo+IG1ha2Uga2V4ZWMgaW50byBY
+ZW4gZnJvbSBMaW51eCB3b3JrLgoKRG8gd2Uga25vdyB3aGF0IHNjcmliYmxlcyBvbiBpdD8KCkZv
+ciBiZXR0ZXIgb3Igd29yc2UsIHRoZSBJVlQgbmVlZHMgdG8gcmVtYWluIHZhbGlkIHdoZXJldmVy
+IHBvc3NpYmxlIHRvCnJlZHVjZSB0aGUgbnVtYmVyIG9mIGNvcm5lciBjYXNlcyB3aGVyZSBhbiBl
+cnJhbnQgTk1JLyNNQyB3aWxsIHRha2Ugb3V0CnRoZSBlbnRpcmUgc3lzdGVtLgoKPiBTZWNvbmRs
+eSwga2V4ZWMgKGluIHhlbl9rZXhlY19sb2FkKCkpIGFkZHMgYSBtYXBwaW5nIG9mIHRoZSAwLTFN
+aUIKPiByZWdpb24sIHdoaWNoICJvdmVybGFwcyIgd2l0aCB3aGVyZSBYZW4gaXMgYWN0dWFsbHkg
+bG9hZGVkLCBzbyAqWGVuKgo+IHJlZnVzZXMgdGhlIGtleGVjX2xvYWQgaHlwZXJjYWxsLgoKSVNU
+UiB0aGlzIGJlaW5nIG5lY2Vzc2FyeSBmb3IgcHVyZ2F0b3J5IHRvIGZ1bmN0aW9uIGF0IHRoZSB0
+aW1lIERhdmlkCmRpZCB0aGUga2V4ZWMgd29yaywgYnV0IHJlYWxseSBpdCBzZWVtcyBsaWtlIGEg
+YnVnIHdpdGggdGhlCmNvbmZpZ3VyYXRpb24gb2YgcHVyZ2F0b3J5LgoKPiBGb3Iga2V4ZWMgZnJv
+bSBYZW4gSSBhbHNvIHJldmVydGVkIHRvIGtleGVjLXRvb2xzIDIuMC4xNiBhcyBjb21taXQKPiA4
+OTRiZWE5MzM1ZjU3YjYyYyAoImtleGVjLXRvb2xzOiBQZXJmb3JtIHJ1bi10aW1lIGxpbmtpbmcg
+b2YKPiBsaWJ4ZW5jdHJsLnNvIikgc2VlbXMgdG8gaGF2ZSBicm9rZW4gdGhpbmdzIGJ5IG5vdCBh
+bHdheXMgZGVmaW5pbmcKPiBIQVZFX0xJQlhFTkNUUkwgd2hlbiBpdCBzaG91bGQuIEknbGwgZml4
+IHRoYXQgc2hvcnRseS4KPgo+IE1vc3Qgb2YgdGhlIGFib3ZlIGlzIHJlbGF0aXZlbHkgc2ltcGx5
+IHdvcmtlZCBhcm91bmQgYnkgaGFja2luZyB0aGUgWGVuCj4gaW1hZ2UgdG8gYmUgRVRfRFlOIChz
+byB0aGF0IGtleGVjIHdpbGwgcmVsb2NhdGUgaXQpIGFuZCB0aGVuIHVzaW5nCj4ga2V4ZWMgLS1t
+ZW0tbWluPTB4MTAwMDAwLiBJJ2xsIHByb2JhYmx5IGltcGxlbWVudCBNdWx0aWJvb3QgdjIgc3Vw
+cG9ydAo+IGluIGtleGVjLXRvb2xzIHRvIGFsbG93IGZvciBzYW5lciByZWxvY2F0aW9uLgoKSSB0
+aGluayBoYXZpbmcgTUIyIHN1cHBvcnQgd291bGQgYmUgYSB2ZXJ5IGdvb2QgbW92ZS7CoCBJdCBh
+bHNvIHByb3ZpZGVzCmEgYmV0dGVyIHdheSB0byBwYXNzIHRoZSBVRUZJIGRldGFpbHMuCgo+IFdl
+IHNob3VsZCBmaXggaGVhZC5TLiBPbmUgb3B0aW9uIGlzIHRvIHJlY29nbmlzZSB3aGVuIHRoZSBs
+b2FkIGFkZHJlc3MKPiBpcyB6ZXJvLCBhbmQgYXV0b21hdGljYWxseSBlc2NoZXcgdGhlIEJEQSBh
+bmQgdHJpZ2dlciB0aGUgbm8tcmVhbC1tb2RlCj4gYmVoYXZpb3VyIHdoZW4gdGhhdCBpcyB0aGUg
+Y2FzZS4gQmV0dGVyIHN1Z2dlc3Rpb25zIHdlbGNvbWUuCj4KPiBTaG91bGQgd2UgYWxzbyBhdm9p
+ZCBoYXZpbmcgYSBsb2FkIHNlZ21lbnQgYXQgb2Zmc2V0IHplcm8gaW4gdGhlIGltYWdlLAo+IHNv
+IHRoYXQgaXQgZG9lc24ndCBzY3JpYmJsZSBvbiB0aGUgQkRBIGJ5IGRlZmF1bHQ/CgpJIGRvbid0
+IHRoaW5rIHdlIHNob3VsZCBldmVyIGJlIGxvYWRpbmcgYSBiaW5hcnkgYXQgMCwgYnV0IGl0IG1p
+Z2h0IGJlCndvcnRoIGhhdmluZyBhIGRlZGljYXRlZCBrZXhlYyBlbnRyeSBwb2ludCB3aGljaCBj
+YW4gYmUgbW9yZSBzZWxlY3RpdmUKYWJvdXQgd2hhdCBpdCBkb2VzLgoKVGhlIEVGSSBhbmQgUFZI
+IGVudHJ5cG9pbnRzIGFscmVhZHkgc2V0IHNraXBfcmVhbG1vZGUgYW1vbmdzdCBvdGhlciB0aGlu
+Z3MuCgpBbm90aGVyIG9wdGlvbiBtaWdodCBiZSB0byBvbmx5IHVzZSB0aGUgQkRBL0VCREEgaW4g
+dGhlIGFic2VuY2Ugb2YgYW55Cm1lbW9yeSBtYXAgaW5mb3JtYXRpb24uCgo+IFNob3VsZCB3ZSBh
+bHNvIGZpeCBYZW4ncyBrZXhlY19sb2FkIG5vdCB0byByZWZ1c2Ugb3ZlcmxhcHBpbmcgc2VnbWVu
+dHMKPiBpZiB0aGV5IGFyZSBub3QgbG9hZGVkIChidWZzej09MCk/IEknbSBub3QgcXVpdGUgc3Vy
+ZSB3aGF0J3MgZ29pbmcgb24KPiB0aGVyZTsgZG9lc24ndCB0aGlzIGhhcHBlbiB3aXRoIHBhZ2lu
+ZyBkaXNhYmxlZCBhbnl3YXksIHNvIHdoeSB3b3VsZCB3ZQo+IG5lZWQgYW4gZXhwbGljaXQgbWFw
+cGluZyBvZiBSQU0/CgpEbyB5b3UgaGF2ZSBhIGR1bXAgb2Ygd2hpY2ggc2VnbWVudHMgYXJlIGF0
+dGVtcHRpbmcgdG8gYmUgbG9hZGVkP8KgIFRCSCwKdGhpcyBzb3VuZHMgbGlrZSBmYWxsb3V0IGZy
+b20gdGhlIGVhcmxpZXIgaXNzdWVzLCBidXQgaXQgaXMgYWxzbwpwb3NzaWJsZSB0aGF0IHdlJ3Zl
+IGdvdCBhIGJ1ZyBpbiB0aGUgb3ZlcmxhcCBjaGVja3MuCgo+IEFmdGVyIHRoYXQsIEknbSBsb29r
+aW5nIGF0IHVzaW5nIFhlbiBhcyBhIGNyYXNoIGtlcm5lbCwgd2hpY2ggbWVhbnMgSQo+IHJlYWxs
+eSBkb24ndCB3YW50IGl0IHNjcmliYmxpbmcgb24gbG93IG1lbW9yeSB0aGF0IGl0IGhhc24ndCBi
+ZWVuCj4gZXhwbGljaXRseSB0b2xkIGl0IGNhbiB1c2UuIEZpcnN0IGF0dGVtcHQgYXQgdGhpcyBp
+cyBhdCAKPiBodHRwOi8vZGF2aWQud29vZGhvdS5zZS8wMDAxLXg4Ni1ib290LVVzZS10cmFtcG9s
+aW5lX3Byb3Rtb2RlX2VudHJ5LWluLXBsYWNlLnBhdGNoCj4gYnV0IGFzIG5vdGVkIHRoZXJlLCBp
+dCBvbmx5IHdvcmtzIGZvciBhIHNpbmdsZSBwcm9jZXNzb3IgZm9yIG5vdzsgSSdsbAo+IGZpeCBp
+dCBhcyBkZXNjcmliZWQgdGhlcmVpbi4KCkkgdGhpbmsgaXQgaXMgd2VsbCBwYXN0IHRpbWUgdG8g
+KHJlKWNvbnNpZGVyIGFuZCBzdHJpcCBkb3duIHRoZSBlYXJseQphc3NlbWJseSBjb2RlLsKgIFRo
+ZXJlIGFyZSBhIG51bWJlciBvZiBhdC1iZXN0LXF1ZXN0aW9uYWJsZSB0aGluZ3MsIGFuZAppdCBp
+cyBleHRyZW1lbHkgdGhpY2sgZ29pbmcuwqAgKFRCSCwgSSdkIGFsc28gbGlrZSB0byByZXBsYWNl
+IG1vc3Qgb2YgaXQKd2l0aCBDLCBidXQgZG9pbmcgdGhhdCB3aWxsIGZpcnN0IHJlcXVpcmUgdW5k
+ZXJzdGFuZGluZyBob3cgaXQgYWN0dWFsbHkKYWxsIHdvcmtzLikKCkN1cnJlbnRseSwgdGhlIG1h
+aW4gWGVuIGltYWdlIHN0cmljdGx5IG5lZWRzIHRvIGJlIGxvY2F0ZWQgYmVsb3cgdGhlIDRHCmJv
+dW5kYXJ5LCBzbyB5b3UgYXJlIHJpZ2h0IHRoYXQgbm9uZSBvZiB0aGUgMzJiaXQgY29kZSBhY3R1
+YWxseSBuZWVkcyB0bwpiZSBpbiB0aGUgdHJhbXBvbGluZS7CoCBJbiBwcmluY2lwbGUgaXQgd291
+bGQgYmUgbmljZSB0byBsaWZ0IHRoaXMKcmVzdHJpY3Rpb24sIGF0IHdoaWNoIHBvaW50IHdlIG5l
+ZWQgYWxsIHRoZSBjb2RlIHJlcXVpcmVkIHRvIGdldCBpbnRvCmxvbmcgbW9kZSBpbiB0aGUgdHJh
+bXBvbGluZS4KCn5BbmRyZXcKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
