@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.grenz-bonn.de ([2001:41d0:1:c648::ffe1])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hL1ZE-00036y-RM
- for kexec@lists.infradead.org; Mon, 29 Apr 2019 08:23:20 +0000
-Subject: [PATCH 2/2] x86: Find mounts by FS type, not name
-References: <93048bda-26a4-8573-6614-8b98ccb44591@nh2.me>
-From: =?UTF-8?Q?Niklas_Hamb=c3=bcchen?= <mail@nh2.me>
-Message-ID: <be8c8058-b1bf-75c3-0f9b-4d6c7349f097@nh2.me>
-Date: Mon, 29 Apr 2019 10:23:14 +0200
+ id 1hL5kX-0004wR-Ah
+ for kexec@lists.infradead.org; Mon, 29 Apr 2019 12:51:15 +0000
+Date: Mon, 29 Apr 2019 14:50:59 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v5 1/2] x86/kexec: Build identity mapping for EFI systab
+ and ACPI tables
+Message-ID: <20190429125059.GB2324@zn.tnic>
+References: <20190424092944.30481-1-bhe@redhat.com>
+ <20190424092944.30481-2-bhe@redhat.com>
+ <20190427161121.GC12360@zn.tnic>
+ <20190428054114.GS3584@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <93048bda-26a4-8573-6614-8b98ccb44591@nh2.me>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190428054114.GS3584@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,58 +23,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au
+To: Baoquan He <bhe@redhat.com>
+Cc: x86@kernel.org, kasong@redhat.com, fanc.fnst@cn.fujitsu.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com, j-nomura@ce.jp.nec.com, tglx@linutronix.de, dyoung@redhat.com
 
-VGhlIG5hbWUgaW4gbW91bnQgaW52b2NhdGlvbnMgbGlrZQoKCQltb3VudCAtdCBkZWJ1Z2ZzIGRl
-YnVnZnMgL3N5cy9rZXJuZWwvZGVidWcKCmlzIG5vdGhpbmcgYnV0IGNvbnZlbnRpb24gYW5kIGNh
-bm5vdCBiZSByZWxpZWQgdXBvbi4KCkZvciBleGFtcGxlLCBodHRwczovL3d3dy5rZXJuZWwub3Jn
-L2RvYy9Eb2N1bWVudGF0aW9uL2ZpbGVzeXN0ZW1zL2RlYnVnZnMudHh0CnJlY29tbWVuZHMgbWFr
-aW5nIHRoZSBuYW1lICJub25lIiBpbnN0ZWFkOgoKCQltb3VudCAtdCBkZWJ1Z2ZzIG5vbmUgL3N5
-cy9rZXJuZWwvZGVidWcKCmFuZCBtYW55IGV4aXN0aW5nIHN5c3RlbXMgdXNlIG1vdW50cyBuYW1l
-ZCAibm9uZSIgb3Igb3RoZXJ3aXNlLgoKVXNpbmcgYG1udF90eXBlYCBpbnN0ZWFkIG9mIGBtbnRf
-ZnNuYW1lYCBhbGxvd3Mga2V4ZWMgdG8gd29yawpvbiBzdWNoIHN5c3RlbXMuCgpUaGlzIGZpeGVz
-IGFub3RoZXIgaW5zdGFuY2Ugb2YgYHBvd2Vyb2ZmYCBub3Qgd29ya2luZyBvbiBrZXhlYydlZApr
-ZXJuZWxzIGJlY2F1c2UgdGhlIGxhY2sgb2YgY29ycmVjdGx5IG1hdGNoZWQgbW91bnQgcmVzdWx0
-cyBpbiBFRkkKdmFyaWFibGVzIG5vdCBiZWluZyByZWFkIGFuZCBwcm9wYWdhdGVkLgoKU2lnbmVk
-LW9mZi1ieTogTmlrbGFzIEhhbWLDvGNoZW4gPG1haWxAbmgyLm1lPgotLS0KIGtleGVjL2FyY2gv
-aTM4Ni94ODYtbGludXgtc2V0dXAuYyB8IDEyICsrKysrKysrLS0tLQogMSBmaWxlIGNoYW5nZWQs
-IDggaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9rZXhlYy9hcmNo
-L2kzODYveDg2LWxpbnV4LXNldHVwLmMgYi9rZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVw
-LmMKaW5kZXggNzRmYjBjNC4uYjY0M2M4YiAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9pMzg2L3g4
-Ni1saW51eC1zZXR1cC5jCisrKyBiL2tleGVjL2FyY2gvaTM4Ni94ODYtbGludXgtc2V0dXAuYwpA
-QCAtNDMzLDggKzQzMywxMiBAQCBvdXQ6CiAgKiBUaGlzIHJlYWxseSBvbmx5IG1ha2VzIHNlbnNl
-IGZvciB2aXJ0dWFsIGZpbGVzeXN0ZW1zIHRoYXQgYXJlIG9ubHkgZXhwZWN0ZWQKICAqIHRvIGJl
-IG1vdW50ZWQgb25jZSAoc3lzZnMsIGRlYnVnc2ZzLCBwcm9jKSwgYXMgaXQgd2lsbCByZXR1cm4g
-dGhlIGZpcnN0CiAgKiBpbnN0YW5jZSBsaXN0ZWQgaW4gL3Byb2MvbW91bnRzLCBmYWxsaW5nIGJh
-Y2sgdG8gbXRhYiBpZiBhYnNlbnQuCisgKiBXZSBzZWFyY2ggYnkgdHlwZSBhbmQgbm90IGJ5IG5h
-bWUgYmVjYXVzZSB0aGUgbmFtZSBjYW4gYmUgYW55dGhpbmc7CisgKiB3aGlsZSBzZXR0aW5nIHRo
-ZSBuYW1lIGVxdWFsIHRvIHRoZSBtb3VudCBwb2ludCBpcyBjb21tb24sIGl0IGNhbm5vdCBiZQor
-ICogcmVsaWVkIHVwb24sIGFzIGV2ZW4ga2VybmVsIGRvY3VtZW50YXRpb24gZXhhbXBsZXMgcmVj
-b21tZW5kcyB1c2luZworICogIm5vbmUiIGFzIHRoZSBuYW1lIGUuZy4gZm9yIGRlYnVnZnMuCiAg
-Ki8KLWNoYXIgKmZpbmRfbW50X2J5X2ZzbmFtZShjaGFyICpmc25hbWUpCitjaGFyICpmaW5kX21u
-dF9ieV90eXBlKGNoYXIgKnR5cGUpCiB7CiAJRklMRSAqbXRhYjsKIAlzdHJ1Y3QgbW50ZW50ICpt
-bnQ7CkBAIC00NDgsNyArNDUyLDcgQEAgY2hhciAqZmluZF9tbnRfYnlfZnNuYW1lKGNoYXIgKmZz
-bmFtZSkKIAlpZiAoIW10YWIpCiAJCXJldHVybiBOVUxMOwogCWZvcihtbnQgPSBnZXRtbnRlbnQo
-bXRhYik7IG1udDsgbW50ID0gZ2V0bW50ZW50KG10YWIpKSB7Ci0JCWlmIChzdHJjbXAobW50LT5t
-bnRfZnNuYW1lLCBmc25hbWUpID09IDApCisJCWlmIChzdHJjbXAobW50LT5tbnRfdHlwZSwgdHlw
-ZSkgPT0gMCkKIAkJCWJyZWFrOwogCX0KIAltbnRkaXIgPSBtbnQgPyBzdHJkdXAobW50LT5tbnRf
-ZGlyKSA6IE5VTEw7CkBAIC00NjMsNyArNDY3LDcgQEAgc3RhdGljIGludCBnZXRfYm9vdHBhcmFt
-KHZvaWQgKmJ1Ziwgb2ZmX3Qgb2Zmc2V0LCBzaXplX3Qgc2l6ZSkKIAljaGFyIGZpbGVuYW1lW1BB
-VEhfTUFYXTsKIAlpbnQgZXJyLCBoYXNfc3lzZnNfcGFyYW1zID0gMDsKIAotCXN5c2ZzX21udCA9
-IGZpbmRfbW50X2J5X2ZzbmFtZSgic3lzZnMiKTsKKwlzeXNmc19tbnQgPSBmaW5kX21udF9ieV90
-eXBlKCJzeXNmcyIpOwogCWlmIChzeXNmc19tbnQpIHsKIAkJc25wcmludGYoZmlsZW5hbWUsIFBB
-VEhfTUFYLCAiJXMvJXMiLCBzeXNmc19tbnQsCiAJCQkia2VybmVsL2Jvb3RfcGFyYW1zL2RhdGEi
-KTsKQEAgLTQ3NCw3ICs0NzgsNyBAQCBzdGF0aWMgaW50IGdldF9ib290cGFyYW0odm9pZCAqYnVm
-LCBvZmZfdCBvZmZzZXQsIHNpemVfdCBzaXplKQogCX0KIAogCWlmICghaGFzX3N5c2ZzX3BhcmFt
-cykgewotCQlkZWJ1Z2ZzX21udCA9IGZpbmRfbW50X2J5X2ZzbmFtZSgiZGVidWdmcyIpOworCQlk
-ZWJ1Z2ZzX21udCA9IGZpbmRfbW50X2J5X3R5cGUoImRlYnVnZnMiKTsKIAkJaWYgKCFkZWJ1Z2Zz
-X21udCkKIAkJCXJldHVybiAxOwogCQlzbnByaW50ZihmaWxlbmFtZSwgUEFUSF9NQVgsICIlcy8l
-cyIsIGRlYnVnZnNfbW50LAotLSAKMi4xOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhl
-Ywo=
+On Sun, Apr 28, 2019 at 01:41:14PM +0800, Baoquan He wrote:
+> About this place, do you think below change is OK to you?
+> 
+> ~~~
+> The current code only builds identity mapping for physical memory during
+> kexec-type loading. The regions reserved by firmware are not covered.
+> In the later code change, the boot decompressing code of kexec-ed kernel
+> will try to access EFI systab and ACPI tables, lacking identity mapping for
+> them will cause error and reset system to firmware.
+
+Yap, better.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
