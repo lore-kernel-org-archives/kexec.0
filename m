@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hL75I-00061e-03
- for kexec@lists.infradead.org; Mon, 29 Apr 2019 14:16:45 +0000
-Date: Mon, 29 Apr 2019 22:16:36 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
- and ACPI tables
-Message-ID: <20190429141636.GB14140@MiWiFi-R3L-srv>
-References: <20190424092944.30481-1-bhe@redhat.com>
- <20190424092944.30481-2-bhe@redhat.com>
- <20190429002318.GA25400@MiWiFi-R3L-srv>
- <20190429135536.GC2324@zn.tnic>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190429135536.GC2324@zn.tnic>
+ id 1hLNRR-0002a5-Be
+ for kexec@lists.infradead.org; Tue, 30 Apr 2019 07:44:42 +0000
+From: Lianbo Jiang <lijiang@redhat.com>
+Subject: [PATCH 0/3 v3] Add kdump support for the SEV enabled guest
+Date: Tue, 30 Apr 2019 15:44:18 +0800
+Message-Id: <20190430074421.7852-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,125 +15,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: bp@alien8.de
-Cc: fanc.fnst@cn.fujitsu.com, kasong@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com, j-nomura@ce.jp.nec.com, tglx@linutronix.de, dyoung@redhat.com
+To: linux-kernel@vger.kernel.org
+Cc: Thomas.Lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-T24gMDQvMjkvMTkgYXQgMDM6NTVwbSwgQm9yaXNsYXYgUGV0a292IHdyb3RlOgo+IE9uIE1vbiwg
-QXByIDI5LCAyMDE5IGF0IDA4OjIzOjE4QU0gKzA4MDAsIEJhb3F1YW4gSGUgd3JvdGU6Cj4gPiAr
-c3RhdGljIGludAo+ID4gK21hcF9hY3BpX3RhYmxlcyhzdHJ1Y3QgeDg2X21hcHBpbmdfaW5mbyAq
-aW5mbywgcGdkX3QgKmxldmVsNHApCj4gPiArewo+ID4gKwl1bnNpZ25lZCBsb25nIGZsYWdzID0g
-SU9SRVNPVVJDRV9NRU0gfCBJT1JFU09VUkNFX0JVU1k7Cj4gPiArCXN0cnVjdCBpbml0X3BndGFi
-bGVfZGF0YSBkYXRhOwo+ID4gKwo+ID4gKwlkYXRhLmluZm8gPSBpbmZvOwo+ID4gKwlkYXRhLmxl
-dmVsNHAgPSBsZXZlbDRwOwo+ID4gKwlmbGFncyA9IElPUkVTT1VSQ0VfTUVNIHwgSU9SRVNPVVJD
-RV9CVVNZOwo+ID4gKwlyZXR1cm4gd2Fsa19pb21lbV9yZXNfZGVzYyhJT1JFU19ERVNDX0FDUElf
-VEFCTEVTLCBmbGFncywgMCwgLTEsCj4gPiArCQkJCSAgICZkYXRhLCBtZW1fcmVnaW9uX2NhbGxi
-YWNrKTsKPiA+ICt9Cj4gPiArI2Vsc2UKPiA+ICtzdGF0aWMgaW50IGluaXRfYWNwaV9wZ3RhYmxl
-KHN0cnVjdCB4ODZfbWFwcGluZ19pbmZvICppbmZvLAo+IAo+IERpZCB5b3UgYXQgbGVhc3QgYnVp
-bGQtdGVzdCB0aGUgIUNPTkZJR19BQ1BJIGNhc2U/Cj4gCj4gYXJjaC94ODYva2VybmVsL21hY2hp
-bmVfa2V4ZWNfNjQuYzogSW4gZnVuY3Rpb24g4oCYaW5pdF9wZ3RhYmxl4oCZOgo+IGFyY2gveDg2
-L2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0LmM6MjM3OjExOiBlcnJvcjogaW1wbGljaXQgZGVjbGFy
-YXRpb24gb2YgZnVuY3Rpb24g4oCYbWFwX2FjcGlfdGFibGVz4oCZOyBkaWQgeW91IG1lYW4g4oCY
-aW5pdF9hY3BpX3BndGFibGXigJk/IFstV2Vycm9yPWltcGxpY2l0LWZ1bmN0aW9uLWRlY2xhcmF0
-aW9uXQo+ICAgcmVzdWx0ID0gbWFwX2FjcGlfdGFibGVzKCZpbmZvLCBsZXZlbDRwKTsKPiAgICAg
-ICAgICAgIF5+fn5+fn5+fn5+fn5+fgo+ICAgICAgICAgICAgaW5pdF9hY3BpX3BndGFibGUKPiAK
-PiAKPiBJIGRvbid0IHRoaW5rIHNvLiA7LSgKPiAKPiBTaWdoLCBuZXh0IHRpbWUgYXQgbGVhc3Qg
-YnVpbGQtdGVzdCB5b3VyIHBhdGNoIGJlZm9yZSBodXJyeWluZyBpdCBvdXQuIEkKPiBmaXhlZCBp
-dCB1cCBhbG9uZyB3aXRoIGRlY3lwaGVyaW5nIHRoZSBjb21taXQgbWVzc2FnZToKClNvcnJ5LCB0
-aG91Z2h0IHRoZW0gc2ltcGxlLCBkaWRuJ3QgYnVpbGQgIUNPTkZJR19BQ1BJIGNhc2UuIFNob3Vs
-ZCBiZQptb3JlIGNhcmVmdWwuCgpUaGFua3MgZm9yIGZpeGluZyBpdCBhbmQgdGhlIGxvZyByZXdy
-aXRpbmcuCgo+IAo+IC0tLQo+IEZyb206IEthaXJ1aSBTb25nIDxrYXNvbmdAcmVkaGF0LmNvbT4K
-PiBEYXRlOiBNb24sIDI5IEFwciAyMDE5IDA4OjIzOjE4ICswODAwCj4gU3ViamVjdDogW1BBVENI
-XSB4ODYva2V4ZWM6IEFkZCB0aGUgRUZJIHN5c3RlbSB0YWJsZXMgYW5kIEFDUEkgdGFibGVzIHRv
-IHRoZSBpZGVudCBtYXAKPiAKPiBDdXJyZW50bHksIG9ubHkgdGhlIHdob2xlIHBoeXNpY2FsIG1l
-bW9yeSBpcyBpZGVudGl0eS1tYXBwZWQgZm9yIHRoZQo+IGtleGVjIGtlcm5lbCBhbmQgdGhlIHJl
-Z2lvbnMgcmVzZXJ2ZWQgYnkgZmlybXdhcmUgYXJlIGlnbm9yZWQuCj4gCj4gSG93ZXZlciwgdGhl
-IHJlY2VudCBhZGRpdGlvbiBvZiBSU0RQIHBhcnNpbmcgaW4gdGhlIGRlY29tcHJlc3Npb24gc3Rh
-Z2UKPiBhbmQgZXNwZWNpYWxseToKPiAKPiAgIDMzZjBkZjhkODQzZCAoIng4Ni9ib290OiBTZWFy
-Y2ggZm9yIFJTRFAgaW4gdGhlIEVGSSB0YWJsZXMiKQo+IAo+IHdoaWNoIHRyaWVzIHRvIGFjY2Vz
-cyBFRkkgc3lzdGVtIHRhYmxlcyBhbmQgdG8gZGlnIG91dCB0aGUgUkRTUCBhZGRyZXNzCj4gZnJv
-bSB0aGVyZSwgYmVjb21lcyBhIHByb2JsZW0gYmVjYXVzZSBpbiBjZXJ0YWluIGNvbmZpZ3VyYXRp
-b25zLCB0aGV5Cj4gbWlnaHQgbm90IGJlIG1hcHBlZCBpbiB0aGUga2V4ZWMnZWQga2VybmVsJ3Mg
-YWRkcmVzcyBzcGFjZS4KPiAKPiBXaGF0IGlzIG1vcmUsIHRoaXMgcHJvYmxlbSBkb2Vzbid0IGFw
-cGVhciBvbiBhbGwgc3lzdGVtcyBiZWNhdXNlIHRoZQo+IGtleGVjIGtlcm5lbCB1c2VzIGdpZ2Fi
-eXRlIHBhZ2VzIHRvIGJ1aWxkIHRoZSBpZGVudGl0eSBtYXBwaW5nLiBBbmQKPiB0aGUgRUZJIHN5
-c3RlbSB0YWJsZXMgYW5kIEFDUEkgdGFibGVzIGNhbiwgZGVwZW5kaW5nIG9uIHRoZSBzeXN0ZW0K
-PiBjb25maWd1cmF0aW9uLCBlbmQgdXAgYmVpbmcgbWFwcGVkIGFzIHBhcnQgb2YgYWxsIHBoeXNp
-Y2FsIG1lbW9yeSwgaWYKPiB0aGV5IHNoYXJlIHRoZSBzYW1lIDEgR0IgYXJlYSB3aXRoIHRoZSBw
-aHlzaWNhbCBtZW1vcnkuCj4gCj4gVGhlcmVmb3JlLCBtYWtlIHN1cmUgdGhleSdyZSBhbHdheXMg
-bWFwcGVkLgo+IAo+ICBbIGJwOiBwcm9kdWN0aXplIGhhbGYtYmFrZWQgcGF0Y2g6Cj4gICAgLSBy
-ZXdyaXRlIGNvbW1pdCBtZXNzYWdlLgo+ICAgIC0gcy9pbml0X2FjcGlfcGd0YWJsZS9tYXBfYWNw
-aV90YWJsZXMvIGluIHRoZSAhQUNQSSBjYXNlLiBdCj4gCj4gU2lnbmVkLW9mZi1ieTogS2FpcnVp
-IFNvbmcgPGthc29uZ0ByZWRoYXQuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEJhb3F1YW4gSGUgPGJo
-ZUByZWRoYXQuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEJvcmlzbGF2IFBldGtvdiA8YnBAc3VzZS5k
-ZT4KPiBDYzogZHlvdW5nQHJlZGhhdC5jb20KPiBDYzogZmFuYy5mbnN0QGNuLmZ1aml0c3UuY29t
-Cj4gQ2M6ICJILiBQZXRlciBBbnZpbiIgPGhwYUB6eXRvci5jb20+Cj4gQ2M6IEluZ28gTW9sbmFy
-IDxtaW5nb0ByZWRoYXQuY29tPgo+IENjOiBqLW5vbXVyYUBjZS5qcC5uZWMuY29tCj4gQ2M6IGtl
-eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBDYzogIktpcmlsbCBBLiBTaHV0ZW1vdiIgPGtpcmls
-bC5zaHV0ZW1vdkBsaW51eC5pbnRlbC5jb20+Cj4gQ2M6IExpYW5ibyBKaWFuZyA8bGlqaWFuZ0By
-ZWRoYXQuY29tPgo+IENjOiBUZXRzdW8gSGFuZGEgPHBlbmd1aW4ta2VybmVsQEktbG92ZS5TQUtV
-UkEubmUuanA+Cj4gQ2M6IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPgo+IENj
-OiB4ODYtbWwgPHg4NkBrZXJuZWwub3JnPgo+IExpbms6IGh0dHBzOi8vbGttbC5rZXJuZWwub3Jn
-L3IvMjAxOTA0MjkwMDIzMTguR0EyNTQwMEBNaVdpRmktUjNMLXNydgo+IC0tLQo+ICBhcmNoL3g4
-Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jIHwgNzUgKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA3NSBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdp
-dCBhL2FyY2gveDg2L2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0LmMgYi9hcmNoL3g4Ni9rZXJuZWwv
-bWFjaGluZV9rZXhlY182NC5jCj4gaW5kZXggY2ViYTQwOGVhOTgyLi4zYzc3YmRmN2IzMmEgMTAw
-NjQ0Cj4gLS0tIGEvYXJjaC94ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQuYwo+ICsrKyBiL2Fy
-Y2gveDg2L2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0LmMKPiBAQCAtMTgsNiArMTgsNyBAQAo+ICAj
-aW5jbHVkZSA8bGludXgvaW8uaD4KPiAgI2luY2x1ZGUgPGxpbnV4L3N1c3BlbmQuaD4KPiAgI2lu
-Y2x1ZGUgPGxpbnV4L3ZtYWxsb2MuaD4KPiArI2luY2x1ZGUgPGxpbnV4L2VmaS5oPgo+ICAKPiAg
-I2luY2x1ZGUgPGFzbS9pbml0Lmg+Cj4gICNpbmNsdWRlIDxhc20vcGd0YWJsZS5oPgo+IEBAIC0y
-OSw2ICszMCw0MyBAQAo+ICAjaW5jbHVkZSA8YXNtL3NldHVwLmg+Cj4gICNpbmNsdWRlIDxhc20v
-c2V0X21lbW9yeS5oPgo+ICAKPiArI2lmZGVmIENPTkZJR19BQ1BJCj4gKy8qCj4gKyAqIFVzZWQg
-d2hpbGUgYWRkaW5nIG1hcHBpbmcgZm9yIEFDUEkgdGFibGVzLgo+ICsgKiBDYW4gYmUgcmV1c2Vk
-IHdoZW4gb3RoZXIgaW9tZW0gcmVnaW9ucyBuZWVkIGJlIG1hcHBlZAo+ICsgKi8KPiArc3RydWN0
-IGluaXRfcGd0YWJsZV9kYXRhIHsKPiArCXN0cnVjdCB4ODZfbWFwcGluZ19pbmZvICppbmZvOwo+
-ICsJcGdkX3QgKmxldmVsNHA7Cj4gK307Cj4gKwo+ICtzdGF0aWMgaW50IG1lbV9yZWdpb25fY2Fs
-bGJhY2soc3RydWN0IHJlc291cmNlICpyZXMsIHZvaWQgKmFyZykKPiArewo+ICsJc3RydWN0IGlu
-aXRfcGd0YWJsZV9kYXRhICpkYXRhID0gYXJnOwo+ICsJdW5zaWduZWQgbG9uZyBtc3RhcnQsIG1l
-bmQ7Cj4gKwo+ICsJbXN0YXJ0ID0gcmVzLT5zdGFydDsKPiArCW1lbmQgPSBtc3RhcnQgKyByZXNv
-dXJjZV9zaXplKHJlcykgLSAxOwo+ICsKPiArCXJldHVybiBrZXJuZWxfaWRlbnRfbWFwcGluZ19p
-bml0KGRhdGEtPmluZm8sIGRhdGEtPmxldmVsNHAsIG1zdGFydCwgbWVuZCk7Cj4gK30KPiArCj4g
-K3N0YXRpYyBpbnQKPiArbWFwX2FjcGlfdGFibGVzKHN0cnVjdCB4ODZfbWFwcGluZ19pbmZvICpp
-bmZvLCBwZ2RfdCAqbGV2ZWw0cCkKPiArewo+ICsJdW5zaWduZWQgbG9uZyBmbGFncyA9IElPUkVT
-T1VSQ0VfTUVNIHwgSU9SRVNPVVJDRV9CVVNZOwo+ICsJc3RydWN0IGluaXRfcGd0YWJsZV9kYXRh
-IGRhdGE7Cj4gKwo+ICsJZGF0YS5pbmZvID0gaW5mbzsKPiArCWRhdGEubGV2ZWw0cCA9IGxldmVs
-NHA7Cj4gKwlmbGFncyA9IElPUkVTT1VSQ0VfTUVNIHwgSU9SRVNPVVJDRV9CVVNZOwo+ICsJcmV0
-dXJuIHdhbGtfaW9tZW1fcmVzX2Rlc2MoSU9SRVNfREVTQ19BQ1BJX1RBQkxFUywgZmxhZ3MsIDAs
-IC0xLAo+ICsJCQkJICAgJmRhdGEsIG1lbV9yZWdpb25fY2FsbGJhY2spOwo+ICt9Cj4gKyNlbHNl
-Cj4gK3N0YXRpYyBpbnQgbWFwX2FjcGlfdGFibGVzKHN0cnVjdCB4ODZfbWFwcGluZ19pbmZvICpp
-bmZvLCBwZ2RfdCAqbGV2ZWw0cCkgeyByZXR1cm4gMDsgfQo+ICsjZW5kaWYKPiArCj4gICNpZmRl
-ZiBDT05GSUdfS0VYRUNfRklMRQo+ICBjb25zdCBzdHJ1Y3Qga2V4ZWNfZmlsZV9vcHMgKiBjb25z
-dCBrZXhlY19maWxlX2xvYWRlcnNbXSA9IHsKPiAgCQkma2V4ZWNfYnpJbWFnZTY0X29wcywKPiBA
-QCAtMzYsNiArNzQsMzEgQEAgY29uc3Qgc3RydWN0IGtleGVjX2ZpbGVfb3BzICogY29uc3Qga2V4
-ZWNfZmlsZV9sb2FkZXJzW10gPSB7Cj4gIH07Cj4gICNlbmRpZgo+ICAKPiArc3RhdGljIGludAo+
-ICttYXBfZWZpX3N5c3RhYihzdHJ1Y3QgeDg2X21hcHBpbmdfaW5mbyAqaW5mbywgcGdkX3QgKmxl
-dmVsNHApCj4gK3sKPiArI2lmZGVmIENPTkZJR19FRkkKPiArCXVuc2lnbmVkIGxvbmcgbXN0YXJ0
-LCBtZW5kOwo+ICsKPiArCWlmICghZWZpX2VuYWJsZWQoRUZJX0JPT1QpKQo+ICsJCXJldHVybiAw
-Owo+ICsKPiArCW1zdGFydCA9IChib290X3BhcmFtcy5lZmlfaW5mby5lZmlfc3lzdGFiIHwKPiAr
-CQkJKCh1NjQpYm9vdF9wYXJhbXMuZWZpX2luZm8uZWZpX3N5c3RhYl9oaTw8MzIpKTsKPiArCj4g
-KwlpZiAoZWZpX2VuYWJsZWQoRUZJXzY0QklUKSkKPiArCQltZW5kID0gbXN0YXJ0ICsgc2l6ZW9m
-KGVmaV9zeXN0ZW1fdGFibGVfNjRfdCk7Cj4gKwllbHNlCj4gKwkJbWVuZCA9IG1zdGFydCArIHNp
-emVvZihlZmlfc3lzdGVtX3RhYmxlXzMyX3QpOwo+ICsKPiArCWlmICghbXN0YXJ0KQo+ICsJCXJl
-dHVybiAwOwo+ICsKPiArCXJldHVybiBrZXJuZWxfaWRlbnRfbWFwcGluZ19pbml0KGluZm8sIGxl
-dmVsNHAsIG1zdGFydCwgbWVuZCk7Cj4gKyNlbmRpZgo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4g
-IHN0YXRpYyB2b2lkIGZyZWVfdHJhbnNpdGlvbl9wZ3RhYmxlKHN0cnVjdCBraW1hZ2UgKmltYWdl
-KQo+ICB7Cj4gIAlmcmVlX3BhZ2UoKHVuc2lnbmVkIGxvbmcpaW1hZ2UtPmFyY2gucDRkKTsKPiBA
-QCAtMTU5LDYgKzIyMiwxOCBAQCBzdGF0aWMgaW50IGluaXRfcGd0YWJsZShzdHJ1Y3Qga2ltYWdl
-ICppbWFnZSwgdW5zaWduZWQgbG9uZyBzdGFydF9wZ3RhYmxlKQo+ICAJCQlyZXR1cm4gcmVzdWx0
-Owo+ICAJfQo+ICAKPiArCS8qCj4gKwkgKiBQcmVwYXJlIEVGSSBzeXN0YWIgYW5kIEFDUEkgdGFi
-bGVzIGZvciBrZXhlYyBrZXJuZWwgc2luY2UgdGhleSBhcmUKPiArCSAqIG5vdCBjb3ZlcmVkIGJ5
-IHBmbl9tYXBwZWQuCj4gKwkgKi8KPiArCXJlc3VsdCA9IG1hcF9lZmlfc3lzdGFiKCZpbmZvLCBs
-ZXZlbDRwKTsKPiArCWlmIChyZXN1bHQpCj4gKwkJcmV0dXJuIHJlc3VsdDsKPiArCj4gKwlyZXN1
-bHQgPSBtYXBfYWNwaV90YWJsZXMoJmluZm8sIGxldmVsNHApOwo+ICsJaWYgKHJlc3VsdCkKPiAr
-CQlyZXR1cm4gcmVzdWx0Owo+ICsKPiAgCXJldHVybiBpbml0X3RyYW5zaXRpb25fcGd0YWJsZShp
-bWFnZSwgbGV2ZWw0cCk7Cj4gIH0KPiAgCj4gLS0gCj4gMi4yMS4wCj4gCj4gLS0gCj4gUmVnYXJk
-cy9HcnVzcywKPiAgICAgQm9yaXMuCj4gCj4gR29vZCBtYWlsaW5nIHByYWN0aWNlcyBmb3IgNDAw
-OiBhdm9pZCB0b3AtcG9zdGluZyBhbmQgdHJpbSB0aGUgcmVwbHkuCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2tleGVjCg==
+Just like the physical machines support kdump, the virtual machines
+also need kdump. When a virtual machine panic, we also need to dump
+its memory for analysis.
+
+For the SEV virtual machine, the memory is also encrypted. When SEV
+is enabled, the second kernel images(kernel and initrd) are loaded
+into the encrypted areas. Unlike the SME, the second kernel images
+are loaded into the decrypted areas.
+
+Because of this difference between SME and SEV, we need to properly
+map the kexec memory area in order to correctly access it.
+
+Test tools:
+makedumpfile[v1.6.5]:
+git://git.code.sf.net/p/makedumpfile/code
+commit <d222b01e516b> ("Add support for AMD Secure Memory Encryption")
+Note: This patch was merged into the devel branch.
+
+crash-7.2.5: https://github.com/crash-utility/crash.git
+commit <942d813cda35> ("Fix for the "kmem -i" option on Linux 5.0")
+
+kexec-tools-2.0.19:
+git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+commit <942d813cda35> ("Fix for the kmem '-i' option on Linux 5.0")
+http://lists.infradead.org/pipermail/kexec/2019-March/022576.html
+Note: The second kernel cann't boot without this patch.
+
+kernel:
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+commit <f261c4e529da> ("Merge branch 'akpm' (patches from Andrew)")
+
+Test steps:
+[1] load the vmlinux and initrd for kdump
+# kexec -p /boot/vmlinuz-5.0.0+ --initrd=/boot/initramfs-5.0.0+kdump.img --command-line="BOOT_IMAGE=(hd0,gpt2)/vmlinuz-5.0.0+ ro resume=UUID=126c5e95-fc8b-48d6-a23b-28409198a52e console=ttyS0,115200 earlyprintk=serial irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never disable_cpu_apicid=0"
+
+[2] trigger panic
+# echo 1 > /proc/sys/kernel/sysrq
+# echo c > /proc/sysrq-trigger
+
+[3] check and parse the vmcore
+# crash vmlinux /var/crash/127.0.0.1-2019-03-15-05\:03\:42/vmcore
+
+Changes since v1:
+1. Modify the patch subject prefixes.
+2. Improve patch log: add parentheses at the end of the function names.
+3. Fix the multiple confusing checks.
+4. Add comment in the arch_kexec_post_alloc_pages().
+
+Changes since v2:
+1. Add the explanation to the commit message[Boris' suggestion].
+2. Improve the patch log.
+
+Lianbo Jiang (3):
+  x86/kexec: Do not map the kexec area as decrypted when SEV is active
+  x86/kexec: Set the C-bit in the identity map page table when SEV is
+    active
+  kdump,proc/vmcore: Enable dumping encrypted memory when SEV was active
+
+ arch/x86/kernel/machine_kexec_64.c | 27 ++++++++++++++++++++++++++-
+ fs/proc/vmcore.c                   |  6 +++---
+ 2 files changed, 29 insertions(+), 4 deletions(-)
+
+-- 
+2.17.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
