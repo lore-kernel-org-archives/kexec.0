@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-qk1-x741.google.com ([2607:f8b0:4864:20::741])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hLNRx-0003xd-2I
- for kexec@lists.infradead.org; Tue, 30 Apr 2019 07:45:14 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 3/3 v3] kdump,
- proc/vmcore: Enable dumping encrypted memory when SEV was active
-Date: Tue, 30 Apr 2019 15:44:21 +0800
-Message-Id: <20190430074421.7852-4-lijiang@redhat.com>
-In-Reply-To: <20190430074421.7852-1-lijiang@redhat.com>
-References: <20190430074421.7852-1-lijiang@redhat.com>
+ id 1hLfPh-0002D7-IK
+ for kexec@lists.infradead.org; Wed, 01 May 2019 02:56:07 +0000
+Received: by mail-qk1-x741.google.com with SMTP id p19so9540625qkm.10
+ for <kexec@lists.infradead.org>; Tue, 30 Apr 2019 19:56:04 -0700 (PDT)
+Date: Tue, 30 Apr 2019 22:56:01 -0400
+From: Kevin O'Connor <kevin@koconnor.net>
+Subject: Re: [SeaBIOS] Real mode kexec failure with non-IDE disk
+Message-ID: <20190501025601.GA5342@morn.lan>
+References: <e5872703412f9a56c10df52d9793ca2a6401d7f0.camel@infradead.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <e5872703412f9a56c10df52d9793ca2a6401d7f0.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,70 +21,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Thomas.Lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: seabios@seabios.org, kexec <kexec@lists.infradead.org>
 
-In the kdump kernel, the memory of the first kernel needs to be dumped
-into the vmcore file.
+On Mon, Apr 29, 2019 at 12:05:33AM +0300, David Woodhouse wrote:
+> When I kexec either Xen or Linux in real mode, from either Xen or
+> Linux, it fails.
+> 
+> The last thing I see looks like SeaBIOS trying to use SMM for call32:
+> 
+> ----------------
+> IN: 
+> 0x00000000000f70ec:  mov    %eax,%esi
+> 0x00000000000f70ef:  mov    $0xb5,%eax
+> 0x00000000000f70f5:  mov    $0x1234,%ecx
+> 0x00000000000f70fb:  mov    $0xef3dc,%ebx
+> 0x00000000000f7101:  out    %al,$0xb2
+> 0x00000000000f7103:  pause  
+> 
+> ----------------
+> IN: 
+> 0x00000000000ef3db:  hlt    
+> 
+> This happens when the real mode boot code calls INT 13h to read from
+> the disk. It seems to happen with virtio and SATA disks.
+> 
+> This is with the Ubuntu-packaged 1.10.2-1ubuntu1 SeaBIOS. Switching to
+> an IDE disk, or booting with 'edd=skipmbr', makes Xen work and Linux
+> get a little further before it dies anyway.
 
-It is similar to the SME kdump, if SEV was enabled in the first kernel,
-the old memory has to be remapped with memory encryption mask in order
-to access it properly. Following commit 992b649a3f01 ("kdump, proc/vmcore:
-Enable kdumping encrypted memory with SME enabled") took care of the
-SME case but it uses sme_active() which checks for SME only. Lets use
-the mem_encrypt_active() which returns true when either of them are
-active.
+Hi David,
 
-Unlike the SME, the second kernel images(kernel and initrd) are loaded
-to the encrypted memory when SEV is active, hence the kernel elf header
-must be remapped as encrypted in order to access it properly.
+That call trace certainly looks odd.  The SeaBIOS debugging info would
+help - try compiling SeaBIOS with debug level 8 and grab the log (as
+described at: https://www.seabios.org/Debugging#Diagnostic_information
+).
 
-Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- fs/proc/vmcore.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 3fe90443c1bb..cda6c1922e4f 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -165,7 +165,7 @@ void __weak elfcorehdr_free(unsigned long long addr)
-  */
- ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, false);
-+	return read_from_oldmem(buf, count, ppos, 0, sev_active());
- }
- 
- /*
-@@ -173,7 +173,7 @@ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-  */
- ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, sme_active());
-+	return read_from_oldmem(buf, count, ppos, 0, mem_encrypt_active());
- }
- 
- /*
-@@ -373,7 +373,7 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
- 					    buflen);
- 			start = m->paddr + *fpos - m->offset;
- 			tmp = read_from_oldmem(buffer, tsz, &start,
--					       userbuf, sme_active());
-+					       userbuf, mem_encrypt_active());
- 			if (tmp < 0)
- 				return tmp;
- 			buflen -= tsz;
--- 
-2.17.1
-
+-Kevin
 
 _______________________________________________
 kexec mailing list
