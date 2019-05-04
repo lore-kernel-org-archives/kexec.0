@@ -1,12 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1689977da7b323b360c35fc021a67e766c3347bb.camel@infradead.org>
-Subject: Re: [SeaBIOS] Real mode kexec failure with non-IDE disk
-From: David Woodhouse <dwmw2@infradead.org>
-Date: Wed, 01 May 2019 23:16:03 +0300
-In-Reply-To: <20190501025601.GA5342@morn.lan>
-References: <e5872703412f9a56c10df52d9793ca2a6401d7f0.camel@infradead.org>
- <20190501025601.GA5342@morn.lan>
-Mime-Version: 1.0
+Received: from mail-pf1-f195.google.com ([209.85.210.195])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1hMuB2-0004Zc-I2
+ for kexec@lists.infradead.org; Sat, 04 May 2019 12:54:07 +0000
+Received: by mail-pf1-f195.google.com with SMTP id t87so3731663pfa.2
+ for <kexec@lists.infradead.org>; Sat, 04 May 2019 05:54:03 -0700 (PDT)
+Subject: Re: [PATCH v3 1/3] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to
+ vmcoreinfo
+From: Bhupesh Sharma <bhsharma@redhat.com>
+References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
+ <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
+ <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
+ <58c6cda9-9fd4-3b3e-740a-7b9b80b1f634@redhat.com>
+ <a48bb02c-8f93-4e3b-085d-a6f0e5a1f3a0@arm.com>
+ <66da4098-b221-408b-50ca-f3790b943965@redhat.com>
+Message-ID: <380b137b-a611-5c8d-3890-8021084f87fe@redhat.com>
+Date: Sat, 4 May 2019 18:23:56 +0530
+MIME-Version: 1.0
+In-Reply-To: <66da4098-b221-408b-50ca-f3790b943965@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,317 +27,284 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============7052497537021981380=="
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kevin O'Connor <kevin@koconnor.net>
-Cc: seabios@seabios.org, kexec <kexec@lists.infradead.org>
+To: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Steve Capper <Steve.Capper@arm.com>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Dave Anderson <anderson@redhat.com>, bhupesh.linux@gmail.com, linux-arm-kernel@lists.infradead.org
 
+On 04/03/2019 11:24 PM, Bhupesh Sharma wrote:
+> Hi James,
+> 
+> On 04/02/2019 10:56 PM, James Morse wrote:
+>> Hi Bhupesh,
+>>
+>> On 28/03/2019 11:42, Bhupesh Sharma wrote:
+>>> On 03/26/2019 10:06 PM, James Morse wrote:
+>>>> On 20/03/2019 05:09, Bhupesh Sharma wrote:
+>>>>> With ARMv8.2-LVA architecture extension availability, arm64 hardware
+>>>>> which supports this extension can support a virtual address-space upto
+>>>>> 52-bits.
+>>>>>
+>>>>> Since at the moment we enable the support of this extension in kernel
+>>>>> via CONFIG flags, e.g.
+>>>>>    - User-space 52-bit LVA via CONFIG_ARM64_USER_VA_BITS_52
+>>>>>
+>>>>> so, there is no clear mechanism in the user-space right now to
+>>>>> determine these CONFIG flag values and hence determine the maximum
+>>>>> virtual address space supported by the underlying kernel.
+>>>>>
+>>>>> User-space tools like 'makedumpfile' therefore are broken currently
+>>>>> as they have no proper method to calculate the 'PTRS_PER_PGD' value
+>>>>> which is required to perform a page table walk to determine the
+>>>>> physical address of a corresponding virtual address found in
+>>>>> kcore/vmcoreinfo.
+>>>>>
+>>>>> If one appends 'PTRS_PER_PGD' number to vmcoreinfo for arm64,
+>>>>> it can be used in user-space to determine the maximum virtual address
+>>>>> supported by underlying kernel.
+>>>>
+>>>> I don't think this really solves the problem, it feels fragile.
+>>>>
+>>>> I can see how vmcoreinfo tells you VA_BITS==48, PAGE_SIZE==64K and 
+>>>> PTRS_PER_PGD=1024.
+>>>> You can use this to work out that the top level page table size 
+>>>> isn't consistent with a
+>>>> 48bit VA, so 52bit VA must be in use...
+>>>>
+>>>> But wasn't your problem walking the kernel page tables? In 
+>>>> particular the offset that we
+>>>> apply because the tables were based on a 48bit VA shifted up in 
+>>>> swapper_pg_dir.
+>>>>
+>>>> Where does the TTBR1_EL1 offset come from with this property? I 
+>>>> assume makedumpfile
+>>>> hard-codes it when it sees 52bit is in use ... somewhere.
+>>>> We haven't solved the problem!
+>>
+>>> But isn't the TTBR1_EL1 offset already appended by the kernel via 
+>>> e842dfb5a2d3 ("arm64:
+>>> mm: Offset TTBR1 to allow 52-bit PTRS_PER_PGD")
+>>> in case of kernel configuration where 52-bit userspace VAs are possible.
+>>
+>>> Accordingly we have the following assembler helper in 
+>>> 'arch/arm64/include/asm/assembler.h':
+>>>
+>>>         .macro  offset_ttbr1, ttbr
+>>> #ifdef CONFIG_ARM64_52BIT_VA
+>>>         orr     \ttbr, \ttbr, #TTBR1_BADDR_4852_OFFSET
+>>> #endif
+>>>         .endm
+>>>
+>>> where:
+>>> #ifdef CONFIG_ARM64_52BIT_VA
+>>> /* Must be at least 64-byte aligned to prevent corruption of the TTBR */
+>>> #define TTBR1_BADDR_4852_OFFSET        (((UL(1) << (52 - 
+>>> PGDIR_SHIFT)) - \
+>>>                                  (UL(1) << (48 - PGDIR_SHIFT))) * 8)
+>>> #endif
+>>
+>> Sure, and all this would work today, because there is only one weird 
+>> combination. But once
+>> we support another combination of 52bit-va, you'd either need another 
+>> value, or to start
+>> using PTRS_PER_PGD as a flag for v5.1_FUNNY_BEHAVIOUR_ONE.
+> 
+> I completed my user-space experimentation with 52-bit kernel VA changes 
+> from Steve today and have shared a detailed review on his patchset (See 
+> <http://lists.infradead.org/pipermail/kexec/2019-April/022750.html>).
+> 
+> But first let me share some opinion on how we are adding the 52-bit 
+> address space changes for arm64 in the kernel.
+> 
+> I think we have ended up adding just a bit _too many_ CONFIG and MACRO 
+> values for the increased address space changes. For e.g. after the 
+> 52-bit kernel VA changes we have at-least 4 macros which explain the VA 
+> address range with CONFIG_ARM64_USER_KERNEL_VA_BITS_52=y:
+> 
+> VA_BITS = 52,
+> VA_BITS_ACTUAL = vabits_actual = 48,
+> VA_BITS_MIN = min (48, VA_BITS) = 48.
+> PTRS_PER_PGD = 64 (48-bit) or 1024 (52-bit)
+> 
+> Of these, VA_BITS, VA_BITS_ACTUAL and PTRS_PER_PGD are definitely of 
+> interest in the userspace as they define:
+> 
+> 1.
+>   /*
+>      * VMEMMAP_SIZE - allows the whole linear region to be covered by
+>      *                a struct page array
+>      */
+>     #define VMEMMAP_SIZE (UL(1) << (VA_BITS - PAGE_SHIFT - 1 + 
+> STRUCT_PAGE_MAX_SHIFT))
+> 
+> 2. #define __is_lm_address(addr)    (!((addr) & BIT(VA_BITS_ACTUAL - 1)))
+> 
+> We have discussed the usage of PTRS_PER_PGD in userspace already at 
+> quite some length, so I will focus on the other two below (VA_BITS and 
+> VA_BITS_ACUAL).
+> 
+> Both are critical for determining VMEMMAP_SIZE and whether a virtual 
+> address lies in the linear map range respectively.
+> 
+> I don't see any standard mechanism other than the following to achieve a 
+> working user-space with these changes:
+> - a sysfs node (may be a 
+> '/sys/devices/system/cpu/addressing-capabilities' node?) or HWCAP 
+> capability export for user-space utilities which perform a live analysis 
+> and use the above variables.
+> - exporting these variables in vmcoreinfo (for analysis of crash dump).
+> 
+> VA_BITS is already exported in vmcoreinfo, whereas I have proposed 
+> exporting PTRS_PER_PGD to vmcoreinfo via this patch.
+> 
+> For 52-bit kernel VA changes, VA_BITS_ACTUAL will also be needed in 
+> vmcoreinfo (See 
+> <http://lists.infradead.org/pipermail/kexec/2019-April/022750.html> for 
+> details).
+> 
+>>> Note that the above computation holds true both for PTRS_PER_PGD = 64 
+>>> (48-bit kernel with
+>>> 48-bit User VA) and 1024 (48-bit with 52-bit User VA) cases. And 
+>>> these are the
+>>> configurations for which we are trying to fix the user-space 
+>>> regressions reported (on
+>>> arm64) recently.
+>>
+>> ... and revisit it when there is another combination?
+> 
+> See above.
+> 
+>>>> Today __cpu_setup() sets T0SZ and T1SZ differently for 52bit VA, but 
+>>>> in the future it
+>>>> could set them the same, or different the other-way-round.
+>>>>
+>>>> Will makedumpfile using this value keep working once T1SZ is 52bit 
+>>>> VA too? In this case
+>>>> there would be no ttbr offset.
+>>>>
+>>>> If you need another vmcoreinfo flag once that happens, we've done 
+>>>> something wrong here.
+>>>
+>>> I am currently experimenting with Steve's patches for 52-bit kernel VA
+>>> (<https://lwn.net/Articles/780093/>) and will comment more on the 
+>>> same when I am able to
+>>> get the user-space utilities like makedumpfile and kexec-tools to 
+>>> work with the same on
+>>> both ARMv8 Fast Simulator model and older CPUs which don't support 
+>>> ARMv8.2 extensions.
+>>
+>>> However, I think we should not hold up fixes for regressions already 
+>>> reported, because the
+>>> 52-bit kernel VA changes probably still need some more rework.
+>>
+>> Chucking things into vmcoreinfo isn't free: we need to keep them there 
+>> forever, otherwise
+>> yesterdays version of the tools breaks. Can we take the time to get 
+>> this right for the
+>> cases we know about?
+> 
+> Sure, but exporting variable(s) in vmcoreinfo in directly related to the 
+> information variable(s) we add in the kernel side without which the 
+> user-space would break.
+> 
+> I have added the requirements for 52-bit kernel VA above (i.e we need an 
+> additional VA_BITS_ACTUAL variable export'ed rather than any tinkering 
+> with already proposed PTRS_PER_PGD).
+> 
+> May be this is a good time to also talk about minimizing the kernel 
+> interfaces we are proposing to hold and indicate normal (48-bit) and 
+> extended (52-bit) address spaces on arm64.
+> 
+> Ideally, we would want to simplify it further to be on similar lines as 
+> x86:
+> CONFIG_X86_5LEVEL=y
+> vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
+>              pgtable_l5_enabled());
+> 
+> which seems much cleaner..
+> 
+> I am open to any suggestions on the same.
+> 
+>> Yes the kernel code is going to move around, this is why the 
+>> information we expose via
+>> vmcoreinfo needs to be thought through: something we would always 
+>> need, regardless of how
+>> the kernel implements it.
+>>
+>>
+>>>> (Not to mention what happens if the TTBR1_EL1 uses 52bit va, but 
+>>>> TTBR0_EL1 doesn't)
+>>>
+>>> I am wondering if there are any real users of the above combination.
+>>
+>> Heh! Is there any hardware that supports this?
+>>
+>> Pointer-auth changes all this again, as we may prefer to use the bits 
+>> for pointer-auth in
+>> one TTB or the other. PTRS_PER_PGD may show the 52bit value in this 
+>> case, but neither TTBR
+>> is mapping 52bits of VA.
+>>
+>>
+>>> So far, I have generally come across discussions where the following 
+>>> variations of the
+>>> address spaces have been proposed/requested:
+>>> - 48bit kernel VA + 48-bit User VA,
+>>> - 48-bit kernel VA + 52-bit User VA,
+>>
+>> + 52bit kernel, because there is excessive quantities of memory, and 
+>> the kernel maps it
+>> all, but 48-bit user, because it never maps all the memory, and we 
+>> prefer the bits for
+>> pointer-auth.
+>>
+>>> - 52-bit kernel VA + 52-bit User VA.
+>>
+>> And...  all four may happen with the same built image. I don't see how 
+>> you can tell these
+>> cases apart with the one (build-time-constant!) PTRS_PER_PGD value.
+>>
+>> I'm sure some of these cases are hypothetical, but by considering it 
+>> all now, we can avoid
+>> three more kernel:vmcoreinfo updates, and three more 
+>> fix-user-space-to-use-the-new-value.
+> 
+> Agree.
+> 
+>> I think you probably do need PTRS_PER_PGD, as this is the one value 
+>> the mm is using to
+>> generate page tables. I'm pretty sure you also need T0SZ and T1SZ to 
+>> know if that's
+>> actually in use, or the kernel is bodging round it with an offset.
+> 
+> Sure, I am open to suggestions (as I realize that we need an additional 
+> VA_BITS_ACTUAL variable export'ed for 52-bit kernel VA changes).
+> 
+> Also how do we standardize reading T0SZ and T1SZ in user-space. Do you 
+> propose I make an enhancement in the cpu-feature-registers interface 
+> (see [1]) or the HWCAPS interface (see [2]) for the same?
+> 
+> [1]. 
+> https://www.kernel.org/doc/Documentation/arm64/cpu-feature-registers.txt
+> [2]. https://www.kernel.org/doc/Documentation/arm64/elf_hwcaps.txt
+> 
+> Thanks,
+> Bhupesh
 
---===============7052497537021981380==
-Content-Type: multipart/signed; micalg="sha-256";
-	protocol="application/x-pkcs7-signature";
-	boundary="=-AHPUHpYFwrFM7Ps8W61U"
+Ping.
 
+Hi James, Steve,
 
---=-AHPUHpYFwrFM7Ps8W61U
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Any comments on the above points? At the moment we have to carry these 
+fixes in the distribution kernels and I would like to have these fixed 
+in upstream kernel itself.
 
-On Tue, 2019-04-30 at 22:56 -0400, Kevin O'Connor wrote:
-> Hi David,
->=20
-> That call trace certainly looks odd.  The SeaBIOS debugging info would
-> help - try compiling SeaBIOS with debug level 8 and grab the log (as
-> described at: https://www.seabios.org/Debugging#Diagnostic_information
-> ).
-
-Choosing Xen because it actually succeeds, while Linux real-mode boot
-then dies a bit later even if I use IDE disks...
-
-This SeaBIOS git master (f4c6e4c1) with an IDE disk, from the moment of
-kexec:
-
-unimplemented handle_15XX:330:
-   a=3D0000ec00  b=3D00000002  c=3D00000000  d=3D00000000 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000000 bp=3D00000000 sp=3D0000fe8e cs=3D8f00 ip=3D00=
-60  f=3D0246
-enter handle_12:
-   a=3D534d3c00  b=3D0000befe  c=3D00003c00  d=3D002ffb80 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000af1 bp=3D00000000 sp=3D0000fe8e cs=3D8f00 ip=3D01=
-43  f=3D0202
-invalid handle_legacy_disk:729:
-   a=3D534d4139  b=3D000055aa  c=3D0000fe03  d=3D002ffb81 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00001539 di=3D00000000 bp=3D00000000 sp=3D0000fe8e cs=3D8f00 ip=3D01=
-5b  f=3D0293
-invalid handle_legacy_disk:729:
-   a=3D534d0201  b=3D00000000  c=3D889f0001  d=3D002f0081 ds=3D8f00 es=3D8e=
-e0 ss=3Dd980
-  si=3D0000aa55 di=3D00000000 bp=3D00000000 sp=3D0000fe8e cs=3D8f00 ip=3D02=
-02  f=3D0247
- Xen 4.11.2-pre
-(XEN) Xen version 4.11.2-pre (dwmw@ant.amazon.com) (gcc (Ubuntu 7.3.0-27ubu=
-ntu1~18.04) 7.3.0) debug=3Dn  Wed May  1 22:08:39 IDT 2019
-(XEN) Latest ChangeSet: Wed May 1 13:37:09 2019 +0300 git:7c281700a8
-(XEN) Bootloader: kexec 2.0.19.git
-(XEN) Command line: console=3Dvga,com1
-(XEN) Xen image load base address: 0
-(XEN) Video information:
-(XEN)  VGA is text mode 80x25, font 8x16
-(XEN) Disc information:
-(XEN)  Found 1 MBR signatures
-(XEN)  Found 1 EDD information structures
-
-And this is all I see when the disk is virtio:
-
-unimplemented handle_15XX:330:
-   a=3D0000ec00  b=3D00000002  c=3D00000000  d=3D00000000 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000000 bp=3D00000000 sp=3D0000fe8e cs=3D8f00 ip=3D00=
-60  f=3D0246
-enter handle_12:
-   a=3D534d3c00  b=3D0000befd  c=3D00003c00  d=3D002ffb40 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000af1 bp=3D00000000 sp=3D0000fe8e cs=3D8f00 ip=3D01=
-43  f=3D0202
-invalid handle_legacy_disk:729:
-   a=3D534d4139  b=3D000055aa  c=3D0000fe03  d=3D002ffb81 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00001539 di=3D00000000 bp=3D00000000 sp=3D0000fe8e cs=3D8f00 ip=3D01=
-5b  f=3D0293
-
-Increasing debug to 9, I see:
-
-enter handle_15:
-   a=3D0000ec00  b=3D00000002  c=3D00000000  d=3D00000000 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000000 bp=3D00000000 sp=3D0000f96e cs=3D8f00 ip=3D00=
-60  f=3D0246
-unimplemented handle_15XX:330:
-   a=3D0000ec00  b=3D00000002  c=3D00000000  d=3D00000000 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000000 bp=3D00000000 sp=3D0000f96e cs=3D8f00 ip=3D00=
-60  f=3D0246
-enter handle_15:
-   a=3D0000e820  b=3D00000000  c=3D00000014  d=3D534d4150 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000a51 bp=3D00000000 sp=3D0000f96e cs=3D8f00 ip=3D00=
-ec  f=3D0246
-enter handle_15:
-   a=3D0000e820  b=3D00000001  c=3D00000014  d=3D534d4150 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000a65 bp=3D00000000 sp=3D0000f96e cs=3D8f00 ip=3D00=
-ec  f=3D0202
-enter handle_15:
-   a=3D0000e820  b=3D00000002  c=3D00000014  d=3D534d4150 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000a79 bp=3D00000000 sp=3D0000f96e cs=3D8f00 ip=3D00=
-ec  f=3D0202
-enter handle_15:
-   a=3D0000e820  b=3D00000003  c=3D00000014  d=3D534d4150 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000a8d bp=3D00000000 sp=3D0000f96e cs=3D8f00 ip=3D00=
-ec  f=3D0206
-enter handle_15:
-   a=3D0000e820  b=3D00000004  c=3D00000014  d=3D534d4150 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000aa1 bp=3D00000000 sp=3D0000f96e cs=3D8f00 ip=3D00=
-ec  f=3D0202
-enter handle_15:
-   a=3D0000e820  b=3D00000005  c=3D00000014  d=3D534d4150 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000ab5 bp=3D00000000 sp=3D0000f96e cs=3D8f00 ip=3D00=
-ec  f=3D0206
-enter handle_15:
-   a=3D0000e820  b=3D00000006  c=3D00000014  d=3D534d4150 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000ac9 bp=3D00000000 sp=3D0000f96e cs=3D8f00 ip=3D00=
-ec  f=3D0206
-enter handle_15:
-   a=3D0000e820  b=3D00000007  c=3D00000014  d=3D534d4150 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000add bp=3D00000000 sp=3D0000f96e cs=3D8f00 ip=3D00=
-ec  f=3D0202
-enter handle_15:
-   a=3D534d88f1  b=3D00000000  c=3D00000014  d=3D534d4150 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000af1 bp=3D00000000 sp=3D0000f96e cs=3D8f00 ip=3D01=
-12  f=3D0246
-enter handle_15:
-   a=3D534de801  b=3D00000000  c=3D00000000  d=3D534d0000 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000af1 bp=3D00000000 sp=3D0000f96e cs=3D8f00 ip=3D01=
-1f  f=3D0246
-enter handle_12:
-   a=3D534d3c00  b=3D0000befd  c=3D00003c00  d=3D002ffb40 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00000000 di=3D00000af1 bp=3D00000000 sp=3D0000f96e cs=3D8f00 ip=3D01=
-43  f=3D0202
-invalid handle_legacy_disk:729:
-   a=3D534d4139  b=3D000055aa  c=3D0000fe03  d=3D002ffb81 ds=3D8f00 es=3D8f=
-00 ss=3Dd980
-  si=3D00001539 di=3D00000000 bp=3D00000000 sp=3D0000f96e cs=3D8f00 ip=3D01=
-5b  f=3D0293
-call32_smm 0x000ed91a e9120
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-vp notify fe003000 (2) -- 0x0
-call16_smm 0x00007a79 0 0
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-call16_smm 0x00007a79 0 0
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-call16_smm 0x00007a79 0 0
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-call16_smm 0x00007a79 0 0
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-call16_smm 0x00007a79 0 0
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-call16_smm 0x00007a79 0 0
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-call16_smm 0x00007a79 0 0
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-call16_smm 0x00007a79 0 0
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-call16_smm 0x00007a79 0 0
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-call16_smm 0x00007a79 0 0
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-call16_smm 0x00007a79 0 0
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-handle_smi cmd=3Db5 smbase=3D0x000a0000
-call16_smm 0x00007a79 0 0
-...=20
-
-That just goes on for ever. The full log from boot (including the boot
-of the first kernel) is at http://david.woodhou.se/smi-wtf.txt
-
-
-
---=-AHPUHpYFwrFM7Ps8W61U
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
-ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
-OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
-RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
-cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
-uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
-Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
-Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
-xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
-BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
-dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
-LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
-Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
-Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
-YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
-nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
-PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
-7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
-Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
-MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
-NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
-/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
-0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
-vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
-ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
-ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
-CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
-BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
-aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
-bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
-bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
-LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
-CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
-W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
-vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
-gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
-RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
-jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
-b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
-AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
-BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
-+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
-WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
-aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
-CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
-u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
-RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
-QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
-b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
-cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
-SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
-0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
-KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
-E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
-M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
-jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
-yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
-gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
-R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
-ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkw
-NTAxMjAxNjAzWjAvBgkqhkiG9w0BCQQxIgQgMMlhGwGrPMmTj+0GLXYhYZ0EanETXRLuuxE91LqV
-uvQwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
-TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
-PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
-aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
-DQEBAQUABIIBAD6wa6LSe11W92BheWXkay+smkQqjA1q+L1oBQdheEkIMAjfDUVjxEdjFFAmTV+3
-DCXqWedFRv18Iy/CxV121d5LArV1p+KhoGvws0RMT2W2IEkp9q+AfrHgY+oAjAukWlZTc555Gye/
-nnCxSGUUiFR7yh2+8AGCa0MNnOsREtBXJEVmNbdTrnYy52WhzNkBb32vVDLdR+WMDcmtxzsIAtD8
-LSmyGdVXfa+jcB1vFBIkWNX3ZA4uaIMnpuUcjqyR7Z08jxebqmrWHPDacqDOIAwKoQY8u+QBYfmW
-bIUwWBJKx1Za/6ZEoH6wysfqamnj+aFv0/m1R8wk2jeZKrNS34kAAAAAAAA=
-
-
---=-AHPUHpYFwrFM7Ps8W61U--
-
-
-
---===============7052497537021981380==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Thanks,
+Bhupesh
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============7052497537021981380==--
-
-
