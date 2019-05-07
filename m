@@ -1,11 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH 2/4] arm64: kdump: support reserving crashkernel above 4G
-Date: Tue, 7 May 2019 11:50:56 +0800
-Message-ID: <20190507035058.63992-3-chenzhou10@huawei.com>
-In-Reply-To: <20190507035058.63992-1-chenzhou10@huawei.com>
-References: <20190507035058.63992-1-chenzhou10@huawei.com>
+Received: from mail-qt1-x843.google.com ([2607:f8b0:4864:20::843])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1hO1qg-0002JW-Rl
+ for kexec@lists.infradead.org; Tue, 07 May 2019 15:17:44 +0000
+Received: by mail-qt1-x843.google.com with SMTP id d20so1894589qto.2
+ for <kexec@lists.infradead.org>; Tue, 07 May 2019 08:17:41 -0700 (PDT)
+Date: Tue, 7 May 2019 11:17:38 -0400
+From: Kevin O'Connor <kevin@koconnor.net>
+Subject: Re: [SeaBIOS] Real mode kexec failure with non-IDE disk
+Message-ID: <20190507151738.GB20031@morn.lan>
+References: <e5872703412f9a56c10df52d9793ca2a6401d7f0.camel@infradead.org>
+ <20190501025601.GA5342@morn.lan>
+ <1689977da7b323b360c35fc021a67e766c3347bb.camel@infradead.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1689977da7b323b360c35fc021a67e766c3347bb.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,121 +27,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, ard.biesheuvel@linaro.org, rppt@linux.ibm.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com
-Cc: wangkefeng.wang@huawei.com, linux-mm@kvack.org, Chen Zhou <chenzhou10@huawei.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, takahiro.akashi@linaro.org, horms@verge.net.au, linux-arm-kernel@lists.infradead.org
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: seabios@seabios.org, kexec <kexec@lists.infradead.org>
 
-When crashkernel is reserved above 4G in memory, kernel should
-reserve some amount of low memory for swiotlb and some DMA buffers.
+Hi David,
 
-Meanwhile, support crashkernel=X,[high,low] in arm64. When use
-crashkernel=X parameter, try low memory first and fall back to high
-memory unless "crashkernel=X,high" is specified.
+On Wed, May 01, 2019 at 11:16:03PM +0300, David Woodhouse wrote:
+> On Tue, 2019-04-30 at 22:56 -0400, Kevin O'Connor wrote:
+> > That call trace certainly looks odd.  The SeaBIOS debugging info would
+> > help - try compiling SeaBIOS with debug level 8 and grab the log (as
+> > described at: https://www.seabios.org/Debugging#Diagnostic_information
+> > ).
+> 
+> Choosing Xen because it actually succeeds, while Linux real-mode boot
+> then dies a bit later even if I use IDE disks...
+[...]
+>The full log from boot (including the boot
+> of the first kernel) is at http://david.woodhou.se/smi-wtf.txt
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- arch/arm64/include/asm/kexec.h |  3 +++
- arch/arm64/kernel/setup.c      |  3 +++
- arch/arm64/mm/init.c           | 34 ++++++++++++++++++++++++++++------
- 3 files changed, 34 insertions(+), 6 deletions(-)
+From that log, it doesn't look like SeaBIOS itself is reset during the
+kexec.  I could be wrong, but here's my understanding of that log:
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 67e4cb7..32949bf 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -28,6 +28,9 @@
- 
- #define KEXEC_ARCH KEXEC_ARCH_AARCH64
- 
-+/* 2M alignment for crash kernel regions */
-+#define CRASH_ALIGN	SZ_2M
-+
- #ifndef __ASSEMBLY__
- 
- /**
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 413d566..82cd9a0 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -243,6 +243,9 @@ static void __init request_standard_resources(void)
- 			request_resource(res, &kernel_data);
- #ifdef CONFIG_KEXEC_CORE
- 		/* Userspace will find "Crash kernel" region in /proc/iomem. */
-+		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
-+		    crashk_low_res.end <= res->end)
-+			request_resource(res, &crashk_low_res);
- 		if (crashk_res.end && crashk_res.start >= res->start &&
- 		    crashk_res.end <= res->end)
- 			request_resource(res, &crashk_res);
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index d2adffb..3fcd739 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -74,20 +74,37 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
- static void __init reserve_crashkernel(void)
- {
- 	unsigned long long crash_base, crash_size;
-+	bool high = false;
- 	int ret;
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
- 				&crash_size, &crash_base);
- 	/* no crashkernel= or invalid value specified */
--	if (ret || !crash_size)
--		return;
-+	if (ret || !crash_size) {
-+		/* crashkernel=X,high */
-+		ret = parse_crashkernel_high(boot_command_line,
-+				memblock_phys_mem_size(),
-+				&crash_size, &crash_base);
-+		if (ret || !crash_size)
-+			return;
-+		high = true;
-+	}
- 
- 	crash_size = PAGE_ALIGN(crash_size);
- 
- 	if (crash_base == 0) {
--		/* Current arm64 boot protocol requires 2MB alignment */
--		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
--				crash_size, SZ_2M);
-+		/*
-+		 * Try low memory first and fall back to high memory
-+		 * unless "crashkernel=size[KMG],high" is specified.
-+		 */
-+		if (!high)
-+			crash_base = memblock_find_in_range(0,
-+					ARCH_LOW_ADDRESS_LIMIT,
-+					crash_size, CRASH_ALIGN);
-+		if (!crash_base)
-+			crash_base = memblock_find_in_range(0,
-+					memblock_end_of_DRAM(),
-+					crash_size, CRASH_ALIGN);
- 		if (crash_base == 0) {
- 			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
- 				crash_size);
-@@ -105,13 +122,18 @@ static void __init reserve_crashkernel(void)
- 			return;
- 		}
- 
--		if (!IS_ALIGNED(crash_base, SZ_2M)) {
-+		if (!IS_ALIGNED(crash_base, CRASH_ALIGN)) {
- 			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
- 			return;
- 		}
- 	}
- 	memblock_reserve(crash_base, crash_size);
- 
-+	if (crash_base >= SZ_4G && reserve_crashkernel_low()) {
-+		memblock_free(crash_base, crash_size);
-+		return;
-+	}
-+
- 	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
- 		crash_base, crash_base + crash_size, crash_size >> 20);
- 
--- 
-2.7.4
+- SeaBIOS starts normally and initializes the virtio-blk device
 
+- SeaBIOS hands control to the bootloader.  The bootloader makes
+  various BIOS calls that read blocks from the virtio-blk device.
+
+- At some point the bootloader loads Linux.  Linux reinitializes the
+  virtio-blk device to its liking.
+
+- At some point, a kexec occurs and then SeaBIOS gets a request to
+  read data from the virtio-blk device.  However, the virtio-blk
+  device was reset by Linux, so the SeaBIOS' device structures are no
+  longer valid.
+
+- SeaBIOS waits indefinitely for a virtio notify event that it wont
+  ever receive (because it is waiting on a control structure that the
+  virtio-blk device is no longer configured to use).
+
+If SeaBIOS doesn't get a signal to reinitialize itself, I'm not sure
+there's much it can do in that situation.  (Though, as above, it's
+possible I've misread the log.)
+
+Cheers,
+-Kevin
 
 _______________________________________________
 kexec mailing list
