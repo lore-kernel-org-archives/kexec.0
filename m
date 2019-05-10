@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pg1-f196.google.com ([209.85.215.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hP2ru-0007dQ-DZ
- for kexec@lists.infradead.org; Fri, 10 May 2019 10:35:11 +0000
-From: Kairui Song <kasong@redhat.com>
-Subject: [RFC PATCH] vmcore: Add a kernel cmdline device_dump_limit
-Date: Fri, 10 May 2019 18:20:51 +0800
-Message-Id: <20190510102051.25647-1-kasong@redhat.com>
+ id 1hP3Wj-0005nE-5L
+ for kexec@lists.infradead.org; Fri, 10 May 2019 11:17:23 +0000
+Received: by mail-pg1-f196.google.com with SMTP id c13so2893615pgt.1
+ for <kexec@lists.infradead.org>; Fri, 10 May 2019 04:17:20 -0700 (PDT)
+Subject: Re: [RFC PATCH] vmcore: Add a kernel cmdline device_dump_limit
+References: <20190510102051.25647-1-kasong@redhat.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Message-ID: <4f453ec6-67a6-2c8f-2aab-acb54ae55645@redhat.com>
+Date: Fri, 10 May 2019 16:47:13 +0530
 MIME-Version: 1.0
+In-Reply-To: <20190510102051.25647-1-kasong@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,79 +21,130 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Kairui Song <kasong@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "David S . Miller" <davem@davemloft.net>, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Alexey Dobriyan <adobriyan@gmail.com>, Ganesh Goudar <ganeshgr@chelsio.com>
+To: Kairui Song <kasong@redhat.com>, linux-kernel@vger.kernel.org
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Alexey Dobriyan <adobriyan@gmail.com>, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, "David S . Miller" <davem@davemloft.net>, Ganesh Goudar <ganeshgr@chelsio.com>
 
-Device dump allow drivers to add device related dump data to vmcore as
-they want. This have a potential issue, the data is stored in memory,
-drivers may append too much data and use too much memory. The vmcore is
-typically used in a kdump kernel which runs in a pre-reserved small
-chunk of memory. So as a result it will make kdump unusable at all due
-to OOM issues.
+Hi Kairui,
 
-So introduce new device_dump_limit= kernel parameter, and set the
-default limit to 0, so device dump is not enabled unless user specify
-the accetable maxiam memory usage for device dump data. In this way user
-will also have the chance to adjust the kdump reserved memory
-accordingly.
+Thanks for the patch. Please see my comments in-line:
 
-Signed-off-by: Kairui Song <kasong@redhat.com>
----
- fs/proc/vmcore.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+On 05/10/2019 03:50 PM, Kairui Song wrote:
+> Device dump allow drivers to add device related dump data to vmcore as
+> they want. This have a potential issue, the data is stored in memory,
+> drivers may append too much data and use too much memory. The vmcore is
+> typically used in a kdump kernel which runs in a pre-reserved small
+> chunk of memory. So as a result it will make kdump unusable at all due
+> to OOM issues.
+> 
+> So introduce new device_dump_limit= kernel parameter, and set the
+> default limit to 0, so device dump is not enabled unless user specify
+> the accetable maxiam 
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 3fe90443c1bb..e28695ef2439 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -53,6 +53,9 @@ static struct proc_dir_entry *proc_vmcore;
- /* Device Dump list and mutex to synchronize access to list */
- static LIST_HEAD(vmcoredd_list);
- static DEFINE_MUTEX(vmcoredd_mutex);
-+
-+/* Device Dump Limit */
-+static size_t vmcoredd_limit;
- #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
- 
- /* Device Dump Size */
-@@ -1465,6 +1468,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
- 	data_size = roundup(sizeof(struct vmcoredd_header) + data->size,
- 			    PAGE_SIZE);
- 
-+	if (vmcoredd_orig_sz + data_size >= vmcoredd_limit) {
-+		ret = -ENOMEM;
-+		goto out_err;
-+	}
-+
- 	/* Allocate buffer for driver's to write their dumps */
- 	buf = vmcore_alloc_buf(data_size);
- 	if (!buf) {
-@@ -1502,6 +1510,18 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
- 	return ret;
- }
- EXPORT_SYMBOL(vmcore_add_device_dump);
-+
-+static int __init parse_vmcoredd_limit(char *arg)
-+{
-+	char *end;
-+
-+	if (!arg)
-+		return -EINVAL;
-+	vmcoredd_limit = memparse(arg, &end);
-+	return end > arg ? 0 : -EINVAL;
-+
-+}
-+__setup("device_dump_limit=", parse_vmcoredd_limit);
- #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
- 
- /* Free all dumps in vmcore device dump list */
--- 
-2.20.1
+       ^^^^ acceptable maximum
 
+> memory usage for device dump data. In this way user
+> will also have the chance to adjust the kdump reserved memory
+> accordingly.
+
+Hmmm., this doesn't give much confidence with the 
+PROC_VMCORE_DEVICE_DUMP feature in its current shape. Rather shouldn't 
+we be enabling config PROC_VMCORE_DEVICE_DUMP only under EXPERT mode for 
+now, considering that this feature needs further thrashing and testing 
+with real setups including platforms where drivers append large amounts 
+of data to vmcore:
+
+diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
+index 817c02b13b1d..c47a12cf7fc0 100644
+--- a/fs/proc/Kconfig
++++ b/fs/proc/Kconfig
+@@ -45,7 +45,7 @@ config PROC_VMCORE
+          Exports the dump image of crashed kernel in ELF format.
+
+  config PROC_VMCORE_DEVICE_DUMP
+-       bool "Device Hardware/Firmware Log Collection"
++       bool "Device Hardware/Firmware Log Collection" if EXPERT
+         depends on PROC_VMCORE
+         default n
+         help
+@@ -59,6 +59,12 @@ config PROC_VMCORE_DEVICE_DUMP
+           If you say Y here, the collected device dumps will be added
+           as ELF notes to /proc/vmcore.
+
++         Considering that there can be device drivers which append
++         large amounts of data to vmcore, you should say N here unless
++         you are reserving a large chunk of memory for crashdump
++         kernel, because otherwise the crashdump kernel might become
++         unusable due to OOM issues.
++
+
+May be you can add a 'Fixes:' tag here.
+
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> ---
+>   fs/proc/vmcore.c | 20 ++++++++++++++++++++
+>   1 file changed, 20 insertions(+)
+> 
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 3fe90443c1bb..e28695ef2439 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -53,6 +53,9 @@ static struct proc_dir_entry *proc_vmcore;
+>   /* Device Dump list and mutex to synchronize access to list */
+>   static LIST_HEAD(vmcoredd_list);
+>   static DEFINE_MUTEX(vmcoredd_mutex);
+> +
+> +/* Device Dump Limit */
+> +static size_t vmcoredd_limit;
+>   #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+>   
+>   /* Device Dump Size */
+> @@ -1465,6 +1468,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+>   	data_size = roundup(sizeof(struct vmcoredd_header) + data->size,
+>   			    PAGE_SIZE);
+>   
+> +	if (vmcoredd_orig_sz + data_size >= vmcoredd_limit) {
+> +		ret = -ENOMEM;
+
+Should we be adding a WARN() here to let the user know that the device 
+dump data will not be available in vmcore?
+
+> +		goto out_err;
+> +	}
+> +
+>   	/* Allocate buffer for driver's to write their dumps */
+>   	buf = vmcore_alloc_buf(data_size);
+>   	if (!buf) {
+> @@ -1502,6 +1510,18 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+>   	return ret;
+>   }
+>   EXPORT_SYMBOL(vmcore_add_device_dump);
+> +
+> +static int __init parse_vmcoredd_limit(char *arg)
+> +{
+> +	char *end;
+> +
+> +	if (!arg)
+> +		return -EINVAL;
+> +	vmcoredd_limit = memparse(arg, &end);
+> +	return end > arg ? 0 : -EINVAL;
+> +
+> +}
+> +__setup("device_dump_limit=", parse_vmcoredd_limit);
+
+We should be adding this boot argument and its description to 
+'Documentation/admin-guide/kernel-parameters.txt'
+
+>   #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+>   
+>   /* Free all dumps in vmcore device dump list */
+> 
+
+Thanks,
+Bhupesh
 
 _______________________________________________
 kexec mailing list
