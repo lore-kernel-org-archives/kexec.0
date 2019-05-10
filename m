@@ -1,20 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x843.google.com ([2607:f8b0:4864:20::843])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hO1qg-0002JW-Rl
- for kexec@lists.infradead.org; Tue, 07 May 2019 15:17:44 +0000
-Received: by mail-qt1-x843.google.com with SMTP id d20so1894589qto.2
- for <kexec@lists.infradead.org>; Tue, 07 May 2019 08:17:41 -0700 (PDT)
-Date: Tue, 7 May 2019 11:17:38 -0400
-From: Kevin O'Connor <kevin@koconnor.net>
-Subject: Re: [SeaBIOS] Real mode kexec failure with non-IDE disk
-Message-ID: <20190507151738.GB20031@morn.lan>
-References: <e5872703412f9a56c10df52d9793ca2a6401d7f0.camel@infradead.org>
- <20190501025601.GA5342@morn.lan>
- <1689977da7b323b360c35fc021a67e766c3347bb.camel@infradead.org>
+ id 1hP2ru-0007dQ-DZ
+ for kexec@lists.infradead.org; Fri, 10 May 2019 10:35:11 +0000
+From: Kairui Song <kasong@redhat.com>
+Subject: [RFC PATCH] vmcore: Add a kernel cmdline device_dump_limit
+Date: Fri, 10 May 2019 18:20:51 +0800
+Message-Id: <20190510102051.25647-1-kasong@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1689977da7b323b360c35fc021a67e766c3347bb.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,50 +20,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: seabios@seabios.org, kexec <kexec@lists.infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Kairui Song <kasong@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "David S . Miller" <davem@davemloft.net>, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Alexey Dobriyan <adobriyan@gmail.com>, Ganesh Goudar <ganeshgr@chelsio.com>
 
-Hi David,
+Device dump allow drivers to add device related dump data to vmcore as
+they want. This have a potential issue, the data is stored in memory,
+drivers may append too much data and use too much memory. The vmcore is
+typically used in a kdump kernel which runs in a pre-reserved small
+chunk of memory. So as a result it will make kdump unusable at all due
+to OOM issues.
 
-On Wed, May 01, 2019 at 11:16:03PM +0300, David Woodhouse wrote:
-> On Tue, 2019-04-30 at 22:56 -0400, Kevin O'Connor wrote:
-> > That call trace certainly looks odd.  The SeaBIOS debugging info would
-> > help - try compiling SeaBIOS with debug level 8 and grab the log (as
-> > described at: https://www.seabios.org/Debugging#Diagnostic_information
-> > ).
-> 
-> Choosing Xen because it actually succeeds, while Linux real-mode boot
-> then dies a bit later even if I use IDE disks...
-[...]
->The full log from boot (including the boot
-> of the first kernel) is at http://david.woodhou.se/smi-wtf.txt
+So introduce new device_dump_limit= kernel parameter, and set the
+default limit to 0, so device dump is not enabled unless user specify
+the accetable maxiam memory usage for device dump data. In this way user
+will also have the chance to adjust the kdump reserved memory
+accordingly.
 
-From that log, it doesn't look like SeaBIOS itself is reset during the
-kexec.  I could be wrong, but here's my understanding of that log:
+Signed-off-by: Kairui Song <kasong@redhat.com>
+---
+ fs/proc/vmcore.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-- SeaBIOS starts normally and initializes the virtio-blk device
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 3fe90443c1bb..e28695ef2439 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -53,6 +53,9 @@ static struct proc_dir_entry *proc_vmcore;
+ /* Device Dump list and mutex to synchronize access to list */
+ static LIST_HEAD(vmcoredd_list);
+ static DEFINE_MUTEX(vmcoredd_mutex);
++
++/* Device Dump Limit */
++static size_t vmcoredd_limit;
+ #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+ 
+ /* Device Dump Size */
+@@ -1465,6 +1468,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+ 	data_size = roundup(sizeof(struct vmcoredd_header) + data->size,
+ 			    PAGE_SIZE);
+ 
++	if (vmcoredd_orig_sz + data_size >= vmcoredd_limit) {
++		ret = -ENOMEM;
++		goto out_err;
++	}
++
+ 	/* Allocate buffer for driver's to write their dumps */
+ 	buf = vmcore_alloc_buf(data_size);
+ 	if (!buf) {
+@@ -1502,6 +1510,18 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+ 	return ret;
+ }
+ EXPORT_SYMBOL(vmcore_add_device_dump);
++
++static int __init parse_vmcoredd_limit(char *arg)
++{
++	char *end;
++
++	if (!arg)
++		return -EINVAL;
++	vmcoredd_limit = memparse(arg, &end);
++	return end > arg ? 0 : -EINVAL;
++
++}
++__setup("device_dump_limit=", parse_vmcoredd_limit);
+ #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+ 
+ /* Free all dumps in vmcore device dump list */
+-- 
+2.20.1
 
-- SeaBIOS hands control to the bootloader.  The bootloader makes
-  various BIOS calls that read blocks from the virtio-blk device.
-
-- At some point the bootloader loads Linux.  Linux reinitializes the
-  virtio-blk device to its liking.
-
-- At some point, a kexec occurs and then SeaBIOS gets a request to
-  read data from the virtio-blk device.  However, the virtio-blk
-  device was reset by Linux, so the SeaBIOS' device structures are no
-  longer valid.
-
-- SeaBIOS waits indefinitely for a virtio notify event that it wont
-  ever receive (because it is waiting on a control structure that the
-  virtio-blk device is no longer configured to use).
-
-If SeaBIOS doesn't get a signal to reinitialize itself, I'm not sure
-there's much it can do in that situation.  (Though, as above, it's
-possible I've misread the log.)
-
-Cheers,
--Kevin
 
 _______________________________________________
 kexec mailing list
