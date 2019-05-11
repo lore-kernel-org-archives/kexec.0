@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-f196.google.com ([209.85.215.196])
+Received: from mail-pf1-x444.google.com ([2607:f8b0:4864:20::444])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hP3Wj-0005nE-5L
- for kexec@lists.infradead.org; Fri, 10 May 2019 11:17:23 +0000
-Received: by mail-pg1-f196.google.com with SMTP id c13so2893615pgt.1
- for <kexec@lists.infradead.org>; Fri, 10 May 2019 04:17:20 -0700 (PDT)
-Subject: Re: [RFC PATCH] vmcore: Add a kernel cmdline device_dump_limit
-References: <20190510102051.25647-1-kasong@redhat.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Message-ID: <4f453ec6-67a6-2c8f-2aab-acb54ae55645@redhat.com>
-Date: Fri, 10 May 2019 16:47:13 +0530
+ id 1hPFgj-0008L7-9K
+ for kexec@lists.infradead.org; Sat, 11 May 2019 00:16:31 +0000
+Received: by mail-pf1-x444.google.com with SMTP id 13so4024996pfw.9
+ for <kexec@lists.infradead.org>; Fri, 10 May 2019 17:16:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190510102051.25647-1-kasong@redhat.com>
-Content-Language: en-US
+From: prakhar srivastava <prsriva02@gmail.com>
+Date: Fri, 10 May 2019 17:16:16 -0700
+Message-ID: <CAEFn8q+rT2_0TFb0fKA6ixOvC3H5R5KpR0zFiTOXa_4U-9HeUw@mail.gmail.com>
+Subject: Carrying over the ima log during kexec_file_load
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,132 +18,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>, linux-kernel@vger.kernel.org
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Alexey Dobriyan <adobriyan@gmail.com>, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, "David S . Miller" <davem@davemloft.net>, Ganesh Goudar <ganeshgr@chelsio.com>
+To: linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org, kexec@lists.infradead.org
+Cc: bhe@redhat.com, dyoung@redhat.com, jmorris@namei.org, Mimi Zohar <zohar@linux.ibm.com>, vgoyal@redhat.com
 
-Hi Kairui,
-
-Thanks for the patch. Please see my comments in-line:
-
-On 05/10/2019 03:50 PM, Kairui Song wrote:
-> Device dump allow drivers to add device related dump data to vmcore as
-> they want. This have a potential issue, the data is stored in memory,
-> drivers may append too much data and use too much memory. The vmcore is
-> typically used in a kdump kernel which runs in a pre-reserved small
-> chunk of memory. So as a result it will make kdump unusable at all due
-> to OOM issues.
-> 
-> So introduce new device_dump_limit= kernel parameter, and set the
-> default limit to 0, so device dump is not enabled unless user specify
-> the accetable maxiam 
-
-       ^^^^ acceptable maximum
-
-> memory usage for device dump data. In this way user
-> will also have the chance to adjust the kdump reserved memory
-> accordingly.
-
-Hmmm., this doesn't give much confidence with the 
-PROC_VMCORE_DEVICE_DUMP feature in its current shape. Rather shouldn't 
-we be enabling config PROC_VMCORE_DEVICE_DUMP only under EXPERT mode for 
-now, considering that this feature needs further thrashing and testing 
-with real setups including platforms where drivers append large amounts 
-of data to vmcore:
-
-diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
-index 817c02b13b1d..c47a12cf7fc0 100644
---- a/fs/proc/Kconfig
-+++ b/fs/proc/Kconfig
-@@ -45,7 +45,7 @@ config PROC_VMCORE
-          Exports the dump image of crashed kernel in ELF format.
-
-  config PROC_VMCORE_DEVICE_DUMP
--       bool "Device Hardware/Firmware Log Collection"
-+       bool "Device Hardware/Firmware Log Collection" if EXPERT
-         depends on PROC_VMCORE
-         default n
-         help
-@@ -59,6 +59,12 @@ config PROC_VMCORE_DEVICE_DUMP
-           If you say Y here, the collected device dumps will be added
-           as ELF notes to /proc/vmcore.
-
-+         Considering that there can be device drivers which append
-+         large amounts of data to vmcore, you should say N here unless
-+         you are reserving a large chunk of memory for crashdump
-+         kernel, because otherwise the crashdump kernel might become
-+         unusable due to OOM issues.
-+
-
-May be you can add a 'Fixes:' tag here.
-
-> Signed-off-by: Kairui Song <kasong@redhat.com>
-> ---
->   fs/proc/vmcore.c | 20 ++++++++++++++++++++
->   1 file changed, 20 insertions(+)
-> 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 3fe90443c1bb..e28695ef2439 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -53,6 +53,9 @@ static struct proc_dir_entry *proc_vmcore;
->   /* Device Dump list and mutex to synchronize access to list */
->   static LIST_HEAD(vmcoredd_list);
->   static DEFINE_MUTEX(vmcoredd_mutex);
-> +
-> +/* Device Dump Limit */
-> +static size_t vmcoredd_limit;
->   #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
->   
->   /* Device Dump Size */
-> @@ -1465,6 +1468,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
->   	data_size = roundup(sizeof(struct vmcoredd_header) + data->size,
->   			    PAGE_SIZE);
->   
-> +	if (vmcoredd_orig_sz + data_size >= vmcoredd_limit) {
-> +		ret = -ENOMEM;
-
-Should we be adding a WARN() here to let the user know that the device 
-dump data will not be available in vmcore?
-
-> +		goto out_err;
-> +	}
-> +
->   	/* Allocate buffer for driver's to write their dumps */
->   	buf = vmcore_alloc_buf(data_size);
->   	if (!buf) {
-> @@ -1502,6 +1510,18 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
->   	return ret;
->   }
->   EXPORT_SYMBOL(vmcore_add_device_dump);
-> +
-> +static int __init parse_vmcoredd_limit(char *arg)
-> +{
-> +	char *end;
-> +
-> +	if (!arg)
-> +		return -EINVAL;
-> +	vmcoredd_limit = memparse(arg, &end);
-> +	return end > arg ? 0 : -EINVAL;
-> +
-> +}
-> +__setup("device_dump_limit=", parse_vmcoredd_limit);
-
-We should be adding this boot argument and its description to 
-'Documentation/admin-guide/kernel-parameters.txt'
-
->   #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
->   
->   /* Free all dumps in vmcore device dump list */
-> 
-
-Thanks,
-Bhupesh
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGksCgpJIGFtIGN1cnJlbnRseSBsb29raW5nIGF0IGNhcnJ5aW5nIG92ZXIgdGhlIGltYSBsb2cg
+ZnJvbSB0aGUgY3VycmVudAprZXJuZWwgdG8gdGhlIG5leHQga2VybmVsIGR1cmluZyBzb2Z0IHJl
+Ym9vdChrZXhlY19maWxlX2xvYWQpIGZvciBhcm02NAphbmQgeDg2XzY0LgpEdXJpbmcgc29mdCBy
+ZWJvb3Qoa2V4ZWNfZmlsZV9sb2FkKSBUUE0gYm9vdCBQQ1LigJlzKFBDUnMgMCB0aHJvdWdoIDcp
+CmFyZSBub3QgcmVzZXQgb3IgZXh0ZW5kZWQgYW5kIHRodXMgdGhlIGJvb3QgYWdncmVnYXRlIGRv
+ZXMgbm90IGNoYW5nZSwKbGVhdmluZyB0aGUgbmV3IGtlcm5lbCB3aXRoIGEgc2Vuc2Ugb2Ygc2Vj
+dXJlIGJvb3QuCkR1cmluZyBrZXhlY19maWxlX2xvYWQgdGhlIGtlcm5lbCBmaWxlIHNpZ25hdHVy
+ZSBpcyB2YWxpZGF0ZWQgdGhyb3VnaCBQRQpmaWxlIHNpZ25hdHVyZSB2YWxpZGF0aW9uLgpUaGUg
+Ym9vdCBjbWRsaW5lIGFyZ3Mgd2lsbCBhbHNvIGJlIG1lYXN1cmVkIHdpdGgK4oCca2V4ZWMgY21k
+bGluZSBidWZmZXIgbWVhc3VyZeKAnSBjaGFuZ2Ugd2hpY2ggaXMgaW4gcHJvZ3Jlc3MuCmh0dHBz
+Oi8vbGttbC5vcmcvbGttbC8yMDE5LzUvMTAvNzI4CgpMb29raW5nIGF0IHRoZSBwb3dlcnBjIGlt
+cGxlbWVudGF0aW9uIG9mIGtleGVjX2ZpbGVfbG9hZCwgIG1ha2luZwpjaGFuZ2UgdG8gdGhlIGtp
+bWFnZV9hcmNoIGFzIGJlbG93IHNlZW1zIG1vc3QgcmVhc29uYWJsZS4KClN0cnVjdCBraW1hZ2Vf
+YXJjaCB7CiAgICAgICAgICAgICAgICDigKYKICAgICAgICAgICAgICAgIGltYV9sb2dfYnVmZmVy
+CiAgICAgICAgICAgICAgICBpbWFfbG9nX2J1ZmZlcl9zaXplCn07CgpBZGQgcmVzcGVjdGl2ZSBl
+bnRyaWVzIGluIGR0Yi9mZHQgYW5kIHJlYWQgdGhlIHNhbWUgaW4gdGhlIG5leHQga2VybmVsLgpO
+byBjaGFuZ2VzIHRvIHRoZSBwdXJnYXRvcnkgc2hvdWxkIGJlIG5lZWRlZCBzaW5jZSBubyBrZXJu
+ZWwgc2VnbWVudHMKYXJlIGNoYW5nZWQuCgpJcyBhbnlvbmUgYWxyZWFkeSBsb29raW5nIGF0IHRo
+aXM/CklmIG5vdCwgSSB3YW50IHRvIHVuZGVyc3RhbmQgd2hhdOKAmXMgdGhlIGJlc3QgYXBwcm9h
+Y2ggZm9yIHRoaXMgaXM/CgpUaGFua3MsClByYWtoYXIgU3JpdmFzdGF2YQoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
+eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9rZXhlYwo=
