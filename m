@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hPzzk-0003Hx-P5
- for kexec@lists.infradead.org; Mon, 13 May 2019 01:43:14 +0000
-Date: Mon, 13 May 2019 09:43:05 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
- and ACPI tables
-Message-ID: <20190513014248.GA16774@MiWiFi-R3L-srv>
-References: <20190424092944.30481-1-bhe@redhat.com>
- <20190424092944.30481-2-bhe@redhat.com>
- <20190429002318.GA25400@MiWiFi-R3L-srv>
- <20190429135536.GC2324@zn.tnic>
+ id 1hQ093-0006mJ-MR
+ for kexec@lists.infradead.org; Mon, 13 May 2019 01:52:51 +0000
+Date: Mon, 13 May 2019 09:52:41 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [RFC PATCH] vmcore: Add a kernel cmdline device_dump_limit
+Message-ID: <20190513015241.GA8515@dhcp-128-65.nay.redhat.com>
+References: <20190510102051.25647-1-kasong@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190429135536.GC2324@zn.tnic>
+In-Reply-To: <20190510102051.25647-1-kasong@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,180 +23,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: fanc.fnst@cn.fujitsu.com, kasong@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com, j-nomura@ce.jp.nec.com, tglx@linutronix.de, dyoung@redhat.com
+To: Kairui Song <kasong@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Alexey Dobriyan <adobriyan@gmail.com>, Ganesh Goudar <ganeshgr@chelsio.com>
 
-Hi Boris,
+On 05/10/19 at 06:20pm, Kairui Song wrote:
+> Device dump allow drivers to add device related dump data to vmcore as
+> they want. This have a potential issue, the data is stored in memory,
+> drivers may append too much data and use too much memory. The vmcore is
+> typically used in a kdump kernel which runs in a pre-reserved small
+> chunk of memory. So as a result it will make kdump unusable at all due
+> to OOM issues.
+> 
+> So introduce new device_dump_limit= kernel parameter, and set the
+> default limit to 0, so device dump is not enabled unless user specify
+> the accetable maxiam memory usage for device dump data. In this way user
+> will also have the chance to adjust the kdump reserved memory
+> accordingly.
 
-On 04/29/19 at 03:55pm, Borislav Petkov wrote:
-> From: Kairui Song <kasong@redhat.com>
-> Date: Mon, 29 Apr 2019 08:23:18 +0800
-> Subject: [PATCH] x86/kexec: Add the EFI system tables and ACPI tables to the ident map
+The device dump is only affective in kdump 2nd kernel, so add the
+limitation seems not useful.  One is hard to know the correct size
+unless one does some crash test.  If one did the test and want to eanble
+the device dump he needs increase crashkernel= size in 1st kernel and
+add the limit param in 2nd kernel.
+
+So a global on/off param sounds easier and better, something like
+vmcore_device_dump=on  (default is off) 
 
 > 
-> Currently, only the whole physical memory is identity-mapped for the
-> kexec kernel and the regions reserved by firmware are ignored.
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> ---
+>  fs/proc/vmcore.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> However, the recent addition of RSDP parsing in the decompression stage
-> and especially:
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 3fe90443c1bb..e28695ef2439 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -53,6 +53,9 @@ static struct proc_dir_entry *proc_vmcore;
+>  /* Device Dump list and mutex to synchronize access to list */
+>  static LIST_HEAD(vmcoredd_list);
+>  static DEFINE_MUTEX(vmcoredd_mutex);
+> +
+> +/* Device Dump Limit */
+> +static size_t vmcoredd_limit;
+>  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+>  
+>  /* Device Dump Size */
+> @@ -1465,6 +1468,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+>  	data_size = roundup(sizeof(struct vmcoredd_header) + data->size,
+>  			    PAGE_SIZE);
+>  
+> +	if (vmcoredd_orig_sz + data_size >= vmcoredd_limit) {
+> +		ret = -ENOMEM;
+> +		goto out_err;
+> +	}
+> +
+>  	/* Allocate buffer for driver's to write their dumps */
+>  	buf = vmcore_alloc_buf(data_size);
+>  	if (!buf) {
+> @@ -1502,6 +1510,18 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL(vmcore_add_device_dump);
+> +
+> +static int __init parse_vmcoredd_limit(char *arg)
+> +{
+> +	char *end;
+> +
+> +	if (!arg)
+> +		return -EINVAL;
+> +	vmcoredd_limit = memparse(arg, &end);
+> +	return end > arg ? 0 : -EINVAL;
+> +
+> +}
+> +__setup("device_dump_limit=", parse_vmcoredd_limit);
+>  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+>  
+>  /* Free all dumps in vmcore device dump list */
+> -- 
+> 2.20.1
 > 
->   33f0df8d843d ("x86/boot: Search for RSDP in the EFI tables")
-> 
-> which tries to access EFI system tables and to dig out the RDSP address
-> from there, becomes a problem because in certain configurations, they
-> might not be mapped in the kexec'ed kernel's address space.
-> 
-> What is more, this problem doesn't appear on all systems because the
-> kexec kernel uses gigabyte pages to build the identity mapping. And
-> the EFI system tables and ACPI tables can, depending on the system
-> configuration, end up being mapped as part of all physical memory, if
-> they share the same 1 GB area with the physical memory.
-> 
-> Therefore, make sure they're always mapped.
-> 
->  [ bp: productize half-baked patch:
->    - rewrite commit message.
->    - s/init_acpi_pgtable/map_acpi_tables/ in the !ACPI case. ]
-
-Can this patchset be merged, or picked into tip?
 
 Thanks
-Baoquan
-
-> Signed-off-by: Kairui Song <kasong@redhat.com>
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Cc: dyoung@redhat.com
-> Cc: fanc.fnst@cn.fujitsu.com
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: j-nomura@ce.jp.nec.com
-> Cc: kexec@lists.infradead.org
-> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Lianbo Jiang <lijiang@redhat.com>
-> Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: x86-ml <x86@kernel.org>
-> Link: https://lkml.kernel.org/r/20190429002318.GA25400@MiWiFi-R3L-srv
-> ---
->  arch/x86/kernel/machine_kexec_64.c | 75 ++++++++++++++++++++++++++++++
->  1 file changed, 75 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> index ceba408ea982..3c77bdf7b32a 100644
-> --- a/arch/x86/kernel/machine_kexec_64.c
-> +++ b/arch/x86/kernel/machine_kexec_64.c
-> @@ -18,6 +18,7 @@
->  #include <linux/io.h>
->  #include <linux/suspend.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/efi.h>
->  
->  #include <asm/init.h>
->  #include <asm/pgtable.h>
-> @@ -29,6 +30,43 @@
->  #include <asm/setup.h>
->  #include <asm/set_memory.h>
->  
-> +#ifdef CONFIG_ACPI
-> +/*
-> + * Used while adding mapping for ACPI tables.
-> + * Can be reused when other iomem regions need be mapped
-> + */
-> +struct init_pgtable_data {
-> +	struct x86_mapping_info *info;
-> +	pgd_t *level4p;
-> +};
-> +
-> +static int mem_region_callback(struct resource *res, void *arg)
-> +{
-> +	struct init_pgtable_data *data = arg;
-> +	unsigned long mstart, mend;
-> +
-> +	mstart = res->start;
-> +	mend = mstart + resource_size(res) - 1;
-> +
-> +	return kernel_ident_mapping_init(data->info, data->level4p, mstart, mend);
-> +}
-> +
-> +static int
-> +map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p)
-> +{
-> +	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-> +	struct init_pgtable_data data;
-> +
-> +	data.info = info;
-> +	data.level4p = level4p;
-> +	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-> +	return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
-> +				   &data, mem_region_callback);
-> +}
-> +#else
-> +static int map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p) { return 0; }
-> +#endif
-> +
->  #ifdef CONFIG_KEXEC_FILE
->  const struct kexec_file_ops * const kexec_file_loaders[] = {
->  		&kexec_bzImage64_ops,
-> @@ -36,6 +74,31 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
->  };
->  #endif
->  
-> +static int
-> +map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
-> +{
-> +#ifdef CONFIG_EFI
-> +	unsigned long mstart, mend;
-> +
-> +	if (!efi_enabled(EFI_BOOT))
-> +		return 0;
-> +
-> +	mstart = (boot_params.efi_info.efi_systab |
-> +			((u64)boot_params.efi_info.efi_systab_hi<<32));
-> +
-> +	if (efi_enabled(EFI_64BIT))
-> +		mend = mstart + sizeof(efi_system_table_64_t);
-> +	else
-> +		mend = mstart + sizeof(efi_system_table_32_t);
-> +
-> +	if (!mstart)
-> +		return 0;
-> +
-> +	return kernel_ident_mapping_init(info, level4p, mstart, mend);
-> +#endif
-> +	return 0;
-> +}
-> +
->  static void free_transition_pgtable(struct kimage *image)
->  {
->  	free_page((unsigned long)image->arch.p4d);
-> @@ -159,6 +222,18 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
->  			return result;
->  	}
->  
-> +	/*
-> +	 * Prepare EFI systab and ACPI tables for kexec kernel since they are
-> +	 * not covered by pfn_mapped.
-> +	 */
-> +	result = map_efi_systab(&info, level4p);
-> +	if (result)
-> +		return result;
-> +
-> +	result = map_acpi_tables(&info, level4p);
-> +	if (result)
-> +		return result;
-> +
->  	return init_transition_pgtable(image, level4p);
->  }
->  
-> -- 
-> 2.21.0
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> Good mailing practices for 400: avoid top-posting and trim the reply.
+Dave
 
 _______________________________________________
 kexec mailing list
