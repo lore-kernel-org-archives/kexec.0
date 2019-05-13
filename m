@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hQ5SH-0003aZ-OV
- for kexec@lists.infradead.org; Mon, 13 May 2019 07:33:03 +0000
-Date: Mon, 13 May 2019 15:32:54 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
- and ACPI tables
-Message-ID: <20190513073254.GB16774@MiWiFi-R3L-srv>
-References: <20190424092944.30481-1-bhe@redhat.com>
- <20190424092944.30481-2-bhe@redhat.com>
- <20190429002318.GA25400@MiWiFi-R3L-srv>
- <20190429135536.GC2324@zn.tnic>
- <20190513014248.GA16774@MiWiFi-R3L-srv>
- <20190513070725.GA20105@zn.tnic>
+ id 1hQ5gt-00025y-Vx
+ for kexec@lists.infradead.org; Mon, 13 May 2019 07:48:09 +0000
+Subject: Re: [PATCH] kexec/x86: Unconditionally add the acpi_rsdp command line
+References: <20190315093547.6057-1-lijiang@redhat.com>
+ <CACPcB9fwdsj+gOfZUuAUGvPCHn2vF67jH-+2Mc8=mJquaGJSWA@mail.gmail.com>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <4ca9bc6d-a055-5ca0-343f-2060b1887881@redhat.com>
+Date: Mon, 13 May 2019 15:47:56 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190513070725.GA20105@zn.tnic>
+In-Reply-To: <CACPcB9fwdsj+gOfZUuAUGvPCHn2vF67jH-+2Mc8=mJquaGJSWA@mail.gmail.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,34 +20,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: fanc.fnst@cn.fujitsu.com, kasong@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com, j-nomura@ce.jp.nec.com, tglx@linutronix.de, dyoung@redhat.com
+To: Kairui Song <kasong@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>, brijesh.singh@amd.com
 
-On 05/13/19 at 09:07am, Borislav Petkov wrote:
-> Baoquan,
-> 
-> On Mon, May 13, 2019 at 09:43:05AM +0800, Baoquan He wrote:
-> > Can this patchset be merged, or picked into tip?
-> 
-> what is this thing that happens everytime after a kernel is released and
-> lasts for approximately 2 weeks?
-
-This is a critical bug which breaks memory hotplug, since KASLR is
-enabled by default in upstream, and in our distros too. You can see that
-Junichi posted the patch after NEC must have tested the code and found
-the new issue. And Chao from FJ also worked out the patches to fix the bug. 
-And I have tracking  bugs at hand from other important customers, related
-to this fix too. The back porting of Chao's patches into our distros are
-blocked by these two. We gonna miss another due date we promised to customers.
-
-Thanks
-Baoquan
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTnlubQwNeaciDEz5pelIDE0OjQwLCBLYWlydWkgU29uZyDlhpnpgZM6Cj4gT24gRnJp
+LCBNYXIgMTUsIDIwMTkgYXQgNTozNiBQTSBMaWFuYm8gSmlhbmcgPGxpamlhbmdAcmVkaGF0LmNv
+bT4gd3JvdGU6Cj4+Cj4+IFRoZSBMaW51eCBrZXJuZWwgY29tbWl0IDNhNjNmNzBiZjRjMyBpbnRy
+b2R1Y2VzIHRoZSBlYXJseSBwYXJzaW5nCj4+IG9mIHRoZSBSU0RQLiBUaGlzIG1lYW5zIHRoYXQg
+Ym9vdCBsb2FkZXIgbXVzdCBlaXRoZXIgc2V0IHRoZQo+PiBib290X3BhcmFtcy5hY3BpX3JzZHBf
+YWRkciBvciBwYXNzIGEgY29tbWFuZCBsaW5lICdhY3BpX3JzZHA9eHh4Jwo+PiB0byB0ZWxsIHRo
+ZSBSRFNQIHBoeXNpY2FsIGFkZHJlc3MuCj4+Cj4+IEN1cnJlbnRseSwga2V4ZWMgbmVpdGhlciBz
+ZXRzIHRoZSBib290X3BhcmFtcy5hY3BpX3JzZHAgb3IgcGFzc2VzCj4+IGFjcGlfcnNkcCBjb21t
+YW5kIGxpbmUgaWYgaXQgc2VlcyB0aGUgZmlyc3Qga2VybmVsIHN1cHBvcnQgZWZpCj4+IHJ1bnRp
+bWUuIFRoaXMgaXMgY2F1c2luZyB0aGUgc2Vjb25kIGtlcm5lbCBib290IGZhaWx1cmUuCj4+IFRo
+ZSBFRkkgcnVudGltZSBpcyBub3QgYXZhaWxhYmxlIHNvIGVhcmx5IGluIHRoZSBib290IHByb2Nl
+c3Mgc28KPj4gdW5jb25kaXRpb25hbGx5IHBhc3MgdGhlICdhY3BpX3JzZHA9eHh4JyB0byB0aGUg
+c2Vjb25kIGtlcm5lbC4KPj4KPj4gU2lnbmVkLW9mZi1ieTogTGlhbmJvIEppYW5nIDxsaWppYW5n
+QHJlZGhhdC5jb20+Cj4+IFNpZ25lZC1vZmYtYnk6IEJyaWplc2ggU2luZ2ggPGJyaWplc2guc2lu
+Z2hAYW1kLmNvbT4KPj4gLS0tCj4+ICBrZXhlYy9hcmNoL2kzODYvY3Jhc2hkdW1wLXg4Ni5jIHwg
+MTcgKy0tLS0tLS0tLS0tLS0tLS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwg
+MTYgZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9rZXhlYy9hcmNoL2kzODYvY3Jhc2hk
+dW1wLXg4Ni5jIGIva2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYwo+PiBpbmRleCAxNDBm
+NDViLi5hMjliMTViIDEwMDY0NAo+PiAtLS0gYS9rZXhlYy9hcmNoL2kzODYvY3Jhc2hkdW1wLXg4
+Ni5jCj4+ICsrKyBiL2tleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmMKPj4gQEAgLTM1LDcg
+KzM1LDYgQEAKPj4gICNpbmNsdWRlIDxzeXMvdHlwZXMuaD4KPj4gICNpbmNsdWRlIDxzeXMvc3Rh
+dC5oPgo+PiAgI2luY2x1ZGUgPHVuaXN0ZC5oPgo+PiAtI2luY2x1ZGUgPGRpcmVudC5oPgo+PiAg
+I2luY2x1ZGUgIi4uLy4uL2tleGVjLmgiCj4+ICAjaW5jbHVkZSAiLi4vLi4va2V4ZWMtZWxmLmgi
+Cj4+ICAjaW5jbHVkZSAiLi4vLi4va2V4ZWMtc3lzY2FsbC5oIgo+PiBAQCAtNzcyLDE4ICs3NzEs
+NiBAQCBzdGF0aWMgZW51bSBjb3JldHlwZSBnZXRfY29yZV90eXBlKHN0cnVjdCBjcmFzaF9lbGZf
+aW5mbyAqZWxmX2luZm8sCj4+ICAgICAgICAgfQo+PiAgfQo+Pgo+PiAtc3RhdGljIGludCBzeXNm
+c19lZmlfcnVudGltZV9tYXBfZXhpc3Qodm9pZCkKPj4gLXsKPj4gLSAgICAgICBESVIgKmRpcjsK
+Pj4gLQo+PiAtICAgICAgIGRpciA9IG9wZW5kaXIoIi9zeXMvZmlybXdhcmUvZWZpL3J1bnRpbWUt
+bWFwIik7Cj4+IC0gICAgICAgaWYgKCFkaXIpCj4+IC0gICAgICAgICAgICAgICByZXR1cm4gMDsK
+Pj4gLQo+PiAtICAgICAgIGNsb3NlZGlyKGRpcik7Cj4+IC0gICAgICAgcmV0dXJuIDE7Cj4+IC19
+Cj4+IC0KPj4gIC8qIEFwcGVuZHMgJ2FjcGlfcnNkcD0nIGNvbW1hbmRsaW5lIGZvciBlZmkgYm9v
+dCBjcmFzaCBkdW1wICovCj4+ICBzdGF0aWMgdm9pZCBjbWRsaW5lX2FkZF9lZmkoY2hhciAqY21k
+bGluZSkKPj4gIHsKPj4gQEAgLTk3OCw5ICs5NjUsNyBAQCBpbnQgbG9hZF9jcmFzaGR1bXBfc2Vn
+bWVudHMoc3RydWN0IGtleGVjX2luZm8gKmluZm8sIGNoYXIqIG1vZF9jbWRsaW5lLAo+PiAgICAg
+ICAgIGRiZ3ByaW50ZigiQ3JlYXRlZCBlbGYgaGVhZGVyIHNlZ21lbnQgYXQgMHglbHhcbiIsIGVs
+ZmNvcmVoZHIpOwo+PiAgICAgICAgIGlmIChkZWxldGVfbWVtbWFwKG1lbW1hcF9wLCAmbnJfbWVt
+bWFwLCBlbGZjb3JlaGRyLCBtZW1zeikgPCAwKQo+PiAgICAgICAgICAgICAgICAgcmV0dXJuIC0x
+Owo+PiAtICAgICAgIGlmICghYnpJbWFnZV9zdXBwb3J0X2VmaV9ib290IHx8IGFyY2hfb3B0aW9u
+cy5ub2VmaSB8fAo+PiAtICAgICAgICAgICAhc3lzZnNfZWZpX3J1bnRpbWVfbWFwX2V4aXN0KCkp
+Cj4+IC0gICAgICAgICAgICAgICBjbWRsaW5lX2FkZF9lZmkobW9kX2NtZGxpbmUpOwo+PiArICAg
+ICAgIGNtZGxpbmVfYWRkX2VmaShtb2RfY21kbGluZSk7Cj4+ICAgICAgICAgY21kbGluZV9hZGRf
+ZWxmY29yZWhkcihtb2RfY21kbGluZSwgZWxmY29yZWhkcik7Cj4+Cj4+ICAgICAgICAgLyogSW5m
+b3JtIHNlY29uZCBrZXJuZWwgYWJvdXQgdGhlIHByZXNlbmNlIG9mIEFDUEkgdGFibGVzLiAqLwo+
+PiAtLQo+PiAyLjE3LjEKPj4KPj4KPj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KPj4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4+IGtleGVjQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKPj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
+ZXhlYwo+IAo+IEhpIExpYW5ibywKPiAKPiBJJ3ZlIHNlbnQgYW5vdGhlciBwYXRjaCBzaW1pbGlh
+ciB0byB5b3VyczoKPiBbUEFUQ0hdIHg4NjogQWx3YXlzIHRyeSB0byBmaWxsIGFjcGlfcnNkcF9h
+ZGRyIGluIGJvb3QgcGFyYW1zCj4gCj4gSSdsbCB1cGRhdGUgVjIgYW5kIHlvdXIgdXNlIGNhc2Ug
+c2hvdWxkIGFsc28gYmUgY292ZXJlZCBpbiB0aGF0IHBhdGNoLAo+IGFzIHdlIGhhdmUgdGFsa2Vk
+IGluIElSQyBwcmV2aW91c2x5LCB0aGFua3MhCgpPSy4gSSBub3RpY2VkIHRoYXQgdGhlIFJTRFAg
+cGFyc2luZyB3YXMgZGlzYWJsZWQgaW4gdXBzcmVhbSBrZXJuZWwuIFBsZWFzZQpyZWZlciB0byB0
+aGUgZm9sbG93aW5nIGhlYWRpbmc6CgoieDg2L2Jvb3Q6IERpc2FibGUgUlNEUCBwYXJzaW5nIHRl
+bXBvcmFyaWx5IgoKU28sIGZvciB0aGlzIGNhc2UsIG5vIGxvbmdlciBuZWVkIGl0LiBQbGVhc2Ug
+aWdub3JlIGl0LgoKVGhhbmtzLgpMaWFuYm8KPiAKPiAtLQo+IEJlc3QgUmVnYXJkcywKPiBLYWly
+dWkgU29uZwo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
