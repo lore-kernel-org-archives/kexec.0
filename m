@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hQ5ua-00080U-Uo
- for kexec@lists.infradead.org; Mon, 13 May 2019 08:02:18 +0000
-Date: Mon, 13 May 2019 16:02:10 +0800
+ id 1hQ5zA-0001Xq-PC
+ for kexec@lists.infradead.org; Mon, 13 May 2019 08:07:02 +0000
+Date: Mon, 13 May 2019 16:06:53 +0800
 From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
  and ACPI tables
-Message-ID: <20190513080210.GC16774@MiWiFi-R3L-srv>
+Message-ID: <20190513080653.GD16774@MiWiFi-R3L-srv>
 References: <20190424092944.30481-1-bhe@redhat.com>
  <20190424092944.30481-2-bhe@redhat.com>
  <20190429002318.GA25400@MiWiFi-R3L-srv>
@@ -31,8 +31,10 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>, j-nomura@ce.jp.nec.com
-Cc: fanc.fnst@cn.fujitsu.com, kasong@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com
+To: dyoung@redhat.com, Borislav Petkov <bp@alien8.de>
+Cc: fanc.fnst@cn.fujitsu.com, kasong@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com, j-nomura@ce.jp.nec.com, tglx@linutronix.de
+
+Hi Dave,
 
 On 05/13/19 at 09:50am, Borislav Petkov wrote:
 > On Mon, May 13, 2019 at 03:32:54PM +0800, Baoquan He wrote:
@@ -44,6 +46,14 @@ On 05/13/19 at 09:50am, Borislav Petkov wrote:
 > 
 > already explains what the deal is. This code was *purposefully* disabled
 > because we ran out of time and it broke a couple of machines. Don't make
+
+I remember your machine is the one on whihc the issue is reported. Could
+you also test it and confirm if these all things found ealier are
+cleared out?
+
+Thanks
+Baoquan
+
 > me repeat all that - you were on CC on *all* threads and messages!
 > 
 > So we're going to try it again this cycle and if there's no fallout, it
@@ -56,16 +66,12 @@ On 05/13/19 at 09:50am, Borislav Petkov wrote:
 > So go test it on more machines instead. I've pushed it here:
 > 
 > https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=next-merge-window
-
-Pingfan has got a machine to reproduce the kexec breakage issue, and
-applying these two patches fix it. He planned to paste the test result.
-I will ask him to try this branch if he has time, or I can get his
-machine to test.
-
-Junichi, also have a try on Boris's branch in NEC's test environment?
-
-Thanks
-Baoquan
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
