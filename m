@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hQPhs-00021M-RM
- for kexec@lists.infradead.org; Tue, 14 May 2019 05:10:30 +0000
+ id 1hQPms-0003YB-Rn
+ for kexec@lists.infradead.org; Tue, 14 May 2019 05:15:40 +0000
 From: Kairui Song <kasong@redhat.com>
-Subject: [PATCH v2 3/4] x86: Always try to fill acpi_rsdp_addr in boot params
-Date: Tue, 14 May 2019 13:09:59 +0800
-Message-Id: <20190514050959.21093-4-kasong@redhat.com>
+Subject: [PATCH v2 4/4] crashdump/x86: Use new introduced helper for getting
+ RSDP
+Date: Tue, 14 May 2019 13:15:19 +0800
+Message-Id: <20190514051519.21942-1-kasong@redhat.com>
 In-Reply-To: <20190514050959.21093-1-kasong@redhat.com>
 References: <20190514050959.21093-1-kasong@redhat.com>
 MIME-Version: 1.0
@@ -25,33 +26,63 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>, Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>
 
-Since kernel commit e6e094e053af75 ("x86/acpi, x86/boot: Take RSDP address
-from boot params if available"), kernel accept an acpi_rsdp_addr param in
-boot_params. So fill in this parameter unconditionally, ensure second
-kernel always get the right RSDP address consistently, and boot well on
-EFI system even with EFI service disabled. User no longer need to change
-the kernel cmdline to workaround the missing RSDP issue.
-
-For older version of kernels (Before 5.0), there won't be any change of
-behavior.
+Use the new introduced helper for getting RSDP, this ensures RSDP is
+always accessible and avoid code duplication.
 
 Signed-off-by: Kairui Song <kasong@redhat.com>
 ---
- kexec/arch/i386/x86-linux-setup.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kexec/arch/i386/crashdump-x86.c | 34 +++++++++------------------------
+ 1 file changed, 9 insertions(+), 25 deletions(-)
 
-diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index 5ca7c25..5b00b42 100644
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -901,4 +901,7 @@ void setup_linux_system_parameters(struct kexec_info *info,
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 140f45b..a2aea31 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -787,35 +787,19 @@ static int sysfs_efi_runtime_map_exist(void)
+ /* Appends 'acpi_rsdp=' commandline for efi boot crash dump */
+ static void cmdline_add_efi(char *cmdline)
+ {
+-	FILE *fp;
+-	int cmdlen, len;
+-	char line[MAX_LINE], *s;
+-	const char *acpis = " acpi_rsdp=";
++	uint64_t acpi_rsdp;
++	char acpi_rsdp_buf[MAX_LINE];
  
- 	/* fill the EDD information */
- 	setup_edd_info(real_mode);
-+
-+	/* Always try to fill acpi_rsdp_addr */
-+	real_mode->acpi_rsdp_addr = get_acpi_rsdp();
+-	fp = fopen("/sys/firmware/efi/systab", "r");
+-	if (!fp)
+-		return;
++	acpi_rsdp = get_acpi_rsdp();
+ 
+-	while(fgets(line, sizeof(line), fp) != 0) {
+-		/* ACPI20= always goes before ACPI= */
+-		if ((strstr(line, "ACPI20=")) || (strstr(line, "ACPI="))) {
+-		        line[strlen(line) - 1] = '\0';
+-			s = strchr(line, '=');
+-			s += 1;
+-			len = strlen(s) + strlen(acpis);
+-			cmdlen = strlen(cmdline) + len;
+-			if (cmdlen > (COMMAND_LINE_SIZE - 1))
+-				die("Command line overflow\n");
+-			strcat(cmdline, acpis);
+-			strcat(cmdline, s);
+-			dbgprintf("Command line after adding efi\n");
+-			dbgprintf("%s\n", cmdline);
++	if (!acpi_rsdp)
++		return;
+ 
+-			break;
+-		}
+-	}
++	sprintf(acpi_rsdp_buf, " acpi_rsdp=0x%lx", acpi_rsdp);
++	if (strlen(cmdline) + strlen(acpi_rsdp_buf) > (COMMAND_LINE_SIZE - 1))
++		die("Command line overflow\n");
+ 
+-	fclose(fp);
++	strcat(cmdline, acpi_rsdp_buf);
  }
+ 
+ static void get_backup_area(struct kexec_info *info,
 -- 
 2.20.1
 
