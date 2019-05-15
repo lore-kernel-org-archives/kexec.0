@@ -1,24 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hQo3i-0008EE-07
- for kexec@lists.infradead.org; Wed, 15 May 2019 07:10:39 +0000
-From: Junichi Nomura <j-nomura@ce.jp.nec.com>
-Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
- and ACPI tables
-Date: Wed, 15 May 2019 07:09:43 +0000
-Message-ID: <20190515070942.GA17154@jeru.linux.bs1.fc.nec.co.jp>
-References: <20190424092944.30481-2-bhe@redhat.com>
- <20190429002318.GA25400@MiWiFi-R3L-srv> <20190429135536.GC2324@zn.tnic>
- <20190513014248.GA16774@MiWiFi-R3L-srv> <20190513070725.GA20105@zn.tnic>
- <20190513073254.GB16774@MiWiFi-R3L-srv> <20190513075006.GB20105@zn.tnic>
- <20190513080210.GC16774@MiWiFi-R3L-srv>
- <20190515051717.GA13703@jeru.linux.bs1.fc.nec.co.jp>
- <20190515065843.GA24212@zn.tnic>
-In-Reply-To: <20190515065843.GA24212@zn.tnic>
-Content-Language: ja-JP
-Content-ID: <A094AF2DEB5936499C61698B73C9C0AC@gisp.nec.co.jp>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1hQoWf-00022q-VW
+ for kexec@lists.infradead.org; Wed, 15 May 2019 07:40:35 +0000
+Date: Wed, 15 May 2019 09:40:28 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] xen: Avoid overlapping segments in low memory
+Message-ID: <20190515074027.fzvcrpn3vtwmwrx5@verge.net.au>
+References: <3d9c5c7c501b4d97feffae2bdb6fc84fb40e144a.camel@infradead.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3d9c5c7c501b4d97feffae2bdb6fc84fb40e144a.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,98 +19,26 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "kasong@redhat.com" <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "dyoung@redhat.com" <dyoung@redhat.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: kexec <kexec@lists.infradead.org>
 
-On 5/15/19 3:58 PM, Borislav Petkov wrote:
-> On Wed, May 15, 2019 at 05:17:19AM +0000, Junichi Nomura wrote:
->> Hi Kairui,
->>
->> On 5/13/19 5:02 PM, Baoquan He wrote:
->>> On 05/13/19 at 09:50am, Borislav Petkov wrote:
->>>> On Mon, May 13, 2019 at 03:32:54PM +0800, Baoquan He wrote:
->>>> So we're going to try it again this cycle and if there's no fallout, it
->>>> will go upstream. If not, it will have to be fixed. The usual thing.
->>>>
->>>> And I don't care if Kairui's patch fixes this one problem - judging by
->>>> the fragility of this whole thing, it should be hammered on one more
->>>> cycle on as many boxes as possible to make sure there's no other SNAFUs.
->>>>
->>>> So go test it on more machines instead. I've pushed it here:
->>>>
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=next-merge-window
->>>
->>> Pingfan has got a machine to reproduce the kexec breakage issue, and
->>> applying these two patches fix it. He planned to paste the test result.
->>> I will ask him to try this branch if he has time, or I can get his
->>> machine to test.
->>>
->>> Junichi, also have a try on Boris's branch in NEC's test environment?
->>
->> while the patch set works on most of the machines I'm testing around,
->> I found kexec(1) fails to load kernel on a few machines if this patch
->> is applied.  Those machines don't have IORES_DESC_ACPI_TABLES region
->> and have ACPI tables in IORES_DESC_ACPI_NV_STORAGE region instead.
-> 
-> Why? What kind of machines are those?
-
-I don't know.  They are just general purpose Xeon-based servers
-and not some special purpose machines.  So I guess there are other
-such machines in the wild.
-
-> Why are the ACPI tables in NV storage?
-> 
-> Looking at crash_setup_memmap_entries(), it already maps that type so I
-> guess this is needed.
-> 
-> + Rafael and leaving in the rest for reference.
-> 
->  
->> So I think map_acpi_tables() should try to map both regions.  I tried
->> following change in addition and it worked.
->>
->> -- 
->> Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
->>
->>
->> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
->> index 3c77bdf..3837c4a 100644
->> --- a/arch/x86/kernel/machine_kexec_64.c
->> +++ b/arch/x86/kernel/machine_kexec_64.c
->> @@ -56,12 +56,22 @@ static int mem_region_callback(struct resource *res, void *arg)
->>  {
->>  	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
->>  	struct init_pgtable_data data;
->> +	int ret;
->>  
->>  	data.info = info;
->>  	data.level4p = level4p;
->>  	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
->> -	return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
->> -				   &data, mem_region_callback);
->> +	ret = walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
->> +				  &data, mem_region_callback);
->> +	if (ret && ret != -EINVAL)
->> +		return ret;
->> +
->> +	ret = walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1,
->> +				  &data, mem_region_callback);
->> +	if (ret && ret != -EINVAL)
->> +		return ret;
->> +
->> +	return 0;
->>  }
->>  #else
->>  static int map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p) { return 0; }
-
--- 
-Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU3VuLCBBcHIgMjgsIDIwMTkgYXQgMDE6NTI6MTJQTSArMDMwMCwgRGF2aWQgV29vZGhvdXNl
+IHdyb3RlOgo+IEZyb206IERhdmlkIFdvb2Rob3VzZSA8ZHdtd0BhbWF6b24uY28udWs+Cj4gCj4g
+VW5saWtlIExpbnV4IHdoaWNoIGNyZWF0ZXMgYSBmdWxsIGlkZW50aXR5IG1hcHBpbmcsIFhlbiBv
+bmx5IG1hcHMgdGhvc2UKPiBzZWdtZW50cyB3aGljaCBhcmUgZXhwbGljaXRseSByZXF1ZXN0ZWQu
+IFRoZXJlZm9yZSwgeGVuX2tleGVjX2xvYWQoKQo+IHNpbGVudGx5IGFkZHMgaW4gYSBzZWdtZW50
+IGZyb20gemVybyB0byAxTWlCIHRvIGVuc3VyZSB0aGF0IFZHQSBtZW1vcnkKPiBhbmQgb3RoZXIg
+dGhpbmdzIGFyZSBhY2Nlc3NpYmxlLgo+IAo+IEhvd2V2ZXIsIHRoaXMgZG9lc24ndCB3b3JrIHdo
+ZW4gdGhlcmUgYXJlIGFscmVhZHkgc2VnbWVudHMgdG8gYmUgbG9hZGVkCj4gdW5kZXIgMU1pQiwg
+YmVjYXVzZSB0aGUgb3ZlcmxhcCBjYXVzZXMgWGVuIHRvIHJlamVjdCB0aGUga2V4ZWNfbG9hZC4K
+PiAKPiBCZSBtb3JlIGNhcmVmdWwgYW5kIGp1c3QgaW5maWxsIHRoZSByYW5nZXMgd2hpY2ggYXJl
+IHJlcXVpcmVkIGluc3RlYWQKPiBvZiBuYcOvdmVseSBhZGRpbmcgYSBmdWxsIDAtMU1pQiBzZWdt
+ZW50IGF0IHRoZSBlbmQgb2YgdGhlIGxpc3QuCj4gCj4gU2lnbmVkLW9mZi1ieTogRGF2aWQgV29v
+ZGhvdXNlIDxkd213QGFtYXpvbi5jby51az4KClRoYW5rcyBEYXZpZCwKCmFwcGxpZWQuCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
+IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
