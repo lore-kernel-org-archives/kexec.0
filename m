@@ -1,26 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pl1-f195.google.com ([209.85.214.195])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hQiPo-0006Uo-R5
- for kexec@lists.infradead.org; Wed, 15 May 2019 01:09:06 +0000
-Date: Wed, 15 May 2019 09:08:50 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
- and ACPI tables
-Message-ID: <20190515010850.GA9159@dhcp-128-65.nay.redhat.com>
-References: <20190513014248.GA16774@MiWiFi-R3L-srv>
- <20190513070725.GA20105@zn.tnic>
- <20190513073254.GB16774@MiWiFi-R3L-srv>
- <20190513075006.GB20105@zn.tnic>
- <20190513080653.GD16774@MiWiFi-R3L-srv>
- <20190514032208.GA25875@dhcp-128-65.nay.redhat.com>
- <20190514084841.GA27876@dhcp-128-65.nay.redhat.com>
- <20190514113826.GM2589@hirez.programming.kicks-ass.net>
- <20190514125835.GA29045@dhcp-128-65.nay.redhat.com>
- <20190514140916.GA90245@gmail.com>
+ id 1hQm7f-0007f5-Br
+ for kexec@lists.infradead.org; Wed, 15 May 2019 05:06:38 +0000
+Received: by mail-pl1-f195.google.com with SMTP id f12so709252plt.8
+ for <kexec@lists.infradead.org>; Tue, 14 May 2019 22:06:34 -0700 (PDT)
+Subject: Re: [PATCH 0/4] support reserving crashkernel above 4G on arm64 kdump
+References: <20190507035058.63992-1-chenzhou10@huawei.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Message-ID: <a9d017d0-82d3-3e5f-4af2-4c611393106d@redhat.com>
+Date: Wed, 15 May 2019 10:36:24 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190514140916.GA90245@gmail.com>
+In-Reply-To: <20190507035058.63992-1-chenzhou10@huawei.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,60 +21,124 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: x86@kernel.org, kasong@redhat.com, Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, fanc.fnst@cn.fujitsu.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, hpa@zytor.com, j-nomura@ce.jp.nec.com, tglx@linutronix.de
+To: Chen Zhou <chenzhou10@huawei.com>, catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, ard.biesheuvel@linaro.org, rppt@linux.ibm.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com
+Cc: wangkefeng.wang@huawei.com, takahiro.akashi@linaro.org, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, horms@verge.net.au, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel@lists.infradead.org
 
-On 05/14/19 at 04:09pm, Ingo Molnar wrote:
++Cc kexec-list.
+
+Hi Chen,
+
+I think we are still in the quiet period of the merge cycle, but this is 
+a change which will be useful for systems like HPE Apollo where we are 
+looking at reserving crashkernel across a larger range.
+
+Some comments inline and in respective patch threads..
+
+On 05/07/2019 09:20 AM, Chen Zhou wrote:
+> This patch series enable reserving crashkernel on high memory in arm64.
+
+Please fix the patch subject, it should be v5.
+Also please Cc the kexec-list (kexec@lists.infradead.org) for future 
+versions to allow wider review of the patchset.
+
+> We use crashkernel=X to reserve crashkernel below 4G, which will fail
+> when there is no enough memory. Currently, crashkernel=Y@X can be used
+> to reserve crashkernel above 4G, in this case, if swiotlb or DMA buffers
+> are requierd, capture kernel will boot failure because of no low memory.
+
+... ^^ required
+
+s/capture kernel will boot failure because of no low memory./capture 
+kernel boot will fail because there is no low memory available for 
+allocation.
+
+> When crashkernel is reserved above 4G in memory, kernel should reserve
+> some amount of low memory for swiotlb and some DMA buffers. So there may
+> be two crash kernel regions, one is below 4G, the other is above 4G. Then
+> Crash dump kernel reads more than one crash kernel regions via a dtb
+> property under node /chosen,
+> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
+
+Please use consistent naming for the second kernel, better to use crash 
+dump kernel.
+
+I have tested this on my HPE Apollo machine and with 
+crashkernel=886M,high syntax, I can get the board to reserve a larger 
+memory range for the crashkernel (i.e. 886M):
+
+# dmesg | grep -i crash
+[    0.000000] kexec_core: Reserving 256MB of low memory at 3560MB for 
+crashkernel (System low RAM: 2029MB)
+[    0.000000] crashkernel reserved: 0x0000000bc5a00000 - 
+0x0000000bfd000000 (886 MB)
+
+kexec/kdump can also work also work fine on the board.
+
+So, with the changes suggested in this cover letter and individual 
+patches, please feel free to add:
+
+Reviewed-and-Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
+
+Thanks,
+Bhupesh
+
+> Besides, we need to modify kexec-tools:
+>    arm64: support more than one crash kernel regions(see [1])
 > 
-> * Dave Young <dyoung@redhat.com> wrote:
+> I post this patch series about one month ago. The previous changes and
+> discussions can be retrived from:
 > 
-> > On 05/14/19 at 01:38pm, Peter Zijlstra wrote:
-> > > On Tue, May 14, 2019 at 04:48:41PM +0800, Dave Young wrote:
-> > > 
-> > > > > I did some tests on the laptop,  thing is:
-> > > > > 1. apply the 3 patches (two you posted + Boris's revert commit 52b922c3d49c)
-> > > > >    on latest Linus master branch, everything works fine.
-> > > > > 
-> > > > > 2. build and test the tip/next-merge-window branch, kernel hangs early
-> > > > > without output, (both 1st boot and kexec boot)
-> > > > 
-> > > > Update about 2.  It should be not early rsdp related, I got the boot log
-> > > > Since can not reproduce with Linus master branch it may have been fixed.
-> > > 
-> > > Nothing was changed here since PTI.
-> > > 
-> > > > [    0.685374][    T1] rcu: Hierarchical SRCU implementation.
-> > > > [    0.686414][    T1] general protection fault: 0000 [#1] SMP PTI
-> > > > [    0.687328][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.1.0-rc6+ #877
-> > > > [    0.687328][    T1] Hardware name: LENOVO 4236NUC/4236NUC, BIOS 83ET82WW (1.52 ) 06/04/2018
-> > > > [    0.687328][    T1] RIP: 0010:reserve_ds_buffers+0x34e/0x450
-> > > 
-> > > > [    0.687328][    T1] Call Trace:
-> > > > [    0.687328][    T1]  ? hardlockup_detector_event_create+0x50/0x50
-> > > > [    0.687328][    T1]  x86_reserve_hardware+0x173/0x180
-> > > > [    0.687328][    T1]  x86_pmu_event_init+0x39/0x220
-> > > 
-> > > The DS buffers are special in that they're part of cpu_entrt_area. If
-> > > this comes apart it might mean your pagetables are dodgy.
-> > 
-> > Hmm, it seems caused by some WIP branch patches, I suspect below:
-> > commit 124d6af5a5f559e516ed2c6ea857e889ed293b43
-> > x86/paravirt: Standardize 'insn_buff' variable names
+> Changes since [v4]
+> - reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
 > 
-> This commit had a bug which I fixed - could you try the latest -tip?
+> Changes since [v3]
+> - Add memblock_cap_memory_ranges back for multiple ranges.
+> - Fix some compiling warnings.
+> 
+> Changes since [v2]
+> - Split patch "arm64: kdump: support reserving crashkernel above 4G" as
+>    two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
+>    patch.
+> 
+> Changes since [v1]:
+> - Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
+> - Remove memblock_cap_memory_ranges() i added in v1 and implement that
+>    in fdt_enforce_memory_region().
+>    There are at most two crash kernel regions, for two crash kernel regions
+>    case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
+>    and then remove the memory range in the middle.
+> 
+> [1]: http://lists.infradead.org/pipermail/kexec/2019-April/022792.html
+> [v1]: https://lkml.org/lkml/2019/4/2/1174
+> [v2]: https://lkml.org/lkml/2019/4/9/86
+> [v3]: https://lkml.org/lkml/2019/4/9/306
+> [v4]: https://lkml.org/lkml/2019/4/15/273
+> 
+> Chen Zhou (3):
+>    x86: kdump: move reserve_crashkernel_low() into kexec_core.c
+>    arm64: kdump: support reserving crashkernel above 4G
+>    kdump: update Documentation about crashkernel on arm64
+> 
+> Mike Rapoport (1):
+>    memblock: extend memblock_cap_memory_range to multiple ranges
+> 
+>   Documentation/admin-guide/kernel-parameters.txt |  6 +--
+>   arch/arm64/include/asm/kexec.h                  |  3 ++
+>   arch/arm64/kernel/setup.c                       |  3 ++
+>   arch/arm64/mm/init.c                            | 72 +++++++++++++++++++------
+>   arch/x86/include/asm/kexec.h                    |  3 ++
+>   arch/x86/kernel/setup.c                         | 66 +++--------------------
+>   include/linux/kexec.h                           |  5 ++
+>   include/linux/memblock.h                        |  2 +-
+>   kernel/kexec_core.c                             | 56 +++++++++++++++++++
+>   mm/memblock.c                                   | 44 +++++++--------
+>   10 files changed, 157 insertions(+), 103 deletions(-)
+> 
 
-Will do, but I do not use tip tree often, not sure which branch includes
-the fix.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/
-Is it tip/master or tip/tip?
-
-Thanks
-Dave
 
 _______________________________________________
 kexec mailing list
