@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hQtz8-0001Rx-6V
- for kexec@lists.infradead.org; Wed, 15 May 2019 13:30:19 +0000
-Date: Wed, 15 May 2019 15:30:06 +0200
-From: Borislav Petkov <bp@alien8.de>
+ id 1hR4ws-0007jB-OR
+ for kexec@lists.infradead.org; Thu, 16 May 2019 01:12:44 +0000
 Subject: Re: [PATCH 2/3 v3] x86/kexec: Set the C-bit in the identity map page
  table when SEV is active
-Message-ID: <20190515133006.GG24212@zn.tnic>
 References: <20190430074421.7852-1-lijiang@redhat.com>
- <20190430074421.7852-3-lijiang@redhat.com>
+ <20190430074421.7852-3-lijiang@redhat.com> <20190515133006.GG24212@zn.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <4707fb2d-b7d3-34e3-a488-8aa9bdca05f1@redhat.com>
+Date: Thu, 16 May 2019 09:12:26 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190430074421.7852-3-lijiang@redhat.com>
+In-Reply-To: <20190515133006.GG24212@zn.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,90 +21,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
 Cc: Thomas.Lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On Tue, Apr 30, 2019 at 03:44:20PM +0800, Lianbo Jiang wrote:
-> When SEV is active, the second kernel image is loaded into the
-> encrypted memory. Lets make sure that when kexec builds the
-> identity mapping page table it adds the memory encryption mask(C-bit).
-> 
-> Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> ---
->  arch/x86/kernel/machine_kexec_64.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> index f60611531d17..11fe352f7344 100644
-> --- a/arch/x86/kernel/machine_kexec_64.c
-> +++ b/arch/x86/kernel/machine_kexec_64.c
-> @@ -56,6 +56,7 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
->  	pte_t *pte;
->  	unsigned long vaddr, paddr;
->  	int result = -ENOMEM;
-> +	pgprot_t prot = PAGE_KERNEL_EXEC_NOENC;
->  
->  	vaddr = (unsigned long)relocate_kernel;
->  	paddr = __pa(page_address(image->control_code_page)+PAGE_SIZE);
-> @@ -92,7 +93,11 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
->  		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
->  	}
->  	pte = pte_offset_kernel(pmd, vaddr);
-> -	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, PAGE_KERNEL_EXEC_NOENC));
-> +
-> +	if (sev_active())
-> +		prot = PAGE_KERNEL_EXEC;
-> +
-> +	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
->  	return 0;
->  err:
->  	return result;
-> @@ -129,6 +134,11 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
->  	level4p = (pgd_t *)__va(start_pgtable);
->  	clear_page(level4p);
->  
-> +	if (sev_active()) {
-> +		info.page_flag |= _PAGE_ENC;
-> +		info.kernpg_flag = _KERNPG_TABLE;
-
-kernpg_flag above is initialized to _KERNPG_TABLE_NOENC so you can do here
-
-		info.kernpg_flag |= _PAGE_ENC;
-
-too, to make it even more clear what this does, right?
-
-IOW:
-
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 783ce5184405..16c37fe489bc 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -135,8 +135,8 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
-        clear_page(level4p);
- 
-        if (sev_active()) {
--               info.page_flag |= _PAGE_ENC;
--               info.kernpg_flag = _KERNPG_TABLE;
-+               info.page_flag   |= _PAGE_ENC;
-+               info.kernpg_flag |= _PAGE_ENC;
-        }
- 
-        if (direct_gbpages)
-
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTnlubQwNeaciDE15pelIDIxOjMwLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
+IFR1ZSwgQXByIDMwLCAyMDE5IGF0IDAzOjQ0OjIwUE0gKzA4MDAsIExpYW5ibyBKaWFuZyB3cm90
+ZToKPj4gV2hlbiBTRVYgaXMgYWN0aXZlLCB0aGUgc2Vjb25kIGtlcm5lbCBpbWFnZSBpcyBsb2Fk
+ZWQgaW50byB0aGUKPj4gZW5jcnlwdGVkIG1lbW9yeS4gTGV0cyBtYWtlIHN1cmUgdGhhdCB3aGVu
+IGtleGVjIGJ1aWxkcyB0aGUKPj4gaWRlbnRpdHkgbWFwcGluZyBwYWdlIHRhYmxlIGl0IGFkZHMg
+dGhlIG1lbW9yeSBlbmNyeXB0aW9uIG1hc2soQy1iaXQpLgo+Pgo+PiBDby1kZXZlbG9wZWQtYnk6
+IEJyaWplc2ggU2luZ2ggPGJyaWplc2guc2luZ2hAYW1kLmNvbT4KPj4gU2lnbmVkLW9mZi1ieTog
+QnJpamVzaCBTaW5naCA8YnJpamVzaC5zaW5naEBhbWQuY29tPgo+PiBTaWduZWQtb2ZmLWJ5OiBM
+aWFuYm8gSmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4KPj4gLS0tCj4+ICBhcmNoL3g4Ni9rZXJu
+ZWwvbWFjaGluZV9rZXhlY182NC5jIHwgMTIgKysrKysrKysrKystCj4+ICAxIGZpbGUgY2hhbmdl
+ZCwgMTEgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJj
+aC94ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQuYyBiL2FyY2gveDg2L2tlcm5lbC9tYWNoaW5l
+X2tleGVjXzY0LmMKPj4gaW5kZXggZjYwNjExNTMxZDE3Li4xMWZlMzUyZjczNDQgMTAwNjQ0Cj4+
+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0LmMKPj4gKysrIGIvYXJjaC94
+ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQuYwo+PiBAQCAtNTYsNiArNTYsNyBAQCBzdGF0aWMg
+aW50IGluaXRfdHJhbnNpdGlvbl9wZ3RhYmxlKHN0cnVjdCBraW1hZ2UgKmltYWdlLCBwZ2RfdCAq
+cGdkKQo+PiAgCXB0ZV90ICpwdGU7Cj4+ICAJdW5zaWduZWQgbG9uZyB2YWRkciwgcGFkZHI7Cj4+
+ICAJaW50IHJlc3VsdCA9IC1FTk9NRU07Cj4+ICsJcGdwcm90X3QgcHJvdCA9IFBBR0VfS0VSTkVM
+X0VYRUNfTk9FTkM7Cj4+ICAKPj4gIAl2YWRkciA9ICh1bnNpZ25lZCBsb25nKXJlbG9jYXRlX2tl
+cm5lbDsKPj4gIAlwYWRkciA9IF9fcGEocGFnZV9hZGRyZXNzKGltYWdlLT5jb250cm9sX2NvZGVf
+cGFnZSkrUEFHRV9TSVpFKTsKPj4gQEAgLTkyLDcgKzkzLDExIEBAIHN0YXRpYyBpbnQgaW5pdF90
+cmFuc2l0aW9uX3BndGFibGUoc3RydWN0IGtpbWFnZSAqaW1hZ2UsIHBnZF90ICpwZ2QpCj4+ICAJ
+CXNldF9wbWQocG1kLCBfX3BtZChfX3BhKHB0ZSkgfCBfS0VSTlBHX1RBQkxFKSk7Cj4+ICAJfQo+
+PiAgCXB0ZSA9IHB0ZV9vZmZzZXRfa2VybmVsKHBtZCwgdmFkZHIpOwo+PiAtCXNldF9wdGUocHRl
+LCBwZm5fcHRlKHBhZGRyID4+IFBBR0VfU0hJRlQsIFBBR0VfS0VSTkVMX0VYRUNfTk9FTkMpKTsK
+Pj4gKwo+PiArCWlmIChzZXZfYWN0aXZlKCkpCj4+ICsJCXByb3QgPSBQQUdFX0tFUk5FTF9FWEVD
+Owo+PiArCj4+ICsJc2V0X3B0ZShwdGUsIHBmbl9wdGUocGFkZHIgPj4gUEFHRV9TSElGVCwgcHJv
+dCkpOwo+PiAgCXJldHVybiAwOwo+PiAgZXJyOgo+PiAgCXJldHVybiByZXN1bHQ7Cj4+IEBAIC0x
+MjksNiArMTM0LDExIEBAIHN0YXRpYyBpbnQgaW5pdF9wZ3RhYmxlKHN0cnVjdCBraW1hZ2UgKmlt
+YWdlLCB1bnNpZ25lZCBsb25nIHN0YXJ0X3BndGFibGUpCj4+ICAJbGV2ZWw0cCA9IChwZ2RfdCAq
+KV9fdmEoc3RhcnRfcGd0YWJsZSk7Cj4+ICAJY2xlYXJfcGFnZShsZXZlbDRwKTsKPj4gIAo+PiAr
+CWlmIChzZXZfYWN0aXZlKCkpIHsKPj4gKwkJaW5mby5wYWdlX2ZsYWcgfD0gX1BBR0VfRU5DOwo+
+PiArCQlpbmZvLmtlcm5wZ19mbGFnID0gX0tFUk5QR19UQUJMRTsKPiAKPiBrZXJucGdfZmxhZyBh
+Ym92ZSBpcyBpbml0aWFsaXplZCB0byBfS0VSTlBHX1RBQkxFX05PRU5DIHNvIHlvdSBjYW4gZG8g
+aGVyZQo+IAo+IAkJaW5mby5rZXJucGdfZmxhZyB8PSBfUEFHRV9FTkM7Cj4gCj4gdG9vLCB0byBt
+YWtlIGl0IGV2ZW4gbW9yZSBjbGVhciB3aGF0IHRoaXMgZG9lcywgcmlnaHQ/Cj4gCk9LLCBpIHdp
+bGwgbW9kaWZ5IGl0IGFjY29yZGluZyB0byB5b3VyIHN1Z2dlc3Rpb24gYW5kIHBvc3QgYWdhaW4u
+CgpUaGFua3MuCkxpYW5ibwoKPiBJT1c6Cj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5l
+bC9tYWNoaW5lX2tleGVjXzY0LmMgYi9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5j
+Cj4gaW5kZXggNzgzY2U1MTg0NDA1Li4xNmMzN2ZlNDg5YmMgMTAwNjQ0Cj4gLS0tIGEvYXJjaC94
+ODYva2VybmVsL21hY2hpbmVfa2V4ZWNfNjQuYwo+ICsrKyBiL2FyY2gveDg2L2tlcm5lbC9tYWNo
+aW5lX2tleGVjXzY0LmMKPiBAQCAtMTM1LDggKzEzNSw4IEBAIHN0YXRpYyBpbnQgaW5pdF9wZ3Rh
+YmxlKHN0cnVjdCBraW1hZ2UgKmltYWdlLCB1bnNpZ25lZCBsb25nIHN0YXJ0X3BndGFibGUpCj4g
+ICAgICAgICBjbGVhcl9wYWdlKGxldmVsNHApOwo+ICAKPiAgICAgICAgIGlmIChzZXZfYWN0aXZl
+KCkpIHsKPiAtICAgICAgICAgICAgICAgaW5mby5wYWdlX2ZsYWcgfD0gX1BBR0VfRU5DOwo+IC0g
+ICAgICAgICAgICAgICBpbmZvLmtlcm5wZ19mbGFnID0gX0tFUk5QR19UQUJMRTsKPiArICAgICAg
+ICAgICAgICAgaW5mby5wYWdlX2ZsYWcgICB8PSBfUEFHRV9FTkM7Cj4gKyAgICAgICAgICAgICAg
+IGluZm8ua2VybnBnX2ZsYWcgfD0gX1BBR0VfRU5DOwo+ICAgICAgICAgfQo+ICAKPiAgICAgICAg
+IGlmIChkaXJlY3RfZ2JwYWdlcykKPiAKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
