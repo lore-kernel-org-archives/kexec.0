@@ -1,20 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hREfy-0007Yn-9w
- for kexec@lists.infradead.org; Thu, 16 May 2019 11:35:55 +0000
-Subject: Re: [PATCH 2/3 v3] x86/kexec: Set the C-bit in the identity map page
- table when SEV is active
-References: <20190430074421.7852-1-lijiang@redhat.com>
- <20190430074421.7852-3-lijiang@redhat.com> <20190515133006.GG24212@zn.tnic>
- <4707fb2d-b7d3-34e3-a488-8aa9bdca05f1@redhat.com>
- <0650D79F-2B12-4A80-A37A-F318B5C9ECBC@alien8.de>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <9e2f1d7b-eb3b-1903-cc7a-30bc5d5f20fc@redhat.com>
-Date: Thu, 16 May 2019 19:35:37 +0800
+ id 1hRd7n-0002I0-Ko
+ for kexec@lists.infradead.org; Fri, 17 May 2019 13:42:17 +0000
+Date: Fri, 17 May 2019 15:41:59 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
+ and ACPI tables
+Message-ID: <20190517134159.GA13482@zn.tnic>
+References: <20190424092944.30481-1-bhe@redhat.com>
+ <20190424092944.30481-2-bhe@redhat.com>
+ <20190429002318.GA25400@MiWiFi-R3L-srv>
+ <20190429135536.GC2324@zn.tnic>
+ <20190513014248.GA16774@MiWiFi-R3L-srv>
+ <20190513070725.GA20105@zn.tnic>
+ <20190513073254.GB16774@MiWiFi-R3L-srv>
+ <20190513075006.GB20105@zn.tnic>
+ <20190513080653.GD16774@MiWiFi-R3L-srv>
+ <20190514032208.GA25875@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <0650D79F-2B12-4A80-A37A-F318B5C9ECBC@alien8.de>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190514032208.GA25875@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,18 +29,26 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Boris Petkov <bp@alien8.de>
-Cc: Thomas.Lendacky@amd.com, brijesh.singh@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
+To: Dave Young <dyoung@redhat.com>
+Cc: fanc.fnst@cn.fujitsu.com, kasong@redhat.com, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com, j-nomura@ce.jp.nec.com, tglx@linutronix.de
 
-5ZyoIDIwMTnlubQwNeaciDE25pelIDE2OjE1LCBCb3JpcyBQZXRrb3Yg5YaZ6YGTOgo+IE9uIE1h
-eSAxNiwgMjAxOSAzOjEyOjI2IEFNIEdNVCswMjowMCwgbGlqaWFuZyA8bGlqaWFuZ0ByZWRoYXQu
-Y29tPiB3cm90ZToKPj4gT0ssIGkgd2lsbCBtb2RpZnkgaXQgYWNjb3JkaW5nIHRvIHlvdXIgc3Vn
-Z2VzdGlvbiBhbmQgcG9zdCBhZ2Fpbi4KPiAKPiBObyBuZWVkIC0gaSBmaXhlZCBpdCB1cCBhbHJl
-YWR5LiAKPiAKT0ssIHRoYW5rIHlvdSB2ZXJ5IG11Y2guCgpMaWFuYm8KCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
-ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2tleGVjCg==
+On Tue, May 14, 2019 at 11:22:08AM +0800, Dave Young wrote:
+> Another thing is we can move the get rsdp after console_init, but that
+> can be done later as separate patch.
+
+https://lkml.kernel.org/r/20190417090247.GD20492@zn.tnic
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
