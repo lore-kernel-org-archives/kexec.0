@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10])
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hSzGa-0007AV-A1
- for kexec@lists.infradead.org; Tue, 21 May 2019 07:32:57 +0000
-Received: from EX13MTAUEA001.ant.amazon.com
- (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
- by email-inbound-relay-1e-57e1d233.us-east-1.amazon.com (8.14.7/8.14.7) with
- ESMTP id x4L7Wmjf082565
+ id 1hSzGc-0007Az-Ra
+ for kexec@lists.infradead.org; Tue, 21 May 2019 07:33:00 +0000
+Received: from EX13MTAUEB001.ant.amazon.com
+ (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+ by email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com (8.14.7/8.14.7) with
+ ESMTP id x4L7WqYp068603
  (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL)
- for <kexec@lists.infradead.org>; Tue, 21 May 2019 07:32:52 GMT
+ for <kexec@lists.infradead.org>; Tue, 21 May 2019 07:32:56 GMT
 From: Varad Gautam <vrd@amazon.de>
-Subject: [PATCH 1/3] xen: Avoid overlapping segments in low memory
-Date: Tue, 21 May 2019 09:32:26 +0200
-Message-ID: <1558423948-24583-1-git-send-email-vrd@amazon.de>
+Subject: [PATCH 2/3] elf: Support ELF loading with relocation
+Date: Tue, 21 May 2019 09:32:27 +0200
+Message-ID: <1558423948-24583-2-git-send-email-vrd@amazon.de>
+In-Reply-To: <1558423948-24583-1-git-send-email-vrd@amazon.de>
+References: <1558423948-24583-1-git-send-email-vrd@amazon.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,97 +24,295 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Varad Gautam <vrd@amazon.de>, David Woodhouse <dwmw@amazon.co.uk>
 
-RnJvbTogRGF2aWQgV29vZGhvdXNlIDxkd213QGFtYXpvbi5jby51az4KClVubGlrZSBMaW51eCB3
-aGljaCBjcmVhdGVzIGEgZnVsbCBpZGVudGl0eSBtYXBwaW5nLCBYZW4gb25seSBtYXBzIHRob3Nl
-CnNlZ21lbnRzIHdoaWNoIGFyZSBleHBsaWNpdGx5IHJlcXVlc3RlZC4gVGhlcmVmb3JlLCB4ZW5f
-a2V4ZWNfbG9hZCgpCnNpbGVudGx5IGFkZHMgaW4gYSBzZWdtZW50IGZyb20gemVybyB0byAxTWlC
-IHRvIGVuc3VyZSB0aGF0IFZHQSBtZW1vcnkKYW5kIG90aGVyIHRoaW5ncyBhcmUgYWNjZXNzaWJs
-ZS4KCkhvd2V2ZXIsIHRoaXMgZG9lc24ndCB3b3JrIHdoZW4gdGhlcmUgYXJlIGFscmVhZHkgc2Vn
-bWVudHMgdG8gYmUgbG9hZGVkCnVuZGVyIDFNaUIsIGJlY2F1c2UgdGhlIG92ZXJsYXAgY2F1c2Vz
-IFhlbiB0byByZWplY3QgdGhlIGtleGVjX2xvYWQuCgpCZSBtb3JlIGNhcmVmdWwgYW5kIGp1c3Qg
-aW5maWxsIHRoZSByYW5nZXMgd2hpY2ggYXJlIHJlcXVpcmVkIGluc3RlYWQKb2YgbmHDr3ZlbHkg
-YWRkaW5nIGEgZnVsbCAwLTFNaUIgc2VnbWVudCBhdCB0aGUgZW5kLgoKU2lnbmVkLW9mZi1ieTog
-RGF2aWQgV29vZGhvdXNlIDxkd213QGFtYXpvbi5jby51az4KLS0tCiBrZXhlYy9rZXhlYy14ZW4u
-YyB8IDczICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0t
-LS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA1NCBpbnNlcnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkK
-CmRpZmYgLS1naXQgYS9rZXhlYy9rZXhlYy14ZW4uYyBiL2tleGVjL2tleGVjLXhlbi5jCmluZGV4
-IDE4ODczOTAuLmMzMjY5NTUgMTAwNjQ0Ci0tLSBhL2tleGVjL2tleGVjLXhlbi5jCisrKyBiL2tl
-eGVjL2tleGVjLXhlbi5jCkBAIC02NCwxNSArNjQsMTggQEAgaW50IF9feGNfaW50ZXJmYWNlX2Ns
-b3NlKHhjX2ludGVyZmFjZSAqeGNoKQogfQogI2VuZGlmIC8qIENPTkZJR19MSUJYRU5DVFJMX0RM
-ICovCiAKKyNkZWZpbmUgSURFTlRNQVBfMU1pQiAoMTAyNCAqIDEwMjQpCisKIGludCB4ZW5fa2V4
-ZWNfbG9hZChzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbykKIHsKLQl1aW50MzJfdCBucl9zZWdtZW50
-cyA9IGluZm8tPm5yX3NlZ21lbnRzOworCXVpbnQzMl90IG5yX3NlZ21lbnRzID0gaW5mby0+bnJf
-c2VnbWVudHMsIG5yX2xvd19zZWdtZW50cyA9IDA7CiAJc3RydWN0IGtleGVjX3NlZ21lbnQgKnNl
-Z21lbnRzID0gaW5mby0+c2VnbWVudDsKKwl1aW50NjRfdCBsb3dfd2F0ZXJtYXJrID0gMDsKIAl4
-Y19pbnRlcmZhY2UgKnhjaDsKIAl4Y19oeXBlcmNhbGxfYnVmZmVyX2FycmF5X3QgKmFycmF5ID0g
-TlVMTDsKIAl1aW50OF90IHR5cGU7CiAJdWludDhfdCBhcmNoOwotCXhlbl9rZXhlY19zZWdtZW50
-X3QgKnhlbl9zZWdzOworCXhlbl9rZXhlY19zZWdtZW50X3QgKnhlbl9zZWdzLCAqc2VnOwogCWlu
-dCBzOwogCWludCByZXQgPSAtMTsKIApAQCAtODAsNyArODMsMjggQEAgaW50IHhlbl9rZXhlY19s
-b2FkKHN0cnVjdCBrZXhlY19pbmZvICppbmZvKQogCWlmICgheGNoKQogCQlyZXR1cm4gLTE7CiAK
-LQl4ZW5fc2VncyA9IGNhbGxvYyhucl9zZWdtZW50cyArIDEsIHNpemVvZigqeGVuX3NlZ3MpKTsK
-KwkvKgorCSAqIEVuc3VyZSAwIC0gMSBNaUIgaXMgbWFwcGVkIGFuZCBhY2Nlc3NpYmxlIGJ5IHRo
-ZSBpbWFnZS4KKwkgKiBUaGlzIGFsbG93cyBhY2Nlc3MgdG8gdGhlIFZHQSBtZW1vcnkgYW5kIHRo
-ZSByZWdpb24KKwkgKiBwdXJnYXRvcnkgY29waWVzIGluIHRoZSBjcmFzaCBjYXNlLgorCSAqCisJ
-ICogRmlyc3QsIGNvdW50IHRoZSBudW1iZXIgb2YgYWRkaXRpb25hbCBzZWdtZW50cyB3aGljaCB3
-aWxsCisJICogbmVlZCB0byBiZSBhZGRlZCBpbiBiZXR3ZWVuIHRoZSBvbmVzIGluIHNlZ21lbnRz
-W10uCisJICoKKwkgKiBUaGUgc2VnbWVudHMgYXJlIGFscmVhZHkgc29ydGVkLgorCSAqLworCWZv
-ciAocyA9IDA7IHMgPCBucl9zZWdtZW50cyAmJiAodWludDY0X3Qpc2VnbWVudHNbc10ubWVtIDw9
-IElERU5UTUFQXzFNaUI7IHMrKykgeworCQlpZiAoKHVpbnQ2NF90KXNlZ21lbnRzW3NdLm1lbSA+
-IGxvd193YXRlcm1hcmspCisJCQlucl9sb3dfc2VnbWVudHMrKzsKKworCQlsb3dfd2F0ZXJtYXJr
-ID0gKHVpbnQ2NF90KXNlZ21lbnRzW3NdLm1lbSArIHNlZ21lbnRzW3NdLm1lbXN6OworCX0KKwlp
-ZiAobG93X3dhdGVybWFyayA8IElERU5UTUFQXzFNaUIpCisJCW5yX2xvd19zZWdtZW50cysrOwor
-CisJbG93X3dhdGVybWFyayA9IDA7CisKKwl4ZW5fc2VncyA9IGNhbGxvYyhucl9zZWdtZW50cyAr
-IG5yX2xvd19zZWdtZW50cywgc2l6ZW9mKCp4ZW5fc2VncykpOwogCWlmICgheGVuX3NlZ3MpCiAJ
-CWdvdG8gb3V0OwogCkBAIC04OCwzMiArMTEyLDQzIEBAIGludCB4ZW5fa2V4ZWNfbG9hZChzdHJ1
-Y3Qga2V4ZWNfaW5mbyAqaW5mbykKIAlpZiAoYXJyYXkgPT0gTlVMTCkKIAkJZ290byBvdXQ7CiAK
-KwlzZWcgPSB4ZW5fc2VnczsKIAlmb3IgKHMgPSAwOyBzIDwgbnJfc2VnbWVudHM7IHMrKykgewog
-CQlERUNMQVJFX0hZUEVSQ0FMTF9CVUZGRVIodm9pZCwgc2VnX2J1Zik7CiAKKwkJaWYgKGxvd193
-YXRlcm1hcmsgPCBJREVOVE1BUF8xTWlCICYmICh1aW50NjRfdClzZWdtZW50c1tzXS5tZW0gPiBs
-b3dfd2F0ZXJtYXJrKSB7CisJCQlzZXRfeGVuX2d1ZXN0X2hhbmRsZShzZWctPmJ1Zi5oLCBIWVBF
-UkNBTExfQlVGRkVSX05VTEwpOworCQkJc2VnLT5idWZfc2l6ZSA9IDA7CisJCQlzZWctPmRlc3Rf
-bWFkZHIgPSBsb3dfd2F0ZXJtYXJrOworCQkJbG93X3dhdGVybWFyayA9ICh1aW50NjRfdClzZWdt
-ZW50c1tzXS5tZW07CisJCQlpZiAobG93X3dhdGVybWFyayA+IElERU5UTUFQXzFNaUIpCisJCQkJ
-bG93X3dhdGVybWFyayA9IElERU5UTUFQXzFNaUI7CisJCQlzZWctPmRlc3Rfc2l6ZSA9IGxvd193
-YXRlcm1hcmsgLSBzZWctPmRlc3RfbWFkZHI7CisJCQlzZWcrKzsKKwkJfQorCiAJCXNlZ19idWYg
-PSB4Y19oeXBlcmNhbGxfYnVmZmVyX2FycmF5X2FsbG9jKHhjaCwgYXJyYXksIHMsCiAJCQkJCQkJ
-ICBzZWdfYnVmLCBzZWdtZW50c1tzXS5idWZzeik7CiAJCWlmIChzZWdfYnVmID09IE5VTEwpCiAJ
-CQlnb3RvIG91dDsKIAkJbWVtY3B5KHNlZ19idWYsIHNlZ21lbnRzW3NdLmJ1Ziwgc2VnbWVudHNb
-c10uYnVmc3opOwogCi0JCXNldF94ZW5fZ3Vlc3RfaGFuZGxlKHhlbl9zZWdzW3NdLmJ1Zi5oLCBz
-ZWdfYnVmKTsKLQkJeGVuX3NlZ3Nbc10uYnVmX3NpemUgPSBzZWdtZW50c1tzXS5idWZzejsKLQkJ
-eGVuX3NlZ3Nbc10uZGVzdF9tYWRkciA9ICh1aW50NjRfdClzZWdtZW50c1tzXS5tZW07Ci0JCXhl
-bl9zZWdzW3NdLmRlc3Rfc2l6ZSA9IHNlZ21lbnRzW3NdLm1lbXN6OworCQlzZXRfeGVuX2d1ZXN0
-X2hhbmRsZShzZWctPmJ1Zi5oLCBzZWdfYnVmKTsKKwkJc2VnLT5idWZfc2l6ZSA9IHNlZ21lbnRz
-W3NdLmJ1ZnN6OworCQlzZWctPmRlc3RfbWFkZHIgPSAodWludDY0X3Qpc2VnbWVudHNbc10ubWVt
-OworCQlzZWctPmRlc3Rfc2l6ZSA9IHNlZ21lbnRzW3NdLm1lbXN6OworCQlzZWcrKzsKKworCQls
-b3dfd2F0ZXJtYXJrID0gKHVpbnQ2NF90KXNlZ21lbnRzW3NdLm1lbSArIHNlZ21lbnRzW3NdLm1l
-bXN6OwogCX0KIAotCS8qCi0JICogRW5zdXJlIDAgLSAxIE1pQiBpcyBtYXBwZWQgYW5kIGFjY2Vz
-c2libGUgYnkgdGhlIGltYWdlLgotCSAqCi0JICogVGhpcyBhbGxvd3MgYWNjZXNzIHRvIHRoZSBW
-R0EgbWVtb3J5IGFuZCB0aGUgcmVnaW9uCi0JICogcHVyZ2F0b3J5IGNvcGllcyBpbiB0aGUgY3Jh
-c2ggY2FzZS4KLQkgKi8KLQlzZXRfeGVuX2d1ZXN0X2hhbmRsZSh4ZW5fc2Vnc1tzXS5idWYuaCwg
-SFlQRVJDQUxMX0JVRkZFUl9OVUxMKTsKLQl4ZW5fc2Vnc1tzXS5idWZfc2l6ZSA9IDA7Ci0JeGVu
-X3NlZ3Nbc10uZGVzdF9tYWRkciA9IDA7Ci0JeGVuX3NlZ3Nbc10uZGVzdF9zaXplID0gMSAqIDEw
-MjQgKiAxMDI0OwotCW5yX3NlZ21lbnRzKys7CisJaWYgKCh1aW50NjRfdClsb3dfd2F0ZXJtYXJr
-IDwgSURFTlRNQVBfMU1pQikgeworCQlzZXRfeGVuX2d1ZXN0X2hhbmRsZShzZWctPmJ1Zi5oLCBI
-WVBFUkNBTExfQlVGRkVSX05VTEwpOworCQlzZWctPmJ1Zl9zaXplID0gMDsKKwkJc2VnLT5kZXN0
-X21hZGRyID0gbG93X3dhdGVybWFyazsKKwkJc2VnLT5kZXN0X3NpemUgPSBJREVOVE1BUF8xTWlC
-IC0gbG93X3dhdGVybWFyazsKKwkJc2VnKys7CisJfQogCiAJdHlwZSA9IChpbmZvLT5rZXhlY19m
-bGFncyAmIEtFWEVDX09OX0NSQVNIKSA/IEtFWEVDX1RZUEVfQ1JBU0gKIAkJOiBLRVhFQ19UWVBF
-X0RFRkFVTFQ7CkBAIC0xMjUsNyArMTYwLDcgQEAgaW50IHhlbl9rZXhlY19sb2FkKHN0cnVjdCBr
-ZXhlY19pbmZvICppbmZvKQogI2VuZGlmCiAKIAlyZXQgPSB4Y19rZXhlY19sb2FkKHhjaCwgdHlw
-ZSwgYXJjaCwgKHVpbnQ2NF90KWluZm8tPmVudHJ5LAotCQkJICAgIG5yX3NlZ21lbnRzLCB4ZW5f
-c2Vncyk7CisJCQkgICAgbnJfc2VnbWVudHMgKyBucl9sb3dfc2VnbWVudHMsIHhlbl9zZWdzKTsK
-IAogb3V0OgogCXhjX2h5cGVyY2FsbF9idWZmZXJfYXJyYXlfZGVzdHJveSh4Y2gsIGFycmF5KTsK
-LS0gCjIuNy40CgoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIEdlcm1hbnkgR21iSApLcmF1
-c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhyZXI6IENocmlzdGlhbiBTY2hs
-YWVnZXIsIFJhbGYgSGVyYnJpY2gKVXN0LUlEOiBERSAyODkgMjM3IDg3OQpFaW5nZXRyYWdlbiBh
-bSBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVyZyBIUkIgMTQ5MTczIEIKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
-Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8va2V4ZWMK
+Add a helper to allow loading an image within specified address range.
+This will be used to load multiboot2 images later.
+
+Signed-off-by: Varad Gautam <vrd@amazon.de>
+---
+ kexec/kexec-elf-exec.c | 199 +++++++++++++++++++++++++++++++++----------------
+ kexec/kexec-elf.h      |   7 ++
+ 2 files changed, 141 insertions(+), 65 deletions(-)
+
+diff --git a/kexec/kexec-elf-exec.c b/kexec/kexec-elf-exec.c
+index a9329ac..bea7b3e 100644
+--- a/kexec/kexec-elf-exec.c
++++ b/kexec/kexec-elf-exec.c
+@@ -11,6 +11,84 @@
+ 
+ static const int probe_debug = 0;
+ 
++static void load_elf_segments(struct mem_ehdr *ehdr, struct kexec_info *info, unsigned long base)
++{
++	size_t i;
++
++	/* Read in the PT_LOAD segments */
++	for(i = 0; i < ehdr->e_phnum; i++) {
++		struct mem_phdr *phdr;
++		size_t size;
++		phdr = &ehdr->e_phdr[i];
++		if (phdr->p_type != PT_LOAD) {
++			continue;
++		}
++		size = phdr->p_filesz;
++		if (size > phdr->p_memsz) {
++			size = phdr->p_memsz;
++		}
++		add_segment(info, phdr->p_data, size,
++					phdr->p_paddr + base, phdr->p_memsz);
++	}
++}
++
++static int get_elf_exec_load_base(struct mem_ehdr *ehdr, struct kexec_info *info,
++				  unsigned long min, unsigned long max,
++				  unsigned long align, unsigned long *base)
++{
++	unsigned long first, last;
++	size_t i;
++
++	/* Note on arm64:
++	 * arm64's vmlinux has virtual address in physical address
++	 * field of PT_LOAD segments. So the following validity check
++	 * and relocation makes no sense on arm64.
++	 */
++	if (ehdr->e_machine == EM_AARCH64)
++		return 0;
++
++	first = ULONG_MAX;
++	last  = 0;
++	for(i = 0; i < ehdr->e_phnum; i++) {
++		unsigned long start, stop;
++		struct mem_phdr *phdr;
++		phdr = &ehdr->e_phdr[i];
++		if ((phdr->p_type != PT_LOAD) ||
++			(phdr->p_memsz == 0))
++		{
++			continue;
++		}
++		start = phdr->p_paddr;
++		stop  = start + phdr->p_memsz;
++		if (first > start) {
++			first = start;
++		}
++		if (last < stop) {
++			last = stop;
++		}
++		if (align < phdr->p_align) {
++			align = phdr->p_align;
++		}
++	}
++
++	if ((max - min) < (last - first))
++		return -1;
++
++	if (!valid_memory_range(info, min > first ? min : first, max < last ? max : last)) {
++		unsigned long hole;
++		hole = locate_hole(info, last - first + 1, align, min, max, 1);
++		if (hole == ULONG_MAX)
++			return -1;
++
++		/* Base is the value that when added
++		 * to any virtual address in the file
++		 * yields it's load virtual address.
++		 */
++		*base = hole - first;
++	}
++	return 0;
++}
++
+ int build_elf_exec_info(const char *buf, off_t len, struct mem_ehdr *ehdr,
+ 				uint32_t flags)
+ {
+@@ -53,7 +131,6 @@ int elf_exec_load(struct mem_ehdr *ehdr, struct kexec_info *info)
+ {
+ 	unsigned long base;
+ 	int result;
+-	size_t i;
+ 
+ 	if (!ehdr->e_phdr) {
+ 		fprintf(stderr, "No program header?\n");
+@@ -63,75 +140,48 @@ int elf_exec_load(struct mem_ehdr *ehdr, struct kexec_info *info)
+ 
+ 	/* If I have a dynamic executable find it's size
+ 	 * and then find a location for it in memory.
+-	 * Note on arm64:
+-	 * arm64's vmlinux has virtual address in physical address
+-	 * field of PT_LOAD segments. So the following validity check
+-	 * and relocation makes no sense on arm64.
+ 	 */
+ 	base = 0;
+-	if ((ehdr->e_machine != EM_AARCH64) && (ehdr->e_type == ET_DYN)) {
+-		unsigned long first, last, align;
+-		first = ULONG_MAX;
+-		last  = 0;
+-		align = 0;
+-		for(i = 0; i < ehdr->e_phnum; i++) {
+-			unsigned long start, stop;
+-			struct mem_phdr *phdr;
+-			phdr = &ehdr->e_phdr[i];
+-			if ((phdr->p_type != PT_LOAD) ||
+-				(phdr->p_memsz == 0))
+-			{
+-				continue;
+-			}
+-			start = phdr->p_paddr;
+-			stop  = start + phdr->p_memsz;
+-			if (first > start) {
+-				first = start;
+-			}
+-			if (last < stop) {
+-				last = stop;
+-			}
+-			if (align < phdr->p_align) {
+-				align = phdr->p_align;
+-			}
+-		}
+-		/* If I can't use the default paddr find a new
+-		 * hole for the dynamic executable.
+-		 */
+-		if (!valid_memory_range(info, first, last)) {
+-			unsigned long hole;
+-			hole = locate_hole(info,
+-				last - first + 1, align, 
+-				0, elf_max_addr(ehdr), 1);
+-			if (hole == ULONG_MAX) {
+-				result = -1;
+-				goto out;
+-			}
+-			/* Base is the value that when added
+-			 * to any virtual address in the file
+-			 * yields it's load virtual address.
+-			 */
+-			base = hole - first;
+-		}
+-
++	if (ehdr->e_type == ET_DYN) {
++		result = get_elf_exec_load_base(ehdr, info, 0, elf_max_addr(ehdr), 0 /* align */, &base);
++		if (result < 0)
++			goto out;
+ 	}
+ 
+-	/* Read in the PT_LOAD segments */
+-	for(i = 0; i < ehdr->e_phnum; i++) {
+-		struct mem_phdr *phdr;
+-		size_t size;
+-		phdr = &ehdr->e_phdr[i];
+-		if (phdr->p_type != PT_LOAD) {
+-			continue;
+-		}
+-		size = phdr->p_filesz;
+-		if (size > phdr->p_memsz) {
+-			size = phdr->p_memsz;
+-		}
+-		add_segment(info,
+-			phdr->p_data, size,
+-			phdr->p_paddr + base, phdr->p_memsz);
++	load_elf_segments(ehdr, info, base);
++
++	/* Update entry point to reflect new load address*/
++	ehdr->e_entry += base;
++
++	result = 0;
++ out:
++	return result;
++}
++
++int elf_exec_load_relocatable(struct mem_ehdr *ehdr, struct kexec_info *info,
++			      unsigned long reloc_min, unsigned long reloc_max,
++			      unsigned long align)
++{
++	unsigned long base;
++	int result;
++
++	if (reloc_min > reloc_max) {
++		fprintf(stderr, "Bad relocation range, start=%lux > end=%lux.\n", reloc_min, reloc_max);
++		result = -1;
++		goto out;
+ 	}
++	if (!ehdr->e_phdr) {
++		fprintf(stderr, "No program header?\n");
++		result = -1;
++		goto out;
++	}
++
++	base = 0;
++	result = get_elf_exec_load_base(ehdr, info, reloc_min, reloc_max, align, &base);
++	if (result < 0)
++		goto out;
++
++	load_elf_segments(ehdr, info, base);
+ 
+ 	/* Update entry point to reflect new load address*/
+ 	ehdr->e_entry += base;
+@@ -157,3 +207,22 @@ void elf_exec_build_load(struct kexec_info *info, struct mem_ehdr *ehdr,
+ 		die("ELF exec load failed\n");
+ 	}
+ }
++
++void elf_exec_build_load_relocatable(struct kexec_info *info, struct mem_ehdr *ehdr,
++				     const char *buf, off_t len, uint32_t flags,
++				     unsigned long reloc_min, unsigned long reloc_max,
++				     unsigned long align)
++{
++	int result;
++	/* Parse the Elf file */
++	result = build_elf_exec_info(buf, len, ehdr, flags);
++	if (result < 0) {
++		die("%s: ELF exec parse failed\n", __func__);
++	}
++
++	/* Load the Elf data */
++	result = elf_exec_load_relocatable(ehdr, info, reloc_min, reloc_max, align);
++	if (result < 0) {
++		die("%s: ELF exec load failed\n", __func__);
++	}
++}
+\ No newline at end of file
+diff --git a/kexec/kexec-elf.h b/kexec/kexec-elf.h
+index 1164db4..1e512c8 100644
+--- a/kexec/kexec-elf.h
++++ b/kexec/kexec-elf.h
+@@ -100,11 +100,18 @@ extern int build_elf_rel_info(const char *buf, off_t len, struct mem_ehdr *ehdr,
+ extern int build_elf_core_info(const char *buf, off_t len,
+ 					struct mem_ehdr *ehdr, uint32_t flags);
+ extern int elf_exec_load(struct mem_ehdr *ehdr, struct kexec_info *info);
++extern int elf_exec_load_relocatable(struct mem_ehdr *ehdr, struct kexec_info *info,
++				     unsigned long reloc_min, unsigned long reloc_max,
++				     unsigned long align);
+ extern int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
+ 	unsigned long min, unsigned long max, int end);
+ 
+ extern void elf_exec_build_load(struct kexec_info *info, struct mem_ehdr *ehdr, 
+ 				const char *buf, off_t len, uint32_t flags);
++extern void elf_exec_build_load_relocatable(struct kexec_info *info, struct mem_ehdr *ehdr,
++					    const char *buf, off_t len, uint32_t flags,
++					    unsigned long reloc_min, unsigned long reloc_max,
++					    unsigned long align);
+ extern void elf_rel_build_load(struct kexec_info *info, struct mem_ehdr *ehdr, 
+ 	const char *buf, off_t len, unsigned long min, unsigned long max, 
+ 	int end, uint32_t flags);
+-- 
+2.7.4
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrer: Christian Schlaeger, Ralf Herbrich
+Ust-ID: DE 289 237 879
+Eingetragen am Amtsgericht Charlottenburg HRB 149173 B
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
