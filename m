@@ -1,26 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hTDnd-00069W-30
- for kexec@lists.infradead.org; Tue, 21 May 2019 23:04:02 +0000
-Date: Wed, 22 May 2019 01:04:21 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
- and ACPI tables
-Message-ID: <20190521230421.GA2435@cz.tnic>
-References: <20190429002318.GA25400@MiWiFi-R3L-srv>
- <20190429135536.GC2324@zn.tnic>
- <20190513014248.GA16774@MiWiFi-R3L-srv>
- <20190513070725.GA20105@zn.tnic>
- <20190513073254.GB16774@MiWiFi-R3L-srv>
- <20190513075006.GB20105@zn.tnic>
- <20190513080653.GD16774@MiWiFi-R3L-srv>
- <20190514032208.GA25875@dhcp-128-65.nay.redhat.com>
- <20190514033338.GA6612@MiWiFi-R3L-srv>
- <c640061a-a7c5-5bc3-87b6-0ee7af5a4b43@netronome.com>
+ id 1hTJxU-0005DE-0e
+ for kexec@lists.infradead.org; Wed, 22 May 2019 05:38:37 +0000
+Date: Wed, 22 May 2019 13:38:22 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2] vmcore: Add a kernel cmdline vmcore_device_dump
+Message-ID: <20190522053822.GA4472@dhcp-128-65.nay.redhat.com>
+References: <20190520061834.32231-1-kasong@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <c640061a-a7c5-5bc3-87b6-0ee7af5a4b43@netronome.com>
+In-Reply-To: <20190520061834.32231-1-kasong@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,24 +23,107 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dirk van der Merwe <dirk.vandermerwe@netronome.com>, Ingo Molnar <mingo@kernel.org>
-Cc: fanc.fnst@cn.fujitsu.com, kasong@redhat.com, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com, j-nomura@ce.jp.nec.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>
+To: Kairui Song <kasong@redhat.com>
+Cc: Bhupesh Sharma <bhsharma@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Alexey Dobriyan <adobriyan@gmail.com>
 
-On Tue, May 21, 2019 at 02:53:52PM -0700, Dirk van der Merwe wrote:
-> Where can I find the next-merge-window tree?
+On 05/20/19 at 02:18pm, Kairui Song wrote:
+> Since commit 2724273e8fd0 ('vmcore: add API to collect hardware dump in
+> second kernel'), drivers is allowed to add device related dump data to
+> vmcore as they want by using the device dump API. This have a potential
+> issue, the data is stored in memory, drivers may append too much data
+> and use too much memory. The vmcore is typically used in a kdump kernel
+> which runs in a pre-reserved small chunk of memory. So as a result it
+> will make kdump unusable at all due to OOM issues.
 > 
-> I can test against that too.
+> So introduce new vmcore_device_dump= kernel parameter, and disable
+> device dump by default. User can enable it only if device dump data is
+> required for debugging, and have the chance to increase the kdump
+> reserved memory accordingly before device dump fails kdump.
+> 
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> ---
+>  Update from V1:
+>   - Use bool parameter to turn it on/off instead of letting user give
+>     the size limit. Size of device dump is hard to determine.
+> 
+>  Documentation/admin-guide/kernel-parameters.txt | 15 +++++++++++++++
+>  fs/proc/vmcore.c                                | 13 +++++++++++++
+>  2 files changed, 28 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 43176340c73d..2d48e39fd080 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -5062,6 +5062,21 @@
+>  			decrease the size and leave more room for directly
+>  			mapped kernel RAM.
+>  
+> +	vmcore_device_dump=
+> +			[VMCORE]
 
-It'll appear soon in a tip branch. I'd appreciate if you tested that
-instead - stay tuned...
+It looks better to have above two line merged in one line, also use
+[KNL, KDUMP] will be better.
 
-Thx.
+> +			Format: {"off" | "on"}
+> +			If CONFIG_PROC_VMCORE_DEVICE_DUMP is set,
+> +			this parameter allows enable or disable device dump
+> +			for vmcore.
+> +			Device dump allows drivers to append dump data to
+> +			vmcore so you can collect driver specified debug info.
+> +			Note that the drivers could append the data without
+> +			any limit, and the data is stored in memory, this may
+> +			bring a significant memory stress. If you want to turn
+> +			on this option, make sure you have reserved enough memory
+> +			with crashkernel= parameter.
+> +			default: off
+> +
+>  	vmcp_cma=nn[MG]	[KNL,S390]
+>  			Sets the memory size reserved for contiguous memory
+>  			allocations for the vmcp device driver.
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 3fe90443c1bb..d1b608b0efad 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -53,6 +53,8 @@ static struct proc_dir_entry *proc_vmcore;
+>  /* Device Dump list and mutex to synchronize access to list */
+>  static LIST_HEAD(vmcoredd_list);
+>  static DEFINE_MUTEX(vmcoredd_mutex);
+> +
+> +static bool vmcoredd_enabled;
+>  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+>  
+>  /* Device Dump Size */
+> @@ -1451,6 +1453,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+>  	size_t data_size;
+>  	int ret;
+>  
+> +	if (!vmcoredd_enabled) {
+> +		pr_err_once("Device dump is disabled\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	if (!data || !strlen(data->dump_name) ||
+>  	    !data->vmcoredd_callback || !data->size)
+>  		return -EINVAL;
+> @@ -1502,6 +1509,12 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL(vmcore_add_device_dump);
+> +
+> +static int __init vmcoredd_parse_cmdline(char *arg)
+> +{
+> +	return kstrtobool(arg, &vmcoredd_enabled);
+> +}
+> +__setup("vmcore_device_dump=", vmcoredd_parse_cmdline);
+>  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+>  
+>  /* Free all dumps in vmcore device dump list */
+> -- 
+> 2.21.0
+> 
 
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply. Srsly.
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
