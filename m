@@ -1,30 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail-it1-f196.google.com ([209.85.166.196])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hTfZu-0002Hg-Kv
- for kexec@lists.infradead.org; Thu, 23 May 2019 04:43:44 +0000
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x4N4bQ2s024753
- for <kexec@lists.infradead.org>; Thu, 23 May 2019 00:43:41 -0400
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2snkcqtp0c-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 23 May 2019 00:43:41 -0400
-Received: from localhost
- by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.ibm.com>;
- Thu, 23 May 2019 05:43:40 +0100
-References: <20190522220158.18479-1-bauerman@linux.ibm.com>
- <20190523032302.GD8174@dhcp-128-65.nay.redhat.com>
-From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH] powerpc: Fix loading of kernel + initramfs with
- kexec_file_load()
-In-reply-to: <20190523032302.GD8174@dhcp-128-65.nay.redhat.com>
-Date: Thu, 23 May 2019 01:43:29 -0300
+ id 1hTlWs-0005rS-6F
+ for kexec@lists.infradead.org; Thu, 23 May 2019 11:05:00 +0000
+Received: by mail-it1-f196.google.com with SMTP id j17so7992382itk.0
+ for <kexec@lists.infradead.org>; Thu, 23 May 2019 04:04:57 -0700 (PDT)
 MIME-Version: 1.0
-Message-Id: <87zhndzspa.fsf@morokweng.localdomain>
+References: <20190520061834.32231-1-kasong@redhat.com>
+ <0c0fb7af-f386-bde1-46f6-1afa29782243@redhat.com>
+In-Reply-To: <0c0fb7af-f386-bde1-46f6-1afa29782243@redhat.com>
+From: Kairui Song <kasong@redhat.com>
+Date: Thu, 23 May 2019 19:04:36 +0800
+Message-ID: <CACPcB9fWsOHGhyF-b4emTuoTUO4twbG6of=bruBYop4Jf4rzig@mail.gmail.com>
+Subject: Re: [PATCH v2] vmcore: Add a kernel cmdline vmcore_device_dump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,42 +25,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, linuxppc-dev@lists.ozlabs.org
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "David S . Miller" <davem@davemloft.net>, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Alexey Dobriyan <adobriyan@gmail.com>
 
-
-Dave Young <dyoung@redhat.com> writes:
-
-> On 05/22/19 at 07:01pm, Thiago Jung Bauermann wrote:
->> Commit b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
->> changed kexec_add_buffer() to skip searching for a memory location if
->> kexec_buf.mem is already set, and use the address that is there.
->> 
->> In powerpc code we reuse a kexec_buf variable for loading both the kernel
->> and the initramfs by resetting some of the fields between those uses, but
->> not mem. This causes kexec_add_buffer() to try to load the kernel at the
->> same address where initramfs will be loaded, which is naturally rejected:
->> 
->>   # kexec -s -l --initrd initramfs vmlinuz
->>   kexec_file_load failed: Invalid argument
->> 
->> Setting the mem field before every call to kexec_add_buffer() fixes this
->> regression.
->> 
->> Fixes: b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
->> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->> ---
->>  arch/powerpc/kernel/kexec_elf_64.c | 6 +++++-
->>  1 file changed, 5 insertions(+), 1 deletion(-)
+On Thu, May 23, 2019 at 2:44 AM Bhupesh Sharma <bhsharma@redhat.com> wrote:
 >
-> Reviewed-by: Dave Young <dyoung@redhat.com>
+> On 05/20/2019 11:48 AM, Kairui Song wrote:
+> > Since commit 2724273e8fd0 ('vmcore: add API to collect hardware dump in
+> > second kernel'), drivers is allowed to add device related dump data to
+> > vmcore as they want by using the device dump API. This have a potential
+> > issue, the data is stored in memory, drivers may append too much data
+> > and use too much memory. The vmcore is typically used in a kdump kernel
+> > which runs in a pre-reserved small chunk of memory. So as a result it
+> > will make kdump unusable at all due to OOM issues.
+> >
+> > So introduce new vmcore_device_dump= kernel parameter, and disable
+> > device dump by default. User can enable it only if device dump data is
+> > required for debugging, and have the chance to increase the kdump
+> > reserved memory accordingly before device dump fails kdump.
+> >
+> > Signed-off-by: Kairui Song <kasong@redhat.com>
+> > ---
+> >   Update from V1:
+> >    - Use bool parameter to turn it on/off instead of letting user give
+> >      the size limit. Size of device dump is hard to determine.
+> >
+> >   Documentation/admin-guide/kernel-parameters.txt | 15 +++++++++++++++
+> >   fs/proc/vmcore.c                                | 13 +++++++++++++
+> >   2 files changed, 28 insertions(+)
+> >
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > index 43176340c73d..2d48e39fd080 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -5062,6 +5062,21 @@
+> >                       decrease the size and leave more room for directly
+> >                       mapped kernel RAM.
+> >
+> > +     vmcore_device_dump=
+> > +                     [VMCORE]
+> > +                     Format: {"off" | "on"}
+> > +                     If CONFIG_PROC_VMCORE_DEVICE_DUMP is set,
+> > +                     this parameter allows enable or disable device dump
+> > +                     for vmcore.
+>
+> We can add a simpler description here, something like:
+>                         Depends on CONFIG_PROC_VMCORE_DEVICE_DUMP
+>
+> > +                     Device dump allows drivers to append dump data to
+> > +                     vmcore so you can collect driver specified debug info.
+> > +                     Note that the drivers could append the data without
+> > +                     any limit, and the data is stored in memory, this may
+> > +                     bring a significant memory stress. If you want to turn
+> > +                     on this option, make sure you have reserved enough memory
+> > +                     with crashkernel= parameter.
+> > +                     default: off
+>
+> ... and massage the rest of text accordingly.
+>
+> Better to also modify the help text for 'PROC_VMCORE_DEVICE_DUMP' config
+> option defined in 'fs/proc/Kconfig'. Something like:
+>
+> config PROC_VMCORE_DEVICE_DUMP
+>         bool "Device Hardware/Firmware Log Collection"
+> <..snip..>
+>           If you say Y here, the collected device dumps will be added
+>           as ELF notes to /proc/vmcore.
+>
+>           If this option is selected, device dump collection can still be
+> disabled by passing vmcore_device_dump=off to the kernel.
+>
+> See config INTEL_IOMMU_DEFAULT_ON in 'drivers/iommu/Kconfig' as an example.
+>
 
-Thanks!
+Good suggestion! I'll update in V3.
 
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+Best Regards,
+Kairui Song
 
 _______________________________________________
 kexec mailing list
