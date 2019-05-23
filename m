@@ -1,27 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hTZKx-00033v-HP
- for kexec@lists.infradead.org; Wed, 22 May 2019 22:03:53 +0000
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x4MLxLnQ144726
- for <kexec@lists.infradead.org>; Wed, 22 May 2019 18:03:49 -0400
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2snetvg5t5-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 22 May 2019 18:03:48 -0400
-Received: from localhost
- by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.ibm.com>;
- Wed, 22 May 2019 23:03:48 +0100
-From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH] powerpc: Fix loading of kernel + initramfs with
- kexec_file_load()
-Date: Wed, 22 May 2019 19:01:58 -0300
+ id 1hTdzR-0005JV-Tk
+ for kexec@lists.infradead.org; Thu, 23 May 2019 03:01:59 +0000
+Date: Thu, 23 May 2019 11:01:44 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2 1/4] x86: Update boot parameters defination
+Message-ID: <20190523030144.GA8174@dhcp-128-65.nay.redhat.com>
+References: <20190514050959.21093-1-kasong@redhat.com>
+ <20190514050959.21093-2-kasong@redhat.com>
 MIME-Version: 1.0
-Message-Id: <20190522220158.18479-1-bauerman@linux.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <20190514050959.21093-2-kasong@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,69 +24,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To: Kairui Song <kasong@redhat.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>
 
-Commit b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
-changed kexec_add_buffer() to skip searching for a memory location if
-kexec_buf.mem is already set, and use the address that is there.
+Hi Kairui
+On 05/14/19 at 01:09pm, Kairui Song wrote:
+> Since kernel commit e6e094e053af75 ("x86/acpi, x86/boot: Take RSDP address
+> from boot params if available"), kernel accept a acpi_rsdp_addr param in
+> boot_params. Sync the x86_linux_param_header to support this param.
+> 
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> ---
+>  include/x86/x86-linux.h | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
+> index 352ea02..a5d8df8 100644
+> --- a/include/x86/x86-linux.h
+> +++ b/include/x86/x86-linux.h
+> @@ -45,8 +45,7 @@ struct apm_bios_info {
+>  	uint16_t cseg_len;	/* 0x4e */
+>  	uint16_t cseg_16_len;	/* 0x50 */
+>  	uint16_t dseg_len;	/* 0x52 */
+> -	uint8_t  reserved[44];	/* 0x54 */
+> -};
+> +} __attribute__((packed));
 
-In powerpc code we reuse a kexec_buf variable for loading both the kernel
-and the initramfs by resetting some of the fields between those uses, but
-not mem. This causes kexec_add_buffer() to try to load the kernel at the
-same address where initramfs will be loaded, which is naturally rejected:
+It should be good to keep same as the kernel header without packed
+attribute.
 
-  # kexec -s -l --initrd initramfs vmlinuz
-  kexec_file_load failed: Invalid argument
+is it possible to sync the latest mainline uapi bootparam header file,
+maybe after this series get solved?
 
-Setting the mem field before every call to kexec_add_buffer() fixes this
-regression.
+>  
+>  /*
+>   * EDD stuff
+> @@ -113,12 +112,15 @@ struct x86_linux_param_header {
+>  	uint8_t  reserved4[2];			/* 0x3e -- 0x3f reserved for future expansion */
+>  
+>  	struct apm_bios_info apm_bios_info;	/* 0x40 */
+> +	uint8_t  reserved4_1[28];		/* 0x54 */
+> +	uint64_t acpi_rsdp_addr;		/* 0x70 */
+> +	uint8_t  reserved4_2[8];		/* 0x78 */
+>  	struct drive_info_struct drive_info;	/* 0x80 */
+>  	struct sys_desc_table sys_desc_table;	/* 0xa0 */
+>  	uint32_t ext_ramdisk_image;		/* 0xc0 */
+>  	uint32_t ext_ramdisk_size;		/* 0xc4 */
+>  	uint32_t ext_cmd_line_ptr;		/* 0xc8 */
+> -	uint8_t reserved4_1[0x1c0 - 0xcc];	/* 0xe4 */
+> +	uint8_t reserved4_3[0x1c0 - 0xcc];	/* 0xe4 */
+>  	uint8_t efi_info[32];			/* 0x1c0 */
+>  	uint32_t alt_mem_k;			/* 0x1e0 */
+>  	uint8_t  reserved5[4];			/* 0x1e4 */
+> -- 
+> 2.20.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-Fixes: b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
----
- arch/powerpc/kernel/kexec_elf_64.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec_elf_64.c
-index ba4f18a43ee8..52a29fc73730 100644
---- a/arch/powerpc/kernel/kexec_elf_64.c
-+++ b/arch/powerpc/kernel/kexec_elf_64.c
-@@ -547,6 +547,7 @@ static int elf_exec_load(struct kimage *image, struct elfhdr *ehdr,
- 		kbuf.memsz = phdr->p_memsz;
- 		kbuf.buf_align = phdr->p_align;
- 		kbuf.buf_min = phdr->p_paddr + base;
-+		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- 		ret = kexec_add_buffer(&kbuf);
- 		if (ret)
- 			goto out;
-@@ -581,7 +582,8 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
- 	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
- 				  .buf_max = ppc64_rma_size };
- 	struct kexec_buf pbuf = { .image = image, .buf_min = 0,
--				  .buf_max = ppc64_rma_size, .top_down = true };
-+				  .buf_max = ppc64_rma_size, .top_down = true,
-+				  .mem = KEXEC_BUF_MEM_UNKNOWN };
- 
- 	ret = build_elf_exec_info(kernel_buf, kernel_len, &ehdr, &elf_info);
- 	if (ret)
-@@ -606,6 +608,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
- 		kbuf.bufsz = kbuf.memsz = initrd_len;
- 		kbuf.buf_align = PAGE_SIZE;
- 		kbuf.top_down = false;
-+		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- 		ret = kexec_add_buffer(&kbuf);
- 		if (ret)
- 			goto out;
-@@ -638,6 +641,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
- 	kbuf.bufsz = kbuf.memsz = fdt_size;
- 	kbuf.buf_align = PAGE_SIZE;
- 	kbuf.top_down = true;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- 	ret = kexec_add_buffer(&kbuf);
- 	if (ret)
- 		goto out;
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
