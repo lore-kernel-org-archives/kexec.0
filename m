@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-f67.google.com ([209.85.166.67])
+Received: from mail-qt1-f195.google.com ([209.85.160.195])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hTlWu-0005ry-QI
- for kexec@lists.infradead.org; Thu, 23 May 2019 11:05:02 +0000
-Received: by mail-io1-f67.google.com with SMTP id g84so4510003ioa.1
- for <kexec@lists.infradead.org>; Thu, 23 May 2019 04:05:00 -0700 (PDT)
+ id 1hTlYI-0007Th-AX
+ for kexec@lists.infradead.org; Thu, 23 May 2019 11:06:28 +0000
+Received: by mail-qt1-f195.google.com with SMTP id f24so6125751qtk.11
+ for <kexec@lists.infradead.org>; Thu, 23 May 2019 04:06:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190520061834.32231-1-kasong@redhat.com>
- <20190522053822.GA4472@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190522053822.GA4472@dhcp-128-65.nay.redhat.com>
+References: <20190514050959.21093-1-kasong@redhat.com>
+ <20190514050959.21093-3-kasong@redhat.com>
+ <20190523031609.GB8174@dhcp-128-65.nay.redhat.com>
+ <CACPcB9eKOGNLxBLVfX8uqWS1uxjxMFtNR8h=MqaueZ+Ymr5QJg@mail.gmail.com>
+In-Reply-To: <CACPcB9eKOGNLxBLVfX8uqWS1uxjxMFtNR8h=MqaueZ+Ymr5QJg@mail.gmail.com>
 From: Kairui Song <kasong@redhat.com>
-Date: Thu, 23 May 2019 19:04:42 +0800
-Message-ID: <CACPcB9dM97sFmydswSkpj8nmFHvsWXUhnQJ-8jW2aEc-m7g9qg@mail.gmail.com>
-Subject: Re: [PATCH v2] vmcore: Add a kernel cmdline vmcore_device_dump
+Date: Thu, 23 May 2019 19:06:13 +0800
+Message-ID: <CACPcB9f3RJsJsYTbjFvT_QU+6rr_xE0f=tezZ-Yf0h45ymJxEA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] x86: Introduce helpers for getting RSDP address
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,110 +28,74 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: Bhupesh Sharma <bhsharma@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "David S . Miller" <davem@davemloft.net>, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>
 
-On Wed, May 22, 2019 at 1:38 PM Dave Young <dyoung@redhat.com> wrote:
+On Thu, May 23, 2019 at 11:43 AM Kairui Song <kasong@redhat.com> wrote:
 >
-> On 05/20/19 at 02:18pm, Kairui Song wrote:
-> > Since commit 2724273e8fd0 ('vmcore: add API to collect hardware dump in
-> > second kernel'), drivers is allowed to add device related dump data to
-> > vmcore as they want by using the device dump API. This have a potential
-> > issue, the data is stored in memory, drivers may append too much data
-> > and use too much memory. The vmcore is typically used in a kdump kernel
-> > which runs in a pre-reserved small chunk of memory. So as a result it
-> > will make kdump unusable at all due to OOM issues.
+> On Thu, May 23, 2019 at 11:16 AM Dave Young <dyoung@redhat.com> wrote:
 > >
-> > So introduce new vmcore_device_dump= kernel parameter, and disable
-> > device dump by default. User can enable it only if device dump data is
-> > required for debugging, and have the chance to increase the kdump
-> > reserved memory accordingly before device dump fails kdump.
+> > On 05/14/19 at 01:09pm, Kairui Song wrote:
+> > > On x86 RSDP is fundamental for booting the machine. When second kernel
+> > > is incapable of parsing the RSDP address (eg. kexec next kernel on an EFI
+> > > system with EFI service disabled), kexec should prepare the RSDP address
+> > > for second kernel.
+> > >
+> > > Introduce helpers for getting RSDP from multiple sources, including boot
+> > > params, cmdline and EFI firmware.
+> > >
+> > > For legacy BIOS interface, there is no better way to find the RSDP address
+> > > rather than scanning the memory region and search for it, and this will
+> > > always be done by the kernel as a fallback, so this is no need to try to
+> > > get the RSDP address for that case.
+> > >
+> > > Signed-off-by: Kairui Song <kasong@redhat.com>
+> > > ---
+> > >  kexec/arch/i386/kexec-x86-common.c | 60 ++++++++++++++++++++++++++++++
+> > >  kexec/arch/i386/kexec-x86.h        |  1 +
+> > >  kexec/arch/i386/x86-linux-setup.c  |  3 +-
+> > >  kexec/arch/i386/x86-linux-setup.h  |  1 +
+> > >  4 files changed, 63 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+> > > index de99758..4b8eb26 100644
+> > > --- a/kexec/arch/i386/kexec-x86-common.c
+> > > +++ b/kexec/arch/i386/kexec-x86-common.c
+> > > @@ -39,6 +39,7 @@
+> > >  #include "../../firmware_memmap.h"
+> > >  #include "../../crashdump.h"
+> > >  #include "kexec-x86.h"
+> > > +#include "x86-linux-setup.h"
+> > >  #include "../../kexec-xen.h"
+> > >
+> > >  /* Used below but not present in (older?) xenctrl.h */
+> > > @@ -392,4 +393,63 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
+> > >       return ret;
+> > >  }
+> > >
+> > > +static uint64_t cmdline_get_acpi_rsdp(void) {
+> > > +     uint64_t acpi_rsdp = 0;
+> > > +     char *tmp_cmdline, *rsdp_param;
+> > >
+> > > +     tmp_cmdline = get_command_line();
+> > > +     rsdp_param = strstr(tmp_cmdline, "acpi_rsdp=");
 > >
-> > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > ---
-> >  Update from V1:
-> >   - Use bool parameter to turn it on/off instead of letting user give
-> >     the size limit. Size of device dump is hard to determine.
-> >
-> >  Documentation/admin-guide/kernel-parameters.txt | 15 +++++++++++++++
-> >  fs/proc/vmcore.c                                | 13 +++++++++++++
-> >  2 files changed, 28 insertions(+)
-> >
-> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > index 43176340c73d..2d48e39fd080 100644
-> > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > @@ -5062,6 +5062,21 @@
-> >                       decrease the size and leave more room for directly
-> >                       mapped kernel RAM.
-> >
-> > +     vmcore_device_dump=
-> > +                     [VMCORE]
+> > strstr will locate the first acpi_rsdp, what about multiple acpi_rsdp
+> > provided?
 >
-> It looks better to have above two line merged in one line, also use
-> [KNL, KDUMP] will be better.
+> Good catch, should always use the latest acpi_rsdp provided, will fix that.
 >
-> > +                     Format: {"off" | "on"}
-> > +                     If CONFIG_PROC_VMCORE_DEVICE_DUMP is set,
-> > +                     this parameter allows enable or disable device dump
-> > +                     for vmcore.
-> > +                     Device dump allows drivers to append dump data to
-> > +                     vmcore so you can collect driver specified debug info.
-> > +                     Note that the drivers could append the data without
-> > +                     any limit, and the data is stored in memory, this may
-> > +                     bring a significant memory stress. If you want to turn
-> > +                     on this option, make sure you have reserved enough memory
-> > +                     with crashkernel= parameter.
-> > +                     default: off
-> > +
-> >       vmcp_cma=nn[MG] [KNL,S390]
-> >                       Sets the memory size reserved for contiguous memory
-> >                       allocations for the vmcp device driver.
-> > diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> > index 3fe90443c1bb..d1b608b0efad 100644
-> > --- a/fs/proc/vmcore.c
-> > +++ b/fs/proc/vmcore.c
-> > @@ -53,6 +53,8 @@ static struct proc_dir_entry *proc_vmcore;
-> >  /* Device Dump list and mutex to synchronize access to list */
-> >  static LIST_HEAD(vmcoredd_list);
-> >  static DEFINE_MUTEX(vmcoredd_mutex);
-> > +
-> > +static bool vmcoredd_enabled;
-> >  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
 > >
-> >  /* Device Dump Size */
-> > @@ -1451,6 +1453,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
-> >       size_t data_size;
-> >       int ret;
-> >
-> > +     if (!vmcoredd_enabled) {
-> > +             pr_err_once("Device dump is disabled\n");
-> > +             return -EINVAL;
-> > +     }
-> > +
-> >       if (!data || !strlen(data->dump_name) ||
-> >           !data->vmcoredd_callback || !data->size)
-> >               return -EINVAL;
-> > @@ -1502,6 +1509,12 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
-> >       return ret;
-> >  }
-> >  EXPORT_SYMBOL(vmcore_add_device_dump);
-> > +
-> > +static int __init vmcoredd_parse_cmdline(char *arg)
-> > +{
-> > +     return kstrtobool(arg, &vmcoredd_enabled);
-> > +}
-> > +__setup("vmcore_device_dump=", vmcoredd_parse_cmdline);
-> >  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
-> >
-> >  /* Free all dumps in vmcore device dump list */
-> > --
-> > 2.21.0
+> > BTW, if one provide a wrong adress in acpi_rsdp= cmdline then it is not
+> > usable.
 > >
 >
-> Thanks
-> Dave
+> I think in that case kernel will not boot. If kexec is available then
+> it means a right value is given.
+>
 
-Good suggestion, I'll update in V3.
+After double check the kernel will boot even wrong acpi_rsdp is given,
+so I'll drop this part. boot_params in newer kernel will be enough to
+make sure kexec loop boot with EFI disabled won't fail.
 
 -- 
 Best Regards,
