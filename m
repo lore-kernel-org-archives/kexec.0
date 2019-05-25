@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from bilbo.ozlabs.org ([2401:3900:2:1::2] helo=ozlabs.org)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hU9jJ-0003nI-R2
- for kexec@lists.infradead.org; Fri, 24 May 2019 12:55:27 +0000
-Date: Fri, 24 May 2019 20:54:56 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v3] vmcore: Add a kernel parameter vmcore_device_dump
-Message-ID: <20190524125456.GA3342@dhcp-128-65.nay.redhat.com>
-References: <20190524062922.26399-1-kasong@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190524062922.26399-1-kasong@redhat.com>
+ id 1hUKxe-0005jE-BB
+ for kexec@lists.infradead.org; Sat, 25 May 2019 00:55:00 +0000
+In-Reply-To: <20190522220158.18479-1-bauerman@linux.ibm.com>
+From: Michael Ellerman <patch-notifications@ellerman.id.au>
+Subject: Re: [PATCH] powerpc: Fix loading of kernel + initramfs with
+ kexec_file_load()
+Message-Id: <459lBd53mCz9sBr@ozlabs.org>
+Date: Sat, 25 May 2019 10:54:49 +1000 (AEST)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,141 +17,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>
-Cc: Bhupesh Sharma <bhsharma@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Alexey Dobriyan <adobriyan@gmail.com>
+To: Thiago Jung Bauermann <bauerman@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>
 
-On 05/24/19 at 02:29pm, Kairui Song wrote:
-> Since commit 2724273e8fd0 ("vmcore: add API to collect hardware dump in
-> second kernel"), drivers is allowed to add device related dump data to
-> vmcore as they want by using the device dump API. This have a potential
-> issue, the data is stored in memory, drivers may append too much data
-> and use too much memory. The vmcore is typically used in a kdump kernel
-> which runs in a pre-reserved small chunk of memory. So as a result it
-> will make kdump unusable at all due to OOM issues.
+On Wed, 2019-05-22 at 22:01:58 UTC, Thiago Jung Bauermann wrote:
+> Commit b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
+> changed kexec_add_buffer() to skip searching for a memory location if
+> kexec_buf.mem is already set, and use the address that is there.
 > 
-> So introduce new vmcore_device_dump= kernel parameter, and disable
-> device dump by default. User can enable it only if device dump data is
-> required for debugging, and have the chance to increase the kdump
-> reserved memory accordingly before device dump fails kdump.
+> In powerpc code we reuse a kexec_buf variable for loading both the kernel
+> and the initramfs by resetting some of the fields between those uses, but
+> not mem. This causes kexec_add_buffer() to try to load the kernel at the
+> same address where initramfs will be loaded, which is naturally rejected:
 > 
-> Signed-off-by: Kairui Song <kasong@redhat.com>
+>   # kexec -s -l --initrd initramfs vmlinuz
+>   kexec_file_load failed: Invalid argument
 > 
-> ---
+> Setting the mem field before every call to kexec_add_buffer() fixes this
+> regression.
 > 
->  Update from V2:
->   - Improve related docs
-> 
->  Update from V1:
->   - Use bool parameter to turn it on/off instead of letting user give
->     the size limit. Size of device dump is hard to determine.
-> 
->  Documentation/admin-guide/kernel-parameters.txt | 14 ++++++++++++++
->  fs/proc/Kconfig                                 |  6 ++++--
->  fs/proc/vmcore.c                                | 13 +++++++++++++
->  3 files changed, 31 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 138f6664b2e2..3706ad9e1d97 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5078,6 +5078,20 @@
->  			decrease the size and leave more room for directly
->  			mapped kernel RAM.
->  
-> +	vmcore_device_dump=	[KNL,KDUMP]
-> +			Format: {"off" | "on"}
-> +			Depends on CONFIG_PROC_VMCORE_DEVICE_DUMP.
-> +			This parameter allows enable or disable device dump
-> +			for vmcore on kernel start-up.
-> +			Device dump allows drivers to append dump data to
-> +			vmcore so you can collect driver specified debug info.
-> +			Note that the drivers could append the data without
-> +			any limit, and the data is stored in memory, this may
-> +			bring a significant memory stress. If you want to turn
-> +			on this option, make sure you have reserved enough memory
-> +			with crashkernel= parameter.
-> +			default: off
-> +
->  	vmcp_cma=nn[MG]	[KNL,S390]
->  			Sets the memory size reserved for contiguous memory
->  			allocations for the vmcp device driver.
-> diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
-> index 817c02b13b1d..1a7a38976bb0 100644
-> --- a/fs/proc/Kconfig
-> +++ b/fs/proc/Kconfig
-> @@ -56,8 +56,10 @@ config PROC_VMCORE_DEVICE_DUMP
->  	  recovery kernel's initramfs to collect its underlying device
->  	  snapshot.
->  
-> -	  If you say Y here, the collected device dumps will be added
-> -	  as ELF notes to /proc/vmcore.
-> +	  If you say Y here, a new kernel parameter 'vmcore_device_dump'
-> +	  will be available. You can then enable device dump by passing
+> Fixes: b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> Reviewed-by: Dave Young <dyoung@redhat.com>
 
-"a new kernel parameter 'vmcore_device_dump' will be available" is not
-necessary, "new" is a not a clear word.  I suggest to remove this
-sentence.
+Applied to powerpc fixes, thanks.
 
-s/You can then/You can
+https://git.kernel.org/powerpc/c/8b909e3548706cbebc0a676067b81aad
 
-Otherwise:
-
-Acked-by: Dave Young <dyoung@redhat.com>
-
-
-> +	  'vmcore_device_dump=on' to kernel, the collected device dumps
-> +	  will be added as ELF notes to /proc/vmcore.
->  
->  config PROC_SYSCTL
->  	bool "Sysctl support (/proc/sys)" if EXPERT
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 3fe90443c1bb..d1b608b0efad 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -53,6 +53,8 @@ static struct proc_dir_entry *proc_vmcore;
->  /* Device Dump list and mutex to synchronize access to list */
->  static LIST_HEAD(vmcoredd_list);
->  static DEFINE_MUTEX(vmcoredd_mutex);
-> +
-> +static bool vmcoredd_enabled;
->  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
->  
->  /* Device Dump Size */
-> @@ -1451,6 +1453,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
->  	size_t data_size;
->  	int ret;
->  
-> +	if (!vmcoredd_enabled) {
-> +		pr_err_once("Device dump is disabled\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	if (!data || !strlen(data->dump_name) ||
->  	    !data->vmcoredd_callback || !data->size)
->  		return -EINVAL;
-> @@ -1502,6 +1509,12 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
->  	return ret;
->  }
->  EXPORT_SYMBOL(vmcore_add_device_dump);
-> +
-> +static int __init vmcoredd_parse_cmdline(char *arg)
-> +{
-> +	return kstrtobool(arg, &vmcoredd_enabled);
-> +}
-> +__setup("vmcore_device_dump=", vmcoredd_parse_cmdline);
->  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
->  
->  /* Free all dumps in vmcore device dump list */
-> -- 
-> 2.21.0
-> 
-
-Thanks
-Dave
+cheers
 
 _______________________________________________
 kexec mailing list
