@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hVUV3-0003rA-F8
- for kexec@lists.infradead.org; Tue, 28 May 2019 05:18:14 +0000
-Date: Tue, 28 May 2019 13:18:02 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v3] vmcore: Add a kernel parameter vmcore_device_dump
-Message-ID: <20190528051802.GA8195@dhcp-128-65.nay.redhat.com>
-References: <20190524062922.26399-1-kasong@redhat.com>
- <20190524125456.GA3342@dhcp-128-65.nay.redhat.com>
- <CACi5LpNue+9GVafB-aYxhTNRWf6jbRk9O6Vq8BCQO3EHWrNnrw@mail.gmail.com>
- <CACPcB9eGujOmDMfez2dWUtt2s6K=bDp2PEDSKhY9NLu2pHpfvg@mail.gmail.com>
+ id 1hVWZF-0002vr-0h
+ for kexec@lists.infradead.org; Tue, 28 May 2019 07:30:42 +0000
+Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel e820
+ table
+From: lijiang <lijiang@redhat.com>
+References: <20190423013007.17838-1-lijiang@redhat.com>
+Message-ID: <12847a03-3226-0b29-97b5-04d404410147@redhat.com>
+Date: Tue, 28 May 2019 15:30:21 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CACPcB9eGujOmDMfez2dWUtt2s6K=bDp2PEDSKhY9NLu2pHpfvg@mail.gmail.com>
+In-Reply-To: <20190423013007.17838-1-lijiang@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,129 +20,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>
-Cc: Bhupesh Sharma <bhsharma@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "David S . Miller" <davem@davemloft.net>, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Alexey Dobriyan <adobriyan@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Thomas.Lendacky@amd.com, x86@kernel.org, bhe@redhat.com, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, mingo@redhat.com, bp@alien8.de, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On 05/27/19 at 01:05pm, Kairui Song wrote:
-> On Mon, May 27, 2019 at 2:45 AM Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> >
-> > On Fri, May 24, 2019 at 6:25 PM Dave Young <dyoung@redhat.com> wrote:
-> > >
-> > > On 05/24/19 at 02:29pm, Kairui Song wrote:
-> > > > Since commit 2724273e8fd0 ("vmcore: add API to collect hardware dump in
-> > > > second kernel"), drivers is allowed to add device related dump data to
-> > > > vmcore as they want by using the device dump API. This have a potential
-> > > > issue, the data is stored in memory, drivers may append too much data
-> > > > and use too much memory. The vmcore is typically used in a kdump kernel
-> > > > which runs in a pre-reserved small chunk of memory. So as a result it
-> > > > will make kdump unusable at all due to OOM issues.
-> > > >
-> > > > So introduce new vmcore_device_dump= kernel parameter, and disable
-> > > > device dump by default. User can enable it only if device dump data is
-> > > > required for debugging, and have the chance to increase the kdump
-> > > > reserved memory accordingly before device dump fails kdump.
-> > > >
-> > > > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > > >
-> > > > ---
-> > > >
-> > > >  Update from V2:
-> > > >   - Improve related docs
-> > > >
-> > > >  Update from V1:
-> > > >   - Use bool parameter to turn it on/off instead of letting user give
-> > > >     the size limit. Size of device dump is hard to determine.
-> > > >
-> > > >  Documentation/admin-guide/kernel-parameters.txt | 14 ++++++++++++++
-> > > >  fs/proc/Kconfig                                 |  6 ++++--
-> > > >  fs/proc/vmcore.c                                | 13 +++++++++++++
-> > > >  3 files changed, 31 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > > > index 138f6664b2e2..3706ad9e1d97 100644
-> > > > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > > > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > > > @@ -5078,6 +5078,20 @@
-> > > >                       decrease the size and leave more room for directly
-> > > >                       mapped kernel RAM.
-> > > >
-> > > > +     vmcore_device_dump=     [KNL,KDUMP]
-> > > > +                     Format: {"off" | "on"}
-> > > > +                     Depends on CONFIG_PROC_VMCORE_DEVICE_DUMP.
-> > > > +                     This parameter allows enable or disable device dump
-> > > > +                     for vmcore on kernel start-up.
-> > > > +                     Device dump allows drivers to append dump data to
-> > > > +                     vmcore so you can collect driver specified debug info.
-> > > > +                     Note that the drivers could append the data without
-> > > > +                     any limit, and the data is stored in memory, this may
-> > > > +                     bring a significant memory stress. If you want to turn
-> > > > +                     on this option, make sure you have reserved enough memory
-> > > > +                     with crashkernel= parameter.
-> > > > +                     default: off
-> > > > +
-> > > >       vmcp_cma=nn[MG] [KNL,S390]
-> > > >                       Sets the memory size reserved for contiguous memory
-> > > >                       allocations for the vmcp device driver.
-> > > > diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
-> > > > index 817c02b13b1d..1a7a38976bb0 100644
-> > > > --- a/fs/proc/Kconfig
-> > > > +++ b/fs/proc/Kconfig
-> > > > @@ -56,8 +56,10 @@ config PROC_VMCORE_DEVICE_DUMP
-> > > >         recovery kernel's initramfs to collect its underlying device
-> > > >         snapshot.
-> > > >
-> > > > -       If you say Y here, the collected device dumps will be added
-> > > > -       as ELF notes to /proc/vmcore.
-> > > > +       If you say Y here, a new kernel parameter 'vmcore_device_dump'
-> > > > +       will be available. You can then enable device dump by passing
-> > >
-> > > "a new kernel parameter 'vmcore_device_dump' will be available" is not
-> > > necessary, "new" is a not a clear word.  I suggest to remove this
-> > > sentence.
-> > >
-> > > s/You can then/You can
-> >
-> > I agree with Dave. We are just trying to say here that even if
-> > CONFIG_PROC_VMCORE_DEVICE_DUMP is set to Y, one can still disable the
-> > device dump feature by passing parameter 'vmcore_device_dump=off' to
-> > the kernel.
-> >
-> > May be you can use the wording I mentioned in the v2 patch review,
-> > which tried to convey a similar meaning.
-> >
-> > With the change addressed:
-> > Reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
-> >
-> > Thanks,
-> > Bhupesh
-> >
-> OK, How about:
-> 
->   If you say Y here, device dump is still disabled by default.
->   You can enable device dump by passing 'vmcore_device_dump=on'
->   to kernel, the collected device dumps will be added as ELF
->   notes to /proc/vmcore.
-> 
-> If you think this is good I'll send V4 including the changes.
-
-Kairui, looks good.
-
-rethink about it, to be even simple, just replace the __setup with core_param like
-crash_kexec_post_notifiers, no need on/off. 
-
-> 
-> -- 
-> Best Regards,
-> Kairui Song
-
-Thanks
-Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGksIEJvcmlzIGFuZCBUaG9tYXMKCkNvdWxkIHlvdSBnaXZlIG1lIGFueSBzdWdnZXN0aW9ucyBh
+Ym91dCB0aGlzIHBhdGNoIHNlcmllcz8gT3RoZXIgcmV2aWV3ZXJzPwoKVGhhbmtzLgpMaWFuYm8K
+CuWcqCAyMDE55bm0MDTmnIgyM+aXpSAwOTozMCwgTGlhbmJvIEppYW5nIOWGmemBkzoKPiBUaGlz
+IHBhdGNoc2V0IGRpZCB0aHJlZSB0aGluZ3M6Cj4gCj4gYSkuIHg4Ni9lODIwLCByZXNvdXJjZTog
+YWRkIGEgbmV3IEkvTyByZXNvdXJjZSBkZXNjcmlwdG9yICdJT1JFU19ERVNDXwo+ICAgICBSRVNF
+UlZFRCcKPiAKPiBiKS4geDg2L21tOiBjaGFuZ2UgdGhlIGNoZWNrIGNvbmRpdGlvbiBpbiBTRVYg
+YmVjYXVzZSBhIG5ldyBkZXNjcmlwdG9yIGlzCj4gICAgIGludHJvZHVjZWQKPiAKPiBjKS4geDg2
+L2tleGVjX2ZpbGU6IGFkZCByZXNlcnZlZCBlODIwIHJhbmdlcyB0byBrZHVtcCBrZXJuZWwgZTgy
+MCB0YWJsZQo+IAo+IENoYW5nZXMgc2luY2UgdjE6Cj4gMS4gTW9kaWZpZWQgdGhlIHZhbHVlIG9m
+IGZsYWdzIHRvICIwIiwgd2hlbiB3YWxraW5nIHRocm91Z2ggdGhlIHdob2xlCj4gdHJlZSBmb3Ig
+ZTgyMCByZXNlcnZlZCByYW5nZXMuCj4gCj4gQ2hhbmdlcyBzaW5jZSB2MjoKPiAxLiBNb2RpZmll
+ZCB0aGUgdmFsdWUgb2YgZmxhZ3MgdG8gIjAiLCB3aGVuIHdhbGtpbmcgdGhyb3VnaCB0aGUgd2hv
+bGUKPiB0cmVlIGZvciBlODIwIHJlc2VydmVkIHJhbmdlcy4KPiAyLiBNb2RpZmllZCB0aGUgaW52
+YWxpZCBTT0IgY2hhaW4gaXNzdWUuCj4gCj4gQ2hhbmdlcyBzaW5jZSB2MzoKPiAxLiBEcm9wcGVk
+IFtQQVRDSCAxLzMgdjNdIHJlc291cmNlOiBmaXggYW4gZXJyb3Igd2hpY2ggd2Fsa3MgdGhyb3Vn
+aCBpb21lbQo+ICAgIHJlc291cmNlcy4gUGxlYXNlIHJlZmVyIHRvIHRoaXMgY29tbWl0IDwwMTBh
+OTNiZjk3Yzc+ICJyZXNvdXJjZTogRml4Cj4gICAgZmluZF9uZXh0X2lvbWVtX3JlcygpIGl0ZXJh
+dGlvbiBpc3N1ZSIKPiAKPiBDaGFuZ2VzIHNpbmNlIHY0Ogo+IDEuIEltcHJvdmUgdGhlIHBhdGNo
+IGxvZywgYW5kIGFkZCBrZXJuZWwgbG9nLgo+IAo+IENoYW5nZXMgc2luY2UgdjU6Cj4gMS4gUmV3
+cml0ZSB0aGVzZSBwYXRjaGVzIGxvZy4KPiAKPiBDaGFuZ2VzIHNpbmNlIHY2Ogo+IDEuIE1vZGlm
+eSB0aGUgW1BBVENIIDEvMl0sIGFuZCBhZGQgdGhlIG5ldyBJL08gcmVzb3VyY2UgZGVzY3JpcHRv
+cgo+ICAgICdJT1JFU19ERVNDX1JFU0VSVkVEJyBmb3IgdGhlIGlvbWVtIHJlc291cmNlcyBzZWFy
+Y2ggaW50ZXJmYWNlcywKPiAgICBhbmQgYWxzbyB1cGRhdGVzIHRoZXNlIGNvZGVzIHJlbGF0ZXMg
+dG8gJ0lPUkVTX0RFU0NfTk9ORScuCj4gMi4gTW9kaWZ5IHRoZSBbUEFUQ0ggMi8yXSwgYW5kIHdh
+bGsgdGhyb3VnaCBpbyByZXNvdXJjZSBiYXNlZCBvbiB0aGUKPiAgICBuZXcgZGVzY3JpcHRvciAn
+SU9SRVNfREVTQ19SRVNFUlZFRCcuCj4gMy4gVXBkYXRlIHBhdGNoIGxvZy4KPiAKPiBDaGFuZ2Vz
+IHNpbmNlIHY3Ogo+IDEuIEltcHJvdmUgcGF0Y2ggbG9nLgo+IDIuIEltcHJvdmUgdGhpcyBmdW5j
+dGlvbiBfX2lvcmVtYXBfY2hlY2tfZGVzY19vdGhlcigpLgo+IDMuIE1vZGlmeSBjb2RlIGNvbW1l
+bnQgaW4gdGhlIF9faW9yZW1hcF9jaGVja19kZXNjX290aGVyKCkKPiAKPiBDaGFuZ2VzIHNpbmNl
+IHY4Ogo+IDEuIEdldCByaWQgb2YgYWxsIGNoYW5nZXMgYWJvdXQgaWE2NC4oQm9yaXNsYXYncyBz
+dWdnZXN0aW9uKQo+IDIuIENoYW5nZSB0aGUgZXhhbWluYXRpb24gY29uZGl0aW9uIHRvIHRoZSAn
+SU9SRVNfREVTQ19BQ1BJXyonLgo+IDMuIE1vZGlmeSB0aGUgc2lnbmF0dXJlLiBUaGlzIHBhdGNo
+KGFkZCB0aGUgbmV3IEkvTyByZXNvdXJjZQo+ICAgIGRlc2NyaXB0b3IgJ0lPUkVTX0RFU0NfUkVT
+RVJWRUQnKSB3YXMgc3VnZ2VzdGVkIGJ5IEJvcmlzLgo+IAo+IENoYW5nZXMgc2luY2Ugdjk6Cj4g
+MS4gSW1wcm92ZSBwYXRjaCBsb2cuCj4gMi4gTm8gbmVlZCB0byBtb2RpZnkgdGhlIGtlcm5lbC9y
+ZXNvdXJjZS5jLCBzbyBjb3JyZWN0IHRoZW0uCj4gMy4gQ2hhbmdlIHRoZSBuYW1lIG9mIHRoZSBf
+X2lvcmVtYXBfY2hlY2tfZGVzY19vdGhlcigpIHRvCj4gICAgX19pb3JlbWFwX2NoZWNrX2Rlc2Nf
+bm9uZV9hbmRfcmVzZXJ2ZWQoKSwgYW5kIG1vZGlmeSB0aGUKPiAgICBjaGVjayBjb25kaXRpb24s
+IGFkZCBjb21tZW50IGFib3ZlIGl0Lgo+IAo+IENoYW5nZXMgc2luY2UgdjEwOgo+IDEuIFNwbGl0
+IHRoZW0gaW50byB0aHJlZSBwYXRjaGVzLCB0aGUgc2Vjb25kIHBhdGNoIGlzIGN1cnJlbnRseSBh
+ZGRlZC4KPiAyLiBDaGFuZ2Ugc3RydWN0IGlvcmVtYXBfbWVtX2ZsYWdzIHRvIHN0cnVjdCBpb3Jl
+bWFwX2Rlc2MgYW5kIHJlZGVmaW5lCj4gaXQuCj4gMy4gQ2hhbmdlIHRoZSBuYW1lIG9mIHRoZSBf
+X2lvcmVtYXBfY2hlY2tfZGVzY19vdGhlcigpIHRvCj4gX19pb3JlbWFwX2NoZWNrX2Rlc2MoKS4K
+PiA0LiBDaGFuZ2UgdGhlIGNoZWNrIGNvbmRpdGlvbiBpbiBTRVYgYW5kIGFsc28gaW1wcm92ZSB0
+aGVtLgo+IDUuIE1vZGlmeSB0aGUgcmV0dXJuIHZhbHVlIGZvciBzb21lIGZ1bmN0aW9ucy4KPiAK
+PiBMaWFuYm8gSmlhbmcgKDMpOgo+ICAgeDg2L2U4MjAsIHJlc291cmNlOiBhZGQgYSBuZXcgSS9P
+IHJlc291cmNlIGRlc2NyaXB0b3IKPiAgICAgJ0lPUkVTX0RFU0NfUkVTRVJWRUQnCj4gICB4ODYv
+bW06IGNoYW5nZSB0aGUgY2hlY2sgY29uZGl0aW9uIGluIFNFViBiZWNhdXNlIGEgbmV3IGRlc2Ny
+aXB0b3IgaXMKPiAgICAgaW50cm9kdWNlZAo+ICAgeDg2L2tleGVjX2ZpbGU6IGFkZCByZXNlcnZl
+ZCBlODIwIHJhbmdlcyB0byBrZHVtcCBrZXJuZWwgZTgyMCB0YWJsZQo+IAo+ICBhcmNoL3g4Ni9r
+ZXJuZWwvY3Jhc2guYyB8ICA2ICsrKysrCj4gIGFyY2gveDg2L2tlcm5lbC9lODIwLmMgIHwgIDIg
+Ky0KPiAgYXJjaC94ODYvbW0vaW9yZW1hcC5jICAgfCA1OSArKysrKysrKysrKysrKysrKysrKysr
+KysrKy0tLS0tLS0tLS0tLS0tLQo+ICBpbmNsdWRlL2xpbnV4L2lvcG9ydC5oICB8IDEwICsrKysr
+KysKPiAgNCBmaWxlcyBjaGFuZ2VkLCA1NCBpbnNlcnRpb25zKCspLCAyMyBkZWxldGlvbnMoLSkK
+PiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
+IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
