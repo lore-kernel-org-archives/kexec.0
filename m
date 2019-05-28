@@ -1,31 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-it1-f193.google.com ([209.85.166.193])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hVM1E-00056o-4M
- for kexec@lists.infradead.org; Mon, 27 May 2019 20:14:54 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x4RKBsn3036912
- for <kexec@lists.infradead.org>; Mon, 27 May 2019 16:14:49 -0400
-Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2srkvx64u9-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 27 May 2019 16:14:49 -0400
-Received: from localhost
- by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.ibm.com>;
- Mon, 27 May 2019 21:14:48 +0100
-References: <20190522220158.18479-1-bauerman@linux.ibm.com>
- <459lBd53mCz9sBr@ozlabs.org>
-From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH] powerpc: Fix loading of kernel + initramfs with
- kexec_file_load()
-In-reply-to: <459lBd53mCz9sBr@ozlabs.org>
-Date: Mon, 27 May 2019 17:14:17 -0300
+ id 1hVSBi-0003fW-G6
+ for kexec@lists.infradead.org; Tue, 28 May 2019 02:50:08 +0000
+Received: by mail-it1-f193.google.com with SMTP id 9so1667559itf.4
+ for <kexec@lists.infradead.org>; Mon, 27 May 2019 19:50:06 -0700 (PDT)
 MIME-Version: 1.0
-Message-Id: <87pno3psdi.fsf@morokweng.localdomain>
+References: <20190429135536.GC2324@zn.tnic>
+ <20190513014248.GA16774@MiWiFi-R3L-srv>
+ <20190513070725.GA20105@zn.tnic> <20190513073254.GB16774@MiWiFi-R3L-srv>
+ <20190513075006.GB20105@zn.tnic> <20190513080210.GC16774@MiWiFi-R3L-srv>
+ <20190515051717.GA13703@jeru.linux.bs1.fc.nec.co.jp>
+ <20190515065843.GA24212@zn.tnic>
+ <20190515070942.GA17154@jeru.linux.bs1.fc.nec.co.jp>
+ <CACPcB9cyiPc8JYmt1QhYNipSsJ5z3wTOJ90LS5LTx4YqwaG8rA@mail.gmail.com>
+ <20190521180855.GA7793@cz.tnic>
+In-Reply-To: <20190521180855.GA7793@cz.tnic>
+From: Kairui Song <kasong@redhat.com>
+Date: Tue, 28 May 2019 10:49:54 +0800
+Message-ID: <CACPcB9fg5RGXcBbESNnn9rV0DSoh4jYkVWZrdcRWay5KKAjLww@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
+ and ACPI tables
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,42 +33,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: "x86@kernel.org" <x86@kernel.org>, Baoquan He <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>, Junichi Nomura <j-nomura@ce.jp.nec.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "dyoung@redhat.com" <dyoung@redhat.com>
 
-
-Michael Ellerman <patch-notifications@ellerman.id.au> writes:
-
-> On Wed, 2019-05-22 at 22:01:58 UTC, Thiago Jung Bauermann wrote:
->> Commit b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
->> changed kexec_add_buffer() to skip searching for a memory location if
->> kexec_buf.mem is already set, and use the address that is there.
->> 
->> In powerpc code we reuse a kexec_buf variable for loading both the kernel
->> and the initramfs by resetting some of the fields between those uses, but
->> not mem. This causes kexec_add_buffer() to try to load the kernel at the
->> same address where initramfs will be loaded, which is naturally rejected:
->> 
->>   # kexec -s -l --initrd initramfs vmlinuz
->>   kexec_file_load failed: Invalid argument
->> 
->> Setting the mem field before every call to kexec_add_buffer() fixes this
->> regression.
->> 
->> Fixes: b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
->> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->> Reviewed-by: Dave Young <dyoung@redhat.com>
+On Wed, May 22, 2019 at 2:09 AM Borislav Petkov <bp@alien8.de> wrote:
 >
-> Applied to powerpc fixes, thanks.
+> On Tue, May 21, 2019 at 05:02:59PM +0800, Kairui Song wrote:
+> > Hi Boris, would you prefer to just fold Junichi update patch into the
+> > previous one or I should send an updated patch?
 >
-> https://git.kernel.org/powerpc/c/8b909e3548706cbebc0a676067b81aad
+> Please send a patch ontop after Ingo queues your old one, which should
+> happen soon. This way it would also document the fact that there are
+> machines with NVS regions only.
+>
+> Thx.
+>
 
-Thanks!!
+Hi, by now, I still didn't see any tip branch pick up this patch yet,
+any update?
 
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+--
+Best Regards,
+Kairui Song
 
 _______________________________________________
 kexec mailing list
