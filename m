@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hWdka-0004xJ-2a
- for kexec@lists.infradead.org; Fri, 31 May 2019 09:23:01 +0000
-Date: Fri, 31 May 2019 11:22:56 +0200
+ id 1hWdpD-0006da-86
+ for kexec@lists.infradead.org; Fri, 31 May 2019 09:27:48 +0000
+Date: Fri, 31 May 2019 11:27:44 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 3/3] x86: Support multiboot2 images
-Message-ID: <20190531092256.5kvnkfhpa6oweewi@verge.net.au>
-References: <1558423948-24583-1-git-send-email-vrd@amazon.de>
- <1558423948-24583-3-git-send-email-vrd@amazon.de>
+Subject: Re: [PATCH v3 0/4] x86: Always try to fill acpi_rsdp_addr in boot
+ params
+Message-ID: <20190531092743.qgwku2ob4trduadr@verge.net.au>
+References: <20190524062321.24126-1-kasong@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1558423948-24583-3-git-send-email-vrd@amazon.de>
+In-Reply-To: <20190524062321.24126-1-kasong@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,39 +24,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Varad Gautam <vrd@amazon.de>
-Cc: kexec@lists.infradead.org, David Woodhouse <dwmw@amazon.co.uk>
+To: Kairui Song <kasong@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>
 
-On Tue, May 21, 2019 at 09:32:28AM +0200, Varad Gautam wrote:
-> Add a new type `multiboot2-x86` that allows loading multiboot2 images
-> within the relocation range specified in the image header. The image is
-> always placed at the lowest available address, regardless of the
-> preference information.
+On Fri, May 24, 2019 at 02:23:17PM +0800, Kairui Song wrote:
+> This patch sync the behavior of user space kexec and kexec_file_load,
+> they will both fill the boot_params.acpi_rsdp_addr with a valid RSDP
+> value, to make sure second kernel can always get the RSDP consistently.
 > 
-> Also make multiboot2 take priority over multiboot if the -t flag isn't
-> specified.
+> This will make it effortless to boot newer version of kernel (5.0+)
+> without specifying acpi_rsdp= cmdline on EFI system even with EFI
+> service disabled. Should not change any behavior with older kernels.
 > 
-> Signed-off-by: Varad Gautam <vrd@amazon.de>
-> ---
->  doc/multiboot2.html              | 2716 ++++++++++++++++++++++++++++++++++++++
+> Update from V2:
+>   - Drop unneeded 'packed' attribute for boot parameters structure
+>   - Don't trust kernel cmdline as a reliable acpi rsdp source
+> 
+> Update from V1:
+>   - Split into multiple patches for a cleaner structure, content is not
+>     changed.
 
-multiboot2.html does not appear to be licenced as GPLv2.
-Is it possible to provide a link to this document
-rather than the text itself?
+Thanks Kairui,
 
->  include/x86/multiboot2.h         |  416 ++++++
->  kexec/arch/i386/kexec-mb2-x86.c  |  543 ++++++++
->  kexec/arch/i386/kexec-x86.c      |    2 +
->  kexec/arch/x86_64/Makefile       |    1 +
->  kexec/arch/x86_64/kexec-x86_64.c |    2 +
->  kexec/arch/x86_64/kexec-x86_64.h |    5 +
->  kexec/kexec.8                    |   24 +
->  8 files changed, 3709 insertions(+)
->  create mode 100644 doc/multiboot2.html
->  create mode 100644 include/x86/multiboot2.h
->  create mode 100644 kexec/arch/i386/kexec-mb2-x86.c
-
-...
+applied.
 
 _______________________________________________
 kexec mailing list
