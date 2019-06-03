@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it1-f194.google.com ([209.85.166.194])
+Received: from szxga06-in.huawei.com ([45.249.212.32] helo=huawei.com)
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hWdzp-0003yw-0r
- for kexec@lists.infradead.org; Fri, 31 May 2019 09:38:46 +0000
-Received: by mail-it1-f194.google.com with SMTP id h20so14663143itk.4
- for <kexec@lists.infradead.org>; Fri, 31 May 2019 02:38:44 -0700 (PDT)
+ id 1hXbwg-0007L5-CO
+ for kexec@lists.infradead.org; Mon, 03 Jun 2019 01:39:32 +0000
+Subject: Re: [PATCH] arm64: support more than one crash kernel regions
+References: <20190403025504.30480-1-chenzhou10@huawei.com>
+ <20190531092854.by4sgjggjyozgyaw@verge.net.au>
+From: Chen Zhou <chenzhou10@huawei.com>
+Message-ID: <0c438a39-81af-e2e1-3e45-946f694a6125@huawei.com>
+Date: Mon, 3 Jun 2019 09:39:10 +0800
 MIME-Version: 1.0
-References: <20181123092633.16111-1-kasong@redhat.com>
- <20190531092935.sfpbxeu7uquogtd5@verge.net.au>
-In-Reply-To: <20190531092935.sfpbxeu7uquogtd5@verge.net.au>
-From: Kairui Song <kasong@redhat.com>
-Date: Fri, 31 May 2019 17:38:32 +0800
-Message-ID: <CACPcB9fCDnvB-bQ0NngStydh4UBy0cV7CYA1QPj1+Apea1sSwQ@mail.gmail.com>
-Subject: Re: [PATCH] x86: Handle 64bit framebuffer memory address properly
+In-Reply-To: <20190531092854.by4sgjggjyozgyaw@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,37 +24,35 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
+Cc: takahiro.akashi@linaro.org, wangkefeng.wang@huawei.com, kexec@lists.infradead.org
 
-On Fri, May 31, 2019 at 5:29 PM Simon Horman <horms@verge.net.au> wrote:
->
-> On Fri, Nov 23, 2018 at 05:26:33PM +0800, Kairui Song wrote:
-> > In a EFI system, the frame buffer address is 64bit, so currently
-> > if the address is beyound 4G, kexec will set wrong address due to
-> > truncate.
-> >
-> > Linux kernel commit ae2ee627dc87 ('efifb: Add support for 64-bit
-> > frame buffer addresses') added support for 64bit frame buffer
-> > address, an 'ext_lfb_base' field is added as the upper 32-bits of
-> > the frame buffer, and introduced a new capability flag
-> > 'VIDEO_TYPE_CAPABILITY_64BIT_BASE' to indicate if the extend field is
-> > used.
-> >
-> > This patch adopts this change, set proper extent address and capability
-> > flag when the address is beyound 4G.
-> >
-> > Signed-off-by: Kairui Song <kasong@redhat.com>
->
+Hi Simon,
+
+On 2019/5/31 17:28, Simon Horman wrote:
+> On Wed, Apr 03, 2019 at 10:55:04AM +0800, Chen Zhou wrote:
+>> When crashkernel is reserved above 4G in memory, kernel should
+>> reserve some amount of low memory for swiotlb and some DMA buffers.
+>> So there may be two crash kernel regions, one is below 4G, the other
+>> is above 4G.
+>>
+>> Currently, there is only one crash kernel region on arm64, and pass
+>> "linux,usable-memory-range = <BASE SIZE>" property to crash dump
+>> kernel. Now, we pass
+>> "linux,usable-memory-range = <BASE1 SIZE1 BASE2 SIZE2>" to crash
+>> dump kernel to support two crash kernel regions and load crash
+>> kernel high.
+>>
+>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> 
 > Sorry for letting this slip through the cracks.
 > Please let me know if this is still relevant.
+> 
 
-Hi Simon, I checked kexec-tools repo and this patch is merged already,
-maybe you replied the wrong mail?
+This is still relevant and the kernel patches are still under discussion.
 
+Thanks,
+Chen Zhou
 
---
-Best Regards,
-Kairui Song
 
 _______________________________________________
 kexec mailing list
