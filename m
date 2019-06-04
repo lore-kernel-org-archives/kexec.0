@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hY5cG-0002Md-MW
- for kexec@lists.infradead.org; Tue, 04 Jun 2019 09:20:26 +0000
-Date: Tue, 4 Jun 2019 11:20:17 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] x86: Clear isVGA flag if current fb driver is mimicking
- VGA
-Message-ID: <20190604092017.7gdsla2ey3l77edj@verge.net.au>
-References: <20181123092801.16411-1-kasong@redhat.com>
- <20190531092923.ytuwwmmmmteh77cw@verge.net.au>
- <CACPcB9fcrQybChtt1GHEYOQ1K2hOWJANJP3sH5kxwpEC9RbRnw@mail.gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1hY9pD-0005Y9-34
+ for kexec@lists.infradead.org; Tue, 04 Jun 2019 13:50:04 +0000
+Date: Tue, 4 Jun 2019 21:49:52 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: The current SME implementation fails kexec/kdump kernel booting.
+Message-ID: <20190604134952.GC26891@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CACPcB9fcrQybChtt1GHEYOQ1K2hOWJANJP3sH5kxwpEC9RbRnw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,34 +21,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
+To: Thomas.Lendacky@amd.com
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 05:38:25PM +0800, Kairui Song wrote:
-> On Fri, May 31, 2019 at 5:29 PM Simon Horman <horms@verge.net.au> wrote:
-> >
-> > On Fri, Nov 23, 2018 at 05:28:01PM +0800, Kairui Song wrote:
-> > > Some device (eg. hyperv_fb) will mimic EFI (or VESA) VGA on first boot
-> > > up, but after the real driver is loaded, it will switch to new mode
-> > > and no longer compatible with EFI/VESA VGA. Keep setting
-> > > orig_video_isVGA to EFI/VESA VGA flag will get wrong driver loaded and
-> > > try to manipulate the framebuffer in a wrong way.
-> > >
-> > > As we have already take care of "VESA VGA" and "EFI VGA", just set the
-> > > orig_video_isVGA to 0 for any other driver reports as EFI/VESA VGA but
-> > > is not EFI/VESA VGA.
-> > >
-> > > Signed-off-by: Kairui Song <kasong@redhat.com>
-> >
-> > Sorry for letting this slip through the cracks.
-> > Please let me know if this is still relevant.
-> 
-> Hi Simon, after fb5a879 ("x86: Introduce a new option
-> --reuse-video-type") in kexec-tools, this patch is no longer needed.
+Hi Tom,
 
-Hi Kairui,
+Lianbo reported kdump kernel can't boot well with 'nokaslr' added, and
+have to enable KASLR in kdump kernel to make it boot successfully. This
+blocked his work on enabling sme for kexec/kdump. And on some machines
+SME kernel can't boot in 1st kernel.
 
-thanks for the clarification.
+I checked code of SME implementation, and found out the root cause. The
+above failures are caused by SME code, sme_encrypt_kernel(). In
+sme_encrypt_kernel(), you get a 2M of encryption work area as intermediate
+buffer to encrypt kernel in-place. And the work area is just after _end of
+kernel.
+
+This happens to work in 1st kernel. But it will fail kexec/kdump kernel
+absolutely. Because we load realmode/kernel/initrd in kexec-tools from
+top to down. In kexec-tools, realmode is put just after kernel image. If
+KASLR enabled, kernel may be randomized to other position, then kdump
+kernel can boot. However, if nokaslr specified, the 2M intermediate
+encryption workarea will definitely stump into the following realmode,
+and fail kexec/kdump kernel booting. 
+
+I have hacked kexec-tools code to put real mode area 4M away from the
+kernel image end, it works and confirm my finding. So the current SME
+in-place encryption way is not only a kexec/kdump issue, but also an
+issue in 1st kernel. Because KASLR could put kernel at the end of an
+available memory region, how to make sure the next 2M intermediate
+workarea must exist; if KASLR put kernel to be close to starting address
+of any cmdline/initrd/setup_data, how to make sure the gap between them
+must be larger than 2M.
+
+Thanks
+Baoquan
 
 _______________________________________________
 kexec mailing list
