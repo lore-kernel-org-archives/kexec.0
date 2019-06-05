@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hYEj1-00012n-Ns
- for kexec@lists.infradead.org; Tue, 04 Jun 2019 19:04:01 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: [PATCH] makedumpfile/arm64: fix get_kaslr_offset_arm64() to return
- kaslr_offset correctly
-Date: Tue, 4 Jun 2019 19:00:15 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03577879@BPXM09GP.gisp.nec.co.jp>
-Content-Language: en-US
+ id 1hYKDk-0007ct-Qx
+ for kexec@lists.infradead.org; Wed, 05 Jun 2019 00:56:06 +0000
+Date: Wed, 5 Jun 2019 08:56:00 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: The current SME implementation fails kexec/kdump kernel booting.
+Message-ID: <20190605005600.GF26891@MiWiFi-R3L-srv>
+References: <20190604134952.GC26891@MiWiFi-R3L-srv>
+ <508c2853-dc4f-70a6-6fa8-97c950dc31c6@amd.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <508c2853-dc4f-70a6-6fa8-97c950dc31c6@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,89 +24,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: Bhupesh Sharma <bhsharma@redhat.com>
+To: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Currently, the get_kaslr_offset_arm64() function has the following
-condition to return info->kaslr_offset, but kernel text mapping is
-placed in another range on arm64 by default, so it returns 0 for
-kernel text addresses.
+On 06/04/19 at 03:56pm, Lendacky, Thomas wrote:
+> On 6/4/19 8:49 AM, Baoquan He wrote:
+> > Hi Tom,
+> > 
+> > Lianbo reported kdump kernel can't boot well with 'nokaslr' added, and
+> > have to enable KASLR in kdump kernel to make it boot successfully. This
+> > blocked his work on enabling sme for kexec/kdump. And on some machines
+> > SME kernel can't boot in 1st kernel.
+> > 
+> > I checked code of SME implementation, and found out the root cause. The
+> > above failures are caused by SME code, sme_encrypt_kernel(). In
+> > sme_encrypt_kernel(), you get a 2M of encryption work area as intermediate
+> > buffer to encrypt kernel in-place. And the work area is just after _end of
+> > kernel.
+> 
+> I remember worrying about something like this back when I was testing the
+> kexec support. I had come up with a patch to address it, but never got the
+> time to test and submit it.  I've included it here if you'd like to test
+> it (I haven't done run this patch in quite some time). If it works, we can
+> think about submitting it.
 
-    if (vaddr >= __START_KERNEL_map &&
-                    vaddr < __START_KERNEL_map + info->kaslr_offset)
+Thanks for your quick response and making this patch, Tom.
 
-Consequently, kernel text symbols in erase config are resolved wrongly
-with KASLR enabled vmcore, and makedumpfile erases unintended data.
-
-Since the return value of get_kaslr_offset_arm64() is used in
-resolve_config_entry() only, and in that case, we must have a vmlinux,
-so get the addresses of _text and _end from vmlinux and use them.
-
-Signed-off-by: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
----
- arch/arm64.c   | 24 ++++++++++++++++++++++--
- makedumpfile.h |  1 -
- 2 files changed, 22 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64.c b/arch/arm64.c
-index 5fcf59d..a61d96f 100644
---- a/arch/arm64.c
-+++ b/arch/arm64.c
-@@ -215,6 +215,8 @@ get_kaslr_offset_arm64(unsigned long vaddr)
- {
- 	unsigned int i;
- 	char buf[BUFSIZE_FGETS], *endp;
-+	static unsigned long _text = NOT_FOUND_SYMBOL;
-+	static unsigned long _end = NOT_FOUND_SYMBOL;
- 
- 	if (!info->kaslr_offset && info->file_vmcoreinfo) {
- 		if (fseek(info->file_vmcoreinfo, 0, SEEK_SET) < 0) {
-@@ -237,9 +239,27 @@ get_kaslr_offset_arm64(unsigned long vaddr)
- 			}
- 		}
- 	}
-+	if (!info->kaslr_offset)
-+		return 0;
-+
-+	if (_text == NOT_FOUND_SYMBOL) {
-+		/*
-+		 * Currently, the return value of this function is used in
-+		 * resolve_config_entry() only, and in that case, we must
-+		 * have a vmlinux.
-+		 */
-+		if (info->name_vmlinux) {
-+			_text = get_symbol_addr("_text");
-+			_end = get_symbol_addr("_end");
-+		}
-+		DEBUG_MSG("_text: %lx, _end: %lx\n", _text, _end);
-+		if (_text == NOT_FOUND_SYMBOL || _end == NOT_FOUND_SYMBOL) {
-+			ERRMSG("Cannot determine _text and _end address\n");
-+			return FALSE;
-+		}
-+	}
- 
--	if (vaddr >= __START_KERNEL_map &&
--			vaddr < __START_KERNEL_map + info->kaslr_offset) {
-+	if (_text <= vaddr && vaddr <= _end) {
- 		DEBUG_MSG("info->kaslr_offset: %lx\n", info->kaslr_offset);
- 		return info->kaslr_offset;
- 	} else {
-diff --git a/makedumpfile.h b/makedumpfile.h
-index b1176b7..bd60acc 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -542,7 +542,6 @@ do { \
- #ifdef __aarch64__
- unsigned long get_kvbase_arm64(void);
- #define KVBASE			get_kvbase_arm64()
--#define __START_KERNEL_map	(0xffffffff80000000UL)
- 
- #endif /* aarch64 */
- 
--- 
-2.18.1
+Tested on a speedway machine, it entered into kernel, but failed in
+below stage. Tested two times, always happened.
 
 
+[    4.978521] Freeing unused decrypted memory: 2040K
+[    4.983800] Freeing unused kernel image memory: 2344K
+[    4.988943] Write protecting the kernel read-only data: 18432k
+[    4.995306] Freeing unused kernel image memory: 2012K
+[    5.000488] Freeing unused kernel image memory: 256K
+[    5.005540] Run /init as init process
+[    5.009443] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00007f00
+[    5.017230] CPU: 0 PID: 1 Comm: init Not tainted 5.2.0-rc2+ #38
+[    5.023251] Hardware name: AMD Corporation Speedway/Speedway, BIOS RSW1004B 10/18/2017
+[    5.031299] Call Trace:
+[    5.033793]  dump_stack+0x46/0x60
+[    5.037169]  panic+0xfb/0x2cb
+[    5.040191]  do_exit.cold.21+0x59/0x81
+[    5.044004]  do_group_exit+0x3a/0xa0
+[    5.047640]  __x64_sys_exit_group+0x14/0x20
+[    5.051899]  do_syscall_64+0x55/0x1c0
+[    5.055627]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[    5.060764] RIP: 0033:0x7fa1b1fc9e2e
+[    5.064404] Code: Bad RIP value.
+[    5.067687] RSP: 002b:00007fffc5abb778 EFLAGS: 00000202 ORIG_RAX: 00000000000000e7
+[    5.075296] RAX: ffffffffffffffda RBX: 00007fa1b1fd2528 RCX: 00007fa1b1fc9e2e
+[    5.082625] RDX: 000000000000007f RSI: 000000000000003c RDI: 000000000000007f
+[    5.089879] RBP: 00007fa1b21d8d00 R08: 00000000000000e7 R09: 00007fffc5abb688
+[    5.097134] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
+[    5.104386] R13: 0000000000000001 R14: 00007fa1b21d8d40 R15: 00007fa1b21d8d30
+[    5.111645] Kernel Offset: disabled
+[    5.423002] Rebooting in 10 seconds..
+[   15.429641] ACPI MEMORY or I/O RESET_REG.
 
 _______________________________________________
 kexec mailing list
