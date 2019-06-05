@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 1/4] x86: kdump: move reserve_crashkernel_low() into
- kexec_core.c
+Subject: Re: [PATCH 2/4] arm64: kdump: support reserving crashkernel above 4G
 References: <20190507035058.63992-1-chenzhou10@huawei.com>
- <20190507035058.63992-2-chenzhou10@huawei.com>
+ <20190507035058.63992-3-chenzhou10@huawei.com>
 From: James Morse <james.morse@arm.com>
-Message-ID: <6585f047-063c-6d6c-4967-1d8a472f30f4@arm.com>
-Date: Wed, 5 Jun 2019 17:29:21 +0100
+Message-ID: <df2b659d-7406-fbfd-597d-be3a3f69abcb@arm.com>
+Date: Wed, 5 Jun 2019 17:29:54 +0100
 MIME-Version: 1.0
-In-Reply-To: <20190507035058.63992-2-chenzhou10@huawei.com>
+In-Reply-To: <20190507035058.63992-3-chenzhou10@huawei.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,144 +26,137 @@ Cc: wangkefeng.wang@huawei.com, horms@verge.net.au, ard.biesheuvel@linaro.org, c
 Hello,
 
 On 07/05/2019 04:50, Chen Zhou wrote:
-> In preparation for supporting reserving crashkernel above 4G
-> in arm64 as x86_64 does, move reserve_crashkernel_low() into
-> kexec/kexec_core.c.
+> When crashkernel is reserved above 4G in memory, kernel should
+> reserve some amount of low memory for swiotlb and some DMA buffers.
+
+> Meanwhile, support crashkernel=X,[high,low] in arm64. When use
+> crashkernel=X parameter, try low memory first and fall back to high
+> memory unless "crashkernel=X,high" is specified.
+
+What is the 'unless crashkernel=...,high' for? I think it would be simpler to relax the
+ARCH_LOW_ADDRESS_LIMIT if reserve_crashkernel_low() allocated something.
+
+This way "crashkernel=1G" tries to allocate 1G below 4G, but fails if there isn't enough
+memory. "crashkernel=1G crashkernel=16M,low" allocates 16M below 4G, which is more likely
+to succeed, if it does it can then place the 1G block anywhere.
 
 
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index 905dae8..9ee33b6 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -463,59 +460,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
->  # define CRASH_ADDR_HIGH_MAX	MAXMEM
->  #endif
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index 413d566..82cd9a0 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -243,6 +243,9 @@ static void __init request_standard_resources(void)
+>  			request_resource(res, &kernel_data);
+>  #ifdef CONFIG_KEXEC_CORE
+>  		/* Userspace will find "Crash kernel" region in /proc/iomem. */
+> +		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
+> +		    crashk_low_res.end <= res->end)
+> +			request_resource(res, &crashk_low_res);
+>  		if (crashk_res.end && crashk_res.start >= res->start &&
+>  		    crashk_res.end <= res->end)
+>  			request_resource(res, &crashk_res);
+
+With both crashk_low_res and crashk_res, we end up with two entries in /proc/iomem called
+"Crash kernel". Because its sorted by address, and kexec-tools stops searching when it
+find "Crash kernel", you are always going to get the kernel placed in the lower portion.
+
+I suspect this isn't what you want, can we rename crashk_low_res for arm64 so that
+existing kexec-tools doesn't use it?
+
+
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index d2adffb..3fcd739 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -74,20 +74,37 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+>  static void __init reserve_crashkernel(void)
+>  {
+>  	unsigned long long crash_base, crash_size;
+> +	bool high = false;
+>  	int ret;
 >  
-> -static int __init reserve_crashkernel_low(void)
-> -{
-> -#ifdef CONFIG_X86_64
-
-The behaviour of this #ifdef has disappeared, won't 32bit x86 now try and reserve a chunk
-of unnecessary 'low' memory?
-
-[...]
-
-
-> @@ -579,9 +523,13 @@ static void __init reserve_crashkernel(void)
->  		return;
->  	}
->  
-> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
-> -		memblock_free(crash_base, crash_size);
+>  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+>  				&crash_size, &crash_base);
+>  	/* no crashkernel= or invalid value specified */
+> -	if (ret || !crash_size)
 > -		return;
-> +	if (crash_base >= (1ULL << 32)) {
-> +		if (reserve_crashkernel_low()) {
-> +			memblock_free(crash_base, crash_size);
+> +	if (ret || !crash_size) {
+> +		/* crashkernel=X,high */
+> +		ret = parse_crashkernel_high(boot_command_line,
+> +				memblock_phys_mem_size(),
+> +				&crash_size, &crash_base);
+> +		if (ret || !crash_size)
 > +			return;
-> +		}
-> +
-> +		insert_resource(&iomem_resource, &crashk_low_res);
-
-
-Previously reserve_crashkernel_low() was #ifdefed to do nothing if !CONFIG_X86_64, I don't
-see how 32bit is skipping this reservation...
-
-
->  	}
+> +		high = true;
+> +	}
 >  
->  	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index b9b1bc5..096ad63 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -63,6 +63,10 @@
+>  	crash_size = PAGE_ALIGN(crash_size);
 >  
->  #define KEXEC_CORE_NOTE_NAME	CRASH_CORE_NOTE_NAME
->  
-> +#ifndef CRASH_ALIGN
-> +#define CRASH_ALIGN SZ_128M
-> +#endif
-
-Why 128M? Wouldn't we rather each architecture tells us its minimum alignment?
-
-
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index d714044..3492abd 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -39,6 +39,8 @@
->  #include <linux/compiler.h>
->  #include <linux/hugetlb.h>
->  #include <linux/frame.h>
-> +#include <linux/memblock.h>
-> +#include <linux/swiotlb.h>
->  
->  #include <asm/page.h>
->  #include <asm/sections.h>
-> @@ -96,6 +98,60 @@ int kexec_crash_loaded(void)
->  }
->  EXPORT_SYMBOL_GPL(kexec_crash_loaded);
->  
-> +int __init reserve_crashkernel_low(void)
-> +{
-> +	unsigned long long base, low_base = 0, low_size = 0;
-> +	unsigned long total_low_mem;
-> +	int ret;
-> +
-> +	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
-> +
-> +	/* crashkernel=Y,low */
-> +	ret = parse_crashkernel_low(boot_command_line, total_low_mem,
-> +			&low_size, &base);
-> +	if (ret) {
+>  	if (crash_base == 0) {
+> -		/* Current arm64 boot protocol requires 2MB alignment */
+> -		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
+> -				crash_size, SZ_2M);
 > +		/*
-> +		 * two parts from lib/swiotlb.c:
-> +		 * -swiotlb size: user-specified with swiotlb= or default.
-> +		 *
-> +		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
-> +		 * to 8M for other buffers that may need to stay low too. Also
-> +		 * make sure we allocate enough extra low memory so that we
-> +		 * don't run out of DMA buffers for 32-bit devices.
+> +		 * Try low memory first and fall back to high memory
+> +		 * unless "crashkernel=size[KMG],high" is specified.
 > +		 */
-> +		low_size = max(swiotlb_size_or_default() + (8UL << 20),
+> +		if (!high)
+> +			crash_base = memblock_find_in_range(0,
+> +					ARCH_LOW_ADDRESS_LIMIT,
+> +					crash_size, CRASH_ALIGN);
+> +		if (!crash_base)
+> +			crash_base = memblock_find_in_range(0,
+> +					memblock_end_of_DRAM(),
+> +					crash_size, CRASH_ALIGN);
+>  		if (crash_base == 0) {
+>  			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+>  				crash_size);
+> @@ -105,13 +122,18 @@ static void __init reserve_crashkernel(void)
+>  			return;
+>  		}
+>  
+> -		if (!IS_ALIGNED(crash_base, SZ_2M)) {
+> +		if (!IS_ALIGNED(crash_base, CRASH_ALIGN)) {
+>  			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
+>  			return;
+>  		}
+>  	}
+>  	memblock_reserve(crash_base, crash_size);
+>  
+> +	if (crash_base >= SZ_4G && reserve_crashkernel_low()) {
+> +		memblock_free(crash_base, crash_size);
+> +		return;
 
-SZ_8M?
+This is going to be annoying on platforms that don't have, and don't need memory below 4G.
+A "crashkernel=...,low" on these system will break crashdump. I don't think we should
+expect users to know the memory layout. (I'm assuming distro's are going to add a low
+reservation everywhere, just in case)
 
-> +				256UL << 20);
+I think the 'low' region should be a small optional/best-effort extra, that kexec-tools
+can't touch.
 
-SZ_256M?
+
+I'm afraid you've missed the ugly bit of the crashkernel reservation...
+
+arch/arm64/mm/mmu.c::map_mem() marks the crashkernel as 'nomap' during the first pass of
+page-table generation. This means it isn't mapped in the linear map. It then maps it with
+page-size mappings, and removes the nomap flag.
+
+This is done so that arch_kexec_protect_crashkres() and
+arch_kexec_unprotect_crashkres() can remove the valid bits of the crashkernel mapping.
+This way the old-kernel can't accidentally overwrite the crashkernel. It also saves us if
+the old-kernel and the crashkernel use different memory attributes for the mapping.
+
+As your low-memory reservation is intended to be used for devices, having it mapped by the
+old-kernel as cacheable memory is going to cause problems if those CPUs aren't taken
+offline and go corrupting this memory. (we did crash for a reason after all)
 
 
-> +	} else {
-> +		/* passed with crashkernel=0,low ? */
-> +		if (!low_size)
-> +			return 0;
-> +	}
-> +
-> +	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
-> +	if (!low_base) {
-> +		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
-> +		       (unsigned long)(low_size >> 20));
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = memblock_reserve(low_base, low_size);
-> +	if (ret) {
-> +		pr_err("%s: Error reserving crashkernel low memblock.\n",
-> +				__func__);
-> +		return ret;
-> +	}
-> +
-> +	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
-> +		(unsigned long)(low_size >> 20),
-> +		(unsigned long)(low_base >> 20),
-> +		(unsigned long)(total_low_mem >> 20));
-> +
-> +	crashk_low_res.start = low_base;
-> +	crashk_low_res.end   = low_base + low_size - 1;
-> +
-> +	return 0;
-> +}
+I think the simplest thing to do is mark the low region as 'nomap' in
+reserve_crashkernel() and always leave it unmapped. We can then describe it via a
+different string in /proc/iomem, something like "Crash kernel (low)". Older kexec-tools
+shouldn't use it, (I assume its not using strncmp() in a way that would do this by
+accident), and newer kexec-tools can know to describe it in the DT, but it can't write to it.
 
 
 Thanks,
