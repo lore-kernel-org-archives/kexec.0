@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr740081.outbound.protection.outlook.com
- ([40.107.74.81] helo=NAM01-BN3-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hYYOh-00086S-2Z
- for kexec@lists.infradead.org; Wed, 05 Jun 2019 16:04:20 +0000
-From: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Subject: Re: The current SME implementation fails kexec/kdump kernel booting.
-Date: Wed, 5 Jun 2019 16:04:14 +0000
-Message-ID: <0d9fba9d-7bbe-a7c7-dfe4-696da0dfecc4@amd.com>
-References: <20190604134952.GC26891@MiWiFi-R3L-srv>
- <508c2853-dc4f-70a6-6fa8-97c950dc31c6@amd.com>
- <20190605005600.GF26891@MiWiFi-R3L-srv>
-In-Reply-To: <20190605005600.GF26891@MiWiFi-R3L-srv>
-Content-Language: en-US
-Content-ID: <B84EE748BF0CF44F9E7ACFBC8B966561@namprd12.prod.outlook.com>
+Subject: Re: [PATCH 1/4] x86: kdump: move reserve_crashkernel_low() into
+ kexec_core.c
+References: <20190507035058.63992-1-chenzhou10@huawei.com>
+ <20190507035058.63992-2-chenzhou10@huawei.com>
+From: James Morse <james.morse@arm.com>
+Message-ID: <6585f047-063c-6d6c-4967-1d8a472f30f4@arm.com>
+Date: Wed, 5 Jun 2019 17:29:21 +0100
 MIME-Version: 1.0
+In-Reply-To: <20190507035058.63992-2-chenzhou10@huawei.com>
+Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,77 +21,156 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Chen Zhou <chenzhou10@huawei.com>
+Cc: wangkefeng.wang@huawei.com, horms@verge.net.au, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, rppt@linux.ibm.com, linux-mm@kvack.org, takahiro.akashi@linaro.org, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, kexec@lists.infradead.org, akpm@linux-foundation.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 
-On 6/4/19 7:56 PM, Baoquan He wrote:
-> On 06/04/19 at 03:56pm, Lendacky, Thomas wrote:
->> On 6/4/19 8:49 AM, Baoquan He wrote:
->>> Hi Tom,
->>>
->>> Lianbo reported kdump kernel can't boot well with 'nokaslr' added, and
->>> have to enable KASLR in kdump kernel to make it boot successfully. This
->>> blocked his work on enabling sme for kexec/kdump. And on some machines
->>> SME kernel can't boot in 1st kernel.
->>>
->>> I checked code of SME implementation, and found out the root cause. The
->>> above failures are caused by SME code, sme_encrypt_kernel(). In
->>> sme_encrypt_kernel(), you get a 2M of encryption work area as intermediate
->>> buffer to encrypt kernel in-place. And the work area is just after _end of
->>> kernel.
->>
->> I remember worrying about something like this back when I was testing the
->> kexec support. I had come up with a patch to address it, but never got the
->> time to test and submit it.  I've included it here if you'd like to test
->> it (I haven't done run this patch in quite some time). If it works, we can
->> think about submitting it.
-> 
-> Thanks for your quick response and making this patch, Tom.
-> 
-> Tested on a speedway machine, it entered into kernel, but failed in
-> below stage. Tested two times, always happened.
+Hello,
 
-Is this the initial kernel boot or the kexec kernel boot?
+On 07/05/2019 04:50, Chen Zhou wrote:
+> In preparation for supporting reserving crashkernel above 4G
+> in arm64 as x86_64 does, move reserve_crashkernel_low() into
+> kexec/kexec_core.c.
 
-It looks like this is related to the initrd/initramfs decryption. Not
-sure what could be happening there. I just tried the patch on my Naples
-system and a 5.2.0-rc3 kernel and have been able to repeatedly kexec boot
-a number of times so far.
+
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 905dae8..9ee33b6 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -463,59 +460,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>  # define CRASH_ADDR_HIGH_MAX	MAXMEM
+>  #endif
+>  
+> -static int __init reserve_crashkernel_low(void)
+> -{
+> -#ifdef CONFIG_X86_64
+
+The behaviour of this #ifdef has disappeared, won't 32bit x86 now try and reserve a chunk
+of unnecessary 'low' memory?
+
+[...]
+
+
+> @@ -579,9 +523,13 @@ static void __init reserve_crashkernel(void)
+>  		return;
+>  	}
+>  
+> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+> -		memblock_free(crash_base, crash_size);
+> -		return;
+> +	if (crash_base >= (1ULL << 32)) {
+> +		if (reserve_crashkernel_low()) {
+> +			memblock_free(crash_base, crash_size);
+> +			return;
+> +		}
+> +
+> +		insert_resource(&iomem_resource, &crashk_low_res);
+
+
+Previously reserve_crashkernel_low() was #ifdefed to do nothing if !CONFIG_X86_64, I don't
+see how 32bit is skipping this reservation...
+
+
+>  	}
+>  
+>  	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index b9b1bc5..096ad63 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -63,6 +63,10 @@
+>  
+>  #define KEXEC_CORE_NOTE_NAME	CRASH_CORE_NOTE_NAME
+>  
+> +#ifndef CRASH_ALIGN
+> +#define CRASH_ALIGN SZ_128M
+> +#endif
+
+Why 128M? Wouldn't we rather each architecture tells us its minimum alignment?
+
+
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index d714044..3492abd 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -39,6 +39,8 @@
+>  #include <linux/compiler.h>
+>  #include <linux/hugetlb.h>
+>  #include <linux/frame.h>
+> +#include <linux/memblock.h>
+> +#include <linux/swiotlb.h>
+>  
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+> @@ -96,6 +98,60 @@ int kexec_crash_loaded(void)
+>  }
+>  EXPORT_SYMBOL_GPL(kexec_crash_loaded);
+>  
+> +int __init reserve_crashkernel_low(void)
+> +{
+> +	unsigned long long base, low_base = 0, low_size = 0;
+> +	unsigned long total_low_mem;
+> +	int ret;
+> +
+> +	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+> +
+> +	/* crashkernel=Y,low */
+> +	ret = parse_crashkernel_low(boot_command_line, total_low_mem,
+> +			&low_size, &base);
+> +	if (ret) {
+> +		/*
+> +		 * two parts from lib/swiotlb.c:
+> +		 * -swiotlb size: user-specified with swiotlb= or default.
+> +		 *
+> +		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+> +		 * to 8M for other buffers that may need to stay low too. Also
+> +		 * make sure we allocate enough extra low memory so that we
+> +		 * don't run out of DMA buffers for 32-bit devices.
+> +		 */
+> +		low_size = max(swiotlb_size_or_default() + (8UL << 20),
+
+SZ_8M?
+
+> +				256UL << 20);
+
+SZ_256M?
+
+
+> +	} else {
+> +		/* passed with crashkernel=0,low ? */
+> +		if (!low_size)
+> +			return 0;
+> +	}
+> +
+> +	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+> +	if (!low_base) {
+> +		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+> +		       (unsigned long)(low_size >> 20));
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret = memblock_reserve(low_base, low_size);
+> +	if (ret) {
+> +		pr_err("%s: Error reserving crashkernel low memblock.\n",
+> +				__func__);
+> +		return ret;
+> +	}
+> +
+> +	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
+> +		(unsigned long)(low_size >> 20),
+> +		(unsigned long)(low_base >> 20),
+> +		(unsigned long)(total_low_mem >> 20));
+> +
+> +	crashk_low_res.start = low_base;
+> +	crashk_low_res.end   = low_base + low_size - 1;
+> +
+> +	return 0;
+> +}
+
 
 Thanks,
-Tom
 
-> 
-> 
-> [    4.978521] Freeing unused decrypted memory: 2040K
-> [    4.983800] Freeing unused kernel image memory: 2344K
-> [    4.988943] Write protecting the kernel read-only data: 18432k
-> [    4.995306] Freeing unused kernel image memory: 2012K
-> [    5.000488] Freeing unused kernel image memory: 256K
-> [    5.005540] Run /init as init process
-> [    5.009443] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00007f00
-> [    5.017230] CPU: 0 PID: 1 Comm: init Not tainted 5.2.0-rc2+ #38
-> [    5.023251] Hardware name: AMD Corporation Speedway/Speedway, BIOS RSW1004B 10/18/2017
-> [    5.031299] Call Trace:
-> [    5.033793]  dump_stack+0x46/0x60
-> [    5.037169]  panic+0xfb/0x2cb
-> [    5.040191]  do_exit.cold.21+0x59/0x81
-> [    5.044004]  do_group_exit+0x3a/0xa0
-> [    5.047640]  __x64_sys_exit_group+0x14/0x20
-> [    5.051899]  do_syscall_64+0x55/0x1c0
-> [    5.055627]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [    5.060764] RIP: 0033:0x7fa1b1fc9e2e
-> [    5.064404] Code: Bad RIP value.
-> [    5.067687] RSP: 002b:00007fffc5abb778 EFLAGS: 00000202 ORIG_RAX: 00000000000000e7
-> [    5.075296] RAX: ffffffffffffffda RBX: 00007fa1b1fd2528 RCX: 00007fa1b1fc9e2e
-> [    5.082625] RDX: 000000000000007f RSI: 000000000000003c RDI: 000000000000007f
-> [    5.089879] RBP: 00007fa1b21d8d00 R08: 00000000000000e7 R09: 00007fffc5abb688
-> [    5.097134] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
-> [    5.104386] R13: 0000000000000001 R14: 00007fa1b21d8d40 R15: 00007fa1b21d8d30
-> [    5.111645] Kernel Offset: disabled
-> [    5.423002] Rebooting in 10 seconds..
-> [   15.429641] ACPI MEMORY or I/O RESET_REG.
-> 
+James
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
