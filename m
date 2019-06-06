@@ -1,19 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
- id 1hYerJ-0007u9-KN
- for kexec@lists.infradead.org; Wed, 05 Jun 2019 22:58:19 +0000
-Date: Thu, 6 Jun 2019 06:57:54 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: The current SME implementation fails kexec/kdump kernel booting.
-Message-ID: <20190605225754.GG26891@MiWiFi-R3L-srv>
-References: <20190604134952.GC26891@MiWiFi-R3L-srv>
- <508c2853-dc4f-70a6-6fa8-97c950dc31c6@amd.com>
- <20190605005600.GF26891@MiWiFi-R3L-srv>
- <0d9fba9d-7bbe-a7c7-dfe4-696da0dfecc4@amd.com>
+ id 1hYxvz-00011V-8h
+ for kexec@lists.infradead.org; Thu, 06 Jun 2019 19:20:24 +0000
+Date: Thu, 6 Jun 2019 21:20:10 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
+ and ACPI tables
+Message-ID: <20190606192010.GJ26146@zn.tnic>
+References: <20190513070725.GA20105@zn.tnic>
+ <20190513073254.GB16774@MiWiFi-R3L-srv>
+ <20190513075006.GB20105@zn.tnic>
+ <20190513080210.GC16774@MiWiFi-R3L-srv>
+ <20190515051717.GA13703@jeru.linux.bs1.fc.nec.co.jp>
+ <20190515065843.GA24212@zn.tnic>
+ <20190515070942.GA17154@jeru.linux.bs1.fc.nec.co.jp>
+ <CACPcB9cyiPc8JYmt1QhYNipSsJ5z3wTOJ90LS5LTx4YqwaG8rA@mail.gmail.com>
+ <20190521180855.GA7793@cz.tnic>
+ <CACPcB9fg5RGXcBbESNnn9rV0DSoh4jYkVWZrdcRWay5KKAjLww@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <0d9fba9d-7bbe-a7c7-dfe4-696da0dfecc4@amd.com>
+In-Reply-To: <CACPcB9fg5RGXcBbESNnn9rV0DSoh4jYkVWZrdcRWay5KKAjLww@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,81 +33,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Cc: "dyoung@redhat.com x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, lijiang@redhat.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Kairui Song <kasong@redhat.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, Baoquan He <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, Junichi Nomura <j-nomura@ce.jp.nec.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "dyoung@redhat.com" <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>
 
-On 06/05/19 at 04:04pm, Lendacky, Thomas wrote:
-> On 6/4/19 7:56 PM, Baoquan He wrote:
-> > On 06/04/19 at 03:56pm, Lendacky, Thomas wrote:
-> >> On 6/4/19 8:49 AM, Baoquan He wrote:
-> >>> Hi Tom,
-> >>>
-> >>> Lianbo reported kdump kernel can't boot well with 'nokaslr' added, and
-> >>> have to enable KASLR in kdump kernel to make it boot successfully. This
-> >>> blocked his work on enabling sme for kexec/kdump. And on some machines
-> >>> SME kernel can't boot in 1st kernel.
-> >>>
-> >>> I checked code of SME implementation, and found out the root cause. The
-> >>> above failures are caused by SME code, sme_encrypt_kernel(). In
-> >>> sme_encrypt_kernel(), you get a 2M of encryption work area as intermediate
-> >>> buffer to encrypt kernel in-place. And the work area is just after _end of
-> >>> kernel.
-> >>
-> >> I remember worrying about something like this back when I was testing the
-> >> kexec support. I had come up with a patch to address it, but never got the
-> >> time to test and submit it.  I've included it here if you'd like to test
-> >> it (I haven't done run this patch in quite some time). If it works, we can
-> >> think about submitting it.
-> > 
-> > Thanks for your quick response and making this patch, Tom.
-> > 
-> > Tested on a speedway machine, it entered into kernel, but failed in
-> > below stage. Tested two times, always happened.
-> 
-> Is this the initial kernel boot or the kexec kernel boot?
+On Tue, May 28, 2019 at 10:49:54AM +0800, Kairui Song wrote:
+> Hi, by now, I still didn't see any tip branch pick up this patch yet,
+> any update?
 
-It's kexec kernel booting.
+Ok, stuff is queued in tip:x86/boot now. Please test it as much as you
+can and send all fixes ontop.
 
-> 
-> It looks like this is related to the initrd/initramfs decryption. Not
-> sure what could be happening there. I just tried the patch on my Naples
-> system and a 5.2.0-rc3 kernel and have been able to repeatedly kexec boot
-> a number of times so far.
-> 
-> Thanks,
-> Tom
-> 
-> > 
-> > 
-> > [    4.978521] Freeing unused decrypted memory: 2040K
-> > [    4.983800] Freeing unused kernel image memory: 2344K
-> > [    4.988943] Write protecting the kernel read-only data: 18432k
-> > [    4.995306] Freeing unused kernel image memory: 2012K
-> > [    5.000488] Freeing unused kernel image memory: 256K
-> > [    5.005540] Run /init as init process
-> > [    5.009443] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00007f00
-> > [    5.017230] CPU: 0 PID: 1 Comm: init Not tainted 5.2.0-rc2+ #38
-> > [    5.023251] Hardware name: AMD Corporation Speedway/Speedway, BIOS RSW1004B 10/18/2017
-> > [    5.031299] Call Trace:
-> > [    5.033793]  dump_stack+0x46/0x60
-> > [    5.037169]  panic+0xfb/0x2cb
-> > [    5.040191]  do_exit.cold.21+0x59/0x81
-> > [    5.044004]  do_group_exit+0x3a/0xa0
-> > [    5.047640]  __x64_sys_exit_group+0x14/0x20
-> > [    5.051899]  do_syscall_64+0x55/0x1c0
-> > [    5.055627]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > [    5.060764] RIP: 0033:0x7fa1b1fc9e2e
-> > [    5.064404] Code: Bad RIP value.
-> > [    5.067687] RSP: 002b:00007fffc5abb778 EFLAGS: 00000202 ORIG_RAX: 00000000000000e7
-> > [    5.075296] RAX: ffffffffffffffda RBX: 00007fa1b1fd2528 RCX: 00007fa1b1fc9e2e
-> > [    5.082625] RDX: 000000000000007f RSI: 000000000000003c RDI: 000000000000007f
-> > [    5.089879] RBP: 00007fa1b21d8d00 R08: 00000000000000e7 R09: 00007fffc5abb688
-> > [    5.097134] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
-> > [    5.104386] R13: 0000000000000001 R14: 00007fa1b21d8d40 R15: 00007fa1b21d8d30
-> > [    5.111645] Kernel Offset: disabled
-> > [    5.423002] Rebooting in 10 seconds..
-> > [   15.429641] ACPI MEMORY or I/O RESET_REG.
-> > 
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
