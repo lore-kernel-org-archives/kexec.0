@@ -1,19 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v3 1/3] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to
- vmcoreinfo
-References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
- <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
- <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
- <58c6cda9-9fd4-3b3e-740a-7b9b80b1f634@redhat.com>
- <a48bb02c-8f93-4e3b-085d-a6f0e5a1f3a0@arm.com>
- <66da4098-b221-408b-50ca-f3790b943965@redhat.com>
- <380b137b-a611-5c8d-3890-8021084f87fe@redhat.com>
-From: James Morse <james.morse@arm.com>
-Message-ID: <2a4af3a0-1342-fdd2-1cfd-e37abb99d8bd@arm.com>
-Date: Fri, 7 Jun 2019 16:11:43 +0100
+Received: from mail.skyhub.de ([5.9.137.197])
+ by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
+ id 1hZIh3-00027c-MT
+ for kexec@lists.infradead.org; Fri, 07 Jun 2019 17:30:23 +0000
+Date: Fri, 7 Jun 2019 19:30:16 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
+Message-ID: <20190607173016.GM20269@zn.tnic>
+References: <1548047768-7656-1-git-send-email-kernelfans@gmail.com>
+ <20190125103924.GB27998@zn.tnic>
+ <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
+ <20190125140823.GC27998@zn.tnic>
+ <20190128095809.GC3732@dhcp-128-65.nay.redhat.com>
+ <20190128101831.GA27154@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <380b137b-a611-5c8d-3890-8021084f87fe@redhat.com>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <20190128101831.GA27154@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,78 +25,92 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Steve Capper <Steve.Capper@arm.com>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Dave Anderson <anderson@redhat.com>, bhupesh.linux@gmail.com, linux-arm-kernel@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>, Pingfan Liu <kernelfans@gmail.com>
+Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, yinghai@kernel.org, vgoyal@redhat.com
 
-SGkgQmh1cGVzaCwKCihzb3JyeSBmb3IgdGhlIGRlbGF5IG9uIHRoaXMpCgpPbiAwNC8wNS8yMDE5
-IDEzOjUzLCBCaHVwZXNoIFNoYXJtYSB3cm90ZToKPiBPbiAwNC8wMy8yMDE5IDExOjI0IFBNLCBC
-aHVwZXNoIFNoYXJtYSB3cm90ZToKPj4gT24gMDQvMDIvMjAxOSAxMDo1NiBQTSwgSmFtZXMgTW9y
-c2Ugd3JvdGU6Cj4+PiBZZXMgdGhlIGtlcm5lbCBjb2RlIGlzIGdvaW5nIHRvIG1vdmUgYXJvdW5k
-LCB0aGlzIGlzIHdoeSB0aGUgaW5mb3JtYXRpb24gd2UgZXhwb3NlIHZpYQo+Pj4gdm1jb3JlaW5m
-byBuZWVkcyB0byBiZSB0aG91Z2h0IHRocm91Z2g6IHNvbWV0aGluZyB3ZSB3b3VsZCBhbHdheXMg
-bmVlZCwgcmVnYXJkbGVzcyBvZiBob3cKPj4+IHRoZSBrZXJuZWwgaW1wbGVtZW50cyBpdC4KPj4+
-Cgo+Pj4gUG9pbnRlci1hdXRoIGNoYW5nZXMgYWxsIHRoaXMgYWdhaW4sIGFzIHdlIG1heSBwcmVm
-ZXIgdG8gdXNlIHRoZSBiaXRzIGZvciBwb2ludGVyLWF1dGggaW4KPj4+IG9uZSBUVEIgb3IgdGhl
-IG90aGVyLiBQVFJTX1BFUl9QR0QgbWF5IHNob3cgdGhlIDUyYml0IHZhbHVlIGluIHRoaXMgY2Fz
-ZSwgYnV0IG5laXRoZXIgVFRCUgo+Pj4gaXMgbWFwcGluZyA1MmJpdHMgb2YgVkEuCj4+Pgo+Pj4K
-Pj4+PiBTbyBmYXIsIEkgaGF2ZSBnZW5lcmFsbHkgY29tZSBhY3Jvc3MgZGlzY3Vzc2lvbnMgd2hl
-cmUgdGhlIGZvbGxvd2luZyB2YXJpYXRpb25zIG9mIHRoZQo+Pj4+IGFkZHJlc3Mgc3BhY2VzIGhh
-dmUgYmVlbiBwcm9wb3NlZC9yZXF1ZXN0ZWQ6Cj4+Pj4gLSA0OGJpdCBrZXJuZWwgVkEgKyA0OC1i
-aXQgVXNlciBWQSwKPj4+PiAtIDQ4LWJpdCBrZXJuZWwgVkEgKyA1Mi1iaXQgVXNlciBWQSwKPj4+
-Cj4+PiArIDUyYml0IGtlcm5lbCwgYmVjYXVzZSB0aGVyZSBpcyBleGNlc3NpdmUgcXVhbnRpdGll
-cyBvZiBtZW1vcnksIGFuZCB0aGUga2VybmVsIG1hcHMgaXQKPj4+IGFsbCwgYnV0IDQ4LWJpdCB1
-c2VyLCBiZWNhdXNlIGl0IG5ldmVyIG1hcHMgYWxsIHRoZSBtZW1vcnksIGFuZCB3ZSBwcmVmZXIg
-dGhlIGJpdHMgZm9yCj4+PiBwb2ludGVyLWF1dGguCj4+Pgo+Pj4+IC0gNTItYml0IGtlcm5lbCBW
-QSArIDUyLWJpdCBVc2VyIFZBLgo+Pj4KPj4+IEFuZC4uLsKgIGFsbCBmb3VyIG1heSBoYXBwZW4g
-d2l0aCB0aGUgc2FtZSBidWlsdCBpbWFnZS4gSSBkb24ndCBzZWUgaG93IHlvdSBjYW4gdGVsbCB0
-aGVzZQo+Pj4gY2FzZXMgYXBhcnQgd2l0aCB0aGUgb25lIChidWlsZC10aW1lLWNvbnN0YW50ISkg
-UFRSU19QRVJfUEdEIHZhbHVlLgo+Pj4KPj4+IEknbSBzdXJlIHNvbWUgb2YgdGhlc2UgY2FzZXMg
-YXJlIGh5cG90aGV0aWNhbCwgYnV0IGJ5IGNvbnNpZGVyaW5nIGl0IGFsbCBub3csIHdlIGNhbiBh
-dm9pZAo+Pj4gdGhyZWUgbW9yZSBrZXJuZWw6dm1jb3JlaW5mbyB1cGRhdGVzLCBhbmQgdGhyZWUg
-bW9yZSBmaXgtdXNlci1zcGFjZS10by11c2UtdGhlLW5ldy12YWx1ZS4KPj4KPj4gQWdyZWUuCj4+
-Cj4+PiBJIHRoaW5rIHlvdSBwcm9iYWJseSBkbyBuZWVkIFBUUlNfUEVSX1BHRCwgYXMgdGhpcyBp
-cyB0aGUgb25lIHZhbHVlIHRoZSBtbSBpcyB1c2luZyB0bwo+Pj4gZ2VuZXJhdGUgcGFnZSB0YWJs
-ZXMuIEknbSBwcmV0dHkgc3VyZSB5b3UgYWxzbyBuZWVkIFQwU1ogYW5kIFQxU1ogdG8ga25vdyBp
-ZiB0aGF0J3MKPj4+IGFjdHVhbGx5IGluIHVzZSwgb3IgdGhlIGtlcm5lbCBpcyBib2RnaW5nIHJv
-dW5kIGl0IHdpdGggYW4gb2Zmc2V0Lgo+Pgo+PiBTdXJlLCBJIGFtIG9wZW4gdG8gc3VnZ2VzdGlv
-bnMgKGFzIEkgcmVhbGl6ZSB0aGF0IHdlIG5lZWQgYW4gYWRkaXRpb25hbCBWQV9CSVRTX0FDVFVB
-TAo+PiB2YXJpYWJsZSBleHBvcnQnZWQgZm9yIDUyLWJpdCBrZXJuZWwgVkEgY2hhbmdlcykuCgoo
-c3RlcHBpbmcgYmFjayBhIGJpdDopCgpJJ20gYWdhaW5zdCBleHBvc2luZyBhcmNoLXNwZWNpZmlj
-ICNpZmRlZnMgdGhhdCBjb3JyZXNwb25kIHRvIGhvdyB3ZSd2ZSBjb25maWd1cmVkIHRoZQphcmNo
-IGNvZGUncyBpbnRlcmFjdGlvbnMgd2l0aCBtbS4gVGhlc2UgYXJlIGFsbCBtb3ZpbmcgdGFyZ2V0
-cywgd2UgY2FuJ3QgaGF2ZSBhbnkgb2YgaXQKYmVjb21lIEFCSS4KCkkgaGF2ZSBhIHN0cmF3LW1h
-biBmb3IgdGhpczogV2hhdCBpcyB0aGUgdmFsdWUgb2YgUFRFX0ZJTEVfTUFYX0JJVFMgb24geW91
-ciBzeXN0ZW0/CkkgaGF2ZSBubyBpZGVhIHdoYXQgdGhpcyB2YWx1ZSBpcyBvciBtZWFucywgYW4g
-YWZ0ZXJub29uJ3MgYXJjaGFlb2xvZ3kgd291bGQgYmUgbmVlZGVkKCEpLgpUaGlzIGlzIHNvbWV0
-aGluZyB0aGF0IG1hZGUgc2Vuc2UgZm9yIG9uZSBrZXJuZWwgdmVyc2lvbiwgYSBiZXR0ZXIgaWRl
-YSBjYW1lIGFsb25nLCBhbmQgaXQKd2FzIHJlcGxhY2VkLiBJZiB3ZSdkIGV4cG9zZWQgdGhpcyB0
-byB1c2VyLXNwYWNlLCB3ZSdkIGhhdmUgdG8gZ2VuZXJhdGUgYSB2YWx1ZSwgZXZlbiBpZgppdCBk
-b2Vzbid0IG1lYW4gYW55dGhpbmcuIEV4cG9zaW5nIFZBX0JJVFNfQUNUVUFMIGlzIHRoZSBzYW1l
-LgoKKEtlZXAgYW4gZXllIG91dCBmb3Igd2hlbiB3ZSBjaGFuZ2UgdGhlIGtlcm5lbCBtZW1vcnkg
-bWFwLCBhbmQgYW55IHNlY29uZC1ndWVzc2luZyBiYXNlZApvbiBWQV9CSVRTIHR1cm5zIG91dCB0
-byBiZSB3cm9uZykKCgpXaGF0IHdlIGRvIGhhdmUgYXJlIHRoZSBoYXJkd2FyZSBwcm9wZXJ0aWVz
-LiBUaGUga2VybmVsIGNhbid0IGNoYW5nZSB0aGVzZS4KCgo+PiBBbHNvIGhvdyBkbyB3ZSBzdGFu
-ZGFyZGl6ZSByZWFkaW5nIFQwU1ogYW5kIFQxU1ogaW4gdXNlci1zcGFjZS4gRG8geW91IHByb3Bv
-c2UgSSBtYWtlIGFuCj4+IGVuaGFuY2VtZW50IGluIHRoZSBjcHUtZmVhdHVyZS1yZWdpc3RlcnMg
-aW50ZXJmYWNlIChzZWUgWzFdKSBvciB0aGUgSFdDQVBTIGludGVyZmFjZQo+PiAoc2VlIFsyXSkg
-Zm9yIHRoZSBzYW1lPwoKY3B1ZmVhdHVyZSB3b24ndCBoZWxwIHlvdSBpZiB5b3UndmUgYWxyZWFk
-eSBwYW5pYygpZCBhbmQgb25seSBoYXZlIHRoZSB2bWNvcmUgZmlsZS4gVGhpcwpzdHVmZiBuZWVk
-cyB0byBnbyBpbiB2bWNvcmVpbmZvLgoKQXMgbG9uZyBhcyB0aGVyZSBpcyBhIGRlc2NyaXB0aW9u
-IG9mIGhvdyB1c2Vyc3BhY2UgdXNlcyB0aGVzZSB2YWx1ZXMsIEkgdGhpbmsgYWRkaW5nCmtleS92
-YWx1ZXMgZm9yIFRDUl9FTDEuVHhTWiB0byB0aGUgdm1jb3JlaW5mbyBpcyBhIHNlbnNpYmxlIHdh
-eSBvdXQgb2YgdGhpcy4gWW91IHByb2JhYmx5Cm5lZWQgVFRCUjFfRUwxLkJBRERSIHRvby4gKGl0
-IHNob3VsZCBiZSBzcGVjaWZpYyBmaWVsZHMsIHRvIHByZXZlbnQgJ25ldyB1c2VzJyBiZWNvbWlu
-ZyBBQkkpCgpUaGlzIHRlbGxzIHlvdSBob3cgdGhlIGhhcmR3YXJlIHdhcyBjb25maWd1cmVkLCBh
-bmQgY292ZXJzIGFueSBjb21iaW5hdGlvbiBvZiBUeFNaIHRyaWNrcwp3ZSBwbGF5LCBhbmQgd2hl
-dGhlciB0aG9zZSBhZGRyZXNzIGJpdHMgYXJlIHVzZWQgZm9yIFZBLCBvciBwdHJhdXRoIGZvciBU
-VEJSMCBvciBUVFJCMS4KCgo+IEFueSBjb21tZW50cyBvbiB0aGUgYWJvdmUgcG9pbnRzPyBBdCB0
-aGUgbW9tZW50IHdlIGhhdmUgdG8gY2FycnkgdGhlc2UgZml4ZXMgaW4gdGhlCj4gZGlzdHJpYnV0
-aW9uIGtlcm5lbHMgYW5kIEkgd291bGQgbGlrZSB0byBoYXZlIHRoZXNlIGZpeGVkIGluIHVwc3Ry
-ZWFtIGtlcm5lbCBpdHNlbGYuCgoKVGhhbmtzLAoKSmFtZXMKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8va2V4ZWMK
+On Mon, Jan 28, 2019 at 11:18:31AM +0100, Borislav Petkov wrote:
+> On Mon, Jan 28, 2019 at 05:58:09PM +0800, Dave Young wrote:
+> > Another reason is in case ,high we will need automatically reserve a
+> > region in low area for swiotlb.  So for example one use
+> > crashkernel=256M,high,  actual reserved memory is 256M above 4G and
+> > another 256M under 4G for swiotlb.  Normally it is not necessary for
+> > most people.  Thus we can not make ,high as default.
+> 
+> And how is the poor user to figure out that we decided for her/him that
+> swiotlb reservation is something not necessary for most people and thus
+> we fail the crashkernel= reservation?
+> 
+> IOW, that "logic" above doesn't make a whole lot of sense to me from
+> user friendliness perspective.
+
+So to show what I mean: I'm trying to reserve a crash kernel region on a
+box here. I tried:
+
+crashkernel=64M@16M
+
+as it is stated in Documentation/kdump/kdump.txt.
+
+Box said:
+
+[    0.000000] crashkernel reservation failed - memory is in use.
+
+Oh great.
+
+Then I tried:
+
+crashkernel=64M@64M
+
+Box said:
+
+[    0.000000] crashkernel reservation failed - memory is in use.
+
+So I simply did:
+
+crashkernel=64M
+
+and the box said:
+
+[    0.000000] Reserving 64MB of memory at 3392MB for crashkernel (System RAM: 16271MB)
+
+So I could've gone a long time poking at the memory to find a suitable
+address.
+
+So do you see what I mean with making this as user-friendly and as
+robust as possible?
+
+In this case I don't care about *where* my crash kernel is - I only want
+to have one loaded *somewhere*.
+
+And the same strategy should be applied to other reservation attempts
+- we should try hard to reserve and if we cannot reserve, then try an
+alternating range.
+
+I even think that
+
+crashkernel=X@Y
+
+should not simply fail if Y is occupied but keep trying and say
+
+[    0.000000] Reserving 64MB of memory at alternative address 3392MB for crashkernel (System RAM: 16271MB)
+
+and only fail when the user doesn't really want the kernel to try hard
+by booting with
+
+crashkernel=X@Y,strict
+
+But that's for another day.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
