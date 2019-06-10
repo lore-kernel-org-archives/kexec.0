@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-it1-f194.google.com ([209.85.166.194])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1haErn-0006ff-6Z
- for kexec@lists.infradead.org; Mon, 10 Jun 2019 07:37:20 +0000
-From: Kairui Song <kasong@redhat.com>
-Subject: [PATCH] x86/kexec: Add ACPI NVS region to the ident map
-Date: Mon, 10 Jun 2019 15:36:17 +0800
-Message-Id: <20190610073617.19767-1-kasong@redhat.com>
+ id 1haFO6-0003Eq-BN
+ for kexec@lists.infradead.org; Mon, 10 Jun 2019 08:10:43 +0000
+Received: by mail-it1-f194.google.com with SMTP id n189so11827206itd.0
+ for <kexec@lists.infradead.org>; Mon, 10 Jun 2019 01:10:41 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190524062321.24126-1-kasong@redhat.com>
+ <20190531092743.qgwku2ob4trduadr@verge.net.au>
+In-Reply-To: <20190531092743.qgwku2ob4trduadr@verge.net.au>
+From: Kairui Song <kasong@redhat.com>
+Date: Mon, 10 Jun 2019 16:10:30 +0800
+Message-ID: <CACPcB9dOSwe1s2Z5W3ccwXSR_h_Y33cqnt2d=TPZ4hX+fpqdrA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] x86: Always try to fill acpi_rsdp_addr in boot
+ params
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,68 +26,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Baoquan He <bhe@redhat.com>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Dave Young <dyoung@redhat.com>
-Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>, Kairui Song <kasong@redhat.com>, kexec@lists.infradead.org, x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Dirk van der Merwe <dirk.vandermerwe@netronome.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>
 
-With the recent addition of RSDP parsing in decompression stage, kexec
-kernel now needs ACPI tables to be covered by the identity mapping.
-And in commit 6bbeb276b71f ("x86/kexec: Add the EFI system tables and
-ACPI tables to the ident map"), ACPI tables memory region was added to
-the ident map.
+On Fri, May 31, 2019 at 5:27 PM Simon Horman <horms@verge.net.au> wrote:
+>
+> On Fri, May 24, 2019 at 02:23:17PM +0800, Kairui Song wrote:
+> > This patch sync the behavior of user space kexec and kexec_file_load,
+> > they will both fill the boot_params.acpi_rsdp_addr with a valid RSDP
+> > value, to make sure second kernel can always get the RSDP consistently.
+> >
+> > This will make it effortless to boot newer version of kernel (5.0+)
+> > without specifying acpi_rsdp= cmdline on EFI system even with EFI
+> > service disabled. Should not change any behavior with older kernels.
+> >
+> > Update from V2:
+> >   - Drop unneeded 'packed' attribute for boot parameters structure
+> >   - Don't trust kernel cmdline as a reliable acpi rsdp source
+> >
+> > Update from V1:
+> >   - Split into multiple patches for a cleaner structure, content is not
+> >     changed.
+>
+> Thanks Kairui,
+>
+> applied.
 
-But on some machines, there is only ACPI NVS memory region, and the ACPI
-tables is located in the NVS region instead. In such case second kernel
-will still fail when trying to access ACPI tables.
+Hi Simon,
 
-So, to fix the problem, add NVS memory region in the ident map as well.
+I still haven't see this series get merged yet in the git repo, any update?
 
-Fixes: 6bbeb276b71f ("x86/kexec: Add the EFI system tables and ACPI tables to the ident map")
-Suggested-by: Junichi Nomura <j-nomura@ce.jp.nec.com>
-Signed-off-by: Kairui Song <kasong@redhat.com>
----
-
-Tested with my laptop and VM, on top of current tip:x86/boot.
-
- arch/x86/kernel/machine_kexec_64.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 3c77bdf7b32a..a406602fdb3c 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -54,14 +54,26 @@ static int mem_region_callback(struct resource *res, void *arg)
- static int
- map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p)
- {
--	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-+	int ret;
-+	unsigned long flags;
- 	struct init_pgtable_data data;
- 
- 	data.info = info;
- 	data.level4p = level4p;
- 	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
--	return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
--				   &data, mem_region_callback);
-+
-+	ret = walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
-+				  &data, mem_region_callback);
-+	if (ret && ret != -EINVAL)
-+		return ret;
-+
-+	/* ACPI tables could be located in ACPI Non-volatile Storage region */
-+	ret = walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1,
-+				  &data, mem_region_callback);
-+	if (ret && ret != -EINVAL)
-+		return ret;
-+
-+	return 0;
- }
- #else
- static int map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p) { return 0; }
--- 
-2.21.0
-
+--
+Best Regards,
+Kairui Song
 
 _______________________________________________
 kexec mailing list
