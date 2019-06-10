@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it1-f196.google.com ([209.85.166.196])
+Received: from mail-pf1-f193.google.com ([209.85.210.193])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1haHOJ-0000Ye-QE
- for kexec@lists.infradead.org; Mon, 10 Jun 2019 10:19:05 +0000
-Received: by mail-it1-f196.google.com with SMTP id j194so5402347ite.0
- for <kexec@lists.infradead.org>; Mon, 10 Jun 2019 03:19:03 -0700 (PDT)
+ id 1haHjV-0005jF-Lt
+ for kexec@lists.infradead.org; Mon, 10 Jun 2019 10:40:59 +0000
+Received: by mail-pf1-f193.google.com with SMTP id i189so5058286pfg.10
+ for <kexec@lists.infradead.org>; Mon, 10 Jun 2019 03:40:57 -0700 (PDT)
+Subject: Re: [PATCH v2 00/12] 52-bit kernel + user VAs
+References: <20190528161026.13193-1-steve.capper@arm.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Message-ID: <762411c4-1148-a10e-2a79-d2c9e38bc46e@redhat.com>
+Date: Mon, 10 Jun 2019 16:10:50 +0530
 MIME-Version: 1.0
-References: <20190610073617.19767-1-kasong@redhat.com>
- <20190610095150.GA5488@zn.tnic>
-In-Reply-To: <20190610095150.GA5488@zn.tnic>
-From: Kairui Song <kasong@redhat.com>
-Date: Mon, 10 Jun 2019 18:18:50 +0800
-Message-ID: <CACPcB9f-sussXaOuOau6=CD85pS2KhcsknpJDQH_aEkwvLfvVA@mail.gmail.com>
-Subject: Re: [PATCH] x86/kexec: Add ACPI NVS region to the ident map
+In-Reply-To: <20190528161026.13193-1-steve.capper@arm.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,55 +21,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: the arch/x86 maintainers <x86@kernel.org>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Chao Fan <fanc.fnst@cn.fujitsu.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Dirk van der Merwe <dirk.vandermerwe@netronome.com>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>
+To: Steve Capper <steve.capper@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: crecklin@redhat.com, ard.biesheuvel@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Mon, Jun 10, 2019 at 5:52 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Mon, Jun 10, 2019 at 03:36:17PM +0800, Kairui Song wrote:
-> > With the recent addition of RSDP parsing in decompression stage, kexec
-> > kernel now needs ACPI tables to be covered by the identity mapping.
-> > And in commit 6bbeb276b71f ("x86/kexec: Add the EFI system tables and
-> > ACPI tables to the ident map"), ACPI tables memory region was added to
-> > the ident map.
-> >
-> > But on some machines, there is only ACPI NVS memory region, and the ACPI
-> > tables is located in the NVS region instead. In such case second kernel
->
-> *are* located - plural.
->
-> > will still fail when trying to access ACPI tables.
-> >
-> > So, to fix the problem, add NVS memory region in the ident map as well.
-> >
-> > Fixes: 6bbeb276b71f ("x86/kexec: Add the EFI system tables and ACPI tables to the ident map")
-> > Suggested-by: Junichi Nomura <j-nomura@ce.jp.nec.com>
-> > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > ---
-> >
-> > Tested with my laptop and VM, on top of current tip:x86/boot.
->
-> You tested this in a VM and not on the *actual* machine with the NVS
-> region?
->
-> This is a joke, right?
->
+Hi Steve,
 
-Hi Boris, unfortunately I don't have a real machine which only have
-the NVS region.
-I did fake the memmap to emulate such problem but can't really promise
-this will fix the real case.
-So just declare it won't break anything that is already working. And
-I'm asking Junichi to have a try as he reported this issue on the
-machines he has.
+Thanks for the v2. I still did not get much time to go through this in 
+deep and have a go with the same on LVA supporting prototype platforms 
+or old CPUs (which don't support ARMv8.2 LVA/LPA extensions) I have. May 
+be I will give this a quick check on the same in a day or two.
 
--- 
-Best Regards,
-Kairui Song
+On 05/28/2019 09:40 PM, Steve Capper wrote:
+> This patch series adds support for 52-bit kernel VAs using some of the
+> machinery already introduced by the 52-bit userspace VA code in 5.0.
+> 
+> As 52-bit virtual address support is an optional hardware feature,
+> software support for 52-bit kernel VAs needs to be deduced at early boot
+> time. If HW support is not available, the kernel falls back to 48-bit.
+> 
+> A significant proportion of this series focuses on "de-constifying"
+> VA_BITS related constants.
+> 
+> In order to allow for a KASAN shadow that changes size at boot time, one
+> must fix the KASAN_SHADOW_END for both 48 & 52-bit VAs and "grow" the
+> start address. Also, it is highly desirable to maintain the same
+> function addresses in the kernel .text between VA sizes. Both of these
+> requirements necessitate us to flip the kernel address space halves s.t.
+> the direct linear map occupies the lower addresses.
+> 
+> In V2 of this series (apologies for the long delay from V1), the major
+> change is that PAGE_OFFSET is retained as a constant. This allows for
+> much faster virt_to_page computations. This is achieved by expanding the
+> size of the VMEMMAP region to accommodate a disjoint 52-bit/48-bit
+> direct linear map. This has been found to work well in my testing, but I
+> would appreciate any feedback on this if it needs changing. To aid with
+> git bisect, this logic is broken down into a few smaller patches.
+> 
+> As far as I'm aware, there are two outstanding issues with this series
+> that need to be resolved:
+>   1) Is the code patching for ttbr1_offset safe? I need to analyse this
+>      a little more,
+>   2) How can this memory map be advertised to kdump tools/documentation?
+>      I was planning on getting the kernel VA structure agreed on, then I
+>      would add the relevant exports/documentation.
+
+
+Indeed, in the absence of corresponding changes to the Documentation 
+section,
+it is hard to visualize the changes being made in the memory map.
+
+Also I would suggest that we note in the patchset itself (may be the git 
+log) that kdump tools (or even crash for that matter) will be broken 
+with this patchset - to prevent kernel bugs being reported.
+
+BTW, James and I are already discussing more coherent methods (see [0]) 
+to manage this exporting of information to user-land (so to that we can 
+save ourselves from requiring to export new variables in the vmcoreinfo 
+in case we have similar changes to the virtual/physical address spaces 
+in future).
+
+I will work on and send a patchset addressing the same shortly.
+
+[0]. http://lists.infradead.org/pipermail/kexec/2019-June/023105.html
+
+Thanks,
+Bhupesh
+
 
 _______________________________________________
 kexec mailing list
