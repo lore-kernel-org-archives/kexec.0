@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it1-f194.google.com ([209.85.166.194])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1haFO6-0003Eq-BN
- for kexec@lists.infradead.org; Mon, 10 Jun 2019 08:10:43 +0000
-Received: by mail-it1-f194.google.com with SMTP id n189so11827206itd.0
- for <kexec@lists.infradead.org>; Mon, 10 Jun 2019 01:10:41 -0700 (PDT)
+ id 1haGy9-00054k-5B
+ for kexec@lists.infradead.org; Mon, 10 Jun 2019 09:52:02 +0000
+Date: Mon, 10 Jun 2019 11:51:50 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH] x86/kexec: Add ACPI NVS region to the ident map
+Message-ID: <20190610095150.GA5488@zn.tnic>
+References: <20190610073617.19767-1-kasong@redhat.com>
 MIME-Version: 1.0
-References: <20190524062321.24126-1-kasong@redhat.com>
- <20190531092743.qgwku2ob4trduadr@verge.net.au>
-In-Reply-To: <20190531092743.qgwku2ob4trduadr@verge.net.au>
-From: Kairui Song <kasong@redhat.com>
-Date: Mon, 10 Jun 2019 16:10:30 +0800
-Message-ID: <CACPcB9dOSwe1s2Z5W3ccwXSR_h_Y33cqnt2d=TPZ4hX+fpqdrA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] x86: Always try to fill acpi_rsdp_addr in boot
- params
+Content-Disposition: inline
+In-Reply-To: <20190610073617.19767-1-kasong@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,39 +23,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>
+To: Kairui Song <kasong@redhat.com>
+Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Chao Fan <fanc.fnst@cn.fujitsu.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Dirk van der Merwe <dirk.vandermerwe@netronome.com>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>
 
-On Fri, May 31, 2019 at 5:27 PM Simon Horman <horms@verge.net.au> wrote:
->
-> On Fri, May 24, 2019 at 02:23:17PM +0800, Kairui Song wrote:
-> > This patch sync the behavior of user space kexec and kexec_file_load,
-> > they will both fill the boot_params.acpi_rsdp_addr with a valid RSDP
-> > value, to make sure second kernel can always get the RSDP consistently.
-> >
-> > This will make it effortless to boot newer version of kernel (5.0+)
-> > without specifying acpi_rsdp= cmdline on EFI system even with EFI
-> > service disabled. Should not change any behavior with older kernels.
-> >
-> > Update from V2:
-> >   - Drop unneeded 'packed' attribute for boot parameters structure
-> >   - Don't trust kernel cmdline as a reliable acpi rsdp source
-> >
-> > Update from V1:
-> >   - Split into multiple patches for a cleaner structure, content is not
-> >     changed.
->
-> Thanks Kairui,
->
-> applied.
+On Mon, Jun 10, 2019 at 03:36:17PM +0800, Kairui Song wrote:
+> With the recent addition of RSDP parsing in decompression stage, kexec
+> kernel now needs ACPI tables to be covered by the identity mapping.
+> And in commit 6bbeb276b71f ("x86/kexec: Add the EFI system tables and
+> ACPI tables to the ident map"), ACPI tables memory region was added to
+> the ident map.
+> 
+> But on some machines, there is only ACPI NVS memory region, and the ACPI
+> tables is located in the NVS region instead. In such case second kernel
 
-Hi Simon,
+*are* located - plural.
 
-I still haven't see this series get merged yet in the git repo, any update?
+> will still fail when trying to access ACPI tables.
+> 
+> So, to fix the problem, add NVS memory region in the ident map as well.
+> 
+> Fixes: 6bbeb276b71f ("x86/kexec: Add the EFI system tables and ACPI tables to the ident map")
+> Suggested-by: Junichi Nomura <j-nomura@ce.jp.nec.com>
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> ---
+> 
+> Tested with my laptop and VM, on top of current tip:x86/boot.
 
---
-Best Regards,
-Kairui Song
+You tested this in a VM and not on the *actual* machine with the NVS
+region?
+
+This is a joke, right?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
