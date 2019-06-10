@@ -1,20 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1haIPl-0006yz-TS
- for kexec@lists.infradead.org; Mon, 10 Jun 2019 11:24:39 +0000
-Date: Mon, 10 Jun 2019 13:24:31 +0200
+ id 1haIcb-00048J-Re
+ for kexec@lists.infradead.org; Mon, 10 Jun 2019 11:37:55 +0000
+Date: Mon, 10 Jun 2019 13:37:47 +0200
 From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH] x86/kexec: Add ACPI NVS region to the ident map
-Message-ID: <20190610112431.GC5488@zn.tnic>
-References: <20190610073617.19767-1-kasong@redhat.com>
- <20190610095150.GA5488@zn.tnic>
- <CACPcB9f-sussXaOuOau6=CD85pS2KhcsknpJDQH_aEkwvLfvVA@mail.gmail.com>
- <20190610105959.GB5488@zn.tnic>
- <1555938c-e00f-d40f-5f24-146aec7a67eb@ce.jp.nec.com>
+Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel
+ e820 table
+Message-ID: <20190610113747.GD5488@zn.tnic>
+References: <20190423013007.17838-1-lijiang@redhat.com>
+ <12847a03-3226-0b29-97b5-04d404410147@redhat.com>
+ <20190607174211.GN20269@zn.tnic>
+ <20190608035451.GB26148@MiWiFi-R3L-srv>
+ <20190608091030.GB32464@zn.tnic>
+ <20190608100139.GC26148@MiWiFi-R3L-srv>
+ <20190608100623.GA9138@zn.tnic>
+ <20190608102659.GA9130@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1555938c-e00f-d40f-5f24-146aec7a67eb@ce.jp.nec.com>
+In-Reply-To: <20190608102659.GA9130@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,19 +31,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc: the arch/x86 maintainers <x86@kernel.org>, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Chao Fan <fanc.fnst@cn.fujitsu.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Dirk van der Merwe <dirk.vandermerwe@netronome.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: Thomas.Lendacky@amd.com, x86@kernel.org, lijiang <lijiang@redhat.com>, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-On Mon, Jun 10, 2019 at 11:07:05AM +0000, Junichi Nomura wrote:
-> I had tested the version I posted here on bunch of physical machines
-> I had access and confirmed it didn't broke working setups:
-> https://lore.kernel.org/lkml/20190515051717.GA13703@jeru.linux.bs1.fc.nec.co.jp/
+On Sat, Jun 08, 2019 at 06:26:59PM +0800, Baoquan He wrote:
+> OK, I see. Then it should be the issue we have met and talked about with
+> Tom.
+> https://lkml.kernel.org/r/20190604134952.GC26891@MiWiFi-R3L-srv
 > 
-> Since the logic in the patch seems unchanged, I'm very sure it's ok.
+> You can apply Tom's patch as below. I tested it, it can make kexec
+> kernel succeed to boot, but failed for kdump kernel booting. The kdump
+> kernel can boot till the end of kernel initialization, then hang with a
+> call trace. I have pasted the log in the above thread. Haven't got the
+> reason.
+> http://lkml.kernel.org/r/508c2853-dc4f-70a6-6fa8-97c950dc31c6@amd.com
 
-Ok, thanks for testing.
+I can confirm the same observation.
 
-I'll add your Tested-by.
+Thx.
 
 -- 
 Regards/Gruss,
