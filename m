@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 10 Jun 2019 11:54:26 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v2 00/12] 52-bit kernel + user VAs
-Message-ID: <20190610105425.d4vubtcknc2wn5uk@mbp>
-References: <20190528161026.13193-1-steve.capper@arm.com>
- <762411c4-1148-a10e-2a79-d2c9e38bc46e@redhat.com>
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+ by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
+ id 1haI24-0004N5-G2
+ for kexec@lists.infradead.org; Mon, 10 Jun 2019 11:00:13 +0000
+Date: Mon, 10 Jun 2019 12:59:59 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH] x86/kexec: Add ACPI NVS region to the ident map
+Message-ID: <20190610105959.GB5488@zn.tnic>
+References: <20190610073617.19767-1-kasong@redhat.com>
+ <20190610095150.GA5488@zn.tnic>
+ <CACPcB9f-sussXaOuOau6=CD85pS2KhcsknpJDQH_aEkwvLfvVA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <762411c4-1148-a10e-2a79-d2c9e38bc46e@redhat.com>
+In-Reply-To: <CACPcB9f-sussXaOuOau6=CD85pS2KhcsknpJDQH_aEkwvLfvVA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,28 +25,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: crecklin@redhat.com, ard.biesheuvel@linaro.org, marc.zyngier@arm.com, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Steve Capper <steve.capper@arm.com>, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org
+To: Kairui Song <kasong@redhat.com>
+Cc: the arch/x86 maintainers <x86@kernel.org>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Chao Fan <fanc.fnst@cn.fujitsu.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Dirk van der Merwe <dirk.vandermerwe@netronome.com>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>
 
-On Mon, Jun 10, 2019 at 04:10:50PM +0530, Bhupesh Sharma wrote:
-> On 05/28/2019 09:40 PM, Steve Capper wrote:
-> >   2) How can this memory map be advertised to kdump tools/documentation?
-> >      I was planning on getting the kernel VA structure agreed on, then I
-> >      would add the relevant exports/documentation.
-> 
-> Indeed, in the absence of corresponding changes to the Documentation
-> section, it is hard to visualize the changes being made in the memory
-> map.
+On Mon, Jun 10, 2019 at 06:18:50PM +0800, Kairui Song wrote:
+> Hi Boris, unfortunately I don't have a real machine which only have
+> the NVS region. I did fake the memmap to emulate such problem but
+> can't really promise this will fix the real case. So just declare it
+> won't break anything that is already working. And I'm asking Junichi
+> to have a try as he reported this issue on the machines he has.
 
-We used to have some better documentation in the arm64 memory.txt until
-commit 08375198b010 ("arm64: Determine the vmalloc/vmemmap space at
-build time based on VA_BITS") which removed it in favour of what the
-kernel was printing. Subsequently, the kernel VA layout printing was
-also removed. It would be nice to bring back the memory.txt, even if it
-is for a single configuration as per defconfig.
+Yes, this is how you should do it. First you test on a real hardware -
+if the issue is such that needs a real hardware to verify - and if it
+passes, *then* you send the patch.
+
+If you don't have access to the box, then ask someone who has.
+
+But for the future, please do not send untested patches in a hurry,
+hoping that they would work. This could cause more trouble than the
+little time you might save speculating it'll all go fine.
 
 -- 
-Catalin
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
