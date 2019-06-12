@@ -1,14 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 12 Jun 2019 16:45:51 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 1/4] x86: kdump: move reserve_crashkernel_low() into
- kexec_core.c
-Message-ID: <20190612084551.GA24575@dhcp-128-65.nay.redhat.com>
-References: <20190507035058.63992-1-chenzhou10@huawei.com>
- <20190507035058.63992-2-chenzhou10@huawei.com>
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+ by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
+ id 1hb4tb-0007Th-Ex
+ for kexec@lists.infradead.org; Wed, 12 Jun 2019 15:10:41 +0000
+Date: Wed, 12 Jun 2019 17:10:33 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel
+ e820 table
+Message-ID: <20190612151033.GJ32652@zn.tnic>
+References: <20190423013007.17838-1-lijiang@redhat.com>
+ <12847a03-3226-0b29-97b5-04d404410147@redhat.com>
+ <20190607174211.GN20269@zn.tnic>
+ <20190608035451.GB26148@MiWiFi-R3L-srv>
+ <20190608091030.GB32464@zn.tnic>
+ <20190608100139.GC26148@MiWiFi-R3L-srv>
+ <20190608100623.GA9138@zn.tnic>
+ <20190608102659.GA9130@MiWiFi-R3L-srv>
+ <20190610113747.GD5488@zn.tnic>
+ <20190612015549.GI26148@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190507035058.63992-2-chenzhou10@huawei.com>
+In-Reply-To: <20190612015549.GI26148@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,21 +33,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chen Zhou <chenzhou10@huawei.com>
-Cc: wangkefeng.wang@huawei.com, horms@verge.net.au, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, takahiro.akashi@linaro.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, rppt@linux.ibm.com, linux-mm@kvack.org, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, kexec@lists.infradead.org, akpm@linux-foundation.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>, Thomas.Lendacky@amd.com
+Cc: x86@kernel.org, lijiang <lijiang@redhat.com>, peterz@infradead.org, dave.hansen@linux.intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, luto@kernel.org, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org
 
-Hi,
-On 05/07/19 at 11:50am, Chen Zhou wrote:
-> In preparation for supporting reserving crashkernel above 4G
-> in arm64 as x86_64 does, move reserve_crashkernel_low() into
-> kexec/kexec_core.c.
+On Wed, Jun 12, 2019 at 09:55:49AM +0800, Baoquan He wrote:
+> With further investigation, the failure after applying Tom's patch is
+> caused by OOM. When increase crashkernel reservation to 512M, kdump
+> kernel can boot successfully. I noticed your crashkernel reservation is
+> 256M, that will fail and stuck there very possibly.
+> 
+> So Tom's patch can fix the issue. We need further check why much more
+> crashkernel memory is needed on those AMD boxes with sme support..
 
-Other than the comments from James, can you move the function into
-kernel/crash_core.c, we already have some functions moved there for
-sharing.
+Yes, 256M for a kexec kernel sounds pretty much enough to me. So there's
+something else at play here. I wonder if that workarea after _end, from
+Tom's patch, needs so much room...
 
-Thanks
-Dave
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
