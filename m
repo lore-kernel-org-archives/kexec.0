@@ -1,15 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 2/4] arm64: kdump: support reserving crashkernel above 4G
-References: <20190507035058.63992-1-chenzhou10@huawei.com>
- <20190507035058.63992-3-chenzhou10@huawei.com>
- <df2b659d-7406-fbfd-597d-be3a3f69abcb@arm.com>
- <d15f334c-90cd-7c09-5e54-6501e822e7f1@huawei.com>
-From: James Morse <james.morse@arm.com>
-Message-ID: <b04f5578-4422-319c-da1f-62f7b465c9f6@arm.com>
-Date: Thu, 13 Jun 2019 13:44:28 +0100
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
+ id 1hbRKZ-0008Kp-Sw
+ for kexec@lists.infradead.org; Thu, 13 Jun 2019 15:08:02 +0000
+Date: Thu, 13 Jun 2019 23:07:44 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel
+ e820 table
+Message-ID: <20190613150744.GR26148@MiWiFi-R3L-srv>
+References: <20190608091030.GB32464@zn.tnic>
+ <20190608100139.GC26148@MiWiFi-R3L-srv>
+ <20190608100623.GA9138@zn.tnic>
+ <20190608102659.GA9130@MiWiFi-R3L-srv>
+ <20190610113747.GD5488@zn.tnic>
+ <20190612015549.GI26148@MiWiFi-R3L-srv>
+ <20190612151033.GJ32652@zn.tnic>
+ <3dfa5985-008a-20d8-5171-cfe96807c303@amd.com>
+ <20190612180724.GP32652@zn.tnic>
+ <d89ef4ef-b85a-ea94-acdf-2eed5666ed78@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <d15f334c-90cd-7c09-5e54-6501e822e7f1@huawei.com>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <d89ef4ef-b85a-ea94-acdf-2eed5666ed78@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,93 +33,96 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chen Zhou <chenzhou10@huawei.com>
-Cc: wangkefeng.wang@huawei.com, horms@verge.net.au, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, rppt@linux.ibm.com, linux-mm@kvack.org, takahiro.akashi@linaro.org, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, kexec@lists.infradead.org, akpm@linux-foundation.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>, "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, lijiang <lijiang@redhat.com>, "peterz@infradead.org" <peterz@infradead.org>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "luto@kernel.org" <luto@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "dyoung@redhat.com" <dyoung@redhat.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>
 
-Hi Chen Zhou,
+On 06/12/19 at 07:10pm, Lendacky, Thomas wrote:
+> On 6/12/19 1:07 PM, Borislav Petkov wrote:
+> > On Wed, Jun 12, 2019 at 04:52:22PM +0000, Lendacky, Thomas wrote:
+> >> I think the discussion ended up being that debuginfo wasn't being stripped
+> >> from the kernel and initrd (mainly the initrd).  What are the sizes of
+> >> the kernel and initrd that you are loading for kdump via kexec?
+> >>
+> >> From previous post:
+> >>   kexec -s -p /boot/vmlinuz-5.2.0-rc3+ --initrd=/boot/initrd.img-5.2.0-rc3+
+> > 
+> > You mean those sizes?
+> > 
+> > $ ls -lh /boot/vmlinuz-5.2.0-rc3+ /boot/initrd.img-5.2.0-rc3+
+> > -rw-r--r-- 1 root root 7.8M Jun 10 12:53 /boot/initrd.img-5.2.0-rc3+
+> > -rw-r--r-- 1 root root 6.7M Jun 10 12:53 /boot/vmlinuz-5.2.0-rc3+
+> > 
+> > That should fit easily in 256M :)
+> 
+> Certainly seems like they should. I know there are other things that are
+> loaded, but that should be plenty of room. I wonder if Baoquan or Lianbo
+> could track where things are being loaded to see if everything is being
+> calculated and placed properly.
 
-On 13/06/2019 12:27, Chen Zhou wrote:
-> On 2019/6/6 0:29, James Morse wrote:
->> On 07/05/2019 04:50, Chen Zhou wrote:
->>> When crashkernel is reserved above 4G in memory, kernel should
->>> reserve some amount of low memory for swiotlb and some DMA buffers.
->>
->>> Meanwhile, support crashkernel=X,[high,low] in arm64. When use
->>> crashkernel=X parameter, try low memory first and fall back to high
->>> memory unless "crashkernel=X,high" is specified.
->>
->> What is the 'unless crashkernel=...,high' for? I think it would be simpler to relax the
->> ARCH_LOW_ADDRESS_LIMIT if reserve_crashkernel_low() allocated something.
->>
->> This way "crashkernel=1G" tries to allocate 1G below 4G, but fails if there isn't enough
->> memory. "crashkernel=1G crashkernel=16M,low" allocates 16M below 4G, which is more likely
->> to succeed, if it does it can then place the 1G block anywhere.
->>
-> Yeah, this is much simpler.
+Today I did some investigations on speedway and another customer's
+machine with sme support. 
 
->>> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
->>> index 413d566..82cd9a0 100644
->>> --- a/arch/arm64/kernel/setup.c
->>> +++ b/arch/arm64/kernel/setup.c
->>> @@ -243,6 +243,9 @@ static void __init request_standard_resources(void)
->>>  			request_resource(res, &kernel_data);
->>>  #ifdef CONFIG_KEXEC_CORE
->>>  		/* Userspace will find "Crash kernel" region in /proc/iomem. */
->>> +		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
->>> +		    crashk_low_res.end <= res->end)
->>> +			request_resource(res, &crashk_low_res);
->>>  		if (crashk_res.end && crashk_res.start >= res->start &&
->>>  		    crashk_res.end <= res->end)
->>>  			request_resource(res, &crashk_res);
->>
->> With both crashk_low_res and crashk_res, we end up with two entries in /proc/iomem called
->> "Crash kernel". Because its sorted by address, and kexec-tools stops searching when it
->> find "Crash kernel", you are always going to get the kernel placed in the lower portion.
->>
->> I suspect this isn't what you want, can we rename crashk_low_res for arm64 so that
->> existing kexec-tools doesn't use it?
+In kdump kernel boot log, we can see that it prints the memory usage as
+below from mem_init_print_info() of mem_init(). There it free all
+memblock memory into buddy. We can see kernel used (144828K reserved)
+before this, about 144M. This is for sure, and I got the same value form
+memblock=debug kernel parameter adding.
 
-> In my patchset, in addition to the kernel patches, i also modify the kexec-tools.
->   arm64: support more than one crash kernel regions(http://lists.infradead.org/pipermail/kexec/2019-April/022792.html).
-> In kexec-tools patch, we read all the "Crash kernel" entry and load crash kernel high.
+[    2.109408] Kernel command line: BOOT_IMAGE=(hd0,gpt2)/vmlinuz-5.2.0-rc4+ ro mem_encrypt=on resume=/dev/mapper/rhel_amd--speedway--05-swap console=ttyS0,115200 earlyprintk=serial,0x6000,115200 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never nr_cpus=1 debug nokaslr disable_cpu_apicid=0 elfcorehdr=1899892K
+[    2.155433] Memory: 65572K/262128K available (12292K kernel code, 2047K rwdata, 3840K rodata, 2344K init, 6360K bss, 144828K reserved, 0K cma-reserved)
 
-But we can't rely on people updating user-space when they update the kernel!
+The free memory in buddy is 65572K, about 65M. This confuses me. I added
+below code to print the free memory, it's about 64M. It seems not
+changed. I need read code and check further.
 
-[...]
+[    5.775595] bhe: free:0x10304
+[    5.778612] Mem-Info:
+[    5.780923] active_anon:1818 inactive_anon:12837 isolated_anon:0
+[    5.780923]  active_file:0 inactive_file:0 isolated_file:0
+[    5.780923]  unevictable:0 dirty:0 writeback:0 unstable:0
+[    5.780923]  slab_reclaimable:1995 slab_unreclaimable:3347
+[    5.780923]  mapped:0 shmem:14662 pagetables:1 bounce:0
+[    5.780923]  free:16577 free_pcp:3 free_cma:0
 
+--- a/init/main.c
++++ b/init/main.c
+@@ -1168,6 +1168,8 @@ static noinline void __init kernel_init_freeable(void)
+ 
+        do_basic_setup();
+ 
++       pr_info("bhe: free:0x%lx\n", nr_free_pages() << (PAGE_SHIFT - 10));
++       show_mem(0, NULL);
 
->> I'm afraid you've missed the ugly bit of the crashkernel reservation...
->>
->> arch/arm64/mm/mmu.c::map_mem() marks the crashkernel as 'nomap' during the first pass of
->> page-table generation. This means it isn't mapped in the linear map. It then maps it with
->> page-size mappings, and removes the nomap flag.
->>
->> This is done so that arch_kexec_protect_crashkres() and
->> arch_kexec_unprotect_crashkres() can remove the valid bits of the crashkernel mapping.
->> This way the old-kernel can't accidentally overwrite the crashkernel. It also saves us if
->> the old-kernel and the crashkernel use different memory attributes for the mapping.
->>
->> As your low-memory reservation is intended to be used for devices, having it mapped by the
->> old-kernel as cacheable memory is going to cause problems if those CPUs aren't taken
->> offline and go corrupting this memory. (we did crash for a reason after all)
->>
->>
->> I think the simplest thing to do is mark the low region as 'nomap' in
->> reserve_crashkernel() and always leave it unmapped. We can then describe it via a
->> different string in /proc/iomem, something like "Crash kernel (low)". Older kexec-tools
->> shouldn't use it, (I assume its not using strncmp() in a way that would do this by
->> accident), and newer kexec-tools can know to describe it in the DT, but it can't write to it.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Above is about code debugging and analysis. From testing results, there
+are things impacting the memory usage of kdump kernel. 
 
-> I did miss the bit of the crashkernel reservation.
-> I will fix this in next version.
+1)We need strip DEBUG INFO from kernel modules, otherwise it will bloat
+the initrd and its space.
 
-I think all that is needed is to make the low-region nmap, and describe it via /proc/iomem
-with a name where nothing will try and use it by accident.
+2)And some machines will consume more memory than other, because they own
+more pci devices or different devices and drivers. Before init process
+run, we will detect and init them, these will eat memory.
 
+With my testing, the speedway machine which has 128 cpus obvisouly consume
+more memory than one HP machine. On the HP machine, even 160M
+crashkernel memory with DEBUG INFO stripped, kdump kernel can work well.
+While 160M crashkernel doesn't satisfy speedway machine, it needs 256M.
 
-Thanks,
+3)Some extra kernel parameters may impact memory usage. E.g in Boris's
+test, 'log_buf_len=16M' and 'debug' are added, this will cost extra
+memory.
 
-James
+kexec -s -p /boot/vmlinuz-5.2.0-rc3+ --initrd=/boot/initrd.img-5.2.0-rc3+ --command-line="maxcpus=1 root=/dev/sda5 ro debug ignore_loglevel
+log_buf_len=16M no_console_suspend net.ifnames=0 systemd.log_target=null mem_encrypt=on kvm_amd.sev=1 nr_cpus=1 irqpoll reset_devices vga=normal
+LANG=en_US.UTF-8 earlyprintk=serial cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug
+transparent_hugepage=never disable_cpu_apicid=0"
+
+Anyway, I will continue investigating, see if I can get exact
+information from kernel printing or debugging.
+
+Thanks
+Baoquan
 
 _______________________________________________
 kexec mailing list
