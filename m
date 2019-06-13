@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 0/4] support reserving crashkernel above 4G on arm64 kdump
+Subject: Re: [PATCH 2/4] arm64: kdump: support reserving crashkernel above 4G
 References: <20190507035058.63992-1-chenzhou10@huawei.com>
- <51995efd-8469-7c15-0d5e-935b63fe2d9f@arm.com>
- <638a5d22-8d51-8d63-2d8a-a38bbb8fb1d6@huawei.com>
+ <20190507035058.63992-3-chenzhou10@huawei.com>
+ <df2b659d-7406-fbfd-597d-be3a3f69abcb@arm.com>
+ <d15f334c-90cd-7c09-5e54-6501e822e7f1@huawei.com>
 From: James Morse <james.morse@arm.com>
-Message-ID: <72a9c52b-1b24-57e8-e29f-b5a53524744b@arm.com>
-Date: Thu, 13 Jun 2019 13:43:16 +0100
+Message-ID: <b04f5578-4422-319c-da1f-62f7b465c9f6@arm.com>
+Date: Thu, 13 Jun 2019 13:44:28 +0100
 MIME-Version: 1.0
-In-Reply-To: <638a5d22-8d51-8d63-2d8a-a38bbb8fb1d6@huawei.com>
+In-Reply-To: <d15f334c-90cd-7c09-5e54-6501e822e7f1@huawei.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,48 +28,82 @@ Cc: wangkefeng.wang@huawei.com, horms@verge.net.au, ard.biesheuvel@linaro.org, c
 Hi Chen Zhou,
 
 On 13/06/2019 12:27, Chen Zhou wrote:
-> On 2019/6/6 0:32, James Morse wrote:
+> On 2019/6/6 0:29, James Morse wrote:
 >> On 07/05/2019 04:50, Chen Zhou wrote:
->>> We use crashkernel=X to reserve crashkernel below 4G, which will fail
->>> when there is no enough memory. Currently, crashkernel=Y@X can be used
->>> to reserve crashkernel above 4G, in this case, if swiotlb or DMA buffers
->>> are requierd, capture kernel will boot failure because of no low memory.
+>>> When crashkernel is reserved above 4G in memory, kernel should
+>>> reserve some amount of low memory for swiotlb and some DMA buffers.
 >>
->>> When crashkernel is reserved above 4G in memory, kernel should reserve
->>> some amount of low memory for swiotlb and some DMA buffers. So there may
->>> be two crash kernel regions, one is below 4G, the other is above 4G.
+>>> Meanwhile, support crashkernel=X,[high,low] in arm64. When use
+>>> crashkernel=X parameter, try low memory first and fall back to high
+>>> memory unless "crashkernel=X,high" is specified.
 >>
->> This is a good argument for supporting the 'crashkernel=...,low' version.
->> What is the 'crashkernel=...,high' version for?
+>> What is the 'unless crashkernel=...,high' for? I think it would be simpler to relax the
+>> ARCH_LOW_ADDRESS_LIMIT if reserve_crashkernel_low() allocated something.
 >>
->> Wouldn't it be simpler to relax the ARCH_LOW_ADDRESS_LIMIT if we see 'crashkernel=...,low'
->> in the kernel cmdline?
+>> This way "crashkernel=1G" tries to allocate 1G below 4G, but fails if there isn't enough
+>> memory. "crashkernel=1G crashkernel=16M,low" allocates 16M below 4G, which is more likely
+>> to succeed, if it does it can then place the 1G block anywhere.
 >>
->> I don't see what the 'crashkernel=...,high' variant is giving us, it just complicates the
->> flow of reserve_crashkernel().
+> Yeah, this is much simpler.
+
+>>> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+>>> index 413d566..82cd9a0 100644
+>>> --- a/arch/arm64/kernel/setup.c
+>>> +++ b/arch/arm64/kernel/setup.c
+>>> @@ -243,6 +243,9 @@ static void __init request_standard_resources(void)
+>>>  			request_resource(res, &kernel_data);
+>>>  #ifdef CONFIG_KEXEC_CORE
+>>>  		/* Userspace will find "Crash kernel" region in /proc/iomem. */
+>>> +		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
+>>> +		    crashk_low_res.end <= res->end)
+>>> +			request_resource(res, &crashk_low_res);
+>>>  		if (crashk_res.end && crashk_res.start >= res->start &&
+>>>  		    crashk_res.end <= res->end)
+>>>  			request_resource(res, &crashk_res);
 >>
->> If we called reserve_crashkernel_low() at the beginning of reserve_crashkernel() we could
->> use crashk_low_res.end to change some limit variable from ARCH_LOW_ADDRESS_LIMIT to
->> memblock_end_of_DRAM().
->> I think this is a simpler change that gives you what you want.
-> 
-> According to your suggestions, we should do like this:
-> 1. call reserve_crashkernel_low() at the beginning of reserve_crashkernel()
-> 2. mark the low region as 'nomap'
-> 3. use crashk_low_res.end to change some limit variable from ARCH_LOW_ADDRESS_LIMIT to
-> memblock_end_of_DRAM()
-> 4. rename crashk_low_res as "Crash kernel (low)" for arm64
+>> With both crashk_low_res and crashk_res, we end up with two entries in /proc/iomem called
+>> "Crash kernel". Because its sorted by address, and kexec-tools stops searching when it
+>> find "Crash kernel", you are always going to get the kernel placed in the lower portion.
+>>
+>> I suspect this isn't what you want, can we rename crashk_low_res for arm64 so that
+>> existing kexec-tools doesn't use it?
 
-> 5. add an 'linux,low-memory-range' node in DT
+> In my patchset, in addition to the kernel patches, i also modify the kexec-tools.
+>   arm64: support more than one crash kernel regions(http://lists.infradead.org/pipermail/kexec/2019-April/022792.html).
+> In kexec-tools patch, we read all the "Crash kernel" entry and load crash kernel high.
 
-(This bit would happen in kexec-tools)
+But we can't rely on people updating user-space when they update the kernel!
+
+[...]
 
 
-> Do i understand correctly?
+>> I'm afraid you've missed the ugly bit of the crashkernel reservation...
+>>
+>> arch/arm64/mm/mmu.c::map_mem() marks the crashkernel as 'nomap' during the first pass of
+>> page-table generation. This means it isn't mapped in the linear map. It then maps it with
+>> page-size mappings, and removes the nomap flag.
+>>
+>> This is done so that arch_kexec_protect_crashkres() and
+>> arch_kexec_unprotect_crashkres() can remove the valid bits of the crashkernel mapping.
+>> This way the old-kernel can't accidentally overwrite the crashkernel. It also saves us if
+>> the old-kernel and the crashkernel use different memory attributes for the mapping.
+>>
+>> As your low-memory reservation is intended to be used for devices, having it mapped by the
+>> old-kernel as cacheable memory is going to cause problems if those CPUs aren't taken
+>> offline and go corrupting this memory. (we did crash for a reason after all)
+>>
+>>
+>> I think the simplest thing to do is mark the low region as 'nomap' in
+>> reserve_crashkernel() and always leave it unmapped. We can then describe it via a
+>> different string in /proc/iomem, something like "Crash kernel (low)". Older kexec-tools
+>> shouldn't use it, (I assume its not using strncmp() in a way that would do this by
+>> accident), and newer kexec-tools can know to describe it in the DT, but it can't write to it.
 
-Yes, I think this is simpler and still gives you what you want.
-It also leaves the existing behaviour unchanged, which helps with keeping compatibility
-with existing user-space and older kdump kernels.
+> I did miss the bit of the crashkernel reservation.
+> I will fix this in next version.
+
+I think all that is needed is to make the low-region nmap, and describe it via /proc/iomem
+with a name where nothing will try and use it by accident.
 
 
 Thanks,
