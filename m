@@ -1,29 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hbBnH-0006nO-QX
- for kexec@lists.infradead.org; Wed, 12 Jun 2019 22:32:37 +0000
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x5CMWRY2101922
- for <kexec@lists.infradead.org>; Wed, 12 Jun 2019 18:32:30 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2t37e6wwk5-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 12 Jun 2019 18:32:29 -0400
-Received: from localhost
- by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
- Wed, 12 Jun 2019 23:31:51 +0100
-Subject: Re: [PATCH V8 3/3] Call ima_kexec_cmdline to measure the cmdline args
-From: Mimi Zohar <zohar@linux.ibm.com>
-Date: Wed, 12 Jun 2019 18:31:43 -0400
-In-Reply-To: <20190612221549.28399-4-prsriva02@gmail.com>
-References: <20190612221549.28399-1-prsriva02@gmail.com>
- <20190612221549.28399-4-prsriva02@gmail.com>
-Mime-Version: 1.0
-Message-Id: <1560378703.4578.91.camel@linux.ibm.com>
+ id 1hbENb-0006Ic-PA
+ for kexec@lists.infradead.org; Thu, 13 Jun 2019 01:18:17 +0000
+Date: Thu, 13 Jun 2019 09:18:04 +0800
+From: "dyoung@redhat.com" <dyoung@redhat.com>
+Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel
+ e820 table
+Message-ID: <20190613011804.GA27786@dhcp-128-65.nay.redhat.com>
+References: <20190608035451.GB26148@MiWiFi-R3L-srv>
+ <20190608091030.GB32464@zn.tnic>
+ <20190608100139.GC26148@MiWiFi-R3L-srv>
+ <20190608100623.GA9138@zn.tnic>
+ <20190608102659.GA9130@MiWiFi-R3L-srv>
+ <20190610113747.GD5488@zn.tnic>
+ <20190612015549.GI26148@MiWiFi-R3L-srv>
+ <20190612151033.GJ32652@zn.tnic>
+ <3dfa5985-008a-20d8-5171-cfe96807c303@amd.com>
+ <20190612180724.GP32652@zn.tnic>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20190612180724.GP32652@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,71 +33,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Prakhar Srivastava <prsriva02@gmail.com>, linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Dave Young <dyoung@redhat.com>, roberto.sassu@huawei.com, "Eric W. Biederman" <ebiederm@xmission.com>, vgoyal@redhat.com, kexec <kexec@lists.infradead.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>, "x86@kernel.org" <x86@kernel.org>, lijiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>, "peterz@infradead.org" <peterz@infradead.org>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "luto@kernel.org" <luto@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>
 
-[Cc: kexec mailing list]
-
-Hi Eric, Dave,
-
-On Wed, 2019-06-12 at 15:15 -0700, Prakhar Srivastava wrote:
-> During soft reboot(kexec_file_load) boot cmdline args
-> are not measured.Thus the new kernel on load boots with
-> an assumption of cold reboot.
+On 06/12/19 at 08:07pm, Borislav Petkov wrote:
+> On Wed, Jun 12, 2019 at 04:52:22PM +0000, Lendacky, Thomas wrote:
+> > I think the discussion ended up being that debuginfo wasn't being stripped
+> > from the kernel and initrd (mainly the initrd).  What are the sizes of
+> > the kernel and initrd that you are loading for kdump via kexec?
+> > 
+> > From previous post:
+> >   kexec -s -p /boot/vmlinuz-5.2.0-rc3+ --initrd=/boot/initrd.img-5.2.0-rc3+
 > 
-> This patch makes a call to the ima hook ima_kexec_cmdline,
-> added in "Define a new IMA hook to measure the boot command
-> line arguments"
-> to measure the boot cmdline args into the ima log.
+> You mean those sizes?
 > 
-> - call ima_kexec_cmdline from kexec_file_load.
-> - move the call ima_add_kexec_buffer after the cmdline
-> args have been measured.
+> $ ls -lh /boot/vmlinuz-5.2.0-rc3+ /boot/initrd.img-5.2.0-rc3+
+> -rw-r--r-- 1 root root 7.8M Jun 10 12:53 /boot/initrd.img-5.2.0-rc3+
+> -rw-r--r-- 1 root root 6.7M Jun 10 12:53 /boot/vmlinuz-5.2.0-rc3+
 > 
-> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Dave Young <dyoung@redhat.com>
+> That should fit easily in 256M :)
 
-Any chance we could get some Acks?
+The final used size is uncompressed size, for example in my case:
 
-thanks,
+$ ls -lth arch/x86/boot/bzImage 
+-rw-rw-r-- 1 dyoung dyoung 6.3M May 24 11:19 arch/x86/boot/bzImage
+$ ls -lth arch/x86/boot/compressed/vmlinux.bin
+-rwxrwxr-x 1 dyoung dyoung 25M May 24 11:19 arch/x86/boot/compressed/vmlinux.bin
 
-Mimi
+The vmlinuz is 6.3M, uncompressed kernel is about 25M, since yours
+bzImage is 7.8M, I would expect the final size is around 29M
 
-> ---
->  kernel/kexec_file.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+for initramfs, you can check it by:
+
+$ ls -lth /boot/initramfs-5.0.9-301.fc30.x86_64kdump.img
+-rw------- 1 root root 16M May 28 08:59 /boot/initramfs-5.0.9-301.fc30.x86_64kdump.img
+$ mkdir tmp
+$ cd tmp
+$ sudo lsinitrd --unpack /boot/initramfs-5.0.9-301.fc30.x86_64kdump.img
+$ du -hs .
+46M	.
+
+You can see my kdump initrd is 46M after unpacking.
+
 > 
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 072b6ee55e3f..b0c724e5d86c 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -198,9 +198,6 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
->  		return ret;
->  	image->kernel_buf_len = size;
->  
-> -	/* IMA needs to pass the measurement list to the next kernel. */
-> -	ima_add_kexec_buffer(image);
-> -
->  	/* Call arch image probe handlers */
->  	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
->  					    image->kernel_buf_len);
-> @@ -241,8 +238,14 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
->  			ret = -EINVAL;
->  			goto out;
->  		}
-> +
-> +		ima_kexec_cmdline(image->cmdline_buf,
-> +				  image->cmdline_buf_len - 1);
->  	}
->  
-> +	/* IMA needs to pass the measurement list to the next kernel. */
-> +	ima_add_kexec_buffer(image);
-> +
->  	/* Call arch image load handlers */
->  	ldata = arch_kexec_kernel_image_load(image);
->  
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> Good mailing practices for 400: avoid top-posting and trim the reply.
 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
