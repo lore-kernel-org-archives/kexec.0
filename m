@@ -1,24 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hbVrP-0004HU-4o
- for kexec@lists.infradead.org; Thu, 13 Jun 2019 19:58:12 +0000
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
- by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x5DJw6r6015503
- (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO)
- for <kexec@lists.infradead.org>; Fri, 14 Jun 2019 04:58:06 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
- by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x5DJw6c8005551
- for <kexec@lists.infradead.org>; Fri, 14 Jun 2019 04:58:06 +0900
-Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
- by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x5DJw6OA027780
- for <kexec@lists.infradead.org>; Fri, 14 Jun 2019 04:58:06 +0900
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: [ANNOUNCE] makedumpfile 1.6.6 preparation
-Date: Thu, 13 Jun 2019 19:57:06 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03578556@BPXM09GP.gisp.nec.co.jp>
-Content-Language: en-US
-MIME-Version: 1.0
+ id 1hbW0p-0000S1-SW
+ for kexec@lists.infradead.org; Thu, 13 Jun 2019 20:07:57 +0000
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x5DK1bkd002513
+ for <kexec@lists.infradead.org>; Thu, 13 Jun 2019 16:07:54 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2t3v7tjk8x-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 13 Jun 2019 16:07:54 -0400
+Received: from localhost
+ by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Thu, 13 Jun 2019 21:07:52 +0100
+Subject: Re: [PATCH V8 3/3] Call ima_kexec_cmdline to measure the cmdline args
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Thu, 13 Jun 2019 16:07:36 -0400
+In-Reply-To: <20190613082627.GA30288@dhcp-128-65.nay.redhat.com>
+References: <20190612221549.28399-1-prsriva02@gmail.com>
+ <20190612221549.28399-4-prsriva02@gmail.com>
+ <1560378703.4578.91.camel@linux.ibm.com>
+ <20190613082627.GA30288@dhcp-128-65.nay.redhat.com>
+Mime-Version: 1.0
+Message-Id: <1560456456.4805.61.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,33 +38,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec <kexec@lists.infradead.org>, Prakhar Srivastava <prsriva02@gmail.com>, roberto.sassu@huawei.com, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, "Eric W.
+ Biederman" <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, vgoyal@redhat.com
 
-Hi,
+On Thu, 2019-06-13 at 16:26 +0800, Dave Young wrote:
+> On 06/12/19 at 06:31pm, Mimi Zohar wrote:
+> > [Cc: kexec mailing list]
+> > 
+> > Hi Eric, Dave,
+> > 
+> > On Wed, 2019-06-12 at 15:15 -0700, Prakhar Srivastava wrote:
+> > > During soft reboot(kexec_file_load) boot cmdline args
+> > > are not measured.Thus the new kernel on load boots with
+> > > an assumption of cold reboot.
+> > > 
+> > > This patch makes a call to the ima hook ima_kexec_cmdline,
+> > > added in "Define a new IMA hook to measure the boot command
+> > > line arguments"
+> > > to measure the boot cmdline args into the ima log.
+> > > 
+> > > - call ima_kexec_cmdline from kexec_file_load.
+> > > - move the call ima_add_kexec_buffer after the cmdline
+> > > args have been measured.
+> > > 
+> > > Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
+> > Cc: Eric W. Biederman <ebiederm@xmission.com>
+> > Cc: Dave Young <dyoung@redhat.com>
+> > 
+> > Any chance we could get some Acks?
+> 
+> The ima_* is blackbox functions to me, looks like this patch is trying
+> to measure kexec cmdline buffer and save in some ima logs and then add all the
+> measure results including those for kernel/initrd to a kexec_buf and pass to 2nd
 
-I am planning to release makedumpfile v1.6.6 in the next two weeks.
-It will support newer kernels up to v5.1.
+Right, including the new boot command line measurement.
 
-If you have any patches that you would like included in v1.6.6,
-please send them within one week.
+> kernel.
+> 
+> It should be good and only take effect when IMA enabled. If all the
+> assumptions are right:
+> 
+> Acked-by: Dave Young <dyoung@redhat.com>
 
-For reference the patches since v1.6.5 are as follows:
-
-8c21fc7e7c52 [PATCH] Support newer kernels up to v5.1
-3222d4ad04c6 [PATCH] x86_64: fix get_kaslr_offset_x86_64() to return kaslr_offset correctly
-d222b01e516b [PATCH] x86_64: Add support for AMD Secure Memory Encryption
-1743c7370868 [PATCH] exclude pages that are logically offline
-feee755900e0 [PATCH] ppc64: fix a typo for checking the file pointer for null
-2f007b48c581 [PATCH v2] honor the CFLAGS from environment variables
-b9da17259ef5 [PATCH] Some improvements of debugging messages
-f349b51f6211 [PATCH] ppc64: increase MAX_PHYSMEM_BITS to 2PB
-
-and "[PATCH] makedumpfile/arm64: fix get_kaslr_offset_arm64() to return
-kaslr_offset correctly" I posted, if no objection to it.
-
-Thanks,
-Kazu
-
+Thanks, Dave.
 
 
 _______________________________________________
