@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.92 #3 (Red Hat Linux))
- id 1hdvz7-0005Ch-Vv
- for kexec@lists.infradead.org; Thu, 20 Jun 2019 12:16:11 +0000
-Date: Thu, 20 Jun 2019 14:16:05 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/4] x86: Always try to fill acpi_rsdp_addr in boot
- params
-Message-ID: <20190620121605.sir7hwfwfmqdtykn@verge.net.au>
-References: <20190524062321.24126-1-kasong@redhat.com>
- <20190531092743.qgwku2ob4trduadr@verge.net.au>
- <CACPcB9dOSwe1s2Z5W3ccwXSR_h_Y33cqnt2d=TPZ4hX+fpqdrA@mail.gmail.com>
+Subject: Re: [Query] arm64: Right approach to support Image.gz file type via
+ kexec_file_load()
+References: <9d54bb1e-7371-5163-69b0-0af0426ee4a0@redhat.com>
+From: James Morse <james.morse@arm.com>
+Message-ID: <102e8c0a-d69a-81ee-5652-85a2b901230a@arm.com>
+Date: Thu, 20 Jun 2019 16:28:29 +0100
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CACPcB9dOSwe1s2Z5W3ccwXSR_h_Y33cqnt2d=TPZ4hX+fpqdrA@mail.gmail.com>
+In-Reply-To: <9d54bb1e-7371-5163-69b0-0af0426ee4a0@redhat.com>
+Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,44 +16,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, matthewgarrett@google.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Mon, Jun 10, 2019 at 04:10:30PM +0800, Kairui Song wrote:
-> On Fri, May 31, 2019 at 5:27 PM Simon Horman <horms@verge.net.au> wrote:
-> >
-> > On Fri, May 24, 2019 at 02:23:17PM +0800, Kairui Song wrote:
-> > > This patch sync the behavior of user space kexec and kexec_file_load,
-> > > they will both fill the boot_params.acpi_rsdp_addr with a valid RSDP
-> > > value, to make sure second kernel can always get the RSDP consistently.
-> > >
-> > > This will make it effortless to boot newer version of kernel (5.0+)
-> > > without specifying acpi_rsdp= cmdline on EFI system even with EFI
-> > > service disabled. Should not change any behavior with older kernels.
-> > >
-> > > Update from V2:
-> > >   - Drop unneeded 'packed' attribute for boot parameters structure
-> > >   - Don't trust kernel cmdline as a reliable acpi rsdp source
-> > >
-> > > Update from V1:
-> > >   - Split into multiple patches for a cleaner structure, content is not
-> > >     changed.
-> >
-> > Thanks Kairui,
-> >
-> > applied.
-> 
-> Hi Simon,
-> 
-> I still haven't see this series get merged yet in the git repo, any update?
-
-Sorry about that, it should be there now.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgQmh1cGVzaCwKCk9uIDE5LzA2LzIwMTkgMjI6MjMsIEJodXBlc2ggU2hhcm1hIHdyb3RlOgo+
+IFNpbmNlIG1vc3QgZGlzdHJpYnV0aW9ucyB1c2UgJ21ha2Ugemluc3RhbGwnIHJ1bGUgaW5zaWRl
+ICdhcmNoL2FybTY0L2Jvb3QvTWFrZWZpbGUnIChzZWUKPiBbMV0gZm9yIGRldGFpbHMpIHRvIGlu
+c3RhbGwgdGhlIGFybTY0IEltYWdlLmd6IGNvbXByZXNzZWQgZmlsZSBpbnNpZGUgdGhlIGJvb3Qg
+ZGVzdGluYXRpb24KPiBkaXJlY3RvcnkgKGZvciBlLmcuIC9ib290KSwgY3VycmVudGx5IHdlIGNh
+bm5vdCB1c2Uga2V4ZWNfZmlsZV9sb2FkKCkgdG8gbG9hZCB2bWxpbnV6IChvcgo+IEltYWdlLmd6
+KToKCkl0J3Mgbm90IGp1c3Qga2V4ZWNfZmlsZV9sb2FkKCksIHdlIGRvbid0IHN1cHBvcnQgYm9v
+dGluZyBmcm9tIGNvbXByZXNzZWQgb3IgZWxmIGltYWdlCmZvcm1hdHMgZWl0aGVyOiB0aGUgYm9v
+dGxvYWRlciBoYXMgdG8gZGVjb21wcmVzcyBhbnkgSW1hZ2UuZ3ogYmVmb3JlIGl0IGNhbiBydW4g
+aXQuCgoKPiAuLi4ga2VybmVsIHJldHVybnMgLUVJTlZBTCBlcnJvciB2YWx1ZSwgYXMgaXQgaXMg
+bm90IGFibGUgdG8gbG9jYXRlIHRoZSBtYWdpYyBudW1iZXLCoAo+ID0weDY0NGQ1MjQxLCB3aGlj
+aCBpcyBleHBlY3RlZCBpbiB0aGUgNjQtYnl0ZSBoZWFkZXIgb2YgdGhlIGRlY29tcHJlc3NlZCBr
+ZXJuZWwgaW1hZ2UKCgo+IEkgY2FuIGZpZ3VyZSBvdXQgdHdvIHdheXMgdG8gYWRkcmVzcyB0aGlz
+Ogo+IAo+IDEuIEFkZCBzdXBwb3J0IGluIHVzZXItc3BhY2Uga2V4ZWMtdG9vbHMgKGZvciB3aGlj
+aCBJIGhhdmUgYSBSRkMgcGF0Y2ggcmVhZHkpLCB3aGljaAo+IGhhbmRsZXMgYW4gJ0ltYWdlLmd6
+JyBiZWluZyBwYXNzZWQgdmlhIGtleGVjX2ZpbGVfbG9hZCgpLCB1c2luZyBhbiBhcHByb2FjaCBh
+cyBmb2xsb3dzOgo+IAo+IGEpLiBDb3B5IHRoZSBjb250ZW50cyBvZiBJbWFnZS5neiB0byBhIHRl
+bXBvcmFyeSBmaWxlLgo+IGIpLiBEZWNvbXByZXNzIChndW56aXAtZGVjb21wcmVzcykgdGhlIGNv
+bnRlbnRzIGluc2lkZSB0aGUgdGVtcG9yYXJ5IGZpbGUuCj4gYykuIFBhc3MgdGhlICdmZCcgb2Yg
+dGhlIHRlbXBvcmFyeSBmaWxlIHRvIHRoZSBrZXJuZWwgc3BhY2UuIFNvIGJhc2ljYWxseSB0aGUg
+a2VybmVsIHNwYWNlCj4gc3RpbGwgZ2V0cyBhIGRlY29tcHJlc3NlZCBrZXJuZWwgaW1hZ2UgdG8g
+bG9hZCB2aWEga2V4ZWNfdG9vbHMKClNvdW5kcyByZWFzb25hYmxlLgooSSBndWVzcyB5b3UgbmVl
+ZCB0byBkZWNvbXByZXNzIGl0IGZpcnN0IHRvIGtub3cgdGhlIHNpemUgdG8gcGFzcyB0byBrZXhl
+Y19maWxlX2xvYWQoKSwKaGVuY2UgdGhlIGludGVybWVkaWF0ZSBjb3B5KQoKCj4gVGhpcyBzZWVt
+cyB0byBoYXZlIHRoZSBmb2xsb3dpbmcgcHJvcyBhbmQgY29ucywgd2hpY2ggSSBjYW4gdGhpbmsg
+b2Y6Cj4gCj4gUHJvczoKPiDCoC0gQ2hhbmdlcyBjYW4gYmUgaGFuZGxlZCBpbiB0aGUgdXNlci1z
+cGFjZSAoa2V4ZWNfdG9vbHMpIGFuZCBubyBjaGFuZ2VzIGFyZSByZXF1aXJlZCBpbgo+IGtlcm5l
+bCBzcGFjZSBmb3IgaGFuZGxpbmcgdGhlIHVuc2lnbmVkL25vbi1zZWN1cmUgYm9vdCBjYXNlLgo+
+IAo+IENvbnM6Cj4gwqAtIE9uZSBvYnZpb3VzIGlzc3VlIGlzIGhvdyB0byBoYW5kbGUgdGhlIHNp
+Z25lZCBrZXJuZWwgSW1hZ2UuZ3osIGJlY2F1c2Ugc2lnbmF0dXJlCj4gdmVyaWZpY2F0aW9uIGlz
+IG1hbmFnZWQgaW5zaWRlIHRoZSBrZXJuZWwsIHNvIGhhbmRsaW5nIGEgc2lnbmVkIEltYWdlLmd6
+IHdvdWxkIHJlcXVpcmUKPiBrZXJuZWwgaW50ZXJ2ZW50aW9uIGV2ZW50dWFsbHkuCgpIb3cgZG8g
+eW91IHNpZ24gYW4gSW1hZ2UuZ3o/IElzbid0IHRoZSBzaWduYXR1cmUgd3JpdHRlbiBpbnRvIHRo
+ZSBQRSBoZWFkZXI/CgoKPiDCoC0gUGFzc2luZyBkZWNvbXByZXNzZWQgaW1hZ2UgZnJvbSB1c2Vy
+LXNwYWNlIHJlcXVpcmVzIHRoZSBrZXJuZWwgdG8gcmVhZCBsYXJnZSBhbW91bnQgb2YKPiBkYXRh
+IGZyb20gdGhlIHVzZXItc3BhY2UuCgpUaGUga2VybmVsIGNhbid0IGRlY29tcHJlc3MgaXRzZWxm
+LCBzbyB0aGlzIGxhcmdlIGFtb3VudCBvZiBkYXRhIGhhcyB0byBiZSBtb3ZlZCBhdCBzb21lCnBv
+aW50LgoKCj4gMi4gQWRkIHN1cHBvcnQgaW4ga2VybmVsIChmb3Igd2hpY2ggSSBoYXZlIGEgUkZD
+IHBhdGNoIHJlYWR5KSwgd2hpY2ggaGFuZGxlcyBhbiAnSW1hZ2UuZ3onCj4gYmVpbmcgcGFzc2Vk
+IHZpYSBrZXhlY19maWxlX2xvYWQoKSwgdXNpbmcgYW4gYXBwcm9hY2ggYXMgZm9sbG93czoKPiAK
+PiBhKS4gRGVmaW5lIGEgJ2FyY2hfa2V4ZWNfa2VybmVsX2ltYWdlX3Byb2JlJyBmb3IgYXJtNjQs
+IHdoaWNoIG92ZXJyaWRlcyB0aGUgX193ZWFrCj4gZGVmaW5pdGlvbiBpbiAna2VybmVsL2tleGVj
+X2ZpbGUuYycKPiBiKS4gSW5zaWRlICdhcmNoX2tleGVjX2tlcm5lbF9pbWFnZV9wcm9iZScgZm9y
+IGFybTY0LCBjaGVjayBpZiB3ZSBoYXZlIGJlZW4gcGFzc2VkIGHCoAo+IG1hZ2ljIGhlYWRlcsKg
+IDB4MWYsIDB4OGIgKFwwMzcgXDIxMykgd2hpY2ggaW5kaWNhdGVzIGEgJ2d6aXAgZm9ybWF0JyBJ
+bWFnZSBmaWxlLgo+IGIpLiBEZWNvbXByZXNzIHRoZSBjb250ZW50cyBpbnNpZGUgYSBidWZmZXIg
+dXNpbmcgYSBkZWNvbXByZXNzX2tlcm5lbCgpIC0+IGd1bnppcCgpIC0+Cj4gaW5mbGF0ZSgpIGxv
+Z2ljLgo+IAo+IFRoaXMgc2VlbXMgdG8gaGF2ZSB0aGUgZm9sbG93aW5nIHByb3MgYW5kIGNvbnMs
+IHdoaWNoIEkgY2FuIHRoaW5rIG9mOgo+IAo+IFByb3M6Cj4gwqAtIEhhbmRsaW5nIHNpZ25lZCBJ
+bWFnZS5neiBiZWNvbWVzIGVhc2llciBpbiB0aGUga2VybmVsIGl0c2VsZi4KCkkgZG9uJ3QgZm9s
+bG93OiB5b3UgY2FuJ3QgYm9vdCB0aGlzLCBzbyB3aHkgd291bGQgeW91IHNpZ24gaXQ/CgoKPiBD
+b25zOgo+IMKgLSBPbmUgbmVlZHMgdG8gYWRkIGEgZGVjb21wcmVzc19rZXJuZWwoKSAtPiBndW56
+aXAoKSAtPiBpbmZsYXRlKCkga2luZC1vZiBsb2dpYyBpbiBrZXJuZWwKPiBzcGFjZSB0byBoYW5k
+bGUgZ3ppcHAnZWQgaW1hZ2UgZm9yIGFybTY0LgoKV2Ugc3VwcG9ydCBnemlwcGVkIGluaXRyYW1m
+cyBzbyB0aGUgY29kZSBhbHJlYWR5IGV4aXN0cy4gTW9yZSBvZiBhIHByb2JsZW0gaXMga2R1bXAg
+KHdoaWNoCndlIGRvbid0IHlldCBzdXBwb3J0KSwgd2hpY2ggaGFzIHRvIGZpdCBpbiB0aGUgcmVz
+ZXJ2ZWQgY3Jhc2hrZXJuZWwgcmVnaW9uLCBhbmQgd2Ugd29uJ3QKa25vdyB0aGUgc2l6ZSBvZiB0
+aGUgY29tcHJlc3NlZCBpbWFnZSB1bnRpbCB3ZSd2ZSBkZWNvbXByZXNzZWQgaXQuIChpdHMganVz
+dCBmaWRkbHkpCgoKPiBTbywgSSB3YXMgd29uZGVyaW5nIHdoaWNoIGFwcHJvYWNoIHNob3VsZCBi
+ZSBtb3JlIHN1aXRhYmxlIC0gZml4aW5nIHRoaXMgaW4gdXNlci1zcGFjZSB2L3MKPiBmaXggdGhp
+cyBpbiBrZXJuZWwtc3BhY2UuCgpBcyB1c2VyLXNwYWNlIGNhbiBkbyB0aGlzLCBJIHRoaW5rIGl0
+IHNob3VsZCEKCgpUaGFua3MsCgpKYW1lcwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
