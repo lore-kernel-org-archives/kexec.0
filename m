@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [Query] arm64: Right approach to support Image.gz file type via
- kexec_file_load()
-References: <9d54bb1e-7371-5163-69b0-0af0426ee4a0@redhat.com>
-From: James Morse <james.morse@arm.com>
-Message-ID: <102e8c0a-d69a-81ee-5652-85a2b901230a@arm.com>
-Date: Thu, 20 Jun 2019 16:28:29 +0100
-MIME-Version: 1.0
-In-Reply-To: <9d54bb1e-7371-5163-69b0-0af0426ee4a0@redhat.com>
-Content-Language: en-GB
+Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
+ by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
+ id 1he8Dk-0004Cb-Dq
+ for kexec@lists.infradead.org; Fri, 21 Jun 2019 01:20:05 +0000
+Received: by mail-pl1-x64a.google.com with SMTP id i3so2666137plb.8
+ for <kexec@lists.infradead.org>; Thu, 20 Jun 2019 18:20:02 -0700 (PDT)
+Date: Thu, 20 Jun 2019 18:19:17 -0700
+In-Reply-To: <20190621011941.186255-1-matthewgarrett@google.com>
+Message-Id: <20190621011941.186255-7-matthewgarrett@google.com>
+Mime-Version: 1.0
+References: <20190621011941.186255-1-matthewgarrett@google.com>
+Subject: [PATCH V33 06/30] kexec_load: Disable at runtime if the kernel is
+ locked down
+From: Matthew Garrett <matthewgarrett@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,74 +21,79 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, matthewgarrett@google.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: jmorris@namei.org
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-api@vger.kernel.org, linux-security@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, Dave Young <dyoung@redhat.com>
 
-SGkgQmh1cGVzaCwKCk9uIDE5LzA2LzIwMTkgMjI6MjMsIEJodXBlc2ggU2hhcm1hIHdyb3RlOgo+
-IFNpbmNlIG1vc3QgZGlzdHJpYnV0aW9ucyB1c2UgJ21ha2Ugemluc3RhbGwnIHJ1bGUgaW5zaWRl
-ICdhcmNoL2FybTY0L2Jvb3QvTWFrZWZpbGUnIChzZWUKPiBbMV0gZm9yIGRldGFpbHMpIHRvIGlu
-c3RhbGwgdGhlIGFybTY0IEltYWdlLmd6IGNvbXByZXNzZWQgZmlsZSBpbnNpZGUgdGhlIGJvb3Qg
-ZGVzdGluYXRpb24KPiBkaXJlY3RvcnkgKGZvciBlLmcuIC9ib290KSwgY3VycmVudGx5IHdlIGNh
-bm5vdCB1c2Uga2V4ZWNfZmlsZV9sb2FkKCkgdG8gbG9hZCB2bWxpbnV6IChvcgo+IEltYWdlLmd6
-KToKCkl0J3Mgbm90IGp1c3Qga2V4ZWNfZmlsZV9sb2FkKCksIHdlIGRvbid0IHN1cHBvcnQgYm9v
-dGluZyBmcm9tIGNvbXByZXNzZWQgb3IgZWxmIGltYWdlCmZvcm1hdHMgZWl0aGVyOiB0aGUgYm9v
-dGxvYWRlciBoYXMgdG8gZGVjb21wcmVzcyBhbnkgSW1hZ2UuZ3ogYmVmb3JlIGl0IGNhbiBydW4g
-aXQuCgoKPiAuLi4ga2VybmVsIHJldHVybnMgLUVJTlZBTCBlcnJvciB2YWx1ZSwgYXMgaXQgaXMg
-bm90IGFibGUgdG8gbG9jYXRlIHRoZSBtYWdpYyBudW1iZXLCoAo+ID0weDY0NGQ1MjQxLCB3aGlj
-aCBpcyBleHBlY3RlZCBpbiB0aGUgNjQtYnl0ZSBoZWFkZXIgb2YgdGhlIGRlY29tcHJlc3NlZCBr
-ZXJuZWwgaW1hZ2UKCgo+IEkgY2FuIGZpZ3VyZSBvdXQgdHdvIHdheXMgdG8gYWRkcmVzcyB0aGlz
-Ogo+IAo+IDEuIEFkZCBzdXBwb3J0IGluIHVzZXItc3BhY2Uga2V4ZWMtdG9vbHMgKGZvciB3aGlj
-aCBJIGhhdmUgYSBSRkMgcGF0Y2ggcmVhZHkpLCB3aGljaAo+IGhhbmRsZXMgYW4gJ0ltYWdlLmd6
-JyBiZWluZyBwYXNzZWQgdmlhIGtleGVjX2ZpbGVfbG9hZCgpLCB1c2luZyBhbiBhcHByb2FjaCBh
-cyBmb2xsb3dzOgo+IAo+IGEpLiBDb3B5IHRoZSBjb250ZW50cyBvZiBJbWFnZS5neiB0byBhIHRl
-bXBvcmFyeSBmaWxlLgo+IGIpLiBEZWNvbXByZXNzIChndW56aXAtZGVjb21wcmVzcykgdGhlIGNv
-bnRlbnRzIGluc2lkZSB0aGUgdGVtcG9yYXJ5IGZpbGUuCj4gYykuIFBhc3MgdGhlICdmZCcgb2Yg
-dGhlIHRlbXBvcmFyeSBmaWxlIHRvIHRoZSBrZXJuZWwgc3BhY2UuIFNvIGJhc2ljYWxseSB0aGUg
-a2VybmVsIHNwYWNlCj4gc3RpbGwgZ2V0cyBhIGRlY29tcHJlc3NlZCBrZXJuZWwgaW1hZ2UgdG8g
-bG9hZCB2aWEga2V4ZWNfdG9vbHMKClNvdW5kcyByZWFzb25hYmxlLgooSSBndWVzcyB5b3UgbmVl
-ZCB0byBkZWNvbXByZXNzIGl0IGZpcnN0IHRvIGtub3cgdGhlIHNpemUgdG8gcGFzcyB0byBrZXhl
-Y19maWxlX2xvYWQoKSwKaGVuY2UgdGhlIGludGVybWVkaWF0ZSBjb3B5KQoKCj4gVGhpcyBzZWVt
-cyB0byBoYXZlIHRoZSBmb2xsb3dpbmcgcHJvcyBhbmQgY29ucywgd2hpY2ggSSBjYW4gdGhpbmsg
-b2Y6Cj4gCj4gUHJvczoKPiDCoC0gQ2hhbmdlcyBjYW4gYmUgaGFuZGxlZCBpbiB0aGUgdXNlci1z
-cGFjZSAoa2V4ZWNfdG9vbHMpIGFuZCBubyBjaGFuZ2VzIGFyZSByZXF1aXJlZCBpbgo+IGtlcm5l
-bCBzcGFjZSBmb3IgaGFuZGxpbmcgdGhlIHVuc2lnbmVkL25vbi1zZWN1cmUgYm9vdCBjYXNlLgo+
-IAo+IENvbnM6Cj4gwqAtIE9uZSBvYnZpb3VzIGlzc3VlIGlzIGhvdyB0byBoYW5kbGUgdGhlIHNp
-Z25lZCBrZXJuZWwgSW1hZ2UuZ3osIGJlY2F1c2Ugc2lnbmF0dXJlCj4gdmVyaWZpY2F0aW9uIGlz
-IG1hbmFnZWQgaW5zaWRlIHRoZSBrZXJuZWwsIHNvIGhhbmRsaW5nIGEgc2lnbmVkIEltYWdlLmd6
-IHdvdWxkIHJlcXVpcmUKPiBrZXJuZWwgaW50ZXJ2ZW50aW9uIGV2ZW50dWFsbHkuCgpIb3cgZG8g
-eW91IHNpZ24gYW4gSW1hZ2UuZ3o/IElzbid0IHRoZSBzaWduYXR1cmUgd3JpdHRlbiBpbnRvIHRo
-ZSBQRSBoZWFkZXI/CgoKPiDCoC0gUGFzc2luZyBkZWNvbXByZXNzZWQgaW1hZ2UgZnJvbSB1c2Vy
-LXNwYWNlIHJlcXVpcmVzIHRoZSBrZXJuZWwgdG8gcmVhZCBsYXJnZSBhbW91bnQgb2YKPiBkYXRh
-IGZyb20gdGhlIHVzZXItc3BhY2UuCgpUaGUga2VybmVsIGNhbid0IGRlY29tcHJlc3MgaXRzZWxm
-LCBzbyB0aGlzIGxhcmdlIGFtb3VudCBvZiBkYXRhIGhhcyB0byBiZSBtb3ZlZCBhdCBzb21lCnBv
-aW50LgoKCj4gMi4gQWRkIHN1cHBvcnQgaW4ga2VybmVsIChmb3Igd2hpY2ggSSBoYXZlIGEgUkZD
-IHBhdGNoIHJlYWR5KSwgd2hpY2ggaGFuZGxlcyBhbiAnSW1hZ2UuZ3onCj4gYmVpbmcgcGFzc2Vk
-IHZpYSBrZXhlY19maWxlX2xvYWQoKSwgdXNpbmcgYW4gYXBwcm9hY2ggYXMgZm9sbG93czoKPiAK
-PiBhKS4gRGVmaW5lIGEgJ2FyY2hfa2V4ZWNfa2VybmVsX2ltYWdlX3Byb2JlJyBmb3IgYXJtNjQs
-IHdoaWNoIG92ZXJyaWRlcyB0aGUgX193ZWFrCj4gZGVmaW5pdGlvbiBpbiAna2VybmVsL2tleGVj
-X2ZpbGUuYycKPiBiKS4gSW5zaWRlICdhcmNoX2tleGVjX2tlcm5lbF9pbWFnZV9wcm9iZScgZm9y
-IGFybTY0LCBjaGVjayBpZiB3ZSBoYXZlIGJlZW4gcGFzc2VkIGHCoAo+IG1hZ2ljIGhlYWRlcsKg
-IDB4MWYsIDB4OGIgKFwwMzcgXDIxMykgd2hpY2ggaW5kaWNhdGVzIGEgJ2d6aXAgZm9ybWF0JyBJ
-bWFnZSBmaWxlLgo+IGIpLiBEZWNvbXByZXNzIHRoZSBjb250ZW50cyBpbnNpZGUgYSBidWZmZXIg
-dXNpbmcgYSBkZWNvbXByZXNzX2tlcm5lbCgpIC0+IGd1bnppcCgpIC0+Cj4gaW5mbGF0ZSgpIGxv
-Z2ljLgo+IAo+IFRoaXMgc2VlbXMgdG8gaGF2ZSB0aGUgZm9sbG93aW5nIHByb3MgYW5kIGNvbnMs
-IHdoaWNoIEkgY2FuIHRoaW5rIG9mOgo+IAo+IFByb3M6Cj4gwqAtIEhhbmRsaW5nIHNpZ25lZCBJ
-bWFnZS5neiBiZWNvbWVzIGVhc2llciBpbiB0aGUga2VybmVsIGl0c2VsZi4KCkkgZG9uJ3QgZm9s
-bG93OiB5b3UgY2FuJ3QgYm9vdCB0aGlzLCBzbyB3aHkgd291bGQgeW91IHNpZ24gaXQ/CgoKPiBD
-b25zOgo+IMKgLSBPbmUgbmVlZHMgdG8gYWRkIGEgZGVjb21wcmVzc19rZXJuZWwoKSAtPiBndW56
-aXAoKSAtPiBpbmZsYXRlKCkga2luZC1vZiBsb2dpYyBpbiBrZXJuZWwKPiBzcGFjZSB0byBoYW5k
-bGUgZ3ppcHAnZWQgaW1hZ2UgZm9yIGFybTY0LgoKV2Ugc3VwcG9ydCBnemlwcGVkIGluaXRyYW1m
-cyBzbyB0aGUgY29kZSBhbHJlYWR5IGV4aXN0cy4gTW9yZSBvZiBhIHByb2JsZW0gaXMga2R1bXAg
-KHdoaWNoCndlIGRvbid0IHlldCBzdXBwb3J0KSwgd2hpY2ggaGFzIHRvIGZpdCBpbiB0aGUgcmVz
-ZXJ2ZWQgY3Jhc2hrZXJuZWwgcmVnaW9uLCBhbmQgd2Ugd29uJ3QKa25vdyB0aGUgc2l6ZSBvZiB0
-aGUgY29tcHJlc3NlZCBpbWFnZSB1bnRpbCB3ZSd2ZSBkZWNvbXByZXNzZWQgaXQuIChpdHMganVz
-dCBmaWRkbHkpCgoKPiBTbywgSSB3YXMgd29uZGVyaW5nIHdoaWNoIGFwcHJvYWNoIHNob3VsZCBi
-ZSBtb3JlIHN1aXRhYmxlIC0gZml4aW5nIHRoaXMgaW4gdXNlci1zcGFjZSB2L3MKPiBmaXggdGhp
-cyBpbiBrZXJuZWwtc3BhY2UuCgpBcyB1c2VyLXNwYWNlIGNhbiBkbyB0aGlzLCBJIHRoaW5rIGl0
-IHNob3VsZCEKCgpUaGFua3MsCgpKYW1lcwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+
+The kexec_load() syscall permits the loading and execution of arbitrary
+code in ring 0, which is something that lock-down is meant to prevent. It
+makes sense to disable kexec_load() in this situation.
+
+This does not affect kexec_file_load() syscall which can check for a
+signature on the image to be booted.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Acked-by: Dave Young <dyoung@redhat.com>
+cc: kexec@lists.infradead.org
+---
+ include/linux/security.h     | 1 +
+ kernel/kexec.c               | 7 +++++++
+ security/lockdown/lockdown.c | 1 +
+ 3 files changed, 9 insertions(+)
+
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 034a8d54687f..2d3c69b9fd04 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -84,6 +84,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_NONE,
+ 	LOCKDOWN_MODULE_SIGNATURE,
+ 	LOCKDOWN_DEV_MEM,
++	LOCKDOWN_KEXEC,
+ 	LOCKDOWN_INTEGRITY_MAX,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 68559808fdfa..040819d7b11b 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -207,6 +207,13 @@ static inline int kexec_load_check(unsigned long nr_segments,
+ 	if (result < 0)
+ 		return result;
+ 
++	/*
++	 * kexec can be used to circumvent module loading restrictions, so
++	 * prevent loading in that case
++	 */
++	if (security_is_locked_down(LOCKDOWN_KEXEC))
++		return -EPERM;
++
+ 	/*
+ 	 * Verify we have a legal set of flags
+ 	 * This leaves us room for future extensions.
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index 43a049b3b66a..94af1c3583d8 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -20,6 +20,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_NONE] = "none",
+ 	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
+ 	[LOCKDOWN_DEV_MEM] = "/dev/mem,kmem,port",
++	[LOCKDOWN_KEXEC] = "kexec of unsigned images",
+ 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
