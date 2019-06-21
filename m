@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-io1-xd42.google.com ([2607:f8b0:4864:20::d42])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1heDH4-0008WS-ST
- for kexec@lists.infradead.org; Fri, 21 Jun 2019 06:43:52 +0000
-Date: Fri, 21 Jun 2019 14:43:40 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH V31 07/25] kexec_file: Restrict at runtime if the kernel
- is locked down
-Message-ID: <20190621064340.GB4528@localhost.localdomain>
-References: <20190326182742.16950-1-matthewgarrett@google.com>
- <20190326182742.16950-8-matthewgarrett@google.com>
+ id 1hePv0-0003Hr-Ah
+ for kexec@lists.infradead.org; Fri, 21 Jun 2019 20:13:55 +0000
+Received: by mail-io1-xd42.google.com with SMTP id k8so49231iot.1
+ for <kexec@lists.infradead.org>; Fri, 21 Jun 2019 13:13:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190326182742.16950-8-matthewgarrett@google.com>
+References: <20190326182742.16950-1-matthewgarrett@google.com>
+ <20190326182742.16950-7-matthewgarrett@google.com>
+ <20190621063402.GA4528@localhost.localdomain>
+In-Reply-To: <20190621063402.GA4528@localhost.localdomain>
+From: Matthew Garrett <mjg59@google.com>
+Date: Fri, 21 Jun 2019 13:13:39 -0700
+Message-ID: <CACdnJuvmU8PcRztTYRHes-O3QVwiXy_PQvP9AP=B=byX4Pu3uA@mail.gmail.com>
+Subject: Re: [PATCH V31 06/25] kexec_file: split KEXEC_VERIFY_SIG into
+ KEXEC_SIG and KEXEC_SIG_FORCE
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,65 +27,13 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew Garrett <matthewgarrett@google.com>
-Cc: Jiri Bohac <jbohac@suse.cz>, linux-api@vger.kernel.org, kexec@lists.infradead.org, jmorris@namei.org, Matthew Garrett <mjg59@google.com>, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-security-module@vger.kernel.org, luto@kernel.org
+To: Dave Young <dyoung@redhat.com>
+Cc: Jiri Bohac <jbohac@suse.cz>, Linux API <linux-api@vger.kernel.org>, kexec@lists.infradead.org, James Morris <jmorris@namei.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, LSM List <linux-security-module@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>
 
-On 03/26/19 at 11:27am, Matthew Garrett wrote:
-> From: Jiri Bohac <jbohac@suse.cz>
-> 
-> When KEXEC_SIG is not enabled, kernel should not load images through
-> kexec_file systemcall if the kernel is locked down.
-> 
-> [Modified by David Howells to fit with modifications to the previous patch
->  and to return -EPERM if the kernel is locked down for consistency with
->  other lockdowns. Modified by Matthew Garrett to remove the IMA
->  integration, which will be replaced by integrating with the IMA
->  architecture policy patches.]
-> 
-> Signed-off-by: Jiri Bohac <jbohac@suse.cz>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
-> Reviewed-by: Jiri Bohac <jbohac@suse.cz>
-> cc: kexec@lists.infradead.org
-> ---
->  kernel/kexec_file.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 67f3a866eabe..a1cc37c8b43b 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -239,6 +239,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
->  		}
->  
->  		ret = 0;
-> +
-> +		if (kernel_is_locked_down(reason, LOCKDOWN_INTEGRITY)) {
-> +			ret = -EPERM;
-> +			goto out;
-> +		}
-> +
+On Thu, Jun 20, 2019 at 11:34 PM Dave Young <dyoung@redhat.com> wrote:
+> Force use -EKEYREJECTED is odd,  why not just use original "ret"?
 
-Checking here is late, it would be good to move the check to earlier
-code around below code:
-        /* We only trust the superuser with rebooting the system. */
-        if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
-                return -EPERM;
-
->  		break;
->  
->  		/* All other errors are fatal, including nomem, unparseable
-> -- 
-> 2.21.0.392.gf8f6787159e-goog
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-Thanks
-Dave
+Fair question. Jiri, any feelings here?
 
 _______________________________________________
 kexec mailing list
