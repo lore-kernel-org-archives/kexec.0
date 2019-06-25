@@ -1,22 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hfbYq-0006az-9e
- for kexec@lists.infradead.org; Tue, 25 Jun 2019 02:51:57 +0000
-Date: Tue, 25 Jun 2019 10:51:48 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH V31 07/25] kexec_file: Restrict at runtime if the kernel
- is locked down
-Message-ID: <20190625025148.GA4024@dhcp-128-65.nay.redhat.com>
-References: <20190326182742.16950-1-matthewgarrett@google.com>
- <20190326182742.16950-8-matthewgarrett@google.com>
- <20190621064340.GB4528@localhost.localdomain>
- <CACdnJut=J1YTpM4s6g5XWCEs+=X0Jvf8otfMg+w=_oqSZmf01Q@mail.gmail.com>
- <20190624015206.GB2976@dhcp-128-65.nay.redhat.com>
- <CACdnJusPtYLdg7ZPhBo=Y5EsBz6B+5M2zYscBrLcc89oNnPkdQ@mail.gmail.com>
+ id 1hfgYN-0005WE-TA
+ for kexec@lists.infradead.org; Tue, 25 Jun 2019 08:11:49 +0000
+Received: from EX13MTAUEB001.ant.amazon.com
+ (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+ by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS
+ id C8CFAA26AF
+ for <kexec@lists.infradead.org>; Tue, 25 Jun 2019 08:11:43 +0000 (UTC)
+From: Varad Gautam <vrd@amazon.de>
+Subject: [PATCH 2/3 RESEND] elf: Support ELF loading with relocation
+Date: Tue, 25 Jun 2019 10:11:24 +0200
+Message-ID: <1561450284-22003-1-git-send-email-vrd@amazon.de>
+In-Reply-To: <1558423948-24583-2-git-send-email-vrd@amazon.de>
+References: <1558423948-24583-2-git-send-email-vrd@amazon.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CACdnJusPtYLdg7ZPhBo=Y5EsBz6B+5M2zYscBrLcc89oNnPkdQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,39 +27,291 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew Garrett <mjg59@google.com>
-Cc: Jiri Bohac <jbohac@suse.cz>, Linux API <linux-api@vger.kernel.org>, kexec@lists.infradead.org, James Morris <jmorris@namei.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, LSM List <linux-security-module@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>
+To: kexec@lists.infradead.org
+Cc: Varad Gautam <vrd@amazon.de>, Amit Shah <aams@amazon.de>, David Woodhouse <dwmw@amazon.co.uk>
 
-On 06/24/19 at 02:06pm, Matthew Garrett wrote:
-> On Sun, Jun 23, 2019 at 6:52 PM Dave Young <dyoung@redhat.com> wrote:
-> >
-> > On 06/21/19 at 01:18pm, Matthew Garrett wrote:
-> > > I don't think so - we want it to be possible to load images if they
-> > > have a valid signature.
-> >
-> > I know it works like this way because of the previous patch.  But from
-> > the patch log "When KEXEC_SIG is not enabled, kernel should not load
-> > images", it is simple to check it early for !IS_ENABLED(CONFIG_KEXEC_SIG) &&
-> > kernel_is_locked_down(reason, LOCKDOWN_INTEGRITY)  instead of depending
-> > on the late code to verify signature.  In that way, easier to
-> > understand the logic, no?
-> 
-> But that combination doesn't enforce signature validation? We can't
-> depend on !IS_ENABLED(CONFIG_KEXEC_SIG_FORCE) because then it'll
-> enforce signature validation even if lockdown is disabled.
+Add a helper to allow loading an image within specified address range.
+This will be used to load multiboot2 images later.
 
-Ok, got your point. still something could be improved though, in the switch
-chunk, the errno, reason and IS_ENABLED(CONFIG_KEXEC_SIG_FORCE) etc is
-not necessary for this -EPERM case.
+Signed-off-by: Varad Gautam <vrd@amazon.de>
+---
+ kexec/kexec-elf-exec.c | 199 +++++++++++++++++++++++++++++++++----------------
+ kexec/kexec-elf.h      |   7 ++
+ 2 files changed, 141 insertions(+), 65 deletions(-)
 
-/* add some comment to describe the behavior */
-if (ret && security_is_locked_down(LOCKDOWN_KEXEC)) {
-	ret = -EPERM;
-	goto out;
-}
+diff --git a/kexec/kexec-elf-exec.c b/kexec/kexec-elf-exec.c
+index a9329ac..bea7b3e 100644
+--- a/kexec/kexec-elf-exec.c
++++ b/kexec/kexec-elf-exec.c
+@@ -11,6 +11,84 @@
+ 
+ static const int probe_debug = 0;
+ 
++static void load_elf_segments(struct mem_ehdr *ehdr, struct kexec_info *info, unsigned long base)
++{
++	size_t i;
++
++	/* Read in the PT_LOAD segments */
++	for(i = 0; i < ehdr->e_phnum; i++) {
++		struct mem_phdr *phdr;
++		size_t size;
++		phdr = &ehdr->e_phdr[i];
++		if (phdr->p_type != PT_LOAD) {
++			continue;
++		}
++		size = phdr->p_filesz;
++		if (size > phdr->p_memsz) {
++			size = phdr->p_memsz;
++		}
++		add_segment(info, phdr->p_data, size,
++					phdr->p_paddr + base, phdr->p_memsz);
++	}
++}
++
++static int get_elf_exec_load_base(struct mem_ehdr *ehdr, struct kexec_info *info,
++				  unsigned long min, unsigned long max,
++				  unsigned long align, unsigned long *base)
++{
++	unsigned long first, last;
++	size_t i;
++
++	/* Note on arm64:
++	 * arm64's vmlinux has virtual address in physical address
++	 * field of PT_LOAD segments. So the following validity check
++	 * and relocation makes no sense on arm64.
++	 */
++	if (ehdr->e_machine == EM_AARCH64)
++		return 0;
++
++	first = ULONG_MAX;
++	last  = 0;
++	for(i = 0; i < ehdr->e_phnum; i++) {
++		unsigned long start, stop;
++		struct mem_phdr *phdr;
++		phdr = &ehdr->e_phdr[i];
++		if ((phdr->p_type != PT_LOAD) ||
++			(phdr->p_memsz == 0))
++		{
++			continue;
++		}
++		start = phdr->p_paddr;
++		stop  = start + phdr->p_memsz;
++		if (first > start) {
++			first = start;
++		}
++		if (last < stop) {
++			last = stop;
++		}
++		if (align < phdr->p_align) {
++			align = phdr->p_align;
++		}
++	}
++
++	if ((max - min) < (last - first))
++		return -1;
++
++	if (!valid_memory_range(info, min > first ? min : first, max < last ? max : last)) {
++		unsigned long hole;
++		hole = locate_hole(info, last - first + 1, align, min, max, 1);
++		if (hole == ULONG_MAX)
++			return -1;
++
++		/* Base is the value that when added
++		 * to any virtual address in the file
++		 * yields it's load virtual address.
++		 */
++		*base = hole - first;
++	}
++	return 0;
++}
++
+ int build_elf_exec_info(const char *buf, off_t len, struct mem_ehdr *ehdr,
+ 				uint32_t flags)
+ {
+@@ -53,7 +131,6 @@ int elf_exec_load(struct mem_ehdr *ehdr, struct kexec_info *info)
+ {
+ 	unsigned long base;
+ 	int result;
+-	size_t i;
+ 
+ 	if (!ehdr->e_phdr) {
+ 		fprintf(stderr, "No program header?\n");
+@@ -63,75 +140,48 @@ int elf_exec_load(struct mem_ehdr *ehdr, struct kexec_info *info)
+ 
+ 	/* If I have a dynamic executable find it's size
+ 	 * and then find a location for it in memory.
+-	 * Note on arm64:
+-	 * arm64's vmlinux has virtual address in physical address
+-	 * field of PT_LOAD segments. So the following validity check
+-	 * and relocation makes no sense on arm64.
+ 	 */
+ 	base = 0;
+-	if ((ehdr->e_machine != EM_AARCH64) && (ehdr->e_type == ET_DYN)) {
+-		unsigned long first, last, align;
+-		first = ULONG_MAX;
+-		last  = 0;
+-		align = 0;
+-		for(i = 0; i < ehdr->e_phnum; i++) {
+-			unsigned long start, stop;
+-			struct mem_phdr *phdr;
+-			phdr = &ehdr->e_phdr[i];
+-			if ((phdr->p_type != PT_LOAD) ||
+-				(phdr->p_memsz == 0))
+-			{
+-				continue;
+-			}
+-			start = phdr->p_paddr;
+-			stop  = start + phdr->p_memsz;
+-			if (first > start) {
+-				first = start;
+-			}
+-			if (last < stop) {
+-				last = stop;
+-			}
+-			if (align < phdr->p_align) {
+-				align = phdr->p_align;
+-			}
+-		}
+-		/* If I can't use the default paddr find a new
+-		 * hole for the dynamic executable.
+-		 */
+-		if (!valid_memory_range(info, first, last)) {
+-			unsigned long hole;
+-			hole = locate_hole(info,
+-				last - first + 1, align, 
+-				0, elf_max_addr(ehdr), 1);
+-			if (hole == ULONG_MAX) {
+-				result = -1;
+-				goto out;
+-			}
+-			/* Base is the value that when added
+-			 * to any virtual address in the file
+-			 * yields it's load virtual address.
+-			 */
+-			base = hole - first;
+-		}
+-
++	if (ehdr->e_type == ET_DYN) {
++		result = get_elf_exec_load_base(ehdr, info, 0, elf_max_addr(ehdr), 0 /* align */, &base);
++		if (result < 0)
++			goto out;
+ 	}
+ 
+-	/* Read in the PT_LOAD segments */
+-	for(i = 0; i < ehdr->e_phnum; i++) {
+-		struct mem_phdr *phdr;
+-		size_t size;
+-		phdr = &ehdr->e_phdr[i];
+-		if (phdr->p_type != PT_LOAD) {
+-			continue;
+-		}
+-		size = phdr->p_filesz;
+-		if (size > phdr->p_memsz) {
+-			size = phdr->p_memsz;
+-		}
+-		add_segment(info,
+-			phdr->p_data, size,
+-			phdr->p_paddr + base, phdr->p_memsz);
++	load_elf_segments(ehdr, info, base);
++
++	/* Update entry point to reflect new load address*/
++	ehdr->e_entry += base;
++
++	result = 0;
++ out:
++	return result;
++}
++
++int elf_exec_load_relocatable(struct mem_ehdr *ehdr, struct kexec_info *info,
++			      unsigned long reloc_min, unsigned long reloc_max,
++			      unsigned long align)
++{
++	unsigned long base;
++	int result;
++
++	if (reloc_min > reloc_max) {
++		fprintf(stderr, "Bad relocation range, start=%lux > end=%lux.\n", reloc_min, reloc_max);
++		result = -1;
++		goto out;
+ 	}
++	if (!ehdr->e_phdr) {
++		fprintf(stderr, "No program header?\n");
++		result = -1;
++		goto out;
++	}
++
++	base = 0;
++	result = get_elf_exec_load_base(ehdr, info, reloc_min, reloc_max, align, &base);
++	if (result < 0)
++		goto out;
++
++	load_elf_segments(ehdr, info, base);
+ 
+ 	/* Update entry point to reflect new load address*/
+ 	ehdr->e_entry += base;
+@@ -157,3 +207,22 @@ void elf_exec_build_load(struct kexec_info *info, struct mem_ehdr *ehdr,
+ 		die("ELF exec load failed\n");
+ 	}
+ }
++
++void elf_exec_build_load_relocatable(struct kexec_info *info, struct mem_ehdr *ehdr,
++				     const char *buf, off_t len, uint32_t flags,
++				     unsigned long reloc_min, unsigned long reloc_max,
++				     unsigned long align)
++{
++	int result;
++	/* Parse the Elf file */
++	result = build_elf_exec_info(buf, len, ehdr, flags);
++	if (result < 0) {
++		die("%s: ELF exec parse failed\n", __func__);
++	}
++
++	/* Load the Elf data */
++	result = elf_exec_load_relocatable(ehdr, info, reloc_min, reloc_max, align);
++	if (result < 0) {
++		die("%s: ELF exec load failed\n", __func__);
++	}
++}
+\ No newline at end of file
+diff --git a/kexec/kexec-elf.h b/kexec/kexec-elf.h
+index 1164db4..1e512c8 100644
+--- a/kexec/kexec-elf.h
++++ b/kexec/kexec-elf.h
+@@ -100,11 +100,18 @@ extern int build_elf_rel_info(const char *buf, off_t len, struct mem_ehdr *ehdr,
+ extern int build_elf_core_info(const char *buf, off_t len,
+ 					struct mem_ehdr *ehdr, uint32_t flags);
+ extern int elf_exec_load(struct mem_ehdr *ehdr, struct kexec_info *info);
++extern int elf_exec_load_relocatable(struct mem_ehdr *ehdr, struct kexec_info *info,
++				     unsigned long reloc_min, unsigned long reloc_max,
++				     unsigned long align);
+ extern int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
+ 	unsigned long min, unsigned long max, int end);
+ 
+ extern void elf_exec_build_load(struct kexec_info *info, struct mem_ehdr *ehdr, 
+ 				const char *buf, off_t len, uint32_t flags);
++extern void elf_exec_build_load_relocatable(struct kexec_info *info, struct mem_ehdr *ehdr,
++					    const char *buf, off_t len, uint32_t flags,
++					    unsigned long reloc_min, unsigned long reloc_max,
++					    unsigned long align);
+ extern void elf_rel_build_load(struct kexec_info *info, struct mem_ehdr *ehdr, 
+ 	const char *buf, off_t len, unsigned long min, unsigned long max, 
+ 	int end, uint32_t flags);
+-- 
+2.7.4
 
-Thanks
-Dave
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
 
 _______________________________________________
 kexec mailing list
