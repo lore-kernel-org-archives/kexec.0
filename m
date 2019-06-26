@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hg35Z-0006rO-Md
- for kexec@lists.infradead.org; Wed, 26 Jun 2019 08:15:34 +0000
-Date: Wed, 26 Jun 2019 16:15:22 +0800
+ id 1hg3Is-0003jC-6o
+ for kexec@lists.infradead.org; Wed, 26 Jun 2019 08:29:19 +0000
+Date: Wed, 26 Jun 2019 16:29:07 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: mgag200 fails kdump kernel booting
-Message-ID: <20190626081522.GX24419@MiWiFi-R3L-srv>
+Subject: Re: mgag200 fails kdump kernel booting
+Message-ID: <20190626082907.GY24419@MiWiFi-R3L-srv>
+References: <20190626081522.GX24419@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20190626081522.GX24419@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,43 +26,50 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: airlied@redhat.com
 Cc: dyoung@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hi Dave,
+On 06/26/19 at 04:15pm, Baoquan He wrote:
+> Hi Dave,
+> 
+> We met an kdump kernel boot failure on a lenovo system. Kdump kernel
+> failed to boot, but just reset to firmware to reboot system. And nothing
+> is printed out.
+> 
+> The machine is a big server, with 6T memory and many cpu, its graphic
+> driver module is mgag200.
+> 
+> When added 'earlyprintk=ttyS0' into kernel command line, it printed
+> out only one line to console during kdump kernel booting:
+>      KASLR disabled: 'nokaslr' on cmdline.
+> 
+> Then reset to firmware to reboot system.
+> 
+> By further code debugging, the failure happened in
+> arch/x86/boot/compressed/misc.c, during kernel decompressing stage. It's
+> triggered by the vga printing. As you can see, in __putstr() of
+> arch/x86/boot/compressed/misc.c, the code checks if earlyprintk= is
+> specified, and print out to the target. And no matter if earlyprintk= is
+> added or not, it will print to VGA. And printing to VGA caused it to
+> reset to firmware. That's why we see nothing when didn't specify
+> earlyprintk=, but see only one line of printing about the 'KASLR
+> disabled'.
 
-We met an kdump kernel boot failure on a lenovo system. Kdump kernel
-failed to boot, but just reset to firmware to reboot system. And nothing
-is printed out.
+Here I mean:
+That's why we see nothing when didn't specify earlyprintk=, but see only
+one line of printing about the 'KASLR disabled' message when
+earlyprintk=ttyS0 added.
 
-The machine is a big server, with 6T memory and many cpu, its graphic
-driver module is mgag200.
-
-When added 'earlyprintk=ttyS0' into kernel command line, it printed
-out only one line to console during kdump kernel booting:
-     KASLR disabled: 'nokaslr' on cmdline.
-
-Then reset to firmware to reboot system.
-
-By further code debugging, the failure happened in
-arch/x86/boot/compressed/misc.c, during kernel decompressing stage. It's
-triggered by the vga printing. As you can see, in __putstr() of
-arch/x86/boot/compressed/misc.c, the code checks if earlyprintk= is
-specified, and print out to the target. And no matter if earlyprintk= is
-added or not, it will print to VGA. And printing to VGA caused it to
-reset to firmware. That's why we see nothing when didn't specify
-earlyprintk=, but see only one line of printing about the 'KASLR
-disabled'.
-
-To confirm it's caused by VGA printing, I blacklist the mgag200 by
-writting it into /etc/modprobe.d/blacklist.conf. The kdump kernel can
-boot up successfully. And add 'nomodeset' can also make it work. So it's
-for sure mgag driver or related code have something wrong when booting
-code tries to re-init it.
-
-This is the only case we ever see, tend to pursuit fix in mgag200 driver
-side. Any idea or suggestion? We have two machines to be able to
-reproduce it stablly.
-
-Thanks
-Baoquan
+> 
+> To confirm it's caused by VGA printing, I blacklist the mgag200 by
+> writting it into /etc/modprobe.d/blacklist.conf. The kdump kernel can
+> boot up successfully. And add 'nomodeset' can also make it work. So it's
+> for sure mgag driver or related code have something wrong when booting
+> code tries to re-init it.
+> 
+> This is the only case we ever see, tend to pursuit fix in mgag200 driver
+> side. Any idea or suggestion? We have two machines to be able to
+> reproduce it stablly.
+> 
+> Thanks
+> Baoquan
 
 _______________________________________________
 kexec mailing list
