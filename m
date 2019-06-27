@@ -1,24 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mail-io1-xd42.google.com ([2607:f8b0:4864:20::d42])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hgUlf-00046p-5f
- for kexec@lists.infradead.org; Thu, 27 Jun 2019 13:48:53 +0000
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
- by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x5RDmkSv029785
- (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO)
- for <kexec@lists.infradead.org>; Thu, 27 Jun 2019 22:48:46 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
- by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x5RDmkL5012338
- for <kexec@lists.infradead.org>; Thu, 27 Jun 2019 22:48:46 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x5RDmk7G015904
- for <kexec@lists.infradead.org>; Thu, 27 Jun 2019 22:48:46 +0900
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: [ANNOUNCE] makedumpfile 1.6.6 is released
-Date: Thu, 27 Jun 2019 13:47:40 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC035794EF@BPXM09GP.gisp.nec.co.jp>
-Content-Language: en-US
+ id 1hgWK0-0004JT-64
+ for kexec@lists.infradead.org; Thu, 27 Jun 2019 15:28:25 +0000
+Received: by mail-io1-xd42.google.com with SMTP id i10so5569161iol.13
+ for <kexec@lists.infradead.org>; Thu, 27 Jun 2019 08:28:21 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190622000358.19895-1-matthewgarrett@google.com>
+ <20190622000358.19895-10-matthewgarrett@google.com>
+ <alpine.LRH.2.21.1906271423070.16512@namei.org>
+In-Reply-To: <alpine.LRH.2.21.1906271423070.16512@namei.org>
+From: Matthew Garrett <mjg59@google.com>
+Date: Thu, 27 Jun 2019 08:28:08 -0700
+Message-ID: <CACdnJusJeCYPKVFHiu6yn+mfqQe5k0RqZhbCUZEkxtXx_shMmw@mail.gmail.com>
+Subject: Re: [PATCH V34 09/29] kexec_file: Restrict at runtime if the kernel
+ is locked down
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,45 +27,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: James Morris <jmorris@namei.org>
+Cc: Jiri Bohac <jbohac@suse.cz>, Linux API <linux-api@vger.kernel.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, LSM List <linux-security-module@vger.kernel.org>
 
-Hello,
+On Wed, Jun 26, 2019 at 9:59 PM James Morris <jmorris@namei.org> wrote:
+> This is not a criticism of the patch but a related issue which I haven't
+> seen discussed (apologies if it has).
+>
+> If signed code is loaded into ring 0, verified by the kernel, then
+> executed, you still lose your secure/trusted/verified boot state. If the
+> currently running kernel has been runtime-compromised, any signature
+> verification performed by the kernel cannot be trusted.
+>
+> This problem is out of scope for the lockdown threat model (which
+> naturally cannot include a compromised kernel), but folk should be aware
+> that signature-verified kexec does not provide equivalent assurance to a
+> full reboot on a secure-boot system.
 
-I'm pleased to announce the release of makedumpfile 1.6.6.
-Your comments/patches are welcome.
-
-Main new features:
-o Support for AMD Secure Memory Encryption
-o Exclude pages that are logically offline
-o Support new kernels
-  - The supported kernel is updated to 5.1.9 in this version.
-
-Changelog since v1.6.5:
-0a8b504102db [v1.6.6] Update version (Kazuhito Hagio)
-8c21fc7e7c52 [PATCH] Support newer kernels up to v5.1 (Kazuhito Hagio)
-3222d4ad04c6 [PATCH] x86_64: fix get_kaslr_offset_x86_64() to return kaslr_offset correctly (Kazuhito Hagio)
-d222b01e516b [PATCH] x86_64: Add support for AMD Secure Memory Encryption (Lianbo Jiang)
-1743c7370868 [PATCH] exclude pages that are logically offline (David Hildenbrand)
-feee755900e0 [PATCH] ppc64: fix a typo for checking the file pointer for null (Nisha Parrakat)
-2f007b48c581 [PATCH v2] honor the CFLAGS from environment variables (Kairui Song)
-b9da17259ef5 [PATCH] Some improvements of debugging messages (Kazuhito Hagio)
-f349b51f6211 [PATCH] ppc64: increase MAX_PHYSMEM_BITS to 2PB (Hari Bathini)
-
-Explanation of makedumpfile:
-  To shorten the size of the dumpfile and the time of creating the
-  dumpfile, makedumpfile copies only the necessary pages for analysis
-  to the dumpfile from /proc/vmcore. You can specify the kind of
-  unnecessary pages with dump_level. If you want to shorten the size
-  further, enable the compression of the page data.
-
-Download:
-  The latest makedumpfile can be downloaded from the following URL.
-  https://sourceforge.net/projects/makedumpfile/
-
-Thanks,
-Kazu
-
-
+By that metric, on a secure boot system how do we determine that code
+running in the firmware environment wasn't compromised before it
+launched the initial signed kernel?
 
 _______________________________________________
 kexec mailing list
