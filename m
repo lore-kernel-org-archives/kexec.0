@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hg3Is-0003jC-6o
- for kexec@lists.infradead.org; Wed, 26 Jun 2019 08:29:19 +0000
-Date: Wed, 26 Jun 2019 16:29:07 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: mgag200 fails kdump kernel booting
-Message-ID: <20190626082907.GY24419@MiWiFi-R3L-srv>
-References: <20190626081522.GX24419@MiWiFi-R3L-srv>
+Received: from namei.org ([65.99.196.166])
+ by casper.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
+ id 1hgMVG-0006Wi-27
+ for kexec@lists.infradead.org; Thu, 27 Jun 2019 04:59:24 +0000
+Date: Thu, 27 Jun 2019 14:59:09 +1000 (AEST)
+From: James Morris <jmorris@namei.org>
+Subject: Re: [PATCH V34 09/29] kexec_file: Restrict at runtime if the kernel
+ is locked down
+In-Reply-To: <20190622000358.19895-10-matthewgarrett@google.com>
+Message-ID: <alpine.LRH.2.21.1906271423070.16512@namei.org>
+References: <20190622000358.19895-1-matthewgarrett@google.com>
+ <20190622000358.19895-10-matthewgarrett@google.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190626081522.GX24419@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,53 +24,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: airlied@redhat.com
-Cc: dyoung@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Matthew Garrett <matthewgarrett@google.com>
+Cc: Jiri Bohac <jbohac@suse.cz>, linux-api@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org
 
-On 06/26/19 at 04:15pm, Baoquan He wrote:
-> Hi Dave,
-> 
-> We met an kdump kernel boot failure on a lenovo system. Kdump kernel
-> failed to boot, but just reset to firmware to reboot system. And nothing
-> is printed out.
-> 
-> The machine is a big server, with 6T memory and many cpu, its graphic
-> driver module is mgag200.
-> 
-> When added 'earlyprintk=ttyS0' into kernel command line, it printed
-> out only one line to console during kdump kernel booting:
->      KASLR disabled: 'nokaslr' on cmdline.
-> 
-> Then reset to firmware to reboot system.
-> 
-> By further code debugging, the failure happened in
-> arch/x86/boot/compressed/misc.c, during kernel decompressing stage. It's
-> triggered by the vga printing. As you can see, in __putstr() of
-> arch/x86/boot/compressed/misc.c, the code checks if earlyprintk= is
-> specified, and print out to the target. And no matter if earlyprintk= is
-> added or not, it will print to VGA. And printing to VGA caused it to
-> reset to firmware. That's why we see nothing when didn't specify
-> earlyprintk=, but see only one line of printing about the 'KASLR
-> disabled'.
+On Fri, 21 Jun 2019, Matthew Garrett wrote:
 
-Here I mean:
-That's why we see nothing when didn't specify earlyprintk=, but see only
-one line of printing about the 'KASLR disabled' message when
-earlyprintk=ttyS0 added.
+> From: Jiri Bohac <jbohac@suse.cz>
+> 
+> When KEXEC_SIG is not enabled, kernel should not load images through
+> kexec_file systemcall if the kernel is locked down.
 
-> 
-> To confirm it's caused by VGA printing, I blacklist the mgag200 by
-> writting it into /etc/modprobe.d/blacklist.conf. The kdump kernel can
-> boot up successfully. And add 'nomodeset' can also make it work. So it's
-> for sure mgag driver or related code have something wrong when booting
-> code tries to re-init it.
-> 
-> This is the only case we ever see, tend to pursuit fix in mgag200 driver
-> side. Any idea or suggestion? We have two machines to be able to
-> reproduce it stablly.
-> 
-> Thanks
-> Baoquan
+This is not a criticism of the patch but a related issue which I haven't 
+seen discussed (apologies if it has).
+
+If signed code is loaded into ring 0, verified by the kernel, then 
+executed, you still lose your secure/trusted/verified boot state. If the 
+currently running kernel has been runtime-compromised, any signature 
+verification performed by the kernel cannot be trusted.
+
+This problem is out of scope for the lockdown threat model (which 
+naturally cannot include a compromised kernel), but folk should be aware 
+that signature-verified kexec does not provide equivalent assurance to a 
+full reboot on a secure-boot system.
+
+Potential mitigations here include runtime integrity verification of the
+kernel via a separate security monitor (hypervisor, SMM, TEE etc.) or some
+kind of platform support for kexec verification.
+
+
+-- 
+James Morris
+<jmorris@namei.org>
+
 
 _______________________________________________
 kexec mailing list
