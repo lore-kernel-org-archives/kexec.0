@@ -1,11 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 18/39] docs: admin-guide: add kdump documentation into it
-Date: Fri, 28 Jun 2019 09:30:11 -0300
-Message-Id: <654e7591c044632c06257e0f069a52c0bb993554.1561724493.git.mchehab+samsung@kernel.org>
-In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
-References: <cover.1561724493.git.mchehab+samsung@kernel.org>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
+ id 1hhvSz-0006wo-LN
+ for kexec@lists.infradead.org; Mon, 01 Jul 2019 12:31:31 +0000
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x61CIdno106217
+ for <kexec@lists.infradead.org>; Mon, 1 Jul 2019 08:31:27 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2tfh69m30t-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 01 Jul 2019 08:31:27 -0400
+Received: from localhost
+ by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <prudo@linux.ibm.com>;
+ Mon, 1 Jul 2019 13:31:25 +0100
+Date: Mon, 1 Jul 2019 14:31:20 +0200
+From: Philipp Rudo <prudo@linux.ibm.com>
+Subject: Re: [PATCH RFC] generic ELF support for kexec
+In-Reply-To: <20190625185433.GA10934@t470p.stackframe.org>
+References: <20190625185433.GA10934@t470p.stackframe.org>
 MIME-Version: 1.0
+Message-Id: <20190701143120.20c71b30@laptop-ibm>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -14,192 +32,373 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Jerry Hoemann <jerry.hoemann@hpe.com>, Harry Wei <harryxiyou@gmail.com>, Paul Mackerras <paulus@samba.org>, "H. Peter Anvin" <hpa@zytor.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Alex Shi <alex.shi@linux.alibaba.com>, Will Deacon <will@kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Russell King <linux@armlinux.org.uk>, Ingo Molnar <mingo@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Dave Young <dyoung@redhat.com>, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, Mauro Carvalho Chehab <mchehab@infradead.org>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Wim Van Sebroeck <wim@linux-watchdog.org>, linux-arm-kernel@lists.infradead.org, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, linuxppc-dev@lists.ozlabs.org
+To: Sven Schnelle <svens@stackframe.org>
+Cc: linux-s390@vger.kernel.org, deller@gmx.de, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 
-VGhlIEtkdW1wIGRvY3VtZW50YXRpb24gZGVzY3JpYmVzIHByb2NlZHVyZXMgd2l0aCBhZG1pbnMg
-dXNlCmluIG9yZGVyIHRvIHNvbHZlIGlzc3VlcyBvbiB0aGVpciBzeXN0ZW1zLgoKU2lnbmVkLW9m
-Zi1ieTogTWF1cm8gQ2FydmFsaG8gQ2hlaGFiIDxtY2hlaGFiK3NhbXN1bmdAa2VybmVsLm9yZz4K
-LS0tCiBEb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2J1Zy1odW50aW5nLnJzdCAgICAgICAgICAg
-IHwgNCArKy0tCiBEb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2luZGV4LnJzdCAgICAgICAgICAg
-ICAgICAgIHwgMSArCiBEb2N1bWVudGF0aW9uL3sgPT4gYWRtaW4tZ3VpZGV9L2tkdW1wL2dkYm1h
-Y3Jvcy50eHQgIHwgMAogRG9jdW1lbnRhdGlvbi97ID0+IGFkbWluLWd1aWRlfS9rZHVtcC9pbmRl
-eC5yc3QgICAgICB8IDEgLQogRG9jdW1lbnRhdGlvbi97ID0+IGFkbWluLWd1aWRlfS9rZHVtcC9r
-ZHVtcC5yc3QgICAgICB8IDAKIERvY3VtZW50YXRpb24veyA9PiBhZG1pbi1ndWlkZX0va2R1bXAv
-dm1jb3JlaW5mby5yc3QgfCAwCiBEb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tlcm5lbC1wYXJh
-bWV0ZXJzLnR4dCAgICAgIHwgNiArKystLS0KIERvY3VtZW50YXRpb24vcG93ZXJwYy9maXJtd2Fy
-ZS1hc3Npc3RlZC1kdW1wLnJzdCAgICAgfCAyICstCiBEb2N1bWVudGF0aW9uL3RyYW5zbGF0aW9u
-cy96aF9DTi9vb3BzLXRyYWNpbmcudHh0ICAgIHwgNCArKy0tCiBEb2N1bWVudGF0aW9uL3dhdGNo
-ZG9nL2hwd2R0LnJzdCAgICAgICAgICAgICAgICAgICAgIHwgMiArLQogTUFJTlRBSU5FUlMgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDIgKy0KIGFyY2gvYXJtL0tj
-b25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAyICstCiBhcmNoL2Fy
-bTY0L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMiArLQogYXJj
-aC9zaC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDIgKy0K
-IGFyY2gveDg2L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCA0
-ICsrLS0KIDE1IGZpbGVzIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDE2IGRlbGV0aW9ucygt
-KQogcmVuYW1lIERvY3VtZW50YXRpb24veyA9PiBhZG1pbi1ndWlkZX0va2R1bXAvZ2RibWFjcm9z
-LnR4dCAoMTAwJSkKIHJlbmFtZSBEb2N1bWVudGF0aW9uL3sgPT4gYWRtaW4tZ3VpZGV9L2tkdW1w
-L2luZGV4LnJzdCAoOTclKQogcmVuYW1lIERvY3VtZW50YXRpb24veyA9PiBhZG1pbi1ndWlkZX0v
-a2R1bXAva2R1bXAucnN0ICgxMDAlKQogcmVuYW1lIERvY3VtZW50YXRpb24veyA9PiBhZG1pbi1n
-dWlkZX0va2R1bXAvdm1jb3JlaW5mby5yc3QgKDEwMCUpCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9hZG1pbi1ndWlkZS9idWctaHVudGluZy5yc3QgYi9Eb2N1bWVudGF0aW9uL2FkbWluLWd1
-aWRlL2J1Zy1odW50aW5nLnJzdAppbmRleCBiNzYxYWEyYTUxZDIuLjQ0YjhhNGVkZDM0OCAxMDA2
-NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9idWctaHVudGluZy5yc3QKKysrIGIv
-RG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9idWctaHVudGluZy5yc3QKQEAgLTkwLDkgKzkwLDkg
-QEAgdGhlIGRpc2sgaXMgbm90IGF2YWlsYWJsZSB0aGVuIHlvdSBoYXZlIHRocmVlIG9wdGlvbnM6
-CiAgICAgcnVuIGEgbnVsbCBtb2RlbSB0byBhIHNlY29uZCBtYWNoaW5lIGFuZCBjYXB0dXJlIHRo
-ZSBvdXRwdXQgdGhlcmUKICAgICB1c2luZyB5b3VyIGZhdm91cml0ZSBjb21tdW5pY2F0aW9uIHBy
-b2dyYW0uICBNaW5pY29tIHdvcmtzIHdlbGwuCiAKLSgzKSBVc2UgS2R1bXAgKHNlZSBEb2N1bWVu
-dGF0aW9uL2tkdW1wL2tkdW1wLnJzdCksCisoMykgVXNlIEtkdW1wIChzZWUgRG9jdW1lbnRhdGlv
-bi9hZG1pbi1ndWlkZS9rZHVtcC9rZHVtcC5yc3QpLAogICAgIGV4dHJhY3QgdGhlIGtlcm5lbCBy
-aW5nIGJ1ZmZlciBmcm9tIG9sZCBtZW1vcnkgd2l0aCB1c2luZyBkbWVzZwotICAgIGdkYm1hY3Jv
-IGluIERvY3VtZW50YXRpb24va2R1bXAvZ2RibWFjcm9zLnR4dC4KKyAgICBnZGJtYWNybyBpbiBE
-b2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tkdW1wL2dkYm1hY3Jvcy50eHQuCiAKIEZpbmRpbmcg
-dGhlIGJ1ZydzIGxvY2F0aW9uCiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9pbmRleC5yc3QgYi9Eb2N1bWVudGF0aW9uL2Fk
-bWluLWd1aWRlL2luZGV4LnJzdAppbmRleCA5ODk5Yjc4ZGJlNTAuLjY1ZTgyMWEwM2FjYSAxMDA2
-NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9pbmRleC5yc3QKKysrIGIvRG9jdW1l
-bnRhdGlvbi9hZG1pbi1ndWlkZS9pbmRleC5yc3QKQEAgLTM5LDYgKzM5LDcgQEAgcHJvYmxlbXMg
-YW5kIGJ1Z3MgaW4gcGFydGljdWxhci4KICAgIHJhbW9vcHMKICAgIGR5bmFtaWMtZGVidWctaG93
-dG8KICAgIGluaXQKKyAgIGtkdW1wL2luZGV4CiAgICBwZXJmL2luZGV4CiAKIFRoaXMgaXMgdGhl
-IGJlZ2lubmluZyBvZiBhIHNlY3Rpb24gd2l0aCBpbmZvcm1hdGlvbiBvZiBpbnRlcmVzdCB0bwpk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9rZHVtcC9nZGJtYWNyb3MudHh0IGIvRG9jdW1lbnRh
-dGlvbi9hZG1pbi1ndWlkZS9rZHVtcC9nZGJtYWNyb3MudHh0CnNpbWlsYXJpdHkgaW5kZXggMTAw
-JQpyZW5hbWUgZnJvbSBEb2N1bWVudGF0aW9uL2tkdW1wL2dkYm1hY3Jvcy50eHQKcmVuYW1lIHRv
-IERvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUva2R1bXAvZ2RibWFjcm9zLnR4dApkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9rZHVtcC9pbmRleC5yc3QgYi9Eb2N1bWVudGF0aW9uL2FkbWluLWd1
-aWRlL2tkdW1wL2luZGV4LnJzdApzaW1pbGFyaXR5IGluZGV4IDk3JQpyZW5hbWUgZnJvbSBEb2N1
-bWVudGF0aW9uL2tkdW1wL2luZGV4LnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9hZG1pbi1n
-dWlkZS9rZHVtcC9pbmRleC5yc3QKaW5kZXggMmIxN2ZjZjY4NjdhLi44ZTJlYmQwMzgzY2QgMTAw
-NjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24va2R1bXAvaW5kZXgucnN0CisrKyBiL0RvY3VtZW50YXRp
-b24vYWRtaW4tZ3VpZGUva2R1bXAvaW5kZXgucnN0CkBAIC0xLDQgKzEsMyBAQAotOm9ycGhhbjoK
-IAogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PQogRG9jdW1lbnRhdGlvbiBmb3IgS2R1bXAgLSBUaGUga2V4ZWMtYmFzZWQgQ3Jh
-c2ggRHVtcGluZyBTb2x1dGlvbgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9rZHVtcC9rZHVt
-cC5yc3QgYi9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tkdW1wL2tkdW1wLnJzdApzaW1pbGFy
-aXR5IGluZGV4IDEwMCUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9rZHVtcC9rZHVtcC5yc3QK
-cmVuYW1lIHRvIERvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUva2R1bXAva2R1bXAucnN0CmRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2tkdW1wL3ZtY29yZWluZm8ucnN0IGIvRG9jdW1lbnRhdGlv
-bi9hZG1pbi1ndWlkZS9rZHVtcC92bWNvcmVpbmZvLnJzdApzaW1pbGFyaXR5IGluZGV4IDEwMCUK
-cmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9rZHVtcC92bWNvcmVpbmZvLnJzdApyZW5hbWUgdG8g
-RG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9rZHVtcC92bWNvcmVpbmZvLnJzdApkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9rZXJuZWwtcGFyYW1ldGVycy50eHQgYi9Eb2N1
-bWVudGF0aW9uL2FkbWluLWd1aWRlL2tlcm5lbC1wYXJhbWV0ZXJzLnR4dAppbmRleCBlMzhiOTZk
-MDYxZjQuLjliNTM1YzBlMjJmMyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlk
-ZS9rZXJuZWwtcGFyYW1ldGVycy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9r
-ZXJuZWwtcGFyYW1ldGVycy50eHQKQEAgLTcwOCwxNCArNzA4LDE0IEBACiAJCQlbS05MLCB4ODZf
-NjRdIHNlbGVjdCBhIHJlZ2lvbiB1bmRlciA0RyBmaXJzdCwgYW5kCiAJCQlmYWxsIGJhY2sgdG8g
-cmVzZXJ2ZSByZWdpb24gYWJvdmUgNEcgd2hlbiAnQG9mZnNldCcKIAkJCWhhc24ndCBiZWVuIHNw
-ZWNpZmllZC4KLQkJCVNlZSBEb2N1bWVudGF0aW9uL2tkdW1wL2tkdW1wLnJzdCBmb3IgZnVydGhl
-ciBkZXRhaWxzLgorCQkJU2VlIERvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUva2R1bXAva2R1bXAu
-cnN0IGZvciBmdXJ0aGVyIGRldGFpbHMuCiAKIAljcmFzaGtlcm5lbD1yYW5nZTE6c2l6ZTFbLHJh
-bmdlMjpzaXplMiwuLi5dW0BvZmZzZXRdCiAJCQlbS05MXSBTYW1lIGFzIGFib3ZlLCBidXQgZGVw
-ZW5kcyBvbiB0aGUgbWVtb3J5CiAJCQlpbiB0aGUgcnVubmluZyBzeXN0ZW0uIFRoZSBzeW50YXgg
-b2YgcmFuZ2UgaXMKIAkJCXN0YXJ0LVtlbmRdIHdoZXJlIHN0YXJ0IGFuZCBlbmQgYXJlIGJvdGgK
-IAkJCWEgbWVtb3J5IHVuaXQgKGFtb3VudFtLTUddKS4gU2VlIGFsc28KLQkJCURvY3VtZW50YXRp
-b24va2R1bXAva2R1bXAucnN0IGZvciBhbiBleGFtcGxlLgorCQkJRG9jdW1lbnRhdGlvbi9hZG1p
-bi1ndWlkZS9rZHVtcC9rZHVtcC5yc3QgZm9yIGFuIGV4YW1wbGUuCiAKIAljcmFzaGtlcm5lbD1z
-aXplW0tNR10saGlnaAogCQkJW0tOTCwgeDg2XzY0XSByYW5nZSBjb3VsZCBiZSBhYm92ZSA0Ry4g
-QWxsb3cga2VybmVsCkBAIC0xMjA3LDcgKzEyMDcsNyBAQAogCQkJU3BlY2lmaWVzIHBoeXNpY2Fs
-IGFkZHJlc3Mgb2Ygc3RhcnQgb2Yga2VybmVsIGNvcmUKIAkJCWltYWdlIGVsZiBoZWFkZXIgYW5k
-IG9wdGlvbmFsbHkgdGhlIHNpemUuIEdlbmVyYWxseQogCQkJa2V4ZWMgbG9hZGVyIHdpbGwgcGFz
-cyB0aGlzIG9wdGlvbiB0byBjYXB0dXJlIGtlcm5lbC4KLQkJCVNlZSBEb2N1bWVudGF0aW9uL2tk
-dW1wL2tkdW1wLnJzdCBmb3IgZGV0YWlscy4KKwkJCVNlZSBEb2N1bWVudGF0aW9uL2FkbWluLWd1
-aWRlL2tkdW1wL2tkdW1wLnJzdCBmb3IgZGV0YWlscy4KIAogCWVuYWJsZV9tdHJyX2NsZWFudXAg
-W1g4Nl0KIAkJCVRoZSBrZXJuZWwgdHJpZXMgdG8gYWRqdXN0IE1UUlIgbGF5b3V0IGZyb20gY29u
-dGludW91cwpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9wb3dlcnBjL2Zpcm13YXJlLWFzc2lz
-dGVkLWR1bXAucnN0IGIvRG9jdW1lbnRhdGlvbi9wb3dlcnBjL2Zpcm13YXJlLWFzc2lzdGVkLWR1
-bXAucnN0CmluZGV4IGQ3ZmE3YzM1ZGQxMi4uOWNhMTI4MzBhNDhlIDEwMDY0NAotLS0gYS9Eb2N1
-bWVudGF0aW9uL3Bvd2VycGMvZmlybXdhcmUtYXNzaXN0ZWQtZHVtcC5yc3QKKysrIGIvRG9jdW1l
-bnRhdGlvbi9wb3dlcnBjL2Zpcm13YXJlLWFzc2lzdGVkLWR1bXAucnN0CkBAIC02MSw3ICs2MSw3
-IEBAIGFzIGZvbGxvd3M6CiAgICAgICAgICB0aGUgZGVmYXVsdCBjYWxjdWxhdGVkIHNpemUuIFVz
-ZSB0aGlzIG9wdGlvbiBpZiBkZWZhdWx0CiAgICAgICAgICBib290IG1lbW9yeSBzaXplIGlzIG5v
-dCBzdWZmaWNpZW50IGZvciBzZWNvbmQga2VybmVsIHRvCiAgICAgICAgICBib290IHN1Y2Nlc3Nm
-dWxseS4gRm9yIHN5bnRheCBvZiBjcmFzaGtlcm5lbD0gcGFyYW1ldGVyLAotICAgICAgICAgcmVm
-ZXIgdG8gRG9jdW1lbnRhdGlvbi9rZHVtcC9rZHVtcC5yc3QuIElmIGFueSBvZmZzZXQgaXMKKyAg
-ICAgICAgIHJlZmVyIHRvIERvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUva2R1bXAva2R1bXAucnN0
-LiBJZiBhbnkgb2Zmc2V0IGlzCiAgICAgICAgICBwcm92aWRlZCBpbiBjcmFzaGtlcm5lbD0gcGFy
-YW1ldGVyLCBpdCB3aWxsIGJlIGlnbm9yZWQKICAgICAgICAgIGFzIGZhZHVtcCB1c2VzIGEgcHJl
-ZGVmaW5lZCBvZmZzZXQgdG8gcmVzZXJ2ZSBtZW1vcnkKICAgICAgICAgIGZvciBib290IG1lbW9y
-eSBkdW1wIHByZXNlcnZhdGlvbiBpbiBjYXNlIG9mIGEgY3Jhc2guCmRpZmYgLS1naXQgYS9Eb2N1
-bWVudGF0aW9uL3RyYW5zbGF0aW9ucy96aF9DTi9vb3BzLXRyYWNpbmcudHh0IGIvRG9jdW1lbnRh
-dGlvbi90cmFuc2xhdGlvbnMvemhfQ04vb29wcy10cmFjaW5nLnR4dAppbmRleCAzNjhkZGQwNWIz
-MDQuLmM1ZjNiZGE3YWJjYiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi90cmFuc2xhdGlvbnMv
-emhfQ04vb29wcy10cmFjaW5nLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL3RyYW5zbGF0aW9ucy96
-aF9DTi9vb3BzLXRyYWNpbmcudHh0CkBAIC01Myw4ICs1Myw4IEBAIGNhdCAvcHJvYy9rbXNnID4g
-ZmlsZe+8jCDnhLbogIzkvaDlv4Xpobvku4vlhaXkuK3mraLkvKDovpPvvIwga21zZ+aYr+S4gOS4
-quKAnAog77yIMu+8ieeUqOS4suWPo+e7iOerr+WQr+WKqO+8iOivt+WPgueci0RvY3VtZW50YXRp
-b24vYWRtaW4tZ3VpZGUvc2VyaWFsLWNvbnNvbGUucnN077yJ77yM6L+Q6KGM5LiA5LiqbnVsbAog
-bW9kZW3liLDlj6bkuIDlj7DmnLrlmajlubbnlKjkvaDllpzmrKLnmoTpgJrorq/lt6Xlhbfojrfl
-j5bovpPlh7rjgIJNaW5pY29t5bel5L2c5Zyw5b6I5aW944CCCiAKLe+8iDPvvInkvb/nlKhLZHVt
-cO+8iOivt+WPgueci0RvY3VtZW50YXRpb24va2R1bXAva2R1bXAucnN077yJ77yMCi3kvb/nlKjl
-nKhEb2N1bWVudGF0aW9uL2tkdW1wL2dkYm1hY3Jvcy50eHTkuK3lrprkuYnnmoRkbWVzZyBnZGLl
-ro/vvIzku47ml6fnmoTlhoXlrZjkuK3mj5Dlj5blhoXmoLgKK++8iDPvvInkvb/nlKhLZHVtcO+8
-iOivt+WPgueci0RvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUva2R1bXAva2R1bXAucnN077yJ77yM
-Civkvb/nlKjlnKhEb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tkdW1wL2dkYm1hY3Jvcy50eHTk
-uK3lrprkuYnnmoRkbWVzZyBnZGLlro/vvIzku47ml6fnmoTlhoXlrZjkuK3mj5Dlj5blhoXmoLgK
-IOeOr+W9oue8k+WGsuWMuuOAggogCiDlrozmlbTkv6Hmga8KZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vd2F0Y2hkb2cvaHB3ZHQucnN0IGIvRG9jdW1lbnRhdGlvbi93YXRjaGRvZy9ocHdkdC5y
-c3QKaW5kZXggOTRhOTYzNzExMTNlLi40OWM2NDdkYmE4YWEgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50
-YXRpb24vd2F0Y2hkb2cvaHB3ZHQucnN0CisrKyBiL0RvY3VtZW50YXRpb24vd2F0Y2hkb2cvaHB3
-ZHQucnN0CkBAIC01OSw3ICs1OSw3IEBAIExhc3QgcmV2aWV3ZWQ6IDA4LzIwLzIwMTgKICBhbmQg
-bG9vcCBmb3JldmVyLiAgVGhpcyBpcyBnZW5lcmFsbHkgbm90IHdoYXQgYSB3YXRjaGRvZyB1c2Vy
-IHdhbnRzLgogCiAgRm9yIHRob3NlIHdpc2hpbmcgdG8gbGVhcm4gbW9yZSBwbGVhc2Ugc2VlOgot
-CURvY3VtZW50YXRpb24va2R1bXAva2R1bXAucnN0CisJRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlk
-ZS9rZHVtcC9rZHVtcC5yc3QKIAlEb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tlcm5lbC1wYXJh
-bWV0ZXJzLnR4dCAocGFuaWM9KQogCVlvdXIgTGludXggRGlzdHJpYnV0aW9uIHNwZWNpZmljIGRv
-Y3VtZW50YXRpb24uCiAKZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMKaW5k
-ZXggZDM1ZmY3M2Y3MThhLi40YzYyMmExOWFiN2QgMTAwNjQ0Ci0tLSBhL01BSU5UQUlORVJTCisr
-KyBiL01BSU5UQUlORVJTCkBAIC04NjIyLDcgKzg2MjIsNyBAQCBSOglWaXZlayBHb3lhbCA8dmdv
-eWFsQHJlZGhhdC5jb20+CiBMOglrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCiBXOglodHRwOi8v
-bHNlLnNvdXJjZWZvcmdlLm5ldC9rZHVtcC8KIFM6CU1haW50YWluZWQKLUY6CURvY3VtZW50YXRp
-b24va2R1bXAvCitGOglEb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tkdW1wLwogCiBLRUVORSBG
-TSBSQURJTyBUUkFOU01JVFRFUiBEUklWRVIKIE06CUhhbnMgVmVya3VpbCA8aHZlcmt1aWxAeHM0
-YWxsLm5sPgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vS2NvbmZpZyBiL2FyY2gvYXJtL0tjb25maWcK
-aW5kZXggOGJmODk4NWVjNjY3Li5kNWJkNDM1MGZjYmQgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL0tj
-b25maWcKKysrIGIvYXJjaC9hcm0vS2NvbmZpZwpAQCAtMjAyNSw3ICsyMDI1LDcgQEAgY29uZmln
-IENSQVNIX0RVTVAKIAkgIGtkdW1wL2tleGVjLiBUaGUgY3Jhc2ggZHVtcCBrZXJuZWwgbXVzdCBi
-ZSBjb21waWxlZCB0byBhCiAJICBtZW1vcnkgYWRkcmVzcyBub3QgdXNlZCBieSB0aGUgbWFpbiBr
-ZXJuZWwKIAotCSAgRm9yIG1vcmUgZGV0YWlscyBzZWUgRG9jdW1lbnRhdGlvbi9rZHVtcC9rZHVt
-cC5yc3QKKwkgIEZvciBtb3JlIGRldGFpbHMgc2VlIERvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUv
-a2R1bXAva2R1bXAucnN0CiAKIGNvbmZpZyBBVVRPX1pSRUxBRERSCiAJYm9vbCAiQXV0byBjYWxj
-dWxhdGlvbiBvZiB0aGUgZGVjb21wcmVzc2VkIGtlcm5lbCBpbWFnZSBhZGRyZXNzIgpkaWZmIC0t
-Z2l0IGEvYXJjaC9hcm02NC9LY29uZmlnIGIvYXJjaC9hcm02NC9LY29uZmlnCmluZGV4IGFjY2Iw
-NDU5OTdjNi4uZTFlYTY5OTk0ZTBmIDEwMDY0NAotLS0gYS9hcmNoL2FybTY0L0tjb25maWcKKysr
-IGIvYXJjaC9hcm02NC9LY29uZmlnCkBAIC05OTcsNyArOTk3LDcgQEAgY29uZmlnIENSQVNIX0RV
-TVAKIAkgIHJlc2VydmVkIHJlZ2lvbiBhbmQgdGhlbiBsYXRlciBleGVjdXRlZCBhZnRlciBhIGNy
-YXNoIGJ5CiAJICBrZHVtcC9rZXhlYy4KIAotCSAgRm9yIG1vcmUgZGV0YWlscyBzZWUgRG9jdW1l
-bnRhdGlvbi9rZHVtcC9rZHVtcC5yc3QKKwkgIEZvciBtb3JlIGRldGFpbHMgc2VlIERvY3VtZW50
-YXRpb24vYWRtaW4tZ3VpZGUva2R1bXAva2R1bXAucnN0CiAKIGNvbmZpZyBYRU5fRE9NMAogCWRl
-Zl9ib29sIHkKZGlmZiAtLWdpdCBhL2FyY2gvc2gvS2NvbmZpZyBiL2FyY2gvc2gvS2NvbmZpZwpp
-bmRleCAzMWE3ZDEyZGI3MDUuLmMyODU4YWM2YTQ2YSAxMDA2NDQKLS0tIGEvYXJjaC9zaC9LY29u
-ZmlnCisrKyBiL2FyY2gvc2gvS2NvbmZpZwpAQCAtNjI2LDcgKzYyNiw3IEBAIGNvbmZpZyBDUkFT
-SF9EVU1QCiAJICB0byBhIG1lbW9yeSBhZGRyZXNzIG5vdCB1c2VkIGJ5IHRoZSBtYWluIGtlcm5l
-bCB1c2luZwogCSAgUEhZU0lDQUxfU1RBUlQuCiAKLQkgIEZvciBtb3JlIGRldGFpbHMgc2VlIERv
-Y3VtZW50YXRpb24va2R1bXAva2R1bXAucnN0CisJICBGb3IgbW9yZSBkZXRhaWxzIHNlZSBEb2N1
-bWVudGF0aW9uL2FkbWluLWd1aWRlL2tkdW1wL2tkdW1wLnJzdAogCiBjb25maWcgS0VYRUNfSlVN
-UAogCWJvb2wgImtleGVjIGp1bXAgKEVYUEVSSU1FTlRBTCkiCmRpZmYgLS1naXQgYS9hcmNoL3g4
-Ni9LY29uZmlnIGIvYXJjaC94ODYvS2NvbmZpZwppbmRleCBjOWQ1OWNhNWUzYWMuLjQ4OWZkODMz
-Yjk4MCAxMDA2NDQKLS0tIGEvYXJjaC94ODYvS2NvbmZpZworKysgYi9hcmNoL3g4Ni9LY29uZmln
-CkBAIC0yMDU3LDcgKzIwNTcsNyBAQCBjb25maWcgQ1JBU0hfRFVNUAogCSAgdG8gYSBtZW1vcnkg
-YWRkcmVzcyBub3QgdXNlZCBieSB0aGUgbWFpbiBrZXJuZWwgb3IgQklPUyB1c2luZwogCSAgUEhZ
-U0lDQUxfU1RBUlQsIG9yIGl0IG11c3QgYmUgYnVpbHQgYXMgYSByZWxvY2F0YWJsZSBpbWFnZQog
-CSAgKENPTkZJR19SRUxPQ0FUQUJMRT15KS4KLQkgIEZvciBtb3JlIGRldGFpbHMgc2VlIERvY3Vt
-ZW50YXRpb24va2R1bXAva2R1bXAucnN0CisJICBGb3IgbW9yZSBkZXRhaWxzIHNlZSBEb2N1bWVu
-dGF0aW9uL2FkbWluLWd1aWRlL2tkdW1wL2tkdW1wLnJzdAogCiBjb25maWcgS0VYRUNfSlVNUAog
-CWJvb2wgImtleGVjIGp1bXAiCkBAIC0yMDk0LDcgKzIwOTQsNyBAQCBjb25maWcgUEhZU0lDQUxf
-U1RBUlQKIAkgIHRoZSByZXNlcnZlZCByZWdpb24uICBJbiBvdGhlciB3b3JkcywgaXQgY2FuIGJl
-IHNldCBiYXNlZCBvbgogCSAgdGhlICJYIiB2YWx1ZSBhcyBzcGVjaWZpZWQgaW4gdGhlICJjcmFz
-aGtlcm5lbD1ZTUBYTSIKIAkgIGNvbW1hbmQgbGluZSBib290IHBhcmFtZXRlciBwYXNzZWQgdG8g
-dGhlIHBhbmljLWVkCi0JICBrZXJuZWwuIFBsZWFzZSB0YWtlIGEgbG9vayBhdCBEb2N1bWVudGF0
-aW9uL2tkdW1wL2tkdW1wLnJzdAorCSAga2VybmVsLiBQbGVhc2UgdGFrZSBhIGxvb2sgYXQgRG9j
-dW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9rZHVtcC9rZHVtcC5yc3QKIAkgIGZvciBtb3JlIGRldGFp
-bHMgYWJvdXQgY3Jhc2ggZHVtcHMuCiAKIAkgIFVzYWdlIG9mIGJ6SW1hZ2UgZm9yIGNhcHR1cmlu
-ZyB0aGUgY3Jhc2ggZHVtcCBpcyByZWNvbW1lbmRlZCBhcwotLSAKMi4yMS4wCgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0
-CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Sven,
+
+On Tue, 25 Jun 2019 20:54:34 +0200
+Sven Schnelle <svens@stackframe.org> wrote:
+
+> Hi List,
+> 
+> i recently started working on kexec for PA-RISC. While doing so, i figured
+> that powerpc already has support for reading ELF images inside of the Kernel.
+> My first attempt was to steal the source code and modify it for PA-RISC, but
+> it turned out that i didn't had to change much. Only ARM specific stuff like
+> fdt blob fetching had to be removed.
+> 
+> So instead of duplicating the code, i thought about moving the ELF stuff to
+> the core kexec code, and exposing several function to use that code from the
+> arch specific code.
+
+That's always the right approach. Well done.
+
+> I'm attaching the patch to this Mail. What do you think about that change?
+> s390 also uses ELF files, and (maybe?) could also switch to this implementation.
+> But i don't know anything about S/390 and don't have one in my basement. So
+> i'll leave s390 to the IBM folks.
+
+I'm afraid there isn't much code here s390 can reuse. I see multiple problems
+in kexec_elf_load:
+
+* while loading the phdrs we also need to setup some data structures to pass
+  to the next kernel
+* the s390 kernel needs to be loaded to a fixed address
+* there is no support to load a crash kernel
+
+Of course that could all be fixed/worked around by introducing some arch hooks.
+But when you take into account that the whole elf loader on s390 is ~100 lines
+of code, I don't think it is worth it.
+
+More comments below.
+ 
+[...]
+
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index b9b1bc5f9669..49b23b425f84 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -216,6 +216,41 @@ extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
+>  				       void **addr, unsigned long *sz);
+>  #endif /* CONFIG_KEXEC_FILE */
+>  
+> +#ifdef CONFIG_KEXEC_FILE_ELF
+> +
+> +struct kexec_elf_info {
+> +	/*
+> +	 * Where the ELF binary contents are kept.
+> +	 * Memory managed by the user of the struct.
+> +	 */
+> +	const char *buffer;
+> +
+> +	const struct elfhdr *ehdr;
+> +	const struct elf_phdr *proghdrs;
+> +	struct elf_shdr *sechdrs;
+> +};
+
+Do i understand this right? elf_info->buffer contains the full elf file and
+elf_info->ehdr is a (endianness translated) copy of the files ehdr?
+
+If so ...
+
+> +void kexec_free_elf_info(struct kexec_elf_info *elf_info);
+> +
+> +int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
+> +			  struct kexec_elf_info *elf_info);
+> +
+> +int kexec_elf_kernel_load(struct kimage *image, struct kexec_buf *kbuf,
+> +			  char *kernel_buf, unsigned long kernel_len,
+> +			  unsigned long *kernel_load_addr);
+> +
+> +int kexec_elf_probe(const char *buf, unsigned long len);
+> +
+> +int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+> +			 struct kexec_elf_info *elf_info,
+> +			 struct kexec_buf *kbuf,
+> +			 unsigned long *lowest_load_addr);
+> +
+> +int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+> +			 struct kexec_elf_info *elf_info,
+> +			 struct kexec_buf *kbuf,
+> +			 unsigned long *lowest_load_addr);
+
+... you could simplify the arguments by dropping the ehdr argument. The
+elf_info should contain all the information needed. Furthermore the kexec_buf
+also contains a pointer to its kimage. So you can drop that argument as well.
+
+An other thing is that you kzalloc the memory needed for proghdrs and sechdrs
+but expect the user of those functions to provide the memory needed for ehdr.
+Wouldn't it be more consistent to also kzalloc the ehdr?
+
+[...]
+
+> diff --git a/kernel/kexec_file_elf.c b/kernel/kexec_file_elf.c
+> new file mode 100644
+> index 000000000000..bb966c93492c
+> --- /dev/null
+> +++ b/kernel/kexec_file_elf.c
+> @@ -0,0 +1,574 @@
+
+[...]
+
+> +static uint64_t elf64_to_cpu(const struct elfhdr *ehdr, uint64_t value)
+> +{
+> +	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
+> +		value = le64_to_cpu(value);
+> +	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
+> +		value = be64_to_cpu(value);
+> +
+> +	return value;
+> +}
+> +
+> +static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
+> +{
+> +	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
+> +		value = le16_to_cpu(value);
+> +	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
+> +		value = be16_to_cpu(value);
+> +
+> +	return value;
+> +}
+> +
+> +static uint32_t elf32_to_cpu(const struct elfhdr *ehdr, uint32_t value)
+> +{
+> +	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
+> +		value = le32_to_cpu(value);
+> +	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
+> +		value = be32_to_cpu(value);
+> +
+> +	return value;
+> +}
+
+What are the elf*_to_cpu good for? In general I'd assume that kexec loads a
+kernel for the same architecture it is running on. So the new kernel should
+also have the same endianness like the one which loads it. Is this a
+ppcle/ppcbe issue?
+
+Furthermore the current order is 64->16->32, which my OCPD absolutely hates :)
+
+[...]
+
+> +/**
+> + * elf_is_shdr_sane - check that it is safe to use the section header
+> + * @buf_len:	size of the buffer in which the ELF file is loaded.
+> + */
+> +static bool elf_is_shdr_sane(const struct elf_shdr *shdr, size_t buf_len)
+> +{
+> +	bool size_ok;
+> +
+> +	/* SHT_NULL headers have undefined values, so we can't check them. */
+> +	if (shdr->sh_type == SHT_NULL)
+> +		return true;
+> +
+> +	/* Now verify sh_entsize */
+> +	switch (shdr->sh_type) {
+> +	case SHT_SYMTAB:
+> +		size_ok = shdr->sh_entsize == sizeof(Elf_Sym);
+> +		break;
+> +	case SHT_RELA:
+> +		size_ok = shdr->sh_entsize == sizeof(Elf_Rela);
+> +		break;
+> +	case SHT_DYNAMIC:
+> +		size_ok = shdr->sh_entsize == sizeof(Elf_Dyn);
+> +		break;
+> +	case SHT_REL:
+> +		size_ok = shdr->sh_entsize == sizeof(Elf_Rel);
+> +		break;
+> +	case SHT_NOTE:
+> +	case SHT_PROGBITS:
+> +	case SHT_HASH:
+> +	case SHT_NOBITS:
+> +	default:
+> +		/*
+> +		 * This is a section whose entsize requirements
+> +		 * I don't care about.  If I don't know about
+> +		 * the section I can't care about it's entsize
+> +		 * requirements.
+> +		 */
+> +		size_ok = true;
+> +		break;
+> +	}
+> +
+> +	if (!size_ok) {
+> +		pr_debug("ELF section with wrong entry size.\n");
+> +		return false;
+> +	} else if (shdr->sh_addr + shdr->sh_size < shdr->sh_addr) {
+> +		pr_debug("ELF section address wraps around.\n");
+> +		return false;
+> +	}
+> +
+> +	if (shdr->sh_type != SHT_NOBITS) {
+> +		if (shdr->sh_offset + shdr->sh_size < shdr->sh_offset) {
+> +			pr_debug("ELF section location wraps around.\n");
+> +			return false;
+> +		} else if (shdr->sh_offset + shdr->sh_size > buf_len) {
+> +			pr_debug("ELF section not in file.\n");
+> +			return false;
+> +		}
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +static int elf_read_shdr(const char *buf, size_t len, struct kexec_elf_info *elf_info,
+> +			 int idx)
+> +{
+> +	struct elf_shdr *shdr = &elf_info->sechdrs[idx];
+> +	const struct elfhdr *ehdr = elf_info->ehdr;
+> +	const char *sbuf;
+> +	struct elf_shdr *buf_shdr;
+> +
+> +	sbuf = buf + ehdr->e_shoff + idx * sizeof(*buf_shdr);
+> +	buf_shdr = (struct elf_shdr *) sbuf;
+> +
+> +	shdr->sh_name      = elf32_to_cpu(ehdr, buf_shdr->sh_name);
+> +	shdr->sh_type      = elf32_to_cpu(ehdr, buf_shdr->sh_type);
+> +	shdr->sh_addr      = elf_addr_to_cpu(ehdr, buf_shdr->sh_addr);
+> +	shdr->sh_offset    = elf_addr_to_cpu(ehdr, buf_shdr->sh_offset);
+> +	shdr->sh_link      = elf32_to_cpu(ehdr, buf_shdr->sh_link);
+> +	shdr->sh_info      = elf32_to_cpu(ehdr, buf_shdr->sh_info);
+> +
+> +	/*
+> +	 * The following fields have a type equivalent to Elf_Addr
+> +	 * both in 32 bit and 64 bit ELF.
+> +	 */
+> +	shdr->sh_flags     = elf_addr_to_cpu(ehdr, buf_shdr->sh_flags);
+> +	shdr->sh_size      = elf_addr_to_cpu(ehdr, buf_shdr->sh_size);
+> +	shdr->sh_addralign = elf_addr_to_cpu(ehdr, buf_shdr->sh_addralign);
+> +	shdr->sh_entsize   = elf_addr_to_cpu(ehdr, buf_shdr->sh_entsize);
+> +
+> +	return elf_is_shdr_sane(shdr, len) ? 0 : -ENOEXEC;
+> +}
+> +
+> +/**
+> + * elf_read_shdrs - read the section headers from the buffer
+> + *
+> + * This function assumes that the section header table was checked for sanity.
+> + * Use elf_is_ehdr_sane() if it wasn't.
+> + */
+> +static int elf_read_shdrs(const char *buf, size_t len,
+> +			  struct kexec_elf_info *elf_info)
+> +{
+> +	size_t shdr_size, i;
+> +
+> +	/*
+> +	 * e_shnum is at most 65536 so calculating
+> +	 * the size of the section header cannot overflow.
+> +	 */
+> +	shdr_size = sizeof(struct elf_shdr) * elf_info->ehdr->e_shnum;
+> +
+> +	elf_info->sechdrs = kzalloc(shdr_size, GFP_KERNEL);
+> +	if (!elf_info->sechdrs)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < elf_info->ehdr->e_shnum; i++) {
+> +		int ret;
+> +
+> +		ret = elf_read_shdr(buf, len, elf_info, i);
+> +		if (ret) {
+> +			kfree(elf_info->sechdrs);
+> +			elf_info->sechdrs = NULL;
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+
+In the end you only use the phdrs. So in theory you can drop everything shdr
+related. Although keeping it would be 'formally more correct'.
+
+[...]
+
+> +/**
+> + * kexec_free_elf_info - free memory allocated by elf_read_from_buffer
+> + */
+> +void kexec_free_elf_info(struct kexec_elf_info *elf_info)
+> +{
+> +	kfree(elf_info->proghdrs);
+> +	kfree(elf_info->sechdrs);
+> +	memset(elf_info, 0, sizeof(*elf_info));
+> +}
+> +EXPORT_SYMBOL(kexec_free_elf_info);
+
+Why are you exporting these functions? Is there any kexec implementation out
+there which is put into a module? Do you even want that to be possible?
+
+> +/**
+> + * kexec_build_elf_info - read ELF executable and check that we can use it
+> + */
+> +int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
+> +			  struct kexec_elf_info *elf_info)
+> +{
+> +	int i;
+> +	int ret;
+> +
+> +	ret = elf_read_from_buffer(buf, len, ehdr, elf_info);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Big endian vmlinux has type ET_DYN. */
+> +	if (ehdr->e_type != ET_EXEC && ehdr->e_type != ET_DYN) {
+
+s390 is big endian and it's vmlinux has type ET_EXEC. So I assume that this is
+a ppc issue?
+
+> +		pr_err("Not an ELF executable.\n");
+> +		goto error;
+> +	} else if (!elf_info->proghdrs) {
+> +		pr_err("No ELF program header.\n");
+> +		goto error;
+> +	}
+> +
+> +	for (i = 0; i < ehdr->e_phnum; i++) {
+> +		/*
+> +		 * Kexec does not support loading interpreters.
+> +		 * In addition this check keeps us from attempting
+> +		 * to kexec ordinay executables.
+> +		 */
+> +		if (elf_info->proghdrs[i].p_type == PT_INTERP) {
+> +			pr_err("Requires an ELF interpreter.\n");
+> +			goto error;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +error:
+> +	kexec_free_elf_info(elf_info);
+> +	return -ENOEXEC;
+> +}
+> +EXPORT_SYMBOL(kexec_build_elf_info);
+
+[...]
+
+> +int kexec_elf_probe(const char *buf, unsigned long len)
+> +{
+> +	struct elfhdr ehdr;
+> +	struct kexec_elf_info elf_info;
+> +	int ret;
+> +
+> +	ret = kexec_build_elf_info(buf, len, &ehdr, &elf_info);
+
+On s390 I only check the elf magic when probing. That's because the image
+loader cannot reliably check the image and thus accepts everything that is
+given to it. That also means that any elf file the elf probe rejects (e.g.
+because it has a phdr with type PT_INTERP) is passed on to the image loader,
+which happily takes it.
+
+If you plan to also add an image loader you should keep that in mind.
+
+Thanks
+Philipp
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
