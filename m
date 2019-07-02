@@ -1,8 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <b01211c61610d022e65b00f39d3d7962e9c60d5f.camel@infradead.org>
+Message-ID: <a8142dc999983b6fcd8c21314a1c082216226c92.camel@infradead.org>
 Subject: Re: [PATCH 2/2] x86: Support multiboot2 images
 From: David Woodhouse <dwmw2@infradead.org>
-Date: Tue, 02 Jul 2019 12:37:05 +0100
+Date: Tue, 02 Jul 2019 14:29:56 +0100
 In-Reply-To: <20190702110944.mcugf6krueakfpam@verge.net.au>
 References: <1561630363-6342-1-git-send-email-vrd@amazon.de>
  <1561630363-6342-2-git-send-email-vrd@amazon.de>
@@ -16,35 +16,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============4879126084949040190=="
+Content-Type: multipart/mixed; boundary="===============7706110708936781747=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, Varad Gautam <vrd@amazon.de>
 Cc: Amit Shah <aams@amazon.de>, kexec@lists.infradead.org
 
 
---===============4879126084949040190==
+--===============7706110708936781747==
 Content-Type: multipart/signed; micalg="sha-256";
 	protocol="application/x-pkcs7-signature";
-	boundary="=-iVn7Q/4KGOP7tiyHe1IT"
+	boundary="=-o3WexcZ0r3UBv3avG+bM"
 
 
---=-iVn7Q/4KGOP7tiyHe1IT
+--=-o3WexcZ0r3UBv3avG+bM
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Tue, 2019-07-02 at 13:09 +0200, Simon Horman wrote:
+> > diff --git a/include/x86/multiboot2.h b/include/x86/multiboot2.h
+> > new file mode 100644
+> > index 0000000..5693923
+> > --- /dev/null
+> > +++ b/include/x86/multiboot2.h
+> > @@ -0,0 +1,416 @@
+> > +/*  multiboot2.h - Multiboot 2 header file.  */
+> > +/*  Copyright (C) 1999,2003,2007,2008,2009,2010  Free Software Foundat=
+ion, Inc.
+> > + *
+> > + *  Permission is hereby granted, free of charge, to any person obtain=
+ing a copy
+> > + *  of this software and associated documentation files (the "Software=
+"), to
+> > + *  deal in the Software without restriction, including without limita=
+tion the
+> > + *  rights to use, copy, modify, merge, publish, distribute, sublicens=
+e, and/or
+> > + *  sell copies of the Software, and to permit persons to whom the Sof=
+tware is
+> > + *  furnished to do so, subject to the following conditions:
+> > + *
+> > + *  The above copyright notice and this permission notice shall be inc=
+luded in
+> > + *  all copies or substantial portions of the Software.
+> > + *
+> > + *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EX=
+PRESS OR
+> > + *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTAB=
+ILITY,
+> > + *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT=
+ SHALL ANY
+> > + *  DEVELOPER OR DISTRIBUTOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER=
+ LIABILITY,
+> > + *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,=
+ OUT OF OR
+> > + *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN TH=
+E SOFTWARE.
+> > + */
+>=20
 > As per my comment on your previous posting of this patch:
 >=20
 > multiboot2.h does not appear to be licenced as GPLv2.
 > This seems incompatible with inclusion in kexec-tools.
 > Can we discuss this?
 
-Ah, last time it was the documentation in multiboot2.html, which Varad
-dropped. We'll ensure we work it out for the header file too, which we
-can't drop quite so easily!
+Er... why do you say that isn't GPL-compatible? It's just a standard
+MIT licence, isn't it?
 
---=-iVn7Q/4KGOP7tiyHe1IT
+
+
+--=-o3WexcZ0r3UBv3avG+bM
 Content-Type: application/x-pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -127,26 +168,26 @@ BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
 BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
 ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
 ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkw
-NzAyMTEzNzA1WjAvBgkqhkiG9w0BCQQxIgQgHkB/fqYoKssLbe+ZMkmpz3ekWWXbrs40M3QnjD8k
-lbgwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
+NzAyMTMyOTU2WjAvBgkqhkiG9w0BCQQxIgQgqmAizI7MdJ7Y8OdwmK6jmcCWEn4cgpordtKRi316
+7oAwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
 TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
 PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
 aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
 BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
 A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
 bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
-DQEBAQUABIIBAD5lkuBpYWd9vXquRYEAQqRkfKoXLFOJW2g1Um26Yr/qns/ko0Ze0eR3g/957dwG
-tgYLkMtFs/lCxDNo5ztRticeOaIPjdjv1w87MsBTTVlGJpecaN5lhz7C2r2Epjw/bQ4ezl7RVbf5
-jNm5v5VzQSYngAeBs1lHNdFEBoFtGlzb7wRb20i5S3SWIsfoQNBf7OXevecgxbNGiMSHdVtY8owz
-iw8ov9NRssQWGMuhNHCbEcxlUBGmjyx6teJMAVnA1CjVYrHDPPrKhUsyCNA0RKEwnRXqhII76CT9
-pYcQCH9GkpqbFVIP/14Q8qF9LThb9A8R68ledrBM5fRp3YsUfXYAAAAAAAA=
+DQEBAQUABIIBAA2H8+PZ+6U109dLHdK9szZ4ySd6u6joUH6tpM8kBwcOPM5LCoPdJC9vLztydlG1
+3pJCblbze+Yj/M5OHmeToJRI2SrK61LQp+p8VQvaAQfmZMmCCIrYt/xR9pjq6LxZtyWNRoNeBWb1
+NwkCU/StR16OkWQIk8b24JyjvODYouEcT1na3DFPrdOPYaJvAjFSBCMulTSrIM8d2rRzCQOxxMvh
+XuFi0cN16/UCsOVvrWpUywtetNOJVc6STWO33JnXCerZlCIybWcoQojjEcczCaYrRSCtyGGgkmJZ
+RjRboy7OlcbeltIJtHw3c7QyAC7HlwCi8Fwct5RMFNaAkOHIkskAAAAAAAA=
 
 
---=-iVn7Q/4KGOP7tiyHe1IT--
+--=-o3WexcZ0r3UBv3avG+bM--
 
 
 
---===============4879126084949040190==
+--===============7706110708936781747==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -157,6 +198,6 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============4879126084949040190==--
+--===============7706110708936781747==--
 
 
