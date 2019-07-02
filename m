@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ua1-f66.google.com ([209.85.222.66])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hi3Gd-0007E4-QA
- for kexec@lists.infradead.org; Mon, 01 Jul 2019 20:51:17 +0000
-Received: by mail-ua1-f66.google.com with SMTP id 34so5618541uar.8
- for <kexec@lists.infradead.org>; Mon, 01 Jul 2019 13:51:15 -0700 (PDT)
-MIME-Version: 1.0
+ id 1hi7oC-0005Os-M4
+ for kexec@lists.infradead.org; Tue, 02 Jul 2019 01:42:14 +0000
+Date: Tue, 2 Jul 2019 09:41:58 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: mgag200 fails kdump kernel booting
+Message-ID: <20190702014158.GC3178@localhost.localdomain>
 References: <20190626081522.GX24419@MiWiFi-R3L-srv>
  <20190626082907.GY24419@MiWiFi-R3L-srv>
-In-Reply-To: <20190626082907.GY24419@MiWiFi-R3L-srv>
-From: David Airlie <airlied@redhat.com>
-Date: Tue, 2 Jul 2019 06:51:03 +1000
-Message-ID: <CAMwc25oeskFG4bbrb3rwotqi1a5z4wYsGW=Qs_XJmhX_vAdNfQ@mail.gmail.com>
-Subject: Re: mgag200 fails kdump kernel booting
+ <CAMwc25oeskFG4bbrb3rwotqi1a5z4wYsGW=Qs_XJmhX_vAdNfQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAMwc25oeskFG4bbrb3rwotqi1a5z4wYsGW=Qs_XJmhX_vAdNfQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,67 +25,71 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
+To: David Airlie <airlied@redhat.com>
 Cc: Lyude Paul <lyude@redhat.com>, dyoung@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>
 
-On Wed, Jun 26, 2019 at 6:29 PM Baoquan He <bhe@redhat.com> wrote:
->
-> On 06/26/19 at 04:15pm, Baoquan He wrote:
-> > Hi Dave,
+On 07/02/19 at 06:51am, David Airlie wrote:
+> On Wed, Jun 26, 2019 at 6:29 PM Baoquan He <bhe@redhat.com> wrote:
 > >
-> > We met an kdump kernel boot failure on a lenovo system. Kdump kernel
-> > failed to boot, but just reset to firmware to reboot system. And nothing
-> > is printed out.
+> > On 06/26/19 at 04:15pm, Baoquan He wrote:
+> > > Hi Dave,
+> > >
+> > > We met an kdump kernel boot failure on a lenovo system. Kdump kernel
+> > > failed to boot, but just reset to firmware to reboot system. And nothing
+> > > is printed out.
+> > >
+> > > The machine is a big server, with 6T memory and many cpu, its graphic
+> > > driver module is mgag200.
+> > >
+> > > When added 'earlyprintk=ttyS0' into kernel command line, it printed
+> > > out only one line to console during kdump kernel booting:
+> > >      KASLR disabled: 'nokaslr' on cmdline.
+> > >
+> > > Then reset to firmware to reboot system.
+> > >
+> > > By further code debugging, the failure happened in
+> > > arch/x86/boot/compressed/misc.c, during kernel decompressing stage. It's
+> > > triggered by the vga printing. As you can see, in __putstr() of
+> > > arch/x86/boot/compressed/misc.c, the code checks if earlyprintk= is
+> > > specified, and print out to the target. And no matter if earlyprintk= is
+> > > added or not, it will print to VGA. And printing to VGA caused it to
+> > > reset to firmware. That's why we see nothing when didn't specify
+> > > earlyprintk=, but see only one line of printing about the 'KASLR
+> > > disabled'.
 > >
-> > The machine is a big server, with 6T memory and many cpu, its graphic
-> > driver module is mgag200.
-> >
-> > When added 'earlyprintk=ttyS0' into kernel command line, it printed
-> > out only one line to console during kdump kernel booting:
-> >      KASLR disabled: 'nokaslr' on cmdline.
-> >
-> > Then reset to firmware to reboot system.
-> >
-> > By further code debugging, the failure happened in
-> > arch/x86/boot/compressed/misc.c, during kernel decompressing stage. It's
-> > triggered by the vga printing. As you can see, in __putstr() of
-> > arch/x86/boot/compressed/misc.c, the code checks if earlyprintk= is
-> > specified, and print out to the target. And no matter if earlyprintk= is
-> > added or not, it will print to VGA. And printing to VGA caused it to
-> > reset to firmware. That's why we see nothing when didn't specify
-> > earlyprintk=, but see only one line of printing about the 'KASLR
-> > disabled'.
->
-> Here I mean:
-> That's why we see nothing when didn't specify earlyprintk=, but see only
-> one line of printing about the 'KASLR disabled' message when
-> earlyprintk=ttyS0 added.
+> > Here I mean:
+> > That's why we see nothing when didn't specify earlyprintk=, but see only
+> > one line of printing about the 'KASLR disabled' message when
+> > earlyprintk=ttyS0 added.
+> 
+> Just to clarify, the original kernel is booted with mgag200 turned
+> off, then kexec works, but if the original kernel loads mgag200, the
+> kexec kernels resets hard when the VGA is used to write stuff out.
 
-Just to clarify, the original kernel is booted with mgag200 turned
-off, then kexec works, but if the original kernel loads mgag200, the
-kexec kernels resets hard when the VGA is used to write stuff out.
+Thanks for looking into this, Dave.
 
-This *might* be fixable in the controlled kexec case, but having an
-mgag200 shutdown path that tries to put the gpu back into a state
-where VGA doesn't die, but for the uncontrolled kexec it'll still be a
-problem, since once the gpu is up and running and VGA is disabled, it
-doesn't expect to see anymore VGA transactions.
+Yeah, in fact the issue was found in kdump kernel. I haven't checked the
+kexec jumping. Kexec jumping will call device_shutdown() to attempt to
+shutdown all devices before jumping to the 2nd kernel. But kdump jumping
+won't.
 
-Dave.
->
-> >
-> > To confirm it's caused by VGA printing, I blacklist the mgag200 by
-> > writting it into /etc/modprobe.d/blacklist.conf. The kdump kernel can
-> > boot up successfully. And add 'nomodeset' can also make it work. So it's
-> > for sure mgag driver or related code have something wrong when booting
-> > code tries to re-init it.
-> >
-> > This is the only case we ever see, tend to pursuit fix in mgag200 driver
-> > side. Any idea or suggestion? We have two machines to be able to
-> > reproduce it stablly.
-> >
-> > Thanks
-> > Baoquan
+> 
+> This *might* be fixable in the controlled kexec case, but having an
+> mgag200 shutdown path that tries to put the gpu back into a state
+> where VGA doesn't die, but for the uncontrolled kexec it'll still be a
+> problem, since once the gpu is up and running and VGA is disabled, it
+> doesn't expect to see anymore VGA transactions.
+
+Yes, I see. It should have been shutdown by device_shutdown() in kexec
+case. The uncontrolled case, I guess you mean the kdump case. In
+kdump case, we don't call device_shutdown() before jumping because the
+1st kernel has been in crashed state, we just want to switch to kdump
+kernel asap. So wondering how other GPU/VGA device/driver bebahve,
+currently haven't got report about them. Probably mgag200 is very new,
+or we may not meet them. This issue was met on a new bought server.
+
+Thanks
+Baoquan
 
 _______________________________________________
 kexec mailing list
