@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.92 #3 (Red Hat Linux))
- id 1hiGfW-0000q9-LI
- for kexec@lists.infradead.org; Tue, 02 Jul 2019 11:09:52 +0000
-Date: Tue, 2 Jul 2019 13:09:44 +0200
+ id 1hiGiB-0002DL-Ry
+ for kexec@lists.infradead.org; Tue, 02 Jul 2019 11:12:37 +0000
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+ by kirsty.vergenet.net (Postfix) with ESMTPA id E1FAB25AEC8
+ for <kexec@lists.infradead.org>; Tue,  2 Jul 2019 21:12:34 +1000 (AEST)
+Date: Tue, 2 Jul 2019 13:12:32 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] x86: Support multiboot2 images
-Message-ID: <20190702110944.mcugf6krueakfpam@verge.net.au>
-References: <1561630363-6342-1-git-send-email-vrd@amazon.de>
- <1561630363-6342-2-git-send-email-vrd@amazon.de>
+Subject: [ANNOUNCE] kexec-tools v2.0.20 preparation
+Message-ID: <20190702111232.6yqywbph6tmglmew@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1561630363-6342-2-git-send-email-vrd@amazon.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,62 +24,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Varad Gautam <vrd@amazon.de>
-Cc: Amit Shah <aams@amazon.de>, kexec@lists.infradead.org, David Woodhouse <dwmw@amazon.co.uk>
+To: kexec@lists.infradead.org
 
-On Thu, Jun 27, 2019 at 12:12:43PM +0200, Varad Gautam wrote:
-> Add a new type `multiboot2-x86` that allows loading multiboot2 [1] images
-> within the relocation range specified in the image header. The image is
-> always placed at the lowest available address, regardless of the
-> preference information.
-> 
-> [1] https://www.gnu.org/software/grub/manual/multiboot2/multiboot.html
-> 
-> Signed-off-by: Varad Gautam <vrd@amazon.de>
-> ---
->  include/x86/multiboot2.h         | 416 ++++++++++++++++++++++++++++++
->  kexec/arch/i386/kexec-mb2-x86.c  | 543 +++++++++++++++++++++++++++++++++++++++
->  kexec/arch/i386/kexec-x86.c      |   2 +
->  kexec/arch/x86_64/Makefile       |   1 +
->  kexec/arch/x86_64/kexec-x86_64.c |   2 +
->  kexec/arch/x86_64/kexec-x86_64.h |   5 +
->  kexec/kexec.8                    |  24 ++
->  7 files changed, 993 insertions(+)
->  create mode 100644 include/x86/multiboot2.h
->  create mode 100644 kexec/arch/i386/kexec-mb2-x86.c
-> 
-> diff --git a/include/x86/multiboot2.h b/include/x86/multiboot2.h
-> new file mode 100644
-> index 0000000..5693923
-> --- /dev/null
-> +++ b/include/x86/multiboot2.h
-> @@ -0,0 +1,416 @@
-> +/*  multiboot2.h - Multiboot 2 header file.  */
-> +/*  Copyright (C) 1999,2003,2007,2008,2009,2010  Free Software Foundation, Inc.
-> + *
-> + *  Permission is hereby granted, free of charge, to any person obtaining a copy
-> + *  of this software and associated documentation files (the "Software"), to
-> + *  deal in the Software without restriction, including without limitation the
-> + *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-> + *  sell copies of the Software, and to permit persons to whom the Software is
-> + *  furnished to do so, subject to the following conditions:
-> + *
-> + *  The above copyright notice and this permission notice shall be included in
-> + *  all copies or substantial portions of the Software.
-> + *
-> + *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-> + *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-> + *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL ANY
-> + *  DEVELOPER OR DISTRIBUTOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
-> + *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-> + */
+Hi all,
 
-As per my comment on your previous posting of this patch:
+I am planning to release kexec-tools v2.0.20 in the next two weeks
+to roughly coincide with the release of the v5.2 kernel.
 
-multiboot2.h does not appear to be licenced as GPLv2.
-This seems incompatible with inclusion in kexec-tools.
-Can we discuss this?
+I would like to ask interested parties to send any patches they would like
+included in v2.0.20 within one week so that I can make an rc release.
+
+For reference the patches queued up since v2.0.19 are as follows:
+
+40805e393b2f crashdump/x86: Use new introduce helper for getting RSDP
+b071fc084bda x86: Always try to fill acpi_rsdp_addr in boot params
+cedeee0a3007 x86: Introduce helpers for getting RSDP address
+402351390f31 x86: Update boot parameters defination
+c072bd13abbe x86: Find mounts by FS type, not name
+23aaa44614a0 x86: Check /proc/mounts before mtab for mounts
+eff53089523c xen: Avoid overlapping segments in low memory
+fb5a8792e6e4 x86: Introduce a new option --reuse-video-type
+3757ef630b72 kexec-tools 2.0.19.git
 
 _______________________________________________
 kexec mailing list
