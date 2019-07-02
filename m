@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pegase1.c-s.fr ([93.17.236.30])
- by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hgAW0-0004BD-Ay
- for kexec@lists.infradead.org; Wed, 26 Jun 2019 16:11:24 +0000
-Subject: Re: [PATCH RFC] generic ELF support for kexec
-References: <20190625185433.GA10934@t470p.stackframe.org>
-From: Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <7e8a1652-5daf-5e63-c686-63f7779369af@c-s.fr>
-Date: Wed, 26 Jun 2019 16:09:56 +0000
-MIME-Version: 1.0
-In-Reply-To: <20190625185433.GA10934@t470p.stackframe.org>
-Content-Language: en-US
+Message-ID: <b01211c61610d022e65b00f39d3d7962e9c60d5f.camel@infradead.org>
+Subject: Re: [PATCH 2/2] x86: Support multiboot2 images
+From: David Woodhouse <dwmw2@infradead.org>
+Date: Tue, 02 Jul 2019 12:37:05 +0100
+In-Reply-To: <20190702110944.mcugf6krueakfpam@verge.net.au>
+References: <1561630363-6342-1-git-send-email-vrd@amazon.de>
+ <1561630363-6342-2-git-send-email-vrd@amazon.de>
+ <20190702110944.mcugf6krueakfpam@verge.net.au>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,1355 +16,147 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: multipart/mixed; boundary="===============4879126084949040190=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sven Schnelle <svens@stackframe.org>, kexec@lists.infradead.org
-Cc: linux-s390@vger.kernel.org, deller@gmx.de, linuxppc-dev@lists.ozlabs.org
-
-Hi Sven,
-
-On 06/25/2019 06:54 PM, Sven Schnelle wrote:
-> Hi List,
-> 
-> i recently started working on kexec for PA-RISC. While doing so, i figured
-> that powerpc already has support for reading ELF images inside of the Kernel.
-> My first attempt was to steal the source code and modify it for PA-RISC, but
-> it turned out that i didn't had to change much. Only ARM specific stuff like
-> fdt blob fetching had to be removed.
-> 
-> So instead of duplicating the code, i thought about moving the ELF stuff to
-> the core kexec code, and exposing several function to use that code from the
-> arch specific code.
-> 
-> I'm attaching the patch to this Mail. What do you think about that change?
-> s390 also uses ELF files, and (maybe?) could also switch to this implementation.
-> But i don't know anything about S/390 and don't have one in my basement. So
-> i'll leave s390 to the IBM folks.
-> 
-> I haven't really tested PowerPC yet. Can anyone give me a helping hand what
-> would be a good target to test this code in QEMU? Or even better, test this
-> code on real Hardware?
-
-Where did you start from ? Your patch doesn't apply on latest 
-powerpc/merge branch 
-(https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git):
-
-[root@localhost linux-powerpc]# git am -3 
-/root/Downloads/RFC-generic-ELF-support-for-kexec.patch
-Applying: generic ELF support for kexec
-Using index info to reconstruct a base tree...
-M	arch/powerpc/kernel/kexec_elf_64.c
-M	kernel/Makefile
-Falling back to patching base and 3-way merge...
-Auto-merging kernel/Makefile
-Auto-merging arch/powerpc/kernel/kexec_elf_64.c
-CONFLICT (content): Merge conflict in arch/powerpc/kernel/kexec_elf_64.c
-error: Failed to merge in the changes.
-Patch failed at 0001 generic ELF support for kexec
-
-Neither does it apply on 5.2-rc6
-
-Looks like it cleanly applies on 5.1
-
-Could you generate your patch using 'git format-patch -M -C ' ? It would 
-be a lot easier to see the real changes:
-
-  arch/Kconfig                                       |   3 +
-  arch/powerpc/Kconfig                               |   1 +
-  arch/powerpc/kernel/kexec_elf_64.c                 | 547 
-+--------------------
-  include/linux/kexec.h                              |  35 ++
-  kernel/Makefile                                    |   1 +
-  .../kexec_elf_64.c => kernel/kexec_file_elf.c      | 192 ++------
-  6 files changed, 96 insertions(+), 683 deletions(-)
-  copy arch/powerpc/kernel/kexec_elf_64.c => kernel/kexec_file_elf.c (77%)
-
-Thanks
-Christophe
-
-> 
-> If that change is acceptable i would finish the patch and submit it. I think
-> best would be to push this change through Helge's parisc tree, so we don't
-> have any dependencies to sort out.
-> 
-> Regards,
-> Sven
-> 
-> [PATCH] kexec: add generic support for elf kernel images
-> 
-> Signed-off-by: Sven Schnelle <svens@stackframe.org>
-> ---
->   arch/Kconfig                       |   3 +
->   arch/powerpc/Kconfig               |   1 +
->   arch/powerpc/kernel/kexec_elf_64.c | 547 +--------------------------
->   include/linux/kexec.h              |  35 ++
->   kernel/Makefile                    |   1 +
->   kernel/kexec_file_elf.c            | 574 +++++++++++++++++++++++++++++
->   6 files changed, 619 insertions(+), 542 deletions(-)
->   create mode 100644 kernel/kexec_file_elf.c
-> 
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index c47b328eada0..de7520100136 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -18,6 +18,9 @@ config KEXEC_CORE
->   	select CRASH_CORE
->   	bool
->   
-> +config KEXEC_FILE_ELF
-> +	bool
-> +
->   config HAVE_IMA_KEXEC
->   	bool
->   
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 8c1c636308c8..48241260b6ae 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -502,6 +502,7 @@ config KEXEC_FILE
->   	select KEXEC_CORE
->   	select HAVE_IMA_KEXEC
->   	select BUILD_BIN2C
-> +	select KEXEC_FILE_ELF
->   	depends on PPC64
->   	depends on CRYPTO=y
->   	depends on CRYPTO_SHA256=y
-> diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec_elf_64.c
-> index ba4f18a43ee8..0059e36913e9 100644
-> --- a/arch/powerpc/kernel/kexec_elf_64.c
-> +++ b/arch/powerpc/kernel/kexec_elf_64.c
-> @@ -21,8 +21,6 @@
->    * GNU General Public License for more details.
->    */
->   
-> -#define pr_fmt(fmt)	"kexec_elf: " fmt
-> -
->   #include <linux/elf.h>
->   #include <linux/kexec.h>
->   #include <linux/libfdt.h>
-> @@ -31,540 +29,6 @@
->   #include <linux/slab.h>
->   #include <linux/types.h>
->   
-> -#define PURGATORY_STACK_SIZE	(16 * 1024)
-> -
-> -#define elf_addr_to_cpu	elf64_to_cpu
-> -
-> -#ifndef Elf_Rel
-> -#define Elf_Rel		Elf64_Rel
-> -#endif /* Elf_Rel */
-> -
-> -struct elf_info {
-> -	/*
-> -	 * Where the ELF binary contents are kept.
-> -	 * Memory managed by the user of the struct.
-> -	 */
-> -	const char *buffer;
-> -
-> -	const struct elfhdr *ehdr;
-> -	const struct elf_phdr *proghdrs;
-> -	struct elf_shdr *sechdrs;
-> -};
-> -
-> -static inline bool elf_is_elf_file(const struct elfhdr *ehdr)
-> -{
-> -       return memcmp(ehdr->e_ident, ELFMAG, SELFMAG) == 0;
-> -}
-> -
-> -static uint64_t elf64_to_cpu(const struct elfhdr *ehdr, uint64_t value)
-> -{
-> -	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
-> -		value = le64_to_cpu(value);
-> -	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
-> -		value = be64_to_cpu(value);
-> -
-> -	return value;
-> -}
-> -
-> -static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
-> -{
-> -	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
-> -		value = le16_to_cpu(value);
-> -	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
-> -		value = be16_to_cpu(value);
-> -
-> -	return value;
-> -}
-> -
-> -static uint32_t elf32_to_cpu(const struct elfhdr *ehdr, uint32_t value)
-> -{
-> -	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
-> -		value = le32_to_cpu(value);
-> -	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
-> -		value = be32_to_cpu(value);
-> -
-> -	return value;
-> -}
-> -
-> -/**
-> - * elf_is_ehdr_sane - check that it is safe to use the ELF header
-> - * @buf_len:	size of the buffer in which the ELF file is loaded.
-> - */
-> -static bool elf_is_ehdr_sane(const struct elfhdr *ehdr, size_t buf_len)
-> -{
-> -	if (ehdr->e_phnum > 0 && ehdr->e_phentsize != sizeof(struct elf_phdr)) {
-> -		pr_debug("Bad program header size.\n");
-> -		return false;
-> -	} else if (ehdr->e_shnum > 0 &&
-> -		   ehdr->e_shentsize != sizeof(struct elf_shdr)) {
-> -		pr_debug("Bad section header size.\n");
-> -		return false;
-> -	} else if (ehdr->e_ident[EI_VERSION] != EV_CURRENT ||
-> -		   ehdr->e_version != EV_CURRENT) {
-> -		pr_debug("Unknown ELF version.\n");
-> -		return false;
-> -	}
-> -
-> -	if (ehdr->e_phoff > 0 && ehdr->e_phnum > 0) {
-> -		size_t phdr_size;
-> -
-> -		/*
-> -		 * e_phnum is at most 65535 so calculating the size of the
-> -		 * program header cannot overflow.
-> -		 */
-> -		phdr_size = sizeof(struct elf_phdr) * ehdr->e_phnum;
-> -
-> -		/* Sanity check the program header table location. */
-> -		if (ehdr->e_phoff + phdr_size < ehdr->e_phoff) {
-> -			pr_debug("Program headers at invalid location.\n");
-> -			return false;
-> -		} else if (ehdr->e_phoff + phdr_size > buf_len) {
-> -			pr_debug("Program headers truncated.\n");
-> -			return false;
-> -		}
-> -	}
-> -
-> -	if (ehdr->e_shoff > 0 && ehdr->e_shnum > 0) {
-> -		size_t shdr_size;
-> -
-> -		/*
-> -		 * e_shnum is at most 65536 so calculating
-> -		 * the size of the section header cannot overflow.
-> -		 */
-> -		shdr_size = sizeof(struct elf_shdr) * ehdr->e_shnum;
-> -
-> -		/* Sanity check the section header table location. */
-> -		if (ehdr->e_shoff + shdr_size < ehdr->e_shoff) {
-> -			pr_debug("Section headers at invalid location.\n");
-> -			return false;
-> -		} else if (ehdr->e_shoff + shdr_size > buf_len) {
-> -			pr_debug("Section headers truncated.\n");
-> -			return false;
-> -		}
-> -	}
-> -
-> -	return true;
-> -}
-> -
-> -static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
-> -{
-> -	struct elfhdr *buf_ehdr;
-> -
-> -	if (len < sizeof(*buf_ehdr)) {
-> -		pr_debug("Buffer is too small to hold ELF header.\n");
-> -		return -ENOEXEC;
-> -	}
-> -
-> -	memset(ehdr, 0, sizeof(*ehdr));
-> -	memcpy(ehdr->e_ident, buf, sizeof(ehdr->e_ident));
-> -	if (!elf_is_elf_file(ehdr)) {
-> -		pr_debug("No ELF header magic.\n");
-> -		return -ENOEXEC;
-> -	}
-> -
-> -	if (ehdr->e_ident[EI_CLASS] != ELF_CLASS) {
-> -		pr_debug("Not a supported ELF class.\n");
-> -		return -ENOEXEC;
-> -	} else  if (ehdr->e_ident[EI_DATA] != ELFDATA2LSB &&
-> -		ehdr->e_ident[EI_DATA] != ELFDATA2MSB) {
-> -		pr_debug("Not a supported ELF data format.\n");
-> -		return -ENOEXEC;
-> -	}
-> -
-> -	buf_ehdr = (struct elfhdr *) buf;
-> -	if (elf16_to_cpu(ehdr, buf_ehdr->e_ehsize) != sizeof(*buf_ehdr)) {
-> -		pr_debug("Bad ELF header size.\n");
-> -		return -ENOEXEC;
-> -	}
-> -
-> -	ehdr->e_type      = elf16_to_cpu(ehdr, buf_ehdr->e_type);
-> -	ehdr->e_machine   = elf16_to_cpu(ehdr, buf_ehdr->e_machine);
-> -	ehdr->e_version   = elf32_to_cpu(ehdr, buf_ehdr->e_version);
-> -	ehdr->e_entry     = elf_addr_to_cpu(ehdr, buf_ehdr->e_entry);
-> -	ehdr->e_phoff     = elf_addr_to_cpu(ehdr, buf_ehdr->e_phoff);
-> -	ehdr->e_shoff     = elf_addr_to_cpu(ehdr, buf_ehdr->e_shoff);
-> -	ehdr->e_flags     = elf32_to_cpu(ehdr, buf_ehdr->e_flags);
-> -	ehdr->e_phentsize = elf16_to_cpu(ehdr, buf_ehdr->e_phentsize);
-> -	ehdr->e_phnum     = elf16_to_cpu(ehdr, buf_ehdr->e_phnum);
-> -	ehdr->e_shentsize = elf16_to_cpu(ehdr, buf_ehdr->e_shentsize);
-> -	ehdr->e_shnum     = elf16_to_cpu(ehdr, buf_ehdr->e_shnum);
-> -	ehdr->e_shstrndx  = elf16_to_cpu(ehdr, buf_ehdr->e_shstrndx);
-> -
-> -	return elf_is_ehdr_sane(ehdr, len) ? 0 : -ENOEXEC;
-> -}
-> -
-> -/**
-> - * elf_is_phdr_sane - check that it is safe to use the program header
-> - * @buf_len:	size of the buffer in which the ELF file is loaded.
-> - */
-> -static bool elf_is_phdr_sane(const struct elf_phdr *phdr, size_t buf_len)
-> -{
-> -
-> -	if (phdr->p_offset + phdr->p_filesz < phdr->p_offset) {
-> -		pr_debug("ELF segment location wraps around.\n");
-> -		return false;
-> -	} else if (phdr->p_offset + phdr->p_filesz > buf_len) {
-> -		pr_debug("ELF segment not in file.\n");
-> -		return false;
-> -	} else if (phdr->p_paddr + phdr->p_memsz < phdr->p_paddr) {
-> -		pr_debug("ELF segment address wraps around.\n");
-> -		return false;
-> -	}
-> -
-> -	return true;
-> -}
-> -
-> -static int elf_read_phdr(const char *buf, size_t len, struct elf_info *elf_info,
-> -			 int idx)
-> -{
-> -	/* Override the const in proghdrs, we are the ones doing the loading. */
-> -	struct elf_phdr *phdr = (struct elf_phdr *) &elf_info->proghdrs[idx];
-> -	const char *pbuf;
-> -	struct elf_phdr *buf_phdr;
-> -
-> -	pbuf = buf + elf_info->ehdr->e_phoff + (idx * sizeof(*buf_phdr));
-> -	buf_phdr = (struct elf_phdr *) pbuf;
-> -
-> -	phdr->p_type   = elf32_to_cpu(elf_info->ehdr, buf_phdr->p_type);
-> -	phdr->p_offset = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_offset);
-> -	phdr->p_paddr  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_paddr);
-> -	phdr->p_vaddr  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_vaddr);
-> -	phdr->p_flags  = elf32_to_cpu(elf_info->ehdr, buf_phdr->p_flags);
-> -
-> -	/*
-> -	 * The following fields have a type equivalent to Elf_Addr
-> -	 * both in 32 bit and 64 bit ELF.
-> -	 */
-> -	phdr->p_filesz = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_filesz);
-> -	phdr->p_memsz  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_memsz);
-> -	phdr->p_align  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_align);
-> -
-> -	return elf_is_phdr_sane(phdr, len) ? 0 : -ENOEXEC;
-> -}
-> -
-> -/**
-> - * elf_read_phdrs - read the program headers from the buffer
-> - *
-> - * This function assumes that the program header table was checked for sanity.
-> - * Use elf_is_ehdr_sane() if it wasn't.
-> - */
-> -static int elf_read_phdrs(const char *buf, size_t len,
-> -			  struct elf_info *elf_info)
-> -{
-> -	size_t phdr_size, i;
-> -	const struct elfhdr *ehdr = elf_info->ehdr;
-> -
-> -	/*
-> -	 * e_phnum is at most 65535 so calculating the size of the
-> -	 * program header cannot overflow.
-> -	 */
-> -	phdr_size = sizeof(struct elf_phdr) * ehdr->e_phnum;
-> -
-> -	elf_info->proghdrs = kzalloc(phdr_size, GFP_KERNEL);
-> -	if (!elf_info->proghdrs)
-> -		return -ENOMEM;
-> -
-> -	for (i = 0; i < ehdr->e_phnum; i++) {
-> -		int ret;
-> -
-> -		ret = elf_read_phdr(buf, len, elf_info, i);
-> -		if (ret) {
-> -			kfree(elf_info->proghdrs);
-> -			elf_info->proghdrs = NULL;
-> -			return ret;
-> -		}
-> -	}
-> -
-> -	return 0;
-> -}
-> -
-> -/**
-> - * elf_is_shdr_sane - check that it is safe to use the section header
-> - * @buf_len:	size of the buffer in which the ELF file is loaded.
-> - */
-> -static bool elf_is_shdr_sane(const struct elf_shdr *shdr, size_t buf_len)
-> -{
-> -	bool size_ok;
-> -
-> -	/* SHT_NULL headers have undefined values, so we can't check them. */
-> -	if (shdr->sh_type == SHT_NULL)
-> -		return true;
-> -
-> -	/* Now verify sh_entsize */
-> -	switch (shdr->sh_type) {
-> -	case SHT_SYMTAB:
-> -		size_ok = shdr->sh_entsize == sizeof(Elf_Sym);
-> -		break;
-> -	case SHT_RELA:
-> -		size_ok = shdr->sh_entsize == sizeof(Elf_Rela);
-> -		break;
-> -	case SHT_DYNAMIC:
-> -		size_ok = shdr->sh_entsize == sizeof(Elf_Dyn);
-> -		break;
-> -	case SHT_REL:
-> -		size_ok = shdr->sh_entsize == sizeof(Elf_Rel);
-> -		break;
-> -	case SHT_NOTE:
-> -	case SHT_PROGBITS:
-> -	case SHT_HASH:
-> -	case SHT_NOBITS:
-> -	default:
-> -		/*
-> -		 * This is a section whose entsize requirements
-> -		 * I don't care about.  If I don't know about
-> -		 * the section I can't care about it's entsize
-> -		 * requirements.
-> -		 */
-> -		size_ok = true;
-> -		break;
-> -	}
-> -
-> -	if (!size_ok) {
-> -		pr_debug("ELF section with wrong entry size.\n");
-> -		return false;
-> -	} else if (shdr->sh_addr + shdr->sh_size < shdr->sh_addr) {
-> -		pr_debug("ELF section address wraps around.\n");
-> -		return false;
-> -	}
-> -
-> -	if (shdr->sh_type != SHT_NOBITS) {
-> -		if (shdr->sh_offset + shdr->sh_size < shdr->sh_offset) {
-> -			pr_debug("ELF section location wraps around.\n");
-> -			return false;
-> -		} else if (shdr->sh_offset + shdr->sh_size > buf_len) {
-> -			pr_debug("ELF section not in file.\n");
-> -			return false;
-> -		}
-> -	}
-> -
-> -	return true;
-> -}
-> -
-> -static int elf_read_shdr(const char *buf, size_t len, struct elf_info *elf_info,
-> -			 int idx)
-> -{
-> -	struct elf_shdr *shdr = &elf_info->sechdrs[idx];
-> -	const struct elfhdr *ehdr = elf_info->ehdr;
-> -	const char *sbuf;
-> -	struct elf_shdr *buf_shdr;
-> -
-> -	sbuf = buf + ehdr->e_shoff + idx * sizeof(*buf_shdr);
-> -	buf_shdr = (struct elf_shdr *) sbuf;
-> -
-> -	shdr->sh_name      = elf32_to_cpu(ehdr, buf_shdr->sh_name);
-> -	shdr->sh_type      = elf32_to_cpu(ehdr, buf_shdr->sh_type);
-> -	shdr->sh_addr      = elf_addr_to_cpu(ehdr, buf_shdr->sh_addr);
-> -	shdr->sh_offset    = elf_addr_to_cpu(ehdr, buf_shdr->sh_offset);
-> -	shdr->sh_link      = elf32_to_cpu(ehdr, buf_shdr->sh_link);
-> -	shdr->sh_info      = elf32_to_cpu(ehdr, buf_shdr->sh_info);
-> -
-> -	/*
-> -	 * The following fields have a type equivalent to Elf_Addr
-> -	 * both in 32 bit and 64 bit ELF.
-> -	 */
-> -	shdr->sh_flags     = elf_addr_to_cpu(ehdr, buf_shdr->sh_flags);
-> -	shdr->sh_size      = elf_addr_to_cpu(ehdr, buf_shdr->sh_size);
-> -	shdr->sh_addralign = elf_addr_to_cpu(ehdr, buf_shdr->sh_addralign);
-> -	shdr->sh_entsize   = elf_addr_to_cpu(ehdr, buf_shdr->sh_entsize);
-> -
-> -	return elf_is_shdr_sane(shdr, len) ? 0 : -ENOEXEC;
-> -}
-> -
-> -/**
-> - * elf_read_shdrs - read the section headers from the buffer
-> - *
-> - * This function assumes that the section header table was checked for sanity.
-> - * Use elf_is_ehdr_sane() if it wasn't.
-> - */
-> -static int elf_read_shdrs(const char *buf, size_t len,
-> -			  struct elf_info *elf_info)
-> -{
-> -	size_t shdr_size, i;
-> -
-> -	/*
-> -	 * e_shnum is at most 65536 so calculating
-> -	 * the size of the section header cannot overflow.
-> -	 */
-> -	shdr_size = sizeof(struct elf_shdr) * elf_info->ehdr->e_shnum;
-> -
-> -	elf_info->sechdrs = kzalloc(shdr_size, GFP_KERNEL);
-> -	if (!elf_info->sechdrs)
-> -		return -ENOMEM;
-> -
-> -	for (i = 0; i < elf_info->ehdr->e_shnum; i++) {
-> -		int ret;
-> -
-> -		ret = elf_read_shdr(buf, len, elf_info, i);
-> -		if (ret) {
-> -			kfree(elf_info->sechdrs);
-> -			elf_info->sechdrs = NULL;
-> -			return ret;
-> -		}
-> -	}
-> -
-> -	return 0;
-> -}
-> -
-> -/**
-> - * elf_read_from_buffer - read ELF file and sets up ELF header and ELF info
-> - * @buf:	Buffer to read ELF file from.
-> - * @len:	Size of @buf.
-> - * @ehdr:	Pointer to existing struct which will be populated.
-> - * @elf_info:	Pointer to existing struct which will be populated.
-> - *
-> - * This function allows reading ELF files with different byte order than
-> - * the kernel, byte-swapping the fields as needed.
-> - *
-> - * Return:
-> - * On success returns 0, and the caller should call elf_free_info(elf_info) to
-> - * free the memory allocated for the section and program headers.
-> - */
-> -int elf_read_from_buffer(const char *buf, size_t len, struct elfhdr *ehdr,
-> -			 struct elf_info *elf_info)
-> -{
-> -	int ret;
-> -
-> -	ret = elf_read_ehdr(buf, len, ehdr);
-> -	if (ret)
-> -		return ret;
-> -
-> -	elf_info->buffer = buf;
-> -	elf_info->ehdr = ehdr;
-> -	if (ehdr->e_phoff > 0 && ehdr->e_phnum > 0) {
-> -		ret = elf_read_phdrs(buf, len, elf_info);
-> -		if (ret)
-> -			return ret;
-> -	}
-> -	if (ehdr->e_shoff > 0 && ehdr->e_shnum > 0) {
-> -		ret = elf_read_shdrs(buf, len, elf_info);
-> -		if (ret) {
-> -			kfree(elf_info->proghdrs);
-> -			return ret;
-> -		}
-> -	}
-> -
-> -	return 0;
-> -}
-> -
-> -/**
-> - * elf_free_info - free memory allocated by elf_read_from_buffer
-> - */
-> -void elf_free_info(struct elf_info *elf_info)
-> -{
-> -	kfree(elf_info->proghdrs);
-> -	kfree(elf_info->sechdrs);
-> -	memset(elf_info, 0, sizeof(*elf_info));
-> -}
-> -/**
-> - * build_elf_exec_info - read ELF executable and check that we can use it
-> - */
-> -static int build_elf_exec_info(const char *buf, size_t len, struct elfhdr *ehdr,
-> -			       struct elf_info *elf_info)
-> -{
-> -	int i;
-> -	int ret;
-> -
-> -	ret = elf_read_from_buffer(buf, len, ehdr, elf_info);
-> -	if (ret)
-> -		return ret;
-> -
-> -	/* Big endian vmlinux has type ET_DYN. */
-> -	if (ehdr->e_type != ET_EXEC && ehdr->e_type != ET_DYN) {
-> -		pr_err("Not an ELF executable.\n");
-> -		goto error;
-> -	} else if (!elf_info->proghdrs) {
-> -		pr_err("No ELF program header.\n");
-> -		goto error;
-> -	}
-> -
-> -	for (i = 0; i < ehdr->e_phnum; i++) {
-> -		/*
-> -		 * Kexec does not support loading interpreters.
-> -		 * In addition this check keeps us from attempting
-> -		 * to kexec ordinay executables.
-> -		 */
-> -		if (elf_info->proghdrs[i].p_type == PT_INTERP) {
-> -			pr_err("Requires an ELF interpreter.\n");
-> -			goto error;
-> -		}
-> -	}
-> -
-> -	return 0;
-> -error:
-> -	elf_free_info(elf_info);
-> -	return -ENOEXEC;
-> -}
-> -
-> -static int elf64_probe(const char *buf, unsigned long len)
-> -{
-> -	struct elfhdr ehdr;
-> -	struct elf_info elf_info;
-> -	int ret;
-> -
-> -	ret = build_elf_exec_info(buf, len, &ehdr, &elf_info);
-> -	if (ret)
-> -		return ret;
-> -
-> -	elf_free_info(&elf_info);
-> -
-> -	return elf_check_arch(&ehdr) ? 0 : -ENOEXEC;
-> -}
-> -
-> -/**
-> - * elf_exec_load - load ELF executable image
-> - * @lowest_load_addr:	On return, will be the address where the first PT_LOAD
-> - *			section will be loaded in memory.
-> - *
-> - * Return:
-> - * 0 on success, negative value on failure.
-> - */
-> -static int elf_exec_load(struct kimage *image, struct elfhdr *ehdr,
-> -			 struct elf_info *elf_info,
-> -			 unsigned long *lowest_load_addr)
-> -{
-> -	unsigned long base = 0, lowest_addr = UINT_MAX;
-> -	int ret;
-> -	size_t i;
-> -	struct kexec_buf kbuf = { .image = image, .buf_max = ppc64_rma_size,
-> -				  .top_down = false };
-> -
-> -	/* Read in the PT_LOAD segments. */
-> -	for (i = 0; i < ehdr->e_phnum; i++) {
-> -		unsigned long load_addr;
-> -		size_t size;
-> -		const struct elf_phdr *phdr;
-> -
-> -		phdr = &elf_info->proghdrs[i];
-> -		if (phdr->p_type != PT_LOAD)
-> -			continue;
-> -
-> -		size = phdr->p_filesz;
-> -		if (size > phdr->p_memsz)
-> -			size = phdr->p_memsz;
-> -
-> -		kbuf.buffer = (void *) elf_info->buffer + phdr->p_offset;
-> -		kbuf.bufsz = size;
-> -		kbuf.memsz = phdr->p_memsz;
-> -		kbuf.buf_align = phdr->p_align;
-> -		kbuf.buf_min = phdr->p_paddr + base;
-> -		ret = kexec_add_buffer(&kbuf);
-> -		if (ret)
-> -			goto out;
-> -		load_addr = kbuf.mem;
-> -
-> -		if (load_addr < lowest_addr)
-> -			lowest_addr = load_addr;
-> -	}
-> -
-> -	/* Update entry point to reflect new load address. */
-> -	ehdr->e_entry += base;
-> -
-> -	*lowest_load_addr = lowest_addr;
-> -	ret = 0;
-> - out:
-> -	return ret;
-> -}
-> -
->   static void *elf64_load(struct kimage *image, char *kernel_buf,
->   			unsigned long kernel_len, char *initrd,
->   			unsigned long initrd_len, char *cmdline,
-> @@ -577,17 +41,17 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
->   	void *fdt;
->   	const void *slave_code;
->   	struct elfhdr ehdr;
-> -	struct elf_info elf_info;
-> +	struct kexec_elf_info elf_info;
->   	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
->   				  .buf_max = ppc64_rma_size };
->   	struct kexec_buf pbuf = { .image = image, .buf_min = 0,
->   				  .buf_max = ppc64_rma_size, .top_down = true };
->   
-> -	ret = build_elf_exec_info(kernel_buf, kernel_len, &ehdr, &elf_info);
-> +	ret = kexec_build_elf_info(kernel_buf, kernel_len, &ehdr, &elf_info);
->   	if (ret)
->   		goto out;
->   
-> -	ret = elf_exec_load(image, &ehdr, &elf_info, &kernel_load_addr);
-> +	ret = kexec_elf_load(image, &ehdr, &elf_info, &kbuf, &kernel_load_addr);
->   	if (ret)
->   		goto out;
->   
-> @@ -652,13 +116,12 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
->   		pr_err("Error setting up the purgatory.\n");
->   
->   out:
-> -	elf_free_info(&elf_info);
-> -
-> +	kexec_free_elf_info(&elf_info);
->   	/* Make kimage_file_post_load_cleanup free the fdt buffer for us. */
->   	return ret ? ERR_PTR(ret) : fdt;
->   }
->   
->   const struct kexec_file_ops kexec_elf64_ops = {
-> -	.probe = elf64_probe,
-> +	.probe = kexec_elf_probe,
->   	.load = elf64_load,
->   };
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index b9b1bc5f9669..49b23b425f84 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -216,6 +216,41 @@ extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
->   				       void **addr, unsigned long *sz);
->   #endif /* CONFIG_KEXEC_FILE */
->   
-> +#ifdef CONFIG_KEXEC_FILE_ELF
-> +
-> +struct kexec_elf_info {
-> +	/*
-> +	 * Where the ELF binary contents are kept.
-> +	 * Memory managed by the user of the struct.
-> +	 */
-> +	const char *buffer;
-> +
-> +	const struct elfhdr *ehdr;
-> +	const struct elf_phdr *proghdrs;
-> +	struct elf_shdr *sechdrs;
-> +};
-> +
-> +void kexec_free_elf_info(struct kexec_elf_info *elf_info);
-> +
-> +int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
-> +			  struct kexec_elf_info *elf_info);
-> +
-> +int kexec_elf_kernel_load(struct kimage *image, struct kexec_buf *kbuf,
-> +			  char *kernel_buf, unsigned long kernel_len,
-> +			  unsigned long *kernel_load_addr);
-> +
-> +int kexec_elf_probe(const char *buf, unsigned long len);
-> +
-> +int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
-> +			 struct kexec_elf_info *elf_info,
-> +			 struct kexec_buf *kbuf,
-> +			 unsigned long *lowest_load_addr);
-> +
-> +int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
-> +			 struct kexec_elf_info *elf_info,
-> +			 struct kexec_buf *kbuf,
-> +			 unsigned long *lowest_load_addr);
-> +#endif
->   struct kimage {
->   	kimage_entry_t head;
->   	kimage_entry_t *entry;
-> diff --git a/kernel/Makefile b/kernel/Makefile
-> index 33824f0385b3..fdba91785977 100644
-> --- a/kernel/Makefile
-> +++ b/kernel/Makefile
-> @@ -64,6 +64,7 @@ obj-$(CONFIG_CRASH_CORE) += crash_core.o
->   obj-$(CONFIG_KEXEC_CORE) += kexec_core.o
->   obj-$(CONFIG_KEXEC) += kexec.o
->   obj-$(CONFIG_KEXEC_FILE) += kexec_file.o
-> +obj-$(CONFIG_KEXEC_FILE_ELF) += kexec_file_elf.o
->   obj-$(CONFIG_BACKTRACE_SELF_TEST) += backtracetest.o
->   obj-$(CONFIG_COMPAT) += compat.o
->   obj-$(CONFIG_CGROUPS) += cgroup/
-> diff --git a/kernel/kexec_file_elf.c b/kernel/kexec_file_elf.c
-> new file mode 100644
-> index 000000000000..bb966c93492c
-> --- /dev/null
-> +++ b/kernel/kexec_file_elf.c
-> @@ -0,0 +1,574 @@
-> +/*
-> + * Load ELF vmlinux file for the kexec_file_load syscall.
-> + *
-> + * Copyright (C) 2004  Adam Litke (agl@us.ibm.com)
-> + * Copyright (C) 2004  IBM Corp.
-> + * Copyright (C) 2005  R Sharada (sharada@in.ibm.com)
-> + * Copyright (C) 2006  Mohan Kumar M (mohan@in.ibm.com)
-> + * Copyright (C) 2016  IBM Corporation
-> + *
-> + * Based on kexec-tools' kexec-elf-exec.c and kexec-elf-ppc64.c.
-> + * Heavily modified for the kernel by
-> + * Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation (version 2 of the License).
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#define pr_fmt(fmt)	"kexec_elf: " fmt
-> +
-> +#include <linux/elf.h>
-> +#include <linux/kexec.h>
-> +#include <linux/libfdt.h>
-> +#include <linux/module.h>
-> +#include <linux/of_fdt.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +
-> +#define elf_addr_to_cpu	elf64_to_cpu
-> +
-> +#ifndef Elf_Rel
-> +#define Elf_Rel		Elf64_Rel
-> +#endif /* Elf_Rel */
-> +
-> +static inline bool elf_is_elf_file(const struct elfhdr *ehdr)
-> +{
-> +       return memcmp(ehdr->e_ident, ELFMAG, SELFMAG) == 0;
-> +}
-> +
-> +static uint64_t elf64_to_cpu(const struct elfhdr *ehdr, uint64_t value)
-> +{
-> +	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
-> +		value = le64_to_cpu(value);
-> +	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
-> +		value = be64_to_cpu(value);
-> +
-> +	return value;
-> +}
-> +
-> +static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
-> +{
-> +	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
-> +		value = le16_to_cpu(value);
-> +	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
-> +		value = be16_to_cpu(value);
-> +
-> +	return value;
-> +}
-> +
-> +static uint32_t elf32_to_cpu(const struct elfhdr *ehdr, uint32_t value)
-> +{
-> +	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
-> +		value = le32_to_cpu(value);
-> +	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
-> +		value = be32_to_cpu(value);
-> +
-> +	return value;
-> +}
-> +
-> +/**
-> + * elf_is_ehdr_sane - check that it is safe to use the ELF header
-> + * @buf_len:	size of the buffer in which the ELF file is loaded.
-> + */
-> +static bool elf_is_ehdr_sane(const struct elfhdr *ehdr, size_t buf_len)
-> +{
-> +	if (ehdr->e_phnum > 0 && ehdr->e_phentsize != sizeof(struct elf_phdr)) {
-> +		pr_debug("Bad program header size.\n");
-> +		return false;
-> +	} else if (ehdr->e_shnum > 0 &&
-> +		   ehdr->e_shentsize != sizeof(struct elf_shdr)) {
-> +		pr_debug("Bad section header size.\n");
-> +		return false;
-> +	} else if (ehdr->e_ident[EI_VERSION] != EV_CURRENT ||
-> +		   ehdr->e_version != EV_CURRENT) {
-> +		pr_debug("Unknown ELF version.\n");
-> +		return false;
-> +	}
-> +
-> +	if (ehdr->e_phoff > 0 && ehdr->e_phnum > 0) {
-> +		size_t phdr_size;
-> +
-> +		/*
-> +		 * e_phnum is at most 65535 so calculating the size of the
-> +		 * program header cannot overflow.
-> +		 */
-> +		phdr_size = sizeof(struct elf_phdr) * ehdr->e_phnum;
-> +
-> +		/* Sanity check the program header table location. */
-> +		if (ehdr->e_phoff + phdr_size < ehdr->e_phoff) {
-> +			pr_debug("Program headers at invalid location.\n");
-> +			return false;
-> +		} else if (ehdr->e_phoff + phdr_size > buf_len) {
-> +			pr_debug("Program headers truncated.\n");
-> +			return false;
-> +		}
-> +	}
-> +
-> +	if (ehdr->e_shoff > 0 && ehdr->e_shnum > 0) {
-> +		size_t shdr_size;
-> +
-> +		/*
-> +		 * e_shnum is at most 65536 so calculating
-> +		 * the size of the section header cannot overflow.
-> +		 */
-> +		shdr_size = sizeof(struct elf_shdr) * ehdr->e_shnum;
-> +
-> +		/* Sanity check the section header table location. */
-> +		if (ehdr->e_shoff + shdr_size < ehdr->e_shoff) {
-> +			pr_debug("Section headers at invalid location.\n");
-> +			return false;
-> +		} else if (ehdr->e_shoff + shdr_size > buf_len) {
-> +			pr_debug("Section headers truncated.\n");
-> +			return false;
-> +		}
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
-> +{
-> +	struct elfhdr *buf_ehdr;
-> +
-> +	if (len < sizeof(*buf_ehdr)) {
-> +		pr_debug("Buffer is too small to hold ELF header.\n");
-> +		return -ENOEXEC;
-> +	}
-> +
-> +	memset(ehdr, 0, sizeof(*ehdr));
-> +	memcpy(ehdr->e_ident, buf, sizeof(ehdr->e_ident));
-> +	if (!elf_is_elf_file(ehdr)) {
-> +		pr_debug("No ELF header magic.\n");
-> +		return -ENOEXEC;
-> +	}
-> +
-> +	if (ehdr->e_ident[EI_CLASS] != ELF_CLASS) {
-> +		pr_debug("Not a supported ELF class.\n");
-> +		return -ENOEXEC;
-> +	} else  if (ehdr->e_ident[EI_DATA] != ELFDATA2LSB &&
-> +		ehdr->e_ident[EI_DATA] != ELFDATA2MSB) {
-> +		pr_debug("Not a supported ELF data format.\n");
-> +		return -ENOEXEC;
-> +	}
-> +
-> +	buf_ehdr = (struct elfhdr *) buf;
-> +	if (elf16_to_cpu(ehdr, buf_ehdr->e_ehsize) != sizeof(*buf_ehdr)) {
-> +		pr_debug("Bad ELF header size.\n");
-> +		return -ENOEXEC;
-> +	}
-> +
-> +	ehdr->e_type      = elf16_to_cpu(ehdr, buf_ehdr->e_type);
-> +	ehdr->e_machine   = elf16_to_cpu(ehdr, buf_ehdr->e_machine);
-> +	ehdr->e_version   = elf32_to_cpu(ehdr, buf_ehdr->e_version);
-> +	ehdr->e_entry     = elf_addr_to_cpu(ehdr, buf_ehdr->e_entry);
-> +	ehdr->e_phoff     = elf_addr_to_cpu(ehdr, buf_ehdr->e_phoff);
-> +	ehdr->e_shoff     = elf_addr_to_cpu(ehdr, buf_ehdr->e_shoff);
-> +	ehdr->e_flags     = elf32_to_cpu(ehdr, buf_ehdr->e_flags);
-> +	ehdr->e_phentsize = elf16_to_cpu(ehdr, buf_ehdr->e_phentsize);
-> +	ehdr->e_phnum     = elf16_to_cpu(ehdr, buf_ehdr->e_phnum);
-> +	ehdr->e_shentsize = elf16_to_cpu(ehdr, buf_ehdr->e_shentsize);
-> +	ehdr->e_shnum     = elf16_to_cpu(ehdr, buf_ehdr->e_shnum);
-> +	ehdr->e_shstrndx  = elf16_to_cpu(ehdr, buf_ehdr->e_shstrndx);
-> +
-> +	return elf_is_ehdr_sane(ehdr, len) ? 0 : -ENOEXEC;
-> +}
-> +
-> +/**
-> + * elf_is_phdr_sane - check that it is safe to use the program header
-> + * @buf_len:	size of the buffer in which the ELF file is loaded.
-> + */
-> +static bool elf_is_phdr_sane(const struct elf_phdr *phdr, size_t buf_len)
-> +{
-> +
-> +	if (phdr->p_offset + phdr->p_filesz < phdr->p_offset) {
-> +		pr_debug("ELF segment location wraps around.\n");
-> +		return false;
-> +	} else if (phdr->p_offset + phdr->p_filesz > buf_len) {
-> +		pr_debug("ELF segment not in file.\n");
-> +		return false;
-> +	} else if (phdr->p_paddr + phdr->p_memsz < phdr->p_paddr) {
-> +		pr_debug("ELF segment address wraps around.\n");
-> +		return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +static int elf_read_phdr(const char *buf, size_t len, struct kexec_elf_info *elf_info,
-> +			 int idx)
-> +{
-> +	/* Override the const in proghdrs, we are the ones doing the loading. */
-> +	struct elf_phdr *phdr = (struct elf_phdr *) &elf_info->proghdrs[idx];
-> +	const char *pbuf;
-> +	struct elf_phdr *buf_phdr;
-> +
-> +	pbuf = buf + elf_info->ehdr->e_phoff + (idx * sizeof(*buf_phdr));
-> +	buf_phdr = (struct elf_phdr *) pbuf;
-> +
-> +	phdr->p_type   = elf32_to_cpu(elf_info->ehdr, buf_phdr->p_type);
-> +	phdr->p_offset = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_offset);
-> +	phdr->p_paddr  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_paddr);
-> +	phdr->p_vaddr  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_vaddr);
-> +	phdr->p_flags  = elf32_to_cpu(elf_info->ehdr, buf_phdr->p_flags);
-> +
-> +	/*
-> +	 * The following fields have a type equivalent to Elf_Addr
-> +	 * both in 32 bit and 64 bit ELF.
-> +	 */
-> +	phdr->p_filesz = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_filesz);
-> +	phdr->p_memsz  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_memsz);
-> +	phdr->p_align  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_align);
-> +
-> +	return elf_is_phdr_sane(phdr, len) ? 0 : -ENOEXEC;
-> +}
-> +
-> +/**
-> + * elf_read_phdrs - read the program headers from the buffer
-> + *
-> + * This function assumes that the program header table was checked for sanity.
-> + * Use elf_is_ehdr_sane() if it wasn't.
-> + */
-> +static int elf_read_phdrs(const char *buf, size_t len,
-> +			  struct kexec_elf_info *elf_info)
-> +{
-> +	size_t phdr_size, i;
-> +	const struct elfhdr *ehdr = elf_info->ehdr;
-> +
-> +	/*
-> +	 * e_phnum is at most 65535 so calculating the size of the
-> +	 * program header cannot overflow.
-> +	 */
-> +	phdr_size = sizeof(struct elf_phdr) * ehdr->e_phnum;
-> +
-> +	elf_info->proghdrs = kzalloc(phdr_size, GFP_KERNEL);
-> +	if (!elf_info->proghdrs)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < ehdr->e_phnum; i++) {
-> +		int ret;
-> +
-> +		ret = elf_read_phdr(buf, len, elf_info, i);
-> +		if (ret) {
-> +			kfree(elf_info->proghdrs);
-> +			elf_info->proghdrs = NULL;
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * elf_is_shdr_sane - check that it is safe to use the section header
-> + * @buf_len:	size of the buffer in which the ELF file is loaded.
-> + */
-> +static bool elf_is_shdr_sane(const struct elf_shdr *shdr, size_t buf_len)
-> +{
-> +	bool size_ok;
-> +
-> +	/* SHT_NULL headers have undefined values, so we can't check them. */
-> +	if (shdr->sh_type == SHT_NULL)
-> +		return true;
-> +
-> +	/* Now verify sh_entsize */
-> +	switch (shdr->sh_type) {
-> +	case SHT_SYMTAB:
-> +		size_ok = shdr->sh_entsize == sizeof(Elf_Sym);
-> +		break;
-> +	case SHT_RELA:
-> +		size_ok = shdr->sh_entsize == sizeof(Elf_Rela);
-> +		break;
-> +	case SHT_DYNAMIC:
-> +		size_ok = shdr->sh_entsize == sizeof(Elf_Dyn);
-> +		break;
-> +	case SHT_REL:
-> +		size_ok = shdr->sh_entsize == sizeof(Elf_Rel);
-> +		break;
-> +	case SHT_NOTE:
-> +	case SHT_PROGBITS:
-> +	case SHT_HASH:
-> +	case SHT_NOBITS:
-> +	default:
-> +		/*
-> +		 * This is a section whose entsize requirements
-> +		 * I don't care about.  If I don't know about
-> +		 * the section I can't care about it's entsize
-> +		 * requirements.
-> +		 */
-> +		size_ok = true;
-> +		break;
-> +	}
-> +
-> +	if (!size_ok) {
-> +		pr_debug("ELF section with wrong entry size.\n");
-> +		return false;
-> +	} else if (shdr->sh_addr + shdr->sh_size < shdr->sh_addr) {
-> +		pr_debug("ELF section address wraps around.\n");
-> +		return false;
-> +	}
-> +
-> +	if (shdr->sh_type != SHT_NOBITS) {
-> +		if (shdr->sh_offset + shdr->sh_size < shdr->sh_offset) {
-> +			pr_debug("ELF section location wraps around.\n");
-> +			return false;
-> +		} else if (shdr->sh_offset + shdr->sh_size > buf_len) {
-> +			pr_debug("ELF section not in file.\n");
-> +			return false;
-> +		}
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +static int elf_read_shdr(const char *buf, size_t len, struct kexec_elf_info *elf_info,
-> +			 int idx)
-> +{
-> +	struct elf_shdr *shdr = &elf_info->sechdrs[idx];
-> +	const struct elfhdr *ehdr = elf_info->ehdr;
-> +	const char *sbuf;
-> +	struct elf_shdr *buf_shdr;
-> +
-> +	sbuf = buf + ehdr->e_shoff + idx * sizeof(*buf_shdr);
-> +	buf_shdr = (struct elf_shdr *) sbuf;
-> +
-> +	shdr->sh_name      = elf32_to_cpu(ehdr, buf_shdr->sh_name);
-> +	shdr->sh_type      = elf32_to_cpu(ehdr, buf_shdr->sh_type);
-> +	shdr->sh_addr      = elf_addr_to_cpu(ehdr, buf_shdr->sh_addr);
-> +	shdr->sh_offset    = elf_addr_to_cpu(ehdr, buf_shdr->sh_offset);
-> +	shdr->sh_link      = elf32_to_cpu(ehdr, buf_shdr->sh_link);
-> +	shdr->sh_info      = elf32_to_cpu(ehdr, buf_shdr->sh_info);
-> +
-> +	/*
-> +	 * The following fields have a type equivalent to Elf_Addr
-> +	 * both in 32 bit and 64 bit ELF.
-> +	 */
-> +	shdr->sh_flags     = elf_addr_to_cpu(ehdr, buf_shdr->sh_flags);
-> +	shdr->sh_size      = elf_addr_to_cpu(ehdr, buf_shdr->sh_size);
-> +	shdr->sh_addralign = elf_addr_to_cpu(ehdr, buf_shdr->sh_addralign);
-> +	shdr->sh_entsize   = elf_addr_to_cpu(ehdr, buf_shdr->sh_entsize);
-> +
-> +	return elf_is_shdr_sane(shdr, len) ? 0 : -ENOEXEC;
-> +}
-> +
-> +/**
-> + * elf_read_shdrs - read the section headers from the buffer
-> + *
-> + * This function assumes that the section header table was checked for sanity.
-> + * Use elf_is_ehdr_sane() if it wasn't.
-> + */
-> +static int elf_read_shdrs(const char *buf, size_t len,
-> +			  struct kexec_elf_info *elf_info)
-> +{
-> +	size_t shdr_size, i;
-> +
-> +	/*
-> +	 * e_shnum is at most 65536 so calculating
-> +	 * the size of the section header cannot overflow.
-> +	 */
-> +	shdr_size = sizeof(struct elf_shdr) * elf_info->ehdr->e_shnum;
-> +
-> +	elf_info->sechdrs = kzalloc(shdr_size, GFP_KERNEL);
-> +	if (!elf_info->sechdrs)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < elf_info->ehdr->e_shnum; i++) {
-> +		int ret;
-> +
-> +		ret = elf_read_shdr(buf, len, elf_info, i);
-> +		if (ret) {
-> +			kfree(elf_info->sechdrs);
-> +			elf_info->sechdrs = NULL;
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * elf_read_from_buffer - read ELF file and sets up ELF header and ELF info
-> + * @buf:	Buffer to read ELF file from.
-> + * @len:	Size of @buf.
-> + * @ehdr:	Pointer to existing struct which will be populated.
-> + * @elf_info:	Pointer to existing struct which will be populated.
-> + *
-> + * This function allows reading ELF files with different byte order than
-> + * the kernel, byte-swapping the fields as needed.
-> + *
-> + * Return:
-> + * On success returns 0, and the caller should call kexec_free_elf_info(elf_info) to
-> + * free the memory allocated for the section and program headers.
-> + */
-> +int elf_read_from_buffer(const char *buf, size_t len, struct elfhdr *ehdr,
-> +			 struct kexec_elf_info *elf_info)
-> +{
-> +	int ret;
-> +
-> +	ret = elf_read_ehdr(buf, len, ehdr);
-> +	if (ret)
-> +		return ret;
-> +
-> +	elf_info->buffer = buf;
-> +	elf_info->ehdr = ehdr;
-> +	if (ehdr->e_phoff > 0 && ehdr->e_phnum > 0) {
-> +		ret = elf_read_phdrs(buf, len, elf_info);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	if (ehdr->e_shoff > 0 && ehdr->e_shnum > 0) {
-> +		ret = elf_read_shdrs(buf, len, elf_info);
-> +		if (ret) {
-> +			kfree(elf_info->proghdrs);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * kexec_free_elf_info - free memory allocated by elf_read_from_buffer
-> + */
-> +void kexec_free_elf_info(struct kexec_elf_info *elf_info)
-> +{
-> +	kfree(elf_info->proghdrs);
-> +	kfree(elf_info->sechdrs);
-> +	memset(elf_info, 0, sizeof(*elf_info));
-> +}
-> +EXPORT_SYMBOL(kexec_free_elf_info);
-> +
-> +/**
-> + * kexec_build_elf_info - read ELF executable and check that we can use it
-> + */
-> +int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
-> +			  struct kexec_elf_info *elf_info)
-> +{
-> +	int i;
-> +	int ret;
-> +
-> +	ret = elf_read_from_buffer(buf, len, ehdr, elf_info);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Big endian vmlinux has type ET_DYN. */
-> +	if (ehdr->e_type != ET_EXEC && ehdr->e_type != ET_DYN) {
-> +		pr_err("Not an ELF executable.\n");
-> +		goto error;
-> +	} else if (!elf_info->proghdrs) {
-> +		pr_err("No ELF program header.\n");
-> +		goto error;
-> +	}
-> +
-> +	for (i = 0; i < ehdr->e_phnum; i++) {
-> +		/*
-> +		 * Kexec does not support loading interpreters.
-> +		 * In addition this check keeps us from attempting
-> +		 * to kexec ordinay executables.
-> +		 */
-> +		if (elf_info->proghdrs[i].p_type == PT_INTERP) {
-> +			pr_err("Requires an ELF interpreter.\n");
-> +			goto error;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +error:
-> +	kexec_free_elf_info(elf_info);
-> +	return -ENOEXEC;
-> +}
-> +EXPORT_SYMBOL(kexec_build_elf_info);
-> +
-> +/**
-> + * elf_exec_load - load ELF executable image
-> + * @lowest_load_addr:	On return, will be the address where the first PT_LOAD
-> + *			section will be loaded in memory.
-> + *
-> + * Return:
-> + * 0 on success, negative value on failure.
-> + */
-> +int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
-> +		   struct kexec_elf_info *elf_info,
-> +		   struct kexec_buf *kbuf,
-> +		   unsigned long *lowest_load_addr)
-> +{
-> +	unsigned long lowest_addr = UINT_MAX;
-> +	int ret;
-> +	size_t i;
-> +	/* Read in the PT_LOAD segments. */
-> +	for (i = 0; i < ehdr->e_phnum; i++) {
-> +		unsigned long load_addr;
-> +		size_t size;
-> +		const struct elf_phdr *phdr;
-> +
-> +		phdr = &elf_info->proghdrs[i];
-> +		if (phdr->p_type != PT_LOAD)
-> +			continue;
-> +
-> +		size = phdr->p_filesz;
-> +		if (size > phdr->p_memsz)
-> +			size = phdr->p_memsz;
-> +
-> +		kbuf->buffer = (void *) elf_info->buffer + phdr->p_offset;
-> +		kbuf->bufsz = size;
-> +		kbuf->memsz = phdr->p_memsz;
-> +		kbuf->buf_align = phdr->p_align;
-> +		kbuf->buf_min = phdr->p_paddr;
-> +		kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
-> +		ret = kexec_add_buffer(kbuf);
-> +		if (ret)
-> +			goto out;
-> +		load_addr = kbuf->mem;
-> +
-> +		if (load_addr < lowest_addr)
-> +			lowest_addr = load_addr;
-> +	}
-> +
-> +	image->start = ehdr->e_entry;
-> +	*lowest_load_addr = lowest_addr;
-> +	ret = 0;
-> + out:
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(kexec_elf_load);
-> +
-> +int kexec_elf_kernel_load(struct kimage *image, struct kexec_buf *kbuf,
-> +			char *kernel_buf, unsigned long kernel_len,
-> +			unsigned long *kernel_load_addr)
-> +{
-> +	int ret;
-> +	struct elfhdr ehdr;
-> +	struct kexec_elf_info elf_info;
-> +
-> +	ret = kexec_build_elf_info(kernel_buf, kernel_len, &ehdr, &elf_info);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = kexec_elf_load(image, &ehdr, &elf_info, kbuf, kernel_load_addr);
-> +out:
-> +	kexec_free_elf_info(&elf_info);
-> +	return ret;
-> +
-> +}
-> +EXPORT_SYMBOL(kexec_elf_kernel_load);
-> +
-> +int kexec_elf_probe(const char *buf, unsigned long len)
-> +{
-> +	struct elfhdr ehdr;
-> +	struct kexec_elf_info elf_info;
-> +	int ret;
-> +
-> +	ret = kexec_build_elf_info(buf, len, &ehdr, &elf_info);
-> +	if (ret)
-> +		return ret;
-> +
-> +	kexec_free_elf_info(&elf_info);
-> +
-> +	return elf_check_arch(&ehdr) ? 0 : -ENOEXEC;
-> +}
-> +EXPORT_SYMBOL(kexec_elf_probe);
-> 
+To: Simon Horman <horms@verge.net.au>, Varad Gautam <vrd@amazon.de>
+Cc: Amit Shah <aams@amazon.de>, kexec@lists.infradead.org
 
 
+--===============4879126084949040190==
+Content-Type: multipart/signed; micalg="sha-256";
+	protocol="application/x-pkcs7-signature";
+	boundary="=-iVn7Q/4KGOP7tiyHe1IT"
+
+
+--=-iVn7Q/4KGOP7tiyHe1IT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, 2019-07-02 at 13:09 +0200, Simon Horman wrote:
+> As per my comment on your previous posting of this patch:
+>=20
+> multiboot2.h does not appear to be licenced as GPLv2.
+> This seems incompatible with inclusion in kexec-tools.
+> Can we discuss this?
+
+Ah, last time it was the documentation in multiboot2.html, which Varad
+dropped. We'll ensure we work it out for the header file too, which we
+can't drop quite so easily!
+
+--=-iVn7Q/4KGOP7tiyHe1IT
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
+ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
+OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
+RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
+cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
+uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
+Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
+Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
+xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
+YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
+nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
+PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
+7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
+Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
+MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
+NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
+/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
+0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
+vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
+ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
+ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
+CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
+aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
+bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
+bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
+LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
+CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
+W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
+vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
+gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
+RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
+jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
+b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
+AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
+BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
++bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
+WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
+aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
+CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
+u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
+RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
+QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
+b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
+cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
+SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
+0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
+KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
+E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
+M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
+jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
+yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
+gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
+R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
+ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkw
+NzAyMTEzNzA1WjAvBgkqhkiG9w0BCQQxIgQgHkB/fqYoKssLbe+ZMkmpz3ekWWXbrs40M3QnjD8k
+lbgwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
+TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
+PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
+aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
+DQEBAQUABIIBAD5lkuBpYWd9vXquRYEAQqRkfKoXLFOJW2g1Um26Yr/qns/ko0Ze0eR3g/957dwG
+tgYLkMtFs/lCxDNo5ztRticeOaIPjdjv1w87MsBTTVlGJpecaN5lhz7C2r2Epjw/bQ4ezl7RVbf5
+jNm5v5VzQSYngAeBs1lHNdFEBoFtGlzb7wRb20i5S3SWIsfoQNBf7OXevecgxbNGiMSHdVtY8owz
+iw8ov9NRssQWGMuhNHCbEcxlUBGmjyx6teJMAVnA1CjVYrHDPPrKhUsyCNA0RKEwnRXqhII76CT9
+pYcQCH9GkpqbFVIP/14Q8qF9LThb9A8R68ledrBM5fRp3YsUfXYAAAAAAAA=
+
+
+--=-iVn7Q/4KGOP7tiyHe1IT--
+
+
+
+--===============4879126084949040190==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============4879126084949040190==--
+
+
