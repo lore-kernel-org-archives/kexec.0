@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.92 #3 (Red Hat Linux))
- id 1hiaBX-00086J-8C
- for kexec@lists.infradead.org; Wed, 03 Jul 2019 08:00:12 +0000
-Date: Wed, 3 Jul 2019 10:00:07 +0200
+ id 1hiaG2-0000ZH-JJ
+ for kexec@lists.infradead.org; Wed, 03 Jul 2019 08:04:52 +0000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] x86: Support multiboot2 images
-Message-ID: <20190703080007.aygcila3hdvnhjxb@verge.net.au>
-References: <1561630363-6342-1-git-send-email-vrd@amazon.de>
- <1561630363-6342-2-git-send-email-vrd@amazon.de>
- <20190702110944.mcugf6krueakfpam@verge.net.au>
- <a8142dc999983b6fcd8c21314a1c082216226c92.camel@infradead.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <a8142dc999983b6fcd8c21314a1c082216226c92.camel@infradead.org>
+Subject: [PATCH kexec-tools] x86: re-order includes to avoid duplicate struct
+ e820entry
+Date: Wed,  3 Jul 2019 10:04:32 +0200
+Message-Id: <20190703080432.28806-1-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,62 +16,105 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Varad Gautam <vrd@amazon.de>, Amit Shah <aams@amazon.de>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>
 
-On Tue, Jul 02, 2019 at 02:29:56PM +0100, David Woodhouse wrote:
-> On Tue, 2019-07-02 at 13:09 +0200, Simon Horman wrote:
-> > > diff --git a/include/x86/multiboot2.h b/include/x86/multiboot2.h
-> > > new file mode 100644
-> > > index 0000000..5693923
-> > > --- /dev/null
-> > > +++ b/include/x86/multiboot2.h
-> > > @@ -0,0 +1,416 @@
-> > > +/*  multiboot2.h - Multiboot 2 header file.  */
-> > > +/*  Copyright (C) 1999,2003,2007,2008,2009,2010  Free Software Foundation, Inc.
-> > > + *
-> > > + *  Permission is hereby granted, free of charge, to any person obtaining a copy
-> > > + *  of this software and associated documentation files (the "Software"), to
-> > > + *  deal in the Software without restriction, including without limitation the
-> > > + *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-> > > + *  sell copies of the Software, and to permit persons to whom the Software is
-> > > + *  furnished to do so, subject to the following conditions:
-> > > + *
-> > > + *  The above copyright notice and this permission notice shall be included in
-> > > + *  all copies or substantial portions of the Software.
-> > > + *
-> > > + *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-> > > + *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-> > > + *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL ANY
-> > > + *  DEVELOPER OR DISTRIBUTOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> > > + *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
-> > > + *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-> > > + */
-> > 
-> > As per my comment on your previous posting of this patch:
-> > 
-> > multiboot2.h does not appear to be licenced as GPLv2.
-> > This seems incompatible with inclusion in kexec-tools.
-> > Can we discuss this?
-> 
-> Er... why do you say that isn't GPL-compatible? It's just a standard
-> MIT licence, isn't it?
+xenctrl.h defines struct e820entry as:
 
-Thanks David,
+	if defined(__i386__) || defined(__x86_64__)
+	...
+	#define E820_RAM	1
+	...
+	struct e820entry {
+		uint64_t addr;
+		uint64_t size;
+		uint32_t type;
+	} __attribute__((packed));
+	...
+	#endif
 
-this is kind of what I meant by discuss.
+ $ dpkg-query -S /usr/include/xenctrl.h
+ libxen-dev:amd64: /usr/include/xenctrl.h
+ $  dpkg-query -W libxen-dev:amd64
+ libxen-dev:amd64	4.8.5+shim4.10.2+xsa282-1+deb9u11
 
-Taking a look over the FSF site this morning I agree that:
-a) this is the MIT license; and
-b) it is compatible with GPLv2
+./include/x86/x86-linux.h defines struct e820entry as:
 
-With that in mind I have no objections to this series and
-have applied it for inclusion in kexec v2.0.20.
+	#ifndef E820_RAM
+	struct e820entry {
+		uint64_t addr;  /* start of memory segment */
+		uint64_t size;  /* size of memory segment */
+		uint32_t type;  /* type of memory segment */
+		#define E820_RAM    1
+		...
+	} __attribute__((packed));
+	#endif
 
+Since cedeee0a3007 ("x86: Introduce helpers for getting RSDP address")
+./kexec/arch/i386/kexec-x86-common.c includes
+
+	+#include "x86-linux-setup.h"
+	 #include "../../kexec-xen.h"
+
+When xenctrl.h is present the above results in:
+
+ $ gcc
+ ...
+ In file included from kexec/arch/i386/../../kexec-xen.h:5:0,
+                  from kexec/arch/i386/kexec-x86-common.c:43:
+ /usr/include/xenctrl.h:1271:8: error: redefinition of 'struct e820entry'
+  struct e820entry {
+         ^~~~~~~~~
+
+ In file included from kexec/arch/i386/x86-linux-setup.h:3:0,
+                  from kexec/arch/i386/kexec-x86-common.c:42:
+ ./include/x86/x86-linux.h:16:8: note: originally defined here
+  struct e820entry {
+         ^~~~~~~~~
+ ...
+ $ gcc --version | head -1
+ gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+
+To militate this this problem re-order the includes so that
+x86-linux.h is included after xenctrl.h and thus
+struct e820entry will only be defined once due to it
+being devined conditionally in x86-linux.h.
+
+In practice the definitions are the same so it should
+not matter which is chosen.
+
+It also seems rather unpleasent to me to need to play
+with include ordering. Perhaps a better solution in the longer
+term would be to rename the local definition of struct e820entry.
+
+Fixes: cedeee0a3007 ("x86: Introduce helpers for getting RSDP address")
+Signed-off-by: Simon Horman <horms@verge.net.au>
+---
+ kexec/arch/i386/kexec-x86-common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+index 5c55ec8a2cd3..61ea19380ab2 100644
+--- a/kexec/arch/i386/kexec-x86-common.c
++++ b/kexec/arch/i386/kexec-x86-common.c
+@@ -38,9 +38,9 @@
+ #include "../../kexec-syscall.h"
+ #include "../../firmware_memmap.h"
+ #include "../../crashdump.h"
++#include "../../kexec-xen.h"
+ #include "kexec-x86.h"
+ #include "x86-linux-setup.h"
+-#include "../../kexec-xen.h"
+ 
+ /* Used below but not present in (older?) xenctrl.h */
+ #ifndef E820_PMEM
+-- 
+2.11.0
 
 
 _______________________________________________
