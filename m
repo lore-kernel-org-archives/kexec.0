@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pegase1.c-s.fr ([93.17.236.30])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hkQXX-0005b0-4G
- for kexec@lists.infradead.org; Mon, 08 Jul 2019 10:06:34 +0000
+ id 1hkQdX-0007gX-KF
+ for kexec@lists.infradead.org; Mon, 08 Jul 2019 10:12:49 +0000
+Subject: Re: [PATCH] kexec: add generic support for elf kernel images
+References: <20190707192153.7821-1-svens@stackframe.org>
 From: Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH using git format-patch -C] kexec: add generic support for elf
- kernel images
-Message-Id: <20190708100624.EBCDF68DB2@pc17473vm.idsi0.si.c-s.fr>
-Date: Mon,  8 Jul 2019 10:06:24 +0000 (UTC)
+Message-ID: <73174513-95c7-05c1-4c81-b1fab17e03e1@c-s.fr>
+Date: Mon, 8 Jul 2019 12:12:41 +0200
+MIME-Version: 1.0
+In-Reply-To: <20190707192153.7821-1-svens@stackframe.org>
+Content-Language: fr
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,1168 +19,685 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: linuxppc-dev@lists.ozlabs.org, deller@gmx.de, Sven Schnelle <svens@stackframe.org>
+To: Sven Schnelle <svens@stackframe.org>, kexec@lists.infradead.org
+Cc: deller@gmx.de, linuxppc-dev@lists.ozlabs.org
 
-From: Sven Schnelle <svens@stackframe.org>
-
-Signed-off-by: Sven Schnelle <svens@stackframe.org>
----
- patch generated with 'git format-patch -C' in order to
- see the modifications done in kexec_elf.c in addition to
- copying it from arch/powerpc/kernel/kexec_elf_64.c
-
- arch/Kconfig                                       |   3 +
- arch/powerpc/Kconfig                               |   1 +
- arch/powerpc/kernel/kexec_elf_64.c                 | 547 +--------------------
- include/linux/kexec.h                              |  35 ++
- kernel/Makefile                                    |   1 +
- .../kernel/kexec_elf_64.c => kernel/kexec_elf.c    | 264 +++-------
- 6 files changed, 118 insertions(+), 733 deletions(-)
- copy arch/powerpc/kernel/kexec_elf_64.c => kernel/kexec_elf.c (64%)
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 33687dddd86a..c7c75fbc0b79 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -18,6 +18,9 @@ config KEXEC_CORE
- 	select CRASH_CORE
- 	bool
- 
-+config KEXEC_ELF
-+	bool
-+
- config HAVE_IMA_KEXEC
- 	bool
- 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 2d0be82c3061..447b6e3ad999 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -501,6 +501,7 @@ config KEXEC_FILE
- 	select KEXEC_CORE
- 	select HAVE_IMA_KEXEC
- 	select BUILD_BIN2C
-+	select KEXEC_ELF
- 	depends on PPC64
- 	depends on CRYPTO=y
- 	depends on CRYPTO_SHA256=y
-diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec_elf_64.c
-index ba4f18a43ee8..d062c5991722 100644
---- a/arch/powerpc/kernel/kexec_elf_64.c
-+++ b/arch/powerpc/kernel/kexec_elf_64.c
-@@ -31,539 +31,7 @@
- #include <linux/slab.h>
- #include <linux/types.h>
- 
--#define PURGATORY_STACK_SIZE	(16 * 1024)
--
--#define elf_addr_to_cpu	elf64_to_cpu
--
--#ifndef Elf_Rel
--#define Elf_Rel		Elf64_Rel
--#endif /* Elf_Rel */
--
--struct elf_info {
--	/*
--	 * Where the ELF binary contents are kept.
--	 * Memory managed by the user of the struct.
--	 */
--	const char *buffer;
--
--	const struct elfhdr *ehdr;
--	const struct elf_phdr *proghdrs;
--	struct elf_shdr *sechdrs;
--};
--
--static inline bool elf_is_elf_file(const struct elfhdr *ehdr)
--{
--       return memcmp(ehdr->e_ident, ELFMAG, SELFMAG) == 0;
--}
--
--static uint64_t elf64_to_cpu(const struct elfhdr *ehdr, uint64_t value)
--{
--	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
--		value = le64_to_cpu(value);
--	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
--		value = be64_to_cpu(value);
--
--	return value;
--}
--
--static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
--{
--	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
--		value = le16_to_cpu(value);
--	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
--		value = be16_to_cpu(value);
--
--	return value;
--}
--
--static uint32_t elf32_to_cpu(const struct elfhdr *ehdr, uint32_t value)
--{
--	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
--		value = le32_to_cpu(value);
--	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
--		value = be32_to_cpu(value);
--
--	return value;
--}
--
--/**
-- * elf_is_ehdr_sane - check that it is safe to use the ELF header
-- * @buf_len:	size of the buffer in which the ELF file is loaded.
-- */
--static bool elf_is_ehdr_sane(const struct elfhdr *ehdr, size_t buf_len)
--{
--	if (ehdr->e_phnum > 0 && ehdr->e_phentsize != sizeof(struct elf_phdr)) {
--		pr_debug("Bad program header size.\n");
--		return false;
--	} else if (ehdr->e_shnum > 0 &&
--		   ehdr->e_shentsize != sizeof(struct elf_shdr)) {
--		pr_debug("Bad section header size.\n");
--		return false;
--	} else if (ehdr->e_ident[EI_VERSION] != EV_CURRENT ||
--		   ehdr->e_version != EV_CURRENT) {
--		pr_debug("Unknown ELF version.\n");
--		return false;
--	}
--
--	if (ehdr->e_phoff > 0 && ehdr->e_phnum > 0) {
--		size_t phdr_size;
--
--		/*
--		 * e_phnum is at most 65535 so calculating the size of the
--		 * program header cannot overflow.
--		 */
--		phdr_size = sizeof(struct elf_phdr) * ehdr->e_phnum;
--
--		/* Sanity check the program header table location. */
--		if (ehdr->e_phoff + phdr_size < ehdr->e_phoff) {
--			pr_debug("Program headers at invalid location.\n");
--			return false;
--		} else if (ehdr->e_phoff + phdr_size > buf_len) {
--			pr_debug("Program headers truncated.\n");
--			return false;
--		}
--	}
--
--	if (ehdr->e_shoff > 0 && ehdr->e_shnum > 0) {
--		size_t shdr_size;
--
--		/*
--		 * e_shnum is at most 65536 so calculating
--		 * the size of the section header cannot overflow.
--		 */
--		shdr_size = sizeof(struct elf_shdr) * ehdr->e_shnum;
--
--		/* Sanity check the section header table location. */
--		if (ehdr->e_shoff + shdr_size < ehdr->e_shoff) {
--			pr_debug("Section headers at invalid location.\n");
--			return false;
--		} else if (ehdr->e_shoff + shdr_size > buf_len) {
--			pr_debug("Section headers truncated.\n");
--			return false;
--		}
--	}
--
--	return true;
--}
--
--static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
--{
--	struct elfhdr *buf_ehdr;
--
--	if (len < sizeof(*buf_ehdr)) {
--		pr_debug("Buffer is too small to hold ELF header.\n");
--		return -ENOEXEC;
--	}
--
--	memset(ehdr, 0, sizeof(*ehdr));
--	memcpy(ehdr->e_ident, buf, sizeof(ehdr->e_ident));
--	if (!elf_is_elf_file(ehdr)) {
--		pr_debug("No ELF header magic.\n");
--		return -ENOEXEC;
--	}
--
--	if (ehdr->e_ident[EI_CLASS] != ELF_CLASS) {
--		pr_debug("Not a supported ELF class.\n");
--		return -ENOEXEC;
--	} else  if (ehdr->e_ident[EI_DATA] != ELFDATA2LSB &&
--		ehdr->e_ident[EI_DATA] != ELFDATA2MSB) {
--		pr_debug("Not a supported ELF data format.\n");
--		return -ENOEXEC;
--	}
--
--	buf_ehdr = (struct elfhdr *) buf;
--	if (elf16_to_cpu(ehdr, buf_ehdr->e_ehsize) != sizeof(*buf_ehdr)) {
--		pr_debug("Bad ELF header size.\n");
--		return -ENOEXEC;
--	}
--
--	ehdr->e_type      = elf16_to_cpu(ehdr, buf_ehdr->e_type);
--	ehdr->e_machine   = elf16_to_cpu(ehdr, buf_ehdr->e_machine);
--	ehdr->e_version   = elf32_to_cpu(ehdr, buf_ehdr->e_version);
--	ehdr->e_entry     = elf_addr_to_cpu(ehdr, buf_ehdr->e_entry);
--	ehdr->e_phoff     = elf_addr_to_cpu(ehdr, buf_ehdr->e_phoff);
--	ehdr->e_shoff     = elf_addr_to_cpu(ehdr, buf_ehdr->e_shoff);
--	ehdr->e_flags     = elf32_to_cpu(ehdr, buf_ehdr->e_flags);
--	ehdr->e_phentsize = elf16_to_cpu(ehdr, buf_ehdr->e_phentsize);
--	ehdr->e_phnum     = elf16_to_cpu(ehdr, buf_ehdr->e_phnum);
--	ehdr->e_shentsize = elf16_to_cpu(ehdr, buf_ehdr->e_shentsize);
--	ehdr->e_shnum     = elf16_to_cpu(ehdr, buf_ehdr->e_shnum);
--	ehdr->e_shstrndx  = elf16_to_cpu(ehdr, buf_ehdr->e_shstrndx);
--
--	return elf_is_ehdr_sane(ehdr, len) ? 0 : -ENOEXEC;
--}
--
--/**
-- * elf_is_phdr_sane - check that it is safe to use the program header
-- * @buf_len:	size of the buffer in which the ELF file is loaded.
-- */
--static bool elf_is_phdr_sane(const struct elf_phdr *phdr, size_t buf_len)
--{
--
--	if (phdr->p_offset + phdr->p_filesz < phdr->p_offset) {
--		pr_debug("ELF segment location wraps around.\n");
--		return false;
--	} else if (phdr->p_offset + phdr->p_filesz > buf_len) {
--		pr_debug("ELF segment not in file.\n");
--		return false;
--	} else if (phdr->p_paddr + phdr->p_memsz < phdr->p_paddr) {
--		pr_debug("ELF segment address wraps around.\n");
--		return false;
--	}
--
--	return true;
--}
--
--static int elf_read_phdr(const char *buf, size_t len, struct elf_info *elf_info,
--			 int idx)
--{
--	/* Override the const in proghdrs, we are the ones doing the loading. */
--	struct elf_phdr *phdr = (struct elf_phdr *) &elf_info->proghdrs[idx];
--	const char *pbuf;
--	struct elf_phdr *buf_phdr;
--
--	pbuf = buf + elf_info->ehdr->e_phoff + (idx * sizeof(*buf_phdr));
--	buf_phdr = (struct elf_phdr *) pbuf;
--
--	phdr->p_type   = elf32_to_cpu(elf_info->ehdr, buf_phdr->p_type);
--	phdr->p_offset = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_offset);
--	phdr->p_paddr  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_paddr);
--	phdr->p_vaddr  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_vaddr);
--	phdr->p_flags  = elf32_to_cpu(elf_info->ehdr, buf_phdr->p_flags);
--
--	/*
--	 * The following fields have a type equivalent to Elf_Addr
--	 * both in 32 bit and 64 bit ELF.
--	 */
--	phdr->p_filesz = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_filesz);
--	phdr->p_memsz  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_memsz);
--	phdr->p_align  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_align);
--
--	return elf_is_phdr_sane(phdr, len) ? 0 : -ENOEXEC;
--}
--
--/**
-- * elf_read_phdrs - read the program headers from the buffer
-- *
-- * This function assumes that the program header table was checked for sanity.
-- * Use elf_is_ehdr_sane() if it wasn't.
-- */
--static int elf_read_phdrs(const char *buf, size_t len,
--			  struct elf_info *elf_info)
--{
--	size_t phdr_size, i;
--	const struct elfhdr *ehdr = elf_info->ehdr;
--
--	/*
--	 * e_phnum is at most 65535 so calculating the size of the
--	 * program header cannot overflow.
--	 */
--	phdr_size = sizeof(struct elf_phdr) * ehdr->e_phnum;
--
--	elf_info->proghdrs = kzalloc(phdr_size, GFP_KERNEL);
--	if (!elf_info->proghdrs)
--		return -ENOMEM;
--
--	for (i = 0; i < ehdr->e_phnum; i++) {
--		int ret;
--
--		ret = elf_read_phdr(buf, len, elf_info, i);
--		if (ret) {
--			kfree(elf_info->proghdrs);
--			elf_info->proghdrs = NULL;
--			return ret;
--		}
--	}
--
--	return 0;
--}
--
--/**
-- * elf_is_shdr_sane - check that it is safe to use the section header
-- * @buf_len:	size of the buffer in which the ELF file is loaded.
-- */
--static bool elf_is_shdr_sane(const struct elf_shdr *shdr, size_t buf_len)
--{
--	bool size_ok;
--
--	/* SHT_NULL headers have undefined values, so we can't check them. */
--	if (shdr->sh_type == SHT_NULL)
--		return true;
--
--	/* Now verify sh_entsize */
--	switch (shdr->sh_type) {
--	case SHT_SYMTAB:
--		size_ok = shdr->sh_entsize == sizeof(Elf_Sym);
--		break;
--	case SHT_RELA:
--		size_ok = shdr->sh_entsize == sizeof(Elf_Rela);
--		break;
--	case SHT_DYNAMIC:
--		size_ok = shdr->sh_entsize == sizeof(Elf_Dyn);
--		break;
--	case SHT_REL:
--		size_ok = shdr->sh_entsize == sizeof(Elf_Rel);
--		break;
--	case SHT_NOTE:
--	case SHT_PROGBITS:
--	case SHT_HASH:
--	case SHT_NOBITS:
--	default:
--		/*
--		 * This is a section whose entsize requirements
--		 * I don't care about.  If I don't know about
--		 * the section I can't care about it's entsize
--		 * requirements.
--		 */
--		size_ok = true;
--		break;
--	}
--
--	if (!size_ok) {
--		pr_debug("ELF section with wrong entry size.\n");
--		return false;
--	} else if (shdr->sh_addr + shdr->sh_size < shdr->sh_addr) {
--		pr_debug("ELF section address wraps around.\n");
--		return false;
--	}
--
--	if (shdr->sh_type != SHT_NOBITS) {
--		if (shdr->sh_offset + shdr->sh_size < shdr->sh_offset) {
--			pr_debug("ELF section location wraps around.\n");
--			return false;
--		} else if (shdr->sh_offset + shdr->sh_size > buf_len) {
--			pr_debug("ELF section not in file.\n");
--			return false;
--		}
--	}
--
--	return true;
--}
--
--static int elf_read_shdr(const char *buf, size_t len, struct elf_info *elf_info,
--			 int idx)
--{
--	struct elf_shdr *shdr = &elf_info->sechdrs[idx];
--	const struct elfhdr *ehdr = elf_info->ehdr;
--	const char *sbuf;
--	struct elf_shdr *buf_shdr;
--
--	sbuf = buf + ehdr->e_shoff + idx * sizeof(*buf_shdr);
--	buf_shdr = (struct elf_shdr *) sbuf;
--
--	shdr->sh_name      = elf32_to_cpu(ehdr, buf_shdr->sh_name);
--	shdr->sh_type      = elf32_to_cpu(ehdr, buf_shdr->sh_type);
--	shdr->sh_addr      = elf_addr_to_cpu(ehdr, buf_shdr->sh_addr);
--	shdr->sh_offset    = elf_addr_to_cpu(ehdr, buf_shdr->sh_offset);
--	shdr->sh_link      = elf32_to_cpu(ehdr, buf_shdr->sh_link);
--	shdr->sh_info      = elf32_to_cpu(ehdr, buf_shdr->sh_info);
--
--	/*
--	 * The following fields have a type equivalent to Elf_Addr
--	 * both in 32 bit and 64 bit ELF.
--	 */
--	shdr->sh_flags     = elf_addr_to_cpu(ehdr, buf_shdr->sh_flags);
--	shdr->sh_size      = elf_addr_to_cpu(ehdr, buf_shdr->sh_size);
--	shdr->sh_addralign = elf_addr_to_cpu(ehdr, buf_shdr->sh_addralign);
--	shdr->sh_entsize   = elf_addr_to_cpu(ehdr, buf_shdr->sh_entsize);
--
--	return elf_is_shdr_sane(shdr, len) ? 0 : -ENOEXEC;
--}
--
--/**
-- * elf_read_shdrs - read the section headers from the buffer
-- *
-- * This function assumes that the section header table was checked for sanity.
-- * Use elf_is_ehdr_sane() if it wasn't.
-- */
--static int elf_read_shdrs(const char *buf, size_t len,
--			  struct elf_info *elf_info)
--{
--	size_t shdr_size, i;
--
--	/*
--	 * e_shnum is at most 65536 so calculating
--	 * the size of the section header cannot overflow.
--	 */
--	shdr_size = sizeof(struct elf_shdr) * elf_info->ehdr->e_shnum;
--
--	elf_info->sechdrs = kzalloc(shdr_size, GFP_KERNEL);
--	if (!elf_info->sechdrs)
--		return -ENOMEM;
--
--	for (i = 0; i < elf_info->ehdr->e_shnum; i++) {
--		int ret;
--
--		ret = elf_read_shdr(buf, len, elf_info, i);
--		if (ret) {
--			kfree(elf_info->sechdrs);
--			elf_info->sechdrs = NULL;
--			return ret;
--		}
--	}
--
--	return 0;
--}
--
--/**
-- * elf_read_from_buffer - read ELF file and sets up ELF header and ELF info
-- * @buf:	Buffer to read ELF file from.
-- * @len:	Size of @buf.
-- * @ehdr:	Pointer to existing struct which will be populated.
-- * @elf_info:	Pointer to existing struct which will be populated.
-- *
-- * This function allows reading ELF files with different byte order than
-- * the kernel, byte-swapping the fields as needed.
-- *
-- * Return:
-- * On success returns 0, and the caller should call elf_free_info(elf_info) to
-- * free the memory allocated for the section and program headers.
-- */
--int elf_read_from_buffer(const char *buf, size_t len, struct elfhdr *ehdr,
--			 struct elf_info *elf_info)
--{
--	int ret;
--
--	ret = elf_read_ehdr(buf, len, ehdr);
--	if (ret)
--		return ret;
--
--	elf_info->buffer = buf;
--	elf_info->ehdr = ehdr;
--	if (ehdr->e_phoff > 0 && ehdr->e_phnum > 0) {
--		ret = elf_read_phdrs(buf, len, elf_info);
--		if (ret)
--			return ret;
--	}
--	if (ehdr->e_shoff > 0 && ehdr->e_shnum > 0) {
--		ret = elf_read_shdrs(buf, len, elf_info);
--		if (ret) {
--			kfree(elf_info->proghdrs);
--			return ret;
--		}
--	}
--
--	return 0;
--}
--
--/**
-- * elf_free_info - free memory allocated by elf_read_from_buffer
-- */
--void elf_free_info(struct elf_info *elf_info)
--{
--	kfree(elf_info->proghdrs);
--	kfree(elf_info->sechdrs);
--	memset(elf_info, 0, sizeof(*elf_info));
--}
--/**
-- * build_elf_exec_info - read ELF executable and check that we can use it
-- */
--static int build_elf_exec_info(const char *buf, size_t len, struct elfhdr *ehdr,
--			       struct elf_info *elf_info)
--{
--	int i;
--	int ret;
--
--	ret = elf_read_from_buffer(buf, len, ehdr, elf_info);
--	if (ret)
--		return ret;
--
--	/* Big endian vmlinux has type ET_DYN. */
--	if (ehdr->e_type != ET_EXEC && ehdr->e_type != ET_DYN) {
--		pr_err("Not an ELF executable.\n");
--		goto error;
--	} else if (!elf_info->proghdrs) {
--		pr_err("No ELF program header.\n");
--		goto error;
--	}
--
--	for (i = 0; i < ehdr->e_phnum; i++) {
--		/*
--		 * Kexec does not support loading interpreters.
--		 * In addition this check keeps us from attempting
--		 * to kexec ordinay executables.
--		 */
--		if (elf_info->proghdrs[i].p_type == PT_INTERP) {
--			pr_err("Requires an ELF interpreter.\n");
--			goto error;
--		}
--	}
--
--	return 0;
--error:
--	elf_free_info(elf_info);
--	return -ENOEXEC;
--}
--
--static int elf64_probe(const char *buf, unsigned long len)
--{
--	struct elfhdr ehdr;
--	struct elf_info elf_info;
--	int ret;
--
--	ret = build_elf_exec_info(buf, len, &ehdr, &elf_info);
--	if (ret)
--		return ret;
--
--	elf_free_info(&elf_info);
--
--	return elf_check_arch(&ehdr) ? 0 : -ENOEXEC;
--}
--
--/**
-- * elf_exec_load - load ELF executable image
-- * @lowest_load_addr:	On return, will be the address where the first PT_LOAD
-- *			section will be loaded in memory.
-- *
-- * Return:
-- * 0 on success, negative value on failure.
-- */
--static int elf_exec_load(struct kimage *image, struct elfhdr *ehdr,
--			 struct elf_info *elf_info,
--			 unsigned long *lowest_load_addr)
--{
--	unsigned long base = 0, lowest_addr = UINT_MAX;
--	int ret;
--	size_t i;
--	struct kexec_buf kbuf = { .image = image, .buf_max = ppc64_rma_size,
--				  .top_down = false };
--
--	/* Read in the PT_LOAD segments. */
--	for (i = 0; i < ehdr->e_phnum; i++) {
--		unsigned long load_addr;
--		size_t size;
--		const struct elf_phdr *phdr;
--
--		phdr = &elf_info->proghdrs[i];
--		if (phdr->p_type != PT_LOAD)
--			continue;
--
--		size = phdr->p_filesz;
--		if (size > phdr->p_memsz)
--			size = phdr->p_memsz;
--
--		kbuf.buffer = (void *) elf_info->buffer + phdr->p_offset;
--		kbuf.bufsz = size;
--		kbuf.memsz = phdr->p_memsz;
--		kbuf.buf_align = phdr->p_align;
--		kbuf.buf_min = phdr->p_paddr + base;
--		ret = kexec_add_buffer(&kbuf);
--		if (ret)
--			goto out;
--		load_addr = kbuf.mem;
--
--		if (load_addr < lowest_addr)
--			lowest_addr = load_addr;
--	}
--
--	/* Update entry point to reflect new load address. */
--	ehdr->e_entry += base;
--
--	*lowest_load_addr = lowest_addr;
--	ret = 0;
-- out:
--	return ret;
--}
-+#define PURGATORY_STACK_SIZE (16 * 1024)
- 
- static void *elf64_load(struct kimage *image, char *kernel_buf,
- 			unsigned long kernel_len, char *initrd,
-@@ -577,17 +45,17 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
- 	void *fdt;
- 	const void *slave_code;
- 	struct elfhdr ehdr;
--	struct elf_info elf_info;
-+	struct kexec_elf_info elf_info;
- 	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
- 				  .buf_max = ppc64_rma_size };
- 	struct kexec_buf pbuf = { .image = image, .buf_min = 0,
- 				  .buf_max = ppc64_rma_size, .top_down = true };
- 
--	ret = build_elf_exec_info(kernel_buf, kernel_len, &ehdr, &elf_info);
-+	ret = kexec_build_elf_info(kernel_buf, kernel_len, &ehdr, &elf_info);
- 	if (ret)
- 		goto out;
- 
--	ret = elf_exec_load(image, &ehdr, &elf_info, &kernel_load_addr);
-+	ret = kexec_elf_load(image, &ehdr, &elf_info, &kbuf, &kernel_load_addr);
- 	if (ret)
- 		goto out;
- 
-@@ -606,6 +74,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
- 		kbuf.bufsz = kbuf.memsz = initrd_len;
- 		kbuf.buf_align = PAGE_SIZE;
- 		kbuf.top_down = false;
-+		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- 		ret = kexec_add_buffer(&kbuf);
- 		if (ret)
- 			goto out;
-@@ -638,6 +107,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
- 	kbuf.bufsz = kbuf.memsz = fdt_size;
- 	kbuf.buf_align = PAGE_SIZE;
- 	kbuf.top_down = true;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- 	ret = kexec_add_buffer(&kbuf);
- 	if (ret)
- 		goto out;
-@@ -652,13 +122,12 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
- 		pr_err("Error setting up the purgatory.\n");
- 
- out:
--	elf_free_info(&elf_info);
--
-+	kexec_free_elf_info(&elf_info);
- 	/* Make kimage_file_post_load_cleanup free the fdt buffer for us. */
- 	return ret ? ERR_PTR(ret) : fdt;
- }
- 
- const struct kexec_file_ops kexec_elf64_ops = {
--	.probe = elf64_probe,
-+	.probe = kexec_elf_probe,
- 	.load = elf64_load,
- };
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index b9b1bc5f9669..72648b18b778 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -216,6 +216,41 @@ extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
- 				       void **addr, unsigned long *sz);
- #endif /* CONFIG_KEXEC_FILE */
- 
-+#ifdef CONFIG_KEXEC_ELF
-+
-+struct kexec_elf_info {
-+	/*
-+	 * Where the ELF binary contents are kept.
-+	 * Memory managed by the user of the struct.
-+	 */
-+	const char *buffer;
-+
-+	const struct elfhdr *ehdr;
-+	const struct elf_phdr *proghdrs;
-+	struct elf_shdr *sechdrs;
-+};
-+
-+void kexec_free_elf_info(struct kexec_elf_info *elf_info);
-+
-+int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
-+			  struct kexec_elf_info *elf_info);
-+
-+int kexec_elf_kernel_load(struct kimage *image, struct kexec_buf *kbuf,
-+			  char *kernel_buf, unsigned long kernel_len,
-+			  unsigned long *kernel_load_addr);
-+
-+int kexec_elf_probe(const char *buf, unsigned long len);
-+
-+int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
-+			 struct kexec_elf_info *elf_info,
-+			 struct kexec_buf *kbuf,
-+			 unsigned long *lowest_load_addr);
-+
-+int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
-+			 struct kexec_elf_info *elf_info,
-+			 struct kexec_buf *kbuf,
-+			 unsigned long *lowest_load_addr);
-+#endif
- struct kimage {
- 	kimage_entry_t head;
- 	kimage_entry_t *entry;
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 6c57e78817da..081b378050d0 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -63,6 +63,7 @@ obj-$(CONFIG_CRASH_CORE) += crash_core.o
- obj-$(CONFIG_KEXEC_CORE) += kexec_core.o
- obj-$(CONFIG_KEXEC) += kexec.o
- obj-$(CONFIG_KEXEC_FILE) += kexec_file.o
-+obj-$(CONFIG_KEXEC_ELF) += kexec_elf.o
- obj-$(CONFIG_BACKTRACE_SELF_TEST) += backtracetest.o
- obj-$(CONFIG_COMPAT) += compat.o
- obj-$(CONFIG_CGROUPS) += cgroup/
-diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/kernel/kexec_elf.c
-similarity index 64%
-copy from arch/powerpc/kernel/kexec_elf_64.c
-copy to kernel/kexec_elf.c
-index ba4f18a43ee8..07e5bcc79bba 100644
---- a/arch/powerpc/kernel/kexec_elf_64.c
-+++ b/kernel/kexec_elf.c
-@@ -1,55 +1,13 @@
--/*
-- * Load ELF vmlinux file for the kexec_file_load syscall.
-- *
-- * Copyright (C) 2004  Adam Litke (agl@us.ibm.com)
-- * Copyright (C) 2004  IBM Corp.
-- * Copyright (C) 2005  R Sharada (sharada@in.ibm.com)
-- * Copyright (C) 2006  Mohan Kumar M (mohan@in.ibm.com)
-- * Copyright (C) 2016  IBM Corporation
-- *
-- * Based on kexec-tools' kexec-elf-exec.c and kexec-elf-ppc64.c.
-- * Heavily modified for the kernel by
-- * Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation (version 2 of the License).
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
-+// SPDX-License-Identifier: GPL-2.0
- 
- #define pr_fmt(fmt)	"kexec_elf: " fmt
- 
- #include <linux/elf.h>
- #include <linux/kexec.h>
--#include <linux/libfdt.h>
- #include <linux/module.h>
--#include <linux/of_fdt.h>
- #include <linux/slab.h>
- #include <linux/types.h>
- 
--#define PURGATORY_STACK_SIZE	(16 * 1024)
--
--#define elf_addr_to_cpu	elf64_to_cpu
--
--#ifndef Elf_Rel
--#define Elf_Rel		Elf64_Rel
--#endif /* Elf_Rel */
--
--struct elf_info {
--	/*
--	 * Where the ELF binary contents are kept.
--	 * Memory managed by the user of the struct.
--	 */
--	const char *buffer;
--
--	const struct elfhdr *ehdr;
--	const struct elf_phdr *proghdrs;
--	struct elf_shdr *sechdrs;
--};
- 
- static inline bool elf_is_elf_file(const struct elfhdr *ehdr)
- {
-@@ -66,22 +24,22 @@ static uint64_t elf64_to_cpu(const struct elfhdr *ehdr, uint64_t value)
- 	return value;
- }
- 
--static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
-+static uint32_t elf32_to_cpu(const struct elfhdr *ehdr, uint32_t value)
- {
- 	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
--		value = le16_to_cpu(value);
-+		value = le32_to_cpu(value);
- 	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
--		value = be16_to_cpu(value);
-+		value = be32_to_cpu(value);
- 
- 	return value;
- }
- 
--static uint32_t elf32_to_cpu(const struct elfhdr *ehdr, uint32_t value)
-+static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
- {
- 	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
--		value = le32_to_cpu(value);
-+		value = le16_to_cpu(value);
- 	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
--		value = be32_to_cpu(value);
-+		value = be16_to_cpu(value);
- 
- 	return value;
- }
-@@ -180,9 +138,9 @@ static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
- 	ehdr->e_type      = elf16_to_cpu(ehdr, buf_ehdr->e_type);
- 	ehdr->e_machine   = elf16_to_cpu(ehdr, buf_ehdr->e_machine);
- 	ehdr->e_version   = elf32_to_cpu(ehdr, buf_ehdr->e_version);
--	ehdr->e_entry     = elf_addr_to_cpu(ehdr, buf_ehdr->e_entry);
--	ehdr->e_phoff     = elf_addr_to_cpu(ehdr, buf_ehdr->e_phoff);
--	ehdr->e_shoff     = elf_addr_to_cpu(ehdr, buf_ehdr->e_shoff);
-+	ehdr->e_entry     = elf64_to_cpu(ehdr, buf_ehdr->e_entry);
-+	ehdr->e_phoff     = elf64_to_cpu(ehdr, buf_ehdr->e_phoff);
-+	ehdr->e_shoff     = elf64_to_cpu(ehdr, buf_ehdr->e_shoff);
- 	ehdr->e_flags     = elf32_to_cpu(ehdr, buf_ehdr->e_flags);
- 	ehdr->e_phentsize = elf16_to_cpu(ehdr, buf_ehdr->e_phentsize);
- 	ehdr->e_phnum     = elf16_to_cpu(ehdr, buf_ehdr->e_phnum);
-@@ -214,7 +172,7 @@ static bool elf_is_phdr_sane(const struct elf_phdr *phdr, size_t buf_len)
- 	return true;
- }
- 
--static int elf_read_phdr(const char *buf, size_t len, struct elf_info *elf_info,
-+static int elf_read_phdr(const char *buf, size_t len, struct kexec_elf_info *elf_info,
- 			 int idx)
- {
- 	/* Override the const in proghdrs, we are the ones doing the loading. */
-@@ -226,18 +184,18 @@ static int elf_read_phdr(const char *buf, size_t len, struct elf_info *elf_info,
- 	buf_phdr = (struct elf_phdr *) pbuf;
- 
- 	phdr->p_type   = elf32_to_cpu(elf_info->ehdr, buf_phdr->p_type);
--	phdr->p_offset = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_offset);
--	phdr->p_paddr  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_paddr);
--	phdr->p_vaddr  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_vaddr);
-+	phdr->p_offset = elf64_to_cpu(elf_info->ehdr, buf_phdr->p_offset);
-+	phdr->p_paddr  = elf64_to_cpu(elf_info->ehdr, buf_phdr->p_paddr);
-+	phdr->p_vaddr  = elf64_to_cpu(elf_info->ehdr, buf_phdr->p_vaddr);
- 	phdr->p_flags  = elf32_to_cpu(elf_info->ehdr, buf_phdr->p_flags);
- 
- 	/*
- 	 * The following fields have a type equivalent to Elf_Addr
- 	 * both in 32 bit and 64 bit ELF.
- 	 */
--	phdr->p_filesz = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_filesz);
--	phdr->p_memsz  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_memsz);
--	phdr->p_align  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_align);
-+	phdr->p_filesz = elf64_to_cpu(elf_info->ehdr, buf_phdr->p_filesz);
-+	phdr->p_memsz  = elf64_to_cpu(elf_info->ehdr, buf_phdr->p_memsz);
-+	phdr->p_align  = elf64_to_cpu(elf_info->ehdr, buf_phdr->p_align);
- 
- 	return elf_is_phdr_sane(phdr, len) ? 0 : -ENOEXEC;
- }
-@@ -249,7 +207,7 @@ static int elf_read_phdr(const char *buf, size_t len, struct elf_info *elf_info,
-  * Use elf_is_ehdr_sane() if it wasn't.
-  */
- static int elf_read_phdrs(const char *buf, size_t len,
--			  struct elf_info *elf_info)
-+			  struct kexec_elf_info *elf_info)
- {
- 	size_t phdr_size, i;
- 	const struct elfhdr *ehdr = elf_info->ehdr;
-@@ -296,13 +254,13 @@ static bool elf_is_shdr_sane(const struct elf_shdr *shdr, size_t buf_len)
- 		size_ok = shdr->sh_entsize == sizeof(Elf_Sym);
- 		break;
- 	case SHT_RELA:
--		size_ok = shdr->sh_entsize == sizeof(Elf_Rela);
-+		size_ok = shdr->sh_entsize == sizeof(Elf64_Rela);
- 		break;
- 	case SHT_DYNAMIC:
- 		size_ok = shdr->sh_entsize == sizeof(Elf_Dyn);
- 		break;
- 	case SHT_REL:
--		size_ok = shdr->sh_entsize == sizeof(Elf_Rel);
-+		size_ok = shdr->sh_entsize == sizeof(Elf64_Rel);
- 		break;
- 	case SHT_NOTE:
- 	case SHT_PROGBITS:
-@@ -340,7 +298,7 @@ static bool elf_is_shdr_sane(const struct elf_shdr *shdr, size_t buf_len)
- 	return true;
- }
- 
--static int elf_read_shdr(const char *buf, size_t len, struct elf_info *elf_info,
-+static int elf_read_shdr(const char *buf, size_t len, struct kexec_elf_info *elf_info,
- 			 int idx)
- {
- 	struct elf_shdr *shdr = &elf_info->sechdrs[idx];
-@@ -353,8 +311,8 @@ static int elf_read_shdr(const char *buf, size_t len, struct elf_info *elf_info,
- 
- 	shdr->sh_name      = elf32_to_cpu(ehdr, buf_shdr->sh_name);
- 	shdr->sh_type      = elf32_to_cpu(ehdr, buf_shdr->sh_type);
--	shdr->sh_addr      = elf_addr_to_cpu(ehdr, buf_shdr->sh_addr);
--	shdr->sh_offset    = elf_addr_to_cpu(ehdr, buf_shdr->sh_offset);
-+	shdr->sh_addr      = elf64_to_cpu(ehdr, buf_shdr->sh_addr);
-+	shdr->sh_offset    = elf64_to_cpu(ehdr, buf_shdr->sh_offset);
- 	shdr->sh_link      = elf32_to_cpu(ehdr, buf_shdr->sh_link);
- 	shdr->sh_info      = elf32_to_cpu(ehdr, buf_shdr->sh_info);
- 
-@@ -362,10 +320,10 @@ static int elf_read_shdr(const char *buf, size_t len, struct elf_info *elf_info,
- 	 * The following fields have a type equivalent to Elf_Addr
- 	 * both in 32 bit and 64 bit ELF.
- 	 */
--	shdr->sh_flags     = elf_addr_to_cpu(ehdr, buf_shdr->sh_flags);
--	shdr->sh_size      = elf_addr_to_cpu(ehdr, buf_shdr->sh_size);
--	shdr->sh_addralign = elf_addr_to_cpu(ehdr, buf_shdr->sh_addralign);
--	shdr->sh_entsize   = elf_addr_to_cpu(ehdr, buf_shdr->sh_entsize);
-+	shdr->sh_flags     = elf64_to_cpu(ehdr, buf_shdr->sh_flags);
-+	shdr->sh_size      = elf64_to_cpu(ehdr, buf_shdr->sh_size);
-+	shdr->sh_addralign = elf64_to_cpu(ehdr, buf_shdr->sh_addralign);
-+	shdr->sh_entsize   = elf64_to_cpu(ehdr, buf_shdr->sh_entsize);
- 
- 	return elf_is_shdr_sane(shdr, len) ? 0 : -ENOEXEC;
- }
-@@ -377,7 +335,7 @@ static int elf_read_shdr(const char *buf, size_t len, struct elf_info *elf_info,
-  * Use elf_is_ehdr_sane() if it wasn't.
-  */
- static int elf_read_shdrs(const char *buf, size_t len,
--			  struct elf_info *elf_info)
-+			  struct kexec_elf_info *elf_info)
- {
- 	size_t shdr_size, i;
- 
-@@ -416,11 +374,11 @@ static int elf_read_shdrs(const char *buf, size_t len,
-  * the kernel, byte-swapping the fields as needed.
-  *
-  * Return:
-- * On success returns 0, and the caller should call elf_free_info(elf_info) to
-+ * On success returns 0, and the caller should call kexec_free_elf_info(elf_info) to
-  * free the memory allocated for the section and program headers.
-  */
- int elf_read_from_buffer(const char *buf, size_t len, struct elfhdr *ehdr,
--			 struct elf_info *elf_info)
-+			 struct kexec_elf_info *elf_info)
- {
- 	int ret;
- 
-@@ -447,19 +405,19 @@ int elf_read_from_buffer(const char *buf, size_t len, struct elfhdr *ehdr,
- }
- 
- /**
-- * elf_free_info - free memory allocated by elf_read_from_buffer
-+ * kexec_free_elf_info - free memory allocated by elf_read_from_buffer
-  */
--void elf_free_info(struct elf_info *elf_info)
-+void kexec_free_elf_info(struct kexec_elf_info *elf_info)
- {
- 	kfree(elf_info->proghdrs);
--	kfree(elf_info->sechdrs);
- 	memset(elf_info, 0, sizeof(*elf_info));
- }
-+
- /**
-- * build_elf_exec_info - read ELF executable and check that we can use it
-+ * kexec_build_elf_info - read ELF executable and check that we can use it
-  */
--static int build_elf_exec_info(const char *buf, size_t len, struct elfhdr *ehdr,
--			       struct elf_info *elf_info)
-+int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
-+			  struct kexec_elf_info *elf_info)
- {
- 	int i;
- 	int ret;
-@@ -491,25 +449,10 @@ static int build_elf_exec_info(const char *buf, size_t len, struct elfhdr *ehdr,
- 
- 	return 0;
- error:
--	elf_free_info(elf_info);
-+	kexec_free_elf_info(elf_info);
- 	return -ENOEXEC;
- }
- 
--static int elf64_probe(const char *buf, unsigned long len)
--{
--	struct elfhdr ehdr;
--	struct elf_info elf_info;
--	int ret;
--
--	ret = build_elf_exec_info(buf, len, &ehdr, &elf_info);
--	if (ret)
--		return ret;
--
--	elf_free_info(&elf_info);
--
--	return elf_check_arch(&ehdr) ? 0 : -ENOEXEC;
--}
--
- /**
-  * elf_exec_load - load ELF executable image
-  * @lowest_load_addr:	On return, will be the address where the first PT_LOAD
-@@ -518,16 +461,14 @@ static int elf64_probe(const char *buf, unsigned long len)
-  * Return:
-  * 0 on success, negative value on failure.
-  */
--static int elf_exec_load(struct kimage *image, struct elfhdr *ehdr,
--			 struct elf_info *elf_info,
--			 unsigned long *lowest_load_addr)
-+int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
-+		   struct kexec_elf_info *elf_info,
-+		   struct kexec_buf *kbuf,
-+		   unsigned long *lowest_load_addr)
- {
--	unsigned long base = 0, lowest_addr = UINT_MAX;
-+	unsigned long lowest_addr = UINT_MAX;
- 	int ret;
- 	size_t i;
--	struct kexec_buf kbuf = { .image = image, .buf_max = ppc64_rma_size,
--				  .top_down = false };
--
- 	/* Read in the PT_LOAD segments. */
- 	for (i = 0; i < ehdr->e_phnum; i++) {
- 		unsigned long load_addr;
-@@ -542,123 +483,58 @@ static int elf_exec_load(struct kimage *image, struct elfhdr *ehdr,
- 		if (size > phdr->p_memsz)
- 			size = phdr->p_memsz;
- 
--		kbuf.buffer = (void *) elf_info->buffer + phdr->p_offset;
--		kbuf.bufsz = size;
--		kbuf.memsz = phdr->p_memsz;
--		kbuf.buf_align = phdr->p_align;
--		kbuf.buf_min = phdr->p_paddr + base;
--		ret = kexec_add_buffer(&kbuf);
-+		kbuf->buffer = (void *) elf_info->buffer + phdr->p_offset;
-+		kbuf->bufsz = size;
-+		kbuf->memsz = phdr->p_memsz;
-+		kbuf->buf_align = phdr->p_align;
-+		kbuf->buf_min = phdr->p_paddr;
-+		kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
-+		ret = kexec_add_buffer(kbuf);
- 		if (ret)
- 			goto out;
--		load_addr = kbuf.mem;
-+		load_addr = kbuf->mem;
- 
- 		if (load_addr < lowest_addr)
- 			lowest_addr = load_addr;
- 	}
- 
--	/* Update entry point to reflect new load address. */
--	ehdr->e_entry += base;
--
-+	image->start = ehdr->e_entry;
- 	*lowest_load_addr = lowest_addr;
- 	ret = 0;
-  out:
- 	return ret;
- }
- 
--static void *elf64_load(struct kimage *image, char *kernel_buf,
--			unsigned long kernel_len, char *initrd,
--			unsigned long initrd_len, char *cmdline,
--			unsigned long cmdline_len)
-+int kexec_elf_kernel_load(struct kimage *image, struct kexec_buf *kbuf,
-+			char *kernel_buf, unsigned long kernel_len,
-+			unsigned long *kernel_load_addr)
- {
- 	int ret;
--	unsigned int fdt_size;
--	unsigned long kernel_load_addr;
--	unsigned long initrd_load_addr = 0, fdt_load_addr;
--	void *fdt;
--	const void *slave_code;
- 	struct elfhdr ehdr;
--	struct elf_info elf_info;
--	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
--				  .buf_max = ppc64_rma_size };
--	struct kexec_buf pbuf = { .image = image, .buf_min = 0,
--				  .buf_max = ppc64_rma_size, .top_down = true };
--
--	ret = build_elf_exec_info(kernel_buf, kernel_len, &ehdr, &elf_info);
--	if (ret)
--		goto out;
-+	struct kexec_elf_info elf_info;
- 
--	ret = elf_exec_load(image, &ehdr, &elf_info, &kernel_load_addr);
-+	ret = kexec_build_elf_info(kernel_buf, kernel_len, &ehdr, &elf_info);
- 	if (ret)
- 		goto out;
- 
--	pr_debug("Loaded the kernel at 0x%lx\n", kernel_load_addr);
--
--	ret = kexec_load_purgatory(image, &pbuf);
--	if (ret) {
--		pr_err("Loading purgatory failed.\n");
--		goto out;
--	}
--
--	pr_debug("Loaded purgatory at 0x%lx\n", pbuf.mem);
--
--	if (initrd != NULL) {
--		kbuf.buffer = initrd;
--		kbuf.bufsz = kbuf.memsz = initrd_len;
--		kbuf.buf_align = PAGE_SIZE;
--		kbuf.top_down = false;
--		ret = kexec_add_buffer(&kbuf);
--		if (ret)
--			goto out;
--		initrd_load_addr = kbuf.mem;
--
--		pr_debug("Loaded initrd at 0x%lx\n", initrd_load_addr);
--	}
--
--	fdt_size = fdt_totalsize(initial_boot_params) * 2;
--	fdt = kmalloc(fdt_size, GFP_KERNEL);
--	if (!fdt) {
--		pr_err("Not enough memory for the device tree.\n");
--		ret = -ENOMEM;
--		goto out;
--	}
--	ret = fdt_open_into(initial_boot_params, fdt, fdt_size);
--	if (ret < 0) {
--		pr_err("Error setting up the new device tree.\n");
--		ret = -EINVAL;
--		goto out;
--	}
--
--	ret = setup_new_fdt(image, fdt, initrd_load_addr, initrd_len, cmdline);
--	if (ret)
--		goto out;
--
--	fdt_pack(fdt);
-+	ret = kexec_elf_load(image, &ehdr, &elf_info, kbuf, kernel_load_addr);
-+out:
-+	kexec_free_elf_info(&elf_info);
-+	return ret;
- 
--	kbuf.buffer = fdt;
--	kbuf.bufsz = kbuf.memsz = fdt_size;
--	kbuf.buf_align = PAGE_SIZE;
--	kbuf.top_down = true;
--	ret = kexec_add_buffer(&kbuf);
--	if (ret)
--		goto out;
--	fdt_load_addr = kbuf.mem;
-+}
- 
--	pr_debug("Loaded device tree at 0x%lx\n", fdt_load_addr);
-+int kexec_elf_probe(const char *buf, unsigned long len)
-+{
-+	struct elfhdr ehdr;
-+	struct kexec_elf_info elf_info;
-+	int ret;
- 
--	slave_code = elf_info.buffer + elf_info.proghdrs[0].p_offset;
--	ret = setup_purgatory(image, slave_code, fdt, kernel_load_addr,
--			      fdt_load_addr);
-+	ret = kexec_build_elf_info(buf, len, &ehdr, &elf_info);
- 	if (ret)
--		pr_err("Error setting up the purgatory.\n");
-+		return ret;
- 
--out:
--	elf_free_info(&elf_info);
-+	kexec_free_elf_info(&elf_info);
- 
--	/* Make kimage_file_post_load_cleanup free the fdt buffer for us. */
--	return ret ? ERR_PTR(ret) : fdt;
-+	return elf_check_arch(&ehdr) ? 0 : -ENOEXEC;
- }
--
--const struct kexec_file_ops kexec_elf64_ops = {
--	.probe = elf64_probe,
--	.load = elf64_load,
--};
--- 
-2.13.3
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgpMZSAwNy8wNy8yMDE5IMOgIDIxOjIxLCBTdmVuIFNjaG5lbGxlIGEgw6ljcml0wqA6Cj4gU2ln
+bmVkLW9mZi1ieTogU3ZlbiBTY2huZWxsZSA8c3ZlbnNAc3RhY2tmcmFtZS5vcmc+Cj4gLS0tCgpQ
+bGVhc2UgYWRkIGhlcmUgYSBkZXNjcmlwdGlvbiBvZiB0aGUgY2hhbmdlcyBkb25lIHNpbmNlIFJG
+Qy4KCj4gICBhcmNoL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgIHwgICAzICsKPiAgIGFy
+Y2gvcG93ZXJwYy9LY29uZmlnICAgICAgICAgICAgICAgfCAgIDEgKwo+ICAgYXJjaC9wb3dlcnBj
+L2tlcm5lbC9rZXhlY19lbGZfNjQuYyB8IDU0NyArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQo+ICAgaW5jbHVkZS9saW51eC9rZXhlYy5oICAgICAgICAgICAgICB8ICAzNSArKwo+ICAga2Vy
+bmVsL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gICBrZXJuZWwva2V4ZWNf
+ZWxmLmMgICAgICAgICAgICAgICAgIHwgNTQwICsrKysrKysrKysrKysrKysrKysrKysrKysrKysK
+PiAgIDYgZmlsZXMgY2hhbmdlZCwgNTg4IGluc2VydGlvbnMoKyksIDUzOSBkZWxldGlvbnMoLSkK
+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBrZXJuZWwva2V4ZWNfZWxmLmMKCmtlcm5lbC9rZXhlY19l
+bGYuYyBpcyBhIG1vZGlmaWVkIGNvcHkgb2YgYXJjaC9wb3dlcnBjL2tlcm5lbC9rZXhlY19lbGZf
+NjQuYy4KWW91IHNob3VsZCBnZW5lcmF0ZSB5b3VyIHBhdGNoIHVzaWduICdnaXQgZm9ybWF0LXBh
+dGNoIC1DJyBpbiBvcmRlciB0byAKbGV0IGdpdCBpZGVudGlmeSB0aGUgY29weSBhbmQgdGhlIGNo
+YW5nZXMgdG8gdGhlIGNvcHkuClRoYXQgd291bGQgZWFzZSB0aGUgcmV2aWV3LiBJIGhhdmUgcmVn
+ZW5lcmF0ZWQgeW91ciBwYXRjaCB3aXRoIC1DIGFuZCAKcmVzZW50IGl0LgoKQ2hyaXN0b3BoZQoK
+PiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9LY29uZmlnIGIvYXJjaC9LY29uZmlnCj4gaW5kZXggYzQ3
+YjMyOGVhZGEwLi4zMDY5NGFjYTQzMTYgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9LY29uZmlnCj4gKysr
+IGIvYXJjaC9LY29uZmlnCj4gQEAgLTE4LDYgKzE4LDkgQEAgY29uZmlnIEtFWEVDX0NPUkUKPiAg
+IAlzZWxlY3QgQ1JBU0hfQ09SRQo+ICAgCWJvb2wKPiAgIAo+ICtjb25maWcgS0VYRUNfRUxGCj4g
+Kwlib29sCj4gKwo+ICAgY29uZmlnIEhBVkVfSU1BX0tFWEVDCj4gICAJYm9vbAo+ICAgCj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9LY29uZmlnIGIvYXJjaC9wb3dlcnBjL0tjb25maWcKPiBp
+bmRleCA4YzFjNjM2MzA4YzguLjk3YWE4MTYyMjQ1MiAxMDA2NDQKPiAtLS0gYS9hcmNoL3Bvd2Vy
+cGMvS2NvbmZpZwo+ICsrKyBiL2FyY2gvcG93ZXJwYy9LY29uZmlnCj4gQEAgLTUwMiw2ICs1MDIs
+NyBAQCBjb25maWcgS0VYRUNfRklMRQo+ICAgCXNlbGVjdCBLRVhFQ19DT1JFCj4gICAJc2VsZWN0
+IEhBVkVfSU1BX0tFWEVDCj4gICAJc2VsZWN0IEJVSUxEX0JJTjJDCj4gKwlzZWxlY3QgS0VYRUNf
+RUxGCj4gICAJZGVwZW5kcyBvbiBQUEM2NAo+ICAgCWRlcGVuZHMgb24gQ1JZUFRPPXkKPiAgIAlk
+ZXBlbmRzIG9uIENSWVBUT19TSEEyNTY9eQo+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMva2Vy
+bmVsL2tleGVjX2VsZl82NC5jIGIvYXJjaC9wb3dlcnBjL2tlcm5lbC9rZXhlY19lbGZfNjQuYwo+
+IGluZGV4IGJhNGYxOGE0M2VlOC4uZDA2MmM1OTkxNzIyIDEwMDY0NAo+IC0tLSBhL2FyY2gvcG93
+ZXJwYy9rZXJuZWwva2V4ZWNfZWxmXzY0LmMKPiArKysgYi9hcmNoL3Bvd2VycGMva2VybmVsL2tl
+eGVjX2VsZl82NC5jCj4gQEAgLTMxLDUzOSArMzEsNyBAQAo+ICAgI2luY2x1ZGUgPGxpbnV4L3Ns
+YWIuaD4KPiAgICNpbmNsdWRlIDxsaW51eC90eXBlcy5oPgo+ICAgCj4gLSNkZWZpbmUgUFVSR0FU
+T1JZX1NUQUNLX1NJWkUJKDE2ICogMTAyNCkKPiAtCj4gLSNkZWZpbmUgZWxmX2FkZHJfdG9fY3B1
+CWVsZjY0X3RvX2NwdQo+IC0KPiAtI2lmbmRlZiBFbGZfUmVsCj4gLSNkZWZpbmUgRWxmX1JlbAkJ
+RWxmNjRfUmVsCj4gLSNlbmRpZiAvKiBFbGZfUmVsICovCj4gLQo+IC1zdHJ1Y3QgZWxmX2luZm8g
+ewo+IC0JLyoKPiAtCSAqIFdoZXJlIHRoZSBFTEYgYmluYXJ5IGNvbnRlbnRzIGFyZSBrZXB0Lgo+
+IC0JICogTWVtb3J5IG1hbmFnZWQgYnkgdGhlIHVzZXIgb2YgdGhlIHN0cnVjdC4KPiAtCSAqLwo+
+IC0JY29uc3QgY2hhciAqYnVmZmVyOwo+IC0KPiAtCWNvbnN0IHN0cnVjdCBlbGZoZHIgKmVoZHI7
+Cj4gLQljb25zdCBzdHJ1Y3QgZWxmX3BoZHIgKnByb2doZHJzOwo+IC0Jc3RydWN0IGVsZl9zaGRy
+ICpzZWNoZHJzOwo+IC19Owo+IC0KPiAtc3RhdGljIGlubGluZSBib29sIGVsZl9pc19lbGZfZmls
+ZShjb25zdCBzdHJ1Y3QgZWxmaGRyICplaGRyKQo+IC17Cj4gLSAgICAgICByZXR1cm4gbWVtY21w
+KGVoZHItPmVfaWRlbnQsIEVMRk1BRywgU0VMRk1BRykgPT0gMDsKPiAtfQo+IC0KPiAtc3RhdGlj
+IHVpbnQ2NF90IGVsZjY0X3RvX2NwdShjb25zdCBzdHJ1Y3QgZWxmaGRyICplaGRyLCB1aW50NjRf
+dCB2YWx1ZSkKPiAtewo+IC0JaWYgKGVoZHItPmVfaWRlbnRbRUlfREFUQV0gPT0gRUxGREFUQTJM
+U0IpCj4gLQkJdmFsdWUgPSBsZTY0X3RvX2NwdSh2YWx1ZSk7Cj4gLQllbHNlIGlmIChlaGRyLT5l
+X2lkZW50W0VJX0RBVEFdID09IEVMRkRBVEEyTVNCKQo+IC0JCXZhbHVlID0gYmU2NF90b19jcHUo
+dmFsdWUpOwo+IC0KPiAtCXJldHVybiB2YWx1ZTsKPiAtfQo+IC0KPiAtc3RhdGljIHVpbnQxNl90
+IGVsZjE2X3RvX2NwdShjb25zdCBzdHJ1Y3QgZWxmaGRyICplaGRyLCB1aW50MTZfdCB2YWx1ZSkK
+PiAtewo+IC0JaWYgKGVoZHItPmVfaWRlbnRbRUlfREFUQV0gPT0gRUxGREFUQTJMU0IpCj4gLQkJ
+dmFsdWUgPSBsZTE2X3RvX2NwdSh2YWx1ZSk7Cj4gLQllbHNlIGlmIChlaGRyLT5lX2lkZW50W0VJ
+X0RBVEFdID09IEVMRkRBVEEyTVNCKQo+IC0JCXZhbHVlID0gYmUxNl90b19jcHUodmFsdWUpOwo+
+IC0KPiAtCXJldHVybiB2YWx1ZTsKPiAtfQo+IC0KPiAtc3RhdGljIHVpbnQzMl90IGVsZjMyX3Rv
+X2NwdShjb25zdCBzdHJ1Y3QgZWxmaGRyICplaGRyLCB1aW50MzJfdCB2YWx1ZSkKPiAtewo+IC0J
+aWYgKGVoZHItPmVfaWRlbnRbRUlfREFUQV0gPT0gRUxGREFUQTJMU0IpCj4gLQkJdmFsdWUgPSBs
+ZTMyX3RvX2NwdSh2YWx1ZSk7Cj4gLQllbHNlIGlmIChlaGRyLT5lX2lkZW50W0VJX0RBVEFdID09
+IEVMRkRBVEEyTVNCKQo+IC0JCXZhbHVlID0gYmUzMl90b19jcHUodmFsdWUpOwo+IC0KPiAtCXJl
+dHVybiB2YWx1ZTsKPiAtfQo+IC0KPiAtLyoqCj4gLSAqIGVsZl9pc19laGRyX3NhbmUgLSBjaGVj
+ayB0aGF0IGl0IGlzIHNhZmUgdG8gdXNlIHRoZSBFTEYgaGVhZGVyCj4gLSAqIEBidWZfbGVuOglz
+aXplIG9mIHRoZSBidWZmZXIgaW4gd2hpY2ggdGhlIEVMRiBmaWxlIGlzIGxvYWRlZC4KPiAtICov
+Cj4gLXN0YXRpYyBib29sIGVsZl9pc19laGRyX3NhbmUoY29uc3Qgc3RydWN0IGVsZmhkciAqZWhk
+ciwgc2l6ZV90IGJ1Zl9sZW4pCj4gLXsKPiAtCWlmIChlaGRyLT5lX3BobnVtID4gMCAmJiBlaGRy
+LT5lX3BoZW50c2l6ZSAhPSBzaXplb2Yoc3RydWN0IGVsZl9waGRyKSkgewo+IC0JCXByX2RlYnVn
+KCJCYWQgcHJvZ3JhbSBoZWFkZXIgc2l6ZS5cbiIpOwo+IC0JCXJldHVybiBmYWxzZTsKPiAtCX0g
+ZWxzZSBpZiAoZWhkci0+ZV9zaG51bSA+IDAgJiYKPiAtCQkgICBlaGRyLT5lX3NoZW50c2l6ZSAh
+PSBzaXplb2Yoc3RydWN0IGVsZl9zaGRyKSkgewo+IC0JCXByX2RlYnVnKCJCYWQgc2VjdGlvbiBo
+ZWFkZXIgc2l6ZS5cbiIpOwo+IC0JCXJldHVybiBmYWxzZTsKPiAtCX0gZWxzZSBpZiAoZWhkci0+
+ZV9pZGVudFtFSV9WRVJTSU9OXSAhPSBFVl9DVVJSRU5UIHx8Cj4gLQkJICAgZWhkci0+ZV92ZXJz
+aW9uICE9IEVWX0NVUlJFTlQpIHsKPiAtCQlwcl9kZWJ1ZygiVW5rbm93biBFTEYgdmVyc2lvbi5c
+biIpOwo+IC0JCXJldHVybiBmYWxzZTsKPiAtCX0KPiAtCj4gLQlpZiAoZWhkci0+ZV9waG9mZiA+
+IDAgJiYgZWhkci0+ZV9waG51bSA+IDApIHsKPiAtCQlzaXplX3QgcGhkcl9zaXplOwo+IC0KPiAt
+CQkvKgo+IC0JCSAqIGVfcGhudW0gaXMgYXQgbW9zdCA2NTUzNSBzbyBjYWxjdWxhdGluZyB0aGUg
+c2l6ZSBvZiB0aGUKPiAtCQkgKiBwcm9ncmFtIGhlYWRlciBjYW5ub3Qgb3ZlcmZsb3cuCj4gLQkJ
+ICovCj4gLQkJcGhkcl9zaXplID0gc2l6ZW9mKHN0cnVjdCBlbGZfcGhkcikgKiBlaGRyLT5lX3Bo
+bnVtOwo+IC0KPiAtCQkvKiBTYW5pdHkgY2hlY2sgdGhlIHByb2dyYW0gaGVhZGVyIHRhYmxlIGxv
+Y2F0aW9uLiAqLwo+IC0JCWlmIChlaGRyLT5lX3Bob2ZmICsgcGhkcl9zaXplIDwgZWhkci0+ZV9w
+aG9mZikgewo+IC0JCQlwcl9kZWJ1ZygiUHJvZ3JhbSBoZWFkZXJzIGF0IGludmFsaWQgbG9jYXRp
+b24uXG4iKTsKPiAtCQkJcmV0dXJuIGZhbHNlOwo+IC0JCX0gZWxzZSBpZiAoZWhkci0+ZV9waG9m
+ZiArIHBoZHJfc2l6ZSA+IGJ1Zl9sZW4pIHsKPiAtCQkJcHJfZGVidWcoIlByb2dyYW0gaGVhZGVy
+cyB0cnVuY2F0ZWQuXG4iKTsKPiAtCQkJcmV0dXJuIGZhbHNlOwo+IC0JCX0KPiAtCX0KPiAtCj4g
+LQlpZiAoZWhkci0+ZV9zaG9mZiA+IDAgJiYgZWhkci0+ZV9zaG51bSA+IDApIHsKPiAtCQlzaXpl
+X3Qgc2hkcl9zaXplOwo+IC0KPiAtCQkvKgo+IC0JCSAqIGVfc2hudW0gaXMgYXQgbW9zdCA2NTUz
+NiBzbyBjYWxjdWxhdGluZwo+IC0JCSAqIHRoZSBzaXplIG9mIHRoZSBzZWN0aW9uIGhlYWRlciBj
+YW5ub3Qgb3ZlcmZsb3cuCj4gLQkJICovCj4gLQkJc2hkcl9zaXplID0gc2l6ZW9mKHN0cnVjdCBl
+bGZfc2hkcikgKiBlaGRyLT5lX3NobnVtOwo+IC0KPiAtCQkvKiBTYW5pdHkgY2hlY2sgdGhlIHNl
+Y3Rpb24gaGVhZGVyIHRhYmxlIGxvY2F0aW9uLiAqLwo+IC0JCWlmIChlaGRyLT5lX3Nob2ZmICsg
+c2hkcl9zaXplIDwgZWhkci0+ZV9zaG9mZikgewo+IC0JCQlwcl9kZWJ1ZygiU2VjdGlvbiBoZWFk
+ZXJzIGF0IGludmFsaWQgbG9jYXRpb24uXG4iKTsKPiAtCQkJcmV0dXJuIGZhbHNlOwo+IC0JCX0g
+ZWxzZSBpZiAoZWhkci0+ZV9zaG9mZiArIHNoZHJfc2l6ZSA+IGJ1Zl9sZW4pIHsKPiAtCQkJcHJf
+ZGVidWcoIlNlY3Rpb24gaGVhZGVycyB0cnVuY2F0ZWQuXG4iKTsKPiAtCQkJcmV0dXJuIGZhbHNl
+Owo+IC0JCX0KPiAtCX0KPiAtCj4gLQlyZXR1cm4gdHJ1ZTsKPiAtfQo+IC0KPiAtc3RhdGljIGlu
+dCBlbGZfcmVhZF9laGRyKGNvbnN0IGNoYXIgKmJ1Ziwgc2l6ZV90IGxlbiwgc3RydWN0IGVsZmhk
+ciAqZWhkcikKPiAtewo+IC0Jc3RydWN0IGVsZmhkciAqYnVmX2VoZHI7Cj4gLQo+IC0JaWYgKGxl
+biA8IHNpemVvZigqYnVmX2VoZHIpKSB7Cj4gLQkJcHJfZGVidWcoIkJ1ZmZlciBpcyB0b28gc21h
+bGwgdG8gaG9sZCBFTEYgaGVhZGVyLlxuIik7Cj4gLQkJcmV0dXJuIC1FTk9FWEVDOwo+IC0JfQo+
+IC0KPiAtCW1lbXNldChlaGRyLCAwLCBzaXplb2YoKmVoZHIpKTsKPiAtCW1lbWNweShlaGRyLT5l
+X2lkZW50LCBidWYsIHNpemVvZihlaGRyLT5lX2lkZW50KSk7Cj4gLQlpZiAoIWVsZl9pc19lbGZf
+ZmlsZShlaGRyKSkgewo+IC0JCXByX2RlYnVnKCJObyBFTEYgaGVhZGVyIG1hZ2ljLlxuIik7Cj4g
+LQkJcmV0dXJuIC1FTk9FWEVDOwo+IC0JfQo+IC0KPiAtCWlmIChlaGRyLT5lX2lkZW50W0VJX0NM
+QVNTXSAhPSBFTEZfQ0xBU1MpIHsKPiAtCQlwcl9kZWJ1ZygiTm90IGEgc3VwcG9ydGVkIEVMRiBj
+bGFzcy5cbiIpOwo+IC0JCXJldHVybiAtRU5PRVhFQzsKPiAtCX0gZWxzZSAgaWYgKGVoZHItPmVf
+aWRlbnRbRUlfREFUQV0gIT0gRUxGREFUQTJMU0IgJiYKPiAtCQllaGRyLT5lX2lkZW50W0VJX0RB
+VEFdICE9IEVMRkRBVEEyTVNCKSB7Cj4gLQkJcHJfZGVidWcoIk5vdCBhIHN1cHBvcnRlZCBFTEYg
+ZGF0YSBmb3JtYXQuXG4iKTsKPiAtCQlyZXR1cm4gLUVOT0VYRUM7Cj4gLQl9Cj4gLQo+IC0JYnVm
+X2VoZHIgPSAoc3RydWN0IGVsZmhkciAqKSBidWY7Cj4gLQlpZiAoZWxmMTZfdG9fY3B1KGVoZHIs
+IGJ1Zl9laGRyLT5lX2Voc2l6ZSkgIT0gc2l6ZW9mKCpidWZfZWhkcikpIHsKPiAtCQlwcl9kZWJ1
+ZygiQmFkIEVMRiBoZWFkZXIgc2l6ZS5cbiIpOwo+IC0JCXJldHVybiAtRU5PRVhFQzsKPiAtCX0K
+PiAtCj4gLQllaGRyLT5lX3R5cGUgICAgICA9IGVsZjE2X3RvX2NwdShlaGRyLCBidWZfZWhkci0+
+ZV90eXBlKTsKPiAtCWVoZHItPmVfbWFjaGluZSAgID0gZWxmMTZfdG9fY3B1KGVoZHIsIGJ1Zl9l
+aGRyLT5lX21hY2hpbmUpOwo+IC0JZWhkci0+ZV92ZXJzaW9uICAgPSBlbGYzMl90b19jcHUoZWhk
+ciwgYnVmX2VoZHItPmVfdmVyc2lvbik7Cj4gLQllaGRyLT5lX2VudHJ5ICAgICA9IGVsZl9hZGRy
+X3RvX2NwdShlaGRyLCBidWZfZWhkci0+ZV9lbnRyeSk7Cj4gLQllaGRyLT5lX3Bob2ZmICAgICA9
+IGVsZl9hZGRyX3RvX2NwdShlaGRyLCBidWZfZWhkci0+ZV9waG9mZik7Cj4gLQllaGRyLT5lX3No
+b2ZmICAgICA9IGVsZl9hZGRyX3RvX2NwdShlaGRyLCBidWZfZWhkci0+ZV9zaG9mZik7Cj4gLQll
+aGRyLT5lX2ZsYWdzICAgICA9IGVsZjMyX3RvX2NwdShlaGRyLCBidWZfZWhkci0+ZV9mbGFncyk7
+Cj4gLQllaGRyLT5lX3BoZW50c2l6ZSA9IGVsZjE2X3RvX2NwdShlaGRyLCBidWZfZWhkci0+ZV9w
+aGVudHNpemUpOwo+IC0JZWhkci0+ZV9waG51bSAgICAgPSBlbGYxNl90b19jcHUoZWhkciwgYnVm
+X2VoZHItPmVfcGhudW0pOwo+IC0JZWhkci0+ZV9zaGVudHNpemUgPSBlbGYxNl90b19jcHUoZWhk
+ciwgYnVmX2VoZHItPmVfc2hlbnRzaXplKTsKPiAtCWVoZHItPmVfc2hudW0gICAgID0gZWxmMTZf
+dG9fY3B1KGVoZHIsIGJ1Zl9laGRyLT5lX3NobnVtKTsKPiAtCWVoZHItPmVfc2hzdHJuZHggID0g
+ZWxmMTZfdG9fY3B1KGVoZHIsIGJ1Zl9laGRyLT5lX3Noc3RybmR4KTsKPiAtCj4gLQlyZXR1cm4g
+ZWxmX2lzX2VoZHJfc2FuZShlaGRyLCBsZW4pID8gMCA6IC1FTk9FWEVDOwo+IC19Cj4gLQo+IC0v
+KioKPiAtICogZWxmX2lzX3BoZHJfc2FuZSAtIGNoZWNrIHRoYXQgaXQgaXMgc2FmZSB0byB1c2Ug
+dGhlIHByb2dyYW0gaGVhZGVyCj4gLSAqIEBidWZfbGVuOglzaXplIG9mIHRoZSBidWZmZXIgaW4g
+d2hpY2ggdGhlIEVMRiBmaWxlIGlzIGxvYWRlZC4KPiAtICovCj4gLXN0YXRpYyBib29sIGVsZl9p
+c19waGRyX3NhbmUoY29uc3Qgc3RydWN0IGVsZl9waGRyICpwaGRyLCBzaXplX3QgYnVmX2xlbikK
+PiAtewo+IC0KPiAtCWlmIChwaGRyLT5wX29mZnNldCArIHBoZHItPnBfZmlsZXN6IDwgcGhkci0+
+cF9vZmZzZXQpIHsKPiAtCQlwcl9kZWJ1ZygiRUxGIHNlZ21lbnQgbG9jYXRpb24gd3JhcHMgYXJv
+dW5kLlxuIik7Cj4gLQkJcmV0dXJuIGZhbHNlOwo+IC0JfSBlbHNlIGlmIChwaGRyLT5wX29mZnNl
+dCArIHBoZHItPnBfZmlsZXN6ID4gYnVmX2xlbikgewo+IC0JCXByX2RlYnVnKCJFTEYgc2VnbWVu
+dCBub3QgaW4gZmlsZS5cbiIpOwo+IC0JCXJldHVybiBmYWxzZTsKPiAtCX0gZWxzZSBpZiAocGhk
+ci0+cF9wYWRkciArIHBoZHItPnBfbWVtc3ogPCBwaGRyLT5wX3BhZGRyKSB7Cj4gLQkJcHJfZGVi
+dWcoIkVMRiBzZWdtZW50IGFkZHJlc3Mgd3JhcHMgYXJvdW5kLlxuIik7Cj4gLQkJcmV0dXJuIGZh
+bHNlOwo+IC0JfQo+IC0KPiAtCXJldHVybiB0cnVlOwo+IC19Cj4gLQo+IC1zdGF0aWMgaW50IGVs
+Zl9yZWFkX3BoZHIoY29uc3QgY2hhciAqYnVmLCBzaXplX3QgbGVuLCBzdHJ1Y3QgZWxmX2luZm8g
+KmVsZl9pbmZvLAo+IC0JCQkgaW50IGlkeCkKPiAtewo+IC0JLyogT3ZlcnJpZGUgdGhlIGNvbnN0
+IGluIHByb2doZHJzLCB3ZSBhcmUgdGhlIG9uZXMgZG9pbmcgdGhlIGxvYWRpbmcuICovCj4gLQlz
+dHJ1Y3QgZWxmX3BoZHIgKnBoZHIgPSAoc3RydWN0IGVsZl9waGRyICopICZlbGZfaW5mby0+cHJv
+Z2hkcnNbaWR4XTsKPiAtCWNvbnN0IGNoYXIgKnBidWY7Cj4gLQlzdHJ1Y3QgZWxmX3BoZHIgKmJ1
+Zl9waGRyOwo+IC0KPiAtCXBidWYgPSBidWYgKyBlbGZfaW5mby0+ZWhkci0+ZV9waG9mZiArIChp
+ZHggKiBzaXplb2YoKmJ1Zl9waGRyKSk7Cj4gLQlidWZfcGhkciA9IChzdHJ1Y3QgZWxmX3BoZHIg
+KikgcGJ1ZjsKPiAtCj4gLQlwaGRyLT5wX3R5cGUgICA9IGVsZjMyX3RvX2NwdShlbGZfaW5mby0+
+ZWhkciwgYnVmX3BoZHItPnBfdHlwZSk7Cj4gLQlwaGRyLT5wX29mZnNldCA9IGVsZl9hZGRyX3Rv
+X2NwdShlbGZfaW5mby0+ZWhkciwgYnVmX3BoZHItPnBfb2Zmc2V0KTsKPiAtCXBoZHItPnBfcGFk
+ZHIgID0gZWxmX2FkZHJfdG9fY3B1KGVsZl9pbmZvLT5laGRyLCBidWZfcGhkci0+cF9wYWRkcik7
+Cj4gLQlwaGRyLT5wX3ZhZGRyICA9IGVsZl9hZGRyX3RvX2NwdShlbGZfaW5mby0+ZWhkciwgYnVm
+X3BoZHItPnBfdmFkZHIpOwo+IC0JcGhkci0+cF9mbGFncyAgPSBlbGYzMl90b19jcHUoZWxmX2lu
+Zm8tPmVoZHIsIGJ1Zl9waGRyLT5wX2ZsYWdzKTsKPiAtCj4gLQkvKgo+IC0JICogVGhlIGZvbGxv
+d2luZyBmaWVsZHMgaGF2ZSBhIHR5cGUgZXF1aXZhbGVudCB0byBFbGZfQWRkcgo+IC0JICogYm90
+aCBpbiAzMiBiaXQgYW5kIDY0IGJpdCBFTEYuCj4gLQkgKi8KPiAtCXBoZHItPnBfZmlsZXN6ID0g
+ZWxmX2FkZHJfdG9fY3B1KGVsZl9pbmZvLT5laGRyLCBidWZfcGhkci0+cF9maWxlc3opOwo+IC0J
+cGhkci0+cF9tZW1zeiAgPSBlbGZfYWRkcl90b19jcHUoZWxmX2luZm8tPmVoZHIsIGJ1Zl9waGRy
+LT5wX21lbXN6KTsKPiAtCXBoZHItPnBfYWxpZ24gID0gZWxmX2FkZHJfdG9fY3B1KGVsZl9pbmZv
+LT5laGRyLCBidWZfcGhkci0+cF9hbGlnbik7Cj4gLQo+IC0JcmV0dXJuIGVsZl9pc19waGRyX3Nh
+bmUocGhkciwgbGVuKSA/IDAgOiAtRU5PRVhFQzsKPiAtfQo+IC0KPiAtLyoqCj4gLSAqIGVsZl9y
+ZWFkX3BoZHJzIC0gcmVhZCB0aGUgcHJvZ3JhbSBoZWFkZXJzIGZyb20gdGhlIGJ1ZmZlcgo+IC0g
+Kgo+IC0gKiBUaGlzIGZ1bmN0aW9uIGFzc3VtZXMgdGhhdCB0aGUgcHJvZ3JhbSBoZWFkZXIgdGFi
+bGUgd2FzIGNoZWNrZWQgZm9yIHNhbml0eS4KPiAtICogVXNlIGVsZl9pc19laGRyX3NhbmUoKSBp
+ZiBpdCB3YXNuJ3QuCj4gLSAqLwo+IC1zdGF0aWMgaW50IGVsZl9yZWFkX3BoZHJzKGNvbnN0IGNo
+YXIgKmJ1Ziwgc2l6ZV90IGxlbiwKPiAtCQkJICBzdHJ1Y3QgZWxmX2luZm8gKmVsZl9pbmZvKQo+
+IC17Cj4gLQlzaXplX3QgcGhkcl9zaXplLCBpOwo+IC0JY29uc3Qgc3RydWN0IGVsZmhkciAqZWhk
+ciA9IGVsZl9pbmZvLT5laGRyOwo+IC0KPiAtCS8qCj4gLQkgKiBlX3BobnVtIGlzIGF0IG1vc3Qg
+NjU1MzUgc28gY2FsY3VsYXRpbmcgdGhlIHNpemUgb2YgdGhlCj4gLQkgKiBwcm9ncmFtIGhlYWRl
+ciBjYW5ub3Qgb3ZlcmZsb3cuCj4gLQkgKi8KPiAtCXBoZHJfc2l6ZSA9IHNpemVvZihzdHJ1Y3Qg
+ZWxmX3BoZHIpICogZWhkci0+ZV9waG51bTsKPiAtCj4gLQllbGZfaW5mby0+cHJvZ2hkcnMgPSBr
+emFsbG9jKHBoZHJfc2l6ZSwgR0ZQX0tFUk5FTCk7Cj4gLQlpZiAoIWVsZl9pbmZvLT5wcm9naGRy
+cykKPiAtCQlyZXR1cm4gLUVOT01FTTsKPiAtCj4gLQlmb3IgKGkgPSAwOyBpIDwgZWhkci0+ZV9w
+aG51bTsgaSsrKSB7Cj4gLQkJaW50IHJldDsKPiAtCj4gLQkJcmV0ID0gZWxmX3JlYWRfcGhkcihi
+dWYsIGxlbiwgZWxmX2luZm8sIGkpOwo+IC0JCWlmIChyZXQpIHsKPiAtCQkJa2ZyZWUoZWxmX2lu
+Zm8tPnByb2doZHJzKTsKPiAtCQkJZWxmX2luZm8tPnByb2doZHJzID0gTlVMTDsKPiAtCQkJcmV0
+dXJuIHJldDsKPiAtCQl9Cj4gLQl9Cj4gLQo+IC0JcmV0dXJuIDA7Cj4gLX0KPiAtCj4gLS8qKgo+
+IC0gKiBlbGZfaXNfc2hkcl9zYW5lIC0gY2hlY2sgdGhhdCBpdCBpcyBzYWZlIHRvIHVzZSB0aGUg
+c2VjdGlvbiBoZWFkZXIKPiAtICogQGJ1Zl9sZW46CXNpemUgb2YgdGhlIGJ1ZmZlciBpbiB3aGlj
+aCB0aGUgRUxGIGZpbGUgaXMgbG9hZGVkLgo+IC0gKi8KPiAtc3RhdGljIGJvb2wgZWxmX2lzX3No
+ZHJfc2FuZShjb25zdCBzdHJ1Y3QgZWxmX3NoZHIgKnNoZHIsIHNpemVfdCBidWZfbGVuKQo+IC17
+Cj4gLQlib29sIHNpemVfb2s7Cj4gLQo+IC0JLyogU0hUX05VTEwgaGVhZGVycyBoYXZlIHVuZGVm
+aW5lZCB2YWx1ZXMsIHNvIHdlIGNhbid0IGNoZWNrIHRoZW0uICovCj4gLQlpZiAoc2hkci0+c2hf
+dHlwZSA9PSBTSFRfTlVMTCkKPiAtCQlyZXR1cm4gdHJ1ZTsKPiAtCj4gLQkvKiBOb3cgdmVyaWZ5
+IHNoX2VudHNpemUgKi8KPiAtCXN3aXRjaCAoc2hkci0+c2hfdHlwZSkgewo+IC0JY2FzZSBTSFRf
+U1lNVEFCOgo+IC0JCXNpemVfb2sgPSBzaGRyLT5zaF9lbnRzaXplID09IHNpemVvZihFbGZfU3lt
+KTsKPiAtCQlicmVhazsKPiAtCWNhc2UgU0hUX1JFTEE6Cj4gLQkJc2l6ZV9vayA9IHNoZHItPnNo
+X2VudHNpemUgPT0gc2l6ZW9mKEVsZl9SZWxhKTsKPiAtCQlicmVhazsKPiAtCWNhc2UgU0hUX0RZ
+TkFNSUM6Cj4gLQkJc2l6ZV9vayA9IHNoZHItPnNoX2VudHNpemUgPT0gc2l6ZW9mKEVsZl9EeW4p
+Owo+IC0JCWJyZWFrOwo+IC0JY2FzZSBTSFRfUkVMOgo+IC0JCXNpemVfb2sgPSBzaGRyLT5zaF9l
+bnRzaXplID09IHNpemVvZihFbGZfUmVsKTsKPiAtCQlicmVhazsKPiAtCWNhc2UgU0hUX05PVEU6
+Cj4gLQljYXNlIFNIVF9QUk9HQklUUzoKPiAtCWNhc2UgU0hUX0hBU0g6Cj4gLQljYXNlIFNIVF9O
+T0JJVFM6Cj4gLQlkZWZhdWx0Ogo+IC0JCS8qCj4gLQkJICogVGhpcyBpcyBhIHNlY3Rpb24gd2hv
+c2UgZW50c2l6ZSByZXF1aXJlbWVudHMKPiAtCQkgKiBJIGRvbid0IGNhcmUgYWJvdXQuICBJZiBJ
+IGRvbid0IGtub3cgYWJvdXQKPiAtCQkgKiB0aGUgc2VjdGlvbiBJIGNhbid0IGNhcmUgYWJvdXQg
+aXQncyBlbnRzaXplCj4gLQkJICogcmVxdWlyZW1lbnRzLgo+IC0JCSAqLwo+IC0JCXNpemVfb2sg
+PSB0cnVlOwo+IC0JCWJyZWFrOwo+IC0JfQo+IC0KPiAtCWlmICghc2l6ZV9vaykgewo+IC0JCXBy
+X2RlYnVnKCJFTEYgc2VjdGlvbiB3aXRoIHdyb25nIGVudHJ5IHNpemUuXG4iKTsKPiAtCQlyZXR1
+cm4gZmFsc2U7Cj4gLQl9IGVsc2UgaWYgKHNoZHItPnNoX2FkZHIgKyBzaGRyLT5zaF9zaXplIDwg
+c2hkci0+c2hfYWRkcikgewo+IC0JCXByX2RlYnVnKCJFTEYgc2VjdGlvbiBhZGRyZXNzIHdyYXBz
+IGFyb3VuZC5cbiIpOwo+IC0JCXJldHVybiBmYWxzZTsKPiAtCX0KPiAtCj4gLQlpZiAoc2hkci0+
+c2hfdHlwZSAhPSBTSFRfTk9CSVRTKSB7Cj4gLQkJaWYgKHNoZHItPnNoX29mZnNldCArIHNoZHIt
+PnNoX3NpemUgPCBzaGRyLT5zaF9vZmZzZXQpIHsKPiAtCQkJcHJfZGVidWcoIkVMRiBzZWN0aW9u
+IGxvY2F0aW9uIHdyYXBzIGFyb3VuZC5cbiIpOwo+IC0JCQlyZXR1cm4gZmFsc2U7Cj4gLQkJfSBl
+bHNlIGlmIChzaGRyLT5zaF9vZmZzZXQgKyBzaGRyLT5zaF9zaXplID4gYnVmX2xlbikgewo+IC0J
+CQlwcl9kZWJ1ZygiRUxGIHNlY3Rpb24gbm90IGluIGZpbGUuXG4iKTsKPiAtCQkJcmV0dXJuIGZh
+bHNlOwo+IC0JCX0KPiAtCX0KPiAtCj4gLQlyZXR1cm4gdHJ1ZTsKPiAtfQo+IC0KPiAtc3RhdGlj
+IGludCBlbGZfcmVhZF9zaGRyKGNvbnN0IGNoYXIgKmJ1Ziwgc2l6ZV90IGxlbiwgc3RydWN0IGVs
+Zl9pbmZvICplbGZfaW5mbywKPiAtCQkJIGludCBpZHgpCj4gLXsKPiAtCXN0cnVjdCBlbGZfc2hk
+ciAqc2hkciA9ICZlbGZfaW5mby0+c2VjaGRyc1tpZHhdOwo+IC0JY29uc3Qgc3RydWN0IGVsZmhk
+ciAqZWhkciA9IGVsZl9pbmZvLT5laGRyOwo+IC0JY29uc3QgY2hhciAqc2J1ZjsKPiAtCXN0cnVj
+dCBlbGZfc2hkciAqYnVmX3NoZHI7Cj4gLQo+IC0Jc2J1ZiA9IGJ1ZiArIGVoZHItPmVfc2hvZmYg
+KyBpZHggKiBzaXplb2YoKmJ1Zl9zaGRyKTsKPiAtCWJ1Zl9zaGRyID0gKHN0cnVjdCBlbGZfc2hk
+ciAqKSBzYnVmOwo+IC0KPiAtCXNoZHItPnNoX25hbWUgICAgICA9IGVsZjMyX3RvX2NwdShlaGRy
+LCBidWZfc2hkci0+c2hfbmFtZSk7Cj4gLQlzaGRyLT5zaF90eXBlICAgICAgPSBlbGYzMl90b19j
+cHUoZWhkciwgYnVmX3NoZHItPnNoX3R5cGUpOwo+IC0Jc2hkci0+c2hfYWRkciAgICAgID0gZWxm
+X2FkZHJfdG9fY3B1KGVoZHIsIGJ1Zl9zaGRyLT5zaF9hZGRyKTsKPiAtCXNoZHItPnNoX29mZnNl
+dCAgICA9IGVsZl9hZGRyX3RvX2NwdShlaGRyLCBidWZfc2hkci0+c2hfb2Zmc2V0KTsKPiAtCXNo
+ZHItPnNoX2xpbmsgICAgICA9IGVsZjMyX3RvX2NwdShlaGRyLCBidWZfc2hkci0+c2hfbGluayk7
+Cj4gLQlzaGRyLT5zaF9pbmZvICAgICAgPSBlbGYzMl90b19jcHUoZWhkciwgYnVmX3NoZHItPnNo
+X2luZm8pOwo+IC0KPiAtCS8qCj4gLQkgKiBUaGUgZm9sbG93aW5nIGZpZWxkcyBoYXZlIGEgdHlw
+ZSBlcXVpdmFsZW50IHRvIEVsZl9BZGRyCj4gLQkgKiBib3RoIGluIDMyIGJpdCBhbmQgNjQgYml0
+IEVMRi4KPiAtCSAqLwo+IC0Jc2hkci0+c2hfZmxhZ3MgICAgID0gZWxmX2FkZHJfdG9fY3B1KGVo
+ZHIsIGJ1Zl9zaGRyLT5zaF9mbGFncyk7Cj4gLQlzaGRyLT5zaF9zaXplICAgICAgPSBlbGZfYWRk
+cl90b19jcHUoZWhkciwgYnVmX3NoZHItPnNoX3NpemUpOwo+IC0Jc2hkci0+c2hfYWRkcmFsaWdu
+ID0gZWxmX2FkZHJfdG9fY3B1KGVoZHIsIGJ1Zl9zaGRyLT5zaF9hZGRyYWxpZ24pOwo+IC0Jc2hk
+ci0+c2hfZW50c2l6ZSAgID0gZWxmX2FkZHJfdG9fY3B1KGVoZHIsIGJ1Zl9zaGRyLT5zaF9lbnRz
+aXplKTsKPiAtCj4gLQlyZXR1cm4gZWxmX2lzX3NoZHJfc2FuZShzaGRyLCBsZW4pID8gMCA6IC1F
+Tk9FWEVDOwo+IC19Cj4gLQo+IC0vKioKPiAtICogZWxmX3JlYWRfc2hkcnMgLSByZWFkIHRoZSBz
+ZWN0aW9uIGhlYWRlcnMgZnJvbSB0aGUgYnVmZmVyCj4gLSAqCj4gLSAqIFRoaXMgZnVuY3Rpb24g
+YXNzdW1lcyB0aGF0IHRoZSBzZWN0aW9uIGhlYWRlciB0YWJsZSB3YXMgY2hlY2tlZCBmb3Igc2Fu
+aXR5Lgo+IC0gKiBVc2UgZWxmX2lzX2VoZHJfc2FuZSgpIGlmIGl0IHdhc24ndC4KPiAtICovCj4g
+LXN0YXRpYyBpbnQgZWxmX3JlYWRfc2hkcnMoY29uc3QgY2hhciAqYnVmLCBzaXplX3QgbGVuLAo+
+IC0JCQkgIHN0cnVjdCBlbGZfaW5mbyAqZWxmX2luZm8pCj4gLXsKPiAtCXNpemVfdCBzaGRyX3Np
+emUsIGk7Cj4gLQo+IC0JLyoKPiAtCSAqIGVfc2hudW0gaXMgYXQgbW9zdCA2NTUzNiBzbyBjYWxj
+dWxhdGluZwo+IC0JICogdGhlIHNpemUgb2YgdGhlIHNlY3Rpb24gaGVhZGVyIGNhbm5vdCBvdmVy
+Zmxvdy4KPiAtCSAqLwo+IC0Jc2hkcl9zaXplID0gc2l6ZW9mKHN0cnVjdCBlbGZfc2hkcikgKiBl
+bGZfaW5mby0+ZWhkci0+ZV9zaG51bTsKPiAtCj4gLQllbGZfaW5mby0+c2VjaGRycyA9IGt6YWxs
+b2Moc2hkcl9zaXplLCBHRlBfS0VSTkVMKTsKPiAtCWlmICghZWxmX2luZm8tPnNlY2hkcnMpCj4g
+LQkJcmV0dXJuIC1FTk9NRU07Cj4gLQo+IC0JZm9yIChpID0gMDsgaSA8IGVsZl9pbmZvLT5laGRy
+LT5lX3NobnVtOyBpKyspIHsKPiAtCQlpbnQgcmV0Owo+IC0KPiAtCQlyZXQgPSBlbGZfcmVhZF9z
+aGRyKGJ1ZiwgbGVuLCBlbGZfaW5mbywgaSk7Cj4gLQkJaWYgKHJldCkgewo+IC0JCQlrZnJlZShl
+bGZfaW5mby0+c2VjaGRycyk7Cj4gLQkJCWVsZl9pbmZvLT5zZWNoZHJzID0gTlVMTDsKPiAtCQkJ
+cmV0dXJuIHJldDsKPiAtCQl9Cj4gLQl9Cj4gLQo+IC0JcmV0dXJuIDA7Cj4gLX0KPiAtCj4gLS8q
+Kgo+IC0gKiBlbGZfcmVhZF9mcm9tX2J1ZmZlciAtIHJlYWQgRUxGIGZpbGUgYW5kIHNldHMgdXAg
+RUxGIGhlYWRlciBhbmQgRUxGIGluZm8KPiAtICogQGJ1ZjoJQnVmZmVyIHRvIHJlYWQgRUxGIGZp
+bGUgZnJvbS4KPiAtICogQGxlbjoJU2l6ZSBvZiBAYnVmLgo+IC0gKiBAZWhkcjoJUG9pbnRlciB0
+byBleGlzdGluZyBzdHJ1Y3Qgd2hpY2ggd2lsbCBiZSBwb3B1bGF0ZWQuCj4gLSAqIEBlbGZfaW5m
+bzoJUG9pbnRlciB0byBleGlzdGluZyBzdHJ1Y3Qgd2hpY2ggd2lsbCBiZSBwb3B1bGF0ZWQuCj4g
+LSAqCj4gLSAqIFRoaXMgZnVuY3Rpb24gYWxsb3dzIHJlYWRpbmcgRUxGIGZpbGVzIHdpdGggZGlm
+ZmVyZW50IGJ5dGUgb3JkZXIgdGhhbgo+IC0gKiB0aGUga2VybmVsLCBieXRlLXN3YXBwaW5nIHRo
+ZSBmaWVsZHMgYXMgbmVlZGVkLgo+IC0gKgo+IC0gKiBSZXR1cm46Cj4gLSAqIE9uIHN1Y2Nlc3Mg
+cmV0dXJucyAwLCBhbmQgdGhlIGNhbGxlciBzaG91bGQgY2FsbCBlbGZfZnJlZV9pbmZvKGVsZl9p
+bmZvKSB0bwo+IC0gKiBmcmVlIHRoZSBtZW1vcnkgYWxsb2NhdGVkIGZvciB0aGUgc2VjdGlvbiBh
+bmQgcHJvZ3JhbSBoZWFkZXJzLgo+IC0gKi8KPiAtaW50IGVsZl9yZWFkX2Zyb21fYnVmZmVyKGNv
+bnN0IGNoYXIgKmJ1Ziwgc2l6ZV90IGxlbiwgc3RydWN0IGVsZmhkciAqZWhkciwKPiAtCQkJIHN0
+cnVjdCBlbGZfaW5mbyAqZWxmX2luZm8pCj4gLXsKPiAtCWludCByZXQ7Cj4gLQo+IC0JcmV0ID0g
+ZWxmX3JlYWRfZWhkcihidWYsIGxlbiwgZWhkcik7Cj4gLQlpZiAocmV0KQo+IC0JCXJldHVybiBy
+ZXQ7Cj4gLQo+IC0JZWxmX2luZm8tPmJ1ZmZlciA9IGJ1ZjsKPiAtCWVsZl9pbmZvLT5laGRyID0g
+ZWhkcjsKPiAtCWlmIChlaGRyLT5lX3Bob2ZmID4gMCAmJiBlaGRyLT5lX3BobnVtID4gMCkgewo+
+IC0JCXJldCA9IGVsZl9yZWFkX3BoZHJzKGJ1ZiwgbGVuLCBlbGZfaW5mbyk7Cj4gLQkJaWYgKHJl
+dCkKPiAtCQkJcmV0dXJuIHJldDsKPiAtCX0KPiAtCWlmIChlaGRyLT5lX3Nob2ZmID4gMCAmJiBl
+aGRyLT5lX3NobnVtID4gMCkgewo+IC0JCXJldCA9IGVsZl9yZWFkX3NoZHJzKGJ1ZiwgbGVuLCBl
+bGZfaW5mbyk7Cj4gLQkJaWYgKHJldCkgewo+IC0JCQlrZnJlZShlbGZfaW5mby0+cHJvZ2hkcnMp
+Owo+IC0JCQlyZXR1cm4gcmV0Owo+IC0JCX0KPiAtCX0KPiAtCj4gLQlyZXR1cm4gMDsKPiAtfQo+
+IC0KPiAtLyoqCj4gLSAqIGVsZl9mcmVlX2luZm8gLSBmcmVlIG1lbW9yeSBhbGxvY2F0ZWQgYnkg
+ZWxmX3JlYWRfZnJvbV9idWZmZXIKPiAtICovCj4gLXZvaWQgZWxmX2ZyZWVfaW5mbyhzdHJ1Y3Qg
+ZWxmX2luZm8gKmVsZl9pbmZvKQo+IC17Cj4gLQlrZnJlZShlbGZfaW5mby0+cHJvZ2hkcnMpOwo+
+IC0Ja2ZyZWUoZWxmX2luZm8tPnNlY2hkcnMpOwo+IC0JbWVtc2V0KGVsZl9pbmZvLCAwLCBzaXpl
+b2YoKmVsZl9pbmZvKSk7Cj4gLX0KPiAtLyoqCj4gLSAqIGJ1aWxkX2VsZl9leGVjX2luZm8gLSBy
+ZWFkIEVMRiBleGVjdXRhYmxlIGFuZCBjaGVjayB0aGF0IHdlIGNhbiB1c2UgaXQKPiAtICovCj4g
+LXN0YXRpYyBpbnQgYnVpbGRfZWxmX2V4ZWNfaW5mbyhjb25zdCBjaGFyICpidWYsIHNpemVfdCBs
+ZW4sIHN0cnVjdCBlbGZoZHIgKmVoZHIsCj4gLQkJCSAgICAgICBzdHJ1Y3QgZWxmX2luZm8gKmVs
+Zl9pbmZvKQo+IC17Cj4gLQlpbnQgaTsKPiAtCWludCByZXQ7Cj4gLQo+IC0JcmV0ID0gZWxmX3Jl
+YWRfZnJvbV9idWZmZXIoYnVmLCBsZW4sIGVoZHIsIGVsZl9pbmZvKTsKPiAtCWlmIChyZXQpCj4g
+LQkJcmV0dXJuIHJldDsKPiAtCj4gLQkvKiBCaWcgZW5kaWFuIHZtbGludXggaGFzIHR5cGUgRVRf
+RFlOLiAqLwo+IC0JaWYgKGVoZHItPmVfdHlwZSAhPSBFVF9FWEVDICYmIGVoZHItPmVfdHlwZSAh
+PSBFVF9EWU4pIHsKPiAtCQlwcl9lcnIoIk5vdCBhbiBFTEYgZXhlY3V0YWJsZS5cbiIpOwo+IC0J
+CWdvdG8gZXJyb3I7Cj4gLQl9IGVsc2UgaWYgKCFlbGZfaW5mby0+cHJvZ2hkcnMpIHsKPiAtCQlw
+cl9lcnIoIk5vIEVMRiBwcm9ncmFtIGhlYWRlci5cbiIpOwo+IC0JCWdvdG8gZXJyb3I7Cj4gLQl9
+Cj4gLQo+IC0JZm9yIChpID0gMDsgaSA8IGVoZHItPmVfcGhudW07IGkrKykgewo+IC0JCS8qCj4g
+LQkJICogS2V4ZWMgZG9lcyBub3Qgc3VwcG9ydCBsb2FkaW5nIGludGVycHJldGVycy4KPiAtCQkg
+KiBJbiBhZGRpdGlvbiB0aGlzIGNoZWNrIGtlZXBzIHVzIGZyb20gYXR0ZW1wdGluZwo+IC0JCSAq
+IHRvIGtleGVjIG9yZGluYXkgZXhlY3V0YWJsZXMuCj4gLQkJICovCj4gLQkJaWYgKGVsZl9pbmZv
+LT5wcm9naGRyc1tpXS5wX3R5cGUgPT0gUFRfSU5URVJQKSB7Cj4gLQkJCXByX2VycigiUmVxdWly
+ZXMgYW4gRUxGIGludGVycHJldGVyLlxuIik7Cj4gLQkJCWdvdG8gZXJyb3I7Cj4gLQkJfQo+IC0J
+fQo+IC0KPiAtCXJldHVybiAwOwo+IC1lcnJvcjoKPiAtCWVsZl9mcmVlX2luZm8oZWxmX2luZm8p
+Owo+IC0JcmV0dXJuIC1FTk9FWEVDOwo+IC19Cj4gLQo+IC1zdGF0aWMgaW50IGVsZjY0X3Byb2Jl
+KGNvbnN0IGNoYXIgKmJ1ZiwgdW5zaWduZWQgbG9uZyBsZW4pCj4gLXsKPiAtCXN0cnVjdCBlbGZo
+ZHIgZWhkcjsKPiAtCXN0cnVjdCBlbGZfaW5mbyBlbGZfaW5mbzsKPiAtCWludCByZXQ7Cj4gLQo+
+IC0JcmV0ID0gYnVpbGRfZWxmX2V4ZWNfaW5mbyhidWYsIGxlbiwgJmVoZHIsICZlbGZfaW5mbyk7
+Cj4gLQlpZiAocmV0KQo+IC0JCXJldHVybiByZXQ7Cj4gLQo+IC0JZWxmX2ZyZWVfaW5mbygmZWxm
+X2luZm8pOwo+IC0KPiAtCXJldHVybiBlbGZfY2hlY2tfYXJjaCgmZWhkcikgPyAwIDogLUVOT0VY
+RUM7Cj4gLX0KPiAtCj4gLS8qKgo+IC0gKiBlbGZfZXhlY19sb2FkIC0gbG9hZCBFTEYgZXhlY3V0
+YWJsZSBpbWFnZQo+IC0gKiBAbG93ZXN0X2xvYWRfYWRkcjoJT24gcmV0dXJuLCB3aWxsIGJlIHRo
+ZSBhZGRyZXNzIHdoZXJlIHRoZSBmaXJzdCBQVF9MT0FECj4gLSAqCQkJc2VjdGlvbiB3aWxsIGJl
+IGxvYWRlZCBpbiBtZW1vcnkuCj4gLSAqCj4gLSAqIFJldHVybjoKPiAtICogMCBvbiBzdWNjZXNz
+LCBuZWdhdGl2ZSB2YWx1ZSBvbiBmYWlsdXJlLgo+IC0gKi8KPiAtc3RhdGljIGludCBlbGZfZXhl
+Y19sb2FkKHN0cnVjdCBraW1hZ2UgKmltYWdlLCBzdHJ1Y3QgZWxmaGRyICplaGRyLAo+IC0JCQkg
+c3RydWN0IGVsZl9pbmZvICplbGZfaW5mbywKPiAtCQkJIHVuc2lnbmVkIGxvbmcgKmxvd2VzdF9s
+b2FkX2FkZHIpCj4gLXsKPiAtCXVuc2lnbmVkIGxvbmcgYmFzZSA9IDAsIGxvd2VzdF9hZGRyID0g
+VUlOVF9NQVg7Cj4gLQlpbnQgcmV0Owo+IC0Jc2l6ZV90IGk7Cj4gLQlzdHJ1Y3Qga2V4ZWNfYnVm
+IGtidWYgPSB7IC5pbWFnZSA9IGltYWdlLCAuYnVmX21heCA9IHBwYzY0X3JtYV9zaXplLAo+IC0J
+CQkJICAudG9wX2Rvd24gPSBmYWxzZSB9Owo+IC0KPiAtCS8qIFJlYWQgaW4gdGhlIFBUX0xPQUQg
+c2VnbWVudHMuICovCj4gLQlmb3IgKGkgPSAwOyBpIDwgZWhkci0+ZV9waG51bTsgaSsrKSB7Cj4g
+LQkJdW5zaWduZWQgbG9uZyBsb2FkX2FkZHI7Cj4gLQkJc2l6ZV90IHNpemU7Cj4gLQkJY29uc3Qg
+c3RydWN0IGVsZl9waGRyICpwaGRyOwo+IC0KPiAtCQlwaGRyID0gJmVsZl9pbmZvLT5wcm9naGRy
+c1tpXTsKPiAtCQlpZiAocGhkci0+cF90eXBlICE9IFBUX0xPQUQpCj4gLQkJCWNvbnRpbnVlOwo+
+IC0KPiAtCQlzaXplID0gcGhkci0+cF9maWxlc3o7Cj4gLQkJaWYgKHNpemUgPiBwaGRyLT5wX21l
+bXN6KQo+IC0JCQlzaXplID0gcGhkci0+cF9tZW1zejsKPiAtCj4gLQkJa2J1Zi5idWZmZXIgPSAo
+dm9pZCAqKSBlbGZfaW5mby0+YnVmZmVyICsgcGhkci0+cF9vZmZzZXQ7Cj4gLQkJa2J1Zi5idWZz
+eiA9IHNpemU7Cj4gLQkJa2J1Zi5tZW1zeiA9IHBoZHItPnBfbWVtc3o7Cj4gLQkJa2J1Zi5idWZf
+YWxpZ24gPSBwaGRyLT5wX2FsaWduOwo+IC0JCWtidWYuYnVmX21pbiA9IHBoZHItPnBfcGFkZHIg
+KyBiYXNlOwo+IC0JCXJldCA9IGtleGVjX2FkZF9idWZmZXIoJmtidWYpOwo+IC0JCWlmIChyZXQp
+Cj4gLQkJCWdvdG8gb3V0Owo+IC0JCWxvYWRfYWRkciA9IGtidWYubWVtOwo+IC0KPiAtCQlpZiAo
+bG9hZF9hZGRyIDwgbG93ZXN0X2FkZHIpCj4gLQkJCWxvd2VzdF9hZGRyID0gbG9hZF9hZGRyOwo+
+IC0JfQo+IC0KPiAtCS8qIFVwZGF0ZSBlbnRyeSBwb2ludCB0byByZWZsZWN0IG5ldyBsb2FkIGFk
+ZHJlc3MuICovCj4gLQllaGRyLT5lX2VudHJ5ICs9IGJhc2U7Cj4gLQo+IC0JKmxvd2VzdF9sb2Fk
+X2FkZHIgPSBsb3dlc3RfYWRkcjsKPiAtCXJldCA9IDA7Cj4gLSBvdXQ6Cj4gLQlyZXR1cm4gcmV0
+Owo+IC19Cj4gKyNkZWZpbmUgUFVSR0FUT1JZX1NUQUNLX1NJWkUgKDE2ICogMTAyNCkKPiAgIAo+
+ICAgc3RhdGljIHZvaWQgKmVsZjY0X2xvYWQoc3RydWN0IGtpbWFnZSAqaW1hZ2UsIGNoYXIgKmtl
+cm5lbF9idWYsCj4gICAJCQl1bnNpZ25lZCBsb25nIGtlcm5lbF9sZW4sIGNoYXIgKmluaXRyZCwK
+PiBAQCAtNTc3LDE3ICs0NSwxNyBAQCBzdGF0aWMgdm9pZCAqZWxmNjRfbG9hZChzdHJ1Y3Qga2lt
+YWdlICppbWFnZSwgY2hhciAqa2VybmVsX2J1ZiwKPiAgIAl2b2lkICpmZHQ7Cj4gICAJY29uc3Qg
+dm9pZCAqc2xhdmVfY29kZTsKPiAgIAlzdHJ1Y3QgZWxmaGRyIGVoZHI7Cj4gLQlzdHJ1Y3QgZWxm
+X2luZm8gZWxmX2luZm87Cj4gKwlzdHJ1Y3Qga2V4ZWNfZWxmX2luZm8gZWxmX2luZm87Cj4gICAJ
+c3RydWN0IGtleGVjX2J1ZiBrYnVmID0geyAuaW1hZ2UgPSBpbWFnZSwgLmJ1Zl9taW4gPSAwLAo+
+ICAgCQkJCSAgLmJ1Zl9tYXggPSBwcGM2NF9ybWFfc2l6ZSB9Owo+ICAgCXN0cnVjdCBrZXhlY19i
+dWYgcGJ1ZiA9IHsgLmltYWdlID0gaW1hZ2UsIC5idWZfbWluID0gMCwKPiAgIAkJCQkgIC5idWZf
+bWF4ID0gcHBjNjRfcm1hX3NpemUsIC50b3BfZG93biA9IHRydWUgfTsKPiAgIAo+IC0JcmV0ID0g
+YnVpbGRfZWxmX2V4ZWNfaW5mbyhrZXJuZWxfYnVmLCBrZXJuZWxfbGVuLCAmZWhkciwgJmVsZl9p
+bmZvKTsKPiArCXJldCA9IGtleGVjX2J1aWxkX2VsZl9pbmZvKGtlcm5lbF9idWYsIGtlcm5lbF9s
+ZW4sICZlaGRyLCAmZWxmX2luZm8pOwo+ICAgCWlmIChyZXQpCj4gICAJCWdvdG8gb3V0Owo+ICAg
+Cj4gLQlyZXQgPSBlbGZfZXhlY19sb2FkKGltYWdlLCAmZWhkciwgJmVsZl9pbmZvLCAma2VybmVs
+X2xvYWRfYWRkcik7Cj4gKwlyZXQgPSBrZXhlY19lbGZfbG9hZChpbWFnZSwgJmVoZHIsICZlbGZf
+aW5mbywgJmtidWYsICZrZXJuZWxfbG9hZF9hZGRyKTsKPiAgIAlpZiAocmV0KQo+ICAgCQlnb3Rv
+IG91dDsKPiAgIAo+IEBAIC02MDYsNiArNzQsNyBAQCBzdGF0aWMgdm9pZCAqZWxmNjRfbG9hZChz
+dHJ1Y3Qga2ltYWdlICppbWFnZSwgY2hhciAqa2VybmVsX2J1ZiwKPiAgIAkJa2J1Zi5idWZzeiA9
+IGtidWYubWVtc3ogPSBpbml0cmRfbGVuOwo+ICAgCQlrYnVmLmJ1Zl9hbGlnbiA9IFBBR0VfU0la
+RTsKPiAgIAkJa2J1Zi50b3BfZG93biA9IGZhbHNlOwo+ICsJCWtidWYubWVtID0gS0VYRUNfQlVG
+X01FTV9VTktOT1dOOwo+ICAgCQlyZXQgPSBrZXhlY19hZGRfYnVmZmVyKCZrYnVmKTsKPiAgIAkJ
+aWYgKHJldCkKPiAgIAkJCWdvdG8gb3V0Owo+IEBAIC02MzgsNiArMTA3LDcgQEAgc3RhdGljIHZv
+aWQgKmVsZjY0X2xvYWQoc3RydWN0IGtpbWFnZSAqaW1hZ2UsIGNoYXIgKmtlcm5lbF9idWYsCj4g
+ICAJa2J1Zi5idWZzeiA9IGtidWYubWVtc3ogPSBmZHRfc2l6ZTsKPiAgIAlrYnVmLmJ1Zl9hbGln
+biA9IFBBR0VfU0laRTsKPiAgIAlrYnVmLnRvcF9kb3duID0gdHJ1ZTsKPiArCWtidWYubWVtID0g
+S0VYRUNfQlVGX01FTV9VTktOT1dOOwo+ICAgCXJldCA9IGtleGVjX2FkZF9idWZmZXIoJmtidWYp
+Owo+ICAgCWlmIChyZXQpCj4gICAJCWdvdG8gb3V0Owo+IEBAIC02NTIsMTMgKzEyMiwxMiBAQCBz
+dGF0aWMgdm9pZCAqZWxmNjRfbG9hZChzdHJ1Y3Qga2ltYWdlICppbWFnZSwgY2hhciAqa2VybmVs
+X2J1ZiwKPiAgIAkJcHJfZXJyKCJFcnJvciBzZXR0aW5nIHVwIHRoZSBwdXJnYXRvcnkuXG4iKTsK
+PiAgIAo+ICAgb3V0Ogo+IC0JZWxmX2ZyZWVfaW5mbygmZWxmX2luZm8pOwo+IC0KPiArCWtleGVj
+X2ZyZWVfZWxmX2luZm8oJmVsZl9pbmZvKTsKPiAgIAkvKiBNYWtlIGtpbWFnZV9maWxlX3Bvc3Rf
+bG9hZF9jbGVhbnVwIGZyZWUgdGhlIGZkdCBidWZmZXIgZm9yIHVzLiAqLwo+ICAgCXJldHVybiBy
+ZXQgPyBFUlJfUFRSKHJldCkgOiBmZHQ7Cj4gICB9Cj4gICAKPiAgIGNvbnN0IHN0cnVjdCBrZXhl
+Y19maWxlX29wcyBrZXhlY19lbGY2NF9vcHMgPSB7Cj4gLQkucHJvYmUgPSBlbGY2NF9wcm9iZSwK
+PiArCS5wcm9iZSA9IGtleGVjX2VsZl9wcm9iZSwKPiAgIAkubG9hZCA9IGVsZjY0X2xvYWQsCj4g
+ICB9Owo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2tleGVjLmggYi9pbmNsdWRlL2xpbnV4
+L2tleGVjLmgKPiBpbmRleCBiOWIxYmM1Zjk2NjkuLjcyNjQ4YjE4Yjc3OCAxMDA2NDQKPiAtLS0g
+YS9pbmNsdWRlL2xpbnV4L2tleGVjLmgKPiArKysgYi9pbmNsdWRlL2xpbnV4L2tleGVjLmgKPiBA
+QCAtMjE2LDYgKzIxNiw0MSBAQCBleHRlcm4gaW50IGNyYXNoX3ByZXBhcmVfZWxmNjRfaGVhZGVy
+cyhzdHJ1Y3QgY3Jhc2hfbWVtICptZW0sIGludCBrZXJuZWxfbWFwLAo+ICAgCQkJCSAgICAgICB2
+b2lkICoqYWRkciwgdW5zaWduZWQgbG9uZyAqc3opOwo+ICAgI2VuZGlmIC8qIENPTkZJR19LRVhF
+Q19GSUxFICovCj4gICAKPiArI2lmZGVmIENPTkZJR19LRVhFQ19FTEYKPiArCj4gK3N0cnVjdCBr
+ZXhlY19lbGZfaW5mbyB7Cj4gKwkvKgo+ICsJICogV2hlcmUgdGhlIEVMRiBiaW5hcnkgY29udGVu
+dHMgYXJlIGtlcHQuCj4gKwkgKiBNZW1vcnkgbWFuYWdlZCBieSB0aGUgdXNlciBvZiB0aGUgc3Ry
+dWN0Lgo+ICsJICovCj4gKwljb25zdCBjaGFyICpidWZmZXI7Cj4gKwo+ICsJY29uc3Qgc3RydWN0
+IGVsZmhkciAqZWhkcjsKPiArCWNvbnN0IHN0cnVjdCBlbGZfcGhkciAqcHJvZ2hkcnM7Cj4gKwlz
+dHJ1Y3QgZWxmX3NoZHIgKnNlY2hkcnM7Cj4gK307Cj4gKwo+ICt2b2lkIGtleGVjX2ZyZWVfZWxm
+X2luZm8oc3RydWN0IGtleGVjX2VsZl9pbmZvICplbGZfaW5mbyk7Cj4gKwo+ICtpbnQga2V4ZWNf
+YnVpbGRfZWxmX2luZm8oY29uc3QgY2hhciAqYnVmLCBzaXplX3QgbGVuLCBzdHJ1Y3QgZWxmaGRy
+ICplaGRyLAo+ICsJCQkgIHN0cnVjdCBrZXhlY19lbGZfaW5mbyAqZWxmX2luZm8pOwo+ICsKPiAr
+aW50IGtleGVjX2VsZl9rZXJuZWxfbG9hZChzdHJ1Y3Qga2ltYWdlICppbWFnZSwgc3RydWN0IGtl
+eGVjX2J1ZiAqa2J1ZiwKPiArCQkJICBjaGFyICprZXJuZWxfYnVmLCB1bnNpZ25lZCBsb25nIGtl
+cm5lbF9sZW4sCj4gKwkJCSAgdW5zaWduZWQgbG9uZyAqa2VybmVsX2xvYWRfYWRkcik7Cj4gKwo+
+ICtpbnQga2V4ZWNfZWxmX3Byb2JlKGNvbnN0IGNoYXIgKmJ1ZiwgdW5zaWduZWQgbG9uZyBsZW4p
+Owo+ICsKPiAraW50IGtleGVjX2VsZl9sb2FkKHN0cnVjdCBraW1hZ2UgKmltYWdlLCBzdHJ1Y3Qg
+ZWxmaGRyICplaGRyLAo+ICsJCQkgc3RydWN0IGtleGVjX2VsZl9pbmZvICplbGZfaW5mbywKPiAr
+CQkJIHN0cnVjdCBrZXhlY19idWYgKmtidWYsCj4gKwkJCSB1bnNpZ25lZCBsb25nICpsb3dlc3Rf
+bG9hZF9hZGRyKTsKPiArCj4gK2ludCBrZXhlY19lbGZfbG9hZChzdHJ1Y3Qga2ltYWdlICppbWFn
+ZSwgc3RydWN0IGVsZmhkciAqZWhkciwKPiArCQkJIHN0cnVjdCBrZXhlY19lbGZfaW5mbyAqZWxm
+X2luZm8sCj4gKwkJCSBzdHJ1Y3Qga2V4ZWNfYnVmICprYnVmLAo+ICsJCQkgdW5zaWduZWQgbG9u
+ZyAqbG93ZXN0X2xvYWRfYWRkcik7Cj4gKyNlbmRpZgo+ICAgc3RydWN0IGtpbWFnZSB7Cj4gICAJ
+a2ltYWdlX2VudHJ5X3QgaGVhZDsKPiAgIAlraW1hZ2VfZW50cnlfdCAqZW50cnk7Cj4gZGlmZiAt
+LWdpdCBhL2tlcm5lbC9NYWtlZmlsZSBiL2tlcm5lbC9NYWtlZmlsZQo+IGluZGV4IDMzODI0ZjAz
+ODViMy4uNzA2MjMwNmRlOWI3IDEwMDY0NAo+IC0tLSBhL2tlcm5lbC9NYWtlZmlsZQo+ICsrKyBi
+L2tlcm5lbC9NYWtlZmlsZQo+IEBAIC02NCw2ICs2NCw3IEBAIG9iai0kKENPTkZJR19DUkFTSF9D
+T1JFKSArPSBjcmFzaF9jb3JlLm8KPiAgIG9iai0kKENPTkZJR19LRVhFQ19DT1JFKSArPSBrZXhl
+Y19jb3JlLm8KPiAgIG9iai0kKENPTkZJR19LRVhFQykgKz0ga2V4ZWMubwo+ICAgb2JqLSQoQ09O
+RklHX0tFWEVDX0ZJTEUpICs9IGtleGVjX2ZpbGUubwo+ICtvYmotJChDT05GSUdfS0VYRUNfRUxG
+KSArPSBrZXhlY19lbGYubwo+ICAgb2JqLSQoQ09ORklHX0JBQ0tUUkFDRV9TRUxGX1RFU1QpICs9
+IGJhY2t0cmFjZXRlc3Qubwo+ICAgb2JqLSQoQ09ORklHX0NPTVBBVCkgKz0gY29tcGF0Lm8KPiAg
+IG9iai0kKENPTkZJR19DR1JPVVBTKSArPSBjZ3JvdXAvCj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9r
+ZXhlY19lbGYuYyBiL2tlcm5lbC9rZXhlY19lbGYuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4g
+aW5kZXggMDAwMDAwMDAwMDAwLi4wN2U1YmNjNzliYmEKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIv
+a2VybmVsL2tleGVjX2VsZi5jCj4gQEAgLTAsMCArMSw1NDAgQEAKPiArLy8gU1BEWC1MaWNlbnNl
+LUlkZW50aWZpZXI6IEdQTC0yLjAKPiArCj4gKyNkZWZpbmUgcHJfZm10KGZtdCkJImtleGVjX2Vs
+ZjogIiBmbXQKPiArCj4gKyNpbmNsdWRlIDxsaW51eC9lbGYuaD4KPiArI2luY2x1ZGUgPGxpbnV4
+L2tleGVjLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPiArI2luY2x1ZGUgPGxpbnV4
+L3NsYWIuaD4KPiArI2luY2x1ZGUgPGxpbnV4L3R5cGVzLmg+Cj4gKwo+ICsKPiArc3RhdGljIGlu
+bGluZSBib29sIGVsZl9pc19lbGZfZmlsZShjb25zdCBzdHJ1Y3QgZWxmaGRyICplaGRyKQo+ICt7
+Cj4gKyAgICAgICByZXR1cm4gbWVtY21wKGVoZHItPmVfaWRlbnQsIEVMRk1BRywgU0VMRk1BRykg
+PT0gMDsKPiArfQo+ICsKPiArc3RhdGljIHVpbnQ2NF90IGVsZjY0X3RvX2NwdShjb25zdCBzdHJ1
+Y3QgZWxmaGRyICplaGRyLCB1aW50NjRfdCB2YWx1ZSkKPiArewo+ICsJaWYgKGVoZHItPmVfaWRl
+bnRbRUlfREFUQV0gPT0gRUxGREFUQTJMU0IpCj4gKwkJdmFsdWUgPSBsZTY0X3RvX2NwdSh2YWx1
+ZSk7Cj4gKwllbHNlIGlmIChlaGRyLT5lX2lkZW50W0VJX0RBVEFdID09IEVMRkRBVEEyTVNCKQo+
+ICsJCXZhbHVlID0gYmU2NF90b19jcHUodmFsdWUpOwo+ICsKPiArCXJldHVybiB2YWx1ZTsKPiAr
+fQo+ICsKPiArc3RhdGljIHVpbnQzMl90IGVsZjMyX3RvX2NwdShjb25zdCBzdHJ1Y3QgZWxmaGRy
+ICplaGRyLCB1aW50MzJfdCB2YWx1ZSkKPiArewo+ICsJaWYgKGVoZHItPmVfaWRlbnRbRUlfREFU
+QV0gPT0gRUxGREFUQTJMU0IpCj4gKwkJdmFsdWUgPSBsZTMyX3RvX2NwdSh2YWx1ZSk7Cj4gKwll
+bHNlIGlmIChlaGRyLT5lX2lkZW50W0VJX0RBVEFdID09IEVMRkRBVEEyTVNCKQo+ICsJCXZhbHVl
+ID0gYmUzMl90b19jcHUodmFsdWUpOwo+ICsKPiArCXJldHVybiB2YWx1ZTsKPiArfQo+ICsKPiAr
+c3RhdGljIHVpbnQxNl90IGVsZjE2X3RvX2NwdShjb25zdCBzdHJ1Y3QgZWxmaGRyICplaGRyLCB1
+aW50MTZfdCB2YWx1ZSkKPiArewo+ICsJaWYgKGVoZHItPmVfaWRlbnRbRUlfREFUQV0gPT0gRUxG
+REFUQTJMU0IpCj4gKwkJdmFsdWUgPSBsZTE2X3RvX2NwdSh2YWx1ZSk7Cj4gKwllbHNlIGlmIChl
+aGRyLT5lX2lkZW50W0VJX0RBVEFdID09IEVMRkRBVEEyTVNCKQo+ICsJCXZhbHVlID0gYmUxNl90
+b19jcHUodmFsdWUpOwo+ICsKPiArCXJldHVybiB2YWx1ZTsKPiArfQo+ICsKPiArLyoqCj4gKyAq
+IGVsZl9pc19laGRyX3NhbmUgLSBjaGVjayB0aGF0IGl0IGlzIHNhZmUgdG8gdXNlIHRoZSBFTEYg
+aGVhZGVyCj4gKyAqIEBidWZfbGVuOglzaXplIG9mIHRoZSBidWZmZXIgaW4gd2hpY2ggdGhlIEVM
+RiBmaWxlIGlzIGxvYWRlZC4KPiArICovCj4gK3N0YXRpYyBib29sIGVsZl9pc19laGRyX3NhbmUo
+Y29uc3Qgc3RydWN0IGVsZmhkciAqZWhkciwgc2l6ZV90IGJ1Zl9sZW4pCj4gK3sKPiArCWlmIChl
+aGRyLT5lX3BobnVtID4gMCAmJiBlaGRyLT5lX3BoZW50c2l6ZSAhPSBzaXplb2Yoc3RydWN0IGVs
+Zl9waGRyKSkgewo+ICsJCXByX2RlYnVnKCJCYWQgcHJvZ3JhbSBoZWFkZXIgc2l6ZS5cbiIpOwo+
+ICsJCXJldHVybiBmYWxzZTsKPiArCX0gZWxzZSBpZiAoZWhkci0+ZV9zaG51bSA+IDAgJiYKPiAr
+CQkgICBlaGRyLT5lX3NoZW50c2l6ZSAhPSBzaXplb2Yoc3RydWN0IGVsZl9zaGRyKSkgewo+ICsJ
+CXByX2RlYnVnKCJCYWQgc2VjdGlvbiBoZWFkZXIgc2l6ZS5cbiIpOwo+ICsJCXJldHVybiBmYWxz
+ZTsKPiArCX0gZWxzZSBpZiAoZWhkci0+ZV9pZGVudFtFSV9WRVJTSU9OXSAhPSBFVl9DVVJSRU5U
+IHx8Cj4gKwkJICAgZWhkci0+ZV92ZXJzaW9uICE9IEVWX0NVUlJFTlQpIHsKPiArCQlwcl9kZWJ1
+ZygiVW5rbm93biBFTEYgdmVyc2lvbi5cbiIpOwo+ICsJCXJldHVybiBmYWxzZTsKPiArCX0KPiAr
+Cj4gKwlpZiAoZWhkci0+ZV9waG9mZiA+IDAgJiYgZWhkci0+ZV9waG51bSA+IDApIHsKPiArCQlz
+aXplX3QgcGhkcl9zaXplOwo+ICsKPiArCQkvKgo+ICsJCSAqIGVfcGhudW0gaXMgYXQgbW9zdCA2
+NTUzNSBzbyBjYWxjdWxhdGluZyB0aGUgc2l6ZSBvZiB0aGUKPiArCQkgKiBwcm9ncmFtIGhlYWRl
+ciBjYW5ub3Qgb3ZlcmZsb3cuCj4gKwkJICovCj4gKwkJcGhkcl9zaXplID0gc2l6ZW9mKHN0cnVj
+dCBlbGZfcGhkcikgKiBlaGRyLT5lX3BobnVtOwo+ICsKPiArCQkvKiBTYW5pdHkgY2hlY2sgdGhl
+IHByb2dyYW0gaGVhZGVyIHRhYmxlIGxvY2F0aW9uLiAqLwo+ICsJCWlmIChlaGRyLT5lX3Bob2Zm
+ICsgcGhkcl9zaXplIDwgZWhkci0+ZV9waG9mZikgewo+ICsJCQlwcl9kZWJ1ZygiUHJvZ3JhbSBo
+ZWFkZXJzIGF0IGludmFsaWQgbG9jYXRpb24uXG4iKTsKPiArCQkJcmV0dXJuIGZhbHNlOwo+ICsJ
+CX0gZWxzZSBpZiAoZWhkci0+ZV9waG9mZiArIHBoZHJfc2l6ZSA+IGJ1Zl9sZW4pIHsKPiArCQkJ
+cHJfZGVidWcoIlByb2dyYW0gaGVhZGVycyB0cnVuY2F0ZWQuXG4iKTsKPiArCQkJcmV0dXJuIGZh
+bHNlOwo+ICsJCX0KPiArCX0KPiArCj4gKwlpZiAoZWhkci0+ZV9zaG9mZiA+IDAgJiYgZWhkci0+
+ZV9zaG51bSA+IDApIHsKPiArCQlzaXplX3Qgc2hkcl9zaXplOwo+ICsKPiArCQkvKgo+ICsJCSAq
+IGVfc2hudW0gaXMgYXQgbW9zdCA2NTUzNiBzbyBjYWxjdWxhdGluZwo+ICsJCSAqIHRoZSBzaXpl
+IG9mIHRoZSBzZWN0aW9uIGhlYWRlciBjYW5ub3Qgb3ZlcmZsb3cuCj4gKwkJICovCj4gKwkJc2hk
+cl9zaXplID0gc2l6ZW9mKHN0cnVjdCBlbGZfc2hkcikgKiBlaGRyLT5lX3NobnVtOwo+ICsKPiAr
+CQkvKiBTYW5pdHkgY2hlY2sgdGhlIHNlY3Rpb24gaGVhZGVyIHRhYmxlIGxvY2F0aW9uLiAqLwo+
+ICsJCWlmIChlaGRyLT5lX3Nob2ZmICsgc2hkcl9zaXplIDwgZWhkci0+ZV9zaG9mZikgewo+ICsJ
+CQlwcl9kZWJ1ZygiU2VjdGlvbiBoZWFkZXJzIGF0IGludmFsaWQgbG9jYXRpb24uXG4iKTsKPiAr
+CQkJcmV0dXJuIGZhbHNlOwo+ICsJCX0gZWxzZSBpZiAoZWhkci0+ZV9zaG9mZiArIHNoZHJfc2l6
+ZSA+IGJ1Zl9sZW4pIHsKPiArCQkJcHJfZGVidWcoIlNlY3Rpb24gaGVhZGVycyB0cnVuY2F0ZWQu
+XG4iKTsKPiArCQkJcmV0dXJuIGZhbHNlOwo+ICsJCX0KPiArCX0KPiArCj4gKwlyZXR1cm4gdHJ1
+ZTsKPiArfQo+ICsKPiArc3RhdGljIGludCBlbGZfcmVhZF9laGRyKGNvbnN0IGNoYXIgKmJ1Ziwg
+c2l6ZV90IGxlbiwgc3RydWN0IGVsZmhkciAqZWhkcikKPiArewo+ICsJc3RydWN0IGVsZmhkciAq
+YnVmX2VoZHI7Cj4gKwo+ICsJaWYgKGxlbiA8IHNpemVvZigqYnVmX2VoZHIpKSB7Cj4gKwkJcHJf
+ZGVidWcoIkJ1ZmZlciBpcyB0b28gc21hbGwgdG8gaG9sZCBFTEYgaGVhZGVyLlxuIik7Cj4gKwkJ
+cmV0dXJuIC1FTk9FWEVDOwo+ICsJfQo+ICsKPiArCW1lbXNldChlaGRyLCAwLCBzaXplb2YoKmVo
+ZHIpKTsKPiArCW1lbWNweShlaGRyLT5lX2lkZW50LCBidWYsIHNpemVvZihlaGRyLT5lX2lkZW50
+KSk7Cj4gKwlpZiAoIWVsZl9pc19lbGZfZmlsZShlaGRyKSkgewo+ICsJCXByX2RlYnVnKCJObyBF
+TEYgaGVhZGVyIG1hZ2ljLlxuIik7Cj4gKwkJcmV0dXJuIC1FTk9FWEVDOwo+ICsJfQo+ICsKPiAr
+CWlmIChlaGRyLT5lX2lkZW50W0VJX0NMQVNTXSAhPSBFTEZfQ0xBU1MpIHsKPiArCQlwcl9kZWJ1
+ZygiTm90IGEgc3VwcG9ydGVkIEVMRiBjbGFzcy5cbiIpOwo+ICsJCXJldHVybiAtRU5PRVhFQzsK
+PiArCX0gZWxzZSAgaWYgKGVoZHItPmVfaWRlbnRbRUlfREFUQV0gIT0gRUxGREFUQTJMU0IgJiYK
+PiArCQllaGRyLT5lX2lkZW50W0VJX0RBVEFdICE9IEVMRkRBVEEyTVNCKSB7Cj4gKwkJcHJfZGVi
+dWcoIk5vdCBhIHN1cHBvcnRlZCBFTEYgZGF0YSBmb3JtYXQuXG4iKTsKPiArCQlyZXR1cm4gLUVO
+T0VYRUM7Cj4gKwl9Cj4gKwo+ICsJYnVmX2VoZHIgPSAoc3RydWN0IGVsZmhkciAqKSBidWY7Cj4g
+KwlpZiAoZWxmMTZfdG9fY3B1KGVoZHIsIGJ1Zl9laGRyLT5lX2Voc2l6ZSkgIT0gc2l6ZW9mKCpi
+dWZfZWhkcikpIHsKPiArCQlwcl9kZWJ1ZygiQmFkIEVMRiBoZWFkZXIgc2l6ZS5cbiIpOwo+ICsJ
+CXJldHVybiAtRU5PRVhFQzsKPiArCX0KPiArCj4gKwllaGRyLT5lX3R5cGUgICAgICA9IGVsZjE2
+X3RvX2NwdShlaGRyLCBidWZfZWhkci0+ZV90eXBlKTsKPiArCWVoZHItPmVfbWFjaGluZSAgID0g
+ZWxmMTZfdG9fY3B1KGVoZHIsIGJ1Zl9laGRyLT5lX21hY2hpbmUpOwo+ICsJZWhkci0+ZV92ZXJz
+aW9uICAgPSBlbGYzMl90b19jcHUoZWhkciwgYnVmX2VoZHItPmVfdmVyc2lvbik7Cj4gKwllaGRy
+LT5lX2VudHJ5ICAgICA9IGVsZjY0X3RvX2NwdShlaGRyLCBidWZfZWhkci0+ZV9lbnRyeSk7Cj4g
+KwllaGRyLT5lX3Bob2ZmICAgICA9IGVsZjY0X3RvX2NwdShlaGRyLCBidWZfZWhkci0+ZV9waG9m
+Zik7Cj4gKwllaGRyLT5lX3Nob2ZmICAgICA9IGVsZjY0X3RvX2NwdShlaGRyLCBidWZfZWhkci0+
+ZV9zaG9mZik7Cj4gKwllaGRyLT5lX2ZsYWdzICAgICA9IGVsZjMyX3RvX2NwdShlaGRyLCBidWZf
+ZWhkci0+ZV9mbGFncyk7Cj4gKwllaGRyLT5lX3BoZW50c2l6ZSA9IGVsZjE2X3RvX2NwdShlaGRy
+LCBidWZfZWhkci0+ZV9waGVudHNpemUpOwo+ICsJZWhkci0+ZV9waG51bSAgICAgPSBlbGYxNl90
+b19jcHUoZWhkciwgYnVmX2VoZHItPmVfcGhudW0pOwo+ICsJZWhkci0+ZV9zaGVudHNpemUgPSBl
+bGYxNl90b19jcHUoZWhkciwgYnVmX2VoZHItPmVfc2hlbnRzaXplKTsKPiArCWVoZHItPmVfc2hu
+dW0gICAgID0gZWxmMTZfdG9fY3B1KGVoZHIsIGJ1Zl9laGRyLT5lX3NobnVtKTsKPiArCWVoZHIt
+PmVfc2hzdHJuZHggID0gZWxmMTZfdG9fY3B1KGVoZHIsIGJ1Zl9laGRyLT5lX3Noc3RybmR4KTsK
+PiArCj4gKwlyZXR1cm4gZWxmX2lzX2VoZHJfc2FuZShlaGRyLCBsZW4pID8gMCA6IC1FTk9FWEVD
+Owo+ICt9Cj4gKwo+ICsvKioKPiArICogZWxmX2lzX3BoZHJfc2FuZSAtIGNoZWNrIHRoYXQgaXQg
+aXMgc2FmZSB0byB1c2UgdGhlIHByb2dyYW0gaGVhZGVyCj4gKyAqIEBidWZfbGVuOglzaXplIG9m
+IHRoZSBidWZmZXIgaW4gd2hpY2ggdGhlIEVMRiBmaWxlIGlzIGxvYWRlZC4KPiArICovCj4gK3N0
+YXRpYyBib29sIGVsZl9pc19waGRyX3NhbmUoY29uc3Qgc3RydWN0IGVsZl9waGRyICpwaGRyLCBz
+aXplX3QgYnVmX2xlbikKPiArewo+ICsKPiArCWlmIChwaGRyLT5wX29mZnNldCArIHBoZHItPnBf
+ZmlsZXN6IDwgcGhkci0+cF9vZmZzZXQpIHsKPiArCQlwcl9kZWJ1ZygiRUxGIHNlZ21lbnQgbG9j
+YXRpb24gd3JhcHMgYXJvdW5kLlxuIik7Cj4gKwkJcmV0dXJuIGZhbHNlOwo+ICsJfSBlbHNlIGlm
+IChwaGRyLT5wX29mZnNldCArIHBoZHItPnBfZmlsZXN6ID4gYnVmX2xlbikgewo+ICsJCXByX2Rl
+YnVnKCJFTEYgc2VnbWVudCBub3QgaW4gZmlsZS5cbiIpOwo+ICsJCXJldHVybiBmYWxzZTsKPiAr
+CX0gZWxzZSBpZiAocGhkci0+cF9wYWRkciArIHBoZHItPnBfbWVtc3ogPCBwaGRyLT5wX3BhZGRy
+KSB7Cj4gKwkJcHJfZGVidWcoIkVMRiBzZWdtZW50IGFkZHJlc3Mgd3JhcHMgYXJvdW5kLlxuIik7
+Cj4gKwkJcmV0dXJuIGZhbHNlOwo+ICsJfQo+ICsKPiArCXJldHVybiB0cnVlOwo+ICt9Cj4gKwo+
+ICtzdGF0aWMgaW50IGVsZl9yZWFkX3BoZHIoY29uc3QgY2hhciAqYnVmLCBzaXplX3QgbGVuLCBz
+dHJ1Y3Qga2V4ZWNfZWxmX2luZm8gKmVsZl9pbmZvLAo+ICsJCQkgaW50IGlkeCkKPiArewo+ICsJ
+LyogT3ZlcnJpZGUgdGhlIGNvbnN0IGluIHByb2doZHJzLCB3ZSBhcmUgdGhlIG9uZXMgZG9pbmcg
+dGhlIGxvYWRpbmcuICovCj4gKwlzdHJ1Y3QgZWxmX3BoZHIgKnBoZHIgPSAoc3RydWN0IGVsZl9w
+aGRyICopICZlbGZfaW5mby0+cHJvZ2hkcnNbaWR4XTsKPiArCWNvbnN0IGNoYXIgKnBidWY7Cj4g
+KwlzdHJ1Y3QgZWxmX3BoZHIgKmJ1Zl9waGRyOwo+ICsKPiArCXBidWYgPSBidWYgKyBlbGZfaW5m
+by0+ZWhkci0+ZV9waG9mZiArIChpZHggKiBzaXplb2YoKmJ1Zl9waGRyKSk7Cj4gKwlidWZfcGhk
+ciA9IChzdHJ1Y3QgZWxmX3BoZHIgKikgcGJ1ZjsKPiArCj4gKwlwaGRyLT5wX3R5cGUgICA9IGVs
+ZjMyX3RvX2NwdShlbGZfaW5mby0+ZWhkciwgYnVmX3BoZHItPnBfdHlwZSk7Cj4gKwlwaGRyLT5w
+X29mZnNldCA9IGVsZjY0X3RvX2NwdShlbGZfaW5mby0+ZWhkciwgYnVmX3BoZHItPnBfb2Zmc2V0
+KTsKPiArCXBoZHItPnBfcGFkZHIgID0gZWxmNjRfdG9fY3B1KGVsZl9pbmZvLT5laGRyLCBidWZf
+cGhkci0+cF9wYWRkcik7Cj4gKwlwaGRyLT5wX3ZhZGRyICA9IGVsZjY0X3RvX2NwdShlbGZfaW5m
+by0+ZWhkciwgYnVmX3BoZHItPnBfdmFkZHIpOwo+ICsJcGhkci0+cF9mbGFncyAgPSBlbGYzMl90
+b19jcHUoZWxmX2luZm8tPmVoZHIsIGJ1Zl9waGRyLT5wX2ZsYWdzKTsKPiArCj4gKwkvKgo+ICsJ
+ICogVGhlIGZvbGxvd2luZyBmaWVsZHMgaGF2ZSBhIHR5cGUgZXF1aXZhbGVudCB0byBFbGZfQWRk
+cgo+ICsJICogYm90aCBpbiAzMiBiaXQgYW5kIDY0IGJpdCBFTEYuCj4gKwkgKi8KPiArCXBoZHIt
+PnBfZmlsZXN6ID0gZWxmNjRfdG9fY3B1KGVsZl9pbmZvLT5laGRyLCBidWZfcGhkci0+cF9maWxl
+c3opOwo+ICsJcGhkci0+cF9tZW1zeiAgPSBlbGY2NF90b19jcHUoZWxmX2luZm8tPmVoZHIsIGJ1
+Zl9waGRyLT5wX21lbXN6KTsKPiArCXBoZHItPnBfYWxpZ24gID0gZWxmNjRfdG9fY3B1KGVsZl9p
+bmZvLT5laGRyLCBidWZfcGhkci0+cF9hbGlnbik7Cj4gKwo+ICsJcmV0dXJuIGVsZl9pc19waGRy
+X3NhbmUocGhkciwgbGVuKSA/IDAgOiAtRU5PRVhFQzsKPiArfQo+ICsKPiArLyoqCj4gKyAqIGVs
+Zl9yZWFkX3BoZHJzIC0gcmVhZCB0aGUgcHJvZ3JhbSBoZWFkZXJzIGZyb20gdGhlIGJ1ZmZlcgo+
+ICsgKgo+ICsgKiBUaGlzIGZ1bmN0aW9uIGFzc3VtZXMgdGhhdCB0aGUgcHJvZ3JhbSBoZWFkZXIg
+dGFibGUgd2FzIGNoZWNrZWQgZm9yIHNhbml0eS4KPiArICogVXNlIGVsZl9pc19laGRyX3NhbmUo
+KSBpZiBpdCB3YXNuJ3QuCj4gKyAqLwo+ICtzdGF0aWMgaW50IGVsZl9yZWFkX3BoZHJzKGNvbnN0
+IGNoYXIgKmJ1Ziwgc2l6ZV90IGxlbiwKPiArCQkJICBzdHJ1Y3Qga2V4ZWNfZWxmX2luZm8gKmVs
+Zl9pbmZvKQo+ICt7Cj4gKwlzaXplX3QgcGhkcl9zaXplLCBpOwo+ICsJY29uc3Qgc3RydWN0IGVs
+ZmhkciAqZWhkciA9IGVsZl9pbmZvLT5laGRyOwo+ICsKPiArCS8qCj4gKwkgKiBlX3BobnVtIGlz
+IGF0IG1vc3QgNjU1MzUgc28gY2FsY3VsYXRpbmcgdGhlIHNpemUgb2YgdGhlCj4gKwkgKiBwcm9n
+cmFtIGhlYWRlciBjYW5ub3Qgb3ZlcmZsb3cuCj4gKwkgKi8KPiArCXBoZHJfc2l6ZSA9IHNpemVv
+ZihzdHJ1Y3QgZWxmX3BoZHIpICogZWhkci0+ZV9waG51bTsKPiArCj4gKwllbGZfaW5mby0+cHJv
+Z2hkcnMgPSBremFsbG9jKHBoZHJfc2l6ZSwgR0ZQX0tFUk5FTCk7Cj4gKwlpZiAoIWVsZl9pbmZv
+LT5wcm9naGRycykKPiArCQlyZXR1cm4gLUVOT01FTTsKPiArCj4gKwlmb3IgKGkgPSAwOyBpIDwg
+ZWhkci0+ZV9waG51bTsgaSsrKSB7Cj4gKwkJaW50IHJldDsKPiArCj4gKwkJcmV0ID0gZWxmX3Jl
+YWRfcGhkcihidWYsIGxlbiwgZWxmX2luZm8sIGkpOwo+ICsJCWlmIChyZXQpIHsKPiArCQkJa2Zy
+ZWUoZWxmX2luZm8tPnByb2doZHJzKTsKPiArCQkJZWxmX2luZm8tPnByb2doZHJzID0gTlVMTDsK
+PiArCQkJcmV0dXJuIHJldDsKPiArCQl9Cj4gKwl9Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiAr
+Cj4gKy8qKgo+ICsgKiBlbGZfaXNfc2hkcl9zYW5lIC0gY2hlY2sgdGhhdCBpdCBpcyBzYWZlIHRv
+IHVzZSB0aGUgc2VjdGlvbiBoZWFkZXIKPiArICogQGJ1Zl9sZW46CXNpemUgb2YgdGhlIGJ1ZmZl
+ciBpbiB3aGljaCB0aGUgRUxGIGZpbGUgaXMgbG9hZGVkLgo+ICsgKi8KPiArc3RhdGljIGJvb2wg
+ZWxmX2lzX3NoZHJfc2FuZShjb25zdCBzdHJ1Y3QgZWxmX3NoZHIgKnNoZHIsIHNpemVfdCBidWZf
+bGVuKQo+ICt7Cj4gKwlib29sIHNpemVfb2s7Cj4gKwo+ICsJLyogU0hUX05VTEwgaGVhZGVycyBo
+YXZlIHVuZGVmaW5lZCB2YWx1ZXMsIHNvIHdlIGNhbid0IGNoZWNrIHRoZW0uICovCj4gKwlpZiAo
+c2hkci0+c2hfdHlwZSA9PSBTSFRfTlVMTCkKPiArCQlyZXR1cm4gdHJ1ZTsKPiArCj4gKwkvKiBO
+b3cgdmVyaWZ5IHNoX2VudHNpemUgKi8KPiArCXN3aXRjaCAoc2hkci0+c2hfdHlwZSkgewo+ICsJ
+Y2FzZSBTSFRfU1lNVEFCOgo+ICsJCXNpemVfb2sgPSBzaGRyLT5zaF9lbnRzaXplID09IHNpemVv
+ZihFbGZfU3ltKTsKPiArCQlicmVhazsKPiArCWNhc2UgU0hUX1JFTEE6Cj4gKwkJc2l6ZV9vayA9
+IHNoZHItPnNoX2VudHNpemUgPT0gc2l6ZW9mKEVsZjY0X1JlbGEpOwo+ICsJCWJyZWFrOwo+ICsJ
+Y2FzZSBTSFRfRFlOQU1JQzoKPiArCQlzaXplX29rID0gc2hkci0+c2hfZW50c2l6ZSA9PSBzaXpl
+b2YoRWxmX0R5bik7Cj4gKwkJYnJlYWs7Cj4gKwljYXNlIFNIVF9SRUw6Cj4gKwkJc2l6ZV9vayA9
+IHNoZHItPnNoX2VudHNpemUgPT0gc2l6ZW9mKEVsZjY0X1JlbCk7Cj4gKwkJYnJlYWs7Cj4gKwlj
+YXNlIFNIVF9OT1RFOgo+ICsJY2FzZSBTSFRfUFJPR0JJVFM6Cj4gKwljYXNlIFNIVF9IQVNIOgo+
+ICsJY2FzZSBTSFRfTk9CSVRTOgo+ICsJZGVmYXVsdDoKPiArCQkvKgo+ICsJCSAqIFRoaXMgaXMg
+YSBzZWN0aW9uIHdob3NlIGVudHNpemUgcmVxdWlyZW1lbnRzCj4gKwkJICogSSBkb24ndCBjYXJl
+IGFib3V0LiAgSWYgSSBkb24ndCBrbm93IGFib3V0Cj4gKwkJICogdGhlIHNlY3Rpb24gSSBjYW4n
+dCBjYXJlIGFib3V0IGl0J3MgZW50c2l6ZQo+ICsJCSAqIHJlcXVpcmVtZW50cy4KPiArCQkgKi8K
+PiArCQlzaXplX29rID0gdHJ1ZTsKPiArCQlicmVhazsKPiArCX0KPiArCj4gKwlpZiAoIXNpemVf
+b2spIHsKPiArCQlwcl9kZWJ1ZygiRUxGIHNlY3Rpb24gd2l0aCB3cm9uZyBlbnRyeSBzaXplLlxu
+Iik7Cj4gKwkJcmV0dXJuIGZhbHNlOwo+ICsJfSBlbHNlIGlmIChzaGRyLT5zaF9hZGRyICsgc2hk
+ci0+c2hfc2l6ZSA8IHNoZHItPnNoX2FkZHIpIHsKPiArCQlwcl9kZWJ1ZygiRUxGIHNlY3Rpb24g
+YWRkcmVzcyB3cmFwcyBhcm91bmQuXG4iKTsKPiArCQlyZXR1cm4gZmFsc2U7Cj4gKwl9Cj4gKwo+
+ICsJaWYgKHNoZHItPnNoX3R5cGUgIT0gU0hUX05PQklUUykgewo+ICsJCWlmIChzaGRyLT5zaF9v
+ZmZzZXQgKyBzaGRyLT5zaF9zaXplIDwgc2hkci0+c2hfb2Zmc2V0KSB7Cj4gKwkJCXByX2RlYnVn
+KCJFTEYgc2VjdGlvbiBsb2NhdGlvbiB3cmFwcyBhcm91bmQuXG4iKTsKPiArCQkJcmV0dXJuIGZh
+bHNlOwo+ICsJCX0gZWxzZSBpZiAoc2hkci0+c2hfb2Zmc2V0ICsgc2hkci0+c2hfc2l6ZSA+IGJ1
+Zl9sZW4pIHsKPiArCQkJcHJfZGVidWcoIkVMRiBzZWN0aW9uIG5vdCBpbiBmaWxlLlxuIik7Cj4g
+KwkJCXJldHVybiBmYWxzZTsKPiArCQl9Cj4gKwl9Cj4gKwo+ICsJcmV0dXJuIHRydWU7Cj4gK30K
+PiArCj4gK3N0YXRpYyBpbnQgZWxmX3JlYWRfc2hkcihjb25zdCBjaGFyICpidWYsIHNpemVfdCBs
+ZW4sIHN0cnVjdCBrZXhlY19lbGZfaW5mbyAqZWxmX2luZm8sCj4gKwkJCSBpbnQgaWR4KQo+ICt7
+Cj4gKwlzdHJ1Y3QgZWxmX3NoZHIgKnNoZHIgPSAmZWxmX2luZm8tPnNlY2hkcnNbaWR4XTsKPiAr
+CWNvbnN0IHN0cnVjdCBlbGZoZHIgKmVoZHIgPSBlbGZfaW5mby0+ZWhkcjsKPiArCWNvbnN0IGNo
+YXIgKnNidWY7Cj4gKwlzdHJ1Y3QgZWxmX3NoZHIgKmJ1Zl9zaGRyOwo+ICsKPiArCXNidWYgPSBi
+dWYgKyBlaGRyLT5lX3Nob2ZmICsgaWR4ICogc2l6ZW9mKCpidWZfc2hkcik7Cj4gKwlidWZfc2hk
+ciA9IChzdHJ1Y3QgZWxmX3NoZHIgKikgc2J1ZjsKPiArCj4gKwlzaGRyLT5zaF9uYW1lICAgICAg
+PSBlbGYzMl90b19jcHUoZWhkciwgYnVmX3NoZHItPnNoX25hbWUpOwo+ICsJc2hkci0+c2hfdHlw
+ZSAgICAgID0gZWxmMzJfdG9fY3B1KGVoZHIsIGJ1Zl9zaGRyLT5zaF90eXBlKTsKPiArCXNoZHIt
+PnNoX2FkZHIgICAgICA9IGVsZjY0X3RvX2NwdShlaGRyLCBidWZfc2hkci0+c2hfYWRkcik7Cj4g
+KwlzaGRyLT5zaF9vZmZzZXQgICAgPSBlbGY2NF90b19jcHUoZWhkciwgYnVmX3NoZHItPnNoX29m
+ZnNldCk7Cj4gKwlzaGRyLT5zaF9saW5rICAgICAgPSBlbGYzMl90b19jcHUoZWhkciwgYnVmX3No
+ZHItPnNoX2xpbmspOwo+ICsJc2hkci0+c2hfaW5mbyAgICAgID0gZWxmMzJfdG9fY3B1KGVoZHIs
+IGJ1Zl9zaGRyLT5zaF9pbmZvKTsKPiArCj4gKwkvKgo+ICsJICogVGhlIGZvbGxvd2luZyBmaWVs
+ZHMgaGF2ZSBhIHR5cGUgZXF1aXZhbGVudCB0byBFbGZfQWRkcgo+ICsJICogYm90aCBpbiAzMiBi
+aXQgYW5kIDY0IGJpdCBFTEYuCj4gKwkgKi8KPiArCXNoZHItPnNoX2ZsYWdzICAgICA9IGVsZjY0
+X3RvX2NwdShlaGRyLCBidWZfc2hkci0+c2hfZmxhZ3MpOwo+ICsJc2hkci0+c2hfc2l6ZSAgICAg
+ID0gZWxmNjRfdG9fY3B1KGVoZHIsIGJ1Zl9zaGRyLT5zaF9zaXplKTsKPiArCXNoZHItPnNoX2Fk
+ZHJhbGlnbiA9IGVsZjY0X3RvX2NwdShlaGRyLCBidWZfc2hkci0+c2hfYWRkcmFsaWduKTsKPiAr
+CXNoZHItPnNoX2VudHNpemUgICA9IGVsZjY0X3RvX2NwdShlaGRyLCBidWZfc2hkci0+c2hfZW50
+c2l6ZSk7Cj4gKwo+ICsJcmV0dXJuIGVsZl9pc19zaGRyX3NhbmUoc2hkciwgbGVuKSA/IDAgOiAt
+RU5PRVhFQzsKPiArfQo+ICsKPiArLyoqCj4gKyAqIGVsZl9yZWFkX3NoZHJzIC0gcmVhZCB0aGUg
+c2VjdGlvbiBoZWFkZXJzIGZyb20gdGhlIGJ1ZmZlcgo+ICsgKgo+ICsgKiBUaGlzIGZ1bmN0aW9u
+IGFzc3VtZXMgdGhhdCB0aGUgc2VjdGlvbiBoZWFkZXIgdGFibGUgd2FzIGNoZWNrZWQgZm9yIHNh
+bml0eS4KPiArICogVXNlIGVsZl9pc19laGRyX3NhbmUoKSBpZiBpdCB3YXNuJ3QuCj4gKyAqLwo+
+ICtzdGF0aWMgaW50IGVsZl9yZWFkX3NoZHJzKGNvbnN0IGNoYXIgKmJ1Ziwgc2l6ZV90IGxlbiwK
+PiArCQkJICBzdHJ1Y3Qga2V4ZWNfZWxmX2luZm8gKmVsZl9pbmZvKQo+ICt7Cj4gKwlzaXplX3Qg
+c2hkcl9zaXplLCBpOwo+ICsKPiArCS8qCj4gKwkgKiBlX3NobnVtIGlzIGF0IG1vc3QgNjU1MzYg
+c28gY2FsY3VsYXRpbmcKPiArCSAqIHRoZSBzaXplIG9mIHRoZSBzZWN0aW9uIGhlYWRlciBjYW5u
+b3Qgb3ZlcmZsb3cuCj4gKwkgKi8KPiArCXNoZHJfc2l6ZSA9IHNpemVvZihzdHJ1Y3QgZWxmX3No
+ZHIpICogZWxmX2luZm8tPmVoZHItPmVfc2hudW07Cj4gKwo+ICsJZWxmX2luZm8tPnNlY2hkcnMg
+PSBremFsbG9jKHNoZHJfc2l6ZSwgR0ZQX0tFUk5FTCk7Cj4gKwlpZiAoIWVsZl9pbmZvLT5zZWNo
+ZHJzKQo+ICsJCXJldHVybiAtRU5PTUVNOwo+ICsKPiArCWZvciAoaSA9IDA7IGkgPCBlbGZfaW5m
+by0+ZWhkci0+ZV9zaG51bTsgaSsrKSB7Cj4gKwkJaW50IHJldDsKPiArCj4gKwkJcmV0ID0gZWxm
+X3JlYWRfc2hkcihidWYsIGxlbiwgZWxmX2luZm8sIGkpOwo+ICsJCWlmIChyZXQpIHsKPiArCQkJ
+a2ZyZWUoZWxmX2luZm8tPnNlY2hkcnMpOwo+ICsJCQllbGZfaW5mby0+c2VjaGRycyA9IE5VTEw7
+Cj4gKwkJCXJldHVybiByZXQ7Cj4gKwkJfQo+ICsJfQo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4g
+Kwo+ICsvKioKPiArICogZWxmX3JlYWRfZnJvbV9idWZmZXIgLSByZWFkIEVMRiBmaWxlIGFuZCBz
+ZXRzIHVwIEVMRiBoZWFkZXIgYW5kIEVMRiBpbmZvCj4gKyAqIEBidWY6CUJ1ZmZlciB0byByZWFk
+IEVMRiBmaWxlIGZyb20uCj4gKyAqIEBsZW46CVNpemUgb2YgQGJ1Zi4KPiArICogQGVoZHI6CVBv
+aW50ZXIgdG8gZXhpc3Rpbmcgc3RydWN0IHdoaWNoIHdpbGwgYmUgcG9wdWxhdGVkLgo+ICsgKiBA
+ZWxmX2luZm86CVBvaW50ZXIgdG8gZXhpc3Rpbmcgc3RydWN0IHdoaWNoIHdpbGwgYmUgcG9wdWxh
+dGVkLgo+ICsgKgo+ICsgKiBUaGlzIGZ1bmN0aW9uIGFsbG93cyByZWFkaW5nIEVMRiBmaWxlcyB3
+aXRoIGRpZmZlcmVudCBieXRlIG9yZGVyIHRoYW4KPiArICogdGhlIGtlcm5lbCwgYnl0ZS1zd2Fw
+cGluZyB0aGUgZmllbGRzIGFzIG5lZWRlZC4KPiArICoKPiArICogUmV0dXJuOgo+ICsgKiBPbiBz
+dWNjZXNzIHJldHVybnMgMCwgYW5kIHRoZSBjYWxsZXIgc2hvdWxkIGNhbGwga2V4ZWNfZnJlZV9l
+bGZfaW5mbyhlbGZfaW5mbykgdG8KPiArICogZnJlZSB0aGUgbWVtb3J5IGFsbG9jYXRlZCBmb3Ig
+dGhlIHNlY3Rpb24gYW5kIHByb2dyYW0gaGVhZGVycy4KPiArICovCj4gK2ludCBlbGZfcmVhZF9m
+cm9tX2J1ZmZlcihjb25zdCBjaGFyICpidWYsIHNpemVfdCBsZW4sIHN0cnVjdCBlbGZoZHIgKmVo
+ZHIsCj4gKwkJCSBzdHJ1Y3Qga2V4ZWNfZWxmX2luZm8gKmVsZl9pbmZvKQo+ICt7Cj4gKwlpbnQg
+cmV0Owo+ICsKPiArCXJldCA9IGVsZl9yZWFkX2VoZHIoYnVmLCBsZW4sIGVoZHIpOwo+ICsJaWYg
+KHJldCkKPiArCQlyZXR1cm4gcmV0Owo+ICsKPiArCWVsZl9pbmZvLT5idWZmZXIgPSBidWY7Cj4g
+KwllbGZfaW5mby0+ZWhkciA9IGVoZHI7Cj4gKwlpZiAoZWhkci0+ZV9waG9mZiA+IDAgJiYgZWhk
+ci0+ZV9waG51bSA+IDApIHsKPiArCQlyZXQgPSBlbGZfcmVhZF9waGRycyhidWYsIGxlbiwgZWxm
+X2luZm8pOwo+ICsJCWlmIChyZXQpCj4gKwkJCXJldHVybiByZXQ7Cj4gKwl9Cj4gKwlpZiAoZWhk
+ci0+ZV9zaG9mZiA+IDAgJiYgZWhkci0+ZV9zaG51bSA+IDApIHsKPiArCQlyZXQgPSBlbGZfcmVh
+ZF9zaGRycyhidWYsIGxlbiwgZWxmX2luZm8pOwo+ICsJCWlmIChyZXQpIHsKPiArCQkJa2ZyZWUo
+ZWxmX2luZm8tPnByb2doZHJzKTsKPiArCQkJcmV0dXJuIHJldDsKPiArCQl9Cj4gKwl9Cj4gKwo+
+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gKy8qKgo+ICsgKiBrZXhlY19mcmVlX2VsZl9pbmZvIC0g
+ZnJlZSBtZW1vcnkgYWxsb2NhdGVkIGJ5IGVsZl9yZWFkX2Zyb21fYnVmZmVyCj4gKyAqLwo+ICt2
+b2lkIGtleGVjX2ZyZWVfZWxmX2luZm8oc3RydWN0IGtleGVjX2VsZl9pbmZvICplbGZfaW5mbykK
+PiArewo+ICsJa2ZyZWUoZWxmX2luZm8tPnByb2doZHJzKTsKPiArCW1lbXNldChlbGZfaW5mbywg
+MCwgc2l6ZW9mKCplbGZfaW5mbykpOwo+ICt9Cj4gKwo+ICsvKioKPiArICoga2V4ZWNfYnVpbGRf
+ZWxmX2luZm8gLSByZWFkIEVMRiBleGVjdXRhYmxlIGFuZCBjaGVjayB0aGF0IHdlIGNhbiB1c2Ug
+aXQKPiArICovCj4gK2ludCBrZXhlY19idWlsZF9lbGZfaW5mbyhjb25zdCBjaGFyICpidWYsIHNp
+emVfdCBsZW4sIHN0cnVjdCBlbGZoZHIgKmVoZHIsCj4gKwkJCSAgc3RydWN0IGtleGVjX2VsZl9p
+bmZvICplbGZfaW5mbykKPiArewo+ICsJaW50IGk7Cj4gKwlpbnQgcmV0Owo+ICsKPiArCXJldCA9
+IGVsZl9yZWFkX2Zyb21fYnVmZmVyKGJ1ZiwgbGVuLCBlaGRyLCBlbGZfaW5mbyk7Cj4gKwlpZiAo
+cmV0KQo+ICsJCXJldHVybiByZXQ7Cj4gKwo+ICsJLyogQmlnIGVuZGlhbiB2bWxpbnV4IGhhcyB0
+eXBlIEVUX0RZTi4gKi8KPiArCWlmIChlaGRyLT5lX3R5cGUgIT0gRVRfRVhFQyAmJiBlaGRyLT5l
+X3R5cGUgIT0gRVRfRFlOKSB7Cj4gKwkJcHJfZXJyKCJOb3QgYW4gRUxGIGV4ZWN1dGFibGUuXG4i
+KTsKPiArCQlnb3RvIGVycm9yOwo+ICsJfSBlbHNlIGlmICghZWxmX2luZm8tPnByb2doZHJzKSB7
+Cj4gKwkJcHJfZXJyKCJObyBFTEYgcHJvZ3JhbSBoZWFkZXIuXG4iKTsKPiArCQlnb3RvIGVycm9y
+Owo+ICsJfQo+ICsKPiArCWZvciAoaSA9IDA7IGkgPCBlaGRyLT5lX3BobnVtOyBpKyspIHsKPiAr
+CQkvKgo+ICsJCSAqIEtleGVjIGRvZXMgbm90IHN1cHBvcnQgbG9hZGluZyBpbnRlcnByZXRlcnMu
+Cj4gKwkJICogSW4gYWRkaXRpb24gdGhpcyBjaGVjayBrZWVwcyB1cyBmcm9tIGF0dGVtcHRpbmcK
+PiArCQkgKiB0byBrZXhlYyBvcmRpbmF5IGV4ZWN1dGFibGVzLgo+ICsJCSAqLwo+ICsJCWlmIChl
+bGZfaW5mby0+cHJvZ2hkcnNbaV0ucF90eXBlID09IFBUX0lOVEVSUCkgewo+ICsJCQlwcl9lcnIo
+IlJlcXVpcmVzIGFuIEVMRiBpbnRlcnByZXRlci5cbiIpOwo+ICsJCQlnb3RvIGVycm9yOwo+ICsJ
+CX0KPiArCX0KPiArCj4gKwlyZXR1cm4gMDsKPiArZXJyb3I6Cj4gKwlrZXhlY19mcmVlX2VsZl9p
+bmZvKGVsZl9pbmZvKTsKPiArCXJldHVybiAtRU5PRVhFQzsKPiArfQo+ICsKPiArLyoqCj4gKyAq
+IGVsZl9leGVjX2xvYWQgLSBsb2FkIEVMRiBleGVjdXRhYmxlIGltYWdlCj4gKyAqIEBsb3dlc3Rf
+bG9hZF9hZGRyOglPbiByZXR1cm4sIHdpbGwgYmUgdGhlIGFkZHJlc3Mgd2hlcmUgdGhlIGZpcnN0
+IFBUX0xPQUQKPiArICoJCQlzZWN0aW9uIHdpbGwgYmUgbG9hZGVkIGluIG1lbW9yeS4KPiArICoK
+PiArICogUmV0dXJuOgo+ICsgKiAwIG9uIHN1Y2Nlc3MsIG5lZ2F0aXZlIHZhbHVlIG9uIGZhaWx1
+cmUuCj4gKyAqLwo+ICtpbnQga2V4ZWNfZWxmX2xvYWQoc3RydWN0IGtpbWFnZSAqaW1hZ2UsIHN0
+cnVjdCBlbGZoZHIgKmVoZHIsCj4gKwkJICAgc3RydWN0IGtleGVjX2VsZl9pbmZvICplbGZfaW5m
+bywKPiArCQkgICBzdHJ1Y3Qga2V4ZWNfYnVmICprYnVmLAo+ICsJCSAgIHVuc2lnbmVkIGxvbmcg
+Kmxvd2VzdF9sb2FkX2FkZHIpCj4gK3sKPiArCXVuc2lnbmVkIGxvbmcgbG93ZXN0X2FkZHIgPSBV
+SU5UX01BWDsKPiArCWludCByZXQ7Cj4gKwlzaXplX3QgaTsKPiArCS8qIFJlYWQgaW4gdGhlIFBU
+X0xPQUQgc2VnbWVudHMuICovCj4gKwlmb3IgKGkgPSAwOyBpIDwgZWhkci0+ZV9waG51bTsgaSsr
+KSB7Cj4gKwkJdW5zaWduZWQgbG9uZyBsb2FkX2FkZHI7Cj4gKwkJc2l6ZV90IHNpemU7Cj4gKwkJ
+Y29uc3Qgc3RydWN0IGVsZl9waGRyICpwaGRyOwo+ICsKPiArCQlwaGRyID0gJmVsZl9pbmZvLT5w
+cm9naGRyc1tpXTsKPiArCQlpZiAocGhkci0+cF90eXBlICE9IFBUX0xPQUQpCj4gKwkJCWNvbnRp
+bnVlOwo+ICsKPiArCQlzaXplID0gcGhkci0+cF9maWxlc3o7Cj4gKwkJaWYgKHNpemUgPiBwaGRy
+LT5wX21lbXN6KQo+ICsJCQlzaXplID0gcGhkci0+cF9tZW1zejsKPiArCj4gKwkJa2J1Zi0+YnVm
+ZmVyID0gKHZvaWQgKikgZWxmX2luZm8tPmJ1ZmZlciArIHBoZHItPnBfb2Zmc2V0Owo+ICsJCWti
+dWYtPmJ1ZnN6ID0gc2l6ZTsKPiArCQlrYnVmLT5tZW1zeiA9IHBoZHItPnBfbWVtc3o7Cj4gKwkJ
+a2J1Zi0+YnVmX2FsaWduID0gcGhkci0+cF9hbGlnbjsKPiArCQlrYnVmLT5idWZfbWluID0gcGhk
+ci0+cF9wYWRkcjsKPiArCQlrYnVmLT5tZW0gPSBLRVhFQ19CVUZfTUVNX1VOS05PV047Cj4gKwkJ
+cmV0ID0ga2V4ZWNfYWRkX2J1ZmZlcihrYnVmKTsKPiArCQlpZiAocmV0KQo+ICsJCQlnb3RvIG91
+dDsKPiArCQlsb2FkX2FkZHIgPSBrYnVmLT5tZW07Cj4gKwo+ICsJCWlmIChsb2FkX2FkZHIgPCBs
+b3dlc3RfYWRkcikKPiArCQkJbG93ZXN0X2FkZHIgPSBsb2FkX2FkZHI7Cj4gKwl9Cj4gKwo+ICsJ
+aW1hZ2UtPnN0YXJ0ID0gZWhkci0+ZV9lbnRyeTsKPiArCSpsb3dlc3RfbG9hZF9hZGRyID0gbG93
+ZXN0X2FkZHI7Cj4gKwlyZXQgPSAwOwo+ICsgb3V0Ogo+ICsJcmV0dXJuIHJldDsKPiArfQo+ICsK
+PiAraW50IGtleGVjX2VsZl9rZXJuZWxfbG9hZChzdHJ1Y3Qga2ltYWdlICppbWFnZSwgc3RydWN0
+IGtleGVjX2J1ZiAqa2J1ZiwKPiArCQkJY2hhciAqa2VybmVsX2J1ZiwgdW5zaWduZWQgbG9uZyBr
+ZXJuZWxfbGVuLAo+ICsJCQl1bnNpZ25lZCBsb25nICprZXJuZWxfbG9hZF9hZGRyKQo+ICt7Cj4g
+KwlpbnQgcmV0Owo+ICsJc3RydWN0IGVsZmhkciBlaGRyOwo+ICsJc3RydWN0IGtleGVjX2VsZl9p
+bmZvIGVsZl9pbmZvOwo+ICsKPiArCXJldCA9IGtleGVjX2J1aWxkX2VsZl9pbmZvKGtlcm5lbF9i
+dWYsIGtlcm5lbF9sZW4sICZlaGRyLCAmZWxmX2luZm8pOwo+ICsJaWYgKHJldCkKPiArCQlnb3Rv
+IG91dDsKPiArCj4gKwlyZXQgPSBrZXhlY19lbGZfbG9hZChpbWFnZSwgJmVoZHIsICZlbGZfaW5m
+bywga2J1Ziwga2VybmVsX2xvYWRfYWRkcik7Cj4gK291dDoKPiArCWtleGVjX2ZyZWVfZWxmX2lu
+Zm8oJmVsZl9pbmZvKTsKPiArCXJldHVybiByZXQ7Cj4gKwo+ICt9Cj4gKwo+ICtpbnQga2V4ZWNf
+ZWxmX3Byb2JlKGNvbnN0IGNoYXIgKmJ1ZiwgdW5zaWduZWQgbG9uZyBsZW4pCj4gK3sKPiArCXN0
+cnVjdCBlbGZoZHIgZWhkcjsKPiArCXN0cnVjdCBrZXhlY19lbGZfaW5mbyBlbGZfaW5mbzsKPiAr
+CWludCByZXQ7Cj4gKwo+ICsJcmV0ID0ga2V4ZWNfYnVpbGRfZWxmX2luZm8oYnVmLCBsZW4sICZl
+aGRyLCAmZWxmX2luZm8pOwo+ICsJaWYgKHJldCkKPiArCQlyZXR1cm4gcmV0Owo+ICsKPiArCWtl
+eGVjX2ZyZWVfZWxmX2luZm8oJmVsZl9pbmZvKTsKPiArCj4gKwlyZXR1cm4gZWxmX2NoZWNrX2Fy
+Y2goJmVoZHIpID8gMCA6IC1FTk9FWEVDOwo+ICt9Cj4gCgoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8va2V4ZWMK
