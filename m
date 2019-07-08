@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x741.google.com ([2607:f8b0:4864:20::741])
- by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hkaz3-0001Rh-ET
- for kexec@lists.infradead.org; Mon, 08 Jul 2019 21:15:40 +0000
-Received: by mail-qk1-x741.google.com with SMTP id g18so14457283qkl.3
- for <kexec@lists.infradead.org>; Mon, 08 Jul 2019 14:15:37 -0700 (PDT)
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [v1 4/5] kexec: use reserved memory for normal kexec reboot
-Date: Mon,  8 Jul 2019 17:15:27 -0400
-Message-Id: <20190708211528.12392-5-pasha.tatashin@soleen.com>
-In-Reply-To: <20190708211528.12392-1-pasha.tatashin@soleen.com>
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20190708211528.12392-1-pasha.tatashin@soleen.com>
+Date: Mon, 08 Jul 2019 18:53:41 -0500
+In-Reply-To: <20190708211528.12392-1-pasha.tatashin@soleen.com> (Pavel
+ Tatashin's message of "Mon, 8 Jul 2019 17:15:23 -0400")
+Message-ID: <87sgrgjd6i.fsf@xmission.com>
 MIME-Version: 1.0
+Subject: Re: [v1 0/5] allow to reserve memory for normal kexec kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,100 +19,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: sashal@kernel.org, corbet@lwn.net, catalin.marinas@arm.com, linux-doc@vger.kernel.org, kexec@lists.infradead.org, jmorris@namei.org, linux-kernel@vger.kernel.org, will@kernel.org, linux-arm-kernel@lists.infradead.org
 
-If memory was reserved for the given segment use it directly instead of
-allocating on per-page bases. This will avoid relocating this segment to
-final destination when machine is rebooted.
+Pavel Tatashin <pasha.tatashin@soleen.com> writes:
 
-This is done on a per segment bases because user might decide to always
-load kernel segments at the given address (i.e. non-relocatable kernel),
-but load initramfs at reserved address, and thus save reboot time on
-copying initramfs if it is large, and reduces reboot performance.
+> Currently, it is only allowed to reserve memory for crash kernel, because
+> it is a requirement in order to be able to boot into crash kernel without
+> touching memory of crashed kernel is to have memory reserved.
+>
+> The second benefit for having memory reserved for kexec kernel is
+> that it does not require a relocation after segments are loaded into
+> memory.
+>
+> If kexec functionality is used for a fast system update, with a minimal
+> downtime, the relocation of kernel + initramfs might take a significant
+> portion of reboot.
+>
+> In fact, on the machine that we are using, that has ARM64 processor
+> it takes 0.35s to relocate during kexec, thus taking 52% of kernel reboot
+> time:
+>
+> kernel shutdown	0.03s
+> relocation	0.35s
+> kernel startup	0.29s
+>
+> Image: 13M and initramfs is 24M. If initramfs increases, the relocation
+> time increases proportionally.
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- kernel/kexec_core.c | 39 ++++++++++++++++++++++++++-------------
- 1 file changed, 26 insertions(+), 13 deletions(-)
+Something is very very wrong there.
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 932feadbeb3a..2a8d8746e0a1 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -154,6 +154,18 @@ static struct page *kimage_alloc_page(struct kimage *image,
- 				       gfp_t gfp_mask,
- 				       unsigned long dest);
- 
-+/* Check whether this segment is fully within the resource */
-+static bool segment_is_reserved(struct kexec_segment *seg, struct resource *res)
-+{
-+	unsigned long mstart = seg->mem;
-+	unsigned long mend = mstart + seg->memsz - 1;
-+
-+	if (mstart < phys_to_boot_phys(res->start) ||
-+	    mend > phys_to_boot_phys(res->end))
-+		return false;
-+	return true;
-+}
-+
- int sanity_check_segment_list(struct kimage *image)
- {
- 	int i;
-@@ -246,13 +258,9 @@ int sanity_check_segment_list(struct kimage *image)
- 
- 	if (image->type == KEXEC_TYPE_CRASH) {
- 		for (i = 0; i < nr_segments; i++) {
--			unsigned long mstart, mend;
--
--			mstart = image->segment[i].mem;
--			mend = mstart + image->segment[i].memsz - 1;
- 			/* Ensure we are within the crash kernel limits */
--			if ((mstart < phys_to_boot_phys(crashk_res.start)) ||
--			    (mend > phys_to_boot_phys(crashk_res.end)))
-+			if (!segment_is_reserved(&image->segment[i],
-+						 &crashk_res))
- 				return -EADDRNOTAVAIL;
- 		}
- 	}
-@@ -848,12 +856,13 @@ static int kimage_load_normal_segment(struct kimage *image,
- 	return result;
- }
- 
--static int kimage_load_crash_segment(struct kimage *image,
--					struct kexec_segment *segment)
-+static int kimage_load_crash_or_reserved_segment(struct kimage *image,
-+						 struct kexec_segment *segment)
- {
--	/* For crash dumps kernels we simply copy the data from
--	 * user space to it's destination.
--	 * We do things a page at a time for the sake of kmap.
-+	/*
-+	 * For crash dumps and kexec-reserved kernels we simply copy the data
-+	 * from user space to it's destination. We do things a page at a time
-+	 * for the sake of kmap.
- 	 */
- 	unsigned long maddr;
- 	size_t ubytes, mbytes;
-@@ -923,10 +932,14 @@ int kimage_load_segment(struct kimage *image,
- 
- 	switch (image->type) {
- 	case KEXEC_TYPE_DEFAULT:
--		result = kimage_load_normal_segment(image, segment);
-+		if (segment_is_reserved(segment, &kexeck_res))
-+			result = kimage_load_crash_or_reserved_segment(image,
-+								       segment);
-+		else
-+			result = kimage_load_normal_segment(image, segment);
- 		break;
- 	case KEXEC_TYPE_CRASH:
--		result = kimage_load_crash_segment(image, segment);
-+		result = kimage_load_crash_or_reserved_segment(image, segment);
- 		break;
- 	}
- 
--- 
-2.22.0
+Last I measured memory bandwidth seriously I could touch a Gigabyte per
+second easily, and that was nearly 20 years ago.  Did you manage to
+disable caching or have some particularly slow code that does the
+reolocations.
 
+There is a serious cost to reserving memory in that it is simply not
+available at other times.  For kexec on panic there is no other reliable
+way to get memory that won't be DMA'd to.
+
+We have options in this case and I would strongly encourage you to track
+down why that copy in relocation is so very slow.  I suspect a 4KiB page
+size is large enough that it can swamp pointer following costs.
+
+My back of the napkin math says even 20 years ago your copying costs
+should be only 0.037s.  The only machine I have ever tested on where
+the copy costs were noticable was my old 386.
+
+Maybe I am out to lunch here but a claim that your memory only runs
+at 100MiB/s (the speed of my spinning rust hard drive) is rather
+incredible.
+
+Eric
 
 _______________________________________________
 kexec mailing list
