@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x842.google.com ([2607:f8b0:4864:20::842])
+Received: from mail-qk1-x743.google.com ([2607:f8b0:4864:20::743])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hkaz2-0001QD-0M
- for kexec@lists.infradead.org; Mon, 08 Jul 2019 21:15:38 +0000
-Received: by mail-qt1-x842.google.com with SMTP id h24so19574707qto.0
- for <kexec@lists.infradead.org>; Mon, 08 Jul 2019 14:15:35 -0700 (PDT)
+ id 1hkaz4-0001TI-Ex
+ for kexec@lists.infradead.org; Mon, 08 Jul 2019 21:15:41 +0000
+Received: by mail-qk1-x743.google.com with SMTP id v22so14444936qkj.8
+ for <kexec@lists.infradead.org>; Mon, 08 Jul 2019 14:15:38 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [v1 3/5] kexec: export common crashkernel/kexeckernel parser
-Date: Mon,  8 Jul 2019 17:15:26 -0400
-Message-Id: <20190708211528.12392-4-pasha.tatashin@soleen.com>
+Subject: [v1 5/5] arm64, kexec: reserve kexeckernel region
+Date: Mon,  8 Jul 2019 17:15:28 -0400
+Message-Id: <20190708211528.12392-6-pasha.tatashin@soleen.com>
 In-Reply-To: <20190708211528.12392-1-pasha.tatashin@soleen.com>
 References: <20190708211528.12392-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,114 +26,185 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-To reserve memory for normal kexec reboot, the new parameter:
-kexeckernel=size[KMG][@offset[KMG]] is used. Its syntax is the
-same as craskernel=, therefore they can use the same function to
-parse parameter settings.
+kexeckernel= is used to reserve memory for normal kexec kernel for
+faster reboot.
 
-Rename: __parse_crashkernel() to parse_crash_or_kexec_kernel(), and
-make it public.
+Rename reserve_crashkernel() to reserve_crash_or_kexec_kernel(), and
+generalize it by adding an argument that specifies what is reserved:
+"crashkernel=" for crash kernel region
+"kexeckernel=" for normal kexec region
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- .../admin-guide/kernel-parameters.txt         |  7 +++++
- include/linux/crash_core.h                    |  6 +++++
- kernel/crash_core.c                           | 27 ++++++++++---------
- 3 files changed, 28 insertions(+), 12 deletions(-)
+ .../admin-guide/kernel-parameters.txt         | 10 +--
+ arch/arm64/kernel/setup.c                     |  5 ++
+ arch/arm64/mm/init.c                          | 83 ++++++++++++-------
+ 3 files changed, 63 insertions(+), 35 deletions(-)
 
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 5c7a0f5b0a2f..0f5ce665c7f5 100644
+index 0f5ce665c7f5..a18222c1fbee 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -739,6 +739,13 @@
- 			It will be ignored when crashkernel=X,high is not used
+@@ -740,11 +740,11 @@
  			or memory reserved is below 4G.
  
-+	kexeckernel=size[KMG][@offset[KMG]]
-+			[KNL] Using kexec, Linux can reboot to a new kernel.
-+			This parameter reserves the physical memory region
-+			[offset, offset + size] for that kernel. If '@offset' is
-+			omitted, then a suitable offset is selected
-+			automatically.
-+
+ 	kexeckernel=size[KMG][@offset[KMG]]
+-			[KNL] Using kexec, Linux can reboot to a new kernel.
+-			This parameter reserves the physical memory region
+-			[offset, offset + size] for that kernel. If '@offset' is
+-			omitted, then a suitable offset is selected
+-			automatically.
++			[KNL, ARM64] Using kexec, Linux can reboot to a new
++			kernel. This parameter reserves the physical memory
++			region [offset, offset + size] for that kernel. If
++			'@offset' is omitted, then a suitable offset is
++			selected automatically.
+ 
  	cryptomgr.notests
  			[KNL] Disable crypto self-tests
- 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 525510a9f965..e90789ff0bec 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -74,5 +74,11 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *crash_size, unsigned long long *crash_base);
- int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *crash_size, unsigned long long *crash_base);
-+int parse_crash_or_kexec_kernel(char *cmdline,
-+				unsigned long long system_ram,
-+				unsigned long long *crash_size,
-+				unsigned long long *crash_base,
-+				const char *name,
-+				const char *suffix);
- 
- #endif /* LINUX_CRASH_CORE_H */
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 9f1557b98468..11e0f9837a32 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -224,12 +224,12 @@ static __init char *get_last_crashkernel(char *cmdline,
- 	return ck_cmdline;
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 7e541f947b4c..9f308fa103c5 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -235,6 +235,11 @@ static void __init request_standard_resources(void)
+ 		if (crashk_res.end && crashk_res.start >= res->start &&
+ 		    crashk_res.end <= res->end)
+ 			request_resource(res, &crashk_res);
++
++		/* Userspace will find "Kexec kernel" region in /proc/iomem. */
++		if (kexeck_res.end && kexeck_res.start >= res->start &&
++		    kexeck_res.end <= res->end)
++			request_resource(res, &kexeck_res);
+ #endif
+ 	}
  }
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index f3c795278def..dfef39f72faf 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -54,61 +54,83 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
  
--static int __init __parse_crashkernel(char *cmdline,
--			     unsigned long long system_ram,
--			     unsigned long long *crash_size,
--			     unsigned long long *crash_base,
--			     const char *name,
--			     const char *suffix)
-+int __init parse_crash_or_kexec_kernel(char *cmdline,
-+				       unsigned long long system_ram,
-+				       unsigned long long *crash_size,
-+				       unsigned long long *crash_base,
-+				       const char *name,
-+				       const char *suffix)
+ #ifdef CONFIG_KEXEC_CORE
+ /*
+- * reserve_crashkernel() - reserves memory for crash kernel
++ * reserve_crash_or_kexec_kernel() - reserves memory for crash kernel or
++ * for normal kexec kernel.
+  *
+- * This function reserves memory area given in "crashkernel=" kernel command
+- * line parameter. The memory reserved is used by dump capture kernel when
+- * primary kernel is crashing.
++ * This function reserves memory area given in "crashkernel=" or "kexeckenel="
++ * kernel command line parameter. The memory reserved is used by dump capture
++ * kernel when primary kernel is crashing, or to load new kexec kernel for
++ * faster reboot without relocation.
+  */
+-static void __init reserve_crashkernel(void)
++static void __init reserve_crash_or_kexec_kernel(char *cmd)
  {
- 	char	*first_colon, *first_space;
- 	char	*ck_cmdline;
-@@ -270,8 +270,9 @@ int __init parse_crashkernel(char *cmdline,
- 			     unsigned long long *crash_size,
- 			     unsigned long long *crash_base)
- {
--	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
--					"crashkernel=", NULL);
-+	return parse_crash_or_kexec_kernel(cmdline, system_ram, crash_size,
-+					   crash_base, "crashkernel=",
-+					   NULL);
+-	unsigned long long crash_base, crash_size;
++	unsigned long long base, size;
++	struct resource *res;
++	char s[16];
+ 	int ret;
+ 
+-	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+-				&crash_size, &crash_base);
+-	/* no crashkernel= or invalid value specified */
+-	if (ret || !crash_size)
++	/* cmd must be either: "crashkernel=" or "kexeckernel=" */
++	if (!strcmp(cmd, "crashkernel=")) {
++		res = &crashk_res;
++	} else if (!strcmp(cmd, "kexeckernel=")) {
++		res = &kexeck_res;
++	} else {
++		pr_err("%s: invalid cmd %s\n", __func__, cmd);
++		return;
++	}
++
++	/* remove trailing '=' for a nicer printfs */
++	strcpy(s, cmd);
++	s[strlen(s) - 1] = '\0';
++
++	ret = parse_crash_or_kexec_kernel(boot_command_line,
++					  memblock_phys_mem_size(),
++					  &size, &base, cmd, NULL);
++	/* no specified command or invalid value specified */
++	if (ret || !size)
+ 		return;
+ 
+-	crash_size = PAGE_ALIGN(crash_size);
++	size = PAGE_ALIGN(size);
+ 
+-	if (crash_base == 0) {
++	if (base == 0) {
+ 		/* Current arm64 boot protocol requires 2MB alignment */
+-		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
+-				crash_size, SZ_2M);
+-		if (crash_base == 0) {
+-			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+-				crash_size);
++		base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
++					      size, SZ_2M);
++		if (base == 0) {
++			pr_warn("cannot allocate %s (size:0x%llx)\n",
++				s, size);
+ 			return;
+ 		}
+ 	} else {
+ 		/* User specifies base address explicitly. */
+-		if (!memblock_is_region_memory(crash_base, crash_size)) {
+-			pr_warn("cannot reserve crashkernel: region is not memory\n");
++		if (!memblock_is_region_memory(base, size)) {
++			pr_warn("cannot reserve %s: region is not memory\n",
++				s);
+ 			return;
+ 		}
+ 
+-		if (memblock_is_region_reserved(crash_base, crash_size)) {
+-			pr_warn("cannot reserve crashkernel: region overlaps reserved memory\n");
++		if (memblock_is_region_reserved(base, size)) {
++			pr_warn("cannot reserve %s: region overlaps reserved memory\n",
++				s);
+ 			return;
+ 		}
+ 
+-		if (!IS_ALIGNED(crash_base, SZ_2M)) {
+-			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
++		if (!IS_ALIGNED(base, SZ_2M)) {
++			pr_warn("cannot reserve %s: base address is not 2MB aligned\n",
++				s);
+ 			return;
+ 		}
+ 	}
+-	memblock_reserve(crash_base, crash_size);
++	memblock_reserve(base, size);
+ 
+-	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
+-		crash_base, crash_base + crash_size, crash_size >> 20);
++	pr_info("%s reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
++		s, base, base + size, size >> 20);
+ 
+-	crashk_res.start = crash_base;
+-	crashk_res.end = crash_base + crash_size - 1;
++	res->start = base;
++	res->end = base + size - 1;
  }
- 
- int __init parse_crashkernel_high(char *cmdline,
-@@ -279,8 +280,9 @@ int __init parse_crashkernel_high(char *cmdline,
- 			     unsigned long long *crash_size,
- 			     unsigned long long *crash_base)
+ #else
+-static void __init reserve_crashkernel(void)
++static void __init reserve_crash_or_kexec_kernel(char *cmd)
  {
--	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
--				"crashkernel=", suffix_tbl[SUFFIX_HIGH]);
-+	return parse_crash_or_kexec_kernel(cmdline, system_ram, crash_size,
-+					   crash_base, "crashkernel=",
-+					   suffix_tbl[SUFFIX_HIGH]);
  }
+ #endif /* CONFIG_KEXEC_CORE */
+@@ -411,7 +433,8 @@ void __init arm64_memblock_init(void)
+ 	else
+ 		arm64_dma_phys_limit = PHYS_MASK + 1;
  
- int __init parse_crashkernel_low(char *cmdline,
-@@ -288,8 +290,9 @@ int __init parse_crashkernel_low(char *cmdline,
- 			     unsigned long long *crash_size,
- 			     unsigned long long *crash_base)
- {
--	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
--				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
-+	return parse_crash_or_kexec_kernel(cmdline, system_ram, crash_size,
-+					   crash_base, "crashkernel=",
-+					   suffix_tbl[SUFFIX_LOW]);
- }
+-	reserve_crashkernel();
++	reserve_crash_or_kexec_kernel("crashkernel=");
++	reserve_crash_or_kexec_kernel("kexeckernel=");
  
- Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+ 	reserve_elfcorehdr();
+ 
 -- 
 2.22.0
 
