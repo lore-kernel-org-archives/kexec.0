@@ -1,11 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20190708211528.12392-1-pasha.tatashin@soleen.com>
-Date: Mon, 08 Jul 2019 18:53:41 -0500
-In-Reply-To: <20190708211528.12392-1-pasha.tatashin@soleen.com> (Pavel
- Tatashin's message of "Mon, 8 Jul 2019 17:15:23 -0400")
-Message-ID: <87sgrgjd6i.fsf@xmission.com>
+Received: from mail-ed1-x541.google.com ([2a00:1450:4864:20::541])
+ by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
+ id 1hkdh8-0001U6-Dj
+ for kexec@lists.infradead.org; Tue, 09 Jul 2019 00:09:20 +0000
+Received: by mail-ed1-x541.google.com with SMTP id w13so16082209eds.4
+ for <kexec@lists.infradead.org>; Mon, 08 Jul 2019 17:09:16 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190708211528.12392-1-pasha.tatashin@soleen.com>
+ <87sgrgjd6i.fsf@xmission.com>
+In-Reply-To: <87sgrgjd6i.fsf@xmission.com>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Date: Mon, 8 Jul 2019 20:09:04 -0400
+Message-ID: <CA+CK2bAOPkN=qEdE38R0FRnrzRK0EqLid7eUVnTj1acmaFHY_w@mail.gmail.com>
 Subject: Re: [v1 0/5] allow to reserve memory for normal kexec kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,58 +25,71 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: sashal@kernel.org, corbet@lwn.net, catalin.marinas@arm.com, linux-doc@vger.kernel.org, kexec@lists.infradead.org, jmorris@namei.org, linux-kernel@vger.kernel.org, will@kernel.org, linux-arm-kernel@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Sasha Levin <sashal@kernel.org>, corbet@lwn.net, Catalin Marinas <catalin.marinas@arm.com>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, James Morris <jmorris@namei.org>, LKML <linux-kernel@vger.kernel.org>, will@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 
-Pavel Tatashin <pasha.tatashin@soleen.com> writes:
-
-> Currently, it is only allowed to reserve memory for crash kernel, because
-> it is a requirement in order to be able to boot into crash kernel without
-> touching memory of crashed kernel is to have memory reserved.
+> Something is very very wrong there.
 >
-> The second benefit for having memory reserved for kexec kernel is
-> that it does not require a relocation after segments are loaded into
-> memory.
+> Last I measured memory bandwidth seriously I could touch a Gigabyte per
+> second easily, and that was nearly 20 years ago.  Did you manage to
+> disable caching or have some particularly slow code that does the
+> reolocations.
 >
-> If kexec functionality is used for a fast system update, with a minimal
-> downtime, the relocation of kernel + initramfs might take a significant
-> portion of reboot.
+> There is a serious cost to reserving memory in that it is simply not
+> available at other times.  For kexec on panic there is no other reliable
+> way to get memory that won't be DMA'd to.
+
+Hi Eric,
+
+Thank you for your comments.
+
+Indeed, but sometimes fast reboot is more important than the cost of
+reserving 32M-64M of memory.
+
 >
-> In fact, on the machine that we are using, that has ARM64 processor
-> it takes 0.35s to relocate during kexec, thus taking 52% of kernel reboot
-> time:
+> We have options in this case and I would strongly encourage you to track
+> down why that copy in relocation is so very slow.  I suspect a 4KiB page
+> size is large enough that it can swamp pointer following costs.
 >
-> kernel shutdown	0.03s
-> relocation	0.35s
-> kernel startup	0.29s
+> My back of the napkin math says even 20 years ago your copying costs
+> should be only 0.037s.  The only machine I have ever tested on where
+> the copy costs were noticable was my old 386.
 >
-> Image: 13M and initramfs is 24M. If initramfs increases, the relocation
-> time increases proportionally.
+> Maybe I am out to lunch here but a claim that your memory only runs
+> at 100MiB/s (the speed of my spinning rust hard drive) is rather
+> incredible.
 
-Something is very very wrong there.
+I agree,  my measurement on this machine was 2,857MB/s. Perhaps when
+MMU is disabled ARM64 also has caching disabled? The function that
+loops through array of pages and relocates them to final destination
+is this:
 
-Last I measured memory bandwidth seriously I could touch a Gigabyte per
-second easily, and that was nearly 20 years ago.  Did you manage to
-disable caching or have some particularly slow code that does the
-reolocations.
+https://soleen.com/source/xref/linux/arch/arm64/kernel/relocate_kernel.S?r=d2912cb1#29
 
-There is a serious cost to reserving memory in that it is simply not
-available at other times.  For kexec on panic there is no other reliable
-way to get memory that won't be DMA'd to.
+A comment before calling it:
 
-We have options in this case and I would strongly encourage you to track
-down why that copy in relocation is so very slow.  I suspect a 4KiB page
-size is large enough that it can swamp pointer following costs.
+205   /*
+206   * cpu_soft_restart will shutdown the MMU, disable data caches, then
+207   * transfer control to the reboot_code_buffer which contains a copy of
+208   * the arm64_relocate_new_kernel routine.  arm64_relocate_new_kernel
+209   * uses physical addressing to relocate the new image to its final
+210   * position and transfers control to the image entry point when the
+211   * relocation is complete.
+212   * In kexec case, kimage->start points to purgatory assuming that
+213   * kernel entry and dtb address are embedded in purgatory by
+214   * userspace (kexec-tools).
+215   * In kexec_file case, the kernel starts directly without purgatory.
+216   */
+https://soleen.com/source/xref/linux/arch/arm64/kernel/machine_kexec.c?r=d2912cb1#206
 
-My back of the napkin math says even 20 years ago your copying costs
-should be only 0.037s.  The only machine I have ever tested on where
-the copy costs were noticable was my old 386.
+So, as I understand at least data caches are disabled, and MMU is
+disabled, perhaps this is why this function is so incredibly slow?
 
-Maybe I am out to lunch here but a claim that your memory only runs
-at 100MiB/s (the speed of my spinning rust hard drive) is rather
-incredible.
+Perhaps, there is a better way to fix this problem by keeping caches
+enabled while still relocating? Any suggestions from Aarch64
+developers?
 
-Eric
+Pasha
 
 _______________________________________________
 kexec mailing list
