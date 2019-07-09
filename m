@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from bilbo.ozlabs.org ([203.11.71.1] helo=ozlabs.org)
- by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hkhbG-0001Ok-My
- for kexec@lists.infradead.org; Tue, 09 Jul 2019 04:19:32 +0000
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH using git format-patch -C] kexec: add generic support for
- elf kernel images
-In-Reply-To: <e016c0bb-c857-b78c-a159-120e42d0db03@c-s.fr>
-References: <20190708100624.EBCDF68DB2@pc17473vm.idsi0.si.c-s.fr>
- <e016c0bb-c857-b78c-a159-120e42d0db03@c-s.fr>
-Date: Tue, 09 Jul 2019 14:19:21 +1000
-Message-ID: <87pnmjhmba.fsf@concordia.ellerman.id.au>
+Subject: Re: [v1 0/5] allow to reserve memory for normal kexec kernel
+References: <20190708211528.12392-1-pasha.tatashin@soleen.com>
+ <87sgrgjd6i.fsf@xmission.com>
+ <CA+CK2bAOPkN=qEdE38R0FRnrzRK0EqLid7eUVnTj1acmaFHY_w@mail.gmail.com>
+From: James Morse <james.morse@arm.com>
+Message-ID: <9a61d38a-66cb-132c-de07-ee65d5a238c0@arm.com>
+Date: Tue, 9 Jul 2019 11:18:01 +0100
 MIME-Version: 1.0
+In-Reply-To: <CA+CK2bAOPkN=qEdE38R0FRnrzRK0EqLid7eUVnTj1acmaFHY_w@mail.gmail.com>
+Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,28 +17,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christophe Leroy <christophe.leroy@c-s.fr>, kexec@lists.infradead.org, Sven Schnelle <svens@stackframe.org>
-Cc: deller@gmx.de, linuxppc-dev@lists.ozlabs.org
+To: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Sasha Levin <sashal@kernel.org>, corbet@lwn.net, Catalin Marinas <catalin.marinas@arm.com>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, "Eric W. Biederman" <ebiederm@xmission.com>, will@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 
-Q2hyaXN0b3BoZSBMZXJveSA8Y2hyaXN0b3BoZS5sZXJveUBjLXMuZnI+IHdyaXRlczoKPiBIaSBT
-dmVuLAo+Cj4gTGUgMDgvMDcvMjAxOSDDoCAxMjowNiwgQ2hyaXN0b3BoZSBMZXJveSBhIMOpY3Jp
-dMKgOgo+PiBGcm9tOiBTdmVuIFNjaG5lbGxlIDxzdmVuc0BzdGFja2ZyYW1lLm9yZz4KPgo+IFBs
-ZWFzZSBkZXNjcmliZSB5b3UgcGF0Y2guCj4KPiBBbGwgdGhlIGNoYW5nZXMgeW91IGFyZSBkb2lu
-ZyB0byB0aGUgcHBjNjQgdmVyc2lvbiBpbiBvcmRlciB0byBtYWtlIGl0IAo+IGdlbmVyaWMgc2hv
-dWxkIGJlIGRlc2NyaWJlZC4KPgo+IFRob3NlIGNoYW5nZXMgYXJlIGFsc28gbWF5YmUgd29ydGgg
-c3BsaXR0aW5nIHRoZSBwYXRjaCBpbiBzZXZlcmFsIHBhcnRzLCAKPiBlaXRoZXIgcHJlcGFyaW5n
-IHRoZSBwcGM2NCBmb3IgZ2VuZXJpYyB0aGVuIG1vdmluZyB0byBrZXJuZWwva2V4ZWNfZWxmLmMg
-Cj4gb3IgbW92aW5nIHRvIGtlcm5lbC9rZXhlY19lbGYuYyB3aXRob3V0IG1vZGlmaWNhdGlvbnMs
-IHRoZW4gbW9kaWZ5aW5nIGl0IAo+IHRvIG1ha2UgaXQgZ2VuZXJpYy4KPgo+IE5vdGUgdGhhdCB5
-b3VyIHBhdGNoIG9ubHkgYXBwbGllcyBvbiBMaW51eCA1LjEsIGl0IGRvZXNuJ3QgYXBwbHkgb24g
-Cj4gcG93ZXJwYy9uZXh0LgoKRG9uJ3Qgd29ycnkgYWJvdXQgdGhhdC4gQnkgdGhlIHRpbWUgaXQn
-cyBtZXJnZWQgcG93ZXJwYy9uZXh0IHdpbGwKcHJvYmFibHkgaGF2ZSBtb3ZlZCBvbiwgYW5kIGlm
-IG5vdCBJIGNhbiBkZWFsIHdpdGggYW55IGNvbmZsaWN0cy4KClVzaW5nIG1hc3RlciBvciBwb3dl
-cnBjL21lcmdlIGFzIGEgYmFzZSBpcyBmaW5lLgoKY2hlZXJzCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2tleGVjCg==
+Hi Pavel, Eric,
+
+(Subject-Nit: 'arm64:' is needed to match the style for arm64's arch code. Without it the
+maintainer is likely to skip the patches as being for core code.)
+
+On 09/07/2019 01:09, Pavel Tatashin wrote:
+>> Something is very very wrong there.
+>>
+>> Last I measured memory bandwidth seriously I could touch a Gigabyte per
+>> second easily, and that was nearly 20 years ago.  Did you manage to
+>> disable caching or have some particularly slow code that does the
+>> reolocations.
+>>
+>> There is a serious cost to reserving memory in that it is simply not
+>> available at other times.  For kexec on panic there is no other reliable
+>> way to get memory that won't be DMA'd to.
+
+> Indeed, but sometimes fast reboot is more important than the cost of
+> reserving 32M-64M of memory.
+
+>> We have options in this case and I would strongly encourage you to track
+>> down why that copy in relocation is so very slow.  I suspect a 4KiB page
+>> size is large enough that it can swamp pointer following costs.
+>>
+>> My back of the napkin math says even 20 years ago your copying costs
+>> should be only 0.037s.  The only machine I have ever tested on where
+>> the copy costs were noticable was my old 386.
+
+>> Maybe I am out to lunch here but a claim that your memory only runs
+>> at 100MiB/s (the speed of my spinning rust hard drive) is rather
+>> incredible.
+
+> I agree,  my measurement on this machine was 2,857MB/s. Perhaps when
+> MMU is disabled ARM64 also has caching disabled? The function that
+> loops through array of pages and relocates them to final destination
+> is this:
+
+> A comment before calling it:
+> 
+> 205   /*
+> 206   * cpu_soft_restart will shutdown the MMU, disable data caches, then
+> 207   * transfer control to the reboot_code_buffer which contains a copy of
+> 208   * the arm64_relocate_new_kernel routine.  arm64_relocate_new_kernel
+> 209   * uses physical addressing to relocate the new image to its final
+> 210   * position and transfers control to the image entry point when the
+> 211   * relocation is complete.
+> 212   * In kexec case, kimage->start points to purgatory assuming that
+> 213   * kernel entry and dtb address are embedded in purgatory by
+> 214   * userspace (kexec-tools).
+> 215   * In kexec_file case, the kernel starts directly without purgatory.
+> 216   */
+
+> So, as I understand at least data caches are disabled, and MMU is
+> disabled, perhaps this is why this function is so incredibly slow?
+
+Yup, spot on.
+
+Kexec typically wants to place the new kernel over the top of the old one, so its
+guaranteed to overwrite the live swapper_pg_dir.
+There is also nothing to prevent the other parts of the page-tables being overwritten as
+we relocate the kernel. The way the the kexec series chose to make this safe was the
+simplest: turn the MMU off. We need to enter purgatory with the MMU off anyway.
+
+(Its worth checking your kexec-tools purgatory isn't spending a decade generating a SHA256
+of the kernel while the MMU is off. This is pointless as we don't suspect the previous
+kernel of corrupting memory, and we can't debug/report the problem if we detect a
+different SHA256. Newer kexec-tools have some commandline option to turn this thing off.)
+
+
+> Perhaps, there is a better way to fix this problem by keeping caches
+> enabled while still relocating? Any suggestions from Aarch64
+> developers?
+
+Turning the MMU off is the simplest. The alternative is a lot more complicated:
+
+(To get the benefit of the caches, we need the MMU enabled to tell the hardware what the
+cache-ability attributes of each page of memory are.)
+
+We'd need to copy the page tables to build a new set out of memory we know won't get
+overwritten. Switching to this 'safe set' is tricky, as it also maps the code we're
+executing. To do that we'd need to use TTBR0 to hold another 'safe mapping' of the code
+we're running, while we change our view of the linear-map.
+
+Hibernate does exactly this, so its possible to re-use some of that logic. From memory, I
+think the reason that didn't get done is kexec doesn't provide an allocator, and needs the
+MMU off at some point anyway.
+
+
+Thanks,
+
+James
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
