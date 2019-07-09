@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from smtp.duncanthrax.net ([2001:470:70c5:1111::170])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hkw1d-0004Nd-SP
+ id 1hkw1d-0004NY-TQ
  for kexec@lists.infradead.org; Tue, 09 Jul 2019 19:43:45 +0000
 From: Sven Schnelle <svens@stackframe.org>
-Subject: [PATCH v2 7/7] kexec_elf: remove unused variable in kexec_elf_load()
-Date: Tue,  9 Jul 2019 21:43:28 +0200
-Message-Id: <20190709194328.16991-8-svens@stackframe.org>
-In-Reply-To: <20190709194328.16991-1-svens@stackframe.org>
-References: <20190709194328.16991-1-svens@stackframe.org>
+Subject: [PATCH v2 0/7] kexec: add generic support for elf kernel images
+Date: Tue,  9 Jul 2019 21:43:21 +0200
+Message-Id: <20190709194328.16991-1-svens@stackframe.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,45 +23,43 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Sven Schnelle <svens@stackframe.org>, deller@gmx.de, linuxppc-dev@lists.ozlabs.org
 
-base was never unsigned, so we can remove it.
+Hi List,
 
-Signed-off-by: Sven Schnelle <svens@stackframe.org>
----
- kernel/kexec_elf.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+i've split up the patch a bit more. The first one move the generic elf stuff
+out of arch/powerpc to linux/kexec_elf.c, and prefixes the exposed functions
+with kexec_. That other patches remove stuff that is not used as proposed in
+the review.
 
-diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
-index b7e47ddd7cad..a56ec5481e71 100644
---- a/kernel/kexec_elf.c
-+++ b/kernel/kexec_elf.c
-@@ -348,7 +348,7 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
- 			 struct kexec_buf *kbuf,
- 			 unsigned long *lowest_load_addr)
- {
--	unsigned long base = 0, lowest_addr = UINT_MAX;
-+	unsigned long lowest_addr = UINT_MAX;
- 	int ret;
- 	size_t i;
+Changes to v1:
+ - split up patch into smaller pieces
+ - rebase onto powerpc/next
+ - remove unused variable in kexec_elf_load()
+
+Changes to RFC version:
+ - remove unused Elf_Rel macro
+ - remove section header parsing
+ - remove PURGATORY_STACK_SIZE
+ - change order of elf_*_to_cpu() functions
+ - remove elf_addr_to_cpu macro
  
-@@ -370,7 +370,7 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
- 		kbuf->bufsz = size;
- 		kbuf->memsz = phdr->p_memsz;
- 		kbuf->buf_align = phdr->p_align;
--		kbuf->buf_min = phdr->p_paddr + base;
-+		kbuf->buf_min = phdr->p_paddr;
- 		ret = kexec_add_buffer(kbuf);
- 		if (ret)
- 			goto out;
-@@ -380,9 +380,6 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
- 			lowest_addr = load_addr;
- 	}
- 
--	/* Update entry point to reflect new load address. */
--	ehdr->e_entry += base;
--
- 	*lowest_load_addr = lowest_addr;
- 	ret = 0;
-  out:
+Sven Schnelle (7):
+  kexec: add KEXEC_ELF
+  kexec_elf: change order of elf_*_to_cpu() functions
+  kexec_elf: remove parsing of section headers
+  kexec_elf: remove PURGATORY_STACK_SIZE
+  kexec_elf: remove elf_addr_to_cpu macro
+  kexec_elf: remove Elf_Rel macro
+  kexec_elf: remove unused variable in kexec_elf_load()
+
+ arch/Kconfig                       |   3 +
+ arch/powerpc/Kconfig               |   1 +
+ arch/powerpc/kernel/kexec_elf_64.c | 551 +----------------------------
+ include/linux/kexec.h              |  23 ++
+ kernel/Makefile                    |   1 +
+ kernel/kexec_elf.c                 | 389 ++++++++++++++++++++
+ 6 files changed, 427 insertions(+), 541 deletions(-)
+ create mode 100644 kernel/kexec_elf.c
+
 -- 
 2.20.1
 
