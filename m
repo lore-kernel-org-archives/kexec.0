@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pegase1.c-s.fr ([93.17.236.30])
- by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hlEEA-00057G-0i
- for kexec@lists.infradead.org; Wed, 10 Jul 2019 15:09:51 +0000
-Subject: Re: [PATCH v3 5/7] kexec_elf: remove elf_addr_to_cpu macro
-References: <20190710142944.2774-1-svens@stackframe.org>
- <20190710142944.2774-6-svens@stackframe.org>
-From: Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <49206784-009c-391b-5f9a-11e9b1de930b@c-s.fr>
-Date: Wed, 10 Jul 2019 17:09:29 +0200
+Subject: Re: [v1 0/5] allow to reserve memory for normal kexec kernel
+References: <20190708211528.12392-1-pasha.tatashin@soleen.com>
+ <CACi5LpNGWhTnXyM8gB0Tn=682+08s-ppfDpX2SawfxMvue1GTQ@mail.gmail.com>
+ <CA+CK2bBrwBHhD-PFO_gVnDYoFi0Su6t456WNdtBWpOe4qM+oww@mail.gmail.com>
+ <2d60f302-5161-638a-76cd-d7d79e5631fe@arm.com>
+ <CA+CK2bA40wQvX=KieE5Qg2Ny5ZyiDAAjAb9W7Phu2Ou_9r6bOA@mail.gmail.com>
+From: James Morse <james.morse@arm.com>
+Message-ID: <f9bea5bd-370a-47b5-8ad1-a30bd43d6cca@arm.com>
+Date: Wed, 10 Jul 2019 16:19:07 +0100
 MIME-Version: 1.0
-In-Reply-To: <20190710142944.2774-6-svens@stackframe.org>
-Content-Language: fr
+In-Reply-To: <CA+CK2bA40wQvX=KieE5Qg2Ny5ZyiDAAjAb9W7Phu2Ou_9r6bOA@mail.gmail.com>
+Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,67 +19,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sven Schnelle <svens@stackframe.org>, kexec@lists.infradead.org
-Cc: deller@gmx.de, linuxppc-dev@lists.ozlabs.org
+To: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Sasha Levin <sashal@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, Eric Biederman <ebiederm@xmission.com>, will@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-CgpMZSAxMC8wNy8yMDE5IMOgIDE2OjI5LCBTdmVuIFNjaG5lbGxlIGEgw6ljcml0wqA6Cj4gSXQg
-aGFkIG9ubHkgb25lIGRlZmluaXRpb24sIHNvIGp1c3QgdXNlIHRoZSBmdW5jdGlvbiBkaXJlY3Rs
-eS4KCkl0IGhhZCBvbmx5IG9uZSBkZWZpbml0aW9uIGJlY2F1c2UgaXQgd2FzIGZvciBwcGM2NCBv
-bmx5LgpCdXQgYXMgZmFyIGFzIEkgdW5kZXJzdGFuZCAoYXQgbGVhc3QgZnJvbSB0aGUgbmFtZSBv
-ZiB0aGUgbmV3IGZpbGUpLCB5b3UgCndhbnQgaXQgdG8gYmUgZ2VuZXJpYywgZG9uJ3QgeW91ID8g
-VGhlcmVmb3JlIEkgZ2V0IG9uIDMyIGJpdHMgaXQgd291bGQgCmJlIGVsZjMyX3RvX2NwdSgpLgoK
-Q2hyaXN0b3BoZQoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBTdmVuIFNjaG5lbGxlIDxzdmVuc0BzdGFj
-a2ZyYW1lLm9yZz4KPiAtLS0KPiAgIGtlcm5lbC9rZXhlY19lbGYuYyB8IDIwICsrKysrKysrKy0t
-LS0tLS0tLS0tCj4gICAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlv
-bnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEva2VybmVsL2tleGVjX2VsZi5jIGIva2VybmVsL2tleGVj
-X2VsZi5jCj4gaW5kZXggNzBkMzFiOGZlZWFlLi45OWU2ZDYzYjVkZmMgMTAwNjQ0Cj4gLS0tIGEv
-a2VybmVsL2tleGVjX2VsZi5jCj4gKysrIGIva2VybmVsL2tleGVjX2VsZi5jCj4gQEAgLTgsOCAr
-OCw2IEBACj4gICAjaW5jbHVkZSA8bGludXgvc2xhYi5oPgo+ICAgI2luY2x1ZGUgPGxpbnV4L3R5
-cGVzLmg+Cj4gICAKPiAtI2RlZmluZSBlbGZfYWRkcl90b19jcHUJZWxmNjRfdG9fY3B1Cj4gLQo+
-ICAgI2lmbmRlZiBFbGZfUmVsCj4gICAjZGVmaW5lIEVsZl9SZWwJCUVsZjY0X1JlbAo+ICAgI2Vu
-ZGlmIC8qIEVsZl9SZWwgKi8KPiBAQCAtMTQzLDkgKzE0MSw5IEBAIHN0YXRpYyBpbnQgZWxmX3Jl
-YWRfZWhkcihjb25zdCBjaGFyICpidWYsIHNpemVfdCBsZW4sIHN0cnVjdCBlbGZoZHIgKmVoZHIp
-Cj4gICAJZWhkci0+ZV90eXBlICAgICAgPSBlbGYxNl90b19jcHUoZWhkciwgYnVmX2VoZHItPmVf
-dHlwZSk7Cj4gICAJZWhkci0+ZV9tYWNoaW5lICAgPSBlbGYxNl90b19jcHUoZWhkciwgYnVmX2Vo
-ZHItPmVfbWFjaGluZSk7Cj4gICAJZWhkci0+ZV92ZXJzaW9uICAgPSBlbGYzMl90b19jcHUoZWhk
-ciwgYnVmX2VoZHItPmVfdmVyc2lvbik7Cj4gLQllaGRyLT5lX2VudHJ5ICAgICA9IGVsZl9hZGRy
-X3RvX2NwdShlaGRyLCBidWZfZWhkci0+ZV9lbnRyeSk7Cj4gLQllaGRyLT5lX3Bob2ZmICAgICA9
-IGVsZl9hZGRyX3RvX2NwdShlaGRyLCBidWZfZWhkci0+ZV9waG9mZik7Cj4gLQllaGRyLT5lX3No
-b2ZmICAgICA9IGVsZl9hZGRyX3RvX2NwdShlaGRyLCBidWZfZWhkci0+ZV9zaG9mZik7Cj4gKwll
-aGRyLT5lX2VudHJ5ICAgICA9IGVsZjY0X3RvX2NwdShlaGRyLCBidWZfZWhkci0+ZV9lbnRyeSk7
-Cj4gKwllaGRyLT5lX3Bob2ZmICAgICA9IGVsZjY0X3RvX2NwdShlaGRyLCBidWZfZWhkci0+ZV9w
-aG9mZik7Cj4gKwllaGRyLT5lX3Nob2ZmICAgICA9IGVsZjY0X3RvX2NwdShlaGRyLCBidWZfZWhk
-ci0+ZV9zaG9mZik7Cj4gICAJZWhkci0+ZV9mbGFncyAgICAgPSBlbGYzMl90b19jcHUoZWhkciwg
-YnVmX2VoZHItPmVfZmxhZ3MpOwo+ICAgCWVoZHItPmVfcGhlbnRzaXplID0gZWxmMTZfdG9fY3B1
-KGVoZHIsIGJ1Zl9laGRyLT5lX3BoZW50c2l6ZSk7Cj4gICAJZWhkci0+ZV9waG51bSAgICAgPSBl
-bGYxNl90b19jcHUoZWhkciwgYnVmX2VoZHItPmVfcGhudW0pOwo+IEBAIC0xOTAsMTggKzE4OCwx
-OCBAQCBzdGF0aWMgaW50IGVsZl9yZWFkX3BoZHIoY29uc3QgY2hhciAqYnVmLCBzaXplX3QgbGVu
-LAo+ICAgCWJ1Zl9waGRyID0gKHN0cnVjdCBlbGZfcGhkciAqKSBwYnVmOwo+ICAgCj4gICAJcGhk
-ci0+cF90eXBlICAgPSBlbGYzMl90b19jcHUoZWxmX2luZm8tPmVoZHIsIGJ1Zl9waGRyLT5wX3R5
-cGUpOwo+IC0JcGhkci0+cF9vZmZzZXQgPSBlbGZfYWRkcl90b19jcHUoZWxmX2luZm8tPmVoZHIs
-IGJ1Zl9waGRyLT5wX29mZnNldCk7Cj4gLQlwaGRyLT5wX3BhZGRyICA9IGVsZl9hZGRyX3RvX2Nw
-dShlbGZfaW5mby0+ZWhkciwgYnVmX3BoZHItPnBfcGFkZHIpOwo+IC0JcGhkci0+cF92YWRkciAg
-PSBlbGZfYWRkcl90b19jcHUoZWxmX2luZm8tPmVoZHIsIGJ1Zl9waGRyLT5wX3ZhZGRyKTsKPiAr
-CXBoZHItPnBfb2Zmc2V0ID0gZWxmNjRfdG9fY3B1KGVsZl9pbmZvLT5laGRyLCBidWZfcGhkci0+
-cF9vZmZzZXQpOwo+ICsJcGhkci0+cF9wYWRkciAgPSBlbGY2NF90b19jcHUoZWxmX2luZm8tPmVo
-ZHIsIGJ1Zl9waGRyLT5wX3BhZGRyKTsKPiArCXBoZHItPnBfdmFkZHIgID0gZWxmNjRfdG9fY3B1
-KGVsZl9pbmZvLT5laGRyLCBidWZfcGhkci0+cF92YWRkcik7Cj4gICAJcGhkci0+cF9mbGFncyAg
-PSBlbGYzMl90b19jcHUoZWxmX2luZm8tPmVoZHIsIGJ1Zl9waGRyLT5wX2ZsYWdzKTsKPiAgIAo+
-ICAgCS8qCj4gICAJICogVGhlIGZvbGxvd2luZyBmaWVsZHMgaGF2ZSBhIHR5cGUgZXF1aXZhbGVu
-dCB0byBFbGZfQWRkcgo+ICAgCSAqIGJvdGggaW4gMzIgYml0IGFuZCA2NCBiaXQgRUxGLgo+ICAg
-CSAqLwo+IC0JcGhkci0+cF9maWxlc3ogPSBlbGZfYWRkcl90b19jcHUoZWxmX2luZm8tPmVoZHIs
-IGJ1Zl9waGRyLT5wX2ZpbGVzeik7Cj4gLQlwaGRyLT5wX21lbXN6ICA9IGVsZl9hZGRyX3RvX2Nw
-dShlbGZfaW5mby0+ZWhkciwgYnVmX3BoZHItPnBfbWVtc3opOwo+IC0JcGhkci0+cF9hbGlnbiAg
-PSBlbGZfYWRkcl90b19jcHUoZWxmX2luZm8tPmVoZHIsIGJ1Zl9waGRyLT5wX2FsaWduKTsKPiAr
-CXBoZHItPnBfZmlsZXN6ID0gZWxmNjRfdG9fY3B1KGVsZl9pbmZvLT5laGRyLCBidWZfcGhkci0+
-cF9maWxlc3opOwo+ICsJcGhkci0+cF9tZW1zeiAgPSBlbGY2NF90b19jcHUoZWxmX2luZm8tPmVo
-ZHIsIGJ1Zl9waGRyLT5wX21lbXN6KTsKPiArCXBoZHItPnBfYWxpZ24gID0gZWxmNjRfdG9fY3B1
-KGVsZl9pbmZvLT5laGRyLCBidWZfcGhkci0+cF9hbGlnbik7Cj4gICAKPiAgIAlyZXR1cm4gZWxm
-X2lzX3BoZHJfc2FuZShwaGRyLCBsZW4pID8gMCA6IC1FTk9FWEVDOwo+ICAgfQo+IAoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
-aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Pasha,
+
+On 09/07/2019 14:07, Pavel Tatashin wrote:
+>>> Enabling MMU and D-Cache for relocation  would essentially require the
+>>> same changes in kernel. Could you please share exactly why these were
+>>> not accepted upstream into kexec-tools?
+>>
+>> Because '--no-checks' is a much simpler alternative.
+>>
+>> More of the discussion:
+>> https://lore.kernel.org/linux-arm-kernel/5599813d-f83c-d154-287a-c131c48292ca@arm.com/
+>>
+>> While you can make purgatory a fully-fledged operating system, it doesn't really need to
+>> do anything on arm64. Errata-workarounds alone are a reason not do start down this path.
+> 
+> Thank you James. I will summaries the information gathered from the
+> yesterday's/today's discussion and add it to the cover letter together
+> with ARM64 tag. I think, the patch series makes sense for ARM64 only,
+> unless there are other platforms that disable caching/MMU during
+> relocation.
+
+I'd prefer not to reserve additional memory for regular kexec just to avoid the relocation.
+If the kernel's relocation work is so painful we can investigate doing it while the MMU is
+enabled. If you can compare regular-kexec with kexec_file_load() you eliminate the
+purgatory part of the work.
+
+
+Thanks,
+
+James
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
