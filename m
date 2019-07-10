@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from smtp.duncanthrax.net ([2001:470:70c5:1111::170])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hlDbr-0007te-QW
+ id 1hlDbr-0007ti-Qa
  for kexec@lists.infradead.org; Wed, 10 Jul 2019 14:30:17 +0000
 From: Sven Schnelle <svens@stackframe.org>
-Subject: [PATCH v3 0/7] kexec: add generic support for elf kernel images
-Date: Wed, 10 Jul 2019 16:29:37 +0200
-Message-Id: <20190710142944.2774-1-svens@stackframe.org>
+Subject: [PATCH v3 5/7] kexec_elf: remove elf_addr_to_cpu macro
+Date: Wed, 10 Jul 2019 16:29:42 +0200
+Message-Id: <20190710142944.2774-6-svens@stackframe.org>
+In-Reply-To: <20190710142944.2774-1-svens@stackframe.org>
+References: <20190710142944.2774-1-svens@stackframe.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,43 +25,64 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Sven Schnelle <svens@stackframe.org>, deller@gmx.de, linuxppc-dev@lists.ozlabs.org
 
-Hi List,
+It had only one definition, so just use the function directly.
 
-this is the same changeset as v2, but (hopefully) with git format-patch -C.
+Signed-off-by: Sven Schnelle <svens@stackframe.org>
+---
+ kernel/kexec_elf.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-Changes to v2:
- - use git format-patch -C
-
-Changes to v1:
- - split up patch into smaller pieces
- - rebase onto powerpc/next
- - remove unused variable in kexec_elf_load()
-
-Changes to RFC version:
- - remove unused Elf_Rel macro
- - remove section header parsing
- - remove PURGATORY_STACK_SIZE
- - change order of elf_*_to_cpu() functions
- - remove elf_addr_to_cpu macro
-
-Sven Schnelle (7):
-  kexec: add KEXEC_ELF
-  kexec_elf: change order of elf_*_to_cpu() functions
-  kexec_elf: remove parsing of section headers
-  kexec_elf: remove PURGATORY_STACK_SIZE
-  kexec_elf: remove elf_addr_to_cpu macro
-  kexec_elf: remove Elf_Rel macro
-  kexec_elf: remove unused variable in kexec_elf_load()
-
- arch/Kconfig                       |   3 +
- arch/powerpc/Kconfig               |   1 +
- arch/powerpc/kernel/kexec_elf_64.c | 551 +----------------------------
- include/linux/kexec.h              |  23 ++
- kernel/Makefile                    |   1 +
- kernel/kexec_elf.c                 | 389 ++++++++++++++++++++
- 6 files changed, 427 insertions(+), 541 deletions(-)
- create mode 100644 kernel/kexec_elf.c
-
+diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
+index 70d31b8feeae..99e6d63b5dfc 100644
+--- a/kernel/kexec_elf.c
++++ b/kernel/kexec_elf.c
+@@ -8,8 +8,6 @@
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ 
+-#define elf_addr_to_cpu	elf64_to_cpu
+-
+ #ifndef Elf_Rel
+ #define Elf_Rel		Elf64_Rel
+ #endif /* Elf_Rel */
+@@ -143,9 +141,9 @@ static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
+ 	ehdr->e_type      = elf16_to_cpu(ehdr, buf_ehdr->e_type);
+ 	ehdr->e_machine   = elf16_to_cpu(ehdr, buf_ehdr->e_machine);
+ 	ehdr->e_version   = elf32_to_cpu(ehdr, buf_ehdr->e_version);
+-	ehdr->e_entry     = elf_addr_to_cpu(ehdr, buf_ehdr->e_entry);
+-	ehdr->e_phoff     = elf_addr_to_cpu(ehdr, buf_ehdr->e_phoff);
+-	ehdr->e_shoff     = elf_addr_to_cpu(ehdr, buf_ehdr->e_shoff);
++	ehdr->e_entry     = elf64_to_cpu(ehdr, buf_ehdr->e_entry);
++	ehdr->e_phoff     = elf64_to_cpu(ehdr, buf_ehdr->e_phoff);
++	ehdr->e_shoff     = elf64_to_cpu(ehdr, buf_ehdr->e_shoff);
+ 	ehdr->e_flags     = elf32_to_cpu(ehdr, buf_ehdr->e_flags);
+ 	ehdr->e_phentsize = elf16_to_cpu(ehdr, buf_ehdr->e_phentsize);
+ 	ehdr->e_phnum     = elf16_to_cpu(ehdr, buf_ehdr->e_phnum);
+@@ -190,18 +188,18 @@ static int elf_read_phdr(const char *buf, size_t len,
+ 	buf_phdr = (struct elf_phdr *) pbuf;
+ 
+ 	phdr->p_type   = elf32_to_cpu(elf_info->ehdr, buf_phdr->p_type);
+-	phdr->p_offset = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_offset);
+-	phdr->p_paddr  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_paddr);
+-	phdr->p_vaddr  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_vaddr);
++	phdr->p_offset = elf64_to_cpu(elf_info->ehdr, buf_phdr->p_offset);
++	phdr->p_paddr  = elf64_to_cpu(elf_info->ehdr, buf_phdr->p_paddr);
++	phdr->p_vaddr  = elf64_to_cpu(elf_info->ehdr, buf_phdr->p_vaddr);
+ 	phdr->p_flags  = elf32_to_cpu(elf_info->ehdr, buf_phdr->p_flags);
+ 
+ 	/*
+ 	 * The following fields have a type equivalent to Elf_Addr
+ 	 * both in 32 bit and 64 bit ELF.
+ 	 */
+-	phdr->p_filesz = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_filesz);
+-	phdr->p_memsz  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_memsz);
+-	phdr->p_align  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_align);
++	phdr->p_filesz = elf64_to_cpu(elf_info->ehdr, buf_phdr->p_filesz);
++	phdr->p_memsz  = elf64_to_cpu(elf_info->ehdr, buf_phdr->p_memsz);
++	phdr->p_align  = elf64_to_cpu(elf_info->ehdr, buf_phdr->p_align);
+ 
+ 	return elf_is_phdr_sane(phdr, len) ? 0 : -ENOEXEC;
+ }
 -- 
 2.20.1
 
