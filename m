@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.92 #3 (Red Hat Linux))
- id 1hl7gm-0003Zc-Ij
- for kexec@lists.infradead.org; Wed, 10 Jul 2019 08:10:57 +0000
-Date: Wed, 10 Jul 2019 10:10:53 +0200
+ id 1hl85L-0004hD-OO
+ for kexec@lists.infradead.org; Wed, 10 Jul 2019 08:36:21 +0000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH kexec-tools] x86: re-order includes to avoid duplicate
- struct e820entry
-Message-ID: <20190710081053.qtiqskblmxcpkr6e@verge.net.au>
-References: <20190703080432.28806-1-horms@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190703080432.28806-1-horms@verge.net.au>
+Subject: [PATCH] x86: Include kexec-mb2-x86.c and multiboot2.h in distribution
+Date: Wed, 10 Jul 2019 10:36:01 +0200
+Message-Id: <20190710083601.2040-1-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,109 +15,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Dave Young <dyoung@redhat.com>, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>
+Cc: Simon Horman <horms@verge.net.au>, Varad Gautam <vrd@amazon.de>, Amit Shah <aams@amazon.de>, David Woodhouse <dwmw@amazon.co.uk>
 
-On Wed, Jul 03, 2019 at 10:04:32AM +0200, Simon Horman wrote:
-> xenctrl.h defines struct e820entry as:
-> 
-> 	if defined(__i386__) || defined(__x86_64__)
-> 	...
-> 	#define E820_RAM	1
-> 	...
-> 	struct e820entry {
-> 		uint64_t addr;
-> 		uint64_t size;
-> 		uint32_t type;
-> 	} __attribute__((packed));
-> 	...
-> 	#endif
-> 
->  $ dpkg-query -S /usr/include/xenctrl.h
->  libxen-dev:amd64: /usr/include/xenctrl.h
->  $  dpkg-query -W libxen-dev:amd64
->  libxen-dev:amd64	4.8.5+shim4.10.2+xsa282-1+deb9u11
-> 
-> ./include/x86/x86-linux.h defines struct e820entry as:
-> 
-> 	#ifndef E820_RAM
-> 	struct e820entry {
-> 		uint64_t addr;  /* start of memory segment */
-> 		uint64_t size;  /* size of memory segment */
-> 		uint32_t type;  /* type of memory segment */
-> 		#define E820_RAM    1
-> 		...
-> 	} __attribute__((packed));
-> 	#endif
-> 
-> Since cedeee0a3007 ("x86: Introduce helpers for getting RSDP address")
-> ./kexec/arch/i386/kexec-x86-common.c includes
-> 
-> 	+#include "x86-linux-setup.h"
-> 	 #include "../../kexec-xen.h"
-> 
-> When xenctrl.h is present the above results in:
-> 
->  $ gcc
->  ...
->  In file included from kexec/arch/i386/../../kexec-xen.h:5:0,
->                   from kexec/arch/i386/kexec-x86-common.c:43:
->  /usr/include/xenctrl.h:1271:8: error: redefinition of 'struct e820entry'
->   struct e820entry {
->          ^~~~~~~~~
-> 
->  In file included from kexec/arch/i386/x86-linux-setup.h:3:0,
->                   from kexec/arch/i386/kexec-x86-common.c:42:
->  ./include/x86/x86-linux.h:16:8: note: originally defined here
->   struct e820entry {
->          ^~~~~~~~~
->  ...
->  $ gcc --version | head -1
->  gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
-> 
-> To militate this this problem re-order the includes so that
-> x86-linux.h is included after xenctrl.h and thus
-> struct e820entry will only be defined once due to it
-> being devined conditionally in x86-linux.h.
-> 
-> In practice the definitions are the same so it should
-> not matter which is chosen.
-> 
-> It also seems rather unpleasent to me to need to play
-> with include ordering. Perhaps a better solution in the longer
-> term would be to rename the local definition of struct e820entry.
-> 
-> Fixes: cedeee0a3007 ("x86: Introduce helpers for getting RSDP address")
-> Signed-off-by: Simon Horman <horms@verge.net.au>
+Fixes: 22a2ed55132e ("x86: Support multiboot2 images")
+Signed-off-by: Simon Horman <horms@verge.net.au>
+---
+ include/Makefile         | 1 +
+ kexec/arch/i386/Makefile | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-I have applied this change.
+ I intend to apply this patch for inclusion in v2.0.20-rc1
+ the release of which I am currently preparing.
 
-> ---
->  kexec/arch/i386/kexec-x86-common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-> index 5c55ec8a2cd3..61ea19380ab2 100644
-> --- a/kexec/arch/i386/kexec-x86-common.c
-> +++ b/kexec/arch/i386/kexec-x86-common.c
-> @@ -38,9 +38,9 @@
->  #include "../../kexec-syscall.h"
->  #include "../../firmware_memmap.h"
->  #include "../../crashdump.h"
-> +#include "../../kexec-xen.h"
->  #include "kexec-x86.h"
->  #include "x86-linux-setup.h"
-> -#include "../../kexec-xen.h"
->  
->  /* Used below but not present in (older?) xenctrl.h */
->  #ifndef E820_PMEM
-> -- 
-> 2.11.0
-> 
+diff --git a/include/Makefile b/include/Makefile
+index c26b503fbe36..621ce9f903d6 100644
+--- a/include/Makefile
++++ b/include/Makefile
+@@ -5,6 +5,7 @@ dist += include/Makefile		\
+ 	include/x86/x86-linux.h		\
+ 	include/x86/mb_info.h		\
+ 	include/x86/mb_header.h		\
++	include/x86/multiboot2.h	\
+ 	include/elf.h			\
+ 	include/image.h			\
+ 	include/unused.h		\
+diff --git a/kexec/arch/i386/Makefile b/kexec/arch/i386/Makefile
+index d52a2f541448..105cefd60695 100644
+--- a/kexec/arch/i386/Makefile
++++ b/kexec/arch/i386/Makefile
+@@ -13,6 +13,8 @@ i386_KEXEC_SRCS += kexec/arch/i386/x86-linux-setup.c
+ i386_KEXEC_SRCS += kexec/arch/i386/crashdump-x86.c
+ 
+ dist += kexec/arch/i386/Makefile $(i386_KEXEC_SRCS)			\
+-	kexec/arch/i386/kexec-x86.h kexec/arch/i386/crashdump-x86.h	\
++	kexec/arch/i386/crashdump-x86.h					\
++	kexec/arch/i386/kexec-mb2-x86.c					\
++	kexec/arch/i386/kexec-x86.h					\
+ 	kexec/arch/i386/x86-linux-setup.h				\
+ 	kexec/arch/i386/include/arch/options.h
+-- 
+2.11.0
+
 
 _______________________________________________
 kexec mailing list
