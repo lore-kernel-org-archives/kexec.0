@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.duncanthrax.net ([2001:470:70c5:1111::170])
+Received: from mail-pg1-f196.google.com ([209.85.215.196])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hlGy2-0005cr-Uk
- for kexec@lists.infradead.org; Wed, 10 Jul 2019 18:05:24 +0000
-Date: Wed, 10 Jul 2019 20:05:18 +0200
-From: Sven Schnelle <svens@stackframe.org>
-Subject: Re: [PATCH v3 5/7] kexec_elf: remove elf_addr_to_cpu macro
-Message-ID: <20190710180518.GA6343@t470p.stackframe.org>
-References: <20190710142944.2774-1-svens@stackframe.org>
- <20190710142944.2774-6-svens@stackframe.org>
- <49206784-009c-391b-5f9a-11e9b1de930b@c-s.fr>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <49206784-009c-391b-5f9a-11e9b1de930b@c-s.fr>
+ id 1hlIfj-0006Hc-R9
+ for kexec@lists.infradead.org; Wed, 10 Jul 2019 19:54:37 +0000
+Received: by mail-pg1-f196.google.com with SMTP id q4so1726700pgj.8
+ for <kexec@lists.infradead.org>; Wed, 10 Jul 2019 12:54:35 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH 0/4] kexec/arm64: Add support for zlib compressed kernel
+ images (Image.gz)
+Date: Thu, 11 Jul 2019 01:24:25 +0530
+Message-Id: <1562788469-22935-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,37 +18,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: linuxppc-dev@lists.ozlabs.org, deller@gmx.de, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: bhupesh.linux@gmail.com, bhsharma@redhat.com, horms@verge.net.au, takahiro.akashi@linaro.org
 
-Hi Christophe,
+This patchset adds the support for zlib compressed kernel images
+(Image.gz) for arm64 kexec-tools.
 
-On Wed, Jul 10, 2019 at 05:09:29PM +0200, Christophe Leroy wrote:
-> =
+This was discussed a bit with the arm64 kernel maintainers (see [0]) and
+after discussing the pros and cons of adding this support in
+kernel-space v/s in user-space, we decided it makes more sense to add
+this support to the user-space kexec-tools.
 
-> =
+Note that this series adds support for unsigned arm64 Image.gz files
+only as signing an Image.gz type file is not a easy implementation from
+kexec-tools p-o-v. Also even standard signing tools like sbsign fail to
+recongize the Image.gz format:
 
-> Le 10/07/2019 =E0 16:29, Sven Schnelle a =E9crit=A0:
-> > It had only one definition, so just use the function directly.
-> =
+ $ sbsign --key certs/signing_key.pem  --cert certs/signing_key.pem Image.gz
+   Invalid DOS header magic
 
-> It had only one definition because it was for ppc64 only.
-> But as far as I understand (at least from the name of the new file), you
-> want it to be generic, don't you ? Therefore I get on 32 bits it would be
-> elf32_to_cpu().
+... because that gzip file isn't a PE32+ that can be loaded by UEFI.
+So I will work on the same in coming days and try to send a RFC
+patchset for the same later on.
 
-That brings up the question whether we need those endianess conversions. I =
-would
-assume that the ELF file has always the same endianess as the running kerne=
-l. So
-i think we could just drop them. What do you think?
+[0]. http://lists.infradead.org/pipermail/kexec/2019-June/023156.html
 
-Regards
-Sven
+Bhupesh Sharma (4):
+  kexec/kexec.c: Add the missing close() for fd used for
+    kexec_file_load()
+  kexec-uImage-arm64.c: Fix return value of uImage_arm64_probe()
+  kexec/kexec-zlib.h: Add 'is_zlib_file()' helper function
+  kexec/arm64: Add support for handling zlib compressed (Image.gz) image
+
+ kexec/arch/arm64/Makefile             |   3 +-
+ kexec/arch/arm64/kexec-arm64.c        |   1 +
+ kexec/arch/arm64/kexec-arm64.h        |   7 ++
+ kexec/arch/arm64/kexec-image-arm64.c  |   4 +-
+ kexec/arch/arm64/kexec-uImage-arm64.c |  13 ++-
+ kexec/arch/arm64/kexec-zImage-arm64.c | 199 ++++++++++++++++++++++++++++++++++
+ kexec/kexec-zlib.h                    |   1 +
+ kexec/kexec.c                         |  14 +++
+ kexec/zlib.c                          |  32 ++++++
+ 9 files changed, 270 insertions(+), 4 deletions(-)
+ create mode 100644 kexec/arch/arm64/kexec-zImage-arm64.c
+
+-- 
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
