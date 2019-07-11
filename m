@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [v1 0/5] allow to reserve memory for normal kexec kernel
-References: <20190708211528.12392-1-pasha.tatashin@soleen.com>
- <CACi5LpNGWhTnXyM8gB0Tn=682+08s-ppfDpX2SawfxMvue1GTQ@mail.gmail.com>
- <CA+CK2bBrwBHhD-PFO_gVnDYoFi0Su6t456WNdtBWpOe4qM+oww@mail.gmail.com>
- <2d60f302-5161-638a-76cd-d7d79e5631fe@arm.com>
- <CA+CK2bA40wQvX=KieE5Qg2Ny5ZyiDAAjAb9W7Phu2Ou_9r6bOA@mail.gmail.com>
- <f9bea5bd-370a-47b5-8ad1-a30bd43d6cca@arm.com>
- <CA+CK2bBWis8TgyOmDhVgLYrOU95Za-UhSGSB3ufsjiNDt-Zd_w@mail.gmail.com>
-From: Vladimir Murzin <vladimir.murzin@arm.com>
-Message-ID: <93f99d54-9fe4-a191-4877-080ad78322bb@arm.com>
-Date: Thu, 11 Jul 2019 09:12:05 +0100
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.92 #3 (Red Hat Linux))
+ id 1hlVq4-0000FE-7D
+ for kexec@lists.infradead.org; Thu, 11 Jul 2019 09:58:12 +0000
+Date: Thu, 11 Jul 2019 11:58:01 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 3/4] kexec/kexec-zlib.h: Add 'is_zlib_file()' helper
+ function
+Message-ID: <20190711095800.i6flfrcdidw2t6la@verge.net.au>
+References: <1562788469-22935-1-git-send-email-bhsharma@redhat.com>
+ <1562788469-22935-4-git-send-email-bhsharma@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+CK2bBWis8TgyOmDhVgLYrOU95Za-UhSGSB3ufsjiNDt-Zd_w@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1562788469-22935-4-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,59 +25,90 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Tatashin <pasha.tatashin@soleen.com>, James Morse <james.morse@arm.com>
-Cc: Sasha Levin <sashal@kernel.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, Jonathan Corbet <corbet@lwn.net>, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, Eric Biederman <ebiederm@xmission.com>, will@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: takahiro.akashi@linaro.org, bhupesh.linux@gmail.com, kexec@lists.infradead.org
 
-Hi,
-
-On 7/10/19 4:56 PM, Pavel Tatashin wrote:
-> On Wed, Jul 10, 2019 at 11:19 AM James Morse <james.morse@arm.com> wrote:
->>
->> Hi Pasha,
->>
->> On 09/07/2019 14:07, Pavel Tatashin wrote:
->>>>> Enabling MMU and D-Cache for relocation  would essentially require the
->>>>> same changes in kernel. Could you please share exactly why these were
->>>>> not accepted upstream into kexec-tools?
->>>>
->>>> Because '--no-checks' is a much simpler alternative.
->>>>
->>>> More of the discussion:
->>>> https://lore.kernel.org/linux-arm-kernel/5599813d-f83c-d154-287a-c131c48292ca@arm.com/
->>>>
->>>> While you can make purgatory a fully-fledged operating system, it doesn't really need to
->>>> do anything on arm64. Errata-workarounds alone are a reason not do start down this path.
->>>
->>> Thank you James. I will summaries the information gathered from the
->>> yesterday's/today's discussion and add it to the cover letter together
->>> with ARM64 tag. I think, the patch series makes sense for ARM64 only,
->>> unless there are other platforms that disable caching/MMU during
->>> relocation.
->>
->> I'd prefer not to reserve additional memory for regular kexec just to avoid the relocation.
->> If the kernel's relocation work is so painful we can investigate doing it while the MMU is
->> enabled. If you can compare regular-kexec with kexec_file_load() you eliminate the
->> purgatory part of the work.
+On Thu, Jul 11, 2019 at 01:24:28AM +0530, Bhupesh Sharma wrote:
+> This patch adds 'is_zlib_file()' helper function which can be
+> used to quickly determine with the passed kernel image is a zlib
+> compressed kernel image.
 > 
-> Relocation time is exactly the same for regular-kexec and
-> kexec_file_load(). So, the relocation is indeed painful for our case.
-> I am working on adding MMU enabled kernel relocation.
-
-Out of curiosity, does enabling only I-cache make a difference? IIRC, it doesn't
-require setting MMU, in contrast to D-cache.
-
-Cheers
-Vladimir
-
+> This is specifically useful for arm64 zImage (or Image.gz) support,
+> which is introduced by later patches in this patchset.
 > 
-> Pasha
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> ---
+>  kexec/kexec-zlib.h |  1 +
+>  kexec/zlib.c       | 32 ++++++++++++++++++++++++++++++++
+>  2 files changed, 33 insertions(+)
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+> diff --git a/kexec/kexec-zlib.h b/kexec/kexec-zlib.h
+> index 43c107bf4a72..16300f294759 100644
+> --- a/kexec/kexec-zlib.h
+> +++ b/kexec/kexec-zlib.h
+> @@ -6,5 +6,6 @@
+>  
+>  #include "config.h"
+>  
+> +int is_zlib_file(const char *filename, off_t *r_size);
+>  char *zlib_decompress_file(const char *filename, off_t *r_size);
+>  #endif /* __KEXEC_ZLIB_H */
+> diff --git a/kexec/zlib.c b/kexec/zlib.c
+> index 95b608059d41..34d5ca566769 100644
+> --- a/kexec/zlib.c
+> +++ b/kexec/zlib.c
+> @@ -23,6 +23,32 @@ static void _gzerror(gzFile fp, int *errnum, const char **errmsg)
+>  	}
+>  }
+>  
+> +int is_zlib_file(const char *filename, off_t *r_size)
+> +{
+> +	gzFile fp;
+> +	int errnum;
+> +	const char *msg;
+> +
+> +	if (!filename)
+> +		goto out;
+> +
+> +	fp = gzopen(filename, "rb");
 
+Does fp need to be closed somewhere to avoid a leak?
+
+> +	if (fp == 0) {
+> +		_gzerror(fp, &errnum, &msg);
+> +		dbgprintf("Cannot open `%s': %s\n", filename, msg);
+> +		goto out;
+> +	}
+> +
+> +	if (gzdirect(fp))
+> +		/* It's not in gzip format */
+> +		goto out;
+> +
+> +	/* It's in gzip format */
+> +	return 1;
+> +out:
+> +	return 0;
+> +}
+> +
+>  char *zlib_decompress_file(const char *filename, off_t *r_size)
+>  {
+>  	gzFile fp;
+> @@ -84,6 +110,12 @@ fail:
+>  	return buf;
+>  }
+>  #else
+> +
+> +int is_zlib_file(const char *filename, off_t *r_size)
+> +{
+> +	return 0;
+> +}
+> +
+>  char *zlib_decompress_file(const char *UNUSED(filename), off_t *UNUSED(r_size))
+>  {
+>  	return NULL;
+> -- 
+> 2.7.4
+> 
 
 _______________________________________________
 kexec mailing list
