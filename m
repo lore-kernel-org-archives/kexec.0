@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from smtp.duncanthrax.net ([2001:470:70c5:1111::170])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hmwKc-000549-9K
+ id 1hmwKc-00054D-9K
  for kexec@lists.infradead.org; Mon, 15 Jul 2019 08:27:41 +0000
 From: Sven Schnelle <svens@stackframe.org>
-Subject: [PATCH v4 2/7] kexec_elf: change order of elf_*_to_cpu() functions
-Date: Mon, 15 Jul 2019 10:26:57 +0200
-Message-Id: <20190715082702.27308-3-svens@stackframe.org>
+Subject: [PATCH v4 4/7] kexec_elf: remove PURGATORY_STACK_SIZE
+Date: Mon, 15 Jul 2019 10:26:59 +0200
+Message-Id: <20190715082702.27308-5-svens@stackframe.org>
 In-Reply-To: <20190715082702.27308-1-svens@stackframe.org>
 References: <20190715082702.27308-1-svens@stackframe.org>
 MIME-Version: 1.0
@@ -25,46 +25,26 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Sven Schnelle <svens@stackframe.org>, deller@gmx.de, linuxppc-dev@lists.ozlabs.org
 
-Change the order to have a 64/32/16 order, no functional change.
+It's not used anywhere so just drop it.
 
 Signed-off-by: Sven Schnelle <svens@stackframe.org>
 ---
- kernel/kexec_elf.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ kernel/kexec_elf.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
-index 6e9f52171ede..76e7df64d715 100644
+index effe9dc0b055..70d31b8feeae 100644
 --- a/kernel/kexec_elf.c
 +++ b/kernel/kexec_elf.c
-@@ -31,22 +31,22 @@ static uint64_t elf64_to_cpu(const struct elfhdr *ehdr, uint64_t value)
- 	return value;
- }
+@@ -8,8 +8,6 @@
+ #include <linux/slab.h>
+ #include <linux/types.h>
  
--static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
-+static uint32_t elf32_to_cpu(const struct elfhdr *ehdr, uint32_t value)
- {
- 	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
--		value = le16_to_cpu(value);
-+		value = le32_to_cpu(value);
- 	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
--		value = be16_to_cpu(value);
-+		value = be32_to_cpu(value);
+-#define PURGATORY_STACK_SIZE	(16 * 1024)
+-
+ #define elf_addr_to_cpu	elf64_to_cpu
  
- 	return value;
- }
- 
--static uint32_t elf32_to_cpu(const struct elfhdr *ehdr, uint32_t value)
-+static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
- {
- 	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
--		value = le32_to_cpu(value);
-+		value = le16_to_cpu(value);
- 	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
--		value = be32_to_cpu(value);
-+		value = be16_to_cpu(value);
- 
- 	return value;
- }
+ #ifndef Elf_Rel
 -- 
 2.20.1
 
