@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-f193.google.com ([209.85.215.193])
+Received: from mail-pg1-f196.google.com ([209.85.215.196])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hmu4q-0005qc-6Y
- for kexec@lists.infradead.org; Mon, 15 Jul 2019 06:03:09 +0000
-Received: by mail-pg1-f193.google.com with SMTP id o13so7154614pgp.12
- for <kexec@lists.infradead.org>; Sun, 14 Jul 2019 23:03:07 -0700 (PDT)
+ id 1hmu4t-0005rH-BP
+ for kexec@lists.infradead.org; Mon, 15 Jul 2019 06:03:12 +0000
+Received: by mail-pg1-f196.google.com with SMTP id n9so949944pgc.1
+ for <kexec@lists.infradead.org>; Sun, 14 Jul 2019 23:03:10 -0700 (PDT)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH v2 1/4] kexec/kexec.c: Add the missing close() for fd used for
- kexec_file_load()
-Date: Mon, 15 Jul 2019 11:32:53 +0530
-Message-Id: <1563170576-13134-2-git-send-email-bhsharma@redhat.com>
+Subject: [PATCH v2 2/4] kexec-uImage-arm64.c: Fix return value of
+ uImage_arm64_probe()
+Date: Mon, 15 Jul 2019 11:32:54 +0530
+Message-Id: <1563170576-13134-3-git-send-email-bhsharma@redhat.com>
 In-Reply-To: <1563170576-13134-1-git-send-email-bhsharma@redhat.com>
 References: <1563170576-13134-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -28,30 +28,51 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: takahiro.akashi@linaro.org, bhsharma@redhat.com, bhupesh.linux@gmail.com, horms@verge.net.au
 
-In kexec/kexec.c, we open() the kernel Image file and pass this file
-descriptor to the kexec_file_load() system call, but never call a
-corresponding close().
+Commit bf06cf2095e1 ("kexec/uImage: probe to identify a corrupted image"),
+defined the 'uImage_probe_kernel()' function return values and
+correspondingly ;uImage_arm64_probe()' returns the same (0 -> If the
+image is valid 'type' image, -1 -> If the image is corrupted and
+1 -> If the image is not a uImage).
 
-Fix the same via this patch.
+This causes issues because, in later patches we introduce zImage
+support for arm64, and since it is probed after uImage, the return
+values from 'uImage_arm64_probe()' needs to be fixed to make sure
+that kexec will not return with an invalid error code.
+
+Now, 'uImage_arm64_probe()' returns the following values instead:
+  0 - valid uImage.
+ -1 - uImage is corrupted.
+  1 - image is not a uImage.
 
 Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
 ---
- kexec/kexec.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kexec/arch/arm64/kexec-uImage-arm64.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 32ae56c8f1c3..8ca3b457cac8 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -1234,6 +1234,8 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
- 	if (ret != 0)
- 		fprintf(stderr, "kexec_file_load failed: %s\n",
- 					strerror(errno));
+diff --git a/kexec/arch/arm64/kexec-uImage-arm64.c b/kexec/arch/arm64/kexec-uImage-arm64.c
+index 126ea9c2555b..c4669131b667 100644
+--- a/kexec/arch/arm64/kexec-uImage-arm64.c
++++ b/kexec/arch/arm64/kexec-uImage-arm64.c
+@@ -11,7 +11,18 @@
+ 
+ int uImage_arm64_probe(const char *buf, off_t len)
+ {
+-	return uImage_probe_kernel(buf, len, IH_ARCH_ARM64);
++	int ret;
 +
-+	close(kernel_fd);
- 	return ret;
++	ret = uImage_probe_kernel(buf, len, IH_ARCH_ARM64);
++
++	/*  0 - valid uImage.
++	 * -1 - uImage is corrupted.
++	 *  1 - image is not a uImage.
++	 */
++	if (!ret)
++		return 0;
++	else
++		return -1;
  }
  
+ int uImage_arm64_load(int argc, char **argv, const char *buf, off_t len,
 -- 
 2.7.4
 
