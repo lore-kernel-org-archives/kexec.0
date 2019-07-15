@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-f196.google.com ([209.85.215.196])
+Received: from mail-pg1-f195.google.com ([209.85.215.195])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hmu4t-0005rH-BP
- for kexec@lists.infradead.org; Mon, 15 Jul 2019 06:03:12 +0000
-Received: by mail-pg1-f196.google.com with SMTP id n9so949944pgc.1
- for <kexec@lists.infradead.org>; Sun, 14 Jul 2019 23:03:10 -0700 (PDT)
+ id 1hmu4w-0005s2-J4
+ for kexec@lists.infradead.org; Mon, 15 Jul 2019 06:03:16 +0000
+Received: by mail-pg1-f195.google.com with SMTP id l21so7175004pgm.3
+ for <kexec@lists.infradead.org>; Sun, 14 Jul 2019 23:03:14 -0700 (PDT)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH v2 2/4] kexec-uImage-arm64.c: Fix return value of
- uImage_arm64_probe()
-Date: Mon, 15 Jul 2019 11:32:54 +0530
-Message-Id: <1563170576-13134-3-git-send-email-bhsharma@redhat.com>
+Subject: [PATCH v2 3/4] kexec/kexec-zlib.h: Add 'is_zlib_file()' helper
+ function
+Date: Mon, 15 Jul 2019 11:32:55 +0530
+Message-Id: <1563170576-13134-4-git-send-email-bhsharma@redhat.com>
 In-Reply-To: <1563170576-13134-1-git-send-email-bhsharma@redhat.com>
 References: <1563170576-13134-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -28,51 +28,86 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: takahiro.akashi@linaro.org, bhsharma@redhat.com, bhupesh.linux@gmail.com, horms@verge.net.au
 
-Commit bf06cf2095e1 ("kexec/uImage: probe to identify a corrupted image"),
-defined the 'uImage_probe_kernel()' function return values and
-correspondingly ;uImage_arm64_probe()' returns the same (0 -> If the
-image is valid 'type' image, -1 -> If the image is corrupted and
-1 -> If the image is not a uImage).
+This patch adds 'is_zlib_file()' helper function which can be
+used to quickly determine with the passed kernel image is a zlib
+compressed kernel image.
 
-This causes issues because, in later patches we introduce zImage
-support for arm64, and since it is probed after uImage, the return
-values from 'uImage_arm64_probe()' needs to be fixed to make sure
-that kexec will not return with an invalid error code.
-
-Now, 'uImage_arm64_probe()' returns the following values instead:
-  0 - valid uImage.
- -1 - uImage is corrupted.
-  1 - image is not a uImage.
+This is specifically useful for arm64 zImage (or Image.gz) support,
+which is introduced by later patches in this patchset.
 
 Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
 ---
- kexec/arch/arm64/kexec-uImage-arm64.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ kexec/kexec-zlib.h |  1 +
+ kexec/zlib.c       | 38 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
 
-diff --git a/kexec/arch/arm64/kexec-uImage-arm64.c b/kexec/arch/arm64/kexec-uImage-arm64.c
-index 126ea9c2555b..c4669131b667 100644
---- a/kexec/arch/arm64/kexec-uImage-arm64.c
-+++ b/kexec/arch/arm64/kexec-uImage-arm64.c
-@@ -11,7 +11,18 @@
+diff --git a/kexec/kexec-zlib.h b/kexec/kexec-zlib.h
+index 43c107bf4a72..16300f294759 100644
+--- a/kexec/kexec-zlib.h
++++ b/kexec/kexec-zlib.h
+@@ -6,5 +6,6 @@
  
- int uImage_arm64_probe(const char *buf, off_t len)
- {
--	return uImage_probe_kernel(buf, len, IH_ARCH_ARM64);
-+	int ret;
-+
-+	ret = uImage_probe_kernel(buf, len, IH_ARCH_ARM64);
-+
-+	/*  0 - valid uImage.
-+	 * -1 - uImage is corrupted.
-+	 *  1 - image is not a uImage.
-+	 */
-+	if (!ret)
-+		return 0;
-+	else
-+		return -1;
+ #include "config.h"
+ 
++int is_zlib_file(const char *filename, off_t *r_size);
+ char *zlib_decompress_file(const char *filename, off_t *r_size);
+ #endif /* __KEXEC_ZLIB_H */
+diff --git a/kexec/zlib.c b/kexec/zlib.c
+index 95b608059d41..9bc340d85001 100644
+--- a/kexec/zlib.c
++++ b/kexec/zlib.c
+@@ -23,6 +23,38 @@ static void _gzerror(gzFile fp, int *errnum, const char **errmsg)
+ 	}
  }
  
- int uImage_arm64_load(int argc, char **argv, const char *buf, off_t len,
++int is_zlib_file(const char *filename, off_t *r_size)
++{
++	gzFile fp;
++	int errnum;
++	int is_zlib_file = 0; /* default: It's not in gzip format */
++	const char *msg;
++	ssize_t result;
++
++	if (!filename)
++		goto out;
++
++	fp = gzopen(filename, "rb");
++	if (fp == 0) {
++		_gzerror(fp, &errnum, &msg);
++		dbgprintf("Cannot open `%s': %s\n", filename, msg);
++		goto out;
++	}
++
++	if (!gzdirect(fp))
++		/* It's in gzip format */
++		is_zlib_file = 1;
++
++	result = gzclose(fp);
++	if (result != Z_OK) {
++		_gzerror(fp, &errnum, &msg);
++		dbgprintf(" Close of %s failed: %s\n", filename, msg);
++	}
++
++out:
++	return is_zlib_file;
++}
++
+ char *zlib_decompress_file(const char *filename, off_t *r_size)
+ {
+ 	gzFile fp;
+@@ -84,6 +116,12 @@ fail:
+ 	return buf;
+ }
+ #else
++
++int is_zlib_file(const char *filename, off_t *r_size)
++{
++	return 0;
++}
++
+ char *zlib_decompress_file(const char *UNUSED(filename), off_t *UNUSED(r_size))
+ {
+ 	return NULL;
 -- 
 2.7.4
 
