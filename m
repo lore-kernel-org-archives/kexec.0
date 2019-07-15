@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from smtp.duncanthrax.net ([2001:470:70c5:1111::170])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hmvLd-0000nq-CQ
- for kexec@lists.infradead.org; Mon, 15 Jul 2019 07:24:35 +0000
-Date: Mon, 15 Jul 2019 09:24:17 +0200
+ id 1hmwKc-00054G-9N
+ for kexec@lists.infradead.org; Mon, 15 Jul 2019 08:27:39 +0000
 From: Sven Schnelle <svens@stackframe.org>
-Subject: Re: [PATCH v3 5/7] kexec_elf: remove elf_addr_to_cpu macro
-Message-ID: <20190715072417.GA25659@t470p.stackframe.org>
-References: <20190710142944.2774-1-svens@stackframe.org>
- <20190710142944.2774-6-svens@stackframe.org>
- <49206784-009c-391b-5f9a-11e9b1de930b@c-s.fr>
- <20190710180518.GA6343@t470p.stackframe.org>
- <871rywhlq4.fsf@concordia.ellerman.id.au>
+Subject: [PATCH v4 6/7] kexec_elf: remove unused variable in kexec_elf_load()
+Date: Mon, 15 Jul 2019 10:27:01 +0200
+Message-Id: <20190715082702.27308-7-svens@stackframe.org>
+In-Reply-To: <20190715082702.27308-1-svens@stackframe.org>
+References: <20190715082702.27308-1-svens@stackframe.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <871rywhlq4.fsf@concordia.ellerman.id.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,46 +18,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>, kexec@lists.infradead.org, deller@gmx.de, linuxppc-dev@lists.ozlabs.org
+To: kexec@lists.infradead.org
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>, Sven Schnelle <svens@stackframe.org>, deller@gmx.de, linuxppc-dev@lists.ozlabs.org
 
-Hi Michael,
+base was never assigned, so we can remove it.
 
-On Thu, Jul 11, 2019 at 09:08:51PM +1000, Michael Ellerman wrote:
-> Sven Schnelle <svens@stackframe.org> writes:
-> > On Wed, Jul 10, 2019 at 05:09:29PM +0200, Christophe Leroy wrote:
-> >> Le 10/07/2019 =E0 16:29, Sven Schnelle a =E9crit=A0:
-> >> > It had only one definition, so just use the function directly.
-> >> =
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Sven Schnelle <svens@stackframe.org>
+---
+ kernel/kexec_elf.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-> >> It had only one definition because it was for ppc64 only.
-> >> But as far as I understand (at least from the name of the new file), y=
-ou
-> >> want it to be generic, don't you ? Therefore I get on 32 bits it would=
- be
-> >> elf32_to_cpu().
-> >
-> > That brings up the question whether we need those endianess conversions=
-. I would
-> > assume that the ELF file has always the same endianess as the running k=
-ernel. So
-> > i think we could just drop them. What do you think?
-> =
+diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
+index e346659af324..9421eebbacf0 100644
+--- a/kernel/kexec_elf.c
++++ b/kernel/kexec_elf.c
+@@ -350,7 +350,7 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+ 			 struct kexec_buf *kbuf,
+ 			 unsigned long *lowest_load_addr)
+ {
+-	unsigned long base = 0, lowest_addr = UINT_MAX;
++	unsigned long lowest_addr = UINT_MAX;
+ 	int ret;
+ 	size_t i;
+ 
+@@ -372,7 +372,7 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+ 		kbuf->bufsz = size;
+ 		kbuf->memsz = phdr->p_memsz;
+ 		kbuf->buf_align = phdr->p_align;
+-		kbuf->buf_min = phdr->p_paddr + base;
++		kbuf->buf_min = phdr->p_paddr;
+ 		ret = kexec_add_buffer(kbuf);
+ 		if (ret)
+ 			goto out;
+@@ -382,9 +382,6 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+ 			lowest_addr = load_addr;
+ 	}
+ 
+-	/* Update entry point to reflect new load address. */
+-	ehdr->e_entry += base;
+-
+ 	*lowest_load_addr = lowest_addr;
+ 	ret = 0;
+  out:
+-- 
+2.20.1
 
-> We should be able to kexec from big to little endian or vice versa, so
-> they are necessary.
-
-I'll update the patch to check for a needed 32/64 bit conversion during run=
-time,
-so we can also kexec from 32 to 64 bit kernels and vice versa. Don't know
-whether that's possible on powerpc, but at least on parisc it is.
-
-Regards
-Sven
 
 _______________________________________________
 kexec mailing list
