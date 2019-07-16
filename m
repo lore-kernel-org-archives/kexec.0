@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.92 #3 (Red Hat Linux))
- id 1hnM8r-0007DO-9K
- for kexec@lists.infradead.org; Tue, 16 Jul 2019 12:01:10 +0000
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
- by kirsty.vergenet.net (Postfix) with ESMTPA id EC4EB25AD78
- for <kexec@lists.infradead.org>; Tue, 16 Jul 2019 22:01:07 +1000 (AEST)
-Date: Tue, 16 Jul 2019 14:01:05 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools 2.0.20-rc2
-Message-ID: <20190716120105.qt2jtyd7s55xf7kn@verge.net.au>
+Received: from mail-qk1-x744.google.com ([2607:f8b0:4864:20::744])
+ by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
+ id 1hnQku-00052K-UU
+ for kexec@lists.infradead.org; Tue, 16 Jul 2019 16:56:46 +0000
+Received: by mail-qk1-x744.google.com with SMTP id w190so15147834qkc.6
+ for <kexec@lists.infradead.org>; Tue, 16 Jul 2019 09:56:43 -0700 (PDT)
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Subject: [RFC v1 0/4] arm64: MMU enabled kexec kernel relocation
+Date: Tue, 16 Jul 2019 12:56:37 -0400
+Message-Id: <20190716165641.6990-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,58 +22,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-Hi all,
+Added identity mapped page table, and keep MMU enabled while
+kernel is being relocated from sparse pages to the final
+destination during kexec.
 
-I am happy to announce the release of kexec-tools 2.0.20-rc2.
+More description about the problem I am trying to solve here, can be
+found here:
+https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com/
 
-This is an incremental feature pre-release.
+This patch series works in terms, that I can kexec-reboot both in QEMU
+and on a physical machine. However, I do not see performance improvement
+during relocation. The performance is just as slow as before with disabled
+caches.
 
-I had planed to release v2.0.20 at this time but have, instead,
-decided to add Bhupesh Sharma's support for zlib compressed kernel
-images for ARM64 and release 2.0.20-rc2.
+Am I missing something? Perhaps, there is some flag that I should also
+enable in page table? Please provide me with any suggestions.
 
-So long as no serious problems arise I intend to release kexec-tools 2.0.20
-in a weeks time. Testing of 2.0.20-rc2 would be greatly appreciated.
+Pavel Tatashin (4):
+  arm64, mm: identity mapped page table
+  arm64, kexec: interface preparation for mmu enabled kexec
+  arm64, kexec: add kexec's own identity page table
+  arm64: Keep MMU on while kernel is being relocated
 
-I do not have any outstanding changes for 2.0.20 at this time.
-And I would like to only accept bug fixes at this time and take
-features patches once 2.0.20 has been released.
+ arch/arm64/include/asm/ident_map.h  |  26 ++++++
+ arch/arm64/include/asm/kexec.h      |   5 +-
+ arch/arm64/kernel/cpu-reset.S       |   8 --
+ arch/arm64/kernel/cpu-reset.h       |   7 +-
+ arch/arm64/kernel/machine_kexec.c   | 128 +++++++++++++++++++++-------
+ arch/arm64/kernel/relocate_kernel.S |  36 +++++---
+ arch/arm64/mm/Makefile              |   1 +
+ arch/arm64/mm/ident_map.c           |  99 +++++++++++++++++++++
+ 8 files changed, 255 insertions(+), 55 deletions(-)
+ create mode 100644 arch/arm64/include/asm/ident_map.h
+ create mode 100644 arch/arm64/mm/ident_map.c
 
-The pre-release can be downloaded from kernel.org:
+-- 
+2.22.0
 
-	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.20-rc2.tar.xz
-	https://kernel.org/pub/linux/utils/kernel/kexec/
-
-I have also tagged it in git:
-
-	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-Thanks to everyone who has contributed to kexec.
-
-
-For reference the changes since v2.0.19 are:
-
-419716b151e8 kexec-tools 2.0.20-rc2
-f4c1caaa97a2 kexec/arm64: Add support for handling zlib compressed (Image.gz) image
-0e709571bfe7 kexec/kexec-zlib.h: Add 'is_zlib_file()' helper function
-6ef59c03bf2c kexec-uImage-arm64.c: Fix return value of uImage_arm64_probe()
-019d8258f15c kexec/kexec.c: Add the missing close() for fd used for kexec_file_load()
-ffdc7feceea3 kexec-tools 2.0.20-rc1
-d9cd81a39b59 x86: Include kexec-mb2-x86.c and multiboot2.h in distribution
-7018e436cd34 x86: re-order includes to avoid duplicate struct e820entry
-22a2ed55132e x86: Support multiboot2 images
-d6bc88c06962 elf: Support ELF loading with relocation
-40805e393b2f crashdump/x86: Use new introduce helper for getting RSDP
-b071fc084bda x86: Always try to fill acpi_rsdp_addr in boot params
-cedeee0a3007 x86: Introduce helpers for getting RSDP address
-402351390f31 x86: Update boot parameters defination
-c072bd13abbe x86: Find mounts by FS type, not name
-23aaa44614a0 x86: Check /proc/mounts before mtab for mounts
-eff53089523c xen: Avoid overlapping segments in low memory
-fb5a8792e6e4 x86: Introduce a new option --reuse-video-type
-3757ef630b72 kexec-tools 2.0.19.git
 
 _______________________________________________
 kexec mailing list
