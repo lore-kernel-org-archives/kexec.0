@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x742.google.com ([2607:f8b0:4864:20::742])
+Received: from mail-qt1-x843.google.com ([2607:f8b0:4864:20::843])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hnQkx-00053t-En
+ id 1hnQkz-00055G-68
  for kexec@lists.infradead.org; Tue, 16 Jul 2019 16:56:51 +0000
-Received: by mail-qk1-x742.google.com with SMTP id r21so15174937qke.2
- for <kexec@lists.infradead.org>; Tue, 16 Jul 2019 09:56:47 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id w17so20287189qto.10
+ for <kexec@lists.infradead.org>; Tue, 16 Jul 2019 09:56:49 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [RFC v1 3/4] arm64, kexec: add kexec's own identity page table
-Date: Tue, 16 Jul 2019 12:56:40 -0400
-Message-Id: <20190716165641.6990-4-pasha.tatashin@soleen.com>
+Subject: [RFC v1 4/4] arm64: Keep MMU on while kernel is being relocated
+Date: Tue, 16 Jul 2019 12:56:41 -0400
+Message-Id: <20190716165641.6990-5-pasha.tatashin@soleen.com>
 In-Reply-To: <20190716165641.6990-1-pasha.tatashin@soleen.com>
 References: <20190716165641.6990-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,134 +26,100 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-Allocate and configure identity page table to be used for kexec reboot.
-Note, for now we still have MMU disabled during kernel relocation phase,
-so this table is still used the same as idmap_pg_dir was used.
+It is inefficient to do kernel relocation with MMU disabled. This is
+because if MMU is disabled,  dcache must also be disabled.
+
+Now, that we have identity page table we can disable MMU after relocation
+is completed.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/kernel/machine_kexec.c | 78 ++++++++++++++++++++++++++++++-
- 1 file changed, 76 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/cpu-reset.S       |  8 -------
+ arch/arm64/kernel/relocate_kernel.S | 36 ++++++++++++++++++-----------
+ 2 files changed, 22 insertions(+), 22 deletions(-)
 
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index f4565eb01d09..60433c264178 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -12,6 +12,7 @@
- #include <linux/kexec.h>
- #include <linux/page-flags.h>
- #include <linux/smp.h>
-+#include <linux/memblock.h>
+diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
+index 6ea337d464c4..d5cfc17b8e1f 100644
+--- a/arch/arm64/kernel/cpu-reset.S
++++ b/arch/arm64/kernel/cpu-reset.S
+@@ -30,14 +30,6 @@
+  * flat identity mapping.
+  */
+ ENTRY(__cpu_soft_restart)
+-	/* Clear sctlr_el1 flags. */
+-	mrs	x12, sctlr_el1
+-	ldr	x13, =SCTLR_ELx_FLAGS
+-	bic	x12, x12, x13
+-	pre_disable_mmu_workaround
+-	msr	sctlr_el1, x12
+-	isb
+-
+ 	cbz	x0, 1f				// el2_switch?
+ 	mov	x0, #HVC_SOFT_RESTART
+ 	hvc	#0				// no return
+diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
+index c1d7db71a726..e2724fedd082 100644
+--- a/arch/arm64/kernel/relocate_kernel.S
++++ b/arch/arm64/kernel/relocate_kernel.S
+@@ -36,18 +36,6 @@ ENTRY(arm64_relocate_new_kernel)
+ 	mov	x14, xzr			/* x14 = entry ptr */
+ 	mov	x13, xzr			/* x13 = copy dest */
  
- #include <asm/cacheflush.h>
- #include <asm/cpu_ops.h>
-@@ -20,6 +21,7 @@
- #include <asm/mmu.h>
- #include <asm/mmu_context.h>
- #include <asm/page.h>
-+#include <asm/ident_map.h>
+-	/* Clear the sctlr_el2 flags. */
+-	mrs	x0, CurrentEL
+-	cmp	x0, #CurrentEL_EL2
+-	b.ne	1f
+-	mrs	x0, sctlr_el2
+-	ldr	x1, =SCTLR_ELx_FLAGS
+-	bic	x0, x0, x1
+-	pre_disable_mmu_workaround
+-	msr	sctlr_el2, x0
+-	isb
+-1:
+-
+ 	/* Check if the new image needs relocation. */
+ 	tbnz	x16, IND_DONE_BIT, .Ldone
  
- #include "cpu-reset.h"
+@@ -63,10 +51,10 @@ ENTRY(arm64_relocate_new_kernel)
+ 	add     x20, x0, #PAGE_SIZE
+ 	sub     x1, x15, #1
+ 	bic     x0, x0, x1
+-2:	dc      ivac, x0
++1:	dc      ivac, x0
+ 	add     x0, x0, x15
+ 	cmp     x0, x20
+-	b.lo    2b
++	b.lo    1b
+ 	dsb     sy
  
-@@ -55,6 +57,77 @@ static void _kexec_image_info(const char *func, int line,
- 	}
- }
+ 	mov x20, x13
+@@ -104,6 +92,26 @@ ENTRY(arm64_relocate_new_kernel)
+ 	dsb	nsh
+ 	isb
  
-+/* Allocates pages for kexec page table */
-+static void *kexec_pgtable_alloc(void *arg)
-+{
-+	struct kimage *kimage = (struct kimage *)arg;
-+	struct page *page = kimage_alloc_control_pages(kimage, 0);
++	/* Clear sctlr_el1 flags. */
++	mrs	x12, sctlr_el1
++	ldr	x13, =SCTLR_ELx_FLAGS
++	bic	x12, x12, x13
++	pre_disable_mmu_workaround
++	msr	sctlr_el1, x12
++	isb
 +
-+	if (!page)
-+		return NULL;
++	/* Clear the sctlr_el2 flags. */
++	mrs	x0, CurrentEL
++	cmp	x0, #CurrentEL_EL2
++	b.ne	2f
++	mrs	x0, sctlr_el2
++	ldr	x1, =SCTLR_ELx_FLAGS
++	bic	x0, x0, x1
++	pre_disable_mmu_workaround
++	msr	sctlr_el2, x0
++	isb
++2:
 +
-+	return page_address(page);
-+}
-+
-+/*
-+ * Create identity mapped page table for kexec purposes. The flags that are used
-+ * in this page table are the same as what is set in __create_page_tables. The
-+ * page table is needed for performance reasons. Without it, kernel relocation
-+ * is rather slow, because when MMU is off, d-caching is disabled as well.
-+ */
-+static int
-+kexec_create_pgtable(struct kimage *kimage)
-+{
-+	void *pgd_page = kexec_pgtable_alloc(kimage);
-+	phys_addr_t kexec_pgtable;
-+	int rv, i;
-+	struct memblock_region *reg;
-+	struct ident_map_info info = {
-+		.alloc_pgt_page	= kexec_pgtable_alloc,
-+		.alloc_arg	= kimage,
-+		.page_flags	= PMD_SECT_VALID | PMD_SECT_AF | PMD_SECT_S |
-+				  PMD_ATTRINDX(MT_NORMAL),
-+		.offset		= 0,
-+		.pud_pages	= false,
-+	};
-+
-+	if (!pgd_page)
-+		return -ENOMEM;
-+
-+	clear_page(pgd_page);
-+	kexec_pgtable = __pa(pgd_page);
-+
-+	for_each_memblock(memory, reg) {
-+		phys_addr_t mstart = reg->base;
-+		phys_addr_t mend   = reg->base + reg->size;
-+
-+		rv = ident_map_pgd_populate(&info, kexec_pgtable, mstart, mend);
-+		if (rv)
-+			return rv;
-+	}
-+
-+	/*
-+	 * It is possible new kernel knows of some physical addresses that this
-+	 * kernel does not know: for example a different device tree might
-+	 * provide information of a memory region, or memory could have been
-+	 * reduced via mem= kernel parameter.
-+	 * This is why also unconditionally map new kernel segments, even though
-+	 * most likely this is redundant.
-+	 */
-+	for (i = 0; i < kimage->nr_segments; i++) {
-+		phys_addr_t mstart = kimage->segment[i].mem;
-+		phys_addr_t mend   = mstart + kimage->segment[i].memsz;
-+
-+		rv = ident_map_pgd_populate(&info, kexec_pgtable, mstart, mend);
-+		if (rv)
-+			return rv;
-+	}
-+
-+	kimage->arch.kexec_pgtable = pgd_page;
-+
-+	return 0;
-+}
-+
- void machine_kexec_cleanup(struct kimage *kimage)
- {
- 	/* Empty routine needed to avoid build errors. */
-@@ -70,6 +143,7 @@ void machine_kexec_cleanup(struct kimage *kimage)
- int machine_kexec_prepare(struct kimage *kimage)
- {
- 	void *reloc_buf = page_address(kimage->control_code_page);
-+	int rv;
- 
- 	if (kimage->type != KEXEC_TYPE_CRASH && cpus_are_stuck_in_kernel()) {
- 		pr_err("Can't kexec: CPUs are stuck in the kernel.\n");
-@@ -84,10 +158,10 @@ int machine_kexec_prepare(struct kimage *kimage)
- 	       arm64_relocate_new_kernel_size);
- 
- 	kimage->arch.relocate_kern = reloc_buf;
--	kimage->arch.kexec_pgtable = lm_alias(idmap_pg_dir);
-+	rv = kexec_create_pgtable(kimage);
- 	kexec_image_info(kimage);
- 
--	return 0;
-+	return rv;
- }
- 
- /**
+ 	/* Start new image. */
+ 	mov	x0, x18
+ 	mov	x1, xzr
 -- 
 2.22.0
 
