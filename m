@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x44a.google.com ([2607:f8b0:4864:20::44a])
- by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hn793-0002JW-4M
- for kexec@lists.infradead.org; Mon, 15 Jul 2019 20:00:22 +0000
-Received: by mail-pf1-x44a.google.com with SMTP id 145so10847131pfw.16
- for <kexec@lists.infradead.org>; Mon, 15 Jul 2019 13:00:18 -0700 (PDT)
-Date: Mon, 15 Jul 2019 12:59:26 -0700
-In-Reply-To: <20190715195946.223443-1-matthewgarrett@google.com>
-Message-Id: <20190715195946.223443-10-matthewgarrett@google.com>
-Mime-Version: 1.0
-References: <20190715195946.223443-1-matthewgarrett@google.com>
-Subject: [PATCH V35 09/29] kexec_file: Restrict at runtime if the kernel is
- locked down
-From: Matthew Garrett <matthewgarrett@google.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.92 #3 (Red Hat Linux))
+ id 1hnLxq-0007YP-4e
+ for kexec@lists.infradead.org; Tue, 16 Jul 2019 11:49:47 +0000
+Date: Tue, 16 Jul 2019 13:49:42 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/4] kexec/arm64: Add support for zlib compressed
+ kernel images (Image.gz)
+Message-ID: <20190716114942.7ufsup2eyco4pxax@verge.net.au>
+References: <1563170576-13134-1-git-send-email-bhsharma@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1563170576-13134-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,49 +24,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: jmorris@namei.org
-Cc: Jiri Bohac <jbohac@suse.cz>, Kees Cook <keescook@chromium.org>, linux-api@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: takahiro.akashi@linaro.org, bhupesh.linux@gmail.com, kexec@lists.infradead.org
 
-From: Jiri Bohac <jbohac@suse.cz>
+On Mon, Jul 15, 2019 at 11:32:52AM +0530, Bhupesh Sharma wrote:
+> Changes since v1:
+> ----------------
+> (v1 can be viewed here: http://lists.infradead.org/pipermail/kexec/2019-July/023288.html)
+>  - Fixed the potential file descriptor leakage code legs pointed out by
+>    Simon.
+>  - Ran Valgrind to make sure no potential memory leakage issues are
+>    introduced by this patchset.
+> 
+> This patchset adds the support for zlib compressed kernel images
+> (Image.gz) for arm64 kexec-tools.
+> 
+> This was discussed a bit with the arm64 kernel maintainers (see [0]) and
+> after discussing the pros and cons of adding this support in
+> kernel-space v/s in user-space, we decided it makes more sense to add
+> this support to the user-space kexec-tools.
+> 
+> Note that this series adds support for unsigned arm64 Image.gz files
+> only as signing an Image.gz type file is not a easy implementation from
+> kexec-tools p-o-v. Also even standard signing tools like sbsign fail to
+> recongize the Image.gz format:
+> 
+>  $ sbsign --key certs/signing_key.pem  --cert certs/signing_key.pem Image.gz
+>    Invalid DOS header magic
+> 
+> ... because that gzip file isn't a PE32+ that can be loaded by UEFI.
+> So I will work on the same in coming days and try to send a RFC
+> patchset for the same later on.
+> 
+> [0]. http://lists.infradead.org/pipermail/kexec/2019-June/023156.html
 
-When KEXEC_SIG is not enabled, kernel should not load images through
-kexec_file systemcall if the kernel is locked down.
-
-[Modified by David Howells to fit with modifications to the previous patch
- and to return -EPERM if the kernel is locked down for consistency with
- other lockdowns. Modified by Matthew Garrett to remove the IMA
- integration, which will be replaced by integrating with the IMA
- architecture policy patches.]
-
-Signed-off-by: Jiri Bohac <jbohac@suse.cz>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Reviewed-by: Jiri Bohac <jbohac@suse.cz>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-cc: kexec@lists.infradead.org
----
- kernel/kexec_file.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 875482c34154..dd06f1070d66 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -228,7 +228,10 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 			goto out;
- 		}
- 
--		ret = 0;
-+		ret = security_locked_down(LOCKDOWN_KEXEC);
-+		if (ret)
-+			goto out;
-+
- 		break;
- 
- 		/* All other errors are fatal, including nomem, unparseable
--- 
-2.22.0.510.g264f2c817a-goog
-
+Thanks, applied for inclusion in v2.0.20.
 
 _______________________________________________
 kexec mailing list
