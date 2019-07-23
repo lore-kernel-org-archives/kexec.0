@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from www262.sakura.ne.jp ([202.181.97.72])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hpZUf-00058p-4M
- for kexec@lists.infradead.org; Mon, 22 Jul 2019 14:40:51 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [RFC] makedumpfile: exclude ZFS file cache pages
-Date: Mon, 22 Jul 2019 14:35:53 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03581F01@BPXM09GP.gisp.nec.co.jp>
-References: <CAPEr6wVVboDUxUrGE77NtS2WWrhR8vV0EEGPvPMJ+hfzkAb26g@mail.gmail.com>
-In-Reply-To: <CAPEr6wVVboDUxUrGE77NtS2WWrhR8vV0EEGPvPMJ+hfzkAb26g@mail.gmail.com>
-Content-Language: en-US
+ id 1hpul1-0004vc-W5
+ for kexec@lists.infradead.org; Tue, 23 Jul 2019 13:23:09 +0000
+Subject: Re: [PATCH] kexec: Bail out upon SIGKILL when allocating memory.
+References: <000000000000a861f6058b2699e0@google.com>
+ <000000000000c0103a058b2ba0ec@google.com>
+ <993c9185-d324-2640-d061-bed2dd18b1f7@I-love.SAKURA.ne.jp>
+ <612eebbe-336a-c1d0-904b-5970d3c4dbb0@I-love.SAKURA.ne.jp>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <eb662b31-3a56-f3fd-6a0c-7e9f8b36ca8a@I-love.SAKURA.ne.jp>
+Date: Tue, 23 Jul 2019 22:22:55 +0900
 MIME-Version: 1.0
+In-Reply-To: <612eebbe-336a-c1d0-904b-5970d3c4dbb0@I-love.SAKURA.ne.jp>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,55 +26,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Donald Brady <don.brady@delphix.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
 
-> -----Original Message-----
-> From: kexec <kexec-bounces@lists.infradead.org> On Behalf Of Donald Brady
-> Sent: Friday, July 19, 2019 3:44 PM
-> To: kexec@lists.infradead.org
-> Subject: [RFC] makedumpfile: exclude ZFS file cache pages
-> 
-> Hello,
-> 
-> I have for consideration a makedumpfile patch that can exclude the ZFS
-> file data cache pages. This is similar in capability as the exclusion
-> of the VFS page cache pages.
-> 
-> My question to this list is how to proceed?  Should I post a patch or
-> should I first explain how the ZFS pages are being marked and see if
-> others here can recommend a better approach?
+Andrew, can you pick up this patch? 
 
-Hi Don,
-
-Either is OK, but I don't have any knowledge about ZFS implementation
-so the explanation of that and what your patch is going to do will be
-helpful at least for me to review/discuss it. And as you say, someone
-here may be able to help.
-
-Thanks,
-Kazu
-
+On 2019/07/01 19:52, Tetsuo Handa wrote:
+> Andrew, can you pick up this patch? We might miss next merge window, for
+> Eric Biederman seems to be offline for two weeks. 
 > 
-> Long term, ZFS should participate in the VFS page cache. However, that
-> is a significant change and won't be available in the foreseeable
-> future. There is an immediate benefit from excluding ZFS file cache
-> pages that will benefit crash dump users that use ZFS.
+> On 2019/06/14 19:16, Tetsuo Handa wrote:
+>> syzbot found that a thread can stall for minutes inside kexec_load() after
+>> that thread was killed by SIGKILL [1]. It turned out that the reproducer
+>> was trying to allocate 2408MB of memory using kimage_alloc_page() from
+>> kimage_load_normal_segment(). Let's check for SIGKILL before doing memory
+>> allocation.
+>>
+>> [1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
+>>
+>> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+>> Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+>> ---
+>>  kernel/kexec_core.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>> index fd5c95f..2b25d95 100644
+>> --- a/kernel/kexec_core.c
+>> +++ b/kernel/kexec_core.c
+>> @@ -302,6 +302,8 @@ static struct page *kimage_alloc_pages(gfp_t gfp_mask, unsigned int order)
+>>  {
+>>  	struct page *pages;
+>>  
+>> +	if (fatal_signal_pending(current))
+>> +		return NULL;
+>>  	pages = alloc_pages(gfp_mask & ~__GFP_ZERO, order);
+>>  	if (pages) {
+>>  		unsigned int count, i;
+>>
 > 
-> Thanks in advance for your help!
-> -Don
-> 
-> --
-> DON BRADY
-> Staff Engineer
-> Delphix.com
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-
 
 _______________________________________________
 kexec mailing list
