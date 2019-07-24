@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from www262.sakura.ne.jp ([202.181.97.72])
+Received: from mail-eopbgr150092.outbound.protection.outlook.com
+ ([40.107.15.92] helo=EUR01-DB5-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hpul1-0004vc-W5
- for kexec@lists.infradead.org; Tue, 23 Jul 2019 13:23:09 +0000
-Subject: Re: [PATCH] kexec: Bail out upon SIGKILL when allocating memory.
-References: <000000000000a861f6058b2699e0@google.com>
- <000000000000c0103a058b2ba0ec@google.com>
- <993c9185-d324-2640-d061-bed2dd18b1f7@I-love.SAKURA.ne.jp>
- <612eebbe-336a-c1d0-904b-5970d3c4dbb0@I-love.SAKURA.ne.jp>
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Message-ID: <eb662b31-3a56-f3fd-6a0c-7e9f8b36ca8a@I-love.SAKURA.ne.jp>
-Date: Tue, 23 Jul 2019 22:22:55 +0900
+ id 1hqDLE-0008QU-Ap
+ for kexec@lists.infradead.org; Wed, 24 Jul 2019 09:13:53 +0000
+From: Maikel Coenen <maikel.coenen@nedap.com>
+Subject: No compression technique of zImage/uImage detected - ARM
+Date: Wed, 24 Jul 2019 09:13:40 +0000
+Message-ID: <FD58192C-90D7-462E-8869-80F71A86D4E1@nedap.com>
+References: <34E10BEF-BF40-4230-BA02-5C64EDC372D2@nedap.com>
+In-Reply-To: <34E10BEF-BF40-4230-BA02-5C64EDC372D2@nedap.com>
+Content-Language: en-GB
+Content-ID: <0F93B8FA895538498080D536706A8D26@EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-In-Reply-To: <612eebbe-336a-c1d0-904b-5970d3c4dbb0@I-love.SAKURA.ne.jp>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,51 +21,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Andrew, can you pick up this patch? 
-
-On 2019/07/01 19:52, Tetsuo Handa wrote:
-> Andrew, can you pick up this patch? We might miss next merge window, for
-> Eric Biederman seems to be offline for two weeks. 
-> 
-> On 2019/06/14 19:16, Tetsuo Handa wrote:
->> syzbot found that a thread can stall for minutes inside kexec_load() after
->> that thread was killed by SIGKILL [1]. It turned out that the reproducer
->> was trying to allocate 2408MB of memory using kimage_alloc_page() from
->> kimage_load_normal_segment(). Let's check for SIGKILL before doing memory
->> allocation.
->>
->> [1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
->>
->> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
->> Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
->> ---
->>  kernel/kexec_core.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> index fd5c95f..2b25d95 100644
->> --- a/kernel/kexec_core.c
->> +++ b/kernel/kexec_core.c
->> @@ -302,6 +302,8 @@ static struct page *kimage_alloc_pages(gfp_t gfp_mask, unsigned int order)
->>  {
->>  	struct page *pages;
->>  
->> +	if (fatal_signal_pending(current))
->> +		return NULL;
->>  	pages = alloc_pages(gfp_mask & ~__GFP_ZERO, order);
->>  	if (pages) {
->>  		unsigned int count, i;
->>
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGksDQrCoA0KSSBoYXZlIG1ldCBhbiBpc3N1ZSBkdXJpbmcgbG9hZGluZyBhIG5ldyBrZXJuZWwg
+d2l0aCBLZXhlYyBvbiBhbiBBUk12NSBTb0MuIFRoZSBrZXJuZWwgaXMgYSA0LjE5IHdpdGggR3pp
+cCBjb21wcmVzc2lvbiBidXQgZHVyaW5nIGxvYWRpbmcgS2V4ZWMgZG9lcyBub3QgcmVjb2duaXpl
+IHRoZSBjb21wcmVzc2lvbi4gDQrCoA0KSWYgSSBsb2FkIHRoZSBuZXcga2VybmVsIGFuZCBkdGIg
+d2l0aDoNCsKgDQprZXhlYyAtbCAvYm9vdC96SW1hZ2UgLWQgLS1kdGI9L2Jvb3QvdS1ib290LmR0
+Yg0KwqANClRoZSBvdXRwdXQgaXM6DQrCoA0KVHJ5IGd6aXAgZGVjb21wcmVzc2lvbi4NClRyeSBM
+Wk1BIGRlY29tcHJlc3Npb24uDQpsem1hX2RlY29tcHJlc3NfZmlsZTogcmVhZCBvbiAvYm9vdC96
+SW1hZ2Ugb2YgNjU1MzYgYnl0ZXMgZmFpbGVkDQprZXJuZWw6IDB4YjZhNjgwMDgga2VybmVsX3Np
+emU6IDB4NDk0ZDMwDQpNRU1PUlkgUkFOR0VTDQowMDAwMDAwMDAwMDAwMDAwLTAwMDAwMDAwMGZm
+ZmZmZmYgKDApDQp6SW1hZ2UgaGVhZGVyOiAweDAxNmYyODE4IDB4MDAwMDAwMDAgMHgwMDQ5NGQz
+MA0KekltYWdlIHNpemUgMHg0OTRkMzAsIGZpbGUgc2l6ZSAweDQ5NGQzMA0Ka2V4ZWNfbG9hZDog
+ZW50cnkgPSAweDgwMDAgZmxhZ3MgPSAweDI4MDAwMA0KbnJfc2VnbWVudHMgPSAyDQpzZWdtZW50
+WzBdLmJ1ZsKgwqAgPSAweGI2YTY4MDA4DQpzZWdtZW50WzBdLmJ1ZnN6ID0gMHg0OTRkMzANCnNl
+Z21lbnRbMF0ubWVtwqDCoCA9IDB4ODAwMA0Kc2VnbWVudFswXS5tZW1zeiA9IDB4NDk1MDAwDQpz
+ZWdtZW50WzFdLmJ1ZsKgwqAgPSAweDFmY2YwNjANCnNlZ21lbnRbMV0uYnVmc3ogPSAweDI0NWIN
+CnNlZ21lbnRbMV0ubWVtwqDCoCA9IDB4MTZmMjAwMA0Kc2VnbWVudFsxXS5tZW1zeiA9IDB4MzAw
+MA0KwqANCkxvb2tpbmcgYXQgdGhlIGRlYnVnLCB0aGUgZnVuY3Rpb24gZ3pkaXJlY3QgcmV0dXJu
+cyDigJwx4oCdIHdoaWNoIGluZGljYXRlcyB0aGUga2VybmVsIGNvbXByZXNzaW9uIGlzIG5vdCBv
+ZiBnemlwIGJ1dCBJIGRlZmluaXRlbHkgdXNlIGd6aXAuIEkgYWxzbyB0ZXN0ZWQgaXQgd2l0aCBM
+Wk1BIGNvbXByZXNzaW9uIGFuZCB1SW1hZ2UgaW5zdGVhZCBvZiB6SW1hZ2UgYnV0IGFsbCB3aXRo
+IHRoZSBzYW1lIG91dGNvbWUuDQrCoA0KVG8gYmUgY29tcGxldGUsIEkgdXNlIEtleGVjLXRvb2xz
+IDIuMC4xOSBhbmQgemxpYiAxLjIuMTEuDQrCoA0KRGlkIEkgaW1wbGVtZW50IHNvbWV0aGluZyB3
+cm9uZyBvciBob3cgY2FuIEkgZGVidWcgdGhpcyBmdXJ0aGVyPw0KwqANCktpbmQgcmVnYXJkcywN
+CsKgDQpNYWlrZWwgQ29lbmVuDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
