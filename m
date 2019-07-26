@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.92 #3 (Red Hat Linux))
- id 1hqVFn-0005Qh-2Z
- for kexec@lists.infradead.org; Thu, 25 Jul 2019 04:21:20 +0000
-Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
- by kirsty.vergenet.net (Postfix) with ESMTPA id B2CEF25BE09
- for <kexec@lists.infradead.org>; Thu, 25 Jul 2019 14:21:13 +1000 (AEST)
-Date: Thu, 25 Jul 2019 06:21:10 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools 2.0.20
-Message-ID: <20190725042110.pvego7gbnu7czcht@verge.net.au>
+Received: from mail-eopbgr70107.outbound.protection.outlook.com
+ ([40.107.7.107] helo=EUR04-HE1-obe.outbound.protection.outlook.com)
+ by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
+ id 1hqyRL-0005hd-J0
+ for kexec@lists.infradead.org; Fri, 26 Jul 2019 11:31:16 +0000
+From: Maikel Coenen <maikel.coenen@nedap.com>
+Subject: No compression technique of zImage/uImage detected - ARM
+Date: Fri, 26 Jul 2019 11:31:05 +0000
+Message-ID: <06B8A796-5772-435E-B98C-9C0D783CB634@nedap.com>
+Content-Language: en-GB
+Content-ID: <1481C36B00F65149BF6B8C4A5F31619F@EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,54 +19,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi all,
-
-I am happy to announce the release of kexec-tools 2.0.20.
-
-This is a feature release coinciding with the release of v5.2
-of the Linux Kernel.
-
-This release can be downloaded from kernel.org:
-
-	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.20.tar.xz
-	http://kernel.org/pub/linux/utils/kernel/kexec/
-
-It is also tagged it in git:
-
-	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-Thanks to everyone who has contributed to kexec.
-
-Commits since v2.0.19:
-
-49b93b9afc24 kexec-tools 2.0.20
-419716b151e8 kexec-tools 2.0.20-rc2
-f4c1caaa97a2 kexec/arm64: Add support for handling zlib compressed (Image.gz) image
-0e709571bfe7 kexec/kexec-zlib.h: Add 'is_zlib_file()' helper function
-6ef59c03bf2c kexec-uImage-arm64.c: Fix return value of uImage_arm64_probe()
-019d8258f15c kexec/kexec.c: Add the missing close() for fd used for kexec_file_load()
-ffdc7feceea3 kexec-tools 2.0.20-rc1
-d9cd81a39b59 x86: Include kexec-mb2-x86.c and multiboot2.h in distribution
-7018e436cd34 x86: re-order includes to avoid duplicate struct e820entry
-22a2ed55132e x86: Support multiboot2 images
-d6bc88c06962 elf: Support ELF loading with relocation
-40805e393b2f crashdump/x86: Use new introduce helper for getting RSDP
-b071fc084bda x86: Always try to fill acpi_rsdp_addr in boot params
-cedeee0a3007 x86: Introduce helpers for getting RSDP address
-402351390f31 x86: Update boot parameters defination
-c072bd13abbe x86: Find mounts by FS type, not name
-23aaa44614a0 x86: Check /proc/mounts before mtab for mounts
-eff53089523c xen: Avoid overlapping segments in low memory
-fb5a8792e6e4 x86: Introduce a new option --reuse-video-type
-3757ef630b72 kexec-tools 2.0.19.git
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+PiBIaSwNCj4gIA0KPiBJIGhhdmUgbWV0IGFuIGlzc3VlIGR1cmluZyBsb2FkaW5nIGEgbmV3IGtl
+cm5lbCB3aXRoIEtleGVjIG9uIGFuIEFSTXY1IFNvQy4gVGhlIGtlcm5lbCBpcyBhIDQuMTkgd2l0
+aCBHemlwIGNvbXByZXNzaW9uIGJ1dCBkdXJpbmcgbG9hZGluZyBLZXhlYyBkb2VzIG5vdCByZWNv
+Z25pemUgdGhlIGNvbXByZXNzaW9uLiANCj4gIA0KPiBJZiBJIGxvYWQgdGhlIG5ldyBrZXJuZWwg
+YW5kIGR0YiB3aXRoOg0KPiAgDQo+IGtleGVjIC1sIC9ib290L3pJbWFnZSAtZCAtLWR0Yj0vYm9v
+dC91LWJvb3QuZHRiDQo+ICANCj4gVGhlIG91dHB1dCBpczoNCj4gIA0KPiBUcnkgZ3ppcCBkZWNv
+bXByZXNzaW9uLg0KPiBUcnkgTFpNQSBkZWNvbXByZXNzaW9uLg0KPiBsem1hX2RlY29tcHJlc3Nf
+ZmlsZTogcmVhZCBvbiAvYm9vdC96SW1hZ2Ugb2YgNjU1MzYgYnl0ZXMgZmFpbGVkDQo+IGtlcm5l
+bDogMHhiNmE2ODAwOCBrZXJuZWxfc2l6ZTogMHg0OTRkMzANCj4gTUVNT1JZIFJBTkdFUw0KPiAw
+MDAwMDAwMDAwMDAwMDAwLTAwMDAwMDAwMGZmZmZmZmYgKDApDQo+IHpJbWFnZSBoZWFkZXI6IDB4
+MDE2ZjI4MTggMHgwMDAwMDAwMCAweDAwNDk0ZDMwDQo+IHpJbWFnZSBzaXplIDB4NDk0ZDMwLCBm
+aWxlIHNpemUgMHg0OTRkMzANCj4ga2V4ZWNfbG9hZDogZW50cnkgPSAweDgwMDAgZmxhZ3MgPSAw
+eDI4MDAwMA0KPiBucl9zZWdtZW50cyA9IDINCj4gc2VnbWVudFswXS5idWYgICA9IDB4YjZhNjgw
+MDgNCj4gc2VnbWVudFswXS5idWZzeiA9IDB4NDk0ZDMwDQo+IHNlZ21lbnRbMF0ubWVtICAgPSAw
+eDgwMDANCj4gc2VnbWVudFswXS5tZW1zeiA9IDB4NDk1MDAwDQo+IHNlZ21lbnRbMV0uYnVmICAg
+PSAweDFmY2YwNjANCj4gc2VnbWVudFsxXS5idWZzeiA9IDB4MjQ1Yg0KPiBzZWdtZW50WzFdLm1l
+bSAgID0gMHgxNmYyMDAwDQo+IHNlZ21lbnRbMV0ubWVtc3ogPSAweDMwMDANCj4gIA0KPiBMb29r
+aW5nIGF0IHRoZSBkZWJ1ZywgdGhlIGZ1bmN0aW9uIGd6ZGlyZWN0IHJldHVybnMg4oCcMeKAnSB3
+aGljaCBpbmRpY2F0ZXMgdGhlIGtlcm5lbCBjb21wcmVzc2lvbiBpcyBub3Qgb2YgZ3ppcCBidXQg
+SSA+IGRlZmluaXRlbHkgdXNlIGd6aXAuIA0KPiBJIGFsc28gdGVzdGVkIGl0IHdpdGggTFpNQSBj
+b21wcmVzc2lvbiBhbmQgdUltYWdlIGluc3RlYWQgb2YgekltYWdlIGJ1dCBhbGwgd2l0aCB0aGUg
+c2FtZSBvdXRjb21lLg0KPiAgDQo+IFRvIGJlIGNvbXBsZXRlLCBJIHVzZSBLZXhlYy10b29scyAy
+LjAuMTkgYW5kIHpsaWIgMS4yLjExLg0KPiAgDQo+IERpZCBJIGltcGxlbWVudCBzb21ldGhpbmcg
+d3Jvbmcgb3IgaG93IGNhbiBJIGRlYnVnIHRoaXMgZnVydGhlcj8NCj4gIA0KPiBLaW5kIHJlZ2Fy
+ZHMsDQo+ICANCj4gTWFpa2VsIENvZW5lbg0KDQpEaWQgc29tZSBtb3JlIHRlc3RpbmcgYW5kIGFz
+IGZhciBhcyBJIGNhbiBzZWUsIGl0IHRyaWVzIHRvIGRlY29tcHJlc3MgdGhlIGtlcm5lbCBiZWZv
+cmUgcmVtb3ZpbmcgdGhlIGRlY29tcHJlc3Npbmcgc3R1YiBhbmQgaGVhZGVyIG9mIHRoZSB6SW1h
+Z2UvdUltYWdlLiBUaGVyZWZvcmUsIGl0IGlzIG5vdCBhYmxlIHRvIGZpbmQgdGhlIG1hZ2ljIG51
+bWJlcnMgb2YgYSBnemlwIGZpbGUgYXQgdGhlIGJlZ2lubmluZyBvZiB0aGUgZmlsZS4gDQoNCkZ1
+bmN0aW9uIGd6X2xvb2ssIGNhbGxlZCBmcm9tIGd6ZGlyZWN0IGF0IHpsaWJfZGVjb21wcmVzc19m
+aWxlLCBjaGVja3MgdGhlIGZpcnN0IGJ5dGUgb2YgdGhlIHN0cmVhbSB0byBiZSBlcXVhbCB0byAz
+MSBhbmQgdGhlIHNlY29uZCBlcXVhbCB0byAxMzkuIEJlY2F1c2UgaXQgZGlkIG5vdCBzdHJpcCB0
+aGUgaGVhZGVyLCB0aGUgZmlyc3QgYW5kIHNlY29uZCBieXRlIGFyZSAzOSBhbmQgNS4gVGhlc2Ug
+YXJlIHRoZSBmaXJzdCBieXRlcyBvZiB0aGUgdUltYWdlLg0KDQpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2tleGVjCg==
