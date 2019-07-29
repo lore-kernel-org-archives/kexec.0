@@ -1,20 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr30138.outbound.protection.outlook.com
- ([40.107.3.138] helo=EUR03-AM5-obe.outbound.protection.outlook.com)
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hs0ff-00059f-AL
- for kexec@lists.infradead.org; Mon, 29 Jul 2019 08:06:16 +0000
-From: Maikel Coenen <maikel.coenen@nedap.com>
-Subject: No compression technique of zImage/uImage detected - ARM
-Date: Mon, 29 Jul 2019 08:06:10 +0000
-Message-ID: <6AB2A445-6C9D-451A-8CEB-5F5AC8A15545@nedap.com>
-References: <34E10BEF-BF40-4230-BA02-5C64EDC372D2@nedap.com>
- <FD58192C-90D7-462E-8869-80F71A86D4E1@nedap.com>
- <5088a9d0-5638-1c41-1968-fc973e773e52@redhat.com>
-In-Reply-To: <5088a9d0-5638-1c41-1968-fc973e773e52@redhat.com>
-Content-Language: en-GB
-Content-ID: <16DFB616AD2A274E9A046D625A46B116@EURPRD10.PROD.OUTLOOK.COM>
+ id 1hs4Y4-0008RX-DC
+ for kexec@lists.infradead.org; Mon, 29 Jul 2019 12:14:41 +0000
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x6TC9GhJ023382
+ for <kexec@lists.infradead.org>; Mon, 29 Jul 2019 08:14:39 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2u208c1832-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 29 Jul 2019 08:14:39 -0400
+Received: from localhost
+ by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <gor@linux.ibm.com>;
+ Mon, 29 Jul 2019 13:14:36 +0100
+Date: Mon, 29 Jul 2019 14:14:30 +0200
+From: Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH] kexec: restore arch_kexec_kernel_image_probe declaration
 MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <patch.git-ff1c9045ebdc.your-ad-here.call-01564402297-ext-5690@work.hours>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,65 +30,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>
+To: Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-PiBPbiAyOS8wNy8yMDE5LCAwNzowMiwgIkJodXBlc2ggU2hhcm1hIiA8YmhzaGFybWFAcmVkaGF0
-LmNvbT4gd3JvdGU6Pg0KDQo+ICAgICBIaSBNYWlrZWwsDQo+ICAgIA0KPiAgICAgSSBoYXZlIGEg
-Y291cGxlIG9mIHF1ZXJpZXMgKHNvIHRoYXQgSSBjYW4gaGVscCB5b3UgYmV0dGVyKS4gUGxlYXNl
-IHNlZQ0KPiAgICAgdGhlbSBpbi1saW5lOg0KPiAgICANCj4gICAgIE9uIDA3LzI0LzIwMTkgMDI6
-NDMgUE0sIE1haWtlbCBDb2VuZW4gd3JvdGU6DQo+ICAgICA+IEhpLA0KPiAgICAgPiAgDQo+ICAg
-ICA+IEkgaGF2ZSBtZXQgYW4gaXNzdWUgZHVyaW5nIGxvYWRpbmcgYSBuZXcga2VybmVsIHdpdGgg
-S2V4ZWMgb24gYW4gQVJNdjUgU29DLiBUaGUga2VybmVsIGlzIGEgNC4xOSB3aXRoIEd6aXAgY29t
-cHJlc3Npb24gYnV0IGR1cmluZyBsb2FkaW5nIEtleGVjIGRvZXMgbm90IHJlY29nbml6ZSB0aGUg
-Y29tcHJlc3Npb24uDQo+ICAgICA+ICANCj4gICAgID4gSWYgSSBsb2FkIHRoZSBuZXcga2VybmVs
-IGFuZCBkdGIgd2l0aDoNCj4gICAgID4gIA0KPiAgICAgPiBrZXhlYyAtbCAvYm9vdC96SW1hZ2Ug
-LWQgLS1kdGI9L2Jvb3QvdS1ib290LmR0Yg0KPiAgICANCj4gICAgIENhbiB5b3UgcGxlYXNlIHNo
-b3cgdGhlIG91dHB1dCBvZiB0aGUgZm9sbG93aW5nIGNvbW1hbmQ6DQo+ICAgICAkIGZpbGUgL2Jv
-b3QvekltYWdlDQoNCnpJbWFnZTogTGludXgga2VybmVsIEFSTSBib290IGV4ZWN1dGFibGUgeklt
-YWdlIChsaXR0bGUtZW5kaWFuKQ0KDQpJIGFsc28gcGVyZm9ybWVkIGEgYmlud2FsayB3aXRoIGZv
-bGxvd2luZyBvdXRwdXQ6DQpERUNJTUFMICAgICAgIAlIRVhBREVDSU1BTCAgCURFU0NSSVBUSU9O
-DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KMAkJMHgwCQlMaW51eCBrZXJuZWwgQVJNIGJvb3Qg
-ZXhlY3V0YWJsZSB6SW1hZ2UgKGxpdHRsZS1lbmRpYW4pDQoxNjQyNAkJMHg0MDI4CQlnemlwIGNv
-bXByZXNzZWQgZGF0YSwgbWF4aW11bSBjb21wcmVzc2lvbiwgZnJvbSBVbml4LCBsYXN0IG1vZGlm
-aWVkOiAxOTcwLTAxLTAxIDAwOjAwOjAwIChudWxsIGRhdGUpDQoNCj4gICAgIEFsc28gY2FuIHlv
-dSBwbGVhc2UgbWFrZSBzdXJlIHRoYXQgdGhlIHpJbWFnZSBoYXMgdGhlIHJpZ2h0IGd6aXAgaGVh
-ZGVyDQo+ICAgICA6IG1hZ2ljIGhlYWRlciAgMHgxZiwgMHg4YiAoXDAzNyBcMjEzKQ0KDQpBcyB5
-b3UgY2FuIHNlZSBpbiB0aGUgYmlud2FsayBvdXRwdXQsIGlzIHRoZSBtYWdpYyBoZWFkZXIgZm91
-bmQgYXQgMHg0MDI4LiBUaGlzIGJlY2F1c2Ugb2YgdGhlIHpJbWFnZSBoZWFkZXIuDQpXaGVuIEkg
-Y2hlY2sgdGhlIHpJbWFnZSBtYW51YWxseSwgaXQgaXMgaW5kZWVkIGF0IHRoYXQgbG9jYXRpb24u
-ICAgIA0KICAgIA0KPiAgICAgPiBUaGUgb3V0cHV0IGlzOg0KPiAgICAgPiAgDQo+ICAgICA+IFRy
-eSBnemlwIGRlY29tcHJlc3Npb24uDQo+ICAgICA+IFRyeSBMWk1BIGRlY29tcHJlc3Npb24uDQo+
-ICAgICA+IGx6bWFfZGVjb21wcmVzc19maWxlOiByZWFkIG9uIC9ib290L3pJbWFnZSBvZiA2NTUz
-NiBieXRlcyBmYWlsZWQNCj4gICAgID4ga2VybmVsOiAweGI2YTY4MDA4IGtlcm5lbF9zaXplOiAw
-eDQ5NGQzMA0KPiAgICAgPiBNRU1PUlkgUkFOR0VTDQo+ICAgICA+IDAwMDAwMDAwMDAwMDAwMDAt
-MDAwMDAwMDAwZmZmZmZmZiAoMCkNCj4gICAgID4gekltYWdlIGhlYWRlcjogMHgwMTZmMjgxOCAw
-eDAwMDAwMDAwIDB4MDA0OTRkMzANCj4gICAgID4gekltYWdlIHNpemUgMHg0OTRkMzAsIGZpbGUg
-c2l6ZSAweDQ5NGQzMA0KPiAgICAgPiBrZXhlY19sb2FkOiBlbnRyeSA9IDB4ODAwMCBmbGFncyA9
-IDB4MjgwMDAwDQo+ICAgICA+IG5yX3NlZ21lbnRzID0gMg0KPiAgICAgPiBzZWdtZW50WzBdLmJ1
-ZiAgID0gMHhiNmE2ODAwOA0KPiAgICAgPiBzZWdtZW50WzBdLmJ1ZnN6ID0gMHg0OTRkMzANCj4g
-ICAgID4gc2VnbWVudFswXS5tZW0gICA9IDB4ODAwMA0KPiAgICAgPiBzZWdtZW50WzBdLm1lbXN6
-ID0gMHg0OTUwMDANCj4gICAgID4gc2VnbWVudFsxXS5idWYgICA9IDB4MWZjZjA2MA0KPiAgICAg
-PiBzZWdtZW50WzFdLmJ1ZnN6ID0gMHgyNDViDQo+ICAgICA+IHNlZ21lbnRbMV0ubWVtICAgPSAw
-eDE2ZjIwMDANCj4gICAgID4gc2VnbWVudFsxXS5tZW1zeiA9IDB4MzAwMA0KPiAgICAgPiAgDQo+
-ICAgICA+IExvb2tpbmcgYXQgdGhlIGRlYnVnLCB0aGUgZnVuY3Rpb24gZ3pkaXJlY3QgcmV0dXJu
-cyDigJwx4oCdIHdoaWNoIGluZGljYXRlcyB0aGUga2VybmVsIGNvbXByZXNzaW9uIGlzIG5vdCBv
-ZiBnemlwIGJ1dCBJIGRlZmluaXRlbHkgdXNlIGd6aXAuDQo+ICAgICA+IEkgYWxzbyB0ZXN0ZWQg
-aXQgd2l0aCBMWk1BIGNvbXByZXNzaW9uIGFuZCB1SW1hZ2UgaW5zdGVhZCBvZiB6SW1hZ2UgYnV0
-IGFsbCB3aXRoIHRoZSBzYW1lIG91dGNvbWUuDQo+ICAgICA+ICANCj4gICAgID4gVG8gYmUgY29t
-cGxldGUsIEkgdXNlIEtleGVjLXRvb2xzIDIuMC4xOSBhbmQgemxpYiAxLjIuMTEuDQo+ICAgICA+
-ICANCj4gICAgID4gRGlkIEkgaW1wbGVtZW50IHNvbWV0aGluZyB3cm9uZyBvciBob3cgY2FuIEkg
-ZGVidWcgdGhpcyBmdXJ0aGVyPw0KPiAgICANCj4gICAgIEkgZG9uJ3QgaGF2ZSBhIGFybXY1IGhh
-cmR3YXJlIGFuZCBteSBhdHRlbXB0IHRvIHNldHVwIGEgcWVtdSArIGJ1aWxkcm9vdA0KPiAgICAg
-c2V0dXAgZm9yIEFSTXY1ICg5MjZ0KSBsZWFkIHRvIGEgZmFpbHVyZSB0byBib290IHRoZSBsYXRl
-c3QgdXBzdHJlYW0ga2VybmVsLg0KPiAgICANCj4gICAgIEkgd2lsbCB0cnkgdG8gZml4IHVwIHRo
-ZSBzZXR1cCBhbmQgY29tZSBiYWNrIHdpdGggbW9yZSBkZXRhaWxzLg0KPiAgICAgSW4gdGhlIG1l
-YW53aGlsZSBpZiB5b3UgY2FuIHNoYXJlIHRoZSBhYm92ZSwgSSBjYW4gaGF2ZSBmdXJ0aGVyIGxv
-b2sgYXQNCj4gICAgIHRoZSBzYW1lLg0KDQpUaGFua3MhDQoNCj4gICAgIFRoYW5rcywNCj4gICAg
-IEJodXBlc2gNCg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+arch_kexec_kernel_image_probe function declaration has been removed by
+commit 9ec4ecef0af7 ("kexec_file,x86,powerpc: factor out kexec_file_ops
+functions"). Still this function is overridden by couple of architectures
+and proper prototype declaration is therefore important, so bring it
+back. This fixes the following sparse warning on s390:
+arch/s390/kernel/machine_kexec_file.c:333:5: warning: symbol 'arch_kexec_kernel_image_probe' was not declared. Should it be static?
+
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+---
+ include/linux/kexec.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 1740fe36b5b7..f7529d120920 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -183,6 +183,8 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+ 				   bool get_value);
+ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
+ 
++int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
++					 unsigned long buf_len);
+ void * __weak arch_kexec_kernel_image_load(struct kimage *image);
+ int __weak arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+ 					    Elf_Shdr *section,
+-- 
+2.21.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
