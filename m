@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-f196.google.com ([209.85.208.196])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hsPKW-0000Do-KX
- for kexec@lists.infradead.org; Tue, 30 Jul 2019 10:26:06 +0000
-Received: by mail-lj1-f196.google.com with SMTP id t28so61538391lje.9
- for <kexec@lists.infradead.org>; Tue, 30 Jul 2019 03:26:02 -0700 (PDT)
+ id 1hskcB-0002Nn-LS
+ for kexec@lists.infradead.org; Wed, 31 Jul 2019 09:09:45 +0000
+From: Kairui Song <kasong@redhat.com>
+Subject: [PATCH] x86: Fix broken multiboot2 buliding for i386
+Date: Wed, 31 Jul 2019 17:09:02 +0800
+Message-Id: <20190731090902.29481-1-kasong@redhat.com>
 MIME-Version: 1.0
-References: <patch.git-ff1c9045ebdc.your-ad-here.call-01564402297-ext-5690@work.hours>
-In-Reply-To: <patch.git-ff1c9045ebdc.your-ad-here.call-01564402297-ext-5690@work.hours>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Tue, 30 Jul 2019 15:55:48 +0530
-Message-ID: <CACi5LpNQ8bEC+2KE=DZaUjeSmA46U=3u8m2WQYJEexK7uE0L+A@mail.gmail.com>
-Subject: Re: [PATCH] kexec: restore arch_kexec_kernel_image_probe declaration
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,55 +20,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vasily Gorbik <gor@linux.ibm.com>
-Cc: kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Varad Gautam <vrd@amazon.de>, Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>, Kairui Song <kasong@redhat.com>
 
-Hi Vasily,
+When building for i386, an error occured:
 
-On Mon, Jul 29, 2019 at 5:44 PM Vasily Gorbik <gor@linux.ibm.com> wrote:
->
-> arch_kexec_kernel_image_probe function declaration has been removed by
-> commit 9ec4ecef0af7 ("kexec_file,x86,powerpc: factor out kexec_file_ops
-> functions"). Still this function is overridden by couple of architectures
-> and proper prototype declaration is therefore important, so bring it
-> back. This fixes the following sparse warning on s390:
-> arch/s390/kernel/machine_kexec_file.c:333:5: warning: symbol 'arch_kexec_kernel_image_probe' was not declared. Should it be static?
+kexec/arch/i386/kexec-x86.c:39:22: error: 'multiboot2_x86_probe'
+undeclared here (not in a function); did you mean 'multiboot_x86_probe'?
+39 |  { "multiboot2-x86", multiboot2_x86_probe, multiboot2_x86_load,
+   |                      ^~~~~~~~~~~~~~~~~~~~
+   |                      multiboot_x86_probe
 
-May be it would be better to add a 'Fixes:' tag here (but may be it
-can be added while picking it into the tree). With the above minor
-nitpick:
+kexec/arch/i386/kexec-x86.c:39:44: error: 'multiboot2_x86_load'
+undeclared here (not in a function); did you mean 'multiboot_x86_load'?
+39 |  { "multiboot2-x86", multiboot2_x86_probe, multiboot2_x86_load,
+   |                                            ^~~~~~~~~~~~~~~~~~~
+   |                                            multiboot_x86_load
+kexec/arch/i386/kexec-x86.c:40:4: error: 'multiboot2_x86_usage'
+ undeclared here (not in a function); did you mean 'multiboot_x86_usage'?
+40 |    multiboot2_x86_usage },
+   |    ^~~~~~~~~~~~~~~~~~~~
+   |    multiboot_x86_usage
 
-Reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
+Fix this issue by putting the definition in the right header, also tidy
+up Makefile.
 
-Thanks,
-Bhupesh
+Fixes: 22a2ed55132e ("x86: Support multiboot2 images")
+Signed-off-by: Kairui Song <kasong@redhat.com>
+---
+ kexec/arch/i386/Makefile         | 2 +-
+ kexec/arch/i386/kexec-x86.h      | 5 +++++
+ kexec/arch/x86_64/kexec-x86_64.h | 5 -----
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-> ---
->  include/linux/kexec.h | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 1740fe36b5b7..f7529d120920 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -183,6 +183,8 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
->                                    bool get_value);
->  void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
->
-> +int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
-> +                                        unsigned long buf_len);
->  void * __weak arch_kexec_kernel_image_load(struct kimage *image);
->  int __weak arch_kexec_apply_relocations_add(struct purgatory_info *pi,
->                                             Elf_Shdr *section,
-> --
-> 2.21.0
->
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+diff --git a/kexec/arch/i386/Makefile b/kexec/arch/i386/Makefile
+index 105cefd..f486103 100644
+--- a/kexec/arch/i386/Makefile
++++ b/kexec/arch/i386/Makefile
+@@ -7,6 +7,7 @@ i386_KEXEC_SRCS += kexec/arch/i386/kexec-elf-x86.c
+ i386_KEXEC_SRCS += kexec/arch/i386/kexec-elf-rel-x86.c
+ i386_KEXEC_SRCS += kexec/arch/i386/kexec-bzImage.c
+ i386_KEXEC_SRCS += kexec/arch/i386/kexec-multiboot-x86.c
++i386_KEXEC_SRCS += kexec/arch/i386/kexec-mb2-x86.c
+ i386_KEXEC_SRCS += kexec/arch/i386/kexec-beoboot-x86.c
+ i386_KEXEC_SRCS += kexec/arch/i386/kexec-nbi.c
+ i386_KEXEC_SRCS += kexec/arch/i386/x86-linux-setup.c
+@@ -14,7 +15,6 @@ i386_KEXEC_SRCS += kexec/arch/i386/crashdump-x86.c
+ 
+ dist += kexec/arch/i386/Makefile $(i386_KEXEC_SRCS)			\
+ 	kexec/arch/i386/crashdump-x86.h					\
+-	kexec/arch/i386/kexec-mb2-x86.c					\
+ 	kexec/arch/i386/kexec-x86.h					\
+ 	kexec/arch/i386/x86-linux-setup.h				\
+ 	kexec/arch/i386/include/arch/options.h
+diff --git a/kexec/arch/i386/kexec-x86.h b/kexec/arch/i386/kexec-x86.h
+index 1b58c3b..16d0f6c 100644
+--- a/kexec/arch/i386/kexec-x86.h
++++ b/kexec/arch/i386/kexec-x86.h
+@@ -60,6 +60,11 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct kexec_info *info);
+ void multiboot_x86_usage(void);
+ 
++int multiboot2_x86_load(int argc, char **argv, const char *buf, off_t len,
++                       struct kexec_info *info);
++void multiboot2_x86_usage(void);
++int multiboot2_x86_probe(const char *buf, off_t buf_len);
++
+ int elf_x86_probe(const char *buf, off_t len);
+ int elf_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct kexec_info *info);
+diff --git a/kexec/arch/x86_64/kexec-x86_64.h b/kexec/arch/x86_64/kexec-x86_64.h
+index 21c3a73..4cdeffb 100644
+--- a/kexec/arch/x86_64/kexec-x86_64.h
++++ b/kexec/arch/x86_64/kexec-x86_64.h
+@@ -33,9 +33,4 @@ int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
+ 			struct kexec_info *info);
+ void bzImage64_usage(void);
+ 
+-int multiboot2_x86_load(int argc, char **argv, const char *buf, off_t len,
+-			struct kexec_info *info);
+-void multiboot2_x86_usage(void);
+-int multiboot2_x86_probe(const char *buf, off_t buf_len);
+-
+ #endif /* KEXEC_X86_64_H */
+-- 
+2.21.0
+
 
 _______________________________________________
 kexec mailing list
