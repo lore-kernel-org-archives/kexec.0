@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x543.google.com ([2a00:1450:4864:20::543])
+Received: from mail-vk1-xa4a.google.com ([2607:f8b0:4864:20::a4a])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hss1V-00075s-9C
- for kexec@lists.infradead.org; Wed, 31 Jul 2019 17:04:22 +0000
-Received: by mail-ed1-x543.google.com with SMTP id s49so31545305edb.1
- for <kexec@lists.infradead.org>; Wed, 31 Jul 2019 10:04:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190731153857.4045-1-pasha.tatashin@soleen.com>
- <20190731163258.GH39768@lakrids.cambridge.arm.com>
- <CA+CK2bAYUFBBGo-LHBK4UWRK1tpx3AZ4Z9NkDxiDK0UYEDozaQ@mail.gmail.com>
- <20190731165007.GJ39768@lakrids.cambridge.arm.com>
-In-Reply-To: <20190731165007.GJ39768@lakrids.cambridge.arm.com>
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Wed, 31 Jul 2019 13:04:08 -0400
-Message-ID: <CA+CK2bBOSC0iYjq_A18DNaNCYskTTJJTkM4N-WAqssoxpxuNPg@mail.gmail.com>
-Subject: Re: [RFC v2 0/8] arm64: MMU enabled kexec relocation
+ id 1hswtn-0002Sd-NH
+ for kexec@lists.infradead.org; Wed, 31 Jul 2019 22:16:45 +0000
+Received: by mail-vk1-xa4a.google.com with SMTP id u202so30055125vku.5
+ for <kexec@lists.infradead.org>; Wed, 31 Jul 2019 15:16:42 -0700 (PDT)
+Date: Wed, 31 Jul 2019 15:15:54 -0700
+In-Reply-To: <20190731221617.234725-1-matthewgarrett@google.com>
+Message-Id: <20190731221617.234725-7-matthewgarrett@google.com>
+Mime-Version: 1.0
+References: <20190731221617.234725-1-matthewgarrett@google.com>
+Subject: [PATCH V37 06/29] kexec_load: Disable at runtime if the kernel is
+ locked down
+From: Matthew Garrett <matthewgarrett@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,68 +25,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Sasha Levin <sashal@kernel.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, James Morse <james.morse@arm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Matthias Brugger <matthias.bgg@gmail.com>, will@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: jmorris@namei.org
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Kees Cook <keescook@chromium.org>, linux-api@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Dave Young <dyoung@redhat.com>
 
-On Wed, Jul 31, 2019 at 12:50 PM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Wed, Jul 31, 2019 at 12:40:51PM -0400, Pavel Tatashin wrote:
-> > On Wed, Jul 31, 2019 at 12:33 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> > >
-> > > Hi Pavel,
-> > >
-> > > Generally, the cover letter should state up-front what the goal is (or
-> > > what problem you're trying to solve). It would be really helpful to have
-> > > that so that we understand what you're trying to achieve, and why.
->
-> [...]
->
-> > > > Here is the current data from the real hardware:
-> > > > (because of bug, I forced EL1 mode by setting el2_switch always to zero in
-> > > > cpu_soft_restart()):
-> > > >
-> > > > For this experiment, the size of kernel plus initramfs is 25M. If initramfs
-> > > > was larger, than the improvements would be even greater, as time spent in
-> > > > relocation is proportional to the size of relocation.
-> > > >
-> > > > Previously:
-> > > > kernel shutdown       0.022131328s
-> > > > relocation    0.440510736s
-> > > > kernel startup        0.294706768s
-> > >
-> > > In total this takes ~0.76s...
-> > >
-> > > >
-> > > > Relocation was taking: 58.2% of reboot time
-> > > >
-> > > > Now:
-> > > > kernel shutdown       0.032066576s
-> > > > relocation    0.022158152s
-> > > > kernel startup        0.296055880s
-> > >
-> > > ... and this takes ~0.35s
-> > >
-> > > So do we really need this complexity for a few blinks of an eye?
-> >
-> > Yes, we have an extremely tight reboot budget, 0.35s is not an acceptable waste.
->
-> Could you please elaborate on your use-case?
->
-> Understanfin what you're trying to achieve would help us to understand
-> which solutions make sense.
+From: Matthew Garrett <mjg59@srcf.ucam.org>
 
-An extremely high availability device with an update story utilizing
-kexec functionality for a faster kernel update and also for being able
-to preserve some state in memory without wasting the time of copying
-it to and from a backing storage. We at Microsoft will be using a
-fleet of these devices. The total reboot budget is less than half a
-second, out of which 0.44s is currently spent in kexec relocation.
+The kexec_load() syscall permits the loading and execution of arbitrary
+code in ring 0, which is something that lock-down is meant to prevent. It
+makes sense to disable kexec_load() in this situation.
 
-Pasha
+This does not affect kexec_file_load() syscall which can check for a
+signature on the image to be booted.
 
->
-> Thanks,
-> Mark.
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Acked-by: Dave Young <dyoung@redhat.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+cc: kexec@lists.infradead.org
+---
+ include/linux/security.h     | 1 +
+ kernel/kexec.c               | 8 ++++++++
+ security/lockdown/lockdown.c | 1 +
+ 3 files changed, 10 insertions(+)
+
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 9458152601b5..69c5de539e9a 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -105,6 +105,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_NONE,
+ 	LOCKDOWN_MODULE_SIGNATURE,
+ 	LOCKDOWN_DEV_MEM,
++	LOCKDOWN_KEXEC,
+ 	LOCKDOWN_INTEGRITY_MAX,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 1b018f1a6e0d..bc933c0db9bf 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -205,6 +205,14 @@ static inline int kexec_load_check(unsigned long nr_segments,
+ 	if (result < 0)
+ 		return result;
+ 
++	/*
++	 * kexec can be used to circumvent module loading restrictions, so
++	 * prevent loading in that case
++	 */
++	result = security_locked_down(LOCKDOWN_KEXEC);
++	if (result)
++		return result;
++
+ 	/*
+ 	 * Verify we have a legal set of flags
+ 	 * This leaves us room for future extensions.
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index d2ef29d9f0b2..6f302c156bc8 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -20,6 +20,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_NONE] = "none",
+ 	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
+ 	[LOCKDOWN_DEV_MEM] = "/dev/mem,kmem,port",
++	[LOCKDOWN_KEXEC] = "kexec of unsigned images",
+ 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
+-- 
+2.22.0.770.g0f2c4a37fd-goog
+
 
 _______________________________________________
 kexec mailing list
