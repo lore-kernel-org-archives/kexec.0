@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-f67.google.com ([209.85.167.67])
+Received: from mail-qk1-x742.google.com ([2607:f8b0:4864:20::742])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hsnkQ-0003B9-1p
- for kexec@lists.infradead.org; Wed, 31 Jul 2019 12:30:27 +0000
-Received: by mail-lf1-f67.google.com with SMTP id v85so47281084lfa.6
- for <kexec@lists.infradead.org>; Wed, 31 Jul 2019 05:30:25 -0700 (PDT)
+ id 1hsqgv-0007hf-BS
+ for kexec@lists.infradead.org; Wed, 31 Jul 2019 15:39:03 +0000
+Received: by mail-qk1-x742.google.com with SMTP id t8so49569139qkt.1
+ for <kexec@lists.infradead.org>; Wed, 31 Jul 2019 08:39:00 -0700 (PDT)
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Subject: [RFC v2 0/8] arm64: MMU enabled kexec relocation
+Date: Wed, 31 Jul 2019 11:38:49 -0400
+Message-Id: <20190731153857.4045-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-References: <34E10BEF-BF40-4230-BA02-5C64EDC372D2@nedap.com>
- <FD58192C-90D7-462E-8869-80F71A86D4E1@nedap.com>
- <5088a9d0-5638-1c41-1968-fc973e773e52@redhat.com>
- <6AB2A445-6C9D-451A-8CEB-5F5AC8A15545@nedap.com>
-In-Reply-To: <6AB2A445-6C9D-451A-8CEB-5F5AC8A15545@nedap.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Wed, 31 Jul 2019 18:00:12 +0530
-Message-ID: <CACi5LpNKRCqnQz4WDEe6t0LPbELeepALnrgqcDEdf0GeSD8fcA@mail.gmail.com>
-Subject: Re: No compression technique of zImage/uImage detected - ARM
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,109 +18,129 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Maikel Coenen <maikel.coenen@nedap.com>
-Cc: Bhupesh SHARMA <bhupesh.linux@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com
 
-T24gTW9uLCBKdWwgMjksIDIwMTkgYXQgMTozNiBQTSBNYWlrZWwgQ29lbmVuIDxtYWlrZWwuY29l
-bmVuQG5lZGFwLmNvbT4gd3JvdGU6Cj4KPiA+IE9uIDI5LzA3LzIwMTksIDA3OjAyLCAiQmh1cGVz
-aCBTaGFybWEiIDxiaHNoYXJtYUByZWRoYXQuY29tPiB3cm90ZTo+Cj4KPiA+ICAgICBIaSBNYWlr
-ZWwsCj4gPgo+ID4gICAgIEkgaGF2ZSBhIGNvdXBsZSBvZiBxdWVyaWVzIChzbyB0aGF0IEkgY2Fu
-IGhlbHAgeW91IGJldHRlcikuIFBsZWFzZSBzZWUKPiA+ICAgICB0aGVtIGluLWxpbmU6Cj4gPgo+
-ID4gICAgIE9uIDA3LzI0LzIwMTkgMDI6NDMgUE0sIE1haWtlbCBDb2VuZW4gd3JvdGU6Cj4gPiAg
-ICAgPiBIaSwKPiA+ICAgICA+Cj4gPiAgICAgPiBJIGhhdmUgbWV0IGFuIGlzc3VlIGR1cmluZyBs
-b2FkaW5nIGEgbmV3IGtlcm5lbCB3aXRoIEtleGVjIG9uIGFuIEFSTXY1IFNvQy4gVGhlIGtlcm5l
-bCBpcyBhIDQuMTkgd2l0aCBHemlwIGNvbXByZXNzaW9uIGJ1dCBkdXJpbmcgbG9hZGluZyBLZXhl
-YyBkb2VzIG5vdCByZWNvZ25pemUgdGhlIGNvbXByZXNzaW9uLgo+ID4gICAgID4KPiA+ICAgICA+
-IElmIEkgbG9hZCB0aGUgbmV3IGtlcm5lbCBhbmQgZHRiIHdpdGg6Cj4gPiAgICAgPgo+ID4gICAg
-ID4ga2V4ZWMgLWwgL2Jvb3QvekltYWdlIC1kIC0tZHRiPS9ib290L3UtYm9vdC5kdGIKPiA+Cj4g
-PiAgICAgQ2FuIHlvdSBwbGVhc2Ugc2hvdyB0aGUgb3V0cHV0IG9mIHRoZSBmb2xsb3dpbmcgY29t
-bWFuZDoKPiA+ICAgICAkIGZpbGUgL2Jvb3QvekltYWdlCj4KPiB6SW1hZ2U6IExpbnV4IGtlcm5l
-bCBBUk0gYm9vdCBleGVjdXRhYmxlIHpJbWFnZSAobGl0dGxlLWVuZGlhbikKPgo+IEkgYWxzbyBw
-ZXJmb3JtZWQgYSBiaW53YWxrIHdpdGggZm9sbG93aW5nIG91dHB1dDoKPiBERUNJTUFMICAgICAg
-ICAgSEVYQURFQ0lNQUwgICAgIERFU0NSSVBUSU9OCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0K
-PiAwICAgICAgICAgICAgICAgMHgwICAgICAgICAgICAgIExpbnV4IGtlcm5lbCBBUk0gYm9vdCBl
-eGVjdXRhYmxlIHpJbWFnZSAobGl0dGxlLWVuZGlhbikKPiAxNjQyNCAgICAgICAgICAgMHg0MDI4
-ICAgICAgICAgIGd6aXAgY29tcHJlc3NlZCBkYXRhLCBtYXhpbXVtIGNvbXByZXNzaW9uLCBmcm9t
-IFVuaXgsIGxhc3QgbW9kaWZpZWQ6IDE5NzAtMDEtMDEgMDA6MDA6MDAgKG51bGwgZGF0ZSkKPgo+
-ID4gICAgIEFsc28gY2FuIHlvdSBwbGVhc2UgbWFrZSBzdXJlIHRoYXQgdGhlIHpJbWFnZSBoYXMg
-dGhlIHJpZ2h0IGd6aXAgaGVhZGVyCj4gPiAgICAgOiBtYWdpYyBoZWFkZXIgIDB4MWYsIDB4OGIg
-KFwwMzcgXDIxMykKPgo+IEFzIHlvdSBjYW4gc2VlIGluIHRoZSBiaW53YWxrIG91dHB1dCwgaXMg
-dGhlIG1hZ2ljIGhlYWRlciBmb3VuZCBhdCAweDQwMjguIFRoaXMgYmVjYXVzZSBvZiB0aGUgeklt
-YWdlIGhlYWRlci4KPiBXaGVuIEkgY2hlY2sgdGhlIHpJbWFnZSBtYW51YWxseSwgaXQgaXMgaW5k
-ZWVkIGF0IHRoYXQgbG9jYXRpb24uCj4KPiA+ICAgICA+IFRoZSBvdXRwdXQgaXM6Cj4gPiAgICAg
-Pgo+ID4gICAgID4gVHJ5IGd6aXAgZGVjb21wcmVzc2lvbi4KPiA+ICAgICA+IFRyeSBMWk1BIGRl
-Y29tcHJlc3Npb24uCj4gPiAgICAgPiBsem1hX2RlY29tcHJlc3NfZmlsZTogcmVhZCBvbiAvYm9v
-dC96SW1hZ2Ugb2YgNjU1MzYgYnl0ZXMgZmFpbGVkCj4gPiAgICAgPiBrZXJuZWw6IDB4YjZhNjgw
-MDgga2VybmVsX3NpemU6IDB4NDk0ZDMwCj4gPiAgICAgPiBNRU1PUlkgUkFOR0VTCj4gPiAgICAg
-PiAwMDAwMDAwMDAwMDAwMDAwLTAwMDAwMDAwMGZmZmZmZmYgKDApCj4gPiAgICAgPiB6SW1hZ2Ug
-aGVhZGVyOiAweDAxNmYyODE4IDB4MDAwMDAwMDAgMHgwMDQ5NGQzMAo+ID4gICAgID4gekltYWdl
-IHNpemUgMHg0OTRkMzAsIGZpbGUgc2l6ZSAweDQ5NGQzMAo+ID4gICAgID4ga2V4ZWNfbG9hZDog
-ZW50cnkgPSAweDgwMDAgZmxhZ3MgPSAweDI4MDAwMAo+ID4gICAgID4gbnJfc2VnbWVudHMgPSAy
-Cj4gPiAgICAgPiBzZWdtZW50WzBdLmJ1ZiAgID0gMHhiNmE2ODAwOAo+ID4gICAgID4gc2VnbWVu
-dFswXS5idWZzeiA9IDB4NDk0ZDMwCj4gPiAgICAgPiBzZWdtZW50WzBdLm1lbSAgID0gMHg4MDAw
-Cj4gPiAgICAgPiBzZWdtZW50WzBdLm1lbXN6ID0gMHg0OTUwMDAKPiA+ICAgICA+IHNlZ21lbnRb
-MV0uYnVmICAgPSAweDFmY2YwNjAKPiA+ICAgICA+IHNlZ21lbnRbMV0uYnVmc3ogPSAweDI0NWIK
-PiA+ICAgICA+IHNlZ21lbnRbMV0ubWVtICAgPSAweDE2ZjIwMDAKPiA+ICAgICA+IHNlZ21lbnRb
-MV0ubWVtc3ogPSAweDMwMDAKPiA+ICAgICA+Cj4gPiAgICAgPiBMb29raW5nIGF0IHRoZSBkZWJ1
-ZywgdGhlIGZ1bmN0aW9uIGd6ZGlyZWN0IHJldHVybnMg4oCcMeKAnSB3aGljaCBpbmRpY2F0ZXMg
-dGhlIGtlcm5lbCBjb21wcmVzc2lvbiBpcyBub3Qgb2YgZ3ppcCBidXQgSSBkZWZpbml0ZWx5IHVz
-ZSBnemlwLgo+ID4gICAgID4gSSBhbHNvIHRlc3RlZCBpdCB3aXRoIExaTUEgY29tcHJlc3Npb24g
-YW5kIHVJbWFnZSBpbnN0ZWFkIG9mIHpJbWFnZSBidXQgYWxsIHdpdGggdGhlIHNhbWUgb3V0Y29t
-ZS4KPiA+ICAgICA+Cj4gPiAgICAgPiBUbyBiZSBjb21wbGV0ZSwgSSB1c2UgS2V4ZWMtdG9vbHMg
-Mi4wLjE5IGFuZCB6bGliIDEuMi4xMS4KPiA+ICAgICA+Cj4gPiAgICAgPiBEaWQgSSBpbXBsZW1l
-bnQgc29tZXRoaW5nIHdyb25nIG9yIGhvdyBjYW4gSSBkZWJ1ZyB0aGlzIGZ1cnRoZXI/Cj4gPgo+
-ID4gICAgIEkgZG9uJ3QgaGF2ZSBhIGFybXY1IGhhcmR3YXJlIGFuZCBteSBhdHRlbXB0IHRvIHNl
-dHVwIGEgcWVtdSArIGJ1aWxkcm9vdAo+ID4gICAgIHNldHVwIGZvciBBUk12NSAoOTI2dCkgbGVh
-ZCB0byBhIGZhaWx1cmUgdG8gYm9vdCB0aGUgbGF0ZXN0IHVwc3RyZWFtIGtlcm5lbC4KPiA+Cj4g
-PiAgICAgSSB3aWxsIHRyeSB0byBmaXggdXAgdGhlIHNldHVwIGFuZCBjb21lIGJhY2sgd2l0aCBt
-b3JlIGRldGFpbHMuCj4gPiAgICAgSW4gdGhlIG1lYW53aGlsZSBpZiB5b3UgY2FuIHNoYXJlIHRo
-ZSBhYm92ZSwgSSBjYW4gaGF2ZSBmdXJ0aGVyIGxvb2sgYXQKPiA+ICAgICB0aGUgc2FtZS4KCldl
-bGwsIEkgY2FuJ3QgcmVwcm9kdWNlIHRoZSBpc3N1ZSB5b3UgcmVwb3J0ZWQgYXQgbXkgZW5kLgpI
-ZXJlIGlzIG15IGVudmlyb25tZW50OgoKJCBxZW11LXN5c3RlbS1hcm0gLS12ZXJzaW9uClFFTVUg
-ZW11bGF0b3IgdmVyc2lvbiAyLjExLjIocWVtdS0yLjExLjItNS5mYzI4KQpDb3B5cmlnaHQgKGMp
-IDIwMDMtMjAxNyBGYWJyaWNlIEJlbGxhcmQgYW5kIHRoZSBRRU1VIFByb2plY3QgZGV2ZWxvcGVy
-cwoKIyB1bmFtZSAtcm4KYnVpbGRyb290IDQuMTkuMTYKCiMga2V4ZWMgLXYKa2V4ZWMtdG9vbHMg
-Mi4wLjE4CgojIGtleGVjIC1sIHpJbWFnZSAtZCAtLWR0Yj12ZXJzYXRpbGUtcGIuZHRiClRyeSBn
-emlwIGRlY29tcHJlc3Npb24uCmtlcm5lbDogMHhiNmM0NjAwOCBrZXJuZWxfc2l6ZTogMHgyOWNi
-NDgKTUVNT1JZIFJBTkdFUwowMDAwMDAwMDAwMDAwMDAwLTAwMDAwMDAwMDdmZmZmZmYgKDApCnpJ
-bWFnZSBoZWFkZXI6IDB4MDE2ZjI4MTggMHgwMDAwMDAwMCAweDAwMjljYjQ4CnpJbWFnZSBzaXpl
-IDB4MjljYjQ4LCBmaWxlIHNpemUgMHgyOWNiNDgKekltYWdlIHJlcXVpcmVzIDB4MDAyYWRiNDgg
-Ynl0ZXMKICBvZmZzZXQgMHgwMDAwMzkzNCB0YWcgMHg1YTUzNGM0YiBzaXplIDgKRGVjb21wcmVz
-c2VkIGtlcm5lbCBzaXplczoKIHRleHQrZGF0YSAweDAwNTBmZTMwIGJzcyAweDAwMDMxZGU0IHRv
-dGFsIDB4MDA1NDFjMTQKUmVzdWx0aW5nIGtlcm5lbCBzcGFjZTogMHgwMDdiZDk3OApLZXJuZWw6
-IGFkZHJlc3M9MHgwMDAwODAwMCBzaXplPTB4MDA3YmQ5NzgKRFQgICAgOiBhZGRyZXNzPTB4MDA3
-YzcwMDAgc2l6ZT0weDAwMDAyMjc4CmtleGVjX2xvYWQ6IGVudHJ5ID0gMHg4MDAwIGZsYWdzID0g
-MHgyODAwMDAKbnJfc2VnbWVudHMgPSAyCnNlZ21lbnRbMF0uYnVmICAgPSAweGI2YzQ2MDA4CnNl
-Z21lbnRbMF0uYnVmc3ogPSAweDI5Y2I0YwpzZWdtZW50WzBdLm1lbSAgID0gMHg4MDAwCnNlZ21l
-bnRbMF0ubWVtc3ogPSAweDI5ZDAwMApzZWdtZW50WzFdLmJ1ZiAgID0gMHg0N2NhOApzZWdtZW50
-WzFdLmJ1ZnN6ID0gMHgyMjc4CnNlZ21lbnRbMV0ubWVtICAgPSAweDdjNzAwMApzZWdtZW50WzFd
-Lm1lbXN6ID0gMHgzMDAwCgpBcyB5b3UgY2FuIHNlZSBmcm9tIHRoZSBsb2dzIGFib3ZlIHRoZSB6
-SW1hZ2UgZm9ybWF0IGlzIGNvcnJlY3RseQpyZWNvZ25pemVkIGFuZCBkZWNvbXByZXNzZWQuCgpX
-aGVuIEkgcnVuICdrZXhlYyAtZScsIEkgY2FuIGxhdW5jaCB0aGUgbmV3IGtlcm5lbCBqdXN0IGZp
-bmUuCgpJIGRvbid0IHNlZSBhbnkgbmV3IHBhdGNoZXMgaW4gJ2tleGVjL2FyY2gvYXJtJyBmb2xk
-ZXIgYmV0d2VlbgprZXhlYy10b29scyAyLjAuMTggKGF0IG15IGVuZCkgYW5kIGtleGVjLXRvb2xz
-IDIuMC4xOSAod2hpY2ggeW91IHVzZSksCnNvIEkgYW0gb2YgdGhlIHZpZXcgdGhhdCB0aGUgaXNz
-dWUgaXMgb2YgdGhlIHpJbWFnZSBpbWFnZSBnZW5lcmF0aW9uCnByb2JhYmx5LgoKU2luY2UsICdr
-ZXhlYy9hcmNoL2FybS9rZXhlYy16SW1hZ2UtYXJtLmMnIGFsc28gc3VwcG9ydHMgdW5jb21wcmVz
-c2VkCmtlcm5lbCBJbWFnZSwgeW91IGNhbiB0cnkgbG9hZGluZyB0aGUgSW1hZ2UgZmlsZSBkaXJl
-Y3RseSBhbmQgc2VlIGlmCnRoYXQgbWFrZXMgYSBkaWZmZXJlbmNlICh5b3UgY2FuIGZpbmQgaXQg
-aGVyZSBpbiB0aGUga2VybmVsIHRyZWU6CmFyY2gvYXJtL2Jvb3QvSW1hZ2UpOgoKIyBrZXhlYyAt
-bCBJbWFnZSAtZCAtLWR0Yj12ZXJzYXRpbGUtcGIuZHRiClRyeSBnemlwIGRlY29tcHJlc3Npb24u
-Cmtlcm5lbDogMHhiNWYzYTAwOCBrZXJuZWxfc2l6ZTogMHhmYzRmMjAKTUVNT1JZIFJBTkdFUwow
-MDAwMDAwMDAwMDAwMDAwLTAwMDAwMDAwMDdmZmZmZmYgKDApCnpJbWFnZSBoZWFkZXI6IDB4ZWIw
-MDAwNWEgMHhlYjAwMDA0NCAweGViMDAwMDA5CnpJbWFnZSByZXF1aXJlcyAweDAwZmQ1ZjIwIGJ5
-dGVzCktlcm5lbDogYWRkcmVzcz0weDAwMDA4MDAwIHNpemU9MHgwNGYyZGJhMApEVCAgICA6IGFk
-ZHJlc3M9MHgwNGYzNzAwMCBzaXplPTB4MDAwMDIyNzgKa2V4ZWNfbG9hZDogZW50cnkgPSAweDgw
-MDAgZmxhZ3MgPSAweDI4MDAwMApucl9zZWdtZW50cyA9IDIKc2VnbWVudFswXS5idWYgICA9IDB4
-YjVmM2EwMDgKc2VnbWVudFswXS5idWZzeiA9IDB4ZmM0ZjI0CnNlZ21lbnRbMF0ubWVtICAgPSAw
-eDgwMDAKc2VnbWVudFswXS5tZW1zeiA9IDB4ZmM1MDAwCnNlZ21lbnRbMV0uYnVmICAgPSAweDQ3
-Y2E4CnNlZ21lbnRbMV0uYnVmc3ogPSAweDIyNzgKc2VnbWVudFsxXS5tZW0gICA9IDB4NGYzNzAw
-MApzZWdtZW50WzFdLm1lbXN6ID0gMHgzMDAwCgpUaGFua3MsCkJodXBlc2gKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
-ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8va2V4ZWMK
+Changelog from previous RFC:
+- Added trans_table support for both hibernate and kexec.
+- Fixed performance issue, where enabling MMU did not yield the
+  actual performance improvement.
+
+Bug:
+With the current state, this patch series works on kernels booted with EL1
+mode, but for some reason, when elevated to EL2 mode reboot freezes in
+both QEMU and on real hardware.
+
+The freeze happens in:
+
+arch/arm64/kernel/relocate_kernel.S
+	turn_on_mmu()
+
+Right after sctlr_el2 is written (MMU on EL2 is enabled)
+
+	msr     sctlr_el2, \tmp1
+
+I've been studying all the relevant control registers for EL2, but do not
+see what might be causing this hang:
+
+MAIR_EL2 is set to be exactly the same as MAIR_EL1 0xbbff440c0400
+
+TCR_EL2        0x80843510
+Enabled bits:
+PS      Physical Address Size. (0b100   44 bits, 16TB.)
+SH0     Shareability    11 Inner Shareable
+ORGN0   Normal memory, Outer Write-Back Read-Allocate Write-Allocate Cach.
+IRGN0   Normal memory, Inner Write-Back Read-Allocate Write-Allocate Cach.
+T0SZ    01 0000
+
+SCTLR_EL2	0x30e5183f
+RES1    : Reserve ones
+M       : MMU enabled
+A       : Align check
+C       : Cacheability control
+SA      : SP Alignment check enable
+IESB    : Implicit Error Synchronization event
+I       : Instruction access Cacheability
+
+TTBR0_EL2      0x1b3069000 (address of trans_table)
+
+Any suggestion of what else might be missing that causes this freeze when
+MMU is enabled in EL2?
+
+=====
+Here is the current data from the real hardware:
+(because of bug, I forced EL1 mode by setting el2_switch always to zero in
+cpu_soft_restart()):
+
+For this experiment, the size of kernel plus initramfs is 25M. If initramfs
+was larger, than the improvements would be even greater, as time spent in
+relocation is proportional to the size of relocation.
+
+Previously:
+kernel shutdown	0.022131328s
+relocation	0.440510736s
+kernel startup	0.294706768s
+
+Relocation was taking: 58.2% of reboot time
+
+Now:
+kernel shutdown	0.032066576s
+relocation	0.022158152s
+kernel startup	0.296055880s
+
+Now: Relocation takes 6.3% of reboot time
+
+Total reboot is x2.16 times faster.
+
+Previous approaches and discussions
+-----------------------------------
+https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com
+reserve space for kexec to avoid relocation, involves changes to generic code
+to optimize a problem that exists on arm64 only:
+
+https://lore.kernel.org/lkml/20190716165641.6990-1-pasha.tatashin@soleen.com
+The first attempt to enable MMU, some bugs that prevented performance
+improvement. The page tables unnecessary configured idmap for the whole
+physical space.
+
+Pavel Tatashin (8):
+  kexec: quiet down kexec reboot
+  arm64, mm: transitional tables
+  arm64: hibernate: switch to transtional page tables.
+  kexec: add machine_kexec_post_load()
+  arm64, kexec: move relocation function setup and clean up
+  arm64, kexec: add expandable argument to relocation function
+  arm64, kexec: configure transitional page table for kexec
+  arm64, kexec: enable MMU during kexec relocation
+
+ arch/arm64/Kconfig                     |   4 +
+ arch/arm64/include/asm/kexec.h         |  24 ++-
+ arch/arm64/include/asm/pgtable-hwdef.h |   1 +
+ arch/arm64/include/asm/trans_table.h   |  66 ++++++
+ arch/arm64/kernel/asm-offsets.c        |  10 +
+ arch/arm64/kernel/cpu-reset.S          |   4 +-
+ arch/arm64/kernel/cpu-reset.h          |   8 +-
+ arch/arm64/kernel/hibernate.c          | 261 ++++++------------------
+ arch/arm64/kernel/machine_kexec.c      | 168 ++++++++++++---
+ arch/arm64/kernel/relocate_kernel.S    | 238 +++++++++++++++-------
+ arch/arm64/mm/Makefile                 |   1 +
+ arch/arm64/mm/trans_table.c            | 272 +++++++++++++++++++++++++
+ kernel/kexec.c                         |   4 +
+ kernel/kexec_core.c                    |   8 +-
+ kernel/kexec_file.c                    |   4 +
+ kernel/kexec_internal.h                |   2 +
+ 16 files changed, 756 insertions(+), 319 deletions(-)
+ create mode 100644 arch/arm64/include/asm/trans_table.h
+ create mode 100644 arch/arm64/mm/trans_table.c
+
+-- 
+2.22.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
