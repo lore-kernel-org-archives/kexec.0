@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x744.google.com ([2607:f8b0:4864:20::744])
+Received: from mail-io1-xd44.google.com ([2607:f8b0:4864:20::d44])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1htCwo-0001Y0-JM
- for kexec@lists.infradead.org; Thu, 01 Aug 2019 15:24:59 +0000
-Received: by mail-qk1-x744.google.com with SMTP id r21so52387403qke.2
- for <kexec@lists.infradead.org>; Thu, 01 Aug 2019 08:24:54 -0700 (PDT)
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v1 8/8] arm64, kexec: enable MMU during kexec relocation
-Date: Thu,  1 Aug 2019 11:24:39 -0400
-Message-Id: <20190801152439.11363-9-pasha.tatashin@soleen.com>
-In-Reply-To: <20190801152439.11363-1-pasha.tatashin@soleen.com>
-References: <20190801152439.11363-1-pasha.tatashin@soleen.com>
-MIME-Version: 1.0
+ id 1htIcW-0006yj-Uq
+ for kexec@lists.infradead.org; Thu, 01 Aug 2019 21:28:22 +0000
+Received: by mail-io1-xd44.google.com with SMTP id k20so147594843ios.10
+ for <kexec@lists.infradead.org>; Thu, 01 Aug 2019 14:28:18 -0700 (PDT)
+From: =?UTF-8?q?Don=20Brady=C2=A0?= <don.brady@delphix.com>
+Subject: [RFC PATCH] makedumpfile: exclude ZFS file cache pages
+Date: Thu,  1 Aug 2019 15:26:17 -0600
+Message-Id: <20190801212617.9698-1-don.brady@delphix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,247 +17,137 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org
+To: kexec@lists.infradead.org
+Cc: Don Brady <don.brady@delphix.com>
 
-Now, that we have transitional page tables configured, temporarily enable
-MMU to allow faster relocation of segments to final destination.
+From: Don Brady <don.brady@delphix.com>
 
-The performance data: for a moderate size kernel + initramfs: 25M the
-relocation was taking 0.382s, with enabled MMU it now takes
-0.019s only or x20 improvement.
+ZFS caches pages for file data in its Adaptive Replacement Cache (ARC).
+This cache is separate from the VFS page cache.  The amount of data
+cached can be significant and it would be ideal to exclude it from the
+crashdump file.  ZFS can tag these pages so they are easily identifiable
+from within makedumpfile.
 
-The time is proportional to the size of relocation, therefore if initramfs
-is larger, 100M it could take over a second.
+ref https://github.com/zfsonlinux/zfs/pull/8899/files
 
-Also, remove reloc_arg->head, as it is not needed anymore once MMU is
-enabled.
+Below is a suggested patch that can work in tandem with the above ZFS
+changes to exclude the ZFS ARC file data pages from a dump file.
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: Don Brady <don.brady@delphix.com>
 ---
- arch/arm64/include/asm/kexec.h      |   2 -
- arch/arm64/kernel/asm-offsets.c     |   1 -
- arch/arm64/kernel/machine_kexec.c   |   1 -
- arch/arm64/kernel/relocate_kernel.S | 136 +++++++++++++++++-----------
- 4 files changed, 84 insertions(+), 56 deletions(-)
+ makedumpfile.c | 36 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 450d8440f597..ad81ed3e5751 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -109,7 +109,6 @@ extern const unsigned long kexec_el1_sync_size;
- 			((UL(0xffffffffffffffff) - PAGE_OFFSET) >> 1) + 1)
- /*
-  * kern_reloc_arg is passed to kernel relocation function as an argument.
-- * head		kimage->head, allows to traverse through relocation segments.
-  * entry_addr	kimage->start, where to jump from relocation function (new
-  *		kernel, or purgatory entry address).
-  * kern_arg0	first argument to kernel is its dtb address. The other
-@@ -125,7 +124,6 @@ extern const unsigned long kexec_el1_sync_size;
-  * copy_len	Number of bytes that need to be copied
-  */
- struct kern_reloc_arg {
--	unsigned long	head;
- 	unsigned long	entry_addr;
- 	unsigned long	kern_arg0;
- 	unsigned long	kern_arg1;
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index 7c2ba09a8ceb..13ad00b1b90f 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -129,7 +129,6 @@ int main(void)
-   DEFINE(SDEI_EVENT_PRIORITY,	offsetof(struct sdei_registered_event, priority));
- #endif
- #ifdef CONFIG_KEXEC_CORE
--  DEFINE(KRELOC_HEAD,		offsetof(struct kern_reloc_arg, head));
-   DEFINE(KRELOC_ENTRY_ADDR,	offsetof(struct kern_reloc_arg, entry_addr));
-   DEFINE(KRELOC_KERN_ARG0,	offsetof(struct kern_reloc_arg, kern_arg0));
-   DEFINE(KRELOC_KERN_ARG1,	offsetof(struct kern_reloc_arg, kern_arg1));
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 16f761fc50c8..b5ff5fdb4777 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -199,7 +199,6 @@ int machine_kexec_post_load(struct kimage *kimage)
- 	kimage->arch.kern_reloc = kern_reloc;
- 	kimage->arch.kern_reloc_arg = __pa(kern_reloc_arg);
+diff --git a/makedumpfile.c b/makedumpfile.c
+index d76a435..b760934 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -85,6 +85,7 @@ mdf_pfn_t pfn_zero;
+ mdf_pfn_t pfn_memhole;
+ mdf_pfn_t pfn_cache;
+ mdf_pfn_t pfn_cache_private;
++mdf_pfn_t pfn_zfs_arc_pages;
+ mdf_pfn_t pfn_user;
+ mdf_pfn_t pfn_free;
+ mdf_pfn_t pfn_hwpoison;
+@@ -282,6 +283,20 @@ is_cache_page(unsigned long flags)
+ 	return FALSE;
+ }
  
--	kern_reloc_arg->head = kimage->head;
- 	kern_reloc_arg->entry_addr = kimage->start;
- 	kern_reloc_arg->el2_vector = el2_vector;
- 	kern_reloc_arg->kern_arg0 = kimage->arch.dtb_mem;
-diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-index 14243a678277..96ff6760bd9c 100644
---- a/arch/arm64/kernel/relocate_kernel.S
-+++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -4,6 +4,8 @@
-  *
-  * Copyright (C) Linaro.
-  * Copyright (C) Huawei Futurewei Technologies.
-+ * Copyright (c) 2019, Microsoft Corporation.
-+ * Pavel Tatashin <patatash@linux.microsoft.com>
-  */
++#define	ZFS_ABD_FILE_CACHE	0x2F5ABDF11ECAC4E
++
++static int
++is_zfs_cache_page(unsigned long flags, unsigned long private)
++{
++	/*
++	 * ZFS cached file data resides in pages with a private tag
++	 */
++	if (isPrivate(flags) && private == ZFS_ABD_FILE_CACHE)
++		return TRUE;
++
++	return FALSE;
++}
++
+ static inline unsigned long
+ calculate_len_buf_out(long page_size)
+ {
+@@ -6048,6 +6063,13 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 			else
+ 				pfn_counter = &pfn_cache;
+ 		}
++		/*
++		 * Exclude ZFS ARC pages
++		 */
++		else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
++		    && is_zfs_cache_page(flags, private)) {
++			pfn_counter = &pfn_zfs_arc_pages;
++		}
+ 		/*
+ 		 * Exclude the data page of the user process.
+ 		 *  - anonymous pages
+@@ -7551,6 +7573,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ 	if (info->flag_cyclic) {
+ 		pfn_zero = pfn_cache = pfn_cache_private = 0;
+ 		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = 0;
++		pfn_zfs_arc_pages = 0;
+ 		pfn_memhole = info->max_mapnr;
+ 	}
  
- #include <linux/kexec.h>
-@@ -14,6 +16,49 @@
- #include <asm/page.h>
- #include <asm/sysreg.h>
+@@ -8833,6 +8856,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+ 		 */
+ 		pfn_zero = pfn_cache = pfn_cache_private = 0;
+ 		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = 0;
++		pfn_zfs_arc_pages = 0;
+ 		pfn_memhole = info->max_mapnr;
  
-+/* Invalidae TLB */
-+.macro tlb_invalidate
-+	dsb	sy
-+	dsb	ish
-+	tlbi	vmalle1
-+	dsb	ish
-+	isb
-+.endm
-+
-+/* Turn-off mmu at level specified by sctlr */
-+.macro turn_off_mmu sctlr, tmp1, tmp2
-+	mrs	\tmp1, \sctlr
-+	ldr	\tmp2, =SCTLR_ELx_FLAGS
-+	bic	\tmp1, \tmp1, \tmp2
-+	pre_disable_mmu_workaround
-+	msr	\sctlr, \tmp1
-+	isb
-+.endm
-+
-+/* Turn-on mmu at level specified by sctlr */
-+.macro turn_on_mmu sctlr, tmp1, tmp2
-+	mrs	\tmp1, \sctlr
-+	ldr	\tmp2, =SCTLR_ELx_FLAGS
-+	orr	\tmp1, \tmp1, \tmp2
-+	msr	\sctlr, \tmp1
-+	ic	iallu
-+	dsb	nsh
-+	isb
-+.endm
-+
-+/*
-+ * Set ttbr0 and ttbr1, called while MMU is disabled, so no need to temporarily
-+ * set zero_page table. Invalidate TLB after new tables are set.
-+ */
-+.macro set_ttbr arg, tmp
-+	ldr	\tmp, [\arg, #KRELOC_TRANS_TTBR0]
-+	msr	ttbr0_el1, \tmp
-+	ldr	\tmp, [\arg, #KRELOC_TRANS_TTBR1]
-+	offset_ttbr1 \tmp
-+	msr	ttbr1_el1, \tmp
-+	isb
-+.endm
-+
- /*
-  * arm64_relocate_new_kernel - Put a 2nd stage image in place and boot it.
-  *
-@@ -24,65 +69,52 @@
-  * symbols arm64_relocate_new_kernel and arm64_relocate_new_kernel_end.  The
-  * machine_kexec() routine will copy arm64_relocate_new_kernel to the kexec
-  * safe memory that has been set up to be preserved during the copy operation.
-+ *
-+ * This function temporarily enables MMU if kernel relocation is needed.
-+ * Also, if we enter this function at EL2 on non-VHE kernel, we temporarily go
-+ * to EL1 to enable MMU, and escalate back to EL2 at the end to do the jump to
-+ * the new kernel. This is determined by presence of el2_vector.
-  */
- ENTRY(arm64_relocate_new_kernel)
--	/* Clear the sctlr_el2 flags. */
--	mrs	x2, CurrentEL
--	cmp	x2, #CurrentEL_EL2
-+	mrs	x1, CurrentEL
-+	cmp	x1, #CurrentEL_EL2
- 	b.ne	1f
--	mrs	x2, sctlr_el2
--	ldr	x1, =SCTLR_ELx_FLAGS
--	bic	x2, x2, x1
--	pre_disable_mmu_workaround
--	msr	sctlr_el2, x2
--	isb
--1:	/* Check if the new image needs relocation. */
--	ldr	x16, [x0, #KRELOC_HEAD]		/* x16 = kimage_head */
--	tbnz	x16, IND_DONE_BIT, .Ldone
--	raw_dcache_line_size x15, x1		/* x15 = dcache line size */
--.Lloop:
--	and	x12, x16, PAGE_MASK		/* x12 = addr */
--	/* Test the entry flags. */
--.Ltest_source:
--	tbz	x16, IND_SOURCE_BIT, .Ltest_indirection
--
--	/* Invalidate dest page to PoC. */
--	mov     x2, x13
--	add     x20, x2, #PAGE_SIZE
--	sub     x1, x15, #1
--	bic     x2, x2, x1
--2:	dc      ivac, x2
--	add     x2, x2, x15
--	cmp     x2, x20
--	b.lo    2b
--	dsb     sy
--
--	copy_page x13, x12, x1, x2, x3, x4, x5, x6, x7, x8
--	b	.Lnext
--.Ltest_indirection:
--	tbz	x16, IND_INDIRECTION_BIT, .Ltest_destination
--	mov	x14, x12			/* ptr = addr */
--	b	.Lnext
--.Ltest_destination:
--	tbz	x16, IND_DESTINATION_BIT, .Lnext
--	mov	x13, x12			/* dest = addr */
--.Lnext:
--	ldr	x16, [x14], #8			/* entry = *ptr++ */
--	tbz	x16, IND_DONE_BIT, .Lloop	/* while (!(entry & DONE)) */
--.Ldone:
--	/* wait for writes from copy_page to finish */
--	dsb	nsh
--	ic	iallu
--	dsb	nsh
--	isb
--
--	/* Start new image. */
--	ldr	x4, [x0, #KRELOC_ENTRY_ADDR]	/* x4 = kimage_start */
-+	turn_off_mmu sctlr_el2, x1, x2		/* Turn off MMU at EL2 */
-+1:	mov	x20, xzr			/* x20 will hold vector value */
-+	ldr	x11, [x0, #KRELOC_COPY_LEN]
-+	cbz	x11, 5f				/* Check if need to relocate */
-+	ldr	x20, [x0, #KRELOC_EL2_VECTOR]
-+	cbz	x20, 2f				/* need to reduce to EL1? */
-+	msr	vbar_el2, x20			/* el2_vector present, means */
-+	adr	x1, 2f				/* we will do copy in el1 but */
-+	msr	elr_el2, x1			/* do final jump from el2 */
-+	eret					/* Reduce to EL1 */
-+2:	set_ttbr x0, x1				/* Set our page tables */
-+	tlb_invalidate
-+	turn_on_mmu sctlr_el1, x1, x2		/* Turn MMU back on */
-+	ldr	x1, [x0, #KRELOC_DST_ADDR];
-+	ldr	x2, [x0, #KRELOC_SRC_ADDR];
-+	mov	x12, x1				/* x12 dst backup */
-+3:	copy_page x1, x2, x3, x4, x5, x6, x7, x8, x9, x10
-+	sub	x11, x11, #PAGE_SIZE
-+	cbnz	x11, 3b				/* page copy loop */
-+	raw_dcache_line_size x2, x3		/* x2 = dcache line size */
-+	sub	x3, x2, #1			/* x3 = dcache_size - 1 */
-+	bic	x12, x12, x3
-+4:	dc	cvau, x12			/* Flush D-cache */
-+	add	x12, x12, x2
-+	cmp	x12, x1				/* Compare to dst + len */
-+	b.ne	4b				/* D-cache flush loop */
-+	turn_off_mmu sctlr_el1, x1, x2		/* Turn off MMU */
-+	tlb_invalidate				/* Invalidate TLB */
-+5:	ldr	x4, [x0, #KRELOC_ENTRY_ADDR]	/* x4 = kimage_start */
- 	ldr	x3, [x0, #KRELOC_KERN_ARG3]
- 	ldr	x2, [x0, #KRELOC_KERN_ARG2]
- 	ldr	x1, [x0, #KRELOC_KERN_ARG1]
- 	ldr	x0, [x0, #KRELOC_KERN_ARG0]	/* x0 = dtb address */
--	br	x4
-+	cbnz	x20, 6f				/* need to escalate to el2? */
-+	br	x4				/* Jump to new world */
-+6:	hvc	#0				/* enters kexec_el1_sync */
- .ltorg
- .Larm64_relocate_new_kernel_end:
- END(arm64_relocate_new_kernel)
+ 		/*
+@@ -9777,7 +9801,8 @@ print_report(void)
+ 	pfn_original = info->max_mapnr - pfn_memhole;
+ 
+ 	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
+-	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline;
++	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline
++	    + pfn_zfs_arc_pages;
+ 	shrinking = (pfn_original - pfn_excluded) * 100;
+ 	shrinking = shrinking / pfn_original;
+ 
+@@ -9788,6 +9813,9 @@ print_report(void)
+ 	REPORT_MSG("    Non-private cache pages : 0x%016llx\n", pfn_cache);
+ 	REPORT_MSG("    Private cache pages     : 0x%016llx\n",
+ 	    pfn_cache_private);
++	if (pfn_zfs_arc_pages != 0)
++		REPORT_MSG("    ZFS ARC file data pages : 0x%016llx\n",
++		    pfn_zfs_arc_pages);
+ 	REPORT_MSG("    User process data pages : 0x%016llx\n", pfn_user);
+ 	REPORT_MSG("    Free pages              : 0x%016llx\n", pfn_free);
+ 	REPORT_MSG("    Hwpoison pages          : 0x%016llx\n", pfn_hwpoison);
+@@ -9819,7 +9847,8 @@ print_mem_usage(void)
+ 	pfn_original = info->max_mapnr - pfn_memhole;
+ 
+ 	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
+-	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline;
++	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline
++	    + pfn_zfs_arc_pages;
+ 	shrinking = (pfn_original - pfn_excluded) * 100;
+ 	shrinking = shrinking / pfn_original;
+ 	total_size = info->page_size * pfn_original;
+@@ -9833,6 +9862,9 @@ print_mem_usage(void)
+ 	    pfn_cache);
+ 	MSG("PRI_CACHE	%-16llu	yes		Cache pages with private flag\n",
+ 	    pfn_cache_private);
++	if (pfn_zfs_arc_pages != 0)
++		MSG("ZFS_CACHE	%-16llu	yes		ZFS ARC data pages\n",
++		    pfn_zfs_arc_pages);
+ 	MSG("USER		%-16llu	yes		User process pages\n", pfn_user);
+ 	MSG("FREE		%-16llu	yes		Free pages\n", pfn_free);
+ 	MSG("KERN_DATA	%-16llu	no		Dumpable kernel data \n",
 -- 
-2.22.0
+2.17.1
 
 
 _______________________________________________
