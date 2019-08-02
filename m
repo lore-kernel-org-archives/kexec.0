@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1htSTn-0007G4-9I
- for kexec@lists.infradead.org; Fri, 02 Aug 2019 08:00:01 +0000
-Date: Fri, 2 Aug 2019 15:59:49 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1htTtT-0000Wn-LY
+ for kexec@lists.infradead.org; Fri, 02 Aug 2019 09:30:37 +0000
+Date: Fri, 2 Aug 2019 11:30:24 +0200
+From: Borislav Petkov <bp@suse.de>
 Subject: Re: [x86/boot] 5b51ae969e: kexec boot failed
-Message-ID: <20190802075949.GA4681@dhcp-128-65.nay.redhat.com>
+Message-ID: <20190802093024.GB30710@zn.tnic>
 References: <97f74c86-54bd-f165-ce33-b53ca48ab850@intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -19,35 +19,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kernel test robot <rong.a.chen@intel.com>
-Cc: x86@kernel.org, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, kexec@lists.infradead.org, Jun'ichi Nomura <j-nomura@ce.jp.nec.com>, Borislav Petkov <bp@suse.de>, lkp@01.org
+Cc: x86@kernel.org, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, lkp@01.org, Chao Fan <fanc.fnst@cn.fujitsu.com>, kexec@lists.infradead.org, Jun'ichi Nomura <j-nomura@ce.jp.nec.com>, Dave Young <dyoung@redhat.com>
 
-Hi,
-
-On 08/02/19 at 03:48pm, kernel test robot wrote:
-> FYI, we noticed the following commit (built with gcc-7):
-> 
-> commit: 5b51ae969e3d8ab0134ee3c98a769ad6d2cc2e24 ("x86/boot: Call get_rsdp_addr() after console_init()")
-> https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git  master
-> 
-> in testcase: boot
-> 
-> on test machine: Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 4G memory
-> 
-> The commit broke kexec boot on physical machines, We have to set "nokaslr" to kernel cmdline to avoid the issue.
-> 
-
-Does moving line of "sanitize_boot_params(boot_params);" after get_rsdp_addr()
-callback work?
-
-Thanks
-Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCBBdWcgMDIsIDIwMTkgYXQgMDM6NDg6NTNQTSArMDgwMCwga2VybmVsIHRlc3Qgcm9i
+b3Qgd3JvdGU6Cj4gRllJLCB3ZSBub3RpY2VkIHRoZSBmb2xsb3dpbmcgY29tbWl0IChidWlsdCB3
+aXRoIGdjYy03KToKPiAKPiBjb21taXQ6IDViNTFhZTk2OWUzZDhhYjAxMzRlZTNjOThhNzY5YWQ2
+ZDJjYzJlMjQgKCJ4ODYvYm9vdDogQ2FsbCBnZXRfcnNkcF9hZGRyKCkgYWZ0ZXIgY29uc29sZV9p
+bml0KCkiKQo+IGh0dHBzOi8va2VybmVsLmdvb2dsZXNvdXJjZS5jb20vcHViL3NjbS9saW51eC9r
+ZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdCAgbWFzdGVyCj4gCj4gaW4gdGVzdGNhc2U6IGJv
+b3QKPiAKPiBvbiB0ZXN0IG1hY2hpbmU6IEludGVsKFIpIENvcmUoVE0pIGkzLTMyMjAgQ1BVIEAg
+My4zMEdIeiB3aXRoIDRHIG1lbW9yeQo+IAo+IFRoZSBjb21taXQgYnJva2Uga2V4ZWMgYm9vdCBv
+biBwaHlzaWNhbCBtYWNoaW5lcywgV2UgaGF2ZSB0byBzZXQgIm5va2FzbHIiIHRvIGtlcm5lbCBj
+bWRsaW5lIHRvIGF2b2lkIHRoZSBpc3N1ZS4KCkhvdyBleGFjdGx5IGRvIHlvdSB0cmlnZ2VyIGl0
+PyBEZXRhaWxzPwoKLS0gClJlZ2FyZHMvR3J1c3MsCiAgICBCb3Jpcy4KClNVU0UgTGludXggR21i
+SCwgR0Y6IEZlbGl4IEltZW5kw7ZyZmZlciwgTWFyeSBIaWdnaW5zLCBTcmkgUmFzaWFoLCBIUkIg
+MjEyODQgKEFHIE7DvHJuYmVyZykKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
