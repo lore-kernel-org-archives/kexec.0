@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
+Received: from mail-wr1-x443.google.com ([2a00:1450:4864:20::443])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hud63-0005tY-2o
- for kexec@lists.infradead.org; Mon, 05 Aug 2019 13:32:20 +0000
-Date: Mon, 5 Aug 2019 15:32:10 +0200
-From: Borislav Petkov <bp@suse.de>
-Subject: Re: [LKP] [x86/boot] 5b51ae969e: kexec boot failed
-Message-ID: <20190805133210.GB18887@zn.tnic>
-References: <97f74c86-54bd-f165-ce33-b53ca48ab850@intel.com>
- <20190802093024.GB30710@zn.tnic>
- <0f817336-2d87-2110-13c0-e0a417d70e90@intel.com>
- <20190805130221.GA18887@zn.tnic>
+ id 1hufKO-0004Va-Sb
+ for kexec@lists.infradead.org; Mon, 05 Aug 2019 15:55:23 +0000
+Received: by mail-wr1-x443.google.com with SMTP id x1so35035454wrr.9
+ for <kexec@lists.infradead.org>; Mon, 05 Aug 2019 08:55:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20190805130221.GA18887@zn.tnic>
+References: <20190805083553.GA27708@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190805083553.GA27708@dhcp-128-65.nay.redhat.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date: Mon, 5 Aug 2019 18:55:03 +0300
+Message-ID: <CAKv+Gu-my6EpLfxBnbMn21be62oHrF6PKFu2rt-4Pqk9wG9SXA@mail.gmail.com>
+Subject: Re: [PATCH] do not clean dummy variable in kexec path
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,27 +20,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Chen, Rong A" <rong.a.chen@intel.com>
-Cc: x86@kernel.org, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, kexec@lists.infradead.org, Jun'ichi Nomura <j-nomura@ce.jp.nec.com>, lkp@01.org
+To: Dave Young <dyoung@redhat.com>
+Cc: Matthew Garrett <matthewgarrett@google.com>, Bhupesh Sharma <bhsharma@redhat.com>, linux-efi <linux-efi@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-T24gTW9uLCBBdWcgMDUsIDIwMTkgYXQgMDM6MDI6MjFQTSArMDIwMCwgQm9yaXNsYXYgUGV0a292
-IHdyb3RlOgo+IE9uIE1vbiwgQXVnIDA1LCAyMDE5IGF0IDA3OjQ5OjU0UE0gKzA4MDAsIENoZW4s
-IFJvbmcgQSB3cm90ZToKPiA+IFdlIHVzZSB0aGUgZm9sbG93aW5nIGNvbW1hbmQgdG8gYm9vdCBh
-IG5ldyBrZXJuZWw6Cj4gPiBrZXhlYyAtLW5vZWZpIC1sIC9vcHQvcm9vdGZzL3RtcC9wa2cvbGlu
-dXgveDg2XzY0LXJoZWwtNy42L2djYy03LzViNTFhZTk2OWUzZDhhYjAxMzRlZTNjOThhNzY5YWQ2
-ZDJjYzJlMjQvdm1saW51ei01LjIuMC1yYzMtMDAwMDQtZzViNTFhZTk2OWUzZDhhCj4gPiAtLWlu
-aXRyZD0vb3B0L3Jvb3Rmcy90bXAvaW5pdHJkLWNvbmNhdGVuYXRlZAo+IAo+IEFuZCB0aGlzICJj
-b25jYXRlbmF0ZWQiIGluaXRyZCwgaG93IGRvIHlvdSBnZW5lcmF0ZSB0aGF0PwoKQW5kIHRoZSAi
-LWwiIHRoaW5nIGlzIGp1c3QgdGhlIGtleGVjIGxvYWQgY29tbWFuZCB0byBsb2FkIHRoZSBzZWNv
-bmQKa2VybmVsLiBJIG5lZWQgeW91IHRvIGdpdmUgbWUgYSBzdGVwLWJ5LXN0ZXAsIGV4YWN0IGNv
-bW1hbmQtYnktY29tbWFuZApsaXN0IG9mIHRoaW5ncyB5b3UgZG8gdG8gdHJpZ2dlci4KCkFsc28s
-IHBscyBzZW5kIG1lIGRtZXNnIGZyb20gdGhlIGZpcnN0IGtlcm5lbC4gUHJpdmF0ZWx5IGlzIGZp
-bmUgdG9vLgoKVGh4LgoKLS0gClJlZ2FyZHMvR3J1c3MsCiAgICBCb3Jpcy4KClNVU0UgTGludXgg
-R21iSCwgR0Y6IEZlbGl4IEltZW5kw7ZyZmZlciwgTWFyeSBIaWdnaW5zLCBTcmkgUmFzaWFoLCBI
-UkIgMjEyODQgKEFHIE7DvHJuYmVyZykKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Mon, 5 Aug 2019 at 11:36, Dave Young <dyoung@redhat.com> wrote:
+>
+> kexec reboot fails randomly in UEFI based kvm guest.  The firmware
+> just reset while calling efi_delete_dummy_variable();  Unfortunately
+> I don't know how to debug the firmware, it is also possible a potential
+> problem on real hardware as well although nobody reproduced it.
+>
+> The intention of efi_delete_dummy_variable is to trigger garbage collection
+> when entering virtual mode.  But SetVirtualAddressMap can only run once
+> for each physical reboot, thus kexec_enter_virtual_mode is not necessarily
+> a good place to clean dummy object.
+>
+
+I would argue that this means it is not a good place to *create* the
+dummy variable, and if we don't create it, we don't have to delete it
+either.
+
+> Drop efi_delete_dummy_variable so that kexec reboot can work.
+>
+
+Creating it and not deleting it is bad, so please try and see if we
+can omit the creation on this code path instead.
+
+
+> Signed-off-by: Dave Young <dyoung@redhat.com>
+> ---
+>  arch/x86/platform/efi/efi.c |    3 ---
+>  1 file changed, 3 deletions(-)
+>
+> --- linux-x86.orig/arch/x86/platform/efi/efi.c
+> +++ linux-x86/arch/x86/platform/efi/efi.c
+> @@ -894,9 +894,6 @@ static void __init kexec_enter_virtual_m
+>
+>         if (efi_enabled(EFI_OLD_MEMMAP) && (__supported_pte_mask & _PAGE_NX))
+>                 runtime_code_page_mkexec();
+> -
+> -       /* clean DUMMY object */
+> -       efi_delete_dummy_variable();
+>  #endif
+>  }
+>
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
