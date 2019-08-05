@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pl1-x643.google.com ([2607:f8b0:4864:20::643])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1huYTJ-0008Dh-5g
- for kexec@lists.infradead.org; Mon, 05 Aug 2019 08:36:02 +0000
-Date: Mon, 5 Aug 2019 16:35:53 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH] do not clean dummy variable in kexec path
-Message-ID: <20190805083553.GA27708@dhcp-128-65.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
+ id 1huYqC-0006E4-0X
+ for kexec@lists.infradead.org; Mon, 05 Aug 2019 08:59:42 +0000
+Received: by mail-pl1-x643.google.com with SMTP id t14so36186171plr.11
+ for <kexec@lists.infradead.org>; Mon, 05 Aug 2019 01:59:38 -0700 (PDT)
+From: Pingfan Liu <kernelfans@gmail.com>
+Subject: [PATCH 0/4] x86/mce: protect nr_cpus from rebooting by broadcast mce
+Date: Mon,  5 Aug 2019 16:58:55 +0800
+Message-Id: <1564995539-29609-1-git-send-email-kernelfans@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,42 +17,98 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-efi@vger.kernel.org, ard.biesheuvel@linaro.org
-Cc: matthewgarrett@google.com, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Andy Lutomirski <luto@kernel.org>, x86@kernel.org
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>, Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, Dave Hansen <dave.hansen@linux.intel.com>, Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Daniel Drake <drake@endlessm.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Masami Hiramatsu <mhiramat@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Qian Cai <cai@lca.pw>, Dave Young <dyoung@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Eric Biederman <ebiederm@xmission.com>
 
-kexec reboot fails randomly in UEFI based kvm guest.  The firmware
-just reset while calling efi_delete_dummy_variable();  Unfortunately
-I don't know how to debug the firmware, it is also possible a potential
-problem on real hardware as well although nobody reproduced it.
+This series include two related groups:
+[1-3/4]: protect nr_cpus from rebooting by broadcast mce
+[4/4]: improve "kexec -l" robustness against broadcast mce
 
-The intention of efi_delete_dummy_variable is to trigger garbage collection
-when entering virtual mode.  But SetVirtualAddressMap can only run once
-for each physical reboot, thus kexec_enter_virtual_mode is not necessarily
-a good place to clean dummy object.
+When I tried to fix [1], Thomas raised concern about the nr_cpus' vulnerability
+to unexpected rebooting by broadcast mce. After analysis, I think only the
+following first case suffers from the rebooting by broadcast mce. [1-3/4] aims
+to fix that issue.
 
-Drop efi_delete_dummy_variable so that kexec reboot can work.
+*** Back ground ***
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
+On x86 it's required to have all logical CPUs set CR4.MCE=1. Otherwise, a
+broadcast MCE observing CR4.MCE=0b on any core will shutdown the machine.
+
+The option 'nosmt' has already complied with the above rule by Thomas's patch.
+For detail, refer to 506a66f3748 (Revert "x86/apic: Ignore secondary threads if
+nosmt=force")
+
+But for nr_cpus option, the exposure to broadcast MCE is a little complicated,
+and can be categorized into three cases.
+
+-1. boot up by BIOS. Since no one set CR4.MCE=1, nr_cpus risks rebooting by
+broadcast MCE.
+
+-2. boot up by "kexec -p nr_cpus=".  Since the 1st kernel has all cpus'
+CR4.MCE=1 set before kexec -p, nr_cpus is free of rebooting by broadcast MCE.
+Furthermore, the crashed kernel's wreckage, including page table and text, is
+not touched by capture kernel. Hence if MCE event happens on capped cpu,
+do_machine_check->__mc_check_crashing_cpu() runs smoothly and returns
+immediately, the capped cpu is still pinned on "halt".
+
+-3. boot up by "kexec -l nr_cpus=". As "kexec -p", it is free of rebooting by
+broadcast MCE. But the 1st kernel's wreckage is discarded and changed.  when
+capped cpus execute do_machine_check(), they may crack the new kernel.  But
+this is not related with broadcast MCE, and need an extra fix.
+
+*** Solution ***
+"nr_cpus" can not follow the same way as "nosmt".  Because nr_cpus limits the
+allocation of percpu area and some other kthread memory, which is critical to
+cpu hotplug framework.  Instead, developing a dedicated SIPI callback
+make_capped_cpu_stable() for capped cpu, which does not lean on percpu area to
+work.
+
+[1]: https://lkml.org/lkml/2019/7/5/3
+
+To: Gleixner <tglx@linutronix.de>
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+To: x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Daniel Drake <drake@endlessm.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org
+
 ---
- arch/x86/platform/efi/efi.c |    3 ---
- 1 file changed, 3 deletions(-)
+Pingfan Liu (4):
+  x86/apic: correct the ENO in generic_processor_info()
+  x86/apic: record capped cpu in generic_processor_info()
+  x86/smp: send capped cpus to a stable state when smp_init()
+  x86/smp: disallow MCE handler on rebooting AP
 
---- linux-x86.orig/arch/x86/platform/efi/efi.c
-+++ linux-x86/arch/x86/platform/efi/efi.c
-@@ -894,9 +894,6 @@ static void __init kexec_enter_virtual_m
- 
- 	if (efi_enabled(EFI_OLD_MEMMAP) && (__supported_pte_mask & _PAGE_NX))
- 		runtime_code_page_mkexec();
--
--	/* clean DUMMY object */
--	efi_delete_dummy_variable();
- #endif
- }
- 
+ arch/x86/include/asm/apic.h  |  1 +
+ arch/x86/include/asm/smp.h   |  3 ++
+ arch/x86/kernel/apic/apic.c  | 23 ++++++++----
+ arch/x86/kernel/cpu/common.c |  7 ++++
+ arch/x86/kernel/smp.c        |  8 +++++
+ arch/x86/kernel/smpboot.c    | 83 ++++++++++++++++++++++++++++++++++++++++++++
+ kernel/smp.c                 |  6 ++++
+ 7 files changed, 124 insertions(+), 7 deletions(-)
+
+-- 
+2.7.5
+
 
 _______________________________________________
 kexec mailing list
