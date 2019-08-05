@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-x644.google.com ([2607:f8b0:4864:20::644])
+Received: from mail-pf1-x441.google.com ([2607:f8b0:4864:20::441])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1huYqI-0006KH-KM
- for kexec@lists.infradead.org; Mon, 05 Aug 2019 08:59:48 +0000
-Received: by mail-pl1-x644.google.com with SMTP id t14so36186284plr.11
- for <kexec@lists.infradead.org>; Mon, 05 Aug 2019 01:59:46 -0700 (PDT)
+ id 1huYqQ-0006Rc-4m
+ for kexec@lists.infradead.org; Mon, 05 Aug 2019 08:59:55 +0000
+Received: by mail-pf1-x441.google.com with SMTP id p184so39296742pfp.7
+ for <kexec@lists.infradead.org>; Mon, 05 Aug 2019 01:59:53 -0700 (PDT)
 From: Pingfan Liu <kernelfans@gmail.com>
-Subject: [PATCH 1/4] x86/apic: correct the ENO in generic_processor_info()
-Date: Mon,  5 Aug 2019 16:58:56 +0800
-Message-Id: <1564995539-29609-2-git-send-email-kernelfans@gmail.com>
+Subject: [PATCH 2/4] x86/apic: record capped cpu in generic_processor_info()
+Date: Mon,  5 Aug 2019 16:58:57 +0800
+Message-Id: <1564995539-29609-3-git-send-email-kernelfans@gmail.com>
 In-Reply-To: <1564995539-29609-1-git-send-email-kernelfans@gmail.com>
 References: <1564995539-29609-1-git-send-email-kernelfans@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -27,8 +27,11 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Thomas Gleixner <tglx@linutronix.de>, Andy Lutomirski <luto@kernel.org>, x86@kernel.org
 Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>, Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, Dave Hansen <dave.hansen@linux.intel.com>, Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Daniel Drake <drake@endlessm.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Masami Hiramatsu <mhiramat@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Qian Cai <cai@lca.pw>, Dave Young <dyoung@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Eric Biederman <ebiederm@xmission.com>
 
-When capped by nr_cpu_ids, the current code return -EINVAL or -ENODEV. It
-is better to return -EINVAL for both cases.
+No matter the cpu is capped by nr_cpus option, recording the mapping
+between all cpus' id and apic id
+
+Later this mapping will be used by BSP to sent SIPI to bring capped cpu to
+stable state
 
 Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
 To: Thomas Gleixner <tglx@linutronix.de>
@@ -51,22 +54,111 @@ Cc: Dave Young <dyoung@redhat.com>
 Cc: Baoquan He <bhe@redhat.com>
 Cc: kexec@lists.infradead.org
 ---
- arch/x86/kernel/apic/apic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/smp.h   |  2 ++
+ arch/x86/kernel/apic/apic.c  | 21 +++++++++++++++------
+ arch/x86/kernel/cpu/common.c |  4 ++++
+ 3 files changed, 21 insertions(+), 6 deletions(-)
 
+diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
+index e1356a3..5f63399 100644
+--- a/arch/x86/include/asm/smp.h
++++ b/arch/x86/include/asm/smp.h
+@@ -196,5 +196,7 @@ extern void nmi_selftest(void);
+ #define nmi_selftest() do { } while (0)
+ #endif
+ 
++extern struct cpumask *cpu_capped_mask;
++
+ #endif /* __ASSEMBLY__ */
+ #endif /* _ASM_X86_SMP_H */
 diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index f529136..f4f603a 100644
+index f4f603a..6a57bad3 100644
 --- a/arch/x86/kernel/apic/apic.c
 +++ b/arch/x86/kernel/apic/apic.c
-@@ -2346,7 +2346,7 @@ int generic_processor_info(int apicid, int version)
+@@ -2296,9 +2296,10 @@ static int allocate_logical_cpuid(int apicid)
+ 
+ int generic_processor_info(int apicid, int version)
+ {
+-	int cpu, max = nr_cpu_ids;
++	int thiscpu, cpu, max = nr_cpu_ids;
+ 	bool boot_cpu_detected = physid_isset(boot_cpu_physical_apicid,
+ 				phys_cpu_present_map);
++	bool capped = false;
+ 
+ 	/*
+ 	 * boot_cpu_physical_apicid is designed to have the apicid
+@@ -2322,7 +2323,7 @@ int generic_processor_info(int apicid, int version)
+ 	if (disabled_cpu_apicid != BAD_APICID &&
+ 	    disabled_cpu_apicid != read_apic_id() &&
+ 	    disabled_cpu_apicid == apicid) {
+-		int thiscpu = num_processors + disabled_cpus;
++		thiscpu = num_processors + disabled_cpus;
+ 
+ 		pr_warning("APIC: Disabling requested cpu."
+ 			   " Processor %d/0x%x ignored.\n",
+@@ -2338,7 +2339,7 @@ int generic_processor_info(int apicid, int version)
+ 	 */
+ 	if (!boot_cpu_detected && num_processors >= nr_cpu_ids - 1 &&
+ 	    apicid != boot_cpu_physical_apicid) {
+-		int thiscpu = max + disabled_cpus - 1;
++		thiscpu = max + disabled_cpus - 1;
+ 
+ 		pr_warning(
+ 			"APIC: NR_CPUS/possible_cpus limit of %i almost"
+@@ -2346,20 +2347,28 @@ int generic_processor_info(int apicid, int version)
  			"  Processor %d/0x%x ignored.\n", max, thiscpu, apicid);
  
  		disabled_cpus++;
--		return -ENODEV;
-+		return -EINVAL;
+-		return -EINVAL;
++		capped = true;
  	}
  
  	if (num_processors >= nr_cpu_ids) {
+-		int thiscpu = max + disabled_cpus;
++		thiscpu = max + disabled_cpus;
+ 
+ 		pr_warning("APIC: NR_CPUS/possible_cpus limit of %i "
+ 			   "reached. Processor %d/0x%x ignored.\n",
+ 			   max, thiscpu, apicid);
+ 
+ 		disabled_cpus++;
+-		return -EINVAL;
++		capped = true;
+ 	}
+ 
++	if (capped) {
++		/* record the mapping between capped cpu and apicid */
++		if (thiscpu < NR_CPUS && cpu_capped_mask != NULL) {
++			cpuid_to_apicid[thiscpu] = apicid;
++			cpumask_set_cpu(thiscpu, cpu_capped_mask);
++		}
++		return -EINVAL;
++	}
+ 	if (apicid == boot_cpu_physical_apicid) {
+ 		/*
+ 		 * x86_bios_cpu_apicid is required to have processors listed
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 1147217..4d87df5 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -66,6 +66,9 @@ u32 elf_hwcap2 __read_mostly;
+ cpumask_var_t cpu_initialized_mask;
+ cpumask_var_t cpu_callout_mask;
+ cpumask_var_t cpu_callin_mask;
++/* size of NR_CPUS is required. */
++struct cpumask __cpu_capped_mask __initdata;
++struct cpumask *cpu_capped_mask;
+ 
+ /* representing cpus for which sibling maps can be computed */
+ cpumask_var_t cpu_sibling_setup_mask;
+@@ -84,6 +87,7 @@ void __init setup_cpu_local_masks(void)
+ 	alloc_bootmem_cpumask_var(&cpu_callin_mask);
+ 	alloc_bootmem_cpumask_var(&cpu_callout_mask);
+ 	alloc_bootmem_cpumask_var(&cpu_sibling_setup_mask);
++	cpu_capped_mask = &__cpu_capped_mask;
+ }
+ 
+ static void default_init(struct cpuinfo_x86 *c)
 -- 
 2.7.5
 
