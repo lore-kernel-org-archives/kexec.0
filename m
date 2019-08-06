@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1huv6P-0001XX-Ka
- for kexec@lists.infradead.org; Tue, 06 Aug 2019 08:45:55 +0000
-Date: Tue, 6 Aug 2019 16:45:43 +0800
+ id 1huvGV-0006ec-DZ
+ for kexec@lists.infradead.org; Tue, 06 Aug 2019 08:56:20 +0000
+Date: Tue, 6 Aug 2019 16:56:11 +0800
 From: Dave Young <dyoung@redhat.com>
 Subject: Re: [LKP] [x86/boot] 5b51ae969e: kexec boot failed
-Message-ID: <20190806084543.GA2164@dhcp-128-65.nay.redhat.com>
+Message-ID: <20190806085611.GA2671@dhcp-128-65.nay.redhat.com>
 References: <97f74c86-54bd-f165-ce33-b53ca48ab850@intel.com>
  <20190802093024.GB30710@zn.tnic>
  <0f817336-2d87-2110-13c0-e0a417d70e90@intel.com>
+ <20190805130221.GA18887@zn.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <0f817336-2d87-2110-13c0-e0a417d70e90@intel.com>
+In-Reply-To: <20190805130221.GA18887@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,59 +26,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Chen, Rong A" <rong.a.chen@intel.com>
-Cc: x86@kernel.org, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, kexec@lists.infradead.org, Jun'ichi Nomura <j-nomura@ce.jp.nec.com>, Borislav Petkov <bp@suse.de>, lkp@01.org
+To: Borislav Petkov <bp@suse.de>
+Cc: x86@kernel.org, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, "Chen, Rong A" <rong.a.chen@intel.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, kexec@lists.infradead.org, Jun'ichi Nomura <j-nomura@ce.jp.nec.com>, lkp@01.org
 
-On 08/05/19 at 07:49pm, Chen, Rong A wrote:
-> Hi,
+On 08/05/19 at 03:02pm, Borislav Petkov wrote:
+> On Mon, Aug 05, 2019 at 07:49:54PM +0800, Chen, Rong A wrote:
+> > We use the following command to boot a new kernel:
+> > kexec --noefi -l /opt/rootfs/tmp/pkg/linux/x86_64-rhel-7.6/gcc-7/5b51ae969e3d8ab0134ee3c98a769ad6d2cc2e24/vmlinuz-5.2.0-rc3-00004-g5b51ae969e3d8a
+> > --initrd=/opt/rootfs/tmp/initrd-concatenated
 > 
-> On 8/2/2019 5:30 PM, Borislav Petkov wrote:
-> > On Fri, Aug 02, 2019 at 03:48:53PM +0800, kernel test robot wrote:
-> > > FYI, we noticed the following commit (built with gcc-7):
-> > > 
-> > > commit: 5b51ae969e3d8ab0134ee3c98a769ad6d2cc2e24 ("x86/boot: Call get_rsdp_addr() after console_init()")
-> > > https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git  master
-> > > 
-> > > in testcase: boot
-> > > 
-> > > on test machine: Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 4G memory
-> > > 
-> > > The commit broke kexec boot on physical machines, We have to set "nokaslr" to kernel cmdline to avoid the issue.
-> > How exactly do you trigger it? Details?
-> > 
+> And this "concatenated" initrd, how do you generate that?
 > 
-> We use the following command to boot a new kernel:
-> kexec --noefi -l /opt/rootfs/tmp/pkg/linux/x86_64-rhel-7.6/gcc-7/5b51ae969e3d8ab0134ee3c98a769ad6d2cc2e24/vmlinuz-5.2.0-rc3-00004-g5b51ae969e3d8a
-> --initrd=/opt/rootfs/tmp/initrd-concatenated
+> FWIW, trying this in a vm doesn't seem to work because of EFI even though
+> --noefi is supplied on the cmdline:
 > 
+> $ kexec --noefi -l /mnt/tmp/bzImage
+> Unknown type (Reserved) while parsing /sys/firmware/memmap/5/type. Please report this as bug. Using RANGE_RESERVED now.
+> Unknown type (Reserved) while parsing /sys/firmware/memmap/1/type. Please report this as bug. Using RANGE_RESERVED now.
+> Unknown type (Reserved) while parsing /sys/firmware/memmap/6/type. Please report this as bug. Using RANGE_RESERVED now.
+> Unknown type (Reserved) while parsing /sys/firmware/memmap/4/type. Please report this as bug. Using RANGE_RESERVED now.
+> Unknown type (Reserved) while parsing /sys/firmware/memmap/2/type. Please report this as bug. Using RANGE_RESERVED now.
 
---noefi is a corner case as kexec now supports efi, it is expected not
-work with old kexec-tools in case you do not use acpi_rsdp= cmdline
-explicitly.
- 
-I suspect it is still the rsdp getting failed instead of the moving
-chunk after console_init.
- 
-Can you do more testing?
-  
-1.  test latest kexec-tools
-git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
- 
-2. still use your old kexec-tools:
-  a. test without --noefi
-  b. test with --noefi but with some appending acpi_rsdp= cmdline, for
-example (enable serial to capture console log):
-kexec --noefi -l .../vmlinuz-... --reuse-cmdline --append
-"acpi_rsdp=0xaabbccdd earlyprintk=serial"
- 
-Note: get the acpi pointer by:
-cat /sys/firmware/efi/systab
-for example on my laptop the acpi cmdline should be acpi_rsdp=0x7b5fe014:
-[root@dhcp-*-* dyoung]# cat /sys/firmware/efi/systab
-ACPI20=0x7b5fe014
-ACPI=0x7b5fe000
-SMBIOS3=0x7a671000
-SMBIOS=0x7a674000
+These warning messages should have been fixed in latest kexec-tools
+since 2017.  e820 (/proc/iomem) previously used "reserved", later
+changed to "Reserved" thus kexec-tools can not recognize.
+
+I would suggest you also upgrade to latest kexec-tools, but this should
+be not harmful since it is still using those ranges as reserved..
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
