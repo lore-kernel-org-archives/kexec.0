@@ -1,16 +1,17 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hv2nP-0000Y0-V9
- for kexec@lists.infradead.org; Tue, 06 Aug 2019 16:58:49 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [RFC PATCH] makedumpfile: exclude ZFS file cache pages
-Date: Tue, 6 Aug 2019 16:57:51 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC0358BF76@BPXM09GP.gisp.nec.co.jp>
-References: <20190801212617.9698-1-don.brady@delphix.com>
-In-Reply-To: <20190801212617.9698-1-don.brady@delphix.com>
-Content-Language: en-US
+ id 1hvCC6-0002uj-Eh
+ for kexec@lists.infradead.org; Wed, 07 Aug 2019 03:00:56 +0000
+Date: Wed, 7 Aug 2019 11:00:41 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 0/4] x86/mce: protect nr_cpus from rebooting by broadcast
+ mce
+Message-ID: <20190807025843.GA4776@dhcp-128-65.nay.redhat.com>
+References: <1564995539-29609-1-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1564995539-29609-1-git-send-email-kernelfans@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,162 +23,115 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: =?utf-8?B?RG9uIEJyYWR5wqA=?= <don.brady@delphix.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: Pingfan Liu <kernelfans@gmail.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, Baoquan He <bhe@redhat.com>, tony.luck@intel.com, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, Jacob Pan <jacob.jun.pan@linux.intel.com>, x86@kernel.org, Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org, Daniel Drake <drake@endlessm.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Masami Hiramatsu <mhiramat@kernel.org>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>, Xunlei Pang <xlpang@linux.alibaba.com>, Vlastimil Babka <vbabka@suse.cz>, Eric Biederman <ebiederm@xmission.com>
 
-Hi Don,
-
-> -----Original Message-----
-> From: Don Brady <don.brady@delphix.com>
+Add Tony and Xunlei in cc.
+On 08/05/19 at 04:58pm, Pingfan Liu wrote:
+> This series include two related groups:
+> [1-3/4]: protect nr_cpus from rebooting by broadcast mce
+> [4/4]: improve "kexec -l" robustness against broadcast mce
 > 
-> ZFS caches pages for file data in its Adaptive Replacement Cache (ARC).
-> This cache is separate from the VFS page cache.  The amount of data
-> cached can be significant and it would be ideal to exclude it from the
-> crashdump file.  ZFS can tag these pages so they are easily identifiable
-> from within makedumpfile.
-> 
-> ref https://github.com/zfsonlinux/zfs/pull/8899/files
-> 
-> Below is a suggested patch that can work in tandem with the above ZFS
-> changes to exclude the ZFS ARC file data pages from a dump file.
+> When I tried to fix [1], Thomas raised concern about the nr_cpus' vulnerability
+> to unexpected rebooting by broadcast mce. After analysis, I think only the
+> following first case suffers from the rebooting by broadcast mce. [1-3/4] aims
+> to fix that issue.
 
-Thank you for the patch.  The idea looks simple and good to me.
+I did not understand and read the MCE details, but we previously had a
+MCE problem, Xunlei fixed in below commit:
+commit 5bc329503e8191c91c4c40836f062ef771d8ba83
+Author: Xunlei Pang <xlpang@redhat.com>
+Date:   Mon Mar 13 10:50:19 2017 +0100
 
-From makedumpfile's viewpoint, it would be better to be separated from
-the dump level (DL_EXCLUDE_CACHE_PRI) because there may be a case that
-we want to exclude the ZFS ARC pages only, it can exclude unexpected pages
-by accident, and a similar request to exclude private pages that have
-another tag value can happen.
+    x86/mce: Handle broadcasted MCE gracefully with kexec
 
-So what about adding a new option to specify a tag value and exclude
-the pages that have it?  For example:
+I wonder if this is same issue or not. Also the old discussion is in
+below thread:
+https://lore.kernel.org/patchwork/patch/753530/
 
-  # makedumpfile -l -d 1 --private-page-filter 0x2F5ABDF11ECAC4E
-
-For simplicity, it would be enough to accept only a single value, not
-multiple values/times for now.
-
-Thanks,
-Kazu
+Tony raised similar questions, but I'm not sure if it is still a problem
+or it has been fixed.
 
 > 
-> Signed-off-by: Don Brady <don.brady@delphix.com>
+> *** Back ground ***
+> 
+> On x86 it's required to have all logical CPUs set CR4.MCE=1. Otherwise, a
+> broadcast MCE observing CR4.MCE=0b on any core will shutdown the machine.
+> 
+> The option 'nosmt' has already complied with the above rule by Thomas's patch.
+> For detail, refer to 506a66f3748 (Revert "x86/apic: Ignore secondary threads if
+> nosmt=force")
+> 
+> But for nr_cpus option, the exposure to broadcast MCE is a little complicated,
+> and can be categorized into three cases.
+> 
+> -1. boot up by BIOS. Since no one set CR4.MCE=1, nr_cpus risks rebooting by
+> broadcast MCE.
+> 
+> -2. boot up by "kexec -p nr_cpus=".  Since the 1st kernel has all cpus'
+> CR4.MCE=1 set before kexec -p, nr_cpus is free of rebooting by broadcast MCE.
+> Furthermore, the crashed kernel's wreckage, including page table and text, is
+> not touched by capture kernel. Hence if MCE event happens on capped cpu,
+> do_machine_check->__mc_check_crashing_cpu() runs smoothly and returns
+> immediately, the capped cpu is still pinned on "halt".
+> 
+> -3. boot up by "kexec -l nr_cpus=". As "kexec -p", it is free of rebooting by
+> broadcast MCE. But the 1st kernel's wreckage is discarded and changed.  when
+> capped cpus execute do_machine_check(), they may crack the new kernel.  But
+> this is not related with broadcast MCE, and need an extra fix.
+> 
+> *** Solution ***
+> "nr_cpus" can not follow the same way as "nosmt".  Because nr_cpus limits the
+> allocation of percpu area and some other kthread memory, which is critical to
+> cpu hotplug framework.  Instead, developing a dedicated SIPI callback
+> make_capped_cpu_stable() for capped cpu, which does not lean on percpu area to
+> work.
+> 
+> [1]: https://lkml.org/lkml/2019/7/5/3
+> 
+> To: Gleixner <tglx@linutronix.de>
+> To: Andy Lutomirski <luto@kernel.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> To: x86@kernel.org
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Daniel Drake <drake@endlessm.com>
+> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: kexec@lists.infradead.org
+> 
 > ---
->  makedumpfile.c | 36 ++++++++++++++++++++++++++++++++++--
->  1 file changed, 34 insertions(+), 2 deletions(-)
+> Pingfan Liu (4):
+>   x86/apic: correct the ENO in generic_processor_info()
+>   x86/apic: record capped cpu in generic_processor_info()
+>   x86/smp: send capped cpus to a stable state when smp_init()
+>   x86/smp: disallow MCE handler on rebooting AP
 > 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index d76a435..b760934 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -85,6 +85,7 @@ mdf_pfn_t pfn_zero;
->  mdf_pfn_t pfn_memhole;
->  mdf_pfn_t pfn_cache;
->  mdf_pfn_t pfn_cache_private;
-> +mdf_pfn_t pfn_zfs_arc_pages;
->  mdf_pfn_t pfn_user;
->  mdf_pfn_t pfn_free;
->  mdf_pfn_t pfn_hwpoison;
-> @@ -282,6 +283,20 @@ is_cache_page(unsigned long flags)
->  	return FALSE;
->  }
+>  arch/x86/include/asm/apic.h  |  1 +
+>  arch/x86/include/asm/smp.h   |  3 ++
+>  arch/x86/kernel/apic/apic.c  | 23 ++++++++----
+>  arch/x86/kernel/cpu/common.c |  7 ++++
+>  arch/x86/kernel/smp.c        |  8 +++++
+>  arch/x86/kernel/smpboot.c    | 83 ++++++++++++++++++++++++++++++++++++++++++++
+>  kernel/smp.c                 |  6 ++++
+>  7 files changed, 124 insertions(+), 7 deletions(-)
 > 
-> +#define	ZFS_ABD_FILE_CACHE	0x2F5ABDF11ECAC4E
-> +
-> +static int
-> +is_zfs_cache_page(unsigned long flags, unsigned long private)
-> +{
-> +	/*
-> +	 * ZFS cached file data resides in pages with a private tag
-> +	 */
-> +	if (isPrivate(flags) && private == ZFS_ABD_FILE_CACHE)
-> +		return TRUE;
-> +
-> +	return FALSE;
-> +}
-> +
->  static inline unsigned long
->  calculate_len_buf_out(long page_size)
->  {
-> @@ -6048,6 +6063,13 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->  			else
->  				pfn_counter = &pfn_cache;
->  		}
-> +		/*
-> +		 * Exclude ZFS ARC pages
-> +		 */
-> +		else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
-> +		    && is_zfs_cache_page(flags, private)) {
-> +			pfn_counter = &pfn_zfs_arc_pages;
-> +		}
->  		/*
->  		 * Exclude the data page of the user process.
->  		 *  - anonymous pages
-> @@ -7551,6 +7573,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
->  	if (info->flag_cyclic) {
->  		pfn_zero = pfn_cache = pfn_cache_private = 0;
->  		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = 0;
-> +		pfn_zfs_arc_pages = 0;
->  		pfn_memhole = info->max_mapnr;
->  	}
+> -- 
+> 2.7.5
 > 
-> @@ -8833,6 +8856,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
->  		 */
->  		pfn_zero = pfn_cache = pfn_cache_private = 0;
->  		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = 0;
-> +		pfn_zfs_arc_pages = 0;
->  		pfn_memhole = info->max_mapnr;
-> 
->  		/*
-> @@ -9777,7 +9801,8 @@ print_report(void)
->  	pfn_original = info->max_mapnr - pfn_memhole;
-> 
->  	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
-> -	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline;
-> +	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline
-> +	    + pfn_zfs_arc_pages;
->  	shrinking = (pfn_original - pfn_excluded) * 100;
->  	shrinking = shrinking / pfn_original;
-> 
-> @@ -9788,6 +9813,9 @@ print_report(void)
->  	REPORT_MSG("    Non-private cache pages : 0x%016llx\n", pfn_cache);
->  	REPORT_MSG("    Private cache pages     : 0x%016llx\n",
->  	    pfn_cache_private);
-> +	if (pfn_zfs_arc_pages != 0)
-> +		REPORT_MSG("    ZFS ARC file data pages : 0x%016llx\n",
-> +		    pfn_zfs_arc_pages);
->  	REPORT_MSG("    User process data pages : 0x%016llx\n", pfn_user);
->  	REPORT_MSG("    Free pages              : 0x%016llx\n", pfn_free);
->  	REPORT_MSG("    Hwpoison pages          : 0x%016llx\n", pfn_hwpoison);
-> @@ -9819,7 +9847,8 @@ print_mem_usage(void)
->  	pfn_original = info->max_mapnr - pfn_memhole;
-> 
->  	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
-> -	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline;
-> +	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline
-> +	    + pfn_zfs_arc_pages;
->  	shrinking = (pfn_original - pfn_excluded) * 100;
->  	shrinking = shrinking / pfn_original;
->  	total_size = info->page_size * pfn_original;
-> @@ -9833,6 +9862,9 @@ print_mem_usage(void)
->  	    pfn_cache);
->  	MSG("PRI_CACHE	%-16llu	yes		Cache pages with private flag\n",
->  	    pfn_cache_private);
-> +	if (pfn_zfs_arc_pages != 0)
-> +		MSG("ZFS_CACHE	%-16llu	yes		ZFS ARC data pages\n",
-> +		    pfn_zfs_arc_pages);
->  	MSG("USER		%-16llu	yes		User process pages\n", pfn_user);
->  	MSG("FREE		%-16llu	yes		Free pages\n", pfn_free);
->  	MSG("KERN_DATA	%-16llu	no		Dumpable kernel data \n",
-> --
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
