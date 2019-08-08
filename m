@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga05.intel.com ([192.55.52.43])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hvW8S-0003ir-EX
- for kexec@lists.infradead.org; Thu, 08 Aug 2019 00:18:29 +0000
-Date: Thu, 8 Aug 2019 08:17:43 +0800
+ id 1hvX7S-0004KY-Ne
+ for kexec@lists.infradead.org; Thu, 08 Aug 2019 01:21:32 +0000
+Date: Thu, 8 Aug 2019 09:20:54 +0800
 From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 2/4] x86/apic: record capped cpu in
- generic_processor_info()
-Message-ID: <201908080844.z7kDOy5O%lkp@intel.com>
-References: <1564995539-29609-3-git-send-email-kernelfans@gmail.com>
+Subject: Re: [PATCH 3/4] x86/smp: send capped cpus to a stable state when
+ smp_init()
+Message-ID: <201908080938.Rjv1ILYn%lkp@intel.com>
+References: <1564995539-29609-4-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1564995539-29609-3-git-send-email-kernelfans@gmail.com>
+In-Reply-To: <1564995539-29609-4-git-send-email-kernelfans@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -48,13 +48,14 @@ Reported-by: kbuild test robot <lkp@intel.com>
 
 sparse warnings: (new ones prefixed by >>)
 
->> arch/x86/kernel/cpu/common.c:70:16: sparse: sparse: symbol '__cpu_capped_mask' was not declared. Should it be static?
-   arch/x86/kernel/cpu/common.c:135:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
-   arch/x86/kernel/cpu/common.c:136:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
-   arch/x86/kernel/cpu/common.c:137:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:70:16: sparse: sparse: symbol '__cpu_capped_mask' was not declared. Should it be static?
+>> arch/x86/kernel/cpu/common.c:72:16: sparse: sparse: symbol '__cpu_capped_done_mask' was not declared. Should it be static?
    arch/x86/kernel/cpu/common.c:138:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
-   arch/x86/kernel/cpu/common.c:165:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
-   arch/x86/kernel/cpu/common.c:166:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:139:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:140:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:141:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:168:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:169:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
 
 Please review and possibly fold the followup patch.
 
