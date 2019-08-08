@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-ed1-x542.google.com ([2a00:1450:4864:20::542])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hvdAe-0000wP-01
- for kexec@lists.infradead.org; Thu, 08 Aug 2019 07:49:13 +0000
-Date: Thu, 8 Aug 2019 15:49:04 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] do not clean dummy variable in kexec path
-Message-ID: <20190808074904.GA5300@dhcp-128-65.nay.redhat.com>
-References: <20190805083553.GA27708@dhcp-128-65.nay.redhat.com>
- <CAKv+Gu-my6EpLfxBnbMn21be62oHrF6PKFu2rt-4Pqk9wG9SXA@mail.gmail.com>
+ id 1hvnOr-0005hY-GL
+ for kexec@lists.infradead.org; Thu, 08 Aug 2019 18:44:35 +0000
+Received: by mail-ed1-x542.google.com with SMTP id k21so91942733edq.3
+ for <kexec@lists.infradead.org>; Thu, 08 Aug 2019 11:44:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu-my6EpLfxBnbMn21be62oHrF6PKFu2rt-4Pqk9wG9SXA@mail.gmail.com>
+References: <20190801152439.11363-1-pasha.tatashin@soleen.com>
+In-Reply-To: <20190801152439.11363-1-pasha.tatashin@soleen.com>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Date: Thu, 8 Aug 2019 14:44:20 -0400
+Message-ID: <CA+CK2bADiBMEx9cJuXT5fQkBYFZAtxUtc7ZzjrNfEjijPZkPtw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/8] arm64: MMU enabled kexec relocation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,84 +24,97 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Matthew Garrett <matthewgarrett@google.com>, Bhupesh Sharma <bhsharma@redhat.com>, linux-efi <linux-efi@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Pavel Tatashin <pasha.tatashin@soleen.com>, James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Bhupesh Sharma <bhsharma@redhat.com>, linux-mm <linux-mm@kvack.org>
 
-On 08/05/19 at 06:55pm, Ard Biesheuvel wrote:
-> On Mon, 5 Aug 2019 at 11:36, Dave Young <dyoung@redhat.com> wrote:
-> >
-> > kexec reboot fails randomly in UEFI based kvm guest.  The firmware
-> > just reset while calling efi_delete_dummy_variable();  Unfortunately
-> > I don't know how to debug the firmware, it is also possible a potential
-> > problem on real hardware as well although nobody reproduced it.
-> >
-> > The intention of efi_delete_dummy_variable is to trigger garbage collection
-> > when entering virtual mode.  But SetVirtualAddressMap can only run once
-> > for each physical reboot, thus kexec_enter_virtual_mode is not necessarily
-> > a good place to clean dummy object.
-> >
-> 
-> I would argue that this means it is not a good place to *create* the
-> dummy variable, and if we don't create it, we don't have to delete it
-> either.
-> 
-> > Drop efi_delete_dummy_variable so that kexec reboot can work.
-> >
-> 
-> Creating it and not deleting it is bad, so please try and see if we
-> can omit the creation on this code path instead.
-> 
+Just a friendly reminder, please send your comments on this series.
+It's been a week since I sent out these patches, and no feedback yet.
+Also, I'd appreciate if anyone could test this series on vhe hardware
+with vhe kernel, it does not look like QEMU can emulate it yet
 
-Check the code for the dummy var, it is created only in below chunk:
-arch/x86/platform/efi/quirks.c:
-efi_query_variable_store():
-[snip]
-	/*
-	 * We account for that by refusing the write if permitting it would
-	 * reduce the available space to under 5KB. This figure was provided by
-	 * Samsung, so should be safe.
-	 */
-	if ((remaining_size - size < EFI_MIN_RESERVE) &&
-		!efi_no_storage_paranoia) {
+Thank you,
+Pasha
 
-		/*
-		 * Triggering garbage collection may require that the firmware
-		 * generate a real EFI_OUT_OF_RESOURCES error. We can force
-		 * that by attempting to use more space than is available.
-		 */
-		unsigned long dummy_size = remaining_size + 1024;
-		void *dummy = kzalloc(dummy_size, GFP_KERNEL);
-
-		if (!dummy)
-			return EFI_OUT_OF_RESOURCES;
-
-		status = efi.set_variable((efi_char16_t *)efi_dummy_name,
-					  &EFI_DUMMY_GUID,
-					  EFI_VARIABLE_NON_VOLATILE |
-					  EFI_VARIABLE_BOOTSERVICE_ACCESS |
-					  EFI_VARIABLE_RUNTIME_ACCESS,
-					  dummy_size, dummy);
-
-		if (status == EFI_SUCCESS) {
-			/*
-			 * This should have failed, so if it didn't make sure
-			 * that we delete it...
-			 */
-			efi_delete_dummy_variable();
-		}
-
-[snip]
-
-So the dummy var only be created when the if condition matched, also
-once creating succeeded it is deleted.  The deleting while entering
-virtual mode is always deleting a non exist efi var.  Please correct me
-if I miss something. 
-
-If above is true, then at least in the kexec path can be dropped because
-we have a real bug which resets machine.
-
-Thanks
-Dave
+On Thu, Aug 1, 2019 at 11:24 AM Pavel Tatashin
+<pasha.tatashin@soleen.com> wrote:
+>
+> Enable MMU during kexec relocation in order to improve reboot performance.
+>
+> If kexec functionality is used for a fast system update, with a minimal
+> downtime, the relocation of kernel + initramfs takes a significant portion
+> of reboot.
+>
+> The reason for slow relocation is because it is done without MMU, and thus
+> not benefiting from D-Cache.
+>
+> Performance data
+> ----------------
+> For this experiment, the size of kernel plus initramfs is small, only 25M.
+> If initramfs was larger, than the improvements would be greater, as time
+> spent in relocation is proportional to the size of relocation.
+>
+> Previously:
+> kernel shutdown 0.022131328s
+> relocation      0.440510736s
+> kernel startup  0.294706768s
+>
+> Relocation was taking: 58.2% of reboot time
+>
+> Now:
+> kernel shutdown 0.032066576s
+> relocation      0.022158152s
+> kernel startup  0.296055880s
+>
+> Now: Relocation takes 6.3% of reboot time
+>
+> Total reboot is x2.16 times faster.
+>
+> Previous approaches and discussions
+> -----------------------------------
+> https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com
+> reserve space for kexec to avoid relocation, involves changes to generic code
+> to optimize a problem that exists on arm64 only:
+>
+> https://lore.kernel.org/lkml/20190716165641.6990-1-pasha.tatashin@soleen.com
+> The first attempt to enable MMU, some bugs that prevented performance
+> improvement. The page tables unnecessary configured idmap for the whole
+> physical space.
+>
+> https://lore.kernel.org/lkml/20190731153857.4045-1-pasha.tatashin@soleen.com
+> No linear copy, bug with EL2 reboots.
+>
+> Pavel Tatashin (8):
+>   kexec: quiet down kexec reboot
+>   arm64, mm: transitional tables
+>   arm64: hibernate: switch to transtional page tables.
+>   kexec: add machine_kexec_post_load()
+>   arm64, kexec: move relocation function setup and clean up
+>   arm64, kexec: add expandable argument to relocation function
+>   arm64, kexec: configure transitional page table for kexec
+>   arm64, kexec: enable MMU during kexec relocation
+>
+>  arch/arm64/Kconfig                     |   4 +
+>  arch/arm64/include/asm/kexec.h         |  51 ++++-
+>  arch/arm64/include/asm/pgtable-hwdef.h |   1 +
+>  arch/arm64/include/asm/trans_table.h   |  68 ++++++
+>  arch/arm64/kernel/asm-offsets.c        |  14 ++
+>  arch/arm64/kernel/cpu-reset.S          |   4 +-
+>  arch/arm64/kernel/cpu-reset.h          |   8 +-
+>  arch/arm64/kernel/hibernate.c          | 261 ++++++-----------------
+>  arch/arm64/kernel/machine_kexec.c      | 199 ++++++++++++++----
+>  arch/arm64/kernel/relocate_kernel.S    | 196 +++++++++---------
+>  arch/arm64/mm/Makefile                 |   1 +
+>  arch/arm64/mm/trans_table.c            | 273 +++++++++++++++++++++++++
+>  kernel/kexec.c                         |   4 +
+>  kernel/kexec_core.c                    |   8 +-
+>  kernel/kexec_file.c                    |   4 +
+>  kernel/kexec_internal.h                |   2 +
+>  16 files changed, 758 insertions(+), 340 deletions(-)
+>  create mode 100644 arch/arm64/include/asm/trans_table.h
+>  create mode 100644 arch/arm64/mm/trans_table.c
+>
+> --
+> 2.22.0
+>
 
 _______________________________________________
 kexec mailing list
