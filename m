@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x542.google.com ([2a00:1450:4864:20::542])
+Received: from mail-eopbgr770048.outbound.protection.outlook.com
+ ([40.107.77.48] helo=NAM02-SN1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hvnOr-0005hY-GL
- for kexec@lists.infradead.org; Thu, 08 Aug 2019 18:44:35 +0000
-Received: by mail-ed1-x542.google.com with SMTP id k21so91942733edq.3
- for <kexec@lists.infradead.org>; Thu, 08 Aug 2019 11:44:32 -0700 (PDT)
+ id 1hvr2i-0002PZ-V4
+ for kexec@lists.infradead.org; Thu, 08 Aug 2019 22:37:57 +0000
+From: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: Re: crash: `kmem -s` reported "kmem: dma-kmalloc-512: slab:
+ ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e" on a dumped vmcore
+Date: Thu, 8 Aug 2019 22:37:53 +0000
+Message-ID: <5d91e856-01de-bc80-e4bc-497d57652072@amd.com>
+References: <e640b50a-a962-8e56-33a2-2ba2eb76e813@redhat.com>
+ <20190802010538.GA2202@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190802010538.GA2202@dhcp-128-65.nay.redhat.com>
+Content-Language: en-US
+Content-ID: <90AF5D7FF1C0014A9F7C643F3BE5F454@namprd12.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190801152439.11363-1-pasha.tatashin@soleen.com>
-In-Reply-To: <20190801152439.11363-1-pasha.tatashin@soleen.com>
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 8 Aug 2019 14:44:20 -0400
-Message-ID: <CA+CK2bADiBMEx9cJuXT5fQkBYFZAtxUtc7ZzjrNfEjijPZkPtw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/8] arm64: MMU enabled kexec relocation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,98 +27,103 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Tatashin <pasha.tatashin@soleen.com>, James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Bhupesh Sharma <bhsharma@redhat.com>, linux-mm <linux-mm@kvack.org>
+To: Dave Young <dyoung@redhat.com>, lijiang <lijiang@redhat.com>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Anderson <anderson@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-Just a friendly reminder, please send your comments on this series.
-It's been a week since I sent out these patches, and no feedback yet.
-Also, I'd appreciate if anyone could test this series on vhe hardware
-with vhe kernel, it does not look like QEMU can emulate it yet
+On 8/1/19 8:05 PM, Dave Young wrote:
+> Add kexec cc list.
+> On 08/01/19 at 11:02pm, lijiang wrote:
+>> Hi, Tom
+>>
+>> Recently, i ran into a problem about SME and used crash tool to check the vmcore as follow:
+>>
+>> crash> kmem -s | grep -i invalid
+>> kmem: dma-kmalloc-512: slab: ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e
+>> kmem: dma-kmalloc-512: slab: ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e
+>>
+>> And the crash tool reported the above error, probably, the main reason is that kernel does not
+>> correctly handle the first 640k region when SME is enabled.
+>>
+>> When SME is enabled, the kernel and initramfs images are loaded into the decrypted memory, and
+>> the backup area(first 640k) is also mapped as decrypted, but the first 640k data is copied to
+>> the backup area in purgatory(). Please refer to this file: arch/x86/purgatory/purgatory.c
+>> ......
+>> static int copy_backup_region(void)
+>> {
+>>          if (purgatory_backup_dest) {
+>>                  memcpy((void *)purgatory_backup_dest,
+>>                         (void *)purgatory_backup_src, purgatory_backup_sz);
+>>          }
+>>          return 0;
+>> }
+>> ......
+>>
+>> arch/x86/kernel/machine_kexec_64.c
+>> ......
+>> machine_kexec_prepare()->
+>> arch_update_purgatory()->
+>> .....
+>>
+>> Actually, the firs 640k area is encrypted in the first kernel when SME is enabled, here kernel
+>> copies the first 640k data to the backup area in purgatory(), because the backup area is mapped
+>> as decrypted, this copying operation makes that the first 640k data is decrypted(decoded) and
+>> saved to the backup area, but probably kernel can not aware of SME in purgatory(), which causes
+>> kernel mistakenly read out the first 640k.
+>>
+>> In addition, i hacked kernel code as follow:
+>>
+>> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+>> index 7bcc92add72c..a51631d36a7a 100644
+>> --- a/fs/proc/vmcore.c
+>> +++ b/fs/proc/vmcore.c
+>> @@ -377,6 +378,16 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+>>                                              m->offset + m->size - *fpos,
+>>                                              buflen);
+>>                          start = m->paddr + *fpos - m->offset;
+>> +                       if (m->paddr == 0x73f60000) {//the backup area's start address:0x73f60000
+>> +                               tmp = read_from_oldmem(buffer, tsz, &start,
+>> +                                               userbuf, false);
+>> +                       } else
+>>                                  tmp = read_from_oldmem(buffer, tsz, &start,
+>>                                                 userbuf, mem_encrypt_active());
+>>                          if (tmp < 0)
+>>
+>> Here, i used the crash tool to check the vmcore, i can see that the backup area is decrypted,
+>> except for the dma-kmalloc-512. So i suspect that kernel did not correctly read out the first
+>> 640k data to backup area. Do you happen to know how to deal with the first 640k area in purgatory()
+>> when SME is enabled? Any idea?
 
-Thank you,
-Pasha
+I'm not all that familiar with kexec and purgatory, etc., but I think
+that you want to setup the page table that is active when purgatory runs
+so that the src and dest both have the SME encryption mask set in their
+respective page table entries. This way, when the copy is performed,
+everything is copied correctly.  Remember, encrypted data from one page
+cannot be directly copied as unencrypted data and decrypted properly in
+the new location (e.g. a page of zeroes encrypted at one address will not
+appear the same as a page of zeroes encrypted at a different address).
 
-On Thu, Aug 1, 2019 at 11:24 AM Pavel Tatashin
-<pasha.tatashin@soleen.com> wrote:
->
-> Enable MMU during kexec relocation in order to improve reboot performance.
->
-> If kexec functionality is used for a fast system update, with a minimal
-> downtime, the relocation of kernel + initramfs takes a significant portion
-> of reboot.
->
-> The reason for slow relocation is because it is done without MMU, and thus
-> not benefiting from D-Cache.
->
-> Performance data
-> ----------------
-> For this experiment, the size of kernel plus initramfs is small, only 25M.
-> If initramfs was larger, than the improvements would be greater, as time
-> spent in relocation is proportional to the size of relocation.
->
-> Previously:
-> kernel shutdown 0.022131328s
-> relocation      0.440510736s
-> kernel startup  0.294706768s
->
-> Relocation was taking: 58.2% of reboot time
->
-> Now:
-> kernel shutdown 0.032066576s
-> relocation      0.022158152s
-> kernel startup  0.296055880s
->
-> Now: Relocation takes 6.3% of reboot time
->
-> Total reboot is x2.16 times faster.
->
-> Previous approaches and discussions
-> -----------------------------------
-> https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com
-> reserve space for kexec to avoid relocation, involves changes to generic code
-> to optimize a problem that exists on arm64 only:
->
-> https://lore.kernel.org/lkml/20190716165641.6990-1-pasha.tatashin@soleen.com
-> The first attempt to enable MMU, some bugs that prevented performance
-> improvement. The page tables unnecessary configured idmap for the whole
-> physical space.
->
-> https://lore.kernel.org/lkml/20190731153857.4045-1-pasha.tatashin@soleen.com
-> No linear copy, bug with EL2 reboots.
->
-> Pavel Tatashin (8):
->   kexec: quiet down kexec reboot
->   arm64, mm: transitional tables
->   arm64: hibernate: switch to transtional page tables.
->   kexec: add machine_kexec_post_load()
->   arm64, kexec: move relocation function setup and clean up
->   arm64, kexec: add expandable argument to relocation function
->   arm64, kexec: configure transitional page table for kexec
->   arm64, kexec: enable MMU during kexec relocation
->
->  arch/arm64/Kconfig                     |   4 +
->  arch/arm64/include/asm/kexec.h         |  51 ++++-
->  arch/arm64/include/asm/pgtable-hwdef.h |   1 +
->  arch/arm64/include/asm/trans_table.h   |  68 ++++++
->  arch/arm64/kernel/asm-offsets.c        |  14 ++
->  arch/arm64/kernel/cpu-reset.S          |   4 +-
->  arch/arm64/kernel/cpu-reset.h          |   8 +-
->  arch/arm64/kernel/hibernate.c          | 261 ++++++-----------------
->  arch/arm64/kernel/machine_kexec.c      | 199 ++++++++++++++----
->  arch/arm64/kernel/relocate_kernel.S    | 196 +++++++++---------
->  arch/arm64/mm/Makefile                 |   1 +
->  arch/arm64/mm/trans_table.c            | 273 +++++++++++++++++++++++++
->  kernel/kexec.c                         |   4 +
->  kernel/kexec_core.c                    |   8 +-
->  kernel/kexec_file.c                    |   4 +
->  kernel/kexec_internal.h                |   2 +
->  16 files changed, 758 insertions(+), 340 deletions(-)
->  create mode 100644 arch/arm64/include/asm/trans_table.h
->  create mode 100644 arch/arm64/mm/trans_table.c
->
-> --
-> 2.22.0
->
+Thanks,
+Tom
 
+>>
+>> BTW: I' curious the reason why the address of dma-kmalloc-512k always falls into the first 640k
+>> region, and i did not see the same issue on another machine.
+>>
+>> Machine:
+>> Serial Number 	diesel-sys9079-0001
+>> Model           AMD Diesel (A0C)
+>> CPU             AMD EPYC 7601 32-Core Processor
+>>
+>>
+>> Background:
+>> On x86_64, the first 640k region is special because of some historical reasons. And kdump kernel will
+>> reuse the first 640k region, so kernel will back up(copy) the first 640k region to a backup area in
+>> purgatory(), in order not to rewrite the old region(640k) in kdump kernel, which makes sure that kdump
+>> can read out the old memory from vmcore.
+>>
+>>
+>> Thanks.
+>> Lianbo
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
