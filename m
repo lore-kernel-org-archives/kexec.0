@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from mail-pf1-x44a.google.com ([2607:f8b0:4864:20::44a])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hvLg6-0006Xu-39
- for kexec@lists.infradead.org; Wed, 07 Aug 2019 13:08:32 +0000
-Date: Wed, 7 Aug 2019 15:07:33 +0200 (CEST)
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 0/4] x86/mce: protect nr_cpus from rebooting by broadcast
- mce
-In-Reply-To: <20190807075226.GA10392@mypc>
-Message-ID: <alpine.DEB.2.21.1908071504310.24014@nanos.tec.linutronix.de>
-References: <1564995539-29609-1-git-send-email-kernelfans@gmail.com>
- <20190807025843.GA4776@dhcp-128-65.nay.redhat.com>
- <20190807075226.GA10392@mypc>
-MIME-Version: 1.0
+ id 1hvVy1-0000RM-Rw
+ for kexec@lists.infradead.org; Thu, 08 Aug 2019 00:07:43 +0000
+Received: by mail-pf1-x44a.google.com with SMTP id i26so57744653pfo.22
+ for <kexec@lists.infradead.org>; Wed, 07 Aug 2019 17:07:40 -0700 (PDT)
+Date: Wed,  7 Aug 2019 17:06:58 -0700
+In-Reply-To: <20190808000721.124691-1-matthewgarrett@google.com>
+Message-Id: <20190808000721.124691-7-matthewgarrett@google.com>
+Mime-Version: 1.0
+References: <20190808000721.124691-1-matthewgarrett@google.com>
+Subject: [PATCH V38 06/29] kexec_load: Disable at runtime if the kernel is
+ locked down
+From: Matthew Garrett <matthewgarrett@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,60 +25,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <kernelfans@gmail.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>, Baoquan He <bhe@redhat.com>, tony.luck@intel.com, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, Jacob Pan <jacob.jun.pan@linux.intel.com>, x86@kernel.org, Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org, Daniel Drake <drake@endlessm.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Masami Hiramatsu <mhiramat@kernel.org>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Qian Cai <cai@lca.pw>, Dave Young <dyoung@redhat.com>, Xunlei Pang <xlpang@linux.alibaba.com>, Vlastimil Babka <vbabka@suse.cz>, Eric Biederman <ebiederm@xmission.com>
+To: jmorris@namei.org
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Kees Cook <keescook@chromium.org>, linux-api@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Dave Young <dyoung@redhat.com>
 
-On Wed, 7 Aug 2019, Pingfan Liu wrote:
-> On Wed, Aug 07, 2019 at 11:00:41AM +0800, Dave Young wrote:
-> > Add Tony and Xunlei in cc.
-> > On 08/05/19 at 04:58pm, Pingfan Liu wrote:
-> > > This series include two related groups:
-> > > [1-3/4]: protect nr_cpus from rebooting by broadcast mce
-> > > [4/4]: improve "kexec -l" robustness against broadcast mce
-> > > 
-> > > When I tried to fix [1], Thomas raised concern about the nr_cpus' vulnerability
-> > > to unexpected rebooting by broadcast mce. After analysis, I think only the
-> > > following first case suffers from the rebooting by broadcast mce. [1-3/4] aims
-> > > to fix that issue.
-> > 
-> > I did not understand and read the MCE details, but we previously had a
-> > MCE problem, Xunlei fixed in below commit:
-> > commit 5bc329503e8191c91c4c40836f062ef771d8ba83
-> > Author: Xunlei Pang <xlpang@redhat.com>
-> > Date:   Mon Mar 13 10:50:19 2017 +0100
-> > 
-> >     x86/mce: Handle broadcasted MCE gracefully with kexec
-> > 
-> > I wonder if this is same issue or not. Also the old discussion is in
-> > below thread:
-> > https://lore.kernel.org/patchwork/patch/753530/
-> > 
-> > Tony raised similar questions, but I'm not sure if it is still a problem
-> > or it has been fixed.
-> > 
->
-> Xunlei's patch is the precondition of the stability for the case 2: boot
-> up by "kexec -p nr_cpus="
+From: Matthew Garrett <mjg59@srcf.ucam.org>
 
-Correct. The only dangerous issue which is then left is that an MCE hits
-_before_ all CPUs have CR.MCE=1 set. That's a general issue also for cold
-boot. Thanks to the brilliant hardware design, all we can do is pray....
+The kexec_load() syscall permits the loading and execution of arbitrary
+code in ring 0, which is something that lock-down is meant to prevent. It
+makes sense to disable kexec_load() in this situation.
 
-> For case1/3, extra effort is needed.
-> 
-> Thanks,
-> 	Pingfan
-> > > 
-> > > *** Back ground ***
-> > > 
-> > > On x86 it's required to have all logical CPUs set CR4.MCE=1. Otherwise, a
-> > > broadcast MCE observing CR4.MCE=0b on any core will shutdown the machine.
+This does not affect kexec_file_load() syscall which can check for a
+signature on the image to be booted.
 
-Pingfan, please trim your replies and remove the useless gunk after your answer.
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Acked-by: Dave Young <dyoung@redhat.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+cc: kexec@lists.infradead.org
+---
+ include/linux/security.h     | 1 +
+ kernel/kexec.c               | 8 ++++++++
+ security/lockdown/lockdown.c | 1 +
+ 3 files changed, 10 insertions(+)
 
-Thanks,
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 9458152601b5..69c5de539e9a 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -105,6 +105,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_NONE,
+ 	LOCKDOWN_MODULE_SIGNATURE,
+ 	LOCKDOWN_DEV_MEM,
++	LOCKDOWN_KEXEC,
+ 	LOCKDOWN_INTEGRITY_MAX,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 1b018f1a6e0d..bc933c0db9bf 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -205,6 +205,14 @@ static inline int kexec_load_check(unsigned long nr_segments,
+ 	if (result < 0)
+ 		return result;
+ 
++	/*
++	 * kexec can be used to circumvent module loading restrictions, so
++	 * prevent loading in that case
++	 */
++	result = security_locked_down(LOCKDOWN_KEXEC);
++	if (result)
++		return result;
++
+ 	/*
+ 	 * Verify we have a legal set of flags
+ 	 * This leaves us room for future extensions.
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index d2ef29d9f0b2..6f302c156bc8 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -20,6 +20,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_NONE] = "none",
+ 	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
+ 	[LOCKDOWN_DEV_MEM] = "/dev/mem,kmem,port",
++	[LOCKDOWN_KEXEC] = "kexec of unsigned images",
+ 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
+-- 
+2.22.0.770.g0f2c4a37fd-goog
 
-	tglx
 
 _______________________________________________
 kexec mailing list
