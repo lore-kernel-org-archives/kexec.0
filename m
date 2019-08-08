@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mga09.intel.com ([134.134.136.24])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hvW8R-0003ir-4K
- for kexec@lists.infradead.org; Thu, 08 Aug 2019 00:18:28 +0000
-Date: Thu, 8 Aug 2019 08:17:44 +0800
+ id 1hvW8S-0003ir-EX
+ for kexec@lists.infradead.org; Thu, 08 Aug 2019 00:18:29 +0000
+Date: Thu, 8 Aug 2019 08:17:43 +0800
 From: kbuild test robot <lkp@intel.com>
-Subject: [RFC PATCH] x86/apic: __cpu_capped_mask can be static
-Message-ID: <20190808001744.beecoooj27rph2ky@48261080c7f1>
+Subject: Re: [PATCH 2/4] x86/apic: record capped cpu in
+ generic_processor_info()
+Message-ID: <201908080844.z7kDOy5O%lkp@intel.com>
 References: <1564995539-29609-3-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -26,26 +27,40 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Pingfan Liu <kernelfans@gmail.com>
 Cc: Eric Biederman <ebiederm@xmission.com>, Dave Hansen <dave.hansen@linux.intel.com>, Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, Jacob Pan <jacob.jun.pan@linux.intel.com>, x86@kernel.org, Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Daniel Drake <drake@endlessm.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, kbuild-all@01.org, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Masami Hiramatsu <mhiramat@kernel.org>
 
+Hi Pingfan,
 
-Fixes: 294b1ea98966 ("x86/apic: record capped cpu in generic_processor_info()")
-Signed-off-by: kbuild test robot <lkp@intel.com>
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on linus/master]
+[cannot apply to v5.3-rc3 next-20190807]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Pingfan-Liu/x86-mce-protect-nr_cpus-from-rebooting-by-broadcast-mce/20190806-101748
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> arch/x86/kernel/cpu/common.c:70:16: sparse: sparse: symbol '__cpu_capped_mask' was not declared. Should it be static?
+   arch/x86/kernel/cpu/common.c:135:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:136:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:137:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:138:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:165:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:166:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+
+Please review and possibly fold the followup patch.
+
 ---
- common.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 4d87df5be9124..b95721e7376d4 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -67,7 +67,7 @@ cpumask_var_t cpu_initialized_mask;
- cpumask_var_t cpu_callout_mask;
- cpumask_var_t cpu_callin_mask;
- /* size of NR_CPUS is required. */
--struct cpumask __cpu_capped_mask __initdata;
-+static struct cpumask __cpu_capped_mask __initdata;
- struct cpumask *cpu_capped_mask;
- 
- /* representing cpus for which sibling maps can be computed */
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
 _______________________________________________
 kexec mailing list
