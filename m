@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mga14.intel.com ([192.55.52.115])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hwdcg-00075Y-Rt
- for kexec@lists.infradead.org; Sun, 11 Aug 2019 02:30:20 +0000
-Subject: Re: crash: `kmem -s` reported "kmem: dma-kmalloc-512: slab:
- ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e" on a dumped vmcore
-References: <e640b50a-a962-8e56-33a2-2ba2eb76e813@redhat.com>
- <20190802010538.GA2202@dhcp-128-65.nay.redhat.com>
- <5d91e856-01de-bc80-e4bc-497d57652072@amd.com>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <2d3c7ab8-0b83-4ef5-bb89-0c7c476265b3@redhat.com>
-Date: Sun, 11 Aug 2019 10:29:57 +0800
+ id 1hx54u-00034l-J5
+ for kexec@lists.infradead.org; Mon, 12 Aug 2019 07:49:18 +0000
+Subject: Re: [LKP] [x86/boot] 5b51ae969e: kexec boot failed
+References: <97f74c86-54bd-f165-ce33-b53ca48ab850@intel.com>
+ <20190802093024.GB30710@zn.tnic>
+ <0f817336-2d87-2110-13c0-e0a417d70e90@intel.com>
+ <20190806084543.GA2164@dhcp-128-65.nay.redhat.com>
+From: Rong Chen <rong.a.chen@intel.com>
+Message-ID: <44d5e337-ac6a-46f1-41d4-a963f820391b@intel.com>
+Date: Mon, 12 Aug 2019 15:49:18 +0800
 MIME-Version: 1.0
-In-Reply-To: <5d91e856-01de-bc80-e4bc-497d57652072@amd.com>
+In-Reply-To: <20190806084543.GA2164@dhcp-128-65.nay.redhat.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,96 +22,105 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>, Dave Young <dyoung@redhat.com>
-Cc: "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Anderson <anderson@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: x86@kernel.org, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, kexec@lists.infradead.org, Jun'ichi Nomura <j-nomura@ce.jp.nec.com>, Borislav Petkov <bp@suse.de>, lkp@01.org
 
-5ZyoIDIwMTnlubQwOOaciDA55pelIDA2OjM3LCBMZW5kYWNreSwgVGhvbWFzIOWGmemBkzoKPiBP
-biA4LzEvMTkgODowNSBQTSwgRGF2ZSBZb3VuZyB3cm90ZToKPj4gQWRkIGtleGVjIGNjIGxpc3Qu
-Cj4+IE9uIDA4LzAxLzE5IGF0IDExOjAycG0sIGxpamlhbmcgd3JvdGU6Cj4+PiBIaSwgVG9tCj4+
-Pgo+Pj4gUmVjZW50bHksIGkgcmFuIGludG8gYSBwcm9ibGVtIGFib3V0IFNNRSBhbmQgdXNlZCBj
-cmFzaCB0b29sIHRvIGNoZWNrIHRoZSB2bWNvcmUgYXMgZm9sbG93Ogo+Pj4KPj4+IGNyYXNoPiBr
-bWVtIC1zIHwgZ3JlcCAtaSBpbnZhbGlkCj4+PiBrbWVtOiBkbWEta21hbGxvYy01MTI6IHNsYWI6
-IGZmZmZlMTkyYzAwMDEwMDAgaW52YWxpZCBmcmVlcG9pbnRlcjogZTVmZmVmNGU5YTA0MGI3ZQo+
-Pj4ga21lbTogZG1hLWttYWxsb2MtNTEyOiBzbGFiOiBmZmZmZTE5MmMwMDAxMDAwIGludmFsaWQg
-ZnJlZXBvaW50ZXI6IGU1ZmZlZjRlOWEwNDBiN2UKPj4+Cj4+PiBBbmQgdGhlIGNyYXNoIHRvb2wg
-cmVwb3J0ZWQgdGhlIGFib3ZlIGVycm9yLCBwcm9iYWJseSwgdGhlIG1haW4gcmVhc29uIGlzIHRo
-YXQga2VybmVsIGRvZXMgbm90Cj4+PiBjb3JyZWN0bHkgaGFuZGxlIHRoZSBmaXJzdCA2NDBrIHJl
-Z2lvbiB3aGVuIFNNRSBpcyBlbmFibGVkLgo+Pj4KPj4+IFdoZW4gU01FIGlzIGVuYWJsZWQsIHRo
-ZSBrZXJuZWwgYW5kIGluaXRyYW1mcyBpbWFnZXMgYXJlIGxvYWRlZCBpbnRvIHRoZSBkZWNyeXB0
-ZWQgbWVtb3J5LCBhbmQKPj4+IHRoZSBiYWNrdXAgYXJlYShmaXJzdCA2NDBrKSBpcyBhbHNvIG1h
-cHBlZCBhcyBkZWNyeXB0ZWQsIGJ1dCB0aGUgZmlyc3QgNjQwayBkYXRhIGlzIGNvcGllZCB0bwo+
-Pj4gdGhlIGJhY2t1cCBhcmVhIGluIHB1cmdhdG9yeSgpLiBQbGVhc2UgcmVmZXIgdG8gdGhpcyBm
-aWxlOiBhcmNoL3g4Ni9wdXJnYXRvcnkvcHVyZ2F0b3J5LmMKPj4+IC4uLi4uLgo+Pj4gc3RhdGlj
-IGludCBjb3B5X2JhY2t1cF9yZWdpb24odm9pZCkKPj4+IHsKPj4+ICAgICAgICAgIGlmIChwdXJn
-YXRvcnlfYmFja3VwX2Rlc3QpIHsKPj4+ICAgICAgICAgICAgICAgICAgbWVtY3B5KCh2b2lkICop
-cHVyZ2F0b3J5X2JhY2t1cF9kZXN0LAo+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgKHZvaWQg
-KilwdXJnYXRvcnlfYmFja3VwX3NyYywgcHVyZ2F0b3J5X2JhY2t1cF9zeik7Cj4+PiAgICAgICAg
-ICB9Cj4+PiAgICAgICAgICByZXR1cm4gMDsKPj4+IH0KPj4+IC4uLi4uLgo+Pj4KPj4+IGFyY2gv
-eDg2L2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0LmMKPj4+IC4uLi4uLgo+Pj4gbWFjaGluZV9rZXhl
-Y19wcmVwYXJlKCktPgo+Pj4gYXJjaF91cGRhdGVfcHVyZ2F0b3J5KCktPgo+Pj4gLi4uLi4KPj4+
-Cj4+PiBBY3R1YWxseSwgdGhlIGZpcnMgNjQwayBhcmVhIGlzIGVuY3J5cHRlZCBpbiB0aGUgZmly
-c3Qga2VybmVsIHdoZW4gU01FIGlzIGVuYWJsZWQsIGhlcmUga2VybmVsCj4+PiBjb3BpZXMgdGhl
-IGZpcnN0IDY0MGsgZGF0YSB0byB0aGUgYmFja3VwIGFyZWEgaW4gcHVyZ2F0b3J5KCksIGJlY2F1
-c2UgdGhlIGJhY2t1cCBhcmVhIGlzIG1hcHBlZAo+Pj4gYXMgZGVjcnlwdGVkLCB0aGlzIGNvcHlp
-bmcgb3BlcmF0aW9uIG1ha2VzIHRoYXQgdGhlIGZpcnN0IDY0MGsgZGF0YSBpcyBkZWNyeXB0ZWQo
-ZGVjb2RlZCkgYW5kCj4+PiBzYXZlZCB0byB0aGUgYmFja3VwIGFyZWEsIGJ1dCBwcm9iYWJseSBr
-ZXJuZWwgY2FuIG5vdCBhd2FyZSBvZiBTTUUgaW4gcHVyZ2F0b3J5KCksIHdoaWNoIGNhdXNlcwo+
-Pj4ga2VybmVsIG1pc3Rha2VubHkgcmVhZCBvdXQgdGhlIGZpcnN0IDY0MGsuCj4+Pgo+Pj4gSW4g
-YWRkaXRpb24sIGkgaGFja2VkIGtlcm5lbCBjb2RlIGFzIGZvbGxvdzoKPj4+Cj4+PiBkaWZmIC0t
-Z2l0IGEvZnMvcHJvYy92bWNvcmUuYyBiL2ZzL3Byb2Mvdm1jb3JlLmMKPj4+IGluZGV4IDdiY2M5
-MmFkZDcyYy4uYTUxNjMxZDM2YTdhIDEwMDY0NAo+Pj4gLS0tIGEvZnMvcHJvYy92bWNvcmUuYwo+
-Pj4gKysrIGIvZnMvcHJvYy92bWNvcmUuYwo+Pj4gQEAgLTM3Nyw2ICszNzgsMTYgQEAgc3RhdGlj
-IHNzaXplX3QgX19yZWFkX3ZtY29yZShjaGFyICpidWZmZXIsIHNpemVfdCBidWZsZW4sIGxvZmZf
-dCAqZnBvcywKPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IG0tPm9mZnNldCArIG0tPnNpemUgLSAqZnBvcywKPj4+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIGJ1Zmxlbik7Cj4+PiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgc3RhcnQgPSBtLT5wYWRkciArICpmcG9zIC0gbS0+b2Zmc2V0Owo+Pj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgaWYgKG0tPnBhZGRyID09IDB4NzNmNjAwMDApIHsvL3RoZSBiYWNrdXAgYXJl
-YSdzIHN0YXJ0IGFkZHJlc3M6MHg3M2Y2MDAwMAo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB0bXAgPSByZWFkX2Zyb21fb2xkbWVtKGJ1ZmZlciwgdHN6LCAmc3RhcnQsCj4+PiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1c2VyYnVmLCBm
-YWxzZSk7Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICB9IGVsc2UKPj4+ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHRtcCA9IHJlYWRfZnJvbV9vbGRtZW0oYnVmZmVyLCB0c3os
-ICZzdGFydCwKPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHVzZXJidWYsIG1lbV9lbmNyeXB0X2FjdGl2ZSgpKTsKPj4+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICBpZiAodG1wIDwgMCkKPj4+Cj4+PiBIZXJlLCBpIHVzZWQgdGhlIGNyYXNoIHRvb2wg
-dG8gY2hlY2sgdGhlIHZtY29yZSwgaSBjYW4gc2VlIHRoYXQgdGhlIGJhY2t1cCBhcmVhIGlzIGRl
-Y3J5cHRlZCwKPj4+IGV4Y2VwdCBmb3IgdGhlIGRtYS1rbWFsbG9jLTUxMi4gU28gaSBzdXNwZWN0
-IHRoYXQga2VybmVsIGRpZCBub3QgY29ycmVjdGx5IHJlYWQgb3V0IHRoZSBmaXJzdAo+Pj4gNjQw
-ayBkYXRhIHRvIGJhY2t1cCBhcmVhLiBEbyB5b3UgaGFwcGVuIHRvIGtub3cgaG93IHRvIGRlYWwg
-d2l0aCB0aGUgZmlyc3QgNjQwayBhcmVhIGluIHB1cmdhdG9yeSgpCj4+PiB3aGVuIFNNRSBpcyBl
-bmFibGVkPyBBbnkgaWRlYT8KPiAKPiBJJ20gbm90IGFsbCB0aGF0IGZhbWlsaWFyIHdpdGgga2V4
-ZWMgYW5kIHB1cmdhdG9yeSwgZXRjLiwgYnV0IEkgdGhpbmsKPiB0aGF0IHlvdSB3YW50IHRvIHNl
-dHVwIHRoZSBwYWdlIHRhYmxlIHRoYXQgaXMgYWN0aXZlIHdoZW4gcHVyZ2F0b3J5IHJ1bnMKPiBz
-byB0aGF0IHRoZSBzcmMgYW5kIGRlc3QgYm90aCBoYXZlIHRoZSBTTUUgZW5jcnlwdGlvbiBtYXNr
-IHNldCBpbiB0aGVpcgo+IHJlc3BlY3RpdmUgcGFnZSB0YWJsZSBlbnRyaWVzLiBUaGlzIHdheSwg
-d2hlbiB0aGUgY29weSBpcyBwZXJmb3JtZWQsCj4gZXZlcnl0aGluZyBpcyBjb3BpZWQgY29ycmVj
-dGx5LiAKCkV4YWN0bHkuIFRoYXQncyBqdXN0IHdoYXQgaSB3YXMgdGhpbmtpbmcuCgo+IFJlbWVt
-YmVyLCBlbmNyeXB0ZWQgZGF0YSBmcm9tIG9uZSBwYWdlCj4gY2Fubm90IGJlIGRpcmVjdGx5IGNv
-cGllZCBhcyB1bmVuY3J5cHRlZCBkYXRhIGFuZCBkZWNyeXB0ZWQgcHJvcGVybHkgaW4KPiB0aGUg
-bmV3IGxvY2F0aW9uIChlLmcuIGEgcGFnZSBvZiB6ZXJvZXMgZW5jcnlwdGVkIGF0IG9uZSBhZGRy
-ZXNzIHdpbGwgbm90Cj4gYXBwZWFyIHRoZSBzYW1lIGFzIGEgcGFnZSBvZiB6ZXJvZXMgZW5jcnlw
-dGVkIGF0IGEgZGlmZmVyZW50IGFkZHJlc3MpLgoKWWVzLCB0aGF0J3MgcmlnaHQuIFRoYW5rIHlv
-dSwgVG9tLgoKSSdtIGNvbnNpZGVyaW5nIGhvdyB0byBzb2x2ZSBpdCwgYW5kIGkgZ3Vlc3MgdGhh
-dCBwcm9iYWJseSBpdCBuZWVkcyB0byBwcm9wZXJseSBkZWFsIHdpdGgKdGhpcyBwcm9ibGVtIGlu
-IHB1cmdhdG9yeSgpLgoKVGhhbmtzLgpMaWFuYm8KCj4gCj4gVGhhbmtzLAo+IFRvbQo+IAo+Pj4K
-Pj4+IEJUVzogSScgY3VyaW91cyB0aGUgcmVhc29uIHdoeSB0aGUgYWRkcmVzcyBvZiBkbWEta21h
-bGxvYy01MTJrIGFsd2F5cyBmYWxscyBpbnRvIHRoZSBmaXJzdCA2NDBrCj4+PiByZWdpb24sIGFu
-ZCBpIGRpZCBub3Qgc2VlIHRoZSBzYW1lIGlzc3VlIG9uIGFub3RoZXIgbWFjaGluZS4KPj4+Cj4+
-PiBNYWNoaW5lOgo+Pj4gU2VyaWFsIE51bWJlciAJZGllc2VsLXN5czkwNzktMDAwMQo+Pj4gTW9k
-ZWwgICAgICAgICAgIEFNRCBEaWVzZWwgKEEwQykKPj4+IENQVSAgICAgICAgICAgICBBTUQgRVBZ
-QyA3NjAxIDMyLUNvcmUgUHJvY2Vzc29yCj4+Pgo+Pj4KPj4+IEJhY2tncm91bmQ6Cj4+PiBPbiB4
-ODZfNjQsIHRoZSBmaXJzdCA2NDBrIHJlZ2lvbiBpcyBzcGVjaWFsIGJlY2F1c2Ugb2Ygc29tZSBo
-aXN0b3JpY2FsIHJlYXNvbnMuIEFuZCBrZHVtcCBrZXJuZWwgd2lsbAo+Pj4gcmV1c2UgdGhlIGZp
-cnN0IDY0MGsgcmVnaW9uLCBzbyBrZXJuZWwgd2lsbCBiYWNrIHVwKGNvcHkpIHRoZSBmaXJzdCA2
-NDBrIHJlZ2lvbiB0byBhIGJhY2t1cCBhcmVhIGluCj4+PiBwdXJnYXRvcnkoKSwgaW4gb3JkZXIg
-bm90IHRvIHJld3JpdGUgdGhlIG9sZCByZWdpb24oNjQwaykgaW4ga2R1bXAga2VybmVsLCB3aGlj
-aCBtYWtlcyBzdXJlIHRoYXQga2R1bXAKPj4+IGNhbiByZWFkIG91dCB0aGUgb2xkIG1lbW9yeSBm
-cm9tIHZtY29yZS4KPj4+Cj4+Pgo+Pj4gVGhhbmtzLgo+Pj4gTGlhbmJvCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
-ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2tleGVjCg==
+Hi,
+
+On 8/6/19 4:45 PM, Dave Young wrote:
+> On 08/05/19 at 07:49pm, Chen, Rong A wrote:
+>> Hi,
+>>
+>> On 8/2/2019 5:30 PM, Borislav Petkov wrote:
+>>> On Fri, Aug 02, 2019 at 03:48:53PM +0800, kernel test robot wrote:
+>>>> FYI, we noticed the following commit (built with gcc-7):
+>>>>
+>>>> commit: 5b51ae969e3d8ab0134ee3c98a769ad6d2cc2e24 ("x86/boot: Call get_rsdp_addr() after console_init()")
+>>>> https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git  master
+>>>>
+>>>> in testcase: boot
+>>>>
+>>>> on test machine: Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 4G memory
+>>>>
+>>>> The commit broke kexec boot on physical machines, We have to set "nokaslr" to kernel cmdline to avoid the issue.
+>>> How exactly do you trigger it? Details?
+>>>
+>> We use the following command to boot a new kernel:
+>> kexec --noefi -l /opt/rootfs/tmp/pkg/linux/x86_64-rhel-7.6/gcc-7/5b51ae969e3d8ab0134ee3c98a769ad6d2cc2e24/vmlinuz-5.2.0-rc3-00004-g5b51ae969e3d8a
+>> --initrd=/opt/rootfs/tmp/initrd-concatenated
+>>
+> --noefi is a corner case as kexec now supports efi, it is expected not
+> work with old kexec-tools in case you do not use acpi_rsdp= cmdline
+> explicitly.
+>   
+> I suspect it is still the rsdp getting failed instead of the moving
+> chunk after console_init.
+>   
+> Can you do more testing?
+>    
+> 1.  test latest kexec-tools
+> git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+
+There's no problem if using the latest kexec-tools
+root@lkp-bdw-de1 ~# ./kexec --version
+kexec-tools 2.0.20
+root@lkp-bdw-de1 ~# ./kexec --noefi -l 
+vmlinuz-5.2.0-rc3-00004-g5b51ae969e3d8a --initrd final_initrd-borrow 
+--reuse-cmdline
+root@lkp-bdw-de1 ~# ./kexec -e
+
+>   
+> 2. still use your old kexec-tools:
+>    a. test without --noefi
+
+root@lkp-bdw-de1 ~# kexec vmlinuz-5.2.0-rc3-00004-g5b51ae969e3d8a 
+--initrd final_initrd-borrow --reuse-cmdline
+Unknown type (Reserved) while parsing /sys/firmware/memmap/7/type. 
+Please report this as bug. Using RANGE_RESERVED now.
+Unknown type (Reserved) while parsing /sys/firmware/memmap/13/type. 
+Please report this as bug. Using RANGE_RESERVED now.
+Unknown type (Reserved) while parsing /sys/firmware/memmap/11/type. 
+Please report this as bug. Using RANGE_RESERVED now.
+Unknown type (Reserved) while parsing /sys/firmware/memmap/1/type. 
+Please report this as bug. Using RANGE_RESERVED now.
+Unknown type (Reserved) while parsing /sys/firmware/memmap/4/type. 
+Please report this as bug. Using RANGE_RESERVED now.
+Unknown type (Reserved) while parsing /sys/firmware/memmap/12/type. 
+Please report this as bug. Using RANGE_RESERVED now.
+Unknown type (Reserved) while parsing /sys/firmware/memmap/2/type. 
+Please report this as bug. Using RANGE_RESERVED now.
+Unknown type (Reserved) while parsing /sys/firmware/memmap/9/type. 
+Please report this as bug. Using RANGE_RESERVED now.
+Connection to lkp-bdw-de1 closed by remote host.
+Connection to lkp-bdw-de1 closed.
+
+
+>    b. test with --noefi but with some appending acpi_rsdp= cmdline, for
+> example (enable serial to capture console log):
+> kexec --noefi -l .../vmlinuz-... --reuse-cmdline --append
+> "acpi_rsdp=0xaabbccdd earlyprintk=serial"
+
+Sorry, I can't get console log from this machine.
+
+Best Regards,
+Rong Chen
+
+>   
+> Note: get the acpi pointer by:
+> cat /sys/firmware/efi/systab
+> for example on my laptop the acpi cmdline should be acpi_rsdp=0x7b5fe014:
+> [root@dhcp-*-* dyoung]# cat /sys/firmware/efi/systab
+> ACPI20=0x7b5fe014
+> ACPI=0x7b5fe000
+> SMBIOS3=0x7a671000
+> SMBIOS=0x7a674000
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
