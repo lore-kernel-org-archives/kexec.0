@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi1-x244.google.com ([2607:f8b0:4864:20::244])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hxe7v-0001rL-JD
- for kexec@lists.infradead.org; Tue, 13 Aug 2019 21:14:45 +0000
-Received: by mail-oi1-x244.google.com with SMTP id k22so739889oiw.11
- for <kexec@lists.infradead.org>; Tue, 13 Aug 2019 14:14:40 -0700 (PDT)
+ id 1hxjG8-0000FO-DI
+ for kexec@lists.infradead.org; Wed, 14 Aug 2019 02:43:34 +0000
+Date: Wed, 14 Aug 2019 10:43:23 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [LKP] [x86/boot] 5b51ae969e: kexec boot failed
+Message-ID: <20190814024323.GA7008@dhcp-128-65.nay.redhat.com>
+References: <97f74c86-54bd-f165-ce33-b53ca48ab850@intel.com>
+ <20190802093024.GB30710@zn.tnic>
+ <0f817336-2d87-2110-13c0-e0a417d70e90@intel.com>
+ <20190806084543.GA2164@dhcp-128-65.nay.redhat.com>
+ <44d5e337-ac6a-46f1-41d4-a963f820391b@intel.com>
 MIME-Version: 1.0
-References: <20190805083553.GA27708@dhcp-128-65.nay.redhat.com>
- <CAKv+Gu-my6EpLfxBnbMn21be62oHrF6PKFu2rt-4Pqk9wG9SXA@mail.gmail.com>
- <fbea659c-6e8f-b854-66d2-2c928d1d3783@redhat.com>
-In-Reply-To: <fbea659c-6e8f-b854-66d2-2c928d1d3783@redhat.com>
-From: Matthew Garrett <mjg59@google.com>
-Date: Tue, 13 Aug 2019 14:14:27 -0700
-Message-ID: <CACdnJusU7FKPFTz9MbXWvs-NHLX7bPLwkVynyK6cLxbxCNjrNQ@mail.gmail.com>
-Subject: Re: [PATCH] do not clean dummy variable in kexec path
+Content-Disposition: inline
+In-Reply-To: <44d5e337-ac6a-46f1-41d4-a963f820391b@intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,61 +27,101 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Laszlo Ersek <lersek@redhat.com>
-Cc: kexec devel list <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+To: Rong Chen <rong.a.chen@intel.com>
+Cc: x86@kernel.org, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, kexec@lists.infradead.org, Jun'ichi Nomura <j-nomura@ce.jp.nec.com>, Borislav Petkov <bp@suse.de>, lkp@01.org
 
-On Tue, Aug 13, 2019 at 4:28 AM Laszlo Ersek <lersek@redhat.com> wrote:
-> (I verified yesterday, using the edk2 source code, that there is no
-> varstore reclaim after ExitBootServices(), indeed.)
+On 08/12/19 at 03:49pm, Rong Chen wrote:
+> Hi,
+> 
+> On 8/6/19 4:45 PM, Dave Young wrote:
+> > On 08/05/19 at 07:49pm, Chen, Rong A wrote:
+> > > Hi,
+> > > 
+> > > On 8/2/2019 5:30 PM, Borislav Petkov wrote:
+> > > > On Fri, Aug 02, 2019 at 03:48:53PM +0800, kernel test robot wrote:
+> > > > > FYI, we noticed the following commit (built with gcc-7):
+> > > > > 
+> > > > > commit: 5b51ae969e3d8ab0134ee3c98a769ad6d2cc2e24 ("x86/boot: Call get_rsdp_addr() after console_init()")
+> > > > > https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git  master
+> > > > > 
+> > > > > in testcase: boot
+> > > > > 
+> > > > > on test machine: Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 4G memory
+> > > > > 
+> > > > > The commit broke kexec boot on physical machines, We have to set "nokaslr" to kernel cmdline to avoid the issue.
+> > > > How exactly do you trigger it? Details?
+> > > > 
+> > > We use the following command to boot a new kernel:
+> > > kexec --noefi -l /opt/rootfs/tmp/pkg/linux/x86_64-rhel-7.6/gcc-7/5b51ae969e3d8ab0134ee3c98a769ad6d2cc2e24/vmlinuz-5.2.0-rc3-00004-g5b51ae969e3d8a
+> > > --initrd=/opt/rootfs/tmp/initrd-concatenated
+> > > 
+> > --noefi is a corner case as kexec now supports efi, it is expected not
+> > work with old kexec-tools in case you do not use acpi_rsdp= cmdline
+> > explicitly.
+> > I suspect it is still the rsdp getting failed instead of the moving
+> > chunk after console_init.
+> > Can you do more testing?
+> > 1.  test latest kexec-tools
+> > git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+> 
+> There's no problem if using the latest kexec-tools
+> root@lkp-bdw-de1 ~# ./kexec --version
+> kexec-tools 2.0.20
+> root@lkp-bdw-de1 ~# ./kexec --noefi -l
+> vmlinuz-5.2.0-rc3-00004-g5b51ae969e3d8a --initrd final_initrd-borrow
+> --reuse-cmdline
+> root@lkp-bdw-de1 ~# ./kexec -e
 
-Some implementations do reclaim at runtime, in which case the
-create/delete dance will permit variable creation.
+Glad to know new kexec-tools works.
 
-> (a) Attempting to delete the dummy variable in efi_enter_virtual_mode().
+> 
+> > 2. still use your old kexec-tools:
+> >    a. test without --noefi
+> 
+> root@lkp-bdw-de1 ~# kexec vmlinuz-5.2.0-rc3-00004-g5b51ae969e3d8a --initrd
+> final_initrd-borrow --reuse-cmdline
+> Unknown type (Reserved) while parsing /sys/firmware/memmap/7/type. Please
+> report this as bug. Using RANGE_RESERVED now.
+> Unknown type (Reserved) while parsing /sys/firmware/memmap/13/type. Please
+> report this as bug. Using RANGE_RESERVED now.
+> Unknown type (Reserved) while parsing /sys/firmware/memmap/11/type. Please
+> report this as bug. Using RANGE_RESERVED now.
+> Unknown type (Reserved) while parsing /sys/firmware/memmap/1/type. Please
+> report this as bug. Using RANGE_RESERVED now.
+> Unknown type (Reserved) while parsing /sys/firmware/memmap/4/type. Please
+> report this as bug. Using RANGE_RESERVED now.
+> Unknown type (Reserved) while parsing /sys/firmware/memmap/12/type. Please
+> report this as bug. Using RANGE_RESERVED now.
+> Unknown type (Reserved) while parsing /sys/firmware/memmap/2/type. Please
+> report this as bug. Using RANGE_RESERVED now.
+> Unknown type (Reserved) while parsing /sys/firmware/memmap/9/type. Please
+> report this as bug. Using RANGE_RESERVED now.
+> Connection to lkp-bdw-de1 closed by remote host.
+> Connection to lkp-bdw-de1 closed.
 
-To be clear, the dummy variable should never actually come into
-existence - we explicitly attempt to create a variable that's bigger
-than the available space, so the expectation is that it will always
-fail. However, should it somehow end up being created, there's a race
-between the creation and the deletion and so there's a (small) risk
-that the variable actually ends up there. The cleanup in
-enter_virtual_mode() is just there to ensure that anything that did
-end up being created on a previous boot is deleted - the expectation
-is that it'll be a noop.
+The system just reset?
 
-> (b) The following part, in efi_query_variable_store():
->
-> +               /*
-> +                * The runtime code may now have triggered a garbage collection
-> +                * run, so check the variable info again
-> +                */
->
-> Let me start with (b). That code is essentially dead, I would say, based
-> on the information that had already been captured in the commit message
-> of [1]. Reclaim would never happen after ExitBootServices(). (I assume
-> efi_query_variable_store() is only invoked after ExitBootServices(),
-> i.e., from kernel space proper -- sorry if that's a wrong assumption.)
+What is your kexec-tools version?  As for kexec the userspace tool
+version matters.
 
-It's dead code on Tiano, but not on at least one vendor implementation.
+I never used kexec vmlinuz directly, usually kexec -l first then run
+"reboot" command.  kexec -e also be fine but it will skip the
+filesystem unmount etc.
 
-> Considering (a): what justified the attempt to delete the dummy variable
-> in efi_enter_virtual_mode(), in commit [4]? Was that meant as a
-> fail-safe just so we don't leave a dummy variable lying around?
+> 
+> 
+> >    b. test with --noefi but with some appending acpi_rsdp= cmdline, for
+> > example (enable serial to capture console log):
+> > kexec --noefi -l .../vmlinuz-... --reuse-cmdline --append
+> > "acpi_rsdp=0xaabbccdd earlyprintk=serial"
+> 
+> Sorry, I can't get console log from this machine.
 
-Yes.
+Ok, but can you still try appeding acpi_rsdp test?  If this works then I
+think from kexec perspective it is good enough.
 
-> So even if we consider the "clean DUMMY object" hunk from [4] a
-> justified fail-safe for the normal boot path, it doesn't apply to the
-> kexec path -- the cold-booted primary kernel will have gone through
-> those motions already, will it not?
->
-> Therefore, we should do two things:
->
-> - Remove the cleanup from the kexec path -- the cleanup logic from [4],
->   even if justified for the cold boot path, should have never modified
->   the kexec path.
-
-I agree that there's no benefit in it being called in the kexec path.
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
