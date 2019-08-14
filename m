@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hxjG8-0000FO-DI
- for kexec@lists.infradead.org; Wed, 14 Aug 2019 02:43:34 +0000
-Date: Wed, 14 Aug 2019 10:43:23 +0800
+ id 1hxlla-0003Gk-Rs
+ for kexec@lists.infradead.org; Wed, 14 Aug 2019 05:24:12 +0000
+Date: Wed, 14 Aug 2019 13:23:59 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [LKP] [x86/boot] 5b51ae969e: kexec boot failed
-Message-ID: <20190814024323.GA7008@dhcp-128-65.nay.redhat.com>
-References: <97f74c86-54bd-f165-ce33-b53ca48ab850@intel.com>
- <20190802093024.GB30710@zn.tnic>
- <0f817336-2d87-2110-13c0-e0a417d70e90@intel.com>
- <20190806084543.GA2164@dhcp-128-65.nay.redhat.com>
- <44d5e337-ac6a-46f1-41d4-a963f820391b@intel.com>
+Subject: Re: [PATCH 3/6] Avoid build warning when !CONFIG_KEXEC_SIG
+Message-ID: <20190814052359.GA10664@dhcp-128-65.nay.redhat.com>
+References: <20190813192126.122370-1-matthewgarrett@google.com>
+ <20190813192126.122370-4-matthewgarrett@google.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <44d5e337-ac6a-46f1-41d4-a963f820391b@intel.com>
+In-Reply-To: <20190813192126.122370-4-matthewgarrett@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,98 +24,145 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rong Chen <rong.a.chen@intel.com>
-Cc: x86@kernel.org, Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, Chao Fan <fanc.fnst@cn.fujitsu.com>, kexec@lists.infradead.org, Jun'ichi Nomura <j-nomura@ce.jp.nec.com>, Borislav Petkov <bp@suse.de>, lkp@01.org
+To: Matthew Garrett <matthewgarrett@google.com>
+Cc: Jiri Bohac <jbohac@suse.cz>, linux-security-module@vger.kernel.org, kexec@lists.infradead.org, jmorris@namei.org, Matthew Garrett <mjg59@google.com>
 
-On 08/12/19 at 03:49pm, Rong Chen wrote:
-> Hi,
+On 08/13/19 at 12:21pm, Matthew Garrett wrote:
+> Refactor the signature validation and lockdown integration a little in
+> order to avoid an unused variable.
 > 
-> On 8/6/19 4:45 PM, Dave Young wrote:
-> > On 08/05/19 at 07:49pm, Chen, Rong A wrote:
-> > > Hi,
-> > > 
-> > > On 8/2/2019 5:30 PM, Borislav Petkov wrote:
-> > > > On Fri, Aug 02, 2019 at 03:48:53PM +0800, kernel test robot wrote:
-> > > > > FYI, we noticed the following commit (built with gcc-7):
-> > > > > 
-> > > > > commit: 5b51ae969e3d8ab0134ee3c98a769ad6d2cc2e24 ("x86/boot: Call get_rsdp_addr() after console_init()")
-> > > > > https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git  master
-> > > > > 
-> > > > > in testcase: boot
-> > > > > 
-> > > > > on test machine: Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 4G memory
-> > > > > 
-> > > > > The commit broke kexec boot on physical machines, We have to set "nokaslr" to kernel cmdline to avoid the issue.
-> > > > How exactly do you trigger it? Details?
-> > > > 
-> > > We use the following command to boot a new kernel:
-> > > kexec --noefi -l /opt/rootfs/tmp/pkg/linux/x86_64-rhel-7.6/gcc-7/5b51ae969e3d8ab0134ee3c98a769ad6d2cc2e24/vmlinuz-5.2.0-rc3-00004-g5b51ae969e3d8a
-> > > --initrd=/opt/rootfs/tmp/initrd-concatenated
-> > > 
-> > --noefi is a corner case as kexec now supports efi, it is expected not
-> > work with old kexec-tools in case you do not use acpi_rsdp= cmdline
-> > explicitly.
-> > I suspect it is still the rsdp getting failed instead of the moving
-> > chunk after console_init.
-> > Can you do more testing?
-> > 1.  test latest kexec-tools
-> > git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+> Cc: Jiri Bohac <jbohac@suse.cz>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: kexec@lists.infradead.org
+> ---
+>  kernel/kexec_file.c | 72 ++++++++++++++++++++++++++++-----------------
+>  1 file changed, 45 insertions(+), 27 deletions(-)
 > 
-> There's no problem if using the latest kexec-tools
-> root@lkp-bdw-de1 ~# ./kexec --version
-> kexec-tools 2.0.20
-> root@lkp-bdw-de1 ~# ./kexec --noefi -l
-> vmlinuz-5.2.0-rc3-00004-g5b51ae969e3d8a --initrd final_initrd-borrow
-> --reuse-cmdline
-> root@lkp-bdw-de1 ~# ./kexec -e
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index be0c13076056..e878587715b9 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -177,36 +177,13 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+>  	image->image_loader_data = NULL;
+>  }
+>  
+> -/*
+> - * In file mode list of segments is prepared by kernel. Copy relevant
+> - * data from user space, do error checking, prepare segment list
+> - */
+> +#ifdef CONFIG_KEXEC_SIG
+>  static int
+> -kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+> -			     const char __user *cmdline_ptr,
+> -			     unsigned long cmdline_len, unsigned flags)
+> +kimage_validate_signature(struct kimage *image)
+>  {
+>  	const char *reason;
+>  	int ret;
+> -	void *ldata;
+> -	loff_t size;
+> -
+> -	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
+> -				       &size, INT_MAX, READING_KEXEC_IMAGE);
+> -	if (ret)
+> -		return ret;
+> -	image->kernel_buf_len = size;
+> -
+> -	/* IMA needs to pass the measurement list to the next kernel. */
+> -	ima_add_kexec_buffer(image);
+>  
+> -	/* Call arch image probe handlers */
+> -	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
+> -					    image->kernel_buf_len);
+> -	if (ret)
+> -		goto out;
+> -
+> -#ifdef CONFIG_KEXEC_SIG
+>  	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+>  					   image->kernel_buf_len);
+>  	switch (ret) {
+> @@ -228,7 +205,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  	decide:
+>  		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
+>  			pr_notice("%s rejected\n", reason);
+> -			goto out;
+> +			break;
+>  		}
+>  
+>  		ret = 0;
+> @@ -251,9 +228,44 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  		 */
+>  	default:
+>  		pr_notice("kernel signature verification failed (%d).\n", ret);
+> -		goto out;
+> +		break;
+>  	}
+> +
+> +	return ret;
+> +}
+> +#endif
+> +
+> +/*
+> + * In file mode list of segments is prepared by kernel. Copy relevant
+> + * data from user space, do error checking, prepare segment list
+> + */
+> +static int
+> +kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+> +			     const char __user *cmdline_ptr,
+> +			     unsigned long cmdline_len, unsigned flags)
+> +{
+> +	int ret;
+> +	void *ldata;
+> +	loff_t size;
+> +
+> +	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
+> +				       &size, INT_MAX, READING_KEXEC_IMAGE);
+> +	if (ret)
+> +		return ret;
+> +	image->kernel_buf_len = size;
+> +
+> +	/* Call arch image probe handlers */
+> +	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
+> +					    image->kernel_buf_len);
+> +	if (ret)
+> +		goto out;
+> +
+> +#ifdef CONFIG_KEXEC_SIG
+> +	ret = kimage_validate_signature(image);
+> +	if (ret)
+> +		goto out;
+>  #endif
+> +
+>  	/* It is possible that there no initramfs is being loaded */
+>  	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+>  		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
+> @@ -279,8 +291,14 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  			ret = -EINVAL;
+>  			goto out;
+>  		}
+> +
+> +		ima_kexec_cmdline(image->cmdline_buf,
+> +				  image->cmdline_buf_len - 1);
+>  	}
+>  
+> +	/* IMA needs to pass the measurement list to the next kernel. */
+> +	ima_add_kexec_buffer(image);
+> +
+>  	/* Call arch image load handlers */
+>  	ldata = arch_kexec_kernel_image_load(image);
+>  
 
-Glad to know new kexec-tools works.
+I can not get the whole thread, also not sure which tree it should
+apply.
 
-> 
-> > 2. still use your old kexec-tools:
-> >    a. test without --noefi
-> 
-> root@lkp-bdw-de1 ~# kexec vmlinuz-5.2.0-rc3-00004-g5b51ae969e3d8a --initrd
-> final_initrd-borrow --reuse-cmdline
-> Unknown type (Reserved) while parsing /sys/firmware/memmap/7/type. Please
-> report this as bug. Using RANGE_RESERVED now.
-> Unknown type (Reserved) while parsing /sys/firmware/memmap/13/type. Please
-> report this as bug. Using RANGE_RESERVED now.
-> Unknown type (Reserved) while parsing /sys/firmware/memmap/11/type. Please
-> report this as bug. Using RANGE_RESERVED now.
-> Unknown type (Reserved) while parsing /sys/firmware/memmap/1/type. Please
-> report this as bug. Using RANGE_RESERVED now.
-> Unknown type (Reserved) while parsing /sys/firmware/memmap/4/type. Please
-> report this as bug. Using RANGE_RESERVED now.
-> Unknown type (Reserved) while parsing /sys/firmware/memmap/12/type. Please
-> report this as bug. Using RANGE_RESERVED now.
-> Unknown type (Reserved) while parsing /sys/firmware/memmap/2/type. Please
-> report this as bug. Using RANGE_RESERVED now.
-> Unknown type (Reserved) while parsing /sys/firmware/memmap/9/type. Please
-> report this as bug. Using RANGE_RESERVED now.
-> Connection to lkp-bdw-de1 closed by remote host.
-> Connection to lkp-bdw-de1 closed.
+I assume it is based on your series for lockdown.  But it is really hard
+to review because of no context in this patch.
 
-The system just reset?
-
-What is your kexec-tools version?  As for kexec the userspace tool
-version matters.
-
-I never used kexec vmlinuz directly, usually kexec -l first then run
-"reboot" command.  kexec -e also be fine but it will skip the
-filesystem unmount etc.
-
-> 
-> 
-> >    b. test with --noefi but with some appending acpi_rsdp= cmdline, for
-> > example (enable serial to capture console log):
-> > kexec --noefi -l .../vmlinuz-... --reuse-cmdline --append
-> > "acpi_rsdp=0xaabbccdd earlyprintk=serial"
-> 
-> Sorry, I can't get console log from this machine.
-
-Ok, but can you still try appeding acpi_rsdp test?  If this works then I
-think from kexec perspective it is good enough.
+Also I think it should be good to split the preparation piece of kexec
+and send them separately.  Since it is improve the signature
+verification logic, they do not necessarily depend on the lockdown
+series.
 
 Thanks
 Dave
