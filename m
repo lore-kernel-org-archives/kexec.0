@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hy6ad-0004fK-NF
- for kexec@lists.infradead.org; Thu, 15 Aug 2019 03:38:17 +0000
+ id 1hy6ai-0004hR-Ch
+ for kexec@lists.infradead.org; Thu, 15 Aug 2019 03:38:21 +0000
 From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 1/2] cleanup: move it back from util_lib/elf_info.c
-Date: Thu, 15 Aug 2019 11:37:55 +0800
-Message-Id: <20190815033756.15587-2-lijiang@redhat.com>
+Subject: [PATCH 2/2] Limit the size of vmcore-dmesg.txt to 2G
+Date: Thu, 15 Aug 2019 11:37:56 +0800
+Message-Id: <20190815033756.15587-3-lijiang@redhat.com>
 In-Reply-To: <20190815033756.15587-1-lijiang@redhat.com>
 References: <20190815033756.15587-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,286 +25,51 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: kasong@redhat.com, bhe@redhat.com, piliu@redhat.com, bhsharma@redhat.com, junw99@yahoo.com, horms@verge.net.au, dyoung@redhat.com
 
-Some code related to vmcore-dmesg.c is put into the util_lib, which
-is not very reasonable, so lets move it back and tidy up those code.
+With some corrupted vmcore files, the vmcore-dmesg.txt file may grow
+forever till the kdump disk becomes full, and also probably causes
+the disk error messages as follow:
+...
+sd 0:0:0:0: [sda] tag#6 FAILED Result: hostbyte=DID_BAD_TARGET driverbyte=DRIVER_OK
+sd 0:0:0:0: [sda] tag#6 CDB: Read(10) 28 00 08 06 4c 98 00 00 08 00
+blk_update_request: I/O error, dev sda, sector 134630552
+sd 0:0:0:0: [sda] tag#7 FAILED Result: hostbyte=DID_BAD_TARGET driverbyte=DRIVER_OK
+sd 0:0:0:0: [sda] tag#7 CDB: Read(10) 28 00 08 06 4c 98 00 00 08 00
+blk_update_request: I/O error, dev sda, sector 134630552
+...
 
-In addition, that will also help to limit the size of vmcore-dmesg.txt.
+If vmcore-dmesg.txt occupies the whole disk, the vmcore can not be
+saved, this is also a problem.
+
+Lets limit the size of vmcore-dmesg.txt to avoid such problems.
 
 Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
 ---
- kexec/arch/arm64/kexec-arm64.c |  2 +-
- util_lib/elf_info.c            | 73 ++++++++--------------------------
- util_lib/include/elf_info.h    |  8 +++-
- vmcore-dmesg/vmcore-dmesg.c    | 44 +++++++++++++++++---
- 4 files changed, 61 insertions(+), 66 deletions(-)
+ vmcore-dmesg/vmcore-dmesg.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index eb3a3a37307c..6ad3b0a134b3 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -889,7 +889,7 @@ int get_phys_base_from_pt_load(unsigned long *phys_offset)
- 		return EFAILED;
- 	}
- 
--	read_elf_kcore(fd);
-+	read_elf(fd);
- 
- 	for (i = 0; get_pt_load(i,
- 		    &phys_start, NULL, &virt_start, NULL);
-diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
-index 90a3b21662e7..2f254e972721 100644
---- a/util_lib/elf_info.c
-+++ b/util_lib/elf_info.c
-@@ -20,7 +20,6 @@
- /* The 32bit and 64bit note headers make it clear we don't care */
- typedef Elf32_Nhdr Elf_Nhdr;
- 
--static const char *fname;
- static Elf64_Ehdr ehdr;
- static Elf64_Phdr *phdr;
- static int num_pt_loads;
-@@ -120,8 +119,8 @@ void read_elf32(int fd)
- 
- 	ret = pread(fd, &ehdr32, sizeof(ehdr32), 0);
- 	if (ret != sizeof(ehdr32)) {
--		fprintf(stderr, "Read of Elf header from %s failed: %s\n",
--			fname, strerror(errno));
-+		fprintf(stderr, "Read of Elf header failed in %s: %s\n",
-+				__func__, strerror(errno));
- 		exit(10);
- 	}
- 
-@@ -193,8 +192,8 @@ void read_elf64(int fd)
- 
- 	ret = pread(fd, &ehdr64, sizeof(ehdr64), 0);
- 	if (ret < 0 || (size_t)ret != sizeof(ehdr)) {
--		fprintf(stderr, "Read of Elf header from %s failed: %s\n",
--			fname, strerror(errno));
-+		fprintf(stderr, "Read of Elf header failed in %s: %s\n",
-+				__func__, strerror(errno));
- 		exit(10);
- 	}
- 
-@@ -531,19 +530,7 @@ static int32_t read_file_s32(int fd, uint64_t addr)
- 	return read_file_u32(fd, addr);
- }
- 
--static void write_to_stdout(char *buf, unsigned int nr)
--{
--	ssize_t ret;
--
--	ret = write(STDOUT_FILENO, buf, nr);
--	if (ret != nr) {
--		fprintf(stderr, "Failed to write out the dmesg log buffer!:"
--			" %s\n", strerror(errno));
--		exit(54);
--	}
--}
--
--static void dump_dmesg_legacy(int fd)
-+void dump_dmesg_legacy(int fd, handler_t handler)
- {
- 	uint64_t log_buf, log_buf_offset;
- 	unsigned log_end, logged_chars, log_end_wrapped;
-@@ -604,7 +591,7 @@ static void dump_dmesg_legacy(int fd)
- 	 */
- 	logged_chars = log_end < log_buf_len ? log_end : log_buf_len;
- 
--	write_to_stdout(buf + (log_buf_len - logged_chars), logged_chars);
-+	handler(buf + (log_buf_len - logged_chars), logged_chars);
- }
- 
- static inline uint16_t struct_val_u16(char *ptr, unsigned int offset)
-@@ -623,7 +610,7 @@ static inline uint64_t struct_val_u64(char *ptr, unsigned int offset)
- }
- 
- /* Read headers of log records and dump accordingly */
--static void dump_dmesg_structured(int fd)
-+void dump_dmesg_structured(int fd, handler_t handler)
- {
- #define OUT_BUF_SIZE	4096
- 	uint64_t log_buf, log_buf_offset, ts_nsec;
-@@ -733,7 +720,7 @@ static void dump_dmesg_structured(int fd)
- 				out_buf[len++] = c;
- 
- 			if (len >= OUT_BUF_SIZE - 64) {
--				write_to_stdout(out_buf, len);
-+				handler(out_buf, len);
- 				len = 0;
- 			}
- 		}
-@@ -753,25 +740,24 @@ static void dump_dmesg_structured(int fd)
- 	}
- 	free(buf);
- 	if (len)
--		write_to_stdout(out_buf, len);
-+		handler(out_buf, len);
- }
- 
--static void dump_dmesg(int fd)
-+int check_log_first_idx_vaddr(void)
- {
- 	if (log_first_idx_vaddr)
--		dump_dmesg_structured(fd);
--	else
--		dump_dmesg_legacy(fd);
-+		return 1;
-+
-+	return 0;
- }
- 
--static int read_elf(int fd)
-+int read_elf(int fd)
- {
- 	int ret;
- 
- 	ret = pread(fd, ehdr.e_ident, EI_NIDENT, 0);
- 	if (ret != EI_NIDENT) {
--		fprintf(stderr, "Read of e_ident from %s failed: %s\n",
--			fname, strerror(errno));
-+		fprintf(stderr, "Read of e_ident failed: %s\n", strerror(errno));
- 		return 3;
- 	}
- 	if (memcmp(ehdr.e_ident, ELFMAG, SELFMAG) != 0) {
-@@ -808,40 +794,13 @@ static int read_elf(int fd)
- 	return 0;
- }
- 
--int read_elf_vmcore(int fd)
--{
--	int ret;
--
--	ret = read_elf(fd);
--	if (ret > 0) {
--		fprintf(stderr, "Unable to read ELF information"
--			" from vmcore\n");
--		return ret;
--	}
--
--	dump_dmesg(fd);
--
--	return 0;
--}
--
--int read_elf_kcore(int fd)
--{
--	int ret;
--
--	ret = read_elf(fd);
--	if (ret != 0)
--		return ret;
--
--	return 0;
--}
--
- int read_phys_offset_elf_kcore(int fd, unsigned long *phys_off)
- {
- 	int ret;
- 
- 	*phys_off = UINT64_MAX;
- 
--	ret = read_elf_kcore(fd);
-+	ret = read_elf(fd);
- 	if (!ret) {
- 		/* If we have a valid 'PHYS_OFFSET' by now,
- 		 * return it to the caller now.
-diff --git a/util_lib/include/elf_info.h b/util_lib/include/elf_info.h
-index 1a4debd2d4ba..8ee7d3e2763f 100644
---- a/util_lib/include/elf_info.h
-+++ b/util_lib/include/elf_info.h
-@@ -23,13 +23,17 @@
- #include <inttypes.h>
- #include <ctype.h>
- 
-+typedef void (*handler_t)(char *msg, unsigned int bytes);
-+
- int get_pt_load(int idx,
- 	unsigned long long *phys_start,
- 	unsigned long long *phys_end,
- 	unsigned long long *virt_start,
- 	unsigned long long *virt_end);
- int read_phys_offset_elf_kcore(int fd, unsigned long *phys_off);
--int read_elf_kcore(int fd);
--int read_elf_vmcore(int fd);
-+int check_log_first_idx_vaddr(void);
-+void dump_dmesg_structured(int fd, handler_t handler);
-+void dump_dmesg_legacy(int fd, handler_t handler);
-+int read_elf(int fd);
- 
- #endif /* ELF_INFO_H */
 diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
-index 7a386b380291..ff0d540c9130 100644
+index ff0d540c9130..5ada3566972b 100644
 --- a/vmcore-dmesg/vmcore-dmesg.c
 +++ b/vmcore-dmesg/vmcore-dmesg.c
-@@ -1,21 +1,53 @@
+@@ -1,8 +1,18 @@
  #include <elf_info.h>
  
--/* The 32bit and 64bit note headers make it clear we don't care */
--typedef Elf32_Nhdr Elf_Nhdr;
-+static void write_to_stdout(char *buf, unsigned int nr)
-+{
-+	ssize_t ret;
++/* stole this macro from kernel printk.c */
++#define LOG_BUF_LEN_MAX (uint32_t)(1 << 31)
 +
-+	ret = write(STDOUT_FILENO, buf, nr);
-+	if (ret != nr) {
-+		fprintf(stderr, "Failed to write out the dmesg log buffer!:"
-+				" %s\n", strerror(errno));
-+		exit(54);
-+	}
-+}
-+
-+static void dump_dmesg(int fd, handler_t handler)
-+{
-+	if (check_log_first_idx_vaddr())
-+		dump_dmesg_structured(fd, handler);
-+	else
-+		dump_dmesg_legacy(fd, handler);
-+}
- 
--static const char *fname;
-+static int read_vmcore_dmesg(int fd)
-+{
-+        int ret;
-+
-+        ret = read_elf(fd);
-+        if (ret > 0) {
-+                fprintf(stderr, "Unable to read ELF information"
-+                        " from vmcore\n");
-+                return ret;
-+        }
-+
-+        dump_dmesg(fd, write_to_stdout);
-+
-+        return 0;
-+}
- 
- int main(int argc, char **argv)
+ static void write_to_stdout(char *buf, unsigned int nr)
  {
  	ssize_t ret;
- 	int fd;
-+	const char *fname;
- 
- 	if (argc != 2) {
- 		fprintf(stderr, "usage: %s <kernel core file>\n", argv[0]);
- 		return 1;
- 	}
--	fname = argv[1];
- 
-+	fname = argv[1];
- 	fd = open(fname, O_RDONLY);
- 	if (fd < 0) {
- 		fprintf(stderr, "Cannot open %s: %s\n",
-@@ -23,8 +55,8 @@ int main(int argc, char **argv)
- 		return 2;
- 	}
- 
--	ret = read_elf_vmcore(fd);
--	
-+	ret = read_vmcore_dmesg(fd);
++	static uint32_t n_bytes = 0;
 +
- 	close(fd);
++	n_bytes += nr;
++	if (n_bytes > LOG_BUF_LEN_MAX) {
++		fprintf(stderr, "The vmcore-dmesg.txt over 2G in size is not supported.\n");
++		exit(55);
++	}
  
- 	return ret;
+ 	ret = write(STDOUT_FILENO, buf, nr);
+ 	if (ret != nr) {
 -- 
 2.17.1
 
