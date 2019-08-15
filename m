@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x543.google.com ([2a00:1450:4864:20::543])
+Received: from mail-ed1-x544.google.com ([2a00:1450:4864:20::544])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hyM3y-0003he-HQ
- for kexec@lists.infradead.org; Thu, 15 Aug 2019 20:09:37 +0000
-Received: by mail-ed1-x543.google.com with SMTP id f22so3217975edt.4
- for <kexec@lists.infradead.org>; Thu, 15 Aug 2019 13:09:31 -0700 (PDT)
+ id 1hyMD1-0007S2-Es
+ for kexec@lists.infradead.org; Thu, 15 Aug 2019 20:18:58 +0000
+Received: by mail-ed1-x544.google.com with SMTP id a21so3201757edt.11
+ for <kexec@lists.infradead.org>; Thu, 15 Aug 2019 13:18:54 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190801152439.11363-1-pasha.tatashin@soleen.com>
- <CA+CK2bADiBMEx9cJuXT5fQkBYFZAtxUtc7ZzjrNfEjijPZkPtw@mail.gmail.com>
- <ba8a2519-ed95-2518-d0e8-66e8e0c14ff5@arm.com>
-In-Reply-To: <ba8a2519-ed95-2518-d0e8-66e8e0c14ff5@arm.com>
+ <20190801152439.11363-3-pasha.tatashin@soleen.com>
+ <e00455af-a9f6-82e1-4c0d-78fae01ae00a@arm.com>
+In-Reply-To: <e00455af-a9f6-82e1-4c0d-78fae01ae00a@arm.com>
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 15 Aug 2019 16:09:19 -0400
-Message-ID: <CA+CK2bAqBi43Cchr=md7EPRuEWH-iuToK0PxN3ysSBQ42Hd0-g@mail.gmail.com>
-Subject: Re: [PATCH v1 0/8] arm64: MMU enabled kexec relocation
+Date: Thu, 15 Aug 2019 16:18:43 -0400
+Message-ID: <CA+CK2bD-_34o0McpFwSYgEDyFa8MDXWUNid0GgVsUKC=ZiQzMg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/8] arm64, mm: transitional tables
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,82 +29,80 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: James Morse <james.morse@arm.com>
 Cc: Sasha Levin <sashal@kernel.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Matthias Brugger <matthias.bgg@gmail.com>, will@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 
-Hi James,
-
-Thank you for your feedback. My replies below:
-
-> > Also, I'd appreciate if anyone could test this series on vhe hardware
-> > with vhe kernel, it does not look like QEMU can emulate it yet
+On Thu, Aug 15, 2019 at 2:11 PM James Morse <james.morse@arm.com> wrote:
 >
-> This locks up during resume from hibernate on my AMD Seattle, a regular v8.0 machine.
-
-Thanks for reporting a bug I will root cause and fix it.
-
-> Please try and build the series to reduce review time. What you have here is an all-new
-> page-table generation API, which you switch hibernate and kexec too. This is effectively a
-> new implementation of hibernate and kexec. There are three things here that need review.
+> Hi Pavel,
 >
-> You have a regression in your all-new implementation of hibernate. It took six months (and
-> lots of review) to get the existing code right, please don't rip it out if there is
-> nothing wrong with it.
-
-> Instead, please just move the hibernate copy_page_tables() code, and then wire kexec up.
-> You shouldn't need to change anything in the copy_page_tables() code as the linear map is
-> the same in both cases.
-
-It is not really an all-new implementation of hibernate (for kexec it
-is true though). I used the current implementation of hibernate as
-bases, and simply generalized the functions by providing a flexible
-interface. So what you are asking is actually exactly what I am doing.
-I realize, that I introduced a bug that I will fix.
-
-> It looks like you are creating the page tables just after the kexec:segments have been
-> loaded. This will go horribly wrong if anything changes between then and kexec time. (e.g.
-> memory you've got mapped gets hot-removed).
-> This needs to be done as late as possible, so we don't waste memory, and the world can't
-> change around us. Reboot notifiers run before kexec, can't we do the memory-allocation there?
-
-Kexec by design does not allow allocate during kexec time. This is
-because we cannot fail during kexec syscall. All allocations must be
-done during kexec load time. Kernel memory cannot be hot-removed, as
-it is not part of ZONE_MOVABLE, and cannot be migrated.
-
-The current implementation relies on this assumption as well: during
-load time the (struct kimage) -> head contains the physical addresses
-of sources and destinations. If sources can be moved, this array will
-be broken.
-
-
-> >> Previously:
-> >> kernel shutdown 0.022131328s
-> >> relocation      0.440510736s
-> >> kernel startup  0.294706768s
-> >>
-> >> Relocation was taking: 58.2% of reboot time
-> >>
-> >> Now:
-> >> kernel shutdown 0.032066576s
-> >> relocation      0.022158152s
-> >> kernel startup  0.296055880s
-> >>
-> >> Now: Relocation takes 6.3% of reboot time
-> >>
-> >> Total reboot is x2.16 times faster.
+> On 01/08/2019 16:24, Pavel Tatashin wrote:
+> > There are cases where normal kernel pages tables, i.e. idmap_pg_dir
+> > and swapper_pg_dir are not sufficient because they may be overwritten.
+> >
+> > This happens when we transition from one world to another: for example
+> > during kexec kernel relocation transition, and also during hibernate
+> > kernel restore transition.
+> >
+> > In these cases, if MMU is needed, the page table memory must be allocated
+> > from a safe place. Transitional tables is intended to allow just that.
 >
-> When I first saw these numbers they were ~'0.29s', which I wrongly assumed was 29 seconds.
-> Savings in milliseconds, for _reboot_ is a hard sell. I'm hoping that on the machines that
-> take minutes to kexec we'll get numbers that make this change more convincing.
+> > diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
+> > index db92950bb1a0..dcb4f13c7888 100644
+> > --- a/arch/arm64/include/asm/pgtable-hwdef.h
+> > +++ b/arch/arm64/include/asm/pgtable-hwdef.h
+> > @@ -110,6 +110,7 @@
+> >  #define PUD_TABLE_BIT                (_AT(pudval_t, 1) << 1)
+> >  #define PUD_TYPE_MASK                (_AT(pudval_t, 3) << 0)
+> >  #define PUD_TYPE_SECT                (_AT(pudval_t, 1) << 0)
+> > +#define PUD_SECT_RDONLY              (_AT(pudval_t, 1) << 7)         /* AP[2] */
+>
+> This shouldn't be needed. As far as I'm aware, we only get read-only pages in the linear
+> map from debug-pagealloc, and the module aliases. Both of which require the linear map to
+> be made of page-size mappings.
+>
+> Where are you seeing these?
 
-Sure, this userland is very small kernel+userland is only 47M. Here is
-another data point: fitImage: 380M, it contains a larger userland.
-The numbers for kernel shutdown and startup are the same as this is
-the same kernel, but relocation takes: 3.58s
+This was done simply for generalization.
 
-shutdown: 0.02s
-relocation: 3.58s
-startup:  0.30s
+In old copy_pud:
 
-Relocation take 88% of reboot time. And, we must have it under one second.
+445   set_pud(dst_pudp,
+446   __pud(pud_val(pud) & ~PMD_SECT_RDONLY));
+
+In new trans_table_copy_pud():
+119                 if (!pud_table(src_pud)) {
+120                         if (info->trans_flags & TRANS_MKWRITE)
+121                                 pud_val(src_pud) &= ~PUD_SECT_RDONLY;
+
+If you want, I can replace it with PMD_SECT_RDONLY
+
+> > + * trans_flags
+> > + *   - bitmap with flags that control how page table is filled.
+> > + *     TRANS_MKWRITE: during page table copy make PTE, PME, and PUD page
+> > + *                    writeable by removing RDONLY flag from PTE.
+> > + *     TRANS_MKVALID: during page table copy, if PTE present, but not valid,
+> > + *                    make it valid.
+> > + *     TRANS_CHECKPFN: During page table copy, for every PTE entry check that
+> > + *                     PFN that this PTE points to is valid. Otherwise return
+> > + *                     -ENXIO
+>
+> Adding top-level global knobs to manipulate the copied linear map is going to lead to
+> bugs. The existing code will only change the PTE in specific circumstances, that it tests
+> for, that only happen at the PTE level.
+
+I am simply doing the same what the old code is doing:
+
+hibernate sets this flag if: debug_pagealloc_enabled() and trans_table
+in this case check if pfn_valid() or not. This is part of
+generalization, without which it is not possible to re-use the code
+between kexec and hibernate.
+
+>
+>
+> > + *     TRANS_FORCEMAP: During page map, if translation exists, force
+> > + *                     overwrite it. Otherwise -ENXIO may be returned by
+> > + *                     trans_table_map_* functions if conflict is detected.
+>
+
+I will remove it.
 
 Thank you,
 Pasha
