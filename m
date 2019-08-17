@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x842.google.com ([2607:f8b0:4864:20::842])
+Received: from mail-qt1-x841.google.com ([2607:f8b0:4864:20::841])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hyojt-0002ZX-6k
- for kexec@lists.infradead.org; Sat, 17 Aug 2019 02:46:48 +0000
-Received: by mail-qt1-x842.google.com with SMTP id k13so8179687qtm.12
- for <kexec@lists.infradead.org>; Fri, 16 Aug 2019 19:46:44 -0700 (PDT)
+ id 1hyojw-0002cn-4A
+ for kexec@lists.infradead.org; Sat, 17 Aug 2019 02:46:50 +0000
+Received: by mail-qt1-x841.google.com with SMTP id l9so8217124qtu.6
+ for <kexec@lists.infradead.org>; Fri, 16 Aug 2019 19:46:48 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v2 09/14] arm64,
- trans_table: complete generalization of trans_tables
-Date: Fri, 16 Aug 2019 22:46:24 -0400
-Message-Id: <20190817024629.26611-10-pasha.tatashin@soleen.com>
+Subject: [PATCH v2 11/14] arm64,
+ kexec: move relocation function setup and clean up
+Date: Fri, 16 Aug 2019 22:46:26 -0400
+Message-Id: <20190817024629.26611-12-pasha.tatashin@soleen.com>
 In-Reply-To: <20190817024629.26611-1-pasha.tatashin@soleen.com>
 References: <20190817024629.26611-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -27,283 +27,143 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org
 
-Make the last private functions in page table copy path generlized for use
-outside of hibernate.
+Currently, kernel relocation function is configured in machine_kexec()
+at the time of kexec reboot by using control_code_page.
 
-Switch to use the provided allocator, flags, and source page table. Also,
-unify all copy function implementations to reduce the possibility of bugs.
-All page table levels are implemented symmetrically.
+This operation, however, is more logical to be done during kexec_load,
+and thus remove from reboot time. Move, setup of this function to
+newly added machine_kexec_post_load().
+
+In addition, do some cleanup: add infor about reloction function to
+kexec_image_info(), and remove extra messages from machine_kexec().
+
+Make dtb_mem, always available, if CONFIG_KEXEC_FILE is not configured
+dtb_mem is set to zero anyway.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/mm/trans_table.c | 204 ++++++++++++++++++++----------------
- 1 file changed, 113 insertions(+), 91 deletions(-)
+ arch/arm64/include/asm/kexec.h    |  3 +-
+ arch/arm64/kernel/machine_kexec.c | 49 +++++++++++--------------------
+ 2 files changed, 19 insertions(+), 33 deletions(-)
 
-diff --git a/arch/arm64/mm/trans_table.c b/arch/arm64/mm/trans_table.c
-index 815e40bb1316..ce0f24806eaa 100644
---- a/arch/arm64/mm/trans_table.c
-+++ b/arch/arm64/mm/trans_table.c
-@@ -27,139 +27,161 @@ static void *trans_alloc(struct trans_table_info *info)
- 	return page;
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 12a561a54128..d15ca1ca1e83 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -90,14 +90,15 @@ static inline void crash_prepare_suspend(void) {}
+ static inline void crash_post_resume(void) {}
+ #endif
+ 
+-#ifdef CONFIG_KEXEC_FILE
+ #define ARCH_HAS_KIMAGE_ARCH
+ 
+ struct kimage_arch {
+ 	void *dtb;
+ 	unsigned long dtb_mem;
++	unsigned long kern_reloc;
+ };
+ 
++#ifdef CONFIG_KEXEC_FILE
+ extern const struct kexec_file_ops kexec_image_ops;
+ 
+ struct kimage;
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 0df8493624e0..9b41da50e6f7 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -42,6 +42,7 @@ static void _kexec_image_info(const char *func, int line,
+ 	pr_debug("    start:       %lx\n", kimage->start);
+ 	pr_debug("    head:        %lx\n", kimage->head);
+ 	pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
++	pr_debug("    kern_reloc: %pa\n", &kimage->arch.kern_reloc);
+ 
+ 	for (i = 0; i < kimage->nr_segments; i++) {
+ 		pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
+@@ -58,6 +59,19 @@ void machine_kexec_cleanup(struct kimage *kimage)
+ 	/* Empty routine needed to avoid build errors. */
  }
  
--static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
-+static int trans_table_copy_pte(struct trans_table_info *info, pte_t *dst_ptep,
-+				pte_t *src_ptep, unsigned long start,
-+				unsigned long end)
++int machine_kexec_post_load(struct kimage *kimage)
++{
++	unsigned long kern_reloc;
++
++	kern_reloc = page_to_phys(kimage->control_code_page);
++	memcpy(__va(kern_reloc), arm64_relocate_new_kernel,
++	       arm64_relocate_new_kernel_size);
++	kimage->arch.kern_reloc = kern_reloc;
++
++	kexec_image_info(kimage);
++	return 0;
++}
++
+ /**
+  * machine_kexec_prepare - Prepare for a kexec reboot.
+  *
+@@ -67,8 +81,6 @@ void machine_kexec_cleanup(struct kimage *kimage)
+  */
+ int machine_kexec_prepare(struct kimage *kimage)
  {
--	pte_t pte = READ_ONCE(*src_ptep);
+-	kexec_image_info(kimage);
 -
--	if (pte_valid(pte)) {
--		/*
--		 * Resume will overwrite areas that may be marked
--		 * read only (code, rodata). Clear the RDONLY bit from
--		 * the temporary mappings we use during restore.
--		 */
--		set_pte(dst_ptep, pte_mkwrite(pte));
--	} else if (debug_pagealloc_enabled() && !pte_none(pte)) {
--		/*
--		 * debug_pagealloc will removed the PTE_VALID bit if
--		 * the page isn't in use by the resume kernel. It may have
--		 * been in use by the original kernel, in which case we need
--		 * to put it back in our copy to do the restore.
--		 *
--		 * Before marking this entry valid, check the pfn should
--		 * be mapped.
--		 */
--		BUG_ON(!pfn_valid(pte_pfn(pte)));
--
--		set_pte(dst_ptep, pte_mkpresent(pte_mkwrite(pte)));
--	}
--}
--
--static int copy_pte(pmd_t *dst_pmdp, pmd_t *src_pmdp, unsigned long start,
--		    unsigned long end)
--{
--	pte_t *src_ptep;
--	pte_t *dst_ptep;
- 	unsigned long addr = start;
-+	int i = pte_index(addr);
- 
--	dst_ptep = (pte_t *)get_safe_page(GFP_ATOMIC);
--	if (!dst_ptep)
--		return -ENOMEM;
--	pmd_populate_kernel(&init_mm, dst_pmdp, dst_ptep);
--	dst_ptep = pte_offset_kernel(dst_pmdp, start);
--
--	src_ptep = pte_offset_kernel(src_pmdp, start);
- 	do {
--		_copy_pte(dst_ptep, src_ptep, addr);
--	} while (dst_ptep++, src_ptep++, addr += PAGE_SIZE, addr != end);
-+		pte_t src_pte = READ_ONCE(src_ptep[i]);
-+
-+		if (pte_none(src_pte))
-+			continue;
-+		if (info->trans_flags & TRANS_MKWRITE)
-+			src_pte = pte_mkwrite(src_pte);
-+		if (info->trans_flags & TRANS_MKVALID)
-+			src_pte = pte_mkpresent(src_pte);
-+		if (info->trans_flags & TRANS_CHECKPFN) {
-+			if (!pfn_valid(pte_pfn(src_pte)))
-+				return -ENXIO;
-+		}
-+		set_pte(&dst_ptep[i], src_pte);
-+	} while (addr += PAGE_SIZE, i++, addr != end && i < PTRS_PER_PTE);
- 
- 	return 0;
- }
- 
--static int copy_pmd(pud_t *dst_pudp, pud_t *src_pudp, unsigned long start,
--		    unsigned long end)
-+static int trans_table_copy_pmd(struct trans_table_info *info, pmd_t *dst_pmdp,
-+				pmd_t *src_pmdp, unsigned long start,
-+				unsigned long end)
+ 	if (kimage->type != KEXEC_TYPE_CRASH && cpus_are_stuck_in_kernel()) {
+ 		pr_err("Can't kexec: CPUs are stuck in the kernel.\n");
+ 		return -EBUSY;
+@@ -143,8 +155,7 @@ static void kexec_segment_flush(const struct kimage *kimage)
+  */
+ void machine_kexec(struct kimage *kimage)
  {
--	pmd_t *src_pmdp;
--	pmd_t *dst_pmdp;
- 	unsigned long next;
- 	unsigned long addr = start;
-+	int i = pmd_index(addr);
-+	int rc;
+-	phys_addr_t reboot_code_buffer_phys;
+-	void *reboot_code_buffer;
++	void *reboot_code_buffer = phys_to_virt(kimage->arch.kern_reloc);
+ 	bool in_kexec_crash = (kimage == kexec_crash_image);
+ 	bool stuck_cpus = cpus_are_stuck_in_kernel();
  
--	if (pud_none(READ_ONCE(*dst_pudp))) {
--		dst_pmdp = (pmd_t *)get_safe_page(GFP_ATOMIC);
--		if (!dst_pmdp)
--			return -ENOMEM;
--		pud_populate(&init_mm, dst_pudp, dst_pmdp);
--	}
--	dst_pmdp = pmd_offset(dst_pudp, start);
+@@ -155,30 +166,8 @@ void machine_kexec(struct kimage *kimage)
+ 	WARN(in_kexec_crash && (stuck_cpus || smp_crash_stop_failed()),
+ 		"Some CPUs may be stale, kdump will be unreliable.\n");
+ 
+-	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
+-	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
 -
--	src_pmdp = pmd_offset(src_pudp, start);
- 	do {
--		pmd_t pmd = READ_ONCE(*src_pmdp);
-+		pmd_t src_pmd = READ_ONCE(src_pmdp[i]);
-+		pmd_t dst_pmd = READ_ONCE(dst_pmdp[i]);
-+		pte_t *dst_ptep, *src_ptep;
+ 	kexec_image_info(kimage);
  
- 		next = pmd_addr_end(addr, end);
--		if (pmd_none(pmd))
-+		if (pmd_none(src_pmd))
-+			continue;
-+
-+		if (!pmd_table(src_pmd)) {
-+			if (info->trans_flags & TRANS_MKWRITE)
-+				pmd_val(src_pmd) &= ~PMD_SECT_RDONLY;
-+			set_pmd(&dst_pmdp[i], src_pmd);
- 			continue;
--		if (pmd_table(pmd)) {
--			if (copy_pte(dst_pmdp, src_pmdp, addr, next))
-+		}
-+
-+		if (pmd_none(dst_pmd)) {
-+			pte_t *t = trans_alloc(info);
-+
-+			if (!t)
- 				return -ENOMEM;
--		} else {
--			set_pmd(dst_pmdp,
--				__pmd(pmd_val(pmd) & ~PMD_SECT_RDONLY));
-+
-+			__pmd_populate(&dst_pmdp[i], __pa(t), PTE_TYPE_PAGE);
-+			dst_pmd = READ_ONCE(dst_pmdp[i]);
- 		}
--	} while (dst_pmdp++, src_pmdp++, addr = next, addr != end);
-+
-+		src_ptep = __va(pmd_page_paddr(src_pmd));
-+		dst_ptep = __va(pmd_page_paddr(dst_pmd));
-+
-+		rc = trans_table_copy_pte(info, dst_ptep, src_ptep, addr, next);
-+		if (rc)
-+			return rc;
-+	} while (addr = next, i++, addr != end && i < PTRS_PER_PMD);
- 
- 	return 0;
- }
- 
--static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
--		    unsigned long end)
-+static int trans_table_copy_pud(struct trans_table_info *info, pud_t *dst_pudp,
-+				pud_t *src_pudp, unsigned long start,
-+				unsigned long end)
- {
--	pud_t *dst_pudp;
--	pud_t *src_pudp;
- 	unsigned long next;
- 	unsigned long addr = start;
-+	int i = pud_index(addr);
-+	int rc;
- 
--	if (pgd_none(READ_ONCE(*dst_pgdp))) {
--		dst_pudp = (pud_t *)get_safe_page(GFP_ATOMIC);
--		if (!dst_pudp)
--			return -ENOMEM;
--		pgd_populate(&init_mm, dst_pgdp, dst_pudp);
--	}
--	dst_pudp = pud_offset(dst_pgdp, start);
+-	pr_debug("%s:%d: control_code_page:        %p\n", __func__, __LINE__,
+-		kimage->control_code_page);
+-	pr_debug("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
+-		&reboot_code_buffer_phys);
+-	pr_debug("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
+-		reboot_code_buffer);
+-	pr_debug("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
+-		arm64_relocate_new_kernel);
+-	pr_debug("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
+-		__func__, __LINE__, arm64_relocate_new_kernel_size,
+-		arm64_relocate_new_kernel_size);
 -
--	src_pudp = pud_offset(src_pgdp, start);
- 	do {
--		pud_t pud = READ_ONCE(*src_pudp);
-+		pud_t src_pud = READ_ONCE(src_pudp[i]);
-+		pud_t dst_pud = READ_ONCE(dst_pudp[i]);
-+		pmd_t *dst_pmdp, *src_pmdp;
+-	/*
+-	 * Copy arm64_relocate_new_kernel to the reboot_code_buffer for use
+-	 * after the kernel is shut down.
+-	 */
+-	memcpy(reboot_code_buffer, arm64_relocate_new_kernel,
+-		arm64_relocate_new_kernel_size);
+-
+ 	/* Flush the reboot_code_buffer in preparation for its execution. */
+ 	__flush_dcache_area(reboot_code_buffer, arm64_relocate_new_kernel_size);
  
- 		next = pud_addr_end(addr, end);
--		if (pud_none(pud))
-+		if (pud_none(src_pud))
- 			continue;
--		if (pud_table(pud)) {
--			if (copy_pmd(dst_pudp, src_pudp, addr, next))
-+
-+		if (!pud_table(src_pud)) {
-+			if (info->trans_flags & TRANS_MKWRITE)
-+				pud_val(src_pud) &= ~PUD_SECT_RDONLY;
-+			set_pud(&dst_pudp[i], src_pud);
-+			continue;
-+		}
-+
-+		if (pud_none(dst_pud)) {
-+			pmd_t *t = trans_alloc(info);
-+
-+			if (!t)
- 				return -ENOMEM;
--		} else {
--			set_pud(dst_pudp,
--				__pud(pud_val(pud) & ~PUD_SECT_RDONLY));
-+
-+			__pud_populate(&dst_pudp[i], __pa(t), PMD_TYPE_TABLE);
-+			dst_pud = READ_ONCE(dst_pudp[i]);
- 		}
--	} while (dst_pudp++, src_pudp++, addr = next, addr != end);
-+
-+		src_pmdp = __va(pud_page_paddr(src_pud));
-+		dst_pmdp = __va(pud_page_paddr(dst_pud));
-+
-+		rc = trans_table_copy_pmd(info, dst_pmdp, src_pmdp, addr, next);
-+		if (rc)
-+			return rc;
-+	} while (addr = next, i++, addr != end && i < PTRS_PER_PUD);
+@@ -214,12 +203,8 @@ void machine_kexec(struct kimage *kimage)
+ 	 * userspace (kexec-tools).
+ 	 * In kexec_file case, the kernel starts directly without purgatory.
+ 	 */
+-	cpu_soft_restart(reboot_code_buffer_phys, kimage->head, kimage->start,
+-#ifdef CONFIG_KEXEC_FILE
+-						kimage->arch.dtb_mem);
+-#else
+-						0);
+-#endif
++	cpu_soft_restart(kimage->arch.kern_reloc, kimage->head, kimage->start,
++			 kimage->arch.dtb_mem);
  
- 	return 0;
+ 	BUG(); /* Should never get here. */
  }
- 
--static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
--			    unsigned long end)
-+static int trans_table_copy_pgd(struct trans_table_info *info, pgd_t *dst_pgdp,
-+				pgd_t *src_pgdp, unsigned long start,
-+				unsigned long end)
- {
- 	unsigned long next;
- 	unsigned long addr = start;
--	pgd_t *src_pgdp = pgd_offset_k(start);
-+	int i = pgd_index(addr);
-+	int rc;
- 
--	dst_pgdp = pgd_offset_raw(dst_pgdp, start);
- 	do {
-+		pgd_t src_pgd;
-+		pgd_t dst_pgd;
-+		pud_t *dst_pudp, *src_pudp;
-+
-+		src_pgd = READ_ONCE(src_pgdp[i]);
-+		dst_pgd = READ_ONCE(dst_pgdp[i]);
- 		next = pgd_addr_end(addr, end);
--		if (pgd_none(READ_ONCE(*src_pgdp)))
-+		if (pgd_none(src_pgd))
- 			continue;
--		if (copy_pud(dst_pgdp, src_pgdp, addr, next))
--			return -ENOMEM;
--	} while (dst_pgdp++, src_pgdp++, addr = next, addr != end);
-+
-+		if (pgd_none(dst_pgd)) {
-+			pud_t *t = trans_alloc(info);
-+
-+			if (!t)
-+				return -ENOMEM;
-+
-+			__pgd_populate(&dst_pgdp[i], __pa(t), PUD_TYPE_TABLE);
-+			dst_pgd = READ_ONCE(dst_pgdp[i]);
-+		}
-+
-+		src_pudp = __va(pgd_page_paddr(src_pgd));
-+		dst_pudp = __va(pgd_page_paddr(dst_pgd));
-+
-+		rc = trans_table_copy_pud(info, dst_pudp, src_pudp, addr, next);
-+		if (rc)
-+			return rc;
-+	} while (addr = next, i++, addr != end && i < PTRS_PER_PGD);
- 
- 	return 0;
- }
-@@ -186,7 +208,7 @@ int trans_table_create_copy(struct trans_table_info *info, pgd_t **trans_table,
- 	if (rc)
- 		return rc;
- 
--	return copy_page_tables(*trans_table, start, end);
-+	return trans_table_copy_pgd(info, *trans_table, from_table, start, end);
- }
- 
- int trans_table_map_page(struct trans_table_info *info, pgd_t *trans_table,
 -- 
 2.22.1
 
