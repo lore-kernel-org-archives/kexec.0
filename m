@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x842.google.com ([2607:f8b0:4864:20::842])
+Received: from mail-qt1-x843.google.com ([2607:f8b0:4864:20::843])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hyojl-0002Po-R0
+ id 1hyojl-0002Pq-GZ
  for kexec@lists.infradead.org; Sat, 17 Aug 2019 02:46:41 +0000
-Received: by mail-qt1-x842.google.com with SMTP id i4so8194669qtj.8
- for <kexec@lists.infradead.org>; Fri, 16 Aug 2019 19:46:35 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id q4so8244009qtp.1
+ for <kexec@lists.infradead.org>; Fri, 16 Aug 2019 19:46:36 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v2 02/14] arm64, hibernate: create_safe_exec_page cleanup
-Date: Fri, 16 Aug 2019 22:46:17 -0400
-Message-Id: <20190817024629.26611-3-pasha.tatashin@soleen.com>
+Subject: [PATCH v2 03/14] arm64, hibernate: add trans_table public functions
+Date: Fri, 16 Aug 2019 22:46:18 -0400
+Message-Id: <20190817024629.26611-4-pasha.tatashin@soleen.com>
 In-Reply-To: <20190817024629.26611-1-pasha.tatashin@soleen.com>
 References: <20190817024629.26611-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,128 +26,156 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org
 
-create_safe_exec_page() is going to be split into two parts in preparation
-of moving page table handling code out of hibernate.c
-
-Remove allocator parameter, and rename dst to page. Also, remove the
-goto's, as we can return directly without cleanups.
+trans_table_create_copy() and trans_table_map_page() are going to be
+the basis for public interface of new subsystem that handles page
+tables for cases which are between kernels: kexec, and hibernate.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/kernel/hibernate.c | 60 +++++++++++++++--------------------
- 1 file changed, 26 insertions(+), 34 deletions(-)
+ arch/arm64/kernel/hibernate.c | 96 ++++++++++++++++++++++-------------
+ 1 file changed, 61 insertions(+), 35 deletions(-)
 
 diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index 9341fcc6e809..96b6f8da7e49 100644
+index 96b6f8da7e49..449d69b5651c 100644
 --- a/arch/arm64/kernel/hibernate.c
 +++ b/arch/arm64/kernel/hibernate.c
-@@ -196,57 +196,51 @@ EXPORT_SYMBOL(arch_hibernation_header_restore);
-  */
- static int create_safe_exec_page(void *src_start, size_t length,
- 				 unsigned long dst_addr,
--				 phys_addr_t *phys_dst_addr,
--				 void *(*allocator)(gfp_t mask),
--				 gfp_t mask)
-+				 phys_addr_t *phys_dst_addr)
+@@ -182,39 +182,15 @@ int arch_hibernation_header_restore(void *addr)
+ }
+ EXPORT_SYMBOL(arch_hibernation_header_restore);
+ 
+-/*
+- * Copies length bytes, starting at src_start into an new page,
+- * perform cache maintentance, then maps it at the specified address low
+- * address as executable.
+- *
+- * This is used by hibernate to copy the code it needs to execute when
+- * overwriting the kernel text. This function generates a new set of page
+- * tables, which it loads into ttbr0.
+- *
+- * Length is provided as we probably only want 4K of data, even on a 64K
+- * page system.
+- */
+-static int create_safe_exec_page(void *src_start, size_t length,
+-				 unsigned long dst_addr,
+-				 phys_addr_t *phys_dst_addr)
++int trans_table_map_page(pgd_t *trans_table, void *page,
++			 unsigned long dst_addr,
++			 pgprot_t pgprot)
  {
--	int rc = 0;
-+	void *page = (void *)get_safe_page(GFP_ATOMIC);
-+	pgd_t *trans_table;
+-	void *page = (void *)get_safe_page(GFP_ATOMIC);
+-	pgd_t *trans_table;
  	pgd_t *pgdp;
  	pud_t *pudp;
  	pmd_t *pmdp;
  	pte_t *ptep;
--	unsigned long dst = (unsigned long)allocator(mask);
  
--	if (!dst) {
--		rc = -ENOMEM;
--		goto out;
--	}
+-	if (!page)
+-		return -ENOMEM;
+-
+-	memcpy((void *)page, src_start, length);
+-	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
+-
+-	trans_table = (void *)get_safe_page(GFP_ATOMIC);
+-	if (!trans_table)
+-		return -ENOMEM;
+-
+ 	pgdp = pgd_offset_raw(trans_table, dst_addr);
+ 	if (pgd_none(READ_ONCE(*pgdp))) {
+ 		pudp = (void *)get_safe_page(GFP_ATOMIC);
+@@ -242,6 +218,44 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 	ptep = pte_offset_kernel(pmdp, dst_addr);
+ 	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
+ 
++	return 0;
++}
++
++/*
++ * Copies length bytes, starting at src_start into an new page,
++ * perform cache maintentance, then maps it at the specified address low
++ * address as executable.
++ *
++ * This is used by hibernate to copy the code it needs to execute when
++ * overwriting the kernel text. This function generates a new set of page
++ * tables, which it loads into ttbr0.
++ *
++ * Length is provided as we probably only want 4K of data, even on a 64K
++ * page system.
++ */
++static int create_safe_exec_page(void *src_start, size_t length,
++				 unsigned long dst_addr,
++				 phys_addr_t *phys_dst_addr)
++{
++	void *page = (void *)get_safe_page(GFP_ATOMIC);
++	pgd_t *trans_table;
++	int rc;
++
 +	if (!page)
 +		return -ENOMEM;
 +
-+	memcpy((void *)page, src_start, length);
++	memcpy(page, src_start, length);
 +	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
- 
--	memcpy((void *)dst, src_start, length);
--	__flush_icache_range(dst, dst + length);
++
 +	trans_table = (void *)get_safe_page(GFP_ATOMIC);
 +	if (!trans_table)
 +		return -ENOMEM;
- 
--	pgdp = pgd_offset_raw(allocator(mask), dst_addr);
-+	pgdp = pgd_offset_raw(trans_table, dst_addr);
- 	if (pgd_none(READ_ONCE(*pgdp))) {
--		pudp = allocator(mask);
--		if (!pudp) {
--			rc = -ENOMEM;
--			goto out;
--		}
-+		pudp = (void *)get_safe_page(GFP_ATOMIC);
-+		if (!pudp)
-+			return -ENOMEM;
- 		pgd_populate(&init_mm, pgdp, pudp);
- 	}
- 
- 	pudp = pud_offset(pgdp, dst_addr);
- 	if (pud_none(READ_ONCE(*pudp))) {
--		pmdp = allocator(mask);
--		if (!pmdp) {
--			rc = -ENOMEM;
--			goto out;
--		}
-+		pmdp = (void *)get_safe_page(GFP_ATOMIC);
-+		if (!pmdp)
-+			return -ENOMEM;
- 		pud_populate(&init_mm, pudp, pmdp);
- 	}
- 
- 	pmdp = pmd_offset(pudp, dst_addr);
- 	if (pmd_none(READ_ONCE(*pmdp))) {
--		ptep = allocator(mask);
--		if (!ptep) {
--			rc = -ENOMEM;
--			goto out;
--		}
-+		ptep = (void *)get_safe_page(GFP_ATOMIC);
-+		if (!ptep)
-+			return -ENOMEM;
- 		pmd_populate_kernel(&init_mm, pmdp, ptep);
- 	}
- 
- 	ptep = pte_offset_kernel(pmdp, dst_addr);
--	set_pte(ptep, pfn_pte(virt_to_pfn(dst), PAGE_KERNEL_EXEC));
-+	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
- 
++
++	rc = trans_table_map_page(trans_table, page, dst_addr,
++				  PAGE_KERNEL_EXEC);
++	if (rc)
++		return rc;
++
  	/*
  	 * Load our new page tables. A strict BBM approach requires that we
-@@ -262,13 +256,12 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 	 */
- 	cpu_set_reserved_ttbr0();
- 	local_flush_tlb_all();
--	write_sysreg(phys_to_ttbr(virt_to_phys(pgdp)), ttbr0_el1);
-+	write_sysreg(phys_to_ttbr(virt_to_phys(trans_table)), ttbr0_el1);
+ 	 * ensure that TLBs are free of any entries that may overlap with the
+@@ -259,7 +273,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 	write_sysreg(phys_to_ttbr(virt_to_phys(trans_table)), ttbr0_el1);
  	isb();
  
--	*phys_dst_addr = virt_to_phys((void *)dst);
-+	*phys_dst_addr = virt_to_phys((void *)page);
+-	*phys_dst_addr = virt_to_phys((void *)page);
++	*phys_dst_addr = virt_to_phys(page);
  
--out:
--	return rc;
-+	return 0;
+ 	return 0;
+ }
+@@ -462,6 +476,24 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
+ 	return 0;
  }
  
- #define dcache_clean_range(start, end)	__flush_dcache_area(start, (end - start))
-@@ -523,8 +516,7 @@ int swsusp_arch_resume(void)
++int trans_table_create_copy(pgd_t **dst_pgdp, unsigned long start,
++			    unsigned long end)
++{
++	int rc;
++	pgd_t *trans_table = (pgd_t *)get_safe_page(GFP_ATOMIC);
++
++	if (!trans_table) {
++		pr_err("Failed to allocate memory for temporary page tables.\n");
++		return -ENOMEM;
++	}
++
++	rc = copy_page_tables(trans_table, start, end);
++	if (!rc)
++		*dst_pgdp = trans_table;
++
++	return rc;
++}
++
+ /*
+  * Setup then Resume from the hibernate image using swsusp_arch_suspend_exit().
+  *
+@@ -483,13 +515,7 @@ int swsusp_arch_resume(void)
+ 	 * Create a second copy of just the linear map, and use this when
+ 	 * restoring.
  	 */
- 	rc = create_safe_exec_page(__hibernate_exit_text_start, exit_size,
- 				   (unsigned long)hibernate_exit,
--				   &phys_hibernate_exit,
--				   (void *)get_safe_page, GFP_ATOMIC);
-+				   &phys_hibernate_exit);
- 	if (rc) {
- 		pr_err("Failed to create safe executable page for hibernate_exit code.\n");
+-	tmp_pg_dir = (pgd_t *)get_safe_page(GFP_ATOMIC);
+-	if (!tmp_pg_dir) {
+-		pr_err("Failed to allocate memory for temporary page tables.\n");
+-		rc = -ENOMEM;
+-		goto out;
+-	}
+-	rc = copy_page_tables(tmp_pg_dir, PAGE_OFFSET, 0);
++	rc = trans_table_create_copy(&tmp_pg_dir, PAGE_OFFSET, 0);
+ 	if (rc)
  		goto out;
+ 
 -- 
 2.22.1
 
