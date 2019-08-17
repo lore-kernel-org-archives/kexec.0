@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x843.google.com ([2607:f8b0:4864:20::843])
+Received: from mail-qt1-x841.google.com ([2607:f8b0:4864:20::841])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1hyojn-0002Sj-8M
+ id 1hyojo-0002UV-MM
  for kexec@lists.infradead.org; Sat, 17 Aug 2019 02:46:44 +0000
-Received: by mail-qt1-x843.google.com with SMTP id e8so8203101qtp.7
- for <kexec@lists.infradead.org>; Fri, 16 Aug 2019 19:46:39 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id q4so8244103qtp.1
+ for <kexec@lists.infradead.org>; Fri, 16 Aug 2019 19:46:40 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v2 05/14] arm64, trans_table: make trans_table_map_page generic
-Date: Fri, 16 Aug 2019 22:46:20 -0400
-Message-Id: <20190817024629.26611-6-pasha.tatashin@soleen.com>
+Subject: [PATCH v2 06/14] arm64, trans_table: add trans_table_create_empty
+Date: Fri, 16 Aug 2019 22:46:21 -0400
+Message-Id: <20190817024629.26611-7-pasha.tatashin@soleen.com>
 In-Reply-To: <20190817024629.26611-1-pasha.tatashin@soleen.com>
 References: <20190817024629.26611-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,223 +26,73 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org
 
-Currently, trans_table_map_page has assumptions that are relevant to
-hibernate. But, to make it generic we must allow it to use any allocator
-and also, can't assume that entries do not exist in the page table
-already. Also, we can't use init_mm here.
+This functions returns a zeroed trans_table using the allocator that is
+specified in the info argument.
 
-Also, add "flags" for trans_table_info, they are going to be used
-in copy functions once they are generalized.
+trans_tables should be created by using this function.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/include/asm/trans_table.h | 40 +++++++++++++-
- arch/arm64/kernel/hibernate.c        | 13 ++++-
- arch/arm64/mm/trans_table.c          | 83 +++++++++++++++++++---------
- 3 files changed, 107 insertions(+), 29 deletions(-)
+ arch/arm64/include/asm/trans_table.h |  4 ++++
+ arch/arm64/kernel/hibernate.c        |  6 +++---
+ arch/arm64/mm/trans_table.c          | 12 ++++++++++++
+ 3 files changed, 19 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm64/include/asm/trans_table.h b/arch/arm64/include/asm/trans_table.h
-index f57b2ab2a0b8..1a57af09ded5 100644
+index 1a57af09ded5..02d3a0333dc9 100644
 --- a/arch/arm64/include/asm/trans_table.h
 +++ b/arch/arm64/include/asm/trans_table.h
-@@ -11,11 +11,45 @@
- #include <linux/bits.h>
- #include <asm/pgtable-types.h>
+@@ -40,6 +40,10 @@ struct trans_table_info {
+ 	unsigned long trans_flags;
+ };
  
-+/*
-+ * trans_alloc_page
-+ *	- Allocator that should return exactly one uninitilaized page, if this
-+ *	 allocator fails, trans_table returns -ENOMEM error.
-+ *
-+ * trans_alloc_arg
-+ *	- Passed to trans_alloc_page as an argument
-+ *
-+ * trans_flags
-+ *	- bitmap with flags that control how page table is filled.
-+ *	  TRANS_MKWRITE: during page table copy make PTE, PME, and PUD page
-+ *			 writeable by removing RDONLY flag from PTE.
-+ *	  TRANS_MKVALID: during page table copy, if PTE present, but not valid,
-+ *			 make it valid.
-+ *	  TRANS_CHECKPFN: During page table copy, for every PTE entry check that
-+ *			  PFN that this PTE points to is valid. Otherwise return
-+ *			  -ENXIO
-+ */
-+
-+#define	TRANS_MKWRITE	BIT(0)
-+#define	TRANS_MKVALID	BIT(1)
-+#define	TRANS_CHECKPFN	BIT(2)
-+
-+struct trans_table_info {
-+	void * (*trans_alloc_page)(void *arg);
-+	void *trans_alloc_arg;
-+	unsigned long trans_flags;
-+};
++/* Create and empty trans table. */
++int trans_table_create_empty(struct trans_table_info *info,
++			     pgd_t **trans_table);
 +
  int trans_table_create_copy(pgd_t **dst_pgdp, unsigned long start,
  			    unsigned long end);
  
--int trans_table_map_page(pgd_t *trans_table, void *page,
--			 unsigned long dst_addr,
--			 pgprot_t pgprot);
-+/*
-+ * Add map entry to trans_table for a base-size page at PTE level.
-+ * page:	page to be mapped.
-+ * dst_addr:	new VA address for the pages
-+ * pgprot:	protection for the page.
-+ */
-+int trans_table_map_page(struct trans_table_info *info, pgd_t *trans_table,
-+			 void *page, unsigned long dst_addr, pgprot_t pgprot);
- 
- #endif /* _ASM_TRANS_TABLE_H */
 diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index 0cb858b3f503..524b68ec3233 100644
+index 524b68ec3233..3a7b362e5a58 100644
 --- a/arch/arm64/kernel/hibernate.c
 +++ b/arch/arm64/kernel/hibernate.c
-@@ -179,6 +179,12 @@ int arch_hibernation_header_restore(void *addr)
- }
- EXPORT_SYMBOL(arch_hibernation_header_restore);
+@@ -216,9 +216,9 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 	memcpy(page, src_start, length);
+ 	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
  
-+static void *
-+hibernate_page_alloc(void *arg)
-+{
-+	return (void *)get_safe_page((gfp_t)(unsigned long)arg);
-+}
-+
- /*
-  * Copies length bytes, starting at src_start into an new page,
-  * perform cache maintentance, then maps it at the specified address low
-@@ -195,6 +201,11 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 				 unsigned long dst_addr,
- 				 phys_addr_t *phys_dst_addr)
- {
-+	struct trans_table_info trans_info = {
-+		.trans_alloc_page	= hibernate_page_alloc,
-+		.trans_alloc_arg	= (void *)GFP_ATOMIC,
-+		.trans_flags		= 0,
-+	};
- 	void *page = (void *)get_safe_page(GFP_ATOMIC);
- 	pgd_t *trans_table;
- 	int rc;
-@@ -209,7 +220,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 	if (!trans_table)
- 		return -ENOMEM;
+-	trans_table = (void *)get_safe_page(GFP_ATOMIC);
+-	if (!trans_table)
+-		return -ENOMEM;
++	rc = trans_table_create_empty(&trans_info, &trans_table);
++	if (rc)
++		return rc;
  
--	rc = trans_table_map_page(trans_table, page, dst_addr,
-+	rc = trans_table_map_page(&trans_info, trans_table, page, dst_addr,
+ 	rc = trans_table_map_page(&trans_info, trans_table, page, dst_addr,
  				  PAGE_KERNEL_EXEC);
- 	if (rc)
- 		return rc;
 diff --git a/arch/arm64/mm/trans_table.c b/arch/arm64/mm/trans_table.c
-index b4bbb559d9cf..12f4b3cab6d6 100644
+index 12f4b3cab6d6..6deb35f83118 100644
 --- a/arch/arm64/mm/trans_table.c
 +++ b/arch/arm64/mm/trans_table.c
-@@ -17,6 +17,16 @@
- #include <asm/pgtable.h>
- #include <linux/suspend.h>
- 
-+static void *trans_alloc(struct trans_table_info *info)
-+{
-+	void *page = info->trans_alloc_page(info->trans_alloc_arg);
-+
-+	if (page)
-+		clear_page(page);
-+
-+	return page;
-+}
-+
- static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
- {
- 	pte_t pte = READ_ONCE(*src_ptep);
-@@ -172,41 +182,64 @@ int trans_table_create_copy(pgd_t **dst_pgdp, unsigned long start,
- 	return rc;
- }
- 
--int trans_table_map_page(pgd_t *trans_table, void *page,
--			 unsigned long dst_addr,
--			 pgprot_t pgprot)
-+int trans_table_map_page(struct trans_table_info *info, pgd_t *trans_table,
-+			 void *page, unsigned long dst_addr, pgprot_t pgprot)
- {
--	pgd_t *pgdp;
--	pud_t *pudp;
--	pmd_t *pmdp;
--	pte_t *ptep;
--
--	pgdp = pgd_offset_raw(trans_table, dst_addr);
--	if (pgd_none(READ_ONCE(*pgdp))) {
--		pudp = (void *)get_safe_page(GFP_ATOMIC);
--		if (!pudp)
-+	int pgd_idx = pgd_index(dst_addr);
-+	int pud_idx = pud_index(dst_addr);
-+	int pmd_idx = pmd_index(dst_addr);
-+	int pte_idx = pte_index(dst_addr);
-+	pgd_t *pgdp = trans_table;
-+	pgd_t pgd = READ_ONCE(pgdp[pgd_idx]);
-+	pud_t *pudp, pud;
-+	pmd_t *pmdp, pmd;
-+	pte_t *ptep, pte;
-+
-+	if (pgd_none(pgd)) {
-+		pud_t *t = trans_alloc(info);
-+
-+		if (!t)
- 			return -ENOMEM;
--		pgd_populate(&init_mm, pgdp, pudp);
-+
-+		__pgd_populate(&pgdp[pgd_idx], __pa(t), PUD_TYPE_TABLE);
-+		pgd = READ_ONCE(pgdp[pgd_idx]);
- 	}
- 
--	pudp = pud_offset(pgdp, dst_addr);
--	if (pud_none(READ_ONCE(*pudp))) {
--		pmdp = (void *)get_safe_page(GFP_ATOMIC);
--		if (!pmdp)
-+	pudp = __va(pgd_page_paddr(pgd));
-+	pud = READ_ONCE(pudp[pud_idx]);
-+	if (pud_sect(pud)) {
-+		return -ENXIO;
-+	} else if (pud_none(pud) || pud_sect(pud)) {
-+		pmd_t *t = trans_alloc(info);
-+
-+		if (!t)
- 			return -ENOMEM;
--		pud_populate(&init_mm, pudp, pmdp);
-+
-+		__pud_populate(&pudp[pud_idx], __pa(t), PMD_TYPE_TABLE);
-+		pud = READ_ONCE(pudp[pud_idx]);
- 	}
- 
--	pmdp = pmd_offset(pudp, dst_addr);
--	if (pmd_none(READ_ONCE(*pmdp))) {
--		ptep = (void *)get_safe_page(GFP_ATOMIC);
--		if (!ptep)
-+	pmdp = __va(pud_page_paddr(pud));
-+	pmd = READ_ONCE(pmdp[pmd_idx]);
-+	if (pmd_sect(pmd)) {
-+		return -ENXIO;
-+	} else if (pmd_none(pmd) || pmd_sect(pmd)) {
-+		pte_t *t = trans_alloc(info);
-+
-+		if (!t)
- 			return -ENOMEM;
--		pmd_populate_kernel(&init_mm, pmdp, ptep);
-+
-+		__pmd_populate(&pmdp[pmd_idx], __pa(t), PTE_TYPE_PAGE);
-+		pmd = READ_ONCE(pmdp[pmd_idx]);
- 	}
- 
--	ptep = pte_offset_kernel(pmdp, dst_addr);
--	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
-+	ptep = __va(pmd_page_paddr(pmd));
-+	pte = READ_ONCE(ptep[pte_idx]);
-+
-+	if (!pte_none(pte))
-+		return -ENXIO;
-+
-+	set_pte(&ptep[pte_idx], pfn_pte(virt_to_pfn(page), pgprot));
- 
+@@ -164,6 +164,18 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
  	return 0;
  }
+ 
++int trans_table_create_empty(struct trans_table_info *info, pgd_t **trans_table)
++{
++	pgd_t *dst_pgdp = trans_alloc(info);
++
++	if (!dst_pgdp)
++		return -ENOMEM;
++
++	*trans_table = dst_pgdp;
++
++	return 0;
++}
++
+ int trans_table_create_copy(pgd_t **dst_pgdp, unsigned long start,
+ 			    unsigned long end)
+ {
 -- 
 2.22.1
 
