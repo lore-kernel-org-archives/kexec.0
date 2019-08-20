@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-vs1-xe41.google.com ([2607:f8b0:4864:20::e41])
+Received: from mx3.molgen.mpg.de ([141.14.17.11] helo=mx1.molgen.mpg.de)
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i07aM-0004sM-Jp
- for kexec@lists.infradead.org; Tue, 20 Aug 2019 17:06:20 +0000
-Received: by mail-vs1-xe41.google.com with SMTP id q188so4030298vsa.4
- for <kexec@lists.infradead.org>; Tue, 20 Aug 2019 10:06:16 -0700 (PDT)
+ id 1i0BZa-0004bZ-Nc
+ for kexec@lists.infradead.org; Tue, 20 Aug 2019 21:21:49 +0000
+From: Donald Buczek <buczek@molgen.mpg.de>
+Subject: /proc/vmcore and wrong PAGE_OFFSET
+Message-ID: <c42060b0-12ae-d170-9ad4-03d85919948c@molgen.mpg.de>
+Date: Tue, 20 Aug 2019 23:21:23 +0200
 MIME-Version: 1.0
-From: Aggelis Aggelis <aggelis@gmail.com>
-Date: Tue, 20 Aug 2019 20:06:03 +0300
-Message-ID: <CAKUkA506XrKTeZ2LOcwctvUUFBB+ZUDcAaw1=K8z+KyfGntbeg@mail.gmail.com>
-Subject: kexec broken on arm (v7) socfpga in later 4 series kernels ?
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,95 +17,119 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>
 
-SSB1c2UgTWl0eVNPTS01Q1NYIGRldiBraXQgKGFsdGVyYSBjeWNsb25lIHYgc29jZnBnYSkgZnJv
-bSBDcml0aWNhbCBMaW5rCmFuZCBpIHdvdWxkIGxpa2UgdG8gYm9vdCB0byBhIGRpZmZlcmVudCBr
-ZXJuZWwgdXNpbmcga2V4ZWMuCgpJbiBteSBjb25maWd1cmF0aW9uOgoKS0VSTkVMIDogaHR0cHM6
-Ly9naXRodWIuY29tL2FsdGVyYS1vcGVuc291cmNlL2xpbnV4LXNvY2ZwZ2EvYXJjaGl2ZS9zb2Nm
-cGdhLTQuOS43Ni1sdHNpLXJ0LnppcApDT01QSUxFUiA6IGh0dHBzOi8vcmVsZWFzZXMubGluYXJv
-Lm9yZy9hcmNoaXZlLzE0LjA0L2NvbXBvbmVudHMvdG9vbGNoYWluL2JpbmFyaWVzL2djYy1saW5h
-cm8tYXJtLWxpbnV4LWdudWVhYmloZi00LjgtMjAxNC4wNF9saW51eC50YXIuYnoyCgpJbiB0aGUg
-a2VybmVsIGNvbmZpZ3VyYXRpb24ga2V4ZWMgaXMgZW5hYmxlZAoKemNhdCAvcHJvYy9jb25maWcu
-Z3ogfGdyZXAgS0VYRUMKQ09ORklHX0tFWEVDX0NPUkU9eQpDT05GSUdfS0VYRUM9eQoKCmFuZCB0
-aGUgZGVmYXVsdCBrZXJuZWwgY21kbGluZSBpcwoKIyBjYXQgL3Byb2MvY21kbGluZQpyb290PS9k
-ZXYvbW1jYmxrMHAzIHJvb3R3YWl0IHJ3IGVhcmx5Y29uCgprZXhlYyB0b29scyB2ZXJzaW9uICBp
-cwoKIy4va2V4ZWMgLS12ZXJzaW9uCmtleGVjLXRvb2xzIDIuMC4xOQoKCgoidWJvb3Qga2VybmVs
-IiBhbmQgJ2tleGVjIGtlcm5lbCcgYXJlIHRoZSBzYW1lIHZlcnNpb24KKHNvY2ZwZ2EtNC45Ljc2
-LWx0c2ktcnQpLiBUaGUgImtleGVjIGtlcm5lbCIgaGFzIGp1c3QgbW9yZSBtb2R1bGVzCmVuYWJs
-ZWQgY29tcGFyZWQgdG8gdGhlIGRlZmF1bHQgInVib290IGtlcm5lbCIKCkZpcnN0ICB0aGUga2Vy
-bmVsIGlzIGxvYWRlZCAgd2l0aCBrZXhlYyB0b29scwoKIy4va2V4ZWMgLWQgIC1jIC1sIHpJbWFn
-ZWJreAotLWR0Yj1zb2NmcGdhX2N5Y2xvbmU1X21pdHlzb201Y3N4X2RldmtpdC5kdGIKLS1jb21t
-YW5kLWxpbmU9InJvb3Q9L2Rldi9tbWNibGswcDMgcm9vdHdhaXQgcncgZWFybHljb24iCnN5c2Nh
-bGwga2V4ZWNfZmlsZV9sb2FkIG5vdCBhdmFpbGFibGUuCmtlcm5lbDogMHhiNmFiMTAwOCBrZXJu
-ZWxfc2l6ZTogMHg0YTU1YzgKTUVNT1JZIFJBTkdFUwowMDAwMDAwMDAwMDAwMDAwLTAwMDAwMDAw
-M2ZmZmZmZmYgKDApCnpJbWFnZSBoZWFkZXI6IDB4MDE2ZjI4MTggMHgwMDAwMDAwMCAweDAwNGE1
-NWM4CnpJbWFnZSBzaXplIDB4NGE1NWM4LCBmaWxlIHNpemUgMHg0YTU1YzgKekltYWdlIHJlcXVp
-cmVzIDB4MDA0YjY1YzggYnl0ZXMKS2VybmVsOiBhZGRyZXNzPTB4MDAwMDgwMDAgc2l6ZT0weDAx
-NzhmY2U4CkRUICAgIDogYWRkcmVzcz0weDAxNzk5MDAwIHNpemU9MHgwMDAwN2QwMAprZXhlY19s
-b2FkOiBlbnRyeSA9IDB4ODAwMCBmbGFncyA9IDB4MjgwMDAwCm5yX3NlZ21lbnRzID0gMgpzZWdt
-ZW50WzBdLmJ1ZiAgID0gMHhiNmFiMTAwOApzZWdtZW50WzBdLmJ1ZnN6ID0gMHg0YTU1Y2MKc2Vn
-bWVudFswXS5tZW0gICA9IDB4ODAwMApzZWdtZW50WzBdLm1lbXN6ID0gMHg0YTYwMDAKc2VnbWVu
-dFsxXS5idWYgICA9IDB4OGU2MzAKc2VnbWVudFsxXS5idWZzeiA9IDB4N2QwMApzZWdtZW50WzFd
-Lm1lbSAgID0gMHgxNzk5MDAwCnNlZ21lbnRbMV0ubWVtc3ogPSAweDgwMDAKCmFuZCB0aGVuIHRy
-eSB0byBzdGFydCB0aGUgbmV3IG5ldyBrZXJuZWwKIyBrZXhlYyAtZCAtZQpbIDEyNy45MjI4Mjld
-IGtleGVjX2NvcmU6IFN0YXJ0aW5nIG5ldyBrZXJuZWwKWyAxMjcuOTI3MDI0XSBEaXNhYmxpbmcg
-bm9uLWJvb3QgQ1BVcyAuLi4KWyAxMjcuOTc2Mjc3XSBDUFUxOiBzaHV0ZG93bgpbIDEyNy45Nzk4
-OTldIEJ5ZSEKCmJ1dCAgdGhlbiBub3RoaW5nIGhhcHBlbnMgYW5kIG5vIG1lc3NhZ2VzIG9uIGNv
-bnNvbGUuCgpBZnRlciBlbmFibGluZyDigJxLZXJuZWwgSGFja2luZ+KAnSAtPiAiS2VybmVsIGxv
-dy1sZXZlbCBkZWJ1Z2dpbmcgZnVuY3Rpb25zICIKCnRoZSBrZXhlYydkIHpJbWFnZWJreCBrZXJu
-ZWwgZ2l2ZXMgdGhlIGZvbGxvd2luZyByZXN1bHQKCmtleGVjIC1kIC1lClsgIDEzNC4xMTA4NTVd
-IGtleGVjX2NvcmU6IFN0YXJ0aW5nIG5ldyBrZXJuZWwKWyAgMTM0LjExNTA2NF0gRGlzYWJsaW5n
-IG5vbi1ib290IENQVXMgLi4uClsgIDEzNC4xNzY5NjFdIENQVTE6IHNodXRkb3duClsgIDEzNC4x
-ODA2MjRdIEJ5ZSEKVW5jb21wcmVzc2luZyBMaW51eC4uLiBkb25lLCBib290aW5nIHRoZSBrZXJu
-ZWwuCgoKYW5kIHRoZW4gbm90aGluZyAuIEF0IGxlYXN0IHRoZSDigJxVbmNvbXByZXNzaW5nIExp
-bnV44oCmIGRvbmUsIGJvb3RpbmcKdGhlIGtlcm5lbC7igJ0gbWVzc2FnZSBtZWFucyB0aGF0IHRo
-ZSBrZXhlYydkIGtlcm5lbCBzdGFydHMgdG8gZXhlY3V0ZQphbmQgcmVhY2hlcyBhdCBsZWFzdCBh
-dCBsaW5lIDU0NiBvZiDigJwvYXJjaC9hcm0vYm9vdC9jb21wcmVzc2VkL2hlYWQuU+KAnQpmaWxl
-IGV4ZWN1dGluZyB0aGUgZm9sbG93aW5nIGluc3RydWN0aW9uOgoKYmwgZGVjb21wcmVzc19rZXJu
-ZWwuCgoKQWNjb3JkaW5nIHRvIHRoaXMgcGF0Y2ggaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9y
-Zy9wYXRjaC82NTA0MzIxLwprZXhlYyBpcyBzdXBwb3J0ZWQgb24gc29jZnBnYS4KCkRvd25sb2Fk
-aW5nIGFuIG9sZGVyIHNlcmllcyBrZXJuZWwgZm9yIHNvY2ZwZ2EgKDQuMS4yMikKCmZyb20gKGh0
-dHBzOi8vZ2l0aHViLmNvbS9kbGF1dC9saW51eC1zb2NmcGdhICwgIHVuZm9ydHVuYXRlbGx5IG9s
-ZGVyCnNlcmllcyBrZXJuZWxzIGFyZSBub3QgYXZhaWxhYmxlIGZyb20gb2ZmaWNpYWwKaHR0cHM6
-Ly9naXRodWIuY29tL2FsdGVyYS1vcGVuc291cmNlL2xpbnV4LXNvY2ZwZ2EgKQoKYW5kIGFwcGx5
-aW5nIHRoZSBhYm92ZSBwYXRjaCBpIHdhcyBhYmxlIHRvIGtleGVjIGJvb3QgdGhlCjQuOS43Ni1s
-dHNpLXJ0IGtlcm5lbCBmcm9tIHRoZSA0LjEuMjIga2VybmVsIGFzIHNob3duIGJlbGxvdwoKcm9v
-dEBub2RlMTovbW50L3Rlc3QjdW5hbWUgLWEKTGludXggbm9kZTEgNC4xLjIyLWx0c2ktYWx0ZXJh
-ICMyIFNNUCBQUkVFTVBUIE1vbiBKdWwgMjkgMTI6Mzg6MDYgRUVTVAoyMDE5IGFybXY3bCBHTlUv
-CgpXZSB0aGVuIGtleGVjIGxvYWQgdGhlIDQuOS43NiBrZXJuZWwKCnJvb3RAbm9kZTE6L21udC90
-ZXN0Iy4va2V4ZWMgLWQgIC1jIC1sIHpJbWFnZWJreAotLWR0Yj1zb2NmcGdhX2N5Y2xvbmU1X21p
-dHlzb201Y3N4X2RldmtpdC5kdGIKLS1jb21tYW5kLWxpbmU9InJvb3Q9L2Rldi9tbWNibGswcDMg
-cm9vdHdhaXQgcncgZWFybHljb24iCgphbmQgdGhlbiBzdGFydCB0aGUga2VybmVsIChzdWNjZXNz
-ZnVsbHkhISkgd2l0aAoKcm9vdEBub2RlMTovbW50L3Rlc3QjIGtleGVjIC1kIC1lClsgICA0Ni4z
-MDYxMDJdIGtleGVjOiBTdGFydGluZyBuZXcga2VybmVsClsgICA0Ni4zMDk5MjhdIERpc2FibGlu
-ZyBub24tYm9vdCBDUFVzIC4uLgpbICAgNDYuMzA2MTAyXSBrZXhlYzogU3RhcnRpbmcgbmV3IGtl
-cm5lbApbICAgNDYuMzc4MDUzXSBDUFUxOiBzaHV0ZG93bgpbICAgNDYuMzgxODc1XSBCeWUhClVu
-Y29tcHJlc3NpbmcgTGludXguLi4gZG9uZSwgYm9vdGluZyB0aGUga2VybmVsLgpbICAgIDAuMDAw
-MDAwXSBCb290aW5nIExpbnV4IG9uIHBoeXNpY2FsIENQVSAweDAKWyAgICAwLjAwMDAwMF0gTGlu
-dXggdmVyc2lvbiA0LjkuNzYtcnQ2MS1sdHNpLWFsdGVyYSAoYWdnZWxpc0Bjb3JlaTUpCihnY2Mg
-dmVyc2lvbiA0LjguMyAyMDE0MDQwMSAocHJlcmVsZWFzZSkgKGNyb3NzdG9vbC1ORyBsOQpbICAg
-IDAuMDAwMDAwXSBDUFU6IEFSTXY3IFByb2Nlc3NvciBbNDEzZmMwOTBdIHJldmlzaW9uIDAgKEFS
-TXY3KSwgY3I9MTBjNTM4N2QKWyAgICAwLjAwMDAwMF0gQ1BVOiBQSVBUIC8gVklQVCBub25hbGlh
-c2luZyBkYXRhIGNhY2hlLCBWSVBUIGFsaWFzaW5nCmluc3RydWN0aW9uIGNhY2hlClsgICAgMC4w
-MDAwMDBdIE9GOiBmZHQ6TWFjaGluZSBtb2RlbDogTWl0eVNPTS01Q1NYIEFsdGVyYSBTT0NGUEdB
-IEN5Y2xvbmUgVgpbICAgIDAuMDAwMDAwXSBjbWE6IFJlc2VydmVkIDE2IE1pQiBhdCAweDNmMDAw
-MDAwClsgICAgMC4wMDAwMDBdIE1lbW9yeSBwb2xpY3k6IERhdGEgY2FjaGUgd3JpdGVhbGxvYwpb
-ICAgIDAuMDAwMDAwXSBwZXJjcHU6IEVtYmVkZGVkIDE1IHBhZ2VzL2NwdSBAZWY2YmYwMDAgczI5
-MTg0IHI4MTkyCmQyNDA2NCB1NjE0NDAKWyAgICAwLjAwMDAwMF0gQnVpbHQgMSB6b25lbGlzdHMj
-Li9rZXhlYyAtZCAgLWMgLWwgekltYWdlYmt4Ci0tZHRiPXNvY2ZwZ2FfY3ljbG9uZTVfbWl0eXNv
-bTVjc3hfZGV2a2l0LmR0YgotLWNvbW1hbmQtbGluZT0icm9vdD0vZGV2L21tY2JsazBwMyByb290
-d2FpdCBydyBlYXJseWNvbiIgaW4gWm9uZQpvcmRlciwgbW9iaWxpdHkgZ3JvdXBpbmcgb24uICBU
-b3RhbCBwYWdlczogMjYwNDE2ClsgICAgMC4wMDAwMDBdIEtlcm5lbCBjb21tYW5kIGxpbmU6IHJv
-b3Q9L2Rldi9tbWNibGswcDMgcm9vdHdhaXQKWyAgICAwLjAwMDAwMF0gUElEIGhhc2ggdGFibGUg
-ZW50cmllczogNDA5NiAob3JkZXI6IDIsIDE2Mzg0IGJ5dGVzKQoKLi4uLi4KLi4uLi4KQW5nc3Ry
-b20gdjIwMTcuMTIgLSBLZXJuZWwgNC45Ljc2LXJ0NjEtbHRzaS1hbHRlcmEKCm5vZGUxIGxvZ2lu
-OgoKCklzIHRoZXJlIHNvbWV0aGluZyBpIGFtIG1pc3Npbmcgb3Iga2V4ZWMgYnJva2UgaW4gbGF0
-ZXIgc2VyaWVzIDQKa2VybmVscyBmb3IgYXJtIChzb2NmcGdhKT8KCkFnZ2VsaXMgQWdnZWxpcwoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
-bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Dear Linux folks,
+
+I'm investigating a problem, that the crash utility fails to work with our crash dumps:
+
+     buczek@kreios:/mnt$ crash vmlinux crash.vmcore
+     
+     crash 7.2.6
+     Copyright (C) 2002-2019  Red Hat, Inc.
+     Copyright (C) 2004, 2005, 2006, 2010  IBM Corporation
+     Copyright (C) 1999-2006  Hewlett-Packard Co
+     Copyright (C) 2005, 2006, 2011, 2012  Fujitsu Limited
+     Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
+     Copyright (C) 2005, 2011  NEC Corporation
+     Copyright (C) 1999, 2002, 2007  Silicon Graphics, Inc.
+     Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
+     This program is free software, covered by the GNU General Public License,
+     and you are welcome to change it and/or distribute copies of it under
+     certain conditions.  Enter "help copying" to see the conditions.
+     This program has absolutely no warranty.  Enter "help warranty" for details.
+      
+     GNU gdb (GDB) 7.6
+     Copyright (C) 2013 Free Software Foundation, Inc.
+     License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+     This is free software: you are free to change and redistribute it.
+     There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+     and "show warranty" for details.
+     This GDB was configured as "x86_64-unknown-linux-gnu"...
+     
+     crash: read error: kernel virtual address: ffff89807ff77000  type: "memory section root table"
+
+The crash file is a copy of /dev/vmcore taken by a crashkernel after a sysctl-forced panic.
+
+It looks to me, that  0xffff89807ff77000 is not readable, because the virtual addresses stored in the elf header of the dump file are off by 0x0000008000000000:
+
+     buczek@kreios:/mnt$ readelf -a crash.vmcore | grep LOAD | perl -lane 'printf "%s (%016x)\n",$_,hex($F[2])-hex($F[3])'
+       LOAD           0x000000000000d000 0xffffffff81000000 0x000001007d000000 (fffffeff04000000)
+       LOAD           0x0000000001c33000 0xffff880000001000 0x0000000000001000 (ffff880000000000)
+       LOAD           0x0000000001cc1000 0xffff880000090000 0x0000000000090000 (ffff880000000000)
+       LOAD           0x0000000001cd1000 0xffff880000100000 0x0000000000100000 (ffff880000000000)
+       LOAD           0x0000000001cd2070 0xffff880000100070 0x0000000000100070 (ffff880000000000)
+       LOAD           0x0000000019bd2000 0xffff880038000000 0x0000000038000000 (ffff880000000000)
+       LOAD           0x000000004e6a1000 0xffff88006ffff000 0x000000006ffff000 (ffff880000000000)
+       LOAD           0x000000004e6a2000 0xffff880100000000 0x0000000100000000 (ffff880000000000)
+       LOAD           0x0000001fcda22000 0xffff882080000000 0x0000002080000000 (ffff880000000000)
+       LOAD           0x0000003fcd9a2000 0xffff884080000000 0x0000004080000000 (ffff880000000000)
+       LOAD           0x0000005fcd922000 0xffff886080000000 0x0000006080000000 (ffff880000000000)
+       LOAD           0x0000007fcd8a2000 0xffff888080000000 0x0000008080000000 (ffff880000000000)
+       LOAD           0x0000009fcd822000 0xffff88a080000000 0x000000a080000000 (ffff880000000000)
+       LOAD           0x000000bfcd7a2000 0xffff88c080000000 0x000000c080000000 (ffff880000000000)
+       LOAD           0x000000dfcd722000 0xffff88e080000000 0x000000e080000000 (ffff880000000000)
+       LOAD           0x000000fc4d722000 0xffff88fe00000000 0x000000fe00000000 (ffff880000000000)
+
+(Columns are File offset, Virtual Address, Physical Address and computed offset).
+
+I would expect the offset between the virtual and the physical address to be PAGE_OFFSET, which is 0xffff88800000000 on x86_64, not 0xffff880000000000. Unlike /proc/vmcore, /proc/kcore shows the same physical memory (of the last memory section above) with a correct offset:
+
+     buczek@kreios:/mnt$ sudo readelf -a /proc/kcore | grep 0x000000fe00000000 | perl -lane 'printf "%s (%016x)\n",$_,hex($F[2])-hex($F[3])'
+       LOAD           0x0000097e00004000 0xffff897e00000000 0x000000fe00000000 (ffff888000000000)
+
+The failing address 0xffff89807ff77000 happens to be at the end of the last memory section. It is the mem_section array, which crash wants to load and which is visible in the running system:
+
+     buczek@kreios:/mnt$ sudo gdb vmlinux /proc/kcore
+     [...]
+     (gdb) print mem_section
+     $1 = (struct mem_section **) 0xffff89807ff77000
+     (gdb) print *mem_section
+     $2 = (struct mem_section *) 0xffff88a07f37b000
+     (gdb) print **mem_section
+     $3 = {section_mem_map = 18446719884453740551, pageblock_flags = 0xffff88a07f36f040}
+
+I can read the same information from the crash dump, if I account for the 0x0000008000000000 error:
+
+     buczek@kreios:/mnt$ gdb vmlinux crash.vmcore
+     [...]
+     (gdb) print mem_section
+     $1 = (struct mem_section **) 0xffff89807ff77000
+     (gdb) print *mem_section
+     Cannot access memory at address 0xffff89807ff77000
+     (gdb) set $t=(struct mem_section **) ((char *)mem_section - 0x0000008000000000)
+     (gdb) print *$t
+     $2 = (struct mem_section *) 0xffff88a07f37b000
+     (gdb) set $s=(struct mem_section *)((char *)*$t - 0x0000008000000000 )
+     (gdb) print *$s
+     $3 = {section_mem_map = 18446719884453740551, pageblock_flags = 0xffff88a07f36f040}
+
+In the above example, the running kernel, the crashed kernel and the crashkernel are all the same 4.19.57 compilation. But I've tried with several other versions ( crashkernel 4.4, running kernel from 4.0 to linux master) with the same result.
+
+The machine in the above example has several numa nodes (this is why there are so many LOAD headers). But I've tried this with a small kvm virtual machine and got the same result.
+
+     buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep RANDOMIZE_BASE .config
+     # CONFIG_RANDOMIZE_BASE is not set
+     buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep SPARSEMEM .config
+     CONFIG_ARCH_SPARSEMEM_ENABLE=y
+     CONFIG_ARCH_SPARSEMEM_DEFAULT=y
+     CONFIG_SPARSEMEM_MANUAL=y
+     CONFIG_SPARSEMEM=y
+     CONFIG_SPARSEMEM_EXTREME=y
+     CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
+     CONFIG_SPARSEMEM_VMEMMAP=y
+     buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep PAGE_TABLE_ISOLATION .config
+     CONFIG_PAGE_TABLE_ISOLATION=y
+
+Any ideas?
+
+Donald
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
