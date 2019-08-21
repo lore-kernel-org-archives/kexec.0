@@ -1,30 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i0F09-0002Qd-GJ
- for kexec@lists.infradead.org; Wed, 21 Aug 2019 01:01:26 +0000
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x7L0v9P0101259
- for <kexec@lists.infradead.org>; Tue, 20 Aug 2019 21:01:22 -0400
+ id 1i0F0x-0002Uj-P5
+ for kexec@lists.infradead.org; Wed, 21 Aug 2019 01:02:18 +0000
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x7L11sw4015177
+ for <kexec@lists.infradead.org>; Tue, 20 Aug 2019 21:02:15 -0400
 Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2ugu9cs9vt-1
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2ugnuqp94m-1
  (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 20 Aug 2019 21:01:22 -0400
+ for <kexec@lists.infradead.org>; Tue, 20 Aug 2019 21:02:15 -0400
 Received: from localhost
  by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.ibm.com>;
- Wed, 21 Aug 2019 02:01:21 +0100
+ Wed, 21 Aug 2019 02:02:14 +0100
 References: <20190715082702.27308-1-svens@stackframe.org>
- <20190715082702.27308-6-svens@stackframe.org>
+ <20190715082702.27308-7-svens@stackframe.org>
 From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH v4 5/7] kexec_elf: remove Elf_Rel macro
-In-reply-to: <20190715082702.27308-6-svens@stackframe.org>
-Date: Tue, 20 Aug 2019 22:01:11 -0300
+Subject: Re: [PATCH v4 6/7] kexec_elf: remove unused variable in
+ kexec_elf_load()
+In-reply-to: <20190715082702.27308-7-svens@stackframe.org>
+Date: Tue, 20 Aug 2019 22:02:06 -0300
 MIME-Version: 1.0
-Message-Id: <87tvabmiw8.fsf@morokweng.localdomain>
+Message-Id: <87sgpvmiup.fsf@morokweng.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,39 +43,50 @@ Cc: Christophe Leroy <christophe.leroy@c-s.fr>, linuxppc-dev@lists.ozlabs.org, d
 
 Sven Schnelle <svens@stackframe.org> writes:
 
-> It wasn't used anywhere, so lets drop it.
+> base was never assigned, so we can remove it.
 >
 > Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 > Signed-off-by: Sven Schnelle <svens@stackframe.org>
 > ---
->  kernel/kexec_elf.c | 4 ----
->  1 file changed, 4 deletions(-)
+>  kernel/kexec_elf.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
 >
 > diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
-> index 70d31b8feeae..e346659af324 100644
+> index e346659af324..9421eebbacf0 100644
 > --- a/kernel/kexec_elf.c
 > +++ b/kernel/kexec_elf.c
-> @@ -10,10 +10,6 @@
->
->  #define elf_addr_to_cpu	elf64_to_cpu
->
-> -#ifndef Elf_Rel
-> -#define Elf_Rel		Elf64_Rel
-> -#endif /* Elf_Rel */
-> -
->  static inline bool elf_is_elf_file(const struct elfhdr *ehdr)
+> @@ -350,7 +350,7 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+>  			 struct kexec_buf *kbuf,
+>  			 unsigned long *lowest_load_addr)
 >  {
->  	return memcmp(ehdr->e_ident, ELFMAG, SELFMAG) == 0;
-
-Could you remove this one from the file in arch/powerpc as well? Perhaps
-this and the previous patch could be placed before patch 1, so that this
-change can be done only once.
-
-In any case:
+> -	unsigned long base = 0, lowest_addr = UINT_MAX;
+> +	unsigned long lowest_addr = UINT_MAX;
+>  	int ret;
+>  	size_t i;
+>  
+> @@ -372,7 +372,7 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+>  		kbuf->bufsz = size;
+>  		kbuf->memsz = phdr->p_memsz;
+>  		kbuf->buf_align = phdr->p_align;
+> -		kbuf->buf_min = phdr->p_paddr + base;
+> +		kbuf->buf_min = phdr->p_paddr;
+>  		ret = kexec_add_buffer(kbuf);
+>  		if (ret)
+>  			goto out;
+> @@ -382,9 +382,6 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+>  			lowest_addr = load_addr;
+>  	}
+>  
+> -	/* Update entry point to reflect new load address. */
+> -	ehdr->e_entry += base;
+> -
+>  	*lowest_load_addr = lowest_addr;
+>  	ret = 0;
+>   out:
 
 Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
---
+-- 
 Thiago Jung Bauermann
 IBM Linux Technology Center
 
