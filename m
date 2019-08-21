@@ -1,30 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i0Eyq-0008Df-Vi
- for kexec@lists.infradead.org; Wed, 21 Aug 2019 01:00:08 +0000
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x7L0vAgf103170
- for <kexec@lists.infradead.org>; Tue, 20 Aug 2019 21:00:04 -0400
-Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2ugskxvjym-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 20 Aug 2019 21:00:04 -0400
-Received: from localhost
- by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.ibm.com>;
- Wed, 21 Aug 2019 02:00:03 +0100
+ id 1i0EzC-0000RC-TY
+ for kexec@lists.infradead.org; Wed, 21 Aug 2019 01:00:28 +0000
 References: <20190715082702.27308-1-svens@stackframe.org>
- <20190715082702.27308-4-svens@stackframe.org>
+ <20190715082702.27308-5-svens@stackframe.org>
 From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH v4 3/7] kexec_elf: remove parsing of section headers
-In-reply-to: <20190715082702.27308-4-svens@stackframe.org>
-Date: Tue, 20 Aug 2019 21:59:53 -0300
+Subject: Re: [PATCH v4 4/7] kexec_elf: remove PURGATORY_STACK_SIZE
+In-reply-to: <20190715082702.27308-5-svens@stackframe.org>
+Date: Tue, 20 Aug 2019 22:00:17 -0300
+Message-ID: <87v9urmixq.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Message-Id: <87wof7miye.fsf@morokweng.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,16 +29,32 @@ Cc: linuxppc-dev@lists.ozlabs.org, deller@gmx.de, Sven Schnelle <svens@stackfram
 
 Sven Schnelle <svens@stackframe.org> writes:
 
-> We're not using them, so we can drop the parsing.
+> It's not used anywhere so just drop it.
 >
 > Signed-off-by: Sven Schnelle <svens@stackframe.org>
+> ---
+>  kernel/kexec_elf.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
+> index effe9dc0b055..70d31b8feeae 100644
+> --- a/kernel/kexec_elf.c
+> +++ b/kernel/kexec_elf.c
+> @@ -8,8 +8,6 @@
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+>  
+> -#define PURGATORY_STACK_SIZE	(16 * 1024)
+> -
+>  #define elf_addr_to_cpu	elf64_to_cpu
+>  
+>  #ifndef Elf_Rel
 
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Can you remove it from the file in arch/powerpc as well?
 
 -- 
 Thiago Jung Bauermann
 IBM Linux Technology Center
-
 
 _______________________________________________
 kexec mailing list
