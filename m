@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3.molgen.mpg.de ([141.14.17.11] helo=mx1.molgen.mpg.de)
+Received: from mail-eopbgr750057.outbound.protection.outlook.com
+ ([40.107.75.57] helo=NAM02-BL2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i0mvG-0003cO-Dw
- for kexec@lists.infradead.org; Thu, 22 Aug 2019 13:14:40 +0000
-Subject: Re: Brocken/incomplete `/proc/vmcore`
-References: <1d18de74-76e3-823c-7480-fad1d6012026@molgen.mpg.de>
-From: Donald Buczek <buczek@molgen.mpg.de>
-Message-ID: <5431590a-e0fa-afac-2f38-8c3b60853d0d@molgen.mpg.de>
-Date: Thu, 22 Aug 2019 15:14:16 +0200
-MIME-Version: 1.0
-In-Reply-To: <1d18de74-76e3-823c-7480-fad1d6012026@molgen.mpg.de>
+ id 1i0oBR-0001HD-Bt
+ for kexec@lists.infradead.org; Thu, 22 Aug 2019 14:35:27 +0000
+From: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH] x86/kdump: Reserve extra memory when SME or SEV is active
+Date: Thu, 22 Aug 2019 14:35:21 +0000
+Message-ID: <ff049b95-92a3-52ab-7ee8-01051a597cff@amd.com>
+References: <20190822025328.17151-1-kasong@redhat.com>
+In-Reply-To: <20190822025328.17151-1-kasong@redhat.com>
 Content-Language: en-US
+Content-ID: <EEDAE35B32F9CC4B801F6354AE021080@namprd12.prod.outlook.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,106 +21,120 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Paul Menzel <pmenzel@molgen.mpg.de>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Kairui Song <kasong@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
 
-Dear Paul,
+On 8/21/19 9:53 PM, Kairui Song wrote:
+> Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
+> SWIOTLB will be enabled even if there is less than 4G of memory when SME
+> is active, to support DMA of devices that not support address with the
+> encrypt bit.
+> 
+> And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
+> active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
+> 
+> Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
+> encryption") will always force SWIOTLB to be enabled when SEV is active
+> in all cases.
+> 
+> Now, when either SME or SEV is active, SWIOTLB will be force enabled,
+> and this is also true for kdump kernel. As a result kdump kernel will
+> run out of already scarce pre-reserved memory easily.
+> 
+> So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
+> kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
+> is specified or any offset is used. As for the high reservation case, an
+> extra low memory region will always be reserved and that is enough for
+> SWIOTLB. Else if the offset format is used, user should be fully aware
+> of any possible kdump kernel memory requirement and have to organize the
+> memory usage carefully.
+> 
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> ---
+>  arch/x86/kernel/setup.c | 26 +++++++++++++++++++++++---
+>  1 file changed, 23 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index bbe35bf879f5..ed91fa9d9f6e 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -528,7 +528,7 @@ static int __init reserve_crashkernel_low(void)
+>  
+>  static void __init reserve_crashkernel(void)
+>  {
+> -	unsigned long long crash_size, crash_base, total_mem;
+> +	unsigned long long crash_size, crash_base, total_mem, mem_enc_req;
+>  	bool high = false;
+>  	int ret;
+>  
+> @@ -550,6 +550,17 @@ static void __init reserve_crashkernel(void)
+>  		return;
+>  	}
+>  
+> +	/*
+> +	 * When SME/SEV is active, it will always required an extra SWIOTLB
+> +	 * region.
+> +	 */
+> +	if (sme_active() || sev_active()) {
 
-On 8/15/19 1:36 PM, Paul Menzel wrote:
-> Dear Linux folks,
-> 
-> 
-> Using Linux 4.19.57 (configuration attached), crashing the system, and
-> starting it using the same Linux kernel as crash kernel, the available
-> `/proc/vmcore` seems to be incomplete.
-> 
-> Running GDB commands, working with `/proc/kcore`, do not work with
-> `/proc/vmcore`, and the addresses are not there.
-> 
-> In the running system, iterating through the tasks works.
-> 
-> ```
-> macro define offsetof(type, member) ((size_t)(&((type *)0)->member))
-> macro define container_of(ptr,type,member)  ((type *)((size_t)ptr-offsetof(type,member)))
-> ```
-> 
-> ### /proc/kcore ###
-> 
-> ```
-> Core was generated by `BOOT_IMAGE=/boot/bzImage-4.19.57.mx64.286 root=LABEL=root ro crashkernel=512M c'.
-> #0  0x0000000000000000 in irq_stack_union ()
-> (gdb) source gdb-macros.txt
-> (gdb) set $t=&init_task
-> (gdb) print $t->tasks
-> $1 = {next = 0xffff889ffbb0f080, prev = 0xffff88bff9b09300}
-> (gdb) print $t->pid
-> $2 = 0
-> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
-> (gdb) print $t->tasks
-> $3 = {next = 0xffff889ffbb0e340, prev = 0xffffffff82411a80 <init_task+768>}
-> (gdb) print $t->pid
-> $4 = 1
-> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
-> (gdb) print $t->tasks
-> $5 = {next = 0xffff889ffbb530c0, prev = 0xffff889ffbb0f080}
-> (gdb) print $t->pid
-> $6 = 2
-> ```
-> 
-> ### /proc/vmcore ###
-> 
-> After the crash by SysRQ trigger, values in `/proc/vmcore` are incorrect.
-> 
-> ```
-> (gdb) set $t=&init_task
-> (gdb) print $t->tasks
-> $1 = {next = 0xffff889ffbb0f080, prev = 0xffff88bff9b09300}
-> (gdb) print $t->pid
-> $2 = 0
-> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
-> (gdb) print $t->tasks
-> $3 = {next = 0x0 <irq_stack_union>, prev = 0x0 <irq_stack_union>}
-> (gdb) print $t->pid
-> $4 = 0
-> ```
-> 
-> We can reproduce this in a virtual machine and on a big server.
+You can use mem_encrypt_active() here in place of the two checks.
 
-It is the same bug as the one described in my mail "/proc/vmcore and wrong PAGE_OFFSET". The task list can be walked if addresses are corrected by 0x0000008000000000:
+> +		mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
+> +		pr_info("Memory encryption is active, crashkernel needs %ldMB extra memory\n",
+> +				(unsigned long)(mem_enc_req >> 20));
 
-(gdb) set $t=&init_task
-(gdb) print $t->pid
-$1 = 0
-(gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
-(gdb) set $t=(struct task_struct *)( (char *)$t - 0x0000008000000000)
-(gdb) print $t->pid
-$2 = 1
-(gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
-(gdb) set $t=(struct task_struct *)( (char *)$t - 0x0000008000000000)
-(gdb) print $t->pid
-$3 = 2
+There is a point below where you zero out this value, so should this
+be issued later only if mem_enc_req is non-zero?
 
-The debugger has wrongly mapped the physical memory at virtual 0xffff880000000000 instead of at 0xffff888000000000, because the vmcore file says so for yet unknown reasons.
+Also, looks like one too many tabs.
 
-Donald
+> +	} else
 
+Since you used braces on the if path, you need braces on the else path.
+
+Thanks,
+Tom
+
+> +		mem_enc_req = 0;
+> +
+>  	/* 0 means: find the address automatically */
+>  	if (!crash_base) {
+>  		/*
+> @@ -563,11 +574,19 @@ static void __init reserve_crashkernel(void)
+>  		if (!high)
+>  			crash_base = memblock_find_in_range(CRASH_ALIGN,
+>  						CRASH_ADDR_LOW_MAX,
+> -						crash_size, CRASH_ALIGN);
+> -		if (!crash_base)
+> +						crash_size + mem_enc_req,
+> +						CRASH_ALIGN);
+> +		/*
+> +		 * For high reservation, an extra low memory for SWIOTLB will
+> +		 * always be reserved later, so no need to reserve extra
+> +		 * memory for memory encryption case here.
+> +		 */
+> +		if (!crash_base) {
+> +			mem_enc_req = 0;
+>  			crash_base = memblock_find_in_range(CRASH_ALIGN,
+>  						CRASH_ADDR_HIGH_MAX,
+>  						crash_size, CRASH_ALIGN);
+> +		}
+>  		if (!crash_base) {
+>  			pr_info("crashkernel reservation failed - No suitable area found.\n");
+>  			return;
+> @@ -583,6 +602,7 @@ static void __init reserve_crashkernel(void)
+>  			return;
+>  		}
+>  	}
+> +	crash_size += mem_enc_req;
+>  	ret = memblock_reserve(crash_base, crash_size);
+>  	if (ret) {
+>  		pr_err("%s: Error reserving crashkernel memblock.\n", __func__);
 > 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-
-
--- 
-Donald Buczek
-buczek@molgen.mpg.de
-Tel: +49 30 8413 1433
-
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
