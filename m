@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from smtp.duncanthrax.net ([2001:470:70c5:1111::170])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i1FZ8-0000JQ-Be
+ id 1i1FZ8-0000JZ-BS
  for kexec@lists.infradead.org; Fri, 23 Aug 2019 19:49:45 +0000
 From: Sven Schnelle <svens@stackframe.org>
-Subject: [PATCH v5 2/7] kexec_elf: change order of elf_*_to_cpu() functions
-Date: Fri, 23 Aug 2019 21:49:14 +0200
-Message-Id: <20190823194919.30916-3-svens@stackframe.org>
+Subject: [PATCH v5 6/7] kexec_elf: remove unused variable in kexec_elf_load()
+Date: Fri, 23 Aug 2019 21:49:18 +0200
+Message-Id: <20190823194919.30916-7-svens@stackframe.org>
 In-Reply-To: <20190823194919.30916-1-svens@stackframe.org>
 References: <20190823194919.30916-1-svens@stackframe.org>
 MIME-Version: 1.0
@@ -23,49 +23,49 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Sven Schnelle <svens@stackframe.org>, Helge Deller <deller@gmx.de>, linuxppc-dev@lists.ozlabs.org, Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>, Sven Schnelle <svens@stackframe.org>, Helge Deller <deller@gmx.de>, linuxppc-dev@lists.ozlabs.org, Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-Change the order to have a 64/32/16 order, no functional change.
+base was never assigned, so we can remove it.
 
-Signed-off-by: Sven Schnelle <svens@stackframe.org>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Signed-off-by: Sven Schnelle <svens@stackframe.org>
 ---
- kernel/kexec_elf.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ kernel/kexec_elf.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
-index 26c6310167a0..34376fbc55be 100644
+index 6c806ce96ac1..85f2bd177d6e 100644
 --- a/kernel/kexec_elf.c
 +++ b/kernel/kexec_elf.c
-@@ -44,22 +44,22 @@ static uint64_t elf64_to_cpu(const struct elfhdr *ehdr, uint64_t value)
- 	return value;
- }
- 
--static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
-+static uint32_t elf32_to_cpu(const struct elfhdr *ehdr, uint32_t value)
+@@ -363,7 +363,7 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+ 			 struct kexec_buf *kbuf,
+ 			 unsigned long *lowest_load_addr)
  {
- 	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
--		value = le16_to_cpu(value);
-+		value = le32_to_cpu(value);
- 	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
--		value = be16_to_cpu(value);
-+		value = be32_to_cpu(value);
+-	unsigned long base = 0, lowest_addr = UINT_MAX;
++	unsigned long lowest_addr = UINT_MAX;
+ 	int ret;
+ 	size_t i;
  
- 	return value;
- }
+@@ -385,7 +385,7 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+ 		kbuf->bufsz = size;
+ 		kbuf->memsz = phdr->p_memsz;
+ 		kbuf->buf_align = phdr->p_align;
+-		kbuf->buf_min = phdr->p_paddr + base;
++		kbuf->buf_min = phdr->p_paddr;
+ 		kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
+ 		ret = kexec_add_buffer(kbuf);
+ 		if (ret)
+@@ -396,9 +396,6 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+ 			lowest_addr = load_addr;
+ 	}
  
--static uint32_t elf32_to_cpu(const struct elfhdr *ehdr, uint32_t value)
-+static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
- {
- 	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
--		value = le32_to_cpu(value);
-+		value = le16_to_cpu(value);
- 	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
--		value = be32_to_cpu(value);
-+		value = be16_to_cpu(value);
- 
- 	return value;
- }
+-	/* Update entry point to reflect new load address. */
+-	ehdr->e_entry += base;
+-
+ 	*lowest_load_addr = lowest_addr;
+ 	ret = 0;
+  out:
 -- 
 2.23.0.rc1
 
