@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i18KI-0007hd-Tl
- for kexec@lists.infradead.org; Fri, 23 Aug 2019 12:05:56 +0000
+ id 1i18KU-0007l1-Bv
+ for kexec@lists.infradead.org; Fri, 23 Aug 2019 12:06:07 +0000
 From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 0/4 v2] Limit the size of vmcore-dmesg.txt to 2G
-Date: Fri, 23 Aug 2019 20:05:35 +0800
-Message-Id: <20190823120539.18330-1-lijiang@redhat.com>
+Subject: [PATCH 1/4 v2] Cleanup: remove the read_elf_kcore()
+Date: Fri, 23 Aug 2019 20:05:36 +0800
+Message-Id: <20190823120539.18330-2-lijiang@redhat.com>
+In-Reply-To: <20190823120539.18330-1-lijiang@redhat.com>
+References: <20190823120539.18330-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,46 +25,81 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: kasong@redhat.com, bhe@redhat.com, piliu@redhat.com, bhsharma@redhat.com, junw99@yahoo.com, horms@verge.net.au, dyoung@redhat.com
 
-[PATCH 1/4] Cleanup: remove the read_elf_kcore()
 Here, no need to wrap the read_elf() again, lets invoke it directly.
 So remove the read_elf_kcore() and clean up redundant code.
 
-[PATCH 2/4] Fix an error definition about the variable 'fname'
-The variable 'fname' is mistakenly defined two twice, the first definition
-is in the vmcore-dmesg.c, and the second definition is in the elf_info.c.
-That is confused and incorrect although it's a static type, because the
-value of variable 'fname' is not assigned(set) in elf_info.c. Anyway, its
-value will be always 'null' when printing an error information.
-
-[PATCH 3/4] Cleanup: move it back from util_lib/elf_info.c
-Some code related to vmcore-dmesg.c is put into the util_lib, which
-is not very reasonable, so lets move it back and tidy up those code.
-In addition, that will also help to limit the size of vmcore-dmesg.txt.
-
-[PATCH 4/4] Limit the size of vmcore-dmesg.txt to 2G
-With some corrupted vmcore files, the vmcore-dmesg.txt file may
-grow forever till the kdump disk becomes full. Lets limit the
-size of vmcore-dmesg.txt to avoid such problems.
-
-BTW: I tested this patch series on x86 64 and arm64, it also worked well.
-
-Changes since v1:
-[1] split them([patch 1/4] and [patch 2/4]) into a separate patch.
-[2] remove a typedef definition for handler.
-[3] remove some changes of variable 'fname' and fix its error.
-
-Lianbo Jiang (4):
-  Cleanup: remove the read_elf_kcore()
-  Fix an error definition about the variable 'fname'
-  Cleanup: move it back from util_lib/elf_info.c
-  Limit the size of vmcore-dmesg.txt to 2G
-
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+---
  kexec/arch/arm64/kexec-arm64.c |  2 +-
- util_lib/elf_info.c            | 65 ++++++++--------------------------
- util_lib/include/elf_info.h    |  4 +--
- vmcore-dmesg/vmcore-dmesg.c    | 42 ++++++++++++++++++++--
- 4 files changed, 57 insertions(+), 56 deletions(-)
+ util_lib/elf_info.c            | 15 ++-------------
+ util_lib/include/elf_info.h    |  2 +-
+ 3 files changed, 4 insertions(+), 15 deletions(-)
 
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index eb3a3a37307c..6ad3b0a134b3 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -889,7 +889,7 @@ int get_phys_base_from_pt_load(unsigned long *phys_offset)
+ 		return EFAILED;
+ 	}
+ 
+-	read_elf_kcore(fd);
++	read_elf(fd);
+ 
+ 	for (i = 0; get_pt_load(i,
+ 		    &phys_start, NULL, &virt_start, NULL);
+diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
+index 90a3b21662e7..d9397ecd8626 100644
+--- a/util_lib/elf_info.c
++++ b/util_lib/elf_info.c
+@@ -764,7 +764,7 @@ static void dump_dmesg(int fd)
+ 		dump_dmesg_legacy(fd);
+ }
+ 
+-static int read_elf(int fd)
++int read_elf(int fd)
+ {
+ 	int ret;
+ 
+@@ -824,24 +824,13 @@ int read_elf_vmcore(int fd)
+ 	return 0;
+ }
+ 
+-int read_elf_kcore(int fd)
+-{
+-	int ret;
+-
+-	ret = read_elf(fd);
+-	if (ret != 0)
+-		return ret;
+-
+-	return 0;
+-}
+-
+ int read_phys_offset_elf_kcore(int fd, unsigned long *phys_off)
+ {
+ 	int ret;
+ 
+ 	*phys_off = UINT64_MAX;
+ 
+-	ret = read_elf_kcore(fd);
++	ret = read_elf(fd);
+ 	if (!ret) {
+ 		/* If we have a valid 'PHYS_OFFSET' by now,
+ 		 * return it to the caller now.
+diff --git a/util_lib/include/elf_info.h b/util_lib/include/elf_info.h
+index 1a4debd2d4ba..c328a1b0ecf2 100644
+--- a/util_lib/include/elf_info.h
++++ b/util_lib/include/elf_info.h
+@@ -29,7 +29,7 @@ int get_pt_load(int idx,
+ 	unsigned long long *virt_start,
+ 	unsigned long long *virt_end);
+ int read_phys_offset_elf_kcore(int fd, unsigned long *phys_off);
+-int read_elf_kcore(int fd);
++int read_elf(int fd);
+ int read_elf_vmcore(int fd);
+ 
+ #endif /* ELF_INFO_H */
 -- 
 2.17.1
 
