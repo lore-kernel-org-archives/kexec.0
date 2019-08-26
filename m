@@ -1,15 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x741.google.com ([2607:f8b0:4864:20::741])
- by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i2KEk-0007HB-Ud
- for kexec@lists.infradead.org; Mon, 26 Aug 2019 19:01:09 +0000
-Received: by mail-qk1-x741.google.com with SMTP id u190so14982242qkh.5
- for <kexec@lists.infradead.org>; Mon, 26 Aug 2019 12:01:06 -0700 (PDT)
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v1 6/6] dt-bindings: interrupt-controller: add optional
- memory-region
-Date: Mon, 26 Aug 2019 15:00:56 -0400
-Message-Id: <20190826190056.27854-7-pasha.tatashin@soleen.com>
+Date: Mon, 26 Aug 2019 20:13:13 +0100
+From: Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v1 0/6] Allow kexec reboot for GICv3 and device tree
+Message-ID: <20190826201313.246208e9@why>
 In-Reply-To: <20190826190056.27854-1-pasha.tatashin@soleen.com>
 References: <20190826190056.27854-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -25,38 +18,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, mark.rutland@arm.com
+To: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, kexec@lists.infradead.org, jmorris@namei.org, linux-kernel@vger.kernel.org, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-Allow pre-reserve memory in device tree that can be used in interrupt
-controller tabes. This memory is required when kexec functionality is needed
-with GICv3 controler and device trees.
+On Mon, 26 Aug 2019 15:00:50 -0400
+Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- .../bindings/interrupt-controller/arm,gic-v3.yaml          | 7 +++++++
- 1 file changed, 7 insertions(+)
+> Marc Zyngier added the support for kexec and GICv3 for EFI based systems.
+> However, it is still not possible todo on systems with device trees.
+> 
+> Here is EFI fixes from Marc:
+> https://lore.kernel.org/lkml/20180921195954.21574-1-marc.zyngier@arm.com
+> 
+> For Device Tree variant: lets allow reserve a memory region in interrupt
+> controller node, and use this property to allocate interrupt tables.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
-index c34df35a25fc..7640aaa97302 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
-@@ -102,6 +102,13 @@ properties:
-       - $ref: /schemas/types.yaml#/definitions/uint32
-       - maximum: 4096   # Should be enough?
- 
-+  memory-region:
-+    description:
-+      Memory used to allocate property and pending tables.
-+      Required if kexec functionality is needed.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint64
-+
-   msi-controller:
-     description:
-       Only present if the Message Based Interrupt functionnality is
+There is no such thing as a "device tree variant". As long as your
+bootloader implements EFI, everything will work correctly, whether
+you're using DT, ACPI, or the anything else.
+
+This already works today, without any need to add anything to the
+kernel (I have systems using EDK II and u-boot, both implementing EFI,
+and I'm able to kexec without any issue). If your bootloader doesn't
+support EFI, here's a good opportunity to implement it!
+
+Thanks,
+
+	M.
 -- 
-2.23.0
-
+Without deviation from the norm, progress is not possible.
 
 _______________________________________________
 kexec mailing list
