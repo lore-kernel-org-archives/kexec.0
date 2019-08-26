@@ -1,19 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x543.google.com ([2a00:1450:4864:20::543])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i2MYT-0003BW-DH
- for kexec@lists.infradead.org; Mon, 26 Aug 2019 21:29:39 +0000
-Received: by mail-ed1-x543.google.com with SMTP id f22so28385063edt.4
- for <kexec@lists.infradead.org>; Mon, 26 Aug 2019 14:29:37 -0700 (PDT)
+ id 1i2Onp-0002cp-Fp
+ for kexec@lists.infradead.org; Mon, 26 Aug 2019 23:53:39 +0000
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+ (No client certificate requested)
+ by mx1.redhat.com (Postfix) with ESMTPS id A819985363
+ for <kexec@lists.infradead.org>; Mon, 26 Aug 2019 23:53:36 +0000 (UTC)
+Received: by mail-io1-f71.google.com with SMTP id k13so24687139ioh.16
+ for <kexec@lists.infradead.org>; Mon, 26 Aug 2019 16:53:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190826190056.27854-1-pasha.tatashin@soleen.com>
- <20190826190056.27854-6-pasha.tatashin@soleen.com>
-In-Reply-To: <20190826190056.27854-6-pasha.tatashin@soleen.com>
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Mon, 26 Aug 2019 17:29:25 -0400
-Message-ID: <CA+CK2bDXpoRV=1hD50E6FKJry=hRcyxkwbf4fq_PdFRPYCM3UQ@mail.gmail.com>
-Subject: Re: [PATCH v1 5/6] rqchip/gic-v3-its: move reset pending table
- outside of allocator
+References: <20190826044535.9646-1-kasong@redhat.com>
+In-Reply-To: <20190826044535.9646-1-kasong@redhat.com>
+From: Kairui Song <kasong@redhat.com>
+Date: Tue, 27 Aug 2019 07:53:23 +0800
+Message-ID: <CACPcB9cULwH1B6Um9TXnbgu2GuYBQ9yZ0OKKu9yMdBmhDdNp8Q@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/kdump: Reserve extra memory when SME or SEV is
+ active
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,218 +31,129 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Tatashin <pasha.tatashin@soleen.com>, James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Mark Rutland <mark.rutland@arm.com>
+To: Thomas Lendacky <Thomas.Lendacky@amd.com>
+Cc: Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>, the arch/x86 maintainers <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
 
-This patch requires a small fix (which I will do in later revisions):
-
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 2ffdb3927549..c9faeac4b3a8 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2182,7 +2182,8 @@ static void its_cpu_init_lpis(void)
-                paddr &= GENMASK_ULL(51, 16);
-
-                WARN_ON(!gic_check_reserved_range(paddr, LPI_PENDBASE_SZ));
--               its_free_pending_table(gic_data_rdist()->pend_page);
-+               if (efi_enabled(EFI_CONFIG_TABLES))
-+                       its_free_pending_table(gic_data_rdist()->pend_page);
-                gic_data_rdist()->pend_page = NULL;
-
-                goto out;
-
-reserved-memory does not need to be freed. However, I am confused why
-it is needed to be freed in EFI case. Marc, can you please explain
-this to me?
-
-Thank you,
-Pasha
-
-On Mon, Aug 26, 2019 at 3:01 PM Pavel Tatashin
-<pasha.tatashin@soleen.com> wrote:
+On Mon, Aug 26, 2019 at 12:46 PM Kairui Song <kasong@redhat.com> wrote:
 >
-> Allow to use reserved memory for interrupt controller tables.
+> Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
+> SWIOTLB will be enabled even if there is less than 4G of memory when SME
+> is active, to support DMA of devices that not support address with the
+> encrypt bit.
 >
-> Currently, it is not possible to do kexec reboots without possible memory
-> corruption using device tree and GICv3 interrupt controller.
+> And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
+> active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
 >
-> GICv3 can be configured once during boot, and location of tables cannot
-> be changed thereafter.
+> Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
+> encryption") will always force SWIOTLB to be enabled when SEV is active
+> in all cases.
 >
-> The fix is to allow to reserve memory region in interrupt controller device
-> property, and use it to do allocations.
+> Now, when either SME or SEV is active, SWIOTLB will be force enabled,
+> and this is also true for kdump kernel. As a result kdump kernel will
+> run out of already scarce pre-reserved memory easily.
 >
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
+> kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
+> is specified or any offset is used. As for the high reservation case, an
+> extra low memory region will always be reserved and that is enough for
+> SWIOTLB. Else if the offset format is used, user should be fully aware
+> of any possible kdump kernel memory requirement and have to organize the
+> memory usage carefully.
+>
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+>
 > ---
->  drivers/irqchip/irq-gic-v3-its.c | 82 ++++++++++++++++++++++++++++----
->  1 file changed, 72 insertions(+), 10 deletions(-)
+> Update from V1:
+> - Use mem_encrypt_active() instead of "sme_active() || sev_active()"
+> - Don't reserve extra memory when ",high" or "@offset" is used, and
+>   don't print redundant message.
+> - Fix coding style problem
 >
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index d5f3508ca11f..aeda8760cc4e 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -47,6 +47,54 @@
+>  arch/x86/kernel/setup.c | 31 ++++++++++++++++++++++++++++---
+>  1 file changed, 28 insertions(+), 3 deletions(-)
 >
->  static u32 lpi_id_bits;
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index bbe35bf879f5..221beb10c55d 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -528,7 +528,7 @@ static int __init reserve_crashkernel_low(void)
 >
-> +/*
-> + * Describes reserved memory region in interrupt controller.
-> + * The memory reserved: [pa_start, pa_end)
-> + */
-> +struct of_resv {
-> +       unsigned long pa_start;
-> +       unsigned long pa_end;
-> +};
-> +
-> +static struct page __init *get_of_page(struct of_resv *resv, unsigned long size)
-> +{
-> +       unsigned long pa = ALIGN(resv->pa_start, size);
-> +       unsigned long pa_next = pa + size;
-> +
-> +       /* Check if there is enough memory reserved to do another allocation */
-> +       if (pa_next > resv->pa_end)
-> +               return NULL;
-> +
-> +       resv->pa_start = pa_next;
-> +       memset(phys_to_virt(pa), 0, size);
-> +
-> +       return phys_to_page(pa);
-> +}
-> +
-> +/*
-> + * Memory controller might have a reserved memory region to be used for table
-> + * allocations. This is a requirement for kexec reboots.
-> + */
-> +static void __init its_of_mem_region(struct device_node *node,
-> +                                    struct of_resv **resv,
-> +                                    struct of_resv *resv_buf)
-> +{
-> +       struct device_node *np = of_parse_phandle(node, "memory-region", 0);
-> +       struct resource mem_res;
-> +
-> +       if (!np)
-> +               return;
-> +
-> +       if (of_address_to_resource(np, 0, &mem_res)) {
-> +               pr_warn("%pOF: address to resource failed\n", np);
-> +               return;
-> +       }
-> +
-> +       resv_buf->pa_start = mem_res.start;
-> +       resv_buf->pa_end = mem_res.start + resource_size(&mem_res);
-> +       *resv = resv_buf;
-> +}
-> +
->  /*
->   * We allocate memory for PROPBASE to cover 2 ^ lpi_id_bits LPIs to
->   * deal with (one configuration byte per interrupt). PENDBASE has to
-> @@ -1665,7 +1713,7 @@ static int gic_reserve_range(phys_addr_t addr, unsigned long size)
->         return 0;
->  }
->
-> -static int __init its_setup_lpi_prop_table(void)
-> +static int __init its_setup_lpi_prop_table(struct of_resv *resv)
+>  static void __init reserve_crashkernel(void)
 >  {
->         if (gic_rdists->flags & RDIST_FLAGS_RD_TABLES_PREALLOCATED) {
->                 unsigned long pa;
-> @@ -1676,7 +1724,10 @@ static int __init its_setup_lpi_prop_table(void)
->                 lpi_id_bits = (val & GICR_PROPBASER_IDBITS_MASK) + 1;
+> -       unsigned long long crash_size, crash_base, total_mem;
+> +       unsigned long long crash_size, crash_base, total_mem, mem_enc_req;
+>         bool high = false;
+>         int ret;
 >
->                 pa = val & GENMASK_ULL(51, 12);
-> -               va = memremap(pa, LPI_PROPBASE_SZ, MEMREMAP_WB);
-> +               if (resv)
-> +                       va = phys_to_virt(pa);
-> +               else
-> +                       va = memremap(pa, LPI_PROPBASE_SZ, MEMREMAP_WB);
->                 gic_rdists->prop_table_pa = pa;
->                 gic_rdists->prop_table_va = va;
->         } else {
-> @@ -1685,7 +1736,10 @@ static int __init its_setup_lpi_prop_table(void)
->                 lpi_id_bits = min_t(u32,
->                                     GICD_TYPER_ID_BITS(gic_rdists->gicd_typer),
->                                     ITS_MAX_LPI_NRBITS);
-> -               page = its_allocate_prop_table(GFP_NOWAIT);
-> +               if (resv)
-> +                       page = get_of_page(resv, LPI_PROPBASE_SZ);
-> +               else
-> +                       page = its_allocate_prop_table(GFP_NOWAIT);
->                 if (!page) {
->                         pr_err("Failed to allocate PROPBASE\n");
->                         return -ENOMEM;
-> @@ -2009,7 +2063,8 @@ static void its_free_pending_table(struct page *pt)
->
->  /*
->   * Booting with kdump and LPIs enabled is generally fine. Any other
-> - * case is wrong in the absence of firmware/EFI support.
-> + * case is wrong in the absence of firmware/EFI support or reserve-memory
-> + * in device tree for interrupt controller.
->   */
->  static bool enabled_lpis_allowed(void)
->  {
-> @@ -2023,7 +2078,7 @@ static bool enabled_lpis_allowed(void)
->         return gic_check_reserved_range(addr, LPI_PROPBASE_SZ);
->  }
->
-> -static int __init allocate_lpi_tables(void)
-> +static int __init allocate_lpi_tables(struct of_resv *resv)
->  {
->         u64 val;
->         int err, cpu;
-> @@ -2039,7 +2094,7 @@ static int __init allocate_lpi_tables(void)
->                 pr_info("GICv3: Using preallocated redistributor tables\n");
+> @@ -550,6 +550,15 @@ static void __init reserve_crashkernel(void)
+>                 return;
 >         }
 >
-> -       err = its_setup_lpi_prop_table();
-> +       err = its_setup_lpi_prop_table(resv);
->         if (err)
->                 return err;
+> +       /*
+> +        * When SME/SEV is active, it will always required an extra SWIOTLB
+> +        * region.
+> +        */
+> +       if (mem_encrypt_active())
+> +               mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
+> +       else
+> +               mem_enc_req = 0;
+> +
+>         /* 0 means: find the address automatically */
+>         if (!crash_base) {
+>                 /*
+> @@ -563,11 +572,19 @@ static void __init reserve_crashkernel(void)
+>                 if (!high)
+>                         crash_base = memblock_find_in_range(CRASH_ALIGN,
+>                                                 CRASH_ADDR_LOW_MAX,
+> -                                               crash_size, CRASH_ALIGN);
+> -               if (!crash_base)
+> +                                               crash_size + mem_enc_req,
+> +                                               CRASH_ALIGN);
+> +               /*
+> +                * For high reservation, an extra low memory for SWIOTLB will
+> +                * always be reserved later, so no need to reserve extra
+> +                * memory for memory encryption case here.
+> +                */
+> +               if (!crash_base) {
+> +                       mem_enc_req = 0;
+>                         crash_base = memblock_find_in_range(CRASH_ALIGN,
+>                                                 CRASH_ADDR_HIGH_MAX,
+>                                                 crash_size, CRASH_ALIGN);
+> +               }
+>                 if (!crash_base) {
+>                         pr_info("crashkernel reservation failed - No suitable area found.\n");
+>                         return;
+> @@ -575,6 +592,7 @@ static void __init reserve_crashkernel(void)
+>         } else {
+>                 unsigned long long start;
 >
-> @@ -2051,7 +2106,10 @@ static int __init allocate_lpi_tables(void)
->         for_each_possible_cpu(cpu) {
->                 struct page *pend_page;
->
-> -               pend_page = its_allocate_pending_table(GFP_NOWAIT);
-> +               if (resv)
-> +                       pend_page = get_of_page(resv, LPI_PENDBASE_SZ);
-> +               else
-> +                       pend_page = its_allocate_pending_table(GFP_NOWAIT);
->                 if (!pend_page) {
->                         pr_err("Failed to allocate PENDBASE for CPU%d\n", cpu);
->                         return -ENOMEM;
-> @@ -3957,16 +4015,20 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
->                     struct irq_domain *parent_domain)
->  {
->         struct device_node *of_node;
-> +       struct of_resv resv_buf;
-> +       struct of_resv *resv = NULL;
->         struct its_node *its;
->         bool has_v4 = false;
->         int err;
->
->         its_parent = parent_domain;
->         of_node = to_of_node(handle);
-> -       if (of_node)
-> +       if (of_node) {
->                 its_of_probe(of_node);
-> -       else
-> +               its_of_mem_region(of_node, &resv, &resv_buf);
-> +       } else {
->                 its_acpi_probe();
+> +               mem_enc_req = 0;
+>                 start = memblock_find_in_range(crash_base,
+>                                                crash_base + crash_size,
+>                                                crash_size, 1 << 20);
+> @@ -583,6 +601,13 @@ static void __init reserve_crashkernel(void)
+>                         return;
+>                 }
+>         }
+> +
+> +       if (mem_enc_req) {
+> +               pr_info("Memory encryption is active, crashkernel needs %ldMB extra memory\n",
+> +                       (unsigned long)(mem_enc_req >> 20));
+> +               crash_size += mem_enc_req;
 > +       }
->
->         if (list_empty(&its_nodes)) {
->                 pr_warn("ITS: No ITS available, not enabling LPIs\n");
-> @@ -3975,7 +4037,7 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
->
->         gic_rdists = rdists;
->
-> -       err = allocate_lpi_tables();
-> +       err = allocate_lpi_tables(resv);
->         if (err)
->                 return err;
->
+> +
+>         ret = memblock_reserve(crash_base, crash_size);
+>         if (ret) {
+>                 pr_err("%s: Error reserving crashkernel memblock.\n", __func__);
 > --
-> 2.23.0
+> 2.21.0
 >
+
+Hi Tom, any comment about V2?
+
+--
+Best Regards,
+Kairui Song
 
 _______________________________________________
 kexec mailing list
