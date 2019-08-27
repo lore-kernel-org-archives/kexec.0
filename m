@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x542.google.com ([2607:f8b0:4864:20::542])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i2RlQ-0006lq-3k
- for kexec@lists.infradead.org; Tue, 27 Aug 2019 03:03:21 +0000
-Received: by mail-pg1-x542.google.com with SMTP id l21so11776438pgm.3
- for <kexec@lists.infradead.org>; Mon, 26 Aug 2019 20:03:19 -0700 (PDT)
-From: Pingfan Liu <kernelfans@gmail.com>
-Subject: [PATCHv2 4/4] x86/smp: disallow MCE handler on rebooting AP
-Date: Tue, 27 Aug 2019 11:02:23 +0800
-Message-Id: <1566874943-4449-5-git-send-email-kernelfans@gmail.com>
-In-Reply-To: <1566874943-4449-1-git-send-email-kernelfans@gmail.com>
-References: <1566874943-4449-1-git-send-email-kernelfans@gmail.com>
+ id 1i2UJI-0003lq-8r
+ for kexec@lists.infradead.org; Tue, 27 Aug 2019 05:46:30 +0000
+Date: Tue, 27 Aug 2019 13:46:20 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v2] x86/kdump: Reserve extra memory when SME or SEV is
+ active
+Message-ID: <20190827054620.GB12242@MiWiFi-R3L-srv>
+References: <20190826044535.9646-1-kasong@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20190826044535.9646-1-kasong@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,89 +20,134 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>, Andy Lutomirski <luto@kernel.org>, x86@kernel.org
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>, Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, Dave Hansen <dave.hansen@linux.intel.com>, Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Daniel Drake <drake@endlessm.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Masami Hiramatsu <mhiramat@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Qian Cai <cai@lca.pw>, Dave Young <dyoung@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Eric Biederman <ebiederm@xmission.com>
+To: Kairui Song <kasong@redhat.com>
+Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>, Lianbo Jiang <lijiang@redhat.com>, x86@kernel.org, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
 
-"kexec -l" sends the rest cpu to halt state with local apic disabled. But
-they can still respond to MCE.  Meanwhile the execution of MCE handler
-relies on the 1st kernel's page table and text, which may be cracked during
-the 2nd kernel bootup. Hence Before sending SIPI to AP in 2nd kernel, an
-MCE event makes AP take the risk of running in weird context.
+On 08/26/19 at 12:45pm, Kairui Song wrote:
+> Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
+> SWIOTLB will be enabled even if there is less than 4G of memory when SME
+> is active, to support DMA of devices that not support address with the
+> encrypt bit.
+> 
+> And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
+> active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
+> 
+> Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
+> encryption") will always force SWIOTLB to be enabled when SEV is active
+> in all cases.
+> 
+> Now, when either SME or SEV is active, SWIOTLB will be force enabled,
+> and this is also true for kdump kernel. As a result kdump kernel will
+> run out of already scarce pre-reserved memory easily.
+> 
+> So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
+> kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
+> is specified or any offset is used. As for the high reservation case, an
+> extra low memory region will always be reserved and that is enough for
+> SWIOTLB. Else if the offset format is used, user should be fully aware
+> of any possible kdump kernel memory requirement and have to organize the
+> memory usage carefully.
+> 
+> Signed-off-by: Kairui Song <kasong@redhat.com>
 
-Heavily suppress it by disallowing MCE handler on rebooting AP.
+The patch looks good to me, ack it.
 
-Note: after this patch, "kexec -l" still has a little window vulnerable to
-weird context, despite AP uses tlb cache and icache.  Consider the
-scenario: The 1st kernel code native_halt() in stop_this_cpu() is modified
-during the 2nd kernel bootup. Then AP is waken up by MCE after the
-modification, and will continue in a weired context. This needs extra
-effort.
+Acked-by: Baoquan He <bhe@redhat.com>
 
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-To: x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Daniel Drake <drake@endlessm.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org
----
- arch/x86/kernel/smp.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Thanks
+Baoquan
 
-diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
-index 96421f9..55b0f11 100644
---- a/arch/x86/kernel/smp.c
-+++ b/arch/x86/kernel/smp.c
-@@ -157,11 +157,15 @@ void native_send_call_func_ipi(const struct cpumask *mask)
- 
- static int smp_stop_nmi_callback(unsigned int val, struct pt_regs *regs)
- {
-+	struct desc_ptr null_ptr = { 0 };
-+
- 	/* We are registered on stopping cpu too, avoid spurious NMI */
- 	if (raw_smp_processor_id() == atomic_read(&stopping_cpu))
- 		return NMI_HANDLED;
- 
- 	cpu_emergency_vmxoff();
-+	/* prevent from dispatching MCE handler */
-+	load_idt(&null_ptr);
- 	stop_this_cpu(NULL);
- 
- 	return NMI_HANDLED;
-@@ -173,8 +177,12 @@ static int smp_stop_nmi_callback(unsigned int val, struct pt_regs *regs)
- 
- asmlinkage __visible void smp_reboot_interrupt(void)
- {
-+	struct desc_ptr null_ptr = { 0 };
-+
- 	ipi_entering_ack_irq();
- 	cpu_emergency_vmxoff();
-+	/* prevent from dispatching MCE handler */
-+	load_idt(&null_ptr);
- 	stop_this_cpu(NULL);
- 	irq_exit();
- }
--- 
-2.7.5
-
+> 
+> ---
+> Update from V1:
+> - Use mem_encrypt_active() instead of "sme_active() || sev_active()"
+> - Don't reserve extra memory when ",high" or "@offset" is used, and
+>   don't print redundant message.
+> - Fix coding style problem
+> 
+>  arch/x86/kernel/setup.c | 31 ++++++++++++++++++++++++++++---
+>  1 file changed, 28 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index bbe35bf879f5..221beb10c55d 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -528,7 +528,7 @@ static int __init reserve_crashkernel_low(void)
+>  
+>  static void __init reserve_crashkernel(void)
+>  {
+> -	unsigned long long crash_size, crash_base, total_mem;
+> +	unsigned long long crash_size, crash_base, total_mem, mem_enc_req;
+>  	bool high = false;
+>  	int ret;
+>  
+> @@ -550,6 +550,15 @@ static void __init reserve_crashkernel(void)
+>  		return;
+>  	}
+>  
+> +	/*
+> +	 * When SME/SEV is active, it will always required an extra SWIOTLB
+> +	 * region.
+> +	 */
+> +	if (mem_encrypt_active())
+> +		mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
+> +	else
+> +		mem_enc_req = 0;
+> +
+>  	/* 0 means: find the address automatically */
+>  	if (!crash_base) {
+>  		/*
+> @@ -563,11 +572,19 @@ static void __init reserve_crashkernel(void)
+>  		if (!high)
+>  			crash_base = memblock_find_in_range(CRASH_ALIGN,
+>  						CRASH_ADDR_LOW_MAX,
+> -						crash_size, CRASH_ALIGN);
+> -		if (!crash_base)
+> +						crash_size + mem_enc_req,
+> +						CRASH_ALIGN);
+> +		/*
+> +		 * For high reservation, an extra low memory for SWIOTLB will
+> +		 * always be reserved later, so no need to reserve extra
+> +		 * memory for memory encryption case here.
+> +		 */
+> +		if (!crash_base) {
+> +			mem_enc_req = 0;
+>  			crash_base = memblock_find_in_range(CRASH_ALIGN,
+>  						CRASH_ADDR_HIGH_MAX,
+>  						crash_size, CRASH_ALIGN);
+> +		}
+>  		if (!crash_base) {
+>  			pr_info("crashkernel reservation failed - No suitable area found.\n");
+>  			return;
+> @@ -575,6 +592,7 @@ static void __init reserve_crashkernel(void)
+>  	} else {
+>  		unsigned long long start;
+>  
+> +		mem_enc_req = 0;
+>  		start = memblock_find_in_range(crash_base,
+>  					       crash_base + crash_size,
+>  					       crash_size, 1 << 20);
+> @@ -583,6 +601,13 @@ static void __init reserve_crashkernel(void)
+>  			return;
+>  		}
+>  	}
+> +
+> +	if (mem_enc_req) {
+> +		pr_info("Memory encryption is active, crashkernel needs %ldMB extra memory\n",
+> +			(unsigned long)(mem_enc_req >> 20));
+> +		crash_size += mem_enc_req;
+> +	}
+> +
+>  	ret = memblock_reserve(crash_base, crash_size);
+>  	if (ret) {
+>  		pr_err("%s: Error reserving crashkernel memblock.\n", __func__);
+> -- 
+> 2.21.0
+> 
 
 _______________________________________________
 kexec mailing list
