@@ -1,16 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3.molgen.mpg.de ([141.14.17.11] helo=mx1.molgen.mpg.de)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i2zYk-0004Yx-MQ
- for kexec@lists.infradead.org; Wed, 28 Aug 2019 15:08:33 +0000
-Subject: Re: /proc/vmcore and wrong PAGE_OFFSET
-From: Donald Buczek <buczek@molgen.mpg.de>
-References: <c42060b0-12ae-d170-9ad4-03d85919948c@molgen.mpg.de>
-Message-ID: <b208dccd-63d9-e902-28e1-3a6cb44f082f@molgen.mpg.de>
-Date: Wed, 28 Aug 2019 17:08:08 +0200
+ id 1i341N-0006CB-PP
+ for kexec@lists.infradead.org; Wed, 28 Aug 2019 19:54:23 +0000
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+ (No client certificate requested)
+ by mx1.redhat.com (Postfix) with ESMTPS id 9E6EF4E4E6
+ for <kexec@lists.infradead.org>; Wed, 28 Aug 2019 19:54:19 +0000 (UTC)
+Received: by mail-lf1-f72.google.com with SMTP id o4so114369lfi.12
+ for <kexec@lists.infradead.org>; Wed, 28 Aug 2019 12:54:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c42060b0-12ae-d170-9ad4-03d85919948c@molgen.mpg.de>
-Content-Language: en-US
+References: <c42060b0-12ae-d170-9ad4-03d85919948c@molgen.mpg.de>
+ <b208dccd-63d9-e902-28e1-3a6cb44f082f@molgen.mpg.de>
+In-Reply-To: <b208dccd-63d9-e902-28e1-3a6cb44f082f@molgen.mpg.de>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Thu, 29 Aug 2019 01:24:05 +0530
+Message-ID: <CACi5LpNOyLd9598Ks05t14+Mrc0YNRmmbTML5CmLAODOJQkzFA@mail.gmail.com>
+Subject: Re: /proc/vmcore and wrong PAGE_OFFSET
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,159 +27,181 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: horms@verge.net.au
+To: Donald Buczek <buczek@molgen.mpg.de>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, linux-pci@vger.kernel.org, x86@kernel.org, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, iommu <iommu@lists.linux-foundation.org>, Simon Horman <horms@verge.net.au>
 
-T24gOC8yMC8xOSAxMToyMSBQTSwgRG9uYWxkIEJ1Y3playB3cm90ZToKPiBEZWFyIExpbnV4IGZv
-bGtzLAo+IAo+IEknbSBpbnZlc3RpZ2F0aW5nIGEgcHJvYmxlbSwgdGhhdCB0aGUgY3Jhc2ggdXRp
-bGl0eSBmYWlscyB0byB3b3JrIHdpdGggb3VyIGNyYXNoIGR1bXBzOgo+IAo+ICDCoMKgwqAgYnVj
-emVrQGtyZWlvczovbW50JCBjcmFzaCB2bWxpbnV4IGNyYXNoLnZtY29yZQo+ICDCoMKgwqAgY3Jh
-c2ggNy4yLjYKPiAgwqDCoMKgIENvcHlyaWdodCAoQykgMjAwMi0yMDE5wqAgUmVkIEhhdCwgSW5j
-Lgo+ICDCoMKgwqAgQ29weXJpZ2h0IChDKSAyMDA0LCAyMDA1LCAyMDA2LCAyMDEwwqAgSUJNIENv
-cnBvcmF0aW9uCj4gIMKgwqDCoCBDb3B5cmlnaHQgKEMpIDE5OTktMjAwNsKgIEhld2xldHQtUGFj
-a2FyZCBDbwo+ICDCoMKgwqAgQ29weXJpZ2h0IChDKSAyMDA1LCAyMDA2LCAyMDExLCAyMDEywqAg
-RnVqaXRzdSBMaW1pdGVkCj4gIMKgwqDCoCBDb3B5cmlnaHQgKEMpIDIwMDYsIDIwMDfCoCBWQSBM
-aW51eCBTeXN0ZW1zIEphcGFuIEsuSy4KPiAgwqDCoMKgIENvcHlyaWdodCAoQykgMjAwNSwgMjAx
-McKgIE5FQyBDb3Jwb3JhdGlvbgo+ICDCoMKgwqAgQ29weXJpZ2h0IChDKSAxOTk5LCAyMDAyLCAy
-MDA3wqAgU2lsaWNvbiBHcmFwaGljcywgSW5jLgo+ICDCoMKgwqAgQ29weXJpZ2h0IChDKSAxOTk5
-LCAyMDAwLCAyMDAxLCAyMDAywqAgTWlzc2lvbiBDcml0aWNhbCBMaW51eCwgSW5jLgo+ICDCoMKg
-wqAgVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmUsIGNvdmVyZWQgYnkgdGhlIEdOVSBHZW5l
-cmFsIFB1YmxpYyBMaWNlbnNlLAo+ICDCoMKgwqAgYW5kIHlvdSBhcmUgd2VsY29tZSB0byBjaGFu
-Z2UgaXQgYW5kL29yIGRpc3RyaWJ1dGUgY29waWVzIG9mIGl0IHVuZGVyCj4gIMKgwqDCoCBjZXJ0
-YWluIGNvbmRpdGlvbnMuwqAgRW50ZXIgImhlbHAgY29weWluZyIgdG8gc2VlIHRoZSBjb25kaXRp
-b25zLgo+ICDCoMKgwqAgVGhpcyBwcm9ncmFtIGhhcyBhYnNvbHV0ZWx5IG5vIHdhcnJhbnR5LsKg
-IEVudGVyICJoZWxwIHdhcnJhbnR5IiBmb3IgZGV0YWlscy4KPiAgwqDCoMKgIEdOVSBnZGIgKEdE
-QikgNy42Cj4gIMKgwqDCoCBDb3B5cmlnaHQgKEMpIDIwMTMgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0
-aW9uLCBJbmMuCj4gIMKgwqDCoCBMaWNlbnNlIEdQTHYzKzogR05VIEdQTCB2ZXJzaW9uIDMgb3Ig
-bGF0ZXIgPGh0dHA6Ly9nbnUub3JnL2xpY2Vuc2VzL2dwbC5odG1sPgo+ICDCoMKgwqAgVGhpcyBp
-cyBmcmVlIHNvZnR3YXJlOiB5b3UgYXJlIGZyZWUgdG8gY2hhbmdlIGFuZCByZWRpc3RyaWJ1dGUg
-aXQuCj4gIMKgwqDCoCBUaGVyZSBpcyBOTyBXQVJSQU5UWSwgdG8gdGhlIGV4dGVudCBwZXJtaXR0
-ZWQgYnkgbGF3LsKgIFR5cGUgInNob3cgY29weWluZyIKPiAgwqDCoMKgIGFuZCAic2hvdyB3YXJy
-YW50eSIgZm9yIGRldGFpbHMuCj4gIMKgwqDCoCBUaGlzIEdEQiB3YXMgY29uZmlndXJlZCBhcyAi
-eDg2XzY0LXVua25vd24tbGludXgtZ251Ii4uLgo+ICDCoMKgwqAgY3Jhc2g6IHJlYWQgZXJyb3I6
-IGtlcm5lbCB2aXJ0dWFsIGFkZHJlc3M6IGZmZmY4OTgwN2ZmNzcwMDDCoCB0eXBlOiAibWVtb3J5
-IHNlY3Rpb24gcm9vdCB0YWJsZSIKPiAKPiBUaGUgY3Jhc2ggZmlsZSBpcyBhIGNvcHkgb2YgL2Rl
-di92bWNvcmUgdGFrZW4gYnkgYSBjcmFzaGtlcm5lbCBhZnRlciBhIHN5c2N0bC1mb3JjZWQgcGFu
-aWMuCj4gCj4gSXQgbG9va3MgdG8gbWUsIHRoYXTCoCAweGZmZmY4OTgwN2ZmNzcwMDAgaXMgbm90
-IHJlYWRhYmxlLCBiZWNhdXNlIHRoZSB2aXJ0dWFsIGFkZHJlc3NlcyBzdG9yZWQgaW4gdGhlIGVs
-ZiBoZWFkZXIgb2YgdGhlIGR1bXAgZmlsZSBhcmUgb2ZmIGJ5IDB4MDAwMDAwODAwMDAwMDAwMDoK
-PiAKPiAgwqDCoMKgIGJ1Y3pla0BrcmVpb3M6L21udCQgcmVhZGVsZiAtYSBjcmFzaC52bWNvcmUg
-fCBncmVwIExPQUQgfCBwZXJsIC1sYW5lICdwcmludGYgIiVzICglMDE2eClcbiIsJF8saGV4KCRG
-WzJdKS1oZXgoJEZbM10pJwo+ICDCoMKgwqDCoMKgIExPQUTCoMKgwqDCoMKgwqDCoMKgwqDCoCAw
-eDAwMDAwMDAwMDAwMGQwMDAgMHhmZmZmZmZmZjgxMDAwMDAwIDB4MDAwMDAxMDA3ZDAwMDAwMCAo
-ZmZmZmZlZmYwNDAwMDAwMCkKPiAgwqDCoMKgwqDCoCBMT0FEwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-MHgwMDAwMDAwMDAxYzMzMDAwIDB4ZmZmZjg4MDAwMDAwMTAwMCAweDAwMDAwMDAwMDAwMDEwMDAg
-KGZmZmY4ODAwMDAwMDAwMDApCj4gIMKgwqDCoMKgwqAgTE9BRMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IDB4MDAwMDAwMDAwMWNjMTAwMCAweGZmZmY4ODAwMDAwOTAwMDAgMHgwMDAwMDAwMDAwMDkwMDAw
-IChmZmZmODgwMDAwMDAwMDAwKQo+ICDCoMKgwqDCoMKgIExPQUTCoMKgwqDCoMKgwqDCoMKgwqDC
-oCAweDAwMDAwMDAwMDFjZDEwMDAgMHhmZmZmODgwMDAwMTAwMDAwIDB4MDAwMDAwMDAwMDEwMDAw
-MCAoZmZmZjg4MDAwMDAwMDAwMCkKPiAgwqDCoMKgwqDCoCBMT0FEwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgMHgwMDAwMDAwMDAxY2QyMDcwIDB4ZmZmZjg4MDAwMDEwMDA3MCAweDAwMDAwMDAwMDAxMDAw
-NzAgKGZmZmY4ODAwMDAwMDAwMDApCj4gIMKgwqDCoMKgwqAgTE9BRMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIDB4MDAwMDAwMDAxOWJkMjAwMCAweGZmZmY4ODAwMzgwMDAwMDAgMHgwMDAwMDAwMDM4MDAw
-MDAwIChmZmZmODgwMDAwMDAwMDAwKQo+ICDCoMKgwqDCoMKgIExPQUTCoMKgwqDCoMKgwqDCoMKg
-wqDCoCAweDAwMDAwMDAwNGU2YTEwMDAgMHhmZmZmODgwMDZmZmZmMDAwIDB4MDAwMDAwMDA2ZmZm
-ZjAwMCAoZmZmZjg4MDAwMDAwMDAwMCkKPiAgwqDCoMKgwqDCoCBMT0FEwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgMHgwMDAwMDAwMDRlNmEyMDAwIDB4ZmZmZjg4MDEwMDAwMDAwMCAweDAwMDAwMDAxMDAw
-MDAwMDAgKGZmZmY4ODAwMDAwMDAwMDApCj4gIMKgwqDCoMKgwqAgTE9BRMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIDB4MDAwMDAwMWZjZGEyMjAwMCAweGZmZmY4ODIwODAwMDAwMDAgMHgwMDAwMDAyMDgw
-MDAwMDAwIChmZmZmODgwMDAwMDAwMDAwKQo+ICDCoMKgwqDCoMKgIExPQUTCoMKgwqDCoMKgwqDC
-oMKgwqDCoCAweDAwMDAwMDNmY2Q5YTIwMDAgMHhmZmZmODg0MDgwMDAwMDAwIDB4MDAwMDAwNDA4
-MDAwMDAwMCAoZmZmZjg4MDAwMDAwMDAwMCkKPiAgwqDCoMKgwqDCoCBMT0FEwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgMHgwMDAwMDA1ZmNkOTIyMDAwIDB4ZmZmZjg4NjA4MDAwMDAwMCAweDAwMDAwMDYw
-ODAwMDAwMDAgKGZmZmY4ODAwMDAwMDAwMDApCj4gIMKgwqDCoMKgwqAgTE9BRMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIDB4MDAwMDAwN2ZjZDhhMjAwMCAweGZmZmY4ODgwODAwMDAwMDAgMHgwMDAwMDA4
-MDgwMDAwMDAwIChmZmZmODgwMDAwMDAwMDAwKQo+ICDCoMKgwqDCoMKgIExPQUTCoMKgwqDCoMKg
-wqDCoMKgwqDCoCAweDAwMDAwMDlmY2Q4MjIwMDAgMHhmZmZmODhhMDgwMDAwMDAwIDB4MDAwMDAw
-YTA4MDAwMDAwMCAoZmZmZjg4MDAwMDAwMDAwMCkKPiAgwqDCoMKgwqDCoCBMT0FEwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgMHgwMDAwMDBiZmNkN2EyMDAwIDB4ZmZmZjg4YzA4MDAwMDAwMCAweDAwMDAw
-MGMwODAwMDAwMDAgKGZmZmY4ODAwMDAwMDAwMDApCj4gIMKgwqDCoMKgwqAgTE9BRMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIDB4MDAwMDAwZGZjZDcyMjAwMCAweGZmZmY4OGUwODAwMDAwMDAgMHgwMDAw
-MDBlMDgwMDAwMDAwIChmZmZmODgwMDAwMDAwMDAwKQo+ICDCoMKgwqDCoMKgIExPQUTCoMKgwqDC
-oMKgwqDCoMKgwqDCoCAweDAwMDAwMGZjNGQ3MjIwMDAgMHhmZmZmODhmZTAwMDAwMDAwIDB4MDAw
-MDAwZmUwMDAwMDAwMCAoZmZmZjg4MDAwMDAwMDAwMCkKPiAKPiAoQ29sdW1ucyBhcmUgRmlsZSBv
-ZmZzZXQsIFZpcnR1YWwgQWRkcmVzcywgUGh5c2ljYWwgQWRkcmVzcyBhbmQgY29tcHV0ZWQgb2Zm
-c2V0KS4KPiAKPiBJIHdvdWxkIGV4cGVjdCB0aGUgb2Zmc2V0IGJldHdlZW4gdGhlIHZpcnR1YWwg
-YW5kIHRoZSBwaHlzaWNhbCBhZGRyZXNzIHRvIGJlIFBBR0VfT0ZGU0VULCB3aGljaCBpcyAweGZm
-ZmY4ODgwMDAwMDAwMCBvbiB4ODZfNjQsIG5vdCAweGZmZmY4ODAwMDAwMDAwMDAuIFVubGlrZSAv
-cHJvYy92bWNvcmUsIC9wcm9jL2tjb3JlIHNob3dzIHRoZSBzYW1lIHBoeXNpY2FsIG1lbW9yeSAo
-b2YgdGhlIGxhc3QgbWVtb3J5IHNlY3Rpb24gYWJvdmUpIHdpdGggYSBjb3JyZWN0IG9mZnNldDoK
-PiAKPiAgwqDCoMKgIGJ1Y3pla0BrcmVpb3M6L21udCQgc3VkbyByZWFkZWxmIC1hIC9wcm9jL2tj
-b3JlIHwgZ3JlcCAweDAwMDAwMGZlMDAwMDAwMDAgfCBwZXJsIC1sYW5lICdwcmludGYgIiVzICgl
-MDE2eClcbiIsJF8saGV4KCRGWzJdKS1oZXgoJEZbM10pJwo+ICDCoMKgwqDCoMKgIExPQUTCoMKg
-wqDCoMKgwqDCoMKgwqDCoCAweDAwMDAwOTdlMDAwMDQwMDAgMHhmZmZmODk3ZTAwMDAwMDAwIDB4
-MDAwMDAwZmUwMDAwMDAwMCAoZmZmZjg4ODAwMDAwMDAwMCkKPiAKPiBUaGUgZmFpbGluZyBhZGRy
-ZXNzIDB4ZmZmZjg5ODA3ZmY3NzAwMCBoYXBwZW5zIHRvIGJlIGF0IHRoZSBlbmQgb2YgdGhlIGxh
-c3QgbWVtb3J5IHNlY3Rpb24uIEl0IGlzIHRoZSBtZW1fc2VjdGlvbiBhcnJheSwgd2hpY2ggY3Jh
-c2ggd2FudHMgdG8gbG9hZCBhbmQgd2hpY2ggaXMgdmlzaWJsZSBpbiB0aGUgcnVubmluZyBzeXN0
-ZW06Cj4gCj4gIMKgwqDCoCBidWN6ZWtAa3JlaW9zOi9tbnQkIHN1ZG8gZ2RiIHZtbGludXggL3By
-b2Mva2NvcmUKPiAgwqDCoMKgIFsuLi5dCj4gIMKgwqDCoCAoZ2RiKSBwcmludCBtZW1fc2VjdGlv
-bgo+ICDCoMKgwqAgJDEgPSAoc3RydWN0IG1lbV9zZWN0aW9uICoqKSAweGZmZmY4OTgwN2ZmNzcw
-MDAKPiAgwqDCoMKgIChnZGIpIHByaW50ICptZW1fc2VjdGlvbgo+ICDCoMKgwqAgJDIgPSAoc3Ry
-dWN0IG1lbV9zZWN0aW9uICopIDB4ZmZmZjg4YTA3ZjM3YjAwMAo+ICDCoMKgwqAgKGdkYikgcHJp
-bnQgKiptZW1fc2VjdGlvbgo+ICDCoMKgwqAgJDMgPSB7c2VjdGlvbl9tZW1fbWFwID0gMTg0NDY3
-MTk4ODQ0NTM3NDA1NTEsIHBhZ2VibG9ja19mbGFncyA9IDB4ZmZmZjg4YTA3ZjM2ZjA0MH0KPiAK
-PiBJIGNhbiByZWFkIHRoZSBzYW1lIGluZm9ybWF0aW9uIGZyb20gdGhlIGNyYXNoIGR1bXAsIGlm
-IEkgYWNjb3VudCBmb3IgdGhlIDB4MDAwMDAwODAwMDAwMDAwMCBlcnJvcjoKPiAKPiAgwqDCoMKg
-IGJ1Y3pla0BrcmVpb3M6L21udCQgZ2RiIHZtbGludXggY3Jhc2gudm1jb3JlCj4gIMKgwqDCoCBb
-Li4uXQo+ICDCoMKgwqAgKGdkYikgcHJpbnQgbWVtX3NlY3Rpb24KPiAgwqDCoMKgICQxID0gKHN0
-cnVjdCBtZW1fc2VjdGlvbiAqKikgMHhmZmZmODk4MDdmZjc3MDAwCj4gIMKgwqDCoCAoZ2RiKSBw
-cmludCAqbWVtX3NlY3Rpb24KPiAgwqDCoMKgIENhbm5vdCBhY2Nlc3MgbWVtb3J5IGF0IGFkZHJl
-c3MgMHhmZmZmODk4MDdmZjc3MDAwCj4gIMKgwqDCoCAoZ2RiKSBzZXQgJHQ9KHN0cnVjdCBtZW1f
-c2VjdGlvbiAqKikgKChjaGFyICopbWVtX3NlY3Rpb24gLSAweDAwMDAwMDgwMDAwMDAwMDApCj4g
-IMKgwqDCoCAoZ2RiKSBwcmludCAqJHQKPiAgwqDCoMKgICQyID0gKHN0cnVjdCBtZW1fc2VjdGlv
-biAqKSAweGZmZmY4OGEwN2YzN2IwMDAKPiAgwqDCoMKgIChnZGIpIHNldCAkcz0oc3RydWN0IG1l
-bV9zZWN0aW9uICopKChjaGFyICopKiR0IC0gMHgwMDAwMDA4MDAwMDAwMDAwICkKPiAgwqDCoMKg
-IChnZGIpIHByaW50ICokcwo+ICDCoMKgwqAgJDMgPSB7c2VjdGlvbl9tZW1fbWFwID0gMTg0NDY3
-MTk4ODQ0NTM3NDA1NTEsIHBhZ2VibG9ja19mbGFncyA9IDB4ZmZmZjg4YTA3ZjM2ZjA0MH0KPiAK
-PiBJbiB0aGUgYWJvdmUgZXhhbXBsZSwgdGhlIHJ1bm5pbmcga2VybmVsLCB0aGUgY3Jhc2hlZCBr
-ZXJuZWwgYW5kIHRoZSBjcmFzaGtlcm5lbCBhcmUgYWxsIHRoZSBzYW1lIDQuMTkuNTcgY29tcGls
-YXRpb24uIEJ1dCBJJ3ZlIHRyaWVkIHdpdGggc2V2ZXJhbCBvdGhlciB2ZXJzaW9ucyAoIGNyYXNo
-a2VybmVsIDQuNCwgcnVubmluZyBrZXJuZWwgZnJvbSA0LjAgdG8gbGludXggbWFzdGVyKSB3aXRo
-IHRoZSBzYW1lIHJlc3VsdC4KPiAKPiBUaGUgbWFjaGluZSBpbiB0aGUgYWJvdmUgZXhhbXBsZSBo
-YXMgc2V2ZXJhbCBudW1hIG5vZGVzICh0aGlzIGlzIHdoeSB0aGVyZSBhcmUgc28gbWFueSBMT0FE
-IGhlYWRlcnMpLiBCdXQgSSd2ZSB0cmllZCB0aGlzIHdpdGggYSBzbWFsbCBrdm0gdmlydHVhbCBt
-YWNoaW5lIGFuZCBnb3QgdGhlIHNhbWUgcmVzdWx0Lgo+IAo+ICDCoMKgwqAgYnVjemVrQGtyZWlv
-czovbW50L2xpbnV4LTQuMTkuNTctMjg2Lng4Nl82NC9idWlsZCQgZ3JlcCBSQU5ET01JWkVfQkFT
-RSAuY29uZmlnCj4gIMKgwqDCoCAjIENPTkZJR19SQU5ET01JWkVfQkFTRSBpcyBub3Qgc2V0Cj4g
-IMKgwqDCoCBidWN6ZWtAa3JlaW9zOi9tbnQvbGludXgtNC4xOS41Ny0yODYueDg2XzY0L2J1aWxk
-JCBncmVwIFNQQVJTRU1FTSAuY29uZmlnCj4gIMKgwqDCoCBDT05GSUdfQVJDSF9TUEFSU0VNRU1f
-RU5BQkxFPXkKPiAgwqDCoMKgIENPTkZJR19BUkNIX1NQQVJTRU1FTV9ERUZBVUxUPXkKPiAgwqDC
-oMKgIENPTkZJR19TUEFSU0VNRU1fTUFOVUFMPXkKPiAgwqDCoMKgIENPTkZJR19TUEFSU0VNRU09
-eQo+ICDCoMKgwqAgQ09ORklHX1NQQVJTRU1FTV9FWFRSRU1FPXkKPiAgwqDCoMKgIENPTkZJR19T
-UEFSU0VNRU1fVk1FTU1BUF9FTkFCTEU9eQo+ICDCoMKgwqAgQ09ORklHX1NQQVJTRU1FTV9WTUVN
-TUFQPXkKPiAgwqDCoMKgIGJ1Y3pla0BrcmVpb3M6L21udC9saW51eC00LjE5LjU3LTI4Ni54ODZf
-NjQvYnVpbGQkIGdyZXAgUEFHRV9UQUJMRV9JU09MQVRJT04gLmNvbmZpZwo+ICDCoMKgwqAgQ09O
-RklHX1BBR0VfVEFCTEVfSVNPTEFUSU9OPXkKPiAKPiBBbnkgaWRlYXM/Cj4gCj4gRG9uYWxkCgpU
-byBhbnN3ZXIgbXkgb3duIHF1ZXN0aW9uIGZvciB0aGUgcmVjb3JkczoKCk91ciBrZXhlYyBjb21t
-YW5kIGxpbmUgaXMKCiAgICAgL3Vzci9zYmluL2tleGVjIC1wIC9ib290L2J6SW1hZ2UuY3Jhc2gg
-LS1pbml0cmQ9L2Jvb3QvZ3J1Yi9pbml0cmFtZnMuaWd6IC0tY29tbWFuZC1saW5lPSJyb290PUxB
-QkVMPXJvb3Qgcm8gY29uc29sZT10dHlTMSwxMTUyMDBuOCBjb25zb2xlPXR0eTAgaXJxcG9sbCBu
-cl9jcHVzPTEgcmVzZXRfZGV2aWNlcyBwYW5pYz01IENSQVNIIgoKU28gd2UgbmVpdGhlciBnYXZl
-IC1zICgtLWtleGVjLWZpbGUtc3lzY2FsbCkgbm9yIC1hICggLS1rZXhlYy1zeXNjYWxsLWF1dG8g
-KS4gRm9yIHRoaXMgcmVhc29uLCBrZXhlYyB1c2VkIHRoZSBrZXhlY19sb2FkKCkgc3lzY2FsbCBp
-bnN0ZWFkIG9mIHRoZSBuZXdlciBrZXhlY19maWxlX2xvYWQgc3lzY2FsbC4KCldpdGgga2V4ZWNf
-bG9hZCgpLCB0aGUgZWxmIGhlYWRlcnMgZm9yIHRoZSBjcmFzaCwgd2hpY2ggaW5jbHVkZSBwcm9n
-cmFtIGhlYWRlciBmb3IgdGhlIG9sZCBzeXN0ZW0gcmFtLCBhcmUgbm90IGNvbXB1dGVkIGJ5IHRo
-ZSBrZXJuZWwsIGJ1dCBieSB0aGUgdXNlcnNwYWNlIHByb2dyYW0gZnJvbSBrZXhlYy10b29scy4K
-CkxpbnV4IGtlcm5lbCBjb21taXQgZDUyODg4YWEgKCJ4ODYvbW06IE1vdmUgTERUIHJlbWFwIG91
-dCBvZiBLQVNMUiByZWdpb24gb24gNS1sZXZlbCBwYWdpbmciKSBjaGFuZ2VkIHRoZSBiYXNlIG9m
-IHRoZSBkaXJlY3QgbWFwcGluZyBmcm9tIDB4ZmZmZjg4MDAwMDAwMDAwMCB0byAweGZmZmY4ODgw
-MDAwMDAwMDAuIFRoaXMgd2FzIG1lcmdlZCBpbnRvIHY0LjIwLXJjMi4KCmtleGVjLXRvb2xzLCBo
-b3dldmVyLCBzdGlsbCBoYXMgdGhlIG9sZCBhZGRyZXNzIGhhcmQgY29kZWQ6CgogICAgIGJ1Y3pl
-a0BhdmFyaXRpYTovc2NyYXRjaC9jbHVzdGVyL2J1Y3play9rZXhlYy10b29scyAobWFzdGVyKSQg
-Z2l0IGdyZXAgWDg2XzY0X1BBR0VfT0ZGU0VUCiAgICAga2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVt
-cC14ODYuYzogICAgICAgICAgICAgICAgICAgICAgICBlbGZfaW5mby0+cGFnZV9vZmZzZXQgPSBY
-ODZfNjRfUEFHRV9PRkZTRVRfUFJFXzJfNl8yNzsKICAgICBrZXhlYy9hcmNoL2kzODYvY3Jhc2hk
-dW1wLXg4Ni5jOiAgICAgICAgICAgICAgICAgICAgICAgIGVsZl9pbmZvLT5wYWdlX29mZnNldCA9
-IFg4Nl82NF9QQUdFX09GRlNFVDsKICAgICBrZXhlYy9hcmNoL2kzODYvY3Jhc2hkdW1wLXg4Ni5o
-OiNkZWZpbmUgWDg2XzY0X1BBR0VfT0ZGU0VUX1BSRV8yXzZfMjcgICAweGZmZmY4MTAwMDAwMDAw
-MDBVTEwKICAgICBrZXhlYy9hcmNoL2kzODYvY3Jhc2hkdW1wLXg4Ni5oOiNkZWZpbmUgWDg2XzY0
-X1BBR0VfT0ZGU0VUICAgICAgICAgICAgICAweGZmZmY4ODAwMDAwMDAwMDBVTEwKCkJlc3QKICAg
-RG9uYWxkCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
-ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hi Donald,
+
+On Wed, Aug 28, 2019 at 8:38 PM Donald Buczek <buczek@molgen.mpg.de> wrote:
+>
+> On 8/20/19 11:21 PM, Donald Buczek wrote:
+> > Dear Linux folks,
+> >
+> > I'm investigating a problem, that the crash utility fails to work with our crash dumps:
+> >
+> >      buczek@kreios:/mnt$ crash vmlinux crash.vmcore
+> >      crash 7.2.6
+> >      Copyright (C) 2002-2019  Red Hat, Inc.
+> >      Copyright (C) 2004, 2005, 2006, 2010  IBM Corporation
+> >      Copyright (C) 1999-2006  Hewlett-Packard Co
+> >      Copyright (C) 2005, 2006, 2011, 2012  Fujitsu Limited
+> >      Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
+> >      Copyright (C) 2005, 2011  NEC Corporation
+> >      Copyright (C) 1999, 2002, 2007  Silicon Graphics, Inc.
+> >      Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
+> >      This program is free software, covered by the GNU General Public License,
+> >      and you are welcome to change it and/or distribute copies of it under
+> >      certain conditions.  Enter "help copying" to see the conditions.
+> >      This program has absolutely no warranty.  Enter "help warranty" for details.
+> >      GNU gdb (GDB) 7.6
+> >      Copyright (C) 2013 Free Software Foundation, Inc.
+> >      License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+> >      This is free software: you are free to change and redistribute it.
+> >      There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+> >      and "show warranty" for details.
+> >      This GDB was configured as "x86_64-unknown-linux-gnu"...
+> >      crash: read error: kernel virtual address: ffff89807ff77000  type: "memory section root table"
+> >
+> > The crash file is a copy of /dev/vmcore taken by a crashkernel after a sysctl-forced panic.
+> >
+> > It looks to me, that  0xffff89807ff77000 is not readable, because the virtual addresses stored in the elf header of the dump file are off by 0x0000008000000000:
+> >
+> >      buczek@kreios:/mnt$ readelf -a crash.vmcore | grep LOAD | perl -lane 'printf "%s (%016x)\n",$_,hex($F[2])-hex($F[3])'
+> >        LOAD           0x000000000000d000 0xffffffff81000000 0x000001007d000000 (fffffeff04000000)
+> >        LOAD           0x0000000001c33000 0xffff880000001000 0x0000000000001000 (ffff880000000000)
+> >        LOAD           0x0000000001cc1000 0xffff880000090000 0x0000000000090000 (ffff880000000000)
+> >        LOAD           0x0000000001cd1000 0xffff880000100000 0x0000000000100000 (ffff880000000000)
+> >        LOAD           0x0000000001cd2070 0xffff880000100070 0x0000000000100070 (ffff880000000000)
+> >        LOAD           0x0000000019bd2000 0xffff880038000000 0x0000000038000000 (ffff880000000000)
+> >        LOAD           0x000000004e6a1000 0xffff88006ffff000 0x000000006ffff000 (ffff880000000000)
+> >        LOAD           0x000000004e6a2000 0xffff880100000000 0x0000000100000000 (ffff880000000000)
+> >        LOAD           0x0000001fcda22000 0xffff882080000000 0x0000002080000000 (ffff880000000000)
+> >        LOAD           0x0000003fcd9a2000 0xffff884080000000 0x0000004080000000 (ffff880000000000)
+> >        LOAD           0x0000005fcd922000 0xffff886080000000 0x0000006080000000 (ffff880000000000)
+> >        LOAD           0x0000007fcd8a2000 0xffff888080000000 0x0000008080000000 (ffff880000000000)
+> >        LOAD           0x0000009fcd822000 0xffff88a080000000 0x000000a080000000 (ffff880000000000)
+> >        LOAD           0x000000bfcd7a2000 0xffff88c080000000 0x000000c080000000 (ffff880000000000)
+> >        LOAD           0x000000dfcd722000 0xffff88e080000000 0x000000e080000000 (ffff880000000000)
+> >        LOAD           0x000000fc4d722000 0xffff88fe00000000 0x000000fe00000000 (ffff880000000000)
+> >
+> > (Columns are File offset, Virtual Address, Physical Address and computed offset).
+> >
+> > I would expect the offset between the virtual and the physical address to be PAGE_OFFSET, which is 0xffff88800000000 on x86_64, not 0xffff880000000000. Unlike /proc/vmcore, /proc/kcore shows the same physical memory (of the last memory section above) with a correct offset:
+> >
+> >      buczek@kreios:/mnt$ sudo readelf -a /proc/kcore | grep 0x000000fe00000000 | perl -lane 'printf "%s (%016x)\n",$_,hex($F[2])-hex($F[3])'
+> >        LOAD           0x0000097e00004000 0xffff897e00000000 0x000000fe00000000 (ffff888000000000)
+> >
+> > The failing address 0xffff89807ff77000 happens to be at the end of the last memory section. It is the mem_section array, which crash wants to load and which is visible in the running system:
+> >
+> >      buczek@kreios:/mnt$ sudo gdb vmlinux /proc/kcore
+> >      [...]
+> >      (gdb) print mem_section
+> >      $1 = (struct mem_section **) 0xffff89807ff77000
+> >      (gdb) print *mem_section
+> >      $2 = (struct mem_section *) 0xffff88a07f37b000
+> >      (gdb) print **mem_section
+> >      $3 = {section_mem_map = 18446719884453740551, pageblock_flags = 0xffff88a07f36f040}
+> >
+> > I can read the same information from the crash dump, if I account for the 0x0000008000000000 error:
+> >
+> >      buczek@kreios:/mnt$ gdb vmlinux crash.vmcore
+> >      [...]
+> >      (gdb) print mem_section
+> >      $1 = (struct mem_section **) 0xffff89807ff77000
+> >      (gdb) print *mem_section
+> >      Cannot access memory at address 0xffff89807ff77000
+> >      (gdb) set $t=(struct mem_section **) ((char *)mem_section - 0x0000008000000000)
+> >      (gdb) print *$t
+> >      $2 = (struct mem_section *) 0xffff88a07f37b000
+> >      (gdb) set $s=(struct mem_section *)((char *)*$t - 0x0000008000000000 )
+> >      (gdb) print *$s
+> >      $3 = {section_mem_map = 18446719884453740551, pageblock_flags = 0xffff88a07f36f040}
+> >
+> > In the above example, the running kernel, the crashed kernel and the crashkernel are all the same 4.19.57 compilation. But I've tried with several other versions ( crashkernel 4.4, running kernel from 4.0 to linux master) with the same result.
+> >
+> > The machine in the above example has several numa nodes (this is why there are so many LOAD headers). But I've tried this with a small kvm virtual machine and got the same result.
+> >
+> >      buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep RANDOMIZE_BASE .config
+> >      # CONFIG_RANDOMIZE_BASE is not set
+> >      buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep SPARSEMEM .config
+> >      CONFIG_ARCH_SPARSEMEM_ENABLE=y
+> >      CONFIG_ARCH_SPARSEMEM_DEFAULT=y
+> >      CONFIG_SPARSEMEM_MANUAL=y
+> >      CONFIG_SPARSEMEM=y
+> >      CONFIG_SPARSEMEM_EXTREME=y
+> >      CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
+> >      CONFIG_SPARSEMEM_VMEMMAP=y
+> >      buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep PAGE_TABLE_ISOLATION .config
+> >      CONFIG_PAGE_TABLE_ISOLATION=y
+> >
+> > Any ideas?
+> >
+> > Donald
+>
+> To answer my own question for the records:
+
+Thanks for the update.
+
+I think Paul (may be from your organization?) posted a similar issue
+and I had enquired about a few environment details from him for
+helping debug this issue (see <https://lkml.org/lkml/2019/8/19/938>).
+But he seems to be  OOO..
+
+> Our kexec command line is
+>
+>      /usr/sbin/kexec -p /boot/bzImage.crash --initrd=/boot/grub/initramfs.igz --command-line="root=LABEL=root ro console=ttyS1,115200n8 console=tty0 irqpoll nr_cpus=1 reset_devices panic=5 CRASH"
+>
+> So we neither gave -s (--kexec-file-syscall) nor -a ( --kexec-syscall-auto ). For this reason, kexec used the kexec_load() syscall instead of the newer kexec_file_load syscall.
+
+'-p' flag is for indicating a kdump operation (i.e you want to load a
+crash kernel and want to execute it if the primary kernel crashes) and
+different from the kexec load ('-l' or '-s' operation where you want
+to load and execute another kernel).
+
+> With kexec_load(), the elf headers for the crash, which include program header for the old system ram, are not computed by the kernel, but by the userspace program from kexec-tools.
+
+See above, kdump and kexec-load are completely different operation and
+I am not sure how using kdump options seem to help your case when
+kexec_load() / kexec_file_load() don't seem to work.
+
+However looking at your and Paul's original email, I can decipher that
+you are able to generate a vmcore (although an incomplete one), so I
+am pretty sure you are using the kexec -p (i.e. kdump) feature rather
+than kexec to another kernel :)
+
+> Linux kernel commit d52888aa ("x86/mm: Move LDT remap out of KASLR region on 5-level paging") changed the base of the direct mapping from 0xffff880000000000 to 0xffff888000000000. This was merged into v4.20-rc2.
+>
+> kexec-tools, however, still has the old address hard coded:
+
+>      buczek@avaritia:/scratch/cluster/buczek/kexec-tools (master)$ git grep X86_64_PAGE_OFFSET
+>      kexec/arch/i386/crashdump-x86.c:                        elf_info->page_offset = X86_64_PAGE_OFFSET_PRE_2_6_27;
+>      kexec/arch/i386/crashdump-x86.c:                        elf_info->page_offset = X86_64_PAGE_OFFSET;
+>      kexec/arch/i386/crashdump-x86.h:#define X86_64_PAGE_OFFSET_PRE_2_6_27   0xffff810000000000ULL
+>      kexec/arch/i386/crashdump-x86.h:#define X86_64_PAGE_OFFSET              0xffff880000000000ULL
+
+Good catch.
+I see, while other user-space tools (for e.g. makedumpfile have
+migrated to using the available PT_LOADs for example in the
+'/proc/kcore' file (see [0] for reference) to determine the correct
+PAGE_OFFSET value, it seems kexec-tools is still using MACRO values
+for the same - which probably are not maintainable and need to be
+updated with changes in the kernel.
+
+I will try to reproduce this at my end (I think it should be easy to
+do so on Qemu) and send a kexec-tools fix shortly. I will Cc you for
+the fix patch.
+
+Please feel free to test the same and let me know in case you face any
+further issues.
+
+Thanks,
+Bhupesh
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
