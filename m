@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr680083.outbound.protection.outlook.com
- ([40.107.68.83] helo=NAM04-BN3-obe.outbound.protection.outlook.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i2bkg-0001VI-DM
- for kexec@lists.infradead.org; Tue, 27 Aug 2019 13:43:16 +0000
-From: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Subject: Re: [PATCH v2] x86/kdump: Reserve extra memory when SME or SEV is
- active
-Date: Tue, 27 Aug 2019 13:43:10 +0000
-Message-ID: <dfb623dd-6c68-14a9-7ef5-ea8c6b5a2567@amd.com>
-References: <20190826044535.9646-1-kasong@redhat.com>
-In-Reply-To: <20190826044535.9646-1-kasong@redhat.com>
-Content-Language: en-US
-Content-ID: <2DC00BA7C27A87489CB7E42FBC4B6659@namprd12.prod.outlook.com>
+ id 1i2u6i-0000AH-Jj
+ for kexec@lists.infradead.org; Wed, 28 Aug 2019 09:19:14 +0000
+Subject: Re: [PATCH 0/4 v2] Limit the size of vmcore-dmesg.txt to 2G
+From: lijiang <lijiang@redhat.com>
+References: <20190823120539.18330-1-lijiang@redhat.com>
+Message-ID: <21c5b324-c3f5-4fb4-25da-e62610b2becd@redhat.com>
+Date: Wed, 28 Aug 2019 17:18:58 +0800
 MIME-Version: 1.0
+In-Reply-To: <20190823120539.18330-1-lijiang@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,123 +23,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
+To: kexec@lists.infradead.org, horms@verge.net.au
+Cc: bhe@redhat.com, piliu@redhat.com, bhsharma@redhat.com, junw99@yahoo.com, dyoung@redhat.com, kasong@redhat.com
 
-On 8/25/19 11:45 PM, Kairui Song wrote:
-> Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
-> SWIOTLB will be enabled even if there is less than 4G of memory when SME
-> is active, to support DMA of devices that not support address with the
-> encrypt bit.
-> 
-> And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
-> active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
-> 
-> Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
-> encryption") will always force SWIOTLB to be enabled when SEV is active
-> in all cases.
-> 
-> Now, when either SME or SEV is active, SWIOTLB will be force enabled,
-> and this is also true for kdump kernel. As a result kdump kernel will
-> run out of already scarce pre-reserved memory easily.
-> 
-> So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
-> kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
-> is specified or any offset is used. As for the high reservation case, an
-> extra low memory region will always be reserved and that is enough for
-> SWIOTLB. Else if the offset format is used, user should be fully aware
-> of any possible kdump kernel memory requirement and have to organize the
-> memory usage carefully.
-> 
-> Signed-off-by: Kairui Song <kasong@redhat.com>
+Hi, Simon and other reviewers, any comment about v2?
 
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+Thanks.
+Lianbo
 
+
+> [PATCH 1/4] Cleanup: remove the read_elf_kcore()
+> Here, no need to wrap the read_elf() again, lets invoke it directly.
+> So remove the read_elf_kcore() and clean up redundant code.
 > 
-> ---
-> Update from V1:
-> - Use mem_encrypt_active() instead of "sme_active() || sev_active()"
-> - Don't reserve extra memory when ",high" or "@offset" is used, and
->   don't print redundant message.
-> - Fix coding style problem
+> [PATCH 2/4] Fix an error definition about the variable 'fname'
+> The variable 'fname' is mistakenly defined two twice, the first definition
+> is in the vmcore-dmesg.c, and the second definition is in the elf_info.c.
+> That is confused and incorrect although it's a static type, because the
+> value of variable 'fname' is not assigned(set) in elf_info.c. Anyway, its
+> value will be always 'null' when printing an error information.
 > 
->  arch/x86/kernel/setup.c | 31 ++++++++++++++++++++++++++++---
->  1 file changed, 28 insertions(+), 3 deletions(-)
+> [PATCH 3/4] Cleanup: move it back from util_lib/elf_info.c
+> Some code related to vmcore-dmesg.c is put into the util_lib, which
+> is not very reasonable, so lets move it back and tidy up those code.
+> In addition, that will also help to limit the size of vmcore-dmesg.txt.
 > 
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index bbe35bf879f5..221beb10c55d 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -528,7 +528,7 @@ static int __init reserve_crashkernel_low(void)
->  
->  static void __init reserve_crashkernel(void)
->  {
-> -	unsigned long long crash_size, crash_base, total_mem;
-> +	unsigned long long crash_size, crash_base, total_mem, mem_enc_req;
->  	bool high = false;
->  	int ret;
->  
-> @@ -550,6 +550,15 @@ static void __init reserve_crashkernel(void)
->  		return;
->  	}
->  
-> +	/*
-> +	 * When SME/SEV is active, it will always required an extra SWIOTLB
-> +	 * region.
-> +	 */
-> +	if (mem_encrypt_active())
-> +		mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
-> +	else
-> +		mem_enc_req = 0;
-> +
->  	/* 0 means: find the address automatically */
->  	if (!crash_base) {
->  		/*
-> @@ -563,11 +572,19 @@ static void __init reserve_crashkernel(void)
->  		if (!high)
->  			crash_base = memblock_find_in_range(CRASH_ALIGN,
->  						CRASH_ADDR_LOW_MAX,
-> -						crash_size, CRASH_ALIGN);
-> -		if (!crash_base)
-> +						crash_size + mem_enc_req,
-> +						CRASH_ALIGN);
-> +		/*
-> +		 * For high reservation, an extra low memory for SWIOTLB will
-> +		 * always be reserved later, so no need to reserve extra
-> +		 * memory for memory encryption case here.
-> +		 */
-> +		if (!crash_base) {
-> +			mem_enc_req = 0;
->  			crash_base = memblock_find_in_range(CRASH_ALIGN,
->  						CRASH_ADDR_HIGH_MAX,
->  						crash_size, CRASH_ALIGN);
-> +		}
->  		if (!crash_base) {
->  			pr_info("crashkernel reservation failed - No suitable area found.\n");
->  			return;
-> @@ -575,6 +592,7 @@ static void __init reserve_crashkernel(void)
->  	} else {
->  		unsigned long long start;
->  
-> +		mem_enc_req = 0;
->  		start = memblock_find_in_range(crash_base,
->  					       crash_base + crash_size,
->  					       crash_size, 1 << 20);
-> @@ -583,6 +601,13 @@ static void __init reserve_crashkernel(void)
->  			return;
->  		}
->  	}
-> +
-> +	if (mem_enc_req) {
-> +		pr_info("Memory encryption is active, crashkernel needs %ldMB extra memory\n",
-> +			(unsigned long)(mem_enc_req >> 20));
-> +		crash_size += mem_enc_req;
-> +	}
-> +
->  	ret = memblock_reserve(crash_base, crash_size);
->  	if (ret) {
->  		pr_err("%s: Error reserving crashkernel memblock.\n", __func__);
+> [PATCH 4/4] Limit the size of vmcore-dmesg.txt to 2G
+> With some corrupted vmcore files, the vmcore-dmesg.txt file may
+> grow forever till the kdump disk becomes full. Lets limit the
+> size of vmcore-dmesg.txt to avoid such problems.
 > 
+> BTW: I tested this patch series on x86 64 and arm64, it also worked well.
+> 
+> Changes since v1:
+> [1] split them([patch 1/4] and [patch 2/4]) into a separate patch.
+> [2] remove a typedef definition for handler.
+> [3] remove some changes of variable 'fname' and fix its error.
+> 
+> Lianbo Jiang (4):
+>   Cleanup: remove the read_elf_kcore()
+>   Fix an error definition about the variable 'fname'
+>   Cleanup: move it back from util_lib/elf_info.c
+>   Limit the size of vmcore-dmesg.txt to 2G
+> 
+>  kexec/arch/arm64/kexec-arm64.c |  2 +-
+>  util_lib/elf_info.c            | 65 ++++++++--------------------------
+>  util_lib/include/elf_info.h    |  4 +--
+>  vmcore-dmesg/vmcore-dmesg.c    | 42 ++++++++++++++++++++--
+>  4 files changed, 57 insertions(+), 56 deletions(-)
+> 
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
