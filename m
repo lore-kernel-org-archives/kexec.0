@@ -1,31 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i3hrE-00086A-K8
- for kexec@lists.infradead.org; Fri, 30 Aug 2019 14:26:33 +0000
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
- x7UEICZB059869
- for <kexec@lists.infradead.org>; Fri, 30 Aug 2019 10:26:30 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2uq3d1dp27-1
- (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 30 Aug 2019 10:26:30 -0400
-Received: from localhost
- by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <prudo@linux.ibm.com>;
- Fri, 30 Aug 2019 15:26:28 +0100
-Date: Fri, 30 Aug 2019 16:26:22 +0200
-From: Philipp Rudo <prudo@linux.ibm.com>
-Subject: Re: [PATCH V40 08/29] kexec_file: split KEXEC_VERIFY_SIG into
- KEXEC_SIG and KEXEC_SIG_FORCE
-In-Reply-To: <20190820001805.241928-9-matthewgarrett@google.com>
-References: <20190820001805.241928-1-matthewgarrett@google.com>
- <20190820001805.241928-9-matthewgarrett@google.com>
+ id 1i3k1a-0005mY-Tr
+ for kexec@lists.infradead.org; Fri, 30 Aug 2019 16:45:24 +0000
+Date: Fri, 30 Aug 2019 18:45:13 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2] x86/kdump: Reserve extra memory when SME or SEV is
+ active
+Message-ID: <20190830164513.GE30413@zn.tnic>
+References: <20190826044535.9646-1-kasong@redhat.com>
 MIME-Version: 1.0
-Message-Id: <20190830162622.534a0b8f@laptop-ibm>
+Content-Disposition: inline
+In-Reply-To: <20190826044535.9646-1-kasong@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,37 +24,145 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew Garrett <matthewgarrett@google.com>
-Cc: Jiri Bohac <jbohac@suse.cz>, linux-api@vger.kernel.org, kexec@lists.infradead.org, jmorris@namei.org, Matthew Garrett <mjg59@google.com>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org
+To: Kairui Song <kasong@redhat.com>
+Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>, Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>, x86@kernel.org, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
 
-Hi Matthew,
+On Mon, Aug 26, 2019 at 12:45:35PM +0800, Kairui Song wrote:
+> Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
+> SWIOTLB will be enabled even if there is less than 4G of memory when SME
+> is active, to support DMA of devices that not support address with the
+> encrypt bit.
+> 
+> And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
+> active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
+> 
+> Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
+> encryption") will always force SWIOTLB to be enabled when SEV is active
+> in all cases.
+> 
+> Now, when either SME or SEV is active, SWIOTLB will be force enabled,
+> and this is also true for kdump kernel. As a result kdump kernel will
+> run out of already scarce pre-reserved memory easily.
+> 
+> So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
+> kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
+> is specified or any offset is used. As for the high reservation case, an
+> extra low memory region will always be reserved and that is enough for
+> SWIOTLB. Else if the offset format is used, user should be fully aware
+> of any possible kdump kernel memory requirement and have to organize the
+> memory usage carefully.
+> 
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> 
+> ---
+> Update from V1:
+> - Use mem_encrypt_active() instead of "sme_active() || sev_active()"
+> - Don't reserve extra memory when ",high" or "@offset" is used, and
+>   don't print redundant message.
+> - Fix coding style problem
+> 
+>  arch/x86/kernel/setup.c | 31 ++++++++++++++++++++++++++++---
+>  1 file changed, 28 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index bbe35bf879f5..221beb10c55d 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -528,7 +528,7 @@ static int __init reserve_crashkernel_low(void)
+>  
+>  static void __init reserve_crashkernel(void)
+>  {
+> -	unsigned long long crash_size, crash_base, total_mem;
+> +	unsigned long long crash_size, crash_base, total_mem, mem_enc_req;
+>  	bool high = false;
+>  	int ret;
+>  
+> @@ -550,6 +550,15 @@ static void __init reserve_crashkernel(void)
+>  		return;
+>  	}
+>  
+> +	/*
+> +	 * When SME/SEV is active, it will always required an extra SWIOTLB
+> +	 * region.
+> +	 */
+> +	if (mem_encrypt_active())
+> +		mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
+> +	else
+> +		mem_enc_req = 0;
 
-found a typo ...
+Hmm, ugly.
 
-On Mon, 19 Aug 2019 17:17:44 -0700
-Matthew Garrett <matthewgarrett@google.com> wrote:
+You set mem_enc_reg here ...
 
-[...]
+> +
+>  	/* 0 means: find the address automatically */
+>  	if (!crash_base) {
+>  		/*
+> @@ -563,11 +572,19 @@ static void __init reserve_crashkernel(void)
+>  		if (!high)
+>  			crash_base = memblock_find_in_range(CRASH_ALIGN,
+>  						CRASH_ADDR_LOW_MAX,
+> -						crash_size, CRASH_ALIGN);
+> -		if (!crash_base)
+> +						crash_size + mem_enc_req,
+> +						CRASH_ALIGN);
+> +		/*
+> +		 * For high reservation, an extra low memory for SWIOTLB will
+> +		 * always be reserved later, so no need to reserve extra
+> +		 * memory for memory encryption case here.
+> +		 */
+> +		if (!crash_base) {
+> +			mem_enc_req = 0;
 
-> index 6d0635ceddd0..9b4f37a4edf1 100644
-> --- a/arch/s390/kernel/kexec_elf.c
-> +++ b/arch/s390/kernel/kexec_elf.c
-> @@ -130,7 +130,7 @@ static int s390_elf_probe(const char *buf, unsigned long len)
->  const struct kexec_file_ops s390_kexec_elf_ops = {
->  	.probe = s390_elf_probe,
->  	.load = s390_elf_load,
-> -#ifdef CONFIG_KEXEC_VERIFY_SIG
-> +#ifdef CONFIG_KEXEC__SIG
-		      ^^
-... here.
->  	.verify_sig = s390_verify_sig,
-> -#endif /* CONFIG_KEXEC_VERIFY_SIG */
-> +#endif /* CONFIG_KEXEC_SIG */
->  };
+... but you clear it here...
 
-Thanks
-Philipp
+>  			crash_base = memblock_find_in_range(CRASH_ALIGN,
+>  						CRASH_ADDR_HIGH_MAX,
+>  						crash_size, CRASH_ALIGN);
+> +		}
+>  		if (!crash_base) {
+>  			pr_info("crashkernel reservation failed - No suitable area found.\n");
+>  			return;
+> @@ -575,6 +592,7 @@ static void __init reserve_crashkernel(void)
+>  	} else {
+>  		unsigned long long start;
+>  
+> +		mem_enc_req = 0;
 
+... and here...
+
+>  		start = memblock_find_in_range(crash_base,
+>  					       crash_base + crash_size,
+>  					       crash_size, 1 << 20);
+> @@ -583,6 +601,13 @@ static void __init reserve_crashkernel(void)
+>  			return;
+>  		}
+>  	}
+> +
+> +	if (mem_enc_req) {
+> +		pr_info("Memory encryption is active, crashkernel needs %ldMB extra memory\n",
+> +			(unsigned long)(mem_enc_req >> 20));
+> +		crash_size += mem_enc_req;
+> +	}
+
+... and then you report only when it is still set.
+
+How about you carve out that if (!crash_base) { ... } else { } piece
+into a separate function without any further changes - only code
+movement? That is your patch 1.
+
+Your patch 2 is then adding the mem_encrypt_active() check in the if
+(!crash_base && !high) case, i.e., only where you need it and issuing
+the pr_info from there instead of stretching that logic throughout the
+whole function and twisting my brain unnecessarily?
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
