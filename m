@@ -1,17 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i3hdK-0002nR-DA
- for kexec@lists.infradead.org; Fri, 30 Aug 2019 14:12:16 +0000
-Date: Fri, 30 Aug 2019 16:11:56 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCHv2 0/4] x86/mce: protect nr_cpus from rebooting by
- broadcast mce
-Message-ID: <20190830141156.GB30413@zn.tnic>
-References: <1566874943-4449-1-git-send-email-kernelfans@gmail.com>
+ id 1i3hrE-00086A-K8
+ for kexec@lists.infradead.org; Fri, 30 Aug 2019 14:26:33 +0000
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x7UEICZB059869
+ for <kexec@lists.infradead.org>; Fri, 30 Aug 2019 10:26:30 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2uq3d1dp27-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 30 Aug 2019 10:26:30 -0400
+Received: from localhost
+ by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <prudo@linux.ibm.com>;
+ Fri, 30 Aug 2019 15:26:28 +0100
+Date: Fri, 30 Aug 2019 16:26:22 +0200
+From: Philipp Rudo <prudo@linux.ibm.com>
+Subject: Re: [PATCH V40 08/29] kexec_file: split KEXEC_VERIFY_SIG into
+ KEXEC_SIG and KEXEC_SIG_FORCE
+In-Reply-To: <20190820001805.241928-9-matthewgarrett@google.com>
+References: <20190820001805.241928-1-matthewgarrett@google.com>
+ <20190820001805.241928-9-matthewgarrett@google.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1566874943-4449-1-git-send-email-kernelfans@gmail.com>
+Message-Id: <20190830162622.534a0b8f@laptop-ibm>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,49 +38,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <kernelfans@gmail.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>, Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, Jacob Pan <jacob.jun.pan@linux.intel.com>, x86@kernel.org, Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org, Daniel Drake <drake@endlessm.com>, Ingo Molnar <mingo@redhat.com>, Qian Cai <cai@lca.pw>, Masami Hiramatsu <mhiramat@kernel.org>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Eric Biederman <ebiederm@xmission.com>
+To: Matthew Garrett <matthewgarrett@google.com>
+Cc: Jiri Bohac <jbohac@suse.cz>, linux-api@vger.kernel.org, kexec@lists.infradead.org, jmorris@namei.org, Matthew Garrett <mjg59@google.com>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 11:02:19AM +0800, Pingfan Liu wrote:
-> v1 -> v2: fix compile warning and error on x86_32
-> 
-> 
-> This series include two related groups:
-> [1-3/4]: protect nr_cpus from rebooting by broadcast mce
-> [4/4]: improve "kexec -l" robustness against broadcast mce
-> 
-> When I tried to fix [1], Thomas raised concern about the nr_cpus' vulnerability
-> to unexpected rebooting by broadcast mce. After analysis, I think only the
-> following first case suffers from the rebooting by broadcast mce. [1-3/4] aims
-> to fix that issue.
-> 
-> *** Back ground ***
-> 
-> On x86 it's required to have all logical CPUs set CR4.MCE=1. Otherwise, a
-> broadcast MCE observing CR4.MCE=0b on any core will shutdown the machine.
-> 
-> The option 'nosmt' has already complied with the above rule by Thomas's patch.
-> For detail, refer to 506a66f3748 (Revert "x86/apic: Ignore secondary threads if
-> nosmt=force")
-> 
-> But for nr_cpus option, the exposure to broadcast MCE is a little complicated,
-> and can be categorized into three cases.
+Hi Matthew,
 
-One thing is not clear to me: are you "fixing" a hypothetical case here
-or have you *actually* experienced an MCE happening while kdumping with
-nr_cpus < num_online_cpus()?
+found a typo ...
 
-Btw, pls do not use lkml.org to refer to previous mails but
+On Mon, 19 Aug 2019 17:17:44 -0700
+Matthew Garrett <matthewgarrett@google.com> wrote:
 
-http://lkml.kernel.org/r/<Message-ID>
+[...]
 
-Thx.
+> index 6d0635ceddd0..9b4f37a4edf1 100644
+> --- a/arch/s390/kernel/kexec_elf.c
+> +++ b/arch/s390/kernel/kexec_elf.c
+> @@ -130,7 +130,7 @@ static int s390_elf_probe(const char *buf, unsigned long len)
+>  const struct kexec_file_ops s390_kexec_elf_ops = {
+>  	.probe = s390_elf_probe,
+>  	.load = s390_elf_load,
+> -#ifdef CONFIG_KEXEC_VERIFY_SIG
+> +#ifdef CONFIG_KEXEC__SIG
+		      ^^
+... here.
+>  	.verify_sig = s390_verify_sig,
+> -#endif /* CONFIG_KEXEC_VERIFY_SIG */
+> +#endif /* CONFIG_KEXEC_SIG */
+>  };
 
--- 
-Regards/Gruss,
-    Boris.
+Thanks
+Philipp
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
