@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.92 #3 (Red Hat Linux))
- id 1i59w9-0001Ut-GM
- for kexec@lists.infradead.org; Tue, 03 Sep 2019 14:37:39 +0000
-Date: Tue, 3 Sep 2019 16:37:30 +0200
+ id 1i59zu-0004LG-Lv
+ for kexec@lists.infradead.org; Tue, 03 Sep 2019 14:41:32 +0000
+Date: Tue, 3 Sep 2019 16:41:27 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/4 v2] Limit the size of vmcore-dmesg.txt to 2G
-Message-ID: <20190903143730.lz45x774rhmefjzg@verge.net.au>
-References: <20190823120539.18330-1-lijiang@redhat.com>
- <21c5b324-c3f5-4fb4-25da-e62610b2becd@redhat.com>
+Subject: Re: [PATCH] x86: Fix PAGE_OFFSET for kernels since 4.20
+Message-ID: <20190903144127.opmnw42pie6klghc@verge.net.au>
+References: <20190830091258.51133-1-buczek@molgen.mpg.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <21c5b324-c3f5-4fb4-25da-e62610b2becd@redhat.com>
+In-Reply-To: <20190830091258.51133-1-buczek@molgen.mpg.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,16 +23,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: kasong@redhat.com, bhe@redhat.com, piliu@redhat.com, bhsharma@redhat.com, kexec@lists.infradead.org, junw99@yahoo.com, dyoung@redhat.com
+To: Donald Buczek <buczek@molgen.mpg.de>
+Cc: Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org
 
-On Wed, Aug 28, 2019 at 05:18:58PM +0800, lijiang wrote:
-> Hi, Simon and other reviewers, any comment about v2?
+On Fri, Aug 30, 2019 at 11:12:58AM +0200, Donald Buczek wrote:
+> Linux kernel commit d52888aa2753 ("x86/mm: Move LDT remap out of KASLR
+> region on 5-level paging") changed the base of the direct mapping
+> from 0xffff880000000000 to 0xffff888000000000. This was merged
+> into v4.20-rc2.
+> 
+> Update to new address accordingly.
 
-Hi,
+Thanks, applied for inclusion in v2.0.20.
 
-sorry for the extended delay.
-I will look over this.
+> ---
+>  kexec/arch/i386/crashdump-x86.c | 2 ++
+>  kexec/arch/i386/crashdump-x86.h | 3 ++-
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> index a2aea31..c79791f 100644
+> --- a/kexec/arch/i386/crashdump-x86.c
+> +++ b/kexec/arch/i386/crashdump-x86.c
+> @@ -61,6 +61,8 @@ static int get_kernel_page_offset(struct kexec_info *UNUSED(info),
+>  
+>  		if (kv < KERNEL_VERSION(2, 6, 27))
+>  			elf_info->page_offset = X86_64_PAGE_OFFSET_PRE_2_6_27;
+> +		else if (kv < KERNEL_VERSION(4, 20, 0))
+> +			elf_info->page_offset = X86_64_PAGE_OFFSET_PRE_4_20_0;
+>  		else
+>  			elf_info->page_offset = X86_64_PAGE_OFFSET;
+>  	}
+> diff --git a/kexec/arch/i386/crashdump-x86.h b/kexec/arch/i386/crashdump-x86.h
+> index ddee19f..e4fdc82 100644
+> --- a/kexec/arch/i386/crashdump-x86.h
+> +++ b/kexec/arch/i386/crashdump-x86.h
+> @@ -13,7 +13,8 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
+>  
+>  #define X86_64__START_KERNEL_map	0xffffffff80000000ULL
+>  #define X86_64_PAGE_OFFSET_PRE_2_6_27	0xffff810000000000ULL
+> -#define X86_64_PAGE_OFFSET		0xffff880000000000ULL
+> +#define X86_64_PAGE_OFFSET_PRE_4_20_0	0xffff880000000000ULL
+> +#define X86_64_PAGE_OFFSET	0xffff888000000000ULL
+>  
+>  #define X86_64_MAXMEM        		0x3fffffffffffUL
+>  
+> -- 
+> 2.22.0
+> 
 
 _______________________________________________
 kexec mailing list
