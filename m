@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x544.google.com ([2a00:1450:4864:20::544])
+Received: from mail-ed1-x543.google.com ([2a00:1450:4864:20::543])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i6GLK-0005gD-ON
- for kexec@lists.infradead.org; Fri, 06 Sep 2019 15:40:12 +0000
-Received: by mail-ed1-x544.google.com with SMTP id p2so5509394edx.11
- for <kexec@lists.infradead.org>; Fri, 06 Sep 2019 08:40:10 -0700 (PDT)
+ id 1i6GMN-0006F0-JK
+ for kexec@lists.infradead.org; Fri, 06 Sep 2019 15:41:16 +0000
+Received: by mail-ed1-x543.google.com with SMTP id y91so6671985ede.9
+ for <kexec@lists.infradead.org>; Fri, 06 Sep 2019 08:41:15 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
- <20190821183204.23576-3-pasha.tatashin@soleen.com>
- <dc6506a0-9b66-f633-8319-9c8a9dc93d4f@arm.com>
-In-Reply-To: <dc6506a0-9b66-f633-8319-9c8a9dc93d4f@arm.com>
+ <20190821183204.23576-5-pasha.tatashin@soleen.com>
+ <2e826560-4005-fa16-8bbb-fc0e25763dcc@arm.com>
+In-Reply-To: <2e826560-4005-fa16-8bbb-fc0e25763dcc@arm.com>
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 6 Sep 2019 11:39:58 -0400
-Message-ID: <CA+CK2bBgUH8v_bYEyJKPsLZFDxse6xYRwGR8KN=SzgHnrR9yhA@mail.gmail.com>
-Subject: Re: [PATCH v3 02/17] arm64, hibernate: use get_safe_page directly
+Date: Fri, 6 Sep 2019 11:41:03 -0400
+Message-ID: <CA+CK2bDU9ZZbXsqfEzMV9JDRUq0vMRNHObpQ0q-YtwbEbq702w@mail.gmail.com>
+Subject: Re: [PATCH v3 04/17] arm64,
+ hibernate: rename dst to page in create_safe_exec_page
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,45 +34,30 @@ On Fri, Sep 6, 2019 at 11:17 AM James Morse <james.morse@arm.com> wrote:
 >
 > Hi Pavel,
 >
-> Nit: The pattern for the subject prefix should be "arm64: hibernate:"..
-> Its usually possible to spot the pattern from "git log --oneline $file".
-
-Sure, I will change here and in other places to "arm64: hibernate:"
-
->
 > On 21/08/2019 19:31, Pavel Tatashin wrote:
-> > create_safe_exec_page is a local function that uses the
-> > get_safe_page() to allocate page table and pages and one pages
-> > that is getting mapped.
+> > create_safe_exec_page() allocates a safe page and maps it at a
+> > specific location, also this function returns the physical address
+> > of newly allocated page.
+> >
+> > The destination VA, and PA are specified in arguments: dst_addr,
+> > phys_dst_addr
+> >
+> > However, within the function it uses "dst" which has unsigned long
+> > type, but is actually a pointers in the current virtual space. This
+> > is confusing to read.
 >
-> I can't parse this.
->
-> create_safe_exec_page() uses hibernate's allocator to create a set of page table to map a
-> single page that will contain the relocation code.
-
-Thanks I will rephrase it with your suggestion.
-
+> The type? There are plenty of places in the kernel that an unsigned-long is actually a
+> pointer. This isn't unusual.
 >
 >
-> > Remove the allocator related arguments, and use get_safe_page
-> > directly, as it is done in other local functions in this
-> > file.
-> ... because kexec can't use this as it doesn't have a working allocator.
-> Removing this function pointer makes it easier to refactor the code later.
-
-Thanks, I will add it to the description.
-
+> > Rename dst to more appropriate page (page that is created), and also
+> > change its time to "void *"
 >
-> (this thing is only a function pointer so kexec could use it too ... It looks like you're
-> creating extra work. Patch 7 moves these new calls out to a new file... presumably so
-> another patch can remove them again)
->
-> As stand-alone cleanup the patch looks fine, but you probably don't need to do this.
+> If you think its clearer,
+> Reviewed-by: James Morse <james.morse@arm.com>
 
-Without this clean-up moving to common code becomes messier. So, I
-would like to keep this change.
+Thank you for your review.
 
-Thank you,
 Pasha
 
 _______________________________________________
