@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v3 01/17] kexec: quiet down kexec reboot
+Subject: Re: [PATCH v3 02/17] arm64, hibernate: use get_safe_page directly
 References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
- <20190821183204.23576-2-pasha.tatashin@soleen.com>
-Message-ID: <0f83b70e-2f8f-aa05-84d8-41290679003b@arm.com>
-Date: Fri, 6 Sep 2019 16:17:19 +0100
+ <20190821183204.23576-3-pasha.tatashin@soleen.com>
+Message-ID: <dc6506a0-9b66-f633-8319-9c8a9dc93d4f@arm.com>
+Date: Fri, 6 Sep 2019 16:17:25 +0100
 MIME-Version: 1.0
-In-Reply-To: <20190821183204.23576-2-pasha.tatashin@soleen.com>
+In-Reply-To: <20190821183204.23576-3-pasha.tatashin@soleen.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,25 +25,31 @@ Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn
 
 Hi Pavel,
 
-On 21/08/2019 19:31, Pavel Tatashin wrote:
-> Here is a regular kexec command sequence and output:
-> =====
-> $ kexec --reuse-cmdline -i --load Image
-> $ kexec -e
-> [  161.342002] kexec_core: Starting new kernel
-> 
-> Welcome to Buildroot
-> buildroot login:
-> =====
-> 
-> Even when "quiet" kernel parameter is specified, "kexec_core: Starting
-> new kernel" is printed.
-> 
-> This message has  KERN_EMERG level, but there is no emergency, it is a
-> normal kexec operation, so quiet it down to appropriate KERN_NOTICE.
+Nit: The pattern for the subject prefix should be "arm64: hibernate:"..
+Its usually possible to spot the pattern from "git log --oneline $file".
 
-As this doesn't have a dependency with the rest of the series, you may want to post it
-independently so it can be picked up independently.
+On 21/08/2019 19:31, Pavel Tatashin wrote:
+> create_safe_exec_page is a local function that uses the
+> get_safe_page() to allocate page table and pages and one pages
+> that is getting mapped.
+
+I can't parse this.
+
+create_safe_exec_page() uses hibernate's allocator to create a set of page table to map a
+single page that will contain the relocation code.
+
+
+> Remove the allocator related arguments, and use get_safe_page
+> directly, as it is done in other local functions in this
+> file.
+... because kexec can't use this as it doesn't have a working allocator.
+Removing this function pointer makes it easier to refactor the code later.
+
+(this thing is only a function pointer so kexec could use it too ... It looks like you're
+creating extra work. Patch 7 moves these new calls out to a new file... presumably so
+another patch can remove them again)
+
+As stand-alone cleanup the patch looks fine, but you probably don't need to do this.
 
 
 Thanks,
