@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v3 03/17] arm64, hibernate: remove gotos in
+Subject: Re: [PATCH v3 04/17] arm64, hibernate: rename dst to page in
  create_safe_exec_page
 References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
- <20190821183204.23576-4-pasha.tatashin@soleen.com>
-Message-ID: <99aba737-a959-e352-74d8-a2aff3ae5a88@arm.com>
-Date: Fri, 6 Sep 2019 16:17:33 +0100
+ <20190821183204.23576-5-pasha.tatashin@soleen.com>
+Message-ID: <2e826560-4005-fa16-8bbb-fc0e25763dcc@arm.com>
+Date: Fri, 6 Sep 2019 16:17:38 +0100
 MIME-Version: 1.0
-In-Reply-To: <20190821183204.23576-4-pasha.tatashin@soleen.com>
+In-Reply-To: <20190821183204.23576-5-pasha.tatashin@soleen.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,10 +27,25 @@ Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn
 Hi Pavel,
 
 On 21/08/2019 19:31, Pavel Tatashin wrote:
-> Usually, gotos are used to handle cleanup after exception, but
-> in case of create_safe_exec_page there are no clean-ups. So,
-> simply return the errors directly.
+> create_safe_exec_page() allocates a safe page and maps it at a
+> specific location, also this function returns the physical address
+> of newly allocated page.
+> 
+> The destination VA, and PA are specified in arguments: dst_addr,
+> phys_dst_addr
+> 
+> However, within the function it uses "dst" which has unsigned long
+> type, but is actually a pointers in the current virtual space. This
+> is confusing to read.
 
+The type? There are plenty of places in the kernel that an unsigned-long is actually a
+pointer. This isn't unusual.
+
+
+> Rename dst to more appropriate page (page that is created), and also
+> change its time to "void *"
+
+If you think its clearer,
 Reviewed-by: James Morse <james.morse@arm.com>
 
 
