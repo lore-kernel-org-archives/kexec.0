@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x542.google.com ([2a00:1450:4864:20::542])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i6JZI-0008CS-GZ
- for kexec@lists.infradead.org; Fri, 06 Sep 2019 19:06:49 +0000
-Received: by mail-ed1-x542.google.com with SMTP id f19so7207459eds.12
- for <kexec@lists.infradead.org>; Fri, 06 Sep 2019 12:06:48 -0700 (PDT)
+ id 1i6M54-0006Gy-LM
+ for kexec@lists.infradead.org; Fri, 06 Sep 2019 21:47:48 +0000
+References: <20190823194919.30916-1-svens@stackframe.org>
+ <22b40bb7-6f86-0a69-12b2-12d90124173d@gmx.de>
+From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: Re: [PATCH v5 0/7] kexec: add generic support for elf kernel images
+In-reply-to: <22b40bb7-6f86-0a69-12b2-12d90124173d@gmx.de>
+Date: Fri, 06 Sep 2019 18:47:35 -0300
+Message-ID: <87blvxgkqw.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
- <20190821183204.23576-13-pasha.tatashin@soleen.com>
- <d4a5bb7b-21c0-9f39-ad96-3fa43684c6c6@arm.com>
-In-Reply-To: <d4a5bb7b-21c0-9f39-ad96-3fa43684c6c6@arm.com>
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 6 Sep 2019 15:06:36 -0400
-Message-ID: <CA+CK2bDxK5DHARkAUxzodhMDqokqEy3Y12F-bgHPF9g9K496hA@mail.gmail.com>
-Subject: Re: [PATCH v3 12/17] arm64,
- trans_pgd: complete generalization of trans_pgds
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,30 +24,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Matthias Brugger <matthias.bgg@gmail.com>, will@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Helge Deller <deller@gmx.de>
+Cc: kexec@lists.infradead.org, Sven Schnelle <svens@stackframe.org>, linuxppc-dev@lists.ozlabs.org
 
-On Fri, Sep 6, 2019 at 11:23 AM James Morse <james.morse@arm.com> wrote:
->
-> Hi Pavel,
->
-> On 21/08/2019 19:31, Pavel Tatashin wrote:
-> > Make the last private functions in page table copy path generlized for use
-> > outside of hibernate.
-> >
-> > Switch to use the provided allocator, flags, and source page table. Also,
-> > unify all copy function implementations to reduce the possibility of bugs.
->
-> By changing it? No one has reported any problems. We're more likely to break it making
-> unnecessary changes.
->
-> Why is this necessary?
 
-I tried to make it cleaner, but if you think the final version does
-not make it better, I will keep the current versions.
+Helge Deller <deller@gmx.de> writes:
 
-Thank you,
-Pasha
+> Hi all,
+>
+> This kexec patch series is the groundwork for kexec on the parisc architecture.
+> Since we want kexec on parisc, I've applied it to my for-next-kexec tree [1],
+> and can push it to Linus in the next merge window through the parisc tree [2].
+
+I just had a look at this version and it looks fine to me. Identical to
+the version I reviewed before except for the changes I suggested.
+Thanks, Sven!
+
+> If someone has any objections, or if you prefer to take it through
+> a kexec or powerpc tree, please let me know.
+>
+> Helge
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git/log/?h=for-next-kexec
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git/log/?h=for-next
+
+I noticed that the first patch is the only one that doesn't have my
+Reviewed-by. If you want, you can add it:
+
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+
+If it's inconvenient to add it now since it's already applied, that's
+fine too of course.
+
+> On 23.08.19 21:49, Sven Schnelle wrote:
+>> Changes to v4:
+>>  - rebase on current powerpc/merge tree
+>>  - fix syscall name in commit message
+>>  - remove a few unused #defines in arch/powerpc/kernel/kexec_elf_64.c
+>>...
+>>  arch/Kconfig                                  |   3 +
+>>  arch/powerpc/Kconfig                          |   1 +
+>>  arch/powerpc/kernel/kexec_elf_64.c            | 545 +-----------------
+>>  include/linux/kexec.h                         |  23 +
+>>  kernel/Makefile                               |   1 +
+>>  .../kexec_elf_64.c => kernel/kexec_elf.c      | 394 +++----------
+>>  6 files changed, 115 insertions(+), 852 deletions(-)
+>>  copy arch/powerpc/kernel/kexec_elf_64.c => kernel/kexec_elf.c (50%)
+
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
 _______________________________________________
 kexec mailing list
