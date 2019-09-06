@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v3 02/17] arm64, hibernate: use get_safe_page directly
+Subject: Re: [PATCH v3 03/17] arm64, hibernate: remove gotos in
+ create_safe_exec_page
 References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
- <20190821183204.23576-3-pasha.tatashin@soleen.com>
-Message-ID: <dc6506a0-9b66-f633-8319-9c8a9dc93d4f@arm.com>
-Date: Fri, 6 Sep 2019 16:17:25 +0100
+ <20190821183204.23576-4-pasha.tatashin@soleen.com>
+Message-ID: <99aba737-a959-e352-74d8-a2aff3ae5a88@arm.com>
+Date: Fri, 6 Sep 2019 16:17:33 +0100
 MIME-Version: 1.0
-In-Reply-To: <20190821183204.23576-3-pasha.tatashin@soleen.com>
+In-Reply-To: <20190821183204.23576-4-pasha.tatashin@soleen.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,31 +26,12 @@ Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn
 
 Hi Pavel,
 
-Nit: The pattern for the subject prefix should be "arm64: hibernate:"..
-Its usually possible to spot the pattern from "git log --oneline $file".
-
 On 21/08/2019 19:31, Pavel Tatashin wrote:
-> create_safe_exec_page is a local function that uses the
-> get_safe_page() to allocate page table and pages and one pages
-> that is getting mapped.
+> Usually, gotos are used to handle cleanup after exception, but
+> in case of create_safe_exec_page there are no clean-ups. So,
+> simply return the errors directly.
 
-I can't parse this.
-
-create_safe_exec_page() uses hibernate's allocator to create a set of page table to map a
-single page that will contain the relocation code.
-
-
-> Remove the allocator related arguments, and use get_safe_page
-> directly, as it is done in other local functions in this
-> file.
-... because kexec can't use this as it doesn't have a working allocator.
-Removing this function pointer makes it easier to refactor the code later.
-
-(this thing is only a function pointer so kexec could use it too ... It looks like you're
-creating extra work. Patch 7 moves these new calls out to a new file... presumably so
-another patch can remove them again)
-
-As stand-alone cleanup the patch looks fine, but you probably don't need to do this.
+Reviewed-by: James Morse <james.morse@arm.com>
 
 
 Thanks,
