@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v3 04/17] arm64, hibernate: rename dst to page in
- create_safe_exec_page
+Subject: Re: [PATCH v3 05/17] arm64, hibernate: check pgd table allocation
 References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
- <20190821183204.23576-5-pasha.tatashin@soleen.com>
-Message-ID: <2e826560-4005-fa16-8bbb-fc0e25763dcc@arm.com>
-Date: Fri, 6 Sep 2019 16:17:38 +0100
+ <20190821183204.23576-6-pasha.tatashin@soleen.com>
+Message-ID: <ddd81093-89fc-5146-0b33-ad3bd9a1c10c@arm.com>
+Date: Fri, 6 Sep 2019 16:17:53 +0100
 MIME-Version: 1.0
-In-Reply-To: <20190821183204.23576-5-pasha.tatashin@soleen.com>
+In-Reply-To: <20190821183204.23576-6-pasha.tatashin@soleen.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,26 +26,34 @@ Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn
 Hi Pavel,
 
 On 21/08/2019 19:31, Pavel Tatashin wrote:
-> create_safe_exec_page() allocates a safe page and maps it at a
-> specific location, also this function returns the physical address
-> of newly allocated page.
+> There is a bug in create_safe_exec_page(), when page table is allocated
+> it is not checked that table is allocated successfully:
 > 
-> The destination VA, and PA are specified in arguments: dst_addr,
-> phys_dst_addr
-> 
-> However, within the function it uses "dst" which has unsigned long
-> type, but is actually a pointers in the current virtual space. This
-> is confusing to read.
+> But it is dereferenced in: pgd_none(READ_ONCE(*pgdp)).
 
-The type? There are plenty of places in the kernel that an unsigned-long is actually a
-pointer. This isn't unusual.
+If there is a bug, it shouldn't be fixed part way through a series. This makes it
+difficult to backport the fix.
+
+Please split this out as an independent patch with a 'Fixes:' tag for the commit that
+introduced the bug.
 
 
-> Rename dst to more appropriate page (page that is created), and also
-> change its time to "void *"
+> Another issue,
 
-If you think its clearer,
-Reviewed-by: James Morse <james.morse@arm.com>
+So this patch does two things? That is rarely a good idea. Again, this makes it difficult
+to backport the fix.
+
+
+> is that phys_to_ttbr() uses an offset in page table instead
+> of pgd directly.
+
+If you were going to reuse this, that would be a bug. But because the only page that is
+being mapped, is mapped to PAGE_SIZE, all the top bits will be 0. The offset calls are
+boiler-plate. It doesn't look intentional, but its harmless.
+
+
+Please separate out the potential NULL-dereference bits so there is a clean stand-alone
+fix that can be sent to the stable trees.
 
 
 Thanks,
