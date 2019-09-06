@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x544.google.com ([2a00:1450:4864:20::544])
+Received: from mout.gmx.net ([212.227.17.20])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i6GPP-0007aX-1S
- for kexec@lists.infradead.org; Fri, 06 Sep 2019 15:44:24 +0000
-Received: by mail-ed1-x544.google.com with SMTP id i1so6719820edv.4
- for <kexec@lists.infradead.org>; Fri, 06 Sep 2019 08:44:22 -0700 (PDT)
+ id 1i6GYe-00030T-Nw
+ for kexec@lists.infradead.org; Fri, 06 Sep 2019 15:53:58 +0000
+Subject: Re: [PATCH v5 0/7] kexec: add generic support for elf kernel images
+References: <20190823194919.30916-1-svens@stackframe.org>
+From: Helge Deller <deller@gmx.de>
+Message-ID: <22b40bb7-6f86-0a69-12b2-12d90124173d@gmx.de>
+Date: Fri, 6 Sep 2019 17:53:41 +0200
 MIME-Version: 1.0
-References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
- <20190821183204.23576-6-pasha.tatashin@soleen.com>
- <ddd81093-89fc-5146-0b33-ad3bd9a1c10c@arm.com>
-In-Reply-To: <ddd81093-89fc-5146-0b33-ad3bd9a1c10c@arm.com>
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 6 Sep 2019 11:44:10 -0400
-Message-ID: <CA+CK2bBXfa0MFspOpWAGL4Q7iYH9UMdKAwMD-PyL7Wp4s64x+Q@mail.gmail.com>
-Subject: Re: [PATCH v3 05/17] arm64, hibernate: check pgd table allocation
+In-Reply-To: <20190823194919.30916-1-svens@stackframe.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,45 +23,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Matthias Brugger <matthias.bgg@gmail.com>, will@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Sven Schnelle <svens@stackframe.org>, kexec@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org, Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-On Fri, Sep 6, 2019 at 11:17 AM James Morse <james.morse@arm.com> wrote:
->
-> Hi Pavel,
->
-> On 21/08/2019 19:31, Pavel Tatashin wrote:
-> > There is a bug in create_safe_exec_page(), when page table is allocated
-> > it is not checked that table is allocated successfully:
-> >
-> > But it is dereferenced in: pgd_none(READ_ONCE(*pgdp)).
->
-> If there is a bug, it shouldn't be fixed part way through a series. This makes it
-> difficult to backport the fix.
->
-> Please split this out as an independent patch with a 'Fixes:' tag for the commit that
-> introduced the bug.
->
->
-> > Another issue,
->
-> So this patch does two things? That is rarely a good idea. Again, this makes it difficult
-> to backport the fix.
->
->
-> > is that phys_to_ttbr() uses an offset in page table instead
-> > of pgd directly.
->
-> If you were going to reuse this, that would be a bug. But because the only page that is
-> being mapped, is mapped to PAGE_SIZE, all the top bits will be 0. The offset calls are
-> boiler-plate. It doesn't look intentional, but its harmless.
+Hi all,
 
-Yes, it is harmless otherwise the code would not work. But it is
-confusing to read, and looks broken. I will separate this change as
-two patches as you suggested.
+This kexec patch series is the groundwork for kexec on the parisc architecture.
+Since we want kexec on parisc, I've applied it to my for-next-kexec tree [1],
+and can push it to Linus in the next merge window through the parisc tree [2].
 
-Thank you,
-Pasha
+If someone has any objections, or if you prefer to take it through
+a kexec or powerpc tree, please let me know.
+
+Helge
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git/log/?h=for-next-kexec
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git/log/?h=for-next
+
+On 23.08.19 21:49, Sven Schnelle wrote:
+> Changes to v4:
+>  - rebase on current powerpc/merge tree
+>  - fix syscall name in commit message
+>  - remove a few unused #defines in arch/powerpc/kernel/kexec_elf_64.c
+>...
+>  arch/Kconfig                                  |   3 +
+>  arch/powerpc/Kconfig                          |   1 +
+>  arch/powerpc/kernel/kexec_elf_64.c            | 545 +-----------------
+>  include/linux/kexec.h                         |  23 +
+>  kernel/Makefile                               |   1 +
+>  .../kexec_elf_64.c => kernel/kexec_elf.c      | 394 +++----------
+>  6 files changed, 115 insertions(+), 852 deletions(-)
+>  copy arch/powerpc/kernel/kexec_elf_64.c => kernel/kexec_elf.c (50%)
 
 _______________________________________________
 kexec mailing list
