@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v3 05/17] arm64, hibernate: check pgd table allocation
+Subject: Re: [PATCH v3 06/17] arm64, hibernate: add trans_pgd public functions
 References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
- <20190821183204.23576-6-pasha.tatashin@soleen.com>
-Message-ID: <ddd81093-89fc-5146-0b33-ad3bd9a1c10c@arm.com>
-Date: Fri, 6 Sep 2019 16:17:53 +0100
+ <20190821183204.23576-7-pasha.tatashin@soleen.com>
+Message-ID: <bcc3f71f-97d2-dff4-c55a-4798c6e2bede@arm.com>
+Date: Fri, 6 Sep 2019 16:18:06 +0100
 MIME-Version: 1.0
-In-Reply-To: <20190821183204.23576-6-pasha.tatashin@soleen.com>
+In-Reply-To: <20190821183204.23576-7-pasha.tatashin@soleen.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,34 +26,90 @@ Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn
 Hi Pavel,
 
 On 21/08/2019 19:31, Pavel Tatashin wrote:
-> There is a bug in create_safe_exec_page(), when page table is allocated
-> it is not checked that table is allocated successfully:
-> 
-> But it is dereferenced in: pgd_none(READ_ONCE(*pgdp)).
+> trans_pgd_create_copy() and trans_pgd_map_page() are going to be
+> the basis for public interface of new subsystem that handles page
 
-If there is a bug, it shouldn't be fixed part way through a series. This makes it
-difficult to backport the fix.
+Please don't call this a subsystem. 'sound' and 'mm' are subsystems, this is just some
+shared code.
 
-Please split this out as an independent patch with a 'Fixes:' tag for the commit that
-introduced the bug.
+> tables for cases which are between kernels: kexec, and hibernate.
 
-
-> Another issue,
-
-So this patch does two things? That is rarely a good idea. Again, this makes it difficult
-to backport the fix.
+Even though you've baked the get_safe_page() calls into trans_pgd_map_page()?
 
 
-> is that phys_to_ttbr() uses an offset in page table instead
-> of pgd directly.
+> diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+> index 750ecc7f2cbe..2e29d620b56c 100644
+> --- a/arch/arm64/kernel/hibernate.c
+> +++ b/arch/arm64/kernel/hibernate.c
+> @@ -182,39 +182,15 @@ int arch_hibernation_header_restore(void *addr)
 
-If you were going to reuse this, that would be a bug. But because the only page that is
-being mapped, is mapped to PAGE_SIZE, all the top bits will be 0. The offset calls are
-boiler-plate. It doesn't look intentional, but its harmless.
+> +int trans_pgd_map_page(pgd_t *trans_pgd, void *page,
+> +		       unsigned long dst_addr,
+> +		       pgprot_t pgprot)
+
+If this thing is going to be exposed, its name should reflect that its creating a set of
+page tables, to map a single page.
+
+A function called 'map_page' with this prototype should 'obviously' map @page at @dst_addr
+in @trans_pgd using the provided @pgprot... but it doesn't.
+
+This is what 'create' was doing in the old name, if that wasn't obvious, its because
+naming things is hard!
+| trans_create_single_page_mapping()?
+
+(might be too verbose)
+
+I think this bites you in patch 8, where you 'generalise' this.
 
 
-Please separate out the potential NULL-dereference bits so there is a clean stand-alone
-fix that can be sent to the stable trees.
+>  {
+> -	void *page = (void *)get_safe_page(GFP_ATOMIC);
+> -	pgd_t *trans_pgd;
+>  	pgd_t *pgdp;
+>  	pud_t *pudp;
+>  	pmd_t *pmdp;
+>  	pte_t *ptep;
+>  
+> -	if (!page)
+> -		return -ENOMEM;
+> -
+> -	memcpy(page, src_start, length);
+> -	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
+> -
+> -	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
+> -	if (!trans_pgd)
+> -		return -ENOMEM;
+> -
+>  	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
+>  	if (pgd_none(READ_ONCE(*pgdp))) {
+>  		pudp = (void *)get_safe_page(GFP_ATOMIC);
+> @@ -242,6 +218,44 @@ static int create_safe_exec_page(void *src_start, size_t length,
+>  	ptep = pte_offset_kernel(pmdp, dst_addr);
+>  	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
+>  
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Copies length bytes, starting at src_start into an new page,
+> + * perform cache maintentance, then maps it at the specified address low
+
+Could you fix the spelling of maintenance as git thinks you've moved it?
+
+
+> + * address as executable.
+> + *
+> + * This is used by hibernate to copy the code it needs to execute when
+> + * overwriting the kernel text. This function generates a new set of page
+> + * tables, which it loads into ttbr0.
+> + *
+> + * Length is provided as we probably only want 4K of data, even on a 64K
+> + * page system.
+> + */
+> +static int create_safe_exec_page(void *src_start, size_t length,
+> +				 unsigned long dst_addr,
+> +				 phys_addr_t *phys_dst_addr)
+> +{
 
 
 Thanks,
