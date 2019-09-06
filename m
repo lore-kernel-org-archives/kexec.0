@@ -1,23 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga18.intel.com ([134.134.136.126])
+Received: from mail-ed1-x544.google.com ([2a00:1450:4864:20::544])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i6JVN-0005cq-Hs
- for kexec@lists.infradead.org; Fri, 06 Sep 2019 19:02:46 +0000
-Date: Fri, 6 Sep 2019 22:00:40 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to
- kexec'ed kernel
-Message-ID: <20190906190040.GA16211@smile.fi.intel.com>
-References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
- <20161202195416.58953-3-andriy.shevchenko@linux.intel.com>
- <20161215122856.7d24b7a8@endymion>
- <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
- <1481890738.9552.70.camel@linux.intel.com>
- <20161216143330.69e9c8ee@endymion>
- <20161217105721.GB6922@dhcp-128-65.nay.redhat.com>
+ id 1i6JWV-0005wd-Cy
+ for kexec@lists.infradead.org; Fri, 06 Sep 2019 19:03:56 +0000
+Received: by mail-ed1-x544.google.com with SMTP id i1so7268102edv.4
+ for <kexec@lists.infradead.org>; Fri, 06 Sep 2019 12:03:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20161217105721.GB6922@dhcp-128-65.nay.redhat.com>
+References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
+ <20190821183204.23576-11-pasha.tatashin@soleen.com>
+ <21f6eb6f-be3a-a715-a37c-2f59183ed183@arm.com>
+In-Reply-To: <21f6eb6f-be3a-a715-a37c-2f59183ed183@arm.com>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Date: Fri, 6 Sep 2019 15:03:42 -0400
+Message-ID: <CA+CK2bAS37vPa0FD7Ya1vnZR29hiEsNfkq6q7+UreNRjRgUEFw@mail.gmail.com>
+Subject: Re: [PATCH v3 10/17] arm64,
+ trans_pgd: adjust trans_pgd_create_copy interface
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,59 +27,97 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linux-efi@vger.kernel.org, ard.biesheuvel@linaro.org, matt@codeblueprint.co.uk, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Jean Delvare <jdelvare@suse.de>
+To: James Morse <james.morse@arm.com>
+Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Matthias Brugger <matthias.bgg@gmail.com>, will@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 
-On Sat, Dec 17, 2016 at 06:57:21PM +0800, Dave Young wrote:
-> On 12/16/16 at 02:33pm, Jean Delvare wrote:
-> > On Fri, 16 Dec 2016 14:18:58 +0200, Andy Shevchenko wrote:
-> > > On Fri, 2016-12-16 at 10:32 +0800, Dave Young wrote:
-> > > > On 12/15/16 at 12:28pm, Jean Delvare wrote:
-> > > > > I am no kexec expert but this confuses me. Shouldn't the second
-> > > > > kernel have access to the EFI systab as the first kernel does? It
-> > > > > includes many more pointers than just ACPI and DMI tables, and it
-> > > > > would seem inconvenient to have to pass all these addresses
-> > > > > individually explicitly.
-> > > > 
-> > > > Yes, in modern linux kernel, kexec has the support for EFI, I think it
-> > > > should work naturally at least in x86_64.
-> > > 
-> > > Thanks for this good news!
-> > > 
-> > > Unfortunately Intel Galileo is 32-bit platform.
-> > 
-> > If it was done for X86_64 then maybe it can be generalized to X86?
-> 
-> For X86_64, we have a new way for efi runtime memmory mapping, in i386
-> code it still use old ioremap way. It is impossible to use same way as
-> the X86_64 since the virtual address space is limited.
-> 
-> But maybe for 32bit, kexec kernel can run in physical mode, but I'm not
-> sure, I would suggest Andy to do a test first with efi=noruntime for
-> kexec 2nd kernel.
+> > -int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
+> > +/*
+> > + * Create trans_pgd and copy entries from from_table to trans_pgd in range
+> > + * [start, end)
+> > + */
+> > +int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **trans_pgd,
+> > +                       pgd_t *from_table, unsigned long start,
+> >                         unsigned long end);
+>
+> This creates a copy of the linear-map. Why does it need to be told from_table?
 
-Sorry for a delay.
-Eventually I found time to check this.
+This what done as a generic page table entries copy, but I agree, will
+remove the from_table.
 
-Unfortunately the efi=noruntime didn't help:
+>
+>
+> > diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+> > index 8c2641a9bb09..8bb602e91065 100644
+> > --- a/arch/arm64/kernel/hibernate.c
+> > +++ b/arch/arm64/kernel/hibernate.c
+> > @@ -323,15 +323,42 @@ int swsusp_arch_resume(void)
+> >       phys_addr_t phys_hibernate_exit;
+> >       void __noreturn (*hibernate_exit)(phys_addr_t, phys_addr_t, void *,
+> >                                         void *, phys_addr_t, phys_addr_t);
+> > +     struct trans_pgd_info trans_info = {
+> > +             .trans_alloc_page       = hibernate_page_alloc,
+> > +             .trans_alloc_arg        = (void *)GFP_ATOMIC,
+> > +             /*
+> > +              * Resume will overwrite areas that may be marked read only
+> > +              * (code, rodata). Clear the RDONLY bit from the temporary
+> > +              * mappings we use during restore.
+> > +              */
+> > +             .trans_flags            = TRANS_MKWRITE,
+> > +     };
+>
+>
+> > +     /*
+> > +      * debug_pagealloc will removed the PTE_VALID bit if the page isn't in
+> > +      * use by the resume kernel. It may have been in use by the original
+> > +      * kernel, in which case we need to put it back in our copy to do the
+> > +      * restore.
+> > +      *
+> > +      * Before marking this entry valid, check the pfn should be mapped.
+> > +      */
+> > +     if (debug_pagealloc_enabled())
+> > +             trans_info.trans_flags |= (TRANS_MKVALID | TRANS_CHECKPFN);
+>
+> The debug_pagealloc_enabled() check should be with the code that generates a different
+> entry. Whether the different entry is correct needs to be considered with
+> debug_pagealloc_enabled() in mind. You are making this tricky logic less clear.
+>
+> There is no way the existing code invents an entry for a !pfn_valid() page. With your
+> 'checkpfn' flag, this thing can. You don't need to generalise this for hypothetical users.
 
-# uname -a
-Linux buildroot 5.3.0-rc7+ #17 Thu Sep 5 16:08:22 EEST 2019 i586 GNU/Linux
-# dmidecode
-# dmidecode 4.2
-Scanning /dev/mem for entry point.
-# No SMBIOS nor DMI entry point found, sorry.
-#
-# cat /proc/cmdline
-... ignore_loglevel efi=noruntime earlycon=efifb acpi_rsdp=0xf01e014
+Ok
 
-So, I am all ears to anything else to try.
+>
+>
+> If kexec needs to create mappings for bogus pages, I'd like to know why.
+>
 
--- 
-With Best Regards,
-Andy Shevchenko
+It does not.
 
+>
+> >       /*
+> >        * Restoring the memory image will overwrite the ttbr1 page tables.
+> >        * Create a second copy of just the linear map, and use this when
+> >        * restoring.
+> >        */
+> > -     rc = trans_pgd_create_copy(&tmp_pg_dir, PAGE_OFFSET, 0);
+> > -     if (rc)
+> > +     rc = trans_pgd_create_copy(&trans_info, &tmp_pg_dir, init_mm.pgd,
+> > +                                PAGE_OFFSET, 0);
+>
+> > +     if (rc) {
+> > +             if (rc == -ENOMEM)
+> > +                     pr_err("Failed to allocate memory for temporary page tables.\n");
+> > +             else if (rc == -ENXIO)
+> > +                     pr_err("Tried to set PTE for PFN that does not exist\n");
+> >               goto out;
+> > +     }
+>
+> If you think the distinction for this error message is useful, it would be clearer to
+> change it in the current hibernate code before you move it. (_copy_pte() to return an
+> error, instead of silently failing). Done here, this is unrelated noise.
+>
 
+Ok, will do that.
 
 _______________________________________________
 kexec mailing list
