@@ -1,20 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i785J-0006bT-OW
- for kexec@lists.infradead.org; Mon, 09 Sep 2019 01:03:15 +0000
-Subject: Re: [PATCH 0/4 v2] Limit the size of vmcore-dmesg.txt to 2G
-References: <20190823120539.18330-1-lijiang@redhat.com>
- <21c5b324-c3f5-4fb4-25da-e62610b2becd@redhat.com>
- <20190903143730.lz45x774rhmefjzg@verge.net.au>
- <a4c38d0b-d702-037e-74aa-889900bb63a5@redhat.com>
- <20190908124007.uxcbbhqshbnsymd2@verge.net.au>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <e65d2335-c39e-4a4e-5dcb-8f0352ff8ee4@redhat.com>
-Date: Mon, 9 Sep 2019 09:03:00 +0800
+ id 1i7Bpl-0003qj-QR
+ for kexec@lists.infradead.org; Mon, 09 Sep 2019 05:03:27 +0000
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+ (No client certificate requested)
+ by mx1.redhat.com (Postfix) with ESMTPS id BDF1911A14
+ for <kexec@lists.infradead.org>; Mon,  9 Sep 2019 05:03:24 +0000 (UTC)
+Received: by mail-lj1-f198.google.com with SMTP id a9so1084506ljb.5
+ for <kexec@lists.infradead.org>; Sun, 08 Sep 2019 22:03:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190908124007.uxcbbhqshbnsymd2@verge.net.au>
-Content-Language: en-US
+References: <20190830091258.51133-1-buczek@molgen.mpg.de>
+ <20190903144127.opmnw42pie6klghc@verge.net.au>
+ <848555a3-5a1f-c0c0-ef50-e684cf70595a@molgen.mpg.de>
+In-Reply-To: <848555a3-5a1f-c0c0-ef50-e684cf70595a@molgen.mpg.de>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Mon, 9 Sep 2019 10:33:11 +0530
+Message-ID: <CACi5LpPe5ueNMdCObWvCLg+k_kDrvd-SkOvc8ACa1V9UfSD77g@mail.gmail.com>
+Subject: Re: [PATCH] x86: Fix PAGE_OFFSET for kernels since 4.20
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,22 +28,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kasong@redhat.com, bhe@redhat.com, piliu@redhat.com, bhsharma@redhat.com, kexec@lists.infradead.org, junw99@yahoo.com, dyoung@redhat.com
+To: Donald Buczek <buczek@molgen.mpg.de>
+Cc: Simon Horman <horms@verge.net.au>, kexec mailing list <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>
 
-5ZyoIDIwMTnlubQwOeaciDA45pelIDIwOjQwLCBTaW1vbiBIb3JtYW4g5YaZ6YGTOgo+IE9uIFdl
-ZCwgU2VwIDA0LCAyMDE5IGF0IDA5OjI5OjIwUE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+IOWc
-qCAyMDE55bm0MDnmnIgwM+aXpSAyMjozNywgU2ltb24gSG9ybWFuIOWGmemBkzoKPj4+IE9uIFdl
-ZCwgQXVnIDI4LCAyMDE5IGF0IDA1OjE4OjU4UE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+Pj4g
-SGksIFNpbW9uIGFuZCBvdGhlciByZXZpZXdlcnMsIGFueSBjb21tZW50IGFib3V0IHYyPwo+Pj4K
-Pj4+IEhpLAo+Pj4KPj4+IHNvcnJ5IGZvciB0aGUgZXh0ZW5kZWQgZGVsYXkuCj4+PiBJIHdpbGwg
-bG9vayBvdmVyIHRoaXMuCj4+Pgo+PiBOZXZlciBtaW5kLiBBbnkgc3VnZ2VzdGlvbnMgd2lsbCBi
-ZSBhcHByZWNpYXRlZC4KPj4KPj4gVGhhbmsgeW91IGluIGFkdmFuY2UuCj4gCj4gU29ycnkgb25j
-ZSBhZ2FpbiBmb3IgdGhlIGRlbGF5Lgo+IAo+IEkgaGF2ZSBhcHBsaWVkIHRoaXMgc2VyaWVzLgo+
-IApPSywgdGhhbmsgeW91LCBTaW1vbi4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Sorry Guys,
+
+On Tue, Sep 3, 2019 at 11:36 PM Donald Buczek <buczek@molgen.mpg.de> wrote:
+>
+> Dear Simon,
+>
+> On 03.09.19 16:41, Simon Horman wrote:
+> > On Fri, Aug 30, 2019 at 11:12:58AM +0200, Donald Buczek wrote:
+> >> Linux kernel commit d52888aa2753 ("x86/mm: Move LDT remap out of KASLR
+> >> region on 5-level paging") changed the base of the direct mapping
+> >> from 0xffff880000000000 to 0xffff888000000000. This was merged
+> >> into v4.20-rc2.
+> >>
+> >> Update to new address accordingly.
+> >
+> > Thanks, applied for inclusion in v2.0.20.
+>
+> I must admit, that I overlooked that d52888aa2753 ("x86/mm: Move LDT remap out of KASLR region on 5-level paging") was backported to 4.19.5 as 4074ca7d8a18 ("x86/mm: Move LDT remap out of KASLR region on 5-level paging").
+>
+> Bhupesh Sharma wanted to look into a a dynamic solution, which, of course, would be better. But if you still want to include this (e.g. as the fallback for the dynamic solution), you might want to replace the patch with the following one, which selects the new PAGE_OFFSET starting from kernel version 4.19.5 instead of 4.20.0.
+
+I was in a conference last week and was not able to connect to my test
+machine(s) to develop and test a more generic fix, as I suggested in
+my earlier message.
+
+I will try to work on and send a generic fix in a couple of days.
+
+Thanks.
+Bhupesh
+
+> Donald
+>
+> >8------------------------------------------------------8<
+>
+>      x86: Fix PAGE_OFFSET for kernels since 4.19.5
+>
+>      Linux kernel commit d52888aa2753 ("x86/mm: Move LDT remap out of KASLR
+>      region on 5-level paging") changed the base of the direct mapping
+>      from 0xffff880000000000 to 0xffff888000000000. This was merged
+>      into v4.20-rc2.
+>
+>      The patch was backported to 4.19.5 as 4074ca7d8a18 ("x86/mm: Move LDT
+>      remap out of KASLR region on 5-level paging").
+>
+>      Update to new address accordingly.
+>
+> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> index a2aea31..f9d1998 100644
+> --- a/kexec/arch/i386/crashdump-x86.c
+> +++ b/kexec/arch/i386/crashdump-x86.c
+> @@ -61,6 +61,8 @@ static int get_kernel_page_offset(struct kexec_info *UNUSED(info),
+>
+>                  if (kv < KERNEL_VERSION(2, 6, 27))
+>                          elf_info->page_offset = X86_64_PAGE_OFFSET_PRE_2_6_27;
+> +               else if (kv < KERNEL_VERSION(4, 19, 5))
+> +                       elf_info->page_offset = X86_64_PAGE_OFFSET_PRE_4_19_5;
+>                  else
+>                          elf_info->page_offset = X86_64_PAGE_OFFSET;
+>          }
+> diff --git a/kexec/arch/i386/crashdump-x86.h b/kexec/arch/i386/crashdump-x86.h
+> index ddee19f..6cd8826 100644
+> --- a/kexec/arch/i386/crashdump-x86.h
+> +++ b/kexec/arch/i386/crashdump-x86.h
+> @@ -13,7 +13,8 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
+>
+>   #define X86_64__START_KERNEL_map       0xffffffff80000000ULL
+>   #define X86_64_PAGE_OFFSET_PRE_2_6_27  0xffff810000000000ULL
+> -#define X86_64_PAGE_OFFSET             0xffff880000000000ULL
+> +#define X86_64_PAGE_OFFSET_PRE_4_19_5  0xffff880000000000ULL
+> +#define X86_64_PAGE_OFFSET     0xffff888000000000ULL
+>
+>   #define X86_64_MAXMEM                  0x3fffffffffffUL
+>
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
