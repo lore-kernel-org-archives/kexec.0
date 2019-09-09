@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x844.google.com ([2607:f8b0:4864:20::844])
+Received: from mail-qt1-x841.google.com ([2607:f8b0:4864:20::841])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i7O9K-0008H3-HG
- for kexec@lists.infradead.org; Mon, 09 Sep 2019 18:12:29 +0000
-Received: by mail-qt1-x844.google.com with SMTP id o12so17315596qtf.3
- for <kexec@lists.infradead.org>; Mon, 09 Sep 2019 11:12:26 -0700 (PDT)
+ id 1i7O9N-0008Ij-1w
+ for kexec@lists.infradead.org; Mon, 09 Sep 2019 18:12:30 +0000
+Received: by mail-qt1-x841.google.com with SMTP id j1so4536035qth.1
+ for <kexec@lists.infradead.org>; Mon, 09 Sep 2019 11:12:29 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v4 01/17] kexec: quiet down kexec reboot
-Date: Mon,  9 Sep 2019 14:12:05 -0400
-Message-Id: <20190909181221.309510-2-pasha.tatashin@soleen.com>
+Subject: [PATCH v4 03/17] arm64: hibernate: check pgd table allocation
+Date: Mon,  9 Sep 2019 14:12:07 -0400
+Message-Id: <20190909181221.309510-4-pasha.tatashin@soleen.com>
 In-Reply-To: <20190909181221.309510-1-pasha.tatashin@soleen.com>
 References: <20190909181221.309510-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,43 +26,35 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com
 
-Here is a regular kexec command sequence and output:
-=====
-$ kexec --reuse-cmdline -i --load Image
-$ kexec -e
-[  161.342002] kexec_core: Starting new kernel
+There is a bug in create_safe_exec_page(), when page table is allocated
+it is not checked that table is allocated successfully:
 
-Welcome to Buildroot
-buildroot login:
-=====
+But it is dereferenced in: pgd_none(READ_ONCE(*pgdp)).  Check that
+allocation was successful.
 
-Even when "quiet" kernel parameter is specified, "kexec_core: Starting
-new kernel" is printed.
-
-This message has  KERN_EMERG level, but there is no emergency, it is a
-normal kexec operation, so quiet it down to appropriate KERN_NOTICE.
-
-Machines that have slow console baud rate benefit from less output.
+Fixes: 82869ac57b5d ("arm64: kernel: Add support for hibernate/suspend-to-disk")
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Simon Horman <horms@verge.net.au>
 ---
- kernel/kexec_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/hibernate.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index d5870723b8ad..2c5b72863b7b 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1169,7 +1169,7 @@ int kernel_kexec(void)
- 		 * CPU hotplug again; so re-enable it here.
- 		 */
- 		cpu_hotplug_enable();
--		pr_emerg("Starting new kernel\n");
-+		pr_notice("Starting new kernel\n");
- 		machine_shutdown();
- 	}
+diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+index 025221564252..227cc26720f7 100644
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -217,6 +217,11 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 	__flush_icache_range(dst, dst + length);
  
+ 	trans_pgd = allocator(mask);
++	if (!trans_pgd) {
++		rc = -ENOMEM;
++		goto out;
++	}
++
+ 	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
+ 	if (pgd_none(READ_ONCE(*pgdp))) {
+ 		pudp = allocator(mask);
 -- 
 2.23.0
 
