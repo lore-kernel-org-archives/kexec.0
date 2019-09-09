@@ -1,25 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from ozlabs.org ([2401:3900:2:1::2])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i7Bpl-0003qj-QR
- for kexec@lists.infradead.org; Mon, 09 Sep 2019 05:03:27 +0000
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
- (No client certificate requested)
- by mx1.redhat.com (Postfix) with ESMTPS id BDF1911A14
- for <kexec@lists.infradead.org>; Mon,  9 Sep 2019 05:03:24 +0000 (UTC)
-Received: by mail-lj1-f198.google.com with SMTP id a9so1084506ljb.5
- for <kexec@lists.infradead.org>; Sun, 08 Sep 2019 22:03:24 -0700 (PDT)
+ id 1i7Eu7-00071N-LD
+ for kexec@lists.infradead.org; Mon, 09 Sep 2019 08:20:09 +0000
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v5 0/7] kexec: add generic support for elf kernel images
+In-Reply-To: <22b40bb7-6f86-0a69-12b2-12d90124173d@gmx.de>
+References: <20190823194919.30916-1-svens@stackframe.org>
+ <22b40bb7-6f86-0a69-12b2-12d90124173d@gmx.de>
+Date: Mon, 09 Sep 2019 18:20:03 +1000
+Message-ID: <87v9u1zxsc.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20190830091258.51133-1-buczek@molgen.mpg.de>
- <20190903144127.opmnw42pie6klghc@verge.net.au>
- <848555a3-5a1f-c0c0-ef50-e684cf70595a@molgen.mpg.de>
-In-Reply-To: <848555a3-5a1f-c0c0-ef50-e684cf70595a@molgen.mpg.de>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Mon, 9 Sep 2019 10:33:11 +0530
-Message-ID: <CACi5LpPe5ueNMdCObWvCLg+k_kDrvd-SkOvc8ACa1V9UfSD77g@mail.gmail.com>
-Subject: Re: [PATCH] x86: Fix PAGE_OFFSET for kernels since 4.20
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,82 +23,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Donald Buczek <buczek@molgen.mpg.de>
-Cc: Simon Horman <horms@verge.net.au>, kexec mailing list <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>
+To: Helge Deller <deller@gmx.de>, Sven Schnelle <svens@stackframe.org>, kexec@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org, Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-Sorry Guys,
+Hi Helge,
 
-On Tue, Sep 3, 2019 at 11:36 PM Donald Buczek <buczek@molgen.mpg.de> wrote:
->
-> Dear Simon,
->
-> On 03.09.19 16:41, Simon Horman wrote:
-> > On Fri, Aug 30, 2019 at 11:12:58AM +0200, Donald Buczek wrote:
-> >> Linux kernel commit d52888aa2753 ("x86/mm: Move LDT remap out of KASLR
-> >> region on 5-level paging") changed the base of the direct mapping
-> >> from 0xffff880000000000 to 0xffff888000000000. This was merged
-> >> into v4.20-rc2.
-> >>
-> >> Update to new address accordingly.
-> >
-> > Thanks, applied for inclusion in v2.0.20.
->
-> I must admit, that I overlooked that d52888aa2753 ("x86/mm: Move LDT remap out of KASLR region on 5-level paging") was backported to 4.19.5 as 4074ca7d8a18 ("x86/mm: Move LDT remap out of KASLR region on 5-level paging").
->
-> Bhupesh Sharma wanted to look into a a dynamic solution, which, of course, would be better. But if you still want to include this (e.g. as the fallback for the dynamic solution), you might want to replace the patch with the following one, which selects the new PAGE_OFFSET starting from kernel version 4.19.5 instead of 4.20.0.
+Sorry I meant to do something about this series but got swamped by other
+things, as always.
 
-I was in a conference last week and was not able to connect to my test
-machine(s) to develop and test a more generic fix, as I suggested in
-my earlier message.
+Helge Deller <deller@gmx.de> writes:
+> Hi all,
+>
+> This kexec patch series is the groundwork for kexec on the parisc architecture.
+> Since we want kexec on parisc, I've applied it to my for-next-kexec tree [1],
+> and can push it to Linus in the next merge window through the parisc tree [2].
+>
+> If someone has any objections, or if you prefer to take it through
+> a kexec or powerpc tree, please let me know.
 
-I will try to work on and send a generic fix in a couple of days.
+The ideal way to handle a series like this is to put it in a topic
+branch based off rc1, so that both trees can merge it without pulling in
+any unrelated arch changes.
 
-Thanks.
-Bhupesh
+But in this case I don't see any conflicts so I think it's fine for it
+to go via your tree, it will get some testing in linux-next.
 
-> Donald
+cheers
+
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git/log/?h=for-next-kexec
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git/log/?h=for-next
 >
-> >8------------------------------------------------------8<
->
->      x86: Fix PAGE_OFFSET for kernels since 4.19.5
->
->      Linux kernel commit d52888aa2753 ("x86/mm: Move LDT remap out of KASLR
->      region on 5-level paging") changed the base of the direct mapping
->      from 0xffff880000000000 to 0xffff888000000000. This was merged
->      into v4.20-rc2.
->
->      The patch was backported to 4.19.5 as 4074ca7d8a18 ("x86/mm: Move LDT
->      remap out of KASLR region on 5-level paging").
->
->      Update to new address accordingly.
->
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index a2aea31..f9d1998 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -61,6 +61,8 @@ static int get_kernel_page_offset(struct kexec_info *UNUSED(info),
->
->                  if (kv < KERNEL_VERSION(2, 6, 27))
->                          elf_info->page_offset = X86_64_PAGE_OFFSET_PRE_2_6_27;
-> +               else if (kv < KERNEL_VERSION(4, 19, 5))
-> +                       elf_info->page_offset = X86_64_PAGE_OFFSET_PRE_4_19_5;
->                  else
->                          elf_info->page_offset = X86_64_PAGE_OFFSET;
->          }
-> diff --git a/kexec/arch/i386/crashdump-x86.h b/kexec/arch/i386/crashdump-x86.h
-> index ddee19f..6cd8826 100644
-> --- a/kexec/arch/i386/crashdump-x86.h
-> +++ b/kexec/arch/i386/crashdump-x86.h
-> @@ -13,7 +13,8 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
->
->   #define X86_64__START_KERNEL_map       0xffffffff80000000ULL
->   #define X86_64_PAGE_OFFSET_PRE_2_6_27  0xffff810000000000ULL
-> -#define X86_64_PAGE_OFFSET             0xffff880000000000ULL
-> +#define X86_64_PAGE_OFFSET_PRE_4_19_5  0xffff880000000000ULL
-> +#define X86_64_PAGE_OFFSET     0xffff888000000000ULL
->
->   #define X86_64_MAXMEM                  0x3fffffffffffUL
->
+> On 23.08.19 21:49, Sven Schnelle wrote:
+>> Changes to v4:
+>>  - rebase on current powerpc/merge tree
+>>  - fix syscall name in commit message
+>>  - remove a few unused #defines in arch/powerpc/kernel/kexec_elf_64.c
+>>...
+>>  arch/Kconfig                                  |   3 +
+>>  arch/powerpc/Kconfig                          |   1 +
+>>  arch/powerpc/kernel/kexec_elf_64.c            | 545 +-----------------
+>>  include/linux/kexec.h                         |  23 +
+>>  kernel/Makefile                               |   1 +
+>>  .../kexec_elf_64.c => kernel/kexec_elf.c      | 394 +++----------
+>>  6 files changed, 115 insertions(+), 852 deletions(-)
+>>  copy arch/powerpc/kernel/kexec_elf_64.c => kernel/kexec_elf.c (50%)
 
 _______________________________________________
 kexec mailing list
