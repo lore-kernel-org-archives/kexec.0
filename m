@@ -1,23 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i7dHc-0007Fb-M7
- for kexec@lists.infradead.org; Tue, 10 Sep 2019 10:22:02 +0000
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200])
+ id 1i7dHf-0007Hj-NH
+ for kexec@lists.infradead.org; Tue, 10 Sep 2019 10:22:05 +0000
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199])
  (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
  (No client certificate requested)
- by mx1.redhat.com (Postfix) with ESMTPS id 6AF78C05AA58
- for <kexec@lists.infradead.org>; Tue, 10 Sep 2019 10:22:00 +0000 (UTC)
-Received: by mail-pf1-f200.google.com with SMTP id w126so11424166pfd.22
- for <kexec@lists.infradead.org>; Tue, 10 Sep 2019 03:22:00 -0700 (PDT)
+ by mx1.redhat.com (Postfix) with ESMTPS id 6FCA53B3C0
+ for <kexec@lists.infradead.org>; Tue, 10 Sep 2019 10:22:03 +0000 (UTC)
+Received: by mail-pf1-f199.google.com with SMTP id x1so3386685pfn.19
+ for <kexec@lists.infradead.org>; Tue, 10 Sep 2019 03:22:03 -0700 (PDT)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH 1/2] vmcore-dmesg/vmcore-dmesg.c: Fix shifting error reported
- by cppcheck
-Date: Tue, 10 Sep 2019 15:51:49 +0530
-Message-Id: <20190910102150.7229-2-bhsharma@redhat.com>
+Subject: [PATCH 2/2] i386/kexec-mb2-x86.c: Fix compilation warning
+Date: Tue, 10 Sep 2019 15:51:50 +0530
+Message-Id: <20190910102150.7229-3-bhsharma@redhat.com>
 In-Reply-To: <20190910102150.7229-1-bhsharma@redhat.com>
 References: <20190910102150.7229-1-bhsharma@redhat.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,49 +26,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: bhsharma@redhat.com, bhupesh.linux@gmail.com, Lianbo Jiang <lijiang@redhat.com>, horms@verge.net.au
+Cc: bhsharma@redhat.com, bhupesh.linux@gmail.com, horms@verge.net.au
 
-Running 'cppcheck' static code analyzer (see cppcheck(1))
- on 'vmcore-dmesg/vmcore-dmesg.c' shows the following
-shifting error:
-
-$ cppcheck  --enable=all  vmcore-dmesg/vmcore-dmesg.c
-Checking vmcore-dmesg/vmcore-dmesg.c ...
-[vmcore-dmesg/vmcore-dmesg.c:17]: (error) Shifting signed 32-bit value by 31 bits is undefined behaviour
-
-Fix the same via this patch.
-
-Cc: Lianbo Jiang <lijiang@redhat.com>
-Cc: Simon Horman <horms@verge.net.au>
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- vmcore-dmesg/vmcore-dmesg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
-index 81c2a58..122e536 100644
---- a/vmcore-dmesg/vmcore-dmesg.c
-+++ b/vmcore-dmesg/vmcore-dmesg.c
-@@ -6,7 +6,7 @@ typedef Elf32_Nhdr Elf_Nhdr;
- extern const char *fname;
- 
- /* stole this macro from kernel printk.c */
--#define LOG_BUF_LEN_MAX (uint32_t)(1 << 31)
-+#define LOG_BUF_LEN_MAX (uint32_t)(1U << 31)
- 
- static void write_to_stdout(char *buf, unsigned int nr)
- {
--- 
-2.17.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+VGhpcyBwYXRjaCBmaXhlcyB0aGUgZm9sbG93aW5nIGNvbXBpbGF0aW9uIHdhcm5pbmcgaW4KJ2kz
+ODYva2V4ZWMtbWIyLXg4Ni5jJyByZWdhcmRpbmcgdGhlIHZhcmlhYmxlICdyZXN1bHQnCndoaWNo
+IGlzIHNldCBidXQgbm90IHVzZWQ6CgprZXhlYy9hcmNoL2kzODYva2V4ZWMtbWIyLXg4Ni5jOjQw
+Mjo2Ogogd2FybmluZzogdmFyaWFibGUg4oCYcmVzdWx04oCZIHNldCBidXQgbm90IHVzZWQgWy1X
+dW51c2VkLWJ1dC1zZXQtdmFyaWFibGVdCiAgaW50IHJlc3VsdDsKICAgICAgXn5+fn5+CgpDYzog
+U2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+ClNpZ25lZC1vZmYtYnk6IEJodXBlc2gg
+U2hhcm1hIDxiaHNoYXJtYUByZWRoYXQuY29tPgotLS0KIGtleGVjL2FyY2gvaTM4Ni9rZXhlYy1t
+YjIteDg2LmMgfCAyIC0tCiAxIGZpbGUgY2hhbmdlZCwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1n
+aXQgYS9rZXhlYy9hcmNoL2kzODYva2V4ZWMtbWIyLXg4Ni5jIGIva2V4ZWMvYXJjaC9pMzg2L2tl
+eGVjLW1iMi14ODYuYwppbmRleCA3ZWFhYjBjLi5iODM5ZDU5IDEwMDY0NAotLS0gYS9rZXhlYy9h
+cmNoL2kzODYva2V4ZWMtbWIyLXg4Ni5jCisrKyBiL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1tYjIt
+eDg2LmMKQEAgLTM5OSw3ICszOTksNiBAQCBpbnQgbXVsdGlib290Ml94ODZfbG9hZChpbnQgYXJn
+YywgY2hhciAqKmFyZ3YsIGNvbnN0IGNoYXIgKmJ1Ziwgb2ZmX3QgbGVuLAogCWNoYXIgKmNvbW1h
+bmRfbGluZSA9IE5VTEwsICp0bXBfY21kbGluZSA9IE5VTEw7CiAJaW50IGNvbW1hbmRfbGluZV9s
+ZW47CiAJY2hhciAqaW1hZ2VuYW1lLCAqY3AsICphcHBlbmQgPSBOVUxMOzsKLQlpbnQgcmVzdWx0
+OwogCWludCBvcHQ7CiAJaW50IG1vZHVsZXMsIG1vZF9jb21tYW5kX2xpbmVfc3BhY2U7CiAJdWlu
+dDY0X3QgbWJpX3B0cjsKQEAgLTQyOSw3ICs0MjgsNiBAQCBpbnQgbXVsdGlib290Ml94ODZfbG9h
+ZChpbnQgYXJnYywgY2hhciAqKmFyZ3YsIGNvbnN0IGNoYXIgKmJ1Ziwgb2ZmX3QgbGVuLAogCWNv
+bW1hbmRfbGluZV9sZW4gPSAwOwogCW1vZHVsZXMgPSAwOwogCW1vZF9jb21tYW5kX2xpbmVfc3Bh
+Y2UgPSAwOwotCXJlc3VsdCA9IDA7CiAJd2hpbGUoKG9wdCA9IGdldG9wdF9sb25nKGFyZ2MsIGFy
+Z3YsIHNob3J0X29wdGlvbnMsIG9wdGlvbnMsIDApKSAhPSAtMSkKIAl7CiAJCXN3aXRjaChvcHQp
+IHsKLS0gCjIuMTcuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
