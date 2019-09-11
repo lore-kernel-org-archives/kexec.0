@@ -1,26 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-wm1-x344.google.com ([2a00:1450:4864:20::344])
  by bombadil.infradead.org with esmtps (Exim 4.92 #3 (Red Hat Linux))
- id 1i7mLb-0007rc-Bb
- for kexec@lists.infradead.org; Tue, 10 Sep 2019 20:02:44 +0000
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
- (No client certificate requested)
- by mx1.redhat.com (Postfix) with ESMTPS id C5035C007351
- for <kexec@lists.infradead.org>; Tue, 10 Sep 2019 20:02:39 +0000 (UTC)
-Received: by mail-lj1-f198.google.com with SMTP id m8so3107593ljb.3
- for <kexec@lists.infradead.org>; Tue, 10 Sep 2019 13:02:39 -0700 (PDT)
+ id 1i7vc9-0002mq-2E
+ for kexec@lists.infradead.org; Wed, 11 Sep 2019 05:56:26 +0000
+Received: by mail-wm1-x344.google.com with SMTP id t9so1911421wmi.5
+ for <kexec@lists.infradead.org>; Tue, 10 Sep 2019 22:56:22 -0700 (PDT)
+Date: Wed, 11 Sep 2019 07:56:18 +0200
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v3 2/2] x86/kdump: Reserve extra memory when SME or SEV
+ is active
+Message-ID: <20190911055618.GA104115@gmail.com>
+References: <20190910151341.14986-1-kasong@redhat.com>
+ <20190910151341.14986-3-kasong@redhat.com>
 MIME-Version: 1.0
-References: <20190910102150.7229-1-bhsharma@redhat.com>
- <20190910102150.7229-2-bhsharma@redhat.com>
- <50726111-29ef-6054-edd3-f9c9214442e8@redhat.com>
-In-Reply-To: <50726111-29ef-6054-edd3-f9c9214442e8@redhat.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Wed, 11 Sep 2019 01:32:25 +0530
-Message-ID: <CACi5LpOOdxr1c95k69QXp60RwE2CWGC97dqG0mUaVKgNenGgKg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] vmcore-dmesg/vmcore-dmesg.c: Fix shifting error
- reported by cppcheck
+Content-Disposition: inline
+In-Reply-To: <20190910151341.14986-3-kasong@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,35 +23,98 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: Bhupesh SHARMA <bhupesh.linux@gmail.com>, kexec mailing list <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>
+To: Kairui Song <kasong@redhat.com>
+Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>, Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>, x86@kernel.org, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
 
-T24gVHVlLCBTZXAgMTAsIDIwMTkgYXQgNzoyNSBQTSBsaWppYW5nIDxsaWppYW5nQHJlZGhhdC5j
-b20+IHdyb3RlOgo+Cj4g5ZyoIDIwMTnlubQwOeaciDEw5pelIDE4OjIxLCBCaHVwZXNoIFNoYXJt
-YSDlhpnpgZM6Cj4gPiBSdW5uaW5nICdjcHBjaGVjaycgc3RhdGljIGNvZGUgYW5hbHl6ZXIgKHNl
-ZSBjcHBjaGVjaygxKSkKPiA+ICBvbiAndm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jJyBzaG93
-cyB0aGUgZm9sbG93aW5nCj4gPiBzaGlmdGluZyBlcnJvcjoKPiA+Cj4gPiAkIGNwcGNoZWNrICAt
-LWVuYWJsZT1hbGwgIHZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYwo+ID4gQ2hlY2tpbmcgdm1j
-b3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jIC4uLgo+ID4gW3ZtY29yZS1kbWVzZy92bWNvcmUtZG1l
-c2cuYzoxN106IChlcnJvcikgU2hpZnRpbmcgc2lnbmVkIDMyLWJpdCB2YWx1ZSBieSAzMSBiaXRz
-IGlzIHVuZGVmaW5lZCBiZWhhdmlvdXIKPiA+Cj4gPiBGaXggdGhlIHNhbWUgdmlhIHRoaXMgcGF0
-Y2guCj4gPgo+ID4gQ2M6IExpYW5ibyBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+ID4gQ2M6
-IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1Pgo+ID4gU2lnbmVkLW9mZi1ieTogQmh1
-cGVzaCBTaGFybWEgPGJoc2hhcm1hQHJlZGhhdC5jb20+Cj4gPiAtLS0KPiA+ICB2bWNvcmUtZG1l
-c2cvdm1jb3JlLWRtZXNnLmMgfCAyICstCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
-KCspLCAxIGRlbGV0aW9uKC0pCj4gPgo+ID4gZGlmZiAtLWdpdCBhL3ZtY29yZS1kbWVzZy92bWNv
-cmUtZG1lc2cuYyBiL3ZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYwo+ID4gaW5kZXggODFjMmE1
-OC4uMTIyZTUzNiAxMDA2NDQKPiA+IC0tLSBhL3ZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYwo+
-ID4gKysrIGIvdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jCj4gPiBAQCAtNiw3ICs2LDcgQEAg
-dHlwZWRlZiBFbGYzMl9OaGRyIEVsZl9OaGRyOwo+ID4gIGV4dGVybiBjb25zdCBjaGFyICpmbmFt
-ZTsKPiA+Cj4gPiAgLyogc3RvbGUgdGhpcyBtYWNybyBmcm9tIGtlcm5lbCBwcmludGsuYyAqLwo+
-ID4gLSNkZWZpbmUgTE9HX0JVRl9MRU5fTUFYICh1aW50MzJfdCkoMSA8PCAzMSkKPiA+ICsjZGVm
-aW5lIExPR19CVUZfTEVOX01BWCAodWludDMyX3QpKDFVIDw8IDMxKQo+ID4KPgo+IFRoaXMgbG9v
-a3MgYmV0dGVyLiBUaGFuayB5b3UsIEJodXBlc2guCgpUaGFua3MgZm9yIHlvdXIgcmV2aWV3LCBM
-aWFuYm8uCgpSZWdhcmRzLApCaHVwZXNoCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+
+* Kairui Song <kasong@redhat.com> wrote:
+
+> Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
+> SWIOTLB will be enabled even if there is less than 4G of memory when SME
+> is active, to support DMA of devices that not support address with the
+> encrypt bit.
+> 
+> And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
+> active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
+> 
+> Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
+> encryption") will always force SWIOTLB to be enabled when SEV is active
+> in all cases.
+> 
+> Now, when either SME or SEV is active, SWIOTLB will be force enabled,
+> and this is also true for kdump kernel. As a result kdump kernel will
+> run out of already scarce pre-reserved memory easily.
+> 
+> So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
+> kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
+> is specified or any offset is used. As for the high reservation case, an
+> extra low memory region will always be reserved and that is enough for
+> SWIOTLB. Else if the offset format is used, user should be fully aware
+> of any possible kdump kernel memory requirement and have to organize the
+> memory usage carefully.
+> 
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> ---
+>  arch/x86/kernel/setup.c | 20 +++++++++++++++++---
+>  1 file changed, 17 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 71f20bb18cb0..ee6a2f1e2226 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -530,7 +530,7 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
+>  					  unsigned long long *crash_size,
+>  					  bool high)
+>  {
+> -	unsigned long long base, size;
+> +	unsigned long long base, size, mem_enc_req = 0;
+>  
+>  	base = *crash_base;
+>  	size = *crash_size;
+> @@ -561,11 +561,25 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
+>  	if (high)
+>  		goto high_reserve;
+>  
+> +	/*
+> +	 * When SME/SEV is active and not using high reserve,
+> +	 * it will always required an extra SWIOTLB region.
+> +	 */
+> +	if (mem_encrypt_active())
+> +		mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
+> +
+>  	base = memblock_find_in_range(CRASH_ALIGN,
+> -				      CRASH_ADDR_LOW_MAX, size,
+> +				      CRASH_ADDR_LOW_MAX,
+> +				      size + mem_enc_req,
+>  				      CRASH_ALIGN);
+
+What sizes are we talking about here?
+
+- What is the possible size range of swiotlb_size_or_default()
+
+- What is the size of CRASH_ADDR_LOW_MAX (the old limit)?
+
+- Why do we replace one fixed limit with another fixed limit instead of 
+  accurately sizing the area, with each required feature adding its own 
+  requirement to the reservation size?
+
+I.e. please engineer this into a proper solution instead of just 
+modifying it around the edges.
+
+For example have you considered adding some sort of 
+kdump_memory_reserve(size) facility, which increases the reservation size 
+as something like SWIOTLB gets activated? That would avoid the ugly 
+mem_encrypt_active() flag, it would just automagically work.
+
+Thanks,
+
+	Ingo
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
