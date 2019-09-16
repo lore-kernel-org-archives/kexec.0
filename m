@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.92.2 #3 (Red Hat Linux))
- id 1i9lIR-0002q3-Jy
- for kexec@lists.infradead.org; Mon, 16 Sep 2019 07:19:41 +0000
-Date: Mon, 16 Sep 2019 09:19:36 +0200
+ id 1i9lMG-0004tB-Cr
+ for kexec@lists.infradead.org; Mon, 16 Sep 2019 07:23:37 +0000
+Date: Mon, 16 Sep 2019 09:23:33 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec/arm: undefine __NR_kexec_file_load for arm
-Message-ID: <20190916071936.q735mn7fo5sctkix@verge.net.au>
-References: <20190916024905.3100-1-quanyang.w@gmail.com>
+Subject: Re: [PATCH] x86: Fix PAGE_OFFSET for kernels since 4.20
+Message-ID: <20190916072333.7xma2kgjzucfes44@verge.net.au>
+References: <20190830091258.51133-1-buczek@molgen.mpg.de>
+ <20190903144127.opmnw42pie6klghc@verge.net.au>
+ <848555a3-5a1f-c0c0-ef50-e684cf70595a@molgen.mpg.de>
+ <CACi5LpPe5ueNMdCObWvCLg+k_kDrvd-SkOvc8ACa1V9UfSD77g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190916024905.3100-1-quanyang.w@gmail.com>
+In-Reply-To: <CACi5LpPe5ueNMdCObWvCLg+k_kDrvd-SkOvc8ACa1V9UfSD77g@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,23 +26,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: quanyang.w@gmail.com
-Cc: kexec@lists.infradead.org
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: kexec mailing list <kexec@lists.infradead.org>, Donald Buczek <buczek@molgen.mpg.de>, Baoquan He <bhe@redhat.com>
 
-On Mon, Sep 16, 2019 at 10:49:05AM +0800, quanyang.w@gmail.com wrote:
-> From: Quanyang Wang <quanyang.wang@windriver.com>
+On Mon, Sep 09, 2019 at 10:33:11AM +0530, Bhupesh Sharma wrote:
+> Sorry Guys,
 > 
-> In the kernel upstream commit 4ab65ba7a5cb
-> ("ARM: add kexec_file_load system call number"),
-> __NR_kexec_file_load for arm has been defined to be 401.
-> This results that even if kexec_file_load isn't implemented
-> for arm but the function is_kexec_file_load_implemented()
-> will still return true. So undef __NR_kexec_file_load for
-> arm architecture.
+> On Tue, Sep 3, 2019 at 11:36 PM Donald Buczek <buczek@molgen.mpg.de> wrote:
+> >
+> > Dear Simon,
+> >
+> > On 03.09.19 16:41, Simon Horman wrote:
+> > > On Fri, Aug 30, 2019 at 11:12:58AM +0200, Donald Buczek wrote:
+> > >> Linux kernel commit d52888aa2753 ("x86/mm: Move LDT remap out of KASLR
+> > >> region on 5-level paging") changed the base of the direct mapping
+> > >> from 0xffff880000000000 to 0xffff888000000000. This was merged
+> > >> into v4.20-rc2.
+> > >>
+> > >> Update to new address accordingly.
+> > >
+> > > Thanks, applied for inclusion in v2.0.20.
+> >
+> > I must admit, that I overlooked that d52888aa2753 ("x86/mm: Move LDT remap out of KASLR region on 5-level paging") was backported to 4.19.5 as 4074ca7d8a18 ("x86/mm: Move LDT remap out of KASLR region on 5-level paging").
+> >
+> > Bhupesh Sharma wanted to look into a a dynamic solution, which, of course, would be better. But if you still want to include this (e.g. as the fallback for the dynamic solution), you might want to replace the patch with the following one, which selects the new PAGE_OFFSET starting from kernel version 4.19.5 instead of 4.20.0.
 > 
-> Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+> I was in a conference last week and was not able to connect to my test
+> machine(s) to develop and test a more generic fix, as I suggested in
+> my earlier message.
+> 
+> I will try to work on and send a generic fix in a couple of days.
 
-Thanks, applied.
+Thanks,
+
+I think it would be best if this patch,
+23b67f048dde ("x86: Fix PAGE_OFFSET for kernels since 4.20"),
+was reverted.
+
+Donald, Bhupesh, what do you think?
 
 _______________________________________________
 kexec mailing list
