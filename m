@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-xd42.google.com ([2607:f8b0:4864:20::d42])
+Received: from mail-io1-xd2c.google.com ([2607:f8b0:4864:20::d2c])
  by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
- id 1iA63g-0007BT-TG
- for kexec@lists.infradead.org; Tue, 17 Sep 2019 05:29:50 +0000
-Received: by mail-io1-xd42.google.com with SMTP id r26so4569517ioh.8
- for <kexec@lists.infradead.org>; Mon, 16 Sep 2019 22:29:47 -0700 (PDT)
+ id 1iAHdz-0005zz-8R
+ for kexec@lists.infradead.org; Tue, 17 Sep 2019 17:52:06 +0000
+Received: by mail-io1-xd2c.google.com with SMTP id n197so9668867iod.9
+ for <kexec@lists.infradead.org>; Tue, 17 Sep 2019 10:52:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <1568256617-14030-1-git-send-email-kernelfans@gmail.com>
-In-Reply-To: <1568256617-14030-1-git-send-email-kernelfans@gmail.com>
-From: Pingfan Liu <kernelfans@gmail.com>
-Date: Tue, 17 Sep 2019 13:29:35 +0800
-Message-ID: <CAFgQCTvKpPEP1UywcGcC2Mo4mzzZR+ff7M3L9QN_U+hfk31ijQ@mail.gmail.com>
-Subject: Re: [PATCH] powerpc/crashkernel: take mem option into account
+References: <20190805083553.GA27708@dhcp-128-65.nay.redhat.com>
+ <CAKv+Gu-my6EpLfxBnbMn21be62oHrF6PKFu2rt-4Pqk9wG9SXA@mail.gmail.com>
+ <fbea659c-6e8f-b854-66d2-2c928d1d3783@redhat.com>
+ <CACdnJusU7FKPFTz9MbXWvs-NHLX7bPLwkVynyK6cLxbxCNjrNQ@mail.gmail.com>
+ <CAKv+Gu9_GDHiU2iBD7Lsk5dKupKBQO9Cfn3V2rhSU+DqQkAHOw@mail.gmail.com>
+In-Reply-To: <CAKv+Gu9_GDHiU2iBD7Lsk5dKupKBQO9Cfn3V2rhSU+DqQkAHOw@mail.gmail.com>
+From: Matthew Garrett <mjg59@google.com>
+Date: Tue, 17 Sep 2019 10:51:47 -0700
+Message-ID: <CACdnJut3t+TNLKg0=hUEFCT6wXmJtE2ju1hg6tuXue6L9Bxp6Q@mail.gmail.com>
+Subject: Re: [PATCH] do not clean dummy variable in kexec path
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,62 +28,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Hari Bathini <hbathini@linux.ibm.com>
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Dave Young <dyoung@redhat.com>, Laszlo Ersek <lersek@redhat.com>, kexec devel list <kexec@lists.infradead.org>
 
-Cc Kexec list. And keep the original content.
+On Fri, Sep 13, 2019 at 2:18 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
 
-On Thu, Sep 12, 2019 at 10:50 AM Pingfan Liu <kernelfans@gmail.com> wrote:
+> > > - Remove the cleanup from the kexec path -- the cleanup logic from [4],
+> > >   even if justified for the cold boot path, should have never modified
+> > >   the kexec path.
+> >
+> > I agree that there's no benefit in it being called in the kexec path.
 >
-> 'mem=" option is an easy way to put high pressure on memory during some
-> test. Hence in stead of total mem, the effective usable memory size should
-> be considered when reserving mem for crashkernel. Otherwise the boot up may
-> experience oom issue.
->
-> E.g passing
-> crashkernel="2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G", and
-> mem=5G on a 256G machine.
->
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Hari Bathini <hbathini@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> To: linuxppc-dev@lists.ozlabs.org
-> ---
-> v1 -> v2: fix the printk info about the total mem
->  arch/powerpc/kernel/machine_kexec.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
-> index c4ed328..eec96dc 100644
-> --- a/arch/powerpc/kernel/machine_kexec.c
-> +++ b/arch/powerpc/kernel/machine_kexec.c
-> @@ -114,11 +114,12 @@ void machine_kexec(struct kimage *image)
->
->  void __init reserve_crashkernel(void)
->  {
-> -       unsigned long long crash_size, crash_base;
-> +       unsigned long long crash_size, crash_base, total_mem_sz;
->         int ret;
->
-> +       total_mem_sz = memory_limit ? memory_limit : memblock_phys_mem_size();
->         /* use common parsing */
-> -       ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-> +       ret = parse_crashkernel(boot_command_line, total_mem_sz,
->                         &crash_size, &crash_base);
->         if (ret == 0 && crash_size > 0) {
->                 crashk_res.start = crash_base;
-> @@ -185,7 +186,7 @@ void __init reserve_crashkernel(void)
->                         "for crashkernel (System RAM: %ldMB)\n",
->                         (unsigned long)(crash_size >> 20),
->                         (unsigned long)(crashk_res.start >> 20),
-> -                       (unsigned long)(memblock_phys_mem_size() >> 20));
-> +                       (unsigned long)(total_mem_sz >> 20));
->
->         if (!memblock_is_region_memory(crashk_res.start, crash_size) ||
->             memblock_reserve(crashk_res.start, crash_size)) {
-> --
-> 2.7.5
->
+> Can I take that as an ack?
+
+An ack of this hunk.
 
 _______________________________________________
 kexec mailing list
