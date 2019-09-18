@@ -1,28 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
- id 1iAX1V-00077w-Vq
- for kexec@lists.infradead.org; Wed, 18 Sep 2019 10:17:25 +0000
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
- (No client certificate requested)
- by mx1.redhat.com (Postfix) with ESMTPS id 91D2D34CC
- for <kexec@lists.infradead.org>; Wed, 18 Sep 2019 10:17:20 +0000 (UTC)
-Received: by mail-io1-f72.google.com with SMTP id j23so10478714iog.16
- for <kexec@lists.infradead.org>; Wed, 18 Sep 2019 03:17:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190910151341.14986-1-kasong@redhat.com>
- <20190910151341.14986-3-kasong@redhat.com>
- <20190911055618.GA104115@gmail.com>
- <CACPcB9cEE5eYWixkUvMeLVdRC5qhrru9PbjbLLxP3k1jsbRanQ@mail.gmail.com>
- <20190918075546.GA27186@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190918075546.GA27186@dhcp-128-65.nay.redhat.com>
-From: Kairui Song <kasong@redhat.com>
-Date: Wed, 18 Sep 2019 18:17:08 +0800
-Message-ID: <CACPcB9dbC-mSzKA3cnea4OGB71tvbZLr=_yWPM5UJij+nVz4UA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] x86/kdump: Reserve extra memory when SME or SEV is
- active
+ id 1iAajv-0004H5-TO
+ for kexec@lists.infradead.org; Wed, 18 Sep 2019 14:15:29 +0000
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x8IE6rf0043164
+ for <kexec@lists.infradead.org>; Wed, 18 Sep 2019 10:15:25 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2v3nbv272b-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 18 Sep 2019 10:15:25 -0400
+Received: from localhost
+ by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Wed, 18 Sep 2019 15:15:23 +0100
+Subject: Re: [RFC PATCH v1 1/1] Add support for arm64 to carry ima
+ measurement log in kexec_file_load
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Wed, 18 Sep 2019 10:15:11 -0400
+In-Reply-To: <20190913225009.3406-2-prsriva@linux.microsoft.com>
+References: <20190913225009.3406-1-prsriva@linux.microsoft.com>
+ <20190913225009.3406-2-prsriva@linux.microsoft.com>
+Mime-Version: 1.0
+Message-Id: <1568816111.16709.68.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,188 +34,214 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>, Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
+To: Prakhar Srivastava <prsriva@linux.microsoft.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-integrity@vger.kernel.org, kexec@lists.infradead.org
+Cc: mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de, takahiro.akashi@linaro.org, sboyd@kernel.org, catalin.marinas@arm.com, yamada.masahiro@socionext.com, kristina.martsenko@arm.org, duwe@lst.de, bauerman@linux.ibm.com, james.morse@arm.org, tglx@linutronix.de, allison@lohutok.net
 
-On Wed, Sep 18, 2019 at 3:55 PM Dave Young <dyoung@redhat.com> wrote:
->
-> On 09/12/19 at 12:23am, Kairui Song wrote:
-> > On Wednesday, September 11, 2019, Ingo Molnar <mingo@kernel.org> wrote:
-> > >
-> > > * Kairui Song <kasong@redhat.com> wrote:
-> > >
-> > >> Since commit c7753208a94c ("x86, swiotlb: Add memory encryption
-> > support"),
-> > >> SWIOTLB will be enabled even if there is less than 4G of memory when SME
-> > >> is active, to support DMA of devices that not support address with the
-> > >> encrypt bit.
-> > >>
-> > >> And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
-> > >> active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
-> > >>
-> > >> Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
-> > >> encryption") will always force SWIOTLB to be enabled when SEV is active
-> > >> in all cases.
-> > >>
-> > >> Now, when either SME or SEV is active, SWIOTLB will be force enabled,
-> > >> and this is also true for kdump kernel. As a result kdump kernel will
-> > >> run out of already scarce pre-reserved memory easily.
-> > >>
-> > >> So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
-> > >> kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
-> > >> is specified or any offset is used. As for the high reservation case, an
-> > >> extra low memory region will always be reserved and that is enough for
-> > >> SWIOTLB. Else if the offset format is used, user should be fully aware
-> > >> of any possible kdump kernel memory requirement and have to organize the
-> > >> memory usage carefully.
-> > >>
-> > >> Signed-off-by: Kairui Song <kasong@redhat.com>
-> > >> ---
-> > >>  arch/x86/kernel/setup.c | 20 +++++++++++++++++---
-> > >>  1 file changed, 17 insertions(+), 3 deletions(-)
-> > >>
-> > >> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > >> index 71f20bb18cb0..ee6a2f1e2226 100644
-> > >> --- a/arch/x86/kernel/setup.c
-> > >> +++ b/arch/x86/kernel/setup.c
-> > >> @@ -530,7 +530,7 @@ static int __init crashkernel_find_region(unsigned
-> > long long *crash_base,
-> > >>                                         unsigned long long *crash_size,
-> > >>                                         bool high)
-> > >>  {
-> > >> -     unsigned long long base, size;
-> > >> +     unsigned long long base, size, mem_enc_req = 0;
-> > >>
-> > >>       base = *crash_base;
-> > >>       size = *crash_size;
-> > >> @@ -561,11 +561,25 @@ static int __init crashkernel_find_region(unsigned
-> > long long *crash_base,
-> > >>       if (high)
-> > >>               goto high_reserve;
-> > >>
-> > >> +     /*
-> > >> +      * When SME/SEV is active and not using high reserve,
-> > >> +      * it will always required an extra SWIOTLB region.
-> > >> +      */
-> > >> +     if (mem_encrypt_active())
-> > >> +             mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
-> > >> +
-> > >>       base = memblock_find_in_range(CRASH_ALIGN,
-> > >> -                                   CRASH_ADDR_LOW_MAX, size,
-> > >> +                                   CRASH_ADDR_LOW_MAX,
-> > >> +                                   size + mem_enc_req,
-> > >>                                     CRASH_ALIGN);
-> > >
-> > > What sizes are we talking about here?
-> > >
-> > > - What is the possible size range of swiotlb_size_or_default()
-> > >
-> > > - What is the size of CRASH_ADDR_LOW_MAX (the old limit)?
-> > >
-> > > - Why do we replace one fixed limit with another fixed limit instead of
-> > >   accurately sizing the area, with each required feature adding its own
-> > >   requirement to the reservation size?
-> > >
-> > > I.e. please engineer this into a proper solution instead of just
-> > > modifying it around the edges.
-> > >
-> > > For example have you considered adding some sort of
-> > > kdump_memory_reserve(size) facility, which increases the reservation size
-> > > as something like SWIOTLB gets activated? That would avoid the ugly
-> > > mem_encrypt_active() flag, it would just automagically work.
-> >
-> > Hi, thanks for the suggestions, actually I did try to workout a better
-> > resolution, at least for SWIOTLB and crashkernel memory, like make
-> > crashkernel reserve more memory as SWIOTLB get activated to be more
-> > flexible and generic.
-> >
-> > There are some problems:
-> >
-> > - Usually, for SWIOTLB, even if the first booting kernel have SWIOTLB
-> > activated, second kernel will most likely not need it. Currently, only the
-> > high reservation case will still need SWIOTLB in second kernel, and it's
-> > already reserving extra low memory automatically. SME/SEV systems is the
-> > only other special case that will force both kernel to use it.
-> >
-> > - There is a little complex procedure to judge whether SWIOTLB is required
-> > (Depends on whether the system have >4G, if there is an iommu want to shut
-> > down SWIOTLB, and some times iommu still expect SWIOTLB to exist, and
-> > SWIOTLB could be activated first, then got closed later etc...). The crash
-> > kernel reserve should happen very early to ensure the region is usable, but
-> > kernel is not aware of if SWIOTLB is needed. Have to either move the
-> > reservation to some later stage or always reserve extra memories early,
-> > then release if not needed later. Neither sound a good solution, and after
-> > all, as mentioned above, currently kernel need it doesn't mean kdump kernel
-> > needs it.
-> >
-> > - Also tried to reuse and improve the currently crashk_low_res facility to
-> > reserve the memory in a different block at first, make the code simpler.
-> > Didn't work well due to some other issue with all current version of user
-> > space kexec-tools, which never expect there will be an extra memory region
-> > for non-high reservation case, and failed to load the kernel for kdump.
-> > Have to always make the another block in a lower position or rename the
-> > memory resource. I think this will either break user space tools heavily,
-> > or make the implementation even more complex and confusing.
->
-> Kairui, I remember you tried to reuse the swiotlb regions across kexec
-> reboot, are you saying this as the 3rd problem above?
->
-> It is not clear how you use crashk_low_res,  can you elaborate it I
-> remember you mentioned some problem with this approach, maybe we can
-> re-explore it.
->
-> Thanks
-> Dave
-
-Yes, previously I tried to pass the swiotlb region in 1st kernel to
-kdump kernel as usable memory. What I worried is that if there are
-still on going DMA, and kdump kernel just used the region as normal
-memory, it may cause memory corruption.
-
-There are other ways to make it work properly, maybe pass it as
-reserved and build the map on need when doing swiotlb init, or
-introduce an earlier swiotlb reserving logic so nothing else will
-occupy the region. But still have to find a way to let kdump kernel
-know about the reusable swiotlb region, like extend the
-swiotlb=<nslab>@<addr> syntax so both userspace kernel kexec can
-specify where the kdump kernel should reuse as swiotlb, and have to
-expose swiotlb in iomem so userspace kexec-tools can actually find the
-range...
-But this seems getting a bit trouble some just for solving this
-particular problem, not sure if it's acceptable. SME/SEV is currently
-the only case that swiotlb will be required in kdump kernel, and reuse
-it will force drop the swiotlb content when doing kdump.
-
-
-About the "reuse crashk_low_res" part, I was trying to simply change
-the "if (condition)" of previous low memory reserving logic, so an
-extra low memory region for swiotlb will be reserve when SME/SEV is
-used, just like high reserve case, and it will be only a few lines of
-code change.
-
-But that will make it always reserve at lease 256M more memory when
-SME/SEV is active, it doesn't require that much. The previous reason
-for always reserving at lease 256M of low memory could be found in
-commit 94fb933418228. Then I tried to change the logic a bit to
-reserve fewer low memory for SME/SEV case, and encountered the issue I
-mentioned, that all current version of user space kexec-tools, never
-expect there will be a smaller extra memory region for non-high
-reservation case. It always try to load kernel image into the highest
-region, it's totally possible that the extra smaller swiotlb region
-reserved for SME/SEV case is actually higher. So have to always make
-the another block in a lower position, or rename the low memory
-resource. This also seems more confusing and complex. So instead I
-just posted this patch, at lease it's a straight and clean approach.
-
---
-Best Regards,
-Kairui Song
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgUHJhaGthciwKCk9uIEZyaSwgMjAxOS0wOS0xMyBhdCAxNTo1MCAtMDcwMCwgUHJha2hhciBT
+cml2YXN0YXZhIHdyb3RlOgo+IER1cmluZyBrZXhlY19maWxlX2xvYWQsIGNhcnJ5aW5nIGZvcndh
+cmQgdGhlIGltYSBtZWFzdXJlbWVudCBsb2cgYWxsb3dzCj4gYSB2ZXJpZnlpbmcgcGFydHkgdG8g
+Z2V0IHRoZSBlbnRpcmUgcnVudGltZSBldmVudCBsb2cgc2luY2UgdGhlIGxhc3QKPiBmdWxsIHJl
+Ym9vdCBzaW5jZSB0aGF0IGlzIHdoZW4gUENScyB3ZXJlIGxhc3QgcmVzZXQuCj4gCj4gU2lnbmVk
+LW9mZi1ieTogUHJha2hhciBTcml2YXN0YXZhIDxwcnNyaXZhQGxpbnV4Lm1pY3Jvc29mdC5jb20+
+CgpNaXNzaW5nIGlzIHRoZSBDaGFuZ2Vsb2cgYmV0d2VlbiB2ZXJzaW9ucy4gwqAodjEgaGFzIG5v
+dyBiZWVuIHBvc3RlZCAzCnRpbWVzLikKClRoZXJlJ3MgYSBudW1iZXIgb2YgdHJhaWxpbmcgd2hp
+dGVzcGFjZXMsIGJsYW5rcyBiZWZvcmUgdGFicywgYW5kCm90aGVyIHdhcm5pbmdzLiDCoFBsZWFz
+ZSB1c2Ugc2NyaXB0cy9jaGVja3BhdGNoLnBsIGJlZm9yZSBwb3N0aW5nCnBhdGNoZXMuCgoKPiAt
+LS0KPiAgYXJjaC9hcm02NC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgfCAgIDcgKwo+ICBh
+cmNoL2FybTY0L2luY2x1ZGUvYXNtL2ltYS5oICAgICAgICAgICB8ICAyOSArKysrCj4gIGFyY2gv
+YXJtNjQvaW5jbHVkZS9hc20va2V4ZWMuaCAgICAgICAgIHwgICA1ICsKPiAgYXJjaC9hcm02NC9r
+ZXJuZWwvTWFrZWZpbGUgICAgICAgICAgICAgfCAgIDMgKy0KPiAgYXJjaC9hcm02NC9rZXJuZWwv
+aW1hX2tleGVjLmMgICAgICAgICAgfCAyMTMgKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICBh
+cmNoL2FybTY0L2tlcm5lbC9tYWNoaW5lX2tleGVjX2ZpbGUuYyB8ICAgNiArCj4gIDYgZmlsZXMg
+Y2hhbmdlZCwgMjYyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IGFyY2gvYXJtNjQvaW5jbHVkZS9hc20vaW1hLmgKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IGFyY2gvYXJtNjQva2VybmVsL2ltYV9rZXhlYy5jCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
+NjQvS2NvbmZpZyBiL2FyY2gvYXJtNjQvS2NvbmZpZwo+IGluZGV4IDNhZGNlYzA1YjFmNi4uZjM5
+YjEyZGJmOWU4IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvS2NvbmZpZwo+ICsrKyBiL2FyY2gv
+YXJtNjQvS2NvbmZpZwo+IEBAIC05NzYsNiArOTc2LDEzIEBAIGNvbmZpZyBLRVhFQ19WRVJJRllf
+U0lHCj4gIAkgIHZlcmlmaWNhdGlvbiBmb3IgdGhlIGNvcnJlc3BvbmRpbmcga2VybmVsIGltYWdl
+IHR5cGUgYmVpbmcKPiAgCSAgbG9hZGVkIGluIG9yZGVyIGZvciB0aGlzIHRvIHdvcmsuCj4gIAo+
+ICtjb25maWcgSEFWRV9JTUFfS0VYRUMKPiArCWJvb2wgIkNhcnJ5IG92ZXIgSU1BIG1lYXN1cmVt
+ZW50IGxvZyBkdXJpbmcga2V4ZWNfZmlsZV9sb2FkKCkgc3lzY2FsbCIKPiArCWRlcGVuZHMgb24g
+S0VYRUNfRklMRQo+ICsJaGVscAo+ICsJICBTZWxlY3QgdGhpcyBvcHRpb24gdG8gY2Fycnkgb3Zl
+ciBJTUEgbWVhc3VyZW1lbnQgbG9nIGR1cmluZwo+ICsJICBrZXhlY19maWxlX2xvYWQuCj4gKwo+
+ICBjb25maWcgS0VYRUNfSU1BR0VfVkVSSUZZX1NJRwo+ICAJYm9vbCAiRW5hYmxlIEltYWdlIHNp
+Z25hdHVyZSB2ZXJpZmljYXRpb24gc3VwcG9ydCIKPiAgCWRlZmF1bHQgeQo+IGRpZmYgLS1naXQg
+YS9hcmNoL2FybTY0L2luY2x1ZGUvYXNtL2ltYS5oIGIvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9p
+bWEuaAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi5lMjNjZWU4
+NDcyOWYKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9pbWEu
+aAo+IEBAIC0wLDAgKzEsMjkgQEAKPiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0y
+LjAgKi8KPiArI2lmbmRlZiBfQVNNX0FSTTY0X0lNQV9ICj4gKyNkZWZpbmUgX0FTTV9BUk02NF9J
+TUFfSAo+ICsKPiArc3RydWN0IGtpbWFnZTsKPiArCj4gK2ludCBpbWFfZ2V0X2tleGVjX2J1ZmZl
+cih2b2lkICoqYWRkciwgc2l6ZV90ICpzaXplKTsKPiAraW50IGltYV9mcmVlX2tleGVjX2J1ZmZl
+cih2b2lkKTsKPiArCj4gKyNpZmRlZiBDT05GSUdfSU1BCj4gK3ZvaWQgcmVtb3ZlX2ltYV9idWZm
+ZXIodm9pZCAqZmR0LCBpbnQgY2hvc2VuX25vZGUpOwo+ICsjZWxzZQo+ICtzdGF0aWMgaW5saW5l
+IHZvaWQgcmVtb3ZlX2ltYV9idWZmZXIodm9pZCAqZmR0LCBpbnQgY2hvc2VuX25vZGUpIHt9Cj4g
+KyNlbmRpZgo+ICsKPiArI2lmZGVmIENPTkZJR19JTUFfS0VYRUMKPiAraW50IGFyY2hfaW1hX2Fk
+ZF9rZXhlY19idWZmZXIoc3RydWN0IGtpbWFnZSAqaW1hZ2UsIHVuc2lnbmVkIGxvbmcgbG9hZF9h
+ZGRyLAo+ICsJCQkgICAgICBzaXplX3Qgc2l6ZSk7Cj4gKwo+ICtpbnQgc2V0dXBfaW1hX2J1ZmZl
+cihjb25zdCBzdHJ1Y3Qga2ltYWdlICppbWFnZSwgdm9pZCAqZmR0LCBpbnQgY2hvc2VuX25vZGUp
+Owo+ICsjZWxzZQo+ICtzdGF0aWMgaW5saW5lIGludCBzZXR1cF9pbWFfYnVmZmVyKGNvbnN0IHN0
+cnVjdCBraW1hZ2UgKmltYWdlLCB2b2lkICpmZHQsCj4gKwkJCQkgICBpbnQgY2hvc2VuX25vZGUp
+Cj4gK3sKPiArCXJlbW92ZV9pbWFfYnVmZmVyKGZkdCwgY2hvc2VuX25vZGUpOwo+ICsJcmV0dXJu
+IDA7Cj4gK30KPiArI2VuZGlmIC8qIENPTkZJR19JTUFfS0VYRUMgKi8KPiArI2VuZGlmIC8qIF9B
+U01fQVJNNjRfSU1BX0ggKi8KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9r
+ZXhlYy5oIGIvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9rZXhlYy5oCj4gaW5kZXggMTJhNTYxYTU0
+MTI4Li5lOGQyNDEyMDY2ZTcgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9r
+ZXhlYy5oCj4gKysrIGIvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9rZXhlYy5oCj4gQEAgLTk2LDYg
+Kzk2LDExIEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBjcmFzaF9wb3N0X3Jlc3VtZSh2b2lkKSB7fQo+
+ICBzdHJ1Y3Qga2ltYWdlX2FyY2ggewo+ICAJdm9pZCAqZHRiOwo+ICAJdW5zaWduZWQgbG9uZyBk
+dGJfbWVtOwo+ICsKPiArI2lmZGVmIENPTkZJR19JTUFfS0VYRUMKPiArCXBoeXNfYWRkcl90IGlt
+YV9idWZmZXJfYWRkcjsKPiArCXNpemVfdCBpbWFfYnVmZmVyX3NpemU7Cj4gKyNlbmRpZgo+ICB9
+Owo+ICAKPiAgZXh0ZXJuIGNvbnN0IHN0cnVjdCBrZXhlY19maWxlX29wcyBrZXhlY19pbWFnZV9v
+cHM7Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQva2VybmVsL01ha2VmaWxlIGIvYXJjaC9hcm02
+NC9rZXJuZWwvTWFrZWZpbGUKPiBpbmRleCA0Nzg0OTFmMDdiNGYuLjU4MDIzOGYyZTlhNyAxMDA2
+NDQKPiAtLS0gYS9hcmNoL2FybTY0L2tlcm5lbC9NYWtlZmlsZQo+ICsrKyBiL2FyY2gvYXJtNjQv
+a2VybmVsL01ha2VmaWxlCj4gQEAgLTU1LDcgKzU1LDggQEAgb2JqLSQoQ09ORklHX1JBTkRPTUla
+RV9CQVNFKQkJKz0ga2FzbHIubwo+ICBvYmotJChDT05GSUdfSElCRVJOQVRJT04pCQkrPSBoaWJl
+cm5hdGUubyBoaWJlcm5hdGUtYXNtLm8KPiAgb2JqLSQoQ09ORklHX0tFWEVDX0NPUkUpCQkrPSBt
+YWNoaW5lX2tleGVjLm8gcmVsb2NhdGVfa2VybmVsLm8JXAo+ICAJCQkJCSAgIGNwdS1yZXNldC5v
+Cj4gLW9iai0kKENPTkZJR19LRVhFQ19GSUxFKQkJKz0gbWFjaGluZV9rZXhlY19maWxlLm8ga2V4
+ZWNfaW1hZ2Uubwo+ICtvYmotJChDT05GSUdfS0VYRUNfRklMRSkJCSs9IG1hY2hpbmVfa2V4ZWNf
+ZmlsZS5vIGtleGVjX2ltYWdlLm8JXAo+ICsJCQkJCSAgIGltYV9rZXhlYy5vCgpUaGUga2VybmVs
+IG1heSBiZSBidWlsdCB3aXRoL3dpdGhvdXQgSU1BIGVuYWJsZWQgb3Igd2l0aG91dCBJTUFfS0VY
+RUMKc3VwcG9ydC4gwqBIZXJlIHlvdSdyZSByZXF1aXJpbmcgYm90aCBJTUEgYW5kIElNQV9LRVhF
+QyB0byBiZQpjb25maWd1cmVkLiDCoFBsZWFzZSByZWZlciB0byB0aGUgcG93ZXJwYyBleGFtcGxl
+LgoKCj4gIG9iai0kKENPTkZJR19BUk02NF9SRUxPQ19URVNUKQkJKz0gYXJtNjQtcmVsb2MtdGVz
+dC5vCj4gIGFybTY0LXJlbG9jLXRlc3QteSA6PSByZWxvY190ZXN0X2NvcmUubyByZWxvY190ZXN0
+X3N5bXMubwo+ICBvYmotJChDT05GSUdfQ1JBU0hfRFVNUCkJCSs9IGNyYXNoX2R1bXAubwo+IGRp
+ZmYgLS1naXQgYS9hcmNoL2FybTY0L2tlcm5lbC9pbWFfa2V4ZWMuYyBiL2FyY2gvYXJtNjQva2Vy
+bmVsL2ltYV9rZXhlYy5jCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAw
+MDAuLmIxNDMyNmQ1NDFmMwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9hcmNoL2FybTY0L2tlcm5l
+bC9pbWFfa2V4ZWMuYwo+IEBAIC0wLDAgKzEsMjEzIEBACj4gKy8vIFNQRFgtTGljZW5zZS1JZGVu
+dGlmaWVyOiBHUEwtMi4wCj4gKy8qCj4gKyAqIENvcHlyaWdodCAoQykgMjAxOSBNaWNyb3NvZnQg
+Q29ycG9yYXRpb24uCj4gKyAqCj4gKyAqIEF1dGhvcnM6Cj4gKyAqIFByYWtoYXIgU3JpdmFzdGF2
+YSA8cHJzcml2YUBsaW51eC5taWNyb3NvZnQuY29tPgo+ICsgKi8KPiArCj4gKyNpbmNsdWRlIDxs
+aW51eC9zbGFiLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9rZXhlYy5oPgo+ICsjaW5jbHVkZSA8bGlu
+dXgvb2YuaD4KPiArI2luY2x1ZGUgPGxpbnV4L21lbWJsb2NrLmg+Cj4gKyNpbmNsdWRlIDxsaW51
+eC9saWJmZHQuaD4KPiArCj4gKwoKRXh0cmFuZW91cyBibGFuayBsaW5lLgoKPiArLyoqCj4gKyAq
+IGRlbGV0ZV9mZHRfbWVtX3JzdiAtIGRlbGV0ZSBtZW1vcnkgcmVzZXJ2YXRpb24gd2l0aCBnaXZl
+biBhZGRyZXNzIGFuZCBzaXplCj4gKyAqIEBmZHQgLSBwb2ludGVyIHRvIHRoZSBmZHQuCj4gKyAq
+IEBzdGFydCAtIHN0YXJ0IGFkZHJlc3Mgb2YgdGhlIG1lbW9yeS4KPiArICogQHNpemUgLSBudW1i
+ZXIgb2YgY2VsbHMgdG8gYmUgZGVsZXRkLgo+ICsgKiAKPiArICogUmV0dXJuOiAwIG9uIHN1Y2Nl
+c3MsIG9yIG5lZ2F0aXZlIGVycm5vIG9uIGVycm9yLgo+ICsgKi8KPiAraW50IGRlbGV0ZV9mZHRf
+bWVtX3Jzdih2b2lkICpmZHQsIHVuc2lnbmVkIGxvbmcgc3RhcnQsIHVuc2lnbmVkIGxvbmcgc2l6
+ZSkKPiArewo+ICsJaW50IGksIHJldCwgbnVtX3JzdnMgPSBmZHRfbnVtX21lbV9yc3YoZmR0KTsK
+PiArCj4gKwlmb3IgKGkgPSAwOyBpIDwgbnVtX3JzdnM7IGkrKykgewo+ICsJCXVpbnQ2NF90IHJz
+dl9zdGFydCwgcnN2X3NpemU7Cj4gKwo+ICsJCXJldCA9IGZkdF9nZXRfbWVtX3JzdihmZHQsIGks
+ICZyc3Zfc3RhcnQsICZyc3Zfc2l6ZSk7Cj4gKwkJaWYgKHJldCkgewo+ICsJCQlwcl9lcnIoIk1h
+bGZvcm1lZCBkZXZpY2UgdHJlZVxuIik7Cj4gKwkJCXJldHVybiAtRUlOVkFMOwo+ICsJCX0KPiAr
+Cj4gKwkJaWYgKHJzdl9zdGFydCA9PSBzdGFydCAmJiByc3Zfc2l6ZSA9PSBzaXplKSB7Cj4gKwkJ
+CXJldCA9IGZkdF9kZWxfbWVtX3JzdihmZHQsIGkpOwo+ICsJCQlpZiAocmV0KSB7Cj4gKwkJCQlw
+cl9lcnIoIkVycm9yIGRlbGV0aW5nIGRldmljZSB0cmVlIHJlc2VydmF0aW9uXG4iKTsKPiArCQkJ
+CXJldHVybiAtRUlOVkFMOwo+ICsJCQl9Cj4gKwo+ICsJCQlyZXR1cm4gMDsKPiArCQl9Cj4gKwl9
+Cj4gKwo+ICsJcmV0dXJuIC1FTk9FTlQ7Cj4gK30KPiArCj4gKy8qKgo+ICsgKiByZW1vdmVfaW1h
+X2J1ZmZlciAtIHJlbW92ZSB0aGUgSU1BIGJ1ZmZlciBwcm9wZXJ0eSBhbmQgcmVzZXJ2YXRpb24K
+PiArICogQGZkdCAtIHBvaW50ZXIgdGhlIGZkdC4KPiArICogQGNob3Nlbl9ub2RlIC0gbm9kZSB1
+bmRlciB3aGljaCBwcm9wZXJ0eSBjYW4gYmUgZm91bmQuCj4gKyAqIAo+ICsgKiBUaGUgSU1BIG1l
+YXN1cmVtZW50IGJ1ZmZlciBpcyBlaXRoZXIgcmVhZCBieSBub3cgYW5kIGZyZWVlZCBvciBhIGtl
+eGVjIGNhbGwKPiArICogbmVlZHMgdG8gcmVwbGFjZSB0aGUgaW1hIG1lYXN1cmVtZW50IGJ1ZmZl
+ciwgY2xlYXIgdGhlIHByb3BlcnR5IGFuZCBtZW1vcnkKPiArICogcmVzZXJ2YXRpb24uCj4gKyAq
+Lwo+ICt2b2lkIHJlbW92ZV9pbWFfYnVmZmVyKHZvaWQgKmZkdCwgaW50IGNob3Nlbl9ub2RlKQo+
+ICt7Cj4gKwlpbnQgcmV0LCBsZW47Cj4gKwljb25zdCB2b2lkICpwcm9wOwo+ICsJdWludDY0X3Qg
+dG1wX3N0YXJ0LCB0bXBfZW5kOwo+ICsKPiArCXByb3AgPSBmZHRfZ2V0cHJvcChmZHQsIGNob3Nl
+bl9ub2RlLCAibGludXgsaW1hLWtleGVjLWJ1ZmZlciIsICZsZW4pOwo+ICsJaWYgKHByb3ApIHsK
+PiArCQl0bXBfc3RhcnQgPSBmZHQ2NF90b19jcHUoKigoY29uc3QgZmR0NjRfdCAqKSBwcm9wKSk7
+Cj4gKwo+ICsJCXByb3AgPSBmZHRfZ2V0cHJvcChmZHQsIGNob3Nlbl9ub2RlLAo+ICsJCQkJICAg
+ImxpbnV4LGltYS1rZXhlYy1idWZmZXItZW5kIiwgJmxlbik7Cj4gKwkJaWYgKCFwcm9wKQo+ICsJ
+CQlyZXR1cm47Cj4gKwo+ICsJCXRtcF9lbmQgPSBmZHQ2NF90b19jcHUoKigoY29uc3QgZmR0NjRf
+dCAqKSBwcm9wKSk7Cj4gKwo+ICsJCXJldCA9IGRlbGV0ZV9mZHRfbWVtX3JzdihmZHQsIHRtcF9z
+dGFydCwgdG1wX2VuZCAtIHRtcF9zdGFydCk7Cj4gKwo+ICsJCWlmIChyZXQgPT0gMCkKPiArCQkJ
+cHJfZGVidWcoIlJlbW92ZWQgb2xkIElNQSBidWZmZXIgcmVzZXJ2YXRpb24uXG4iKTsKPiArCQll
+bHNlIGlmIChyZXQgIT0gLUVOT0VOVCkKPiArCQkJcmV0dXJuOwo+ICsKPiArCQlmZHRfZGVscHJv
+cChmZHQsIGNob3Nlbl9ub2RlLCAibGludXgsaW1hLWtleGVjLWJ1ZmZlciIpOwo+ICsJCWZkdF9k
+ZWxwcm9wKGZkdCwgY2hvc2VuX25vZGUsICJsaW51eCxpbWEta2V4ZWMtYnVmZmVyLWVuZCIpOwo+
+ICsJfQo+ICt9Cj4gKwo+ICsvKioKPiArICogaW1hX2dldF9rZXhlY19idWZmZXIgLSBnZXQgSU1B
+IGJ1ZmZlciBmcm9tIHRoZSBwcmV2aW91cyBrZXJuZWwKPiArICogQGFkZHI6CU9uIHN1Y2Nlc3Nm
+dWwgcmV0dXJuLCBzZXQgdG8gcG9pbnQgdG8gdGhlIGJ1ZmZlciBjb250ZW50cy4KPiArICogQHNp
+emU6CU9uIHN1Y2Nlc3NmdWwgcmV0dXJuLCBzZXQgdG8gdGhlIGJ1ZmZlciBzaXplLgo+ICsgKgo+
+ICsgKiBSZXR1cm46IDAgb24gc3VjY2VzcywgbmVnYXRpdmUgZXJybm8gb24gZXJyb3IuCj4gKyAq
+Lwo+ICtpbnQgaW1hX2dldF9rZXhlY19idWZmZXIodm9pZCAqKmFkZHIsIHNpemVfdCAqc2l6ZSkK
+PiArewo+ICsJaW50IGxlbjsKPiArCWNvbnN0IHZvaWQgKnByb3A7Cj4gKwl1aW50NjRfdCB0bXBf
+c3RhcnQsIHRtcF9lbmQ7Cj4gKwo+ICsJcHJvcCA9IG9mX2dldF9wcm9wZXJ0eShvZl9jaG9zZW4s
+ICJsaW51eCxpbWEta2V4ZWMtYnVmZmVyIiwgJmxlbik7Cj4gKwlpZiAoIXByb3ApCj4gKwkJcmV0
+dXJuIC1FTk9FTlQ7Cj4gKwo+ICsJdG1wX3N0YXJ0ID0gZmR0NjRfdG9fY3B1KCooKGNvbnN0IGZk
+dDY0X3QgKikgcHJvcCkpOwo+ICsKPiArCXByb3AgPSBvZl9nZXRfcHJvcGVydHkob2ZfY2hvc2Vu
+LCAibGludXgsaW1hLWtleGVjLWJ1ZmZlci1lbmQiLCAmbGVuKTsKPiArCWlmICghcHJvcCkKPiAr
+CQlyZXR1cm4gLUVOT0VOVDsKPiArCj4gKwl0bXBfZW5kID0gZmR0NjRfdG9fY3B1KCooKGNvbnN0
+IGZkdDY0X3QgKikgcHJvcCkpOwo+ICsKPiArCSphZGRyID0gX192YSh0bXBfc3RhcnQpOwo+ICsJ
+KnNpemUgPSB0bXBfZW5kIC0gdG1wX3N0YXJ0Owo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+
+ICsvKioKPiArICogaW1hX2ZyZWVfa2V4ZWNfYnVmZmVyIC0gZnJlZSBtZW1vcnkgdXNlZCBieSB0
+aGUgSU1BIGJ1ZmZlcgo+ICsgKgo+ICsgKiBSZXR1cm46IDAgb24gc3VjY2VzcywgbmVnYXRpdmUg
+ZXJybm8gb24gZXJyb3IuCj4gKyAqLwo+ICtpbnQgaW1hX2ZyZWVfa2V4ZWNfYnVmZmVyKHZvaWQp
+Cj4gK3sKPiArCWludCByZXQ7Cj4gKwl2b2lkICpwcm9wU3RhcnQsICpwcm9wRW5kOwoKSXMgdGhl
+cmUgYSByZWFzb24gZm9yIHVzaW5nIG1peGVkIGNhc2UgdmFyaWFibGVzPyDCoFdoeSBkb2VzIHRo
+ZQp2YXJpYWJsZSBuZWVkIHRvIGJlIHByZWZpeGVkIHdpdGggInByb3AiPyDCoFdvdWxkbid0IGlt
+YV9zdGFydC9fc3RvcCwKwqBidWZmZXJfc3RhcnQvX3N0b3AsIG9yIGV2ZW4gYnVmX3N0YXJ0L19z
+dG9wIGJlIGZpbmU/Cgo+ICsJdWludDY0X3QgdG1wX3N0YXJ0LCB0bXBfZW5kOwo+ICsKPiArCXBy
+b3BTdGFydCA9IG9mX2ZpbmRfcHJvcGVydHkob2ZfY2hvc2VuLCAibGludXgsaW1hLWtleGVjLWJ1
+ZmZlciIsCj4gKwkJCQkgICAgIE5VTEwpOwo+ICsJaWYgKHByb3BTdGFydCkgewo+ICsJCXRtcF9z
+dGFydCA9IGZkdDY0X3RvX2NwdSgqKChjb25zdCBmZHQ2NF90ICopIHByb3BTdGFydCkpOwo+ICsJ
+CXJldCA9IG9mX3JlbW92ZV9wcm9wZXJ0eShvZl9jaG9zZW4sIHByb3BTdGFydCk7Cj4gKwkJaWYg
+KCFyZXQpIHsKPiArCQkJcmV0dXJuIHJldDsKPiArCQl9Cj4gKwo+ICsJCXByb3BFbmQgPSBvZl9m
+aW5kX3Byb3BlcnR5KG9mX2Nob3NlbiwKPiArCQkJCQkgICAibGludXgsaW1hLWtleGVjLWJ1ZmZl
+ci1lbmQiLCBOVUxMKTsKPiArCQlpZiAoIXByb3BFbmQpIHsKPiArCQkJcmV0dXJuIC1FSU5WQUw7
+Cj4gKwkJfQo+ICsKPiArCQl0bXBfZW5kID0gZmR0NjRfdG9fY3B1KCooKGNvbnN0IGZkdDY0X3Qg
+KikgcHJvcEVuZCkpOwo+ICsKPiArCQlyZXQgPSBvZl9yZW1vdmVfcHJvcGVydHkob2ZfY2hvc2Vu
+LCBwcm9wRW5kKTsKPiArCQlpZiAoIXJldCkgewo+ICsJCQlyZXR1cm4gcmV0Owo+ICsJCX0KClRo
+ZXJlIHNlZW1zIHRvIGJlIHF1aXRlIGEgYml0IG9mIGNvZGUgZHVwbGljYXRpb24gaW4gdGhpcyBm
+dW5jdGlvbiBhbmQKaW7CoGltYV9nZXRfa2V4ZWNfYnVmZmVyKCkuIMKgSXQgY291bGQgcHJvYmFi
+bHkgYmUgY2xlYW5lZCB1cCB3aXRoIHNvbWUKcmVmYWN0b3JpbmcuCgpNaW1pCgo+ICsKPiArCQly
+ZXR1cm4gbWVtYmxvY2tfZnJlZSh0bXBfc3RhcnQsIHRtcF9lbmQgLSB0bXBfc3RhcnQpOwo+ICsJ
+fQo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gKyNpZmRlZiBDT05GSUdfSU1BX0tFWEVDCj4gKy8q
+Kgo+ICsgKiBhcmNoX2ltYV9hZGRfa2V4ZWNfYnVmZmVyIC0gZG8gYXJjaC1zcGVjaWZpYyBzdGVw
+cyB0byBhZGQgdGhlIElNQQo+ICsgKiAJbWVhc3VyZW1lbnQgbG9nLgo+ICsgKiBAaW1hZ2U6IC0g
+cG9pbnRlciB0byB0aGUga2ltYWdlLCB0byBzdG9yZSB0aGUgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0
+aGUgCj4gKyAqCSBJTUEgbWVhc3VyZW1lbnQgbG9nLgo+ICsgKiBAbG9hZF9hZGRyOiAtIHRoZSBh
+ZGRyZXNzIHdoZXJlIHRoZSBJTUEgbWVhc3VyZW1lbnQgbG9nIGlzIHN0b3JlZC4KPiArICogQHNp
+emUgLSBzaXplIG9mIHRoZSBJTUEgbWVhc3VyZW1lbnQgbG9nLgo+ICsgKiAKPiArICogUmV0dXJu
+OiAwIG9uIHN1Y2Nlc3MsIG5lZ2F0aXZlIGVycm5vIG9uIGVycm9yLgo+ICsgKi8KPiAraW50IGFy
+Y2hfaW1hX2FkZF9rZXhlY19idWZmZXIoc3RydWN0IGtpbWFnZSAqaW1hZ2UsIHVuc2lnbmVkIGxv
+bmcgbG9hZF9hZGRyLAo+ICsJCQkgICAgICBzaXplX3Qgc2l6ZSkKPiArewo+ICsJaW1hZ2UtPmFy
+Y2guaW1hX2J1ZmZlcl9hZGRyID0gbG9hZF9hZGRyOwo+ICsJaW1hZ2UtPmFyY2guaW1hX2J1ZmZl
+cl9zaXplID0gc2l6ZTsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICsvKioKPiArICogc2V0dXBf
+aW1hX2J1ZmZlciAtIHVwZGF0ZSB0aGUgZmR0IHRvIGNvbnRhaW4gdGhlIGltYSBtZXNhc3VyZW1l
+bnQgbG9nCj4gKyAqIEBpbWFnZTogLSBwb2ludGVyIHRvIHRoZSBraW1hZ2UsIGNvbnRhaW5pbmcg
+dGhlIGFkZHJlc3MgYW5kIHNpemUgb2YKPiArICoJICAgICB0aGUgSU1BIG1lYXN1cmVtZW50IGxv
+Zy4KPiArICogQGZkdDogLSBwb2ludGVyIHRvIHRoZSBmZHQuCj4gKyAqIEBjaG9zZW5fbm9kZTog
+LSBub2RlIHVuZGVyIHdoaWNoIHByb3BlcnR5IGlzIHRvIGJlIGRlZmluZWQuCj4gKyAqICAKPiAr
+ICogUmV0dXJuOiAwIG9uIHN1Y2Nlc3MsIG5lZ2F0aXZlIGVycm5vIG9uIGVycm9yLgo+ICsgKi8K
+PiAraW50IHNldHVwX2ltYV9idWZmZXIoY29uc3Qgc3RydWN0IGtpbWFnZSAqaW1hZ2UsIHZvaWQg
+KmZkdCwgaW50IGNob3Nlbl9ub2RlKQo+ICt7Cj4gKwlpbnQgcmV0Owo+ICsKPiArCXJlbW92ZV9p
+bWFfYnVmZmVyKGZkdCwgY2hvc2VuX25vZGUpOwo+ICsKPiArCWlmICghaW1hZ2UtPmFyY2guaW1h
+X2J1ZmZlcl9zaXplKQo+ICsJCXJldHVybiAwOwo+ICsKPiArCXJldCA9IGZkdF9zZXRwcm9wX3U2
+NChmZHQsIGNob3Nlbl9ub2RlLCAibGludXgsaW1hLWtleGVjLWJ1ZmZlciIsCj4gKwkJCSAgICAg
+IGltYWdlLT5hcmNoLmltYV9idWZmZXJfYWRkcik7Cj4gKwlpZiAocmV0IDwgMCkKPiArCQlyZXR1
+cm4gcmV0Owo+ICsKPiArCXJldCA9IGZkdF9zZXRwcm9wX3U2NChmZHQsIGNob3Nlbl9ub2RlLCAi
+bGludXgsaW1hLWtleGVjLWJ1ZmZlci1lbmQiLAo+ICsJCQkgICAgICBpbWFnZS0+YXJjaC5pbWFf
+YnVmZmVyX2FkZHIgKwo+ICsJCQkgICAgICBpbWFnZS0+YXJjaC5pbWFfYnVmZmVyX3NpemUpOwo+
+ICsJaWYgKHJldCA8IDApCj4gKwkJcmV0dXJuIHJldDsKPiArCj4gKwlyZXQgPSBmZHRfYWRkX21l
+bV9yc3YoZmR0LCBpbWFnZS0+YXJjaC5pbWFfYnVmZmVyX2FkZHIsCj4gKwkJCSAgICAgIGltYWdl
+LT5hcmNoLmltYV9idWZmZXJfc2l6ZSk7Cj4gKwlpZiAocmV0IDwgMCkKPiArCQlyZXR1cm4gcmV0
+Owo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKyNlbmRpZiAvKiBDT05GSUdfSU1BX0tFWEVDICov
+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQva2VybmVsL21hY2hpbmVfa2V4ZWNfZmlsZS5jIGIv
+YXJjaC9hcm02NC9rZXJuZWwvbWFjaGluZV9rZXhlY19maWxlLmMKPiBpbmRleCA1ODg3MTMzMzcz
+N2EuLmRlNTQ1MjUzOWM2NyAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2tlcm5lbC9tYWNoaW5l
+X2tleGVjX2ZpbGUuYwo+ICsrKyBiL2FyY2gvYXJtNjQva2VybmVsL21hY2hpbmVfa2V4ZWNfZmls
+ZS5jCj4gQEAgLTIxLDYgKzIxLDcgQEAKPiAgI2luY2x1ZGUgPGxpbnV4L3R5cGVzLmg+Cj4gICNp
+bmNsdWRlIDxsaW51eC92bWFsbG9jLmg+Cj4gICNpbmNsdWRlIDxhc20vYnl0ZW9yZGVyLmg+Cj4g
+KyNpbmNsdWRlIDxhc20vaW1hLmg+Cj4gIAo+ICAvKiByZWxldmFudCBkZXZpY2UgdHJlZSBwcm9w
+ZXJ0aWVzICovCj4gICNkZWZpbmUgRkRUX1BST1BfSU5JVFJEX1NUQVJUCSJsaW51eCxpbml0cmQt
+c3RhcnQiCj4gQEAgLTg1LDYgKzg2LDExIEBAIHN0YXRpYyBpbnQgc2V0dXBfZHRiKHN0cnVjdCBr
+aW1hZ2UgKmltYWdlLAo+ICAJCQlnb3RvIG91dDsKPiAgCX0KPiAgCj4gKwkvKiBhZGQgaW1hIG1l
+YXN1cmVtbmV0IGxvZyBidWZmZXIgKi8KPiArCXJldCA9IHNldHVwX2ltYV9idWZmZXIoaW1hZ2Us
+IGR0Yiwgb2ZmKTsKPiArCWlmIChyZXQpCj4gKwkJZ290byBvdXQ7Cj4gKwo+ICAJLyogYWRkIGth
+c2xyLXNlZWQgKi8KPiAgCXJldCA9IGZkdF9kZWxwcm9wKGR0Yiwgb2ZmLCBGRFRfUFJPUF9LQVNM
+Ul9TRUVEKTsKPiAgCWlmICAocmV0ID09IC1GRFRfRVJSX05PVEZPVU5EKQoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8va2V4ZWMK
