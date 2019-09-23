@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x541.google.com ([2607:f8b0:4864:20::541])
+Received: from mail-pl1-x644.google.com ([2607:f8b0:4864:20::644])
  by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
- id 1iCV32-0002kz-SR
- for kexec@lists.infradead.org; Mon, 23 Sep 2019 20:35:13 +0000
-Received: by mail-pg1-x541.google.com with SMTP id a24so8660431pgj.2
- for <kexec@lists.infradead.org>; Mon, 23 Sep 2019 13:35:04 -0700 (PDT)
+ id 1iCV37-00033w-3r
+ for kexec@lists.infradead.org; Mon, 23 Sep 2019 20:35:17 +0000
+Received: by mail-pl1-x644.google.com with SMTP id q24so6979734plr.13
+ for <kexec@lists.infradead.org>; Mon, 23 Sep 2019 13:35:08 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v5 10/17] arm64: trans_pgd: make trans_pgd_map_page generic
-Date: Mon, 23 Sep 2019 16:34:20 -0400
-Message-Id: <20190923203427.294286-11-pasha.tatashin@soleen.com>
+Subject: [PATCH v5 11/17] arm64: trans_pgd: pass allocator
+ trans_pgd_create_copy
+Date: Mon, 23 Sep 2019 16:34:21 -0400
+Message-Id: <20190923203427.294286-12-pasha.tatashin@soleen.com>
 In-Reply-To: <20190923203427.294286-1-pasha.tatashin@soleen.com>
 References: <20190923203427.294286-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,159 +27,186 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com
 
-kexec is going to use a different allocator, so make
-trans_pgd_map_page to accept allocator as an argument, and also
-kexec is going to use a different map protection, so also pass
-it via argument.
+Make trans_pgd_create_copy and its subroutines to use allocator that is
+passed as an argument
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Matthias Brugger <mbrugger@suse.com>
 ---
- arch/arm64/include/asm/trans_pgd.h | 18 ++++++++++++++++--
- arch/arm64/kernel/hibernate.c      | 12 +++++++++++-
- arch/arm64/mm/trans_pgd.c          | 27 +++++++++++++++++++++------
- 3 files changed, 48 insertions(+), 9 deletions(-)
+ arch/arm64/include/asm/trans_pgd.h |  4 +--
+ arch/arm64/kernel/hibernate.c      |  7 ++++-
+ arch/arm64/mm/trans_pgd.c          | 44 ++++++++++++++++++------------
+ 3 files changed, 35 insertions(+), 20 deletions(-)
 
 diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
-index c7b5402b7d87..bb38f73aa7aa 100644
+index bb38f73aa7aa..56613e83aa53 100644
 --- a/arch/arm64/include/asm/trans_pgd.h
 +++ b/arch/arm64/include/asm/trans_pgd.h
-@@ -11,10 +11,24 @@
- #include <linux/bits.h>
- #include <asm/pgtable-types.h>
+@@ -25,8 +25,8 @@ struct trans_pgd_info {
+ 	void *trans_alloc_arg;
+ };
  
-+/*
-+ * trans_alloc_page
-+ *	- Allocator that should return exactly one zeroed page, if this
-+ *	 allocator fails, trans_pgd returns -ENOMEM error.
-+ *
-+ * trans_alloc_arg
-+ *	- Passed to trans_alloc_page as an argument
-+ */
-+
-+struct trans_pgd_info {
-+	void * (*trans_alloc_page)(void *arg);
-+	void *trans_alloc_arg;
-+};
-+
- int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
- 			  unsigned long end);
+-int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
+-			  unsigned long end);
++int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **trans_pgd,
++			  unsigned long start, unsigned long end);
  
--int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
--		       pgprot_t pgprot);
-+int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
-+		       void *page, unsigned long dst_addr, pgprot_t pgprot);
- 
- #endif /* _ASM_TRANS_TABLE_H */
+ int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
+ 		       void *page, unsigned long dst_addr, pgprot_t pgprot);
 diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index d6346ad23f87..7f0a5e152c45 100644
+index 7f0a5e152c45..038d8214df8d 100644
 --- a/arch/arm64/kernel/hibernate.c
 +++ b/arch/arm64/kernel/hibernate.c
-@@ -179,6 +179,11 @@ int arch_hibernation_header_restore(void *addr)
- }
- EXPORT_SYMBOL(arch_hibernation_header_restore);
- 
-+static void *hibernate_page_alloc(void *arg)
-+{
-+	return (void *)get_safe_page((gfp_t)(unsigned long)arg);
-+}
-+
- /*
-  * Copies length bytes, starting at src_start into an new page,
-  * perform cache maintenance, then maps it at the specified address low
-@@ -195,6 +200,11 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 				 unsigned long dst_addr,
- 				 phys_addr_t *phys_dst_addr)
- {
+@@ -322,6 +322,10 @@ int swsusp_arch_resume(void)
+ 	phys_addr_t phys_hibernate_exit;
+ 	void __noreturn (*hibernate_exit)(phys_addr_t, phys_addr_t, void *,
+ 					  void *, phys_addr_t, phys_addr_t);
 +	struct trans_pgd_info trans_info = {
 +		.trans_alloc_page	= hibernate_page_alloc,
 +		.trans_alloc_arg	= (void *)GFP_ATOMIC,
 +	};
-+
- 	void *page = (void *)get_safe_page(GFP_ATOMIC);
- 	pgd_t *trans_pgd;
- 	int rc;
-@@ -209,7 +219,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 	if (!trans_pgd)
- 		return -ENOMEM;
  
--	rc = trans_pgd_map_page(trans_pgd, page, dst_addr,
-+	rc = trans_pgd_map_page(&trans_info, trans_pgd, page, dst_addr,
- 				PAGE_KERNEL_EXEC);
+ 	/*
+ 	 * Restoring the memory image will overwrite the ttbr1 page tables.
+@@ -333,7 +337,8 @@ int swsusp_arch_resume(void)
+ 		pr_err("Failed to allocate memory for temporary page tables.\n");
+ 		return -ENOMEM;
+ 	}
+-	rc = trans_pgd_create_copy(&tmp_pg_dir, PAGE_OFFSET, PAGE_END);
++	rc = trans_pgd_create_copy(&trans_info, &tmp_pg_dir, PAGE_OFFSET,
++				   PAGE_END);
  	if (rc)
  		return rc;
+ 
 diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-index 5ac712b92439..1142dde8c02f 100644
+index 1142dde8c02f..df3a10d36f62 100644
 --- a/arch/arm64/mm/trans_pgd.c
 +++ b/arch/arm64/mm/trans_pgd.c
-@@ -25,6 +25,11 @@
- #include <linux/mm.h>
- #include <linux/mmzone.h>
- 
-+static void *trans_alloc(struct trans_pgd_info *info)
-+{
-+	return info->trans_alloc_page(info->trans_alloc_arg);
-+}
-+
- static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
- {
- 	pte_t pte = READ_ONCE(*src_ptep);
-@@ -180,8 +185,18 @@ int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
- 	return rc;
+@@ -57,14 +57,14 @@ static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
+ 	}
  }
  
--int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
--		       pgprot_t pgprot)
-+/*
-+ * Add map entry to trans_pgd for a base-size page at PTE level.
-+ * info:	contains allocator and its argument
-+ * trans_pgd:	page table in which new map is added.
-+ * page:	page to be mapped.
-+ * dst_addr:	new VA address for the pages
-+ * pgprot:	protection for the page.
-+ *
-+ * Returns 0 on success, and -ENOMEM on failure.
-+ */
-+int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
-+		       void *page, unsigned long dst_addr, pgprot_t pgprot)
+-static int copy_pte(pmd_t *dst_pmdp, pmd_t *src_pmdp, unsigned long start,
+-		    unsigned long end)
++static int copy_pte(struct trans_pgd_info *info, pmd_t *dst_pmdp,
++		    pmd_t *src_pmdp, unsigned long start, unsigned long end)
  {
- 	pgd_t *pgdp;
- 	pud_t *pudp;
-@@ -190,7 +205,7 @@ int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
+ 	pte_t *src_ptep;
+ 	pte_t *dst_ptep;
+ 	unsigned long addr = start;
  
- 	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
- 	if (pgd_none(READ_ONCE(*pgdp))) {
--		pudp = (void *)get_safe_page(GFP_ATOMIC);
-+		pudp = trans_alloc(info);
- 		if (!pudp)
+-	dst_ptep = (pte_t *)get_safe_page(GFP_ATOMIC);
++	dst_ptep = trans_alloc(info);
+ 	if (!dst_ptep)
+ 		return -ENOMEM;
+ 	pmd_populate_kernel(&init_mm, dst_pmdp, dst_ptep);
+@@ -78,8 +78,8 @@ static int copy_pte(pmd_t *dst_pmdp, pmd_t *src_pmdp, unsigned long start,
+ 	return 0;
+ }
+ 
+-static int copy_pmd(pud_t *dst_pudp, pud_t *src_pudp, unsigned long start,
+-		    unsigned long end)
++static int copy_pmd(struct trans_pgd_info *info, pud_t *dst_pudp,
++		    pud_t *src_pudp, unsigned long start, unsigned long end)
+ {
+ 	pmd_t *src_pmdp;
+ 	pmd_t *dst_pmdp;
+@@ -87,7 +87,7 @@ static int copy_pmd(pud_t *dst_pudp, pud_t *src_pudp, unsigned long start,
+ 	unsigned long addr = start;
+ 
+ 	if (pud_none(READ_ONCE(*dst_pudp))) {
+-		dst_pmdp = (pmd_t *)get_safe_page(GFP_ATOMIC);
++		dst_pmdp = trans_alloc(info);
+ 		if (!dst_pmdp)
  			return -ENOMEM;
- 		pgd_populate(&init_mm, pgdp, pudp);
-@@ -198,7 +213,7 @@ int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
+ 		pud_populate(&init_mm, dst_pudp, dst_pmdp);
+@@ -102,7 +102,7 @@ static int copy_pmd(pud_t *dst_pudp, pud_t *src_pudp, unsigned long start,
+ 		if (pmd_none(pmd))
+ 			continue;
+ 		if (pmd_table(pmd)) {
+-			if (copy_pte(dst_pmdp, src_pmdp, addr, next))
++			if (copy_pte(info, dst_pmdp, src_pmdp, addr, next))
+ 				return -ENOMEM;
+ 		} else {
+ 			set_pmd(dst_pmdp,
+@@ -113,7 +113,8 @@ static int copy_pmd(pud_t *dst_pudp, pud_t *src_pudp, unsigned long start,
+ 	return 0;
+ }
  
- 	pudp = pud_offset(pgdp, dst_addr);
- 	if (pud_none(READ_ONCE(*pudp))) {
--		pmdp = (void *)get_safe_page(GFP_ATOMIC);
-+		pmdp = trans_alloc(info);
- 		if (!pmdp)
+-static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
++static int copy_pud(struct trans_pgd_info *info, pgd_t *dst_pgdp,
++		    pgd_t *src_pgdp, unsigned long start,
+ 		    unsigned long end)
+ {
+ 	pud_t *dst_pudp;
+@@ -122,7 +123,7 @@ static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
+ 	unsigned long addr = start;
+ 
+ 	if (pgd_none(READ_ONCE(*dst_pgdp))) {
+-		dst_pudp = (pud_t *)get_safe_page(GFP_ATOMIC);
++		dst_pudp = trans_alloc(info);
+ 		if (!dst_pudp)
  			return -ENOMEM;
- 		pud_populate(&init_mm, pudp, pmdp);
-@@ -206,14 +221,14 @@ int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
+ 		pgd_populate(&init_mm, dst_pgdp, dst_pudp);
+@@ -137,7 +138,7 @@ static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
+ 		if (pud_none(pud))
+ 			continue;
+ 		if (pud_table(pud)) {
+-			if (copy_pmd(dst_pudp, src_pudp, addr, next))
++			if (copy_pmd(info, dst_pudp, src_pudp, addr, next))
+ 				return -ENOMEM;
+ 		} else {
+ 			set_pud(dst_pudp,
+@@ -148,8 +149,8 @@ static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
+ 	return 0;
+ }
  
- 	pmdp = pmd_offset(pudp, dst_addr);
- 	if (pmd_none(READ_ONCE(*pmdp))) {
--		ptep = (void *)get_safe_page(GFP_ATOMIC);
-+		ptep = trans_alloc(info);
- 		if (!ptep)
+-static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
+-			    unsigned long end)
++static int copy_page_tables(struct trans_pgd_info *info, pgd_t *dst_pgdp,
++			    unsigned long start, unsigned long end)
+ {
+ 	unsigned long next;
+ 	unsigned long addr = start;
+@@ -160,25 +161,34 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
+ 		next = pgd_addr_end(addr, end);
+ 		if (pgd_none(READ_ONCE(*src_pgdp)))
+ 			continue;
+-		if (copy_pud(dst_pgdp, src_pgdp, addr, next))
++		if (copy_pud(info, dst_pgdp, src_pgdp, addr, next))
  			return -ENOMEM;
- 		pmd_populate_kernel(&init_mm, pmdp, ptep);
- 	}
- 
- 	ptep = pte_offset_kernel(pmdp, dst_addr);
--	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
-+	set_pte(ptep, pfn_pte(virt_to_pfn(page), pgprot));
+ 	} while (dst_pgdp++, src_pgdp++, addr = next, addr != end);
  
  	return 0;
  }
+ 
+-int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
+-			  unsigned long end)
++/*
++ * Create trans_pgd and copy linear map.
++ * info:	contains allocator and its argument
++ * dst_pgdp:	new page table that is created, and to which map is copied.
++ * start:	Start of the interval (inclusive).
++ * end:		End of the interval (exclusive).
++ *
++ * Returns 0 on success, and -ENOMEM on failure.
++ */
++int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **dst_pgdp,
++			  unsigned long start, unsigned long end)
+ {
+ 	int rc;
+-	pgd_t *trans_pgd = (pgd_t *)get_safe_page(GFP_ATOMIC);
++	pgd_t *trans_pgd = trans_alloc(info);
+ 
+ 	if (!trans_pgd) {
+ 		pr_err("Failed to allocate memory for temporary page tables.\n");
+ 		return -ENOMEM;
+ 	}
+ 
+-	rc = copy_page_tables(trans_pgd, start, end);
++	rc = copy_page_tables(info, trans_pgd, start, end);
+ 	if (!rc)
+ 		*dst_pgdp = trans_pgd;
+ 
 -- 
 2.23.0
 
