@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [RFC PATCH v1 1/1] Add support for arm64 to carry ima measurement
- log in kexec_file_load
-References: <20190913225009.3406-1-prsriva@linux.microsoft.com>
- <20190913225009.3406-2-prsriva@linux.microsoft.com>
- <87zhiz1x9l.fsf@morokweng.localdomain>
-From: prsriva <prsriva@linux.microsoft.com>
-Message-ID: <baf74901-a594-c15d-b93f-f7d0a8c584b8@linux.microsoft.com>
-Date: Tue, 24 Sep 2019 13:27:06 -0700
+Date: Wed, 25 Sep 2019 14:04:45 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v5 01/17] kexec: quiet down kexec reboot
+Message-ID: <20190925060445.GA30921@dhcp-128-65.nay.redhat.com>
+References: <20190923203427.294286-1-pasha.tatashin@soleen.com>
+ <20190923203427.294286-2-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-In-Reply-To: <87zhiz1x9l.fsf@morokweng.localdomain>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190923203427.294286-2-pasha.tatashin@soleen.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,77 +16,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc: mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de, yamada.masahiro@socionext.com, sboyd@kernel.org, catalin.marinas@arm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, takahiro.akashi@linaro.org, kristina.martsenko@arm.org, duwe@lst.de, linux-arm-kernel@lists.infradead.org, james.morse@arm.org, linux-integrity@vger.kernel.org, tglx@linutronix.de, allison@lohutok.net
+To: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn.net, marc.zyngier@arm.com, catalin.marinas@arm.com, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, jmorris@namei.org, linux-mm@kvack.org, james.morse@arm.com, ebiederm@xmission.com, matthias.bgg@gmail.com, will@kernel.org, linux-arm-kernel@lists.infradead.org
 
-
-
-On 9/19/19 8:07 PM, Thiago Jung Bauermann wrote:
+On 09/23/19 at 04:34pm, Pavel Tatashin wrote:
+> Here is a regular kexec command sequence and output:
+> =====
+> $ kexec --reuse-cmdline -i --load Image
+> $ kexec -e
+> [  161.342002] kexec_core: Starting new kernel
 > 
-> Hello Prakhar,
+> Welcome to Buildroot
+> buildroot login:
+> =====
 > 
-> Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
+> Even when "quiet" kernel parameter is specified, "kexec_core: Starting
+> new kernel" is printed.
 > 
->> During kexec_file_load, carrying forward the ima measurement log allows
->> a verifying party to get the entire runtime event log since the last
->> full reboot since that is when PCRs were last reset.
-
-<snip>
-
-> In the previous patch, you took the powerpc file and made a few
-> modifications to fit your needs. This file is now somewhat different
-> than the powerpc version, but I don't understand to what purpose. It's
-> not different in any significant way.
+> This message has  KERN_EMERG level, but there is no emergency, it is a
+> normal kexec operation, so quiet it down to appropriate KERN_NOTICE.
 > 
-> Based on review comments from your previous patch, I was expecting to
-> see code from the powerpc file moved to an arch-independent part of the
-> the kernel and possibly adapted so that both arm64 and powerpc could use
-> it. Can you explain why you chose this approach instead? What is the
-> advantage of having superficially different but basically equivalent
-> code in the two architectures?
+> Machines that have slow console baud rate benefit from less output.
 > 
-> Actually, there's one change that is significant: instead of a single
-> linux,ima-kexec-buffer property holding the start address and size of
-> the buffer, ARM64 is now using two properties (linux,ima-kexec-buffer
-> and linux,ima-kexec-buffer-end) for the start and end addresses. In my
-> opinion, unless there's a good reason for it Linux should be consistent
-> accross architectures when possible.
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Reviewed-by: Simon Horman <horms@verge.net.au>
+> ---
+>  kernel/kexec_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> --
-> Thiago Jung Bauermann
-> IBM Linux Technology Center
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index d5870723b8ad..2c5b72863b7b 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1169,7 +1169,7 @@ int kernel_kexec(void)
+>  		 * CPU hotplug again; so re-enable it here.
+>  		 */
+>  		cpu_hotplug_enable();
+> -		pr_emerg("Starting new kernel\n");
+> +		pr_notice("Starting new kernel\n");
+>  		machine_shutdown();
+>  	}
+>  
 
-I looked at the of_ drivers are it became apparent that the driver calls
-were already available for consumption. Adding ima specific code will be
-same as adding wrapper code for any other property. Which is true for
-all properties, effectively setting the property name and pass through
-for other parameters.
+Acked-by: Dave Young <dyoung@redhat.com>
 
-I still like to move both implementations to a arch independent code 
-path, i could not convince my self that of_*ima is probably the place, 
-but if that's the best place?, then i will go ahead and make that change 
-as well.
-
-Regarding using two properties, it just seemed more consistent how the
-properties(start-end) are being used in the kexec, and hides the inner 
-details for the cell structures, thats all.
-
-Its just the placement of the wrapper functions, but once thats done
-both archs will call the same.
-
-Thanks,
-Prakhar Srivastava
-
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
