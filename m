@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x541.google.com ([2a00:1450:4864:20::541])
+Received: from mail-ed1-x542.google.com ([2a00:1450:4864:20::542])
  by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
- id 1iD9I7-0007Aw-9x
- for kexec@lists.infradead.org; Wed, 25 Sep 2019 15:33:21 +0000
-Received: by mail-ed1-x541.google.com with SMTP id a15so3499869edt.6
- for <kexec@lists.infradead.org>; Wed, 25 Sep 2019 08:33:17 -0700 (PDT)
+ id 1iD9IM-0007Ev-Ki
+ for kexec@lists.infradead.org; Wed, 25 Sep 2019 15:33:36 +0000
+Received: by mail-ed1-x542.google.com with SMTP id y91so3489591ede.9
+ for <kexec@lists.infradead.org>; Wed, 25 Sep 2019 08:33:34 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190923203427.294286-1-pasha.tatashin@soleen.com>
- <20190923203427.294286-2-pasha.tatashin@soleen.com>
- <20190925060445.GA30921@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190925060445.GA30921@dhcp-128-65.nay.redhat.com>
+ <20190923203427.294286-14-pasha.tatashin@soleen.com>
+ <20190925060533.GB30921@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190925060533.GB30921@dhcp-128-65.nay.redhat.com>
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Wed, 25 Sep 2019 11:33:05 -0400
-Message-ID: <CA+CK2bBscWKpQ43jjzaN33wHm5m7W8ZGiW7YCTE+Syzu2ZunoQ@mail.gmail.com>
-Subject: Re: [PATCH v5 01/17] kexec: quiet down kexec reboot
+Date: Wed, 25 Sep 2019 11:33:22 -0400
+Message-ID: <CA+CK2bCqFwC8hADny5svR=Jj7=js05gXV=Rz1L7ZTfEDmBBRBA@mail.gmail.com>
+Subject: Re: [PATCH v5 13/17] kexec: add machine_kexec_post_load()
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
