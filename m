@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
- id 1iDibQ-0000hF-Af
- for kexec@lists.infradead.org; Fri, 27 Sep 2019 05:15:38 +0000
-Date: Fri, 27 Sep 2019 13:15:18 +0800
+ id 1iDj1E-00081o-Rw
+ for kexec@lists.infradead.org; Fri, 27 Sep 2019 05:42:18 +0000
+Date: Fri, 27 Sep 2019 13:42:08 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] x86/kdump: Fix 'kmem -s' reported an invalid freepointer
- when SME was active
-Message-ID: <20190927051518.GA13023@dhcp-128-65.nay.redhat.com>
-References: <20190920035326.27212-1-lijiang@redhat.com>
+Subject: Re: [PATCH v3 2/2] x86/kdump: Reserve extra memory when SME or SEV
+ is active
+Message-ID: <20190927054208.GA13426@dhcp-128-65.nay.redhat.com>
+References: <20190910151341.14986-1-kasong@redhat.com>
+ <20190910151341.14986-3-kasong@redhat.com>
+ <20190911055618.GA104115@gmail.com>
+ <CACPcB9eZUZ1fCsc1GZs9MJnoqLK9Ld5KEx0_emx8J44Mjcy3WA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20190920035326.27212-1-lijiang@redhat.com>
+In-Reply-To: <CACPcB9eZUZ1fCsc1GZs9MJnoqLK9Ld5KEx0_emx8J44Mjcy3WA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,100 +27,118 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>
-Cc: jgross@suse.com, Thomas.Lendacky@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, Eric Biederman <ebiederm@xmission.com>, hpa@zytor.com, tglx@linutronix.de, Vivek Goyal <vgoyal@redhat.com>
+To: Kairui Song <kasong@redhat.com>
+Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>, Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>, the arch/x86 maintainers <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
 
-Hi Lianbo,
+On 09/25/19 at 06:36pm, Kairui Song wrote:
+> On Wed, Sep 11, 2019 at 1:56 PM Ingo Molnar <mingo@kernel.org> wrote:
+> > * Kairui Song <kasong@redhat.com> wrote:
+> >
+> > > Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
+> > > SWIOTLB will be enabled even if there is less than 4G of memory when SME
+> > > is active, to support DMA of devices that not support address with the
+> > > encrypt bit.
+> > >
+> > > And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
+> > > active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
+> > >
+> > > Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
+> > > encryption") will always force SWIOTLB to be enabled when SEV is active
+> > > in all cases.
+> > >
+> > > Now, when either SME or SEV is active, SWIOTLB will be force enabled,
+> > > and this is also true for kdump kernel. As a result kdump kernel will
+> > > run out of already scarce pre-reserved memory easily.
+> > >
+> > > So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
+> > > kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
+> > > is specified or any offset is used. As for the high reservation case, an
+> > > extra low memory region will always be reserved and that is enough for
+> > > SWIOTLB. Else if the offset format is used, user should be fully aware
+> > > of any possible kdump kernel memory requirement and have to organize the
+> > > memory usage carefully.
+> > >
+> > > Signed-off-by: Kairui Song <kasong@redhat.com>
+> > > ---
+> > >  arch/x86/kernel/setup.c | 20 +++++++++++++++++---
+> > >  1 file changed, 17 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> > > index 71f20bb18cb0..ee6a2f1e2226 100644
+> > > --- a/arch/x86/kernel/setup.c
+> > > +++ b/arch/x86/kernel/setup.c
+> > > @@ -530,7 +530,7 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
+> > >                                         unsigned long long *crash_size,
+> > >                                         bool high)
+> > >  {
+> > > -     unsigned long long base, size;
+> > > +     unsigned long long base, size, mem_enc_req = 0;
+> > >
+> > >       base = *crash_base;
+> > >       size = *crash_size;
+> > > @@ -561,11 +561,25 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
+> > >       if (high)
+> > >               goto high_reserve;
+> > >
+> > > +     /*
+> > > +      * When SME/SEV is active and not using high reserve,
+> > > +      * it will always required an extra SWIOTLB region.
+> > > +      */
+> > > +     if (mem_encrypt_active())
+> > > +             mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
+> > > +
+> > >       base = memblock_find_in_range(CRASH_ALIGN,
+> > > -                                   CRASH_ADDR_LOW_MAX, size,
+> > > +                                   CRASH_ADDR_LOW_MAX,
+> > > +                                   size + mem_enc_req,
+> > >                                     CRASH_ALIGN);
+> >
+> 
+> Hi Ingo,
+> 
+> I re-read my previous reply, it's long and tedious, let me try to make
+> a more effective reply:
+> 
+> > What sizes are we talking about here?
+> 
+> The size here is how much memory will be reserved for kdump kernel, to
+> ensure kdump kernel and userspace can run without OOM.
+> 
+> >
+> > - What is the possible size range of swiotlb_size_or_default()
+> 
+> swiotlb_size_or_default() returns the swiotlb size, it's specified by
+> user using swiotlb=<size>, or default size (64MB)
+> 
+> >
+> > - What is the size of CRASH_ADDR_LOW_MAX (the old limit)?
+> 
+> It's 4G.
+> 
+> >
+> > - Why do we replace one fixed limit with another fixed limit instead of
+> >   accurately sizing the area, with each required feature adding its own
+> >   requirement to the reservation size?
+> 
+> It's quite hard to "accurately sizing the area".
+> 
+> No way to tell the exact amount of memory kdump needs, we can only estimate.
+> Kdump kernel use different cmdline, drivers and components will have
+> special handling for kdump, and userspace is totally different.
 
-For kexec/kdump patches, please remember to cc kexec list next time.
-Also it is definitely kdump specific issue, I added Vivek and Eric in
-cc. 
+Agreed about your above, but specific this the problem in this patch
+There should be other ways.
 
-On 09/20/19 at 11:53am, Lianbo Jiang wrote:
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204793
-> 
-> Kdump kernel will reuse the first 640k region because of some reasons,
-> for example: the trampline and conventional PC system BIOS region may
-> require to allocate memory in this area. Obviously, kdump kernel will
-> also overwrite the first 640k region, therefore, kernel has to copy
-> the contents of the first 640k area to a backup area, which is done in
-> purgatory(), because vmcore may need the old memory. When vmcore is
-> dumped, kdump kernel will read the old memory from the backup area of
-> the first 640k area.
-> 
-> Basically, the main reason should be clear, kernel does not correctly
-> handle the first 640k region when SME is active, which causes that
-> kernel does not properly copy these old memory to the backup area in
-> purgatory(). Therefore, kdump kernel reads out the incorrect contents
-> from the backup area when dumping vmcore. Finally, the phenomenon is
-> as follow:
-> 
-> [root linux]$ crash vmlinux /var/crash/127.0.0.1-2019-09-19-08\:31\:27/vmcore
-> WARNING: kernel relocated [240MB]: patching 97110 gdb minimal_symbol values
-> 
->       KERNEL: /var/crash/127.0.0.1-2019-09-19-08:31:27/vmlinux
->     DUMPFILE: /var/crash/127.0.0.1-2019-09-19-08:31:27/vmcore  [PARTIAL DUMP]
->         CPUS: 128
->         DATE: Thu Sep 19 08:31:18 2019
->       UPTIME: 00:01:21
-> LOAD AVERAGE: 0.16, 0.07, 0.02
->        TASKS: 1343
->     NODENAME: amd-ethanol
->      RELEASE: 5.3.0-rc7+
->      VERSION: #4 SMP Thu Sep 19 08:14:00 EDT 2019
->      MACHINE: x86_64  (2195 Mhz)
->       MEMORY: 127.9 GB
->        PANIC: "Kernel panic - not syncing: sysrq triggered crash"
->          PID: 9789
->      COMMAND: "bash"
->         TASK: "ffff89711894ae80  [THREAD_INFO: ffff89711894ae80]"
->          CPU: 83
->        STATE: TASK_RUNNING (PANIC)
-> 
-> crash> kmem -s|grep -i invalid
-> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
-> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
-> crash>
-> 
-> In order to avoid such problem, lets occupy the first 640k region when
-> SME is active, which will ensure that the allocated memory does not fall
-> into the first 640k area. So, no need to worry about whether kernel can
-> correctly copy the contents of the first 640K area to a backup region in
-> purgatory().
+First thought about doing generic handling in swiotlb part, and do
+something like kdump_memory_reserve(size) Ingo suggested,  but according
+to you swiotlb init is late, so it can not increase the size, OTOH if
+reserve another region for kdump in swiotlb will cause other issues. 
 
-The log is too simple,  I know you did some other tries to fix this, but
-the patch log does not show why you can not correctly copy the 640k in
-current kdump code, in purgatory here.
+So let's think about other improvement, for example to see if you can
+call kdump_memory_reserve(size) in AMD SME init path, for example in
+mem_encrypt_init(), is it before crashkernel reservation? 
 
-Also this patch seems works in your test, but still to see if other
-people can comment and see if it is safe or not, if any other risks
-other than waste the small chunk of memory.  If it is safe then kdump
-can just drop the backup logic and use this in common code instead of
-only do it for SME.
-
-> 
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> ---
->  arch/x86/kernel/setup.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index 77ea96b794bd..5bfb2c83bb6c 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -1148,6 +1148,9 @@ void __init setup_arch(char **cmdline_p)
->  
->  	reserve_real_mode();
->  
-> +	if (sme_active())
-> +		memblock_reserve(0, 640*1024);
-> +
->  	trim_platform_memory_ranges();
->  	trim_low_memory_range();
->  
-> -- 
-> 2.17.1
-> 
+If doable it will be at least cleaner than the code in this patch.
 
 Thanks
 Dave
