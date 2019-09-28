@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
- id 1iE01s-00009g-OA
- for kexec@lists.infradead.org; Fri, 27 Sep 2019 23:52:06 +0000
-Date: Sat, 28 Sep 2019 07:51:56 +0800
+ id 1iE0Eb-00057e-Gg
+ for kexec@lists.infradead.org; Sat, 28 Sep 2019 00:05:15 +0000
+Date: Sat, 28 Sep 2019 08:05:05 +0800
 From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH] x86/kdump: Fix 'kmem -s' reported an invalid freepointer
  when SME was active
-Message-ID: <20190927235156.GI31919@MiWiFi-R3L-srv>
+Message-ID: <20190928000505.GJ31919@MiWiFi-R3L-srv>
 References: <20190920035326.27212-1-lijiang@redhat.com>
  <20190927051518.GA13023@dhcp-128-65.nay.redhat.com>
  <87r241piqg.fsf@x220.int.ebiederm.org>
@@ -30,6 +30,7 @@ To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: jgross@suse.com, Thomas.Lendacky@amd.com, Lianbo Jiang <lijiang@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
 On 09/27/19 at 03:49pm, Eric W. Biederman wrote:
+> Dave Young <dyoung@redhat.com> writes:
 > >> In order to avoid such problem, lets occupy the first 640k region when
 > >> SME is active, which will ensure that the allocated memory does not fall
 > >> into the first 640k area. So, no need to worry about whether kernel can
@@ -49,44 +50,6 @@ On 09/27/19 at 03:49pm, Eric W. Biederman wrote:
 > 
 > So I do not think ignoring the first 640K is the correct resolution
 > here.
-
-We discussed and tried many ways to copy the first 640K of 1st kernel
-out since kernel data may be allocated there, then crash need it to
-parse. But SME makes the copy very difficult to do, because the first
-640K is encrypted in 1st kernel, but the copy is done in purgatory with
-1:1 ident-mapping and unencrypted.
-
-Finally we decided this way as patch does. Reserving it in memblock is
-not ignoring the first 640K, but lock it down to avoid any later kernel
-data allocated in this area. The first 640K will be taken as system RAM
-of kdump kernel as is. Like this, no available kernel information
-could be located in this area, then we don't care if the copy is correct
-or not.
-
-One word, what the patch is doing is locking down the first 640K after 
-reserve_real_mode() invocation. Putting it after reserve_real_mode() is
-because reserve_real_mode() may put real mode trampoline inside first
-640K. Surely the real mode trampoline will be discarded too in kdump
-kernel, since it's not important and unnecessary for crash parsing.
-
-I think Lianbo need rewrite this patch log to make it clearer.
-
-
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 77ea96b794bd..5bfb2c83bb6c 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -1148,6 +1148,9 @@ void __init setup_arch(char **cmdline_p)
-
-        reserve_real_mode();
-
-+       if (sme_active())
-+               memblock_reserve(0, 640*1024);
-+
-        trim_platform_memory_ranges();
-        trim_low_memory_range();
-
-
 > 
 > > The log is too simple,  I know you did some other tries to fix this, but
 > > the patch log does not show why you can not correctly copy the 640k in
@@ -102,8 +65,22 @@ index 77ea96b794bd..5bfb2c83bb6c 100644
 > 
 > I think at best this avoids the symptoms, but does not give a reliable
 > crash dump.
-> 
-> Eric
+
+Sorry, didn't notice this comment at bottom.
+
+From code, currently the first 640K area is needed in two places.
+One is for 5-level trampoline during boot compressing stage, in
+find_trampoline_placement(). 
+
+The other is in reserve_real_mode(), as you mentioned, for application
+CPU booting.
+
+Only allow these two put data inside first 640K, then lock it done. It
+should not impact crash dump and parsing. And these two's content
+doesn't matter.
+
+Thanks
+Baoquan
 
 _______________________________________________
 kexec mailing list
