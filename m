@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
- id 1iFLCj-0006jF-1D
- for kexec@lists.infradead.org; Tue, 01 Oct 2019 16:40:50 +0000
+ id 1iFLEU-0007KQ-Ao
+ for kexec@lists.infradead.org; Tue, 01 Oct 2019 16:42:39 +0000
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 53/71] kexec: bail out upon SIGKILL when
+Subject: [PATCH AUTOSEL 5.2 47/63] kexec: bail out upon SIGKILL when
  allocating memory.
-Date: Tue,  1 Oct 2019 12:39:03 -0400
-Message-Id: <20191001163922.14735-53-sashal@kernel.org>
-In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
-References: <20191001163922.14735-1-sashal@kernel.org>
+Date: Tue,  1 Oct 2019 12:41:09 -0400
+Message-Id: <20191001164125.15398-47-sashal@kernel.org>
+In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
+References: <20191001164125.15398-1-sashal@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
