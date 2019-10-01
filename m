@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
- id 1iFLEU-0007KQ-Ao
- for kexec@lists.infradead.org; Tue, 01 Oct 2019 16:42:39 +0000
+ id 1iFLFu-0007aX-O3
+ for kexec@lists.infradead.org; Tue, 01 Oct 2019 16:44:08 +0000
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 47/63] kexec: bail out upon SIGKILL when
+Subject: [PATCH AUTOSEL 4.19 36/43] kexec: bail out upon SIGKILL when
  allocating memory.
-Date: Tue,  1 Oct 2019 12:41:09 -0400
-Message-Id: <20191001164125.15398-47-sashal@kernel.org>
-In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
-References: <20191001164125.15398-1-sashal@kernel.org>
+Date: Tue,  1 Oct 2019 12:43:04 -0400
+Message-Id: <20191001164311.15993-36-sashal@kernel.org>
+In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
+References: <20191001164311.15993-1-sashal@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -51,10 +51,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index d5870723b8ada..15d70a90b50dc 100644
+index 23a83a4da38a1..f50b90d0d1c28 100644
 --- a/kernel/kexec_core.c
 +++ b/kernel/kexec_core.c
-@@ -300,6 +300,8 @@ static struct page *kimage_alloc_pages(gfp_t gfp_mask, unsigned int order)
+@@ -301,6 +301,8 @@ static struct page *kimage_alloc_pages(gfp_t gfp_mask, unsigned int order)
  {
  	struct page *pages;
  
