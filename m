@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x844.google.com ([2607:f8b0:4864:20::844])
+Received: from mail-qk1-x742.google.com ([2607:f8b0:4864:20::742])
  by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
- id 1iGShC-0002HH-GG
- for kexec@lists.infradead.org; Fri, 04 Oct 2019 18:52:59 +0000
-Received: by mail-qt1-x844.google.com with SMTP id n7so9929287qtb.6
- for <kexec@lists.infradead.org>; Fri, 04 Oct 2019 11:52:53 -0700 (PDT)
+ id 1iGShF-0002K8-PT
+ for kexec@lists.infradead.org; Fri, 04 Oct 2019 18:53:02 +0000
+Received: by mail-qk1-x742.google.com with SMTP id u184so6761213qkd.4
+ for <kexec@lists.infradead.org>; Fri, 04 Oct 2019 11:52:57 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v6 11/17] arm64: trans_pgd: pass allocator
- trans_pgd_create_copy
-Date: Fri,  4 Oct 2019 14:52:28 -0400
-Message-Id: <20191004185234.31471-12-pasha.tatashin@soleen.com>
+Subject: [PATCH v6 13/17] kexec: add machine_kexec_post_load()
+Date: Fri,  4 Oct 2019 14:52:30 -0400
+Message-Id: <20191004185234.31471-14-pasha.tatashin@soleen.com>
 In-Reply-To: <20191004185234.31471-1-pasha.tatashin@soleen.com>
 References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -27,186 +26,81 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com
 
-Make trans_pgd_create_copy and its subroutines to use allocator that is
-passed as an argument
+It is the same as machine_kexec_prepare(), but is called after segments are
+loaded. This way, can do processing work with already loaded relocation
+segments. One such example is arm64: it has to have segments loaded in
+order to create a page table, but it cannot do it during kexec time,
+because at that time allocations won't be possible anymore.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Acked-by: Dave Young <dyoung@redhat.com>
 ---
- arch/arm64/include/asm/trans_pgd.h |  4 +--
- arch/arm64/kernel/hibernate.c      |  7 ++++-
- arch/arm64/mm/trans_pgd.c          | 44 ++++++++++++++++++------------
- 3 files changed, 35 insertions(+), 20 deletions(-)
+ kernel/kexec.c          | 4 ++++
+ kernel/kexec_core.c     | 6 ++++++
+ kernel/kexec_file.c     | 4 ++++
+ kernel/kexec_internal.h | 2 ++
+ 4 files changed, 16 insertions(+)
 
-diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
-index bb38f73aa7aa..56613e83aa53 100644
---- a/arch/arm64/include/asm/trans_pgd.h
-+++ b/arch/arm64/include/asm/trans_pgd.h
-@@ -25,8 +25,8 @@ struct trans_pgd_info {
- 	void *trans_alloc_arg;
- };
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index bc933c0db9bf..f977786fe498 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -159,6 +159,10 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
  
--int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
--			  unsigned long end);
-+int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **trans_pgd,
-+			  unsigned long start, unsigned long end);
+ 	kimage_terminate(image);
  
- int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
- 		       void *page, unsigned long dst_addr, pgprot_t pgprot);
-diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index 7f0a5e152c45..038d8214df8d 100644
---- a/arch/arm64/kernel/hibernate.c
-+++ b/arch/arm64/kernel/hibernate.c
-@@ -322,6 +322,10 @@ int swsusp_arch_resume(void)
- 	phys_addr_t phys_hibernate_exit;
- 	void __noreturn (*hibernate_exit)(phys_addr_t, phys_addr_t, void *,
- 					  void *, phys_addr_t, phys_addr_t);
-+	struct trans_pgd_info trans_info = {
-+		.trans_alloc_page	= hibernate_page_alloc,
-+		.trans_alloc_arg	= (void *)GFP_ATOMIC,
-+	};
++	ret = machine_kexec_post_load(image);
++	if (ret)
++		goto out;
++
+ 	/* Install the new kernel and uninstall the old */
+ 	image = xchg(dest_image, image);
  
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index f7ae04b8de6f..c19c0dad1ebe 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -589,6 +589,12 @@ static void kimage_free_extra_pages(struct kimage *image)
+ 	kimage_free_page_list(&image->unusable_pages);
+ 
+ }
++
++int __weak machine_kexec_post_load(struct kimage *image)
++{
++	return 0;
++}
++
+ void kimage_terminate(struct kimage *image)
+ {
+ 	if (*image->entry != 0)
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 79f252af7dee..5b7f802be177 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -441,6 +441,10 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 
+ 	kimage_terminate(image);
+ 
++	ret = machine_kexec_post_load(image);
++	if (ret)
++		goto out;
++
  	/*
- 	 * Restoring the memory image will overwrite the ttbr1 page tables.
-@@ -333,7 +337,8 @@ int swsusp_arch_resume(void)
- 		pr_err("Failed to allocate memory for temporary page tables.\n");
- 		return -ENOMEM;
- 	}
--	rc = trans_pgd_create_copy(&tmp_pg_dir, PAGE_OFFSET, PAGE_END);
-+	rc = trans_pgd_create_copy(&trans_info, &tmp_pg_dir, PAGE_OFFSET,
-+				   PAGE_END);
- 	if (rc)
- 		return rc;
+ 	 * Free up any temporary buffers allocated which are not needed
+ 	 * after image has been loaded
+diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+index 48aaf2ac0d0d..39d30ccf8d87 100644
+--- a/kernel/kexec_internal.h
++++ b/kernel/kexec_internal.h
+@@ -13,6 +13,8 @@ void kimage_terminate(struct kimage *image);
+ int kimage_is_destination_range(struct kimage *image,
+ 				unsigned long start, unsigned long end);
  
-diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-index 1142dde8c02f..df3a10d36f62 100644
---- a/arch/arm64/mm/trans_pgd.c
-+++ b/arch/arm64/mm/trans_pgd.c
-@@ -57,14 +57,14 @@ static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
- 	}
- }
++int machine_kexec_post_load(struct kimage *image);
++
+ extern struct mutex kexec_mutex;
  
--static int copy_pte(pmd_t *dst_pmdp, pmd_t *src_pmdp, unsigned long start,
--		    unsigned long end)
-+static int copy_pte(struct trans_pgd_info *info, pmd_t *dst_pmdp,
-+		    pmd_t *src_pmdp, unsigned long start, unsigned long end)
- {
- 	pte_t *src_ptep;
- 	pte_t *dst_ptep;
- 	unsigned long addr = start;
- 
--	dst_ptep = (pte_t *)get_safe_page(GFP_ATOMIC);
-+	dst_ptep = trans_alloc(info);
- 	if (!dst_ptep)
- 		return -ENOMEM;
- 	pmd_populate_kernel(&init_mm, dst_pmdp, dst_ptep);
-@@ -78,8 +78,8 @@ static int copy_pte(pmd_t *dst_pmdp, pmd_t *src_pmdp, unsigned long start,
- 	return 0;
- }
- 
--static int copy_pmd(pud_t *dst_pudp, pud_t *src_pudp, unsigned long start,
--		    unsigned long end)
-+static int copy_pmd(struct trans_pgd_info *info, pud_t *dst_pudp,
-+		    pud_t *src_pudp, unsigned long start, unsigned long end)
- {
- 	pmd_t *src_pmdp;
- 	pmd_t *dst_pmdp;
-@@ -87,7 +87,7 @@ static int copy_pmd(pud_t *dst_pudp, pud_t *src_pudp, unsigned long start,
- 	unsigned long addr = start;
- 
- 	if (pud_none(READ_ONCE(*dst_pudp))) {
--		dst_pmdp = (pmd_t *)get_safe_page(GFP_ATOMIC);
-+		dst_pmdp = trans_alloc(info);
- 		if (!dst_pmdp)
- 			return -ENOMEM;
- 		pud_populate(&init_mm, dst_pudp, dst_pmdp);
-@@ -102,7 +102,7 @@ static int copy_pmd(pud_t *dst_pudp, pud_t *src_pudp, unsigned long start,
- 		if (pmd_none(pmd))
- 			continue;
- 		if (pmd_table(pmd)) {
--			if (copy_pte(dst_pmdp, src_pmdp, addr, next))
-+			if (copy_pte(info, dst_pmdp, src_pmdp, addr, next))
- 				return -ENOMEM;
- 		} else {
- 			set_pmd(dst_pmdp,
-@@ -113,7 +113,8 @@ static int copy_pmd(pud_t *dst_pudp, pud_t *src_pudp, unsigned long start,
- 	return 0;
- }
- 
--static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
-+static int copy_pud(struct trans_pgd_info *info, pgd_t *dst_pgdp,
-+		    pgd_t *src_pgdp, unsigned long start,
- 		    unsigned long end)
- {
- 	pud_t *dst_pudp;
-@@ -122,7 +123,7 @@ static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
- 	unsigned long addr = start;
- 
- 	if (pgd_none(READ_ONCE(*dst_pgdp))) {
--		dst_pudp = (pud_t *)get_safe_page(GFP_ATOMIC);
-+		dst_pudp = trans_alloc(info);
- 		if (!dst_pudp)
- 			return -ENOMEM;
- 		pgd_populate(&init_mm, dst_pgdp, dst_pudp);
-@@ -137,7 +138,7 @@ static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
- 		if (pud_none(pud))
- 			continue;
- 		if (pud_table(pud)) {
--			if (copy_pmd(dst_pudp, src_pudp, addr, next))
-+			if (copy_pmd(info, dst_pudp, src_pudp, addr, next))
- 				return -ENOMEM;
- 		} else {
- 			set_pud(dst_pudp,
-@@ -148,8 +149,8 @@ static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
- 	return 0;
- }
- 
--static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
--			    unsigned long end)
-+static int copy_page_tables(struct trans_pgd_info *info, pgd_t *dst_pgdp,
-+			    unsigned long start, unsigned long end)
- {
- 	unsigned long next;
- 	unsigned long addr = start;
-@@ -160,25 +161,34 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
- 		next = pgd_addr_end(addr, end);
- 		if (pgd_none(READ_ONCE(*src_pgdp)))
- 			continue;
--		if (copy_pud(dst_pgdp, src_pgdp, addr, next))
-+		if (copy_pud(info, dst_pgdp, src_pgdp, addr, next))
- 			return -ENOMEM;
- 	} while (dst_pgdp++, src_pgdp++, addr = next, addr != end);
- 
- 	return 0;
- }
- 
--int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
--			  unsigned long end)
-+/*
-+ * Create trans_pgd and copy linear map.
-+ * info:	contains allocator and its argument
-+ * dst_pgdp:	new page table that is created, and to which map is copied.
-+ * start:	Start of the interval (inclusive).
-+ * end:		End of the interval (exclusive).
-+ *
-+ * Returns 0 on success, and -ENOMEM on failure.
-+ */
-+int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **dst_pgdp,
-+			  unsigned long start, unsigned long end)
- {
- 	int rc;
--	pgd_t *trans_pgd = (pgd_t *)get_safe_page(GFP_ATOMIC);
-+	pgd_t *trans_pgd = trans_alloc(info);
- 
- 	if (!trans_pgd) {
- 		pr_err("Failed to allocate memory for temporary page tables.\n");
- 		return -ENOMEM;
- 	}
- 
--	rc = copy_page_tables(trans_pgd, start, end);
-+	rc = copy_page_tables(info, trans_pgd, start, end);
- 	if (!rc)
- 		*dst_pgdp = trans_pgd;
- 
+ #ifdef CONFIG_KEXEC_FILE
 -- 
 2.23.0
 
