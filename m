@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x843.google.com ([2607:f8b0:4864:20::843])
+Received: from mail-qt1-x841.google.com ([2607:f8b0:4864:20::841])
  by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
- id 1iGSh5-00029C-65
- for kexec@lists.infradead.org; Fri, 04 Oct 2019 18:52:48 +0000
-Received: by mail-qt1-x843.google.com with SMTP id u40so9908984qth.11
- for <kexec@lists.infradead.org>; Fri, 04 Oct 2019 11:52:46 -0700 (PDT)
+ id 1iGSh6-0002B5-Bo
+ for kexec@lists.infradead.org; Fri, 04 Oct 2019 18:52:50 +0000
+Received: by mail-qt1-x841.google.com with SMTP id c3so9902571qtv.10
+ for <kexec@lists.infradead.org>; Fri, 04 Oct 2019 11:52:48 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v6 06/17] arm64: hibernate: rename dst to page in
- create_safe_exec_page
-Date: Fri,  4 Oct 2019 14:52:23 -0400
-Message-Id: <20191004185234.31471-7-pasha.tatashin@soleen.com>
+Subject: [PATCH v6 07/17] arm64: hibernate: add PUD_SECT_RDONLY
+Date: Fri,  4 Oct 2019 14:52:24 -0400
+Message-Id: <20191004185234.31471-8-pasha.tatashin@soleen.com>
 In-Reply-To: <20191004185234.31471-1-pasha.tatashin@soleen.com>
 References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -27,71 +26,40 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com
 
-create_safe_exec_page() allocates a safe page and maps it at a
-specific location, also this function returns the physical address
-of newly allocated page.
-
-The destination VA, and PA are specified in arguments: dst_addr,
-phys_dst_addr
-
-However, within the function it uses "dst" which has unsigned long
-type, but is actually a pointers in the current virtual space. This
-is confusing to read.
-
-Rename dst to more appropriate page (page that is created), and also
-change its time to "void *"
+There is PMD_SECT_RDONLY that is used in pud_* function which is confusing.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: James Morse <james.morse@arm.com>
+Acked-by: James Morse <james.morse@arm.com>
 ---
- arch/arm64/kernel/hibernate.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm64/include/asm/pgtable-hwdef.h | 1 +
+ arch/arm64/kernel/hibernate.c          | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
+index 3df60f97da1f..756a1dfb4f55 100644
+--- a/arch/arm64/include/asm/pgtable-hwdef.h
++++ b/arch/arm64/include/asm/pgtable-hwdef.h
+@@ -110,6 +110,7 @@
+ #define PUD_TABLE_BIT		(_AT(pudval_t, 1) << 1)
+ #define PUD_TYPE_MASK		(_AT(pudval_t, 3) << 0)
+ #define PUD_TYPE_SECT		(_AT(pudval_t, 1) << 0)
++#define PUD_SECT_RDONLY		(_AT(pudval_t, 1) << 7)		/* AP[2] */
+ 
+ /*
+  * Level 2 descriptor (PMD).
 diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index 83c41a2f8400..1ca8af685e96 100644
+index 1ca8af685e96..ce60bceed357 100644
 --- a/arch/arm64/kernel/hibernate.c
 +++ b/arch/arm64/kernel/hibernate.c
-@@ -198,18 +198,18 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 				 unsigned long dst_addr,
- 				 phys_addr_t *phys_dst_addr)
- {
-+	void *page = (void *)get_safe_page(GFP_ATOMIC);
- 	pgd_t *trans_pgd;
- 	pgd_t *pgdp;
- 	pud_t *pudp;
- 	pmd_t *pmdp;
- 	pte_t *ptep;
--	unsigned long dst = get_safe_page(GFP_ATOMIC);
+@@ -436,7 +436,7 @@ static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
+ 				return -ENOMEM;
+ 		} else {
+ 			set_pud(dst_pudp,
+-				__pud(pud_val(pud) & ~PMD_SECT_RDONLY));
++				__pud(pud_val(pud) & ~PUD_SECT_RDONLY));
+ 		}
+ 	} while (dst_pudp++, src_pudp++, addr = next, addr != end);
  
--	if (!dst)
-+	if (!page)
- 		return -ENOMEM;
- 
--	memcpy((void *)dst, src_start, length);
--	__flush_icache_range(dst, dst + length);
-+	memcpy(page, src_start, length);
-+	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
- 
- 	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
- 	if (!trans_pgd)
-@@ -240,7 +240,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 	}
- 
- 	ptep = pte_offset_kernel(pmdp, dst_addr);
--	set_pte(ptep, pfn_pte(virt_to_pfn(dst), PAGE_KERNEL_EXEC));
-+	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
- 
- 	/*
- 	 * Load our new page tables. A strict BBM approach requires that we
-@@ -259,7 +259,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 	write_sysreg(phys_to_ttbr(virt_to_phys(trans_pgd)), ttbr0_el1);
- 	isb();
- 
--	*phys_dst_addr = virt_to_phys((void *)dst);
-+	*phys_dst_addr = virt_to_phys(page);
- 
- 	return 0;
- }
 -- 
 2.23.0
 
