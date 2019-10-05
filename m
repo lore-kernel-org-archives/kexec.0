@@ -1,17 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x742.google.com ([2607:f8b0:4864:20::742])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
- id 1iGShK-0002P4-Qx
- for kexec@lists.infradead.org; Fri, 04 Oct 2019 18:53:13 +0000
-Received: by mail-qk1-x742.google.com with SMTP id 4so6769162qki.6
- for <kexec@lists.infradead.org>; Fri, 04 Oct 2019 11:53:02 -0700 (PDT)
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v6 17/17] arm64: kexec: enable MMU during kexec relocation
-Date: Fri,  4 Oct 2019 14:52:34 -0400
-Message-Id: <20191004185234.31471-18-pasha.tatashin@soleen.com>
-In-Reply-To: <20191004185234.31471-1-pasha.tatashin@soleen.com>
-References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
+ id 1iGebA-0006In-MB
+ for kexec@lists.infradead.org; Sat, 05 Oct 2019 07:35:30 +0000
+Subject: Re: [PATCH] x86/kdump: Fix 'kmem -s' reported an invalid freepointer
+ when SME was active
+References: <20190920035326.27212-1-lijiang@redhat.com>
+ <20190927051518.GA13023@dhcp-128-65.nay.redhat.com>
+ <87r241piqg.fsf@x220.int.ebiederm.org>
+ <20190928000505.GJ31919@MiWiFi-R3L-srv>
+ <875zldp2vj.fsf@x220.int.ebiederm.org> <20190928030910.GA5774@MiWiFi-R3L-srv>
+ <87zhimks5j.fsf@x220.int.ebiederm.org>
+ <20191001074012.GK31919@MiWiFi-R3L-srv>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <7e97421d-d9a8-9d57-1aa0-406039f8421d@redhat.com>
+Date: Sat, 5 Oct 2019 15:35:07 +0800
 MIME-Version: 1.0
+In-Reply-To: <20191001074012.GK31919@MiWiFi-R3L-srv>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,250 +26,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com
+To: Baoquan He <bhe@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: jgross@suse.com, Thomas.Lendacky@amd.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Now, that we have transitional page tables configured, temporarily enable
-MMU to allow faster relocation of segments to final destination.
-
-The performance data: for a moderate size kernel + initramfs: 25M the
-relocation was taking 0.382s, with enabled MMU it now takes
-0.019s only or x20 improvement.
-
-The time is proportional to the size of relocation, therefore if initramfs
-is larger, 100M it could take over a second.
-
-Also, remove reloc_arg->head, as it is not needed anymore once MMU is
-enabled.
-
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- arch/arm64/include/asm/kexec.h      |   2 -
- arch/arm64/kernel/asm-offsets.c     |   1 -
- arch/arm64/kernel/machine_kexec.c   |   1 -
- arch/arm64/kernel/relocate_kernel.S | 136 +++++++++++++++++-----------
- 4 files changed, 84 insertions(+), 56 deletions(-)
-
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 450d8440f597..ad81ed3e5751 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -109,7 +109,6 @@ extern const unsigned long kexec_el1_sync_size;
- 			((UL(0xffffffffffffffff) - PAGE_OFFSET) >> 1) + 1)
- /*
-  * kern_reloc_arg is passed to kernel relocation function as an argument.
-- * head		kimage->head, allows to traverse through relocation segments.
-  * entry_addr	kimage->start, where to jump from relocation function (new
-  *		kernel, or purgatory entry address).
-  * kern_arg0	first argument to kernel is its dtb address. The other
-@@ -125,7 +124,6 @@ extern const unsigned long kexec_el1_sync_size;
-  * copy_len	Number of bytes that need to be copied
-  */
- struct kern_reloc_arg {
--	unsigned long	head;
- 	unsigned long	entry_addr;
- 	unsigned long	kern_arg0;
- 	unsigned long	kern_arg1;
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index 7c2ba09a8ceb..13ad00b1b90f 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -129,7 +129,6 @@ int main(void)
-   DEFINE(SDEI_EVENT_PRIORITY,	offsetof(struct sdei_registered_event, priority));
- #endif
- #ifdef CONFIG_KEXEC_CORE
--  DEFINE(KRELOC_HEAD,		offsetof(struct kern_reloc_arg, head));
-   DEFINE(KRELOC_ENTRY_ADDR,	offsetof(struct kern_reloc_arg, entry_addr));
-   DEFINE(KRELOC_KERN_ARG0,	offsetof(struct kern_reloc_arg, kern_arg0));
-   DEFINE(KRELOC_KERN_ARG1,	offsetof(struct kern_reloc_arg, kern_arg1));
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 71479013dd24..970892970bab 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -196,7 +196,6 @@ int machine_kexec_post_load(struct kimage *kimage)
- 	kimage->arch.kern_reloc = kern_reloc;
- 	kimage->arch.kern_reloc_arg = __pa(kern_reloc_arg);
- 
--	kern_reloc_arg->head = kimage->head;
- 	kern_reloc_arg->entry_addr = kimage->start;
- 	kern_reloc_arg->el2_vector = el2_vector;
- 	kern_reloc_arg->kern_arg0 = kimage->arch.dtb_mem;
-diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-index 14243a678277..96ff6760bd9c 100644
---- a/arch/arm64/kernel/relocate_kernel.S
-+++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -4,6 +4,8 @@
-  *
-  * Copyright (C) Linaro.
-  * Copyright (C) Huawei Futurewei Technologies.
-+ * Copyright (c) 2019, Microsoft Corporation.
-+ * Pavel Tatashin <patatash@linux.microsoft.com>
-  */
- 
- #include <linux/kexec.h>
-@@ -14,6 +16,49 @@
- #include <asm/page.h>
- #include <asm/sysreg.h>
- 
-+/* Invalidae TLB */
-+.macro tlb_invalidate
-+	dsb	sy
-+	dsb	ish
-+	tlbi	vmalle1
-+	dsb	ish
-+	isb
-+.endm
-+
-+/* Turn-off mmu at level specified by sctlr */
-+.macro turn_off_mmu sctlr, tmp1, tmp2
-+	mrs	\tmp1, \sctlr
-+	ldr	\tmp2, =SCTLR_ELx_FLAGS
-+	bic	\tmp1, \tmp1, \tmp2
-+	pre_disable_mmu_workaround
-+	msr	\sctlr, \tmp1
-+	isb
-+.endm
-+
-+/* Turn-on mmu at level specified by sctlr */
-+.macro turn_on_mmu sctlr, tmp1, tmp2
-+	mrs	\tmp1, \sctlr
-+	ldr	\tmp2, =SCTLR_ELx_FLAGS
-+	orr	\tmp1, \tmp1, \tmp2
-+	msr	\sctlr, \tmp1
-+	ic	iallu
-+	dsb	nsh
-+	isb
-+.endm
-+
-+/*
-+ * Set ttbr0 and ttbr1, called while MMU is disabled, so no need to temporarily
-+ * set zero_page table. Invalidate TLB after new tables are set.
-+ */
-+.macro set_ttbr arg, tmp
-+	ldr	\tmp, [\arg, #KRELOC_TRANS_TTBR0]
-+	msr	ttbr0_el1, \tmp
-+	ldr	\tmp, [\arg, #KRELOC_TRANS_TTBR1]
-+	offset_ttbr1 \tmp
-+	msr	ttbr1_el1, \tmp
-+	isb
-+.endm
-+
- /*
-  * arm64_relocate_new_kernel - Put a 2nd stage image in place and boot it.
-  *
-@@ -24,65 +69,52 @@
-  * symbols arm64_relocate_new_kernel and arm64_relocate_new_kernel_end.  The
-  * machine_kexec() routine will copy arm64_relocate_new_kernel to the kexec
-  * safe memory that has been set up to be preserved during the copy operation.
-+ *
-+ * This function temporarily enables MMU if kernel relocation is needed.
-+ * Also, if we enter this function at EL2 on non-VHE kernel, we temporarily go
-+ * to EL1 to enable MMU, and escalate back to EL2 at the end to do the jump to
-+ * the new kernel. This is determined by presence of el2_vector.
-  */
- ENTRY(arm64_relocate_new_kernel)
--	/* Clear the sctlr_el2 flags. */
--	mrs	x2, CurrentEL
--	cmp	x2, #CurrentEL_EL2
-+	mrs	x1, CurrentEL
-+	cmp	x1, #CurrentEL_EL2
- 	b.ne	1f
--	mrs	x2, sctlr_el2
--	ldr	x1, =SCTLR_ELx_FLAGS
--	bic	x2, x2, x1
--	pre_disable_mmu_workaround
--	msr	sctlr_el2, x2
--	isb
--1:	/* Check if the new image needs relocation. */
--	ldr	x16, [x0, #KRELOC_HEAD]		/* x16 = kimage_head */
--	tbnz	x16, IND_DONE_BIT, .Ldone
--	raw_dcache_line_size x15, x1		/* x15 = dcache line size */
--.Lloop:
--	and	x12, x16, PAGE_MASK		/* x12 = addr */
--	/* Test the entry flags. */
--.Ltest_source:
--	tbz	x16, IND_SOURCE_BIT, .Ltest_indirection
--
--	/* Invalidate dest page to PoC. */
--	mov     x2, x13
--	add     x20, x2, #PAGE_SIZE
--	sub     x1, x15, #1
--	bic     x2, x2, x1
--2:	dc      ivac, x2
--	add     x2, x2, x15
--	cmp     x2, x20
--	b.lo    2b
--	dsb     sy
--
--	copy_page x13, x12, x1, x2, x3, x4, x5, x6, x7, x8
--	b	.Lnext
--.Ltest_indirection:
--	tbz	x16, IND_INDIRECTION_BIT, .Ltest_destination
--	mov	x14, x12			/* ptr = addr */
--	b	.Lnext
--.Ltest_destination:
--	tbz	x16, IND_DESTINATION_BIT, .Lnext
--	mov	x13, x12			/* dest = addr */
--.Lnext:
--	ldr	x16, [x14], #8			/* entry = *ptr++ */
--	tbz	x16, IND_DONE_BIT, .Lloop	/* while (!(entry & DONE)) */
--.Ldone:
--	/* wait for writes from copy_page to finish */
--	dsb	nsh
--	ic	iallu
--	dsb	nsh
--	isb
--
--	/* Start new image. */
--	ldr	x4, [x0, #KRELOC_ENTRY_ADDR]	/* x4 = kimage_start */
-+	turn_off_mmu sctlr_el2, x1, x2		/* Turn off MMU at EL2 */
-+1:	mov	x20, xzr			/* x20 will hold vector value */
-+	ldr	x11, [x0, #KRELOC_COPY_LEN]
-+	cbz	x11, 5f				/* Check if need to relocate */
-+	ldr	x20, [x0, #KRELOC_EL2_VECTOR]
-+	cbz	x20, 2f				/* need to reduce to EL1? */
-+	msr	vbar_el2, x20			/* el2_vector present, means */
-+	adr	x1, 2f				/* we will do copy in el1 but */
-+	msr	elr_el2, x1			/* do final jump from el2 */
-+	eret					/* Reduce to EL1 */
-+2:	set_ttbr x0, x1				/* Set our page tables */
-+	tlb_invalidate
-+	turn_on_mmu sctlr_el1, x1, x2		/* Turn MMU back on */
-+	ldr	x1, [x0, #KRELOC_DST_ADDR];
-+	ldr	x2, [x0, #KRELOC_SRC_ADDR];
-+	mov	x12, x1				/* x12 dst backup */
-+3:	copy_page x1, x2, x3, x4, x5, x6, x7, x8, x9, x10
-+	sub	x11, x11, #PAGE_SIZE
-+	cbnz	x11, 3b				/* page copy loop */
-+	raw_dcache_line_size x2, x3		/* x2 = dcache line size */
-+	sub	x3, x2, #1			/* x3 = dcache_size - 1 */
-+	bic	x12, x12, x3
-+4:	dc	cvau, x12			/* Flush D-cache */
-+	add	x12, x12, x2
-+	cmp	x12, x1				/* Compare to dst + len */
-+	b.ne	4b				/* D-cache flush loop */
-+	turn_off_mmu sctlr_el1, x1, x2		/* Turn off MMU */
-+	tlb_invalidate				/* Invalidate TLB */
-+5:	ldr	x4, [x0, #KRELOC_ENTRY_ADDR]	/* x4 = kimage_start */
- 	ldr	x3, [x0, #KRELOC_KERN_ARG3]
- 	ldr	x2, [x0, #KRELOC_KERN_ARG2]
- 	ldr	x1, [x0, #KRELOC_KERN_ARG1]
- 	ldr	x0, [x0, #KRELOC_KERN_ARG0]	/* x0 = dtb address */
--	br	x4
-+	cbnz	x20, 6f				/* need to escalate to el2? */
-+	br	x4				/* Jump to new world */
-+6:	hvc	#0				/* enters kexec_el1_sync */
- .ltorg
- .Larm64_relocate_new_kernel_end:
- END(arm64_relocate_new_kernel)
--- 
-2.23.0
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTnlubQxMOaciDAx5pelIDE1OjQwLCBCYW9xdWFuIEhlIOWGmemBkzoKPiBPbiAwOS8z
+MC8xOSBhdCAwNToxNGFtLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90ZToKPj4gQmFvcXVhbiBIZSA8
+YmhlQHJlZGhhdC5jb20+IHdyaXRlczoKPj4+PiBuZWVkcyBhIGxpdHRsZSBiZXR0ZXIgZGVzY3Jp
+cHRpb24uICBJIGtub3cgaXQgaXMgbm90IGEgbG90IG9uIG1vZGVybgo+Pj4+IHN5c3RlbXMgYnV0
+IHJlc2VydmluZyBhbiBleHRyYSAxTSBvZiBtZW1vcnkgdG8gYXZvaWQgaGF2aW5nIHRvIHNwZWNp
+YWwKPj4+PiBjYXNlIGl0IGxhdGVyIHNlZW1zIGluIG5lZWQgb2YgY2FsbGluZyBvdXQuCj4+Pj4K
+Pj4+PiBJIGhhdmUgYW4gb2xkIHN5c3RlbSBhcm91bmQgdGhhdCBJIHRoaW5rIHRoYXQgNjQwSyBp
+cyBhYm91dCAyNSUgb2YKPj4+PiBtZW1vcnkuCj4+Pgo+Pj4gVW5kZXJzdG9vZC4gQmFzaWNhbGx5
+IDY0MEsgaXMgd2FzdGVkIGluIHRoaXMgY2FzZS4gQnV0IHdlIG9ubHkgZG8gbGlrZQo+Pj4gdGhp
+cyBpbiBTTUUgY2FzZSwgYSBjb25kaXRpb24gY2hlY2tpbmcgaXMgYWRkZWQuIEFuZCBzeXN0ZW0g
+d2l0aCBTTUUgaXMKPj4+IHByZXR0eSBuZXcgbW9kZWwsIGl0IG1heSBub3QgaW1wYWN0IHRoZSBv
+bGQgc3lzdGVtLgo+Pgo+PiBUaGUgY29uZGl0aW9uYWwgcmVhbGx5IHNob3VsZCBiZSBiYXNlZCBv
+biBpZiB3ZSBhcmUgcmVzZXJ2aW5nIG1lbW9yeQo+PiBmb3IgYSBrZHVtcCBrZXJuZWwuICBBS0Eg
+aWYgY3Jhc2hfa2VybmVsPVhYWCBpcyBzcGVjaWZpZWQgb24gdGhlIGtlcm5lbAo+PiBjb21tYW5k
+IGxpbmUuCj4+Cj4+IEF0IHdoaWNoIHBvaW50IEkgdGhpbmsgaXQgd291bGQgYmUgdmVyeSByZWFz
+b25hYmxlIHRvIHVuY29uZGl0aW9uYWxseQo+PiByZXNlcnZlIHRoZSBsb3cgNjQwaywgYW5kIG1h
+a2UgdGhlIHdob2xlIHRoaW5nIGEgbm9uLWlzc3VlLiAgVGhpcyB3b3VsZAo+PiBhbGxvdyB0aGUg
+a2R1bXAgY29kZSB0byBqdXN0IG5vdCBkbyBhbnl0aGluZyBzcGVjaWFsIGZvciBhbnkgb2YgdGhl
+Cj4+IHdlaXJkIHNwZWNpYWwgY2FzZS4KPj4KPj4gSXQgaXNuJ3QgcGVyZmVjdCBiZWNhdXNlIHdl
+IG5lZWQgYSBwYWdlIG9yIHNvIHVzZWQgaW4gdGhlIGZpcnN0IGtlcm5lbAo+PiBmb3IgYm9vdHN0
+cmFwcGluZyB0aGUgc2Vjb25kYXJ5IGNwdXMsIGJ1dCB0aGF0IHNlZW1zIGxpa2UgdGhlIGxlYXN0
+IG9mCj4+IGV2aWxzLiAgRXNwZWNpYWxseSBhcyBubyBvbmUgd2lsbCBETUEgdG8gdGhhdCBtZW1v
+cnkuCj4+Cj4+IFNvIHBsZWFzZSBsZXQncyBqdXN0IGNoYW5nZSB3aGF0IG1lbW9yeSB3ZSByZXNl
+cnZlIHdoZW4gY3Jhc2hfa2VybmVsIGlzCj4+IHNwZWNpZmllZC4KPiAKPiBZZXMsIG1ha2VzIHNl
+bnNlLCB0aGFua3MgZm9yIHBvaW50aW5nIGl0IG91dC4KPiAKClNvcnJ5IGZvciB0aGUgZGVsYXkg
+YW5kIHRoYW5rcyBmb3IgeW91ciBjb21tZW50LCBFcmljLCBCYW9xdWFuIGFuZCBEYXZlIFlvdW5n
+LgoKSSB3aWxsIGltcHJvdmUgcGF0Y2ggbG9nIGFuZCBhZGQgdGhlIGV4dHJhIGNvbmRpdGlvbiBj
+cmFzaF9rZXJuZWwuIEkgd2lsbCBwb3N0CnYyIGxhdGVyLgoKVGhhbmtzLgpMaWFuYm8KCj4+Cj4+
+Pj4gSG93IHdlIGludGVyYWN0IHdpdGggQklPUyB0YWJsZXMgaW4gdGhlIGZpcnN0IDY0MGsgbmVl
+ZHMgc29tZQo+Pj4+IGV4cGxhbmF0aW9uLiAgQm90aCBpbiB0aGUgZmlyc3Qga2VybmVsIGFuZCBp
+biB0aGUgY3Jhc2gga2VybmVsLgo+Pj4KPj4+IFllcywgdG90YWxseSBhZ3JlZS4KPj4+Cj4+PiBU
+aG9zZSBCSU9TIHRhYmxlcyBoYXZlIGJlZW4gcmVzZXJ2ZWQgYXMgZTgyMCByZXNlcnZlZCByZWdp
+b25zIGFuZCB3aWxsCj4+PiBiZSBwYXNzZWQgdG8ga2R1bXAga2VybmVsIGZvciByZXVzaW5nLiBN
+ZW1ibG9jayByZXNlcnZlZCA2NDBLIGRvZXNuJ3QKPj4+IG1lYW4gaXQgd2lsbCBjb3ZlciB0aGUg
+d2hvbGUgWzAsIDY0MEspIHJlZ2lvbiwgaXQgb25seSBzZWFyY2hlcyBmb3IKPj4+IGF2YWlsYWJs
+ZSBzeXN0ZW0gUkFNIGZyb20gbWVtYmxvY2sgYWxsb2NhdG9yLgo+Pgo+PiBDYXJlZnVsIHdpdGgg
+dGhhdCBhc3N1bXB0aW9uLiAgTXkgbWVtb3J5IGlzIHRoYXQgdGhlIGU4MjAgbWVtb3J5IG1hcAo+
+PiBmcmVxdWVudGx5IGZhaWxzIHRvIGNvdmVyIGFyZWFzIGxpa2UgdGhlIHJlYWwgbW9kZSBpbnRl
+cnJ1cHQgZGVzY3JpcHRvcgo+PiB0YWJsZSBhdCBhZGRyZXNzIDAuCj4gCj4gT0ssIHdpbGwgdGhp
+bmsgbW9yZSBhYm91dCB0aGlzLiBUaGFua3MuCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
+eGVjCg==
