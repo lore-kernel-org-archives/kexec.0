@@ -1,11 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Prakhar Srivastava <prsriva@linux.microsoft.com>
-Subject: [PATCH v2 1/2] Add support for arm64 to carry ima measurement log in
- kexec_file_load
-Date: Mon,  7 Oct 2019 11:59:42 -0700
-Message-Id: <20191007185943.1828-2-prsriva@linux.microsoft.com>
-In-Reply-To: <20191007185943.1828-1-prsriva@linux.microsoft.com>
-References: <20191007185943.1828-1-prsriva@linux.microsoft.com>
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+ by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
+ id 1iHZOw-0007iG-OK
+ for kexec@lists.infradead.org; Mon, 07 Oct 2019 20:14:40 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: makedumpfile: Fix divide by zero in print_report()
+Date: Mon, 7 Oct 2019 20:13:07 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC0359146E@BPXM09GP.gisp.nec.co.jp>
+References: <20190924194005.GA7666@codemonkey.org.uk>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC0359079B@BPXM09GP.gisp.nec.co.jp>
+ <20190926193253.GA10258@codemonkey.org.uk>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC035909ED@BPXM09GP.gisp.nec.co.jp>
+ <20191004170357.GA12416@codemonkey.org.uk>
+In-Reply-To: <20191004170357.GA12416@codemonkey.org.uk>
+Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -14,498 +23,131 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-integrity@vger.kernel.org, kexec@lists.infradead.org
-Cc: mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de, takahiro.akashi@linaro.org, sboyd@kernel.org, catalin.marinas@arm.com, zohar@linux.ibm.com, yamada.masahiro@socionext.com, kristina.martsenko@arm.org, duwe@lst.de, bauerman@linux.ibm.com, james.morse@arm.org, tglx@linutronix.de, allison@lohutok.net
+To: Dave Jones <davej@codemonkey.org.uk>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-During kexec_file_load, carrying forward the ima measurement log allows
-a verifying party to get the entire runtime event log since the last
-full reboot since that is when PCRs were last reset.
+> -----Original Message-----
+> On Fri, Sep 27, 2019 at 08:39:04PM +0000, Kazuhito Hagio wrote:
+>  > > -----Original Message-----
+>  > > On Thu, Sep 26, 2019 at 06:41:48PM +0000, Kazuhito Hagio wrote:
+>  > >
+>  > >  > > -----Original Message-----
+>  > >  > > If info->max_mapnr and pfn_memhole are equal, we divide by zero when
+>  > >  > > trying determine the 'shrinking' value.
+>  > >  > >
+>  > >  > > On the system I saw this error, we arrived at this function with
+>  > >  > > info->max_mapnr:0x0000000001080000 pfn_memhole:0x0000000001080000
+>  > >  >
+>  > >  > Thank you for the patch.
+>  > >  > I suppose that you see the error with the -E option, right?
+>  > >  >
+>  > >  > It seems that the -E option has some problems with its statistics,
+>  > >  > so I'm checking whether there is a better way to fix this.
+>  > >
+>  > > Yes, we use the -E option.
+>  > > We manage to get useful info from the generated dump after this fix, so
+>  > > it seems it only affects the statistics output.
+>  >
+>  > OK, the statistics in cyclic mode with the -E option is completely wrong
+>  > but a possible fix is likely to affect the whole of cyclic processing, so
+>  > I just cover the hole with your patch and leave the statistics problem as
+>  > a known issue at this time.  I would revisit it when I have time.
+>  >
+>  > The patch was applied to the devel branch.
+> 
+> While this patch does avoid the divide by zero, some further analysis
+> shows that there seems to be some deeper problem when we encounter this
+> 'original pages = 0' situation.
+> 
+> Take a look at the attached output from makedumpfile.
+> 
+> Key part in the summary:
+> 
+> [  518.819690] Original pages  : 0x0000000000000000
+> [  518.828894]   Excluded pages   : 0x0000000003decd15
+> [  518.838635]     Pages filled with zero  : 0x00000000000210ee
+> [  518.849920]     Non-private cache pages : 0x000000000000271a
+> [  518.861218]     Private cache pages     : 0x000000000000da47
+> [  518.872502]     User process data pages : 0x0000000003d6bdc8
+> [  518.883786]     Free pages              : 0x000000000004fcfe
+> [  518.895070]     Hwpoison pages          : 0x0000000000000000
+> [  518.906356]     Offline pages           : 0x0000000000000000
+> [  518.917659]   Remaining pages  : 0xfffffffffc2132eb
+> [  518.927398] Memory Hole     : 0x0000000004080000
+> 
+> In this case, 'remaining pages' has gone negative which looks concerning.
 
-Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
----
- arch/Kconfig                           |   6 +-
- arch/arm64/include/asm/ima.h           |  24 +++
- arch/arm64/include/asm/kexec.h         |   5 +
- arch/arm64/kernel/Makefile             |   3 +-
- arch/arm64/kernel/ima_kexec.c          |  78 ++++++++++
- arch/arm64/kernel/machine_kexec_file.c |   6 +
- drivers/of/Kconfig                     |   6 +
- drivers/of/Makefile                    |   1 +
- drivers/of/of_ima.c                    | 204 +++++++++++++++++++++++++
- include/linux/of.h                     |  31 ++++
- 10 files changed, 362 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm64/include/asm/ima.h
- create mode 100644 arch/arm64/kernel/ima_kexec.c
- create mode 100644 drivers/of/of_ima.c
+This is the known issue that I wrote above and am looking for a safe fix.
+How does this patch work?
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index a7b57dd42c26..d53e1596c5b1 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -19,7 +19,11 @@ config KEXEC_CORE
- 	bool
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -56,6 +56,9 @@ static void first_cycle(mdf_pfn_t start, mdf_pfn_t max, struct cycle *cycle)
+	if (cycle->end_pfn > max)
+		cycle->end_pfn = max;
  
- config HAVE_IMA_KEXEC
--	bool
-+	bool "Carry over IMA measurement log during kexec_file_load() syscall"
-+	depends on KEXEC_FILE
-+	help
-+	  Select this option to carry over IMA measurement log during
-+	  kexec_file_load.
++	if (cycle->start_pfn < start)
++		cycle->start_pfn = start;
++
+	cycle->exclude_pfn_start = 0;
+	cycle->exclude_pfn_end = 0;
+ }
+@@ -7595,6 +7598,9 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+			}
  
- config HOTPLUG_SMT
- 	bool
-diff --git a/arch/arm64/include/asm/ima.h b/arch/arm64/include/asm/ima.h
-new file mode 100644
-index 000000000000..287dbcefd15e
---- /dev/null
-+++ b/arch/arm64/include/asm/ima.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_ARM64_IMA_H
-+#define _ASM_ARM64_IMA_H
+			for (pfn = MAX(pfn_start, cycle.start_pfn); pfn < cycle.end_pfn; pfn++) {
++				if (info->flag_cyclic)
++					pfn_memhole--;
 +
-+struct kimage;
-+
-+int ima_get_kexec_buffer(void **addr, size_t *size);
-+int ima_free_kexec_buffer(void);
-+void remove_ima_buffer(void *fdt, int chosen_node);
-+
-+#ifdef CONFIG_IMA_KEXEC
-+int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
-+			      size_t size);
-+
-+int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node);
-+#else
-+static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
-+				   int chosen_node)
-+{
-+	remove_ima_buffer(fdt, chosen_node);
-+	return 0;
-+}
-+#endif /* CONFIG_IMA_KEXEC */
-+#endif /* _ASM_ARM64_IMA_H */
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 12a561a54128..e8d2412066e7 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -96,6 +96,11 @@ static inline void crash_post_resume(void) {}
- struct kimage_arch {
- 	void *dtb;
- 	unsigned long dtb_mem;
-+
-+#ifdef CONFIG_IMA_KEXEC
-+	phys_addr_t ima_buffer_addr;
-+	size_t ima_buffer_size;
-+#endif
- };
- 
- extern const struct kexec_file_ops kexec_image_ops;
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 478491f07b4f..580238f2e9a7 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -55,7 +55,8 @@ obj-$(CONFIG_RANDOMIZE_BASE)		+= kaslr.o
- obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
- obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
- 					   cpu-reset.o
--obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o kexec_image.o
-+obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o kexec_image.o	\
-+					   ima_kexec.o
- obj-$(CONFIG_ARM64_RELOC_TEST)		+= arm64-reloc-test.o
- arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
- obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
-diff --git a/arch/arm64/kernel/ima_kexec.c b/arch/arm64/kernel/ima_kexec.c
-new file mode 100644
-index 000000000000..c2450aaa42c8
---- /dev/null
-+++ b/arch/arm64/kernel/ima_kexec.c
-@@ -0,0 +1,78 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Microsoft Corporation.
-+ *
-+ * Authors:
-+ * Prakhar Srivastava <prsriva@linux.microsoft.com>
-+ */
-+
-+#include <linux/kexec.h>
-+#include <linux/of.h>
-+
-+/**
-+ * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
-+ * The IMA measurement buffer once read needs to be freed.
-+ */
-+void remove_ima_buffer(void *fdt, int chosen_node)
-+{
-+	fdt_remove_ima_buffer(fdt, chosen_node);
-+}
-+
-+/**
-+ * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-+ * @addr:	On successful return, set to point to the buffer contents.
-+ * @size:	On successful return, set to the buffer size.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int ima_get_kexec_buffer(void **addr, size_t *size)
-+{
-+	return of_get_ima_buffer(addr, size);
-+}
-+
-+/**
-+ * ima_free_kexec_buffer - free memory used by the IMA buffer
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int ima_free_kexec_buffer(void)
-+{
-+	return of_remove_ima_buffer();
-+}
-+
-+#ifdef CONFIG_IMA_KEXEC
-+/**
-+ * arch_ima_add_kexec_buffer - do arch-specific steps to add the IMA
-+ *	measurement log.
-+ * @image: - pointer to the kimage, to store the address and size of the
-+ *	IMA measurement log.
-+ * @load_addr: - the address where the IMA measurement log is stored.
-+ * @size - size of the IMA measurement log.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
-+			      size_t size)
-+{
-+	image->arch.ima_buffer_addr = load_addr;
-+	image->arch.ima_buffer_size = size;
-+	return 0;
-+}
-+
-+/**
-+ * setup_ima_buffer - update the fdt to contain the ima mesasurement log
-+ * @image: - pointer to the kimage, containing the address and size of
-+ *	     the IMA measurement log.
-+ * @fdt: - pointer to the fdt.
-+ * @chosen_node: - node under which property is to be defined.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node)
-+{
-+	return fdt_setup_ima_buffer(image->arch.ima_buffer_addr,
-+				    image->arch.ima_buffer_size,
-+				    fdt, chosen_node);
-+
-+}
-+#endif /* CONFIG_IMA_KEXEC */
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 58871333737a..86d57198d739 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -21,6 +21,7 @@
- #include <linux/types.h>
- #include <linux/vmalloc.h>
- #include <asm/byteorder.h>
-+#include <asm/ima.h>
- 
- /* relevant device tree properties */
- #define FDT_PROP_INITRD_START	"linux,initrd-start"
-@@ -85,6 +86,11 @@ static int setup_dtb(struct kimage *image,
- 			goto out;
- 	}
- 
-+	/* add ima measuremnet log buffer */
-+	ret = setup_ima_buffer(image, dtb, off);
-+	if (ret < 0)
-+		goto out;
-+
- 	/* add kaslr-seed */
- 	ret = fdt_delprop(dtb, off, FDT_PROP_KASLR_SEED);
- 	if  (ret == -FDT_ERR_NOTFOUND)
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 37c2ccbefecd..167c6ecb64aa 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -103,4 +103,10 @@ config OF_OVERLAY
- config OF_NUMA
- 	bool
- 
-+config OF_IMA
-+	def_bool y
-+	help
-+	  IMA related wrapper functions to add/remove ima measurement logs during
-+	  kexec_file_load call.
-+
- endif # OF
-diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index 663a4af0cccd..b4caf083df4e 100644
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -14,5 +14,6 @@ obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
- obj-$(CONFIG_OF_RESOLVE)  += resolver.o
- obj-$(CONFIG_OF_OVERLAY) += overlay.o
- obj-$(CONFIG_OF_NUMA) += of_numa.o
-+obj-$(CONFIG_OF_IMA) += of_ima.o
- 
- obj-$(CONFIG_OF_UNITTEST) += unittest-data/
-diff --git a/drivers/of/of_ima.c b/drivers/of/of_ima.c
-new file mode 100644
-index 000000000000..cfc3cb4522b0
---- /dev/null
-+++ b/drivers/of/of_ima.c
-@@ -0,0 +1,204 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Microsoft Corporation.
-+ */
-+
-+#include <linux/slab.h>
-+#include <linux/kexec.h>
-+#include <linux/of.h>
-+#include <linux/memblock.h>
-+#include <linux/libfdt.h>
-+
-+/**
-+ * delete_fdt_mem_rsv - delete memory reservation with given address and size
-+ * @fdt - pointer to the fdt.
-+ * @start - start address of the memory.
-+ * @size - number of cells to be deletd.
-+ *
-+ * Return: 0 on success, or negative errno on error.
-+ */
-+int fdt_delete_mem_rsv(void *fdt, unsigned long start, unsigned long size)
-+{
-+	int i, ret, num_rsvs = fdt_num_mem_rsv(fdt);
-+
-+	for (i = 0; i < num_rsvs; i++) {
-+		uint64_t rsv_start, rsv_size;
-+
-+		ret = fdt_get_mem_rsv(fdt, i, &rsv_start, &rsv_size);
-+		if (ret < 0) {
-+			pr_err("Malformed device tree\n");
-+			return ret;
-+		}
-+
-+		if (rsv_start == start && rsv_size == size) {
-+			ret = fdt_del_mem_rsv(fdt, i);
-+			if (ret < 0) {
-+				pr_err("Error deleting device tree reservation\n");
-+				return ret;
-+			}
-+
-+			return 0;
-+		}
-+	}
-+
-+	return -ENOENT;
-+}
-+
-+/**
-+ * of_get_ima_buffer_properties - get the properties for ima buffer
-+ * @ima_buf_start - start of the ima buffer
-+ * @ima_buf_end - end of the ima buffer
-+ *	If any one of the properties is not found. The device tree
-+ *	is malformed or something went wrong.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int of_get_ima_buffer_properties(void **ima_buf_start, void **ima_buf_end)
-+{
-+	struct property *pproperty;
-+
-+	pproperty = of_find_property(of_chosen, "linux,ima-kexec-buffer",
-+				    NULL);
-+	*ima_buf_start = pproperty ? pproperty->value : NULL;
-+
-+	pproperty = of_find_property(of_chosen, "linux,ima-kexec-buffer-end",
-+				    NULL);
-+	*ima_buf_end = pproperty ? pproperty->value : NULL;
-+
-+	if (!*ima_buf_start || !*ima_buf_end)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+/**
-+ * of_remove_ima_buffer - free memory used by the IMA buffer
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int of_remove_ima_buffer(void)
-+{
-+	int ret;
-+	void *ima_buf_start, *ima_buf_end;
-+	uint64_t buf_start, buf_end;
-+
-+	ret = of_get_ima_buffer_properties(&ima_buf_start, &ima_buf_end);
-+	if (ret < 0)
-+		return ret;
-+
-+	buf_start = fdt64_to_cpu(*((const fdt64_t *) ima_buf_start));
-+	buf_end = fdt64_to_cpu(*((const fdt64_t *) ima_buf_end));
-+
-+	ret = of_remove_property(of_chosen, ima_buf_start);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = of_remove_property(of_chosen, ima_buf_end);
-+	if (ret < 0)
-+		return ret;
-+
-+	return memblock_free(buf_start, buf_end - buf_start);
-+}
-+
-+/**
-+ * of_get_ima_buffer - get IMA buffer from the previous kernel
-+ * @addr:	On successful return, set to point to the buffer contents.
-+ * @size:	On successful return, set to the buffer size.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int of_get_ima_buffer(void **addr, size_t *size)
-+{
-+	int ret;
-+	void *ima_buf_start, *ima_buf_end;
-+	uint64_t buf_start, buf_end;
-+
-+	ret = of_get_ima_buffer_properties(&ima_buf_start, &ima_buf_end);
-+	if (ret < 0)
-+		return ret;
-+
-+	buf_start = fdt64_to_cpu(*((const fdt64_t *) ima_buf_start));
-+	buf_end = fdt64_to_cpu(*((const fdt64_t *) ima_buf_end));
-+
-+	*addr = __va(buf_start);
-+	*size = buf_end - buf_start;
-+
-+	return 0;
-+}
-+
-+/**
-+ * fdt_remove_ima_buffer - remove the IMA buffer property and reservation
-+ * @fdt - pointer the fdt.
-+ * @chosen_node - node under which property can be found.
-+ *
-+ * The IMA measurement buffer is either read by now and freeed or a kexec call
-+ * needs to replace the ima measurement buffer, clear the property and memory
-+ * reservation.
-+ */
-+void fdt_remove_ima_buffer(void *fdt, int chosen_node)
-+{
-+	int ret, len;
-+	const void *prop;
-+	uint64_t tmp_start, tmp_end;
-+
-+	prop = fdt_getprop(fdt, chosen_node, "linux,ima-kexec-buffer", &len);
-+	if (prop) {
-+		tmp_start = fdt64_to_cpu(*((const fdt64_t *) prop));
-+
-+		prop = fdt_getprop(fdt, chosen_node,
-+				   "linux,ima-kexec-buffer-end", &len);
-+		if (!prop)
-+			return;
-+
-+		tmp_end = fdt64_to_cpu(*((const fdt64_t *) prop));
-+
-+		ret = fdt_delete_mem_rsv(fdt, tmp_start, tmp_end - tmp_start);
-+
-+		if (ret == 0)
-+			pr_debug("Removed old IMA buffer reservation.\n");
-+		else if (ret != -ENOENT)
-+			return;
-+
-+		fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer");
-+		fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer-end");
-+	}
-+}
-+
-+/**
-+ * fdt_setup_ima_buffer - update the fdt to contain the ima mesasurement log
-+ * @image: - pointer to the kimage, containing the address and size of
-+ *	     the IMA measurement log.
-+ * @fdt: - pointer to the fdt.
-+ * @chosen_node: - node under which property is to be defined.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int fdt_setup_ima_buffer(const phys_addr_t ima_buffer_addr,
-+	const size_t ima_buffer_size,
-+	void *fdt, int chosen_node)
-+{
-+	int ret;
-+
-+	fdt_remove_ima_buffer(fdt, chosen_node);
-+
-+	if (!ima_buffer_addr)
-+		return 0;
-+
-+	ret = fdt_setprop_u64(fdt, chosen_node, "linux,ima-kexec-buffer",
-+			      ima_buffer_addr);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = fdt_setprop_u64(fdt, chosen_node, "linux,ima-kexec-buffer-end",
-+			      ima_buffer_addr +
-+			      ima_buffer_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = fdt_add_mem_rsv(fdt, ima_buffer_addr,
-+			      ima_buffer_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 844f89e1b039..7831c2972178 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -1477,4 +1477,35 @@ static inline int of_overlay_notifier_unregister(struct notifier_block *nb)
- 
- #endif
- 
-+#ifdef CONFIG_OF_IMA
-+int of_remove_ima_buffer(void);
-+int of_get_ima_buffer(void **addr, size_t *size);
-+void fdt_remove_ima_buffer(void *fdt, int chosen_node);
-+int fdt_setup_ima_buffer(const phys_addr_t ima_buffer_addr,
-+	const size_t ima_buffer_size,
-+	void *fdt, int chosen_node);
-+#else
-+static inline int of_remove_ima_buffer(void)
-+{
-+	return -ENOTSUPP;
-+};
-+
-+static inline int of_get_ima_buffer(void **addr, size_t *size)
-+{
-+	return -ENOTSUPP;
-+};
-+
-+static inline void fdt_remove_ima_buffer(void *fdt, int chosen_node)
-+{
-+	return -ENOTSUPP;
-+};
-+
-+static inline int fdt_setup_ima_buffer(const phys_addr_t ima_buffer_addr,
-+	const size_t ima_buffer_size, void *fdt, int chosen_node)
-+{
-+	return -ENOTSUPP;
-+};
-+
-+#endif
-+
- #endif /* _LINUX_OF_H */
--- 
-2.17.1
+				if (!is_dumpable(info->bitmap2, pfn, &cycle)) {
+					num_excluded++;
+					if ((pfn == pfn_end - 1) && frac_tail)
+
+If it looks good, I'll look into its side effects further,
+but might take some time..
+
+> 
+> And the crashdump seems corrupt:
+> 
+> 'crash' complains:
+> WARNING: possibly corrupt Elf64_Nhdr: n_namesz: 2079035392 n_descsz: 3 n_type: 1000
+> 
+> vmcore-dmesg complains "Missing the log_buf symbol", even though the makedumpfile log
+> shows it was present at ffffffff822510a0
+> 
+> Readelf seems to think the notes sections are mangled.
+> 
+> # readelf -n vmcore
+> 
+> Displaying notes found at file offset 0x00015468 with length 0x0000556c:
+>   Owner                 Data size       Description
+>                        0x00000007       Unknown note type: (0x727c79d4)
+> readelf: vmcore: Warning: Corrupt note: name size is too big: 7beb9000
+>   (NONE)               0x00000003       Unknown note type: (0x00001000)
+> readelf: vmcore: Warning: Corrupt note: name size is too big: 55a000
+>   (NONE)               0x00000000       Unknown note type: (0x00000000)
+>   (NONE)               0x00000001       Unknown note type: (0x00000007)
+> readelf: vmcore: Warning: note with invalid namesz and/or descsz found at offset 0x44
+> readelf: vmcore: Warning:  type: 0xffff8803, namesize: 0x00000000, descsize: 0x7c413000
+
+I don't think that the statistics issue corrupts a dumpfile itself
+so far.  Could you show me the output of "readelf -a vmcore"?
+Does this issue always reproduce?
+
+Thanks,
+Kazu
+
+> 
+> 
+> 
+> Any thoughts on where to add additional debugging in makedumpfile ?
+> 
+> 	Dave
+
 
 
 _______________________________________________
