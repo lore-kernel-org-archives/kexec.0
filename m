@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
- id 1iHPOn-0002NY-7b
- for kexec@lists.infradead.org; Mon, 07 Oct 2019 09:33:51 +0000
-Date: Mon, 7 Oct 2019 17:33:38 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1iHRak-00075s-0w
+ for kexec@lists.infradead.org; Mon, 07 Oct 2019 11:54:20 +0000
 Subject: Re: [PATCH v2] x86/kdump: Fix 'kmem -s' reported an invalid
  freepointer when SME was active
-Message-ID: <20191007093338.GA4710@dhcp-128-65.nay.redhat.com>
 References: <20191007070844.15935-1-lijiang@redhat.com>
+ <20191007093338.GA4710@dhcp-128-65.nay.redhat.com>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <e179c616-f427-769f-aa5b-058c63040015@redhat.com>
+Date: Mon, 7 Oct 2019 19:53:57 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20191007070844.15935-1-lijiang@redhat.com>
+In-Reply-To: <20191007093338.GA4710@dhcp-128-65.nay.redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,114 +21,90 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>
+To: Dave Young <dyoung@redhat.com>
 Cc: jgross@suse.com, Thomas.Lendacky@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, vgoyal@redhat.com
 
-Hi Lianbo,
-On 10/07/19 at 03:08pm, Lianbo Jiang wrote:
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204793
-> 
-> Kdump kernel will reuse the first 640k region because of some reasons,
-> for example: the trampline and conventional PC system BIOS region may
-> require to allocate memory in this area. Obviously, kdump kernel will
-> also overwrite the first 640k region, therefore, kernel has to copy
-> the contents of the first 640k area to a backup area, which is done in
-> purgatory(), because vmcore may need the old memory. When vmcore is
-> dumped, kdump kernel will read the old memory from the backup area of
-> the first 640k area.
-> 
-> Basically, the main reason should be clear, kernel does not correctly
-> handle the first 640k region when SME is active, which causes that
-> kernel does not properly copy these old memory to the backup area in
-> purgatory(). Therefore, kdump kernel reads out the incorrect contents
-> from the backup area when dumping vmcore. Finally, the phenomenon is
-> as follow:
-> 
-> [root linux]$ crash vmlinux /var/crash/127.0.0.1-2019-09-19-08\:31\:27/vmcore
-> WARNING: kernel relocated [240MB]: patching 97110 gdb minimal_symbol values
-> 
->       KERNEL: /var/crash/127.0.0.1-2019-09-19-08:31:27/vmlinux
->     DUMPFILE: /var/crash/127.0.0.1-2019-09-19-08:31:27/vmcore  [PARTIAL DUMP]
->         CPUS: 128
->         DATE: Thu Sep 19 08:31:18 2019
->       UPTIME: 00:01:21
-> LOAD AVERAGE: 0.16, 0.07, 0.02
->        TASKS: 1343
->     NODENAME: amd-ethanol
->      RELEASE: 5.3.0-rc7+
->      VERSION: #4 SMP Thu Sep 19 08:14:00 EDT 2019
->      MACHINE: x86_64  (2195 Mhz)
->       MEMORY: 127.9 GB
->        PANIC: "Kernel panic - not syncing: sysrq triggered crash"
->          PID: 9789
->      COMMAND: "bash"
->         TASK: "ffff89711894ae80  [THREAD_INFO: ffff89711894ae80]"
->          CPU: 83
->        STATE: TASK_RUNNING (PANIC)
-> 
-> crash> kmem -s|grep -i invalid
-> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
-> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
-> crash>
-> 
-> BTW: I also tried to fix the above problem in purgatory(), but there
-> are too many restricts in purgatory() context, for example: i can't
-> allocate new memory to create the identity mapping page table for SME
-> situation.
-> 
-> Currently, there are two places where the first 640k area is needed,
-> the first one is in the find_trampoline_placement(), another one is
-> in the reserve_real_mode(), and their content doesn't matter. To avoid
-> the above error, lets occupy the remain memory of the first 640k region
-> (expect for the trampoline and real mode) so that the allocated memory
-> does not fall into the first 640k area when SME is active, which makes
-> us not to worry about whether kernel can correctly copy the contents of
-> the first 640k area to a backup region in the purgatory().
-> 
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> ---
-> Changes since v1:
-> 1. Improve patch log
-> 2. Change the checking condition from sme_active() to sme_active()
->    && strstr(boot_command_line, "crashkernel=")
-> 
->  arch/x86/kernel/setup.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index 77ea96b794bd..bdb1a02a84fd 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -1148,6 +1148,9 @@ void __init setup_arch(char **cmdline_p)
->  
->  	reserve_real_mode();
->  
-> +	if (sme_active() && strstr(boot_command_line, "crashkernel="))
-> +		memblock_reserve(0, 640*1024);
-> +
-
-Seems you missed the comment about "unconditionally do it", only check
-crashkernel param looks better.
-
-Also I noticed reserve_crashkernel is called after initmem_init, I'm not
-sure if memblock_reserve is good enough in early code before
-initmem_init. 
-
->  	trim_platform_memory_ranges();
->  	trim_low_memory_range();
->  
-> -- 
-> 2.17.1
-> 
-
-Thanks
-Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTnlubQxMOaciDA35pelIDE3OjMzLCBEYXZlIFlvdW5nIOWGmemBkzoKPiBIaSBMaWFu
+Ym8sCj4gT24gMTAvMDcvMTkgYXQgMDM6MDhwbSwgTGlhbmJvIEppYW5nIHdyb3RlOgo+PiBCdWd6
+aWxsYTogaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNnaT9pZD0yMDQ3OTMK
+Pj4KPj4gS2R1bXAga2VybmVsIHdpbGwgcmV1c2UgdGhlIGZpcnN0IDY0MGsgcmVnaW9uIGJlY2F1
+c2Ugb2Ygc29tZSByZWFzb25zLAo+PiBmb3IgZXhhbXBsZTogdGhlIHRyYW1wbGluZSBhbmQgY29u
+dmVudGlvbmFsIFBDIHN5c3RlbSBCSU9TIHJlZ2lvbiBtYXkKPj4gcmVxdWlyZSB0byBhbGxvY2F0
+ZSBtZW1vcnkgaW4gdGhpcyBhcmVhLiBPYnZpb3VzbHksIGtkdW1wIGtlcm5lbCB3aWxsCj4+IGFs
+c28gb3ZlcndyaXRlIHRoZSBmaXJzdCA2NDBrIHJlZ2lvbiwgdGhlcmVmb3JlLCBrZXJuZWwgaGFz
+IHRvIGNvcHkKPj4gdGhlIGNvbnRlbnRzIG9mIHRoZSBmaXJzdCA2NDBrIGFyZWEgdG8gYSBiYWNr
+dXAgYXJlYSwgd2hpY2ggaXMgZG9uZSBpbgo+PiBwdXJnYXRvcnkoKSwgYmVjYXVzZSB2bWNvcmUg
+bWF5IG5lZWQgdGhlIG9sZCBtZW1vcnkuIFdoZW4gdm1jb3JlIGlzCj4+IGR1bXBlZCwga2R1bXAg
+a2VybmVsIHdpbGwgcmVhZCB0aGUgb2xkIG1lbW9yeSBmcm9tIHRoZSBiYWNrdXAgYXJlYSBvZgo+
+PiB0aGUgZmlyc3QgNjQwayBhcmVhLgo+Pgo+PiBCYXNpY2FsbHksIHRoZSBtYWluIHJlYXNvbiBz
+aG91bGQgYmUgY2xlYXIsIGtlcm5lbCBkb2VzIG5vdCBjb3JyZWN0bHkKPj4gaGFuZGxlIHRoZSBm
+aXJzdCA2NDBrIHJlZ2lvbiB3aGVuIFNNRSBpcyBhY3RpdmUsIHdoaWNoIGNhdXNlcyB0aGF0Cj4+
+IGtlcm5lbCBkb2VzIG5vdCBwcm9wZXJseSBjb3B5IHRoZXNlIG9sZCBtZW1vcnkgdG8gdGhlIGJh
+Y2t1cCBhcmVhIGluCj4+IHB1cmdhdG9yeSgpLiBUaGVyZWZvcmUsIGtkdW1wIGtlcm5lbCByZWFk
+cyBvdXQgdGhlIGluY29ycmVjdCBjb250ZW50cwo+PiBmcm9tIHRoZSBiYWNrdXAgYXJlYSB3aGVu
+IGR1bXBpbmcgdm1jb3JlLiBGaW5hbGx5LCB0aGUgcGhlbm9tZW5vbiBpcwo+PiBhcyBmb2xsb3c6
+Cj4+Cj4+IFtyb290IGxpbnV4XSQgY3Jhc2ggdm1saW51eCAvdmFyL2NyYXNoLzEyNy4wLjAuMS0y
+MDE5LTA5LTE5LTA4XDozMVw6Mjcvdm1jb3JlCj4+IFdBUk5JTkc6IGtlcm5lbCByZWxvY2F0ZWQg
+WzI0ME1CXTogcGF0Y2hpbmcgOTcxMTAgZ2RiIG1pbmltYWxfc3ltYm9sIHZhbHVlcwo+Pgo+PiAg
+ICAgICBLRVJORUw6IC92YXIvY3Jhc2gvMTI3LjAuMC4xLTIwMTktMDktMTktMDg6MzE6Mjcvdm1s
+aW51eAo+PiAgICAgRFVNUEZJTEU6IC92YXIvY3Jhc2gvMTI3LjAuMC4xLTIwMTktMDktMTktMDg6
+MzE6Mjcvdm1jb3JlICBbUEFSVElBTCBEVU1QXQo+PiAgICAgICAgIENQVVM6IDEyOAo+PiAgICAg
+ICAgIERBVEU6IFRodSBTZXAgMTkgMDg6MzE6MTggMjAxOQo+PiAgICAgICBVUFRJTUU6IDAwOjAx
+OjIxCj4+IExPQUQgQVZFUkFHRTogMC4xNiwgMC4wNywgMC4wMgo+PiAgICAgICAgVEFTS1M6IDEz
+NDMKPj4gICAgIE5PREVOQU1FOiBhbWQtZXRoYW5vbAo+PiAgICAgIFJFTEVBU0U6IDUuMy4wLXJj
+NysKPj4gICAgICBWRVJTSU9OOiAjNCBTTVAgVGh1IFNlcCAxOSAwODoxNDowMCBFRFQgMjAxOQo+
+PiAgICAgIE1BQ0hJTkU6IHg4Nl82NCAgKDIxOTUgTWh6KQo+PiAgICAgICBNRU1PUlk6IDEyNy45
+IEdCCj4+ICAgICAgICBQQU5JQzogIktlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBzeXNycSB0
+cmlnZ2VyZWQgY3Jhc2giCj4+ICAgICAgICAgIFBJRDogOTc4OQo+PiAgICAgIENPTU1BTkQ6ICJi
+YXNoIgo+PiAgICAgICAgIFRBU0s6ICJmZmZmODk3MTE4OTRhZTgwICBbVEhSRUFEX0lORk86IGZm
+ZmY4OTcxMTg5NGFlODBdIgo+PiAgICAgICAgICBDUFU6IDgzCj4+ICAgICAgICBTVEFURTogVEFT
+S19SVU5OSU5HIChQQU5JQykKPj4KPj4gY3Jhc2g+IGttZW0gLXN8Z3JlcCAtaSBpbnZhbGlkCj4+
+IGttZW06IGRtYS1rbWFsbG9jLTUxMjogc2xhYjpmZmZmZDc3NjgwMDAxYzAwIGludmFsaWQgZnJl
+ZXBvaW50ZXI6YTYwODZhYzA5OWYwYzVhNAo+PiBrbWVtOiBkbWEta21hbGxvYy01MTI6IHNsYWI6
+ZmZmZmQ3NzY4MDAwMWMwMCBpbnZhbGlkIGZyZWVwb2ludGVyOmE2MDg2YWMwOTlmMGM1YTQKPj4g
+Y3Jhc2g+Cj4+Cj4+IEJUVzogSSBhbHNvIHRyaWVkIHRvIGZpeCB0aGUgYWJvdmUgcHJvYmxlbSBp
+biBwdXJnYXRvcnkoKSwgYnV0IHRoZXJlCj4+IGFyZSB0b28gbWFueSByZXN0cmljdHMgaW4gcHVy
+Z2F0b3J5KCkgY29udGV4dCwgZm9yIGV4YW1wbGU6IGkgY2FuJ3QKPj4gYWxsb2NhdGUgbmV3IG1l
+bW9yeSB0byBjcmVhdGUgdGhlIGlkZW50aXR5IG1hcHBpbmcgcGFnZSB0YWJsZSBmb3IgU01FCj4+
+IHNpdHVhdGlvbi4KPj4KPj4gQ3VycmVudGx5LCB0aGVyZSBhcmUgdHdvIHBsYWNlcyB3aGVyZSB0
+aGUgZmlyc3QgNjQwayBhcmVhIGlzIG5lZWRlZCwKPj4gdGhlIGZpcnN0IG9uZSBpcyBpbiB0aGUg
+ZmluZF90cmFtcG9saW5lX3BsYWNlbWVudCgpLCBhbm90aGVyIG9uZSBpcwo+PiBpbiB0aGUgcmVz
+ZXJ2ZV9yZWFsX21vZGUoKSwgYW5kIHRoZWlyIGNvbnRlbnQgZG9lc24ndCBtYXR0ZXIuIFRvIGF2
+b2lkCj4+IHRoZSBhYm92ZSBlcnJvciwgbGV0cyBvY2N1cHkgdGhlIHJlbWFpbiBtZW1vcnkgb2Yg
+dGhlIGZpcnN0IDY0MGsgcmVnaW9uCj4+IChleHBlY3QgZm9yIHRoZSB0cmFtcG9saW5lIGFuZCBy
+ZWFsIG1vZGUpIHNvIHRoYXQgdGhlIGFsbG9jYXRlZCBtZW1vcnkKPj4gZG9lcyBub3QgZmFsbCBp
+bnRvIHRoZSBmaXJzdCA2NDBrIGFyZWEgd2hlbiBTTUUgaXMgYWN0aXZlLCB3aGljaCBtYWtlcwo+
+PiB1cyBub3QgdG8gd29ycnkgYWJvdXQgd2hldGhlciBrZXJuZWwgY2FuIGNvcnJlY3RseSBjb3B5
+IHRoZSBjb250ZW50cyBvZgo+PiB0aGUgZmlyc3QgNjQwayBhcmVhIHRvIGEgYmFja3VwIHJlZ2lv
+biBpbiB0aGUgcHVyZ2F0b3J5KCkuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IExpYW5ibyBKaWFuZyA8
+bGlqaWFuZ0ByZWRoYXQuY29tPgo+PiAtLS0KPj4gQ2hhbmdlcyBzaW5jZSB2MToKPj4gMS4gSW1w
+cm92ZSBwYXRjaCBsb2cKPj4gMi4gQ2hhbmdlIHRoZSBjaGVja2luZyBjb25kaXRpb24gZnJvbSBz
+bWVfYWN0aXZlKCkgdG8gc21lX2FjdGl2ZSgpCj4+ICAgICYmIHN0cnN0cihib290X2NvbW1hbmRf
+bGluZSwgImNyYXNoa2VybmVsPSIpCj4+Cj4+ICBhcmNoL3g4Ni9rZXJuZWwvc2V0dXAuYyB8IDMg
+KysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQg
+YS9hcmNoL3g4Ni9rZXJuZWwvc2V0dXAuYyBiL2FyY2gveDg2L2tlcm5lbC9zZXR1cC5jCj4+IGlu
+ZGV4IDc3ZWE5NmI3OTRiZC4uYmRiMWEwMmE4NGZkIDEwMDY0NAo+PiAtLS0gYS9hcmNoL3g4Ni9r
+ZXJuZWwvc2V0dXAuYwo+PiArKysgYi9hcmNoL3g4Ni9rZXJuZWwvc2V0dXAuYwo+PiBAQCAtMTE0
+OCw2ICsxMTQ4LDkgQEAgdm9pZCBfX2luaXQgc2V0dXBfYXJjaChjaGFyICoqY21kbGluZV9wKQo+
+PiAgCj4+ICAJcmVzZXJ2ZV9yZWFsX21vZGUoKTsKPj4gIAo+PiArCWlmIChzbWVfYWN0aXZlKCkg
+JiYgc3Ryc3RyKGJvb3RfY29tbWFuZF9saW5lLCAiY3Jhc2hrZXJuZWw9IikpCj4+ICsJCW1lbWJs
+b2NrX3Jlc2VydmUoMCwgNjQwKjEwMjQpOwo+PiArCj4gCj4gU2VlbXMgeW91IG1pc3NlZCB0aGUg
+Y29tbWVudCBhYm91dCAidW5jb25kaXRpb25hbGx5IGRvIGl0Iiwgb25seSBjaGVjawo+IGNyYXNo
+a2VybmVsIHBhcmFtIGxvb2tzIGJldHRlci4KPiAKSWYgc28sIGl0IG1lYW5zIHRoYXQgY29weWlu
+ZyB0aGUgZmlyc3QgNjQwayB0byBhIGJhY2t1cCByZWdpb24gaXMgbm8gbG9uZ2VyIG5lZWRlZCwg
+YW5kCmkgc2hvdWxkIHBvc3QgYSBwYXRjaCBzZXJpZXMgdG8gcmVtb3ZlIHRoZSBjb3B5X2JhY2t1
+cF9yZWdpb24oKS4gQW55IGlkZWE/Cgo+IEFsc28gSSBub3RpY2VkIHJlc2VydmVfY3Jhc2hrZXJu
+ZWwgaXMgY2FsbGVkIGFmdGVyIGluaXRtZW1faW5pdCwgSSdtIG5vdAo+IHN1cmUgaWYgbWVtYmxv
+Y2tfcmVzZXJ2ZSBpcyBnb29kIGVub3VnaCBpbiBlYXJseSBjb2RlIGJlZm9yZQo+IGluaXRtZW1f
+aW5pdC4gCj4KVGhlIGZpcnN0IHplcm8gcGFnZSBhbmQgcmVhbCBtb2RlIGFyZSBhbHNvIHJlc2Vy
+dmVkIGJlZm9yZSB0aGUgaW5pdG1lbV9pbml0KCksCmFuZCBzZWVtcyB0aGF0IHRoZXkgd29yayB3
+ZWxsIHVudGlsIG5vdy4KClRoYW5rcy4KTGlhbmJvCgo+PiAgCXRyaW1fcGxhdGZvcm1fbWVtb3J5
+X3JhbmdlcygpOwo+PiAgCXRyaW1fbG93X21lbW9yeV9yYW5nZSgpOwo+PiAgCj4+IC0tIAo+PiAy
+LjE3LjEKPj4KPiAKPiBUaGFua3MKPiBEYXZlCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
+eGVjCg==
