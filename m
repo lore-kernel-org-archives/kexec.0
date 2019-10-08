@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
- id 1iHfhk-0007NE-Ed
- for kexec@lists.infradead.org; Tue, 08 Oct 2019 02:58:30 +0000
-Date: Tue, 8 Oct 2019 10:58:22 +0800
-From: Baoquan He <bhe@redhat.com>
+ id 1iHg0r-0005XZ-T3
+ for kexec@lists.infradead.org; Tue, 08 Oct 2019 03:18:16 +0000
 Subject: Re: [PATCH v2] x86/kdump: Fix 'kmem -s' reported an invalid
  freepointer when SME was active
-Message-ID: <20191008025822.GM31919@MiWiFi-R3L-srv>
 References: <20191007070844.15935-1-lijiang@redhat.com>
  <20191007093338.GA4710@dhcp-128-65.nay.redhat.com>
  <e179c616-f427-769f-aa5b-058c63040015@redhat.com>
  <87bluseaz2.fsf@x220.int.ebiederm.org>
- <20191008024447.GL31919@MiWiFi-R3L-srv>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <0570f384-9bec-df83-303e-c2cb997c7fc5@redhat.com>
+Date: Tue, 8 Oct 2019 11:17:58 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20191008024447.GL31919@MiWiFi-R3L-srv>
+In-Reply-To: <87bluseaz2.fsf@x220.int.ebiederm.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,184 +23,179 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: jgross@suse.com, Thomas.Lendacky@amd.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: jgross@suse.com, Thomas.Lendacky@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-On 10/08/19 at 10:44am, Baoquan He wrote:
-> On 10/07/19 at 12:12pm, Eric W. Biederman wrote:
-> > This has only been boot tested but I think this is about what we need.
-> > 
-> > I feel like I haven't found and deleted all of the backup region code.
-> > 
-> > I think it is important to have the reservation code in reseve_real_mode
-> > as the logic is fundamentally intertwined.
-> > 
-> > Eric
-> > 
-> > 
-> > From: "Eric W. Biederman" <ebiederm@xmission.com>
-> > Date: Mon, 7 Oct 2019 11:57:24 -0500
-> > Subject: [PATCH] x86/kexec: Always reserve the low 1MiB
-> > 
-> > When the crashkernel kernel command line option is specified always
-> > reserve the low 1MiB.    That way it does not need to be included
-> > in crash dumps or used for anything execept the processor trampolines
-> > that must live in the low 1MiB.
-> > 
-> > The current handling of copying the low 1MiB runs into problems when
-> > SME is active.  So just simplify everything and make it unnecessary
-> > to do anything with the low 1MiB.
-> > 
-> > This comes at a cost of 640KiB.  But when crash kernels need 32MiB or
-> > more to run this isn't much more, and it makes everything much more
-> > reliable.
-> > 
-> > Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> > ---
-> >  arch/x86/include/asm/kexec.h   |  4 ----
-> >  arch/x86/kernel/crash.c        | 19 -------------------
-> >  arch/x86/purgatory/purgatory.c | 15 ---------------
-> >  arch/x86/realmode/init.c       | 10 ++++++++++
-> >  4 files changed, 10 insertions(+), 38 deletions(-)
-> > 
-> > diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-> > index 5e7d6b46de97..e36307ac324d 100644
-> > --- a/arch/x86/include/asm/kexec.h
-> > +++ b/arch/x86/include/asm/kexec.h
-> > @@ -66,10 +66,6 @@ struct kimage;
-> >  # define KEXEC_ARCH KEXEC_ARCH_X86_64
-> >  #endif
-> >  
-> > -/* Memory to backup during crash kdump */
-> > -#define KEXEC_BACKUP_SRC_START	(0UL)
-> > -#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
-> > -
-> >  /*
-> >   * This function is responsible for capturing register states if coming
-> >   * via panic otherwise just fix up the ss and sp if coming via kernel
-> > diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> > index eb651fbde92a..dc4773d2f4a6 100644
-> > --- a/arch/x86/kernel/crash.c
-> > +++ b/arch/x86/kernel/crash.c
-> > @@ -409,31 +409,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
-> >  	return ret;
-> >  }
-> >  
-> > -static int determine_backup_region(struct resource *res, void *arg)
-> > -{
-> > -	struct kimage *image = arg;
-> > -
-> > -	image->arch.backup_src_start = res->start;
-> > -	image->arch.backup_src_sz = resource_size(res);
-> > -
-> > -	/* Expecting only one range for backup region */
-> > -	return 1;
-> > -}
-> > -
-> >  int crash_load_segments(struct kimage *image)
-> >  {
-> >  	int ret;
-> >  	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
-> >  				  .buf_max = ULONG_MAX, .top_down = false };
-> >  
-> > -	/*
-> > -	 * Determine and load a segment for backup area. First 640K RAM
-> > -	 * region is backup source
-> > -	 */
-> > -
-> > -	ret = walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
-> > -				image, determine_backup_region);
-> > -
-> >  	/* Zero or postive return values are ok */
-> >  	if (ret < 0)
-> >  		return ret;
-> > diff --git a/arch/x86/purgatory/purgatory.c b/arch/x86/purgatory/purgatory.c
-> > index 3b95410ff0f8..448de04703ba 100644
-> > --- a/arch/x86/purgatory/purgatory.c
-> > +++ b/arch/x86/purgatory/purgatory.c
-> > @@ -22,20 +22,6 @@ u8 purgatory_sha256_digest[SHA256_DIGEST_SIZE] __section(.kexec-purgatory);
-> >  
-> >  struct kexec_sha_region purgatory_sha_regions[KEXEC_SEGMENT_MAX] __section(.kexec-purgatory);
-> >  
-> > -/*
-> > - * On x86, second kernel requries first 640K of memory to boot. Copy
-> > - * first 640K to a backup region in reserved memory range so that second
-> > - * kernel can use first 640K.
-> > - */
-> > -static int copy_backup_region(void)
-> > -{
-> > -	if (purgatory_backup_dest) {
-> > -		memcpy((void *)purgatory_backup_dest,
-> > -		       (void *)purgatory_backup_src, purgatory_backup_sz);
-> > -	}
-> > -	return 0;
-> > -}
-> > -
-> >  static int verify_sha256_digest(void)
-> >  {
-> >  	struct kexec_sha_region *ptr, *end;
-> > @@ -66,7 +52,6 @@ void purgatory(void)
-> >  		for (;;)
-> >  			;
-> >  	}
-> > -	copy_backup_region();
-> >  }
-> >  
-> >  /*
-> > diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-> > index 7dce39c8c034..76c680ad23a1 100644
-> > --- a/arch/x86/realmode/init.c
-> > +++ b/arch/x86/realmode/init.c
-> > @@ -34,6 +34,16 @@ void __init reserve_real_mode(void)
-> >  
-> >  	memblock_reserve(mem, size);
-> >  	set_real_mode_mem(mem);
-> > +
-> > +#ifdef CONFIG_KEXEC_CORE
-> > +	/* When crashkernel is specified only use the low 1MiB for the
-> > +	 * real mode trampolines.
-> > +	 */
-> > +	if (strstr(boot_command_line, "crashkernel=")) {
-> > +		memblock_reserve(0, 1<<20);
-> > +		pr_info("Reserving low 1MiB of memory for crashkernel\n");
-> > +	}
-> 
-> Reserving low 1M looks good to me. The memblock reserved pages won't
-> enter into buddy allocator, unless they are freed explicitly with
-> memblock_free() later.
-> > +#endif /* CONFIG_KEXEC_CORE */
-> 
-> I doubt this patch can work in kdump kernel booting. Because the low 1MB
-> is not passed to kdump kernel as system RAM, please check below code.
-> 
-> /* Prepare memory map for crash dump kernel */
-> int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
-> {
-> ......
-> 
->         /* Add first 640K segment */                                                                                                              
->         ei.addr = image->arch.backup_src_start;
->         ei.size = image->arch.backup_src_sz;
->         ei.type = E820_TYPE_RAM;
->         add_e820_entry(params, &ei);
-> 
-> ......
-> }
-
-The current code will dig out one block of 640K from crashkernel region,
-we call it the backup region, then copy its low 640K to this backup region.
-the low 640K will be added to kdump kernel as system RAM, and the backup
-region will be mapped to the [0,640K] of the vmcore elf file of the 1st
-kernel. So we can memblock reserve low 1MB, and add it to kdump kernel
-as system RAM in crash_setup_memmap_entries(), then clean up all the
-other backup related old code, just based on Eric's patch.
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTnlubQxMOaciDA45pelIDAxOjEyLCBFcmljIFcuIEJpZWRlcm1hbiDlhpnpgZM6Cj4g
+bGlqaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPiB3cml0ZXM6Cj4gCj4+IOWcqCAyMDE55bm0MTDm
+nIgwN+aXpSAxNzozMywgRGF2ZSBZb3VuZyDlhpnpgZM6Cj4+PiBIaSBMaWFuYm8sCj4+PiBPbiAx
+MC8wNy8xOSBhdCAwMzowOHBtLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4+Pj4gQnVnemlsbGE6IGh0
+dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MjA0NzkzCj4+Pj4KPj4+
+PiBLZHVtcCBrZXJuZWwgd2lsbCByZXVzZSB0aGUgZmlyc3QgNjQwayByZWdpb24gYmVjYXVzZSBv
+ZiBzb21lIHJlYXNvbnMsCj4+Pj4gZm9yIGV4YW1wbGU6IHRoZSB0cmFtcGxpbmUgYW5kIGNvbnZl
+bnRpb25hbCBQQyBzeXN0ZW0gQklPUyByZWdpb24gbWF5Cj4+Pj4gcmVxdWlyZSB0byBhbGxvY2F0
+ZSBtZW1vcnkgaW4gdGhpcyBhcmVhLiBPYnZpb3VzbHksIGtkdW1wIGtlcm5lbCB3aWxsCj4+Pj4g
+YWxzbyBvdmVyd3JpdGUgdGhlIGZpcnN0IDY0MGsgcmVnaW9uLCB0aGVyZWZvcmUsIGtlcm5lbCBo
+YXMgdG8gY29weQo+Pj4+IHRoZSBjb250ZW50cyBvZiB0aGUgZmlyc3QgNjQwayBhcmVhIHRvIGEg
+YmFja3VwIGFyZWEsIHdoaWNoIGlzIGRvbmUgaW4KPj4+PiBwdXJnYXRvcnkoKSwgYmVjYXVzZSB2
+bWNvcmUgbWF5IG5lZWQgdGhlIG9sZCBtZW1vcnkuIFdoZW4gdm1jb3JlIGlzCj4+Pj4gZHVtcGVk
+LCBrZHVtcCBrZXJuZWwgd2lsbCByZWFkIHRoZSBvbGQgbWVtb3J5IGZyb20gdGhlIGJhY2t1cCBh
+cmVhIG9mCj4+Pj4gdGhlIGZpcnN0IDY0MGsgYXJlYS4KPj4+Pgo+Pj4+IEJhc2ljYWxseSwgdGhl
+IG1haW4gcmVhc29uIHNob3VsZCBiZSBjbGVhciwga2VybmVsIGRvZXMgbm90IGNvcnJlY3RseQo+
+Pj4+IGhhbmRsZSB0aGUgZmlyc3QgNjQwayByZWdpb24gd2hlbiBTTUUgaXMgYWN0aXZlLCB3aGlj
+aCBjYXVzZXMgdGhhdAo+Pj4+IGtlcm5lbCBkb2VzIG5vdCBwcm9wZXJseSBjb3B5IHRoZXNlIG9s
+ZCBtZW1vcnkgdG8gdGhlIGJhY2t1cCBhcmVhIGluCj4+Pj4gcHVyZ2F0b3J5KCkuIFRoZXJlZm9y
+ZSwga2R1bXAga2VybmVsIHJlYWRzIG91dCB0aGUgaW5jb3JyZWN0IGNvbnRlbnRzCj4+Pj4gZnJv
+bSB0aGUgYmFja3VwIGFyZWEgd2hlbiBkdW1waW5nIHZtY29yZS4gRmluYWxseSwgdGhlIHBoZW5v
+bWVub24gaXMKPj4+PiBhcyBmb2xsb3c6Cj4+Pj4KPj4+PiBbcm9vdCBsaW51eF0kIGNyYXNoIHZt
+bGludXggL3Zhci9jcmFzaC8xMjcuMC4wLjEtMjAxOS0wOS0xOS0wOFw6MzFcOjI3L3ZtY29yZQo+
+Pj4+IFdBUk5JTkc6IGtlcm5lbCByZWxvY2F0ZWQgWzI0ME1CXTogcGF0Y2hpbmcgOTcxMTAgZ2Ri
+IG1pbmltYWxfc3ltYm9sIHZhbHVlcwo+Pj4+Cj4+Pj4gICAgICAgS0VSTkVMOiAvdmFyL2NyYXNo
+LzEyNy4wLjAuMS0yMDE5LTA5LTE5LTA4OjMxOjI3L3ZtbGludXgKPj4+PiAgICAgRFVNUEZJTEU6
+IC92YXIvY3Jhc2gvMTI3LjAuMC4xLTIwMTktMDktMTktMDg6MzE6Mjcvdm1jb3JlICBbUEFSVElB
+TCBEVU1QXQo+Pj4+ICAgICAgICAgQ1BVUzogMTI4Cj4+Pj4gICAgICAgICBEQVRFOiBUaHUgU2Vw
+IDE5IDA4OjMxOjE4IDIwMTkKPj4+PiAgICAgICBVUFRJTUU6IDAwOjAxOjIxCj4+Pj4gTE9BRCBB
+VkVSQUdFOiAwLjE2LCAwLjA3LCAwLjAyCj4+Pj4gICAgICAgIFRBU0tTOiAxMzQzCj4+Pj4gICAg
+IE5PREVOQU1FOiBhbWQtZXRoYW5vbAo+Pj4+ICAgICAgUkVMRUFTRTogNS4zLjAtcmM3Kwo+Pj4+
+ICAgICAgVkVSU0lPTjogIzQgU01QIFRodSBTZXAgMTkgMDg6MTQ6MDAgRURUIDIwMTkKPj4+PiAg
+ICAgIE1BQ0hJTkU6IHg4Nl82NCAgKDIxOTUgTWh6KQo+Pj4+ICAgICAgIE1FTU9SWTogMTI3Ljkg
+R0IKPj4+PiAgICAgICAgUEFOSUM6ICJLZXJuZWwgcGFuaWMgLSBub3Qgc3luY2luZzogc3lzcnEg
+dHJpZ2dlcmVkIGNyYXNoIgo+Pj4+ICAgICAgICAgIFBJRDogOTc4OQo+Pj4+ICAgICAgQ09NTUFO
+RDogImJhc2giCj4+Pj4gICAgICAgICBUQVNLOiAiZmZmZjg5NzExODk0YWU4MCAgW1RIUkVBRF9J
+TkZPOiBmZmZmODk3MTE4OTRhZTgwXSIKPj4+PiAgICAgICAgICBDUFU6IDgzCj4+Pj4gICAgICAg
+IFNUQVRFOiBUQVNLX1JVTk5JTkcgKFBBTklDKQo+Pj4+Cj4+Pj4gY3Jhc2g+IGttZW0gLXN8Z3Jl
+cCAtaSBpbnZhbGlkCj4+Pj4ga21lbTogZG1hLWttYWxsb2MtNTEyOiBzbGFiOmZmZmZkNzc2ODAw
+MDFjMDAgaW52YWxpZCBmcmVlcG9pbnRlcjphNjA4NmFjMDk5ZjBjNWE0Cj4+Pj4ga21lbTogZG1h
+LWttYWxsb2MtNTEyOiBzbGFiOmZmZmZkNzc2ODAwMDFjMDAgaW52YWxpZCBmcmVlcG9pbnRlcjph
+NjA4NmFjMDk5ZjBjNWE0Cj4+Pj4gY3Jhc2g+Cj4+Pj4KPj4+PiBCVFc6IEkgYWxzbyB0cmllZCB0
+byBmaXggdGhlIGFib3ZlIHByb2JsZW0gaW4gcHVyZ2F0b3J5KCksIGJ1dCB0aGVyZQo+Pj4+IGFy
+ZSB0b28gbWFueSByZXN0cmljdHMgaW4gcHVyZ2F0b3J5KCkgY29udGV4dCwgZm9yIGV4YW1wbGU6
+IGkgY2FuJ3QKPj4+PiBhbGxvY2F0ZSBuZXcgbWVtb3J5IHRvIGNyZWF0ZSB0aGUgaWRlbnRpdHkg
+bWFwcGluZyBwYWdlIHRhYmxlIGZvciBTTUUKPj4+PiBzaXR1YXRpb24uCj4+Pj4KPj4+PiBDdXJy
+ZW50bHksIHRoZXJlIGFyZSB0d28gcGxhY2VzIHdoZXJlIHRoZSBmaXJzdCA2NDBrIGFyZWEgaXMg
+bmVlZGVkLAo+Pj4+IHRoZSBmaXJzdCBvbmUgaXMgaW4gdGhlIGZpbmRfdHJhbXBvbGluZV9wbGFj
+ZW1lbnQoKSwgYW5vdGhlciBvbmUgaXMKPj4+PiBpbiB0aGUgcmVzZXJ2ZV9yZWFsX21vZGUoKSwg
+YW5kIHRoZWlyIGNvbnRlbnQgZG9lc24ndCBtYXR0ZXIuIFRvIGF2b2lkCj4+Pj4gdGhlIGFib3Zl
+IGVycm9yLCBsZXRzIG9jY3VweSB0aGUgcmVtYWluIG1lbW9yeSBvZiB0aGUgZmlyc3QgNjQwayBy
+ZWdpb24KPj4+PiAoZXhwZWN0IGZvciB0aGUgdHJhbXBvbGluZSBhbmQgcmVhbCBtb2RlKSBzbyB0
+aGF0IHRoZSBhbGxvY2F0ZWQgbWVtb3J5Cj4+Pj4gZG9lcyBub3QgZmFsbCBpbnRvIHRoZSBmaXJz
+dCA2NDBrIGFyZWEgd2hlbiBTTUUgaXMgYWN0aXZlLCB3aGljaCBtYWtlcwo+Pj4+IHVzIG5vdCB0
+byB3b3JyeSBhYm91dCB3aGV0aGVyIGtlcm5lbCBjYW4gY29ycmVjdGx5IGNvcHkgdGhlIGNvbnRl
+bnRzIG9mCj4+Pj4gdGhlIGZpcnN0IDY0MGsgYXJlYSB0byBhIGJhY2t1cCByZWdpb24gaW4gdGhl
+IHB1cmdhdG9yeSgpLgo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogTGlhbmJvIEppYW5nIDxsaWpp
+YW5nQHJlZGhhdC5jb20+Cj4+Pj4gLS0tCj4+Pj4gQ2hhbmdlcyBzaW5jZSB2MToKPj4+PiAxLiBJ
+bXByb3ZlIHBhdGNoIGxvZwo+Pj4+IDIuIENoYW5nZSB0aGUgY2hlY2tpbmcgY29uZGl0aW9uIGZy
+b20gc21lX2FjdGl2ZSgpIHRvIHNtZV9hY3RpdmUoKQo+Pj4+ICAgICYmIHN0cnN0cihib290X2Nv
+bW1hbmRfbGluZSwgImNyYXNoa2VybmVsPSIpCj4+Pj4KPj4+PiAgYXJjaC94ODYva2VybmVsL3Nl
+dHVwLmMgfCAzICsrKwo+Pj4+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4+Pj4K
+Pj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL3NldHVwLmMgYi9hcmNoL3g4Ni9rZXJu
+ZWwvc2V0dXAuYwo+Pj4+IGluZGV4IDc3ZWE5NmI3OTRiZC4uYmRiMWEwMmE4NGZkIDEwMDY0NAo+
+Pj4+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9zZXR1cC5jCj4+Pj4gKysrIGIvYXJjaC94ODYva2Vy
+bmVsL3NldHVwLmMKPj4+PiBAQCAtMTE0OCw2ICsxMTQ4LDkgQEAgdm9pZCBfX2luaXQgc2V0dXBf
+YXJjaChjaGFyICoqY21kbGluZV9wKQo+Pj4+ICAKPj4+PiAgCXJlc2VydmVfcmVhbF9tb2RlKCk7
+Cj4+Pj4gIAo+Pj4+ICsJaWYgKHNtZV9hY3RpdmUoKSAmJiBzdHJzdHIoYm9vdF9jb21tYW5kX2xp
+bmUsICJjcmFzaGtlcm5lbD0iKSkKPj4+PiArCQltZW1ibG9ja19yZXNlcnZlKDAsIDY0MCoxMDI0
+KTsKPj4+PiArCj4+Pgo+Pj4gU2VlbXMgeW91IG1pc3NlZCB0aGUgY29tbWVudCBhYm91dCAidW5j
+b25kaXRpb25hbGx5IGRvIGl0Iiwgb25seSBjaGVjawo+Pj4gY3Jhc2hrZXJuZWwgcGFyYW0gbG9v
+a3MgYmV0dGVyLgo+Pj4KPj4gSWYgc28sIGl0IG1lYW5zIHRoYXQgY29weWluZyB0aGUgZmlyc3Qg
+NjQwayB0byBhIGJhY2t1cCByZWdpb24gaXMgbm8gbG9uZ2VyIG5lZWRlZCwgYW5kCj4+IGkgc2hv
+dWxkIHBvc3QgYSBwYXRjaCBzZXJpZXMgdG8gcmVtb3ZlIHRoZSBjb3B5X2JhY2t1cF9yZWdpb24o
+KS4gQW55IGlkZWE/Cj4+Cj4+PiBBbHNvIEkgbm90aWNlZCByZXNlcnZlX2NyYXNoa2VybmVsIGlz
+IGNhbGxlZCBhZnRlciBpbml0bWVtX2luaXQsIEknbSBub3QKPj4+IHN1cmUgaWYgbWVtYmxvY2tf
+cmVzZXJ2ZSBpcyBnb29kIGVub3VnaCBpbiBlYXJseSBjb2RlIGJlZm9yZQo+Pj4gaW5pdG1lbV9p
+bml0LiAKPj4+Cj4+IFRoZSBmaXJzdCB6ZXJvIHBhZ2UgYW5kIHJlYWwgbW9kZSBhcmUgYWxzbyBy
+ZXNlcnZlZCBiZWZvcmUgdGhlIGluaXRtZW1faW5pdCgpLAo+PiBhbmQgc2VlbXMgdGhhdCB0aGV5
+IHdvcmsgd2VsbCB1bnRpbCBub3cuCj4+Cj4+IFRoYW5rcy4KPj4gTGlhbmJvCj4gCj4gVGhpcyBo
+YXMgb25seSBiZWVuIGJvb3QgdGVzdGVkIGJ1dCBJIHRoaW5rIHRoaXMgaXMgYWJvdXQgd2hhdCB3
+ZSBuZWVkLgo+IAo+IEkgZmVlbCBsaWtlIEkgaGF2ZW4ndCBmb3VuZCBhbmQgZGVsZXRlZCBhbGwg
+b2YgdGhlIGJhY2t1cCByZWdpb24gY29kZS4KPiAKTm8gd29ycnksIGkgd2lsbCBjaGVjayB0aGUg
+YmFja3VwIHJlbGF0ZWQgY29kZS4KCkluIGFkZGl0aW9uLCBpIHdpbGwgYWxzbyBtYWtlIGEgdGVz
+dCBhbmQgaW1wcm92ZSBpdCBiYXNlZCBvbiB5b3VyIGRyYWZ0IHBhdGNoLgpBbmQgSSB3aWxsIHBv
+c3QgdGhlbSBoZXJlLgoKVGhhbmtzLgpMaWFuYm8KCj4gSSB0aGluayBpdCBpcyBpbXBvcnRhbnQg
+dG8gaGF2ZSB0aGUgcmVzZXJ2YXRpb24gY29kZSBpbiByZXNldmVfcmVhbF9tb2RlCj4gYXMgdGhl
+IGxvZ2ljIGlzIGZ1bmRhbWVudGFsbHkgaW50ZXJ0d2luZWQuCj4gCj4gRXJpYwo+ID4gCj4gRnJv
+bTogIkVyaWMgVy4gQmllZGVybWFuIiA8ZWJpZWRlcm1AeG1pc3Npb24uY29tPgo+IERhdGU6IE1v
+biwgNyBPY3QgMjAxOSAxMTo1NzoyNCAtMDUwMAo+IFN1YmplY3Q6IFtQQVRDSF0geDg2L2tleGVj
+OiBBbHdheXMgcmVzZXJ2ZSB0aGUgbG93IDFNaUIKPiAKPiBXaGVuIHRoZSBjcmFzaGtlcm5lbCBr
+ZXJuZWwgY29tbWFuZCBsaW5lIG9wdGlvbiBpcyBzcGVjaWZpZWQgYWx3YXlzCj4gcmVzZXJ2ZSB0
+aGUgbG93IDFNaUIuICAgIFRoYXQgd2F5IGl0IGRvZXMgbm90IG5lZWQgdG8gYmUgaW5jbHVkZWQK
+PiBpbiBjcmFzaCBkdW1wcyBvciB1c2VkIGZvciBhbnl0aGluZyBleGVjZXB0IHRoZSBwcm9jZXNz
+b3IgdHJhbXBvbGluZXMKPiB0aGF0IG11c3QgbGl2ZSBpbiB0aGUgbG93IDFNaUIuCj4gCj4gVGhl
+IGN1cnJlbnQgaGFuZGxpbmcgb2YgY29weWluZyB0aGUgbG93IDFNaUIgcnVucyBpbnRvIHByb2Js
+ZW1zIHdoZW4KPiBTTUUgaXMgYWN0aXZlLiAgU28ganVzdCBzaW1wbGlmeSBldmVyeXRoaW5nIGFu
+ZCBtYWtlIGl0IHVubmVjZXNzYXJ5Cj4gdG8gZG8gYW55dGhpbmcgd2l0aCB0aGUgbG93IDFNaUIu
+Cj4gCj4gVGhpcyBjb21lcyBhdCBhIGNvc3Qgb2YgNjQwS2lCLiAgQnV0IHdoZW4gY3Jhc2gga2Vy
+bmVscyBuZWVkIDMyTWlCIG9yCj4gbW9yZSB0byBydW4gdGhpcyBpc24ndCBtdWNoIG1vcmUsIGFu
+ZCBpdCBtYWtlcyBldmVyeXRoaW5nIG11Y2ggbW9yZQo+IHJlbGlhYmxlLgo+IAo+IFNpZ25lZC1v
+ZmYtYnk6ICJFcmljIFcuIEJpZWRlcm1hbiIgPGViaWVkZXJtQHhtaXNzaW9uLmNvbT4KPiAtLS0K
+PiAgYXJjaC94ODYvaW5jbHVkZS9hc20va2V4ZWMuaCAgIHwgIDQgLS0tLQo+ICBhcmNoL3g4Ni9r
+ZXJuZWwvY3Jhc2guYyAgICAgICAgfCAxOSAtLS0tLS0tLS0tLS0tLS0tLS0tCj4gIGFyY2gveDg2
+L3B1cmdhdG9yeS9wdXJnYXRvcnkuYyB8IDE1IC0tLS0tLS0tLS0tLS0tLQo+ICBhcmNoL3g4Ni9y
+ZWFsbW9kZS9pbml0LmMgICAgICAgfCAxMCArKysrKysrKysrCj4gIDQgZmlsZXMgY2hhbmdlZCwg
+MTAgaW5zZXJ0aW9ucygrKSwgMzggZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gv
+eDg2L2luY2x1ZGUvYXNtL2tleGVjLmggYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9rZXhlYy5oCj4g
+aW5kZXggNWU3ZDZiNDZkZTk3Li5lMzYzMDdhYzMyNGQgMTAwNjQ0Cj4gLS0tIGEvYXJjaC94ODYv
+aW5jbHVkZS9hc20va2V4ZWMuaAo+ICsrKyBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL2tleGVjLmgK
+PiBAQCAtNjYsMTAgKzY2LDYgQEAgc3RydWN0IGtpbWFnZTsKPiAgIyBkZWZpbmUgS0VYRUNfQVJD
+SCBLRVhFQ19BUkNIX1g4Nl82NAo+ICAjZW5kaWYKPiAgCj4gLS8qIE1lbW9yeSB0byBiYWNrdXAg
+ZHVyaW5nIGNyYXNoIGtkdW1wICovCj4gLSNkZWZpbmUgS0VYRUNfQkFDS1VQX1NSQ19TVEFSVAko
+MFVMKQo+IC0jZGVmaW5lIEtFWEVDX0JBQ0tVUF9TUkNfRU5ECSg2NDAgKiAxMDI0VUwgLSAxKQkv
+KiA2NDBLICovCj4gLQo+ICAvKgo+ICAgKiBUaGlzIGZ1bmN0aW9uIGlzIHJlc3BvbnNpYmxlIGZv
+ciBjYXB0dXJpbmcgcmVnaXN0ZXIgc3RhdGVzIGlmIGNvbWluZwo+ICAgKiB2aWEgcGFuaWMgb3Ro
+ZXJ3aXNlIGp1c3QgZml4IHVwIHRoZSBzcyBhbmQgc3AgaWYgY29taW5nIHZpYSBrZXJuZWwKPiBk
+aWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2NyYXNoLmMgYi9hcmNoL3g4Ni9rZXJuZWwvY3Jh
+c2guYwo+IGluZGV4IGViNjUxZmJkZTkyYS4uZGM0NzczZDJmNGE2IDEwMDY0NAo+IC0tLSBhL2Fy
+Y2gveDg2L2tlcm5lbC9jcmFzaC5jCj4gKysrIGIvYXJjaC94ODYva2VybmVsL2NyYXNoLmMKPiBA
+QCAtNDA5LDMxICs0MDksMTIgQEAgaW50IGNyYXNoX3NldHVwX21lbW1hcF9lbnRyaWVzKHN0cnVj
+dCBraW1hZ2UgKmltYWdlLCBzdHJ1Y3QgYm9vdF9wYXJhbXMgKnBhcmFtcykKPiAgCXJldHVybiBy
+ZXQ7Cj4gIH0KPiAgCj4gLXN0YXRpYyBpbnQgZGV0ZXJtaW5lX2JhY2t1cF9yZWdpb24oc3RydWN0
+IHJlc291cmNlICpyZXMsIHZvaWQgKmFyZykKPiAtewo+IC0Jc3RydWN0IGtpbWFnZSAqaW1hZ2Ug
+PSBhcmc7Cj4gLQo+IC0JaW1hZ2UtPmFyY2guYmFja3VwX3NyY19zdGFydCA9IHJlcy0+c3RhcnQ7
+Cj4gLQlpbWFnZS0+YXJjaC5iYWNrdXBfc3JjX3N6ID0gcmVzb3VyY2Vfc2l6ZShyZXMpOwo+IC0K
+PiAtCS8qIEV4cGVjdGluZyBvbmx5IG9uZSByYW5nZSBmb3IgYmFja3VwIHJlZ2lvbiAqLwo+IC0J
+cmV0dXJuIDE7Cj4gLX0KPiAtCj4gIGludCBjcmFzaF9sb2FkX3NlZ21lbnRzKHN0cnVjdCBraW1h
+Z2UgKmltYWdlKQo+ICB7Cj4gIAlpbnQgcmV0Owo+ICAJc3RydWN0IGtleGVjX2J1ZiBrYnVmID0g
+eyAuaW1hZ2UgPSBpbWFnZSwgLmJ1Zl9taW4gPSAwLAo+ICAJCQkJICAuYnVmX21heCA9IFVMT05H
+X01BWCwgLnRvcF9kb3duID0gZmFsc2UgfTsKPiAgCj4gLQkvKgo+IC0JICogRGV0ZXJtaW5lIGFu
+ZCBsb2FkIGEgc2VnbWVudCBmb3IgYmFja3VwIGFyZWEuIEZpcnN0IDY0MEsgUkFNCj4gLQkgKiBy
+ZWdpb24gaXMgYmFja3VwIHNvdXJjZQo+IC0JICovCj4gLQo+IC0JcmV0ID0gd2Fsa19zeXN0ZW1f
+cmFtX3JlcyhLRVhFQ19CQUNLVVBfU1JDX1NUQVJULCBLRVhFQ19CQUNLVVBfU1JDX0VORCwKPiAt
+CQkJCWltYWdlLCBkZXRlcm1pbmVfYmFja3VwX3JlZ2lvbik7Cj4gLQo+ICAJLyogWmVybyBvciBw
+b3N0aXZlIHJldHVybiB2YWx1ZXMgYXJlIG9rICovCj4gIAlpZiAocmV0IDwgMCkKPiAgCQlyZXR1
+cm4gcmV0Owo+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9wdXJnYXRvcnkvcHVyZ2F0b3J5LmMgYi9h
+cmNoL3g4Ni9wdXJnYXRvcnkvcHVyZ2F0b3J5LmMKPiBpbmRleCAzYjk1NDEwZmYwZjguLjQ0OGRl
+MDQ3MDNiYSAxMDA2NDQKPiAtLS0gYS9hcmNoL3g4Ni9wdXJnYXRvcnkvcHVyZ2F0b3J5LmMKPiAr
+KysgYi9hcmNoL3g4Ni9wdXJnYXRvcnkvcHVyZ2F0b3J5LmMKPiBAQCAtMjIsMjAgKzIyLDYgQEAg
+dTggcHVyZ2F0b3J5X3NoYTI1Nl9kaWdlc3RbU0hBMjU2X0RJR0VTVF9TSVpFXSBfX3NlY3Rpb24o
+LmtleGVjLXB1cmdhdG9yeSk7Cj4gIAo+ICBzdHJ1Y3Qga2V4ZWNfc2hhX3JlZ2lvbiBwdXJnYXRv
+cnlfc2hhX3JlZ2lvbnNbS0VYRUNfU0VHTUVOVF9NQVhdIF9fc2VjdGlvbigua2V4ZWMtcHVyZ2F0
+b3J5KTsKPiAgCj4gLS8qCj4gLSAqIE9uIHg4Niwgc2Vjb25kIGtlcm5lbCByZXF1cmllcyBmaXJz
+dCA2NDBLIG9mIG1lbW9yeSB0byBib290LiBDb3B5Cj4gLSAqIGZpcnN0IDY0MEsgdG8gYSBiYWNr
+dXAgcmVnaW9uIGluIHJlc2VydmVkIG1lbW9yeSByYW5nZSBzbyB0aGF0IHNlY29uZAo+IC0gKiBr
+ZXJuZWwgY2FuIHVzZSBmaXJzdCA2NDBLLgo+IC0gKi8KPiAtc3RhdGljIGludCBjb3B5X2JhY2t1
+cF9yZWdpb24odm9pZCkKPiAtewo+IC0JaWYgKHB1cmdhdG9yeV9iYWNrdXBfZGVzdCkgewo+IC0J
+CW1lbWNweSgodm9pZCAqKXB1cmdhdG9yeV9iYWNrdXBfZGVzdCwKPiAtCQkgICAgICAgKHZvaWQg
+KilwdXJnYXRvcnlfYmFja3VwX3NyYywgcHVyZ2F0b3J5X2JhY2t1cF9zeik7Cj4gLQl9Cj4gLQly
+ZXR1cm4gMDsKPiAtfQo+IC0KPiAgc3RhdGljIGludCB2ZXJpZnlfc2hhMjU2X2RpZ2VzdCh2b2lk
+KQo+ICB7Cj4gIAlzdHJ1Y3Qga2V4ZWNfc2hhX3JlZ2lvbiAqcHRyLCAqZW5kOwo+IEBAIC02Niw3
+ICs1Miw2IEBAIHZvaWQgcHVyZ2F0b3J5KHZvaWQpCj4gIAkJZm9yICg7OykKPiAgCQkJOwo+ICAJ
+fQo+IC0JY29weV9iYWNrdXBfcmVnaW9uKCk7Cj4gIH0KPiAgCj4gIC8qCj4gZGlmZiAtLWdpdCBh
+L2FyY2gveDg2L3JlYWxtb2RlL2luaXQuYyBiL2FyY2gveDg2L3JlYWxtb2RlL2luaXQuYwo+IGlu
+ZGV4IDdkY2UzOWM4YzAzNC4uNzZjNjgwYWQyM2ExIDEwMDY0NAo+IC0tLSBhL2FyY2gveDg2L3Jl
+YWxtb2RlL2luaXQuYwo+ICsrKyBiL2FyY2gveDg2L3JlYWxtb2RlL2luaXQuYwo+IEBAIC0zNCw2
+ICszNCwxNiBAQCB2b2lkIF9faW5pdCByZXNlcnZlX3JlYWxfbW9kZSh2b2lkKQo+ICAKPiAgCW1l
+bWJsb2NrX3Jlc2VydmUobWVtLCBzaXplKTsKPiAgCXNldF9yZWFsX21vZGVfbWVtKG1lbSk7Cj4g
+Kwo+ICsjaWZkZWYgQ09ORklHX0tFWEVDX0NPUkUKPiArCS8qIFdoZW4gY3Jhc2hrZXJuZWwgaXMg
+c3BlY2lmaWVkIG9ubHkgdXNlIHRoZSBsb3cgMU1pQiBmb3IgdGhlCj4gKwkgKiByZWFsIG1vZGUg
+dHJhbXBvbGluZXMuCj4gKwkgKi8KPiArCWlmIChzdHJzdHIoYm9vdF9jb21tYW5kX2xpbmUsICJj
+cmFzaGtlcm5lbD0iKSkgewo+ICsJCW1lbWJsb2NrX3Jlc2VydmUoMCwgMTw8MjApOwo+ICsJCXBy
+X2luZm8oIlJlc2VydmluZyBsb3cgMU1pQiBvZiBtZW1vcnkgZm9yIGNyYXNoa2VybmVsXG4iKTsK
+PiArCX0KPiArI2VuZGlmIC8qIENPTkZJR19LRVhFQ19DT1JFICovCj4gIH0KPiAgCj4gIHN0YXRp
+YyB2b2lkIF9faW5pdCBzZXR1cF9yZWFsX21vZGUodm9pZCkKPiAKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8va2V4ZWMK
