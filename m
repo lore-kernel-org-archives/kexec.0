@@ -1,14 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 8 Oct 2019 17:22:24 -0400
-From: Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH v2 1/2] Add support for arm64 to carry ima measurement
- log in kexec_file_load
-Message-ID: <20191008212224.GC1396@sasha-vm>
-References: <20191007185943.1828-1-prsriva@linux.microsoft.com>
- <20191007185943.1828-2-prsriva@linux.microsoft.com>
+Received: from scorn.kernelslacker.org ([2600:3c03:e000:2fb::1])
+ by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
+ id 1iHxAq-0007Ch-GL
+ for kexec@lists.infradead.org; Tue, 08 Oct 2019 21:37:42 +0000
+Date: Tue, 8 Oct 2019 17:37:33 -0400
+From: Dave Jones <davej@codemonkey.org.uk>
+Subject: Re: makedumpfile: Fix divide by zero in print_report()
+Message-ID: <20191008213733.GA21304@codemonkey.org.uk>
+References: <20190924194005.GA7666@codemonkey.org.uk>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC0359079B@BPXM09GP.gisp.nec.co.jp>
+ <20190926193253.GA10258@codemonkey.org.uk>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC035909ED@BPXM09GP.gisp.nec.co.jp>
+ <20191004170357.GA12416@codemonkey.org.uk>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC0359146E@BPXM09GP.gisp.nec.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20191007185943.1828-2-prsriva@linux.microsoft.com>
+In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC0359146E@BPXM09GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,80 +24,129 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Prakhar Srivastava <prsriva@linux.microsoft.com>
-Cc: mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de, takahiro.akashi@linaro.org, sboyd@kernel.org, catalin.marinas@arm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, bauerman@linux.ibm.com, yamada.masahiro@socionext.com, kristina.martsenko@arm.org, duwe@lst.de, allison@lohutok.net, james.morse@arm.org, linux-integrity@vger.kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Mon, Oct 07, 2019 at 11:59:42AM -0700, Prakhar Srivastava wrote:
->During kexec_file_load, carrying forward the ima measurement log allows
->a verifying party to get the entire runtime event log since the last
->full reboot since that is when PCRs were last reset.
->
->Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
->---
-> arch/Kconfig                           |   6 +-
-> arch/arm64/include/asm/ima.h           |  24 +++
-> arch/arm64/include/asm/kexec.h         |   5 +
-> arch/arm64/kernel/Makefile             |   3 +-
-> arch/arm64/kernel/ima_kexec.c          |  78 ++++++++++
-> arch/arm64/kernel/machine_kexec_file.c |   6 +
-> drivers/of/Kconfig                     |   6 +
-> drivers/of/Makefile                    |   1 +
-> drivers/of/of_ima.c                    | 204 +++++++++++++++++++++++++
-> include/linux/of.h                     |  31 ++++
-> 10 files changed, 362 insertions(+), 2 deletions(-)
-> create mode 100644 arch/arm64/include/asm/ima.h
-> create mode 100644 arch/arm64/kernel/ima_kexec.c
-> create mode 100644 drivers/of/of_ima.c
->
->diff --git a/arch/Kconfig b/arch/Kconfig
->index a7b57dd42c26..d53e1596c5b1 100644
->--- a/arch/Kconfig
->+++ b/arch/Kconfig
->@@ -19,7 +19,11 @@ config KEXEC_CORE
-> 	bool
->
-> config HAVE_IMA_KEXEC
->-	bool
->+	bool "Carry over IMA measurement log during kexec_file_load() syscall"
->+	depends on KEXEC_FILE
->+	help
->+	  Select this option to carry over IMA measurement log during
->+	  kexec_file_load.
+On Mon, Oct 07, 2019 at 08:13:07PM +0000, Kazuhito Hagio wrote:
+ 
+ > > [  518.819690] Original pages  : 0x0000000000000000
+ > > [  518.828894]   Excluded pages   : 0x0000000003decd15
+ > > [  518.838635]     Pages filled with zero  : 0x00000000000210ee
+ > > [  518.849920]     Non-private cache pages : 0x000000000000271a
+ > > [  518.861218]     Private cache pages     : 0x000000000000da47
+ > > [  518.872502]     User process data pages : 0x0000000003d6bdc8
+ > > [  518.883786]     Free pages              : 0x000000000004fcfe
+ > > [  518.895070]     Hwpoison pages          : 0x0000000000000000
+ > > [  518.906356]     Offline pages           : 0x0000000000000000
+ > > [  518.917659]   Remaining pages  : 0xfffffffffc2132eb
+ > > [  518.927398] Memory Hole     : 0x0000000004080000
+ >
+ > This is the known issue that I wrote above and am looking for a safe fix.
+ > How does this patch work?
 
-This change looks very wrong: HAVE_* config symbols are used to indicate
-the availability of certain arch specific capability, rather than act as
-a config option. How does this work with CONFIG_IMA_KEXEC ?
+I'll give this a try, and see how it goes for a few days.
 
-Also, please, at the very least verify that basic functionality works on
-the architectures we have access to. Trying it on x86:
+ > If it looks good, I'll look into its side effects further,
+ > but might take some time..
 
-$ make allmodconfig
-scripts/kconfig/conf  --allmodconfig Kconfig
-#
-# No change to .config
-#
-$ make
-  CALL    scripts/checksyscalls.sh
-  CALL    scripts/atomic/check-atomics.sh
-  DESCEND  objtool
-  CC      security/integrity/ima/ima_fs.o
-In file included from security/integrity/ima/ima_fs.c:26:
-security/integrity/ima/ima.h:28:10: fatal error: asm/ima.h: No such file or directory
- #include <asm/ima.h>
-          ^~~~~~~~~~~
-compilation terminated.
-make[3]: *** [scripts/Makefile.build:266: security/integrity/ima/ima_fs.o] Error 1
-make[2]: *** [scripts/Makefile.build:509: security/integrity/ima] Error 2
-make[1]: *** [scripts/Makefile.build:509: security/integrity] Error 2
-make: *** [Makefile:1649: security] Error 2
 
---
-Thanks,
-Sasha
+ > > And the crashdump seems corrupt:
+ > > 
+ > Could you show me the output of "readelf -a vmcore"?
+
+See below.
+
+ > Does this issue always reproduce?
+
+Not 100% the time. Sometimes we do get valid dumps from these hosts.
+My guess so far is that it has something to do with how much of memory
+makedumpfile was able to discard with -d31
+
+
+Common case seems to be:
+
+<F28>ELF Header:
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF64
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              CORE (Core file)
+  Machine:                           Advanced Micro Devices X86-64
+  Version:                           0x1
+  Entry point address:               0x0
+  Start of program headers:          64 (bytes into file)
+  Start of section headers:          0 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               64 (bytes)
+  Size of program headers:           56 (bytes)
+  Number of program headers:         23881
+  Size of section headers:           0 (bytes)
+  Number of section headers:         0
+  Section header string table index: 0
+
+There are no sections in this file.
+
+There are no sections to group in this file.
+
+Program Headers:
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  NULL           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000         0
+  NULL           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000         0
+  NULL           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000         0
+  NULL           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000         0
+  NULL           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000         0
+  NULL           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000         0
+  NULL           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000         0
+  NULL           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000         0
+  NULL           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000         0
+  NULL           0x0000000000000000 0x0000000000000000 0x0000000000000000
+... <repeats for thousands of lines>
+  NULL           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000         0
+  NULL           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000         0
+
+There is no dynamic section in this file.
+
+There are no relocations in this file.
+
+The decoding of unwind sections for machine type Advanced Micro Devices X86-64 is not currently supported.
+
+Dynamic symbol information is not available for displaying symbols.
+
+No version information found in this file.
+
+
+
+There are some other failure cases with non-null data, so maybe there's >1 bug here.
+I've not seen an obvious pattern to this. eg...
+
+https://pastebin.com/2uM4sBCF
+
+
+
+I'll put your patch on some of the affected hosts and see if this
+changes behaviour in any way.
+
+thanks,
+	Dave
+
 
 _______________________________________________
 kexec mailing list
