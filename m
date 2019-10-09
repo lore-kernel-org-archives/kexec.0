@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v2 1/2] Add support for arm64 to carry ima measurement log
- in kexec_file_load
-References: <20191007185943.1828-1-prsriva@linux.microsoft.com>
- <20191007185943.1828-2-prsriva@linux.microsoft.com>
- <20191008212224.GC1396@sasha-vm>
-From: prsriva <prsriva@linux.microsoft.com>
-Message-ID: <b4ca20f8-dc8c-7266-de54-8062cf6ac8e3@linux.microsoft.com>
-Date: Wed, 9 Oct 2019 13:49:09 -0700
+Received: from scorn.kernelslacker.org ([2600:3c03:e000:2fb::1])
+ by bombadil.infradead.org with esmtps (Exim 4.92.2 #3 (Red Hat Linux))
+ id 1iIJfe-0000W8-VA
+ for kexec@lists.infradead.org; Wed, 09 Oct 2019 21:39:00 +0000
+Date: Wed, 9 Oct 2019 17:38:55 -0400
+From: Dave Jones <davej@codemonkey.org.uk>
+Subject: Re: makedumpfile: ELF format issues (RE: makedumpfile: Fix divide by
+ zero in print_report())
+Message-ID: <20191009213855.GA14574@codemonkey.org.uk>
+References: <4AE2DC15AC0B8543882A74EA0D43DBEC03591761@BPXM09GP.gisp.nec.co.jp>
 MIME-Version: 1.0
-In-Reply-To: <20191008212224.GC1396@sasha-vm>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03591761@BPXM09GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,68 +20,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sasha Levin <sashal@kernel.org>
-Cc: mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de, takahiro.akashi@linaro.org, sboyd@kernel.org, catalin.marinas@arm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, bauerman@linux.ibm.com, yamada.masahiro@socionext.com, kristina.martsenko@arm.org, duwe@lst.de, allison@lohutok.net, james.morse@arm.org, linux-integrity@vger.kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-CgpPbiAxMC84LzE5IDI6MjIgUE0sIFNhc2hhIExldmluIHdyb3RlOgo+IE9uIE1vbiwgT2N0IDA3
-LCAyMDE5IGF0IDExOjU5OjQyQU0gLTA3MDAsIFByYWtoYXIgU3JpdmFzdGF2YSB3cm90ZToKPj4g
-RHVyaW5nIGtleGVjX2ZpbGVfbG9hZCwgY2FycnlpbmcgZm9yd2FyZCB0aGUgaW1hIG1lYXN1cmVt
-ZW50IGxvZyBhbGxvd3MKPj4gYSB2ZXJpZnlpbmcgcGFydHkgdG8gZ2V0IHRoZSBlbnRpcmUgcnVu
-dGltZSBldmVudCBsb2cgc2luY2UgdGhlIGxhc3QKPj4gZnVsbCByZWJvb3Qgc2luY2UgdGhhdCBp
-cyB3aGVuIFBDUnMgd2VyZSBsYXN0IHJlc2V0Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBQcmFraGFy
-IFNyaXZhc3RhdmEgPHByc3JpdmFAbGludXgubWljcm9zb2Z0LmNvbT4KPj4gLS0tCj4+IGFyY2gv
-S2NvbmZpZ8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgfMKgwqAgNiArLQo+PiBhcmNoL2FybTY0L2luY2x1ZGUvYXNtL2ltYS5owqDCoMKgwqDCoMKg
-wqDCoMKgwqAgfMKgIDI0ICsrKwo+PiBhcmNoL2FybTY0L2luY2x1ZGUvYXNtL2tleGVjLmjCoMKg
-wqDCoMKgwqDCoMKgIHzCoMKgIDUgKwo+PiBhcmNoL2FybTY0L2tlcm5lbC9NYWtlZmlsZcKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoCAzICstCj4+IGFyY2gvYXJtNjQva2VybmVsL2ltYV9r
-ZXhlYy5jwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCA3OCArKysrKysrKysrCj4+IGFyY2gvYXJtNjQv
-a2VybmVsL21hY2hpbmVfa2V4ZWNfZmlsZS5jIHzCoMKgIDYgKwo+PiBkcml2ZXJzL29mL0tjb25m
-aWfCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDYgKwo+PiBk
-cml2ZXJzL29mL01ha2VmaWxlwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-fMKgwqAgMSArCj4+IGRyaXZlcnMvb2Yvb2ZfaW1hLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCB8IDIwNCArKysrKysrKysrKysrKysrKysrKysrKysrCj4+IGluY2x1ZGUv
-bGludXgvb2YuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDMx
-ICsrKysKPj4gMTAgZmlsZXMgY2hhbmdlZCwgMzYyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
-KC0pCj4+IGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2luY2x1ZGUvYXNtL2ltYS5oCj4+
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2tlcm5lbC9pbWFfa2V4ZWMuYwo+PiBjcmVh
-dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9vZi9vZl9pbWEuYwo+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJj
-aC9LY29uZmlnIGIvYXJjaC9LY29uZmlnCj4+IGluZGV4IGE3YjU3ZGQ0MmMyNi4uZDUzZTE1OTZj
-NWIxIDEwMDY0NAo+PiAtLS0gYS9hcmNoL0tjb25maWcKPj4gKysrIGIvYXJjaC9LY29uZmlnCj4+
-IEBAIC0xOSw3ICsxOSwxMSBAQCBjb25maWcgS0VYRUNfQ09SRQo+PiDCoMKgwqDCoGJvb2wKPj4K
-Pj4gY29uZmlnIEhBVkVfSU1BX0tFWEVDCj4+IC3CoMKgwqAgYm9vbAo+PiArwqDCoMKgIGJvb2wg
-IkNhcnJ5IG92ZXIgSU1BIG1lYXN1cmVtZW50IGxvZyBkdXJpbmcga2V4ZWNfZmlsZV9sb2FkKCkg
-Cj4+IHN5c2NhbGwiCj4+ICvCoMKgwqAgZGVwZW5kcyBvbiBLRVhFQ19GSUxFCj4+ICvCoMKgwqAg
-aGVscAo+PiArwqDCoMKgwqDCoCBTZWxlY3QgdGhpcyBvcHRpb24gdG8gY2Fycnkgb3ZlciBJTUEg
-bWVhc3VyZW1lbnQgbG9nIGR1cmluZwo+PiArwqDCoMKgwqDCoCBrZXhlY19maWxlX2xvYWQuCj4g
-Cj4gVGhpcyBjaGFuZ2UgbG9va3MgdmVyeSB3cm9uZzogSEFWRV8qIGNvbmZpZyBzeW1ib2xzIGFy
-ZSB1c2VkIHRvIGluZGljYXRlCj4gdGhlIGF2YWlsYWJpbGl0eSBvZiBjZXJ0YWluIGFyY2ggc3Bl
-Y2lmaWMgY2FwYWJpbGl0eSwgcmF0aGVyIHRoYW4gYWN0IGFzCj4gYSBjb25maWcgb3B0aW9uLiBI
-b3cgZG9lcyB0aGlzIHdvcmsgd2l0aCBDT05GSUdfSU1BX0tFWEVDID8KPiAKVGhhbmtzIGZvciBw
-b2ludGluZyB0aGlzIG91dC4gTXkgYXR0ZW1wdCB3YXMgdG8gbW92ZSB0aGlzIG91dCBvZiBhcmNo
-IApkZXBlbmRlbnQgY29uZmlnLiBJIHdpbGwgZml4IHRoZSBDT05GSUcuCgo+IEFsc28sIHBsZWFz
-ZSwgYXQgdGhlIHZlcnkgbGVhc3QgdmVyaWZ5IHRoYXQgYmFzaWMgZnVuY3Rpb25hbGl0eSB3b3Jr
-cyBvbgo+IHRoZSBhcmNoaXRlY3R1cmVzIHdlIGhhdmUgYWNjZXNzIHRvLiBUcnlpbmcgaXQgb24g
-eDg2Ogo+IAoKTGV0IG1lIGZpeCB0aGUgYnVpbGQgaXNzdWVzIGZvciBvdGhlciBhcmNocy4KSSBo
-YXZlIHRlc3RlZCB0aGVzZSBjaGFuZ2VzIGZvciBhcm02NC4KCj4gJCBtYWtlIGFsbG1vZGNvbmZp
-Zwo+IHNjcmlwdHMva2NvbmZpZy9jb25mwqAgLS1hbGxtb2Rjb25maWcgS2NvbmZpZwo+ICMKPiAj
-IE5vIGNoYW5nZSB0byAuY29uZmlnCj4gIwo+ICQgbWFrZQo+ICDCoENBTEzCoMKgwqAgc2NyaXB0
-cy9jaGVja3N5c2NhbGxzLnNoCj4gIMKgQ0FMTMKgwqDCoCBzY3JpcHRzL2F0b21pYy9jaGVjay1h
-dG9taWNzLnNoCj4gIMKgREVTQ0VORMKgIG9ianRvb2wKPiAgwqBDQ8KgwqDCoMKgwqAgc2VjdXJp
-dHkvaW50ZWdyaXR5L2ltYS9pbWFfZnMubwo+IEluIGZpbGUgaW5jbHVkZWQgZnJvbSBzZWN1cml0
-eS9pbnRlZ3JpdHkvaW1hL2ltYV9mcy5jOjI2Ogo+IHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1h
-Lmg6Mjg6MTA6IGZhdGFsIGVycm9yOiBhc20vaW1hLmg6IE5vIHN1Y2ggZmlsZSAKPiBvciBkaXJl
-Y3RvcnkKPiAjaW5jbHVkZSA8YXNtL2ltYS5oPgo+ICDCoMKgwqDCoMKgwqDCoMKgIF5+fn5+fn5+
-fn5+Cj4gY29tcGlsYXRpb24gdGVybWluYXRlZC4KPiBtYWtlWzNdOiAqKiogW3NjcmlwdHMvTWFr
-ZWZpbGUuYnVpbGQ6MjY2OiAKPiBzZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9mcy5vXSBFcnJv
-ciAxCj4gbWFrZVsyXTogKioqIFtzY3JpcHRzL01ha2VmaWxlLmJ1aWxkOjUwOTogc2VjdXJpdHkv
-aW50ZWdyaXR5L2ltYV0gRXJyb3IgMgo+IG1ha2VbMV06ICoqKiBbc2NyaXB0cy9NYWtlZmlsZS5i
-dWlsZDo1MDk6IHNlY3VyaXR5L2ludGVncml0eV0gRXJyb3IgMgo+IG1ha2U6ICoqKiBbTWFrZWZp
-bGU6MTY0OTogc2VjdXJpdHldIEVycm9yIDIKPiAKPiAtLSAKPiBUaGFua3MsCj4gU2FzaGEKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Wed, Oct 09, 2019 at 08:03:51PM +0000, Kazuhito Hagio wrote:
+
+ > >                  0x0000000000000000 0x0000000000000000         0
+ > >   NULL           0x0000000000000000 0x0000000000000000 0x0000000000000000
+ > >                  0x0000000000000000 0x0000000000000000         0
+ > > 
+ > 
+ > In this case, was the "makedumpfile Completed." message emitted?
+ > It looks like the buffer of program headers was not written to the file..
+
+Our logging infra didn't capture the makedumpfile output. I've fixed
+that up, so hopefully next time..
+
+ > Anyway, a debugging patch attached below.
+ > 
+ > > There are some other failure cases with non-null data, so maybe there's >1 bug here.
+ > > I've not seen an obvious pattern to this. eg...
+ > > 
+ > > https://pastebin.com/2uM4sBCF
+ > > 
+ > 
+ > As for this case, I suspect that Elf64_Ehdr.e_phnum overflows
+ > (i.e. num_loads_dumpfile > 65535):
+
+Oh, good catch.  These are 256GB machines, so after discarding
+everything, that explains why we end up with so many sections.
+This also explains why it sometimes works I think, when the discarding
+manages to get the total nr headers <64k.
+
+ > > I'll put your patch on some of the affected hosts and see if this
+ > > changes behaviour in any way.
+ > 
+ > If you can try the patch below, which includes the previous patch,
+ > please show me:
+ > - the debugging output of makedumpfile
+ > - readelf -a vmcore
+ > - ls -ls vmcore
+
+Will take me a few days (travelling right now), but when hopefully by
+the time I get back we'll have some data.
+
+thanks for looking into this.
+
+	Dave
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
