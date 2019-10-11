@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v3 08/17] arm64, trans_pgd: make trans_pgd_map_page generic
+Subject: Re: [PATCH v3 06/17] arm64, hibernate: add trans_pgd public functions
 References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
- <20190821183204.23576-9-pasha.tatashin@soleen.com>
- <62fc9ed9-1740-d40b-bc72-6d1911ef1f24@arm.com>
- <CA+CK2bAPA=L+KeWve=2PbNEh+B9mXRzTGr1iQqRCkOAs5dU-Qg@mail.gmail.com>
+ <20190821183204.23576-7-pasha.tatashin@soleen.com>
+ <bcc3f71f-97d2-dff4-c55a-4798c6e2bede@arm.com>
+ <CA+CK2bCwRm_AQHzrJ8tdjp5k6Yj+32yRsvQsOoy7b44GTdd6wQ@mail.gmail.com>
 From: James Morse <james.morse@arm.com>
-Message-ID: <ba96ab95-af8b-895e-e515-a94a63dd056a@arm.com>
-Date: Fri, 11 Oct 2019 19:15:15 +0100
+Message-ID: <f1dbf5c6-7caf-daae-aec4-9a47a367c119@arm.com>
+Date: Fri, 11 Oct 2019 19:16:50 +0100
 MIME-Version: 1.0
-In-Reply-To: <CA+CK2bAPA=L+KeWve=2PbNEh+B9mXRzTGr1iQqRCkOAs5dU-Qg@mail.gmail.com>
+In-Reply-To: <CA+CK2bCwRm_AQHzrJ8tdjp5k6Yj+32yRsvQsOoy7b44GTdd6wQ@mail.gmail.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,178 +27,101 @@ Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladim
 
 Hi Pavel,
 
-On 06/09/2019 19:58, Pavel Tatashin wrote:
-> On Fri, Sep 6, 2019 at 11:20 AM James Morse <james.morse@arm.com> wrote:
+On 06/09/2019 17:00, Pavel Tatashin wrote:
+> On Fri, Sep 6, 2019 at 11:18 AM James Morse <james.morse@arm.com> wrote:
 >> On 21/08/2019 19:31, Pavel Tatashin wrote:
->>> Currently, trans_pgd_map_page has assumptions that are relevant to
->>> hibernate. But, to make it generic we must allow it to use any allocator
-
->>> and also, can't assume that entries do not exist in the page table
->>> already.
-
-[...]
-
->> Please don't use the page tables as an array: this is what the offset helpers are for.
-> 
-> Sure, I can use:
-> 
-> pte_offset_kernel()
-> pmd_offset()
-> pud_offset()
-> pgd_offset_raw()
-
-> The code becomes a little less efficient, because offsets return
-> pointer to the entry after READ_ONCE, and we need to use another
-> READ_ONCE() to read its content to parse its value in for example
-> pud_table(), pud_none() etc . In my case we use READ_ONCE() only one
-> time  per entry and operate on the content multiple times. Also,
-> because of unfortunate differences in macro names, the code become a
-> little less symmetric. Still, I can change the code to use _offsets
-> here. Please let me know if you still think it is better to use them
-> here.
-
-We should make this as clearly readable as possible, that way reviewers can spot the bugs.
-Using the helpers makes this more maintainable, as the helpers may be where strange things
-like 52bit VA get implemented.
-
-Making it fast is the compilers job. I agree it can't remove READ_ONCE()es, but I think
-the difference between one and two READ_ONCE()es per leaf-entry is insignificant when we
-go on to copy megabytes worth of data.
-
-
->> The copy_p?d() functions should decide if they should manipulate _this_ entry based on
->> _this_ entry and the kernel configuration. This is only really done in _copy_pte(), which
->> is where it should stay.
-> 
-> I am sorry, I do not understand this comment. Could you please
-> elaborate what would you like me to change.
-
-Consider the current _copy_pte():
-|	} else if (debug_pagealloc_enabled() && !pte_none(pte)) {
-|		/*
-|		 * debug_pagealloc will removed the PTE_VALID bit if
-|		 * the page isn't in use by the resume kernel. It may have
-|		 * been in use by the original kernel, in which case we need
-|		 * to put it back in our copy to do the restore.
-|		 *
-|		 * Before marking this entry valid, check the pfn should
-|		 * be mapped.
-|		 */
-|		BUG_ON(!pfn_valid(pte_pfn(pte)));
-|
-|		set_pte(dst_ptep, pte_mkpresent(pte_mkwrite(pte)));
-|	}
-
-From this it is very obvious that we only put the valid bits back into the page table if
-debug_pagealloc is enabled and the not-valid PTE's PFN points to memory that was part of
-the linear map.
-
-If this logic gets moved apart, and strung together with global variables, its not at all
-clear what happens.
-
-
->>> diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
->>> index c7b5402b7d87..e3d022b1b526 100644
->>> --- a/arch/arm64/include/asm/trans_pgd.h
->>> +++ b/arch/arm64/include/asm/trans_pgd.h
->>> @@ -11,10 +11,45 @@
->>>  #include <linux/bits.h>
->>>  #include <asm/pgtable-types.h>
->>>
->>> +/*
->>> + * trans_alloc_page
->>> + *   - Allocator that should return exactly one uninitilaized page, if this
->>> + *    allocator fails, trans_pgd returns -ENOMEM error.
->>> + *
->>> + * trans_alloc_arg
->>> + *   - Passed to trans_alloc_page as an argument
+>>> trans_pgd_create_copy() and trans_pgd_map_page() are going to be
+>>> the basis for public interface of new subsystem that handles page
 >>
->> This is very familiar.
+>> Please don't call this a subsystem. 'sound' and 'mm' are subsystems, this is just some
+>> shared code.
+
+> Sounds good: just could not find a better term to call trans_pgd_*.
+
+I don't like the trans_pgd_ name either, but I can't think of anything better, and its
+only a name.
+
+
+> I won't fix log commits.
+
+Please avoid the word 'subsystem',
+
+
+>>> diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+>>> index 750ecc7f2cbe..2e29d620b56c 100644
+>>> --- a/arch/arm64/kernel/hibernate.c
+>>> +++ b/arch/arm64/kernel/hibernate.c
+>>> @@ -182,39 +182,15 @@ int arch_hibernation_header_restore(void *addr)
+>>
+>>> +int trans_pgd_map_page(pgd_t *trans_pgd, void *page,
+>>> +                    unsigned long dst_addr,
+>>> +                    pgprot_t pgprot)
+>>
+>> If this thing is going to be exposed, its name should reflect that its creating a set of
+>> page tables, to map a single page.
+>>
+>> A function called 'map_page' with this prototype should 'obviously' map @page at @dst_addr
+>> in @trans_pgd using the provided @pgprot... but it doesn't.
 > 
-> Sorry, What do you mean?
-
-This stuff used to take a pointer to a function that allocates a page, and an argument for
-that allocator ... until patch 2 when you squashed it all in... only to undo it here. This
-looks like churn.
-
-
->>> + * trans_flags
-
-[...]
-
-> I re-evaluated "flags", and figured that they are indeed not needed.
-> So, I will embed them into the code directly.
-
-Great!
-
-
-
->>> diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
->>> index 00b62d8640c2..dbabccd78cc4 100644
->>> --- a/arch/arm64/mm/trans_pgd.c
->>> +++ b/arch/arm64/mm/trans_pgd.c
->>> @@ -17,6 +17,16 @@
->>>  #include <asm/pgtable.h>
->>>  #include <linux/suspend.h>
-
->>>
->>> -int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
->>> -                    pgprot_t pgprot)
->>> +int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
->>> +                    void *page, unsigned long dst_addr, pgprot_t pgprot)
->>>  {
->>> -     pgd_t *pgdp;
->>> -     pud_t *pudp;
->>> -     pmd_t *pmdp;
->>> -     pte_t *ptep;
->>> -
->>> -     pgdp = pgd_offset_raw(trans_pgd, dst_addr);
->>> -     if (pgd_none(READ_ONCE(*pgdp))) {
->>> -             pudp = (void *)get_safe_page(GFP_ATOMIC);
->>> -             if (!pudp)
->>> +     int pgd_idx = pgd_index(dst_addr);
->>> +     int pud_idx = pud_index(dst_addr);
->>> +     int pmd_idx = pmd_index(dst_addr);
->>> +     int pte_idx = pte_index(dst_addr);
->>
->> Yuck.
->>
+> Answered below...
 > 
-> What's wrong with pre-calculating indices? :)
-
-The only thing to do with them is access the page tables as a C array. This stuff is the
-business of the helpers, please use them. Its a maintenance headache if you don't.
-
-
->>> -     pudp = pud_offset(pgdp, dst_addr);
->>> -     if (pud_none(READ_ONCE(*pudp))) {
->>> -             pmdp = (void *)get_safe_page(GFP_ATOMIC);
->>> -             if (!pmdp)
->>> +     pudp = __va(pgd_page_paddr(pgd));
->>> +     pud = READ_ONCE(pudp[pud_idx]);
->>> +     if (pud_sect(pud)) {
->>> +             return -ENXIO;
->>> +     } else if (pud_none(pud) || pud_sect(pud)) {
->>> +             pmd_t *t = trans_alloc(info);
->>> +
->>> +             if (!t)
->>>                       return -ENOMEM;
 >>
->> Choke on block mappings? This should never happen because this function should only create
->> the tables necessary to map one page. Not a block mapping in sight.
+>> This is what 'create' was doing in the old name, if that wasn't obvious, its because
+>> naming things is hard!
+>> | trans_create_single_page_mapping()?
 >>
->> (see my comments on patch 6)
+>> (might be too verbose)
+>>
+>> I think this bites you in patch 8, where you 'generalise' this.
 
-> I can remove this, but what should I replace it with BUG() or silently
-> ignore, and assume no huge page hre? I thought the idea is not to use
-> BUG() calls in kernel code, and return errors instead. If, in the
-> future PUD size mappings are added, how is that going to be detected?
+> The new naming makes more sense to me. The old code had function named:
+> 
+> create_safe_exec_page()
+> 
+> It was doing four things: 1. creating the actual page via provided
+> allocator, 2. copying content from the provided page to new page, 3
+> creating a new page table. 4 mapping it to a new page table at
+> specified destination address
 
-...if in the future...
+Yup, all implied in the work of creation.
 
-Could your turn RODATA_FULL_DEFAULT_ENABLED off in your kernel config, then check debugfs
-kernel_page_tables export. You should see blocks mappings for the large contiguous blocks
-of memory.
+
+> After, I generalize this the function the prototype looks like this:
+> 
+> int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
+>                                          void *page, unsigned long
+> dst_addr, pgprot_t pgprot)
+> 
+> The function only does the "4" from the old code: map the specified
+> page at dst_addr.
+
+
+> The trans_pgd is already created.
+
+Which one is this?
+The existing hibernate code has two PGD. One for the copy of the linear-map, one for this
+safe page that contains the code doing the copying.
+
+
+> Of course, and
+> mapping function will have to allocate missing tables in the page
+> tables when necessary.
+
+I think you are over generalising this, to support a case that doesn't exist.
+
+Hibernate needs a copy of the linear map to relocate memory, without stepping in
+page-table, and an executable page it can do that from.
+
+To get kexec to relocate the kernel with the MMU on... you need the same.
+
+When do you need to add an arbitrary page to either of these sets of tables? Its either a
+copy of the linear-map, or the single executable page.
+
+When would does 'trans_pgd_map_page()' get used outside those two?
+
+(looking in your later series, I see you are using it to try and idmap stuff into the low
+memory. We can't do stuff like this because there may not be any memory in range of the
+page table helpers. More details in that patch)
 
 
 Thanks,
