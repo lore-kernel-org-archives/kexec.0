@@ -1,10 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Prakhar Srivastava <prsriva@linux.microsoft.com>
-Subject: [PATCH V4 2/2] update powerpc implementation to call into of_ima*
-Date: Thu, 10 Oct 2019 17:36:00 -0700
-Message-Id: <20191011003600.22090-3-prsriva@linux.microsoft.com>
-In-Reply-To: <20191011003600.22090-1-prsriva@linux.microsoft.com>
-References: <20191011003600.22090-1-prsriva@linux.microsoft.com>
+Subject: Re: [PATCH v3 08/17] arm64, trans_pgd: make trans_pgd_map_page generic
+References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
+ <20190821183204.23576-9-pasha.tatashin@soleen.com>
+ <62fc9ed9-1740-d40b-bc72-6d1911ef1f24@arm.com>
+ <CA+CK2bAPA=L+KeWve=2PbNEh+B9mXRzTGr1iQqRCkOAs5dU-Qg@mail.gmail.com>
+From: James Morse <james.morse@arm.com>
+Message-ID: <ba96ab95-af8b-895e-e515-a94a63dd056a@arm.com>
+Date: Fri, 11 Oct 2019 19:15:15 +0100
+MIME-Version: 1.0
+In-Reply-To: <CA+CK2bAPA=L+KeWve=2PbNEh+B9mXRzTGr1iQqRCkOAs5dU-Qg@mail.gmail.com>
+Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -13,274 +18,192 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-integrity@vger.kernel.org, kexec@lists.infradead.org
-Cc: mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de, takahiro.akashi@linaro.org, sboyd@kernel.org, catalin.marinas@arm.com, zohar@linux.ibm.com, yamada.masahiro@socionext.com, kristina.martsenko@arm.org, duwe@lst.de, bauerman@linux.ibm.com, james.morse@arm.org, tglx@linutronix.de, allison@lohutok.net
+To: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Matthias Brugger <matthias.bgg@gmail.com>, will@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 
-update powerpc ima buffer pass implementationt to call into
-of_ima* for a cross architecture support.
+Hi Pavel,
 
-Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
----
- arch/powerpc/include/asm/ima.h  |   5 -
- arch/powerpc/kernel/Makefile    |   3 -
- arch/powerpc/kernel/ima_kexec.c | 170 +++-----------------------------
- 3 files changed, 14 insertions(+), 164 deletions(-)
+On 06/09/2019 19:58, Pavel Tatashin wrote:
+> On Fri, Sep 6, 2019 at 11:20 AM James Morse <james.morse@arm.com> wrote:
+>> On 21/08/2019 19:31, Pavel Tatashin wrote:
+>>> Currently, trans_pgd_map_page has assumptions that are relevant to
+>>> hibernate. But, to make it generic we must allow it to use any allocator
 
-diff --git a/arch/powerpc/include/asm/ima.h b/arch/powerpc/include/asm/ima.h
-index ead488cf3981..f50a4f622f3d 100644
---- a/arch/powerpc/include/asm/ima.h
-+++ b/arch/powerpc/include/asm/ima.h
-@@ -6,12 +6,7 @@ struct kimage;
- 
- int ima_get_kexec_buffer(void **addr, size_t *size);
- int ima_free_kexec_buffer(void);
--
--#ifdef CONFIG_IMA
- void remove_ima_buffer(void *fdt, int chosen_node);
--#else
--static inline void remove_ima_buffer(void *fdt, int chosen_node) {}
--#endif
- 
- #ifdef CONFIG_IMA_KEXEC
- int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index 56dfa7a2a6f2..339aaae7ed3e 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -128,11 +128,8 @@ obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o crash.o \
- 				   machine_kexec_$(BITS).o
- obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file_$(BITS).o kexec_elf_$(BITS).o
- ifdef CONFIG_HAVE_IMA_KEXEC
--ifdef CONFIG_IMA
- obj-y				+= ima_kexec.o
- endif
--endif
--
- obj-$(CONFIG_AUDIT)		+= audit.o
- obj64-$(CONFIG_AUDIT)		+= compat_audit.o
- 
-diff --git a/arch/powerpc/kernel/ima_kexec.c b/arch/powerpc/kernel/ima_kexec.c
-index 720e50e490b6..41f52297de0c 100644
---- a/arch/powerpc/kernel/ima_kexec.c
-+++ b/arch/powerpc/kernel/ima_kexec.c
-@@ -6,45 +6,21 @@
-  * Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-  */
- 
--#include <linux/slab.h>
- #include <linux/kexec.h>
- #include <linux/of.h>
--#include <linux/memblock.h>
--#include <linux/libfdt.h>
- 
--static int get_addr_size_cells(int *addr_cells, int *size_cells)
-+/**
-+ * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
-+ *
-+ * The IMA measurement buffer is of no use to a subsequent kernel, so we always
-+ * remove it from the device tree.
-+ */
-+void remove_ima_buffer(void *fdt, int chosen_node)
- {
--	struct device_node *root;
--
--	root = of_find_node_by_path("/");
--	if (!root)
--		return -EINVAL;
--
--	*addr_cells = of_n_addr_cells(root);
--	*size_cells = of_n_size_cells(root);
--
--	of_node_put(root);
--
--	return 0;
-+	fdt_remove_ima_buffer(fdt, chosen_node);
-+	return;
- }
- 
--static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
--			       size_t *size)
--{
--	int ret, addr_cells, size_cells;
--
--	ret = get_addr_size_cells(&addr_cells, &size_cells);
--	if (ret)
--		return ret;
--
--	if (len < 4 * (addr_cells + size_cells))
--		return -ENOENT;
--
--	*addr = of_read_number(prop, addr_cells);
--	*size = of_read_number(prop + 4 * addr_cells, size_cells);
--
--	return 0;
--}
- 
- /**
-  * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-@@ -55,23 +31,7 @@ static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
-  */
- int ima_get_kexec_buffer(void **addr, size_t *size)
- {
--	int ret, len;
--	unsigned long tmp_addr;
--	size_t tmp_size;
--	const void *prop;
--
--	prop = of_get_property(of_chosen, "linux,ima-kexec-buffer", &len);
--	if (!prop)
--		return -ENOENT;
--
--	ret = do_get_kexec_buffer(prop, len, &tmp_addr, &tmp_size);
--	if (ret)
--		return ret;
--
--	*addr = __va(tmp_addr);
--	*size = tmp_size;
--
--	return 0;
-+	return of_get_ima_buffer(addr, size);
- }
- 
- /**
-@@ -79,52 +39,7 @@ int ima_get_kexec_buffer(void **addr, size_t *size)
-  */
- int ima_free_kexec_buffer(void)
- {
--	int ret;
--	unsigned long addr;
--	size_t size;
--	struct property *prop;
--
--	prop = of_find_property(of_chosen, "linux,ima-kexec-buffer", NULL);
--	if (!prop)
--		return -ENOENT;
--
--	ret = do_get_kexec_buffer(prop->value, prop->length, &addr, &size);
--	if (ret)
--		return ret;
--
--	ret = of_remove_property(of_chosen, prop);
--	if (ret)
--		return ret;
--
--	return memblock_free(addr, size);
--
--}
--
--/**
-- * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
-- *
-- * The IMA measurement buffer is of no use to a subsequent kernel, so we always
-- * remove it from the device tree.
-- */
--void remove_ima_buffer(void *fdt, int chosen_node)
--{
--	int ret, len;
--	unsigned long addr;
--	size_t size;
--	const void *prop;
--
--	prop = fdt_getprop(fdt, chosen_node, "linux,ima-kexec-buffer", &len);
--	if (!prop)
--		return;
--
--	ret = do_get_kexec_buffer(prop, len, &addr, &size);
--	fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer");
--	if (ret)
--		return;
--
--	ret = delete_fdt_mem_rsv(fdt, addr, size);
--	if (!ret)
--		pr_debug("Removed old IMA buffer reservation.\n");
-+	return of_remove_ima_buffer();
- }
- 
- #ifdef CONFIG_IMA_KEXEC
-@@ -145,27 +60,6 @@ int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
- 	return 0;
- }
- 
--static int write_number(void *p, u64 value, int cells)
--{
--	if (cells == 1) {
--		u32 tmp;
--
--		if (value > U32_MAX)
--			return -EINVAL;
--
--		tmp = cpu_to_be32(value);
--		memcpy(p, &tmp, sizeof(tmp));
--	} else if (cells == 2) {
--		u64 tmp;
--
--		tmp = cpu_to_be64(value);
--		memcpy(p, &tmp, sizeof(tmp));
--	} else
--		return -EINVAL;
--
--	return 0;
--}
--
- /**
-  * setup_ima_buffer - add IMA buffer information to the fdt
-  * @image:		kexec image being loaded.
-@@ -176,44 +70,8 @@ static int write_number(void *p, u64 value, int cells)
-  */
- int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node)
- {
--	int ret, addr_cells, size_cells, entry_size;
--	u8 value[16];
--
--	remove_ima_buffer(fdt, chosen_node);
--	if (!image->arch.ima_buffer_size)
--		return 0;
--
--	ret = get_addr_size_cells(&addr_cells, &size_cells);
--	if (ret)
--		return ret;
--
--	entry_size = 4 * (addr_cells + size_cells);
--
--	if (entry_size > sizeof(value))
--		return -EINVAL;
--
--	ret = write_number(value, image->arch.ima_buffer_addr, addr_cells);
--	if (ret)
--		return ret;
--
--	ret = write_number(value + 4 * addr_cells, image->arch.ima_buffer_size,
--			   size_cells);
--	if (ret)
--		return ret;
--
--	ret = fdt_setprop(fdt, chosen_node, "linux,ima-kexec-buffer", value,
--			  entry_size);
--	if (ret < 0)
--		return -EINVAL;
--
--	ret = fdt_add_mem_rsv(fdt, image->arch.ima_buffer_addr,
--			      image->arch.ima_buffer_size);
--	if (ret)
--		return -EINVAL;
--
--	pr_debug("IMA buffer at 0x%llx, size = 0x%zx\n",
--		 image->arch.ima_buffer_addr, image->arch.ima_buffer_size);
--
--	return 0;
-+	return fdt_setup_ima_buffer(image->arch.ima_buffer_addr,
-+				    image->arch.ima_buffer_size,
-+				    fdt, chosen_node);
- }
- #endif /* CONFIG_IMA_KEXEC */
--- 
-2.17.1
+>>> and also, can't assume that entries do not exist in the page table
+>>> already.
 
+[...]
+
+>> Please don't use the page tables as an array: this is what the offset helpers are for.
+> 
+> Sure, I can use:
+> 
+> pte_offset_kernel()
+> pmd_offset()
+> pud_offset()
+> pgd_offset_raw()
+
+> The code becomes a little less efficient, because offsets return
+> pointer to the entry after READ_ONCE, and we need to use another
+> READ_ONCE() to read its content to parse its value in for example
+> pud_table(), pud_none() etc . In my case we use READ_ONCE() only one
+> time  per entry and operate on the content multiple times. Also,
+> because of unfortunate differences in macro names, the code become a
+> little less symmetric. Still, I can change the code to use _offsets
+> here. Please let me know if you still think it is better to use them
+> here.
+
+We should make this as clearly readable as possible, that way reviewers can spot the bugs.
+Using the helpers makes this more maintainable, as the helpers may be where strange things
+like 52bit VA get implemented.
+
+Making it fast is the compilers job. I agree it can't remove READ_ONCE()es, but I think
+the difference between one and two READ_ONCE()es per leaf-entry is insignificant when we
+go on to copy megabytes worth of data.
+
+
+>> The copy_p?d() functions should decide if they should manipulate _this_ entry based on
+>> _this_ entry and the kernel configuration. This is only really done in _copy_pte(), which
+>> is where it should stay.
+> 
+> I am sorry, I do not understand this comment. Could you please
+> elaborate what would you like me to change.
+
+Consider the current _copy_pte():
+|	} else if (debug_pagealloc_enabled() && !pte_none(pte)) {
+|		/*
+|		 * debug_pagealloc will removed the PTE_VALID bit if
+|		 * the page isn't in use by the resume kernel. It may have
+|		 * been in use by the original kernel, in which case we need
+|		 * to put it back in our copy to do the restore.
+|		 *
+|		 * Before marking this entry valid, check the pfn should
+|		 * be mapped.
+|		 */
+|		BUG_ON(!pfn_valid(pte_pfn(pte)));
+|
+|		set_pte(dst_ptep, pte_mkpresent(pte_mkwrite(pte)));
+|	}
+
+From this it is very obvious that we only put the valid bits back into the page table if
+debug_pagealloc is enabled and the not-valid PTE's PFN points to memory that was part of
+the linear map.
+
+If this logic gets moved apart, and strung together with global variables, its not at all
+clear what happens.
+
+
+>>> diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
+>>> index c7b5402b7d87..e3d022b1b526 100644
+>>> --- a/arch/arm64/include/asm/trans_pgd.h
+>>> +++ b/arch/arm64/include/asm/trans_pgd.h
+>>> @@ -11,10 +11,45 @@
+>>>  #include <linux/bits.h>
+>>>  #include <asm/pgtable-types.h>
+>>>
+>>> +/*
+>>> + * trans_alloc_page
+>>> + *   - Allocator that should return exactly one uninitilaized page, if this
+>>> + *    allocator fails, trans_pgd returns -ENOMEM error.
+>>> + *
+>>> + * trans_alloc_arg
+>>> + *   - Passed to trans_alloc_page as an argument
+>>
+>> This is very familiar.
+> 
+> Sorry, What do you mean?
+
+This stuff used to take a pointer to a function that allocates a page, and an argument for
+that allocator ... until patch 2 when you squashed it all in... only to undo it here. This
+looks like churn.
+
+
+>>> + * trans_flags
+
+[...]
+
+> I re-evaluated "flags", and figured that they are indeed not needed.
+> So, I will embed them into the code directly.
+
+Great!
+
+
+
+>>> diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
+>>> index 00b62d8640c2..dbabccd78cc4 100644
+>>> --- a/arch/arm64/mm/trans_pgd.c
+>>> +++ b/arch/arm64/mm/trans_pgd.c
+>>> @@ -17,6 +17,16 @@
+>>>  #include <asm/pgtable.h>
+>>>  #include <linux/suspend.h>
+
+>>>
+>>> -int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
+>>> -                    pgprot_t pgprot)
+>>> +int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
+>>> +                    void *page, unsigned long dst_addr, pgprot_t pgprot)
+>>>  {
+>>> -     pgd_t *pgdp;
+>>> -     pud_t *pudp;
+>>> -     pmd_t *pmdp;
+>>> -     pte_t *ptep;
+>>> -
+>>> -     pgdp = pgd_offset_raw(trans_pgd, dst_addr);
+>>> -     if (pgd_none(READ_ONCE(*pgdp))) {
+>>> -             pudp = (void *)get_safe_page(GFP_ATOMIC);
+>>> -             if (!pudp)
+>>> +     int pgd_idx = pgd_index(dst_addr);
+>>> +     int pud_idx = pud_index(dst_addr);
+>>> +     int pmd_idx = pmd_index(dst_addr);
+>>> +     int pte_idx = pte_index(dst_addr);
+>>
+>> Yuck.
+>>
+> 
+> What's wrong with pre-calculating indices? :)
+
+The only thing to do with them is access the page tables as a C array. This stuff is the
+business of the helpers, please use them. Its a maintenance headache if you don't.
+
+
+>>> -     pudp = pud_offset(pgdp, dst_addr);
+>>> -     if (pud_none(READ_ONCE(*pudp))) {
+>>> -             pmdp = (void *)get_safe_page(GFP_ATOMIC);
+>>> -             if (!pmdp)
+>>> +     pudp = __va(pgd_page_paddr(pgd));
+>>> +     pud = READ_ONCE(pudp[pud_idx]);
+>>> +     if (pud_sect(pud)) {
+>>> +             return -ENXIO;
+>>> +     } else if (pud_none(pud) || pud_sect(pud)) {
+>>> +             pmd_t *t = trans_alloc(info);
+>>> +
+>>> +             if (!t)
+>>>                       return -ENOMEM;
+>>
+>> Choke on block mappings? This should never happen because this function should only create
+>> the tables necessary to map one page. Not a block mapping in sight.
+>>
+>> (see my comments on patch 6)
+
+> I can remove this, but what should I replace it with BUG() or silently
+> ignore, and assume no huge page hre? I thought the idea is not to use
+> BUG() calls in kernel code, and return errors instead. If, in the
+> future PUD size mappings are added, how is that going to be detected?
+
+...if in the future...
+
+Could your turn RODATA_FULL_DEFAULT_ENABLED off in your kernel config, then check debugfs
+kernel_page_tables export. You should see blocks mappings for the large contiguous blocks
+of memory.
+
+
+Thanks,
+
+James
 
 _______________________________________________
 kexec mailing list
