@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v6 08/17] arm64: hibernate: add trans_pgd public functions
+Subject: Re: [PATCH v6 14/17] arm64: kexec: move relocation function setup and
+ clean up
 References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
- <20191004185234.31471-9-pasha.tatashin@soleen.com>
+ <20191004185234.31471-15-pasha.tatashin@soleen.com>
 From: James Morse <james.morse@arm.com>
-Message-ID: <2ea69969-154d-fa55-767d-43ea8971dd0e@arm.com>
-Date: Fri, 11 Oct 2019 19:18:34 +0100
+Message-ID: <f1c50a5f-103e-e6d7-e93d-e873a169833e@arm.com>
+Date: Fri, 11 Oct 2019 19:19:12 +0100
 MIME-Version: 1.0
-In-Reply-To: <20191004185234.31471-9-pasha.tatashin@soleen.com>
+In-Reply-To: <20191004185234.31471-15-pasha.tatashin@soleen.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,109 +27,92 @@ Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn
 Hi Pavel,
 
 On 04/10/2019 19:52, Pavel Tatashin wrote:
-> trans_pgd_create_copy() and trans_pgd_map_page() are going to be
-> the basis for new shared code that handles page tables for cases
-> which are between kernels: kexec, and hibernate.
+> Currently, kernel relocation function is configured in machine_kexec()
+> at the time of kexec reboot by using control_code_page.
 > 
-> Note: Eventually, get_safe_page() will be moved into a function pointer
-> passed via argument, but for now keep it as is.
+> This operation, however, is more logical to be done during kexec_load,
+> and thus remove from reboot time. Move, setup of this function to
+> newly added machine_kexec_post_load().
+> 
+> In addition, do some cleanup: add infor about reloction function to
+
+infor ? reloction?
 
 
-> diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-> index ce60bceed357..ded9034b9d39 100644
-> --- a/arch/arm64/kernel/hibernate.c
-> +++ b/arch/arm64/kernel/hibernate.c
+> kexec_image_info(), and remove extra messages from machine_kexec().
 
-> @@ -242,6 +218,44 @@ static int create_safe_exec_page(void *src_start, size_t length,
 
-> +/*
-> + * Copies length bytes, starting at src_start into an new page,
-> + * perform cache maintenance, then maps it at the specified address low
-> + * address as executable.
-> + *
-> + * This is used by hibernate to copy the code it needs to execute when
-> + * overwriting the kernel text. This function generates a new set of page
-> + * tables, which it loads into ttbr0.
-> + *
-> + * Length is provided as we probably only want 4K of data, even on a 64K
-> + * page system.
-> + */
-> +static int create_safe_exec_page(void *src_start, size_t length,
-> +				 unsigned long dst_addr,
-> +				 phys_addr_t *phys_dst_addr)
+> Make dtb_mem, always available, if CONFIG_KEXEC_FILE is not configured
+> dtb_mem is set to zero anyway.
+
+This is unrelated cleanup, please do it as an earlier patch to make it clearer what you
+are changing here.
+
+(I'm not convinced you need to cache va<->pa)
+
+
+> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> index 12a561a54128..d15ca1ca1e83 100644
+> --- a/arch/arm64/include/asm/kexec.h
+> +++ b/arch/arm64/include/asm/kexec.h
+> @@ -90,14 +90,15 @@ static inline void crash_prepare_suspend(void) {}
+>  static inline void crash_post_resume(void) {}
+>  #endif
+>  
+> -#ifdef CONFIG_KEXEC_FILE
+>  #define ARCH_HAS_KIMAGE_ARCH
+>  
+>  struct kimage_arch {
+>  	void *dtb;
+>  	unsigned long dtb_mem;
+
+> +	unsigned long kern_reloc;
+
+This is cache-ing the physical address of an all-architectures value from struct kimage,
+in the arch specific part of struct kiamge. Why?
+
+(You must have the struct kimage on hand to access this thing at all!)
+
+If its supposed to be a physical address, please use phys_addr_t.
+
+>  };
+
+
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> index 0df8493624e0..9b41da50e6f7 100644
+> --- a/arch/arm64/kernel/machine_kexec.c
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -42,6 +42,7 @@ static void _kexec_image_info(const char *func, int line,
+>  	pr_debug("    start:       %lx\n", kimage->start);
+>  	pr_debug("    head:        %lx\n", kimage->head);
+>  	pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
+> +	pr_debug("    kern_reloc: %pa\n", &kimage->arch.kern_reloc);
+>  
+>  	for (i = 0; i < kimage->nr_segments; i++) {
+>  		pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
+> @@ -58,6 +59,19 @@ void machine_kexec_cleanup(struct kimage *kimage)
+>  	/* Empty routine needed to avoid build errors. */
+>  }
+>  
+> +int machine_kexec_post_load(struct kimage *kimage)
 > +{
-> +	void *page = (void *)get_safe_page(GFP_ATOMIC);
-> +	pgd_t *trans_pgd;
-> +	int rc;
+> +	unsigned long kern_reloc;
 > +
-> +	if (!page)
-> +		return -ENOMEM;
-> +
-> +	memcpy(page, src_start, length);
-> +	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
-> +
-> +	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
-> +	if (!trans_pgd)
-> +		return -ENOMEM;
-> +
-> +	rc = trans_pgd_map_page(trans_pgd, page, dst_addr,
-> +				PAGE_KERNEL_EXEC);
-> +	if (rc)
-> +		return rc;
-> +
->  	/*
->  	 * Load our new page tables. A strict BBM approach requires that we
->  	 * ensure that TLBs are free of any entries that may overlap with the
+> +	kern_reloc = page_to_phys(kimage->control_code_page);
 
-(I suspect you are going to to duplicate this in the kexec code. Kexec has the same
-pattern: instructions that have to be copied to do the relocation of the rest of memory)
+kern_reloc should be phys_addr_t.
 
 
-> @@ -462,6 +476,24 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
-
-> +int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
-> +			  unsigned long end)
-> +{
-> +	int rc;
-> +	pgd_t *trans_pgd = (pgd_t *)get_safe_page(GFP_ATOMIC);
-> +
-> +	if (!trans_pgd) {
-> +		pr_err("Failed to allocate memory for temporary page tables.\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	rc = copy_page_tables(trans_pgd, start, end);
-> +	if (!rc)
-> +		*dst_pgdp = trans_pgd;
-
-*dst_pgdp was already allocated in swsusp_arch_resume().
+> +	memcpy(__va(kern_reloc), arm64_relocate_new_kernel,
+> +	       arm64_relocate_new_kernel_size);
+> +	kimage->arch.kern_reloc = kern_reloc;
 
 
-> +
-> +	return rc;
+Please move the cache maintenance in here too. This will save us doing it late during
+kdump. This will also group the mmu-on changes together.
+
+
 > +}
-> +
->  /*
->   * Setup then Resume from the hibernate image using swsusp_arch_suspend_exit().
->   *
-> @@ -488,7 +520,7 @@ int swsusp_arch_resume(void)
->  		pr_err("Failed to allocate memory for temporary page tables.\n");
->  		return -ENOMEM;
->  	}
-
-If the allocation moves into 'trans_pgd_create_copy()', please move the code just above
-here (cut off by the diff) that allocates it in swsusp_arch_resume().
-
-Its actually okay to leak memory like this, hibernate's allocator acts as a memory pool.
-It either gets freed if we fail to resume, or vanishes when the resumed kernel takes over.
-
-Reviewed-by: James Morse <james.morse@arm.com>
-
-
-> -	rc = copy_page_tables(tmp_pg_dir, PAGE_OFFSET, PAGE_END);
-> +	rc = trans_pgd_create_copy(&tmp_pg_dir, PAGE_OFFSET, PAGE_END);
->  	if (rc)
->  		return rc;
 
 
 Thanks,
