@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iJUyi-0001Ln-Pt
- for kexec@lists.infradead.org; Sun, 13 Oct 2019 03:55:34 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
+ id 1iJaIy-0002ra-R1
+ for kexec@lists.infradead.org; Sun, 13 Oct 2019 09:36:51 +0000
+Subject: Re: [PATCH 3/3 v3] x86/kdump: clean up all the code related to the
+ backup region
 References: <20191012022140.19003-1-lijiang@redhat.com>
  <20191012022140.19003-4-lijiang@redhat.com>
  <87d0f22oi5.fsf@x220.int.ebiederm.org>
  <20191012121625.GA11587@dhcp-128-65.nay.redhat.com>
-Date: Sat, 12 Oct 2019 22:54:31 -0500
-In-Reply-To: <20191012121625.GA11587@dhcp-128-65.nay.redhat.com> (Dave Young's
- message of "Sat, 12 Oct 2019 20:16:25 +0800")
-Message-ID: <87zhi51ers.fsf@x220.int.ebiederm.org>
+ <87zhi51ers.fsf@x220.int.ebiederm.org>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <72edff0b-9778-2e83-224b-7fe70dfb8d73@redhat.com>
+Date: Sun, 13 Oct 2019 17:36:28 +0800
 MIME-Version: 1.0
-Subject: Re: [PATCH 3/3 v3] x86/kdump: clean up all the code related to the
- backup region
+In-Reply-To: <87zhi51ers.fsf@x220.int.ebiederm.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,113 +24,79 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: jgross@suse.com, Thomas.Lendacky@amd.com, Lianbo Jiang <lijiang@redhat.com>, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, vgoyal@redhat.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>
+Cc: jgross@suse.com, Thomas.Lendacky@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, vgoyal@redhat.com
 
-Dave Young <dyoung@redhat.com> writes:
-
-> Hi Eric,
->
-> On 10/12/19 at 06:26am, Eric W. Biederman wrote:
->> Lianbo Jiang <lijiang@redhat.com> writes:
->> 
->> > When the crashkernel kernel command line option is specified, the
->> > low 1MiB memory will always be reserved, which makes that the memory
->> > allocated later won't fall into the low 1MiB area, thereby, it's not
->> > necessary to create a backup region and also no need to copy the first
->> > 640k content to a backup region.
->> >
->> > Currently, the code related to the backup region can be safely removed,
->> > so lets clean up.
->> >
->> > Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
->> > ---
->> 
->> > diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
->> > index eb651fbde92a..cc5774fc84c0 100644
->> > --- a/arch/x86/kernel/crash.c
->> > +++ b/arch/x86/kernel/crash.c
->> > @@ -173,8 +173,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
->> >  
->> >  #ifdef CONFIG_KEXEC_FILE
->> >  
->> > -static unsigned long crash_zero_bytes;
->> > -
->> >  static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
->> >  {
->> >  	unsigned int *nr_ranges = arg;
->> > @@ -234,9 +232,15 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
->> >  {
->> >  	struct crash_mem *cmem = arg;
->> >  
->> > -	cmem->ranges[cmem->nr_ranges].start = res->start;
->> > -	cmem->ranges[cmem->nr_ranges].end = res->end;
->> > -	cmem->nr_ranges++;
->> > +	if (res->start >= SZ_1M) {
->> > +		cmem->ranges[cmem->nr_ranges].start = res->start;
->> > +		cmem->ranges[cmem->nr_ranges].end = res->end;
->> > +		cmem->nr_ranges++;
->> > +	} else if (res->end > SZ_1M) {
->> > +		cmem->ranges[cmem->nr_ranges].start = SZ_1M;
->> > +		cmem->ranges[cmem->nr_ranges].end = res->end;
->> > +		cmem->nr_ranges++;
->> > +	}
->> 
->> What is going on with this chunk?  I can guess but this needs a clear
->> comment.
->
-> Indeed it needs some code comment, this is based on some offline
-> discussion.  cat /proc/vmcore will give a warning because ioremap is
-> mapping the system ram.
->
-> We pass the first 1M to kdump kernel in e820 as system ram so that 2nd
-> kernel can use the low 1M memory because for example the trampoline
-> code.
->
->> 
->> >  
->> >  	return 0;
->> >  }
->> 
->> > @@ -356,9 +337,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
->> >  	memset(&cmd, 0, sizeof(struct crash_memmap_data));
->> >  	cmd.params = params;
->> >  
->> > -	/* Add first 640K segment */
->> > -	ei.addr = image->arch.backup_src_start;
->> > -	ei.size = image->arch.backup_src_sz;
->> > +	/*
->> > +	 * Add the low memory range[0x1000, SZ_1M], skip
->> > +	 * the first zero page.
->> > +	 */
->> > +	ei.addr = PAGE_SIZE;
->> > +	ei.size = SZ_1M - PAGE_SIZE;
->> >  	ei.type = E820_TYPE_RAM;
->> >  	add_e820_entry(params, &ei);
->> 
->> Likewise here.  Why do we need a special case?
->> Why the magic with PAGE_SIZE?
->
-> Good catch, the zero page part is useless, I think no other special
-> reason, just assumed zero page is not usable, but it should be ok to
-> remove the special handling, just pass 0 - 1M is good enough.
-
-But if we have stopped special casing the low 1M.  Why do we need a
-special case here at all?
-
-If you need the special case it is almost certainly wrong to say you
-have ram above 640KiB and below 1MiB.  That is the legacy ROM and video
-MMIO area.
-
-There is a reason the original code said 640KiB.
-
-Eric
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTnlubQxMOaciDEz5pelIDExOjU0LCBFcmljIFcuIEJpZWRlcm1hbiDlhpnpgZM6Cj4g
+RGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhhdC5jb20+IHdyaXRlczoKPiAKPj4gSGkgRXJpYywKPj4K
+Pj4gT24gMTAvMTIvMTkgYXQgMDY6MjZhbSwgRXJpYyBXLiBCaWVkZXJtYW4gd3JvdGU6Cj4+PiBM
+aWFuYm8gSmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4gd3JpdGVzOgo+Pj4KPj4+PiBXaGVuIHRo
+ZSBjcmFzaGtlcm5lbCBrZXJuZWwgY29tbWFuZCBsaW5lIG9wdGlvbiBpcyBzcGVjaWZpZWQsIHRo
+ZQo+Pj4+IGxvdyAxTWlCIG1lbW9yeSB3aWxsIGFsd2F5cyBiZSByZXNlcnZlZCwgd2hpY2ggbWFr
+ZXMgdGhhdCB0aGUgbWVtb3J5Cj4+Pj4gYWxsb2NhdGVkIGxhdGVyIHdvbid0IGZhbGwgaW50byB0
+aGUgbG93IDFNaUIgYXJlYSwgdGhlcmVieSwgaXQncyBub3QKPj4+PiBuZWNlc3NhcnkgdG8gY3Jl
+YXRlIGEgYmFja3VwIHJlZ2lvbiBhbmQgYWxzbyBubyBuZWVkIHRvIGNvcHkgdGhlIGZpcnN0Cj4+
+Pj4gNjQwayBjb250ZW50IHRvIGEgYmFja3VwIHJlZ2lvbi4KPj4+Pgo+Pj4+IEN1cnJlbnRseSwg
+dGhlIGNvZGUgcmVsYXRlZCB0byB0aGUgYmFja3VwIHJlZ2lvbiBjYW4gYmUgc2FmZWx5IHJlbW92
+ZWQsCj4+Pj4gc28gbGV0cyBjbGVhbiB1cC4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IExpYW5i
+byBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+Pj4+IC0tLQo+Pj4KPj4+PiBkaWZmIC0tZ2l0
+IGEvYXJjaC94ODYva2VybmVsL2NyYXNoLmMgYi9hcmNoL3g4Ni9rZXJuZWwvY3Jhc2guYwo+Pj4+
+IGluZGV4IGViNjUxZmJkZTkyYS4uY2M1Nzc0ZmM4NGMwIDEwMDY0NAo+Pj4+IC0tLSBhL2FyY2gv
+eDg2L2tlcm5lbC9jcmFzaC5jCj4+Pj4gKysrIGIvYXJjaC94ODYva2VybmVsL2NyYXNoLmMKPj4+
+PiBAQCAtMTczLDggKzE3Myw2IEBAIHZvaWQgbmF0aXZlX21hY2hpbmVfY3Jhc2hfc2h1dGRvd24o
+c3RydWN0IHB0X3JlZ3MgKnJlZ3MpCj4+Pj4gIAo+Pj4+ICAjaWZkZWYgQ09ORklHX0tFWEVDX0ZJ
+TEUKPj4+PiAgCj4+Pj4gLXN0YXRpYyB1bnNpZ25lZCBsb25nIGNyYXNoX3plcm9fYnl0ZXM7Cj4+
+Pj4gLQo+Pj4+ICBzdGF0aWMgaW50IGdldF9ucl9yYW1fcmFuZ2VzX2NhbGxiYWNrKHN0cnVjdCBy
+ZXNvdXJjZSAqcmVzLCB2b2lkICphcmcpCj4+Pj4gIHsKPj4+PiAgCXVuc2lnbmVkIGludCAqbnJf
+cmFuZ2VzID0gYXJnOwo+Pj4+IEBAIC0yMzQsOSArMjMyLDE1IEBAIHN0YXRpYyBpbnQgcHJlcGFy
+ZV9lbGY2NF9yYW1faGVhZGVyc19jYWxsYmFjayhzdHJ1Y3QgcmVzb3VyY2UgKnJlcywgdm9pZCAq
+YXJnKQo+Pj4+ICB7Cj4+Pj4gIAlzdHJ1Y3QgY3Jhc2hfbWVtICpjbWVtID0gYXJnOwo+Pj4+ICAK
+Pj4+PiAtCWNtZW0tPnJhbmdlc1tjbWVtLT5ucl9yYW5nZXNdLnN0YXJ0ID0gcmVzLT5zdGFydDsK
+Pj4+PiAtCWNtZW0tPnJhbmdlc1tjbWVtLT5ucl9yYW5nZXNdLmVuZCA9IHJlcy0+ZW5kOwo+Pj4+
+IC0JY21lbS0+bnJfcmFuZ2VzKys7Cj4+Pj4gKwlpZiAocmVzLT5zdGFydCA+PSBTWl8xTSkgewo+
+Pj4+ICsJCWNtZW0tPnJhbmdlc1tjbWVtLT5ucl9yYW5nZXNdLnN0YXJ0ID0gcmVzLT5zdGFydDsK
+Pj4+PiArCQljbWVtLT5yYW5nZXNbY21lbS0+bnJfcmFuZ2VzXS5lbmQgPSByZXMtPmVuZDsKPj4+
+PiArCQljbWVtLT5ucl9yYW5nZXMrKzsKPj4+PiArCX0gZWxzZSBpZiAocmVzLT5lbmQgPiBTWl8x
+TSkgewo+Pj4+ICsJCWNtZW0tPnJhbmdlc1tjbWVtLT5ucl9yYW5nZXNdLnN0YXJ0ID0gU1pfMU07
+Cj4+Pj4gKwkJY21lbS0+cmFuZ2VzW2NtZW0tPm5yX3Jhbmdlc10uZW5kID0gcmVzLT5lbmQ7Cj4+
+Pj4gKwkJY21lbS0+bnJfcmFuZ2VzKys7Cj4+Pj4gKwl9Cj4+Pgo+Pj4gV2hhdCBpcyBnb2luZyBv
+biB3aXRoIHRoaXMgY2h1bms/ICBJIGNhbiBndWVzcyBidXQgdGhpcyBuZWVkcyBhIGNsZWFyCj4+
+PiBjb21tZW50Lgo+Pgo+PiBJbmRlZWQgaXQgbmVlZHMgc29tZSBjb2RlIGNvbW1lbnQsIHRoaXMg
+aXMgYmFzZWQgb24gc29tZSBvZmZsaW5lCj4+IGRpc2N1c3Npb24uICBjYXQgL3Byb2Mvdm1jb3Jl
+IHdpbGwgZ2l2ZSBhIHdhcm5pbmcgYmVjYXVzZSBpb3JlbWFwIGlzCj4+IG1hcHBpbmcgdGhlIHN5
+c3RlbSByYW0uCj4+Cj4+IFdlIHBhc3MgdGhlIGZpcnN0IDFNIHRvIGtkdW1wIGtlcm5lbCBpbiBl
+ODIwIGFzIHN5c3RlbSByYW0gc28gdGhhdCAybmQKPj4ga2VybmVsIGNhbiB1c2UgdGhlIGxvdyAx
+TSBtZW1vcnkgYmVjYXVzZSBmb3IgZXhhbXBsZSB0aGUgdHJhbXBvbGluZQo+PiBjb2RlLgo+Pgo+
+Pj4KPj4+PiAgCj4+Pj4gIAlyZXR1cm4gMDsKPj4+PiAgfQo+Pj4KPj4+PiBAQCAtMzU2LDkgKzMz
+NywxMiBAQCBpbnQgY3Jhc2hfc2V0dXBfbWVtbWFwX2VudHJpZXMoc3RydWN0IGtpbWFnZSAqaW1h
+Z2UsIHN0cnVjdCBib290X3BhcmFtcyAqcGFyYW1zKQo+Pj4+ICAJbWVtc2V0KCZjbWQsIDAsIHNp
+emVvZihzdHJ1Y3QgY3Jhc2hfbWVtbWFwX2RhdGEpKTsKPj4+PiAgCWNtZC5wYXJhbXMgPSBwYXJh
+bXM7Cj4+Pj4gIAo+Pj4+IC0JLyogQWRkIGZpcnN0IDY0MEsgc2VnbWVudCAqLwo+Pj4+IC0JZWku
+YWRkciA9IGltYWdlLT5hcmNoLmJhY2t1cF9zcmNfc3RhcnQ7Cj4+Pj4gLQllaS5zaXplID0gaW1h
+Z2UtPmFyY2guYmFja3VwX3NyY19zejsKPj4+PiArCS8qCj4+Pj4gKwkgKiBBZGQgdGhlIGxvdyBt
+ZW1vcnkgcmFuZ2VbMHgxMDAwLCBTWl8xTV0sIHNraXAKPj4+PiArCSAqIHRoZSBmaXJzdCB6ZXJv
+IHBhZ2UuCj4+Pj4gKwkgKi8KPj4+PiArCWVpLmFkZHIgPSBQQUdFX1NJWkU7Cj4+Pj4gKwllaS5z
+aXplID0gU1pfMU0gLSBQQUdFX1NJWkU7Cj4+Pj4gIAllaS50eXBlID0gRTgyMF9UWVBFX1JBTTsK
+Pj4+PiAgCWFkZF9lODIwX2VudHJ5KHBhcmFtcywgJmVpKTsKPj4+Cj4+PiBMaWtld2lzZSBoZXJl
+LiAgV2h5IGRvIHdlIG5lZWQgYSBzcGVjaWFsIGNhc2U/Cj4+PiBXaHkgdGhlIG1hZ2ljIHdpdGgg
+UEFHRV9TSVpFPwo+Pgo+PiBHb29kIGNhdGNoLCB0aGUgemVybyBwYWdlIHBhcnQgaXMgdXNlbGVz
+cywgSSB0aGluayBubyBvdGhlciBzcGVjaWFsCj4+IHJlYXNvbiwganVzdCBhc3N1bWVkIHplcm8g
+cGFnZSBpcyBub3QgdXNhYmxlLCBidXQgaXQgc2hvdWxkIGJlIG9rIHRvCj4+IHJlbW92ZSB0aGUg
+c3BlY2lhbCBoYW5kbGluZywganVzdCBwYXNzIDAgLSAxTSBpcyBnb29kIGVub3VnaC4KPiAKPiBC
+dXQgaWYgd2UgaGF2ZSBzdG9wcGVkIHNwZWNpYWwgY2FzaW5nIHRoZSBsb3cgMU0uICBXaHkgZG8g
+d2UgbmVlZCBhCj4gc3BlY2lhbCBjYXNlIGhlcmUgYXQgYWxsPwo+IApIZXJlLCBuZWVkIHRvIHBh
+c3MgdGhlIGxvdyBtZW1vcnkgcmFuZ2UgdG8ga2R1bXAga2VybmVsLCB3aGljaCB3aWxsIGd1YXJh
+bnRlZQp0aGUgYXZhaWxhYmlsaXR5IG9mIGxvdyBtZW1vcnkgaW4ga2R1bXAga2VybmVsLCBvdGhl
+cndpc2UsIGtkdW1wIGtlcm5lbCB3b24ndAp1c2UgdGhlIGxvdyBtZW1vcnkgcmVnaW9uLgoKPiBJ
+ZiB5b3UgbmVlZCB0aGUgc3BlY2lhbCBjYXNlIGl0IGlzIGFsbW9zdCBjZXJ0YWlubHkgd3Jvbmcg
+dG8gc2F5IHlvdQo+IGhhdmUgcmFtIGFib3ZlIDY0MEtpQiBhbmQgYmVsb3cgMU1pQi4gIFRoYXQg
+aXMgdGhlIGxlZ2FjeSBST00gYW5kIHZpZGVvCj4gTU1JTyBhcmVhLgo+IAo+IFRoZXJlIGlzIGEg
+cmVhc29uIHRoZSBvcmlnaW5hbCBjb2RlIHNhaWQgNjQwS2lCLgo+IApEbyB5b3UgbWVhbiB0aGF0
+IHRoZSA2NDBrIHJlZ2lvbiBpcyBnb29kIGVub3VnaCBoZXJlIGluc3RlYWQgb2YgMU1pQj8KClRo
+YW5rcy4KTGlhbmJvCgo+IEVyaWMKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
