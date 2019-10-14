@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x542.google.com ([2a00:1450:4864:20::542])
+Received: from mail-ed1-x541.google.com ([2a00:1450:4864:20::541])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iK62m-0004V1-Kn
- for kexec@lists.infradead.org; Mon, 14 Oct 2019 19:30:18 +0000
-Received: by mail-ed1-x542.google.com with SMTP id r9so15786972edl.10
- for <kexec@lists.infradead.org>; Mon, 14 Oct 2019 12:30:11 -0700 (PDT)
+ id 1iK9sj-0003BQ-5l
+ for kexec@lists.infradead.org; Mon, 14 Oct 2019 23:36:06 +0000
+Received: by mail-ed1-x541.google.com with SMTP id r16so16197772edq.11
+ for <kexec@lists.infradead.org>; Mon, 14 Oct 2019 16:36:04 -0700 (PDT)
 MIME-Version: 1.0
 References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
- <20191004185234.31471-15-pasha.tatashin@soleen.com>
- <f1c50a5f-103e-e6d7-e93d-e873a169833e@arm.com>
-In-Reply-To: <f1c50a5f-103e-e6d7-e93d-e873a169833e@arm.com>
+ <20191004185234.31471-16-pasha.tatashin@soleen.com>
+ <fe5a4aae-fae3-f30f-db15-f3eced229a6e@arm.com>
+In-Reply-To: <fe5a4aae-fae3-f30f-db15-f3eced229a6e@arm.com>
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Mon, 14 Oct 2019 15:29:58 -0400
-Message-ID: <CA+CK2bBU3ZkTRP8VuS7zwKLPBa+4nSdirq_ss7_aODoLe2iucA@mail.gmail.com>
-Subject: Re: [PATCH v6 14/17] arm64: kexec: move relocation function setup and
- clean up
+Date: Mon, 14 Oct 2019 19:35:51 -0400
+Message-ID: <CA+CK2bBRRQsepxrWnOUOnFfPUe5SYsOurQ3kL_P1ghxze77RFQ@mail.gmail.com>
+Subject: Re: [PATCH v6 15/17] arm64: kexec: add expandable argument to
+ relocation function
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,121 +30,78 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: James Morse <james.morse@arm.com>
 Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Matthias Brugger <matthias.bgg@gmail.com>, will@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 
-> > In addition, do some cleanup: add infor about reloction function to
+> > +struct kern_reloc_arg {
+> > +     unsigned long   head;
+> > +     unsigned long   entry_addr;
+> > +     unsigned long   kern_arg0;
+> > +     unsigned long   kern_arg1;
+> > +     unsigned long   kern_arg2;
+> > +     unsigned long   kern_arg3;
 >
-> infor ? reloction?
+> ... at least one of these should by phys_addr_t!
 
-Typo. I have fixed commit log. It meant to be "info about
-arm64_relocate_new_kernel function"
-
->
->
-> > kexec_image_info(), and remove extra messages from machine_kexec().
->
->
-> > Make dtb_mem, always available, if CONFIG_KEXEC_FILE is not configured
-> > dtb_mem is set to zero anyway.
->
-> This is unrelated cleanup, please do it as an earlier patch to make it clearer what you
-> are changing here.
-Ok.
+OK, changed them to phys_addr_t
 
 >
-> (I'm not convinced you need to cache va<->pa)
+> While the sizes are the same on arm64, this reminds the reader what kind of address this
+> is, and lets the compiler warn you if you make a mistake.
+
+OK
+
 >
 >
-> > diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> > index 12a561a54128..d15ca1ca1e83 100644
-> > --- a/arch/arm64/include/asm/kexec.h
-> > +++ b/arch/arm64/include/asm/kexec.h
-> > @@ -90,14 +90,15 @@ static inline void crash_prepare_suspend(void) {}
-> >  static inline void crash_post_resume(void) {}
-> >  #endif
+> > +};
+>
+> > diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+> > index 214685760e1c..900394907fd8 100644
+> > --- a/arch/arm64/kernel/asm-offsets.c
+> > +++ b/arch/arm64/kernel/asm-offsets.c
+> > @@ -23,6 +23,7 @@
+> >  #include <asm/suspend.h>
+> >  #include <linux/kbuild.h>
+> >  #include <linux/arm-smccc.h>
+> > +#include <linux/kexec.h>
 > >
-> > -#ifdef CONFIG_KEXEC_FILE
-> >  #define ARCH_HAS_KIMAGE_ARCH
+> >  int main(void)
+> >  {
+> > @@ -126,6 +127,14 @@ int main(void)
+> >  #ifdef CONFIG_ARM_SDE_INTERFACE
+> >    DEFINE(SDEI_EVENT_INTREGS, offsetof(struct sdei_registered_event, interrupted_regs));
+> >    DEFINE(SDEI_EVENT_PRIORITY,        offsetof(struct sdei_registered_event, priority));
+> > +#endif
+> > +#ifdef CONFIG_KEXEC_CORE
+> > +  DEFINE(KRELOC_HEAD,                offsetof(struct kern_reloc_arg, head));
+> > +  DEFINE(KRELOC_ENTRY_ADDR,  offsetof(struct kern_reloc_arg, entry_addr));
+> > +  DEFINE(KRELOC_KERN_ARG0,   offsetof(struct kern_reloc_arg, kern_arg0));
+> > +  DEFINE(KRELOC_KERN_ARG1,   offsetof(struct kern_reloc_arg, kern_arg1));
+> > +  DEFINE(KRELOC_KERN_ARG2,   offsetof(struct kern_reloc_arg, kern_arg2));
+> > +  DEFINE(KRELOC_KERN_ARG3,   offsetof(struct kern_reloc_arg, kern_arg3));
+>
+> Please use kexec as the prefix. The kernel also applies relocations during early boot.
+> These are global values, and in isolation doesn't imply kexec.
+
+OK
+> >  .align 3     /* To keep the 64-bit values below naturally aligned. */
+> > -
+> >  .Lcopy_end:
+> >  .org KEXEC_CONTROL_PAGE_SIZE
 > >
-> >  struct kimage_arch {
-> >       void *dtb;
-> >       unsigned long dtb_mem;
 >
-> > +     unsigned long kern_reloc;
+> My eyes!
 >
-> This is cache-ing the physical address of an all-architectures value from struct kimage,
-> in the arch specific part of struct kiamge. Why?
-> (You must have the struct kimage on hand to access this thing at all!)
-
-Because, currently only one physical page is used in order to do reboot:
-control_code_page; this is where arm64_relocate_new_kernel is copied.
-So, PA of control_code_page is used as a handler. But with MMU enabled
-kexec reboot, a number of pages are allocated for reboot purposes,
-they contain page table, arm64_relocate_new_kernel, and el2 vector
-table. This is why we need handlers. control_code_page is simply one
-of the pages that can contains any of the kexec reboot specific data.
-
-> If its supposed to be a physical address, please use phys_addr_t.
-
-Done that, also changed dtb_mem to phys_addr_t.
-
+> Please don't make unnecessary changes. Its hard enough to read the assembly, moving
+> whitespace, comments and re-allocating the register guarantees that no-one can work out
+> what is happening.
 >
-> >  };
->
->
-> > diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> > index 0df8493624e0..9b41da50e6f7 100644
-> > --- a/arch/arm64/kernel/machine_kexec.c
-> > +++ b/arch/arm64/kernel/machine_kexec.c
-> > @@ -42,6 +42,7 @@ static void _kexec_image_info(const char *func, int line,
-> >       pr_debug("    start:       %lx\n", kimage->start);
-> >       pr_debug("    head:        %lx\n", kimage->head);
-> >       pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
-> > +     pr_debug("    kern_reloc: %pa\n", &kimage->arch.kern_reloc);
-> >
-> >       for (i = 0; i < kimage->nr_segments; i++) {
-> >               pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
-> > @@ -58,6 +59,19 @@ void machine_kexec_cleanup(struct kimage *kimage)
-> >       /* Empty routine needed to avoid build errors. */
-> >  }
-> >
-> > +int machine_kexec_post_load(struct kimage *kimage)
-> > +{
-> > +     unsigned long kern_reloc;
-> > +
-> > +     kern_reloc = page_to_phys(kimage->control_code_page);
->
-> kern_reloc should be phys_addr_t.
+> If something needs cleaning up to make the change obvious, it needs doing as a previous
+> patch. Mechanical changes are fairly easy to review.
+> Functional changes behind a whirlwind of mechanical changes will cause the reviewer to
+> give up.
 
-Ok
+Sure, I have split this patch into several patches, and moved
+clean-ups into separate patches.
 
->
->
-> > +     memcpy(__va(kern_reloc), arm64_relocate_new_kernel,
-> > +            arm64_relocate_new_kernel_size);
-> > +     kimage->arch.kern_reloc = kern_reloc;
->
->
-> Please move the cache maintenance in here too. This will save us doing it late during
-> kdump. This will also group the mmu-on changes together.
-
-OK, but I think we should do it in a separate patch. I assume you mean
-this code to be moved to load time:
-
-177         /* Flush the reboot_code_buffer in preparation for its execution. */
-178         __flush_dcache_area(reboot_code_buffer,
-arm64_relocate_new_kernel_size);
-179
-180         /*
-181          * Although we've killed off the secondary CPUs, we don't update
-182          * the online mask if we're handling a crash kernel and consequently
-183          * need to avoid flush_icache_range(), which will attempt to IPI
-184          * the offline CPUs. Therefore, we must use the __* variant here.
-185          */
-186         __flush_icache_range((uintptr_t)reboot_code_buffer,
-187                              arm64_relocate_new_kernel_size);
-
-Is it safe to do? We do not know what CPU is going to be executing
-kexec reboot for us at the load time.
-
+Thank you,
 Pasha
 
 _______________________________________________
