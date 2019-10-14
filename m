@@ -1,20 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iJxBZ-0002qe-9G
- for kexec@lists.infradead.org; Mon, 14 Oct 2019 10:02:42 +0000
-Subject: Re: [PATCH 3/3 v3] x86/kdump: clean up all the code related to the
- backup region
-References: <20191012022140.19003-1-lijiang@redhat.com>
- <20191012022140.19003-4-lijiang@redhat.com>
- <87d0f22oi5.fsf@x220.int.ebiederm.org>
- <20191012121625.GA11587@dhcp-128-65.nay.redhat.com>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <f3fc12b9-be39-d430-52f5-d1b76b2599a3@redhat.com>
-Date: Mon, 14 Oct 2019 18:02:22 +0800
+ id 1iJyA6-0007Af-Mb
+ for kexec@lists.infradead.org; Mon, 14 Oct 2019 11:05:16 +0000
+Date: Mon, 14 Oct 2019 19:05:04 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v3 2/2] x86/kdump: Reserve extra memory when SME or SEV
+ is active
+Message-ID: <20191014110504.GA16271@dhcp-128-65.nay.redhat.com>
+References: <20190910151341.14986-1-kasong@redhat.com>
+ <20190910151341.14986-3-kasong@redhat.com>
+ <20190911055618.GA104115@gmail.com>
+ <CACPcB9eZUZ1fCsc1GZs9MJnoqLK9Ld5KEx0_emx8J44Mjcy3WA@mail.gmail.com>
+ <20190927054208.GA13426@dhcp-128-65.nay.redhat.com>
+ <3e1f65de-4539-736e-a7b4-3c726a001f4b@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191012121625.GA11587@dhcp-128-65.nay.redhat.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <3e1f65de-4539-736e-a7b4-3c726a001f4b@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,88 +25,221 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: jgross@suse.com, Thomas.Lendacky@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, vgoyal@redhat.com
+To: Kairui Song <kasong@redhat.com>
+Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>, Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>, the arch/x86 maintainers <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
 
-5ZyoIDIwMTnlubQxMOaciDEy5pelIDIwOjE2LCBEYXZlIFlvdW5nIOWGmemBkzoKPiBIaSBFcmlj
-LAo+IAo+IE9uIDEwLzEyLzE5IGF0IDA2OjI2YW0sIEVyaWMgVy4gQmllZGVybWFuIHdyb3RlOgo+
-PiBMaWFuYm8gSmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4gd3JpdGVzOgo+Pgo+Pj4gV2hlbiB0
-aGUgY3Jhc2hrZXJuZWwga2VybmVsIGNvbW1hbmQgbGluZSBvcHRpb24gaXMgc3BlY2lmaWVkLCB0
-aGUKPj4+IGxvdyAxTWlCIG1lbW9yeSB3aWxsIGFsd2F5cyBiZSByZXNlcnZlZCwgd2hpY2ggbWFr
-ZXMgdGhhdCB0aGUgbWVtb3J5Cj4+PiBhbGxvY2F0ZWQgbGF0ZXIgd29uJ3QgZmFsbCBpbnRvIHRo
-ZSBsb3cgMU1pQiBhcmVhLCB0aGVyZWJ5LCBpdCdzIG5vdAo+Pj4gbmVjZXNzYXJ5IHRvIGNyZWF0
-ZSBhIGJhY2t1cCByZWdpb24gYW5kIGFsc28gbm8gbmVlZCB0byBjb3B5IHRoZSBmaXJzdAo+Pj4g
-NjQwayBjb250ZW50IHRvIGEgYmFja3VwIHJlZ2lvbi4KPj4+Cj4+PiBDdXJyZW50bHksIHRoZSBj
-b2RlIHJlbGF0ZWQgdG8gdGhlIGJhY2t1cCByZWdpb24gY2FuIGJlIHNhZmVseSByZW1vdmVkLAo+
-Pj4gc28gbGV0cyBjbGVhbiB1cC4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBMaWFuYm8gSmlhbmcg
-PGxpamlhbmdAcmVkaGF0LmNvbT4KPj4+IC0tLQo+Pgo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2
-L2tlcm5lbC9jcmFzaC5jIGIvYXJjaC94ODYva2VybmVsL2NyYXNoLmMKPj4+IGluZGV4IGViNjUx
-ZmJkZTkyYS4uY2M1Nzc0ZmM4NGMwIDEwMDY0NAo+Pj4gLS0tIGEvYXJjaC94ODYva2VybmVsL2Ny
-YXNoLmMKPj4+ICsrKyBiL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5jCj4+PiBAQCAtMTczLDggKzE3
-Myw2IEBAIHZvaWQgbmF0aXZlX21hY2hpbmVfY3Jhc2hfc2h1dGRvd24oc3RydWN0IHB0X3JlZ3Mg
-KnJlZ3MpCj4+PiAgCj4+PiAgI2lmZGVmIENPTkZJR19LRVhFQ19GSUxFCj4+PiAgCj4+PiAtc3Rh
-dGljIHVuc2lnbmVkIGxvbmcgY3Jhc2hfemVyb19ieXRlczsKPj4+IC0KPj4+ICBzdGF0aWMgaW50
-IGdldF9ucl9yYW1fcmFuZ2VzX2NhbGxiYWNrKHN0cnVjdCByZXNvdXJjZSAqcmVzLCB2b2lkICph
-cmcpCj4+PiAgewo+Pj4gIAl1bnNpZ25lZCBpbnQgKm5yX3JhbmdlcyA9IGFyZzsKPj4+IEBAIC0y
-MzQsOSArMjMyLDE1IEBAIHN0YXRpYyBpbnQgcHJlcGFyZV9lbGY2NF9yYW1faGVhZGVyc19jYWxs
-YmFjayhzdHJ1Y3QgcmVzb3VyY2UgKnJlcywgdm9pZCAqYXJnKQo+Pj4gIHsKPj4+ICAJc3RydWN0
-IGNyYXNoX21lbSAqY21lbSA9IGFyZzsKPj4+ICAKPj4+IC0JY21lbS0+cmFuZ2VzW2NtZW0tPm5y
-X3Jhbmdlc10uc3RhcnQgPSByZXMtPnN0YXJ0Owo+Pj4gLQljbWVtLT5yYW5nZXNbY21lbS0+bnJf
-cmFuZ2VzXS5lbmQgPSByZXMtPmVuZDsKPj4+IC0JY21lbS0+bnJfcmFuZ2VzKys7Cj4+PiArCWlm
-IChyZXMtPnN0YXJ0ID49IFNaXzFNKSB7Cj4+PiArCQljbWVtLT5yYW5nZXNbY21lbS0+bnJfcmFu
-Z2VzXS5zdGFydCA9IHJlcy0+c3RhcnQ7Cj4+PiArCQljbWVtLT5yYW5nZXNbY21lbS0+bnJfcmFu
-Z2VzXS5lbmQgPSByZXMtPmVuZDsKPj4+ICsJCWNtZW0tPm5yX3JhbmdlcysrOwo+Pj4gKwl9IGVs
-c2UgaWYgKHJlcy0+ZW5kID4gU1pfMU0pIHsKPj4+ICsJCWNtZW0tPnJhbmdlc1tjbWVtLT5ucl9y
-YW5nZXNdLnN0YXJ0ID0gU1pfMU07Cj4+PiArCQljbWVtLT5yYW5nZXNbY21lbS0+bnJfcmFuZ2Vz
-XS5lbmQgPSByZXMtPmVuZDsKPj4+ICsJCWNtZW0tPm5yX3JhbmdlcysrOwo+Pj4gKwl9Cj4+Cj4+
-IFdoYXQgaXMgZ29pbmcgb24gd2l0aCB0aGlzIGNodW5rPyAgSSBjYW4gZ3Vlc3MgYnV0IHRoaXMg
-bmVlZHMgYSBjbGVhcgo+PiBjb21tZW50Lgo+IAo+IEluZGVlZCBpdCBuZWVkcyBzb21lIGNvZGUg
-Y29tbWVudCwgdGhpcyBpcyBiYXNlZCBvbiBzb21lIG9mZmxpbmUKPiBkaXNjdXNzaW9uLiAgY2F0
-IC9wcm9jL3ZtY29yZSB3aWxsIGdpdmUgYSB3YXJuaW5nIGJlY2F1c2UgaW9yZW1hcCBpcwo+IG1h
-cHBpbmcgdGhlIHN5c3RlbSByYW0uCj4gCj4gV2UgcGFzcyB0aGUgZmlyc3QgMU0gdG8ga2R1bXAg
-a2VybmVsIGluIGU4MjAgYXMgc3lzdGVtIHJhbSBzbyB0aGF0IDJuZAo+IGtlcm5lbCBjYW4gdXNl
-IHRoZSBsb3cgMU0gbWVtb3J5IGJlY2F1c2UgZm9yIGV4YW1wbGUgdGhlIHRyYW1wb2xpbmUKPiBj
-b2RlLgo+IApUaGFuayB5b3UsIEVyaWMgYW5kIERhdmUuIEkgd2lsbCBhZGQgdGhlIGNvZGUgY29t
-bWVudCBhcyBiZWxvdyBpZiBpdCB3b3VsZCBiZSBPSy4KCkBAIC0yMzQsOSArMjMyLDIwIEBAIHN0
-YXRpYyBpbnQgcHJlcGFyZV9lbGY2NF9yYW1faGVhZGVyc19jYWxsYmFjayhzdHJ1Y3QgcmVzb3Vy
-Y2UgKnJlcywgdm9pZCAqYXJnKQogewogICAgICAgIHN0cnVjdCBjcmFzaF9tZW0gKmNtZW0gPSBh
-cmc7CiAKLSAgICAgICBjbWVtLT5yYW5nZXNbY21lbS0+bnJfcmFuZ2VzXS5zdGFydCA9IHJlcy0+
-c3RhcnQ7Ci0gICAgICAgY21lbS0+cmFuZ2VzW2NtZW0tPm5yX3Jhbmdlc10uZW5kID0gcmVzLT5l
-bmQ7Ci0gICAgICAgY21lbS0+bnJfcmFuZ2VzKys7CisgICAgICAgLyoKKyAgICAgICAgKiBDdXJy
-ZW50bHksIHBhc3MgdGhlIGxvdyAxTWlCIHJhbmdlIHRvIGtkdW1wIGtlcm5lbCBpbiBlODIwCisg
-ICAgICAgICogYXMgc3lzdGVtIHJhbSBzbyB0aGF0IGtkdW1wIGtlcm5lbCBjYW4gYWxzbyB1c2Ug
-dGhlIGxvdyAxTWlCCisgICAgICAgICogbWVtb3J5IGR1ZSB0byB0aGUgcmVhbCBtb2RlIHRyYW1w
-b2xpbmUgY29kZS4KKyAgICAgICAgKiBBbmQgbGF0ZXIsIHRoZSBsb3cgMU1pQiByYW5nZSB3aWxs
-IGJlIGV4Y2x1ZWQgZnJvbSBlbGYgaGVhZGVyLAorICAgICAgICAqIHdoaWNoIHdpbGwgYXZvaWQg
-cmVtYXBwaW5nIHRoZSAxTWlCIHN5c3RlbSByYW0gd2hlbiBkdW1waW5nCisgICAgICAgICogdm1j
-b3JlLgorICAgICAgICAqLworICAgICAgIGlmIChyZXMtPnN0YXJ0ID49IFNaXzFNKSB7CisgICAg
-ICAgICAgICAgICBjbWVtLT5yYW5nZXNbY21lbS0+bnJfcmFuZ2VzXS5zdGFydCA9IHJlcy0+c3Rh
-cnQ7CisgICAgICAgICAgICAgICBjbWVtLT5yYW5nZXNbY21lbS0+bnJfcmFuZ2VzXS5lbmQgPSBy
-ZXMtPmVuZDsKKyAgICAgICAgICAgICAgIGNtZW0tPm5yX3JhbmdlcysrOworICAgICAgIH0gZWxz
-ZSBpZiAocmVzLT5lbmQgPiBTWl8xTSkgeworICAgICAgICAgICAgICAgY21lbS0+cmFuZ2VzW2Nt
-ZW0tPm5yX3Jhbmdlc10uc3RhcnQgPSBTWl8xTTsKKyAgICAgICAgICAgICAgIGNtZW0tPnJhbmdl
-c1tjbWVtLT5ucl9yYW5nZXNdLmVuZCA9IHJlcy0+ZW5kOworICAgICAgICAgICAgICAgY21lbS0+
-bnJfcmFuZ2VzKys7CisgICAgICAgfQogCiAgICAgICAgcmV0dXJuIDA7CiB9Cgo+Pgo+Pj4gIAo+
-Pj4gIAlyZXR1cm4gMDsKPj4+ICB9Cj4+Cj4+PiBAQCAtMzU2LDkgKzMzNywxMiBAQCBpbnQgY3Jh
-c2hfc2V0dXBfbWVtbWFwX2VudHJpZXMoc3RydWN0IGtpbWFnZSAqaW1hZ2UsIHN0cnVjdCBib290
-X3BhcmFtcyAqcGFyYW1zKQo+Pj4gIAltZW1zZXQoJmNtZCwgMCwgc2l6ZW9mKHN0cnVjdCBjcmFz
-aF9tZW1tYXBfZGF0YSkpOwo+Pj4gIAljbWQucGFyYW1zID0gcGFyYW1zOwo+Pj4gIAo+Pj4gLQkv
-KiBBZGQgZmlyc3QgNjQwSyBzZWdtZW50ICovCj4+PiAtCWVpLmFkZHIgPSBpbWFnZS0+YXJjaC5i
-YWNrdXBfc3JjX3N0YXJ0Owo+Pj4gLQllaS5zaXplID0gaW1hZ2UtPmFyY2guYmFja3VwX3NyY19z
-ejsKPj4+ICsJLyoKPj4+ICsJICogQWRkIHRoZSBsb3cgbWVtb3J5IHJhbmdlWzB4MTAwMCwgU1pf
-MU1dLCBza2lwCj4+PiArCSAqIHRoZSBmaXJzdCB6ZXJvIHBhZ2UuCj4+PiArCSAqLwo+Pj4gKwll
-aS5hZGRyID0gUEFHRV9TSVpFOwo+Pj4gKwllaS5zaXplID0gU1pfMU0gLSBQQUdFX1NJWkU7Cj4+
-PiAgCWVpLnR5cGUgPSBFODIwX1RZUEVfUkFNOwo+Pj4gIAlhZGRfZTgyMF9lbnRyeShwYXJhbXMs
-ICZlaSk7Cj4+Cj4+IExpa2V3aXNlIGhlcmUuICBXaHkgZG8gd2UgbmVlZCBhIHNwZWNpYWwgY2Fz
-ZT8KPj4gV2h5IHRoZSBtYWdpYyB3aXRoIFBBR0VfU0laRT8KPiAKPiBHb29kIGNhdGNoLCB0aGUg
-emVybyBwYWdlIHBhcnQgaXMgdXNlbGVzcywgSSB0aGluayBubyBvdGhlciBzcGVjaWFsCj4gcmVh
-c29uLCBqdXN0IGFzc3VtZWQgemVybyBwYWdlIGlzIG5vdCB1c2FibGUsIGJ1dCBpdCBzaG91bGQg
-YmUgb2sgdG8KPiByZW1vdmUgdGhlIHNwZWNpYWwgaGFuZGxpbmcsIGp1c3QgcGFzcyAwIC0gMU0g
-aXMgZ29vZCBlbm91Z2guCj4+IFRoYW5rcwo+IERhdmUKPiAKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8va2V4ZWMK
+On 10/12/19 at 05:24pm, Kairui Song wrote:
+> On 9/27/19 1:42 PM, Dave Young wrote:
+> > On 09/25/19 at 06:36pm, Kairui Song wrote:
+> > > On Wed, Sep 11, 2019 at 1:56 PM Ingo Molnar <mingo@kernel.org> wrote:
+> > > > * Kairui Song <kasong@redhat.com> wrote:
+> > > > 
+> > > > > Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
+> > > > > SWIOTLB will be enabled even if there is less than 4G of memory when SME
+> > > > > is active, to support DMA of devices that not support address with the
+> > > > > encrypt bit.
+> > > > > 
+> > > > > And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
+> > > > > active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
+> > > > > 
+> > > > > Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
+> > > > > encryption") will always force SWIOTLB to be enabled when SEV is active
+> > > > > in all cases.
+> > > > > 
+> > > > > Now, when either SME or SEV is active, SWIOTLB will be force enabled,
+> > > > > and this is also true for kdump kernel. As a result kdump kernel will
+> > > > > run out of already scarce pre-reserved memory easily.
+> > > > > 
+> > > > > So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
+> > > > > kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
+> > > > > is specified or any offset is used. As for the high reservation case, an
+> > > > > extra low memory region will always be reserved and that is enough for
+> > > > > SWIOTLB. Else if the offset format is used, user should be fully aware
+> > > > > of any possible kdump kernel memory requirement and have to organize the
+> > > > > memory usage carefully.
+> > > > > 
+> > > > > Signed-off-by: Kairui Song <kasong@redhat.com>
+> > > > > ---
+> > > > >   arch/x86/kernel/setup.c | 20 +++++++++++++++++---
+> > > > >   1 file changed, 17 insertions(+), 3 deletions(-)
+> > > > > 
+> > > > > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> > > > > index 71f20bb18cb0..ee6a2f1e2226 100644
+> > > > > --- a/arch/x86/kernel/setup.c
+> > > > > +++ b/arch/x86/kernel/setup.c
+> > > > > @@ -530,7 +530,7 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
+> > > > >                                          unsigned long long *crash_size,
+> > > > >                                          bool high)
+> > > > >   {
+> > > > > -     unsigned long long base, size;
+> > > > > +     unsigned long long base, size, mem_enc_req = 0;
+> > > > > 
+> > > > >        base = *crash_base;
+> > > > >        size = *crash_size;
+> > > > > @@ -561,11 +561,25 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
+> > > > >        if (high)
+> > > > >                goto high_reserve;
+> > > > > 
+> > > > > +     /*
+> > > > > +      * When SME/SEV is active and not using high reserve,
+> > > > > +      * it will always required an extra SWIOTLB region.
+> > > > > +      */
+> > > > > +     if (mem_encrypt_active())
+> > > > > +             mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
+> > > > > +
+> > > > >        base = memblock_find_in_range(CRASH_ALIGN,
+> > > > > -                                   CRASH_ADDR_LOW_MAX, size,
+> > > > > +                                   CRASH_ADDR_LOW_MAX,
+> > > > > +                                   size + mem_enc_req,
+> > > > >                                      CRASH_ALIGN);
+> > > > 
+> > > 
+> > > Hi Ingo,
+> > > 
+> > > I re-read my previous reply, it's long and tedious, let me try to make
+> > > a more effective reply:
+> > > 
+> > > > What sizes are we talking about here?
+> > > 
+> > > The size here is how much memory will be reserved for kdump kernel, to
+> > > ensure kdump kernel and userspace can run without OOM.
+> > > 
+> > > > 
+> > > > - What is the possible size range of swiotlb_size_or_default()
+> > > 
+> > > swiotlb_size_or_default() returns the swiotlb size, it's specified by
+> > > user using swiotlb=<size>, or default size (64MB)
+> > > 
+> > > > 
+> > > > - What is the size of CRASH_ADDR_LOW_MAX (the old limit)?
+> > > 
+> > > It's 4G.
+> > > 
+> > > > 
+> > > > - Why do we replace one fixed limit with another fixed limit instead of
+> > > >    accurately sizing the area, with each required feature adding its own
+> > > >    requirement to the reservation size?
+> > > 
+> > > It's quite hard to "accurately sizing the area".
+> > > 
+> > > No way to tell the exact amount of memory kdump needs, we can only estimate.
+> > > Kdump kernel use different cmdline, drivers and components will have
+> > > special handling for kdump, and userspace is totally different.
+> > 
+> > Agreed about your above, but specific this the problem in this patch
+> > There should be other ways.
+> > 
+> > First thought about doing generic handling in swiotlb part, and do
+> > something like kdump_memory_reserve(size) Ingo suggested,  but according
+> > to you swiotlb init is late, so it can not increase the size, OTOH if
+> > reserve another region for kdump in swiotlb will cause other issues.
+> > 
+> > So let's think about other improvement, for example to see if you can
+> > call kdump_memory_reserve(size) in AMD SME init path, for example in
+> > mem_encrypt_init(), is it before crashkernel reservation?
+> > 
+> > If doable it will be at least cleaner than the code in this patch.
+> > 
+> > Thanks
+> > Dave
+> > 
+> 
+> How about something simple as following code? The logic and new function is as simple as
+> possible, just always reserve extra low memory when SME/SEV is active, ignore the high/low
+> reservation case. It will waste some memory with SME and high reservation though.
+> 
+> Was hesitating a lot about this series, one thing I'm thinking is that what is the point
+> of "crashkernel=" argument, if the crashkernel value could be adjusted according, the value
+> specified will seems more meanless or confusing...
+> 
+> And currently there isn't anything like crashkernel=auto or anything similiar to let kernel
+> calculate the value automatically, maybe the admin should be aware of the value or be informed
+> about the suitable crashkernel value after all?
+
+Hmm, it is reasonable that a user defined value should be just as is
+without any change by kernel.  So it is a good reason to introduce
+a crashkernel=auto so that kernel can tune the crashkernel size
+accordingly on top of some base value which can be configurable by
+kernel configs (arch dependent).
+
+> 
+> diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+> index ed8ec011a9fd..7263a237f689 100644
+> --- a/arch/x86/include/asm/setup.h
+> +++ b/arch/x86/include/asm/setup.h
+> @@ -44,6 +44,7 @@ void early_platform_quirks(void);
+>  extern unsigned long saved_video_mode;
+> +extern void kdump_need_extra_low_memory(unsigned long size);
+>  extern void reserve_standard_io_resources(void);
+>  extern void i386_reserve_resources(void);
+>  extern unsigned long __startup_64(unsigned long physaddr, struct boot_params *bp);
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 77ea96b794bd..e5888fb8e4bc 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -473,6 +473,13 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>  # define CRASH_ADDR_HIGH_MAX	SZ_64T
+>  #endif
+> +static __initdata unsigned long long crash_low_extra;
+> +
+> +void __init kdump_need_extra_low_memory(unsigned long size)
+> +{
+> +	crash_low_extra += size;
+> +}
+> +
+>  static int __init reserve_crashkernel_low(void)
+>  {
+>  #ifdef CONFIG_X86_64
+> @@ -501,6 +508,7 @@ static int __init reserve_crashkernel_low(void)
+>  			return 0;
+>  	}
+> +	low_size += crash_low_extra;
+>  	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+>  	if (!low_base) {
+>  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+> @@ -563,8 +571,17 @@ static void __init reserve_crashkernel(void)
+>  		if (!high)
+>  			crash_base = memblock_find_in_range(CRASH_ALIGN,
+>  						CRASH_ADDR_LOW_MAX,
+> -						crash_size, CRASH_ALIGN);
+> -		if (!crash_base)
+> +						crash_size + crash_low_extra,
+> +						CRASH_ALIGN);
+> +		/*
+> +		 * If reserving the crashkernel memory in low region, then also
+> +		 * include the extra low memory requirement declared by other
+> +		 * components. If falled back to high reservation the dedicated
+> +		 * low crash memory will take care of that.
+> +		 */
+> +		if (crash_base)
+> +			crash_size += crash_low_extra;
+> +		else
+>  			crash_base = memblock_find_in_range(CRASH_ALIGN,
+>  						CRASH_ADDR_HIGH_MAX,
+>  						crash_size, CRASH_ALIGN);
+> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+> index 9268c12458c8..b4556d2dcb8e 100644
+> --- a/arch/x86/mm/mem_encrypt.c
+> +++ b/arch/x86/mm/mem_encrypt.c
+> @@ -415,6 +415,8 @@ void __init mem_encrypt_init(void)
+>  	if (sev_active())
+>  		static_branch_enable(&sev_enable_key);
+> +	kdump_need_extra_low_memory(swiotlb_size_or_default());
+> +
+>  	pr_info("AMD %s active\n",
+>  		sev_active() ? "Secure Encrypted Virtualization (SEV)"
+>  			     : "Secure Memory Encryption (SME)");
+
+BTW, your above patch chunks are not malformed, can not be applied cleanly.
+
+Thanks
+Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
