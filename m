@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x841.google.com ([2607:f8b0:4864:20::841])
+Received: from mail-qt1-x844.google.com ([2607:f8b0:4864:20::844])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iK14k-0000F6-KD
- for kexec@lists.infradead.org; Mon, 14 Oct 2019 14:11:56 +0000
-Received: by mail-qt1-x841.google.com with SMTP id u40so25558195qth.11
- for <kexec@lists.infradead.org>; Mon, 14 Oct 2019 07:11:53 -0700 (PDT)
-Date: Mon, 14 Oct 2019 14:11:50 +0000
+ id 1iK1h4-0001aD-EL
+ for kexec@lists.infradead.org; Mon, 14 Oct 2019 14:51:31 +0000
+Received: by mail-qt1-x844.google.com with SMTP id 3so25862240qta.1
+ for <kexec@lists.infradead.org>; Mon, 14 Oct 2019 07:51:29 -0700 (PDT)
+Date: Mon, 14 Oct 2019 14:51:25 +0000
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: Re: [PATCH v6 02/17] arm64: hibernate: pass the allocated pgdp to
- ttbr0
-Message-ID: <20191014141150.xt6z3gs3cu3rl3go@soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net>
+Subject: Re: [PATCH v6 03/17] arm64: hibernate: check pgd table allocation
+Message-ID: <20191014145125.ahemooviyznqgpdh@soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net>
 References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
- <20191004185234.31471-3-pasha.tatashin@soleen.com>
- <bb937db3-f23a-809b-4ad8-ca86f689554d@arm.com>
+ <20191004185234.31471-4-pasha.tatashin@soleen.com>
+ <b5f965b5-bbd6-9e53-c085-d1a0c0dceca7@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <bb937db3-f23a-809b-4ad8-ca86f689554d@arm.com>
+In-Reply-To: <b5f965b5-bbd6-9e53-c085-d1a0c0dceca7@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,24 +30,17 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: James Morse <james.morse@arm.com>
 Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn.net, marc.zyngier@arm.com, catalin.marinas@arm.com, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, jmorris@namei.org, linux-mm@kvack.org, ebiederm@xmission.com, matthias.bgg@gmail.com, will@kernel.org, linux-arm-kernel@lists.infradead.org
 
-On 19-10-11 19:17:22, James Morse wrote:
-> > Fixes: 0194e760f7d2 ("arm64: hibernate: avoid potential TLB conflict")
+> Thanks for splitting [0] into two ... but this fix depends on the previous patch - which
+> isn't an issue that anyone can hit, and doesn't match Greg's 'stable-kernel-rules'.
 > 
-> (That was a 'break before make' fix, the affected code comes from:
->  82869ac57b5d (""arm64: kernel: Add support for hibernate/suspend-to-disk))
+> Please separate out this patch - and post it on its own as a stand-alone fix that can be
+> sent to the stable trees.
 > 
-> But, it works in all one circumstances its used: we know all the top bits will be zero.
-> I agree its by accident and we should fix it.
 > 
-> I don't think we should send it to stable.
-> Please drop the fixes tag, with that:
+> Mixing fixes with other patches leads to problems like this. It isn't possible to pick
+> this fix independently of the cleanup in the previous patch.
 
-OK
-
-> Reviewed-by: James Morse <james.morse@arm.com>
-Thank you!
-
-Pasha
+Thank you, I sent it out as a separate fix.
 
 _______________________________________________
 kexec mailing list
