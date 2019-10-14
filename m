@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x841.google.com ([2607:f8b0:4864:20::841])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iK2MZ-0002F1-Eo
- for kexec@lists.infradead.org; Mon, 14 Oct 2019 15:34:24 +0000
-Received: by mail-qt1-x841.google.com with SMTP id j31so25994317qta.5
- for <kexec@lists.infradead.org>; Mon, 14 Oct 2019 08:34:22 -0700 (PDT)
-Date: Mon, 14 Oct 2019 15:34:19 +0000
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: Re: [PATCH v6 08/17] arm64: hibernate: add trans_pgd public functions
-Message-ID: <20191014153419.galjhum7amnyuiml@soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net>
-References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
- <20191004185234.31471-9-pasha.tatashin@soleen.com>
- <2ea69969-154d-fa55-767d-43ea8971dd0e@arm.com>
+Subject: Re: [PATCH V4 0/2] Add support for arm64 to carry ima measurement
+References: <20191011003600.22090-1-prsriva@linux.microsoft.com>
+From: James Morse <james.morse@arm.com>
+Message-ID: <87d92514-e5e4-a79f-467f-f24a4ed279b6@arm.com>
+Date: Mon, 14 Oct 2019 19:02:28 +0100
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2ea69969-154d-fa55-767d-43ea8971dd0e@arm.com>
+In-Reply-To: <20191011003600.22090-1-prsriva@linux.microsoft.com>
+Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,82 +19,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn.net, marc.zyngier@arm.com, catalin.marinas@arm.com, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, jmorris@namei.org, linux-mm@kvack.org, ebiederm@xmission.com, matthias.bgg@gmail.com, will@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Prakhar Srivastava <prsriva@linux.microsoft.com>
+Cc: mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de, yamada.masahiro@socionext.com, sboyd@kernel.org, catalin.marinas@arm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, takahiro.akashi@linaro.org, kristina.martsenko@arm.org, duwe@lst.de, bauerman@linux.ibm.com, allison@lohutok.net, james.morse@arm.org, linux-integrity@vger.kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 
-> > +
-> > +	memcpy(page, src_start, length);
-> > +	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
-> > +
-> > +	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
-> > +	if (!trans_pgd)
-> > +		return -ENOMEM;
-> > +
-> > +	rc = trans_pgd_map_page(trans_pgd, page, dst_addr,
-> > +				PAGE_KERNEL_EXEC);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> >  	/*
-> >  	 * Load our new page tables. A strict BBM approach requires that we
-> >  	 * ensure that TLBs are free of any entries that may overlap with the
-> 
-> (I suspect you are going to to duplicate this in the kexec code. Kexec has the same
-> pattern: instructions that have to be copied to do the relocation of the rest of memory)
-> 
+Hi Prakhar,
 
-Yes, the relocation function is also copied, but I do not see an easy
-way to unify this particular code with kexec. We can discuss in kexec
-part of this series what else can be unified with hibernate's code.
+(You've CC'd a few folk who work for 'arm.org'...)
 
-> 
-> > @@ -462,6 +476,24 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
-> 
-> > +int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
-> > +			  unsigned long end)
-> > +{
-> > +	int rc;
-> > +	pgd_t *trans_pgd = (pgd_t *)get_safe_page(GFP_ATOMIC);
-> > +
-> > +	if (!trans_pgd) {
-> > +		pr_err("Failed to allocate memory for temporary page tables.\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	rc = copy_page_tables(trans_pgd, start, end);
-> > +	if (!rc)
-> > +		*dst_pgdp = trans_pgd;
-> 
-> *dst_pgdp was already allocated in swsusp_arch_resume().
+On 11/10/2019 01:35, Prakhar Srivastava wrote:
+> Add support to carry ima measurement log
+> to the next kexec'ed session triggered via kexec_file_load.
 
-Good catch, I forgot to remove allocation from swsusp_arch_resume().
+I don't know much about 'ima', I'm assuming its the list of 'stuff' that has already been
+fed into the TPM as part of SecureBoot. Please forgive the stupid questions,
 
- 
-> > +
-> > +	return rc;
-> > +}
-> > +
-> >  /*
-> >   * Setup then Resume from the hibernate image using swsusp_arch_suspend_exit().
-> >   *
-> > @@ -488,7 +520,7 @@ int swsusp_arch_resume(void)
-> >  		pr_err("Failed to allocate memory for temporary page tables.\n");
-> >  		return -ENOMEM;
-> >  	}
+
+> Currently during kexec the kernel file signatures are/can be validated
+> prior to actual load, the information(PE/ima signature) is not carried
+> to the next session. This lead to loss of information.
 > 
-> If the allocation moves into 'trans_pgd_create_copy()', please move the code just above
-> here (cut off by the diff) that allocates it in swsusp_arch_resume().
-> 
-> Its actually okay to leak memory like this, hibernate's allocator acts as a memory pool.
-> It either gets freed if we fail to resume, or vanishes when the resumed kernel takes over.
+> Carrying forward the ima measurement log to the next kexec'ed session 
+> allows a verifying party to get the entire runtime event log since the
+> last full reboot, since that is when PCRs were last reset.
 
-I did.
+Hmm, You're adding this as a linux-specific thing in the chosen node, which points at a
+memreserve.
 
-> 
-> Reviewed-by: James Morse <james.morse@arm.com>
+The question that normally needs answering when adding to the stuff we have to treat as
+ABI over kexec is: how would this work from a bootloader that isn't kexec? Does it need to
+work for non-linux OS?
 
-Thank you,
-Pasha
+Changing anything other than the chosen node of the DT isn't something the kernel should
+be doing. I suspect if you need reserved memory for this stuff, it should be carved out by
+the bootloader, and like all other memreserves: should not be moved or deleted.
+
+('fdt_delete_mem_rsv()' is a terrifying idea, we depend on the memreserve nodes to tell
+use which 'memory' we shouldn't touch!)
+
+
+Sharing with powerpc is a great starting point ... but, how does this work for ACPI systems?
+How does this work if I keep kexecing between ACPI and DT?
+
+I'd prefer it we only had one way this works on arm64, so whatever we do has to cover both.
+
+Does ima work without UEFI secure-boot?
+If not, the Linux-specific UEFI 'memreserve' table might be a better fit, this would be
+the same for both DT and ACPI systems. Given U-boot supports the UEFI API too, its
+probably the right thing to do regardless of secure-boot.
+
+It looks like x86 doesn't support this either yet. If we have to add something to support
+ACPI, it would be good if it covers both firmware mechanisms for arm64, and works for x86
+in the same way.
+
+(How does this thing interact with EFI's existing efi_tpm_eventlog_init()?)
+
+
+Thanks,
+
+James
 
 _______________________________________________
 kexec mailing list
