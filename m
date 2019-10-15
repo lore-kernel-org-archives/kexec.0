@@ -1,21 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iKKkS-0006uY-Sg
- for kexec@lists.infradead.org; Tue, 15 Oct 2019 11:12:18 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20191012022140.19003-1-lijiang@redhat.com>
- <20191012022140.19003-4-lijiang@redhat.com>
- <87d0f22oi5.fsf@x220.int.ebiederm.org>
- <20191012121625.GA11587@dhcp-128-65.nay.redhat.com>
- <f3fc12b9-be39-d430-52f5-d1b76b2599a3@redhat.com>
-Date: Tue, 15 Oct 2019 06:11:21 -0500
-In-Reply-To: <f3fc12b9-be39-d430-52f5-d1b76b2599a3@redhat.com> (lijiang's
- message of "Mon, 14 Oct 2019 18:02:22 +0800")
-Message-ID: <87tv8az2jq.fsf@x220.int.ebiederm.org>
+ id 1iKQTF-0006tP-Uh
+ for kexec@lists.infradead.org; Tue, 15 Oct 2019 17:18:56 +0000
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+ (No client certificate requested)
+ by mx1.redhat.com (Postfix) with ESMTPS id 853F72D7E1
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2019 17:18:52 +0000 (UTC)
+Received: by mail-io1-f69.google.com with SMTP id w8so33086082iol.20
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2019 10:18:52 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [PATCH 3/3 v3] x86/kdump: clean up all the code related to the
- backup region
+References: <20190910151341.14986-1-kasong@redhat.com>
+ <20190910151341.14986-3-kasong@redhat.com>
+ <20190911055618.GA104115@gmail.com>
+ <CACPcB9eZUZ1fCsc1GZs9MJnoqLK9Ld5KEx0_emx8J44Mjcy3WA@mail.gmail.com>
+ <20190927054208.GA13426@dhcp-128-65.nay.redhat.com>
+ <3e1f65de-4539-736e-a7b4-3c726a001f4b@redhat.com>
+ <20191014110504.GA16271@dhcp-128-65.nay.redhat.com>
+ <20191015021848.GA18043@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20191015021848.GA18043@dhcp-128-65.nay.redhat.com>
+From: Kairui Song <kasong@redhat.com>
+Date: Wed, 16 Oct 2019 01:18:40 +0800
+Message-ID: <CACPcB9dXYgJ3YqFNTi3sf0Ym8Ux47p-m3DXGpg=jtuq7070eAw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] x86/kdump: Reserve extra memory when SME or SEV is
+ active
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,81 +34,193 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: jgross@suse.com, Thomas.Lendacky@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>, Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>, the arch/x86 maintainers <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
 
-bGlqaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPiB3cml0ZXM6Cgo+IOWcqCAyMDE55bm0MTDmnIgx
-MuaXpSAyMDoxNiwgRGF2ZSBZb3VuZyDlhpnpgZM6Cj4+IEhpIEVyaWMsCj4+IAo+PiBPbiAxMC8x
-Mi8xOSBhdCAwNjoyNmFtLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90ZToKPj4+IExpYW5ibyBKaWFu
-ZyA8bGlqaWFuZ0ByZWRoYXQuY29tPiB3cml0ZXM6Cj4+Pgo+Pj4+IFdoZW4gdGhlIGNyYXNoa2Vy
-bmVsIGtlcm5lbCBjb21tYW5kIGxpbmUgb3B0aW9uIGlzIHNwZWNpZmllZCwgdGhlCj4+Pj4gbG93
-IDFNaUIgbWVtb3J5IHdpbGwgYWx3YXlzIGJlIHJlc2VydmVkLCB3aGljaCBtYWtlcyB0aGF0IHRo
-ZSBtZW1vcnkKPj4+PiBhbGxvY2F0ZWQgbGF0ZXIgd29uJ3QgZmFsbCBpbnRvIHRoZSBsb3cgMU1p
-QiBhcmVhLCB0aGVyZWJ5LCBpdCdzIG5vdAo+Pj4+IG5lY2Vzc2FyeSB0byBjcmVhdGUgYSBiYWNr
-dXAgcmVnaW9uIGFuZCBhbHNvIG5vIG5lZWQgdG8gY29weSB0aGUgZmlyc3QKPj4+PiA2NDBrIGNv
-bnRlbnQgdG8gYSBiYWNrdXAgcmVnaW9uLgo+Pj4+Cj4+Pj4gQ3VycmVudGx5LCB0aGUgY29kZSBy
-ZWxhdGVkIHRvIHRoZSBiYWNrdXAgcmVnaW9uIGNhbiBiZSBzYWZlbHkgcmVtb3ZlZCwKPj4+PiBz
-byBsZXRzIGNsZWFuIHVwLgo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogTGlhbmJvIEppYW5nIDxs
-aWppYW5nQHJlZGhhdC5jb20+Cj4+Pj4gLS0tCj4+Pgo+Pj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4
-Ni9rZXJuZWwvY3Jhc2guYyBiL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5jCj4+Pj4gaW5kZXggZWI2
-NTFmYmRlOTJhLi5jYzU3NzRmYzg0YzAgMTAwNjQ0Cj4+Pj4gLS0tIGEvYXJjaC94ODYva2VybmVs
-L2NyYXNoLmMKPj4+PiArKysgYi9hcmNoL3g4Ni9rZXJuZWwvY3Jhc2guYwo+Pj4+IEBAIC0xNzMs
-OCArMTczLDYgQEAgdm9pZCBuYXRpdmVfbWFjaGluZV9jcmFzaF9zaHV0ZG93bihzdHJ1Y3QgcHRf
-cmVncyAqcmVncykKPj4+PiAgCj4+Pj4gICNpZmRlZiBDT05GSUdfS0VYRUNfRklMRQo+Pj4+ICAK
-Pj4+PiAtc3RhdGljIHVuc2lnbmVkIGxvbmcgY3Jhc2hfemVyb19ieXRlczsKPj4+PiAtCj4+Pj4g
-IHN0YXRpYyBpbnQgZ2V0X25yX3JhbV9yYW5nZXNfY2FsbGJhY2soc3RydWN0IHJlc291cmNlICpy
-ZXMsIHZvaWQgKmFyZykKPj4+PiAgewo+Pj4+ICAJdW5zaWduZWQgaW50ICpucl9yYW5nZXMgPSBh
-cmc7Cj4+Pj4gQEAgLTIzNCw5ICsyMzIsMTUgQEAgc3RhdGljIGludCBwcmVwYXJlX2VsZjY0X3Jh
-bV9oZWFkZXJzX2NhbGxiYWNrKHN0cnVjdCByZXNvdXJjZSAqcmVzLCB2b2lkICphcmcpCj4+Pj4g
-IHsKPj4+PiAgCXN0cnVjdCBjcmFzaF9tZW0gKmNtZW0gPSBhcmc7Cj4+Pj4gIAo+Pj4+IC0JY21l
-bS0+cmFuZ2VzW2NtZW0tPm5yX3Jhbmdlc10uc3RhcnQgPSByZXMtPnN0YXJ0Owo+Pj4+IC0JY21l
-bS0+cmFuZ2VzW2NtZW0tPm5yX3Jhbmdlc10uZW5kID0gcmVzLT5lbmQ7Cj4+Pj4gLQljbWVtLT5u
-cl9yYW5nZXMrKzsKPj4+PiArCWlmIChyZXMtPnN0YXJ0ID49IFNaXzFNKSB7Cj4+Pj4gKwkJY21l
-bS0+cmFuZ2VzW2NtZW0tPm5yX3Jhbmdlc10uc3RhcnQgPSByZXMtPnN0YXJ0Owo+Pj4+ICsJCWNt
-ZW0tPnJhbmdlc1tjbWVtLT5ucl9yYW5nZXNdLmVuZCA9IHJlcy0+ZW5kOwo+Pj4+ICsJCWNtZW0t
-Pm5yX3JhbmdlcysrOwo+Pj4+ICsJfSBlbHNlIGlmIChyZXMtPmVuZCA+IFNaXzFNKSB7Cj4+Pj4g
-KwkJY21lbS0+cmFuZ2VzW2NtZW0tPm5yX3Jhbmdlc10uc3RhcnQgPSBTWl8xTTsKPj4+PiArCQlj
-bWVtLT5yYW5nZXNbY21lbS0+bnJfcmFuZ2VzXS5lbmQgPSByZXMtPmVuZDsKPj4+PiArCQljbWVt
-LT5ucl9yYW5nZXMrKzsKPj4+PiArCX0KPj4+Cj4+PiBXaGF0IGlzIGdvaW5nIG9uIHdpdGggdGhp
-cyBjaHVuaz8gIEkgY2FuIGd1ZXNzIGJ1dCB0aGlzIG5lZWRzIGEgY2xlYXIKPj4+IGNvbW1lbnQu
-Cj4+IAo+PiBJbmRlZWQgaXQgbmVlZHMgc29tZSBjb2RlIGNvbW1lbnQsIHRoaXMgaXMgYmFzZWQg
-b24gc29tZSBvZmZsaW5lCj4+IGRpc2N1c3Npb24uICBjYXQgL3Byb2Mvdm1jb3JlIHdpbGwgZ2l2
-ZSBhIHdhcm5pbmcgYmVjYXVzZSBpb3JlbWFwIGlzCj4+IG1hcHBpbmcgdGhlIHN5c3RlbSByYW0u
-Cj4+IAo+PiBXZSBwYXNzIHRoZSBmaXJzdCAxTSB0byBrZHVtcCBrZXJuZWwgaW4gZTgyMCBhcyBz
-eXN0ZW0gcmFtIHNvIHRoYXQgMm5kCj4+IGtlcm5lbCBjYW4gdXNlIHRoZSBsb3cgMU0gbWVtb3J5
-IGJlY2F1c2UgZm9yIGV4YW1wbGUgdGhlIHRyYW1wb2xpbmUKPj4gY29kZS4KPj4gCj4gVGhhbmsg
-eW91LCBFcmljIGFuZCBEYXZlLiBJIHdpbGwgYWRkIHRoZSBjb2RlIGNvbW1lbnQgYXMgYmVsb3cg
-aWYgaXQgd291bGQgYmUgT0suCj4KPiBAQCAtMjM0LDkgKzIzMiwyMCBAQCBzdGF0aWMgaW50IHBy
-ZXBhcmVfZWxmNjRfcmFtX2hlYWRlcnNfY2FsbGJhY2soc3RydWN0IHJlc291cmNlICpyZXMsIHZv
-aWQgKmFyZykKPiAgewo+ICAgICAgICAgc3RydWN0IGNyYXNoX21lbSAqY21lbSA9IGFyZzsKPiAg
-Cj4gLSAgICAgICBjbWVtLT5yYW5nZXNbY21lbS0+bnJfcmFuZ2VzXS5zdGFydCA9IHJlcy0+c3Rh
-cnQ7Cj4gLSAgICAgICBjbWVtLT5yYW5nZXNbY21lbS0+bnJfcmFuZ2VzXS5lbmQgPSByZXMtPmVu
-ZDsKPiAtICAgICAgIGNtZW0tPm5yX3JhbmdlcysrOwo+ICsgICAgICAgLyoKPiArICAgICAgICAq
-IEN1cnJlbnRseSwgcGFzcyB0aGUgbG93IDFNaUIgcmFuZ2UgdG8ga2R1bXAga2VybmVsIGluIGU4
-MjAKPiArICAgICAgICAqIGFzIHN5c3RlbSByYW0gc28gdGhhdCBrZHVtcCBrZXJuZWwgY2FuIGFs
-c28gdXNlIHRoZSBsb3cgMU1pQgo+ICsgICAgICAgICogbWVtb3J5IGR1ZSB0byB0aGUgcmVhbCBt
-b2RlIHRyYW1wb2xpbmUgY29kZS4KPiArICAgICAgICAqIEFuZCBsYXRlciwgdGhlIGxvdyAxTWlC
-IHJhbmdlIHdpbGwgYmUgZXhjbHVlZCBmcm9tIGVsZiBoZWFkZXIsCj4gKyAgICAgICAgKiB3aGlj
-aCB3aWxsIGF2b2lkIHJlbWFwcGluZyB0aGUgMU1pQiBzeXN0ZW0gcmFtIHdoZW4gZHVtcGluZwo+
-ICsgICAgICAgICogdm1jb3JlLgo+ICsgICAgICAgICovCj4gKyAgICAgICBpZiAocmVzLT5zdGFy
-dCA+PSBTWl8xTSkgewo+ICsgICAgICAgICAgICAgICBjbWVtLT5yYW5nZXNbY21lbS0+bnJfcmFu
-Z2VzXS5zdGFydCA9IHJlcy0+c3RhcnQ7Cj4gKyAgICAgICAgICAgICAgIGNtZW0tPnJhbmdlc1tj
-bWVtLT5ucl9yYW5nZXNdLmVuZCA9IHJlcy0+ZW5kOwo+ICsgICAgICAgICAgICAgICBjbWVtLT5u
-cl9yYW5nZXMrKzsKPiArICAgICAgIH0gZWxzZSBpZiAocmVzLT5lbmQgPiBTWl8xTSkgewo+ICsg
-ICAgICAgICAgICAgICBjbWVtLT5yYW5nZXNbY21lbS0+bnJfcmFuZ2VzXS5zdGFydCA9IFNaXzFN
-Owo+ICsgICAgICAgICAgICAgICBjbWVtLT5yYW5nZXNbY21lbS0+bnJfcmFuZ2VzXS5lbmQgPSBy
-ZXMtPmVuZDsKPiArICAgICAgICAgICAgICAgY21lbS0+bnJfcmFuZ2VzKys7Cj4gKyAgICAgICB9
-Cj4gIAo+ICAgICAgICAgcmV0dXJuIDA7Cj4gIH0KCkkganVzdCByZWFkIHRocm91Z2ggdGhlIGFw
-cHJvcHJpYXRlIHNlY3Rpb24gb2YgY3Jhc2guYyBhbmQgdGhlIHdheQp0aGluZ3MgYXJlIHN0cnVj
-dHVyZWQgZG9pbmcgdGhpcyB3b3JrIGluCnByZXBhcmVfZWxmNjRfcmFtX2hlYWRlcnNfY2FsbGJh
-Y2sgaXMgd3JvbmcuCgpUaGlzIGNhbiBiZSBkb25lIGluIGEgc2ltcGxlciBtYW5uZXIgaW4gZWxm
-X2hlYWRlcl9leGNsdWRlX3Jhbmdlcy4KU29tZXRoaW5nIGxpa2U6CgoJLyogVGhlIGxvdyAxTWlC
-IGlzIGFsd2F5cyByZXNlcnZlZCAqLwoJcmV0ID0gY3Jhc2hfZXhjbHVkZV9tZW1fcmFuZ2UoY21l
-bSwgMCwgMTAyNCoxMDI0KTsKCWlmIChyZXQpCgkJcmV0dXJuIHJldDsKCkVyaWMKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
-dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8va2V4ZWMK
+ thiOn Tue, Oct 15, 2019 at 10:18 AM Dave Young <dyoung@redhat.com> wrote:
+>
+> On 10/14/19 at 07:05pm, Dave Young wrote:
+> > On 10/12/19 at 05:24pm, Kairui Song wrote:
+> > > On 9/27/19 1:42 PM, Dave Young wrote:
+> > > > On 09/25/19 at 06:36pm, Kairui Song wrote:
+> > > > > On Wed, Sep 11, 2019 at 1:56 PM Ingo Molnar <mingo@kernel.org> wrote:
+> > > > > > * Kairui Song <kasong@redhat.com> wrote:
+> > > > > >
+> > > > > > > Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
+> > > > > > > SWIOTLB will be enabled even if there is less than 4G of memory when SME
+> > > > > > > is active, to support DMA of devices that not support address with the
+> > > > > > > encrypt bit.
+> > > > > > >
+> > > > > > > And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
+> > > > > > > active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
+> > > > > > >
+> > > > > > > Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
+> > > > > > > encryption") will always force SWIOTLB to be enabled when SEV is active
+> > > > > > > in all cases.
+> > > > > > >
+> > > > > > > Now, when either SME or SEV is active, SWIOTLB will be force enabled,
+> > > > > > > and this is also true for kdump kernel. As a result kdump kernel will
+> > > > > > > run out of already scarce pre-reserved memory easily.
+> > > > > > >
+> > > > > > > So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
+> > > > > > > kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
+> > > > > > > is specified or any offset is used. As for the high reservation case, an
+> > > > > > > extra low memory region will always be reserved and that is enough for
+> > > > > > > SWIOTLB. Else if the offset format is used, user should be fully aware
+> > > > > > > of any possible kdump kernel memory requirement and have to organize the
+> > > > > > > memory usage carefully.
+> > > > > > >
+> > > > > > > Signed-off-by: Kairui Song <kasong@redhat.com>
+> > > > > > > ---
+> > > > > > >   arch/x86/kernel/setup.c | 20 +++++++++++++++++---
+> > > > > > >   1 file changed, 17 insertions(+), 3 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> > > > > > > index 71f20bb18cb0..ee6a2f1e2226 100644
+> > > > > > > --- a/arch/x86/kernel/setup.c
+> > > > > > > +++ b/arch/x86/kernel/setup.c
+> > > > > > > @@ -530,7 +530,7 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
+> > > > > > >                                          unsigned long long *crash_size,
+> > > > > > >                                          bool high)
+> > > > > > >   {
+> > > > > > > -     unsigned long long base, size;
+> > > > > > > +     unsigned long long base, size, mem_enc_req = 0;
+> > > > > > >
+> > > > > > >        base = *crash_base;
+> > > > > > >        size = *crash_size;
+> > > > > > > @@ -561,11 +561,25 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
+> > > > > > >        if (high)
+> > > > > > >                goto high_reserve;
+> > > > > > >
+> > > > > > > +     /*
+> > > > > > > +      * When SME/SEV is active and not using high reserve,
+> > > > > > > +      * it will always required an extra SWIOTLB region.
+> > > > > > > +      */
+> > > > > > > +     if (mem_encrypt_active())
+> > > > > > > +             mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
+> > > > > > > +
+> > > > > > >        base = memblock_find_in_range(CRASH_ALIGN,
+> > > > > > > -                                   CRASH_ADDR_LOW_MAX, size,
+> > > > > > > +                                   CRASH_ADDR_LOW_MAX,
+> > > > > > > +                                   size + mem_enc_req,
+> > > > > > >                                      CRASH_ALIGN);
+> > > > > >
+> > > > >
+> > > > > Hi Ingo,
+> > > > >
+> > > > > I re-read my previous reply, it's long and tedious, let me try to make
+> > > > > a more effective reply:
+> > > > >
+> > > > > > What sizes are we talking about here?
+> > > > >
+> > > > > The size here is how much memory will be reserved for kdump kernel, to
+> > > > > ensure kdump kernel and userspace can run without OOM.
+> > > > >
+> > > > > >
+> > > > > > - What is the possible size range of swiotlb_size_or_default()
+> > > > >
+> > > > > swiotlb_size_or_default() returns the swiotlb size, it's specified by
+> > > > > user using swiotlb=<size>, or default size (64MB)
+> > > > >
+> > > > > >
+> > > > > > - What is the size of CRASH_ADDR_LOW_MAX (the old limit)?
+> > > > >
+> > > > > It's 4G.
+> > > > >
+> > > > > >
+> > > > > > - Why do we replace one fixed limit with another fixed limit instead of
+> > > > > >    accurately sizing the area, with each required feature adding its own
+> > > > > >    requirement to the reservation size?
+> > > > >
+> > > > > It's quite hard to "accurately sizing the area".
+> > > > >
+> > > > > No way to tell the exact amount of memory kdump needs, we can only estimate.
+> > > > > Kdump kernel use different cmdline, drivers and components will have
+> > > > > special handling for kdump, and userspace is totally different.
+> > > >
+> > > > Agreed about your above, but specific this the problem in this patch
+> > > > There should be other ways.
+> > > >
+> > > > First thought about doing generic handling in swiotlb part, and do
+> > > > something like kdump_memory_reserve(size) Ingo suggested,  but according
+> > > > to you swiotlb init is late, so it can not increase the size, OTOH if
+> > > > reserve another region for kdump in swiotlb will cause other issues.
+> > > >
+> > > > So let's think about other improvement, for example to see if you can
+> > > > call kdump_memory_reserve(size) in AMD SME init path, for example in
+> > > > mem_encrypt_init(), is it before crashkernel reservation?
+> > > >
+> > > > If doable it will be at least cleaner than the code in this patch.
+> > > >
+> > > > Thanks
+> > > > Dave
+> > > >
+> > >
+> > > How about something simple as following code? The logic and new function is as simple as
+> > > possible, just always reserve extra low memory when SME/SEV is active, ignore the high/low
+> > > reservation case. It will waste some memory with SME and high reservation though.
+> > >
+> > > Was hesitating a lot about this series, one thing I'm thinking is that what is the point
+> > > of "crashkernel=" argument, if the crashkernel value could be adjusted according, the value
+> > > specified will seems more meanless or confusing...
+> > >
+> > > And currently there isn't anything like crashkernel=auto or anything similiar to let kernel
+> > > calculate the value automatically, maybe the admin should be aware of the value or be informed
+> > > about the suitable crashkernel value after all?
+> >
+> > Hmm, it is reasonable that a user defined value should be just as is
+> > without any change by kernel.  So it is a good reason to introduce
+> > a crashkernel=auto so that kernel can tune the crashkernel size
+> > accordingly on top of some base value which can be configurable by
+> > kernel configs (arch dependent).
+> >
+>
+> And for the time being, can just print a warning when crashkernel= param
+> is used, in mem_encrypt_init() code. alert people to increase the memory
+> size swiotlb_size_or_default().
+
+Good suggestion,  it will be much more reasonable if kernel only adjust the
+crashekernel value when crashkernel=auto is used. For now, I think giving a
+warning could be a better solution.
+
+> In the future, if the crashkernel=auto is doable then kernel can adapt
+> to that in code.  Even if it is reasonable to let admin to provide a
+> exact value but sometimes it is hard to know these kernel requirement
+> details..
+>
+
+Yes, and the crashkernel=auto could be more helpful with some infrastructure
+for add extra kdump memory.
+
+Let crashkernel=auto have a configurable basic size, and each component could
+call kdump_memory_reserve to add to the basic size. (Like SME/SEV case here)
+
+And currently I'm doing some experiment to reserve some pages from buddy
+as the crash memory. So kernel can try reserve extra memory for kdump kernel
+anytime, userspace can also tell kernel to reserve more crash memory.
+
+If everything goes well, this may make the auto reservation even better.
+
+crashkernel=auto just need to provide a more generic value that's enough to
+contain the kernel image, initramfs, swiotlb, early boot memory, etc..
+(all the continual things), plus some basic value to fits most default
+kdump setups.
+
+Extra usage could be estimated by userspace and added later.
+Userspace is more aware of what service/module might be used for kdump
+and can be more accurate.
+
+This may provide a better 'auto' crashkernel solution.
+
+--
+Best Regards,
+Kairui Song
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
