@@ -1,13 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH V4 0/2] Add support for arm64 to carry ima measurement
-References: <20191011003600.22090-1-prsriva@linux.microsoft.com>
- <87d92514-e5e4-a79f-467f-f24a4ed279b6@arm.com>
-From: prsriva <prsriva@linux.microsoft.com>
-Message-ID: <b35b239c-990c-0d5b-0298-8f9e35064e2b@linux.microsoft.com>
-Date: Mon, 14 Oct 2019 18:31:30 -0700
+Received: from mail-ed1-x541.google.com ([2a00:1450:4864:20::541])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1iKCKJ-00062X-TN
+ for kexec@lists.infradead.org; Tue, 15 Oct 2019 02:12:46 +0000
+Received: by mail-ed1-x541.google.com with SMTP id y91so16441143ede.9
+ for <kexec@lists.infradead.org>; Mon, 14 Oct 2019 19:12:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87d92514-e5e4-a79f-467f-f24a4ed279b6@arm.com>
-Content-Language: en-US
+References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
+ <20191004185234.31471-17-pasha.tatashin@soleen.com>
+ <45a2f0b8-5bac-8b5d-d595-f92e9acb27ad@arm.com>
+In-Reply-To: <45a2f0b8-5bac-8b5d-d595-f92e9acb27ad@arm.com>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Date: Mon, 14 Oct 2019 22:12:30 -0400
+Message-ID: <CA+CK2bCBEp8Uvm8oF-LJ6hUpJtSYN0xuK6Esd75czYBAWsA5GQ@mail.gmail.com>
+Subject: Re: [PATCH v6 16/17] arm64: kexec: configure trans_pgd page table for
+ kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,120 +23,195 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: James Morse <james.morse@arm.com>
-Cc: mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de, yamada.masahiro@socionext.com, sboyd@kernel.org, catalin.marinas@arm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, takahiro.akashi@linaro.org, kristina.martsenko@arm.org, duwe@lst.de, bauerman@linux.ibm.com, allison@lohutok.net, james.morse@arm.org, linux-integrity@vger.kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Matthias Brugger <matthias.bgg@gmail.com>, will@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 
+> > +/* Body of the vector for escalating to EL2 from relocation routine */
+> > +extern const unsigned char kexec_el1_sync[];
+> > +extern const unsigned long kexec_el1_sync_size;
+>
+> > +#define KEXEC_EL2_VECTOR_TABLE_SIZE  2048
+>
+>
+> > +#define KEXEC_EL2_SYNC_OFFSET                (KEXEC_EL2_VECTOR_TABLE_SIZE / 2)
+>
+> Yuck.
+>
+> Please don't generate one-off vectors like this. Create _all_ of them, and have the ones
+> that should never happen spin round a branch. Someone will hit one eventually, its a lot
+> easier to work out what happened if it stops on the first fault, instead of executing junk
+> and flying off into the weeds.
+>
+> git grep invalid_vector
+>
+> Having the vectors at a known offset in the page that does the relocation means you have a
+> fair idea what happened from just the PC.
 
+Sure, I will set invalid_vector of every unused part of the table.
 
-On 10/14/19 11:02 AM, James Morse wrote:
-> Hi Prakhar,
-> 
-> (You've CC'd a few folk who work for 'arm.org'...)
-> 
-> On 11/10/2019 01:35, Prakhar Srivastava wrote:
->> Add support to carry ima measurement log
->> to the next kexec'ed session triggered via kexec_file_load.
-> 
-> I don't know much about 'ima', I'm assuming its the list of 'stuff' that has already been
-> fed into the TPM as part of SecureBoot. Please forgive the stupid questions,
-> 
-The IMA logs are event logs for module load time signature 
-validation(based on policies) which are backed by the TPM. No SecureBoot 
-information is present in the log other than the boot aggregate.
+> > +     for (entry = kimage->head; !(entry & IND_DONE); entry = *ptr++) {
+> > +             addr = entry & PAGE_MASK;
+> > +
+> > +             switch (entry & IND_FLAGS) {
+> > +             case IND_DESTINATION:
+> > +                     dest = addr;
+> > +                     break;
+> > +             case IND_INDIRECTION:
+> > +                     ptr = __va(addr);
+> > +                     if (rc)
+> > +                             return rc;
+> > +                     break;
+>
+> > +             case IND_SOURCE:
+> > +                     rc = trans_pgd_map_page(info, pgdp, __va(addr),
+> > +                                             src_va, PAGE_KERNEL);
+> > +                     if (rc)
+> > +                             return rc;
+> > +                     rc = trans_pgd_map_page(info, pgdp, __va(dest),
+> > +                                             dst_va, PAGE_KERNEL);
+> > +                     if (rc)
+> > +                             return rc;
+> > +                     dest += PAGE_SIZE;
+> > +                     src_va += PAGE_SIZE;
+> > +                     dst_va += PAGE_SIZE;
+> > +                     len += PAGE_SIZE;
+> > +             }
+>
+> It looks like you're building a swiss cheese.
 
->> Currently during kexec the kernel file signatures are/can be validated
->> prior to actual load, the information(PE/ima signature) is not carried
->> to the next session. This lead to loss of information.
->>
->> Carrying forward the ima measurement log to the next kexec'ed session
->> allows a verifying party to get the entire runtime event log since the
->> last full reboot, since that is when PCRs were last reset.
-> 
-> Hmm, You're adding this as a linux-specific thing in the chosen node, which points at a
-> memreserve.
-> 
-> The question that normally needs answering when adding to the stuff we have to treat as
-> ABI over kexec is: how would this work from a bootloader that isn't kexec? Does it need to
-> work for non-linux OS?
-> 
-This change is only intended to be executed in the path of 
-kexec_file_load and not intended to be executed by any boot loader.(Not 
-very aware of boot loader calls.). The logs are non intended to be 
-injected by the boot loader at all.
-The change is configurable(CONFIG_IMA_KEXEC) under the IMA subsection 
-and can be disabled if not needed.
-
-> Changing anything other than the chosen node of the DT isn't something the kernel should
-> be doing. I suspect if you need reserved memory for this stuff, it should be carved out by
-> the bootloader, and like all other memreserves: should not be moved or deleted.
-> 
-> ('fdt_delete_mem_rsv()' is a terrifying idea, we depend on the memreserve nodes to tell
-> use which 'memory' we shouldn't touch!)
-> 
-fdt_delete_mem_rsv - is to cleanup any memory that's been mistakenly 
-still lying around in the same session while creating the fdt. 
-memblock_free is actually used to free up the reserved memory.
-
-Thiago may have more insight, This is primarily a code that's been 
-ported from existing kernel for PowerPC.
-https://github.com/torvalds/linux/blob/master/arch/powerpc/kernel/machine_kexec_file_64.c
-
-> 
-> Sharing with powerpc is a great starting point ... but, how does this work for ACPI systems?
-> How does this work if I keep kexecing between ACPI and DT?
-> 
-
-I don't have an answer to this, just going through the call stack i dont 
-believe it depends on ACPI as such. I am not the expert here, but more 
-than willing to try out the scenario in question.(Can you point me to 
-some documentation to setup some environment to test this.) 
-Kexec_file_load call depends purely on DT implementation.
-
-
-> I'd prefer it we only had one way this works on arm64, so whatever we do has to cover both.
-I can move the code to be only part of arm64 arch if absolutely 
-necessary. Thiago do you have any concerns on going back the path of 
-multiple code paths?
+The userland provides several segments that need to be loaded at
+specific physical locations. Each of those segment is mapped with
+virtually contiguous source and destinations. We do not have swiss
+cheese, even between the segments the VAs are contiguous.
 
 >
-> Does ima work without UEFI secure-boot?
-Yes, IMA, the measurement is not dependent on any hardware capabilities.
-TPM is needed to back the measurements but the IMA module will not fail 
-if TPM is not available.
-In short Secure-boot has no impact on IMA.
+> If you disable RODATA_FULL_DEFAULT_ENABLED, the kernel will use block mappings for the
+> linear map. This dramatically reduces the amount of memory in use. On Juno running with
+> 39bit/4K, there is typically 6G of contiguous memory with no firmware/uefi holes in it.
+> This is mapped by 6 1G block mappings, which take up no additional memory.
 
-> If not, the Linux-specific UEFI 'memreserve' table might be a better fit, this would be
-> the same for both DT and ACPI systems. Given U-boot supports the UEFI API too, its
-> probably the right thing to do regardless of secure-boot.
-> 
-> It looks like x86 doesn't support this either yet. If we have to add something to support
-> ACPI, it would be good if it covers both firmware mechanisms for arm64, and works for x86
-> in the same way.
-> 
-> (How does this thing interact with EFI's existing efi_tpm_eventlog_init()?)
-> 
-IMA does not interact with the TPM event log.
-Only one of the PCR's is extended but not logged in the TPM logs. The 
-logging is done in IMA. The IMA measurement log in question is whats 
-needed to be carried over to via kexec_file_load call.
+Kexec loads segments in the common code, and pages for the segments
+are allocated one at a time in a special allocator that checks that
+the allocated pages are outside of the destination addresses. The
+allocations are done one base page at a time:
 
-I am not sure if i addressed all your concerns, please let me know
-if i missed anything. To me most concerns look to be towards the kexec 
-case and dependency on hardware(ACPI/TPM) during boot and early boot 
-services, where as carrying the logs is only during the kexec_file_load 
-sys call and does not interfere with that code path.
-IMA documentation: https://sourceforge.net/p/linux-ima/wiki/Home/
+kimage_load_normal_segment()
+  kimage_alloc_page()
 
-Prakhar Srivastava
-> 
-> Thanks,
-> 
-> James
-> 
+Unlike with control pages, it is not simple to change them to use
+large pages. The control pages can be allocated as large pages, as
+kimage_alloc_normal_control_pages() accepts an "order" argument.
+
+Without overhaul of the common code I do not see how can we benefit
+from having large pages here. But even then, imo it is not a high
+priority. Performance wise, I do not think we will win anything by
+using large mappings here. The only benefit of using large pages here
+is to save space. But, we do not waste any space for crash kernel, as
+crash kernel does not require relocation, so the only space that we
+will space is only for normal reboot, but that means we are about to
+be rebooted, and saving space is probably not a high priority.
+
+> For the first go at supporting this in mainline please keep as close as possible to the
+> existing hibernate code. Please use the helpers that copy the linear map.
+> (if you cant do pa->va in the relocation assembly you'd need to generate a virtually
+> addressed structure, which could then use hibernate's relocation assembly)
+>
+> If all this extra code turns out to be a significant performance improvement, I'd like to
+> see the numbers. We can come back to it after we've got the simplest way of running
+> kexec's relocation with the MMU on merged.
+
+I had some RFC version of this project where I had a linear map, but
+was asked to create mapping only for segments that are being copied.
+Which, I think is the right approach here.  The page table is smaller
+(when small mappings are used), faster, because copies are not
+sparse), and the assembly code is MUCH simpler because all we need to
+do if bcopy(src, dst, len)
+
++3:     copy_page x1, x2, x3, x4, x5, x6, x7, x8, x9, x10
++       sub     x11, x11, #PAGE_SIZE
++       cbnz    x11, 3b                         /* page copy loop */
+
+These 3 lines copy all segments to the correct locations.
+
+> > +static int mmu_relocate_setup(struct kimage *kimage, unsigned long kern_reloc,
+> > +                           struct kern_reloc_arg *kern_reloc_arg)
+> > +{
+> > +     struct trans_pgd_info info = {
+> > +             .trans_alloc_page       = kexec_page_alloc,
+> > +             .trans_alloc_arg        = kimage,
+> > +     };
+> > +
+> > +     pgd_t *trans_ttbr0 = kexec_page_alloc(kimage);
+> > +     pgd_t *trans_ttbr1 = kexec_page_alloc(kimage);
+> > +     int rc;
+> > +
+> > +     if (!trans_ttbr0 || !trans_ttbr1)
+> > +             return -ENOMEM;
+> > +
+> > +     rc = map_segments(kimage, trans_ttbr1, &info,
+> > +                       &kern_reloc_arg->copy_len);
+> > +     if (rc)
+> > +             return rc;
+> > +
+> > +     /* Map relocation function va == pa */
+> > +     rc = trans_pgd_map_page(&info, trans_ttbr0,  __va(kern_reloc),
+> > +                             kern_reloc, PAGE_KERNEL_EXEC);
+> > +     if (rc)
+> > +             return rc;
+>
+> You can't do this with the page table helpers. We support platforms with no memory in
+> range of TTBR0's VA space. See dd006da21646f
+>
+> You will need some idmapped memory to turn the MMU off on a system that booted at EL1.
+> This will need to be in a set of page tables that the helpers can't easily touch - so it
+> should only be a single page. (like the arch code's existing idmap - although that may
+> have been overwritten).
+>
+> (I have a machine where this is a problem, if I get the time I will have a stab at making
+> hibernate's safe page idmaped).
+
+To be honest, I am a little lost here. Do you mean machine has
+physical addresses above ttbr0 VA-range? If so, seems we need  to
+reserve few idmapped pages for trans_pgd... But, what to do if all
+physical memory is outside of ttbr0 VA-range? Means, we can't use
+idmap at all?
+Also, reserving is not good because what if user requested kexec
+segments to be loaded into idmaped reserved memory..
+
+>
+>
+> >  int machine_kexec_post_load(struct kimage *kimage)
+> >  {
+> > +     unsigned long el2_vector = 0;
+> >       unsigned long kern_reloc;
+> >       struct kern_reloc_arg *kern_reloc_arg;
+> > +     int rc = 0;
+> > +
+> > +     /*
+> > +      * Sanity check that relocation function + el2_vector fit into one
+> > +      * page.
+> > +      */
+> > +     if (arm64_relocate_new_kernel_size > KEXEC_EL2_VECTOR_TABLE_SIZE) {
+> > +             pr_err("can't fit relocation function and el2_vector in one page");
+> > +             return -ENOMEM;
+> > +     }
+>
+> If you need them to fit in one page, why are the separate?
+> hibernate does this as a compile time check.
+
+I checked, arm64_relocate_new_kernel_size is not known at compile
+time, so unfortunately BUILD_BUG_ON() cannot be used here. However, if
+you think this check is ugly, I can put them into separate pages, and
+map these pages independently (or do this conditionally when the above
+condition fails, which should never happen, as I cannot imagine
+arm64_relocate_new_kernel_size to ever grow that big).
+
+Thank you,
+Pasha
 
 _______________________________________________
 kexec mailing list
