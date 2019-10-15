@@ -1,20 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x541.google.com ([2a00:1450:4864:20::541])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iK9sj-0003BQ-5l
- for kexec@lists.infradead.org; Mon, 14 Oct 2019 23:36:06 +0000
-Received: by mail-ed1-x541.google.com with SMTP id r16so16197772edq.11
- for <kexec@lists.infradead.org>; Mon, 14 Oct 2019 16:36:04 -0700 (PDT)
+Subject: Re: [PATCH V4 0/2] Add support for arm64 to carry ima measurement
+References: <20191011003600.22090-1-prsriva@linux.microsoft.com>
+ <87d92514-e5e4-a79f-467f-f24a4ed279b6@arm.com>
+From: prsriva <prsriva@linux.microsoft.com>
+Message-ID: <b35b239c-990c-0d5b-0298-8f9e35064e2b@linux.microsoft.com>
+Date: Mon, 14 Oct 2019 18:31:30 -0700
 MIME-Version: 1.0
-References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
- <20191004185234.31471-16-pasha.tatashin@soleen.com>
- <fe5a4aae-fae3-f30f-db15-f3eced229a6e@arm.com>
-In-Reply-To: <fe5a4aae-fae3-f30f-db15-f3eced229a6e@arm.com>
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Mon, 14 Oct 2019 19:35:51 -0400
-Message-ID: <CA+CK2bBRRQsepxrWnOUOnFfPUe5SYsOurQ3kL_P1ghxze77RFQ@mail.gmail.com>
-Subject: Re: [PATCH v6 15/17] arm64: kexec: add expandable argument to
- relocation function
+In-Reply-To: <87d92514-e5e4-a79f-467f-f24a4ed279b6@arm.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,86 +16,120 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: James Morse <james.morse@arm.com>
-Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Matthias Brugger <matthias.bgg@gmail.com>, will@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de, yamada.masahiro@socionext.com, sboyd@kernel.org, catalin.marinas@arm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, takahiro.akashi@linaro.org, kristina.martsenko@arm.org, duwe@lst.de, bauerman@linux.ibm.com, allison@lohutok.net, james.morse@arm.org, linux-integrity@vger.kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 
-> > +struct kern_reloc_arg {
-> > +     unsigned long   head;
-> > +     unsigned long   entry_addr;
-> > +     unsigned long   kern_arg0;
-> > +     unsigned long   kern_arg1;
-> > +     unsigned long   kern_arg2;
-> > +     unsigned long   kern_arg3;
->
-> ... at least one of these should by phys_addr_t!
 
-OK, changed them to phys_addr_t
+
+On 10/14/19 11:02 AM, James Morse wrote:
+> Hi Prakhar,
+> 
+> (You've CC'd a few folk who work for 'arm.org'...)
+> 
+> On 11/10/2019 01:35, Prakhar Srivastava wrote:
+>> Add support to carry ima measurement log
+>> to the next kexec'ed session triggered via kexec_file_load.
+> 
+> I don't know much about 'ima', I'm assuming its the list of 'stuff' that has already been
+> fed into the TPM as part of SecureBoot. Please forgive the stupid questions,
+> 
+The IMA logs are event logs for module load time signature 
+validation(based on policies) which are backed by the TPM. No SecureBoot 
+information is present in the log other than the boot aggregate.
+
+>> Currently during kexec the kernel file signatures are/can be validated
+>> prior to actual load, the information(PE/ima signature) is not carried
+>> to the next session. This lead to loss of information.
+>>
+>> Carrying forward the ima measurement log to the next kexec'ed session
+>> allows a verifying party to get the entire runtime event log since the
+>> last full reboot, since that is when PCRs were last reset.
+> 
+> Hmm, You're adding this as a linux-specific thing in the chosen node, which points at a
+> memreserve.
+> 
+> The question that normally needs answering when adding to the stuff we have to treat as
+> ABI over kexec is: how would this work from a bootloader that isn't kexec? Does it need to
+> work for non-linux OS?
+> 
+This change is only intended to be executed in the path of 
+kexec_file_load and not intended to be executed by any boot loader.(Not 
+very aware of boot loader calls.). The logs are non intended to be 
+injected by the boot loader at all.
+The change is configurable(CONFIG_IMA_KEXEC) under the IMA subsection 
+and can be disabled if not needed.
+
+> Changing anything other than the chosen node of the DT isn't something the kernel should
+> be doing. I suspect if you need reserved memory for this stuff, it should be carved out by
+> the bootloader, and like all other memreserves: should not be moved or deleted.
+> 
+> ('fdt_delete_mem_rsv()' is a terrifying idea, we depend on the memreserve nodes to tell
+> use which 'memory' we shouldn't touch!)
+> 
+fdt_delete_mem_rsv - is to cleanup any memory that's been mistakenly 
+still lying around in the same session while creating the fdt. 
+memblock_free is actually used to free up the reserved memory.
+
+Thiago may have more insight, This is primarily a code that's been 
+ported from existing kernel for PowerPC.
+https://github.com/torvalds/linux/blob/master/arch/powerpc/kernel/machine_kexec_file_64.c
+
+> 
+> Sharing with powerpc is a great starting point ... but, how does this work for ACPI systems?
+> How does this work if I keep kexecing between ACPI and DT?
+> 
+
+I don't have an answer to this, just going through the call stack i dont 
+believe it depends on ACPI as such. I am not the expert here, but more 
+than willing to try out the scenario in question.(Can you point me to 
+some documentation to setup some environment to test this.) 
+Kexec_file_load call depends purely on DT implementation.
+
+
+> I'd prefer it we only had one way this works on arm64, so whatever we do has to cover both.
+I can move the code to be only part of arm64 arch if absolutely 
+necessary. Thiago do you have any concerns on going back the path of 
+multiple code paths?
 
 >
-> While the sizes are the same on arm64, this reminds the reader what kind of address this
-> is, and lets the compiler warn you if you make a mistake.
+> Does ima work without UEFI secure-boot?
+Yes, IMA, the measurement is not dependent on any hardware capabilities.
+TPM is needed to back the measurements but the IMA module will not fail 
+if TPM is not available.
+In short Secure-boot has no impact on IMA.
 
-OK
+> If not, the Linux-specific UEFI 'memreserve' table might be a better fit, this would be
+> the same for both DT and ACPI systems. Given U-boot supports the UEFI API too, its
+> probably the right thing to do regardless of secure-boot.
+> 
+> It looks like x86 doesn't support this either yet. If we have to add something to support
+> ACPI, it would be good if it covers both firmware mechanisms for arm64, and works for x86
+> in the same way.
+> 
+> (How does this thing interact with EFI's existing efi_tpm_eventlog_init()?)
+> 
+IMA does not interact with the TPM event log.
+Only one of the PCR's is extended but not logged in the TPM logs. The 
+logging is done in IMA. The IMA measurement log in question is whats 
+needed to be carried over to via kexec_file_load call.
 
->
->
-> > +};
->
-> > diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-> > index 214685760e1c..900394907fd8 100644
-> > --- a/arch/arm64/kernel/asm-offsets.c
-> > +++ b/arch/arm64/kernel/asm-offsets.c
-> > @@ -23,6 +23,7 @@
-> >  #include <asm/suspend.h>
-> >  #include <linux/kbuild.h>
-> >  #include <linux/arm-smccc.h>
-> > +#include <linux/kexec.h>
-> >
-> >  int main(void)
-> >  {
-> > @@ -126,6 +127,14 @@ int main(void)
-> >  #ifdef CONFIG_ARM_SDE_INTERFACE
-> >    DEFINE(SDEI_EVENT_INTREGS, offsetof(struct sdei_registered_event, interrupted_regs));
-> >    DEFINE(SDEI_EVENT_PRIORITY,        offsetof(struct sdei_registered_event, priority));
-> > +#endif
-> > +#ifdef CONFIG_KEXEC_CORE
-> > +  DEFINE(KRELOC_HEAD,                offsetof(struct kern_reloc_arg, head));
-> > +  DEFINE(KRELOC_ENTRY_ADDR,  offsetof(struct kern_reloc_arg, entry_addr));
-> > +  DEFINE(KRELOC_KERN_ARG0,   offsetof(struct kern_reloc_arg, kern_arg0));
-> > +  DEFINE(KRELOC_KERN_ARG1,   offsetof(struct kern_reloc_arg, kern_arg1));
-> > +  DEFINE(KRELOC_KERN_ARG2,   offsetof(struct kern_reloc_arg, kern_arg2));
-> > +  DEFINE(KRELOC_KERN_ARG3,   offsetof(struct kern_reloc_arg, kern_arg3));
->
-> Please use kexec as the prefix. The kernel also applies relocations during early boot.
-> These are global values, and in isolation doesn't imply kexec.
+I am not sure if i addressed all your concerns, please let me know
+if i missed anything. To me most concerns look to be towards the kexec 
+case and dependency on hardware(ACPI/TPM) during boot and early boot 
+services, where as carrying the logs is only during the kexec_file_load 
+sys call and does not interfere with that code path.
+IMA documentation: https://sourceforge.net/p/linux-ima/wiki/Home/
 
-OK
-> >  .align 3     /* To keep the 64-bit values below naturally aligned. */
-> > -
-> >  .Lcopy_end:
-> >  .org KEXEC_CONTROL_PAGE_SIZE
-> >
->
-> My eyes!
->
-> Please don't make unnecessary changes. Its hard enough to read the assembly, moving
-> whitespace, comments and re-allocating the register guarantees that no-one can work out
-> what is happening.
->
-> If something needs cleaning up to make the change obvious, it needs doing as a previous
-> patch. Mechanical changes are fairly easy to review.
-> Functional changes behind a whirlwind of mechanical changes will cause the reviewer to
-> give up.
-
-Sure, I have split this patch into several patches, and moved
-clean-ups into separate patches.
-
-Thank you,
-Pasha
+Prakhar Srivastava
+> 
+> Thanks,
+> 
+> James
+> 
 
 _______________________________________________
 kexec mailing list
