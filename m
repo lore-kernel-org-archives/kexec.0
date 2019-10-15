@@ -1,31 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iKQTF-0006tP-Uh
- for kexec@lists.infradead.org; Tue, 15 Oct 2019 17:18:56 +0000
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
- (No client certificate requested)
- by mx1.redhat.com (Postfix) with ESMTPS id 853F72D7E1
- for <kexec@lists.infradead.org>; Tue, 15 Oct 2019 17:18:52 +0000 (UTC)
-Received: by mail-io1-f69.google.com with SMTP id w8so33086082iol.20
- for <kexec@lists.infradead.org>; Tue, 15 Oct 2019 10:18:52 -0700 (PDT)
+Subject: Re: [PATCH V4 0/2] Add support for arm64 to carry ima measurement
+References: <20191011003600.22090-1-prsriva@linux.microsoft.com>
+ <87d92514-e5e4-a79f-467f-f24a4ed279b6@arm.com>
+ <b35b239c-990c-0d5b-0298-8f9e35064e2b@linux.microsoft.com>
+From: James Morse <james.morse@arm.com>
+Message-ID: <0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com>
+Date: Tue, 15 Oct 2019 18:39:06 +0100
 MIME-Version: 1.0
-References: <20190910151341.14986-1-kasong@redhat.com>
- <20190910151341.14986-3-kasong@redhat.com>
- <20190911055618.GA104115@gmail.com>
- <CACPcB9eZUZ1fCsc1GZs9MJnoqLK9Ld5KEx0_emx8J44Mjcy3WA@mail.gmail.com>
- <20190927054208.GA13426@dhcp-128-65.nay.redhat.com>
- <3e1f65de-4539-736e-a7b4-3c726a001f4b@redhat.com>
- <20191014110504.GA16271@dhcp-128-65.nay.redhat.com>
- <20191015021848.GA18043@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20191015021848.GA18043@dhcp-128-65.nay.redhat.com>
-From: Kairui Song <kasong@redhat.com>
-Date: Wed, 16 Oct 2019 01:18:40 +0800
-Message-ID: <CACPcB9dXYgJ3YqFNTi3sf0Ym8Ux47p-m3DXGpg=jtuq7070eAw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] x86/kdump: Reserve extra memory when SME or SEV is
- active
+In-Reply-To: <b35b239c-990c-0d5b-0298-8f9e35064e2b@linux.microsoft.com>
+Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,187 +21,197 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>, Lianbo Jiang <lijiang@redhat.com>, Baoquan He <bhe@redhat.com>, the arch/x86 maintainers <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
+To: prsriva <prsriva@linux.microsoft.com>
+Cc: mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de, yamada.masahiro@socionext.com, sboyd@kernel.org, catalin.marinas@arm.com, ard.biesheuvel@linaro.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zohar@linux.ibm.com, takahiro.akashi@linaro.org, duwe@lst.de, bauerman@linux.ibm.com, allison@lohutok.net, linux-integrity@vger.kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 
- thiOn Tue, Oct 15, 2019 at 10:18 AM Dave Young <dyoung@redhat.com> wrote:
->
-> On 10/14/19 at 07:05pm, Dave Young wrote:
-> > On 10/12/19 at 05:24pm, Kairui Song wrote:
-> > > On 9/27/19 1:42 PM, Dave Young wrote:
-> > > > On 09/25/19 at 06:36pm, Kairui Song wrote:
-> > > > > On Wed, Sep 11, 2019 at 1:56 PM Ingo Molnar <mingo@kernel.org> wrote:
-> > > > > > * Kairui Song <kasong@redhat.com> wrote:
-> > > > > >
-> > > > > > > Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
-> > > > > > > SWIOTLB will be enabled even if there is less than 4G of memory when SME
-> > > > > > > is active, to support DMA of devices that not support address with the
-> > > > > > > encrypt bit.
-> > > > > > >
-> > > > > > > And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
-> > > > > > > active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
-> > > > > > >
-> > > > > > > Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
-> > > > > > > encryption") will always force SWIOTLB to be enabled when SEV is active
-> > > > > > > in all cases.
-> > > > > > >
-> > > > > > > Now, when either SME or SEV is active, SWIOTLB will be force enabled,
-> > > > > > > and this is also true for kdump kernel. As a result kdump kernel will
-> > > > > > > run out of already scarce pre-reserved memory easily.
-> > > > > > >
-> > > > > > > So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
-> > > > > > > kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
-> > > > > > > is specified or any offset is used. As for the high reservation case, an
-> > > > > > > extra low memory region will always be reserved and that is enough for
-> > > > > > > SWIOTLB. Else if the offset format is used, user should be fully aware
-> > > > > > > of any possible kdump kernel memory requirement and have to organize the
-> > > > > > > memory usage carefully.
-> > > > > > >
-> > > > > > > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > > > > > > ---
-> > > > > > >   arch/x86/kernel/setup.c | 20 +++++++++++++++++---
-> > > > > > >   1 file changed, 17 insertions(+), 3 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > > > > > > index 71f20bb18cb0..ee6a2f1e2226 100644
-> > > > > > > --- a/arch/x86/kernel/setup.c
-> > > > > > > +++ b/arch/x86/kernel/setup.c
-> > > > > > > @@ -530,7 +530,7 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
-> > > > > > >                                          unsigned long long *crash_size,
-> > > > > > >                                          bool high)
-> > > > > > >   {
-> > > > > > > -     unsigned long long base, size;
-> > > > > > > +     unsigned long long base, size, mem_enc_req = 0;
-> > > > > > >
-> > > > > > >        base = *crash_base;
-> > > > > > >        size = *crash_size;
-> > > > > > > @@ -561,11 +561,25 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
-> > > > > > >        if (high)
-> > > > > > >                goto high_reserve;
-> > > > > > >
-> > > > > > > +     /*
-> > > > > > > +      * When SME/SEV is active and not using high reserve,
-> > > > > > > +      * it will always required an extra SWIOTLB region.
-> > > > > > > +      */
-> > > > > > > +     if (mem_encrypt_active())
-> > > > > > > +             mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
-> > > > > > > +
-> > > > > > >        base = memblock_find_in_range(CRASH_ALIGN,
-> > > > > > > -                                   CRASH_ADDR_LOW_MAX, size,
-> > > > > > > +                                   CRASH_ADDR_LOW_MAX,
-> > > > > > > +                                   size + mem_enc_req,
-> > > > > > >                                      CRASH_ALIGN);
-> > > > > >
-> > > > >
-> > > > > Hi Ingo,
-> > > > >
-> > > > > I re-read my previous reply, it's long and tedious, let me try to make
-> > > > > a more effective reply:
-> > > > >
-> > > > > > What sizes are we talking about here?
-> > > > >
-> > > > > The size here is how much memory will be reserved for kdump kernel, to
-> > > > > ensure kdump kernel and userspace can run without OOM.
-> > > > >
-> > > > > >
-> > > > > > - What is the possible size range of swiotlb_size_or_default()
-> > > > >
-> > > > > swiotlb_size_or_default() returns the swiotlb size, it's specified by
-> > > > > user using swiotlb=<size>, or default size (64MB)
-> > > > >
-> > > > > >
-> > > > > > - What is the size of CRASH_ADDR_LOW_MAX (the old limit)?
-> > > > >
-> > > > > It's 4G.
-> > > > >
-> > > > > >
-> > > > > > - Why do we replace one fixed limit with another fixed limit instead of
-> > > > > >    accurately sizing the area, with each required feature adding its own
-> > > > > >    requirement to the reservation size?
-> > > > >
-> > > > > It's quite hard to "accurately sizing the area".
-> > > > >
-> > > > > No way to tell the exact amount of memory kdump needs, we can only estimate.
-> > > > > Kdump kernel use different cmdline, drivers and components will have
-> > > > > special handling for kdump, and userspace is totally different.
-> > > >
-> > > > Agreed about your above, but specific this the problem in this patch
-> > > > There should be other ways.
-> > > >
-> > > > First thought about doing generic handling in swiotlb part, and do
-> > > > something like kdump_memory_reserve(size) Ingo suggested,  but according
-> > > > to you swiotlb init is late, so it can not increase the size, OTOH if
-> > > > reserve another region for kdump in swiotlb will cause other issues.
-> > > >
-> > > > So let's think about other improvement, for example to see if you can
-> > > > call kdump_memory_reserve(size) in AMD SME init path, for example in
-> > > > mem_encrypt_init(), is it before crashkernel reservation?
-> > > >
-> > > > If doable it will be at least cleaner than the code in this patch.
-> > > >
-> > > > Thanks
-> > > > Dave
-> > > >
-> > >
-> > > How about something simple as following code? The logic and new function is as simple as
-> > > possible, just always reserve extra low memory when SME/SEV is active, ignore the high/low
-> > > reservation case. It will waste some memory with SME and high reservation though.
-> > >
-> > > Was hesitating a lot about this series, one thing I'm thinking is that what is the point
-> > > of "crashkernel=" argument, if the crashkernel value could be adjusted according, the value
-> > > specified will seems more meanless or confusing...
-> > >
-> > > And currently there isn't anything like crashkernel=auto or anything similiar to let kernel
-> > > calculate the value automatically, maybe the admin should be aware of the value or be informed
-> > > about the suitable crashkernel value after all?
-> >
-> > Hmm, it is reasonable that a user defined value should be just as is
-> > without any change by kernel.  So it is a good reason to introduce
-> > a crashkernel=auto so that kernel can tune the crashkernel size
-> > accordingly on top of some base value which can be configurable by
-> > kernel configs (arch dependent).
-> >
->
-> And for the time being, can just print a warning when crashkernel= param
-> is used, in mem_encrypt_init() code. alert people to increase the memory
-> size swiotlb_size_or_default().
+Hi Prakhar,
 
-Good suggestion,  it will be much more reasonable if kernel only adjust the
-crashekernel value when crashkernel=auto is used. For now, I think giving a
-warning could be a better solution.
+(CC: +Ard : passing reserved memory between kernels using Kexec?)
 
-> In the future, if the crashkernel=auto is doable then kernel can adapt
-> to that in code.  Even if it is reasonable to let admin to provide a
-> exact value but sometimes it is hard to know these kernel requirement
-> details..
->
+On 15/10/2019 02:31, prsriva wrote:
+> On 10/14/19 11:02 AM, James Morse wrote:
+>> On 11/10/2019 01:35, Prakhar Srivastava wrote:
+>>> Add support to carry ima measurement log
+>>> to the next kexec'ed session triggered via kexec_file_load.
+>>
+>> I don't know much about 'ima', I'm assuming its the list of 'stuff' that has already been
+>> fed into the TPM as part of SecureBoot. Please forgive the stupid questions,
+>>
+> The IMA logs are event logs for module load time signature validation(based on policies)
+> which are backed by the TPM. No SecureBoot information is present in the log other than
+> the boot aggregate.
 
-Yes, and the crashkernel=auto could be more helpful with some infrastructure
-for add extra kdump memory.
+Okay, so SecureBoot is optional with this thing.
 
-Let crashkernel=auto have a configurable basic size, and each component could
-call kdump_memory_reserve to add to the basic size. (Like SME/SEV case here)
 
-And currently I'm doing some experiment to reserve some pages from buddy
-as the crash memory. So kernel can try reserve extra memory for kdump kernel
-anytime, userspace can also tell kernel to reserve more crash memory.
+>>> Currently during kexec the kernel file signatures are/can be validated
+>>> prior to actual load, the information(PE/ima signature) is not carried
+>>> to the next session. This lead to loss of information.
+>>>
+>>> Carrying forward the ima measurement log to the next kexec'ed session
+>>> allows a verifying party to get the entire runtime event log since the
+>>> last full reboot, since that is when PCRs were last reset.
+>>
+>> Hmm, You're adding this as a linux-specific thing in the chosen node, which points at a
+>> memreserve.
+>>
+>> The question that normally needs answering when adding to the stuff we have to treat as
+>> ABI over kexec is: how would this work from a bootloader that isn't kexec? Does it need to
+>> work for non-linux OS?
 
-If everything goes well, this may make the auto reservation even better.
+> This change is only intended to be executed in the path of kexec_file_load and not
+> intended to be executed by any boot loader.(Not very aware of boot loader calls.).
 
-crashkernel=auto just need to provide a more generic value that's enough to
-contain the kernel image, initramfs, swiotlb, early boot memory, etc..
-(all the continual things), plus some basic value to fits most default
-kdump setups.
+kexec_file_load only means something to the first kernel. If you boot something that isn't
+linux, does it need to delete this stuff from the DT?
+Even if you kexec_file_load linux, it could go on to regular-kexec something that is
+not... what should that do with these things?
 
-Extra usage could be estimated by userspace and added later.
-Userspace is more aware of what service/module might be used for kdump
-and can be more accurate.
+Other than the chosen node, the DT is treated as a cast-iron description of the platform,
+we shouldn't be tinkering with it.
 
-This may provide a better 'auto' crashkernel solution.
+If its not describing hardware, it probably doesn't belong in the DT.
 
---
-Best Regards,
-Kairui Song
+
+> The logs are non intended to be injected by the boot loader at all.
+
+You're using linux as a bootloader with kexec. We have to treat the stuff that gets passed
+between kernels as ABI, as people expect to be able to kexec to a newer kernel.
+
+Is linux-as-a-bootloader special? Or should we work out what any bootloader should do here
+first. This avoids having to change this when it turns out someone wants to log UEFI
+DXE-drivers/modules in the TPM too.
+
+From the git-log of the ima code it looks like this is some linux-specific format.
+Are we certain it will never change, and nothing else ever needs to support it?
+(e.g. the DXE driver example above. Is there another way that sort of thing would work?).
+
+
+> The change is configurable(CONFIG_IMA_KEXEC) under the IMA subsection and can be disabled
+> if not needed.
+
+Sure, but not needed isn't the same as not supported.
+If we support it at all, we need to cover everything that needs supporting. If its ABI (we
+treat data passed between kernels as if it is), we need to get it right first time.
+
+(my point? We need to get the ACPI story sorted before we add any support... otherwise we
+end up with two incompatible ways of doing this).
+
+[...]
+
+>> Sharing with powerpc is a great starting point ... but, how does this work for ACPI
+>> systems?
+>> How does this work if I keep kexecing between ACPI and DT?
+
+> I don't have an answer to this, just going through the call stack i dont believe it
+> depends on ACPI as such. I am not the expert here, but more than willing to try out the
+> scenario in question.(Can you point me to some documentation to setup some environment to
+> test this.)
+
+Yup: Documentation/arm64/arm-acpi.rst
+
+Arm64's ACPI support depends on UEFI. As a starter:
+https://wiki.ubuntu.com/ARM64/QEMU
+
+You may need to pass 'acpi=on' on the commandline if your UEFI build supports both DT and
+ACPI. The x86 name for UEFI-in-Qemu is OVMF, which helps when googling.
+
+
+> Kexec_file_load call depends purely on DT implementation.
+
+Heh. And it works with ACPI too! You'll note it only touches things in the chosen node...
+
+An ACPI system boots without a DT. Linux's EFI-stub can make API calls and poke around in
+the UEFI structures to find out about the system. When it finishes, the EFI-stub needs to
+pass on a set of values to the kernel... we need some kind of key-value store ...
+
+To avoid re-inventing the wheel, the EFI-stub creates an empty DT, and shoves the cmdline,
+the initrd etc in there... just like a DT bootloader would have done.
+
+From drivers/firmware/efi/libstub/arm-stub.c::efi_entry()
+|	if (!fdt_addr)
+|		pr_efi(sys_table, "Generating empty DTB\n");
+
+(you will see this message on an ACPI-only system)
+
+On an ACPI system there won't be anything else in the DT, other than the chosen node.
+
+When booted with UEFI, the memory is described in the UEFI memory-map. An ACPI system
+doesn't know to look for memreserve nodes in the DT. (it might work by accident, but I
+wouldn't rely on it).
+
+
+>> I'd prefer it we only had one way this works on arm64, so whatever we do has to cover both.
+
+> I can move the code to be only part of arm64 arch if absolutely necessary. Thiago do you
+> have any concerns on going back the path of multiple code paths?
+
+Because arm64 needs to support ACPI too, I think its support for this will always look
+different to PowerPCs.
+
+I think the UEFI persistent-memory-reservations thing is a better fit for this [0][1].
+
+As U-boot supports booting the kernel via the UEFI stub, I think this is all we need to
+support this. (If your platform supports LPIs, you also need this UEFI table to kexec
+safely anyway. See [1])
+
+
+Removing something that was reserved memory might be tricky, I don't think we do this
+anywhere else. Why do you need to remove the reservations?
+
+
+>> Does ima work without UEFI secure-boot?
+
+> Yes, IMA, the measurement is not dependent on any hardware capabilities.
+> TPM is needed to back the measurements but the IMA module will not fail if TPM is not
+> available.
+> In short Secure-boot has no impact on IMA.
+
+(thanks)
+
+
+>> If not, the Linux-specific UEFI 'memreserve' table might be a better fit, this would be
+>> the same for both DT and ACPI systems. Given U-boot supports the UEFI API too, its
+>> probably the right thing to do regardless of secure-boot.
+>>
+>> It looks like x86 doesn't support this either yet. If we have to add something to support
+>> ACPI, it would be good if it covers both firmware mechanisms for arm64, and works for x86
+>> in the same way.
+>>
+>> (How does this thing interact with EFI's existing efi_tpm_eventlog_init()?)
+
+> IMA does not interact with the TPM event log.
+> Only one of the PCR's is extended but not logged in the TPM logs. The logging is done in
+> IMA. The IMA measurement log in question is whats needed to be carried over to via
+> kexec_file_load call.
+
+If SecureBoot isn't relevant, I'm confused as to why kexec_file_load() is.
+
+I thought kexec_file_load() only existed because SecureBoot systems need to validate the
+new OS images's signature before loading it, and we can't trust user-space calling Kexec
+to do this.
+
+If there is no secure boot, why does this thing only work with kexec_file_load()?
+(good news! With the UEFI memreseve table, it should work transparently with regular kexec
+too)
+
+
+> I am not sure if i addressed all your concerns, please let me know
+> if i missed anything. To me most concerns look to be towards the kexec case and dependency
+> on hardware(ACPI/TPM) during boot and early boot services, where as carrying the logs is
+> only during the kexec_file_load sys call and does not interfere with that code path.
+> IMA documentation: https://sourceforge.net/p/linux-ima/wiki/Home/
+
+Supporting ACPI in the same way is something we need to do from day one. kexec_file_load()
+already does this. I'm not sure "only kexec_file_load()" is a justifiable restriction...
+
+
+Thanks,
+
+James
+
+[0] https://marc.info/?l=linux-efi&m=153754757208163&w=2
+[1] https://lore.kernel.org/lkml/20180921195954.21574-1-marc.zyngier@arm.com/
 
 _______________________________________________
 kexec mailing list
