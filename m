@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x843.google.com ([2607:f8b0:4864:20::843])
+Received: from mail-qk1-x744.google.com ([2607:f8b0:4864:20::744])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iKpTo-0004Tt-V6
- for kexec@lists.infradead.org; Wed, 16 Oct 2019 20:01:11 +0000
-Received: by mail-qt1-x843.google.com with SMTP id c21so37943805qtj.12
- for <kexec@lists.infradead.org>; Wed, 16 Oct 2019 13:01:08 -0700 (PDT)
+ id 1iKpTn-0004ST-1v
+ for kexec@lists.infradead.org; Wed, 16 Oct 2019 20:01:10 +0000
+Received: by mail-qk1-x744.google.com with SMTP id h126so23972507qke.10
+ for <kexec@lists.infradead.org>; Wed, 16 Oct 2019 13:01:07 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v7 19/25] arm64: kexec: arm64_relocate_new_kernel don't use x0
- as temp
-Date: Wed, 16 Oct 2019 16:00:28 -0400
-Message-Id: <20191016200034.1342308-20-pasha.tatashin@soleen.com>
+Subject: [PATCH v7 18/25] arm64: kexec: arm64_relocate_new_kernel clean-ups
+Date: Wed, 16 Oct 2019 16:00:27 -0400
+Message-Id: <20191016200034.1342308-19-pasha.tatashin@soleen.com>
 In-Reply-To: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
 References: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -27,63 +26,144 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de
 
-x0 will contain the only argument to arm64_relocate_new_kernel; don't
-use it as a temp. Reassigned registers to free-up x0.
+Remove excessive empty lines from arm64_relocate_new_kernel.
+Also, use comments on the same lines with instructions where
+appropriate.
+
+Change ENDPROC to END it never returns.
+
+copy_page(dest, src, tmps...)
+Increments dest and src by PAGE_SIZE, so no need to store dest
+prior to calling copy_page and increment it after. Also, src is not
+used after a copy, not need to copy either.
+
+Call raw_dcache_line_size()  only when relocation is actually going to
+happen.
+
+Since '.align 3' is intended to align globals at the end of the file,
+move it there.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/kernel/relocate_kernel.S | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ arch/arm64/kernel/relocate_kernel.S | 50 +++++++----------------------
+ 1 file changed, 11 insertions(+), 39 deletions(-)
 
 diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-index e9c974ea4717..41f9c95fabe8 100644
+index c1d7db71a726..e9c974ea4717 100644
 --- a/arch/arm64/kernel/relocate_kernel.S
 +++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -32,14 +32,14 @@ ENTRY(arm64_relocate_new_kernel)
+@@ -8,7 +8,6 @@
+ 
+ #include <linux/kexec.h>
+ #include <linux/linkage.h>
+-
+ #include <asm/assembler.h>
+ #include <asm/kexec.h>
+ #include <asm/page.h>
+@@ -17,25 +16,21 @@
+ /*
+  * arm64_relocate_new_kernel - Put a 2nd stage image in place and boot it.
+  *
+- * The memory that the old kernel occupies may be overwritten when coping the
++ * The memory that the old kernel occupies may be overwritten when copying the
+  * new image to its final location.  To assure that the
+  * arm64_relocate_new_kernel routine which does that copy is not overwritten,
+  * all code and data needed by arm64_relocate_new_kernel must be between the
+  * symbols arm64_relocate_new_kernel and arm64_relocate_new_kernel_end.  The
+  * machine_kexec() routine will copy arm64_relocate_new_kernel to the kexec
+- * control_code_page, a special page which has been set up to be preserved
+- * during the copy operation.
++ * safe memory that has been set up to be preserved during the copy operation.
+  */
+ ENTRY(arm64_relocate_new_kernel)
+-
+ 	/* Setup the list loop variables. */
+ 	mov	x18, x2				/* x18 = dtb address */
+ 	mov	x17, x1				/* x17 = kimage_start */
+ 	mov	x16, x0				/* x16 = kimage_head */
+-	raw_dcache_line_size x15, x0		/* x15 = dcache line size */
  	mov	x14, xzr			/* x14 = entry ptr */
  	mov	x13, xzr			/* x13 = copy dest */
+-
  	/* Clear the sctlr_el2 flags. */
--	mrs	x0, CurrentEL
--	cmp	x0, #CurrentEL_EL2
-+	mrs	x2, CurrentEL
-+	cmp	x2, #CurrentEL_EL2
- 	b.ne	1f
--	mrs	x0, sctlr_el2
-+	mrs	x2, sctlr_el2
- 	ldr	x1, =SCTLR_ELx_FLAGS
--	bic	x0, x0, x1
-+	bic	x2, x2, x1
+ 	mrs	x0, CurrentEL
+ 	cmp	x0, #CurrentEL_EL2
+@@ -46,14 +41,11 @@ ENTRY(arm64_relocate_new_kernel)
  	pre_disable_mmu_workaround
--	msr	sctlr_el2, x0
-+	msr	sctlr_el2, x2
+ 	msr	sctlr_el2, x0
  	isb
- 1:	/* Check if the new image needs relocation. */
+-1:
+-
+-	/* Check if the new image needs relocation. */
++1:	/* Check if the new image needs relocation. */
  	tbnz	x16, IND_DONE_BIT, .Ldone
-@@ -51,17 +51,17 @@ ENTRY(arm64_relocate_new_kernel)
+-
++	raw_dcache_line_size x15, x1		/* x15 = dcache line size */
+ .Lloop:
+ 	and	x12, x16, PAGE_MASK		/* x12 = addr */
+-
+ 	/* Test the entry flags. */
+ .Ltest_source:
  	tbz	x16, IND_SOURCE_BIT, .Ltest_indirection
- 
- 	/* Invalidate dest page to PoC. */
--	mov     x0, x13
--	add     x20, x0, #PAGE_SIZE
-+	mov     x2, x13
-+	add     x20, x2, #PAGE_SIZE
- 	sub     x1, x15, #1
--	bic     x0, x0, x1
--2:	dc      ivac, x0
--	add     x0, x0, x15
--	cmp     x0, x20
-+	bic     x2, x2, x1
-+2:	dc      ivac, x2
-+	add     x2, x2, x15
-+	cmp     x2, x20
+@@ -69,34 +61,18 @@ ENTRY(arm64_relocate_new_kernel)
  	b.lo    2b
  	dsb     sy
  
--	copy_page x13, x12, x0, x1, x2, x3, x4, x5, x6, x7
-+	copy_page x13, x12, x1, x2, x3, x4, x5, x6, x7, x8
+-	mov x20, x13
+-	mov x21, x12
+-	copy_page x20, x21, x0, x1, x2, x3, x4, x5, x6, x7
+-
+-	/* dest += PAGE_SIZE */
+-	add	x13, x13, PAGE_SIZE
++	copy_page x13, x12, x0, x1, x2, x3, x4, x5, x6, x7
  	b	.Lnext
+-
  .Ltest_indirection:
  	tbz	x16, IND_INDIRECTION_BIT, .Ltest_destination
+-
+-	/* ptr = addr */
+-	mov	x14, x12
++	mov	x14, x12			/* ptr = addr */
+ 	b	.Lnext
+-
+ .Ltest_destination:
+ 	tbz	x16, IND_DESTINATION_BIT, .Lnext
+-
+-	/* dest = addr */
+-	mov	x13, x12
+-
++	mov	x13, x12			/* dest = addr */
+ .Lnext:
+-	/* entry = *ptr++ */
+-	ldr	x16, [x14], #8
+-
+-	/* while (!(entry & DONE)) */
+-	tbz	x16, IND_DONE_BIT, .Lloop
+-
++	ldr	x16, [x14], #8			/* entry = *ptr++ */
++	tbz	x16, IND_DONE_BIT, .Lloop	/* while (!(entry & DONE)) */
+ .Ldone:
+ 	/* wait for writes from copy_page to finish */
+ 	dsb	nsh
+@@ -110,16 +86,12 @@ ENTRY(arm64_relocate_new_kernel)
+ 	mov	x2, xzr
+ 	mov	x3, xzr
+ 	br	x17
+-
+-ENDPROC(arm64_relocate_new_kernel)
+-
+ .ltorg
+-
+-.align 3	/* To keep the 64-bit values below naturally aligned. */
++END(arm64_relocate_new_kernel)
+ 
+ .Lcopy_end:
+ .org	KEXEC_CONTROL_PAGE_SIZE
+-
++.align 3	/* To keep the 64-bit values below naturally aligned. */
+ /*
+  * arm64_relocate_new_kernel_size - Number of bytes to copy to the
+  * control_code_page.
 -- 
 2.23.0
 
