@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-ed1-x544.google.com ([2a00:1450:4864:20::544])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iL2LI-0004fN-HD
- for kexec@lists.infradead.org; Thu, 17 Oct 2019 09:45:14 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 3/3 v4] x86/kdump: clean up all the code related to the backup
- region
-Date: Thu, 17 Oct 2019 17:43:47 +0800
-Message-Id: <20191017094347.20327-4-lijiang@redhat.com>
-In-Reply-To: <20191017094347.20327-1-lijiang@redhat.com>
-References: <20191017094347.20327-1-lijiang@redhat.com>
+ id 1iL6jm-0008Ux-6g
+ for kexec@lists.infradead.org; Thu, 17 Oct 2019 14:26:48 +0000
+Received: by mail-ed1-x544.google.com with SMTP id l21so1899252edr.5
+ for <kexec@lists.infradead.org>; Thu, 17 Oct 2019 07:26:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
+In-Reply-To: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Date: Thu, 17 Oct 2019 10:26:33 -0400
+Message-ID: <CA+CK2bC2KwWufE1DWa4szn_hQ1dbjDVHgYUu7=J4O_kvKXTrHg@mail.gmail.com>
+Subject: Re: [PATCH v7 00/25] arm64: MMU enabled kexec relocation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,342 +20,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: jgross@suse.com, Thomas.Lendacky@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, vgoyal@redhat.com
+To: Pavel Tatashin <pasha.tatashin@soleen.com>, James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Bhupesh Sharma <bhsharma@redhat.com>, linux-mm <linux-mm@kvack.org>, Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com, rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>
 
-When the crashkernel kernel command line option is specified, the
-low 1MiB memory will always be reserved, which makes that the memory
-allocated later won't fall into the low 1MiB area, thereby, it's not
-necessary to create a backup region and also no need to copy the first
-640k content to a backup region.
+> https://lore.kernel.org/lkml/45a2f0b8-5bac-8b5d-d595-f92e9acb27ad@arm.com
+> > +     /* Map relocation function va == pa */
+> > +     rc = trans_pgd_map_page(&info, trans_ttbr0,  __va(kern_reloc),
+> > +                             kern_reloc, PAGE_KERNEL_EXEC);
+> > +     if (rc)
+> > +             return rc;
+> James wrote:
+> You can't do this with the page table helpers. We support platforms
+> with no memory in range of TTBR0's VA space. See dd006da21646f
+>
+> You will need some idmapped memory to turn the MMU off on a system
+> that booted at EL1. This will need to be in a set of page tables
+> that the helpers can't easily touch - so it should only be a single
+> page. (like the arch code's existing idmap - although that may
+> have been overwritten).
+>
+> (I have a machine where this is a problem, if I get the time I will
+> have a stab at making hibernate's safe page idmaped).
+> ---
+>
+> As I understand, there are platforms where TTBR0 cannot include all
+> physical memory for idmap. However, kexec must have at least one page
+> idmapped (kimage->control_code_page) to be able to relocate kernel
+> while MMU is enabled:
+>
+> I am still trying to fully understand the problem:
+> CONFIG_ARM64_VA_BITS must be smaller than 48 and physical memory must
+> start at a high address for this problem to occur.
+>
+> Why can't we simply decrease T0SZ to cover all physical memory?
 
-Currently, the code related to the backup region can be safely removed,
-so lets clean up.
+Is there a way to reproduce this platform with qemu?
 
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- arch/x86/include/asm/kexec.h       | 10 ----
- arch/x86/include/asm/purgatory.h   | 10 ----
- arch/x86/kernel/crash.c            | 87 ++++--------------------------
- arch/x86/kernel/machine_kexec_64.c | 47 ----------------
- arch/x86/purgatory/purgatory.c     | 19 -------
- 5 files changed, 11 insertions(+), 162 deletions(-)
-
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 5e7d6b46de97..6802c59e8252 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -66,10 +66,6 @@ struct kimage;
- # define KEXEC_ARCH KEXEC_ARCH_X86_64
- #endif
- 
--/* Memory to backup during crash kdump */
--#define KEXEC_BACKUP_SRC_START	(0UL)
--#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
--
- /*
-  * This function is responsible for capturing register states if coming
-  * via panic otherwise just fix up the ss and sp if coming via kernel
-@@ -154,12 +150,6 @@ struct kimage_arch {
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
--	/* Details of backup region */
--	unsigned long backup_src_start;
--	unsigned long backup_src_sz;
--
--	/* Physical address of backup segment */
--	unsigned long backup_load_addr;
- 
- 	/* Core ELF header buffer */
- 	void *elf_headers;
-diff --git a/arch/x86/include/asm/purgatory.h b/arch/x86/include/asm/purgatory.h
-index 92c34e517da1..5528e9325049 100644
---- a/arch/x86/include/asm/purgatory.h
-+++ b/arch/x86/include/asm/purgatory.h
-@@ -6,16 +6,6 @@
- #include <linux/purgatory.h>
- 
- extern void purgatory(void);
--/*
-- * These forward declarations serve two purposes:
-- *
-- * 1) Make sparse happy when checking arch/purgatory
-- * 2) Document that these are required to be global so the symbol
-- *    lookup in kexec works
-- */
--extern unsigned long purgatory_backup_dest;
--extern unsigned long purgatory_backup_src;
--extern unsigned long purgatory_backup_sz;
- #endif	/* __ASSEMBLY__ */
- 
- #endif /* _ASM_PURGATORY_H */
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index eb651fbde92a..ef54b3ffb0f6 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -173,8 +173,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- 
- #ifdef CONFIG_KEXEC_FILE
- 
--static unsigned long crash_zero_bytes;
--
- static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
- {
- 	unsigned int *nr_ranges = arg;
-@@ -217,6 +215,11 @@ static int elf_header_exclude_ranges(struct crash_mem *cmem)
- {
- 	int ret = 0;
- 
-+	/* Exclude the low 1MiB because it is always reserved */
-+	ret = crash_exclude_mem_range(cmem, 0, 1<<20);
-+	if (ret)
-+		return ret;
-+
- 	/* Exclude crashkernel region */
- 	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
- 	if (ret)
-@@ -246,9 +249,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
- 					unsigned long *sz)
- {
- 	struct crash_mem *cmem;
--	Elf64_Ehdr *ehdr;
--	Elf64_Phdr *phdr;
--	int ret, i;
-+	int ret;
- 
- 	cmem = fill_up_crash_elf_data();
- 	if (!cmem)
-@@ -267,22 +268,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
- 	/* By default prepare 64bit headers */
- 	ret =  crash_prepare_elf64_headers(cmem,
- 				IS_ENABLED(CONFIG_X86_64), addr, sz);
--	if (ret)
--		goto out;
- 
--	/*
--	 * If a range matches backup region, adjust offset to backup
--	 * segment.
--	 */
--	ehdr = (Elf64_Ehdr *)*addr;
--	phdr = (Elf64_Phdr *)(ehdr + 1);
--	for (i = 0; i < ehdr->e_phnum; phdr++, i++)
--		if (phdr->p_type == PT_LOAD &&
--				phdr->p_paddr == image->arch.backup_src_start &&
--				phdr->p_memsz == image->arch.backup_src_sz) {
--			phdr->p_offset = image->arch.backup_load_addr;
--			break;
--		}
- out:
- 	vfree(cmem);
- 	return ret;
-@@ -321,19 +307,11 @@ static int memmap_exclude_ranges(struct kimage *image, struct crash_mem *cmem,
- 				 unsigned long long mend)
- {
- 	unsigned long start, end;
--	int ret = 0;
- 
- 	cmem->ranges[0].start = mstart;
- 	cmem->ranges[0].end = mend;
- 	cmem->nr_ranges = 1;
- 
--	/* Exclude Backup region */
--	start = image->arch.backup_load_addr;
--	end = start + image->arch.backup_src_sz - 1;
--	ret = crash_exclude_mem_range(cmem, start, end);
--	if (ret)
--		return ret;
--
- 	/* Exclude elf header region */
- 	start = image->arch.elf_load_addr;
- 	end = start + image->arch.elf_headers_sz - 1;
-@@ -356,11 +334,11 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	memset(&cmd, 0, sizeof(struct crash_memmap_data));
- 	cmd.params = params;
- 
--	/* Add first 640K segment */
--	ei.addr = image->arch.backup_src_start;
--	ei.size = image->arch.backup_src_sz;
--	ei.type = E820_TYPE_RAM;
--	add_e820_entry(params, &ei);
-+	/* Add the low 1MiB */
-+	cmd.type = E820_TYPE_RAM;
-+	flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-+	walk_iomem_res_desc(IORES_DESC_NONE, flags, 0, (1<<20)-1, &cmd,
-+			memmap_entry_callback);
- 
- 	/* Add ACPI tables */
- 	cmd.type = E820_TYPE_ACPI;
-@@ -409,55 +387,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	return ret;
- }
- 
--static int determine_backup_region(struct resource *res, void *arg)
--{
--	struct kimage *image = arg;
--
--	image->arch.backup_src_start = res->start;
--	image->arch.backup_src_sz = resource_size(res);
--
--	/* Expecting only one range for backup region */
--	return 1;
--}
--
- int crash_load_segments(struct kimage *image)
- {
- 	int ret;
- 	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
- 				  .buf_max = ULONG_MAX, .top_down = false };
- 
--	/*
--	 * Determine and load a segment for backup area. First 640K RAM
--	 * region is backup source
--	 */
--
--	ret = walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
--				image, determine_backup_region);
--
--	/* Zero or postive return values are ok */
--	if (ret < 0)
--		return ret;
--
--	/* Add backup segment. */
--	if (image->arch.backup_src_sz) {
--		kbuf.buffer = &crash_zero_bytes;
--		kbuf.bufsz = sizeof(crash_zero_bytes);
--		kbuf.memsz = image->arch.backup_src_sz;
--		kbuf.buf_align = PAGE_SIZE;
--		/*
--		 * Ideally there is no source for backup segment. This is
--		 * copied in purgatory after crash. Just add a zero filled
--		 * segment for now to make sure checksum logic works fine.
--		 */
--		ret = kexec_add_buffer(&kbuf);
--		if (ret)
--			return ret;
--		image->arch.backup_load_addr = kbuf.mem;
--		pr_debug("Loaded backup region at 0x%lx backup_start=0x%lx memsz=0x%lx\n",
--			 image->arch.backup_load_addr,
--			 image->arch.backup_src_start, kbuf.memsz);
--	}
--
- 	/* Prepare elf headers and add a segment */
- 	ret = prepare_elf_headers(image, &kbuf.buffer, &kbuf.bufsz);
- 	if (ret)
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 5dcd438ad8f2..16e125a50b33 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -298,48 +298,6 @@ static void load_segments(void)
- 		);
- }
- 
--#ifdef CONFIG_KEXEC_FILE
--/* Update purgatory as needed after various image segments have been prepared */
--static int arch_update_purgatory(struct kimage *image)
--{
--	int ret = 0;
--
--	if (!image->file_mode)
--		return 0;
--
--	/* Setup copying of backup region */
--	if (image->type == KEXEC_TYPE_CRASH) {
--		ret = kexec_purgatory_get_set_symbol(image,
--				"purgatory_backup_dest",
--				&image->arch.backup_load_addr,
--				sizeof(image->arch.backup_load_addr), 0);
--		if (ret)
--			return ret;
--
--		ret = kexec_purgatory_get_set_symbol(image,
--				"purgatory_backup_src",
--				&image->arch.backup_src_start,
--				sizeof(image->arch.backup_src_start), 0);
--		if (ret)
--			return ret;
--
--		ret = kexec_purgatory_get_set_symbol(image,
--				"purgatory_backup_sz",
--				&image->arch.backup_src_sz,
--				sizeof(image->arch.backup_src_sz), 0);
--		if (ret)
--			return ret;
--	}
--
--	return ret;
--}
--#else /* !CONFIG_KEXEC_FILE */
--static inline int arch_update_purgatory(struct kimage *image)
--{
--	return 0;
--}
--#endif /* CONFIG_KEXEC_FILE */
--
- int machine_kexec_prepare(struct kimage *image)
- {
- 	unsigned long start_pgtable;
-@@ -353,11 +311,6 @@ int machine_kexec_prepare(struct kimage *image)
- 	if (result)
- 		return result;
- 
--	/* update purgatory as needed */
--	result = arch_update_purgatory(image);
--	if (result)
--		return result;
--
- 	return 0;
- }
- 
-diff --git a/arch/x86/purgatory/purgatory.c b/arch/x86/purgatory/purgatory.c
-index 3b95410ff0f8..2961234d0795 100644
---- a/arch/x86/purgatory/purgatory.c
-+++ b/arch/x86/purgatory/purgatory.c
-@@ -14,28 +14,10 @@
- 
- #include "../boot/string.h"
- 
--unsigned long purgatory_backup_dest __section(.kexec-purgatory);
--unsigned long purgatory_backup_src __section(.kexec-purgatory);
--unsigned long purgatory_backup_sz __section(.kexec-purgatory);
--
- u8 purgatory_sha256_digest[SHA256_DIGEST_SIZE] __section(.kexec-purgatory);
- 
- struct kexec_sha_region purgatory_sha_regions[KEXEC_SEGMENT_MAX] __section(.kexec-purgatory);
- 
--/*
-- * On x86, second kernel requries first 640K of memory to boot. Copy
-- * first 640K to a backup region in reserved memory range so that second
-- * kernel can use first 640K.
-- */
--static int copy_backup_region(void)
--{
--	if (purgatory_backup_dest) {
--		memcpy((void *)purgatory_backup_dest,
--		       (void *)purgatory_backup_src, purgatory_backup_sz);
--	}
--	return 0;
--}
--
- static int verify_sha256_digest(void)
- {
- 	struct kexec_sha_region *ptr, *end;
-@@ -66,7 +48,6 @@ void purgatory(void)
- 		for (;;)
- 			;
- 	}
--	copy_backup_region();
- }
- 
- /*
--- 
-2.17.1
-
+Pasha
 
 _______________________________________________
 kexec mailing list
