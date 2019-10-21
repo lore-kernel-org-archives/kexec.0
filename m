@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH V4 0/2] Add support for arm64 to carry ima measurement
-References: <20191011003600.22090-1-prsriva@linux.microsoft.com>
- <87d92514-e5e4-a79f-467f-f24a4ed279b6@arm.com>
- <b35b239c-990c-0d5b-0298-8f9e35064e2b@linux.microsoft.com>
- <0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com>
- <CA+CK2bBVcE91YbJx1f_BkNqbD03wGLNtyane7PjCnEu8i_cH2Q@mail.gmail.com>
-From: prsriva <prsriva@linux.microsoft.com>
-Message-ID: <11036cd6-2977-5f78-7fe7-1085ba31f005@linux.microsoft.com>
-Date: Mon, 21 Oct 2019 10:38:44 -0700
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]
+ helo=us-smtp-delivery-1.mimecast.com)
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1iMco5-00086q-80
+ for kexec@lists.infradead.org; Mon, 21 Oct 2019 18:53:30 +0000
+Received: by mail-lj1-f199.google.com with SMTP id m22so2598145ljj.6
+ for <kexec@lists.infradead.org>; Mon, 21 Oct 2019 11:53:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CA+CK2bBVcE91YbJx1f_BkNqbD03wGLNtyane7PjCnEu8i_cH2Q@mail.gmail.com>
-Content-Language: en-US
+References: <1C379272-3B10-432C-8A83-8F3008CEE87F@oracle.com>
+In-Reply-To: <1C379272-3B10-432C-8A83-8F3008CEE87F@oracle.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Tue, 22 Oct 2019 00:23:07 +0530
+Message-ID: <CACi5LpM9eN7XuFRi-BapvGNSfu8GgDPTi0BRG9WT4E_nJkzwfw@mail.gmail.com>
+Subject: Re: Makedumpfile help for 5.4.0.rc3 : Arm
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,42 +21,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Tatashin <pasha.tatashin@soleen.com>, James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, jean-philippe@linaro.org, arnd@arndb.de, Ard Biesheuvel <ard.biesheuvel@linaro.org>, sboyd@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, takahiro.akashi@linaro.org, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, zohar@linux.ibm.com, Masahiro Yamada <yamada.masahiro@socionext.com>, duwe@lst.de, allison@lohutok.net, linux-integrity@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, bauerman@linux.ibm.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: John Donnelly <john.p.donnelly@oracle.com>
+Cc: kexec mailing list <kexec@lists.infradead.org>
 
+Hello John,
 
-On 10/15/19 11:47 AM, Pavel Tatashin wrote:
->> I think the UEFI persistent-memory-reservations thing is a better fit for this [0][1].
-> 
-> Hi James,
-> 
-> Thank you for your thought. As I understand you propose the to use the
-> existing method as such:
-> 1. Use the existing kexec ABI to pass reservation from kernel to
-> kernel using EFI the same as is done for GICv3 tables.
-> 2. Allow this memory to be reservable only during first Linux boot via
-> EFI memory reserve
-> 3. Allow to have this memory pre-reserved by firmware or to be
-> embedded into device tree.
-> 
-> A question I have is how to tell that a reserved region is reserved
-> for IMA use. With GICv3 it is done by reading the registers, finding
-> the interrupt tables memory, and check that the memory ranges are
-> indeed pre-reserved.
-> 
-> Is there a way to name memory with the current ABI that you think is acceptable?
-> 
-> Thank you,
-> Pasha
-> 
-Friendly ping.
+On Mon, Oct 21, 2019 at 9:39 PM John Donnelly
+<john.p.donnelly@oracle.com> wrote:
+>
+>
+>
+> Hello,
+>
+>
+> Kazuhito Hagio asked me to share my test results on this patch for makedumpfile :
+>
+>
+> https://sourceforge.net/p/makedumpfile/code/ci/7bdb468c2c99dd780c9a5321f93c79cbfdce2527/
+>
+> And I was successfully able to get vmcore dumps on vmlinuz-5.3.6 and 5.4.0-rc3 Intel ( x86-64) kernels.
+>
+> I am still having difficulties getting vmcores on 5.4.0.rc3   Arm kernels with this update to makedumpfile.
+>
+> I get this message;
+>
+>
+> Buffer size for the cyclic mode: 3145728
+> va_bits      : 47
+> page_offset  : ffffc00000000000
+> calculate_plat_config: PAGE SIZE 0x10000 and VA Bits 47 not supported
+> get_machdep_info_arm64: Can't determine platform config values
+>
+> makedumpfile Failed.
+>
+>
+> Any suggestions welcomed
+
+I am working on the changes in the vmcoreinfo after the 52-bit VA
+changes from Steve were accepted in Linux 5.4-rc1 ("Support for 52-bit
+virtual addressing in kernel space").
+
+The suggestions during the last set of reviews (my v3 patchset) was to
+introduce arch specific details like TCR_EL1.TxSZ in the vmcoreinfo
+and also to wait for the 52-bit changes to make way upstream (as I
+raised a couple of issues/kernel panic issues) earlier with the 52-bit
+VA changes from Steve.
+
+I plan to send out the v4 patchset later this week (and will Cc you so
+that you can test the same).
 
 Thanks,
-Prakhar Srivastava
+Bhupesh
 
 
 _______________________________________________
