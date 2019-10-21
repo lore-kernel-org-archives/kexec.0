@@ -1,19 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from static-213-198-238-194.adsl.eunet.rs ([213.198.238.194]
- helo=fx.arvanta.net)
- by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iLv41-0007u6-58
- for kexec@lists.infradead.org; Sat, 19 Oct 2019 20:11:05 +0000
-Received: from arya.arvanta.net (arya.arvanta.net [10.5.1.6])
- by fx.arvanta.net (Postfix) with ESMTP id 8150E257E3
- for <kexec@lists.infradead.org>; Sat, 19 Oct 2019 22:10:57 +0200 (CEST)
-Date: Sat, 19 Oct 2019 22:10:57 +0200
-From: Milan =?utf-8?Q?P=2E_Stani=C4=87?= <mps@arvanta.net>
-Subject: Build failed on Alpine Linux for x86 arch
-Message-ID: <20191019201057.GA21551@arya.arvanta.net>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="u3/rZRmxL6MmkK24"
-Content-Disposition: inline
+Received: from userp2130.oracle.com ([156.151.31.86])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1iMaFG-00071R-VU
+ for kexec@lists.infradead.org; Mon, 21 Oct 2019 16:09:24 +0000
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+ by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9LG4dHD149596
+ for <kexec@lists.infradead.org>; Mon, 21 Oct 2019 16:09:20 GMT
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+ by userp2130.oracle.com with ESMTP id 2vqswt8utk-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+ for <kexec@lists.infradead.org>; Mon, 21 Oct 2019 16:09:20 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+ by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9LG84VZ096894
+ for <kexec@lists.infradead.org>; Mon, 21 Oct 2019 16:09:20 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+ by userp3020.oracle.com with ESMTP id 2vrcmndpj4-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+ for <kexec@lists.infradead.org>; Mon, 21 Oct 2019 16:09:20 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+ by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9LG9JUZ014641
+ for <kexec@lists.infradead.org>; Mon, 21 Oct 2019 16:09:19 GMT
+From: John Donnelly <john.p.donnelly@oracle.com>
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Date: Mon, 21 Oct 2019 11:09:17 -0500
+Subject: Makedumpfile help for 5.4.0.rc3 :  Arm 
+Message-Id: <1C379272-3B10-432C-8A83-8F3008CEE87F@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,106 +33,24 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi,
-
-I'm trying to upgrade kexec-tools to version 2.0.20 on Alpine Linux
-(musl libc based) and got error:
-kexec/arch/i386/kexec-x86.c:40:4: error: 'multiboot2_x86_usage' undeclared here (not in a function); did you mean 'multiboot_x86_usage'?
-
-Excerpt from build log is attached to this mail.
-
-I changed kexec/arch/i386/kexec-x86.c file with patch attached to this
-mail, and then it builds fine but I'm not sure if that patch is correct.
-
-Would anyone review patch and issue, and post comment or fix.
-
--- 
-Tia
-
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: attachment; filename="kexec-build.log"
-
-gcc -Os -fomit-frame-pointer -fno-strict-aliasing -Wall -Wstrict-prototypes -Os -fomit-frame-pointer -I./include -I./util_lib/include -Iinclude/  -I./kexec/arch/i386/include  -c -MD -o kexec/arch/i386/kexec-elf-x86.o kexec/arch/i386/kexec-elf-x86.c
-gcc -Os -fomit-frame-pointer -fno-strict-aliasing -Wall -Wstrict-prototypes -Os -fomit-frame-pointer -I./include -I./util_lib/include -Iinclude/  -I./kexec/arch/i386/include  -c -MD -o kexec/arch/i386/kexec-elf-rel-x86.o kexec/arch/i386/kexec-elf-rel-x86.c
-kexec/arch/i386/kexec-x86.c:39:22: error: 'multiboot2_x86_probe' undeclared here (not in a function); did you mean 'multiboot_x86_probe'?
-   39 |  { "multiboot2-x86", multiboot2_x86_probe, multiboot2_x86_load,
-      |                      ^~~~~~~~~~~~~~~~~~~~
-      |                      multiboot_x86_probe
-kexec/arch/i386/kexec-x86.c:39:44: error: 'multiboot2_x86_load' undeclared here (not in a function); did you mean 'multiboot_x86_load'?
-   39 |  { "multiboot2-x86", multiboot2_x86_probe, multiboot2_x86_load,
-      |                                            ^~~~~~~~~~~~~~~~~~~
-      |                                            multiboot_x86_load
-kexec/arch/i386/kexec-x86.c:40:4: error: 'multiboot2_x86_usage' undeclared here (not in a function); did you mean 'multiboot_x86_usage'?
-   40 |    multiboot2_x86_usage },
-      |    ^~~~~~~~~~~~~~~~~~~~
-      |    multiboot_x86_usage
-make: *** [Makefile:113: kexec/arch/i386/kexec-x86.o] Error 1
-make: *** Waiting for unfinished jobs....
-kexec/arch/i386/kexec-x86-common.c: In function 'efi_get_acpi_rsdp':
-kexec/arch/i386/kexec-x86-common.c:419:19: warning: format '%lx' expects argument of type 'long unsigned int *', but argument 3 has type 'uint64_t *' {aka 'long long unsigned int *'} [-Wformat=]
-  419 |    sscanf(s, "0x%lx", &acpi_rsdp);
-      |                 ~~^   ~~~~~~~~~~
-      |                   |   |
-      |                   |   uint64_t * {aka long long unsigned int *}
-      |                   long unsigned int *
-      |                 %llx
->>> ERROR: kexec-tools: build failed
-
---u3/rZRmxL6MmkK24
-Content-Type: text/x-diff; charset=utf-8
-Content-Disposition: attachment; filename="fix-build-on-Alpine-linux.patch"
-Content-Transfer-Encoding: quoted-printable
-
-=46rom d390f1f873fa42fa5791ba48f9acf0f41da33632 Mon Sep 17 00:00:00 2001
-=46rom: =3D?UTF-8?q?Milan=3D20P=3D2E=3D20Stani=3DC4=3D87?=3D <mps@arvanta.n=
-et>
-Date: Sat, 19 Oct 2019 17:10:16 +0000
-Subject: [PATCH] kexec/arch/i386/kexec-x86.c: fix build on Alpine linux x86
- arch
-
----
- kexec/arch/i386/kexec-x86.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kexec/arch/i386/kexec-x86.c b/kexec/arch/i386/kexec-x86.c
-index 444cb69..6001e76 100644
---- a/kexec/arch/i386/kexec-x86.c
-+++ b/kexec/arch/i386/kexec-x86.c
-@@ -36,8 +36,8 @@
- struct file_type file_type[] =3D {
- 	{ "multiboot-x86", multiboot_x86_probe, multiboot_x86_load,
- 	  multiboot_x86_usage },
--	{ "multiboot2-x86", multiboot2_x86_probe, multiboot2_x86_load,
--	  multiboot2_x86_usage },
-+	{ "multiboot2-x86", multiboot_x86_probe, multiboot_x86_load,
-+	  multiboot_x86_usage },
- 	{ "elf-x86", elf_x86_probe, elf_x86_load, elf_x86_usage },
- 	{ "bzImage", bzImage_probe, bzImage_load, bzImage_usage },
- 	{ "beoboot-x86", beoboot_probe, beoboot_load, beoboot_usage },
---=20
-2.23.0
-
-
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
-
---u3/rZRmxL6MmkK24--
-
+CgpIZWxsbywKCgpLYXp1aGl0byBIYWdpbyBhc2tlZCBtZSB0byBzaGFyZSBteSB0ZXN0IHJlc3Vs
+dHMgb24gdGhpcyBwYXRjaCBmb3IgbWFrZWR1bXBmaWxlIDoKCgpodHRwczovL3NvdXJjZWZvcmdl
+Lm5ldC9wL21ha2VkdW1wZmlsZS9jb2RlL2NpLzdiZGI0NjhjMmM5OWRkNzgwYzlhNTMyMWY5M2M3
+OWNiZmRjZTI1MjcvCgpBbmQgSSB3YXMgc3VjY2Vzc2Z1bGx5IGFibGUgdG8gZ2V0IHZtY29yZSBk
+dW1wcyBvbiB2bWxpbnV6LTUuMy42IGFuZCA1LjQuMC1yYzMgSW50ZWwgKCB4ODYtNjQpIGtlcm5l
+bHMuCgpJIGFtIHN0aWxsIGhhdmluZyBkaWZmaWN1bHRpZXMgZ2V0dGluZyB2bWNvcmVzIG9uIDUu
+NC4wLnJjMyAgIEFybSBrZXJuZWxzIHdpdGggdGhpcyB1cGRhdGUgdG8gbWFrZWR1bXBmaWxlLiAK
+CkkgZ2V0IHRoaXMgbWVzc2FnZTsKCgpCdWZmZXIgc2l6ZSBmb3IgdGhlIGN5Y2xpYyBtb2RlOiAz
+MTQ1NzI4CnZhX2JpdHMgICAgICA6IDQ3CnBhZ2Vfb2Zmc2V0ICA6IGZmZmZjMDAwMDAwMDAwMDAK
+Y2FsY3VsYXRlX3BsYXRfY29uZmlnOiBQQUdFIFNJWkUgMHgxMDAwMCBhbmQgVkEgQml0cyA0NyBu
+b3Qgc3VwcG9ydGVkCmdldF9tYWNoZGVwX2luZm9fYXJtNjQ6IENhbid0IGRldGVybWluZSBwbGF0
+Zm9ybSBjb25maWcgdmFsdWVzCgptYWtlZHVtcGZpbGUgRmFpbGVkLgoKCkFueSBzdWdnZXN0aW9u
+cyB3ZWxjb21lZAoKCuKAlAoKCgoKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
